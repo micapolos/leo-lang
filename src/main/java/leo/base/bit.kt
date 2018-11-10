@@ -26,46 +26,46 @@ val Bit.neg
     }
 
 fun Bit.and(bit: Bit) =
-  when (this) {
-    Bit.ZERO ->
-      when (bit) {
-        Bit.ZERO -> Bit.ZERO
-        Bit.ONE -> Bit.ZERO
-      }
-    Bit.ONE ->
-      when (bit) {
-        Bit.ZERO -> Bit.ZERO
-        Bit.ONE -> Bit.ONE
-      }
-  }
+    when (this) {
+      Bit.ZERO ->
+        when (bit) {
+          Bit.ZERO -> Bit.ZERO
+          Bit.ONE -> Bit.ZERO
+        }
+      Bit.ONE ->
+        when (bit) {
+          Bit.ZERO -> Bit.ZERO
+          Bit.ONE -> Bit.ONE
+        }
+    }
 
 fun Bit.or(bit: Bit) =
-  when (this) {
-    Bit.ZERO ->
-      when (bit) {
-        Bit.ZERO -> Bit.ZERO
-        Bit.ONE -> Bit.ONE
-      }
-    Bit.ONE ->
-      when (bit) {
-        Bit.ZERO -> Bit.ONE
-        Bit.ONE -> Bit.ONE
-      }
-  }
+    when (this) {
+      Bit.ZERO ->
+        when (bit) {
+          Bit.ZERO -> Bit.ZERO
+          Bit.ONE -> Bit.ONE
+        }
+      Bit.ONE ->
+        when (bit) {
+          Bit.ZERO -> Bit.ONE
+          Bit.ONE -> Bit.ONE
+        }
+    }
 
 fun Bit.xor(bit: Bit) =
-  when (this) {
-    Bit.ZERO ->
-      when (bit) {
-        Bit.ZERO -> Bit.ZERO
-        Bit.ONE -> Bit.ONE
-      }
-    Bit.ONE ->
-      when (bit) {
-        Bit.ZERO -> Bit.ONE
-        Bit.ONE -> Bit.ZERO
-      }
-  }
+    when (this) {
+      Bit.ZERO ->
+        when (bit) {
+          Bit.ZERO -> Bit.ZERO
+          Bit.ONE -> Bit.ONE
+        }
+      Bit.ONE ->
+        when (bit) {
+          Bit.ZERO -> Bit.ONE
+          Bit.ONE -> Bit.ZERO
+        }
+    }
 
 val Int.bitOrNull
   get() =
@@ -81,10 +81,10 @@ val Int.bit
     else Bit.ONE
 
 fun <V> Bit.ifZero(value: V, fn: (V) -> V): V =
-  when (this) {
-    Bit.ZERO -> fn(value)
-    Bit.ONE -> value
-  }
+    when (this) {
+      Bit.ZERO -> fn(value)
+      Bit.ONE -> value
+    }
 
 fun Appendable.append(bit: Bit) =
-  append(bit.char)
+    append(bit.char)

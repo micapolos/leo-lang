@@ -3,18 +3,17 @@ package leo
 import leo.base.string
 
 data class Rule(
-  val pattern: Pattern,
-  val template: Template
-) {
+    val pattern: Pattern,
+    val template: Template) {
   override fun toString() = reflect.string
 }
 
 infix fun Pattern.returns(template: Template) =
-  Rule(this, template)
+    Rule(this, template)
 
 fun Rule.apply(argument: Script): Script? =
-  if (!argument.matches(pattern)) null
-  else template.apply(argument)
+    if (!argument.matches(pattern)) null
+    else template.apply(argument)
 
 val Script.parseRule: Rule?
   get() =
@@ -33,6 +32,6 @@ val Script.parseRule: Rule?
 val Rule.reflect: Field<Nothing>
   get() =
     ruleWord fieldTo term(
-      pattern.reflect,
-      template.reflect
+        pattern.reflect,
+        template.reflect
     )

@@ -3,8 +3,7 @@ package leo
 import leo.base.*
 
 data class Function(
-  val ruleStackOrNull: Stack<Rule>?
-) {
+    val ruleStackOrNull: Stack<Rule>?) {
   override fun toString() = reflect.string
 }
 
@@ -17,29 +16,29 @@ val identityFunction
     nullStack<Rule>().function
 
 fun Function.push(rule: Rule) =
-  ruleStackOrNull.push(rule).function
+    ruleStackOrNull.push(rule).function
 
 fun Function.invoke(argument: Script): Script =
-  ruleStackOrNull.invoke(argument)
+    ruleStackOrNull.invoke(argument)
 
 fun Stack<Rule>?.invoke(argument: Script): Script =
-  fold(argument) { argument, rule ->
-    var currentArgument = argument
-    while (true) {
-      val result = rule.apply(currentArgument)
-      if (result == null) break
-      else currentArgument = result
+    fold(argument) { foldedArgument, rule ->
+      var currentArgument = foldedArgument
+      while (true) {
+        val result = rule.apply(currentArgument)
+        if (result == null) break
+        else currentArgument = result
+      }
+      currentArgument
     }
-    currentArgument
-  }
 
 // === reflect
 
 val Function.reflect: Field<Nothing>
   get() =
     functionWord
-      .fieldTo(
-        ruleStackOrNull
-          ?.reflect(Rule::reflect)
-          ?: term(identityWord)
-      )
+        .fieldTo(
+            ruleStackOrNull
+                ?.reflect(Rule::reflect)
+                ?: term(identityWord)
+        )

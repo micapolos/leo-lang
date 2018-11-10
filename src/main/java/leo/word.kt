@@ -3,14 +3,13 @@ package leo
 import leo.base.*
 
 data class Word(
-  val letterStack: Stack<Letter>
-) {
+    val letterStack: Stack<Letter>) {
   override fun toString() = reflect.string
 
   sealed class Reader {
     object Empty : Reader()
     data class Full(
-      val word: Word
+        val word: Word
     ) : Reader()
   }
 }
@@ -20,7 +19,7 @@ val Stack<Letter>.word
     Word(this)
 
 operator fun Word?.plus(letter: Letter) =
-  this?.letterStack.push(letter).word
+    this?.letterStack.push(letter).word
 
 val String.wordOrNull: Word?
   get() =
@@ -29,35 +28,35 @@ val String.wordOrNull: Word?
     }?.fullOrNull?.word
 
 fun <R> Word.foldLetters(initial: R, fn: (R, Letter) -> R) =
-  letterStack.reverse.fold(initial, fn)
+    letterStack.reverse.fold(initial, fn)
 
 // === Appendable
 
 fun Appendable.append(word: Word): Appendable =
-  word.foldLetters(this) { appendable, letter ->
-    appendable.append(letter)
-  }
+    word.foldLetters(this) { appendable, letter ->
+      appendable.append(letter)
+    }
 
 // === reader
 
 val emptyWordReader: Word.Reader =
-  Word.Reader.Empty
+    Word.Reader.Empty
 
 fun Word.Reader.plus(char: Char) =
-  when (this) {
-    is Word.Reader.Empty -> plus(char)
-    is Word.Reader.Full -> plus(char)
-  }
+    when (this) {
+      is Word.Reader.Empty -> wordReader(char)
+      is Word.Reader.Full -> plus(char)
+    }
 
-fun Word.Reader.Empty.plus(char: Char) =
-  char.letterOrNull?.let { letter ->
-    Word.Reader.Full(letter.stack.word)
-  }
+fun wordReader(char: Char) =
+    char.letterOrNull?.let { letter ->
+      Word.Reader.Full(letter.stack.word)
+    }
 
 fun Word.Reader.Full.plus(char: Char) =
-  char.letterOrNull?.let { letter ->
-    Word.Reader.Full(word + letter)
-  }
+    char.letterOrNull?.let { letter ->
+      Word.Reader.Full(word + letter)
+    }
 
 val Word.Reader.fullOrNull: Word.Reader.Full?
   get() =

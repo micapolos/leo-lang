@@ -2,17 +2,13 @@ package leo
 
 import leo.base.*
 
-// TODO: Implement
-fun <V> V.anyReflect(): Field<V> =
-  valueWord fieldTo term(todoWord)
-
 val Bit.reflect: Field<Nothing>
   get() =
     bitWord fieldTo term(
-      when (this) {
-        Bit.ZERO -> zeroWord
-        Bit.ONE -> oneWord
-      }
+        when (this) {
+          Bit.ZERO -> zeroWord
+          Bit.ONE -> oneWord
+        }
     )
 
 val Byte.reflect: Field<Nothing>

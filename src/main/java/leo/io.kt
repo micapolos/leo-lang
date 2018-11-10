@@ -19,10 +19,10 @@ fun evaluate(inputStream: InputStream, outputStream: OutputStream, errorStream: 
     errorStream.write("leo: end of stream".toByteArray())
   } else {
     evaluatorOrNull
-      .evaluatedScript
-      ?.term
-      ?.coreString
-      ?.toByteArray()
-      ?.let(outputStream::write)
+        .evaluatedScript
+        ?.term
+        ?.coreString
+        ?.toByteArray()
+        ?.let(outputStream::write)
   }
 }

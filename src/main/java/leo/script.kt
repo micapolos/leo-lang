@@ -3,8 +3,7 @@ package leo
 import leo.base.fail
 
 data class Script(
-  val term: Term<Nothing>
-) {
+    val term: Term<Nothing>) {
   override fun toString() = term.toString()
 }
 
@@ -13,23 +12,23 @@ val Term<Nothing>.script
     Script(this)
 
 fun script(term: Term<Nothing>) =
-  term.script
+    term.script
 
 fun Script?.push(word: Word) =
-  this?.term.push(word)?.script
+    this?.term.push(word)?.script
 
 fun Script?.push(field: Field<Nothing>) =
-  this?.term.push(field)?.script
+    this?.term.push(field)?.script
 
 fun <R> Script.match(key: Word, fn: (Script) -> R): R? =
-  term.match(key) { term ->
-    fn(term.script)
-  }
+    term.match(key) { term ->
+      fn(term.script)
+    }
 
 fun <R> Script.match(key1: Word, key2: Word, fn: (Script, Script) -> R): R? =
-  term.match(key1, key2) { term1, term2 ->
-    fn(term1.script, term2.script)
-  }
+    term.match(key1, key2) { term1, term2 ->
+      fn(term1.script, term2.script)
+    }
 
 // === reflect
 

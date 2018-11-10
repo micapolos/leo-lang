@@ -34,21 +34,21 @@ enum class Letter(val char: Char) {
 }
 
 val letterList =
-  Letter.values().toList()
+    Letter.values().toList()
 
 val charToLetterMap =
-  letterList.associate { it.char to it }
+    letterList.associate { it.char to it }
 
 val Char.letterOrNull: Letter?
   get() =
     charToLetterMap[this]
 
-inline fun Appendable.append(letter: Letter) =
-  append(letter.char)
+fun Appendable.append(letter: Letter): Appendable =
+    append(letter.char)
 
 val Byte.letterOrNull: Letter?
   get() =
     toChar().letterOrNull
 
 fun <V> Letter.reflect(): Field<V> =
-  letterWord fieldTo term(char.toString().wordOrNull!!)
+    letterWord fieldTo term(char.toString().wordOrNull!!)
