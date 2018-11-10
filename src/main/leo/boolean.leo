@@ -27,26 +27,3 @@ define(
       boolean(true)
       and(boolean(true))))
   is(boolean(false)))
-
-define(
-  it(kill(either(false)either(true)))
-  is(bazoo))
-
-test(
-	not(
-		boolean(false)
-		and(boolean(false))))
-test(
-	not(
-		boolean(false)
-		and(boolean(true))))
-test(
-	not(
-		boolean(true)
-		and(boolean(false))))
-test(
-	not(
-		boolean(true)
-		and(boolean(true))))
-test(any(boolean))
-test(kill(true))
