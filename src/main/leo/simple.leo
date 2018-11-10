@@ -1,1 +1,1 @@
-define(it(foo)is(bar))it(foo)
+foo(bar)

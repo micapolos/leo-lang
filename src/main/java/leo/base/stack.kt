@@ -92,6 +92,10 @@ fun <V, R> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
       }
     }?.reverse
 
+val Stack<*>.sizeInt: Int
+	get() =
+		fold(0) { size, _ -> size + 1 }
+
 // === appendable
 
 fun Appendable.append(stack: Stack<*>) {
@@ -120,3 +124,18 @@ fun <V> Stack<V>.reflect(reflectValue: (V) -> Field<Nothing>): Term<Nothing> =
         .foldTop { value -> reflectValue(value).stack }
         .andPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
         .term
+
+// === parse
+
+fun <V> Term<Nothing>.parseStack(parseValue: (Field<Nothing>) -> V?): Stack<V>? =
+	structureTermOrNull
+		?.fieldStack
+		?.reverse
+		?.foldTop { field ->
+			parseValue(field)?.stack
+		}
+		?.andPop { stackOrNull, field ->
+			parseValue(field)?.let { value ->
+				stackOrNull?.push(value)
+			}
+		}

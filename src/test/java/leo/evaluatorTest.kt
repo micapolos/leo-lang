@@ -18,7 +18,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = null
+	            wordOrNull = null,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -36,7 +37,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = oneWord
+	            wordOrNull = oneWord,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -60,7 +62,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = null
+	            wordOrNull = null,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -85,7 +88,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = numberWord
+	            wordOrNull = numberWord,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -106,7 +110,8 @@ class EvaluatorTest {
                         scriptOrNull = script(term(oneWord fieldTo term(numberWord)))
                     )
                 ),
-                wordOrNull = null
+	            wordOrNull = null,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -128,7 +133,8 @@ class EvaluatorTest {
                         scriptOrNull = script(term(oneWord fieldTo term(numberWord)))
                     )
                 ),
-                wordOrNull = twoWord
+	            wordOrNull = twoWord,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -156,7 +162,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = null
+	            wordOrNull = null,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -185,7 +192,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = stringWord
+	            wordOrNull = stringWord,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -216,7 +224,8 @@ class EvaluatorTest {
                         )
                     )
                 ),
-                wordOrNull = null
+	            wordOrNull = null,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -249,7 +258,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = null
+	            wordOrNull = null,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -283,7 +293,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = itWord
+	            wordOrNull = itWord,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -328,7 +339,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = null
+	            wordOrNull = null,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -374,7 +386,8 @@ class EvaluatorTest {
                         scriptOrNull = null
                     )
                 ),
-                wordOrNull = oneWord
+	            wordOrNull = oneWord,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
@@ -411,8 +424,24 @@ class EvaluatorTest {
                         scriptOrNull = script(term(itWord fieldTo term(numberWord)))
                     )
                 ),
-                wordOrNull = null
+	            wordOrNull = null,
+	            readerScript = leoReaderCoreScript
             )
         )
   }
+
+	@Test
+	fun pushByte() {
+		evaluator
+			.push(97.toByte())
+			.assertEqualTo(
+				Evaluator(
+					scopeStack = stack(
+						Scope(
+							parentWord = evaluateWord,
+							function = identityFunction,
+							scriptOrNull = null)),
+					wordOrNull = stack(Letter.A).word,
+					readerScript = leoReaderCoreScript))
+	}
 }
