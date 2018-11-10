@@ -1,0 +1,52 @@
+define(
+  it(any(boolean))
+  is(
+    either(false)
+    either(true)))
+define(
+  it(
+    not(
+      boolean(false)
+      and(boolean(false))))
+  is(boolean(true)))
+define(
+  it(
+    not(
+      boolean(false)
+      and(boolean(true))))
+  is(boolean(true)))
+define(
+  it(
+    not(
+      boolean(true)
+      and(boolean(false))))
+  is(boolean(true)))
+define(
+  it(
+    not(
+      boolean(true)
+      and(boolean(true))))
+  is(boolean(false)))
+
+define(
+  it(kill(either(false)either(true)))
+  is(bazoo))
+
+test(
+	not(
+		boolean(false)
+		and(boolean(false))))
+test(
+	not(
+		boolean(false)
+		and(boolean(true))))
+test(
+	not(
+		boolean(true)
+		and(boolean(false))))
+test(
+	not(
+		boolean(true)
+		and(boolean(true))))
+test(any(boolean))
+test(kill(true))

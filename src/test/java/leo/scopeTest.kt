@@ -1,0 +1,5 @@
+package leo
+
+class ScopeTest {
+
+}

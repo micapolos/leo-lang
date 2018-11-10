@@ -1,0 +1,4 @@
+rootProject.name = 'leo'
+include 'auto-lambda'
+include 'auto'
+include 'base'

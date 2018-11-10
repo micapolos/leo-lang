@@ -1,0 +1,1 @@
+define(it(foo)is(bar))it(foo)
