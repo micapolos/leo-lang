@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto/auto.iml" filepath="$PROJECT_DIR$/.idea/modules/auto/auto.iml" group="auto" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto-lambda/auto-lambda.iml" filepath="$PROJECT_DIR$/.idea/modules/auto-lambda/auto-lambda.iml" group="auto-lambda" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/base/base.iml" filepath="$PROJECT_DIR$/.idea/modules/base/base.iml" group="base" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo.iml" filepath="$PROJECT_DIR$/.idea/modules/leo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo_main.iml" filepath="$PROJECT_DIR$/.idea/modules/leo_main.iml" group="leo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo_test.iml" filepath="$PROJECT_DIR$/.idea/modules/leo_test.iml" group="leo" />
+    </modules>
+  </component>
+</project>
