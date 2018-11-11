@@ -4,10 +4,7 @@ import java.io.ByteArrayInputStream
 import java.io.InputStream
 
 fun main(args: Array<String>) {
-	evaluate(
-		args.inputStream,
-		System.out,
-		System.err)
+	evaluate(args.inputStream, System.out, System.err)
 	if (!args.isEmpty()) System.out.println()
 }
 
