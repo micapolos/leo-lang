@@ -122,6 +122,7 @@ val popWord = "pop".wordOrNull!!
 val quoteWord = "quote".wordOrNull!!
 val readWord = "read".wordOrNull!!
 val readerWord = "reader".wordOrNull!!
+val replWord = "repl".wordOrNull!!
 val ruleWord = "rule".wordOrNull!!
 val scopeWord = "scope".wordOrNull!!
 val scriptWord = "script".wordOrNull!!

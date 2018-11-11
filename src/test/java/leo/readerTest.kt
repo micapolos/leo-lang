@@ -9,72 +9,70 @@ class ReaderTest {
 	// 2 -> 20, 30
 	// 3 -> error
 	// 4 -> swallowed
-	val testReader =
-		Reader(
-			Function(
-				stack(
-					pattern(
+	val readerFunction =
+		Function(
+			stack(
+				pattern(
+					term(
+						leoReaderField,
+						readWord fieldTo term(1.toByte().reflect))) returns
+					template(
 						term(
 							leoReaderField,
-							readWord fieldTo term(1.toByte().reflect))) returns
-						template(
-							term(
-								leoReaderField,
-								readWord fieldTo term(10.toByte().reflect))),
-					pattern(
+							readWord fieldTo term(10.toByte().reflect))),
+				pattern(
+					term(
+						leoReaderField,
+						readWord fieldTo term(2.toByte().reflect))) returns
+					template(
 						term(
 							leoReaderField,
-							readWord fieldTo term(2.toByte().reflect))) returns
-						template(
-							term(
-								leoReaderField,
-								readWord fieldTo term(20.toByte().reflect),
-								readWord fieldTo term(30.toByte().reflect))),
-					pattern(
-						term(
-							leoReaderField,
-							readWord fieldTo term(3.toByte().reflect))) returns
-						template(term(errorWord)),
-					pattern(
-						term(
-							leoReaderField,
-							readWord fieldTo term(4.toByte().reflect))) returns
-						template(term(leoReaderField)))),
-			leoReaderScript)
+							readWord fieldTo term(20.toByte().reflect),
+							readWord fieldTo term(30.toByte().reflect))),
+				pattern(
+					term(
+						leoReaderField,
+						readWord fieldTo term(3.toByte().reflect))) returns
+					template(term(errorWord)),
+				pattern(
+					term(
+						leoReaderField,
+						readWord fieldTo term(4.toByte().reflect))) returns
+					template(term(leoReaderField))))
 
 	@Test
 	fun read_1_becomes_10() {
-		testReader
-			.read("x", 1.toByte()) { string, nextByte ->
+		emptyReader
+			.read("x", 1.toByte(), readerFunction::invoke) { string, nextByte ->
 				string.plus(nextByte)
 			}
-			.assertEqualTo("x10" to testReader)
+			.assertEqualTo("x10" to emptyReader)
 	}
 
 	@Test
 	fun read_2_becomes_20_30() {
-		testReader
-			.read("x", 2.toByte()) { string, nextByte ->
+		emptyReader
+			.read("x", 2.toByte(), readerFunction::invoke) { string, nextByte ->
 				string.plus(nextByte)
 			}
-			.assertEqualTo("x2030" to testReader)
+			.assertEqualTo("x2030" to emptyReader)
 	}
 
 	@Test
 	fun read_3_becomes_error() {
-		testReader
-			.read("x", 3.toByte()) { string, byte ->
+		emptyReader
+			.read("x", 3.toByte(), readerFunction::invoke) { string, byte ->
 				string.plus(byte)
 			}
-			.assertEqualTo("x" to testReader.copy(script = script(term(errorWord))))
+			.assertEqualTo("x" to emptyReader.copy(script = script(term(errorWord))))
 	}
 
 	@Test
 	fun read_4_is_swallowed() {
-		testReader
-			.read("x", 4.toByte()) { string, nextByte ->
+		emptyReader
+			.read("x", 4.toByte(), readerFunction::invoke) { string, nextByte ->
 				string.plus(nextByte)
 			}
-			.assertEqualTo("x" to testReader)
+			.assertEqualTo("x" to emptyReader)
 	}
 }

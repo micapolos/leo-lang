@@ -3,10 +3,12 @@ package leo
 import leo.base.andPop
 import leo.base.foldTop
 import leo.base.reverse
+import leo.base.string
 
 data class Reader(
-	val function: Function,
-	val script: Script)
+	val script: Script) {
+	override fun toString() = reflect.string
+}
 
 val leoReaderField =
 	leoWord fieldTo term<Nothing>(readerWord)
@@ -15,14 +17,13 @@ val leoReaderScript =
 	script(term(leoReaderField))
 
 val emptyReader =
-	Reader(identityFunction, leoReaderScript)
+	Reader(leoReaderScript)
 
-fun <R> Reader.read(initial: R, byte: Byte, fn: (R, Byte) -> R): Pair<R, Reader>? =
+fun <R> Reader.read(initial: R, byte: Byte, readerFn: (Script) -> Script, readFn: (R, Byte) -> R): Pair<R, Reader>? =
 	script
 		.push(readWord fieldTo term(byte.reflect))
 		?.let { newScript ->
-			function
-				.invoke(newScript)
+			readerFn(newScript)
 				.let { resultScript ->
 					resultScript
 						.term
@@ -41,7 +42,7 @@ fun <R> Reader.read(initial: R, byte: Byte, fn: (R, Byte) -> R): Pair<R, Reader>
 											followingField.key != readWord -> null
 											else -> followingField.value.match(byteWord) { byteValue ->
 												byteWord.fieldTo(byteValue).parseByte?.let { byte ->
-													fn(folded, byte) to reader.copy(script = leoReaderScript)
+													readFn(folded, byte) to reader.copy(script = leoReaderScript)
 												}
 											}
 										}
@@ -56,3 +57,9 @@ fun Reader.push(field: Field<Nothing>): Reader? =
 		copy(script = newScript)
 	}
 
+// === reflect
+
+val Reader.reflect: Field<Nothing>
+	get() =
+		readerWord fieldTo term(
+			script.reflect)
