@@ -69,5 +69,4 @@ fun Field<Nothing>.parseTemplateField(pattern: Pattern) =
 val Template.reflect: Field<Nothing>
   get() =
     templateWord fieldTo term(
-        term.fieldReflect(Selector::reflect)
-    )
+	    term.fieldReflect(Selector::reflect))

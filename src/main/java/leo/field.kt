@@ -64,6 +64,4 @@ fun <V> V?.orNullReflect(word: Word, fn: (V) -> Field<Nothing>): Field<Nothing> 
     word fieldTo term(
         optionalWord.fieldTo(
             if (this == null) term(nullWord)
-            else term(fn(this))
-        )
-    )
+            else term(fn(this))))

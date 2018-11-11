@@ -11,9 +11,7 @@ class SelectorTest {
       ageWord fieldTo term(44),
       numberWord fieldTo term(
           firstWord fieldTo term(100),
-          lastWord fieldTo term(200)
-      )
-  )
+	      lastWord fieldTo term(200)))
 
   @Test
   fun invokeEmpty() {
@@ -64,10 +62,7 @@ class SelectorTest {
             pattern(
                 term(
                     oneWord fieldTo term(numberWord),
-                    twoWord fieldTo term(stringWord)
-                )
-            )
-        )
+	                twoWord fieldTo term(stringWord))))
         .assertEqualTo(selector(oneWord))
   }
 
@@ -92,10 +87,7 @@ class SelectorTest {
             pattern(
                 term(
                     oneWord fieldTo term(numberWord),
-                    oneWord fieldTo term(stringWord)
-                )
-            )
-        )
+	                oneWord fieldTo term(stringWord))))
         .assertEqualTo(null)
   }
 }

@@ -32,9 +32,7 @@ class BitTest {
                 Bit.ONE.reflect,
                 Bit.ONE.reflect,
                 Bit.ZERO.reflect,
-                Bit.ONE.reflect
-            )
-        )
+	            Bit.ONE.reflect))
   }
 
   @Test
@@ -53,9 +51,6 @@ class BitTest {
             byteWord fieldTo term(
                 arrayWord fieldTo term(
                     0.toByte().reflect,
-                    127.toByte().reflect
-                )
-            )
-        )
+	                127.toByte().reflect)))
   }
 }

@@ -40,5 +40,4 @@ val Function.reflect: Field<Nothing>
         .fieldTo(
             ruleStackOrNull
                 ?.reflect(Rule::reflect)
-                ?: term(identityWord)
-        )
+	            ?: term(identityWord))

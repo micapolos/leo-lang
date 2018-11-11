@@ -48,5 +48,4 @@ val Selector.reflect: Field<Nothing>
         .fieldTo(
             wordStackOrNull
                 ?.reflect(Word::reflect)
-                ?: term(thisWord)
-        )
+	            ?: term(thisWord))

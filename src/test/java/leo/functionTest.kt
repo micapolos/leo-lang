@@ -17,9 +17,7 @@ class FunctionTest {
     Function(
         stack(
             pattern(term(nameWord)) returns template(term(stringWord)),
-            pattern(term(ageWord)) returns template(term(numberWord))
-        )
-    )
+	        pattern(term(ageWord)) returns template(term(numberWord))))
         .invoke(script(term(nameWord)))
         .assertEqualTo(script(term(stringWord)))
   }
@@ -29,9 +27,7 @@ class FunctionTest {
     Function(
         stack(
             pattern(term(nameWord)) returns template(term(stringWord)),
-            pattern(term(ageWord)) returns template(term(nameWord))
-        )
-    )
+	        pattern(term(ageWord)) returns template(term(nameWord))))
         .invoke(script(term(ageWord)))
         .assertEqualTo(script(term(stringWord)))
   }

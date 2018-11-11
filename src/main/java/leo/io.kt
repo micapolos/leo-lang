@@ -23,5 +23,4 @@ fun evaluate(inputStream: InputStream, outputStream: OutputStream, errorStream: 
 		  currentRepl = repl
 	  }
   }
-
 }

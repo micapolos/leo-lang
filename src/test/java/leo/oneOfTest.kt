@@ -15,14 +15,11 @@ class OneOfTest {
   @Test
   fun parse_onePattern() {
     script(
-        term(eitherWord fieldTo term(oneWord))
-    )
+	    term(eitherWord fieldTo term(oneWord)))
         .parseOneOf
         .assertEqualTo(
             oneOf(
-                pattern(term(oneWord))
-            )
-        )
+	            pattern(term(oneWord))))
   }
 
   @Test
@@ -30,16 +27,12 @@ class OneOfTest {
     script(
         term(
             eitherWord fieldTo term(oneWord),
-            eitherWord fieldTo term(twoWord)
-        )
-    )
+	        eitherWord fieldTo term(twoWord)))
         .parseOneOf
         .assertEqualTo(
             oneOf(
                 pattern(term(oneWord)),
-                pattern(term(twoWord))
-            )
-        )
+	            pattern(term(twoWord))))
   }
 
   @Test
@@ -48,9 +41,7 @@ class OneOfTest {
         term(
             eitherWord fieldTo term(oneWord),
             personWord fieldTo term(nameWord),
-            eitherWord fieldTo term(twoWord)
-        )
-    )
+	        eitherWord fieldTo term(twoWord)))
         .parseOneOf
         .assertEqualTo(null)
   }

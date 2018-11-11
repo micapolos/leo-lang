@@ -8,11 +8,8 @@ val personTerm =
         personWord fieldTo term(
             nameWord fieldTo term(
                 firstWord fieldTo term("Michał"),
-                lastWord fieldTo term("Pociecha-Łoś")
-            ),
-            ageWord fieldTo term("42")
-        )
-    )
+	            lastWord fieldTo term("Pociecha-Łoś")),
+	        ageWord fieldTo term("42")))
 
 class TermTest {
   @Test
@@ -114,9 +111,7 @@ class TermTest {
         .assertEqualTo(
             term(
                 oneWord fieldTo term(1),
-                twoWord fieldTo term(2)
-            )
-        )
+	            twoWord fieldTo term(2)))
   }
 
   @Test
@@ -124,9 +119,7 @@ class TermTest {
     term(
         personWord fieldTo term(
             nameWord fieldTo term(stringWord),
-            ageWord fieldTo term(12)
-        )
-    )
+	        ageWord fieldTo term(12)))
         .foldTokens(nullStack<Token<Int>>()) { stackOrNull, token ->
           stackOrNull.push(token)
         }
@@ -142,7 +135,6 @@ class TermTest {
                 beginToken(),
                 token(12),
                 endToken(),
-                endToken()
-            ))
+	            endToken()))
   }
 }

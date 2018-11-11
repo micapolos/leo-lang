@@ -19,14 +19,10 @@ class RuleTest {
         term(
             defineWord fieldTo term(
                 itWord fieldTo term(oneWord),
-                isWord fieldTo term(numberWord)
-            )
-        )
-    )
+	            isWord fieldTo term(numberWord))))
         .parseRule
         .assertEqualTo(
-            pattern(term(oneWord)) returns template(term(numberWord))
-        )
+	        pattern(term(oneWord)) returns template(term(numberWord)))
   }
 
   @Test
@@ -35,13 +31,9 @@ class RuleTest {
         term(
             defineWord fieldTo term(
                 itWord fieldTo term(oneWord),
-                isWord fieldTo term(thisWord)
-            )
-        )
-    )
+	            isWord fieldTo term(thisWord))))
         .parseRule
         .assertEqualTo(
-            pattern(term(oneWord)) returns template(term(selector()))
-        )
+	        pattern(term(oneWord)) returns template(term(selector())))
   }
 }

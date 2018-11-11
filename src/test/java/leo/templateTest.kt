@@ -24,18 +24,13 @@ class TemplateTest {
     script(
         term(
             nameWord fieldTo term(stringWord),
-            ageWord fieldTo term(numberWord)
-        )
-    )
+	        ageWord fieldTo term(numberWord)))
         .parseTemplate(pattern(term(personWord)))
         .assertEqualTo(
             template(
                 term(
                     nameWord fieldTo term(stringWord),
-                    ageWord fieldTo term(numberWord)
-                )
-            )
-        )
+	                ageWord fieldTo term(numberWord))))
   }
 
   @Test
@@ -43,22 +38,14 @@ class TemplateTest {
     script(
         term(
             nameWord fieldTo term(
-                oneWord fieldTo term(thisWord)
-            )
-        )
-    )
+	            oneWord fieldTo term(thisWord))))
         .parseTemplate(
             pattern(
-                term(oneWord fieldTo term(numberWord))
-            )
-        )
+	            term(oneWord fieldTo term(numberWord))))
         .assertEqualTo(
             template(
                 term(
-                    nameWord fieldTo term(selector(oneWord))
-                )
-            )
-        )
+	                nameWord fieldTo term(selector(oneWord)))))
   }
 
   @Test
@@ -66,20 +53,14 @@ class TemplateTest {
     template(
         term(
             thisWord fieldTo term(selector(itWord)),
-            timesWord fieldTo term(selector(plusWord))
-        )
-    )
+	        timesWord fieldTo term(selector(plusWord))))
         .invoke(
             term(
                 itWord fieldTo term(1),
-                plusWord fieldTo term(2)
-            )
-        )
+	            plusWord fieldTo term(2)))
         .assertEqualTo(
             term(
                 thisWord fieldTo term(1),
-                timesWord fieldTo term(2)
-            )
-        )
+	            timesWord fieldTo term(2)))
   }
 }

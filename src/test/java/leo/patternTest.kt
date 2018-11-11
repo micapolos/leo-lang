@@ -24,18 +24,13 @@ class PatternTest {
     script(
         term(
             nameWord fieldTo term(stringWord),
-            ageWord fieldTo term(numberWord)
-        )
-    )
+	        ageWord fieldTo term(numberWord)))
         .parsePattern
         .assertEqualTo(
             pattern(
                 term(
                     nameWord fieldTo term(stringWord),
-                    ageWord fieldTo term(numberWord)
-                )
-            )
-        )
+	                ageWord fieldTo term(numberWord))))
   }
 
   @Test
@@ -43,18 +38,13 @@ class PatternTest {
     script(
         term(
             eitherWord fieldTo term(stringWord),
-            eitherWord fieldTo term(numberWord)
-        )
-    )
+	        eitherWord fieldTo term(numberWord)))
         .parsePattern
         .assertEqualTo(
             pattern(
                 oneOf(
                     pattern(term(stringWord)),
-                    pattern(term(numberWord))
-                )
-            )
-        )
+	                pattern(term(numberWord)))))
   }
 
   @Test
@@ -63,10 +53,7 @@ class PatternTest {
         term(
             oneWord fieldTo term(
                 eitherWord fieldTo term(stringWord),
-                eitherWord fieldTo term(numberWord)
-            )
-        )
-    )
+	            eitherWord fieldTo term(numberWord))))
         .parsePattern
         .assertEqualTo(
             pattern(
@@ -74,12 +61,7 @@ class PatternTest {
                     oneWord fieldTo term(
                         oneOf(
                             pattern(term(stringWord)),
-                            pattern(term(numberWord))
-                        )
-                    )
-                )
-            )
-        )
+	                        pattern(term(numberWord)))))))
   }
 
   @Test
@@ -94,17 +76,12 @@ class PatternTest {
     script(
         term(
             nameWord fieldTo term(stringWord),
-            ageWord fieldTo term(numberWord)
-        )
-    )
+	        ageWord fieldTo term(numberWord)))
         .matches(
             pattern(
                 term(
                     nameWord fieldTo term(stringWord),
-                    ageWord fieldTo term(numberWord)
-                )
-            )
-        )
+	                ageWord fieldTo term(numberWord))))
         .assertEqualTo(true)
   }
 
@@ -116,11 +93,7 @@ class PatternTest {
                 term(
                     oneOf(
                         pattern(term(nameWord)),
-                        pattern(term(ageWord))
-                    )
-                )
-            )
-        )
+	                    pattern(term(ageWord))))))
         .assertEqualTo(true)
   }
 }

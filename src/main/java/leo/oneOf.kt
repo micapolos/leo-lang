@@ -45,5 +45,4 @@ val OneOf.reflect: Field<Nothing>
   get() =
     oneWord fieldTo term(
         ofWord fieldTo patternStack
-            .reflect(Pattern::reflect)
-    )
+	        .reflect(Pattern::reflect))

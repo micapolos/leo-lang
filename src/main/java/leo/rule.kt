@@ -33,5 +33,4 @@ val Rule.reflect: Field<Nothing>
   get() =
     ruleWord fieldTo term(
         pattern.reflect,
-        template.reflect
-    )
+	    template.reflect)

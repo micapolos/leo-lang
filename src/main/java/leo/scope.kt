@@ -43,5 +43,4 @@ val Scope.reflect: Field<Nothing>
     scopeWord fieldTo term(
 	    parentWord fieldTo term(parentWord.reflect),
         function.reflect,
-        scriptOrNull?.reflect.orNullField(scriptWord)
-    )
+	    scriptOrNull?.reflect.orNullField(scriptWord))
