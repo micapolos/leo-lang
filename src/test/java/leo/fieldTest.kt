@@ -2,7 +2,7 @@ package leo
 
 import leo.*
 import leo.base.assertEqualTo
-import leo.base.nullInstance
+import leo.base.nullOf
 import leo.base.string
 import kotlin.test.Test
 
@@ -16,7 +16,7 @@ class FieldTest {
 
 	@Test
 	fun orNullReflect_null() {
-		Letter::class.nullInstance
+		nullOf<Letter>()
 			.orNullReflect(letterWord, Letter::reflect)
 			.string
 			.assertEqualTo("letter optional null")

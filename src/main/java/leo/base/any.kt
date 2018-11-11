@@ -1,5 +1,8 @@
 package leo.base
 
+fun <V : Any> nullOf() =
+	null as V?
+
 val <V> V.orNull: V?
 	get() =
 		this
