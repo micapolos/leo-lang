@@ -1,6 +1,5 @@
 package leo
 
-import leo.*
 import leo.base.assertEqualTo
 import leo.base.stack
 import kotlin.test.Test
@@ -8,7 +7,7 @@ import kotlin.test.Test
 class EvaluatorTest {
   @Test
   fun evaluator() {
-    evaluator
+	  emptyEvaluator
         .assertEqualTo(
             Evaluator(
                 scopeStack = stack(
@@ -19,14 +18,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = null,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_one() {
-    evaluator
+	  emptyEvaluator
         .push(oneWord)
         .assertEqualTo(
             Evaluator(
@@ -38,14 +37,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = oneWord,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_one_() {
-    evaluator
+	  emptyEvaluator
         .push(oneWord)
         ?.begin
         .assertEqualTo(
@@ -63,14 +62,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = null,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_one_number() {
-    evaluator
+	  emptyEvaluator
         .push(oneWord)
         ?.begin
         ?.push(numberWord)
@@ -89,14 +88,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = numberWord,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_one_number__() {
-    evaluator
+	  emptyEvaluator
         .push(oneWord)
         ?.begin
         ?.push(numberWord)
@@ -111,14 +110,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = null,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_one_number__two() {
-    evaluator
+	  emptyEvaluator
         .push(oneWord)
         ?.begin
         ?.push(numberWord)
@@ -134,14 +133,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = twoWord,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_one_number__two_() {
-    evaluator
+	  emptyEvaluator
         .push(oneWord)
         ?.begin
         ?.push(numberWord)
@@ -163,14 +162,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = null,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_one_number__two_string() {
-    evaluator
+	  emptyEvaluator
         .push(oneWord)
         ?.begin
         ?.push(numberWord)
@@ -193,7 +192,7 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = stringWord,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
@@ -201,7 +200,7 @@ class EvaluatorTest {
 
   @Test
   fun push_one_number__two_string__() {
-    evaluator
+	  emptyEvaluator
         .push(oneWord)
         ?.begin
         ?.push(numberWord)
@@ -225,14 +224,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = null,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_define_it_one__is_number___() {
-    evaluator
+	  emptyEvaluator
         .push(defineWord)
         ?.begin
         ?.push(itWord)
@@ -259,14 +258,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = null,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_define_it_one__is_number___it() {
-    evaluator
+	  emptyEvaluator
         .push(defineWord)
         ?.begin
         ?.push(itWord)
@@ -294,14 +293,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = itWord,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_define_it_one__is_number___it_() {
-    evaluator
+	  emptyEvaluator
         .push(defineWord)
         ?.begin
         ?.push(itWord)
@@ -340,14 +339,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = null,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_define_it_one__is_number___it_one() {
-    evaluator
+	  emptyEvaluator
         .push(defineWord)
         ?.begin
         ?.push(itWord)
@@ -387,14 +386,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = oneWord,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
   @Test
   fun push_define_it_one__is_number___it_one__() {
-    evaluator
+	  emptyEvaluator
         .push(defineWord)
         ?.begin
         ?.push(itWord)
@@ -425,14 +424,14 @@ class EvaluatorTest {
                     )
                 ),
 	            wordOrNull = null,
-	            readerScript = leoReaderCoreScript
+	            readerScript = leoReaderScript
             )
         )
   }
 
 	@Test
-	fun pushByte() {
-		evaluator
+	fun pushValidByte() {
+		emptyEvaluator
 			.push(97.toByte())
 			.assertEqualTo(
 				Evaluator(
@@ -442,6 +441,6 @@ class EvaluatorTest {
 							function = identityFunction,
 							scriptOrNull = null)),
 					wordOrNull = stack(Letter.A).word,
-					readerScript = leoReaderCoreScript))
+					readerScript = leoReaderScript))
 	}
 }

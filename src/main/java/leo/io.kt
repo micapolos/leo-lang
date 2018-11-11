@@ -1,28 +1,27 @@
 package leo
 
-import leo.base.orNull
 import java.io.InputStream
 import java.io.OutputStream
 
 fun evaluate(inputStream: InputStream, outputStream: OutputStream, errorStream: OutputStream) {
-  var evaluatorOrNull = evaluator.orNull
+	var currentRepl = emptyRepl
   while (true) {
     val int = inputStream.read()
-    if (int == -1) break
-    if (evaluatorOrNull != null) {
-      evaluatorOrNull = evaluatorOrNull.push(int.toByte())
-      if (evaluatorOrNull == null) errorStream.write("leo: parse error".toByteArray())
-    }
+
+	  if (int == -1) {
+		  val script = currentRepl.evaluatedScript
+		  if (script == null) errorStream.write("leo: end of stream\n".toByteArray())
+		  else script.term.coreString.toByteArray().let(outputStream::write)
+		  break
+	  }
+
+	  val repl = currentRepl.push(int.toByte())
+	  if (repl == null) {
+		  errorStream.write("leo: parse error\n".toByteArray())
+		  break
+	  } else {
+		  currentRepl = repl
+	  }
   }
 
-  if (evaluatorOrNull == null) {
-    errorStream.write("leo: end of stream".toByteArray())
-  } else {
-    evaluatorOrNull
-        .evaluatedScript
-        ?.term
-        ?.coreString
-        ?.toByteArray()
-        ?.let(outputStream::write)
-  }
 }

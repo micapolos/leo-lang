@@ -9,76 +9,32 @@ data class Evaluator(
   override fun toString() = reflect.string
 }
 
-val leoReaderCoreField =
-	leoWord fieldTo term(readerWord fieldTo term<Nothing>(coreWord))
-
-val leoReaderCoreScript =
-	script(term(leoReaderCoreField))
-
 val Stack<Scope>.evaluator
   get() =
-	  Evaluator(this, null, leoReaderCoreScript)
+	  Evaluator(this, null, leoReaderScript)
 
 val Word.evaluator
   get() =
     scope.stack.evaluator
 
-val evaluator =
+val emptyEvaluator =
     evaluateWord.evaluator
 
 val Evaluator.evaluatedScript: Script?
   get() =
     if (scopeStack.pop != null) null
+    else if (readerScript != leoReaderScript) null
     else scopeStack.top.let { scope ->
       if (wordOrNull == null) scope.scriptOrNull
       else scope.scriptOrNull.push(wordOrNull)
     }
 
-fun Evaluator.push(string: String): Evaluator? =
-	string.toByteArray().fold(orNull) { evaluatorOrNull, byte ->
-		evaluatorOrNull?.push(byte)
-	}
-
-fun Evaluator.push(byteArray: ByteArray): Evaluator? =
-    byteArray.fold(this.orNull) { evaluatorOrNull, byte ->
-      evaluatorOrNull?.push(byte)
-    }
-
 fun Evaluator.push(byte: Byte): Evaluator? =
-	readerPush(byte)
-
-fun Evaluator.corePush(byte: Byte): Evaluator? =
     when (byte) {
       '('.toByte() -> begin
       ')'.toByte() -> end
       else -> byte.letterOrNull?.let(this::push)
     }
-
-fun Evaluator.readerPush(byte: Byte): Evaluator? =
-	scopeStack
-		.top
-		.function
-		.invoke(readerScript.push(readWord fieldTo term(byte.reflect))!!)
-		.let { result ->
-			result
-				.term
-				.structureTermOrNull
-				?.fieldStack
-				?.reverse
-				?.foldTop { topField ->
-					if (topField != leoReaderCoreField) null
-					else this
-				}
-				?.andPop { evaluator, followingField ->
-					if (followingField.key != readWord) null
-					else followingField.value.match(byteWord) { byteValue ->
-						(byteWord fieldTo byteValue).parseByte?.let { byte ->
-							copy(readerScript = leoReaderCoreScript).corePush(byte)
-						}
-					}
-				}
-				?: copy(readerScript = result)
-		}
 
 fun Evaluator.push(letter: Letter): Evaluator =
     copy(wordOrNull = wordOrNull.plus(letter))
@@ -133,10 +89,6 @@ fun Evaluator.push(script: Script): Evaluator =
     script.term.foldTokens(orNull) { evaluatorOrNull, token ->
       evaluatorOrNull?.push(token)
     }!!
-
-val Script.evaluate: Script?
-  get() =
-    evaluator.push(this).evaluatedScript
 
 // === reflect ===
 

@@ -87,6 +87,7 @@ val defineWord = "define".wordOrNull!!
 val eitherWord = "either".wordOrNull!!
 val emptyWord = "empty".wordOrNull!!
 val endWord = "end".wordOrNull!!
+val errorWord = "error".wordOrNull!!
 val evaluateWord = "evaluate".wordOrNull!!
 val evaluatorWord = "evaluator".wordOrNull!!
 val falseWord = "false".wordOrNull!!

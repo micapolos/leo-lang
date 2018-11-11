@@ -41,7 +41,7 @@ fun Scope.push(rule: Rule) =
 val Scope.reflect: Field<Nothing>
   get() =
     scopeWord fieldTo term(
-        leo.parentWord fieldTo term(parentWord.reflect),
+	    parentWord fieldTo term(parentWord.reflect),
         function.reflect,
         scriptOrNull?.reflect.orNullField(scriptWord)
     )
