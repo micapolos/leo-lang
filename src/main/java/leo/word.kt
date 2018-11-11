@@ -68,6 +68,13 @@ val Word.reflect: Field<Nothing>
 	get() =
 		wordWord fieldTo term(this)
 
+// === folding bytes
+
+fun <R> R.foldBytes(word: Word, fn: R.(Byte) -> R): R =
+	fold2(word.letterStack.reverse) { letter ->
+		foldBytes(letter, fn)
+	}
+
 // === words ===
 
 val aWord = "a".wordOrNull!!

@@ -52,6 +52,11 @@ fun <V, R> Stack<V>?.fold(initial: R, fn: (R, V) -> R): R =
 	if (this == null) initial
 	else pop.fold(fn(initial, top), fn)
 
+fun <V, R> R.fold2(stackOrNull: Stack<V>?, fn: R.(V) -> R): R =
+	stackOrNull.fold(this) { folded, value ->
+		folded.fn(value)
+	}
+
 val <V> Stack<V>.reverse: Stack<V>
 	get() =
 		foldTop { top -> top.stack }.andPop { stack, value -> stack.push(value) }

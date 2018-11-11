@@ -47,3 +47,6 @@ val Repl.reflect: Field<Nothing>
 		replWord fieldTo term(
 			reader.reflect,
 			evaluator.reflect)
+
+fun <R> R.foldBytes(repl: Repl, fn: R.(Byte) -> R): R =
+	foldBytes(repl.evaluator, fn)

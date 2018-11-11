@@ -29,6 +29,20 @@ val Evaluator.evaluatedScript: Script?
 			else scope.scriptOrNull.push(wordOrNull)
 		}
 
+fun <R> R.foldBytes(evaluator: Evaluator, fn: R.(Byte) -> R): R =
+	evaluator.scopeStack.reverse.foldTop { scope ->
+		if (scope.scriptOrNull == null) this
+		else foldBytes(scope.scriptOrNull, fn)
+	}.andPop { folded, scope ->
+		folded
+			.fn('('.toByte())
+			.foldBytes(scope, fn)
+			.let { folded2 ->
+				if (evaluator.wordOrNull == null) folded2
+				else folded2.fn('('.toByte()).foldBytes(evaluator.wordOrNull, fn)
+			}
+	}
+
 fun Evaluator.push(byte: Byte): Evaluator? =
 	when (byte) {
 		'('.toByte() -> begin

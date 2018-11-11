@@ -52,3 +52,10 @@ val Byte.letterOrNull: Letter?
 
 fun <V> Letter.reflect(): Field<V> =
 	letterWord fieldTo term(char.toString().wordOrNull!!)
+
+val Letter.byte
+	get() =
+		char.toByte()
+
+fun <R> R.foldBytes(letter: Letter, fn: R.(Byte) -> R): R =
+	fn(letter.byte)

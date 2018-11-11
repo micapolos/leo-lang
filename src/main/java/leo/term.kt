@@ -203,3 +203,13 @@ fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
 		is Term.Identifier -> Term.Identifier(word)
 		is Term.Structure -> Term.Structure(fieldStack.map { field -> field.map(fn) })
 	}
+
+// === folding bytes
+
+fun <V, R> R.foldBytes(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R =
+	when (term) {
+		is Term.Meta -> metaFn(term.value)
+		is Term.Identifier -> foldBytes(term.word, fn)
+		is Term.Structure -> fold2(term.fieldStack.reverse) { field -> foldBytes(field, metaFn, fn) }
+	}
+

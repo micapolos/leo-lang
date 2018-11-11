@@ -35,3 +35,8 @@ fun <R> Script.match(key1: Word, key2: Word, fn: (Script, Script) -> R): R? =
 val Script.reflect: Field<Nothing>
 	get() =
 		scriptWord fieldTo term.map { fail }
+
+// === folding bytes
+
+fun <R> R.foldBytes(script: Script, fn: R.(Byte) -> R): R =
+	foldBytes(script.term, { fail }, fn)

@@ -44,3 +44,14 @@ val Scope.reflect: Field<Nothing>
 			parentWord fieldTo term(parentWord.reflect),
 			function.reflect,
 			scriptOrNull?.reflect.orNullField(scriptWord))
+
+// === folding bytes
+
+fun <R> R.foldBytes(scope: Scope, fn: R.(Byte) -> R): R =
+	foldBytes(scope.parentWord, fn)
+		.let { folded ->
+			when {
+				scope.scriptOrNull != null -> folded.fn('('.toByte()).foldBytes(scope.scriptOrNull, fn)
+				else -> folded
+			}
+		}

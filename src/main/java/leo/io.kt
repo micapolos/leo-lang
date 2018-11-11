@@ -9,9 +9,9 @@ fun evaluate(inputStream: InputStream, outputStream: OutputStream, errorStream: 
 		val int = inputStream.read()
 
 		if (int == -1) {
-			val script = currentRepl.evaluatedScript
-			if (script == null) errorStream.write("leo: end of stream\n".toByteArray())
-			else script.term.coreString.toByteArray().let(outputStream::write)
+			Unit.foldBytes(currentRepl) { byte ->
+				outputStream.write(byte.toInt())
+			}
 			break
 		}
 
