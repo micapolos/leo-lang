@@ -27,15 +27,13 @@ val String.wordOrNull: Word?
 			readerOrNull?.plus(char)
 		}?.fullOrNull?.word
 
-fun <R> Word.foldLetters(initial: R, fn: (R, Letter) -> R) =
-	initial.fold(letterStack.reverse, fn)
+fun <R> R.foldLetters(word: Word, fn: R.(Letter) -> R) =
+	fold(word.letterStack.reverse, fn)
 
 // === Appendable
 
 fun Appendable.append(word: Word): Appendable =
-	word.foldLetters(this) { appendable, letter ->
-		appendable.append(letter)
-	}
+	foldLetters(word, Appendable::append)
 
 // === reader
 
