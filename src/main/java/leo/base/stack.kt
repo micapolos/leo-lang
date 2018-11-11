@@ -46,16 +46,11 @@ fun <V, R> Stack<V>.foldTop(fn: (V) -> R): Stack.FoldedTop<V, R> =
 	Stack.FoldedTop(fn(top), pop)
 
 fun <V, R> Stack.FoldedTop<V, R>.andPop(fn: (R, V) -> R): R =
-	pop.fold(foldedTop, fn)
+	foldedTop.fold(pop, fn)
 
-fun <V, R> Stack<V>?.fold(initial: R, fn: (R, V) -> R): R =
-	if (this == null) initial
-	else pop.fold(fn(initial, top), fn)
-
-fun <V, R> R.fold2(stackOrNull: Stack<V>?, fn: R.(V) -> R): R =
-	stackOrNull.fold(this) { folded, value ->
-		folded.fn(value)
-	}
+fun <V, R> R.fold(stackOrNull: Stack<V>?, fn: R.(V) -> R): R =
+	if (stackOrNull == null) this
+	else fn(this, stackOrNull.top).fold(stackOrNull.pop, fn)
 
 val <V> Stack<V>.reverse: Stack<V>
 	get() =
@@ -79,10 +74,12 @@ fun <V> Stack<V>.only(fn: (V) -> Boolean): V? =
 	all(fn)?.only
 
 fun <V> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
-	fold(null as Stack<V>?) { all, value ->
-		if (fn(value)) all.push(value)
-		else all
-	}?.reverse
+	nullOf<Stack<V>>()
+		.fold(this) { value ->
+			if (fn(value)) push(value)
+			else this
+		}
+		?.reverse
 
 fun <V, R> Stack<V>.map(fn: (V) -> R): Stack<R> =
 	reverse
@@ -90,16 +87,16 @@ fun <V, R> Stack<V>.map(fn: (V) -> R): Stack<R> =
 		.andPop { stack, value -> stack.push(fn(value)) }
 
 fun <V, R> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
-	fold(null as Stack<R>?) { all, value ->
+	(null as Stack<R>?).fold(this) { value ->
 		fn(value).let { mappedOrNull ->
-			if (mappedOrNull == null) all
-			else all.push(mappedOrNull)
+			if (mappedOrNull == null) this
+			else push(mappedOrNull)
 		}
 	}?.reverse
 
 val Stack<*>.sizeInt: Int
 	get() =
-		fold(0) { size, _ -> size + 1 }
+		0.fold(this) { this + 1 }
 
 // === appendable
 

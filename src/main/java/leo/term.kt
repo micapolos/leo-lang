@@ -210,6 +210,6 @@ fun <V, R> R.foldBytes(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R 
 	when (term) {
 		is Term.Meta -> metaFn(term.value)
 		is Term.Identifier -> foldBytes(term.word, fn)
-		is Term.Structure -> fold2(term.fieldStack.reverse) { field -> foldBytes(field, metaFn, fn) }
+		is Term.Structure -> fold(term.fieldStack.reverse) { field -> foldBytes(field, metaFn, fn) }
 	}
 

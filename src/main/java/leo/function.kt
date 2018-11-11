@@ -22,8 +22,8 @@ fun Function.invoke(argument: Script): Script =
 	ruleStackOrNull.invoke(argument)
 
 fun Stack<Rule>?.invoke(argument: Script): Script =
-	fold(argument) { foldedArgument, rule ->
-		var currentArgument = foldedArgument
+	argument.fold(this) { rule ->
+		var currentArgument = this
 		while (true) {
 			val result = rule.apply(currentArgument)
 			if (result == null) break

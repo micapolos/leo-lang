@@ -17,8 +17,8 @@ fun oneOf(pattern: Pattern, vararg patterns: Pattern) =
 val Script.parseOneOf: OneOf?
 	get() =
 		term.structureTermOrNull?.let { listTerm ->
-			listTerm.fieldStack.fold(true) { isOneOf, field ->
-				isOneOf && field.key == eitherWord
+			true.fold(listTerm.fieldStack) { field ->
+				this && field.key == eitherWord
 			}.let { isOneOf ->
 				if (!isOneOf) null
 				else term

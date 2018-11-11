@@ -36,15 +36,13 @@ class StackTest {
 
 	@Test
 	fun fold_null() {
-		nullStack<Int>()
-			.fold("", String::plus)
+		"".fold(nullStack<Int>(), String::plus)
 			.assertEqualTo("")
 	}
 
 	@Test
 	fun fold_nonNull() {
-		stack(1, 2, 3)
-			.fold("", String::plus)
+		"".fold(stack(1, 2, 3), String::plus)
 			.assertEqualTo("321")
 	}
 

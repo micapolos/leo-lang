@@ -17,7 +17,7 @@ val Field<Nothing>.parseByte: Byte?
 			.parseStack { field -> field.parseBit }
 			?.let { bitStack ->
 				if (bitStack.sizeInt != 8) null
-				else bitStack.reverse.fold(0x00) { byte, bit ->
-					byte.shl(1).or(bit.int)
+				else 0x00.fold(bitStack.reverse) { bit ->
+					shl(1).or(bit.int)
 				}.toByte()
 			}
