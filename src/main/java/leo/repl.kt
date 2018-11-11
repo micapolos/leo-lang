@@ -25,13 +25,13 @@ val Repl.evaluatedScript: Script?
 	get() =
 		evaluator.evaluatedScript
 
+// === utils
+
 fun Repl.push(byteArray: ByteArray): Repl? =
-	byteArray.fold(orNull) { leoOrNull, byte ->
-		leoOrNull?.push(byte)
+	byteArray.fold(orNull) { replOrNull, byte ->
+		replOrNull?.push(byte)
 	}
 
 fun Repl.push(string: String): Repl? =
-	string.toByteArray().fold(orNull) { leoOrNull, byte ->
-		leoOrNull?.push(byte)
-	}
+	push(string.toByteArray())
 
