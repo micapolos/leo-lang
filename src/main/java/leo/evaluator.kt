@@ -54,8 +54,7 @@ fun Evaluator.push(letter: Letter): Evaluator =
 	copy(wordOrNull = wordOrNull.plus(letter))
 
 fun Evaluator.push(word: Word): Evaluator? =
-	if (wordOrNull != null) null
-	else copy(wordOrNull = word)
+	foldLetters(word, Evaluator::push)
 
 val Evaluator.begin: Evaluator?
 	get() =
@@ -90,19 +89,6 @@ val Evaluator.end: Evaluator?
 					}
 			}
 			?.evaluator
-
-fun Evaluator.push(token: Token<Nothing>): Evaluator? =
-	when (token) {
-		is Token.Meta -> null
-		is Token.Identifier -> push(token.word)
-		is Token.Begin -> begin
-		is Token.End -> end
-	}
-
-fun Evaluator.push(script: Script): Evaluator =
-	script.term.foldTokens(orNull) { evaluatorOrNull, token ->
-		evaluatorOrNull?.push(token)
-	}!!
 
 // === reflect ===
 
