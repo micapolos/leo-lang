@@ -12,7 +12,10 @@ fun main(args: Array<String>) {
 				System.out.flush()
 			}
 		}
-	if (!args.isEmpty()) System.out.println()
+
+	// TODO(micapolos): This is not correct in general, but is convenient until we implement Printer.
+	// TODO(micapolos): Move it to Printer when implemented.
+	System.out.println()
 }
 
 val Array<String>.inputStream: InputStream
