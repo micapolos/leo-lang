@@ -1,0 +1,335 @@
+define(
+	it(bits(leo(letter(a))))
+	is(bits(
+    bit(zero)
+    bit(zero)
+    bit(zero)
+    bit(zero)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(a))))))
+  is(leo(letter(a))))
+
+define(
+	it(bits(leo(letter(b))))
+	is(bits(
+    bit(zero)
+    bit(zero)
+    bit(zero)
+    bit(one)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(b))))))
+  is(leo(letter(b))))
+
+define(
+	it(bits(leo(letter(c))))
+	is(bits(
+    bit(zero)
+    bit(zero)
+    bit(zero)
+    bit(one)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(c))))))
+  is(leo(letter(c))))
+
+define(
+	it(bits(leo(letter(d))))
+	is(bits(
+    bit(zero)
+    bit(zero)
+    bit(one)
+    bit(zero)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(d))))))
+  is(leo(letter(d))))
+
+define(
+	it(bits(leo(letter(e))))
+	is(bits(
+    bit(zero)
+    bit(zero)
+    bit(one)
+    bit(zero)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(e))))))
+  is(leo(letter(e))))
+
+define(
+	it(bits(leo(letter(f))))
+	is(bits(
+    bit(zero)
+    bit(zero)
+    bit(one)
+    bit(one)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(f))))))
+  is(leo(letter(f))))
+
+define(
+	it(bits(leo(letter(g))))
+	is(bits(
+    bit(zero)
+    bit(zero)
+    bit(one)
+    bit(one)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(g))))))
+  is(leo(letter(g))))
+
+define(
+	it(bits(leo(letter(h))))
+	is(bits(
+    bit(zero)
+    bit(one)
+    bit(zero)
+    bit(zero)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(h))))))
+  is(leo(letter(h))))
+
+define(
+	it(bits(leo(letter(i))))
+	is(bits(
+    bit(zero)
+    bit(one)
+    bit(zero)
+    bit(zero)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(i))))))
+  is(leo(letter(i))))
+
+define(
+	it(bits(leo(letter(j))))
+	is(bits(
+    bit(zero)
+    bit(one)
+    bit(zero)
+    bit(one)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(j))))))
+  is(leo(letter(j))))
+
+define(
+	it(bits(leo(letter(k))))
+	is(bits(
+    bit(zero)
+    bit(one)
+    bit(zero)
+    bit(one)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(k))))))
+  is(leo(letter(k))))
+
+define(
+	it(bits(leo(letter(l))))
+	is(bits(
+    bit(zero)
+    bit(one)
+    bit(one)
+    bit(zero)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(l))))))
+  is(leo(letter(l))))
+
+define(
+	it(bits(leo(letter(m))))
+	is(bits(
+    bit(zero)
+    bit(one)
+    bit(one)
+    bit(zero)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(m))))))
+  is(leo(letter(m))))
+
+define(
+	it(bits(leo(letter(n))))
+	is(bits(
+    bit(zero)
+    bit(one)
+    bit(one)
+    bit(one)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(n))))))
+  is(leo(letter(n))))
+
+define(
+	it(bits(leo(letter(o))))
+	is(bits(
+    bit(zero)
+    bit(one)
+    bit(one)
+    bit(one)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(o))))))
+  is(leo(letter(o))))
+
+define(
+	it(bits(leo(letter(p))))
+	is(bits(
+    bit(one)
+    bit(zero)
+    bit(zero)
+    bit(zero)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(p))))))
+  is(leo(letter(p))))
+
+define(
+	it(bits(leo(letter(q))))
+	is(bits(
+    bit(one)
+    bit(zero)
+    bit(zero)
+    bit(zero)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(q))))))
+  is(leo(letter(q))))
+
+define(
+	it(bits(leo(letter(r))))
+	is(bits(
+    bit(one)
+    bit(zero)
+    bit(zero)
+    bit(one)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(r))))))
+  is(leo(letter(r))))
+
+define(
+	it(bits(leo(letter(s))))
+	is(bits(
+    bit(one)
+    bit(zero)
+    bit(zero)
+    bit(one)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(s))))))
+  is(leo(letter(s))))
+
+define(
+	it(bits(leo(letter(t))))
+	is(bits(
+    bit(one)
+    bit(zero)
+    bit(one)
+    bit(zero)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(t))))))
+  is(leo(letter(t))))
+
+define(
+	it(bits(leo(letter(u))))
+	is(bits(
+    bit(one)
+    bit(zero)
+    bit(one)
+    bit(zero)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(u))))))
+  is(leo(letter(u))))
+
+define(
+	it(bits(leo(letter(v))))
+	is(bits(
+    bit(one)
+    bit(zero)
+    bit(one)
+    bit(one)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(v))))))
+  is(leo(letter(v))))
+
+define(
+	it(bits(leo(letter(w))))
+	is(bits(
+    bit(one)
+    bit(zero)
+    bit(one)
+    bit(one)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(w))))))
+  is(leo(letter(w))))
+
+define(
+	it(bits(leo(letter(x))))
+	is(bits(
+    bit(one)
+    bit(one)
+    bit(zero)
+    bit(zero)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(x))))))
+  is(leo(letter(x))))
+
+define(
+	it(bits(leo(letter(y))))
+	is(bits(
+    bit(one)
+    bit(one)
+    bit(zero)
+    bit(zero)
+    bit(one))))
+define(
+	it(leo(letter(bits(leo(letter(y))))))
+  is(leo(letter(y))))
+
+define(
+	it(bits(leo(letter(z))))
+	is(bits(
+    bit(one)
+    bit(one)
+    bit(zero)
+    bit(one)
+    bit(zero))))
+define(
+	it(leo(letter(bits(leo(letter(z))))))
+  is(leo(letter(z))))
+
+define(
+	it(bits(leo(token(begin))))
+	is(bits(
+    bit(one)
+    bit(one)
+    bit(zero)
+    bit(one)
+    bit(one))))
+define(
+	it(leo(token(bits(leo(token(begin))))))
+  is(leo(token(begin))))
+
+define(
+	it(bits(leo(token(end))))
+	is(bits(
+    bit(one)
+    bit(one)
+    bit(one)
+    bit(zero)
+    bit(zero))))
+define(
+	it(leo(token(bits(leo(token(end))))))
+  is(leo(token(end))))
