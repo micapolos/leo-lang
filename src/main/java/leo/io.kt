@@ -19,3 +19,6 @@ fun Repl.evaluate(inputStream: InputStream, errorStream: OutputStream): Repl? {
 
 	return currentRepl
 }
+
+fun OutputStream.write(byte: Byte) =
+	write(byte.toInt())

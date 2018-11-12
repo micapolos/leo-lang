@@ -8,7 +8,8 @@ fun main(args: Array<String>) {
 		.evaluate(args.inputStream, System.err)
 		?.let { replOrNull ->
 			Unit.foldBytes(replOrNull) { byte ->
-				System.out.write(byte.toInt())
+				System.out.write(byte)
+				System.out.flush()
 			}
 		}
 	if (!args.isEmpty()) System.out.println()
