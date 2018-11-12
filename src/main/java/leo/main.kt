@@ -1,11 +1,11 @@
 package leo
 
 import java.io.ByteArrayInputStream
-import java.io.InputStream
 
 fun main(args: Array<String>) {
 	emptyRepl
-		.evaluate(args.inputStream, System.err)
+		.evaluate(System.`in`, System.err)
+		?.evaluate(ByteArrayInputStream(args.joinToString(" ").toByteArray()), System.err)
 		?.let { replOrNull ->
 			Unit.foldBytes(replOrNull) { byte ->
 				System.out.write(byte)
@@ -17,8 +17,3 @@ fun main(args: Array<String>) {
 	// TODO(micapolos): Move it to Printer when implemented.
 	System.out.println()
 }
-
-val Array<String>.inputStream: InputStream
-	get() =
-		if (isEmpty()) System.`in`
-		else ByteArrayInputStream(joinToString(" ").toByteArray())
