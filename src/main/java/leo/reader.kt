@@ -19,36 +19,34 @@ val leoReaderScript =
 val emptyReader =
 	Reader(leoReaderScript)
 
-fun <R> Reader.read(initial: R, byte: Byte, readerFn: (Script) -> Script, readFn: (R, Byte) -> R): Pair<R, Reader>? =
-	script
-		.push(readWord fieldTo term(byte.reflect))
+fun <R> R.read(
+	reader: Reader,
+	byte: Byte,
+	readerFn: (Script) -> Script,
+	readFn: (R, Byte) -> R): Pair<R, Reader>? =
+	reader.script.push(readWord fieldTo term(byte.reflect))
 		?.let { newScript ->
 			readerFn(newScript)
 				.let { resultScript ->
-					resultScript
-						.term
-						.structureTermOrNull
-						?.let { resultTerm ->
-							resultTerm
-								.fieldStack
-								.reverse
-								.foldTop { topField ->
-									if (topField != leoReaderField) null
-									else initial to copy(script = leoReaderScript)
-								}
-								.andPop { foldedAndReaderOrNull, followingField ->
-									foldedAndReaderOrNull?.let { (folded, reader) ->
-										when {
-											followingField.key != readWord -> null
-											else -> followingField.value.match(byteWord) { byteValue ->
-												byteWord.fieldTo(byteValue).parseByte?.let { byte ->
-													readFn(folded, byte) to reader.copy(script = leoReaderScript)
-												}
+					resultScript.term.structureTermOrNull?.let { resultTerm ->
+						resultTerm.fieldStack.reverse
+							.foldTop { topField ->
+								if (topField != leoReaderField) null
+								else to(reader.copy(script = leoReaderScript))
+							}
+							.andPop { foldedAndReaderOrNull, followingField ->
+								foldedAndReaderOrNull?.let { (folded, reader) ->
+									when {
+										followingField.key != readWord -> null
+										else -> followingField.value.match(byteWord) { byteValue ->
+											byteWord.fieldTo(byteValue).parseByte?.let { byte ->
+												readFn(folded, byte) to reader.copy(script = leoReaderScript)
 											}
 										}
 									}
 								}
-						} ?: initial to copy(script = resultScript)
+							}
+					} ?: to(reader.copy(script = resultScript))
 				}
 		}
 

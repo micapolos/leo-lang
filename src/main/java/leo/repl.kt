@@ -15,16 +15,15 @@ val emptyRepl =
 	Repl(emptyReader, emptyEvaluator)
 
 fun Repl.push(byte: Byte): Repl? =
-	reader
-		.read(evaluator.orNull, byte, { readerScript ->
-			evaluator.scopeStack.top.function.invoke(readerScript)
-		}) { evaluatorOrNull, nextByte ->
-			evaluatorOrNull?.push(nextByte)
-		}?.let { (newEvaluatorOrNull, newReader) ->
-			newEvaluatorOrNull?.let { newEvaluator ->
-				Repl(newReader, newEvaluator)
-			}
+	evaluator.orNull.read(reader, byte, { readerScript ->
+		evaluator.scopeStack.top.function.invoke(readerScript)
+	}) { evaluatorOrNull, nextByte ->
+		evaluatorOrNull?.push(nextByte)
+	}?.let { (newEvaluatorOrNull, newReader) ->
+		newEvaluatorOrNull?.let { newEvaluator ->
+			Repl(newReader, newEvaluator)
 		}
+	}
 
 val Repl.evaluatedScript: Script?
 	get() =
