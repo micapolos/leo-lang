@@ -17,8 +17,8 @@ val emptyRepl =
 fun Repl.push(byte: Byte): Repl? =
 	evaluator.orNull.read(reader, byte, { readerScript ->
 		evaluator.scopeStack.top.function.invoke(readerScript)
-	}) { evaluatorOrNull, nextByte ->
-		evaluatorOrNull?.push(nextByte)
+	}) { nextByte ->
+		this?.push(nextByte)
 	}?.let { (newEvaluatorOrNull, newReader) ->
 		newEvaluatorOrNull?.let { newEvaluator ->
 			Repl(newReader, newEvaluator)

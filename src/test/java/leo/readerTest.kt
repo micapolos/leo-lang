@@ -42,37 +42,29 @@ class ReaderTest {
 
 	@Test
 	fun read_1_becomes_10() {
-		emptyReader
-			.read("x", 1.toByte(), readerFunction::invoke) { string, nextByte ->
-				string.plus(nextByte)
-			}
+		"x"
+			.read(emptyReader, 1.toByte(), readerFunction::invoke, String::plus)
 			.assertEqualTo("x10" to emptyReader)
 	}
 
 	@Test
 	fun read_2_becomes_20_30() {
-		emptyReader
-			.read("x", 2.toByte(), readerFunction::invoke) { string, nextByte ->
-				string.plus(nextByte)
-			}
+		"x"
+			.read(emptyReader, 2.toByte(), readerFunction::invoke, String::plus)
 			.assertEqualTo("x2030" to emptyReader)
 	}
 
 	@Test
 	fun read_3_becomes_error() {
-		emptyReader
-			.read("x", 3.toByte(), readerFunction::invoke) { string, byte ->
-				string.plus(byte)
-			}
+		"x"
+			.read(emptyReader, 3.toByte(), readerFunction::invoke, String::plus)
 			.assertEqualTo("x" to emptyReader.copy(script = script(term(errorWord))))
 	}
 
 	@Test
 	fun read_4_is_swallowed() {
-		emptyReader
-			.read("x", 4.toByte(), readerFunction::invoke) { string, nextByte ->
-				string.plus(nextByte)
-			}
+		"x"
+			.read(emptyReader, 4.toByte(), readerFunction::invoke, String::plus)
 			.assertEqualTo("x" to emptyReader)
 	}
 }

@@ -23,7 +23,7 @@ fun <R> R.read(
 	reader: Reader,
 	byte: Byte,
 	readerFn: (Script) -> Script,
-	readFn: (R, Byte) -> R): Pair<R, Reader>? =
+	readFn: R.(Byte) -> R): Pair<R, Reader>? =
 	reader.script.push(readWord fieldTo term(byte.reflect))
 		?.let { newScript ->
 			readerFn(newScript)
