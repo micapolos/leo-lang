@@ -4,7 +4,13 @@ import java.io.ByteArrayInputStream
 import java.io.InputStream
 
 fun main(args: Array<String>) {
-	evaluate(args.inputStream, System.out, System.err)
+	emptyRepl
+		.evaluate(args.inputStream, System.err)
+		?.let { replOrNull ->
+			Unit.foldBytes(replOrNull) { byte ->
+				System.out.write(byte.toInt())
+			}
+		}
 	if (!args.isEmpty()) System.out.println()
 }
 
