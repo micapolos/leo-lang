@@ -28,7 +28,7 @@ fun Scope.invoke(argument: Script): Scope =
 		?: invokeFunction(argument)
 
 fun Scope.parseRule(argument: Script): Scope? =
-	argument.parseRule?.let(this::push)
+	argument.parseRule(function)?.let(this::push)
 
 fun Scope.invokeFunction(argument: Script): Scope =
 	copy(scriptOrNull = function.invoke(argument))

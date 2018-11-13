@@ -8,9 +8,12 @@ class RuleTest {
 	@Test
 	fun string() {
 		pattern(term(oneWord))
-			.returns(template(term(numberWord)))
+			.returns(
+				body(
+					template(term(numberWord)),
+					identityFunction))
 			.string
-			.assertEqualTo("rule(pattern term identifier word one, template term identifier word number)")
+			.assertEqualTo("rule(pattern term identifier word one, body(template term identifier word number, function identity))")
 	}
 
 	@Test
@@ -20,9 +23,9 @@ class RuleTest {
 				defineWord fieldTo term(
 					itWord fieldTo term(oneWord),
 					isWord fieldTo term(numberWord))))
-			.parseRule
+			.parseRule(identityFunction)
 			.assertEqualTo(
-				pattern(term(oneWord)) returns template(term(numberWord)))
+				pattern(term(oneWord)) returns body(template(term(numberWord)), identityFunction))
 	}
 
 	@Test
@@ -32,8 +35,8 @@ class RuleTest {
 				defineWord fieldTo term(
 					itWord fieldTo term(oneWord),
 					isWord fieldTo term(thisWord))))
-			.parseRule
+			.parseRule(identityFunction)
 			.assertEqualTo(
-				pattern(term(oneWord)) returns template(term(selector())))
+				pattern(term(oneWord)) returns body(template(term(selector())), identityFunction))
 	}
 }

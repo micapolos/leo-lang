@@ -209,7 +209,7 @@ class EvaluatorTest {
 							function = Function(
 								stack(
 									pattern(term(oneWord)) returns
-										template(term(numberWord)))),
+										Body(template(term(numberWord)), identityFunction))),
 							scriptOrNull = null)),
 					wordOrNull = null,
 					readerScript = leoReaderScript))
@@ -238,7 +238,9 @@ class EvaluatorTest {
 							function = Function(
 								stack(
 									pattern(term(oneWord)) returns
-										template(term(numberWord)))),
+										body(
+											template(term(numberWord)),
+											identityFunction))),
 							scriptOrNull = null)),
 					wordOrNull = itWord,
 					readerScript = leoReaderScript))
@@ -268,14 +270,18 @@ class EvaluatorTest {
 							function = Function(
 								stack(
 									pattern(term(oneWord)) returns
-										template(term(numberWord)))),
+										body(
+											template(term(numberWord)),
+											identityFunction))),
 							scriptOrNull = null),
 						Scope(
 							parentWord = itWord,
 							function = Function(
 								stack(
 									pattern(term(oneWord)) returns
-										template(term(numberWord)))),
+										body(
+											template(term(numberWord)),
+											identityFunction))),
 							scriptOrNull = null)),
 					wordOrNull = null,
 					readerScript = leoReaderScript))
@@ -306,14 +312,18 @@ class EvaluatorTest {
 							function = Function(
 								stack(
 									pattern(term(oneWord)) returns
-										template(term(numberWord)))),
+										body(
+											template(term(numberWord)),
+											identityFunction))),
 							scriptOrNull = null),
 						Scope(
 							parentWord = itWord,
 							function = Function(
 								stack(
 									pattern(term(oneWord)) returns
-										template(term(numberWord)))),
+										body(
+											template(term(numberWord)),
+											identityFunction))),
 							scriptOrNull = null)),
 					wordOrNull = oneWord,
 					readerScript = leoReaderScript
@@ -347,7 +357,9 @@ class EvaluatorTest {
 							function = Function(
 								stack(
 									pattern(term(oneWord)) returns
-										template(term(numberWord)))),
+										body(
+											template(term(numberWord)),
+											identityFunction))),
 							scriptOrNull = script(term(itWord fieldTo term(numberWord))))),
 					wordOrNull = null,
 					readerScript = leoReaderScript))

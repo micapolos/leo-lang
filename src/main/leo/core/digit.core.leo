@@ -1,0 +1,13 @@
+define(
+	it(any(digit))
+	is(
+		either(zero)
+		either(one)
+		either(two)
+		either(three)
+		either(four)
+		either(five)
+		either(six)
+		either(seven)
+		either(eight)
+		either(nine))))

@@ -16,29 +16,37 @@ class ReaderTest {
 					term(
 						leoReaderField,
 						readWord fieldTo term(1.toByte().reflect))) returns
-					template(
-						term(
-							leoReaderField,
-							readWord fieldTo term(10.toByte().reflect))),
+					body(
+						template(
+							term(
+								leoReaderField,
+								readWord fieldTo term(10.toByte().reflect))),
+						identityFunction),
 				pattern(
 					term(
 						leoReaderField,
 						readWord fieldTo term(2.toByte().reflect))) returns
-					template(
-						term(
-							leoReaderField,
-							readWord fieldTo term(20.toByte().reflect),
-							readWord fieldTo term(30.toByte().reflect))),
+					body(
+						template(
+							term(
+								leoReaderField,
+								readWord fieldTo term(20.toByte().reflect),
+								readWord fieldTo term(30.toByte().reflect))),
+						identityFunction),
 				pattern(
 					term(
 						leoReaderField,
 						readWord fieldTo term(3.toByte().reflect))) returns
-					template(term(errorWord)),
+					body(
+						template(term(errorWord)),
+						identityFunction),
 				pattern(
 					term(
 						leoReaderField,
 						readWord fieldTo term(4.toByte().reflect))) returns
-					template(term(leoReaderField))))
+					body(
+						template(term(leoReaderField)),
+						identityFunction)))
 
 	@Test
 	fun read_1_becomes_10() {

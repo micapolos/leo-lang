@@ -16,21 +16,14 @@ val identityFunction
 		nullStack<Rule>().function
 
 fun Function.push(rule: Rule) =
-	ruleStackOrNull.push(rule).function
+	copy(ruleStackOrNull = ruleStackOrNull.push(rule))
 
 fun Function.invoke(argument: Script): Script =
-	ruleStackOrNull.invoke(argument)
-
-fun Stack<Rule>?.invoke(argument: Script): Script =
-	argument.fold(this) { rule ->
-		var currentArgument = this
-		while (true) {
-			val result = rule.apply(currentArgument)
-			if (result == null) break
-			else currentArgument = result
-		}
-		currentArgument
-	}
+	ruleStackOrNull
+		?.top { rule -> argument.matches(rule.pattern) }
+		?.body
+		?.apply(argument)
+		?: argument
 
 // === reflect
 

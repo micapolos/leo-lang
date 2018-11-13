@@ -60,11 +60,8 @@ fun <V> Field<V>?.orNullField(word: Word): Field<V> =
 fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
 	key fieldTo value.map(fn)
 
-fun <V> V?.orNullReflect(word: Word, fn: (V) -> Field<Nothing>): Field<Nothing> =
-	word fieldTo term(
-		optionalWord.fieldTo(
-			if (this == null) term(nullWord)
-			else term(fn(this))))
+fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Nothing>): Field<Nothing> =
+	this?.let(reflect) ?: word.fieldTo(term(nullWord))
 
 // === fold bytes
 

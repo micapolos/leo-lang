@@ -16,8 +16,8 @@ class FunctionTest {
 	fun invoke_single() {
 		Function(
 			stack(
-				pattern(term(nameWord)) returns template(term(stringWord)),
-				pattern(term(ageWord)) returns template(term(numberWord))))
+				pattern(term(nameWord)) returns body(template(term(stringWord)), identityFunction),
+				pattern(term(ageWord)) returns body(template(term(numberWord)), identityFunction)))
 			.invoke(script(term(nameWord)))
 			.assertEqualTo(script(term(stringWord)))
 	}
@@ -26,8 +26,19 @@ class FunctionTest {
 	fun invoke_chain() {
 		Function(
 			stack(
-				pattern(term(nameWord)) returns template(term(stringWord)),
-				pattern(term(ageWord)) returns template(term(nameWord))))
+				pattern(term(nameWord)) returns
+					body(
+						template(term(stringWord)),
+						identityFunction),
+				pattern(term(ageWord)) returns
+					body(
+						template(term(nameWord)),
+						Function(
+							stack(
+								pattern(term(nameWord)) returns
+									body(
+										template(term(stringWord)),
+										identityFunction))))))
 			.invoke(script(term(ageWord)))
 			.assertEqualTo(script(term(stringWord)))
 	}

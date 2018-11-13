@@ -26,3 +26,6 @@ val Any?.string
 			this is Char -> "\'$this\'"
 			else -> toString()
 		}
+
+fun <V> identity(): (V) -> V =
+	{ it }

@@ -83,6 +83,7 @@ val arrayWord = "array".wordOrNull!!
 val bWord = "b".wordOrNull!!
 val beginWord = "begin".wordOrNull!!
 val bitWord = "bit".wordOrNull!!
+val bodyWord = "body".wordOrNull!!
 val booleanWord = "boolean".wordOrNull!!
 var byteWord = "byte".wordOrNull!!
 val cWord = "c".wordOrNull!!

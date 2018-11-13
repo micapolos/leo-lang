@@ -1,6 +1,5 @@
 package leo
 
-import leo.*
 import leo.base.assertEqualTo
 import leo.base.nullOf
 import leo.base.string
@@ -19,7 +18,7 @@ class FieldTest {
 		nullOf<Letter>()
 			.orNullReflect(letterWord, Letter::reflect)
 			.string
-			.assertEqualTo("letter optional null")
+			.assertEqualTo("letter null")
 	}
 
 	@Test
@@ -27,6 +26,6 @@ class FieldTest {
 		Letter.A
 			.orNullReflect(letterWord, Letter::reflect)
 			.string
-			.assertEqualTo("letter optional letter a")
+			.assertEqualTo("letter a")
 	}
 }

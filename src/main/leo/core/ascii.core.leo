@@ -1,0 +1,540 @@
+define(
+	it(byte(ascii(digit(zero))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero)
+		bit(zero))))
+define(
+	it(digit(ascii(byte(ascii(digit(zero))))))
+	is(digit(zero)))
+
+define(
+	it(byte(ascii(digit(one))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero)
+		bit(one))))
+define(
+	it(digit(ascii(byte(ascii(digit(one))))))
+	is(digit(one)))
+
+define(
+	it(byte(ascii(digit(two))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(zero))))
+define(
+	it(digit(ascii(byte(ascii(digit(two))))))
+	is(digit(two)))
+
+define(
+	it(byte(ascii(digit(three))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one))))
+define(
+	it(digit(ascii(byte(ascii(digit(three))))))
+	is(digit(three)))
+
+define(
+	it(byte(ascii(digit(four))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(zero))))
+define(
+	it(digit(ascii(byte(ascii(digit(four))))))
+	is(digit(four)))
+
+define(
+	it(byte(ascii(digit(five))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(one))))
+define(
+	it(digit(ascii(byte(ascii(digit(five))))))
+	is(digit(five)))
+
+define(
+	it(byte(ascii(digit(six))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero))))
+define(
+	it(digit(ascii(byte(ascii(digit(six))))))
+	is(digit(six)))
+
+define(
+	it(byte(ascii(digit(seven))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one))))
+define(
+	it(digit(ascii(byte(ascii(digit(seven))))))
+	is(digit(seven)))
+
+define(
+	it(byte(ascii(digit(eight))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero))))
+define(
+	it(digit(ascii(byte(ascii(digit(eight))))))
+	is(digit(eight)))
+
+define(
+	it(byte(ascii(digit(nine))))
+	is(byte(
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one))))
+define(
+	it(digit(ascii(byte(ascii(digit(nine))))))
+	is(digit(nine)))
+
+
+define(
+	it(byte(ascii(letter(a))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero)
+		bit(zero)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(a))))))
+	is(ascii(letter(a))))
+
+define(
+	it(byte(ascii(letter(b))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(b))))))
+	is(ascii(letter(b))))
+
+define(
+	it(byte(ascii(letter(c))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(c))))))
+	is(ascii(letter(c))))
+
+define(
+	it(byte(ascii(letter(d))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(d))))))
+	is(ascii(letter(d))))
+
+define(
+	it(byte(ascii(letter(e))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(e))))))
+	is(ascii(letter(e))))
+
+define(
+	it(byte(ascii(letter(f))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(f))))))
+	is(ascii(letter(f))))
+
+define(
+	it(byte(ascii(letter(g))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(g))))))
+	is(ascii(letter(g))))
+
+define(
+	it(byte(ascii(letter(h))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(h))))))
+	is(ascii(letter(h))))
+
+define(
+	it(byte(ascii(letter(i))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(i))))))
+	is(ascii(letter(i))))
+
+define(
+	it(byte(ascii(letter(j))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(j))))))
+	is(ascii(letter(j))))
+
+define(
+	it(byte(ascii(letter(k))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(k))))))
+	is(ascii(letter(k))))
+
+define(
+	it(byte(ascii(letter(l))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(l))))))
+	is(ascii(letter(l))))
+
+define(
+	it(byte(ascii(letter(m))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(m))))))
+	is(ascii(letter(m))))
+
+define(
+	it(byte(ascii(letter(n))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(n))))))
+	is(ascii(letter(n))))
+
+define(
+	it(byte(ascii(letter(o))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(o))))))
+	is(ascii(letter(o))))
+
+define(
+	it(byte(ascii(letter(p))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(p))))))
+	is(ascii(letter(p))))
+
+define(
+	it(byte(ascii(letter(q))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(q))))))
+	is(ascii(letter(q))))
+
+define(
+	it(byte(ascii(letter(r))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(r))))))
+	is(ascii(letter(r))))
+
+define(
+	it(byte(ascii(letter(s))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(s))))))
+	is(ascii(letter(s))))
+
+define(
+	it(byte(ascii(letter(t))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(t))))))
+	is(ascii(letter(t))))
+
+define(
+	it(byte(ascii(letter(u))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(u))))))
+	is(ascii(letter(u))))
+
+define(
+	it(byte(ascii(letter(v))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(v))))))
+	is(ascii(letter(v))))
+
+define(
+	it(byte(ascii(letter(w))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(w))))))
+	is(ascii(letter(w))))
+
+define(
+	it(byte(ascii(letter(x))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(x))))))
+	is(ascii(letter(x))))
+
+define(
+	it(byte(ascii(letter(y))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(zero)
+		bit(one))))
+define(
+	it(ascii(letter(byte(ascii(letter(y))))))
+	is(ascii(letter(y))))
+
+define(
+	it(byte(ascii(letter(z))))
+	is(byte(
+		bit(zero)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(one)
+		bit(zero)
+		bit(one)
+		bit(zero))))
+define(
+	it(ascii(letter(byte(ascii(letter(z))))))
+	is(ascii(letter(z))))
