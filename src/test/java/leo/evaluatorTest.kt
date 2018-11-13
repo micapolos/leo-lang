@@ -16,7 +16,7 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -31,7 +31,7 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = null)),
 					wordOrNull = oneWord,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -51,7 +51,7 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -72,7 +72,7 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = null)),
 					wordOrNull = numberWord,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -90,7 +90,7 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = term(oneWord fieldTo term(numberWord)))),
 					wordOrNull = null,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -109,7 +109,7 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = term(oneWord fieldTo term(numberWord)))),
 					wordOrNull = twoWord,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -133,7 +133,7 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -158,7 +158,7 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = null)),
 					wordOrNull = stringWord,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 
@@ -183,7 +183,7 @@ class EvaluatorTest {
 								oneWord fieldTo term(numberWord),
 								twoWord fieldTo term(stringWord)))),
 					wordOrNull = null,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -211,7 +211,7 @@ class EvaluatorTest {
 										Body(term(numberWord), identityFunction))),
 							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -242,7 +242,7 @@ class EvaluatorTest {
 											identityFunction))),
 							valueTermOrNull = null)),
 					wordOrNull = itWord,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -283,7 +283,7 @@ class EvaluatorTest {
 											identityFunction))),
 							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -325,7 +325,7 @@ class EvaluatorTest {
 											identityFunction))),
 							valueTermOrNull = null)),
 					wordOrNull = oneWord,
-					readerValueTerm = leoReaderScript()
+					readerValueTerm = leoReaderTerm()
 				)
 			)
 	}
@@ -361,7 +361,7 @@ class EvaluatorTest {
 											identityFunction))),
 							valueTermOrNull = term(itWord fieldTo term(numberWord)))),
 					wordOrNull = null,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 
 	@Test
@@ -376,6 +376,6 @@ class EvaluatorTest {
 							function = identityFunction,
 							valueTermOrNull = null)),
 					wordOrNull = stack(Letter.A).word,
-					readerValueTerm = leoReaderScript()))
+					readerValueTerm = leoReaderTerm()))
 	}
 }

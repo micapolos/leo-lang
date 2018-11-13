@@ -13,11 +13,11 @@ data class Reader(
 fun <V> leoReaderField(): Field<V> =
 	leoWord fieldTo term(readerWord)
 
-fun <V> leoReaderScript(): Term<V> =
+fun <V> leoReaderTerm(): Term<V> =
 	term(leoReaderField())
 
 val emptyReader =
-	Reader(leoReaderScript())
+	Reader(leoReaderTerm())
 
 fun <R> R.read(
 	reader: Reader,
@@ -25,14 +25,14 @@ fun <R> R.read(
 	readerFn: (Term<Value>) -> Term<Value>,
 	readFn: R.(Byte) -> R): Pair<R, Reader>? =
 	reader.valueTerm.push(readWord fieldTo term(byte.reflect))
-		?.let { newScript ->
-			readerFn(newScript)
-				.let { resultScript ->
-					resultScript.structureTermOrNull?.let { resultTerm ->
+		?.let { newValueTerm ->
+			readerFn(newValueTerm)
+				.let { resultValueTerm ->
+					resultValueTerm.structureTermOrNull?.let { resultTerm ->
 						resultTerm.fieldStack.reverse
 							.foldTop { topField ->
 								if (topField != leoReaderField<Value>()) null
-								else to(reader.copy(valueTerm = leoReaderScript()))
+								else to(reader.copy(valueTerm = leoReaderTerm()))
 							}
 							.andPop { foldedAndReaderOrNull, followingField ->
 								foldedAndReaderOrNull?.let { (folded, reader) ->
@@ -40,19 +40,19 @@ fun <R> R.read(
 										followingField.key != readWord -> null
 										else -> followingField.value.match(byteWord) { byteValue ->
 											byteWord.fieldTo(byteValue).parseByte?.let { byte ->
-												readFn(folded, byte) to reader.copy(valueTerm = leoReaderScript())
+												readFn(folded, byte) to reader.copy(valueTerm = leoReaderTerm())
 											}
 										}
 									}
 								}
 							}
-					} ?: to(reader.copy(valueTerm = resultScript))
+					} ?: to(reader.copy(valueTerm = resultValueTerm))
 				}
 		}
 
-fun Reader.push(field: Field<Nothing>): Reader? =
-	valueTerm.push(field)?.let { newScript ->
-		copy(valueTerm = newScript)
+fun Reader.push(field: Field<Value>): Reader? =
+	valueTerm.push(field)?.let { newValueTerm ->
+		copy(valueTerm = newValueTerm)
 	}
 
 // === reflect

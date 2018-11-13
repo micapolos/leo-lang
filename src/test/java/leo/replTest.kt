@@ -8,7 +8,7 @@ class ReplTest {
 	fun data() {
 		emptyRepl
 			.push("one(number)")
-			?.evaluatedScript
+			?.evaluatedValueTerm
 			.assertEqualTo(term(oneWord fieldTo term(numberWord)))
 	}
 
@@ -16,7 +16,7 @@ class ReplTest {
 	fun rule() {
 		emptyRepl
 			.push("define(it(two)is(number))it(two)")
-			?.evaluatedScript
+			?.evaluatedValueTerm
 			.assertEqualTo(term(itWord fieldTo term(numberWord)))
 	}
 
@@ -24,7 +24,7 @@ class ReplTest {
 	fun reader() {
 		emptyRepl
 			.push("define(it(leo(reader)read(byte(bit(zero)bit(zero)bit(zero)bit(zero)bit(one)bit(zero)bit(one)bit(zero))))is(leo(reader)))\nit(\none\n)")
-			?.evaluatedScript
+			?.evaluatedValueTerm
 			.assertEqualTo(term(itWord fieldTo term(oneWord)))
 	}
 }

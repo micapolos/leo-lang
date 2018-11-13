@@ -85,11 +85,11 @@ fun Appendable.appendCore(term: Term<*>): Appendable =
 		is Term.Structure -> appendCore(term)
 	}
 
-fun Appendable.appendCore(identifier: Term.Identifier<*>): Appendable =
-	append(identifier.word)
+fun Appendable.appendCore(identifierTerm: Term.Identifier<*>): Appendable =
+	append(identifierTerm.word)
 
-fun Appendable.appendCore(script: Term.Structure<*>): Appendable =
-	script
+fun Appendable.appendCore(structureTerm: Term.Structure<*>): Appendable =
+	structureTerm
 		.fieldStack
 		.reverse
 		.foldTop { field -> appendCore(field) }
@@ -111,8 +111,8 @@ fun Appendable.append(term: Term<*>): Appendable =
 fun Appendable.append(identifier: Term.Identifier<*>): Appendable =
 	append(identifier.word)
 
-fun Appendable.append(script: Term.Structure<*>): Appendable =
-	script
+fun Appendable.append(structureTerm: Term.Structure<*>): Appendable =
+	structureTerm
 		.fieldStack
 		.reverse
 		.foldTop { field -> append(field) }
@@ -243,3 +243,5 @@ fun <V, R> R.foldBytes(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R 
 		is Term.Structure -> fold(term.fieldStack.reverse) { field -> foldBytes(field, metaFn, fn) }
 	}
 
+fun <R> R.foldBytes(term: Term<*>, fn: R.(Byte) -> R): R =
+	foldBytes(term, { fail }, fn)

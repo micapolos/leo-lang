@@ -14,7 +14,7 @@ val Stack<Term<Pattern>>.pattern
 fun oneOf(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
 	stack(patternTerm, *patternTerms).pattern
 
-val Term<Value>.parsePattern: Pattern?
+val Term<*>.parsePattern: Pattern?
 	get() =
 		structureTermOrNull?.let { listTerm ->
 			true.fold(listTerm.fieldStack) { field ->
@@ -60,7 +60,7 @@ fun Field<Value>.matches(patternTerm: Field<Pattern>) =
 
 // === parsing
 
-val Term<Value>.parsePatternTerm: Term<Pattern>
+val Term<*>.parsePatternTerm: Term<Pattern>
 	get() =
 		when (this) {
 			is Term.Meta -> fail
@@ -68,7 +68,7 @@ val Term<Value>.parsePatternTerm: Term<Pattern>
 			is Term.Structure -> parsePattern?.metaTerm ?: parseListPattern
 		}
 
-val Term.Structure<Value>.parseListPattern: Term<Pattern>
+val Term.Structure<*>.parseListPattern: Term<Pattern>
 	get() =
 		fieldStack
 			.reverse
@@ -76,7 +76,7 @@ val Term.Structure<Value>.parseListPattern: Term<Pattern>
 			.andPop { stack, field -> stack.push(field.parsePatternField) }
 			.term
 
-val Field<Value>.parsePatternField: Field<Pattern>
+val Field<*>.parsePatternField: Field<Pattern>
 	get() =
 		key fieldTo value.parsePatternTerm
 

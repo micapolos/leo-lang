@@ -11,7 +11,7 @@ data class Evaluator(
 
 val Stack<Scope>.evaluator
 	get() =
-		Evaluator(this, null, leoReaderScript())
+		Evaluator(this, null, leoReaderTerm())
 
 val Word.evaluator
 	get() =
@@ -20,10 +20,10 @@ val Word.evaluator
 val emptyEvaluator =
 	evaluateWord.evaluator
 
-val Evaluator.evaluatedScript: Term<Value>?
+val Evaluator.evaluatedValueTerm: Term<Value>?
 	get() =
 		if (scopeStack.pop != null) null
-		else if (readerValueTerm != leoReaderScript<Value>()) null
+		else if (readerValueTerm != leoReaderTerm<Value>()) null
 		else scopeStack.top.let { scope ->
 			if (wordOrNull == null) scope.valueTermOrNull
 			else scope.valueTermOrNull.push(wordOrNull)

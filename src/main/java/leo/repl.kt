@@ -15,8 +15,8 @@ val emptyRepl =
 	Repl(emptyReader, emptyEvaluator)
 
 fun Repl.push(byte: Byte): Repl? =
-	evaluator.orNull.read(reader, byte, { readerScript ->
-		evaluator.scopeStack.top.function.invoke(readerScript)
+	evaluator.orNull.read(reader, byte, { readerValueTerm ->
+		evaluator.scopeStack.top.function.invoke(readerValueTerm)
 	}) { nextByte ->
 		this?.push(nextByte)
 	}?.let { (newEvaluatorOrNull, newReader) ->
@@ -25,9 +25,9 @@ fun Repl.push(byte: Byte): Repl? =
 		}
 	}
 
-val Repl.evaluatedScript: Term<Value>?
+val Repl.evaluatedValueTerm: Term<Value>?
 	get() =
-		evaluator.evaluatedScript
+		evaluator.evaluatedValueTerm
 
 // === utils
 

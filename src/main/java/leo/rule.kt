@@ -14,12 +14,12 @@ fun rule(patternTerm: Term<Pattern>, body: Body) =
 infix fun Term<Pattern>.returns(body: Body) =
 	Rule(this, body)
 
-fun Term<Value>.parseRule(localFunction: Function): Rule? =
-	match(defineWord) { defineScript ->
-		defineScript.match(itWord, isWord) { itScript, isScript ->
-			itScript.parsePatternTerm.let { patternTerm ->
-				isScript.parseSelectorTerm(patternTerm).let { template ->
-					patternTerm returns Body(template, localFunction)
+fun Term<*>.parseRule(localFunction: Function): Rule? =
+	match(defineWord) { defineTerm ->
+		defineTerm.match(itWord, isWord) { itTerm, isTerm ->
+			itTerm.parsePatternTerm.let { patternTerm ->
+				isTerm.parseSelectorTerm(patternTerm).let { selectorTerm ->
+					patternTerm returns Body(selectorTerm, localFunction)
 				}
 			}
 		}

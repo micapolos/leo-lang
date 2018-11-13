@@ -22,10 +22,10 @@ fun <V> Selector.invoke(argument: Term<V>): Term<V>? =
 		this?.select(word)
 	}
 
-fun Term<Value>.parseSelector(pattern: Term<Pattern>): Selector? =
+fun Term<*>.parseSelector(pattern: Term<Pattern>): Selector? =
 	parseSelectorToPattern(pattern)?.first
 
-fun Term<Value>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector, Term<Pattern>>? =
+fun Term<*>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector, Term<Pattern>>? =
 	when (this) {
 		is Term.Identifier ->
 			if (word == thisWord) (selector() to pattern)
@@ -41,8 +41,8 @@ fun Term<Value>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector, T
 	}
 
 
-fun Term<Selector>.apply(script: Term<Value>): Term<Value> =
-	invoke(script)!!
+fun Term<Selector>.apply(valueTerm: Term<Value>): Term<Value> =
+	invoke(valueTerm)!!
 
 fun <V> Term<Selector>.invoke(argument: Term<V>): Term<V>? =
 	when (this) {
@@ -71,21 +71,21 @@ fun <V> Field<Selector>.invoke(argument: Term<V>): Field<V>? =
 		key fieldTo value
 	}
 
-// === script parsing
+// === parsing
 
-fun Term<Value>.parseSelectorTerm(pattern: Term<Pattern>): Term<Selector> =
-	parseSelector(pattern)?.metaTerm ?: when (this) {
+fun Term<*>.parseSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
+	parseSelector(patternTerm)?.metaTerm ?: when (this) {
 		is Term.Identifier -> term(word)
 		is Term.Structure ->
 			fieldStack.reverse
-				.foldTop { it.parseSelectorField(pattern).stack }
-				.andPop { stack, field -> stack.push(field.parseSelectorField(pattern)) }
+				.foldTop { it.parseSelectorField(patternTerm).stack }
+				.andPop { stack, field -> stack.push(field.parseSelectorField(patternTerm)) }
 				.term
 		is Term.Meta -> fail
 	}
 
-fun Field<Value>.parseSelectorField(pattern: Term<Pattern>): Field<Selector> =
-	key fieldTo value.parseSelectorTerm(pattern)
+fun Field<*>.parseSelectorField(patternTerm: Term<Pattern>): Field<Selector> =
+	key fieldTo value.parseSelectorTerm(patternTerm)
 
 // === reflect
 

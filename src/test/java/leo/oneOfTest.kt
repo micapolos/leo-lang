@@ -44,21 +44,21 @@ class PatternTest {
 	}
 
 	@Test
-	fun scriptMatches_first() {
+	fun termMatches_first() {
 		term<Value>(oneWord)
 			.matches(oneOf(term(oneWord), term(twoWord)))
 			.assertEqualTo(true)
 	}
 
 	@Test
-	fun scriptMatches_second() {
+	fun termMatches_second() {
 		term<Value>(twoWord)
 			.matches(oneOf(term(oneWord), term(twoWord)))
 			.assertEqualTo(true)
 	}
 
 	@Test
-	fun scriptMatches_none() {
+	fun termMatches_none() {
 		term<Value>(ageWord)
 			.matches(oneOf(term(oneWord), term(twoWord)))
 			.assertEqualTo(false)
@@ -112,14 +112,14 @@ class PatternTest {
 	}
 
 	@Test
-	fun scriptMatches_literal() {
+	fun termMatches_literal() {
 		term<Value>(oneWord)
 			.matches(term(oneWord))
 			.assertEqualTo(true)
 	}
 
 	@Test
-	fun scriptMatches_list() {
+	fun termMatches_list() {
 		term<Value>(
 			nameWord fieldTo term(stringWord),
 			ageWord fieldTo term(numberWord))
@@ -131,7 +131,7 @@ class PatternTest {
 	}
 
 	@Test
-	fun scriptMatches_oneOf_match() {
+	fun termMatches_oneOf_match() {
 		term<Value>(nameWord)
 			.matches(
 				term(
