@@ -18,7 +18,7 @@ val identityFunction
 fun Function.push(rule: Rule) =
 	copy(ruleStackOrNull = ruleStackOrNull.push(rule))
 
-fun Function.invoke(argument: Script): Script =
+fun Function.invoke(argument: Term<Value>): Term<Value> =
 	ruleStackOrNull
 		?.top { rule -> argument.matches(rule.pattern) }
 		?.body
@@ -27,7 +27,7 @@ fun Function.invoke(argument: Script): Script =
 
 // === reflect
 
-val Function.reflect: Field<Nothing>
+val Function.reflect: Field<Value>
 	get() =
 		functionWord
 			.fieldTo(

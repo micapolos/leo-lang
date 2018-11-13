@@ -9,7 +9,7 @@ class ReplTest {
 		emptyRepl
 			.push("one(number)")
 			?.evaluatedScript
-			.assertEqualTo(script(term(oneWord fieldTo term(numberWord))))
+			.assertEqualTo(term(oneWord fieldTo term(numberWord)))
 	}
 
 	@Test
@@ -17,7 +17,7 @@ class ReplTest {
 		emptyRepl
 			.push("define(it(two)is(number))it(two)")
 			?.evaluatedScript
-			.assertEqualTo(script(term(itWord fieldTo term(numberWord))))
+			.assertEqualTo(term(itWord fieldTo term(numberWord)))
 	}
 
 	@Test
@@ -25,6 +25,6 @@ class ReplTest {
 		emptyRepl
 			.push("define(it(leo(reader)read(byte(bit(zero)bit(zero)bit(zero)bit(zero)bit(one)bit(zero)bit(one)bit(zero))))is(leo(reader)))\nit(\none\n)")
 			?.evaluatedScript
-			.assertEqualTo(script(term(itWord fieldTo term(oneWord))))
+			.assertEqualTo(term(itWord fieldTo term(oneWord)))
 	}
 }

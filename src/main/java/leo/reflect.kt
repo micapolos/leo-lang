@@ -2,7 +2,7 @@ package leo
 
 import leo.base.*
 
-val Bit.reflect: Field<Nothing>
+val Bit.reflect: Field<Value>
 	get() =
 		bitWord fieldTo term(
 			when (this) {
@@ -11,16 +11,16 @@ val Bit.reflect: Field<Nothing>
 			}
 		)
 
-val Byte.reflect: Field<Nothing>
+val Byte.reflect: Field<Value>
 	get() =
 		byteWord fieldTo bitStack.reflect(Bit::reflect)
 
-val ByteArray.reflect: Field<Nothing>
+val ByteArray.reflect: Field<Value>
 	get() =
 		byteWord fieldTo
-			fold(nullStack<Field<Nothing>>()) { fieldStack, byte ->
+			fold(nullStack<Field<Value>>()) { fieldStack, byte ->
 				fieldStack.push(byte.reflect)
 			}.let { fieldStackOrNull ->
-				if (fieldStackOrNull == null) term<Nothing>(arrayWord)
+				if (fieldStackOrNull == null) term<Value>(arrayWord)
 				else term(arrayWord fieldTo fieldStackOrNull.term)
 			}

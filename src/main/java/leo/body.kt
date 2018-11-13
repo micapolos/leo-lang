@@ -2,17 +2,17 @@ package leo
 
 // TODO: What about recursion?
 data class Body(
-	val template: Template,
+	val selectorTerm: Term<Selector>,
 	val function: Function)
 
-fun body(template: Template, function: Function) =
-	Body(template, function)
+fun body(selectorTerm: Term<Selector>, function: Function) =
+	Body(selectorTerm, function)
 
-fun Body.apply(argument: Script): Script =
-	function.invoke(template.apply(argument))
+fun Body.apply(argument: Term<Value>): Term<Value> =
+	function.invoke(selectorTerm.apply(argument))
 
-val Body.reflect: Field<Nothing>
+val Body.reflect: Field<Value>
 	get() =
 		bodyWord fieldTo term(
-			template.reflect,
+			selectorTerm.reflect { selector -> term(selector.reflect) },
 			function.reflect)

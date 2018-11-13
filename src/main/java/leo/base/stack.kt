@@ -121,7 +121,7 @@ fun <V, F> Stack<V>.reflect(key: Word, reflectValue: (V) -> Field<F>): Field<F> 
 			.andPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
 			.term)
 
-fun <V> Stack<V>.reflect(reflectValue: (V) -> Field<Nothing>): Term<Nothing> =
+fun <V> Stack<V>.reflect(reflectValue: (V) -> Field<Value>): Term<Value> =
 	reverse
 		.foldTop { value -> reflectValue(value).stack }
 		.andPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
@@ -129,7 +129,7 @@ fun <V> Stack<V>.reflect(reflectValue: (V) -> Field<Nothing>): Term<Nothing> =
 
 // === parse
 
-fun <V> Term<Nothing>.parseStack(parseValue: (Field<Nothing>) -> V?): Stack<V>? =
+fun <V> Term<Value>.parseStack(parseValue: (Field<Value>) -> V?): Stack<V>? =
 	structureTermOrNull
 		?.fieldStack
 		?.reverse

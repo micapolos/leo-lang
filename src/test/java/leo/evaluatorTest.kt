@@ -14,9 +14,9 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -29,9 +29,9 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = oneWord,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -45,13 +45,13 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = null),
+							valueTermOrNull = null),
 						Scope(
 							parentWord = oneWord,
 							function = identityFunction,
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -66,13 +66,13 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = null),
+							valueTermOrNull = null),
 						Scope(
 							parentWord = oneWord,
 							function = identityFunction,
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = numberWord,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -88,9 +88,9 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = script(term(oneWord fieldTo term(numberWord))))),
+							valueTermOrNull = term(oneWord fieldTo term(numberWord)))),
 					wordOrNull = null,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -107,9 +107,9 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = script(term(oneWord fieldTo term(numberWord))))),
+							valueTermOrNull = term(oneWord fieldTo term(numberWord)))),
 					wordOrNull = twoWord,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -127,13 +127,13 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = script(term(oneWord fieldTo term(numberWord)))),
+							valueTermOrNull = term(oneWord fieldTo term(numberWord))),
 						Scope(
 							parentWord = twoWord,
 							function = identityFunction,
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -152,13 +152,13 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = script(term(oneWord fieldTo term(numberWord)))),
+							valueTermOrNull = term(oneWord fieldTo term(numberWord))),
 						Scope(
 							parentWord = twoWord,
 							function = identityFunction,
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = stringWord,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 
@@ -179,12 +179,11 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = script(
-								term(
-									oneWord fieldTo term(numberWord),
-									twoWord fieldTo term(stringWord))))),
+							valueTermOrNull = term(
+								oneWord fieldTo term(numberWord),
+								twoWord fieldTo term(stringWord)))),
 					wordOrNull = null,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -208,11 +207,11 @@ class EvaluatorTest {
 							parentWord = evaluateWord,
 							function = Function(
 								stack(
-									pattern(term(oneWord)) returns
-										Body(template(term(numberWord)), identityFunction))),
-							scriptOrNull = null)),
+									term<Pattern>(oneWord) returns
+										Body(term(numberWord), identityFunction))),
+							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -237,13 +236,13 @@ class EvaluatorTest {
 							parentWord = evaluateWord,
 							function = Function(
 								stack(
-									pattern(term(oneWord)) returns
+									term<Pattern>(oneWord) returns
 										body(
-											template(term(numberWord)),
+											term(numberWord),
 											identityFunction))),
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = itWord,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -269,22 +268,22 @@ class EvaluatorTest {
 							parentWord = evaluateWord,
 							function = Function(
 								stack(
-									pattern(term(oneWord)) returns
+									term<Pattern>(oneWord) returns
 										body(
-											template(term(numberWord)),
+											term(numberWord),
 											identityFunction))),
-							scriptOrNull = null),
+							valueTermOrNull = null),
 						Scope(
 							parentWord = itWord,
 							function = Function(
 								stack(
-									pattern(term(oneWord)) returns
+									term<Pattern>(oneWord) returns
 										body(
-											template(term(numberWord)),
+											term(numberWord),
 											identityFunction))),
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = null,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -311,22 +310,22 @@ class EvaluatorTest {
 							parentWord = evaluateWord,
 							function = Function(
 								stack(
-									pattern(term(oneWord)) returns
+									term<Pattern>(oneWord) returns
 										body(
-											template(term(numberWord)),
+											term(numberWord),
 											identityFunction))),
-							scriptOrNull = null),
+							valueTermOrNull = null),
 						Scope(
 							parentWord = itWord,
 							function = Function(
 								stack(
-									pattern(term(oneWord)) returns
+									term<Pattern>(oneWord) returns
 										body(
-											template(term(numberWord)),
+											term(numberWord),
 											identityFunction))),
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = oneWord,
-					readerScript = leoReaderScript
+					readerValueTerm = leoReaderScript()
 				)
 			)
 	}
@@ -356,13 +355,13 @@ class EvaluatorTest {
 							parentWord = evaluateWord,
 							function = Function(
 								stack(
-									pattern(term(oneWord)) returns
+									term<Pattern>(oneWord) returns
 										body(
-											template(term(numberWord)),
+											term(numberWord),
 											identityFunction))),
-							scriptOrNull = script(term(itWord fieldTo term(numberWord))))),
+							valueTermOrNull = term(itWord fieldTo term(numberWord)))),
 					wordOrNull = null,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 
 	@Test
@@ -375,8 +374,8 @@ class EvaluatorTest {
 						Scope(
 							parentWord = evaluateWord,
 							function = identityFunction,
-							scriptOrNull = null)),
+							valueTermOrNull = null)),
 					wordOrNull = stack(Letter.A).word,
-					readerScript = leoReaderScript))
+					readerValueTerm = leoReaderScript()))
 	}
 }

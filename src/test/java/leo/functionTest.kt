@@ -8,38 +8,38 @@ class FunctionTest {
 	@Test
 	fun invoke_fallback() {
 		Function(null)
-			.invoke(script(term(oneWord)))
-			.assertEqualTo(script(term(oneWord)))
+			.invoke(term(oneWord))
+			.assertEqualTo(term(oneWord))
 	}
 
 	@Test
 	fun invoke_single() {
 		Function(
 			stack(
-				pattern(term(nameWord)) returns body(template(term(stringWord)), identityFunction),
-				pattern(term(ageWord)) returns body(template(term(numberWord)), identityFunction)))
-			.invoke(script(term(nameWord)))
-			.assertEqualTo(script(term(stringWord)))
+				term<Pattern>(nameWord) returns body(term(stringWord), identityFunction),
+				term<Pattern>(ageWord) returns body(term(numberWord), identityFunction)))
+			.invoke(term(nameWord))
+			.assertEqualTo(term(stringWord))
 	}
 
 	@Test
 	fun invoke_chain() {
 		Function(
 			stack(
-				pattern(term(nameWord)) returns
+				term<Pattern>(nameWord) returns
 					body(
-						template(term(stringWord)),
+						term(stringWord),
 						identityFunction),
-				pattern(term(ageWord)) returns
+				term<Pattern>(ageWord) returns
 					body(
-						template(term(nameWord)),
+						term(nameWord),
 						Function(
 							stack(
-								pattern(term(nameWord)) returns
+								term<Pattern>(nameWord) returns
 									body(
-										template(term(stringWord)),
+										term(stringWord),
 										identityFunction))))))
-			.invoke(script(term(ageWord)))
-			.assertEqualTo(script(term(stringWord)))
+			.invoke(term(ageWord))
+			.assertEqualTo(term(stringWord))
 	}
 }

@@ -5,13 +5,13 @@ import leo.base.*
 data class Evaluator(
 	val scopeStack: Stack<Scope>,
 	val wordOrNull: Word?,
-	val readerScript: Script) {
+	val readerValueTerm: Term<Value>) {
 	override fun toString() = reflect.string
 }
 
 val Stack<Scope>.evaluator
 	get() =
-		Evaluator(this, null, leoReaderScript)
+		Evaluator(this, null, leoReaderScript())
 
 val Word.evaluator
 	get() =
@@ -20,19 +20,19 @@ val Word.evaluator
 val emptyEvaluator =
 	evaluateWord.evaluator
 
-val Evaluator.evaluatedScript: Script?
+val Evaluator.evaluatedScript: Term<Value>?
 	get() =
 		if (scopeStack.pop != null) null
-		else if (readerScript != leoReaderScript) null
+		else if (readerValueTerm != leoReaderScript<Value>()) null
 		else scopeStack.top.let { scope ->
-			if (wordOrNull == null) scope.scriptOrNull
-			else scope.scriptOrNull.push(wordOrNull)
+			if (wordOrNull == null) scope.valueTermOrNull
+			else scope.valueTermOrNull.push(wordOrNull)
 		}
 
 fun <R> R.foldBytes(evaluator: Evaluator, fn: R.(Byte) -> R): R =
 	evaluator.scopeStack.reverse.foldTop { scope ->
-		if (scope.scriptOrNull == null) this
-		else foldBytes(scope.scriptOrNull, fn)
+		if (scope.valueTermOrNull == null) this
+		else foldBytes(scope.valueTermOrNull, fn)
 	}.andPop { folded, scope ->
 		folded
 			.fn('('.toByte())
@@ -72,30 +72,30 @@ val Evaluator.end: Evaluator?
 			}?.let { updatedScopeStack ->
 				updatedScopeStack.pop?.let { poppedScopeStack ->
 					poppedScopeStack.updateTopOrNull { scope ->
-						scope.push(updatedScopeStack.top.parentWord fieldTo updatedScopeStack.top.scriptOrNull?.term!!)
+						scope.push(updatedScopeStack.top.parentWord fieldTo updatedScopeStack.top.valueTermOrNull!!)
 					}
 				}
 			}?.evaluator
 		else scopeStack
 			.pop
 			?.let { poppedScopeStack ->
-				if (scopeStack.top.scriptOrNull == null)
+				if (scopeStack.top.valueTermOrNull == null)
 					poppedScopeStack.updateTopOrNull { scope ->
 						scope.push(scopeStack.top.parentWord)
 					}
 				else
 					poppedScopeStack.updateTopOrNull { scope ->
-						scope.push(scopeStack.top.parentWord fieldTo scopeStack.top.scriptOrNull.term)
+						scope.push(scopeStack.top.parentWord fieldTo scopeStack.top.valueTermOrNull)
 					}
 			}
 			?.evaluator
 
 // === reflect ===
 
-val Evaluator.reflect: Field<Nothing>
+val Evaluator.reflect: Field<Value>
 	get() =
 		evaluatorWord fieldTo term(
 			scopeStack.reflect(scopeWord, Scope::reflect),
 			wordOrNull.orNullReflect(wordWord, Word::reflect),
-			readerWord fieldTo readerScript.term)
+			readerWord fieldTo readerValueTerm)
 

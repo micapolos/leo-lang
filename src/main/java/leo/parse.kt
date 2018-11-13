@@ -2,15 +2,15 @@ package leo
 
 import leo.base.*
 
-val Field<Nothing>.parseBit: Bit?
+val Field<Value>.parseBit: Bit?
 	get() =
 		when {
-			this == bitWord fieldTo term<Nothing>(zeroWord) -> Bit.ZERO
-			this == bitWord fieldTo term<Nothing>(oneWord) -> Bit.ONE
+			this == bitWord fieldTo term<Value>(zeroWord) -> Bit.ZERO
+			this == bitWord fieldTo term<Value>(oneWord) -> Bit.ONE
 			else -> null
 		}
 
-val Field<Nothing>.parseByte: Byte?
+val Field<Value>.parseByte: Byte?
 	get() =
 		if (key != byteWord) null
 		else value

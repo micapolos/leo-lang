@@ -25,7 +25,7 @@ fun Repl.push(byte: Byte): Repl? =
 		}
 	}
 
-val Repl.evaluatedScript: Script?
+val Repl.evaluatedScript: Term<Value>?
 	get() =
 		evaluator.evaluatedScript
 
@@ -41,7 +41,7 @@ fun Repl.push(string: String): Repl? =
 
 // === reflect
 
-val Repl.reflect: Field<Nothing>
+val Repl.reflect: Field<Value>
 	get() =
 		replWord fieldTo term(
 			reader.reflect,

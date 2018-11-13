@@ -48,7 +48,7 @@ fun <V, R> Field<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
 
 // === reflect
 
-fun <V> Field<V>.reflect(reflectValue: (V) -> Term<Nothing>): Field<Nothing> =
+fun <V> Field<V>.reflect(reflectValue: (V) -> Term<Value>): Field<Value> =
 	fieldWord fieldTo term(
 		keyWord fieldTo term(key.reflect),
 		valueWord fieldTo term(value.reflect(reflectValue))
@@ -60,7 +60,7 @@ fun <V> Field<V>?.orNullField(word: Word): Field<V> =
 fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
 	key fieldTo value.map(fn)
 
-fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Nothing>): Field<Nothing> =
+fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Value>): Field<Value> =
 	this?.let(reflect) ?: word.fieldTo(term(nullWord))
 
 // === fold bytes

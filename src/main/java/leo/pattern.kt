@@ -3,71 +3,90 @@ package leo
 import leo.base.*
 
 data class Pattern(
-	val term: Term<OneOf>) {
+	val patternTermStack: Stack<Term<Pattern>>) {
 	override fun toString() = reflect.string
 }
 
-val Term<OneOf>.pattern: Pattern
+val Stack<Term<Pattern>>.pattern
 	get() =
 		Pattern(this)
 
-fun pattern(term: Term<OneOf>): Pattern =
-	term.pattern
+fun oneOf(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
+	stack(patternTerm, *patternTerms).pattern
 
-fun pattern(oneOf: OneOf): Pattern =
-	oneOf.metaTerm.pattern
-
-// === Script parsing ===
-
-val Script.parsePattern: Pattern
+val Term<Value>.parsePattern: Pattern?
 	get() =
-		when (term) {
-			is Term.Meta -> fail
-			is Term.Identifier -> Term.Identifier<OneOf>(term.word).pattern
-			is Term.Structure -> parseOneOf?.metaTerm?.pattern ?: term.parseListPattern
+		structureTermOrNull?.let { listTerm ->
+			true.fold(listTerm.fieldStack) { field ->
+				this && field.key == eitherWord
+			}.let { isOneOf ->
+				if (!isOneOf) null
+				else structureTermOrNull
+					?.fieldStack
+					?.reverse
+					?.foldTop { field -> field.value.parsePatternTerm.stack }
+					?.andPop { stack, field -> stack.push(field.value.parsePatternTerm) }
+					?.pattern
+			}
 		}
 
-val Term.Structure<Nothing>.parseListPattern: Pattern
+// === matching
+
+fun Term<Value>.matches(pattern: Pattern): Boolean =
+	pattern.patternTermStack.top { patternTerm -> matches(patternTerm) } != null
+
+// === matching
+
+fun Term<Value>.matches(patternTerm: Term<Pattern>): Boolean =
+	when (patternTerm) {
+		is Term.Meta -> matches(patternTerm)
+		is Term.Identifier -> this is Term.Identifier && this.matches(patternTerm)
+		is Term.Structure -> this is Term.Structure && this.matches(patternTerm)
+	}
+
+fun Term<Value>.matches(patternTerm: Term.Meta<Pattern>): Boolean =
+	matches(patternTerm.value)
+
+fun Term.Identifier<Value>.matches(patternTerm: Term.Identifier<Pattern>) =
+	word == patternTerm.word
+
+fun Term.Structure<Value>.matches(patternTerm: Term.Structure<Pattern>): Boolean =
+	fieldStack.top.matches(patternTerm.fieldStack.top) &&
+		if (fieldStack.pop == null) patternTerm.fieldStack.pop == null
+		else patternTerm.fieldStack.pop != null && fieldStack.pop.term.matches(patternTerm.fieldStack.pop.term)
+
+fun Field<Value>.matches(patternTerm: Field<Pattern>) =
+	key == patternTerm.key && value.matches(patternTerm.value)
+
+// === parsing
+
+val Term<Value>.parsePatternTerm: Term<Pattern>
+	get() =
+		when (this) {
+			is Term.Meta -> fail
+			is Term.Identifier -> Term.Identifier(word)
+			is Term.Structure -> parsePattern?.metaTerm ?: parseListPattern
+		}
+
+val Term.Structure<Value>.parseListPattern: Term<Pattern>
 	get() =
 		fieldStack
 			.reverse
 			.foldTop { it.parsePatternField.stack }
 			.andPop { stack, field -> stack.push(field.parsePatternField) }
 			.term
-			.pattern
 
-val Field<Nothing>.parsePatternField: Field<OneOf>
+val Field<Value>.parsePatternField: Field<Pattern>
 	get() =
-		key fieldTo value.script.parsePattern.term
-
-// === matching
-
-fun Script.matches(pattern: Pattern): Boolean =
-	term.matches(pattern.term)
-
-fun Term<Nothing>.matches(oneOfTerm: Term<OneOf>): Boolean =
-	when (oneOfTerm) {
-		is Term.Meta -> matches(oneOfTerm)
-		is Term.Identifier -> this is Term.Identifier && this.matches(oneOfTerm)
-		is Term.Structure -> this is Term.Structure && this.matches(oneOfTerm)
-	}
-
-fun Term<Nothing>.matches(oneOfTerm: Term.Meta<OneOf>): Boolean =
-	matches(oneOfTerm.value)
-
-fun Term.Identifier<Nothing>.matches(oneOfTerm: Term.Identifier<OneOf>) =
-	word == oneOfTerm.word
-
-fun Term.Structure<Nothing>.matches(oneOfTerm: Term.Structure<OneOf>): Boolean =
-	fieldStack.top.matches(oneOfTerm.fieldStack.top) &&
-		if (fieldStack.pop == null) oneOfTerm.fieldStack.pop == null
-		else oneOfTerm.fieldStack.pop != null && fieldStack.pop.term.matches(oneOfTerm.fieldStack.pop.term)
-
-fun Field<Nothing>.matches(oneOfTerm: Field<OneOf>) =
-	key == oneOfTerm.key && value.matches(oneOfTerm.value)
+		key fieldTo value.parsePatternTerm
 
 // === reflect
 
-val Pattern.reflect: Field<Nothing>
+val Pattern.reflect: Field<Value>
 	get() =
-		patternWord fieldTo term(term.reflect { oneOf -> term(oneOf.reflect) })
+		oneWord fieldTo term(
+			ofWord fieldTo patternTermStack.map { patternTerm ->
+				patternTerm.reflect { oneOf ->
+					term(oneOf.reflect)
+				}
+			}.term)

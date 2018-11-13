@@ -12,41 +12,39 @@ class ReaderTest {
 	val readerFunction =
 		Function(
 			stack(
-				pattern(
-					term(
-						leoReaderField,
-						readWord fieldTo term(1.toByte().reflect))) returns
+				rule(
+					term<Pattern>(
+						leoReaderField(),
+						readWord fieldTo term(1.toByte().reflect).cast()),
 					body(
-						template(
-							term(
-								leoReaderField,
-								readWord fieldTo term(10.toByte().reflect))),
-						identityFunction),
-				pattern(
-					term(
-						leoReaderField,
-						readWord fieldTo term(2.toByte().reflect))) returns
+						term(
+							leoReaderField(),
+							readWord fieldTo term(10.toByte().reflect).cast()),
+						identityFunction)),
+				rule(
+					term<Pattern>(
+						leoReaderField(),
+						readWord fieldTo term(2.toByte().reflect).cast()),
 					body(
-						template(
-							term(
-								leoReaderField,
-								readWord fieldTo term(20.toByte().reflect),
-								readWord fieldTo term(30.toByte().reflect))),
-						identityFunction),
-				pattern(
-					term(
-						leoReaderField,
-						readWord fieldTo term(3.toByte().reflect))) returns
+						term(
+							leoReaderField(),
+							readWord fieldTo term(20.toByte().reflect).cast(),
+							readWord fieldTo term(30.toByte().reflect).cast()),
+						identityFunction)),
+				rule(
+					term<Pattern>(
+						leoReaderField(),
+						readWord fieldTo term(3.toByte().reflect).cast()),
 					body(
-						template(term(errorWord)),
-						identityFunction),
-				pattern(
-					term(
-						leoReaderField,
-						readWord fieldTo term(4.toByte().reflect))) returns
+						term(errorWord),
+						identityFunction)),
+				rule(
+					term<Pattern>(
+						leoReaderField(),
+						readWord fieldTo term(4.toByte().reflect).cast()),
 					body(
-						template(term(leoReaderField)),
-						identityFunction)))
+						term(leoReaderField()),
+						identityFunction))))
 
 	@Test
 	fun read_1_becomes_10() {
@@ -66,7 +64,7 @@ class ReaderTest {
 	fun read_3_becomes_error() {
 		"x"
 			.read(emptyReader, 3.toByte(), readerFunction::invoke, String::plus)
-			.assertEqualTo("x" to emptyReader.copy(script = script(term(errorWord))))
+			.assertEqualTo("x" to emptyReader.copy(valueTerm = term(errorWord)))
 	}
 
 	@Test

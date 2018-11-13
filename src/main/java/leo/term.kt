@@ -69,6 +69,13 @@ val <V> Term<V>.structureTermOrNull
 	get() =
 		this as? Term.Structure<V>
 
+fun <V> Term<V>?.orNullField(word: Word): Field<V> =
+	word fieldTo orNullTerm
+
+val <V> Term<V>?.orNullTerm: Term<V>
+	get() =
+		this ?: term(nullWord)
+
 // === Appendable (core)
 
 fun Appendable.appendCore(term: Term<*>): Appendable =
@@ -193,26 +200,26 @@ fun <V, R> Term.Structure<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
 
 // === reflect
 
-fun <V> Term<V>.fieldReflect(reflectValue: (V) -> Field<Nothing>): Field<Nothing> =
+fun <V> Term<V>.fieldReflect(reflectValue: (V) -> Field<Value>): Field<Value> =
 	reflect { value -> term(reflectValue(value)) }
 
-fun <V> Term<V>.reflect(reflectValue: (V) -> Term<Nothing>): Field<Nothing> =
+fun <V> Term<V>.reflect(reflectValue: (V) -> Term<Value>): Field<Value> =
 	termWord fieldTo term(termReflect(reflectValue))
 
-fun <V> Term<V>.termReflect(reflectValue: (V) -> Term<Nothing>): Field<Nothing> =
+fun <V> Term<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
 	when (this) {
 		is Term.Meta -> this.termReflect(reflectValue)
 		is Term.Identifier -> this.termReflect()
 		is Term.Structure -> this.termReflect(reflectValue)
 	}
 
-fun <V> Term.Meta<V>.termReflect(reflectValue: (V) -> Term<Nothing>): Field<Nothing> =
+fun <V> Term.Meta<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
 	metaWord fieldTo reflectValue(value)
 
-fun <V> Term.Identifier<V>.termReflect(): Field<Nothing> =
+fun <V> Term.Identifier<V>.termReflect(): Field<Value> =
 	identifierWord fieldTo term(word.reflect)
 
-fun <V> Term.Structure<V>.termReflect(reflectValue: (V) -> Term<Nothing>): Field<Nothing> =
+fun <V> Term.Structure<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
 	structureWord fieldTo fieldStack.reflect { field ->
 		field.reflect(reflectValue)
 	}
@@ -223,6 +230,9 @@ fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
 		is Term.Identifier -> Term.Identifier(word)
 		is Term.Structure -> Term.Structure(fieldStack.map { field -> field.map(fn) })
 	}
+
+fun <V, R> Term<V>.cast(): Term<R> =
+	map { fail }
 
 // === folding bytes
 

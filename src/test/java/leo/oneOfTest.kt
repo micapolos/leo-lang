@@ -4,66 +4,140 @@ import leo.base.assertEqualTo
 import leo.base.string
 import kotlin.test.Test
 
-class OneOfTest {
+class PatternTest {
 	@Test
 	fun string() {
-		oneOf(pattern(term(oneWord)), pattern(term(twoWord)))
+		oneOf(term(oneWord), term(twoWord))
 			.string
-			.assertEqualTo("one of(pattern term identifier word one, pattern term identifier word two)")
+			.assertEqualTo("one of(term identifier word one, term identifier word two)")
 	}
 
 	@Test
 	fun parse_onePattern() {
-		script(
-			term(eitherWord fieldTo term(oneWord)))
-			.parseOneOf
+		term<Value>(eitherWord fieldTo term(oneWord))
+			.parsePattern
 			.assertEqualTo(
 				oneOf(
-					pattern(term(oneWord))))
+					term(oneWord)))
 	}
 
 	@Test
 	fun parse_manyPatterns() {
-		script(
-			term(
-				eitherWord fieldTo term(oneWord),
-				eitherWord fieldTo term(twoWord)))
-			.parseOneOf
+		term<Value>(
+			eitherWord fieldTo term(oneWord),
+			eitherWord fieldTo term(twoWord))
+			.parsePattern
 			.assertEqualTo(
 				oneOf(
-					pattern(term(oneWord)),
-					pattern(term(twoWord))))
+					term(oneWord),
+					term(twoWord)))
 	}
 
 	@Test
 	fun parse_illegal() {
-		script(
-			term(
-				eitherWord fieldTo term(oneWord),
-				personWord fieldTo term(nameWord),
-				eitherWord fieldTo term(twoWord)))
-			.parseOneOf
+		term<Value>(
+			eitherWord fieldTo term(oneWord),
+			personWord fieldTo term(nameWord),
+			eitherWord fieldTo term(twoWord))
+			.parsePattern
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun scriptMatches_first() {
-		script(term(oneWord))
-			.matches(oneOf(pattern(term(oneWord)), pattern(term(twoWord))))
+		term<Value>(oneWord)
+			.matches(oneOf(term(oneWord), term(twoWord)))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun scriptMatches_second() {
-		script(term(twoWord))
-			.matches(oneOf(pattern(term(oneWord)), pattern(term(twoWord))))
+		term<Value>(twoWord)
+			.matches(oneOf(term(oneWord), term(twoWord)))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun scriptMatches_none() {
-		script(term(ageWord))
-			.matches(oneOf(pattern(term(oneWord)), pattern(term(twoWord))))
+		term<Value>(ageWord)
+			.matches(oneOf(term(oneWord), term(twoWord)))
 			.assertEqualTo(false)
+	}
+
+	@Test
+	fun parse_literal() {
+		term<Value>(oneWord)
+			.parsePatternTerm
+			.assertEqualTo(term(oneWord))
+	}
+
+	@Test
+	fun parse_list() {
+		term<Value>(
+			nameWord fieldTo term(stringWord),
+			ageWord fieldTo term(numberWord))
+			.parsePatternTerm
+			.assertEqualTo(
+				term(
+					nameWord fieldTo term(stringWord),
+					ageWord fieldTo term(numberWord)))
+	}
+
+	@Test
+	fun parse_oneOf() {
+		term<Value>(
+			eitherWord fieldTo term(stringWord),
+			eitherWord fieldTo term(numberWord))
+			.parsePatternTerm
+			.assertEqualTo(
+				term(
+					oneOf(
+						term(stringWord),
+						term(numberWord))))
+	}
+
+	@Test
+	fun parse_innerOneOf() {
+		term<Value>(
+			oneWord fieldTo term(
+				eitherWord fieldTo term(stringWord),
+				eitherWord fieldTo term(numberWord)))
+			.parsePatternTerm
+			.assertEqualTo(
+				term(
+					oneWord fieldTo term(
+						oneOf(
+							term(stringWord),
+							term(numberWord)))))
+	}
+
+	@Test
+	fun scriptMatches_literal() {
+		term<Value>(oneWord)
+			.matches(term(oneWord))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun scriptMatches_list() {
+		term<Value>(
+			nameWord fieldTo term(stringWord),
+			ageWord fieldTo term(numberWord))
+			.matches(
+				term(
+					nameWord fieldTo term(stringWord),
+					ageWord fieldTo term(numberWord)))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun scriptMatches_oneOf_match() {
+		term<Value>(nameWord)
+			.matches(
+				term(
+					oneOf(
+						term(nameWord),
+						term(ageWord))))
+			.assertEqualTo(true)
 	}
 }

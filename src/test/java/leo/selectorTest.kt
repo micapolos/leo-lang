@@ -54,88 +54,128 @@ class SelectorTest {
 
 	@Test
 	fun parse_this() {
-		script(term(thisWord))
-			.parseSelector(pattern(term(oneWord)))
+		term<Value>(thisWord)
+			.parseSelector(term(oneWord))
 			.assertEqualTo(selector())
 	}
 
 	@Test
 	fun parse_simple() {
-		script(term(oneWord fieldTo term(thisWord)))
+		term<Value>(oneWord fieldTo term(thisWord))
 			.parseSelector(
-				pattern(
-					term(
-						oneWord fieldTo term(numberWord),
-						twoWord fieldTo term(stringWord))))
+				term(
+					oneWord fieldTo term(numberWord),
+					twoWord fieldTo term(stringWord)))
 			.assertEqualTo(selector(oneWord))
 	}
 
 	@Test
 	fun parse_deep() {
-		script(term(twoWord fieldTo term(oneWord fieldTo term(thisWord))))
-			.parseSelector(pattern(term(oneWord fieldTo term(twoWord fieldTo term(numberWord)))))
+		term<Value>(twoWord fieldTo term(oneWord fieldTo term(thisWord)))
+			.parseSelector(term(oneWord fieldTo term(twoWord fieldTo term(numberWord))))
 			.assertEqualTo(selector(oneWord, twoWord))
 	}
 
 	@Test
 	fun parse_mismatch() {
-		script(term(oneWord fieldTo term(thisWord)))
-			.parseSelector(pattern(term(twoWord fieldTo term(numberWord))))
+		term<Value>(oneWord fieldTo term(thisWord))
+			.parseSelector(term(twoWord fieldTo term(numberWord)))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun parse_multiple() {
-		script(term(oneWord fieldTo term(thisWord)))
+		term<Value>(oneWord fieldTo term(thisWord))
 			.parseSelector(
-				pattern(
-					term(
-						oneWord fieldTo term(numberWord),
-						oneWord fieldTo term(stringWord))))
+				term(
+					oneWord fieldTo term(numberWord),
+					oneWord fieldTo term(stringWord)))
 			.assertEqualTo(selector(oneWord))
 	}
 
 	@Test
 	fun parse_multiple_last() {
-		script(term(lastWord fieldTo term(oneWord fieldTo term(thisWord))))
+		term<Value>(lastWord fieldTo term(oneWord fieldTo term(thisWord)))
 			.parseSelector(
-				pattern(
-					term(
-						oneWord fieldTo term(numberWord),
-						oneWord fieldTo term(stringWord))))
+				term(
+					oneWord fieldTo term(numberWord),
+					oneWord fieldTo term(stringWord)))
 			.assertEqualTo(selector(oneWord, lastWord))
 	}
 
 	@Test
 	fun parse_multiple_previous() {
-		script(term(previousWord fieldTo term(oneWord fieldTo term(thisWord))))
+		term<Value>(previousWord fieldTo term(oneWord fieldTo term(thisWord)))
 			.parseSelector(
-				pattern(
-					term(
-						oneWord fieldTo term(numberWord),
-						oneWord fieldTo term(stringWord))))
+				term(
+					oneWord fieldTo term(numberWord),
+					oneWord fieldTo term(stringWord)))
 			.assertEqualTo(selector(oneWord, previousWord))
 	}
 
 	@Test
 	fun parse_multiple_previous_last() {
-		script(term(lastWord fieldTo (term(previousWord fieldTo term(oneWord fieldTo term(thisWord))))))
+		term<Value>(lastWord fieldTo (term(previousWord fieldTo term(oneWord fieldTo term(thisWord)))))
 			.parseSelector(
-				pattern(
-					term(
-						oneWord fieldTo term(numberWord),
-						oneWord fieldTo term(stringWord))))
+				term(
+					oneWord fieldTo term(numberWord),
+					oneWord fieldTo term(stringWord)))
 			.assertEqualTo(selector(oneWord, previousWord, lastWord))
 	}
 
 	@Test
 	fun parse_multiple_previous_previous_last() {
-		script(term(lastWord fieldTo term(previousWord fieldTo term(previousWord fieldTo term(oneWord fieldTo term(thisWord))))))
+		term<Value>(lastWord fieldTo term(previousWord fieldTo term(previousWord fieldTo term(oneWord fieldTo term(thisWord)))))
 			.parseSelector(
-				pattern(
-					term(
-						oneWord fieldTo term(numberWord),
-						oneWord fieldTo term(stringWord))))
+				term(
+					oneWord fieldTo term(numberWord),
+					oneWord fieldTo term(stringWord)))
 			.assertEqualTo(null)
+	}
+
+	@Test
+	fun parse_literal() {
+		term<Value>(oneWord)
+			.parseSelectorTerm(term(personWord))
+			.assertEqualTo(term(oneWord))
+	}
+
+	@Test
+	fun parse_list() {
+		term<Value>(
+			nameWord fieldTo term(stringWord),
+			ageWord fieldTo term(numberWord))
+			.parseSelectorTerm(term(personWord))
+			.assertEqualTo(
+				term(
+					nameWord fieldTo term(stringWord),
+					ageWord fieldTo term(numberWord)))
+	}
+
+	@Test
+	fun parse_selector() {
+		term<Value>(
+			nameWord fieldTo term(
+				oneWord fieldTo term(thisWord)))
+			.parseSelectorTerm(
+				term(oneWord fieldTo term(numberWord)))
+			.assertEqualTo(
+				term(
+					nameWord fieldTo term(selector(oneWord))))
+	}
+
+	@Test
+	fun bodyInvoke() {
+		term(
+			thisWord fieldTo term(selector(itWord)),
+			timesWord fieldTo term(selector(plusWord)))
+			.invoke(
+				term(
+					itWord fieldTo term(1),
+					plusWord fieldTo term(2)))
+			.assertEqualTo(
+				term(
+					thisWord fieldTo term(1),
+					timesWord fieldTo term(2)))
 	}
 }
