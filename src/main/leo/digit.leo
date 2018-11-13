@@ -1,12 +1,12 @@
 any digit
-is one of
-	- zero
-	- one
-	- two
-	- three
-	- four
-	- five
-	- six
-	- seven
-	- eight
-	- nine
+is
+	either zero
+	either one
+	either two
+	either three
+	either four
+	either five
+	either six
+	either seven
+	either eight
+	either nine
