@@ -81,8 +81,52 @@ class SelectorTest {
 	}
 
 	@Test
-	fun parse_notOnly() {
+	fun parse_multiple() {
 		script(term(oneWord fieldTo term(thisWord)))
+			.parseSelector(
+				pattern(
+					term(
+						oneWord fieldTo term(numberWord),
+						oneWord fieldTo term(stringWord))))
+			.assertEqualTo(selector(oneWord))
+	}
+
+	@Test
+	fun parse_multiple_last() {
+		script(term(lastWord fieldTo term(oneWord fieldTo term(thisWord))))
+			.parseSelector(
+				pattern(
+					term(
+						oneWord fieldTo term(numberWord),
+						oneWord fieldTo term(stringWord))))
+			.assertEqualTo(selector(oneWord, lastWord))
+	}
+
+	@Test
+	fun parse_multiple_previous() {
+		script(term(previousWord fieldTo term(oneWord fieldTo term(thisWord))))
+			.parseSelector(
+				pattern(
+					term(
+						oneWord fieldTo term(numberWord),
+						oneWord fieldTo term(stringWord))))
+			.assertEqualTo(selector(oneWord, previousWord))
+	}
+
+	@Test
+	fun parse_multiple_previous_last() {
+		script(term(lastWord fieldTo (term(previousWord fieldTo term(oneWord fieldTo term(thisWord))))))
+			.parseSelector(
+				pattern(
+					term(
+						oneWord fieldTo term(numberWord),
+						oneWord fieldTo term(stringWord))))
+			.assertEqualTo(selector(oneWord, previousWord, lastWord))
+	}
+
+	@Test
+	fun parse_multiple_previous_previous_last() {
+		script(term(lastWord fieldTo term(previousWord fieldTo term(previousWord fieldTo term(oneWord fieldTo term(thisWord))))))
 			.parseSelector(
 				pattern(
 					term(

@@ -33,7 +33,7 @@ fun Script.parseSelectorToPattern(pattern: Pattern): Pair<Selector, Pattern>? =
 		is Term.Structure ->
 			if (term.fieldStack.pop != null) null
 			else term.fieldStack.top.value.script.parseSelectorToPattern(pattern)?.let { (selector, pattern) ->
-				pattern.term.only(term.fieldStack.top.key)?.let { argumentValue ->
+				pattern.term.select(term.fieldStack.top.key)?.let { argumentValue ->
 					selector.then(term.fieldStack.top.key) to argumentValue.pattern
 				}
 			}

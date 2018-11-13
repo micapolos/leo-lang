@@ -137,4 +137,29 @@ class TermTest {
 					endToken(),
 					endToken()))
 	}
+
+	@Test
+	fun selectSingle() {
+		termForGet
+			.select(oneWord)
+			.assertEqualTo(term(1))
+	}
+
+	@Test
+	fun selectMultiple() {
+		termForGet
+			.select(ageWord)
+			.assertEqualTo(
+				term(
+					previousWord fieldTo term(
+						lastWord fieldTo term(42)),
+					lastWord fieldTo term(43)))
+	}
+
+	@Test
+	fun selectMissing() {
+		termForGet
+			.select(personWord)
+			.assertEqualTo(null)
+	}
 }

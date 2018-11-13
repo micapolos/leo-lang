@@ -24,11 +24,19 @@ fun Scope.push(field: Field<Nothing>) =
 
 fun Scope.invoke(argument: Script): Scope =
 	null
+		?: parseSelect(argument)
 		?: parseRule(argument)
 		?: invokeFunction(argument)
 
 fun Scope.parseRule(argument: Script): Scope? =
 	argument.parseRule(function)?.let(this::push)
+
+fun Scope.parseSelect(argument: Script): Scope? =
+	argument.term.onlyField?.let { field ->
+		field.value.select(field.key)?.let { selected ->
+			copy(scriptOrNull = selected.script)
+		}
+	}
 
 fun Scope.invokeFunction(argument: Script): Scope =
 	copy(scriptOrNull = function.invoke(argument))

@@ -125,6 +125,7 @@ val patternWord = "pattern".wordOrNull!!
 val personWord = "person".wordOrNull!!
 val plusWord = "plus".wordOrNull!!
 val popWord = "pop".wordOrNull!!
+val previousWord = "previous".wordOrNull!!
 val quoteWord = "quote".wordOrNull!!
 val readWord = "read".wordOrNull!!
 val readerWord = "reader".wordOrNull!!

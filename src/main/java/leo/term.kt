@@ -133,6 +133,10 @@ fun <V> Term<V>.singleton(key: Word): Term<V>? =
 		else -> fieldStack.top.value
 	}
 
+val <V> Term<V>.onlyField: Field<V>?
+	get() =
+		structureTermOrNull?.fieldStack?.only
+
 fun <V, R> Term<V>.match(key: Word, fn: (Term<V>) -> R): R? =
 	when {
 		this !is Term.Structure -> null
@@ -148,6 +152,22 @@ fun <V, R> Term<V>.match(firstKey: Word, secondKey: Word, fn: (Term<V>, Term<V>)
 		fieldStack.pop?.top?.key != firstKey -> null
 		fieldStack.pop.pop != null -> null
 		else -> fn(fieldStack.pop.top.value, fieldStack.top.value)
+	}
+
+fun <V> Term<V>.select(key: Word): Term<V>? =
+	all(key)?.let { termStack ->
+		when {
+			termStack.pop == null -> termStack.top
+			else -> termStack.reverse
+				.foldTop { term ->
+					term(lastWord fieldTo term)
+				}
+				.andPop { selectTerm, term ->
+					term(
+						previousWord fieldTo selectTerm,
+						lastWord fieldTo term)
+				}
+		}
 	}
 
 // === tokens
