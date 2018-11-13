@@ -31,7 +31,11 @@ class SelectorTest {
 	fun invokeMultipleChoice() {
 		selector(ageWord)
 			.invoke(testTerm)
-			.assertEqualTo(null)
+			.assertEqualTo(
+				term(
+					previousWord fieldTo term(
+						lastWord fieldTo term(42)),
+					lastWord fieldTo term(44)))
 	}
 
 	@Test

@@ -19,7 +19,7 @@ fun selector(vararg words: Word) =
 
 fun <V> Selector.invoke(argument: Term<V>): Term<V>? =
 	argument.orNull.fold(wordStackOrNull?.reverse) { word ->
-		this?.only(word)
+		this?.select(word)
 	}
 
 fun Script.parseSelector(pattern: Pattern): Selector? =
