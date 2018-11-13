@@ -1,5 +1,5 @@
 define(
-	it(any(bit))
+	it(a(bit))
 	is(
 		either(zero)
 		either(false)))

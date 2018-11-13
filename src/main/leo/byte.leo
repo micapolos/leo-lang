@@ -1,0 +1,10 @@
+a byte
+is
+	bit a bit
+	bit a bit
+	bit a bit
+	bit a bit
+	bit a bit
+	bit a bit
+	bit a bit
+	bit a bit

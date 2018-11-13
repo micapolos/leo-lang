@@ -1,5 +1,5 @@
 define(
-	it(any(boolean))
+	it(a(boolean))
 	is(
 		either(false)
 		either(true)))

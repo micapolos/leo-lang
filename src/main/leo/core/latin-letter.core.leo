@@ -1,5 +1,5 @@
 define(
-	it(any(latin(letter)))
+	it(a(latin(letter)))
 	is(
 		either(a)
 		either(b)
