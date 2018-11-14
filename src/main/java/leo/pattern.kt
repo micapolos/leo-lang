@@ -2,16 +2,25 @@ package leo
 
 import leo.base.*
 
-data class Pattern(
-	val patternTermStack: Stack<Term<Pattern>>) {
-	override fun toString() = reflect.string
+sealed class Pattern {
+	object Anything : Pattern() {
+		override fun toString() = reflect.string
+	}
+
+	data class OneOf(
+		val patternTermStack: Stack<Term<Pattern>>) : Pattern() {
+		override fun toString() = reflect.string
+	}
 }
 
 val Stack<Term<Pattern>>.pattern
 	get() =
-		Pattern(this)
+		Pattern.OneOf(this)
 
-fun oneOf(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
+val anythingPattern =
+	Pattern.Anything
+
+fun pattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
 	stack(patternTerm, *patternTerms).pattern
 
 val Term<*>.parsePattern: Pattern?
@@ -33,7 +42,12 @@ val Term<*>.parsePattern: Pattern?
 // === matching
 
 fun Term<Value>.matches(pattern: Pattern): Boolean =
-	pattern.patternTermStack.top { patternTerm -> matches(patternTerm) } != null
+	when (pattern) {
+		is Pattern.Anything -> true
+		is Pattern.OneOf -> pattern.patternTermStack.top { patternTerm ->
+			matches(patternTerm)
+		} != null
+	}
 
 // === matching
 
@@ -64,9 +78,14 @@ val Term<*>.parsePatternTerm: Term<Pattern>
 	get() =
 		when (this) {
 			is Term.Meta -> fail
-			is Term.Identifier -> Term.Identifier(word)
+			is Term.Identifier -> parsePatternTerm
 			is Term.Structure -> parsePattern?.metaTerm ?: parseListPattern
 		}
+
+val Term.Identifier<*>.parsePatternTerm: Term<Pattern>
+	get() =
+		if (word == anythingWord) Pattern.Anything.metaTerm
+		else Term.Identifier(word)
 
 val Term.Structure<*>.parseListPattern: Term<Pattern>
 	get() =
@@ -84,9 +103,20 @@ val Field<*>.parsePatternField: Field<Pattern>
 
 val Pattern.reflect: Field<Value>
 	get() =
-		oneWord fieldTo term(
+		patternWord fieldTo patternReflect
+
+val Pattern.patternReflect: Term<Value>
+	get() =
+		when (this) {
+			is Pattern.Anything -> term(anythingWord)
+			is Pattern.OneOf -> this.patternReflect
+		}
+
+val Pattern.OneOf.patternReflect: Term<Value>
+	get() =
+		term(oneWord fieldTo term(
 			ofWord fieldTo patternTermStack.map { patternTerm ->
 				patternTerm.reflect { oneOf ->
 					term(oneOf.reflect)
 				}
-			}.term)
+			}.term))

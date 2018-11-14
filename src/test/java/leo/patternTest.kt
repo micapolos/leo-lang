@@ -6,10 +6,17 @@ import kotlin.test.Test
 
 class PatternTest {
 	@Test
-	fun string() {
-		oneOf(term(oneWord), term(twoWord))
+	fun string_anything() {
+		anythingPattern
 			.string
-			.assertEqualTo("one of(term identifier word one, term identifier word two)")
+			.assertEqualTo("pattern anything")
+	}
+
+	@Test
+	fun string_oneOf() {
+		pattern(term(oneWord), term(twoWord))
+			.string
+			.assertEqualTo("pattern one of(term identifier word one, term identifier word two)")
 	}
 
 	@Test
@@ -17,7 +24,7 @@ class PatternTest {
 		term<Value>(eitherWord fieldTo term(oneWord))
 			.parsePattern
 			.assertEqualTo(
-				oneOf(
+				pattern(
 					term(oneWord)))
 	}
 
@@ -28,7 +35,7 @@ class PatternTest {
 			eitherWord fieldTo term(twoWord))
 			.parsePattern
 			.assertEqualTo(
-				oneOf(
+				pattern(
 					term(oneWord),
 					term(twoWord)))
 	}
@@ -46,21 +53,21 @@ class PatternTest {
 	@Test
 	fun termMatches_first() {
 		term<Value>(oneWord)
-			.matches(oneOf(term(oneWord), term(twoWord)))
+			.matches(pattern(term(oneWord), term(twoWord)))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun termMatches_second() {
 		term<Value>(twoWord)
-			.matches(oneOf(term(oneWord), term(twoWord)))
+			.matches(pattern(term(oneWord), term(twoWord)))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun termMatches_none() {
 		term<Value>(ageWord)
-			.matches(oneOf(term(oneWord), term(twoWord)))
+			.matches(pattern(term(oneWord), term(twoWord)))
 			.assertEqualTo(false)
 	}
 
@@ -91,7 +98,7 @@ class PatternTest {
 			.parsePatternTerm
 			.assertEqualTo(
 				term(
-					oneOf(
+					pattern(
 						term(stringWord),
 						term(numberWord))))
 	}
@@ -106,9 +113,16 @@ class PatternTest {
 			.assertEqualTo(
 				term(
 					oneWord fieldTo term(
-						oneOf(
+						pattern(
 							term(stringWord),
 							term(numberWord)))))
+	}
+
+	@Test
+	fun parse_anything() {
+		term<Value>(anythingWord)
+			.parsePatternTerm
+			.assertEqualTo(term(anythingPattern))
 	}
 
 	@Test
@@ -135,7 +149,7 @@ class PatternTest {
 		term<Value>(nameWord)
 			.matches(
 				term(
-					oneOf(
+					pattern(
 						term(nameWord),
 						term(ageWord))))
 			.assertEqualTo(true)
