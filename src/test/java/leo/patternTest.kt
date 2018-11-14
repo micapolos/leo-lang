@@ -14,7 +14,7 @@ class PatternTest {
 
 	@Test
 	fun string_oneOf() {
-		pattern(term(oneWord), term(twoWord))
+		oneOfPattern(term(oneWord), term(twoWord))
 			.string
 			.assertEqualTo("pattern one of(term identifier word one, term identifier word two)")
 	}
@@ -24,7 +24,7 @@ class PatternTest {
 		term<Value>(eitherWord fieldTo term(oneWord))
 			.parsePattern
 			.assertEqualTo(
-				pattern(
+				oneOfPattern(
 					term(oneWord)))
 	}
 
@@ -35,7 +35,7 @@ class PatternTest {
 			eitherWord fieldTo term(twoWord))
 			.parsePattern
 			.assertEqualTo(
-				pattern(
+				oneOfPattern(
 					term(oneWord),
 					term(twoWord)))
 	}
@@ -53,21 +53,21 @@ class PatternTest {
 	@Test
 	fun termMatches_first() {
 		term<Value>(oneWord)
-			.matches(pattern(term(oneWord), term(twoWord)))
+			.matches(oneOfPattern(term(oneWord), term(twoWord)))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun termMatches_second() {
 		term<Value>(twoWord)
-			.matches(pattern(term(oneWord), term(twoWord)))
+			.matches(oneOfPattern(term(oneWord), term(twoWord)))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun termMatches_none() {
 		term<Value>(ageWord)
-			.matches(pattern(term(oneWord), term(twoWord)))
+			.matches(oneOfPattern(term(oneWord), term(twoWord)))
 			.assertEqualTo(false)
 	}
 
@@ -98,7 +98,7 @@ class PatternTest {
 			.parsePatternTerm
 			.assertEqualTo(
 				term(
-					pattern(
+					oneOfPattern(
 						term(stringWord),
 						term(numberWord))))
 	}
@@ -113,7 +113,7 @@ class PatternTest {
 			.assertEqualTo(
 				term(
 					oneWord fieldTo term(
-						pattern(
+						oneOfPattern(
 							term(stringWord),
 							term(numberWord)))))
 	}
@@ -156,7 +156,7 @@ class PatternTest {
 		term<Value>(nameWord)
 			.matches(
 				term(
-					pattern(
+					oneOfPattern(
 						term(nameWord),
 						term(ageWord))))
 			.assertEqualTo(true)

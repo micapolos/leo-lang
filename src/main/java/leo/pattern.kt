@@ -13,15 +13,15 @@ sealed class Pattern {
 	}
 }
 
-val Stack<Term<Pattern>>.pattern
+val Stack<Term<Pattern>>.oneOfPattern
 	get() =
 		Pattern.OneOf(this)
 
 val anythingPattern =
 	Pattern.Anything
 
-fun pattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
-	stack(patternTerm, *patternTerms).pattern
+fun oneOfPattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
+	stack(patternTerm, *patternTerms).oneOfPattern
 
 val Term<*>.parsePattern: Pattern?
 	get() =
@@ -35,7 +35,7 @@ val Term<*>.parsePattern: Pattern?
 					?.reverse
 					?.foldTop { field -> field.value.parsePatternTerm.stack }
 					?.andPop { stack, field -> stack.push(field.value.parsePatternTerm) }
-					?.pattern
+					?.oneOfPattern
 			}
 		}
 
