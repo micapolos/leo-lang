@@ -1,4 +1,4 @@
-a latin letter
+any latin letter
 is
 	either a
 	either b

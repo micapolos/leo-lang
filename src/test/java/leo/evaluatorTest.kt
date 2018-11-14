@@ -365,6 +365,43 @@ class EvaluatorTest {
 	}
 
 	@Test
+	fun push_define_it_anything__is_one__() {
+		emptyEvaluator
+			.push(defineWord)
+			?.begin
+			?.push(itWord)
+			?.begin
+			?.push(anythingWord)
+			?.end
+			?.push(isWord)
+			?.begin
+			?.push(oneWord)
+			?.end
+			?.end
+			?.push(itWord)
+			?.begin
+			?.push(ageWord)
+			?.end
+			.assertEqualTo(
+				Evaluator(
+					scopeStack = stack(
+						Scope(
+							parentWord = evaluateWord,
+							function = Function(
+								stack(
+									rule(
+										term<Pattern>(anythingPattern),
+										body(
+											term(oneWord),
+											identityFunction)))),
+							valueTermOrNull = term(oneWord))),
+					wordOrNull = null,
+					readerValueTerm = leoReaderTerm()
+				)
+			)
+	}
+
+	@Test
 	fun pushValidByte() {
 		emptyEvaluator
 			.push(97.toByte())

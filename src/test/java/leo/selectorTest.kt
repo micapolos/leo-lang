@@ -165,6 +165,27 @@ class SelectorTest {
 	}
 
 	@Test
+	fun parse_oneAnything_this() {
+		term<Value>(thisWord)
+			.parseSelectorTerm(term(oneWord fieldTo term(anythingPattern)))
+			.assertEqualTo(term(selector()))
+	}
+
+	@Test
+	fun parse_oneAnything_oneThis() {
+		term<Value>(oneWord fieldTo term(thisWord))
+			.parseSelectorTerm(term(oneWord fieldTo term(anythingPattern)))
+			.assertEqualTo(term(selector(oneWord)))
+	}
+
+	@Test
+	fun parse_oneAnything_twoOneThis() {
+		term<Value>(twoWord fieldTo term(oneWord fieldTo term(thisWord)))
+			.parseSelectorTerm(term(oneWord fieldTo term(anythingPattern)))
+			.assertEqualTo(term(twoWord fieldTo term(selector(oneWord))))
+	}
+
+	@Test
 	fun bodyInvoke() {
 		term(
 			thisWord fieldTo term(selector(itWord)),

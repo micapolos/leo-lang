@@ -44,10 +44,13 @@ val Term<*>.parsePattern: Pattern?
 fun Term<Value>.matches(pattern: Pattern): Boolean =
 	when (pattern) {
 		is Pattern.Anything -> true
-		is Pattern.OneOf -> pattern.patternTermStack.top { patternTerm ->
-			matches(patternTerm)
-		} != null
+		is Pattern.OneOf -> matches(pattern)
 	}
+
+fun Term<Value>.matches(oneOfPattern: Pattern.OneOf): Boolean =
+	oneOfPattern.patternTermStack.top { patternTerm ->
+		matches(patternTerm)
+	} != null
 
 // === matching
 

@@ -1,10 +1,10 @@
-a byte
+any byte
 is
-	bit a bit
-	bit a bit
-	bit a bit
-	bit a bit
-	bit a bit
-	bit a bit
-	bit a bit
-	bit a bit
+	bit any bit
+	bit any bit
+	bit any bit
+	bit any bit
+	bit any bit
+	bit any bit
+	bit any bit
+	bit any bit

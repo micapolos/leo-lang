@@ -1,16 +1,16 @@
 define(
-	it(a(byte))
+	it(any(byte))
 	is(
-		bit(a(bit))
-		bit(a(bit))
-		bit(a(bit))
-		bit(a(bit))
-		bit(a(bit))
-		bit(a(bit))
-		bit(a(bit))
-		bit(a(bit))))
+		bit(any(bit))
+		bit(any(bit))
+		bit(any(bit))
+		bit(any(bit))
+		bit(any(bit))
+		bit(any(bit))
+		bit(any(bit))
+		bit(any(bit))))
 
 define(
-	it(negate(byte(a(byte))))
+	it(negate(byte(any(byte))))
 	is(byte(
 	  bit(negate(bit(last(bit(byte(negate(this))))))))))

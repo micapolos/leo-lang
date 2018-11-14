@@ -1,4 +1,4 @@
-a digit
+any digit
 is
 	either zero
 	either one

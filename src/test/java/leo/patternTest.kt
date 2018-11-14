@@ -126,6 +126,13 @@ class PatternTest {
 	}
 
 	@Test
+	fun parse_deepAnything() {
+		term<Value>(oneWord fieldTo term(anythingWord))
+			.parsePatternTerm
+			.assertEqualTo(term(oneWord fieldTo term(anythingPattern)))
+	}
+
+	@Test
 	fun termMatches_literal() {
 		term<Value>(oneWord)
 			.matches(term(oneWord))

@@ -1,5 +1,5 @@
 define(
-	it(a(digit))
+	it(any(digit))
 	is(
 		either(zero)
 		either(one)

@@ -1,5 +1,5 @@
 define(
-	it(a(bit))
+	it(any(bit))
 	is(
 		either(zero)
 		either(false)))
@@ -13,9 +13,9 @@ define(
   is(bit(zero)))
 
 define(
-	it(a(bool))
-	is(bit(a(bit))))
+	it(any(bool))
+	is(bit(any(bit))))
 
 define(
-  it(negate(bool(a(bool))))
+  it(negate(bool(any(bool))))
   is(bool(negate(bool(negate(this))))))
