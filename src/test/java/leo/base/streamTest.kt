@@ -6,12 +6,12 @@ class StreamTest {
 	@Test
 	fun stackStream() {
 		val stream1 = stream(1, 2, 3)
-		stream1.first.assertEqualTo(3)
-		val stream2 = stream1.next!!
+		stream1.first.assertEqualTo(1)
+		val stream2 = stream1.nextOrNull!!
 		stream2.first.assertEqualTo(2)
-		val stream3 = stream2.next!!
-		stream3.first.assertEqualTo(1)
-		stream3.next.assertEqualTo(null)
+		val stream3 = stream2.nextOrNull!!
+		stream3.first.assertEqualTo(3)
+		stream3.nextOrNull.assertEqualTo(null)
 	}
 
 	@Test
@@ -19,14 +19,14 @@ class StreamTest {
 		stream('a', 'b', 'c')
 			.foldFirst(Char::toString)
 			.foldNext(String::plus)
-			.assertEqualTo("cba")
+			.assertEqualTo("abc")
 	}
 
 	@Test
-	fun reversedStack() {
+	fun stack() {
 		stream(1, 2, 3)
-			.reversedStack
-			.assertEqualTo(stack(3, 2, 1))
+			.stack
+			.assertEqualTo(stack(1, 2, 3))
 	}
 
 	@Test
@@ -41,6 +41,20 @@ class StreamTest {
 		stream(1, 2, 3, 4)
 			.mapNotNull { int -> if (int % 2 == 0) int.toString() else null }
 			?.assertContains("2", "4")
+	}
+
+	@Test
+	fun then() {
+		stream(1, 2, 3)
+			.then(stream(4, 5, 6))
+			.assertContains(1, 2, 3, 4, 5, 6)
+	}
+
+	@Test
+	fun join() {
+		stream(stream(1, 2, 3), stream(4, 5, 6), stream(7, 8, 9))
+			.join
+			.assertContains(1, 2, 3, 4, 5, 6, 7, 8, 9)
 	}
 }
 

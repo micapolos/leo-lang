@@ -50,7 +50,7 @@ fun <V> Term<V>?.push(word: Word): Term<V>? =
 
 fun <V> Term<V>?.push(field: Field<V>): Term<V>? =
 	when {
-		this == null -> field.stack.term
+		this == null -> field.onlyStack.term
 		this is Term.Structure -> fieldStack.push(field).term
 		else -> null
 	}
@@ -234,6 +234,17 @@ fun <V, R> Term<V>.cast(): Term<R> =
 	map { fail }
 
 // === folding bytes
+
+fun <V> Term<V>.byteStream(metaByteStream: (V) -> Stream<Byte>): Stream<Byte> =
+	when (this) {
+		is Term.Meta -> metaByteStream(value)
+		is Term.Identifier -> word.byteStream
+		is Term.Structure -> fieldStack.reverse.stream.map { it.byteStream(metaByteStream) }.join
+	}
+
+val Term<Value>.byteStream: Stream<Byte>
+	get() =
+		byteStream { fail }
 
 fun <V, R> R.foldBytes(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R =
 	when (term) {

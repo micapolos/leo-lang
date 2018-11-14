@@ -1,5 +1,7 @@
 package leo
 
+import leo.base.Stream
+import leo.base.onlyStream
 import leo.base.string
 
 enum class Letter(val char: Char) {
@@ -53,9 +55,13 @@ val Byte.letterOrNull: Letter?
 fun <V> Letter.reflect(): Field<V> =
 	letterWord fieldTo term(char.toString().wordOrNull!!)
 
-val Letter.byte
+val Letter.byte: Byte
 	get() =
 		char.toByte()
+
+val Letter.byteStream: Stream<Byte>
+	get() =
+		byte.onlyStream
 
 fun <R> R.foldBytes(letter: Letter, fn: R.(Byte) -> R): R =
 	fn(letter.byte)

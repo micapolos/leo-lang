@@ -15,7 +15,7 @@ val Stack<Scope>.evaluator
 
 val Word.evaluator
 	get() =
-		scope.stack.evaluator
+		scope.onlyStack.evaluator
 
 val emptyEvaluator =
 	evaluateWord.evaluator

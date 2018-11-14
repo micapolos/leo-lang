@@ -53,4 +53,11 @@ class StackTest {
 			.foldPop(String::plus)
 			.assertEqualTo("321")
 	}
+
+	@Test
+	fun map() {
+		stack(1, 2, 3)
+			.map(Int::toString)
+			.assertEqualTo(stack("1", "2", "3"))
+	}
 }

@@ -59,7 +59,7 @@ fun <V> Term.Identifier<Selector>.invoke(): Term<V> =
 
 fun <V> Term.Structure<Selector>.invoke(argument: Term<V>): Term<V>? =
 	fieldStack.reverse.stream.foldFirst { field ->
-		field.invoke(argument)?.stack
+		field.invoke(argument)?.onlyStack
 	}.foldNext { field ->
 		field.invoke(argument)?.let { invokedField ->
 			push(invokedField)
@@ -78,7 +78,7 @@ fun Term<*>.parseSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
 		is Term.Identifier -> term(word)
 		is Term.Structure ->
 			fieldStack.reverse.stream
-				.foldFirst { field -> field.parseSelectorField(patternTerm).stack }
+				.foldFirst { field -> field.parseSelectorField(patternTerm).onlyStack }
 				.foldNext { field -> push(field.parseSelectorField(patternTerm)) }
 				.term
 		is Term.Meta -> fail

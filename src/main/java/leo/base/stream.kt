@@ -2,51 +2,58 @@ package leo.base
 
 data class Stream<V>(
 	val first: V,
-	val nextFn: () -> Stream<V>?) {
+	val nextOrNullFn: () -> Stream<V>?) {
 
 	data class Folded<V, R>(
 		val foldedFirst: R,
-		val next: Stream<V>?
+		val nextOrNull: Stream<V>?
 	)
 }
 
-val <V> Stream<V>.next
+val <V> V.onlyStream
 	get() =
-		nextFn()
+		Stream(this) { null }
+
+val <V> Stream<V>.nextOrNull: Stream<V>?
+	get() =
+		nextOrNullFn()
 
 fun <V> Stream<V>.plus(value: V) =
 	Stream(value) { this }
 
+fun <V> Stream<V>.then(stream: Stream<V>?): Stream<V> =
+	Stream(first) { nextOrNull?.then(stream) ?: stream }
+
+val <V> Stream<Stream<V>>.join: Stream<V>
+	get() =
+		foldFirst { it }.foldNext { then(it) }
+
 fun <V> stream(first: V, vararg next: V) =
-	stack(first, *next).stream
+	stack(first, *next).reverse.stream
 
 fun <V, R> Stream<V>.foldFirst(fn: (V) -> R): Stream.Folded<V, R> =
-	Stream.Folded(fn(first), nextFn())
+	Stream.Folded(fn(first), nextOrNullFn())
 
 fun <V, R> Stream.Folded<V, R>.foldNext(fn: R.(V) -> R): R =
-	foldedFirst.fold(next, fn)
+	foldedFirst.fold(nextOrNull, fn)
 
 tailrec fun <V, R> R.fold(streamOrNull: Stream<V>?, foldNext: R.(V) -> R): R =
 	if (streamOrNull == null) this
-	else foldNext(streamOrNull.first).fold(streamOrNull.nextFn(), foldNext)
+	else foldNext(streamOrNull.first).fold(streamOrNull.nextOrNullFn(), foldNext)
 
 fun <V, R> Stream<V>.map(fn: (V) -> R): Stream<R> =
-	Stream(fn(first)) { next?.map(fn) }
+	Stream(fn(first)) { nextOrNull?.map(fn) }
 
 fun <V, R> Stream<V>.mapNotNull(fn: (V) -> R?): Stream<R>? =
 	fn(first)?.let { mapped ->
 		Stream(mapped) {
-			next?.mapNotNull(fn)
+			nextOrNull?.mapNotNull(fn)
 		}
-	} ?: next?.mapNotNull(fn)
-
-val <V> Stream<V>.reversedStack
-	get() =
-		foldFirst { it.stack }.foldNext { push(it) }
+	} ?: nextOrNull?.mapNotNull(fn)
 
 val <V> Stream<V>.stack
 	get() =
-		reversedStack.reverse
+		foldFirst { it.onlyStack }.foldNext { push(it) }
 
 val <V> Stack<V>.stream: Stream<V>
 	get() =

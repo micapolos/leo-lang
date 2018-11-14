@@ -1,6 +1,9 @@
 package leo
 
+import leo.base.Stream
 import leo.base.appendableString
+import leo.base.onlyStream
+import leo.base.then
 
 data class Field<out V>(
 	val key: Word,
@@ -64,6 +67,12 @@ fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Value>): Field<Value
 	this?.let(reflect) ?: word.fieldTo(term(nullWord))
 
 // === fold bytes
+
+fun <V> Field<V>.byteStream(metaByteStream: (V) -> Stream<Byte>): Stream<Byte> =
+	key.byteStream
+		.then('('.toByte().onlyStream)
+		.then(value.byteStream(metaByteStream))
+		.then(')'.toByte().onlyStream)
 
 fun <V, R> R.foldBytes(field: Field<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R =
 	foldBytes(field.key, fn)

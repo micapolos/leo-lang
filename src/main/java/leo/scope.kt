@@ -1,6 +1,9 @@
 package leo
 
+import leo.base.Stream
+import leo.base.onlyStream
 import leo.base.string
+import leo.base.then
 
 data class Scope(
 	val parentWord: Word,
@@ -54,6 +57,13 @@ val Scope.reflect: Field<Value>
 			valueTermOrNull.orNullField(valueWord))
 
 // === folding bytes
+
+val Scope.byteStream: Stream<Byte>
+	get() =
+		parentWord.byteStream
+			.then(valueTermOrNull?.let { valueTerm ->
+				'('.toByte().onlyStream.then(valueTerm.byteStream)
+			})
 
 fun <R> R.foldBytes(scope: Scope, fn: R.(Byte) -> R): R =
 	foldBytes(scope.parentWord, fn)

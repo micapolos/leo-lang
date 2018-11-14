@@ -48,7 +48,7 @@ fun Word.Reader.plus(char: Char) =
 
 fun wordReader(char: Char) =
 	char.letterOrNull?.let { letter ->
-		Word.Reader.Full(letter.stack.word)
+		Word.Reader.Full(letter.onlyStack.word)
 	}
 
 fun Word.Reader.Full.plus(char: Char) =
@@ -67,6 +67,10 @@ val Word.reflect: Field<Nothing>
 		wordWord fieldTo term(this)
 
 // === folding bytes
+
+val Word.byteStream: Stream<Byte>
+	get() =
+		letterStack.stream.map(Letter::byte)
 
 fun <R> R.foldBytes(word: Word, fn: R.(Byte) -> R): R =
 	fold(word.letterStack.reverse.stream) { letter ->

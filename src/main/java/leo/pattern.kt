@@ -34,7 +34,7 @@ val Term<*>.parsePattern: Pattern?
 					?.fieldStack
 					?.reverse
 					?.stream
-					?.foldFirst { field -> field.value.parsePatternTerm.stack }
+					?.foldFirst { field -> field.value.parsePatternTerm.onlyStack }
 					?.foldNext { field -> push(field.value.parsePatternTerm) }
 					?.oneOfPattern
 			}
@@ -96,7 +96,7 @@ val Term.Structure<*>.parseListPattern: Term<Pattern>
 		fieldStack
 			.reverse
 			.stream
-			.foldFirst { field -> field.parsePatternField.stack }
+			.foldFirst { field -> field.parsePatternField.onlyStack }
 			.foldNext { field -> push(field.parsePatternField) }
 			.term
 

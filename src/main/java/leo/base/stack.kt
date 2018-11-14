@@ -16,7 +16,7 @@ data class Stack<V>(
 fun <V> nullStack() =
 	null as Stack<V>?
 
-val <V> V.stack
+val <V> V.onlyStack
 	get() =
 		Stack(null, this)
 
@@ -32,7 +32,7 @@ fun <V> Stack<V>?.push(value: V, vararg values: V) =
 	}
 
 fun <V> stack(value: V, vararg values: V): Stack<V> =
-	values.fold(value.stack) { stack, nextValue ->
+	values.fold(value.onlyStack) { stack, nextValue ->
 		stack.push(nextValue)
 	}
 
@@ -53,7 +53,7 @@ fun <V, R> R.fold(stackOrNull: Stack<V>?, fn: R.(V) -> R): R =
 
 val <V> Stack<V>.reverse: Stack<V>
 	get() =
-		foldTop { top -> top.stack }.foldPop { stack, value -> stack.push(value) }
+		foldTop { top -> top.onlyStack }.foldPop { stack, value -> stack.push(value) }
 
 fun <V> Stack<V>.contains(value: V): Boolean =
 	top == value || (pop?.contains(value) ?: false)
@@ -81,7 +81,7 @@ fun <V> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
 		?.reverse
 
 fun <V, R> Stack<V>.map(fn: (V) -> R): Stack<R> =
-	stream.map(fn).stack
+	stream.map(fn).stack.reverse
 
 fun <V, R> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
 	(null as Stack<R>?).fold(this) { value ->
@@ -114,13 +114,13 @@ fun Appendable.appendReversed(stack: Stack<*>) {
 fun <V, F> Stack<V>.reflect(key: Word, reflectValue: (V) -> Field<F>): Field<F> =
 	key fieldTo term(
 		stackWord fieldTo reverse
-			.foldTop { value -> reflectValue(value).stack }
+			.foldTop { value -> reflectValue(value).onlyStack }
 			.foldPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
 			.term)
 
 fun <V> Stack<V>.reflect(reflectValue: (V) -> Field<Value>): Term<Value> =
 	reverse
-		.foldTop { value -> reflectValue(value).stack }
+		.foldTop { value -> reflectValue(value).onlyStack }
 		.foldPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
 		.term
 
@@ -131,7 +131,7 @@ fun <V> Term<Value>.parseStack(parseValue: (Field<Value>) -> V?): Stack<V>? =
 		?.fieldStack
 		?.reverse
 		?.foldTop { field ->
-			parseValue(field)?.stack
+			parseValue(field)?.onlyStack
 		}
 		?.foldPop { stackOrNull, field ->
 			parseValue(field)?.let { value ->
