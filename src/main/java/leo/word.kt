@@ -70,7 +70,7 @@ val Word.reflect: Field<Nothing>
 
 val Word.byteStream: Stream<Byte>
 	get() =
-		letterStack.stream.map(Letter::byte)
+		letterStack.reverse.stream.map(Letter::byte)
 
 fun <R> R.foldBytes(word: Word, fn: R.(Byte) -> R): R =
 	fold(word.letterStack.reverse.stream) { letter ->

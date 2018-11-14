@@ -62,7 +62,9 @@ val Scope.byteStream: Stream<Byte>
 	get() =
 		parentWord.byteStream
 			.then(valueTermOrNull?.let { valueTerm ->
-				'('.toByte().onlyStream.then(valueTerm.byteStream)
+				'('.toByte().onlyStream
+					.then(valueTerm.byteStream)
+					.then(')'.toByte().onlyStream)
 			})
 
 fun <R> R.foldBytes(scope: Scope, fn: R.(Byte) -> R): R =

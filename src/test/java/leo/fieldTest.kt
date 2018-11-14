@@ -1,8 +1,6 @@
 package leo
 
-import leo.base.assertEqualTo
-import leo.base.nullOf
-import leo.base.string
+import leo.base.*
 import kotlin.test.Test
 
 class FieldTest {
@@ -27,5 +25,21 @@ class FieldTest {
 			.orNullReflect(letterWord, Letter::reflect)
 			.string
 			.assertEqualTo("letter a")
+	}
+
+	@Test
+	fun byteStream() {
+		oneWord
+			.fieldTo(term<Value>(twoWord))
+			.byteStream { fail }
+			.assertContains(
+				Letter.O.byte,
+				Letter.N.byte,
+				Letter.E.byte,
+				'('.toByte(),
+				Letter.T.byte,
+				Letter.W.byte,
+				Letter.O.byte,
+				')'.toByte())
 	}
 }
