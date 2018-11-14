@@ -33,6 +33,13 @@ tailrec fun <V, R> R.fold(streamOrNull: Stream<V>?, foldNext: R.(V) -> R): R =
 fun <V, R> Stream<V>.map(fn: (V) -> R): Stream<R> =
 	Stream(fn(first)) { next?.map(fn) }
 
+fun <V, R> Stream<V>.filterMap(fn: (V) -> R): Stream<R>? =
+	fn(first)?.let { mapped ->
+		Stream(mapped) {
+			next?.filterMap(fn)
+		}
+	} ?: next?.filterMap(fn)
+
 val <V> Stream<V>.reversedStack
 	get() =
 		foldFirst { it.stack }.foldNext { push(it) }

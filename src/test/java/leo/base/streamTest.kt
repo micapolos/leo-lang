@@ -35,6 +35,13 @@ class StreamTest {
 			.map(Int::toString)
 			.assertContains("1", "2", "3")
 	}
+
+	@Test
+	fun filterMap() {
+		stream(1, 2, 3, 4)
+			.filterMap { int -> if (int % 2 == 0) int.toString() else null }
+			?.assertContains("2", "4")
+	}
 }
 
 fun <V> Stream<V>.assertContains(first: V, vararg next: V) =
