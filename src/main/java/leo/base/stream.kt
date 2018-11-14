@@ -3,7 +3,8 @@ package leo.base
 data class Stream<V>(
 	val first: V,
 	val nextFn: () -> Stream<V>?) {
-	data class FoldedFirst<V, R>(
+
+	data class Folded<V, R>(
 		val foldedFirst: R,
 		val next: Stream<V>?
 	)
@@ -19,10 +20,10 @@ fun <V> Stream<V>.plus(value: V) =
 fun <V> stream(first: V, vararg next: V) =
 	stack(first, *next).stream
 
-fun <V, R> Stream<V>.foldFirst(fn: (V) -> R): Stream.FoldedFirst<V, R> =
-	Stream.FoldedFirst(fn(first), nextFn())
+fun <V, R> Stream<V>.foldFirst(fn: (V) -> R): Stream.Folded<V, R> =
+	Stream.Folded(fn(first), nextFn())
 
-fun <V, R> Stream.FoldedFirst<V, R>.foldNext(fn: R.(V) -> R): R =
+fun <V, R> Stream.Folded<V, R>.foldNext(fn: R.(V) -> R): R =
 	foldedFirst.fold(next, fn)
 
 tailrec fun <V, R> R.fold(streamOrNull: Stream<V>?, foldNext: R.(V) -> R): R =
@@ -35,10 +36,6 @@ fun <V, R> Stream<V>.map(fn: (V) -> R): Stream<R> =
 val <V> Stream<V>.reversedStack
 	get() =
 		foldFirst { it.stack }.foldNext { push(it) }
-
-val <V> Stream<V>.reverse
-	get() =
-		reversedStack.stream
 
 val <V> Stream<V>.stack
 	get() =
