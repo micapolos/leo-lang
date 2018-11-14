@@ -37,9 +37,9 @@ class StreamTest {
 	}
 
 	@Test
-	fun filterMap() {
+	fun mapNotNull() {
 		stream(1, 2, 3, 4)
-			.filterMap { int -> if (int % 2 == 0) int.toString() else null }
+			.mapNotNull { int -> if (int % 2 == 0) int.toString() else null }
 			?.assertContains("2", "4")
 	}
 }
