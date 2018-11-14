@@ -24,6 +24,9 @@ fun <V> Stream<V>.plus(value: V) =
 fun <V> Stream<V>.then(stream: Stream<V>?): Stream<V> =
 	Stream(first) { nextOrNull?.then(stream) ?: stream }
 
+fun <V> Stream<V>?.orNullThen(stream: Stream<V>?): Stream<V>? =
+	this?.then(stream) ?: stream
+
 val <V> Stream<Stream<V>>.join: Stream<V>
 	get() =
 		foldFirst { it }.foldNext { then(it) }

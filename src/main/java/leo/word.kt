@@ -72,11 +72,6 @@ val Word.byteStream: Stream<Byte>
 	get() =
 		letterStack.reverse.stream.map(Letter::byte)
 
-fun <R> R.foldBytes(word: Word, fn: R.(Byte) -> R): R =
-	fold(word.letterStack.reverse.stream) { letter ->
-		foldBytes(letter, fn)
-	}
-
 // === words ===
 
 val aWord = "a".wordOrNull!!

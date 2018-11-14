@@ -1,16 +1,18 @@
 package leo
 
+import leo.base.fold
 import java.io.ByteArrayInputStream
 
 fun main(args: Array<String>) {
 	emptyRepl
 		.evaluate(System.`in`, System.err)
 		?.evaluate(ByteArrayInputStream(args.joinToString(" ").toByteArray()), System.err)
-		?.let { replOrNull ->
-			Unit.foldBytes(replOrNull) { byte ->
+		?.byteStreamOrNull
+		?.let { byteStream ->
+			Unit.fold(byteStream) { byte ->
 				System.out.write(byte)
-				System.out.flush()
 			}
+			System.out.flush()
 		}
 
 	// TODO(micapolos): This is not correct in general, but is convenient until we implement Printer.

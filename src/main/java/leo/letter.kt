@@ -56,6 +56,3 @@ fun <V> Letter.reflect(): Field<V> =
 val Letter.byte: Byte
 	get() =
 		char.toByte()
-
-fun <R> R.foldBytes(letter: Letter, fn: R.(Byte) -> R): R =
-	fn(letter.byte)

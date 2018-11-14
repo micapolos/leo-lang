@@ -25,7 +25,6 @@ class ScopeTest {
 				'('.toByte(),
 				Letter.T.byte,
 				Letter.W.byte,
-				Letter.O.byte,
-				')'.toByte())
+				Letter.O.byte)
 	}
 }

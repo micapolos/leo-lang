@@ -245,18 +245,3 @@ fun <V> Term<V>.byteStream(metaByteStream: (V) -> Stream<Byte>): Stream<Byte> =
 val Term<Value>.byteStream: Stream<Byte>
 	get() =
 		byteStream { fail }
-
-fun <V, R> R.foldBytes(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R =
-	when (term) {
-		is Term.Meta -> metaFn(term.value)
-		is Term.Identifier -> foldBytes(term.word, fn)
-		is Term.Structure -> fold(term.fieldStack.reverse.stream) { field -> foldBytes(field, metaFn, fn) }
-	}
-
-fun <R> R.foldBytes(term: Term<*>, fn: R.(Byte) -> R): R =
-	foldBytes(term, { fail }, fn)
-
-// === folding chars
-
-fun <V, R> R.foldChars(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Char) -> R): R =
-	foldBytes(term, metaFn) { byte -> fn(byte.toChar()) }

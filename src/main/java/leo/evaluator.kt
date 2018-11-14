@@ -29,18 +29,13 @@ val Evaluator.evaluatedValueTerm: Term<Value>?
 			else scope.valueTermOrNull.push(wordOrNull)
 		}
 
-fun <R> R.foldBytes(evaluator: Evaluator, fn: R.(Byte) -> R): R =
-	evaluator.scopeStack.reverse.stream.foldFirst { scope ->
-		if (scope.valueTermOrNull == null) this
-		else foldBytes(scope.valueTermOrNull, fn)
-	}.foldNext { scope ->
-		fn('('.toByte())
-			.foldBytes(scope, fn)
-			.let { folded2 ->
-				if (evaluator.wordOrNull == null) folded2
-				else folded2.fn('('.toByte()).foldBytes(evaluator.wordOrNull, fn)
-			}
-	}
+// TODO: Fix it, this is still broken!!!
+val Evaluator.byteStreamOrNull: Stream<Byte>?
+	get() =
+		scopeStack.reverse.let { reverseScopeStack ->
+			reverseScopeStack.top.valueTermOrNull?.byteStream
+				.orNullThen(reverseScopeStack.pop?.stream?.map { it.byteStream }?.join?.then('('.toByte().onlyStream))
+		}.orNullThen(wordOrNull?.byteStream)
 
 fun Evaluator.push(byte: Byte): Evaluator? =
 	when (byte) {

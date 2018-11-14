@@ -8,3 +8,7 @@ fun appendableString(fn: (Appendable) -> Unit): String {
 
 fun Appendable.appendString(value: Any?) =
 	append(value.string)
+
+val String.byteStreamOrNull: Stream<Byte>?
+	get() =
+		toByteArray().streamOrNull

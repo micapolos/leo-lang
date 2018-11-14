@@ -73,9 +73,3 @@ fun <V> Field<V>.byteStream(metaByteStream: (V) -> Stream<Byte>): Stream<Byte> =
 		.then('('.toByte().onlyStream)
 		.then(value.byteStream(metaByteStream))
 		.then(')'.toByte().onlyStream)
-
-fun <V, R> R.foldBytes(field: Field<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R =
-	foldBytes(field.key, fn)
-		.fn('('.toByte())
-		.foldBytes(field.value, metaFn, fn)
-		.fn(')'.toByte())

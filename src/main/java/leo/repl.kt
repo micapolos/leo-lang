@@ -1,5 +1,6 @@
 package leo
 
+import leo.base.Stream
 import leo.base.orNull
 import leo.base.string
 
@@ -47,5 +48,6 @@ val Repl.reflect: Field<Value>
 			reader.reflect,
 			evaluator.reflect)
 
-fun <R> R.foldBytes(repl: Repl, fn: R.(Byte) -> R): R =
-	foldBytes(repl.evaluator, fn)
+val Repl.byteStreamOrNull: Stream<Byte>?
+	get() =
+		evaluator.byteStreamOrNull

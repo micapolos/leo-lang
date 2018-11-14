@@ -1,5 +1,6 @@
 package leo
 
+import leo.base.assertContains
 import leo.base.assertEqualTo
 import leo.base.stack
 import kotlin.test.Test
@@ -414,5 +415,46 @@ class EvaluatorTest {
 							valueTermOrNull = null)),
 					wordOrNull = stack(Letter.A).word,
 					readerValueTerm = leoReaderTerm()))
+	}
+
+	@Test
+	fun byteStream_empty() {
+		emptyEvaluator.byteStreamOrNull.assertEqualTo(null)
+	}
+
+	@Test
+	fun byteStream_word() {
+		emptyEvaluator
+			.copy(wordOrNull = aWord)
+			.byteStreamOrNull!!
+			.assertContains(Letter.A.byte)
+	}
+
+	@Test
+	fun byteStream_scopeValueTerm() {
+		emptyEvaluator
+			.copy(scopeStack = stack(Scope(evaluateWord, identityFunction, term(aWord))))
+			.byteStreamOrNull!!
+			.assertContains(Letter.A.byte)
+	}
+
+	@Test
+	fun byteStream_scopeStack() {
+		emptyEvaluator
+			.copy(scopeStack = stack(
+				Scope(evaluateWord, identityFunction, null),
+				Scope(aWord, identityFunction, null)))
+			.byteStreamOrNull!!
+			.assertContains(Letter.A.byte, '('.toByte())
+	}
+
+	@Test
+	fun byteStream_scopeValueTerm_word() {
+		emptyEvaluator
+			.copy(
+				scopeStack = stack(Scope(evaluateWord, identityFunction, term(aWord fieldTo term(bWord)))),
+				wordOrNull = cWord)
+			.byteStreamOrNull!!
+			.assertContains(Letter.A.byte, '('.toByte(), Letter.B.byte, ')'.toByte(), Letter.C.byte)
 	}
 }

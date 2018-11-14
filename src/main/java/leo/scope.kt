@@ -64,14 +64,4 @@ val Scope.byteStream: Stream<Byte>
 			.then(valueTermOrNull?.let { valueTerm ->
 				'('.toByte().onlyStream
 					.then(valueTerm.byteStream)
-					.then(')'.toByte().onlyStream)
 			})
-
-fun <R> R.foldBytes(scope: Scope, fn: R.(Byte) -> R): R =
-	foldBytes(scope.parentWord, fn)
-		.let { folded ->
-			when {
-				scope.valueTermOrNull != null -> folded.fn('('.toByte()).foldBytes(scope.valueTermOrNull, fn)
-				else -> folded
-			}
-		}
