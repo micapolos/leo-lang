@@ -1,9 +1,6 @@
 package leo
 
-import leo.base.foldPop
-import leo.base.foldTop
-import leo.base.reverse
-import leo.base.string
+import leo.base.*
 
 data class Reader(
 	val valueTerm: Term<Value>) {
@@ -29,13 +26,13 @@ fun <R> R.read(
 			readerFn(newValueTerm)
 				.let { resultValueTerm ->
 					resultValueTerm.structureTermOrNull?.let { resultTerm ->
-						resultTerm.fieldStack.reverse
-							.foldTop { topField ->
+						resultTerm.fieldStack.reverse.stream
+							.foldFirst { topField ->
 								if (topField != leoReaderField<Value>()) null
 								else to(reader.copy(valueTerm = leoReaderTerm()))
 							}
-							.foldPop { foldedAndReaderOrNull, followingField ->
-								foldedAndReaderOrNull?.let { (folded, reader) ->
+							.foldNext { followingField ->
+								this?.let { (folded, reader) ->
 									when {
 										followingField.key != readWord -> null
 										else -> followingField.value.match(byteWord) { byteValue ->

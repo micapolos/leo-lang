@@ -81,9 +81,7 @@ fun <V> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
 		?.reverse
 
 fun <V, R> Stack<V>.map(fn: (V) -> R): Stack<R> =
-	reverse
-		.foldTop { top -> fn(top).stack }
-		.foldPop { stack, value -> stack.push(fn(value)) }
+	stream.map(fn).stack
 
 fun <V, R> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
 	(null as Stack<R>?).fold(this) { value ->

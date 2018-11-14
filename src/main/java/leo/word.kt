@@ -28,7 +28,7 @@ val String.wordOrNull: Word?
 		}?.fullOrNull?.word
 
 fun <R> R.foldLetters(word: Word, fn: R.(Letter) -> R) =
-	fold(word.letterStack.reverse, fn)
+	fold(word.letterStack.reverse.stream, fn)
 
 // === Appendable
 
@@ -69,7 +69,7 @@ val Word.reflect: Field<Nothing>
 // === folding bytes
 
 fun <R> R.foldBytes(word: Word, fn: R.(Byte) -> R): R =
-	fold(word.letterStack.reverse) { letter ->
+	fold(word.letterStack.reverse.stream) { letter ->
 		foldBytes(letter, fn)
 	}
 

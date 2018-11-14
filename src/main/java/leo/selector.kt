@@ -18,7 +18,7 @@ fun selector(vararg words: Word) =
 	stackOrNull(*words).selector
 
 fun <V> Selector.invoke(argument: Term<V>): Term<V>? =
-	argument.orNull.fold(wordStackOrNull?.reverse) { word ->
+	argument.orNull.fold(wordStackOrNull?.reverse?.stream) { word ->
 		this?.select(word)
 	}
 
@@ -58,11 +58,11 @@ fun <V> Term.Identifier<Selector>.invoke(): Term<V> =
 	term(word)
 
 fun <V> Term.Structure<Selector>.invoke(argument: Term<V>): Term<V>? =
-	fieldStack.reverse.foldTop { field ->
+	fieldStack.reverse.stream.foldFirst { field ->
 		field.invoke(argument)?.stack
-	}.foldPop { stack, field ->
+	}.foldNext { field ->
 		field.invoke(argument)?.let { invokedField ->
-			stack.push(invokedField)
+			push(invokedField)
 		}
 	}?.term
 
@@ -77,9 +77,9 @@ fun Term<*>.parseSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
 	parseSelector(patternTerm)?.metaTerm ?: when (this) {
 		is Term.Identifier -> term(word)
 		is Term.Structure ->
-			fieldStack.reverse
-				.foldTop { it.parseSelectorField(patternTerm).stack }
-				.foldPop { stack, field -> stack.push(field.parseSelectorField(patternTerm)) }
+			fieldStack.reverse.stream
+				.foldFirst { field -> field.parseSelectorField(patternTerm).stack }
+				.foldNext { field -> push(field.parseSelectorField(patternTerm)) }
 				.term
 		is Term.Meta -> fail
 	}

@@ -26,15 +26,16 @@ fun oneOfPattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>)
 val Term<*>.parsePattern: Pattern?
 	get() =
 		structureTermOrNull?.let { listTerm ->
-			true.fold(listTerm.fieldStack) { field ->
+			true.fold(listTerm.fieldStack.stream) { field ->
 				this && field.key == eitherWord
 			}.let { isOneOf ->
 				if (!isOneOf) null
 				else structureTermOrNull
 					?.fieldStack
 					?.reverse
-					?.foldTop { field -> field.value.parsePatternTerm.stack }
-					?.foldPop { stack, field -> stack.push(field.value.parsePatternTerm) }
+					?.stream
+					?.foldFirst { field -> field.value.parsePatternTerm.stack }
+					?.foldNext { field -> push(field.value.parsePatternTerm) }
 					?.oneOfPattern
 			}
 		}
@@ -94,8 +95,9 @@ val Term.Structure<*>.parseListPattern: Term<Pattern>
 	get() =
 		fieldStack
 			.reverse
-			.foldTop { it.parsePatternField.stack }
-			.foldPop { stack, field -> stack.push(field.parsePatternField) }
+			.stream
+			.foldFirst { field -> field.parsePatternField.stack }
+			.foldNext { field -> push(field.parsePatternField) }
 			.term
 
 val Field<*>.parsePatternField: Field<Pattern>

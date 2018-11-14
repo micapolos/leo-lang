@@ -30,12 +30,11 @@ val Evaluator.evaluatedValueTerm: Term<Value>?
 		}
 
 fun <R> R.foldBytes(evaluator: Evaluator, fn: R.(Byte) -> R): R =
-	evaluator.scopeStack.reverse.foldTop { scope ->
+	evaluator.scopeStack.reverse.stream.foldFirst { scope ->
 		if (scope.valueTermOrNull == null) this
 		else foldBytes(scope.valueTermOrNull, fn)
-	}.foldPop { folded, scope ->
-		folded
-			.fn('('.toByte())
+	}.foldNext { scope ->
+		fn('('.toByte())
 			.foldBytes(scope, fn)
 			.let { folded2 ->
 				if (evaluator.wordOrNull == null) folded2

@@ -92,8 +92,9 @@ fun Appendable.appendCore(structureTerm: Term.Structure<*>): Appendable =
 	structureTerm
 		.fieldStack
 		.reverse
-		.foldTop { field -> appendCore(field) }
-		.foldPop { appendable, field -> appendable.appendCore(field) }
+		.stream
+		.foldFirst { field -> appendCore(field) }
+		.foldNext { field -> appendCore(field) }
 
 // === Appendable (pretty-print)
 
@@ -115,12 +116,9 @@ fun Appendable.append(structureTerm: Term.Structure<*>): Appendable =
 	structureTerm
 		.fieldStack
 		.reverse
-		.foldTop { field -> append(field) }
-		.foldPop { appendable, field ->
-			appendable
-				.append(", ")
-				.append(field)
-		}
+		.stream
+		.foldFirst { field -> append(field) }
+		.foldNext { field -> append(", ").append(field) }
 
 // === access
 
@@ -165,13 +163,13 @@ fun <V> Term<V>.select(key: Word): Term<V>? =
 	all(key)?.let { termStack ->
 		when {
 			termStack.pop == null -> termStack.top
-			else -> termStack.reverse
-				.foldTop { term ->
+			else -> termStack.reverse.stream
+				.foldFirst { term ->
 					term(lastWord fieldTo term)
 				}
-				.foldPop { selectTerm, term ->
+				.foldNext { term ->
 					term(
-						previousWord fieldTo selectTerm,
+						previousWord fieldTo this,
 						lastWord fieldTo term)
 				}
 		}
@@ -195,8 +193,9 @@ fun <V, R> Term.Identifier<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
 fun <V, R> Term.Structure<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
 	fieldStack
 		.reverse
-		.foldTop { field -> field.foldTokens(folded, fn) }
-		.foldPop { foldedTop, field -> field.foldTokens(foldedTop, fn) }
+		.stream
+		.foldFirst { field -> field.foldTokens(folded, fn) }
+		.foldNext { field -> field.foldTokens(this, fn) }
 
 // === reflect
 
@@ -240,7 +239,7 @@ fun <V, R> R.foldBytes(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R 
 	when (term) {
 		is Term.Meta -> metaFn(term.value)
 		is Term.Identifier -> foldBytes(term.word, fn)
-		is Term.Structure -> fold(term.fieldStack.reverse) { field -> foldBytes(field, metaFn, fn) }
+		is Term.Structure -> fold(term.fieldStack.reverse.stream) { field -> foldBytes(field, metaFn, fn) }
 	}
 
 fun <R> R.foldBytes(term: Term<*>, fn: R.(Byte) -> R): R =
