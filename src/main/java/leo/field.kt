@@ -44,11 +44,6 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 					.append(field.value)
 		}
 
-// === tokens
-
-fun <V, R> Field<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-	fn(value.foldTokens(fn(fn(folded, token(key)), beginToken()), fn), endToken())
-
 // === reflect
 
 fun <V> Field<V>.reflect(reflectValue: (V) -> Term<Value>): Field<Value> =

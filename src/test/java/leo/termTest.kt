@@ -1,6 +1,8 @@
 package leo
 
-import leo.base.*
+import leo.base.assertEqualTo
+import leo.base.stack
+import leo.base.string
 import kotlin.test.Test
 
 val personTerm =
@@ -112,30 +114,6 @@ class TermTest {
 				term(
 					oneWord fieldTo term(1),
 					twoWord fieldTo term(2)))
-	}
-
-	@Test
-	fun foldTokens() {
-		term(
-			personWord fieldTo term(
-				nameWord fieldTo term(stringWord),
-				ageWord fieldTo term(12)))
-			.foldTokens(nullStack<Token<Int>>()) { stackOrNull, token ->
-				stackOrNull.push(token)
-			}
-			.assertEqualTo(
-				stack(
-					token(personWord),
-					beginToken(),
-					token(nameWord),
-					beginToken(),
-					token(stringWord),
-					endToken(),
-					token(ageWord),
-					beginToken(),
-					token(12),
-					endToken(),
-					endToken()))
 	}
 
 	@Test

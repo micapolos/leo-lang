@@ -175,28 +175,6 @@ fun <V> Term<V>.select(key: Word): Term<V>? =
 		}
 	}
 
-// === tokens
-
-fun <V, R> Term<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-	when (this) {
-		is Term.Meta -> this.foldTokens(folded, fn)
-		is Term.Identifier -> this.foldTokens(folded, fn)
-		is Term.Structure -> this.foldTokens(folded, fn)
-	}
-
-fun <V, R> Term.Meta<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-	fn(folded, token(value))
-
-fun <V, R> Term.Identifier<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-	fn(folded, token(word))
-
-fun <V, R> Term.Structure<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-	fieldStack
-		.reverse
-		.stream
-		.foldFirst { field -> field.foldTokens(folded, fn) }
-		.foldNext { field -> field.foldTokens(this, fn) }
-
 // === reflect
 
 fun <V> Term<V>.fieldReflect(reflectValue: (V) -> Field<Value>): Field<Value> =
