@@ -50,7 +50,7 @@ class StackTest {
 	fun foldTopAndPop() {
 		stack(1, 2, 3)
 			.foldTop { it.string }
-			.andPop(String::plus)
+			.foldPop(String::plus)
 			.assertEqualTo("321")
 	}
 }

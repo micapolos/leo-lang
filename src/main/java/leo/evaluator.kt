@@ -33,7 +33,7 @@ fun <R> R.foldBytes(evaluator: Evaluator, fn: R.(Byte) -> R): R =
 	evaluator.scopeStack.reverse.foldTop { scope ->
 		if (scope.valueTermOrNull == null) this
 		else foldBytes(scope.valueTermOrNull, fn)
-	}.andPop { folded, scope ->
+	}.foldPop { folded, scope ->
 		folded
 			.fn('('.toByte())
 			.foldBytes(scope, fn)

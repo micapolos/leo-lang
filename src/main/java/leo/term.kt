@@ -93,7 +93,7 @@ fun Appendable.appendCore(structureTerm: Term.Structure<*>): Appendable =
 		.fieldStack
 		.reverse
 		.foldTop { field -> appendCore(field) }
-		.andPop { appendable, field -> appendable.appendCore(field) }
+		.foldPop { appendable, field -> appendable.appendCore(field) }
 
 // === Appendable (pretty-print)
 
@@ -116,7 +116,7 @@ fun Appendable.append(structureTerm: Term.Structure<*>): Appendable =
 		.fieldStack
 		.reverse
 		.foldTop { field -> append(field) }
-		.andPop { appendable, field ->
+		.foldPop { appendable, field ->
 			appendable
 				.append(", ")
 				.append(field)
@@ -169,7 +169,7 @@ fun <V> Term<V>.select(key: Word): Term<V>? =
 				.foldTop { term ->
 					term(lastWord fieldTo term)
 				}
-				.andPop { selectTerm, term ->
+				.foldPop { selectTerm, term ->
 					term(
 						previousWord fieldTo selectTerm,
 						lastWord fieldTo term)
@@ -196,7 +196,7 @@ fun <V, R> Term.Structure<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
 	fieldStack
 		.reverse
 		.foldTop { field -> field.foldTokens(folded, fn) }
-		.andPop { foldedTop, field -> field.foldTokens(foldedTop, fn) }
+		.foldPop { foldedTop, field -> field.foldTokens(foldedTop, fn) }
 
 // === reflect
 
@@ -245,3 +245,8 @@ fun <V, R> R.foldBytes(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Byte) -> R): R 
 
 fun <R> R.foldBytes(term: Term<*>, fn: R.(Byte) -> R): R =
 	foldBytes(term, { fail }, fn)
+
+// === folding chars
+
+fun <V, R> R.foldChars(term: Term<V>, metaFn: R.(V) -> R, fn: R.(Char) -> R): R =
+	foldBytes(term, metaFn) { byte -> fn(byte.toChar()) }

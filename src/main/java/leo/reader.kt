@@ -1,6 +1,6 @@
 package leo
 
-import leo.base.andPop
+import leo.base.foldPop
 import leo.base.foldTop
 import leo.base.reverse
 import leo.base.string
@@ -34,7 +34,7 @@ fun <R> R.read(
 								if (topField != leoReaderField<Value>()) null
 								else to(reader.copy(valueTerm = leoReaderTerm()))
 							}
-							.andPop { foldedAndReaderOrNull, followingField ->
+							.foldPop { foldedAndReaderOrNull, followingField ->
 								foldedAndReaderOrNull?.let { (folded, reader) ->
 									when {
 										followingField.key != readWord -> null

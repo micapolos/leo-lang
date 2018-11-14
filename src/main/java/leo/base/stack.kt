@@ -4,8 +4,7 @@ import leo.*
 
 data class Stack<V>(
 	val pop: Stack<V>?,
-	val top: V
-) {
+	val top: V) {
 	override fun toString() = appendableString { it.append(this) }
 
 	data class FoldedTop<V, R>(
@@ -45,7 +44,7 @@ fun <V> stackOrNull(vararg values: V): Stack<V>? =
 fun <V, R> Stack<V>.foldTop(fn: (V) -> R): Stack.FoldedTop<V, R> =
 	Stack.FoldedTop(fn(top), pop)
 
-fun <V, R> Stack.FoldedTop<V, R>.andPop(fn: (R, V) -> R): R =
+fun <V, R> Stack.FoldedTop<V, R>.foldPop(fn: (R, V) -> R): R =
 	foldedTop.fold(pop, fn)
 
 fun <V, R> R.fold(stackOrNull: Stack<V>?, fn: R.(V) -> R): R =
@@ -54,7 +53,7 @@ fun <V, R> R.fold(stackOrNull: Stack<V>?, fn: R.(V) -> R): R =
 
 val <V> Stack<V>.reverse: Stack<V>
 	get() =
-		foldTop { top -> top.stack }.andPop { stack, value -> stack.push(value) }
+		foldTop { top -> top.stack }.foldPop { stack, value -> stack.push(value) }
 
 fun <V> Stack<V>.contains(value: V): Boolean =
 	top == value || (pop?.contains(value) ?: false)
@@ -84,7 +83,7 @@ fun <V> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
 fun <V, R> Stack<V>.map(fn: (V) -> R): Stack<R> =
 	reverse
 		.foldTop { top -> fn(top).stack }
-		.andPop { stack, value -> stack.push(fn(value)) }
+		.foldPop { stack, value -> stack.push(fn(value)) }
 
 fun <V, R> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
 	(null as Stack<R>?).fold(this) { value ->
@@ -118,13 +117,13 @@ fun <V, F> Stack<V>.reflect(key: Word, reflectValue: (V) -> Field<F>): Field<F> 
 	key fieldTo term(
 		stackWord fieldTo reverse
 			.foldTop { value -> reflectValue(value).stack }
-			.andPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
+			.foldPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
 			.term)
 
 fun <V> Stack<V>.reflect(reflectValue: (V) -> Field<Value>): Term<Value> =
 	reverse
 		.foldTop { value -> reflectValue(value).stack }
-		.andPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
+		.foldPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
 		.term
 
 // === parse
@@ -136,7 +135,7 @@ fun <V> Term<Value>.parseStack(parseValue: (Field<Value>) -> V?): Stack<V>? =
 		?.foldTop { field ->
 			parseValue(field)?.stack
 		}
-		?.andPop { stackOrNull, field ->
+		?.foldPop { stackOrNull, field ->
 			parseValue(field)?.let { value ->
 				stackOrNull?.push(value)
 			}
