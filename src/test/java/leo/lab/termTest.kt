@@ -6,14 +6,13 @@ import leo.base.string
 import kotlin.test.Test
 
 class TermTest {
-	val testTerm = nullTerm
-		.plus(oneWord)
-		.plus(negateWord)
-		.plus(plusWord, nullTerm
-			.plus(twoWord))
-		.plus(plusWord, nullTerm
-			.plus(ageWord)
-			.plus(personWord))
+	val testTerm = term(
+		oneWord.field,
+		negateWord.field,
+		plusWord fieldTo twoWord.term,
+		plusWord fieldTo term(
+			ageWord.field,
+			personWord.field))
 
 	@Test
 	fun string() {
@@ -31,16 +30,16 @@ class TermTest {
 
 	@Test
 	fun isSimple_singleWord() {
-		nullTerm.plus(oneWord).isSimple.assertEqualTo(true)
+		oneWord.term.isSimple.assertEqualTo(true)
 	}
 
 	@Test
 	fun isSimple_wordChain() {
-		nullTerm.plus(oneWord, nullTerm.plus(twoWord)).isSimple.assertEqualTo(true)
+		oneWord.fieldTo(twoWord.term).term.isSimple.assertEqualTo(true)
 	}
 
 	@Test
 	fun isSimple_nodeChain() {
-		nullTerm.plus(oneWord).plus(twoWord).isSimple.assertEqualTo(false)
+		term(oneWord.field, twoWord.field).isSimple.assertEqualTo(false)
 	}
 }

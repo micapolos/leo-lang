@@ -1,0 +1,59 @@
+package leo.lab
+
+import leo.Word
+import leo.base.*
+import leo.byteStream
+
+data class Field<out V>(
+	val value: V,
+	val word: Word,
+	val termOrNull: Term<V>?) {
+	override fun toString() = appendableString { it.append(this) }
+}
+
+val Word.field: Field<Unit>
+	get() =
+		fieldTo(null)
+
+infix fun Word.fieldTo(termOrNull: Term<Unit>?) =
+	Field(Unit, this, termOrNull)
+
+fun <V> Field<V>.get(key: Word): The<Term<V>?>? =
+	if (this.word == key) termOrNull.the else null
+
+// === appendable
+
+fun <V> Appendable.append(field: Field<V>): Appendable =
+	this
+		.appendString(field.word)
+		.let { appendable ->
+			if (field.termOrNull == null) appendable
+			else if (field.termOrNull.isSimple) append(' ').append(field.termOrNull)
+			else append('(').append(field.termOrNull).append(')')
+		}
+
+// === byte stream
+
+val <V> Field<V>.byteStream: Stream<Byte>
+	get() =
+		word.byteStream
+			.then('('.toByte().onlyStream)
+			.thenIfNotNull(termOrNull?.byteStream)
+			.then(')'.toByte().onlyStream)
+
+// === reflect
+
+//fun <V> Field<V>.reflect(reflectValue: (V) -> Term<Value>): Field<Value> =
+//	fieldWord fieldTo term(
+//		keyWord fieldTo term(key.reflect),
+//		valueWord fieldTo term(value.reflect(reflectValue))
+//	)
+//
+//fun <V> Field<V>?.orNullField(word: Word): Field<V> =
+//	this ?: word fieldTo term(nullWord)
+//
+//fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
+//	key fieldTo value.map(fn)
+//
+//fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Value>): Field<Value> =
+//	this?.let(reflect) ?: word.fieldTo(term(nullWord))

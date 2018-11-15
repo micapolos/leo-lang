@@ -2,7 +2,7 @@ package leo.base
 
 import leo.*
 
-data class Stack<V>(
+data class Stack<out V>(
 	val pop: Stack<V>?,
 	val top: V) {
 	override fun toString() = appendableString { it.append(this) }
