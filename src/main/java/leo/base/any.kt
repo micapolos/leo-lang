@@ -11,6 +11,10 @@ fun <V, R> V?.ifNull(fn: () -> R): R? =
 	if (this == null) fn()
 	else null
 
+fun <V, R> R.foldIfNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
+	if (valueOrNull == null) this
+	else fn(valueOrNull)
+
 val fail: Nothing
 	get() =
 		throw IllegalStateException()

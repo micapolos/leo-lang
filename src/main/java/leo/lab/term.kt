@@ -1,31 +1,41 @@
 package leo.lab
 
-import leo.Word
+import leo.*
+import leo.base.*
 
 sealed class Term<out V> {
 	data class Meta<V>(
+		val type: Type<V>,
 		val value: V) : Term<V>() {
-		//override fun toString() = appendableString { it.append(this) }
+		override fun toString() = appendableString { it.append(this) }
+
+		data class Type<V>(
+			val parseValue: (Term<Nothing>) -> V?,
+			val reflectValue: (V) -> Term<Nothing>)
 	}
 
 	data class Node<V>(
 		val lhsTermOrNull: Term<V>?,
 		val word: Word,
 		val rhsTermOrNull: Term<V>?) : Term<V>() {
-		//override fun toString() = appendableString { it.append(this) }
+		override fun toString() = appendableString { it.append(this) }
 	}
 }
 
 // === constructors
 
+val nothingTermType = Term.Meta.Type({ fail }, { fail })
+
+fun <V> Term.Meta.Type<V>.term(value: V) =
+	Term.Meta(this, value)
+
 fun <V> nullTerm(): Term<V>? =
 	null
 
-val <V> V.metaTerm
-	get() =
-		Term.Meta(this)
+val nullTerm: Term<Nothing>? =
+	nullTerm()
 
-fun <V> Term<V>?.plus(word: Word, rhsTermOrNull: Term<V>?): Term<V> =
+fun <V> Term<V>?.plus(word: Word, rhsTermOrNull: Term<V>? = null): Term<V> =
 	Term.Node(this, word, rhsTermOrNull)
 
 // === casting
@@ -38,46 +48,68 @@ val <V> Term<V>.nodeTermTermOrNull
 	get() =
 		this as? Term.Node<V>
 
-// === Appendable (core)
+// === meta handling
 
-//fun Appendable.appendCore(term: Term<*>): Appendable =
-//	when (term) {
-//		is Term.Meta -> appendString(term.value)
-//		is Term.Node -> appendCore(term)
-//	}
-//
-//fun Appendable.appendCore(nodeTerm: Term.Node<*>): Appendable =
-//	nodeTerm
-//		.fieldStack
-//		.reverse
-//		.stream
-//		.foldFirst { field -> appendCore(field) }
-//		.foldNext { field -> appendCore(field) }
-//
-//// === Appendable (pretty-print)
-//
-//val Term<*>.coreString
-//	get() =
-//		appendableString { it.appendCore(this) }
-//
-//fun Appendable.append(term: Term<*>): Appendable =
-//	when (term) {
-//		is Term.Meta -> appendString(term.value)
-//		is Term.Identifier -> append(term)
-//		is Term.Node -> append(term)
-//	}
-//
-//fun Appendable.append(identifier: Term.Identifier<*>): Appendable =
-//	append(identifier.word)
-//
-//fun Appendable.append(nodeTerm: Term.Node<*>): Appendable =
-//	nodeTerm
-//		.fieldStack
-//		.reverse
-//		.stream
-//		.foldFirst { field -> append(field) }
-//		.foldNext { field -> append(", ").append(field) }
-//
+val <V> Term.Meta<V>.reflect: Term<Nothing>
+	get() =
+		type.reflectValue(value)
+
+// === Appendable (pretty-print)
+
+val <V> Term<V>.isSimple: Boolean
+	get() =
+		when (this) {
+			is Term.Meta -> this.reflect.isSimple
+			is Term.Node -> this.lhsTermOrNull == null
+		}
+
+fun <V> Appendable.append(term: Term<V>): Appendable =
+	when (term) {
+		is Term.Meta -> append(term)
+		is Term.Node -> append(term)
+	}
+
+fun <V> Appendable.append(metaTerm: Term.Meta<V>): Appendable =
+	append(metaWord.fieldTo(term(metaTerm.type.reflectValue(metaTerm.value))))
+
+fun <V> Appendable.append(nodeTerm: Term.Node<V>): Appendable =
+	this
+		.foldIfNotNull(nodeTerm.lhsTermOrNull) { lhs -> append(lhs).append(", ") }
+		.append(nodeTerm.word.string)
+		.foldIfNotNull(nodeTerm.rhsTermOrNull) { rhs ->
+			if (rhs.isSimple) append(' ').append(rhs)
+			else append('(').append(rhs).append(')')
+		}
+
+// === byte stream
+
+val <V> Term<V>.coreString: String
+	get() =
+		appendableString { appendable ->
+			appendable.fold(byteStream) { byte ->
+				append(byte.toChar())
+			}
+		}
+
+val <V> Term<V>.byteStream: Stream<Byte>
+	get() =
+		when (this) {
+			is Term.Meta -> this.byteStream
+			is Term.Node -> this.byteStream
+		}
+
+val <V> Term.Meta<V>.byteStream: Stream<Byte>
+	get() =
+		reflect.byteStream
+
+val <V> Term.Node<V>.byteStream: Stream<Byte>
+	get() =
+		lhsTermOrNull?.byteStream
+			.orNullThen(word.byteStream)
+			.then('('.toByte().onlyStream)
+			.thenIfNotNull(rhsTermOrNull?.byteStream)
+			.then(')'.toByte().onlyStream)
+
 //// === access
 //
 //fun <V> Term<V>.all(key: Word): Stack<Term<V>>? =

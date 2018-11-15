@@ -21,11 +21,17 @@ val <V> Stream<V>.nextOrNull: Stream<V>?
 fun <V> Stream<V>.plus(value: V) =
 	Stream(value) { this }
 
-fun <V> Stream<V>.then(stream: Stream<V>?): Stream<V> =
+fun <V> Stream<V>.then(stream: Stream<V>): Stream<V> =
 	Stream(first) { nextOrNull?.then(stream) ?: stream }
 
-fun <V> Stream<V>?.orNullThen(stream: Stream<V>?): Stream<V>? =
+fun <V> Stream<V>.thenIfNotNull(streamOrNull: Stream<V>?): Stream<V> =
+	foldIfNotNull(streamOrNull, Stream<V>::then)
+
+fun <V> Stream<V>?.orNullThen(stream: Stream<V>): Stream<V> =
 	this?.then(stream) ?: stream
+
+fun <V> Stream<V>?.orNullThenIfNotNull(streamOrNull: Stream<V>?): Stream<V>? =
+	if (streamOrNull == null) this else orNullThen(streamOrNull)
 
 val <V> Stream<Stream<V>>.join: Stream<V>
 	get() =

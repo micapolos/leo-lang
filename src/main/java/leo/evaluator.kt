@@ -34,8 +34,8 @@ val Evaluator.byteStreamOrNull: Stream<Byte>?
 	get() =
 		scopeStack.reverse.let { reverseScopeStack ->
 			reverseScopeStack.top.valueTermOrNull?.byteStream
-				.orNullThen(reverseScopeStack.pop?.stream?.map { it.byteStream }?.join?.then('('.toByte().onlyStream))
-		}.orNullThen(wordOrNull?.byteStream)
+				.orNullThenIfNotNull(reverseScopeStack.pop?.stream?.map { it.byteStream }?.join?.then('('.toByte().onlyStream))
+		}.orNullThenIfNotNull(wordOrNull?.byteStream)
 
 fun Evaluator.push(byte: Byte): Evaluator? =
 	when (byte) {

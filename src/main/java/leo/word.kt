@@ -4,7 +4,7 @@ import leo.base.*
 
 data class Word(
 	val letterStack: Stack<Letter>) {
-	override fun toString() = reflect.string
+	override fun toString() = appendableString { it.append(this) }
 
 	sealed class Reader {
 		object Empty : Reader()
@@ -112,9 +112,13 @@ val literalWord = "literal".wordOrNull!!
 val metaWord = "meta".wordOrNull!!
 val nameWord = "name".wordOrNull!!
 val nativeWord = "native".wordOrNull!!
-val none = "none".wordOrNull!!
-val nothing = "nothing".wordOrNull!!
+val negateWord = "negate".wordOrNull!!
+val noneWord = "none".wordOrNull!!
+val notWord = "not".wordOrNull!!
+val nothingWord = "nothing".wordOrNull!!
 val nullWord = "null".wordOrNull!!
+val nullabilityWord = "nullability".wordOrNull!!
+val nullableWord = "nullable".wordOrNull!!
 val numberWord = "number".wordOrNull!!
 val oneWord = "one".wordOrNull!!
 val ofWord = "of".wordOrNull!!

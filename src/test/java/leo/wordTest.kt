@@ -8,7 +8,7 @@ import kotlin.test.Test
 class WordTest {
 	@Test
 	fun string() {
-		"foo".wordOrNull?.string.assertEqualTo("word foo")
+		"foo".wordOrNull?.string.assertEqualTo("foo")
 		"".wordOrNull?.string.assertEqualTo(null)
 		"int64".wordOrNull?.string.assertEqualTo(null)
 		"Foo".wordOrNull?.string.assertEqualTo(null)

@@ -6,7 +6,7 @@ fun appendableString(fn: (Appendable) -> Unit): String {
 	return stringBuilder.toString()
 }
 
-fun Appendable.appendString(value: Any?) =
+fun Appendable.appendString(value: Any?): Appendable =
 	append(value.string)
 
 val String.byteStreamOrNull: Stream<Byte>?

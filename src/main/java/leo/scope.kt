@@ -1,9 +1,6 @@
 package leo
 
-import leo.base.Stream
-import leo.base.onlyStream
-import leo.base.string
-import leo.base.then
+import leo.base.*
 
 data class Scope(
 	val parentWord: Word,
@@ -61,7 +58,7 @@ val Scope.reflect: Field<Value>
 val Scope.byteStream: Stream<Byte>
 	get() =
 		parentWord.byteStream
-			.then(valueTermOrNull?.let { valueTerm ->
+			.thenIfNotNull(valueTermOrNull?.let { valueTerm ->
 				'('.toByte().onlyStream
 					.then(valueTerm.byteStream)
 			})
