@@ -26,12 +26,12 @@ class StackTest {
 
 	@Test
 	fun only_hasOne() {
-		stack(1).only.assertEqualTo(1)
+		stack(1).theOnlyOrNull.assertEqualTo(1.the)
 	}
 
 	@Test
 	fun only_hasMany() {
-		stack(1, 2).only.assertEqualTo(null)
+		stack(1, 2).theOnlyOrNull.assertEqualTo(null)
 	}
 
 	@Test

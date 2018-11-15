@@ -124,11 +124,11 @@ fun Appendable.append(structureTerm: Term.Structure<*>): Appendable =
 
 fun <V> Term<V>.all(key: Word): Stack<Term<V>>? =
 	structureTermOrNull?.fieldStack?.filterMap { field ->
-		field.termOrNull(key)
+		field.termOrNull(key)?.the
 	}
 
 fun <V> Term<V>.only(key: Word): Term<V>? =
-	all(key)?.only
+	all(key)?.theOnlyOrNull?.value
 
 fun <V> Term<V>.singleton(key: Word): Term<V>? =
 	when {
@@ -140,7 +140,7 @@ fun <V> Term<V>.singleton(key: Word): Term<V>? =
 
 val <V> Term<V>.onlyField: Field<V>?
 	get() =
-		structureTermOrNull?.fieldStack?.only
+		structureTermOrNull?.fieldStack?.theOnlyOrNull?.value
 
 fun <V, R> Term<V>.match(key: Word, fn: (Term<V>) -> R): R? =
 	when {

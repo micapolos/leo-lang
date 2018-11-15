@@ -58,9 +58,9 @@ val <V> Stack<V>.reverse: Stack<V>
 fun <V> Stack<V>.contains(value: V): Boolean =
 	top == value || (pop?.contains(value) ?: false)
 
-val <V> Stack<V>.only: V?
+val <V> Stack<V>.theOnlyOrNull: The<V>?
 	get() =
-		if (pop != null) null else top
+		if (pop != null) null else top.the
 
 tailrec fun <V> Stack<V>.top(fn: (V) -> Boolean): V? =
 	when {
@@ -69,8 +69,8 @@ tailrec fun <V> Stack<V>.top(fn: (V) -> Boolean): V? =
 		else -> null
 	}
 
-fun <V> Stack<V>.only(fn: (V) -> Boolean): V? =
-	all(fn)?.only
+fun <V> Stack<V>.theOnlyOrNull(fn: (V) -> Boolean): The<V>? =
+	all(fn)?.theOnlyOrNull
 
 fun <V> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
 	nullOf<Stack<V>>()
@@ -83,11 +83,11 @@ fun <V> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
 fun <V, R> Stack<V>.map(fn: (V) -> R): Stack<R> =
 	stream.map(fn).stack.reverse
 
-fun <V, R> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
+fun <V, R> Stack<V>.filterMap(fn: (V) -> The<R>?): Stack<R>? =
 	(null as Stack<R>?).fold(this) { value ->
 		fn(value).let { mappedOrNull ->
 			if (mappedOrNull == null) this
-			else push(mappedOrNull)
+			else push(mappedOrNull.value)
 		}
 	}?.reverse
 

@@ -55,14 +55,14 @@ val <V> Term<V>.byteStream: Stream<Byte>
 
 // === access
 
-//fun <V> Term<V>.all(key: Word): Stack<Term<V>>? =
-//	fieldStack?.filterMap { field ->
-//		field.termOrNull(key)
-//	}
+//fun <V> Term<V>.all(key: Word): Stack<Term<V>?>? =
+//	fieldStack
+//		.filterMap { field -> field.get(key) }
+//		?.map { it.value }
 //
 //fun <V> Term<V>.only(key: Word): Term<V>? =
-//	all(key)?.only
-//
+//	all(key)?.theOnlyOrNull
+
 //fun <V> Term<V>.singleton(key: Word): Term<V>? =
 //	when {
 //		this !is Term.Node -> null
@@ -107,28 +107,6 @@ val <V> Term<V>.byteStream: Stream<Byte>
 //				}
 //		}
 //	}
-//
-//// === tokens
-//
-//fun <V, R> Term<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-//	when (this) {
-//		is Term.Meta -> this.foldTokens(folded, fn)
-//		is Term.Identifier -> this.foldTokens(folded, fn)
-//		is Term.Node -> this.foldTokens(folded, fn)
-//	}
-//
-//fun <V, R> Term.Meta<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-//	fn(folded, token(value))
-//
-//fun <V, R> Term.Identifier<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-//	fn(folded, token(word))
-//
-//fun <V, R> Term.Node<V>.foldTokens(folded: R, fn: (R, Token<V>) -> R): R =
-//	fieldStack
-//		.reverse
-//		.stream
-//		.foldFirst { field -> field.foldTokens(folded, fn) }
-//		.foldNext { field -> field.foldTokens(this, fn) }
 
 // === reflect
 
@@ -136,25 +114,5 @@ val <V> Term<V>.reflect: Field<Unit>
 	get() =
 		termWord fieldTo fieldStack.reflect(Field<V>::reflect)
 
-//fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
-//	when (this) {
-//		is Term.Meta -> Term.Meta(fn(value))
-//		is Term.Identifier -> Term.Identifier(word)
-//		is Term.Node -> Term.Node(fieldStack.map { field -> field.map(fn) })
-//	}
-//
-//fun <V, R> Term<V>.cast(): Term<R> =
-//	map { fail }
-//
-//// === folding bytes
-//
-//fun <V> Term<V>.byteStream(metaByteStream: (V) -> Stream<Byte>): Stream<Byte> =
-//	when (this) {
-//		is Term.Meta -> metaByteStream(value)
-//		is Term.Identifier -> word.byteStream
-//		is Term.Node -> fieldStack.reverse.stream.map { it.byteStream(metaByteStream) }.join
-//	}
-//
-//val Term<Value>.byteStream: Stream<Byte>
-//	get() =
-//		byteStream { fail }
+fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
+	Term(fieldStack.map { field -> field.map(fn) })

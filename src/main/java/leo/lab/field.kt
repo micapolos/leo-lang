@@ -53,9 +53,6 @@ fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Unit>): Field<Unit> 
 
 //fun <V> Field<V>?.orNullField(word: Word): Field<V> =
 //	this ?: word fieldTo term(nullWord)
-//
-//fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
-//	key fieldTo value.map(fn)
-//
-//fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Value>): Field<Value> =
-//	this?.let(reflect) ?: word.fieldTo(term(nullWord))
+
+fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
+	Field(fn(value), word, termOrNull?.map(fn))
