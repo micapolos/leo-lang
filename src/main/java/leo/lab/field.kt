@@ -1,8 +1,7 @@
 package leo.lab
 
-import leo.Word
+import leo.*
 import leo.base.*
-import leo.byteStream
 
 data class Field<out V>(
 	val value: V,
@@ -43,12 +42,15 @@ val <V> Field<V>.byteStream: Stream<Byte>
 
 // === reflect
 
-//fun <V> Field<V>.reflect(reflectValue: (V) -> Term<Value>): Field<Value> =
-//	fieldWord fieldTo term(
-//		keyWord fieldTo term(key.reflect),
-//		valueWord fieldTo term(value.reflect(reflectValue))
-//	)
-//
+val <V> Field<V>.reflect: Field<Unit>
+	get() =
+		fieldWord fieldTo term(
+			word.labReflect,
+			termOrNull.orNullReflect(termWord, Term<V>::reflect))
+
+fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Unit>): Field<Unit> =
+	this?.let(reflect) ?: word.fieldTo(nullWord.term)
+
 //fun <V> Field<V>?.orNullField(word: Word): Field<V> =
 //	this ?: word fieldTo term(nullWord)
 //

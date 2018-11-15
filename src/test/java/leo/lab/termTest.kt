@@ -42,4 +42,9 @@ class TermTest {
 	fun isSimple_nodeChain() {
 		term(oneWord.field, twoWord.field).isSimple.assertEqualTo(false)
 	}
+
+	@Test
+	fun reflect() {
+		testTerm.reflect.string.assertEqualTo("term(field(word one, term null), field(word negate, term null), field(word plus, term field(word two, term null)), field(word plus, term(field(word age, term null), field(word person, term null))))")
+	}
 }

@@ -2,6 +2,7 @@ package leo.lab
 
 import leo.Word
 import leo.base.*
+import leo.termWord
 
 data class Term<out V>(
 	val fieldStack: Stack<Field<V>>) {
@@ -128,33 +129,13 @@ val <V> Term<V>.byteStream: Stream<Byte>
 //		.stream
 //		.foldFirst { field -> field.foldTokens(folded, fn) }
 //		.foldNext { field -> field.foldTokens(this, fn) }
-//
-//// === reflect
-//
-//fun <V> Term<V>.fieldReflect(reflectValue: (V) -> Field<Value>): Field<Value> =
-//	reflect { value -> term(reflectValue(value)) }
-//
-//fun <V> Term<V>.reflect(reflectValue: (V) -> Term<Value>): Field<Value> =
-//	termWord fieldTo term(termReflect(reflectValue))
-//
-//fun <V> Term<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
-//	when (this) {
-//		is Term.Meta -> this.termReflect(reflectValue)
-//		is Term.Identifier -> this.termReflect()
-//		is Term.Node -> this.termReflect(reflectValue)
-//	}
-//
-//fun <V> Term.Meta<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
-//	metaWord fieldTo reflectValue(value)
-//
-//fun <V> Term.Identifier<V>.termReflect(): Field<Value> =
-//	identifierWord fieldTo term(word.reflect)
-//
-//fun <V> Term.Node<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
-//	structureWord fieldTo fieldStack.reflect { field ->
-//		field.reflect(reflectValue)
-//	}
-//
+
+// === reflect
+
+val <V> Term<V>.reflect: Field<Unit>
+	get() =
+		termWord fieldTo fieldStack.reflect(Field<V>::reflect)
+
 //fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
 //	when (this) {
 //		is Term.Meta -> Term.Meta(fn(value))
