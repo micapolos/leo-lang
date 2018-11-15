@@ -2,6 +2,8 @@ package leo.lab
 
 import leo.Word
 import leo.base.*
+import leo.lastWord
+import leo.previousWord
 import leo.termWord
 
 data class Term<out V>(
@@ -55,58 +57,54 @@ val <V> Term<V>.byteStream: Stream<Byte>
 
 // === access
 
-//fun <V> Term<V>.all(key: Word): Stack<Term<V>?>? =
-//	fieldStack
-//		.filterMap { field -> field.get(key) }
-//		?.map { it.value }
-//
-//fun <V> Term<V>.only(key: Word): Term<V>? =
-//	all(key)?.theOnlyOrNull
+fun <V> Term<V>.all(key: Word): Stack<Term<V>?>? =
+	fieldStack
+		.filterMap { field -> field.get(key) }
 
-//fun <V> Term<V>.singleton(key: Word): Term<V>? =
-//	when {
-//		this !is Term.Node -> null
-//		fieldStack.pop != null -> null
-//		fieldStack.top.key != key -> null
-//		else -> fieldStack.top.value
-//	}
-//
-//val <V> Term<V>.onlyField: Field<V>?
-//	get() =
-//		structureTermOrNull?.fieldStack?.only
-//
-//fun <V, R> Term<V>.match(key: Word, fn: (Term<V>) -> R): R? =
-//	when {
-//		this !is Term.Node -> null
-//		fieldStack.top.key != key -> null
-//		fieldStack.pop != null -> null
-//		else -> fn(fieldStack.top.value)
-//	}
-//
-//fun <V, R> Term<V>.match(firstKey: Word, secondKey: Word, fn: (Term<V>, Term<V>) -> R): R? =
-//	when {
-//		this !is Term.Node -> null
-//		fieldStack.top.key != secondKey -> null
-//		fieldStack.pop?.top?.key != firstKey -> null
-//		fieldStack.pop.pop != null -> null
-//		else -> fn(fieldStack.pop.top.value, fieldStack.top.value)
-//	}
-//
-//fun <V> Term<V>.select(key: Word): Term<V>? =
-//	all(key)?.let { termStack ->
-//		when {
-//			termStack.pop == null -> termStack.top
-//			else -> termStack.reverse.stream
-//				.foldFirst { term ->
-//					term(lastWord fieldTo term)
-//				}
-//				.foldNext { term ->
-//					term(
-//						previousWord fieldTo this,
-//						lastWord fieldTo term)
-//				}
-//		}
-//	}
+fun <V> Term<V>.only(key: Word): The<Term<V>?>? =
+	all(key)?.theOnlyOrNull
+
+fun <V> Term<V>.theOnly(key: Word): The<Term<V>?>? =
+	when {
+		fieldStack.pop != null -> null
+		fieldStack.top.word != key -> null
+		else -> fieldStack.top.termOrNull.the
+	}
+
+val <V> Term<V>.onlyFieldOrNull: Field<V>?
+	get() =
+		fieldStack.theOnlyOrNull?.value
+
+fun <V, R> Term<V>.match(key: Word, fn: (Term<V>?) -> R): R? =
+	when {
+		fieldStack.top.word != key -> null
+		fieldStack.pop != null -> null
+		else -> fn(fieldStack.top.termOrNull)
+	}
+
+fun <V, R> Term<V>.match(firstKey: Word, secondKey: Word, fn: (Term<V>?, Term<V>?) -> R): R? =
+	when {
+		fieldStack.top.word != secondKey -> null
+		fieldStack.pop?.top?.word != firstKey -> null
+		fieldStack.pop.pop != null -> null
+		else -> fn(fieldStack.pop.top.termOrNull, fieldStack.top.termOrNull)
+	}
+
+fun Term<Unit>.select(key: Word): The<Term<Unit>?>? =
+	all(key)?.let { termStack ->
+		when {
+			termStack.pop == null -> termStack.top
+			else -> termStack.reverse.stream
+				.foldFirst { term ->
+					term(lastWord fieldTo term)
+				}
+				.foldNext { term ->
+					term(
+						previousWord fieldTo this,
+						lastWord fieldTo term)
+				}
+		}.the
+	}
 
 // === reflect
 
