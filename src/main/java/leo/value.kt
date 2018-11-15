@@ -4,4 +4,4 @@ object Value
 
 val Value.reflect
 	get() =
-		valueWord fieldTo term(this)
+		valueWord fieldTo metaTerm(this)

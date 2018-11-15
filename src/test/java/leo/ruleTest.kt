@@ -35,6 +35,6 @@ class RuleTest {
 				isWord fieldTo term(thisWord)))
 			.parseRule(identityFunction)
 			.assertEqualTo(
-				term<Pattern>(oneWord) returns body(term(selector()), identityFunction))
+				term<Pattern>(oneWord) returns body(metaTerm(selector()), identityFunction))
 	}
 }

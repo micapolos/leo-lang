@@ -6,12 +6,12 @@ import kotlin.test.Test
 
 class SelectorTest {
 	val testTerm: Term<Int> = term(
-		oneWord fieldTo term(1),
-		ageWord fieldTo term(42),
-		ageWord fieldTo term(44),
+		oneWord fieldTo metaTerm(1),
+		ageWord fieldTo metaTerm(42),
+		ageWord fieldTo metaTerm(44),
 		numberWord fieldTo term(
-			firstWord fieldTo term(100),
-			lastWord fieldTo term(200)))
+			firstWord fieldTo metaTerm(100),
+			lastWord fieldTo metaTerm(200)))
 
 	@Test
 	fun invokeEmpty() {
@@ -24,7 +24,7 @@ class SelectorTest {
 	fun invokeSingleChoice() {
 		selector(oneWord)
 			.invoke(testTerm)
-			.assertEqualTo(term(1))
+			.assertEqualTo(metaTerm(1))
 	}
 
 	@Test
@@ -34,8 +34,8 @@ class SelectorTest {
 			.assertEqualTo(
 				term(
 					previousWord fieldTo term(
-						lastWord fieldTo term(42)),
-					lastWord fieldTo term(44)))
+						lastWord fieldTo metaTerm(42)),
+					lastWord fieldTo metaTerm(44)))
 	}
 
 	@Test
@@ -49,7 +49,7 @@ class SelectorTest {
 	fun invokeDeep() {
 		selector(numberWord, lastWord)
 			.invoke(testTerm)
-			.assertEqualTo(term(200))
+			.assertEqualTo(metaTerm(200))
 	}
 
 	@Test
@@ -161,42 +161,42 @@ class SelectorTest {
 				term(oneWord fieldTo term(numberWord)))
 			.assertEqualTo(
 				term(
-					nameWord fieldTo term(selector(oneWord))))
+					nameWord fieldTo metaTerm(selector(oneWord))))
 	}
 
 	@Test
 	fun parse_oneAnything_this() {
 		term<Value>(thisWord)
-			.parseSelectorTerm(term(oneWord fieldTo term(anythingPattern)))
-			.assertEqualTo(term(selector()))
+			.parseSelectorTerm(term(oneWord fieldTo metaTerm(anythingPattern)))
+			.assertEqualTo(metaTerm(selector()))
 	}
 
 	@Test
 	fun parse_oneAnything_oneThis() {
 		term<Value>(oneWord fieldTo term(thisWord))
-			.parseSelectorTerm(term(oneWord fieldTo term(anythingPattern)))
-			.assertEqualTo(term(selector(oneWord)))
+			.parseSelectorTerm(term(oneWord fieldTo metaTerm(anythingPattern)))
+			.assertEqualTo(metaTerm(selector(oneWord)))
 	}
 
 	@Test
 	fun parse_oneAnything_twoOneThis() {
 		term<Value>(twoWord fieldTo term(oneWord fieldTo term(thisWord)))
-			.parseSelectorTerm(term(oneWord fieldTo term(anythingPattern)))
-			.assertEqualTo(term(twoWord fieldTo term(selector(oneWord))))
+			.parseSelectorTerm(term(oneWord fieldTo metaTerm(anythingPattern)))
+			.assertEqualTo(term(twoWord fieldTo metaTerm(selector(oneWord))))
 	}
 
 	@Test
 	fun bodyInvoke() {
 		term(
-			thisWord fieldTo term(selector(itWord)),
-			timesWord fieldTo term(selector(plusWord)))
+			thisWord fieldTo metaTerm(selector(itWord)),
+			timesWord fieldTo metaTerm(selector(plusWord)))
 			.invoke(
 				term(
-					itWord fieldTo term(1),
-					plusWord fieldTo term(2)))
+					itWord fieldTo metaTerm(1),
+					plusWord fieldTo metaTerm(2)))
 			.assertEqualTo(
 				term(
-					thisWord fieldTo term(1),
-					timesWord fieldTo term(2)))
+					thisWord fieldTo metaTerm(1),
+					timesWord fieldTo metaTerm(2)))
 	}
 }

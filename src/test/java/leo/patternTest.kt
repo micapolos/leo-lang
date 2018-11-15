@@ -97,7 +97,7 @@ class PatternTest {
 			eitherWord fieldTo term(numberWord))
 			.parsePatternTerm
 			.assertEqualTo(
-				term(
+				metaTerm(
 					oneOfPattern(
 						term(stringWord),
 						term(numberWord))))
@@ -112,7 +112,7 @@ class PatternTest {
 			.parsePatternTerm
 			.assertEqualTo(
 				term(
-					oneWord fieldTo term(
+					oneWord fieldTo metaTerm(
 						oneOfPattern(
 							term(stringWord),
 							term(numberWord)))))
@@ -122,14 +122,14 @@ class PatternTest {
 	fun parse_anything() {
 		term<Value>(anythingWord)
 			.parsePatternTerm
-			.assertEqualTo(term(anythingPattern))
+			.assertEqualTo(metaTerm(anythingPattern))
 	}
 
 	@Test
 	fun parse_deepAnything() {
 		term<Value>(oneWord fieldTo term(anythingWord))
 			.parsePatternTerm
-			.assertEqualTo(term(oneWord fieldTo term(anythingPattern)))
+			.assertEqualTo(term(oneWord fieldTo metaTerm(anythingPattern)))
 	}
 
 	@Test
@@ -155,7 +155,7 @@ class PatternTest {
 	fun termMatches_oneOf_match() {
 		term<Value>(nameWord)
 			.matches(
-				term(
+				metaTerm(
 					oneOfPattern(
 						term(nameWord),
 						term(ageWord))))

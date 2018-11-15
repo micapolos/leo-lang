@@ -391,7 +391,7 @@ class EvaluatorTest {
 							function = Function(
 								stack(
 									rule(
-										term<Pattern>(anythingPattern),
+										metaTerm<Pattern>(anythingPattern),
 										body(
 											term(oneWord),
 											identityFunction)))),

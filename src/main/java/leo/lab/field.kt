@@ -46,11 +46,10 @@ val <V> Field<V>.byteStream: Stream<Byte>
 
 // === reflect
 
-val <V> Field<V>.reflect: Field<Nothing>
-	get() =
+fun <V> Field<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =
 		fieldWord fieldTo term(
 			word.reflect,
-			termOrNull.orNullReflect(termWord, Term<V>::reflect))
+			termOrNull.orNullReflect(termWord) { reflect(metaReflect) })
 
 fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Nothing>): Field<Nothing> =
 	this?.let(reflect) ?: word.fieldTo(nullWord.term())

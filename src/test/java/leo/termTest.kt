@@ -9,9 +9,9 @@ val personTerm =
 	term(
 		personWord fieldTo term(
 			nameWord fieldTo term(
-				firstWord fieldTo term("Michał"),
-				lastWord fieldTo term("Pociecha-Łoś")),
-			ageWord fieldTo term("42")))
+				firstWord fieldTo metaTerm("Michał"),
+				lastWord fieldTo metaTerm("Pociecha-Łoś")),
+			ageWord fieldTo metaTerm("42")))
 
 class TermTest {
 	@Test
@@ -35,25 +35,25 @@ class TermTest {
 	}
 
 	val termForGet = term(
-		oneWord fieldTo term(1),
-		ageWord fieldTo term(42),
-		ageWord fieldTo term(43),
-		twoWord fieldTo term(2)
+		oneWord fieldTo metaTerm(1),
+		ageWord fieldTo metaTerm(42),
+		ageWord fieldTo metaTerm(43),
+		twoWord fieldTo metaTerm(2)
 	)
 
 	@Test
 	fun only() {
-		termForGet.only(oneWord).assertEqualTo(term(1))
-		termForGet.only(twoWord).assertEqualTo(term(2))
+		termForGet.only(oneWord).assertEqualTo(metaTerm(1))
+		termForGet.only(twoWord).assertEqualTo(metaTerm(2))
 		termForGet.only(ageWord).assertEqualTo(null)
 		termForGet.only(nameWord).assertEqualTo(null)
 	}
 
 	@Test
 	fun all() {
-		termForGet.all(oneWord).assertEqualTo(stack(term(1)))
-		termForGet.all(twoWord).assertEqualTo(stack(term(2)))
-		termForGet.all(ageWord).assertEqualTo(stack(term(42), term(43)))
+		termForGet.all(oneWord).assertEqualTo(stack(metaTerm(1)))
+		termForGet.all(twoWord).assertEqualTo(stack(metaTerm(2)))
+		termForGet.all(ageWord).assertEqualTo(stack(metaTerm(42), metaTerm(43)))
 		termForGet.all(nameWord).assertEqualTo(null)
 	}
 
@@ -66,7 +66,7 @@ class TermTest {
 
 	@Test
 	fun nativePushIdentifier() {
-		term(1)
+		metaTerm(1)
 			.push(oneWord)
 			.assertEqualTo(null)
 	}
@@ -80,7 +80,7 @@ class TermTest {
 
 	@Test
 	fun listPushWord() {
-		term(oneWord fieldTo term(1))
+		term(oneWord fieldTo metaTerm(1))
 			.push(twoWord)
 			.assertEqualTo(null)
 	}
@@ -94,33 +94,33 @@ class TermTest {
 
 	@Test
 	fun nativePushField() {
-		term(1)
-			.push(twoWord fieldTo term(2))
+		metaTerm(1)
+			.push(twoWord fieldTo metaTerm(2))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun wordPushField() {
 		term<Nothing>(oneWord)
-			.push(twoWord fieldTo term(2))
+			.push(twoWord fieldTo metaTerm(2))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun listPushField() {
-		term(oneWord fieldTo term(1))
-			.push(twoWord fieldTo term(2))
+		term(oneWord fieldTo metaTerm(1))
+			.push(twoWord fieldTo metaTerm(2))
 			.assertEqualTo(
 				term(
-					oneWord fieldTo term(1),
-					twoWord fieldTo term(2)))
+					oneWord fieldTo metaTerm(1),
+					twoWord fieldTo metaTerm(2)))
 	}
 
 	@Test
 	fun selectSingle() {
 		termForGet
 			.select(oneWord)
-			.assertEqualTo(term(1))
+			.assertEqualTo(metaTerm(1))
 	}
 
 	@Test
@@ -130,8 +130,8 @@ class TermTest {
 			.assertEqualTo(
 				term(
 					previousWord fieldTo term(
-						lastWord fieldTo term(42)),
-					lastWord fieldTo term(43)))
+						lastWord fieldTo metaTerm(42)),
+					lastWord fieldTo metaTerm(43)))
 	}
 
 	@Test

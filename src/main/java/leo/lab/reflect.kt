@@ -1,11 +1,7 @@
 package leo.lab
 
-import leo.base.Bit
-import leo.base.bitStack
-import leo.bitWord
-import leo.byteWord
-import leo.oneWord
-import leo.zeroWord
+import leo.*
+import leo.base.*
 
 val Bit.reflect: Field<Nothing>
 	get() =
@@ -18,3 +14,24 @@ val Bit.reflect: Field<Nothing>
 val Byte.reflect: Field<Nothing>
 	get() =
 		byteWord fieldTo bitStack.reflect(Bit::reflect)
+
+fun <V> Stack<V>.reflect(key: Word, reflectValue: (V) -> Field<Nothing>): Field<Nothing> =
+	key fieldTo term(
+		stackWord fieldTo reverse
+			.foldTop { value -> reflectValue(value).onlyStack }
+			.foldPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
+			.term)
+
+fun <V> Stack<V>.reflect(reflectValue: (V) -> Field<Nothing>): Term<Nothing> =
+	reverse
+		.foldTop { value -> reflectValue(value).onlyStack }
+		.foldPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
+		.term
+
+val Word.reflect: Field<Nothing>
+	get() =
+		wordWord fieldTo term
+
+val Letter.reflect: Field<Nothing>
+	get() =
+		letterWord fieldTo char.toString().wordOrNull!!.term

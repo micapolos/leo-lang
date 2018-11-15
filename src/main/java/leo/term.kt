@@ -31,7 +31,7 @@ val <V> Stack<Field<V>>.term
 
 // === helper constructors
 
-fun <V> term(value: V) =
+fun <V> metaTerm(value: V) =
 	Term.Meta(value)
 
 fun <V> term(word: Word): Term<V> =

@@ -5,8 +5,7 @@ import leo.base.*
 
 sealed class Term<out V> {
 	data class Meta<V>(
-		val value: V,
-		val reflectFn: (V) -> Term<Nothing>) : Term<V>()
+		val value: V) : Term<V>()
 
 	data class Structure<out V>(
 		val fieldStack: Stack<Field<V>>) : Term<V>() {
@@ -16,8 +15,9 @@ sealed class Term<out V> {
 
 // === constructors
 
-infix fun <V> V.metaTerm(reflectFn: (V) -> Term<Nothing>) =
-	Term.Meta(this, reflectFn)
+val <V> V.metaTerm
+	get() =
+		Term.Meta(this)
 
 val <V> Stack<Field<V>>.term
 	get() =
@@ -142,10 +142,12 @@ fun Term<Nothing>.select(key: Word): The<Term<Nothing>?>? =
 
 // === reflect
 
-val <V> Term<V>.reflect: Field<Nothing>
-	get() =
+val Term<Nothing>.reflect: Field<Nothing>
+	get() = reflect { fail }
+
+fun <V> Term<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =
 		when (this) {
-			is Term.Meta -> metaWord fieldTo reflectFn(value)
-			is Term.Structure -> termWord fieldTo fieldStack.reflect(Field<V>::reflect)
+			is Term.Meta -> metaWord fieldTo term(metaReflect(value))
+			is Term.Structure -> termWord fieldTo fieldStack.reflect { field -> field.reflect(metaReflect) }
 		}
 

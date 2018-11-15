@@ -88,6 +88,7 @@ var byteWord = "byte".wordOrNull!!
 val cWord = "c".wordOrNull!!
 val charWord = "char".wordOrNull!!
 val characterWord = "character".wordOrNull!!
+val choiceWord = "choice".wordOrNull!!
 val classWord = "class".wordOrNull!!
 val coreWord = "core".wordOrNull!!
 val defineWord = "define".wordOrNull!!

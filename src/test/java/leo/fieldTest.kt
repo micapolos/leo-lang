@@ -6,7 +6,7 @@ import kotlin.test.Test
 class FieldTest {
 	@Test
 	fun string() {
-		numberWord.fieldTo(term(1))
+		numberWord.fieldTo(metaTerm(1))
 			.string
 			.assertEqualTo("number Integer(1)")
 	}
