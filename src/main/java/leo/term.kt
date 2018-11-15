@@ -34,7 +34,7 @@ val <V> Stack<Field<V>>.term
 fun <V> term(value: V) =
 	Term.Meta(value)
 
-fun <V> term(word: Word) =
+fun <V> term(word: Word): Term<V> =
 	Term.Identifier<V>(word)
 
 fun <V> term(field: Field<V>, vararg fields: Field<V>) =

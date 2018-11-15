@@ -26,6 +26,12 @@ fun <V> fail(): V =
 val Any?.string
 	get() =
 		when {
+			this is Byte -> "Byte($this)"
+			this is Short -> "Short($this)"
+			this is Int -> "Integer($this)"
+			this is Long -> "Long($this)"
+			this is Float -> "Float($this)"
+			this is Double -> "Double($this)"
 			this is String -> "\"$this\""
 			this is Char -> "\'$this\'"
 			else -> toString()

@@ -30,17 +30,17 @@ class TermTest {
 
 	@Test
 	fun isSimple_singleWord() {
-		oneWord.term.isSimple.assertEqualTo(true)
+		oneWord.term<Nothing>().isSimple.assertEqualTo(true)
 	}
 
 	@Test
 	fun isSimple_wordChain() {
-		oneWord.fieldTo(twoWord.term).term.isSimple.assertEqualTo(true)
+		oneWord.fieldTo(twoWord.term<Nothing>()).term.isSimple.assertEqualTo(true)
 	}
 
 	@Test
 	fun isSimple_nodeChain() {
-		term(oneWord.field, twoWord.field).isSimple.assertEqualTo(false)
+		term<Nothing>(oneWord.field(), twoWord.field()).isSimple.assertEqualTo(false)
 	}
 
 	@Test

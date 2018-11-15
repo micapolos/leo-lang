@@ -8,7 +8,7 @@ class FieldTest {
 	fun string() {
 		numberWord.fieldTo(term(1))
 			.string
-			.assertEqualTo("number 1")
+			.assertEqualTo("number Integer(1)")
 	}
 
 	@Test

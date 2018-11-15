@@ -4,18 +4,20 @@ import leo.*
 import leo.base.*
 
 data class Field<out V>(
-	val value: V,
 	val word: Word,
 	val termOrNull: Term<V>?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-val Word.field: Field<Unit>
-	get() =
+infix fun <V> Word.fieldTo(termOrNull: Term<V>?) =
+	Field(this, termOrNull)
+
+fun <V> Word.field(): Field<V> =
 		fieldTo(null)
 
-infix fun Word.fieldTo(termOrNull: Term<Unit>?) =
-	Field(Unit, this, termOrNull)
+val Word.field: Field<Nothing>
+	get() =
+		field()
 
 fun <V> Field<V>.get(key: Word): The<Term<V>?>? =
 	if (this.word == key) termOrNull.the else null
@@ -26,9 +28,11 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 	this
 		.appendString(field.word)
 		.let { appendable ->
-			if (field.termOrNull == null) appendable
-			else if (field.termOrNull.isSimple) append(' ').append(field.termOrNull)
-			else append('(').append(field.termOrNull).append(')')
+			when {
+				field.termOrNull == null -> appendable
+				field.termOrNull.isSimple -> append(' ').append(field.termOrNull)
+				else -> append('(').append(field.termOrNull).append(')')
+			}
 		}
 
 // === byte stream
@@ -42,17 +46,14 @@ val <V> Field<V>.byteStream: Stream<Byte>
 
 // === reflect
 
-val <V> Field<V>.reflect: Field<Unit>
+val <V> Field<V>.reflect: Field<Nothing>
 	get() =
 		fieldWord fieldTo term(
-			word.labReflect,
+			word.reflect,
 			termOrNull.orNullReflect(termWord, Term<V>::reflect))
 
-fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Unit>): Field<Unit> =
-	this?.let(reflect) ?: word.fieldTo(nullWord.term)
+fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Nothing>): Field<Nothing> =
+	this?.let(reflect) ?: word.fieldTo(nullWord.term())
 
 //fun <V> Field<V>?.orNullField(word: Word): Field<V> =
 //	this ?: word fieldTo term(nullWord)
-
-fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
-	Field(fn(value), word, termOrNull?.map(fn))
