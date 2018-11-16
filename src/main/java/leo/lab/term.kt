@@ -124,7 +124,7 @@ fun <V, R> Term<V>.match(firstKey: Word, secondKey: Word, fn: (Term<V>?, Term<V>
 		}
 	}
 
-fun Term<Nothing>.select(key: Word): The<Term<Nothing>?>? =
+fun <V> Term<V>.select(key: Word): The<Term<V>?>? =
 	all(key)?.run {
 		when {
 			pop == null -> top
