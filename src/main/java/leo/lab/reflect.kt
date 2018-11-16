@@ -15,7 +15,18 @@ val Byte.reflect: Field<Nothing>
 	get() =
 		byteWord fieldTo bitStack.reflect(Bit::reflect)
 
-fun <V> Stack<V>.reflect(key: Word, reflectValue: (V) -> Field<Nothing>): Field<Nothing> =
+fun <V> Stream<V>.reflect(key: Word, reflectValue: (V) -> Field<Nothing>): Field<Nothing> =
+	key fieldTo term(
+		stackWord fieldTo reverse
+			.foldFirst { value -> reflectValue(value).term }
+			.foldNext { value -> push(reflectValue(value)) })
+
+fun <V> Stream<V>.reflect(reflectValue: V.() -> Field<Nothing>): Term<Nothing> =
+	reverse
+		.foldFirst { value -> reflectValue(value).term }
+		.foldNext { value -> push(reflectValue(value)) }
+
+fun <V> Stack<V>.reflect(key: Word, reflectValue: V.() -> Field<Nothing>): Field<Nothing> =
 	key fieldTo term(
 		stackWord fieldTo reverse
 			.foldTop { value -> reflectValue(value).onlyStack }

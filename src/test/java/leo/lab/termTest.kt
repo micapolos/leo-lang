@@ -1,10 +1,7 @@
 package leo.lab
 
 import leo.*
-import leo.base.assertEqualTo
-import leo.base.nullOf
-import leo.base.stack
-import leo.base.string
+import leo.base.*
 import kotlin.test.Test
 
 class TermTest {
@@ -89,7 +86,7 @@ class TermTest {
 	fun nativePushIdentifier() {
 		1.metaTerm
 			.push(oneWord)
-			.assertEqualTo(null)
+			.assertEqualTo(Term.Structure(1.metaTerm, oneWord, null))
 	}
 
 	@Test
@@ -117,7 +114,7 @@ class TermTest {
 	fun nativePushField() {
 		1.metaTerm
 			.push(twoWord fieldTo oneWord.term)
-			.assertEqualTo(null)
+			.assertEqualTo(Term.Structure(1.metaTerm, twoWord, oneWord.term))
 	}
 
 	@Test
@@ -159,6 +156,52 @@ class TermTest {
 	fun selectMissing() {
 		termForGet
 			.select(personWord)
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun match1_nullTerm() {
+		oneWord.term
+			.match(oneWord) { it.the }
+			.assertEqualTo(null.the)
+	}
+
+	@Test
+	fun match1_nonNullTerm() {
+		term(oneWord fieldTo twoWord.term)
+			.match(oneWord) { it.the }
+			.assertEqualTo(twoWord.term.the)
+	}
+
+	@Test
+	fun match1_mismatch() {
+		term(oneWord fieldTo twoWord.term)
+			.match(twoWord) { it.the }
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun match2_nullTerms() {
+		term(oneWord.field, twoWord.field)
+			.match(oneWord, twoWord) { one, two -> one to two }
+			.assertEqualTo(null to null)
+	}
+
+	@Test
+	fun match2_nonNullTerm() {
+		term(
+			oneWord fieldTo twoWord.term,
+			twoWord fieldTo ageWord.term)
+			.match(oneWord, twoWord) { one, two -> one to two }
+			.assertEqualTo(twoWord.term to ageWord.term)
+	}
+
+	@Test
+	fun match2_mismatch() {
+		term(
+			oneWord fieldTo twoWord.term,
+			twoWord fieldTo ageWord.term)
+			.match(twoWord, oneWord) { one, two -> one to two }
 			.assertEqualTo(null)
 	}
 }

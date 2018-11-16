@@ -35,10 +35,10 @@ fun Term<Nothing>.matches(choiceMetaTerm: Term.Meta<Choice>): Boolean =
 	matches(choiceMetaTerm.value)
 
 fun Term.Structure<Nothing>.matches(choiceStructureTerm: Term.Structure<Choice>): Boolean =
-	fieldStack.top.matches(choiceStructureTerm.fieldStack.top) &&
-		if (fieldStack.pop == null) choiceStructureTerm.fieldStack.pop == null
-		else choiceStructureTerm.fieldStack.pop != null &&
-			fieldStack.pop.term.matches(choiceStructureTerm.fieldStack.pop.term)
+	topField.matches(choiceStructureTerm.topField) &&
+		if (lhsTermOrNull == null) choiceStructureTerm.lhsTermOrNull == null
+		else choiceStructureTerm.lhsTermOrNull != null &&
+			lhsTermOrNull.matches(choiceStructureTerm.lhsTermOrNull)
 
 fun Field<Nothing>.matches(choiceField: Field<Choice>) =
 	word == choiceField.word &&
@@ -50,13 +50,12 @@ fun Field<Nothing>.matches(choiceField: Field<Choice>) =
 val Term<Nothing>.parseChoice: Choice?
 	get() =
 		structureTermOrNull?.run {
-			true.fold(fieldStack.stream) { field ->
+			true.fold(fieldStream) { field ->
 				this && field.word == eitherWord && field.termOrNull != null
 			}.let { isOneOf ->
 				if (!isOneOf) null
-				else fieldStack
+				else fieldStream
 					.reverse
-					.stream
 					.foldFirst { field -> field.termOrNull!!.parseChoiceTerm.onlyStack }
 					.foldNext { field -> push(field.termOrNull!!.parseChoiceTerm) }
 					.oneOf
@@ -72,9 +71,8 @@ val Term<Nothing>.parseChoiceTerm: Term<Choice>
 
 val Term.Structure<Nothing>.parseStructureChoiceTerm: Term<Choice>
 	get() =
-		fieldStack
+		fieldStream
 			.reverse
-			.stream
 			.foldFirst { field -> field.parseChoiceField.onlyStack }
 			.foldNext { field -> push(field.parseChoiceField) }
 			.term

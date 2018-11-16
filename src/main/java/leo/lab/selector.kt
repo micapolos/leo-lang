@@ -20,30 +20,33 @@ fun Selector.then(word: Word) =
 fun selector(vararg words: Word) =
 	stackOrNull(*words).selector
 
-fun <V> Selector.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
-	argumentTermOrNull.the.orNull.fold(wordStackOrNull?.reverse?.stream) { word ->
-		this?.value?.select(word)
-	}
-
 fun Term<Nothing>.parseSelector(choice: Term<Choice>): Selector? =
 	parseSelectorToChoice(choice)?.first
 
 fun Term<Nothing>.parseSelectorToChoice(choice: Term<Choice>): Pair<Selector, Term<Choice>?>? =
 	if (this == thisWord.term) selector() to choice
 	else structureTermOrNull?.run {
-		fieldStack.top.termOrNull?.let { term ->
+		rhsTermOrNull?.let { term ->
 			term.parseSelectorToChoice(choice)?.let { (selector, choice) ->
-				choice?.select(fieldStack.top.word)?.let { argumentValue ->
-					selector.then(fieldStack.top.word) to argumentValue.value
+				choice?.select(word)?.let { argumentValue ->
+					selector.then(word) to argumentValue.value
 				}
 			}
 		}
 	}
 
-// === application
+// === apply
 
 fun Term<Selector>?.apply(argumentOrNull: Term<Nothing>?): Term<Nothing>? =
-	this?.invoke(argumentOrNull)!!.value
+	if (this == null) null
+	else invoke(argumentOrNull)!!.value
+
+// === invoke
+
+fun <V> Selector.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
+	argumentTermOrNull.the.orNull.fold(wordStackOrNull?.reverse?.stream) { word ->
+		this?.value?.select(word)
+	}
 
 fun <V> Term<Selector>.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
 	when (this) {
@@ -52,12 +55,11 @@ fun <V> Term<Selector>.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
 	}
 
 fun <V> Term.Meta<Selector>.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
-	this.value.invoke(argumentTermOrNull)
+	value.invoke(argumentTermOrNull)
 
 fun <V> Term.Structure<Selector>.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
-	fieldStack
+	fieldStream
 		.reverse
-		.stream
 		.foldFirst { field -> field.invoke(argumentTermOrNull)?.onlyStack }
 		.foldNext { field ->
 			field.invoke(argumentTermOrNull)?.let { invokedField ->
@@ -68,7 +70,8 @@ fun <V> Term.Structure<Selector>.invoke(argumentTermOrNull: Term<V>?): The<Term<
 		?.the
 
 fun <V> Field<Selector>.invoke(argumentTermOrNull: Term<V>?): Field<V>? =
-	termOrNull?.invoke(argumentTermOrNull)?.let { theValue ->
+	if (termOrNull == null) word.field
+	else termOrNull.invoke(argumentTermOrNull)?.let { theValue ->
 		word.fieldTo(theValue.value)
 	}
 
@@ -76,7 +79,7 @@ fun <V> Field<Selector>.invoke(argumentTermOrNull: Term<V>?): Field<V>? =
 
 fun Term<Nothing>.parseSelectorTerm(choiceTerm: Term<Choice>): Term<Selector> =
 	parseSelector(choiceTerm)?.metaTerm
-		?: structureTermOrNull?.fieldStack?.reverse?.stream
+		?: structureTermOrNull?.fieldStream?.reverse
 			?.foldFirst { field -> field.parseSelectorField(choiceTerm).onlyStack }
 			?.foldNext { field -> push(field.parseSelectorField(choiceTerm)) }
 			?.term ?: fail

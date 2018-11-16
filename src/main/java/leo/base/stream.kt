@@ -60,9 +60,13 @@ fun <V, R> Stream<V>.mapNotNull(fn: (V) -> R?): Stream<R>? =
 		}
 	} ?: nextOrNull?.mapNotNull(fn)
 
-val <V> Stream<V>.stack
+val <V> Stream<V>.stack: Stack<V>
 	get() =
 		foldFirst { it.onlyStack }.foldNext { push(it) }
+
+val <V> Stream<V>.reverse: Stream<V>
+	get() =
+		stack.stream
 
 val <V> Stack<V>.stream: Stream<V>
 	get() =
