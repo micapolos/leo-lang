@@ -52,43 +52,4 @@ class FunctionTest {
 			.invoke(ageWord.term)
 			.assertEqualTo(stringWord.term)
 	}
-
-	@Test
-	fun invokeFallback_match() {
-		nameToStringFunction
-			.invoke(
-				term(
-					nameWord fieldTo stringWord.term,
-					ageWord fieldTo numberWord.term,
-					nameWord.field))
-			.assertEqualTo(stringWord.term)
-	}
-
-	@Test
-	fun invokeFallback_mismatch() {
-		nameToStringFunction
-			.invoke(
-				term(
-					nameWord fieldTo stringWord.term,
-					ageWord fieldTo numberWord.term,
-					oneWord.field))
-			.assertEqualTo(
-				term(
-					oneWord fieldTo term(
-						nameWord fieldTo stringWord.term,
-						ageWord fieldTo numberWord.term)))
-	}
-
-	@Test
-	fun invokeFallback_notASelect() {
-		nameToStringFunction
-			.invoke(
-				term(
-					nameWord fieldTo stringWord.term,
-					ageWord fieldTo numberWord.term))
-			.assertEqualTo(
-				term(
-					nameWord fieldTo stringWord.term,
-					ageWord fieldTo numberWord.term))
-	}
 }

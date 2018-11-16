@@ -19,9 +19,15 @@ fun Scope.push(field: Field<Nothing>) =
 	copy(termOrNull = termOrNull.push(field))
 
 val Scope.evaluate: Scope
-	get() = null
-		?: parseRule
-		?: invokeFunction
+	get() = evaluateSelect.run {
+		null
+			?: parseRule
+			?: invokeFunction
+	}
+
+val Scope.evaluateSelect: Scope
+	get() =
+		copy(termOrNull = termOrNull?.select)
 
 val Scope.parseRule: Scope?
 	get() =

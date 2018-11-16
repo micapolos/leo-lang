@@ -17,7 +17,7 @@ class ScopeTest {
 		Function(stack(nameToStringRule))
 
 	@Test
-	fun define() {
+	fun evaluate_define() {
 		Scope(
 			nameToStringFunction,
 			term(
@@ -39,10 +39,25 @@ class ScopeTest {
 	}
 
 	@Test
-	fun invoke() {
+	fun evaluate_invoke() {
 		Scope(
 			nameToStringFunction,
 			nameWord.term)
+			.evaluate
+			.assertEqualTo(
+				Scope(
+					nameToStringFunction,
+					stringWord.term))
+	}
+
+	@Test
+	fun evaluate_select() {
+		Scope(
+			nameToStringFunction,
+			term(
+				nameWord fieldTo stringWord.term,
+				ageWord fieldTo numberWord.term,
+				nameWord.field))
 			.evaluate
 			.assertEqualTo(
 				Scope(

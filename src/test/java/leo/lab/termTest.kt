@@ -213,6 +213,41 @@ class TermTest {
 		term(
 			oneWord fieldTo twoWord.term,
 			twoWord.field).onlyFieldOrNull.assertEqualTo(null)
+	}
 
+	@Test
+	fun select_match() {
+		term(
+			nameWord fieldTo stringWord.term,
+			ageWord fieldTo numberWord.term,
+			nameWord.field)
+			.select
+			.assertEqualTo(stringWord.term)
+	}
+
+	@Test
+	fun select_mismatch() {
+		term(
+			nameWord fieldTo stringWord.term,
+			ageWord fieldTo numberWord.term,
+			oneWord.field)
+			.select
+			.assertEqualTo(
+				term(
+					oneWord fieldTo term(
+						nameWord fieldTo stringWord.term,
+						ageWord fieldTo numberWord.term)))
+	}
+
+	@Test
+	fun select_notASelect() {
+		term(
+			nameWord fieldTo stringWord.term,
+			ageWord fieldTo numberWord.term)
+			.select
+			.assertEqualTo(
+				term(
+					nameWord fieldTo stringWord.term,
+					ageWord fieldTo numberWord.term))
 	}
 }

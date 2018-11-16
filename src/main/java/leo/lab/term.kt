@@ -187,3 +187,17 @@ fun <V> Term<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =
 			is Term.Structure -> termWord fieldTo this.fieldStream.reflect { reflect(metaReflect) }
 		}
 
+// === select
+
+val Term<Nothing>.select: Term<Nothing>?
+	get() =
+		when (this) {
+			is Term.Meta -> this
+			is Term.Structure ->
+				when {
+					rhsTermOrNull != null -> this
+					lhsTermOrNull == null -> this
+					else -> lhsTermOrNull.select(word)?.value ?: word.fieldTo(lhsTermOrNull).term
+				}
+		}
+
