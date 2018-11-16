@@ -12,3 +12,12 @@ fun Appendable.appendString(value: Any?): Appendable =
 val String.byteStreamOrNull: Stream<Byte>?
 	get() =
 		toByteArray().streamOrNull
+
+
+val Stream<Byte>?.utf8string
+	get() =
+		appendableString { appendable ->
+			appendable.fold(this) { byte ->
+				append(byte.toChar())
+			}
+		}

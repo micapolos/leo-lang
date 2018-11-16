@@ -5,7 +5,7 @@ import leo.base.assertEqualTo
 import leo.base.stack
 import kotlin.test.Test
 
-class EvaluatorTest {
+class TokenReaderTest {
 	@Test
 	fun evaluator() {
 		emptyEvaluator

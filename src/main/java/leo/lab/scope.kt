@@ -12,6 +12,9 @@ data class Scope(
 	override fun toString() = reflect.string
 }
 
+val emptyScope =
+	Scope(identityFunction, null)
+
 fun Scope.push(word: Word) =
 	copy(termOrNull = termOrNull.push(word))
 
