@@ -151,3 +151,12 @@ fun <V> Term<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =
 			is Term.Structure -> termWord fieldTo fieldStack.reflect { field -> field.reflect(metaReflect) }
 		}
 
+// === pushing
+
+fun <V> Term<V>?.push(word: Word): Term<V>? =
+	if (this == null) word.term
+	else this.structureTermOrNull?.fieldStack?.push(word.field)?.term
+
+fun <V> Term<V>?.push(field: Field<V>): Term<V>? =
+	if (this == null) field.term
+	else this.structureTermOrNull?.fieldStack?.push(field)?.term
