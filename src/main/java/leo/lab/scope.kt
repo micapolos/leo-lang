@@ -1,0 +1,51 @@
+package leo.lab
+
+import leo.Word
+import leo.base.Stream
+import leo.base.string
+import leo.scopeWord
+import leo.termWord
+
+data class Scope(
+	val function: Function,
+	val termOrNull: Term<Nothing>?) {
+	override fun toString() = reflect.string
+}
+
+fun Scope.push(word: Word) =
+	copy(termOrNull = termOrNull.push(word))
+
+fun Scope.push(field: Field<Nothing>) =
+	copy(termOrNull = termOrNull.push(field))
+
+val Scope.evaluate: Scope
+	get() = null
+		?: parseRule
+		?: invokeFunction
+
+val Scope.parseRule: Scope?
+	get() =
+		termOrNull?.parseRule(function)?.let(this::push)
+
+val Scope.invokeFunction: Scope
+	get() =
+		copy(termOrNull = termOrNull?.let { term ->
+			function.invoke(term)
+		})
+
+fun Scope.push(rule: Rule): Scope =
+	copy(function = function.push(rule), termOrNull = null)
+
+// === reflect ===
+
+val Scope.reflect: Field<Nothing>
+	get() =
+		scopeWord fieldTo term(
+			function.reflect,
+			termWord fieldTo termOrNull)
+
+// === folding bytes
+
+val Scope.byteStreamOrNull: Stream<Byte>?
+	get() =
+		termOrNull?.byteStream

@@ -132,11 +132,14 @@ fun <V> Term<V>.only(key: Word): The<Term<V>?>? =
 //			else -> fieldStack.top.termOrNull.the
 //		}
 //	}
-//
-//val <V> Term<V>.onlyFieldOrNull: Field<V>?
-//	get() =
-//		structureTermOrNull?.run { fieldStack.theOnlyOrNull?.value }
-//
+
+val <V> Term<V>.onlyFieldOrNull: Field<V>?
+	get() =
+		structureTermOrNull?.run {
+			if (lhsTermOrNull != null) null
+			else word fieldTo rhsTermOrNull
+		}
+
 fun <V, R> Term<V>.match(key: Word, fn: (Term<V>?) -> R): R? =
 	structureTermOrNull?.run {
 		when {

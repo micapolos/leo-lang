@@ -204,4 +204,15 @@ class TermTest {
 			.match(twoWord, oneWord) { one, two -> one to two }
 			.assertEqualTo(null)
 	}
+
+	@Test
+	fun onlyFieldOrNull() {
+		1.metaTerm.onlyFieldOrNull.assertEqualTo(null)
+		oneWord.term.onlyFieldOrNull.assertEqualTo(oneWord.field)
+		oneWord.fieldTo(twoWord.term).term.onlyFieldOrNull.assertEqualTo(oneWord fieldTo twoWord.term)
+		term(
+			oneWord fieldTo twoWord.term,
+			twoWord.field).onlyFieldOrNull.assertEqualTo(null)
+
+	}
 }
