@@ -13,6 +13,9 @@ val String.byteStreamOrNull: Stream<Byte>?
 	get() =
 		toByteArray().streamOrNull
 
+val String.bitStreamOrNull: Stream<Bit>?
+	get() =
+		byteStreamOrNull?.mapNotNull(Byte::bitStream)?.join
 
 val Stream<Byte>?.utf8string
 	get() =

@@ -11,9 +11,12 @@ fun <V, R> V?.ifNull(fn: () -> R): R? =
 	if (this == null) fn()
 	else null
 
-fun <V, R> R.foldIfNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
+fun <V, R> R.ifNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
 	if (valueOrNull == null) this
 	else fn(valueOrNull)
+
+fun <V> V.ifNotNull(fn: V.() -> V?): V =
+	fn() ?: this
 
 val fail: Nothing
 	get() =

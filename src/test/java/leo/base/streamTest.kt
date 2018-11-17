@@ -46,7 +46,7 @@ class StreamTest {
 	@Test
 	fun then() {
 		stream(1, 2, 3)
-			.then(stream(4, 5, 6))
+			.then { stream(4, 5, 6) }
 			.assertContains(1, 2, 3, 4, 5, 6)
 	}
 

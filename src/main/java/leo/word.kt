@@ -72,6 +72,10 @@ val Word.byteStream: Stream<Byte>
 	get() =
 		letterStack.reverse.stream.map(Letter::byte)
 
+val Word.bitStream: Stream<Bit>
+	get() =
+		letterStack.reverse.stream.map(Letter::bitStream).join
+
 // === words ===
 
 val aWord = "a".wordOrNull!!

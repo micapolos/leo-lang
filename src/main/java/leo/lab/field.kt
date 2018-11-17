@@ -35,14 +35,14 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 			}
 		}
 
-// === byte stream
+// === bit stream
 
-val <V> Field<V>.byteStream: Stream<Byte>
+val Field<Nothing>.bitStream: Stream<Bit>
 	get() =
-		word.byteStream
-			.then('('.toByte().onlyStream)
-			.thenIfNotNull(termOrNull?.byteStream)
-			.then(')'.toByte().onlyStream)
+		word.bitStream
+			.then(beginBitStream)
+			.thenIfNotNull(termOrNull?.bitStream)
+			.then(endBitStream)
 
 // === reflect
 

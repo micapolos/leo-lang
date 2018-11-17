@@ -48,14 +48,14 @@ val TokenReader.Entry.reflect: Field<Nothing>
 
 // === byte stream
 
-val TokenReader.byteStreamOrNull: Stream<Byte>?
+val TokenReader.bitStreamOrNull: Stream<Bit>?
 	get() =
-		nullOf<Stream<Byte>>()
+		nullOf<Stream<Bit>>()
 			.fold(entryStackOrNull?.reverse?.stream) { entry ->
-				orNullThen(entry.byteStream).then('('.toByte().onlyStream)
+				orNullThen(entry.coreBitStream).then('('.toByte().bitStream)
 			}
-			.orNullThenIfNotNull(scope.byteStreamOrNull)
+			.orNullThenIfNotNull(scope.bitStreamOrNull)
 
-val TokenReader.Entry.byteStream: Stream<Byte>
+val TokenReader.Entry.coreBitStream: Stream<Bit>
 	get() =
-		scope.byteStreamOrNull.orNullThen(word.byteStream)
+		scope.bitStreamOrNull.orNullThen(word.bitStream)

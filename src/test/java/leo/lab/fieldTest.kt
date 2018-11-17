@@ -1,10 +1,12 @@
 package leo.lab
 
-import leo.*
-import leo.base.assertContains
+import leo.Letter
 import leo.base.assertEqualTo
 import leo.base.nullOf
 import leo.base.string
+import leo.letterWord
+import leo.numberWord
+import leo.oneWord
 import kotlin.test.Test
 
 class FieldTest {
@@ -13,6 +15,15 @@ class FieldTest {
 		numberWord.fieldTo(1.metaTerm)
 			.string
 			.assertEqualTo("number Integer(1)")
+	}
+
+	@Test
+	fun coreString() {
+		numberWord
+			.fieldTo(oneWord.term)
+			.term
+			.coreString
+			.assertEqualTo("number(one())")
 	}
 
 	@Test
@@ -29,22 +40,5 @@ class FieldTest {
 			.orNullReflect(letterWord, Letter::reflect)
 			.string
 			.assertEqualTo("letter a")
-	}
-
-	@Test
-	fun byteStream() {
-		oneWord.fieldTo(twoWord.term)
-			.byteStream
-			.assertContains(
-				Letter.O.byte,
-				Letter.N.byte,
-				Letter.E.byte,
-				'('.toByte(),
-				Letter.T.byte,
-				Letter.W.byte,
-				Letter.O.byte,
-				'('.toByte(),
-				')'.toByte(),
-				')'.toByte())
 	}
 }

@@ -101,17 +101,17 @@ fun <V> Appendable.append(term: Term<V>): Appendable =
 val Term<Nothing>.coreString: String
 	get() =
 		appendableString { appendable ->
-			appendable.fold(byteStream) { byte ->
+			appendable.fold(bitStream.bitByteStreamOrNull) { byte ->
 				append(byte.toChar())
 			}
 		}
 
-val <V> Term<V>.byteStream: Stream<Byte>
+val Term<Nothing>.bitStream: Stream<Bit>
 	get() =
 		structureTermOrNull?.let {
 			it.fieldStream.reverse
-				.foldFirst { field -> field.byteStream }
-				.foldNext { field -> then(field.byteStream) }
+				.foldFirst { field -> field.bitStream }
+				.foldNext { field -> then(field.bitStream) }
 		} ?: fail
 
 // === access

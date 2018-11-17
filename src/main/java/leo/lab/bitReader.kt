@@ -23,6 +23,6 @@ fun BitReader.read(bit: Bit): BitReader? {
 	}
 }
 
-val BitReader.byteStreamOrNull: Stream<Byte>?
+val BitReader.bitStreamOrNull: Stream<Bit>?
 	get() =
-		byteReader.byteStreamOrNull
+		byteReader.bitStreamOrNull

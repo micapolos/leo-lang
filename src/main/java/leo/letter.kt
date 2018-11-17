@@ -1,5 +1,8 @@
 package leo
 
+import leo.base.Bit
+import leo.base.Stream
+import leo.base.bitStream
 import leo.base.string
 
 enum class Letter(val char: Char) {
@@ -56,3 +59,7 @@ fun <V> Letter.reflect(): Field<V> =
 val Letter.byte: Byte
 	get() =
 		char.toByte()
+
+val Letter.bitStream: Stream<Bit>
+	get() =
+		char.toByte().bitStream

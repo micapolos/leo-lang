@@ -1,6 +1,7 @@
 package leo.lab
 
 import leo.*
+import leo.base.Bit
 import leo.base.Stream
 import leo.base.orNullThenIfNotNull
 
@@ -41,7 +42,7 @@ fun ByteReader.plus(letter: Letter): ByteReader =
 
 // === byte stream
 
-val ByteReader.byteStreamOrNull: Stream<Byte>?
+val ByteReader.bitStreamOrNull: Stream<Bit>?
 	get() =
-		tokenReader.byteStreamOrNull
-			.orNullThenIfNotNull(wordOrNull?.byteStream)
+		tokenReader.bitStreamOrNull
+			.orNullThenIfNotNull(wordOrNull?.bitStream)

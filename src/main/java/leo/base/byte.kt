@@ -18,3 +18,47 @@ val Byte.bitStack: Stack<Bit>
 		foldBits(nullStack()) { bitStackOrNull, bit ->
 			bitStackOrNull.push(bit)
 		}!!
+
+val Byte.bitStream: Stream<Bit>
+	get() =
+		bitStack.reverse.stream
+
+val Stream<Byte>.byteBitStream: Stream<Bit>
+	get() =
+		first.bitStream
+			.then { nextOrNull?.byteBitStream }
+
+// TODO: This is insane, can it be made simpler? Like fold n-times?
+val Stream<Bit>.bitByteStreamOrNull: Stream<Byte>?
+	get() =
+		first.int.let { int1 ->
+			nextOrNull?.run {
+				int1.shl(1).or(first.int).let { int2 ->
+					nextOrNull?.run {
+						int2.shl(1).or(first.int).let { int3 ->
+							nextOrNull?.run {
+								int3.shl(1).or(first.int).let { int4 ->
+									nextOrNull?.run {
+										int4.shl(1).or(first.int).let { int5 ->
+											nextOrNull?.run {
+												int5.shl(1).or(first.int).let { int6 ->
+													nextOrNull?.run {
+														int6.shl(1).or(first.int).let { int7 ->
+															nextOrNull?.run {
+																Stream(int7.shl(1).or(first.int).toByte()) {
+																	nextOrNull?.bitByteStreamOrNull
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}

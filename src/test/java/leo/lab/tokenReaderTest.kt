@@ -2,6 +2,7 @@ package leo.lab
 
 import leo.bWord
 import leo.base.assertEqualTo
+import leo.base.bitByteStreamOrNull
 import leo.base.stack
 import leo.base.utf8string
 import leo.cWord
@@ -13,7 +14,8 @@ class TokenReaderTest {
 	@Test
 	fun byteStream_empty() {
 		emptyTokenReader
-			.byteStreamOrNull
+			.bitStreamOrNull
+			?.bitByteStreamOrNull
 			.utf8string
 			.assertEqualTo("")
 	}
@@ -29,7 +31,8 @@ class TokenReaderTest {
 					Scope(identityFunction, oneWord.term),
 					twoWord)),
 			Scope(identityFunction, cWord.term))
-			.byteStreamOrNull
+			.bitStreamOrNull
+			?.bitByteStreamOrNull
 			.utf8string
 			.assertEqualTo("b(one()two(c()")
 	}

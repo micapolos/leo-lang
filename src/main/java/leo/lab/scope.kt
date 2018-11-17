@@ -1,6 +1,7 @@
 package leo.lab
 
 import leo.Word
+import leo.base.Bit
 import leo.base.Stream
 import leo.base.string
 import leo.scopeWord
@@ -53,8 +54,8 @@ val Scope.reflect: Field<Nothing>
 			function.reflect,
 			termWord fieldTo termOrNull)
 
-// === folding bytes
+// === bit stream
 
-val Scope.byteStreamOrNull: Stream<Byte>?
+val Scope.bitStreamOrNull: Stream<Bit>?
 	get() =
-		termOrNull?.byteStream
+		termOrNull?.bitStream
