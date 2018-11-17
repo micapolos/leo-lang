@@ -13,6 +13,10 @@ fun <R> Byte.foldBits(initial: R, fn: (R, Bit) -> R): R {
 	return b0
 }
 
+val Byte.int
+	get() =
+		toInt()
+
 val Byte.bitStack: Stack<Bit>
 	get() =
 		foldBits(nullStack()) { bitStackOrNull, bit ->
