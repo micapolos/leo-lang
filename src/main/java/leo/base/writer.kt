@@ -1,47 +1,63 @@
 package leo.base
 
-data class Writer<V, R>(
-	val written: R,
-	val writeFn: R.(V) -> R)
+data class Writer<V>(
+	val writeFn: (V) -> Writer<V>)
 
-fun <V, R> R.writer(writeFn: R.(V) -> R): Writer<V, R> =
-	Writer(this, writeFn)
+fun <V> Writer<V>.write(value: V): Writer<V> =
+	writeFn(value)
 
-fun <V> nullWriter(): Writer<V, Unit> =
-	Unit.writer { Unit }
+fun <V> nullWriter(): Writer<V> =
+	Writer { nullWriter() }
 
-fun <V> printlnWriter(): Writer<V, Unit> =
-	Unit.writer { println(this); Unit }
+fun <V> printlnWriter(): Writer<V> =
+	Writer { println(it); printlnWriter() }
 
-fun <V, R> Writer<V, R>.write(value: V): Writer<V, R> =
-	Writer(writeFn.invoke(this.written, value), writeFn)
+fun <V> Writer<V>.write(stream: Stream<V>) =
+	fold(stream, Writer<V>::write)
 
-fun <V, R> Writer<V, R>.write(stream: Stream<V>) =
-	fold(stream, Writer<V, R>::write)
+fun <A, B> Writer<B>.map(fn: (A) -> B): Writer<A> =
+	Writer { write(fn(it)).map(fn) }
 
-fun <A, B, R> Writer<B, R>.map(fn: (A) -> B): Writer<A, R> =
-	written.writer { a ->
-		writeFn.invoke(this, fn(a))
-	}
-
-val <V, R> Writer<V, R>.join: Writer<Stream<V>, R>
+val <V> Writer<V>.streamJoin: Writer<Stream<V>>
 	get() =
-		written.writer { stream ->
+		Writer { stream ->
 			stream
-				.foldFirst { value -> writeFn.invoke(this, value) }
-				.foldNext(writeFn)
+				.foldFirst { value -> write(value) }
+				.foldNext { value -> write(value) }
+				.streamJoin
 		}
 
-val <R> Writer<Bit, R>.bitByteWriter: Writer<Byte, R>
+val Writer<Bit>.bitByteWriter: Writer<Byte>
 	get() =
-		join.map(Byte::bitStream)
+		streamJoin.map(Byte::bitStream)
 
-//val <R> Writer<Byte, R>.byteBitWriter: Writer<Bit, R>
-//	get() =
-
-val <V> Stack<V>?.writer: Writer<V, Stack<V>?>
+val Writer<Byte>.byteBitWriter: Writer<Bit>
 	get() =
-		Writer(this, Stack<V>?::push)
+		Writer { bit7 ->
+			Writer { bit6 ->
+				Writer { bit5 ->
+					Writer { bit4 ->
+						Writer { bit3 ->
+							Writer { bit2 ->
+								Writer { bit1 ->
+									Writer { bit0 ->
+										write(byte(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)).byteBitWriter
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
-fun <V> writerStackOrNull(fn: Writer<V, Stack<V>?>.() -> Writer<V, Stack<V>?>): Stack<V>? =
-	fn(nullStack<V>().writer).written
+fun <R, V> R.writerFold(fn: R.(V) -> R, writerFn: Writer<V>.() -> Unit): R {
+	var state = this
+	lateinit var writer: Writer<V>
+	writer = Writer { value -> state = fn.invoke(state, value); writer }
+	writerFn(writer)
+	return state
+}
+
+fun <V> writeStackOrNull(fn: Writer<V>.() -> Unit): Stack<V>? =
+	nullStack<V>().writerFold(Stack<V>?::push, fn)

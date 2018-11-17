@@ -8,6 +8,6 @@ fun OutputStream.put(byte: Byte): OutputStream {
 	return this
 }
 
-val OutputStream.byteWriter: Writer<Byte, OutputStream>
+val OutputStream.byteWriter: Writer<Byte>
 	get() =
-		Writer(this, OutputStream::put)
+		Writer { byte -> put(byte).byteWriter }

@@ -10,17 +10,13 @@ class WriterTest {
 
 	@Test
 	fun stackWriter() {
-		nullStack<Int>().writer
-			.write(1)
-			.write(2)
-			.written
+		nullStack<Int>()
+			.writerFold(Stack<Int>?::push) { write(1).write(2) }
 			.assertEqualTo(stack(1, 2))
 	}
 
 	@Test
-	fun bitByteWriter() {
-		writerStackOrNull<Int> {
-			write(1).write(2)
-		}.assertEqualTo(stack(1, 2))
+	fun test_writeStackOrNull() {
+		writeStackOrNull<Int> { write(1).write(2) }.assertEqualTo(stack(1, 2))
 	}
 }

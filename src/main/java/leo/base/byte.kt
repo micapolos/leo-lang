@@ -1,5 +1,23 @@
 package leo.base
 
+fun byte(
+	bit7: Bit,
+	bit6: Bit,
+	bit5: Bit,
+	bit4: Bit,
+	bit3: Bit,
+	bit2: Bit,
+	bit1: Bit,
+	bit0: Bit): Byte =
+	bit7.int.shl(7)
+		.or(bit6.int.shr(6))
+		.or(bit5.int.shr(5))
+		.or(bit4.int.shr(4))
+		.or(bit3.int.shr(3))
+		.or(bit2.int.shr(2))
+		.or(bit1.int.shr(1))
+		.or(bit0.int).byte
+
 fun <R> Byte.foldBits(initial: R, fn: (R, Bit) -> R): R {
 	val b8 = initial
 	val b7 = fn(b8, toInt().and(0b10000000).bit)
