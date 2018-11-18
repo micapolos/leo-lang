@@ -1,9 +1,6 @@
 package leo.lab
 
-import leo.base.Bit
-import leo.base.Stream
-import leo.base.fold
-import leo.base.orNull
+import leo.base.*
 import leo.bitWord
 import leo.continueWord
 import leo.leoWord
@@ -16,7 +13,7 @@ data class BitReader(
 val emptyBitReader =
 	BitReader(emptyBitEvaluator, null)
 
-fun BitReader.plus(bit: Bit): BitReader? =
+fun BitReader.read(bit: Bit): BitReader? =
 	this
 		.termPush(leoReadField(bit))
 		.termInvoke
@@ -33,7 +30,7 @@ val BitReader.termInvoke: BitReader
 val BitReader.termParse: BitReader?
 	get() =
 		copy(termOrNull = null).orNull
-			.fold(termOrNull?.fieldStreamOrNull) { field ->
+			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
 				else if (field == leoWord fieldTo continueWord.term) this
@@ -44,7 +41,7 @@ val BitReader.termParse: BitReader?
 			}
 
 fun BitReader.readPreprocessed(bit: Bit): BitReader? =
-	bitEvaluator.read(bit)?.let { bitReader ->
+	bitEvaluator.evaluate(bit)?.let { bitReader ->
 		copy(bitEvaluator = bitReader)
 	}
 

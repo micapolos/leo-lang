@@ -12,7 +12,7 @@ fun emptyRepl(errorBitWriter: Writer<Bit>): Repl =
 
 fun Repl.read(bit: Bit): Repl =
 	if (isError) copy(errorBitWriter = errorBitWriter.write(bit))
-	else bitReader.plus(bit).let { nextBitPreprocessor ->
+	else bitReader.read(bit).let { nextBitPreprocessor ->
 		if (nextBitPreprocessor == null) copy(
 			isError = true,
 			errorBitWriter = errorBitWriter

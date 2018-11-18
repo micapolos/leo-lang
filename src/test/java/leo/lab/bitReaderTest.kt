@@ -8,7 +8,7 @@ class BitReaderTest {
 	@Test
 	fun plusBit() {
 		BitReader(emptyBitEvaluator, null)
-			.plus(Bit.ONE)
-			.assertEqualTo(BitReader(emptyBitEvaluator.read(Bit.ONE)!!, null))
+			.read(Bit.ONE)
+			.assertEqualTo(BitReader(emptyBitEvaluator.evaluate(Bit.ONE)!!, null))
 	}
 }

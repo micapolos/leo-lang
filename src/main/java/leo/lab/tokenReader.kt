@@ -1,9 +1,6 @@
 package leo.lab
 
-import leo.base.Bit
-import leo.base.Stream
-import leo.base.fold
-import leo.base.orNull
+import leo.base.*
 import leo.continueWord
 import leo.leoWord
 import leo.readWord
@@ -33,7 +30,7 @@ val TokenReader.termInvoke: TokenReader
 val TokenReader.termParse: TokenReader?
 	get() =
 		copy(termOrNull = null).orNull
-			.fold(termOrNull?.fieldStreamOrNull) { field ->
+			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
 				else if (field == leoWord fieldTo continueWord.term) this

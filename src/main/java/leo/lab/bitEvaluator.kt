@@ -13,11 +13,11 @@ data class BitEvaluator(
 val emptyBitEvaluator =
 	BitEvaluator(emptyByteReader, 0, 0x80)
 
-fun BitEvaluator.read(bit: Bit): BitEvaluator? {
+fun BitEvaluator.evaluate(bit: Bit): BitEvaluator? {
 	val nextByteInt = byteInt.or(if (bit == Bit.ONE) maskInt else 0)
 	val nextMaskInt = maskInt.shr(1)
 	return if (nextMaskInt == 0) {
-		byteReader.plus(nextByteInt.toByte())?.let { nextByteReader ->
+		byteReader.read(nextByteInt.toByte())?.let { nextByteReader ->
 			BitEvaluator(nextByteReader, 0, 0x80)
 		}
 	} else {

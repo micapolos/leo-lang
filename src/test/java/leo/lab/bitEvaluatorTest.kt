@@ -8,14 +8,14 @@ class BitEvaluatorTest {
 	@Test
 	fun readBitOne() {
 		emptyBitEvaluator
-			.read(Bit.ONE)
+			.evaluate(Bit.ONE)
 			.assertEqualTo(emptyBitEvaluator.copy(byteInt = 0x80, maskInt = 0x40))
 	}
 
 	@Test
 	fun readBitZero() {
 		emptyBitEvaluator
-			.read(Bit.ZERO)
+			.evaluate(Bit.ZERO)
 			.assertEqualTo(emptyBitEvaluator.copy(byteInt = 0x00, maskInt = 0x40))
 	}
 

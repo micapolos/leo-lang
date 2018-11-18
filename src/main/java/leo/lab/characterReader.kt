@@ -1,10 +1,7 @@
 package leo.lab
 
 import leo.*
-import leo.base.Bit
-import leo.base.Stream
-import leo.base.fold
-import leo.base.orNull
+import leo.base.*
 
 data class CharacterReader(
 	val characterEvaluator: CharacterEvaluator,
@@ -30,7 +27,7 @@ val CharacterReader.termInvoke: CharacterReader
 val CharacterReader.termParse: CharacterReader?
 	get() =
 		copy(termOrNull = null).orNull
-			.fold(termOrNull?.fieldStreamOrNull) { field ->
+			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
 				else if (field == leoWord fieldTo continueWord.term) this

@@ -1,9 +1,6 @@
 package leo.lab
 
-import leo.base.Bit
-import leo.base.Stream
-import leo.base.fold
-import leo.base.orNull
+import leo.base.*
 import leo.byteWord
 import leo.continueWord
 import leo.leoWord
@@ -16,7 +13,7 @@ data class ByteReader(
 val emptyByteReader =
 	ByteReader(emptyByteEvaluator, null)
 
-fun ByteReader.plus(byte: Byte): ByteReader? =
+fun ByteReader.read(byte: Byte): ByteReader? =
 	this
 		.termPush(leoReadField(byte))
 		.termInvoke
@@ -33,7 +30,7 @@ val ByteReader.termInvoke: ByteReader
 val ByteReader.termParse: ByteReader?
 	get() =
 		copy(termOrNull = null).orNull
-			.fold(termOrNull?.fieldStreamOrNull) { field ->
+			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
 				else if (field == leoWord fieldTo continueWord.term) this
