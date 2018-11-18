@@ -1,8 +1,5 @@
 package leo
 
-import leo.base.Bit
-import leo.base.Stream
-
 sealed class Character
 object BeginCharacter : Character()
 object EndCharacter : Character()
@@ -26,13 +23,9 @@ val Character.byte: Byte
 			is EndCharacter -> endByte
 		}
 
-val Character.bitStream: Stream<Bit>
+val Character.char: Char
 	get() =
-		when (this) {
-			is LetterCharacter -> letter.bitStream
-			is BeginCharacter -> beginBitStream
-			is EndCharacter -> endBitStream
-		}
+		byte.toChar()
 
 val Byte.characterOrNull: Character?
 	get() =

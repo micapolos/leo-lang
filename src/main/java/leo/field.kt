@@ -36,19 +36,11 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 
 // === bit stream
 
-val Field<Nothing>.bitStream: Stream<Bit>
-	get() =
-		word.bitStream
-			.then(beginBitStream)
-			.thenIfNotNull(termOrNull?.bitStream)
-			.then(endBitStream)
-
 val Field<Nothing>.tokenStream: Stream<Token>
 	get() =
 		word.beginToken.onlyStream
 			.then { termOrNull?.tokenStream }
 			.then { endToken.onlyStream }
-
 
 // === reflect
 

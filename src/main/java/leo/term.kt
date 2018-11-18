@@ -103,10 +103,10 @@ fun <V> Appendable.append(term: Term<V>): Appendable =
 
 val Term<Nothing>.coreString: String
 	get() =
-		appendableString { appendable ->
-			appendable.fold(bitStream.bitByteStreamOrNull) { byte ->
-				append(byte.toChar())
-			}
+		appendableString {
+			it.fold(
+				tokenStream.mapJoin(Token::characterStream).map(Character::char),
+				Appendable::append)
 		}
 
 val Term<Nothing>.bitStream: Stream<Bit>

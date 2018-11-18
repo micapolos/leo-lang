@@ -35,6 +35,10 @@ val Byte.int
 	get() =
 		toInt()
 
+val Byte.char
+	get() =
+		toChar()
+
 val Byte.bitStack: Stack<Bit>
 	get() =
 		foldBits(nullStack()) { bitStackOrNull, bit ->
