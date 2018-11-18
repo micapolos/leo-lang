@@ -1,59 +1,66 @@
 package leo
 
-import leo.base.foldFirst
-import leo.base.foldNext
-import leo.base.reverse
-import leo.base.string
+import leo.base.*
 
-data class Reader(
-	val valueTerm: Term<Nothing>) {
-	override fun toString() = reflect.string
-}
+data class Reader<V>(
+	val parseFn: Field<Nothing>.() -> V?,
+	val reflectFn: V.() -> Field<Nothing>,
+	val applyFn: Term<Nothing>.() -> Term<Nothing>?,
+	val bitStreamOrNullFn: () -> Stream<Bit>?,
+	val evaluator: Evaluator<V>,
+	val termOrNull: Term<Nothing>?)
 
-val leoReaderField: Field<Nothing> =
-	leoWord fieldTo readerWord.term
+fun <V> Reader<V>.read(value: V): Reader<V>? =
+	this
+		.termPush(leoReadField(value))
+		.termInvoke
+		.termParse
 
-val leoReaderTerm: Term<Nothing> =
-	leoReaderField.term
+fun <V> Reader<V>.termPush(field: Field<Nothing>): Reader<V> =
+	copy(termOrNull = termOrNull.push(field))
 
-val emptyReader =
-	Reader(leoReaderTerm)
+val <V> Reader<V>.termInvoke: Reader<V>
+	get() =
+		if (termOrNull == null) this
+		else copy(termOrNull = apply(termOrNull) ?: termOrNull)
 
-fun <R> R.read(
-	reader: Reader,
-	byte: Byte,
-	readerFn: (Term<Nothing>) -> Term<Nothing>,
-	readFn: R.(Byte) -> R): Pair<R, Reader>? =
-	reader.valueTerm.push(readWord fieldTo term(byte.reflect)).let { newValueTerm ->
-		readerFn(newValueTerm)
-			.let { resultValueTerm ->
-				resultValueTerm.structureTermOrNull?.let { resultTerm ->
-					resultTerm.fieldStream.reverse
-						.foldFirst { topField ->
-							if (topField != leoReaderField) null
-							else to(reader.copy(valueTerm = leoReaderTerm))
-						}
-						.foldNext { followingField ->
-							this?.let { (folded, reader) ->
-								when {
-									followingField.word != readWord -> null
-									else -> followingField.termOrNull?.match(byteWord) { byteValue ->
-										byteWord.fieldTo(byteValue).parseByte?.let { byte ->
-											readFn(folded, byte) to reader.copy(valueTerm = leoReaderTerm)
-										}
-									}
-								}
-							}
-						}
-				} ?: to(reader.copy(valueTerm = resultValueTerm))
+val <V> Reader<V>.termParse: Reader<V>?
+	get() =
+		copy(termOrNull = null).orNull
+			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
+				if (this == null) null
+				else if (termOrNull != null) termPush(field)
+				else if (field == leoWord fieldTo continueWord.term) this
+				else parseLeoRead(field).let { valueOrNull ->
+					if (valueOrNull == null) termPush(field)
+					else readPreprocessed(valueOrNull)
+				}
 			}
+
+fun <V> Reader<V>.readPreprocessed(value: V): Reader<V>? =
+	evaluator.evaluate(value)?.let { evaluator ->
+		copy(evaluator = evaluator)
 	}
 
-fun Reader.push(field: Field<Nothing>): Reader =
-	copy(valueTerm = valueTerm.push(field))
+// === leo read bit
 
-// === reflect
+fun <V> Reader<V>.leoReadField(value: V): Field<Nothing> =
+	leoWord fieldTo term(readWord fieldTo reflectFn(value).term)
 
-val Reader.reflect: Field<Nothing>
+fun <V> Reader<V>.parseLeoRead(term: Field<Nothing>): V? =
+	term.get(leoWord)?.let { theLeoTerm ->
+		theLeoTerm.value?.match(readWord) { readTerm ->
+			readTerm?.onlyFieldOrNull?.let { field ->
+				parseFn(field)
+			}
+		}
+	}
+
+// === bit stream
+
+val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
 	get() =
-		readerWord fieldTo valueTerm
+		bitStreamOrNullFn()
+
+fun <V> Reader<V>.apply(term: Term<Nothing>): Term<Nothing>? =
+	applyFn(term)

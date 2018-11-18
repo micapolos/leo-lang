@@ -41,5 +41,5 @@ val BitEvaluator.partialByteBitStreamOrNull: Stream<Bit>?
 			else -> null
 		}
 
-fun BitEvaluator.invoke(term: Term<Nothing>) =
-	byteReader.invoke(term)
+fun BitEvaluator.apply(term: Term<Nothing>): Term<Nothing>? =
+	byteReader.apply(term)

@@ -21,7 +21,7 @@ fun ByteReader.termPush(field: Field<Nothing>): ByteReader =
 val ByteReader.termInvoke: ByteReader
 	get() =
 		if (termOrNull == null) this
-		else copy(termOrNull = invoke(termOrNull))
+		else copy(termOrNull = apply(termOrNull) ?: termOrNull)
 
 val ByteReader.termParse: ByteReader?
 	get() =
@@ -62,5 +62,5 @@ val ByteReader.bitStreamOrNull: Stream<Bit>?
 	get() =
 		byteEvaluator.bitStreamOrNull
 
-fun ByteReader.invoke(term: Term<Nothing>) =
-	byteEvaluator.invoke(term)
+fun ByteReader.apply(term: Term<Nothing>): Term<Nothing>? =
+	byteEvaluator.apply(term)

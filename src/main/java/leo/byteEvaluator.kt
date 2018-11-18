@@ -24,5 +24,5 @@ val ByteEvaluator.bitStreamOrNull: Stream<Bit>?
 	get() =
 		characterReader.bitStreamOrNull
 
-fun ByteEvaluator.invoke(term: Term<Nothing>) =
-	characterReader.invoke(term)
+fun ByteEvaluator.apply(term: Term<Nothing>): Term<Nothing>? =
+	characterReader.apply(term)

@@ -18,16 +18,18 @@ val identityFunction
 fun Function.push(rule: Rule) =
 	copy(ruleStackOrNull = ruleStackOrNull.push(rule))
 
-fun Function.invoke(argument: Term<Nothing>): Term<Nothing>? =
+fun Function.invoke(argument: Term<Nothing>): Term<Nothing> =
+	apply(argument) ?: argument.invokeFallback
+
+fun Function.apply(argument: Term<Nothing>): Term<Nothing>? =
 	ruleStackOrNull
 		?.top { rule -> argument.matches(rule.choiceTerm) }
 		?.body
 		?.apply(argument)
-		?: argument.invokeFallback
 
 // === fallback
 
-val Term<Nothing>.invokeFallback: Term<Nothing>?
+val Term<Nothing>.invokeFallback: Term<Nothing>
 	get() =
 		when (this) {
 			is Term.Meta -> this

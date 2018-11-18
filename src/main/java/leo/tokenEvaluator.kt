@@ -65,5 +65,5 @@ val TokenEvaluator.Entry.coreBitStream: Stream<Bit>
 	get() =
 		scope.bitStreamOrNull.orNullThen(word.bitStream)
 
-fun TokenEvaluator.invoke(term: Term<Nothing>) =
-	scope.invoke(term)
+fun TokenEvaluator.apply(term: Term<Nothing>): Term<Nothing>? =
+	scope.apply(term)

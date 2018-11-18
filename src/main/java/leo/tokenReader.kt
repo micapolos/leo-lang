@@ -21,7 +21,7 @@ fun TokenReader.termPush(field: Field<Nothing>): TokenReader =
 val TokenReader.termInvoke: TokenReader
 	get() =
 		if (termOrNull == null) this
-		else copy(termOrNull = invoke(termOrNull))
+		else copy(termOrNull = apply(termOrNull) ?: termOrNull)
 
 val TokenReader.termParse: TokenReader?
 	get() =
@@ -62,5 +62,5 @@ val TokenReader.bitStreamOrNull: Stream<Bit>?
 	get() =
 		tokenEvaluator.bitStreamOrNull
 
-fun TokenReader.invoke(term: Term<Nothing>) =
-	tokenEvaluator.invoke(term)
+fun TokenReader.apply(term: Term<Nothing>): Term<Nothing>? =
+	tokenEvaluator.apply(term)

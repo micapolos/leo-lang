@@ -59,5 +59,5 @@ val Scope.bitStreamOrNull: Stream<Bit>?
 
 // === invoke
 
-fun Scope.invoke(term: Term<Nothing>) =
-	function.invoke(term)
+fun Scope.apply(term: Term<Nothing>): Term<Nothing>? =
+	function.apply(term)
