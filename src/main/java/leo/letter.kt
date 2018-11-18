@@ -1,9 +1,6 @@
 package leo
 
-import leo.base.Bit
-import leo.base.Stream
-import leo.base.bitStream
-import leo.base.string
+import leo.base.*
 
 enum class Letter(val char: Char) {
 	A('a'),
@@ -60,3 +57,13 @@ val Letter.byte: Byte
 val Letter.bitStream: Stream<Bit>
 	get() =
 		char.toByte().bitStream
+
+val Letter.reflect: Field<Nothing>
+	get() =
+		letterWord fieldTo char.toString().wordOrNull!!.term
+
+val Field<Nothing>.parseLetter: Letter?
+	get() =
+		match(letterWord) { letterTerm ->
+			letterTerm?.onlyFieldOrNull?.word?.letterStack?.theOnlyOrNull?.value
+		}

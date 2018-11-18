@@ -70,6 +70,10 @@ val Word.bitStream: Stream<Bit>
 	get() =
 		letterStack.reverse.stream.map(Letter::bitStream).join
 
+val Word.reflect: Field<Nothing>
+	get() =
+		wordWord fieldTo term
+
 // === words ===
 
 val aWord = "a".wordOrNull!!
