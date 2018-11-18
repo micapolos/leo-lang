@@ -56,3 +56,14 @@ fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Nothing>): Field<Not
 
 //fun <V> Field<V>?.orNullField(word: Word): Field<V> =
 //	this ?: word fieldTo term(nullWord)
+
+// === map
+
+fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
+	word fieldTo termOrNull?.map(fn)
+
+// === match
+
+fun <V, R> Field<V>.match(key: Word, fn: (Term<V>?) -> R): R? =
+	if (word == key) fn(termOrNull)
+	else null

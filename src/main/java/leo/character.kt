@@ -15,3 +15,11 @@ val Character.bitStream: Stream<Bit>
 			is BeginCharacter -> beginBitStream
 			is EndCharacter -> endBitStream
 		}
+
+val Byte.characterOrNull: Character?
+	get() =
+		when (toChar()) {
+			'(' -> BeginCharacter
+			')' -> EndCharacter
+			else -> letterOrNull?.let { LetterCharacter(it) }
+		}

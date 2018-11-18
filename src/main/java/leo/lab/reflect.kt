@@ -15,6 +15,15 @@ val Byte.reflect: Field<Nothing>
 	get() =
 		byteWord fieldTo bitStack.reflect(Bit::reflect)
 
+val Character.reflect: Field<Nothing>
+	get() =
+		characterWord fieldTo
+			when (this) {
+				is BeginCharacter -> beginWord.term
+				is EndCharacter -> endWord.term
+				is LetterCharacter -> letter.reflect.termOrNull
+			}
+
 fun <V> Stream<V>.reflect(key: Word, reflectValue: (V) -> Field<Nothing>): Field<Nothing> =
 	key fieldTo term(
 		stackWord fieldTo reverse

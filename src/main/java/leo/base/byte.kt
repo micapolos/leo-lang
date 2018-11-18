@@ -8,15 +8,15 @@ fun byte(
 	bit3: Bit,
 	bit2: Bit,
 	bit1: Bit,
-	bit0: Bit): Byte =
-	bit7.int.shl(7)
-		.or(bit6.int.shr(6))
-		.or(bit5.int.shr(5))
-		.or(bit4.int.shr(4))
-		.or(bit3.int.shr(3))
-		.or(bit2.int.shr(2))
-		.or(bit1.int.shr(1))
-		.or(bit0.int).byte
+	bit0: Bit): Byte = 0
+	.or(bit7.int.shl(7))
+	.or(bit6.int.shl(6))
+	.or(bit5.int.shl(5))
+	.or(bit4.int.shl(4))
+	.or(bit3.int.shl(3))
+	.or(bit2.int.shl(2))
+	.or(bit1.int.shl(1))
+	.or(bit0.int.shl(0)).byte
 
 fun <R> Byte.foldBits(initial: R, fn: (R, Bit) -> R): R {
 	val b8 = initial

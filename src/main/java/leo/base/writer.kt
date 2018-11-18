@@ -12,7 +12,7 @@ fun <V> nullWriter(): Writer<V> =
 fun <V> printlnWriter(): Writer<V> =
 	Writer { println(it); printlnWriter() }
 
-fun <V> Writer<V>.write(stream: Stream<V>) =
+fun <V> Writer<V>.write(stream: Stream<V>?) =
 	fold(stream, Writer<V>::write)
 
 fun <A, B> Writer<B>.map(fn: (A) -> B): Writer<A> =

@@ -1,10 +1,7 @@
 package leo.lab
 
+import leo.*
 import leo.base.*
-import leo.bitWord
-import leo.byteWord
-import leo.oneWord
-import leo.zeroWord
 
 val Field<Nothing>.parseBit: Bit?
 	get() =
@@ -36,5 +33,23 @@ fun <V> Term<Nothing>.parseStack(parseValue: (Field<Nothing>) -> V?): Stack<V>? 
 		?.foldNext { field ->
 			parseValue(field)?.let { value ->
 				push(value)
+			}
+		}
+
+val Field<Nothing>.parseLetter: Letter?
+	get() =
+		match(letterWord) { letterTerm ->
+			letterTerm?.onlyFieldOrNull?.word?.letterStack?.theOnlyOrNull?.value
+		}
+
+val Field<Nothing>.parseCharacter: Character?
+	get() =
+		match(characterWord) { characterTerm ->
+			when (characterTerm) {
+				beginWord.term -> BeginCharacter
+				endWord.term -> EndCharacter
+				else -> letterWord.fieldTo(characterTerm).parseLetter?.let { letter ->
+					LetterCharacter(letter)
+				}
 			}
 		}

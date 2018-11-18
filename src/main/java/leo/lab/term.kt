@@ -201,3 +201,10 @@ val Term<Nothing>.select: Term<Nothing>?
 				}
 		}
 
+// === map
+
+fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
+	when (this) {
+		is Term.Meta -> fn(value).metaTerm
+		is Term.Structure -> Term.Structure(lhsTermOrNull?.map(fn), word, rhsTermOrNull?.map(fn))
+	}

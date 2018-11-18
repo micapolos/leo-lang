@@ -1,0 +1,10 @@
+define(it(leo(read(byte(
+bit(zero())
+bit(zero())
+bit(one())
+bit(zero())
+bit(zero())
+bit(zero())
+bit(zero())
+bit(zero())))))
+is(leo(continue())))

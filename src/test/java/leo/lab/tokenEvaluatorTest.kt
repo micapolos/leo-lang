@@ -10,10 +10,10 @@ import leo.oneWord
 import leo.twoWord
 import kotlin.test.Test
 
-class TokenReaderTest {
+class TokenEvaluatorTest {
 	@Test
 	fun byteStream_empty() {
-		emptyTokenReader
+		emptyTokenEvaluator
 			.bitStreamOrNull
 			?.bitByteStreamOrNull
 			.utf8string
@@ -22,12 +22,12 @@ class TokenReaderTest {
 
 	@Test
 	fun byteStream_a__b_() {
-		TokenReader(
+		TokenEvaluator(
 			stack(
-				TokenReader.Entry(
+				TokenEvaluator.Entry(
 					Scope(identityFunction, null),
 					bWord),
-				TokenReader.Entry(
+				TokenEvaluator.Entry(
 					Scope(identityFunction, oneWord.term),
 					twoWord)),
 			Scope(identityFunction, cWord.term))

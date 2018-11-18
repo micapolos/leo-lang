@@ -59,3 +59,8 @@ val Scope.reflect: Field<Nothing>
 val Scope.bitStreamOrNull: Stream<Bit>?
 	get() =
 		termOrNull?.bitStream
+
+// === invoke
+
+fun Scope.invoke(term: Term<Nothing>) =
+	function.invoke(term)

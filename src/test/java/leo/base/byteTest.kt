@@ -4,6 +4,20 @@ import kotlin.test.Test
 
 class ByteTest {
 	@Test
+	fun byteFromBits() {
+		byte(
+			Bit.ZERO,
+			Bit.ZERO,
+			Bit.ZERO,
+			Bit.ZERO,
+			Bit.ONE,
+			Bit.ONE,
+			Bit.ZERO,
+			Bit.ONE)
+			.assertEqualTo(13.byte)
+	}
+
+	@Test
 	fun bitStream() {
 		13.toByte()
 			.bitStream

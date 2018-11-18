@@ -1,48 +1,73 @@
 package leo.lab
 
-import leo.*
 import leo.base.Bit
 import leo.base.Stream
-import leo.base.orNullThenIfNotNull
+import leo.base.fold
+import leo.base.orNull
+import leo.byteWord
+import leo.continueWord
+import leo.leoWord
+import leo.readWord
 
 data class ByteReader(
-	val tokenReader: TokenReader,
-	val wordOrNull: Word?)
-
-// === constructors
+	val byteEvaluator: ByteEvaluator,
+	val termOrNull: Term<Nothing>?)
 
 val emptyByteReader =
-	ByteReader(emptyTokenReader, null)
+	ByteReader(emptyByteEvaluator, null)
 
-// === mutation
+fun ByteReader.plus(byte: Byte): ByteReader? =
+	this
+		.termPush(leoReadField(byte))
+		.termInvoke
+		.termParse
 
-fun ByteReader.read(byte: Byte): ByteReader? =
-	byte.toChar().let { char ->
-		when (char) {
-			'(' -> begin
-			')' -> end
-			else -> char.letterOrNull?.let(this::plus)
-		}
+fun ByteReader.termPush(field: Field<Nothing>): ByteReader =
+	copy(termOrNull = termOrNull.push(field))
+
+val ByteReader.termInvoke: ByteReader
+	get() =
+		if (termOrNull == null) this
+		else copy(termOrNull = invoke(termOrNull))
+
+val ByteReader.termParse: ByteReader?
+	get() =
+		copy(termOrNull = null).orNull
+			.fold(termOrNull?.fieldStreamOrNull) { field ->
+				if (this == null) null
+				else if (termOrNull != null) termPush(field)
+				else if (field == leoWord fieldTo continueWord.term) this
+				else field.leoReadByteOrNull.let { byte ->
+					if (byte == null) termPush(field)
+					else readPreprocessed(byte)
+				}
+			}
+
+fun ByteReader.readPreprocessed(byte: Byte): ByteReader? =
+	byteEvaluator.evaluate(byte)?.let { byteReader ->
+		copy(byteEvaluator = byteReader)
 	}
 
-val ByteReader.begin: ByteReader?
-	get() =
-		if (wordOrNull == null) null
-		else ByteReader(tokenReader.begin(wordOrNull), null)
+// === leo read bit
 
-val ByteReader.end: ByteReader?
+fun leoReadField(byte: Byte): Field<Nothing> =
+	leoWord fieldTo term(readWord fieldTo byte.reflect.term)
+
+val Field<Nothing>.leoReadByteOrNull: Byte?
 	get() =
-		if (wordOrNull != null) null
-		else tokenReader.end?.let { endedTokenReader ->
-			ByteReader(endedTokenReader, null)
+		get(leoWord)?.let { theLeoTerm ->
+			theLeoTerm.value?.match(readWord) { readTerm ->
+				readTerm?.match(byteWord) { byteTerm ->
+					byteWord.fieldTo(byteTerm).parseByte
+				}
+			}
 		}
 
-fun ByteReader.plus(letter: Letter): ByteReader =
-	ByteReader(tokenReader, wordOrNull.plus(letter))
-
-// === byte stream
+// === bit stream
 
 val ByteReader.bitStreamOrNull: Stream<Bit>?
 	get() =
-		tokenReader.bitStreamOrNull
-			.orNullThenIfNotNull(wordOrNull?.bitStream)
+		byteEvaluator.bitStreamOrNull
+
+fun ByteReader.invoke(term: Term<Nothing>) =
+	byteEvaluator.invoke(term)
