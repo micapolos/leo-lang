@@ -75,7 +75,7 @@ val Int.bitOrNull
 			else -> null
 		}
 
-val Int.bit
+val Int.clampedBit
 	get() =
 		if (this == 0) Bit.ZERO
 		else Bit.ONE
@@ -86,5 +86,5 @@ fun <V> Bit.ifZero(value: V, fn: (V) -> V): V =
 		Bit.ONE -> value
 	}
 
-fun Appendable.append(bit: Bit) =
+fun Appendable.append(bit: Bit): Appendable =
 	append(bit.char)

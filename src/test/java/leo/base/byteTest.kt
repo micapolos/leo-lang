@@ -14,7 +14,7 @@ class ByteTest {
 			Bit.ONE,
 			Bit.ZERO,
 			Bit.ONE)
-			.assertEqualTo(13.byte)
+			.assertEqualTo(13.clampedByte)
 	}
 
 	@Test
@@ -59,7 +59,7 @@ class ByteTest {
 			Bit.ONE)
 			.bitByteStreamOrNull
 			?.stack
-			.assertEqualTo(stack(13.byte))
+			.assertEqualTo(stack(13.clampedByte))
 	}
 
 	@Test
@@ -83,12 +83,12 @@ class ByteTest {
 			Bit.ZERO)
 			.bitByteStreamOrNull
 			?.stack
-			.assertEqualTo(stack(13.byte, 14.byte))
+			.assertEqualTo(stack(13.clampedByte, 14.clampedByte))
 	}
 
 	@Test
 	fun byteBitStream() {
-		stream(13.byte, 14.byte)
+		stream(13.clampedByte, 14.clampedByte)
 			.byteBitStream
 			.stack
 			.assertEqualTo(

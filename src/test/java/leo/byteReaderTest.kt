@@ -1,6 +1,6 @@
 package leo
 
-import leo.base.byte
+import leo.base.clampedByte
 import leo.base.fail
 import leo.base.stack
 
@@ -12,7 +12,7 @@ class ByteReaderTest {
 					term(
 						leoWord fieldTo term(
 							readWord fieldTo term(
-								32.byte.reflect.map<Nothing, Choice> { fail }))),
+								32.clampedByte.reflect.map<Nothing, Choice> { fail }))),
 					body(
 						term(
 							leoWord fieldTo continueWord.term()),

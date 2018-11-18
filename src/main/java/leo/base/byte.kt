@@ -16,18 +16,18 @@ fun byte(
 	.or(bit3.int.shl(3))
 	.or(bit2.int.shl(2))
 	.or(bit1.int.shl(1))
-	.or(bit0.int.shl(0)).byte
+	.or(bit0.int.shl(0)).clampedByte
 
 fun <R> Byte.foldBits(initial: R, fn: (R, Bit) -> R): R {
 	val b8 = initial
-	val b7 = fn(b8, toInt().and(0b10000000).bit)
-	val b6 = fn(b7, toInt().and(0b01000000).bit)
-	val b5 = fn(b6, toInt().and(0b00100000).bit)
-	val b4 = fn(b5, toInt().and(0b00010000).bit)
-	val b3 = fn(b4, toInt().and(0b00001000).bit)
-	val b2 = fn(b3, toInt().and(0b00000100).bit)
-	val b1 = fn(b2, toInt().and(0b00000010).bit)
-	val b0 = fn(b1, toInt().and(0b00000001).bit)
+	val b7 = fn(b8, toInt().and(0b10000000).clampedBit)
+	val b6 = fn(b7, toInt().and(0b01000000).clampedBit)
+	val b5 = fn(b6, toInt().and(0b00100000).clampedBit)
+	val b4 = fn(b5, toInt().and(0b00010000).clampedBit)
+	val b3 = fn(b4, toInt().and(0b00001000).clampedBit)
+	val b2 = fn(b3, toInt().and(0b00000100).clampedBit)
+	val b1 = fn(b2, toInt().and(0b00000010).clampedBit)
+	val b0 = fn(b1, toInt().and(0b00000001).clampedBit)
 	return b0
 }
 
@@ -67,7 +67,7 @@ val Stream<Bit>.bitByteStreamOrNull: Stream<Byte>?
 													nextOrNull?.run {
 														int6.shl(1).or(first.int).let { int7 ->
 															nextOrNull?.run {
-																Stream(int7.shl(1).or(first.int).byte) {
+																Stream(int7.shl(1).or(first.int).clampedByte) {
 																	nextOrNull?.bitByteStreamOrNull
 																}
 															}

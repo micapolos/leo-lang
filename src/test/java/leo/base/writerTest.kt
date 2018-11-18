@@ -33,6 +33,6 @@ class WriterTest {
 				.write(Bit.ZERO)
 				.write(Bit.ONE)
 		}
-			.assertEqualTo(stack(13.byte))
+			.assertEqualTo(stack(13.clampedByte))
 	}
 }

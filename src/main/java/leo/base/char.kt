@@ -1,5 +1,5 @@
 package leo.base
 
-val Char.byte
+val Char.clampedByte
 	get() =
 		toByte()

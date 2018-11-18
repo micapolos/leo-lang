@@ -57,7 +57,7 @@ val TokenEvaluator.bitStreamOrNull: Stream<Bit>?
 	get() =
 		nullOf<Stream<Bit>>()
 			.fold(entryStackOrNull?.reverse?.stream) { entry ->
-				orNullThen(entry.coreBitStream).then('('.byte.bitStream)
+				orNullThen(entry.coreBitStream).then('('.clampedByte.bitStream)
 			}
 			.orNullThenIfNotNull(scope.bitStreamOrNull)
 

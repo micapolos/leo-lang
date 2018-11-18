@@ -52,11 +52,11 @@ val Byte.letterOrNull: Letter?
 
 val Letter.byte: Byte
 	get() =
-		char.byte
+		char.clampedByte
 
 val Letter.bitStream: Stream<Bit>
 	get() =
-		char.byte.bitStream
+		char.clampedByte.bitStream
 
 val Letter.reflect: Field<Nothing>
 	get() =
