@@ -62,13 +62,17 @@ val Word.Reader.fullOrNull: Word.Reader.Full?
 
 // === folding bytes
 
+val Word.letterStream: Stream<Letter>
+	get() =
+		letterStack.reverse.stream
+
 val Word.byteStream: Stream<Byte>
 	get() =
-		letterStack.reverse.stream.map(Letter::byte)
+		letterStream.map(Letter::byte)
 
 val Word.bitStream: Stream<Bit>
 	get() =
-		letterStack.reverse.stream.map(Letter::bitStream).join
+		letterStream.map(Letter::bitStream).join
 
 val Word.reflect: Field<Nothing>
 	get() =

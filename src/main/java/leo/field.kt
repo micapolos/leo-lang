@@ -43,6 +43,13 @@ val Field<Nothing>.bitStream: Stream<Bit>
 			.thenIfNotNull(termOrNull?.bitStream)
 			.then(endBitStream)
 
+val Field<Nothing>.tokenStream: Stream<Token>
+	get() =
+		word.beginToken.onlyStream
+			.then { termOrNull?.tokenStream }
+			.then { endToken.onlyStream }
+
+
 // === reflect
 
 fun <V> Field<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =

@@ -1,8 +1,21 @@
 package leo
 
+import leo.base.Stream
+import leo.base.map
+import leo.base.onlyStream
+import leo.base.then
+
 sealed class Token
 data class BeginToken(val word: Word) : Token()
 object EndToken : Token()
+
+val Word.beginToken: Token
+	get() =
+		BeginToken(this)
+
+val endToken: Token
+	get() =
+		EndToken
 
 val Token.reflect: Field<Nothing>
 	get() =
@@ -24,4 +37,13 @@ val Field<Nothing>.parseToken: Token?
 					}
 				}
 			}
+		}
+
+// === streams
+
+val Token.characterStream: Stream<Character>
+	get() =
+		when (this) {
+			is BeginToken -> word.letterStream.map(Letter::character).then { beginCharacter.onlyStream }
+			is EndToken -> endCharacter.onlyStream
 		}

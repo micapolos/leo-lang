@@ -57,6 +57,9 @@ tailrec fun <V, R> R.fold(streamOrNull: Stream<V>?, foldNext: R.(V) -> R): R =
 fun <V, R> Stream<V>.map(fn: (V) -> R): Stream<R> =
 	Stream(fn(first)) { nextOrNull?.map(fn) }
 
+fun <V, R> Stream<V>.mapJoin(fn: (V) -> Stream<R>): Stream<R> =
+	map(fn).join
+
 fun <V, R> Stream<V>.mapNotNull(fn: (V) -> R?): Stream<R>? =
 	fn(first)?.let { mapped ->
 		Stream(mapped) {

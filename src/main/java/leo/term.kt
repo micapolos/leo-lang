@@ -56,6 +56,10 @@ val <V> Term.Structure<V>.topField: Field<V>
 	get() =
 		word fieldTo rhsTermOrNull
 
+val Term<Nothing>.structureTerm: Term.Structure<Nothing>
+	get() =
+		structureTermOrNull!!
+
 // === fields
 
 val <V> Term<V>.fieldStreamOrNull: Stream<Field<V>>?
@@ -95,7 +99,7 @@ fun <V> Appendable.append(term: Term<V>): Appendable =
 			.foldNext { field -> append(", ").append(field) }
 	}
 
-// === byte stream
+// === stream
 
 val Term<Nothing>.coreString: String
 	get() =
@@ -107,11 +111,18 @@ val Term<Nothing>.coreString: String
 
 val Term<Nothing>.bitStream: Stream<Bit>
 	get() =
-		structureTermOrNull?.let {
-			it.fieldStream.reverse
-				.foldFirst { field -> field.bitStream }
-				.foldNext { field -> then(field.bitStream) }
-		} ?: fail
+		tokenStream
+			.mapJoin(Token::characterStream)
+			.map(Character::byte)
+			.mapJoin(Byte::bitStream)
+
+val Term<Nothing>.tokenStream: Stream<Token>
+	get() =
+		structureTerm
+			.fieldStream
+			.reverse
+			.foldFirst { it.tokenStream }
+			.foldNext { then(it::tokenStream) }
 
 // === access
 

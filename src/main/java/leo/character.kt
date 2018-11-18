@@ -8,6 +8,24 @@ object BeginCharacter : Character()
 object EndCharacter : Character()
 data class LetterCharacter(val letter: Letter) : Character()
 
+val Letter.character: Character
+	get() =
+		LetterCharacter(this)
+
+val beginCharacter: Character =
+	BeginCharacter
+
+val endCharacter: Character =
+	EndCharacter
+
+val Character.byte: Byte
+	get() =
+		when (this) {
+			is LetterCharacter -> letter.byte
+			is BeginCharacter -> beginByte
+			is EndCharacter -> endByte
+		}
+
 val Character.bitStream: Stream<Bit>
 	get() =
 		when (this) {
@@ -18,10 +36,10 @@ val Character.bitStream: Stream<Bit>
 
 val Byte.characterOrNull: Character?
 	get() =
-		when (toChar()) {
-			'(' -> BeginCharacter
-			')' -> EndCharacter
-			else -> letterOrNull?.let { LetterCharacter(it) }
+		when (this) {
+			beginByte -> BeginCharacter
+			endByte -> EndCharacter
+			else -> letterOrNull?.character
 		}
 
 val Character.reflect: Field<Nothing>
