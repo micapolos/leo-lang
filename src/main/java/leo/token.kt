@@ -1,9 +1,4 @@
-package leo.lab
-
-import leo.Word
-import leo.beginWord
-import leo.endWord
-import leo.tokenWord
+package leo
 
 sealed class Token
 data class BeginToken(val word: Word) : Token()

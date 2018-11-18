@@ -18,19 +18,33 @@ val identityFunction
 fun Function.push(rule: Rule) =
 	copy(ruleStackOrNull = ruleStackOrNull.push(rule))
 
-fun Function.invoke(argument: Term<Value>): Term<Value> =
+fun Function.invoke(argument: Term<Nothing>): Term<Nothing>? =
 	ruleStackOrNull
-		?.top { rule -> argument.matches(rule.pattern) }
+		?.top { rule -> argument.matches(rule.choiceTerm) }
 		?.body
 		?.apply(argument)
-		?: argument
+		?: argument.invokeFallback
+
+// === fallback
+
+val Term<Nothing>.invokeFallback: Term<Nothing>?
+	get() =
+		when (this) {
+			is Term.Meta -> this
+			is Term.Structure ->
+				when {
+					rhsTermOrNull != null -> this
+					lhsTermOrNull == null -> this
+					else -> lhsTermOrNull.select(word)?.value ?: word.fieldTo(lhsTermOrNull).term
+				}
+		}
 
 // === reflect
 
-val Function.reflect: Field<Value>
+val Function.reflect: Field<Nothing>
 	get() =
 		functionWord
 			.fieldTo(
 				ruleStackOrNull
 					?.reflect(Rule::reflect)
-					?: term(identityWord))
+					?: identityWord.term)

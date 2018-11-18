@@ -1,8 +1,6 @@
-package leo.lab
+package leo
 
 import leo.base.*
-import leo.choiceWord
-import leo.eitherWord
 
 data class Choice(
 	val choiceTermStack: Stack<Term<Choice>>) {

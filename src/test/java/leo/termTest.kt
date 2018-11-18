@@ -1,126 +1,142 @@
 package leo
 
-import leo.base.assertEqualTo
-import leo.base.stack
-import leo.base.string
+import leo.base.*
 import kotlin.test.Test
 
-val personTerm =
-	term(
-		personWord fieldTo term(
-			nameWord fieldTo term(
-				firstWord fieldTo metaTerm("Michał"),
-				lastWord fieldTo metaTerm("Pociecha-Łoś")),
-			ageWord fieldTo metaTerm("42")))
-
 class TermTest {
+	val testTerm = term(
+		oneWord.field,
+		negateWord.field,
+		plusWord fieldTo twoWord.term,
+		plusWord fieldTo term(
+			ageWord.field,
+			personWord.field))
+
 	@Test
 	fun string() {
-		personTerm
+		testTerm
 			.string
-			.assertEqualTo("person(name(first \"Michał\", last \"Pociecha-Łoś\"), age \"42\")")
+			.assertEqualTo("one, negate, plus two, plus(age, person)")
+	}
+
+	@Test
+	fun coreString() {
+		testTerm
+			.coreString
+			.assertEqualTo("one()negate()plus(two())plus(age()person())")
+	}
+
+	@Test
+	fun isSimple_singleWord() {
+		oneWord.term<Nothing>().isSimple.assertEqualTo(true)
+	}
+
+	@Test
+	fun isSimple_wordChain() {
+		oneWord.fieldTo(twoWord.term<Nothing>()).term.isSimple.assertEqualTo(true)
+	}
+
+	@Test
+	fun isSimple_nodeChain() {
+		term<Nothing>(oneWord.field(), twoWord.field()).isSimple.assertEqualTo(false)
 	}
 
 	@Test
 	fun reflect() {
-		personTerm
-			.reflect { term(stringWord) }
-			.string
-			.assertEqualTo("term structure " +
-				"field(key word person, value term structure(" +
-				"field(key word name, value term structure(" +
-				"field(key word first, value term meta string), " +
-				"field(key word last, value term meta string))), " +
-				"field(key word age, value term meta string)))")
+		testTerm.reflect.string.assertEqualTo("term(" +
+			"field(word one, term null), " +
+			"field(word negate, term null), " +
+			"field(word plus, term field(word two, term null)), " +
+			"field(word plus, term(field(word age, term null), " +
+			"field(word person, term null))))")
 	}
 
 	val termForGet = term(
-		oneWord fieldTo metaTerm(1),
-		ageWord fieldTo metaTerm(42),
-		ageWord fieldTo metaTerm(43),
-		twoWord fieldTo metaTerm(2)
-	)
+		oneWord fieldTo 1.metaTerm,
+		ageWord fieldTo 42.metaTerm,
+		ageWord fieldTo 43.metaTerm,
+		twoWord fieldTo 2.metaTerm)
 
 	@Test
 	fun only() {
-		termForGet.only(oneWord).assertEqualTo(metaTerm(1))
-		termForGet.only(twoWord).assertEqualTo(metaTerm(2))
+		termForGet.only(oneWord).assertEqualTo(1.metaTerm.the)
+		termForGet.only(twoWord).assertEqualTo(2.metaTerm.the)
 		termForGet.only(ageWord).assertEqualTo(null)
 		termForGet.only(nameWord).assertEqualTo(null)
 	}
 
 	@Test
 	fun all() {
-		termForGet.all(oneWord).assertEqualTo(stack(metaTerm(1)))
-		termForGet.all(twoWord).assertEqualTo(stack(metaTerm(2)))
-		termForGet.all(ageWord).assertEqualTo(stack(metaTerm(42), metaTerm(43)))
+		termForGet.all(oneWord).assertEqualTo(stack(1.metaTerm))
+		termForGet.all(twoWord).assertEqualTo(stack(2.metaTerm))
+		termForGet.all(ageWord).assertEqualTo(stack(42.metaTerm, 43.metaTerm))
 		termForGet.all(nameWord).assertEqualTo(null)
 	}
 
 	@Test
 	fun nullPushIdentifier() {
-		(null as Term<Nothing>?)
+		nullOf<Term<Nothing>>()
 			.push(oneWord)
-			.assertEqualTo(term(oneWord))
+			.assertEqualTo(oneWord.term)
 	}
 
 	@Test
 	fun nativePushIdentifier() {
-		metaTerm(1)
+		1.metaTerm
 			.push(oneWord)
-			.assertEqualTo(null)
+			.assertEqualTo(Term.Structure(1.metaTerm, oneWord, null))
 	}
 
 	@Test
 	fun idPushId() {
-		term<Nothing>(oneWord)
+		oneWord.term
 			.push(twoWord)
-			.assertEqualTo(null)
+			.assertEqualTo(term(oneWord.field, twoWord.field))
 	}
 
 	@Test
 	fun listPushWord() {
-		term(oneWord fieldTo metaTerm(1))
+		term(oneWord fieldTo 1.metaTerm)
 			.push(twoWord)
-			.assertEqualTo(null)
+			.assertEqualTo(term(oneWord fieldTo 1.metaTerm, twoWord.field))
 	}
 
 	@Test
 	fun nullPushField() {
-		(null as Term<Nothing>?)
-			.push(oneWord fieldTo term(numberWord))
-			.assertEqualTo(term(oneWord fieldTo term(numberWord)))
+		nullOf<Term<Nothing>>()
+			.push(oneWord fieldTo numberWord.term)
+			.assertEqualTo(term(oneWord fieldTo numberWord.term))
 	}
 
 	@Test
 	fun nativePushField() {
-		metaTerm(1)
-			.push(twoWord fieldTo metaTerm(2))
-			.assertEqualTo(null)
+		1.metaTerm
+			.push(twoWord fieldTo oneWord.term)
+			.assertEqualTo(Term.Structure(1.metaTerm, twoWord, oneWord.term))
 	}
 
 	@Test
 	fun wordPushField() {
-		term<Nothing>(oneWord)
-			.push(twoWord fieldTo metaTerm(2))
-			.assertEqualTo(null)
+		oneWord.term
+			.push(twoWord fieldTo 2.metaTerm)
+			.assertEqualTo(term(oneWord.field, twoWord fieldTo 2.metaTerm))
 	}
 
 	@Test
 	fun listPushField() {
-		term(oneWord fieldTo metaTerm(1))
-			.push(twoWord fieldTo metaTerm(2))
+		term(oneWord fieldTo 1.metaTerm)
+			.push(twoWord fieldTo 2.metaTerm)
 			.assertEqualTo(
 				term(
-					oneWord fieldTo metaTerm(1),
-					twoWord fieldTo metaTerm(2)))
+					oneWord fieldTo 1.metaTerm,
+					twoWord fieldTo 2.metaTerm))
 	}
 
 	@Test
 	fun selectSingle() {
 		termForGet
 			.select(oneWord)
-			.assertEqualTo(metaTerm(1))
+			.assertEqualTo(1.metaTerm.the)
 	}
 
 	@Test
@@ -130,8 +146,8 @@ class TermTest {
 			.assertEqualTo(
 				term(
 					previousWord fieldTo term(
-						lastWord fieldTo metaTerm(42)),
-					lastWord fieldTo metaTerm(43)))
+						lastWord fieldTo 42.metaTerm),
+					lastWord fieldTo 43.metaTerm).the)
 	}
 
 	@Test
@@ -139,5 +155,97 @@ class TermTest {
 		termForGet
 			.select(personWord)
 			.assertEqualTo(null)
+	}
+
+	@Test
+	fun match1_nullTerm() {
+		oneWord.term
+			.match(oneWord) { it.the }
+			.assertEqualTo(null.the)
+	}
+
+	@Test
+	fun match1_nonNullTerm() {
+		term(oneWord fieldTo twoWord.term)
+			.match(oneWord) { it.the }
+			.assertEqualTo(twoWord.term.the)
+	}
+
+	@Test
+	fun match1_mismatch() {
+		term(oneWord fieldTo twoWord.term)
+			.match(twoWord) { it.the }
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun match2_nullTerms() {
+		term(oneWord.field, twoWord.field)
+			.match(oneWord, twoWord) { one, two -> one to two }
+			.assertEqualTo(null to null)
+	}
+
+	@Test
+	fun match2_nonNullTerm() {
+		term(
+			oneWord fieldTo twoWord.term,
+			twoWord fieldTo ageWord.term)
+			.match(oneWord, twoWord) { one, two -> one to two }
+			.assertEqualTo(twoWord.term to ageWord.term)
+	}
+
+	@Test
+	fun match2_mismatch() {
+		term(
+			oneWord fieldTo twoWord.term,
+			twoWord fieldTo ageWord.term)
+			.match(twoWord, oneWord) { one, two -> one to two }
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun onlyFieldOrNull() {
+		1.metaTerm.onlyFieldOrNull.assertEqualTo(null)
+		oneWord.term.onlyFieldOrNull.assertEqualTo(oneWord.field)
+		oneWord.fieldTo(twoWord.term).term.onlyFieldOrNull.assertEqualTo(oneWord fieldTo twoWord.term)
+		term(
+			oneWord fieldTo twoWord.term,
+			twoWord.field).onlyFieldOrNull.assertEqualTo(null)
+	}
+
+	@Test
+	fun select_match() {
+		term(
+			nameWord fieldTo stringWord.term,
+			ageWord fieldTo numberWord.term,
+			nameWord.field)
+			.select
+			.assertEqualTo(stringWord.term)
+	}
+
+	@Test
+	fun select_mismatch() {
+		term(
+			nameWord fieldTo stringWord.term,
+			ageWord fieldTo numberWord.term,
+			oneWord.field)
+			.select
+			.assertEqualTo(
+				term(
+					oneWord fieldTo term(
+						nameWord fieldTo stringWord.term,
+						ageWord fieldTo numberWord.term)))
+	}
+
+	@Test
+	fun select_notASelect() {
+		term(
+			nameWord fieldTo stringWord.term,
+			ageWord fieldTo numberWord.term)
+			.select
+			.assertEqualTo(
+				term(
+					nameWord fieldTo stringWord.term,
+					ageWord fieldTo numberWord.term))
 	}
 }

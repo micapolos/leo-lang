@@ -1,59 +1,59 @@
 package leo
 
-import leo.base.*
+import leo.base.foldFirst
+import leo.base.foldNext
+import leo.base.reverse
+import leo.base.string
 
 data class Reader(
-	val valueTerm: Term<Value>) {
+	val valueTerm: Term<Nothing>) {
 	override fun toString() = reflect.string
 }
 
-fun <V> leoReaderField(): Field<V> =
-	leoWord fieldTo term(readerWord)
+val leoReaderField: Field<Nothing> =
+	leoWord fieldTo readerWord.term
 
-fun <V> leoReaderTerm(): Term<V> =
-	term(leoReaderField())
+val leoReaderTerm: Term<Nothing> =
+	leoReaderField.term
 
 val emptyReader =
-	Reader(leoReaderTerm())
+	Reader(leoReaderTerm)
 
 fun <R> R.read(
 	reader: Reader,
 	byte: Byte,
-	readerFn: (Term<Value>) -> Term<Value>,
+	readerFn: (Term<Nothing>) -> Term<Nothing>,
 	readFn: R.(Byte) -> R): Pair<R, Reader>? =
-	reader.valueTerm.push(readWord fieldTo term(byte.reflect))
-		?.let { newValueTerm ->
-			readerFn(newValueTerm)
-				.let { resultValueTerm ->
-					resultValueTerm.structureTermOrNull?.let { resultTerm ->
-						resultTerm.fieldStack.reverse.stream
-							.foldFirst { topField ->
-								if (topField != leoReaderField<Value>()) null
-								else to(reader.copy(valueTerm = leoReaderTerm()))
-							}
-							.foldNext { followingField ->
-								this?.let { (folded, reader) ->
-									when {
-										followingField.key != readWord -> null
-										else -> followingField.value.match(byteWord) { byteValue ->
-											byteWord.fieldTo(byteValue).parseByte?.let { byte ->
-												readFn(folded, byte) to reader.copy(valueTerm = leoReaderTerm())
-											}
+	reader.valueTerm.push(readWord fieldTo term(byte.reflect)).let { newValueTerm ->
+		readerFn(newValueTerm)
+			.let { resultValueTerm ->
+				resultValueTerm.structureTermOrNull?.let { resultTerm ->
+					resultTerm.fieldStream.reverse
+						.foldFirst { topField ->
+							if (topField != leoReaderField) null
+							else to(reader.copy(valueTerm = leoReaderTerm))
+						}
+						.foldNext { followingField ->
+							this?.let { (folded, reader) ->
+								when {
+									followingField.word != readWord -> null
+									else -> followingField.termOrNull?.match(byteWord) { byteValue ->
+										byteWord.fieldTo(byteValue).parseByte?.let { byte ->
+											readFn(folded, byte) to reader.copy(valueTerm = leoReaderTerm)
 										}
 									}
 								}
 							}
-					} ?: to(reader.copy(valueTerm = resultValueTerm))
-				}
-		}
-
-fun Reader.push(field: Field<Value>): Reader? =
-	valueTerm.push(field)?.let { newValueTerm ->
-		copy(valueTerm = newValueTerm)
+						}
+				} ?: to(reader.copy(valueTerm = resultValueTerm))
+			}
 	}
+
+fun Reader.push(field: Field<Nothing>): Reader =
+	copy(valueTerm = valueTerm.push(field))
 
 // === reflect
 
-val Reader.reflect: Field<Value>
+val Reader.reflect: Field<Nothing>
 	get() =
 		readerWord fieldTo valueTerm

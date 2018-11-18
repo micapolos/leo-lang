@@ -1,12 +1,9 @@
-package leo.lab
+package leo
 
+import leo.*
 import leo.base.Bit
 import leo.base.assertEqualTo
 import leo.base.stack
-import leo.bitWord
-import leo.byteWord
-import leo.oneWord
-import leo.zeroWord
 import kotlin.test.Test
 
 class ParserTest {

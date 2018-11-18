@@ -1,64 +1,63 @@
 package leo
 
-import leo.base.*
+import leo.base.Bit
+import leo.base.Stream
+import leo.base.string
 
 data class Scope(
-	val parentWord: Word,
 	val function: Function,
-	val valueTermOrNull: Term<Value>?) {
+	val termOrNull: Term<Nothing>?) {
 	override fun toString() = reflect.string
 }
 
-val Word.scope
-	get() =
-		Scope(this, identityFunction, null)
-
-fun Scope.beginChild(word: Word): Scope =
-	Scope(word, function, null)
+val emptyScope =
+	Scope(identityFunction, null)
 
 fun Scope.push(word: Word) =
-	valueTermOrNull.push(word)?.let(this::invoke)
+	copy(termOrNull = termOrNull.push(word))
 
-fun Scope.push(field: Field<Value>) =
-	valueTermOrNull.push(field)?.let(this::invoke)
+fun Scope.push(field: Field<Nothing>) =
+	copy(termOrNull = termOrNull.push(field))
 
-fun Scope.invoke(argument: Term<Value>): Scope =
-	null
-		?: parseSelect(argument)
-		?: parseRule(argument)
-		?: invokeFunction(argument)
-
-fun Scope.parseRule(argument: Term<Value>): Scope? =
-	argument.parseRule(function)?.let(this::push)
-
-fun Scope.parseSelect(argument: Term<Value>): Scope? =
-	argument.onlyField?.let { field ->
-		field.value.select(field.key)?.let { selected ->
-			copy(valueTermOrNull = selected)
-		}
+val Scope.evaluate: Scope
+	get() = evaluateSelect.run {
+		null
+			?: parseRule
+			?: invokeFunction
 	}
 
-fun Scope.invokeFunction(argument: Term<Value>): Scope =
-	copy(valueTermOrNull = function.invoke(argument))
+val Scope.evaluateSelect: Scope
+	get() =
+		copy(termOrNull = termOrNull?.select)
 
-fun Scope.push(rule: Rule) =
-	copy(function = function.push(rule), valueTermOrNull = null)
+val Scope.parseRule: Scope?
+	get() =
+		termOrNull?.parseRule(function)?.let(this::push)
+
+val Scope.invokeFunction: Scope
+	get() =
+		copy(termOrNull = termOrNull?.let { term ->
+			function.invoke(term)
+		})
+
+fun Scope.push(rule: Rule): Scope =
+	copy(function = function.push(rule), termOrNull = null)
 
 // === reflect ===
 
-val Scope.reflect: Field<Value>
+val Scope.reflect: Field<Nothing>
 	get() =
 		scopeWord fieldTo term(
-			parentWord fieldTo term(parentWord.reflect),
 			function.reflect,
-			valueTermOrNull.orNullField(valueWord))
+			termWord fieldTo termOrNull)
 
-// === folding bytes
+// === bit stream
 
-val Scope.byteStream: Stream<Byte>
+val Scope.bitStreamOrNull: Stream<Bit>?
 	get() =
-		parentWord.byteStream
-			.thenIfNotNull(valueTermOrNull?.let { valueTerm ->
-				'('.toByte().onlyStream
-					.then(valueTerm.byteStream)
-			})
+		termOrNull?.bitStream
+
+// === invoke
+
+fun Scope.invoke(term: Term<Nothing>) =
+	function.invoke(term)

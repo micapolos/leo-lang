@@ -1,14 +1,26 @@
 package leo
 
-import leo.base.*
+import leo.*
+import leo.base.assertEqualTo
+import leo.base.nullOf
+import leo.base.string
 import kotlin.test.Test
 
 class FieldTest {
 	@Test
 	fun string() {
-		numberWord.fieldTo(metaTerm(1))
+		numberWord.fieldTo(1.metaTerm)
 			.string
 			.assertEqualTo("number Integer(1)")
+	}
+
+	@Test
+	fun coreString() {
+		numberWord
+			.fieldTo(oneWord.term)
+			.term
+			.coreString
+			.assertEqualTo("number(one())")
 	}
 
 	@Test
@@ -25,21 +37,5 @@ class FieldTest {
 			.orNullReflect(letterWord, Letter::reflect)
 			.string
 			.assertEqualTo("letter a")
-	}
-
-	@Test
-	fun byteStream() {
-		oneWord
-			.fieldTo(term<Value>(twoWord))
-			.byteStream { fail }
-			.assertContains(
-				Letter.O.byte,
-				Letter.N.byte,
-				Letter.E.byte,
-				'('.toByte(),
-				Letter.T.byte,
-				Letter.W.byte,
-				Letter.O.byte,
-				')'.toByte())
 	}
 }

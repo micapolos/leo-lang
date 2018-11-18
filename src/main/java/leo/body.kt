@@ -8,11 +8,13 @@ data class Body(
 fun body(selectorTerm: Term<Selector>, function: Function) =
 	Body(selectorTerm, function)
 
-fun Body.apply(argument: Term<Value>): Term<Value> =
-	function.invoke(selectorTerm.apply(argument))
+fun Body.apply(argument: Term<Nothing>): Term<Nothing>? =
+	selectorTerm.apply(argument)?.let { selectedTerm ->
+		function.invoke(selectedTerm)
+	}
 
-val Body.reflect: Field<Value>
+val Body.reflect: Field<Nothing>
 	get() =
 		bodyWord fieldTo term(
-			selectorTerm.reflect { selector -> term(selector.reflect) },
+			selectorTerm.reflect(Selector::reflect),
 			function.reflect)

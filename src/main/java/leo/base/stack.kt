@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.*
-
 data class Stack<out V>(
 	val pop: Stack<V>?,
 	val top: V) {
@@ -108,33 +106,3 @@ fun Appendable.appendReversed(stack: Stack<*>) {
 		appendReversed(stack.pop)
 	}
 }
-
-// === reflect
-
-fun <V, F> Stack<V>.reflect(key: Word, reflectValue: (V) -> Field<F>): Field<F> =
-	key fieldTo term(
-		stackWord fieldTo reverse
-			.foldTop { value -> reflectValue(value).onlyStack }
-			.foldPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
-			.term)
-
-fun <V> Stack<V>.reflect(reflectValue: (V) -> Field<Value>): Term<Value> =
-	reverse
-		.foldTop { value -> reflectValue(value).onlyStack }
-		.foldPop { fieldStack, value -> fieldStack.push(reflectValue(value)) }
-		.term
-
-// === parse
-
-fun <V> Term<Value>.parseStack(parseValue: (Field<Value>) -> V?): Stack<V>? =
-	structureTermOrNull
-		?.fieldStack
-		?.reverse
-		?.foldTop { field ->
-			parseValue(field)?.onlyStack
-		}
-		?.foldPop { stackOrNull, field ->
-			parseValue(field)?.let { value ->
-				stackOrNull?.push(value)
-			}
-		}

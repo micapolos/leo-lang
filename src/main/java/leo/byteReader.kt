@@ -1,10 +1,6 @@
-package leo.lab
+package leo
 
 import leo.base.*
-import leo.byteWord
-import leo.continueWord
-import leo.leoWord
-import leo.readWord
 
 data class ByteReader(
 	val byteEvaluator: ByteEvaluator,

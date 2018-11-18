@@ -33,7 +33,7 @@ enum class Letter(val char: Char) {
 	Y('y'),
 	Z('z');
 
-	override fun toString() = reflect<Nothing>().string
+	override fun toString() = reflect.string
 }
 
 val letterList =
@@ -52,9 +52,6 @@ fun Appendable.append(letter: Letter): Appendable =
 val Byte.letterOrNull: Letter?
 	get() =
 		toChar().letterOrNull
-
-fun <V> Letter.reflect(): Field<V> =
-	letterWord fieldTo term(char.toString().wordOrNull!!)
 
 val Letter.byte: Byte
 	get() =

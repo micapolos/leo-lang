@@ -1,6 +1,5 @@
-package leo.lab
+package leo
 
-import leo.*
 import leo.base.assertEqualTo
 import leo.base.string
 import kotlin.test.Test

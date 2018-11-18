@@ -1,13 +1,9 @@
-package leo.lab
+package leo
 
-import leo.bWord
 import leo.base.assertEqualTo
 import leo.base.bitByteStreamOrNull
 import leo.base.stack
 import leo.base.utf8string
-import leo.cWord
-import leo.oneWord
-import leo.twoWord
 import kotlin.test.Test
 
 class TokenEvaluatorTest {

@@ -1,10 +1,6 @@
-package leo.lab
+package leo
 
 import leo.base.*
-import leo.continueWord
-import leo.leoWord
-import leo.readWord
-import leo.tokenWord
 
 data class TokenReader(
 	val tokenEvaluator: TokenEvaluator,

@@ -1,10 +1,6 @@
-package leo.lab
+package leo
 
 import leo.base.assertEqualTo
-import leo.beginWord
-import leo.endWord
-import leo.oneWord
-import leo.tokenWord
 import org.junit.Test
 
 class TokenTest {

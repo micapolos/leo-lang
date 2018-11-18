@@ -5,41 +5,50 @@ import leo.base.stack
 import kotlin.test.Test
 
 class FunctionTest {
+	val nameToStringFunction =
+		Function(
+			stack(
+				rule(
+					nameWord.term,
+					body(
+						stringWord.term,
+						identityFunction))))
+
 	@Test
 	fun invoke_fallback() {
 		Function(null)
-			.invoke(term(oneWord))
-			.assertEqualTo(term(oneWord))
+			.invoke(oneWord.term)
+			.assertEqualTo(oneWord.term)
 	}
 
 	@Test
 	fun invoke_single() {
 		Function(
 			stack(
-				term<Pattern>(nameWord) returns body(term(stringWord), identityFunction),
-				term<Pattern>(ageWord) returns body(term(numberWord), identityFunction)))
-			.invoke(term(nameWord))
-			.assertEqualTo(term(stringWord))
+				rule(nameWord.term(), body(stringWord.term(), identityFunction)),
+				rule(ageWord.term(), body(numberWord.term(), identityFunction))))
+			.invoke(nameWord.term)
+			.assertEqualTo(stringWord.term)
 	}
 
 	@Test
 	fun invoke_chain() {
 		Function(
 			stack(
-				term<Pattern>(nameWord) returns
+				nameWord.term returns
 					body(
-						term(stringWord),
+						stringWord.term,
 						identityFunction),
-				term<Pattern>(ageWord) returns
+				ageWord.term returns
 					body(
-						term(nameWord),
+						nameWord.term,
 						Function(
 							stack(
-								term<Pattern>(nameWord) returns
+								nameWord.term returns
 									body(
-										term(stringWord),
+										stringWord.term,
 										identityFunction))))))
-			.invoke(term(ageWord))
-			.assertEqualTo(term(stringWord))
+			.invoke(ageWord.term)
+			.assertEqualTo(stringWord.term)
 	}
 }

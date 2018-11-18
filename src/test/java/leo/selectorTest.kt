@@ -1,30 +1,30 @@
 package leo
 
 import leo.base.assertEqualTo
+import leo.base.the
 import kotlin.test.Test
-
 
 class SelectorTest {
 	val testTerm: Term<Int> = term(
-		oneWord fieldTo metaTerm(1),
-		ageWord fieldTo metaTerm(42),
-		ageWord fieldTo metaTerm(44),
+		oneWord fieldTo 1.metaTerm,
+		ageWord fieldTo 42.metaTerm,
+		ageWord fieldTo 44.metaTerm,
 		numberWord fieldTo term(
-			firstWord fieldTo metaTerm(100),
-			lastWord fieldTo metaTerm(200)))
+			firstWord fieldTo 100.metaTerm,
+			lastWord fieldTo 200.metaTerm))
 
 	@Test
 	fun invokeEmpty() {
 		selector()
 			.invoke(testTerm)
-			.assertEqualTo(testTerm)
+			.assertEqualTo(testTerm.the)
 	}
 
 	@Test
 	fun invokeSingleChoice() {
 		selector(oneWord)
 			.invoke(testTerm)
-			.assertEqualTo(metaTerm(1))
+			.assertEqualTo(1.metaTerm.the)
 	}
 
 	@Test
@@ -34,8 +34,8 @@ class SelectorTest {
 			.assertEqualTo(
 				term(
 					previousWord fieldTo term(
-						lastWord fieldTo metaTerm(42)),
-					lastWord fieldTo metaTerm(44)))
+						lastWord fieldTo 42.metaTerm),
+					lastWord fieldTo 44.metaTerm).the)
 	}
 
 	@Test
@@ -49,154 +49,133 @@ class SelectorTest {
 	fun invokeDeep() {
 		selector(numberWord, lastWord)
 			.invoke(testTerm)
-			.assertEqualTo(metaTerm(200))
+			.assertEqualTo(200.metaTerm.the)
 	}
 
 	@Test
 	fun parse_this() {
-		term<Value>(thisWord)
-			.parseSelector(term(oneWord))
+		thisWord.term
+			.parseSelector(oneWord.term)
 			.assertEqualTo(selector())
 	}
 
 	@Test
 	fun parse_simple() {
-		term<Value>(oneWord fieldTo term(thisWord))
+		term(oneWord fieldTo thisWord.term)
 			.parseSelector(
 				term(
-					oneWord fieldTo term(numberWord),
-					twoWord fieldTo term(stringWord)))
+					oneWord fieldTo numberWord.term,
+					twoWord fieldTo stringWord.term))
 			.assertEqualTo(selector(oneWord))
 	}
 
 	@Test
 	fun parse_deep() {
-		term<Value>(twoWord fieldTo term(oneWord fieldTo term(thisWord)))
-			.parseSelector(term(oneWord fieldTo term(twoWord fieldTo term(numberWord))))
+		term(twoWord fieldTo term(oneWord fieldTo thisWord.term))
+			.parseSelector(term(oneWord fieldTo term(twoWord fieldTo numberWord.term)))
 			.assertEqualTo(selector(oneWord, twoWord))
 	}
 
 	@Test
 	fun parse_mismatch() {
-		term<Value>(oneWord fieldTo term(thisWord))
-			.parseSelector(term(twoWord fieldTo term(numberWord)))
+		term(oneWord fieldTo thisWord.term)
+			.parseSelector(term(twoWord fieldTo numberWord.term))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun parse_multiple() {
-		term<Value>(oneWord fieldTo term(thisWord))
+		term(oneWord fieldTo thisWord.term)
 			.parseSelector(
 				term(
-					oneWord fieldTo term(numberWord),
-					oneWord fieldTo term(stringWord)))
+					oneWord fieldTo numberWord.term,
+					oneWord fieldTo stringWord.term))
 			.assertEqualTo(selector(oneWord))
 	}
 
 	@Test
 	fun parse_multiple_last() {
-		term<Value>(lastWord fieldTo term(oneWord fieldTo term(thisWord)))
+		term(lastWord fieldTo term(oneWord fieldTo thisWord.term))
 			.parseSelector(
 				term(
-					oneWord fieldTo term(numberWord),
-					oneWord fieldTo term(stringWord)))
+					oneWord fieldTo numberWord.term,
+					oneWord fieldTo stringWord.term))
 			.assertEqualTo(selector(oneWord, lastWord))
 	}
 
 	@Test
 	fun parse_multiple_previous() {
-		term<Value>(previousWord fieldTo term(oneWord fieldTo term(thisWord)))
+		term(previousWord fieldTo term(oneWord fieldTo thisWord.term))
 			.parseSelector(
 				term(
-					oneWord fieldTo term(numberWord),
-					oneWord fieldTo term(stringWord)))
+					oneWord fieldTo numberWord.term,
+					oneWord fieldTo stringWord.term))
 			.assertEqualTo(selector(oneWord, previousWord))
 	}
 
 	@Test
 	fun parse_multiple_previous_last() {
-		term<Value>(lastWord fieldTo (term(previousWord fieldTo term(oneWord fieldTo term(thisWord)))))
+		term(lastWord fieldTo (term(previousWord fieldTo term(oneWord fieldTo thisWord.term))))
 			.parseSelector(
 				term(
-					oneWord fieldTo term(numberWord),
-					oneWord fieldTo term(stringWord)))
+					oneWord fieldTo numberWord.term,
+					oneWord fieldTo stringWord.term))
 			.assertEqualTo(selector(oneWord, previousWord, lastWord))
 	}
 
 	@Test
 	fun parse_multiple_previous_previous_last() {
-		term<Value>(lastWord fieldTo term(previousWord fieldTo term(previousWord fieldTo term(oneWord fieldTo term(thisWord)))))
+		term(lastWord fieldTo term(previousWord fieldTo term(previousWord fieldTo term(oneWord fieldTo thisWord.term))))
 			.parseSelector(
 				term(
-					oneWord fieldTo term(numberWord),
-					oneWord fieldTo term(stringWord)))
+					oneWord fieldTo numberWord.term,
+					oneWord fieldTo stringWord.term))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun parse_literal() {
-		term<Value>(oneWord)
-			.parseSelectorTerm(term(personWord))
-			.assertEqualTo(term(oneWord))
+		oneWord.term
+			.parseSelectorTerm(personWord.term)
+			.assertEqualTo(oneWord.term)
 	}
 
 	@Test
 	fun parse_list() {
-		term<Value>(
-			nameWord fieldTo term(stringWord),
-			ageWord fieldTo term(numberWord))
-			.parseSelectorTerm(term(personWord))
+		term(
+			nameWord fieldTo stringWord.term,
+			ageWord fieldTo numberWord.term)
+			.parseSelectorTerm(personWord.term)
 			.assertEqualTo(
 				term(
-					nameWord fieldTo term(stringWord),
-					ageWord fieldTo term(numberWord)))
+					nameWord fieldTo stringWord.term,
+					ageWord fieldTo numberWord.term))
 	}
 
 	@Test
 	fun parse_selector() {
-		term<Value>(
+		term(
 			nameWord fieldTo term(
-				oneWord fieldTo term(thisWord)))
+				oneWord fieldTo thisWord.term))
 			.parseSelectorTerm(
-				term(oneWord fieldTo term(numberWord)))
+				term(oneWord fieldTo numberWord.term))
 			.assertEqualTo(
 				term(
-					nameWord fieldTo metaTerm(selector(oneWord))))
-	}
-
-	@Test
-	fun parse_oneAnything_this() {
-		term<Value>(thisWord)
-			.parseSelectorTerm(term(oneWord fieldTo metaTerm(anythingPattern)))
-			.assertEqualTo(metaTerm(selector()))
-	}
-
-	@Test
-	fun parse_oneAnything_oneThis() {
-		term<Value>(oneWord fieldTo term(thisWord))
-			.parseSelectorTerm(term(oneWord fieldTo metaTerm(anythingPattern)))
-			.assertEqualTo(metaTerm(selector(oneWord)))
-	}
-
-	@Test
-	fun parse_oneAnything_twoOneThis() {
-		term<Value>(twoWord fieldTo term(oneWord fieldTo term(thisWord)))
-			.parseSelectorTerm(term(oneWord fieldTo metaTerm(anythingPattern)))
-			.assertEqualTo(term(twoWord fieldTo metaTerm(selector(oneWord))))
+					nameWord fieldTo selector(oneWord).metaTerm))
 	}
 
 	@Test
 	fun bodyInvoke() {
 		term(
-			thisWord fieldTo metaTerm(selector(itWord)),
-			timesWord fieldTo metaTerm(selector(plusWord)))
+			thisWord fieldTo selector(itWord).metaTerm,
+			timesWord fieldTo selector(plusWord).metaTerm)
 			.invoke(
 				term(
-					itWord fieldTo metaTerm(1),
-					plusWord fieldTo metaTerm(2)))
+					itWord fieldTo 1.metaTerm,
+					plusWord fieldTo 2.metaTerm))
 			.assertEqualTo(
 				term(
-					thisWord fieldTo metaTerm(1),
-					timesWord fieldTo metaTerm(2)))
+					thisWord fieldTo 1.metaTerm,
+					timesWord fieldTo 2.metaTerm).the)
 	}
 }

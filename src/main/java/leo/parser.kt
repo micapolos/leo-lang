@@ -1,6 +1,5 @@
-package leo.lab
+package leo
 
-import leo.*
 import leo.base.*
 
 val Field<Nothing>.parseBit: Bit?

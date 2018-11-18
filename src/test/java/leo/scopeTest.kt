@@ -1,30 +1,66 @@
 package leo
 
-import leo.base.assertContains
-import org.junit.Test
+import leo.base.assertEqualTo
+import leo.base.stack
+import kotlin.test.Test
 
 class ScopeTest {
+	val nameToStringRule =
+		rule(
+			nameWord.term,
+			body(
+				stringWord.term,
+				identityFunction))
+
+	val nameToStringFunction =
+		Function(stack(nameToStringRule))
+
 	@Test
-	fun byteStream_nullValueTerm() {
-		Scope(oneWord, identityFunction, null)
-			.byteStream
-			.assertContains(
-				Letter.O.byte,
-				Letter.N.byte,
-				Letter.E.byte)
+	fun evaluate_define() {
+		Scope(
+			nameToStringFunction,
+			term(
+				defineWord fieldTo term(
+					itWord fieldTo term(ageWord.field),
+					isWord fieldTo term(numberWord.field))))
+			.evaluate
+			.assertEqualTo(
+				Scope(
+					Function(
+						stack(
+							nameToStringRule,
+							rule(
+								ageWord.term,
+								body(
+									numberWord.term,
+									nameToStringFunction)))),
+					null))
 	}
 
 	@Test
-	fun byteStream_nonNullValueTerm() {
-		Scope(oneWord, identityFunction, term(twoWord))
-			.byteStream
-			.assertContains(
-				Letter.O.byte,
-				Letter.N.byte,
-				Letter.E.byte,
-				'('.toByte(),
-				Letter.T.byte,
-				Letter.W.byte,
-				Letter.O.byte)
+	fun evaluate_invoke() {
+		Scope(
+			nameToStringFunction,
+			nameWord.term)
+			.evaluate
+			.assertEqualTo(
+				Scope(
+					nameToStringFunction,
+					stringWord.term))
+	}
+
+	@Test
+	fun evaluate_select() {
+		Scope(
+			nameToStringFunction,
+			term(
+				nameWord fieldTo stringWord.term,
+				ageWord fieldTo numberWord.term,
+				nameWord.field))
+			.evaluate
+			.assertEqualTo(
+				Scope(
+					nameToStringFunction,
+					stringWord.term))
 	}
 }

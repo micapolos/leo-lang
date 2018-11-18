@@ -1,11 +1,8 @@
-package leo.lab
+package leo
 
 import leo.base.byte
 import leo.base.fail
 import leo.base.stack
-import leo.continueWord
-import leo.leoWord
-import leo.readWord
 
 class ByteReaderTest {
 	var noSpacesFunction =

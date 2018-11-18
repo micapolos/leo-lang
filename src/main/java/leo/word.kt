@@ -60,12 +60,6 @@ val Word.Reader.fullOrNull: Word.Reader.Full?
 	get() =
 		this as? Word.Reader.Full
 
-// === term
-
-val Word.reflect: Field<Nothing>
-	get() =
-		wordWord fieldTo term(this)
-
 // === folding bytes
 
 val Word.byteStream: Stream<Byte>

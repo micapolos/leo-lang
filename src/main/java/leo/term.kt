@@ -8,13 +8,10 @@ sealed class Term<out V> {
 		override fun toString() = appendableString { it.append(this) }
 	}
 
-	data class Identifier<V>(
-		val word: Word) : Term<V>() {
-		override fun toString() = appendableString { it.append(this) }
-	}
-
-	data class Structure<V>(
-		val fieldStack: Stack<Field<V>>) : Term<V>() {
+	data class Structure<out V>(
+		val lhsTermOrNull: Term<V>?,
+		val word: Word,
+		val rhsTermOrNull: Term<V>?) : Term<V>() {
 		override fun toString() = appendableString { it.append(this) }
 	}
 }
@@ -27,143 +24,146 @@ val <V> V.metaTerm
 
 val <V> Stack<Field<V>>.term
 	get() =
-		Term.Structure(this)
-
-// === helper constructors
-
-fun <V> metaTerm(value: V) =
-	Term.Meta(value)
-
-fun <V> term(word: Word): Term<V> =
-	Term.Identifier<V>(word)
+		reverse.stream
+			.foldFirst(Field<V>::term)
+			.foldNext(Term<V>::push)
 
 fun <V> term(field: Field<V>, vararg fields: Field<V>) =
-	Term.Structure(stack(field, *fields))
+	stack(field, *fields).term
 
-// === pushing
+fun <V> Word.term(): Term<V> =
+	term(field())
 
-fun <V> Term<V>?.push(word: Word): Term<V>? =
-	when {
-		this == null -> term(word)
-		else -> null
-	}
+val Word.term: Term<Nothing>
+	get() =
+		term()
 
-fun <V> Term<V>?.push(field: Field<V>): Term<V>? =
-	when {
-		this == null -> field.onlyStack.term
-		this is Term.Structure -> fieldStack.push(field).term
-		else -> null
-	}
+val <V> Field<V>.term: Term<V>
+	get() =
+		Term.Structure(null, word, termOrNull)
+
+fun <V> Term<V>?.push(word: Word): Term<V> =
+	push(word.field)
+
+fun <V> Term<V>?.push(field: Field<V>): Term<V> =
+	Term.Structure(this, field.word, field.termOrNull)
+
+val <V> Term<V>.topFieldOrNull: Field<V>?
+	get() =
+		structureTermOrNull?.topField
+
+val <V> Term.Structure<V>.topField: Field<V>
+	get() =
+		word fieldTo rhsTermOrNull
+
+// === fields
+
+val <V> Term<V>.fieldStreamOrNull: Stream<Field<V>>?
+	get() =
+		structureTermOrNull?.fieldStream
+
+val <V> Term.Structure<V>.fieldStream: Stream<Field<V>>
+	get() =
+		Stream(word.fieldTo(rhsTermOrNull)) {
+			lhsTermOrNull?.fieldStreamOrNull
+		}
 
 // === casting
 
 val <V> Term<V>.metaTermOrNull
 	get() =
-		this as? Term.Meta<V>
-
-val <V> Term<V>.identifierTermOrNull
-	get() =
-		this as? Term.Identifier<V>
+		this as? Term.Meta
 
 val <V> Term<V>.structureTermOrNull
 	get() =
-		this as? Term.Structure<V>
-
-fun <V> Term<V>?.orNullField(word: Word): Field<V> =
-	word fieldTo orNullTerm
-
-val <V> Term<V>?.orNullTerm: Term<V>
-	get() =
-		this ?: term(nullWord)
-
-// === Appendable (core)
-
-fun Appendable.appendCore(term: Term<*>): Appendable =
-	when (term) {
-		is Term.Meta -> appendString(term.value)
-		is Term.Identifier -> appendCore(term)
-		is Term.Structure -> appendCore(term)
-	}
-
-fun Appendable.appendCore(identifierTerm: Term.Identifier<*>): Appendable =
-	append(identifierTerm.word)
-
-fun Appendable.appendCore(structureTerm: Term.Structure<*>): Appendable =
-	structureTerm
-		.fieldStack
-		.reverse
-		.stream
-		.foldFirst { field -> appendCore(field) }
-		.foldNext { field -> appendCore(field) }
+		this as? Term.Structure
 
 // === Appendable (pretty-print)
 
-val Term<*>.coreString
+val <V> Term<V>.isSimple: Boolean
 	get() =
-		appendableString { it.appendCore(this) }
+		when (this) {
+			is Term.Meta -> true
+			is Term.Structure -> this.lhsTermOrNull == null
+		}
 
-fun Appendable.append(term: Term<*>): Appendable =
+fun <V> Appendable.append(term: Term<V>): Appendable =
 	when (term) {
-		is Term.Meta -> appendString(term.value)
-		is Term.Identifier -> append(term)
-		is Term.Structure -> append(term)
+		is Term.Meta -> append(term.value.string)
+		is Term.Structure -> term.fieldStream.reverse
+			.foldFirst { field -> append(field) }
+			.foldNext { field -> append(", ").append(field) }
 	}
 
-fun Appendable.append(identifier: Term.Identifier<*>): Appendable =
-	append(identifier.word)
+// === byte stream
 
-fun Appendable.append(structureTerm: Term.Structure<*>): Appendable =
-	structureTerm
-		.fieldStack
-		.reverse
-		.stream
-		.foldFirst { field -> append(field) }
-		.foldNext { field -> append(", ").append(field) }
+val Term<Nothing>.coreString: String
+	get() =
+		appendableString { appendable ->
+			appendable.fold(bitStream.bitByteStreamOrNull) { byte ->
+				append(byte.toChar())
+			}
+		}
+
+val Term<Nothing>.bitStream: Stream<Bit>
+	get() =
+		structureTermOrNull?.let {
+			it.fieldStream.reverse
+				.foldFirst { field -> field.bitStream }
+				.foldNext { field -> then(field.bitStream) }
+		} ?: fail
 
 // === access
 
-fun <V> Term<V>.all(key: Word): Stack<Term<V>>? =
-	structureTermOrNull?.fieldStack?.filterMap { field ->
-		field.termOrNull(key)?.the
+fun <V> Term<V>.all(key: Word): Stack<Term<V>?>? =
+	structureTermOrNull?.run {
+		fieldStream.stack.reverse.filterMap { field -> field.get(key) }
 	}
 
-fun <V> Term<V>.only(key: Word): Term<V>? =
-	all(key)?.theOnlyOrNull?.value
+fun <V> Term<V>.only(key: Word): The<Term<V>?>? =
+	all(key)?.theOnlyOrNull
 
-fun <V> Term<V>.singleton(key: Word): Term<V>? =
-	when {
-		this !is Term.Structure -> null
-		fieldStack.pop != null -> null
-		fieldStack.top.key != key -> null
-		else -> fieldStack.top.value
-	}
+//fun <V> Term<V>.theOnly(key: Word): The<Term<V>?>? =
+//	structureTermOrNull?.run {
+//		when {
+//			fieldStack.pop != null -> null
+//			fieldStack.top.word != key -> null
+//			else -> fieldStack.top.termOrNull.the
+//		}
+//	}
 
-val <V> Term<V>.onlyField: Field<V>?
+val <V> Term<V>.onlyFieldOrNull: Field<V>?
 	get() =
-		structureTermOrNull?.fieldStack?.theOnlyOrNull?.value
+		structureTermOrNull?.run {
+			if (lhsTermOrNull != null) null
+			else word fieldTo rhsTermOrNull
+		}
 
-fun <V, R> Term<V>.match(key: Word, fn: (Term<V>) -> R): R? =
-	when {
-		this !is Term.Structure -> null
-		fieldStack.top.key != key -> null
-		fieldStack.pop != null -> null
-		else -> fn(fieldStack.top.value)
-	}
-
-fun <V, R> Term<V>.match(firstKey: Word, secondKey: Word, fn: (Term<V>, Term<V>) -> R): R? =
-	when {
-		this !is Term.Structure -> null
-		fieldStack.top.key != secondKey -> null
-		fieldStack.pop?.top?.key != firstKey -> null
-		fieldStack.pop.pop != null -> null
-		else -> fn(fieldStack.pop.top.value, fieldStack.top.value)
-	}
-
-fun <V> Term<V>.select(key: Word): Term<V>? =
-	all(key)?.let { termStack ->
+fun <V, R> Term<V>.match(key: Word, fn: (Term<V>?) -> R): R? =
+	structureTermOrNull?.run {
 		when {
-			termStack.pop == null -> termStack.top
-			else -> termStack.reverse.stream
+			word != key -> null
+			lhsTermOrNull != null -> null
+			else -> fn(rhsTermOrNull)
+		}
+	}
+
+fun <V, R> Term<V>.match(firstKey: Word, secondKey: Word, fn: (Term<V>?, Term<V>?) -> R): R? =
+	structureTermOrNull?.run {
+		when {
+			word != secondKey -> null
+			lhsTermOrNull == null -> null
+			lhsTermOrNull.structureTermOrNull?.word != firstKey -> null
+			lhsTermOrNull.structureTermOrNull?.lhsTermOrNull != null -> null
+			else -> fn(lhsTermOrNull.structureTermOrNull?.rhsTermOrNull, rhsTermOrNull)
+		}
+	}
+
+fun <V> Term<V>.select(key: Word): The<Term<V>?>? =
+	all(key)?.run {
+		when {
+			pop == null -> top
+			else -> reverse.stream
 				.foldFirst { term ->
 					term(lastWord fieldTo term)
 				}
@@ -172,54 +172,38 @@ fun <V> Term<V>.select(key: Word): Term<V>? =
 						previousWord fieldTo this,
 						lastWord fieldTo term)
 				}
-		}
+		}.the
 	}
 
 // === reflect
 
-fun <V> Term<V>.fieldReflect(reflectValue: (V) -> Field<Value>): Field<Value> =
-	reflect { value -> term(reflectValue(value)) }
+val Term<Nothing>.reflect: Field<Nothing>
+	get() = reflect { fail }
 
-fun <V> Term<V>.reflect(reflectValue: (V) -> Term<Value>): Field<Value> =
-	termWord fieldTo term(termReflect(reflectValue))
-
-fun <V> Term<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
+fun <V> Term<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =
 	when (this) {
-		is Term.Meta -> this.termReflect(reflectValue)
-		is Term.Identifier -> this.termReflect()
-		is Term.Structure -> this.termReflect(reflectValue)
+		is Term.Meta -> metaWord fieldTo term(metaReflect(value))
+		is Term.Structure -> termWord fieldTo this.fieldStream.reflect { reflect(metaReflect) }
 	}
 
-fun <V> Term.Meta<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
-	metaWord fieldTo reflectValue(value)
+// === select
 
-fun <V> Term.Identifier<V>.termReflect(): Field<Value> =
-	identifierWord fieldTo term(word.reflect)
+val Term<Nothing>.select: Term<Nothing>?
+	get() =
+		when (this) {
+			is Term.Meta -> this
+			is Term.Structure ->
+				when {
+					rhsTermOrNull != null -> this
+					lhsTermOrNull == null -> this
+					else -> lhsTermOrNull.select(word)?.value ?: word.fieldTo(lhsTermOrNull).term
+				}
+		}
 
-fun <V> Term.Structure<V>.termReflect(reflectValue: (V) -> Term<Value>): Field<Value> =
-	structureWord fieldTo fieldStack.reflect { field ->
-		field.reflect(reflectValue)
-	}
+// === map
 
 fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
 	when (this) {
-		is Term.Meta -> Term.Meta(fn(value))
-		is Term.Identifier -> Term.Identifier(word)
-		is Term.Structure -> Term.Structure(fieldStack.map { field -> field.map(fn) })
+		is Term.Meta -> fn(value).metaTerm
+		is Term.Structure -> Term.Structure(lhsTermOrNull?.map(fn), word, rhsTermOrNull?.map(fn))
 	}
-
-fun <V, R> Term<V>.cast(): Term<R> =
-	map { fail }
-
-// === folding bytes
-
-fun <V> Term<V>.byteStream(metaByteStream: (V) -> Stream<Byte>): Stream<Byte> =
-	when (this) {
-		is Term.Meta -> metaByteStream(value)
-		is Term.Identifier -> word.byteStream
-		is Term.Structure -> fieldStack.reverse.stream.map { it.byteStream(metaByteStream) }.join
-	}
-
-val Term<Value>.byteStream: Stream<Byte>
-	get() =
-		byteStream { fail }
