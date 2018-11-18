@@ -1,9 +1,6 @@
 package leo
 
-import leo.base.Bit
-import leo.base.Stream
-import leo.base.bit
-import leo.base.stream
+import leo.base.*
 
 data class BitEvaluator(
 	val byteReader: ByteReader,
@@ -17,7 +14,7 @@ fun BitEvaluator.evaluate(bit: Bit): BitEvaluator? {
 	val nextByteInt = byteInt.or(if (bit == Bit.ONE) maskInt else 0)
 	val nextMaskInt = maskInt.shr(1)
 	return if (nextMaskInt == 0) {
-		byteReader.read(nextByteInt.toByte())?.let { nextByteReader ->
+		byteReader.read(nextByteInt.byte)?.let { nextByteReader ->
 			BitEvaluator(nextByteReader, 0, 0x80)
 		}
 	} else {

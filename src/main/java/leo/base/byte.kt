@@ -67,7 +67,7 @@ val Stream<Bit>.bitByteStreamOrNull: Stream<Byte>?
 													nextOrNull?.run {
 														int6.shl(1).or(first.int).let { int7 ->
 															nextOrNull?.run {
-																Stream(int7.shl(1).or(first.int).toByte()) {
+																Stream(int7.shl(1).or(first.int).byte) {
 																	nextOrNull?.bitByteStreamOrNull
 																}
 															}

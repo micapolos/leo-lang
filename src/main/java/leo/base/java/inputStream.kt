@@ -7,7 +7,7 @@ val InputStream.byteStreamOrNull: Stream<Byte>?
 	get() =
 		read().let { readInt ->
 			if (readInt == -1) null
-			else readInt.toByte().onlyStream.then { byteStreamOrNull }
+			else readInt.byte.onlyStream.then { byteStreamOrNull }
 		}
 
 val InputStream.bitStreamOrNull: Stream<Bit>?
