@@ -68,3 +68,18 @@ val BitReader.partialByteBitStreamOrNull: Stream<Bit>?
 
 fun BitReader.apply(term: Term<Nothing>): Term<Nothing>? =
 	bitEvaluator.apply(term)
+
+// === transition to Reader<Bit>
+
+val bitReader: Reader<Bit> =
+	emptyBitReader.reader
+
+val BitReader.reader: Reader<Bit>
+	get() =
+		Reader(
+			Field<Nothing>::parseBit,
+			Bit::reflect,
+			this::apply,
+			this::bitStreamOrNull,
+			bitEvaluator.evaluator,
+			null)
