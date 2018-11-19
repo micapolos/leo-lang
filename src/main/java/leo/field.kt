@@ -36,11 +36,17 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 
 // === bit stream
 
-val Field<Nothing>.tokenStream: Stream<Token>
+val Field<Nothing>.tokenStream: Stream<Token<Nothing>>
 	get() =
 		word.beginToken.onlyStream
 			.then { termOrNull?.tokenStream }
 			.then { endToken.onlyStream }
+
+val <V> Field<V>.reversedTokenStream: Stream<Token<V>>
+	get() =
+		endToken<V>().onlyStream
+			.then { termOrNull?.reversedTokenStream }
+			.then { word.beginToken<V>().onlyStream }
 
 // === reflect
 

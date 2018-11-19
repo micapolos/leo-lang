@@ -9,7 +9,7 @@ data class TokenReader(
 val emptyTokenReader =
 	TokenReader(emptyTokenEvaluator, null)
 
-fun TokenReader.read(token: Token): TokenReader? =
+fun TokenReader.read(token: Token<Nothing>): TokenReader? =
 	this
 		.termPush(leoReadField(token))
 		.termInvoke
@@ -36,17 +36,17 @@ val TokenReader.termParse: TokenReader?
 				}
 			}
 
-fun TokenReader.readPreprocessed(token: Token): TokenReader? =
+fun TokenReader.readPreprocessed(token: Token<Nothing>): TokenReader? =
 	tokenEvaluator.evaluate(token)?.let { tokenEvaluator ->
 		copy(tokenEvaluator = tokenEvaluator)
 	}
 
 // === leo read bit
 
-fun leoReadField(token: Token): Field<Nothing> =
+fun leoReadField(token: Token<Nothing>): Field<Nothing> =
 	leoWord fieldTo term(readWord fieldTo token.reflect.term)
 
-val Field<Nothing>.leoReadTokenOrNull: Token?
+val Field<Nothing>.leoReadTokenOrNull: Token<Nothing>?
 	get() =
 		get(leoWord)?.let { theLeoTerm ->
 			theLeoTerm.value?.match(readWord) { readTerm ->

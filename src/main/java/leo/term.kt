@@ -105,24 +105,29 @@ val Term<Nothing>.coreString: String
 	get() =
 		appendableString {
 			it.fold(
-				tokenStream.mapJoin(Token::characterStream).map(Character::char),
+				tokenStream.mapJoin(Token<Nothing>::characterStream).map(Character::char),
 				Appendable::append)
 		}
 
 val Term<Nothing>.bitStream: Stream<Bit>
 	get() =
 		tokenStream
-			.mapJoin(Token::characterStream)
+			.mapJoin(Token<Nothing>::characterStream)
 			.map(Character::byte)
 			.mapJoin(Byte::bitStream)
 
-val Term<Nothing>.tokenStream: Stream<Token>
+val Term<Nothing>.tokenStream: Stream<Token<Nothing>>
 	get() =
-		structureTerm
-			.fieldStream
-			.reverse
-			.foldFirst { it.tokenStream }
-			.foldNext { then(it::tokenStream) }
+		reversedTokenStream.reverse
+
+val <V> Term<V>.reversedTokenStream: Stream<Token<V>>
+	get() =
+		when (this) {
+			is Term.Meta -> value.metaEndToken.onlyStream
+			is Term.Structure -> this.fieldStream
+				.foldFirst { it.reversedTokenStream }
+				.foldNext { then(it::reversedTokenStream) }
+		}
 
 // === access
 

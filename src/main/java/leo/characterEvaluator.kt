@@ -25,14 +25,14 @@ fun CharacterEvaluator.evaluate(character: Character): CharacterEvaluator? =
 val CharacterEvaluator.begin: CharacterEvaluator?
 	get() =
 		if (wordOrNull == null) null
-		else tokenReader.read(BeginToken(wordOrNull))?.let { tokenReader ->
+		else tokenReader.read(wordOrNull.beginToken)?.let { tokenReader ->
 			CharacterEvaluator(tokenReader, null)
 		}
 
 val CharacterEvaluator.end: CharacterEvaluator?
 	get() =
 		if (wordOrNull != null) null
-		else tokenReader.read(EndToken)?.let { endedTokenReader ->
+		else tokenReader.read(endToken)?.let { endedTokenReader ->
 			CharacterEvaluator(endedTokenReader, null)
 		}
 

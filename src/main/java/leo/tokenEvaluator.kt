@@ -17,10 +17,11 @@ data class TokenEvaluator(
 val emptyTokenEvaluator =
 	TokenEvaluator(null, emptyScope)
 
-fun TokenEvaluator.evaluate(token: Token): TokenEvaluator? =
+fun TokenEvaluator.evaluate(token: Token<Nothing>): TokenEvaluator? =
 	when (token) {
-		is BeginToken -> begin(token.word)
-		is EndToken -> end
+		is Token.MetaEnd -> fail
+		is Token.Begin -> begin(token.word)
+		is Token.End -> end
 	}
 
 fun TokenEvaluator.begin(word: Word): TokenEvaluator =

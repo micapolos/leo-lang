@@ -6,7 +6,7 @@ import org.junit.Test
 class TokenTest {
 	@Test
 	fun reflect_begin() {
-		BeginToken(oneWord)
+		oneWord.beginToken
 			.reflect
 			.assertEqualTo(
 				tokenWord fieldTo term(
@@ -16,7 +16,7 @@ class TokenTest {
 
 	@Test
 	fun reflect_end() {
-		EndToken
+		endToken
 			.reflect
 			.assertEqualTo(
 				tokenWord fieldTo term(
@@ -29,13 +29,13 @@ class TokenTest {
 			beginWord fieldTo term(
 				oneWord.field)))
 			.parseToken
-			.assertEqualTo(BeginToken(oneWord))
+			.assertEqualTo(oneWord.beginToken)
 	}
 
 	@Test
 	fun parse_end() {
 		tokenWord.fieldTo(endWord.term)
 			.parseToken
-			.assertEqualTo(EndToken)
+			.assertEqualTo(endToken)
 	}
 }

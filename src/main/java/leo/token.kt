@@ -1,39 +1,48 @@
 package leo
 
-import leo.base.Stream
-import leo.base.map
-import leo.base.onlyStream
-import leo.base.then
+import leo.base.*
 
-sealed class Token
-data class BeginToken(val word: Word) : Token()
-object EndToken : Token()
+sealed class Token<out V> {
+	data class MetaEnd<V>(val value: V) : Token<V>()
+	data class Begin<V>(val word: Word) : Token<V>()
+	data class End<V>(val unit: Unit) : Token<V>()
+}
 
-val Word.beginToken: Token
+fun <V> Word.beginToken(): Token<V> =
+	Token.Begin(this)
+
+fun <V> endToken(): Token<V> =
+	Token.End(Unit)
+
+val <V> V.metaEndToken: Token<V>
 	get() =
-		BeginToken(this)
+		Token.MetaEnd(this)
 
-val endToken: Token
+val Word.beginToken: Token<Nothing>
 	get() =
-		EndToken
+		beginToken()
 
-val Token.reflect: Field<Nothing>
+val endToken: Token<Nothing> =
+	endToken()
+
+val Token<Nothing>.reflect: Field<Nothing>
 	get() =
 		tokenWord fieldTo term(
 			when (this) {
-				is BeginToken -> beginWord fieldTo word.reflect.termOrNull
-				is EndToken -> endWord.field
+				is Token.MetaEnd -> fail
+				is Token.Begin -> beginWord fieldTo word.reflect.termOrNull
+				is Token.End -> endWord.field
 			})
 
-val Field<Nothing>.parseToken: Token?
+val Field<Nothing>.parseToken: Token<Nothing>?
 	get() =
 		match(tokenWord) { tokenTerm ->
 			when (tokenTerm) {
-				endWord.term -> EndToken
+				endWord.term -> endToken
 				else -> tokenTerm?.match(beginWord) { beginTerm ->
 					beginTerm?.onlyFieldOrNull?.let { field ->
 						if (field.termOrNull != null) null
-						else BeginToken(field.word)
+						else field.word.beginToken
 					}
 				}
 			}
@@ -41,9 +50,10 @@ val Field<Nothing>.parseToken: Token?
 
 // === streams
 
-val Token.characterStream: Stream<Character>
+val Token<Nothing>.characterStream: Stream<Character>
 	get() =
 		when (this) {
-			is BeginToken -> word.letterStream.map(Letter::character).then { beginCharacter.onlyStream }
-			is EndToken -> endCharacter.onlyStream
+			is Token.MetaEnd -> fail
+			is Token.Begin -> word.letterStream.map(Letter::character).then { beginCharacter.onlyStream }
+			is Token.End -> endCharacter.onlyStream
 		}

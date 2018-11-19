@@ -33,8 +33,17 @@ val <V> V.binaryTrieFullMatch: BinaryTrie.Match<V>
 	get() =
 		BinaryTrie.Match.Full(this)
 
+fun <V> BinaryTrie<V>.get(bit: Bit): BinaryTrie.Match<V>? =
+	binaryMatchOrNullMap.get(bit)
+
+fun <V> BinaryTrie.Match<V>.get(bit: Bit): BinaryTrie.Match<V>? =
+	when (this) {
+		is BinaryTrie.Match.Full -> null
+		is BinaryTrie.Match.Partial -> binaryTrie.get(bit)
+	}
+
 tailrec fun <V> BinaryTrie<V>.matchOrNull(bitStream: Stream<Bit>): BinaryTrie.Match<V>? {
-	val matchOrNull = binaryMatchOrNullMap.get(bitStream.first)
+	val matchOrNull = get(bitStream.first)
 	return if (matchOrNull == null) null
 	else {
 		val nextBitStreamOrNull = bitStream.nextOrNull
@@ -49,21 +58,25 @@ tailrec fun <V> BinaryTrie<V>.matchOrNull(bitStream: Stream<Bit>): BinaryTrie.Ma
 fun <V> BinaryTrie<V>.get(bitStream: Stream<Bit>): The<V>? =
 	matchOrNull(bitStream)?.theValueOrNull
 
+fun <V> BinaryTrie<V>.set(bit: Bit, matchOrNull: BinaryTrie.Match<V>?): BinaryTrie<V> =
+	binaryMatchOrNullMap.set(bit, matchOrNull).binaryTrie
+
+fun <V> BinaryTrie<V>.setIfNull(bit: Bit, match: BinaryTrie.Match<V>): BinaryTrie<V>? =
+	get(bit).ifNull { set(bit, match) }
+
 // TODO: Make it tailrec, using accumulator
 fun <V> BinaryTrie<V>.set(bitStream: Stream<Bit>, value: V): BinaryTrie<V> {
 	val nextBitStreamOrNull: Stream<Bit>? = bitStream.nextOrNull
 	return if (nextBitStreamOrNull == null)
-		binaryMatchOrNullMap
-			.set(bitStream.first, value.binaryTrieFullMatch)
-			.binaryTrie
+		set(bitStream.first, value.binaryTrieFullMatch)
 	else {
-		val currentMatch = binaryMatchOrNullMap.get(bitStream.first)
+		val currentMatch = get(bitStream.first)
 		val nextTrie =
 			if (currentMatch is BinaryTrie.Match.Partial)
 				currentMatch.binaryTrie.set(nextBitStreamOrNull, value)
 			else
 				emptyBinaryTrie<V>().set(nextBitStreamOrNull, value)
-		binaryMatchOrNullMap.set(bitStream.first, nextTrie.binaryTriePartialMatch).binaryTrie
+		set(bitStream.first, nextTrie.binaryTriePartialMatch)
 	}
 }
 
