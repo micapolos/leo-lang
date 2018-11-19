@@ -7,9 +7,6 @@ data class Map<in K, out V>(
 fun <K, V> emptyMap(keyBitStreamOrNullFn: (K) -> Stream<Bit>?): Map<K, V> =
 	Map(emptyBinaryTrie(), keyBitStreamOrNullFn)
 
-fun <K, V> map(keyBitStreamFn: (K) -> Stream<Bit>): Map<K, V> =
-	Map(emptyBinaryTrie(), keyBitStreamFn)
-
 fun <K, V> Map<K, V>.get(key: K): The<V>? =
 	binaryTrie.match(binaryTrieKeyBitStream(key))?.theValueOrNull
 

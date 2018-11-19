@@ -29,4 +29,16 @@ class MapTest {
 		map.get("foobar").assertEqualTo("zoozar".the)
 		map.get("goo").assertEqualTo(null)
 	}
+
+	@Test
+	fun bulkTest() {
+		val maxKey = 255
+		var map = emptyMap<String, Int>(String::bitStreamOrNull)
+		for (key in 0..maxKey) {
+			map = map.set(key.toString(), key)
+		}
+		for (key in 0..maxKey) {
+			map.get(key.toString()).assertEqualTo(key.the)
+		}
+	}
 }
