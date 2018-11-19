@@ -16,6 +16,9 @@ val emptyFunction: Function =
 fun Function.get(bit: Bit): Match? =
 	ruleBinaryTrie.get(bit)?.match
 
+fun Function.set(bit: Bit, matchOrNull: Match?): Function =
+	ruleBinaryTrie.set(bit, matchOrNull?.ruleBinaryTrieMatch).function
+
 // === define
 
 fun Function.define(patternTerm: Term<Pattern>, rule: Rule): Function? =
@@ -63,4 +66,18 @@ fun Pair<Function, Match>.functionDefine(byte: Byte): Pair<Function, Match>? =
 	}
 
 fun Pair<Function, Match>.functionDefine(bit: Bit): Pair<Function, Match>? =
-	TODO()
+	let { (function, accumulatedMatch) ->
+		function.get(bit).let { currentMatchOrNull ->
+			if (currentMatchOrNull == null)
+				function.set(bit, accumulatedMatch) to accumulatedMatch
+			else
+				when (accumulatedMatch.ruleBinaryTrieMatch) {
+					is BinaryTrie.Match.Full -> null
+					is BinaryTrie.Match.Partial ->
+						when (currentMatchOrNull.ruleBinaryTrieMatch) {
+							is BinaryTrie.Match.Full -> null
+							is BinaryTrie.Match.Partial -> TODO()
+						}
+				}
+		}
+	}
