@@ -17,8 +17,8 @@ fun Repl.read(bit: Bit): Repl =
 			isError = true,
 			errorBitWriter = errorBitWriter
 				.write(bitReader.bitStreamOrNull)
+				// TODO(micapolos): It may be byte-misaligned. How to solve this?
 				.write("<<<ERROR>>>".bitStreamOrNull)
-				.write(bitReader.partialByteBitStreamOrNull)
 				.write(bit))
 		else copy(bitReader = nextBitPreprocessor)
 	}

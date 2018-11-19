@@ -5,8 +5,6 @@ import leo.base.*
 data class Reader<V>(
 	val parseFn: (Field<Nothing>) -> V?,
 	val reflectFn: (V) -> Field<Nothing>,
-	val applyFn: (Term<Nothing>) -> Term<Nothing>?,
-	val bitStreamOrNullFn: () -> Stream<Bit>?,
 	val evaluator: Evaluator<V>,
 	val termOrNull: Term<Nothing>?)
 
@@ -60,7 +58,7 @@ fun <V> Reader<V>.parseLeoRead(term: Field<Nothing>): V? =
 
 val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
 	get() =
-		bitStreamOrNullFn()
+		evaluator.bitStreamOrNull()
 
 fun <V> Reader<V>.apply(term: Term<Nothing>): Term<Nothing>? =
-	applyFn(term)
+	evaluator.apply(term)

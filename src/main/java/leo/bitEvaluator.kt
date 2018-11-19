@@ -24,7 +24,7 @@ fun BitEvaluator.evaluate(bit: Bit): BitEvaluator? {
 
 val BitEvaluator.bitStreamOrNull: Stream<Bit>?
 	get() =
-		byteReader.bitStreamOrNull
+		byteReader.bitStreamOrNull?.then { partialByteBitStreamOrNull }
 
 // TODO: This method is ugly, can we make it smarter?
 val BitEvaluator.partialByteBitStreamOrNull: Stream<Bit>?
@@ -51,6 +51,9 @@ val bitEvaluator =
 
 val BitEvaluator.evaluator: Evaluator<Bit>
 	get() =
-		Evaluator { bit ->
-			evaluate(bit)?.evaluator
-		}
+		Evaluator(
+			{ bit ->
+				evaluate(bit)?.evaluator
+			},
+			this::apply,
+			this::bitStreamOrNull)

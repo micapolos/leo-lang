@@ -62,10 +62,6 @@ val BitReader.bitStreamOrNull: Stream<Bit>?
 	get() =
 		bitEvaluator.bitStreamOrNull
 
-val BitReader.partialByteBitStreamOrNull: Stream<Bit>?
-	get() =
-		bitEvaluator.partialByteBitStreamOrNull
-
 fun BitReader.apply(term: Term<Nothing>): Term<Nothing>? =
 	bitEvaluator.apply(term)
 
@@ -79,7 +75,5 @@ val BitReader.reader: Reader<Bit>
 		Reader(
 			Field<Nothing>::parseBit,
 			Bit::reflect,
-			this::apply,
-			this::bitStreamOrNull,
 			bitEvaluator.evaluator,
 			null)
