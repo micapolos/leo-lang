@@ -34,10 +34,10 @@ class MapTest {
 	fun bulkTest() {
 		var map = emptyMap<Byte, String>(Byte::bitStream)
 		for (byte in Byte.MIN_VALUE..Byte.MAX_VALUE) {
-			map = map.set(byte.toByte(), byte.toString())
+			map = map.set(byte.clampedByte, byte.toString())
 		}
 		for (byte in Byte.MIN_VALUE..Byte.MAX_VALUE) {
-			map.get(byte.toByte()).assertEqualTo(byte.toString().the)
+			map.get(byte.clampedByte).assertEqualTo(byte.toString().the)
 		}
 	}
 }
