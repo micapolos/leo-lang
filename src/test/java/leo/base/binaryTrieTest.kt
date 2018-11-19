@@ -12,20 +12,39 @@ class BinaryTrieTest {
 	val testTrie = binaryTrie(match0, match1)
 
 	@Test
-	fun get_bitStream() {
-		testTrie.get(stream(Bit.ZERO)).assertEqualTo(match0)
-		testTrie.get(stream(Bit.ONE)).assertEqualTo(match1)
+	fun get() {
+		testTrie.get(stream(Bit.ZERO)).assertEqualTo("0".the)
+		testTrie.get(stream(Bit.ONE)).assertEqualTo(null)
 		testTrie.get(stream(Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
 		testTrie.get(stream(Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ONE, Bit.ZERO)).assertEqualTo(match10)
-		testTrie.get(stream(Bit.ONE, Bit.ONE)).assertEqualTo(match11)
+		testTrie.get(stream(Bit.ONE, Bit.ZERO)).assertEqualTo(null)
+		testTrie.get(stream(Bit.ONE, Bit.ONE)).assertEqualTo("11".the)
 		testTrie.get(stream(Bit.ZERO, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
 		testTrie.get(stream(Bit.ZERO, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
 		testTrie.get(stream(Bit.ZERO, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
 		testTrie.get(stream(Bit.ZERO, Bit.ONE, Bit.ONE)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo(match100)
-		testTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo(match101)
+		testTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo("100".the)
+		testTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo("101".the)
 		testTrie.get(stream(Bit.ONE, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
 		testTrie.get(stream(Bit.ONE, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+	}
+
+	@Test
+	fun set() {
+		val newTrie = testTrie.set(stream(Bit.ONE, Bit.ZERO), "x10")
+		newTrie.get(stream(Bit.ZERO)).assertEqualTo("0".the)
+		newTrie.get(stream(Bit.ONE)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ZERO, Bit.ONE)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ONE, Bit.ZERO)).assertEqualTo("x10".the)
+		newTrie.get(stream(Bit.ONE, Bit.ONE)).assertEqualTo("11".the)
+		newTrie.get(stream(Bit.ZERO, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ZERO, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ZERO, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ZERO, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ONE, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
+		newTrie.get(stream(Bit.ONE, Bit.ONE, Bit.ONE)).assertEqualTo(null)
 	}
 }

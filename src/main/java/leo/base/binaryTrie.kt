@@ -19,7 +19,7 @@ val <V> BinaryMap<BinaryTrie.Match<V>?>.binaryTrie
 	get() =
 		BinaryTrie(this)
 
-fun <V> emptyTrie(): BinaryTrie<V> =
+fun <V> emptyBinaryTrie(): BinaryTrie<V> =
 	BinaryTrie(nullBinaryTrieMatch<V>().binaryMap)
 
 fun <V> binaryTrie(zeroMatchOrNull: BinaryTrie.Match<V>?, oneMatchOrNull: BinaryTrie.Match<V>?) =
@@ -33,7 +33,7 @@ val <V> V.binaryTrieFullMatch: BinaryTrie.Match<V>
 	get() =
 		BinaryTrie.Match.Full(this)
 
-tailrec fun <V> BinaryTrie<V>.get(bitStream: Stream<Bit>): BinaryTrie.Match<V>? {
+tailrec fun <V> BinaryTrie<V>.match(bitStream: Stream<Bit>): BinaryTrie.Match<V>? {
 	val matchOrNull = binaryMatchOrNullMap.get(bitStream.first)
 	return if (matchOrNull == null) null
 	else {
@@ -41,17 +41,35 @@ tailrec fun <V> BinaryTrie<V>.get(bitStream: Stream<Bit>): BinaryTrie.Match<V>? 
 		if (nextBitStreamOrNull == null) matchOrNull
 		else when (matchOrNull) {
 			is BinaryTrie.Match.Full -> null
-			is BinaryTrie.Match.Partial -> matchOrNull.binaryTrie.get(nextBitStreamOrNull)
+			is BinaryTrie.Match.Partial -> matchOrNull.binaryTrie.match(nextBitStreamOrNull)
 		}
 	}
 }
 
-tailrec fun <V> BinaryTrie<V>.set(bitStream: Stream<Bit>, value: V): BinaryTrie<V> {
+fun <V> BinaryTrie<V>.get(bitStream: Stream<Bit>): The<V>? =
+	match(bitStream)?.theValueOrNull
+
+// TODO: Make it tailrec, using accumulator
+fun <V> BinaryTrie<V>.set(bitStream: Stream<Bit>, value: V): BinaryTrie<V> {
 	val nextBitStreamOrNull: Stream<Bit>? = bitStream.nextOrNull
-	return if (nextBitStreamOrNull == null) binaryMatchOrNullMap.set(bitStream.first, value.binaryTrieFullMatch).binaryTrie
+	return if (nextBitStreamOrNull == null)
+		binaryMatchOrNullMap
+			.set(bitStream.first, value.binaryTrieFullMatch)
+			.binaryTrie
 	else {
 		val currentMatch = binaryMatchOrNullMap.get(bitStream.first)
-		val nextTrie = if (currentMatch is BinaryTrie.Match.Partial) currentMatch.binaryTrie else emptyTrie()
-		nextTrie.set(nextBitStreamOrNull, value)
+		val nextTrie =
+			if (currentMatch is BinaryTrie.Match.Partial)
+				currentMatch.binaryTrie.set(nextBitStreamOrNull, value)
+			else
+				emptyBinaryTrie<V>().set(nextBitStreamOrNull, value)
+		binaryMatchOrNullMap.set(bitStream.first, nextTrie.binaryTriePartialMatch).binaryTrie
 	}
 }
+
+val <V> BinaryTrie.Match<V>.theValueOrNull: The<V>?
+	get() =
+		when (this) {
+			is BinaryTrie.Match.Full -> value.the
+			is BinaryTrie.Match.Partial -> null
+		}

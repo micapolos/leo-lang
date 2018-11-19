@@ -4,9 +4,12 @@ data class BinaryMap<out V>(
 	val zeroValue: V,
 	val oneValue: V)
 
-val <V> V.binaryMap
+val <V> V.binaryMap: BinaryMap<V>
 	get() =
 		BinaryMap(this, this)
+
+fun <V> binaryMap(): BinaryMap<V?> =
+	BinaryMap(null, null)
 
 fun <V> binaryMap(zeroValue: V, oneValue: V) =
 	BinaryMap(zeroValue, oneValue)
