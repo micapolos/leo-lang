@@ -4,19 +4,19 @@ import leo.base.assertEqualTo
 import leo.base.string
 import kotlin.test.Test
 
-class ChoiceTest {
+class PatternTest {
 	@Test
 	fun string() {
-		choice(oneWord.term, twoWord.term)
+		pattern(oneWord.term, twoWord.term)
 			.string
-			.assertEqualTo("choice(term field(word one, term null), term field(word two, term null))")
+			.assertEqualTo("pattern(term field(word one, term null), term field(word two, term null))")
 	}
 
 	@Test
 	fun parse_onePattern() {
 		term(eitherWord fieldTo oneWord.term)
-			.parseChoice
-			.assertEqualTo(choice(oneWord.term))
+			.parsePattern
+			.assertEqualTo(pattern(oneWord.term))
 	}
 
 	@Test
@@ -24,9 +24,9 @@ class ChoiceTest {
 		term(
 			eitherWord fieldTo oneWord.term,
 			eitherWord fieldTo twoWord.term)
-			.parseChoice
+			.parsePattern
 			.assertEqualTo(
-				choice(
+				pattern(
 					oneWord.term,
 					twoWord.term))
 	}
@@ -37,35 +37,35 @@ class ChoiceTest {
 			eitherWord fieldTo oneWord.term,
 			personWord fieldTo nameWord.term,
 			eitherWord fieldTo twoWord.term)
-			.parseChoice
+			.parsePattern
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun termMatches_first() {
 		oneWord.term
-			.matches(choice(oneWord.term, twoWord.term))
+			.matches(pattern(oneWord.term, twoWord.term))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun termMatches_second() {
 		twoWord.term
-			.matches(choice(oneWord.term, twoWord.term))
+			.matches(pattern(oneWord.term, twoWord.term))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun termMatches_none() {
 		ageWord.term
-			.matches(choice(oneWord.term, twoWord.term))
+			.matches(pattern(oneWord.term, twoWord.term))
 			.assertEqualTo(false)
 	}
 
 	@Test
 	fun parse_literal() {
 		oneWord.term
-			.parseChoiceTerm
+			.parsePatternTerm
 			.assertEqualTo(oneWord.term)
 	}
 
@@ -74,7 +74,7 @@ class ChoiceTest {
 		term(
 			nameWord fieldTo stringWord.term,
 			ageWord fieldTo numberWord.term)
-			.parseChoiceTerm
+			.parsePatternTerm
 			.assertEqualTo(
 				term(
 					nameWord fieldTo stringWord.term,
@@ -86,9 +86,9 @@ class ChoiceTest {
 		term(
 			eitherWord fieldTo stringWord.term,
 			eitherWord fieldTo numberWord.term)
-			.parseChoiceTerm
+			.parsePatternTerm
 			.assertEqualTo(
-				choice(
+				pattern(
 					stringWord.term,
 					numberWord.term).metaTerm)
 	}
@@ -99,10 +99,10 @@ class ChoiceTest {
 			oneWord fieldTo term(
 				eitherWord fieldTo stringWord.term,
 				eitherWord fieldTo numberWord.term))
-			.parseChoiceTerm
+			.parsePatternTerm
 			.assertEqualTo(
 				term(oneWord fieldTo
-					choice(
+					pattern(
 						stringWord.term,
 						numberWord.term).metaTerm))
 	}
@@ -158,7 +158,7 @@ class ChoiceTest {
 	fun termMatches_oneOf_match() {
 		nameWord.term
 			.matches(
-				choice(
+				pattern(
 					nameWord.term,
 					ageWord.term).metaTerm)
 			.assertEqualTo(true)

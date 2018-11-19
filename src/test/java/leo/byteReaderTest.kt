@@ -12,7 +12,7 @@ class ByteReaderTest {
 					term(
 						leoWord fieldTo term(
 							readWord fieldTo term(
-								32.clampedByte.reflect.map<Nothing, Choice> { fail }))),
+								32.clampedByte.reflect.map<Nothing, Pattern> { fail }))),
 					body(
 						term(
 							leoWord fieldTo continueWord.term()),

@@ -17,15 +17,15 @@ fun Selector.then(word: Word) =
 fun selector(vararg words: Word) =
 	stackOrNull(*words).selector
 
-fun Term<Nothing>.parseSelector(choice: Term<Choice>): Selector? =
-	parseSelectorToChoice(choice)?.first
+fun Term<Nothing>.parseSelector(pattern: Term<Pattern>): Selector? =
+	parseSelectorToPattern(pattern)?.first
 
-fun Term<Nothing>.parseSelectorToChoice(choice: Term<Choice>): Pair<Selector, Term<Choice>?>? =
-	if (this == thisWord.term) selector() to choice
+fun Term<Nothing>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector, Term<Pattern>?>? =
+	if (this == thisWord.term) selector() to pattern
 	else structureTermOrNull?.run {
 		rhsTermOrNull?.let { term ->
-			term.parseSelectorToChoice(choice)?.let { (selector, choice) ->
-				choice?.select(word)?.let { argumentValue ->
+			term.parseSelectorToPattern(pattern)?.let { (selector, pattern) ->
+				pattern?.select(word)?.let { argumentValue ->
 					selector.then(word) to argumentValue.value
 				}
 			}
@@ -74,15 +74,15 @@ fun <V> Field<Selector>.invoke(argumentTermOrNull: Term<V>?): Field<V>? =
 
 // === parsing
 
-fun Term<Nothing>.parseSelectorTerm(choiceTerm: Term<Choice>): Term<Selector> =
-	parseSelector(choiceTerm)?.metaTerm
+fun Term<Nothing>.parseSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
+	parseSelector(patternTerm)?.metaTerm
 		?: structureTermOrNull?.fieldStream?.reverse
-			?.foldFirst { field -> field.parseSelectorField(choiceTerm).onlyStack }
-			?.foldNext { field -> push(field.parseSelectorField(choiceTerm)) }
+			?.foldFirst { field -> field.parseSelectorField(patternTerm).onlyStack }
+			?.foldNext { field -> push(field.parseSelectorField(patternTerm)) }
 			?.term ?: fail
 
-fun Field<Nothing>.parseSelectorField(choiceTerm: Term<Choice>): Field<Selector> =
-	word fieldTo termOrNull?.parseSelectorTerm(choiceTerm)
+fun Field<Nothing>.parseSelectorField(patternTerm: Term<Pattern>): Field<Selector> =
+	word fieldTo termOrNull?.parseSelectorTerm(patternTerm)
 
 // === reflect
 

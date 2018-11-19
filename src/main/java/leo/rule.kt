@@ -3,23 +3,23 @@ package leo
 import leo.base.string
 
 data class Rule(
-	val choiceTerm: Term<Choice>,
+	val patternTerm: Term<Pattern>,
 	val body: Body) {
 	override fun toString() = reflect.string
 }
 
-fun rule(patternTerm: Term<Choice>, body: Body) =
+fun rule(patternTerm: Term<Pattern>, body: Body) =
 	Rule(patternTerm, body)
 
-infix fun Term<Choice>.returns(body: Body) =
+infix fun Term<Pattern>.returns(body: Body) =
 	Rule(this, body)
 
 fun Term<Nothing>.parseRule(localFunction: Function): Rule? =
 	match(defineWord) { defineTerm ->
 		defineTerm?.match(itWord, isWord) { itTerm, isTerm ->
-			itTerm?.parseChoiceTerm?.let { choiceTerm ->
-				isTerm?.parseSelectorTerm(choiceTerm)?.let { selectorTerm ->
-					rule(choiceTerm, body(selectorTerm, localFunction))
+			itTerm?.parsePatternTerm?.let { patternTerm ->
+				isTerm?.parseSelectorTerm(patternTerm)?.let { selectorTerm ->
+					rule(patternTerm, body(selectorTerm, localFunction))
 				}
 			}
 		}
@@ -30,5 +30,5 @@ fun Term<Nothing>.parseRule(localFunction: Function): Rule? =
 val Rule.reflect: Field<Nothing>
 	get() =
 		ruleWord fieldTo term(
-			choiceTerm.reflect(Choice::reflect),
+			patternTerm.reflect(Pattern::reflect),
 			body.reflect)

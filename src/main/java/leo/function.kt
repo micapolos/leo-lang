@@ -23,7 +23,7 @@ fun Function.invoke(argument: Term<Nothing>): Term<Nothing> =
 
 fun Function.apply(argument: Term<Nothing>): Term<Nothing>? =
 	ruleStackOrNull
-		?.top { rule -> argument.matches(rule.choiceTerm) }
+		?.top { rule -> argument.matches(rule.patternTerm) }
 		?.body
 		?.apply(argument)
 

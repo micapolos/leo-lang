@@ -21,14 +21,14 @@ class SelectorTest {
 	}
 
 	@Test
-	fun invokeSingleChoice() {
+	fun invokeSinglePattern() {
 		selector(oneWord)
 			.invoke(testTerm)
 			.assertEqualTo(1.metaTerm.the)
 	}
 
 	@Test
-	fun invokeMultipleChoice() {
+	fun invokeMultiplePattern() {
 		selector(ageWord)
 			.invoke(testTerm)
 			.assertEqualTo(
@@ -39,7 +39,7 @@ class SelectorTest {
 	}
 
 	@Test
-	fun invokeMissingChoice() {
+	fun invokeMissingPattern() {
 		selector(personWord)
 			.invoke(testTerm)
 			.assertEqualTo(null)
