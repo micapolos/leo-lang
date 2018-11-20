@@ -98,6 +98,7 @@ val choiceWord = "choice".wordOrNull!!
 val classWord = "class".wordOrNull!!
 val continueWord = "continue".wordOrNull!!
 val coreWord = "core".wordOrNull!!
+val dWord = "d".wordOrNull!!
 val defineWord = "define".wordOrNull!!
 val doneWord = "done".wordOrNull!!
 val eightWord = "eight".wordOrNull!!

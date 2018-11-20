@@ -22,6 +22,9 @@ val <V> V.metaTerm
 	get() =
 		Term.Meta(this)
 
+fun <V> metaTerm(value: V) =
+	Term.Meta(value)
+
 val <V> Stack<Field<V>>.term
 	get() =
 		reverse.stream
