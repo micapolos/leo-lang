@@ -21,8 +21,6 @@ fun Term<Nothing>.matches(pattern: Pattern): Boolean =
 		matches(oneOfTerm)
 	} != null
 
-// === matching
-
 fun Term<Nothing>.matches(patternTerm: Term<Pattern>): Boolean =
 	when (patternTerm) {
 		is Term.Meta -> matches(patternTerm)

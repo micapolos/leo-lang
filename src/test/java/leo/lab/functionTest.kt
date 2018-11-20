@@ -5,15 +5,15 @@ import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class FunctionTest {
-	val testBody = body(term(theWord fieldTo selector().metaTerm), emptyFunction)
+	private val testBody = body(term(theWord fieldTo selector().metaTerm), emptyFunction)
 
-	fun Function.testDefine(term: Term<Pattern>): Function? =
+	private fun Function.testDefine(term: Term<Pattern>): Function? =
 		define(term, testBody)
 
-	fun Function.assertInvokesBody(argument: Term<Nothing>) =
+	private fun Function.assertInvokesBody(argument: Term<Nothing>) =
 		invoke(argument).assertEqualTo(term(theWord fieldTo argument))
 
-	fun Function.assertDoesNotInvokeBody(argument: Term<Nothing>) =
+	private fun Function.assertDoesNotInvokeBody(argument: Term<Nothing>) =
 		invoke(argument).assertEqualTo(argument)
 
 	@Test
@@ -116,7 +116,7 @@ class FunctionTest {
 			.assertInvokesBody(bWord.term)
 	}
 
-	val nonDependentOneOfsFunction = emptyFunction
+	private val nonDependentPatternsFunction = emptyFunction
 		.testDefine(
 			term(
 				oneWord fieldTo pattern(aWord.term(), bWord.term()).metaTerm,
@@ -124,29 +124,29 @@ class FunctionTest {
 
 	@Test
 	fun defineNonDependentOneOfs_getFirstFirst() {
-		nonDependentOneOfsFunction!!
+		nonDependentPatternsFunction!!
 			.assertInvokesBody(term(oneWord fieldTo aWord.term, twoWord fieldTo aWord.term))
 	}
 
 	@Test
 	fun defineNonDependentOneOfs_getFirstSecond() {
-		nonDependentOneOfsFunction!!
+		nonDependentPatternsFunction!!
 			.assertInvokesBody(term(oneWord fieldTo aWord.term, twoWord fieldTo bWord.term))
 	}
 
 	@Test
 	fun defineNonDependentOneOfs_getSecondFirst() {
-		nonDependentOneOfsFunction!!
+		nonDependentPatternsFunction!!
 			.assertInvokesBody(term(oneWord fieldTo bWord.term, twoWord fieldTo aWord.term))
 	}
 
 	@Test
 	fun defineNonDependentOneOfs_getSecondSecond() {
-		nonDependentOneOfsFunction!!
+		nonDependentPatternsFunction!!
 			.assertInvokesBody(term(oneWord fieldTo bWord.term, twoWord fieldTo bWord.term))
 	}
 
-	val dependentOneOfsFunction = emptyFunction
+	private val dependentPatternsFunction = emptyFunction
 		.testDefine(
 			metaTerm(
 				pattern(
@@ -163,25 +163,25 @@ class FunctionTest {
 
 	@Test
 	fun dependentOneOfs_invokeFirstFirst() {
-		dependentOneOfsFunction!!
+		dependentPatternsFunction!!
 			.assertInvokesBody(term(oneWord fieldTo aWord.term))
 	}
 
 	@Test
 	fun dependentOneOfs_invokeFirstSecond() {
-		dependentOneOfsFunction!!
+		dependentPatternsFunction!!
 			.assertInvokesBody(term(oneWord fieldTo bWord.term))
 	}
 
 	@Test
 	fun dependentOneOfs_invokeSecondFirst() {
-		dependentOneOfsFunction!!
+		dependentPatternsFunction!!
 			.assertInvokesBody(term(twoWord fieldTo cWord.term))
 	}
 
 	@Test
 	fun dependentOneOfs_invokeSecondSecond() {
-		dependentOneOfsFunction!!
+		dependentPatternsFunction!!
 			.assertInvokesBody(term(twoWord fieldTo dWord.term))
 	}
 }
