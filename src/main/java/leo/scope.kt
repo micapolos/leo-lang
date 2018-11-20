@@ -2,16 +2,15 @@ package leo
 
 import leo.base.Bit
 import leo.base.Stream
-import leo.base.string
 
 data class Scope(
 	val function: Function,
 	val termOrNull: Term<Nothing>?) {
-	override fun toString() = reflect.string
+	//override fun toString() = reflect.string
 }
 
 val emptyScope =
-	Scope(identityFunction, null)
+	Scope(emptyFunction, null)
 
 fun Scope.push(word: Word) =
 	copy(termOrNull = termOrNull.push(word))
@@ -40,16 +39,18 @@ val Scope.invokeFunction: Scope
 			function.invoke(term)
 		})
 
-fun Scope.push(rule: Rule): Scope =
-	copy(function = function.push(rule), termOrNull = null)
+fun Scope.push(rule: Rule): Scope? =
+	function.define(rule)?.let { newFunction ->
+		copy(function = newFunction, termOrNull = null)
+	}
 
 // === reflect ===
 
-val Scope.reflect: Field<Nothing>
-	get() =
-		scopeWord fieldTo term(
-			function.reflect,
-			termWord fieldTo termOrNull)
+//val Scope.reflect: Field<Nothing>
+//	get() =
+//		scopeWord fieldTo term(
+//			function.reflect,
+//			termWord fieldTo termOrNull)
 
 // === bit stream
 

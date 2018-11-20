@@ -34,6 +34,9 @@ fun <V> Stream<V>.thenIfNotNull(streamOrNull: Stream<V>?): Stream<V> =
 fun <V> Stream<V>?.orNullThen(stream: Stream<V>): Stream<V> =
 	this?.then { stream } ?: stream
 
+fun <V> Stream<V>?.orNullThen(nextOrNullFn: () -> Stream<V>?): Stream<V>? =
+	this?.then(nextOrNullFn) ?: nextOrNullFn()
+
 fun <V> Stream<V>?.orNullThenIfNotNull(streamOrNull: Stream<V>?): Stream<V>? =
 	if (streamOrNull == null) this else orNullThen(streamOrNull)
 

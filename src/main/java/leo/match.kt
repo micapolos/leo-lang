@@ -1,4 +1,4 @@
-package leo.lab
+package leo
 
 import leo.base.*
 

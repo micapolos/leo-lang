@@ -13,8 +13,8 @@ fun Body.apply(argument: Term<Nothing>): Term<Nothing>? =
 		function.invoke(selectedTerm)
 	}
 
-val Body.reflect: Field<Nothing>
-	get() =
-		bodyWord fieldTo term(
-			selectorTerm.reflect(Selector::reflect),
-			function.reflect)
+//val Body.reflect: Field<Nothing>
+//	get() =
+//		bodyWord fieldTo term(
+//			selectorTerm.reflect(Selector::reflect),
+//			function.reflect)

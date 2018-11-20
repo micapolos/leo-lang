@@ -5,12 +5,12 @@ import leo.base.*
 data class TokenEvaluator(
 	val entryStackOrNull: Stack<Entry>?,
 	val scope: Scope) {
-	override fun toString() = reflect.string
+	//override fun toString() = reflect.string
 
 	data class Entry(
 		val scope: Scope,
 		val word: Word) {
-		override fun toString() = reflect.string
+		//override fun toString() = reflect.string
 	}
 }
 
@@ -39,19 +39,19 @@ val TokenEvaluator.end: TokenEvaluator?
 
 // === reflect ===
 
-val TokenEvaluator.reflect: Field<Nothing>
-	get() =
-		tokenWord fieldTo term(
-			readerWord fieldTo term(
-				entryStackOrNull.orNullReflect(entryWord) { reflect(entryWord, TokenEvaluator.Entry::reflect) },
-				scope.reflect))
-
-val TokenEvaluator.Entry.reflect: Field<Nothing>
-	get() =
-		entryWord fieldTo term(
-			scope.reflect,
-			word.reflect)
-
+//val TokenEvaluator.reflect: Field<Nothing>
+//	get() =
+//		tokenWord fieldTo term(
+//			readerWord fieldTo term(
+//				entryStackOrNull.orNullReflect(entryWord) { reflect(entryWord, TokenEvaluator.Entry::reflect) },
+//				scope.reflect))
+//
+//val TokenEvaluator.Entry.reflect: Field<Nothing>
+//	get() =
+//		entryWord fieldTo term(
+//			scope.reflect,
+//			word.reflect)
+//
 // === byte stream
 
 val TokenEvaluator.bitStreamOrNull: Stream<Bit>?

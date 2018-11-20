@@ -21,12 +21,12 @@ class TokenEvaluatorTest {
 		TokenEvaluator(
 			stack(
 				TokenEvaluator.Entry(
-					Scope(identityFunction, null),
+					Scope(emptyFunction, null),
 					bWord),
 				TokenEvaluator.Entry(
-					Scope(identityFunction, oneWord.term),
+					Scope(emptyFunction, oneWord.term),
 					twoWord)),
-			Scope(identityFunction, cWord.term))
+			Scope(emptyFunction, cWord.term))
 			.bitStreamOrNull
 			?.bitByteStreamOrNull
 			.utf8string

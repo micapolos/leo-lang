@@ -10,7 +10,9 @@ val emptyByteReader =
 	ByteReader(emptyByteEvaluator, null)
 
 fun ByteReader.read(byte: Byte): ByteReader? =
-	this
+	if (ignoreWhiteSpaces && byte.toChar().isWhitespace()) this
+	else if (!byteReaderEnabled) readPreprocessed(byte)
+	else this
 		.termPush(leoReadField(byte))
 		.termInvoke
 		.termParse

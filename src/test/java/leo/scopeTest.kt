@@ -1,24 +1,16 @@
 package leo
 
 import leo.base.assertEqualTo
-import leo.base.stack
 import kotlin.test.Test
 
 class ScopeTest {
-	val nameToStringRule =
-		rule(
-			nameWord.term,
-			body(
-				stringWord.term,
-				identityFunction))
-
-	val nameToStringFunction =
-		Function(stack(nameToStringRule))
+	private val nameToStringFunction =
+		emptyFunction.define(nameWord.term(), body(stringWord.term(), emptyFunction))
 
 	@Test
 	fun evaluate_define() {
 		Scope(
-			nameToStringFunction,
+			nameToStringFunction!!,
 			term(
 				defineWord fieldTo term(
 					itWord fieldTo term(ageWord.field),
@@ -26,21 +18,19 @@ class ScopeTest {
 			.evaluate
 			.assertEqualTo(
 				Scope(
-					Function(
-						stack(
-							nameToStringRule,
-							rule(
-								ageWord.term,
-								body(
-									numberWord.term,
-									nameToStringFunction)))),
+					nameToStringFunction
+						.define(
+							ageWord.term(),
+							body(
+								numberWord.term,
+								nameToStringFunction))!!,
 					null))
 	}
 
 	@Test
 	fun evaluate_invoke() {
 		Scope(
-			nameToStringFunction,
+			nameToStringFunction!!,
 			nameWord.term)
 			.evaluate
 			.assertEqualTo(
@@ -52,7 +42,7 @@ class ScopeTest {
 	@Test
 	fun evaluate_select() {
 		Scope(
-			nameToStringFunction,
+			nameToStringFunction!!,
 			term(
 				nameWord fieldTo stringWord.term,
 				ageWord fieldTo numberWord.term,

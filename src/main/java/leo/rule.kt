@@ -1,11 +1,9 @@
 package leo
 
-import leo.base.string
-
 data class Rule(
 	val patternTerm: Term<Pattern>,
 	val body: Body) {
-	override fun toString() = reflect.string
+	//override fun toString() = reflect.string
 }
 
 fun rule(patternTerm: Term<Pattern>, body: Body) =
@@ -27,8 +25,8 @@ fun Term<Nothing>.parseRule(localFunction: Function): Rule? =
 
 // === reflect
 
-val Rule.reflect: Field<Nothing>
-	get() =
-		ruleWord fieldTo term(
-			patternTerm.reflect(Pattern::reflect),
-			body.reflect)
+//val Rule.reflect: Field<Nothing>
+//	get() =
+//		ruleWord fieldTo term(
+//			patternTerm.reflect(Pattern::reflect),
+//			body.reflect)
