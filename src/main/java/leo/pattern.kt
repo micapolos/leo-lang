@@ -11,7 +11,7 @@ val Stack<Term<Pattern>>.oneOf
 	get() =
 		Pattern(this)
 
-fun pattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
+fun pattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>): Pattern =
 	stack(patternTerm, *patternTerms).oneOf
 
 // === matching
