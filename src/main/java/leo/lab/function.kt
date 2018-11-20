@@ -4,80 +4,84 @@ import leo.*
 import leo.base.*
 
 data class Function(
-	val ruleBinaryTrie: BinaryTrie<Rule>)
+	val bodyBinaryTrie: BinaryTrie<Body>)
 
-val BinaryTrie<Rule>.function
+val BinaryTrie<Body>.function
 	get() =
 		Function(this)
 
 val emptyFunction: Function =
-	emptyBinaryTrie<Rule>().function
+	emptyBinaryTrie<Body>().function
 
 fun Function.get(bit: Bit): Match? =
-	ruleBinaryTrie.get(bit)?.match
+	bodyBinaryTrie.get(bit)?.match
 
 fun Function.set(bit: Bit, matchOrNull: Match?): Function =
-	ruleBinaryTrie.set(bit, matchOrNull?.ruleBinaryTrieMatch).function
+	bodyBinaryTrie.set(bit, matchOrNull?.bodyBinaryTrieMatch).function
+
+fun Function.get(bitStream: Stream<Bit>): Match? =
+	bodyBinaryTrie.get(bitStream)?.match
+
+fun Function.get(term: Term<Nothing>): Match? =
+	get(term.bitStream)
+
+// == invoke & apply
+
+fun Function.invoke(argument: Term<Nothing>): Term<Nothing> =
+	apply(argument) ?: argument.invokeFallback
+
+fun Function.apply(argument: Term<Nothing>): Term<Nothing>? =
+	get(argument)?.bodyOrNull?.apply(argument)
 
 // === define
 
-fun Function.define(patternTerm: Term<Pattern>, rule: Rule): Function? =
-	(this to rule.binaryTrieFullMatch.match).functionDefine(patternTerm)?.first
+fun Function.define(patternTerm: Term<Pattern>, body: Body): Function? =
+	define(patternTerm) { body.match }
 
-fun Pair<Function, Match>.functionDefine(patternTerm: Term<Pattern>): Pair<Function, Match>? =
-	orNull.fold(patternTerm.reversedTokenStream) { token ->
-		functionDefine(token)
-	}
+fun Function.define(patternTerm: Term<Pattern>, defineNext: Function.() -> Match?): Function? =
+	defineToken(patternTerm.tokenStream, defineNext)
 
-fun Pair<Function, Match>.functionDefine(pattern: Pattern): Pair<Function, Match>? =
+fun Function.define(pattern: Pattern, defineNext: Function.() -> Match?): Function? =
 	orNull.fold(pattern.patternTermStack.reverse.stream) { patternTerm ->
-		this?.functionDefine(patternTerm)
+		this?.define(patternTerm, defineNext)
 	}
 
-fun Pair<Function, Match>.functionDefine(token: Token<Pattern>): Pair<Function, Match>? =
-	when (token) {
-		is Token.MetaEnd -> functionDefine(token)
-		is Token.Begin -> functionDefine(token)
-		is Token.End -> functionDefineEndToken()
-	}
-
-fun Pair<Function, Match>.functionDefine(token: Token.MetaEnd<Pattern>): Pair<Function, Match>? =
-	functionDefine(token.value)
-
-fun Pair<Function, Match>.functionDefine(token: Token.Begin<Pattern>): Pair<Function, Match>? =
-	this
-		.functionDefine(token.word)
-		?.functionDefine(beginByte)
-
-fun Pair<Function, Match>.functionDefineEndToken(): Pair<Function, Match>? =
-	functionDefine(endByte)
-
-fun Pair<Function, Match>.functionDefine(word: Word): Pair<Function, Match>? =
-	orNull.fold(word.letterStack) { letter ->
-		functionDefine(letter)
-	}
-
-fun Pair<Function, Match>.functionDefine(letter: Letter): Pair<Function, Match>? =
-	functionDefine(letter.byte)
-
-fun Pair<Function, Match>.functionDefine(byte: Byte): Pair<Function, Match>? =
-	orNull.fold(byte.bitStack) { bit ->
-		functionDefine(bit)
-	}
-
-fun Pair<Function, Match>.functionDefine(bit: Bit): Pair<Function, Match>? =
-	let { (function, accumulatedMatch) ->
-		function.get(bit).let { currentMatchOrNull ->
-			if (currentMatchOrNull == null)
-				function.set(bit, accumulatedMatch) to accumulatedMatch
-			else
-				when (accumulatedMatch.ruleBinaryTrieMatch) {
-					is BinaryTrie.Match.Full -> null
-					is BinaryTrie.Match.Partial ->
-						when (currentMatchOrNull.ruleBinaryTrieMatch) {
-							is BinaryTrie.Match.Full -> null
-							is BinaryTrie.Match.Partial -> TODO()
-						}
-				}
+fun Function.defineToken(tokenStream: Stream<Token<Pattern>>, defineNext: Function.() -> Match?): Function? =
+	define(tokenStream.first) {
+		tokenStream.nextOrNull.let { nextTokenStreamOrNull ->
+			if (nextTokenStreamOrNull == null) defineNext()
+			else defineToken(nextTokenStreamOrNull, defineNext)?.match
 		}
 	}
+
+fun Function.define(token: Token<Pattern>, defineNext: Function.() -> Match?): Function? =
+	when (token) {
+		is Token.MetaEnd -> define(token, defineNext)
+		is Token.Begin -> define(token, defineNext)
+		is Token.End -> defineEndToken(defineNext)
+	}
+
+fun Function.define(token: Token.MetaEnd<Pattern>, defineNext: Function.() -> Match?): Function? =
+	define(token.value, defineNext)
+
+fun Function.define(token: Token.Begin<Pattern>, defineNext: Function.() -> Match?): Function? =
+	defineBit(token.word.bitStream.then { beginByte.bitStream }, defineNext)
+
+fun Function.defineEndToken(defineNext: Function.() -> Match?): Function? =
+	define(endByte, defineNext)
+
+fun Function.define(word: Word, defineNext: Function.() -> Match?): Function? =
+	defineBit(word.letterStream.map(Letter::byte).map(Byte::bitStream).join, defineNext)
+
+fun Function.define(byte: Byte, defineNext: Function.() -> Match?): Function? =
+	defineBit(byte.bitStream, defineNext)
+
+fun Function.defineBit(bitStream: Stream<Bit>, defineNext: Function.() -> Match?): Function? =
+	bodyBinaryTrie.defineBit(bitStream) {
+		defineNext.invoke(function)?.bodyBinaryTrieMatch
+	}?.function
+
+fun Function.define(bit: Bit, defineNext: Function.() -> Match?): Function? =
+	bodyBinaryTrie.define(bit) {
+		defineNext.invoke(function)?.bodyBinaryTrieMatch
+	}?.function

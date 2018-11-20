@@ -116,7 +116,7 @@ val Term<Nothing>.bitStream: Stream<Bit>
 			.map(Character::byte)
 			.mapJoin(Byte::bitStream)
 
-val Term<Nothing>.tokenStream: Stream<Token<Nothing>>
+val <V> Term<V>.tokenStream: Stream<Token<V>>
 	get() =
 		reversedTokenStream.reverse
 

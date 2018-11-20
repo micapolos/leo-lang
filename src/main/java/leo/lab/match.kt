@@ -1,16 +1,29 @@
 package leo.lab
 
-import leo.Rule
-import leo.base.BinaryTrie
-import leo.base.Bit
-import leo.base.get
+import leo.base.*
 
 data class Match(
-	val ruleBinaryTrieMatch: BinaryTrie.Match<Rule>)
+	val bodyBinaryTrieMatch: BinaryTrie.Match<Body>)
 
-val BinaryTrie.Match<Rule>.match
+val BinaryTrie.Match<Body>.match
 	get() =
 		Match(this)
 
+val Body.match: Match
+	get() =
+		binaryTrieFullMatch.match
+
 fun Match.get(bit: Bit): Match? =
-	ruleBinaryTrieMatch.get(bit)?.match
+	bodyBinaryTrieMatch.get(bit)?.match
+
+val Function.match: Match
+	get() =
+		bodyBinaryTrie.binaryTriePartialMatch.match
+
+val Match.functionOrNull: Function?
+	get() =
+		(bodyBinaryTrieMatch as? BinaryTrie.Match.Partial<Body>)?.binaryTrie?.function
+
+val Match.bodyOrNull: Body?
+	get() =
+		bodyBinaryTrieMatch.theValueOrNull?.value

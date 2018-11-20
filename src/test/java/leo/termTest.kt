@@ -248,4 +248,25 @@ class TermTest {
 					nameWord fieldTo stringWord.term,
 					ageWord fieldTo numberWord.term))
 	}
+
+	@Test
+	fun tokenStream() {
+		testTerm
+			.tokenStream
+			.assertContains(
+				oneWord.beginToken,
+				endToken,
+				negateWord.beginToken,
+				endToken,
+				plusWord.beginToken,
+				twoWord.beginToken,
+				endToken,
+				endToken,
+				plusWord.beginToken,
+				ageWord.beginToken,
+				endToken,
+				personWord.beginToken,
+				endToken,
+				endToken)
+	}
 }

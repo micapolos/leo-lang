@@ -3,6 +3,8 @@ package leo.base
 import kotlin.test.Test
 
 class BinaryTrieTest {
+	val emptyTrie = emptyBinaryTrie<String>()
+
 	val match0 = "0".binaryTrieFullMatch
 	val match100 = "100".binaryTrieFullMatch
 	val match101 = "101".binaryTrieFullMatch
@@ -13,38 +15,115 @@ class BinaryTrieTest {
 
 	@Test
 	fun get() {
-		testTrie.get(stream(Bit.ZERO)).assertEqualTo("0".the)
-		testTrie.get(stream(Bit.ONE)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ONE, Bit.ONE)).assertEqualTo("11".the)
-		testTrie.get(stream(Bit.ZERO, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ZERO, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ZERO, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ZERO, Bit.ONE, Bit.ONE)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo("100".the)
-		testTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo("101".the)
-		testTrie.get(stream(Bit.ONE, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		testTrie.get(stream(Bit.ONE, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ZERO)).assertEqualTo("0".the)
+		testTrie.valueOrNull(stream(Bit.ONE)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ONE, Bit.ONE)).assertEqualTo("11".the)
+		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo("100".the)
+		testTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo("101".the)
+		testTrie.valueOrNull(stream(Bit.ONE, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
+		testTrie.valueOrNull(stream(Bit.ONE, Bit.ONE, Bit.ONE)).assertEqualTo(null)
 	}
 
 	@Test
 	fun set() {
 		val newTrie = testTrie.set(stream(Bit.ONE, Bit.ZERO), "x10")
-		newTrie.get(stream(Bit.ZERO)).assertEqualTo("0".the)
-		newTrie.get(stream(Bit.ONE)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ONE, Bit.ZERO)).assertEqualTo("x10".the)
-		newTrie.get(stream(Bit.ONE, Bit.ONE)).assertEqualTo("11".the)
-		newTrie.get(stream(Bit.ZERO, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ZERO, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ZERO, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ZERO, Bit.ONE, Bit.ONE)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ONE, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		newTrie.get(stream(Bit.ONE, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ZERO)).assertEqualTo("0".the)
+		newTrie.valueOrNull(stream(Bit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO)).assertEqualTo("x10".the)
+		newTrie.valueOrNull(stream(Bit.ONE, Bit.ONE)).assertEqualTo("11".the)
+		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ONE, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(Bit.ONE, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+	}
+
+	@Test
+	fun defineSingle() {
+		emptyTrie
+			.define(Bit.ZERO) { "0".binaryTrieFullMatch }
+			.assertEqualTo(emptyTrie.set(Bit.ZERO, "0".binaryTrieFullMatch))
+	}
+
+	@Test
+	fun defineAlternatives() {
+		emptyTrie
+			.define(Bit.ZERO) { "0".binaryTrieFullMatch }!!
+			.define(Bit.ONE) { "1".binaryTrieFullMatch }
+			.assertEqualTo(
+				emptyTrie
+					.set(Bit.ZERO, "0".binaryTrieFullMatch)
+					.set(Bit.ONE, "1".binaryTrieFullMatch))
+	}
+
+	@Test
+	fun defineSequence() {
+		emptyTrie
+			.define(Bit.ZERO) {
+				define(Bit.ZERO) {
+					"00".binaryTrieFullMatch
+				}!!.binaryTriePartialMatch
+			}
+			.assertEqualTo(
+				emptyTrie
+					.set(Bit.ZERO,
+						emptyTrie.set(Bit.ZERO,
+							"00".binaryTrieFullMatch).binaryTriePartialMatch))
+	}
+
+	@Test
+	fun defineSingleThenAlternatives() {
+		emptyTrie
+			.define(Bit.ZERO) {
+				define(Bit.ZERO) {
+					"00".binaryTrieFullMatch
+				}!!.binaryTriePartialMatch
+			}!!
+			.define(Bit.ZERO) {
+				define(Bit.ONE) {
+					"01".binaryTrieFullMatch
+				}!!.binaryTriePartialMatch
+			}
+			.assertEqualTo(
+				emptyTrie
+					.set(Bit.ZERO,
+						emptyTrie
+							.set(Bit.ZERO, "00".binaryTrieFullMatch)
+							.set(Bit.ONE, "01".binaryTrieFullMatch)
+							.binaryTriePartialMatch))
+	}
+
+	@Test
+	fun defineBitStream() {
+		emptyTrie
+			.defineBit(stream(Bit.ZERO, Bit.ONE)) {
+				"01".binaryTrieFullMatch
+			}
+			.assertEqualTo(
+				emptyTrie
+					.set(Bit.ZERO,
+						emptyTrie
+							.set(Bit.ONE, "01".binaryTrieFullMatch)
+							.binaryTriePartialMatch))
+	}
+
+	@Test
+	fun defineConflict() {
+		emptyTrie
+			.define(Bit.ZERO) { "0".binaryTrieFullMatch }!!
+			.define(Bit.ZERO) { "00".binaryTrieFullMatch }
+			.assertEqualTo(null)
 	}
 }

@@ -55,14 +55,14 @@ tailrec fun <V> BinaryTrie<V>.matchOrNull(bitStream: Stream<Bit>): BinaryTrie.Ma
 	}
 }
 
-fun <V> BinaryTrie<V>.get(bitStream: Stream<Bit>): The<V>? =
-	matchOrNull(bitStream)?.theValueOrNull
+fun <V> BinaryTrie<V>.get(bitStream: Stream<Bit>): BinaryTrie.Match<V>? =
+	matchOrNull(bitStream)
+
+fun <V> BinaryTrie<V>.valueOrNull(bitStream: Stream<Bit>): The<V>? =
+	get(bitStream)?.theValueOrNull
 
 fun <V> BinaryTrie<V>.set(bit: Bit, matchOrNull: BinaryTrie.Match<V>?): BinaryTrie<V> =
 	binaryMatchOrNullMap.set(bit, matchOrNull).binaryTrie
-
-fun <V> BinaryTrie<V>.setIfNull(bit: Bit, match: BinaryTrie.Match<V>): BinaryTrie<V>? =
-	get(bit).ifNull { set(bit, match) }
 
 // TODO: Make it tailrec, using accumulator
 fun <V> BinaryTrie<V>.set(bitStream: Stream<Bit>, value: V): BinaryTrie<V> {
@@ -86,3 +86,30 @@ val <V> BinaryTrie.Match<V>.theValueOrNull: The<V>?
 			is BinaryTrie.Match.Full -> value.the
 			is BinaryTrie.Match.Partial -> null
 		}
+
+fun <V> BinaryTrie<V>.define(bit: Bit, defineNext: BinaryTrie<V>.() -> BinaryTrie.Match<V>?): BinaryTrie<V>? =
+	get(bit).let { matchOrNull ->
+		if (matchOrNull == null)
+			emptyBinaryTrie<V>().defineNext()?.let { nextMatch ->
+				set(bit, nextMatch)
+			}
+		else
+			when (matchOrNull) {
+				is BinaryTrie.Match.Full -> null
+				is BinaryTrie.Match.Partial ->
+					matchOrNull.binaryTrie.defineNext()?.let { nextMatch ->
+						when (nextMatch) {
+							is BinaryTrie.Match.Full -> null
+							is BinaryTrie.Match.Partial -> set(bit, nextMatch)
+						}
+					}
+			}
+	}
+
+fun <V> BinaryTrie<V>.defineBit(bitStream: Stream<Bit>, defineNext: BinaryTrie<V>.() -> BinaryTrie.Match<V>?): BinaryTrie<V>? =
+	define(bitStream.first) {
+		bitStream.nextOrNull.let { nextBitStreamOrNull ->
+			if (nextBitStreamOrNull == null) defineNext()
+			else defineBit(nextBitStreamOrNull, defineNext)?.binaryTriePartialMatch
+		}
+	}
