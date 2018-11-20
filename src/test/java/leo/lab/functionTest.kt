@@ -2,33 +2,15 @@ package leo.lab
 
 import leo.*
 import leo.base.assertEqualTo
-import leo.base.bitStream
 import kotlin.test.Test
 
 class FunctionTest {
-	val bBody = body(bWord.term(), emptyFunction)
-	val stringBody = body(stringWord.term(), emptyFunction)
-	val numberBody = body(numberWord.term(), emptyFunction)
-
-	@Test
-	fun get() {
-		emptyFunction
-			.define(aWord.term(), bBody)!!
-			.get(Letter.A.bitStream)!!
-			.functionOrNull!!
-			.get(beginByte.bitStream)!!
-			.functionOrNull!!
-			.get(endByte.bitStream)!!
-			.bodyOrNull
-			.assertEqualTo(bBody)
-	}
-
 	@Test
 	fun defineSimpleAndInvoke() {
 		emptyFunction
-			.define(aWord.term(), bBody)!!
-			.invoke(aWord.term())
-			.assertEqualTo(bWord.term)
+			.define(aWord.term(), body(oneWord.term(), emptyFunction))!!
+			.invoke(aWord.term)
+			.assertEqualTo(oneWord.term)
 	}
 
 	@Test
@@ -70,8 +52,8 @@ class FunctionTest {
 	@Test
 	fun redefineSame() {
 		emptyFunction
-			.define(aWord.term(), bBody)!!
-			.define(aWord.term(), bBody)
+			.define(aWord.term(), body(oneWord.term(), emptyFunction))!!
+			.define(aWord.term(), body(twoWord.term(), emptyFunction))
 			.assertEqualTo(null)
 	}
 
