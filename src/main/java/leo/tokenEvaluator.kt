@@ -24,6 +24,12 @@ fun TokenEvaluator.evaluate(token: Token<Nothing>): TokenEvaluator? =
 		is Token.End -> end
 	}
 
+fun TokenEvaluator.evaluateInternal(token: Token<Nothing>): Evaluator<Token<Nothing>>? =
+	evaluate(token)?.evaluator
+
+fun TokenEvaluator.apply(term: Term<Nothing>): Match? =
+	function.get(term)
+
 fun TokenEvaluator.begin(word: Word): TokenEvaluator =
 	copy(
 		entryStackOrNull = entryStackOrNull.push(TokenEvaluator.Entry(scope, word)),
@@ -74,3 +80,10 @@ val TokenEvaluator.theEvaluatedTermOrNull: The<Term<Nothing>?>?
 	get() =
 		if (entryStackOrNull != null) null
 		else scope.termOrNull.the
+
+val TokenEvaluator.evaluator: Evaluator<Token<Nothing>>
+	get() =
+		Evaluator(
+			this::evaluateInternal,
+			this::apply,
+			this::bitStreamOrNull)

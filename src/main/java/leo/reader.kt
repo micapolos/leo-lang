@@ -6,7 +6,7 @@ data class Reader<V>(
 	val parseFn: (Field<Nothing>) -> V?,
 	val reflectFn: (V) -> Field<Nothing>,
 	val evaluator: Evaluator<V>,
-	val termOrNull: Term<Nothing>?)
+	val termOrNull: Term<Nothing>? = null)
 
 fun <V> Reader<V>.read(value: V): Reader<V>? =
 	if (!readersEnabled || !byteReaderEnabled) readPreprocessed(value)
@@ -75,3 +75,34 @@ val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
 
 fun <V> Reader<V>.apply(term: Term<Nothing>): Match? =
 	evaluator.applyFn(term)
+
+// === reader instances
+
+val emptyTokenReader: Reader<Token<Nothing>>
+	get() =
+		Reader(
+			Field<Nothing>::parseToken,
+			Token<Nothing>::reflect,
+			emptyTokenEvaluator.evaluator)
+
+val emptyCharacterReader: Reader<Character>
+	get() =
+		Reader(
+			Field<Nothing>::parseCharacter,
+			Character::reflect,
+			emptyCharacterEvaluator.evaluator)
+
+val emptyByteReader: Reader<Byte>
+	get() =
+		Reader(
+			Field<Nothing>::parseByte,
+			Byte::reflect,
+			emptyByteEvaluator.evaluator)
+
+val emptyBitReader
+	get() =
+		Reader(
+			Field<Nothing>::parseBit,
+			Bit::reflect,
+			emptyBitEvaluator.evaluator)
+

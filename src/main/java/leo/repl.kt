@@ -4,7 +4,7 @@ import leo.base.*
 
 data class Repl(
 	val isError: Boolean,
-	val bitReader: BitReader,
+	val bitReader: Reader<Bit>,
 	val errorBitWriter: Writer<Bit>)
 
 fun emptyRepl(errorBitWriter: Writer<Bit>): Repl =
@@ -12,15 +12,15 @@ fun emptyRepl(errorBitWriter: Writer<Bit>): Repl =
 
 fun Repl.read(bit: Bit): Repl =
 	if (isError) copy(errorBitWriter = errorBitWriter.write(bit))
-	else bitReader.read(bit).let { nextBitPreprocessor ->
-		if (nextBitPreprocessor == null) copy(
+	else bitReader.read(bit).let { nextBitReader ->
+		if (nextBitReader == null) copy(
 			isError = true,
 			errorBitWriter = errorBitWriter
 				.write(bitReader.bitStreamOrNull)
 				.write(bit)
 				.write("<<<ERROR>>>".bitStreamOrNull)
 		)
-		else copy(bitReader = nextBitPreprocessor)
+		else copy(bitReader = nextBitReader)
 	}
 
 val Repl.bitStreamOrNull: Stream<Bit>?

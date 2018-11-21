@@ -3,7 +3,7 @@ package leo
 import leo.base.*
 
 data class BitEvaluator(
-	val byteReader: ByteReader,
+	val byteReader: Reader<Byte>,
 	val byteInt: Int,
 	val maskInt: Int)
 
@@ -26,7 +26,7 @@ fun BitEvaluator.evaluateInternal(bit: Bit): Evaluator<Bit>? =
 	evaluate(bit)?.evaluator
 
 fun BitEvaluator.apply(term: Term<Nothing>): Match? =
-	function.get(term)
+	byteReader.evaluator.applyFn(term)
 
 val BitEvaluator.bitStreamOrNull: Stream<Bit>?
 	get() =
@@ -46,10 +46,6 @@ val BitEvaluator.partialByteBitStreamOrNull: Stream<Bit>?
 			0x01 -> stream(byteInt.and(0x80).clampedBit, byteInt.and(0x40).clampedBit, byteInt.and(0x20).clampedBit, byteInt.and(0x10).clampedBit, byteInt.and(0x08).clampedBit, byteInt.and(0x04).clampedBit, byteInt.and(0x02).clampedBit)
 			else -> null
 		}
-
-val BitEvaluator.function: Function
-	get() =
-		byteReader.function
 
 // === transition to Evaluator<Bit>
 

@@ -4,7 +4,7 @@ import leo.base.Bit
 import leo.base.Stream
 
 data class ByteEvaluator(
-	val characterReader: CharacterReader)
+	val characterReader: Reader<Character>)
 
 // === constructors
 
@@ -18,12 +18,21 @@ fun ByteEvaluator.evaluate(byte: Byte): ByteEvaluator? =
 		?.let(characterReader::read)
 		?.let { copy(characterReader = it) }
 
+fun ByteEvaluator.evaluateInternal(byte: Byte): Evaluator<Byte>? =
+	evaluate(byte)?.evaluator
+
+fun ByteEvaluator.apply(term: Term<Nothing>): Match? =
+	characterReader.evaluator.applyFn(term)
+
 // === byte stream
 
 val ByteEvaluator.bitStreamOrNull: Stream<Bit>?
 	get() =
 		characterReader.bitStreamOrNull
 
-val ByteEvaluator.function: Function
+val ByteEvaluator.evaluator: Evaluator<Byte>
 	get() =
-		characterReader.function
+		Evaluator(
+			this::evaluateInternal,
+			this::apply,
+			this::bitStreamOrNull)
