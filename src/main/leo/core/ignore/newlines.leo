@@ -1,1 +1,1 @@
-byte(bit(zero())bit(zero())bit(zero())bit(zero())bit(one())bit(zero())bit(one())bit(zero()))leo(read())is()
+leo(read(byte(bit(zero())bit(zero())bit(zero())bit(zero())bit(one())bit(zero())bit(one())bit(zero()))))is()

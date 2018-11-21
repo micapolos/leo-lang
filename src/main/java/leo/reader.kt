@@ -11,16 +11,16 @@ data class Reader<V>(
 fun <V> Reader<V>.read(value: V): Reader<V>? =
 	if (!readerEnabled) readPreprocessed(value)
 	else this
-		.termPush(reflectFn(value))
+		.termPush(leoWord fieldTo term(readWord fieldTo term(reflectFn(value))))
 		.termInvoke(value)
 
 fun <V> Reader<V>.termPush(field: Field<Nothing>): Reader<V> =
 	copy(termOrNull = termOrNull.push(field))
 
+// TODO: This applyFn() should be incremental, to avoid quadratic cost.
 fun <V> Reader<V>.termInvoke(value: V): Reader<V>? =
 	if (termOrNull == null) this
 	else termOrNull
-		.push(leoWord fieldTo readWord.term)
 		.let { argument ->
 			evaluator
 				.applyFn(argument)
@@ -42,9 +42,15 @@ val <V> Reader<V>.termParse: Reader<V>?
 			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
-				else parseFn(field).let { valueOrNull ->
-					if (valueOrNull == null) termPush(field)
-					else readPreprocessed(valueOrNull)
+				else field.match(leoWord) { leoTermOrNull ->
+					leoTermOrNull?.match(readWord) { readTermOrNull ->
+						readTermOrNull?.onlyFieldOrNull?.let { readField ->
+							parseFn(readField).let { valueOrNull ->
+								if (valueOrNull == null) termPush(leoWord fieldTo term(readWord fieldTo term(field)))
+								else readPreprocessed(valueOrNull)
+							}
+						}
+					}
 				}
 			}
 
@@ -58,9 +64,6 @@ fun <V> Reader<V>.readPreprocessed(value: V): Reader<V>? =
 val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
 	get() =
 		evaluator.bitStreamOrNullFn()
-
-fun <V> Reader<V>.apply(term: Term<Nothing>): Match? =
-	evaluator.applyFn(term)
 
 // === reader instances
 

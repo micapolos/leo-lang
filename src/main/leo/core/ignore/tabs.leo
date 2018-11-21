@@ -1,4 +1,4 @@
-byte(
+leo(read(byte(
   bit(zero())
   bit(zero())
   bit(zero())
@@ -6,6 +6,5 @@ byte(
   bit(one())
   bit(zero())
   bit(zero())
-  bit(one()))
-leo(read())
+  bit(one()))))
 is()
