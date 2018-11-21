@@ -1,8 +1,6 @@
 package leo
 
-import leo.base.assertContains
-import leo.base.assertEqualTo
-import leo.base.string
+import leo.base.*
 import kotlin.test.Test
 
 class WordTest {
@@ -21,5 +19,14 @@ class WordTest {
 		oneWord
 			.byteStream
 			.assertContains(Letter.O.byte, Letter.N.byte, Letter.E.byte)
+	}
+
+	@Test
+	fun parse() {
+		oneWord
+			.bitStream
+			.then(Bit.ZERO.onlyStream)
+			.bitParseWord
+			.assertParsedAndRest(oneWord, Bit.ZERO)
 	}
 }

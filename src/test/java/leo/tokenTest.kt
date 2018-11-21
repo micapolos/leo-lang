@@ -1,6 +1,6 @@
 package leo
 
-import leo.base.assertEqualTo
+import leo.base.*
 import org.junit.Test
 
 class TokenTest {
@@ -16,7 +16,7 @@ class TokenTest {
 
 	@Test
 	fun reflect_end() {
-		endToken
+		end.token
 			.reflect
 			.assertEqualTo(
 				tokenWord fieldTo term(
@@ -36,6 +36,24 @@ class TokenTest {
 	fun parse_end() {
 		tokenWord.fieldTo(endWord.term)
 			.parseToken
-			.assertEqualTo(endToken)
+			.assertEqualTo(end.token)
+	}
+
+	@Test
+	fun bitParseToken_begin() {
+		oneWord.beginToken
+			.bitStream
+			.then(Bit.ZERO.onlyStream)
+			.bitParseToken
+			.assertParsedAndRest(oneWord.beginToken, Bit.ZERO)
+	}
+
+	@Test
+	fun bitParseToken_end() {
+		end.token
+			.bitStream
+			.then(Bit.ZERO.onlyStream)
+			.bitParseToken
+			.assertParsedAndRest(end.token, Bit.ZERO)
 	}
 }

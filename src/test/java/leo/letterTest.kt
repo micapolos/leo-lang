@@ -1,6 +1,6 @@
 package leo
 
-import leo.base.assertEqualTo
+import leo.base.*
 import kotlin.test.Test
 
 class LetterTest {
@@ -18,5 +18,14 @@ class LetterTest {
 		'ą'.letterOrNull.assertEqualTo(null)
 		'('.letterOrNull.assertEqualTo(null)
 		')'.letterOrNull.assertEqualTo(null)
+	}
+
+	@Test
+	fun parse() {
+		Letter.A
+			.bitStream
+			.then(Bit.ZERO.onlyStream)
+			.bitParseLetter
+			.assertParsedAndRest(Letter.A, Bit.ZERO)
 	}
 }

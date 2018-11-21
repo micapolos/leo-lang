@@ -38,7 +38,7 @@ val CharacterEvaluator.begin: CharacterEvaluator?
 val CharacterEvaluator.end: CharacterEvaluator?
 	get() =
 		if (wordOrNull != null) null
-		else tokenReader.read(endToken)?.let { endedTokenReader ->
+		else tokenReader.read(leo.end.token())?.let { endedTokenReader ->
 			CharacterEvaluator(endedTokenReader, null)
 		}
 

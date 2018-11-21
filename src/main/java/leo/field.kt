@@ -40,11 +40,11 @@ val Field<Nothing>.tokenStream: Stream<Token<Nothing>>
 	get() =
 		word.beginToken.onlyStream
 			.then { termOrNull?.tokenStream }
-			.then { endToken.onlyStream }
+			.then { end.token.onlyStream }
 
 val <V> Field<V>.reversedTokenStream: Stream<Token<V>>
 	get() =
-		endToken<V>().onlyStream
+		end.token<V>().onlyStream
 			.then { termOrNull?.reversedTokenStream }
 			.then { word.beginToken<V>().onlyStream }
 

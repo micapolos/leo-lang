@@ -18,6 +18,10 @@ val Stack<Letter>.word
 	get() =
 		Word(this)
 
+val Letter.onlyWord
+	get() =
+		onlyStack.word
+
 operator fun Word?.plus(letter: Letter) =
 	this?.letterStack.push(letter).word
 
@@ -77,6 +81,14 @@ val Word.bitStream: Stream<Bit>
 val Word.reflect: Field<Nothing>
 	get() =
 		wordWord fieldTo term
+
+val Stream<Bit>?.bitParseWord: Parse<Bit, Word>?
+	get() =
+		bitParseLetter?.map { letter -> letter.onlyWord }?.bitParseWord
+
+val Parse<Bit, Word>.bitParseWord: Parse<Bit, Word>
+	get() =
+		streamOrNull.bitParseLetter?.map { letter -> parsed.plus(letter) }?.bitParseWord ?: this
 
 // === words ===
 

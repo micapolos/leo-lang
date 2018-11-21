@@ -1,12 +1,12 @@
 package leo
 
-import leo.base.assertEqualTo
+import leo.base.*
 import org.junit.Test
 
 class CharacterTest {
 	@Test
 	fun reflect_begin() {
-		BeginCharacter
+		begin.character
 			.reflect
 			.assertEqualTo(
 				characterWord fieldTo beginWord.term)
@@ -14,7 +14,7 @@ class CharacterTest {
 
 	@Test
 	fun reflect_end() {
-		EndCharacter
+		end.character
 			.reflect
 			.assertEqualTo(
 				characterWord fieldTo endWord.term)
@@ -33,7 +33,7 @@ class CharacterTest {
 		characterWord
 			.fieldTo(beginWord.term)
 			.parseCharacter
-			.assertEqualTo(BeginCharacter)
+			.assertEqualTo(begin.character)
 	}
 
 	@Test
@@ -41,7 +41,7 @@ class CharacterTest {
 		characterWord
 			.fieldTo(endWord.term)
 			.parseCharacter
-			.assertEqualTo(EndCharacter)
+			.assertEqualTo(end.character)
 	}
 
 	@Test
@@ -49,5 +49,32 @@ class CharacterTest {
 		characterWord.fieldTo(aWord.term)
 			.parseCharacter
 			.assertEqualTo(LetterCharacter(Letter.A))
+	}
+
+	@Test
+	fun bitParseCharacter_begin() {
+		begin.character
+			.bitStream
+			.then(Bit.ZERO.onlyStream)
+			.bitParseCharacter
+			.assertParsedAndRest(begin.character, Bit.ZERO)
+	}
+
+	@Test
+	fun bitParseCharacter_end() {
+		end.character
+			.bitStream
+			.then(Bit.ZERO.onlyStream)
+			.bitParseCharacter
+			.assertParsedAndRest(end.character, Bit.ZERO)
+	}
+
+	@Test
+	fun bitParseCharacter_letter() {
+		Letter.A.character
+			.bitStream
+			.then(Bit.ZERO.onlyStream)
+			.bitParseCharacter
+			.assertParsedAndRest(Letter.A.character, Bit.ZERO)
 	}
 }

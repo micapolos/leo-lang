@@ -255,18 +255,18 @@ class TermTest {
 			.tokenStream
 			.assertContains(
 				oneWord.beginToken,
-				endToken,
+				end.token,
 				negateWord.beginToken,
-				endToken,
+				end.token,
 				plusWord.beginToken,
 				twoWord.beginToken,
-				endToken,
-				endToken,
+				end.token,
+				end.token,
 				plusWord.beginToken,
 				ageWord.beginToken,
-				endToken,
+				end.token,
 				personWord.beginToken,
-				endToken,
-				endToken)
+				end.token,
+				end.token)
 	}
 }

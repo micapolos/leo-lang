@@ -1,9 +1,6 @@
 package leo
 
-import leo.base.Bit
-import leo.base.Parse
-import leo.base.Stream
-import leo.base.map
+import leo.base.*
 
 sealed class Character
 data class BeginCharacter(val begin: Begin) : Character()
@@ -29,6 +26,10 @@ val Character.byte: Byte
 			is BeginCharacter -> beginByte
 			is EndCharacter -> endByte
 		}
+
+val Character.bitStream
+	get() =
+		byte.bitStream
 
 val Character.char: Char
 	get() =

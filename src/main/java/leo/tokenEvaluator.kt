@@ -19,9 +19,9 @@ val emptyTokenEvaluator =
 
 fun TokenEvaluator.evaluate(token: Token<Nothing>): TokenEvaluator? =
 	when (token) {
-		is Token.MetaEnd -> fail
-		is Token.Begin -> begin(token.word)
-		is Token.End -> end
+		is MetaEndToken -> fail
+		is BeginToken -> begin(token.word)
+		is EndToken -> end
 	}
 
 fun TokenEvaluator.evaluateInternal(token: Token<Nothing>): Evaluator<Token<Nothing>>? =

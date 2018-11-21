@@ -88,15 +88,15 @@ fun Function.defineToken(tokenStream: Stream<Token<Pattern>>, defineNext: Functi
 
 fun Function.define(token: Token<Pattern>, defineNext: Function.() -> Match?): Function? =
 	when (token) {
-		is Token.MetaEnd -> define(token, defineNext)
-		is Token.Begin -> define(token, defineNext)
-		is Token.End -> defineEndToken(defineNext)
+		is MetaEndToken -> define(token, defineNext)
+		is BeginToken -> define(token, defineNext)
+		is EndToken -> defineEndToken(defineNext)
 	}
 
-fun Function.define(token: Token.MetaEnd<Pattern>, defineNext: Function.() -> Match?): Function? =
+fun Function.define(token: MetaEndToken<Pattern>, defineNext: Function.() -> Match?): Function? =
 	define(token.value, defineNext)
 
-fun Function.define(token: Token.Begin<Pattern>, defineNext: Function.() -> Match?): Function? =
+fun Function.define(token: BeginToken<Pattern>, defineNext: Function.() -> Match?): Function? =
 	defineBit(token.word.bitStream.then { beginByte.bitStream }, defineNext)
 
 fun Function.defineEndToken(defineNext: Function.() -> Match?): Function? =

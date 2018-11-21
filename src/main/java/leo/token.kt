@@ -2,43 +2,43 @@ package leo
 
 import leo.base.*
 
-sealed class Token<out V> {
-	data class MetaEnd<V>(val value: V) : Token<V>()
-	data class Begin<V>(val word: Word) : Token<V>()
-	data class End<V>(val unit: Unit) : Token<V>()
-}
+sealed class Token<out V>
+data class MetaEndToken<V>(val value: V) : Token<V>()
+data class BeginToken<V>(val word: Word) : Token<V>()
+data class EndToken<V>(val end: End) : Token<V>()
 
 fun <V> Word.beginToken(): Token<V> =
-	Token.Begin(this)
+	BeginToken(this)
 
-fun <V> endToken(): Token<V> =
-	Token.End(Unit)
+fun <V> End.token(): Token<V> =
+	EndToken(this)
 
 val <V> V.metaEndToken: Token<V>
 	get() =
-		Token.MetaEnd(this)
+		MetaEndToken(this)
 
 val Word.beginToken: Token<Nothing>
 	get() =
 		beginToken()
 
-val endToken: Token<Nothing> =
-	endToken()
+val End.token: Token<Nothing>
+	get() =
+		EndToken(this)
 
 val Token<Nothing>.reflect: Field<Nothing>
 	get() =
 		tokenWord fieldTo term(
 			when (this) {
-				is Token.MetaEnd -> fail
-				is Token.Begin -> beginWord fieldTo word.reflect.termOrNull
-				is Token.End -> endWord.field
+				is MetaEndToken -> fail
+				is BeginToken -> beginWord fieldTo word.reflect.termOrNull
+				is EndToken -> endWord.field
 			})
 
 val Field<Nothing>.parseToken: Token<Nothing>?
 	get() =
 		match(tokenWord) { tokenTerm ->
 			when (tokenTerm) {
-				endWord.term -> endToken
+				endWord.term -> end.token
 				else -> tokenTerm?.match(beginWord) { beginTerm ->
 					beginTerm?.onlyFieldOrNull?.let { field ->
 						if (field.termOrNull != null) null
@@ -53,7 +53,23 @@ val Field<Nothing>.parseToken: Token<Nothing>?
 val Token<Nothing>.characterStream: Stream<Character>
 	get() =
 		when (this) {
-			is Token.MetaEnd -> fail
-			is Token.Begin -> word.letterStream.map(Letter::character).then { begin.character.onlyStream }
-			is Token.End -> end.character.onlyStream
+			is MetaEndToken -> fail
+			is BeginToken -> word.letterStream.map(Letter::character).then { begin.character.onlyStream }
+			is EndToken -> end.character.onlyStream
 		}
+
+val Token<Nothing>.bitStream: Stream<Bit>
+	get() =
+		characterStream.map(Character::bitStream).join
+
+val Stream<Bit>.bitParseToken: Parse<Bit, Token<Nothing>>?
+	get() = null
+		?: bitParseWord?.bind { word ->
+			bitParseBegin?.bind {
+				parsed(word.beginToken)
+			}
+		}
+		?: bitParseEnd?.bind { end ->
+			parsed(end.token)
+		}
+
