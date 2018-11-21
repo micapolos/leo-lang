@@ -9,7 +9,7 @@ data class Reader<V>(
 	val termOrNull: Term<Nothing>? = null)
 
 fun <V> Reader<V>.read(value: V): Reader<V>? =
-	if (!readersEnabled || !byteReaderEnabled) readPreprocessed(value)
+	if (!readerEnabled) readPreprocessed(value)
 	else this
 		.termPush(reflectFn(value))
 		.termInvoke(value)
