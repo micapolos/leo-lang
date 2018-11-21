@@ -45,7 +45,7 @@ class TokenTest {
 			.bitStream
 			.then(Bit.ZERO.onlyStream)
 			.bitParseToken
-			.assertParsedAndRest(oneWord.beginToken, Bit.ZERO)
+			.assertParsedAndRest(oneWord.beginToken, Bit.ZERO.onlyStream)
 	}
 
 	@Test
@@ -54,6 +54,6 @@ class TokenTest {
 			.bitStream
 			.then(Bit.ZERO.onlyStream)
 			.bitParseToken
-			.assertParsedAndRest(end.token, Bit.ZERO)
+			.assertParsedAndRest(end.token, Bit.ZERO.onlyStream)
 	}
 }

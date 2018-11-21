@@ -57,7 +57,7 @@ class CharacterTest {
 			.bitStream
 			.then(Bit.ZERO.onlyStream)
 			.bitParseCharacter
-			.assertParsedAndRest(begin.character, Bit.ZERO)
+			.assertParsedAndRest(begin.character, Bit.ZERO.onlyStream)
 	}
 
 	@Test
@@ -66,7 +66,7 @@ class CharacterTest {
 			.bitStream
 			.then(Bit.ZERO.onlyStream)
 			.bitParseCharacter
-			.assertParsedAndRest(end.character, Bit.ZERO)
+			.assertParsedAndRest(end.character, Bit.ZERO.onlyStream)
 	}
 
 	@Test
@@ -75,6 +75,6 @@ class CharacterTest {
 			.bitStream
 			.then(Bit.ZERO.onlyStream)
 			.bitParseCharacter
-			.assertParsedAndRest(Letter.A.character, Bit.ZERO)
+			.assertParsedAndRest(Letter.A.character, Bit.ZERO.onlyStream)
 	}
 }

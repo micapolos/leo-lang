@@ -62,14 +62,14 @@ val Token<Nothing>.bitStream: Stream<Bit>
 	get() =
 		characterStream.map(Character::bitStream).join
 
-val Stream<Bit>.bitParseToken: Parse<Bit, Token<Nothing>>?
+val Stream<Bit>?.bitParseToken: Parse<Bit, Token<Nothing>>?
 	get() = null
-		?: bitParseWord?.bind { word ->
-			bitParseBegin?.bind {
+		?: bitParseWord.bind { word ->
+			bitParseBegin.bind {
 				parsed(word.beginToken)
 			}
 		}
-		?: bitParseEnd?.bind { end ->
+		?: bitParseEnd.bind { end ->
 			parsed(end.token)
 		}
 

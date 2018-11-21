@@ -26,6 +26,6 @@ class LetterTest {
 			.bitStream
 			.then(Bit.ZERO.onlyStream)
 			.bitParseLetter
-			.assertParsedAndRest(Letter.A, Bit.ZERO)
+			.assertParsedAndRest(Letter.A, Bit.ZERO.onlyStream)
 	}
 }

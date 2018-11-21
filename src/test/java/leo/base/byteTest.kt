@@ -124,7 +124,7 @@ class ByteTest {
 			Bit.ONE,
 			Bit.ONE)
 			.bitParseByte
-			.assertParsedAndRest(13.toByte(), Bit.ONE)
+			.assertParsedAndRest(13.toByte(), Bit.ONE.onlyStream)
 	}
 }
 

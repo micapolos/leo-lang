@@ -27,6 +27,6 @@ class WordTest {
 			.bitStream
 			.then(Bit.ZERO.onlyStream)
 			.bitParseWord
-			.assertParsedAndRest(oneWord, Bit.ZERO)
+			.assertParsedAndRest(oneWord, Bit.ZERO.onlyStream)
 	}
 }
