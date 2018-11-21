@@ -10,7 +10,7 @@ val emptyBitReader =
 	BitReader(emptyBitEvaluator, null)
 
 fun BitReader.read(bit: Bit): BitReader? =
-	if (!bitReaderEnabled) readPreprocessed(bit)
+	if (!readersEnabled || !bitReaderEnabled) readPreprocessed(bit)
 	else this
 		.termPush(leoReadField(bit))
 		.termInvoke

@@ -20,9 +20,7 @@ fun Term<Nothing>.parseDefineItIs(localFunction: Function): Rule? =
 	match(defineWord) { defineTerm ->
 		defineTerm?.match(itWord, isWord) { itTerm, isTerm ->
 			itTerm?.parsePatternTerm?.let { patternTerm ->
-				isTerm?.parseSelectorTerm(patternTerm)?.let { selectorTerm ->
-					rule(patternTerm, body(selectorTerm, localFunction))
-				}
+				rule(patternTerm, body(isTerm?.parseSelectorTerm(patternTerm), localFunction))
 			}
 		}
 	}

@@ -10,7 +10,7 @@ val emptyTokenReader =
 	TokenReader(emptyTokenEvaluator, null)
 
 fun TokenReader.read(token: Token<Nothing>): TokenReader? =
-	if (!tokenReaderEnabled) readPreprocessed(token)
+	if (!readersEnabled || !tokenReaderEnabled) readPreprocessed(token)
 	else this
 		.termPush(leoReadField(token))
 		.termInvoke
