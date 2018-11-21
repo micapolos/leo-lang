@@ -22,7 +22,7 @@ fun BitReader.termPush(field: Field<Nothing>): BitReader =
 val BitReader.termInvoke: BitReader
 	get() =
 		if (termOrNull == null) this
-		else copy(termOrNull = apply(termOrNull) ?: termOrNull)
+		else copy(termOrNull = function.apply(termOrNull)?.value ?: termOrNull)
 
 val BitReader.termParse: BitReader?
 	get() =
@@ -63,8 +63,9 @@ val BitReader.bitStreamOrNull: Stream<Bit>?
 	get() =
 		bitEvaluator.bitStreamOrNull
 
-fun BitReader.apply(term: Term<Nothing>): Term<Nothing>? =
-	bitEvaluator.apply(term)
+val BitReader.function: Function
+	get() =
+		bitEvaluator.function
 
 // === transition to Reader<Bit>
 

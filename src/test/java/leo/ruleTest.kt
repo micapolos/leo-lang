@@ -23,7 +23,7 @@ class RuleTest {
 			defineWord fieldTo term(
 				itWord fieldTo oneWord.term,
 				isWord fieldTo numberWord.term))
-			.parseRule(emptyFunction)
+			.parseDefineItIs(emptyFunction)
 			.assertEqualTo(
 				rule(oneWord.term(), body(numberWord.term(), emptyFunction)))
 	}
@@ -34,7 +34,7 @@ class RuleTest {
 			defineWord fieldTo term(
 				itWord fieldTo oneWord.term,
 				isWord fieldTo thisWord.term))
-			.parseRule(emptyFunction)
+			.parseDefineItIs(emptyFunction)
 			.assertEqualTo(
 				rule(oneWord.term(), body(selector().metaTerm, emptyFunction)))
 	}

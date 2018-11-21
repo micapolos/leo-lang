@@ -41,8 +41,9 @@ val BitEvaluator.partialByteBitStreamOrNull: Stream<Bit>?
 			else -> null
 		}
 
-fun BitEvaluator.apply(term: Term<Nothing>): Term<Nothing>? =
-	byteReader.apply(term)
+val BitEvaluator.function: Function
+	get() =
+		byteReader.function
 
 // === transition to Evaluator<Bit>
 
@@ -55,5 +56,5 @@ val BitEvaluator.evaluator: Evaluator<Bit>
 			{ bit ->
 				evaluate(bit)?.evaluator
 			},
-			this::apply,
+			{ function.apply(it) },
 			this::bitStreamOrNull)

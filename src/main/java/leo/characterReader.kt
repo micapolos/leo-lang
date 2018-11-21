@@ -21,7 +21,7 @@ fun CharacterReader.termPush(field: Field<Nothing>): CharacterReader =
 val CharacterReader.termInvoke: CharacterReader
 	get() =
 		if (termOrNull == null) this
-		else copy(termOrNull = apply(termOrNull) ?: termOrNull)
+		else copy(termOrNull = function.apply(termOrNull)?.value ?: termOrNull)
 
 val CharacterReader.termParse: CharacterReader?
 	get() =
@@ -62,5 +62,6 @@ val CharacterReader.bitStreamOrNull: Stream<Bit>?
 	get() =
 		characterEvaluator.bitStreamOrNull
 
-fun CharacterReader.apply(term: Term<Nothing>): Term<Nothing>? =
-	characterEvaluator.apply(term)
+val CharacterReader.function: Function
+	get() =
+		characterEvaluator.function

@@ -46,5 +46,6 @@ val CharacterEvaluator.bitStreamOrNull: Stream<Bit>?
 		tokenReader.bitStreamOrNull
 			.orNullThenIfNotNull(wordOrNull?.bitStream)
 
-fun CharacterEvaluator.apply(term: Term<Nothing>): Term<Nothing>? =
-	tokenReader.apply(term)
+val CharacterEvaluator.function: Function
+	get() =
+		tokenReader.function

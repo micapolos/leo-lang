@@ -2,14 +2,14 @@ package leo
 
 // TODO: What about recursion?
 data class Body(
-	val selectorTerm: Term<Selector>,
+	val selectorTermOrNull: Term<Selector>?,
 	val function: Function)
 
-fun body(selectorTerm: Term<Selector>, function: Function) =
-	Body(selectorTerm, function)
+fun body(selectorTermOrNull: Term<Selector>?, function: Function) =
+	Body(selectorTermOrNull, function)
 
 fun Body.apply(argument: Term<Nothing>): Term<Nothing>? =
-	selectorTerm.apply(argument)?.let { selectedTerm ->
+	selectorTermOrNull?.apply(argument)?.let { selectedTerm ->
 		function.invoke(selectedTerm)
 	}
 

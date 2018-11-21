@@ -16,6 +16,14 @@ class FunctionTest {
 		invoke(argument).assertEqualTo(argument)
 
 	@Test
+	fun defineEmptyAndInvoke() {
+		emptyFunction
+			.define(aWord.term(), body(null, emptyFunction))!!
+			.invoke(aWord.term)
+			.assertEqualTo(null)
+	}
+
+	@Test
 	fun defineSimpleAndInvoke_match() {
 		emptyFunction
 			.testDefine(aWord.term())!!

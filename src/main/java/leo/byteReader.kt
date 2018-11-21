@@ -13,17 +13,30 @@ fun ByteReader.read(byte: Byte): ByteReader? =
 	if (ignoreWhiteSpaces && byte.toChar().isWhitespace()) this
 	else if (!byteReaderEnabled) readPreprocessed(byte)
 	else this
-		.termPush(leoReadField(byte))
-		.termInvoke
-		.termParse
+		.termPush(byte.reflect)
+		.termInvoke(byte)
 
 fun ByteReader.termPush(field: Field<Nothing>): ByteReader =
 	copy(termOrNull = termOrNull.push(field))
 
-val ByteReader.termInvoke: ByteReader
-	get() =
+fun ByteReader.termInvoke(byte: Byte): ByteReader? =
 		if (termOrNull == null) this
-		else copy(termOrNull = apply(termOrNull) ?: termOrNull)
+		else termOrNull
+			.push(leoWord fieldTo readWord.term)
+			.let { argument ->
+				function
+					.get(argument)
+					.let { matchOrNull ->
+						if (matchOrNull == null)
+							copy(termOrNull = null).readPreprocessed(byte)
+						else when (matchOrNull.bodyBinaryTrieMatch) {
+							is BinaryTrie.Match.Partial ->
+								this // partial - continue
+							is BinaryTrie.Match.Full ->
+								copy(termOrNull = matchOrNull.bodyBinaryTrieMatch.value.apply(argument)).termParse
+						}
+					}
+			}
 
 val ByteReader.termParse: ByteReader?
 	get() =
@@ -31,10 +44,9 @@ val ByteReader.termParse: ByteReader?
 			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
-				else if (field == leoWord fieldTo continueWord.term) this
-				else field.leoReadByteOrNull.let { byte ->
-					if (byte == null) termPush(field)
-					else readPreprocessed(byte)
+				else field.parseByte.let { byteOrNull ->
+					if (byteOrNull == null) termPush(field)
+					else readPreprocessed(byteOrNull)
 				}
 			}
 
@@ -64,5 +76,6 @@ val ByteReader.bitStreamOrNull: Stream<Bit>?
 	get() =
 		byteEvaluator.bitStreamOrNull
 
-fun ByteReader.apply(term: Term<Nothing>): Term<Nothing>? =
-	byteEvaluator.apply(term)
+val ByteReader.function: Function
+	get() =
+		byteEvaluator.function

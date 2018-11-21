@@ -19,11 +19,9 @@ fun Scope.push(field: Field<Nothing>) =
 	copy(termOrNull = termOrNull.push(field))
 
 val Scope.evaluate: Scope
-	get() = evaluateSelect.run {
-		null
-			?: parseRule
-			?: invokeFunction
-	}
+	get() = parseRule
+		?: evaluateSelect
+			.invokeFunction
 
 val Scope.evaluateSelect: Scope
 	get() =
@@ -57,8 +55,3 @@ fun Scope.push(rule: Rule): Scope? =
 val Scope.bitStreamOrNull: Stream<Bit>?
 	get() =
 		termOrNull?.bitStream
-
-// === invoke
-
-fun Scope.apply(term: Term<Nothing>): Term<Nothing>? =
-	function.apply(term)

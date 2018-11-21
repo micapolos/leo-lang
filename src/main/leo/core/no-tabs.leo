@@ -1,11 +1,11 @@
-define(
-  it(leo(read(byte(
-    bit(zero())
-    bit(zero())
-    bit(zero())
-    bit(zero())
-    bit(one())
-    bit(zero())
-    bit(zero())
-    bit(one())))))
-  is(leo(continue())))
+byte(
+  bit(zero())
+  bit(zero())
+  bit(zero())
+  bit(zero())
+  bit(one())
+  bit(zero())
+  bit(zero())
+  bit(one()))
+leo(read())
+is()

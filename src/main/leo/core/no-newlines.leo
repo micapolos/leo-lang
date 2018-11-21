@@ -1,1 +1,1 @@
-define(it(leo(read(byte(bit(zero())bit(zero())bit(zero())bit(zero())bit(one())bit(zero())bit(one())bit(zero())))))is(leo(continue())))
+byte(bit(zero())bit(zero())bit(zero())bit(zero())bit(one())bit(zero())bit(one())bit(zero()))leo(read())is()

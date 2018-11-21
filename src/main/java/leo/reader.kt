@@ -20,7 +20,7 @@ fun <V> Reader<V>.termPush(field: Field<Nothing>): Reader<V> =
 val <V> Reader<V>.termInvoke: Reader<V>
 	get() =
 		if (termOrNull == null) this
-		else copy(termOrNull = apply(termOrNull) ?: termOrNull)
+		else copy(termOrNull = apply(termOrNull)?.value ?: termOrNull)
 
 val <V> Reader<V>.termParse: Reader<V>?
 	get() =
@@ -60,5 +60,5 @@ val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
 	get() =
 		evaluator.bitStreamOrNull()
 
-fun <V> Reader<V>.apply(term: Term<Nothing>): Term<Nothing>? =
+fun <V> Reader<V>.apply(term: Term<Nothing>): The<Term<Nothing>?>? =
 	evaluator.apply(term)

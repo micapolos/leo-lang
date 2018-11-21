@@ -26,11 +26,17 @@ fun Function.get(term: Term<Nothing>): Match? =
 
 // == invoke & apply
 
-fun Function.invoke(argument: Term<Nothing>): Term<Nothing> =
-	apply(argument) ?: argument.invokeFallback
+fun Function.invoke(argument: Term<Nothing>): Term<Nothing>? =
+	apply(argument).let { theTermOrNull ->
+		if (theTermOrNull == null) argument.invokeFallback
+		else theTermOrNull.value
+	}
 
-fun Function.apply(argument: Term<Nothing>): Term<Nothing>? =
-	get(argument)?.bodyOrNull?.apply(argument)
+fun Function.apply(argument: Term<Nothing>): The<Term<Nothing>?>? =
+	get(argument)?.bodyOrNull.let { bodyOrNull ->
+		if (bodyOrNull == null) null
+		else bodyOrNull.apply(argument).the
+	}
 
 // === fallback
 

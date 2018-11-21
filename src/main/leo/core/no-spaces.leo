@@ -1,4 +1,4 @@
-define(it(leo(read(byte(
+byte(
 bit(zero())
 bit(zero())
 bit(one())
@@ -6,5 +6,6 @@ bit(zero())
 bit(zero())
 bit(zero())
 bit(zero())
-bit(zero())))))
-is(leo(continue())))
+bit(zero()))
+leo(read())
+is()
