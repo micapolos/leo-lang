@@ -10,19 +10,32 @@ val emptyTokenReader =
 	TokenReader(emptyTokenEvaluator, null)
 
 fun TokenReader.read(token: Token<Nothing>): TokenReader? =
-	if (!readersEnabled || !tokenReaderEnabled) readPreprocessed(token)
+	if (!readersEnabled || !byteReaderEnabled) readPreprocessed(token)
 	else this
-		.termPush(leoReadField(token))
-		.termInvoke
-		.termParse
+		.termPush(token.reflect)
+		.termInvoke(token)
 
 fun TokenReader.termPush(field: Field<Nothing>): TokenReader =
 	copy(termOrNull = termOrNull.push(field))
 
-val TokenReader.termInvoke: TokenReader
-	get() =
-		if (termOrNull == null) this
-		else copy(termOrNull = function.apply(termOrNull)?.value ?: termOrNull)
+fun TokenReader.termInvoke(token: Token<Nothing>): TokenReader? =
+	if (termOrNull == null) this
+	else termOrNull
+		.push(leoWord fieldTo readWord.term)
+		.let { argument ->
+			function
+				.get(argument)
+				.let { matchOrNull ->
+					if (matchOrNull == null)
+						copy(termOrNull = null).readPreprocessed(token)
+					else when (matchOrNull.bodyBinaryTrieMatch) {
+						is BinaryTrie.Match.Partial ->
+							this // partial - continue
+						is BinaryTrie.Match.Full ->
+							copy(termOrNull = matchOrNull.bodyBinaryTrieMatch.value.apply(argument)).termParse
+					}
+				}
+		}
 
 val TokenReader.termParse: TokenReader?
 	get() =
@@ -30,12 +43,12 @@ val TokenReader.termParse: TokenReader?
 			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
-				else if (field == leoWord fieldTo continueWord.term) this
-				else field.leoReadTokenOrNull.let { token ->
-					if (token == null) termPush(field)
-					else readPreprocessed(token)
+				else field.parseToken.let { tokenOrNull ->
+					if (tokenOrNull == null) termPush(field)
+					else readPreprocessed(tokenOrNull)
 				}
 			}
+
 
 fun TokenReader.readPreprocessed(token: Token<Nothing>): TokenReader? =
 	tokenEvaluator.evaluate(token)?.let { tokenEvaluator ->

@@ -56,5 +56,5 @@ val BitEvaluator.evaluator: Evaluator<Bit>
 			{ bit ->
 				evaluate(bit)?.evaluator
 			},
-			{ function.apply(it) },
+			{ function.get(it) },
 			this::bitStreamOrNull)

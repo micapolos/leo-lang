@@ -10,19 +10,32 @@ val emptyBitReader =
 	BitReader(emptyBitEvaluator, null)
 
 fun BitReader.read(bit: Bit): BitReader? =
-	if (!readersEnabled || !bitReaderEnabled) readPreprocessed(bit)
+	if (!readersEnabled || !byteReaderEnabled) readPreprocessed(bit)
 	else this
-		.termPush(leoReadField(bit))
-		.termInvoke
-		.termParse
+		.termPush(bit.reflect)
+		.termInvoke(bit)
 
 fun BitReader.termPush(field: Field<Nothing>): BitReader =
 	copy(termOrNull = termOrNull.push(field))
 
-val BitReader.termInvoke: BitReader
-	get() =
-		if (termOrNull == null) this
-		else copy(termOrNull = function.apply(termOrNull)?.value ?: termOrNull)
+fun BitReader.termInvoke(bit: Bit): BitReader? =
+	if (termOrNull == null) this
+	else termOrNull
+		.push(leoWord fieldTo readWord.term)
+		.let { argument ->
+			function
+				.get(argument)
+				.let { matchOrNull ->
+					if (matchOrNull == null)
+						copy(termOrNull = null).readPreprocessed(bit)
+					else when (matchOrNull.bodyBinaryTrieMatch) {
+						is BinaryTrie.Match.Partial ->
+							this // partial - continue
+						is BinaryTrie.Match.Full ->
+							copy(termOrNull = matchOrNull.bodyBinaryTrieMatch.value.apply(argument)).termParse
+					}
+				}
+		}
 
 val BitReader.termParse: BitReader?
 	get() =
@@ -30,10 +43,9 @@ val BitReader.termParse: BitReader?
 			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
-				else if (field == leoWord fieldTo continueWord.term) this
-				else field.leoReadBitOrNull.let { bit ->
-					if (bit == null) termPush(field)
-					else readPreprocessed(bit)
+				else field.parseBit.let { bitOrNull ->
+					if (bitOrNull == null) termPush(field)
+					else readPreprocessed(bitOrNull)
 				}
 			}
 

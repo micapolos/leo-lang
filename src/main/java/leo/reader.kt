@@ -9,18 +9,32 @@ data class Reader<V>(
 	val termOrNull: Term<Nothing>?)
 
 fun <V> Reader<V>.read(value: V): Reader<V>? =
-	this
-		.termPush(leoReadField(value))
-		.termInvoke
-		.termParse
+	if (!readersEnabled || !byteReaderEnabled) readPreprocessed(value)
+	else this
+		.termPush(reflectFn(value))
+		.termInvoke(value)
 
 fun <V> Reader<V>.termPush(field: Field<Nothing>): Reader<V> =
 	copy(termOrNull = termOrNull.push(field))
 
-val <V> Reader<V>.termInvoke: Reader<V>
-	get() =
-		if (termOrNull == null) this
-		else copy(termOrNull = apply(termOrNull)?.value ?: termOrNull)
+fun <V> Reader<V>.termInvoke(value: V): Reader<V>? =
+	if (termOrNull == null) this
+	else termOrNull
+		.push(leoWord fieldTo readWord.term)
+		.let { argument ->
+			evaluator
+				.apply(argument)
+				.let { matchOrNull ->
+					if (matchOrNull == null)
+						copy(termOrNull = null).readPreprocessed(value)
+					else when (matchOrNull.bodyBinaryTrieMatch) {
+						is BinaryTrie.Match.Partial ->
+							this // partial - continue
+						is BinaryTrie.Match.Full ->
+							copy(termOrNull = matchOrNull.bodyBinaryTrieMatch.value.apply(argument)).termParse
+					}
+				}
+		}
 
 val <V> Reader<V>.termParse: Reader<V>?
 	get() =
@@ -28,8 +42,7 @@ val <V> Reader<V>.termParse: Reader<V>?
 			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
-				else if (field == leoWord fieldTo continueWord.term) this
-				else parseLeoRead(field).let { valueOrNull ->
+				else parseFn(field).let { valueOrNull ->
 					if (valueOrNull == null) termPush(field)
 					else readPreprocessed(valueOrNull)
 				}
@@ -60,5 +73,5 @@ val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
 	get() =
 		evaluator.bitStreamOrNull()
 
-fun <V> Reader<V>.apply(term: Term<Nothing>): The<Term<Nothing>?>? =
+fun <V> Reader<V>.apply(term: Term<Nothing>): Match? =
 	evaluator.apply(term)

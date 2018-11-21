@@ -10,18 +10,32 @@ val emptyCharacterReader =
 	CharacterReader(emptyCharacterEvaluator, null)
 
 fun CharacterReader.read(character: Character): CharacterReader? =
-	this
-		.termPush(leoReadField(character))
-		.termInvoke
-		.termParse
+	if (!readersEnabled || !byteReaderEnabled) readPreprocessed(character)
+	else this
+		.termPush(character.reflect)
+		.termInvoke(character)
 
 fun CharacterReader.termPush(field: Field<Nothing>): CharacterReader =
 	copy(termOrNull = termOrNull.push(field))
 
-val CharacterReader.termInvoke: CharacterReader
-	get() =
-		if (termOrNull == null) this
-		else copy(termOrNull = function.apply(termOrNull)?.value ?: termOrNull)
+fun CharacterReader.termInvoke(character: Character): CharacterReader? =
+	if (termOrNull == null) this
+	else termOrNull
+		.push(leoWord fieldTo readWord.term)
+		.let { argument ->
+			function
+				.get(argument)
+				.let { matchOrNull ->
+					if (matchOrNull == null)
+						copy(termOrNull = null).readPreprocessed(character)
+					else when (matchOrNull.bodyBinaryTrieMatch) {
+						is BinaryTrie.Match.Partial ->
+							this // partial - continue
+						is BinaryTrie.Match.Full ->
+							copy(termOrNull = matchOrNull.bodyBinaryTrieMatch.value.apply(argument)).termParse
+					}
+				}
+		}
 
 val CharacterReader.termParse: CharacterReader?
 	get() =
@@ -29,10 +43,9 @@ val CharacterReader.termParse: CharacterReader?
 			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
 				if (this == null) null
 				else if (termOrNull != null) termPush(field)
-				else if (field == leoWord fieldTo continueWord.term) this
-				else field.leoReadCharacterOrNull.let { character ->
-					if (character == null) termPush(field)
-					else readPreprocessed(character)
+				else field.parseCharacter.let { characterOrNull ->
+					if (characterOrNull == null) termPush(field)
+					else readPreprocessed(characterOrNull)
 				}
 			}
 

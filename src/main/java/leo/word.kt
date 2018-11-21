@@ -115,6 +115,7 @@ val firstWord = "first".wordOrNull!!
 val functionWord = "function".wordOrNull!!
 val identifierWord = "identifier".wordOrNull!!
 val identityWord = "identity".wordOrNull!!
+val importWord = "import".wordOrNull!!
 val isWord = "is".wordOrNull!!
 val itWord = "it".wordOrNull!!
 val itemWord = "item".wordOrNull!!
