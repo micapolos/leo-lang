@@ -88,3 +88,35 @@ val Stream<Bit>.bitByteStreamOrNull: Stream<Byte>?
 				}
 			}
 		}
+
+val Stream<Bit>.bitParseByte: Parse<Bit, Byte>?
+	get() =
+		first.int.let { int1 ->
+			nextOrNull?.run {
+				int1.shl(1).or(first.int).let { int2 ->
+					nextOrNull?.run {
+						int2.shl(1).or(first.int).let { int3 ->
+							nextOrNull?.run {
+								int3.shl(1).or(first.int).let { int4 ->
+									nextOrNull?.run {
+										int4.shl(1).or(first.int).let { int5 ->
+											nextOrNull?.run {
+												int5.shl(1).or(first.int).let { int6 ->
+													nextOrNull?.run {
+														int6.shl(1).or(first.int).let { int7 ->
+															nextOrNull?.run {
+																nextOrNull parsed int7.shl(1).or(first.int).clampedByte
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}

@@ -67,3 +67,11 @@ val Field<Nothing>.parseLetter: Letter?
 		match(letterWord) { letterTerm ->
 			letterTerm?.onlyFieldOrNull?.word?.letterStack?.theOnlyOrNull?.value
 		}
+
+val Stream<Bit>.bitParseLetter: Parse<Bit, Letter>?
+	get() =
+		bitParseByte?.let { bitParseByte ->
+			bitParseByte.parsed.letterOrNull?.let { letter ->
+				bitParseByte.streamOrNull parsed letter
+			}
+		}

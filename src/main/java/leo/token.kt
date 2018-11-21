@@ -54,6 +54,6 @@ val Token<Nothing>.characterStream: Stream<Character>
 	get() =
 		when (this) {
 			is Token.MetaEnd -> fail
-			is Token.Begin -> word.letterStream.map(Letter::character).then { beginCharacter.onlyStream }
-			is Token.End -> endCharacter.onlyStream
+			is Token.Begin -> word.letterStream.map(Letter::character).then { begin.character.onlyStream }
+			is Token.End -> end.character.onlyStream
 		}

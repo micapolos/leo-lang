@@ -110,4 +110,21 @@ class ByteTest {
 					Bit.ONE,
 					Bit.ZERO))
 	}
+
+	@Test
+	fun byteToBitStreamOrNull() {
+		stream(
+			Bit.ZERO,
+			Bit.ZERO,
+			Bit.ZERO,
+			Bit.ZERO,
+			Bit.ONE,
+			Bit.ONE,
+			Bit.ZERO,
+			Bit.ONE,
+			Bit.ONE)
+			.bitParseByte
+			.assertParsedAndRest(13.toByte(), Bit.ONE)
+	}
 }
+
