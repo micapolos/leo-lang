@@ -22,6 +22,12 @@ fun BitEvaluator.evaluate(bit: Bit): BitEvaluator? {
 	}
 }
 
+fun BitEvaluator.evaluateInternal(bit: Bit): Evaluator<Bit>? =
+	evaluate(bit)?.evaluator
+
+fun BitEvaluator.apply(term: Term<Nothing>): Match? =
+	function.get(term)
+
 val BitEvaluator.bitStreamOrNull: Stream<Bit>?
 	get() =
 		byteReader.bitStreamOrNull?.then { partialByteBitStreamOrNull }
@@ -53,8 +59,6 @@ val bitEvaluator =
 val BitEvaluator.evaluator: Evaluator<Bit>
 	get() =
 		Evaluator(
-			{ bit ->
-				evaluate(bit)?.evaluator
-			},
-			{ function.get(it) },
+			this::evaluateInternal,
+			this::apply,
 			this::bitStreamOrNull)

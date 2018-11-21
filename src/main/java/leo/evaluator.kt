@@ -4,6 +4,6 @@ import leo.base.Bit
 import leo.base.Stream
 
 data class Evaluator<V>(
-	val evaluate: (V) -> Evaluator<V>?,
-	val apply: (Term<Nothing>) -> Match?,
+	val evaluateFn: (V) -> Evaluator<V>?,
+	val applyFn: (Term<Nothing>) -> Match?,
 	val bitStreamOrNull: () -> Stream<Bit>?)

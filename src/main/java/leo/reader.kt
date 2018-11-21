@@ -23,7 +23,7 @@ fun <V> Reader<V>.termInvoke(value: V): Reader<V>? =
 		.push(leoWord fieldTo readWord.term)
 		.let { argument ->
 			evaluator
-				.apply(argument)
+				.applyFn(argument)
 				.let { matchOrNull ->
 					if (matchOrNull == null)
 						copy(termOrNull = null).readPreprocessed(value)
@@ -49,7 +49,7 @@ val <V> Reader<V>.termParse: Reader<V>?
 			}
 
 fun <V> Reader<V>.readPreprocessed(value: V): Reader<V>? =
-	evaluator.evaluate(value)?.let { evaluator ->
+	evaluator.evaluateFn(value)?.let { evaluator ->
 		copy(evaluator = evaluator)
 	}
 
@@ -74,4 +74,4 @@ val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
 		evaluator.bitStreamOrNull()
 
 fun <V> Reader<V>.apply(term: Term<Nothing>): Match? =
-	evaluator.apply(term)
+	evaluator.applyFn(term)
