@@ -69,3 +69,8 @@ val TokenEvaluator.Entry.coreBitStream: Stream<Bit>
 val TokenEvaluator.function: Function
 	get() =
 		scope.function
+
+val TokenEvaluator.theEvaluatedTermOrNull: The<Term<Nothing>?>?
+	get() =
+		if (entryStackOrNull != null) null
+		else scope.termOrNull.the

@@ -54,21 +54,6 @@ fun BitReader.readPreprocessed(bit: Bit): BitReader? =
 		copy(bitEvaluator = bitReader)
 	}
 
-// === leo read bit
-
-fun leoReadField(bit: Bit): Field<Nothing> =
-	leoWord fieldTo term(readWord fieldTo bit.reflect.term)
-
-val Field<Nothing>.leoReadBitOrNull: Bit?
-	get() =
-		get(leoWord)?.let { theLeoTerm ->
-			theLeoTerm.value?.match(readWord) { readTerm ->
-				readTerm?.match(bitWord) { bitTerm ->
-					bitWord.fieldTo(bitTerm).parseBit
-				}
-			}
-		}
-
 // === bit stream
 
 val BitReader.bitStreamOrNull: Stream<Bit>?

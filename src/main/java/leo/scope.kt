@@ -34,7 +34,7 @@ val Scope.parseRule: Scope?
 val Scope.invokeFunction: Scope
 	get() =
 		copy(termOrNull = termOrNull?.let { term ->
-			function.invoke(term)
+			function.invoke(term) { term.invokeFallback }
 		})
 
 fun Scope.push(rule: Rule): Scope? =

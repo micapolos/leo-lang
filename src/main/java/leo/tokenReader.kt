@@ -55,21 +55,6 @@ fun TokenReader.readPreprocessed(token: Token<Nothing>): TokenReader? =
 		copy(tokenEvaluator = tokenEvaluator)
 	}
 
-// === leo read bit
-
-fun leoReadField(token: Token<Nothing>): Field<Nothing> =
-	leoWord fieldTo term(readWord fieldTo token.reflect.term)
-
-val Field<Nothing>.leoReadTokenOrNull: Token<Nothing>?
-	get() =
-		get(leoWord)?.let { theLeoTerm ->
-			theLeoTerm.value?.match(readWord) { readTerm ->
-				readTerm?.match(tokenWord) { tokenTerm ->
-					tokenWord.fieldTo(tokenTerm).parseToken
-				}
-			}
-		}
-
 // === bit stream
 
 val TokenReader.bitStreamOrNull: Stream<Bit>?

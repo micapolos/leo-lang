@@ -5,7 +5,7 @@ import java.io.File
 import java.io.IOException
 
 data class Import(
-	val filePath: File)
+	val file: File)
 
 val File.import: Import
 	get() =
@@ -28,7 +28,9 @@ val Field<Nothing>.parseImport: Import?
 val Import.theBitStreamOrNull: The<Stream<Bit>?>?
 	get() =
 		try {
-			filePath.readBytes().streamOrNull?.map(Byte::bitStream)?.join?.the
+			System.out.println("Importing: $file")
+			file.readBytes().streamOrNull?.map(Byte::bitStream)?.join?.the
 		} catch (e: IOException) {
+			System.out.println("Error importing: $file")
 			null
 		}

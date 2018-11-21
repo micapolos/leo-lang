@@ -54,21 +54,6 @@ fun CharacterReader.readPreprocessed(character: Character): CharacterReader? =
 		copy(characterEvaluator = characterEvaluator)
 	}
 
-// === leo read bit
-
-fun leoReadField(character: Character): Field<Nothing> =
-	leoWord fieldTo term(readWord fieldTo character.reflect.term)
-
-val Field<Nothing>.leoReadCharacterOrNull: Character?
-	get() =
-		get(leoWord)?.let { theLeoTerm ->
-			theLeoTerm.value?.match(readWord) { readTerm ->
-				readTerm?.match(characterWord) { characterTerm ->
-					characterWord.fieldTo(characterTerm).parseCharacter
-				}
-			}
-		}
-
 // === bit stream
 
 val CharacterReader.bitStreamOrNull: Stream<Bit>?

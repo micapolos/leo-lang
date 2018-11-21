@@ -55,21 +55,6 @@ fun ByteReader.readPreprocessed(byte: Byte): ByteReader? =
 		copy(byteEvaluator = byteReader)
 	}
 
-// === leo read bit
-
-fun leoReadField(byte: Byte): Field<Nothing> =
-	leoWord fieldTo term(readWord fieldTo byte.reflect.term)
-
-val Field<Nothing>.leoReadByteOrNull: Byte?
-	get() =
-		get(leoWord)?.let { theLeoTerm ->
-			theLeoTerm.value?.match(readWord) { readTerm ->
-				readTerm?.match(byteWord) { byteTerm ->
-					byteWord.fieldTo(byteTerm).parseByte
-				}
-			}
-		}
-
 // === bit stream
 
 val ByteReader.bitStreamOrNull: Stream<Bit>?

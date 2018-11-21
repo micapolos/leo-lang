@@ -27,8 +27,11 @@ fun Function.get(term: Term<Nothing>): Match? =
 // == invoke & apply
 
 fun Function.invoke(argument: Term<Nothing>): Term<Nothing>? =
+	invoke(argument) { argument.invokeFallback }
+
+fun Function.invoke(argument: Term<Nothing>, fallbackFn: () -> Term<Nothing>?): Term<Nothing>? =
 	apply(argument).let { theTermOrNull ->
-		if (theTermOrNull == null) argument.invokeFallback
+		if (theTermOrNull == null) fallbackFn()
 		else theTermOrNull.value
 	}
 
@@ -40,7 +43,14 @@ fun Function.apply(argument: Term<Nothing>): The<Term<Nothing>?>? =
 
 // === fallback
 
-val Term<Nothing>.invokeFallback: Term<Nothing>
+val Term<Nothing>.invokeFallback: Term<Nothing>?
+	get() = invokeExtern.let { theTermOrNull ->
+		if (theTermOrNull == null) invokeSelect
+		else theTermOrNull.value
+	}
+
+
+val Term<Nothing>.invokeSelect: Term<Nothing>
 	get() =
 		when (this) {
 			is Term.Meta -> this
