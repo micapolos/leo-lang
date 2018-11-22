@@ -18,3 +18,7 @@ val <V> Stream<V>?.parseItself: Parse<V, V>?
 	get() =
 		if (this == null) null
 		else nextOrNull?.parsed(first)
+
+val <V, P> Parse<V, P>.theParsed: The<P>?
+	get() =
+		streamOrNull.ifNull { parsed.the }
