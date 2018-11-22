@@ -2,9 +2,9 @@ package leo
 
 import leo.base.Bit
 import leo.base.Stream
-import leo.base.java.bitStreamOrNull
-import leo.base.java.bitWriter
 import leo.base.orNullThen
+import leo.java.io.bitStreamOrNull
+import leo.java.io.bitWriter
 import java.io.ByteArrayInputStream
 
 fun main(args: Array<String>) {

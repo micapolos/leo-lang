@@ -1,4 +1,4 @@
-package leo.base.java
+package leo.java.io
 
 import leo.base.*
 import java.io.InputStream
