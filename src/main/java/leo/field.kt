@@ -58,8 +58,23 @@ fun <V> Field<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =
 fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Nothing>): Field<Nothing> =
 	this?.let(reflect) ?: word.fieldTo(nullWord.term())
 
-//fun <V> Field<V>?.orNullField(word: Word): Field<V> =
-//	this ?: word fieldTo term(nullWord)
+val Field<Nothing>.reflect: Field<Nothing>
+	get() =
+		reflect { fail }
+
+// === parse
+
+val Field<Nothing>.parseField: Field<Nothing>?
+	get() =
+		match(fieldWord) { fieldTermOrNull ->
+			fieldTermOrNull?.match(wordWord, termWord) { wordTermOrNull, termTermOrNull ->
+				wordWord.fieldTo(wordTermOrNull).parseWord?.let { word ->
+					termWord.fieldTo(termTermOrNull).parseTheTerm?.let { theTerm ->
+						word fieldTo theTerm.value
+					}
+				}
+			}
+		}
 
 // === map
 

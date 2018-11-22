@@ -82,6 +82,15 @@ val Word.reflect: Field<Nothing>
 	get() =
 		wordWord fieldTo term
 
+val Field<Nothing>.parseWord: Word?
+	get() =
+		match(wordWord) { wordTermOrNull ->
+			wordTermOrNull?.onlyFieldOrNull?.let { field ->
+				if (field.termOrNull != null) null
+				else field.word
+			}
+		}
+
 val Stream<Bit>?.bitParseWord: Parse<Bit, Word>?
 	get() =
 		bitParseLetter?.map { letter -> letter.onlyWord }?.bitParseWord

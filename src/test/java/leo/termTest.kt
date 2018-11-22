@@ -51,6 +51,26 @@ class TermTest {
 			"field(word person, term null))))")
 	}
 
+	@Test
+	fun parseEmpty() {
+		termWord.field
+			.parseTheTerm
+			.assertEqualTo(the(null))
+	}
+
+	@Test
+	fun parseNonEmpty() {
+		(termWord fieldTo term(
+			fieldWord fieldTo term(
+				wordWord fieldTo oneWord.term,
+				termWord fieldTo null),
+			fieldWord fieldTo term(
+				wordWord fieldTo twoWord.term,
+				termWord fieldTo null)))
+			.parseTheTerm
+			.assertEqualTo(the(term(oneWord.field, twoWord.field)))
+	}
+
 	val termForGet = term(
 		oneWord fieldTo 1.metaTerm,
 		ageWord fieldTo 42.metaTerm,

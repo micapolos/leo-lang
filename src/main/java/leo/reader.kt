@@ -67,19 +67,12 @@ val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
 
 // === reader instances
 
-val emptyTokenReader: Reader<Token<Nothing>>
+val emptyBitReader
 	get() =
 		Reader(
-			Field<Nothing>::parseToken,
-			Token<Nothing>::reflect,
-			emptyTokenEvaluator.evaluator)
-
-val emptyCharacterReader: Reader<Character>
-	get() =
-		Reader(
-			Field<Nothing>::parseCharacter,
-			Character::reflect,
-			emptyCharacterEvaluator.evaluator)
+			Field<Nothing>::parseBit,
+			Bit::reflect,
+			emptyBitEvaluator.evaluator)
 
 val emptyByteReader: Reader<Byte>
 	get() =
@@ -88,10 +81,30 @@ val emptyByteReader: Reader<Byte>
 			Byte::reflect,
 			emptyByteEvaluator.evaluator)
 
-val emptyBitReader
+val emptyCharacterReader: Reader<Character>
 	get() =
 		Reader(
-			Field<Nothing>::parseBit,
-			Bit::reflect,
-			emptyBitEvaluator.evaluator)
+			Field<Nothing>::parseCharacter,
+			Character::reflect,
+			emptyCharacterEvaluator.evaluator)
 
+val emptyTokenReader: Reader<Token<Nothing>>
+	get() =
+		Reader(
+			Field<Nothing>::parseToken,
+			Token<Nothing>::reflect,
+			emptyTokenEvaluator.evaluator)
+
+val emptyFieldReader: Reader<Field<Nothing>>
+	get() =
+		Reader(
+			Field<Nothing>::parseField,
+			Field<Nothing>::reflect,
+			TODO())
+
+val emptyTermReader: Reader<The<Term<Nothing>?>>
+	get() =
+		Reader(
+			Field<Nothing>::parseTheTerm,
+			The<Term<Nothing>?>::reflectTerm,
+			TODO())

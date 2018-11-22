@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.java.lang.useResourceBitStream
+
 fun <V : Any> nullOf() =
 	null as V?
 
@@ -42,3 +44,6 @@ val Any?.string
 
 fun <V> identity(): (V) -> V =
 	{ it }
+
+fun <R> Any.useSiblingResourceBitStream(siblingName: String, fn: Stream<Bit>?.() -> R): R =
+	this::class.java.useResourceBitStream(siblingName, fn)

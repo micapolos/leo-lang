@@ -196,6 +196,10 @@ fun <V> Term<V>.select(key: Word): The<Term<V>?>? =
 
 // === reflect
 
+val The<Term<Nothing>?>.reflectTerm: Field<Nothing>
+	get() =
+		value?.reflect ?: termWord.field
+
 val Term<Nothing>.reflect: Field<Nothing>
 	get() = reflect { fail }
 
@@ -204,6 +208,27 @@ fun <V> Term<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =
 		is Term.Meta -> metaWord fieldTo term(metaReflect(value))
 		is Term.Structure -> termWord fieldTo this.fieldStream.reflect { reflect(metaReflect) }
 	}
+
+val Field<Nothing>.parseTheTerm: The<Term<Nothing>?>?
+	get() =
+		match(termWord) { termTermOrNull ->
+			if (termTermOrNull == null) {
+				termTermOrNull.the
+			} else {
+				termTermOrNull.structureTermOrNull
+					?.fieldStream
+					?.reverse
+					?.foldFirst { field ->
+						field.parseField?.term?.the
+					}
+					?.foldNext { field ->
+						if (this == null) null
+						else field.parseField?.let { parsedField ->
+							this.value.push(parsedField).the
+						}
+					}
+			}
+		}
 
 // === select
 

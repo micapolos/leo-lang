@@ -17,10 +17,14 @@ val String.bitStreamOrNull: Stream<Bit>?
 	get() =
 		byteStreamOrNull?.mapNotNull(Byte::bitStream)?.join
 
-val Stream<Byte>?.utf8string
+val Stream<Byte>?.utf8string: String
 	get() =
 		appendableString { appendable ->
 			appendable.fold(this) { byte ->
 				append(byte.toChar())
 			}
 		}
+
+val Stream<Bit>?.utf8String
+	get() =
+		this?.bitByteStreamOrNull.utf8string
