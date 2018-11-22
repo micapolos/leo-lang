@@ -43,21 +43,6 @@ val TokenEvaluator.end: TokenEvaluator?
 				scope = entryStack.top.scope.push(entryStack.top.word fieldTo scope.termOrNull).evaluate)
 		}
 
-// === reflect ===
-
-//val TokenEvaluator.reflect: Field<Nothing>
-//	get() =
-//		tokenWord fieldTo term(
-//			readerWord fieldTo term(
-//				entryStackOrNull.orNullReflect(entryWord) { reflect(entryWord, TokenEvaluator.Entry::reflect) },
-//				scope.reflect))
-//
-//val TokenEvaluator.Entry.reflect: Field<Nothing>
-//	get() =
-//		entryWord fieldTo term(
-//			scope.reflect,
-//			word.reflect)
-//
 // === byte stream
 
 val TokenEvaluator.bitStreamOrNull: Stream<Bit>?
