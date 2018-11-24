@@ -102,11 +102,11 @@ val emptyFieldReader: Reader<Field<Nothing>>
 		Reader(
 			Field<Nothing>::parseField,
 			Field<Nothing>::reflect,
-			TODO())
+			emptyFieldEvaluator.evaluator)
 
 val emptyTermReader: Reader<Term<Nothing>>
 	get() =
 		Reader(
 			Field<Nothing>::parseTerm,
 			Term<Nothing>::reflect,
-			TODO())
+			emptyTermReader.evaluator)
