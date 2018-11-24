@@ -20,4 +20,3 @@ val Begin.control: Control
 val End.control: Control
 	get() =
 		EndControl(this)
-
