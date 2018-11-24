@@ -147,6 +147,7 @@ val readWord = "read".wordOrNull!!
 val readerWord = "reader".wordOrNull!!
 val replWord = "repl".wordOrNull!!
 val ruleWord = "rule".wordOrNull!!
+val scalarWord = "scalar".wordOrNull!!
 val scopeWord = "scope".wordOrNull!!
 val selectorWord = "selector".wordOrNull!!
 val srcWord = "src".wordOrNull!!

@@ -26,6 +26,7 @@ val <V> Stream<Stream<V>>.join: Stream<V>
 val <V> Stream<Stream<V>?>.joinOrNull: Stream<V>?
 	get() = first?.then { nextOrNull?.joinOrNull } ?: nextOrNull?.joinOrNull
 
+// TODO: Make it all lazy, and not use stack
 fun <V> stream(first: V, vararg next: V) =
 	stack(first, *next).reverse.stream
 

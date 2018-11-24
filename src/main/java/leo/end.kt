@@ -9,6 +9,12 @@ val end = End
 val endByte: Byte =
 	')'.clampedByte
 
+val endChar: Char =
+	endByte.char
+
+val endString: String =
+	endChar.toString()
+
 val endBitStream =
 	endByte.bitStream
 

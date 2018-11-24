@@ -2,6 +2,7 @@ package leo
 
 import leo.base.*
 
+// TODO: Find better name
 sealed class Command<out V>
 
 data class BeginCommand<out V>(

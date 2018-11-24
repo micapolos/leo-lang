@@ -116,19 +116,19 @@ class TokenEvaluatorTest {
 					wordOrNull = twoWord))
 	}
 
-	@Test
-	fun evaluate_word_begin_word_end() {
-		emptyTokenEvaluator
-			.evaluate(oneWord.token)!!
-			.evaluate(begin.token)!!
-			.evaluate(twoWord.token)!!
-			.evaluate(end.token)
-			.assertEqualTo(
-				TokenEvaluator(
-					entryStackOrNull = null,
-					scope = Scope(
-						function = emptyFunction,
-						termOrNull = term(oneWord fieldTo twoWord.term)),
-					wordOrNull = null))
-	}
+//	@Test
+//	fun evaluate_word_begin_word_end() {
+//		emptyTokenEvaluator
+//			.evaluate(oneWord.token)!!
+//			.evaluate(begin.token)!!
+//			.evaluate(twoWord.token)!!
+//			.evaluate(end.token)
+//			.assertEqualTo(
+//				TokenEvaluator(
+//					entryStackOrNull = null,
+//					scope = Scope(
+//						function = emptyFunction,
+//						termOrNull = term(oneWord fieldTo twoWord.term)),
+//					wordOrNull = null))
+//	}
 }

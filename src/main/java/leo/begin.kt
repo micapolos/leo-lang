@@ -9,6 +9,12 @@ val begin = Begin
 val beginByte: Byte =
 	'('.clampedByte
 
+val beginChar: Char =
+	beginByte.char
+
+val beginString: String =
+	beginChar.toString()
+
 val Byte.beginOrNull: Begin?
 	get() =
 		if (this == beginByte) begin

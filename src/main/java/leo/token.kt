@@ -19,6 +19,13 @@ val Word.token: Token<Nothing>
 	get() =
 		token()
 
+val <V> Scalar<V>.token: Token<V>
+  get() =
+	  when (this) {
+		  is MetaScalar -> meta.value.metaToken
+		  is WordScalar -> word.token
+	  }
+
 fun <V> Begin.token(): Token<V> =
 	BeginToken(this)
 
