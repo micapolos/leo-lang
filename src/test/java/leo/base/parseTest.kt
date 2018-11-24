@@ -13,7 +13,7 @@ class ParseTest {
 		stream(1, 2, 3)
 			.parseItself
 			.bind { int1 ->
-				parseItself.bind { int2 ->
+				this?.parseItself.bind { int2 ->
 					parsed(stack(int1, int2))
 				}
 			}

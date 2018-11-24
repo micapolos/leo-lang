@@ -3,9 +3,18 @@ package leo
 import leo.base.*
 
 sealed class Character
-data class BeginCharacter(val begin: Begin) : Character()
-data class EndCharacter(val end: End) : Character()
-data class LetterCharacter(val letter: Letter) : Character()
+
+data class BeginCharacter(val begin: Begin) : Character() {
+	override fun toString() = reflect.string
+}
+
+data class EndCharacter(val end: End) : Character() {
+	override fun toString() = reflect.string
+}
+
+data class LetterCharacter(val letter: Letter) : Character() {
+	override fun toString() = reflect.string
+}
 
 val Begin.character: Character
 	get() =
@@ -27,7 +36,7 @@ val Character.byte: Byte
 			is EndCharacter -> endByte
 		}
 
-val Character.bitStream
+val Character.bitStream: Stream<Bit>
 	get() =
 		byte.bitStream
 
@@ -49,19 +58,14 @@ val Character.reflect: Field<Nothing>
 			when (this) {
 				is BeginCharacter -> beginWord.term
 				is EndCharacter -> endWord.term
-				is LetterCharacter -> letter.reflect.termOrNull
+				is LetterCharacter -> letter.reflect.value
 			}
 
 val Field<Nothing>.parseCharacter: Character?
 	get() =
-		match(characterWord) { characterTerm ->
-			when (characterTerm) {
-				beginWord.term -> BeginCharacter(Begin)
-				endWord.term -> EndCharacter(End)
-				else -> letterWord.fieldTo(characterTerm).parseLetter?.let { letter ->
-					LetterCharacter(letter)
-				}
-			}
+		matchKey(characterWord) {
+			matchWord(beginWord) { begin.character } ?: matchWord(endWord) { end.character }
+			?: (letterWord fieldTo this).parseLetter?.character
 		}
 
 val Stream<Bit>.bitParseCharacter: Parse<Bit, Character>?

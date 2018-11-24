@@ -46,3 +46,6 @@ class ParserTest {
 			.assertEqualTo(stack(Bit.ZERO, Bit.ONE))
 	}
 }
+
+fun <V> V.assertReflectAndParseWorks(reflectFn: V.() -> Field<Nothing>, parseFn: Field<Nothing>.() -> V?) =
+	reflectFn().parseFn().assertEqualTo(this)

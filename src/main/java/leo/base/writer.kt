@@ -1,6 +1,6 @@
 package leo.base
 
-data class Writer<V>(
+data class Writer<in V>(
 	val writeFn: (V) -> Writer<V>)
 
 fun <V> Writer<V>.write(value: V): Writer<V> =
@@ -12,20 +12,15 @@ fun <V> nullWriter(): Writer<V> =
 fun <V> printlnWriter(): Writer<V> =
 	Writer { println(it); printlnWriter() }
 
-fun <V> Writer<V>.write(stream: Stream<V>?) =
+fun <V> Writer<V>.write(stream: Stream<V>?): Writer<V> =
 	fold(stream, Writer<V>::write)
 
 fun <A, B> Writer<B>.map(fn: (A) -> B): Writer<A> =
 	Writer { write(fn(it)).map(fn) }
 
-val <V> Writer<V>.streamJoin: Writer<Stream<V>>
+val <V> Writer<V>.streamJoin: Writer<Stream<V>?>
 	get() =
-		Writer { stream ->
-			stream
-				.foldFirst { value -> write(value) }
-				.foldNext { value -> write(value) }
-				.streamJoin
-		}
+		Writer { stream -> write(stream).streamJoin }
 
 val Writer<Bit>.bitByteWriter: Writer<Byte>
 	get() =
@@ -60,4 +55,4 @@ fun <R, V> R.writerFold(fn: R.(V) -> R, writerFn: Writer<V>.() -> Unit): R {
 }
 
 fun <V> writeStackOrNull(fn: Writer<V>.() -> Unit): Stack<V>? =
-	nullStack<V>().writerFold(Stack<V>?::push, fn)
+	nullOf<Stack<V>>().writerFold(Stack<V>?::push, fn)

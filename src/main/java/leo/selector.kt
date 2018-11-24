@@ -17,79 +17,90 @@ fun Selector.then(word: Word) =
 fun selector(vararg words: Word) =
 	stackOrNull(*words).selector
 
+val Selector.wordStreamOrNull: Stream<Word>?
+	get() =
+		wordStackOrNull?.reverse?.stream
+
 fun Term<Nothing>.parseSelector(pattern: Term<Pattern>): Selector? =
 	parseSelectorToPattern(pattern)?.first
 
-fun Term<Nothing>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector, Term<Pattern>?>? =
-	if (this == thisWord.term) selector() to pattern
-	else structureTermOrNull?.run {
-		rhsTermOrNull?.let { term ->
-			term.parseSelectorToPattern(pattern)?.let { (selector, pattern) ->
-				pattern?.select(word)?.let { argumentValue ->
-					selector.then(word) to argumentValue.value
-				}
+fun Term<Nothing>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector, Term<Pattern>>? =
+	matchWord(thisWord) {
+		selector() to pattern
+	} ?: onlyFieldOrNull?.run {
+		value.parseSelectorToPattern(pattern)?.let { (selector, pattern) ->
+			pattern.select(key)?.let { argumentValue ->
+				selector.then(key) to argumentValue
 			}
 		}
 	}
 
 // === apply
 
-fun Term<Selector>?.apply(argumentOrNull: Term<Nothing>?): Term<Nothing>? =
-	if (this == null) null
-	else invoke(argumentOrNull)!!.value
+fun Term<Selector>.apply(argument: Term<Nothing>): Term<Nothing> =
+	invoke(argument)!!
 
 // === invoke
 
-fun <V> Selector.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
-	argumentTermOrNull.the.orNull.fold(wordStackOrNull?.reverse?.stream) { word ->
-		this?.value?.select(word)
+fun <V> Selector.invoke(argumentTerm: Term<V>): Term<V>? =
+	argumentTerm.orNull.fold(wordStreamOrNull) { word ->
+		this?.select(word)
 	}
 
-fun <V> Term<Selector>.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
+fun <V> Term<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
 	when (this) {
-		is Term.Meta -> this.invoke(argumentTermOrNull)
-		is Term.Structure -> this.invoke(argumentTermOrNull)
+		is MetaTerm -> this.invoke(argumentTerm)
+		is WordTerm -> this.invoke()
+		is FieldsTerm -> this.invoke(argumentTerm)
 	}
 
-fun <V> Term.Meta<Selector>.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
-	value.invoke(argumentTermOrNull)
+fun <V> MetaTerm<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
+	value.invoke(argumentTerm)
 
-fun <V> Term.Structure<Selector>.invoke(argumentTermOrNull: Term<V>?): The<Term<V>?>? =
-	fieldStream
-		.reverse
-		.foldFirst { field -> field.invoke(argumentTermOrNull)?.onlyStack }
-		.foldNext { field ->
-			field.invoke(argumentTermOrNull)?.let { invokedField ->
-				push(invokedField)
+fun <V> WordTerm<Selector>.invoke(): Term<V>? =
+	word.term()
+
+fun <V> FieldsTerm<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
+	fieldStream.run {
+		first.invoke(argumentTerm)?.onlyTerm.fold(nextOrNull) { field ->
+			field.invoke(argumentTerm)?.let { invokedField ->
+				this?.push(invokedField)
 			}
 		}
-		?.term
-		?.the
+	}
 
-fun <V> Field<Selector>.invoke(argumentTermOrNull: Term<V>?): Field<V>? =
-	if (termOrNull == null) word.field
-	else termOrNull.invoke(argumentTermOrNull)?.let { theValue ->
-		word.fieldTo(theValue.value)
+fun <V> Field<Selector>.invoke(argumentTerm: Term<V>): Field<V>? =
+	value.invoke(argumentTerm)?.let { invokedTerm ->
+		key fieldTo invokedTerm
 	}
 
 // === parsing
 
 fun Term<Nothing>.parseSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
-	parseSelector(patternTerm)?.metaTerm
-		?: structureTermOrNull?.fieldStream?.reverse
-			?.foldFirst { field -> field.parseSelectorField(patternTerm).onlyStack }
-			?.foldNext { field -> push(field.parseSelectorField(patternTerm)) }
-			?.term ?: fail
+	parseSelector(patternTerm)?.metaTerm ?: parseNonSelectorTerm(patternTerm)
+
+fun Term<Nothing>.parseNonSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
+	when (this) {
+		is MetaTerm -> fail
+		is WordTerm -> parseNonSelectorTerm()
+		is FieldsTerm -> parseNonSelectorTerm(patternTerm)
+	}
+
+fun WordTerm<Nothing>.parseNonSelectorTerm(): Term<Selector> =
+	word.term
+
+fun FieldsTerm<Nothing>.parseNonSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
+	fieldStream.run {
+		first.parseSelectorField(patternTerm).term.fold(nextOrNull) { field ->
+			fieldsPush(field.parseSelectorField(patternTerm))
+		}
+	}
 
 fun Field<Nothing>.parseSelectorField(patternTerm: Term<Pattern>): Field<Selector> =
-	word fieldTo termOrNull?.parseSelectorTerm(patternTerm)
+	key fieldTo value.parseSelectorTerm(patternTerm)
 
 // === reflect
 
 val Selector.reflect: Field<Nothing>
 	get() =
-		selectorWord
-			.fieldTo(
-				wordStackOrNull
-					?.reflect(Word::reflect)
-					?: thisWord.term)
+		selectorWord.fieldTo(wordStreamOrNull?.reflect(Word::reflect) ?: thisWord.term)

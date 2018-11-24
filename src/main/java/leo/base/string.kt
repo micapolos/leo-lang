@@ -15,7 +15,7 @@ val String.byteStreamOrNull: Stream<Byte>?
 
 val String.bitStreamOrNull: Stream<Bit>?
 	get() =
-		byteStreamOrNull?.mapNotNull(Byte::bitStream)?.join
+		byteStreamOrNull?.map(Byte::bitStream)?.join
 
 val Stream<Byte>?.utf8string: String
 	get() =
@@ -25,6 +25,9 @@ val Stream<Byte>?.utf8string: String
 			}
 		}
 
-val Stream<Bit>?.utf8String
+val Stream<Bit>.utf8String
 	get() =
-		this?.bitByteStreamOrNull.utf8string
+		bitByteStreamOrNull?.utf8string
+
+fun <R> R.fold(charSequence: CharSequence, fn: R.(Char) -> R): R =
+	charSequence.fold(this, fn)

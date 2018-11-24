@@ -12,8 +12,8 @@ class ScopeTest {
 		Scope(
 			nameToStringFunction!!,
 			term(
-				ageWord.field,
-				isWord fieldTo term(numberWord.field)))
+				itWord fieldTo ageWord.term,
+				isWord fieldTo numberWord.term))
 			.evaluate
 			.assertEqualTo(
 				Scope(
@@ -22,25 +22,6 @@ class ScopeTest {
 							ageWord.term(),
 							body(
 								numberWord.term,
-								nameToStringFunction))!!,
-					null))
-	}
-
-	@Test
-	fun evaluate_defineEmpty() {
-		Scope(
-			nameToStringFunction!!,
-			term(
-				ageWord.field,
-				isWord.field))
-			.evaluate
-			.assertEqualTo(
-				Scope(
-					nameToStringFunction
-						.define(
-							ageWord.term(),
-							body(
-								null,
 								nameToStringFunction))!!,
 					null))
 	}
@@ -62,9 +43,9 @@ class ScopeTest {
 		Scope(
 			nameToStringFunction!!,
 			term(
+				nameWord fieldTo term(
 				nameWord fieldTo stringWord.term,
-				ageWord fieldTo numberWord.term,
-				nameWord.field))
+					ageWord fieldTo numberWord.term)))
 			.evaluate
 			.assertEqualTo(
 				Scope(

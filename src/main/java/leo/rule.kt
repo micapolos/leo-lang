@@ -13,33 +13,28 @@ infix fun Term<Pattern>.returns(body: Body) =
 	Rule(this, body)
 
 fun Term<Nothing>.parseRule(localFunction: Function): Rule? =
-	if (shortRuleSyntax) parseIs(localFunction)
-	else parseDefineItIs(localFunction)
+	parseItIsRule(localFunction)
 
-fun Term<Nothing>.parseDefineItIs(localFunction: Function): Rule? =
-	match(defineWord) { defineTerm ->
-		defineTerm?.match(itWord, isWord) { itTerm, isTerm ->
-			itTerm?.parsePatternTerm?.let { patternTerm ->
-				rule(patternTerm, body(isTerm?.parseSelectorTerm(patternTerm), localFunction))
-			}
-		}
+fun Term<Nothing>.parseDefineItIsRule(localFunction: Function): Rule? =
+	matchFieldKey(defineWord) {
+		parseItIsRule(localFunction)
 	}
 
-fun Term<Nothing>.parseIs(localFunction: Function): Rule? =
-	structureTermOrNull?.let { structureTerm ->
-		when {
-			structureTerm.lhsTermOrNull == null -> null
-			structureTerm.word != isWord -> null
-			else -> structureTerm.lhsTermOrNull.parsePatternTerm.let { patternTerm ->
-				rule(patternTerm, body(structureTerm.rhsTermOrNull?.parseSelectorTerm(patternTerm), localFunction))
-			}
+fun Term<Nothing>.parseItIsRule(localFunction: Function): Rule? =
+	matchFieldKeys(itWord, isWord) { itTerm, isTerm ->
+		itTerm.parsePatternTerm.let { patternTerm ->
+			rule(
+				patternTerm,
+				body(
+					isTerm.parseSelectorTerm(patternTerm),
+					localFunction))
 		}
 	}
 
 // === reflect
 
-//val Rule.reflect: Field<Nothing>
-//	get() =
-//		ruleWord fieldTo term(
-//			patternTerm.reflect(Pattern::reflect),
-//			body.reflect)
+val Rule.reflect: Field<Nothing>
+	get() =
+		ruleWord fieldTo term(
+			patternTerm.reflect(Pattern::reflect),
+			body.reflect)

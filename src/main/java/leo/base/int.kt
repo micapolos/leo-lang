@@ -1,5 +1,5 @@
 package leo.base
 
-val Int.clampedByte
+inline val Int.clampedByte
 	get() =
 		toByte()

@@ -3,48 +3,57 @@ package leo
 import leo.base.*
 
 sealed class Token<out V>
-data class MetaEndToken<V>(val value: V) : Token<V>()
-data class BeginToken<V>(val word: Word) : Token<V>()
+data class MetaToken<V>(val value: V) : Token<V>()
+data class WordToken<V>(val word: Word) : Token<V>()
+data class BeginToken<V>(val begin: Begin) : Token<V>()
 data class EndToken<V>(val end: End) : Token<V>()
 
-fun <V> Word.beginToken(): Token<V> =
+val <V> V.metaToken: Token<V>
+	get() =
+		MetaToken(this)
+
+fun <V> Word.token(): Token<V> =
+	WordToken(this)
+
+val Word.token: Token<Nothing>
+	get() =
+		token()
+
+fun <V> Begin.token(): Token<V> =
 	BeginToken(this)
+
+val Begin.token: Token<Nothing>
+	get() =
+		token()
 
 fun <V> End.token(): Token<V> =
 	EndToken(this)
 
-val <V> V.metaEndToken: Token<V>
-	get() =
-		MetaEndToken(this)
-
-val Word.beginToken: Token<Nothing>
-	get() =
-		beginToken()
-
 val End.token: Token<Nothing>
 	get() =
-		EndToken(this)
+		token()
 
 val Token<Nothing>.reflect: Field<Nothing>
 	get() =
-		tokenWord fieldTo term(
+		tokenWord fieldTo
 			when (this) {
-				is MetaEndToken -> fail
-				is BeginToken -> beginWord fieldTo word.reflect.termOrNull
-				is EndToken -> endWord.field
-			})
+				is MetaToken -> fail
+				is WordToken -> word.reflect.onlyTerm
+				is BeginToken -> beginWord.term
+				is EndToken -> endWord.term
+			}
 
 val Field<Nothing>.parseToken: Token<Nothing>?
 	get() =
-		match(tokenWord) { tokenTerm ->
-			when (tokenTerm) {
-				endWord.term -> end.token
-				else -> tokenTerm?.match(beginWord) { beginTerm ->
-					beginTerm?.onlyFieldOrNull?.let { field ->
-						if (field.termOrNull != null) null
-						else field.word.beginToken
-					}
+		matchKey(tokenWord) {
+			onlyFieldOrNull?.matchKey(wordWord) {
+				matchWord {
+					token
 				}
+			} ?: matchWord(beginWord) {
+				begin.token
+			} ?: matchWord(endWord) {
+				end.token
 			}
 		}
 
@@ -53,23 +62,23 @@ val Field<Nothing>.parseToken: Token<Nothing>?
 val Token<Nothing>.characterStream: Stream<Character>
 	get() =
 		when (this) {
-			is MetaEndToken -> fail
-			is BeginToken -> word.letterStream.map(Letter::character).then { begin.character.onlyStream }
+			is MetaToken -> fail
+			is WordToken -> word.letterStream.map(Letter::character)
+			is BeginToken -> begin.character.onlyStream
 			is EndToken -> end.character.onlyStream
 		}
 
 val Token<Nothing>.bitStream: Stream<Bit>
 	get() =
-		characterStream.map(Character::bitStream).join
+		characterStream.mapJoin(Character::bitStream)
 
-val Stream<Bit>?.bitParseToken: Parse<Bit, Token<Nothing>>?
+val Stream<Bit>.bitParseToken: Parse<Bit, Token<Nothing>>?
 	get() = null
 		?: bitParseWord.bind { word ->
-			bitParseBegin.bind {
-				parsed(word.beginToken)
-			}
-		}
-		?: bitParseEnd.bind { end ->
+			parsed(word.token)
+		} ?: bitParseBegin.bind { begin ->
+			parsed(begin.token)
+		} ?: bitParseEnd.bind { end ->
 			parsed(end.token)
 		}
 

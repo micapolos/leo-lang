@@ -8,7 +8,7 @@ class ClassLoaderTest {
 	@Test
 	fun useResourceAsBitStream() {
 		this::class.java.classLoader
-			.useResourceBitStream("test.txt") { utf8String }
+			.useResourceBitStreamOrNull("test.txt") { this?.utf8String }
 			.assertEqualTo("test")
 	}
 }

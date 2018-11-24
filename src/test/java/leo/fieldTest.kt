@@ -1,6 +1,5 @@
 package leo
 
-import leo.*
 import leo.base.assertEqualTo
 import leo.base.nullOf
 import leo.base.string
@@ -15,12 +14,22 @@ class FieldTest {
 	}
 
 	@Test
+	fun reflect() {
+		oneWord.fieldTo(Unit.metaTerm)
+			.reflect { reflect }
+			.assertEqualTo(
+				fieldWord fieldTo term(
+					oneWord fieldTo term(
+						metaWord fieldTo Unit.reflect.term)))
+	}
+
+	@Test
 	fun coreString() {
 		numberWord
 			.fieldTo(oneWord.term)
 			.term
 			.coreString
-			.assertEqualTo("number(one())")
+			.assertEqualTo("number(one)")
 	}
 
 	@Test

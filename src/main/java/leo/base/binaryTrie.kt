@@ -66,9 +66,8 @@ fun <V> BinaryTrie<V>.set(bit: Bit, matchOrNull: BinaryTrie.Match<V>?): BinaryTr
 
 // TODO: Make it tailrec, using accumulator
 fun <V> BinaryTrie<V>.set(bitStream: Stream<Bit>, value: V): BinaryTrie<V> {
-	val nextBitStreamOrNull: Stream<Bit>? = bitStream.nextOrNull
-	return if (nextBitStreamOrNull == null)
-		set(bitStream.first, value.binaryTrieFullMatch)
+	val nextBitStreamOrNull = bitStream.nextOrNull
+	return if (nextBitStreamOrNull == null) set(bitStream.first, value.binaryTrieFullMatch)
 	else {
 		val currentMatch = get(bitStream.first)
 		val nextTrie =

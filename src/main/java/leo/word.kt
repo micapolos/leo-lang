@@ -5,13 +5,6 @@ import leo.base.*
 data class Word(
 	val letterStack: Stack<Letter>) {
 	override fun toString() = appendableString { it.append(this) }
-
-	sealed class Reader {
-		object Empty : Reader()
-		data class Full(
-			val word: Word
-		) : Reader()
-	}
 }
 
 val Stack<Letter>.word
@@ -22,14 +15,20 @@ val Letter.onlyWord
 	get() =
 		onlyStack.word
 
-operator fun Word?.plus(letter: Letter) =
-	this?.letterStack.push(letter).word
+fun Word.plus(letter: Letter) =
+	letterStack.push(letter).word
+
+fun Word?.orNullPlus(letter: Letter) =
+	this?.plus(letter) ?: letter.onlyWord
 
 val String.wordOrNull: Word?
 	get() =
-		fold(emptyWordReader.orNull) { readerOrNull, char ->
-			readerOrNull?.plus(char)
-		}?.fullOrNull?.word
+		if (isEmpty()) null
+		else get(0).letterOrNull?.onlyWord?.orNull.fold(substring(1)) { char ->
+			char.letterOrNull?.let { letter ->
+				this?.plus(letter)
+			}
+		}
 
 fun <R> R.foldLetters(word: Word, fn: R.(Letter) -> R) =
 	fold(word.letterStack.reverse.stream, fn)
@@ -38,31 +37,6 @@ fun <R> R.foldLetters(word: Word, fn: R.(Letter) -> R) =
 
 fun Appendable.append(word: Word): Appendable =
 	foldLetters(word, Appendable::append)
-
-// === reader
-
-val emptyWordReader: Word.Reader =
-	Word.Reader.Empty
-
-fun Word.Reader.plus(char: Char) =
-	when (this) {
-		is Word.Reader.Empty -> wordReader(char)
-		is Word.Reader.Full -> plus(char)
-	}
-
-fun wordReader(char: Char) =
-	char.letterOrNull?.let { letter ->
-		Word.Reader.Full(letter.onlyStack.word)
-	}
-
-fun Word.Reader.Full.plus(char: Char) =
-	char.letterOrNull?.let { letter ->
-		Word.Reader.Full(word + letter)
-	}
-
-val Word.Reader.fullOrNull: Word.Reader.Full?
-	get() =
-		this as? Word.Reader.Full
 
 // === folding bytes
 
@@ -76,7 +50,7 @@ val Word.byteStream: Stream<Byte>
 
 val Word.bitStream: Stream<Bit>
 	get() =
-		letterStream.map(Letter::bitStream).join
+		letterStream.mapJoin(Letter::bitStream)
 
 val Word.reflect: Field<Nothing>
 	get() =
@@ -84,20 +58,19 @@ val Word.reflect: Field<Nothing>
 
 val Field<Nothing>.parseWord: Word?
 	get() =
-		match(wordWord) { wordTermOrNull ->
-			wordTermOrNull?.onlyFieldOrNull?.let { field ->
-				if (field.termOrNull != null) null
-				else field.word
+		matchKey(wordWord) {
+			matchWord {
+				this
 			}
 		}
 
-val Stream<Bit>?.bitParseWord: Parse<Bit, Word>?
+val Stream<Bit>.bitParseWord: Parse<Bit, Word>?
 	get() =
 		bitParseLetter?.map { letter -> letter.onlyWord }?.bitParseWord
 
 val Parse<Bit, Word>.bitParseWord: Parse<Bit, Word>
 	get() =
-		streamOrNull.bitParseLetter?.map { letter -> parsed.plus(letter) }?.bitParseWord ?: this
+		streamOrNull?.bitParseLetter?.map { letter -> parsed.plus(letter) }?.bitParseWord ?: this
 
 // === words ===
 
@@ -138,6 +111,7 @@ val functionWord = "function".wordOrNull!!
 val identifierWord = "identifier".wordOrNull!!
 val identityWord = "identity".wordOrNull!!
 val importWord = "import".wordOrNull!!
+val invokedWord = "invoked".wordOrNull!!
 val ioWord = "io".wordOrNull!!
 val isWord = "is".wordOrNull!!
 val itWord = "it".wordOrNull!!
@@ -190,6 +164,7 @@ val tokenWord = "token".wordOrNull!!
 val topWord = "top".wordOrNull!!
 val trueWord = "true".wordOrNull!!
 val twoWord = "two".wordOrNull!!
+val unitWord = "unit".wordOrNull!!
 val unquoteWord = "unquote".wordOrNull!!
 val utfWord = "utf".wordOrNull!!
 val valueWord = "value".wordOrNull!!

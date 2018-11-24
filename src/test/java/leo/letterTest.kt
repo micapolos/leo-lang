@@ -22,9 +22,16 @@ class LetterTest {
 
 	@Test
 	fun parse() {
+		letterWord.fieldTo(aWord.term)
+			.parseLetter
+			.assertEqualTo(Letter.A)
+	}
+
+	@Test
+	fun parseBitStream() {
 		Letter.A
 			.bitStream
-			.then(Bit.ZERO.onlyStream)
+			.then { Bit.ZERO.onlyStream }
 			.bitParseLetter
 			.assertParsedAndRest(Letter.A, Bit.ZERO.onlyStream)
 	}

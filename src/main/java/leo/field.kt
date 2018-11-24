@@ -3,60 +3,59 @@ package leo
 import leo.base.*
 
 data class Field<out V>(
-	val word: Word,
-	val termOrNull: Term<V>?) {
+	val key: Word,
+	val value: Term<V>) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-infix fun <V> Word.fieldTo(termOrNull: Term<V>?) =
-	Field(this, termOrNull)
+infix fun <V> Word.fieldTo(term: Term<V>) =
+	Field(this, term)
 
-fun <V> Word.field(): Field<V> =
-	fieldTo(null)
-
-val Word.field: Field<Nothing>
+val Word.itField: Field<Nothing>
 	get() =
-		field()
+		itWord fieldTo term
 
-fun <V> Field<V>.get(key: Word): The<Term<V>?>? =
-	if (this.word == key) termOrNull.the else null
+val <V> Term<V>.itField: Field<V>
+	get() =
+		itWord fieldTo this
+
+fun <V> Field<V>.get(key: Word): Term<V>? =
+	if (this.key == key) value else null
 
 // === appendable
 
 fun <V> Appendable.append(field: Field<V>): Appendable =
 	this
-		.appendString(field.word)
-		.let { appendable ->
+		.appendString(field.key)
+		.run {
 			when {
-				field.termOrNull == null -> appendable
-				field.termOrNull.isSimple -> append(' ').append(field.termOrNull)
-				else -> append('(').append(field.termOrNull).append(')')
+				field.value.isSimple -> append(' ').append(field.value)
+				else -> append('(').append(field.value).append(')')
 			}
 		}
 
 // === bit stream
 
-val Field<Nothing>.tokenStream: Stream<Token<Nothing>>
+val <V> Field<V>.tokenStream: Stream<Token<V>>
 	get() =
-		word.beginToken.onlyStream
-			.then { termOrNull?.tokenStream }
-			.then { end.token.onlyStream }
-
-val <V> Field<V>.reversedTokenStream: Stream<Token<V>>
-	get() =
-		end.token<V>().onlyStream
-			.then { termOrNull?.reversedTokenStream }
-			.then { word.beginToken<V>().onlyStream }
+		key.token.then {
+			begin.token.then {
+				value.tokenStream.then {
+					end.token.onlyStream
+				}
+			}
+		}
 
 // === reflect
 
-fun <V> Field<V>.reflect(metaReflect: V.() -> Field<Nothing>): Field<Nothing> =
-	fieldWord fieldTo term(
-		word.reflect,
-		termOrNull.orNullReflect(termWord) { reflect(metaReflect) })
+fun <V> Field<V>.reflectMeta(metaValueReflect: V.() -> Field<Nothing>): Field<Nothing> =
+	key fieldTo value.reflectMeta(metaValueReflect)
 
 fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Nothing>): Field<Nothing> =
 	this?.let(reflect) ?: word.fieldTo(nullWord.term())
+
+fun <V> Field<V>.reflect(metaValueReflect: V.() -> Field<Nothing>): Field<Nothing> =
+	fieldWord fieldTo term(reflectMeta(metaValueReflect))
 
 val Field<Nothing>.reflect: Field<Nothing>
 	get() =
@@ -66,23 +65,22 @@ val Field<Nothing>.reflect: Field<Nothing>
 
 val Field<Nothing>.parseField: Field<Nothing>?
 	get() =
-		match(fieldWord) { fieldTermOrNull ->
-			fieldTermOrNull?.match(wordWord, termWord) { wordTermOrNull, termTermOrNull ->
-				wordWord.fieldTo(wordTermOrNull).parseWord?.let { word ->
-					termWord.fieldTo(termTermOrNull).parseTheTerm?.let { theTerm ->
-						word fieldTo theTerm.value
-					}
-				}
-			}
+		matchKey(fieldWord) {
+			onlyFieldOrNull?.parseFieldMeta { fail }
 		}
+
+fun <V> Field<Nothing>.parseFieldMeta(parseMetaValue: (Field<Nothing>) -> V?): Field<V>? =
+	value.parseTermMeta(parseMetaValue)?.let { parsedTerm ->
+		key fieldTo parsedTerm
+	}
 
 // === map
 
 fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
-	word fieldTo termOrNull?.map(fn)
+	key fieldTo value.map(fn)
 
 // === match
 
-fun <V, R> Field<V>.match(key: Word, fn: (Term<V>?) -> R): R? =
-	if (word == key) fn(termOrNull)
+fun <V, R : Any> Field<V>.matchKey(key: Word, fn: Term<V>.() -> R?): R? =
+	if (this.key == key) fn(value)
 	else null

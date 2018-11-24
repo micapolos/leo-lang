@@ -55,7 +55,7 @@ class CharacterTest {
 	fun bitParseCharacter_begin() {
 		begin.character
 			.bitStream
-			.then(Bit.ZERO.onlyStream)
+			.then { Bit.ZERO.onlyStream }
 			.bitParseCharacter
 			.assertParsedAndRest(begin.character, Bit.ZERO.onlyStream)
 	}
@@ -64,7 +64,7 @@ class CharacterTest {
 	fun bitParseCharacter_end() {
 		end.character
 			.bitStream
-			.then(Bit.ZERO.onlyStream)
+			.then { Bit.ZERO.onlyStream }
 			.bitParseCharacter
 			.assertParsedAndRest(end.character, Bit.ZERO.onlyStream)
 	}
@@ -73,7 +73,7 @@ class CharacterTest {
 	fun bitParseCharacter_letter() {
 		Letter.A.character
 			.bitStream
-			.then(Bit.ZERO.onlyStream)
+			.then { Bit.ZERO.onlyStream }
 			.bitParseCharacter
 			.assertParsedAndRest(Letter.A.character, Bit.ZERO.onlyStream)
 	}

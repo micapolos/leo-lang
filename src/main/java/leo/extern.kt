@@ -1,10 +1,7 @@
 package leo
 
-import leo.base.The
-import leo.base.the
-
-val Term<Nothing>.invokeExtern: The<Term<Nothing>?>?
-	get() = the
+val Term<Nothing>.invokeExtern: Term<Nothing>?
+	get() = null
 //		onlyFieldOrNull?.parseImport?.let { import ->
 //			emptyBitReader
 //				.orNull

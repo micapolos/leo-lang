@@ -5,13 +5,19 @@ import org.junit.Test
 
 class TokenTest {
 	@Test
-	fun reflect_begin() {
-		oneWord.beginToken
+	fun reflect_word() {
+		oneWord.token
 			.reflect
 			.assertEqualTo(
-				tokenWord fieldTo term(
-					beginWord fieldTo term(
-						oneWord.field)))
+				tokenWord fieldTo oneWord.reflect.term)
+	}
+
+	@Test
+	fun reflect_begin() {
+		begin.token
+			.reflect
+			.assertEqualTo(
+				tokenWord fieldTo beginWord.term)
 	}
 
 	@Test
@@ -19,17 +25,22 @@ class TokenTest {
 		end.token
 			.reflect
 			.assertEqualTo(
-				tokenWord fieldTo term(
-					endWord.field))
+				tokenWord fieldTo endWord.term)
+	}
+
+	@Test
+	fun parse_word() {
+		(tokenWord fieldTo term(
+			wordWord fieldTo oneWord.term))
+			.parseToken
+			.assertEqualTo(oneWord.token)
 	}
 
 	@Test
 	fun parse_begin() {
-		(tokenWord fieldTo term(
-			beginWord fieldTo term(
-				oneWord.field)))
+		(tokenWord fieldTo beginWord.term)
 			.parseToken
-			.assertEqualTo(oneWord.beginToken)
+			.assertEqualTo(begin.token)
 	}
 
 	@Test
@@ -40,19 +51,28 @@ class TokenTest {
 	}
 
 	@Test
-	fun bitParseToken_begin() {
-		oneWord.beginToken
+	fun bitParseToken_word() {
+		oneWord.token
 			.bitStream
-			.then(Bit.ZERO.onlyStream)
+			.then { Bit.ZERO.onlyStream }
 			.bitParseToken
-			.assertParsedAndRest(oneWord.beginToken, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(oneWord.token, Bit.ZERO.onlyStream)
+	}
+
+	@Test
+	fun bitParseToken_begin() {
+		begin.token
+			.bitStream
+			.then { Bit.ZERO.onlyStream }
+			.bitParseToken
+			.assertParsedAndRest(begin.token, Bit.ZERO.onlyStream)
 	}
 
 	@Test
 	fun bitParseToken_end() {
 		end.token
 			.bitStream
-			.then(Bit.ZERO.onlyStream)
+			.then { Bit.ZERO.onlyStream }
 			.bitParseToken
 			.assertParsedAndRest(end.token, Bit.ZERO.onlyStream)
 	}

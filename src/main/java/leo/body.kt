@@ -1,20 +1,24 @@
 package leo
 
+import leo.base.string
+
 // TODO: What about recursion?
 data class Body(
-	val selectorTermOrNull: Term<Selector>?,
-	val function: Function)
+	val selectorTerm: Term<Selector>,
+	val function: Function) {
+	override fun toString() = reflect.string
+}
 
-fun body(selectorTermOrNull: Term<Selector>?, function: Function) =
-	Body(selectorTermOrNull, function)
+fun body(selectorTerm: Term<Selector>, function: Function) =
+	Body(selectorTerm, function)
 
-fun Body.apply(argument: Term<Nothing>): Term<Nothing>? =
-	selectorTermOrNull?.apply(argument)?.let { selectedTerm ->
+fun Body.apply(argument: Term<Nothing>): Term<Nothing> =
+	selectorTerm.apply(argument).let { selectedTerm ->
 		function.invoke(selectedTerm)
 	}
 
-//val Body.reflect: Field<Nothing>
-//	get() =
-//		bodyWord fieldTo term(
-//			selectorTerm.reflect(Selector::reflect),
-//			function.reflect)
+val Body.reflect: Field<Nothing>
+	get() =
+		bodyWord fieldTo term(
+			selectorTerm.reflect(Selector::reflect),
+			function.reflect)

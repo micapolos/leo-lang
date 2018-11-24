@@ -20,10 +20,9 @@ class RuleTest {
 	@Test
 	fun parse_withoutSelector() {
 		term(
-			defineWord fieldTo term(
-				itWord fieldTo oneWord.term,
-				isWord fieldTo numberWord.term))
-			.parseDefineItIs(emptyFunction)
+			itWord fieldTo oneWord.term,
+			isWord fieldTo numberWord.term)
+			.parseItIsRule(emptyFunction)
 			.assertEqualTo(
 				rule(oneWord.term(), body(numberWord.term(), emptyFunction)))
 	}
@@ -31,10 +30,9 @@ class RuleTest {
 	@Test
 	fun parse_withSelector() {
 		term(
-			defineWord fieldTo term(
-				itWord fieldTo oneWord.term,
-				isWord fieldTo thisWord.term))
-			.parseDefineItIs(emptyFunction)
+			itWord fieldTo oneWord.term,
+			isWord fieldTo thisWord.term)
+			.parseItIsRule(emptyFunction)
 			.assertEqualTo(
 				rule(oneWord.term(), body(selector().metaTerm, emptyFunction)))
 	}

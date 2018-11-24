@@ -26,17 +26,17 @@ class StackTest {
 
 	@Test
 	fun only_hasOne() {
-		stack(1).theOnlyOrNull.assertEqualTo(1.the)
+		stack(1).onlyOrNull.assertEqualTo(1)
 	}
 
 	@Test
 	fun only_hasMany() {
-		stack(1, 2).theOnlyOrNull.assertEqualTo(null)
+		stack(1, 2).onlyOrNull.assertEqualTo(null)
 	}
 
 	@Test
 	fun fold_null() {
-		"".fold(nullStack<Int>(), String::plus)
+		"".fold(nullOf<Stack<Int>>(), String::plus)
 			.assertEqualTo("")
 	}
 
@@ -47,17 +47,26 @@ class StackTest {
 	}
 
 	@Test
-	fun foldTopAndPop() {
-		stack(1, 2, 3)
-			.foldTop { it.toString() }
-			.foldPop(String::plus)
-			.assertEqualTo("321")
-	}
-
-	@Test
 	fun map() {
 		stack(1, 2, 3)
 			.map(Int::toString)
 			.assertEqualTo(stack("1", "2", "3"))
+	}
+
+	@Test
+	fun mapOrNull_notNull() {
+		stack(1, 2, 3)
+			.mapOrNull(Int::toString)
+			.assertEqualTo(stack("1", "2", "3"))
+	}
+
+
+	@Test
+	fun mapOrNull_null() {
+		stack(1, 2, 3)
+			.mapOrNull { int ->
+				if (int == 3) null else int.toString()
+			}
+			.assertEqualTo(null)
 	}
 }

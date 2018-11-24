@@ -10,7 +10,7 @@ class WriterTest {
 
 	@Test
 	fun stackWriter() {
-		nullStack<Int>()
+		nullOf<Stack<Int>>()
 			.writerFold(Stack<Int>?::push) { write(1).write(2) }
 			.assertEqualTo(stack(1, 2))
 	}

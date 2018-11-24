@@ -14,6 +14,10 @@ val Stack<Term<Pattern>>.oneOf
 fun pattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>): Pattern =
 	stack(patternTerm, *patternTerms).oneOf
 
+val Pattern.patternTermStream: Stream<Term<Pattern>>
+	get() =
+		patternTermStack.reverse.stream
+
 // === matching
 
 fun Term<Nothing>.matches(pattern: Pattern): Boolean =
@@ -23,64 +27,69 @@ fun Term<Nothing>.matches(pattern: Pattern): Boolean =
 
 fun Term<Nothing>.matches(patternTerm: Term<Pattern>): Boolean =
 	when (patternTerm) {
-		is Term.Meta -> matches(patternTerm)
-		is Term.Structure -> this is Term.Structure && this.matches(patternTerm)
+		is MetaTerm -> this.matches(patternTerm)
+		is WordTerm -> this is WordTerm && this.matches(patternTerm)
+		is FieldsTerm -> this is FieldsTerm && this.matches(patternTerm)
 	}
 
-fun Term<Nothing>.matches(patternMetaTerm: Term.Meta<Pattern>): Boolean =
+fun Term<Nothing>.matches(patternMetaTerm: MetaTerm<Pattern>): Boolean =
 	matches(patternMetaTerm.value)
 
-fun Term.Structure<Nothing>.matches(patternStructureTerm: Term.Structure<Pattern>): Boolean =
-	topField.matches(patternStructureTerm.topField) &&
-		if (lhsTermOrNull == null) patternStructureTerm.lhsTermOrNull == null
-		else patternStructureTerm.lhsTermOrNull != null &&
-			lhsTermOrNull.matches(patternStructureTerm.lhsTermOrNull)
+fun WordTerm<Nothing>.matches(patternWordTerm: WordTerm<Pattern>): Boolean =
+	word == patternWordTerm.word
+
+fun FieldsTerm<Nothing>.matches(patternFieldsTerm: FieldsTerm<Pattern>): Boolean =
+	fieldStack.top.matches(patternFieldsTerm.fieldStack.top) &&
+		if (fieldStack.pop == null) patternFieldsTerm.fieldStack.pop == null
+		else patternFieldsTerm.fieldStack.pop != null &&
+			fieldStack.pop.fieldsTerm.matches(patternFieldsTerm.fieldStack.pop.fieldsTerm)
 
 fun Field<Nothing>.matches(patternField: Field<Pattern>) =
-	word == patternField.word &&
-		if (termOrNull == null) patternField.termOrNull == null
-		else patternField.termOrNull != null && termOrNull.matches(patternField.termOrNull)
+	key == patternField.key && value.matches(patternField.value)
 
 // === parsing
 
 val Term<Nothing>.parsePattern: Pattern?
 	get() =
-		structureTermOrNull?.run {
-			true.fold(fieldStream) { field ->
-				this && field.word == eitherWord && field.termOrNull != null
-			}.let { isOneOf ->
-				if (!isOneOf) null
-				else fieldStream
-					.reverse
-					.foldFirst { field -> field.termOrNull!!.parsePatternTerm.onlyStack }
-					.foldNext { field -> push(field.termOrNull!!.parsePatternTerm) }
-					.oneOf
+		fieldsTermOrNull
+			?.run {
+				true.fold(fieldStream) { field ->
+					this && field.key == eitherWord
+				}.let { isOneOf ->
+					if (!isOneOf) null
+					else fieldStream.run {
+						first.value.parsePatternTerm.onlyStack.fold(nextOrNull) { field ->
+							push(field.value.parsePatternTerm)
+						}.oneOf
+					}
+				}
 			}
-		}
+
 
 val Term<Nothing>.parsePatternTerm: Term<Pattern>
 	get() =
 		when (this) {
-			is Term.Meta -> fail
-			is Term.Structure -> parsePattern?.metaTerm ?: parseStructurePatternTerm
+			is MetaTerm -> fail
+			is WordTerm -> word.term
+			is FieldsTerm -> parsePattern?.metaTerm ?: parseStructurePatternTerm
 		}
 
-val Term.Structure<Nothing>.parseStructurePatternTerm: Term<Pattern>
+val FieldsTerm<Nothing>.parseStructurePatternTerm: Term<Pattern>
 	get() =
-		fieldStream
-			.reverse
-			.foldFirst { field -> field.parsePatternField.onlyStack }
-			.foldNext { field -> push(field.parsePatternField) }
-			.term
+		fieldStream.run {
+			first.parsePatternField.term.fold(nextOrNull) { field ->
+				fieldsPush(field.parsePatternField)
+			}
+		}
 
 val Field<Nothing>.parsePatternField: Field<Pattern>
 	get() =
-		word fieldTo termOrNull?.parsePatternTerm
+		key fieldTo value.parsePatternTerm
 
 // === reflect
 
 val Pattern.reflect: Field<Nothing>
 	get() =
-		patternWord fieldTo patternTermStack.reflect { patternTerm ->
-			patternTerm.reflect(Pattern::reflect)
+		patternWord fieldTo patternTermStream.reflect {
+			reflect(Pattern::reflect)
 		}

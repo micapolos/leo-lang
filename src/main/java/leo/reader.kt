@@ -12,10 +12,10 @@ fun <V> Reader<V>.read(value: V): Reader<V>? =
 	if (!readerEnabled) readPreprocessed(value)
 	else this
 		.termPush(leoWord fieldTo term(readWord fieldTo term(reflectFn(value))))
-		.termInvoke(value)
+		?.termInvoke(value)
 
-fun <V> Reader<V>.termPush(field: Field<Nothing>): Reader<V> =
-	copy(termOrNull = termOrNull.push(field))
+fun <V> Reader<V>.termPush(field: Field<Nothing>): Reader<V>? =
+	termOrNull?.run { push(field) }?.let { copy(termOrNull = it) }
 
 // TODO: This applyFn() should be incremental, to avoid quadratic cost.
 fun <V> Reader<V>.termInvoke(value: V): Reader<V>? =
@@ -38,21 +38,23 @@ fun <V> Reader<V>.termInvoke(value: V): Reader<V>? =
 
 val <V> Reader<V>.termParse: Reader<V>?
 	get() =
-		copy(termOrNull = null).orNull
-			.fold(termOrNull?.fieldStreamOrNull?.reverse) { field ->
-				if (this == null) null
-				else if (termOrNull != null) termPush(field)
-				else field.match(leoWord) { leoTermOrNull ->
-					leoTermOrNull?.match(readWord) { readTermOrNull ->
-						readTermOrNull?.onlyFieldOrNull?.let { readField ->
-							parseFn(readField).let { valueOrNull ->
-								if (valueOrNull == null) termPush(leoWord fieldTo term(readWord fieldTo term(field)))
-								else readPreprocessed(valueOrNull)
+		termOrNull?.fieldsTermOrNull?.fieldStream?.let { fieldStream ->
+			copy(termOrNull = null).orNull
+				.fold(fieldStream) { field ->
+					if (this == null) null
+					else if (termOrNull != null) termPush(field)
+					else field.matchKey(leoWord) {
+						matchFieldKey(readWord) {
+							onlyFieldOrNull?.let { readField ->
+								parseFn(readField).let { valueOrNull ->
+									if (valueOrNull == null) termPush(leoWord fieldTo term(readWord fieldTo term(field)))
+									else readPreprocessed(valueOrNull)
+								}
 							}
 						}
 					}
 				}
-			}
+		}
 
 fun <V> Reader<V>.readPreprocessed(value: V): Reader<V>? =
 	evaluator.evaluateFn(value)?.let { evaluator ->
@@ -102,9 +104,9 @@ val emptyFieldReader: Reader<Field<Nothing>>
 			Field<Nothing>::reflect,
 			TODO())
 
-val emptyTermReader: Reader<The<Term<Nothing>?>>
+val emptyTermReader: Reader<Term<Nothing>>
 	get() =
 		Reader(
-			Field<Nothing>::parseTheTerm,
-			The<Term<Nothing>?>::reflectTerm,
+			Field<Nothing>::parseTerm,
+			Term<Nothing>::reflect,
 			TODO())

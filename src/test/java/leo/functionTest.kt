@@ -4,107 +4,99 @@ import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class FunctionTest {
-	private val testBody = body(term(theWord fieldTo selector().metaTerm), emptyFunction)
+	private val testBody = body(term(invokedWord fieldTo selector().metaTerm), emptyFunction)
 
 	private fun Function.testDefine(term: Term<Pattern>): Function? =
 		define(term, testBody)
 
 	private fun Function.assertInvokesBody(argument: Term<Nothing>) =
-		invoke(argument).assertEqualTo(term(theWord fieldTo argument))
+		invoke(argument).assertEqualTo(term(invokedWord fieldTo argument))
 
 	private fun Function.assertDoesNotInvokeBody(argument: Term<Nothing>) =
 		invoke(argument).assertEqualTo(argument)
 
 	@Test
-	fun defineEmptyAndInvoke() {
-		emptyFunction
-			.define(aWord.term(), body(null, emptyFunction))!!
-			.invoke(aWord.term)
-			.assertEqualTo(null)
-	}
-
-	@Test
 	fun defineSimpleAndInvoke_match() {
 		emptyFunction
-			.testDefine(aWord.term())!!
+			.testDefine(aWord.term)!!
 			.assertInvokesBody(aWord.term)
 	}
 
 	@Test
 	fun defineSimpleAndInvoke_mismatch() {
 		emptyFunction
-			.testDefine(aWord.term())!!
+			.testDefine(aWord.term)!!
 			.assertDoesNotInvokeBody(bWord.term)
 	}
 
 	@Test
 	fun defineTwo_getFirst() {
 		emptyFunction
-			.testDefine(ageWord.term())!!
-			.testDefine(nameWord.term())!!
+			.testDefine(ageWord.term)!!
+			.testDefine(nameWord.term)!!
 			.assertInvokesBody(ageWord.term)
 	}
 
 	@Test
 	fun defineTwo_getSecond() {
 		emptyFunction
-			.testDefine(ageWord.term())!!
-			.testDefine(nameWord.term())!!
+			.testDefine(ageWord.term)!!
+			.testDefine(nameWord.term)!!
 			.assertInvokesBody(nameWord.term)
 	}
 
 	@Test
 	fun defineCommonPrefix_getFirst() {
 		emptyFunction
-			.testDefine(bodyWord.term())!!
-			.testDefine(booleanWord.term())!!
+			.testDefine(bodyWord.term)!!
+			.testDefine(booleanWord.term)!!
 			.assertInvokesBody(bodyWord.term)
 	}
 
 	@Test
 	fun defineCommonPrefix_getSecond() {
 		emptyFunction
-			.testDefine(bodyWord.term())!!
-			.testDefine(booleanWord.term())!!
+			.testDefine(bodyWord.term)!!
+			.testDefine(booleanWord.term)!!
 			.assertInvokesBody(booleanWord.term)
 	}
 
 	@Test
 	fun redefineSame() {
 		emptyFunction
-			.testDefine(aWord.term())!!
-			.testDefine(aWord.term())
+			.testDefine(aWord.term)!!
+			.testDefine(aWord.term)
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun redefineLonger() {
 		emptyFunction
-			.testDefine(term(aWord.field))!!
-			.testDefine(term(aWord.field, bWord.field))
+			.testDefine(term(aWord.itField))!!
+			.testDefine(term(aWord.itField, bWord.itField))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun redefineShorter() {
 		emptyFunction
-			.testDefine(term(aWord.field, bWord.field))!!
-			.testDefine(term(aWord.field))
+			.testDefine(term(aWord.itField, bWord.itField))!!
+			.testDefine(term(aWord.itField))
 			.assertEqualTo(null)
 	}
 
 	@Test
-	fun defineWithoutAndWithRhs_invokeWithoutRhs() {
+	fun defineWordAndField_invokeWord() {
 		emptyFunction
-			.testDefine(term(aWord.field))!!
+			.testDefine(aWord.term)!!
 			.testDefine(term(aWord fieldTo bWord.term))!!
 			.assertInvokesBody(aWord.term)
 	}
 
 	@Test
-	fun defineWithoutAndWithRhs_invokeWithRhs() {
+	fun defineWordAndField_invokeField() {
 		emptyFunction
-			.testDefine(term(aWord.field))!!
+			.testDefine(aWord.term)!!
 			.testDefine(term(aWord fieldTo bWord.term))!!
 			.assertInvokesBody(term(aWord fieldTo bWord.term))
 	}

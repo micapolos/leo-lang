@@ -18,7 +18,7 @@ val beginBitStream
 	get() =
 		beginByte.bitStream
 
-val Stream<Bit>?.bitParseBegin: Parse<Bit, Begin>?
+val Stream<Bit>.bitParseBegin: Parse<Bit, Begin>?
 	get() =
 		bitParseByte?.let { bitParseByte ->
 			bitParseByte.parsed.beginOrNull?.let { begin ->

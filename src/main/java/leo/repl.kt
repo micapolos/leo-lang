@@ -31,5 +31,5 @@ fun runRepl(inputBitStream: Stream<Bit>?, outBitWriter: Writer<Bit>, errorBitWri
 	emptyRepl(errorBitWriter)
 		.fold(inputBitStream, Repl::read)
 		.bitStreamOrNull
-		?.let { bitStream -> outBitWriter.write(bitStream).write(newlineBitStream) }
+		.let { bitStream -> outBitWriter.write(bitStream).write(newlineBitStream) }
 }

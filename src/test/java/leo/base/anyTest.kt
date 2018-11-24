@@ -6,7 +6,7 @@ class AnyTest {
 	@Test
 	fun useResourceBitStream() {
 		this
-			.useSiblingResourceBitStream("any.txt") { utf8String }
+			.useSiblingResourceBitStreamOrNull("any.txt") { this?.utf8String }
 			.assertEqualTo("test")
 	}
 }

@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.assertEqualTo
-import leo.base.the
 import kotlin.test.Test
 
 class SelectorTest {
@@ -17,14 +16,14 @@ class SelectorTest {
 	fun invokeEmpty() {
 		selector()
 			.invoke(testTerm)
-			.assertEqualTo(testTerm.the)
+			.assertEqualTo(testTerm)
 	}
 
 	@Test
 	fun invokeSinglePattern() {
 		selector(oneWord)
 			.invoke(testTerm)
-			.assertEqualTo(1.metaTerm.the)
+			.assertEqualTo(1.metaTerm)
 	}
 
 	@Test
@@ -35,7 +34,7 @@ class SelectorTest {
 				term(
 					previousWord fieldTo term(
 						lastWord fieldTo 42.metaTerm),
-					lastWord fieldTo 44.metaTerm).the)
+					lastWord fieldTo 44.metaTerm))
 	}
 
 	@Test
@@ -49,7 +48,7 @@ class SelectorTest {
 	fun invokeDeep() {
 		selector(numberWord, lastWord)
 			.invoke(testTerm)
-			.assertEqualTo(200.metaTerm.the)
+			.assertEqualTo(200.metaTerm)
 	}
 
 	@Test
@@ -176,6 +175,6 @@ class SelectorTest {
 			.assertEqualTo(
 				term(
 					thisWord fieldTo 1.metaTerm,
-					timesWord fieldTo 2.metaTerm).the)
+					timesWord fieldTo 2.metaTerm))
 	}
 }

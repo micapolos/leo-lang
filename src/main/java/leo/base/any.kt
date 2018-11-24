@@ -1,9 +1,8 @@
 package leo.base
 
-import leo.java.lang.useResourceBitStream
+import leo.java.lang.useResourceBitStreamOrNull
 
-fun <V : Any> nullOf() =
-	null as V?
+fun <V : Any> nullOf(): V? = null
 
 val <V> V.orNull: V?
 	get() =
@@ -17,7 +16,7 @@ fun <V, R> R.ifNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
 	if (valueOrNull == null) this
 	else fn(valueOrNull)
 
-fun <V> V.ifNotNull(fn: V.() -> V?): V =
+fun <V : Any> V.ifNotNull(fn: V.() -> V?): V =
 	fn() ?: this
 
 val fail: Nothing
@@ -45,5 +44,8 @@ val Any?.string
 fun <V> identity(): (V) -> V =
 	{ it }
 
-fun <R> Any.useSiblingResourceBitStream(siblingName: String, fn: Stream<Bit>?.() -> R): R =
-	this::class.java.useResourceBitStream(siblingName, fn)
+fun <R> Any.useSiblingResourceBitStreamOrNull(siblingName: String, fn: Stream<Bit>?.() -> R): R =
+	this::class.java.useResourceBitStreamOrNull(siblingName, fn)
+
+fun <V : Any, R : Any> V?.matchNull(fn: () -> R?): R? =
+	if (this == null) fn() else null

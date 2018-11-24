@@ -4,24 +4,16 @@ data class Stack<out V>(
 	val pop: Stack<V>?,
 	val top: V) {
 	override fun toString() = appendableString { it.append(this) }
-
-	data class FoldedTop<V, R>(
-		val foldedTop: R,
-		val pop: Stack<V>?
-	)
 }
-
-fun <V> nullStack() =
-	null as Stack<V>?
 
 val <V> V.onlyStack
 	get() =
 		Stack(null, this)
 
-fun <V> Stack<V>.updateTopOrNull(fn: (V) -> V?): Stack<V>? =
-	fn(top)?.let { copy(top = it) }
+//fun <V> Stack<V>.updateTopOrNull(fn: (V) -> V): Stack<V> =
+//	pop?.push(fn(top))
 
-fun <V> Stack<V>?.push(top: V) =
+fun <V> Stack<V>?.push(top: V): Stack<V> =
 	Stack(this, top)
 
 fun <V> Stack<V>?.push(value: V, vararg values: V) =
@@ -30,64 +22,49 @@ fun <V> Stack<V>?.push(value: V, vararg values: V) =
 	}
 
 fun <V> stack(value: V, vararg values: V): Stack<V> =
-	values.fold(value.onlyStack) { stack, nextValue ->
-		stack.push(nextValue)
+	values.fold(value.onlyStack) { stack, top ->
+		stack.push(top)
 	}
 
 fun <V> stackOrNull(vararg values: V): Stack<V>? =
-	values.fold(null as Stack<V>?) { stack, value ->
-		stack.push(value)
+	values.fold(nullOf()) { stack, top ->
+		stack.push(top)
 	}
 
-fun <V, R> Stack<V>.foldTop(fn: (V) -> R): Stack.FoldedTop<V, R> =
-	Stack.FoldedTop(fn(top), pop)
-
-fun <V, R> Stack.FoldedTop<V, R>.foldPop(fn: (R, V) -> R): R =
-	foldedTop.fold(pop, fn)
-
-fun <V, R> R.fold(stackOrNull: Stack<V>?, fn: R.(V) -> R): R =
-	if (stackOrNull == null) this
-	else fn(this, stackOrNull.top).fold(stackOrNull.pop, fn)
+fun <V, R> R.fold(stack: Stack<V>?, fn: R.(V) -> R): R =
+	fold(stack?.stream, fn)
 
 val <V> Stack<V>.reverse: Stack<V>
 	get() =
-		foldTop { top -> top.onlyStack }.foldPop { stack, value -> stack.push(value) }
+		top.onlyStack.fold(pop, Stack<V>::push)
 
-fun <V> Stack<V>.contains(value: V): Boolean =
-	top == value || (pop?.contains(value) ?: false)
-
-val <V> Stack<V>.theOnlyOrNull: The<V>?
+val <V : Any> Stack<V>.onlyOrNull: V?
 	get() =
-		if (pop != null) null else top.the
+		if (pop == null) top else null
 
-tailrec fun <V> Stack<V>.top(fn: (V) -> Boolean): V? =
-	when {
-		fn(top) -> top
-		pop != null -> pop.top(fn)
-		else -> null
-	}
+fun <V : Any> Stack<V>.theOnlyOrNull(fn: (V) -> Boolean): V? =
+	all(fn)?.onlyOrNull
 
-fun <V> Stack<V>.theOnlyOrNull(fn: (V) -> Boolean): The<V>? =
-	all(fn)?.theOnlyOrNull
-
-fun <V> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
-	nullOf<Stack<V>>()
-		.fold(this) { value ->
-			if (fn(value)) push(value)
-			else this
-		}
-		?.reverse
+fun <V : Any> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
+	stream.all(fn)?.stack?.reverse
 
 fun <V, R> Stack<V>.map(fn: (V) -> R): Stack<R> =
 	stream.map(fn).stack.reverse
 
-fun <V, R> Stack<V>.filterMap(fn: (V) -> The<R>?): Stack<R>? =
-	(null as Stack<R>?).fold(this) { value ->
-		fn(value).let { mappedOrNull ->
-			if (mappedOrNull == null) this
-			else push(mappedOrNull.value)
-		}
-	}?.reverse
+fun <V, R> Stack<V>.mapOrNull(fn: (V) -> R?): Stack<R>? =
+	nullOf<Stack<R>>().the.foldOrNull(this) { value ->
+		fn(value)?.let { this.value.push(it).the }
+	}?.value?.reverse
+
+fun <V, R : Any> R.foldOrNull(stack: Stack<V>?, fn: R.(V) -> R?): R? =
+	if (stack == null) this
+	else fn(stack.top)?.foldOrNull(stack.pop, fn)
+
+fun <V, R : Any> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
+	stream.filterMap(fn)?.stack?.reverse
+
+fun <V : Any> Stack<V>.top(fn: (V) -> Boolean): V? =
+	stream.first(fn)
 
 val Stack<*>.sizeInt: Int
 	get() =
@@ -95,14 +72,16 @@ val Stack<*>.sizeInt: Int
 
 // === appendable
 
-fun Appendable.append(stack: Stack<*>) {
-	appendReversed(stack.reverse)
-}
+fun Appendable.append(stack: Stack<*>) =
+	(append("stack(") to true)
+		.fold(stack.reverse) { value ->
+			val (appendable, isFirst) = this
+			if (isFirst) appendString(value) to false
+			else appendable.append(", ").appendString(value) to false
+		}
+		.first
+		.append(")")
 
-fun Appendable.appendReversed(stack: Stack<*>) {
-	appendString(stack.top)
-	stack.pop?.let {
-		append(", ")
-		appendReversed(stack.pop)
-	}
-}
+val <V> Stack<V>.stream: Stream<V>
+	get() =
+		top.onlyStream.then { pop?.stream }

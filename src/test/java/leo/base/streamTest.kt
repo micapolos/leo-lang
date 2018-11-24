@@ -16,9 +16,7 @@ class StreamTest {
 
 	@Test
 	fun fold() {
-		stream('a', 'b', 'c')
-			.foldFirst(Char::toString)
-			.foldNext(String::plus)
+		"".fold(stream('a', 'b', 'c'), String::plus)
 			.assertEqualTo("abc")
 	}
 
@@ -37,13 +35,6 @@ class StreamTest {
 	}
 
 	@Test
-	fun mapNotNull() {
-		stream(1, 2, 3, 4)
-			.mapNotNull { int -> if (int % 2 == 0) int.toString() else null }
-			?.assertContains("2", "4")
-	}
-
-	@Test
 	fun then() {
 		stream(1, 2, 3)
 			.then { stream(4, 5, 6) }
@@ -56,7 +47,14 @@ class StreamTest {
 			.join
 			.assertContains(1, 2, 3, 4, 5, 6, 7, 8, 9)
 	}
+
+	@Test
+	fun joinOrNull() {
+		stream(stream(1, 2, 3), null, stream(7, 8, 9))
+			.joinOrNull
+			.assertContains(1, 2, 3, 7, 8, 9)
+	}
 }
 
-fun <V> Stream<V>.assertContains(first: V, vararg next: V) =
-	stack.assertEqualTo(stack(first, *next))
+fun <V> Stream<V>?.assertContains(vararg next: V) =
+	this?.stack.assertEqualTo(stackOrNull(*next))

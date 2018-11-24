@@ -25,7 +25,7 @@ class WordTest {
 	fun parse() {
 		oneWord
 			.bitStream
-			.then(Bit.ZERO.onlyStream)
+			.then { Bit.ZERO.onlyStream }
 			.bitParseWord
 			.assertParsedAndRest(oneWord, Bit.ZERO.onlyStream)
 	}

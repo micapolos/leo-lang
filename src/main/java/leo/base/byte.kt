@@ -1,14 +1,7 @@
 package leo.base
 
-fun byte(
-	bit7: Bit,
-	bit6: Bit,
-	bit5: Bit,
-	bit4: Bit,
-	bit3: Bit,
-	bit2: Bit,
-	bit1: Bit,
-	bit0: Bit): Byte = 0
+// TODO: Check if it's properly inlined in java.
+fun byte(bit7: Bit, bit6: Bit, bit5: Bit, bit4: Bit, bit3: Bit, bit2: Bit, bit1: Bit, bit0: Bit): Byte = 0
 	.or(bit7.int.shl(7))
 	.or(bit6.int.shl(6))
 	.or(bit5.int.shl(5))
@@ -18,18 +11,37 @@ fun byte(
 	.or(bit1.int.shl(1))
 	.or(bit0.int.shl(0)).clampedByte
 
-fun <R> Byte.foldBits(initial: R, fn: (R, Bit) -> R): R {
-	val b8 = initial
-	val b7 = fn(b8, toInt().and(0b10000000).clampedBit)
-	val b6 = fn(b7, toInt().and(0b01000000).clampedBit)
-	val b5 = fn(b6, toInt().and(0b00100000).clampedBit)
-	val b4 = fn(b5, toInt().and(0b00010000).clampedBit)
-	val b3 = fn(b4, toInt().and(0b00001000).clampedBit)
-	val b2 = fn(b3, toInt().and(0b00000100).clampedBit)
-	val b1 = fn(b2, toInt().and(0b00000010).clampedBit)
-	val b0 = fn(b1, toInt().and(0b00000001).clampedBit)
-	return b0
-}
+inline val Byte.bit7: Bit
+	get() =
+		int.and(0x80).clampedBit
+
+inline val Byte.bit6: Bit
+	get() =
+		int.and(0x40).clampedBit
+
+inline val Byte.bit5: Bit
+	get() =
+		int.and(0x20).clampedBit
+
+inline val Byte.bit4: Bit
+	get() =
+		int.and(0x10).clampedBit
+
+inline val Byte.bit3: Bit
+	get() =
+		int.and(0x08).clampedBit
+
+inline val Byte.bit2: Bit
+	get() =
+		int.and(0x04).clampedBit
+
+inline val Byte.bit1: Bit
+	get() =
+		int.and(0x02).clampedBit
+
+inline val Byte.bit0: Bit
+	get() =
+		int.and(0x01).clampedBit
 
 val Byte.int
 	get() =
@@ -39,81 +51,45 @@ val Byte.char
 	get() =
 		toChar()
 
-val Byte.bitStack: Stack<Bit>
-	get() =
-		foldBits(nullStack()) { bitStackOrNull, bit ->
-			bitStackOrNull.push(bit)
-		}!!
-
 val Byte.bitStream: Stream<Bit>
 	get() =
-		bitStack.reverse.stream
+		bit7.onlyStream.then {
+			bit6.onlyStream.then {
+				bit5.onlyStream.then {
+					bit4.onlyStream.then {
+						bit3.onlyStream.then {
+							bit2.onlyStream.then {
+								bit1.onlyStream.then {
+									bit0.onlyStream
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 val Stream<Byte>.byteBitStream: Stream<Bit>
 	get() =
-		first.bitStream
-			.then { nextOrNull?.byteBitStream }
+		map(Byte::bitStream).join
 
-// TODO: This is insane, can it be made simpler? Like fold n-times?
 val Stream<Bit>.bitByteStreamOrNull: Stream<Byte>?
 	get() =
-		first.int.let { int1 ->
-			nextOrNull?.run {
-				int1.shl(1).or(first.int).let { int2 ->
-					nextOrNull?.run {
-						int2.shl(1).or(first.int).let { int3 ->
-							nextOrNull?.run {
-								int3.shl(1).or(first.int).let { int4 ->
-									nextOrNull?.run {
-										int4.shl(1).or(first.int).let { int5 ->
-											nextOrNull?.run {
-												int5.shl(1).or(first.int).let { int6 ->
-													nextOrNull?.run {
-														int6.shl(1).or(first.int).let { int7 ->
-															nextOrNull?.run {
-																Stream(int7.shl(1).or(first.int).clampedByte) {
-																	nextOrNull?.bitByteStreamOrNull
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+		bitParseByte?.let { parse ->
+			parse.parsed.then { parse.streamOrNull?.bitByteStreamOrNull }
 		}
 
-val Stream<Bit>?.bitParseByte: Parse<Bit, Byte>?
+val Stream<Bit>.bitParseByte: Parse<Bit, Byte>?
 	get() =
-		this?.run {
-			first.int.let { int1 ->
-				nextOrNull?.run {
-					int1.shl(1).or(first.int).let { int2 ->
-						nextOrNull?.run {
-							int2.shl(1).or(first.int).let { int3 ->
-								nextOrNull?.run {
-									int3.shl(1).or(first.int).let { int4 ->
-										nextOrNull?.run {
-											int4.shl(1).or(first.int).let { int5 ->
-												nextOrNull?.run {
-													int5.shl(1).or(first.int).let { int6 ->
-														nextOrNull?.run {
-															int6.shl(1).or(first.int).let { int7 ->
-																nextOrNull?.run {
-																	nextOrNull parsed int7.shl(1).or(first.int).clampedByte
-																}
-															}
-														}
-													}
-												}
-											}
-										}
+		matchFirst { bit7 ->
+			this?.matchFirst { bit6 ->
+				this?.matchFirst { bit5 ->
+					this?.matchFirst { bit4 ->
+						this?.matchFirst { bit3 ->
+							this?.matchFirst { bit2 ->
+								this?.matchFirst { bit1 ->
+									this?.matchFirst { bit0 ->
+										parsed(byte(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0))
 									}
 								}
 							}
@@ -122,4 +98,3 @@ val Stream<Bit>?.bitParseByte: Parse<Bit, Byte>?
 				}
 			}
 		}
-

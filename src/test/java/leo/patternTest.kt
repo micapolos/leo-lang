@@ -9,7 +9,7 @@ class PatternTest {
 	fun string() {
 		pattern(oneWord.term, twoWord.term)
 			.string
-			.assertEqualTo("pattern(term field(word one, term null), term field(word two, term null))")
+			.assertEqualTo("pattern(term one, term two)")
 	}
 
 	@Test
@@ -116,27 +116,6 @@ class PatternTest {
 
 	@Test
 	fun fieldMatches_field() {
-		oneWord.field
-			.matches(oneWord.field)
-			.assertEqualTo(true)
-	}
-
-	@Test
-	fun fieldValueMatches_field() {
-		oneWord.fieldTo(twoWord.term)
-			.matches(oneWord.field)
-			.assertEqualTo(false)
-	}
-
-	@Test
-	fun fieldMatches_fieldValue() {
-		oneWord.field
-			.matches(oneWord.fieldTo(twoWord.term))
-			.assertEqualTo(false)
-	}
-
-	@Test
-	fun fieldValueMatches_fieldValue() {
 		oneWord.fieldTo(twoWord.term)
 			.matches(oneWord.fieldTo(twoWord.term))
 			.assertEqualTo(true)
