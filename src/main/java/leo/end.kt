@@ -5,18 +5,9 @@ import leo.base.*
 object End
 
 val end = End
-
-val endByte: Byte =
-	')'.clampedByte
-
-val endChar: Char =
-	endByte.char
-
-val endString: String =
-	endChar.toString()
-
-val endBitStream =
-	endByte.bitStream
+const val endChar = '('
+const val endByte = endChar.toByte()
+const val endString = endChar.toString()
 
 val Byte.endOrNull: End?
 	get() =

@@ -6,14 +6,9 @@ object Begin
 
 val begin = Begin
 
-val beginByte: Byte =
-	'('.clampedByte
-
-val beginChar: Char =
-	beginByte.char
-
-val beginString: String =
-	beginChar.toString()
+const val beginChar = '('
+const val beginByte = beginChar.toByte()
+const val beginString = beginChar.toString()
 
 val Byte.beginOrNull: Begin?
 	get() =
