@@ -3,11 +3,11 @@ package leo
 import leo.base.*
 
 sealed class Token<out V>
-data class MetaToken<V>(val value: V) : Token<V>()
+data class MetaToken<V>(val meta: Meta<V>) : Token<V>()
 data class WordToken<V>(val word: Word) : Token<V>()
 data class ControlToken<V>(val control: Control) : Token<V>()
 
-val <V> V.metaToken: Token<V>
+val <V> Meta<V>.token: Token<V>
 	get() =
 		MetaToken(this)
 
@@ -17,13 +17,6 @@ fun <V> Word.token(): Token<V> =
 val Word.token: Token<Nothing>
 	get() =
 		token()
-
-val <V> Scalar<V>.token: Token<V>
-  get() =
-	  when (this) {
-		  is MetaScalar -> meta.value.metaToken
-		  is WordScalar -> word.token
-	  }
 
 fun <V> Control.token(): Token<V> =
 	ControlToken(this)

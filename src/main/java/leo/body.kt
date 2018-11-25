@@ -20,5 +20,5 @@ fun Body.apply(argument: Term<Nothing>): Term<Nothing> =
 val Body.reflect: Field<Nothing>
 	get() =
 		bodyWord fieldTo term(
-			selectorTerm.reflect(Selector::reflect),
-			function.reflect)
+			selectorWord fieldTo selectorTerm.reflectMeta(Selector::reflect),
+			functionReflect)

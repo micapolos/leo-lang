@@ -9,27 +9,30 @@ data class Meta<out V>(
 	override fun toString() = appendableString { it.append(this) }
 }
 
+val metaChar = '#'
+
 val <V> V.meta: Meta<V>
 	get() =
 		Meta(this)
 
 fun <V> Appendable.append(meta: Meta<V>): Appendable =
-	append(meta.value.string)
+	append(metaChar).append(meta.value.string)
 
-fun <V> Meta<V>.reflect(metaValueReflect: V.() -> Field<Nothing>): Field<Nothing> =
-	metaWord fieldTo term(metaValueReflect(value))
+fun <V, R> Meta<V>.map(fn: (V) -> R): Meta<R> =
+	fn(value).meta
 
 val Meta<Nothing>.reflect: Field<Nothing>
 	get() =
 		reflect { fail }
 
-fun <V> Field<Nothing>.parseMeta(valueParse: Field<Nothing>.() -> V?): Meta<V>? =
-	matchKey(metaWord) {
-		onlyFieldOrNull?.let { onlyField ->
-			valueParse(onlyField)?.meta
-		}
-	}
+fun <V> Meta<V>.reflectTerm(valueReflect: V.() -> Term<Nothing>): Field<Nothing> =
+	metaWord fieldTo reflectMeta(valueReflect)
 
-val <V> Meta<V>.token: Token<V>
-  get() =
-	  value.metaToken
+fun <V> Meta<V>.reflect(valueReflect: V.() -> Field<Nothing>): Field<Nothing> =
+	metaWord fieldTo reflectMeta { valueReflect().term }
+
+fun <V> Meta<V>.reflectMeta(valueReflect: V.() -> Term<Nothing>): Term<Nothing> =
+	valueReflect(value)
+
+fun <V> Term<Nothing>.parseMeta(valueParse: Term<Nothing>.() -> V?): Term<V> =
+	valueParse(this)?.meta?.term ?: this

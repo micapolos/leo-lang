@@ -49,16 +49,16 @@ fun <V> Selector.invoke(argumentTerm: Term<V>): Term<V>? =
 
 fun <V> Term<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
 	when (this) {
-		is MetaTerm -> this.invoke(argumentTerm)
-		is WordTerm -> this.invoke()
+		is MetaTerm -> meta.invoke(argumentTerm)
+		is WordTerm -> word.invoke()
 		is FieldsTerm -> this.invoke(argumentTerm)
 	}
 
-fun <V> MetaTerm<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
-	value.invoke(argumentTerm)
+fun <V> Word.invoke(): Term<V>? =
+	term()
 
-fun <V> WordTerm<Selector>.invoke(): Term<V>? =
-	word.term()
+fun <V> Meta<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
+	value.invoke(argumentTerm)
 
 fun <V> FieldsTerm<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
 	fieldStream.run {
@@ -77,17 +77,14 @@ fun <V> Field<Selector>.invoke(argumentTerm: Term<V>): Field<V>? =
 // === parsing
 
 fun Term<Nothing>.parseSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
-	parseSelector(patternTerm)?.metaTerm ?: parseNonSelectorTerm(patternTerm)
+	parseSelector(patternTerm)?.meta?.term ?: parseNonSelectorTerm(patternTerm)
 
 fun Term<Nothing>.parseNonSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
 	when (this) {
 		is MetaTerm -> fail
-		is WordTerm -> parseNonSelectorTerm()
+		is WordTerm -> word.term()
 		is FieldsTerm -> parseNonSelectorTerm(patternTerm)
 	}
-
-fun WordTerm<Nothing>.parseNonSelectorTerm(): Term<Selector> =
-	word.term
 
 fun FieldsTerm<Nothing>.parseNonSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
 	fieldStream.run {

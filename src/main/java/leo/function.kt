@@ -84,10 +84,13 @@ fun Function.define(token: Token<Pattern>, defineNext: Function.() -> Match?): F
 	}
 
 fun Function.define(token: MetaToken<Pattern>, defineNext: Function.() -> Match?): Function? =
-	define(token.value, defineNext)
+	define(token.meta, defineNext)
 
 fun Function.define(token: WordToken<Pattern>, defineNext: Function.() -> Match?): Function? =
 	define(token.word, defineNext)
+
+fun Function.define(meta: Meta<Pattern>, defineNext: Function.() -> Match?): Function? =
+	define(meta.value, defineNext)
 
 fun Function.defineBeginToken(defineNext: Function.() -> Match?): Function? =
 	define(beginByte, defineNext)
@@ -121,6 +124,6 @@ fun Function.define(bit: Bit, defineNext: Function.() -> Match?): Function? =
 
 // === reflect
 
-val Function.reflect: Field<Nothing>
+val functionReflect: Field<Nothing>
 	get() =
 		functionWord fieldTo todoWord.term

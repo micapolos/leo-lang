@@ -5,11 +5,11 @@ import leo.base.*
 sealed class Term<out V>
 
 data class MetaTerm<V>(
-	val value: V) : Term<V>() {
+	val meta: Meta<V>) : Term<V>() {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-data class WordTerm<out V>(
+data class WordTerm<V>(
 	val word: Word) : Term<V>() {
 	override fun toString() = appendableString { it.append(this) }
 }
@@ -21,10 +21,7 @@ data class FieldsTerm<out V>(
 
 // === constructors
 
-fun <V> metaTerm(value: V) =
-	value.metaTerm
-
-val <V> V.metaTerm
+val <V> Meta<V>.term: Term<V>
 	get() =
 		MetaTerm(this)
 
@@ -34,6 +31,13 @@ fun <V> Word.term(): Term<V> =
 val Word.term: Term<Nothing>
 	get() =
 		term()
+
+val <V> Atom<V>.term: Term<V>
+	get() =
+		when (this) {
+			is MetaAtom -> meta.term
+			is WordAtom -> word.term
+		}
 
 val <V> Field<V>.onlyTerm: Term<V>
 	get() =
@@ -57,20 +61,8 @@ fun <V> term(field: Field<V>, vararg fields: Field<V>) =
 fun <V> FieldsTerm<V>?.fieldsPush(field: Field<V>): FieldsTerm<V> =
 	this?.fieldStack.push(field).fieldsTerm
 
-fun <V> Term<V>?.orNullPush(word: Word): Term<V> =
-	word.term
-
-fun <V> Term<V>.push(word: Word): Term<V> =
-	word.fieldTo(this).onlyTerm
-
 fun <V> Term<V>.push(field: Field<V>): Term<V>? =
-	fieldsTermOrNull.let { fieldsTermOrNull ->
-		if (fieldsTermOrNull != null) fieldsTermOrNull.fieldStack.push(field).fieldsTerm
-		else itField.term.fieldsPush(field)
-	}
-
-fun <V> Term<V>?.orNullPush(field: Field<V>): Term<V>? =
-	field.term
+	fieldsTermOrNull?.fieldStack?.push(field)?.fieldsTerm
 
 val <V> Term<V>.topFieldOrNull: Field<V>?
 	get() =
@@ -104,6 +96,10 @@ val <V> Term<V>.fieldsTermOrNull
 	get() =
 		this as? FieldsTerm
 
+val <V : Any> Term<V>.valueOrNull: V?
+	get() =
+		metaTermOrNull?.meta?.value
+
 // === Appendable (pretty-print)
 
 val <V> Term<V>.isSimple: Boolean
@@ -116,8 +112,8 @@ val <V> Term<V>.isSimple: Boolean
 
 fun <V> Appendable.append(term: Term<V>): Appendable =
 	when (term) {
-		is MetaTerm -> append(term.value.string)
-		is WordTerm -> append(term.word.string)
+		is MetaTerm -> append(term.meta)
+		is WordTerm -> append(term.word)
 		is FieldsTerm -> term.fieldStream.let { fieldStream ->
 			append(fieldStream.first).fold(fieldStream.nextOrNull) { field ->
 				append(", ").append(field)
@@ -144,7 +140,7 @@ val Term<Nothing>.bitStream: Stream<Bit>
 val <V> Term<V>.tokenStream: Stream<Token<V>>
 	get() =
 		when (this) {
-			is MetaTerm -> value.metaToken.onlyStream
+			is MetaTerm -> meta.token.onlyStream
 			is WordTerm -> stream(word.token(), begin.control.token, end.control.token)
 			is FieldsTerm -> this.fieldStream.mapJoin(Field<V>::tokenStream)
 		}
@@ -166,7 +162,7 @@ val <V> Term<V>.onlyFieldOrNull: Field<V>?
 		}
 
 fun <V, R : Any> Term<V>.matchWord(fn: Word.() -> R?): R? =
-	wordTermOrNull?.let { fn(it.word) }
+	wordTermOrNull?.word?.let { fn(it) }
 
 fun <V, R : Any> Term<V>.matchWord(key: Word, fn: () -> R?): R? =
 	wordTermOrNull?.match(key, fn)
@@ -218,33 +214,30 @@ fun <V> Term<V>.select(key: Word): Term<V>? =
 // === reflect
 
 val Term<Nothing>.reflect: Field<Nothing>
-	get() = reflect { fail }
+	get() =
+		termWord fieldTo this
 
-fun <V> Term<V>.reflect(metaValueReflect: V.() -> Field<Nothing>): Field<Nothing> =
-	termWord fieldTo reflectMeta(metaValueReflect)
-
-fun <V> Term<V>.reflectMeta(metaValueReflect: V.() -> Field<Nothing>): Term<Nothing> =
+fun <V> Term<V>.reflectMetaTerm(valueReflect: V.() -> Term<Nothing>): Term<Nothing> =
 	when (this) {
-		is MetaTerm -> term(metaWord fieldTo term(metaValueReflect(value)))
+		is MetaTerm -> meta.reflectMeta(valueReflect)
 		is WordTerm -> word.term
-		is FieldsTerm -> fieldStack.map { it.reflectMeta(metaValueReflect) }.fieldsTerm
+		is FieldsTerm -> fieldStack.map { it.reflectMetaTerm(valueReflect) }.fieldsTerm
 	}
+
+fun <V> Term<V>.reflectMeta(valueReflect: V.() -> Field<Nothing>): Term<Nothing> =
+	reflectMetaTerm { valueReflect(this).onlyTerm }
 
 val Field<Nothing>.parseTerm: Term<Nothing>?
 	get() =
 		matchKey(termWord) {
-			parseTermMeta { fail }
+			parseTerm { null }
 		}
 
-fun <V> Term<Nothing>.parseTermMeta(parseMetaValue: (Field<Nothing>) -> V?): Term<V>? =
-	matchFieldKey(metaWord) {
-		onlyFieldOrNull?.let { onlyField ->
-			parseMetaValue(onlyField)?.metaTerm
-		}
-	} ?: when (this) {
+fun <V> Term<Nothing>.parseTerm(parseValue: (Term<Nothing>) -> V?): Term<V>? =
+	parseValue(this)?.meta?.term ?: when (this) {
 		is MetaTerm -> fail
-		is WordTerm -> word.term
-		is FieldsTerm -> fieldStack.mapOrNull { it.parseFieldMeta(parseMetaValue) }?.fieldsTerm
+		is WordTerm -> word.term()
+		is FieldsTerm -> fieldStack.mapOrNull { it.parseField(parseValue) }?.fieldsTerm
 	}
 
 // === select
@@ -259,7 +252,7 @@ val Term<Nothing>.evaluateSelect: Term<Nothing>
 
 fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
 	when (this) {
-		is MetaTerm -> fn(value).metaTerm
-		is WordTerm -> word.term
+		is MetaTerm -> meta.map(fn).term
+		is WordTerm -> word.term()
 		is FieldsTerm -> this.fieldStream.map { it.map(fn) }.stack.fieldsTerm
 	}

@@ -4,7 +4,7 @@ enum class Bit {
 	ZERO,
 	ONE;
 
-	override fun toString() = int.toString()
+	override fun toString() = "bit $int"
 }
 
 val Bit.int

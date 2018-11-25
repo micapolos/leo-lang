@@ -4,7 +4,7 @@ import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class FunctionTest {
-	private val testBody = body(term(invokedWord fieldTo selector().metaTerm), emptyFunction)
+	private val testBody = body(term(invokedWord fieldTo selector().meta.atom.term), emptyFunction)
 
 	private fun Function.testDefine(term: Term<Pattern>): Function? =
 		define(term, testBody)
@@ -104,22 +104,22 @@ class FunctionTest {
 	@Test
 	fun defineOneOf_invokeFirst() {
 		emptyFunction
-			.testDefine(pattern(aWord.term(), bWord.term()).metaTerm)!!
+			.testDefine(pattern(aWord.term(), bWord.term()).meta.atom.term)!!
 			.assertInvokesBody(aWord.term)
 	}
 
 	@Test
 	fun defineOneOf_invokeSecond() {
 		emptyFunction
-			.testDefine(pattern(aWord.term(), bWord.term()).metaTerm)!!
+			.testDefine(pattern(aWord.term(), bWord.term()).meta.atom.term)!!
 			.assertInvokesBody(bWord.term)
 	}
 
 	private val nonDependentPatternsFunction = emptyFunction
 		.testDefine(
 			term(
-				oneWord fieldTo pattern(aWord.term(), bWord.term()).metaTerm,
-				twoWord fieldTo pattern(aWord.term(), bWord.term()).metaTerm))
+				oneWord fieldTo pattern(aWord.term(), bWord.term()).meta.atom.term,
+				twoWord fieldTo pattern(aWord.term(), bWord.term()).meta.atom.term))
 
 	@Test
 	fun defineNonDependentOneOfs_getFirstFirst() {
@@ -147,18 +147,17 @@ class FunctionTest {
 
 	private val dependentPatternsFunction = emptyFunction
 		.testDefine(
-			metaTerm(
 				pattern(
 					term(
-						oneWord fieldTo metaTerm(
+						oneWord fieldTo
 							pattern(
 								aWord.term(),
-								bWord.term()))),
+								bWord.term()).meta.atom.term),
 					term(
-						twoWord fieldTo metaTerm(
+						twoWord fieldTo
 							pattern(
 								cWord.term(),
-								dWord.term()))))))
+								dWord.term()).meta.atom.term)).meta.atom.term)
 
 	@Test
 	fun dependentOneOfs_invokeFirstFirst() {

@@ -47,5 +47,8 @@ class ParserTest {
 	}
 }
 
+fun <V> V.assertReflectAndParseTermWorks(reflectFn: V.() -> Term<Nothing>, parseFn: Term<Nothing>.() -> V?) =
+	reflectFn().parseFn().assertEqualTo(this)
+
 fun <V> V.assertReflectAndParseWorks(reflectFn: V.() -> Field<Nothing>, parseFn: Field<Nothing>.() -> V?) =
 	reflectFn().parseFn().assertEqualTo(this)

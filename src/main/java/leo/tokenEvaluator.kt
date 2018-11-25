@@ -26,10 +26,7 @@ fun TokenEvaluator.evaluate(token: Token<Nothing>): TokenEvaluator? =
 	when (token) {
 		is MetaToken -> fail
 		is WordToken -> evaluate(token)
-		is ControlToken -> when (token.control) {
-			is BeginControl -> evaluateBegin
-			is EndControl -> evaluateEnd
-		}
+		is ControlToken -> evaluate(token)
 	}
 
 fun TokenEvaluator.evaluateInternal(token: Token<Nothing>): Evaluator<Token<Nothing>>? =
@@ -38,36 +35,42 @@ fun TokenEvaluator.evaluateInternal(token: Token<Nothing>): Evaluator<Token<Noth
 fun TokenEvaluator.apply(term: Term<Nothing>): Match? =
 	function.get(term)
 
+fun TokenEvaluator.evaluate(controlToken: ControlToken<Nothing>): TokenEvaluator? =
+	when (controlToken.control) {
+		is BeginControl -> evaluateBegin
+		is EndControl -> evaluateEnd
+	}
+
 fun TokenEvaluator.evaluate(wordToken: WordToken<Nothing>): TokenEvaluator? =
-	if (wordOrNull != null) null
-	else copy(wordOrNull = wordToken.word)
+	wordOrNull.ifNull {
+		copy(wordOrNull = wordToken.word)
+	}
 
 val TokenEvaluator.evaluateBegin: TokenEvaluator?
 	get() =
-		if (wordOrNull == null) null
-		else copy(
-			entryStackOrNull = entryStackOrNull.push(TokenEvaluator.Entry(scope, wordOrNull)),
-			scope = Scope(scope.function, null),
-			wordOrNull = null)
+		wordOrNull?.let { word ->
+			copy(
+				entryStackOrNull = entryStackOrNull.push(TokenEvaluator.Entry(scope, word)),
+				scope = Scope(scope.function, null),
+				wordOrNull = null)
+		}
 
 val TokenEvaluator.evaluateEnd: TokenEvaluator?
 	get() =
-		if (wordOrNull != null)
+		wordOrNull.ifNull {
 			entryStackOrNull?.let { entryStack ->
-				if (scope.termOrNull != null) null
-				else entryStack.top.scope.push(entryStack.top.word fieldTo wordOrNull.term)?.let { pushedScope ->
-					copy(
-						entryStackOrNull = entryStack.pop,
-						scope = pushedScope.evaluate)
-				}
-			}
-		else entryStackOrNull?.let { entryStack ->
-			scope.termOrNull?.let { scopeTerm ->
-				entryStack.top.scope.push(entryStack.top.word fieldTo scopeTerm)?.let { pushedScope ->
-					copy(
-						entryStackOrNull = entryStack.pop,
-						scope = pushedScope.evaluate)
-				}
+				if (scope.termOrNull == null)
+					entryStack.top.scope.push(entryStack.top.word)?.let { pushedScope ->
+						copy(
+							entryStackOrNull = entryStack.pop,
+							scope = pushedScope.evaluate)
+					}
+				else
+					entryStack.top.scope.push(entryStack.top.word fieldTo scope.termOrNull)?.let { pushedScope ->
+						copy(
+							entryStackOrNull = entryStack.pop,
+							scope = pushedScope.evaluate)
+					}
 			}
 		}
 

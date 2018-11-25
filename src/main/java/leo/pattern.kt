@@ -20,23 +20,27 @@ val Pattern.patternTermStream: Stream<Term<Pattern>>
 
 // === matching
 
+val Term<Pattern>.patternOrNull: Pattern?
+	get() =
+		valueOrNull
+
 fun Term<Nothing>.matches(pattern: Pattern): Boolean =
 	pattern.patternTermStack.top { oneOfTerm ->
 		matches(oneOfTerm)
 	} != null
 
 fun Term<Nothing>.matches(patternTerm: Term<Pattern>): Boolean =
+	patternTerm.patternOrNull?.let { pattern ->
+		matches(pattern)
+	} ?:
 	when (patternTerm) {
-		is MetaTerm -> this.matches(patternTerm)
-		is WordTerm -> this is WordTerm && this.matches(patternTerm)
+		is MetaTerm -> false
+		is WordTerm -> this is WordTerm && word.matches(patternTerm.word)
 		is FieldsTerm -> this is FieldsTerm && this.matches(patternTerm)
 	}
 
-fun Term<Nothing>.matches(patternMetaTerm: MetaTerm<Pattern>): Boolean =
-	matches(patternMetaTerm.value)
-
-fun WordTerm<Nothing>.matches(patternWordTerm: WordTerm<Pattern>): Boolean =
-	word == patternWordTerm.word
+fun Word.matches(patternWord: Word): Boolean =
+	this == patternWord
 
 fun FieldsTerm<Nothing>.matches(patternFieldsTerm: FieldsTerm<Pattern>): Boolean =
 	fieldStack.top.matches(patternFieldsTerm.fieldStack.top) &&
@@ -71,7 +75,7 @@ val Term<Nothing>.parsePatternTerm: Term<Pattern>
 		when (this) {
 			is MetaTerm -> fail
 			is WordTerm -> word.term
-			is FieldsTerm -> parsePattern?.metaTerm ?: parseStructurePatternTerm
+			is FieldsTerm -> parsePattern?.meta?.term ?: parseStructurePatternTerm
 		}
 
 val FieldsTerm<Nothing>.parseStructurePatternTerm: Term<Pattern>
@@ -88,8 +92,8 @@ val Field<Nothing>.parsePatternField: Field<Pattern>
 
 // === reflect
 
-val Pattern.reflect: Field<Nothing>
+val Pattern.reflect: Term<Nothing>
 	get() =
-		patternWord fieldTo patternTermStream.reflect {
-			reflect(Pattern::reflect)
+		patternTermStream.reflect(eitherWord) {
+			reflectMetaTerm(Pattern::reflect)
 		}

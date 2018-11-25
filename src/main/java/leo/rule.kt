@@ -36,5 +36,5 @@ fun Term<Nothing>.parseItIsRule(localFunction: Function): Rule? =
 val Rule.reflect: Field<Nothing>
 	get() =
 		ruleWord fieldTo term(
-			patternTerm.reflect(Pattern::reflect),
+			patternWord fieldTo patternTerm.reflectMetaTerm(Pattern::reflect),
 			body.reflect)

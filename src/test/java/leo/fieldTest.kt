@@ -8,19 +8,17 @@ import kotlin.test.Test
 class FieldTest {
 	@Test
 	fun string() {
-		numberWord.fieldTo(1.metaTerm)
+		numberWord.fieldTo(1.meta.atom.term)
 			.string
-			.assertEqualTo("number Integer(1)")
+			.assertEqualTo("number #int 1")
 	}
 
 	@Test
 	fun reflect() {
-		oneWord.fieldTo(Unit.metaTerm)
-			.reflect { reflect }
+		oneWord.fieldTo(numberWord.term)
+			.reflect
 			.assertEqualTo(
-				fieldWord fieldTo term(
-					oneWord fieldTo term(
-						metaWord fieldTo Unit.reflect.term)))
+				fieldWord fieldTo oneWord.fieldTo(numberWord.term).term)
 	}
 
 	@Test
@@ -36,15 +34,13 @@ class FieldTest {
 	fun orNullReflect_null() {
 		nullOf<Letter>()
 			.orNullReflect(letterWord, Letter::reflect)
-			.string
-			.assertEqualTo("letter null")
+			.assertEqualTo(letterWord fieldTo nullWord.term)
 	}
 
 	@Test
 	fun orNullReflect_notNull() {
 		Letter.A
 			.orNullReflect(letterWord, Letter::reflect)
-			.string
-			.assertEqualTo("letter a")
+			.assertEqualTo(Letter.A.reflect)
 	}
 }

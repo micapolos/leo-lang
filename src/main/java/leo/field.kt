@@ -48,29 +48,26 @@ val <V> Field<V>.tokenStream: Stream<Token<V>>
 
 // === reflect
 
-fun <V> Field<V>.reflectMeta(metaValueReflect: V.() -> Field<Nothing>): Field<Nothing> =
-	key fieldTo value.reflectMeta(metaValueReflect)
+val Field<Nothing>.reflect: Field<Nothing>
+	get() =
+		fieldWord fieldTo this.term
+
+fun <V> Field<V>.reflectMetaTerm(valueReflect: V.() -> Term<Nothing>): Field<Nothing> =
+	key fieldTo value.reflectMetaTerm(valueReflect)
 
 fun <V> V?.orNullReflect(word: Word, reflect: V.() -> Field<Nothing>): Field<Nothing> =
 	this?.let(reflect) ?: word.fieldTo(nullWord.term())
-
-fun <V> Field<V>.reflect(metaValueReflect: V.() -> Field<Nothing>): Field<Nothing> =
-	fieldWord fieldTo term(reflectMeta(metaValueReflect))
-
-val Field<Nothing>.reflect: Field<Nothing>
-	get() =
-		reflect { fail }
 
 // === parse
 
 val Field<Nothing>.parseField: Field<Nothing>?
 	get() =
 		matchKey(fieldWord) {
-			onlyFieldOrNull?.parseFieldMeta { fail }
+			onlyFieldOrNull?.parseField { fail }
 		}
 
-fun <V> Field<Nothing>.parseFieldMeta(parseMetaValue: (Field<Nothing>) -> V?): Field<V>? =
-	value.parseTermMeta(parseMetaValue)?.let { parsedTerm ->
+fun <V> Field<Nothing>.parseField(parseMetaValue: (Term<Nothing>) -> V?): Field<V>? =
+	value.parseTerm(parseMetaValue)?.let { parsedTerm ->
 		key fieldTo parsedTerm
 	}
 

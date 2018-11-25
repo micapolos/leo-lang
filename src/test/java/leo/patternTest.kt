@@ -9,7 +9,7 @@ class PatternTest {
 	fun string() {
 		pattern(oneWord.term, twoWord.term)
 			.string
-			.assertEqualTo("pattern(term one, term two)")
+			.assertEqualTo("either one, either two")
 	}
 
 	@Test
@@ -90,7 +90,7 @@ class PatternTest {
 			.assertEqualTo(
 				pattern(
 					stringWord.term,
-					numberWord.term).metaTerm)
+					numberWord.term).meta.term)
 	}
 
 	@Test
@@ -104,7 +104,7 @@ class PatternTest {
 				term(oneWord fieldTo
 					pattern(
 						stringWord.term,
-						numberWord.term).metaTerm))
+						numberWord.term).meta.term))
 	}
 
 	@Test
@@ -139,7 +139,7 @@ class PatternTest {
 			.matches(
 				pattern(
 					nameWord.term,
-					ageWord.term).metaTerm)
+					ageWord.term).meta.term)
 			.assertEqualTo(true)
 	}
 }

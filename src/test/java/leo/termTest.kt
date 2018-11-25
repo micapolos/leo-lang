@@ -1,6 +1,9 @@
 package leo
 
-import leo.base.*
+import leo.base.assertContains
+import leo.base.assertEqualTo
+import leo.base.string
+import leo.base.the
 import kotlin.test.Test
 
 class TermTest {
@@ -35,17 +38,9 @@ class TermTest {
 	}
 
 	@Test
-	fun reflectWord() {
+	fun reflectScalar() {
 		oneWord.term.reflect
 			.assertEqualTo(termWord fieldTo oneWord.term)
-	}
-
-	@Test
-	fun reflectMeta() {
-		Unit.metaTerm.reflect { reflect }
-			.assertEqualTo(
-				termWord fieldTo term(
-					metaWord fieldTo term(Unit.reflect)))
 	}
 
 	@Test
@@ -75,91 +70,56 @@ class TermTest {
 	}
 
 	val termForGet = term(
-		oneWord fieldTo 1.metaTerm,
-		ageWord fieldTo 42.metaTerm,
-		ageWord fieldTo 43.metaTerm,
-		twoWord fieldTo 2.metaTerm)
+		oneWord fieldTo 1.meta.term,
+		ageWord fieldTo 42.meta.term,
+		ageWord fieldTo 43.meta.term,
+		twoWord fieldTo 2.meta.term)
 
 	@Test
 	fun only() {
-		termForGet.onlyValueOrNull(oneWord).assertEqualTo(1.metaTerm)
-		termForGet.onlyValueOrNull(twoWord).assertEqualTo(2.metaTerm)
+		termForGet.onlyValueOrNull(oneWord).assertEqualTo(1.meta.term)
+		termForGet.onlyValueOrNull(twoWord).assertEqualTo(2.meta.term)
 		termForGet.onlyValueOrNull(ageWord).assertEqualTo(null)
 		termForGet.onlyValueOrNull(nameWord).assertEqualTo(null)
 	}
 
 	@Test
 	fun all() {
-		termForGet.valueStreamOrNull(oneWord).assertContains(1.metaTerm)
-		termForGet.valueStreamOrNull(twoWord).assertContains(2.metaTerm)
-		termForGet.valueStreamOrNull(ageWord).assertContains(42.metaTerm, 43.metaTerm)
+		termForGet.valueStreamOrNull(oneWord).assertContains(1.meta.term)
+		termForGet.valueStreamOrNull(twoWord).assertContains(2.meta.term)
+		termForGet.valueStreamOrNull(ageWord).assertContains(42.meta.term, 43.meta.term)
 		termForGet.valueStreamOrNull(nameWord).assertContains()
 	}
 
 	@Test
-	fun nullPushIdentifier() {
-		nullOf<Term<Nothing>>()
-			.orNullPush(oneWord)
-			.assertEqualTo(oneWord.term)
-	}
-
-	@Test
-	fun nativePushIdentifier() {
-		1.metaTerm
-			.push(oneWord)
-			.assertEqualTo(term(oneWord fieldTo 1.metaTerm))
-	}
-
-	@Test
-	fun idPushId() {
-		oneWord.term
-			.push(twoWord)
-			.assertEqualTo(term(twoWord fieldTo oneWord.term))
-	}
-
-	@Test
-	fun fieldsPushWord() {
-		term(oneWord fieldTo 1.metaTerm)
-			.push(twoWord)
-			.assertEqualTo(term(twoWord fieldTo term(oneWord fieldTo 1.metaTerm)))
-	}
-
-	@Test
-	fun nullPushField() {
-		nullOf<Term<Nothing>>()
-			.orNullPush(oneWord fieldTo numberWord.term)
-			.assertEqualTo(term(oneWord fieldTo numberWord.term))
-	}
-
-	@Test
 	fun metaPushField() {
-		1.metaTerm
+		1.meta.term
 			.push(twoWord fieldTo oneWord.term)
-			.assertEqualTo(term(1.metaTerm.itField, twoWord fieldTo oneWord.term))
+			.assertEqualTo(null)
 	}
 
 	@Test
 	fun wordPushField() {
 		oneWord.term
-			.push(twoWord fieldTo 2.metaTerm)
-			.assertEqualTo(term(oneWord.itField, twoWord fieldTo 2.metaTerm))
+			.push(twoWord fieldTo 2.meta.term)
+			.assertEqualTo(null)
 	}
 
 	@Test
 	fun fieldsPushField() {
-		term(oneWord fieldTo 1.metaTerm)
-			.fieldsPush(twoWord fieldTo 2.metaTerm)
+		term(oneWord fieldTo 1.meta.term)
+			.fieldsPush(twoWord fieldTo 2.meta.term)
 			.assertEqualTo(
 				term(
-					oneWord fieldTo 1.metaTerm,
-					twoWord fieldTo 2.metaTerm))
+					oneWord fieldTo 1.meta.term,
+					twoWord fieldTo 2.meta.term))
 	}
 
 	@Test
 	fun selectSingle() {
 		termForGet
 			.select(oneWord)
-			.assertEqualTo(1.metaTerm)
+			.assertEqualTo(1.meta.term)
 	}
 
 	@Test
@@ -169,8 +129,8 @@ class TermTest {
 			.assertEqualTo(
 				term(
 					previousWord fieldTo term(
-						lastWord fieldTo 42.metaTerm),
-					lastWord fieldTo 43.metaTerm))
+						lastWord fieldTo 42.meta.term),
+					lastWord fieldTo 43.meta.term))
 	}
 
 	@Test
@@ -221,7 +181,7 @@ class TermTest {
 
 	@Test
 	fun onlyFieldOrNull() {
-		1.metaTerm.onlyFieldOrNull.assertEqualTo(null)
+		1.meta.term.onlyFieldOrNull.assertEqualTo(null)
 		oneWord.term.onlyFieldOrNull.assertEqualTo(null)
 		oneWord.fieldTo(twoWord.term).term.onlyFieldOrNull.assertEqualTo(oneWord fieldTo twoWord.term)
 		term(

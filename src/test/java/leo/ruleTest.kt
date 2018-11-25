@@ -34,6 +34,6 @@ class RuleTest {
 			isWord fieldTo thisWord.term)
 			.parseItIsRule(emptyFunction)
 			.assertEqualTo(
-				rule(oneWord.term(), body(selector().metaTerm, emptyFunction)))
+				rule(oneWord.term(), body(selector().meta.atom.term, emptyFunction)))
 	}
 }

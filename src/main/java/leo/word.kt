@@ -79,6 +79,7 @@ val ageWord = "age".wordOrNull!!
 val anyWord = "any".wordOrNull!!
 val anythingWord = "anything".wordOrNull!!
 val arrayWord = "array".wordOrNull!!
+val atomWord = "atom".wordOrNull!!
 val bWord = "b".wordOrNull!!
 val beginWord = "begin".wordOrNull!!
 val bitWord = "bit".wordOrNull!!

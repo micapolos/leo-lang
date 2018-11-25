@@ -2,6 +2,7 @@ package leo
 
 import leo.base.Bit
 import leo.base.Stream
+import leo.base.ifNull
 import leo.base.string
 
 data class Scope(
@@ -14,8 +15,9 @@ val emptyScope =
 	Scope(emptyFunction, null)
 
 fun Scope.push(word: Word): Scope? =
-	if (termOrNull == null) copy(termOrNull = word.term)
-	else null
+	termOrNull.ifNull {
+		copy(termOrNull = word.term)
+	}
 
 fun Scope.push(field: Field<Nothing>): Scope? =
 	termOrNull?.push(field)?.let { pushedTerm ->
@@ -51,8 +53,8 @@ fun Scope.push(rule: Rule): Scope? =
 val Scope.reflect: Field<Nothing>
 	get() =
 		scopeWord fieldTo term(
-			function.reflect,
-			termOrNull.orNullReflect(termWord, Term<Nothing>::reflect))
+			functionReflect,
+			termWord fieldTo (termOrNull ?: nullWord.term))
 
 // === bit stream
 

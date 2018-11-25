@@ -97,38 +97,17 @@ class TokenEvaluatorTest {
 	}
 
 	@Test
-	fun evaluate_word_begin_word() {
+	fun evaluate_word_begin_end() {
 		emptyTokenEvaluator
 			.evaluate(oneWord.token)!!
 			.evaluate(begin.control.token)!!
-			.evaluate(twoWord.token)
+			.evaluate(end.control.token)
 			.assertEqualTo(
 				TokenEvaluator(
-					entryStackOrNull = stack(
-						TokenEvaluator.Entry(
-							scope = Scope(
-								function = emptyFunction,
-								termOrNull = null),
-							word = oneWord)),
+					entryStackOrNull = null,
+					wordOrNull = null,
 					scope = Scope(
 						function = emptyFunction,
-						termOrNull = null),
-					wordOrNull = twoWord))
+						termOrNull = oneWord.term)))
 	}
-
-//	@Test
-//	fun evaluate_word_begin_word_end() {
-//		emptyTokenEvaluator
-//			.evaluate(oneWord.token)!!
-//			.evaluate(begin.control.token)!!
-//			.evaluate(twoWord.token)!!
-//			.evaluate(end.control.token)
-//			.assertEqualTo(
-//				TokenEvaluator(
-//					entryStackOrNull = null,
-//					scope = Scope(
-//						function = emptyFunction,
-//						termOrNull = term(oneWord fieldTo twoWord.term)),
-//					wordOrNull = null))
-//	}
 }

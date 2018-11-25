@@ -5,12 +5,12 @@ import kotlin.test.Test
 
 class SelectorTest {
 	val testTerm: Term<Int> = term(
-		oneWord fieldTo 1.metaTerm,
-		ageWord fieldTo 42.metaTerm,
-		ageWord fieldTo 44.metaTerm,
+		oneWord fieldTo 1.meta.term,
+		ageWord fieldTo 42.meta.term,
+		ageWord fieldTo 44.meta.term,
 		numberWord fieldTo term(
-			firstWord fieldTo 100.metaTerm,
-			lastWord fieldTo 200.metaTerm))
+			firstWord fieldTo 100.meta.term,
+			lastWord fieldTo 200.meta.term))
 
 	@Test
 	fun invokeEmpty() {
@@ -23,7 +23,7 @@ class SelectorTest {
 	fun invokeSinglePattern() {
 		selector(oneWord)
 			.invoke(testTerm)
-			.assertEqualTo(1.metaTerm)
+			.assertEqualTo(1.meta.term)
 	}
 
 	@Test
@@ -33,8 +33,8 @@ class SelectorTest {
 			.assertEqualTo(
 				term(
 					previousWord fieldTo term(
-						lastWord fieldTo 42.metaTerm),
-					lastWord fieldTo 44.metaTerm))
+						lastWord fieldTo 42.meta.term),
+					lastWord fieldTo 44.meta.term))
 	}
 
 	@Test
@@ -48,7 +48,7 @@ class SelectorTest {
 	fun invokeDeep() {
 		selector(numberWord, lastWord)
 			.invoke(testTerm)
-			.assertEqualTo(200.metaTerm)
+			.assertEqualTo(200.meta.term)
 	}
 
 	@Test
@@ -160,21 +160,21 @@ class SelectorTest {
 				term(oneWord fieldTo numberWord.term))
 			.assertEqualTo(
 				term(
-					nameWord fieldTo selector(oneWord).metaTerm))
+					nameWord fieldTo selector(oneWord).meta.term))
 	}
 
 	@Test
 	fun bodyInvoke() {
 		term(
-			thisWord fieldTo selector(itWord).metaTerm,
-			timesWord fieldTo selector(plusWord).metaTerm)
+			thisWord fieldTo selector(itWord).meta.term,
+			timesWord fieldTo selector(plusWord).meta.term)
 			.invoke(
 				term(
-					itWord fieldTo 1.metaTerm,
-					plusWord fieldTo 2.metaTerm))
+					itWord fieldTo 1.meta.term,
+					plusWord fieldTo 2.meta.term))
 			.assertEqualTo(
 				term(
-					thisWord fieldTo 1.metaTerm,
-					timesWord fieldTo 2.metaTerm))
+					thisWord fieldTo 1.meta.term,
+					timesWord fieldTo 2.meta.term))
 	}
 }

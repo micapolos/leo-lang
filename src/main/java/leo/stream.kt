@@ -1,10 +1,13 @@
 package leo
 
-import leo.base.Stream
-import leo.base.fold
-import leo.base.nextOrNull
+import leo.base.*
+
+fun <V> Stream<V>.reflect(key: Word, reflectValue: V.() -> Term<Nothing>): FieldsTerm<Nothing> =
+	key.fieldTo(reflectValue(first)).onlyStack.fold(nextOrNull) { field ->
+		push(key fieldTo reflectValue(field))
+	}.fieldsTerm
 
 fun <V> Stream<V>.reflect(reflectValue: V.() -> Field<Nothing>): FieldsTerm<Nothing> =
-	reflectValue(first).term.fold(nextOrNull) { field ->
-		fieldsPush(reflectValue(field))
-	}
+	reflectValue(first).onlyStack.fold(nextOrNull) { field ->
+		push(reflectValue(field))
+	}.fieldsTerm
