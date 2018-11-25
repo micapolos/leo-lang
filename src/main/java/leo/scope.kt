@@ -20,7 +20,7 @@ fun Scope.push(word: Word): Scope? =
 	}
 
 fun Scope.push(field: Field<Nothing>): Scope? =
-	termOrNull?.push(field)?.let { pushedTerm ->
+	termOrNull.orNullPush(field)?.let { pushedTerm ->
 		copy(termOrNull = pushedTerm)
 	}
 

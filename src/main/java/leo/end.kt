@@ -5,7 +5,7 @@ import leo.base.*
 object End
 
 val end = End
-const val endChar = '('
+const val endChar = ')'
 const val endByte = endChar.toByte()
 const val endString = endChar.toString()
 

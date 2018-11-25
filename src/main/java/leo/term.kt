@@ -64,6 +64,10 @@ fun <V> FieldsTerm<V>?.fieldsPush(field: Field<V>): FieldsTerm<V> =
 fun <V> Term<V>.push(field: Field<V>): Term<V>? =
 	fieldsTermOrNull?.fieldStack?.push(field)?.fieldsTerm
 
+fun <V> Term<V>?.orNullPush(field: Field<V>): Term<V>? =
+	if (this == null) field.onlyTerm
+	else push(field)
+
 val <V> Term<V>.topFieldOrNull: Field<V>?
 	get() =
 		fieldsTermOrNull?.topField
