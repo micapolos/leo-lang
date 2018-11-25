@@ -29,7 +29,7 @@ class FieldTest {
 			.fieldTo(oneWord.term)
 			.term
 			.coreString
-			.assertEqualTo("number(one)")
+			.assertEqualTo("number(one())")
 	}
 
 	@Test

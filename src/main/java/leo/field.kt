@@ -39,9 +39,9 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 val <V> Field<V>.tokenStream: Stream<Token<V>>
 	get() =
 		key.token.then {
-			begin.token.then {
+			begin.control.token.then {
 				value.tokenStream.then {
-					end.token.onlyStream
+					end.control.token.onlyStream
 				}
 			}
 		}

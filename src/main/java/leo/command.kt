@@ -5,11 +5,8 @@ import leo.base.*
 // TODO: Find better name
 sealed class Command<out V>
 
-data class BeginCommand<out V>(
-	val begin: Begin) : Command<V>()
-
-data class EndCommand<out V>(
-	val end: End) : Command<V>()
+data class ControlCommand<out V>(
+	val control: Control) : Command<V>()
 
 data class FieldCommand<out V>(
 	val field: Field<V>) : Command<V>()
@@ -17,17 +14,10 @@ data class FieldCommand<out V>(
 data class ScalarCommand<out V>(
 	val scalar: Scalar<V>) : Command<V>()
 
-fun <V> Begin.command(): Command<V> =
-	BeginCommand(this)
+fun Control.command(): Command<Nothing> =
+	ControlCommand(this)
 
-val Begin.command: Command<Nothing>
-	get() =
-		command()
-
-fun <V> End.command(): Command<V> =
-	EndCommand(this)
-
-val End.command: Command<Nothing>
+val Control.command: Command<Nothing>
 	get() =
 		command()
 
@@ -44,8 +34,7 @@ val <V> Field<V>.command: Command<V>
 val <V> Command<V>.token: Stream<Token<V>>
 	get() =
 		when (this) {
-			is BeginCommand -> begin.token<V>().onlyStream
-			is EndCommand -> end.token<V>().onlyStream
+			is ControlCommand -> control.token.onlyStream
 			is ScalarCommand -> scalar.token.onlyStream
 			is FieldCommand -> field.tokenStream
 		}
@@ -66,8 +55,7 @@ fun <V> CommandReader<V>.read(token: Token<V>): CommandReader<V>? =
 	when (token) {
 		is MetaToken -> read(token)
 		is WordToken -> read(token)
-		is BeginToken -> readBeginToken
-		is EndToken -> readEndToken
+		is ControlToken -> readControlToken(token)
 	}
 
 fun <V> CommandReader<V>.read(metaToken: MetaToken<V>): CommandReader<V>? =
@@ -80,7 +68,13 @@ fun <V> CommandReader<V>.read(wordToken: WordToken<V>): CommandReader<V>? =
 		copy(scalarOrNull = wordToken.word.scalar)
 	}
 
-val <V> CommandReader<V>.readBeginToken: CommandReader<V>?
+fun <V> CommandReader<V>.readControlToken(controlToken: ControlToken<V>): CommandReader<V>? =
+	when (controlToken.control) {
+		is BeginControl -> readBeginControlToken
+		is EndControl -> readEndControlToken
+	}
+
+val <V> CommandReader<V>.readBeginControlToken: CommandReader<V>?
 	get() =
 		scalarOrNull?.let { scalar ->
 			when (scalar) {
@@ -92,18 +86,16 @@ val <V> CommandReader<V>.readBeginToken: CommandReader<V>?
 			}
 		}
 
-val <V> CommandReader<V>.readEndToken: CommandReader<V>?
+val <V> CommandReader<V>.readEndControlToken: CommandReader<V>?
 	get() =
 		scalarOrNull?.let { scalar ->
 			wordStackOrNull?.let { wordStack ->
-				wordStack.top.let { topWord ->
-					copy(
-						wordStackOrNull = wordStack.pop,
-						commandWriter = commandWriter
-							.write(scalar.command)
-							.write(topWord.fieldTo(scalar.term).command),
-						scalarOrNull = null)
-				}
+				copy(
+					wordStackOrNull = wordStack.pop,
+					commandWriter = commandWriter
+						.write(scalar.command)
+						.write(wordStack.top.fieldTo(scalar.term).command),
+					scalarOrNull = null)
 			}
 		}
 

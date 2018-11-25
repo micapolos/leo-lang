@@ -5,8 +5,7 @@ import leo.base.*
 sealed class Token<out V>
 data class MetaToken<V>(val value: V) : Token<V>()
 data class WordToken<V>(val word: Word) : Token<V>()
-data class BeginToken<V>(val begin: Begin) : Token<V>()
-data class EndToken<V>(val end: End) : Token<V>()
+data class ControlToken<V>(val control: Control) : Token<V>()
 
 val <V> V.metaToken: Token<V>
 	get() =
@@ -26,29 +25,21 @@ val <V> Scalar<V>.token: Token<V>
 		  is WordScalar -> word.token
 	  }
 
-fun <V> Begin.token(): Token<V> =
-	BeginToken(this)
+fun <V> Control.token(): Token<V> =
+	ControlToken(this)
 
-val Begin.token: Token<Nothing>
-	get() =
-		token()
-
-fun <V> End.token(): Token<V> =
-	EndToken(this)
-
-val End.token: Token<Nothing>
+val Control.token: Token<Nothing>
 	get() =
 		token()
 
 val Token<Nothing>.reflect: Field<Nothing>
 	get() =
-		tokenWord fieldTo
+		tokenWord fieldTo term(
 			when (this) {
 				is MetaToken -> fail
-				is WordToken -> word.reflect.onlyTerm
-				is BeginToken -> beginWord.term
-				is EndToken -> endWord.term
-			}
+				is WordToken -> word.reflect
+				is ControlToken -> control.reflect
+			})
 
 val Field<Nothing>.parseToken: Token<Nothing>?
 	get() =
@@ -57,11 +48,7 @@ val Field<Nothing>.parseToken: Token<Nothing>?
 				matchWord {
 					token
 				}
-			} ?: matchWord(beginWord) {
-				begin.token
-			} ?: matchWord(endWord) {
-				end.token
-			}
+			} ?: onlyFieldOrNull?.parseControl?.token
 		}
 
 // === streams
@@ -71,8 +58,7 @@ val Token<Nothing>.characterStream: Stream<Character>
 		when (this) {
 			is MetaToken -> fail
 			is WordToken -> word.letterStream.map(Letter::character)
-			is BeginToken -> begin.character.onlyStream
-			is EndToken -> end.character.onlyStream
+			is ControlToken -> control.character.onlyStream
 		}
 
 val Token<Nothing>.bitStream: Stream<Bit>
@@ -84,8 +70,8 @@ val Stream<Bit>.bitParseToken: Parse<Bit, Token<Nothing>>?
 		?: bitParseWord.bind { word ->
 			parsed(word.token)
 		} ?: bitParseBegin.bind { begin ->
-			parsed(begin.token)
+			parsed(begin.control.token)
 		} ?: bitParseEnd.bind { end ->
-			parsed(end.token)
+			parsed(end.control.token)
 		}
 

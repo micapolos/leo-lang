@@ -24,7 +24,7 @@ class ScalarTest {
 
 	@Test
 	fun wordTokenStream() {
-		oneWord.scalar.tokenStream.assertContains(oneWord.token, begin.token, end.token)
+		oneWord.scalar.tokenStream.assertContains(oneWord.token, begin.control.token, end.control.token)
 	}
 
 	@Test

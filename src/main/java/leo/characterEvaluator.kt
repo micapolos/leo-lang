@@ -17,8 +17,8 @@ val emptyCharacterEvaluator =
 
 fun CharacterEvaluator.evaluate(character: Character): CharacterEvaluator? =
 	when (character) {
-		is BeginCharacter -> begin
-		is EndCharacter -> end
+		is BeginCharacter -> evaluateBegin
+		is EndCharacter -> evaluateEnd
 		is LetterCharacter -> plus(character.letter)
 	}
 
@@ -28,17 +28,17 @@ fun CharacterEvaluator.evaluateInternal(character: Character): Evaluator<Charact
 fun CharacterEvaluator.apply(term: Term<Nothing>): Match? =
 	tokenReader.evaluator.applyFn(term)
 
-val CharacterEvaluator.begin: CharacterEvaluator?
+val CharacterEvaluator.evaluateBegin: CharacterEvaluator?
 	get() =
 		if (wordOrNull == null) null
-		else tokenReader.read(leo.begin.token)?.let { tokenReader ->
+		else tokenReader.read(leo.begin.control.token)?.let { tokenReader ->
 			CharacterEvaluator(tokenReader, null)
 		}
 
-val CharacterEvaluator.end: CharacterEvaluator?
+val CharacterEvaluator.evaluateEnd: CharacterEvaluator?
 	get() =
 		if (wordOrNull != null) null
-		else tokenReader.read(leo.end.token)?.let { endedTokenReader ->
+		else tokenReader.read(leo.end.control.token)?.let { endedTokenReader ->
 			CharacterEvaluator(endedTokenReader, null)
 		}
 

@@ -21,7 +21,7 @@ class TermTest {
 	fun coreString() {
 		testTerm
 			.coreString
-			.assertEqualTo("negate(one)plus(age(number)name(string))")
+			.assertEqualTo("negate(one())plus(age(number())name(string()))")
 	}
 
 	@Test
@@ -275,19 +275,25 @@ class TermTest {
 			.tokenStream
 			.assertContains(
 				negateWord.token,
-				begin.token,
+				begin.control.token,
 				oneWord.token,
-				end.token,
+				begin.control.token,
+				end.control.token,
+				end.control.token,
 				plusWord.token,
-				begin.token,
+				begin.control.token,
 				ageWord.token,
-				begin.token,
+				begin.control.token,
 				numberWord.token,
-				end.token,
+				begin.control.token,
+				end.control.token,
+				end.control.token,
 				nameWord.token,
-				begin.token,
+				begin.control.token,
 				stringWord.token,
-				end.token,
-				end.token)
+				begin.control.token,
+				end.control.token,
+				end.control.token,
+				end.control.token)
 	}
 }

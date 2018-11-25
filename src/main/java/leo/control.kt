@@ -1,6 +1,6 @@
 package leo
 
-// Find a better name: transition? parenthesis? closure? block?
+// TODO: Better name?
 sealed class Control
 
 data class BeginControl(
@@ -20,3 +20,24 @@ val Begin.control: Control
 val End.control: Control
 	get() =
 		EndControl(this)
+
+val Control.character: Character
+	get() =
+		when (this) {
+			is BeginControl -> begin.character
+			is EndControl -> end.character
+		}
+
+val Control.reflect: Field<Nothing>
+	get() =
+		controlWord fieldTo
+			when (this) {
+				is BeginControl -> beginWord.term
+				is EndControl -> endWord.term
+			}
+
+val Field<Nothing>.parseControl
+	get() =
+		matchKey(controlWord) {
+			matchWord(beginWord) { begin.control } ?: matchWord(endWord) { end.control }
+		}

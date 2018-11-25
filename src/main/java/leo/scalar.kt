@@ -38,7 +38,7 @@ val <V> Scalar<V>.tokenStream: Stream<Token<V>>
   get() =
 	  when (this) {
 		  is MetaScalar -> meta.value.metaToken.onlyStream
-		  is WordScalar -> stream(word.token(), begin.token, end.token)
+		  is WordScalar -> stream(word.token(), begin.control.token, end.control.token)
 	  }
 
 // === appendable

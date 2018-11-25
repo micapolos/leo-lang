@@ -26,8 +26,10 @@ fun TokenEvaluator.evaluate(token: Token<Nothing>): TokenEvaluator? =
 	when (token) {
 		is MetaToken -> fail
 		is WordToken -> evaluate(token)
-		is BeginToken -> evaluateBegin
-		is EndToken -> evaluateEnd
+		is ControlToken -> when (token.control) {
+			is BeginControl -> evaluateBegin
+			is EndControl -> evaluateEnd
+		}
 	}
 
 fun TokenEvaluator.evaluateInternal(token: Token<Nothing>): Evaluator<Token<Nothing>>? =

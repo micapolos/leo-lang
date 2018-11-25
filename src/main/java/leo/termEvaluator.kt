@@ -1,6 +1,9 @@
 package leo
 
-import leo.base.*
+import leo.base.Bit
+import leo.base.Stream
+import leo.base.fold
+import leo.base.orNull
 
 data class TermEvaluator(
 	val fieldEvaluator: Evaluator<Field<Nothing>>)
@@ -9,7 +12,7 @@ val emptyTermEvaluator =
 	TermEvaluator(emptyFieldEvaluator.evaluator)
 
 fun TermEvaluator.evaluate(term: Term<Nothing>): TermEvaluator? =
-	orNull.fold(term.fieldStreamOrNull?.reverse) { field ->
+	orNull.fold(term.fieldStreamOrNull) { field ->
 		this?.fieldEvaluator?.evaluate(field)?.let { TermEvaluator(it) }
 	}
 

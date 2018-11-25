@@ -145,7 +145,7 @@ val <V> Term<V>.tokenStream: Stream<Token<V>>
 	get() =
 		when (this) {
 			is MetaTerm -> value.metaToken.onlyStream
-			is WordTerm -> word.token<V>().onlyStream
+			is WordTerm -> stream(word.token(), begin.control.token, end.control.token)
 			is FieldsTerm -> this.fieldStream.mapJoin(Field<V>::tokenStream)
 		}
 

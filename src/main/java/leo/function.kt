@@ -77,8 +77,10 @@ fun Function.define(token: Token<Pattern>, defineNext: Function.() -> Match?): F
 	when (token) {
 		is MetaToken -> define(token, defineNext)
 		is WordToken -> define(token, defineNext)
-		is BeginToken -> defineBeginToken(defineNext)
-		is EndToken -> defineEndToken(defineNext)
+		is ControlToken -> when (token.control) {
+			is BeginControl -> defineBeginToken(defineNext)
+			is EndControl -> defineEndToken(defineNext)
+		}
 	}
 
 fun Function.define(token: MetaToken<Pattern>, defineNext: Function.() -> Match?): Function? =

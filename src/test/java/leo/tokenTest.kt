@@ -13,19 +13,11 @@ class TokenTest {
 	}
 
 	@Test
-	fun reflect_begin() {
-		begin.token
+	fun reflect_control() {
+		begin.control.token
 			.reflect
 			.assertEqualTo(
-				tokenWord fieldTo beginWord.term)
-	}
-
-	@Test
-	fun reflect_end() {
-		end.token
-			.reflect
-			.assertEqualTo(
-				tokenWord fieldTo endWord.term)
+				tokenWord fieldTo begin.control.reflect.term)
 	}
 
 	@Test
@@ -37,17 +29,10 @@ class TokenTest {
 	}
 
 	@Test
-	fun parse_begin() {
-		(tokenWord fieldTo beginWord.term)
+	fun parse_control() {
+		(tokenWord fieldTo begin.control.reflect.term)
 			.parseToken
-			.assertEqualTo(begin.token)
-	}
-
-	@Test
-	fun parse_end() {
-		tokenWord.fieldTo(endWord.term)
-			.parseToken
-			.assertEqualTo(end.token)
+			.assertEqualTo(begin.control.token)
 	}
 
 	@Test
@@ -61,19 +46,19 @@ class TokenTest {
 
 	@Test
 	fun bitParseToken_begin() {
-		begin.token
+		begin.control.token
 			.bitStream
 			.then { Bit.ZERO.onlyStream }
 			.bitParseToken
-			.assertParsedAndRest(begin.token, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(begin.control.token, Bit.ZERO.onlyStream)
 	}
 
 	@Test
 	fun bitParseToken_end() {
-		end.token
+		end.control.token
 			.bitStream
 			.then { Bit.ZERO.onlyStream }
 			.bitParseToken
-			.assertParsedAndRest(end.token, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(end.control.token, Bit.ZERO.onlyStream)
 	}
 }

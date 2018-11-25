@@ -31,20 +31,20 @@ class TokenEvaluatorTest {
 			.bitStreamOrNull
 			?.bitByteStreamOrNull
 			.utf8string
-			.assertEqualTo("b(it(one)two(c")
+			.assertEqualTo("b(it(one())two(c()")
 	}
 
 	@Test
 	fun evaluate_begin() {
 		emptyTokenEvaluator
-			.evaluate(begin.token)
+			.evaluate(begin.control.token)
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun evaluate_end() {
 		emptyTokenEvaluator
-			.evaluate(end.token)
+			.evaluate(end.control.token)
 			.assertEqualTo(null)
 	}
 
@@ -65,7 +65,7 @@ class TokenEvaluatorTest {
 	fun evaluate_word_begin() {
 		emptyTokenEvaluator
 			.evaluate(oneWord.token)!!
-			.evaluate(begin.token)
+			.evaluate(begin.control.token)
 			.assertEqualTo(
 				TokenEvaluator(
 					entryStackOrNull = stack(
@@ -84,7 +84,7 @@ class TokenEvaluatorTest {
 	fun evaluate_word_end() {
 		emptyTokenEvaluator
 			.evaluate(oneWord.token)!!
-			.evaluate(end.token)
+			.evaluate(end.control.token)
 			.assertEqualTo(null)
 	}
 
@@ -100,7 +100,7 @@ class TokenEvaluatorTest {
 	fun evaluate_word_begin_word() {
 		emptyTokenEvaluator
 			.evaluate(oneWord.token)!!
-			.evaluate(begin.token)!!
+			.evaluate(begin.control.token)!!
 			.evaluate(twoWord.token)
 			.assertEqualTo(
 				TokenEvaluator(
@@ -120,9 +120,9 @@ class TokenEvaluatorTest {
 //	fun evaluate_word_begin_word_end() {
 //		emptyTokenEvaluator
 //			.evaluate(oneWord.token)!!
-//			.evaluate(begin.token)!!
+//			.evaluate(begin.control.token)!!
 //			.evaluate(twoWord.token)!!
-//			.evaluate(end.token)
+//			.evaluate(end.control.token)
 //			.assertEqualTo(
 //				TokenEvaluator(
 //					entryStackOrNull = null,
