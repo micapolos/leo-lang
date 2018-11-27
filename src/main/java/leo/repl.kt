@@ -30,9 +30,8 @@ val Repl.bitStreamOrNull: Stream<Bit>?
 fun runRepl(inputBitStream: Stream<Bit>?, outBitWriter: Writer<Bit>, errorBitWriter: Writer<Bit>) {
 	emptyRepl(errorBitWriter)
 		.fold(inputBitStream, Repl::read)
-		.run {
-			bitStreamOrNull.let { bitStream ->
-				outBitWriter.write(bitStream).write(newlineBitStream)
-			}
+		.bitStreamOrNull
+		.let { bitStream ->
+			outBitWriter.write(bitStream).write(newlineBitStream)
 		}
 }
