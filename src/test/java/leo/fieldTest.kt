@@ -8,7 +8,7 @@ import kotlin.test.Test
 class FieldTest {
 	@Test
 	fun string() {
-		numberWord.fieldTo(1.meta.atom.term)
+		numberWord.fieldTo(1.meta.term)
 			.string
 			.assertEqualTo("number #int 1")
 	}

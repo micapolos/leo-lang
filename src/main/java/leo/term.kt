@@ -32,13 +32,6 @@ val Word.term: Term<Nothing>
 	get() =
 		term()
 
-val <V> Atom<V>.term: Term<V>
-	get() =
-		when (this) {
-			is MetaAtom -> meta.term
-			is WordAtom -> word.term
-		}
-
 val <V> Field<V>.onlyTerm: Term<V>
 	get() =
 		term
