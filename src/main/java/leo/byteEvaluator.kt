@@ -2,6 +2,7 @@ package leo
 
 import leo.base.Bit
 import leo.base.Stream
+import leo.base.char
 
 data class ByteEvaluator(
 	val characterReader: Reader<Character>)
@@ -14,7 +15,8 @@ val emptyByteEvaluator =
 // === mutation
 
 fun ByteEvaluator.evaluate(byte: Byte): ByteEvaluator? =
-	byte.characterOrNull
+	if (ignoreWhitespaces && byte.char.isWhitespace()) this
+	else byte.characterOrNull
 		?.let(characterReader::read)
 		?.let { copy(characterReader = it) }
 

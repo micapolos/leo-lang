@@ -13,13 +13,13 @@ fun emptyRepl(errorBitWriter: Writer<Bit>): Repl =
 fun Repl.read(bit: Bit): Repl =
 	if (isError) copy(errorBitWriter = errorBitWriter.write(bit))
 	else bitReader.read(bit).let { nextBitReader ->
-		if (nextBitReader == null) copy(
-			isError = true,
-			errorBitWriter = errorBitWriter
-				.write(bitReader.bitStreamOrNull)
-				.write(bit)
-				.write("<<<ERROR>>>".bitStreamOrNull)
-		)
+		if (nextBitReader == null)
+			copy(
+				isError = true,
+				errorBitWriter = errorBitWriter
+					.write(bitReader.bitStreamOrNull)
+					.write(bit)
+					.write("<<<ERROR>>>".bitStreamOrNull))
 		else copy(bitReader = nextBitReader)
 	}
 
@@ -30,6 +30,9 @@ val Repl.bitStreamOrNull: Stream<Bit>?
 fun runRepl(inputBitStream: Stream<Bit>?, outBitWriter: Writer<Bit>, errorBitWriter: Writer<Bit>) {
 	emptyRepl(errorBitWriter)
 		.fold(inputBitStream, Repl::read)
-		.bitStreamOrNull
-		.let { bitStream -> outBitWriter.write(bitStream).write(newlineBitStream) }
+		.run {
+			bitStreamOrNull.let { bitStream ->
+				outBitWriter.write(bitStream).write(newlineBitStream)
+			}
+		}
 }

@@ -25,9 +25,9 @@ val Stream<Byte>?.utf8string: String
 			}
 		}
 
-val Stream<Bit>.utf8String
+val Stream<Bit>?.utf8String: String
 	get() =
-		bitByteStreamOrNull?.utf8string
+		this?.bitByteStreamOrNull?.utf8string ?: ""
 
 fun <R> R.fold(charSequence: CharSequence, fn: R.(Char) -> R): R =
 	charSequence.fold(this, fn)

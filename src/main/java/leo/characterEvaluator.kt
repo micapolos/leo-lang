@@ -30,15 +30,19 @@ fun CharacterEvaluator.apply(term: Term<Nothing>): Match? =
 
 val CharacterEvaluator.evaluateBegin: CharacterEvaluator?
 	get() =
-		if (wordOrNull == null) null
-		else tokenReader.read(leo.begin.control.token)?.let { tokenReader ->
-			CharacterEvaluator(tokenReader, null)
+		wordOrNull?.let { word ->
+			tokenReader
+				.read(word.token)
+				?.read(begin.control.token)
+				?.let { tokenReader ->
+					CharacterEvaluator(tokenReader, null)
+				}
 		}
 
 val CharacterEvaluator.evaluateEnd: CharacterEvaluator?
 	get() =
 		if (wordOrNull != null) null
-		else tokenReader.read(leo.end.control.token)?.let { endedTokenReader ->
+		else tokenReader.read(end.control.token)?.let { endedTokenReader ->
 			CharacterEvaluator(endedTokenReader, null)
 		}
 
