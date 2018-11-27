@@ -37,8 +37,7 @@ fun Function.invoke(argument: Term<Nothing>, fallbackFn: () -> Term<Nothing>): T
 
 fun Function.apply(argument: Term<Nothing>): Term<Nothing>? =
 	get(argument)?.bodyOrNull.let { bodyOrNull ->
-		if (bodyOrNull == null) null
-		else bodyOrNull.apply(argument)
+		bodyOrNull?.apply(argument)
 	}
 
 // === fallback

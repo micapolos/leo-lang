@@ -35,11 +35,6 @@ fun Term<Nothing>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector,
 		}
 	}
 
-// === apply
-
-fun Term<Selector>.apply(argument: Term<Nothing>): Term<Nothing> =
-	invoke(argument)!!
-
 // === invoke
 
 fun <V> Selector.invoke(argumentTerm: Term<V>): Term<V>? =

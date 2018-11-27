@@ -12,8 +12,8 @@ data class Body(
 fun body(selectorTerm: Term<Selector>, function: Function) =
 	Body(selectorTerm, function)
 
-fun Body.apply(argument: Term<Nothing>): Term<Nothing> =
-	selectorTerm.apply(argument).let { selectedTerm ->
+fun Body.apply(argument: Term<Nothing>): Term<Nothing>? =
+	selectorTerm.invoke(argument)?.let { selectedTerm ->
 		function.invoke(selectedTerm)
 	}
 

@@ -31,7 +31,9 @@ fun <V> Reader<V>.termInvoke(value: V): Reader<V>? =
 						is BinaryTrie.Match.Partial ->
 							this // partial - continue
 						is BinaryTrie.Match.Full ->
-							copy(termOrNull = matchOrNull.bodyBinaryTrieMatch.value.apply(argument)).termParse
+							matchOrNull.bodyBinaryTrieMatch.value.apply(argument)?.let { applied ->
+								copy(termOrNull = applied).termParse
+							}
 					}
 				}
 		}

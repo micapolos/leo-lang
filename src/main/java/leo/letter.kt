@@ -60,7 +60,7 @@ val Letter.bitStream: Stream<Bit>
 
 val Letter.reflect: Field<Nothing>
 	get() =
-		letterWord fieldTo char.toString().wordOrNull!!.term
+		letterWord fieldTo onlyWord.term
 
 val Field<Nothing>.parseLetter: Letter?
 	get() =
