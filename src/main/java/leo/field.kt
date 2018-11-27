@@ -11,6 +11,12 @@ data class Field<out V>(
 infix fun <V> Word.fieldTo(term: Term<V>) =
 	Field(this, term)
 
+infix fun <V> Word.fieldTo(word: Word): Field<V> =
+	fieldTo(word.term())
+
+infix fun <V> Word.fieldTo(value: V): Field<V> =
+	fieldTo(value.meta.term)
+
 val Word.itField: Field<Nothing>
 	get() =
 		itWord fieldTo term

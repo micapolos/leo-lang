@@ -5,7 +5,7 @@ import org.junit.Test
 class WriterTest {
 	@Test
 	fun testPrintlnWriter() {
-		printlnWriter<Bit>().write(stream(Bit.ZERO, Bit.ONE))
+		printlnWriter<Bit>().assertNotNull
 	}
 
 	@Test

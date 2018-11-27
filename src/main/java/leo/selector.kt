@@ -51,7 +51,7 @@ fun <V> Term<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
 	when (this) {
 		is MetaTerm -> meta.invoke(argumentTerm)
 		is WordTerm -> word.invoke()
-		is FieldsTerm -> this.invoke(argumentTerm)
+		is StructureTerm -> this.invoke(argumentTerm)
 	}
 
 fun <V> Word.invoke(): Term<V>? =
@@ -60,7 +60,7 @@ fun <V> Word.invoke(): Term<V>? =
 fun <V> Meta<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
 	value.invoke(argumentTerm)
 
-fun <V> FieldsTerm<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
+fun <V> StructureTerm<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
 	fieldStream.run {
 		first.invoke(argumentTerm)?.onlyTerm.fold(nextOrNull) { field ->
 			field.invoke(argumentTerm)?.let { invokedField ->
@@ -83,14 +83,14 @@ fun Term<Nothing>.parseNonSelectorTerm(patternTerm: Term<Pattern>): Term<Selecto
 	when (this) {
 		is MetaTerm -> fail
 		is WordTerm -> word.term()
-		is FieldsTerm -> parseNonSelectorTerm(patternTerm)
+		is StructureTerm -> structure.parseNonSelectorTerm(patternTerm)
 	}
 
-fun FieldsTerm<Nothing>.parseNonSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
+fun Structure<Nothing>.parseNonSelectorTerm(patternTerm: Term<Pattern>): Term<Selector> =
 	fieldStream.run {
-		first.parseSelectorField(patternTerm).term.fold(nextOrNull) { field ->
-			fieldsPush(field.parseSelectorField(patternTerm))
-		}
+		first.parseSelectorField(patternTerm).structure.fold(nextOrNull) { field ->
+			plus(field.parseSelectorField(patternTerm))
+		}.term
 	}
 
 fun Field<Nothing>.parseSelectorField(patternTerm: Term<Pattern>): Field<Selector> =

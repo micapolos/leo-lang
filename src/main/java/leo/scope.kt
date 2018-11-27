@@ -61,7 +61,7 @@ val Scope.reflect: Field<Nothing>
 fun Scope.bitStreamOrNull(asFieldsTerm: Boolean): Stream<Bit>? =
 	termOrNull?.let { term ->
 		when {
-			asFieldsTerm && term !is FieldsTerm -> term.itTerm
+			asFieldsTerm && term !is StructureTerm -> term.itTerm
 			else -> term
 		}.bitStream
 	}

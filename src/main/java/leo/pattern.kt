@@ -36,17 +36,20 @@ fun Term<Nothing>.matches(patternTerm: Term<Pattern>): Boolean =
 	when (patternTerm) {
 		is MetaTerm -> false
 		is WordTerm -> this is WordTerm && word.matches(patternTerm.word)
-		is FieldsTerm -> this is FieldsTerm && this.matches(patternTerm)
+		is StructureTerm -> this is StructureTerm && this.matches(patternTerm)
 	}
 
 fun Word.matches(patternWord: Word): Boolean =
 	this == patternWord
 
-fun FieldsTerm<Nothing>.matches(patternFieldsTerm: FieldsTerm<Pattern>): Boolean =
-	fieldStack.top.matches(patternFieldsTerm.fieldStack.top) &&
-		if (fieldStack.pop == null) patternFieldsTerm.fieldStack.pop == null
-		else patternFieldsTerm.fieldStack.pop != null &&
-			fieldStack.pop.fieldsTerm.matches(patternFieldsTerm.fieldStack.pop.fieldsTerm)
+fun StructureTerm<Nothing>.matches(patternStructureTerm: StructureTerm<Pattern>): Boolean =
+	structure.matches(patternStructureTerm.structure)
+
+fun Structure<Nothing>.matches(patternStructure: Structure<Pattern>): Boolean =
+	fieldStack.top.matches(patternStructure.fieldStack.top) &&
+		if (fieldStack.pop == null) patternStructure.fieldStack.pop == null
+		else patternStructure.fieldStack.pop != null &&
+			fieldStack.pop.structureTerm.matches(patternStructure.fieldStack.pop.structureTerm)
 
 fun Field<Nothing>.matches(patternField: Field<Pattern>) =
 	key == patternField.key && value.matches(patternField.value)
@@ -55,7 +58,7 @@ fun Field<Nothing>.matches(patternField: Field<Pattern>) =
 
 val Term<Nothing>.parsePattern: Pattern?
 	get() =
-		fieldsTermOrNull
+		structureTermOrNull
 			?.run {
 				true.fold(fieldStream) { field ->
 					this && field.key == eitherWord
@@ -75,15 +78,15 @@ val Term<Nothing>.parsePatternTerm: Term<Pattern>
 		when (this) {
 			is MetaTerm -> fail
 			is WordTerm -> word.term
-			is FieldsTerm -> parsePattern?.meta?.term ?: parseStructurePatternTerm
+			is StructureTerm -> parsePattern?.meta?.term ?: parseStructurePatternTerm
 		}
 
-val FieldsTerm<Nothing>.parseStructurePatternTerm: Term<Pattern>
+val StructureTerm<Nothing>.parseStructurePatternTerm: Term<Pattern>
 	get() =
 		fieldStream.run {
-			first.parsePatternField.term.fold(nextOrNull) { field ->
-				fieldsPush(field.parsePatternField)
-			}
+			first.parsePatternField.structure.fold(nextOrNull) { field ->
+				plus(field.parsePatternField)
+			}.term
 		}
 
 val Field<Nothing>.parsePatternField: Field<Pattern>

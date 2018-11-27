@@ -2,12 +2,12 @@ package leo
 
 import leo.base.*
 
-fun <V> Stream<V>.reflect(key: Word, reflectValue: V.() -> Term<Nothing>): FieldsTerm<Nothing> =
+fun <V> Stream<V>.reflect(key: Word, reflectValue: V.() -> Term<Nothing>): StructureTerm<Nothing> =
 	key.fieldTo(reflectValue(first)).onlyStack.fold(nextOrNull) { field ->
 		push(key fieldTo reflectValue(field))
-	}.fieldsTerm
+	}.structureTerm
 
-fun <V> Stream<V>.reflect(reflectValue: V.() -> Field<Nothing>): FieldsTerm<Nothing> =
+fun <V> Stream<V>.reflect(reflectValue: V.() -> Field<Nothing>): StructureTerm<Nothing> =
 	reflectValue(first).onlyStack.fold(nextOrNull) { field ->
 		push(reflectValue(field))
-	}.fieldsTerm
+	}.structureTerm

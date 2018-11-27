@@ -106,16 +106,6 @@ class TermTest {
 	}
 
 	@Test
-	fun fieldsPushField() {
-		term(oneWord fieldTo 1.meta.term)
-			.fieldsPush(twoWord fieldTo 2.meta.term)
-			.assertEqualTo(
-				term(
-					oneWord fieldTo 1.meta.term,
-					twoWord fieldTo 2.meta.term))
-	}
-
-	@Test
 	fun selectSingle() {
 		termForGet
 			.select(oneWord)

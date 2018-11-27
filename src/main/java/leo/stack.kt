@@ -3,7 +3,7 @@ package leo
 import leo.base.*
 
 fun <V> Term<Nothing>.parseStack(parseValue: (Field<Nothing>) -> V?): Stack<V>? =
-	fieldsTermOrNull
+	structureTermOrNull
 		?.fieldStream
 		?.run {
 			parseValue(first)?.onlyStack?.orNull.fold(nextOrNull) { field ->

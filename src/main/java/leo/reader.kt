@@ -38,7 +38,7 @@ fun <V> Reader<V>.termInvoke(value: V): Reader<V>? =
 
 val <V> Reader<V>.termParse: Reader<V>?
 	get() =
-		termOrNull?.fieldsTermOrNull?.fieldStream?.let { fieldStream ->
+		termOrNull?.structureTermOrNull?.fieldStream?.let { fieldStream ->
 			copy(termOrNull = null).orNull
 				.fold(fieldStream) { field ->
 					if (this == null) null

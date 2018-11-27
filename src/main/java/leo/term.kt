@@ -14,8 +14,8 @@ data class WordTerm<V>(
 	override fun toString() = appendableString { it.append(this) }
 }
 
-data class FieldsTerm<out V>(
-	val fieldStack: Stack<Field<V>>) : Term<V>() {
+data class StructureTerm<out V>(
+	val structure: Structure<V>) : Term<V>() {
 	override fun toString() = appendableString { it.append(this) }
 }
 
@@ -43,26 +43,35 @@ val <V> Field<V>.onlyTerm: Term<V>
 	get() =
 		term
 
-val <V> Field<V>.term: FieldsTerm<V>
+val <V> Field<V>.term: Term<V>
 	get() =
-		FieldsTerm(onlyStack)
+		structure.term
 
-val <V> Stack<Field<V>>.fieldsTerm
+val <V> Stack<Field<V>>.structureTerm: StructureTerm<V>
 	get() =
-		FieldsTerm(this)
+		structure.structureTerm
+
+val <V> Structure<V>.term: Term<V>
+	get() =
+		structureTerm
+
+val <V> Structure<V>.structureTerm: StructureTerm<V>
+	get() =
+		StructureTerm(this)
 
 val <V> Term<V>.itTerm: Term<V>
 	get() =
 		(itWord fieldTo this).term
 
 fun <V> term(field: Field<V>, vararg fields: Field<V>) =
-	stack(field, *fields).fieldsTerm
+	stack(field, *fields).structureTerm
 
-fun <V> FieldsTerm<V>?.fieldsPush(field: Field<V>): FieldsTerm<V> =
-	this?.fieldStack.push(field).fieldsTerm
+val <V> StructureTerm<V>.fieldStack: Stack<Field<V>>
+	get() =
+		structure.fieldStack
 
 fun <V> Term<V>.push(field: Field<V>): Term<V>? =
-	fieldsTermOrNull?.fieldStack?.push(field)?.fieldsTerm
+	structureTermOrNull?.structure?.plus(field)?.term
 
 fun <V> Term<V>?.orNullPush(field: Field<V>): Term<V>? =
 	if (this == null) field.onlyTerm
@@ -70,21 +79,21 @@ fun <V> Term<V>?.orNullPush(field: Field<V>): Term<V>? =
 
 val <V> Term<V>.topFieldOrNull: Field<V>?
 	get() =
-		fieldsTermOrNull?.topField
+		structureTermOrNull?.topField
 
-val <V> FieldsTerm<V>.topField: Field<V>
+val <V> StructureTerm<V>.topField: Field<V>
 	get() =
-		fieldStack.top
+		structure.fieldStack.top
 
 // === fields
 
 val <V> Term<V>.fieldStreamOrNull: Stream<Field<V>>?
 	get() =
-		fieldsTermOrNull?.fieldStream
+		structureTermOrNull?.fieldStream
 
-val <V> FieldsTerm<V>.fieldStream: Stream<Field<V>>
+val <V> StructureTerm<V>.fieldStream: Stream<Field<V>>
 	get() =
-		fieldStack.reverse.stream
+		structure.fieldStream
 
 // === casting
 
@@ -96,9 +105,9 @@ val <V> Term<V>.wordTermOrNull
 	get() =
 		this as? WordTerm
 
-val <V> Term<V>.fieldsTermOrNull
+val <V> Term<V>.structureTermOrNull
 	get() =
-		this as? FieldsTerm
+		this as? StructureTerm
 
 val <V : Any> Term<V>.valueOrNull: V?
 	get() =
@@ -108,21 +117,13 @@ val <V : Any> Term<V>.valueOrNull: V?
 
 val <V> Term<V>.isSimple: Boolean
 	get() =
-		when (this) {
-			is MetaTerm -> true
-			is WordTerm -> true
-			is FieldsTerm -> fieldStack.pop == null
-		}
+		structureTermOrNull?.structure?.isSimple ?: true
 
 fun <V> Appendable.append(term: Term<V>): Appendable =
 	when (term) {
 		is MetaTerm -> append(term.meta)
 		is WordTerm -> append(term.word)
-		is FieldsTerm -> term.fieldStream.let { fieldStream ->
-			append(fieldStream.first).fold(fieldStream.nextOrNull) { field ->
-				append(", ").append(field)
-			}
-		}
+		is StructureTerm -> append(term.structure)
 	}
 
 // === stream
@@ -146,24 +147,20 @@ val <V> Term<V>.tokenStream: Stream<Token<V>>
 		when (this) {
 			is MetaTerm -> meta.token.onlyStream
 			is WordTerm -> stream(word.token(), begin.control.token, end.control.token)
-			is FieldsTerm -> this.fieldStream.mapJoin(Field<V>::tokenStream)
+			is StructureTerm -> this.structure.tokenStream
 		}
 
 // === access
 
-fun <V> FieldsTerm<V>.valueStreamOrNull(key: Word): Stream<Term<V>>? =
+fun <V> StructureTerm<V>.valueStreamOrNull(key: Word): Stream<Term<V>>? =
 	fieldStream.filterMap { field -> field.get(key) }
 
-fun <V> FieldsTerm<V>.onlyValueOrNull(key: Word): Term<V>? =
+fun <V> StructureTerm<V>.onlyValueOrNull(key: Word): Term<V>? =
 	valueStreamOrNull(key)?.onlyValueOrNull
 
 val <V> Term<V>.onlyFieldOrNull: Field<V>?
 	get() =
-		fieldsTermOrNull?.fieldStack?.run {
-			pop.ifNull {
-				top.key fieldTo top.value
-			}
-		}
+		structureTermOrNull?.structure?.fieldStack?.onlyOrNull
 
 fun <V, R : Any> Term<V>.matchWord(fn: Word.() -> R?): R? =
 	wordTermOrNull?.word?.let { fn(it) }
@@ -190,21 +187,21 @@ fun <V, R : Any> Term<V>.matchFieldKeys(key1: Word, key2: Word, fn: (Term<V>, Te
 	}
 
 fun <V, R : Any> Term<V>.matchAllFieldKeys(key: Word, fn: (Term<V>) -> R?): Stream<R>? =
-	fieldsTermOrNull?.matchAllFieldKeys(key, fn)
+	structureTermOrNull?.matchAllFieldKeys(key, fn)
 
-fun <V, R : Any> FieldsTerm<V>.matchFirst(key: Word, fn: FieldsTerm<V>?.(Term<V>) -> R?): R? =
+fun <V, R : Any> StructureTerm<V>.matchFirst(key: Word, fn: StructureTerm<V>?.(Term<V>) -> R?): R? =
 	fieldStream.matchFirst({ it.key == key }) {
 		fn(it.value)
 	}
 
-fun <V, R : Any> FieldsTerm<V>.matchAllFieldKeys(key: Word, fn: (Term<V>) -> R?): Stream<R>? =
+fun <V, R : Any> StructureTerm<V>.matchAllFieldKeys(key: Word, fn: (Term<V>) -> R?): Stream<R>? =
 	fieldStream.filterMap { field ->
 		if (field.key == key) fn(field.value)
 		else null
 	}
 
 fun <V> Term<V>.select(key: Word): Term<V>? =
-	fieldsTermOrNull?.valueStreamOrNull(key)?.run {
+	structureTermOrNull?.valueStreamOrNull(key)?.run {
 		nextOrNull.let { nextOrNull ->
 			if (nextOrNull == null) first
 			else (lastWord fieldTo first).onlyTerm.fold(nextOrNull) { term ->
@@ -225,7 +222,7 @@ fun <V> Term<V>.reflectMetaTerm(valueReflect: V.() -> Term<Nothing>): Term<Nothi
 	when (this) {
 		is MetaTerm -> meta.reflectMeta(valueReflect)
 		is WordTerm -> word.term
-		is FieldsTerm -> fieldStack.map { it.reflectMetaTerm(valueReflect) }.fieldsTerm
+		is StructureTerm -> structure.reflectMetaTerm(valueReflect)
 	}
 
 fun <V> Term<V>.reflectMeta(valueReflect: V.() -> Field<Nothing>): Term<Nothing> =
@@ -241,7 +238,7 @@ fun <V> Term<Nothing>.parseTerm(parseValue: (Term<Nothing>) -> V?): Term<V>? =
 	parseValue(this)?.meta?.term ?: when (this) {
 		is MetaTerm -> fail
 		is WordTerm -> word.term()
-		is FieldsTerm -> fieldStack.mapOrNull { it.parseField(parseValue) }?.fieldsTerm
+		is StructureTerm -> parseStructure(parseValue)?.term
 	}
 
 // === select
@@ -258,5 +255,5 @@ fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
 	when (this) {
 		is MetaTerm -> meta.map(fn).term
 		is WordTerm -> word.term()
-		is FieldsTerm -> this.fieldStream.map { it.map(fn) }.stack.fieldsTerm
+		is StructureTerm -> this.structure.map(fn).term
 	}

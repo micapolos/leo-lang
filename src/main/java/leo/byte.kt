@@ -9,7 +9,7 @@ val Byte.reflect: Field<Nothing>
 val Field<Nothing>.parseByte: Byte?
 	get() =
 		matchKey(byteWord) {
-			fieldsTermOrNull?.fieldStream?.run {
+			structureTermOrNull?.fieldStream?.run {
 				matchFirst { field7 ->
 					field7.parseBit?.let { bit7 ->
 						this?.matchFirst { field6 ->
