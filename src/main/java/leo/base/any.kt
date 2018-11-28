@@ -49,3 +49,7 @@ fun <R> Any.useSiblingResourceBitStreamOrNull(siblingName: String, fn: Stream<Bi
 
 fun <V : Any, R : Any> V?.matchNull(fn: () -> R?): R? =
 	if (this == null) fn() else null
+
+tailrec fun <V> V.iterate(count: Int, fn: V.() -> V): V =
+	if (count == 0) this
+	else fn().iterate(count - 1, fn)

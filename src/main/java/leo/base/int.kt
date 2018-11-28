@@ -12,3 +12,7 @@ val Int.shortStream: Stream<Short>
 val Int.bitStream: Stream<Bit>
 	get() =
 		shortStream.map(Short::bitStream).join
+
+val Int.indexSize: Int
+	get() =
+		32 - Integer.numberOfLeadingZeros(this - 1)

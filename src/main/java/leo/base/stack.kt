@@ -70,6 +70,10 @@ val Stack<*>.sizeInt: Int
 	get() =
 		0.fold(this) { this + 1 }
 
+val Stack<*>.indexBitCount: Int
+	get() =
+		32 - Integer.numberOfLeadingZeros(sizeInt - 1)
+
 tailrec operator fun <V : Any> Stack<V>.get(index: Int): V? =
 	when {
 		index == 0 -> top

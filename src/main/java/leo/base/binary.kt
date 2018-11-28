@@ -32,6 +32,11 @@ val Int.binary: Binary
 	get() =
 		bitStream.stack.binary
 
+fun Int.binaryOrNullWithSize(size: Int): Binary? =
+	(this to nullOf<Stack<Bit>>()).iterate(size) {
+		first.shr(1) to second.push(first.lastBit)
+	}.second?.reverse?.binary
+
 val Binary.clampedInt: Int
 	get() =
 		0.fold(bitStream) { bit ->

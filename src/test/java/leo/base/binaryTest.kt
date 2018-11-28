@@ -102,4 +102,12 @@ class BinaryTest {
 			.clampedByte
 			.assertEqualTo(2.toByte())
 	}
+
+	@Test
+	fun binaryOrNullWithSize() {
+		2.binaryOrNullWithSize(0).assertEqualTo(null)
+		2.binaryOrNullWithSize(1).assertEqualTo(stack(Bit.ZERO).binary)
+		2.binaryOrNullWithSize(2).assertEqualTo(stack(Bit.ONE, Bit.ZERO).binary)
+		2.binaryOrNullWithSize(3).assertEqualTo(stack(Bit.ZERO, Bit.ONE, Bit.ZERO).binary)
+	}
 }
