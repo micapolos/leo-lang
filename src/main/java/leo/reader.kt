@@ -15,7 +15,7 @@ fun <V> Reader<V>.read(value: V): Reader<V>? =
 		?.termInvoke(value)
 
 fun <V> Reader<V>.termPush(field: Field<Nothing>): Reader<V>? =
-	termOrNull?.run { push(field) }?.let { copy(termOrNull = it) }
+	termOrNull.orNullPush(field)?.let { copy(termOrNull = it) }
 
 // TODO: This applyFn() should be incremental, to avoid quadratic cost.
 fun <V> Reader<V>.termInvoke(value: V): Reader<V>? =

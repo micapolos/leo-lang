@@ -1,4 +1,4 @@
 package leo
 
-val readerEnabled = false
+val readerEnabled = true
 val ignoreWhitespaces = true
