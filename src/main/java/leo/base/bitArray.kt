@@ -17,10 +17,6 @@ data class InnerBitArray(
 	override fun toString() = appendableString { it.append(this) }
 }
 
-val Bit.bitArray: BitArray
-	get() =
-		LeafBitArray(this)
-
 val BitArray.grow: BitArray
 	get() =
 		InnerBitArray(this, this)
@@ -63,10 +59,6 @@ val BitArray.leafOrNull: LeafBitArray?
 val BitArray.innerOrNull: InnerBitArray?
 	get() =
 		this as? InnerBitArray
-
-val BitArray.bitOrNull: Bit?
-	get() =
-		leafOrNull?.bit
 
 val BitArray.bitStream: Stream<Bit>
 	get() =
@@ -136,6 +128,12 @@ fun BitArray.set(bit: Bit): BitArray =
 operator fun BitArray.set(indexBitArray: BitArray, bitArray: BitArray): BitArray? =
 	set(indexBitArray.bitStream, bitArray)
 
+// === primitive to bit array
+
+val Bit.bitArray: BitArray
+	get() =
+		LeafBitArray(this)
+
 val Byte.bitArray: BitArray
 	get() =
 		InnerBitArray(
@@ -179,3 +177,45 @@ val Float.bitArray: BitArray
 val Double.bitArray: BitArray
 	get() =
 		toRawBits().bitArray
+
+// === bit array to primitive
+
+val BitArray.bitOrNull: Bit?
+	get() =
+		leafOrNull?.bit
+
+val BitArray.byteOrNull: Byte?
+	get() =
+		if (depth != 3) null
+		else 0.fold(bitStream) { bit ->
+			shl(1).or(bit.int)
+		}.toByte()
+
+val BitArray.shortOrNull: Short?
+	get() =
+		if (depth != 4) null
+		else 0.fold(bitStream) { bit ->
+			shl(1).or(bit.int)
+		}.toShort()
+
+val BitArray.intOrNull: Int?
+	get() =
+		if (depth != 5) null
+		else 0.fold(bitStream) { bit ->
+			shl(1).or(bit.int)
+		}
+
+val BitArray.longOrNull: Long?
+	get() =
+		if (depth != 6) null
+		else 0L.fold(bitStream) { bit ->
+			shl(1).or(bit.int.toLong())
+		}
+
+val BitArray.floatOrNull: Float?
+	get() =
+		intOrNull?.let { Float.fromBits(it) }
+
+val BitArray.doubleOrNull: Double?
+	get() =
+		longOrNull?.let { Double.fromBits(it) }
