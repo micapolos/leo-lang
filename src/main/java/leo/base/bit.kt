@@ -18,7 +18,7 @@ val Bit.char
 			Bit.ONE -> '1'
 		}
 
-val Bit.neg
+val Bit.inverse
 	get() =
 		when (this) {
 			Bit.ZERO -> Bit.ONE
@@ -93,3 +93,7 @@ fun <V> Bit.ifZero(value: V, fn: (V) -> V): V =
 
 fun Appendable.append(bit: Bit): Appendable =
 	append(bit.char)
+
+fun Appendable.appendBit(bitStream: Stream<Bit>): Appendable =
+	append(bitStream.first).ifNotNull(bitStream.nextOrNull, Appendable::appendBit)
+

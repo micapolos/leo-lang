@@ -5,10 +5,6 @@ data class Binary(
 	override fun toString() = appendableString { it.append(this) }
 }
 
-fun Appendable.appendBit(bitStream: Stream<Bit>): Appendable =
-	append(bitStream.first)
-		.ifNotNull(bitStream.nextOrNull, Appendable::appendBit)
-
 fun Appendable.append(binary: Binary): Appendable =
 	append("0b").appendBit(binary.bitStream)
 
