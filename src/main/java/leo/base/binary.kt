@@ -10,7 +10,11 @@ fun Appendable.appendBit(bitStream: Stream<Bit>): Appendable =
 		.ifNotNull(bitStream.nextOrNull, Appendable::appendBit)
 
 fun Appendable.append(binary: Binary): Appendable =
-	append("0b").appendBit(binary.bitStack.reverse.stream)
+	append("0b").appendBit(binary.bitStream)
+
+val Binary.bitStream: Stream<Bit>
+	get() =
+		bitStack.reverse.stream
 
 val Stack<Bit>.binary: Binary
 	get() =
@@ -27,3 +31,17 @@ val Short.binary: Binary
 val Int.binary: Binary
 	get() =
 		bitStream.stack.binary
+
+val Binary.clampedInt: Int
+	get() =
+		0.fold(bitStream) { bit ->
+			toInt().shl(1).or(bit.int)
+		}
+
+val Binary.clampedShort: Short
+	get() =
+		clampedInt.toShort()
+
+val Binary.clampedByte: Byte
+	get() =
+		clampedShort.toByte()

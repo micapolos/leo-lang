@@ -70,6 +70,17 @@ val Stack<*>.sizeInt: Int
 	get() =
 		0.fold(this) { this + 1 }
 
+tailrec operator fun <V : Any> Stack<V>.get(index: Int): V? =
+	when {
+		index == 0 -> top
+		pop == null -> null
+		else -> pop[index - 1]
+	}
+
+// TODO: Using clampedInt is "cheating", implement it properly some day
+operator fun <V : Any> Stack<V>.get(binary: Binary): V? =
+	this[binary.clampedInt]
+
 // === appendable
 
 fun Appendable.append(stack: Stack<*>) =

@@ -95,4 +95,11 @@ class BinaryTest {
 					Bit.ONE,
 					Bit.ZERO).binary)
 	}
+
+	@Test
+	fun clampedByte() {
+		258.binary
+			.clampedByte
+			.assertEqualTo(2.toByte())
+	}
 }
