@@ -4,6 +4,14 @@ import kotlin.test.Test
 
 class BinaryTest {
 	@Test
+	fun string() {
+		stack(Bit.ONE, Bit.ZERO)
+			.binary
+			.string
+			.assertEqualTo("0b10")
+	}
+
+	@Test
 	fun byteBinary() {
 		18.toByte()
 			.binary
@@ -47,7 +55,7 @@ class BinaryTest {
 
 	@Test
 	fun intBinary() {
-		65538.toShort()
+		65538
 			.binary
 			.assertEqualTo(
 				stack(
