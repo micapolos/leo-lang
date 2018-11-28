@@ -4,13 +4,13 @@ sealed class BitArray {
 	abstract val depth: Int
 }
 
-data class LeafBitArray(
+data class SingleBitArray(
 	val bit: Bit) : BitArray() {
 	override val depth = 0
 	override fun toString() = appendableString { it.append(this) }
 }
 
-data class InnerBitArray(
+data class CompositeBitArray(
 	val zeroBitArray: BitArray,
 	val oneBitArray: BitArray) : BitArray() {
 	override val depth = zeroBitArray.depth + 1
@@ -19,7 +19,7 @@ data class InnerBitArray(
 
 val BitArray.grow: BitArray
 	get() =
-		InnerBitArray(this, this)
+		CompositeBitArray(this, this)
 
 val Int.depthBitArray: BitArray
 	get() =
@@ -27,48 +27,48 @@ val Int.depthBitArray: BitArray
 
 fun Int.depthBitArrayOf(bit: Bit): BitArray =
 	if (this == 0)
-		LeafBitArray(bit)
-	else InnerBitArray(
+		SingleBitArray(bit)
+	else CompositeBitArray(
 		dec().depthBitArrayOf(bit),
 		dec().depthBitArrayOf(bit))
 
 fun bitArray(bit0: Bit): BitArray =
-	LeafBitArray(bit0)
+	SingleBitArray(bit0)
 
 fun bitArray(bit0: Bit, bit1: Bit): BitArray =
-	InnerBitArray(
+	CompositeBitArray(
 		bitArray(bit0),
 		bitArray(bit1))
 
 fun bitArray(bit0: Bit, bit1: Bit, bit2: Bit, bit3: Bit): BitArray =
-	InnerBitArray(
+	CompositeBitArray(
 		bitArray(bit0, bit1),
 		bitArray(bit2, bit3))
 
 fun bitArray(bit0: Bit, bit1: Bit, bit2: Bit, bit3: Bit, bit4: Bit, bit5: Bit, bit6: Bit, bit7: Bit): BitArray =
-	InnerBitArray(
+	CompositeBitArray(
 		bitArray(bit0, bit1, bit2, bit3),
 		bitArray(bit4, bit5, bit6, bit7))
 
 // === casting
 
-val BitArray.leafOrNull: LeafBitArray?
+val BitArray.singleOrNull: SingleBitArray?
 	get() =
-		this as? LeafBitArray
+		this as? SingleBitArray
 
-val BitArray.innerOrNull: InnerBitArray?
+val BitArray.compositeOrNull: CompositeBitArray?
 	get() =
-		this as? InnerBitArray
+		this as? CompositeBitArray
 
 val BitArray.bitStream: Stream<Bit>
 	get() =
 		when (this) {
-			is LeafBitArray -> bit.onlyStream
-			is InnerBitArray -> zeroBitArray.bitStream.then { oneBitArray.bitStream }
+			is SingleBitArray -> bit.onlyStream
+			is CompositeBitArray -> zeroBitArray.bitStream.then { oneBitArray.bitStream }
 		}
 
 operator fun BitArray.get(bit: Bit): BitArray? =
-	innerOrNull?.run {
+	compositeOrNull?.run {
 		when (bit) {
 			Bit.ZERO -> zeroBitArray
 			Bit.ONE -> oneBitArray
@@ -95,11 +95,11 @@ operator fun BitArray.get(index: Binary): BitArray? =
 	}
 
 operator fun BitArray.set(bit: Bit, bitArray: BitArray): BitArray? =
-	innerOrNull?.run {
+	compositeOrNull?.run {
 		assert(zeroBitArray.depth == bitArray.depth)
 		when (bit) {
-			Bit.ZERO -> InnerBitArray(bitArray, oneBitArray)
-			Bit.ONE -> InnerBitArray(zeroBitArray, bitArray)
+			Bit.ZERO -> CompositeBitArray(bitArray, oneBitArray)
+			Bit.ONE -> CompositeBitArray(zeroBitArray, bitArray)
 		}
 	}
 
@@ -114,8 +114,8 @@ operator fun BitArray.set(bitStream: Stream<Bit>, bitArray: BitArray): BitArray?
 
 fun BitArray.map(fn: Bit.() -> Bit): BitArray =
 	when (this) {
-		is LeafBitArray -> fn(bit).bitArray
-		is InnerBitArray -> InnerBitArray(zeroBitArray.map(fn), oneBitArray.map(fn))
+		is SingleBitArray -> fn(bit).bitArray
+		is CompositeBitArray -> CompositeBitArray(zeroBitArray.map(fn), oneBitArray.map(fn))
 	}
 
 val BitArray.inverse: BitArray
@@ -132,41 +132,41 @@ operator fun BitArray.set(indexBitArray: BitArray, bitArray: BitArray): BitArray
 
 val Bit.bitArray: BitArray
 	get() =
-		LeafBitArray(this)
+		SingleBitArray(this)
 
 val Byte.bitArray: BitArray
 	get() =
-		InnerBitArray(
-			InnerBitArray(
-				InnerBitArray(
+		CompositeBitArray(
+			CompositeBitArray(
+				CompositeBitArray(
 					bit7.bitArray,
 					bit6.bitArray),
-				InnerBitArray(
+				CompositeBitArray(
 					bit5.bitArray,
 					bit4.bitArray)),
-			InnerBitArray(
-				InnerBitArray(
+			CompositeBitArray(
+				CompositeBitArray(
 					bit3.bitArray,
 					bit2.bitArray),
-				InnerBitArray(
+				CompositeBitArray(
 					bit1.bitArray,
 					bit0.bitArray)))
 
 val Short.bitArray: BitArray
 	get() =
-		InnerBitArray(
+		CompositeBitArray(
 			toInt().shr(8).toByte().bitArray,
 			toByte().bitArray)
 
 val Int.bitArray: BitArray
 	get() =
-		InnerBitArray(
+		CompositeBitArray(
 			shr(16).toShort().bitArray,
 			toShort().bitArray)
 
 val Long.bitArray: BitArray
 	get() =
-		InnerBitArray(
+		CompositeBitArray(
 			shr(32).toInt().bitArray,
 			toInt().bitArray)
 
@@ -182,7 +182,7 @@ val Double.bitArray: BitArray
 
 val BitArray.bitOrNull: Bit?
 	get() =
-		leafOrNull?.bit
+		singleOrNull?.bit
 
 val BitArray.byteOrNull: Byte?
 	get() =
