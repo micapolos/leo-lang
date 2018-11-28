@@ -100,3 +100,6 @@ fun Appendable.append(stack: Stack<*>) =
 val <V> Stack<V>.stream: Stream<V>
 	get() =
 		top.onlyStream.then { pop?.stream }
+
+fun <V> Int.sizeStackOrNullOf(value: V): Stack<V>? =
+	nullOf<Stack<V>>().iterate(this) { push(value) }

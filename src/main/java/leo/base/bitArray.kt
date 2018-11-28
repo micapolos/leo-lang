@@ -86,9 +86,6 @@ operator fun BitArray.get(bitStream: Stream<Bit>): BitArray? =
 		this?.get(bit)
 	}
 
-operator fun BitArray.get(indexBitArray: BitArray): BitArray? =
-	get(indexBitArray.bitStream)
-
 operator fun BitArray.get(index: Binary): BitArray? =
 	orNull.fold(index.bitStream) { bit ->
 		this?.get(bit)
@@ -111,6 +108,8 @@ operator fun BitArray.set(bitStream: Stream<Bit>, bitArray: BitArray): BitArray?
 			?.set(nextBitStreamOrNull, bitArray)
 			?.let { updatedNextArray -> set(bitStream.first, updatedNextArray) }
 	}
+
+// === mapping
 
 fun BitArray.map(fn: Bit.() -> Bit): BitArray =
 	when (this) {

@@ -12,6 +12,10 @@ val Binary.bitStream: Stream<Bit>
 	get() =
 		bitStack.reverse.stream
 
+val Int.sizeZeroBinaryOrNull: Binary?
+	get() =
+		sizeStackOrNullOf(Bit.ZERO)?.binary
+
 val Stack<Bit>.binary: Binary
 	get() =
 		Binary(this)
