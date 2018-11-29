@@ -66,6 +66,9 @@ fun <V, R : Any> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
 fun <V : Any> Stack<V>.top(fn: (V) -> Boolean): V? =
 	stream.first(fn)
 
+fun <V> Stack<V>.contains(value: V): Boolean =
+	stream.contains(value)
+
 val Stack<*>.sizeInt: Int
 	get() =
 		0.fold(this) { this + 1 }

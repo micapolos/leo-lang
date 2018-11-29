@@ -54,6 +54,18 @@ tailrec fun <V : Any> Stream<V>.first(fn: (V) -> Boolean): V? =
 	if (fn(first)) first
 	else nextOrNull?.first(fn)
 
+tailrec fun <V> Stream<V>.contains(value: V): Boolean =
+	when (first) {
+		value -> true
+		else -> {
+			val nextOrNull = nextOrNull
+			when {
+				nextOrNull != null -> nextOrNull.contains(value)
+				else -> false
+			}
+		}
+	}
+
 val <V> Stream<V>.stack: Stack<V>
 	get() =
 		first.onlyStack.fold(nextOrNull, Stack<V>::push)
