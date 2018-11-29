@@ -78,25 +78,22 @@ class BitArrayTest {
 
 	@Test
 	fun getSetPrimitives() {
-		val array = 7.depthBitArray
-			.set(binary(0.bit, 0.bit, 0.bit, 0.bit), 0x01.toByte().bitArray)
-			?.set(binary(0.bit, 0.bit, 0.bit, 1.bit), 0x02.toByte().bitArray)
-			?.set(binary(0.bit, 0.bit, 1.bit, 0.bit), 0x04.toByte().bitArray)
-			?.set(binary(0.bit, 0.bit, 1.bit, 1.bit), 0x08.toByte().bitArray)
-			?.set(binary(0.bit, 1.bit, 0.bit), 0x1020.toShort().bitArray)
-			?.set(binary(0.bit, 1.bit, 1.bit), 0x4080.toShort().bitArray)
-			?.set(binary(1.bit), 0x11223344.bitArray)
+		val array = 5.depthBitArray
+			.set(binary(0.bit, 0.bit), 0x01.toByte().bitArray)
+			?.set(binary(0.bit, 1.bit), 0x02.toByte().bitArray)
+			?.set(binary(1.bit, 0.bit), 0x04.toByte().bitArray)
+			?.set(binary(1.bit, 1.bit), 0x08.toByte().bitArray)
 
 		array.assertNotNull
 
-		array?.get(binary(0.bit))?.intOrNull.assertEqualTo(0x01020408.toShort())
+		array?.get(binary(0.bit, 0.bit))?.byteOrNull.assertEqualTo(0x01.toByte())
+		array?.get(binary(0.bit, 1.bit))?.byteOrNull.assertEqualTo(0x02.toByte())
+		array?.get(binary(1.bit, 0.bit))?.byteOrNull.assertEqualTo(0x04.toByte())
+		array?.get(binary(1.bit, 1.bit))?.byteOrNull.assertEqualTo(0x08.toByte())
 
-		array?.get(binary(1.bit, 0.bit, 0.bit))?.shortOrNull.assertEqualTo(0x0102.toShort())
-		array?.get(binary(1.bit, 0.bit, 1.bit))?.shortOrNull.assertEqualTo(0x0408.toShort())
+		array?.get(binary(0.bit))?.shortOrNull.assertEqualTo(0x0102.toShort())
+		array?.get(binary(1.bit))?.shortOrNull.assertEqualTo(0x0408.toShort())
 
-		array?.get(binary(1.bit, 1.bit, 0.bit, 0.bit))?.byteOrNull.assertEqualTo(0x11.toByte())
-		array?.get(binary(1.bit, 1.bit, 0.bit, 1.bit))?.byteOrNull.assertEqualTo(0x22.toByte())
-		array?.get(binary(1.bit, 1.bit, 1.bit, 0.bit))?.byteOrNull.assertEqualTo(0x44.toByte())
-		array?.get(binary(1.bit, 1.bit, 1.bit, 1.bit))?.byteOrNull.assertEqualTo(0x88.toByte())
+		array?.intOrNull.assertEqualTo(0x01020408)
 	}
 }
