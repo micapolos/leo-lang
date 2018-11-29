@@ -4,9 +4,19 @@ import kotlin.test.Test
 
 class BinaryTest {
 	@Test
+	fun binary() {
+		binary(1, 0)
+			.assertEqualTo(
+				Binary(
+					Bit.ONE,
+					Binary(
+						Bit.ZERO,
+						null)))
+	}
+
+	@Test
 	fun string() {
-		stack(Bit.ONE, Bit.ZERO)
-			.binary
+		binary(1, 0)
 			.string
 			.assertEqualTo("0b10")
 	}
@@ -16,15 +26,7 @@ class BinaryTest {
 		18.toByte()
 			.binary
 			.assertEqualTo(
-				stack(
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ONE,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ONE,
-					Bit.ZERO).binary)
+				binary(0, 0, 0, 1, 0, 0, 1, 0))
 	}
 
 	@Test
@@ -32,24 +34,9 @@ class BinaryTest {
 		258.toShort()
 			.binary
 			.assertEqualTo(
-				stack(
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ONE,
-
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ONE,
-					Bit.ZERO).binary)
+				binary(
+					0, 0, 0, 0, 0, 0, 0, 1,
+					0, 0, 0, 0, 0, 0, 1, 0))
 	}
 
 
@@ -58,42 +45,11 @@ class BinaryTest {
 		65538
 			.binary
 			.assertEqualTo(
-				stack(
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ONE,
-
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ONE,
-					Bit.ZERO).binary)
+				binary(
+					0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 0, 1,
+					0, 0, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 1, 0))
 	}
 
 	@Test
@@ -106,27 +62,27 @@ class BinaryTest {
 	@Test
 	fun binaryOrNullWithSize() {
 		2.binaryOrNullWithSize(0).assertEqualTo(null)
-		2.binaryOrNullWithSize(1).assertEqualTo(stack(Bit.ZERO).binary)
-		2.binaryOrNullWithSize(2).assertEqualTo(stack(Bit.ONE, Bit.ZERO).binary)
-		2.binaryOrNullWithSize(3).assertEqualTo(stack(Bit.ZERO, Bit.ONE, Bit.ZERO).binary)
+		2.binaryOrNullWithSize(1).assertEqualTo(binary(0))
+		2.binaryOrNullWithSize(2).assertEqualTo(binary(1, 0))
+		2.binaryOrNullWithSize(3).assertEqualTo(binary(0, 1, 0))
 	}
 
-	@Test
-	fun align() {
-		binary(1.bit, 1.bit, 0.bit, 1.bit)
-			.align(2)
-			.assertEqualTo(binary(1.bit, 1.bit))
-		binary(1.bit, 1.bit, 0.bit, 1.bit)
-			.align(3)
-			.assertEqualTo(binary(1.bit, 1.bit, 0.bit))
-		binary(1.bit, 1.bit, 0.bit, 1.bit)
-			.align(4)
-			.assertEqualTo(binary(1.bit, 1.bit, 0.bit, 1.bit))
-		binary(1.bit, 1.bit, 0.bit, 1.bit)
-			.align(5)
-			.assertEqualTo(binary(1.bit, 1.bit, 0.bit, 1.bit, 0.bit))
-		binary(1.bit, 1.bit, 0.bit, 1.bit)
-			.align(6)
-			.assertEqualTo(binary(1.bit, 1.bit, 0.bit, 1.bit, 0.bit, 0.bit))
-	}
+//	@Test
+//	fun align() {
+//		binary(1, 1, 0, 1)
+//			.align(2)
+//			.assertEqualTo(binary(1, 1))
+//		binary(1, 1, 0, 1)
+//			.align(3)
+//			.assertEqualTo(binary(1, 1, 0))
+//		binary(1, 1, 0, 1)
+//			.align(4)
+//			.assertEqualTo(binary(1, 1, 0, 1))
+//		binary(1, 1, 0, 1)
+//			.align(5)
+//			.assertEqualTo(binary(1, 1, 0, 1, 0))
+//		binary(1, 1, 0, 1)
+//			.align(6)
+//			.assertEqualTo(binary(1, 1, 0, 1, 0, 0))
+//	}
 }

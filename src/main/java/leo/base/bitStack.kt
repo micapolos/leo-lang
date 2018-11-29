@@ -6,7 +6,7 @@ data class BitStack(
 
 val BitArray.fullBitStack: BitStack
 	get() =
-		BitStack(this, depth.sizeStackOrNullOf(Bit.ONE)?.binary)
+		BitStack(this, depth.sizeStackOrNullOf(Bit.ONE)?.reverseBinary)
 
 //fun BitStack.push(bitArray: BitArray): BitStack =
 //	growIfNeeded.run {
