@@ -13,67 +13,67 @@ class BitArrayTest {
 
 	@Test
 	fun depthBitArrayOf() {
-		0.depthBitArrayOf(0.bit).assertEqualTo(bitArray(0.bit))
-		0.depthBitArrayOf(1.bit).assertEqualTo(bitArray(1.bit))
-		1.depthBitArrayOf(0.bit).assertEqualTo(bitArray(0.bit, 0.bit))
-		2.depthBitArrayOf(1.bit).assertEqualTo(bitArray(1.bit, 1.bit, 1.bit, 1.bit))
+		0.depthBitArrayOf(0.bit).assertEqualTo(bitArray(0))
+		0.depthBitArrayOf(1.bit).assertEqualTo(bitArray(1))
+		1.depthBitArrayOf(0.bit).assertEqualTo(bitArray(0, 0))
+		2.depthBitArrayOf(1.bit).assertEqualTo(bitArray(1, 1, 1, 1))
 	}
 
 	@Test
 	fun setBit() {
-		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
-			.set(0.bit, bitArray(1.bit, 1.bit))
-			.assertEqualTo(bitArray(1.bit, 1.bit, 0.bit, 0.bit))
-		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
+		bitArray(0, 0, 0, 0)
+			.set(0.bit, bitArray(1, 1))
+			.assertEqualTo(bitArray(1, 1, 0, 0))
+		bitArray(0, 0, 0, 0)
 			.set(1.bit, 1.depthBitArrayOf(1.bit))
-			.assertEqualTo(bitArray(0.bit, 0.bit, 1.bit, 1.bit))
+			.assertEqualTo(bitArray(0, 0, 1, 1))
 	}
 
 	@Test
 	fun set() {
-		bitArray(0.bit, 0.bit)
-			.set(bitArray(1.bit, 1.bit))
-			.assertEqualTo(bitArray(1.bit, 1.bit))
-		bitArray(0.bit, 0.bit)
-			.set(bitArray(1.bit))
+		bitArray(0, 0)
+			.set(bitArray(1, 1))
+			.assertEqualTo(bitArray(1, 1))
+		bitArray(0, 0)
+			.set(bitArray(1))
 			.assertEqualTo(null)
 	}
 
 	@Test
-	fun setBitStream() {
-		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
-			.set(nullOf<Stream<Bit>>(), bitArray(1.bit, 1.bit, 1.bit, 1.bit))
-			.assertEqualTo(bitArray(1.bit, 1.bit, 1.bit, 1.bit))
-		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
-			.set(stream(0.bit), bitArray(1.bit, 1.bit))
-			.assertEqualTo(bitArray(1.bit, 1.bit, 0.bit, 0.bit))
-		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
-			.set(stream(1.bit, 0.bit), bitArray(1.bit))
-			.assertEqualTo(bitArray(0.bit, 0.bit, 1.bit, 0.bit))
-		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
-			.set(stream(1.bit, 0.bit, 1.bit), 0.depthBitArrayOf(1.bit))
+	fun setBinary() {
+		bitArray(0, 0, 0, 0)
+			.set(nullOf<Binary>(), bitArray(1, 1, 1, 1))
+			.assertEqualTo(bitArray(1, 1, 1, 1))
+		bitArray(0, 0, 0, 0)
+			.set(binary(0), bitArray(1, 1))
+			.assertEqualTo(bitArray(1, 1, 0, 0))
+		bitArray(0, 0, 0, 0)
+			.set(binary(1, 0), bitArray(1))
+			.assertEqualTo(bitArray(0, 0, 1, 0))
+		bitArray(0, 0, 0, 0)
+			.set(binary(1, 0, 1), bitArray(1))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun incrementDepth() {
-		bitArray(0.bit, 1.bit)
+		bitArray(0, 1)
 			.incrementDepth
-			.assertEqualTo(bitArray(0.bit, 1.bit, 0.bit, 1.bit))
+			.assertEqualTo(bitArray(0, 1, 0, 1))
 	}
 
 	@Test
 	fun increaseDepth() {
-		bitArray(0.bit, 1.bit)
+		bitArray(0, 1)
 			.increaseDepth(3)
-			.assertEqualTo(bitArray(0.bit, 1.bit, 0.bit, 1.bit, 0.bit, 1.bit, 0.bit, 1.bit))
+			.assertEqualTo(bitArray(0, 1, 0, 1, 0, 1, 0, 1))
 	}
 
 	@Test
 	fun inverse() {
-		bitArray(0.bit, 1.bit)
+		bitArray(0, 1)
 			.inverse
-			.assertEqualTo(bitArray(1.bit, 0.bit))
+			.assertEqualTo(bitArray(1, 0))
 	}
 
 	@Test

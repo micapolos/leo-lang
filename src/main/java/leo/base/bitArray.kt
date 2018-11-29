@@ -38,23 +38,25 @@ fun Int.depthBitArrayOf(bit: Bit): BitArray =
 		dec().depthBitArrayOf(bit),
 		dec().depthBitArrayOf(bit))
 
-fun bitArray(bit0: Bit): BitArray =
-	SingleBitArray(bit0)
+fun bitArray(bitInt0: Int): BitArray =
+	SingleBitArray(bitInt0.bit)
 
-fun bitArray(bit0: Bit, bit1: Bit): BitArray =
+fun bitArray(bitInt0: Int, bitInt1: Int): BitArray =
 	CompositeBitArray(
-		bitArray(bit0),
-		bitArray(bit1))
+		bitArray(bitInt0),
+		bitArray(bitInt1))
 
-fun bitArray(bit0: Bit, bit1: Bit, bit2: Bit, bit3: Bit): BitArray =
+fun bitArray(bitInt0: Int, bitInt1: Int, bitInt2: Int, bitInt3: Int): BitArray =
 	CompositeBitArray(
-		bitArray(bit0, bit1),
-		bitArray(bit2, bit3))
+		bitArray(bitInt0, bitInt1),
+		bitArray(bitInt2, bitInt3))
 
-fun bitArray(bit0: Bit, bit1: Bit, bit2: Bit, bit3: Bit, bit4: Bit, bit5: Bit, bit6: Bit, bit7: Bit): BitArray =
+fun bitArray(
+	bitInt0: Int, bitInt1: Int, bitInt2: Int, bitInt3: Int,
+	bitInt4: Int, bitInt5: Int, bitInt6: Int, bitInt7: Int): BitArray =
 	CompositeBitArray(
-		bitArray(bit0, bit1, bit2, bit3),
-		bitArray(bit4, bit5, bit6, bit7))
+		bitArray(bitInt0, bitInt1, bitInt2, bitInt3),
+		bitArray(bitInt4, bitInt5, bitInt6, bitInt7))
 
 // === casting
 
