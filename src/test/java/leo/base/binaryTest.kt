@@ -110,4 +110,23 @@ class BinaryTest {
 		2.binaryOrNullWithSize(2).assertEqualTo(stack(Bit.ONE, Bit.ZERO).binary)
 		2.binaryOrNullWithSize(3).assertEqualTo(stack(Bit.ZERO, Bit.ONE, Bit.ZERO).binary)
 	}
+
+	@Test
+	fun align() {
+		binary(1.bit, 1.bit, 0.bit, 1.bit)
+			.align(2)
+			.assertEqualTo(binary(1.bit, 1.bit))
+		binary(1.bit, 1.bit, 0.bit, 1.bit)
+			.align(3)
+			.assertEqualTo(binary(1.bit, 1.bit, 0.bit))
+		binary(1.bit, 1.bit, 0.bit, 1.bit)
+			.align(4)
+			.assertEqualTo(binary(1.bit, 1.bit, 0.bit, 1.bit))
+		binary(1.bit, 1.bit, 0.bit, 1.bit)
+			.align(5)
+			.assertEqualTo(binary(1.bit, 1.bit, 0.bit, 1.bit, 0.bit))
+		binary(1.bit, 1.bit, 0.bit, 1.bit)
+			.align(6)
+			.assertEqualTo(binary(1.bit, 1.bit, 0.bit, 1.bit, 0.bit, 0.bit))
+	}
 }

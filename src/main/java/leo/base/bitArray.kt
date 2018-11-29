@@ -17,9 +17,15 @@ data class CompositeBitArray(
 	override fun toString() = appendableString { it.append(this) }
 }
 
-val BitArray.grow: BitArray
+val BitArray.incrementDepth: BitArray
 	get() =
 		CompositeBitArray(this, this)
+
+fun BitArray.increaseDepth(depth: Int): BitArray =
+	(depth - this.depth).let { delta ->
+		if (delta > 0) iterate(delta, BitArray::incrementDepth)
+		else this
+	}
 
 val Int.depthBitArray: BitArray
 	get() =
@@ -81,33 +87,39 @@ fun Appendable.append(bitArray: BitArray): Appendable =
 		.appendBit(bitArray.bitStream)
 		.append(']')
 
-operator fun BitArray.get(bitStream: Stream<Bit>): BitArray? =
+operator fun BitArray.get(bitStream: Stream<Bit>?): BitArray? =
 	orNull.fold(bitStream) { bit ->
 		this?.get(bit)
 	}
 
-operator fun BitArray.get(index: Binary): BitArray? =
-	orNull.fold(index.bitStream) { bit ->
-		this?.get(bit)
-	}
+operator fun BitArray.get(index: Binary?): BitArray? =
+	get(index?.bitStream)
+
+fun BitArray.set(bitArray: BitArray): BitArray? =
+	if (depth != bitArray.depth) null
+	else bitArray
 
 operator fun BitArray.set(bit: Bit, bitArray: BitArray): BitArray? =
 	compositeOrNull?.run {
-		assert(zeroBitArray.depth == bitArray.depth)
-		when (bit) {
+		if (zeroBitArray.depth != bitArray.depth) null
+		else when (bit) {
 			Bit.ZERO -> CompositeBitArray(bitArray, oneBitArray)
 			Bit.ONE -> CompositeBitArray(zeroBitArray, bitArray)
 		}
 	}
 
-operator fun BitArray.set(bitStream: Stream<Bit>, bitArray: BitArray): BitArray? =
-	bitStream.nextOrNull.let { nextBitStreamOrNull ->
+operator fun BitArray.set(bitStreamOrNull: Stream<Bit>?, bitArray: BitArray): BitArray? =
+	if (bitStreamOrNull == null) set(bitArray)
+	else bitStreamOrNull.nextOrNull.let { nextBitStreamOrNull ->
 		if (nextBitStreamOrNull == null)
-			set(bitStream.first, bitArray)
-		else get(bitStream.first)
+			set(bitStreamOrNull.first, bitArray)
+		else get(bitStreamOrNull.first)
 			?.set(nextBitStreamOrNull, bitArray)
-			?.let { updatedNextArray -> set(bitStream.first, updatedNextArray) }
+			?.let { updatedNextArray -> set(bitStreamOrNull.first, updatedNextArray) }
 	}
+
+operator fun BitArray.set(binary: Binary?, bitArray: BitArray): BitArray? =
+	set(binary?.bitStream, bitArray)
 
 // === mapping
 
@@ -123,9 +135,6 @@ val BitArray.inverse: BitArray
 
 fun BitArray.set(bit: Bit): BitArray =
 	map { bit }
-
-operator fun BitArray.set(indexBitArray: BitArray, bitArray: BitArray): BitArray? =
-	set(indexBitArray.bitStream, bitArray)
 
 // === primitive to bit array
 

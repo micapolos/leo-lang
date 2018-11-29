@@ -75,6 +75,11 @@ val Int.bitOrNull
 			else -> null
 		}
 
+val Int.bit
+	get() =
+		if (this == 0) Bit.ZERO
+		else Bit.ONE
+
 val Int.lastBit: Bit
 	get() =
 		if (and(1) == 0) Bit.ZERO

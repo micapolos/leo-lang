@@ -13,47 +13,90 @@ class BitArrayTest {
 
 	@Test
 	fun depthBitArrayOf() {
-		0.depthBitArrayOf(Bit.ZERO).string.assertEqualTo("[0]")
-		0.depthBitArrayOf(Bit.ONE).string.assertEqualTo("[1]")
-		1.depthBitArrayOf(Bit.ZERO).string.assertEqualTo("[00]")
-		2.depthBitArrayOf(Bit.ONE).string.assertEqualTo("[1111]")
+		0.depthBitArrayOf(0.bit).assertEqualTo(bitArray(0.bit))
+		0.depthBitArrayOf(1.bit).assertEqualTo(bitArray(1.bit))
+		1.depthBitArrayOf(0.bit).assertEqualTo(bitArray(0.bit, 0.bit))
+		2.depthBitArrayOf(1.bit).assertEqualTo(bitArray(1.bit, 1.bit, 1.bit, 1.bit))
 	}
 
 	@Test
 	fun setBit() {
-		3.depthBitArray
-			.set(Bit.ZERO, 2.depthBitArrayOf(Bit.ONE))
-			.string
-			.assertEqualTo("[11110000]")
-		3.depthBitArray
-			.set(Bit.ONE, 2.depthBitArrayOf(Bit.ONE))
-			.string
-			.assertEqualTo("[00001111]")
+		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
+			.set(0.bit, bitArray(1.bit, 1.bit))
+			.assertEqualTo(bitArray(1.bit, 1.bit, 0.bit, 0.bit))
+		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
+			.set(1.bit, 1.depthBitArrayOf(1.bit))
+			.assertEqualTo(bitArray(0.bit, 0.bit, 1.bit, 1.bit))
+	}
+
+	@Test
+	fun set() {
+		bitArray(0.bit, 0.bit)
+			.set(bitArray(1.bit, 1.bit))
+			.assertEqualTo(bitArray(1.bit, 1.bit))
+		bitArray(0.bit, 0.bit)
+			.set(bitArray(1.bit))
+			.assertEqualTo(null)
 	}
 
 	@Test
 	fun setBitStream() {
-		3.depthBitArray
-			.set(stream(Bit.ZERO, Bit.ONE), 1.depthBitArrayOf(Bit.ONE))
-			.string
-			.assertEqualTo("[00110000]")
-		3.depthBitArray
-			.set(stream(Bit.ONE, Bit.ZERO), 1.depthBitArrayOf(Bit.ONE))
-			.string
-			.assertEqualTo("[00001100]")
+		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
+			.set(nullOf<Stream<Bit>>(), bitArray(1.bit, 1.bit, 1.bit, 1.bit))
+			.assertEqualTo(bitArray(1.bit, 1.bit, 1.bit, 1.bit))
+		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
+			.set(stream(0.bit), bitArray(1.bit, 1.bit))
+			.assertEqualTo(bitArray(1.bit, 1.bit, 0.bit, 0.bit))
+		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
+			.set(stream(1.bit, 0.bit), bitArray(1.bit))
+			.assertEqualTo(bitArray(0.bit, 0.bit, 1.bit, 0.bit))
+		bitArray(0.bit, 0.bit, 0.bit, 0.bit)
+			.set(stream(1.bit, 0.bit, 1.bit), 0.depthBitArrayOf(1.bit))
+			.assertEqualTo(null)
 	}
 
 	@Test
-	fun grow() {
-		bitArray(Bit.ZERO, Bit.ONE)
-			.grow
-			.assertEqualTo(bitArray(Bit.ZERO, Bit.ONE, Bit.ZERO, Bit.ONE))
+	fun incrementDepth() {
+		bitArray(0.bit, 1.bit)
+			.incrementDepth
+			.assertEqualTo(bitArray(0.bit, 1.bit, 0.bit, 1.bit))
+	}
+
+	@Test
+	fun increaseDepth() {
+		bitArray(0.bit, 1.bit)
+			.increaseDepth(3)
+			.assertEqualTo(bitArray(0.bit, 1.bit, 0.bit, 1.bit, 0.bit, 1.bit, 0.bit, 1.bit))
 	}
 
 	@Test
 	fun inverse() {
-		bitArray(Bit.ZERO, Bit.ONE)
+		bitArray(0.bit, 1.bit)
 			.inverse
-			.assertEqualTo(bitArray(Bit.ONE, Bit.ZERO))
+			.assertEqualTo(bitArray(1.bit, 0.bit))
+	}
+
+	@Test
+	fun getSetPrimitives() {
+		val array = 7.depthBitArray
+			.set(binary(0.bit, 0.bit, 0.bit, 0.bit), 0x01.toByte().bitArray)
+			?.set(binary(0.bit, 0.bit, 0.bit, 1.bit), 0x02.toByte().bitArray)
+			?.set(binary(0.bit, 0.bit, 1.bit, 0.bit), 0x04.toByte().bitArray)
+			?.set(binary(0.bit, 0.bit, 1.bit, 1.bit), 0x08.toByte().bitArray)
+			?.set(binary(0.bit, 1.bit, 0.bit), 0x1020.toShort().bitArray)
+			?.set(binary(0.bit, 1.bit, 1.bit), 0x4080.toShort().bitArray)
+			?.set(binary(1.bit), 0x11223344.bitArray)
+
+		array.assertNotNull
+
+		array?.get(binary(0.bit))?.intOrNull.assertEqualTo(0x01020408.toShort())
+
+		array?.get(binary(1.bit, 0.bit, 0.bit))?.shortOrNull.assertEqualTo(0x0102.toShort())
+		array?.get(binary(1.bit, 0.bit, 1.bit))?.shortOrNull.assertEqualTo(0x0408.toShort())
+
+		array?.get(binary(1.bit, 1.bit, 0.bit, 0.bit))?.byteOrNull.assertEqualTo(0x11.toByte())
+		array?.get(binary(1.bit, 1.bit, 0.bit, 1.bit))?.byteOrNull.assertEqualTo(0x22.toByte())
+		array?.get(binary(1.bit, 1.bit, 1.bit, 0.bit))?.byteOrNull.assertEqualTo(0x44.toByte())
+		array?.get(binary(1.bit, 1.bit, 1.bit, 1.bit))?.byteOrNull.assertEqualTo(0x88.toByte())
 	}
 }

@@ -32,6 +32,9 @@ val Int.binary: Binary
 	get() =
 		bitStream.stack.binary
 
+fun binary(bit: Bit, vararg bits: Bit): Binary =
+	stack(bit, *bits).binary
+
 fun Int.binaryOrNullWithSize(size: Int): Binary? =
 	(this to nullOf<Stack<Bit>>()).iterate(size) {
 		first.shr(1) to second.push(first.lastBit)
@@ -50,3 +53,20 @@ val Binary.clampedShort: Short
 val Binary.clampedByte: Byte
 	get() =
 		clampedShort.toByte()
+
+// TODO: Replace with proper math!!!
+val Binary.increment: Binary?
+	get() = clampedInt.inc().binary
+
+val Binary.bitCountInt: Int
+	get() =
+		bitStack.sizeInt
+
+fun Binary.align(bitCountInt: Int): Binary =
+	(bitCountInt - this.bitCountInt).let { bitCountDelta ->
+		when {
+			bitCountDelta < 0 -> iterate(-bitCountDelta) { bitStack.pop!!.binary }
+			bitCountDelta > 0 -> iterate(bitCountDelta) { bitStack.push(0.bit).binary }
+			else -> this
+		}
+	}
