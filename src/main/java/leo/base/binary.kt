@@ -47,10 +47,20 @@ val Int.binary: Binary
 	get() =
 		bitStream.binary
 
+val Long.binary: Binary
+	get() =
+		bitStream.binary
+
 fun Int.binaryOrNullWithSize(size: Int): Binary? =
 	(this to nullOf<Binary>()).iterate(size) {
 		first.shr(1) to first.lastBit.append(second)
 	}.second
+
+val Binary.clampedLong: Long
+	get() =
+		0L.fold(bitStream) { bit ->
+			shl(1).or(bit.int.toLong())
+		}
 
 val Binary.clampedInt: Int
 	get() =
@@ -66,9 +76,85 @@ val Binary.clampedByte: Byte
 	get() =
 		clampedShort.toByte()
 
-// TODO: Replace with proper math!!!
+val Binary.carryIncrement: Pair<Bit, Binary>
+	get() =
+		nextBinaryOrNull?.carryIncrement?.let { (carry, increment) ->
+			when (bit) {
+				Bit.ZERO ->
+					when (carry) {
+						Bit.ZERO -> Bit.ZERO to Bit.ZERO.append(increment)
+						Bit.ONE -> Bit.ZERO to Bit.ONE.append(increment)
+					}
+				Bit.ONE ->
+					when (carry) {
+						Bit.ZERO -> Bit.ZERO to Bit.ONE.append(increment)
+						Bit.ONE -> Bit.ONE to Bit.ZERO.append(increment)
+					}
+			}
+		} ?: when (bit) {
+			Bit.ZERO -> Bit.ZERO to Bit.ONE.binary
+			Bit.ONE -> Bit.ONE to Bit.ZERO.binary
+		}
+
+val Binary.incrementAndWrap: Binary
+	get() =
+		carryIncrement.second
+
+val Binary.incrementAndGrow: Binary
+	get() =
+		carryIncrement.let { (carry, increment) ->
+			when (carry) {
+				Bit.ZERO -> increment
+				Bit.ONE -> Binary(carry, increment)
+			}
+		}
+
+val Binary.incrementAndClamp: Binary
+	get() =
+		carryIncrement.let { (carry, increment) ->
+			when (carry) {
+				Bit.ZERO -> increment
+				Bit.ONE -> this
+			}
+		}
+
 val Binary.increment: Binary?
-	get() = clampedInt.inc().binary
+	get() =
+		carryIncrement.let { (carry, increment) ->
+			when (carry) {
+				Bit.ZERO -> increment
+				Bit.ONE -> null
+			}
+		}
+
+val Binary.borrowDecrement: Pair<Bit, Binary>
+	get() =
+		nextBinaryOrNull?.borrowDecrement?.let { (borrow, decrement) ->
+			when (bit) {
+				Bit.ZERO ->
+					when (borrow) {
+						Bit.ZERO -> Bit.ZERO to Bit.ZERO.append(decrement)
+						Bit.ONE -> Bit.ONE to Bit.ONE.append(decrement)
+					}
+				Bit.ONE ->
+					when (borrow) {
+						Bit.ZERO -> Bit.ZERO to Bit.ONE.append(decrement)
+						Bit.ONE -> Bit.ZERO to Bit.ZERO.append(decrement)
+					}
+			}
+		} ?: when (bit) {
+			Bit.ZERO -> Bit.ONE to Bit.ONE.binary
+			Bit.ONE -> Bit.ZERO to Bit.ZERO.binary
+		}
+
+val Binary.decrement: Binary?
+	get() =
+		borrowDecrement.let { (borrow, decrement) ->
+			when (borrow) {
+				Bit.ZERO -> decrement
+				Bit.ONE -> null
+			}
+		}
 
 val Binary.bitCountInt: Int
 	get() =
