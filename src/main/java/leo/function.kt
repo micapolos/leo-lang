@@ -60,9 +60,18 @@ fun Function.define(patternTerm: Term<Pattern>, defineNext: Function.() -> Match
 	defineToken(patternTerm.tokenStream, defineNext)
 
 fun Function.define(pattern: Pattern, defineNext: Function.() -> Match?): Function? =
+	when (pattern) {
+		is OneOfPattern -> define(pattern, defineNext)
+		is RecursionPattern -> define(pattern, defineNext)
+	}
+
+fun Function.define(pattern: OneOfPattern, defineNext: Function.() -> Match?): Function? =
 	orNull.fold(pattern.patternTermStream) { patternTerm ->
 		this?.define(patternTerm, defineNext)
 	}
+
+fun Function.define(pattern: RecursionPattern, defineNext: Function.() -> Match?): Function? =
+	TODO()
 
 fun Function.defineToken(tokenStream: Stream<Token<Pattern>>, defineNext: Function.() -> Match?): Function? =
 	define(tokenStream.first) {

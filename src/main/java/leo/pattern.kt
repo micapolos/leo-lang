@@ -2,19 +2,30 @@ package leo
 
 import leo.base.*
 
-data class Pattern(
-	val patternTermStack: Stack<Term<Pattern>>) {
+sealed class Pattern
+
+data class OneOfPattern(
+	val patternTermStack: Stack<Term<Pattern>>) : Pattern() {
 	override fun toString() = reflect.string
 }
 
-val Stack<Term<Pattern>>.oneOf
+data class RecursionPattern(
+	val recursion: Recursion) : Pattern() {
+	override fun toString() = reflect.string
+}
+
+val Stack<Term<Pattern>>.oneOfPattern
 	get() =
-		Pattern(this)
+		OneOfPattern(this)
 
-fun pattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>): Pattern =
-	stack(patternTerm, *patternTerms).oneOf
+val Recursion.pattern: Pattern
+	get() =
+		RecursionPattern(this)
 
-val Pattern.patternTermStream: Stream<Term<Pattern>>
+fun oneOfPattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>): Pattern =
+	stack(patternTerm, *patternTerms).oneOfPattern
+
+val OneOfPattern.patternTermStream: Stream<Term<Pattern>>
 	get() =
 		patternTermStack.reverse.stream
 
@@ -24,35 +35,55 @@ val Term<Pattern>.patternOrNull: Pattern?
 	get() =
 		valueOrNull
 
+fun Term<Nothing>.matches(patternTerm: Term<Pattern>): Boolean =
+	matches(patternTerm, null)
+
 fun Term<Nothing>.matches(pattern: Pattern): Boolean =
+	matches(pattern, null)
+
+fun Field<Nothing>.matches(patternField: Field<Pattern>) =
+	matches(patternField, null)
+
+fun Term<Nothing>.matches(pattern: Pattern, backTraceOrNull: BackTrace?): Boolean =
+	when (pattern) {
+		is OneOfPattern -> matches(pattern, backTraceOrNull)
+		is RecursionPattern -> matches(pattern, backTraceOrNull)
+	}
+
+fun Term<Nothing>.matches(pattern: OneOfPattern, backTraceOrNull: BackTrace?): Boolean =
 	pattern.patternTermStack.top { oneOfTerm ->
-		matches(oneOfTerm)
+		matches(oneOfTerm, backTraceOrNull)
 	} != null
 
-fun Term<Nothing>.matches(patternTerm: Term<Pattern>): Boolean =
+fun Term<Nothing>.matches(pattern: RecursionPattern, backTraceOrNull: BackTrace?): Boolean =
+	backTraceOrNull != null && pattern.recursion.apply(backTraceOrNull.back)?.let { newBackTraceOrNull ->
+		matches(newBackTraceOrNull.patternTermStack.top, newBackTraceOrNull.back)
+	} ?: false
+
+fun Term<Nothing>.matches(patternTerm: Term<Pattern>, backTraceOrNull: BackTrace?): Boolean =
 	patternTerm.patternOrNull?.let { pattern ->
-		matches(pattern)
+		matches(pattern, backTraceOrNull.push(patternTerm))
 	} ?:
 	when (patternTerm) {
 		is MetaTerm -> false
 		is WordTerm -> this is WordTerm && word.matches(patternTerm.word)
-		is StructureTerm -> this is StructureTerm && this.matches(patternTerm)
+		is StructureTerm -> this is StructureTerm && this.matches(patternTerm, backTraceOrNull)
 	}
 
 fun Word.matches(patternWord: Word): Boolean =
 	this == patternWord
 
-fun StructureTerm<Nothing>.matches(patternStructureTerm: StructureTerm<Pattern>): Boolean =
-	structure.matches(patternStructureTerm.structure)
+fun StructureTerm<Nothing>.matches(patternStructureTerm: StructureTerm<Pattern>, backTraceOrNull: BackTrace?): Boolean =
+	structure.matches(patternStructureTerm.structure, backTraceOrNull.push(patternStructureTerm))
 
-fun Structure<Nothing>.matches(patternStructure: Structure<Pattern>): Boolean =
-	fieldStack.top.matches(patternStructure.fieldStack.top) &&
+fun Structure<Nothing>.matches(patternStructure: Structure<Pattern>, backTraceOrNull: BackTrace?): Boolean =
+	fieldStack.top.matches(patternStructure.fieldStack.top, backTraceOrNull) &&
 		if (fieldStack.pop == null) patternStructure.fieldStack.pop == null
 		else patternStructure.fieldStack.pop != null &&
-			fieldStack.pop.structureTerm.matches(patternStructure.fieldStack.pop.structureTerm)
+			fieldStack.pop.structureTerm.matches(patternStructure.fieldStack.pop.structureTerm, backTraceOrNull)
 
-fun Field<Nothing>.matches(patternField: Field<Pattern>) =
-	key == patternField.key && value.matches(patternField.value)
+fun Field<Nothing>.matches(patternField: Field<Pattern>, backTraceOrNull: BackTrace?) =
+	key == patternField.key && value.matches(patternField.value, backTraceOrNull)
 
 // === parsing
 
@@ -67,7 +98,7 @@ val Term<Nothing>.parsePattern: Pattern?
 					else fieldStream.run {
 						first.value.parsePatternTerm.onlyStack.fold(nextOrNull) { field ->
 							push(field.value.parsePatternTerm)
-						}.oneOf
+						}.oneOfPattern
 					}
 				}
 			}
@@ -95,8 +126,12 @@ val Field<Nothing>.parsePatternField: Field<Pattern>
 
 // === reflect
 
-val Pattern.reflect: Term<Nothing>
+val Pattern.reflect: Field<Nothing>
 	get() =
-		patternTermStream.reflect(eitherWord) {
-			reflectMetaTerm(Pattern::reflect)
+		patternWord fieldTo when (this) {
+			is OneOfPattern ->
+				patternTermStream.reflect(eitherWord) {
+					reflectMeta(Pattern::reflect)
+				}
+			is RecursionPattern -> recursion.reflect
 		}

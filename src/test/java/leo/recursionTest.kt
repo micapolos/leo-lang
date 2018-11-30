@@ -13,14 +13,21 @@ class RecursionTest {
 	}
 
 	@Test
-	fun apply() {
+	fun backApply() {
+		recursion(back)
+			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
+			.assertEqualTo(backTrace(oneWord.term(), twoWord.term()))
+	}
+
+	@Test
+	fun backBackApply() {
 		recursion(back, back)
 			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
 			.assertEqualTo(backTrace(oneWord.term()))
 	}
 
 	@Test
-	fun apply_overflow() {
+	fun overflowApply() {
 		recursion(back, back, back)
 			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
 			.assertEqualTo(null)

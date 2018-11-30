@@ -6,17 +6,24 @@ import kotlin.test.Test
 
 class PatternTest {
 	@Test
-	fun string() {
-		pattern(oneWord.term, twoWord.term)
+	fun oneOfString() {
+		oneOfPattern(oneWord.term, twoWord.term)
 			.string
-			.assertEqualTo("either one, either two")
+			.assertEqualTo("pattern(either one, either two)")
+	}
+
+	@Test
+	fun recursionString() {
+		recursion(back, back).pattern
+			.string
+			.assertEqualTo("pattern(recurse back, recurse back)")
 	}
 
 	@Test
 	fun parse_onePattern() {
 		term(eitherWord fieldTo oneWord.term)
 			.parsePattern
-			.assertEqualTo(pattern(oneWord.term))
+			.assertEqualTo(oneOfPattern(oneWord.term))
 	}
 
 	@Test
@@ -26,7 +33,7 @@ class PatternTest {
 			eitherWord fieldTo twoWord.term)
 			.parsePattern
 			.assertEqualTo(
-				pattern(
+				oneOfPattern(
 					oneWord.term,
 					twoWord.term))
 	}
@@ -44,21 +51,21 @@ class PatternTest {
 	@Test
 	fun termMatches_first() {
 		oneWord.term
-			.matches(pattern(oneWord.term, twoWord.term))
+			.matches(oneOfPattern(oneWord.term, twoWord.term))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun termMatches_second() {
 		twoWord.term
-			.matches(pattern(oneWord.term, twoWord.term))
+			.matches(oneOfPattern(oneWord.term, twoWord.term))
 			.assertEqualTo(true)
 	}
 
 	@Test
 	fun termMatches_none() {
 		ageWord.term
-			.matches(pattern(oneWord.term, twoWord.term))
+			.matches(oneOfPattern(oneWord.term, twoWord.term))
 			.assertEqualTo(false)
 	}
 
@@ -88,7 +95,7 @@ class PatternTest {
 			eitherWord fieldTo numberWord.term)
 			.parsePatternTerm
 			.assertEqualTo(
-				pattern(
+				oneOfPattern(
 					stringWord.term,
 					numberWord.term).meta.term)
 	}
@@ -102,7 +109,7 @@ class PatternTest {
 			.parsePatternTerm
 			.assertEqualTo(
 				term(oneWord fieldTo
-					pattern(
+					oneOfPattern(
 						stringWord.term,
 						numberWord.term).meta.term))
 	}
@@ -137,9 +144,53 @@ class PatternTest {
 	fun termMatches_oneOf_match() {
 		nameWord.term
 			.matches(
-				pattern(
+				oneOfPattern(
 					nameWord.term,
 					ageWord.term).meta.term)
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun termMatches_noRecursion() {
+		oneWord.term
+			.matches(
+				term(
+					oneOfPattern(
+						oneWord.term(),
+						term(plusWord fieldTo term(recursion(back).pattern)))))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun termMatches_recursionBack() {
+		term(incrementWord fieldTo zeroWord.term)
+			.matches(
+				term(
+					oneOfPattern(
+						zeroWord.term(),
+						term(incrementWord fieldTo term(recursion(back).pattern)))))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun termMatches_recursionBackBack() {
+		term(oneWord fieldTo term(plusWord fieldTo zeroWord.term))
+			.matches(
+				term(
+					oneOfPattern(
+						zeroWord.term(),
+						term(oneWord fieldTo term(plusWord fieldTo term(recursion(back, back).pattern))))))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun termMatches_recursionBack_twoLevels() {
+		term(incrementWord fieldTo term(incrementWord fieldTo zeroWord.term))
+			.matches(
+				term(
+					oneOfPattern(
+						zeroWord.term(),
+						term(incrementWord fieldTo term(recursion(back).pattern)))))
 			.assertEqualTo(true)
 	}
 }

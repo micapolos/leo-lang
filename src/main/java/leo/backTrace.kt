@@ -1,18 +1,28 @@
 package leo
 
-import leo.base.Stack
-import leo.base.stack
+import leo.base.*
 
 data class BackTrace(
-	val patternStack: Stack<Term<Pattern>>)
+	val patternTermStack: Stack<Term<Pattern>>) {
+	override fun toString() = reflect.string
+}
 
 val Stack<Term<Pattern>>.backTrace: BackTrace
 	get() =
 		BackTrace(this)
+
+fun BackTrace?.push(patternTerm: Term<Pattern>): BackTrace =
+	this?.patternTermStack.push(patternTerm).backTrace
 
 fun backTrace(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
 	stack(patternTerm, *patternTerms).backTrace
 
 val BackTrace.back: BackTrace?
 	get() =
-		patternStack.pop?.backTrace
+		patternTermStack.pop?.backTrace
+
+val BackTrace.reflect
+	get() =
+		backWord fieldTo term(
+			traceWord fieldTo
+				patternTermStack.reverse.stream.reflect(termWord) { reflectMeta(Pattern::reflect) })

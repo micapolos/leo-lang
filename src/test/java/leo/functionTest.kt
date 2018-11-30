@@ -104,22 +104,22 @@ class FunctionTest {
 	@Test
 	fun defineOneOf_invokeFirst() {
 		emptyFunction
-			.testDefine(pattern(aWord.term(), bWord.term()).meta.term)!!
+			.testDefine(oneOfPattern(aWord.term(), bWord.term()).meta.term)!!
 			.assertInvokesBody(aWord.term)
 	}
 
 	@Test
 	fun defineOneOf_invokeSecond() {
 		emptyFunction
-			.testDefine(pattern(aWord.term(), bWord.term()).meta.term)!!
+			.testDefine(oneOfPattern(aWord.term(), bWord.term()).meta.term)!!
 			.assertInvokesBody(bWord.term)
 	}
 
 	private val nonDependentPatternsFunction = emptyFunction
 		.testDefine(
 			term(
-				oneWord fieldTo pattern(aWord.term(), bWord.term()).meta.term,
-				twoWord fieldTo pattern(aWord.term(), bWord.term()).meta.term))
+				oneWord fieldTo oneOfPattern(aWord.term(), bWord.term()).meta.term,
+				twoWord fieldTo oneOfPattern(aWord.term(), bWord.term()).meta.term))
 
 	@Test
 	fun defineNonDependentOneOfs_getFirstFirst() {
@@ -147,15 +147,15 @@ class FunctionTest {
 
 	private val dependentPatternsFunction = emptyFunction
 		.testDefine(
-				pattern(
+			oneOfPattern(
 					term(
 						oneWord fieldTo
-							pattern(
+							oneOfPattern(
 								aWord.term(),
 								bWord.term()).meta.term),
 					term(
 						twoWord fieldTo
-							pattern(
+							oneOfPattern(
 								cWord.term(),
 								dWord.term()).meta.term)).meta.term)
 

@@ -21,10 +21,10 @@ val Recursion.back: Recursion?
 	get() =
 		backStack.pop?.recursion
 
-fun Recursion.apply(backTrace: BackTrace?): BackTrace? =
+fun Recursion.apply(backTraceOrNull: BackTrace?): BackTrace? =
 	back.let { back ->
-		if (back == null) backTrace?.back
-		else back.apply(backTrace?.back)
+		if (back == null) backTraceOrNull?.back
+		else back.apply(backTraceOrNull?.back)
 	}
 
 val Recursion.reflect: Term<Nothing>

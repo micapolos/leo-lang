@@ -56,6 +56,9 @@ val <V> Term<V>.itTerm: Term<V>
 	get() =
 		(itWord fieldTo this).term
 
+fun <V> term(value: V) =
+	value.meta.term
+
 fun <V> term(field: Field<V>, vararg fields: Field<V>) =
 	stack(field, *fields).structureTerm
 
