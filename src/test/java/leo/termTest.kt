@@ -118,8 +118,8 @@ class TermTest {
 			.select(ageWord)
 			.assertEqualTo(
 				term(
-					thisWord fieldTo 42.meta.term,
-					thisWord fieldTo 43.meta.term))
+					theWord fieldTo 42.meta.term,
+					theWord fieldTo 43.meta.term))
 	}
 
 	@Test

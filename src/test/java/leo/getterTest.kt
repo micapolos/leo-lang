@@ -31,8 +31,8 @@ class GetterTest {
 			.get(oneWord.getter)
 			.assertEqualTo(
 				term(
-					thisWord fieldTo numberWord.term,
-					thisWord fieldTo booleanWord.term))
+					theWord fieldTo numberWord.term,
+					theWord fieldTo booleanWord.term))
 	}
 
 	@Test

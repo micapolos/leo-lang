@@ -206,7 +206,7 @@ fun <V> StructureTerm<V>.select(key: Word): Term<V>? =
 	else valueStreamOrNull(key)?.run {
 		nextOrNull.let { nextOrNull ->
 			if (nextOrNull == null) first
-			else map { value -> thisWord fieldTo value }.stack.structureTerm
+			else map { value -> theWord fieldTo value }.stack.structureTerm
 		}
 	}
 
@@ -214,7 +214,7 @@ fun <V> StructureTerm<V>.select(key: Word): Term<V>? =
 val StructureTerm<*>.isList: Boolean
 	get() =
 		true.fold(fieldStream) { field ->
-			and(field.key == thisWord)
+			and(field.key == theWord)
 		}
 
 // === reflect

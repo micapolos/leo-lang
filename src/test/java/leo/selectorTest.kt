@@ -32,8 +32,8 @@ class SelectorTest {
 			.invoke(testTerm)
 			.assertEqualTo(
 				term(
-					thisWord fieldTo 42.meta.term,
-					thisWord fieldTo 44.meta.term))
+					theWord fieldTo 42.meta.term,
+					theWord fieldTo 44.meta.term))
 	}
 
 	@Test
