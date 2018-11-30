@@ -118,9 +118,8 @@ class TermTest {
 			.select(ageWord)
 			.assertEqualTo(
 				term(
-					previousWord fieldTo term(
-						lastWord fieldTo 42.meta.term),
-					lastWord fieldTo 43.meta.term))
+					thisWord fieldTo 42.meta.term,
+					thisWord fieldTo 43.meta.term))
 	}
 
 	@Test

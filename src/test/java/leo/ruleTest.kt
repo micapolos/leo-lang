@@ -31,7 +31,7 @@ class RuleTest {
 	fun parse_withSelector() {
 		term(
 			itWord fieldTo oneWord.term,
-			isWord fieldTo thisWord.term)
+			isWord fieldTo argumentWord.term)
 			.parseItIsRule(emptyFunction)
 			.assertEqualTo(
 				rule(oneWord.term(), body(selector().meta.term, emptyFunction)))

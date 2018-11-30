@@ -3,34 +3,58 @@ package leo
 import leo.base.*
 
 data class Selector(
-	val wordStackOrNull: Stack<Word>?) {
-	override fun toString() = reflect.string
-}
+	val getterStackOrNull: Stack<Getter>?)
 
-val Stack<Word>?.selector
+val Stack<Getter>?.selector
 	get() =
 		Selector(this)
 
-fun Selector.then(word: Word) =
-	wordStackOrNull.push(word).selector
-
-fun selector(vararg words: Word) =
-	stackOrNull(*words).selector
-
-val Selector.wordStreamOrNull: Stream<Word>?
+val Selector.selectorItemStreamOrNull: Stream<Getter>?
 	get() =
-		wordStackOrNull?.reverse?.stream
+		getterStackOrNull?.reverse?.stream
+
+val thisSelector =
+	nullOf<Stack<Getter>>().selector
+
+fun Selector?.then(getter: Getter) =
+	this?.getterStackOrNull.push(getter).selector
+
+fun Selector.get(word: Word) =
+	getterStackOrNull.push(WordGetter(word)).selector
+
+val Selector.last: Selector
+	get() =
+		getterStackOrNull.push(LastGetter).selector
+
+val Selector.previous: Selector
+	get() =
+		getterStackOrNull.push(PreviousGetter).selector
+
+fun selector(vararg getters: Getter) =
+	getters.fold(thisSelector, Selector::then)
+
+// === parse
 
 fun Term<Nothing>.parseSelector(pattern: Term<Pattern>): Selector? =
 	parseSelectorToPattern(pattern)?.first
 
 fun Term<Nothing>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector, Term<Pattern>>? =
-	matchWord(thisWord) {
+	matchWord(argumentWord) {
 		selector() to pattern
 	} ?: onlyFieldOrNull?.run {
 		value.parseSelectorToPattern(pattern)?.let { (selector, pattern) ->
-			pattern.select(key)?.let { argumentValue ->
-				selector.then(key) to argumentValue
+			if (pattern.structureTermOrNull?.isList == true)
+				when (key) {
+					lastWord -> pattern.structureTermOrNull?.fieldStack?.top?.value?.let { argumentValue ->
+						selector.last to argumentValue
+					}
+					previousWord -> pattern.structureTermOrNull?.fieldStack?.pop?.structureTerm?.let { argumentValue ->
+						selector.previous to argumentValue
+					}
+					else -> null
+				}
+			else pattern.select(key)?.let { argumentValue ->
+				selector.get(key) to argumentValue
 			}
 		}
 	}
@@ -38,8 +62,8 @@ fun Term<Nothing>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector,
 // === invoke
 
 fun <V> Selector.invoke(argumentTerm: Term<V>): Term<V>? =
-	argumentTerm.orNull.fold(wordStreamOrNull) { word ->
-		this?.select(word)
+	argumentTerm.orNull.fold(selectorItemStreamOrNull) { selectorItem ->
+		this?.get(selectorItem)
 	}
 
 fun <V> Term<Selector>.invoke(argumentTerm: Term<V>): Term<V>? =
@@ -95,4 +119,4 @@ fun Field<Nothing>.parseSelectorField(patternTerm: Term<Pattern>): Field<Selecto
 
 val Selector.reflect: Field<Nothing>
 	get() =
-		selectorWord.fieldTo(wordStreamOrNull?.reflect(Word::reflect) ?: thisWord.term)
+		selectorWord fieldTo (selectorItemStreamOrNull?.reflect(Getter::reflect) ?: nullWord.term)

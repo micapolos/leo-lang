@@ -21,110 +21,109 @@ class SelectorTest {
 
 	@Test
 	fun invokeSinglePattern() {
-		selector(oneWord)
+		selector(oneWord.getter)
 			.invoke(testTerm)
 			.assertEqualTo(1.meta.term)
 	}
 
 	@Test
 	fun invokeMultiplePattern() {
-		selector(ageWord)
+		selector(ageWord.getter)
 			.invoke(testTerm)
 			.assertEqualTo(
 				term(
-					previousWord fieldTo term(
-						lastWord fieldTo 42.meta.term),
-					lastWord fieldTo 44.meta.term))
+					thisWord fieldTo 42.meta.term,
+					thisWord fieldTo 44.meta.term))
 	}
 
 	@Test
 	fun invokeMissingPattern() {
-		selector(personWord)
+		selector(personWord.getter)
 			.invoke(testTerm)
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun invokeDeep() {
-		selector(numberWord, lastWord)
+		selector(numberWord.getter, lastWord.getter)
 			.invoke(testTerm)
 			.assertEqualTo(200.meta.term)
 	}
 
 	@Test
-	fun parse_this() {
-		thisWord.term
+	fun parse_argument() {
+		argumentWord.term
 			.parseSelector(oneWord.term)
 			.assertEqualTo(selector())
 	}
 
 	@Test
 	fun parse_simple() {
-		term(oneWord fieldTo thisWord.term)
+		term(oneWord fieldTo argumentWord.term)
 			.parseSelector(
 				term(
 					oneWord fieldTo numberWord.term,
 					twoWord fieldTo stringWord.term))
-			.assertEqualTo(selector(oneWord))
+			.assertEqualTo(selector(oneWord.getter))
 	}
 
 	@Test
 	fun parse_deep() {
-		term(twoWord fieldTo term(oneWord fieldTo thisWord.term))
+		term(twoWord fieldTo term(oneWord fieldTo argumentWord.term))
 			.parseSelector(term(oneWord fieldTo term(twoWord fieldTo numberWord.term)))
-			.assertEqualTo(selector(oneWord, twoWord))
+			.assertEqualTo(selector(oneWord.getter, twoWord.getter))
 	}
 
 	@Test
 	fun parse_mismatch() {
-		term(oneWord fieldTo thisWord.term)
+		term(oneWord fieldTo argumentWord.term)
 			.parseSelector(term(twoWord fieldTo numberWord.term))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun parse_multiple() {
-		term(oneWord fieldTo thisWord.term)
+		term(oneWord fieldTo argumentWord.term)
 			.parseSelector(
 				term(
 					oneWord fieldTo numberWord.term,
 					oneWord fieldTo stringWord.term))
-			.assertEqualTo(selector(oneWord))
+			.assertEqualTo(selector(oneWord.getter))
 	}
 
 	@Test
 	fun parse_multiple_last() {
-		term(lastWord fieldTo term(oneWord fieldTo thisWord.term))
+		term(lastWord fieldTo term(oneWord fieldTo argumentWord.term))
 			.parseSelector(
 				term(
 					oneWord fieldTo numberWord.term,
 					oneWord fieldTo stringWord.term))
-			.assertEqualTo(selector(oneWord, lastWord))
+			.assertEqualTo(selector(oneWord.getter, lastGetter))
 	}
 
 	@Test
 	fun parse_multiple_previous() {
-		term(previousWord fieldTo term(oneWord fieldTo thisWord.term))
+		term(previousWord fieldTo term(oneWord fieldTo argumentWord.term))
 			.parseSelector(
 				term(
 					oneWord fieldTo numberWord.term,
 					oneWord fieldTo stringWord.term))
-			.assertEqualTo(selector(oneWord, previousWord))
+			.assertEqualTo(selector(oneWord.getter, previousGetter))
 	}
 
 	@Test
 	fun parse_multiple_previous_last() {
-		term(lastWord fieldTo (term(previousWord fieldTo term(oneWord fieldTo thisWord.term))))
+		term(lastWord fieldTo (term(previousWord fieldTo term(oneWord fieldTo argumentWord.term))))
 			.parseSelector(
 				term(
 					oneWord fieldTo numberWord.term,
 					oneWord fieldTo stringWord.term))
-			.assertEqualTo(selector(oneWord, previousWord, lastWord))
+			.assertEqualTo(selector(oneWord.getter, previousGetter, lastGetter))
 	}
 
 	@Test
 	fun parse_multiple_previous_previous_last() {
-		term(lastWord fieldTo term(previousWord fieldTo term(previousWord fieldTo term(oneWord fieldTo thisWord.term))))
+		term(lastWord fieldTo term(previousWord fieldTo term(previousWord fieldTo term(oneWord fieldTo argumentWord.term))))
 			.parseSelector(
 				term(
 					oneWord fieldTo numberWord.term,
@@ -155,26 +154,26 @@ class SelectorTest {
 	fun parse_selector() {
 		term(
 			nameWord fieldTo term(
-				oneWord fieldTo thisWord.term))
+				oneWord fieldTo argumentWord.term))
 			.parseSelectorTerm(
 				term(oneWord fieldTo numberWord.term))
 			.assertEqualTo(
 				term(
-					nameWord fieldTo selector(oneWord).meta.term))
+					nameWord fieldTo selector(oneWord.getter).meta.term))
 	}
 
 	@Test
 	fun bodyInvoke() {
 		term(
-			thisWord fieldTo selector(itWord).meta.term,
-			timesWord fieldTo selector(plusWord).meta.term)
+			argumentWord fieldTo selector(itWord.getter).meta.term,
+			timesWord fieldTo selector(plusWord.getter).meta.term)
 			.invoke(
 				term(
 					itWord fieldTo 1.meta.term,
 					plusWord fieldTo 2.meta.term))
 			.assertEqualTo(
 				term(
-					thisWord fieldTo 1.meta.term,
+					argumentWord fieldTo 1.meta.term,
 					timesWord fieldTo 2.meta.term))
 	}
 }

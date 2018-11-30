@@ -194,16 +194,22 @@ fun <V, R : Any> StructureTerm<V>.matchAllFieldKeys(key: Word, fn: (Term<V>) -> 
 	}
 
 fun <V> Term<V>.select(key: Word): Term<V>? =
-	structureTermOrNull?.valueStreamOrNull(key)?.run {
+	structureTermOrNull?.select(key)
+
+fun <V> StructureTerm<V>.select(key: Word): Term<V>? =
+	valueStreamOrNull(key)?.run {
 		nextOrNull.let { nextOrNull ->
 			if (nextOrNull == null) first
-			else (lastWord fieldTo first).onlyTerm.fold(nextOrNull) { term ->
-				term(
-					previousWord fieldTo this,
-					lastWord fieldTo term)
-			}
+			else map { value -> thisWord fieldTo value }.stack.structureTerm
 		}
 	}
+
+
+val StructureTerm<*>.isList: Boolean
+	get() =
+		true.fold(fieldStream) { field ->
+			and(field.key == thisWord)
+		}
 
 // === reflect
 
