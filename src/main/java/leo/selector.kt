@@ -45,10 +45,10 @@ fun Term<Nothing>.parseSelectorToPattern(pattern: Term<Pattern>): Pair<Selector,
 		value.parseSelectorToPattern(pattern)?.let { (selector, pattern) ->
 			if (pattern.structureTermOrNull?.isList == true)
 				when (key) {
-					lastWord -> pattern.structureTermOrNull?.fieldStack?.top?.value?.let { argumentValue ->
+					lastWord -> pattern.select(key)?.let { argumentValue ->
 						selector.last to argumentValue
 					}
-					previousWord -> pattern.structureTermOrNull?.fieldStack?.pop?.structureTerm?.let { argumentValue ->
+					previousWord -> pattern.select(key)?.let { argumentValue ->
 						selector.previous to argumentValue
 					}
 					else -> null

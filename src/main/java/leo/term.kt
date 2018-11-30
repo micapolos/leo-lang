@@ -197,7 +197,13 @@ fun <V> Term<V>.select(key: Word): Term<V>? =
 	structureTermOrNull?.select(key)
 
 fun <V> StructureTerm<V>.select(key: Word): Term<V>? =
-	valueStreamOrNull(key)?.run {
+	if (isList)
+		when (key) {
+			lastWord -> fieldStack.top.value
+			previousWord -> fieldStack.pop?.structureTerm
+			else -> null
+		}
+	else valueStreamOrNull(key)?.run {
 		nextOrNull.let { nextOrNull ->
 			if (nextOrNull == null) first
 			else map { value -> thisWord fieldTo value }.stack.structureTerm
