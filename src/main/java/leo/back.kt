@@ -1,9 +1,9 @@
 package leo
 
-object Back
+object GoBack
 
-val back = Back
+val goBack = GoBack
 
-val backReflect: Term<Nothing>
+val goBackReflect: Field<Nothing>
 	get() =
-		backWord.term
+		goWord fieldTo backWord.term

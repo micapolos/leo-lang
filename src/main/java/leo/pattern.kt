@@ -103,7 +103,6 @@ val Term<Nothing>.parsePattern: Pattern?
 				}
 			}
 
-
 val Term<Nothing>.parsePatternTerm: Term<Pattern>
 	get() =
 		when (this) {
@@ -128,10 +127,7 @@ val Field<Nothing>.parsePatternField: Field<Pattern>
 
 val Pattern.reflect: Field<Nothing>
 	get() =
-		patternWord fieldTo when (this) {
-			is OneOfPattern ->
-				patternTermStream.reflect(eitherWord) {
-					reflectMeta(Pattern::reflect)
-				}
+		patternWord fieldTo term(when (this) {
+			is OneOfPattern -> oneWord fieldTo term(ofWord fieldTo patternTermStream.termReflect(Pattern::reflect))
 			is RecursionPattern -> recursion.reflect
-		}
+		})

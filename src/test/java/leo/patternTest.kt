@@ -9,14 +9,14 @@ class PatternTest {
 	fun oneOfString() {
 		oneOfPattern(oneWord.term, twoWord.term)
 			.string
-			.assertEqualTo("pattern(either one, either two)")
+			.assertEqualTo("pattern one of(the one, the two)")
 	}
 
 	@Test
 	fun recursionString() {
-		recursion(back, back).pattern
+		recursion(goBack, goBack).pattern
 			.string
-			.assertEqualTo("pattern(recurse back, recurse back)")
+			.assertEqualTo("pattern recursion(go back, go back)")
 	}
 
 	@Test
@@ -157,7 +157,7 @@ class PatternTest {
 				term(
 					oneOfPattern(
 						oneWord.term(),
-						term(plusWord fieldTo term(recursion(back).pattern)))))
+						term(plusWord fieldTo term(recursion(goBack).pattern)))))
 			.assertEqualTo(true)
 	}
 
@@ -168,7 +168,7 @@ class PatternTest {
 				term(
 					oneOfPattern(
 						zeroWord.term(),
-						term(incrementWord fieldTo term(recursion(back).pattern)))))
+						term(incrementWord fieldTo term(recursion(goBack).pattern)))))
 			.assertEqualTo(true)
 	}
 
@@ -179,7 +179,7 @@ class PatternTest {
 				term(
 					oneOfPattern(
 						zeroWord.term(),
-						term(oneWord fieldTo term(plusWord fieldTo term(recursion(back, back).pattern))))))
+						term(oneWord fieldTo term(plusWord fieldTo term(recursion(goBack, goBack).pattern))))))
 			.assertEqualTo(true)
 	}
 
@@ -190,7 +190,7 @@ class PatternTest {
 				term(
 					oneOfPattern(
 						zeroWord.term(),
-						term(incrementWord fieldTo term(recursion(back).pattern)))))
+						term(incrementWord fieldTo term(recursion(goBack).pattern)))))
 			.assertEqualTo(true)
 	}
 }

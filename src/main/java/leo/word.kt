@@ -115,6 +115,7 @@ val fiveWord = "five".wordOrNull!!
 val fourWord = "four".wordOrNull!!
 val functionWord = "function".wordOrNull!!
 val getWord = "get".wordOrNull!!
+val goWord = "go".wordOrNull!!
 val identifierWord = "identifier".wordOrNull!!
 val identityWord = "identity".wordOrNull!!
 val importWord = "import".wordOrNull!!

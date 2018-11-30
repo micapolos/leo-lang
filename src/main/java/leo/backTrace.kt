@@ -25,4 +25,4 @@ val BackTrace.reflect
 	get() =
 		backWord fieldTo term(
 			traceWord fieldTo
-				patternTermStack.reverse.stream.reflect(termWord) { reflectMeta(Pattern::reflect) })
+				patternTermStack.reverse.stream.termReflect(Pattern::reflect))

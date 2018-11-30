@@ -31,13 +31,13 @@ val OneOf<Nothing>.reflect: Field<Nothing>
 
 fun <V> OneOf<V>.reflect(valueReflect: V.() -> Term<Nothing>): Field<Nothing> =
 	oneWord fieldTo term(
-		ofWord fieldTo valueStream.reflect(thisWord, valueReflect))
+		ofWord fieldTo valueStream.reflect(theWord, valueReflect))
 
 // === parse
 
 fun <V : Any> Field<Nothing>.parseOneOf(valueParse: Term<Nothing>.() -> V?): OneOf<V>? =
 	matchKey(oneWord) {
 		matchFieldKey(ofWord) {
-			parseStack { matchKey(thisWord, valueParse) }
+			parseStack { matchKey(theWord, valueParse) }
 		}
 	}?.oneOf

@@ -7,28 +7,28 @@ import kotlin.test.Test
 class RecursionTest {
 	@Test
 	fun string() {
-		recursion(back, back, back)
+		recursion(goBack, goBack)
 			.string
-			.assertEqualTo("recurse back, recurse back, recurse back")
+			.assertEqualTo("recursion(go back, go back)")
 	}
 
 	@Test
 	fun backApply() {
-		recursion(back)
+		recursion(goBack)
 			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
 			.assertEqualTo(backTrace(oneWord.term(), twoWord.term()))
 	}
 
 	@Test
 	fun backBackApply() {
-		recursion(back, back)
+		recursion(goBack, goBack)
 			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
 			.assertEqualTo(backTrace(oneWord.term()))
 	}
 
 	@Test
 	fun overflowApply() {
-		recursion(back, back, back)
+		recursion(goBack, goBack, goBack)
 			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
 			.assertEqualTo(null)
 	}

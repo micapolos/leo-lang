@@ -11,3 +11,6 @@ fun <V> Stream<V>.reflect(reflectValue: V.() -> Field<Nothing>): StructureTerm<N
 	reflectValue(first).onlyStack.fold(nextOrNull) { field ->
 		push(reflectValue(field))
 	}.structureTerm
+
+fun <V> Stream<Term<V>>.termReflect(reflectValue: V.() -> Field<Nothing>): StructureTerm<Nothing> =
+	reflect { theWord fieldTo reflectMeta(reflectValue) }

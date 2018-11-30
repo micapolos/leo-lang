@@ -11,8 +11,8 @@ class OneOfTest {
 			.assertEqualTo(
 				oneWord fieldTo term(
 					ofWord fieldTo term(
-						thisWord fieldTo oneWord.term,
-						thisWord fieldTo twoWord.term)))
+						theWord fieldTo oneWord.term,
+						theWord fieldTo twoWord.term)))
 	}
 
 	@Test
