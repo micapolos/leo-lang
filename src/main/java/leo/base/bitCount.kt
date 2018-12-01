@@ -1,21 +1,27 @@
 package leo.base
 
 data class BitCount(
-	val int: Int)
+	val highestBitIndexBinaryOrNull: Binary?) {
+	override fun toString() = "bit count $intOrNull"
+}
 
-val Int.bitCountOrNull: BitCount?
+val Binary?.orNullHighestBitIndexBitCount: BitCount
 	get() =
-		if (this <= 0) null
-		else BitCount(this)
+		BitCount(this)
 
-val BitCount.increment: BitCount?
+val BitCount?.increment: BitCount
 	get() =
-		int.inc().bitCountOrNull
+		if (this == null) BitCount(null)
+		else highestBitIndexBinaryOrNull.incrementAndGrow.orNullHighestBitIndexBitCount
 
-val bitBitCount = 1.bitCountOrNull!!
-val byteBitCount = 8.bitCountOrNull!!
-val shortBitCount = 16.bitCountOrNull!!
-val intBitCount = 32.bitCountOrNull!!
-val longBitCount = 64.bitCountOrNull!!
+val BitCount.intOrNull: Int?
+	get() =
+		highestBitIndexBinaryOrNull.incrementAndGrow.intOrNull ?: 1
+
+val bitBitCount = nullOf<Binary>().orNullHighestBitIndexBitCount
+val byteBitCount = binary(1, 1, 1).orNullHighestBitIndexBitCount
+val shortBitCount = binary(1, 1, 1, 1).orNullHighestBitIndexBitCount
+val intBitCount = binary(1, 1, 1, 1, 1).orNullHighestBitIndexBitCount
+val longBitCount = binary(1, 1, 1, 1, 1, 1).orNullHighestBitIndexBitCount
 val floatBitCount = intBitCount
 val doubleBitCount = longBitCount

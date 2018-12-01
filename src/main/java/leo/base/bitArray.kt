@@ -1,6 +1,7 @@
 package leo.base
 
-// Fixed size POT bit array, random access: O(log(n)) for POT regions.
+// Non-empty, power-of-two bit array
+// random access: O(log(n)) for bits and power-of-two aligned sub-arrays
 sealed class BitArray {
 	abstract val depth: Int
 }
@@ -22,14 +23,12 @@ val BitArray.indexBitCount: BitCount
 	get() =
 		when (this) {
 			is SingleBitArray -> bitBitCount
-			is CompositeBitArray -> zeroBitArray.indexBitCount.increment!!
+			is CompositeBitArray -> zeroBitArray.indexBitCount.increment
 		}
 
-// Returns null on overflow
-val BitArray.incrementDepth: BitArray?
+val BitArray.incrementDepth: BitArray
 	get() =
-		if (indexBitCount.increment == null) null
-		else CompositeBitArray(this, this)
+		CompositeBitArray(this, this)
 
 val BitArray.minIndexBinaryOrNull: Binary?
 	get() =

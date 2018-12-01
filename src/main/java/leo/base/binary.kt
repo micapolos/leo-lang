@@ -85,6 +85,11 @@ val Binary.clampedInt: Int
 			toInt().shl(1).or(bit.int)
 		}
 
+// TODO: Check for overflow instead of clamping
+val Binary.intOrNull: Int?
+	get() =
+		clampedInt
+
 val Binary.clampedShort: Short
 	get() =
 		clampedInt.toShort()
@@ -93,9 +98,10 @@ val Binary.clampedByte: Byte
 	get() =
 		clampedShort.toByte()
 
-val Binary.carryIncrement: Pair<Bit, Binary>
+val Binary?.carryIncrement: Pair<Bit, Binary?>
 	get() =
-		nextBinaryOrNull?.carryIncrement?.let { (carry, increment) ->
+		if (this == null) Bit.ONE to null
+		else nextBinaryOrNull?.carryIncrement?.let { (carry, increment) ->
 			when (bit) {
 				Bit.ZERO ->
 					when (carry) {
@@ -113,24 +119,20 @@ val Binary.carryIncrement: Pair<Bit, Binary>
 			Bit.ONE -> Bit.ONE to Bit.ZERO.binary
 		}
 
-val Binary?.orNullCarryIncrement: Pair<Bit, Binary?>
-	get() =
-		this?.carryIncrement ?: Bit.ONE.pairTo(this)
-
-val Binary.incrementAndWrap: Binary
+val Binary?.incrementAndWrap: Binary?
 	get() =
 		carryIncrement.second
 
-val Binary.incrementAndGrow: Binary
+val Binary?.incrementAndGrow: Binary
 	get() =
 		carryIncrement.let { (carry, increment) ->
 			when (carry) {
-				Bit.ZERO -> increment
+				Bit.ZERO -> increment!!
 				Bit.ONE -> Binary(carry, increment)
 			}
 		}
 
-val Binary.incrementAndClamp: Binary
+val Binary?.incrementAndClamp: Binary?
 	get() =
 		carryIncrement.let { (carry, increment) ->
 			when (carry) {
@@ -167,10 +169,6 @@ val Binary.borrowDecrement: Pair<Bit, Binary>
 			Bit.ZERO -> Bit.ONE to Bit.ONE.binary
 			Bit.ONE -> Bit.ZERO to Bit.ZERO.binary
 		}
-
-val Binary?.orNullBorrowDecrement: Pair<Bit, Binary?>
-	get() =
-		this?.borrowDecrement ?: Bit.ONE.pairTo(this)
 
 val Binary.decrement: Binary?
 	get() =

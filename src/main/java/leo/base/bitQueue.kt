@@ -26,10 +26,10 @@ fun bitQueue(bitInt: Int, vararg bitInts: Int): BitQueue =
 
 val BitQueue.pushHead: BitQueue
 	get() =
-		headIndexBinary.orNullCarryIncrement.let { (carry, increment) ->
+		headIndexBinary.carryIncrement.let { (carry, increment) ->
 			if (carry == Bit.ZERO) copy(headIndexBinary = increment)
 			else copy(
-				bitArray = bitArray.incrementDepth!!,
+				bitArray = bitArray.incrementDepth,
 				headIndexBinary = carry.append(increment),
 				tailIndexBinary = Bit.ZERO.append(tailIndexBinary))
 		}
