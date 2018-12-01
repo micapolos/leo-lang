@@ -57,7 +57,7 @@ fun Term<Nothing>.matches(pattern: OneOfPattern, backTraceOrNull: BackTrace?): B
 
 fun Term<Nothing>.matches(pattern: RecursionPattern, backTraceOrNull: BackTrace?): Boolean =
 	backTraceOrNull != null && pattern.recurse.apply(backTraceOrNull.back)?.let { newBackTraceOrNull ->
-		matches(newBackTraceOrNull.patternTermStack.top, newBackTraceOrNull.back)
+		matches(newBackTraceOrNull.patternTermStack.head, newBackTraceOrNull.back)
 	} ?: false
 
 fun Term<Nothing>.matches(patternTerm: Term<Pattern>, backTraceOrNull: BackTrace?): Boolean =
@@ -77,10 +77,10 @@ fun StructureTerm<Nothing>.matches(patternStructureTerm: StructureTerm<Pattern>,
 	structure.matches(patternStructureTerm.structure, backTraceOrNull.push(patternStructureTerm))
 
 fun Structure<Nothing>.matches(patternStructure: Structure<Pattern>, backTraceOrNull: BackTrace?): Boolean =
-	fieldStack.top.matches(patternStructure.fieldStack.top, backTraceOrNull) &&
-		if (fieldStack.pop == null) patternStructure.fieldStack.pop == null
-		else patternStructure.fieldStack.pop != null &&
-			fieldStack.pop.structureTerm.matches(patternStructure.fieldStack.pop.structureTerm, backTraceOrNull)
+	fieldStack.head.matches(patternStructure.fieldStack.head, backTraceOrNull) &&
+		if (fieldStack.tail == null) patternStructure.fieldStack.tail == null
+		else patternStructure.fieldStack.tail != null &&
+			fieldStack.tail.structureTerm.matches(patternStructure.fieldStack.tail.structureTerm, backTraceOrNull)
 
 fun Field<Nothing>.matches(patternField: Field<Pattern>, backTraceOrNull: BackTrace?) =
 	key == patternField.key && value.matches(patternField.value, backTraceOrNull)

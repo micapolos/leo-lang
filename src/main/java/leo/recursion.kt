@@ -16,7 +16,7 @@ fun recurse(back: Back, vararg backs: Back): Recurse =
 
 val Recurse.back: Recurse?
 	get() =
-		backStack.pop?.recurse
+		backStack.tail?.recurse
 
 fun Recurse.apply(backTraceOrNull: BackTrace?): BackTrace? =
 	back.let { back ->

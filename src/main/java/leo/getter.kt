@@ -24,8 +24,8 @@ val previousGetter: Getter
 fun <V> Term<V>.get(selectorItem: Getter): Term<V>? =
 	when (selectorItem) {
 		is WordGetter -> select(selectorItem.word)
-		is LastGetter -> structureTermOrNull?.fieldStack?.top?.value
-		is PreviousGetter -> structureTermOrNull?.fieldStack?.pop?.structureTerm
+		is LastGetter -> structureTermOrNull?.fieldStack?.head?.value
+		is PreviousGetter -> structureTermOrNull?.fieldStack?.tail?.structureTerm
 	}
 
 val Getter.reflect: Field<Nothing>

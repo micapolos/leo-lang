@@ -11,6 +11,10 @@ val <V> V.onlyStream: Stream<V>
 val <V> Stream<V>.nextOrNull: Stream<V>?
 	get() = nextOrNullFn()
 
+fun <V, R> R.read(streamOrNull: Stream<V>?, fn: R.(V, Stream<V>?) -> R): R =
+	if (streamOrNull == null) this
+	else fn(streamOrNull.first, streamOrNull.nextOrNull)
+
 fun <V> V.then(nextOrNullFn: () -> Stream<V>?): Stream<V> =
 	Stream(this) { nextOrNullFn() }
 

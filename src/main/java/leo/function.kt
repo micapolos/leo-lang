@@ -74,10 +74,10 @@ fun Function.define(pattern: RecursionPattern, defineNext: Function.() -> Match?
 	TODO()
 
 fun Function.defineToken(tokenStream: Stream<Token<Pattern>>, defineNext: Function.() -> Match?): Function? =
-	define(tokenStream.first) {
-		tokenStream.nextOrNull.let { nextTokenStreamOrNull ->
-			if (nextTokenStreamOrNull == null) defineNext()
-			else defineToken(nextTokenStreamOrNull, defineNext)?.match
+	orNull.read(tokenStream) { token, nextOrNull ->
+		define(token) {
+			if (nextOrNull == null) defineNext()
+			else defineToken(nextOrNull, defineNext)?.match
 		}
 	}
 

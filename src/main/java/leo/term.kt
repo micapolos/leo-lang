@@ -79,7 +79,7 @@ val <V> Term<V>.topFieldOrNull: Field<V>?
 
 val <V> StructureTerm<V>.topField: Field<V>
 	get() =
-		structure.fieldStack.top
+		structure.fieldStack.head
 
 // === fields
 
@@ -202,8 +202,8 @@ fun <V> Term<V>.select(key: Word): Term<V>? =
 fun <V> StructureTerm<V>.select(key: Word): Term<V>? =
 	if (isList)
 		when (key) {
-			lastWord -> fieldStack.top.value
-			previousWord -> fieldStack.pop?.structureTerm
+			lastWord -> fieldStack.head.value
+			previousWord -> fieldStack.tail?.structureTerm
 			else -> null
 		}
 	else valueStreamOrNull(key)?.run {

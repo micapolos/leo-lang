@@ -19,7 +19,7 @@ fun backTrace(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
 
 val BackTrace.back: BackTrace?
 	get() =
-		patternTermStack.pop?.backTrace
+		patternTermStack.tail?.backTrace
 
 val BackTrace.reflect
 	get() =

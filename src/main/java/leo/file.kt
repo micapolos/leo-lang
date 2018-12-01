@@ -25,6 +25,6 @@ fun <R> File.useBitStream(fn: Stream<Bit>?.() -> R): R =
 
 val File.path: Path
 	get() =
-		Paths.get("${wordStack.top}.leo").fold(wordStack.pop) { word ->
+		Paths.get("${wordStack.head}.leo").fold(wordStack.tail) { word ->
 			Paths.get(word.toString()).resolve(this)
 		}

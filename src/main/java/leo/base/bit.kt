@@ -100,5 +100,7 @@ fun Appendable.append(bit: Bit): Appendable =
 	append(bit.char)
 
 fun Appendable.appendBit(bitStream: Stream<Bit>): Appendable =
-	append(bitStream.first).ifNotNull(bitStream.nextOrNull, Appendable::appendBit)
+	read(bitStream) { bit, nextOrNull ->
+		append(bit).ifNotNull(nextOrNull, Appendable::appendBit)
+	}
 

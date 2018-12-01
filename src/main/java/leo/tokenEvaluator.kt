@@ -60,15 +60,15 @@ val TokenEvaluator.evaluateEnd: TokenEvaluator?
 		wordOrNull.ifNull {
 			entryStackOrNull?.let { entryStack ->
 				if (scope.termOrNull == null)
-					entryStack.top.scope.push(entryStack.top.word)?.let { pushedScope ->
+					entryStack.head.scope.push(entryStack.head.word)?.let { pushedScope ->
 						copy(
-							entryStackOrNull = entryStack.pop,
+							entryStackOrNull = entryStack.tail,
 							scope = pushedScope.evaluate)
 					}
 				else
-					entryStack.top.scope.push(entryStack.top.word fieldTo scope.termOrNull)?.let { pushedScope ->
+					entryStack.head.scope.push(entryStack.head.word fieldTo scope.termOrNull)?.let { pushedScope ->
 						copy(
-							entryStackOrNull = entryStack.pop,
+							entryStackOrNull = entryStack.tail,
 							scope = pushedScope.evaluate)
 					}
 			}

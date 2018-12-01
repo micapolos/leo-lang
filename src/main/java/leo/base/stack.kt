@@ -1,17 +1,14 @@
 package leo.base
 
 data class Stack<out V>(
-	val pop: Stack<V>?,
-	val top: V) {
+	val tail: Stack<V>?,
+	val head: V) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val <V> V.onlyStack
 	get() =
 		Stack(null, this)
-
-//fun <V> Stack<V>.updateTopOrNull(fn: (V) -> V): Stack<V> =
-//	pop?.push(fn(top))
 
 fun <V> Stack<V>?.push(top: V): Stack<V> =
 	Stack(this, top)
@@ -36,11 +33,11 @@ fun <V, R> R.fold(stack: Stack<V>?, fn: R.(V) -> R): R =
 
 val <V> Stack<V>.reverse: Stack<V>
 	get() =
-		top.onlyStack.fold(pop, Stack<V>::push)
+		head.onlyStack.fold(tail, Stack<V>::push)
 
 val <V : Any> Stack<V>.onlyOrNull: V?
 	get() =
-		if (pop == null) top else null
+		if (tail == null) head else null
 
 fun <V : Any> Stack<V>.theOnlyOrNull(fn: (V) -> Boolean): V? =
 	all(fn)?.onlyOrNull
@@ -58,7 +55,7 @@ fun <V, R> Stack<V>.mapOrNull(fn: (V) -> R?): Stack<R>? =
 
 fun <V, R : Any> R.foldOrNull(stack: Stack<V>?, fn: R.(V) -> R?): R? =
 	if (stack == null) this
-	else fn(stack.top)?.foldOrNull(stack.pop, fn)
+	else fn(stack.head)?.foldOrNull(stack.tail, fn)
 
 fun <V, R : Any> Stack<V>.filterMap(fn: (V) -> R?): Stack<R>? =
 	stream.filterMap(fn)?.stack?.reverse
@@ -79,9 +76,9 @@ val Stack<*>.indexBitCount: Int
 
 tailrec operator fun <V : Any> Stack<V>.get(index: Int): V? =
 	when {
-		index == 0 -> top
-		pop == null -> null
-		else -> pop[index - 1]
+		index == 0 -> head
+		tail == null -> null
+		else -> tail[index - 1]
 	}
 
 // TODO: Using clampedInt is "cheating", implement it properly some day
@@ -102,7 +99,7 @@ fun Appendable.append(stack: Stack<*>) =
 
 val <V> Stack<V>.stream: Stream<V>
 	get() =
-		top.onlyStream.then { pop?.stream }
+		head.onlyStream.then { tail?.stream }
 
 fun <V> Int.sizeStackOrNullOf(value: V): Stack<V>? =
 	nullOf<Stack<V>>().iterate(this) { push(value) }

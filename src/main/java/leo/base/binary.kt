@@ -28,7 +28,7 @@ val Int.sizeMaxBinaryOrNull: Binary?
 
 val Binary.zero: Binary
 	get() =
-		Bit.ZERO.binary.fold(bitStream.nextOrNull) { bit ->
+		Bit.ZERO.binary.fold(bitStream.nextOrNull) {
 			Bit.ZERO.append(this)
 		}
 
@@ -41,7 +41,7 @@ fun Bit.append(binaryOrNull: Binary?): Binary =
 
 val Stack<Bit>.reverseBinary: Binary
 	get() =
-		top.binary.fold(pop) { bit -> bit.append(this) }
+		head.binary.fold(tail) { bit -> bit.append(this) }
 
 fun binary(bitInt: Int, vararg bitInts: Int): Binary =
 	stack(bitInt, *bitInts.toTypedArray())

@@ -28,7 +28,7 @@ fun <V> Structure<V>.plus(field: Field<V>): Structure<V> =
 // === util
 
 val <V> Structure<V>.isSimple: Boolean
-	get() = fieldStack.pop == null
+	get() = fieldStack.tail == null
 
 val <V> Structure<V>.tokenStream: Stream<Token<V>>
 	get() =

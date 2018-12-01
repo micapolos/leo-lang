@@ -65,19 +65,19 @@ fun <V> BinaryTrie<V>.set(bit: Bit, matchOrNull: BinaryTrie.Match<V>?): BinaryTr
 	binaryMatchOrNullMap.set(bit, matchOrNull).binaryTrie
 
 // TODO: Make it tailrec, using accumulator
-fun <V> BinaryTrie<V>.set(bitStream: Stream<Bit>, value: V): BinaryTrie<V> {
-	val nextBitStreamOrNull = bitStream.nextOrNull
-	return if (nextBitStreamOrNull == null) set(bitStream.first, value.binaryTrieFullMatch)
-	else {
-		val currentMatch = get(bitStream.first)
-		val nextTrie =
-			if (currentMatch is BinaryTrie.Match.Partial)
-				currentMatch.binaryTrie.set(nextBitStreamOrNull, value)
-			else
-				emptyBinaryTrie<V>().set(nextBitStreamOrNull, value)
-		set(bitStream.first, nextTrie.binaryTriePartialMatch)
+fun <V> BinaryTrie<V>.set(bitStream: Stream<Bit>, value: V): BinaryTrie<V> =
+	read(bitStream) { bit, nextBitStreamOrNull ->
+		if (nextBitStreamOrNull == null) set(bit, value.binaryTrieFullMatch)
+		else {
+			val currentMatch = get(bit)
+			val nextTrie =
+				if (currentMatch is BinaryTrie.Match.Partial)
+					currentMatch.binaryTrie.set(nextBitStreamOrNull, value)
+				else
+					emptyBinaryTrie<V>().set(nextBitStreamOrNull, value)
+			set(bit, nextTrie.binaryTriePartialMatch)
+		}
 	}
-}
 
 val <V> BinaryTrie.Match<V>.theValueOrNull: The<V>?
 	get() =

@@ -1,6 +1,7 @@
 package leo.base
 
-// Variable-size bit queue, backed by POT bit array,
+// Non-empty bit queue, backed by power-of-two bit array
+// enqueue, dequeue: O(log(n))
 data class BitQueue(
 	val bitArray: BitArray,
 	val tailIndexBinary: Binary?,
@@ -65,9 +66,9 @@ val BitQueue.tailBit: Bit
 fun BitQueue.enqueue(bit: Bit): BitQueue =
 	pushHead.setHead(bit)
 
-val BitQueue.dequeue: Pair<Bit, BitQueue?>
+val BitQueue.dequeue: Update<Bit, BitQueue?>
 	get() =
-		popTail.let { tailBit.pairTo(it) }
+		popTail.let { tailBit.andUpdated(it) }
 
 fun BitQueue?.orNullEnqueue(bit: Bit): BitQueue =
 	this?.enqueue(bit) ?: bit.bitQueue
