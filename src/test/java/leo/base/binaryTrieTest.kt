@@ -9,26 +9,42 @@ class BinaryTrieTest {
 	val match100 = "100".binaryTrieFullMatch
 	val match101 = "101".binaryTrieFullMatch
 	val match11 = "11".binaryTrieFullMatch
-	val match10 = binaryTrie(match100, match101).binaryTriePartialMatch
-	val match1 = binaryTrie(match10, match11).binaryTriePartialMatch
+	val trie10 = binaryTrie(match100, match101)
+	val match10 = trie10.binaryTriePartialMatch
+	val trie1 = binaryTrie(match10, match11)
+	val match1 = trie1.binaryTriePartialMatch
 	val testTrie = binaryTrie(match0, match1)
 
 	@Test
 	fun get() {
-		testTrie.valueOrNull(stream(Bit.ZERO)).assertEqualTo("0".the)
-		testTrie.valueOrNull(stream(Bit.ONE)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ONE, Bit.ONE)).assertEqualTo("11".the)
-		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE, Bit.ONE)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo("100".the)
-		testTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo("101".the)
-		testTrie.valueOrNull(stream(Bit.ONE, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		testTrie.valueOrNull(stream(Bit.ONE, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+		testTrie.application.get(0.bit)
+			.assertEqualTo(stack(testTrie).and(match0))
+		testTrie.application.get(1.bit)
+			.assertEqualTo(stack(testTrie).and(match1))
+		testTrie.application.get(0.bit)?.get(0.bit)
+			.assertEqualTo(null)
+		testTrie.application.get(0.bit)?.get(1.bit)
+			.assertEqualTo(null)
+		testTrie.application.get(1.bit)?.get(0.bit)
+			.assertEqualTo(stack(testTrie, trie1).and(match10))
+		testTrie.application.get(1.bit)?.get(1.bit)
+			.assertEqualTo(stack(testTrie, trie1).and(match11))
+		testTrie.application.get(0.bit)?.get(0.bit)?.get(0.bit)
+			.assertEqualTo(null)
+		testTrie.application.get(0.bit)?.get(0.bit)?.get(1.bit)
+			.assertEqualTo(null)
+		testTrie.application.get(0.bit)?.get(1.bit)?.get(0.bit)
+			.assertEqualTo(null)
+		testTrie.application.get(0.bit)?.get(1.bit)?.get(1.bit)
+			.assertEqualTo(null)
+		testTrie.application.get(1.bit)?.get(0.bit)?.get(0.bit)
+			.assertEqualTo(stack(testTrie, trie1, trie10).and(match100))
+		testTrie.application.get(1.bit)?.get(0.bit)?.get(1.bit)
+			.assertEqualTo(stack(testTrie, trie1, trie10).and(match101))
+		testTrie.application.get(1.bit)?.get(1.bit)?.get(0.bit)
+			.assertEqualTo(null)
+		testTrie.application.get(1.bit)?.get(1.bit)?.get(1.bit)
+			.assertEqualTo(null)
 	}
 
 	@Test
