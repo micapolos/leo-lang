@@ -1,5 +1,6 @@
 package leo.base
 
+// Fixed size POT bit array, random access: O(log(n)) for POT regions.
 sealed class BitArray {
 	abstract val depth: Int
 }
@@ -17,9 +18,18 @@ data class CompositeBitArray(
 	override fun toString() = appendableString { it.append(this) }
 }
 
-val BitArray.incrementDepth: BitArray
+val BitArray.indexBitCount: BitCount
 	get() =
-		CompositeBitArray(this, this)
+		when (this) {
+			is SingleBitArray -> bitBitCount
+			is CompositeBitArray -> zeroBitArray.indexBitCount.increment!!
+		}
+
+// Returns null on overflow
+val BitArray.incrementDepth: BitArray?
+	get() =
+		if (indexBitCount.increment == null) null
+		else CompositeBitArray(this, this)
 
 val BitArray.minIndexBinaryOrNull: Binary?
 	get() =
@@ -29,9 +39,9 @@ val BitArray.maxIndexBinaryOrNull: Binary?
 	get() =
 		depth.sizeMaxBinaryOrNull
 
-fun BitArray.increaseDepth(depth: Int): BitArray =
+fun BitArray.increaseDepth(depth: Int): BitArray? =
 	(depth - this.depth).let { delta ->
-		if (delta > 0) iterate(delta, BitArray::incrementDepth)
+		if (delta > 0) orNull.iterate(delta) { this?.incrementDepth }
 		else this
 	}
 

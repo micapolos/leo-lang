@@ -113,6 +113,10 @@ val Binary.carryIncrement: Pair<Bit, Binary>
 			Bit.ONE -> Bit.ONE to Bit.ZERO.binary
 		}
 
+val Binary?.orNullCarryIncrement: Pair<Bit, Binary?>
+	get() =
+		this?.carryIncrement ?: Bit.ONE.pairTo(this)
+
 val Binary.incrementAndWrap: Binary
 	get() =
 		carryIncrement.second
@@ -164,6 +168,10 @@ val Binary.borrowDecrement: Pair<Bit, Binary>
 			Bit.ONE -> Bit.ZERO to Bit.ZERO.binary
 		}
 
+val Binary?.orNullBorrowDecrement: Pair<Bit, Binary?>
+	get() =
+		this?.borrowDecrement ?: Bit.ONE.pairTo(this)
+
 val Binary.decrement: Binary?
 	get() =
 		borrowDecrement.let { (borrow, decrement) ->
@@ -179,11 +187,7 @@ val Binary.decrementAndWrap: Binary?
 
 val Binary.bitCountInt: Int
 	get() =
-		bitCount.int
-
-val Binary.bitCount: BitCount
-	get() =
-		0.fold(bitStream) { inc() }.bitCount
+		0.fold(bitStream) { inc() }
 
 fun <V> Stream<V>.wrapIndexedStream(startIndexOrNull: Binary?): Stream<Indexed<V>> =
 	startIndexOrNull.indexedTo(first).onlyStream.then {

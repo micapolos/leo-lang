@@ -23,10 +23,10 @@ class BinaryTest {
 
 	@Test
 	fun bitCount() {
-		binary(0).bitCount.assertEqualTo(1.bitCount)
-		binary(0, 0).bitCount.assertEqualTo(2.bitCount)
-		binary(0, 0, 0).bitCount.assertEqualTo(3.bitCount)
-		binary(0, 0, 0, 0).bitCount.assertEqualTo(4.bitCount)
+		binary(0).bitCountInt.assertEqualTo(1)
+		binary(0, 0).bitCountInt.assertEqualTo(2)
+		binary(0, 0, 0).bitCountInt.assertEqualTo(3)
+		binary(0, 0, 0, 0).bitCountInt.assertEqualTo(4)
 	}
 
 	@Test

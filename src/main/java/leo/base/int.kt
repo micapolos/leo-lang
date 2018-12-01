@@ -16,3 +16,5 @@ val Int.bitStream: Stream<Bit>
 val Int.indexSize: Int
 	get() =
 		32 - Integer.numberOfLeadingZeros(this - 1)
+
+val maxInt = Integer.MAX_VALUE

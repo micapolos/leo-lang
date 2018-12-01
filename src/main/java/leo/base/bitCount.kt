@@ -3,13 +3,19 @@ package leo.base
 data class BitCount(
 	val int: Int)
 
-val Int.bitCount: BitCount
+val Int.bitCountOrNull: BitCount?
 	get() =
-		BitCount(this)
+		if (this <= 0) null
+		else BitCount(this)
 
-val byteBitCount = 8.bitCount
-val shortBitCount = 16.bitCount
-val intBitCount = 32.bitCount
-val longBitCount = 64.bitCount
-val floatBitCount = 32.bitCount
-val doubleBitCount = 64.bitCount
+val BitCount.increment: BitCount?
+	get() =
+		int.inc().bitCountOrNull
+
+val bitBitCount = 1.bitCountOrNull!!
+val byteBitCount = 8.bitCountOrNull!!
+val shortBitCount = 16.bitCountOrNull!!
+val intBitCount = 32.bitCountOrNull!!
+val longBitCount = 64.bitCountOrNull!!
+val floatBitCount = intBitCount
+val doubleBitCount = longBitCount
