@@ -128,6 +128,6 @@ val Field<Nothing>.parsePatternField: Field<Pattern>
 val Pattern.reflect: Field<Nothing>
 	get() =
 		patternWord fieldTo when (this) {
-			is OneOfPattern -> term(oneWord fieldTo term(ofWord fieldTo patternTermStream.termReflect(Pattern::reflect)))
+			is OneOfPattern -> patternTermStream.reflect(eitherWord) { reflectMeta(Pattern::reflect) }
 			is RecursionPattern -> recurse.reflect
 		}

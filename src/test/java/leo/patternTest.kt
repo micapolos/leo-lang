@@ -10,14 +10,14 @@ class PatternTest {
 	fun oneOfString() {
 		oneOfPattern(oneWord.term, twoWord.term)
 			.string
-			.assertEqualTo("pattern(recurse back, recurse back)")
+			.assertEqualTo("pattern(either one, either two)")
 	}
 
 	@Test
 	fun recursionString() {
 		recurse(goBack, goBack).pattern
 			.string
-			.assertEqualTo("pattern recursion(go back, go back)")
+			.assertEqualTo("pattern(recurse back, recurse back)")
 	}
 
 	@Test

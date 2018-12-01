@@ -82,4 +82,14 @@ class BitBufferTest {
 			.tailSet(Bit.ONE)
 			.assertEqualTo(bitArray(1, 1, 0, 1).bitBuffer)
 	}
+
+	@Test
+	fun performance() {
+		16.depthBitArray(Bit.ZERO)
+			.bitBuffer
+			.iterate(65536) {
+				headPush.headSet(Bit.ONE)
+			}
+			.assertEqualTo(16.depthBitArray(Bit.ONE).bitBuffer)
+	}
 }
