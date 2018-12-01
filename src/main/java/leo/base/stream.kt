@@ -104,3 +104,19 @@ fun <V, R : Any> Stream<V>.matchTwo(fn: (V, V) -> R?): R? =
 			}
 		}
 	}
+
+tailrec fun <V, R> R.foldWhile(streamOrNull: Stream<V>?, predicate: V.() -> Boolean, fn: R.(V) -> R): Pair<R, Stream<V>?> =
+	if (streamOrNull == null || !predicate(streamOrNull.first)) this.pairTo(streamOrNull)
+	else fn(streamOrNull.first).foldWhile(streamOrNull.nextOrNull, predicate, fn)
+
+fun <V> Stream<V>.takeWhile(predicate: V.() -> Boolean): Stream<V>? =
+	if (!predicate(first)) null
+	else first.onlyStream.then { nextOrNull?.takeWhile(predicate) }
+
+fun <V> Stream<V>.takeWhileInclusive(predicate: V.() -> Boolean): Stream<V> =
+	if (!predicate(first)) first.onlyStream
+	else first.onlyStream.then { nextOrNull?.takeWhileInclusive(predicate) }
+
+fun <V> Stream<V>.dropWhile(predicate: V.() -> Boolean): Stream<V>? =
+	if (!predicate(first)) this
+	else nextOrNull?.dropWhile(predicate)

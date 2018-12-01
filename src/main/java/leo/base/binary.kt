@@ -179,7 +179,16 @@ val Binary.decrementAndWrap: Binary?
 
 val Binary.bitCountInt: Int
 	get() =
-		0.fold(bitStream) { inc() }
+		bitCount.int
+
+val Binary.bitCount: BitCount
+	get() =
+		0.fold(bitStream) { inc() }.bitCount
+
+fun <V> Stream<V>.wrapIndexedStream(startIndexOrNull: Binary?): Stream<Indexed<V>> =
+	startIndexOrNull.indexedTo(first).onlyStream.then {
+		nextOrNull?.wrapIndexedStream(startIndexOrNull?.incrementAndWrap)
+	}
 
 //fun Binary.align(bitCountInt: Int): Binary =
 //	(bitCountInt - this.bitCountInt).let { bitCountDelta ->

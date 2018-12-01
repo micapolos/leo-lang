@@ -22,6 +22,14 @@ class BinaryTest {
 	}
 
 	@Test
+	fun bitCount() {
+		binary(0).bitCount.assertEqualTo(1.bitCount)
+		binary(0, 0).bitCount.assertEqualTo(2.bitCount)
+		binary(0, 0, 0).bitCount.assertEqualTo(3.bitCount)
+		binary(0, 0, 0, 0).bitCount.assertEqualTo(4.bitCount)
+	}
+
+	@Test
 	fun byteBinary() {
 		18.toByte()
 			.binary
@@ -135,6 +143,28 @@ class BinaryTest {
 		binary(0, 1).decrement.assertEqualTo(binary(0, 0))
 		binary(1, 0).decrement.assertEqualTo(binary(0, 1))
 		binary(1, 1).decrement.assertEqualTo(binary(1, 0))
+	}
+
+	@Test
+	fun wrapIndexedStream_nullIndex() {
+		stream(0, 1)
+			.wrapIndexedStream(null)
+			.assertContains(
+				nullOf<Binary>().indexedTo(0),
+				nullOf<Binary>().indexedTo(1))
+	}
+
+	@Test
+	fun wrapIndexedStream_nonNullIndex() {
+		stream(0, 1, 2, 3, 4, 5)
+			.wrapIndexedStream(binary(0, 1))
+			.assertContains(
+				binary(0, 1).indexedTo(0),
+				binary(1, 0).indexedTo(1),
+				binary(1, 1).indexedTo(2),
+				binary(0, 0).indexedTo(3),
+				binary(0, 1).indexedTo(4),
+				binary(1, 0).indexedTo(5))
 	}
 
 //	@Test

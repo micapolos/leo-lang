@@ -131,6 +131,12 @@ operator fun BitArray.set(bitStreamOrNull: Stream<Bit>?, bitArray: BitArray): Bi
 operator fun BitArray.set(binary: Binary?, bitArray: BitArray): BitArray? =
 	set(binary?.bitStream, bitArray)
 
+// === indexed stream
+
+val BitArray.indexedBitStream: Stream<Indexed<Bit>>
+	get() =
+		bitStream.wrapIndexedStream(minIndexBinaryOrNull)
+
 // === mapping
 
 fun BitArray.map(fn: Bit.() -> Bit): BitArray =
@@ -237,3 +243,4 @@ val BitArray.floatOrNull: Float?
 val BitArray.doubleOrNull: Double?
 	get() =
 		longOrNull?.let { Double.fromBits(it) }
+

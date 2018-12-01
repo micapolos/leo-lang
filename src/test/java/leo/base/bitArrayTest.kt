@@ -110,4 +110,15 @@ class BitArrayTest {
 		bitArray(0, 1).maxIndexBinaryOrNull.assertEqualTo(binary(1))
 		bitArray(1, 0, 1, 1).maxIndexBinaryOrNull.assertEqualTo(binary(1, 1))
 	}
+
+	@Test
+	fun indexedBitStream() {
+		bitArray(1, 0, 1, 1)
+			.indexedBitStream
+			.assertContains(
+				binary(0, 0).indexedTo(1.bit),
+				binary(0, 1).indexedTo(0.bit),
+				binary(1, 0).indexedTo(1.bit),
+				binary(1, 1).indexedTo(1.bit))
+	}
 }
