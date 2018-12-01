@@ -21,6 +21,14 @@ val BitArray.incrementDepth: BitArray
 	get() =
 		CompositeBitArray(this, this)
 
+val BitArray.minIndexBinaryOrNull: Binary?
+	get() =
+		depth.sizeMinBinaryOrNull
+
+val BitArray.maxIndexBinaryOrNull: Binary?
+	get() =
+		depth.sizeMaxBinaryOrNull
+
 fun BitArray.increaseDepth(depth: Int): BitArray =
 	(depth - this.depth).let { delta ->
 		if (delta > 0) iterate(delta, BitArray::incrementDepth)

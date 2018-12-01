@@ -9,7 +9,7 @@ data class BitBuffer(
 
 val BitArray.bitBuffer: BitBuffer
 	get() =
-		BitBuffer(this, depth.sizeMinBinaryOrNull, depth.sizeMaxBinaryOrNull)
+		BitBuffer(this, minIndexBinaryOrNull, maxIndexBinaryOrNull)
 
 fun Int.depthBitBuffer(bit: Bit): BitBuffer =
 	depthBitArray(bit).bitBuffer

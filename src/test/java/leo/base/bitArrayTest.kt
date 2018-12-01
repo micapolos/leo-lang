@@ -96,4 +96,18 @@ class BitArrayTest {
 
 		array?.intOrNull.assertEqualTo(0x01020408)
 	}
+
+	@Test
+	fun minIndexBinaryOrNull() {
+		bitArray(0).minIndexBinaryOrNull.assertEqualTo(null)
+		bitArray(0, 1).minIndexBinaryOrNull.assertEqualTo(binary(0))
+		bitArray(1, 0, 1, 1).minIndexBinaryOrNull.assertEqualTo(binary(0, 0))
+	}
+
+	@Test
+	fun maxIndexBinaryOrNull() {
+		bitArray(0).maxIndexBinaryOrNull.assertEqualTo(null)
+		bitArray(0, 1).maxIndexBinaryOrNull.assertEqualTo(binary(1))
+		bitArray(1, 0, 1, 1).maxIndexBinaryOrNull.assertEqualTo(binary(1, 1))
+	}
 }
