@@ -53,3 +53,7 @@ fun <V : Any, R : Any> V?.matchNull(fn: () -> R?): R? =
 tailrec fun <V> V.iterate(count: Int, fn: V.() -> V): V =
 	if (count == 0) this
 	else fn().iterate(count - 1, fn)
+
+fun <V> V.runIf(boolean: Boolean, fn: V.() -> V): V =
+	if (boolean) fn()
+	else this

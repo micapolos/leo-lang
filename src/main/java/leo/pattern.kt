@@ -10,7 +10,7 @@ data class OneOfPattern(
 }
 
 data class RecursionPattern(
-	val recursion: Recursion) : Pattern() {
+	val recurse: Recurse) : Pattern() {
 	override fun toString() = reflect.string
 }
 
@@ -18,7 +18,7 @@ val Stack<Term<Pattern>>.oneOfPattern
 	get() =
 		OneOfPattern(this)
 
-val Recursion.pattern: Pattern
+val Recurse.pattern: Pattern
 	get() =
 		RecursionPattern(this)
 
@@ -56,7 +56,7 @@ fun Term<Nothing>.matches(pattern: OneOfPattern, backTraceOrNull: BackTrace?): B
 	} != null
 
 fun Term<Nothing>.matches(pattern: RecursionPattern, backTraceOrNull: BackTrace?): Boolean =
-	backTraceOrNull != null && pattern.recursion.apply(backTraceOrNull.back)?.let { newBackTraceOrNull ->
+	backTraceOrNull != null && pattern.recurse.apply(backTraceOrNull.back)?.let { newBackTraceOrNull ->
 		matches(newBackTraceOrNull.patternTermStack.top, newBackTraceOrNull.back)
 	} ?: false
 
@@ -127,7 +127,7 @@ val Field<Nothing>.parsePatternField: Field<Pattern>
 
 val Pattern.reflect: Field<Nothing>
 	get() =
-		patternWord fieldTo term(when (this) {
-			is OneOfPattern -> oneWord fieldTo term(ofWord fieldTo patternTermStream.termReflect(Pattern::reflect))
-			is RecursionPattern -> recursion.reflect
-		})
+		patternWord fieldTo when (this) {
+			is OneOfPattern -> term(oneWord fieldTo term(ofWord fieldTo patternTermStream.termReflect(Pattern::reflect)))
+			is RecursionPattern -> recurse.reflect
+		}

@@ -1,34 +1,35 @@
 package leo
 
 import leo.base.assertEqualTo
+import leo.base.goBack
 import leo.base.string
 import kotlin.test.Test
 
-class RecursionTest {
+class RecurseTest {
 	@Test
 	fun string() {
-		recursion(goBack, goBack)
+		recurse(goBack, goBack)
 			.string
-			.assertEqualTo("recursion(go back, go back)")
+			.assertEqualTo("recurse back, recurse back")
 	}
 
 	@Test
 	fun backApply() {
-		recursion(goBack)
+		recurse(goBack)
 			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
 			.assertEqualTo(backTrace(oneWord.term(), twoWord.term()))
 	}
 
 	@Test
 	fun backBackApply() {
-		recursion(goBack, goBack)
+		recurse(goBack, goBack)
 			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
 			.assertEqualTo(backTrace(oneWord.term()))
 	}
 
 	@Test
 	fun overflowApply() {
-		recursion(goBack, goBack, goBack)
+		recurse(goBack, goBack, goBack)
 			.apply(backTrace(oneWord.term(), twoWord.term(), threeWord.term()))
 			.assertEqualTo(null)
 	}

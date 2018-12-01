@@ -1,32 +1,29 @@
 package leo
 
-import leo.base.Stack
-import leo.base.stack
-import leo.base.stream
-import leo.base.string
+import leo.base.*
 
-data class Recursion(
-	val backStack: Stack<GoBack>) {
+data class Recurse(
+	val backStack: Stack<Back>) {
 	override fun toString() = reflect.string
 }
 
-val Stack<GoBack>.recursion: Recursion
+val Stack<Back>.recurse: Recurse
 	get() =
-		Recursion(this)
+		Recurse(this)
 
-fun recursion(goBack: GoBack, vararg goBacks: GoBack): Recursion =
-	stack(goBack, *goBacks).recursion
+fun recurse(back: Back, vararg backs: Back): Recurse =
+	stack(back, *backs).recurse
 
-val Recursion.goBack: Recursion?
+val Recurse.back: Recurse?
 	get() =
-		backStack.pop?.recursion
+		backStack.pop?.recurse
 
-fun Recursion.apply(backTraceOrNull: BackTrace?): BackTrace? =
-	goBack.let { back ->
+fun Recurse.apply(backTraceOrNull: BackTrace?): BackTrace? =
+	back.let { back ->
 		if (back == null) backTraceOrNull?.back
 		else back.apply(backTraceOrNull?.back)
 	}
 
-val Recursion.reflect: Field<Nothing>
+val Recurse.reflect: Term<Nothing>
 	get() =
-		recursionWord fieldTo backStack.stream.reflect { goBackReflect }
+		backStack.stream.reflect(recurseWord) { backReflect }

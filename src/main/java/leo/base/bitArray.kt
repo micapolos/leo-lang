@@ -29,14 +29,14 @@ fun BitArray.increaseDepth(depth: Int): BitArray =
 
 val Int.depthBitArray: BitArray
 	get() =
-		depthBitArrayOf(Bit.ZERO)
+		depthBitArray(Bit.ZERO)
 
-fun Int.depthBitArrayOf(bit: Bit): BitArray =
+fun Int.depthBitArray(bit: Bit): BitArray =
 	if (this == 0)
 		SingleBitArray(bit)
 	else CompositeBitArray(
-		dec().depthBitArrayOf(bit),
-		dec().depthBitArrayOf(bit))
+		dec().depthBitArray(bit),
+		dec().depthBitArray(bit))
 
 fun bitArray(bitInt0: Int): BitArray =
 	SingleBitArray(bitInt0.bit)

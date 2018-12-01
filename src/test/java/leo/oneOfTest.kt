@@ -1,6 +1,9 @@
 package leo
 
 import leo.base.assertEqualTo
+import leo.base.oneOf
+import leo.base.parseOneOf
+import leo.base.reflect
 import kotlin.test.Test
 
 class OneOfTest {

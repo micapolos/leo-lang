@@ -15,6 +15,23 @@ val Binary.bitStream: Stream<Bit>
 			nextBinaryOrNull?.bitStream
 		}
 
+fun Int.sizeBinaryOrNull(bit: Bit): Binary? =
+	sizeStackOrNullOf(bit)?.reverseBinary
+
+val Int.sizeMinBinaryOrNull: Binary?
+	get() =
+		sizeBinaryOrNull(Bit.ZERO)
+
+val Int.sizeMaxBinaryOrNull: Binary?
+	get() =
+		sizeBinaryOrNull(Bit.ONE)
+
+val Binary.zero: Binary
+	get() =
+		Bit.ZERO.binary.fold(bitStream.nextOrNull) { bit ->
+			Bit.ZERO.append(this)
+		}
+
 val Bit.binary: Binary
 	get() =
 		Binary(this, null)
@@ -155,6 +172,10 @@ val Binary.decrement: Binary?
 				Bit.ONE -> null
 			}
 		}
+
+val Binary.decrementAndWrap: Binary?
+	get() =
+		borrowDecrement.second
 
 val Binary.bitCountInt: Int
 	get() =

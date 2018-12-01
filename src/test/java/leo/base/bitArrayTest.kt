@@ -13,10 +13,10 @@ class BitArrayTest {
 
 	@Test
 	fun depthBitArrayOf() {
-		0.depthBitArrayOf(0.bit).assertEqualTo(bitArray(0))
-		0.depthBitArrayOf(1.bit).assertEqualTo(bitArray(1))
-		1.depthBitArrayOf(0.bit).assertEqualTo(bitArray(0, 0))
-		2.depthBitArrayOf(1.bit).assertEqualTo(bitArray(1, 1, 1, 1))
+		0.depthBitArray(0.bit).assertEqualTo(bitArray(0))
+		0.depthBitArray(1.bit).assertEqualTo(bitArray(1))
+		1.depthBitArray(0.bit).assertEqualTo(bitArray(0, 0))
+		2.depthBitArray(1.bit).assertEqualTo(bitArray(1, 1, 1, 1))
 	}
 
 	@Test
@@ -25,7 +25,7 @@ class BitArrayTest {
 			.set(0.bit, bitArray(1, 1))
 			.assertEqualTo(bitArray(1, 1, 0, 0))
 		bitArray(0, 0, 0, 0)
-			.set(1.bit, 1.depthBitArrayOf(1.bit))
+			.set(1.bit, 1.depthBitArray(1.bit))
 			.assertEqualTo(bitArray(0, 0, 1, 1))
 	}
 

@@ -1,6 +1,6 @@
-package leo
+package leo.base
 
-import leo.base.*
+import leo.*
 
 data class OneOf<out V>(
 	val valueStack: Stack<V>) {

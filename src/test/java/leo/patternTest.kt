@@ -1,6 +1,7 @@
 package leo
 
 import leo.base.assertEqualTo
+import leo.base.goBack
 import leo.base.string
 import kotlin.test.Test
 
@@ -9,12 +10,12 @@ class PatternTest {
 	fun oneOfString() {
 		oneOfPattern(oneWord.term, twoWord.term)
 			.string
-			.assertEqualTo("pattern one of(the one, the two)")
+			.assertEqualTo("pattern(recurse back, recurse back)")
 	}
 
 	@Test
 	fun recursionString() {
-		recursion(goBack, goBack).pattern
+		recurse(goBack, goBack).pattern
 			.string
 			.assertEqualTo("pattern recursion(go back, go back)")
 	}
@@ -157,7 +158,7 @@ class PatternTest {
 				term(
 					oneOfPattern(
 						oneWord.term(),
-						term(plusWord fieldTo term(recursion(goBack).pattern)))))
+						term(plusWord fieldTo term(recurse(goBack).pattern)))))
 			.assertEqualTo(true)
 	}
 
@@ -168,7 +169,7 @@ class PatternTest {
 				term(
 					oneOfPattern(
 						zeroWord.term(),
-						term(incrementWord fieldTo term(recursion(goBack).pattern)))))
+						term(incrementWord fieldTo term(recurse(goBack).pattern)))))
 			.assertEqualTo(true)
 	}
 
@@ -179,7 +180,7 @@ class PatternTest {
 				term(
 					oneOfPattern(
 						zeroWord.term(),
-						term(oneWord fieldTo term(plusWord fieldTo term(recursion(goBack, goBack).pattern))))))
+						term(oneWord fieldTo term(plusWord fieldTo term(recurse(goBack, goBack).pattern))))))
 			.assertEqualTo(true)
 	}
 
@@ -190,7 +191,53 @@ class PatternTest {
 				term(
 					oneOfPattern(
 						zeroWord.term(),
-						term(incrementWord fieldTo term(recursion(goBack).pattern)))))
+						term(incrementWord fieldTo term(recurse(goBack).pattern)))))
+			.assertEqualTo(true)
+	}
+
+	val treePatternTerm = term(
+		treeWord fieldTo
+			term(
+				oneOfPattern(
+					leafWord.term(),
+					term(
+						leftWord fieldTo term(recurse(goBack, goBack, goBack).pattern),
+						rightWord fieldTo term(recurse(goBack, goBack, goBack).pattern)))))
+
+	@Test
+	fun termMatches_treeLeaf() {
+		term(treeWord fieldTo leafWord.term)
+			.matches(treePatternTerm)
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun termMatches_treeLeftRight() {
+		term(treeWord fieldTo term(
+			leftWord fieldTo term(
+				treeWord fieldTo leafWord.term),
+			rightWord fieldTo term(
+				treeWord fieldTo leafWord.term)))
+			.matches(treePatternTerm)
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun termMatches_deepTree() {
+		term(
+			treeWord fieldTo term(
+				leftWord fieldTo term(
+					leftWord fieldTo term(
+						treeWord fieldTo leafWord.term),
+					rightWord fieldTo term(
+						treeWord fieldTo term(
+							leftWord fieldTo term(
+								treeWord fieldTo leafWord.term),
+							rightWord fieldTo term(
+								treeWord fieldTo leafWord.term))),
+					rightWord fieldTo term(
+						treeWord fieldTo leafWord.term))))
+			.matches(treePatternTerm)
 			.assertEqualTo(true)
 	}
 }
