@@ -56,3 +56,9 @@ fun <R, V> R.writerFold(fn: R.(V) -> R, writerFn: Writer<V>.() -> Unit): R {
 
 fun <V> writeStackOrNull(fn: Writer<V>.() -> Unit): Stack<V>? =
 	nullOf<Stack<V>>().writerFold(Stack<V>?::push, fn)
+
+val <V> Processor<*, V>.writer: Writer<V>
+	get() =
+		Writer { value ->
+			process(value).writer
+		}

@@ -103,3 +103,11 @@ val <V> Stack<V>.stream: Stream<V>
 
 fun <V> Int.sizeStackOrNullOf(value: V): Stack<V>? =
 	nullOf<Stack<V>>().iterate(this) { push(value) }
+
+// === processor
+
+val <V> Stack<V>.pushProcessor: Processor<Stack<V>, V>
+	get() =
+		Processor(this) { value ->
+			push(value).pushProcessor
+		}
