@@ -192,6 +192,10 @@ fun <V> Stream<V>.wrapIndexedStream(startIndexOrNull: Binary?): Stream<Indexed<V
 		nextOrNull?.wrapIndexedStream(startIndexOrNull?.incrementAndWrap)
 	}
 
+tailrec fun <R> R.iterate(binary: Binary?, fn: R.() -> R): R =
+	if (binary == null) this
+	else fn().iterate(binary.decrement, fn)
+
 //fun Binary.align(bitCountInt: Int): Binary =
 //	(bitCountInt - this.bitCountInt).let { bitCountDelta ->
 //		when {

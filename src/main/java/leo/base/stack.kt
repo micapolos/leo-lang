@@ -39,6 +39,9 @@ val <V : Any> Stack<V>.onlyOrNull: V?
 	get() =
 		if (tail == null) head else null
 
+fun <V> Stack<V>.pop(int: Int): Stack<V>? =
+	orNull.iterate(int) { this?.tail }
+
 fun <V : Any> Stack<V>.theOnlyOrNull(fn: (V) -> Boolean): V? =
 	all(fn)?.onlyOrNull
 

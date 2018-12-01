@@ -69,4 +69,12 @@ class StackTest {
 			}
 			.assertEqualTo(null)
 	}
+
+	@Test
+	fun popBinary() {
+		stack(1, 2, 3).pop(0).assertEqualTo(stack(1, 2, 3))
+		stack(1, 2, 3).pop(1).assertEqualTo(stack(1, 2))
+		stack(1, 2, 3).pop(2).assertEqualTo(stack(1))
+		stack(1, 2, 3).pop(3).assertEqualTo(null)
+	}
 }

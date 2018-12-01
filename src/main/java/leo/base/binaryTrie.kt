@@ -10,14 +10,7 @@ data class BinaryTrie<out V>(
 		data class Full<V>(
 			val value: V) : Match<V>()
 	}
-
-	data class Application<out V>(
-		val backStackOrNull: Stack<BinaryTrie<V>>?,
-		val match: Match<V>)
 }
-
-fun <V> Stack<BinaryTrie<V>>?.and(match: BinaryTrie.Match<V>) =
-	BinaryTrie.Application(this, match)
 
 fun <V> nullBinaryTrieMatch(): BinaryTrie.Match<V>? =
 	null
@@ -40,17 +33,16 @@ val <V> V.binaryTrieFullMatch: BinaryTrie.Match<V>
 	get() =
 		BinaryTrie.Match.Full(this)
 
-val <V> BinaryTrie<V>.application: BinaryTrie.Application<V>
+val <V> BinaryTrie<V>.pushParser: PushParser<Bit, V>
 	get() =
-		nullOf<Stack<BinaryTrie<V>>>().and(binaryTriePartialMatch)
-
-fun <V> BinaryTrie.Application<V>.get(bit: Bit): BinaryTrie.Application<V>? =
-	when (match) {
-		is BinaryTrie.Match.Full -> null
-		is BinaryTrie.Match.Partial -> match.binaryTrie.get(bit)?.let { nextMatch ->
-			backStackOrNull.push(match.binaryTrie).and(nextMatch)
+		pushParser { bit ->
+			get(bit)?.let { match ->
+				when (match) {
+					is BinaryTrie.Match.Full -> match.value.doneParser()
+					is BinaryTrie.Match.Partial -> match.binaryTrie.pushParser
+				}
+			}
 		}
-	}
 
 fun <V> BinaryTrie<V>.get(bit: Bit): BinaryTrie.Match<V>? =
 	binaryMatchOrNullMap.get(bit)

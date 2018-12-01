@@ -1,21 +1,18 @@
 package leo.base
 
-import leo.Recurse
-
 data class BitPattern<out V>(
 	val opBinaryTrie: BinaryTrie<BitPatternOp<V>>)
 
 sealed class BitPatternOp<out V>
 
 data class BitPatternRecurseOp<out V>(
-	val recurse: Recurse) : BitPatternOp<V>()
+	val offset: Int) : BitPatternOp<V>()
 
-data class BitPatternValueOp<out V>(
+data class BitPatternDoneOp<out V>(
 	val value: V) : BitPatternOp<V>()
 
-data class BitPatternApplication<out V>(
-	val binaryTrieBackStackOrNull: Stack<BinaryTrie<BitPatternOp<V>>>?,
-	val binaryTrieMatch: BinaryTrie.Match<BitPatternOp<V>>)
+data class BitPatternMatch<out V>(
+	val opBinaryTrieMatch: BinaryTrie.Match<BitPatternOp<V>>)
 
 // === constructors
 
@@ -23,24 +20,56 @@ val <V> BinaryTrie<BitPatternOp<V>>.bitPattern: BitPattern<V>
 	get() =
 		BitPattern(this)
 
-val <V> BitPattern<V>.application: BitPatternApplication<V>
-	get() =
-		BitPatternApplication(null, opBinaryTrie.binaryTriePartialMatch)
+fun <V> bitPattern(zeroMatchOrNull: BitPatternMatch<V>?, oneMatchOrNull: BitPatternMatch<V>?): BitPattern<V> =
+	binaryTrie(zeroMatchOrNull?.opBinaryTrieMatch, oneMatchOrNull?.opBinaryTrieMatch).bitPattern
 
-fun <V> BitPatternApplication<V>.apply(bit: Bit): BitPatternApplication<V>? =
-	when (binaryTrieMatch) {
-		is BinaryTrie.Match.Full -> null
-		is BinaryTrie.Match.Partial -> binaryTrieMatch.get(bit)?.let { nextBinaryTrieMatch ->
-			when (nextBinaryTrieMatch) {
-				is BinaryTrie.Match.Full -> when (nextBinaryTrieMatch.value) {
-					is BitPatternRecurseOp -> TODO()
-					is BitPatternValueOp -> nextBinaryTrieMatch
+val <V> BinaryTrie.Match<BitPatternOp<V>>.bitPatternMatch: BitPatternMatch<V>
+	get() =
+		BitPatternMatch(this)
+
+fun <V> bitPatternRecurseMatch(offset: Int): BitPatternMatch<V> =
+	offset.bitPatternRecurseOp<V>().binaryTrieFullMatch.bitPatternMatch
+
+fun <V> bitPatternMatch(value: V): BitPatternMatch<V> =
+	value.bitPatternDoneOp.binaryTrieFullMatch.bitPatternMatch
+
+fun <V> match(bitPattern: BitPattern<V>): BitPatternMatch<V> =
+	bitPattern.opBinaryTrie.binaryTriePartialMatch.bitPatternMatch
+
+fun <V> Int.bitPatternRecurseOp(): BitPatternOp<V> =
+	BitPatternRecurseOp(this)
+
+val <V> V.bitPatternDoneOp: BitPatternOp<V>
+	get() =
+		BitPatternDoneOp(this)
+
+// === push parser
+
+val <V> BitPattern<V>.pushParser: PushParser<Bit, V>
+	get() =
+		pushParser(null)
+
+fun <V> BitPattern<V>.pushParser(traceStackOrNull: Stack<BitPattern<V>>?): PushParser<Bit, V> =
+	pushParser { bit ->
+		opBinaryTrie
+			.get(bit)
+			?.let { binaryTrieMatch ->
+				when (binaryTrieMatch) {
+					is BinaryTrie.Match.Partial ->
+						binaryTrieMatch.binaryTrie.bitPattern.pushParser(traceStackOrNull.push(this))
+					is BinaryTrie.Match.Full ->
+						when (binaryTrieMatch.value) {
+							is BitPatternRecurseOp ->
+								traceStackOrNull.push(this).let { traceStack ->
+									traceStack
+										.pop(binaryTrieMatch.value.offset)
+										?.let { poppedTraceStack ->
+											poppedTraceStack.head.pushParser(poppedTraceStack.tail)
+										}
+								}
+							is BitPatternDoneOp ->
+								binaryTrieMatch.value.value.doneParser()
+						}
 				}
-				is BinaryTrie.Match.Partial -> nextBinaryTrieMatch
-			}.let { next ->
-				BitPatternApplication(
-					binaryTrieBackStackOrNull.push(binaryTrieMatch.binaryTrie),
-					next)
 			}
 		}
-	}
