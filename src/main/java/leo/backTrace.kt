@@ -17,6 +17,10 @@ fun BackTrace?.push(patternTerm: Term<Pattern>): BackTrace =
 fun backTrace(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>) =
 	stack(patternTerm, *patternTerms).backTrace
 
+val BackTrace.patternTerm: Term<Pattern>
+	get() =
+		patternTermStack.head
+
 val BackTrace.back: BackTrace?
 	get() =
 		patternTermStack.tail?.backTrace

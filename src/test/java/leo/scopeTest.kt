@@ -5,7 +5,7 @@ import kotlin.test.Test
 
 class ScopeTest {
 	private val nameToStringFunction =
-		emptyFunction.define(nameWord.term(), body(stringWord.term(), emptyFunction))
+		emptyFunction.define(rule(nameWord.term(), body(stringWord.term(), emptyFunction)))
 
 	@Test
 	fun evaluate_define() {
@@ -19,10 +19,11 @@ class ScopeTest {
 				Scope(
 					nameToStringFunction
 						.define(
+							rule(
 							ageWord.term(),
 							body(
 								numberWord.term,
-								nameToStringFunction))!!,
+								nameToStringFunction)))!!,
 					null))
 	}
 

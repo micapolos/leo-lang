@@ -51,83 +51,87 @@ val Term<Nothing>.invokeFallback: Term<Nothing>
 // === define
 
 fun Function.define(rule: Rule): Function? =
-	define(rule.patternTerm, rule.body)
+	define(rule.patternTerm, null, rule.body)
 
-fun Function.define(patternTerm: Term<Pattern>, body: Body): Function? =
-	define(patternTerm) { body.match }
+fun Function.define(patternTerm: Term<Pattern>, backTraceOrNull: BackTrace?, body: Body): Function? =
+	define(patternTerm, backTraceOrNull) { backTrace -> body.match }
 
-fun Function.define(patternTerm: Term<Pattern>, defineNext: Function.() -> Match?): Function? =
-	defineToken(patternTerm.tokenStream, defineNext)
+fun Function.define(patternTerm: Term<Pattern>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	defineToken(patternTerm.tokenStream, backTraceOrNull.push(patternTerm), defineNext)
 
-fun Function.define(pattern: Pattern, defineNext: Function.() -> Match?): Function? =
+fun Function.define(pattern: Pattern, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	when (pattern) {
-		is OneOfPattern -> define(pattern, defineNext)
-		is RecursionPattern -> define(pattern, defineNext)
+		is OneOfPattern -> define(pattern, backTraceOrNull, defineNext)
+		is RecursionPattern -> define(pattern, backTraceOrNull, defineNext)
 	}
 
-fun Function.define(pattern: OneOfPattern, defineNext: Function.() -> Match?): Function? =
+fun Function.define(pattern: OneOfPattern, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	orNull.fold(pattern.patternTermStream) { patternTerm ->
-		this?.define(patternTerm, defineNext)
+		this?.define(patternTerm, backTraceOrNull, defineNext)
 	}
 
-fun Function.define(pattern: RecursionPattern, defineNext: Function.() -> Match?): Function? =
-	TODO()
+fun Function.define(pattern: RecursionPattern, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	define(pattern.recurse, backTraceOrNull, defineNext)
 
-fun Function.defineToken(tokenStream: Stream<Token<Pattern>>, defineNext: Function.() -> Match?): Function? =
+fun Function.define(recurse: Recurse, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	recurse.apply(backTraceOrNull)?.let { backTrace ->
+		define(backTrace.patternTerm, backTrace.back, defineNext)
+	}
+
+fun Function.defineToken(tokenStream: Stream<Token<Pattern>>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	orNull.read(tokenStream) { token, nextOrNull ->
-		define(token) {
-			if (nextOrNull == null) defineNext()
-			else defineToken(nextOrNull, defineNext)?.match
+		define(token, backTraceOrNull) {
+			if (nextOrNull == null) defineNext(backTraceOrNull)
+			else defineToken(nextOrNull, backTraceOrNull, defineNext)?.match
 		}
 	}
 
-fun Function.define(token: Token<Pattern>, defineNext: Function.() -> Match?): Function? =
+fun Function.define(token: Token<Pattern>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	when (token) {
-		is MetaToken -> define(token, defineNext)
-		is WordToken -> define(token, defineNext)
+		is MetaToken -> define(token, backTraceOrNull, defineNext)
+		is WordToken -> define(token, backTraceOrNull, defineNext)
 		is ControlToken -> when (token.control) {
-			is BeginControl -> defineBeginToken(defineNext)
-			is EndControl -> defineEndToken(defineNext)
+			is BeginControl -> defineBeginToken(backTraceOrNull, defineNext)
+			is EndControl -> defineEndToken(backTraceOrNull, defineNext)
 		}
 	}
 
-fun Function.define(token: MetaToken<Pattern>, defineNext: Function.() -> Match?): Function? =
-	define(token.meta, defineNext)
+fun Function.define(token: MetaToken<Pattern>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	define(token.meta, backTraceOrNull, defineNext)
 
-fun Function.define(token: WordToken<Pattern>, defineNext: Function.() -> Match?): Function? =
-	define(token.word, defineNext)
+fun Function.define(token: WordToken<Pattern>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	define(token.word, backTraceOrNull, defineNext)
 
-fun Function.define(meta: Meta<Pattern>, defineNext: Function.() -> Match?): Function? =
-	define(meta.value, defineNext)
+fun Function.define(meta: Meta<Pattern>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	define(meta.value, backTraceOrNull, defineNext)
 
-fun Function.defineBeginToken(defineNext: Function.() -> Match?): Function? =
-	define(beginByte, defineNext)
+fun Function.defineBeginToken(backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	define(beginByte, backTraceOrNull, defineNext)
 
-fun Function.defineEndToken(defineNext: Function.() -> Match?): Function? =
-	define(endByte, defineNext)
+fun Function.defineEndToken(backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	define(endByte, backTraceOrNull, defineNext)
 
-fun Function.define(word: Word, defineNext: Function.() -> Match?): Function? =
+fun Function.define(word: Word, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	defineBit(
 		word
 			.letterStream
 			.map(Letter::byte)
 			.map(Byte::bitStream)
 			.join,
+		backTraceOrNull,
 		defineNext)
 
-fun Function.define(byte: Byte, defineNext: Function.() -> Match?): Function? =
-	defineBit(
-		byte.bitStream,
-		defineNext)
+fun Function.define(byte: Byte, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+	defineBit(byte.bitStream, backTraceOrNull, defineNext)
 
-fun Function.defineBit(bitStream: Stream<Bit>, defineNext: Function.() -> Match?): Function? =
+fun Function.defineBit(bitStream: Stream<Bit>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	bodyBinaryTrie.defineBit(bitStream) {
-		defineNext.invoke(function)?.bodyBinaryTrieMatch
+		function.defineNext(backTraceOrNull)?.bodyBinaryTrieMatch
 	}?.function
 
-fun Function.define(bit: Bit, defineNext: Function.() -> Match?): Function? =
+fun Function.define(bit: Bit, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	bodyBinaryTrie.define(bit) {
-		defineNext.invoke(function)?.bodyBinaryTrieMatch
+		function.defineNext(backTraceOrNull)?.bodyBinaryTrieMatch
 	}?.function
 
 // === reflect

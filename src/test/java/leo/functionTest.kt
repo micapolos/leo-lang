@@ -7,7 +7,7 @@ class FunctionTest {
 	private val testBody = body(term(invokedWord fieldTo selector().meta.term), emptyFunction)
 
 	private fun Function.testDefine(term: Term<Pattern>): Function? =
-		define(term, testBody)
+		define(rule(term, testBody))
 
 	private fun Function.assertInvokesBody(argument: Term<Nothing>) =
 		invoke(argument).assertEqualTo(term(invokedWord fieldTo argument))
