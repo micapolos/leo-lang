@@ -9,7 +9,7 @@ data class OneOfPattern(
 	override fun toString() = reflect.string
 }
 
-data class RecursionPattern(
+data class RecursePattern(
 	val recurse: Recurse) : Pattern() {
 	override fun toString() = reflect.string
 }
@@ -20,7 +20,10 @@ val Stack<Term<Pattern>>.oneOfPattern
 
 val Recurse.pattern: Pattern
 	get() =
-		RecursionPattern(this)
+		RecursePattern(this)
+
+fun pattern(recurse: Recurse): Pattern =
+	RecursePattern(recurse)
 
 fun oneOfPattern(patternTerm: Term<Pattern>, vararg patternTerms: Term<Pattern>): Pattern =
 	stack(patternTerm, *patternTerms).oneOfPattern
@@ -47,7 +50,7 @@ fun Field<Nothing>.matches(patternField: Field<Pattern>) =
 fun Term<Nothing>.matches(pattern: Pattern, backTraceOrNull: BackTrace?): Boolean =
 	when (pattern) {
 		is OneOfPattern -> matches(pattern, backTraceOrNull)
-		is RecursionPattern -> matches(pattern, backTraceOrNull)
+		is RecursePattern -> matches(pattern, backTraceOrNull)
 	}
 
 fun Term<Nothing>.matches(pattern: OneOfPattern, backTraceOrNull: BackTrace?): Boolean =
@@ -55,7 +58,7 @@ fun Term<Nothing>.matches(pattern: OneOfPattern, backTraceOrNull: BackTrace?): B
 		matches(oneOfTerm, backTraceOrNull)
 	} != null
 
-fun Term<Nothing>.matches(pattern: RecursionPattern, backTraceOrNull: BackTrace?): Boolean =
+fun Term<Nothing>.matches(pattern: RecursePattern, backTraceOrNull: BackTrace?): Boolean =
 	backTraceOrNull != null && pattern.recurse.apply(backTraceOrNull.back)?.let { newBackTraceOrNull ->
 		matches(newBackTraceOrNull.patternTermStack.head, newBackTraceOrNull.back)
 	} ?: false
@@ -129,5 +132,5 @@ val Pattern.reflect: Field<Nothing>
 	get() =
 		patternWord fieldTo when (this) {
 			is OneOfPattern -> patternTermStream.reflect(eitherWord) { reflectMeta(Pattern::reflect) }
-			is RecursionPattern -> recurse.reflect
+			is RecursePattern -> recurse.reflect
 		}

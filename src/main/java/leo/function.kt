@@ -62,7 +62,7 @@ fun Function.define(patternTerm: Term<Pattern>, backTraceOrNull: BackTrace?, def
 fun Function.define(pattern: Pattern, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	when (pattern) {
 		is OneOfPattern -> define(pattern, backTraceOrNull, defineNext)
-		is RecursionPattern -> define(pattern, backTraceOrNull, defineNext)
+		is RecursePattern -> define(pattern, backTraceOrNull, defineNext)
 	}
 
 fun Function.define(pattern: OneOfPattern, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
@@ -70,10 +70,11 @@ fun Function.define(pattern: OneOfPattern, backTraceOrNull: BackTrace?, defineNe
 		this?.define(patternTerm, backTraceOrNull, defineNext)
 	}
 
-fun Function.define(pattern: RecursionPattern, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+fun Function.define(pattern: RecursePattern, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	define(pattern.recurse, backTraceOrNull, defineNext)
 
 fun Function.define(recurse: Recurse, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+// TODO: This does not work
 	recurse.apply(backTraceOrNull)?.let { backTrace ->
 		define(backTrace.patternTerm, backTrace.back, defineNext)
 	}

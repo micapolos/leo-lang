@@ -1,6 +1,7 @@
 package leo
 
 import leo.base.assertEqualTo
+import leo.base.back
 import kotlin.test.Test
 
 class FunctionTest {
@@ -182,4 +183,19 @@ class FunctionTest {
 		dependentPatternsFunction!!
 			.assertInvokesBody(term(twoWord fieldTo dWord.term))
 	}
+
+	private val recursiveFunction = emptyFunction
+		.testDefine(
+			metaTerm(
+				oneOfPattern(
+					zeroWord.term(),
+					term(
+						incrementWord fieldTo
+							metaTerm(pattern(recurse(back, back)))))))
+
+//	@Test
+//	fun recursive_oneStep() {
+//		recursiveFunction!!
+//			.assertInvokesBody(zeroWord.term)
+//	}
 }

@@ -6,7 +6,7 @@ import leo.term
 
 object Back
 
-val goBack = Back
+val back = Back
 
 val backReflect: Term<Nothing>
 	get() =

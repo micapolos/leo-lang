@@ -1,7 +1,7 @@
 package leo
 
 import leo.base.assertEqualTo
-import leo.base.goBack
+import leo.base.back
 import leo.base.string
 import kotlin.test.Test
 
@@ -15,7 +15,7 @@ class PatternTest {
 
 	@Test
 	fun recursionString() {
-		recurse(goBack, goBack).pattern
+		recurse(back, back).pattern
 			.string
 			.assertEqualTo("pattern(recurse back, recurse back)")
 	}
@@ -155,10 +155,10 @@ class PatternTest {
 	fun termMatches_noRecursion() {
 		oneWord.term
 			.matches(
-				term(
+				metaTerm(
 					oneOfPattern(
 						oneWord.term(),
-						term(plusWord fieldTo term(recurse(goBack).pattern)))))
+						term(plusWord fieldTo metaTerm(recurse(back).pattern)))))
 			.assertEqualTo(true)
 	}
 
@@ -166,10 +166,10 @@ class PatternTest {
 	fun termMatches_recursionBack() {
 		term(incrementWord fieldTo zeroWord.term)
 			.matches(
-				term(
+				metaTerm(
 					oneOfPattern(
 						zeroWord.term(),
-						term(incrementWord fieldTo term(recurse(goBack).pattern)))))
+						term(incrementWord fieldTo metaTerm(recurse(back).pattern)))))
 			.assertEqualTo(true)
 	}
 
@@ -177,10 +177,10 @@ class PatternTest {
 	fun termMatches_recursionBackBack() {
 		term(oneWord fieldTo term(plusWord fieldTo zeroWord.term))
 			.matches(
-				term(
+				metaTerm(
 					oneOfPattern(
 						zeroWord.term(),
-						term(oneWord fieldTo term(plusWord fieldTo term(recurse(goBack, goBack).pattern))))))
+						term(oneWord fieldTo term(plusWord fieldTo metaTerm(recurse(back, back).pattern))))))
 			.assertEqualTo(true)
 	}
 
@@ -188,21 +188,21 @@ class PatternTest {
 	fun termMatches_recursionBack_twoLevels() {
 		term(incrementWord fieldTo term(incrementWord fieldTo zeroWord.term))
 			.matches(
-				term(
+				metaTerm(
 					oneOfPattern(
 						zeroWord.term(),
-						term(incrementWord fieldTo term(recurse(goBack).pattern)))))
+						term(incrementWord fieldTo metaTerm(recurse(back).pattern)))))
 			.assertEqualTo(true)
 	}
 
 	val treePatternTerm = term(
 		treeWord fieldTo
-			term(
+			metaTerm(
 				oneOfPattern(
 					leafWord.term(),
 					term(
-						leftWord fieldTo term(recurse(goBack, goBack, goBack).pattern),
-						rightWord fieldTo term(recurse(goBack, goBack, goBack).pattern)))))
+						leftWord fieldTo metaTerm(recurse(back, back, back).pattern),
+						rightWord fieldTo metaTerm(recurse(back, back, back).pattern)))))
 
 	@Test
 	fun termMatches_treeLeaf() {
