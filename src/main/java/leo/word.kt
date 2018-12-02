@@ -76,6 +76,7 @@ val Parse<Bit, Word>.bitParseWord: Parse<Bit, Word>
 
 val aWord = "a".wordOrNull!!
 val ageWord = "age".wordOrNull!!
+val andWord = "and".wordOrNull!!
 val anyWord = "any".wordOrNull!!
 val anythingWord = "anything".wordOrNull!!
 val argumentWord = "argument".wordOrNull!!
@@ -133,6 +134,7 @@ val leftWord = "left".wordOrNull!!
 val leoWord = "leo".wordOrNull!!
 val letterWord = "letter".wordOrNull!!
 val literalWord = "literal".wordOrNull!!
+val maybeWord = "maybe".wordOrNull!!
 val metaWord = "meta".wordOrNull!!
 val nameWord = "name".wordOrNull!!
 val nativeWord = "native".wordOrNull!!
@@ -148,6 +150,7 @@ val numberWord = "number".wordOrNull!!
 val oneWord = "one".wordOrNull!!
 val ofWord = "of".wordOrNull!!
 val optionalWord = "optional".wordOrNull!!
+val orWord = "or".wordOrNull!!
 val parentWord = "parent".wordOrNull!!
 val patternWord = "pattern".wordOrNull!!
 val personWord = "person".wordOrNull!!

@@ -182,20 +182,6 @@ fun <V, R : Any> Term<V>.matchFieldKeys(key1: Word, key2: Word, fn: (Term<V>, Te
 		}
 	}
 
-fun <V, R : Any> Term<V>.matchAllFieldKeys(key: Word, fn: (Term<V>) -> R?): Stream<R>? =
-	structureTermOrNull?.matchAllFieldKeys(key, fn)
-
-fun <V, R : Any> StructureTerm<V>.matchFirst(key: Word, fn: StructureTerm<V>?.(Term<V>) -> R?): R? =
-	fieldStream.matchFirst({ it.key == key }) {
-		fn(it.value)
-	}
-
-fun <V, R : Any> StructureTerm<V>.matchAllFieldKeys(key: Word, fn: (Term<V>) -> R?): Stream<R>? =
-	fieldStream.filterMap { field ->
-		if (field.key == key) fn(field.value)
-		else null
-	}
-
 fun <V> Term<V>.select(key: Word): Term<V>? =
 	structureTermOrNull?.select(key)
 

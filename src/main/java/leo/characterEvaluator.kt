@@ -2,7 +2,7 @@ package leo
 
 import leo.base.Bit
 import leo.base.Stream
-import leo.base.orNullThen
+import leo.base.orNullThenIfNotNull
 
 data class CharacterEvaluator(
 	val tokenReader: Reader<Token<Nothing>>,
@@ -53,7 +53,7 @@ fun CharacterEvaluator.plus(letter: Letter): CharacterEvaluator =
 
 val CharacterEvaluator.bitStreamOrNull: Stream<Bit>?
 	get() =
-		tokenReader.bitStreamOrNull.orNullThen {
+		tokenReader.bitStreamOrNull.orNullThenIfNotNull {
 			wordOrNull?.bitStream
 		}
 

@@ -4,7 +4,9 @@ import leo.Term
 import leo.backWord
 import leo.term
 
-object Back
+object Back {
+	override fun toString() = backWord.string
+}
 
 val back = Back
 

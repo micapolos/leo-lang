@@ -81,7 +81,7 @@ val TokenEvaluator.bitStreamOrNull: Stream<Bit>?
 		entryStreamOrNull
 			?.map { it.coreBitStream.then { beginBitStream } }
 			?.join
-			.orNullThen { scope.bitStreamOrNull(wordOrNull != null) }
+			.orNullThenIfNotNull { scope.bitStreamOrNull(wordOrNull != null) }
 
 val TokenEvaluator.Entry.coreBitStream: Stream<Bit>
 	get() =

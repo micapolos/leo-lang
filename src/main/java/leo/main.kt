@@ -2,7 +2,7 @@ package leo
 
 import leo.base.Bit
 import leo.base.Stream
-import leo.base.orNullThen
+import leo.base.orNullThenIfNotNull
 import leo.java.io.bitStreamOrNull
 import leo.java.io.bitWriter
 import java.io.ByteArrayInputStream
@@ -18,6 +18,6 @@ fun main(args: Array<String>) {
 }
 
 fun inputBitStreamOrNull(args: Array<String>): Stream<Bit>? =
-	System.`in`.bitStreamOrNull.orNullThen {
+	System.`in`.bitStreamOrNull.orNullThenIfNotNull {
 		ByteArrayInputStream(args.joinToString(" ").toByteArray()).bitStreamOrNull
 	}

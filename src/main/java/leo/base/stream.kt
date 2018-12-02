@@ -21,9 +21,11 @@ fun <V> V.then(nextOrNullFn: () -> Stream<V>?): Stream<V> =
 fun <V> Stream<V>.then(nextOrNullFn: () -> Stream<V>?): Stream<V> =
 	first.then { nextOrNull?.then(nextOrNullFn) ?: nextOrNullFn() }
 
-fun <V> Stream<V>?.orNullThen(nextOrNullFn: () -> Stream<V>?): Stream<V>? =
-	if (this == null) nextOrNullFn()
-	else then(nextOrNullFn)
+fun <V> Stream<V>?.orNullThenIfNotNull(nextOrNullFn: () -> Stream<V>?): Stream<V>? =
+	this?.then(nextOrNullFn) ?: nextOrNullFn()
+
+fun <V> Stream<V>?.orNullThen(nextOrNullFn: () -> Stream<V>): Stream<V> =
+	this?.then(nextOrNullFn) ?: nextOrNullFn()
 
 val <V> Stream<Stream<V>>.join: Stream<V>
 	get() = first.then { nextOrNull?.join }

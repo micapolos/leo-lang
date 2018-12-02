@@ -30,7 +30,7 @@ fun BitEvaluator.apply(term: Term<Nothing>): Match? =
 
 val BitEvaluator.bitStreamOrNull: Stream<Bit>?
 	get() =
-		byteReader.bitStreamOrNull.orNullThen { partialByteBitStreamOrNull }
+		byteReader.bitStreamOrNull.orNullThenIfNotNull { partialByteBitStreamOrNull }
 
 // TODO: This method is ugly, can we make it smarter?
 val BitEvaluator.partialByteBitStreamOrNull: Stream<Bit>?
