@@ -23,7 +23,7 @@ val Recursion.back: Recursion?
 fun Recursion.apply(backTraceOrNull: BackTrace?): BackTrace? =
 	if (backTraceOrNull == null) null
 	else back.let { back ->
-		if (back == null) backTraceOrNull
+		if (back == null) backTraceOrNull.back
 		else back.apply(backTraceOrNull.back)
 	}
 

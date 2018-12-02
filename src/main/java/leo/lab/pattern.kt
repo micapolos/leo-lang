@@ -39,7 +39,7 @@ fun Script<Nothing>.matches(pattern: OneOfPattern, backTraceOrNull: BackTrace?):
 	matches(pattern.oneOf, backTraceOrNull)
 
 fun Script<Nothing>.matches(pattern: RecursionPattern, backTraceOrNull: BackTrace?): Boolean =
-	backTraceOrNull != null && pattern.recursion.apply(backTraceOrNull.back)?.let { newBackTraceOrNull ->
+	backTraceOrNull != null && pattern.recursion.apply(backTraceOrNull)?.let { newBackTraceOrNull ->
 		matches(newBackTraceOrNull.patternScript, newBackTraceOrNull.back)
 	} ?: false
 
