@@ -52,6 +52,10 @@ val Word.bitStream: Stream<Bit>
 	get() =
 		letterStream.mapJoin(Letter::bitStream)
 
+val Word.binaryKey: BinaryKey
+	get() =
+		bitStream.then { Bit.ONE.onlyStream }.binaryKey
+
 val Word.reflect: Field<Nothing>
 	get() =
 		wordWord fieldTo term
