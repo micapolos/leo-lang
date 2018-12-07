@@ -4,33 +4,47 @@ import leo.Word
 import leo.base.*
 import leo.bitStream
 
-data class Pattern(
-	val beginWordToMap: BinaryTrie<Pattern>,
-	val endResolutionOrNull: Resolution?)
+sealed class Pattern
 
-fun patternMap(vararg pairs: Pair<Word, Pattern>): BinaryTrie<Pattern> =
-	binaryTrie(*pairs.map {
-		it.first.patternMapBitStream to it.second
-	}.toTypedArray())
+data class SwitchPattern(
+	val wordToPatternBinaryTrie: BinaryTrie<Pattern>,
+	val endMatchOrNull: Match?) : Pattern()
 
-fun pattern(beginWordToMap: BinaryTrie<Pattern>, endResolutionOrNull: Resolution? = null): Pattern =
-	Pattern(beginWordToMap, endResolutionOrNull)
+data class RecursionPattern(
+	val recursion: Recursion) : Pattern()
 
-fun pattern(endResolutionOrNull: Resolution? = null): Pattern =
-	Pattern(patternMap(), endResolutionOrNull)
+val emptySwitchPattern: SwitchPattern =
+	SwitchPattern(emptyBinaryTrie(), null)
 
-fun Pattern.get(word: Word): Pattern? =
-	beginWordToMap.get(word.patternMapBitStream)?.theValueOrNull?.value
+fun SwitchPattern.plus(case: Case): SwitchPattern =
+	when (case) {
+		is WordCase -> plus(case)
+		is EndCase -> plus(case)
+	}
+
+fun SwitchPattern.plus(case: WordCase): SwitchPattern =
+	copy(wordToPatternBinaryTrie = wordToPatternBinaryTrie.set(case.word.caseBitStream, case.pattern))
+
+fun SwitchPattern.plus(case: EndCase): SwitchPattern =
+	copy(endMatchOrNull = case.match)
+
+fun pattern(vararg cases: Case): Pattern =
+	emptySwitchPattern.fold(cases) { plus(it) }
+
+fun pattern(recursion: Recursion): Pattern =
+	RecursionPattern(recursion)
+
+fun SwitchPattern.get(word: Word): Pattern? =
+	wordToPatternBinaryTrie.get(word.caseBitStream)?.theValueOrNull?.value
 
 fun Pattern.invoke(script: Script): Script =
-	match(this)
-		.resolver
+	resolver
 		.invoke(script)
 		?.match
 		?.templateOrNull
 		?.script
 		?: script
 
-val Word.patternMapBitStream: Stream<Bit>
+val Word.caseBitStream: Stream<Bit>
 	get() =
 		bitStream.then { Bit.ONE.onlyStream }

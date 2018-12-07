@@ -1,32 +1,34 @@
 package leo.lab.v2
 
-import leo.base.Back
-import leo.base.Stack
-import leo.base.stack
+sealed class Recursion
 
-data class Recursion(
-	val backStack: Stack<Back>) {
-	//override fun toString() = reflect.string
-}
+data class ParentRecursion(
+	val recursionOrNull: Recursion?) : Recursion()
 
-val Stack<Back>.recursion: Recursion
+data class PreviousRecursion(
+	val recursionOrNull: Recursion?) : Recursion()
+
+val nullRecursion: Recursion? =
+	null
+
+val Recursion?.parent: Recursion
 	get() =
-		Recursion(this)
+		ParentRecursion(this)
 
-fun recursion(back: Back, vararg backs: Back): Recursion =
-	stack(back, *backs).recursion
-
-val Recursion.back: Recursion?
+val Recursion?.previous: Recursion
 	get() =
-		backStack.tail?.recursion
+		PreviousRecursion(this)
 
-fun Recursion.apply(backTraceOrNull: BackTrace?): BackTrace? =
-	if (backTraceOrNull == null) null
-	else back.let { back ->
-		if (back == null) backTraceOrNull.back
-		else back.apply(backTraceOrNull.back)
+fun Recursion.apply(traceOrNull: Trace): Trace? =
+	when (this) {
+		is ParentRecursion -> traceOrNull.parentTraceOrNull?.let { parentTrace ->
+			recursionOrNull.orNullApply(parentTrace)
+		}
+		is PreviousRecursion -> traceOrNull.previousTraceOrNull?.let { previousTrace ->
+			recursionOrNull.orNullApply(previousTrace)
+		}
 	}
 
-//val Recursion.reflect: Term<Nothing>
-//	get() =
-//		backStack.stream.reflect(recurseWord) { backReflect }
+fun Recursion?.orNullApply(trace: Trace): Trace? =
+	if (this == null) trace
+	else apply(trace)

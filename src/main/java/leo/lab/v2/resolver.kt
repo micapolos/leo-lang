@@ -6,11 +6,11 @@ import leo.base.orNull
 
 data class Resolver(
 	val match: Match,
-	val backTraceOrNull: BackTrace?)
+	val trace: Trace)
 
-val Match.resolver: Resolver
+val Pattern.resolver: Resolver
 	get() =
-		Resolver(this, null)
+		Resolver(match(this), trace)
 
 fun Resolver.invoke(command: Command): Resolver? =
 	when (command) {
@@ -20,21 +20,26 @@ fun Resolver.invoke(command: Command): Resolver? =
 
 fun Resolver.begin(word: Word): Resolver? =
 	match.patternOrNull?.let { pattern ->
-		pattern.get(word)?.let { beganPattern ->
-			Resolver(PatternMatch(beganPattern), backTraceOrNull.push(pattern))
+		when (pattern) {
+			is SwitchPattern -> pattern.get(word)?.let { beganPattern ->
+				Resolver(match(beganPattern), trace.childTrace(pattern))
+			}
+			is RecursionPattern -> pattern.recursion.apply(trace)?.let { recursedTrace ->
+				Resolver(match(recursedTrace.pattern), recursedTrace)
+			}
 		}
 	}
 
 val Resolver.end: Resolver?
 	get() =
-		backTraceOrNull?.let { backTrace ->
-			match.patternOrNull?.let { pattern ->
-				pattern.endResolutionOrNull?.let { resolution ->
-					when (resolution) {
-						is MatchResolution -> Resolver(resolution.match, backTrace.back)
-						is RecursionResolution -> resolution.recursion.apply(backTraceOrNull)?.let { recursedBackTrace ->
-							Resolver(PatternMatch(recursedBackTrace.pattern), recursedBackTrace.back)
-						}
+		match.patternOrNull?.let { pattern ->
+			trace.parentTraceOrNull?.let { parentTrace ->
+				when (pattern) {
+					is SwitchPattern -> pattern.endMatchOrNull?.let { endMatch ->
+						Resolver(endMatch, parentTrace)
+					}
+					is RecursionPattern -> pattern.recursion.apply(parentTrace)?.let { recursedTrace ->
+						Resolver(match(recursedTrace.pattern), recursedTrace)
 					}
 				}
 			}
