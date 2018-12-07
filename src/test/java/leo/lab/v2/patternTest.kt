@@ -8,10 +8,15 @@ class PatternTest {
 	@Test
 	fun wordPattern() {
 		val trueOrFalsePattern = pattern(
-			trueWord to pattern()
-				.end(resolution(match(template(oneWord.script)))),
-			falseWord to pattern()
-				.end(resolution(match(template(twoWord.script)))))
+			patternMap(
+				trueWord to pattern(
+					resolution(
+						match(
+							template(oneWord.script)))),
+				falseWord to pattern(
+					resolution(
+						match(
+							template(twoWord.script))))))
 
 		trueOrFalsePattern.invoke(trueWord.script).assertEqualTo(oneWord.script)
 		trueOrFalsePattern.invoke(falseWord.script).assertEqualTo(twoWord.script)
@@ -21,13 +26,23 @@ class PatternTest {
 	@Test
 	fun rhsPattern() {
 		val trueOrFalsePattern = pattern(
-			booleanWord to pattern(
-				trueWord to pattern()
-					.end(resolution(match(pattern()
-						.end(resolution(match(template(oneWord.script))))))),
-				falseWord to pattern()
-					.end(resolution(match(pattern()
-						.end(resolution(match(template(twoWord.script)))))))))
+			patternMap(
+				booleanWord to pattern(
+					patternMap(
+						trueWord to pattern(
+							resolution(
+								match(
+									pattern(
+										resolution(
+											match(
+												template(oneWord.script))))))),
+						falseWord to pattern(
+							resolution(
+								match(
+									pattern(
+										resolution(
+											match(
+												template(twoWord.script)))))))))))
 
 		trueOrFalsePattern
 			.invoke(script(booleanWord to trueWord.script))
@@ -46,14 +61,25 @@ class PatternTest {
 	@Test
 	fun lhsPattern() {
 		val trueOrFalsePattern = pattern(
-			trueWord to pattern()
-				.end(resolution(match(pattern(
-					negateWord to pattern()
-						.end(resolution(match(template(oneWord.script)))))))),
-			falseWord to pattern()
-				.end(resolution(match(pattern(
-					negateWord to pattern()
-						.end(resolution(match(template(twoWord.script)))))))))
+			patternMap(
+				trueWord to pattern(
+					resolution(
+						match(
+							pattern(
+								patternMap(
+									negateWord to pattern(
+										resolution(
+											match(
+												template(oneWord.script))))))))),
+				falseWord to pattern(
+					resolution(
+						match(
+							pattern(
+								patternMap(
+									negateWord to pattern(
+										resolution(
+											match(
+												template(twoWord.script)))))))))))
 
 		trueOrFalsePattern
 			.invoke(script(trueWord to null, negateWord to null))
