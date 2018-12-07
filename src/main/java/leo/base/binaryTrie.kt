@@ -19,6 +19,9 @@ val <V> BinaryMap<BinaryTrie.Match<V>?>.binaryTrie
 	get() =
 		BinaryTrie(this)
 
+fun <V> binaryTrie(vararg pairs: Pair<Stream<Bit>, V>): BinaryTrie<V> =
+	emptyBinaryTrie<V>().fold(pairs) { pair -> set(pair.first, pair.second) }
+
 fun <V> emptyBinaryTrie(): BinaryTrie<V> =
 	BinaryTrie(nullBinaryTrieMatch<V>().binaryMap)
 

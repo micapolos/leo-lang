@@ -1,4 +1,4 @@
-package leo.lab
+package leo.lab.v1
 
 import leo.base.assertEqualTo
 import leo.base.back

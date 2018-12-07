@@ -1,19 +1,19 @@
-package leo.lab
+package leo.lab.v2
 
 import leo.Word
 import leo.base.appendString
 import leo.base.appendableString
 
-data class Field<out V>(
+data class Field(
 	val key: Word,
-	val value: Script<V>) {
+	val value: Script) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-fun <V> field(word: Word, script: Script<V>) =
+fun field(word: Word, script: Script) =
 	Field(word, script)
 
-infix fun <V> Word.fieldTo(term: Script<V>) =
+infix fun Word.fieldTo(term: Script) =
 	Field(this, term)
 
 //infix fun <V> Word.field2To(word: Word): Field2<V> =
@@ -30,12 +30,12 @@ infix fun <V> Word.fieldTo(term: Script<V>) =
 //	get() =
 //		itWord fieldTo this
 
-fun <V> Field<V>.get(key: Word): Script<V>? =
+fun Field.get(key: Word): Script? =
 	if (this.key == key) value else null
 
 // === appendable
 
-fun <V> Appendable.append(field: Field<V>): Appendable =
+fun Appendable.append(field: Field): Appendable =
 	this
 		.appendString(field.key)
 		.run {
@@ -89,6 +89,6 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 //
 // === match
 
-fun <V, R : Any> Field<V>.matchKey(key: Word, fn: Script<V>.() -> R?): R? =
+fun <R : Any> Field.matchKey(key: Word, fn: Script.() -> R?): R? =
 	if (this.key == key) fn(value)
 	else null

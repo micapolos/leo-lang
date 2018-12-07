@@ -1,4 +1,4 @@
-package leo.lab
+package leo.lab.v1
 
 import leo.*
 import leo.base.assertEqualTo
@@ -15,7 +15,7 @@ class SelectorTest {
 	@Test
 	fun select_selector() {
 		personScript
-			.select(selector(rhsGetter, lhsGetter, lhsGetter, rhsGetter, rhsGetter))
+			.select(leo.lab.v1.selector(rhsGetter, lhsGetter, lhsGetter, rhsGetter, rhsGetter))
 			.assertEqualTo(stringWord.script)
 	}
 
@@ -29,7 +29,7 @@ class SelectorTest {
 	@Test
 	fun select_complexSelectorScript() {
 		personScript
-			.select(script(theWord to script(ageWord to script(isWord to metaScript(selector(rhsGetter, rhsGetter))))))
+			.select(script(theWord to script(ageWord to script(isWord to metaScript(leo.lab.v1.selector(rhsGetter, rhsGetter))))))
 			.assertEqualTo(script(theWord to script(ageWord to script(isWord to numberWord.script))))
 	}
 }
