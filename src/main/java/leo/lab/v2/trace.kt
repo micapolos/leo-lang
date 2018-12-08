@@ -1,16 +1,42 @@
 package leo.lab.v2
 
+data class TraceLink(
+	val jump: Jump,
+	val trace: Trace)
+
 data class Trace(
 	val pattern: Pattern,
-	val previousTraceOrNull: Trace?,
-	val parentTraceOrNull: Trace?)
+	val traceLinkOrNull: TraceLink?)
 
-val Pattern.trace: Trace
+val nullTraceLink: TraceLink? = null
+
+fun trace(pattern: Pattern): Trace =
+	Trace(pattern, null)
+
+fun Trace.plus(jump: Jump): TraceLink =
+	TraceLink(jump, this)
+
+fun TraceLink?.plus(pattern: Pattern): Trace =
+	Trace(pattern, this)
+
+val Trace.siblingOrNull: Trace?
 	get() =
-		Trace(this, null, null)
+		traceLinkOrNull?.siblingTraceOrNull
 
-fun Trace.childTrace(pattern: Pattern): Trace =
-	Trace(pattern, null, this)
+val Trace.parentOrNull: Trace?
+	get() =
+		traceLinkOrNull?.parentTraceOrNull
 
-fun Trace.nextTrace(pattern: Pattern): Trace =
-	Trace(pattern, this, null)
+val TraceLink.siblingTraceOrNull: Trace?
+	get() =
+		when (jump) {
+			is SiblingJump -> trace
+			is ParentJump -> null
+		}
+
+val TraceLink.parentTraceOrNull: Trace?
+	get() =
+		when (jump) {
+			is SiblingJump -> trace.traceLinkOrNull?.parentTraceOrNull
+			is ParentJump -> trace
+		}

@@ -77,21 +77,56 @@ class PatternTest {
 	}
 
 	@Test
-	fun recursionPattern() {
-		val naturalPattern = pattern(
-			zeroWord caseTo pattern(
+	fun siblingRecursion() {
+		val pattern = pattern(
+			thisWord caseTo pattern(
+				unitWord caseTo pattern(
+					end caseTo match(
+						pattern(
+							recursion(sibling.jump)))),
 				end caseTo match(
-					template(numberWord.script))),
-			incrementWord caseTo pattern(
-				end caseTo match(
-					pattern(nullRecursion.previous))))
+					template(doneWord.script))))
 
-		naturalPattern
-			.invoke(zeroWord.script)
-			.assertEqualTo(numberWord.script)
+		pattern
+			.invoke(script(thisWord to null))
+			.assertEqualTo(doneWord.script)
 
-		naturalPattern
-			.invoke(script(incrementWord to zeroWord.script))
-			.assertEqualTo(numberWord)
+		pattern
+			.invoke(script(thisWord to script(unitWord to null)))
+			.assertEqualTo(doneWord.script)
+
+		pattern
+			.invoke(script(thisWord to script(unitWord to null, unitWord to null)))
+			.assertEqualTo(doneWord.script)
+	}
+
+	@Test
+	fun siblingRecursion_withTail() {
+		val pattern = pattern(
+			numberWord caseTo pattern(
+				zeroWord caseTo pattern(
+					end caseTo match(
+						pattern(
+							incrementWord caseTo pattern(
+								end caseTo match(
+									pattern(
+										recursion(sibling.jump)))),
+							end caseTo match(
+								template(doneWord.script)))))))
+
+		pattern
+			.invoke(
+				script(
+					numberWord to script(
+						zeroWord to null)))
+			.assertEqualTo(doneWord.script)
+
+		pattern
+			.invoke(
+				script(
+					numberWord to script(
+						zeroWord to null,
+						incrementWord to null)))
+			.assertEqualTo(doneWord.script)
 	}
 }

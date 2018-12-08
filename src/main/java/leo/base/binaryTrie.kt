@@ -2,6 +2,7 @@ package leo.base
 
 data class BinaryTrie<out V>(
 	val binaryMatchOrNullMap: BinaryMap<Match<V>?>) {
+	override fun toString() = "binaryTrie(*)"
 
 	sealed class Match<out V> {
 		data class Partial<V>(

@@ -8,19 +8,22 @@ sealed class Pattern
 
 data class SwitchPattern(
 	val wordToPatternBinaryTrie: BinaryTrie<Pattern>,
-	val endMatchOrNull: Match?) : Pattern()
+	val endMatchOrNull: Match?,
+	val caseStackOrNull: Stack<Case>?) : Pattern() {
+	override fun toString() = "cases($caseStackOrNull)"
+}
 
 data class RecursionPattern(
 	val recursion: Recursion) : Pattern()
 
 val emptySwitchPattern: SwitchPattern =
-	SwitchPattern(emptyBinaryTrie(), null)
+	SwitchPattern(emptyBinaryTrie(), null, null)
 
 fun SwitchPattern.plus(case: Case): SwitchPattern =
 	when (case) {
 		is WordCase -> plus(case)
 		is EndCase -> plus(case)
-	}
+	}.copy(caseStackOrNull = caseStackOrNull.push(case))
 
 fun SwitchPattern.plus(case: WordCase): SwitchPattern =
 	copy(wordToPatternBinaryTrie = wordToPatternBinaryTrie.set(case.word.caseBitStream, case.pattern))
@@ -34,8 +37,27 @@ fun pattern(vararg cases: Case): Pattern =
 fun pattern(recursion: Recursion): Pattern =
 	RecursionPattern(recursion)
 
+val Pattern.switchPatternOrNull: SwitchPattern?
+	get() =
+		this as? SwitchPattern
+
+val Pattern.recursionPatternOrNull: RecursionPattern?
+	get() =
+		this as? RecursionPattern
+
+fun Pattern.get(word: Word): Pattern? =
+	switchPatternOrNull?.get(word)
+
 fun SwitchPattern.get(word: Word): Pattern? =
 	wordToPatternBinaryTrie.get(word.caseBitStream)?.theValueOrNull?.value
+
+val Pattern.end: Match?
+	get() =
+		switchPatternOrNull?.endMatchOrNull
+
+val Pattern.endPatternOrNull: Pattern?
+	get() =
+		end?.patternOrNull
 
 fun Pattern.invoke(script: Script): Script =
 	resolver

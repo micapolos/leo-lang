@@ -6,11 +6,11 @@ import leo.base.orNull
 
 data class Resolver(
 	val match: Match,
-	val trace: Trace)
+	val traceLinkOrNull: TraceLink?)
 
 val Pattern.resolver: Resolver
 	get() =
-		Resolver(match(this), trace)
+		Resolver(match(this), null)
 
 fun Resolver.invoke(command: Command): Resolver? =
 	when (command) {
@@ -21,26 +21,36 @@ fun Resolver.invoke(command: Command): Resolver? =
 fun Resolver.begin(word: Word): Resolver? =
 	match.patternOrNull?.let { pattern ->
 		when (pattern) {
-			is SwitchPattern -> pattern.get(word)?.let { beganPattern ->
-				Resolver(match(beganPattern), trace.childTrace(pattern))
+			is SwitchPattern -> pattern.get(word)?.let { childPattern ->
+				Resolver(match(childPattern), traceLinkOrNull.plus(pattern).plus(parent.jump)).resolveRecursion
 			}
-			is RecursionPattern -> pattern.recursion.apply(trace)?.let { recursedTrace ->
-				Resolver(match(recursedTrace.pattern), recursedTrace)
-			}
+			is RecursionPattern -> null
 		}
 	}
 
 val Resolver.end: Resolver?
 	get() =
 		match.patternOrNull?.let { pattern ->
-			trace.parentTraceOrNull?.let { parentTrace ->
-				when (pattern) {
-					is SwitchPattern -> pattern.endMatchOrNull?.let { endMatch ->
-						Resolver(endMatch, parentTrace)
+			traceLinkOrNull?.let { traceLink ->
+				traceLink.parentTraceOrNull?.let { parentTrace ->
+					when (pattern) {
+						is SwitchPattern -> pattern.endMatchOrNull?.let { endMatch ->
+							Resolver(endMatch, parentTrace.plus(sibling.jump)).resolveRecursion
+						}
+						is RecursionPattern -> null
 					}
-					is RecursionPattern -> pattern.recursion.apply(parentTrace)?.let { recursedTrace ->
-						Resolver(match(recursedTrace.pattern), recursedTrace)
-					}
+				}
+			}
+		}
+
+val Resolver.resolveRecursion: Resolver?
+	get() =
+		when (match) {
+			is TemplateMatch -> this
+			is PatternMatch -> when (match.pattern) {
+				is SwitchPattern -> this
+				is RecursionPattern -> match.pattern.recursion.orNullApply(traceLinkOrNull.plus(match.pattern))?.let { appliedTrace ->
+					Resolver(match(appliedTrace.pattern), appliedTrace.traceLinkOrNull)
 				}
 			}
 		}
