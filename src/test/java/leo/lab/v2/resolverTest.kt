@@ -1,77 +1,68 @@
 package leo.lab.v2
 
-import leo.*
 import leo.base.assertEqualTo
+import leo.incrementWord
+import leo.numberWord
+import leo.unitWord
+import leo.zeroWord
 import kotlin.test.Test
 
 class ResolverTest {
-	val testFunction = function(
-		numberWord caseTo function(
-			zeroWord caseTo function(
-				end caseTo match(
-					function(
-						incrementWord caseTo function(
-							end caseTo match(
-								function(
-									recursion(
-										sibling.jump)))),
-						end caseTo template(okWord.script).body.match)))))
-
 	@Test
 	fun resolver() {
-		testFunction
+		numberFunction
 			.resolver
 			.assertEqualTo(
 				Resolver(
-					match(testFunction),
+					match(numberFunction),
 					null))
 	}
 
 	@Test
 	fun resolve_numberWord() {
-		testFunction
+		numberFunction
 			.resolver
 			.begin(numberWord)
 			.assertEqualTo(
 				Resolver(
-					match(testFunction.get(numberWord)!!),
-					trace(testFunction).plus(parent.jump)))
+					match(numberFunction.get(numberWord)!!),
+					trace(numberFunction).plus(parent.jump)))
 	}
 
 	@Test
 	fun resolve_numberWord_zeroWord() {
-		testFunction
+		numberFunction
 			.resolver
 			.begin(numberWord)!!
 			.begin(zeroWord)
 			.assertEqualTo(
 				Resolver(
-					match(testFunction.get(numberWord)!!.get(zeroWord)!!),
-					trace(testFunction)
+					match(numberFunction.get(numberWord)!!.get(zeroWord)!!),
+					trace(numberFunction)
 						.plus(parent.jump)
-						.plus(testFunction.get(numberWord)!!)
+						.plus(numberFunction.get(numberWord)!!)
 						.plus(parent.jump)))
 	}
 
 	@Test
 	fun resolve_numberWord_zeroWord_end() {
-		testFunction
+		numberFunction
 			.resolver
 			.begin(numberWord)!!
 			.begin(zeroWord)!!
 			.end
 			.assertEqualTo(
 				Resolver(
-					match(testFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!),
-					trace(testFunction)
+					match(numberFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!),
+					trace(numberFunction)
 						.plus(parent.jump)
-						.plus(testFunction.get(numberWord)!!)
+						.plus(numberFunction.get(numberWord)!!)
 						.plus(sibling.jump)))
 	}
 
 	@Test
 	fun resolve_numberWord_zeroWord_end_end() {
-		testFunction
+		numberFunction
 			.resolver
 			.begin(numberWord)!!
 			.begin(zeroWord)!!
@@ -79,14 +70,14 @@ class ResolverTest {
 			.end
 			.assertEqualTo(
 				Resolver(
-					testFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!.end!!,
-					trace(testFunction)
+					numberFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!.end!!,
+					trace(numberFunction)
 						.plus(sibling.jump)))
 	}
 
 	@Test
 	fun resolve_numberWord_zeroWord_end_incrementWord() {
-		testFunction
+		numberFunction
 			.resolver
 			.begin(numberWord)!!
 			.begin(zeroWord)!!
@@ -94,18 +85,18 @@ class ResolverTest {
 			.begin(incrementWord)
 			.assertEqualTo(
 				Resolver(
-					match(testFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!.get(incrementWord)!!),
-					trace(testFunction)
+					match(numberFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!.get(incrementWord)!!),
+					trace(numberFunction)
 						.plus(parent.jump)
-						.plus(testFunction.get(numberWord)!!)
+						.plus(numberFunction.get(numberWord)!!)
 						.plus(sibling.jump)
-						.plus(testFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!)
+						.plus(numberFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!)
 						.plus(parent.jump)))
 	}
 
 	@Test
 	fun resolve_numberWord_zeroWord_end_incrementWord_end() {
-		testFunction
+		numberFunction
 			.resolver
 			.begin(numberWord)!!
 			.begin(zeroWord)!!
@@ -114,16 +105,16 @@ class ResolverTest {
 			.end
 			.assertEqualTo(
 				Resolver(
-					match(testFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!),
-					trace(testFunction)
+					match(numberFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!),
+					trace(numberFunction)
 						.plus(parent.jump)
-						.plus(testFunction.get(numberWord)!!)
+						.plus(numberFunction.get(numberWord)!!)
 						.plus(sibling.jump)))
 	}
 
 	@Test
 	fun resolve_numberWord_zeroWord_end_incrementWord_end_end() {
-		testFunction
+		numberFunction
 			.resolver
 			.begin(numberWord)!!
 			.begin(zeroWord)!!
@@ -133,16 +124,9 @@ class ResolverTest {
 			.end
 			.assertEqualTo(
 				Resolver(
-					testFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!.end!!,
-					trace(testFunction).plus(sibling.jump)))
+					numberFunction.get(numberWord)!!.get(zeroWord)!!.endFunctionOrNull!!.end!!,
+					trace(numberFunction).plus(sibling.jump)))
 	}
-
-	val unitsFunction = function(
-		unitWord caseTo function(
-			end caseTo match(
-				function(
-					recursion(sibling.jump)))),
-		end caseTo template(okWord.script).body.match)
 
 	@Test
 	fun unitsPatternResolve_unitWord() {

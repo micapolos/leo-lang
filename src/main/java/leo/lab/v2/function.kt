@@ -37,6 +37,10 @@ fun function(vararg cases: Case): SwitchFunction =
 fun function(recursion: Recursion): Function =
 	RecursionFunction(recursion)
 
+val Recursion.function: Function
+	get() =
+		RecursionFunction(this)
+
 val Function.switchFunctionOrNull: SwitchFunction?
 	get() =
 		this as? SwitchFunction

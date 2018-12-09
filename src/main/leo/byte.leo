@@ -1,10 +1,10 @@
-any byte
-is
-	bit any bit
-	bit any bit
-	bit any bit
-	bit any bit
-	bit any bit
-	bit any bit
-	bit any bit
-	bit any bit
+byte
+gives
+	a bit
+	a bit
+	a bit
+	a bit
+	a bit
+	a bit
+	a bit
+	a bit

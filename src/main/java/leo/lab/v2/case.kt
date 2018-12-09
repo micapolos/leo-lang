@@ -18,3 +18,9 @@ infix fun Word.caseTo(function: Function): Case =
 
 infix fun End.caseTo(match: Match): Case =
 	EndCase(this, match)
+
+infix fun End.caseTo(recursion: Recursion): Case =
+	caseTo(recursion.function.match)
+
+infix fun End.caseTo(template: Template): Case =
+	caseTo(template.body.match)

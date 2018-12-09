@@ -1,5 +1,5 @@
-any latin letter
-is
+latin letter
+gives latin letter
 	either a
 	either b
 	either c
