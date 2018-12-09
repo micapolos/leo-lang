@@ -5,11 +5,11 @@ import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class RecursionTest {
-	private val testTrace = trace(pattern(parentWord caseTo pattern()))
-		.plus(parent.jump).plus(pattern(childWord caseTo pattern()))
-		.plus(sibling.jump).plus(pattern(oneWord caseTo pattern()))
-		.plus(sibling.jump).plus(pattern(twoWord caseTo pattern()))
-		.plus(parent.jump).plus(pattern(leafWord caseTo pattern()))
+	private val testTrace = trace(function(parentWord caseTo function()))
+		.plus(parent.jump).plus(function(childWord caseTo function()))
+		.plus(sibling.jump).plus(function(oneWord caseTo function()))
+		.plus(sibling.jump).plus(function(twoWord caseTo function()))
+		.plus(parent.jump).plus(function(leafWord caseTo function()))
 
 	@Test
 	fun apply_parent() {

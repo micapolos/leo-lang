@@ -7,14 +7,14 @@ import org.junit.Test
 class LangTest {
 	@Test
 	fun letterCaseTo() {
-		pattern(letterCaseTo(match(template(okWord.script))))
+		function(letterCaseTo(template(okWord.script).body.match))
 			.invoke(script(letterWord to aWord.script))
 			.assertEqualTo(okWord.script)
 	}
 
 	@Test
 	fun wordCaseTo_oneLetter() {
-		pattern(wordCaseTo(match(template(okWord.script))))
+		function(wordCaseTo(template(okWord.script).body.match))
 			.invoke(
 				script(
 					wordWord to script(
@@ -24,7 +24,7 @@ class LangTest {
 
 	@Test
 	fun wordCaseTo_manyLetters() {
-		pattern(wordCaseTo(match(template(okWord.script))))
+		function(wordCaseTo(template(okWord.script).body.match))
 			.invoke(
 				script(
 					wordWord to script(
@@ -36,28 +36,28 @@ class LangTest {
 
 	@Test
 	fun bitZeroInvoke() {
-		pattern(bitCaseTo(match(template(okWord.script))))
+		function(bitCaseTo(template(okWord.script).body.match))
 			.invoke(script(bitWord to zeroWord.script))
 			.assertEqualTo(okWord.script)
 	}
 
 	@Test
 	fun bitOneInvoke() {
-		pattern(bitCaseTo(match(template(okWord.script))))
+		function(bitCaseTo(template(okWord.script).body.match))
 			.invoke(script(bitWord to oneWord.script))
 			.assertEqualTo(okWord.script)
 	}
 
 	@Test
 	fun bitTwoInvoke() {
-		pattern(bitCaseTo(match(template(okWord.script))))
+		function(bitCaseTo(template(okWord.script).body.match))
 			.invoke(script(bitWord to twoWord.script))
 			.assertEqualTo(script(bitWord to twoWord.script))
 	}
 
 	@Test
 	fun byteInvoke() {
-		pattern(byteCaseTo(match(template(okWord.script))))
+		function(byteCaseTo(template(okWord.script).body.match))
 			.invoke(
 				script(
 					byteWord to script(

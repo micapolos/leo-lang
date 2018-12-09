@@ -2,22 +2,30 @@ package leo.lab.v2
 
 sealed class Match
 
-data class TemplateMatch(
-	val template: Template) : Match()
+data class BodyMatch(
+	val body: Body) : Match()
 
-data class PatternMatch(
-	val pattern: Pattern) : Match()
+data class FunctionMatch(
+	val function: Function) : Match()
 
-fun match(template: Template): Match =
-	TemplateMatch(template)
-
-fun match(pattern: Pattern): Match =
-	PatternMatch(pattern)
-
-val Match.templateOrNull: Template?
+val Function.match: Match
 	get() =
-		(this as? TemplateMatch)?.template
+		FunctionMatch(this)
 
-val Match.patternOrNull: Pattern?
+val Body.match: Match
 	get() =
-		(this as? PatternMatch)?.pattern
+		BodyMatch(this)
+
+fun match(body: Body): Match =
+	BodyMatch(body)
+
+fun match(function: Function): Match =
+	FunctionMatch(function)
+
+val Match.bodyOrNull: Body?
+	get() =
+		(this as? BodyMatch)?.body
+
+val Match.functionOrNull: Function?
+	get() =
+		(this as? FunctionMatch)?.function

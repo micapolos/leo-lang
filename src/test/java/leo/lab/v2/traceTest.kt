@@ -9,21 +9,21 @@ import org.junit.Test
 class TraceTest {
 	@Test
 	fun parent_direct() {
-		trace(pattern(parentWord caseTo pattern()))
+		trace(function(parentWord caseTo function()))
 			.plus(parent.jump)
-			.plus(pattern(childWord caseTo pattern()))
+			.plus(function(childWord caseTo function()))
 			.parentOrNull
-			.assertEqualTo(trace(pattern(parentWord caseTo pattern())))
+			.assertEqualTo(trace(function(parentWord caseTo function())))
 	}
 
 	@Test
 	fun parent_indirect() {
-		trace(pattern(parentWord caseTo pattern()))
+		trace(function(parentWord caseTo function()))
 			.plus(parent.jump)
-			.plus(pattern(childWord caseTo pattern()))
+			.plus(function(childWord caseTo function()))
 			.plus(sibling.jump)
-			.plus(pattern(twoWord caseTo pattern()))
+			.plus(function(twoWord caseTo function()))
 			.parentOrNull
-			.assertEqualTo(trace(pattern(parentWord caseTo pattern())))
+			.assertEqualTo(trace(function(parentWord caseTo function())))
 	}
 }

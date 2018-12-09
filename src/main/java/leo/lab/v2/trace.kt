@@ -5,19 +5,19 @@ data class TraceLink(
 	val trace: Trace)
 
 data class Trace(
-	val pattern: Pattern,
+	val function: Function,
 	val traceLinkOrNull: TraceLink?)
 
 val nullTraceLink: TraceLink? = null
 
-fun trace(pattern: Pattern): Trace =
-	Trace(pattern, null)
+fun trace(function: Function): Trace =
+	Trace(function, null)
 
 fun Trace.plus(jump: Jump): TraceLink =
 	TraceLink(jump, this)
 
-fun TraceLink?.plus(pattern: Pattern): Trace =
-	Trace(pattern, this)
+fun TraceLink?.plus(function: Function): Trace =
+	Trace(function, this)
 
 val Trace.siblingOrNull: Trace?
 	get() =
