@@ -20,10 +20,10 @@ class ScopeTest {
 					nameToStringFunction
 						.define(
 							rule(
-							ageWord.term(),
-							body(
-								numberWord.term,
-								nameToStringFunction)))!!,
+								ageWord.term(),
+								body(
+									numberWord.term,
+									nameToStringFunction)))!!,
 					null))
 	}
 
@@ -45,7 +45,7 @@ class ScopeTest {
 			nameToStringFunction!!,
 			term(
 				nameWord fieldTo term(
-				nameWord fieldTo stringWord.term,
+					nameWord fieldTo stringWord.term,
 					ageWord fieldTo numberWord.term)))
 			.evaluate
 			.assertEqualTo(

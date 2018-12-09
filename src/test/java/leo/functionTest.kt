@@ -149,16 +149,16 @@ class FunctionTest {
 	private val dependentPatternsFunction = emptyFunction
 		.testDefine(
 			oneOfPattern(
-					term(
-						oneWord fieldTo
-							oneOfPattern(
-								aWord.term(),
-								bWord.term()).meta.term),
-					term(
-						twoWord fieldTo
-							oneOfPattern(
-								cWord.term(),
-								dWord.term()).meta.term)).meta.term)
+				term(
+					oneWord fieldTo
+						oneOfPattern(
+							aWord.term(),
+							bWord.term()).meta.term),
+				term(
+					twoWord fieldTo
+						oneOfPattern(
+							cWord.term(),
+							dWord.term()).meta.term)).meta.term)
 
 	@Test
 	fun dependentOneOfs_invokeFirstFirst() {

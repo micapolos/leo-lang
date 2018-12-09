@@ -4,18 +4,18 @@ package leo
 sealed class Control
 
 data class BeginControl(
-	val begin: Begin): Control() {
+	val begin: Begin) : Control() {
 	override fun toString() = beginString
 }
 
 data class EndControl(
-	val end: End): Control() {
+	val end: End) : Control() {
 	override fun toString() = endString
 }
 
 val Begin.control: Control
-  get() =
-	  BeginControl(this)
+	get() =
+		BeginControl(this)
 
 val End.control: Control
 	get() =

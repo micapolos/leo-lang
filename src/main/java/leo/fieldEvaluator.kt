@@ -1,6 +1,9 @@
 package leo
 
-import leo.base.*
+import leo.base.Bit
+import leo.base.Stream
+import leo.base.fold
+import leo.base.orNull
 
 data class FieldEvaluator(
 	val tokenEvaluator: Evaluator<Token<Nothing>>)
@@ -20,8 +23,8 @@ fun FieldEvaluator.apply(term: Term<Nothing>): Match? =
 	tokenEvaluator.apply(term)
 
 val FieldEvaluator.bitStreamOrNull: Stream<Bit>?
-  get() =
-	  tokenEvaluator.bitStreamOrNull
+	get() =
+		tokenEvaluator.bitStreamOrNull
 
 val FieldEvaluator.evaluator: Evaluator<Field<Nothing>>
 	get() =

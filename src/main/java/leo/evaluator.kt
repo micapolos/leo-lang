@@ -15,5 +15,5 @@ fun <V> Evaluator<V>.apply(term: Term<Nothing>): Match? =
 	applyFn(term)
 
 val <V> Evaluator<V>.bitStreamOrNull: Stream<Bit>?
-  get() =
-	  bitStreamOrNullFn()
+	get() =
+		bitStreamOrNullFn()

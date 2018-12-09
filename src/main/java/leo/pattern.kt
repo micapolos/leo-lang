@@ -66,8 +66,7 @@ fun Term<Nothing>.matches(pattern: RecursePattern, backTraceOrNull: BackTrace?):
 fun Term<Nothing>.matches(patternTerm: Term<Pattern>, backTraceOrNull: BackTrace?): Boolean =
 	patternTerm.patternOrNull?.let { pattern ->
 		matches(pattern, backTraceOrNull.push(patternTerm))
-	} ?:
-	when (patternTerm) {
+	} ?: when (patternTerm) {
 		is MetaTerm -> false
 		is WordTerm -> this is WordTerm && word.matches(patternTerm.word)
 		is StructureTerm -> this is StructureTerm && this.matches(patternTerm, backTraceOrNull)

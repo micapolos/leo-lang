@@ -72,4 +72,4 @@ fun <V> BitPattern<V>.pushParser(traceStackOrNull: Stack<BitPattern<V>>?): PushP
 						}
 				}
 			}
-		}
+	}
