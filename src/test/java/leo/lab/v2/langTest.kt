@@ -33,4 +33,42 @@ class LangTest {
 						letterWord to cWord.script)))
 			.assertEqualTo(okWord.script)
 	}
+
+	@Test
+	fun bitZeroInvoke() {
+		pattern(bitCaseTo(match(template(okWord.script))))
+			.invoke(script(bitWord to zeroWord.script))
+			.assertEqualTo(okWord.script)
+	}
+
+	@Test
+	fun bitOneInvoke() {
+		pattern(bitCaseTo(match(template(okWord.script))))
+			.invoke(script(bitWord to oneWord.script))
+			.assertEqualTo(okWord.script)
+	}
+
+	@Test
+	fun bitTwoInvoke() {
+		pattern(bitCaseTo(match(template(okWord.script))))
+			.invoke(script(bitWord to twoWord.script))
+			.assertEqualTo(script(bitWord to twoWord.script))
+	}
+
+	@Test
+	fun byteInvoke() {
+		pattern(byteCaseTo(match(template(okWord.script))))
+			.invoke(
+				script(
+					byteWord to script(
+						bitWord to zeroWord.script,
+						bitWord to zeroWord.script,
+						bitWord to zeroWord.script,
+						bitWord to zeroWord.script,
+						bitWord to oneWord.script,
+						bitWord to oneWord.script,
+						bitWord to zeroWord.script,
+						bitWord to oneWord.script)))
+			.assertEqualTo(okWord.script)
+	}
 }

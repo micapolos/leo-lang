@@ -22,3 +22,20 @@ fun wordCaseTo(match: Match): Case =
 								recursion(
 									sibling.jump)))),
 					end caseTo match))))
+
+fun bitCaseTo(match: Match): Case =
+	bitWord caseTo pattern(
+		zeroWord caseTo pattern(end caseTo match(pattern(end caseTo match))),
+		oneWord caseTo pattern(end caseTo match(pattern(end caseTo match))))
+
+fun byteCaseTo(match: Match): Case =
+	byteWord caseTo pattern(
+		bitCaseTo(match(pattern(
+			bitCaseTo(match(pattern(
+				bitCaseTo(match(pattern(
+					bitCaseTo(match(pattern(
+						bitCaseTo(match(pattern(
+							bitCaseTo(match(pattern(
+								bitCaseTo(match(pattern(
+									bitCaseTo(match(pattern(
+										end caseTo match)))))))))))))))))))))))))

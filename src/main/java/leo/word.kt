@@ -177,6 +177,7 @@ val scopeWord = "scope".wordOrNull!!
 val scriptWord = "script".wordOrNull!!
 val selectorWord = "selector".wordOrNull!!
 val sixWord = "six".wordOrNull!!
+val secondWord = "second".wordOrNull!!
 val sevenWord = "seven".wordOrNull!!
 val srcWord = "src".wordOrNull!!
 val stackWord = "stack".wordOrNull!!
