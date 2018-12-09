@@ -5,13 +5,13 @@ gives
     itself
     plus one
 
-any natural number
+a natural number
 plus natural number zero
 gives the natural number
 
-any natural number
+a natural number
 plus
-  any natural number
+  a natural number
   plus one
 gives
   the first natural number

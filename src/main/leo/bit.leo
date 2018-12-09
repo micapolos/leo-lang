@@ -1,4 +1,4 @@
 bit
-gives bit
+gives
 	either zero
 	either one

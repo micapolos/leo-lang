@@ -1,5 +1,5 @@
 latin letter
-gives latin letter
+gives
 	either a
 	either b
 	either c
