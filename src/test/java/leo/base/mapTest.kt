@@ -13,20 +13,20 @@ class MapTest {
 	@Test
 	fun get() {
 		val map = testMap
-		map.get("").assertEqualTo("empty".the)
-		map.get("foo").assertEqualTo("zoo".the)
-		map.get("bar").assertEqualTo("zar".the)
-		map.get("foobar").assertEqualTo("zoozar".the)
+		map.get("").assertEqualTo("empty")
+		map.get("foo").assertEqualTo("zoo")
+		map.get("bar").assertEqualTo("zar")
+		map.get("foobar").assertEqualTo("zoozar")
 		map.get("goo").assertEqualTo(null)
 	}
 
 	@Test
 	fun set() {
 		val map = testMap.set("foo", "moo")
-		map.get("").assertEqualTo("empty".the)
-		map.get("foo").assertEqualTo("moo".the)
-		map.get("bar").assertEqualTo("zar".the)
-		map.get("foobar").assertEqualTo("zoozar".the)
+		map.get("").assertEqualTo("empty")
+		map.get("foo").assertEqualTo("moo")
+		map.get("bar").assertEqualTo("zar")
+		map.get("foobar").assertEqualTo("zoozar")
 		map.get("goo").assertEqualTo(null)
 	}
 
@@ -37,7 +37,7 @@ class MapTest {
 			map = map.set(byte.clampedByte, byte.toString())
 		}
 		for (byte in Byte.MIN_VALUE..Byte.MAX_VALUE) {
-			map.get(byte.clampedByte).assertEqualTo(byte.toString().the)
+			map.get(byte.clampedByte).assertEqualTo(byte.toString())
 		}
 	}
 }
