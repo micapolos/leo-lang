@@ -36,6 +36,11 @@ enum class Letter(val char: Char) {
 val letterList =
 	Letter.values().toList()
 
+val letterStream: Stream<Letter> =
+	Letter.values().toList().fold(nullOf<Stack<Letter>>()) { stack, letter ->
+		stack.push(letter)
+	}!!.reverse.stream
+
 val charToLetterMap =
 	letterList.associate { it.char to it }
 

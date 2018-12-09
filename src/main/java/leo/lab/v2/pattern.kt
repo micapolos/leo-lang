@@ -31,7 +31,7 @@ fun SwitchPattern.plus(case: WordCase): SwitchPattern =
 fun SwitchPattern.plus(case: EndCase): SwitchPattern =
 	copy(endMatchOrNull = case.match)
 
-fun pattern(vararg cases: Case): Pattern =
+fun pattern(vararg cases: Case): SwitchPattern =
 	emptySwitchPattern.fold(cases) { plus(it) }
 
 fun pattern(recursion: Recursion): Pattern =

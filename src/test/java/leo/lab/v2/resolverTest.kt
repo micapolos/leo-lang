@@ -138,4 +138,49 @@ class ResolverTest {
 					testPattern.get(numberWord)!!.get(zeroWord)!!.endPatternOrNull!!.end!!,
 					trace(testPattern).plus(sibling.jump)))
 	}
+
+	val unitsPattern = pattern(
+		unitWord caseTo pattern(
+			end caseTo match(
+				pattern(
+					recursion(sibling.jump)))),
+		end caseTo match(
+			template(okWord.script)))
+
+	@Test
+	fun unitsPatternResolve_unitWord() {
+		unitsPattern
+			.resolver
+			.begin(unitWord)
+			.assertEqualTo(
+				Resolver(
+					match(unitsPattern.get(unitWord)!!),
+					trace(unitsPattern).plus(parent.jump)))
+	}
+
+	@Test
+	fun unitsPatternResolve_unitWord_end() {
+		unitsPattern
+			.resolver
+			.begin(unitWord)!!
+			.end
+			.assertEqualTo(
+				Resolver(
+					match(unitsPattern),
+					null)
+			)
+	}
+
+	@Test
+	fun unitsPatternResolve_unitWord_end_unitWord() {
+		unitsPattern
+			.resolver
+			.begin(unitWord)!!
+			.end!!
+			.begin(unitWord)
+			.assertEqualTo(
+				Resolver(
+					match(unitsPattern.get(unitWord)!!),
+					trace(unitsPattern).plus(parent.jump)))
+	}
 }

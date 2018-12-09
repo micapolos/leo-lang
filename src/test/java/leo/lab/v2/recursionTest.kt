@@ -2,7 +2,7 @@ package leo.lab.v2
 
 import leo.*
 import leo.base.assertEqualTo
-import org.junit.Test
+import kotlin.test.Test
 
 class RecursionTest {
 	private val testTrace = trace(pattern(parentWord caseTo pattern()))

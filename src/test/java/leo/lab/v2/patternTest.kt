@@ -77,6 +77,25 @@ class PatternTest {
 	}
 
 	@Test
+	fun siblingRecursion_noRoot() {
+		val pattern = pattern(
+			unitWord caseTo pattern(
+				end caseTo match(
+					pattern(
+						recursion(sibling.jump)))),
+			end caseTo match(
+				template(okWord.script)))
+
+		pattern
+			.invoke(script(unitWord to null))
+			.assertEqualTo(okWord.script)
+
+		pattern
+			.invoke(script(unitWord to null, unitWord to null))
+			.assertEqualTo(okWord.script)
+	}
+
+	@Test
 	fun siblingRecursion() {
 		val pattern = pattern(
 			thisWord caseTo pattern(
@@ -85,19 +104,19 @@ class PatternTest {
 						pattern(
 							recursion(sibling.jump)))),
 				end caseTo match(
-					template(doneWord.script))))
+					template(okWord.script))))
 
 		pattern
 			.invoke(script(thisWord to null))
-			.assertEqualTo(doneWord.script)
+			.assertEqualTo(okWord.script)
 
 		pattern
 			.invoke(script(thisWord to script(unitWord to null)))
-			.assertEqualTo(doneWord.script)
+			.assertEqualTo(okWord.script)
 
 		pattern
 			.invoke(script(thisWord to script(unitWord to null, unitWord to null)))
-			.assertEqualTo(doneWord.script)
+			.assertEqualTo(okWord.script)
 	}
 
 	@Test
@@ -112,14 +131,14 @@ class PatternTest {
 									pattern(
 										recursion(sibling.jump)))),
 							end caseTo match(
-								template(doneWord.script)))))))
+								template(okWord.script)))))))
 
 		pattern
 			.invoke(
 				script(
 					numberWord to script(
 						zeroWord to null)))
-			.assertEqualTo(doneWord.script)
+			.assertEqualTo(okWord.script)
 
 		pattern
 			.invoke(
@@ -127,6 +146,6 @@ class PatternTest {
 					numberWord to script(
 						zeroWord to null,
 						incrementWord to null)))
-			.assertEqualTo(doneWord.script)
+			.assertEqualTo(okWord.script)
 	}
 }
