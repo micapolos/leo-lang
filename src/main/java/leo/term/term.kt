@@ -12,8 +12,8 @@ data class MetaTerm<out V>(
 	override fun toString() = appendableString { it.append(this) }
 }
 
-data class ApplicationTerm<out V>(
-	val application: Application<V>) : Term<V>() {
+data class OperatorTerm<out V>(
+	val operator: Operator<V>) : Term<V>() {
 	override fun toString() = appendableString { it.append(this) }
 }
 
@@ -23,9 +23,9 @@ val <V> Meta<V>.term: Term<V>
 	get() =
 		MetaTerm(this)
 
-val <V> Application<V>.onlyTerm: Term<V>
+val <V> Operator<V>.onlyTerm: Term<V>
 	get() =
-		ApplicationTerm(this)
+		OperatorTerm(this)
 
 fun <V> Term<V>?.plus(word: Word, rightTermOrNull: Term<V>? = null): Term<V> =
 	apply(word, rightTermOrNull).onlyTerm
@@ -43,18 +43,18 @@ val Word.term: Term<Nothing>
 fun <V> metaTerm(value: V): Term<V> =
 	value.meta.term
 
-val <V> Line<V>.term: Term<V>
+val <V> Application<V>.term: Term<V>
 	get() =
-		application.onlyTerm
+		operator.onlyTerm
 
-fun <V> Term<V>?.plus(line: Line<V>): Term<V> =
-	plus(line.word, line.termOrNull)
+fun <V> Term<V>?.plus(application: Application<V>): Term<V> =
+	plus(application.word, application.termOrNull)
 
-fun <V> term(line: Line<V>, vararg lines: Line<V>): Term<V> =
-	term(line.term, *lines)
+fun <V> term(application: Application<V>, vararg applications: Application<V>): Term<V> =
+	term(application.term, *applications)
 
-fun <V> term(term: Term<V>, vararg lines: Line<V>): Term<V> =
-	term.fold(lines, Term<V>::plus)
+fun <V> term(term: Term<V>, vararg applications: Application<V>): Term<V> =
+	term.fold(applications, Term<V>::plus)
 
 // === casting
 
@@ -62,9 +62,9 @@ val <V> Term<V>.metaTermOrNull
 	get() =
 		this as? MetaTerm
 
-val <V> Term<V>.applicationTermOrNull
+val <V> Term<V>.operatorTermOrNull
 	get() =
-		this as? ApplicationTerm
+		this as? OperatorTerm
 
 // === Appendable (pretty-print)
 
@@ -72,13 +72,13 @@ val <V> Term<V>.isSimple: Boolean
 	get() =
 		when (this) {
 			is MetaTerm -> true
-			is ApplicationTerm -> application.termOrNull == null
+			is OperatorTerm -> operator.termOrNull == null
 		}
 
 fun <V> Appendable.append(term: Term<V>): Appendable =
 	when (term) {
 		is MetaTerm -> append(term.meta)
-		is ApplicationTerm -> append(term.application)
+		is OperatorTerm -> append(term.operator)
 	}
 
 // === map
@@ -86,5 +86,5 @@ fun <V> Appendable.append(term: Term<V>): Appendable =
 fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
 	when (this) {
 		is MetaTerm -> meta.map(fn).term
-		is ApplicationTerm -> application.map(fn).onlyTerm
+		is OperatorTerm -> operator.map(fn).onlyTerm
 	}

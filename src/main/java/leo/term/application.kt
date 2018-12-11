@@ -1,29 +1,23 @@
 package leo.term
 
 import leo.Word
+import leo.append
 import leo.base.ifNotNull
-import leo.base.nullOf
 
 data class Application<out V>(
-	val termOrNull: Term<V>?,
-	val line: Line<V>)
+	val word: Word,
+	val termOrNull: Term<V>?)
 
-fun <V> Term<V>?.apply(word: Word, termOrNull: Term<V>?): Application<V> =
-	Application(this, word lineTo termOrNull)
-
-val <V> Line<V>.application: Application<V>
-	get() =
-		nullOf<Term<V>>().apply(word, termOrNull)
-
-fun <V> Application<V>.plus(line: Line<V>): Application<V> =
-	Application(onlyTerm, line)
+infix fun <V> Word.apply(termOrNull: Term<V>?): Application<V> =
+	Application(this, termOrNull)
 
 fun <V> Appendable.append(application: Application<V>): Appendable =
 	this
+		.append(application.word)
 		.ifNotNull(application.termOrNull) { term ->
-			append(term).append(", ")
+			if (term.isSimple) append(' ').append(term)
+			else append('(').append(term).append(')')
 		}
-		.append(application.line)
 
 fun <V, R> Application<V>.map(fn: V.() -> R): Application<R> =
-	Application(termOrNull?.map(fn), line.map(fn))
+	word apply termOrNull?.map(fn)
