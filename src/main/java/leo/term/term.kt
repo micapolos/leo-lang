@@ -23,12 +23,12 @@ val <V> Meta<V>.term: Term<V>
 	get() =
 		MetaTerm(this)
 
-val <V> Application<V>.term: Term<V>
+val <V> Application<V>.onlyTerm: Term<V>
 	get() =
 		ApplicationTerm(this)
 
 fun <V> Term<V>?.plus(word: Word, rightTermOrNull: Term<V>? = null): Term<V> =
-	apply(word, rightTermOrNull).term
+	apply(word, rightTermOrNull).onlyTerm
 
 fun <V> term(word: Word, rightTermOrNull: Term<V>? = null): Term<V> =
 	nullOf<Term<V>>().plus(word, rightTermOrNull)
@@ -45,10 +45,10 @@ fun <V> metaTerm(value: V): Term<V> =
 
 val <V> Line<V>.term: Term<V>
 	get() =
-		application.term
+		application.onlyTerm
 
 fun <V> Term<V>?.plus(line: Line<V>): Term<V> =
-	plus(line.operator.word, line.right.termOrNull)
+	plus(line.word, line.termOrNull)
 
 fun <V> term(line: Line<V>, vararg lines: Line<V>): Term<V> =
 	term(line.term, *lines)
@@ -72,7 +72,7 @@ val <V> Term<V>.isSimple: Boolean
 	get() =
 		when (this) {
 			is MetaTerm -> true
-			is ApplicationTerm -> application.left.termOrNull == null
+			is ApplicationTerm -> application.termOrNull == null
 		}
 
 fun <V> Appendable.append(term: Term<V>): Appendable =
@@ -86,6 +86,5 @@ fun <V> Appendable.append(term: Term<V>): Appendable =
 fun <V, R> Term<V>.map(fn: (V) -> R): Term<R> =
 	when (this) {
 		is MetaTerm -> meta.map(fn).term
-		is ApplicationTerm -> application.map(fn).term
+		is ApplicationTerm -> application.map(fn).onlyTerm
 	}
-

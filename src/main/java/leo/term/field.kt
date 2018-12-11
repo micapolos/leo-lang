@@ -3,16 +3,13 @@ package leo.term
 import leo.Word
 
 data class Field<out V>(
-	val key: Key,
-	val value: Value<V>) {
+	val word: Word,
+	val term: Term<V>) {
 	//override fun toString() = appendableString { it.append(this) }
 }
 
-infix fun <V> Key.fieldTo(value: Value<V>): Field<V> =
-	Field(this, value)
-
 infix fun <V> Word.fieldTo(term: Term<V>): Field<V> =
-	key.fieldTo(term.value)
+	Field(this, term)
 
 //infix fun <V> Word.field2To(word: Word): Field2<V> =
 //	field2To(word.term2())
@@ -28,8 +25,8 @@ infix fun <V> Word.fieldTo(term: Term<V>): Field<V> =
 //	get() =
 //		itWord fieldTo this
 
-fun <V> Field<V>.get(key: Key): Value<V>? =
-	if (this.key == key) value else null
+fun <V> Field<V>.get(word: Word): Term<V>? =
+	if (this.word == word) term else null
 
 // === appendable
 
@@ -83,8 +80,8 @@ fun <V> Field<V>.get(key: Key): Value<V>? =
 // === map
 
 fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
-	Field(key, value.map(fn))
-//
+	Field(word, term.map(fn))
+
 //// === match
 //
 //fun <R : Any> Field.matchKey(key: Word, fn: Script.() -> R?): R? =
