@@ -1,11 +1,14 @@
 package leo.term
 
 import leo.Word
+import leo.base.orNullIf
+import leo.base.string
+import leo.theWord
 
 data class Field<out V>(
 	val word: Word,
 	val term: Term<V>) {
-	//override fun toString() = appendableString { it.append(this) }
+	override fun toString() = string { append(it) }
 }
 
 infix fun <V> Word.fieldTo(term: Term<V>): Field<V> =
@@ -28,18 +31,15 @@ infix fun <V> Word.fieldTo(term: Term<V>): Field<V> =
 fun <V> Field<V>.get(word: Word): Term<V>? =
 	if (this.word == word) term else null
 
+val <V> Field<V>.application: Application<V>
+	get() =
+		word apply term
+
 // === appendable
 
-//fun <V> Appendable.append(field: Field<V>): Appendable =
-//	this
-//		.appendString(field.key)
-//		.run {
-//			when {
-//				field.value.isSimple -> append(' ').append(field.value)
-//				else -> append('(').append(field.value).append(')')
-//			}
-//		}
-//
+fun <V> Appendable.append(field: Field<V>): Appendable =
+	append(field.application)
+
 ////// === bit stream
 //
 //val <V> Field<V>.tokenStream: Stream<Token<V>>
@@ -81,6 +81,10 @@ fun <V> Field<V>.get(word: Word): Term<V>? =
 
 fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
 	Field(word, term.map(fn))
+
+val <V> Field<V>.listItemOrNull: Term<V>?
+	get() =
+		term.orNullIf(word != theWord)
 
 //// === match
 //

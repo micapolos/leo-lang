@@ -1,12 +1,13 @@
 package leo.term
 
 import leo.Word
-import leo.base.ifNotNull
-import leo.base.nullOf
+import leo.base.*
 
 data class Operator<out V>(
 	val termOrNull: Term<V>?,
-	val application: Application<V>)
+	val application: Application<V>) {
+	override fun toString() = string { append(it) }
+}
 
 fun <V> Term<V>?.apply(word: Word, termOrNull: Term<V>?): Operator<V> =
 	Operator(this, word apply termOrNull)
@@ -27,3 +28,17 @@ fun <V> Appendable.append(operator: Operator<V>): Appendable =
 
 fun <V, R> Operator<V>.map(fn: V.() -> R): Operator<R> =
 	Operator(termOrNull?.map(fn), application.map(fn))
+
+tailrec fun <V> Operator<V>.structureOrNull(reversedFieldStackOrNull: Stack<Field<V>>?): Structure<V>? {
+	val fieldOrNull = application.fieldOrNull
+	return if (fieldOrNull == null) null
+	else {
+		val acc = reversedFieldStackOrNull.push(fieldOrNull)
+		if (termOrNull == null) acc.reverse.structure
+		else termOrNull.operatorTermOrNull?.operator?.structureOrNull(acc)
+	}
+}
+
+val <V> Operator<V>.structureOrNull: Structure<V>?
+	get() =
+		structureOrNull(null)

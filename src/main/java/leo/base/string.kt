@@ -6,6 +6,12 @@ fun appendableString(fn: (Appendable) -> Unit): String {
 	return stringBuilder.toString()
 }
 
+fun <V> V.string(fn: Appendable.(V) -> Unit): String {
+	val stringBuilder = StringBuilder()
+	stringBuilder.fn(this)
+	return stringBuilder.toString()
+}
+
 fun Appendable.appendString(value: Any?): Appendable =
 	append(value.string)
 

@@ -12,6 +12,9 @@ fun <V, R> V?.ifNull(fn: () -> R): R? =
 	if (this == null) fn()
 	else null
 
+fun <V : Any> V.orNullIf(boolean: Boolean): V? =
+	if (boolean) null else this
+
 fun <V, R> R.ifNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
 	if (valueOrNull == null) this
 	else fn(valueOrNull)
