@@ -1,38 +1,31 @@
 package leo.term
 
 import leo.Word
-import leo.base.ifNotNull
 import leo.base.nullOf
 
 data class Application<out V>(
-	val leftOrNull: Left<V>?,
+	val left: Left<V>,
 	val operator: Operator,
-	val rightOrNull: Right<V>?)
+	val right: Right<V>)
 
-fun <V> Left<V>?.apply(operator: Operator, rightOrNull: Right<V>?): Application<V> =
-	Application(this, operator, rightOrNull)
+fun <V> Left<V>.apply(operator: Operator, right: Right<V>): Application<V> =
+	Application(this, operator, right)
 
 fun <V> Term<V>?.apply(word: Word, termOrNull: Term<V>?): Application<V> =
-	this?.operand?.left.apply(word.operator, termOrNull?.operand?.right)
+	left.apply(word.operator, termOrNull.right)
 
 val <V> Line<V>.application: Application<V>
 	get() =
-		nullOf<Left<V>>().apply(operator, rightOrNull)
+		nullOf<Term<V>>().left.apply(operator, right)
 
 fun <V> Application<V>.plus(line: Line<V>): Application<V> =
-	Application(term.operand.left, line.operator, line.rightOrNull)
+	Application(term.left, line.operator, line.right)
 
 fun <V> Appendable.append(application: Application<V>): Appendable =
 	this
-		.ifNotNull(application.leftOrNull) { left ->
-			append(left).append(", ")
-		}
+		.append(application.left)
 		.append(application.operator)
-		.ifNotNull(application.rightOrNull) { right ->
-			if (right.isSimple) append(" ").append(right)
-			else append("(").append(right).append(")")
-		}
-
+		.append(application.right)
 
 fun <V, R> Application<V>.map(fn: V.() -> R): Application<R> =
-	leftOrNull?.map(fn).apply(operator, rightOrNull?.map(fn))
+	left.map(fn).apply(operator, right.map(fn))

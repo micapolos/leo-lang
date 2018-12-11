@@ -48,7 +48,7 @@ val <V> Line<V>.term: Term<V>
 		application.term
 
 fun <V> Term<V>?.plus(line: Line<V>): Term<V> =
-	plus(line.operator.word, line.rightOrNull?.operand?.term)
+	plus(line.operator.word, line.right.termOrNull)
 
 fun <V> term(line: Line<V>, vararg lines: Line<V>): Term<V> =
 	term(line.term, *lines)
@@ -72,7 +72,7 @@ val <V> Term<V>.isSimple: Boolean
 	get() =
 		when (this) {
 			is MetaTerm -> true
-			is ApplicationTerm -> application.leftOrNull?.operand?.term == null
+			is ApplicationTerm -> application.left.termOrNull == null
 		}
 
 fun <V> Appendable.append(term: Term<V>): Appendable =

@@ -1,14 +1,18 @@
 package leo.term
 
-data class Left<out V>(
-	val operand: Operand<V>)
+import leo.base.ifNotNull
 
-val <V> Operand<V>.left: Left<V>
+data class Left<out V>(
+	val termOrNull: Term<V>?)
+
+val <V> Term<V>?.left: Left<V>
 	get() =
 		Left(this)
 
 fun <V> Appendable.append(left: Left<V>): Appendable =
-	append(left.operand)
+	ifNotNull(left.termOrNull) { term ->
+		append(term).append(", ")
+	}
 
 fun <V, R> Left<V>.map(fn: V.() -> R): Left<R> =
-	operand.map(fn).left
+	termOrNull?.map(fn).left

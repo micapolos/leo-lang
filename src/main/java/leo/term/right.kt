@@ -1,19 +1,18 @@
 package leo.term
 
-data class Right<out V>(
-	val operand: Operand<V>)
+import leo.base.ifNotNull
 
-val <V> Operand<V>.right: Right<V>
+data class Right<out V>(
+	val termOrNull: Term<V>?)
+
+val <V> Term<V>?.right: Right<V>
 	get() =
 		Right(this)
 
 fun <V> Appendable.append(right: Right<V>): Appendable =
-	append(right.operand)
+	ifNotNull(right.termOrNull) { term ->
+		append(term).append(", ")
+	}
 
 fun <V, R> Right<V>.map(fn: V.() -> R): Right<R> =
-	operand.map(fn).right
-
-val <V> Right<V>.isSimple: Boolean
-	get() =
-		operand.term.isSimple
-
+	termOrNull?.map(fn).right
