@@ -74,8 +74,15 @@ val Natural.minusOne: Natural?
 			Bit.ONE -> bitStackWithoutLeadingOneOrNull.tail.push(Bit.ZERO).withoutLeadingOneNatural
 		}
 
+val Natural.bitCount: Natural
+	get() =
+		bitStream.run {
+			naturalOne.fold(nextOrNull) { plusOne }
+		}
+
 // === Cached naturals
 
+val naturalZero = null as Natural?
 val naturalOne = Natural(null)
 val naturalTwo = naturalOne.plusOne
 val naturalThree = naturalTwo.plusOne

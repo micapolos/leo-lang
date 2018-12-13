@@ -30,8 +30,25 @@ class NaturalTest {
 	}
 
 	@Test
+	fun bitCount() {
+		naturalOne.bitCount.assertEqualTo(naturalOne)
+		naturalTwo.bitCount.assertEqualTo(naturalTwo)
+		naturalThree.bitCount.assertEqualTo(naturalTwo)
+		naturalFour.bitCount.assertEqualTo(naturalThree)
+		naturalFive.bitCount.assertEqualTo(naturalThree)
+		naturalSix.bitCount.assertEqualTo(naturalThree)
+		naturalSeven.bitCount.assertEqualTo(naturalThree)
+	}
+
+	@Test
 	fun intNatural() {
-		13.unsignedNaturalOrNull!!.assertEqualTo(Natural(stack(1.bit, 0.bit, 1.bit)))
+		1.unsignedNaturalOrNull!!.assertEqualTo(naturalOne)
+		2.unsignedNaturalOrNull!!.assertEqualTo(naturalTwo)
+		3.unsignedNaturalOrNull!!.assertEqualTo(naturalThree)
+		4.unsignedNaturalOrNull!!.assertEqualTo(naturalFour)
+		5.unsignedNaturalOrNull!!.assertEqualTo(naturalFive)
+		6.unsignedNaturalOrNull!!.assertEqualTo(naturalSix)
+		7.unsignedNaturalOrNull!!.assertEqualTo(naturalSeven)
 	}
 
 	@Test
