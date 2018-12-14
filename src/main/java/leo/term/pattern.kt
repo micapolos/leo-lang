@@ -2,18 +2,25 @@ package leo.term
 
 import leo.Word
 import leo.base.fold
-import leo.lab.v2.Recursion
+import leo.base.string
 
 sealed class Pattern
 
 data class TermPattern(
-	val term: Term<Pattern>) : Pattern()
+	val term: Term<Pattern>) : Pattern() {
+	override fun toString() = patternType.string(term)
+}
 
 data class SwitchPattern(
-	val oneOf: OneOf) : Pattern()
+	val oneOf: OneOf) : Pattern() {
+	override fun toString() = oneOf.string
+
+}
 
 data class RecursionPattern(
-	val recursion: Recursion) : Pattern()
+	val recursion: Recursion) : Pattern() {
+	override fun toString() = recursion.string
+}
 
 val patternType: Type<Pattern> =
 	Type(Pattern::isSimple)
