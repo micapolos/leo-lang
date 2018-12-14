@@ -7,6 +7,9 @@ enum class Bit {
 	override fun toString() = "bit $int"
 }
 
+val zeroBit = Bit.ZERO
+val oneBit = Bit.ONE
+
 val Bit.int
 	get() =
 		ordinal
