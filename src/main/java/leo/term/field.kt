@@ -1,17 +1,12 @@
 package leo.term
 
 import leo.Word
-import leo.base.orNullIf
-import leo.base.string
-import leo.theWord
 
-data class Field<out V>(
-	val word: Word,
-	val term: Term<V>) {
-	override fun toString() = string { append(it) }
-}
+data class Field<out V : Any>(
+	val key: Word,
+	val value: V)
 
-infix fun <V> Word.fieldTo(term: Term<V>): Field<V> =
+infix fun <V : Any> Word.fieldTo(term: V): Field<V> =
 	Field(this, term)
 
 //infix fun <V> Word.field2To(word: Word): Field2<V> =
@@ -28,17 +23,12 @@ infix fun <V> Word.fieldTo(term: Term<V>): Field<V> =
 //	get() =
 //		itWord fieldTo this
 
-fun <V> Field<V>.get(word: Word): Term<V>? =
-	if (this.word == word) term else null
+fun <V : Any> Field<V>.get(key: Word): V? =
+	if (key == this.key) value else null
 
-val <V> Field<V>.application: Application<V>
+val <V : Any> Field<V>.application: Application<V>
 	get() =
-		word apply term
-
-// === appendable
-
-fun <V> Appendable.append(field: Field<V>): Appendable =
-	append(field.application)
+		key apply value
 
 ////// === bit stream
 //
@@ -79,12 +69,8 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 //
 // === map
 
-fun <V, R> Field<V>.map(fn: (V) -> R): Field<R> =
-	Field(word, term.map(fn))
-
-val <V> Field<V>.listItemOrNull: Term<V>?
-	get() =
-		term.orNullIf(word != theWord)
+fun <V : Any, R : Any> Field<V>.map(fn: (V) -> R): Field<R> =
+	Field(key, fn(value))
 
 //// === match
 //

@@ -37,4 +37,3 @@ fun Int8.addOp(int8: Int8, carry: Variable<Bit>): Op =
 	sequenceOp(
 		loInt4.addOp(int8.loInt4, carry),
 		hiInt4.addOp(int8.hiInt4, carry))
-

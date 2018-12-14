@@ -8,11 +8,11 @@ import kotlin.test.Test
 class TermTest {
 	@Test
 	fun string() {
-		term(
-			personWord apply term(
-				firstWord apply term(nameWord apply stringWord.term),
-				lastWord apply term(nameWord apply stringWord.term),
-				ageWord apply numberWord.term))
+		script(
+			personWord apply script(
+				firstWord apply script(nameWord apply stringWord.script),
+				lastWord apply script(nameWord apply stringWord.script),
+				ageWord apply numberWord.script))
 			.string
 			.assertEqualTo("person(first name string, last name string, age number)")
 	}

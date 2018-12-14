@@ -5,26 +5,27 @@ import leo.append
 import leo.base.ifNotNull
 import leo.base.string
 
-data class Application<out V>(
+data class Application<out V : Any>(
 	val word: Word,
-	val termOrNull: Term<V>?) {
-	override fun toString() = string { append(it) }
-}
+	val argumentOrNull: V?)
 
-infix fun <V> Word.apply(termOrNull: Term<V>?): Application<V> =
-	Application(this, termOrNull)
+fun <V : Any> Word.application(): Application<V> =
+	Application(this, null)
 
-fun <V> Appendable.append(application: Application<V>): Appendable =
+infix fun <V : Any> Word.apply(argumentOrNull: V?): Application<V> =
+	Application(this, argumentOrNull)
+
+fun <V : Any> Appendable.append(application: Application<V>): Appendable =
 	this
 		.append(application.word)
-		.ifNotNull(application.termOrNull) { term ->
-			if (term.isSimple) append(' ').append(term)
-			else append('(').append(term).append(')')
+		.ifNotNull(application.argumentOrNull) { argument ->
+			append('(').append(argument.string).append(')')
 		}
 
-fun <V, R> Application<V>.map(fn: V.() -> R): Application<R> =
-	word apply termOrNull?.map(fn)
-
-val <V> Application<V>.fieldOrNull: Field<V>?
+val <V : Any> Application<V>.fieldOrNull: Field<V>?
 	get() =
-		termOrNull?.let { term -> word fieldTo term }
+		argumentOrNull?.let { argument -> word fieldTo argument }
+
+val <V : Any> Application<V>.term: Term<V>
+	get() =
+		Term(null, this)
