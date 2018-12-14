@@ -2,14 +2,13 @@ package leo.term
 
 import leo.Word
 import leo.base.fold
-import leo.base.string
 
 data class Script(
 	val term: Term<Script>) {
 	override fun toString() = scriptType.string(term)
 }
 
-val scriptType = Type<Script>({ string }, { term.isSimple })
+val scriptType = Type(Script::isSimple)
 
 val Term<Script>.script: Script
 	get() =
@@ -24,3 +23,7 @@ fun script(script: Script, vararg applications: Application<Script>): Script =
 
 fun script(application: Application<Script>, vararg applications: Application<Script>): Script =
 	script(application.term.script, *applications)
+
+val Script.isSimple: Boolean
+	get() =
+		term.isSimple
