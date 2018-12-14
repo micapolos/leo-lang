@@ -3,7 +3,9 @@ package leo.term
 import leo.base.*
 
 data class Selector(
-	val getterStackOrNull: Stack<Getter>?)
+	val getterStackOrNull: Stack<Getter>?) {
+	override fun toString() = "selector ${getterStackOrNull.string}"
+}
 
 val Stack<Getter>?.selector
 	get() =
