@@ -5,7 +5,8 @@ import leo.base.Variable
 import leo.base.oneBit
 import leo.base.zeroBit
 
-sealed class Op {
+sealed class Op(
+	var previousOpOrNull: Op? = null) {
 	abstract fun apply()
 }
 
@@ -14,29 +15,29 @@ object NoOp : Op() {
 }
 
 data class ConstantOp(
-	val bitVariable: Variable<Bit>,
-	val bit: Bit) : Op() {
+	val dstBitVariable: Variable<Bit>,
+	val srcBit: Bit) : Op() {
 	override fun apply() {
-		bitVariable.value = bit
+		dstBitVariable.value = srcBit
 	}
 }
 
 data class LoadOp(
-	val lhs: Variable<Bit>,
-	val rhs: Variable<Bit>) : Op() {
+	val dstBitVariable: Variable<Bit>,
+	val srcBitVariable: Variable<Bit>) : Op() {
 	override fun apply() {
-		lhs.value = rhs.value
+		dstBitVariable.value = srcBitVariable.value
 	}
 }
 
 data class BranchOp(
-	val selector: Variable<Bit>,
-	val zeroOp: Op,
-	val oneOp: Op) : Op() {
+	val switchBitVariable: Variable<Bit>,
+	val caseZeroOp: Op,
+	val caseOneOp: Op) : Op() {
 	override fun apply() {
-		when (selector.value) {
-			Bit.ZERO -> zeroOp.apply()
-			Bit.ONE -> oneOp.apply()
+		when (switchBitVariable.value) {
+			Bit.ZERO -> caseZeroOp.apply()
+			Bit.ONE -> caseOneOp.apply()
 		}
 	}
 }
@@ -50,6 +51,17 @@ data class SequenceOp(
 	}
 }
 
+data class WhileOp(
+	val conditionBitVariable: Variable<Bit>,
+	val op: Op) : Op() {
+	override fun apply() {
+		while (conditionBitVariable.value == oneBit) {
+			op.apply()
+		}
+	}
+}
+
+// === constructors
 
 val noOp = NoOp
 
@@ -65,7 +77,20 @@ fun Variable<Bit>.branchOp(zeroOp: Op, oneOp: Op): Op =
 fun Op.then(op: Op): Op =
 	SequenceOp(this, op)
 
-// === custom ops
+fun sequenceOp(op1: Op, op2: Op): Op =
+	op1.then(op2)
+
+fun sequenceOp(op1: Op, op2: Op, op3: Op, op4: Op): Op =
+	sequenceOp(
+		sequenceOp(op1, op2),
+		sequenceOp(op3, op4))
+
+fun sequenceOp(op1: Op, op2: Op, op3: Op, op4: Op, op5: Op, op6: Op, op7: Op, op8: Op): Op =
+	sequenceOp(
+		sequenceOp(op1, op2, op3, op4),
+		sequenceOp(op5, op6, op7, op8))
+
+// === custom
 
 val Variable<Bit>.notOp: Op
 	get() =
@@ -85,3 +110,6 @@ fun Variable<Bit>.xorOp(bitVariable: Variable<Bit>): Op =
 	branchOp(
 		bitVariable.branchOp(setOp(zeroBit), setOp(oneBit)),
 		bitVariable.branchOp(setOp(oneBit), setOp(zeroBit)))
+
+fun Variable<Bit>.whileOne(op: Op): Op =
+	WhileOp(this, op)
