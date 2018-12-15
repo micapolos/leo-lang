@@ -3,11 +3,11 @@ package leo.term
 sealed class Getter
 
 object LhsGetter : Getter() {
-	override fun toString() = "lhs"
+	override fun toString() = "get receiver"
 }
 
 object RhsGetter : Getter() {
-	override fun toString() = "rhs"
+	override fun toString() = "get argument"
 }
 
 val lhsGetter: Getter

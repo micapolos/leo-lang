@@ -5,7 +5,7 @@ import leo.base.stack
 
 data class Recursion(
 	val backStack: Stack<Back>) {
-	override fun toString() = "recursion $backStack"
+	override fun toString() = "recursion($backStack)"
 }
 
 val Stack<Back>.recursion: Recursion
