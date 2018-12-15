@@ -18,6 +18,9 @@ val Word.script: Script
 	get() =
 		term<Script>().script
 
+fun script(word: Word): Script =
+	word.script
+
 fun script(script: Script, vararg applications: Application<Script>): Script =
 	script.fold(applications) { apply(it).script }
 
@@ -27,3 +30,8 @@ fun script(application: Application<Script>, vararg applications: Application<Sc
 val Script.isSimple: Boolean
 	get() =
 		term.isSimple
+
+// === matching
+
+fun <R : Any> Script.matchArgument(word: Word, fn: Script?.() -> R?): R? =
+	term.matchArgument(word, fn)

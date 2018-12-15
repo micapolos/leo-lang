@@ -18,3 +18,12 @@ fun <V : Any> V?.apply(application: Application<V>): Term<V> =
 val Term<*>.isSimple: Boolean
 	get() =
 		receiverOrNull == null
+
+// === matching ===
+
+fun <V : Any, R : Any> Term<V>.matchArgument(word: Word, fn: V?.() -> R?): R? =
+	when {
+		receiverOrNull != null -> null
+		application.word != word -> null
+		else -> application.argumentOrNull.fn()
+	}

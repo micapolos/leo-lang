@@ -64,3 +64,5 @@ val Pattern.isSimple: Boolean
 			is SwitchPattern -> oneOf.patternStack.tail == null
 			is RecursionPattern -> true
 		}
+
+// === matching

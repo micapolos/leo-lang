@@ -197,6 +197,7 @@ val traceWord = "trace".wordOrNull!!
 val treeWord = "tree".wordOrNull!!
 val trueWord = "true".wordOrNull!!
 val twoWord = "two".wordOrNull!!
+val uniqueWord = "unique".wordOrNull!!
 val unitWord = "unit".wordOrNull!!
 val unquoteWord = "unquote".wordOrNull!!
 val utfWord = "utf".wordOrNull!!
