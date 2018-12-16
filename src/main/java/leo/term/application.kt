@@ -24,6 +24,6 @@ val <V> Application<V>.term: Term<V>
 
 // === matching
 
-fun <V, R : Any> Application<V>.match(word: Word, fn: (Term<V>?) -> R?): R? =
+fun <V, R : Any> Application<V>.isMatching(word: Word, fn: (Term<V>?) -> R?): R? =
 	if (this.word == word) fn(argument.termOrNull)
 	else null

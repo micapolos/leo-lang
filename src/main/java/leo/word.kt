@@ -143,6 +143,7 @@ val maybeWord = "maybe".wordOrNull!!
 val metaWord = "meta".wordOrNull!!
 val nameWord = "name".wordOrNull!!
 val nativeWord = "native".wordOrNull!!
+val naturalWord = "natural".wordOrNull!!
 val negateWord = "negate".wordOrNull!!
 val nineWord = "nine".wordOrNull!!
 val noneWord = "none".wordOrNull!!

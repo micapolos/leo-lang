@@ -16,7 +16,7 @@ class TemplateTest {
 
 	@Test
 	fun argumentSelectorTemplateInvoke() {
-		term(selector())
+		valueTerm(selector())
 			.invoke(personScript)
 			.assertEqualTo(personScript)
 	}
@@ -24,7 +24,7 @@ class TemplateTest {
 
 	@Test
 	fun rhsSelectorTemplateInvoke() {
-		term(personLastNameSelector)
+		valueTerm(personLastNameSelector)
 			.invoke(personScript)
 			.assertEqualTo(term(stringWord))
 	}

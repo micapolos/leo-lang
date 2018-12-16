@@ -17,11 +17,7 @@ data class ApplicationTerm<out V>(
 	override fun toString() = "$receiver$application"
 }
 
-val <V> V.term: Term<V>
-	get() =
-		ValueTerm(this)
-
-fun <V> term(value: V): Term<V> =
+fun <V> valueTerm(value: V): Term<V> =
 	ValueTerm(value)
 
 fun <V> term(word: Word): Term<V> =
@@ -54,21 +50,21 @@ val <V> Term<V>.applicationTermOrNull: ApplicationTerm<V>?
 
 fun <V, R : Any> Term<V>.matchPartial(word: Word, fn: Term<V>?.(Term<V>?) -> R?): R? =
 	applicationTermOrNull?.let { applicationTerm ->
-		applicationTerm.application.match(word) { termOrNull ->
+		applicationTerm.application.isMatching(word) { termOrNull ->
 			applicationTerm.receiver.termOrNull.fn(termOrNull)
 		}
 	}
 
-fun <V, R : Any> Term<V>.match(word: Word, fn: (Term<V>?) -> R?): R? =
+fun <V, R : Any> Term<V>.isMatching(word: Word, fn: (Term<V>?) -> R?): R? =
 	matchPartial(word) { termOrNull ->
 		ifNull {
 			fn(termOrNull)
 		}
 	}
 
-fun <V, R : Any> Term<V>.match(word1: Word, word2: Word, fn: (Term<V>?, Term<V>?) -> R?): R? =
+fun <V, R : Any> Term<V>.isMatching(word1: Word, word2: Word, fn: (Term<V>?, Term<V>?) -> R?): R? =
 	matchPartial(word2) { termOrNull2 ->
-		this?.match(word1) { termOrNull1 ->
+		this?.isMatching(word1) { termOrNull1 ->
 			fn(termOrNull1, termOrNull2)
 		}
 	}

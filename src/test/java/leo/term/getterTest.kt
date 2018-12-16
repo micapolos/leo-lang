@@ -9,15 +9,15 @@ class GetterTest {
 	@Test
 	fun get() {
 		term(
-			oneWord apply term(1),
-			twoWord apply term(2))
+			oneWord apply valueTerm(1),
+			twoWord apply valueTerm(2))
 			.get(lhsGetter)
-			.assertEqualTo(term(oneWord apply term(1)))
+			.assertEqualTo(term(oneWord apply valueTerm(1)))
 
 		term(
-			oneWord apply term(1),
-			twoWord apply term(2))
+			oneWord apply valueTerm(1),
+			twoWord apply valueTerm(2))
 			.get(rhsGetter)
-			.assertEqualTo(term(2))
+			.assertEqualTo(valueTerm(2))
 	}
 }

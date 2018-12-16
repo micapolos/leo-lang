@@ -20,7 +20,7 @@ class TermTest {
 
 	@Test
 	fun matchPartial() {
-		term(1)
+		valueTerm(1)
 			.matchPartial(oneWord) { the(it) }
 			.assertEqualTo(null)
 
@@ -28,43 +28,43 @@ class TermTest {
 			.matchPartial(oneWord) { the(it) }
 			.assertEqualTo(the(null))
 
-		term(oneWord apply term(1))
+		term(oneWord apply valueTerm(1))
 			.matchPartial(oneWord) { the(it) }
-			.assertEqualTo(the(term(1)))
+			.assertEqualTo(the(valueTerm(1)))
 
 		term(
-			oneWord apply term(1),
-			twoWord apply term(2))
+			oneWord apply valueTerm(1),
+			twoWord apply valueTerm(2))
 			.matchPartial(twoWord) { the(it) }
-			.assertEqualTo(the(term(2)))
+			.assertEqualTo(the(valueTerm(2)))
 
 		term(
-			oneWord apply term(1),
-			twoWord apply term(2))
+			oneWord apply valueTerm(1),
+			twoWord apply valueTerm(2))
 			.matchPartial(oneWord) { the(it) }
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun match() {
-		term(oneWord apply term(1))
-			.match(oneWord) { the(it) }
-			.assertEqualTo(the(term(1)))
+		term(oneWord apply valueTerm(1))
+			.isMatching(oneWord) { the(it) }
+			.assertEqualTo(the(valueTerm(1)))
 
-		term(oneWord apply term(1))
-			.match(twoWord) { it }
+		term(oneWord apply valueTerm(1))
+			.isMatching(twoWord) { it }
 			.assertEqualTo(null)
 
 		term(
-			oneWord apply term(1),
-			oneWord apply term(1))
-			.match(oneWord) { it }
+			oneWord apply valueTerm(1),
+			oneWord apply valueTerm(1))
+			.isMatching(oneWord) { it }
 			.assertEqualTo(null)
 
 		term(
-			oneWord apply term(1),
-			twoWord apply term(2))
-			.match(oneWord, twoWord) { one, name -> one to name }
-			.assertEqualTo(term(1) to term(2))
+			oneWord apply valueTerm(1),
+			twoWord apply valueTerm(2))
+			.isMatching(oneWord, twoWord) { one, name -> one to name }
+			.assertEqualTo(valueTerm(1) to valueTerm(2))
 	}
 }

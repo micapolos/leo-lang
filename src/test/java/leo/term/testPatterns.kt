@@ -1,27 +1,32 @@
 package leo.term
 
-import leo.bitWord
-import leo.byteWord
-import leo.oneWord
-import leo.zeroWord
-
-val bitPatternApplication =
-	bitWord apply term(
-		oneOf(
-			term(zeroWord apply null),
-			term(oneWord apply null)))
+import leo.*
 
 val bitPattern =
-	term(bitPatternApplication)
-
-val bytePattern =
 	term(
-		byteWord apply term(
-			bitPatternApplication,
-			bitPatternApplication,
-			bitPatternApplication,
-			bitPatternApplication,
-			bitPatternApplication,
-			bitPatternApplication,
-			bitPatternApplication,
-			bitPatternApplication))
+		bitWord apply valueTerm(
+			expander(
+				oneOf(
+					term(zeroWord apply null),
+					term(oneWord apply null)))))
+
+val unitsPattern =
+	valueTerm(
+		expander(
+			oneOf(
+				term(unitWord apply null),
+				term(
+					valueTerm(expander(recursion(back))),
+					unitWord apply null))))
+
+val naturalNumberPattern =
+	valueTerm(
+		expander(
+			oneOf(
+				term(
+					naturalWord apply term(
+						numberWord apply term(zeroWord))),
+				term(
+					valueTerm(expander(recursion(back))),
+					plusWord apply term(oneWord)))))
+
