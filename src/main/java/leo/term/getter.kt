@@ -18,8 +18,11 @@ val rhsGetter: Getter
 	get() =
 		RhsGetter
 
-fun Script.get(getter: Getter): Script? =
-	when (getter) {
-		is LhsGetter -> term.receiverOrNull
-		is RhsGetter -> term.application.argumentOrNull
+fun <V> Term<V>.get(getter: Getter): Term<V>? =
+	when (this) {
+		is ValueTerm -> null
+		is ApplicationTerm -> when (getter) {
+			is LhsGetter -> receiver.termOrNull
+			is RhsGetter -> application.argument.termOrNull
+		}
 	}

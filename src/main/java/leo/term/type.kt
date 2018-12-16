@@ -2,18 +2,25 @@ package leo.term
 
 import leo.base.string
 
-data class Type<in V>(
-	val isSimpleFn: V.() -> Boolean)
+sealed class Type
 
-fun <V : Any> Type<V>.string(application: Application<V>): String = ""
-	.plus(application.word)
-	.plus(if (application.argumentOrNull == null) "" else argumentString(application.argumentOrNull))
+data class OneOfType(
+	val oneOf: OneOf) : Type() {
+	override fun toString() = oneOf.string
 
-fun <V : Any> Type<V>.argumentString(argument: V): String = ""
-	.plus(if (argument.isSimpleFn()) " " else "(")
-	.plus(argument)
-	.plus(if (argument.isSimpleFn()) "" else ")")
+}
 
-fun <V : Any> Type<V>.string(term: Term<V>): String = ""
-	.plus(if (term.receiverOrNull == null) "" else term.receiverOrNull.string.plus(", "))
-	.plus(string(term.application))
+data class RecursionType(
+	val recursion: Recursion) : Type() {
+	override fun toString() = recursion.string
+}
+
+// === constructors
+
+val Recursion.type: Type
+	get() =
+		RecursionType(this)
+
+val OneOf.type: Type
+	get() =
+		OneOfType(this)

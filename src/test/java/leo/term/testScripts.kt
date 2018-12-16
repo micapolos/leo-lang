@@ -4,7 +4,11 @@ import leo.*
 
 val personScript =
 	script(
-		personWord apply script(
-			firstWord apply script(nameWord apply stringWord.script),
-			lastWord apply script(nameWord apply stringWord.script),
-			ageWord apply numberWord.script))
+		term(
+			personWord apply term(
+				firstWord apply term(nameWord apply term(stringWord)),
+				lastWord apply term(nameWord apply term(stringWord),
+					ageWord apply term(numberWord)))))
+
+val personLastNameSelector =
+	selector(rhsGetter, lhsGetter, rhsGetter, rhsGetter)

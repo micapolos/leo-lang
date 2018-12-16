@@ -6,17 +6,17 @@ import leo.oneWord
 import leo.zeroWord
 
 val bitPatternApplication =
-	bitWord apply pattern(
+	bitWord apply term(
 		oneOf(
-			pattern(zeroWord apply null),
-			pattern(oneWord apply null)))
+			term(zeroWord apply null),
+			term(oneWord apply null)))
 
 val bitPattern =
-	pattern(bitPatternApplication)
+	term(bitPatternApplication)
 
 val bytePattern =
-	pattern(
-		byteWord apply pattern(
+	term(
+		byteWord apply term(
 			bitPatternApplication,
 			bitPatternApplication,
 			bitPatternApplication,

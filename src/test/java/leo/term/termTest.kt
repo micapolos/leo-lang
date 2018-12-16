@@ -9,33 +9,62 @@ import kotlin.test.Test
 class TermTest {
 	@Test
 	fun string() {
-		script(
-			personWord apply script(
-				firstWord apply script(nameWord apply stringWord.script),
-				lastWord apply script(nameWord apply stringWord.script),
-				ageWord apply numberWord.script))
+		term<Nothing>(
+			personWord apply term(
+				firstWord apply term(nameWord apply term(stringWord)),
+				lastWord apply term(nameWord apply term(stringWord)),
+				ageWord apply term(numberWord)))
 			.string
 			.assertEqualTo("person(first name string, last name string, age number)")
 	}
 
 	@Test
-	fun match() {
-		script(oneWord apply null)
-			.matchArgument(oneWord) { the(this) }
+	fun matchPartial() {
+		term(1)
+			.matchPartial(oneWord) { the(it) }
+			.assertEqualTo(null)
+
+		term<Nothing>(oneWord)
+			.matchPartial(oneWord) { the(it) }
 			.assertEqualTo(the(null))
 
-		script(oneWord apply numberWord.script)
-			.matchArgument(oneWord) { the(this) }
-			.assertEqualTo(the(numberWord.script))
+		term(oneWord apply term(1))
+			.matchPartial(oneWord) { the(it) }
+			.assertEqualTo(the(term(1)))
 
-		script(oneWord apply numberWord.script)
-			.matchArgument(twoWord) { this }
+		term(
+			oneWord apply term(1),
+			twoWord apply term(2))
+			.matchPartial(twoWord) { the(it) }
+			.assertEqualTo(the(term(2)))
+
+		term(
+			oneWord apply term(1),
+			twoWord apply term(2))
+			.matchPartial(oneWord) { the(it) }
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun match() {
+		term(oneWord apply term(1))
+			.match(oneWord) { the(it) }
+			.assertEqualTo(the(term(1)))
+
+		term(oneWord apply term(1))
+			.match(twoWord) { it }
 			.assertEqualTo(null)
 
-		script(
-			oneWord apply numberWord.script,
-			oneWord apply numberWord.script)
-			.matchArgument(oneWord) { this }
+		term(
+			oneWord apply term(1),
+			oneWord apply term(1))
+			.match(oneWord) { it }
 			.assertEqualTo(null)
+
+		term(
+			oneWord apply term(1),
+			twoWord apply term(2))
+			.match(oneWord, twoWord) { one, name -> one to name }
+			.assertEqualTo(term(1) to term(2))
 	}
 }

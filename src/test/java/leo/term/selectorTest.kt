@@ -8,7 +8,7 @@ class SelectorTest {
 	@Test
 	fun select_selector() {
 		personScript
-			.select(selector(rhsGetter, lhsGetter, lhsGetter, rhsGetter, rhsGetter))
-			.assertEqualTo(stringWord.script)
+			.select(personLastNameSelector)
+			.assertEqualTo(term(stringWord))
 	}
 }

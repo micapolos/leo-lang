@@ -1,10 +1,10 @@
 package leo.term
 
 data class Rule(
-	val pattern: Pattern,
+	val type: Type,
 	val body: Body) {
-	override fun toString() = "$pattern, $body"
+	override fun toString() = "$type, $body"
 }
 
-infix fun Pattern.gives(body: Body): Rule =
+infix fun Type.gives(body: Body): Rule =
 	Rule(this, body)

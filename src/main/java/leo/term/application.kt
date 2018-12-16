@@ -1,31 +1,29 @@
 package leo.term
 
 import leo.Word
-import leo.append
-import leo.base.ifNotNull
-import leo.base.string
 
-data class Application<out V : Any>(
+data class Application<out V>(
 	val word: Word,
-	val argumentOrNull: V?)
+	val argument: Argument<V>) {
+	override fun toString() = "$word$argument"
+}
 
-fun <V : Any> Word.application(): Application<V> =
-	Application(this, null)
+fun <V> Word.application(): Application<V> =
+	Application(this, argument(null))
 
-infix fun <V : Any> Word.apply(argumentOrNull: V?): Application<V> =
-	Application(this, argumentOrNull)
+infix fun <V> Word.apply(termOrNull: Term<V>?): Application<V> =
+	Application(this, termOrNull.argument)
 
-fun <V : Any> Appendable.append(application: Application<V>): Appendable =
-	this
-		.append(application.word)
-		.ifNotNull(application.argumentOrNull) { argument ->
-			append('(').append(argument.string).append(')')
-		}
-
-val <V : Any> Application<V>.fieldOrNull: Field<V>?
+val <V> Application<V>.fieldOrNull: Field<V>?
 	get() =
-		argumentOrNull?.let { argument -> word fieldTo argument }
+		argument.termOrNull?.let { term -> word fieldTo term }
 
-val <V : Any> Application<V>.term: Term<V>
+val <V> Application<V>.term: Term<V>
 	get() =
-		Term(null, this)
+		ApplicationTerm(receiver(null), this)
+
+// === matching
+
+fun <V, R : Any> Application<V>.match(word: Word, fn: (Term<V>?) -> R?): R? =
+	if (this.word == word) fn(argument.termOrNull)
+	else null

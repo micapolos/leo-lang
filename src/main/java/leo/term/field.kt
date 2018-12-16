@@ -2,11 +2,11 @@ package leo.term
 
 import leo.Word
 
-data class Field<out V : Any>(
+data class Field<out V>(
 	val key: Word,
-	val value: V)
+	val value: Term<V>)
 
-infix fun <V : Any> Word.fieldTo(term: V): Field<V> =
+infix fun <V> Word.fieldTo(term: Term<V>): Field<V> =
 	Field(this, term)
 
 //infix fun <V> Word.field2To(word: Word): Field2<V> =
@@ -23,7 +23,7 @@ infix fun <V : Any> Word.fieldTo(term: V): Field<V> =
 //	get() =
 //		itWord fieldTo this
 
-fun <V : Any> Field<V>.get(key: Word): V? =
+fun <V : Any> Field<V>.get(key: Word): Term<V>? =
 	if (key == this.key) value else null
 
 val <V : Any> Field<V>.application: Application<V>
@@ -69,8 +69,8 @@ val <V : Any> Field<V>.application: Application<V>
 //
 // === map
 
-fun <V : Any, R : Any> Field<V>.map(fn: (V) -> R): Field<R> =
-	Field(key, fn(value))
+//fun <V : Any, R : Any> Field<V>.map(fn: (V) -> R): Field<R> =
+//	Field(key, value.mapfn(value))
 
 //// === match
 //
