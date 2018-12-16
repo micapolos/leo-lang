@@ -39,17 +39,17 @@ class OneOfTest {
 	}
 
 	@Test
-	fun unitsIsMatching() {
-		unitsPattern
-			.isMatching(unitScript)
+	fun unitStackIsMatching() {
+		unitStackPattern
+			.isMatching(emptyUnitStackScript)
 			.assertEqualTo(true)
 
-		unitsPattern
-			.isMatching(twoUnitsScript)
+		unitStackPattern
+			.isMatching(oneUnitStackScript)
 			.assertEqualTo(true)
 
-		unitsPattern
-			.isMatching(threeUnitsScript)
+		unitStackPattern
+			.isMatching(twoUnitsStackScript)
 			.assertEqualTo(true)
 	}
 }

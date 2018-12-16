@@ -12,19 +12,19 @@ val personScript: Script =
 val personLastNameSelector =
 	selector(rhsGetter, lhsGetter, rhsGetter, rhsGetter)
 
-val unitScript: Script =
-	term(unitWord apply null)
+val emptyUnitStackScript: Script =
+	term(stackWord apply term(emptyWord))
 
-val twoUnitsScript: Script =
+val oneUnitStackScript: Script =
 	term(
-		unitWord apply null,
-		unitWord apply null)
+		stackWord apply term(
+			unitWord apply null))
 
-val threeUnitsScript: Script =
+val twoUnitsStackScript: Script =
 	term(
-		unitWord apply null,
-		unitWord apply null,
-		unitWord apply null)
+		stackWord apply term(
+			unitWord apply null,
+			unitWord apply null))
 
 val naturalNumberZeroScript: Script =
 	term(

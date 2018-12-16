@@ -5,28 +5,33 @@ import leo.*
 val bitPattern =
 	term(
 		bitWord apply valueTerm(
-			expander(
+			matcher(
 				oneOf(
 					term(zeroWord apply null),
 					term(oneWord apply null)))))
 
-val unitsPattern =
-	valueTerm(
-		expander(
-			oneOf(
-				term(unitWord apply null),
-				term(
-					valueTerm(expander(recursion(back))),
-					unitWord apply null))))
+val unitStackPattern: Pattern =
+	term(
+		stackWord apply valueTerm(
+			matcher(
+				oneOf(
+					term(emptyWord),
+					valueTerm(
+						matcher(
+							oneOf(
+								term(unitWord apply null),
+								term(
+									valueTerm(matcher(recursion(back))),
+									unitWord apply null))))))))
 
-val naturalNumberPattern =
+val naturalNumberPattern: Pattern =
 	valueTerm(
-		expander(
+		matcher(
 			oneOf(
 				term(
 					naturalWord apply term(
 						numberWord apply term(zeroWord))),
 				term(
-					valueTerm(expander(recursion(back))),
+					valueTerm(matcher(recursion(back))),
 					plusWord apply term(oneWord)))))
 

@@ -1,10 +1,10 @@
 package leo.term
 
 data class Rule(
-	val expander: Expander,
+	val matcher: Matcher,
 	val body: Body) {
-	override fun toString() = "$expander, $body"
+	override fun toString() = "$matcher, $body"
 }
 
-infix fun Expander.gives(body: Body): Rule =
+infix fun Matcher.gives(body: Body): Rule =
 	Rule(this, body)
