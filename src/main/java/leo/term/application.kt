@@ -1,6 +1,8 @@
 package leo.term
 
 import leo.Word
+import leo.base.fold
+import leo.base.nullOf
 
 data class Application<out V>(
 	val word: Word,
@@ -8,8 +10,8 @@ data class Application<out V>(
 	override fun toString() = "$word$argument"
 }
 
-fun <V> Word.application(): Application<V> =
-	Application(this, argument(null))
+fun <V> Word.application(vararg applications: Application<V>): Application<V> =
+	apply(nullOf<Term<V>>().fold(applications) { apply(it) })
 
 infix fun <V> Word.apply(termOrNull: Term<V>?): Application<V> =
 	Application(this, termOrNull.argument)
