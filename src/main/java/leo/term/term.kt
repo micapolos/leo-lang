@@ -12,9 +12,9 @@ data class ValueTerm<out V>(
 }
 
 data class ApplicationTerm<out V>(
-	val receiver: Receiver<V>,
+	val subject: Subject<V>,
 	val application: Application<V>) : Term<V>() {
-	override fun toString() = "$receiver$application"
+	override fun toString() = "$subject$application"
 }
 
 fun <V> valueTerm(value: V): Term<V> =
@@ -24,10 +24,10 @@ fun <V> term(word: Word): Term<V> =
 	term(word apply null)
 
 fun <V> Term<V>?.apply(word: Word, termOrNull: Term<V>?): Term<V> =
-	ApplicationTerm(receiver, word apply termOrNull)
+	ApplicationTerm(subject, word apply termOrNull)
 
 fun <V> Term<V>?.apply(application: Application<V>): Term<V> =
-	ApplicationTerm(receiver, application)
+	ApplicationTerm(subject, application)
 
 fun <V> term(term: Term<V>, vararg applications: Application<V>): Term<V> =
 	term.fold(applications, Term<V>::apply)
@@ -39,19 +39,27 @@ val Term<*>.isSimple: Boolean
 	get() =
 		when (this) {
 			is ValueTerm -> true
-			is ApplicationTerm -> receiver.termOrNull == null
+			is ApplicationTerm -> subject.termOrNull == null
 		}
 
 val <V> Term<V>.applicationTermOrNull: ApplicationTerm<V>?
 	get() =
 		this as? ApplicationTerm
 
+fun <V, R> R.foldApplicationsOrNull(term: Term<V>, fn: R.(Application<V>?) -> R): R =
+	when (term) {
+		is ValueTerm -> fn(null)
+		is ApplicationTerm ->
+			if (term.subject.termOrNull == null) this
+			else fn(term.application).foldApplicationsOrNull(term.subject.termOrNull, fn)
+	}
+
 // === matching ===
 
 fun <V, R : Any> Term<V>.matchPartial(word: Word, fn: Term<V>?.(Term<V>?) -> R?): R? =
 	applicationTermOrNull?.let { applicationTerm ->
 		applicationTerm.application.isMatching(word) { termOrNull ->
-			applicationTerm.receiver.termOrNull.fn(termOrNull)
+			applicationTerm.subject.termOrNull.fn(termOrNull)
 		}
 	}
 

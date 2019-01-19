@@ -84,6 +84,21 @@ tailrec operator fun <V : Any> Stack<V>.get(index: Int): V? =
 		else -> tail[index - 1]
 	}
 
+fun <V> Stack<V>.split(acc: Pair<Stack<V>?, Stack<V>?>, predicate: (V) -> Boolean): Pair<Stack<V>?, Stack<V>?> =
+	when (predicate(head)) {
+		false -> acc.first.push(head) to acc.second
+		true -> acc.first to acc.second.push(head)
+	}.let { tailAcc ->
+		tail?.split(tailAcc, predicate) ?: tailAcc
+	}
+
+fun <V> Stack<V>.split(predicate: (V) -> Boolean): Pair<Stack<V>?, Stack<V>?> =
+	split(null to null, predicate)
+
+fun <V> Stack<V>.removeTop(value: V): Stack<V>? =
+	if (head == value) tail
+	else tail.removeTop(value).push(head)
+
 // TODO: Using clampedInt is "cheating", implement it properly some day
 operator fun <V : Any> Stack<V>.get(binary: Binary): V? =
 	this[binary.clampedInt]
@@ -114,3 +129,4 @@ val <V> Stack<V>.pushProcessor: Processor<Stack<V>, V>
 		Processor(this) { value ->
 			push(value).pushProcessor
 		}
+

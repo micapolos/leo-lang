@@ -12,3 +12,6 @@ val Stack<Pattern>.oneOf: OneOf
 
 fun oneOf(pattern: Pattern, vararg patterns: Pattern): OneOf =
 	stack(pattern, *patterns).oneOf
+
+// === parse
+

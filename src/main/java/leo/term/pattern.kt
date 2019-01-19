@@ -4,6 +4,8 @@ typealias Pattern = Term<Matcher>
 
 fun pattern(term: Term<Matcher>): Pattern = term
 
+// === pattern matching script
+
 fun Matcher.isMatching(term: Term<Nothing>, traceOrNull: Trace? = null): Boolean =
 	when (this) {
 		is OneOfMatcher -> oneOf.isMatching(term, traceOrNull)
@@ -33,14 +35,14 @@ fun ValueTerm<Matcher>.isMatching(term: Term<Nothing>, traceOrNull: Trace? = nul
 	value.isMatching(term, traceOrNull.plus(this))
 
 fun ApplicationTerm<Matcher>.isMatching(term: ApplicationTerm<Nothing>, traceOrNull: Trace? = null): Boolean =
-	receiver.isMatching(term.receiver, traceOrNull.plus(this))
+	subject.isMatching(term.subject, traceOrNull.plus(this))
 		&& application.isMatching(term.application, traceOrNull.plus(this))
 
 fun Application<Matcher>.isMatching(application: Application<Nothing>, traceOrNull: Trace? = null): Boolean =
-	word == application.word && argument.isMatching(application.argument, traceOrNull)
+	word == application.word && parameter.isMatching(application.parameter, traceOrNull)
 
-fun Receiver<Matcher>.isMatching(receiver: Receiver<Nothing>, traceOrNull: Trace? = null): Boolean =
-	termOrNull.orNullIsInstance(receiver.termOrNull, traceOrNull)
+fun Subject<Matcher>.isMatching(subject: Subject<Nothing>, traceOrNull: Trace? = null): Boolean =
+	termOrNull.orNullIsInstance(subject.termOrNull, traceOrNull)
 
-fun Argument<Matcher>.isMatching(argument: Argument<Nothing>, traceOrNull: Trace? = null): Boolean =
-	termOrNull.orNullIsInstance(argument.termOrNull, traceOrNull)
+fun Parameter<Matcher>.isMatching(parameter: Parameter<Nothing>, traceOrNull: Trace? = null): Boolean =
+	termOrNull.orNullIsInstance(parameter.termOrNull, traceOrNull)

@@ -6,26 +6,26 @@ import leo.base.nullOf
 
 data class Application<out V>(
 	val word: Word,
-	val argument: Argument<V>) {
-	override fun toString() = "$word$argument"
+	val parameter: Parameter<V>) {
+	override fun toString() = "$word$parameter"
 }
 
 fun <V> Word.application(vararg applications: Application<V>): Application<V> =
 	apply(nullOf<Term<V>>().fold(applications) { apply(it) })
 
 infix fun <V> Word.apply(termOrNull: Term<V>?): Application<V> =
-	Application(this, termOrNull.argument)
+	Application(this, termOrNull.parameter)
 
 val <V> Application<V>.fieldOrNull: Field<V>?
 	get() =
-		argument.termOrNull?.let { term -> word fieldTo term }
+		parameter.termOrNull?.let { term -> word fieldTo term }
 
 val <V> Application<V>.term: Term<V>
 	get() =
-		ApplicationTerm(receiver(null), this)
+		ApplicationTerm(subject(null), this)
 
 // === matching
 
 fun <V, R : Any> Application<V>.isMatching(word: Word, fn: (Term<V>?) -> R?): R? =
-	if (this.word == word) fn(argument.termOrNull)
+	if (this.word == word) fn(parameter.termOrNull)
 	else null

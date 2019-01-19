@@ -22,7 +22,7 @@ fun <V> Term<V>.get(getter: Getter): Term<V>? =
 	when (this) {
 		is ValueTerm -> null
 		is ApplicationTerm -> when (getter) {
-			is LhsGetter -> receiver.termOrNull
-			is RhsGetter -> application.argument.termOrNull
+			is LhsGetter -> subject.termOrNull
+			is RhsGetter -> application.parameter.termOrNull
 		}
 	}

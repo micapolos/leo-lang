@@ -13,4 +13,3 @@ val _naturalNumber = _script(
 		either(
 			natural(number()),
 			plus(one()))))
-

@@ -1,6 +1,6 @@
 package leo.term
 
-data class Argument<out V>(
+data class Parameter<out V>(
 	val termOrNull: Term<V>?) {
 	override fun toString() =
 		when {
@@ -10,9 +10,9 @@ data class Argument<out V>(
 		}
 }
 
-val <V> Term<V>?.argument: Argument<V>
+val <V> Term<V>?.parameter: Parameter<V>
 	get() =
-		Argument(this)
+		Parameter(this)
 
-fun <V> argument(termOrNull: Term<V>?): Argument<V> =
-	termOrNull.argument
+fun <V> parameter(termOrNull: Term<V>?): Parameter<V> =
+	termOrNull.parameter
