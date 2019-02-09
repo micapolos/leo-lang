@@ -22,6 +22,22 @@ class BinaryMapTest {
 	}
 
 	@Test
+	fun get() {
+		val binaryMap =
+			BinaryMap(BitMap(
+				BinaryMapFullMatch(0),
+				BinaryMapPartialMatch(BinaryMap(BitMap(
+					BinaryMapFullMatch(1),
+					null)))))
+		binaryMap.get(binary(Bit0)).assertEqualTo(0)
+		binaryMap.get(binary(Bit1)).assertEqualTo(null)
+		binaryMap.get(binary(Bit0, Bit0)).assertEqualTo(null)
+		binaryMap.get(binary(Bit0, Bit1)).assertEqualTo(null)
+		binaryMap.get(binary(Bit1, Bit0)).assertEqualTo(1)
+		binaryMap.get(binary(Bit1, Bit1)).assertEqualTo(null)
+	}
+
+	@Test
 	fun plus() {
 		BinaryMap<Int>(BitMap(null, null))
 			.plus(binary(Bit0), 0)

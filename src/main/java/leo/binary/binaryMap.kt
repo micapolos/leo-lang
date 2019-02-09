@@ -1,7 +1,5 @@
 package leo.binary
 
-import leo.base.runIfNotNull
-
 data class BinaryMap<out V>(
 	val matchBitMap: BitMap<BinaryMapMatch<V>>)
 
@@ -39,9 +37,10 @@ fun <V> BinaryMap<V>.matchOrNull(bit: Bit) =
 	matchBitMap.get(bit)
 
 fun <V> BinaryMap<V>.matchOrNull(binary: Binary): BinaryMapMatch<V>? =
-	matchOrNull(binary.headBit)
+	if (binary.tailBinaryOrNull == null) matchOrNull(binary.headBit)
+	else matchOrNull(binary.headBit)
 		?.binaryMapOrNull
-		?.runIfNotNull(binary.tailBinaryOrNull) { matchOrNull(it) }
+		?.run { matchOrNull(binary.tailBinaryOrNull) }
 
 fun <V> BinaryMap<V>.get(bit: Bit): V? =
 	matchOrNull(bit)?.valueOrNull
