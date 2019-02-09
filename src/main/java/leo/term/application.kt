@@ -16,6 +16,9 @@ fun <V> Word.application(vararg applications: Application<V>): Application<V> =
 infix fun <V> Word.apply(termOrNull: Term<V>?): Application<V> =
 	Application(this, termOrNull.parameter)
 
+infix fun <V> Word.applyValue(value: V): Application<V> =
+	apply(valueTerm(value))
+
 val <V> Application<V>.fieldOrNull: Field<V>?
 	get() =
 		parameter.termOrNull?.let { term -> word fieldTo term }

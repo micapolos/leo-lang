@@ -127,6 +127,7 @@ val identifierWord = "identifier".wordOrNull!!
 val identityWord = "identity".wordOrNull!!
 val importWord = "import".wordOrNull!!
 val incrementWord = "increment".wordOrNull!!
+val invokeWord = "invoke".wordOrNull!!
 val invokedWord = "invoked".wordOrNull!!
 val ioWord = "io".wordOrNull!!
 val isWord = "is".wordOrNull!!

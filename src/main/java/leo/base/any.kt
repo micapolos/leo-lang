@@ -19,6 +19,10 @@ fun <V, R> R.ifNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
 	if (valueOrNull == null) this
 	else fn(valueOrNull)
 
+fun <V, R, O> R.runIfNotNull(valueOrNull: V?, fn: R.(V) -> O): O? =
+	if (valueOrNull == null) null
+	else fn(valueOrNull)
+
 fun <V : Any> V.ifNotNull(fn: V.() -> V?): V =
 	fn() ?: this
 
