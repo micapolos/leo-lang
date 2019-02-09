@@ -1,7 +1,7 @@
 package leo.binary
 
 data class BinaryMap<out V>(
-	val matchBitMap: BitMap<BinaryMapMatch<V>>)
+	val matchBitMap: BitMap<BinaryMapMatch<V>?>)
 
 sealed class BinaryMapMatch<out V>
 
