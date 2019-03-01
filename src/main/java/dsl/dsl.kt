@@ -1,0 +1,31 @@
+package dsl
+
+import dsl.impl._term
+
+fun and(vararg ts: Any?) = _term("and", *ts)
+fun any(vararg ts: Any?) = _term("any", *ts)
+fun _as(vararg ts: Any?) = _term("as", *ts)
+fun bit(vararg ts: Any?) = _term("bit", *ts)
+fun boolean(vararg ts: Any?) = _term("boolean", *ts)
+fun define(vararg ts: Any?) = _term("define", *ts)
+fun either(vararg ts: Any?) = _term("either", *ts)
+fun gives(vararg ts: Any?) = _term("gives", *ts)
+fun _is(vararg ts: Any?) = _term("is", *ts)
+fun it(vararg ts: Any?) = _term("it", *ts)
+fun language(vararg ts: Any?) = _term("language", *ts)
+fun leo(vararg ts: Any?) = _term("leo", *ts)
+fun of(vararg ts: Any?) = _term("of", *ts)
+fun one(vararg ts: Any?) = _term("one", *ts)
+fun or(vararg ts: Any?) = _term("or", *ts)
+fun plus(vararg ts: Any?) = _term("plus", *ts)
+fun program(vararg ts: Any?) = _term("program", *ts)
+fun programming(vararg ts: Any?) = _term("programming", *ts)
+fun script(vararg ts: Any?) = _term("script", *ts)
+fun times(vararg ts: Any?) = _term("times", *ts)
+fun two(vararg ts: Any?) = _term("two", *ts)
+fun zero(vararg ts: Any?) = _term("zero", *ts)
+
+val bit get() = bit()
+val boolean get() = boolean()
+val one get() = one()
+val zero get() = zero()
