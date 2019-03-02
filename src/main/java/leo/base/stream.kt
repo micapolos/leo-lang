@@ -1,6 +1,6 @@
 package leo.base
 
-data class Stream<out V>(
+data class Stream<V>(
 	val first: V,
 	val nextOrNullFn: () -> Stream<V>?)
 

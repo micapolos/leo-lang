@@ -26,4 +26,30 @@ class IntTest {
 		(-1).bitMaskOrNull.assertEqualTo(null)
 		33.bitMaskOrNull.assertEqualTo(null)
 	}
+
+	@Test
+	fun pow2() {
+		(-1).pow2.assertEqualTo(0)
+		0.pow2.assertEqualTo(1)
+		1.pow2.assertEqualTo(2)
+		2.pow2.assertEqualTo(4)
+		30.pow2.assertEqualTo(0x40000000)
+		31.pow2.assertEqualTo(Integer.MIN_VALUE)
+		32.pow2.assertEqualTo(0)
+	}
+
+	@Test
+	fun bits() {
+		13.bits(0.unsigned).map(Bit::int).assertContains()
+		13.bits(4.unsigned).map(Bit::int).assertContains(1, 1, 0, 1)
+		13.bits(64.unsigned).map(Bit::int).assertContains(
+			0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 1, 1, 0, 1)
+	}
 }

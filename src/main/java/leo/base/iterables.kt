@@ -5,3 +5,8 @@ fun <V> all(vararg items: V): Iterable<V> =
 
 fun <V> flattenIterators(iterable: Iterable<Iterator<V>>) =
 	flatten(iterable.iterator())
+
+fun <T> iterable(iteratorFn: () -> Iterator<T>): Iterable<T> =
+	object : Iterable<T> {
+		override fun iterator() = iteratorFn()
+	}

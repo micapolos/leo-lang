@@ -4,6 +4,15 @@ import kotlin.test.Test
 
 class IteratorsTest {
 	@Test
+	fun nextFnIterator() {
+		iterator { null }.assertContains()
+		val iterator = listOf(1, 2, 3).iterator()
+		iterator {
+			if (iterator.hasNext()) iterator.next() else null
+		}.assertContains(1, 2, 3)
+	}
+
+	@Test
 	fun iteratorConstructor() {
 		iterator<Int>().assertContains()
 		iterator(1).assertContains(1)

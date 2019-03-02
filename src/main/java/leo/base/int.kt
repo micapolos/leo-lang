@@ -25,4 +25,20 @@ val Int.bitMaskOrNull: Int?
 			else -> null
 		}
 
+val Int.pow2: Int
+	get() =
+		when {
+			this < 0 || this >= 32 -> 0
+			else -> 1.shl(this)
+		}
+
+fun Int.bits(count: UInt): Iterable<Bit> =
+	object : Iterable<Bit> {
+		var bit = count.signed
+		override fun iterator() =
+			iterator {
+				if (bit == 0) null else and((--bit).pow2).bit
+			}
+	}
+
 val maxInt = Integer.MAX_VALUE
