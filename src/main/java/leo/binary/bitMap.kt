@@ -1,5 +1,6 @@
 package leo.binary
 
+import leo.base.Bit
 import leo.base.ifNull
 
 data class BitMap<out V>(
@@ -11,24 +12,24 @@ fun <V : Any> emptyBitMap(): BitMap<V?> =
 
 fun <V : Any> bitMap(bit: Bit, value: V): BitMap<V?> =
 	when (bit) {
-		Bit0 -> BitMap(value, null)
-		Bit1 -> BitMap(null, value)
+		Bit.ZERO -> BitMap(value, null)
+		Bit.ONE -> BitMap(null, value)
 	}
 
 fun <V> BitMap<V>.get(bit: Bit): V? =
 	when (bit) {
-		Bit0 -> bit0ValueOrNull
-		Bit1 -> bit1ValueOrNull
+		Bit.ZERO -> bit0ValueOrNull
+		Bit.ONE -> bit1ValueOrNull
 	}
 
 fun <V> BitMap<V>.set(bit: Bit, value: V): BitMap<V> =
 	when (bit) {
-		Bit0 -> copy(bit0ValueOrNull = value)
-		Bit1 -> copy(bit1ValueOrNull = value)
+		Bit.ZERO -> copy(bit0ValueOrNull = value)
+		Bit.ONE -> copy(bit1ValueOrNull = value)
 	}
 
 fun <V> BitMap<V>.plus(bit: Bit, value: V): BitMap<V>? =
 	when (bit) {
-		Bit0 -> bit0ValueOrNull.ifNull { copy(bit0ValueOrNull = value) }
-		Bit1 -> bit1ValueOrNull.ifNull { copy(bit1ValueOrNull = value) }
+		Bit.ZERO -> bit0ValueOrNull.ifNull { copy(bit0ValueOrNull = value) }
+		Bit.ONE -> bit1ValueOrNull.ifNull { copy(bit1ValueOrNull = value) }
 	}

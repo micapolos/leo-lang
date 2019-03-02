@@ -76,7 +76,7 @@ val Stream<Byte>.byteBitStream: Stream<Bit>
 val Stream<Bit>.bitByteStreamOrNull: Stream<Byte>?
 	get() =
 		bitParseByte?.let { parse ->
-			parse.parsed.then { parse.streamOrNull?.bitByteStreamOrNull }
+			parse.parsed.onlyStreamThen { parse.streamOrNull?.bitByteStreamOrNull }
 		}
 
 val Stream<Bit>.bitParseByte: Parse<Bit, Byte>?

@@ -57,7 +57,7 @@ val Script.reversedFieldStreamOrNull: Stream<Field>?
 		else
 			rhsOrNull?.let { rhs ->
 				lhsOrNull.reversedFieldStreamOrNull?.run {
-					field(word, rhs).then { lhsOrNull.reversedFieldStreamOrNull }
+					field(word, rhs).onlyStreamThen { lhsOrNull.reversedFieldStreamOrNull }
 				}
 			}
 
@@ -101,7 +101,7 @@ val Script.bitStream: Stream<Bit>
 val Script.tokenStream: Stream<Token<Nothing>>
 	get() =
 		lhsOrNull?.tokenStream.orNullThen {
-			word.token<Nothing>().then {
+			word.token<Nothing>().onlyStreamThen {
 				begin.control.token<Nothing>().onlyStream.then {
 					rhsOrNull?.tokenStream.orNullThen {
 						end.control.token<Nothing>().onlyStream
@@ -206,7 +206,7 @@ val Script.isList: Boolean
 val Script.commandStream: Stream<Command>
 	get() =
 		lhsOrNull?.commandStream.orNullThen {
-			begin.command(word).then {
+			begin.command(word).onlyStreamThen {
 				rhsOrNull?.commandStream.orNullThen {
 					end.command.onlyStream
 				}

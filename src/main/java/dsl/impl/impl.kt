@@ -1,41 +1,47 @@
 package dsl.impl
 
 import leo.*
+import leo.script.*
 import leo.script.Script
-import leo.script.plus
+import leo.script.Term
 
-data class Term(
-	val name: String,
-	val args: List<Any?>)
+fun term(word: Word, args: List<Any?>): Term =
+	ScriptTerm(
+		word,
+		args.fold(nullScript) { script, arg ->
+			script.plus(arg.term)
+		})
 
-fun _term(name: String, vararg args: Any?): Any? =
-	Term(name, listOf(*args))
-
-data class Field(
-	val word: Word,
-	val rhs: Script? = null)
-
-val List<Any?>.script
+val List<Any?>.script: Script?
 	get() =
-		fold(leo.script.script) { script, arg ->
-			arg.field.let {
-				script.plus(it.word, it.rhs)
-			}
+		fold(nullScript) { script, arg ->
+			script.plus(arg.term)
 		}
 
-val Term.field
+val List<Any?>.term: Term
 	get() =
-		Field(name.wordOrNull!!, args.script)
+		when (size) {
+			0 -> literalTerm
+			else -> (this[0] as? String)?.wordOrNull?.let {
+				term(it, slice(1 until size))
+			} ?: literalTerm
+		}
 
-val Any?.field: Field
+val Any?.term: Term
 	get() =
 		when (this) {
-			is Term -> field
-			is Boolean -> if (this) Field(trueWord) else Field(falseWord)
-			is Int -> Field(numberWord)
-			else -> error(this.toString())
+			is Boolean -> if (this) ScriptTerm(trueWord) else ScriptTerm(falseWord)
+			is Int -> IntTerm(this)
+			is Float -> FloatTerm(this)
+			is String -> StringTerm(this)
+			is List<Any?> -> term
+			else -> literalTerm
 		}
+
+val Any?.literalTerm: Term
+	get() =
+		ScriptTerm(literalWord, Script(null, StringTerm(toString())))
 
 val Any?.script
 	get() =
-		field.let { leo.script.script(it.word, it.rhs) }
+		term.let { nullScript.plus(term) }

@@ -15,4 +15,15 @@ class IntTest {
 		65536.indexSize.assertEqualTo(16)
 		65537.indexSize.assertEqualTo(17)
 	}
+
+	@Test
+	fun bitMaskOrNull() {
+		0.bitMaskOrNull.assertEqualTo(0x00)
+		1.bitMaskOrNull.assertEqualTo(0x01)
+		8.bitMaskOrNull.assertEqualTo(0xFF)
+		31.bitMaskOrNull.assertEqualTo(0x7FFFFFFF)
+		32.bitMaskOrNull.assertEqualTo(-1)
+		(-1).bitMaskOrNull.assertEqualTo(null)
+		33.bitMaskOrNull.assertEqualTo(null)
+	}
 }

@@ -1,5 +1,7 @@
 package leo.binary
 
+import leo.base.Bit
+
 data class BinaryMap<out V>(
 	val matchBitMap: BitMap<BinaryMapMatch<V>?>)
 

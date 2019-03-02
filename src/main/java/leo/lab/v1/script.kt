@@ -91,7 +91,7 @@ val <V> Script<V>.reversedFieldStreamOrNull: Stream<Field<V>>?
 				else
 					rhsOrNull?.let { rhs ->
 						lhsOrNull.reversedFieldStreamOrNull?.run {
-							field(word, rhs).then { lhsOrNull.reversedFieldStreamOrNull }
+							field(word, rhs).onlyStreamThen { lhsOrNull.reversedFieldStreamOrNull }
 						}
 					}
 		}
@@ -145,7 +145,7 @@ val <V> Script<V>.tokenStream: Stream<Token<V>>
 		when (this) {
 			is MetaScript -> meta.token.onlyStream
 			is InvokeScript -> lhsOrNull?.tokenStream.orNullThen {
-				word.token<V>().then {
+				word.token<V>().onlyStreamThen {
 					begin.control.token<V>().onlyStream.then {
 						rhsOrNull?.tokenStream.orNullThen {
 							end.control.token<V>().onlyStream

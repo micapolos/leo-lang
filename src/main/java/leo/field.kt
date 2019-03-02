@@ -44,8 +44,8 @@ fun <V> Appendable.append(field: Field<V>): Appendable =
 
 val <V> Field<V>.tokenStream: Stream<Token<V>>
 	get() =
-		key.token.then {
-			begin.control.token.then {
+		key.token.onlyStreamThen {
+			begin.control.token.onlyStreamThen {
 				value.tokenStream.then {
 					end.control.token.onlyStream
 				}

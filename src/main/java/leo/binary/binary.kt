@@ -22,4 +22,4 @@ val Binary.bitStream: Stream<Bit>
 		headBit.onlyStream.then { tailBinaryOrNull?.bitStream }
 
 fun Appendable.appendDigits(binary: Binary): Appendable =
-	fold(binary.bitStream) { appendDigit(it) }
+	fold(binary.bitStream) { append(it.char) }

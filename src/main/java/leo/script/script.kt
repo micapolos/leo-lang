@@ -1,44 +1,35 @@
 package leo.script
 
 import leo.Word
-import leo.append
-import leo.base.*
-import leo.beginChar
-import leo.endChar
+import leo.base.appendableString
+import leo.base.ifNotNull
 
 data class Script(
-	val wordTree: Tree<Word>) {
+	val lhs: Script?,
+	val term: Term) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-val Tree<Word>.script: Script
-	get() =
-		Script(this)
-
-val script: Script?
+val nullScript: Script?
 	get() =
 		null
 
-fun script(word: Word, rhs: Script? = null): Script =
-	tree(word, rhs?.wordTree).script
+fun Script?.plus(term: Term): Script =
+	Script(this, term)
+
+fun Script?.plus(int: Int): Script =
+	plus(IntTerm(int))
+
+fun Script?.plus(float: Float): Script =
+	plus(FloatTerm(float))
+
+fun Script?.plus(string: String): Script =
+	plus(StringTerm(string))
 
 fun Script?.plus(word: Word, rhs: Script? = null): Script =
-	this?.wordTree.plusSibling(word, rhs?.wordTree).script
-
-val Script.lhs: Script?
-	get() =
-		wordTree.previousSiblingOrNull?.script
-
-val Script.rhs: Script?
-	get() =
-		wordTree.lastChildOrNull?.script
-
-// === code ===
+	plus(ScriptTerm(word, rhs))
 
 fun Appendable.append(script: Script): Appendable =
 	this
-		.ifNotNull(script.lhs, Appendable::append)
-		.append(script.wordTree.value)
-		.append(beginChar)
-		.ifNotNull(script.rhs, Appendable::append)
-		.append(endChar)
+		.ifNotNull(script.lhs) { append(it).append(", ") }
+		.append(script.term)
