@@ -1,7 +1,7 @@
 package leo.vm
 
-import leo.base.Bit
 import leo.base.Variable
+import leo.binary.Bit
 
 data class Int32(
 	val hiInt16: Int16,

@@ -1,9 +1,9 @@
 package leo
 
-import leo.base.Bit
 import leo.base.Stream
 import leo.base.ifNull
 import leo.base.string
+import leo.binary.Bit
 
 data class Scope(
 	val function: Function,

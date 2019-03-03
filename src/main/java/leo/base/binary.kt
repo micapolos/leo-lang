@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.*
+
 data class Binary(
 	val bit: Bit,
 	val nextBinaryOrNull: Binary?) {

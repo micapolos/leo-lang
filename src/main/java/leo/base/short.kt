@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 val Short.byteStream: Stream<Byte>
 	get() =
 		toInt().shr(8).toByte()

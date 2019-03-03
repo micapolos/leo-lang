@@ -1,6 +1,10 @@
 package leo
 
-import leo.base.*
+import leo.base.assertEqualTo
+import leo.base.assertParsedAndRest
+import leo.base.onlyStream
+import leo.base.then
+import leo.binary.Bit
 import org.junit.Test
 
 class TokenTest {

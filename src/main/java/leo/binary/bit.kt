@@ -1,4 +1,9 @@
-package leo.base
+package leo.binary
+
+import leo.base.Stream
+import leo.base.ifNotNull
+import leo.base.onlySequence
+import leo.base.read
 
 enum class Bit {
 	ZERO,
@@ -107,3 +112,13 @@ fun Appendable.appendBit(bitStream: Stream<Bit>): Appendable =
 		append(bit).ifNotNull(nextOrNull, Appendable::appendBit)
 	}
 
+val Bit.bitSequence
+	get() =
+		this.onlySequence
+
+val Bit.boolean
+	get() =
+		when (this) {
+			Bit.ZERO -> false
+			Bit.ONE -> true
+		}

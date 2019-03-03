@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.*
+
 // Non-empty, power-of-two bit array
 // random access: O(log(n)) for bits and power-of-two aligned sub-arrays
 sealed class BitArray {

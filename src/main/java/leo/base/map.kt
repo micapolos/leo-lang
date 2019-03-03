@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 data class Map<in K, out V>(
 	val binaryTrie: BinaryTrie<V>,
 	val keyBitStreamOrNullFn: (K) -> Stream<Bit>?)

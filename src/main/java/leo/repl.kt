@@ -1,6 +1,7 @@
 package leo
 
 import leo.base.*
+import leo.binary.Bit
 
 data class Repl(
 	val isError: Boolean,

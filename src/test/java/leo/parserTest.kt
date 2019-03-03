@@ -1,9 +1,8 @@
 package leo
 
-import leo.*
-import leo.base.Bit
 import leo.base.assertEqualTo
 import leo.base.stack
+import leo.binary.Bit
 import kotlin.test.Test
 
 class ParserTest {

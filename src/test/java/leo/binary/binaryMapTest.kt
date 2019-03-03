@@ -1,34 +1,33 @@
 package leo.binary
 
-import leo.base.Bit
 import leo.base.assertEqualTo
 import org.junit.Test
 
 class BinaryMapTest {
 	@Test
 	fun emptyBinaryMap() {
-		emptyBinaryMap<Int>().assertEqualTo(BinaryMap(emptyBitMap()))
+		emptyBinaryMap<Int>().assertEqualTo(leo.binary.Map(emptyChoice()))
 	}
 
 	@Test
 	fun bitBinaryMap() {
-		binaryMap(Bit.ZERO, 0).assertEqualTo(BinaryMap(bitMap(Bit.ZERO, BinaryMapFullMatch(0))))
-		binaryMap(Bit.ONE, 1).assertEqualTo(BinaryMap(bitMap(Bit.ONE, BinaryMapFullMatch(1))))
+		map(Bit.ZERO, 0).assertEqualTo(leo.binary.Map(array(Bit.ZERO, MapFullMatch(0))))
+		map(Bit.ONE, 1).assertEqualTo(leo.binary.Map(array(Bit.ONE, MapFullMatch(1))))
 	}
 
 	@Test
 	fun binaryBinaryMap() {
-		binaryMap(binary(Bit.ZERO, Bit.ZERO, Bit.ONE, Bit.ONE), 0)
-			.assertEqualTo(BinaryMap(bitMap(Bit.ZERO, BinaryMapPartialMatch(binaryMap(binary(Bit.ZERO, Bit.ONE, Bit.ONE), 0)))))
+		map(binary(Bit.ZERO, Bit.ZERO, Bit.ONE, Bit.ONE), 0)
+			.assertEqualTo(leo.binary.Map(array(Bit.ZERO, MapPartialMatch(map(binary(Bit.ZERO, Bit.ONE, Bit.ONE), 0)))))
 	}
 
 	@Test
 	fun get() {
 		val binaryMap =
-			BinaryMap(BitMap(
-				BinaryMapFullMatch(0),
-				BinaryMapPartialMatch(BinaryMap(BitMap(
-					BinaryMapFullMatch(1),
+			leo.binary.Map(Choice(
+				MapFullMatch(0),
+				MapPartialMatch(Map(Choice(
+					MapFullMatch(1),
 					null)))))
 		binaryMap.get(binary(Bit.ZERO)).assertEqualTo(0)
 		binaryMap.get(binary(Bit.ONE)).assertEqualTo(null)
@@ -40,49 +39,49 @@ class BinaryMapTest {
 
 	@Test
 	fun plus() {
-		BinaryMap<Int>(BitMap(null, null))
+		leo.binary.Map<Int>(Choice(null, null))
 			.plus(binary(Bit.ZERO), 0)
-			.assertEqualTo(BinaryMap(BitMap(BinaryMapFullMatch(0), null)))
+			.assertEqualTo(leo.binary.Map(Choice(MapFullMatch(0), null)))
 
-		BinaryMap<Int>(BitMap(null, null))
+		leo.binary.Map<Int>(Choice(null, null))
 			.plus(binary(Bit.ONE), 0)
-			.assertEqualTo(BinaryMap(BitMap(null, BinaryMapFullMatch(0))))
+			.assertEqualTo(leo.binary.Map(Choice(null, MapFullMatch(0))))
 
-		BinaryMap(BitMap(BinaryMapFullMatch(0), null))
+		leo.binary.Map(Choice(MapFullMatch(0), null))
 			.plus(binary(Bit.ZERO), 1)
 			.assertEqualTo(null)
 
-		BinaryMap(BitMap(BinaryMapFullMatch(0), null))
+		leo.binary.Map(Choice(MapFullMatch(0), null))
 			.plus(binary(Bit.ONE), 1)
-			.assertEqualTo(BinaryMap(BitMap(BinaryMapFullMatch(0), BinaryMapFullMatch(1))))
+			.assertEqualTo(leo.binary.Map(Choice(MapFullMatch(0), MapFullMatch(1))))
 
-		BinaryMap(BitMap(BinaryMapPartialMatch(BinaryMap(BitMap(BinaryMapFullMatch(0), null))), null))
+		leo.binary.Map(Choice(MapPartialMatch(Map(Choice(MapFullMatch(0), null))), null))
 			.plus(binary(Bit.ZERO), 1)
 			.assertEqualTo(null)
 
-		BinaryMap(BitMap(BinaryMapPartialMatch(BinaryMap(BitMap(BinaryMapFullMatch(0), null))), null))
+		leo.binary.Map(Choice(MapPartialMatch(Map(Choice(MapFullMatch(0), null))), null))
 			.plus(binary(Bit.ZERO, Bit.ZERO), 1)
 			.assertEqualTo(null)
 
-		BinaryMap(BitMap(BinaryMapPartialMatch(BinaryMap(BitMap(BinaryMapFullMatch(0), null))), null))
+		leo.binary.Map(Choice(MapPartialMatch(Map(Choice(MapFullMatch(0), null))), null))
 			.plus(binary(Bit.ZERO, Bit.ONE), 1)
 			.assertEqualTo(
-				BinaryMap(BitMap(
-					BinaryMapPartialMatch(BinaryMap(BitMap(BinaryMapFullMatch(0), BinaryMapFullMatch(1)))),
+				leo.binary.Map(Choice(
+					MapPartialMatch(Map(Choice(MapFullMatch(0), MapFullMatch(1)))),
 					null)))
 
-		BinaryMap(BitMap(BinaryMapPartialMatch(BinaryMap(BitMap(BinaryMapFullMatch(0), null))), null))
+		leo.binary.Map(Choice(MapPartialMatch(Map(Choice(MapFullMatch(0), null))), null))
 			.plus(binary(Bit.ONE), 1)
 			.assertEqualTo(
-				BinaryMap(BitMap(
-					BinaryMapPartialMatch(BinaryMap(BitMap(BinaryMapFullMatch(0), null))),
-					BinaryMapFullMatch(1))))
+				leo.binary.Map(Choice(
+					MapPartialMatch(Map(Choice(MapFullMatch(0), null))),
+					MapFullMatch(1))))
 
-		BinaryMap(BitMap(BinaryMapPartialMatch(BinaryMap(BitMap(BinaryMapFullMatch(0), null))), null))
+		leo.binary.Map(Choice(MapPartialMatch(Map(Choice(MapFullMatch(0), null))), null))
 			.plus(binary(Bit.ONE, Bit.ONE), 1)
 			.assertEqualTo(
-				BinaryMap(BitMap(
-					BinaryMapPartialMatch(BinaryMap(BitMap(BinaryMapFullMatch(0), null))),
-					BinaryMapPartialMatch(BinaryMap(BitMap(null, BinaryMapFullMatch(1)))))))
+				leo.binary.Map(Choice(
+					MapPartialMatch(Map(Choice(MapFullMatch(0), null))),
+					MapPartialMatch(Map(Choice(null, MapFullMatch(1)))))))
 	}
 }

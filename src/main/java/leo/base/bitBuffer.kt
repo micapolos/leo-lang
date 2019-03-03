@@ -1,5 +1,8 @@
 package leo.base
 
+import leo.binary.Bit
+import leo.binary.append
+
 // Fixed-size POT cyclic bit buffer, with tail and head cursors, no overflow checks.
 data class BitBuffer(
 	val bitArray: BitArray,

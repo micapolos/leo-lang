@@ -1,6 +1,7 @@
 package leo
 
 import leo.base.*
+import leo.binary.Bit
 
 sealed class Term<out V>
 

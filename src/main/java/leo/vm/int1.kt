@@ -1,9 +1,9 @@
 package leo.vm
 
-import leo.base.Bit
 import leo.base.Variable
-import leo.base.oneBit
-import leo.base.zeroBit
+import leo.binary.Bit
+import leo.binary.oneBit
+import leo.binary.zeroBit
 
 data class Int1(
 	val bit: Variable<Bit>)

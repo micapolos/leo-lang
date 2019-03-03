@@ -1,6 +1,8 @@
 package leo
 
 import leo.base.*
+import leo.binary.Bit
+import leo.binary.int
 import org.junit.Test
 
 class CharacterTest {
@@ -76,5 +78,13 @@ class CharacterTest {
 			.then { Bit.ZERO.onlyStream }
 			.bitParseCharacter
 			.assertParsedAndRest(Letter.A.character, Bit.ZERO.onlyStream)
+	}
+
+	@Test
+	fun bitSequence() {
+		Letter.A.character.bitSequence.map(Bit::int).assertContains(0, 0, 0, 0, 0)
+		Letter.Z.character.bitSequence.map(Bit::int).assertContains(1, 1, 0, 0, 1)
+		begin.character.bitSequence.map(Bit::int).assertContains(1, 1, 0, 1, 0)
+		end.character.bitSequence.map(Bit::int).assertContains(1, 1, 0, 1, 1)
 	}
 }

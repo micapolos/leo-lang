@@ -1,5 +1,9 @@
 package leo.base
 
+import leo.binary.Bit
+import leo.binary.clampedBit
+import leo.binary.int
+
 // TODO: Check if it's properly inlined in java.
 fun byte(bit7: Bit, bit6: Bit, bit5: Bit, bit4: Bit, bit3: Bit, bit2: Bit, bit1: Bit, bit0: Bit): Byte = 0
 	.or(bit7.int.shl(7))

@@ -1,6 +1,11 @@
 package leo
 
-import leo.base.*
+import leo.base.Stream
+import leo.base.clampedByte
+import leo.base.orNullThenIfNotNull
+import leo.base.stream
+import leo.binary.Bit
+import leo.binary.clampedBit
 
 data class BitEvaluator(
 	val byteReader: Reader<Byte>,

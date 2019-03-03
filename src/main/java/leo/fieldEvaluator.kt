@@ -1,9 +1,9 @@
 package leo
 
-import leo.base.Bit
 import leo.base.Stream
 import leo.base.fold
 import leo.base.orNull
+import leo.binary.Bit
 
 data class FieldEvaluator(
 	val tokenEvaluator: Evaluator<Token<Nothing>>)

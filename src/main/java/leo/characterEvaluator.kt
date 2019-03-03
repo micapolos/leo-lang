@@ -1,8 +1,8 @@
 package leo
 
-import leo.base.Bit
 import leo.base.Stream
 import leo.base.orNullThenIfNotNull
+import leo.binary.Bit
 
 data class CharacterEvaluator(
 	val tokenReader: Reader<Token<Nothing>>,

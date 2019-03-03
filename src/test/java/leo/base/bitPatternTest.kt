@@ -1,5 +1,6 @@
 package leo.base
 
+import leo.binary.bit
 import kotlin.test.Test
 
 class BitPatternTest {

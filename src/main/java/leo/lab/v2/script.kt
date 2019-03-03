@@ -2,6 +2,7 @@ package leo.lab.v2
 
 import leo.*
 import leo.base.*
+import leo.binary.Bit
 
 data class Script(
 	val lhsOrNull: Script?,

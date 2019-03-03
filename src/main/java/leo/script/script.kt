@@ -33,3 +33,5 @@ fun Appendable.append(script: Script): Appendable =
 	this
 		.ifNotNull(script.lhs) { append(it).append(", ") }
 		.append(script.term)
+
+// === bit sequence

@@ -1,7 +1,7 @@
 package leo.java.lang
 
-import leo.base.Bit
 import leo.base.Stream
+import leo.binary.Bit
 import leo.java.io.bitStreamOrNull
 
 fun <R> ClassLoader.useResourceBitStreamOrNull(name: String, fn: Stream<Bit>?.() -> R): R =

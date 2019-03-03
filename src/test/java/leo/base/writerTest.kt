@@ -1,5 +1,6 @@
 package leo.base
 
+import leo.binary.Bit
 import org.junit.Test
 
 class WriterTest {

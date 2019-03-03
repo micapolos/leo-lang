@@ -3,7 +3,7 @@ package leo.base
 data class Sequence<T>(
 	val nonEmptySequenceOrNullFn: () -> NonEmptySequence<T>?) : Iterable<T> {
 	override fun iterator() = object : Iterator<T> {
-		var isPrepared = false
+		var sequenceOrNull: Sequence<T>? = this@Sequence
 		var nextNonEmptySequenceOrNull: NonEmptySequence<T>? = null
 
 		override fun hasNext(): Boolean {
@@ -13,23 +13,29 @@ data class Sequence<T>(
 
 		override fun next(): T {
 			prepareNext()
-			isPrepared = false
-			return nextNonEmptySequenceOrNull!!.firstThen.first
+			val nextNonEmptySequence = nextNonEmptySequenceOrNull!!
+			sequenceOrNull = nextNonEmptySequence.remaining
+			nextNonEmptySequenceOrNull = null
+			return nextNonEmptySequence.first
 		}
 
 		private fun prepareNext() {
-			if (!isPrepared) {
-				nextNonEmptySequenceOrNull = nonEmptySequenceOrNullFn()
-				isPrepared = true
+			if (nextNonEmptySequenceOrNull == null && sequenceOrNull != null) {
+				nextNonEmptySequenceOrNull = sequenceOrNull!!.nonEmptySequenceOrNull
 			}
 		}
 	}
 }
 
 data class NonEmptySequence<T>(
-	val firstThen: FirstThen<T, Sequence<T>>) : Iterable<T> {
+	val first: T,
+	val remaining: Sequence<T>) : Iterable<T> {
 	override fun iterator() = sequence.iterator()
 }
+
+val <T> Sequence<T>.nonEmptySequenceOrNull: NonEmptySequence<T>?
+	get() =
+		nonEmptySequenceOrNullFn()
 
 fun <T> emptySequence(): Sequence<T> =
 	Sequence { null }
@@ -38,25 +44,25 @@ val <T> NonEmptySequence<T>.sequence: Sequence<T>
 	get() =
 		Sequence { this }
 
+fun <T> T.thenNonEmptySequence(sequence: Sequence<T>): NonEmptySequence<T> =
+	NonEmptySequence(this, sequence)
+
 val <T> T.onlyNonEmptySequence
 	get() =
-		NonEmptySequence(this.then(emptySequence()))
-
-fun <T> T.thenNonEmptySequence(sequence: Sequence<T>): NonEmptySequence<T> =
-	NonEmptySequence(this.then(sequence))
+		this.thenNonEmptySequence(emptySequence())
 
 fun <T> nonEmptySequence(first: T, vararg remaining: T) =
-	NonEmptySequence(first.then(sequence(*remaining)))
+	first.thenNonEmptySequence(sequence(*remaining))
 
 val <T> T.onlySequence: Sequence<T>
 	get() =
 		onlyNonEmptySequence.sequence
 
 fun <T> sequence(vararg items: T): Sequence<T> =
-	sequence(0, *items)
+	sequenceFrom(0, listOf(*items))
 
-fun <T> sequence(index: Int, vararg items: T): Sequence<T> =
+fun <T> sequenceFrom(index: Int, items: List<T>): Sequence<T> =
 	Sequence {
 		if (index == items.size) null
-		else items[index].thenNonEmptySequence(sequence(index + 1, *items))
+		else items[index].thenNonEmptySequence(sequenceFrom(index + 1, items))
 	}

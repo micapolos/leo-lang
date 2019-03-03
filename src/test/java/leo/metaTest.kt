@@ -1,8 +1,8 @@
 package leo
 
-import leo.base.Bit
 import leo.base.assertEqualTo
 import leo.base.string
+import leo.binary.Bit
 import org.junit.Test
 
 class MetaTest {

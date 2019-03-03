@@ -1,8 +1,8 @@
 package leo.java.io
 
-import leo.base.Bit
 import leo.base.Writer
 import leo.base.byteBitWriter
+import leo.binary.Bit
 import java.io.OutputStream
 
 fun OutputStream.put(byte: Byte): OutputStream {

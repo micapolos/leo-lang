@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 data class BitPattern<out V>(
 	val opBinaryTrie: BinaryTrie<BitPatternOp<V>>)
 

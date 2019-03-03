@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 data class BinaryTrie<out V>(
 	val binaryMatchOrNullMap: BinaryMap<Match<V>?>) {
 	override fun toString() = "binaryTrie(*)"

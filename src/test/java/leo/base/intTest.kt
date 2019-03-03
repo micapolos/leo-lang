@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+import leo.binary.int
 import kotlin.test.Test
 
 class IntTest {
@@ -40,9 +42,9 @@ class IntTest {
 
 	@Test
 	fun bits() {
-		13.bits(0.unsigned).map(Bit::int).assertContains()
-		13.bits(4.unsigned).map(Bit::int).assertContains(1, 1, 0, 1)
-		13.bits(64.unsigned).map(Bit::int).assertContains(
+		13.bitSequence(0).map(Bit::int).assertContains()
+		13.bitSequence(4).map(Bit::int).assertContains(1, 1, 0, 1)
+		13.bitSequence(64).map(Bit::int).assertContains(
 			0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0,

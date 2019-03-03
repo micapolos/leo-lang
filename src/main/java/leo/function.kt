@@ -1,6 +1,7 @@
 package leo
 
 import leo.base.*
+import leo.binary.Bit
 
 data class Function(
 	val bodyBinaryTrie: BinaryTrie<Body>)

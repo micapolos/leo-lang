@@ -1,6 +1,10 @@
 package leo
 
 import leo.base.*
+import leo.binary.Bit
+import leo.binary.Int5
+import leo.binary.inc
+import leo.binary.int5
 
 sealed class Character
 
@@ -73,3 +77,36 @@ val Stream<Bit>.bitParseCharacter: Parse<Bit, Character>?
 		?: bitParseLetter?.map { it.character }
 		?: bitParseBegin?.map { it.character }
 		?: bitParseEnd?.map { it.character }
+
+val characterCount =
+	letterCount + 2
+
+val Character.int
+	get() =
+		when (this) {
+			is LetterCharacter -> letter.int
+			is BeginCharacter -> letterCount
+			is EndCharacter -> letterCount + 1
+		}
+
+val Character.bitSequence
+	get() =
+		int.bitSequence(characterCount.bitCount)
+
+val Int5.characterOrNull
+	get() = null
+		?: letterCharacterOrNull
+		?: beginCharacterOrNull
+		?: endCharacterOrNull
+
+val Int5.letterCharacterOrNull
+	get() =
+		letterOrNull?.character
+
+val Int5.beginCharacterOrNull
+	get() =
+		if (this == Letter.Z.int5.inc) begin.character else null
+
+val Int5.endCharacterOrNull
+	get() =
+		if (this == begin.character.int.int5.inc) end.character else null

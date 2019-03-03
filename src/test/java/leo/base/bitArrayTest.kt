@@ -1,8 +1,9 @@
 package leo.base
 
+import leo.binary.bit
 import kotlin.test.Test
 
-class BitArrayTest {
+class BitChoiceTest {
 	@Test
 	fun string() {
 		13.clampedByte

@@ -1,8 +1,8 @@
 package leo
 
-import leo.base.Bit
 import leo.base.Stream
 import leo.base.char
+import leo.binary.Bit
 
 data class ByteEvaluator(
 	val characterReader: Reader<Character>)

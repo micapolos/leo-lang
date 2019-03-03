@@ -129,4 +129,3 @@ val <V> Stack<V>.pushProcessor: Processor<Stack<V>, V>
 		Processor(this) { value ->
 			push(value).pushProcessor
 		}
-

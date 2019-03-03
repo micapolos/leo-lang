@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 data class Writer<in V>(
 	val writeFn: (V) -> Writer<V>)
 

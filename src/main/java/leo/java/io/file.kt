@@ -1,7 +1,7 @@
 package leo.java.io
 
-import leo.base.Bit
 import leo.base.Stream
+import leo.binary.Bit
 import java.io.File
 import java.nio.file.Path
 

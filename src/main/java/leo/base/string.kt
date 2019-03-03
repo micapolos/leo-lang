@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 fun appendableString(fn: (Appendable) -> Unit): String {
 	val stringBuilder = StringBuilder()
 	fn(stringBuilder)

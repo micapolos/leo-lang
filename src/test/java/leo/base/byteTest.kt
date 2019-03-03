@@ -1,5 +1,6 @@
 package leo.base
 
+import leo.binary.Bit
 import kotlin.test.Test
 
 class ByteTest {

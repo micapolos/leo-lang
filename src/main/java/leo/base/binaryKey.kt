@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 // Binary key, which is not a prefix of any other key.
 data class BinaryKey(
 	val bitStream: Stream<Bit>)

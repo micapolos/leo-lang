@@ -1,6 +1,6 @@
 package leo.asm
 
-import leo.base.Bit
+import leo.binary.Bit
 
 sealed class Op
 

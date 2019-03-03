@@ -1,5 +1,8 @@
 package leo.base
 
+import leo.binary.Bit
+import leo.binary.bit
+
 inline val Int.clampedByte
 	get() =
 		toByte()
@@ -17,6 +20,10 @@ val Int.indexSize: Int
 	get() =
 		32 - Integer.numberOfLeadingZeros(this - 1)
 
+val Int.bitCount: Int
+	get() =
+		indexSize
+
 val Int.bitMaskOrNull: Int?
 	get() =
 		when {
@@ -32,13 +39,11 @@ val Int.pow2: Int
 			else -> 1.shl(this)
 		}
 
-fun Int.bits(count: UInt): Iterable<Bit> =
-	object : Iterable<Bit> {
-		var bit = count.signed
-		override fun iterator() =
-			iterator {
-				if (bit == 0) null else and((--bit).pow2).bit
-			}
+fun Int.bitSequence(count: Int): Sequence<Bit> =
+	Sequence {
+		if (count == 0) null
+		else and((count - 1).pow2).bit.thenNonEmptySequence(bitSequence(count - 1))
 	}
+
 
 val maxInt = Integer.MAX_VALUE

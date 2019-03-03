@@ -1,5 +1,9 @@
 package leo.base
 
+import leo.binary.Bit
+import leo.binary.append
+import leo.binary.bit
+
 // Non-empty bit queue, backed by power-of-two bit array
 // enqueue, dequeue: O(log(n))
 data class BitQueue(

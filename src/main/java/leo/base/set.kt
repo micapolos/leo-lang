@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 data class Set<V>(
 	val unitMap: Map<V, Unit>)
 

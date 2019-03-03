@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 data class BitStack(
 	val bitArray: BitArray,
 	val topIndexOrNull: Binary?)

@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 // Non-empty, power-of-two array of any value
 // random access: O(log(n)) for values and sub-arrays
 sealed class BinaryArray<out V>

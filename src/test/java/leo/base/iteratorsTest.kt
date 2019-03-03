@@ -35,11 +35,5 @@ class IteratorsTest {
 }
 
 fun <T> Iterator<T>.assertContains(vararg items: T) {
-	for (item in items) {
-		hasNext().assertEqualTo(true)
-		hasNext().assertEqualTo(true)
-		next().assertEqualTo(item)
-	}
-	hasNext().assertEqualTo(false)
-	hasNext().assertEqualTo(false)
+	list.assertEqualTo(listOf(*items))
 }

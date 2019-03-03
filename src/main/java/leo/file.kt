@@ -1,6 +1,7 @@
 package leo
 
 import leo.base.*
+import leo.binary.Bit
 import leo.java.io.file
 import leo.java.io.useBitStream
 import java.nio.file.Path

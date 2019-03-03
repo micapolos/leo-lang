@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 data class BinaryMap<out V>(
 	val zeroValue: V,
 	val oneValue: V)

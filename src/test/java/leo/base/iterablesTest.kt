@@ -12,5 +12,4 @@ class IterablesTest {
 
 fun <T> Iterable<T>.assertContains(vararg items: T) {
 	iterator().assertContains(*items)
-	iterator().assertContains(*items)
 }

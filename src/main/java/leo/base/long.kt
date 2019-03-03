@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Bit
+
 val Long.intStream: Stream<Int>
 	get() =
 		shr(32).toInt().onlyStream

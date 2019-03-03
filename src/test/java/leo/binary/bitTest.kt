@@ -1,8 +1,6 @@
 package leo.binary
 
-import leo.base.Bit
 import leo.base.assertEqualTo
-import leo.base.int
 import org.junit.Test
 
 class BitTest {

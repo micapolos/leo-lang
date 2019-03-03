@@ -1,7 +1,7 @@
 package leo
 
-import leo.base.Bit
 import leo.base.Stream
+import leo.binary.Bit
 
 data class Evaluator<V>(
 	val evaluateFn: (V) -> Evaluator<V>?,

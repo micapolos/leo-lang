@@ -1,6 +1,10 @@
 package leo
 
 import leo.base.*
+import leo.binary.Bit
+import leo.binary.Int5
+import leo.binary.int
+import leo.binary.int5
 
 enum class Letter(val char: Char) {
 	A('a'),
@@ -36,6 +40,9 @@ enum class Letter(val char: Char) {
 val letterList =
 	Letter.values().toList()
 
+val letterCount =
+	letterList.size
+
 val letterStream: Stream<Letter> =
 	Letter.values().toList().fold(nullOf<Stack<Letter>>()) { stack, letter ->
 		stack.push(letter)
@@ -58,6 +65,10 @@ val Byte.letterOrNull: Letter?
 val Letter.byte: Byte
 	get() =
 		char.clampedByte
+
+val Letter.int
+	get() =
+		ordinal
 
 val Letter.bitStream: Stream<Bit>
 	get() =
@@ -82,3 +93,11 @@ val Stream<Bit>.bitParseLetter: Parse<Bit, Letter>?
 				bitParseByte.streamOrNull parsed letter
 			}
 		}
+
+val Letter.int5
+	get() =
+		int.int5
+
+val Int5.letterOrNull: Letter?
+	get() =
+		letterList.getOrNull(int)

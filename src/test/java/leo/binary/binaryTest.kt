@@ -1,6 +1,5 @@
 package leo.binary
 
-import leo.base.Bit
 import leo.base.assertEqualTo
 import kotlin.test.Test
 

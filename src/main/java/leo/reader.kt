@@ -1,6 +1,10 @@
 package leo
 
-import leo.base.*
+import leo.base.BinaryTrie
+import leo.base.Stream
+import leo.base.fold
+import leo.base.orNull
+import leo.binary.Bit
 
 data class Reader<V>(
 	val parseFn: (Field<Nothing>) -> V?,

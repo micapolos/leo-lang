@@ -61,3 +61,10 @@ fun <V> flatten(iteratorsIterator: Iterator<Iterator<V>>): Iterator<V> =
 			return currentIteratorOrNull!!
 		}
 	}
+
+val <V> Iterator<V>.list: List<V>
+	get() {
+		val list = ArrayList<V>()
+		while (hasNext()) list.add(next())
+		return list
+	}

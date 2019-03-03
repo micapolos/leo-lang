@@ -1,8 +1,8 @@
 package leo
 
-import leo.base.Bit
 import leo.base.Stream
 import leo.base.orNullThenIfNotNull
+import leo.binary.Bit
 import leo.java.io.bitStreamOrNull
 import leo.java.io.bitWriter
 import java.io.ByteArrayInputStream

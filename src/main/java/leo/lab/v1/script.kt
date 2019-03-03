@@ -2,6 +2,7 @@ package leo.lab.v1
 
 import leo.*
 import leo.base.*
+import leo.binary.Bit
 
 sealed class Script<out V>
 

@@ -1,5 +1,9 @@
 package leo.base
 
+import leo.binary.Bit
+import leo.binary.append
+import leo.binary.bit
+
 // Non-zero natural number.
 data class Natural(
 	val bitStackWithoutLeadingOneOrNull: Stack<Bit>?) {

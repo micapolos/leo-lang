@@ -1,6 +1,10 @@
 package leo
 
-import leo.base.*
+import leo.base.bitStream
+import leo.base.byte
+import leo.base.ifNull
+import leo.base.matchFirst
+import leo.binary.Bit
 
 val Byte.reflect: Field<Nothing>
 	get() =

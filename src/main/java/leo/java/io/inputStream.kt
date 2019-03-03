@@ -1,6 +1,7 @@
 package leo.java.io
 
 import leo.base.*
+import leo.binary.Bit
 import java.io.InputStream
 
 val InputStream.byteStreamOrNull: Stream<Byte>?

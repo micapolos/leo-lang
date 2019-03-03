@@ -1,7 +1,7 @@
 package leo
 
-import leo.base.Bit
 import leo.base.assertEqualTo
+import leo.binary.Bit
 import org.junit.Test
 
 class BitEvaluatorTest {

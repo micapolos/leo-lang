@@ -2,7 +2,7 @@ package leo.base
 
 import kotlin.test.Test
 
-class ByteArrayTest {
+class ByteChoiceTest {
 	@Test
 	fun streamOrNull_empty() {
 		byteArrayOf().streamOrNull.assertEqualTo(null)

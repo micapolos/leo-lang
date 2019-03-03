@@ -1,5 +1,6 @@
 package leo.base
 
+import leo.binary.Bit
 import leo.java.lang.useResourceBitStreamOrNull
 
 fun <V : Any> nullOf(): V? = null
@@ -15,7 +16,10 @@ fun <V, R> V?.ifNull(fn: () -> R): R? =
 fun <V : Any> V.orNullIf(boolean: Boolean): V? =
 	if (boolean) null else this
 
-fun <V, R> V?.ifNotNullOr(notNullFn: V.() -> R, nullFn: () -> R): R =
+fun <V : Any, R> V?.ifNotNull(fn: (V) -> R?): R? =
+	if (this != null) fn(this) else null
+
+fun <V : Any, R> V?.ifNotNullOr(notNullFn: (V) -> R, nullFn: () -> R): R =
 	if (this != null) notNullFn(this) else nullFn()
 
 fun <V, R> R.ifNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
@@ -25,9 +29,6 @@ fun <V, R> R.ifNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
 fun <V, R, O> R.runIfNotNull(valueOrNull: V?, fn: R.(V) -> O): O? =
 	if (valueOrNull == null) null
 	else fn(valueOrNull)
-
-fun <V : Any> V.ifNotNull(fn: V.() -> V?): V =
-	fn() ?: this
 
 val fail: Nothing
 	get() =

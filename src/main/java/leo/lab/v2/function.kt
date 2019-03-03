@@ -2,6 +2,7 @@ package leo.lab.v2
 
 import leo.Word
 import leo.base.*
+import leo.binary.Bit
 import leo.bitStream
 
 sealed class Function

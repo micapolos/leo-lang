@@ -1,6 +1,7 @@
 package leo
 
 import leo.base.*
+import leo.binary.Bit
 import kotlin.test.Test
 
 class WordTest {
