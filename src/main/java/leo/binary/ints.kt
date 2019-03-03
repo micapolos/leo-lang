@@ -2,6 +2,7 @@ package leo.binary
 
 import leo.base.ifNotNull
 import leo.base.ifNotNullOr
+import leo.base.orNull
 import leo.inc
 
 object Int0
@@ -41,8 +42,25 @@ fun <H : Any, T> incOrNull(hi: H, lo: Bit, hiPushFn: H.(Bit) -> T, hiIncFn: H.()
 		{ hi.hiPushFn(it) },
 		{ hi.hiIncFn().ifNotNull { it.hiPushFn(Bit.ZERO) } })
 
-val Int1.incOrNull get() = incOrNull(hi, lo, { push(it) }, { int0 })
+val int0IncOrNull = null as Int0?
+val Int1.incOrNull get() = incOrNull(hi, lo, { push(it) }, { int0IncOrNull })
 val Int2.incOrNull get() = incOrNull(hi, lo, { push(it) }, { incOrNull })
 val Int3.incOrNull get() = incOrNull(hi, lo, { push(it) }, { incOrNull })
 val Int4.incOrNull get() = incOrNull(hi, lo, { push(it) }, { incOrNull })
 val Int5.incOrNull get() = incOrNull(hi, lo, { push(it) }, { incOrNull })
+
+fun <I, R> R.forEach(first: I, incFn: I.() -> I?, fn: R.(I) -> R): R {
+	var r = this
+	var i = first.orNull
+	while (i != null) {
+		r = r.fn(i)
+		i = incFn(i)
+	}
+	return r
+}
+
+fun <R> R.forEachInt1(fn: R.(Int1) -> R): R = forEach(zeroInt1, { incOrNull }, fn)
+fun <R> R.forEachInt2(fn: R.(Int2) -> R): R = forEach(zeroInt2, { incOrNull }, fn)
+fun <R> R.forEachInt3(fn: R.(Int3) -> R): R = forEach(zeroInt3, { incOrNull }, fn)
+fun <R> R.forEachInt4(fn: R.(Int4) -> R): R = forEach(zeroInt4, { incOrNull }, fn)
+fun <R> R.forEachInt5(fn: R.(Int5) -> R): R = forEach(zeroInt5, { incOrNull }, fn)
