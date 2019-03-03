@@ -6,6 +6,12 @@ data class Array3<out T>(val at0: Array2<T>, val at1: Array2<T>)
 data class Array4<out T>(val at0: Array3<T>, val at1: Array3<T>)
 data class Array5<out T>(val at0: Array4<T>, val at1: Array4<T>)
 
+val <T> T.array1 get() = Array1(this, this)
+val <T> T.array2 get() = Array2(array1, array1)
+val <T> T.array3 get() = Array3(array2, array2)
+val <T> T.array4 get() = Array4(array3, array3)
+val <T> T.array5 get() = Array5(array4, array4)
+
 fun <T> Array1<T>.at(index: Int1) = if (index.lo == Bit.ZERO) at0 else at1
 fun <T> Array2<T>.at(index: Int2) = if (index.lo == Bit.ZERO) at0.at(index.hi) else at1.at(index.hi)
 fun <T> Array3<T>.at(index: Int3) = if (index.lo == Bit.ZERO) at0.at(index.hi) else at1.at(index.hi)
