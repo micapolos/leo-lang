@@ -5,7 +5,7 @@ import leo.append
 import leo.base.ifNotNull
 import leo.beginChar
 import leo.binary.Int2
-import leo.binary.int2
+import leo.binary.wrappingInt2
 import leo.endChar
 
 sealed class Term
@@ -52,8 +52,8 @@ val termClassList =
 val Term.classInt2: Int2
 	get() =
 		when (this) {
-			is IntTerm -> 0.int2
-			is FloatTerm -> 1.int2
-			is StringTerm -> 2.int2
-			is ScriptTerm -> 3.int2
+			is IntTerm -> 0.wrappingInt2
+			is FloatTerm -> 1.wrappingInt2
+			is StringTerm -> 2.wrappingInt2
+			is ScriptTerm -> 3.wrappingInt2
 		}

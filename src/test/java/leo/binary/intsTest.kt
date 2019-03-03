@@ -24,19 +24,19 @@ class IntsTest {
 
 	@Test
 	fun fromInt() {
-		0.int1.assertEqualTo(int0.push(0.bit))
-		1.int1.assertEqualTo(int0.push(1.bit))
+		0.wrappingInt1.assertEqualTo(int0.push(0.bit))
+		1.wrappingInt1.assertEqualTo(int0.push(1.bit))
 
-		2.int2.assertEqualTo(int0.push(1.bit).push(0.bit))
-		3.int2.assertEqualTo(int0.push(1.bit).push(1.bit))
+		2.wrappingInt2.assertEqualTo(int0.push(1.bit).push(0.bit))
+		3.wrappingInt2.assertEqualTo(int0.push(1.bit).push(1.bit))
 
-		4.int3.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit))
-		5.int3.assertEqualTo(int0.push(1.bit).push(0.bit).push(1.bit))
+		4.wrappingInt3.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit))
+		5.wrappingInt3.assertEqualTo(int0.push(1.bit).push(0.bit).push(1.bit))
 
-		8.int4.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit).push(0.bit))
-		9.int4.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit).push(1.bit))
+		8.wrappingInt4.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit).push(0.bit))
+		9.wrappingInt4.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit).push(1.bit))
 
-		16.int5.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit).push(0.bit).push(0.bit))
-		17.int5.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit).push(0.bit).push(1.bit))
+		16.wrappingInt5.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit).push(0.bit).push(0.bit))
+		17.wrappingInt5.assertEqualTo(int0.push(1.bit).push(0.bit).push(0.bit).push(0.bit).push(1.bit))
 	}
 }

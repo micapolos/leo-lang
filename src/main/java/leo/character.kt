@@ -3,8 +3,8 @@ package leo
 import leo.base.*
 import leo.binary.Bit
 import leo.binary.Int5
-import leo.binary.inc
-import leo.binary.int5
+import leo.binary.incOrNull
+import leo.binary.wrappingInt5
 
 sealed class Character
 
@@ -105,8 +105,8 @@ val Int5.letterCharacterOrNull
 
 val Int5.beginCharacterOrNull
 	get() =
-		if (this == Letter.Z.int5.inc) begin.character else null
+		if (this == Letter.Z.int5.incOrNull) begin.character else null
 
 val Int5.endCharacterOrNull
 	get() =
-		if (this == begin.character.int.int5.inc) end.character else null
+		if (this == begin.character.int.wrappingInt5.incOrNull) end.character else null

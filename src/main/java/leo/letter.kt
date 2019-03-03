@@ -4,7 +4,7 @@ import leo.base.*
 import leo.binary.Bit
 import leo.binary.Int5
 import leo.binary.int
-import leo.binary.int5
+import leo.binary.wrappingInt5
 
 enum class Letter(val char: Char) {
 	A('a'),
@@ -96,7 +96,7 @@ val Stream<Bit>.bitParseLetter: Parse<Bit, Letter>?
 
 val Letter.int5
 	get() =
-		int.int5
+		int.wrappingInt5
 
 val Int5.letterOrNull: Letter?
 	get() =

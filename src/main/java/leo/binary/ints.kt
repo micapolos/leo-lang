@@ -30,19 +30,19 @@ val Int3.int get() = hi.int.shl(1).or(lo.int)
 val Int4.int get() = hi.int.shl(1).or(lo.int)
 val Int5.int get() = hi.int.shl(1).or(lo.int)
 
-val Int.int1 get() = int0.push(and(1).bit)
-val Int.int2 get() = ushr(1).int1.push(and(1).bit)
-val Int.int3 get() = ushr(1).int2.push(and(1).bit)
-val Int.int4 get() = ushr(1).int3.push(and(1).bit)
-val Int.int5 get() = ushr(1).int4.push(and(1).bit)
+val Int.wrappingInt1 get() = int0.push(and(1).bit)
+val Int.wrappingInt2 get() = ushr(1).wrappingInt1.push(and(1).bit)
+val Int.wrappingInt3 get() = ushr(1).wrappingInt2.push(and(1).bit)
+val Int.wrappingInt4 get() = ushr(1).wrappingInt3.push(and(1).bit)
+val Int.wrappingInt5 get() = ushr(1).wrappingInt4.push(and(1).bit)
 
-fun <H : Any, T> inc(hi: H, lo: Bit, hiPushFn: H.(Bit) -> T, hiIncFn: H.() -> H?): T? =
+fun <H : Any, T> incOrNull(hi: H, lo: Bit, hiPushFn: H.(Bit) -> T, hiIncFn: H.() -> H?): T? =
 	lo.inc.ifNotNullOr(
 		{ hi.hiPushFn(it) },
 		{ hi.hiIncFn().ifNotNull { it.hiPushFn(Bit.ZERO) } })
 
-val Int1.inc get() = inc(hi, lo, { push(it) }, { int0 })
-val Int2.inc get() = inc(hi, lo, { push(it) }, { inc })
-val Int3.inc get() = inc(hi, lo, { push(it) }, { inc })
-val Int4.inc get() = inc(hi, lo, { push(it) }, { inc })
-val Int5.inc get() = inc(hi, lo, { push(it) }, { inc })
+val Int1.incOrNull get() = incOrNull(hi, lo, { push(it) }, { int0 })
+val Int2.incOrNull get() = incOrNull(hi, lo, { push(it) }, { incOrNull })
+val Int3.incOrNull get() = incOrNull(hi, lo, { push(it) }, { incOrNull })
+val Int4.incOrNull get() = incOrNull(hi, lo, { push(it) }, { incOrNull })
+val Int5.incOrNull get() = incOrNull(hi, lo, { push(it) }, { incOrNull })
