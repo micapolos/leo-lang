@@ -20,3 +20,9 @@ fun Stack.push(bit: Bit) =
 
 fun NonEmptyStack?.push(bit: Bit) =
 	NonEmptyStack(bit, Stack(this))
+
+// Avoid recursion!!!
+fun <R> R.fold(stack: Stack, fn: R.(Bit) -> R): R =
+	stack.nonEmptyStackOrNull?.let { nonEmptyStack ->
+		fn(nonEmptyStack.topBit).fold(nonEmptyStack.tailStack, fn)
+	} ?: this

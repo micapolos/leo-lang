@@ -3,45 +3,44 @@ package dsl.impl
 import leo.*
 import leo.script.*
 import leo.script.Script
-import leo.script.Term
 
-fun term(word: Word, args: List<Any?>): Term =
-	ScriptTerm(
+fun term(word: Word, args: List<Any?>): ScriptLine =
+	ScriptLine(
 		word,
 		args.fold(nullScript) { script, arg ->
-			script.plus(arg.term)
+			script.plus(arg.anyScriptLine)
 		})
 
-val List<Any?>.script: Script?
+val List<Any?>.anyListScript: Script?
 	get() =
 		fold(nullScript) { script, arg ->
-			script.plus(arg.term)
+			script.plus(arg.anyScriptLine)
 		}
 
-val List<Any?>.term: Term
+val List<Any?>.anyListScriptLine: ScriptLine
 	get() =
 		when (size) {
-			0 -> literalTerm
+			0 -> literalScriptLine
 			else -> (this[0] as? String)?.wordOrNull?.let {
 				term(it, slice(1 until size))
-			} ?: literalTerm
+			} ?: literalScriptLine
 		}
 
-val Any?.term: Term
+val Any?.anyScriptLine: ScriptLine
 	get() =
 		when (this) {
-			is Boolean -> if (this) ScriptTerm(trueWord) else ScriptTerm(falseWord)
-			is Int -> IntTerm(this)
-			is Float -> FloatTerm(this)
-			is String -> StringTerm(this)
-			is List<Any?> -> term
-			else -> literalTerm
+			is Boolean -> if (this) trueWord.line else falseWord.line
+			is Byte -> scriptLine
+			is Int -> scriptLine
+			is String -> scriptLine
+			is List<Any?> -> anyListScriptLine
+			else -> literalScriptLine
 		}
 
-val Any?.literalTerm: Term
+val Any?.literalScriptLine: ScriptLine
 	get() =
-		ScriptTerm(literalWord, Script(null, StringTerm(toString())))
+		literalWord lineTo nullScript.plus(toString().scriptLine)
 
-val Any?.script
+val Any?.anyScript
 	get() =
-		term.let { nullScript.plus(term) }
+		anyScriptLine.let { nullScript.plus(anyScriptLine) }

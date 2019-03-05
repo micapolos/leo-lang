@@ -122,3 +122,7 @@ val Bit.boolean
 			Bit.ZERO -> false
 			Bit.ONE -> true
 		}
+
+val Bit.isZero
+	get() =
+		this == Bit.ZERO

@@ -6,9 +6,9 @@ import kotlin.test.Test
 class ArrayTest {
 	@Test
 	fun putAndGet() {
-		var array = (-1).array5
-		array.forEachInt5 { at(it).assertEqualTo(-1); this }
-		array = array.forEachInt5 { put(it, it.int) }
-		array.forEachInt5 { at(it).assertEqualTo(it.int); this }
+		0.array5
+			.forEachInt5 { index -> apply { at(index).assertEqualTo(0) } }
+			.forEachInt5 { index -> put(index, index.int) }
+			.forEachInt5 { index -> apply { at(index).assertEqualTo(index.int) } }
 	}
 }

@@ -7,3 +7,7 @@ fun ByteArray.streamOrNullFrom(index: Int): Stream<Byte>? =
 val ByteArray.streamOrNull: Stream<Byte>?
 	get() =
 		streamOrNullFrom(0)
+
+val ByteArray.utf8String
+	get() =
+		String(this)

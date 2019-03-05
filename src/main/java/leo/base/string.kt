@@ -39,3 +39,10 @@ val Stream<Bit>?.utf8String: String
 
 fun <R> R.fold(charSequence: CharSequence, fn: R.(Char) -> R): R =
 	charSequence.fold(this, fn)
+
+fun String.mapChars(fn: (Char) -> Char) =
+	StringBuilder(length).fold(this) { append(fn(it)) }.toString()
+
+val String.utf8ByteArray
+	get() =
+		toByteArray()

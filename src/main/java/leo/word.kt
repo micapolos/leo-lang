@@ -39,6 +39,9 @@ fun <R> R.foldLetters(word: Word, fn: R.(Letter) -> R) =
 fun Appendable.append(word: Word): Appendable =
 	foldLetters(word, Appendable::append)
 
+fun Appendable.scriptAppend(word: Word) =
+	append(word).append(' ')
+
 // === folding bytes
 
 val Word.letterStream: Stream<Letter>

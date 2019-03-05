@@ -1,5 +1,7 @@
 package leo.binary
 
+import leo.base.orNull
+
 sealed class Parser<T>
 
 data class PartialParser<F, T>(
@@ -30,6 +32,9 @@ fun <T> Parser<T>.parse(bit: Bit): Parser<T>? =
 		is DoneParser -> parseError()
 		is PartialParser<*, T> -> this.parse(bit)
 	}
+
+fun <T> Parser<T>.parse(bits: Iterable<Bit>): Parser<T>? =
+	bits.fold(orNull) { parser, bit -> parser?.parse(bit) }
 
 fun <T> parseError(): Parser<T>? = null
 

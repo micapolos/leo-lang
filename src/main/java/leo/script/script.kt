@@ -6,7 +6,7 @@ import leo.base.ifNotNull
 
 data class Script(
 	val lhs: Script?,
-	val term: Term) {
+	val term: ScriptLine) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
@@ -14,24 +14,13 @@ val nullScript: Script?
 	get() =
 		null
 
-fun Script?.plus(term: Term): Script =
-	Script(this, term)
-
-fun Script?.plus(int: Int): Script =
-	plus(IntTerm(int))
-
-fun Script?.plus(float: Float): Script =
-	plus(FloatTerm(float))
-
-fun Script?.plus(string: String): Script =
-	plus(StringTerm(string))
+fun Script?.plus(line: ScriptLine): Script =
+	Script(this, line)
 
 fun Script?.plus(word: Word, rhs: Script? = null): Script =
-	plus(ScriptTerm(word, rhs))
+	plus(word lineTo rhs)
 
 fun Appendable.append(script: Script): Appendable =
 	this
-		.ifNotNull(script.lhs) { append(it).append(", ") }
+		.ifNotNull(script.lhs) { append(it) }
 		.append(script.term)
-
-// === bit sequence

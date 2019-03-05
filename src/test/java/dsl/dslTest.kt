@@ -1,7 +1,8 @@
 package dsl
 
-import dsl.impl.script
+import dsl.impl.anyListScript
 import leo.base.assertEqualTo
+import leo.base.string
 import kotlin.test.Test
 
 class DslTest {
@@ -20,6 +21,7 @@ class DslTest {
 			define(false, and(false), gives(false)),
 			define(false, and(true), gives(false)),
 			define(false, and(true), gives(false)),
-			define(true, and(true), gives(true))).script
+			define(true, and(true), gives(true)))
+			.anyListScript.string.assertEqualTo("")
 	}
 }
