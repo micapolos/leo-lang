@@ -47,3 +47,19 @@ fun Int.bitSequence(count: Int): Sequence<Bit> =
 
 
 val maxInt = Integer.MAX_VALUE
+
+val Int.incOrNull
+	get() =
+		if (this == Int.MAX_VALUE) null else this + 1
+
+val Int.decOrNull
+	get() =
+		if (this == Int.MIN_VALUE) null else this - 1
+
+val Int.uincOrNull
+	get() =
+		if (this == -1) null else this + 1
+
+val Int.udecOrNull
+	get() =
+		if (this == 0) null else this - 1
