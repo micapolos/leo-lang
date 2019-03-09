@@ -6,20 +6,29 @@ import kotlin.test.Test
 class ArrayTest {
 	@Test
 	fun putAndGet() {
-		zeroBitArray32
-			.apply { at(154).assertEqualTo(zeroBit) }
-			.put(154, oneBit)
-			.apply { at(153).assertEqualTo(zeroBit) }
-			.apply { at(154).assertEqualTo(oneBit) }
-			.apply { at(155).assertEqualTo(zeroBit) }
+		0.array32
+			.apply { at(154).assertEqualTo(0) }
+			.put(154, 15400)
+			.apply { at(153).assertEqualTo(0) }
+			.apply { at(154).assertEqualTo(15400) }
+			.apply { at(155).assertEqualTo(0) }
 	}
 
 	@Test
 	fun performance() {
-		val size = 1 shl 16
-		var bitArray32 = zeroBitArray32
-		for (i in 0 until size) bitArray32.at(i).assertEqualTo(zeroBit)
-		for (i in 0 until size) bitArray32 = bitArray32.put(i, i.clampedBit)
-		for (i in 0 until size) bitArray32.at(i).assertEqualTo(i.clampedBit)
+		val size = 1 shl 20
+		var array32 = 0.array32
+		for (i in 0 until size) array32.at(i).assertEqualTo(0)
+		for (i in 0 until size) array32 = array32.put(i, i)
+		for (i in 0 until size) array32.at(i).assertEqualTo(i)
+	}
+
+	@Test
+	fun performanceNative() {
+		val size = 1 shl 20
+		val array = arrayOfNulls<Bit>(size)
+		for (i in 0 until size) array[i].assertEqualTo(null)
+		for (i in 0 until size) array[i] = i.clampedBit
+		for (i in 0 until size) array[i].assertEqualTo(i.clampedBit)
 	}
 }
