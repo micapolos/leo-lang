@@ -30,7 +30,7 @@ val <T> Stack32<T>.grow: Stack32<T>?
 val <T> Stack32<T>.shrink: Stack32<T>?
 	get() =
 		if (topIndex == null) null
-		else topIndex.udecOrNull?.let { Stack32(array32, it) } ?: empty
+		else topIndex.udecOrNull?.let { Stack32(array32.put(topIndex, null), it) } ?: empty
 
 val <T : Any> Stack32<T>.top: T?
 	get() =

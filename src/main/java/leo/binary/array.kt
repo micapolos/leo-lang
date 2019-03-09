@@ -106,38 +106,38 @@ fun <T> Array30<T>.at(bit: Bit) = if (bit.isZero) at0 else at1
 fun <T> Array31<T>.at(bit: Bit) = if (bit.isZero) at0 else at1
 fun <T> Array32<T>.at(bit: Bit) = if (bit.isZero) at0 else at1
 
-fun <T> Array1<T>.put(bit: Bit, value: T) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array2<T>.put(bit: Bit, value: Array1<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array3<T>.put(bit: Bit, value: Array2<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array4<T>.put(bit: Bit, value: Array3<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array5<T>.put(bit: Bit, value: Array4<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array6<T>.put(bit: Bit, value: Array5<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array7<T>.put(bit: Bit, value: Array6<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array8<T>.put(bit: Bit, value: Array7<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array9<T>.put(bit: Bit, value: Array8<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array10<T>.put(bit: Bit, value: Array9<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array11<T>.put(bit: Bit, value: Array10<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array12<T>.put(bit: Bit, value: Array11<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array13<T>.put(bit: Bit, value: Array12<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array14<T>.put(bit: Bit, value: Array13<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array15<T>.put(bit: Bit, value: Array14<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array16<T>.put(bit: Bit, value: Array15<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array17<T>.put(bit: Bit, value: Array16<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array18<T>.put(bit: Bit, value: Array17<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array19<T>.put(bit: Bit, value: Array18<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array20<T>.put(bit: Bit, value: Array19<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array21<T>.put(bit: Bit, value: Array20<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array22<T>.put(bit: Bit, value: Array21<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array23<T>.put(bit: Bit, value: Array22<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array24<T>.put(bit: Bit, value: Array23<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array25<T>.put(bit: Bit, value: Array24<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array26<T>.put(bit: Bit, value: Array25<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array27<T>.put(bit: Bit, value: Array26<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array28<T>.put(bit: Bit, value: Array27<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array29<T>.put(bit: Bit, value: Array28<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array30<T>.put(bit: Bit, value: Array29<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array31<T>.put(bit: Bit, value: Array30<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
-fun <T> Array32<T>.put(bit: Bit, value: Array31<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array1<T>.put(bit: Bit, value: T?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array2<T>.put(bit: Bit, value: Array1<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array3<T>.put(bit: Bit, value: Array2<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array4<T>.put(bit: Bit, value: Array3<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array5<T>.put(bit: Bit, value: Array4<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array6<T>.put(bit: Bit, value: Array5<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array7<T>.put(bit: Bit, value: Array6<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array8<T>.put(bit: Bit, value: Array7<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array9<T>.put(bit: Bit, value: Array8<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array10<T>.put(bit: Bit, value: Array9<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array11<T>.put(bit: Bit, value: Array10<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array12<T>.put(bit: Bit, value: Array11<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array13<T>.put(bit: Bit, value: Array12<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array14<T>.put(bit: Bit, value: Array13<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array15<T>.put(bit: Bit, value: Array14<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array16<T>.put(bit: Bit, value: Array15<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array17<T>.put(bit: Bit, value: Array16<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array18<T>.put(bit: Bit, value: Array17<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array19<T>.put(bit: Bit, value: Array18<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array20<T>.put(bit: Bit, value: Array19<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array21<T>.put(bit: Bit, value: Array20<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array22<T>.put(bit: Bit, value: Array21<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array23<T>.put(bit: Bit, value: Array22<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array24<T>.put(bit: Bit, value: Array23<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array25<T>.put(bit: Bit, value: Array24<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array26<T>.put(bit: Bit, value: Array25<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array27<T>.put(bit: Bit, value: Array26<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array28<T>.put(bit: Bit, value: Array27<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array29<T>.put(bit: Bit, value: Array28<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array30<T>.put(bit: Bit, value: Array29<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array31<T>.put(bit: Bit, value: Array30<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
+fun <T> Array32<T>.put(bit: Bit, value: Array31<T>?) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
 
 fun <T> Array32<T>.at(index: Int): T? = this
 	.at(index.and(1 shl 31).bit)
@@ -174,7 +174,7 @@ fun <T> Array32<T>.at(index: Int): T? = this
 	?.at(index.and(1).bit)
 
 
-fun <T> Array32<T>.put(index: Int, value: T): Array32<T> {
+fun <T> Array32<T>.put(index: Int, value: T?): Array32<T> {
 	val int = index
 	val bit31 = int.and(1 shl 31).bit
 	val bit30 = int.and(1 shl 30).bit
@@ -275,7 +275,7 @@ fun <T> Array32<T>.put(index: Int, value: T): Array32<T> {
 	return put(bit31, newArray31)
 }
 
-fun <T> Array32<T>.updateAt(index: Int, fn: T?.() -> T): Array32<T> =
+fun <T> Array32<T>.updateAt(index: Int, fn: T?.() -> T?): Array32<T> =
 	put(index, at(index).fn())
 
 fun <T, R> R.foldIndexed(array: Array1<T>, fn: R.(IndexedValue<T>) -> R): R =

@@ -6,6 +6,10 @@ import kotlin.test.Test
 class LeoTest {
 	@Test
 	fun add() {
-		emptyLeo.assertEqualTo(12)
+		emptyLeo
+			.push(1)
+			.push(2)
+			.code
+			.assertEqualTo(12)
 	}
 }
