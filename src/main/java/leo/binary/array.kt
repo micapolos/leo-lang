@@ -339,3 +339,6 @@ fun <T> Array32<T>.put(index: Int, value: T): Array32<T> {
 	val newArray31 = array31.put(bit30, newArray30)
 	return put(bit31, newArray31)
 }
+
+fun <T> Array32<T>.updateAt(index: Int, fn: T.() -> T): Array32<T> =
+	put(index, at(index).fn())

@@ -52,3 +52,8 @@ val <T : Any> Stack32<T>.pop: PoppedStack32<T>?
 	get() =
 		if (topIndex == null) null
 		else (topIndex.udecOrNull?.let { Stack32(array32, it) } ?: empty).popped(array32.at(topIndex))
+
+fun <T> Stack32<T>.updateTop(fn: T.() -> T): Stack32<T>? =
+	topIndex?.let {
+		copy(array32 = array32.updateAt(it, fn))
+	}

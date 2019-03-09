@@ -102,3 +102,6 @@ val Stream<Bit>.bitParseByte: Parse<Bit, Byte>?
 				}
 			}
 		}
+
+fun Byte.wrapPlus(byte: Byte) =
+	plus(byte).clampedByte
