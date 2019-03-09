@@ -1,104 +1,77 @@
 package leo.binary
 
-import leo.base.int
+import leo.base.appendableString
+import leo.base.ifNotNull
+import leo.base.indexed
+import leo.base.or1Shl
 
-data class Array1<out T>(val at0: T, val at1: T)
-data class Array2<out T>(val at0: Array1<T>, val at1: Array1<T>)
-data class Array3<out T>(val at0: Array2<T>, val at1: Array2<T>)
-data class Array4<out T>(val at0: Array3<T>, val at1: Array3<T>)
-data class Array5<out T>(val at0: Array4<T>, val at1: Array4<T>)
-data class Array6<out T>(val at0: Array5<T>, val at1: Array5<T>)
-data class Array7<out T>(val at0: Array6<T>, val at1: Array6<T>)
-data class Array8<out T>(val at0: Array7<T>, val at1: Array7<T>)
-data class Array9<out T>(val at0: Array8<T>, val at1: Array8<T>)
-data class Array10<out T>(val at0: Array9<T>, val at1: Array9<T>)
-data class Array11<out T>(val at0: Array10<T>, val at1: Array10<T>)
-data class Array12<out T>(val at0: Array11<T>, val at1: Array11<T>)
-data class Array13<out T>(val at0: Array12<T>, val at1: Array12<T>)
-data class Array14<out T>(val at0: Array13<T>, val at1: Array13<T>)
-data class Array15<out T>(val at0: Array14<T>, val at1: Array14<T>)
-data class Array16<out T>(val at0: Array15<T>, val at1: Array15<T>)
-data class Array17<out T>(val at0: Array16<T>, val at1: Array16<T>)
-data class Array18<out T>(val at0: Array17<T>, val at1: Array17<T>)
-data class Array19<out T>(val at0: Array18<T>, val at1: Array18<T>)
-data class Array20<out T>(val at0: Array19<T>, val at1: Array19<T>)
-data class Array21<out T>(val at0: Array20<T>, val at1: Array20<T>)
-data class Array22<out T>(val at0: Array21<T>, val at1: Array21<T>)
-data class Array23<out T>(val at0: Array22<T>, val at1: Array22<T>)
-data class Array24<out T>(val at0: Array23<T>, val at1: Array23<T>)
-data class Array25<out T>(val at0: Array24<T>, val at1: Array24<T>)
-data class Array26<out T>(val at0: Array25<T>, val at1: Array25<T>)
-data class Array27<out T>(val at0: Array26<T>, val at1: Array26<T>)
-data class Array28<out T>(val at0: Array27<T>, val at1: Array27<T>)
-data class Array29<out T>(val at0: Array28<T>, val at1: Array28<T>)
-data class Array30<out T>(val at0: Array29<T>, val at1: Array29<T>)
-data class Array31<out T>(val at0: Array30<T>, val at1: Array30<T>)
-data class Array32<out T>(val at0: Array31<T>, val at1: Array31<T>)
+data class Array1<out T>(val at0: T? = null, val at1: T? = null)
+data class Array2<out T>(val at0: Array1<T>? = null, val at1: Array1<T>? = null)
+data class Array3<out T>(val at0: Array2<T>? = null, val at1: Array2<T>? = null)
+data class Array4<out T>(val at0: Array3<T>? = null, val at1: Array3<T>? = null)
+data class Array5<out T>(val at0: Array4<T>? = null, val at1: Array4<T>? = null)
+data class Array6<out T>(val at0: Array5<T>? = null, val at1: Array5<T>? = null)
+data class Array7<out T>(val at0: Array6<T>? = null, val at1: Array6<T>? = null)
+data class Array8<out T>(val at0: Array7<T>? = null, val at1: Array7<T>? = null)
+data class Array9<out T>(val at0: Array8<T>? = null, val at1: Array8<T>? = null)
+data class Array10<out T>(val at0: Array9<T>? = null, val at1: Array9<T>? = null)
+data class Array11<out T>(val at0: Array10<T>? = null, val at1: Array10<T>? = null)
+data class Array12<out T>(val at0: Array11<T>? = null, val at1: Array11<T>? = null)
+data class Array13<out T>(val at0: Array12<T>? = null, val at1: Array12<T>? = null)
+data class Array14<out T>(val at0: Array13<T>? = null, val at1: Array13<T>? = null)
+data class Array15<out T>(val at0: Array14<T>? = null, val at1: Array14<T>? = null)
+data class Array16<out T>(val at0: Array15<T>? = null, val at1: Array15<T>? = null)
+data class Array17<out T>(val at0: Array16<T>? = null, val at1: Array16<T>? = null)
+data class Array18<out T>(val at0: Array17<T>? = null, val at1: Array17<T>? = null)
+data class Array19<out T>(val at0: Array18<T>? = null, val at1: Array18<T>? = null)
+data class Array20<out T>(val at0: Array19<T>? = null, val at1: Array19<T>? = null)
+data class Array21<out T>(val at0: Array20<T>? = null, val at1: Array20<T>? = null)
+data class Array22<out T>(val at0: Array21<T>? = null, val at1: Array21<T>? = null)
+data class Array23<out T>(val at0: Array22<T>? = null, val at1: Array22<T>? = null)
+data class Array24<out T>(val at0: Array23<T>? = null, val at1: Array23<T>? = null)
+data class Array25<out T>(val at0: Array24<T>? = null, val at1: Array24<T>? = null)
+data class Array26<out T>(val at0: Array25<T>? = null, val at1: Array25<T>? = null)
+data class Array27<out T>(val at0: Array26<T>? = null, val at1: Array26<T>? = null)
+data class Array28<out T>(val at0: Array27<T>? = null, val at1: Array27<T>? = null)
+data class Array29<out T>(val at0: Array28<T>? = null, val at1: Array28<T>? = null)
+data class Array30<out T>(val at0: Array29<T>? = null, val at1: Array29<T>? = null)
+data class Array31<out T>(val at0: Array30<T>? = null, val at1: Array30<T>? = null)
+data class Array32<out T>(val at0: Array31<T>? = null, val at1: Array31<T>? = null) {
+	override fun toString() = appendableString { it.append(this) }
+}
 
-val <T> T.array1 get() = Array1(this, this)
-val <T> Array1<T>.array2 get() = Array2(this, this)
-val <T> Array2<T>.array3 get() = Array3(this, this)
-val <T> Array3<T>.array4 get() = Array4(this, this)
-val <T> Array4<T>.array5 get() = Array5(this, this)
-val <T> Array5<T>.array6 get() = Array6(this, this)
-val <T> Array6<T>.array7 get() = Array7(this, this)
-val <T> Array7<T>.array8 get() = Array8(this, this)
-val <T> Array8<T>.array9 get() = Array9(this, this)
-val <T> Array9<T>.array10 get() = Array10(this, this)
-val <T> Array10<T>.array11 get() = Array11(this, this)
-val <T> Array11<T>.array12 get() = Array12(this, this)
-val <T> Array12<T>.array13 get() = Array13(this, this)
-val <T> Array13<T>.array14 get() = Array14(this, this)
-val <T> Array14<T>.array15 get() = Array15(this, this)
-val <T> Array15<T>.array16 get() = Array16(this, this)
-val <T> Array16<T>.array17 get() = Array17(this, this)
-val <T> Array17<T>.array18 get() = Array18(this, this)
-val <T> Array18<T>.array19 get() = Array19(this, this)
-val <T> Array19<T>.array20 get() = Array20(this, this)
-val <T> Array20<T>.array21 get() = Array21(this, this)
-val <T> Array21<T>.array22 get() = Array22(this, this)
-val <T> Array22<T>.array23 get() = Array23(this, this)
-val <T> Array23<T>.array24 get() = Array24(this, this)
-val <T> Array24<T>.array25 get() = Array25(this, this)
-val <T> Array25<T>.array26 get() = Array26(this, this)
-val <T> Array26<T>.array27 get() = Array27(this, this)
-val <T> Array27<T>.array28 get() = Array28(this, this)
-val <T> Array28<T>.array29 get() = Array29(this, this)
-val <T> Array29<T>.array30 get() = Array30(this, this)
-val <T> Array30<T>.array31 get() = Array31(this, this)
-val <T> Array31<T>.array32 get() = Array32(this, this)
-
-val <T> T.array2 get() = array1.array2
-val <T> T.array3 get() = array2.array3
-val <T> T.array4 get() = array3.array4
-val <T> T.array5 get() = array4.array5
-val <T> T.array6 get() = array5.array6
-val <T> T.array7 get() = array6.array7
-val <T> T.array8 get() = array7.array8
-val <T> T.array9 get() = array8.array9
-val <T> T.array10 get() = array9.array10
-val <T> T.array11 get() = array10.array11
-val <T> T.array12 get() = array11.array12
-val <T> T.array13 get() = array12.array13
-val <T> T.array14 get() = array13.array14
-val <T> T.array15 get() = array14.array15
-val <T> T.array16 get() = array15.array16
-val <T> T.array17 get() = array16.array17
-val <T> T.array18 get() = array17.array18
-val <T> T.array19 get() = array18.array19
-val <T> T.array20 get() = array19.array20
-val <T> T.array21 get() = array20.array21
-val <T> T.array22 get() = array21.array22
-val <T> T.array23 get() = array22.array23
-val <T> T.array24 get() = array23.array24
-val <T> T.array25 get() = array24.array25
-val <T> T.array26 get() = array25.array26
-val <T> T.array27 get() = array26.array27
-val <T> T.array28 get() = array27.array28
-val <T> T.array29 get() = array28.array29
-val <T> T.array30 get() = array29.array30
-val <T> T.array31 get() = array30.array31
-val <T> T.array32 get() = array31.array32
+fun <T> nullArray1() = Array1<T>()
+fun <T> nullArray2() = Array2<T>()
+fun <T> nullArray3() = Array3<T>()
+fun <T> nullArray4() = Array4<T>()
+fun <T> nullArray5() = Array5<T>()
+fun <T> nullArray6() = Array6<T>()
+fun <T> nullArray7() = Array7<T>()
+fun <T> nullArray8() = Array8<T>()
+fun <T> nullArray9() = Array9<T>()
+fun <T> nullArray10() = Array10<T>()
+fun <T> nullArray11() = Array11<T>()
+fun <T> nullArray12() = Array12<T>()
+fun <T> nullArray13() = Array13<T>()
+fun <T> nullArray14() = Array14<T>()
+fun <T> nullArray15() = Array15<T>()
+fun <T> nullArray16() = Array16<T>()
+fun <T> nullArray17() = Array17<T>()
+fun <T> nullArray18() = Array18<T>()
+fun <T> nullArray19() = Array19<T>()
+fun <T> nullArray20() = Array20<T>()
+fun <T> nullArray21() = Array21<T>()
+fun <T> nullArray22() = Array22<T>()
+fun <T> nullArray23() = Array23<T>()
+fun <T> nullArray24() = Array24<T>()
+fun <T> nullArray25() = Array25<T>()
+fun <T> nullArray26() = Array26<T>()
+fun <T> nullArray27() = Array27<T>()
+fun <T> nullArray28() = Array28<T>()
+fun <T> nullArray29() = Array29<T>()
+fun <T> nullArray30() = Array30<T>()
+fun <T> nullArray31() = Array31<T>()
+fun <T> nullArray32() = Array32<T>()
 
 fun <T> Array1<T>.at(bit: Bit) = if (bit.isZero) at0 else at1
 fun <T> Array2<T>.at(bit: Bit) = if (bit.isZero) at0 else at1
@@ -166,78 +139,40 @@ fun <T> Array30<T>.put(bit: Bit, value: Array29<T>) = if (bit.isZero) copy(at0 =
 fun <T> Array31<T>.put(bit: Bit, value: Array30<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
 fun <T> Array32<T>.put(bit: Bit, value: Array31<T>) = if (bit.isZero) copy(at0 = value) else copy(at1 = value)
 
-fun <T> Array8<T>.at(index: Byte): T = this
-	.at(index.int.and(1 shl 7).bit)
-	.at(index.int.and(1 shl 6).bit)
-	.at(index.int.and(1 shl 5).bit)
-	.at(index.int.and(1 shl 4).bit)
-	.at(index.int.and(1 shl 3).bit)
-	.at(index.int.and(1 shl 2).bit)
-	.at(index.int.and(1 shl 1).bit)
-	.at(index.int.and(1).bit)
-
-fun <T> Array32<T>.at(index: Int): T = this
+fun <T> Array32<T>.at(index: Int): T? = this
 	.at(index.and(1 shl 31).bit)
-	.at(index.and(1 shl 30).bit)
-	.at(index.and(1 shl 29).bit)
-	.at(index.and(1 shl 28).bit)
-	.at(index.and(1 shl 27).bit)
-	.at(index.and(1 shl 26).bit)
-	.at(index.and(1 shl 25).bit)
-	.at(index.and(1 shl 24).bit)
-	.at(index.and(1 shl 23).bit)
-	.at(index.and(1 shl 22).bit)
-	.at(index.and(1 shl 21).bit)
-	.at(index.and(1 shl 20).bit)
-	.at(index.and(1 shl 19).bit)
-	.at(index.and(1 shl 18).bit)
-	.at(index.and(1 shl 17).bit)
-	.at(index.and(1 shl 16).bit)
-	.at(index.and(1 shl 15).bit)
-	.at(index.and(1 shl 14).bit)
-	.at(index.and(1 shl 13).bit)
-	.at(index.and(1 shl 12).bit)
-	.at(index.and(1 shl 11).bit)
-	.at(index.and(1 shl 10).bit)
-	.at(index.and(1 shl 9).bit)
-	.at(index.and(1 shl 8).bit)
-	.at(index.and(1 shl 7).bit)
-	.at(index.and(1 shl 6).bit)
-	.at(index.and(1 shl 5).bit)
-	.at(index.and(1 shl 4).bit)
-	.at(index.and(1 shl 3).bit)
-	.at(index.and(1 shl 2).bit)
-	.at(index.and(1 shl 1).bit)
-	.at(index.and(1).bit)
+	?.at(index.and(1 shl 30).bit)
+	?.at(index.and(1 shl 29).bit)
+	?.at(index.and(1 shl 28).bit)
+	?.at(index.and(1 shl 27).bit)
+	?.at(index.and(1 shl 26).bit)
+	?.at(index.and(1 shl 25).bit)
+	?.at(index.and(1 shl 24).bit)
+	?.at(index.and(1 shl 23).bit)
+	?.at(index.and(1 shl 22).bit)
+	?.at(index.and(1 shl 21).bit)
+	?.at(index.and(1 shl 20).bit)
+	?.at(index.and(1 shl 19).bit)
+	?.at(index.and(1 shl 18).bit)
+	?.at(index.and(1 shl 17).bit)
+	?.at(index.and(1 shl 16).bit)
+	?.at(index.and(1 shl 15).bit)
+	?.at(index.and(1 shl 14).bit)
+	?.at(index.and(1 shl 13).bit)
+	?.at(index.and(1 shl 12).bit)
+	?.at(index.and(1 shl 11).bit)
+	?.at(index.and(1 shl 10).bit)
+	?.at(index.and(1 shl 9).bit)
+	?.at(index.and(1 shl 8).bit)
+	?.at(index.and(1 shl 7).bit)
+	?.at(index.and(1 shl 6).bit)
+	?.at(index.and(1 shl 5).bit)
+	?.at(index.and(1 shl 4).bit)
+	?.at(index.and(1 shl 3).bit)
+	?.at(index.and(1 shl 2).bit)
+	?.at(index.and(1 shl 1).bit)
+	?.at(index.and(1).bit)
 
-fun <T> Array8<T>.put(index: Byte, value: T): Array8<T> {
-	val int = index.int
-	val bit7 = int.and(1 shl 7).bit
-	val bit6 = int.and(1 shl 6).bit
-	val bit5 = int.and(1 shl 5).bit
-	val bit4 = int.and(1 shl 4).bit
-	val bit3 = int.and(1 shl 3).bit
-	val bit2 = int.and(1 shl 2).bit
-	val bit1 = int.and(1 shl 1).bit
-	val bit0 = int.and(1).bit
-
-	val array7 = at(bit7)
-	val array6 = array7.at(bit6)
-	val array5 = array6.at(bit5)
-	val array4 = array5.at(bit4)
-	val array3 = array4.at(bit3)
-	val array2 = array3.at(bit2)
-	val array1 = array2.at(bit1)
-
-	val newArray1 = array1.put(bit0, value)
-	val newArray2 = array2.put(bit1, newArray1)
-	val newArray3 = array3.put(bit2, newArray2)
-	val newArray4 = array4.put(bit3, newArray3)
-	val newArray5 = array5.put(bit4, newArray4)
-	val newArray6 = array6.put(bit5, newArray5)
-	val newArray7 = array7.put(bit6, newArray6)
-	return put(bit7, newArray7)
-}
 
 fun <T> Array32<T>.put(index: Int, value: T): Array32<T> {
 	val int = index
@@ -274,37 +209,37 @@ fun <T> Array32<T>.put(index: Int, value: T): Array32<T> {
 	val bit1 = int.and(1 shl 1).bit
 	val bit0 = int.and(1).bit
 
-	val array31 = at(bit31)
-	val array30 = array31.at(bit30)
-	val array29 = array30.at(bit29)
-	val array28 = array29.at(bit28)
-	val array27 = array28.at(bit27)
-	val array26 = array27.at(bit26)
-	val array25 = array26.at(bit25)
-	val array24 = array25.at(bit24)
-	val array23 = array24.at(bit23)
-	val array22 = array23.at(bit22)
-	val array21 = array22.at(bit21)
-	val array20 = array21.at(bit20)
-	val array19 = array20.at(bit19)
-	val array18 = array19.at(bit18)
-	val array17 = array18.at(bit17)
-	val array16 = array17.at(bit16)
-	val array15 = array16.at(bit15)
-	val array14 = array15.at(bit14)
-	val array13 = array14.at(bit13)
-	val array12 = array13.at(bit12)
-	val array11 = array12.at(bit11)
-	val array10 = array11.at(bit10)
-	val array9 = array10.at(bit9)
-	val array8 = array9.at(bit8)
-	val array7 = array8.at(bit7)
-	val array6 = array7.at(bit6)
-	val array5 = array6.at(bit5)
-	val array4 = array5.at(bit4)
-	val array3 = array4.at(bit3)
-	val array2 = array3.at(bit2)
-	val array1 = array2.at(bit1)
+	val array31 = at(bit31) ?: nullArray31()
+	val array30 = array31.at(bit30) ?: nullArray30()
+	val array29 = array30.at(bit29) ?: nullArray29()
+	val array28 = array29.at(bit28) ?: nullArray28()
+	val array27 = array28.at(bit27) ?: nullArray27()
+	val array26 = array27.at(bit26) ?: nullArray26()
+	val array25 = array26.at(bit25) ?: nullArray25()
+	val array24 = array25.at(bit24) ?: nullArray24()
+	val array23 = array24.at(bit23) ?: nullArray23()
+	val array22 = array23.at(bit22) ?: nullArray22()
+	val array21 = array22.at(bit21) ?: nullArray21()
+	val array20 = array21.at(bit20) ?: nullArray20()
+	val array19 = array20.at(bit19) ?: nullArray19()
+	val array18 = array19.at(bit18) ?: nullArray18()
+	val array17 = array18.at(bit17) ?: nullArray17()
+	val array16 = array17.at(bit16) ?: nullArray16()
+	val array15 = array16.at(bit15) ?: nullArray15()
+	val array14 = array15.at(bit14) ?: nullArray14()
+	val array13 = array14.at(bit13) ?: nullArray13()
+	val array12 = array13.at(bit12) ?: nullArray12()
+	val array11 = array12.at(bit11) ?: nullArray11()
+	val array10 = array11.at(bit10) ?: nullArray10()
+	val array9 = array10.at(bit9) ?: nullArray9()
+	val array8 = array9.at(bit8) ?: nullArray8()
+	val array7 = array8.at(bit7) ?: nullArray7()
+	val array6 = array7.at(bit6) ?: nullArray6()
+	val array5 = array6.at(bit5) ?: nullArray5()
+	val array4 = array5.at(bit4) ?: nullArray4()
+	val array3 = array4.at(bit3) ?: nullArray3()
+	val array2 = array3.at(bit2) ?: nullArray2()
+	val array1 = array2.at(bit1) ?: nullArray1()
 
 	val newArray1 = array1.put(bit0, value)
 	val newArray2 = array2.put(bit1, newArray1)
@@ -340,5 +275,139 @@ fun <T> Array32<T>.put(index: Int, value: T): Array32<T> {
 	return put(bit31, newArray31)
 }
 
-fun <T> Array32<T>.updateAt(index: Int, fn: T.() -> T): Array32<T> =
+fun <T> Array32<T>.updateAt(index: Int, fn: T?.() -> T): Array32<T> =
 	put(index, at(index).fn())
+
+fun <T, R> R.foldIndexed(array: Array1<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { fn(0 indexed it) }
+		.ifNotNull(array.at1) { fn(1 indexed it) }
+
+fun <T, R> R.foldIndexed(array: Array2<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 1) } }
+
+fun <T, R> R.foldIndexed(array: Array3<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 2) } }
+
+fun <T, R> R.foldIndexed(array: Array4<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 3) } }
+
+fun <T, R> R.foldIndexed(array: Array5<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 4) } }
+
+fun <T, R> R.foldIndexed(array: Array6<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 5) } }
+
+fun <T, R> R.foldIndexed(array: Array7<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 6) } }
+
+fun <T, R> R.foldIndexed(array: Array8<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 7) } }
+
+fun <T, R> R.foldIndexed(array: Array9<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 8) } }
+
+fun <T, R> R.foldIndexed(array: Array10<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 9) } }
+
+fun <T, R> R.foldIndexed(array: Array11<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 10) } }
+
+fun <T, R> R.foldIndexed(array: Array12<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 11) } }
+
+fun <T, R> R.foldIndexed(array: Array13<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 12) } }
+
+fun <T, R> R.foldIndexed(array: Array14<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 13) } }
+
+fun <T, R> R.foldIndexed(array: Array15<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 14) } }
+
+fun <T, R> R.foldIndexed(array: Array16<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 15) } }
+
+fun <T, R> R.foldIndexed(array: Array17<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 16) } }
+
+fun <T, R> R.foldIndexed(array: Array18<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 17) } }
+
+fun <T, R> R.foldIndexed(array: Array19<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 18) } }
+
+fun <T, R> R.foldIndexed(array: Array20<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 19) } }
+
+fun <T, R> R.foldIndexed(array: Array21<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 20) } }
+
+fun <T, R> R.foldIndexed(array: Array22<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 21) } }
+
+fun <T, R> R.foldIndexed(array: Array23<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 22) } }
+
+fun <T, R> R.foldIndexed(array: Array24<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 23) } }
+
+fun <T, R> R.foldIndexed(array: Array25<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 24) } }
+
+fun <T, R> R.foldIndexed(array: Array26<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 25) } }
+
+fun <T, R> R.foldIndexed(array: Array27<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 26) } }
+
+fun <T, R> R.foldIndexed(array: Array28<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 27) } }
+
+fun <T, R> R.foldIndexed(array: Array29<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 28) } }
+
+fun <T, R> R.foldIndexed(array: Array30<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 29) } }
+
+fun <T, R> R.foldIndexed(array: Array31<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 30) } }
+
+fun <T, R> R.foldIndexed(array: Array32<T>, fn: R.(IndexedValue<T>) -> R): R =
+	ifNotNull(array.at0) { foldIndexed(it, fn) }
+		.ifNotNull(array.at1) { foldIndexed(it) { indexed -> fn(indexed or1Shl 31) } }
+
+fun <T> Appendable.append(array: Array32<T>): Appendable =
+	append("nullArray32()").appendIndexed(array)
+
+fun <T> Appendable.appendIndexed(array: Array32<T>): Appendable =
+	foldIndexed(array) { append(".put(${it.index}, ${it.value})") }

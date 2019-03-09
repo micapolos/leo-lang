@@ -11,9 +11,8 @@ data class PoppedStack32<out T>(
 	val value: T,
 	val stack32: Stack32<T>)
 
-val <T> T.emptyStack32: Stack32<T>
-	get() =
-		Stack32(array32, null)
+fun <T> emptyStack32(): Stack32<T> =
+	Stack32(nullArray32(), null)
 
 val <T> Stack32<T>.isEmpty
 	get() =
@@ -51,9 +50,9 @@ fun <T : Any> Stack32<T>.popped(value: T): PoppedStack32<T> =
 val <T : Any> Stack32<T>.pop: PoppedStack32<T>?
 	get() =
 		if (topIndex == null) null
-		else (topIndex.udecOrNull?.let { Stack32(array32, it) } ?: empty).popped(array32.at(topIndex))
+		else (topIndex.udecOrNull?.let { Stack32(array32, it) } ?: empty).popped(array32.at(topIndex)!!)
 
 fun <T> Stack32<T>.updateTop(fn: T.() -> T): Stack32<T>? =
 	topIndex?.let {
-		copy(array32 = array32.updateAt(it, fn))
+		copy(array32 = array32.updateAt(it) { fn(this!!) })
 	}

@@ -23,4 +23,3 @@ object PlusOp : Op() {
 	override fun invoke(arg: Int, runtime: Runtime) =
 		runtime.invokePlus(arg)
 }
-

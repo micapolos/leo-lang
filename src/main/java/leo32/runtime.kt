@@ -7,6 +7,9 @@ data class Runtime(
 	val argStack: Stack32<Int>,
 	val functionStack: Stack32<Function>)
 
+val emptyRuntime =
+	Runtime(emptyFunction, emptyStack32(), emptyStack32())
+
 fun Runtime.push(arg: Int): Runtime? =
 	(functionStack.top ?: scopeFunction).invoke(arg, this)
 
