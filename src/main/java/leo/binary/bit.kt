@@ -5,107 +5,73 @@ import leo.base.ifNotNull
 import leo.base.onlySeq
 import leo.base.read
 
-enum class Bit {
-	ZERO,
-	ONE;
+sealed class Bit
+data class ZeroBit(val zero: Zero) : Bit()
+data class OneBit(val one: One) : Bit()
 
-	override fun toString() = "bit $int"
-}
+val Zero.bit: Bit get() = ZeroBit(this)
+val One.bit: Bit get() = OneBit(this)
 
-val zeroBit = Bit.ZERO
-val oneBit = Bit.ONE
+inline fun <R> Bit.match(zeroFn: Zero.() -> R, oneFn: One.() -> R) =
+	when (this) {
+		is ZeroBit -> zero.zeroFn()
+		is OneBit -> one.oneFn()
+	}
+
+val Bit.boolean
+	get() =
+		match({ boolean }, { boolean })
+
+val Boolean.bit
+	get() =
+		if (this) one.bit else zero.bit
 
 val Bit.int
 	get() =
-		ordinal
+		match({ int }, { int })
 
 val Bit.char
 	get() =
-		when (this) {
-			Bit.ZERO -> '0'
-			Bit.ONE -> '1'
-		}
+		match({ char }, { char })
 
 val Bit.inverse
 	get() =
-		when (this) {
-			Bit.ZERO -> Bit.ONE
-			Bit.ONE -> Bit.ZERO
-		}
+		match({ one.bit }, { zero.bit })
 
 infix fun Bit.nand(bit: Bit) =
 	and(bit).inverse
 
 fun Bit.and(bit: Bit) =
-	when (this) {
-		Bit.ZERO ->
-			when (bit) {
-				Bit.ZERO -> Bit.ZERO
-				Bit.ONE -> Bit.ZERO
-			}
-		Bit.ONE ->
-			when (bit) {
-				Bit.ZERO -> Bit.ZERO
-				Bit.ONE -> Bit.ONE
-			}
-	}
+	boolean.and(bit.boolean).bit
 
 fun Bit.or(bit: Bit) =
-	when (this) {
-		Bit.ZERO ->
-			when (bit) {
-				Bit.ZERO -> Bit.ZERO
-				Bit.ONE -> Bit.ONE
-			}
-		Bit.ONE ->
-			when (bit) {
-				Bit.ZERO -> Bit.ONE
-				Bit.ONE -> Bit.ONE
-			}
-	}
+	boolean.or(bit.boolean).bit
 
 fun Bit.xor(bit: Bit) =
-	when (this) {
-		Bit.ZERO ->
-			when (bit) {
-				Bit.ZERO -> Bit.ZERO
-				Bit.ONE -> Bit.ONE
-			}
-		Bit.ONE ->
-			when (bit) {
-				Bit.ZERO -> Bit.ONE
-				Bit.ONE -> Bit.ZERO
-			}
-	}
+	boolean.xor(bit.boolean).bit
 
 val Int.bitOrNull
 	get() =
 		when (this) {
-			0 -> Bit.ZERO
-			1 -> Bit.ONE
+			0 -> zero.bit
+			1 -> one.bit
 			else -> null
 		}
 
 val Int.bit
 	get() =
-		if (this == 0) Bit.ZERO
-		else Bit.ONE
+		if (this == 0) zero.bit
+		else one.bit
 
 val Int.lastBit: Bit
 	get() =
-		if (and(1) == 0) Bit.ZERO
-		else Bit.ONE
+		and(1).bit
 
 val Int.clampedBit
-	get() =
-		if (this == 0) Bit.ZERO
-		else Bit.ONE
+	get() = bit
 
 fun <V> Bit.ifZero(value: V, fn: (V) -> V): V =
-	when (this) {
-		Bit.ZERO -> fn(value)
-		Bit.ONE -> value
-	}
+	match({ fn(value) }, { value })
 
 fun Appendable.append(bit: Bit): Appendable =
 	append(bit.char)
@@ -117,13 +83,6 @@ fun Appendable.appendBit(bitStream: Stream<Bit>): Appendable =
 
 val Bit.bitSeq get() = onlySeq
 
-val Bit.boolean
-	get() =
-		when (this) {
-			Bit.ZERO -> false
-			Bit.ONE -> true
-		}
-
 val Bit.isZero
 	get() =
-		this == Bit.ZERO
+		match({ true }, { false })

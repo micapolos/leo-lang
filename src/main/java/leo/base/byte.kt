@@ -1,11 +1,7 @@
 package leo.base
 
-import leo.binary.Bit
-import leo.binary.clampedBit
-import leo.binary.int
-
 // TODO: Check if it's properly inlined in java.
-fun byte(bit7: Bit, bit6: Bit, bit5: Bit, bit4: Bit, bit3: Bit, bit2: Bit, bit1: Bit, bit0: Bit): Byte = 0
+fun byte(bit7: EnumBit, bit6: EnumBit, bit5: EnumBit, bit4: EnumBit, bit3: EnumBit, bit2: EnumBit, bit1: EnumBit, bit0: EnumBit): Byte = 0
 	.or(bit7.int.shl(7))
 	.or(bit6.int.shl(6))
 	.or(bit5.int.shl(5))
@@ -15,37 +11,37 @@ fun byte(bit7: Bit, bit6: Bit, bit5: Bit, bit4: Bit, bit3: Bit, bit2: Bit, bit1:
 	.or(bit1.int.shl(1))
 	.or(bit0.int.shl(0)).clampedByte
 
-inline val Byte.bit7: Bit
+inline val Byte.bit7: EnumBit
 	get() =
-		int.and(0x80).clampedBit
+		int.and(0x80).clampedEnumBit
 
-inline val Byte.bit6: Bit
+inline val Byte.bit6: EnumBit
 	get() =
-		int.and(0x40).clampedBit
+		int.and(0x40).clampedEnumBit
 
-inline val Byte.bit5: Bit
+inline val Byte.bit5: EnumBit
 	get() =
-		int.and(0x20).clampedBit
+		int.and(0x20).clampedEnumBit
 
-inline val Byte.bit4: Bit
+inline val Byte.bit4: EnumBit
 	get() =
-		int.and(0x10).clampedBit
+		int.and(0x10).clampedEnumBit
 
-inline val Byte.bit3: Bit
+inline val Byte.bit3: EnumBit
 	get() =
-		int.and(0x08).clampedBit
+		int.and(0x08).clampedEnumBit
 
-inline val Byte.bit2: Bit
+inline val Byte.bit2: EnumBit
 	get() =
-		int.and(0x04).clampedBit
+		int.and(0x04).clampedEnumBit
 
-inline val Byte.bit1: Bit
+inline val Byte.bit1: EnumBit
 	get() =
-		int.and(0x02).clampedBit
+		int.and(0x02).clampedEnumBit
 
-inline val Byte.bit0: Bit
+inline val Byte.bit0: EnumBit
 	get() =
-		int.and(0x01).clampedBit
+		int.and(0x01).clampedEnumBit
 
 val Byte.int
 	get() =
@@ -55,7 +51,7 @@ val Byte.char
 	get() =
 		toChar()
 
-val Byte.bitStream: Stream<Bit>
+val Byte.bitStream: Stream<EnumBit>
 	get() =
 		bit7.onlyStream.then {
 			bit6.onlyStream.then {
@@ -73,17 +69,17 @@ val Byte.bitStream: Stream<Bit>
 			}
 		}
 
-val Stream<Byte>.byteBitStream: Stream<Bit>
+val Stream<Byte>.byteBitStream: Stream<EnumBit>
 	get() =
 		map(Byte::bitStream).join
 
-val Stream<Bit>.bitByteStreamOrNull: Stream<Byte>?
+val Stream<EnumBit>.bitByteStreamOrNull: Stream<Byte>?
 	get() =
 		bitParseByte?.let { parse ->
 			parse.parsed.onlyStreamThen { parse.streamOrNull?.bitByteStreamOrNull }
 		}
 
-val Stream<Bit>.bitParseByte: Parse<Bit, Byte>?
+val Stream<EnumBit>.bitParseByte: Parse<EnumBit, Byte>?
 	get() =
 		matchFirst { bit7 ->
 			this?.matchFirst { bit6 ->

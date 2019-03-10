@@ -1,35 +1,35 @@
 package leo
 
-import leo.binary.Bit
+import leo.base.EnumBit
 
-val Bit.reflect: Field<Nothing>
+val EnumBit.reflect: Field<Nothing>
 	get() =
 		bitWord fieldTo
 			when (this) {
-				Bit.ZERO -> zeroWord
-				Bit.ONE -> oneWord
+				EnumBit.ZERO -> zeroWord
+				EnumBit.ONE -> oneWord
 			}.term
 
-val Field<Nothing>.parseBit: Bit?
+val Field<Nothing>.parseBit: EnumBit?
 	get() =
 		when {
-			this == bitWord fieldTo zeroWord.term -> Bit.ZERO
-			this == bitWord fieldTo oneWord.term -> Bit.ONE
+			this == bitWord fieldTo zeroWord.term -> EnumBit.ZERO
+			this == bitWord fieldTo oneWord.term -> EnumBit.ONE
 			else -> null
 		}
 
 // === parsers
 
-val Bit.inc: Bit?
+val EnumBit.inc: EnumBit?
 	get() =
 		when (this) {
-			Bit.ZERO -> Bit.ONE
-			Bit.ONE -> null
+			EnumBit.ZERO -> EnumBit.ONE
+			EnumBit.ONE -> null
 		}
 
-val Bit.carryInc: CarryAnd<Bit>
+val EnumBit.carryInc: CarryAnd<EnumBit>
 	get() =
 		when (this) {
-			Bit.ZERO -> Bit.ZERO.carry.and(Bit.ONE)
-			Bit.ONE -> Bit.ONE.carry.and(Bit.ZERO)
+			EnumBit.ZERO -> EnumBit.ZERO.carry.and(EnumBit.ONE)
+			EnumBit.ONE -> EnumBit.ONE.carry.and(EnumBit.ZERO)
 		}

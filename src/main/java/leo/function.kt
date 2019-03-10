@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 
 data class Function(
 	val bodyBinaryTrie: BinaryTrie<Body>)
@@ -13,13 +12,13 @@ val BinaryTrie<Body>.function
 val emptyFunction: Function =
 	emptyBinaryTrie<Body>().function
 
-fun Function.get(bit: Bit): Match? =
+fun Function.get(bit: EnumBit): Match? =
 	bodyBinaryTrie.get(bit)?.match
 
-fun Function.set(bit: Bit, matchOrNull: Match?): Function =
+fun Function.set(bit: EnumBit, matchOrNull: Match?): Function =
 	bodyBinaryTrie.set(bit, matchOrNull?.bodyBinaryTrieMatch).function
 
-fun Function.get(bitStream: Stream<Bit>): Match? =
+fun Function.get(bitStream: Stream<EnumBit>): Match? =
 	bodyBinaryTrie.get(bitStream)?.match
 
 fun Function.get(term: Term<Nothing>): Match? =
@@ -126,12 +125,12 @@ fun Function.define(word: Word, backTraceOrNull: BackTrace?, defineNext: Functio
 fun Function.define(byte: Byte, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	defineBit(byte.bitStream, backTraceOrNull, defineNext)
 
-fun Function.defineBit(bitStream: Stream<Bit>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+fun Function.defineBit(bitStream: Stream<EnumBit>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	bodyBinaryTrie.defineBit(bitStream) {
 		function.defineNext(backTraceOrNull)?.bodyBinaryTrieMatch
 	}?.function
 
-fun Function.define(bit: Bit, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
+fun Function.define(bit: EnumBit, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	bodyBinaryTrie.define(bit) {
 		function.defineNext(backTraceOrNull)?.bodyBinaryTrieMatch
 	}?.function

@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 
 sealed class Token<out V>
 data class MetaToken<V>(val meta: Meta<V>) : Token<V>()
@@ -55,11 +54,11 @@ val Token<Nothing>.characterStream: Stream<Character>
 			is ControlToken -> control.character.onlyStream
 		}
 
-val Token<Nothing>.bitStream: Stream<Bit>
+val Token<Nothing>.bitStream: Stream<EnumBit>
 	get() =
 		characterStream.mapJoin(Character::bitStream)
 
-val Stream<Bit>.bitParseToken: Parse<Bit, Token<Nothing>>?
+val Stream<EnumBit>.bitParseToken: Parse<EnumBit, Token<Nothing>>?
 	get() = null
 		?: bitParseWord.bind { word ->
 			parsed(word.token)

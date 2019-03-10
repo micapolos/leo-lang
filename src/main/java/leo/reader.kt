@@ -1,10 +1,6 @@
 package leo
 
-import leo.base.BinaryTrie
-import leo.base.Stream
-import leo.base.fold
-import leo.base.orNull
-import leo.binary.Bit
+import leo.base.*
 
 data class Reader<V>(
 	val parseFn: (Field<Nothing>) -> V?,
@@ -69,7 +65,7 @@ fun <V> Reader<V>.readPreprocessed(value: V): Reader<V>? =
 
 // === bit stream
 
-val <V> Reader<V>.bitStreamOrNull: Stream<Bit>?
+val <V> Reader<V>.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		evaluator.bitStreamOrNullFn()
 
@@ -79,7 +75,7 @@ val emptyBitReader
 	get() =
 		Reader(
 			Field<Nothing>::parseBit,
-			Bit::reflect,
+			EnumBit::reflect,
 			emptyBitEvaluator.evaluator)
 
 val emptyByteReader: Reader<Byte>

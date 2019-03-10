@@ -1,21 +1,21 @@
 package leo
 
+import leo.base.EnumBit
 import leo.base.assertEqualTo
-import leo.binary.Bit
 import org.junit.Test
 
 class BitEvaluatorTest {
 	@Test
 	fun readBitOne() {
 		emptyBitEvaluator
-			.evaluate(Bit.ONE)
+			.evaluate(EnumBit.ONE)
 			.assertEqualTo(emptyBitEvaluator.copy(byteInt = 0x80, maskInt = 0x40))
 	}
 
 	@Test
 	fun readBitZero() {
 		emptyBitEvaluator
-			.evaluate(Bit.ZERO)
+			.evaluate(EnumBit.ZERO)
 			.assertEqualTo(emptyBitEvaluator.copy(byteInt = 0x00, maskInt = 0x40))
 	}
 

@@ -2,7 +2,6 @@ package leo.lab.v1
 
 import leo.*
 import leo.base.*
-import leo.binary.Bit
 
 sealed class Script<out V>
 
@@ -135,7 +134,7 @@ val Script<Nothing>.coreString: String
 				Appendable::append)
 		}
 
-val Script<Nothing>.bitStream: Stream<Bit>
+val Script<Nothing>.bitStream: Stream<EnumBit>
 	get() =
 		tokenStream
 			.mapJoin(Token<Nothing>::characterStream)

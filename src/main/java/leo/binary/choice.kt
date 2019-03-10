@@ -14,25 +14,21 @@ val <V> V.allChoice
 		Choice(this, this)
 
 fun <V : Any> array(bit: Bit, value: V): Choice<V?> =
-	when (bit) {
-		Bit.ZERO -> Choice(value, null)
-		Bit.ONE -> Choice(null, value)
-	}
+	bit.match(
+		{ Choice(value, null) },
+		{ Choice(null, value) })
 
 fun <V> Choice<V>.get(bit: Bit): V =
-	when (bit) {
-		Bit.ZERO -> atBitZero
-		Bit.ONE -> atBitOne
-	}
+	bit.match(
+		{ atBitZero },
+		{ atBitOne })
 
 fun <V> Choice<V>.set(bit: Bit, value: V): Choice<V> =
-	when (bit) {
-		Bit.ZERO -> copy(atBitZero = value)
-		Bit.ONE -> copy(atBitOne = value)
-	}
+	bit.match(
+		{ copy(atBitZero = value) },
+		{ copy(atBitOne = value) })
 
 fun <V> Choice<V>.plus(bit: Bit, value: V): Choice<V>? =
-	when (bit) {
-		Bit.ZERO -> atBitZero.ifNull { copy(atBitZero = value) }
-		Bit.ONE -> atBitOne.ifNull { copy(atBitOne = value) }
-	}
+	bit.match(
+		{ atBitZero.ifNull { copy(atBitZero = value) } },
+		{ atBitOne.ifNull { copy(atBitOne = value) } })

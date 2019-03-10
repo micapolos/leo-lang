@@ -1,8 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-import leo.binary.bit
-
 inline val Int.clampedByte
 	get() =
 		toByte()
@@ -12,7 +9,7 @@ val Int.shortStream: Stream<Short>
 		shr(16).toShort().onlyStream
 			.then { toShort().onlyStream }
 
-val Int.bitStream: Stream<Bit>
+val Int.bitStream: Stream<EnumBit>
 	get() =
 		shortStream.map(Short::bitStream).join
 
@@ -39,10 +36,10 @@ val Int.pow2: Int
 			else -> 1.shl(this)
 		}
 
-fun Int.bitSequence(count: Int): Seq<Bit> =
+fun Int.bitSequence(count: Int): Seq<EnumBit> =
 	Seq {
 		if (count == 0) null
-		else and((count - 1).pow2).bit.thenNonEmptySequence(bitSequence(count - 1))
+		else and((count - 1).pow2).enumBit.thenSeqNode(bitSequence(count - 1))
 	}
 
 

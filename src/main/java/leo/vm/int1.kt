@@ -1,12 +1,12 @@
 package leo.vm
 
+import leo.base.EnumBit
 import leo.base.Variable
-import leo.binary.Bit
-import leo.binary.oneBit
-import leo.binary.zeroBit
+import leo.base.oneBit
+import leo.base.zeroBit
 
 data class Int1(
-	val bit: Variable<Bit>)
+	val bit: Variable<EnumBit>)
 
 val Int1.notOp: Op
 	get() =
@@ -21,7 +21,7 @@ fun Int1.orOp(int1: Int1): Op =
 fun Int1.xorOp(int1: Int1): Op =
 	bit.xorOp(int1.bit)
 
-fun Int1.incOp(carryBitVariable: Variable<Bit>): Op =
+fun Int1.incOp(carryBitVariable: Variable<EnumBit>): Op =
 	bit.branchOp(
 		carryBitVariable.branchOp(
 			bit.setOp(zeroBit).then(carryBitVariable.setOp(zeroBit)),
@@ -30,7 +30,7 @@ fun Int1.incOp(carryBitVariable: Variable<Bit>): Op =
 			bit.setOp(oneBit).then(carryBitVariable.setOp(zeroBit)),
 			bit.setOp(zeroBit).then(carryBitVariable.setOp(oneBit))))
 
-fun Int1.addOp(int1: Int1, carryBitVariable: Variable<Bit>): Op =
+fun Int1.addOp(int1: Int1, carryBitVariable: Variable<EnumBit>): Op =
 	bit.branchOp(
 		int1.bit.branchOp(
 			carryBitVariable.branchOp(

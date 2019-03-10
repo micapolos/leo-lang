@@ -1,17 +1,16 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 
 data class Repl(
 	val isError: Boolean,
-	val bitReader: Reader<Bit>,
-	val errorBitWriter: Writer<Bit>)
+	val bitReader: Reader<EnumBit>,
+	val errorBitWriter: Writer<EnumBit>)
 
-fun emptyRepl(errorBitWriter: Writer<Bit>): Repl =
+fun emptyRepl(errorBitWriter: Writer<EnumBit>): Repl =
 	Repl(false, emptyBitReader, errorBitWriter)
 
-fun Repl.read(bit: Bit): Repl =
+fun Repl.read(bit: EnumBit): Repl =
 	if (isError) copy(errorBitWriter = errorBitWriter.write(bit))
 	else bitReader.read(bit).let { nextBitReader ->
 		if (nextBitReader == null)
@@ -24,11 +23,11 @@ fun Repl.read(bit: Bit): Repl =
 		else copy(bitReader = nextBitReader)
 	}
 
-val Repl.bitStreamOrNull: Stream<Bit>?
+val Repl.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		if (!isError) bitReader.bitStreamOrNull else null
 
-fun runRepl(inputBitStream: Stream<Bit>?, outBitWriter: Writer<Bit>, errorBitWriter: Writer<Bit>) {
+fun runRepl(inputBitStream: Stream<EnumBit>?, outBitWriter: Writer<EnumBit>, errorBitWriter: Writer<EnumBit>) {
 	emptyRepl(errorBitWriter)
 		.fold(inputBitStream, Repl::read)
 		.bitStreamOrNull

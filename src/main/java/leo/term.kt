@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 
 sealed class Term<out V>
 
@@ -133,7 +132,7 @@ val Term<Nothing>.coreString: String
 				Appendable::append)
 		}
 
-val Term<Nothing>.bitStream: Stream<Bit>
+val Term<Nothing>.bitStream: Stream<EnumBit>
 	get() =
 		tokenStream
 			.mapJoin(Token<Nothing>::characterStream)

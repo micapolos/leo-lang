@@ -1,6 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
 import kotlin.test.Test
 
 class BitBufferTest {
@@ -49,25 +48,25 @@ class BitBufferTest {
 	fun pop() {
 		val bitBuffer = bitArray(0, 1).bitBuffer
 
-		bitBuffer.tailBit.assertEqualTo(Bit.ZERO)
-		bitBuffer.tailPop.tailBit.assertEqualTo(Bit.ONE)
-		bitBuffer.tailPop.tailPop.tailBit.assertEqualTo(Bit.ZERO)
+		bitBuffer.tailBit.assertEqualTo(EnumBit.ZERO)
+		bitBuffer.tailPop.tailBit.assertEqualTo(EnumBit.ONE)
+		bitBuffer.tailPop.tailPop.tailBit.assertEqualTo(EnumBit.ZERO)
 
-		bitBuffer.headBit.assertEqualTo(Bit.ONE)
-		bitBuffer.headPop.headBit.assertEqualTo(Bit.ZERO)
-		bitBuffer.headPop.headPop.headBit.assertEqualTo(Bit.ONE)
+		bitBuffer.headBit.assertEqualTo(EnumBit.ONE)
+		bitBuffer.headPop.headBit.assertEqualTo(EnumBit.ZERO)
+		bitBuffer.headPop.headPop.headBit.assertEqualTo(EnumBit.ONE)
 	}
 
 	@Test
 	fun headPushAndSet() {
 		bitArray(0, 0, 0, 0).bitBuffer
 			.headPush
-			.headSet(Bit.ONE)
+			.headSet(EnumBit.ONE)
 			.headPush
 			.headPush
-			.headSet(Bit.ONE)
+			.headSet(EnumBit.ONE)
 			.headPush
-			.headSet(Bit.ONE)
+			.headSet(EnumBit.ONE)
 			.assertEqualTo(bitArray(1, 0, 1, 1).bitBuffer)
 	}
 
@@ -75,22 +74,22 @@ class BitBufferTest {
 	fun tailPushAndSet() {
 		bitArray(0, 0, 0, 0).bitBuffer
 			.tailPush
-			.tailSet(Bit.ONE)
+			.tailSet(EnumBit.ONE)
 			.tailPush
 			.tailPush
-			.tailSet(Bit.ONE)
+			.tailSet(EnumBit.ONE)
 			.tailPush
-			.tailSet(Bit.ONE)
+			.tailSet(EnumBit.ONE)
 			.assertEqualTo(bitArray(1, 1, 0, 1).bitBuffer)
 	}
 
 	@Test
 	fun performance() {
-		16.depthBitArray(Bit.ZERO)
+		16.depthBitArray(EnumBit.ZERO)
 			.bitBuffer
 			.iterate(65536) {
-				headPush.headSet(Bit.ONE)
+				headPush.headSet(EnumBit.ONE)
 			}
-			.assertEqualTo(16.depthBitArray(Bit.ONE).bitBuffer)
+			.assertEqualTo(16.depthBitArray(EnumBit.ONE).bitBuffer)
 	}
 }

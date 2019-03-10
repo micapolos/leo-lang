@@ -1,9 +1,7 @@
 package leo.base
 
-import leo.binary.*
-
 data class Binary(
-	val bit: Bit,
+	val bit: EnumBit,
 	val nextBinaryOrNull: Binary?) {
 	override fun toString() = appendableString { it.append(this) }
 }
@@ -11,46 +9,46 @@ data class Binary(
 fun Appendable.append(binary: Binary): Appendable =
 	append("0b").appendBit(binary.bitStream)
 
-val Binary.bitStream: Stream<Bit>
+val Binary.bitStream: Stream<EnumBit>
 	get() =
 		bit.onlyStream.then {
 			nextBinaryOrNull?.bitStream
 		}
 
-fun Int.sizeBinaryOrNull(bit: Bit): Binary? =
+fun Int.sizeBinaryOrNull(bit: EnumBit): Binary? =
 	sizeStackOrNullOf(bit)?.reverseBinary
 
 val Int.sizeMinBinaryOrNull: Binary?
 	get() =
-		sizeBinaryOrNull(Bit.ZERO)
+		sizeBinaryOrNull(EnumBit.ZERO)
 
 val Int.sizeMaxBinaryOrNull: Binary?
 	get() =
-		sizeBinaryOrNull(Bit.ONE)
+		sizeBinaryOrNull(EnumBit.ONE)
 
 val Binary.zero: Binary
 	get() =
-		Bit.ZERO.binary.fold(bitStream.nextOrNull) {
-			Bit.ZERO.append(this)
+		EnumBit.ZERO.binary.fold(bitStream.nextOrNull) {
+			EnumBit.ZERO.append(this)
 		}
 
-val Bit.binary: Binary
+val EnumBit.binary: Binary
 	get() =
 		Binary(this, null)
 
-fun Bit.append(binaryOrNull: Binary?): Binary =
+fun EnumBit.append(binaryOrNull: Binary?): Binary =
 	Binary(this, binaryOrNull)
 
-val Stack<Bit>.reverseBinary: Binary
+val Stack<EnumBit>.reverseBinary: Binary
 	get() =
 		head.binary.fold(tail) { bit -> bit.append(this) }
 
 fun binary(bitInt: Int, vararg bitInts: Int): Binary =
 	stack(bitInt, *bitInts.toTypedArray())
-		.map(Int::bit)
+		.map(Int::enumBit)
 		.reverseBinary
 
-val Stream<Bit>.binary: Binary
+val Stream<EnumBit>.binary: Binary
 	get() =
 		stack.reverseBinary
 
@@ -72,7 +70,7 @@ val Long.binary: Binary
 
 fun Int.binaryOrNullWithSize(size: Int): Binary? =
 	(this to nullOf<Binary>()).iterate(size) {
-		first.shr(1) to first.lastBit.append(second)
+		first.shr(1) to first.lastEnumBit.append(second)
 	}.second
 
 val Binary.clampedLong: Long
@@ -100,25 +98,25 @@ val Binary.clampedByte: Byte
 	get() =
 		clampedShort.toByte()
 
-val Binary?.carryIncrement: Pair<Bit, Binary?>
+val Binary?.carryIncrement: Pair<EnumBit, Binary?>
 	get() =
-		if (this == null) Bit.ONE to null
+		if (this == null) EnumBit.ONE to null
 		else nextBinaryOrNull?.carryIncrement?.let { (carry, increment) ->
 			when (bit) {
-				Bit.ZERO ->
+				EnumBit.ZERO ->
 					when (carry) {
-						Bit.ZERO -> Bit.ZERO to Bit.ZERO.append(increment)
-						Bit.ONE -> Bit.ZERO to Bit.ONE.append(increment)
+						EnumBit.ZERO -> EnumBit.ZERO to EnumBit.ZERO.append(increment)
+						EnumBit.ONE -> EnumBit.ZERO to EnumBit.ONE.append(increment)
 					}
-				Bit.ONE ->
+				EnumBit.ONE ->
 					when (carry) {
-						Bit.ZERO -> Bit.ZERO to Bit.ONE.append(increment)
-						Bit.ONE -> Bit.ONE to Bit.ZERO.append(increment)
+						EnumBit.ZERO -> EnumBit.ZERO to EnumBit.ONE.append(increment)
+						EnumBit.ONE -> EnumBit.ONE to EnumBit.ZERO.append(increment)
 					}
 			}
 		} ?: when (bit) {
-			Bit.ZERO -> Bit.ZERO to Bit.ONE.binary
-			Bit.ONE -> Bit.ONE to Bit.ZERO.binary
+			EnumBit.ZERO -> EnumBit.ZERO to EnumBit.ONE.binary
+			EnumBit.ONE -> EnumBit.ONE to EnumBit.ZERO.binary
 		}
 
 val Binary?.incrementAndWrap: Binary?
@@ -129,8 +127,8 @@ val Binary?.incrementAndGrow: Binary
 	get() =
 		carryIncrement.let { (carry, increment) ->
 			when (carry) {
-				Bit.ZERO -> increment!!
-				Bit.ONE -> Binary(carry, increment)
+				EnumBit.ZERO -> increment!!
+				EnumBit.ONE -> Binary(carry, increment)
 			}
 		}
 
@@ -138,8 +136,8 @@ val Binary?.incrementAndClamp: Binary?
 	get() =
 		carryIncrement.let { (carry, increment) ->
 			when (carry) {
-				Bit.ZERO -> increment
-				Bit.ONE -> this
+				EnumBit.ZERO -> increment
+				EnumBit.ONE -> this
 			}
 		}
 
@@ -147,37 +145,37 @@ val Binary.increment: Binary?
 	get() =
 		carryIncrement.let { (carry, increment) ->
 			when (carry) {
-				Bit.ZERO -> increment
-				Bit.ONE -> null
+				EnumBit.ZERO -> increment
+				EnumBit.ONE -> null
 			}
 		}
 
-val Binary.borrowDecrement: Pair<Bit, Binary>
+val Binary.borrowDecrement: Pair<EnumBit, Binary>
 	get() =
 		nextBinaryOrNull?.borrowDecrement?.let { (borrow, decrement) ->
 			when (bit) {
-				Bit.ZERO ->
+				EnumBit.ZERO ->
 					when (borrow) {
-						Bit.ZERO -> Bit.ZERO to Bit.ZERO.append(decrement)
-						Bit.ONE -> Bit.ONE to Bit.ONE.append(decrement)
+						EnumBit.ZERO -> EnumBit.ZERO to EnumBit.ZERO.append(decrement)
+						EnumBit.ONE -> EnumBit.ONE to EnumBit.ONE.append(decrement)
 					}
-				Bit.ONE ->
+				EnumBit.ONE ->
 					when (borrow) {
-						Bit.ZERO -> Bit.ZERO to Bit.ONE.append(decrement)
-						Bit.ONE -> Bit.ZERO to Bit.ZERO.append(decrement)
+						EnumBit.ZERO -> EnumBit.ZERO to EnumBit.ONE.append(decrement)
+						EnumBit.ONE -> EnumBit.ZERO to EnumBit.ZERO.append(decrement)
 					}
 			}
 		} ?: when (bit) {
-			Bit.ZERO -> Bit.ONE to Bit.ONE.binary
-			Bit.ONE -> Bit.ZERO to Bit.ZERO.binary
+			EnumBit.ZERO -> EnumBit.ONE to EnumBit.ONE.binary
+			EnumBit.ONE -> EnumBit.ZERO to EnumBit.ZERO.binary
 		}
 
 val Binary.decrement: Binary?
 	get() =
 		borrowDecrement.let { (borrow, decrement) ->
 			when (borrow) {
-				Bit.ZERO -> decrement
-				Bit.ONE -> null
+				EnumBit.ZERO -> decrement
+				EnumBit.ONE -> null
 			}
 		}
 

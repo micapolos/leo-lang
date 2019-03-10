@@ -1,9 +1,9 @@
 package leo
 
+import leo.base.EnumBit
 import leo.base.Stream
 import leo.base.ifNull
 import leo.base.string
-import leo.binary.Bit
 
 data class Scope(
 	val function: Function,
@@ -58,7 +58,7 @@ val Scope.reflect: Field<Nothing>
 
 // === bit stream
 
-fun Scope.bitStreamOrNull(asFieldsTerm: Boolean): Stream<Bit>? =
+fun Scope.bitStreamOrNull(asFieldsTerm: Boolean): Stream<EnumBit>? =
 	termOrNull?.let { term ->
 		when {
 			asFieldsTerm && term !is StructureTerm -> term.itTerm

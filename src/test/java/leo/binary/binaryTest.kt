@@ -6,8 +6,8 @@ import kotlin.test.Test
 class BinaryTest {
 	@Test
 	fun bitsBinary() {
-		binary(Bit.ZERO).assertEqualTo(Binary(Bit.ZERO, null))
-		binary(Bit.ZERO, Bit.ONE).assertEqualTo(Binary(Bit.ZERO, Binary(Bit.ONE, null)))
-		binary(Bit.ZERO, Bit.ONE, Bit.ONE).assertEqualTo(Binary(Bit.ZERO, Binary(Bit.ONE, Binary(Bit.ONE, null))))
+		binary(zero.bit).assertEqualTo(Binary(zero.bit, null))
+		binary(zero.bit, one.bit).assertEqualTo(Binary(zero.bit, Binary(one.bit, null)))
+		binary(zero.bit, one.bit, one.bit).assertEqualTo(Binary(zero.bit, Binary(one.bit, Binary(one.bit, null))))
 	}
 }

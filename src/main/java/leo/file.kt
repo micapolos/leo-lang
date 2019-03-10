@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 import leo.java.io.file
 import leo.java.io.useBitStream
 import java.nio.file.Path
@@ -21,7 +20,7 @@ val File.wordStream: Stream<Word>
 fun file(word: Word, vararg words: Word): File =
 	stack(word, *words).file
 
-fun <R> File.useBitStream(fn: Stream<Bit>?.() -> R): R =
+fun <R> File.useBitStream(fn: Stream<EnumBit>?.() -> R): R =
 	path.file.useBitStream(fn)
 
 val File.path: Path

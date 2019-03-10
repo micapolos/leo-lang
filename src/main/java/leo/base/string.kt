@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-
 fun appendableString(fn: (Appendable) -> Unit): String {
 	val stringBuilder = StringBuilder()
 	fn(stringBuilder)
@@ -21,7 +19,7 @@ val String.byteStreamOrNull: Stream<Byte>?
 	get() =
 		toByteArray().streamOrNull
 
-val String.bitStreamOrNull: Stream<Bit>?
+val String.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		byteStreamOrNull?.map(Byte::bitStream)?.join
 
@@ -33,7 +31,7 @@ val Stream<Byte>?.utf8string: String
 			}
 		}
 
-val Stream<Bit>?.utf8String: String
+val Stream<EnumBit>?.utf8String: String
 	get() =
 		this?.bitByteStreamOrNull?.utf8string ?: ""
 

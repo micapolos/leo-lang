@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-
 data class BinaryTrie<out V>(
 	val binaryMatchOrNullMap: BinaryMap<Match<V>?>) {
 	override fun toString() = "binaryTrie(*)"
@@ -22,7 +20,7 @@ val <V> BinaryMap<BinaryTrie.Match<V>?>.binaryTrie
 	get() =
 		BinaryTrie(this)
 
-fun <V> binaryTrie(vararg pairs: Pair<Stream<Bit>, V>): BinaryTrie<V> =
+fun <V> binaryTrie(vararg pairs: Pair<Stream<EnumBit>, V>): BinaryTrie<V> =
 	emptyBinaryTrie<V>().fold(pairs) { pair -> set(pair.first, pair.second) }
 
 fun <V> emptyBinaryTrie(): BinaryTrie<V> =
@@ -39,7 +37,7 @@ val <V> V.binaryTrieFullMatch: BinaryTrie.Match<V>
 	get() =
 		BinaryTrie.Match.Full(this)
 
-val <V> BinaryTrie<V>.pushParser: PushParser<Bit, V>
+val <V> BinaryTrie<V>.pushParser: PushParser<EnumBit, V>
 	get() =
 		pushParser { bit ->
 			get(bit)?.let { match ->
@@ -50,16 +48,16 @@ val <V> BinaryTrie<V>.pushParser: PushParser<Bit, V>
 			}
 		}
 
-fun <V> BinaryTrie<V>.get(bit: Bit): BinaryTrie.Match<V>? =
+fun <V> BinaryTrie<V>.get(bit: EnumBit): BinaryTrie.Match<V>? =
 	binaryMatchOrNullMap.get(bit)
 
-fun <V> BinaryTrie.Match<V>.get(bit: Bit): BinaryTrie.Match<V>? =
+fun <V> BinaryTrie.Match<V>.get(bit: EnumBit): BinaryTrie.Match<V>? =
 	when (this) {
 		is BinaryTrie.Match.Full -> null
 		is BinaryTrie.Match.Partial -> binaryTrie.get(bit)
 	}
 
-tailrec fun <V> BinaryTrie<V>.matchOrNull(bitStream: Stream<Bit>): BinaryTrie.Match<V>? {
+tailrec fun <V> BinaryTrie<V>.matchOrNull(bitStream: Stream<EnumBit>): BinaryTrie.Match<V>? {
 	val matchOrNull = get(bitStream.first)
 	return if (matchOrNull == null) null
 	else {
@@ -72,17 +70,17 @@ tailrec fun <V> BinaryTrie<V>.matchOrNull(bitStream: Stream<Bit>): BinaryTrie.Ma
 	}
 }
 
-fun <V> BinaryTrie<V>.get(bitStream: Stream<Bit>): BinaryTrie.Match<V>? =
+fun <V> BinaryTrie<V>.get(bitStream: Stream<EnumBit>): BinaryTrie.Match<V>? =
 	matchOrNull(bitStream)
 
-fun <V> BinaryTrie<V>.valueOrNull(bitStream: Stream<Bit>): The<V>? =
+fun <V> BinaryTrie<V>.valueOrNull(bitStream: Stream<EnumBit>): The<V>? =
 	get(bitStream)?.theValueOrNull
 
-fun <V> BinaryTrie<V>.set(bit: Bit, matchOrNull: BinaryTrie.Match<V>?): BinaryTrie<V> =
+fun <V> BinaryTrie<V>.set(bit: EnumBit, matchOrNull: BinaryTrie.Match<V>?): BinaryTrie<V> =
 	binaryMatchOrNullMap.set(bit, matchOrNull).binaryTrie
 
 // TODO: Make it tailrec, using accumulator
-fun <V> BinaryTrie<V>.set(bitStream: Stream<Bit>, value: V): BinaryTrie<V> =
+fun <V> BinaryTrie<V>.set(bitStream: Stream<EnumBit>, value: V): BinaryTrie<V> =
 	read(bitStream) { bit, nextBitStreamOrNull ->
 		if (nextBitStreamOrNull == null) set(bit, value.binaryTrieFullMatch)
 		else {
@@ -103,7 +101,7 @@ val <V> BinaryTrie.Match<V>.theValueOrNull: The<V>?
 			is BinaryTrie.Match.Partial -> null
 		}
 
-fun <V> BinaryTrie<V>.define(bit: Bit, defineNext: BinaryTrie<V>.() -> BinaryTrie.Match<V>?): BinaryTrie<V>? =
+fun <V> BinaryTrie<V>.define(bit: EnumBit, defineNext: BinaryTrie<V>.() -> BinaryTrie.Match<V>?): BinaryTrie<V>? =
 	get(bit).let { matchOrNull ->
 		if (matchOrNull == null)
 			emptyBinaryTrie<V>().defineNext()?.let { nextMatch ->
@@ -122,7 +120,7 @@ fun <V> BinaryTrie<V>.define(bit: Bit, defineNext: BinaryTrie<V>.() -> BinaryTri
 			}
 	}
 
-fun <V> BinaryTrie<V>.defineBit(bitStream: Stream<Bit>, defineNext: BinaryTrie<V>.() -> BinaryTrie.Match<V>?): BinaryTrie<V>? =
+fun <V> BinaryTrie<V>.defineBit(bitStream: Stream<EnumBit>, defineNext: BinaryTrie<V>.() -> BinaryTrie.Match<V>?): BinaryTrie<V>? =
 	define(bitStream.first) {
 		bitStream.nextOrNull.let { nextBitStreamOrNull ->
 			if (nextBitStreamOrNull == null) defineNext()

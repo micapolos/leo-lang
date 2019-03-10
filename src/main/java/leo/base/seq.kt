@@ -44,11 +44,11 @@ val <T> SeqNode<T>.seq: Seq<T>
 	get() =
 		Seq { this }
 
-fun <T> T.thenNonEmptySequence(seq: Seq<T>): SeqNode<T> =
+fun <T> T.thenSeqNode(seq: Seq<T>): SeqNode<T> =
 	SeqNode(this, seq)
 
-fun <T> nonEmptySequence(first: T, vararg remaining: T) =
-	first.thenNonEmptySequence(sequence(*remaining))
+fun <T> seqNode(first: T, vararg remaining: T): SeqNode<T> =
+	first.thenSeqNode(sequence(*remaining))
 
 val <T> T.onlySeqNode: SeqNode<T>
 	get() =
@@ -64,7 +64,7 @@ fun <T> sequence(vararg items: T): Seq<T> =
 fun <T> sequenceFrom(index: Int, items: List<T>): Seq<T> =
 	Seq {
 		if (index == items.size) null
-		else items[index].thenNonEmptySequence(sequenceFrom(index + 1, items))
+		else items[index].thenSeqNode(sequenceFrom(index + 1, items))
 	}
 
 fun <T> Seq<T>.then(fn: () -> Seq<T>): Seq<T> =

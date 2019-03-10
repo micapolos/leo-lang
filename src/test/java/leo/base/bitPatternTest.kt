@@ -1,6 +1,5 @@
 package leo.base
 
-import leo.binary.bit
 import kotlin.test.Test
 
 class BitPatternTest {
@@ -11,11 +10,11 @@ class BitPatternTest {
 				bitPatternMatch("value"),
 				bitPatternRecurseMatch(0))
 
-		bitPattern.pushParser.push(0.bit)?.parsedOrNull?.assertEqualTo("value")
-		bitPattern.pushParser.push(1.bit)?.parsedOrNull?.assertEqualTo(null)
-		bitPattern.pushParser.push(1.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo("value")
-		bitPattern.pushParser.push(1.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo(null)
-		bitPattern.pushParser.push(1.bit)?.push(1.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo("value")
+		bitPattern.pushParser.push(0.enumBit)?.parsedOrNull?.assertEqualTo("value")
+		bitPattern.pushParser.push(1.enumBit)?.parsedOrNull?.assertEqualTo(null)
+		bitPattern.pushParser.push(1.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo("value")
+		bitPattern.pushParser.push(1.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
+		bitPattern.pushParser.push(1.enumBit)?.push(1.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo("value")
 	}
 
 	@Test
@@ -28,13 +27,13 @@ class BitPatternTest {
 						bitPatternRecurseMatch(1),
 						bitPatternRecurseMatch(1))))
 
-		bitPattern.pushParser.push(0.bit)?.parsedOrNull?.assertEqualTo("value")
-		bitPattern.pushParser.push(1.bit)?.parsedOrNull?.assertEqualTo(null)
-		bitPattern.pushParser.push(1.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo(null)
-		bitPattern.pushParser.push(1.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo(null)
-		bitPattern.pushParser.push(1.bit)?.push(0.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo("value")
-		bitPattern.pushParser.push(1.bit)?.push(0.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo(null)
-		bitPattern.pushParser.push(1.bit)?.push(1.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo("value")
-		bitPattern.pushParser.push(1.bit)?.push(1.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo(null)
+		bitPattern.pushParser.push(0.enumBit)?.parsedOrNull?.assertEqualTo("value")
+		bitPattern.pushParser.push(1.enumBit)?.parsedOrNull?.assertEqualTo(null)
+		bitPattern.pushParser.push(1.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo(null)
+		bitPattern.pushParser.push(1.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
+		bitPattern.pushParser.push(1.enumBit)?.push(0.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo("value")
+		bitPattern.pushParser.push(1.enumBit)?.push(0.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
+		bitPattern.pushParser.push(1.enumBit)?.push(1.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo("value")
+		bitPattern.pushParser.push(1.enumBit)?.push(1.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
 	}
 }

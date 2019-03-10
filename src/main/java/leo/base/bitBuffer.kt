@@ -1,8 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-import leo.binary.append
-
 // Fixed-size POT cyclic bit buffer, with tail and head cursors, no overflow checks.
 data class BitBuffer(
 	val bitArray: BitArray,
@@ -15,7 +12,7 @@ val BitArray.bitBuffer: BitBuffer
 	get() =
 		BitBuffer(this, minIndexBinaryOrNull, maxIndexBinaryOrNull)
 
-fun Int.depthBitBuffer(bit: Bit): BitBuffer =
+fun Int.depthBitBuffer(bit: EnumBit): BitBuffer =
 	depthBitArray(bit).bitBuffer
 
 fun Appendable.append(bitBuffer: BitBuffer): Appendable =
@@ -50,16 +47,16 @@ val BitBuffer.headPush: BitBuffer
 	get() =
 		copy(headIndexBinary = headIndexBinary?.incrementAndWrap)
 
-val BitBuffer.tailBit: Bit
+val BitBuffer.tailBit: EnumBit
 	get() =
 		bitArray[tailIndexBinary]!!.bitOrNull!!
 
-val BitBuffer.headBit: Bit
+val BitBuffer.headBit: EnumBit
 	get() =
 		bitArray[headIndexBinary]!!.bitOrNull!!
 
-fun BitBuffer.tailSet(bit: Bit): BitBuffer =
+fun BitBuffer.tailSet(bit: EnumBit): BitBuffer =
 	copy(bitArray = bitArray.set(tailIndexBinary, bit.bitArray)!!)
 
-fun BitBuffer.headSet(bit: Bit): BitBuffer =
+fun BitBuffer.headSet(bit: EnumBit): BitBuffer =
 	copy(bitArray = bitArray.set(headIndexBinary, bit.bitArray)!!)

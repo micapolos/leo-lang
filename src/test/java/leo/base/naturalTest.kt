@@ -1,33 +1,32 @@
 package leo.base
 
-import leo.binary.bit
 import kotlin.test.Test
 
 class NaturalTest {
 	@Test
 	fun string() {
 		Natural(null).string.assertEqualTo("0b1")
-		Natural(stack(1.bit, 0.bit, 1.bit)).string.assertEqualTo("0b1101")
+		Natural(stack(1.enumBit, 0.enumBit, 1.enumBit)).string.assertEqualTo("0b1101")
 	}
 
 	@Test
 	fun plusOne() {
 		nullOf<Natural>().orNullPlusOne.assertEqualTo(Natural(null))
-		Natural(null).plusOne.assertEqualTo(Natural(stack(0.bit)))
-		Natural(stack(0.bit)).plusOne.assertEqualTo(Natural(stack(1.bit)))
-		Natural(stack(1.bit)).plusOne.assertEqualTo(Natural(stack(0.bit, 0.bit)))
-		Natural(stack(1.bit, 0.bit)).plusOne.assertEqualTo(Natural(stack(1.bit, 1.bit)))
-		Natural(stack(1.bit, 1.bit)).plusOne.assertEqualTo(Natural(stack(0.bit, 0.bit, 0.bit)))
+		Natural(null).plusOne.assertEqualTo(Natural(stack(0.enumBit)))
+		Natural(stack(0.enumBit)).plusOne.assertEqualTo(Natural(stack(1.enumBit)))
+		Natural(stack(1.enumBit)).plusOne.assertEqualTo(Natural(stack(0.enumBit, 0.enumBit)))
+		Natural(stack(1.enumBit, 0.enumBit)).plusOne.assertEqualTo(Natural(stack(1.enumBit, 1.enumBit)))
+		Natural(stack(1.enumBit, 1.enumBit)).plusOne.assertEqualTo(Natural(stack(0.enumBit, 0.enumBit, 0.enumBit)))
 	}
 
 	@Test
 	fun minusOne() {
 		Natural(null).minusOne.assertEqualTo(null)
-		Natural(stack(0.bit)).minusOne.assertEqualTo(Natural(null))
-		Natural(stack(1.bit)).minusOne.assertEqualTo(Natural(stack(0.bit)))
-		Natural(stack(1.bit, 0.bit)).minusOne.assertEqualTo(Natural(stack(0.bit, 1.bit)))
-		Natural(stack(1.bit, 1.bit)).minusOne.assertEqualTo(Natural(stack(1.bit, 0.bit)))
-		Natural(stack(0.bit, 0.bit, 0.bit)).minusOne.assertEqualTo(Natural(stack(1.bit, 1.bit)))
+		Natural(stack(0.enumBit)).minusOne.assertEqualTo(Natural(null))
+		Natural(stack(1.enumBit)).minusOne.assertEqualTo(Natural(stack(0.enumBit)))
+		Natural(stack(1.enumBit, 0.enumBit)).minusOne.assertEqualTo(Natural(stack(0.enumBit, 1.enumBit)))
+		Natural(stack(1.enumBit, 1.enumBit)).minusOne.assertEqualTo(Natural(stack(1.enumBit, 0.enumBit)))
+		Natural(stack(0.enumBit, 0.enumBit, 0.enumBit)).minusOne.assertEqualTo(Natural(stack(1.enumBit, 1.enumBit)))
 	}
 
 	@Test

@@ -1,6 +1,7 @@
 package leo.binary
 
 import leo.base.assertEqualTo
+import leo.base.clampedEnumBit
 import leo.base.string
 import kotlin.test.Test
 
@@ -30,7 +31,7 @@ class ArrayTest {
 		val array = arrayOfNulls<Int>(size)
 		for (i in 0 until size) array[i].assertEqualTo(null)
 		for (i in 0 until size) array[i] = i
-		for (i in 0 until size) array[i].assertEqualTo(i.clampedBit)
+		for (i in 0 until size) array[i].assertEqualTo(i.clampedEnumBit)
 	}
 
 	@Test

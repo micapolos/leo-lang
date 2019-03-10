@@ -7,20 +7,20 @@ import kotlin.test.Test
 class ParsersTest {
 	@Test
 	fun bit() {
-		bitParser.parse(Bit.ZERO).assertEqualTo(Bit.ZERO.parser)
-		bitParser.parse(Bit.ONE).assertEqualTo(Bit.ONE.parser)
-		bitParser.parse(Bit.ZERO)?.parse(Bit.ZERO).assertEqualTo(null)
+		bitParser.parse(zero.bit).assertEqualTo(zero.bit.parser)
+		bitParser.parse(one.bit).assertEqualTo(one.bit.parser)
+		bitParser.parse(zero.bit)?.parse(zero.bit).assertEqualTo(null)
 	}
 
 	@Test
 	fun int() {
-		int5Parser.parse(0.bit)?.parse(1.bit)?.parse(0.bit)?.parse(0.bit)?.parse(1.bit)
-			.assertEqualTo(int0.hsb(0.bit).hsb(1.bit).hsb(0.bit).hsb(0.bit).hsb(1.bit).parser)
+		int5Parser.parse(zero.bit)?.parse(one.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(one.bit)
+			.assertEqualTo(int0.hsb(zero.bit).hsb(one.bit).hsb(zero.bit).hsb(zero.bit).hsb(one.bit).parser)
 	}
 
 	@Test
 	fun stack() {
-		stackParser(3).parse(all(1.bit, 1.bit, 0.bit))
-			.assertEqualTo(emptyStack.push(1.bit).push(1.bit).push(0.bit).parser)
+		stackParser(3).parse(all(one.bit, one.bit, zero.bit))
+			.assertEqualTo(emptyStack.push(one.bit).push(one.bit).push(zero.bit).parser)
 	}
 }

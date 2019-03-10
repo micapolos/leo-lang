@@ -1,6 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
 import leo.java.lang.useResourceBitStreamOrNull
 
 fun <V : Any> nullOf(): V? = null
@@ -55,7 +54,7 @@ val Any?.string
 fun <V> identity(): (V) -> V =
 	{ it }
 
-fun <R> Any.useSiblingResourceBitStreamOrNull(siblingName: String, fn: Stream<Bit>?.() -> R): R =
+fun <R> Any.useSiblingResourceBitStreamOrNull(siblingName: String, fn: Stream<EnumBit>?.() -> R): R =
 	this::class.java.useResourceBitStreamOrNull(siblingName, fn)
 
 fun <V : Any, R : Any> V?.matchNull(fn: () -> R?): R? =

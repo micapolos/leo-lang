@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.*
-
 // Non-empty, power-of-two bit array
 // random access: O(log(n)) for bits and power-of-two aligned sub-arrays
 sealed class BitArray {
@@ -9,7 +7,7 @@ sealed class BitArray {
 }
 
 data class SingleBitArray(
-	val bit: Bit) : BitArray() {
+	val bit: EnumBit) : BitArray() {
 	override val depth = 0
 	override fun toString() = appendableString { it.append(this) }
 }
@@ -48,9 +46,9 @@ fun BitArray.increaseDepth(depth: Int): BitArray? =
 
 val Int.depthBitArray: BitArray
 	get() =
-		depthBitArray(Bit.ZERO)
+		depthBitArray(EnumBit.ZERO)
 
-fun Int.depthBitArray(bit: Bit): BitArray =
+fun Int.depthBitArray(bit: EnumBit): BitArray =
 	if (this == 0)
 		SingleBitArray(bit)
 	else CompositeBitArray(
@@ -58,7 +56,7 @@ fun Int.depthBitArray(bit: Bit): BitArray =
 		dec().depthBitArray(bit))
 
 fun bitArray(bitInt0: Int): BitArray =
-	SingleBitArray(bitInt0.bit)
+	SingleBitArray(bitInt0.enumBit)
 
 fun bitArray(bitInt0: Int, bitInt1: Int): BitArray =
 	CompositeBitArray(
@@ -87,18 +85,18 @@ val BitArray.compositeOrNull: CompositeBitArray?
 	get() =
 		this as? CompositeBitArray
 
-val BitArray.bitStream: Stream<Bit>
+val BitArray.bitStream: Stream<EnumBit>
 	get() =
 		when (this) {
 			is SingleBitArray -> bit.onlyStream
 			is CompositeBitArray -> zeroBitArray.bitStream.then { oneBitArray.bitStream }
 		}
 
-operator fun BitArray.get(bit: Bit): BitArray? =
+operator fun BitArray.get(bit: EnumBit): BitArray? =
 	compositeOrNull?.run {
 		when (bit) {
-			Bit.ZERO -> zeroBitArray
-			Bit.ONE -> oneBitArray
+			EnumBit.ZERO -> zeroBitArray
+			EnumBit.ONE -> oneBitArray
 		}
 	}
 
@@ -108,7 +106,7 @@ fun Appendable.append(bitArray: BitArray): Appendable =
 		.appendBit(bitArray.bitStream)
 		.append(']')
 
-operator fun BitArray.get(bitStream: Stream<Bit>?): BitArray? =
+operator fun BitArray.get(bitStream: Stream<EnumBit>?): BitArray? =
 	orNull.fold(bitStream) { bit ->
 		this?.get(bit)
 	}
@@ -120,16 +118,16 @@ fun BitArray.set(bitArray: BitArray): BitArray? =
 	if (depth != bitArray.depth) null
 	else bitArray
 
-operator fun BitArray.set(bit: Bit, bitArray: BitArray): BitArray? =
+operator fun BitArray.set(bit: EnumBit, bitArray: BitArray): BitArray? =
 	compositeOrNull?.run {
 		if (zeroBitArray.depth != bitArray.depth) null
 		else when (bit) {
-			Bit.ZERO -> CompositeBitArray(bitArray, oneBitArray)
-			Bit.ONE -> CompositeBitArray(zeroBitArray, bitArray)
+			EnumBit.ZERO -> CompositeBitArray(bitArray, oneBitArray)
+			EnumBit.ONE -> CompositeBitArray(zeroBitArray, bitArray)
 		}
 	}
 
-operator fun BitArray.set(bitStreamOrNull: Stream<Bit>?, bitArray: BitArray): BitArray? =
+operator fun BitArray.set(bitStreamOrNull: Stream<EnumBit>?, bitArray: BitArray): BitArray? =
 	if (bitStreamOrNull == null) set(bitArray)
 	else bitStreamOrNull.nextOrNull.let { nextBitStreamOrNull ->
 		if (nextBitStreamOrNull == null)
@@ -144,13 +142,13 @@ operator fun BitArray.set(binary: Binary?, bitArray: BitArray): BitArray? =
 
 // === indexed stream
 
-val BitArray.indexedBitStream: Stream<Indexed<Bit>>
+val BitArray.indexedBitStream: Stream<Indexed<EnumBit>>
 	get() =
 		bitStream.wrapIndexedStream(minIndexBinaryOrNull)
 
 // === mapping
 
-fun BitArray.map(fn: Bit.() -> Bit): BitArray =
+fun BitArray.map(fn: EnumBit.() -> EnumBit): BitArray =
 	when (this) {
 		is SingleBitArray -> fn(bit).bitArray
 		is CompositeBitArray -> CompositeBitArray(zeroBitArray.map(fn), oneBitArray.map(fn))
@@ -158,14 +156,14 @@ fun BitArray.map(fn: Bit.() -> Bit): BitArray =
 
 val BitArray.inverse: BitArray
 	get() =
-		map(Bit::inverse)
+		map(EnumBit::inverse)
 
-fun BitArray.set(bit: Bit): BitArray =
+fun BitArray.set(bit: EnumBit): BitArray =
 	map { bit }
 
 // === primitive to bit array
 
-val Bit.bitArray: BitArray
+val EnumBit.bitArray: BitArray
 	get() =
 		SingleBitArray(this)
 
@@ -215,7 +213,7 @@ val Double.bitArray: BitArray
 
 // === bit array to primitive
 
-val BitArray.bitOrNull: Bit?
+val BitArray.bitOrNull: EnumBit?
 	get() =
 		singleOrNull?.bit
 

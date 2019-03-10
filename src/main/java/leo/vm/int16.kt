@@ -1,7 +1,7 @@
 package leo.vm
 
+import leo.base.EnumBit
 import leo.base.Variable
-import leo.binary.Bit
 
 data class Int16(
 	val hiInt8: Int8,
@@ -28,12 +28,12 @@ fun Int16.xorOp(int16: Int16): Op =
 		hiInt8.xorOp(int16.hiInt8),
 		loInt8.xorOp(int16.loInt8))
 
-fun Int16.incOp(carry: Variable<Bit>): Op =
+fun Int16.incOp(carry: Variable<EnumBit>): Op =
 	sequenceOp(
 		loInt8.incOp(carry),
 		hiInt8.incOp(carry))
 
-fun Int16.addOp(int16: Int16, carry: Variable<Bit>): Op =
+fun Int16.addOp(int16: Int16, carry: Variable<EnumBit>): Op =
 	sequenceOp(
 		loInt8.addOp(int16.loInt8, carry),
 		hiInt8.addOp(int16.hiInt8, carry))

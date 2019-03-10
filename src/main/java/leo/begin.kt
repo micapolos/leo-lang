@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 
 object Begin
 
@@ -20,7 +19,7 @@ val beginBitStream
 	get() =
 		beginByte.bitStream
 
-val Stream<Bit>.bitParseBegin: Parse<Bit, Begin>?
+val Stream<EnumBit>.bitParseBegin: Parse<EnumBit, Begin>?
 	get() =
 		bitParseByte?.let { bitParseByte ->
 			bitParseByte.parsed.beginOrNull?.let { begin ->

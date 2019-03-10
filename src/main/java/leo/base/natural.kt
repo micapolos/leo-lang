@@ -1,25 +1,21 @@
 package leo.base
 
-import leo.binary.Bit
-import leo.binary.append
-import leo.binary.bit
-
 // Non-zero natural number.
 data class Natural(
-	val bitStackWithoutLeadingOneOrNull: Stack<Bit>?) {
+	val bitStackWithoutLeadingOneOrNull: Stack<EnumBit>?) {
 	override fun toString() = string { append(it) }
 }
 
 fun Appendable.append(natural: Natural): Appendable =
 	append("0b").fold(natural.bitStream, Appendable::append)
 
-val Stack<Bit>?.withoutLeadingOneNatural: Natural
+val Stack<EnumBit>?.withoutLeadingOneNatural: Natural
 	get() =
 		Natural(this)
 
-val Natural.bitStream: Stream<Bit>
+val Natural.bitStream: Stream<EnumBit>
 	get() =
-		1.bit.onlyStream.then { bitStackWithoutLeadingOneOrNull?.reverse?.stream }
+		1.enumBit.onlyStream.then { bitStackWithoutLeadingOneOrNull?.reverse?.stream }
 
 val Natural.dividedByTwo: Natural?
 	get() =
@@ -27,17 +23,17 @@ val Natural.dividedByTwo: Natural?
 
 val Natural.timesTwo: Natural
 	get() =
-		bitStackWithoutLeadingOneOrNull.push(0.bit).withoutLeadingOneNatural
+		bitStackWithoutLeadingOneOrNull.push(0.enumBit).withoutLeadingOneNatural
 
-fun Natural.timesTwoPlus(bit: Bit): Natural =
+fun Natural.timesTwoPlus(bit: EnumBit): Natural =
 	bitStackWithoutLeadingOneOrNull.push(bit).withoutLeadingOneNatural
 
-val Stream<Bit>.naturalOrNull: Natural?
+val Stream<EnumBit>.naturalOrNull: Natural?
 	get() =
 		nullOf<Natural>().fold(this) { bit ->
 			when (bit) {
-				Bit.ZERO -> this?.timesTwoPlus(bit)
-				Bit.ONE -> this?.timesTwoPlus(bit) ?: naturalOne
+				EnumBit.ZERO -> this?.timesTwoPlus(bit)
+				EnumBit.ONE -> this?.timesTwoPlus(bit) ?: naturalOne
 			}
 		}
 
@@ -61,8 +57,8 @@ val Natural.plusOne: Natural
 	get() =
 		if (bitStackWithoutLeadingOneOrNull == null) timesTwo
 		else when (bitStackWithoutLeadingOneOrNull.head) {
-			Bit.ZERO -> bitStackWithoutLeadingOneOrNull.tail.push(Bit.ONE).withoutLeadingOneNatural
-			Bit.ONE -> bitStackWithoutLeadingOneOrNull.tail.withoutLeadingOneNatural.plusOne.timesTwoPlus(Bit.ZERO)
+			EnumBit.ZERO -> bitStackWithoutLeadingOneOrNull.tail.push(EnumBit.ONE).withoutLeadingOneNatural
+			EnumBit.ONE -> bitStackWithoutLeadingOneOrNull.tail.withoutLeadingOneNatural.plusOne.timesTwoPlus(EnumBit.ZERO)
 		}
 
 val Natural?.orNullPlusOne: Natural
@@ -73,9 +69,9 @@ val Natural.minusOne: Natural?
 	get() =
 		if (bitStackWithoutLeadingOneOrNull == null) null
 		else when (bitStackWithoutLeadingOneOrNull.head) {
-			Bit.ZERO -> bitStackWithoutLeadingOneOrNull.tail.withoutLeadingOneNatural.minusOne?.timesTwoPlus(Bit.ONE)
+			EnumBit.ZERO -> bitStackWithoutLeadingOneOrNull.tail.withoutLeadingOneNatural.minusOne?.timesTwoPlus(EnumBit.ONE)
 				?: naturalOne
-			Bit.ONE -> bitStackWithoutLeadingOneOrNull.tail.push(Bit.ZERO).withoutLeadingOneNatural
+			EnumBit.ONE -> bitStackWithoutLeadingOneOrNull.tail.push(EnumBit.ZERO).withoutLeadingOneNatural
 		}
 
 val Natural.bitCount: Natural

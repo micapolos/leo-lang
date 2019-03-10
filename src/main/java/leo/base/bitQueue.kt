@@ -1,9 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-import leo.binary.append
-import leo.binary.bit
-
 // Non-empty bit queue, backed by power-of-two bit array
 // enqueue, dequeue: O(log(n))
 data class BitQueue(
@@ -20,23 +16,23 @@ val BitArray.bitQueue: BitQueue
 			minIndexBinaryOrNull,
 			maxIndexBinaryOrNull)
 
-val Bit.bitQueue: BitQueue
+val EnumBit.bitQueue: BitQueue
 	get() =
 		bitArray.bitQueue
 
 fun bitQueue(bitInt: Int, vararg bitInts: Int): BitQueue =
-	bitInts.fold(bitInt.bit.bitQueue) { bitQueue, foldedBitInt ->
-		bitQueue.enqueue(foldedBitInt.bit)
+	bitInts.fold(bitInt.enumBit.bitQueue) { bitQueue, foldedBitInt ->
+		bitQueue.enqueue(foldedBitInt.enumBit)
 	}
 
 val BitQueue.pushHead: BitQueue
 	get() =
 		headIndexBinary.carryIncrement.let { (carry, increment) ->
-			if (carry == Bit.ZERO) copy(headIndexBinary = increment)
+			if (carry == EnumBit.ZERO) copy(headIndexBinary = increment)
 			else copy(
 				bitArray = bitArray.incrementDepth,
 				headIndexBinary = carry.append(increment),
-				tailIndexBinary = Bit.ZERO.append(tailIndexBinary))
+				tailIndexBinary = EnumBit.ZERO.append(tailIndexBinary))
 		}
 
 val BitQueue?.orNullPushHead: BitQueue
@@ -46,43 +42,43 @@ val BitQueue?.orNullPushHead: BitQueue
 val BitQueue.popTail: BitQueue?
 	get() =
 		tailIndexBinary?.incrementAndWrap?.let { increment ->
-			if (increment.bit == Bit.ZERO) copy(tailIndexBinary = increment)
+			if (increment.bit == EnumBit.ZERO) copy(tailIndexBinary = increment)
 			else copy(
 				bitArray = bitArray.compositeOrNull!!.oneBitArray,
 				headIndexBinary = headIndexBinary!!.nextBinaryOrNull,
 				tailIndexBinary = increment.nextBinaryOrNull)
 		}
 
-fun BitQueue.setHead(bit: Bit): BitQueue =
+fun BitQueue.setHead(bit: EnumBit): BitQueue =
 	copy(bitArray = bitArray.set(headIndexBinary, bit.bitArray)!!)
 
-val BitQueue.head: Bit
+val BitQueue.head: EnumBit
 	get() =
 		bitArray.get(headIndexBinary)!!.bitOrNull!!
 
-fun BitQueue.setTail(bit: Bit): BitQueue =
+fun BitQueue.setTail(bit: EnumBit): BitQueue =
 	copy(bitArray = bitArray.set(tailIndexBinary, bit.bitArray)!!)
 
-val BitQueue.tailBit: Bit
+val BitQueue.tailBit: EnumBit
 	get() =
 		bitArray.get(tailIndexBinary)!!.bitOrNull!!
 
-fun BitQueue.enqueue(bit: Bit): BitQueue =
+fun BitQueue.enqueue(bit: EnumBit): BitQueue =
 	pushHead.setHead(bit)
 
-val BitQueue.dequeue: Update<Bit, BitQueue?>
+val BitQueue.dequeue: Update<EnumBit, BitQueue?>
 	get() =
 		popTail.let { tailBit.andUpdated(it) }
 
-fun BitQueue?.orNullEnqueue(bit: Bit): BitQueue =
+fun BitQueue?.orNullEnqueue(bit: EnumBit): BitQueue =
 	this?.enqueue(bit) ?: bit.bitQueue
 
-val BitQueue.bitStream: Stream<Bit>
+val BitQueue.bitStream: Stream<EnumBit>
 	get() =
 		bitArray.indexedBitStream
 			.dropWhile { indexOrNull != tailIndexBinary }!!
 			.takeWhileInclusive { indexOrNull != headIndexBinary }
-			.map(Indexed<Bit>::value)
+			.map(Indexed<EnumBit>::value)
 
 fun Appendable.append(bitQueue: BitQueue): Appendable =
 	this

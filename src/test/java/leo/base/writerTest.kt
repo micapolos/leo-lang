@@ -1,12 +1,11 @@
 package leo.base
 
-import leo.binary.Bit
 import org.junit.Test
 
 class WriterTest {
 	@Test
 	fun testPrintlnWriter() {
-		printlnWriter<Bit>().assertNotNull
+		printlnWriter<EnumBit>().assertNotNull
 	}
 
 	@Test
@@ -25,14 +24,14 @@ class WriterTest {
 	fun byteBitWriter() {
 		writeStackOrNull<Byte> {
 			byteBitWriter
-				.write(Bit.ZERO)
-				.write(Bit.ZERO)
-				.write(Bit.ZERO)
-				.write(Bit.ZERO)
-				.write(Bit.ONE)
-				.write(Bit.ONE)
-				.write(Bit.ZERO)
-				.write(Bit.ONE)
+				.write(EnumBit.ZERO)
+				.write(EnumBit.ZERO)
+				.write(EnumBit.ZERO)
+				.write(EnumBit.ZERO)
+				.write(EnumBit.ONE)
+				.write(EnumBit.ONE)
+				.write(EnumBit.ZERO)
+				.write(EnumBit.ONE)
 		}
 			.assertEqualTo(stack(13.clampedByte))
 	}

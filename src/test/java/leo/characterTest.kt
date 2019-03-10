@@ -1,8 +1,7 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
-import leo.binary.int
+import leo.base.int
 import org.junit.Test
 
 class CharacterTest {
@@ -57,34 +56,34 @@ class CharacterTest {
 	fun bitParseCharacter_begin() {
 		begin.character
 			.bitStream
-			.then { Bit.ZERO.onlyStream }
+			.then { EnumBit.ZERO.onlyStream }
 			.bitParseCharacter
-			.assertParsedAndRest(begin.character, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(begin.character, EnumBit.ZERO.onlyStream)
 	}
 
 	@Test
 	fun bitParseCharacter_end() {
 		end.character
 			.bitStream
-			.then { Bit.ZERO.onlyStream }
+			.then { EnumBit.ZERO.onlyStream }
 			.bitParseCharacter
-			.assertParsedAndRest(end.character, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(end.character, EnumBit.ZERO.onlyStream)
 	}
 
 	@Test
 	fun bitParseCharacter_letter() {
 		Letter.A.character
 			.bitStream
-			.then { Bit.ZERO.onlyStream }
+			.then { EnumBit.ZERO.onlyStream }
 			.bitParseCharacter
-			.assertParsedAndRest(Letter.A.character, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(Letter.A.character, EnumBit.ZERO.onlyStream)
 	}
 
 	@Test
 	fun bitSequence() {
-		Letter.A.character.bitSequence.map(Bit::int).assertContains(0, 0, 0, 0, 0)
-		Letter.Z.character.bitSequence.map(Bit::int).assertContains(1, 1, 0, 0, 1)
-		begin.character.bitSequence.map(Bit::int).assertContains(1, 1, 0, 1, 0)
-		end.character.bitSequence.map(Bit::int).assertContains(1, 1, 0, 1, 1)
+		Letter.A.character.bitSequence.map(EnumBit::int).assertContains(0, 0, 0, 0, 0)
+		Letter.Z.character.bitSequence.map(EnumBit::int).assertContains(1, 1, 0, 0, 1)
+		begin.character.bitSequence.map(EnumBit::int).assertContains(1, 1, 0, 1, 0)
+		end.character.bitSequence.map(EnumBit::int).assertContains(1, 1, 0, 1, 1)
 	}
 }

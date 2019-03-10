@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-
 data class Set<V>(
 	val unitMap: Map<V, Unit>)
 
@@ -9,7 +7,7 @@ val <V> Map<V, Unit>.set
 	get() =
 		Set(this)
 
-fun <V> emptySet(bitStreamOrNullFn: (V) -> Stream<Bit>?): Set<V> =
+fun <V> emptySet(bitStreamOrNullFn: (V) -> Stream<EnumBit>?): Set<V> =
 	emptyMap<V, Unit>(bitStreamOrNullFn).set
 
 fun <V> Set<V>.contains(value: V): Boolean =

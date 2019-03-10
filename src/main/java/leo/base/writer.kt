@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-
 data class Writer<in V>(
 	val writeFn: (V) -> Writer<V>)
 
@@ -24,11 +22,11 @@ val <V> Writer<V>.streamJoin: Writer<Stream<V>?>
 	get() =
 		Writer { stream -> write(stream).streamJoin }
 
-val Writer<Bit>.bitByteWriter: Writer<Byte>
+val Writer<EnumBit>.bitByteWriter: Writer<Byte>
 	get() =
 		streamJoin.map(Byte::bitStream)
 
-val Writer<Byte>.byteBitWriter: Writer<Bit>
+val Writer<Byte>.byteBitWriter: Writer<EnumBit>
 	get() =
 		Writer { bit7 ->
 			Writer { bit6 ->

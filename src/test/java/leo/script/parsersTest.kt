@@ -11,35 +11,35 @@ import org.junit.Test
 class ParsersTest {
 	@Test
 	fun boolean() {
-		booleanScriptParser.parse(0.bit).assertEqualTo(false.script.parser)
-		booleanScriptParser.parse(1.bit).assertEqualTo(true.script.parser)
+		booleanScriptParser.parse(zero.bit).assertEqualTo(false.script.parser)
+		booleanScriptParser.parse(one.bit).assertEqualTo(true.script.parser)
 	}
 
 	@Test
 	fun letter() {
-		letterOrNullParser.parse(0.bit)?.parse(0.bit)?.parse(0.bit)?.parse(0.bit)?.parse(0.bit)
+		letterOrNullParser.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)
 			.assertEqualTo(Letter.A.parser)
-		letterOrNullParser.parse(1.bit)?.parse(1.bit)?.parse(0.bit)?.parse(0.bit)?.parse(1.bit)
+		letterOrNullParser.parse(one.bit)?.parse(one.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(one.bit)
 			.assertEqualTo(Letter.Z.parser)
-		letterOrNullParser.parse(1.bit)?.parse(1.bit)?.parse(0.bit)?.parse(1.bit)?.parse(0.bit)
+		letterOrNullParser.parse(one.bit)?.parse(one.bit)?.parse(zero.bit)?.parse(one.bit)?.parse(zero.bit)
 			.assertEqualTo(null.parser)
-		letterOrNullParser.parse(0.bit)?.parse(0.bit)?.parse(0.bit)?.parse(0.bit)?.parse(0.bit)?.parse(0.bit)
+		letterOrNullParser.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun character() {
-		characterOrNullParser.parse(0.bit)?.parse(0.bit)?.parse(0.bit)?.parse(0.bit)?.parse(0.bit)
+		characterOrNullParser.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)
 			.assertEqualTo(Letter.A.character.parser)
-		characterOrNullParser.parse(1.bit)?.parse(1.bit)?.parse(0.bit)?.parse(0.bit)?.parse(1.bit)
+		characterOrNullParser.parse(one.bit)?.parse(one.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(one.bit)
 			.assertEqualTo(Letter.Z.character.parser)
-		characterOrNullParser.parse(1.bit)?.parse(1.bit)?.parse(0.bit)?.parse(1.bit)?.parse(0.bit)
+		characterOrNullParser.parse(one.bit)?.parse(one.bit)?.parse(zero.bit)?.parse(one.bit)?.parse(zero.bit)
 			.assertEqualTo(begin.character.parser)
-		characterOrNullParser.parse(1.bit)?.parse(1.bit)?.parse(0.bit)?.parse(1.bit)?.parse(1.bit)
+		characterOrNullParser.parse(one.bit)?.parse(one.bit)?.parse(zero.bit)?.parse(one.bit)?.parse(one.bit)
 			.assertEqualTo(end.character.parser)
-		characterOrNullParser.parse(1.bit)?.parse(1.bit)?.parse(1.bit)?.parse(0.bit)?.parse(0.bit)
+		characterOrNullParser.parse(one.bit)?.parse(one.bit)?.parse(one.bit)?.parse(zero.bit)?.parse(zero.bit)
 			.assertEqualTo(null.parser)
-		characterOrNullParser.parse(1.bit)?.parse(1.bit)?.parse(1.bit)?.parse(0.bit)?.parse(0.bit)?.parse(0.bit)
+		characterOrNullParser.parse(one.bit)?.parse(one.bit)?.parse(one.bit)?.parse(zero.bit)?.parse(zero.bit)?.parse(zero.bit)
 			.assertEqualTo(null)
 	}
 }

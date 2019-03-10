@@ -2,7 +2,6 @@ package leo.lab.v2
 
 import leo.Word
 import leo.base.*
-import leo.binary.Bit
 import leo.bitStream
 
 sealed class Function
@@ -72,6 +71,6 @@ fun Function.invoke(script: Script): Script =
 		?.invoke(script)
 		?: script
 
-val Word.caseBitStream: Stream<Bit>
+val Word.caseBitStream: Stream<EnumBit>
 	get() =
-		bitStream.then { Bit.ONE.onlyStream }
+		bitStream.then { EnumBit.ONE.onlyStream }

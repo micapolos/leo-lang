@@ -2,8 +2,8 @@ package leo.script
 
 import leo.base.assertEqualTo
 import leo.base.clampedByte
+import leo.base.enumBit
 import leo.base.string
-import leo.binary.bit
 import org.junit.Test
 
 class ScriptLinesTest {
@@ -14,7 +14,7 @@ class ScriptLinesTest {
 
 	@Test
 	fun bit() {
-		0.bit.scriptLine.string.assertEqualTo("bit zero   ")
+		0.enumBit.scriptLine.string.assertEqualTo("bit zero   ")
 	}
 
 	@Test

@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-
 data class BitPattern<out V>(
 	val opBinaryTrie: BinaryTrie<BitPatternOp<V>>)
 
@@ -47,11 +45,11 @@ val <V> V.bitPatternDoneOp: BitPatternOp<V>
 
 // === push parser
 
-val <V> BitPattern<V>.pushParser: PushParser<Bit, V>
+val <V> BitPattern<V>.pushParser: PushParser<EnumBit, V>
 	get() =
 		pushParser(null)
 
-fun <V> BitPattern<V>.pushParser(traceStackOrNull: Stack<BitPattern<V>>?): PushParser<Bit, V> =
+fun <V> BitPattern<V>.pushParser(traceStackOrNull: Stack<BitPattern<V>>?): PushParser<EnumBit, V> =
 	pushParser { bit ->
 		opBinaryTrie
 			.get(bit)

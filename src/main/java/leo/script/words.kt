@@ -1,7 +1,7 @@
 package leo.script
 
-import leo.binary.Bit
-import leo.binary.isZero
+import leo.base.EnumBit
+import leo.base.isZero
 import leo.falseWord
 import leo.oneWord
 import leo.trueWord
@@ -11,6 +11,6 @@ val Boolean.word
 	get() =
 		if (this) trueWord else falseWord
 
-val Bit.word
+val EnumBit.word
 	get() =
 		if (isZero) zeroWord else oneWord

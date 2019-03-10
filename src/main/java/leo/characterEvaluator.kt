@@ -1,8 +1,8 @@
 package leo
 
+import leo.base.EnumBit
 import leo.base.Stream
 import leo.base.orNullThenIfNotNull
-import leo.binary.Bit
 
 data class CharacterEvaluator(
 	val tokenReader: Reader<Token<Nothing>>,
@@ -51,7 +51,7 @@ fun CharacterEvaluator.plus(letter: Letter): CharacterEvaluator =
 
 // === bit stream
 
-val CharacterEvaluator.bitStreamOrNull: Stream<Bit>?
+val CharacterEvaluator.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		tokenReader.bitStreamOrNull.orNullThenIfNotNull {
 			wordOrNull?.bitStream

@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-
 // Non-empty, power-of-two array of any value
 // random access: O(log(n)) for values and sub-arrays
 sealed class BinaryArray<out V>
@@ -100,15 +98,15 @@ fun <V> Appendable.append(binaryArray: BinaryArray<V>): Appendable =
 fun <V : Any> BinaryArray<V>.get(index: Binary?): V? =
 	subArrayOrNull(index)?.singleOrNull?.value
 
-fun <V> BinaryArray<V>.subArrayOrNull(bit: Bit): BinaryArray<V>? =
+fun <V> BinaryArray<V>.subArrayOrNull(bit: EnumBit): BinaryArray<V>? =
 	compositeOrNull?.run {
 		when (bit) {
-			Bit.ZERO -> zeroBinaryArray
-			Bit.ONE -> oneBinaryArray
+			EnumBit.ZERO -> zeroBinaryArray
+			EnumBit.ONE -> oneBinaryArray
 		}
 	}
 
-fun <V> BinaryArray<V>.subArrayOrNull(bitStream: Stream<Bit>?): BinaryArray<V>? =
+fun <V> BinaryArray<V>.subArrayOrNull(bitStream: Stream<EnumBit>?): BinaryArray<V>? =
 	orNull.fold(bitStream) { bit ->
 		this?.subArrayOrNull(bit)
 	}
@@ -123,16 +121,16 @@ fun <V> BinaryArray<V>.set(binaryArray: BinaryArray<V>): BinaryArray<V>? =
 	if (depthInt != binaryArray.depthInt) null
 	else binaryArray
 
-fun <V> BinaryArray<V>.set(bit: Bit, binaryArray: BinaryArray<V>): BinaryArray<V>? =
+fun <V> BinaryArray<V>.set(bit: EnumBit, binaryArray: BinaryArray<V>): BinaryArray<V>? =
 	compositeOrNull?.run {
 		if (zeroBinaryArray.depthInt != binaryArray.depthInt) null
 		else when (bit) {
-			Bit.ZERO -> CompositeBinaryArray(binaryArray, oneBinaryArray)
-			Bit.ONE -> CompositeBinaryArray(zeroBinaryArray, binaryArray)
+			EnumBit.ZERO -> CompositeBinaryArray(binaryArray, oneBinaryArray)
+			EnumBit.ONE -> CompositeBinaryArray(zeroBinaryArray, binaryArray)
 		}
 	}
 
-fun <V> BinaryArray<V>.set(bitStreamOrNull: Stream<Bit>?, binaryArray: BinaryArray<V>): BinaryArray<V>? =
+fun <V> BinaryArray<V>.set(bitStreamOrNull: Stream<EnumBit>?, binaryArray: BinaryArray<V>): BinaryArray<V>? =
 	if (bitStreamOrNull == null) set(binaryArray)
 	else bitStreamOrNull.nextOrNull.let { nextBitStreamOrNull ->
 		if (nextBitStreamOrNull == null)

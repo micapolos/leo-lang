@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-import leo.binary.bit
 import kotlin.test.Test
 
 class BinaryTrieTest {
@@ -19,115 +17,115 @@ class BinaryTrieTest {
 
 	@Test
 	fun get() {
-		testTrie.pushParser.push(0.bit)?.parsedOrNull.assertEqualTo("0")
-		testTrie.pushParser.push(1.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(0.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(0.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(1.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(1.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo("11")
-		testTrie.pushParser.push(0.bit)?.push(0.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(0.bit)?.push(0.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(0.bit)?.push(1.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(0.bit)?.push(1.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(1.bit)?.push(0.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo("100")
-		testTrie.pushParser.push(1.bit)?.push(0.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo("101")
-		testTrie.pushParser.push(1.bit)?.push(1.bit)?.push(0.bit)?.parsedOrNull.assertEqualTo(null)
-		testTrie.pushParser.push(1.bit)?.push(1.bit)?.push(1.bit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(0.enumBit)?.parsedOrNull.assertEqualTo("0")
+		testTrie.pushParser.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(0.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(0.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(1.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(1.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo("11")
+		testTrie.pushParser.push(0.enumBit)?.push(0.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(0.enumBit)?.push(0.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(0.enumBit)?.push(1.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(0.enumBit)?.push(1.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(1.enumBit)?.push(0.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo("100")
+		testTrie.pushParser.push(1.enumBit)?.push(0.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo("101")
+		testTrie.pushParser.push(1.enumBit)?.push(1.enumBit)?.push(0.enumBit)?.parsedOrNull.assertEqualTo(null)
+		testTrie.pushParser.push(1.enumBit)?.push(1.enumBit)?.push(1.enumBit)?.parsedOrNull.assertEqualTo(null)
 	}
 
 	@Test
 	fun set() {
-		val newTrie = testTrie.set(stream(Bit.ONE, Bit.ZERO), "x10")
-		newTrie.valueOrNull(stream(Bit.ZERO)).assertEqualTo("0".the)
-		newTrie.valueOrNull(stream(Bit.ONE)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO)).assertEqualTo("x10".the)
-		newTrie.valueOrNull(stream(Bit.ONE, Bit.ONE)).assertEqualTo("11".the)
-		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ZERO, Bit.ONE, Bit.ONE)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO, Bit.ZERO)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ONE, Bit.ZERO, Bit.ONE)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ONE, Bit.ONE, Bit.ZERO)).assertEqualTo(null)
-		newTrie.valueOrNull(stream(Bit.ONE, Bit.ONE, Bit.ONE)).assertEqualTo(null)
+		val newTrie = testTrie.set(stream(EnumBit.ONE, EnumBit.ZERO), "x10")
+		newTrie.valueOrNull(stream(EnumBit.ZERO)).assertEqualTo("0".the)
+		newTrie.valueOrNull(stream(EnumBit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ZERO, EnumBit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ZERO, EnumBit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ONE, EnumBit.ZERO)).assertEqualTo("x10".the)
+		newTrie.valueOrNull(stream(EnumBit.ONE, EnumBit.ONE)).assertEqualTo("11".the)
+		newTrie.valueOrNull(stream(EnumBit.ZERO, EnumBit.ZERO, EnumBit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ZERO, EnumBit.ZERO, EnumBit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ZERO, EnumBit.ONE, EnumBit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ZERO, EnumBit.ONE, EnumBit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ONE, EnumBit.ZERO, EnumBit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ONE, EnumBit.ZERO, EnumBit.ONE)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ONE, EnumBit.ONE, EnumBit.ZERO)).assertEqualTo(null)
+		newTrie.valueOrNull(stream(EnumBit.ONE, EnumBit.ONE, EnumBit.ONE)).assertEqualTo(null)
 	}
 
 	@Test
 	fun defineSingle() {
 		emptyTrie
-			.define(Bit.ZERO) { "0".binaryTrieFullMatch }
-			.assertEqualTo(emptyTrie.set(Bit.ZERO, "0".binaryTrieFullMatch))
+			.define(EnumBit.ZERO) { "0".binaryTrieFullMatch }
+			.assertEqualTo(emptyTrie.set(EnumBit.ZERO, "0".binaryTrieFullMatch))
 	}
 
 	@Test
 	fun defineAlternatives() {
 		emptyTrie
-			.define(Bit.ZERO) { "0".binaryTrieFullMatch }!!
-			.define(Bit.ONE) { "1".binaryTrieFullMatch }
+			.define(EnumBit.ZERO) { "0".binaryTrieFullMatch }!!
+			.define(EnumBit.ONE) { "1".binaryTrieFullMatch }
 			.assertEqualTo(
 				emptyTrie
-					.set(Bit.ZERO, "0".binaryTrieFullMatch)
-					.set(Bit.ONE, "1".binaryTrieFullMatch))
+					.set(EnumBit.ZERO, "0".binaryTrieFullMatch)
+					.set(EnumBit.ONE, "1".binaryTrieFullMatch))
 	}
 
 	@Test
 	fun defineSequence() {
 		emptyTrie
-			.define(Bit.ZERO) {
-				define(Bit.ZERO) {
+			.define(EnumBit.ZERO) {
+				define(EnumBit.ZERO) {
 					"00".binaryTrieFullMatch
 				}!!.binaryTriePartialMatch
 			}
 			.assertEqualTo(
 				emptyTrie
-					.set(Bit.ZERO,
-						emptyTrie.set(Bit.ZERO,
+					.set(EnumBit.ZERO,
+						emptyTrie.set(EnumBit.ZERO,
 							"00".binaryTrieFullMatch).binaryTriePartialMatch))
 	}
 
 	@Test
 	fun defineSingleThenAlternatives() {
 		emptyTrie
-			.define(Bit.ZERO) {
-				define(Bit.ZERO) {
+			.define(EnumBit.ZERO) {
+				define(EnumBit.ZERO) {
 					"00".binaryTrieFullMatch
 				}!!.binaryTriePartialMatch
 			}!!
-			.define(Bit.ZERO) {
-				define(Bit.ONE) {
+			.define(EnumBit.ZERO) {
+				define(EnumBit.ONE) {
 					"01".binaryTrieFullMatch
 				}!!.binaryTriePartialMatch
 			}
 			.assertEqualTo(
 				emptyTrie
-					.set(Bit.ZERO,
+					.set(EnumBit.ZERO,
 						emptyTrie
-							.set(Bit.ZERO, "00".binaryTrieFullMatch)
-							.set(Bit.ONE, "01".binaryTrieFullMatch)
+							.set(EnumBit.ZERO, "00".binaryTrieFullMatch)
+							.set(EnumBit.ONE, "01".binaryTrieFullMatch)
 							.binaryTriePartialMatch))
 	}
 
 	@Test
 	fun defineBitStream() {
 		emptyTrie
-			.defineBit(stream(Bit.ZERO, Bit.ONE)) {
+			.defineBit(stream(EnumBit.ZERO, EnumBit.ONE)) {
 				"01".binaryTrieFullMatch
 			}
 			.assertEqualTo(
 				emptyTrie
-					.set(Bit.ZERO,
+					.set(EnumBit.ZERO,
 						emptyTrie
-							.set(Bit.ONE, "01".binaryTrieFullMatch)
+							.set(EnumBit.ONE, "01".binaryTrieFullMatch)
 							.binaryTriePartialMatch))
 	}
 
 	@Test
 	fun defineConflict() {
 		emptyTrie
-			.define(Bit.ZERO) { "0".binaryTrieFullMatch }!!
-			.define(Bit.ZERO) { "00".binaryTrieFullMatch }
+			.define(EnumBit.ZERO) { "0".binaryTrieFullMatch }!!
+			.define(EnumBit.ZERO) { "00".binaryTrieFullMatch }
 			.assertEqualTo(null)
 	}
 }

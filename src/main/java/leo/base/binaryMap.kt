@@ -1,7 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
-
 data class BinaryMap<out V>(
 	val zeroValue: V,
 	val oneValue: V)
@@ -16,14 +14,14 @@ fun <V> binaryMap(): BinaryMap<V?> =
 fun <V> binaryMap(zeroValue: V, oneValue: V) =
 	BinaryMap(zeroValue, oneValue)
 
-fun <V> BinaryMap<V>.get(bit: Bit): V =
+fun <V> BinaryMap<V>.get(bit: EnumBit): V =
 	when (bit) {
-		Bit.ZERO -> zeroValue
-		Bit.ONE -> oneValue
+		EnumBit.ZERO -> zeroValue
+		EnumBit.ONE -> oneValue
 	}
 
-fun <V> BinaryMap<V>.set(bit: Bit, value: V): BinaryMap<V> =
+fun <V> BinaryMap<V>.set(bit: EnumBit, value: V): BinaryMap<V> =
 	when (bit) {
-		Bit.ZERO -> copy(zeroValue = value)
-		Bit.ONE -> copy(oneValue = value)
+		EnumBit.ZERO -> copy(zeroValue = value)
+		EnumBit.ONE -> copy(oneValue = value)
 	}

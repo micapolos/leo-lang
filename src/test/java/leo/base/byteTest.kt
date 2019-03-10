@@ -1,20 +1,19 @@
 package leo.base
 
-import leo.binary.Bit
 import kotlin.test.Test
 
 class ByteTest {
 	@Test
 	fun byteFromBits() {
 		byte(
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ONE,
-			Bit.ONE,
-			Bit.ZERO,
-			Bit.ONE)
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ONE,
+			EnumBit.ONE,
+			EnumBit.ZERO,
+			EnumBit.ONE)
 			.assertEqualTo(13.clampedByte)
 	}
 
@@ -23,26 +22,26 @@ class ByteTest {
 		13.toByte()
 			.bitStream
 			.assertContains(
-				Bit.ZERO,
-				Bit.ZERO,
-				Bit.ZERO,
-				Bit.ZERO,
-				Bit.ONE,
-				Bit.ONE,
-				Bit.ZERO,
-				Bit.ONE)
+				EnumBit.ZERO,
+				EnumBit.ZERO,
+				EnumBit.ZERO,
+				EnumBit.ZERO,
+				EnumBit.ONE,
+				EnumBit.ONE,
+				EnumBit.ZERO,
+				EnumBit.ONE)
 	}
 
 	@Test
 	fun bitByteStream_incompleteByte() {
 		stream(
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ONE,
-			Bit.ONE,
-			Bit.ZERO)
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ONE,
+			EnumBit.ONE,
+			EnumBit.ZERO)
 			.bitByteStreamOrNull
 			.assertEqualTo(null)
 	}
@@ -50,14 +49,14 @@ class ByteTest {
 	@Test
 	fun bitByteStream_oneByte() {
 		stream(
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ONE,
-			Bit.ONE,
-			Bit.ZERO,
-			Bit.ONE)
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ONE,
+			EnumBit.ONE,
+			EnumBit.ZERO,
+			EnumBit.ONE)
 			.bitByteStreamOrNull
 			?.stack
 			.assertEqualTo(stack(13.clampedByte))
@@ -66,22 +65,22 @@ class ByteTest {
 	@Test
 	fun bitByteStream_twoBytes() {
 		stream(
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ONE,
-			Bit.ONE,
-			Bit.ZERO,
-			Bit.ONE,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ONE,
-			Bit.ONE,
-			Bit.ONE,
-			Bit.ZERO)
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ONE,
+			EnumBit.ONE,
+			EnumBit.ZERO,
+			EnumBit.ONE,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ONE,
+			EnumBit.ONE,
+			EnumBit.ONE,
+			EnumBit.ZERO)
 			.bitByteStreamOrNull
 			?.stack
 			.assertEqualTo(stack(13.clampedByte, 14.clampedByte))
@@ -94,38 +93,38 @@ class ByteTest {
 			.stack
 			.assertEqualTo(
 				stack(
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ONE,
-					Bit.ONE,
-					Bit.ZERO,
-					Bit.ONE,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ZERO,
-					Bit.ONE,
-					Bit.ONE,
-					Bit.ONE,
-					Bit.ZERO))
+					EnumBit.ZERO,
+					EnumBit.ZERO,
+					EnumBit.ZERO,
+					EnumBit.ZERO,
+					EnumBit.ONE,
+					EnumBit.ONE,
+					EnumBit.ZERO,
+					EnumBit.ONE,
+					EnumBit.ZERO,
+					EnumBit.ZERO,
+					EnumBit.ZERO,
+					EnumBit.ZERO,
+					EnumBit.ONE,
+					EnumBit.ONE,
+					EnumBit.ONE,
+					EnumBit.ZERO))
 	}
 
 	@Test
 	fun byteToBitStreamOrNull() {
 		stream(
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ZERO,
-			Bit.ONE,
-			Bit.ONE,
-			Bit.ZERO,
-			Bit.ONE,
-			Bit.ONE)
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ZERO,
+			EnumBit.ONE,
+			EnumBit.ONE,
+			EnumBit.ZERO,
+			EnumBit.ONE,
+			EnumBit.ONE)
 			.bitParseByte
-			.assertParsedAndRest(13.toByte(), Bit.ONE.onlyStream)
+			.assertParsedAndRest(13.toByte(), EnumBit.ONE.onlyStream)
 	}
 }
 

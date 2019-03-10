@@ -1,10 +1,6 @@
 package leo
 
-import leo.base.assertEqualTo
-import leo.base.assertParsedAndRest
-import leo.base.onlyStream
-import leo.base.then
-import leo.binary.Bit
+import leo.base.*
 import kotlin.test.Test
 
 class LetterTest {
@@ -35,8 +31,8 @@ class LetterTest {
 	fun parseBitStream() {
 		Letter.A
 			.bitStream
-			.then { Bit.ZERO.onlyStream }
+			.then { EnumBit.ZERO.onlyStream }
 			.bitParseLetter
-			.assertParsedAndRest(Letter.A, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(Letter.A, EnumBit.ZERO.onlyStream)
 	}
 }

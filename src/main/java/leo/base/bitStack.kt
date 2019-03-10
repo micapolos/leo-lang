@@ -1,14 +1,12 @@
 package leo.base
 
-import leo.binary.Bit
-
 data class BitStack(
 	val bitArray: BitArray,
 	val topIndexOrNull: Binary?)
 
 val BitArray.fullBitStack: BitStack
 	get() =
-		BitStack(this, depth.sizeStackOrNullOf(Bit.ONE)?.reverseBinary)
+		BitStack(this, depth.sizeStackOrNullOf(EnumBit.ONE)?.reverseBinary)
 
 //fun BitStack.push(bitArray: BitArray): BitStack =
 //	growIfNeeded.run {

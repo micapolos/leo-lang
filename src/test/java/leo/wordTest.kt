@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 import kotlin.test.Test
 
 class WordTest {
@@ -26,8 +25,8 @@ class WordTest {
 	fun parse() {
 		oneWord
 			.bitStream
-			.then { Bit.ZERO.onlyStream }
+			.then { EnumBit.ZERO.onlyStream }
 			.bitParseWord
-			.assertParsedAndRest(oneWord, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(oneWord, EnumBit.ZERO.onlyStream)
 	}
 }

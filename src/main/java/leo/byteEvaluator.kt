@@ -1,8 +1,8 @@
 package leo
 
+import leo.base.EnumBit
 import leo.base.Stream
 import leo.base.char
-import leo.binary.Bit
 
 data class ByteEvaluator(
 	val characterReader: Reader<Character>)
@@ -28,7 +28,7 @@ fun ByteEvaluator.apply(term: Term<Nothing>): Match? =
 
 // === byte stream
 
-val ByteEvaluator.bitStreamOrNull: Stream<Bit>?
+val ByteEvaluator.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		characterReader.bitStreamOrNull
 

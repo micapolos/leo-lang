@@ -1,10 +1,10 @@
 package leo
 
-import leo.binary.Bit
+import leo.base.EnumBit
 
 data class Carry(
-	val bit: Bit)
+	val bit: EnumBit)
 
-val Bit.carry
+val EnumBit.carry
 	get() =
 		Carry(this)

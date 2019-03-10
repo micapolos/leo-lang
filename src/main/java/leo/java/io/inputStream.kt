@@ -1,7 +1,6 @@
 package leo.java.io
 
 import leo.base.*
-import leo.binary.Bit
 import java.io.InputStream
 
 val InputStream.byteStreamOrNull: Stream<Byte>?
@@ -11,6 +10,6 @@ val InputStream.byteStreamOrNull: Stream<Byte>?
 			else readInt.clampedByte.onlyStream.then { byteStreamOrNull }
 		}
 
-val InputStream.bitStreamOrNull: Stream<Bit>?
+val InputStream.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		byteStreamOrNull?.map(Byte::bitStream)?.join

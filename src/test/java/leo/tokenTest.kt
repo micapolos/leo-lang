@@ -1,10 +1,6 @@
 package leo
 
-import leo.base.assertEqualTo
-import leo.base.assertParsedAndRest
-import leo.base.onlyStream
-import leo.base.then
-import leo.binary.Bit
+import leo.base.*
 import org.junit.Test
 
 class TokenTest {
@@ -43,26 +39,26 @@ class TokenTest {
 	fun bitParseToken_word() {
 		oneWord.token
 			.bitStream
-			.then { Bit.ZERO.onlyStream }
+			.then { EnumBit.ZERO.onlyStream }
 			.bitParseToken
-			.assertParsedAndRest(oneWord.token, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(oneWord.token, EnumBit.ZERO.onlyStream)
 	}
 
 	@Test
 	fun bitParseToken_begin() {
 		begin.control.token
 			.bitStream
-			.then { Bit.ZERO.onlyStream }
+			.then { EnumBit.ZERO.onlyStream }
 			.bitParseToken
-			.assertParsedAndRest(begin.control.token, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(begin.control.token, EnumBit.ZERO.onlyStream)
 	}
 
 	@Test
 	fun bitParseToken_end() {
 		end.control.token
 			.bitStream
-			.then { Bit.ZERO.onlyStream }
+			.then { EnumBit.ZERO.onlyStream }
 			.bitParseToken
-			.assertParsedAndRest(end.control.token, Bit.ZERO.onlyStream)
+			.assertParsedAndRest(end.control.token, EnumBit.ZERO.onlyStream)
 	}
 }

@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 import leo.binary.Int5
 import leo.binary.int
 import leo.binary.wrappingInt5
@@ -70,7 +69,7 @@ val Letter.int
 	get() =
 		ordinal
 
-val Letter.bitStream: Stream<Bit>
+val Letter.bitStream: Stream<EnumBit>
 	get() =
 		char.clampedByte.bitStream
 
@@ -86,7 +85,7 @@ val Field<Nothing>.parseLetter: Letter?
 			}
 		}
 
-val Stream<Bit>.bitParseLetter: Parse<Bit, Letter>?
+val Stream<EnumBit>.bitParseLetter: Parse<EnumBit, Letter>?
 	get() =
 		bitParseByte?.let { bitParseByte ->
 			bitParseByte.parsed.letterOrNull?.let { letter ->

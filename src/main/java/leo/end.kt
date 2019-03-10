@@ -1,10 +1,6 @@
 package leo
 
-import leo.base.Parse
-import leo.base.Stream
-import leo.base.bitParseByte
-import leo.base.parsed
-import leo.binary.Bit
+import leo.base.*
 
 object End
 
@@ -18,7 +14,7 @@ val Byte.endOrNull: End?
 		if (this == endByte) end
 		else null
 
-val Stream<Bit>.bitParseEnd: Parse<Bit, End>?
+val Stream<EnumBit>.bitParseEnd: Parse<EnumBit, End>?
 	get() =
 		bitParseByte?.let { bitParseByte ->
 			bitParseByte.parsed.endOrNull?.let { end ->

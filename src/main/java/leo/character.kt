@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 import leo.binary.Int5
 import leo.binary.incOrNull
 import leo.binary.wrappingInt5
@@ -40,7 +39,7 @@ val Character.byte: Byte
 			is EndCharacter -> endByte
 		}
 
-val Character.bitStream: Stream<Bit>
+val Character.bitStream: Stream<EnumBit>
 	get() =
 		byte.bitStream
 
@@ -72,7 +71,7 @@ val Field<Nothing>.parseCharacter: Character?
 			?: (letterWord fieldTo this).parseLetter?.character
 		}
 
-val Stream<Bit>.bitParseCharacter: Parse<Bit, Character>?
+val Stream<EnumBit>.bitParseCharacter: Parse<EnumBit, Character>?
 	get() = null
 		?: bitParseLetter?.map { it.character }
 		?: bitParseBegin?.map { it.character }

@@ -1,14 +1,10 @@
 package leo
 
-import leo.base.bitStream
-import leo.base.byte
-import leo.base.ifNull
-import leo.base.matchFirst
-import leo.binary.Bit
+import leo.base.*
 
 val Byte.reflect: Field<Nothing>
 	get() =
-		byteWord fieldTo bitStream.reflect(Bit::reflect)
+		byteWord fieldTo bitStream.reflect(EnumBit::reflect)
 
 val Field<Nothing>.parseByte: Byte?
 	get() =

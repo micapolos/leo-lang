@@ -1,6 +1,5 @@
 package leo.base
 
-import leo.binary.Bit
 import kotlin.test.Test
 
 class BinaryTest {
@@ -9,9 +8,9 @@ class BinaryTest {
 		binary(1, 0)
 			.assertEqualTo(
 				Binary(
-					Bit.ONE,
+					EnumBit.ONE,
 					Binary(
-						Bit.ZERO,
+						EnumBit.ZERO,
 						null)))
 	}
 
@@ -78,12 +77,12 @@ class BinaryTest {
 
 	@Test
 	fun carryIncrement() {
-		binary(0).carryIncrement.assertEqualTo(Bit.ZERO to binary(1))
-		binary(1).carryIncrement.assertEqualTo(Bit.ONE to binary(0))
-		binary(0, 0).carryIncrement.assertEqualTo(Bit.ZERO to binary(0, 1))
-		binary(0, 1).carryIncrement.assertEqualTo(Bit.ZERO to binary(1, 0))
-		binary(1, 0).carryIncrement.assertEqualTo(Bit.ZERO to binary(1, 1))
-		binary(1, 1).carryIncrement.assertEqualTo(Bit.ONE to binary(0, 0))
+		binary(0).carryIncrement.assertEqualTo(EnumBit.ZERO to binary(1))
+		binary(1).carryIncrement.assertEqualTo(EnumBit.ONE to binary(0))
+		binary(0, 0).carryIncrement.assertEqualTo(EnumBit.ZERO to binary(0, 1))
+		binary(0, 1).carryIncrement.assertEqualTo(EnumBit.ZERO to binary(1, 0))
+		binary(1, 0).carryIncrement.assertEqualTo(EnumBit.ZERO to binary(1, 1))
+		binary(1, 1).carryIncrement.assertEqualTo(EnumBit.ONE to binary(0, 0))
 	}
 
 	@Test
@@ -128,12 +127,12 @@ class BinaryTest {
 
 	@Test
 	fun borrowDecrement() {
-		binary(0).borrowDecrement.assertEqualTo(Bit.ONE to binary(1))
-		binary(1).borrowDecrement.assertEqualTo(Bit.ZERO to binary(0))
-		binary(0, 0).borrowDecrement.assertEqualTo(Bit.ONE to binary(1, 1))
-		binary(0, 1).borrowDecrement.assertEqualTo(Bit.ZERO to binary(0, 0))
-		binary(1, 0).borrowDecrement.assertEqualTo(Bit.ZERO to binary(0, 1))
-		binary(1, 1).borrowDecrement.assertEqualTo(Bit.ZERO to binary(1, 0))
+		binary(0).borrowDecrement.assertEqualTo(EnumBit.ONE to binary(1))
+		binary(1).borrowDecrement.assertEqualTo(EnumBit.ZERO to binary(0))
+		binary(0, 0).borrowDecrement.assertEqualTo(EnumBit.ONE to binary(1, 1))
+		binary(0, 1).borrowDecrement.assertEqualTo(EnumBit.ZERO to binary(0, 0))
+		binary(1, 0).borrowDecrement.assertEqualTo(EnumBit.ZERO to binary(0, 1))
+		binary(1, 1).borrowDecrement.assertEqualTo(EnumBit.ZERO to binary(1, 0))
 	}
 
 	@Test

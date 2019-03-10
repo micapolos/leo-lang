@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 
 data class Match(
 	val bodyBinaryTrieMatch: BinaryTrie.Match<Body>)
@@ -14,7 +13,7 @@ val Body.match: Match
 	get() =
 		binaryTrieFullMatch.match
 
-fun Match.get(bit: Bit): Match? =
+fun Match.get(bit: EnumBit): Match? =
 	bodyBinaryTrieMatch.get(bit)?.match
 
 val Function.match: Match

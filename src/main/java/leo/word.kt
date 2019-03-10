@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 
 data class Word(
 	val letterStack: Stack<Letter>) {
@@ -52,13 +51,13 @@ val Word.byteStream: Stream<Byte>
 	get() =
 		letterStream.map(Letter::byte)
 
-val Word.bitStream: Stream<Bit>
+val Word.bitStream: Stream<EnumBit>
 	get() =
 		letterStream.mapJoin(Letter::bitStream)
 
 val Word.binaryKey: BinaryKey
 	get() =
-		bitStream.then { Bit.ONE.onlyStream }.binaryKey
+		bitStream.then { EnumBit.ONE.onlyStream }.binaryKey
 
 val Word.reflect: Field<Nothing>
 	get() =
@@ -72,11 +71,11 @@ val Field<Nothing>.parseWord: Word?
 			}
 		}
 
-val Stream<Bit>.bitParseWord: Parse<Bit, Word>?
+val Stream<EnumBit>.bitParseWord: Parse<EnumBit, Word>?
 	get() =
 		bitParseLetter?.map { letter -> letter.onlyWord }?.bitParseWord
 
-val Parse<Bit, Word>.bitParseWord: Parse<Bit, Word>
+val Parse<EnumBit, Word>.bitParseWord: Parse<EnumBit, Word>
 	get() =
 		streamOrNull?.bitParseLetter?.map { letter -> parsed.plus(letter) }?.bitParseWord ?: this
 

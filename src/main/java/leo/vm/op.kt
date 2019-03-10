@@ -1,9 +1,9 @@
 package leo.vm
 
+import leo.base.EnumBit
 import leo.base.Variable
-import leo.binary.Bit
-import leo.binary.oneBit
-import leo.binary.zeroBit
+import leo.base.oneBit
+import leo.base.zeroBit
 
 sealed class Op(
 	var previousOpOrNull: Op? = null) {
@@ -15,29 +15,29 @@ object NoOp : Op() {
 }
 
 data class ConstantOp(
-	val dstBitVariable: Variable<Bit>,
-	val srcBit: Bit) : Op() {
+	val dstBitVariable: Variable<EnumBit>,
+	val srcBit: EnumBit) : Op() {
 	override fun apply() {
 		dstBitVariable.value = srcBit
 	}
 }
 
 data class LoadOp(
-	val dstBitVariable: Variable<Bit>,
-	val srcBitVariable: Variable<Bit>) : Op() {
+	val dstBitVariable: Variable<EnumBit>,
+	val srcBitVariable: Variable<EnumBit>) : Op() {
 	override fun apply() {
 		dstBitVariable.value = srcBitVariable.value
 	}
 }
 
 data class BranchOp(
-	val switchBitVariable: Variable<Bit>,
+	val switchBitVariable: Variable<EnumBit>,
 	val caseZeroOp: Op,
 	val caseOneOp: Op) : Op() {
 	override fun apply() {
 		when (switchBitVariable.value) {
-			Bit.ZERO -> caseZeroOp.apply()
-			Bit.ONE -> caseOneOp.apply()
+			EnumBit.ZERO -> caseZeroOp.apply()
+			EnumBit.ONE -> caseOneOp.apply()
 		}
 	}
 }
@@ -52,7 +52,7 @@ data class SequenceOp(
 }
 
 data class WhileOp(
-	val conditionBitVariable: Variable<Bit>,
+	val conditionBitVariable: Variable<EnumBit>,
 	val op: Op) : Op() {
 	override fun apply() {
 		while (conditionBitVariable.value == oneBit) {
@@ -65,13 +65,13 @@ data class WhileOp(
 
 val noOp = NoOp
 
-fun Variable<Bit>.setOp(bit: Bit): Op =
+fun Variable<EnumBit>.setOp(bit: EnumBit): Op =
 	ConstantOp(this, bit)
 
-fun Variable<Bit>.setOp(bitVariable: Variable<Bit>): Op =
+fun Variable<EnumBit>.setOp(bitVariable: Variable<EnumBit>): Op =
 	LoadOp(this, bitVariable)
 
-fun Variable<Bit>.branchOp(zeroOp: Op, oneOp: Op): Op =
+fun Variable<EnumBit>.branchOp(zeroOp: Op, oneOp: Op): Op =
 	BranchOp(this, zeroOp, oneOp)
 
 fun Op.then(op: Op): Op =
@@ -92,24 +92,24 @@ fun sequenceOp(op1: Op, op2: Op, op3: Op, op4: Op, op5: Op, op6: Op, op7: Op, op
 
 // === custom
 
-val Variable<Bit>.notOp: Op
+val Variable<EnumBit>.notOp: Op
 	get() =
 		branchOp(setOp(oneBit), setOp(zeroBit))
 
-fun Variable<Bit>.andOp(bitVariable: Variable<Bit>): Op =
+fun Variable<EnumBit>.andOp(bitVariable: Variable<EnumBit>): Op =
 	branchOp(
 		bitVariable.branchOp(setOp(zeroBit), setOp(zeroBit)),
 		bitVariable.branchOp(setOp(zeroBit), setOp(oneBit)))
 
-fun Variable<Bit>.orOp(bitVariable: Variable<Bit>): Op =
+fun Variable<EnumBit>.orOp(bitVariable: Variable<EnumBit>): Op =
 	branchOp(
 		bitVariable.branchOp(setOp(zeroBit), setOp(oneBit)),
 		bitVariable.branchOp(setOp(oneBit), setOp(oneBit)))
 
-fun Variable<Bit>.xorOp(bitVariable: Variable<Bit>): Op =
+fun Variable<EnumBit>.xorOp(bitVariable: Variable<EnumBit>): Op =
 	branchOp(
 		bitVariable.branchOp(setOp(zeroBit), setOp(oneBit)),
 		bitVariable.branchOp(setOp(oneBit), setOp(zeroBit)))
 
-fun Variable<Bit>.whileOne(op: Op): Op =
+fun Variable<EnumBit>.whileOne(op: Op): Op =
 	WhileOp(this, op)

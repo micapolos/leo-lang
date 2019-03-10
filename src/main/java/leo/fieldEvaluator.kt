@@ -1,9 +1,9 @@
 package leo
 
+import leo.base.EnumBit
 import leo.base.Stream
 import leo.base.fold
 import leo.base.orNull
-import leo.binary.Bit
 
 data class FieldEvaluator(
 	val tokenEvaluator: Evaluator<Token<Nothing>>)
@@ -22,7 +22,7 @@ fun FieldEvaluator.evaluateInternal(field: Field<Nothing>): Evaluator<Field<Noth
 fun FieldEvaluator.apply(term: Term<Nothing>): Match? =
 	tokenEvaluator.apply(term)
 
-val FieldEvaluator.bitStreamOrNull: Stream<Bit>?
+val FieldEvaluator.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		tokenEvaluator.bitStreamOrNull
 

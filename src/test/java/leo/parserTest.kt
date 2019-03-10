@@ -1,8 +1,8 @@
 package leo
 
+import leo.base.EnumBit
 import leo.base.assertEqualTo
 import leo.base.stack
-import leo.binary.Bit
 import kotlin.test.Test
 
 class ParserTest {
@@ -10,28 +10,28 @@ class ParserTest {
 	fun bitZero() {
 		bitWord.fieldTo(zeroWord.term)
 			.parseBit
-			.assertEqualTo(Bit.ZERO)
+			.assertEqualTo(EnumBit.ZERO)
 	}
 
 	@Test
 	fun bitOne() {
 		bitWord.fieldTo(oneWord.term)
 			.parseBit
-			.assertEqualTo(Bit.ONE)
+			.assertEqualTo(EnumBit.ONE)
 	}
 
 	@Test
 	fun byte() {
 		byteWord.fieldTo(
 			term(
-				Bit.ZERO.reflect,
-				Bit.ZERO.reflect,
-				Bit.ZERO.reflect,
-				Bit.ZERO.reflect,
-				Bit.ONE.reflect,
-				Bit.ONE.reflect,
-				Bit.ZERO.reflect,
-				Bit.ONE.reflect))
+				EnumBit.ZERO.reflect,
+				EnumBit.ZERO.reflect,
+				EnumBit.ZERO.reflect,
+				EnumBit.ZERO.reflect,
+				EnumBit.ONE.reflect,
+				EnumBit.ONE.reflect,
+				EnumBit.ZERO.reflect,
+				EnumBit.ONE.reflect))
 			.parseByte
 			.assertEqualTo(13.toByte())
 	}
@@ -42,7 +42,7 @@ class ParserTest {
 			bitWord fieldTo zeroWord.term,
 			bitWord fieldTo oneWord.term)
 			.parseStack(Field<Nothing>::parseBit)
-			.assertEqualTo(stack(Bit.ZERO, Bit.ONE))
+			.assertEqualTo(stack(EnumBit.ZERO, EnumBit.ONE))
 	}
 }
 

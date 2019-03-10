@@ -1,6 +1,5 @@
 package leo.base
 
-import leo.binary.bit
 import kotlin.test.Test
 
 class BitChoiceTest {
@@ -14,19 +13,19 @@ class BitChoiceTest {
 
 	@Test
 	fun depthBitArrayOf() {
-		0.depthBitArray(0.bit).assertEqualTo(bitArray(0))
-		0.depthBitArray(1.bit).assertEqualTo(bitArray(1))
-		1.depthBitArray(0.bit).assertEqualTo(bitArray(0, 0))
-		2.depthBitArray(1.bit).assertEqualTo(bitArray(1, 1, 1, 1))
+		0.depthBitArray(0.enumBit).assertEqualTo(bitArray(0))
+		0.depthBitArray(1.enumBit).assertEqualTo(bitArray(1))
+		1.depthBitArray(0.enumBit).assertEqualTo(bitArray(0, 0))
+		2.depthBitArray(1.enumBit).assertEqualTo(bitArray(1, 1, 1, 1))
 	}
 
 	@Test
 	fun setBit() {
 		bitArray(0, 0, 0, 0)
-			.set(0.bit, bitArray(1, 1))
+			.set(0.enumBit, bitArray(1, 1))
 			.assertEqualTo(bitArray(1, 1, 0, 0))
 		bitArray(0, 0, 0, 0)
-			.set(1.bit, 1.depthBitArray(1.bit))
+			.set(1.enumBit, 1.depthBitArray(1.enumBit))
 			.assertEqualTo(bitArray(0, 0, 1, 1))
 	}
 
@@ -117,9 +116,9 @@ class BitChoiceTest {
 		bitArray(1, 0, 1, 1)
 			.indexedBitStream
 			.assertContains(
-				binary(0, 0).indexedTo(1.bit),
-				binary(0, 1).indexedTo(0.bit),
-				binary(1, 0).indexedTo(1.bit),
-				binary(1, 1).indexedTo(1.bit))
+				binary(0, 0).indexedTo(1.enumBit),
+				binary(0, 1).indexedTo(0.enumBit),
+				binary(1, 0).indexedTo(1.enumBit),
+				binary(1, 1).indexedTo(1.enumBit))
 	}
 }

@@ -1,12 +1,12 @@
 package leo
 
+import leo.base.EnumBit
 import leo.base.Stream
-import leo.binary.Bit
 
 data class Evaluator<V>(
 	val evaluateFn: (V) -> Evaluator<V>?,
 	val applyFn: (Term<Nothing>) -> Match?,
-	val bitStreamOrNullFn: () -> Stream<Bit>?)
+	val bitStreamOrNullFn: () -> Stream<EnumBit>?)
 
 fun <V> Evaluator<V>.evaluate(value: V): Evaluator<V>? =
 	evaluateFn(value)
@@ -14,6 +14,6 @@ fun <V> Evaluator<V>.evaluate(value: V): Evaluator<V>? =
 fun <V> Evaluator<V>.apply(term: Term<Nothing>): Match? =
 	applyFn(term)
 
-val <V> Evaluator<V>.bitStreamOrNull: Stream<Bit>?
+val <V> Evaluator<V>.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		bitStreamOrNullFn()

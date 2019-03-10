@@ -1,8 +1,8 @@
 package leo
 
+import leo.base.EnumBit
 import leo.base.assertEqualTo
 import leo.base.string
-import leo.binary.Bit
 import org.junit.Test
 
 class MetaTest {
@@ -13,9 +13,9 @@ class MetaTest {
 
 	@Test
 	fun reflect() {
-		Bit.ZERO.meta
-			.reflect(Bit::reflect)
-			.assertEqualTo(metaWord fieldTo term(Bit.ZERO.reflect))
+		EnumBit.ZERO.meta
+			.reflect(EnumBit::reflect)
+			.assertEqualTo(metaWord fieldTo term(EnumBit.ZERO.reflect))
 	}
 
 	@Test

@@ -1,7 +1,6 @@
 package leo
 
 import leo.base.*
-import leo.binary.Bit
 
 data class TokenEvaluator(
 	val entryStackOrNull: Stack<Entry>?,
@@ -77,14 +76,14 @@ val TokenEvaluator.evaluateEnd: TokenEvaluator?
 
 // === byte stream
 
-val TokenEvaluator.bitStreamOrNull: Stream<Bit>?
+val TokenEvaluator.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		entryStreamOrNull
 			?.map { it.coreBitStream.then { beginBitStream } }
 			?.join
 			.orNullThenIfNotNull { scope.bitStreamOrNull(wordOrNull != null) }
 
-val TokenEvaluator.Entry.coreBitStream: Stream<Bit>
+val TokenEvaluator.Entry.coreBitStream: Stream<EnumBit>
 	get() =
 		scope.bitStreamOrNull(true)?.then { word.bitStream } ?: word.bitStream
 

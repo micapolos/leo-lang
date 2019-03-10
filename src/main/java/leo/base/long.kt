@@ -1,12 +1,10 @@
 package leo.base
 
-import leo.binary.Bit
-
 val Long.intStream: Stream<Int>
 	get() =
 		shr(32).toInt().onlyStream
 			.then { toInt().onlyStream }
 
-val Long.bitStream: Stream<Bit>
+val Long.bitStream: Stream<EnumBit>
 	get() =
 		intStream.map(Int::bitStream).join

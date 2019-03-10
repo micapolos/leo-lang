@@ -1,16 +1,16 @@
 package leo.script
 
 import leo.*
+import leo.base.EnumBit
 import leo.base.bitSequence
 import leo.base.int
 import leo.base.utf8ByteArray
-import leo.binary.Bit
 
 val Boolean.scriptLine
 	get() =
 		booleanWord lineTo nullScript.plus(word)
 
-val Bit.scriptLine
+val EnumBit.scriptLine
 	get() =
 		bitWord lineTo nullScript.plus(word)
 
