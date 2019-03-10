@@ -14,6 +14,6 @@ val Id.codeString
 		if (string.isEmpty()) "empty\u0000"
 		else string.replace("\\", "\\\\").replace("\u0000", "\\0") + '\u0000'
 
-val Id.codeBitSeq
+val Id.bitSeq
 	get() =
 		codeString.utf8BitSeq

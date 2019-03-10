@@ -1,8 +1,11 @@
 package leo32
 
 import leo.base.assertEqualTo
+import leo.base.fold
 import leo.base.seqNode
-import leo.binary.*
+import leo.binary.bit
+import leo.binary.one
+import leo.binary.zero
 import kotlin.test.Test
 
 class FunctionTest {
@@ -10,21 +13,20 @@ class FunctionTest {
 	fun invoke() {
 		emptyFunction
 			.invoke(zero.bit, emptyRuntime)
-			.assertEqualTo(emptyRuntime.push(zero.bit))
+			.assertEqualTo(emptyRuntime)
 		emptyFunction
 			.invoke(one.bit, emptyRuntime)
-			.assertEqualTo(emptyRuntime.push(one.bit))
+			.assertEqualTo(emptyRuntime)
 
 		emptyFunction
-			.define(zero.bit, push.op.match)
+			.define(zero.bit, zero.bit.push.op.match)
 			.invoke(zero.bit, emptyRuntime)
-			.assertEqualTo(emptyRuntime
-				.push(zero.bit))
+			.assertEqualTo(emptyRuntime.push(zero.bit))
 
 		emptyFunction
-			.define(zero.bit, push.op.match)
+			.define(zero.bit, zero.bit.push.op.match)
 			.invoke(one.bit, emptyRuntime)
-			.assertEqualTo(emptyRuntime.push(one.bit))
+			.assertEqualTo(emptyRuntime)
 	}
 
 	@Test
@@ -43,12 +45,10 @@ class FunctionTest {
 	}
 
 	@Test
-	fun nandInvoke() {
-		nandFunction
+	fun booleanInvoke() {
+		booleanFunction
 			.runtime
-			.invoke(zero.bit)
-			.invoke(zero.bit)
-			.bitStack
-			.assertEqualTo(emptyStack32<Bit>().push(one.bit))
+			.fold("false".id.bitSeq) { invoke(it) }
+			.assertEqualTo(booleanFunction.runtime.push(zero.bit))
 	}
 }

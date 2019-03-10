@@ -21,9 +21,9 @@ val Function.match
 	get() =
 		Match(null, this)
 
-fun Match.invoke(bit: Bit, runtime: Runtime) =
+fun Match.invoke(runtime: Runtime) =
 	runtime
-		.ifNotNull(opOrNull) { it.invoke(bit, runtime) }
+		.ifNotNull(opOrNull) { it.invoke(runtime) }
 		.goto(nextFunctionOrNull)
 
 val Match.functionForDefine

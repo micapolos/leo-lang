@@ -37,18 +37,12 @@ fun Function.undefine(bit: Bit) =
 	copy(matchMap = matchMap.put(bit, null))
 
 fun Function.invoke(bit: Bit, runtime: Runtime) =
-	(matchMap.at(bit) ?: push.op.match).invoke(bit, runtime)
+	matchMap
+		.at(bit)
+		?.invoke(runtime)
+		?: runtime
 
-fun Function.matchAt(bit: Bit) =
-	matchMap.at(bit) ?: push.op.match
-
-val nandFunction =
-	function(
-		push.op.match.next(
-			function(
-				push.op.then(nand.op).match,
-				push.op.then(nand.op).match)),
-		push.op.match.next(
-			function(
-				push.op.then(nand.op).match,
-				push.op.then(nand.op).match)))
+val booleanFunction =
+	emptyFunction
+		.define("false".id.bitSeq, zero.bit.push.op.match)
+		.define("true".id.bitSeq, one.bit.push.op.match)

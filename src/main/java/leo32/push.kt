@@ -1,5 +1,10 @@
 package leo32
 
-object Push
+import leo.binary.Bit
 
-val push = Push
+data class Push(
+	val bit: Bit)
+
+val Bit.push
+	get() =
+		Push(this)
