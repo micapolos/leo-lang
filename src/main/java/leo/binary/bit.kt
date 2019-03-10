@@ -2,7 +2,7 @@ package leo.binary
 
 import leo.base.Stream
 import leo.base.ifNotNull
-import leo.base.onlySequence
+import leo.base.onlySeq
 import leo.base.read
 
 enum class Bit {
@@ -32,6 +32,9 @@ val Bit.inverse
 			Bit.ZERO -> Bit.ONE
 			Bit.ONE -> Bit.ZERO
 		}
+
+infix fun Bit.nand(bit: Bit) =
+	and(bit).inverse
 
 fun Bit.and(bit: Bit) =
 	when (this) {
@@ -112,9 +115,7 @@ fun Appendable.appendBit(bitStream: Stream<Bit>): Appendable =
 		append(bit).ifNotNull(nextOrNull, Appendable::appendBit)
 	}
 
-val Bit.bitSequence
-	get() =
-		this.onlySequence
+val Bit.bitSeq get() = onlySeq
 
 val Bit.boolean
 	get() =

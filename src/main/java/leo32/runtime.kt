@@ -24,14 +24,8 @@ val Runtime.pop
 	get() =
 		bitStack.shrink?.let { copy(bitStack = it) }
 
-fun Runtime.and(bit: Bit) =
-	bitStack.updateTop { and(bit) }?.let { copy(bitStack = it) }
-
-fun Runtime.or(bit: Bit) =
-	bitStack.updateTop { or(bit) }?.let { copy(bitStack = it) }
-
-fun Runtime.not(bit: Bit) =
-	bitStack.updateTop { or(bit) }?.let { copy(bitStack = it) }
+fun Runtime.nand(bit: Bit) =
+	bitStack.updateTop { nand(bit) }?.let { copy(bitStack = it) }
 
 fun Runtime.push(function: Function) =
 	functionStack.push(function)?.let { copy(functionStack = it) }

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package leo.binary
 
 import leo.base.*
@@ -160,20 +162,20 @@ fun <R> R.forEachInt14(fn: R.(Int14) -> R): R = forEach(zeroInt14, { incOrNull }
 fun <R> R.forEachInt15(fn: R.(Int15) -> R): R = forEach(zeroInt15, { incOrNull }, fn)
 fun <R> R.forEachInt16(fn: R.(Int16) -> R): R = forEach(zeroInt16, { incOrNull }, fn)
 
-val Int0.bits get() = emptySequence<Bit>()
-val Int1.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int2.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int3.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int4.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int5.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int6.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int7.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int8.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int9.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int10.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int11.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int12.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int13.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int14.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int15.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
-val Int16.bits get() = Sequence { hsb.thenNonEmptySequence(lo.bits) }
+val Int0.bits get() = emptySeq<Bit>()
+val Int1.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int2.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int3.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int4.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int5.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int6.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int7.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int8.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int9.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int10.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int11.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int12.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int13.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int14.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int15.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }
+val Int16.bits get() = Seq { hsb.thenNonEmptySequence(lo.bits) }

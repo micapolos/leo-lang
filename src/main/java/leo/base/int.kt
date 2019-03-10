@@ -39,8 +39,8 @@ val Int.pow2: Int
 			else -> 1.shl(this)
 		}
 
-fun Int.bitSequence(count: Int): Sequence<Bit> =
-	Sequence {
+fun Int.bitSequence(count: Int): Seq<Bit> =
+	Seq {
 		if (count == 0) null
 		else and((count - 1).pow2).bit.thenNonEmptySequence(bitSequence(count - 1))
 	}

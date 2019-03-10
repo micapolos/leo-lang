@@ -1,8 +1,8 @@
 package leo32
 
-import leo.base.Sequence
+import leo.base.Seq
 import leo.base.ifNotNullOr
-import leo.base.nonEmptySequenceOrNull
+import leo.base.seqNodeOrNull
 import leo.binary.Bit
 
 sealed class Match {
@@ -41,9 +41,9 @@ val Match.functionForDefine
 			is OpMatch -> emptyFunction
 		}
 
-fun Match.define(bits: Sequence<Bit>, match: Match): Match =
+fun Match.define(bits: Seq<Bit>, match: Match): Match =
 	bits
-		.nonEmptySequenceOrNull
+		.seqNodeOrNull
 		.ifNotNullOr(
 			{ functionForDefine.define(it, match).partialMatch },
 			{ match })

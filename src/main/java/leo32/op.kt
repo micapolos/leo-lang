@@ -21,24 +21,12 @@ data class PopOp(val pop: Pop) : Op() {
 		runtime.pop
 }
 
-data class AndOp(val and: And) : Op() {
+data class NandOp(val nand: Nand) : Op() {
 	override fun invoke(bit: Bit, runtime: Runtime) =
-		runtime.and(bit)
-}
-
-data class OrOp(val or: Or) : Op() {
-	override fun invoke(bit: Bit, runtime: Runtime) =
-		runtime.or(bit)
-}
-
-data class NotOp(val not: Not) : Op() {
-	override fun invoke(bit: Bit, runtime: Runtime) =
-		runtime.not(bit)
+		runtime.nand(bit)
 }
 
 val Log.op get() = LogOp(this)
 val Push.op get() = PushOp(this)
 val Pop.op get() = PopOp(this)
-val And.op get() = AndOp(this)
-val Or.op get() = OrOp(this)
-val Not.op get() = NotOp(this)
+val Nand.op get() = NandOp(this)

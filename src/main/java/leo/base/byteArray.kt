@@ -28,3 +28,7 @@ fun ByteArray.getInt(index: Int): Int {
 	value = value or this[byteIndex].toInt().and(0xFF)
 	return value
 }
+
+val ByteArray.intRange
+	get() =
+		IntRange(0, size - 1)

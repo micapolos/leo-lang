@@ -2,8 +2,10 @@
 
 package leo32
 
-import leo.base.indexed
-import leo.binary.*
+import leo.binary.Array1
+import leo.binary.Stack32
+import leo.binary.foldIndexed
+import leo.binary.int
 
 val Appendable.appendBeginCode
 	get() =
@@ -21,11 +23,6 @@ fun Appendable.appendCode(string: String) =
 fun Appendable.appendWordCode(wordString: String) =
 	append(wordString).appendBeginCode
 
-fun Appendable.appendCode(bit: Bit) =
-	appendLineCode("bit") {
-		appendCode(bit.int)
-	}
-
 fun Appendable.appendCode(int: Int) =
 	append(int.toString())
 
@@ -37,23 +34,7 @@ fun <T> Appendable.appendCode(indexed: IndexedValue<T>, appendValueFn: Appendabl
 		.appendIndexCode(indexed.index)
 		.appendValueFn(indexed.value)
 
-fun <T> Appendable.appendCode(choice: Choice<T>, appendValueFn: Appendable.(T) -> Appendable) =
-	appendLineCode("choice") {
-		this
-			.appendCode(0 indexed choice.atBitZero) {
-				appendValueFn(choice.atBitZero)
-			}
-			.appendCode(1 indexed choice.atBitOne) {
-				appendValueFn(choice.atBitOne)
-			}
-	}
-
 fun <T> Appendable.appendCode(array: Array1<T>, appendValueFn: Appendable.(T) -> Appendable) =
-	foldIndexed(array) {
-		appendCode(it, appendValueFn)
-	}
-
-fun <T> Appendable.appendCode(array: Array32<T>, appendValueFn: Appendable.(T) -> Appendable) =
 	foldIndexed(array) {
 		appendCode(it, appendValueFn)
 	}
@@ -84,9 +65,7 @@ fun Appendable.appendCode(op: Op): Appendable =
 			is LogOp -> appendCode(op.log)
 			is PushOp -> appendCode(op.push)
 			is PopOp -> appendCode(op.pop)
-			is AndOp -> appendCode(op.and)
-			is OrOp -> appendCode(op.or)
-			is NotOp -> appendCode(op.not)
+			is NandOp -> appendCode(op.nand)
 		}
 	}
 
@@ -106,14 +85,8 @@ fun Appendable.appendCode(push: Push) =
 fun Appendable.appendCode(pop: Pop) =
 	appendSimpleLineCode("pop")
 
-fun Appendable.appendCode(and: And) =
-	appendSimpleLineCode("and")
-
-fun Appendable.appendCode(or: Or) =
-	appendSimpleLineCode("or")
-
-fun Appendable.appendCode(not: Not) =
-	appendSimpleLineCode("not")
+fun Appendable.appendCode(nand: Nand) =
+	appendSimpleLineCode("nand")
 
 fun Appendable.appendCode(runtime: Runtime) =
 	appendLineCode("runtime") {

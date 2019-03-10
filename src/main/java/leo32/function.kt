@@ -1,6 +1,6 @@
 package leo32
 
-import leo.base.NonEmptySequence
+import leo.base.SeqNode
 import leo.binary.*
 
 data class Function(
@@ -17,7 +17,7 @@ fun Function.put(bit: Bit, match: Match) =
 fun Function.define(bit: Bit, match: Match) =
 	copy(matchArray = matchArray.put(bit, match))
 
-fun Function.define(bits: NonEmptySequence<Bit>, match: Match): Function =
+fun Function.define(bits: SeqNode<Bit>, match: Match): Function =
 	copy(matchArray = matchArray.updateAt(bits.first) {
 		notNull.define(bits.remaining, match)
 	})
