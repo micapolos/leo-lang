@@ -5,16 +5,16 @@ import org.junit.Test
 class SeqNodeOrEmptyTest {
 	@Test
 	fun content() {
-		sequence<Int>().assertContains()
-		sequence(1).assertContains(1)
-		sequence(1, 2, 3).assertContains(1, 2, 3)
+		seq<Int>().assertContains()
+		seq(1).assertContains(1)
+		seq(1, 2, 3).assertContains(1, 2, 3)
 	}
 
 	@Test
 	fun iterator() {
-		sequence<Int>().assertContains()
-		sequence(1).assertContains(1)
-		sequence(1, 2, 3).assertContains(1, 2, 3)
+		seq<Int>().assertContains()
+		seq(1).assertContains(1)
+		seq(1, 2, 3).assertContains(1, 2, 3)
 	}
 }
 

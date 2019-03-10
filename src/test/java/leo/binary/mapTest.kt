@@ -1,14 +1,13 @@
 package leo.binary
 
 import leo.base.assertEqualTo
-import leo.base.clampedEnumBit
 import leo.base.string
 import kotlin.test.Test
 
-class ArrayTest {
+class MapTest {
 	@Test
 	fun putAndGet() {
-		nullArray32<Int>()
+		nullMap32<Int>()
 			.apply { at(154).assertEqualTo(null) }
 			.put(154, 15400)
 			.apply { at(153).assertEqualTo(null) }
@@ -19,7 +18,7 @@ class ArrayTest {
 	@Test
 	fun performance() {
 		val size = 1 shl 20
-		var array32 = nullArray32<Int>()
+		var array32 = nullMap32<Int>()
 		for (i in 0 until size) array32.at(i).assertEqualTo(null)
 		for (i in 0 until size) array32 = array32.put(i, i)
 		for (i in 0 until size) array32.at(i).assertEqualTo(i)
@@ -31,16 +30,16 @@ class ArrayTest {
 		val array = arrayOfNulls<Int>(size)
 		for (i in 0 until size) array[i].assertEqualTo(null)
 		for (i in 0 until size) array[i] = i
-		for (i in 0 until size) array[i].assertEqualTo(i.clampedEnumBit)
+		for (i in 0 until size) array[i].assertEqualTo(i)
 	}
 
 	@Test
 	fun string() {
-		nullArray32<Int>()
+		nullMap32<Int>()
 			.put(5, 50)
 			.put(156, 1560)
-			.put(1234566789, 1234567890)
+			.put(123456789, 1234567890)
 			.string
-			.assertEqualTo("")
+			.assertEqualTo("nullMap32().put(5, 50).put(156, 1560).put(123456789, 1234567890)")
 	}
 }

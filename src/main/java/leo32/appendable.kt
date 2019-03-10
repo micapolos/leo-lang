@@ -2,7 +2,9 @@
 
 package leo32
 
-import leo.binary.Array1
+import leo.base.ifNotNull
+import leo.base.indexed
+import leo.binary.Map1
 import leo.binary.Stack32
 import leo.binary.foldIndexed
 import leo.binary.int
@@ -34,28 +36,35 @@ fun <T> Appendable.appendCode(indexed: IndexedValue<T>, appendValueFn: Appendabl
 		.appendIndexCode(indexed.index)
 		.appendValueFn(indexed.value)
 
-fun <T> Appendable.appendCode(array: Array1<T>, appendValueFn: Appendable.(T) -> Appendable) =
+fun <T> Appendable.appendCode(array: Map1<T>, appendValueFn: Appendable.(T) -> Appendable) =
 	foldIndexed(array) {
 		appendCode(it, appendValueFn)
 	}
 
 fun <T> Appendable.appendCode(stack: Stack32<T>, appendValueFn: Appendable.(T) -> Appendable) =
-	foldIndexed(stack.array32) {
+	foldIndexed(stack.map32) {
 		appendValueFn(it.value)
 	}
 
 fun Appendable.appendCode(function: Function) =
 	appendLineCode("function") {
-		appendCode(function.matchArray) {
+		appendCode(function.matchMap) {
 			appendCode(it)
 		}
 	}
 
 fun Appendable.appendCode(match: Match): Appendable =
 	appendLineCode("match") {
-		when (match) {
-			is PartialMatch -> appendCode(match.function)
-			is OpMatch -> appendCode(match.op)
+		this
+			.appendLineCode("op") {
+				ifNotNull(match.opOrNull) {
+					appendCode(it)
+				}
+			}
+			.appendLineCode("next") {
+				ifNotNull(match.nextFunctionOrNull) {
+					appendCode(it)
+				}
 		}
 	}
 
@@ -66,8 +75,14 @@ fun Appendable.appendCode(op: Op): Appendable =
 			is PushOp -> appendCode(op.push)
 			is PopOp -> appendCode(op.pop)
 			is NandOp -> appendCode(op.nand)
+			is SeqOp -> appendCode(op)
 		}
 	}
+
+fun Appendable.appendCode(seqOp: SeqOp) =
+	this
+		.appendCode(0 indexed seqOp.firstOp) { appendCode(it) }
+		.appendCode(1 indexed seqOp.firstOp) { appendCode(it) }
 
 fun Appendable.appendCode(log: Log) =
 	appendLineCode("log") {
@@ -91,18 +106,16 @@ fun Appendable.appendCode(nand: Nand) =
 fun Appendable.appendCode(runtime: Runtime) =
 	appendLineCode("runtime") {
 		this
-			.appendLineCode("scope") {
-				appendCode(runtime.scopeFunction)
-			}
 			.appendLineCode("bits") {
 				appendCode(runtime.bitStack) {
 					appendCode(it.int)
 				}
 			}
-			.appendLineCode("functions") {
-				appendCode(runtime.functionStack) {
-					appendCode(it)
-				}
+			.appendLineCode("scope") {
+				appendCode(runtime.scopeFunction)
+			}
+			.appendLineCode("current") {
+				appendCode(runtime.currentFunction)
 			}
 	}
 

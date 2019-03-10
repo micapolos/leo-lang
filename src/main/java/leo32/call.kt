@@ -1,6 +1,6 @@
 package leo32
 
-import leo.binary.Array32
+import leo.binary.Map32
 
 data class Call(
-	val stack: Array32<Function>)
+	val stack: Map32<Function>)

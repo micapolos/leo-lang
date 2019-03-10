@@ -2,9 +2,7 @@ package leo32
 
 import leo.base.assertEqualTo
 import leo.base.seqNode
-import leo.binary.bit
-import leo.binary.one
-import leo.binary.zero
+import leo.binary.*
 import kotlin.test.Test
 
 class FunctionTest {
@@ -12,10 +10,10 @@ class FunctionTest {
 	fun invoke() {
 		emptyFunction
 			.invoke(zero.bit, emptyRuntime)
-			.assertEqualTo(null)
+			.assertEqualTo(emptyRuntime.push(zero.bit))
 		emptyFunction
 			.invoke(one.bit, emptyRuntime)
-			.assertEqualTo(null)
+			.assertEqualTo(emptyRuntime.push(one.bit))
 
 		emptyFunction
 			.define(zero.bit, push.op.match)
@@ -26,7 +24,7 @@ class FunctionTest {
 		emptyFunction
 			.define(zero.bit, push.op.match)
 			.invoke(one.bit, emptyRuntime)
-			.assertEqualTo(null)
+			.assertEqualTo(emptyRuntime.push(one.bit))
 	}
 
 	@Test
@@ -42,5 +40,15 @@ class FunctionTest {
 						.put(one.bit, "01".tag.log.op.match)
 						.match)
 					.put(one.bit, "1".tag.log.op.match))
+	}
+
+	@Test
+	fun nandInvoke() {
+		nandFunction
+			.runtime
+			.invoke(zero.bit)
+			.invoke(zero.bit)
+			.bitStack
+			.assertEqualTo(emptyStack32<Bit>().push(one.bit))
 	}
 }

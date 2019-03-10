@@ -6,6 +6,10 @@ val Leo.code
 	get() =
 		appendableString { it.appendCode(this) }
 
+val Runtime.code
+	get() =
+		appendableString { it.appendCode(this) }
+
 val Function.code
 	get() =
 		appendableString { it.appendCode(this) }

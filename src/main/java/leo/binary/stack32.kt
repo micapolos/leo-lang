@@ -4,7 +4,7 @@ import leo.base.udecOrNull
 import leo.base.uincOrNull
 
 data class Stack32<out T>(
-	val array32: Array32<T>,
+	val map32: Map32<T>,
 	val topIndex: Int?)
 
 data class PoppedStack32<out T>(
@@ -12,7 +12,7 @@ data class PoppedStack32<out T>(
 	val stack32: Stack32<T>)
 
 fun <T> emptyStack32(): Stack32<T> =
-	Stack32(nullArray32(), null)
+	Stack32(nullMap32(), null)
 
 val <T> Stack32<T>.isEmpty
 	get() =
@@ -25,21 +25,20 @@ val <T> Stack32<T>.empty: Stack32<T>
 val <T> Stack32<T>.grow: Stack32<T>?
 	get() =
 		if (topIndex == null) copy(topIndex = 0)
-		else topIndex.uincOrNull?.let { Stack32(array32, it) }
+		else topIndex.uincOrNull?.let { Stack32(map32, it) }
 
-val <T> Stack32<T>.shrink: Stack32<T>?
+val <T : Any> Stack32<T>.shrink: Stack32<T>?
 	get() =
-		if (topIndex == null) null
-		else topIndex.udecOrNull?.let { Stack32(array32.put(topIndex, null), it) } ?: empty
+		pop?.stack32
 
 val <T : Any> Stack32<T>.top: T?
 	get() =
 		if (topIndex == null) null
-		else array32.at(topIndex)
+		else map32.at(topIndex)
 
 fun <T> Stack32<T>.putTop(value: T): Stack32<T>? =
 	if (topIndex == null) null
-	else copy(array32.put(topIndex, value))
+	else copy(map32.put(topIndex, value))
 
 fun <T> Stack32<T>.push(value: T): Stack32<T>? =
 	grow?.putTop(value)
@@ -50,9 +49,9 @@ fun <T : Any> Stack32<T>.popped(value: T): PoppedStack32<T> =
 val <T : Any> Stack32<T>.pop: PoppedStack32<T>?
 	get() =
 		if (topIndex == null) null
-		else (topIndex.udecOrNull?.let { Stack32(array32, it) } ?: empty).popped(array32.at(topIndex)!!)
+		else (topIndex.udecOrNull?.let { Stack32(map32.put(topIndex, null), it) } ?: empty).popped(map32.at(topIndex)!!)
 
 fun <T> Stack32<T>.updateTop(fn: T.() -> T): Stack32<T>? =
 	topIndex?.let {
-		copy(array32 = array32.updateAt(it) { fn(this!!) })
+		copy(map32 = map32.updateAt(it) { fn(this!!) })
 	}

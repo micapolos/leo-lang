@@ -3,7 +3,7 @@ package leo32
 import leo.binary.Bit
 
 sealed class Op {
-	abstract fun invoke(bit: Bit, runtime: Runtime): Runtime?
+	abstract fun invoke(bit: Bit, runtime: Runtime): Runtime
 }
 
 data class LogOp(val log: Log) : Op() {
@@ -23,10 +23,21 @@ data class PopOp(val pop: Pop) : Op() {
 
 data class NandOp(val nand: Nand) : Op() {
 	override fun invoke(bit: Bit, runtime: Runtime) =
-		runtime.nand(bit)
+		runtime.nand
 }
 
-val Log.op get() = LogOp(this)
-val Push.op get() = PushOp(this)
-val Pop.op get() = PopOp(this)
-val Nand.op get() = NandOp(this)
+data class SeqOp(
+	val firstOp: Op,
+	val secondOp: Op) : Op() {
+	override fun invoke(bit: Bit, runtime: Runtime) =
+		firstOp.invoke(bit, runtime).let {
+			secondOp.invoke(bit, it)
+		}
+}
+
+val Log.op: Op get() = LogOp(this)
+val Push.op: Op get() = PushOp(this)
+val Pop.op: Op get() = PopOp(this)
+val Nand.op: Op get() = NandOp(this)
+fun Op.then(op: Op) =
+	SeqOp(this, op)
