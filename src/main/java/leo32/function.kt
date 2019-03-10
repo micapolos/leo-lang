@@ -1,14 +1,33 @@
 package leo32
 
-import leo.binary.Array32
-import leo.binary.at
-import leo.binary.nullArray32
+import leo.base.NonEmptySequence
+import leo.binary.*
 
 data class Function(
-	val matchArray: Array32<Match>)
+	val matchArray: Array1<Match>) {
+	override fun toString() = code
+}
 
 val emptyFunction =
-	Function(nullArray32())
+	Function(nullArray1())
 
-fun Function.invoke(arg: Int, runtime: Runtime) =
-	(matchArray.at(arg) ?: pushMatch).invoke(arg, runtime)
+fun Function.put(bit: Bit, match: Match) =
+	Function(matchArray.put(bit, match))
+
+fun Function.define(bit: Bit, match: Match) =
+	copy(matchArray = matchArray.put(bit, match))
+
+fun Function.define(bits: NonEmptySequence<Bit>, match: Match): Function =
+	copy(matchArray = matchArray.updateAt(bits.first) {
+		notNull.define(bits.remaining, match)
+	})
+
+fun Function.undefine(bit: Bit) =
+	copy(matchArray = matchArray.put(bit, null))
+
+fun Function.invoke(bit: Bit, runtime: Runtime) =
+	matchArray.at(bit)?.invoke(bit, runtime)
+
+fun Function.matchAt(bit: Bit) =
+	matchArray.at(bit)
+		?: emptyFunction.partialMatch

@@ -9,6 +9,10 @@ data class Choice<out V>(
 fun <V : Any> emptyChoice(): Choice<V?> =
 	Choice<V?>(null, null)
 
+val <V> V.allChoice
+	get() =
+		Choice(this, this)
+
 fun <V : Any> array(bit: Bit, value: V): Choice<V?> =
 	when (bit) {
 		Bit.ZERO -> Choice(value, null)

@@ -1,9 +1,11 @@
 package leo32
 
+import leo.binary.Bit
+
 data class Leo(
 	val runtime: Runtime)
 
 val emptyLeo = Leo(emptyRuntime)
 
-fun Leo.push(arg: Int) =
-	copy(runtime = runtime.push(arg)!!)
+fun Leo.push(bit: Bit) =
+	copy(runtime = runtime.invoke(bit)!!)

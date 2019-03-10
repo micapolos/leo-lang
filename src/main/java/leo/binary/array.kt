@@ -275,6 +275,9 @@ fun <T> Array32<T>.put(index: Int, value: T?): Array32<T> {
 	return put(bit31, newArray31)
 }
 
+fun <T> Array1<T>.updateAt(bit: Bit, fn: T?.() -> T?): Array1<T> =
+	put(bit, at(bit).fn())
+
 fun <T> Array32<T>.updateAt(index: Int, fn: T?.() -> T?): Array32<T> =
 	put(index, at(index).fn())
 

@@ -4,28 +4,34 @@ import leo.binary.*
 
 data class Runtime(
 	val scopeFunction: Function,
-	val argStack: Stack32<Int>,
+	val bitStack: Stack32<Bit>,
 	val functionStack: Stack32<Function>)
 
 val emptyRuntime =
 	Runtime(emptyFunction, emptyStack32(), emptyStack32())
 
-fun Runtime.push(arg: Int): Runtime? =
-	(functionStack.top ?: scopeFunction).invoke(arg, this)
+fun Runtime.invoke(bit: Bit): Runtime? =
+	(functionStack.top ?: scopeFunction).invoke(bit, this)
 
-fun Runtime.invokeLog(tag: String) =
-	argStack.updateTop { apply { println("[$tag] $this") } }
-		?.let { copy(argStack = it) }
+fun Runtime.invoke(log: Log) =
+	bitStack.updateTop { apply { println("[${log.tag.string}] $this") } }
+		?.let { copy(bitStack = it) }
 
-fun Runtime.invokePush(arg: Int) =
-	argStack.push(arg)?.let { copy(argStack = it) }
+fun Runtime.push(bit: Bit) =
+	bitStack.push(bit)?.let { copy(bitStack = it) }
 
-val Runtime.invokePop
+val Runtime.pop
 	get() =
-		argStack.shrink?.let { copy(argStack = it) }
+		bitStack.shrink?.let { copy(bitStack = it) }
 
-fun Runtime.invokePlus(arg: Int) =
-	argStack.updateTop { plus(arg) }?.let { copy(argStack = it) }
+fun Runtime.and(bit: Bit) =
+	bitStack.updateTop { and(bit) }?.let { copy(bitStack = it) }
+
+fun Runtime.or(bit: Bit) =
+	bitStack.updateTop { or(bit) }?.let { copy(bitStack = it) }
+
+fun Runtime.not(bit: Bit) =
+	bitStack.updateTop { or(bit) }?.let { copy(bitStack = it) }
 
 fun Runtime.push(function: Function) =
 	functionStack.push(function)?.let { copy(functionStack = it) }
