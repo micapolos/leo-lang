@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER")
+
 package leo32
 
 import leo.base.indexed
@@ -98,23 +100,18 @@ fun Appendable.appendCode(tag: Tag) =
 		appendCode(tag.string)
 	}
 
-@Suppress("UNUSED_PARAMETER")
 fun Appendable.appendCode(push: Push) =
 	appendSimpleLineCode("push")
 
-@Suppress("UNUSED_PARAMETER")
 fun Appendable.appendCode(pop: Pop) =
 	appendSimpleLineCode("pop")
 
-@Suppress("UNUSED_PARAMETER")
 fun Appendable.appendCode(and: And) =
 	appendSimpleLineCode("and")
 
-@Suppress("UNUSED_PARAMETER")
 fun Appendable.appendCode(or: Or) =
 	appendSimpleLineCode("or")
 
-@Suppress("UNUSED_PARAMETER")
 fun Appendable.appendCode(not: Not) =
 	appendSimpleLineCode("not")
 
