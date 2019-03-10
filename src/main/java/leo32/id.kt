@@ -11,9 +11,8 @@ val String.id
 
 val Id.codeString
 	get() =
-		string
-			.replace("\\", "\\\\")
-			.replace("\u0000", "\\0") + '\u0000'
+		if (string.isEmpty()) "empty\u0000"
+		else string.replace("\\", "\\\\").replace("\u0000", "\\0") + '\u0000'
 
 val Id.codeBitSeq
 	get() =
