@@ -1,16 +1,24 @@
 package leo.binary
 
-import leo.base.Stream
-import leo.base.ifNotNull
 import leo.base.onlySeq
-import leo.base.read
 
 sealed class Bit
-data class ZeroBit(val zero: Zero) : Bit()
-data class OneBit(val one: One) : Bit()
 
-val Zero.bit: Bit get() = ZeroBit(this)
-val One.bit: Bit get() = OneBit(this)
+data class ZeroBit(
+	val zero: Zero
+) : Bit()
+
+data class OneBit(
+	val one: One
+) : Bit()
+
+val Zero.bit: Bit
+	get() =
+		ZeroBit(this)
+
+val One.bit: Bit
+	get() =
+		OneBit(this)
 
 inline fun <R> Bit.match(zeroFn: Zero.() -> R, oneFn: One.() -> R) =
 	when (this) {
@@ -18,9 +26,9 @@ inline fun <R> Bit.match(zeroFn: Zero.() -> R, oneFn: One.() -> R) =
 		is OneBit -> one.oneFn()
 	}
 
-val Bit.boolean
+val Bit.isOne
 	get() =
-		match({ boolean }, { boolean })
+		match({ isOne }, { isOne })
 
 val Boolean.bit
 	get() =
@@ -30,9 +38,9 @@ val Bit.int
 	get() =
 		match({ int }, { int })
 
-val Bit.char
+val Bit.digitChar
 	get() =
-		match({ char }, { char })
+		match({ digitChar }, { digitChar })
 
 val Bit.inverse
 	get() =
@@ -42,44 +50,21 @@ infix fun Bit.nand(bit: Bit) =
 	and(bit).inverse
 
 fun Bit.and(bit: Bit) =
-	boolean.and(bit.boolean).bit
+	isOne.and(bit.isOne).bit
 
 fun Bit.or(bit: Bit) =
-	boolean.or(bit.boolean).bit
-
-fun Bit.xor(bit: Bit) =
-	boolean.xor(bit.boolean).bit
-
-val Int.bitOrNull
-	get() =
-		when (this) {
-			0 -> zero.bit
-			1 -> one.bit
-			else -> null
-		}
+	isOne.or(bit.isOne).bit
 
 val Int.bit
 	get() =
 		if (this == 0) zero.bit
 		else one.bit
 
-val Int.lastBit: Bit
-	get() =
-		and(1).bit
-
 val Int.clampedBit
 	get() = bit
 
-fun <V> Bit.ifZero(value: V, fn: (V) -> V): V =
-	match({ fn(value) }, { value })
-
 fun Appendable.append(bit: Bit): Appendable =
-	append(bit.char)
-
-fun Appendable.appendBit(bitStream: Stream<Bit>): Appendable =
-	read(bitStream) { bit, nextOrNull ->
-		append(bit).ifNotNull(nextOrNull, Appendable::appendBit)
-	}
+	append(bit.digitChar)
 
 val Bit.bitSeq get() = onlySeq
 

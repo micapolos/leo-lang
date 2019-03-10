@@ -6,7 +6,7 @@ import leo.letterOrNull
 val parser = Unit.parser
 
 val bitParser = parser.bind { it.parser }
-val booleanParser = bitParser.map { it.boolean }
+val booleanParser = bitParser.map { it.isOne }
 
 val int0Parser = parser.map { int0 }
 val int1Parser = int0Parser.bind { hsb(it).parser }

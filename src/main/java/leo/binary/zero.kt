@@ -6,6 +6,6 @@ object Zero
 
 val zero = Zero
 
-val Zero.boolean get() = false
+val Zero.isOne get() = false
 val Zero.int get() = 0
-val Zero.char get() = '0'
+val Zero.digitChar get() = '0'
