@@ -63,6 +63,9 @@ val Int.bit
 val Int.clampedBit
 	get() = bit
 
+val Long.clampedBit
+	get() = (this != 0L).bit
+
 fun Appendable.append(bit: Bit): Appendable =
 	append(bit.digitChar)
 

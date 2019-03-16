@@ -2,14 +2,10 @@ package leo32
 
 import leo.base.appendableString
 
-val Leo.code
+val <T> Scope<T>.code
 	get() =
 		appendableString { it.appendCode(this) }
 
-val Runtime.code
-	get() =
-		appendableString { it.appendCode(this) }
-
-val Function.code
+val <T> Function<T>.code
 	get() =
 		appendableString { it.appendCode(this) }

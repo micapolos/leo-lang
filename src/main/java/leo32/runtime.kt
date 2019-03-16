@@ -1,50 +1,20 @@
 package leo32
 
-import leo.binary.*
+import leo.binary.Bit
+import leo.binary.emptyStack32
+import leo.binary.int
+import leo.binary.push
 
-data class Runtime(
-	val scopeFunction: Function,
-	val bitStack: Stack32<Bit>,
-	val currentFunction: Function) {
-	override fun toString() = code
-}
+data class Runtime<T>(
+	val state: T,
+	val pushFn: T.(Bit) -> T,
+	val appendCodeFn: Appendable.(T) -> Appendable)
 
-val emptyRuntime =
-	Runtime(emptyFunction, emptyStack32(), emptyFunction)
+val stackRuntime =
+	Runtime(
+		state = emptyStack32<Bit>(),
+		pushFn = { push(it)!! },
+		appendCodeFn = { appendCode(it) { appendCode(it.int) } })
 
-val Function.runtime
-	get() =
-		Runtime(this, emptyStack32(), this)
-
-fun Runtime.invoke(bit: Bit) =
-	currentFunction.invoke(bit, this)
-
-fun Runtime.invoke(log: Log) =
-	copy(
-		bitStack = bitStack.updateTop {
-			apply {
-				println("[${log.tag.string}] $this")
-			}
-		}!!
-	)
-
-fun Runtime.push(bit: Bit) =
-	copy(bitStack = bitStack.push(bit)!!)
-
-fun Runtime.goto(functionOrNull: Function?) =
-	copy(currentFunction = functionOrNull ?: scopeFunction)
-
-val Runtime.pop
-	get() =
-		copy(bitStack = bitStack.shrink!!)
-
-val Runtime.nand
-	get() =
-		op2 { nand(it) }
-
-fun Runtime.op2(fn: Bit.(Bit) -> Bit) =
-	copy(bitStack = bitStack.pop!!.let { rhs ->
-		rhs.stack32.updateTop {
-			fn(rhs.value)
-		}!!
-	})
+fun <T> Runtime<T>.push(bit: Bit): Runtime<T> =
+	copy(state = state.pushFn(bit))

@@ -6,43 +6,41 @@ import leo.base.ifNotNullOr
 import leo.base.seqNodeOrNull
 import leo.binary.*
 
-data class Function(
-	val matchMap: Map1<Match>) {
+data class Function<T>(
+	val matchMap: Arr1<Match<T>?>) {
 	override fun toString() = code
 }
 
-val emptyFunction =
-	Function(nullMap1())
+fun <T> emptyFunction() =
+	Function<T>(nullArr1())
 
-fun function(match0: Match, match1: Match) =
-	Function(nullMap1<Match>().put(zero.bit, match0).put(one.bit, match1))
+fun <T> function(match0: Match<T>, match1: Match<T>) =
+	Function(nullArr1<Match<T>>().put(zero.bit, match0).put(one.bit, match1))
 
-fun Function.put(bit: Bit, match: Match) =
+fun <T> Function<T>.put(bit: Bit, match: Match<T>) =
 	Function(matchMap.put(bit, match))
 
-fun Function.define(bit: Bit, match: Match) =
+fun <T> Function<T>.define(bit: Bit, match: Match<T>) =
 	copy(matchMap = matchMap.put(bit, match))
 
-fun Function.define(bits: SeqNode<Bit>, match: Match): Function =
-	copy(matchMap = matchMap.updateAt(bits.first) {
+fun <T> Function<T>.define(bits: SeqNode<Bit>, match: Match<T>): Function<T> =
+	copy(matchMap = matchMap.update(bits.first) {
 		forDefine.define(bits.remaining, match)
 	})
 
-fun Function.define(bits: Seq<Bit>, match: Match): Function =
+fun <T> Function<T>.define(bits: Seq<Bit>, match: Match<T>): Function<T> =
 	bits.seqNodeOrNull.ifNotNullOr(
 		{ define(it, match) },
 		{ this })
 
-fun Function.undefine(bit: Bit) =
+fun <T> Function<T>.undefine(bit: Bit) =
 	copy(matchMap = matchMap.put(bit, null))
 
-fun Function.invoke(bit: Bit, runtime: Runtime) =
+fun <T> Function<T>.invoke(bit: Bit, scope: Scope<T>) =
 	matchMap
-		.at(bit)
-		?.invoke(runtime)
-		?: runtime
+		.at(bit)!!.invoke(scope)
 
-val booleanFunction =
-	emptyFunction
-		.define("false".id.bitSeq, zero.bit.push.op.match)
-		.define("true".id.bitSeq, one.bit.push.op.match)
+fun <T> booleanFunction() =
+	emptyFunction<T>()
+		.define("false".id.bitSeq, zero.bit.push.op<T>().match)
+		.define("true".id.bitSeq, one.bit.push.op<T>().match)

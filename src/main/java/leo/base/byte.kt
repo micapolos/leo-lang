@@ -101,3 +101,20 @@ val Stream<EnumBit>.bitParseByte: Parse<EnumBit, Byte>?
 
 fun Byte.wrapPlus(byte: Byte) =
 	plus(byte).clampedByte
+
+// === byte <-> int conversion
+
+val Int.byte3 get() = shr(24).and(0xff).clampedByte
+val Int.byte2 get() = shr(16).and(0xff).clampedByte
+val Int.byte1 get() = shr(8).and(0xff).clampedByte
+val Int.byte0 get() = and(0xff).clampedByte
+
+inline fun Int.updateByte3(fn: Byte.() -> Byte) = byte3.fn().int.and(0xFF).shl(24).or(and(0x00FFFFFF))
+inline fun Int.updateByte2(fn: Byte.() -> Byte) = byte2.fn().int.and(0xFF).shl(16).or(and(0xFF00FFFF.toInt()))
+inline fun Int.updateByte1(fn: Byte.() -> Byte) = byte1.fn().int.and(0xFF).shl(8).or(and(0xFFFF00FF.toInt()))
+inline fun Int.updateByte0(fn: Byte.() -> Byte) = byte0.fn().int.and(0xFF).or(and(0xFFFFFF00.toInt()))
+
+fun Int.setByte3(byte: Byte) = updateByte3 { byte }
+fun Int.setByte2(byte: Byte) = updateByte2 { byte }
+fun Int.setByte1(byte: Byte) = updateByte1 { byte }
+fun Int.setByte0(byte: Byte) = updateByte0 { byte }

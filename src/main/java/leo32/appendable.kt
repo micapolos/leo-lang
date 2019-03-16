@@ -4,7 +4,7 @@ package leo32
 
 import leo.base.ifNotNull
 import leo.base.indexed
-import leo.binary.Map1
+import leo.binary.Arr1
 import leo.binary.Stack32
 import leo.binary.foldIndexed
 import leo.binary.int
@@ -36,24 +36,25 @@ fun <T> Appendable.appendCode(indexed: IndexedValue<T>, appendValueFn: Appendabl
 		.appendIndexCode(indexed.index)
 		.appendValueFn(indexed.value)
 
-fun <T> Appendable.appendCode(array: Map1<T>, appendValueFn: Appendable.(T) -> Appendable) =
-	foldIndexed(array) {
+fun <T> Appendable.appendCode(array: Arr1<T>, appendValueFn: Appendable.(T) -> Appendable) = this
+	.ifNotNull(array.at0) { appendCode(0 indexed it, appendValueFn) }
+	.ifNotNull(array.at0) { appendCode(1 indexed it, appendValueFn) }
+
+fun <T> Appendable.appendCode(stack: Stack32<T>, appendValueFn: Appendable.(T) -> Appendable) =
+	foldIndexed(stack) {
 		appendCode(it, appendValueFn)
 	}
 
-fun <T> Appendable.appendCode(stack: Stack32<T>, appendValueFn: Appendable.(T) -> Appendable) =
-	foldIndexed(stack.map32) {
-		appendValueFn(it.value)
-	}
-
-fun Appendable.appendCode(function: Function) =
+fun <T> Appendable.appendCode(function: Function<T>) =
 	appendLineCode("function") {
 		appendCode(function.matchMap) {
-			appendCode(it)
+			ifNotNull(it) {
+				appendCode(it)
+			}
 		}
 	}
 
-fun Appendable.appendCode(match: Match): Appendable =
+fun <T> Appendable.appendCode(match: Match<T>): Appendable =
 	appendLineCode("match") {
 		this
 			.appendLineCode("op") {
@@ -68,7 +69,7 @@ fun Appendable.appendCode(match: Match): Appendable =
 		}
 	}
 
-fun Appendable.appendCode(op: Op): Appendable =
+fun <T> Appendable.appendCode(op: Op<T>): Appendable =
 	appendLineCode("op") {
 		when (op) {
 			is LogOp -> appendCode(op.log)
@@ -76,10 +77,11 @@ fun Appendable.appendCode(op: Op): Appendable =
 			is PopOp -> appendCode(op.pop)
 			is NandOp -> appendCode(op.nand)
 			is SeqOp -> appendCode(op)
+			is OutOp -> appendCode(op.out)
 		}
 	}
 
-fun Appendable.appendCode(seqOp: SeqOp) =
+fun Appendable.appendCode(seqOp: SeqOp<*>) =
 	this
 		.appendCode(0 indexed seqOp.firstOp) { appendCode(it) }
 		.appendCode(1 indexed seqOp.firstOp) { appendCode(it) }
@@ -103,25 +105,29 @@ fun Appendable.appendCode(pop: Pop) =
 fun Appendable.appendCode(nand: Nand) =
 	appendSimpleLineCode("nand")
 
-fun Appendable.appendCode(runtime: Runtime) =
+fun Appendable.appendCode(out: Out) =
+	appendSimpleLineCode("out")
+
+fun <T> Appendable.appendCode(runtime: Runtime<T>) =
 	appendLineCode("runtime") {
+		runtime.appendCodeFn.invoke(this, runtime.state)
+	}
+
+fun <T> Appendable.appendCode(scope: Scope<T>) =
+	appendLineCode("scope") {
 		this
+			.appendCode(scope.runtime)
 			.appendLineCode("bits") {
-				appendCode(runtime.bitStack) {
+				appendCode(scope.bitStack) {
 					appendCode(it.int)
 				}
 			}
 			.appendLineCode("scope") {
-				appendCode(runtime.scopeFunction)
+				appendCode(scope.scopeFunction)
 			}
 			.appendLineCode("current") {
-				appendCode(runtime.currentFunction)
+				appendCode(scope.currentFunction)
 			}
-	}
-
-fun Appendable.appendCode(leo: Leo) =
-	appendLineCode("leo") {
-		appendCode(leo.runtime)
 	}
 
 fun Appendable.appendSimpleLineCode(word: String) =

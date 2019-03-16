@@ -1,41 +1,48 @@
+@file:Suppress("unused")
+
 package leo32
 
-sealed class Op {
-	abstract fun invoke(runtime: Runtime): Runtime
+sealed class Op<T> {
+	abstract fun invoke(scope: Scope<T>): Scope<T>
 }
 
-data class LogOp(val log: Log) : Op() {
-	override fun invoke(runtime: Runtime) =
-		runtime.invoke(log)
+data class LogOp<T>(val log: Log) : Op<T>() {
+	override fun invoke(scope: Scope<T>) =
+		scope.invoke(log)
 }
 
-data class PushOp(val push: Push) : Op() {
-	override fun invoke(runtime: Runtime) =
-		runtime.push(push.bit)
+data class PushOp<T>(val push: Push) : Op<T>() {
+	override fun invoke(scope: Scope<T>) =
+		scope.push(push.bit)
 }
 
-data class PopOp(val pop: Pop) : Op() {
-	override fun invoke(runtime: Runtime) =
-		runtime.pop
+data class PopOp<T>(val pop: Pop) : Op<T>() {
+	override fun invoke(scope: Scope<T>) =
+		scope.pop
 }
 
-data class NandOp(val nand: Nand) : Op() {
-	override fun invoke(runtime: Runtime) =
-		runtime.nand
+data class NandOp<T>(val nand: Nand) : Op<T>() {
+	override fun invoke(scope: Scope<T>) =
+		scope.nand
 }
 
-data class SeqOp(
-	val firstOp: Op,
-	val secondOp: Op) : Op() {
-	override fun invoke(runtime: Runtime) =
-		firstOp.invoke(runtime).let {
+data class SeqOp<T>(
+	val firstOp: Op<T>,
+	val secondOp: Op<T>) : Op<T>() {
+	override fun invoke(scope: Scope<T>) =
+		firstOp.invoke(scope).let {
 			secondOp.invoke(it)
 		}
 }
 
-val Log.op: Op get() = LogOp(this)
-val Push.op: Op get() = PushOp(this)
-val Pop.op: Op get() = PopOp(this)
-val Nand.op: Op get() = NandOp(this)
-fun Op.then(op: Op) =
-	SeqOp(this, op)
+data class OutOp<T>(val out: Out) : Op<T>() {
+	override fun invoke(scope: Scope<T>) =
+		scope.out
+}
+
+fun <T> Log.op(): Op<T> = LogOp(this)
+fun <T> Push.op(): Op<T> = PushOp(this)
+fun <T> Pop.op(): Op<T> = PopOp(this)
+fun <T> Nand.op(): Op<T> = NandOp(this)
+fun <T> Out.op(): Op<T> = OutOp(this)
+fun <T> Op<T>.then(op: Op<T>) = SeqOp(this, op)

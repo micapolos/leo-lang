@@ -6,40 +6,40 @@ import leo.base.ifNotNullOr
 import leo.base.seqNodeOrNull
 import leo.binary.Bit
 
-data class Match(
-	val opOrNull: Op?,
-	val nextFunctionOrNull: Function?)
+data class Match<T>(
+	val opOrNull: Op<T>?,
+	val nextFunctionOrNull: Function<T>?)
 
-val emptyMatch =
-	Match(null, null)
+fun <T> emptyMatch() =
+	Match<T>(null, null)
 
-val Op.match
+val <T> Op<T>.match
 	get() =
 		Match(this, null)
 
-val Function.match
+val <T> Function<T>.match
 	get() =
 		Match(null, this)
 
-fun Match.invoke(runtime: Runtime) =
-	runtime
-		.ifNotNull(opOrNull) { it.invoke(runtime) }
+fun <T> Match<T>.invoke(scope: Scope<T>) =
+	scope
+		.ifNotNull(opOrNull) { it.invoke(scope) }
 		.goto(nextFunctionOrNull)
 
-val Match.functionForDefine
+val <T> Match<T>.functionForDefine
 	get() =
-		nextFunctionOrNull ?: emptyFunction
+		nextFunctionOrNull ?: emptyFunction()
 
-fun Match.define(bits: Seq<Bit>, match: Match): Match =
+fun <T> Match<T>.define(bits: Seq<Bit>, match: Match<T>): Match<T> =
 	bits
 		.seqNodeOrNull
 		.ifNotNullOr(
 			{ functionForDefine.define(it, match).match },
 			{ match })
 
-val Match?.forDefine
+val <T> Match<T>?.forDefine
 	get() =
-		this ?: emptyMatch
+		this ?: emptyMatch()
 
-fun Match.next(function: Function) =
+fun <T> Match<T>.next(function: Function<T>) =
 	copy(nextFunctionOrNull = function)

@@ -126,5 +126,15 @@ class ByteTest {
 			.bitParseByte
 			.assertParsedAndRest(13.toByte(), EnumBit.ONE.onlyStream)
 	}
+
+	@Test
+	fun intByteConversion() {
+		0x01020304
+			.setByte3(0x10.toByte())
+			.setByte2(0x20.toByte())
+			.setByte1(0x30.toByte())
+			.setByte0(0x40.toByte())
+			.assertEqualTo(0x10203040)
+	}
 }
 
