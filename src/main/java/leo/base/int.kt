@@ -4,6 +4,10 @@ inline val Int.clampedByte
 	get() =
 		toByte()
 
+inline val Int.clampedShort
+	get() =
+		toShort()
+
 val Int.shortStream: Stream<Short>
 	get() =
 		shr(16).toShort().onlyStream

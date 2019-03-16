@@ -1,6 +1,6 @@
 package leo.base
 
-import org.junit.Test
+import kotlin.test.Test
 
 class WriterTest {
 	@Test
@@ -34,5 +34,29 @@ class WriterTest {
 				.write(EnumBit.ONE)
 		}
 			.assertEqualTo(stack(13.clampedByte))
+	}
+
+	@Test
+	fun split() {
+		writeStackOrNull<Int> {
+			this
+				.split<Int, Int>({ it / 2 }, { it - it / 2 })
+				.write(12)
+				.write(13)
+				.write(14)
+		}.assertEqualTo(stack(6, 6, 6, 7, 7, 7))
+	}
+
+	@Test
+	fun join() {
+		writeStackOrNull<Int> {
+			this
+				.join<Int, Int> { a, b -> a + b }
+				.write(1)
+				.write(2)
+				.write(3)
+				.write(4)
+				.write(5)
+		}.assertEqualTo(stack(3, 7))
 	}
 }

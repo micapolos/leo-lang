@@ -3,7 +3,7 @@ package leo.binary
 import leo.base.assertEqualTo
 import org.junit.Test
 
-class ArrayTest {
+class ArrTest {
 	@Test
 	fun default() {
 		"default".arr32.at(13).assertEqualTo("default")

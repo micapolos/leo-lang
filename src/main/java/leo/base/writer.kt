@@ -62,3 +62,17 @@ val <V> Processor<*, V>.writer: Writer<V>
 		Writer { value ->
 			process(value).writer
 		}
+
+fun <I, O> Writer<O>.split(fn1: (I) -> O, fn2: (I) -> O): Writer<I> =
+	Writer { value ->
+		write(fn1(value)).write(fn2(value)).split(fn1, fn2)
+	}
+
+fun <I : Any, O> Writer<O>.join(fn: (I, I) -> O): Writer<I> =
+	join(null, fn)
+
+fun <I : Any, O> Writer<O>.join(firstOrNull: I?, fn: (I, I) -> O): Writer<I> =
+	Writer { value ->
+		if (firstOrNull == null) join(value, fn)
+		else write(fn(firstOrNull, value)).join(null, fn)
+	}

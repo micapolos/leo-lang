@@ -47,6 +47,10 @@ val Byte.int
 	get() =
 		toInt()
 
+val Byte.uint
+	get() =
+		int.and(0xFF)
+
 val Byte.char
 	get() =
 		toChar()
@@ -103,6 +107,18 @@ fun Byte.wrapPlus(byte: Byte) =
 	plus(byte).clampedByte
 
 // === byte <-> int conversion
+
+fun short(byte1: Byte, byte0: Byte) =
+	byte1.uint.shl(8).or(byte0.uint).clampedShort
+
+val Short.byte1 get() = uint.shr(8).clampedByte
+val Short.byte0 get() = uint.clampedByte
+
+fun Short.updateByte1(fn: Byte.() -> Byte) = short(byte0, byte1.fn())
+fun Short.updateByte0(fn: Byte.() -> Byte) = short(byte0.fn(), byte1)
+
+fun Short.setByte1(byte1: Byte) = updateByte1 { byte1 }
+fun Short.setByte0(byte0: Byte) = updateByte0 { byte0 }
 
 val Int.byte3 get() = shr(24).and(0xff).clampedByte
 val Int.byte2 get() = shr(16).and(0xff).clampedByte

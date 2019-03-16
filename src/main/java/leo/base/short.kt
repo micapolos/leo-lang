@@ -9,3 +9,7 @@ val Short.byteStream: Stream<Byte>
 val Short.bitStream: Stream<EnumBit>
 	get() =
 		byteStream.map(Byte::bitStream).join
+
+val Short.uint
+	get() =
+		toInt().and(0xFFFF)
