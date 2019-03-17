@@ -179,3 +179,4 @@ val Int13.bits get() = Seq { hsb.thenSeqNode(lo.bits) }
 val Int14.bits get() = Seq { hsb.thenSeqNode(lo.bits) }
 val Int15.bits get() = Seq { hsb.thenSeqNode(lo.bits) }
 val Int16.bits get() = Seq { hsb.thenSeqNode(lo.bits) }
+

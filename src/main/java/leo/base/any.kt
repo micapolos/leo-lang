@@ -67,3 +67,6 @@ tailrec fun <V> V.iterate(count: Int, fn: V.() -> V): V =
 fun <V> V.runIf(boolean: Boolean, fn: V.() -> V): V =
 	if (boolean) fn()
 	else this
+
+fun <V, R> V.ifThenElse(condition: Boolean, thenFn: V.() -> R, elseFn: V.() -> R): R =
+	if (condition) thenFn() else elseFn()
