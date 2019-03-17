@@ -29,27 +29,8 @@ fun Vm.ensureSize() {
 	}
 }
 
-// === appending ===
-
-val Appendable.appendBegin: Appendable
-	get() = append(" ")
-
-val Appendable.appendEnd: Appendable
-	get() = append(".")
-
-fun Appendable.appendBegin(name: String): Appendable = this
-	.append(name)
-	.appendBegin
-
-fun Appendable.appendField(key: String, appendValue: Appendable.() -> Appendable): Appendable = this
-	.appendBegin(key)
-	.appendValue()
-	.appendEnd
-
-fun Appendable.appendPtr(ptr: Ptr): Appendable =
-	appendPrimitive { append("0x").append(ptr.toString(16)) }
-
-fun Appendable.appendPrimitive(append: Appendable.() -> Appendable): Appendable = this
-	.append()
-	.append(" ")
-	.appendEnd
+fun Vm.printString(body: Vm.(Print) -> Print): String =
+	StringBuilder().let {
+		body(it.print)
+		it.toString()
+	}

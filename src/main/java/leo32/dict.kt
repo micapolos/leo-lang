@@ -28,31 +28,32 @@ fun Vm.dictInnerAt0(dict: Ptr) = get(dict, dictInnerAt0)
 fun Vm.dictInnerAt1(dict: Ptr) = get(dict, dictInnerAt1)
 
 fun Vm.dictInnerAt(dict: Ptr, bit: Bit): Ptr =
-	if (bit.isZero) dictInnerAt0(dict) else dictInnerAt1(dict)
+	if (bit.isZero) dictInnerAt0(dict)
+	else dictInnerAt1(dict)
 
 fun Vm.dictAt(dict: Ptr, index: Ptr): Ptr =
 	if (dictIsLeaf(dict)) dictLeafValue(dict)
 	else dictAt(dictInnerAt(dict, index.and(dictMask(dict)).bit), index)
 
-// === appendables ===
+// === print ===
 
-fun Appendable.appendDict(vm: Vm, dict: Ptr, appendValue: Appendable.(Ptr) -> Appendable): Appendable = this
-	.appendField("dict") {
+fun Vm.dict(print: Print, dict: Ptr, value: Print.(Ptr) -> Print): Print =
+	print.simple("dict") {
 		ifThenElse(
-				vm.dictIsLeaf(dict),
-				{ appendDictLeaf(vm, dict, appendValue) },
-				{ appendDictInner(vm, dict, appendValue) })
+			dictIsLeaf(dict),
+			{ dictLeaf(print, dict, value) },
+			{ dictInner(print, dict, value) })
 	}
 
-fun Appendable.appendDictLeaf(vm: Vm, dict: Ptr, appendValue: Appendable.(Ptr) -> Appendable): Appendable =
-	appendField("leaf") {
-		appendValue(vm.dictLeafValue(dict))
+fun Vm.dictLeaf(print: Print, dictLeaf: Ptr, value: Print.(Ptr) -> Print) =
+	print.simple("leaf") {
+		value(dictLeafValue(dictLeaf))
 	}
 
-fun Appendable.appendDictInner(vm: Vm, dict: Ptr, appendValue: Appendable.(Ptr) -> Appendable): Appendable =
-	appendField("inner") {
+fun Vm.dictInner(print: Print, dictInner: Ptr, value: Print.(Ptr) -> Print) =
+	print.complex("inner") {
 		this
-			.appendField("mask") { appendPtr(vm.dictMask(dict)) }
-			.appendField("at0") { appendDict(vm, vm.dictInnerAt0(dict), appendValue) }
-			.appendField("at1") { appendDict(vm, vm.dictInnerAt1(dict), appendValue) }
+			.simple("mask") { print.ptr(dictMask(dictInner)) }
+			.simple("at0") { dict(print, dictInnerAt0(dictInner), value) }
+			.simple("at1") { dict(print, dictInnerAt1(dictInner), value) }
 	}
