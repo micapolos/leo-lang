@@ -7,16 +7,16 @@ import kotlin.test.Test
 class DictTest {
 	private val vm = newVm
 
-	private val dict = vm.innerDict(
-		0x4,
-		vm.innerDict(
-			0x2,
-			vm.leafDict(1),
-			vm.leafDict(2)),
-		vm.innerDict(
-			0x1,
-			vm.leafDict(3),
-			vm.leafDict(4)))
+	private val dict = vm.dictInner(
+		mask = 0x4,
+		at0 = vm.dictInner(
+			mask = 0x2,
+			at0 = vm.dictLeaf(value = 1),
+			at1 = vm.dictLeaf(value = 2)),
+		at1 = vm.dictInner(
+			mask = 0x1,
+			at0 = vm.dictLeaf(value = 3),
+			at1 = vm.dictLeaf(value = 4)))
 
 	@Test
 	fun string() {

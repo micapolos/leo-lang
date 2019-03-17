@@ -6,33 +6,33 @@ import leo.binary.bit
 import leo.binary.isZero
 
 const val dictMask = 0
-const val leafDictValue = 1
-const val innerDictAt0 = 1
-const val innerDictAt1 = 2
+const val dictLeafValue = 1
+const val dictInnerAt0 = 1
+const val dictInnerAt1 = 2
 
-fun Vm.leafDict(value: T) = alloc(2) { dict ->
+fun Vm.dictLeaf(value: T) = alloc(2) { dict ->
 	set(dict, dictMask, 0)
-	set(dict, leafDictValue, value)
+	set(dict, dictLeafValue, value)
 }
 
-fun Vm.innerDict(mask: T, at0: T, at1: T) = alloc(3) { dict ->
+fun Vm.dictInner(mask: T, at0: T, at1: T) = alloc(3) { dict ->
 	set(dict, dictMask, mask)
-	set(dict, innerDictAt0, at0)
-	set(dict, innerDictAt1, at1)
+	set(dict, dictInnerAt0, at0)
+	set(dict, dictInnerAt1, at1)
 }
 
 fun Vm.dictMask(dict: T) = get(dict, dictMask)
 fun Vm.dictIsLeaf(dict: T) = dictMask(dict) == 0
-fun Vm.leafDictValue(dict: T) = get(dict, leafDictValue)
-fun Vm.innerDictAt0(dict: T) = get(dict, innerDictAt0)
-fun Vm.innerDictAt1(dict: T) = get(dict, innerDictAt1)
+fun Vm.dictLeafValue(dict: T) = get(dict, dictLeafValue)
+fun Vm.dictInnerAt0(dict: T) = get(dict, dictInnerAt0)
+fun Vm.dictInnerAt1(dict: T) = get(dict, dictInnerAt1)
 
-fun Vm.innerDictAt(dict: T, bit: Bit): T =
-	if (bit.isZero) innerDictAt0(dict) else innerDictAt1(dict)
+fun Vm.dictInnerAt(dict: T, bit: Bit): T =
+	if (bit.isZero) dictInnerAt0(dict) else dictInnerAt1(dict)
 
 fun Vm.dictAt(dict: T, index: T): T =
-	if (dictIsLeaf(dict)) leafDictValue(dict)
-	else dictAt(innerDictAt(dict, index.and(dictMask(dict)).bit), index)
+	if (dictIsLeaf(dict)) dictLeafValue(dict)
+	else dictAt(dictInnerAt(dict, index.and(dictMask(dict)).bit), index)
 
 // === appendables ===
 
@@ -41,16 +41,16 @@ fun Appendable.appendDict(vm: Vm, dict: T, appendValue: Appendable.(T) -> Append
 		this
 			.ifThenElse(
 				vm.dictIsLeaf(dict),
-				{ appendLeafDict(vm, dict, appendValue) },
-				{ appendInnerDict(vm, dict, appendValue) })
+				{ appendDictLeaf(vm, dict, appendValue) },
+				{ appendDictInner(vm, dict, appendValue) })
 	}
 
-fun Appendable.appendLeafDict(vm: Vm, dict: T, appendValue: Appendable.(T) -> Appendable): Appendable =
+fun Appendable.appendDictLeaf(vm: Vm, dict: T, appendValue: Appendable.(T) -> Appendable): Appendable =
 	appendField("leaf") {
-		appendValue(vm.leafDictValue(dict))
+		appendValue(vm.dictLeafValue(dict))
 	}
 
-fun Appendable.appendInnerDict(vm: Vm, dict: T, appendValue: Appendable.(T) -> Appendable): Appendable =
+fun Appendable.appendDictInner(vm: Vm, dict: T, appendValue: Appendable.(T) -> Appendable): Appendable =
 	appendField("inner") {
 		this
 			.appendField("mask") {
@@ -59,9 +59,9 @@ fun Appendable.appendInnerDict(vm: Vm, dict: T, appendValue: Appendable.(T) -> A
 				}
 			}
 			.appendField("at0") {
-				appendDict(vm, vm.innerDictAt0(dict), appendValue)
+				appendDict(vm, vm.dictInnerAt0(dict), appendValue)
 			}
 			.appendField("at1") {
-				appendDict(vm, vm.innerDictAt1(dict), appendValue)
+				appendDict(vm, vm.dictInnerAt1(dict), appendValue)
 			}
 	}
