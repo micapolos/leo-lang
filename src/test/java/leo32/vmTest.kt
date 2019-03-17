@@ -7,7 +7,7 @@ class VmTest {
 	@Test
 	fun vm() {
 		val vm = newVm
-		vm.top.assertEqualTo(0)
+		vm.topPtr.assertEqualTo(0)
 
 		vm.alloc(3) { top ->
 			top.assertEqualTo(3)
@@ -16,25 +16,25 @@ class VmTest {
 			vm.set(top, 2, 3)
 		}
 
-		vm.top.assertEqualTo(3)
-		vm.get(vm.top).assertEqualTo(1)
-		vm.get(vm.top, 1).assertEqualTo(2)
-		vm.get(vm.top, 2).assertEqualTo(3)
+		vm.topPtr.assertEqualTo(3)
+		vm.get(vm.topPtr).assertEqualTo(1)
+		vm.get(vm.topPtr, 1).assertEqualTo(2)
+		vm.get(vm.topPtr, 2).assertEqualTo(3)
 
 		vm.alloc(1) { top ->
 			top.assertEqualTo(4)
 			vm.set(top, 0, 4)
 		}
 
-		vm.top.assertEqualTo(4)
-		vm.get(vm.top).assertEqualTo(4)
-		vm.get(vm.top, 1).assertEqualTo(1)
-		vm.get(vm.top, 2).assertEqualTo(2)
-		vm.get(vm.top, 3).assertEqualTo(3)
+		vm.topPtr.assertEqualTo(4)
+		vm.get(vm.topPtr).assertEqualTo(4)
+		vm.get(vm.topPtr, 1).assertEqualTo(1)
+		vm.get(vm.topPtr, 2).assertEqualTo(2)
+		vm.get(vm.topPtr, 3).assertEqualTo(3)
 
 		vm.alloc(1 shl 24) { top ->
 			top.assertEqualTo(4 + (1 shl 24))
 		}
-		vm.top.assertEqualTo(4 + (1 shl 24))
+		vm.topPtr.assertEqualTo(4 + (1 shl 24))
 	}
 }

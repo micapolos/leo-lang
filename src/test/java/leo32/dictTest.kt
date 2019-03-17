@@ -21,7 +21,7 @@ class DictTest {
 	@Test
 	fun string() {
 		appendableString {
-			it.appendDict(vm, dict, Appendable::appendT)
+			it.appendDict(vm, dict, Appendable::appendPtr)
 		}.assertEqualTo("dict inner mask 0x4 ..at0 dict inner mask 0x2 ..at0 dict leaf 1 ....at1 dict leaf 2 .......at1 dict inner mask 0x1 ..at0 dict leaf 3 ....at1 dict leaf 4 .........")
 	}
 

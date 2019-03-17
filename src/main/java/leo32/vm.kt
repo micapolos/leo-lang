@@ -1,54 +1,55 @@
 package leo32
 
-typealias T = Int
-
-const val nullPtr = 0
-
 class Vm(
-	var mem: IntArray,
-	var top: T)
+	var intArray: IntArray,
+	var topPtr: Ptr)
 
-val newVmCapacity = 65536
-val newVm get() = Vm(IntArray(newVmCapacity), 0)
+val newVm get() = Vm(IntArray(1), 0)
 
-operator fun Vm.get(index: T) = mem[index]
-operator fun Vm.set(index: T, int: T) {
-	mem[index] = int
+operator fun Vm.get(index: Ptr) = intArray[index]
+operator fun Vm.set(index: Ptr, int: Ptr) {
+	intArray[index] = int
 }
 
-operator fun Vm.get(index: T, offset: T) = get(index - offset)
-operator fun Vm.set(index: T, offset: T, t: T) {
-	set(index - offset, t)
+operator fun Vm.get(index: Ptr, offset: Ptr) = get(index - offset)
+operator fun Vm.set(index: Ptr, offset: Ptr, ptr: Ptr) {
+	set(index - offset, ptr)
 }
 
-fun Vm.alloc(size: T, init: (T) -> Unit): T {
-	top += size
+fun Vm.alloc(size: Ptr, init: (Ptr) -> Unit): Ptr {
+	topPtr += size
 	ensureSize()
-	init(top)
-	return top
+	init(topPtr)
+	return topPtr
 }
 
 fun Vm.ensureSize() {
-	while (mem.size < top + 1) {
-		mem = mem.copyOf(mem.size * 2)
+	while (intArray.size < topPtr + 1) {
+		intArray = intArray.copyOf(intArray.size * 2)
 	}
 }
 
-val Appendable.appendBegin get() = append(" ")
-val Appendable.appendEnd get() = append(".")
+// === appending ===
 
-fun Appendable.appendBegin(name: String) = this
+val Appendable.appendBegin: Appendable
+	get() = append(" ")
+
+val Appendable.appendEnd: Appendable
+	get() = append(".")
+
+fun Appendable.appendBegin(name: String): Appendable = this
 	.append(name)
 	.appendBegin
 
-fun Appendable.appendField(key: String, appendValue: Appendable.() -> Appendable) = this
+fun Appendable.appendField(key: String, appendValue: Appendable.() -> Appendable): Appendable = this
 	.appendBegin(key)
 	.appendValue()
 	.appendEnd
 
-fun Appendable.appendT(t: T) = appendPrimitive { append(t.toString()) }
+fun Appendable.appendPtr(ptr: Ptr): Appendable =
+	appendPrimitive { append("0x").append(ptr.toString(16)) }
 
-fun Appendable.appendPrimitive(append: Appendable.() -> Appendable) = this
+fun Appendable.appendPrimitive(append: Appendable.() -> Appendable): Appendable = this
 	.append()
 	.append(" ")
 	.appendEnd
