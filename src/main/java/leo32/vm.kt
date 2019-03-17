@@ -28,9 +28,3 @@ fun Vm.ensureSize() {
 		intArray = intArray.copyOf(intArray.size * 2)
 	}
 }
-
-fun Vm.printString(body: Vm.(Print) -> Print): String =
-	StringBuilder().let {
-		body(it.print)
-		it.toString()
-	}

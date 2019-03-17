@@ -4,42 +4,22 @@ import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class DictTest {
-	private val vm = newVm
-
-	private val dict = vm.dictInner(
-		mask = 0x4,
-		at0 = vm.dictInner(
-			mask = 0x2,
-			at0 = vm.dictLeaf(value = 1),
-			at1 = vm.dictLeaf(value = 2)),
-		at1 = vm.dictInner(
-			mask = 0x1,
-			at0 = vm.dictLeaf(value = 3),
-			at1 = vm.dictLeaf(value = 4)))
-
-	@Test
-	fun string() {
-		vm.printString { dict(it, dict, Print::ptr) }
-			.assertEqualTo("")
-	}
-
 	@Test
 	fun at() {
-		vm.dictAt(dict, 0x00).assertEqualTo(1)
-		vm.dictAt(dict, 0x01).assertEqualTo(1)
-		vm.dictAt(dict, 0x02).assertEqualTo(2)
-		vm.dictAt(dict, 0x03).assertEqualTo(2)
-		vm.dictAt(dict, 0x04).assertEqualTo(3)
-		vm.dictAt(dict, 0x05).assertEqualTo(4)
-		vm.dictAt(dict, 0x06).assertEqualTo(3)
-		vm.dictAt(dict, 0x07).assertEqualTo(4)
-		vm.dictAt(dict, 0x08).assertEqualTo(1)
-		vm.dictAt(dict, 0x09).assertEqualTo(1)
-		vm.dictAt(dict, 0x0A).assertEqualTo(2)
-		vm.dictAt(dict, 0x0B).assertEqualTo(2)
-		vm.dictAt(dict, 0x0C).assertEqualTo(3)
-		vm.dictAt(dict, 0x0D).assertEqualTo(4)
-		vm.dictAt(dict, 0x0E).assertEqualTo(3)
-		vm.dictAt(dict, 0x0F).assertEqualTo(4)
+		val vm = newVm
+		val range = 0 until 1.shl(16)
+		vm.topPtr.assertEqualTo(0)
+
+		val dict = emptyDict
+		vm.topPtr.assertEqualTo(0)
+		for (i in range) vm.dictAt(dict, i).assertEqualTo(0)
+
+		var dict2 = dict
+		for (i in range) {
+			dict2 = vm.dictWith(dict2, i, i)
+			vm.topPtr.assertEqualTo((i + 1) * ptrSize * branchSize)
+		}
+		for (i in range) vm.dictAt(dict, i).assertEqualTo(0)
+		for (i in range) vm.dictAt(dict2, i).assertEqualTo(i)
 	}
 }

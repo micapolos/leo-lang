@@ -8,17 +8,6 @@ import kotlin.test.Test
 
 class BranchTest {
 	@Test
-	fun print() {
-		newVm.run {
-			this
-				.printString { print ->
-					branch(print, branch(126, 127), Print::ptr)
-				}
-				.assertEqualTo("q23")
-		}
-	}
-
-	@Test
 	fun at() {
 		newVm.run {
 			val branch = branch(1, 2)

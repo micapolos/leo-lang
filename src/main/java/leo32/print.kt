@@ -32,3 +32,9 @@ fun Print.ptr(ptr: Ptr) =
 val Print.indent
 	get() =
 		string("\n").iterate(indentInt) { string("\t") }
+
+fun printString(body: Print.() -> Print): String =
+	StringBuilder().let { stringBuilder ->
+		stringBuilder.print.body()
+		stringBuilder.toString()
+	}
