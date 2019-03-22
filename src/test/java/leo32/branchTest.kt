@@ -8,25 +8,35 @@ import kotlin.test.Test
 
 class BranchTest {
 	@Test
-	fun at() {
-		newVm.run {
-			val branch = branch(1, 2)
-			branchAt(branch, zero.bit).assertEqualTo(1)
-			branchAt(branch, one.bit).assertEqualTo(2)
+	fun branch() {
+		emptyBranch.assertEqualTo(null)
+		branch(null, null).assertEqualTo(null)
+		branch(0, null).assertEqualTo(Branch(0, null))
+		branch(null, 1).assertEqualTo(Branch(null, 1))
+		branch(0, 1).assertEqualTo(Branch(0, 1))
 
-			val branch0 = branchWith(branch, zero.bit, 3)
-			branchAt(branch, zero.bit).assertEqualTo(1)
-			branchAt(branch, one.bit).assertEqualTo(2)
-			branchAt(branch0, zero.bit).assertEqualTo(3)
-			branchAt(branch0, one.bit).assertEqualTo(2)
+		emptyBranch.branchAt(zero.bit).assertEqualTo(null)
+		emptyBranch.branchAt(one.bit).assertEqualTo(null)
 
-			val branch1 = branchWith(branch0, one.bit, 4)
-			branchAt(branch, zero.bit).assertEqualTo(1)
-			branchAt(branch, one.bit).assertEqualTo(2)
-			branchAt(branch0, zero.bit).assertEqualTo(3)
-			branchAt(branch0, one.bit).assertEqualTo(2)
-			branchAt(branch1, zero.bit).assertEqualTo(3)
-			branchAt(branch1, one.bit).assertEqualTo(4)
-		}
+		branch(10, null).branchPut(zero.bit, null).assertEqualTo(null)
+		branch(10, null).branchPut(one.bit, null).assertEqualTo(branch(10, null))
+
+		branch(null, 20).branchPut(zero.bit, null).assertEqualTo(branch(null, 20))
+		branch(null, 20).branchPut(one.bit, null).assertEqualTo(null)
+
+		branch(10, 20).branchAt(zero.bit).assertEqualTo(10)
+		branch(10, 20).branchAt(one.bit).assertEqualTo(20)
+
+		emptyBranch.branchPut(zero.bit, 10).branchAt(zero.bit).assertEqualTo(10)
+		emptyBranch.branchPut(zero.bit, 10).branchAt(one.bit).assertEqualTo(null)
+
+		emptyBranch.branchPut(one.bit, 20).branchAt(zero.bit).assertEqualTo(null)
+		emptyBranch.branchPut(one.bit, 20).branchAt(one.bit).assertEqualTo(20)
+
+		branch(10, 20).branchPut(zero.bit, 30).branchAt(zero.bit).assertEqualTo(30)
+		branch(10, 20).branchPut(zero.bit, 30).branchAt(one.bit).assertEqualTo(20)
+
+		branch(10, 20).branchPut(one.bit, 40).branchAt(zero.bit).assertEqualTo(10)
+		branch(10, 20).branchPut(one.bit, 40).branchAt(one.bit).assertEqualTo(40)
 	}
 }
