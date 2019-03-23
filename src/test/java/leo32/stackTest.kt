@@ -14,9 +14,13 @@ class StackTest {
 	@Test
 	fun ops() {
 		0.stack
-			.push(10)
-			.push(20)
+			.push(2)
+			.push(3)
+			.load(0)
+			.op1 { times(2) }
+			.op1 { inc() }
 			.op2 { plus(it) }
-			.assertEqualTo(0.stack.push(30))
+			.op2 { times(it) }
+			.assertEqualTo(0.stack.push(16))
 	}
 }
