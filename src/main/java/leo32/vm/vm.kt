@@ -1,5 +1,6 @@
 package leo32.vm
 
+import leo.base.Empty
 import leo.base.fail
 import leo.base.fold
 import leo32.base.*
@@ -8,10 +9,13 @@ data class Vm(
 	val stack: Stack<Int>,
 	val pc: Int)
 
-val vm = Vm(0.stack, 0)
+@Suppress("unused")
+val Empty.vm
+	get() =
+		Vm(0.stack, 0)
 
-fun vm(vararg ops: Int): Vm =
-	vm.fold(ops.toTypedArray()) { push(it) }
+fun Vm.push(vararg ops: Int): Vm =
+	fold(ops.toTypedArray()) { push(it) }
 
 tailrec fun Vm.invoke(): Vm {
 	val op = at(pc)
