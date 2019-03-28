@@ -44,6 +44,9 @@ fun Vm.invoke(op: Int): Vm =
 		branchOp -> pop(Vm::branch)
 		callOp -> fetch2(Vm::call)
 		jumpIfZeroOp -> popFetch(Vm::jumpIfZero)
+		shlOp -> op2(Int::shl)
+		shrOp -> op2(Int::shr)
+		ushrOp -> op2(Int::ushr)
 		else -> fail()
 	}
 

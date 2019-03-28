@@ -21,3 +21,6 @@ const val branchOp = 17
 const val callOp = 18
 const val exitOp = 19
 const val jumpIfZeroOp = 20
+const val shlOp = 21
+const val shrOp = 22
+const val ushrOp = 23
