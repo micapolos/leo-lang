@@ -19,7 +19,7 @@ class VmTest {
 
 	@Test
 	fun jump() {
-		vm(jumpOp, 4, nop, nop, exitOp)
+		vm(jumpOp, 4, noOp, noOp, exitOp)
 			.assertInvokesTo()
 	}
 

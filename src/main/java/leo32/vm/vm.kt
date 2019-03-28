@@ -24,7 +24,7 @@ val Vm.sp get() = stack.topIndex
 
 fun Vm.invoke(op: Int): Vm =
 	when (op) {
-		nop -> this
+		noOp -> this
 		invOp -> op1(Int::inv)
 		andOp -> op2(Int::and)
 		orOp -> op2(Int::or)

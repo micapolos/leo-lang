@@ -1,6 +1,6 @@
 package leo32.vm
 
-const val nop = 0
+const val noOp = 0
 const val invOp = 1
 const val andOp = 2
 const val orOp = 3
