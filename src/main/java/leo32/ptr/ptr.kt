@@ -1,4 +1,4 @@
-package leo32
+package leo32.ptr
 
 typealias Ptr = Any?
 

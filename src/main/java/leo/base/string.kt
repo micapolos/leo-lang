@@ -44,3 +44,19 @@ fun String.mapChars(fn: (Char) -> Char) =
 val String.utf8ByteArray
 	get() =
 		toByteArray()
+
+fun String.codePointSeqAt(index: Int): Seq<Int> =
+	Seq {
+		if (index >= length) null
+		else codePointAt(index).thenSeqNode(codePointSeqAt(offsetByCodePoints(index, 1)))
+	}
+
+val String.codePointSeq
+	get() =
+		codePointSeqAt(0)
+
+val Seq<Int>.codePointString
+	get() =
+		StringBuilder().fold(this) {
+			appendCodePoint(it)
+		}.toString()

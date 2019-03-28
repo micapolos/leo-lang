@@ -1,4 +1,4 @@
-package leo32
+package leo32.base
 
 import leo.base.assertEqualTo
 import leo.base.fold

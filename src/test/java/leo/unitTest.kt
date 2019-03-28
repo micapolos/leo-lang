@@ -3,7 +3,7 @@ package leo
 import leo.base.assertEqualTo
 import kotlin.test.Test
 
-class UnitTest {
+class VmTest {
 	@Test
 	fun reflect() {
 		Unit.reflect.assertEqualTo(unitWord fieldTo unitWord.term)

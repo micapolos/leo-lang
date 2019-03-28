@@ -25,6 +25,9 @@ val Int.bitCount: Int
 	get() =
 		indexSize
 
+val intBitCountInt = 32
+val intHsbMaskInt = 1.shl(intBitCountInt - 1)
+
 val Int.bitMaskOrNull: Int?
 	get() =
 		when {
