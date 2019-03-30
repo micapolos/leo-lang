@@ -137,4 +137,4 @@ fun Int.setByte0(byte: Byte) = updateByte0 { byte }
 
 val Byte.ushr1
 	get() =
-		int.ushr(1).clampedByte
+		int.and(0xFF).ushr(1).clampedByte

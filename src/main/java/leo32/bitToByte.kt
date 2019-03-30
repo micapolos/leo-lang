@@ -1,8 +1,6 @@
 package leo32
 
-import leo.base.clampedByte
-import leo.base.int
-import leo.base.ushr1
+import leo.base.*
 import leo.binary.Bit
 import leo.binary.isZero
 import kotlin.experimental.or
@@ -22,3 +20,11 @@ fun BitToByte.invoke(bit: Bit) =
 val BitToByte.byteIsReady
 	get() =
 		bitMask.int == 0
+
+fun Writer<Byte>.invoke(bitToByte: BitToByte): Writer<Bit> =
+	Writer { bit ->
+		bitToByte.invoke(bit).let { nextBitToByte ->
+			if (nextBitToByte.byteIsReady) write(nextBitToByte.byte).invoke(initialBitToByte)
+			else invoke(nextBitToByte)
+		}
+	}
