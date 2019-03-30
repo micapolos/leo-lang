@@ -14,7 +14,7 @@ fun Scope.trace(byte: Byte) =
 	Trace(this, byte)
 
 fun Scope.resolve(bitToByte: BitToByte) =
-	if (bitToByte.byteIsReady) copy(traceOrNull = trace(bitToByte.byte), bitToByte = initialBitToByte)
+	if (bitToByte.byteIsReady) copy(traceOrNull = trace(bitToByte.byte), bitToByte = newBitToByte)
 	else copy(bitToByte = bitToByte)
 
 fun Scope.invoke(bit: Bit): Scope =

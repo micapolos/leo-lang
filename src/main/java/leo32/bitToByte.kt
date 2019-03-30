@@ -9,7 +9,7 @@ data class BitToByte(
 	val byte: Byte,
 	val bitMask: Byte)
 
-val initialBitToByte =
+val newBitToByte =
 	BitToByte(0.clampedByte, 0x80.clampedByte)
 
 fun BitToByte.invoke(bit: Bit) =
@@ -24,7 +24,11 @@ val BitToByte.byteIsReady
 fun Writer<Byte>.invoke(bitToByte: BitToByte): Writer<Bit> =
 	Writer { bit ->
 		bitToByte.invoke(bit).let { nextBitToByte ->
-			if (nextBitToByte.byteIsReady) write(nextBitToByte.byte).invoke(initialBitToByte)
+			if (nextBitToByte.byteIsReady) write(nextBitToByte.byte).invoke(newBitToByte)
 			else invoke(nextBitToByte)
 		}
 	}
+
+val Writer<Byte>.bitToByte
+	get() =
+		invoke(newBitToByte)
