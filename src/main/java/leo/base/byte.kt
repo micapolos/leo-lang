@@ -134,3 +134,7 @@ fun Int.setByte3(byte: Byte) = updateByte3 { byte }
 fun Int.setByte2(byte: Byte) = updateByte2 { byte }
 fun Int.setByte1(byte: Byte) = updateByte1 { byte }
 fun Int.setByte0(byte: Byte) = updateByte0 { byte }
+
+val Byte.ushr1
+	get() =
+		int.ushr(1).clampedByte

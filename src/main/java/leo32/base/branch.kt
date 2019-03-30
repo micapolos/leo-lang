@@ -10,6 +10,10 @@ data class Branch<T>(
 fun <T> branch(at0: T, at1: T) =
 	Branch(at0, at1)
 
+val <T> T.fullBranch
+	get() =
+		branch(this, this)
+
 fun <T> Branch<T>.at(bit: Bit) =
 	if (bit.isZero) at0 else at1
 
