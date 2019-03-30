@@ -68,7 +68,14 @@ fun <T> seqFrom(index: Int, items: List<T>): Seq<T> =
 	}
 
 fun <T> Seq<T>.then(fn: () -> Seq<T>): Seq<T> =
-	Seq { seqNodeOrNull ?: fn().seqNodeOrNull }
+	Seq {
+		seqNodeOrNull.let { seqNodeOrNull ->
+			seqNodeOrNull
+				?.first
+				?.thenSeqNode(seqNodeOrNull.remaining.then(fn))
+				?: fn().seqNodeOrNull
+		}
+	}
 
 fun <T, R> R.fold(seq: Seq<T>, fn: R.(T) -> R) =
 	seq.fold(this, fn)

@@ -21,6 +21,14 @@ fun <T> Branch<T>.put(bit: Bit, value: T) =
 	if (bit.isZero) branch(value, at1)
 	else branch(at0, value)
 
+fun <T> Branch<T>.update(bit: Bit, fn: T.() -> T) =
+	if (bit.isZero) branch(at0.fn(), at1)
+	else branch(at0, at1.fn())
+
+fun <T, R> Branch<T>.updateEffect(bit: Bit, fn: T.() -> Effect<T, R>): Effect<Branch<T>, R> =
+	if (bit.isZero) at0.fn().let { branch(it.target, at1).effect(it.value) }
+	else at1.fn().let { branch(at0, it.target).effect(it.value) }
+
 fun <T : Any> branchOrNull(at0: T?, at1: T?): Branch<T?>? =
 	if (at0 == null && at1 == null) null
 	else Branch(at0, at1)
@@ -32,3 +40,7 @@ fun <T : Any> branchOrNull(bit: Bit, value: T?): Branch<T?>? =
 fun <T : Any> Branch<T?>.putOrNull(bit: Bit, value: T?): Branch<T?>? =
 	if (bit.isZero) branchOrNull(value, at1)
 	else branchOrNull(at0, value)
+
+fun <T> branch(bit: Bit, value: T, otherValue: T) =
+	if (bit.isZero) branch(value, otherValue)
+	else branch(otherValue, value)
