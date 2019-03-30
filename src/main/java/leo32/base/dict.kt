@@ -3,41 +3,45 @@ package leo32.base
 import leo.base.*
 import leo.binary.Bit
 import leo.binary.bitSeq
-import leo.binary.utf8BitSeq
+import leo.binary.zero
 
-data class Dict(
-	val intOrNullTree: Tree<Int?>,
-	val nextInt: Int)
+data class Dict<out T>(
+	val tree: Tree<T?>)
 
-val emptyDict =
-	Dict(nullOf<Int>().leaf.tree, 0)
+val <T : Any> Tree<T?>.dict
+	get() =
+		Dict(this)
 
-// TODO: Optimize to lazy evaluation
-val String.dictBitSeq: Seq<Bit>
-	get() = this
-		.replace("\\", "\\\\")
-		.replace("\u0000", "\\0")
-		.utf8BitSeq
-		.then { 0.clampedByte.bitSeq }
+fun <T : Any> emptyDict() =
+	nullOf<T>().leaf.tree.dict
 
-fun Dict.effectAt(string: String): Effect<Dict, Int> =
-	intOrNullTree.updateEffect(string.dictBitSeq) {
+fun <T : Any> dict(vararg pairs: Pair<String, T?>) =
+	emptyDict<T>().fold(pairs) { put(it.first, it.second) }
+
+val dictEscapeByte = 27.clampedByte
+val dictEscapedZeroByte = 1.clampedByte
+
+val Byte.dictEscape: Seq<Byte>
+	get() =
 		when (this) {
-			is LeafTree ->
-				if (leaf.value == null) nextInt.orNull.leaf.tree.effect(nextInt)
-				else effect(leaf.value)
-			is BranchTree -> fail()
+			zero.byte -> seq(dictEscapeByte, dictEscapedZeroByte)
+			dictEscapeByte -> seq(dictEscapeByte, dictEscapeByte)
+			else -> seq(this)
 		}
-	}.let { treeEffect ->
-		if (treeEffect.value == nextInt)
-			copy(
-				intOrNullTree = treeEffect.target,
-				nextInt = nextInt.inc()).effect(nextInt)
-		else effect(treeEffect.value)
-	}
 
-fun Dict.at(string: String): Int =
-	effectAt(string).value
+val Seq<Byte>.byteDictEscape: Seq<Byte>
+	get() =
+		map { dictEscape }.flatten
 
-fun Dict.with(string: String): Dict =
-	effectAt(string).target
+val Seq<Byte>.byteDictKey: Seq<Byte>
+	get() =
+		byteDictEscape.then { zero.byte.onlySeq }
+
+val String.dictBitSeq: Seq<Bit>
+	get() = utf8ByteArray.asList().seq.byteDictKey.map { bitSeq }.flatten
+
+fun <T : Any> Dict<T>.at(string: String): T? =
+	tree.at(string.dictBitSeq)?.leafOrNull?.value
+
+fun <T : Any> Dict<T>.put(string: String, value: T?): Dict<T> =
+	tree.update(string.dictBitSeq) { value.leaf.tree }.dict

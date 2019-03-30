@@ -6,7 +6,7 @@ import leo.base.orNull
 import leo.base.seqNodeOrNull
 import leo.binary.Bit
 
-sealed class Tree<T>
+sealed class Tree<out T>
 
 data class LeafTree<T>(
 	val leaf: Leaf<T>) : Tree<T>()
@@ -56,3 +56,6 @@ fun <T : Any, R> Tree<T?>.updateEffect(bitSeq: Seq<Bit>, fn: Tree<T?>.() -> Effe
 			updateEffect(seqNodeOrNull.remaining, fn)
 		}.mapTarget { tree }
 	}
+
+fun <T : Any> Tree<T?>.update(bitSeq: Seq<Bit>, fn: Tree<T?>.() -> Tree<T?>): Tree<T?> =
+	updateEffect(bitSeq) { fn().effect(Unit) }.target

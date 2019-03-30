@@ -1,5 +1,7 @@
 package leo.base
 
+import leo.binary.Zero
+
 // TODO: Check if it's properly inlined in java.
 fun byte(bit7: EnumBit, bit6: EnumBit, bit5: EnumBit, bit4: EnumBit, bit3: EnumBit, bit2: EnumBit, bit1: EnumBit, bit0: EnumBit): Byte = 0
 	.or(bit7.int.shl(7))
@@ -135,6 +137,23 @@ fun Int.setByte2(byte: Byte) = updateByte2 { byte }
 fun Int.setByte1(byte: Byte) = updateByte1 { byte }
 fun Int.setByte0(byte: Byte) = updateByte0 { byte }
 
+fun Int.byte(index: Int): Byte =
+	ushr(index.shl(3)).clampedByte
+
+fun Int.setByte(index: Int, byte: Byte): Int =
+	index.shl(3).let { shift ->
+		0xFF.shl(shift).let { mask ->
+			and(mask.inv()).or(byte.int.shl(shift).and(mask))
+		}
+	}
+
+fun Int.updateByte(index: Int, fn: Byte.() -> Byte): Int =
+	setByte(index, byte(index).fn())
+
 val Byte.ushr1
 	get() =
 		int.and(0xFF).ushr(1).clampedByte
+
+@Suppress("unused")
+val Zero.byte
+	get() = 0.clampedByte

@@ -6,95 +6,88 @@ import kotlin.test.Test
 class DictTest {
 	@Test
 	fun emptyString() {
-		emptyDict
-			.with("foo")
-			.with("bar")
+		emptyDict<String>()
+			.put("foo", "FOO")
+			.put("bar", "BAR")
 			.at("")
-			.assertEqualTo(2)
+			.assertEqualTo(null)
 	}
 
 	@Test
 	fun zeros0() {
-		emptyDict
-			.with("\u0000foo")
-			.with("\u0000bar")
+		emptyDict<String>()
+			.put("\u0000foo", "FOO")
+			.put("\u0000bar", "BAR")
 			.at("\u0000foo")
-			.assertEqualTo(0)
+			.assertEqualTo("FOO")
 	}
 
 	@Test
 	fun zeros1() {
-		emptyDict
-			.with("\u0000foo")
-			.with("\u0000bar")
+		emptyDict<String>()
+			.put("\u0000foo", "FOO")
+			.put("\u0000bar", "BAR")
 			.at("\u0000bar")
-			.assertEqualTo(1)
+			.assertEqualTo("BAR")
 	}
 
 	@Test
 	fun zeros2() {
-		emptyDict
-			.with("\u0000foo")
-			.with("\u0000bar")
+		emptyDict<String>()
+			.put("\u0000foo", "FOO")
+			.put("\u0000bar", "BAR")
 			.at("\u0000")
-			.assertEqualTo(2)
+			.assertEqualTo(null)
 	}
 
 	@Test
 	fun single() {
-		emptyDict
+		emptyDict<String>()
+			.put("foo", "FOO")
 			.at("foo")
-			.assertEqualTo(0)
-	}
-
-	@Test
-	fun same() {
-		emptyDict
-			.with("foo")
-			.at("foo")
-			.assertEqualTo(0)
+			.assertEqualTo("FOO")
 	}
 
 	@Test
 	fun different_first() {
-		emptyDict
-			.with("foo")
-			.with("bar")
+		emptyDict<String>()
+			.put("foo", "FOO")
+			.put("bar", "BAR")
 			.at("foo")
-			.assertEqualTo(0)
+			.assertEqualTo("FOO")
 	}
 
 	@Test
 	fun different_second() {
-		emptyDict
-			.with("foo")
-			.with("bar")
+		emptyDict<String>()
+			.put("foo", "FOO")
+			.put("bar", "BAR")
 			.at("bar")
-			.assertEqualTo(1)
+			.assertEqualTo("BAR")
 	}
 
 	@Test
 	fun different_third() {
-		emptyDict
-			.with("foo")
-			.with("bar")
+		emptyDict<String>()
+			.put("foo", "FOO")
+			.put("bar", "BAR")
 			.at("zoo")
-			.assertEqualTo(2)
+			.assertEqualTo(null)
 	}
 
 	@Test
 	fun shorter() {
-		emptyDict
-			.with("foo")
+		emptyDict<String>()
+			.put("foo", "FOO")
 			.at("fo")
-			.assertEqualTo(1)
+			.assertEqualTo(null)
 	}
 
 	@Test
 	fun longer() {
-		emptyDict
-			.with("foo")
+		emptyDict<String>()
+			.put("foo", "FOO")
 			.at("fooo")
-			.assertEqualTo(1)
+			.assertEqualTo(null)
 	}
 }

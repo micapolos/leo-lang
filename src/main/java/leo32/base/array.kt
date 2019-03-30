@@ -11,7 +11,7 @@ import leo32.ptr.nullPtr
 import leo32.ptr.ptrBranchAt
 import leo32.ptr.ptrBranchPut
 
-data class Array<T>(
+data class Array<out T>(
 	val hsbMask: Int,
 	val default: T,
 	val branchPtr: Ptr) {

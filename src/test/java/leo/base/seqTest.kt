@@ -1,8 +1,8 @@
 package leo.base
 
-import org.junit.Test
+import kotlin.test.Test
 
-class SeqNodeOrEmptyTest {
+class SeqTest {
 	@Test
 	fun content() {
 		seq<Int>().assertContains()
@@ -15,6 +15,21 @@ class SeqNodeOrEmptyTest {
 		seq<Int>().assertContains()
 		seq(1).assertContains(1)
 		seq(1, 2, 3).assertContains(1, 2, 3)
+	}
+
+	@Test
+	fun map() {
+		seq(1, 2, 3).map { toString() }.assertContains("1", "2", "3")
+	}
+
+	@Test
+	fun flatten() {
+		seq<Seq<Int>>().flatten.assertContains()
+		seq(seq<Int>()).flatten.assertContains()
+		seq(seq<Int>(), seq()).flatten.assertContains()
+		seq(seq(1), seq(2)).flatten.assertContains(1, 2)
+		seq(seq(1, 2), seq(3, 4)).flatten.assertContains(1, 2, 3, 4)
+		seq(seq(), seq(1, 2), seq(), seq(3, 4), seq()).flatten.assertContains(1, 2, 3, 4)
 	}
 }
 

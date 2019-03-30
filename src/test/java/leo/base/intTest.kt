@@ -52,4 +52,16 @@ class IntTest {
 			0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 1, 1, 0, 1)
 	}
+
+	@Test
+	fun bytes() {
+		0x12345678.byte(3).assertEqualTo(0x12.clampedByte)
+		0x12345678.byte(2).assertEqualTo(0x34.clampedByte)
+		0x12345678.byte(1).assertEqualTo(0x56.clampedByte)
+		0x12345678.byte(0).assertEqualTo(0x78.clampedByte)
+		0x12345678.setByte(3, 0x01).assertEqualTo(0x01345678)
+		0x12345678.setByte(2, 0x01).assertEqualTo(0x12015678)
+		0x12345678.setByte(1, 0x01).assertEqualTo(0x12340178)
+		0x12345678.setByte(0, 0x01).assertEqualTo(0x12345601)
+	}
 }

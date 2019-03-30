@@ -79,3 +79,28 @@ fun <T> Seq<T>.then(fn: () -> Seq<T>): Seq<T> =
 
 fun <T, R> R.fold(seq: Seq<T>, fn: R.(T) -> R) =
 	seq.fold(this, fn)
+
+fun <T, R> SeqNode<T>.map(fn: T.() -> R): SeqNode<R> =
+	first.fn().thenSeqNode(remaining.map(fn))
+
+fun <T, R> Seq<T>.map(fn: T.() -> R): Seq<R> =
+	Seq { seqNodeOrNull?.map(fn) }
+
+val <T> SeqNode<Seq<T>>.flatten: Seq<T>
+	get() =
+		first.then { remaining.flatten }
+
+val <T> Seq<Seq<T>>.flatten: Seq<T>
+	get() =
+		Seq { seqNodeOrNull?.flatten?.seqNodeOrNull }
+
+val <T> Iterator<T>.seq: Seq<T>
+	get() =
+		Seq {
+			if (hasNext()) next().thenSeqNode(seq)
+			else null
+		}
+
+val <T> Iterable<T>.seq: Seq<T>
+	get() =
+		iterator().seq
