@@ -3,9 +3,7 @@ package leo32.base
 import leo.base.*
 import leo.binary.Bit
 import leo.binary.zero
-import leo32.I32
 import leo32.Seq32
-import leo32.i32
 import leo32.seq32
 
 data class DictKey(

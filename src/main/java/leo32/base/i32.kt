@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package leo32
+package leo32.base
 
 import leo.base.*
 import leo.binary.*
@@ -17,6 +17,12 @@ val One.i32 get() = 1.i32
 
 val Min.i32 get() = 0.i32
 val Max.i32 get() = (-1).i32
+
+val hsbI32 get() = 1.shl(31).i32
+
+val I32.isZero
+	get() =
+		int == 0
 
 val I32.inc
 	get() =
@@ -59,6 +65,10 @@ val I32.shr1
 val I32.shl1
 	get() =
 		shl(zero.i32)
+
+val I32.bit
+	get() =
+		int.bit
 
 // === primitives
 

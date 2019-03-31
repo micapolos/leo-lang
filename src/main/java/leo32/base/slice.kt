@@ -6,7 +6,7 @@ import leo.base.intWithoutStart
 import leo.base.thenSeqNode
 
 class Slice<T>(
-	val array: Ram<T>,
+	val array: Array<T>,
 	val range: ClosedRange<Int>) : Ram<T> {
 	override fun at(index: Int) =
 		array.at(range.start + index)
@@ -15,7 +15,7 @@ class Slice<T>(
 		Slice(array = array.update(range.start + index, fn), range = range)
 }
 
-fun <T> Ram<T>.slice(range: IntRange) =
+fun <T> Array<T>.slice(range: IntRange) =
 	Slice(this, range)
 
 val Slice<*>.size

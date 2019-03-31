@@ -5,6 +5,8 @@ import leo.base.codePointSeq
 import leo.base.map
 import leo.base.onlySeq
 import leo.binary.Bit
+import leo32.base.I32
+import leo32.base.i32
 
 typealias Seq32 = Seq<I32>
 
