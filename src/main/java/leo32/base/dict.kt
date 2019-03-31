@@ -1,47 +1,32 @@
 package leo32.base
 
-import leo.base.*
-import leo.binary.Bit
-import leo.binary.bitSeq
-import leo.binary.zero
+import leo.base.Empty
 
-data class Dict<out T>(
-	val tree: Tree<T?>)
+data class Dict<K, V : Any>(
+	val trie: Trie<V>,
+	val dictKey: K.() -> DictKey)
 
-val <T : Any> Tree<T?>.dict
-	get() =
-		Dict(this)
+fun <K, V : Any> Trie<V>.dict(dictKey: K.() -> DictKey) =
+	Dict(this, dictKey)
 
-fun <T : Any> emptyDict() =
-	nullOf<T>().leaf.tree.dict
+fun <K, V : Any> Dict<K, V>.at(key: K) =
+	trie.uncheckedAt(key.dictKey().bitSeq)
 
-fun <T : Any> dict(vararg pairs: Pair<String, T?>) =
-	emptyDict<T>().fold(pairs) { put(it.first, it.second) }
+fun <K, V : Any> Dict<K, V>.put(key: K, value: V) =
+	copy(trie = trie.uncheckedPut(key.dictKey().bitSeq, value))
 
-val dictEscapeByte = 27.clampedByte
-val dictEscapedZeroByte = 1.clampedByte
-
-val Byte.dictEscape: Seq<Byte>
-	get() =
-		when (this) {
-			zero.byte -> seq(dictEscapeByte, dictEscapedZeroByte)
-			dictEscapeByte -> seq(dictEscapeByte, dictEscapeByte)
-			else -> seq(this)
+fun <K, V : Any> Dict<K, V>.computeAt(key: K, compute: () -> V): Effect<Dict<K, V>, Pair<V, Boolean>> =
+	key.dictKey().bitSeq.let { keyBitSeq ->
+		trie.uncheckedAt(keyBitSeq).let { value ->
+			if (value == null) compute().let { newValue ->
+				copy(trie = trie.uncheckedPut(keyBitSeq, newValue)).effect(newValue to true)
+			}
+			else effect(value to false)
 		}
+	}
 
-val Seq<Byte>.byteDictEscape: Seq<Byte>
-	get() =
-		map { dictEscape }.flatten
+// === core dicts ===
 
-val Seq<Byte>.byteDictKey: Seq<Byte>
-	get() =
-		byteDictEscape.then { zero.byte.onlySeq }
-
-val String.dictBitSeq: Seq<Bit>
-	get() = utf8ByteArray.asList().seq.byteDictKey.map { bitSeq }.flatten
-
-fun <T : Any> Dict<T>.at(string: String): T? =
-	tree.at(string.dictBitSeq)?.leafOrNull?.value
-
-fun <T : Any> Dict<T>.put(string: String, value: T?): Dict<T> =
-	tree.update(string.dictBitSeq) { value.leaf.tree }.dict
+@Suppress("unused")
+fun <V : Any> Empty.stringDict(): Dict<String, V> =
+	emptyTrie<V>().dict { dictKey }

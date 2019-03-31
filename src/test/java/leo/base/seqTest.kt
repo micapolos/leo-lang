@@ -24,12 +24,12 @@ class SeqTest {
 
 	@Test
 	fun flatten() {
-		seq<Seq<Int>>().flatten.assertContains()
-		seq(seq<Int>()).flatten.assertContains()
-		seq(seq<Int>(), seq()).flatten.assertContains()
-		seq(seq(1), seq(2)).flatten.assertContains(1, 2)
-		seq(seq(1, 2), seq(3, 4)).flatten.assertContains(1, 2, 3, 4)
-		seq(seq(), seq(1, 2), seq(), seq(3, 4), seq()).flatten.assertContains(1, 2, 3, 4)
+		seq<Seq<Int>>().flat.assertContains()
+		seq(seq<Int>()).flat.assertContains()
+		seq(seq<Int>(), seq()).flat.assertContains()
+		seq(seq(1), seq(2)).flat.assertContains(1, 2)
+		seq(seq(1, 2), seq(3, 4)).flat.assertContains(1, 2, 3, 4)
+		seq(seq(), seq(1, 2), seq(), seq(3, 4), seq()).flat.assertContains(1, 2, 3, 4)
 	}
 }
 

@@ -1,25 +1,30 @@
 package leo32.base
 
 import leo.base.Seq
+import leo.base.intSize
+import leo.base.intWithoutStart
 import leo.base.thenSeqNode
-import leo.base.withoutFirst
 
 class Slice<T>(
-	val array: Array<T>,
-	val range: IntRange)
+	val array: Ram<T>,
+	val range: ClosedRange<Int>) : Ram<T> {
+	override fun at(index: Int) =
+		array.at(range.start + index)
 
-fun <T> Array<T>.slice(range: IntRange) =
+	override fun update(index: Int, fn: T.() -> T) =
+		Slice(array = array.update(range.start + index, fn), range = range)
+}
+
+fun <T> Ram<T>.slice(range: IntRange) =
 	Slice(this, range)
 
-fun <T> Slice<T>.at(index: Int) =
-	array.at(range.first + index)
-
-fun <T> Slice<T>.put(index: Int, value: T) =
-	array.put(range.first + index, value)
+val Slice<*>.size
+	get() =
+		range.intSize
 
 val <T> Slice<T>.without0: Slice<T>
 	get() =
-		Slice(array, range.withoutFirst)
+		Slice(array, range.intWithoutStart)
 
 val <T> Slice<T>.seq: Seq<T>
 	get() =

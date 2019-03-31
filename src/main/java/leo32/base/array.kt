@@ -87,3 +87,9 @@ fun <R> R.foldArray(array: Ptr, mask: Int, fn: R.(Ptr) -> R): R =
 	else this
 		.foldArray(array.ptrBranchAt(zero.bit), mask ushr 1, fn)
 		.foldArray(array.ptrBranchAt(one.bit), mask ushr 1, fn)
+
+val <T> Array<T>.ram: Ram<T>
+	get() = object : Ram<T> {
+		override fun at(index: Int) = this@ram.at(index)
+		override fun update(index: Int, fn: T.() -> T) = this@ram.update(index, fn).ram
+	}

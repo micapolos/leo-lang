@@ -61,6 +61,9 @@ val <T> T.onlySeq: Seq<T>
 fun <T> seq(vararg items: T): Seq<T> =
 	seqFrom(0, listOf(*items))
 
+fun <T> flatSeq(vararg seqs: Seq<T>): Seq<T> =
+	seq(*seqs).flat
+
 fun <T> seqFrom(index: Int, items: List<T>): Seq<T> =
 	Seq {
 		if (index == items.size) null
@@ -88,9 +91,9 @@ fun <T, R> Seq<T>.map(fn: T.() -> R): Seq<R> =
 
 val <T> SeqNode<Seq<T>>.flatten: Seq<T>
 	get() =
-		first.then { remaining.flatten }
+		first.then { remaining.flat }
 
-val <T> Seq<Seq<T>>.flatten: Seq<T>
+val <T> Seq<Seq<T>>.flat: Seq<T>
 	get() =
 		Seq { seqNodeOrNull?.flatten?.seqNodeOrNull }
 
@@ -104,3 +107,11 @@ val <T> Iterator<T>.seq: Seq<T>
 val <T> Iterable<T>.seq: Seq<T>
 	get() =
 		iterator().seq
+
+fun <T> Seq<T>.prepend(value: T) =
+	Seq {
+		value.thenSeqNode(this)
+	}
+
+fun <T> Seq<T>.prepend(seq: Seq<T>) =
+	seq.then(this)
