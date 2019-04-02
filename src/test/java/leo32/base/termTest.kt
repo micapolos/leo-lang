@@ -1,12 +1,15 @@
 package leo32.base
 
+import leo.base.assertEqualTo
+import leo.base.empty
 import kotlin.test.Test
 
 class TermTest {
 	@Test
 	fun test() {
-		"zero".term.plus("bit".term)
-			.plus("and".term.plus("zero".term.plus("bit".term)))
-			.plus("gives".term.plus("zero".term.plus("bit".term)))
+		empty.term.plus("zero").plus("bit")
+			.plus("and", empty.term.plus("zero").plus("bit"))
+			.plus("gives", empty.term.plus("zero").plus("bit"))
+			.assertEqualTo(null)
 	}
 }

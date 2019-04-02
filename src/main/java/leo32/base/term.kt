@@ -1,18 +1,23 @@
+@file:Suppress("unused")
+
 package leo32.base
 
-sealed class Term
+import leo.base.Empty
 
-data class ApTerm(
-	val ap: Ap<Term, Term>): Term()
+object EmptyTerm
 
-data class StringTerm(
-	val string: String): Term()
+data class Term(
+	val string: String,
+	val apOrNull: Ap?)
 
-val String.term get() =
-	StringTerm(this) as Term
+val Empty.term
+	get() =
+		EmptyTerm
 
-val Ap<Term, Term>.term get() =
-	ApTerm(this) as Term
+fun Term.plus(string: String, rhsOrNull: Term? = null) =
+	if (rhsOrNull == null) Term(string, Ap(this, null))
+	else Term(string, Ap(this, rhsOrNull))
 
-fun Term.plus(term: Term) =
-	ap(term).term
+fun EmptyTerm.plus(string: String, rhsOrNull: Term? = null) =
+	if (rhsOrNull == null) Term(string, null)
+	else Term(string, Ap(rhsOrNull, null))

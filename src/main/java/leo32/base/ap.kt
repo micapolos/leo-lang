@@ -1,8 +1,9 @@
 package leo32.base
 
-data class Ap<out T, out V>(
-	val target: T,
-	val value: V)
+data class Ap(
+	val lhs: Term,
+	val rhsOrNull: Term?)
 
-fun <T, V> T.ap(value: V) =
-	Ap(this, value)
+fun Term.ap(rhsOrNull: Term? = null) =
+	Ap(this, rhsOrNull)
+
