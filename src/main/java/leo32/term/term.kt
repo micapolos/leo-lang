@@ -5,16 +5,18 @@ package leo32.term
 import leo.base.*
 import leo32.base.*
 import leo32.base.List
+import leo32.field
 import leo32.seq32
 
 data class Term(
 	val fieldList: List<TermField>,
-	val termListDict: Dict<String, List<Term>>) {
+	val termListDict: Dict<String, List<Term>>,
+	val scriptOrNull: Script?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Empty.term get() =
-	Term(empty.list(), empty.stringDict())
+	Term(empty.list(), empty.stringDict(), null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -45,7 +47,8 @@ fun Term.plus(field: TermField) =
 		fieldList = fieldList.add(field),
 		termListDict = termListDict.update(field.name) {
 			(this?:empty.list()).add(field.value)
-		})
+		},
+		scriptOrNull = Script(this, field))
 
 fun term(string: String) =
 	empty.term.plus(string)
@@ -74,4 +77,5 @@ val List<Term>.theTerm get() =
 	empty.term.fold(seq) { plus("the" fieldTo it) }
 
 fun Term.resolve(fn: Term.() -> Term): Term =
-	empty.term.fold(fieldSeq) { plus(it.resolve(fn)) }.fn()
+	if (scriptOrNull == null) this
+	else scriptOrNull.lhs.fn().plus(scriptOrNull.field.resolve(fn))

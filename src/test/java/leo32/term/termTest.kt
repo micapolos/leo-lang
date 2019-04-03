@@ -41,11 +41,19 @@ class TermTest {
 
 	@Test
 	fun resolve() {
-		term("one")
-			.resolve { plus("resolved".termField) }
+		val resolveFn: Term.() -> Term = { term("resolved" fieldTo this) }
+
+		empty.term.resolve(resolveFn).assertEqualTo(empty.term)
+
+		term("one").resolve(resolveFn).assertEqualTo(term("resolved" fieldTo term("one")))
+
+		term(
+			"one".termField,
+			"plus" fieldTo term("two"))
+			.resolve(resolveFn)
 			.assertEqualTo(
 				term(
-					"one" fieldTo term("resolved"),
-					"resolved".termField))
+					"resolved" fieldTo term("one"),
+					"plus" fieldTo term("resolved" fieldTo term("two"))))
 	}
 }

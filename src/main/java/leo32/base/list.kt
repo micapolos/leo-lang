@@ -20,8 +20,14 @@ val <T: Any> List<T>.only: T get() {
 fun <T: Any> list(vararg ts: T) =
 	empty.list<T>().fold(ts) { add(it) }
 
+val List<*>.isEmpty get() =
+	size.isZero
+
 fun <T: Any> List<T>.add(value: T) =
 	copy(array = array.put(size.int, value), size = size.inc)
+
+val <T: Any> List<T>.drop get() =
+	copy(array = array.put(size.dec.int, null), size = size.dec)
 
 fun <T: Any> List<T>.at(index: I32): T =
 	array.at(index.int)!!
