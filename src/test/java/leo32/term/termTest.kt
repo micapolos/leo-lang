@@ -1,10 +1,10 @@
 package leo32.term
 
 import leo.base.assertEqualTo
+import leo.base.empty
 import leo.base.string
-import leo32.base.i32
+import leo32.base.list
 import kotlin.test.Test
-import leo32.base.listOf
 
 class TermTest {
 	@Test
@@ -25,16 +25,17 @@ class TermTest {
 			"param" fieldTo term("0"),
 			"param" fieldTo term("1"),
 			"result" fieldTo term("i32"),
-			"body" fieldTo emptyTerm)
+			"body".termField)
 
-		term.fieldCount.assertEqualTo(4.i32)
-		term.at(0.i32).assertEqualTo("param" fieldTo term("0"))
-		term.at(1.i32).assertEqualTo("param" fieldTo term("1"))
-		term.at(2.i32).assertEqualTo("result" fieldTo term("i32"))
-		term.at(3.i32).assertEqualTo("body" fieldTo emptyTerm)
+		term.fieldList.assertEqualTo(
+			list(
+				"param" fieldTo term("0"),
+				"param" fieldTo term("1"),
+				"result" fieldTo term("i32"),
+				"body".termField))
 
-		term.at("param").assertEqualTo(listOf(term("0"), term("1")))
-		term.at("result").assertEqualTo(listOf(term("i32")))
-		term.at("body").assertEqualTo(listOf(emptyTerm))
+		term.at("param").assertEqualTo(list(term("0"), term("1")))
+		term.at("result").assertEqualTo(list(term("i32")))
+		term.at("body").assertEqualTo(list(empty.term))
 	}
 }

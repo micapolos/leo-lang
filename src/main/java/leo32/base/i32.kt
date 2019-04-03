@@ -48,6 +48,9 @@ infix fun I32.and(i32: I32) =
 infix fun I32.or(i32: I32) =
 	int.or(i32.int).i32
 
+infix fun I32.maskPair(i32: I32): Pair<I32, I32> =
+	and(i32.inv) to and(i32)
+
 val I32.inv
 	get() =
 		int.inv().i32

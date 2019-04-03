@@ -17,7 +17,7 @@ val <T: Any> List<T>.only: T get() {
 	return at(0.i32)
 }
 
-fun <T: Any> listOf(vararg ts: T) =
+fun <T: Any> list(vararg ts: T) =
 	empty.list<T>().fold(ts) { add(it) }
 
 fun <T: Any> List<T>.add(value: T) =
