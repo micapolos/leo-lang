@@ -38,4 +38,14 @@ class TermTest {
 		term.at("result").assertEqualTo(list(term("i32")))
 		term.at("body").assertEqualTo(list(empty.term))
 	}
+
+	@Test
+	fun resolve() {
+		term("one")
+			.resolve { plus("resolved".termField) }
+			.assertEqualTo(
+				term(
+					"one" fieldTo term("resolved"),
+					"resolved".termField))
+	}
 }

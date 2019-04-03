@@ -70,7 +70,8 @@ val Term.dictKey get() =
 fun <V: Any> Empty.termDict() =
 	dict<Term, V> { dictKey }
 
-// === primitive terms
-
 val List<Term>.theTerm get() =
 	empty.term.fold(seq) { plus("the" fieldTo it) }
+
+fun Term.resolve(fn: Term.() -> Term): Term =
+	empty.term.fold(fieldSeq) { plus(it.resolve(fn)) }.fn()

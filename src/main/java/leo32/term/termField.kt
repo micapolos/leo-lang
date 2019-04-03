@@ -2,6 +2,7 @@ package leo32.term
 
 import leo.base.appendableString
 import leo.base.empty
+import leo.base.fold
 
 data class TermField(
 	val name: String,
@@ -20,3 +21,6 @@ fun Appendable.append(field: TermField): Appendable =
 		if (!field.value.isEmpty) append('(').append(field.value).append(')')
 		else this
 	}
+
+fun TermField.resolve(fn: Term.() -> Term): TermField =
+	name fieldTo value.resolve(fn)
