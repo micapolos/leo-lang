@@ -1,82 +1,61 @@
 package leo32.term
 
 import leo.base.appendableString
+import leo.base.empty
 import leo.base.fold
-import leo.base.ifNotNull
-import leo.base.nullOf
+import leo32.base.*
+import leo32.base.List
 
-sealed class Term
-
-sealed class SimpleTerm
-
-data class NameTerm(
-	val name: String): SimpleTerm() {
+data class Term(
+	val fieldList: List<Field>,
+	val termListDict: Dict<String, List<Term>>) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-data class InvokeTerm(
-	val name: String,
-	val value: Term): SimpleTerm() {
-	override fun toString() = appendableString { it.append(this) }
-}
+val emptyTerm =
+	Term(empty.list(), empty.stringDict())
 
-data class StructTerm(
-	val firstField: Field,
-	val nextStructTerm: StructTerm?): Term() {
-	override fun toString() = appendableString { it.append(this) }
-}
+val Term.fieldCount get() =
+	fieldList.size
 
-data class Field(
-	val name: String,
-	val term: Term) {
-	override fun toString() = appendableString { it.appendComplex(this) }
-}
+val Term.isEmpty get() =
+	fieldCount.isZero
 
-fun term(name: String): NameTerm =
-	NameTerm(name)
+fun Term.at(index: I32): Field =
+	fieldList.at(index)
 
-fun term(field: Field, vararg fields: Field): StructTerm =
-	StructTerm(field, nullOf<StructTerm>().fold(fields) { StructTerm(it, this) })
+fun Term.at(name: String): List<Term> =
+	termListDict.at(name)!!
 
-infix fun String.fieldTo(term: Term): Field =
-	Field(this, term)
+fun Term.countAt(name: String): I32 =
+	at(name).size
 
-fun Term.invoke(name: String): StructTerm =
-	StructTerm(name fieldTo this, null)
+fun Term.at(name: String, index: I32): Term =
+	at(name).at(index)
 
-fun NameTerm.invoke(field: Field): StructTerm =
-	term("invoke" fieldTo term("it" fieldTo this, field))
+fun Term.onlyAt(name: String): Term =
+	at(name).only
 
-fun StructTerm.invoke(field: Field): StructTerm =
-	StructTerm(field, this)
+val Term.fieldSeq get() =
+	fieldList.seq
 
-// === appendable
+fun Term.plus(field: Field) =
+	copy(
+		fieldList = fieldList.add(field),
+		termListDict = termListDict.update(field.name) {
+			(this?:empty.list()).add(field.value)
+		})
+
+fun term(string: String) =
+	emptyTerm.plus(string)
+
+fun Term.plus(name: String) =
+	plus(name fieldTo emptyTerm)
+
+fun term(vararg fields: Field) =
+	emptyTerm.fold(fields) { plus(it) }
 
 fun Appendable.append(term: Term): Appendable =
-	when (term) {
-		is NameTerm -> append(term)
-		is StructTerm -> append(term)
-	}
-
-fun Appendable.append(nameTerm: NameTerm): Appendable =
-	append(nameTerm.name)
-
-fun Appendable.append(fieldsTerm: StructTerm): Appendable =
-	if (fieldsTerm.nextStructTerm == null) appendSimple(fieldsTerm.firstField)
-	else appendComplex(fieldsTerm)
-
-fun Appendable.appendComplex(fieldsTerm: StructTerm): Appendable =
-	this.append("(").appendComplexFields(fieldsTerm).append(")")
-
-fun Appendable.appendComplexFields(fieldsTerm: StructTerm): Appendable =
-	this
-		.appendComplex(fieldsTerm.firstField)
-		.ifNotNull(fieldsTerm.nextStructTerm) {
-			append(", ").appendComplexFields(it)
-		}
-
-fun Appendable.appendSimple(field: Field): Appendable =
-	append(field.term).append('.').append(field.name)
-
-fun Appendable.appendComplex(field: Field): Appendable =
-	append(field.name).append(": ").append(field.term)
+	(this to false).fold(term.fieldSeq) {
+		(if (second) first.append('.') else first).append(it) to true
+	}.first

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package leo32.base
 
 import leo.base.Empty
@@ -5,6 +7,9 @@ import leo.base.Empty
 data class Dict<K, V : Any>(
 	val trie: Trie<V>,
 	val dictKey: K.() -> DictKey)
+
+fun <K, V: Any> Empty.dict(dictKey: K.() -> DictKey) =
+	emptyTrie<V>().dict(dictKey)
 
 fun <K, V : Any> Trie<V>.dict(dictKey: K.() -> DictKey) =
 	Dict(this, dictKey)
@@ -14,6 +19,9 @@ fun <K, V : Any> Dict<K, V>.at(key: K) =
 
 fun <K, V : Any> Dict<K, V>.put(key: K, value: V) =
 	copy(trie = trie.uncheckedPut(key.dictKey().bitSeq, value))
+
+fun <K, V: Any> Dict<K, V>.update(key: K, fn: V?.() -> V) =
+	put(key, at(key).fn())
 
 fun <K, V : Any> Dict<K, V>.computeAt(key: K, compute: () -> V): Effect<Dict<K, V>, Pair<V, Boolean>> =
 	key.dictKey().bitSeq.let { keyBitSeq ->

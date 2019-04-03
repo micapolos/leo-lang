@@ -21,7 +21,7 @@ val I32.dictKeyEscape: Seq32
 		when (this) {
 			zero.i32 -> seq(dictKeyEscapeI32, dictKeyEscapedZeroI32)
 			dictKeyEscapeI32 -> seq(dictKeyEscapeI32, dictKeyEscapeI32)
-			else -> seq(this)
+			else -> seq32
 		}
 
 val DictKey.bitSeq: Seq<Bit>

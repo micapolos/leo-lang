@@ -70,6 +70,23 @@ val I32.bit
 	get() =
 		int.bit
 
+operator fun I32.compareTo(i32: I32) =
+	if (int >= 0)
+		if (i32.int >= 0) int.compareTo(i32.int)
+		else -1
+	else
+		if (i32.int >= 0) 1
+		else int.compareTo(i32.int).unaryMinus()
+
+fun I32.bitSeq(bitMask: I32): Seq<Bit> =
+	Seq {
+		if (bitMask.isZero) null
+		else and(bitMask).bit.thenSeqNode(bitSeq(bitMask.shr1))
+	}
+
+val I32.bitSeq: Seq<Bit> get() =
+	bitSeq(hsbI32)
+
 // === primitives
 
 val Bit.i32
