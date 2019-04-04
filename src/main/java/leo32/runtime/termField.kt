@@ -1,7 +1,6 @@
 package leo32.runtime
 
 import leo.base.appendableString
-import leo.base.empty
 
 data class TermField(
 	val name: String,
@@ -9,11 +8,8 @@ data class TermField(
 	override fun toString() = appendableString { it.append(this) }
 }
 
-infix fun String.fieldTo(term: Term) =
+infix fun String.to(term: Term) =
 	TermField(this, term)
-
-val String.termField get() =
-	this fieldTo empty.term
 
 fun Appendable.append(field: TermField): Appendable =
 	append(field.name).run {
@@ -22,4 +18,4 @@ fun Appendable.append(field: TermField): Appendable =
 	}
 
 fun TermField.resolve(fn: Term.() -> Term): TermField =
-	name fieldTo value.resolve(fn)
+	name to value.resolve(fn)

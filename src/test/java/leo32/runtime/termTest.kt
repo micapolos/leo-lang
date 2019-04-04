@@ -10,11 +10,11 @@ class TermTest {
 	@Test
 	fun string() {
 		term(
-			"circle" fieldTo term(
-				"radius" fieldTo term("10"),
-				"center" fieldTo term(
-					"x" fieldTo term("12"),
-					"y" fieldTo term("13"))))
+			"circle" to term(
+				"radius" to term("10"),
+				"center" to term(
+					"x" to term("12"),
+					"y" to term("13"))))
 			.string
 			.assertEqualTo("circle(radius(10).center(x(12).y(13)))")
 	}
@@ -22,17 +22,17 @@ class TermTest {
 	@Test
 	fun at() {
 		val term = term(
-			"param" fieldTo term("0"),
-			"param" fieldTo term("1"),
-			"result" fieldTo term("i32"),
-			"body".termField)
+			"param" to term("0"),
+			"param" to term("1"),
+			"result" to term("i32"),
+			"body" to term())
 
 		term.fieldList.assertEqualTo(
 			list(
-				"param" fieldTo term("0"),
-				"param" fieldTo term("1"),
-				"result" fieldTo term("i32"),
-				"body".termField))
+				"param" to term("0"),
+				"param" to term("1"),
+				"result" to term("i32"),
+				"body" to term()))
 
 		term.at("param").assertEqualTo(list(term("0"), term("1")))
 		term.at("result").assertEqualTo(list(term("i32")))

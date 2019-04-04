@@ -27,8 +27,8 @@ class FunctionTest {
 			.invoke(parameter(term("two")))
 			.assertEqualTo(
 				term(
-					"two".termField,
-					"plus" fieldTo term("one")))
+					"two" to term(),
+					"plus" to term("one")))
 	}
 
 	@Test
@@ -40,8 +40,8 @@ class FunctionTest {
 			.invoke(parameter(term("two")))
 			.assertEqualTo(
 				term(
-					"two".termField,
-					"plus" fieldTo term("one")))
+					"two" to term(),
+					"plus" to term("one")))
 	}
 
 	@Test
@@ -50,10 +50,10 @@ class FunctionTest {
 			argument,
 			op(
 				switch(
-					term("not" fieldTo term("false")) gives term("true"),
-					term("not" fieldTo term("true")) gives term("false"))))
+					term("not" to term("false")) gives term("true"),
+					term("not" to term("true")) gives term("false"))))
 
-		function.invoke(parameter(term("not" fieldTo term("true")))).assertEqualTo(term("false"))
-		function.invoke(parameter(term("not" fieldTo term("false")))).assertEqualTo(term("true"))
+		function.invoke(parameter(term("not" to term("true")))).assertEqualTo(term("false"))
+		function.invoke(parameter(term("not" to term("false")))).assertEqualTo(term("true"))
 	}
 }

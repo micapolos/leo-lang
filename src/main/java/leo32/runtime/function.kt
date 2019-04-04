@@ -33,7 +33,7 @@ fun Function.plus(field: FunctionField) =
 	plus(field.op)
 
 fun Function.plus(name: String) =
-	plus(name.fieldToEmptyFunction)
+	plus(name to function())
 
 fun function(vararg ops: Op) =
 	empty.function.fold(ops) { plus(it) }

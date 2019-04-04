@@ -53,7 +53,7 @@ fun term(string: String) =
 	empty.term.plus(string)
 
 fun Term.plus(name: String) =
-	plus(name fieldTo empty.term)
+	plus(name to empty.term)
 
 fun term(vararg fields: TermField) =
 	empty.term.fold(fields) { plus(it) }
@@ -73,7 +73,7 @@ fun <V: Any> Empty.termDict() =
 	dict<Term, V> { dictKey }
 
 val List<Term>.theTerm get() =
-	empty.term.fold(seq) { plus("the" fieldTo it) }
+	empty.term.fold(seq) { plus("the" to it) }
 
 fun Term.resolve(fn: Term.() -> Term): Term =
 	if (scriptOrNull == null) this

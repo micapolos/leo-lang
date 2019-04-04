@@ -8,8 +8,8 @@ class GetterTest {
 	@Test
 	fun invoke() {
 		val term = term(
-			"foo" fieldTo term("foo1"),
-			"bar" fieldTo term("bar1"))
+			"foo" to term("foo1"),
+			"bar" to term("bar1"))
 
 		"foo".getter.invoke(term).assertEqualTo(term("foo1"))
 		"bar".getter.invoke(term).assertEqualTo(term("bar1"))

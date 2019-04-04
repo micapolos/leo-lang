@@ -29,7 +29,7 @@ fun op(call: Call) =
 	InvokeOp(call) as Op
 
 infix fun String.op(function: Function) =
-	fieldTo(function).op
+	to(function).op
 
 val String.op get() =
 	op(empty.function)
