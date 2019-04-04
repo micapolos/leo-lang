@@ -75,6 +75,6 @@ fun <V: Any> Empty.termDict() =
 val List<Term>.theTerm get() =
 	empty.term.fold(seq) { plus("the" to it) }
 
-fun Term.resolve(fn: Term.() -> Term): Term =
+fun Term.map(fn: Term.() -> Term): Term =
 	if (scriptOrNull == null) this
-	else scriptOrNull.lhs.fn().plus(scriptOrNull.field.resolve(fn))
+	else scriptOrNull.lhs.fn().plus(scriptOrNull.field.map(fn))

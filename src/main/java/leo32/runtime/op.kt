@@ -1,11 +1,9 @@
 package leo32.runtime
 
-import leo.base.empty
-
 sealed class Op
 
 data class GetOp(
-	val getter: Getter): Op()
+	val get: Get): Op()
 
 data class FieldOp(
 	val field: FunctionField): Op()
@@ -13,31 +11,28 @@ data class FieldOp(
 data class SwitchOp(
 	val switch: Switch): Op()
 
-data class InvokeOp(
+data class CallOp(
 	val call: Call): Op()
 
-val Getter.op get() =
-	GetOp(this) as Op
+fun op(get: Get) =
+	GetOp(get) as Op
 
-val FunctionField.op get() =
-	FieldOp(this) as Op
+fun op(field: FunctionField) =
+	FieldOp(field) as Op
 
 fun op(switch: Switch) =
 	SwitchOp(switch)
 
 fun op(call: Call) =
-	InvokeOp(call) as Op
+	CallOp(call) as Op
 
 infix fun String.op(function: Function) =
-	to(function).op
-
-val String.op get() =
-	op(empty.function)
+	op(to(function))
 
 fun Op.invoke(term: Term, parameter: Parameter): Term =
 	when (this) {
-		is GetOp -> getter.invoke(term)
+		is GetOp -> get.invoke(term)
 		is FieldOp -> field.invoke(term, parameter)
 		is SwitchOp -> switch.invoke(term)
-		is InvokeOp -> call.invoke(term)
+		is CallOp -> call.invoke(term)
 	}

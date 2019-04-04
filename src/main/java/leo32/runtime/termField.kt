@@ -17,5 +17,5 @@ fun Appendable.append(field: TermField): Appendable =
 		else this
 	}
 
-fun TermField.resolve(fn: Term.() -> Term): TermField =
-	name to value.resolve(fn)
+fun TermField.map(fn: Term.() -> Term): TermField =
+	name to value.fn()

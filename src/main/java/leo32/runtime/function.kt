@@ -30,7 +30,7 @@ fun Function.plus(op: Op) =
 	application(op).function
 
 fun Function.plus(field: FunctionField) =
-	plus(field.op)
+	plus(op(field))
 
 fun Function.plus(name: String) =
 	plus(name to function())

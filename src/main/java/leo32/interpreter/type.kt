@@ -12,6 +12,9 @@ data class Type(
 val Term.type get() =
 	Type(this)
 
+fun type(term: Term) =
+	Type(term)
+
 val Type.seq32 get() =
 	term.seq32
 

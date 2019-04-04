@@ -3,22 +3,28 @@ package leo32.runtime
 import leo32.base.I32
 import leo32.base.only
 
-sealed class Getter
+sealed class Get
 
-data class NameGetter(
-	val name: String): Getter()
+data class NameGet(
+	val name: String): Get()
 
-data class IndexGetter(
-	val index: I32): Getter()
+data class IndexGet(
+	val index: I32): Get()
+
+fun getter(name: String) =
+	NameGet(name) as Get
+
+fun getter(index: I32) =
+	IndexGet(index) as Get
 
 val String.getter get() =
-	NameGetter(this) as Getter
+	NameGet(this) as Get
 
 val I32.getter get() =
-	IndexGetter(this) as Getter
+	IndexGet(this) as Get
 
-fun Getter.invoke(term: Term): Term =
+fun Get.invoke(term: Term): Term =
 	when (this) {
-		is NameGetter -> term.at(name).only
-		is IndexGetter -> term.at(index).value
+		is NameGet -> term.at(name).only
+		is IndexGet -> term.at(index).value
 	}
