@@ -19,12 +19,27 @@ class GetterTest {
 	}
 
 	@Test
-	fun invokeResolver() {
-		val resolver = empty.termResolver
+	fun switch() {
+		val switch = empty.switch
 			.put(term("true"), term("false"))
 			.put(term("false"), term("true"))
 		
-		term("true").invoke(resolver.getter).assertEqualTo(term("false"))
-		term("false").invoke(resolver.getter).assertEqualTo(term("true"))
+		term("true").invoke(switch.getter).assertEqualTo(term("false"))
+		term("false").invoke(switch.getter).assertEqualTo(term("true"))
+	}
+
+	@Test
+	fun template() {
+		term(
+			"foo" fieldTo term("foo1"),
+			"bar" fieldTo term("bar1"))
+			.invoke(template(selector("foo".getter)).getter)
+			.assertEqualTo(term("foo1"))
+
+		term(
+			"foo" fieldTo term("foo1"),
+			"bar" fieldTo term("bar1"))
+			.invoke(template(selector("bar".getter)).getter)
+			.assertEqualTo(term("bar1"))
 	}
 }

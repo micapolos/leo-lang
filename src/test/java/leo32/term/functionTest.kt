@@ -16,7 +16,7 @@ class FunctionTest {
 			.put(bitZeroTerm, bitType)
 			.put(bitOneTerm, bitType)
 
-		val nandTermResolver = empty.termResolver
+		val nandTermResolver = empty.switch
 			.put(bitZeroTerm.plus("nand" fieldTo bitZeroTerm), bitOneTerm)
 			.put(bitZeroTerm.plus("nand" fieldTo bitOneTerm), bitZeroTerm)
 			.put(bitOneTerm.plus("nand" fieldTo bitZeroTerm), bitZeroTerm)

@@ -16,3 +16,6 @@ fun selector(vararg getters: Getter) =
 
 fun Term.invoke(selector: Selector) =
 	fold(selector.getterList.seq) { invoke(it) }
+
+fun Selector.invoke(term: Term) =
+	term.fold(getterList.seq) { invoke(it) }

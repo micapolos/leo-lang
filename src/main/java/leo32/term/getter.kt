@@ -11,8 +11,11 @@ data class NameGetter(
 data class IndexGetter(
 	val index: I32): Getter()
 
-data class ResolverGetter(
-	val resolver: TermResolver): Getter()
+data class SwitchGetter(
+	val switch: Switch): Getter()
+
+data class TemplateGetter(
+	val template: Template): Getter()
 
 val String.getter get() =
 	NameGetter(this) as Getter
@@ -20,12 +23,16 @@ val String.getter get() =
 val I32.getter get() =
 	IndexGetter(this) as Getter
 
-val TermResolver.getter get() =
-	ResolverGetter(this) as Getter
+val Switch.getter get() =
+	SwitchGetter(this) as Getter
+
+val Template.getter get() =
+	TemplateGetter(this) as Getter
 
 fun Term.invoke(getter: Getter): Term =
 	when (getter) {
 		is NameGetter -> at(getter.name).only
 		is IndexGetter -> at(getter.index).value
-		is ResolverGetter -> getter.resolver.resolve(this)
+		is SwitchGetter -> getter.switch.resolve(this)
+		is TemplateGetter -> getter.template.invoke(this)
 	}

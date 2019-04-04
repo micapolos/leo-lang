@@ -7,17 +7,17 @@ import leo32.base.Dict
 import leo32.base.at
 import leo32.base.put
 
-data class TermResolver(
+data class Switch(
 	val termToTermDict: Dict<Term, Term>)
 
-val Dict<Term, Term>.termResolver get() =
-	TermResolver(this)
+val Dict<Term, Term>.switch get() =
+	Switch(this)
 
-val Empty.termResolver get() =
-	termDict<Term>().termResolver
+val Empty.switch get() =
+	termDict<Term>().switch
 
-fun TermResolver.put(key: Term, value: Term) =
+fun Switch.put(key: Term, value: Term) =
 	copy(termToTermDict = termToTermDict.put(key, value))
 
-fun TermResolver.resolve(term: Term): Term =
+fun Switch.resolve(term: Term): Term =
 	termToTermDict.at(term)!!

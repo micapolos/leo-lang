@@ -13,15 +13,20 @@ class SelectorTest {
 					"x" fieldTo term("12"),
 					"y" fieldTo term("13"))))
 
-		term.invoke(selector())
+		selector()
+			.invoke(term)
 			.assertEqualTo(term)
-		term.invoke(selector("circle".getter, "radius".getter))
+		selector("circle".getter, "radius".getter)
+			.invoke(term)
 			.assertEqualTo(term("10"))
-		term.invoke(selector("circle".getter, "center".getter))
+		selector("circle".getter, "center".getter)
+			.invoke(term)
 			.assertEqualTo(term("x" fieldTo term("12"), "y" fieldTo term("13")))
-		term.invoke(selector("circle".getter, "center".getter, "x".getter))
+		selector("circle".getter, "center".getter, "x".getter)
+			.invoke(term)
 			.assertEqualTo(term("12"))
-		term.invoke(selector("circle".getter, "center".getter, "y".getter))
+		selector("circle".getter, "center".getter, "y".getter)
+			.invoke(term)
 			.assertEqualTo(term("13"))
 	}
 }

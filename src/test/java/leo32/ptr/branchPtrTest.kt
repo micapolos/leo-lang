@@ -7,7 +7,7 @@ import leo.binary.zero
 import leo32.base.Branch
 import kotlin.test.Test
 
-class BranchTest {
+class SwitchTest {
 	@Test
 	fun branch() {
 		branchPtr(null, null).assertEqualTo(null)

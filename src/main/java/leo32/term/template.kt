@@ -5,36 +5,36 @@ package leo32.term
 import leo.base.Empty
 import leo.base.empty
 import leo.base.fold
-import leo32.base.List
-import leo32.base.add
-import leo32.base.list
-import leo32.base.seq
 
-data class Template(
-	val selector: Selector?,
-	val fieldList: List<TemplateField>)
+sealed class Template
 
-val Selector.template get() =
-	Template(this, list())
+data class EmptyTemplate(
+	val empty: Empty): Template()
+
+data class ApTemplate(
+	val lhs: Template,
+	val ap: Ap): Template()
 
 val Empty.template get() =
-	Template(null, list())
+	EmptyTemplate(this) as Template
+
+fun Template.plus(ap: Ap) =
+	ApTemplate(this, ap) as Template
 
 fun Template.plus(field: TemplateField) =
-	copy(fieldList = fieldList.add(field))
+	plus(field.ap)
 
 fun Template.plus(name: String) =
-	plus(name fieldTo empty.template)
+	plus(name.templateField)
 
 fun template(string: String) =
-	empty.template.plus(string)
+	template(string.templateField.ap)
 
-fun template(vararg fields: TemplateField) =
-	empty.template.fold(fields) { plus(it) }
-
-fun template(selector: Selector, vararg fields: TemplateField) =
-	selector.template.fold(fields) { plus(it) }
+fun template(vararg aps: Ap) =
+	empty.template.fold(aps) { plus(it) }
 
 fun Template.invoke(term: Term): Term =
-	(selector?.let { term.invoke(it) } ?: empty.term)
-		.fold(fieldList.seq) { plus(it.invoke(term)) }
+	when (this) {
+		is EmptyTemplate -> empty.term
+		is ApTemplate -> ap.invoke(???, term)
+	}
