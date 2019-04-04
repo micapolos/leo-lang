@@ -13,7 +13,7 @@ class FunctionTest {
 		val typeBitTerm = term("type" to term("bit"))
 		val bitType = typeBitTerm.type
 
-		val typeResolver = empty.types
+		val types = empty.types
 			.put(bitZeroTerm, bitType)
 			.put(bitOneTerm, bitType)
 
@@ -26,7 +26,7 @@ class FunctionTest {
 					bitOneTerm.plus("nand" to bitZeroTerm) gives bitZeroTerm,
 					bitOneTerm.plus("nand" to bitOneTerm) gives bitZeroTerm)))
 
-		val templateResolver = empty.templateResolver
+		val functions = empty.functions
 			.put(typeBitTerm.plus("nand" to typeBitTerm).type, nandFunction)
 			.put(term("not" to typeBitTerm).type,
 				function(
@@ -37,29 +37,29 @@ class FunctionTest {
 						op(getter("not")))),
 					op(call(nandFunction))))
 
-		val function = Function(typeResolver, templateResolver)
+		val scope = Scope(types, functions)
 
-		typeResolver
-			.typeOf(bitZeroTerm.plus("nand" to bitZeroTerm))
+		types
+			.at(bitZeroTerm.plus("nand" to bitZeroTerm))
 			.assertEqualTo(typeBitTerm.plus("nand" to typeBitTerm).type)
 
-		function
+		scope
 			.invoke(bitZeroTerm.plus("nand" to bitZeroTerm))
 			.assertEqualTo(term("bit" to term("one")))
 
-		function
+		scope
 			.invoke(bitZeroTerm.plus("nand" to bitOneTerm))
 			.assertEqualTo(term("bit" to term("zero")))
 
-		function
+		scope
 			.invoke(bitOneTerm.plus("nand" to bitZeroTerm))
 			.assertEqualTo(term("bit" to term("zero")))
 
-		function
+		scope
 			.invoke(bitOneTerm.plus("nand" to bitOneTerm))
 			.assertEqualTo(term("bit" to term("zero")))
 
-		function
+		scope
 			.invoke(term("not" to term("bit" to term("zero"))))
 			.assertEqualTo(term("bit" to term("one")))
 	}

@@ -23,7 +23,7 @@ val Empty.types get() =
 fun Types.put(term: Term, type: Type) =
 	copy(termToTypeDict = termToTypeDict.put(term, type))
 
-fun Types.typeOf(term: Term): Type =
-	term.map { typeOf(this).term }.let { mappedTerm ->
+fun Types.at(term: Term): Type =
+	term.map { at(this).term }.let { mappedTerm ->
 		termToTypeDict.at(mappedTerm) ?: type(mappedTerm)
 	}

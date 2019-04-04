@@ -14,27 +14,27 @@ class TypesTest {
 			.put(term("bit" to term("one")), type(term("any" to term("bit"))))
 
 		types
-			.typeOf(term("bit"))
+			.at(term("bit"))
 			.assertEqualTo(type(term("bit")))
 
 		types
-			.typeOf(term("bit" to term("zero")))
+			.at(term("bit" to term("zero")))
 			.assertEqualTo(type(term("any" to term("bit"))))
 
 		types
-			.typeOf(term("bit" to term("one")))
+			.at(term("bit" to term("one")))
 			.assertEqualTo(type(term("any" to term("bit"))))
 
 		types
-			.typeOf(term("the" to term("bit" to term("one"))))
+			.at(term("the" to term("bit" to term("one"))))
 			.assertEqualTo(type(term("the" to term("any" to term("bit")))))
 
 		types
-			.typeOf(term("bit" to term("two")))
+			.at(term("bit" to term("two")))
 			.assertEqualTo(type(term("bit" to term("two"))))
 
 		types
-			.typeOf(
+			.at(
 				term(
 					"byte" to term(
 						"the" to term("bit" to term("zero")),
