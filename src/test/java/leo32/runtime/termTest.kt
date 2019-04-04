@@ -1,4 +1,4 @@
-package leo32.term
+package leo32.runtime
 
 import leo.base.assertEqualTo
 import leo.base.empty
@@ -38,22 +38,22 @@ class TermTest {
 		term.at("result").assertEqualTo(list(term("i32")))
 		term.at("body").assertEqualTo(list(empty.term))
 	}
-
-	@Test
-	fun resolve() {
-		val resolveFn: Term.() -> Term = { term("resolved" fieldTo this) }
-
-		empty.term.resolve(resolveFn).assertEqualTo(empty.term)
-
-		term("one").resolve(resolveFn).assertEqualTo(term("resolved" fieldTo term("one")))
-
-		term(
-			"one".termField,
-			"plus" fieldTo term("two"))
-			.resolve(resolveFn)
-			.assertEqualTo(
-				term(
-					"resolved" fieldTo term("one"),
-					"plus" fieldTo term("resolved" fieldTo term("two"))))
-	}
+//
+//	@Test
+//	fun resolve() {
+//		val resolveFn: Term.() -> Term = { term("resolved" fieldTo this) }
+//
+//		empty.term.resolve(resolveFn).assertEqualTo(empty.term)
+//
+//		term("one").resolve(resolveFn).assertEqualTo(term("resolved" fieldTo term("one")))
+//
+//		term(
+//			"one".termField,
+//			"plus" fieldTo term("two"))
+//			.resolve(resolveFn)
+//			.assertEqualTo(
+//				term(
+//					"resolved" fieldTo term("one"),
+//					"plus" fieldTo term("resolved" fieldTo term("two"))))
+//	}
 }

@@ -1,7 +1,9 @@
-package leo32.term
+package leo32.interpreter
 
 import leo.base.assertEqualTo
 import leo.base.empty
+import leo32.runtime.fieldTo
+import leo32.runtime.term
 import kotlin.test.Test
 
 class TypeResolverTest {
@@ -13,7 +15,8 @@ class TypeResolverTest {
 
 		typeResolver
 			.resolve(term("bit" fieldTo term("zero")))
-			.assertEqualTo(term("any" fieldTo term("bit")).type)
+			.assertEqualTo(
+				term("any" fieldTo term("bit")).type)
 
 		typeResolver
 			.resolve(term("bit" fieldTo term("one")))

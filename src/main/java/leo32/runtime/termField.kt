@@ -1,8 +1,7 @@
-package leo32.term
+package leo32.runtime
 
 import leo.base.appendableString
 import leo.base.empty
-import leo.base.fold
 
 data class TermField(
 	val name: String,

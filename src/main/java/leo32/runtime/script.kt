@@ -1,4 +1,4 @@
-package leo32.term
+package leo32.runtime
 
 data class Script(
 	val lhs: Term,

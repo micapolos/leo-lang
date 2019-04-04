@@ -1,11 +1,10 @@
 @file:Suppress("unused")
 
-package leo32.term
+package leo32.runtime
 
 import leo.base.*
 import leo32.base.*
 import leo32.base.List
-import leo32.field
 import leo32.seq32
 
 data class Term(

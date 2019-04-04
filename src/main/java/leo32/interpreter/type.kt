@@ -1,8 +1,10 @@
-package leo32.term
+package leo32.interpreter
 
 import leo.base.Empty
 import leo32.base.dict
 import leo32.base.dictKey
+import leo32.runtime.Term
+import leo32.runtime.seq32
 
 data class Type(
 	val term: Term)
