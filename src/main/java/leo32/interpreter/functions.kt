@@ -24,4 +24,6 @@ fun Functions.put(type: Type, function: Function) =
 	copy(typeToFunctionDict = typeToFunctionDict.put(type, function))
 
 fun Functions.at(type: Type): Function =
-	typeToFunctionDict.at(type) ?: argument.function
+	typeToFunctionDict
+		.at(type)
+		?:argument.function

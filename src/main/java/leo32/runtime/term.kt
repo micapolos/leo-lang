@@ -27,7 +27,7 @@ fun Term.at(index: I32): TermField =
 	fieldList.at(index)
 
 fun Term.at(name: String): List<Term> =
-	termListDict.at(name)!!
+	termListDict.at(name) ?: empty.list()
 
 fun Term.countAt(name: String): I32 =
 	at(name).size
@@ -37,6 +37,9 @@ fun Term.at(name: String, index: I32): Term =
 
 fun Term.onlyAt(name: String): Term =
 	at(name).only
+
+fun Term.onlyOrNullAt(name: String): Term? =
+	at(name).onlyOrNull
 
 val Term.fieldSeq get() =
 	fieldList.seq
@@ -78,3 +81,9 @@ val List<Term>.theTerm get() =
 fun Term.map(fn: Term.() -> Term): Term =
 	if (scriptOrNull == null) this
 	else scriptOrNull.lhs.fn().plus(scriptOrNull.field.map(fn))
+
+val Term.evalGet: Term get()  =
+	scriptOrNull?.evalGet?:this
+
+val Term.evalWrap: Term get() =
+	scriptOrNull?.evalWrap?:this

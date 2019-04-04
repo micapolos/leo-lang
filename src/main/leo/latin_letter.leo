@@ -1,5 +1,5 @@
 latin letter
-gives
+contains
 	either a
 	either b
 	either c

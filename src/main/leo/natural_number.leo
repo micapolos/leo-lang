@@ -1,5 +1,5 @@
 natural number
-gives
+contains
   either natural number zero
   either
     itself

@@ -1,5 +1,5 @@
 digit
-gives
+contains
 	either zero
 	either one
 	either two

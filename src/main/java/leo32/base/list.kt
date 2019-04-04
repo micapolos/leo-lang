@@ -12,10 +12,12 @@ data class List<out T: Any>(
 fun <T: Any> Empty.list() =
 	List(nullOf<T>().array, zero.i32)
 
-val <T: Any> List<T>.only: T get() {
-	assert(size == 1.i32)
-	return at(0.i32)
-}
+val <T: Any> List<T>.only: T get() =
+	onlyOrNull!!
+
+val <T: Any> List<T>.onlyOrNull: T? get() =
+	if (size != 1.i32) null
+	else at(0.i32)
 
 fun <T: Any> list(vararg ts: T) =
 	empty.list<T>().fold(ts) { add(it) }

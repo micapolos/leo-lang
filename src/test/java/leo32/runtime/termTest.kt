@@ -65,4 +65,83 @@ class TermTest {
 					"two" to term(
 						"resolved" to term("dwa"))))
 	}
+
+	@Test
+	fun evalGet() {
+		term()
+			.evalGet
+			.assertEqualTo(term())
+
+		term("one")
+			.evalGet
+			.assertEqualTo(term("one"))
+
+		term(
+			"one" to term(),
+			"one" to term())
+			.evalGet
+			.assertEqualTo(term())
+
+		term(
+			"one" to term("jeden"),
+			"one" to term())
+			.evalGet
+			.assertEqualTo(term("jeden"))
+
+		term(
+			"one" to term("jeden"),
+			"two" to term())
+			.evalGet
+			.assertEqualTo(
+				term(
+					"one" to term("jeden"),
+					"two" to term()))
+
+		term(
+			"circle" to term("radius" to term("10")),
+			"circle" to term())
+			.evalGet
+			.assertEqualTo(term("radius" to term("10")))
+
+		term(
+			"circle" to term("radius" to term("10")),
+			"circle" to term("radius"))
+			.evalGet
+			.assertEqualTo(term("10"))
+
+		term(
+			"circle" to term("radius" to term("10")),
+			"circle" to term("center"))
+			.evalGet
+			.assertEqualTo(
+				term(
+					"radius" to term("10"),
+					"center" to term()))
+	}
+
+	@Test
+	fun evalWrap() {
+		term()
+			.evalWrap
+			.assertEqualTo(term())
+
+		term("one")
+			.evalWrap
+			.assertEqualTo(term("one"))
+
+		term(
+			"red" to term(),
+			"color" to term())
+			.evalWrap
+			.assertEqualTo(term("color" to term("red")))
+
+		term(
+			"two" to term(),
+			"plus" to term("two"))
+			.evalWrap
+			.assertEqualTo(
+				term(
+					"two" to term(),
+					"plus" to term("two")))
+	}
 }
