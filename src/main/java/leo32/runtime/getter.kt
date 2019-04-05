@@ -26,5 +26,5 @@ val I32.getter get() =
 fun Get.invoke(term: Term): Term =
 	when (this) {
 		is NameGet -> term.at(name).only
-		is IndexGet -> term.at(index).value
+		is IndexGet -> term.fieldAt(index).value
 	}

@@ -10,12 +10,13 @@ import leo32.seq32
 data class Term(
 	val fieldList: List<TermField>,
 	val termListDict: Dict<String, List<Term>>,
+	val termListOrNull: TermList?,
 	val scriptOrNull: Script?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Empty.term get() =
-	Term(empty.list(), empty.stringDict(), null)
+	Term(empty.list(), empty.stringDict(), null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -23,7 +24,7 @@ val Term.fieldCount get() =
 val Term.isEmpty get() =
 	fieldCount.isZero
 
-fun Term.at(index: I32): TermField =
+fun Term.fieldAt(index: I32): TermField =
 	fieldList.at(index)
 
 fun Term.at(name: String): List<Term> =
@@ -45,12 +46,17 @@ val Term.fieldSeq get() =
 	fieldList.seq
 
 fun Term.plus(field: TermField) =
-	copy(
-		fieldList = fieldList.add(field),
-		termListDict = termListDict.update(field.name) {
+	Term(
+		fieldList.add(field),
+		termListDict.update(field.name) {
 			(this?:empty.list()).add(field.value)
 		},
-		scriptOrNull = Script(this, field))
+		when {
+				termListOrNull != null -> termListOrNull.plus(field)
+				fieldCount.int == 2 -> termListOrNull(fieldList.at(0.i32), fieldList.at(1.i32))
+				else -> null
+		},
+		Script(this, field))
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
