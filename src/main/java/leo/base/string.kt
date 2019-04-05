@@ -60,3 +60,6 @@ val Seq<Int>.codePointString
 		StringBuilder().fold(this) {
 			appendCodePoint(it)
 		}.toString()
+
+val Int.codePointString: String get() =
+	StringBuilder().appendCodePoint(this).toString()
