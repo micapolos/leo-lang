@@ -3,6 +3,7 @@ package leo32
 import leo.base.*
 import leo.binary.Bit
 import leo32.base.I32
+import leo32.base.bitSeq
 import leo32.base.i32
 
 typealias Seq32 = Seq<I32>
@@ -29,3 +30,6 @@ val String.seq32
 
 val Seq32.string32 get() =
 	map { int }.codePointString
+
+val Seq32.bitSeq get() =
+	map { bitSeq }.flat

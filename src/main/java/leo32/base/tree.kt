@@ -1,10 +1,11 @@
+@file:Suppress("unused")
+
 package leo32.base
 
-import leo.base.Seq
-import leo.base.fold
-import leo.base.orNull
-import leo.base.seqNodeOrNull
+import leo.base.*
 import leo.binary.Bit
+import leo32.Seq32
+import leo32.bitSeq
 
 sealed class Tree<out T>
 
@@ -13,6 +14,9 @@ data class LeafTree<T>(
 
 data class BranchTree<T>(
 	val branch: Branch<Tree<T>>) : Tree<T>()
+
+fun <T: Any> Empty.tree() =
+	nullOf<T>().leaf.tree
 
 val <T> Leaf<T>.tree: Tree<T>
 	get() =
@@ -65,3 +69,10 @@ fun <T : Any, R> Tree<T?>.updateEffect(bitSeq: Seq<Bit>, fn: Tree<T?>.() -> Effe
 
 fun <T> Tree<T>.updateWithDefault(bitSeq: Seq<Bit>, defaultFn: () -> T, fn: Tree<T>.() -> Tree<T>): Tree<T> =
 	cursor.toWithDefault(bitSeq, defaultFn).update(fn).collapse
+
+fun <T> Tree<T>.at32(seq32: Seq32): Tree<T>? =
+	at(seq32.map { bitSeq }.flat)
+
+fun <T: Any> Tree<T?>.put32(pair: Pair<Seq32, T>): Tree<T?> =
+	updateWithDefault(pair.first.bitSeq, { null }) { pair.second.leaf.tree }
+
