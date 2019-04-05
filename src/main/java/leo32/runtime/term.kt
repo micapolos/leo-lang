@@ -52,11 +52,11 @@ fun Term.plus(field: TermField) =
 		},
 		scriptOrNull = Script(this, field))
 
-fun term(string: String) =
-	empty.term.plus(string)
+fun term(name: String, vararg names: String) =
+	term().plus(name, *names)
 
-fun Term.plus(name: String) =
-	plus(name to empty.term)
+fun Term.plus(name: String, vararg names: String): Term =
+	fold(names.reversed()) { plus(it to term()) }.plus(name to term())
 
 fun term(vararg fields: TermField) =
 	empty.term.fold(fields) { plus(it) }
