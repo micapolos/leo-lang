@@ -9,31 +9,31 @@ import kotlin.test.Test
 class TypesTest {
 	@Test
 	fun resolve() {
-		val types = empty.types
-			.put(term("bit" to term("zero")), type(term("any" to term("bit"))))
-			.put(term("bit" to term("one")), type(term("any" to term("bit"))))
+		val kinds = empty.types
+			.put(term("bit" to term("zero")), type("any" to type("bit")))
+			.put(term("bit" to term("one")), type("any" to type("bit")))
 
-		types
+		kinds
 			.at(term("bit"))
-			.assertEqualTo(type(term("bit")))
+			.assertEqualTo(type("bit"))
 
-		types
+		kinds
 			.at(term("bit" to term("zero")))
-			.assertEqualTo(type(term("any" to term("bit"))))
+			.assertEqualTo(type("any" to type("bit")))
 
-		types
+		kinds
 			.at(term("bit" to term("one")))
-			.assertEqualTo(type(term("any" to term("bit"))))
+			.assertEqualTo(type("any" to type("bit")))
 
-		types
+		kinds
 			.at(term("the" to term("bit" to term("one"))))
-			.assertEqualTo(type(term("the" to term("any" to term("bit")))))
+			.assertEqualTo(type("the" to type("any" to type("bit"))))
 
-		types
+		kinds
 			.at(term("bit" to term("two")))
-			.assertEqualTo(type(term("bit" to term("two"))))
+			.assertEqualTo(type("bit" to type("two")))
 
-		types
+		kinds
 			.at(
 				term(
 					"byte" to term(
@@ -47,16 +47,14 @@ class TypesTest {
 						"the" to term("bit" to term("zero")))))
 			.assertEqualTo(
 				type(
-					term(
-						"byte" to term(
-							"the" to term("any" to term("bit")),
-							"the" to term("any" to term("bit")),
-							"the" to term("any" to term("bit")),
-							"the" to term("any" to term("bit")),
-							"the" to term("any" to term("bit")),
-							"the" to term("any" to term("bit")),
-							"the" to term("any" to term("bit")),
-							"the" to term("any" to term("bit"))))))
-
+					"byte" to type(
+						"the" to type("any" to type("bit")),
+						"the" to type("any" to type("bit")),
+						"the" to type("any" to type("bit")),
+						"the" to type("any" to type("bit")),
+						"the" to type("any" to type("bit")),
+						"the" to type("any" to type("bit")),
+						"the" to type("any" to type("bit")),
+						"the" to type("any" to type("bit")))))
 	}
 }

@@ -10,8 +10,10 @@ class FunctionTest {
 	fun invoke() {
 		val bitZeroTerm = term("bit" to term("zero"))
 		val bitOneTerm = term("bit" to term("one"))
-		val typeBitTerm = term("type" to term("bit"))
-		val bitType = typeBitTerm.type
+		val bitTypeTerm = term("bit" to term(
+				"either" to term("zero"),
+				"either" to term("one")))
+		val bitType = bitTypeTerm.parseType
 
 		val types = empty.types
 			.put(bitZeroTerm, bitType)
@@ -27,8 +29,8 @@ class FunctionTest {
 					bitOneTerm.plus("nand" to bitOneTerm) gives bitZeroTerm)))
 
 		val functions = empty.functions
-			.put(typeBitTerm.plus("nand" to typeBitTerm).type, nandFunction)
-			.put(term("not" to typeBitTerm).type,
+			.put(bitTypeTerm.plus("nand" to bitTypeTerm).parseType, nandFunction)
+			.put(term("not" to bitTypeTerm).parseType,
 				function(
 					argument,
 					op(getter("not")),
@@ -41,7 +43,7 @@ class FunctionTest {
 
 		types
 			.at(bitZeroTerm.plus("nand" to bitZeroTerm))
-			.assertEqualTo(typeBitTerm.plus("nand" to typeBitTerm).type)
+			.assertEqualTo(bitTypeTerm.plus("nand" to bitTypeTerm).parseType)
 
 		scope
 			.invoke(bitZeroTerm.plus("nand" to bitZeroTerm))

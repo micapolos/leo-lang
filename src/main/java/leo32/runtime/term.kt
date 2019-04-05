@@ -53,7 +53,7 @@ fun Term.plus(field: TermField) =
 		},
 		when {
 				termListOrNull != null -> termListOrNull.plus(field)
-				fieldCount.int == 2 -> termListOrNull(fieldList.at(0.i32), fieldList.at(1.i32))
+				fieldCount.int == 1 -> termListOrNull(fieldList.at(0.i32), field)
 				else -> null
 		},
 		Script(this, field))

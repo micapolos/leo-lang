@@ -20,10 +20,10 @@ val Dict<Term, Type>.types get() =
 val Empty.types get() =
 	empty.termDict<Type>().types
 
-fun Types.put(term: Term, type: Type) =
-	copy(termToTypeDict = termToTypeDict.put(term, type))
+fun Types.put(term: Term, Type: Type) =
+	copy(termToTypeDict = termToTypeDict.put(term, Type))
 
 fun Types.at(term: Term): Type =
 	term.map { at(this).term }.let { mappedTerm ->
-		termToTypeDict.at(mappedTerm) ?: type(mappedTerm)
+		termToTypeDict.at(mappedTerm) ?: mappedTerm.parseType
 	}
