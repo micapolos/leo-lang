@@ -84,7 +84,7 @@ operator fun I32.compareTo(i32: I32) =
 fun I32.bitSeq(bitMask: I32): Seq<Bit> =
 	Seq {
 		if (bitMask.isZero) null
-		else and(bitMask).bit.thenSeqNode(bitSeq(bitMask.shr1))
+		else and(bitMask).bit then bitSeq(bitMask.shr1)
 	}
 
 val I32.bitSeq: Seq<Bit> get() =

@@ -1,9 +1,8 @@
 package leo32.runtime
 
-import leo.base.assertEqualTo
-import leo.base.empty
-import leo.base.string
+import leo.base.*
 import leo32.base.list
+import leo32.string32
 import kotlin.test.Test
 
 class TermTest {
@@ -143,5 +142,18 @@ class TermTest {
 				term(
 					"two" to term(),
 					"plus" to term("two")))
+	}
+
+	@Test
+	fun seq32() {
+		term(
+			"circle" to term(
+				"radius" to term("10"),
+				"center\\s" to term(
+					"x" to term("1.2"),
+					"y" to term("1.3"))))
+			.seq32
+			.string32
+			.assertEqualTo("circle.radius.10...center\\\\s.x.1\\_2...y.1\\_3.....")
 	}
 }

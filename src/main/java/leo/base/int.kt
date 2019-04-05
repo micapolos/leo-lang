@@ -46,7 +46,7 @@ val Int.pow2: Int
 fun Int.bitSequence(count: Int): Seq<EnumBit> =
 	Seq {
 		if (count == 0) null
-		else and((count - 1).pow2).enumBit.thenSeqNode(bitSequence(count - 1))
+		else and((count - 1).pow2).enumBit then bitSequence(count - 1)
 	}
 
 

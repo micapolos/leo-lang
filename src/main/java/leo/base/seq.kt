@@ -44,11 +44,11 @@ val <T> SeqNode<T>.seq: Seq<T>
 	get() =
 		Seq { this }
 
-fun <T> T.thenSeqNode(seq: Seq<T>): SeqNode<T> =
+infix fun <T> T.then(seq: Seq<T>): SeqNode<T> =
 	SeqNode(this, seq)
 
 fun <T> seqNode(first: T, vararg remaining: T): SeqNode<T> =
-	first.thenSeqNode(seq(*remaining))
+	first then seq(*remaining)
 
 val <T> T.onlySeqNode: SeqNode<T>
 	get() =
@@ -67,7 +67,7 @@ fun <T> flatSeq(vararg seqs: Seq<T>): Seq<T> =
 fun <T> seqFrom(index: Int, items: List<T>): Seq<T> =
 	Seq {
 		if (index == items.size) null
-		else items[index].thenSeqNode(seqFrom(index + 1, items))
+		else items[index] then seqFrom(index + 1, items)
 	}
 
 fun <T> Seq<T>.then(fn: () -> Seq<T>): Seq<T> =
@@ -75,7 +75,7 @@ fun <T> Seq<T>.then(fn: () -> Seq<T>): Seq<T> =
 		seqNodeOrNull.let { seqNodeOrNull ->
 			seqNodeOrNull
 				?.first
-				?.thenSeqNode(seqNodeOrNull.remaining.then(fn))
+				?.then(seqNodeOrNull.remaining.then(fn))
 				?: fn().seqNodeOrNull
 		}
 	}
@@ -84,7 +84,7 @@ fun <T, R> R.fold(seq: Seq<T>, fn: R.(T) -> R) =
 	seq.fold(this, fn)
 
 fun <T, R> SeqNode<T>.map(fn: T.() -> R): SeqNode<R> =
-	first.fn().thenSeqNode(remaining.map(fn))
+	first.fn() then remaining.map(fn)
 
 fun <T, R> Seq<T>.map(fn: T.() -> R): Seq<R> =
 	Seq { seqNodeOrNull?.map(fn) }
@@ -100,7 +100,7 @@ val <T> Seq<Seq<T>>.flat: Seq<T>
 val <T> Iterator<T>.seq: Seq<T>
 	get() =
 		Seq {
-			if (hasNext()) next().thenSeqNode(seq)
+			if (hasNext()) next() then seq
 			else null
 		}
 
@@ -110,8 +110,8 @@ val <T> Iterable<T>.seq: Seq<T>
 
 fun <T> Seq<T>.prepend(value: T) =
 	Seq {
-		value.thenSeqNode(this)
+		value then this
 	}
 
 fun <T> Seq<T>.prepend(seq: Seq<T>) =
-	seq.then(this)
+	seq then this

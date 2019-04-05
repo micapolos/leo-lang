@@ -1,9 +1,6 @@
 package leo32
 
-import leo.base.Seq
-import leo.base.codePointSeq
-import leo.base.map
-import leo.base.onlySeq
+import leo.base.*
 import leo.binary.Bit
 import leo32.base.I32
 import leo32.base.i32
@@ -29,3 +26,6 @@ val Int.seq32
 val String.seq32
 	get() =
 		codePointSeq.map { i32 }
+
+val Seq32.string32 get() =
+	map { int }.codePointString

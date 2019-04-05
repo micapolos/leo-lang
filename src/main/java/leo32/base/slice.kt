@@ -3,7 +3,7 @@ package leo32.base
 import leo.base.Seq
 import leo.base.intSize
 import leo.base.intWithoutStart
-import leo.base.thenSeqNode
+import leo.base.then
 
 class Slice<T>(
 	val array: Array<T>,
@@ -30,5 +30,5 @@ val <T> Slice<T>.seq: Seq<T>
 	get() =
 		Seq {
 			if (range.isEmpty()) null
-			else array.at(0).thenSeqNode(without0.seq)
+			else array.at(0) then without0.seq
 		}

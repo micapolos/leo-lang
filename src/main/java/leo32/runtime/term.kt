@@ -3,9 +3,9 @@
 package leo32.runtime
 
 import leo.base.*
+import leo32.Seq32
 import leo32.base.*
 import leo32.base.List
-import leo32.seq32
 
 data class Term(
 	val fieldList: List<TermField>,
@@ -72,8 +72,8 @@ fun Appendable.append(term: Term): Appendable =
 		(if (second) first.append('.') else first).append(it) to true
 	}.first
 
-val Term.seq32 get() =
-	string.seq32
+val Term.seq32: Seq32 get() =
+	fieldList.seq.map { seq32 }.flat
 
 val Term.dictKey get() =
 	seq32.dictKey

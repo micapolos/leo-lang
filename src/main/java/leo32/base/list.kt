@@ -36,7 +36,7 @@ fun <T: Any> List<T>.at(index: I32): T =
 
 fun <T: Any> List<T>.subseq(index: I32): Seq<T> =
 	Seq {
-		if (index < size) at(index).thenSeqNode(subseq(index.inc))
+		if (index < size) at(index) then subseq(index.inc)
 		else null
 	}
 

@@ -25,7 +25,7 @@ infix fun <T> TreeCursor<T>.to(bit: Bit): TreeCursor<T>? =
 fun <T> TreeCursor<T>?.to(bitSeq: Seq<Bit>): TreeCursor<T>? =
 	fold(bitSeq) { this?.to(it) }
 
-fun <T> TreeCursor<T>.toWithDefault(bit: Bit, defaultFn: () -> T): TreeCursor<T> =
+inline fun <T> TreeCursor<T>.toWithDefault(bit: Bit, defaultFn: () -> T): TreeCursor<T> =
 	when (tree) {
 		is LeafTree -> traceTo(bit).cursorTo(defaultFn().leaf.tree)
 		is BranchTree -> traceTo(bit).cursorTo(tree.branch.at(bit))

@@ -48,7 +48,7 @@ val String.utf8ByteArray
 fun String.codePointSeqAt(index: Int): Seq<Int> =
 	Seq {
 		if (index >= length) null
-		else codePointAt(index).thenSeqNode(codePointSeqAt(offsetByCodePoints(index, 1)))
+		else codePointAt(index) then codePointSeqAt(offsetByCodePoints(index, 1))
 	}
 
 val String.codePointSeq
