@@ -18,4 +18,4 @@ fun <T : Any> Trie<T>.uncheckedAt(bitSeq: Seq<Bit>): T? =
 	tree.at(bitSeq)?.leafOrNull?.value
 
 fun <T : Any> Trie<T>.uncheckedPut(bitSeq: Seq<Bit>, value: T?): Trie<T> =
-	tree.update(bitSeq) { value.leaf.tree }.dict
+	tree.updateWithDefault(bitSeq, { null }) { value.leaf.tree }.dict

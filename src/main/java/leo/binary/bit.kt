@@ -20,6 +20,9 @@ val One.bit: Bit
 	get() =
 		OneBit(this)
 
+val randomBit get() =
+	(Math.random() > 0.5).bit
+
 inline fun <R> Bit.match(zeroFn: Zero.() -> R, oneFn: One.() -> R) =
 	when (this) {
 		is ZeroBit -> zero.zeroFn()

@@ -43,19 +43,25 @@ fun <T> Tree<T>.at(bit: Bit): Tree<T>? =
 		is BranchTree -> branch.at(bit)
 	}
 
+fun <T> Tree<T>.updateAt(bit: Bit, fn: Tree<T>.() -> Tree<T>): Tree<T> =
+	when (this) {
+		is LeafTree -> branch(bit, fn(), this).tree
+		is BranchTree -> branch.update(bit, fn).tree
+	}
+
 fun <T> Tree<T>.at(bitSeq: Seq<Bit>): Tree<T>? =
 	orNull.fold(bitSeq) { this?.at(it) }
 
 fun <T : Any, R> Tree<T?>.updateEffect(bit: Bit, fn: Tree<T?>.() -> Effect<Tree<T?>, R>): Effect<Tree<T?>, R> =
 	branch.updateEffect(bit, fn).mapTarget { tree }
 
-fun <T : Any, R> Tree<T?>.updateEffect(bitSeq: Seq<Bit>, fn: Tree<T?>.() -> Effect<Tree<T?>, R>): Effect<Tree<T?>, R> =
-	bitSeq.seqNodeOrNull.let { seqNodeOrNull ->
-		if (seqNodeOrNull == null) fn()
-		else branch.updateEffect(seqNodeOrNull.first) {
-			updateEffect(seqNodeOrNull.remaining, fn)
-		}.mapTarget { tree }
+fun <T : Any, R> Tree<T?>.updateEffect(bitSeq: Seq<Bit>, fn: Tree<T?>.() -> Effect<Tree<T?>, R>): Effect<Tree<T?>, R> {
+	val seqNodeOrNull = bitSeq.seqNodeOrNull
+	return if (seqNodeOrNull == null) fn()
+	else updateEffect(seqNodeOrNull.first) {
+		updateEffect(seqNodeOrNull.remaining, fn)
 	}
+}
 
-fun <T : Any> Tree<T?>.update(bitSeq: Seq<Bit>, fn: Tree<T?>.() -> Tree<T?>): Tree<T?> =
-	updateEffect(bitSeq) { fn().effect(Unit) }.target
+fun <T> Tree<T>.updateWithDefault(bitSeq: Seq<Bit>, defaultFn: () -> T, fn: Tree<T>.() -> Tree<T>): Tree<T> =
+	cursor.toWithDefault(bitSeq, defaultFn).update(fn).collapse
