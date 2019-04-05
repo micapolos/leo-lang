@@ -31,3 +31,6 @@ fun Scope.plus(field: TermField): Scope =
 
 fun Scope.plus(term: Term): Scope =
 	fold(term.fieldSeq) { plus(it) }
+
+fun Scope.eval(vararg fields: TermField) =
+	value.fold(fields) { plus(it) }.term

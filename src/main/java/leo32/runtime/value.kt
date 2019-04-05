@@ -26,6 +26,9 @@ fun Value.plus(field: TermField): Value =
 fun Value.plus(term: Term): Value =
 	fold(term.fieldSeq) { plus(it) }
 
+fun Value.plus(string: String): Value =
+	plus(string to term())
+
 fun value(vararg fields: TermField): Value =
 	empty.value.fold(fields) { plus(it) }
 

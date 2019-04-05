@@ -69,7 +69,7 @@ fun term(vararg fields: TermField) =
 
 fun Appendable.append(term: Term): Appendable =
 	(this to false).fold(term.fieldSeq) {
-		(if (second) first.append('.') else first).append(it) to true
+		(if (second) first.append(", ") else first).append(it) to true
 	}.first
 
 val Term.seq32: Seq32 get() =
