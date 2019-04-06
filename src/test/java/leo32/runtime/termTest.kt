@@ -16,6 +16,14 @@ class TermTest {
 			.string
 			.assertEqualTo("pencil color red")
 
+		term("pencil" to term("red" to term(), "color" to term()))
+			.string
+			.assertEqualTo("pencil(red, color)")
+
+		term("red" to term(), "color" to term(), "pencil" to term())
+			.string
+			.assertEqualTo("red, color, pencil")
+
 		term("x" to term("10"), "y" to term("12"))
 			.string
 			.assertEqualTo("x 10, y 12")
@@ -37,6 +45,10 @@ class TermTest {
 			"vec" to term("x" to term("13"), "y" to term("14")))
 			.string
 			.assertEqualTo("vec(x 10, y 12), vec(x 13, y 14)")
+
+		term("red" to term(), "color" to term())
+			.string
+			.assertEqualTo("red, color")
 
 		term(
 			"circle" to term(
