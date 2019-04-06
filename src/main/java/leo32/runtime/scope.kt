@@ -4,10 +4,9 @@ import leo.base.Empty
 import leo.base.empty
 import leo.base.fold
 import leo.base.orIfNull
-import leo32.base.Tree
-import leo32.base.at32
-import leo32.base.put32
-import leo32.base.tree
+import leo32.base.*
+import leo32.interpreter.eval
+import leo32.interpreter.macro
 
 data class Scope(
 	val functionTree: Tree<Function?>)
@@ -34,3 +33,18 @@ fun Scope.plus(term: Term): Scope =
 
 fun Scope.eval(vararg fields: TermField) =
 	value.fold(fields) { plus(it) }.term
+
+val Scope.functionOrNull get() =
+	if (functionTree is LeafTree && functionTree.leaf.value != null) functionTree.leaf.value
+	else null
+
+fun Scope.invoke(term: Term): Term =
+	when (functionTree) {
+		is LeafTree ->
+			macro(term).eval.let { macroedTerm ->
+				functionTree.leaf.value
+					?.invoke(parameter(macroedTerm))
+					?:macroedTerm
+			}
+		is BranchTree -> term
+	}

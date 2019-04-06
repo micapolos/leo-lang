@@ -204,4 +204,13 @@ class TermTest {
 		term("ala ma kota").seq32.string32.assertEqualTo("ala\\_ma\\_kota  ")
 		term("foo\\bar").seq32.string32.assertEqualTo("foo\\\\bar  ")
 	}
+
+	@Test
+	fun eval() {
+		term(
+			"x" to term("0"),
+			"x" to term())
+			.invoke(empty.scope)
+			.assertEqualTo(term("0"))
+	}
 }

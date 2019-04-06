@@ -8,6 +8,8 @@ import leo32.base.*
 import leo32.base.List
 
 data class Term(
+	val globalScope: Scope,
+	val localScope: Scope,
 	val fieldList: List<TermField>,
 	val termListDict: Dict<String, List<Term>>,
 	val termListOrNull: TermList?,
@@ -16,7 +18,7 @@ data class Term(
 }
 
 val Empty.term get() =
-	Term(empty.list(), empty.stringDict(), null, null)
+	Term(scope, scope, list(), stringDict(), null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -45,18 +47,52 @@ fun Term.onlyOrNullAt(name: String): Term? =
 val Term.fieldSeq get() =
 	fieldList.seq
 
+fun Term.invoke(term: Term): Term =
+	begin.fold(term.fieldSeq) { invoke(it) }
+
+fun Term.invoke(field: TermField): Term =
+	begin
+		.invoke(field.value)
+		.let { childTerm ->
+			(field.name to childTerm).let { resolvedField ->
+				localScope
+					.plus(resolvedField)
+					.let { newLocalScope ->
+						copy(localScope = newLocalScope)
+							.plus(resolvedField)
+							.let { resolvedTerm -> newLocalScope.invoke(resolvedTerm) }
+					}
+			}
+		}
+
+fun Term.invoke(scope: Scope) =
+	term()
+		.copy(globalScope = scope, localScope = scope)
+		.invoke(this)
+
+val Term.begin get() =
+	Term(
+		globalScope = globalScope,
+		localScope = empty.scope,
+		fieldList = empty.list(),
+		termListDict = empty.stringDict(),
+		termListOrNull = null,
+		scriptOrNull = null)
+
 fun Term.plus(field: TermField) =
 	Term(
-		fieldList.add(field),
-		termListDict.update(field.name) {
+		globalScope = globalScope,
+		localScope = localScope,
+		fieldList = fieldList.add(field),
+		termListDict = termListDict.update(field.name) {
 			(this?:empty.list()).add(field.value)
 		},
-		when {
+		termListOrNull = when {
 				termListOrNull != null -> termListOrNull.plus(field)
 				fieldCount.int == 1 -> termListOrNull(fieldList.at(0.i32), field)
 				else -> null
 		},
-		Script(this, field))
+		scriptOrNull = Script(this, field))
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
@@ -66,6 +102,9 @@ fun Term.plus(name: String, vararg names: String): Term =
 
 fun term(vararg fields: TermField) =
 	empty.term.fold(fields) { plus(it) }
+
+fun invoke(vararg fields: TermField) =
+	empty.term.fold(fields) { invoke(it) }
 
 fun Appendable.append(term: Term): Appendable =
 	tryAppend { appendSimple(term) } ?: appendComplex(term)

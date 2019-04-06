@@ -1,10 +1,14 @@
-any item, vec2, contains ( x item, y item )
-any item, vec3, contains ( x item, y item, z item )
-any item, vec4, contains ( x item, y item, z item, w item )
+anything.vec2.gives vec(.vec2.x, .vec2.y)
+anything.vec3.gives vec(.vec3.x, .vec3.y, .vec3.z)
+anything.vec4.gives vec(.vec4.x, .vec4.y, .vec4.z, .vec4.w)
 
-any item, vec2
-plus ( any item, vec2 )
-gives
-	this item, vec2
-		x ( this vec2 x, plus this plus vec2 y )
-		y ( this vec2 y, plus this plus vec2 y )
+vec(12.x, 15.y)
+vec(x 12, y 15)
+vec
+  x 12
+  y 15
+12.x
+15.y
+vec
+(x 12).(y 15).vec
+(12.x).(15.y).vec
