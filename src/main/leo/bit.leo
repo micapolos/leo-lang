@@ -13,4 +13,4 @@ bit zero, or bit one, gives bit one
 bit one, or bit zero, gives bit one
 bit one, or bit one, gives bit one
 
-bit, nand bit, gives not ( the first operand, and the second operand )
+bit, not and bit, gives not ( the first operand, and the second operand )
