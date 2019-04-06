@@ -83,6 +83,9 @@ fun <T> Seq<T>.then(fn: () -> Seq<T>): Seq<T> =
 fun <T, R> R.fold(seq: Seq<T>, fn: R.(T) -> R) =
 	seq.fold(this, fn)
 
+fun <T> Seq<T>.runAll(fn: T.() -> Unit) =
+	Unit.fold(this) { it.fn() }
+
 fun <T, R> SeqNode<T>.map(fn: T.() -> R): SeqNode<R> =
 	first.fn() then remaining.map(fn)
 
