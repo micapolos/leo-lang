@@ -1,4 +1,4 @@
-package leo32.base
+package leo.arch
 
 import leo.base.assertEqualTo
 import leo.base.assertFails
