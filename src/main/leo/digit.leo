@@ -1,12 +1,1 @@
-digit
-contains
-	either zero
-	either one
-	either two
-	either three
-	either four
-	either five
-	either six
-	either seven
-	either eight
-	either nine
+digit contains either [ zero, one, two, three, four, five, six, seven, eight, nine ]

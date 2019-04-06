@@ -1,27 +1,2 @@
-latin letter
-contains
-	either a
-	either b
-	either c
-	either d
-	either e
-	either f
-	either g
-	either h
-	either i
-	either j
-	either k
-	either l
-	either m
-	either n
-	either p
-	either q
-	either r
-	either s
-	either t
-	either u
-	either v
-	either w
-	either x
-	either y
-	either z
+latin letter contains either
+	a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
