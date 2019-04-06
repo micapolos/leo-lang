@@ -1,26 +1,30 @@
 package leo32.dsl
 
-import leo32.runtime.TermField
-import leo32.runtime.invoke
-import leo32.runtime.term
-import leo32.runtime.to
+import leo32.base.List
+import leo32.base.list
 
-fun bit(vararg fields: TermField) = "bit" to invoke(*fields)
-fun byte(vararg fields: TermField) = "byte" to invoke(*fields)
-fun center(vararg fields: TermField) = "center" to term(*fields)
-fun circle(vararg fields: TermField) = "circle" to term(*fields)
-fun either(vararg fields: TermField) = "either" to term(*fields)
-fun not(vararg fields: TermField) = "not" to term(*fields)
-fun _false(vararg fields: TermField) = "false" to term(*fields)
-fun one(vararg fields: TermField) = "one" to term(*fields)
-fun plus(vararg fields: TermField) = "plus" to term(*fields)
-fun radius(vararg fields: TermField) = "radius" to term(*fields)
-fun _true(vararg fields: TermField) = "true" to term(*fields)
-fun vec(vararg fields: TermField) = "vec" to term(*fields)
-fun w(vararg fields: TermField) = "w" to term(*fields)
-fun x(vararg fields: TermField) = "x" to term(*fields)
-fun y(vararg fields: TermField) = "y" to term(*fields)
-fun z(vararg fields: TermField) = "z" to term(*fields)
-fun zero(vararg fields: TermField) = "zero" to term(*fields)
+data class Expr(val _name: String, val _value: List<Expr>)
 
-fun i32(int: Int) = int.toString() to term() // TODO: Make it a primitive value
+// Primitives
+fun expr(name: String, vararg xs: Expr) = Expr(name, list(*xs))
+fun boolean(boolean: Boolean) = boolean(expr(boolean.toString()))
+fun int(int: Int) = int(expr(int.toString()))
+
+// Custom
+fun bit(vararg xs: Expr) = expr("bit", *xs)
+fun boolean(vararg xs: Expr) = expr("boolean", *xs)
+fun byte(vararg xs: Expr) = expr("byte", *xs)
+fun center(vararg xs: Expr) = expr("center", *xs)
+fun circle(vararg xs: Expr) = expr("circle", *xs)
+fun either(vararg xs: Expr) = expr("either", *xs)
+fun int(vararg xs: Expr) = expr("int", *xs)
+fun not(vararg xs: Expr) = expr("not", *xs)
+fun one(vararg xs: Expr) = expr("one", *xs)
+fun plus(vararg xs: Expr) = expr("plus", *xs)
+fun radius(vararg xs: Expr) = expr("radius", *xs)
+fun vec(vararg xs: Expr) = expr("vec", *xs)
+fun x(vararg xs: Expr) = expr("x", *xs)
+fun y(vararg xs: Expr) = expr("y", *xs)
+fun z(vararg xs: Expr) = expr("z", *xs)
+fun zero(vararg xs: Expr) = expr("zero", *xs)
+

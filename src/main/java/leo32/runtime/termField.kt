@@ -3,6 +3,8 @@ package leo32.runtime
 import leo.base.*
 import leo32.Seq32
 import leo32.base.i32
+import leo32.dsl.Expr
+import leo32.dsl.expr
 import leo32.seq32
 
 data class TermField(
@@ -47,3 +49,9 @@ fun Appendable.append(field: TermField): Appendable =
 			.tryAppend { append(' ').appendSimple(field.value) }
 			?: append('(').append(field.value).append(')')
 	}
+
+val Expr.field: TermField get() =
+	_name to exprTerm(_value)
+
+val TermField.expr get() =
+	Expr(name, value.exprList)

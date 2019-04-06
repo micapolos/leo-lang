@@ -6,6 +6,7 @@ import leo.base.*
 import leo32.Seq32
 import leo32.base.*
 import leo32.base.List
+import leo32.dsl.Expr
 
 data class Term(
 	val globalScope: Scope,
@@ -142,3 +143,18 @@ val Term.evalGet: Term get()  =
 
 val Term.evalWrap: Term get() =
 	scriptOrNull?.evalWrap?:this
+
+fun exprTerm(exprs: List<Expr>): Term =
+	term().fold(exprs.seq) { plus(it.field) }
+
+fun invoke(expr: Expr, vararg exprs: Expr): List<Expr> =
+	empty.term
+		.invoke(expr.field)
+		.fold(exprs) { invoke(it.field) }
+		.exprList
+
+fun expr(vararg exprs: Expr): List<Expr> =
+	list<Expr>().fold(exprs) { add(it) }
+
+val Term.exprList: List<Expr> get() =
+	list<Expr>().fold(fieldSeq) { add(it.expr) }
