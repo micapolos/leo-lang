@@ -27,4 +27,4 @@ class ArchTest {
 }
 
 fun archTest(fn: Arch.() -> Unit) =
-	archSeq.runAll(fn)
+	archSeq.runAll { fn() }

@@ -7,11 +7,11 @@ import org.junit.Test
 class WordTest {
 	@Test
 	fun incDec() {
-		archTest { testIncDec }
+		archTest { archTestIncDec }
 	}
 }
 
-val Arch.testIncDec get() =
+val <A: Arch> A.archTestIncDec get() =
 	this
 		.run { zero.assertFails { dec } }
 		.run { zero.inc.dec.assertEqualTo(zero) }
@@ -19,4 +19,3 @@ val Arch.testIncDec get() =
 		.run { max.assertFails { inc } }
 		.run { max.dec.inc.assertEqualTo(max) }
 		.run { max.dec.dec.inc.inc.assertEqualTo(max) }
-
