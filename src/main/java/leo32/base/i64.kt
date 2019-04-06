@@ -28,6 +28,14 @@ val I64.isZero
 	get() =
 		long == 0L
 
+val I64.incWrap
+	get() =
+		long.inc().i64
+
+val I64.decWrap
+	get() =
+		long.dec().i64
+
 val I64.inc
 	get() =
 		if (this == max.i64) error("i64 overflow")

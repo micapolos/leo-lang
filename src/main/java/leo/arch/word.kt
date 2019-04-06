@@ -28,6 +28,18 @@ val <A: Arch> Word<A>.arch: A get() =
 		is Word64 -> arch64 as A
 	}
 
+val <A: Arch> Word<A>.incWrap: Word<A> get() =
+	when (this) {
+		is Word32 -> i32.incWrap.word()
+		is Word64 -> i64.incWrap.word()
+	}
+
+val <A: Arch> Word<A>.decWrap: Word<A> get() =
+	when (this) {
+		is Word32 -> i32.decWrap.word()
+		is Word64 -> i64.decWrap.word()
+	}
+
 val <A: Arch> Word<A>.inc: Word<A> get() =
 	when (this) {
 		is Word32 -> i32.inc.word()

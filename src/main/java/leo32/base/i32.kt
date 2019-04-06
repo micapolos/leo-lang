@@ -24,6 +24,14 @@ val I32.isZero
 	get() =
 		int == 0
 
+val I32.incWrap
+	get() =
+		int.inc().i32
+
+val I32.decWrap
+	get() =
+		int.dec().i32
+
 val I32.inc
 	get() =
 		if (this == max.i32) error("i32 overflow")
