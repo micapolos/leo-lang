@@ -7,7 +7,37 @@ import kotlin.test.Test
 
 class TermTest {
 	@Test
-	fun string() {
+	fun simpleString() {
+		term("color" to term("red"))
+			.string
+			.assertEqualTo("color red")
+
+		term("pencil" to term("color" to term("red")))
+			.string
+			.assertEqualTo("pencil color red")
+
+		term("x" to term("10"), "y" to term("12"))
+			.string
+			.assertEqualTo("x 10, y 12")
+
+		term("vec" to term("x" to term("10"), "y" to term("12")))
+			.string
+			.assertEqualTo("vec(x 10, y 12)")
+
+		term("center" to term("vec" to term("x" to term("10"), "y" to term("12"))))
+			.string
+			.assertEqualTo("center vec(x 10, y 12)")
+
+		term("vec" to term("x" to term("percent" to term("10")), "y" to term("percent" to term("12"))))
+			.string
+			.assertEqualTo("vec(x percent 10, y percent 12)")
+
+		term(
+			"vec" to term("x" to term("10"), "y" to term("12")),
+			"vec" to term("x" to term("13"), "y" to term("14")))
+			.string
+			.assertEqualTo("vec(x 10, y 12), vec(x 13, y 14)")
+
 		term(
 			"circle" to term(
 				"radius" to term("10"),
@@ -15,7 +45,7 @@ class TermTest {
 					"x" to term("12"),
 					"y" to term("13"))))
 			.string
-			.assertEqualTo("circle(radius(10).center(x(12).y(13)))")
+			.assertEqualTo("circle(radius 10, center(x 12, y 13))")
 	}
 
 	@Test

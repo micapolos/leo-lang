@@ -16,6 +16,6 @@ class ScopeTest {
 			.leafOrNull!!
 			.value!!
 			.invoke(parameter(term("not")))
-			.assertEqualTo(null)
+			.assertEqualTo(term("true"))
 	}
 }

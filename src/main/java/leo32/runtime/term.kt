@@ -68,9 +68,19 @@ fun term(vararg fields: TermField) =
 	empty.term.fold(fields) { plus(it) }
 
 fun Appendable.append(term: Term): Appendable =
+	tryAppend { appendSimple(term) } ?: appendComplex(term)
+
+fun Appendable.appendComplex(term: Term): Appendable =
 	(this to false).fold(term.fieldSeq) {
-		(if (second) first.append(", ") else first).append(it) to true
-	}.first
+			(if (second) first.append(", ") else first).append(it) to true
+		}.first
+
+fun Appendable.appendSimple(term: Term): Appendable? =
+	when {
+			term.scriptOrNull == null -> this
+			term.scriptOrNull.lhs.isEmpty -> append(term.scriptOrNull.field)
+			else -> null
+	}
 
 val Term.seq32: Seq32 get() =
 	fieldList.seq.map { seq32 }.flat
