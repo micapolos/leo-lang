@@ -13,15 +13,16 @@ data class Term(
 	val fieldList: List<TermField>,
 	val termListDict: Dict<String, List<Term>>,
 	val termListOrNull: TermList?,
+	val isList: Boolean,
 	val nodeOrNull: Node?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.stringDict(), null, null)
+	Term(this, this, list(), empty.stringDict(), null, true, null)
 
 val Empty.term get() =
-	Term(scope, scope, list(), stringDict(), null, null)
+	Term(scope, scope, list(), stringDict(), null, true, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -46,6 +47,10 @@ fun Term.onlyAt(name: String): Term =
 
 fun Term.onlyOrNullAt(name: String): Term? =
 	at(name).onlyOrNull
+
+fun Term.simpleAtOrNull(name: String): Term? =
+	if (isList) termListDict.at(name)?.onlyOrNull
+	else null
 
 val Term.fieldSeq get() =
 	fieldList.seq
@@ -80,6 +85,7 @@ val Term.begin get() =
 		fieldList = empty.list(),
 		termListDict = empty.stringDict(),
 		termListOrNull = null,
+		isList = true,
 		nodeOrNull = null)
 
 fun Term.plus(field: TermField) =
@@ -95,6 +101,7 @@ fun Term.plus(field: TermField) =
 				fieldCount.int == 1 -> termListOrNull(fieldList.at(0.i32), field)
 				else -> null
 		},
+		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
 		nodeOrNull = Node(this, field))
 
 fun term(name: String, vararg names: String) =

@@ -20,6 +20,6 @@ class CodeTest {
 				"\tradius float 10.0\n" +
 				"\tcenter\n" +
 				"\t\tx float 12.0\n" +
-				"\t\ty float15.0")
+				"\t\ty float 15.0")
 	}
 }
