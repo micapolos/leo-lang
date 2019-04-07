@@ -3,6 +3,7 @@ package leo32.dsl
 import leo.base.assertEqualTo
 import leo32.runtime.Line
 import leo32.runtime.Script
+import leo32.runtime.boolean
 import leo32.runtime.invoke
 import kotlin.test.Test
 
@@ -38,6 +39,20 @@ class DslTest {
 		invoke(script(zero(), zero())).assertGives(script())
 		invoke(script(zero(), zero(), zero())).assertGives(script(zero()))
 		invoke(script(zero(), zero(), zero(), zero())).assertGives(script())
+	}
+
+	@Test
+	fun equality() {
+		invoke(script(doesEqual())).assertGives(script(boolean(true)))
+		invoke(script(zero(), doesEqual(zero()))).assertGives(script(boolean(true)))
+		invoke(script(zero(), doesEqual(one()))).assertGives(script(boolean(false)))
+	}
+
+	@Test
+	fun quoting() {
+		invoke(script(quote())).assertGives(script())
+		invoke(script(quote(zero()))).assertGives(script(zero()))
+		invoke(script(quote(zero(), zero()))).assertGives(script())
 	}
 }
 

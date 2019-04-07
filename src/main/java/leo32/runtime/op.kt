@@ -14,6 +14,8 @@ data class SwitchOp(
 data class CallOp(
 	val call: Call): Op()
 
+object EqualsOp: Op()
+
 fun op(get: Get) =
 	GetOp(get) as Op
 
@@ -35,4 +37,5 @@ fun Op.invoke(term: Term, parameter: Parameter): Term =
 		is FieldOp -> field.invoke(term, parameter)
 		is SwitchOp -> switch.invoke(term)
 		is CallOp -> call.invoke(term)
+		is EqualsOp -> term(termField(term == parameter.term))
 	}

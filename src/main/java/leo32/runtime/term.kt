@@ -17,6 +17,9 @@ data class Term(
 	override fun toString() = appendableString { it.append(this) }
 }
 
+val Scope.emptyTerm get() =
+	Term(this, this, list(), empty.stringDict(), null, null)
+
 val Empty.term get() =
 	Term(scope, scope, list(), stringDict(), null, null)
 
@@ -137,14 +140,25 @@ fun Term.map(fn: Term.() -> Term): Term =
 	if (nodeOrNull == null) this
 	else nodeOrNull.lhs.fn().plus(nodeOrNull.field.map(fn))
 
-val Term.evalGet: Term get()  =
-	nodeOrNull?.evalGet?:this
+val Term.evalQuote: Term? get() =
+	nodeOrNull?.evalQuote
 
-val Term.evalWrap: Term get() =
-	nodeOrNull?.evalWrap?:this
+val Term.evalGet: Term? get()  =
+	nodeOrNull?.evalGet
+
+val Term.evalWrap: Term? get() =
+	nodeOrNull?.evalWrap
+
+val Term.evalEquals: Term? get() =
+	nodeOrNull?.evalEquals
 
 val Term.evalMacros: Term get() =
-	evalGet.evalWrap
+	null
+		?:evalQuote
+		?:evalGet
+		?:evalWrap
+		?:evalEquals
+		?:this
 
 val Script.term get() =
 	term().fold(lineSeq) { plus(it.field) }
@@ -154,3 +168,9 @@ val Term.script: Script get() =
 
 fun invoke(vararg lines: Line): Script =
 	empty.term.fold(lines) { invoke(it.field) }.script
+
+val Term.clear get() =
+	globalScope.emptyTerm
+
+fun term(boolean: Boolean) =
+	term(termField(boolean))

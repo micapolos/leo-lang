@@ -113,11 +113,11 @@ class TermTest {
 	fun evalGet() {
 		term()
 			.evalGet
-			.assertEqualTo(term())
+			.assertEqualTo(null)
 
 		term("one")
 			.evalGet
-			.assertEqualTo(term("one"))
+			.assertEqualTo(null)
 
 		term(
 			"one" to term(),
@@ -135,10 +135,7 @@ class TermTest {
 			"one" to term("jeden"),
 			"two" to term())
 			.evalGet
-			.assertEqualTo(
-				term(
-					"one" to term("jeden"),
-					"two" to term()))
+			.assertEqualTo(null)
 
 		term(
 			"circle" to term("radius" to term("10")),
@@ -156,21 +153,18 @@ class TermTest {
 			"circle" to term("radius" to term("10")),
 			"circle" to term("center"))
 			.evalGet
-			.assertEqualTo(
-				term(
-					"radius" to term("10"),
-					"center" to term()))
+			.assertEqualTo(null)
 	}
 
 	@Test
 	fun evalWrap() {
 		term()
 			.evalWrap
-			.assertEqualTo(term())
+			.assertEqualTo(null)
 
 		term("one")
 			.evalWrap
-			.assertEqualTo(term("one"))
+			.assertEqualTo(null)
 
 		term(
 			"red" to term(),
@@ -182,10 +176,26 @@ class TermTest {
 			"two" to term(),
 			"plus" to term("two"))
 			.evalWrap
-			.assertEqualTo(
-				term(
-					"two" to term(),
-					"plus" to term("two")))
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun evalEquals() {
+		term()
+			.evalEquals
+			.assertEqualTo(null)
+
+		term("equals")
+			.evalEquals
+			.assertEqualTo(term(true))
+
+		term("zero" to term(), "equals" to term("zero"))
+			.evalEquals
+			.assertEqualTo(term(true))
+
+		term("zero" to term(), "equals" to term("one"))
+			.evalEquals
+			.assertEqualTo(term(false))
 	}
 
 	@Test

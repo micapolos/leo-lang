@@ -53,3 +53,6 @@ val Line.field: TermField get() =
 
 val TermField.line get() =
 	Line(name, value.script)
+
+fun termField(boolean: Boolean) =
+	"boolean" to term(if (boolean) "true" else "false")
