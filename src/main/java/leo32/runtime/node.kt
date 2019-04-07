@@ -29,3 +29,11 @@ val Node.evalQuote: Term? get() =
 val Node.evalEquals: Term? get() =
 	if (field.name == "equals") lhs.clear.plus(termField(lhs == field.value))
 	else null
+
+val Node.simpleNameOrNull get() =
+	if (lhs.isEmpty) field.simpleNameOrNull
+	else null
+
+fun Node.simpleAtOrNull(name: String) =
+	if (lhs.isEmpty) field.atOrNull(name)
+	else null

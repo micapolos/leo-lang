@@ -14,6 +14,12 @@ data class TermField(
 infix fun String.to(term: Term) =
 	TermField(this, term)
 
+val TermField.simpleNameOrNull get() =
+	notNullIf(value.isEmpty) { name }
+
+fun TermField.atOrNull(string: String) =
+	notNullIf(name == string) { value }
+
 fun TermField.map(fn: Term.() -> Term): TermField =
 	name to value.fn()
 
@@ -55,4 +61,10 @@ val TermField.line get() =
 	Line(name, value.script)
 
 fun termField(boolean: Boolean) =
-	"boolean" to term(if (boolean) "true" else "false")
+	"boolean" to term("$boolean")
+
+fun termField(int: Int) =
+	"int" to term("$int")
+
+val TermField.intOrNull get() =
+	atOrNull("int")?.simpleNameOrNull?.toIntOrNull()

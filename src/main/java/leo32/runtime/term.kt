@@ -14,21 +14,25 @@ data class Term(
 	val termListDict: Dict<String, List<Term>>,
 	val termListOrNull: TermList?,
 	val isList: Boolean,
-	val nodeOrNull: Node?) {
+	val nodeOrNull: Node?,
+	val intOrNull: Int?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.stringDict(), null, true, null)
+	Term(this, this, list(), empty.stringDict(), null, true, null, null)
 
 val Empty.term get() =
-	Term(scope, scope, list(), stringDict(), null, true, null)
+	Term(scope, scope, list(), stringDict(), null, true, null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
 
 val Term.isEmpty get() =
 	fieldCount.isZero
+
+val Term.simpleNameOrNull get() =
+	nodeOrNull?.simpleNameOrNull
 
 fun Term.fieldAt(index: I32): TermField =
 	fieldList.at(index)
@@ -49,8 +53,7 @@ fun Term.onlyOrNullAt(name: String): Term? =
 	at(name).onlyOrNull
 
 fun Term.simpleAtOrNull(name: String): Term? =
-	if (isList) termListDict.at(name)?.onlyOrNull
-	else null
+	nodeOrNull?.simpleAtOrNull(name)
 
 val Term.fieldSeq get() =
 	fieldList.seq
@@ -86,7 +89,8 @@ val Term.begin get() =
 		termListDict = empty.stringDict(),
 		termListOrNull = null,
 		isList = true,
-		nodeOrNull = null)
+		nodeOrNull = null,
+		intOrNull = null)
 
 fun Term.plus(field: TermField) =
 	Term(
@@ -102,7 +106,8 @@ fun Term.plus(field: TermField) =
 				else -> null
 		},
 		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
-		nodeOrNull = Node(this, field))
+		nodeOrNull = Node(this, field),
+		intOrNull = if (nodeOrNull == null) field.intOrNull else null)
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
@@ -181,3 +186,6 @@ val Term.clear get() =
 
 fun term(boolean: Boolean) =
 	term(termField(boolean))
+
+fun term(int: Int) =
+	term(termField(int))
