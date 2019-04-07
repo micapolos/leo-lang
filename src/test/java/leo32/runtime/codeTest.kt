@@ -17,9 +17,9 @@ class CodeTest {
 		script(circle(radius(float(10f)), center(x(float(12f)), y(float(15f)))))
 			.code.string.assertEqualTo(
 				"circle\n" +
-				"  radius float 10.0\n" +
-				"  center\n" +
-				"    x float 12.0\n" +
-				"    y float 15.0")
+				"\tradius float 10.0\n" +
+				"\tcenter\n" +
+				"\t\tx float 12.0\n" +
+				"\t\ty float15.0")
 	}
 }

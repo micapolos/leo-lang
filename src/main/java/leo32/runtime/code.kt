@@ -13,8 +13,6 @@ data class LineCode(val line: Line) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-val codeIndentString = "  "
-
 val Script.code get() =
 	ScriptCode(this)
 
@@ -34,7 +32,7 @@ fun Appendable.append(code: ScriptCode, indent: Indent): Appendable =
 	}
 
 fun Appendable.append(code: LineCode, indent: Indent, applyIndent: Boolean): Appendable = this
-	.runIf(applyIndent) { append(indent, codeIndentString) }
+	.runIf(applyIndent) { append(indent) }
 	.append(code.line.name)
 	.run {
 		when (code.line.value.lineList.size.int) {
