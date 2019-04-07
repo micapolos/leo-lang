@@ -1,6 +1,5 @@
 package leo.base
 
-import leo32.base.i32
 import org.junit.Test
 
 class StringTest {

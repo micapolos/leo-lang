@@ -1,7 +1,6 @@
 package leo.base
 
 import kotlin.test.assertEquals
-import kotlin.test.fail
 
 infix fun <V> V.assertEqualTo(other: V) =
 	assertEquals(other, this)

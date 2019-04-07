@@ -1,6 +1,8 @@
 package leo32.runtime
 
-import leo.base.*
+import leo.base.assertEqualTo
+import leo.base.empty
+import leo.base.string
 import leo32.base.list
 import leo32.string32
 import kotlin.test.Test

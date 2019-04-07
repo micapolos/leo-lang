@@ -1,6 +1,8 @@
 package leo32.base
 
-import leo.base.*
+import leo.base.Seq
+import leo.base.appendableString
+import leo.base.fold
 import leo.binary.Bit
 import leo.binary.append
 
