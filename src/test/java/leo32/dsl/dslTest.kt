@@ -30,6 +30,15 @@ class DslTest {
 		invoke(vec(x(zero()), y(one())), vec(), y(), one()).assertGives()
 		invoke(vec(x(zero()), y(one())), vec(), center()).assertGives(center(x(zero()), y(one())))
 	}
+
+	@Test
+	fun chaining() {
+		invoke(script()).assertGives(script())
+		invoke(script(zero())).assertGives(script(zero()))
+		invoke(script(zero(), zero())).assertGives(script())
+		invoke(script(zero(), zero(), zero())).assertGives(script(zero()))
+		invoke(script(zero(), zero(), zero(), zero())).assertGives(script())
+	}
 }
 
 fun Script.assertGives(vararg lines: Line) =
