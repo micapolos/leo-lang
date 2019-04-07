@@ -1,25 +1,14 @@
 package leo32.runtime
 
-import leo.base.The
-import leo.base.the
-import leo32.base.onlyOrNull
+import leo32.base.List
+import leo32.base.list
+import leo32.base.seq
 
 data class Script(
-	val lhs: Term,
-	val field: TermField)
+	val lineList: List<Line>)
 
-val Script.term get() =
-	lhs.plus(field)
+fun script(vararg lines: Line) =
+	Script(list(*lines))
 
-val Script.evalGet: Term get() =
-	lhs.onlyOrNullAt(field.name)?.let { accessedTerm ->
-		if (field.value.isEmpty) accessedTerm
-		else field.value.fieldList.onlyOrNull?.let { accessedField ->
-			accessedTerm.plus(accessedField).evalGet
-		}
-	}?:term
-
-
-val Script.evalWrap: Term get() =
-	if (field.value.isEmpty) term(field.name to lhs)
-	else term
+val Script.lineSeq get() =
+	lineList.seq

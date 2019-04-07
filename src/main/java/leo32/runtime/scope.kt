@@ -5,8 +5,6 @@ import leo.base.empty
 import leo.base.fold
 import leo.base.orIfNull
 import leo32.base.*
-import leo32.interpreter.eval
-import leo32.interpreter.macro
 
 data class Scope(
 	val functionTree: Tree<Function?>)
@@ -41,10 +39,10 @@ val Scope.functionOrNull get() =
 fun Scope.invoke(term: Term): Term =
 	when (functionTree) {
 		is LeafTree ->
-			macro(term).eval.let { macroedTerm ->
+			term.evalMacros.let { termAfterMacros ->
 				functionTree.leaf.value
-					?.invoke(parameter(macroedTerm))
-					?:macroedTerm
+					?.invoke(parameter(termAfterMacros))
+					?:termAfterMacros
 			}
 		is BranchTree -> term
 	}

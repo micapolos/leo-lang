@@ -1,7 +1,4 @@
-package leo32.interpreter
-
-import leo32.runtime.TermField
-import leo32.runtime.to
+package leo32.runtime
 
 data class EitherField(
 	val name: String,

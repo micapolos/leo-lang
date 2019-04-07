@@ -6,7 +6,6 @@ import leo.base.*
 import leo32.Seq32
 import leo32.base.*
 import leo32.base.List
-import leo32.dsl.Expr
 
 data class Term(
 	val globalScope: Scope,
@@ -14,7 +13,7 @@ data class Term(
 	val fieldList: List<TermField>,
 	val termListDict: Dict<String, List<Term>>,
 	val termListOrNull: TermList?,
-	val scriptOrNull: Script?) {
+	val nodeOrNull: Node?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
@@ -78,7 +77,7 @@ val Term.begin get() =
 		fieldList = empty.list(),
 		termListDict = empty.stringDict(),
 		termListOrNull = null,
-		scriptOrNull = null)
+		nodeOrNull = null)
 
 fun Term.plus(field: TermField) =
 	Term(
@@ -93,7 +92,7 @@ fun Term.plus(field: TermField) =
 				fieldCount.int == 1 -> termListOrNull(fieldList.at(0.i32), field)
 				else -> null
 		},
-		scriptOrNull = Script(this, field))
+		nodeOrNull = Node(this, field))
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
@@ -117,8 +116,8 @@ fun Appendable.appendComplex(term: Term): Appendable =
 
 fun Appendable.appendSimple(term: Term): Appendable? =
 	when {
-			term.scriptOrNull == null -> this
-			term.scriptOrNull.lhs.isEmpty -> append(term.scriptOrNull.field)
+			term.nodeOrNull == null -> this
+			term.nodeOrNull.lhs.isEmpty -> append(term.nodeOrNull.field)
 			else -> null
 	}
 
@@ -135,26 +134,23 @@ val List<Term>.theTerm get() =
 	empty.term.fold(seq) { plus("the" to it) }
 
 fun Term.map(fn: Term.() -> Term): Term =
-	if (scriptOrNull == null) this
-	else scriptOrNull.lhs.fn().plus(scriptOrNull.field.map(fn))
+	if (nodeOrNull == null) this
+	else nodeOrNull.lhs.fn().plus(nodeOrNull.field.map(fn))
 
 val Term.evalGet: Term get()  =
-	scriptOrNull?.evalGet?:this
+	nodeOrNull?.evalGet?:this
 
 val Term.evalWrap: Term get() =
-	scriptOrNull?.evalWrap?:this
+	nodeOrNull?.evalWrap?:this
 
-fun exprTerm(exprs: List<Expr>): Term =
-	term().fold(exprs.seq) { plus(it.field) }
+val Term.evalMacros: Term get() =
+	evalGet.evalWrap
 
-fun invoke(expr: Expr, vararg exprs: Expr): List<Expr> =
-	empty.term
-		.invoke(expr.field)
-		.fold(exprs) { invoke(it.field) }
-		.exprList
+val Script.term get() =
+	term().fold(lineSeq) { plus(it.field) }
 
-fun expr(vararg exprs: Expr): List<Expr> =
-	list<Expr>().fold(exprs) { add(it) }
+val Term.script: Script get() =
+	Script(list<Line>().fold(fieldSeq) { add(it.line) })
 
-val Term.exprList: List<Expr> get() =
-	list<Expr>().fold(fieldSeq) { add(it.expr) }
+fun invoke(vararg lines: Line): Script =
+	empty.term.fold(lines) { invoke(it.field) }.script

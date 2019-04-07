@@ -1,9 +1,7 @@
-package leo32.interpreter
+package leo32.runtime
 
 import leo.base.assertEqualTo
 import leo.base.empty
-import leo32.runtime.to
-import leo32.runtime.term
 import kotlin.test.Test
 
 class TypesTest {
