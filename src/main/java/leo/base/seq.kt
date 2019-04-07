@@ -118,3 +118,17 @@ fun <T> Seq<T>.prepend(value: T) =
 
 fun <T> Seq<T>.prepend(seq: Seq<T>) =
 	seq then this
+
+fun <T> Seq<T>.intercept(value: T) =
+	intercept(false, value)
+
+val <T: Any> Seq<T>.nullIntercept: Seq<T?> get() =
+	map { orNull }.intercept(null)
+
+
+fun <T> Seq<T>.intercept(addValue: Boolean, value: T): Seq<T> =
+	Seq { seqNodeOrNull?.intercept(addValue, value)	}
+
+fun <T> SeqNode<T>.intercept(addValue: Boolean, value: T): SeqNode<T> =
+	if (!addValue) first.then(remaining.intercept(true, value))
+	else value.then(Seq { intercept(false, value) })

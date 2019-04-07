@@ -9,5 +9,8 @@ val Int.indent
 fun Appendable.append(indent: Indent) =
 	iterate(indent.tabCount) { append('\t') }
 
-fun <R> R.increased(indent: Indent, fn: R.(Indent) -> R): R =
+fun Appendable.append(indent: Indent, string: String) =
+	iterate(indent.tabCount) { append(string) }
+
+fun <R> R.indented(indent: Indent, fn: R.(Indent) -> R): R =
 	fn(Indent(indent.tabCount + 1))

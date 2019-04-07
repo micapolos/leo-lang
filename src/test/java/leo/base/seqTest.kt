@@ -31,6 +31,14 @@ class SeqTest {
 		seq(seq(1, 2), seq(3, 4)).flat.assertContains(1, 2, 3, 4)
 		seq(seq(), seq(1, 2), seq(), seq(3, 4), seq()).flat.assertContains(1, 2, 3, 4)
 	}
+
+	@Test
+	fun intercept() {
+		seq<String>().intercept(",").assertContains()
+		seq("one").intercept(",").assertContains("one")
+		seq("one", "two").intercept(",").assertContains("one", ",", "two")
+		seq("one", "two", "three").intercept(",").assertContains("one", ",", "two", ",", "three")
+	}
 }
 
 fun <T> Seq<T>.assertContains(vararg items: T) {
