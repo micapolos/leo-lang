@@ -62,9 +62,19 @@ val Term.fieldSeq get() =
 fun Term.invoke(term: Term): Term =
 	begin.fold(term.fieldSeq) { invoke(it) }
 
-fun Term.plus(line: Line) =
-	if (line.name == "quote") plus(line.value.term)
-	else invoke(line.field)
+fun Term.plus(line: Line): Term =
+	null
+		?: evalErrorPlus(line)
+		?: evalPlusQuote(line)
+		?: invoke(line.field)
+
+fun Term.evalErrorPlus(line: Line): Term? =
+	simpleAtOrNull("error")?.let { errorTerm ->
+		clear.plus("error" to errorTerm.plus(line.field))
+	}
+
+fun Term.evalPlusQuote(line: Line): Term? =
+	notNullIf(line.name == "quote") { plus(line.value.term) }
 
 fun Term.plus(script: Script) =
 	fold(script.lineSeq, Term::plus)

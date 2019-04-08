@@ -142,6 +142,32 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun quote() {
+		script("quote")
+			.evaluate
+			.assertEqualTo(script())
+	}
+
+	@Test
+	fun quote_one() {
+		script("quote" to script("one"))
+			.evaluate
+			.assertEqualTo(script("one"))
+	}
+
+	@Test
+	fun quote_one__two() {
+		script("quote" to script(
+			"one" to script(),
+			"two" to script()))
+			.evaluate
+			.assertEqualTo(
+				script(
+					"one" to script(),
+					"two" to script()))
+	}
+
+	@Test
 	fun quote_one__equals_two() {
 		script(
 			"quote" to script(
@@ -164,5 +190,56 @@ class EvaluateTest {
 			.evaluate
 			.assertEqualTo(
 				script("boolean" to script("false")))
+	}
+
+	@Test
+	fun error() {
+		script("error")
+			.evaluate
+			.assertEqualTo(script("error"))
+	}
+
+	@Test
+	fun error_one() {
+		script("error" to script("one"))
+			.evaluate
+			.assertEqualTo(script("error" to script("one")))
+	}
+
+	@Test
+	fun error__one() {
+		script(
+			"error" to script(),
+			"one" to script())
+			.evaluate
+			.assertEqualTo(script("error" to script("one")))
+	}
+
+	@Test
+	fun error__one__two() {
+		script(
+			"error" to script(),
+			"one" to script(),
+			"two" to script())
+			.evaluate
+			.assertEqualTo(
+				script(
+					"error" to script(
+						"one" to script(),
+						"two" to script())))
+	}
+
+	@Test
+	fun error__one__equals_one() {
+		script(
+			"error" to script(),
+			"one" to script(),
+			"equals" to script("one"))
+			.evaluate
+			.assertEqualTo(
+				script(
+					"error" to script(
+						"one" to script(),
+						"equals" to script("one"))))
 	}
 }
