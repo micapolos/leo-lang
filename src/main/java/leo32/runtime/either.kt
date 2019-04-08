@@ -21,6 +21,9 @@ fun Either.plus(field: EitherField) =
 val Either.term: Term get() =
 	term().fold(fieldList.seq) { plus(it.termField) }
 
+val Either.seq32 get() =
+	term.seq32
+
 val Term.parseEither: Either
 	get() =
 	either().fold(fieldSeq) { plus(it.parseEitherField) }

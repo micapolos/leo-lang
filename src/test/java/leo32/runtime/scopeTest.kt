@@ -11,8 +11,8 @@ class ScopeTest {
 		val booleanType = type(either("true"), either("false"))
 
 		empty.scope
-			.define(term("not" to term("true")) to (booleanType to template("false")))
-			.define(term("not" to term("false")) to (booleanType to template("true")))
+			.define(term("not" to term("true")) to booleanType.gives(template("false")))
+			.define(term("not" to term("false")) to booleanType.gives(template("true")))
 			.plus("not" to term("false"))
 			.functionTree
 			.leafOrNull!!

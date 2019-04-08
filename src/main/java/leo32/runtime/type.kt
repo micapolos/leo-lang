@@ -1,8 +1,6 @@
 package leo32.runtime
 
-import leo.base.Empty
-import leo.base.fold
-import leo.base.string
+import leo.base.*
 import leo32.base.*
 import leo32.base.List
 
@@ -21,6 +19,9 @@ fun type(name: String, vararg names: String) =
 
 fun Type.plus(either: Either) =
 	copy(remainingEitherList = remainingEitherList.add(either))
+
+val Type.eitherSeq get() =
+	Seq { firstEither.then(remainingEitherList.seq) }
 
 fun <V: Any> Empty.typeDict() =
 	dict<Type, V> { term.dictKey }
@@ -43,3 +44,6 @@ val Term.parseType: Type
 val Term.rawType: Type
 	get() =
 		type(rawEither)
+
+val Type.seq32 get() =
+	term.seq32

@@ -15,3 +15,6 @@ val TermField.parseEitherField get() =
 
 val TermField.rawEitherField get() =
 	name to value.rawType
+
+val EitherField.seq32 get() =
+	termField.seq32

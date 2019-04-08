@@ -5,6 +5,7 @@ import leo.base.empty
 import leo.base.fold
 import leo.base.orIfNull
 import leo32.base.*
+import leo32.bitSeq
 
 data class Scope(
 	val functionTree: Tree<Function?>)
@@ -46,3 +47,15 @@ fun Scope.invoke(term: Term): Term =
 			}
 		is BranchTree -> term
 	}
+
+fun Scope.define(type: Type): Scope =
+	fold(type.eitherSeq) { either ->
+		define(either.term.plus(term("type")) to type.gives(template(either.term)))
+	}
+
+fun Scope.function(term: Term) =
+	functionTree
+		.at(term.seq32.bitSeq)
+		?.leafOrNull
+		?.value
+		?: term.rawType.gives(argument.template)
