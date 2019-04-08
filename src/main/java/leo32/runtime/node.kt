@@ -1,6 +1,7 @@
 package leo32.runtime
 
 import leo.base.fold
+import leo.base.ifOrNull
 import leo32.base.onlyOrNull
 
 data class Node(
@@ -25,6 +26,18 @@ val Node.evalWrap: Term? get() =
 val Node.evalEquals: Term? get() =
 	if (field.name == "equals") lhs.clear.plus(termField(lhs == field.value))
 	else null
+
+val Node.evalClassify: Term? get() =
+	ifOrNull(field == "classify" to term()) {
+		lhs.listTermSeqOrNull("either")?.let { termSeq ->
+			lhs.clear.copy(
+				globalScope = lhs.globalScope.fold(termSeq) {
+					this
+						.defineType(it, lhs)
+						.defineTemplate(term("class" to it), template(lhs))
+				})
+		}
+	}
 
 val Node.evalUnquote: Term? get() =
 	if (field.name == "unquote") lhs.clear.plus(termField(lhs == field.value))

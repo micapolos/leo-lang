@@ -56,6 +56,11 @@ fun Term.onlyOrNullAt(name: String): Term? =
 fun Term.simpleAtOrNull(name: String): Term? =
 	nodeOrNull?.simpleAtOrNull(name)
 
+fun Term.listTermSeqOrNull(key: String): Seq<Term>? =
+	notNullIf(isList && (nodeOrNull == null || nodeOrNull.field.name == key)) {
+		fieldList.seq.map { value }
+	}
+
 val Term.fieldSeq get() =
 	fieldList.seq
 
@@ -194,6 +199,9 @@ val Term.evalWrap: Term? get() =
 val Term.evalEquals: Term? get() =
 	nodeOrNull?.evalEquals
 
+val Term.evalClassify: Term? get() =
+	nodeOrNull?.evalClassify
+
 val Term.evalUnquote: Term? get() =
 	nodeOrNull?.evalUnquote
 
@@ -205,6 +213,7 @@ val Term.evalMacros: Term get() =
 		?:evalUnquote
 		?:evalIs
 		?:evalEquals
+		?:evalClassify
 		?:evalGet
 		?:evalWrap
 		?:this

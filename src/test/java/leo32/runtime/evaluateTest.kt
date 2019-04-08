@@ -193,6 +193,13 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun it_quote() {
+		script("it" to script("quote"))
+			.evaluate
+			.assertEqualTo(script("it"))
+	}
+
+	@Test
 	fun error() {
 		script("error")
 			.evaluate
@@ -242,4 +249,64 @@ class EvaluateTest {
 						"one" to script(),
 						"equals" to script("one"))))
 	}
+
+	@Test
+	fun classify() {
+		script("classify" to script())
+			.evaluate
+			.assertEqualTo(script())
+	}
+
+	@Test
+	fun either_zero___classify() {
+		script(
+			"either" to script("zero"),
+			"classify" to script())
+			.evaluate
+			.assertEqualTo(script())
+	}
+
+	@Test
+	fun either_zero___either_one___classify() {
+		script(
+			"either" to script("zero"),
+			"either" to script("one"),
+			"classify" to script())
+			.evaluate
+			.assertEqualTo(script())
+	}
+
+//	@Test
+//	fun either_zero___classify__zero__class() {
+//		script(
+//			"either" to script("zero"),
+//			"classify" to script(),
+//			"zero" to script(),
+//			"class" to script())
+//			.evaluate
+//			.assertEqualTo(script())
+//	}
+//
+//	@Test
+//	fun either_zero___either_one___classify__zero__class() {
+//		script(
+//			"either" to script("zero"),
+//			"either" to script("one"),
+//			"classify" to script(),
+//			"class" to script("zero"))
+//			.evaluate
+//			.assertEqualTo(script())
+//	}
+//
+//	@Test
+//	fun either_zero___either_one___classify__one__class() {
+//		script(
+//			"either" to script("zero"),
+//			"either" to script("one"),
+//			"classify" to script(),
+//			"one" to script(),
+//			"class" to script())
+//			.evaluate
+//			.assertEqualTo(script())
+//	}
 }

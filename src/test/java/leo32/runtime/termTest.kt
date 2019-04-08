@@ -1,5 +1,6 @@
 package leo32.runtime
 
+import leo.base.assertContains
 import leo.base.assertEqualTo
 import leo.base.empty
 import leo.base.string
@@ -294,5 +295,14 @@ class TermTest {
 		term.plus(bitOne).typeTerm.assertEqualTo(bitType)
 		term.plus(bitTwo).typeTerm.assertEqualTo(term.plus(bitTwo))
 		term.plus("the" to term.plus(bitZero)).typeTerm.assertEqualTo(term.plus("the" to bitType))
+	}
+
+	@Test
+	fun listTermSeqOrNull() {
+		term().listTermSeqOrNull("foo")!!.assertContains()
+		term("foo").listTermSeqOrNull("foo")!!.assertContains(term())
+		term("foo" to term("bar")).listTermSeqOrNull("foo")!!.assertContains(term("bar"))
+		term("foo" to term("bar"), "foo" to term("zar")).listTermSeqOrNull("foo")!!.assertContains(term("bar"), term("zar"))
+		term("foo" to term(), "zoo" to term()).listTermSeqOrNull("foo").assertEqualTo(null)
 	}
 }
