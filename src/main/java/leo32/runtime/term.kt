@@ -109,11 +109,17 @@ fun Term.plus(field: TermField) =
 		nodeOrNull = Node(this, field),
 		intOrNull = if (nodeOrNull == null) field.intOrNull else null)
 
+fun Term.plus(term: Term) =
+	fold(term.fieldSeq) { plus(it) }
+
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
 
 fun Term.plus(name: String, vararg names: String): Term =
 	fold(names.reversed()) { plus(it to term()) }.plus(name to term())
+
+fun Term.leafPlus(term: Term): Term =
+	nodeOrNull?.leafPlus(term)?.term ?: plus(term)
 
 fun term(vararg fields: TermField) =
 	empty.term.fold(fields) { plus(it) }

@@ -68,3 +68,6 @@ fun termField(int: Int) =
 
 val TermField.intOrNull get() =
 	atOrNull("int")?.simpleNameOrNull?.toIntOrNull()
+
+fun TermField.leafPlus(term: Term) =
+	name to value.leafPlus(term)
