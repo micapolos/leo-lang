@@ -37,3 +37,12 @@ val Node.simpleNameOrNull get() =
 fun Node.simpleAtOrNull(name: String) =
 	if (lhs.isEmpty) field.atOrNull(name)
 	else null
+
+fun Node.plus(field: TermField) =
+	Node(term, field)
+
+fun Node.plus(term: Term) =
+	fold(term.fieldSeq) { plus(it) }
+
+fun Node.leafPlus(term: Term) =
+	copy(field = field.leafPlus(term))

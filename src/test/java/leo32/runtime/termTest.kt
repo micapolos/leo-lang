@@ -63,6 +63,34 @@ class TermTest {
 	}
 
 	@Test
+	fun leafPlus() {
+		term()
+			.leafPlus(term())
+			.assertEqualTo(term())
+
+		term()
+			.leafPlus(term("one"))
+			.assertEqualTo(term("one"))
+
+		term("one")
+			.leafPlus(term("two"))
+			.assertEqualTo(term("one" to term("two")))
+
+		term("one" to term("two"))
+			.leafPlus(term("three"))
+			.assertEqualTo(term("one" to term("two" to term("three"))))
+
+		term(
+			"anything" to term(),
+			"one" to term())
+			.leafPlus(term("two"))
+			.assertEqualTo(
+				term(
+					"anything" to term(),
+					"one" to term("two")))
+	}
+
+	@Test
 	fun at() {
 		val term = term(
 			"param" to term("0"),
