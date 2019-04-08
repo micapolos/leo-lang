@@ -9,3 +9,6 @@ infix fun String.to(function: Function) =
 
 fun FunctionField.invoke(term: Term, parameter: Parameter): Term =
 	term.plus(name to value.invoke(parameter))
+
+val TermField.functionField get() =
+	name to function(value)

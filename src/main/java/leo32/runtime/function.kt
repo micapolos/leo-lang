@@ -38,6 +38,12 @@ fun Function.plus(name: String) =
 fun function(vararg ops: Op) =
 	empty.function.fold(ops) { plus(it) }
 
+fun Function.plus(field: TermField): Function =
+	plus(field.functionField)
+
+fun function(term: Term): Function =
+	function().fold(term.fieldSeq) { plus(it) }
+
 fun function(argument: Argument, vararg ops: Op) =
 	argument.function.fold(ops) { plus(it) }
 

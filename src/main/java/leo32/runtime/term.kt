@@ -170,12 +170,16 @@ val Term.evalWrap: Term? get() =
 val Term.evalEquals: Term? get() =
 	nodeOrNull?.evalEquals
 
+val Term.evalIs: Term? get() =
+	nodeOrNull?.evalIs
+
 val Term.evalMacros: Term get() =
 	null
 		?:evalQuote
 		?:evalGet
 		?:evalWrap
 		?:evalEquals
+		?:evalIs
 		?:this
 
 val Script.term get() =
@@ -195,3 +199,7 @@ fun term(boolean: Boolean) =
 
 fun term(int: Int) =
 	term(termField(int))
+
+// TODO: Re-define reverse function!!!
+fun Term.defineIs(term: Term) =
+	copy(globalScope = globalScope.define(this to function(term.leafPlus(this))))
