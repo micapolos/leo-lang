@@ -14,9 +14,11 @@ data class Script(
 fun script(vararg lines: Line) =
 	Script(list(*lines))
 
+fun script(name: String) =
+	script(name to script())
+
 val Script.lineSeq get() =
 	lineList.seq
 
 fun Appendable.append(script: Script): Appendable =
 	fold(script.lineSeq) { append(it) }
-

@@ -71,3 +71,7 @@ val TermField.intOrNull get() =
 
 fun TermField.leafPlus(term: Term) =
 	name to value.leafPlus(term)
+
+val TermField.typeTermField get() =
+	name to value.typeTerm
+

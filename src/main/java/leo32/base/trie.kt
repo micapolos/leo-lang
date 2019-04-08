@@ -7,15 +7,18 @@ import leo.binary.Bit
 data class Trie<out T>(
 	val tree: Tree<T?>)
 
-val <T : Any> Tree<T?>.dict
+val <T : Any> Tree<T?>.trie
 	get() =
 		Trie(this)
 
 fun <T : Any> emptyTrie() =
-	nullOf<T>().leaf.tree.dict
+	nullOf<T>().leaf.tree.trie
 
 fun <T : Any> Trie<T>.uncheckedAt(bitSeq: Seq<Bit>): T? =
 	tree.at(bitSeq)?.leafOrNull?.value
 
 fun <T : Any> Trie<T>.uncheckedPut(bitSeq: Seq<Bit>, value: T?): Trie<T> =
-	tree.updateWithDefault(bitSeq, { null }) { value.leaf.tree }.dict
+	tree.updateWithDefault(bitSeq, { null }) { value.leaf.tree }.trie
+
+fun <T: Any> Trie<T?>.atOrNull(bitSeq: Seq<Bit>): Trie<T>? =
+	tree.at(bitSeq)?.trie

@@ -8,6 +8,7 @@ data class Line(val name: String, val value: Script) {
 }
 
 fun line(name: String, vararg xs: Line) = Line(name, script(*xs))
+infix fun String.to(script: Script) = Line(this, script)
 
 fun boolean(boolean: Boolean) = boolean(line(boolean.toString()))
 fun byte(byte: Byte) = byte(line(byte.toString()))
@@ -32,4 +33,3 @@ fun Appendable.append(line: Line): Appendable =
 		.append('(')
 		.append(line.value)
 		.append(')')
-

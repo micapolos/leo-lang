@@ -4,23 +4,36 @@ package leo32.runtime
 
 import leo.base.Empty
 import leo.base.empty
-import leo32.base.Dict
-import leo32.base.at
-import leo32.base.put
+import leo.base.fold
+import leo32.base.*
+import leo32.bitSeq
 
-data class Types(
-	val termToTypeDict: Dict<Term, Type>)
+data class TypeTerms(
+	val typeTermTree: Tree<Term?>)
 
-val Dict<Term, Type>.types get() =
-	Types(this)
+val Tree<Term?>.typeTerms get() =
+	TypeTerms(this)
 
-val Empty.types get() =
-	empty.termDict<Type>().types
+val Empty.typeTerms get() =
+	tree<Term>().typeTerms
 
-fun Types.put(term: Term, Type: Type) =
-	copy(termToTypeDict = termToTypeDict.put(term, Type))
+fun TypeTerms.put(term: Term, type: Term) =
+	copy(typeTermTree = typeTermTree.put(term.seq32.bitSeq, type))
 
-fun Types.at(term: Term): Type =
-	term.map { at(this).term }.let { mappedTerm ->
-		termToTypeDict.at(mappedTerm) ?: mappedTerm.parseType
-	}
+fun TypeTerms.typeTerm(term: Term): Term =
+	plus(term).typeOrNull ?: term
+
+fun TypeTerms.resolveValue(field: TermField) =
+	field.map { typeTerm(this) }
+
+fun TypeTerms.plus(field: TermField): TypeTerms =
+	typeTermTree
+		.at(field.seq32.bitSeq)
+		?.typeTerms
+		?:empty.typeTerms
+
+fun TypeTerms.plus(term: Term): TypeTerms =
+	fold(term.fieldSeq) { plus(it) }
+
+val TypeTerms.typeOrNull get() =
+	typeTermTree.leafOrNull?.value

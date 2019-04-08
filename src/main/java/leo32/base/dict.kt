@@ -17,6 +17,9 @@ fun <K, V : Any> Trie<V>.dict(dictKey: K.() -> DictKey) =
 fun <K, V : Any> Dict<K, V>.at(key: K) =
 	trie.uncheckedAt(key.dictKey().bitSeq)
 
+fun <K, V : Any> Dict<K, V>.dictOrNullAt(key: K): Dict<K, V>? =
+	trie.atOrNull(key.dictKey().bitSeq)?.let { copy(trie = it) }
+
 fun <K, V : Any> Dict<K, V>.put(key: K, value: V) =
 	copy(trie = trie.uncheckedPut(key.dictKey().bitSeq, value))
 
@@ -32,6 +35,9 @@ fun <K, V : Any> Dict<K, V>.computeAt(key: K, compute: () -> V): Effect<Dict<K, 
 			else effect(value to false)
 		}
 	}
+
+val <K, V: Any> Dict<K, V>.valueOrNull: V? get() =
+	trie.tree.leafOrNull?.value
 
 // === core dicts ===
 

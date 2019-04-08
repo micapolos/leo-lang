@@ -6,7 +6,9 @@ import leo32.base.List
 
 data class Type(
 	val firstEither: Either,
-	val remainingEitherList: List<Either>)
+	val remainingEitherList: List<Either>) {
+	override fun toString() = term.string
+}
 
 fun type(either: Either, vararg eithers: Either) =
 	Type(either, list(*eithers))

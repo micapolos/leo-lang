@@ -277,4 +277,22 @@ class TermTest {
 		term("int" to term("-1")).intOrNull.assertEqualTo(-1)
 		term("int" to term("123123123123")).intOrNull.assertEqualTo(null)
 	}
+
+	@Test
+	fun types() {
+		val bitType = term("bit" to term("either" to term("zero"), "either" to term("one")))
+		val bitZero = term("bit" to term("zero"))
+		val bitOne = term("bit" to term("one"))
+		val bitTwo = term("bit" to term("two"))
+
+		val term = empty.scope
+			.defineType(bitZero, bitType)
+			.defineType(bitOne, bitType)
+			.emptyTerm
+
+		term.plus(bitZero).typeTerm.assertEqualTo(bitType)
+		term.plus(bitOne).typeTerm.assertEqualTo(bitType)
+		term.plus(bitTwo).typeTerm.assertEqualTo(term.plus(bitTwo))
+		term.plus("the" to term.plus(bitZero)).typeTerm.assertEqualTo(term.plus("the" to bitType))
+	}
 }

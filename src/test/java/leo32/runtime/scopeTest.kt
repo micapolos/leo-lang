@@ -1,23 +1,33 @@
 package leo32.runtime
 
-import leo.base.assertEqualTo
-import leo.base.empty
-import leo32.base.leafOrNull
-import kotlin.test.Test
-
 class ScopeTest {
-	@Test
-	fun define() {
-		val booleanType = type(either("true"), either("false"))
-
-		empty.scope
-			.define(term("not" to term("true")) to booleanType.gives(template("false")))
-			.define(term("not" to term("false")) to booleanType.gives(template("true")))
-			.plus("not" to term("false"))
-			.functionTree
-			.leafOrNull!!
-			.value!!
-			.invoke(parameter(term("not")))
-			.assertEqualTo(term("true"))
-	}
+//	@Test
+//	fun define() {
+//		val bitType = term("bit" to term("either" to term("zero"), "either" to term("one")))
+//
+//		val scope = empty.scope
+//			.defineType(term("bit" to term("zero")), bitType)
+//			.defineType(term("bit" to term("one")), bitType)
+//			.defineTemplate(
+//				term("negate" to bitType),
+//				template(
+//					op(
+//						switch(
+//							term("bit" to term("zero")) gives term("bit" to term("one")),
+//							term("bit" to term("one")) gives term("bit" to term("zero"))))))
+//
+//		scope.emptyTerm
+//			.invoke(term("bit" to term("zero")))
+//			.assertEqualTo(scope.emptyTerm.plus(term("bit" to term("zero"))))
+//	}
+//
+//	@Test
+//	fun defineType() {
+//		val type = type("boolean" to type(either("false"), either("true")))
+//		val scope = empty.scope.define(type)
+//
+//		scope
+//			.type(term("boolean" to term("false")))
+//			.assertEqualTo(type)
+//	}
 }

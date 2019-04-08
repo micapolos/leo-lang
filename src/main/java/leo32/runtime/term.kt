@@ -15,15 +15,16 @@ data class Term(
 	val termListOrNull: TermList?,
 	val isList: Boolean,
 	val nodeOrNull: Node?,
-	val intOrNull: Int?) {
+	val intOrNull: Int?,
+	val typeTermOrNull: Term?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.stringDict(), null, true, null, null)
+	Term(this, this, list(), empty.stringDict(), null, true, null, null, null)
 
 val Empty.term get() =
-	Term(scope, scope, list(), stringDict(), null, true, null, null)
+	Term(scope, scope, list(), stringDict(), null, true, null, null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -61,6 +62,13 @@ val Term.fieldSeq get() =
 fun Term.invoke(term: Term): Term =
 	begin.fold(term.fieldSeq) { invoke(it) }
 
+fun Term.plus(line: Line) =
+	if (line.name == "quote") plus(line.value.term)
+	else invoke(line.field)
+
+fun Term.plus(script: Script) =
+	fold(script.lineSeq, Term::plus)
+
 fun Term.invoke(field: TermField): Term =
 	begin
 		.invoke(field.value)
@@ -90,9 +98,10 @@ val Term.begin get() =
 		termListOrNull = null,
 		isList = true,
 		nodeOrNull = null,
-		intOrNull = null)
+		intOrNull = null,
+		typeTermOrNull = null)
 
-fun Term.plus(field: TermField) =
+fun Term.plus(field: TermField): Term =
 	Term(
 		globalScope = globalScope,
 		localScope = localScope,
@@ -107,10 +116,18 @@ fun Term.plus(field: TermField) =
 		},
 		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
 		nodeOrNull = Node(this, field),
-		intOrNull = if (nodeOrNull == null) field.intOrNull else null)
+		intOrNull = if (nodeOrNull == null) field.intOrNull else null,
+		typeTermOrNull = field.typeTermField.let { typeField ->
+			localScope.typeTerms.plus(typeField).typeOrNull ?:
+				if (field.value.typeTermOrNull == null) null
+				else typeTerm.plus(typeField)
+		})
 
 fun Term.plus(term: Term) =
 	fold(term.fieldSeq) { plus(it) }
+
+val Term.typeTerm get() =
+	typeTermOrNull?:this
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
@@ -121,7 +138,7 @@ fun Term.plus(name: String, vararg names: String): Term =
 fun Term.leafPlus(term: Term): Term =
 	nodeOrNull?.leafPlus(term)?.term ?: plus(term)
 
-fun term(vararg fields: TermField) =
+fun term(vararg fields: TermField): Term =
 	empty.term.fold(fields) { plus(it) }
 
 fun invoke(vararg fields: TermField) =
@@ -158,9 +175,6 @@ fun Term.map(fn: Term.() -> Term): Term =
 	if (nodeOrNull == null) this
 	else nodeOrNull.lhs.fn().plus(nodeOrNull.field.map(fn))
 
-val Term.evalQuote: Term? get() =
-	nodeOrNull?.evalQuote
-
 val Term.evalGet: Term? get()  =
 	nodeOrNull?.evalGet
 
@@ -170,16 +184,19 @@ val Term.evalWrap: Term? get() =
 val Term.evalEquals: Term? get() =
 	nodeOrNull?.evalEquals
 
+val Term.evalUnquote: Term? get() =
+	nodeOrNull?.evalUnquote
+
 val Term.evalIs: Term? get() =
 	nodeOrNull?.evalIs
 
 val Term.evalMacros: Term get() =
 	null
-		?:evalQuote
+		?:evalUnquote
+		?:evalIs
+		?:evalEquals
 		?:evalGet
 		?:evalWrap
-		?:evalEquals
-		?:evalIs
 		?:this
 
 val Script.term get() =
@@ -189,7 +206,7 @@ val Term.script: Script get() =
 	Script(list<Line>().fold(fieldSeq) { add(it.line) })
 
 fun invoke(vararg lines: Line): Script =
-	empty.term.fold(lines) { invoke(it.field) }.script
+	term().fold(lines) { invoke(it.field) }.script
 
 val Term.clear get() =
 	globalScope.emptyTerm
