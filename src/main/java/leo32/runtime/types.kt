@@ -1,15 +1,12 @@
 @file:Suppress("unused")
 
-package leo32.interpreter
+package leo32.runtime
 
 import leo.base.Empty
 import leo.base.empty
 import leo32.base.Dict
 import leo32.base.at
 import leo32.base.put
-import leo32.runtime.Term
-import leo32.runtime.map
-import leo32.runtime.termDict
 
 data class Types(
 	val termToTypeDict: Dict<Term, Type>)

@@ -199,7 +199,3 @@ fun term(boolean: Boolean) =
 
 fun term(int: Int) =
 	term(termField(int))
-
-// TODO: Re-define reverse function!!!
-fun Term.defineIs(term: Term) =
-	copy(globalScope = globalScope.define(this to function(term.leafPlus(this))))

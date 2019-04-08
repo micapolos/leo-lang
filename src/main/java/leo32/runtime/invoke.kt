@@ -1,10 +1,10 @@
 package leo32.runtime
 
 data class Call(
-	val function: Function)
+	val template: Template)
 
-fun call(function: Function) =
-	Call(function)
+fun call(template: Template) =
+	Call(template)
 
 fun Call.invoke(term: Term) =
-	function.invoke(parameter(term))
+	template.invoke(parameter(term))

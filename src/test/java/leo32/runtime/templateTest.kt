@@ -4,26 +4,26 @@ import leo.base.assertEqualTo
 import leo.base.empty
 import kotlin.test.Test
 
-class FunctionTest {
+class TemplateTest {
 	@Test
 	fun emptyFunction() {
-		function()
+		template()
 			.invoke(parameter(term("one")))
 			.assertEqualTo(empty.term)
 	}
 
 	@Test
 	fun applicationFunction() {
-		function("one")
+		template("one")
 			.invoke(parameter(term()))
 			.assertEqualTo(term("one"))
 	}
 
 	@Test
 	fun argumentFunction() {
-		function(
+		template(
 			argument,
-			"plus" op function("one"))
+			"plus" op template("one"))
 			.invoke(parameter(term("two")))
 			.assertEqualTo(
 				term(
@@ -33,8 +33,8 @@ class FunctionTest {
 
 	@Test
 	fun invokeFunction() {
-		val plusOneFunction = function(argument, "plus" op function("one"))
-		function(
+		val plusOneFunction = template(argument, "plus" op template("one"))
+		template(
 			argument,
 			op(call(plusOneFunction)))
 			.invoke(parameter(term("two")))
@@ -46,7 +46,7 @@ class FunctionTest {
 
 	@Test
 	fun switchFunction() {
-		val function = function(
+		val function = template(
 			argument,
 			op(
 				switch(

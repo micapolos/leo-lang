@@ -7,14 +7,16 @@ import kotlin.test.Test
 class ValueTest {
 	@Test
 	fun syntax() {
+		val booleanType = type(either("false"), either("true"))
+
 		val scope = empty.scope
-			.define(term("not" to term("true")) to function("false"))
-			.define(term("not" to term("false")) to function("true"))
-			.define(term("true" to term(), "negate" to term()) to function("false"))
-			.define(term("false" to term(), "negate" to term()) to function("true"))
-			.define(term("kura" to term()) to function("jajko"))
-			.define(term("jajko" to term()) to function("kura"))
-			.define(term("fixpoint" to term()) to function("fixpoint"))
+			.define(term("not" to term("true")) to (booleanType to template("false")))
+			.define(term("not" to term("false")) to (booleanType to template("true")))
+			.define(term("true" to term(), "negate" to term()) to (booleanType to template("false")))
+			.define(term("false" to term(), "negate" to term()) to (booleanType to template("true")))
+			.define(term("kura" to term()) to (type("jajko") to template("jajko")))
+			.define(term("jajko" to term()) to (type("kura") to template("kura")))
+			.define(term("fixpoint" to term()) to (type("fixpoint") to template("fixpoint")))
 
 		scope.value
 			.term.assertEqualTo(term())

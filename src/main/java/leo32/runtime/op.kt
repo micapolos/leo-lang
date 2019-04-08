@@ -28,8 +28,8 @@ fun op(switch: Switch) =
 fun op(call: Call) =
 	CallOp(call) as Op
 
-infix fun String.op(function: Function) =
-	op(to(function))
+infix fun String.op(template: Template) =
+	op(to(template))
 
 fun Op.invoke(term: Term, parameter: Parameter): Term =
 	when (this) {

@@ -2,13 +2,13 @@ package leo32.runtime
 
 data class FunctionField(
 	val name: String,
-	val value: Function)
+	val value: Template)
 
-infix fun String.to(function: Function) =
-	FunctionField(this, function)
+infix fun String.to(template: Template) =
+	FunctionField(this, template)
 
 fun FunctionField.invoke(term: Term, parameter: Parameter): Term =
 	term.plus(name to value.invoke(parameter))
 
 val TermField.functionField get() =
-	name to function(value)
+	name to template(value)

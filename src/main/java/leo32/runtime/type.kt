@@ -1,11 +1,10 @@
-package leo32.interpreter
+package leo32.runtime
 
 import leo.base.Empty
 import leo.base.fold
 import leo.base.string
 import leo32.base.*
 import leo32.base.List
-import leo32.runtime.*
 
 data class Type(
 	val firstEither: Either,
@@ -32,7 +31,8 @@ val Type.term get(): Term =
   else term("either" to firstEither.term).fold(remainingEitherList.seq) { plus("either" to it.term) }
 
 // TODO: Quote "either"
-val Term.parseType: Type get() =
+val Term.parseType: Type
+	get() =
 	if (termListOrNull != null && termListOrNull.key.string == "either")
 		type(termListOrNull.term0.parseEither, termListOrNull.term1.parseEither)
 			.fold(termListOrNull.remainingTermList.seq) { plus(it.parseEither) }
@@ -40,5 +40,6 @@ val Term.parseType: Type get() =
 		type(fieldAt(0.i32).value.parseEither)
 	else type(parseEither)
 
-val Term.rawType: Type get() =
-	type(rawEither)
+val Term.rawType: Type
+	get() =
+		type(rawEither)
