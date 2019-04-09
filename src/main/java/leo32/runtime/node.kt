@@ -36,7 +36,7 @@ val Node.evalHas: Term? get() =
 		}?:lhs.clear.set(lhs.globalScope.defineTemplate(lhs, template(lhs.leafPlus(field.value))))
 	}
 
-val Node.evalClass: Term? get() =
+val Node.evalClass:  Term? get() =
 	ifOrNull(field.name == "class" && lhs.isEmpty) {
 		lhs.clear.plus(lhs.globalScope.typeTerms.typeTerm(field.value))
 	}

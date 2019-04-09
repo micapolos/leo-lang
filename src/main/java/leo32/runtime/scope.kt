@@ -5,16 +5,23 @@ import leo.base.fold
 
 data class Scope(
 	val typeTerms: TypeTerms,
-	val templates: Templates)
+	val templates: Templates,
+	val functions: Functions)
 
 val Empty.scope get() =
-	Scope(typeTerms, templates)
+	Scope(typeTerms, templates, functions)
 
 fun Scope.defineType(term: Term, type: Term) =
 	copy(typeTerms = typeTerms.put(term, type))
 
 fun Scope.defineTemplate(type: Term, template: Template) =
 	copy(templates = templates.put(type, template))
+
+fun Scope.define(parameterTerm: Term, function: Function) =
+	copy(
+		typeTerms = typeTerms.put(parameterTerm, function.parameterTypeTerm),
+		templates = templates.put(function.parameterTypeTerm, function.template),
+		functions = functions.put(parameterTerm, function))
 
 fun Scope.plus(field: TermField): Scope =
 	copy(typeTerms = typeTerms.plus(field))

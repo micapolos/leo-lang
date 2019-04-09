@@ -252,13 +252,12 @@ class TermTest {
 					"y" to term("1.3"))))
 			.seq32
 			.string32
-			.assertEqualTo("circle radius 10   center x 1.2   y 1.3     ")
+			.assertEqualTo("circle(radius(10())center(x(1.2())y(1.3())))")
 	}
 
 	@Test
 	fun seq32_escaping() {
-		term("ala ma kota").seq32.string32.assertEqualTo("ala\\_ma\\_kota  ")
-		term("foo\\bar").seq32.string32.assertEqualTo("foo\\\\bar  ")
+		term("\\()").seq32.string32.assertEqualTo("\\\\\\(\\)()")
 	}
 
 	@Test

@@ -23,15 +23,17 @@ fun TermField.atOrNull(string: String) =
 fun TermField.map(fn: Term.() -> Term): TermField =
 	name to value.fn()
 
-const val termSeparatorChar = ' '
-val termSeparatorSeq32 = seq(termSeparatorChar.i32)
+const val termBeginChar = '('
+const val termEndChar = ')'
+const val termEscapeChar = '\\'
 
 val String.nameSeq32 get() =
 	seq32
 		.map {
 			when (this) {
-				termSeparatorChar.i32 -> seq('\\'.i32, '_'.i32)
-				'\\'.i32 -> seq('\\'.i32, '\\'.i32)
+				termBeginChar.i32 -> seq(termEscapeChar.i32, termBeginChar.i32)
+				termEndChar.i32 -> seq(termEscapeChar.i32, termEndChar.i32)
+				termEscapeChar.i32 -> seq(termEscapeChar.i32, termEscapeChar.i32)
 				else -> onlySeq
 			}
 		}
@@ -39,9 +41,9 @@ val String.nameSeq32 get() =
 
 val TermField.seq32: Seq32 get() =
 	name.nameSeq32.then {
-		termSeparatorSeq32.then {
+		termBeginChar.i32.onlySeq.then {
 			value.seq32.then {
-				termSeparatorSeq32
+				termEndChar.i32.onlySeq
 			}
 		}
 	}

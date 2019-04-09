@@ -83,15 +83,16 @@ fun Term.invoke(line: Line): Term =
 	begin
 		.plus(line.value)
 		.let { childTerm ->
-			(line.name to childTerm).let { resolvedField ->
-				localScope
-					.plus(resolvedField)
-					.let { newLocalScope ->
-						copy(localScope = newLocalScope)
-							.plus(resolvedField)
-							.let { resolvedTerm -> newLocalScope.invoke(resolvedTerm) }
-					}
-			}
+			plusResolved(line.name to childTerm)
+		}
+
+fun Term.plusResolved(resolvedField: TermField) =
+	localScope
+		.plus(resolvedField)
+		.let { newLocalScope ->
+			copy(localScope = newLocalScope)
+				.plus(resolvedField)
+				.let { resolvedTerm -> newLocalScope.invoke(resolvedTerm) }
 		}
 
 val Term.begin get() =
