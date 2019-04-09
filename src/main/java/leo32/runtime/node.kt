@@ -27,15 +27,18 @@ val Node.evalEquals: Term? get() =
 	if (field.name == "equals") lhs.clear.plus(termField(lhs == field.value))
 	else null
 
-val Node.evalClassify: Term? get() =
-	ifOrNull(field == "classify" to term()) {
-		lhs.listTermSeqOrNull("either")?.let { termSeq ->
-			lhs.clear.set(lhs.globalScope.fold(termSeq) {
-				this
-					.defineType(it, lhs)
-					.defineTemplate(term("class" to it), template(lhs))
-			})
-		}
+val Node.evalHas: Term? get() =
+	ifOrNull(field.name == "has" && !lhs.isEmpty && !field.value.isEmpty) {
+		field.value.listTermSeqOrNull("either")?.let { termSeq ->
+			lhs.clear.set(lhs.globalScope.fold(termSeq) { eitherTerm ->
+				defineType(lhs.leafPlus(eitherTerm), lhs.leafPlus(field.value))
+			}.defineTemplate(lhs, template(lhs.leafPlus(field.value))))
+		}?:lhs.clear.set(lhs.globalScope.defineTemplate(lhs, template(lhs.leafPlus(field.value))))
+	}
+
+val Node.evalClass: Term? get() =
+	ifOrNull(field.name == "class" && lhs.isEmpty) {
+		lhs.clear.plus(lhs.globalScope.typeTerms.typeTerm(field.value))
 	}
 
 val Node.evalGives: Term? get() =

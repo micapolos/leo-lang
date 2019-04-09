@@ -186,8 +186,11 @@ val Term.evalWrap: Term? get() =
 val Term.evalEquals: Term? get() =
 	nodeOrNull?.evalEquals
 
-val Term.evalClassify: Term? get() =
-	nodeOrNull?.evalClassify
+val Term.evalHas: Term? get() =
+	nodeOrNull?.evalHas
+
+val Term.evalClass: Term? get() =
+	nodeOrNull?.evalClass
 
 val Term.evalGives: Term? get() =
 	nodeOrNull?.evalGives
@@ -203,8 +206,9 @@ val Term.evalMacros: Term get() =
 		?:evalUnquote
 		?:evalIs
 		?:evalEquals
-		?:evalClassify
+		?:evalHas
 		?:evalGives
+		?:evalClass
 		?:evalGet
 		?:evalWrap
 		?:this
