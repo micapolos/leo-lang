@@ -200,6 +200,20 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun it_quote_one() {
+		script("it" to script("quote" to script("one")))
+			.evaluate
+			.assertEqualTo(script("it" to script("one")))
+	}
+
+	@Test
+	fun quote_quote() {
+		script("quote" to script("quote"))
+			.evaluate
+			.assertEqualTo(script("quote"))
+	}
+
+	@Test
 	fun error() {
 		script("error")
 			.evaluate

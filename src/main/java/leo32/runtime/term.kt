@@ -71,7 +71,7 @@ fun Term.plus(line: Line): Term =
 	null
 		?: evalErrorPlus(line)
 		?: evalPlusQuote(line)
-		?: invoke(line.field)
+		?: invoke(line)
 
 fun Term.evalErrorPlus(line: Line): Term? =
 	simpleAtOrNull("error")?.let { errorTerm ->
@@ -84,6 +84,22 @@ fun Term.evalPlusQuote(line: Line): Term? =
 fun Term.plus(script: Script) =
 	fold(script.lineSeq, Term::plus)
 
+fun Term.invoke(line: Line): Term =
+	begin
+		.plus(line.value)
+		.let { childTerm ->
+			(line.name to childTerm).let { resolvedField ->
+				localScope
+					.plus(resolvedField)
+					.let { newLocalScope ->
+						copy(localScope = newLocalScope)
+							.plus(resolvedField)
+							.let { resolvedTerm -> newLocalScope.invoke(resolvedTerm) }
+					}
+			}
+		}
+
+// TODO(micapolos): This should be removed!!!
 fun Term.invoke(field: TermField): Term =
 	begin
 		.invoke(field.value)
