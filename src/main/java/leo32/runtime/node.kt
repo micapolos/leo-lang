@@ -30,18 +30,17 @@ val Node.evalEquals: Term? get() =
 val Node.evalClassify: Term? get() =
 	ifOrNull(field == "classify" to term()) {
 		lhs.listTermSeqOrNull("either")?.let { termSeq ->
-			lhs.clear.copy(
-				globalScope = lhs.globalScope.fold(termSeq) {
-					this
-						.defineType(it, lhs)
-						.defineTemplate(term("class" to it), template(lhs))
-				})
+			lhs.clear.set(lhs.globalScope.fold(termSeq) {
+				this
+					.defineType(it, lhs)
+					.defineTemplate(term("class" to it), template(lhs))
+			})
 		}
 	}
 
 val Node.evalGives: Term? get() =
 	ifOrNull(field.name == "gives" && !lhs.isEmpty && !field.value.isEmpty) {
-		lhs.clear.copy(globalScope = lhs.globalScope.defineTemplate(lhs, template(field.value)))
+		lhs.clear.set(lhs.globalScope.defineTemplate(lhs, template(field.value)))
 	} // TODO: return "error" in case of parse error
 
 val Node.evalUnquote: Term? get() =

@@ -223,6 +223,9 @@ fun invoke(line: Line, vararg lines: Line): Script =
 val Term.clear get() =
 	globalScope.emptyTerm
 
+fun Term.set(scope: Scope) =
+	copy(globalScope = scope, localScope = scope)
+
 fun term(boolean: Boolean) =
 	term(termField(boolean))
 

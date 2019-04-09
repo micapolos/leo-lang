@@ -299,47 +299,54 @@ class EvaluateTest {
 			.assertEqualTo(script())
 	}
 
-//	@Test
-//	fun zero__gives_one___zero() {
-//		script(
-//			"zero" to script(),
-//			"gives" to script("one"),
-//			"zero" to script())
-//			.evaluate
-//			.assertEqualTo(script("one"))
-//	}
+	@Test
+	fun zero__gives_one___zero() {
+		script(
+			"zero" to script(),
+			"gives" to script("one"),
+			"zero" to script())
+			.evaluate
+			.assertEqualTo(script("one"))
+	}
 
-//	@Test
-//	fun either_zero___classify__zero__class() {
-//		script(
-//			"either" to script("zero"),
-//			"classify" to script(),
-//			"zero" to script(),
-//			"class" to script())
-//			.evaluate
-//			.assertEqualTo(script())
-//	}
-//
-//	@Test
-//	fun either_zero___either_one___classify__zero__class() {
-//		script(
-//			"either" to script("zero"),
-//			"either" to script("one"),
-//			"classify" to script(),
-//			"class" to script("zero"))
-//			.evaluate
-//			.assertEqualTo(script())
-//	}
-//
-//	@Test
-//	fun either_zero___either_one___classify__one__class() {
-//		script(
-//			"either" to script("zero"),
-//			"either" to script("one"),
-//			"classify" to script(),
-//			"one" to script(),
-//			"class" to script())
-//			.evaluate
-//			.assertEqualTo(script())
-//	}
+	@Test
+	fun either_zero___classify__zero__class() {
+		script(
+			"either" to script("zero"),
+			"classify" to script(),
+			"zero" to script(),
+			"class" to script())
+			.evaluate
+			.assertEqualTo(script("either" to script("zero")))
+	}
+
+	@Test
+	fun either_zero___either_one___classify__zero__class() {
+		script(
+			"either" to script("zero"),
+			"either" to script("one"),
+			"classify" to script(),
+			"zero" to script(),
+			"class" to script())
+			.evaluate
+			.assertEqualTo(
+				script(
+					"either" to script("zero"),
+					"either" to script("one")))
+	}
+
+	@Test
+	fun either_zero___either_one___classify__one__class() {
+		script(
+			"either" to script("zero"),
+			"either" to script("one"),
+			"classify" to script(),
+			"one" to script(),
+			"class" to script())
+			.evaluate
+			.assertEqualTo(
+				script(
+					"either" to script("zero"),
+					"either" to script("one")))
+	}
 }
