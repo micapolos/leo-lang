@@ -290,6 +290,25 @@ class EvaluateTest {
 			.assertEqualTo(script())
 	}
 
+	@Test
+	fun zero__gives_one() {
+		script(
+			"zero" to script(),
+			"gives" to script("one"))
+			.evaluate
+			.assertEqualTo(script())
+	}
+
+//	@Test
+//	fun zero__gives_one___zero() {
+//		script(
+//			"zero" to script(),
+//			"gives" to script("one"),
+//			"zero" to script())
+//			.evaluate
+//			.assertEqualTo(script("one"))
+//	}
+
 //	@Test
 //	fun either_zero___classify__zero__class() {
 //		script(

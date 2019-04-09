@@ -39,6 +39,11 @@ val Node.evalClassify: Term? get() =
 		}
 	}
 
+val Node.evalGives: Term? get() =
+	ifOrNull(field.name == "gives" && !lhs.isEmpty && !field.value.isEmpty) {
+		lhs.clear.copy(globalScope = lhs.globalScope.defineTemplate(lhs, template(field.value)))
+	} // TODO: return "error" in case of parse error
+
 val Node.evalUnquote: Term? get() =
 	if (field.name == "unquote") lhs.clear.plus(termField(lhs == field.value))
 	else null

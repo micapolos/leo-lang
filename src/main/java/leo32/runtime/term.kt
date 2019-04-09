@@ -64,9 +64,6 @@ fun Term.listTermSeqOrNull(key: String): Seq<Term>? =
 val Term.fieldSeq get() =
 	fieldList.seq
 
-fun Term.invoke(term: Term): Term =
-	begin.fold(term.fieldSeq) { invoke(it) }
-
 fun Term.plus(line: Line): Term =
 	null
 		?: evalErrorPlus(line)
@@ -98,27 +95,6 @@ fun Term.invoke(line: Line): Term =
 					}
 			}
 		}
-
-// TODO(micapolos): This should be removed!!!
-fun Term.invoke(field: TermField): Term =
-	begin
-		.invoke(field.value)
-		.let { childTerm ->
-			(field.name to childTerm).let { resolvedField ->
-				localScope
-					.plus(resolvedField)
-					.let { newLocalScope ->
-						copy(localScope = newLocalScope)
-							.plus(resolvedField)
-							.let { resolvedTerm -> newLocalScope.invoke(resolvedTerm) }
-					}
-			}
-		}
-
-fun Term.invoke(scope: Scope) =
-	term()
-		.copy(globalScope = scope, localScope = scope)
-		.invoke(this)
 
 val Term.begin get() =
 	Term(
@@ -172,9 +148,6 @@ fun Term.leafPlus(term: Term): Term =
 fun term(vararg fields: TermField): Term =
 	empty.term.fold(fields) { plus(it) }
 
-fun invoke(vararg fields: TermField) =
-	empty.term.fold(fields) { invoke(it) }
-
 fun Appendable.append(term: Term): Appendable =
 	tryAppend { appendSimple(term) } ?: appendComplex(term)
 
@@ -218,6 +191,9 @@ val Term.evalEquals: Term? get() =
 val Term.evalClassify: Term? get() =
 	nodeOrNull?.evalClassify
 
+val Term.evalGives: Term? get() =
+	nodeOrNull?.evalGives
+
 val Term.evalUnquote: Term? get() =
 	nodeOrNull?.evalUnquote
 
@@ -230,6 +206,7 @@ val Term.evalMacros: Term get() =
 		?:evalIs
 		?:evalEquals
 		?:evalClassify
+		?:evalGives
 		?:evalGet
 		?:evalWrap
 		?:this

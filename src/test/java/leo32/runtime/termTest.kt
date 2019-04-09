@@ -262,15 +262,6 @@ class TermTest {
 	}
 
 	@Test
-	fun eval() {
-		term(
-			"x" to term("0"),
-			"x" to term())
-			.invoke(empty.scope)
-			.assertEqualTo(term("0"))
-	}
-
-	@Test
 	fun intOrNull() {
 		term(0).intOrNull.assertEqualTo(0)
 		term(-1).intOrNull.assertEqualTo(-1)

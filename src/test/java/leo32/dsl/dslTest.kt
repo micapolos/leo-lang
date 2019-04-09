@@ -4,7 +4,6 @@ import leo.base.assertEqualTo
 import leo32.runtime.Line
 import leo32.runtime.Script
 import leo32.runtime.boolean
-import leo32.runtime.invoke
 import kotlin.test.Test
 
 class DslTest {
