@@ -53,6 +53,21 @@ class DslTest {
 		_eval(quote()).assertGives()
 		_eval(quote(zero())).assertGives(zero())
 		_eval(quote(zero(), zero())).assertGives(zero(), zero())
+		_eval(quote(one(), two())).assertGives(one(), two())
+		_eval(quote(x(zero()), y(one()), x())).assertGives(x(zero()), y(one()), x())
+	}
+
+	@Test
+	fun aliases() {
+		_eval(boolean(true)).assertGives(boolean(_true()))
+		_eval(byte(123)).assertGives(byte(_line("123")))
+		_eval(short(123)).assertGives(short(_line("123")))
+		_eval(int(123)).assertGives(int(_line("123")))
+		_eval(long(123)).assertGives(long(_line("123")))
+		_eval(float(123f)).assertGives(float(_line("123.0")))
+		_eval(double(123.0)).assertGives(double(_line("123.0")))
+		_eval(char('a')).assertGives(char(_line("'a'")))
+		_eval(string("foo")).assertGives(string(_line("\"foo\"")))
 	}
 }
 

@@ -2,6 +2,7 @@ package leo32.dsl
 
 import leo.base.fold
 import leo32.runtime.Line
+import leo32.runtime.line
 import leo32.runtime.plus
 import leo32.runtime.script
 
@@ -17,5 +18,17 @@ fun aTrue(vararg xs: Line) = _true(*xs)
 
 fun _script(vararg lines: Line) =
 	leo32.runtime.script(*lines)
+fun _line(string: String) =
+	line(string)
 fun _eval(vararg lines: Line) =
 	leo32.runtime.term().fold(lines) { this.plus(it) }.script
+
+fun boolean(boolean: Boolean) = boolean(line("$boolean"))
+fun byte(byte: Byte) = byte(line("$byte"))
+fun short(short: Short) = short(line("$short"))
+fun int(int: Int) = int(line("$int"))
+fun long(long: Long) = long(line("$long"))
+fun float(float: Float) = float(line("$float"))
+fun double(double: Double) = double(line("$double"))
+fun string(string: String) = string(line("\"$string\"")) // TODO: Escape
+fun char(char: Char) = char(line("\'$char\'")) // TODO: Escape
