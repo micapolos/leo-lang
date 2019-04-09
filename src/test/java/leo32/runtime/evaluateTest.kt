@@ -228,40 +228,12 @@ class EvaluateTest {
 	}
 
 	@Test
-	fun error__one() {
+	fun error_one__two() {
 		script(
-			"error" to script(),
-			"one" to script())
-			.evaluate
-			.assertEqualTo(script("error" to script("one")))
-	}
-
-	@Test
-	fun error__one__two() {
-		script(
-			"error" to script(),
-			"one" to script(),
+			"error" to script("one"),
 			"two" to script())
 			.evaluate
-			.assertEqualTo(
-				script(
-					"error" to script(
-						"one" to script(),
-						"two" to script())))
-	}
-
-	@Test
-	fun error__one__equals_one() {
-		script(
-			"error" to script(),
-			"one" to script(),
-			"equals" to script("one"))
-			.evaluate
-			.assertEqualTo(
-				script(
-					"error" to script(
-						"one" to script(),
-						"equals" to script("one"))))
+			.assertEqualTo(script("error" to script("one")))
 	}
 
 	@Test

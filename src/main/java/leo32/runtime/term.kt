@@ -66,14 +66,12 @@ val Term.fieldSeq get() =
 
 fun Term.plus(line: Line): Term =
 	null
-		?: evalErrorPlus(line)
+		?: evalError
 		?: evalPlusQuote(line)
 		?: invoke(line)
 
-fun Term.evalErrorPlus(line: Line): Term? =
-	simpleAtOrNull("error")?.let { errorTerm ->
-		clear.plus("error" to errorTerm.plus(line.field))
-	}
+val Term.evalError: Term? get() =
+	simpleAtOrNull("error")?.let { this }
 
 fun Term.evalPlusQuote(line: Line): Term? =
 	notNullIf(line.name == "quote") { plus(line.value.term) }
