@@ -240,8 +240,8 @@ val Script.term get() =
 val Term.script: Script get() =
 	Script(list<Line>().fold(fieldSeq) { add(it.line) })
 
-fun invoke(vararg lines: Line): Script =
-	term().fold(lines) { invoke(it.field) }.script
+fun invoke(line: Line, vararg lines: Line): Script =
+	term().plus(line).fold(lines) { plus(it) }.script
 
 val Term.clear get() =
 	globalScope.emptyTerm
