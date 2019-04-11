@@ -38,7 +38,7 @@ val Node.evalHas: Term? get() =
 
 val Node.evalClass:  Term? get() =
 	ifOrNull(field.name == "class" && lhs.isEmpty) {
-		lhs.clear.plus(lhs.globalScope.typeTerms.typeTerm(field.value))
+		lhs.clear.plus(lhs.globalScope.types.typeTerm(field.value))
 	}
 
 val Node.evalGives: Term? get() =

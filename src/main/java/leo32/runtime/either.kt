@@ -1,33 +1,52 @@
 package leo32.runtime
 
+import leo.base.Empty
+import leo.base.empty
 import leo.base.fold
+import leo.base.string
+import leo32.base.*
 import leo32.base.List
-import leo32.base.add
-import leo32.base.list
-import leo32.base.seq
 
 data class Either(
-	val fieldList: List<EitherField>)
+	val fieldList: List<TypeField>,
+	val typeTree: Tree<Type?>) {
+	override fun toString() = termField.string
+}
 
-fun either(vararg fields: EitherField) =
-	Either(list(*fields))
+val Empty.either get() =
+	Either(list(), tree())
 
-fun either(name: String) =
-	either(name to type())
+fun Either.plus(typeField: TypeField) =
+	copy(
+		fieldList = fieldList.add(typeField),
+		typeTree = typeTree.put(typeField.name.dictKey.bitSeq, typeField.value))
 
-fun Either.plus(field: EitherField) =
-	copy(fieldList = fieldList.add(field))
+fun either(vararg fields: TypeField) =
+	empty.either.fold(fields) { plus(it) }
 
-val Either.term: Term get() =
-	term().fold(fieldList.seq) { plus(it.termField) }
+fun either(string: String) =
+	either(typeField(string))
+
+fun Either.at(string: String): Type? =
+	typeTree
+		.at(string.dictKey.bitSeq)
+		?.valueOrNull
 
 val Either.seq32 get() =
-	term.seq32
+	typeTree.seq32 { seq32 }
 
-val Term.parseEither: Either
-	get() =
-	either().fold(fieldSeq) { plus(it.parseEitherField) }
+val Either.termField get() =
+	"either" to term()
+		.fold(fieldList.seq) {
+			plus(it.termField)
+		}
 
-val Term.rawEither: Either
-	get() =
-	either().fold(fieldSeq) { plus(it.rawEitherField) }
+val Term.either get() =
+	empty.either.fold(fieldSeq) {
+		plus(it.typeField)
+	}
+
+fun Either.match(termField: TermField): Boolean =
+	at(termField.name)?.let {
+		it.match(termField.value)
+	}?:false

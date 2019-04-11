@@ -32,3 +32,6 @@ val Types.typeOrNull get() =
 
 fun Types.put32(pair: Pair<Seq32, Type>) =
 	typeTree.put32(pair).types
+
+fun Types.typeTerm(term: Term): Term = TODO()
+fun Types.plus(field: TermField): TypeTerms = TODO()

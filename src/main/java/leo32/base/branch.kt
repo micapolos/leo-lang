@@ -1,7 +1,9 @@
 package leo32.base
 
+import leo.base.then
 import leo.binary.Bit
 import leo.binary.isZero
+import leo32.Seq32
 
 data class Branch<T>(
 	val at0: T,
@@ -44,3 +46,6 @@ fun <T : Any> Branch<T?>.putOrNull(bit: Bit, value: T?): Branch<T?>? =
 fun <T> branch(bit: Bit, value: T, otherValue: T) =
 	if (bit.isZero) branch(value, otherValue)
 	else branch(otherValue, value)
+
+fun <T> Branch<T>.seq32(fn: T.() -> Seq32): Seq32 =
+	at0.fn().then { at1.fn() }

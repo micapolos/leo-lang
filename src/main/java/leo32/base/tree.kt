@@ -81,3 +81,17 @@ fun <T: Any> Tree<T?>.put(bitSeq: Seq<Bit>, value: T) =
 
 val <T: Any> Tree<T?>.valueOrNull get() =
 	leafOrNull?.value
+
+fun <T: Any> Tree<T?>.seq32(valueSeq32: T.() -> Seq32): Seq32 =
+	when (this) {
+		is LeafTree -> 0.i32.onlySeq.then {
+			valueOrNull?.valueSeq32().orIfNull {
+				0.i32.onlySeq
+			}
+		}
+		is BranchTree -> 1.i32.onlySeq.then {
+			branch.seq32 {
+				seq32(valueSeq32)
+			}
+		}
+	}

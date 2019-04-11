@@ -4,7 +4,7 @@ import leo.base.assertEqualTo
 import leo.base.empty
 import kotlin.test.Test
 
-class TypeTermsTest {
+class TypesTest {
 	@Test
 	fun resolve() {
 		val bitTypeTerm = term("bit" to term("either" to term("zero"), "either" to term("one")))

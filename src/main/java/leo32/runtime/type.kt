@@ -1,51 +1,58 @@
 package leo32.runtime
 
 import leo.base.*
+import leo32.Seq32
 import leo32.base.*
 import leo32.base.List
 
 data class Type(
-	val firstEither: Either,
-	val remainingEitherList: List<Either>) {
+	val eithers: List<Either>) {
 	override fun toString() = term.string
 }
 
-fun type(either: Either, vararg eithers: Either) =
-	Type(either, list(*eithers))
+val List<Either>.type get() =
+	Type(this)
 
-fun type(vararg fields: EitherField) =
-	type(either(*fields))
-
-fun type(name: String, vararg names: String) =
-	type(name to type().fold(names.reversed()) { type(it to this) })
+val Empty.type get() =
+	list<Either>().type
 
 fun Type.plus(either: Either) =
-	copy(remainingEitherList = remainingEitherList.add(either))
+	eithers.add(either).type
 
-val Type.eitherSeq get() =
-	Seq { firstEither.then(remainingEitherList.seq) }
+fun type(vararg eithers: Either) =
+	empty.type.fold(eithers) { plus(it) }
 
-fun <V: Any> Empty.typeDict() =
-	dict<Type, V> { term.dictKey }
+fun type(string: String) =
+	type(either(string to type()))
 
-// TODO: Quote "either"
-val Type.term get(): Term =
-	if (remainingEitherList.isEmpty) firstEither.term
-  else term("either" to firstEither.term).fold(remainingEitherList.seq) { plus("either" to it.term) }
+val Type.seq32: Seq32 get() =
+	eithers.seq.map { seq32 }.flat
 
-// TODO: Quote "either"
-val Term.parseType: Type
-	get() =
-	if (termListOrNull != null && termListOrNull.key.string == "either")
-		type(termListOrNull.term0.parseEither, termListOrNull.term1.parseEither)
-			.fold(termListOrNull.remainingTermList.seq) { plus(it.parseEither) }
-	else if (fieldCount.int == 1 && fieldAt(0.i32).name == "either")
-		type(fieldAt(0.i32).value.parseEither)
-	else type(parseEither)
+val Type.term: Term get() =
+	term().fold(eithers.seq) {
+		plus(it.termField)
+	}
 
-val Term.rawType: Type
-	get() =
-		type(rawEither)
+val Term.type: Type get() =
+	listTermSeqOrNull("either")
+		?.let { eitherTermSeq ->
+			empty.type.fold(eitherTermSeq) {
+				plus(it.either)
+			}
+		}
+		?: empty.type.fold(fieldSeq) {
+			plus(term(it).either)
+		}
 
-val Type.seq32 get() =
-	term.seq32
+fun Type.invoke(termField: TermField): Type? =
+	ifOrNull(!eithers.isEmpty) {
+		notNullIf(eithers.first.match(termField)) {
+			eithers.dropFirst.type
+		}
+	}
+
+fun Type.invoke(term: Term): Type? =
+	orNull.fold(term.fieldSeq) { this?.invoke(it) }
+
+fun Type.match(term: Term): Boolean =
+	invoke(term) == type()

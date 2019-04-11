@@ -4,6 +4,7 @@ import leo.base.*
 import leo.binary.zero
 import leo32.base.at
 import leo32.base.i32
+import leo32.base.size
 
 data class ScriptCode(val script: Script) {
 	override fun toString() = appendableString { it.append(this) }

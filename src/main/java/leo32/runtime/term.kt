@@ -123,11 +123,12 @@ fun Term.plus(field: TermField): Term =
 		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
 		nodeOrNull = Node(this, field),
 		intOrNull = if (nodeOrNull == null) field.intOrNull else null,
-		typeTermOrNull = field.typeTermField.let { typeField ->
-			localScope.typeTerms.plus(typeField).typeOrNull ?:
-				if (field.value.typeTermOrNull == null) null
-				else typeTerm.plus(typeField)
-		})
+		typeTermOrNull = typeTermOrNull)
+//field.typeTermField.let { typeField ->
+//			localScope.types.plus(typeField).typeOrNull ?:
+//				if (field.value.typeTermOrNull == null) null
+//				else typeTerm.plus(typeField)
+//		})
 
 fun Term.plus(term: Term) =
 	fold(term.fieldSeq) { plus(it) }
