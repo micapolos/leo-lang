@@ -156,89 +156,53 @@ class TermTest {
 	@Test
 	fun evalGet() {
 		term()
-			.evalGet
+			.plusMacroGet("one" to term())
 			.assertEqualTo(null)
 
-		term("one")
-			.evalGet
-			.assertEqualTo(null)
-
-		term(
-			"one" to term(),
-			"one" to term())
-			.evalGet
+		term("one" to term())
+			.plusMacroGet("one" to term())
 			.assertEqualTo(term())
 
-		term(
-			"one" to term("jeden"),
-			"one" to term())
-			.evalGet
+		term("one" to term("jeden"))
+			.plusMacroGet("one" to term())
 			.assertEqualTo(term("jeden"))
 
-		term(
-			"one" to term("jeden"),
-			"two" to term())
-			.evalGet
+		term("one" to term("jeden"))
+			.plusMacroGet("two" to term())
 			.assertEqualTo(null)
 
-		term(
-			"circle" to term("radius" to term("10")),
-			"circle" to term())
-			.evalGet
+		term("circle" to term("radius" to term("10")))
+			.plusMacroGet("circle" to term())
 			.assertEqualTo(term("radius" to term("10")))
-
-		term(
-			"circle" to term("radius" to term("10")),
-			"circle" to term("radius"))
-			.evalGet
-			.assertEqualTo(term("10"))
-
-		term(
-			"circle" to term("radius" to term("10")),
-			"circle" to term("center"))
-			.evalGet
-			.assertEqualTo(null)
 	}
 
 	@Test
 	fun evalWrap() {
 		term()
-			.evalWrap
+			.plusMacroWrap("one" to term())
 			.assertEqualTo(null)
 
-		term("one")
-			.evalWrap
-			.assertEqualTo(null)
-
-		term(
-			"red" to term(),
-			"color" to term())
-			.evalWrap
+		term("red" to term())
+			.plusMacroWrap("color" to term())
 			.assertEqualTo(term("color" to term("red")))
 
-		term(
-			"two" to term(),
-			"plus" to term("two"))
-			.evalWrap
+		term("two" to term())
+			.plusMacroWrap("plus" to term("two"))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun evalEquals() {
 		term()
-			.evalEquals
-			.assertEqualTo(null)
-
-		term("equals")
-			.evalEquals
+			.plusMacroEquals("equals" to term())
 			.assertEqualTo(term(true))
 
-		term("zero" to term(), "equals" to term("zero"))
-			.evalEquals
+		term("zero" to term())
+			.plusMacroEquals("equals" to term("zero"))
 			.assertEqualTo(term(true))
 
-		term("zero" to term(), "equals" to term("one"))
-			.evalEquals
+		term("zero" to term())
+			.plusMacroEquals("equals" to term("one"))
 			.assertEqualTo(term(false))
 	}
 
@@ -277,8 +241,7 @@ class TermTest {
 		val bitTwo = term("bit" to term("two"))
 
 		val term = empty.scope
-			.defineType(bitZero, bitType)
-			.defineType(bitOne, bitType)
+			.define(term("bit") has term("either" to term("zero"), "either" to term("one")))
 			.emptyTerm
 
 		term.plus(bitZero).typeTerm.assertEqualTo(bitType)

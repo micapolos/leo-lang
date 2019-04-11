@@ -7,8 +7,8 @@ class OpTest {
 	@Test
 	fun switch() {
 		val switch = switch(
-			term("true") gives term("false"),
-			term("false") gives term("true"))
+			term("true") caseTo term("false"),
+			term("false") caseTo term("true"))
 
 		op(switch).invoke(term("true"), parameter(term())).assertEqualTo(term("false"))
 		op(switch).invoke(term("false"), parameter(term())).assertEqualTo(term("true"))

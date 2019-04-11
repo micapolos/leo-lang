@@ -21,10 +21,10 @@ val Empty.types get() =
 fun Types.at(bit: Bit) =
 	typeTree.at(bit).orIfNull { empty.tree() }.types
 
-fun Types.at(field: TermField) =
+fun Types.at(field: TermField): Types =
 	at32(field.seq32)
 
-fun Types.at32(seq32: Seq32) =
+fun Types.at32(seq32: Seq32): Types =
 	fold(seq32.bitSeq) { at(it) }
 
 val Types.typeOrNull get() =
@@ -33,5 +33,5 @@ val Types.typeOrNull get() =
 fun Types.put32(pair: Pair<Seq32, Type>) =
 	typeTree.put32(pair).types
 
-fun Types.typeTerm(term: Term): Term = TODO()
-fun Types.plus(field: TermField): TypeTerms = TODO()
+fun Types.plus(field: TermField): Types? =
+	typeTree.at32(field.seq32)?.types

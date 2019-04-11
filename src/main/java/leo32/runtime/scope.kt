@@ -2,32 +2,41 @@ package leo32.runtime
 
 import leo.base.Empty
 import leo.base.fold
+import leo.base.orIfNull
 
 data class Scope(
-	val types: Types,
-	val templates: Templates)
+	val valueToTypeDictionary: Dictionary<Term>,
+	val typeToValueDictionary: Dictionary<Term>,
+	val typeToTemplateDictionary: Dictionary<Template>)
 
 val Empty.scope get() =
-	Scope(types, templates)
+	Scope(dictionary(), dictionary(), dictionary())
 
-fun Scope.defineType(term: Term, type: Term): Scope = TODO()
-//	copy(types = types.put(term, type))
+fun Scope.define(termHasTerm: TermHasTerm): Scope =
+	termHasTerm.rhs
+		.listTermSeqOrNull("either")
+		?.let { termSeq ->
+			fold(termSeq) { eitherTerm ->
+				copy(
+					valueToTypeDictionary = valueToTypeDictionary.put(
+						termHasTerm.lhs.leafPlus(eitherTerm),
+						termHasTerm.lhs))
+			}
+		}.orIfNull {
+			copy(valueToTypeDictionary = valueToTypeDictionary.put(
+				termHasTerm.lhs.leafPlus(termHasTerm.rhs),
+				termHasTerm.lhs))
+		}.copy(typeToValueDictionary = typeToValueDictionary.put(
+				termHasTerm.lhs,
+				termHasTerm.lhs.leafPlus(termHasTerm.rhs)))
 
-fun Scope.defineTemplate(type: Term, template: Template): Scope = TODO()
-//	copy(templates = templates.put(type, template))
+fun Scope.define(termGivesTerm: TermGivesTerm): Scope =
+	copy(typeToTemplateDictionary = typeToTemplateDictionary.put(
+		termGivesTerm.lhs,
+		template(termGivesTerm.rhs)))
 
-fun Scope.plus(field: TermField): Scope = TODO()
-//	copy(types = types.plus(field))
-
-fun Scope.plus(term: Term): Scope =
-	fold(term.fieldSeq) { plus(it) }
-
-fun Scope.invoke(term: Term): Term = TODO()
-//	term.evalMacros.let { macrosTerm ->
-//		types.at(macrosTerm.typeTerm)
-//			?.invoke(parameter(term.evalMacros))
-//			?:macrosTerm
-//	}
-
-fun Scope.type(term: Term): Term = TODO()
-	//types.typeTerm(term)
+fun Scope.plus(field: TermField) =
+	copy(
+		valueToTypeDictionary = valueToTypeDictionary.plus(field),
+		typeToValueDictionary = typeToValueDictionary.plus(field),
+		typeToTemplateDictionary = typeToTemplateDictionary.plus(field))

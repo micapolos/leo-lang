@@ -64,6 +64,18 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun one_foo___one_bar() {
+		script(
+			"one" to script("foo"),
+			"one" to script("bar"))
+			.evaluate
+			.assertEqualTo(
+				script(
+					"one" to script("foo"),
+					"one" to script("bar")))
+	}
+
+	@Test
 	fun one_two___one() {
 		script(
 			"one" to script("two"),
@@ -252,7 +264,7 @@ class EvaluateTest {
 			"has" to script("bar"),
 			"foo" to script())
 			.evaluate
-			.assertEqualTo(script("foo" to script("bar")))
+			.assertEqualTo(script("foo"))
 	}
 
 	@Test
@@ -262,17 +274,27 @@ class EvaluateTest {
 			"has" to script("bar"),
 			"class" to script("foo" to script("bar" to script())))
 			.evaluate
+			.assertEqualTo(script("foo"))
+	}
+
+	@Test
+	fun foo__has_bar__describe_foo() {
+		script(
+			"foo" to script(),
+			"has" to script("bar"),
+			"describe" to script("foo"))
+			.evaluate
 			.assertEqualTo(script("foo" to script("bar")))
 	}
 
 	@Test
-	fun foo_zoo___has_bar__foo() {
+	fun foo_zoo___has_bar__foo_zoo() {
 		script(
 			"foo" to script("zoo" to script()),
 			"has" to script("bar"),
 			"foo" to script("zoo"))
 			.evaluate
-			.assertEqualTo(script("foo" to script("zoo" to script("bar"))))
+			.assertEqualTo(script("foo" to script("zoo")))
 	}
 
 	@Test
@@ -282,11 +304,21 @@ class EvaluateTest {
 			"has" to script("bar"),
 			"class" to script("foo" to script("zoo" to script("bar"))))
 			.evaluate
+			.assertEqualTo(script("foo" to script("zoo")))
+	}
+
+	@Test
+	fun foo_zoo___has_bar__describe_foo_zoo() {
+		script(
+			"foo" to script("zoo" to script()),
+			"has" to script("bar"),
+			"describe" to script("foo" to script("zoo")))
+			.evaluate
 			.assertEqualTo(script("foo" to script("zoo" to script("bar"))))
 	}
 
 	@Test
-	fun bit__has_either_zero___either_one() {
+	fun bit__has_either_zero___either_one___bit() {
 		script(
 			"bit" to script(),
 			"has" to script(
@@ -294,10 +326,7 @@ class EvaluateTest {
 				"either" to script("one")),
 			"bit" to script())
 			.evaluate
-			.assertEqualTo(
-				script("bit" to script(
-					"either" to script("zero"),
-					"either" to script("one"))))
+			.assertEqualTo(script("bit"))
 	}
 
 	@Test
@@ -308,6 +337,18 @@ class EvaluateTest {
 				"either" to script("zero"),
 				"either" to script("one")),
 			"class" to script("bit" to script("zero")))
+			.evaluate
+			.assertEqualTo(script("bit"))
+	}
+
+	@Test
+	fun bit__has_either_zero___either_one____describe_bit() {
+		script(
+			"bit" to script(),
+			"has" to script(
+				"either" to script("zero"),
+				"either" to script("one")),
+			"describe" to script("bit"))
 			.evaluate
 			.assertEqualTo(
 				script("bit" to script(
@@ -324,10 +365,7 @@ class EvaluateTest {
 				"either" to script("one")),
 			"class" to script("bit" to script("one")))
 			.evaluate
-			.assertEqualTo(
-				script("bit" to script(
-					"either" to script("zero"),
-					"either" to script("one"))))
+			.assertEqualTo(script("bit"))
 	}
 
 	@Test

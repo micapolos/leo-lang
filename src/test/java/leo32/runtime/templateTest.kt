@@ -20,7 +20,7 @@ class TemplateTest {
 	}
 
 	@Test
-	fun argumentFunction() {
+	fun field() {
 		template(
 			argument,
 			"plus" op template("one"))
@@ -32,11 +32,11 @@ class TemplateTest {
 	}
 
 	@Test
-	fun invokeFunction() {
-		val plusOneFunction = template(argument, "plus" op template("one"))
+	fun call() {
+		val template = template(argument, "plus" op template("one"))
 		template(
 			argument,
-			op(call(plusOneFunction)))
+			op(call(template)))
 			.invoke(parameter(term("two")))
 			.assertEqualTo(
 				term(
@@ -46,14 +46,14 @@ class TemplateTest {
 
 	@Test
 	fun switchFunction() {
-		val function = template(
+		val template = template(
 			argument,
 			op(
 				switch(
-					term("not" to term("false")) gives term("true"),
-					term("not" to term("true")) gives term("false"))))
+					term("not" to term("false")) caseTo term("true"),
+					term("not" to term("true")) caseTo term("false"))))
 
-		function.invoke(parameter(term("not" to term("true")))).assertEqualTo(term("false"))
-		function.invoke(parameter(term("not" to term("false")))).assertEqualTo(term("true"))
+		template.invoke(parameter(term("not" to term("true")))).assertEqualTo(term("false"))
+		template.invoke(parameter(term("not" to term("false")))).assertEqualTo(term("true"))
 	}
 }

@@ -8,7 +8,7 @@ import leo32.base.*
 import leo32.base.List
 
 data class Term(
-	val globalScope: Scope,
+	val scope: Scope,
 	val localScope: Scope,
 	val fieldList: List<TermField>,
 	val termListDict: Dict<String, List<Term>>,
@@ -86,19 +86,13 @@ fun Term.invoke(line: Line): Term =
 			plusResolved(line.name to childTerm)
 		}
 
-fun Term.plusResolved(resolvedField: TermField) =
-	localScope
-		.plus(resolvedField)
-		.let { newLocalScope ->
-			copy(localScope = newLocalScope)
-				.plus(resolvedField)
-				.let { resolvedTerm -> newLocalScope.invoke(resolvedTerm) }
-		}
+fun Term.plusResolved(field: TermField) =
+	copy(localScope = localScope.plus(field)).plusMacro(field)
 
 val Term.begin get() =
 	Term(
-		globalScope = globalScope,
-		localScope = empty.scope,
+		scope = scope,
+		localScope = scope,
 		fieldList = empty.list(),
 		termListDict = empty.stringDict(),
 		termListOrNull = null,
@@ -109,7 +103,7 @@ val Term.begin get() =
 
 fun Term.plus(field: TermField): Term =
 	Term(
-		globalScope = globalScope,
+		scope = scope,
 		localScope = localScope,
 		fieldList = fieldList.add(field),
 		termListDict = termListDict.update(field.name) {
@@ -179,41 +173,67 @@ fun Term.map(fn: Term.() -> Term): Term =
 	if (nodeOrNull == null) this
 	else nodeOrNull.lhs.fn().plus(nodeOrNull.field.map(fn))
 
-val Term.evalGet: Term? get()  =
-	nodeOrNull?.evalGet
+fun Term.plusMacroGet(field: TermField): Term? =
+	ifOrNull(field.value.isEmpty) {
+		onlyOrNullAt(field.name)
+	}
 
-val Term.evalWrap: Term? get() =
-	nodeOrNull?.evalWrap
+fun Term.plusMacroWrap(field: TermField): Term? =
+	if (!isEmpty && field.value.isEmpty) term(field.name to this)
+	else null
 
-val Term.evalEquals: Term? get() =
-	nodeOrNull?.evalEquals
+fun Term.plusMacroEquals(field: TermField): Term? =
+	if (field.name == "equals") clear.plus(termField(this == field.value))
+	else null
 
-val Term.evalHas: Term? get() =
-	nodeOrNull?.evalHas
+fun Term.plusMacroHas(field: TermField): Term? =
+	ifOrNull(!isEmpty && field.name == "has" && !field.value.isEmpty) {
+		clear.set(scope.define(this has field.value))
+	}
 
-val Term.evalClass: Term? get() =
-	nodeOrNull?.evalClass
+fun Term.plusMacroClass(field: TermField): Term? =
+	ifOrNull(isEmpty && field.name == "class") {
+		scope
+			.valueToTypeDictionary
+			.at(field.value)
+			?.let { typeOrNull -> clear.plus(typeOrNull) }
+			.orIfNull { clear.plus(field.value) }
+	}
 
-val Term.evalGives: Term? get() =
-	nodeOrNull?.evalGives
+fun Term.plusMacroDescribe(field: TermField): Term? =
+	ifOrNull(isEmpty && field.name == "describe") {
+		scope
+			.typeToValueDictionary
+			.at(field.value)
+			?.let { typeOrNull -> clear.plus(typeOrNull) }
+			.orIfNull { clear.plus(field.value) }
+	}
 
-val Term.evalUnquote: Term? get() =
-	nodeOrNull?.evalUnquote
+fun Term.plusMacroGives(field: TermField): Term? =
+	ifOrNull(field.name == "gives" && !isEmpty && !field.value.isEmpty) {
+		clear.set(scope.define(this gives field.value))
+	}
 
-val Term.evalIs: Term? get() =
-	nodeOrNull?.evalIs
+fun Term.plusMacroUnquote(field: TermField): Term? =
+	if (field.name == "unquote") clear.plus(termField(this == field.value))
+	else null
 
-val Term.evalMacros: Term get() =
+fun Term.plusMacroIs(field: TermField): Term? =
+	if (field.name == "is") clear.plus(leafPlus(field.value))
+	else null
+
+fun Term.plusMacro(field: TermField): Term =
 	null
-		?:evalUnquote
-		?:evalIs
-		?:evalEquals
-		?:evalHas
-		?:evalGives
-		?:evalClass
-		?:evalGet
-		?:evalWrap
-		?:this
+		?:plusMacroUnquote(field)
+		?:plusMacroIs(field)
+		?:plusMacroEquals(field)
+		?:plusMacroHas(field)
+		?:plusMacroGives(field)
+		?:plusMacroClass(field)
+		?:plusMacroDescribe(field)
+		?:plusMacroGet(field)
+		?:plusMacroWrap(field)
+		?:plus(field)
 
 val Script.term get() =
 	term().fold(lineSeq) { plus(it.field) }
@@ -225,10 +245,10 @@ fun invoke(line: Line, vararg lines: Line): Script =
 	term().plus(line).fold(lines) { plus(it) }.script
 
 val Term.clear get() =
-	globalScope.emptyTerm
+	scope.emptyTerm
 
 fun Term.set(scope: Scope) =
-	copy(globalScope = scope, localScope = scope)
+	copy(scope = scope, localScope = scope)
 
 fun term(boolean: Boolean) =
 	term(termField(boolean))
