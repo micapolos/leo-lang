@@ -244,10 +244,21 @@ class TermTest {
 			.define(term("bit") has term("either" to term("zero"), "either" to term("one")))
 			.emptyTerm
 
-		term.plus(bitZero).typeTerm.assertEqualTo(bitType)
-		term.plus(bitOne).typeTerm.assertEqualTo(bitType)
-		term.plus(bitTwo).typeTerm.assertEqualTo(term.plus(bitTwo))
-		term.plus("the" to term.plus(bitZero)).typeTerm.assertEqualTo(term.plus("the" to bitType))
+		term.invoke("class" to script("bit" to script("zero")))
+			.typeTerm
+			.assertEqualTo(term.plus("bit"))
+
+		term.invoke("class" to script("bit" to script("one")))
+			.typeTerm
+			.assertEqualTo(term.plus("bit"))
+
+		term.invoke("class" to script("bit" to script("two")))
+			.typeTerm
+			.assertEqualTo(term.plus("bit" to term.plus("two")))
+
+		term.invoke("class" to script("the" to script("bit" to script("zero"))))
+			.typeTerm
+			.assertEqualTo(term.plus("the" to script("bit")))
 	}
 
 	@Test
