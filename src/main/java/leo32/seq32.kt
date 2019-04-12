@@ -2,9 +2,8 @@ package leo32
 
 import leo.base.*
 import leo.binary.Bit
-import leo32.base.I32
-import leo32.base.bitSeq
-import leo32.base.i32
+import leo.binary.zero
+import leo32.base.*
 
 typealias Seq32 = Seq<I32>
 
@@ -33,3 +32,19 @@ val Seq32.string32 get() =
 
 val Seq32.bitSeq get() =
 	map { bitSeq }.flat
+
+fun Seq<Bit>.bitSeq32(acc: I32, mask: I32): Seq32 =
+	Seq {
+		seqNodeOrNull?.let { seqNode ->
+			acc.or(seqNode.first, mask).let { newAcc ->
+				mask.shr1.let { newMask ->
+					if (newMask.isZero) newAcc.then(seqNode.remaining.bitSeq32)
+					else seqNode.remaining.bitSeq32(newAcc, newMask).seqNodeOrNull
+				}
+			}
+		}
+	}
+
+val Seq<Bit>.bitSeq32
+	get() =
+		bitSeq32(zero.i32, hsbI32)

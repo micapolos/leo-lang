@@ -95,3 +95,11 @@ fun <T: Any> Tree<T?>.seq32(valueSeq32: T.() -> Seq32): Seq32 =
 			}
 		}
 	}
+
+fun <T, R> R.foldValues(tree: Tree<T>, fn: R.(T) -> R): R =
+	when (tree) {
+		is LeafTree -> fn(tree.leaf.value)
+		is BranchTree -> this
+			.foldValues(tree.branch.at0, fn)
+			.foldValues(tree.branch.at1, fn)
+	}

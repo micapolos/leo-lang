@@ -3,6 +3,8 @@ package leo32.runtime
 import leo.base.Empty
 import leo.base.fold
 import leo.base.orIfNull
+import leo32.base.BranchTree
+import leo32.base.LeafTree
 
 data class Scope(
 	val valueToTypeDictionary: Dictionary<Term>,
@@ -40,3 +42,18 @@ fun Scope.plus(field: TermField) =
 		valueToTypeDictionary = valueToTypeDictionary.plus(field),
 		typeToValueDictionary = typeToValueDictionary.plus(field),
 		typeToTemplateDictionary = typeToTemplateDictionary.plus(field))
+
+fun Scope.invoke(parameter: Parameter): Term? =
+	valueToTypeDictionary.tree.let { tree ->
+		when (tree) {
+			is BranchTree -> null
+			is LeafTree ->
+				if (tree.leaf.value == null) null
+				else typeToTemplateDictionary
+					.at(tree.leaf.value.value)
+					?.let { template -> template.invoke(parameter) }
+		}
+	}
+
+fun Scope.invoke(vararg lines: Line): Term =
+	emptyTerm.fold(lines) { invoke(it) }

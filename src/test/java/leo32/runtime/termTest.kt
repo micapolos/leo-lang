@@ -240,25 +240,25 @@ class TermTest {
 		val bitOne = term("bit" to term("one"))
 		val bitTwo = term("bit" to term("two"))
 
-		val term = empty.scope
+		val scope = empty.scope
 			.define(term("bit") has term("either" to term("zero"), "either" to term("one")))
-			.emptyTerm
 
-		term.invoke("class" to script("bit" to script("zero")))
+		scope
+			.invoke("bit" to script("zero"))
 			.typeTerm
-			.assertEqualTo(term.plus("bit"))
-
-		term.invoke("class" to script("bit" to script("one")))
-			.typeTerm
-			.assertEqualTo(term.plus("bit"))
-
-		term.invoke("class" to script("bit" to script("two")))
-			.typeTerm
-			.assertEqualTo(term.plus("bit" to term.plus("two")))
-
-		term.invoke("class" to script("the" to script("bit" to script("zero"))))
-			.typeTerm
-			.assertEqualTo(term.plus("the" to script("bit")))
+			.assertEqualTo(term("bit"))
+//
+//		term.invoke("class" to script("bit" to script("one")))
+//			.typeTerm
+//			.assertEqualTo(term.plus("bit"))
+//
+//		term.invoke("class" to script("bit" to script("two")))
+//			.typeTerm
+//			.assertEqualTo(term.plus("bit" to term.plus("two")))
+//
+//		term.invoke("class" to script("the" to script("bit" to script("zero"))))
+//			.typeTerm
+//			.assertEqualTo(term.plus("the" to script("bit")))
 	}
 
 	@Test

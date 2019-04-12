@@ -98,6 +98,9 @@ fun I32.bitSeq(bitMask: I32): Seq<Bit> =
 val I32.bitSeq: Seq<Bit> get() =
 	bitSeq(hsbI32)
 
+fun I32.or(bit: Bit, mask: I32) =
+	if (bit.isZero) this else or(mask)
+
 // === primitives
 
 val Bit.i32

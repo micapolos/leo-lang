@@ -87,7 +87,12 @@ fun Term.invoke(line: Line): Term =
 		}
 
 fun Term.plusResolved(field: TermField) =
-	copy(localScope = localScope.plus(field)).plusMacro(field)
+	copy(localScope = localScope.plus(field))
+		.plusMacro(field)
+		.eval()
+
+fun Term.eval(): Term =
+	localScope.invoke(parameter(this)) ?: this
 
 val Term.begin get() =
 	Term(
@@ -117,12 +122,13 @@ fun Term.plus(field: TermField): Term =
 		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
 		nodeOrNull = Node(this, field),
 		intOrNull = if (nodeOrNull == null) field.intOrNull else null,
-		typeTermOrNull = typeTermOrNull)
-//field.typeTermField.let { typeField ->
-//			localScope.types.plus(typeField).typeOrNull ?:
-//				if (field.value.typeTermOrNull == null) null
-//				else typeTerm.plus(typeField)
-//		})
+		typeTermOrNull = field.typeTermField.let { typeField ->
+			localScope.valueToTypeDictionary.plus(typeField).valueOrNull?.value
+				?: if (field.value.typeTermOrNull == null) null
+				else typeTerm.plus(typeField)
+		})
+
+
 
 fun Term.plus(term: Term) =
 	fold(term.fieldSeq) { plus(it) }
@@ -193,11 +199,7 @@ fun Term.plusMacroHas(field: TermField): Term? =
 
 fun Term.plusMacroClass(field: TermField): Term? =
 	ifOrNull(isEmpty && field.name == "class") {
-		scope
-			.valueToTypeDictionary
-			.at(field.value)
-			?.let { typeOrNull -> clear.plus(typeOrNull) }
-			.orIfNull { clear.plus(field.value) }
+		field.value.typeTerm
 	}
 
 fun Term.plusMacroDescribe(field: TermField): Term? =
