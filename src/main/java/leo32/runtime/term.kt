@@ -16,15 +16,16 @@ data class Term(
 	val isList: Boolean,
 	val nodeOrNull: Node?,
 	val intOrNull: Int?,
-	val typeTermOrNull: Term?) {
+	val typeTermOrNull: Term?,
+	val functionOrNull: Function?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.stringDict(), null, true, null, null, null)
+	Term(this, this, list(), empty.stringDict(), null, true, null, null, null, null)
 
 val Empty.term get() =
-	Term(scope, scope, list(), stringDict(), null, true, null, null, null)
+	Term(scope, scope, list(), stringDict(), null, true, null, null, null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -104,7 +105,8 @@ val Term.begin get() =
 		isList = true,
 		nodeOrNull = null,
 		intOrNull = null,
-		typeTermOrNull = null)
+		typeTermOrNull = null,
+		functionOrNull = null)
 
 fun Term.plus(field: TermField): Term =
 	Term(
@@ -126,15 +128,22 @@ fun Term.plus(field: TermField): Term =
 			localScope.valueToTypeDictionary.plus(typeField).valueOrNull?.value
 				?: if (field.value.typeTermOrNull == null) null
 				else typeTerm.plus(typeField)
-		})
-
-
+		},
+		functionOrNull = null)
 
 fun Term.plus(term: Term) =
 	fold(term.fieldSeq) { plus(it) }
 
 val Term.typeTerm get() =
 	typeTermOrNull?:this
+
+val Term.invoke
+	get() =
+		typeTerm.function.invoke(parameter(this))
+
+val Term.function
+	get() =
+		functionOrNull.orIfNull { function(this, argument.template) }
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
@@ -147,6 +156,12 @@ fun Term.leafPlus(term: Term): Term =
 
 fun term(vararg fields: TermField): Term =
 	empty.term.fold(fields) { plus(it) }
+
+infix fun Term.of(type: Term) =
+	copy(typeTermOrNull = type)
+
+infix fun Term.gives(function: Function) =
+	copy(functionOrNull = function)
 
 fun Appendable.append(term: Term): Appendable =
 	tryAppend { appendSimple(term) } ?: appendComplex(term)

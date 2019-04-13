@@ -234,39 +234,54 @@ class TermTest {
 	}
 
 	@Test
-	fun types() {
-		val bitType = term("bit" to term("either" to term("zero"), "either" to term("one")))
-		val bitZero = term("bit" to term("zero"))
-		val bitOne = term("bit" to term("one"))
-		val bitTwo = term("bit" to term("two"))
-
-		val scope = empty.scope
-			.define(term("bit") has term("either" to term("zero"), "either" to term("one")))
-
-		scope
-			.invoke("bit" to script("zero"))
-			.typeTerm
-			.assertEqualTo(term("bit"))
-//
-//		term.invoke("class" to script("bit" to script("one")))
-//			.typeTerm
-//			.assertEqualTo(term.plus("bit"))
-//
-//		term.invoke("class" to script("bit" to script("two")))
-//			.typeTerm
-//			.assertEqualTo(term.plus("bit" to term.plus("two")))
-//
-//		term.invoke("class" to script("the" to script("bit" to script("zero"))))
-//			.typeTerm
-//			.assertEqualTo(term.plus("the" to script("bit")))
-	}
-
-	@Test
 	fun listTermSeqOrNull() {
 		term().listTermSeqOrNull("foo")!!.assertContains()
 		term("foo").listTermSeqOrNull("foo")!!.assertContains(term())
 		term("foo" to term("bar")).listTermSeqOrNull("foo")!!.assertContains(term("bar"))
 		term("foo" to term("bar"), "foo" to term("zar")).listTermSeqOrNull("foo")!!.assertContains(term("bar"), term("zar"))
 		term("foo" to term(), "zoo" to term()).listTermSeqOrNull("foo").assertEqualTo(null)
+	}
+
+	@Test
+	fun invoke() {
+		val bitType = term("bit")
+
+		val bitZero = term("bit" to term("zero")) of bitType
+		val bitOne = term("bit" to term("one")) of bitType
+
+		val notBitType = term("not" to term("bit")) gives function(
+			bitType,
+			template(
+				argument,
+				op(
+					switch(
+						term("not" to bitZero) caseTo bitOne,
+						term("not" to bitOne) caseTo bitZero))))
+
+		val notBitZero = term("not" to bitZero) of notBitType
+		val notBitOne = term("not" to bitOne) of notBitType
+
+		val bitAndBitType = bitType.plus("and" to bitType) gives function(
+			bitType,
+			template(
+				argument,
+				op(
+					switch(
+						bitZero.plus("and" to bitZero) caseTo bitZero,
+						bitZero.plus("and" to bitOne) caseTo bitZero,
+						bitOne.plus("and" to bitZero) caseTo bitZero,
+						bitOne.plus("and" to bitOne) caseTo bitOne))))
+
+		val bitZeroAndBitZero = bitZero.plus("and" to bitZero) of bitAndBitType
+		val bitZeroAndBitOne = bitZero.plus("and" to bitOne) of bitAndBitType
+		val bitOneAndBitZero = bitOne.plus("and" to bitZero) of bitAndBitType
+		val bitOneAndBitOne = bitOne.plus("and" to bitOne) of bitAndBitType
+
+		notBitZero.invoke.assertEqualTo(bitOne)
+		notBitOne.invoke.assertEqualTo(bitZero)
+		bitZeroAndBitZero.invoke.assertEqualTo(bitZero)
+		bitZeroAndBitOne.invoke.assertEqualTo(bitZero)
+		bitOneAndBitZero.invoke.assertEqualTo(bitZero)
+		bitOneAndBitOne.invoke.assertEqualTo(bitOne)
 	}
 }
