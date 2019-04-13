@@ -143,7 +143,7 @@ val Term.invoke
 
 val Term.function
 	get() =
-		functionOrNull.orIfNull { function(this, argument.template) }
+		functionOrNull.orIfNull { argument.template of this }
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)

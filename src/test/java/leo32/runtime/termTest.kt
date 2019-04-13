@@ -249,39 +249,68 @@ class TermTest {
 		val bitZero = term("bit" to term("zero")) of bitType
 		val bitOne = term("bit" to term("one")) of bitType
 
-		val notBitType = term("not" to term("bit")) gives function(
-			bitType,
-			template(
-				argument,
-				op(
-					switch(
-						term("not" to bitZero) caseTo bitOne,
-						term("not" to bitOne) caseTo bitZero))))
+		val notBitTemplate = template(
+			argument,
+			op(
+				switch(
+					term("not" to bitZero) caseTo bitOne,
+					term("not" to bitOne) caseTo bitZero)))
+
+		val notBitFunction = notBitTemplate of bitType
+
+		val notBitType = term("not" to term("bit")) gives notBitFunction
 
 		val notBitZero = term("not" to bitZero) of notBitType
 		val notBitOne = term("not" to bitOne) of notBitType
 
-		val bitAndBitType = bitType.plus("and" to bitType) gives function(
-			bitType,
-			template(
-				argument,
-				op(
-					switch(
-						bitZero.plus("and" to bitZero) caseTo bitZero,
-						bitZero.plus("and" to bitOne) caseTo bitZero,
-						bitOne.plus("and" to bitZero) caseTo bitZero,
-						bitOne.plus("and" to bitOne) caseTo bitOne))))
+		val bitAndBitTemplate = template(
+			argument,
+			op(
+				switch(
+					bitZero.plus("and" to bitZero) caseTo bitZero,
+					bitZero.plus("and" to bitOne) caseTo bitZero,
+					bitOne.plus("and" to bitZero) caseTo bitZero,
+					bitOne.plus("and" to bitOne) caseTo bitOne)))
+
+		val bitAndBitFunction = bitAndBitTemplate of bitType
+
+		val bitAndBitType = bitType.plus("and" to bitType) gives bitAndBitFunction
 
 		val bitZeroAndBitZero = bitZero.plus("and" to bitZero) of bitAndBitType
 		val bitZeroAndBitOne = bitZero.plus("and" to bitOne) of bitAndBitType
 		val bitOneAndBitZero = bitOne.plus("and" to bitZero) of bitAndBitType
 		val bitOneAndBitOne = bitOne.plus("and" to bitOne) of bitAndBitType
 
+		val bitOrBitTemplate = template(
+			op("not" to template(
+				op("not" to template(argument, op(get(lhs)))),
+				op(call(notBitTemplate)),
+				op("and" to template(
+					op("not" to template(argument, op(get(rhs)))),
+					op(call(notBitTemplate)))),
+				op(call(bitAndBitTemplate)))),
+			op(call(notBitTemplate)))
+
+		val bitOrBitFunction = bitOrBitTemplate of bitType
+
+		val bitOrBitType = bitType.plus("or" to bitType) gives bitOrBitFunction
+
+		val bitZeroOrBitZero = bitZero.plus("or" to bitZero) of bitOrBitType
+		val bitZeroOrBitOne = bitZero.plus("or" to bitOne) of bitOrBitType
+		val bitOneOrBitZero = bitOne.plus("or" to bitZero) of bitOrBitType
+		val bitOneOrBitOne = bitOne.plus("or" to bitOne) of bitOrBitType
+
 		notBitZero.invoke.assertEqualTo(bitOne)
 		notBitOne.invoke.assertEqualTo(bitZero)
+
 		bitZeroAndBitZero.invoke.assertEqualTo(bitZero)
 		bitZeroAndBitOne.invoke.assertEqualTo(bitZero)
 		bitOneAndBitZero.invoke.assertEqualTo(bitZero)
 		bitOneAndBitOne.invoke.assertEqualTo(bitOne)
+
+		bitZeroOrBitZero.invoke.assertEqualTo(bitZero)
+		bitZeroOrBitOne.invoke.assertEqualTo(bitOne)
+		bitOneOrBitZero.invoke.assertEqualTo(bitOne)
+		bitOneOrBitOne.invoke.assertEqualTo(bitOne)
 	}
 }

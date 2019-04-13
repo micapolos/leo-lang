@@ -1,11 +1,12 @@
 package leo32.runtime
 
 data class Function(
-	val returnTypeTerm: Term,
-	val template: Template)
+	val template: Template,
+	val returnTypeTerm: Term)
 
-fun function(returnTypeTerm: Term, template: Template) =
-	Function(returnTypeTerm, template)
+infix fun Template.of(type: Term) =
+	Function(this, type)
 
 fun Function.invoke(parameter: Parameter): Term =
 	template.invoke(parameter)
+
