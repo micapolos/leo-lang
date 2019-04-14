@@ -17,15 +17,16 @@ data class Term(
 	val nodeOrNull: Node?,
 	val intOrNull: Int?,
 	val typeTermOrNull: Term?,
-	val functionOrNull: Function?) {
+	val argumentOrNull: Term?,
+	val switchOrNull: Switch?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.stringDict(), null, true, null, null, null, null)
+	Term(this, this, list(), empty.stringDict(), null, true, null, null, null, null, null)
 
 val Empty.term get() =
-	Term(scope, scope, list(), stringDict(), null, true, null, null, null, null)
+	Term(scope, scope, list(), stringDict(), null, true, null, null, null, null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -87,10 +88,21 @@ fun Term.invoke(line: Line): Term =
 			plusResolved(line.name to childTerm)
 		}
 
+fun Term.invoke(script: Script): Term =
+	fold(script.lineSeq) { invoke(it) }
+
+fun Term.invoke(field: TermField): Term =
+	begin
+		.plus(field.value)
+		.let { childTerm ->
+			plusResolved(field.name to childTerm)
+		}
+
+fun Term.invoke(term: Term): Term =
+	fold(term.fieldSeq) { invoke(it) }
+
 fun Term.plusResolved(field: TermField) =
-	copy(localScope = localScope.plus(field))
-		.plusMacro(field)
-		.eval()
+	plusMacro(field).invoke
 
 fun Term.eval(): Term =
 	localScope.invoke(parameter(this)) ?: this
@@ -106,30 +118,36 @@ val Term.begin get() =
 		nodeOrNull = null,
 		intOrNull = null,
 		typeTermOrNull = null,
-		functionOrNull = null)
+		argumentOrNull = null,
+		switchOrNull = null)
 
-fun Term.plus(field: TermField): Term =
-	Term(
+fun Term.plus(field: TermField): Term {
+	val localScope = localScope.plusValue(field)
+	return Term(
 		scope = scope,
 		localScope = localScope,
 		fieldList = fieldList.add(field),
 		termListDict = termListDict.update(field.name) {
-			(this?:empty.list()).add(field.value)
+			(this ?: empty.list()).add(field.value)
 		},
 		termListOrNull = when {
-				termListOrNull != null -> termListOrNull.plus(field)
-				fieldCount.int == 1 -> termListOrNull(fieldList.at(0.i32), field)
-				else -> null
+			termListOrNull != null -> termListOrNull.plus(field)
+			fieldCount.int == 1 -> termListOrNull(fieldList.at(0.i32), field)
+			else -> null
 		},
 		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
 		nodeOrNull = Node(this, field),
 		intOrNull = if (nodeOrNull == null) field.intOrNull else null,
-		typeTermOrNull = field.typeTermField.let { typeField ->
-			localScope.valueToTypeDictionary.plus(typeField).valueOrNull?.value
-				?: if (field.value.typeTermOrNull == null) null
-				else typeTerm.plus(typeField)
-		},
-		functionOrNull = null)
+		typeTermOrNull =
+		localScope
+			.valueToTypeDictionary
+			.valueOrNull
+			?: notNullIf(field.value.typeTermOrNull != null || typeTermOrNull != null) {
+				typeTerm.plus(field.typeTermField)
+			},
+		argumentOrNull = null,
+		switchOrNull = null)
+}
 
 fun Term.plus(term: Term) =
 	fold(term.fieldSeq) { plus(it) }
@@ -139,11 +157,18 @@ val Term.typeTerm get() =
 
 val Term.invoke
 	get() =
-		typeTerm.function.invoke(parameter(this))
+		typeTerm.let { typeTerm ->
+			scope.typeToBodyDictionary.at(typeTerm)?.let { body ->
+				typeTerm.clear
+					.copy(argumentOrNull = this)
+					.invoke(body)
+					.copy(argumentOrNull = typeTerm.argumentOrNull)
+			}.orIfNull { this }
+		}
 
-val Term.function
+val Term.argument
 	get() =
-		functionOrNull.orIfNull { argument.template of this }
+		argumentOrNull.orIfNull { term("error" to term("argument")) }
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
@@ -160,8 +185,8 @@ fun term(vararg fields: TermField): Term =
 infix fun Term.of(type: Term) =
 	copy(typeTermOrNull = type)
 
-infix fun Term.gives(function: Function) =
-	copy(functionOrNull = function)
+infix fun Term.defineGives(term: Term) =
+	set(scope.define(this gives term))
 
 fun Appendable.append(term: Term): Appendable =
 	tryAppend { appendSimple(term) } ?: appendComplex(term)
@@ -239,6 +264,11 @@ fun Term.plusMacroIs(field: TermField): Term? =
 	if (field.name == "is") clear.plus(leafPlus(field.value))
 	else null
 
+fun Term.plusMacroArgument(field: TermField): Term? =
+	notNullIf(isEmpty && field == "argument" to term()) {
+		clear.plus(argument)
+	}
+
 fun Term.plusMacro(field: TermField): Term =
 	null
 		?:plusMacroUnquote(field)
@@ -248,6 +278,7 @@ fun Term.plusMacro(field: TermField): Term =
 		?:plusMacroGives(field)
 		?:plusMacroClass(field)
 		?:plusMacroDescribe(field)
+		?: plusMacroArgument(field)
 		?:plusMacroGet(field)
 		?:plusMacroWrap(field)
 		?:plus(field)
@@ -272,3 +303,9 @@ fun term(boolean: Boolean) =
 
 fun term(int: Int) =
 	term(termField(int))
+
+fun Term.invoke(termHasTerm: TermHasTerm) =
+	set(scope.define(termHasTerm))
+
+fun Term.invoke(termGivesTerm: TermGivesTerm) =
+	set(scope.define(termGivesTerm))

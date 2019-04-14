@@ -9,10 +9,11 @@ import leo32.base.LeafTree
 data class Scope(
 	val valueToTypeDictionary: Dictionary<Term>,
 	val typeToValueDictionary: Dictionary<Term>,
-	val typeToTemplateDictionary: Dictionary<Template>)
+	val typeToTemplateDictionary: Dictionary<Template>,
+	val typeToBodyDictionary: Dictionary<Term>)
 
 val Empty.scope get() =
-	Scope(dictionary(), dictionary(), dictionary())
+	Scope(dictionary(), dictionary(), dictionary(), dictionary())
 
 fun Scope.define(termHasTerm: TermHasTerm): Scope =
 	termHasTerm.rhs
@@ -29,15 +30,14 @@ fun Scope.define(termHasTerm: TermHasTerm): Scope =
 				termHasTerm.lhs.leafPlus(termHasTerm.rhs),
 				termHasTerm.lhs))
 		}.copy(typeToValueDictionary = typeToValueDictionary.put(
-				termHasTerm.lhs,
-				termHasTerm.lhs.leafPlus(termHasTerm.rhs)))
+			termHasTerm.lhs, termHasTerm.lhs.leafPlus(termHasTerm.rhs)))
 
 fun Scope.define(termGivesTerm: TermGivesTerm): Scope =
 	copy(typeToTemplateDictionary = typeToTemplateDictionary.put(
 		termGivesTerm.lhs,
 		template(termGivesTerm.rhs)))
 
-fun Scope.plus(field: TermField) =
+fun Scope.plusValue(field: TermField) =
 	copy(
 		valueToTypeDictionary = valueToTypeDictionary.plus(field),
 		typeToValueDictionary = typeToValueDictionary.plus(field),
@@ -50,7 +50,7 @@ fun Scope.invoke(parameter: Parameter): Term? =
 			is LeafTree ->
 				if (tree.leaf.value == null) null
 				else typeToTemplateDictionary
-					.at(tree.leaf.value.value)
+					.at(tree.leaf.value)
 					?.let { template -> template.invoke(parameter) }
 		}
 	}

@@ -4,6 +4,9 @@ package leo32.base
 
 import leo.base.*
 import leo.binary.Bit
+import leo.binary.bit
+import leo.binary.one
+import leo.binary.zero
 import leo32.Seq32
 import leo32.bitSeq
 
@@ -95,6 +98,17 @@ fun <T: Any> Tree<T?>.seq32(valueSeq32: T.() -> Seq32): Seq32 =
 			}
 		}
 	}
+
+fun <T, R> R.fold(tree: Tree<T>, key: List<Bit>, fn: R.(Pair<List<Bit>, T>) -> R): R =
+	when (tree) {
+		is LeafTree -> fn(key to tree.leaf.value)
+		is BranchTree -> this
+			.fold(tree.branch.at0, key.add(zero.bit), fn)
+			.fold(tree.branch.at1, key.add(one.bit), fn)
+	}
+
+fun <T, R> R.foldKeyed(tree: Tree<T>, fn: R.(Pair<List<Bit>, T>) -> R): R =
+	fold(tree, list(), fn)
 
 fun <T, R> R.foldValues(tree: Tree<T>, fn: R.(T) -> R): R =
 	when (tree) {

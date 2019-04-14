@@ -8,14 +8,14 @@ import org.junit.Test
 class DictionaryTest {
 	@Test
 	fun string() {
-		empty.dictionary<Int>()
+		empty.dictionary<Term>()
 			.string
 			.assertEqualTo("dictionary")
 
-		empty.dictionary<Int>()
-			.put(term("zero"), 0)
-			.put(term("inc" to term("zero")), 1)
+		empty.dictionary<Term>()
+			.put(term("zero"), term("0"))
+			.put(term("inc" to term("zero")), term("1"))
 			.string
-			.assertEqualTo("dictionary.put(inc zero to int 1).put(zero to int 0)")
+			.assertEqualTo("dictionary.put(inc(zero()), 1).put(zero(), 0)")
 	}
 }

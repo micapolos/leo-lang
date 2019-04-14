@@ -2,9 +2,7 @@
 
 package leo32.runtime
 
-import leo.base.Empty
-import leo.base.empty
-import leo.base.fold
+import leo.base.*
 import leo32.base.Dict
 import leo32.base.at
 import leo32.base.put
@@ -35,3 +33,13 @@ fun Switch.invoke(term: Term): Term =
 val Switch.termField
 	get() =
 		"switch" to term()
+
+val TermField.switchOrNull: Switch?
+	get() =
+		ifOrNull(name == "switch") {
+			empty.switch.orNull.fold(value.fieldSeq) { field ->
+				field.caseOrNull?.let { case ->
+					this?.plus(case)
+				}
+			}
+		}

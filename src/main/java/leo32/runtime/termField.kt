@@ -76,4 +76,3 @@ fun TermField.leafPlus(term: Term) =
 
 val TermField.typeTermField get() =
 	name to value.typeTerm
-

@@ -5,7 +5,7 @@ import leo.binary.Bit
 import leo.binary.isZero
 import leo32.Seq32
 
-data class Branch<T>(
+data class Branch<out T>(
 	val at0: T,
 	val at1: T)
 

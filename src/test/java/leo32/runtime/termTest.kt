@@ -242,75 +242,138 @@ class TermTest {
 		term("foo" to term(), "zoo" to term()).listTermSeqOrNull("foo").assertEqualTo(null)
 	}
 
+//	@Test
+//	fun invoke() {
+//		val bitType = term("bit")
+//
+//		val bitZero = term("bit" to term("zero")) of bitType
+//		val bitOne = term("bit" to term("one")) of bitType
+//
+//		val notBitTemplate = template(
+//			argument,
+//			op(
+//				switch(
+//					term("not" to bitZero) caseTo bitOne,
+//					term("not" to bitOne) caseTo bitZero)))
+//
+//		val notBitFunction = notBitTemplate of bitType
+//
+//		val notBitType = term("not" to term("bit")) gives notBitFunction
+//
+//		val notBitZero = term("not" to bitZero) of notBitType
+//		val notBitOne = term("not" to bitOne) of notBitType
+//
+//		val bitAndBitTemplate = template(
+//			argument,
+//			op(
+//				switch(
+//					bitZero.plus("and" to bitZero) caseTo bitZero,
+//					bitZero.plus("and" to bitOne) caseTo bitZero,
+//					bitOne.plus("and" to bitZero) caseTo bitZero,
+//					bitOne.plus("and" to bitOne) caseTo bitOne)))
+//
+//		val bitAndBitFunction = bitAndBitTemplate of bitType
+//
+//		val bitAndBitType = bitType.plus("and" to bitType) gives bitAndBitFunction
+//
+//		val bitZeroAndBitZero = bitZero.plus("and" to bitZero) of bitAndBitType
+//		val bitZeroAndBitOne = bitZero.plus("and" to bitOne) of bitAndBitType
+//		val bitOneAndBitZero = bitOne.plus("and" to bitZero) of bitAndBitType
+//		val bitOneAndBitOne = bitOne.plus("and" to bitOne) of bitAndBitType
+//
+//		val bitOrBitTemplate = template(
+//			op("not" to template(
+//				op("not" to template(argument, op(get(lhs)))),
+//				op(call(notBitTemplate)),
+//				op("and" to template(
+//					op("not" to template(argument, op(get(rhs)))),
+//					op(call(notBitTemplate)))),
+//				op(call(bitAndBitTemplate)))),
+//			op(call(notBitTemplate)))
+//
+//		val bitOrBitFunction = bitOrBitTemplate of bitType
+//
+//		val bitOrBitType = bitType.plus("or" to bitType) gives bitOrBitFunction
+//
+//		val bitZeroOrBitZero = bitZero.plus("or" to bitZero) of bitOrBitType
+//		val bitZeroOrBitOne = bitZero.plus("or" to bitOne) of bitOrBitType
+//		val bitOneOrBitZero = bitOne.plus("or" to bitZero) of bitOrBitType
+//		val bitOneOrBitOne = bitOne.plus("or" to bitOne) of bitOrBitType
+//
+//		notBitZero.invoke.assertEqualTo(bitOne)
+//		notBitOne.invoke.assertEqualTo(bitZero)
+//
+//		bitZeroAndBitZero.invoke.assertEqualTo(bitZero)
+//		bitZeroAndBitOne.invoke.assertEqualTo(bitZero)
+//		bitOneAndBitZero.invoke.assertEqualTo(bitZero)
+//		bitOneAndBitOne.invoke.assertEqualTo(bitOne)
+//
+//		bitZeroOrBitZero.invoke.assertEqualTo(bitZero)
+//		bitZeroOrBitOne.invoke.assertEqualTo(bitOne)
+//		bitOneOrBitZero.invoke.assertEqualTo(bitOne)
+//		bitOneOrBitOne.invoke.assertEqualTo(bitOne)
+//	}
+
 	@Test
-	fun invoke() {
-		val bitType = term("bit")
+	fun invokeTermHasTerm() {
+		val term = term()
+			.invoke(
+				term("bit") has term(
+					"either" to term("zero"),
+					"either" to term("one")))
 
-		val bitZero = term("bit" to term("zero")) of bitType
-		val bitOne = term("bit" to term("one")) of bitType
+		term
+			.invoke("bit" to term("zero"))
+			.typeTerm
+			.assertEqualTo(term("bit"))
 
-		val notBitTemplate = template(
-			argument,
-			op(
-				switch(
-					term("not" to bitZero) caseTo bitOne,
-					term("not" to bitOne) caseTo bitZero)))
+		term
+			.invoke("bit" to term("one"))
+			.typeTerm
+			.assertEqualTo(term("bit"))
 
-		val notBitFunction = notBitTemplate of bitType
+		term
+			.invoke("not" to term("bit" to term("one")))
+			.typeTerm
+			.assertEqualTo(term.plus("not" to term("bit")))
 
-		val notBitType = term("not" to term("bit")) gives notBitFunction
+		term
+			.invoke("bit" to term("zero"))
+			.invoke("and" to term("bit" to term("one")))
+			.typeTerm
+			.assertEqualTo(term("bit" to term(), "and" to term("bit")))
 
-		val notBitZero = term("not" to bitZero) of notBitType
-		val notBitOne = term("not" to bitOne) of notBitType
+		term
+			.invoke("bit" to term("zero"))
+			.invoke("bit" to term("one"))
+			.typeTerm
+			.assertEqualTo(term("bit").plus(term.invoke("bit" to term("one"))))
+	}
 
-		val bitAndBitTemplate = template(
-			argument,
-			op(
-				switch(
-					bitZero.plus("and" to bitZero) caseTo bitZero,
-					bitZero.plus("and" to bitOne) caseTo bitZero,
-					bitOne.plus("and" to bitZero) caseTo bitZero,
-					bitOne.plus("and" to bitOne) caseTo bitOne)))
+	@Test
+	fun invokeTermHasTermMacro() {
+		val term0 = term()
 
-		val bitAndBitFunction = bitAndBitTemplate of bitType
+		val term1 = term()
+			.invoke(
+				term(
+					"circle" to term(),
+					"has" to term("radius")))
 
-		val bitAndBitType = bitType.plus("and" to bitType) gives bitAndBitFunction
+		term1
+			.assertEqualTo(
+				term()
+					.invoke(
+						term0.invoke(term("circle")) has term0.invoke(term("radius"))))
 
-		val bitZeroAndBitZero = bitZero.plus("and" to bitZero) of bitAndBitType
-		val bitZeroAndBitOne = bitZero.plus("and" to bitOne) of bitAndBitType
-		val bitOneAndBitZero = bitOne.plus("and" to bitZero) of bitAndBitType
-		val bitOneAndBitOne = bitOne.plus("and" to bitOne) of bitAndBitType
+		val term2 = term1
+			.invoke(
+				term(
+					"color" to term(),
+					"has" to term("alpha")))
 
-		val bitOrBitTemplate = template(
-			op("not" to template(
-				op("not" to template(argument, op(get(lhs)))),
-				op(call(notBitTemplate)),
-				op("and" to template(
-					op("not" to template(argument, op(get(rhs)))),
-					op(call(notBitTemplate)))),
-				op(call(bitAndBitTemplate)))),
-			op(call(notBitTemplate)))
-
-		val bitOrBitFunction = bitOrBitTemplate of bitType
-
-		val bitOrBitType = bitType.plus("or" to bitType) gives bitOrBitFunction
-
-		val bitZeroOrBitZero = bitZero.plus("or" to bitZero) of bitOrBitType
-		val bitZeroOrBitOne = bitZero.plus("or" to bitOne) of bitOrBitType
-		val bitOneOrBitZero = bitOne.plus("or" to bitZero) of bitOrBitType
-		val bitOneOrBitOne = bitOne.plus("or" to bitOne) of bitOrBitType
-
-		notBitZero.invoke.assertEqualTo(bitOne)
-		notBitOne.invoke.assertEqualTo(bitZero)
-
-		bitZeroAndBitZero.invoke.assertEqualTo(bitZero)
-		bitZeroAndBitOne.invoke.assertEqualTo(bitZero)
-		bitOneAndBitZero.invoke.assertEqualTo(bitZero)
-		bitOneAndBitOne.invoke.assertEqualTo(bitOne)
-
-		bitZeroOrBitZero.invoke.assertEqualTo(bitZero)
-		bitZeroOrBitOne.invoke.assertEqualTo(bitOne)
-		bitOneOrBitZero.invoke.assertEqualTo(bitOne)
-		bitOneOrBitOne.invoke.assertEqualTo(bitOne)
+		term2
+			.assertEqualTo(
+				term1.invoke(term0.invoke(term("color")) has term0.invoke(term("alpha"))))
 	}
 }
