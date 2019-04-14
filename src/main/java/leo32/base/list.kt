@@ -47,6 +47,8 @@ fun <T: Any> List<T>.at(index: I32): T =
 
 val <T: Any> List<T>.first: T get() = at(0.i32)
 
+val <T : Any> List<T>.last: T get() = at(size.dec)
+
 fun <T: Any> List<T>.subseq(index: I32): Seq<T> =
 	Seq {
 		notNullIf(startInclusive.plus(index) < endExclusive) {

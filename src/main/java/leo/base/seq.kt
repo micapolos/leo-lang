@@ -37,6 +37,9 @@ val <T> Seq<T>.seqNodeOrNull: SeqNode<T>?
 	get() =
 		seqNodeOrNullFn()
 
+fun <T> Empty.seq() =
+	emptySeq<T>()
+
 fun <T> emptySeq(): Seq<T> =
 	Seq { null }
 

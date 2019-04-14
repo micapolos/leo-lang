@@ -8,4 +8,4 @@ val String.utf8BitSeq
 
 val String.utf8ByteSeq
 	get() =
-		utf8ByteArray
+		utf8ByteArray.seq
