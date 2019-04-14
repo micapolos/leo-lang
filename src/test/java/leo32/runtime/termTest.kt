@@ -376,4 +376,27 @@ class TermTest {
 			.assertEqualTo(
 				term1.invoke(term0.invoke(term("color")) has term0.invoke(term("alpha"))))
 	}
+
+	@Test
+	fun termSwitchOrNull() {
+		term("switch")
+			.switchOrNull
+			.assertEqualTo(switch())
+
+		term(
+			"switch" to term(
+				"case" to term(
+					"one" to term(),
+					"to" to term("two"))))
+			.switchOrNull
+			.assertEqualTo(
+				switch(
+					term("one") caseTo term("two")))
+
+		term(
+			"foo" to term(),
+			"switch" to term())
+			.switchOrNull
+			.assertEqualTo(null)
+	}
 }

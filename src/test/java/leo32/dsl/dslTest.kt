@@ -68,6 +68,50 @@ class DslTest {
 		_eval(char('a')).assertGives(char(_line("'a'")))
 		_eval(string("foo")).assertGives(string(_line("\"foo\"")))
 	}
+
+	@Test
+	fun switching() {
+		_eval(
+			negate(bit(zero())),
+			switch(
+				case(
+					negate(bit(zero())),
+					_to(bit(one()))),
+				case(
+					negate(bit(one())),
+					_to(bit(zero())))))
+			.assertGives(bit(one()))
+
+		_eval(
+			negate(bit(one())),
+			switch(
+				case(
+					negate(bit(zero())),
+					_to(bit(one()))),
+				case(
+					negate(bit(one())),
+					_to(bit(zero())))))
+			.assertGives(bit(zero()))
+
+		_eval(
+			negate(bit(two())),
+			switch(
+				case(
+					negate(bit(zero())),
+					_to(bit(one()))),
+				case(
+					negate(bit(one())),
+					_to(bit(zero())))))
+			.assertGives(
+				negate(bit(two())),
+				switch(
+					case(
+						negate(bit(zero())),
+						_to(bit(one()))),
+					case(
+						negate(bit(one())),
+						_to(bit(zero())))))
+	}
 }
 
 fun Script.assertGives(vararg lines: Line) =

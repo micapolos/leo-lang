@@ -15,6 +15,7 @@ fun aFun(vararg xs: Line) = _fun(*xs)
 fun anIn(vararg xs: Line) = _in(*xs)
 fun anInterface(vararg xs: Line) = _interface(*xs)
 fun aTrue(vararg xs: Line) = _true(*xs)
+fun _to(vararg xs: Line) = to(*xs)
 
 fun _script(vararg lines: Line) =
 	leo32.runtime.script(*lines)

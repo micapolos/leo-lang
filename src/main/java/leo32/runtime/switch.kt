@@ -22,13 +22,8 @@ fun switch(vararg cases: Case) =
 fun Switch.plus(case: Case) =
 	copy(termToTermDict = termToTermDict.put(case.key, case.value))
 
-fun Switch.invoke(term: Term): Term =
-	termToTermDict
-		.at(term)
-		?: term("error" to
-			term(
-				termField,
-				"invoke" to term))
+fun Switch.invoke(term: Term): Term? =
+	termToTermDict.at(term)
 
 val Switch.termField
 	get() =

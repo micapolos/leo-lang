@@ -33,6 +33,6 @@ fun Op.invoke(term: Term, parameter: Parameter): Term =
 	when (this) {
 		is GetOp -> get.invoke(term)
 		is FieldOp -> field.invoke(term, parameter)
-		is SwitchOp -> switch.invoke(term)
+		is SwitchOp -> switch.invoke(term) ?: term("error")
 		is CallOp -> call.invoke(term)
 	}

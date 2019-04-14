@@ -146,7 +146,7 @@ fun Term.plus(field: TermField): Term {
 				typeTerm.plus(field.typeTermField)
 			},
 		argumentOrNull = null,
-		switchOrNull = null)
+		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull })
 }
 
 fun Term.plus(term: Term) =
@@ -253,7 +253,7 @@ fun Term.plusMacroDescribe(field: TermField): Term? =
 
 fun Term.plusMacroGives(field: TermField): Term? =
 	ifOrNull(field.name == "gives" && !isEmpty && !field.value.isEmpty) {
-		clear.set(scope.define(this gives field.value))
+		clear.set(scope.define(this caseTo field.value))
 	}
 
 fun Term.plusMacroUnquote(field: TermField): Term? =
@@ -269,6 +269,9 @@ fun Term.plusMacroArgument(field: TermField): Term? =
 		clear.plus(argument)
 	}
 
+fun Term.plusMacroSwitch(field: TermField): Term? =
+	field.switchOrNull?.invoke(this)
+
 fun Term.plusMacro(field: TermField): Term =
 	null
 		?:plusMacroUnquote(field)
@@ -281,6 +284,7 @@ fun Term.plusMacro(field: TermField): Term =
 		?: plusMacroArgument(field)
 		?:plusMacroGet(field)
 		?:plusMacroWrap(field)
+		?: plusMacroSwitch(field)
 		?:plus(field)
 
 val Script.term get() =
@@ -309,3 +313,9 @@ fun Term.invoke(termHasTerm: TermHasTerm) =
 
 fun Term.invoke(termGivesTerm: TermGivesTerm) =
 	set(scope.define(termGivesTerm))
+
+fun Term.switchAdd(case: Case): Term? =
+	if (isEmpty) plus("switch" to case.term)
+	else ifNotNull(switchOrNull) {
+		scope.emptyTerm.plus("switch" to nodeOrNull!!.field.value.plus(case.term))
+	}

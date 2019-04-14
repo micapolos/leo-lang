@@ -21,3 +21,7 @@ val Node.bodyCaseOrNull: Case?
 		notNullIf(!lhs.isEmpty && field.name == "to" && !field.value.isEmpty) {
 			lhs caseTo field.value
 		}
+
+val Case.term
+	get() =
+		key.invoke("to" to value)
