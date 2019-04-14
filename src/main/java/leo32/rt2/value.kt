@@ -5,6 +5,7 @@ import leo32.base.List
 import leo32.base.list
 import leo32.base.seq
 import leo32.rt.Symbol
+import leo32.rt.quoteSymbol
 
 data class Value(
 	val scope: Scope,
@@ -66,6 +67,11 @@ fun Value.invokeAt(field: Field) =
 		ifOrNull(script.isSimple) {
 			script.value.at(field.symbol)
 		}
+	}
+
+fun Value.invokeQuote(field: Field) =
+	notNullIf(field.symbol == quoteSymbol) {
+
 	}
 
 fun Value.invokePlus(field: Field): Value =
