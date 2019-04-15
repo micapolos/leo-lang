@@ -335,7 +335,7 @@ class TermTest {
 		term
 			.invoke("not" to term("bit" to term("one")))
 			.typeTerm
-			.assertEqualTo(term.plus("not" to term("bit")))
+			.assertEqualTo(term("not" to term("bit")))
 
 		term
 			.invoke("bit" to term("zero"))
@@ -347,7 +347,7 @@ class TermTest {
 			.invoke("bit" to term("zero"))
 			.invoke("bit" to term("one"))
 			.typeTerm
-			.assertEqualTo(term("bit").plus(term.invoke("bit" to term("one"))))
+			.assertEqualTo(term.invoke(term("bit" to term(), "bit" to term("one"))))
 	}
 
 	@Test

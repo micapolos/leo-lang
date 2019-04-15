@@ -104,9 +104,6 @@ fun Term.invoke(term: Term): Term =
 fun Term.plusResolved(field: TermField) =
 	plusMacro(field).invoke
 
-fun Term.eval(): Term =
-	localScope.invoke(parameter(this)) ?: this
-
 val Term.begin get() =
 	Term(
 		scope = scope,
@@ -184,9 +181,6 @@ fun term(vararg fields: TermField): Term =
 
 infix fun Term.of(type: Term) =
 	copy(typeTermOrNull = type)
-
-infix fun Term.defineGives(term: Term) =
-	set(scope.define(this gives term))
 
 fun Appendable.append(term: Term): Appendable =
 	tryAppend { appendSimple(term) } ?: appendComplex(term)
@@ -313,9 +307,6 @@ fun term(int: Int) =
 
 fun Term.invoke(termHasTerm: TermHasTerm) =
 	set(scope.define(termHasTerm))
-
-fun Term.invoke(termGivesTerm: TermGivesTerm) =
-	set(scope.define(termGivesTerm))
 
 fun Term.switchAdd(case: Case): Term? =
 	if (isEmpty) plus("switch" to case.term)
