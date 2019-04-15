@@ -39,13 +39,13 @@ fun Scope.define(termGivesTerm: TermGivesTerm): Scope =
 
 fun Scope.define(case: Case): Scope =
 	copy(typeToBodyDictionary = typeToBodyDictionary.put(case.key, case.value))
-		.run {
-			case.key.typeTermOrNull?.let { typeTerm ->
-				(typeToBodyDictionary.at(typeTerm) ?: term()).switchAdd(case)?.let { added ->
-					copy(typeToBodyDictionary = typeToBodyDictionary.put(typeTerm, added))
-				}
-			} ?: this
-		}
+//		.run {
+//			case.key.typeTermOrNull?.let { typeTerm ->
+//				(typeToBodyDictionary.at(typeTerm) ?: term()).switchAdd(case)?.let { added ->
+//					copy(typeToBodyDictionary = typeToBodyDictionary.put(typeTerm, added))
+//				}
+//			} ?: this
+//		}
 
 fun Scope.plusValue(field: TermField) =
 	copy(

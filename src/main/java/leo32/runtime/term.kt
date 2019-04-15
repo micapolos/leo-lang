@@ -93,7 +93,7 @@ fun Term.invoke(script: Script): Term =
 
 fun Term.invoke(field: TermField): Term =
 	begin
-		.plus(field.value)
+		.invoke(field.value)
 		.let { childTerm ->
 			plusResolved(field.name to childTerm)
 		}
@@ -118,7 +118,7 @@ val Term.begin get() =
 		nodeOrNull = null,
 		intOrNull = null,
 		typeTermOrNull = null,
-		argumentOrNull = null,
+		argumentOrNull = argumentOrNull,
 		switchOrNull = null)
 
 fun Term.plus(field: TermField): Term {
@@ -145,7 +145,7 @@ fun Term.plus(field: TermField): Term {
 			?: notNullIf(field.value.typeTermOrNull != null || typeTermOrNull != null) {
 				typeTerm.plus(field.typeTermField)
 			},
-		argumentOrNull = null,
+		argumentOrNull = argumentOrNull,
 		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull })
 }
 
@@ -153,7 +153,7 @@ fun Term.plus(term: Term) =
 	fold(term.fieldSeq) { plus(it) }
 
 val Term.typeTerm get() =
-	typeTermOrNull?:this
+	typeTermOrNull ?: term().plus(this)
 
 val Term.invoke
 	get() =
@@ -162,13 +162,13 @@ val Term.invoke
 				typeTerm.clear
 					.copy(argumentOrNull = this)
 					.invoke(body)
-					.copy(argumentOrNull = typeTerm.argumentOrNull)
+					.copy(argumentOrNull = argumentOrNull)
 			}.orIfNull { this }
 		}
 
 val Term.argument
 	get() =
-		argumentOrNull.orIfNull { term("error" to term("argument")) }
+		argumentOrNull.orIfNull { term("argument") }
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
@@ -265,7 +265,7 @@ fun Term.plusMacroIs(field: TermField): Term? =
 	else null
 
 fun Term.plusMacroArgument(field: TermField): Term? =
-	notNullIf(isEmpty && field == "argument" to term()) {
+	notNullIf(isEmpty && field.name == "argument" && field.value.isEmpty) {
 		clear.plus(argument)
 	}
 
@@ -294,10 +294,13 @@ val Term.script: Script get() =
 	Script(list<Line>().fold(fieldSeq) { add(it.line) })
 
 fun invoke(line: Line, vararg lines: Line): Script =
-	term().plus(line).fold(lines) { plus(it) }.script
+	invokeTerm(line, *lines).script
+
+fun invokeTerm(line: Line, vararg lines: Line): Term =
+	term().plus(line).fold(lines) { plus(it) }
 
 val Term.clear get() =
-	scope.emptyTerm
+	scope.emptyTerm.copy(argumentOrNull = argumentOrNull)
 
 fun Term.set(scope: Scope) =
 	copy(scope = scope, localScope = scope)

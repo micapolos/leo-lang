@@ -1,5 +1,3 @@
-@file:JvmName("ValueKt")
-
 package leo32.rt
 
 import leo.base.Empty

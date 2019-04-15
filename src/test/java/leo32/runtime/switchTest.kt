@@ -33,4 +33,25 @@ class SwitchTest {
 					term("foo") caseTo term("bar"),
 					term("zoo") caseTo term("zar")))
 	}
+
+	@Test
+	fun switchInvoke() {
+		switch(
+			term("one") caseTo term("jeden"),
+			term("two") caseTo term("dwa"))
+			.invoke(term("one"))
+			.assertEqualTo(term("jeden"))
+
+		switch(
+			term("one") caseTo term("jeden"),
+			term("two") caseTo term("dwa"))
+			.invoke(term("two"))
+			.assertEqualTo(term("dwa"))
+
+		switch(
+			term("one") caseTo term("jeden"),
+			term("two") caseTo term("dwa"))
+			.invoke(term("three"))
+			.assertEqualTo(null)
+	}
 }

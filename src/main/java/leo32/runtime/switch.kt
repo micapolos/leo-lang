@@ -23,7 +23,8 @@ fun Switch.plus(case: Case) =
 	copy(termToTermDict = termToTermDict.put(case.key, case.value))
 
 fun Switch.invoke(term: Term): Term? =
-	termToTermDict.at(term)
+	termToTermDict
+		.at(term)
 
 val Switch.termField
 	get() =

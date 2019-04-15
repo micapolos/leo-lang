@@ -378,6 +378,132 @@ class TermTest {
 	}
 
 	@Test
+	fun argumentRaw() {
+		term()
+			.copy(argumentOrNull = term("zero"))
+			.invoke(script("argument"))
+			.script
+			.assertEqualTo(script("zero"))
+
+		term()
+			.copy(argumentOrNull = term("zero"))
+			.invoke(script("the" to script("argument")))
+			.script
+			.assertEqualTo(script("the" to script("zero")))
+	}
+
+	@Test
+	fun argumentNotBound() {
+		invoke("argument" to script())
+			.assertEqualTo(script("argument"))
+	}
+
+	@Test
+	fun givesArgument() {
+		invoke(
+			"zero" to script(),
+			"gives" to script("argument"),
+			"zero" to script())
+			.assertEqualTo(script("zero"))
+	}
+
+	@Test
+	fun givesTheArgument() {
+		invoke(
+			"zero" to script(),
+			"gives" to script("the" to script("argument")),
+			"zero" to script())
+			.assertEqualTo(script("the" to script("zero")))
+	}
+
+	@Test
+	fun simpleGives() {
+		invoke(
+			"zero" to script(),
+			"gives" to script("one"),
+			"zero" to script())
+			.assertEqualTo(script("one"))
+	}
+
+	@Test
+	fun typeGivesSwitch() {
+		val term = invokeTerm(
+			"bit" to script(),
+			"has" to script(
+				"either" to script("zero"),
+				"either" to script("one")),
+			"negate" to script("bit" to script()),
+			"gives" to script(
+				"argument" to script(),
+				"switch" to script(
+					"case" to script(
+						"negate" to script("bit" to script("zero")),
+						"to" to script("bit" to script("one"))),
+					"case" to script(
+						"negate" to script("bit" to script("one")),
+						"to" to script("bit" to script("zero"))))))
+
+		term.script.assertEqualTo(script())
+		term
+			.invoke("negate" to term("bit" to term("zero")))
+			.script
+			.assertEqualTo(script("bit" to script("one")))
+		term
+			.invoke("negate" to term("bit" to term("one")))
+			.script
+			.assertEqualTo(script("bit" to script("zero")))
+		term
+			.invoke("negate" to term("bit" to term("two")))
+			.script
+			.assertEqualTo(script("negate" to script("bit" to script("two"))))
+	}
+
+	@Test
+	fun macroSwitch() {
+		invoke(
+			"one" to script(),
+			"switch" to script(
+				"case" to script(
+					"one" to script(),
+					"to" to script("jeden")),
+				"case" to script(
+					"two" to script(),
+					"to" to script("dwa"))))
+			.assertEqualTo(script("jeden"))
+
+		invoke(
+			"two" to script(),
+			"switch" to script(
+				"case" to script(
+					"one" to script(),
+					"to" to script("jeden")),
+				"case" to script(
+					"two" to script(),
+					"to" to script("dwa"))))
+			.assertEqualTo(script("dwa"))
+
+		invoke(
+			"three" to script(),
+			"switch" to script(
+				"case" to script(
+					"one" to script(),
+					"to" to script("jeden")),
+				"case" to script(
+					"two" to script(),
+					"to" to script("dwa"))))
+			.assertEqualTo(
+				script(
+					"three" to script(),
+					"switch" to script(
+						"case" to script(
+							"one" to script(),
+							"to" to script("jeden")),
+						"case" to script(
+							"two" to script(),
+							"to" to script("dwa")))))
+	}
+
+	@Test
 	fun termSwitchOrNull() {
 		term("switch")
 			.switchOrNull
