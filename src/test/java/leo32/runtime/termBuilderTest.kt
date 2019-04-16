@@ -79,6 +79,12 @@ class TermBuilderTest {
 			test {
 				not { bit { zero } }
 				gives { bit { one } } }
+			test {
+				not { bit { one } }
+				gives { bit { zero } } }
+			test {
+				not { bit { x } }
+				gives { quote { not { bit { x } } } } }
 		}
 	}
 }
