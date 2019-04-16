@@ -18,15 +18,16 @@ data class Term(
 	val intOrNull: Int?,
 	val typeTermOrNull: Term?,
 	val argumentOrNull: Term?,
-	val switchOrNull: Switch?) {
+	val switchOrNull: Switch?,
+	val quoteDepth: I32) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.stringDict(), null, true, null, null, null, null, null)
+	Term(this, this, list(), empty.stringDict(), null, true, null, null, null, null, null, 0.i32)
 
 val Empty.term get() =
-	Term(scope, scope, list(), stringDict(), null, true, null, null, null, null, null)
+	Term(scope, scope, list(), stringDict(), null, true, null, null, null, null, null, 0.i32)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -116,7 +117,8 @@ val Term.begin get() =
 		intOrNull = null,
 		typeTermOrNull = null,
 		argumentOrNull = argumentOrNull,
-		switchOrNull = null)
+		switchOrNull = null,
+		quoteDepth = quoteDepth)
 
 fun Term.plus(field: TermField): Term {
 	val localScope = localScope.plusValue(field)
@@ -143,7 +145,8 @@ fun Term.plus(field: TermField): Term {
 				typeTerm.plus(field.typeTermField)
 			},
 		argumentOrNull = argumentOrNull,
-		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull })
+		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull },
+		quoteDepth = quoteDepth)
 }
 
 fun Term.plus(term: Term) =
@@ -313,3 +316,23 @@ fun Term.switchAdd(case: Case): Term? =
 	else ifNotNull(switchOrNull) {
 		scope.emptyTerm.plus("switch" to nodeOrNull!!.field.value.plus(case.term))
 	}
+
+// === chained syntax
+
+val Term.quote
+	get() =
+		copy(quoteDepth = quoteDepth.inc)
+
+fun Term.plus(string: String, fn: Term.() -> Term): Term =
+	if (string == "quote") plus(begin.quote.fn())
+	else if (!quoteDepth.isZero) plus(string to begin.fn())
+	else plusResolved(string to begin.fn())
+
+fun Term.plus(string: String) =
+	plus(string) { this }
+
+val Term.descope: Term
+	get() =
+		empty.term.fold(fieldSeq) {
+			plus(it.name to it.value.descope)
+		}
