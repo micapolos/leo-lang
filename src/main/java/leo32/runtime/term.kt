@@ -17,7 +17,7 @@ data class Term(
 	val nodeOrNull: Node?,
 	val intOrNull: Int?,
 	val typeTermOrNull: Term?,
-	val argumentOrNull: Term?,
+	val selfOrNull: Term?,
 	val switchOrNull: Switch?,
 	val quoteDepth: I32) {
 	override fun toString() = appendableString { it.append(this) }
@@ -117,7 +117,7 @@ val Term.begin get() =
 		nodeOrNull = null,
 		intOrNull = null,
 		typeTermOrNull = null,
-		argumentOrNull = argumentOrNull,
+		selfOrNull = selfOrNull,
 		switchOrNull = null,
 		quoteDepth = quoteDepth)
 
@@ -145,7 +145,7 @@ fun Term.plus(field: TermField): Term {
 			?: notNullIf(field.value.typeTermOrNull != null || typeTermOrNull != null) {
 				typeTerm.plus(field.typeTermField)
 			},
-		argumentOrNull = argumentOrNull,
+		selfOrNull = selfOrNull,
 		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull },
 		quoteDepth = quoteDepth)
 }
@@ -161,15 +161,15 @@ val Term.invoke
 		typeTerm.let { typeTerm ->
 			scope.typeToBodyDictionary.at(typeTerm)?.let { body ->
 				typeTerm.clear
-					.copy(argumentOrNull = this)
+					.copy(selfOrNull = this)
 					.invoke(body)
-					.copy(argumentOrNull = argumentOrNull)
+					.copy(selfOrNull = selfOrNull)
 			}.orIfNull { this }
 		}
 
-val Term.argument
+val Term.self
 	get() =
-		argumentOrNull.orIfNull { term("argument") }
+		selfOrNull ?: term("self")
 
 fun term(name: String, vararg names: String) =
 	term().plus(name, *names)
@@ -226,6 +226,24 @@ fun Term.plusMacroEquals(field: TermField): Term? =
 	if (field.name == "equals") clear.plus(termField(this == field.value))
 	else null
 
+fun Term.plusMacroLhs(field: TermField): Term? =
+	if (isEmpty
+		&& field.name == "lhs"
+		&& field.value.nodeOrNull != null
+		&& !field.value.nodeOrNull.lhs.isEmpty
+		&& !field.value.nodeOrNull.field.value.isEmpty)
+		clear.plus(field.value.nodeOrNull.lhs)
+	else null
+
+fun Term.plusMacroRhs(field: TermField): Term? =
+	if (isEmpty
+		&& field.name == "rhs"
+		&& field.value.nodeOrNull != null
+		&& !field.value.nodeOrNull.lhs.isEmpty
+		&& !field.value.nodeOrNull.field.value.isEmpty)
+		clear.plus(field.value.nodeOrNull.field.value)
+	else null
+
 fun Term.plusMacroClass(field: TermField): Term? =
 	ifOrNull(isEmpty && field.name == "class") {
 		field.value.typeTerm
@@ -258,9 +276,9 @@ fun Term.plusMacroIs(field: TermField): Term? =
 	if (field.name == "is") clear.plus(leafPlus(field.value))
 	else null
 
-fun Term.plusMacroArgument(field: TermField): Term? =
-	notNullIf(isEmpty && field.name == "argument" && field.value.isEmpty) {
-		clear.plus(argument)
+fun Term.plusMacroSelf(field: TermField): Term? =
+	notNullIf(isEmpty && field.name == "self" && field.value.isEmpty) {
+		clear.plus(self)
 	}
 
 fun Term.plusMacroSwitch(field: TermField): Term? =
@@ -275,9 +293,11 @@ fun Term.plusMacro(field: TermField): Term =
 		?:plusMacroTest(field)
 		?:plusMacroClass(field)
 		?:plusMacroDescribe(field)
-		?:plusMacroArgument(field)
+		?: plusMacroSelf(field)
 		?:plusMacroGet(field)
 		?:plusMacroSwitch(field)
+		?: plusMacroLhs(field)
+		?: plusMacroRhs(field)
 		?:plus(field)
 
 fun Term.invokeDefine(term: Term) =
@@ -299,11 +319,12 @@ fun Term.invokeTest(term: Term) =
 					clear.invoke(node.lhs).descope.let { actual ->
 						clear.invoke(node.field.value).descope.let { expected ->
 							if (actual == expected) clear
-							else term(
-								"error" to term(
-									"test" to term,
-									"expected" to expected,
-									"actual" to actual))
+							else throw AssertionError(
+								term(
+									"error" to term(
+										"test" to term,
+										"expected" to expected,
+										"actual" to actual)).string)
 						}
 					}
 				else -> null
@@ -324,7 +345,7 @@ fun invokeTerm(line: Line, vararg lines: Line): Term =
 	term().plus(line).fold(lines) { plus(it) }
 
 val Term.clear get() =
-	scope.emptyTerm.copy(argumentOrNull = argumentOrNull)
+	scope.emptyTerm.copy(selfOrNull = selfOrNull)
 
 fun Term.set(scope: Scope) =
 	copy(scope = scope, localScope = scope)

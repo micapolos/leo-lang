@@ -368,13 +368,13 @@ class TermTest {
 	@Test
 	fun argumentRaw() {
 		term()
-			.copy(argumentOrNull = term("zero"))
+			.copy(selfOrNull = term("zero"))
 			.invoke(script("argument"))
 			.script
 			.assertEqualTo(script("zero"))
 
 		term()
-			.copy(argumentOrNull = term("zero"))
+			.copy(selfOrNull = term("zero"))
 			.invoke(script("the" to script("argument")))
 			.script
 			.assertEqualTo(script("the" to script("zero")))

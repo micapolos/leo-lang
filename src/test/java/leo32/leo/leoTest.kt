@@ -1,11 +1,14 @@
-package leo32.runtime
+package leo32.leo
 
 import leo.base.assertEqualTo
 import leo.base.string
+import leo32.runtime.isEmpty
+import leo32.runtime.simpleAtOrNull
 import kotlin.test.Test
 import kotlin.test.fail
+import kotlin.to
 
-class TermBuilderTest {
+abstract class LeoTest {
 	@Test
 	fun gives() {
 		_term {
@@ -64,7 +67,9 @@ class TermBuilderTest {
 				bit
 				has {
 					either { zero }
-					either { one } } }
+					either { one }
+				}
+			}
 			define {
 				not { bit }
 				gives {
@@ -72,23 +77,36 @@ class TermBuilderTest {
 					switch {
 						case {
 							not { bit { zero } }
-							to { bit { one } } }
+							to { bit { one } }
+						}
 						case {
 							not { bit { one } }
-							to { bit { zero } } } } } }
+							to { bit { zero } }
+						}
+					}
+				}
+			}
 			test {
 				not { bit { zero } }
-				gives { bit { one } } }
+				gives { bit { one } }
+			}
 			test {
 				not { bit { one } }
-				gives { bit { zero } } }
+				gives { bit { zero } }
+			}
 			test {
 				not { bit { x } }
-				gives { quote { not { bit { x } } } } }
+				gives { quote { not { bit { x } } } }
+			}
 		}
 	}
 }
 
-fun _test(fn: Fn) {
-	_term(fn).simpleAtOrNull("error")?.run { fail(string) }
+fun _test(leo: Leo) {
+	_term(leo).run {
+		if (isEmpty) Unit
+		else simpleAtOrNull("error")
+			?.run { fail(string) }
+			?: fail(string)
+	}
 }

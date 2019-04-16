@@ -18,10 +18,10 @@ val TermField.caseOrNull: Case?
 
 val Node.bodyCaseOrNull: Case?
 	get() =
-		notNullIf(!lhs.isEmpty && field.name == "to" && !field.value.isEmpty) {
+		notNullIf(!lhs.isEmpty && field.name == "gives" && !field.value.isEmpty) {
 			lhs caseTo field.value
 		}
 
 val Case.term
 	get() =
-		key.invoke("to" to value)
+		key.invoke("gives" to value)
