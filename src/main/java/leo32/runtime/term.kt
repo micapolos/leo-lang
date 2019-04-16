@@ -230,8 +230,7 @@ fun Term.plusMacroLhs(field: TermField): Term? =
 	if (isEmpty
 		&& field.name == "lhs"
 		&& field.value.nodeOrNull != null
-		&& !field.value.nodeOrNull.lhs.isEmpty
-		&& !field.value.nodeOrNull.field.value.isEmpty)
+		&& !field.value.nodeOrNull.lhs.isEmpty)
 		clear.plus(field.value.nodeOrNull.lhs)
 	else null
 
@@ -239,7 +238,6 @@ fun Term.plusMacroRhs(field: TermField): Term? =
 	if (isEmpty
 		&& field.name == "rhs"
 		&& field.value.nodeOrNull != null
-		&& !field.value.nodeOrNull.lhs.isEmpty
 		&& !field.value.nodeOrNull.field.value.isEmpty)
 		clear.plus(field.value.nodeOrNull.field.value)
 	else null
@@ -252,7 +250,16 @@ fun Term.plusMacroClass(field: TermField): Term? =
 fun Term.plusMacroDescribe(field: TermField): Term? =
 	ifOrNull(isEmpty && field.name == "describe") {
 		scope
-			.typeToValueDictionary
+			.typeToDescribeDictionary
+			.at(field.value)
+			?.let { typeOrNull -> clear.plus(typeOrNull) }
+			.orIfNull { clear.plus(field.value) }
+	}
+
+fun Term.plusMacroBody(field: TermField): Term? =
+	ifOrNull(isEmpty && field.name == "body") {
+		scope
+			.typeToBodyDictionary
 			.at(field.value)
 			?.let { typeOrNull -> clear.plus(typeOrNull) }
 			.orIfNull { clear.plus(field.value) }
@@ -286,19 +293,20 @@ fun Term.plusMacroSwitch(field: TermField): Term? =
 
 fun Term.plusMacro(field: TermField): Term =
 	null
-		?:plusMacroUnquote(field)
-		?:plusMacroIs(field)
-		?:plusMacroEquals(field)
-		?:plusMacroDefine(field)
-		?:plusMacroTest(field)
-		?:plusMacroClass(field)
-		?:plusMacroDescribe(field)
+		?: plusMacroUnquote(field)
+		?: plusMacroIs(field)
+		?: plusMacroEquals(field)
+		?: plusMacroDefine(field)
+		?: plusMacroTest(field)
+		?: plusMacroClass(field)
+		?: plusMacroDescribe(field)
+		?: plusMacroBody(field)
 		?: plusMacroSelf(field)
-		?:plusMacroGet(field)
-		?:plusMacroSwitch(field)
+		?: plusMacroGet(field)
+		?: plusMacroSwitch(field)
 		?: plusMacroLhs(field)
 		?: plusMacroRhs(field)
-		?:plus(field)
+		?: plus(field)
 
 fun Term.invokeDefine(term: Term) =
 	term.nodeOrNull?.let { node ->
@@ -324,7 +332,7 @@ fun Term.invokeTest(term: Term) =
 									"error" to term(
 										"test" to term,
 										"expected" to expected,
-										"actual" to actual)).string)
+										"actual" to actual)).script.code.string)
 						}
 					}
 				else -> null

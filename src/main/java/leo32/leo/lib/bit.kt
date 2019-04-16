@@ -10,6 +10,18 @@ val bitLib: Leo = {
 		}
 	}
 
+	test {
+		describe { bit }
+		gives {
+			quote {
+				bit.has {
+					either { zero }
+					either { one }
+				}
+			}
+		}
+	}
+
 	define {
 		bit.negate.gives {
 			self.switch {
@@ -40,12 +52,12 @@ val bitLib: Leo = {
 
 	define {
 		bit.or { bit }.gives {
-			self.lhs.negate.x { self.rhs.negate }.negate
+			self.lhs.negate.and { self.rhs.negate }.negate
 		}
 	}
 
 	test { zero.bit.or { zero.bit }.gives { zero.bit } }
 //	test { zero.bit.or { one.bit }.gives { one.bit } }
-//  test { one.bit.or { zero.bit }.gives { one.bit } }
+	test { one.bit.or { zero.bit }.gives { one.bit } }
 	test { one.bit.or { one.bit }.gives { one.bit } }
 }

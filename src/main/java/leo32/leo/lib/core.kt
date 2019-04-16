@@ -76,4 +76,10 @@ val coreLib: Leo = {
 		define { zero.and { one }.gives { self.lhs } }
 		zero.and { one }.gives { zero }
 	}
+
+//	test {
+//		define { zero.negate.gives { one } }
+//		define { zero.not.gives { self.rhs.negate } }
+//		zero.not.gives { one }
+//	}
 }

@@ -6,7 +6,7 @@ import leo32.runtime.descope
 import leo32.runtime.plus
 import leo32.runtime.term
 
-data class Builder(var term: Term)
+data class Builder(var _term: Term)
 
 typealias T = Builder
 typealias Leo = Builder.() -> Unit
@@ -16,10 +16,10 @@ val Term.builder
 		Builder(this)
 
 fun Builder.plus(string: String, fn: Builder.() -> Unit): Builder {
-	term = term.plus(string) {
+	_term = _term.plus(string) {
 		val termBuilder = builder
 		termBuilder.fn()
-		termBuilder.term
+		termBuilder._term
 	}
 	return this
 }
@@ -30,7 +30,7 @@ fun Builder.plus(string: String): Builder =
 fun _term(leo: Leo): Term {
 	val termBuilder = empty.term.builder
 	termBuilder.leo()
-	return termBuilder.term.descope
+	return termBuilder._term.descope
 }
 
 fun T.int(int: Int): T = plus("int") { plus(int.toString()) }
