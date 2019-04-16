@@ -103,8 +103,10 @@ fun Term.invoke(term: Term): Term =
 	fold(term.fieldSeq) { invoke(it) }
 
 fun Term.plusResolved(field: TermField) =
-	if (!isEmpty && field.value.isEmpty) clear.plusMacro(field.name to this).invoke
-	else plusMacro(field).invoke
+	if (quoteDepth.isZero)
+		if (!isEmpty && field.value.isEmpty) clear.plusMacro(field.name to this).invoke
+		else plusMacro(field).invoke
+	else plus(field)
 
 val Term.begin get() =
 	Term(

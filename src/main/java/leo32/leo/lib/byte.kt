@@ -18,3 +18,7 @@ val byteLib: Leo = {
 		}
 	}
 }
+
+fun main() {
+	_test(byteLib)
+}

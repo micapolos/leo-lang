@@ -1,12 +1,7 @@
 package leo32.leo
 
 import leo.base.assertEqualTo
-import leo.base.string
-import leo32.base.size
-import leo32.runtime.code
-import leo32.runtime.script
 import kotlin.test.Test
-import kotlin.test.fail
 import kotlin.to
 
 abstract class LeoTest {
@@ -99,15 +94,6 @@ abstract class LeoTest {
 				not { bit { x } }
 				gives { quote { not { bit { x } } } }
 			}
-		}
-	}
-}
-
-fun _test(leo: Leo) {
-	_term(leo).script.run {
-		when {
-			lineList.size.int == 0 -> Unit
-			else -> fail(code.string)
 		}
 	}
 }

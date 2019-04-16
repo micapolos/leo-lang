@@ -1,10 +1,9 @@
 package leo32.leo
 
 import leo.base.empty
-import leo32.runtime.Term
-import leo32.runtime.descope
-import leo32.runtime.plus
-import leo32.runtime.term
+import leo.base.string
+import leo32.base.size
+import leo32.runtime.*
 
 data class Builder(var _term: Term)
 
@@ -36,3 +35,12 @@ fun _term(leo: Leo): Term {
 fun T.int(int: Int): T = plus("int") { plus(int.toString()) }
 
 fun T._import(leo: Leo) = leo()
+
+fun _test(leo: Leo) {
+	_term(leo).script.run {
+		when {
+			lineList.size.int == 0 -> println("ok")
+			else -> throw AssertionError(code.string)
+		}
+	}
+}

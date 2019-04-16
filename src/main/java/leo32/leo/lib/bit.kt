@@ -61,3 +61,7 @@ val bitLib: Leo = {
 	test { one.bit.or { zero.bit }.gives { one.bit } }
 	test { one.bit.or { one.bit }.gives { one.bit } }
 }
+
+fun main() {
+	_test(bitLib)
+}
