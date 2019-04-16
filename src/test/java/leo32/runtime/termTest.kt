@@ -177,21 +177,6 @@ class TermTest {
 	}
 
 	@Test
-	fun evalWrap() {
-		term()
-			.plusMacroWrap("one" to term())
-			.assertEqualTo(null)
-
-		term("red" to term())
-			.plusMacroWrap("color" to term())
-			.assertEqualTo(term("color" to term("red")))
-
-		term("two" to term())
-			.plusMacroWrap("plus" to term("two"))
-			.assertEqualTo(null)
-	}
-
-	@Test
 	fun evalEquals() {
 		term()
 			.plusMacroEquals("equals" to term())
@@ -318,9 +303,11 @@ class TermTest {
 	fun invokeTermHasTerm() {
 		val term = term()
 			.invoke(
-				term("bit") has term(
-					"either" to term("zero"),
-					"either" to term("one")))
+				term("define" to term(
+					"bit" to term(),
+					"has" to term(
+						"either" to term("zero"),
+						"either" to term("one")))))
 
 		term
 			.invoke("bit" to term("zero"))
@@ -347,7 +334,7 @@ class TermTest {
 			.invoke("bit" to term("zero"))
 			.invoke("bit" to term("one"))
 			.typeTerm
-			.assertEqualTo(term.invoke(term("bit" to term(), "bit" to term("one"))))
+			.assertEqualTo(term("bit" to term(), "bit" to term("one")))
 	}
 
 	@Test
@@ -357,8 +344,9 @@ class TermTest {
 		val term1 = term()
 			.invoke(
 				term(
-					"circle" to term(),
-					"has" to term("radius")))
+					"define" to term(
+						"circle" to term(),
+						"has" to term("radius"))))
 
 		term1
 			.assertEqualTo(
@@ -401,26 +389,29 @@ class TermTest {
 	@Test
 	fun givesArgument() {
 		invoke(
-			"zero" to script(),
-			"gives" to script("argument"),
+			"define" to script(
+				"zero" to script(),
+				"gives" to script("argument")),
 			"zero" to script())
 			.assertEqualTo(script("zero"))
 	}
 
 	@Test
-	fun givesTheArgument() {
+	fun defineGivesTheArgument() {
 		invoke(
-			"zero" to script(),
-			"gives" to script("the" to script("argument")),
+			"define" to script(
+				"zero" to script(),
+				"gives" to script("the" to script("argument"))),
 			"zero" to script())
 			.assertEqualTo(script("the" to script("zero")))
 	}
 
 	@Test
-	fun simpleGives() {
+	fun simpleDefineGives() {
 		invoke(
-			"zero" to script(),
-			"gives" to script("one"),
+			"define" to script(
+				"zero" to script(),
+				"gives" to script("one")),
 			"zero" to script())
 			.assertEqualTo(script("one"))
 	}
@@ -428,20 +419,22 @@ class TermTest {
 	@Test
 	fun typeGivesSwitch() {
 		val term = invokeTerm(
-			"bit" to script(),
-			"has" to script(
-				"either" to script("zero"),
-				"either" to script("one")),
-			"negate" to script("bit" to script()),
-			"gives" to script(
-				"argument" to script(),
-				"switch" to script(
-					"case" to script(
-						"negate" to script("bit" to script("zero")),
-						"to" to script("bit" to script("one"))),
-					"case" to script(
-						"negate" to script("bit" to script("one")),
-						"to" to script("bit" to script("zero"))))))
+			"define" to script(
+				"bit" to script(),
+				"has" to script(
+					"either" to script("zero"),
+					"either" to script("one"))),
+			"define" to script(
+				"negate" to script("bit" to script()),
+				"gives" to script(
+					"argument" to script(),
+					"switch" to script(
+						"case" to script(
+							"negate" to script("bit" to script("zero")),
+							"to" to script("bit" to script("one"))),
+						"case" to script(
+							"negate" to script("bit" to script("one")),
+							"to" to script("bit" to script("zero")))))))
 
 		term.script.assertEqualTo(script())
 		term

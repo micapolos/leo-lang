@@ -103,7 +103,8 @@ fun Term.invoke(term: Term): Term =
 	fold(term.fieldSeq) { invoke(it) }
 
 fun Term.plusResolved(field: TermField) =
-	plusMacro(field).invoke
+	if (!isEmpty && field.value.isEmpty) clear.plusMacro(field.name to this).invoke
+	else plusMacro(field).invoke
 
 val Term.begin get() =
 	Term(
@@ -217,22 +218,13 @@ fun Term.map(fn: Term.() -> Term): Term =
 	else nodeOrNull.lhs.fn().plus(nodeOrNull.field.map(fn))
 
 fun Term.plusMacroGet(field: TermField): Term? =
-	ifOrNull(field.value.isEmpty) {
-		onlyOrNullAt(field.name)
+	ifOrNull(isEmpty) {
+		field.value.onlyOrNullAt(field.name)
 	}
-
-fun Term.plusMacroWrap(field: TermField): Term? =
-	if (!isEmpty && field.value.isEmpty) term(field.name to this)
-	else null
 
 fun Term.plusMacroEquals(field: TermField): Term? =
 	if (field.name == "equals") clear.plus(termField(this == field.value))
 	else null
-
-fun Term.plusMacroHas(field: TermField): Term? =
-	ifOrNull(!isEmpty && field.name == "has" && !field.value.isEmpty) {
-		clear.set(scope.define(this has field.value))
-	}
 
 fun Term.plusMacroClass(field: TermField): Term? =
 	ifOrNull(isEmpty && field.name == "class") {
@@ -248,9 +240,14 @@ fun Term.plusMacroDescribe(field: TermField): Term? =
 			.orIfNull { clear.plus(field.value) }
 	}
 
-fun Term.plusMacroGives(field: TermField): Term? =
-	ifOrNull(field.name == "gives" && !isEmpty && !field.value.isEmpty) {
-		clear.set(scope.define(this caseTo field.value))
+fun Term.plusMacroDefine(field: TermField): Term? =
+	ifOrNull(isEmpty && field.name == "define") {
+		invokeDefine(field.value)
+	}
+
+fun Term.plusMacroTest(field: TermField): Term? =
+	ifOrNull(isEmpty && field.name == "test") {
+		invokeTest(field.value)
 	}
 
 fun Term.plusMacroUnquote(field: TermField): Term? =
@@ -274,15 +271,45 @@ fun Term.plusMacro(field: TermField): Term =
 		?:plusMacroUnquote(field)
 		?:plusMacroIs(field)
 		?:plusMacroEquals(field)
-		?:plusMacroHas(field)
-		?:plusMacroGives(field)
+		?:plusMacroDefine(field)
+		?:plusMacroTest(field)
 		?:plusMacroClass(field)
 		?:plusMacroDescribe(field)
-		?: plusMacroArgument(field)
+		?:plusMacroArgument(field)
 		?:plusMacroGet(field)
-		?:plusMacroWrap(field)
-		?: plusMacroSwitch(field)
+		?:plusMacroSwitch(field)
 		?:plus(field)
+
+fun Term.invokeDefine(term: Term) =
+	term.nodeOrNull?.let { node ->
+		ifOrNull(!node.lhs.isEmpty && !node.field.value.isEmpty) {
+			when (node.field.name) {
+				"gives" -> clear.set(scope.define(node.lhs caseTo node.field.value))
+				"has" -> clear.set(scope.define(node.lhs has node.field.value))
+				else -> null
+			}
+		}
+	}
+
+fun Term.invokeTest(term: Term) =
+	term.nodeOrNull?.let { node ->
+		ifOrNull(!node.lhs.isEmpty && !node.field.value.isEmpty) {
+			when (node.field.name) {
+				"gives" ->
+					clear.invoke(node.lhs).descope.let { actual ->
+						clear.invoke(node.field.value).descope.let { expected ->
+							if (actual == expected) clear
+							else term(
+								"error" to term(
+									"test" to term,
+									"expected" to expected,
+									"actual" to actual))
+						}
+					}
+				else -> null
+			}
+		}
+	}
 
 val Script.term get() =
 	term().fold(lineSeq) { plus(it.field) }
@@ -326,6 +353,8 @@ val Term.quote
 fun Term.plus(string: String, fn: Term.() -> Term): Term =
 	if (string == "quote") plus(begin.quote.fn())
 	else if (!quoteDepth.isZero) plus(string to begin.fn())
+	else if (string == "test") plusResolved("test" to begin.quote.fn())
+	else if (string == "error") plusResolved("error" to begin.quote.fn())
 	else plusResolved(string to begin.fn())
 
 fun Term.plus(string: String) =
