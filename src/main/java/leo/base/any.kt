@@ -45,6 +45,9 @@ val fail: Nothing
 fun <V> fail(): V =
 	fail
 
+fun <V> failIfOr(condition: Boolean, fn: () -> V): V =
+	if (condition) fail() else fn()
+
 // TODO: Escape string and char
 val Any?.string
 	get() =

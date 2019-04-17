@@ -58,3 +58,10 @@ fun <T: Any> List<T>.subseq(index: I32): Seq<T> =
 
 val <T: Any> List<T>.seq get() =
 	subseq(0.i32)
+
+val List<Byte>.byteArray
+	get() =
+		ByteArray(size.int).fold(0 until size.int) {
+			this[it] = at(it.i32)
+			this
+		}
