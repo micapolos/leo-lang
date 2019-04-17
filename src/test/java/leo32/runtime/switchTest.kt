@@ -14,7 +14,7 @@ class SwitchTest {
 		("switch" to term(
 			"case" to term(
 				"foo" to term(),
-				"to" to term("bar"))))
+				"gives" to term("bar"))))
 			.switchOrNull
 			.assertEqualTo(
 				switch(
@@ -23,10 +23,10 @@ class SwitchTest {
 		("switch" to term(
 			"case" to term(
 				"foo" to term(),
-				"to" to term("bar")),
+				"gives" to term("bar")),
 			"case" to term(
 				"zoo" to term(),
-				"to" to term("zar"))))
+				"gives" to term("zar"))))
 			.switchOrNull
 			.assertEqualTo(
 				switch(

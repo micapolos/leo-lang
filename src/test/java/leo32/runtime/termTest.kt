@@ -369,21 +369,21 @@ class TermTest {
 	fun argumentRaw() {
 		term()
 			.copy(selfOrNull = term("zero"))
-			.invoke(script("argument"))
+			.invoke(script("self"))
 			.script
 			.assertEqualTo(script("zero"))
 
 		term()
 			.copy(selfOrNull = term("zero"))
-			.invoke(script("the" to script("argument")))
+			.invoke(script("the" to script("self")))
 			.script
 			.assertEqualTo(script("the" to script("zero")))
 	}
 
 	@Test
 	fun argumentNotBound() {
-		invoke("argument" to script())
-			.assertEqualTo(script("argument"))
+		invoke("self" to script())
+			.assertEqualTo(script("self"))
 	}
 
 	@Test
@@ -391,7 +391,7 @@ class TermTest {
 		invoke(
 			"define" to script(
 				"zero" to script(),
-				"gives" to script("argument")),
+				"gives" to script("self")),
 			"zero" to script())
 			.assertEqualTo(script("zero"))
 	}
@@ -401,7 +401,7 @@ class TermTest {
 		invoke(
 			"define" to script(
 				"zero" to script(),
-				"gives" to script("the" to script("argument"))),
+				"gives" to script("the" to script("self"))),
 			"zero" to script())
 			.assertEqualTo(script("the" to script("zero")))
 	}
@@ -427,7 +427,7 @@ class TermTest {
 			"define" to script(
 				"negate" to script("bit" to script()),
 				"gives" to script(
-					"argument" to script(),
+					"self" to script(),
 					"switch" to script(
 						"case" to script(
 							"negate" to script("bit" to script("zero")),
@@ -458,10 +458,10 @@ class TermTest {
 			"switch" to script(
 				"case" to script(
 					"one" to script(),
-					"to" to script("jeden")),
+					"gives" to script("jeden")),
 				"case" to script(
 					"two" to script(),
-					"to" to script("dwa"))))
+					"gives" to script("dwa"))))
 			.assertEqualTo(script("jeden"))
 
 		invoke(
@@ -469,10 +469,10 @@ class TermTest {
 			"switch" to script(
 				"case" to script(
 					"one" to script(),
-					"to" to script("jeden")),
+					"gives" to script("jeden")),
 				"case" to script(
 					"two" to script(),
-					"to" to script("dwa"))))
+					"gives" to script("dwa"))))
 			.assertEqualTo(script("dwa"))
 
 		invoke(
