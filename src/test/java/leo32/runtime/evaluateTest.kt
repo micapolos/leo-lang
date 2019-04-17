@@ -11,54 +11,54 @@ class EvaluateTest {
 
 	@Test
 	fun one() {
-		script("one").evaluate.assertEqualTo(script("one"))
+		script(oneSymbol).evaluate.assertEqualTo(script(oneSymbol))
 	}
 
 	@Test
 	fun one__two() {
 		script(
-			"one" to script(),
-			"two" to script())
+			oneSymbol to script(),
+			twoSymbol to script())
 			.evaluate
-			.assertEqualTo(script("two" to script("one")))
+			.assertEqualTo(script(twoSymbol to script(oneSymbol)))
 	}
 
 	@Test
 	fun one_two() {
-		script("one" to script("two"))
+		script(oneSymbol to script(twoSymbol))
 			.evaluate
-			.assertEqualTo(script("one" to script("two")))
+			.assertEqualTo(script(oneSymbol to script(twoSymbol)))
 	}
 
 	@Test
 	fun one_two___three() {
 		script(
-			"one" to script("two"),
-			"three" to script())
+			oneSymbol to script(twoSymbol),
+			threeSymbol to script())
 			.evaluate
 			.assertEqualTo(
 				script(
-					"three" to script(
-						"one" to script("two"))))
+					threeSymbol to script(
+						oneSymbol to script(twoSymbol))))
 	}
 
 	@Test
 	fun one_two___three_four() {
 		script(
-			"one" to script("two"),
-			"three" to script("four"))
+			oneSymbol to script(twoSymbol),
+			threeSymbol to script(fourSymbol))
 			.evaluate
 			.assertEqualTo(
 				script(
-					"one" to script("two"),
-					"three" to script("four")))
+					oneSymbol to script(twoSymbol),
+					threeSymbol to script(fourSymbol)))
 	}
 
 	@Test
 	fun one__one() {
 		script(
-			"one" to script(),
-			"one" to script())
+			oneSymbol to script(),
+			oneSymbol to script())
 			.evaluate
 			.assertEqualTo(script())
 	}
@@ -66,193 +66,193 @@ class EvaluateTest {
 	@Test
 	fun one_foo___one_bar() {
 		script(
-			"one" to script("foo"),
-			"one" to script("bar"))
+			oneSymbol to script(zeroSymbol),
+			oneSymbol to script(oneSymbol))
 			.evaluate
 			.assertEqualTo(
 				script(
-					"one" to script("foo"),
-					"one" to script("bar")))
+					oneSymbol to script(zeroSymbol),
+					oneSymbol to script(oneSymbol)))
 	}
 
 	@Test
 	fun one_two___one() {
 		script(
-			"one" to script("two"),
-			"one" to script())
+			oneSymbol to script(twoSymbol),
+			oneSymbol to script())
 			.evaluate
-			.assertEqualTo(script("two"))
+			.assertEqualTo(script(twoSymbol))
 	}
 
 	@Test
 	fun one_two___two_three___one() {
 		script(
-			"one" to script("two"),
-			"two" to script("three"),
-			"one" to script())
+			oneSymbol to script(twoSymbol),
+			twoSymbol to script(threeSymbol),
+			oneSymbol to script())
 			.evaluate
-			.assertEqualTo(script("two"))
+			.assertEqualTo(script(twoSymbol))
 	}
 
 	@Test
 	fun one_two___two_three___two() {
 		script(
-			"one" to script("two"),
-			"two" to script("three"),
-			"two" to script())
+			oneSymbol to script(twoSymbol),
+			twoSymbol to script(threeSymbol),
+			twoSymbol to script())
 			.evaluate
-			.assertEqualTo(script("three"))
+			.assertEqualTo(script(threeSymbol))
 	}
 
 	@Test
 	fun one_two___two_three___three() {
 		script(
-			"one" to script("two"),
-			"two" to script("three"),
-			"three" to script())
+			oneSymbol to script(twoSymbol),
+			twoSymbol to script(threeSymbol),
+			threeSymbol to script())
 			.evaluate
 			.assertEqualTo(
 				script(
-					"three" to script(
-						"one" to script("two"),
-						"two" to script("three"))))
+					threeSymbol to script(
+						oneSymbol to script(twoSymbol),
+						twoSymbol to script(threeSymbol))))
 	}
 
 	@Test
 	fun equals() {
-		script("equals")
+		script(equalsSymbol)
 			.evaluate
-			.assertEqualTo(script("boolean" to script("true")))
+			.assertEqualTo(script(booleanSymbol to script(trueSymbol)))
 	}
 
 	@Test
 	fun one__equals_one() {
 		script(
-			"one" to script(),
-			"equals" to script("one"))
+			oneSymbol to script(),
+			equalsSymbol to script(oneSymbol))
 			.evaluate
-			.assertEqualTo(script("boolean" to script("true")))
+			.assertEqualTo(script(booleanSymbol to script(trueSymbol)))
 	}
 
 	@Test
 	fun one__equals_two() {
 		script(
-			"one" to script(),
-			"equals" to script("two"))
+			oneSymbol to script(),
+			equalsSymbol to script(twoSymbol))
 			.evaluate
-			.assertEqualTo(script("boolean" to script("false")))
+			.assertEqualTo(script(booleanSymbol to script(falseSymbol)))
 	}
 
 	@Test
 	fun it_one__equals_two() {
 		script(
-			"it" to script(
-				"one" to script(),
-				"equals" to script("two")))
+			itSymbol to script(
+				oneSymbol to script(),
+				equalsSymbol to script(twoSymbol)))
 			.evaluate
-			.assertEqualTo(script("it" to script("boolean" to script("false"))))
+			.assertEqualTo(script(itSymbol to script(booleanSymbol to script(falseSymbol))))
 	}
 
 	@Test
 	fun quote() {
-		script("quote")
+		script(quoteSymbol)
 			.evaluate
 			.assertEqualTo(script())
 	}
 
 	@Test
 	fun quote_one() {
-		script("quote" to script("one"))
+		script(quoteSymbol to script(oneSymbol))
 			.evaluate
-			.assertEqualTo(script("one"))
+			.assertEqualTo(script(oneSymbol))
 	}
 
 	@Test
 	fun quote_one__two() {
-		script("quote" to script(
-			"one" to script(),
-			"two" to script()))
+		script(quoteSymbol to script(
+			oneSymbol to script(),
+			twoSymbol to script()))
 			.evaluate
 			.assertEqualTo(
 				script(
-					"one" to script(),
-					"two" to script()))
+					oneSymbol to script(),
+					twoSymbol to script()))
 	}
 
 	@Test
 	fun quote_one__equals_two() {
 		script(
-			"quote" to script(
-				"one" to script(),
-				"equals" to script("two")))
+			quoteSymbol to script(
+				oneSymbol to script(),
+				equalsSymbol to script(twoSymbol)))
 			.evaluate
 			.assertEqualTo(
 				script(
-					"one" to script(),
-					"equals" to script("two")))
+					oneSymbol to script(),
+					equalsSymbol to script(twoSymbol)))
 	}
 
 	@Test
 	fun quote_one__equals_two___evaluate() {
 		script(
-			"quote" to script(
-				"one" to script(),
-				"equals" to script("two")),
-			"unquote" to script())
+			quoteSymbol to script(
+				oneSymbol to script(),
+				equalsSymbol to script(twoSymbol)),
+			unquoteSymbol to script())
 			.evaluate
 			.assertEqualTo(
-				script("boolean" to script("false")))
+				script(booleanSymbol to script(falseSymbol)))
 	}
 
 	@Test
 	fun it_quote() {
-		script("it" to script("quote"))
+		script(itSymbol to script(quoteSymbol))
 			.evaluate
-			.assertEqualTo(script("it"))
+			.assertEqualTo(script(itSymbol))
 	}
 
 	@Test
 	fun it_quote_one() {
-		script("it" to script("quote" to script("one")))
+		script(itSymbol to script(quoteSymbol to script(oneSymbol)))
 			.evaluate
-			.assertEqualTo(script("it" to script("one")))
+			.assertEqualTo(script(itSymbol to script(oneSymbol)))
 	}
 
 	@Test
 	fun quote_quote() {
-		script("quote" to script("quote"))
+		script(quoteSymbol to script(quoteSymbol))
 			.evaluate
-			.assertEqualTo(script("quote"))
+			.assertEqualTo(script(quoteSymbol))
 	}
 
 	@Test
 	fun error() {
-		script("error")
+		script(errorSymbol)
 			.evaluate
-			.assertEqualTo(script("error"))
+			.assertEqualTo(script(errorSymbol))
 	}
 
 	@Test
 	fun error_one() {
-		script("error" to script("one"))
+		script(errorSymbol to script(oneSymbol))
 			.evaluate
-			.assertEqualTo(script("error" to script("one")))
+			.assertEqualTo(script(errorSymbol to script(oneSymbol)))
 	}
 
 	@Test
 	fun error_one__two() {
 		script(
-			"error" to script("one"),
-			"two" to script())
+			errorSymbol to script(oneSymbol),
+			twoSymbol to script())
 			.evaluate
-			.assertEqualTo(script("error" to script("one")))
+			.assertEqualTo(script(errorSymbol to script(oneSymbol)))
 	}
 
 	@Test
 	fun foo__has_bar() {
 		script(
-			"foo" to script(),
-			"has" to script("bar"))
+			zeroSymbol to script(),
+			hasSymbol to script(oneSymbol))
 			.evaluate
 			.assertEqualTo(script())
 	}
@@ -260,119 +260,119 @@ class EvaluateTest {
 	@Test
 	fun foo__has_bar__foo() {
 		script(
-			"foo" to script(),
-			"has" to script("bar"),
-			"foo" to script())
+			zeroSymbol to script(),
+			hasSymbol to script(oneSymbol),
+			zeroSymbol to script())
 			.evaluate
-			.assertEqualTo(script("foo"))
+			.assertEqualTo(script(zeroSymbol))
 	}
 
 	@Test
 	fun foo__has_bar__class_foo_bar() {
 		script(
-			"foo" to script(),
-			"has" to script("bar"),
-			"class" to script("foo" to script("bar" to script())))
+			zeroSymbol to script(),
+			hasSymbol to script(oneSymbol),
+			classSymbol to script(zeroSymbol to script(oneSymbol to script())))
 			.evaluate
-			.assertEqualTo(script("foo"))
+			.assertEqualTo(script(zeroSymbol))
 	}
 
 	@Test
 	fun foo__has_bar__describe_foo() {
 		script(
-			"foo" to script(),
-			"has" to script("bar"),
-			"describe" to script("foo"))
+			zeroSymbol to script(),
+			hasSymbol to script(oneSymbol),
+			describeSymbol to script(zeroSymbol))
 			.evaluate
-			.assertEqualTo(script("foo" to script("bar")))
+			.assertEqualTo(script(zeroSymbol to script(oneSymbol)))
 	}
 
 	@Test
 	fun foo_zoo___has_bar__foo_zoo() {
 		script(
-			"foo" to script("zoo" to script()),
-			"has" to script("bar"),
-			"foo" to script("zoo"))
+			zeroSymbol to script(fourSymbol to script()),
+			hasSymbol to script(oneSymbol),
+			zeroSymbol to script(fourSymbol))
 			.evaluate
-			.assertEqualTo(script("foo" to script("zoo")))
+			.assertEqualTo(script(zeroSymbol to script(fourSymbol)))
 	}
 
 	@Test
 	fun foo_zoo___has_bar__class_foo_zoo_bar() {
 		script(
-			"foo" to script("zoo" to script()),
-			"has" to script("bar"),
-			"class" to script("foo" to script("zoo" to script("bar"))))
+			zeroSymbol to script(fourSymbol to script()),
+			hasSymbol to script(oneSymbol),
+			classSymbol to script(zeroSymbol to script(fourSymbol to script(oneSymbol))))
 			.evaluate
-			.assertEqualTo(script("foo" to script("zoo")))
+			.assertEqualTo(script(zeroSymbol to script(fourSymbol)))
 	}
 
 	@Test
 	fun foo_zoo___has_bar__describe_foo_zoo() {
 		script(
-			"foo" to script("zoo" to script()),
-			"has" to script("bar"),
-			"describe" to script("foo" to script("zoo")))
+			zeroSymbol to script(fourSymbol to script()),
+			hasSymbol to script(oneSymbol),
+			describeSymbol to script(zeroSymbol to script(fourSymbol)))
 			.evaluate
-			.assertEqualTo(script("foo" to script("zoo" to script("bar"))))
+			.assertEqualTo(script(zeroSymbol to script(fourSymbol to script(oneSymbol))))
 	}
 
 	@Test
 	fun bit__has_either_zero___either_one___bit() {
 		script(
-			"bit" to script(),
-			"has" to script(
-				"either" to script("zero"),
-				"either" to script("one")),
-			"bit" to script())
+			bitSymbol to script(),
+			hasSymbol to script(
+				eitherSymbol to script(zeroSymbol),
+				eitherSymbol to script(oneSymbol)),
+			bitSymbol to script())
 			.evaluate
-			.assertEqualTo(script("bit"))
+			.assertEqualTo(script(bitSymbol))
 	}
 
 	@Test
 	fun bit__has_either_zero___either_one____class_bit_zero() {
 		script(
-			"bit" to script(),
-			"has" to script(
-				"either" to script("zero"),
-				"either" to script("one")),
-			"class" to script("bit" to script("zero")))
+			bitSymbol to script(),
+			hasSymbol to script(
+				eitherSymbol to script(zeroSymbol),
+				eitherSymbol to script(oneSymbol)),
+			classSymbol to script(bitSymbol to script(zeroSymbol)))
 			.evaluate
-			.assertEqualTo(script("bit"))
+			.assertEqualTo(script(bitSymbol))
 	}
 
 	@Test
 	fun bit__has_either_zero___either_one____describe_bit() {
 		script(
-			"bit" to script(),
-			"has" to script(
-				"either" to script("zero"),
-				"either" to script("one")),
-			"describe" to script("bit"))
+			bitSymbol to script(),
+			hasSymbol to script(
+				eitherSymbol to script(zeroSymbol),
+				eitherSymbol to script(oneSymbol)),
+			describeSymbol to script(bitSymbol))
 			.evaluate
 			.assertEqualTo(
-				script("bit" to script(
-					"either" to script("zero"),
-					"either" to script("one"))))
+				script(bitSymbol to script(
+					eitherSymbol to script(zeroSymbol),
+					eitherSymbol to script(oneSymbol))))
 	}
 
 	@Test
 	fun bit__has_either_zero___either_one____class_bit_one() {
 		script(
-			"bit" to script(),
-			"has" to script(
-				"either" to script("zero"),
-				"either" to script("one")),
-			"class" to script("bit" to script("one")))
+			bitSymbol to script(),
+			hasSymbol to script(
+				eitherSymbol to script(zeroSymbol),
+				eitherSymbol to script(oneSymbol)),
+			classSymbol to script(bitSymbol to script(oneSymbol)))
 			.evaluate
-			.assertEqualTo(script("bit"))
+			.assertEqualTo(script(bitSymbol))
 	}
 
 	@Test
 	fun zero__gives_one() {
 		script(
-			"zero" to script(),
-			"gives" to script("one"))
+			zeroSymbol to script(),
+			givesSymbol to script(oneSymbol))
 			.evaluate
 			.assertEqualTo(script())
 	}
@@ -380,10 +380,10 @@ class EvaluateTest {
 	@Test
 	fun zero__gives_one___zero() {
 		script(
-			"zero" to script(),
-			"gives" to script("one"),
-			"zero" to script())
+			zeroSymbol to script(),
+			givesSymbol to script(oneSymbol),
+			zeroSymbol to script())
 			.evaluate
-			.assertEqualTo(script("one"))
+			.assertEqualTo(script(oneSymbol))
 	}
 }

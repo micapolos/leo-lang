@@ -20,8 +20,8 @@ fun Script.plus(line: Line) =
 fun script(vararg lines: Line) =
 	Script(list(*lines))
 
-fun script(name: String) =
-	script(name to script())
+fun script(symbol: Symbol) =
+	script(symbol to script())
 
 val Script.lineSeq get() =
 	lineList.seq
