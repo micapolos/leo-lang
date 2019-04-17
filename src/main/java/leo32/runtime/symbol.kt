@@ -46,6 +46,7 @@ fun <V : Any> Empty.symbolDict(): Dict<Symbol, V> =
 	emptyTrie<V>().dict { bitSeq }
 
 val actualSymbol = symbol("actual")
+val andSymbol = symbol("and")
 val anythingSymbol = symbol("anything")
 val argumentSymbol = symbol("argument")
 val barSymbol = symbol("bar")
@@ -82,6 +83,7 @@ val lhsSymbol = symbol("lhs")
 val notSymbol = symbol("not")
 val negateSymbol = symbol("negate")
 val oneSymbol = symbol("one")
+val orSymbol = symbol("or")
 val pencilSymbol = symbol("pencil")
 val quoteSymbol = symbol("quote")
 val radiusSymbol = symbol("radius")
