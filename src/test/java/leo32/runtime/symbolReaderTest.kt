@@ -24,4 +24,23 @@ class SymbolReaderTest {
 			.script
 			.assertEqualTo(script(oneSymbol))
 	}
+
+	@Test
+	fun quote() {
+		empty
+			.symbolReader
+			.plus(quoteSymbol)!!
+			.plus(defineSymbol)!!
+			.plus(zeroSymbol)!!
+			.plus(null)!!
+			.plus(givesSymbol)!!
+			.plus(oneSymbol)!!
+			.plus(null)!!
+			.plus(null)!!
+			.plus(null)!!
+			.fieldReader
+			.term
+			.script
+			.assertEqualTo(script(oneSymbol))
+	}
 }

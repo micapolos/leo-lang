@@ -382,6 +382,10 @@ val Term.quote
 	get() =
 		copy(quoteDepth = quoteDepth.inc)
 
+val Term.unquote
+	get() =
+		copy(quoteDepth = quoteDepth.dec)
+
 fun Term.plus(string: String, fn: Term.() -> Term): Term =
 	if (string == "quote") plus(begin.quote.fn())
 	else if (!quoteDepth.isZero) plus(string to begin.fn())
