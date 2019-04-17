@@ -10,7 +10,7 @@ import kotlin.test.Test
 
 class TermTest {
 	val notTerm = SelectTerm(
-		CombineTerm(
+		BranchTerm(
 			branch(
 				BitTerm(one.bit),
 				BitTerm(zero.bit))),
@@ -18,31 +18,31 @@ class TermTest {
 
 	val andTerm = SelectTerm(
 		SelectTerm(
-			CombineTerm(
+			BranchTerm(
 				branch(
-					CombineTerm(
+					BranchTerm(
 						branch(
 							BitTerm(zero.bit),
 							BitTerm(zero.bit))),
-					CombineTerm(
+					BranchTerm(
 						branch(
 							BitTerm(zero.bit),
-							BitTerm(zero.bit))))),
-			AtTerm(ArgumentTerm, one.bit)),
-		AtTerm(ArgumentTerm, zero.bit))
+							BitTerm(one.bit))))),
+			SelectTerm(ArgumentTerm, BitTerm(one.bit))),
+		SelectTerm(ArgumentTerm, BitTerm(zero.bit)))
 
 	val orTerm = InvokeTerm(
 		notTerm,
 		InvokeTerm(
 			andTerm,
-			CombineTerm(
+			BranchTerm(
 				branch(
 					InvokeTerm(
 						notTerm,
-						AtTerm(ArgumentTerm, zero.bit)),
+						SelectTerm(ArgumentTerm, BitTerm(zero.bit))),
 					InvokeTerm(
 						notTerm,
-						AtTerm(ArgumentTerm, one.bit))))))
+						SelectTerm(ArgumentTerm, BitTerm(one.bit)))))))
 
 	@Test
 	fun not() {
@@ -61,19 +61,19 @@ class TermTest {
 	@Test
 	fun and() {
 		andTerm
-			.invoke(CombineTerm(branch(BitTerm(zero.bit), BitTerm(zero.bit))))
+			.invoke(BranchTerm(branch(BitTerm(zero.bit), BitTerm(zero.bit))))
 			.assertEqualTo(BitTerm(zero.bit))
 
 		andTerm
-			.invoke(CombineTerm(branch(BitTerm(zero.bit), BitTerm(one.bit))))
+			.invoke(BranchTerm(branch(BitTerm(zero.bit), BitTerm(one.bit))))
 			.assertEqualTo(BitTerm(zero.bit))
 
 		andTerm
-			.invoke(CombineTerm(branch(BitTerm(one.bit), BitTerm(zero.bit))))
+			.invoke(BranchTerm(branch(BitTerm(one.bit), BitTerm(zero.bit))))
 			.assertEqualTo(BitTerm(zero.bit))
 
 		andTerm
-			.invoke(CombineTerm(branch(BitTerm(one.bit), BitTerm(one.bit))))
+			.invoke(BranchTerm(branch(BitTerm(one.bit), BitTerm(one.bit))))
 			.assertEqualTo(BitTerm(one.bit))
 
 		andTerm
@@ -83,19 +83,19 @@ class TermTest {
 	@Test
 	fun orTest() {
 		orTerm
-			.invoke(CombineTerm(branch(BitTerm(zero.bit), BitTerm(zero.bit))))
+			.invoke(BranchTerm(branch(BitTerm(zero.bit), BitTerm(zero.bit))))
 			.assertEqualTo(BitTerm(zero.bit))
 
 		orTerm
-			.invoke(CombineTerm(branch(BitTerm(zero.bit), BitTerm(one.bit))))
+			.invoke(BranchTerm(branch(BitTerm(zero.bit), BitTerm(one.bit))))
 			.assertEqualTo(BitTerm(one.bit))
 
 		orTerm
-			.invoke(CombineTerm(branch(BitTerm(one.bit), BitTerm(zero.bit))))
+			.invoke(BranchTerm(branch(BitTerm(one.bit), BitTerm(zero.bit))))
 			.assertEqualTo(BitTerm(one.bit))
 
 		orTerm
-			.invoke(CombineTerm(branch(BitTerm(one.bit), BitTerm(one.bit))))
+			.invoke(BranchTerm(branch(BitTerm(one.bit), BitTerm(one.bit))))
 			.assertEqualTo(BitTerm(one.bit))
 
 		orTerm
