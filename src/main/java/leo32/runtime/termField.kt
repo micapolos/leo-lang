@@ -1,24 +1,29 @@
 package leo32.runtime
 
 import leo.base.*
+import leo.binary.Bit
+import leo.binary.bitSeq
 import leo32.Seq32
 import leo32.base.i32
 import leo32.seq32
 
 data class TermField(
-	val name: String,
+	val name: Symbol,
 	val value: Term) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-infix fun String.to(term: Term) =
+infix fun Symbol.to(term: Term) =
 	TermField(this, term)
+
+infix fun String.to(term: Term) =
+	symbol(this) to term
 
 val TermField.simpleNameOrNull get() =
 	notNullIf(value.isEmpty) { name }
 
-fun TermField.atOrNull(string: String) =
-	notNullIf(name == string) { value }
+fun TermField.atOrNull(symbol: Symbol) =
+	notNullIf(name == symbol(string)) { value }
 
 fun TermField.map(fn: Term.() -> Term): TermField =
 	name to value.fn()
@@ -40,13 +45,23 @@ val String.nameSeq32 get() =
 		.flat
 
 val TermField.seq32: Seq32 get() =
-	name.nameSeq32.then {
+	name.string.nameSeq32.then {
 		termBeginChar.i32.onlySeq.then {
 			value.seq32.then {
 				termEndChar.i32.onlySeq
 			}
 		}
 	}
+
+val TermField.bitSeq: Seq<Bit>
+	get() =
+		name.bitSeq.then {
+			termBeginChar.toByte().bitSeq.then {
+				value.bitSeq.then {
+					termEndChar.toByte().bitSeq
+				}
+			}
+		}
 
 fun Appendable.append(field: TermField): Appendable =
 	append(field.name).let {
@@ -69,7 +84,7 @@ fun termField(int: Int) =
 	"int" to term("$int")
 
 val TermField.intOrNull get() =
-	atOrNull("int")?.simpleNameOrNull?.toIntOrNull()
+	atOrNull(intSymbol)?.simpleNameOrNull?.string?.toIntOrNull()
 
 fun TermField.leafPlus(term: Term) =
 	name to value.leafPlus(term)

@@ -13,8 +13,8 @@ val Node.simpleNameOrNull get() =
 	if (lhs.isEmpty) field.simpleNameOrNull
 	else null
 
-fun Node.simpleAtOrNull(name: String) =
-	if (lhs.isEmpty) field.atOrNull(name)
+fun Node.simpleAtOrNull(symbol: Symbol) =
+	if (lhs.isEmpty) field.atOrNull(symbol)
 	else null
 
 fun Node.plus(field: TermField) =

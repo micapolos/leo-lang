@@ -1,18 +1,20 @@
 package leo32.runtime
 
 import leo.base.notNullIf
-import leo.base.string
 import leo32.base.*
 import leo32.base.List
 
 data class TermList(
-	val key: Key,
+	val key: Symbol,
 	val term0: Term,
 	val term1: Term,
 	val remainingTermList: List<Term>)
 
+fun termList(key: Symbol, term0: Term, term1: Term, vararg terms: Term) =
+	TermList(key, term0, term1, list(*terms))
+
 fun termList(key: String, term0: Term, term1: Term, vararg terms: Term) =
-	TermList(key(key), term0, term1, list(*terms))
+	termList(symbol(key), term0, term1, *terms)
 
 fun termListOrNull(field0: TermField, field1: TermField) =
 	notNullIf(field0.name == field1.name) {
@@ -23,7 +25,7 @@ fun TermList.plus(term: Term) =
 	copy(remainingTermList = remainingTermList.add(term))
 
 fun TermList.plus(field: TermField): TermList? =
-	notNullIf(field.name == key.string) {
+	notNullIf(field.name == key) {
 		plus(field.value)
 	}
 

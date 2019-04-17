@@ -18,7 +18,7 @@ fun symbol(string: String): Symbol =
 
 val Symbol.byteSeq
 	get() =
-		string.utf8ByteSeq.then { 0.toByte().onlySeq }
+		nonEmptyNoZerosByteArray.seq.then { 0.toByte().onlySeq }
 
 val Symbol.bitSeq
 	get() =
@@ -28,16 +28,41 @@ val Symbol.string
 	get() =
 		nonEmptyNoZerosByteArray.byteArray.utf8String
 
+fun Appendable.append(symbol: Symbol): Appendable =
+	append(symbol.string)
+
+@Suppress("unused")
+fun <V : Any> Empty.symbolDict(): Dict<Symbol, V> =
+	emptyTrie<V>().dict { bitSeq }
+
+val actualSymbol = symbol("actual")
 val argumentSymbol = symbol("argument")
 val bitSymbol = symbol("bit")
+val bodySymbol = symbol("body")
+val caseSymbol = symbol("case")
+val classSymbol = symbol("class")
+val defineSymbol = symbol("define")
+val describeSymbol = symbol("describe")
+val eitherSymbol = symbol("either")
 val entrySymbol = symbol("entry")
+val equalsSymbol = symbol("equals")
 val errorSymbol = symbol("error")
+val expectedSymbol = symbol("expected")
+val givesSymbol = symbol("gives")
+val hasSymbol = symbol("has")
 val i32Symbol = symbol("i32")
+val intSymbol = symbol("int")
+val isSymbol = symbol("is")
+val keySymbol = symbol("key")
 val lhsSymbol = symbol("lhs")
 val oneSymbol = symbol("one")
 val quoteSymbol = symbol("quote")
 val rhsSymbol = symbol("rhs")
+val selfSymbol = symbol("self")
 val switchSymbol = symbol("switch")
+val testSymbol = symbol("test")
+val theSymbol = symbol("the")
 val toSymbol = symbol("to")
+val unquoteSymbol = symbol("unquote")
 val zeroSymbol = symbol("zero")
 

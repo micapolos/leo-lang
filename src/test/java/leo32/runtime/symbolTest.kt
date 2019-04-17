@@ -12,4 +12,9 @@ class SymbolTest {
 		symbol("foo").string.assertEqualTo("foo")
 		symbol("bąk").string.assertEqualTo("bąk")
 	}
+
+	@Test
+	fun equality() {
+		symbol("foo").assertEqualTo(symbol("foo"))
+	}
 }

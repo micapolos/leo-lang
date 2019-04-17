@@ -14,7 +14,7 @@ val Empty.scope get() =
 
 fun Scope.define(termHasTerm: TermHasTerm): Scope =
 	termHasTerm.rhs
-		.listTermSeqOrNull("either")
+		.listTermSeqOrNull(eitherSymbol)
 		?.let { termSeq ->
 			fold(termSeq) { eitherTerm ->
 				copy(
@@ -27,7 +27,7 @@ fun Scope.define(termHasTerm: TermHasTerm): Scope =
 				termHasTerm.lhs.leafPlus(termHasTerm.rhs),
 				termHasTerm.lhs))
 		}.copy(typeToDescribeDictionary = typeToDescribeDictionary.put(
-			termHasTerm.lhs, termHasTerm.lhs.plus("has" to termHasTerm.rhs)))
+			termHasTerm.lhs, termHasTerm.lhs.plus(hasSymbol to termHasTerm.rhs)))
 
 fun Scope.define(case: Case): Scope =
 	copy(typeToBodyDictionary = typeToBodyDictionary.put(case.key, case.value))

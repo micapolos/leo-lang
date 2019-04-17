@@ -2,7 +2,6 @@ package leo32.runtime
 
 import leo.base.*
 import leo.binary.Bit
-import leo32.Seq32
 import leo32.base.*
 import leo32.base.List
 import leo32.base.Tree
@@ -26,28 +25,28 @@ fun <T: Any> Empty.dictionary() =
 	tree<T>().dictionary
 
 fun <T: Any> Dictionary<T>.plus(key: TermField): Dictionary<T> =
-	plus32(key.seq32)
+	plus(key.bitSeq)
 
 fun <T: Any> Dictionary<T>.plus(key: Term): Dictionary<T> =
-	plus32(key.seq32)
+	plus(key.bitSeq)
 
-fun <T: Any> Dictionary<T>.plus32(key: Seq32): Dictionary<T> =
-	tree.at32(key)?.dictionary.orIfNull { empty.dictionary() }
+fun <T : Any> Dictionary<T>.plus(key: Seq<Bit>): Dictionary<T> =
+	tree.at(key)?.dictionary.orIfNull { empty.dictionary() }
 
 fun <T: Any> Dictionary<T>.put(key: Term, value: T) =
-	put32(key.seq32, value)
+	put(key.bitSeq, value)
 
-fun <T : Any> Dictionary<T>.put32(key: Seq32, value: T): Dictionary<T> =
-	tree.put32(key to value).dictionary
+fun <T : Any> Dictionary<T>.put(key: Seq<Bit>, value: T): Dictionary<T> =
+	tree.put(key, value).dictionary
 
 val <T: Any> Dictionary<T>.valueOrNull get() =
 	tree.leafOrNull?.value
 
 fun <T : Any> Dictionary<T>.at(term: Term): T? =
-	tree.at32(term.seq32)?.valueOrNull
+	tree.at(term.bitSeq)?.valueOrNull
 
 fun <T : Any> Dictionary<T>.at(field: TermField): T? =
-	tree.at32(field.seq32)?.valueOrNull
+	tree.at(field.bitSeq)?.valueOrNull
 
 fun <T : Any> Appendable.append(dictionary: Dictionary<T>, fn: Appendable.(T) -> Appendable): Appendable =
 	this

@@ -34,7 +34,7 @@ val Type.term: Term get() =
 	}
 
 val Term.type: Type get() =
-	listTermSeqOrNull("either")
+	listTermSeqOrNull(eitherSymbol)
 		?.let { eitherTermSeq ->
 			empty.type.fold(eitherTermSeq) {
 				plus(it.either)

@@ -45,6 +45,22 @@ fun Seq<Bit>.bitSeq32(acc: I32, mask: I32): Seq32 =
 		}
 	}
 
+//fun Seq<Bit>.bitByteSeq(acc: Byte, mask: Byte): Seq<Byte> =
+//	Seq {
+//		seqNodeOrNull?.let { seqNode ->
+//			acc.or(seqNode.first, mask).let { newAcc ->
+//				mask.ushr1.let { newMask ->
+//					if (newMask == zero.byte) newAcc.then(seqNode.remaining.bitByteSeq)
+//					else seqNode.remaining.bitByteSeq(newAcc, newMask).seqNodeOrNull
+//				}
+//			}
+//		}
+//	}
+//
 val Seq<Bit>.bitSeq32
 	get() =
 		bitSeq32(zero.i32, hsbI32)
+
+//val Seq<Bit>.bitByteSeq
+//	get() =
+//		bitByteSeq(zero.byte, 0x80.toByte())

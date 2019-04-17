@@ -11,7 +11,7 @@ data class Term(
 	val scope: Scope,
 	val localScope: Scope,
 	val fieldList: List<TermField>,
-	val termListDict: Dict<String, List<Term>>,
+	val termListDict: Dict<Symbol, List<Term>>,
 	val termListOrNull: TermList?,
 	val isList: Boolean,
 	val nodeOrNull: Node?,
@@ -24,10 +24,10 @@ data class Term(
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.stringDict(), null, true, null, null, null, null, null, 0.i32)
+	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, null, 0.i32)
 
 val Empty.term get() =
-	Term(scope, scope, list(), stringDict(), null, true, null, null, null, null, null, 0.i32)
+	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, null, 0.i32)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -41,25 +41,25 @@ val Term.simpleNameOrNull get() =
 fun Term.fieldAt(index: I32): TermField =
 	fieldList.at(index)
 
-fun Term.at(name: String): List<Term> =
+fun Term.at(name: Symbol): List<Term> =
 	termListDict.at(name) ?: empty.list()
 
-fun Term.countAt(name: String): I32 =
+fun Term.countAt(name: Symbol): I32 =
 	at(name).size
 
-fun Term.at(name: String, index: I32): Term =
+fun Term.at(name: Symbol, index: I32): Term =
 	at(name).at(index)
 
-fun Term.onlyAt(name: String): Term =
+fun Term.onlyAt(name: Symbol): Term =
 	at(name).only
 
-fun Term.onlyOrNullAt(name: String): Term? =
+fun Term.onlyOrNullAt(name: Symbol): Term? =
 	at(name).onlyOrNull
 
-fun Term.simpleAtOrNull(name: String): Term? =
-	nodeOrNull?.simpleAtOrNull(name)
+fun Term.simpleAtOrNull(symbol: Symbol): Term? =
+	nodeOrNull?.simpleAtOrNull(symbol)
 
-fun Term.listTermSeqOrNull(key: String): Seq<Term>? =
+fun Term.listTermSeqOrNull(key: Symbol): Seq<Term>? =
 	notNullIf(isList && (nodeOrNull == null || nodeOrNull.field.name == key)) {
 		fieldList.seq.map { value }
 	}
@@ -74,10 +74,10 @@ fun Term.plus(line: Line): Term =
 		?: invoke(line)
 
 val Term.evalError: Term? get() =
-	simpleAtOrNull("error")?.let { this }
+	simpleAtOrNull(errorSymbol)?.let { this }
 
 fun Term.evalPlusQuote(line: Line): Term? =
-	notNullIf(line.name == "quote") { plus(line.value.term) }
+	notNullIf(line.name == quoteSymbol) { plus(line.value.term) }
 
 fun Term.plus(script: Script) =
 	fold(script.lineSeq, Term::plus)
@@ -113,7 +113,7 @@ val Term.begin get() =
 		scope = scope,
 		localScope = scope,
 		fieldList = empty.list(),
-		termListDict = empty.stringDict(),
+		termListDict = empty.symbolDict(),
 		termListOrNull = null,
 		isList = true,
 		nodeOrNull = null,
@@ -171,13 +171,13 @@ val Term.invoke
 
 val Term.self
 	get() =
-		selfOrNull ?: term("self")
+		selfOrNull ?: term(selfSymbol)
 
-fun term(name: String, vararg names: String) =
-	term().plus(name, *names)
+fun term(name: Symbol) =
+	term().plus(name to term())
 
-fun Term.plus(name: String, vararg names: String): Term =
-	fold(names.reversed()) { plus(it to term()) }.plus(name to term())
+fun term(name: String) =
+	term(symbol(name))
 
 fun Term.leafPlus(term: Term): Term =
 	nodeOrNull?.leafPlus(term)?.term ?: plus(term)
@@ -206,14 +206,15 @@ fun Appendable.appendSimple(term: Term): Appendable? =
 val Term.seq32: Seq32 get() =
 	fieldList.seq.map { seq32 }.flat
 
-val Term.dictKey get() =
-	seq32.dictKey
+val Term.bitSeq
+	get() =
+		fieldList.seq.map { bitSeq }.flat
 
 fun <V: Any> Empty.termDict() =
-	dict<Term, V> { dictKey }
+	dict<Term, V> { bitSeq }
 
 val List<Term>.theTerm get() =
-	empty.term.fold(seq) { plus("the" to it) }
+	empty.term.fold(seq) { plus(theSymbol to it) }
 
 fun Term.map(fn: Term.() -> Term): Term =
 	if (nodeOrNull == null) this
@@ -225,12 +226,12 @@ fun Term.plusMacroGet(field: TermField): Term? =
 	}
 
 fun Term.plusMacroEquals(field: TermField): Term? =
-	if (field.name == "equals") clear.plus(termField(this == field.value))
+	if (field.name == equalsSymbol) clear.plus(termField(this == field.value))
 	else null
 
 fun Term.plusMacroLhs(field: TermField): Term? =
 	if (isEmpty
-		&& field.name == "lhs"
+		&& field.name == lhsSymbol
 		&& field.value.nodeOrNull != null
 		&& !field.value.nodeOrNull.lhs.isEmpty)
 		clear.plus(field.value.nodeOrNull.lhs)
@@ -238,19 +239,19 @@ fun Term.plusMacroLhs(field: TermField): Term? =
 
 fun Term.plusMacroRhs(field: TermField): Term? =
 	if (isEmpty
-		&& field.name == "rhs"
+		&& field.name == rhsSymbol
 		&& field.value.nodeOrNull != null
 		&& !field.value.nodeOrNull.field.value.isEmpty)
 		clear.plus(field.value.nodeOrNull.field.value)
 	else null
 
 fun Term.plusMacroClass(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == "class") {
+	ifOrNull(isEmpty && field.name == classSymbol) {
 		field.value.typeTerm
 	}
 
 fun Term.plusMacroDescribe(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == "describe") {
+	ifOrNull(isEmpty && field.name == describeSymbol) {
 		scope
 			.typeToDescribeDictionary
 			.at(field.value)
@@ -259,7 +260,7 @@ fun Term.plusMacroDescribe(field: TermField): Term? =
 	}
 
 fun Term.plusMacroBody(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == "body") {
+	ifOrNull(isEmpty && field.name == bodySymbol) {
 		scope
 			.typeToBodyDictionary
 			.at(field.value)
@@ -268,25 +269,25 @@ fun Term.plusMacroBody(field: TermField): Term? =
 	}
 
 fun Term.plusMacroDefine(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == "define") {
+	ifOrNull(isEmpty && field.name == defineSymbol) {
 		invokeDefine(field.value)
 	}
 
 fun Term.plusMacroTest(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == "test") {
+	ifOrNull(isEmpty && field.name == testSymbol) {
 		invokeTest(field.value)
 	}
 
 fun Term.plusMacroUnquote(field: TermField): Term? =
-	if (field.name == "unquote") clear.plus(termField(this == field.value))
+	if (field.name == unquoteSymbol) clear.plus(termField(this == field.value))
 	else null
 
 fun Term.plusMacroIs(field: TermField): Term? =
-	if (field.name == "is") clear.plus(leafPlus(field.value))
+	if (field.name == isSymbol) clear.plus(leafPlus(field.value))
 	else null
 
 fun Term.plusMacroSelf(field: TermField): Term? =
-	notNullIf(isEmpty && field.name == "self" && field.value.isEmpty) {
+	notNullIf(isEmpty && field.name == selfSymbol && field.value.isEmpty) {
 		clear.plus(self)
 	}
 
@@ -314,8 +315,8 @@ fun Term.invokeDefine(term: Term) =
 	term.nodeOrNull?.let { node ->
 		ifOrNull(!node.lhs.isEmpty && !node.field.value.isEmpty) {
 			when (node.field.name) {
-				"gives" -> clear.set(scope.define(node.lhs caseTo node.field.value))
-				"has" -> clear.set(scope.define(node.lhs has node.field.value))
+				givesSymbol -> clear.set(scope.define(node.lhs caseTo node.field.value))
+				hasSymbol -> clear.set(scope.define(node.lhs has node.field.value))
 				else -> null
 			}
 		}
@@ -325,16 +326,16 @@ fun Term.invokeTest(term: Term) =
 	term.nodeOrNull?.let { node ->
 		ifOrNull(!node.lhs.isEmpty && !node.field.value.isEmpty) {
 			when (node.field.name) {
-				"gives" ->
+				givesSymbol ->
 					clear.invoke(node.lhs).descope.let { actual ->
 						clear.invoke(node.field.value).descope.let { expected ->
 							if (actual == expected) clear
 							else throw AssertionError(
 								term(
-									"error" to term(
-										"test" to term,
-										"expected" to expected,
-										"actual" to actual)).script.code.string)
+									errorSymbol to term(
+										testSymbol to term,
+										expectedSymbol to expected,
+										actualSymbol to actual)).script.code.string)
 						}
 					}
 				else -> null

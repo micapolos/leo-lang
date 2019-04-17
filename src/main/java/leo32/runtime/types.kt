@@ -1,13 +1,13 @@
 package leo32.runtime
 
-import leo.base.Empty
+import leo.base.Seq
 import leo.base.empty
 import leo.base.fold
 import leo.base.orIfNull
 import leo.binary.Bit
-import leo32.Seq32
-import leo32.base.*
-import leo32.bitSeq
+import leo32.base.Tree
+import leo32.base.at
+import leo32.base.tree
 
 data class Types(
 	val typeTree: Tree<Type?>)
@@ -15,23 +15,14 @@ data class Types(
 val Tree<Type?>.types get() =
 	Types(this)
 
-val Empty.types get() =
-	tree<Type>().types
-
 fun Types.at(bit: Bit) =
 	typeTree.at(bit).orIfNull { empty.tree() }.types
 
 fun Types.at(field: TermField): Types =
-	at32(field.seq32)
+	at(field.bitSeq)
 
-fun Types.at32(seq32: Seq32): Types =
-	fold(seq32.bitSeq) { at(it) }
-
-val Types.typeOrNull get() =
-	typeTree.leafOrNull?.value
-
-fun Types.put32(pair: Pair<Seq32, Type>) =
-	typeTree.put32(pair).types
+fun Types.at(bitSeq: Seq<Bit>): Types =
+	fold(bitSeq) { at(it) }
 
 fun Types.plus(field: TermField): Types? =
-	typeTree.at32(field.seq32)?.types
+	typeTree.at(field.bitSeq)?.types

@@ -6,7 +6,6 @@ import leo.base.Empty
 import leo.base.empty
 import leo.base.fold
 import leo32.base.*
-import leo32.bitSeq
 
 data class TypeTerms(
 	val typeTermTree: Tree<Term?>)
@@ -18,7 +17,7 @@ val Empty.typeTerms get() =
 	tree<Term>().typeTerms
 
 fun TypeTerms.put(term: Term, type: Term) =
-	copy(typeTermTree = typeTermTree.put(term.seq32.bitSeq, type))
+	copy(typeTermTree = typeTermTree.put(term.bitSeq, type))
 
 fun TypeTerms.typeTerm(term: Term): Term =
 	plus(term).typeOrNull ?: term
@@ -28,7 +27,7 @@ fun TypeTerms.resolveValue(field: TermField) =
 
 fun TypeTerms.plus(field: TermField): TypeTerms =
 	typeTermTree
-		.at(field.seq32.bitSeq)
+		.at(field.bitSeq)
 		?.typeTerms
 		?:empty.typeTerms
 

@@ -19,7 +19,7 @@ val Empty.either get() =
 fun Either.plus(typeField: TypeField) =
 	copy(
 		fieldList = fieldList.add(typeField),
-		typeTree = typeTree.put(typeField.name.dictKey.bitSeq, typeField.value))
+		typeTree = typeTree.put(typeField.name.bitSeq, typeField.value))
 
 fun either(vararg fields: TypeField) =
 	empty.either.fold(fields) { plus(it) }
@@ -27,16 +27,14 @@ fun either(vararg fields: TypeField) =
 fun either(string: String) =
 	either(typeField(string))
 
-fun Either.at(string: String): Type? =
-	typeTree
-		.at(string.dictKey.bitSeq)
-		?.valueOrNull
+fun Either.at(symbol: Symbol): Type? =
+	typeTree.at(symbol.bitSeq)?.valueOrNull
 
 val Either.seq32 get() =
 	typeTree.seq32 { seq32 }
 
 val Either.termField get() =
-	"either" to term()
+	eitherSymbol to term()
 		.fold(fieldList.seq) {
 			plus(it.termField)
 		}

@@ -121,9 +121,9 @@ class TermTest {
 				"result" to term("i32"),
 				"body" to term()))
 
-		term.at("param").assertEqualTo(list(term("0"), term("1")))
-		term.at("result").assertEqualTo(list(term("i32")))
-		term.at("body").assertEqualTo(list(empty.term))
+		term.at(symbol("param")).assertEqualTo(list(term("0"), term("1")))
+		term.at(symbol("result")).assertEqualTo(list(term("i32")))
+		term.at(bodySymbol).assertEqualTo(list(empty.term))
 	}
 
 	@Test
@@ -220,11 +220,11 @@ class TermTest {
 
 	@Test
 	fun listTermSeqOrNull() {
-		term().listTermSeqOrNull("foo")!!.assertContains()
-		term("foo").listTermSeqOrNull("foo")!!.assertContains(term())
-		term("foo" to term("bar")).listTermSeqOrNull("foo")!!.assertContains(term("bar"))
-		term("foo" to term("bar"), "foo" to term("zar")).listTermSeqOrNull("foo")!!.assertContains(term("bar"), term("zar"))
-		term("foo" to term(), "zoo" to term()).listTermSeqOrNull("foo").assertEqualTo(null)
+		term().listTermSeqOrNull(symbol("foo"))!!.assertContains()
+		term("foo").listTermSeqOrNull(symbol("foo"))!!.assertContains(term())
+		term("foo" to term("bar")).listTermSeqOrNull(symbol("foo"))!!.assertContains(term("bar"))
+		term("foo" to term("bar"), "foo" to term("zar")).listTermSeqOrNull(symbol("foo"))!!.assertContains(term("bar"), term("zar"))
+		term("foo" to term(), "zoo" to term()).listTermSeqOrNull(symbol("foo")).assertEqualTo(null)
 	}
 
 //	@Test

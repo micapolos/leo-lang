@@ -32,7 +32,7 @@ val Switch.termField
 
 val TermField.switchOrNull: Switch?
 	get() =
-		ifOrNull(name == "switch") {
+		ifOrNull(name == switchSymbol) {
 			empty.switch.orNull.fold(value.fieldSeq) { field ->
 				field.caseOrNull?.let { case ->
 					this?.plus(case)
