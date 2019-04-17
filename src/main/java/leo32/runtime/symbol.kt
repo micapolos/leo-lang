@@ -16,6 +16,16 @@ fun symbol(string: String): Symbol =
 		.fold(string.utf8ByteSeq) { failIfOr(it == 0.toByte()) { add(it) } }
 		.run { failIfOr(isEmpty) { Symbol(this) } }
 
+val String.symbol
+	get() =
+		symbol(this)
+
+fun Symbol.plus(symbol: Symbol) =
+	Symbol(nonEmptyNoZerosByteArray.add(symbol.nonEmptyNoZerosByteArray))
+
+fun Symbol.plus(string: String) =
+	plus(symbol(string))
+
 val Symbol.byteSeq
 	get() =
 		nonEmptyNoZerosByteArray.seq.then { 0.toByte().onlySeq }

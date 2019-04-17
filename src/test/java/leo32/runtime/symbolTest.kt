@@ -17,4 +17,9 @@ class SymbolTest {
 	fun equality() {
 		symbol("foo").assertEqualTo(symbol("foo"))
 	}
+
+	@Test
+	fun plus() {
+		"foo".symbol.plus("bar").assertEqualTo("foobar".symbol)
+	}
 }

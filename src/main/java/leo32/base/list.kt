@@ -36,6 +36,9 @@ val List<*>.isEmpty get() =
 fun <T: Any> List<T>.add(value: T) =
 	copy(array = array.put(endExclusive.int, value), endExclusive = endExclusive.inc)
 
+fun <T : Any> List<T>.add(list: List<T>) =
+	fold(list.seq) { add(it) }
+
 val <T: Any> List<T>.drop get() =
 	copy(array = array.put(endExclusive.dec.int, null), endExclusive = endExclusive.dec)
 
