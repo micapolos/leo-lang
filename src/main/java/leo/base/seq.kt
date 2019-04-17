@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package leo.base
 
 data class SeqNode<T>(
@@ -135,3 +137,6 @@ fun <T> Seq<T>.intercept(addValue: Boolean, value: T): Seq<T> =
 fun <T> SeqNode<T>.intercept(addValue: Boolean, value: T): SeqNode<T> =
 	if (!addValue) first.then(remaining.intercept(true, value))
 	else value.then(Seq { intercept(false, value) })
+
+fun <T> Seq<T>.replace(fromToPair: Pair<T, T>) =
+	map { value -> if (value == fromToPair.first) fromToPair.second else value }

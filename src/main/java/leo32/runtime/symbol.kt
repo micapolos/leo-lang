@@ -20,7 +20,22 @@ val String.symbol
 	get() =
 		symbol(this)
 
-fun Symbol.plus(symbol: Symbol) =
+val Byte.symbolOrNull
+	get() =
+		notNullIf(this != 0.toByte()) {
+			Symbol(list<Byte>().add(this))
+		}
+
+fun Symbol.plus(byte: Byte): Symbol? =
+	notNullIf(byte != 0.toByte()) {
+		Symbol(nonEmptyNoZerosByteArray.add(byte))
+	}
+
+fun Symbol?.orNullPlus(byte: Byte): Symbol? =
+	if (this == null) byte.symbolOrNull
+	else plus(byte)
+
+fun Symbol.plus(symbol: Symbol): Symbol? =
 	Symbol(nonEmptyNoZerosByteArray.add(symbol.nonEmptyNoZerosByteArray))
 
 fun Symbol.plus(string: String) =
