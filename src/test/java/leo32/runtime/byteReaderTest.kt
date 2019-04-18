@@ -9,7 +9,7 @@ class ByteReaderTest {
 	fun define() {
 		empty
 			.byteReader
-			.plus("define zero  gives one    zero  ")!!
+			.plusDotsToZeros("define.zero..gives.one....zero..")!!
 			.symbolReader
 			.fieldReader
 			.term
@@ -21,7 +21,7 @@ class ByteReaderTest {
 	fun quoting() {
 		empty
 			.byteReader
-			.plus("quote define zero  gives one    ")!!
+			.plusDotsToZeros("quote.define.zero..gives.one....")!!
 			.symbolReader
 			.fieldReader
 			.term

@@ -34,10 +34,10 @@ fun ByteReader.plus(byte: Byte) =
 				copy(symbolOrNull = symbol)
 			}
 
-fun ByteReader.plus(string: String) =
+fun ByteReader.plusDotsToZeros(string: String) =
 	string
 		.utf8ByteSeq
-		.replace(32.toByte() to 0.toByte())
+		.replace('.'.toByte() to 0.toByte())
 		.let { byteSeq ->
 			orNull.fold(byteSeq) { byte ->
 				this?.plus(byte)

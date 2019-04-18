@@ -41,6 +41,25 @@ class SymbolReaderTest {
 			.fieldReader
 			.term
 			.script
-			.assertEqualTo(script(oneSymbol))
+			.assertEqualTo(
+				script(defineSymbol to script(
+					zeroSymbol to script(),
+					givesSymbol to script(oneSymbol))))
+	}
+
+	@Test
+	fun doubleQuote() {
+		empty
+			.symbolReader
+			.plus(quoteSymbol)!!
+			.plus(quoteSymbol)!!
+			.plus(zeroSymbol)!!
+			.plus(null)!!
+			.plus(null)!!
+			.plus(null)!!
+			.fieldReader
+			.term
+			.script
+			.assertEqualTo(script(quoteSymbol to script(zeroSymbol)))
 	}
 }
