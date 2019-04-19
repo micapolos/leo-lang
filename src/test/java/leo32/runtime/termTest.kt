@@ -5,7 +5,6 @@ import leo.base.assertEqualTo
 import leo.base.empty
 import leo.base.string
 import leo32.base.list
-import leo32.base.put
 import leo32.string32
 import kotlin.test.Test
 
@@ -485,66 +484,64 @@ class TermTest {
 	}
 
 	@Test
-	fun eitherDict() {
+	fun alternativesTermOrNull() {
 		term()
-			.eitherDictOrNull
-			.assertEqualTo(empty.symbolDict())
+			.alternativesTermOrNull
+			.assertEqualTo(null)
 
 		term(zeroSymbol to term())
-			.eitherDictOrNull
+			.alternativesTermOrNull
 			.assertEqualTo(null)
 
 		term(eitherSymbol to term())
-			.eitherDictOrNull
+			.alternativesTermOrNull
 			.assertEqualTo(null)
 
 		term(eitherSymbol to term(zeroSymbol))
-			.eitherDictOrNull
-			.assertEqualTo(empty.symbolDict<Term>().put(zeroSymbol, term()))
+			.alternativesTermOrNull
+			.assertEqualTo(term(zeroSymbol))
 
 		term(eitherSymbol to term(zeroSymbol to term(oneSymbol)))
-			.eitherDictOrNull
-			.assertEqualTo(empty.symbolDict<Term>().put(zeroSymbol, term(oneSymbol)))
+			.alternativesTermOrNull
+			.assertEqualTo(term(zeroSymbol to term(oneSymbol)))
 
 		term(
 			eitherSymbol to term(
 				zeroSymbol to term(),
 				oneSymbol to term()))
-			.eitherDictOrNull
+			.alternativesTermOrNull
 			.assertEqualTo(null)
 
 		term(
 			eitherSymbol to term(zeroSymbol),
 			eitherSymbol to term(oneSymbol))
-			.eitherDictOrNull
+			.alternativesTermOrNull
 			.assertEqualTo(
-				empty
-					.symbolDict<Term>()
-					.put(zeroSymbol, term())
-					.put(oneSymbol, term()))
+				term(
+					zeroSymbol to term(),
+					oneSymbol to term()))
 
 		term(
 			eitherSymbol to term(xSymbol to term(zeroSymbol)),
 			eitherSymbol to term(ySymbol to term(oneSymbol)))
-			.eitherDictOrNull
+			.alternativesTermOrNull
 			.assertEqualTo(
-				empty
-					.symbolDict<Term>()
-					.put(xSymbol, term(zeroSymbol))
-					.put(ySymbol, term(oneSymbol)))
+				term(
+					xSymbol to term(zeroSymbol),
+					ySymbol to term(oneSymbol)))
 
 		term(
 			eitherSymbol to term(xSymbol to term(zeroSymbol)),
 			eitherSymbol to term(ySymbol to term(oneSymbol)),
 			eitherSymbol to term())
-			.eitherDictOrNull
+			.alternativesTermOrNull
 			.assertEqualTo(null)
 
 		term(
 			eitherSymbol to term(xSymbol to term(zeroSymbol)),
 			eitherSymbol to term(ySymbol to term(oneSymbol)),
 			zeroSymbol to term())
-			.eitherDictOrNull
+			.alternativesTermOrNull
 			.assertEqualTo(null)
 	}
 }

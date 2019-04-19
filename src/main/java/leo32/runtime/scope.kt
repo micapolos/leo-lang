@@ -7,10 +7,11 @@ import leo.base.orIfNull
 data class Scope(
 	val valueToTypeDictionary: Dictionary<Term>,
 	val typeToDescribeDictionary: Dictionary<Term>,
-	val typeToBodyDictionary: Dictionary<Term>)
+	val typeToBodyDictionary: Dictionary<Term>,
+	val typeToValueDictionary: Dictionary<Term>)
 
 val Empty.scope get() =
-	Scope(dictionary(), dictionary(), dictionary())
+	Scope(dictionary(), dictionary(), dictionary(), dictionary())
 
 fun Scope.define(termHasTerm: TermHasTerm): Scope =
 	termHasTerm.rhs
@@ -26,8 +27,11 @@ fun Scope.define(termHasTerm: TermHasTerm): Scope =
 			copy(valueToTypeDictionary = valueToTypeDictionary.put(
 				termHasTerm.lhs.leafPlus(termHasTerm.rhs),
 				termHasTerm.lhs))
-		}.copy(typeToDescribeDictionary = typeToDescribeDictionary.put(
-			termHasTerm.lhs, termHasTerm.lhs.plus(hasSymbol to termHasTerm.rhs)))
+		}.copy(
+			typeToDescribeDictionary = typeToDescribeDictionary
+				.put(termHasTerm.lhs, termHasTerm.lhs.plus(hasSymbol to termHasTerm.rhs)),
+			typeToValueDictionary = typeToValueDictionary
+				.put(termHasTerm.lhs, termHasTerm.lhs.leafPlus(termHasTerm.rhs)))
 
 fun Scope.define(case: Case): Scope =
 	copy(typeToBodyDictionary = typeToBodyDictionary.put(case.key, case.value))

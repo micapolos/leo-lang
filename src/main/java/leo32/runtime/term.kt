@@ -20,16 +20,16 @@ data class Term(
 	val typeTermOrNull: Term?,
 	val selfOrNull: Term?,
 	val switchOrNull: Switch?,
-	val eitherDictOrNull: Dict<Symbol, Term>?,
+	val alternativesTermOrNull: Term?,
 	val quoteDepth: I32) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, null, empty.symbolDict(), 0.i32)
+	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, null, null, 0.i32)
 
 val Empty.term get() =
-	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, null, symbolDict(), 0.i32)
+	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, null, null, 0.i32)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -123,7 +123,7 @@ val Term.begin get() =
 		typeTermOrNull = null,
 		selfOrNull = selfOrNull,
 		switchOrNull = null,
-		eitherDictOrNull = empty.symbolDict(),
+		alternativesTermOrNull = null,
 		quoteDepth = quoteDepth)
 
 fun Term.plus(field: TermField): Term {
@@ -152,11 +152,11 @@ fun Term.plus(field: TermField): Term {
 			},
 		selfOrNull = selfOrNull,
 		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull },
-		eitherDictOrNull = eitherDictOrNull?.let { eitherDict ->
+		alternativesTermOrNull = alternativesTermForPlusOrNull?.let { alternativesTerm ->
 			ifOrNull(field.name == eitherSymbol) {
 				field.value.nodeOrNull?.let { node ->
 					ifOrNull(node.lhs.isEmpty) {
-						eitherDict.put(node.field.name, node.field.value)
+						alternativesTerm.plus(node.field)
 					}
 				}
 			}
@@ -173,6 +173,11 @@ fun Term.plus(term: Term) =
 
 val Term.typeTerm get() =
 	typeTermOrNull ?: term().plus(this)
+
+val Term.alternativesTermForPlusOrNull
+	get() =
+		if (isEmpty) term()
+		else alternativesTermOrNull
 
 val Term.invoke
 	get() =
