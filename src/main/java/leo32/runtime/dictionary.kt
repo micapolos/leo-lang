@@ -6,7 +6,9 @@ import leo32.base.*
 import leo32.base.Tree
 
 data class Dictionary<out T: Any>(
-	val tree: Tree<T?>)
+	val tree: Tree<T?>) {
+	override fun toString() = appendableString { it.append(this) }
+}
 
 val <T : Any> Tree<T?>.dictionary
 	get() =
@@ -39,7 +41,7 @@ fun <T : Any> Dictionary<T>.at(term: Term): T? =
 fun <T : Any> Dictionary<T>.at(field: TermField): T? =
 	tree.at(field.bitSeq)?.valueOrNull
 
-fun <T : Any> Appendable.append(dictionary: Dictionary<T>, fn: Appendable.(T) -> Appendable): Appendable =
+fun <T : Any> Appendable.append(dictionary: Dictionary<T>): Appendable =
 	this
 		.append("dictionary")
 		.foldPairs(dictionary) { (key, value) ->
@@ -47,7 +49,7 @@ fun <T : Any> Appendable.append(dictionary: Dictionary<T>, fn: Appendable.(T) ->
 				.append(".put(")
 				.append(key)
 				.append(", ")
-				.fn(value)
+				.append(value.toString())
 				.append(")")
 		}
 

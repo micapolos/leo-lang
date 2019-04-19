@@ -18,7 +18,6 @@ data class Term(
 	val nodeOrNull: Node?,
 	val intOrNull: Int?,
 	val typeTermOrNull: Term?,
-	val selfOrNull: Term?,
 	val switchOrNull: Switch?,
 	val alternativesTermOrNull: Term?,
 	val quoteDepth: I32) {
@@ -26,10 +25,10 @@ data class Term(
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, null, null, 0.i32)
+	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, null, 0.i32)
 
 val Empty.term get() =
-	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, null, null, 0.i32)
+	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, null, 0.i32)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -121,7 +120,6 @@ val Term.begin get() =
 		nodeOrNull = null,
 		intOrNull = null,
 		typeTermOrNull = null,
-		selfOrNull = selfOrNull,
 		switchOrNull = null,
 		alternativesTermOrNull = null,
 		quoteDepth = quoteDepth)
@@ -150,7 +148,6 @@ fun Term.plus(field: TermField): Term {
 			?: notNullIf(field.value.typeTermOrNull != null || typeTermOrNull != null) {
 				typeTerm.plus(field.typeTermField)
 			},
-		selfOrNull = selfOrNull,
 		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull },
 		alternativesTermOrNull = alternativesTermForPlusOrNull?.let { alternativesTerm ->
 			ifOrNull(field.name == eitherSymbol) {
@@ -183,16 +180,17 @@ val Term.invoke
 	get() =
 		typeTerm.let { typeTerm ->
 			scope.typeToBodyDictionary.at(typeTerm)?.let { body ->
-				typeTerm.clear
-					.copy(selfOrNull = clear.plus(selfSymbol to this))
+				body.clear
+					.copy(scope = body.scope.bindSelf(body.scope.bring(term(selfSymbol to this))))
 					.invoke(body)
-					.copy(selfOrNull = selfOrNull)
+					.copy(scope = body.scope.bindSelf(body.scope.selfOrNull))
+					.let { result -> scope.bring(result) }
 			}.orIfNull { this }
 		}
 
 val Term.self
 	get() =
-		selfOrNull ?: term(selfSymbol)
+		scope.selfOrNull ?: scope.bring(term(selfSymbol))
 
 fun term(name: Symbol) =
 	term().plus(name to term())
@@ -315,7 +313,7 @@ fun Term.plusMacroUnquote(field: TermField): Term? =
 
 fun Term.plusMacroSelf(field: TermField): Term? =
 	notNullIf(isEmpty && field.name == selfSymbol && field.value.isEmpty) {
-		clear.plus(self)
+		scope.bring(self)
 	}
 
 fun Term.plusMacroSwitch(field: TermField): Term? =
@@ -382,7 +380,7 @@ fun invokeTerm(line: Line, vararg lines: Line): Term =
 	term().plus(line).fold(lines) { plus(it) }
 
 val Term.clear get() =
-	scope.emptyTerm.copy(selfOrNull = selfOrNull)
+	scope.emptyTerm
 
 fun Term.set(scope: Scope) =
 	copy(scope = scope, localScope = scope)
@@ -428,8 +426,7 @@ val Term.descope: Term
 			plus(it.name to it.value.descope)
 		}
 
-//fun Term.typedInvoke(field: TermField): Term =
-//	failIfOr(!isEmpty && field.value.isEmpty) {
-//		if (isEmpty) TODO()
-//		else TODO()
-//	}
+fun Scope.bring(term: Term): Term =
+	emptyTerm.fold(term.fieldSeq) { field ->
+		plus(field.name to bring(field.value))
+	}

@@ -96,11 +96,18 @@ val coreLib: Leo = {
 		quote { zero }.gives { one }
 	}
 
-//	test {
-//		define { zero.negate.gives { self } }
-//		define { zero.not.gives { quote { quote { and.self.rhs.negate } } } }
-//		quote { zero.negate }.body.gives { one }
-//	}
+	test {
+		define { zero.plus { one }.gives { one } }
+		define { one.plus { one }.gives { two } }
+		zero.plus { one }.plus { one }.gives { two }
+	}
+
+	test {
+		define { zero.plus { one }.gives { one } }
+		define { one.plus { one }.gives { two } }
+		define { zero.plus { two }.gives { self.zero.plus { one }.plus { one } } }
+		zero.plus { two }.gives { two }
+	}
 }
 
 fun main() {

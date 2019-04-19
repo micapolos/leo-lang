@@ -345,14 +345,16 @@ class TermTest {
 
 	@Test
 	fun argumentRaw() {
-		term()
-			.copy(selfOrNull = term(zeroSymbol))
+		empty.scope
+			.bindSelf(term(zeroSymbol))
+			.emptyTerm
 			.invoke(script(selfSymbol))
 			.script
 			.assertEqualTo(script(zeroSymbol))
 
-		term()
-			.copy(selfOrNull = term(zeroSymbol))
+		empty.scope
+			.bindSelf(term(zeroSymbol))
+			.emptyTerm
 			.invoke(script(theSymbol to script(selfSymbol)))
 			.script
 			.assertEqualTo(script(theSymbol to script(zeroSymbol)))
@@ -543,5 +545,132 @@ class TermTest {
 			zeroSymbol to term())
 			.alternativesTermOrNull
 			.assertEqualTo(null)
+	}
+
+	@Test
+	fun functionScoping() {
+		val scopedTerm = term()
+			.invoke(defineSymbol to script(
+				zeroSymbol to script(),
+				givesSymbol to script(oneSymbol)))
+
+		scopedTerm
+			.scope
+			.assertEqualTo(empty.scope.define(term("zero") caseTo term("one")))
+
+		scopedTerm
+			.invoke(zeroSymbol to script())
+			.assertEqualTo(scopedTerm.invoke("one" to term()))
+	}
+
+	@Test
+	fun functionScoping2() {
+		val scopedTerm = term()
+			.invoke(defineSymbol to script(
+				zeroSymbol to script(),
+				givesSymbol to script(oneSymbol)))
+
+		val scopedTerm2 = scopedTerm
+			.invoke(defineSymbol to script(
+				oneSymbol to script(),
+				givesSymbol to script(twoSymbol)))
+
+		scopedTerm2
+			.invoke(zeroSymbol to script())
+			.assertEqualTo(scopedTerm2.scope.bring(term(oneSymbol)))
+	}
+
+	@Test
+	fun functionScoping_self() {
+		val scopedTerm = term()
+			.invoke(defineSymbol to script(
+				zeroSymbol to script(),
+				givesSymbol to script(selfSymbol)))
+
+		scopedTerm
+			.invoke(zeroSymbol to script())
+			.assertEqualTo(scopedTerm.scope.bring(term(selfSymbol to term(zeroSymbol))))
+	}
+
+	@Test
+	fun functionScoping_get() {
+		val scopedTerm = term()
+			.invoke(defineSymbol to script(
+				zeroSymbol to script(),
+				negateSymbol to script(),
+				givesSymbol to script(oneSymbol)))
+
+		scopedTerm
+			.invoke(
+				script(
+					theSymbol to script(zeroSymbol to script()),
+					zeroSymbol to script(),
+					negateSymbol to script()))
+			.assertEqualTo(scopedTerm.scope.bring(term(oneSymbol)))
+	}
+
+	@Test
+	fun functionScoping_wrap() {
+		val scopedTerm = term()
+			.invoke(defineSymbol to script(
+				theSymbol to script(zeroSymbol to script()),
+				negateSymbol to script(),
+				givesSymbol to script(oneSymbol)))
+
+		scopedTerm
+			.invoke(
+				script(
+					zeroSymbol to script(),
+					theSymbol to script(),
+					negateSymbol to script()))
+			.assertEqualTo(scopedTerm.scope.bring(term(oneSymbol)))
+	}
+
+	@Test
+	fun functionScoping_self2() {
+		val scopedTerm = term()
+			.invoke(defineSymbol to script(
+				zeroSymbol to script(),
+				negateSymbol to script(),
+				givesSymbol to script(oneSymbol)))
+
+		val scopedTerm2 = scopedTerm
+			.invoke(defineSymbol to script(
+				theSymbol to script(zeroSymbol to script()),
+				givesSymbol to script(
+					selfSymbol to script(),
+					theSymbol to script(),
+					zeroSymbol to script(),
+					negateSymbol to script())))
+
+		scopedTerm2.scope
+			.typeToBodyDictionary
+			.at(term(theSymbol to term(zeroSymbol)))!!
+			.scope
+			.assertEqualTo(scopedTerm.scope)
+
+		scopedTerm2
+			.invoke(theSymbol to script(zeroSymbol to script()))
+			.assertEqualTo(scopedTerm2.scope.bring(term(oneSymbol)))
+	}
+
+	@Test
+	fun functionScoping_self3() {
+		val scopedTerm = term()
+			.invoke(defineSymbol to script(
+				zeroSymbol to script(),
+				givesSymbol to script(
+					selfSymbol to script(),
+					andSymbol to script(selfSymbol))))
+
+		scopedTerm
+			.invoke(zeroSymbol to script())
+			.assertEqualTo(
+				scopedTerm
+					.scope
+					.bring(
+						term(
+							selfSymbol to term(zeroSymbol),
+							andSymbol to term(selfSymbol to term(zeroSymbol)))))
 	}
 }

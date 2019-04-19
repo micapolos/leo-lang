@@ -4,7 +4,8 @@ import leo32.leo.*
 
 val bitLib: Leo = {
 	define {
-		bit.has {
+		bit
+		has {
 			either { zero }
 			either { one }
 		}
@@ -14,7 +15,8 @@ val bitLib: Leo = {
 		describe { bit }
 		gives {
 			quote {
-				bit.has {
+				bit
+				has {
 					either { zero }
 					either { one }
 				}
@@ -23,8 +25,10 @@ val bitLib: Leo = {
 	}
 
 	define {
-		bit.negate.gives {
-			self.negate.bit.switch {
+		bit.negate
+		gives {
+			self.negate.bit
+			switch {
 				case { zero.bit.gives { one.bit } }
 				case { one.bit.gives { zero.bit } }
 			}
@@ -33,21 +37,28 @@ val bitLib: Leo = {
 
 	test { zero.bit.negate.gives { one.bit } }
 	test { one.bit.negate.gives { zero.bit } }
+	test { zero.bit.negate.negate.gives { zero.bit } }
 
 	define {
-		bit.and { bit }.gives {
-			self.bit.switch {
+		bit.and { bit }
+		gives {
+			self.bit
+			switch {
 				case {
-					zero.bit.gives {
-						self.and.bit.switch {
+					zero.bit
+					gives {
+						self.and.bit
+						switch {
 							case { zero.bit.gives { zero.bit } }
 							case { one.bit.gives { zero.bit } }
 						}
 					}
 				}
 				case {
-					one.bit.gives {
-						self.and.bit.switch {
+					one.bit
+					gives {
+						self.and.bit
+						switch {
 							case { zero.bit.gives { zero.bit } }
 							case { one.bit.gives { one.bit } }
 						}
@@ -63,15 +74,14 @@ val bitLib: Leo = {
 	test { one.bit.and { one.bit }.gives { one.bit } }
 
 	define {
-		bit.or { bit }.gives {
-			self.bit.negate.and { self.or.bit.negate }.negate
-		}
+		bit.or { bit }
+		gives { self.bit.negate.and { self.or.bit.negate }.negate }
 	}
 
-//	test { zero.bit.or { zero.bit }.gives { zero.bit } }
-//	test { zero.bit.or { one.bit }.gives { one.bit } }
-//	test { one.bit.or { zero.bit }.gives { one.bit } }
-//	test { one.bit.or { one.bit }.gives { one.bit } }
+	test { zero.bit.or { zero.bit }.gives { zero.bit } }
+	test { zero.bit.or { one.bit }.gives { one.bit } }
+	test { one.bit.or { zero.bit }.gives { one.bit } }
+	test { one.bit.or { one.bit }.gives { one.bit } }
 }
 
 fun main() {

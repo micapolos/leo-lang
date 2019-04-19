@@ -8,10 +8,11 @@ data class Scope(
 	val valueToTypeDictionary: Dictionary<Term>,
 	val typeToDescribeDictionary: Dictionary<Term>,
 	val typeToBodyDictionary: Dictionary<Term>,
-	val typeToValueDictionary: Dictionary<Term>)
+	val typeToValueDictionary: Dictionary<Term>,
+	val selfOrNull: Term?)
 
 val Empty.scope get() =
-	Scope(dictionary(), dictionary(), dictionary(), dictionary())
+	Scope(dictionary(), dictionary(), dictionary(), dictionary(), null)
 
 fun Scope.define(termHasTerm: TermHasTerm): Scope =
 	termHasTerm.rhs
@@ -41,3 +42,6 @@ fun Scope.plusValue(field: TermField) =
 
 fun Scope.invoke(vararg lines: Line): Term =
 	emptyTerm.fold(lines) { invoke(it) }
+
+fun Scope.bindSelf(term: Term?) =
+	copy(selfOrNull = term)
