@@ -8,11 +8,13 @@ data class List<out T: Any>(
 	val array: Array<T?>,
 	val startInclusive: I32,
 	val endExclusive: I32) {
-	override fun equals(other: Any?): Boolean =
-		other is List<*>
-			&& size == other.size
-			&& true.fold(0.until(size.int).asIterable()) { this && at(it.i32) == other.at(it.i32) }
+	override fun equals(other: Any?) =
+		other is List<*> && this.eq(other) { this == it }
 }
+
+fun <T : Any> List<T>.eq(list: List<T>, valueEq: T.(T) -> Boolean) =
+	size == list.size
+		&& true.fold(0.until(size.int).asIterable()) { this && at(it.i32).valueEq(list.at(it.i32)) }
 
 fun <T: Any> Empty.list() =
 	List(nullOf<T>().array, 0.i32, 0.i32)

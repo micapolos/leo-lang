@@ -1,6 +1,7 @@
 package leo32.runtime
 
 import leo.base.fold
+import leo.base.ifOrNull
 
 data class Node(
 	val lhs: Term,
@@ -14,8 +15,9 @@ val Node.simpleNameOrNull get() =
 	else null
 
 fun Node.simpleAtOrNull(symbol: Symbol) =
-	if (lhs.isEmpty) field.atOrNull(symbol)
-	else null
+	ifOrNull(lhs.isEmpty) {
+		field.atOrNull(symbol)
+	}
 
 fun Node.plus(field: TermField) =
 	Node(term, field)

@@ -23,7 +23,7 @@ val TermField.simpleNameOrNull get() =
 	notNullIf(value.isEmpty) { name }
 
 fun TermField.atOrNull(symbol: Symbol) =
-	notNullIf(name == symbol(string)) { value }
+	notNullIf(name == symbol) { value }
 
 fun TermField.map(fn: Term.() -> Term): TermField =
 	name to value.fn()

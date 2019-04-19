@@ -161,18 +161,22 @@ class TermTest {
 
 		term(oneSymbol to term())
 			.plusMacroGet(oneSymbol to term())
-			.assertEqualTo(term())
-
-		term(oneSymbol to term(jedenSymbol))
-			.plusMacroGet(oneSymbol to term())
-			.assertEqualTo(term(jedenSymbol))
-
-		term(oneSymbol to term(jedenSymbol))
-			.plusMacroGet(twoSymbol to term())
 			.assertEqualTo(null)
 
-		term(circleSymbol to term(radiusSymbol to term("10")))
-			.plusMacroGet(circleSymbol to term())
+		term()
+			.plusMacroGet(oneSymbol to term())
+			.assertEqualTo(null)
+
+		term()
+			.plusMacroGet(oneSymbol to term(oneSymbol to term(jedenSymbol)))
+			.assertEqualTo(term(jedenSymbol))
+
+		term()
+			.plusMacroGet(oneSymbol to term(twoSymbol to term(jedenSymbol)))
+			.assertEqualTo(null)
+
+		term()
+			.plusMacroGet(circleSymbol to term(circleSymbol to term(radiusSymbol to term("10"))))
 			.assertEqualTo(term(radiusSymbol to term("10")))
 	}
 
@@ -211,6 +215,7 @@ class TermTest {
 
 	@Test
 	fun intOrNull() {
+		term(0).assertEqualTo(term("int" to term("0")))
 		term(0).intOrNull.assertEqualTo(0)
 		term(-1).intOrNull.assertEqualTo(-1)
 		term(intSymbol to term("0")).intOrNull.assertEqualTo(0)
@@ -334,35 +339,8 @@ class TermTest {
 			.invoke(bitSymbol to term(zeroSymbol))
 			.invoke(bitSymbol to term(oneSymbol))
 			.typeTerm
-			.assertEqualTo(term(bitSymbol to term(), bitSymbol to term(oneSymbol)))
-	}
-
-	@Test
-	fun invokeTermHasTermMacro() {
-		val term0 = term()
-
-		val term1 = term()
-			.invoke(
-				term(
-					defineSymbol to term(
-						circleSymbol to term(),
-						"has" to term(radiusSymbol))))
-
-		term1
-			.assertEqualTo(
-				term()
-					.invoke(
-						term0.invoke(term(circleSymbol)) has term0.invoke(term(radiusSymbol))))
-
-		val term2 = term1
-			.invoke(
-				term(
-					colorSymbol to term(),
-					"has" to term("alpha")))
-
-		term2
-			.assertEqualTo(
-				term1.invoke(term0.invoke(term(colorSymbol)) has term0.invoke(term("alpha"))))
+			.script
+			.assertEqualTo(script(bitSymbol to script(), bitSymbol to script(oneSymbol)))
 	}
 
 	@Test
@@ -435,20 +413,6 @@ class TermTest {
 						caseSymbol to script(
 							negateSymbol to script(bitSymbol to script(oneSymbol)),
 							toSymbol to script(bitSymbol to script(zeroSymbol)))))))
-
-		term.script.assertEqualTo(script())
-		term
-			.invoke(negateSymbol to term(bitSymbol to term(zeroSymbol)))
-			.script
-			.assertEqualTo(script(bitSymbol to script(oneSymbol)))
-		term
-			.invoke(negateSymbol to term(bitSymbol to term(oneSymbol)))
-			.script
-			.assertEqualTo(script(bitSymbol to script(zeroSymbol)))
-		term
-			.invoke(negateSymbol to term(bitSymbol to term(twoSymbol)))
-			.script
-			.assertEqualTo(script(negateSymbol to script(bitSymbol to script(twoSymbol))))
 	}
 
 	@Test
@@ -506,7 +470,7 @@ class TermTest {
 			switchSymbol to term(
 				caseSymbol to term(
 					oneSymbol to term(),
-					toSymbol to term(twoSymbol))))
+					givesSymbol to term(twoSymbol))))
 			.switchOrNull
 			.assertEqualTo(
 				switch(
