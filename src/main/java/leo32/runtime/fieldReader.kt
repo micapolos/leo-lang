@@ -1,6 +1,9 @@
 package leo32.runtime
 
 import leo.base.Empty
+import leo.base._else
+import leo.base._if
+import leo.base._then
 
 data class FieldReader(
 	val term: Term)
@@ -14,7 +17,10 @@ val Empty.fieldReader
 		term.fieldReader
 
 fun FieldReader.plus(field: TermField) =
-	term.plusResolved(field).fieldReader
+	_if(field.value.isEmpty)
+		._then { term.clear.plusResolved(field.name to term) }
+		._else { term.plusResolved(field) }
+		.fieldReader
 
 val FieldReader.quote
 	get() =
