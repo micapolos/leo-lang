@@ -5,6 +5,7 @@ import leo.base.assertEqualTo
 import leo.base.empty
 import leo.base.string
 import leo32.base.list
+import leo32.base.put
 import leo32.string32
 import kotlin.test.Test
 
@@ -480,6 +481,70 @@ class TermTest {
 			fooSymbol to term(),
 			switchSymbol to term())
 			.switchOrNull
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun eitherDict() {
+		term()
+			.eitherDictOrNull
+			.assertEqualTo(empty.symbolDict())
+
+		term(zeroSymbol to term())
+			.eitherDictOrNull
+			.assertEqualTo(null)
+
+		term(eitherSymbol to term())
+			.eitherDictOrNull
+			.assertEqualTo(null)
+
+		term(eitherSymbol to term(zeroSymbol))
+			.eitherDictOrNull
+			.assertEqualTo(empty.symbolDict<Term>().put(zeroSymbol, term()))
+
+		term(eitherSymbol to term(zeroSymbol to term(oneSymbol)))
+			.eitherDictOrNull
+			.assertEqualTo(empty.symbolDict<Term>().put(zeroSymbol, term(oneSymbol)))
+
+		term(
+			eitherSymbol to term(
+				zeroSymbol to term(),
+				oneSymbol to term()))
+			.eitherDictOrNull
+			.assertEqualTo(null)
+
+		term(
+			eitherSymbol to term(zeroSymbol),
+			eitherSymbol to term(oneSymbol))
+			.eitherDictOrNull
+			.assertEqualTo(
+				empty
+					.symbolDict<Term>()
+					.put(zeroSymbol, term())
+					.put(oneSymbol, term()))
+
+		term(
+			eitherSymbol to term(xSymbol to term(zeroSymbol)),
+			eitherSymbol to term(ySymbol to term(oneSymbol)))
+			.eitherDictOrNull
+			.assertEqualTo(
+				empty
+					.symbolDict<Term>()
+					.put(xSymbol, term(zeroSymbol))
+					.put(ySymbol, term(oneSymbol)))
+
+		term(
+			eitherSymbol to term(xSymbol to term(zeroSymbol)),
+			eitherSymbol to term(ySymbol to term(oneSymbol)),
+			eitherSymbol to term())
+			.eitherDictOrNull
+			.assertEqualTo(null)
+
+		term(
+			eitherSymbol to term(xSymbol to term(zeroSymbol)),
+			eitherSymbol to term(ySymbol to term(oneSymbol)),
+			zeroSymbol to term())
+			.eitherDictOrNull
 			.assertEqualTo(null)
 	}
 }

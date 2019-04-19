@@ -93,3 +93,8 @@ fun TermField.leafPlus(term: Term) =
 
 val TermField.typeTermField get() =
 	name to value.typeTerm
+//
+//val TermField.typedInvoke: Term get() =
+//	value.typeTerm.listTermSeqOrNull(eitherSymbol)?.let { eitherTermSeq ->
+//
+//	}

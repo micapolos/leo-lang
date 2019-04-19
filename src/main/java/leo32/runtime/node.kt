@@ -14,6 +14,10 @@ val Node.simpleNameOrNull get() =
 	if (lhs.isEmpty) field.simpleNameOrNull
 	else null
 
+val Node.isSimple
+	get() =
+		lhs.isEmpty
+
 fun Node.simpleAtOrNull(symbol: Symbol) =
 	ifOrNull(lhs.isEmpty) {
 		field.atOrNull(symbol)
