@@ -28,8 +28,7 @@ class LeoTest {
 	fun leo() {
 		"a()equals(a())".assertGives("boolean(true())")
 		"quote(a()equals(a()))".assertGives("a()equals(a())")
-		"foo()is(bar())foo()".assertGives("bar()")
-		"x(zero())x()".assertGives("zero()")
+		"vec(x(zero())y(one()))x()".assertGives("x(zero())")
 	}
 }
 

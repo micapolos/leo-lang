@@ -168,15 +168,15 @@ class TermTest {
 			.assertEqualTo(null)
 
 		term()
-			.plusMacroGet(oneSymbol to term(oneSymbol to term(jedenSymbol)))
-			.assertEqualTo(term(jedenSymbol))
+			.plusMacroGet(oneSymbol to term(theSymbol to term(oneSymbol to term(jedenSymbol))))
+			.assertEqualTo(term(oneSymbol to term(jedenSymbol)))
 
 		term()
 			.plusMacroGet(oneSymbol to term(twoSymbol to term(jedenSymbol)))
 			.assertEqualTo(null)
 
 		term()
-			.plusMacroGet(circleSymbol to term(circleSymbol to term(radiusSymbol to term("10"))))
+			.plusMacroGet(radiusSymbol to term(circleSymbol to term(radiusSymbol to term("10"))))
 			.assertEqualTo(term(radiusSymbol to term("10")))
 	}
 
@@ -371,16 +371,16 @@ class TermTest {
 				zeroSymbol to script(),
 				givesSymbol to script(selfSymbol)),
 			zeroSymbol to script())
-			.assertEqualTo(script(zeroSymbol))
+			.assertEqualTo(script(selfSymbol to script(zeroSymbol)))
 	}
 
 	@Test
 	fun defineGivesTheArgument() {
 		invoke(
 			defineSymbol to script(
-				zeroSymbol to script(),
+				theSymbol to script(zeroSymbol to script()),
 				givesSymbol to script(theSymbol to script(selfSymbol))),
-			zeroSymbol to script())
+			theSymbol to script(zeroSymbol to script()))
 			.assertEqualTo(script(theSymbol to script(zeroSymbol)))
 	}
 

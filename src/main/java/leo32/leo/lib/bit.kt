@@ -24,9 +24,9 @@ val bitLib: Leo = {
 
 	define {
 		bit.negate.gives {
-			self.switch {
-				case { zero.bit.negate.gives { one.bit } }
-				case { one.bit.negate.gives { zero.bit } }
+			self.negate.bit.switch {
+				case { zero.bit.gives { one.bit } }
+				case { one.bit.gives { zero.bit } }
 			}
 		}
 	}
@@ -36,11 +36,23 @@ val bitLib: Leo = {
 
 	define {
 		bit.and { bit }.gives {
-			self.switch {
-				case { zero.bit.and { zero.bit }.gives { zero.bit } }
-				case { zero.bit.and { one.bit }.gives { zero.bit } }
-				case { one.bit.and { zero.bit }.gives { zero.bit } }
-				case { one.bit.and { one.bit }.gives { one.bit } }
+			self.bit.switch {
+				case {
+					zero.bit.gives {
+						self.and.bit.switch {
+							case { zero.bit.gives { zero.bit } }
+							case { one.bit.gives { zero.bit } }
+						}
+					}
+				}
+				case {
+					one.bit.gives {
+						self.and.bit.switch {
+							case { zero.bit.gives { zero.bit } }
+							case { one.bit.gives { one.bit } }
+						}
+					}
+				}
 			}
 		}
 	}
@@ -52,14 +64,14 @@ val bitLib: Leo = {
 
 	define {
 		bit.or { bit }.gives {
-			self.lhs.negate.and { self.rhs.negate }.negate
+			self.bit.negate.and { self.or.bit.negate }.negate
 		}
 	}
 
-	test { zero.bit.or { zero.bit }.gives { zero.bit } }
+//	test { zero.bit.or { zero.bit }.gives { zero.bit } }
 //	test { zero.bit.or { one.bit }.gives { one.bit } }
-	test { one.bit.or { zero.bit }.gives { one.bit } }
-	test { one.bit.or { one.bit }.gives { one.bit } }
+//	test { one.bit.or { zero.bit }.gives { one.bit } }
+//	test { one.bit.or { one.bit }.gives { one.bit } }
 }
 
 fun main() {

@@ -184,7 +184,7 @@ val Term.invoke
 		typeTerm.let { typeTerm ->
 			scope.typeToBodyDictionary.at(typeTerm)?.let { body ->
 				typeTerm.clear
-					.copy(selfOrNull = this)
+					.copy(selfOrNull = clear.plus(selfSymbol to this))
 					.invoke(body)
 					.copy(selfOrNull = selfOrNull)
 			}.orIfNull { this }
@@ -247,7 +247,13 @@ fun Term.map(fn: Term.() -> Term): Term =
 
 fun Term.plusMacroGet(field: TermField): Term? =
 	ifOrNull(isEmpty) {
-		field.value.onlyOrNullAt(field.name)
+		field.value.nodeOrNull?.let { fieldNode ->
+			ifOrNull(fieldNode.lhs.isEmpty) {
+				fieldNode.field.value.onlyOrNullAt(field.name)?.let { value ->
+					clear.plus(field.name to value)
+				}
+			}
+		}
 	}
 
 fun Term.plusMacroEquals(field: TermField): Term? =
@@ -307,10 +313,6 @@ fun Term.plusMacroUnquote(field: TermField): Term? =
 	if (field.name == unquoteSymbol) clear.plus(termField(this == field.value))
 	else null
 
-fun Term.plusMacroIs(field: TermField): Term? =
-	if (field.name == isSymbol) clear.plus(leafPlus(field.value))
-	else null
-
 fun Term.plusMacroSelf(field: TermField): Term? =
 	notNullIf(isEmpty && field.name == selfSymbol && field.value.isEmpty) {
 		clear.plus(self)
@@ -322,7 +324,6 @@ fun Term.plusMacroSwitch(field: TermField): Term? =
 fun Term.plusMacro(field: TermField): Term =
 	null
 		?: plusMacroUnquote(field)
-		?: plusMacroIs(field)
 		?: plusMacroEquals(field)
 		?: plusMacroDefine(field)
 		?: plusMacroTest(field)

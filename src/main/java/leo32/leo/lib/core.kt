@@ -6,13 +6,23 @@ val coreLib: Leo = {
 	test { zero.gives { zero } }
 
 	test {
-		x { zero }.y { one }.x
-		gives { zero }
+		circle { radius }.radius
+		gives { radius }
 	}
 
 	test {
-		x { zero }.y { one }.y
-		gives { one }
+		circle { radius }.circle
+		gives { circle { radius }.circle }
+	}
+
+	test {
+		vec { x { zero }.y { one } }.x
+		gives { x { zero } }
+	}
+
+	test {
+		vec { x { zero }.y { one } }.y
+		gives { y { one } }
 	}
 
 	test { lhs.gives { quote { lhs } } }
@@ -59,22 +69,26 @@ val coreLib: Leo = {
 
 	test {
 		define { zero.gives { self } }
-		zero.gives { zero }
+		zero.gives { self { zero } }
 	}
 
 	test {
 		define { zero.gives { self.negate } }
-		zero.gives { zero.negate }
+		zero.gives { zero.self.negate }
 	}
 
 	test {
 		define { zero.gives { self.and { self } } }
-		zero.gives { zero.and { zero } }
+		zero.gives { zero.self.and { zero.self } }
 	}
 
 	test {
-		define { zero.and { one }.gives { self.lhs } }
-		zero.and { one }.gives { zero }
+		define {
+			side.square.area
+			gives { self.area.square.side.times { self.area.square.side } }
+		}
+		side.square.area
+		gives { side.times { side } }
 	}
 
 	test {
