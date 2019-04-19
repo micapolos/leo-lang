@@ -43,6 +43,13 @@ val <T> Tree<T>.branchOrNull
 	get() =
 		(this as? BranchTree<T>)?.branch
 
+val <T> Tree<T>.theValueOrNull
+	get() =
+		when (this) {
+			is LeafTree -> leaf.value.the
+			is BranchTree -> null
+		}
+
 val <T : Any> Tree<T?>.branch: Branch<Tree<T?>>
 	get() =
 		when (this) {
@@ -131,3 +138,7 @@ fun <T, R> R.foldValues(tree: Tree<T>, fn: R.(T) -> R): R =
 			.foldValues(tree.branch.at0, fn)
 			.foldValues(tree.branch.at1, fn)
 	}
+
+val <T> Tree<T>.seq
+	get() =
+		cursor.treeSeq.filterMap { theValueOrNull }

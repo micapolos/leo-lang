@@ -143,3 +143,13 @@ fun <T> SeqNode<T>.intercept(addValue: Boolean, value: T): SeqNode<T> =
 
 fun <T> Seq<T>.replace(fromToPair: Pair<T, T>) =
 	map { value -> if (value == fromToPair.first) fromToPair.second else value }
+
+fun <T, V> Seq<T>.filterMap(fn: T.() -> The<V>?): Seq<V> {
+	val seqNodeOrNull = seqNodeOrNull
+	return if (seqNodeOrNull == null) Seq { null }
+	else {
+		val theMappedFirst = seqNodeOrNull.first.fn()
+		if (theMappedFirst == null) seqNodeOrNull.remaining.filterMap(fn)
+		else Seq { theMappedFirst.value.then(seqNodeOrNull.remaining.filterMap(fn)) }
+	}
+}

@@ -1,7 +1,9 @@
 package leo32.base
 
 import leo.base.Seq
+import leo.base.emptySeq
 import leo.base.fold
+import leo.base.then
 import leo.binary.Bit
 import leo.binary.append
 import leo.binary.bit
@@ -74,3 +76,9 @@ tailrec fun <T> TreeCursor<T>.nextLeafOrNull(): TreeCursor<T>? {
 val <T> TreeCursor<T>.nextLeafOrNull
 	get() =
 		nextLeafOrNull()
+
+val <T> TreeCursor<T>.treeSeq: Seq<Tree<T>>
+	get() =
+		Seq {
+			tree.then(nextLeafOrNull?.treeSeq ?: emptySeq())
+		}

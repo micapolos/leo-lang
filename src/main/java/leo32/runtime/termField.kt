@@ -2,7 +2,7 @@ package leo32.runtime
 
 import leo.base.*
 import leo.binary.Bit
-import leo.binary.bitSeq
+import leo.binary.byteBitSeq
 import leo32.Seq32
 import leo32.base.i32
 import leo32.seq32
@@ -55,11 +55,13 @@ val TermField.seq32: Seq32 get() =
 
 val TermField.bitSeq: Seq<Bit>
 	get() =
-		name.bitSeq.then {
-			termBeginChar.toByte().bitSeq.then {
-				value.bitSeq.then {
-					termEndChar.toByte().bitSeq
-				}
+		byteSeq.byteBitSeq
+
+val TermField.byteSeq: Seq<Byte>
+	get() =
+		name.byteSeq.then {
+			value.byteSeq.then {
+				0.toByte().onlySeq
 			}
 		}
 

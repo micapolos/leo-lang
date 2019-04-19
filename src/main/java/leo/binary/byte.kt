@@ -1,8 +1,6 @@
 package leo.binary
 
-import leo.base.Seq
-import leo.base.SeqNode
-import leo.base.emptySeq
+import leo.base.*
 
 val Byte.bitSeq
 	get() =
@@ -23,3 +21,7 @@ val Byte.bitSeq
 				})
 			})
 		}
+
+val Seq<Byte>.byteBitSeq
+	get() =
+		map { bitSeq }.flat

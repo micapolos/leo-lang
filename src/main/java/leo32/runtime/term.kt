@@ -3,6 +3,7 @@
 package leo32.runtime
 
 import leo.base.*
+import leo.binary.byteBitSeq
 import leo32.Seq32
 import leo32.base.*
 import leo32.base.List
@@ -206,9 +207,13 @@ fun Appendable.appendSimple(term: Term): Appendable? =
 val Term.seq32: Seq32 get() =
 	fieldList.seq.map { seq32 }.flat
 
+val Term.byteSeq
+	get() =
+		fieldList.seq.map { byteSeq }.flat
+
 val Term.bitSeq
 	get() =
-		fieldList.seq.map { bitSeq }.flat
+		byteSeq.byteBitSeq
 
 fun <V: Any> Empty.termDict() =
 	dict<Term, V> { bitSeq }

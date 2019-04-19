@@ -22,12 +22,14 @@ val Empty.bitReader
 		byteReader.bitReader
 
 fun BitReader.plus(bit: Bit): BitReader? =
-	byteAcc.runIf(bit.isZero) { byteAcc.or(byteMask) }.let { newByteAcc ->
-		byteMask.ushr1.let { newByteMask ->
-			if (newByteMask == 0.toByte()) byteReader.plus(newByteAcc)?.bitReader
-			else copy(byteAcc = newByteAcc, byteMask = newByteMask)
+	byteAcc
+		.runIf(!bit.isZero) { byteAcc.or(byteMask) }
+		.let { newByteAcc ->
+			byteMask.ushr1.let { newByteMask ->
+				if (newByteMask == 0.toByte()) byteReader.plus(newByteAcc)?.bitReader
+				else copy(byteAcc = newByteAcc, byteMask = newByteMask)
+			}
 		}
-	}
 
 val BitReader.termOrNull
 	get() =
