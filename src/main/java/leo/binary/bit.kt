@@ -1,5 +1,6 @@
 package leo.binary
 
+import leo.base.notNullIf
 import leo.base.onlySeq
 
 sealed class Bit
@@ -77,3 +78,11 @@ val Bit.bitSeq get() = onlySeq
 val Bit.isZero
 	get() =
 		match({ true }, { false })
+
+val firstBit
+	get() =
+		zero.bit
+
+val Bit.nextOrNull
+	get() =
+		notNullIf(isZero) { one.bit }

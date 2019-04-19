@@ -1,6 +1,7 @@
 package leo32.runtime
 
 import leo.base.Empty
+import leo.base.notNullIf
 
 data class SymbolReader(
 	val symbolReaderParentOrNull: SymbolReaderParent?,
@@ -59,4 +60,10 @@ val SymbolReader.endDefault
 					.symbolReader
 					.fieldReader
 					.plus(symbolReaderParent.symbol to fieldReader.term))
+		}
+
+val SymbolReader.termOrNull
+	get() =
+		notNullIf(symbolReaderParentOrNull == null && !isQuoted) {
+			fieldReader.term
 		}

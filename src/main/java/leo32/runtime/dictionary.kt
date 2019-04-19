@@ -64,3 +64,10 @@ fun <T : Any> Appendable.append(dictionary: Dictionary<T>, fn: Appendable.(T) ->
 
 fun Appendable.appendKey(key: List<Bit>): Appendable =
 	append(key.seq.bitSeq32.string32)
+
+fun <T : Any, R> R.foldTermValuePairs(dictionary: Dictionary<T>, fn: R.(Pair<Term, T>) -> R): R =
+	foldKeyValuePairs(
+		dictionary.tree,
+		term().quote.bitReader,
+		{ plus(it)!! },
+		{ fn(it.first.termOrNull!! to it.second) })

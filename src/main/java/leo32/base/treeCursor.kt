@@ -1,16 +1,15 @@
 package leo32.base
 
 import leo.base.Seq
-import leo.base.appendableString
 import leo.base.fold
 import leo.binary.Bit
 import leo.binary.append
+import leo.binary.bit
+import leo.binary.zero
 
 data class TreeCursor<out T>(
-	val parentOrNull: TreeTrace<T>?,
-	val tree: Tree<T>) {
-	override fun toString() = appendableString { it.appendBits(this) }
-}
+	val traceOrNull: TreeTrace<T>?,
+	val tree: Tree<T>)
 
 val <T> Tree<T>.cursor get() =
 	null.cursorTo(this)
@@ -37,8 +36,8 @@ fun <T> TreeCursor<T>.toWithDefault(bitSeq: Seq<Bit>, defaultFn: () -> T): TreeC
 	fold(bitSeq) { toWithDefault(it, defaultFn) }
 
 tailrec fun <T, R> R.foldBits(cursor: TreeCursor<T>, fn: R.(Bit) -> R): R {
-	return if (cursor.parentOrNull == null) this
-	else fn(cursor.parentOrNull.bit).foldBits(cursor.parentOrNull.cursor, fn)
+	return if (cursor.traceOrNull == null) this
+	else fn(cursor.traceOrNull.bit).foldBits(cursor.traceOrNull.cursor, fn)
 }
 
 inline fun <T> TreeCursor<T>.update(fn: Tree<T>.() -> Tree<T>) =
@@ -48,10 +47,30 @@ val <T> TreeCursor<T>.collapse get() =
 	collapse()
 
 tailrec fun <T> TreeCursor<T>.collapse(): Tree<T> =
-	if (parentOrNull == null) tree
-	else parentOrNull.cursor.copy(tree = parentOrNull.cursor.tree.updateAt(parentOrNull.bit) { tree }).collapse()
+	if (traceOrNull == null) tree
+	else traceOrNull.cursor.copy(tree = traceOrNull.cursor.tree.updateAt(traceOrNull.bit) { tree }).collapse()
 
 fun <T> Appendable.appendBits(cursor: TreeCursor<T>): Appendable =
 	append("*").foldBits(cursor) {
 		append("->").append(it)
 	}
+
+val <T> TreeCursor<T>.nextOrNull
+	get() =
+		when (tree) {
+			is LeafTree -> traceOrNull?.nextCursorOrNull
+			is BranchTree -> traceTo(zero.bit).cursorTo(tree.branch.at0)
+		}
+
+tailrec fun <T> TreeCursor<T>.nextLeafOrNull(): TreeCursor<T>? {
+	val nextOrNull = nextOrNull
+	return when {
+		nextOrNull == null -> null
+		nextOrNull.tree.leafOrNull == null -> nextOrNull.nextLeafOrNull()
+		else -> nextOrNull
+	}
+}
+
+val <T> TreeCursor<T>.nextLeafOrNull
+	get() =
+		nextLeafOrNull()

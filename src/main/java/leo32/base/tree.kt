@@ -18,6 +18,12 @@ data class LeafTree<T>(
 data class BranchTree<T>(
 	val branch: Branch<Tree<T>>) : Tree<T>()
 
+fun <T> tree(value: T) =
+	value.leaf.tree
+
+fun <T> tree(at0: Tree<T>, at1: Tree<T>) =
+	BranchTree(branch(at0, at1))
+
 fun <T: Any> Empty.tree() =
 	nullOf<T>().leaf.tree
 
@@ -97,6 +103,14 @@ fun <T: Any> Tree<T?>.seq32(valueSeq32: T.() -> Seq32): Seq32 =
 				seq32(valueSeq32)
 			}
 		}
+	}
+
+fun <K, T : Any, R> R.foldKeyValuePairs(tree: Tree<T?>, key: K, keyFn: K.(Bit) -> K, fn: R.(Pair<K, T>) -> R): R =
+	when (tree) {
+		is LeafTree -> tree.leaf.value?.let { fn(key to it) } ?: this
+		is BranchTree -> this
+			.foldKeyValuePairs(tree.branch.at0, key.keyFn(zero.bit), keyFn, fn)
+			.foldKeyValuePairs(tree.branch.at1, key.keyFn(one.bit), keyFn, fn)
 	}
 
 fun <T, R> R.fold(tree: Tree<T>, key: List<Bit>, fn: R.(Pair<List<Bit>, T>) -> R): R =
