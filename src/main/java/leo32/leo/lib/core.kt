@@ -3,7 +3,7 @@ package leo32.leo.lib
 import leo32.leo.*
 
 val coreLib: Leo = {
-	comment { string("core lib test") }
+	comment("core lib test")
 
 	test {
 		zero.comment { zero }.plus { one }

@@ -39,6 +39,8 @@ fun T.string(string: String): T = plus("string") { plus(string) } // TODO: Escap
 val T.doIt get() = _do
 fun T.doIt(leo: Leo) = _do(leo)
 
+fun T.comment(string: String) = comment { string(string) }
+
 fun T._import(leo: Leo) = leo()
 
 fun _test(leo: Leo) {
