@@ -35,6 +35,10 @@ val List<*>.size get() =
 val List<*>.isEmpty get() =
 	size.isZero
 
+val List<*>.isSingleton
+	get() =
+		size.int == 1
+
 fun <T: Any> List<T>.add(value: T) =
 	copy(array = array.put(endExclusive.int, value), endExclusive = endExclusive.inc)
 

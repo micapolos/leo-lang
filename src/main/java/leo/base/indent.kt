@@ -14,3 +14,7 @@ fun Appendable.append(indent: Indent, string: String) =
 
 fun <R> R.indented(indent: Indent, fn: R.(Indent) -> R): R =
 	fn(Indent(indent.tabCount + 1))
+
+val Indent.inc
+	get() =
+		Indent(tabCount.inc())
