@@ -324,6 +324,9 @@ fun Term.plusMacroDo(field: TermField): Term? =
 		invoke(field.value)
 	}
 
+fun Term.plusMacroComment(field: TermField): Term? =
+	ifOrNull(field.name == commentSymbol) { this }
+
 fun Term.plusMacroScript(field: TermField): Term? =
 	ifOrNull(isEmpty && field.name == scriptSymbol) {
 		clear.plus(field.value.scriptField)
@@ -351,6 +354,7 @@ fun Term.plusMacro(field: TermField): Term =
 		?: plusMacroLhs(field)
 		?: plusMacroRhs(field)
 		?: plusMacroDo(field)
+		?: plusMacroComment(field)
 		?: plusMacroScript(field)
 		?: plusMacroStringPlusString(field)
 		?: plus(field)
