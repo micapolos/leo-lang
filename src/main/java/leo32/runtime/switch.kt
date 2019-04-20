@@ -4,8 +4,8 @@ package leo32.runtime
 
 import leo.base.*
 import leo32.base.Dict
-import leo32.base.at
 import leo32.base.put
+import leo32.base.uncheckedAt
 
 data class Switch(
 	val termToTermDict: Dict<Term, Term>)
@@ -24,7 +24,7 @@ fun Switch.plus(case: Case) =
 
 fun Switch.invoke(term: Term): Term? =
 	termToTermDict
-		.at(term)
+		.uncheckedAt(term)
 
 val Switch.termField
 	get() =

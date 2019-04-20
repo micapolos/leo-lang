@@ -43,7 +43,7 @@ fun Term.fieldAt(index: I32): TermField =
 	fieldList.at(index)
 
 fun Term.at(name: Symbol): List<Term> =
-	termListDict.at(name) ?: empty.list()
+	termListDict.uncheckedAt(name) ?: empty.list()
 
 fun Term.countAt(name: Symbol): I32 =
 	at(name).size

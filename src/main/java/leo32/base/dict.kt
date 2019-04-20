@@ -18,7 +18,7 @@ fun <K, V : Any> Empty.dict(bitSeq: K.() -> Seq<Bit>) =
 fun <K, V : Any> Trie<V>.dict(bitSeq: K.() -> Seq<Bit>) =
 	Dict(this, bitSeq)
 
-fun <K, V : Any> Dict<K, V>.at(key: K) =
+fun <K, V : Any> Dict<K, V>.uncheckedAt(key: K) =
 	trie.uncheckedAt(key.bitSeq())
 
 fun <K, V : Any> Dict<K, V>.dictOrNullAt(key: K): Dict<K, V>? =
@@ -28,7 +28,7 @@ fun <K, V : Any> Dict<K, V>.put(key: K, value: V) =
 	copy(trie = trie.uncheckedPut(key.bitSeq(), value))
 
 fun <K, V: Any> Dict<K, V>.update(key: K, fn: V?.() -> V) =
-	put(key, at(key).fn())
+	put(key, uncheckedAt(key).fn())
 
 fun <K, V : Any> Dict<K, V>.computeAt(key: K, compute: () -> V): Effect<Dict<K, V>, Pair<V, Boolean>> =
 	key.bitSeq().let { keyBitSeq ->

@@ -95,6 +95,9 @@ fun <T: Any> Tree<T?>.put32(pair: Pair<Seq32, T>): Tree<T?> =
 fun <T: Any> Tree<T?>.put(bitSeq: Seq<Bit>, value: T) =
 	updateWithDefault(bitSeq, { null }) { value.leaf.tree }
 
+fun <T : Any> Tree<T?>.update(bitSeq: Seq<Bit>, fn: Tree<T?>?.() -> T): Tree<T?> =
+	put(bitSeq, at(bitSeq).fn())
+
 val <T: Any> Tree<T?>.valueOrNull get() =
 	leafOrNull?.value
 
