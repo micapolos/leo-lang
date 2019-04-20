@@ -319,6 +319,16 @@ fun Term.plusMacroSelf(field: TermField): Term? =
 fun Term.plusMacroSwitch(field: TermField): Term? =
 	field.switchOrNull?.invoke(this)
 
+fun Term.plusMacroDo(field: TermField): Term? =
+	ifOrNull(field.name == doSymbol) {
+		invoke(field.value)
+	}
+
+fun Term.plusMacroScript(field: TermField): Term? =
+	ifOrNull(isEmpty && field.name == scriptSymbol) {
+		clear.plus(field.value.scriptField)
+	}
+
 fun Term.plusMacroStringPlusString(field: TermField): Term? =
 	simpleAtOrNull(stringSymbol)?.simpleNameOrNull?.let { lhsSymbol ->
 		field.atOrNull(plusSymbol)?.simpleAtOrNull(stringSymbol)?.simpleNameOrNull?.let { rhsSymbol ->
@@ -340,6 +350,8 @@ fun Term.plusMacro(field: TermField): Term =
 		?: plusMacroSwitch(field)
 		?: plusMacroLhs(field)
 		?: plusMacroRhs(field)
+		?: plusMacroDo(field)
+		?: plusMacroScript(field)
 		?: plusMacroStringPlusString(field)
 		?: plus(field)
 
@@ -438,3 +450,7 @@ fun Scope.bring(term: Term): Term =
 	emptyTerm.fold(term.fieldSeq) { field ->
 		plus(field.name to bring(field.value))
 	}
+
+val Term.scriptField: TermField
+	get() =
+		scriptSymbol to term().fold(fieldSeq) { plus(it.lineField) }

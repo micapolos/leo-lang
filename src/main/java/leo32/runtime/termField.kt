@@ -93,3 +93,9 @@ fun TermField.leafPlus(term: Term) =
 
 val TermField.typeTermField get() =
 	name to value.typeTerm
+
+val TermField.lineField
+	get() =
+		lineSymbol to term(
+			name.stringField,
+			value.scriptField)

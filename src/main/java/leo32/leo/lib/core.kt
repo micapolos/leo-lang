@@ -25,6 +25,30 @@ val coreLib: Leo = {
 		gives { y { one } }
 	}
 
+	test {
+		zero.doIt { zero }
+		gives { zero.zero }
+	}
+
+	test {
+		zero.doIt { plus { zero } }
+		gives { zero.plus { zero } }
+	}
+
+	test {
+		zero.doIt {
+			define { zero.gives { one } }
+			zero
+		}
+		gives { zero.one }
+	}
+
+	test {
+		define { zero.gives { one } }
+		doIt { quote { zero } }
+		gives { one }
+	}
+
 	test { lhs.gives { quote { lhs } } }
 	test { zero.lhs.gives { quote { zero.lhs } } }
 	test { and { one }.lhs.gives { quote { and { one }.lhs } } }
@@ -108,6 +132,28 @@ val coreLib: Leo = {
 		define { zero.plus { two }.gives { self.zero.plus { one }.plus { one } } }
 		zero.plus { two }.gives { two }
 	}
+
+//	test { script.gives { script } }
+//	test { zero.script.gives { quote { script { line { string("zero").script } } } } }
+//	test { zero.plus { one }.script.gives { quote {
+//		script {
+//			line { string("zero").script }
+//			line {
+//				string("plus")
+//				script { line { string("one").script } } } } } } }
+
+//	doIt {
+//		define { bit.has { either { zero }.either { one } } }
+//		define { bit.negate.gives { self.negate.bit.switch {
+//			case { zero.bit.gives { one.bit } }
+//			case { one.bit.gives { zero.bit } } } } }
+//		define { number.has { either { bit }.either { infinite } } }
+//		define { number.negate.gives { self.negate.number.switch {
+//			case { number.bit.gives { self.number.bit.negate } }
+//			case { number.infinite.gives { zero } } } } }
+//		test { zero.bit.negate.gives { one.bit } }
+//		test { one.bit.negate.gives { zero.bit } }
+//	}
 }
 
 fun main() {
