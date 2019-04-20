@@ -4,19 +4,16 @@ import leo32.leo.*
 
 val bitLib: Leo = {
 	define {
-		bit
-		has {
+		bit.has {
 			either { zero }
 			either { one }
 		}
 	}
 
 	test {
-		describe { bit }
-		gives {
+		describe { bit }.gives {
 			quote {
-				bit
-				has {
+				bit.has {
 					either { zero }
 					either { one }
 				}
@@ -25,10 +22,8 @@ val bitLib: Leo = {
 	}
 
 	define {
-		bit.negate
-		gives {
-			self.negate.bit
-			switch {
+		bit.negate.gives {
+			self.negate.bit.switch {
 				case { zero.bit.gives { one.bit } }
 				case { one.bit.gives { zero.bit } }
 			}
@@ -40,25 +35,19 @@ val bitLib: Leo = {
 	test { zero.bit.negate.negate.gives { zero.bit } }
 
 	define {
-		bit.and { bit }
-		gives {
-			self.bit
-			switch {
+		bit.and { bit }.gives {
+			self.bit.switch {
 				case {
-					zero.bit
-					gives {
-						self.and.bit
-						switch {
+					zero.bit.gives {
+						self.and.bit.switch {
 							case { zero.bit.gives { zero.bit } }
 							case { one.bit.gives { zero.bit } }
 						}
 					}
 				}
 				case {
-					one.bit
-					gives {
-						self.and.bit
-						switch {
+					one.bit.gives {
+						self.and.bit.switch {
 							case { zero.bit.gives { zero.bit } }
 							case { one.bit.gives { one.bit } }
 						}

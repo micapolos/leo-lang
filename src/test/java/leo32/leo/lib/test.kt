@@ -9,5 +9,6 @@ class Test {
 		_test(coreLib)
 		_test(bitLib)
 		_test(byteLib)
+		_test(stringLib)
 	}
 }

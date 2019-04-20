@@ -4,6 +4,7 @@ import leo.base.*
 import leo.binary.zero
 import leo32.base.at
 import leo32.base.i32
+import leo32.base.isEmpty
 import leo32.base.size
 
 data class ScriptCode(val script: Script) {
@@ -34,16 +35,35 @@ fun Appendable.append(code: ScriptCode, indent: Indent): Appendable =
 
 fun Appendable.append(code: LineCode, indent: Indent, applyIndent: Boolean): Appendable = this
 	.runIf(applyIndent) { append(indent) }
-	.append(code.line.name)
+	.append(code.line, indent)
+
+fun Appendable.append(line: Line, indent: Indent): Appendable =
+	null
+		?: maybeAppendString(line)
+		?: appendPrim(line, indent)
+
+
+fun Appendable.appendPrim(line: Line, indent: Indent): Appendable = this
+	.append(line.name)
 	.run {
-		when (code.line.value.lineList.size.int) {
+		when (line.value.lineList.size.int) {
 			0 -> this
 			1 -> this
 				.append(' ')
-				.append(code.line.value.lineList.at(zero.i32).code, indent, false)
+				.append(line.value.lineList.at(zero.i32).code, indent, false)
 			else -> indented(indent) { childIndent -> this
 				.append('\n')
-				.append(code.line.value.code, childIndent)
+				.append(line.value.code, childIndent)
+			}
+		}
+	}
+
+fun Appendable.maybeAppendString(line: Line) =
+	ifOrNull(line.name == stringSymbol
+		&& line.value.lineList.size.int == 1) {
+		line.value.lineList.at(0.i32).let { stringLine ->
+			ifOrNull(stringLine.value.lineList.isEmpty) {
+				append("\"${stringLine.name}\"")
 			}
 		}
 	}

@@ -319,6 +319,13 @@ fun Term.plusMacroSelf(field: TermField): Term? =
 fun Term.plusMacroSwitch(field: TermField): Term? =
 	field.switchOrNull?.invoke(this)
 
+fun Term.plusMacroStringPlusString(field: TermField): Term? =
+	simpleAtOrNull(stringSymbol)?.simpleNameOrNull?.let { lhsSymbol ->
+		field.atOrNull(plusSymbol)?.simpleAtOrNull(stringSymbol)?.simpleNameOrNull?.let { rhsSymbol ->
+			clear.plus(stringSymbol to term(lhsSymbol.plus(rhsSymbol)!!))
+		}
+	}
+
 fun Term.plusMacro(field: TermField): Term =
 	null
 		?: plusMacroUnquote(field)
@@ -333,6 +340,7 @@ fun Term.plusMacro(field: TermField): Term =
 		?: plusMacroSwitch(field)
 		?: plusMacroLhs(field)
 		?: plusMacroRhs(field)
+		?: plusMacroStringPlusString(field)
 		?: plus(field)
 
 fun Term.invokeDefine(term: Term) =

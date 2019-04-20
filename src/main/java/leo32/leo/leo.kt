@@ -33,6 +33,8 @@ fun _term(leo: Leo): Term {
 }
 
 fun T.int(int: Int): T = plus("int") { plus(int.toString()) }
+fun T.char(char: Char): T = plus("char") { plus("$char'") } // TODO: Escape
+fun T.string(string: String): T = plus("string") { plus("$string") } // TODO: Escape
 
 fun T._import(leo: Leo) = leo()
 
