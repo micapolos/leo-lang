@@ -1,10 +1,12 @@
 package leo32.leo.scratch
 
 import leo32.leo.*
+import leo32.leo.lib.bitLib
 
 fun main() {
-	_leo {
-		define { ping.gives { pong } }
-		circle { ping }
+	_main {
+		_import(bitLib)
+
+		describe { negate { bit { zero } } }
 	}
 }

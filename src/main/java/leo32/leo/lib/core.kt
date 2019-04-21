@@ -154,6 +154,16 @@ val coreLib: Leo = {
 		define { ping.gives { pong } }
 		circle { with { ping { ping } } }.gives { circle { ping { pong } } }
 	}
+
+	test {
+		circle { radius { circle } }
+		gives { circle }
+	}
+
+	test {
+		circle { with { radius { circle } } }
+		gives { quote { circle { radius { circle } } } }
+	}
 }
 
 fun main() {

@@ -52,8 +52,10 @@ fun _test(leo: Leo) {
 	}
 }
 
-fun _leo(leo: Leo) {
+fun _main(leo: Leo) {
 	_term(leo).script.run {
 		if (!isEmpty) println(code)
 	}
 }
+
+fun _leo(leo: Leo) = leo
