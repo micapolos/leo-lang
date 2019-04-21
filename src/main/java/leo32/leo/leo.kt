@@ -14,7 +14,7 @@ val Term.builder
 	get() =
 		Builder(this)
 
-fun Builder.plus(string: String, fn: Builder.() -> Unit): Builder {
+fun Builder._term(string: String, fn: Builder.() -> Unit): Builder {
 	_term = _term.plus(string) {
 		val termBuilder = builder
 		termBuilder.fn()
@@ -23,8 +23,8 @@ fun Builder.plus(string: String, fn: Builder.() -> Unit): Builder {
 	return this
 }
 
-fun Builder.plus(string: String): Builder =
-	plus(string) { Unit }
+fun Builder._term(string: String): Builder =
+	_term(string) { Unit }
 
 fun _term(leo: Leo): Term {
 	val termBuilder = empty.term.builder
@@ -32,9 +32,9 @@ fun _term(leo: Leo): Term {
 	return termBuilder._term.descope
 }
 
-fun T.int(int: Int): T = plus("int") { plus(int.toString()) }
-fun T.char(char: Char): T = plus("char") { plus("$char'") } // TODO: Escape
-fun T.string(string: String): T = plus("string") { plus(string) } // TODO: Escape
+fun T.int(int: Int): T = _term("int") { _term(int.toString()) }
+fun T.char(char: Char): T = _term("char") { _term("$char'") } // TODO: Escape
+fun T.string(string: String): T = _term("string") { _term(string) } // TODO: Escape
 
 val T.doIt get() = _do
 fun T.doIt(leo: Leo) = _do(leo)

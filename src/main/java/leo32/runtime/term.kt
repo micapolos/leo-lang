@@ -176,7 +176,15 @@ val Term.alternativesTermForPlusOrNull
 		if (isEmpty) term()
 		else alternativesTermOrNull
 
-val Term.invoke
+const val termUseDispatcher = true
+
+@Suppress("ConstantConditionIf")
+val Term.invoke: Term
+	get() =
+		if (termUseDispatcher) invokeDispatcher
+		else invokeTypes
+
+val Term.invokeTypes
 	get() =
 		typeTerm.let { typeTerm ->
 			scope.typeToBodyDictionary.at(typeTerm)?.let { body ->
@@ -187,6 +195,20 @@ val Term.invoke
 					.let { result -> scope.bring(result) }
 			}.orIfNull { this }
 		}
+
+val Term.invokeDispatcher
+	get() =
+		scope
+			.dispatcher
+			.at(this)
+			?.let { body ->
+				body.clear
+					.copy(scope = body.scope.bindSelf(body.scope.bring(term(selfSymbol to this))))
+					.invoke(body)
+					.copy(scope = body.scope.bindSelf(body.scope.selfOrNull))
+					.let { result -> scope.bring(result) }
+			}
+			.orIfNull { this }
 
 val Term.self
 	get() =

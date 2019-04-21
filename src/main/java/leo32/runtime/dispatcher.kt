@@ -1,12 +1,10 @@
 package leo32.runtime
 
-import leo.base.Empty
-import leo.base.Seq
-import leo.base.fold
-import leo.base.seqNodeOrNull
+import leo.base.*
 import leo.binary.Bit
 import leo.binary.bitSeq
 import leo32.base.*
+import leo32.base.Tree
 
 data class Dispatcher(
 	val tree: Tree<Term?>)
@@ -20,7 +18,9 @@ val Empty.dispatcher
 		tree<Term>().dispatcher
 
 fun Dispatcher.put(case: Case) =
-	update(case.key) { case.value.leaf.tree.dispatcher }
+	update(case.key) {
+		case.value.leaf.tree.dispatcher
+	}
 
 fun Dispatcher.update(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher =
 	term
@@ -55,4 +55,20 @@ fun Dispatcher.updateBit(bitSeq: Seq<Bit>, fn: Dispatcher.() -> Dispatcher): Dis
 	}.dispatcher
 
 fun Dispatcher.at(term: Term): Term? =
-	tree.at(term.bitSeq)?.valueOrNull
+	invoke(term).termOrNull
+
+fun Dispatcher.invoke(term: Term) =
+	invokeBit(term.bitSeq)
+
+fun Dispatcher.invoke(field: TermField) =
+	invokeBit(field.bitSeq)
+
+fun Dispatcher.invokeBit(bitSeq: Seq<Bit>) =
+	tree
+		.at(bitSeq)
+		?.dispatcher
+		?: empty.dispatcher
+
+val Dispatcher.termOrNull
+	get() =
+		tree.valueOrNull

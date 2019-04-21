@@ -5,7 +5,7 @@ import leo32.leo.*
 val stringLib: Leo = {
 	test {
 		string("Hello world!")
-		gives { string { plus("Hello world!") } }
+		gives { string { _term("Hello world!") } }
 	}
 
 	test {
