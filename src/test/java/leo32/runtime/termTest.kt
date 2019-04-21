@@ -305,45 +305,6 @@ class TermTest {
 //	}
 
 	@Test
-	fun invokeTermHasTerm() {
-		val term = term()
-			.invoke(
-				term(defineSymbol to term(
-					bitSymbol to term(),
-					"has" to term(
-						"either" to term(zeroSymbol),
-						"either" to term(oneSymbol)))))
-
-		term
-			.invoke(bitSymbol to term(zeroSymbol))
-			.typeTerm
-			.assertEqualTo(term(bitSymbol))
-
-		term
-			.invoke(bitSymbol to term(oneSymbol))
-			.typeTerm
-			.assertEqualTo(term(bitSymbol))
-
-		term
-			.invoke(notSymbol to term(bitSymbol to term(oneSymbol)))
-			.typeTerm
-			.assertEqualTo(term(notSymbol to term(bitSymbol)))
-
-		term
-			.invoke(bitSymbol to term(zeroSymbol))
-			.invoke(andSymbol to term(bitSymbol to term(oneSymbol)))
-			.typeTerm
-			.assertEqualTo(term(bitSymbol to term(), andSymbol to term(bitSymbol)))
-
-		term
-			.invoke(bitSymbol to term(zeroSymbol))
-			.invoke(bitSymbol to term(oneSymbol))
-			.typeTerm
-			.script
-			.assertEqualTo(script(bitSymbol to script(), bitSymbol to script(oneSymbol)))
-	}
-
-	@Test
 	fun argumentRaw() {
 		empty.scope
 			.bindSelf(term(zeroSymbol))
@@ -394,27 +355,6 @@ class TermTest {
 				givesSymbol to script(oneSymbol)),
 			zeroSymbol to script())
 			.assertEqualTo(script(oneSymbol))
-	}
-
-	@Test
-	fun typeGivesSwitch() {
-		val term = invokeTerm(
-			defineSymbol to script(
-				bitSymbol to script(),
-				hasSymbol to script(
-					eitherSymbol to script(zeroSymbol),
-					eitherSymbol to script(oneSymbol))),
-			defineSymbol to script(
-				negateSymbol to script(bitSymbol to script()),
-				givesSymbol to script(
-					selfSymbol to script(),
-					switchSymbol to script(
-						caseSymbol to script(
-							negateSymbol to script(bitSymbol to script(zeroSymbol)),
-							toSymbol to script(bitSymbol to script(oneSymbol))),
-						caseSymbol to script(
-							negateSymbol to script(bitSymbol to script(oneSymbol)),
-							toSymbol to script(bitSymbol to script(zeroSymbol)))))))
 	}
 
 	@Test
@@ -642,12 +582,6 @@ class TermTest {
 					theSymbol to script(),
 					zeroSymbol to script(),
 					negateSymbol to script())))
-
-		scopedTerm2.scope
-			.typeToBodyDictionary
-			.at(term(theSymbol to term(zeroSymbol)))!!
-			.scope
-			.assertEqualTo(scopedTerm.scope)
 
 		scopedTerm2
 			.invoke(theSymbol to script(zeroSymbol to script()))

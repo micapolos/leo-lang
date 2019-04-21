@@ -17,7 +17,6 @@ data class Term(
 	val isList: Boolean,
 	val nodeOrNull: Node?,
 	val intOrNull: Int?,
-	val typeTermOrNull: Term?,
 	val switchOrNull: Switch?,
 	val alternativesTermOrNull: Term?,
 	val quoteDepth: I32) {
@@ -25,10 +24,10 @@ data class Term(
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, null, 0.i32)
+	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, 0.i32)
 
 val Empty.term get() =
-	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, null, 0.i32)
+	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, 0.i32)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -119,7 +118,6 @@ val Term.begin get() =
 		isList = true,
 		nodeOrNull = null,
 		intOrNull = null,
-		typeTermOrNull = null,
 		switchOrNull = null,
 		alternativesTermOrNull = null,
 		quoteDepth = quoteDepth)
@@ -141,13 +139,6 @@ fun Term.plus(field: TermField): Term {
 		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
 		nodeOrNull = Node(this, field),
 		intOrNull = if (nodeOrNull == null) field.intOrNull else null,
-		typeTermOrNull =
-		localScope
-			.valueToTypeDictionary
-			.valueOrNull
-			?: notNullIf(field.value.typeTermOrNull != null || typeTermOrNull != null) {
-				typeTerm.plus(field.typeTermField)
-			},
 		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull },
 		alternativesTermOrNull = alternativesTermForPlusOrNull?.let { alternativesTerm ->
 			ifOrNull(field.name == eitherSymbol) {
@@ -168,35 +159,12 @@ val Term.isSimple
 fun Term.plus(term: Term) =
 	fold(term.fieldSeq) { plus(it) }
 
-val Term.typeTerm get() =
-	typeTermOrNull ?: term().plus(this)
-
 val Term.alternativesTermForPlusOrNull
 	get() =
 		if (isEmpty) term()
 		else alternativesTermOrNull
 
-const val termUseDispatcher = true
-
-@Suppress("ConstantConditionIf")
-val Term.invoke: Term
-	get() =
-		if (termUseDispatcher) invokeDispatcher
-		else invokeTypes
-
-val Term.invokeTypes
-	get() =
-		typeTerm.let { typeTerm ->
-			scope.typeToBodyDictionary.at(typeTerm)?.let { body ->
-				body.clear
-					.copy(scope = body.scope.bindSelf(body.scope.bring(term(selfSymbol to this))))
-					.invoke(body)
-					.copy(scope = body.scope.bindSelf(body.scope.selfOrNull))
-					.let { result -> scope.bring(result) }
-			}.orIfNull { this }
-		}
-
-val Term.invokeDispatcher
+val Term.invoke
 	get() =
 		scope
 			.dispatcher
@@ -225,9 +193,6 @@ fun Term.leafPlus(term: Term): Term =
 
 fun term(vararg fields: TermField): Term =
 	empty.term.fold(fields) { plus(it) }
-
-infix fun Term.of(type: Term) =
-	copy(typeTermOrNull = type)
 
 fun Appendable.append(term: Term): Appendable =
 	tryAppend { appendSimple(term) } ?: appendComplex(term)
@@ -296,29 +261,6 @@ fun Term.plusMacroRhs(field: TermField): Term? =
 		clear.plus(field.value.nodeOrNull.field.value)
 	else null
 
-fun Term.plusMacroClass(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == classSymbol) {
-		field.value.typeTerm
-	}
-
-fun Term.plusMacroDescribe(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == describeSymbol) {
-		scope
-			.typeToDescribeDictionary
-			.at(field.value)
-			?.let { typeOrNull -> clear.plus(typeOrNull) }
-			.orIfNull { clear.plus(field.value) }
-	}
-
-fun Term.plusMacroBody(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == bodySymbol) {
-		scope
-			.typeToBodyDictionary
-			.at(field.value)
-			?.let { typeOrNull -> clear.plus(typeOrNull) }
-			.orIfNull { clear.plus(field.value) }
-	}
-
 fun Term.plusMacroDefine(field: TermField): Term? =
 	ifOrNull(isEmpty && field.name == defineSymbol) {
 		invokeDefine(field.value)
@@ -367,9 +309,6 @@ fun Term.plusMacro(field: TermField): Term =
 		?: plusMacroEquals(field)
 		?: plusMacroDefine(field)
 		?: plusMacroTest(field)
-		?: plusMacroClass(field)
-		?: plusMacroDescribe(field)
-		?: plusMacroBody(field)
 		?: plusMacroSelf(field)
 		?: plusMacroGet(field)
 		?: plusMacroSwitch(field)
