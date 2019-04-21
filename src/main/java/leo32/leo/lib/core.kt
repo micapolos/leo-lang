@@ -139,6 +139,21 @@ val coreLib: Leo = {
 		define { zero.plus { two }.gives { self.zero.plus { one }.plus { one } } }
 		zero.plus { two }.gives { two }
 	}
+
+	test {
+		define { ping.gives { pong } }
+		circle { ping }.gives { circle { pong } }
+	}
+
+	test {
+		define { ping.gives { pong } }
+		circle { with { ping } }.gives { circle { quote { ping } } }
+	}
+
+	test {
+		define { ping.gives { pong } }
+		circle { with { ping { ping } } }.gives { circle { ping { pong } } }
+	}
 }
 
 fun main() {

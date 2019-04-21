@@ -19,15 +19,16 @@ data class Term(
 	val intOrNull: Int?,
 	val switchOrNull: Switch?,
 	val alternativesTermOrNull: Term?,
-	val quoteDepth: I32) {
+	val quoteDepth: I32,
+	val isShortQuoted: Boolean) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, 0.i32)
+	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, 0.i32, false)
 
 val Empty.term get() =
-	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, 0.i32)
+	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, 0.i32, false)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -71,6 +72,7 @@ fun Term.plus(line: Line): Term =
 	null
 		?: evalError
 		?: evalPlusQuote(line)
+		?: evalPlusWith(line)
 		?: invoke(line)
 
 val Term.evalError: Term? get() =
@@ -78,6 +80,9 @@ val Term.evalError: Term? get() =
 
 fun Term.evalPlusQuote(line: Line): Term? =
 	notNullIf(line.name == quoteSymbol) { plus(line.value.term) }
+
+fun Term.evalPlusWith(line: Line): Term? =
+	notNullIf(line.name == withSymbol) { shortQuote.plus(line.value.term) }
 
 fun Term.plus(script: Script) =
 	fold(script.lineSeq, Term::plus)
@@ -93,7 +98,10 @@ fun Term.invoke(script: Script): Term =
 	fold(script.lineSeq) { invoke(it) }
 
 fun Term.invoke(field: TermField): Term =
-	begin
+	if (field.name == withSymbol) shortQuote.invoke(field.value)
+	else if (field.name == quoteSymbol) quote.invoke(field.value)
+	else if (field.name == unquoteSymbol) unquote.invoke(field.value)
+	else begin
 		.invoke(field.value)
 		.let { childTerm ->
 			plusResolved(field.name to childTerm)
@@ -103,7 +111,7 @@ fun Term.invoke(term: Term): Term =
 	fold(term.fieldSeq) { invoke(it) }
 
 fun Term.plusResolved(field: TermField) =
-	if (quoteDepth.isZero)
+	if (quoteDepth.isZero && !isShortQuoted)
 		if (!isEmpty && field.value.isEmpty) clear.plusMacro(field.name to this).invoke
 		else plusMacro(field).invoke
 	else plus(field)
@@ -120,7 +128,8 @@ val Term.begin get() =
 		intOrNull = null,
 		switchOrNull = null,
 		alternativesTermOrNull = null,
-		quoteDepth = quoteDepth)
+		quoteDepth = quoteDepth,
+		isShortQuoted = false)
 
 fun Term.plus(field: TermField): Term {
 	val localScope = localScope.plusValue(field)
@@ -149,7 +158,8 @@ fun Term.plus(field: TermField): Term {
 				}
 			}
 		},
-		quoteDepth = quoteDepth)
+		quoteDepth = quoteDepth,
+		isShortQuoted = isShortQuoted)
 }
 
 val Term.isSimple
@@ -404,9 +414,10 @@ val Term.unquote
 
 fun Term.plus(string: String, fn: Term.() -> Term): Term =
 	if (string == "quote") plus(begin.quote.fn())
-	else if (!quoteDepth.isZero) plus(string to begin.fn())
+	else if (!quoteDepth.isZero || isShortQuoted) plus(string to begin.fn())
 	else if (string == "test") plusResolved("test" to begin.quote.fn())
 	else if (string == "error") plusResolved("error" to begin.quote.fn())
+	else if (string == "with") plus(begin.shortQuote.fn())
 	else plusResolved(string to begin.fn())
 
 fun Term.plus(string: String) =
@@ -426,3 +437,7 @@ fun Scope.bring(term: Term): Term =
 val Term.scriptField: TermField
 	get() =
 		scriptSymbol to term().fold(fieldSeq) { plus(it.lineField) }
+
+val Term.shortQuote
+	get() =
+		copy(isShortQuoted = true)
