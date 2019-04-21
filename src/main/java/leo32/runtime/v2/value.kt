@@ -7,4 +7,3 @@ data class Value(
 val Scope.emptyValue
 	get() =
 		Value(this, null)
-
