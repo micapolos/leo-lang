@@ -139,28 +139,6 @@ val coreLib: Leo = {
 		define { zero.plus { two }.gives { self.zero.plus { one }.plus { one } } }
 		zero.plus { two }.gives { two }
 	}
-
-//	test { script.gives { script } }
-//	test { zero.script.gives { quote { script { line { string("zero").script } } } } }
-//	test { zero.plus { one }.script.gives { quote {
-//		script {
-//			line { string("zero").script }
-//			line {
-//				string("plus")
-//				script { line { string("one").script } } } } } } }
-
-//	doIt {
-//		define { bit.has { either { zero }.either { one } } }
-//		define { bit.negate.gives { self.negate.bit.switch {
-//			case { zero.bit.gives { one.bit } }
-//			case { one.bit.gives { zero.bit } } } } }
-//		define { number.has { either { bit }.either { infinite } } }
-//		define { number.negate.gives { self.negate.number.switch {
-//			case { number.bit.gives { self.number.bit.negate } }
-//			case { number.infinite.gives { zero } } } } }
-//		test { zero.bit.negate.gives { one.bit } }
-//		test { one.bit.negate.gives { zero.bit } }
-//	}
 }
 
 fun main() {

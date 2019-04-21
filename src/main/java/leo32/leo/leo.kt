@@ -51,3 +51,9 @@ fun _test(leo: Leo) {
 		}
 	}
 }
+
+fun _leo(leo: Leo) {
+	_term(leo).script.run {
+		if (!isEmpty) println(code)
+	}
+}

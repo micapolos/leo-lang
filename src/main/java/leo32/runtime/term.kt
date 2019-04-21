@@ -303,6 +303,12 @@ fun Term.plusMacroStringPlusString(field: TermField): Term? =
 		}
 	}
 
+fun Term.plusMacroPrint(field: TermField): Term? =
+	notNullIf(isEmpty && field.name == printSymbol) {
+		println(field.value.script.code)
+		clear
+	}
+
 fun Term.plusMacro(field: TermField): Term =
 	null
 		?: plusMacroUnquote(field)
@@ -318,6 +324,7 @@ fun Term.plusMacro(field: TermField): Term =
 		?: plusMacroComment(field)
 		?: plusMacroScript(field)
 		?: plusMacroStringPlusString(field)
+		?: plusMacroPrint(field)
 		?: plus(field)
 
 fun Term.invokeDefine(term: Term) =

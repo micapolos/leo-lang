@@ -96,3 +96,8 @@ val TermField.lineField
 		lineSymbol to term(
 			name.stringField,
 			value.scriptField)
+
+fun <R : Any> TermField.ifSimpleOrNull(symbol: Symbol, fn: () -> R): R? =
+	simpleNameOrNull?.let { name ->
+		ifOrNull(name == symbol, fn)
+	}
