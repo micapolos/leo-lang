@@ -13,3 +13,13 @@ val InputStream.byteStreamOrNull: Stream<Byte>?
 val InputStream.bitStreamOrNull: Stream<EnumBit>?
 	get() =
 		byteStreamOrNull?.map(Byte::bitStream)?.join
+
+val InputStream.byteSeq: Seq<Byte>
+	get() =
+		Seq {
+			read().let { int ->
+				notNullIf(int != -1) {
+					int.clampedByte.then(byteSeq)
+				}
+			}
+		}

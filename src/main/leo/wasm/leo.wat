@@ -10,4 +10,4 @@
     i32.const 2
     i32.const 3
     call 1)
-  (export "main" (func 2)))
+  (export "leo32.main" (func 2)))
