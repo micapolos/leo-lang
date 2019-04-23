@@ -229,9 +229,8 @@ class TermTest {
 	@Test
 	fun givesArgument() {
 		invoke(
-			defineSymbol to script(
-				zeroSymbol to script(),
-				givesSymbol to script(selfSymbol)),
+			zeroSymbol to script(),
+			givesSymbol to script(selfSymbol),
 			zeroSymbol to script())
 			.assertEqualTo(script(selfSymbol to script(zeroSymbol)))
 	}
@@ -239,9 +238,8 @@ class TermTest {
 	@Test
 	fun defineGivesTheArgument() {
 		invoke(
-			defineSymbol to script(
-				theSymbol to script(zeroSymbol to script()),
-				givesSymbol to script(theSymbol to script(selfSymbol))),
+			theSymbol to script(zeroSymbol to script()),
+			givesSymbol to script(theSymbol to script(selfSymbol)),
 			theSymbol to script(zeroSymbol to script()))
 			.assertEqualTo(script(theSymbol to script(zeroSymbol)))
 	}
@@ -249,9 +247,8 @@ class TermTest {
 	@Test
 	fun simpleDefineGives() {
 		invoke(
-			defineSymbol to script(
-				zeroSymbol to script(),
-				givesSymbol to script(oneSymbol)),
+			zeroSymbol to script(),
+			givesSymbol to script(oneSymbol),
 			zeroSymbol to script())
 			.assertEqualTo(script(oneSymbol))
 	}
@@ -321,9 +318,10 @@ class TermTest {
 	@Test
 	fun functionScoping() {
 		val scopedTerm = term()
-			.invoke(defineSymbol to script(
-				zeroSymbol to script(),
-				givesSymbol to script(oneSymbol)))
+			.invoke(
+				script(
+					zeroSymbol to script(),
+					givesSymbol to script(oneSymbol)))
 
 		scopedTerm
 			.scope
@@ -337,14 +335,16 @@ class TermTest {
 	@Test
 	fun functionScoping2() {
 		val scopedTerm = term()
-			.invoke(defineSymbol to script(
-				zeroSymbol to script(),
-				givesSymbol to script(oneSymbol)))
+			.invoke(
+				script(
+					zeroSymbol to script(),
+					givesSymbol to script(oneSymbol)))
 
 		val scopedTerm2 = scopedTerm
-			.invoke(defineSymbol to script(
-				oneSymbol to script(),
-				givesSymbol to script(twoSymbol)))
+			.invoke(
+				script(
+					oneSymbol to script(),
+					givesSymbol to script(twoSymbol)))
 
 		scopedTerm2
 			.invoke(zeroSymbol to script())
@@ -354,9 +354,10 @@ class TermTest {
 	@Test
 	fun functionScoping_self() {
 		val scopedTerm = term()
-			.invoke(defineSymbol to script(
-				zeroSymbol to script(),
-				givesSymbol to script(selfSymbol)))
+			.invoke(
+				script(
+					zeroSymbol to script(),
+					givesSymbol to script(selfSymbol)))
 
 		scopedTerm
 			.invoke(zeroSymbol to script())
@@ -366,10 +367,11 @@ class TermTest {
 	@Test
 	fun functionScoping_get() {
 		val scopedTerm = term()
-			.invoke(defineSymbol to script(
-				zeroSymbol to script(),
-				negateSymbol to script(),
-				givesSymbol to script(oneSymbol)))
+			.invoke(
+				script(
+					zeroSymbol to script(),
+					negateSymbol to script(),
+					givesSymbol to script(oneSymbol)))
 
 		scopedTerm
 			.invoke(
@@ -383,10 +385,11 @@ class TermTest {
 	@Test
 	fun functionScoping_wrap() {
 		val scopedTerm = term()
-			.invoke(defineSymbol to script(
-				theSymbol to script(zeroSymbol to script()),
-				negateSymbol to script(),
-				givesSymbol to script(oneSymbol)))
+			.invoke(
+				script(
+					theSymbol to script(zeroSymbol to script()),
+					negateSymbol to script(),
+					givesSymbol to script(oneSymbol)))
 
 		scopedTerm
 			.invoke(
@@ -400,19 +403,21 @@ class TermTest {
 	@Test
 	fun functionScoping_self2() {
 		val scopedTerm = term()
-			.invoke(defineSymbol to script(
-				zeroSymbol to script(),
-				negateSymbol to script(),
-				givesSymbol to script(oneSymbol)))
+			.invoke(
+				script(
+					zeroSymbol to script(),
+					negateSymbol to script(),
+					givesSymbol to script(oneSymbol)))
 
 		val scopedTerm2 = scopedTerm
-			.invoke(defineSymbol to script(
-				theSymbol to script(zeroSymbol to script()),
-				givesSymbol to script(
-					selfSymbol to script(),
-					theSymbol to script(),
-					zeroSymbol to script(),
-					negateSymbol to script())))
+			.invoke(
+				script(
+					theSymbol to script(zeroSymbol to script()),
+					givesSymbol to script(
+						selfSymbol to script(),
+						theSymbol to script(),
+						zeroSymbol to script(),
+						negateSymbol to script())))
 
 		scopedTerm2
 			.invoke(theSymbol to script(zeroSymbol to script()))
@@ -422,11 +427,12 @@ class TermTest {
 	@Test
 	fun functionScoping_self3() {
 		val scopedTerm = term()
-			.invoke(defineSymbol to script(
-				zeroSymbol to script(),
-				givesSymbol to script(
-					selfSymbol to script(),
-					andSymbol to script(selfSymbol))))
+			.invoke(
+				script(
+					zeroSymbol to script(),
+					givesSymbol to script(
+						selfSymbol to script(),
+						andSymbol to script(selfSymbol))))
 
 		scopedTerm
 			.invoke(zeroSymbol to script())

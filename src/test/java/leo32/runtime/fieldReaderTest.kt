@@ -19,10 +19,8 @@ class FieldReaderTest {
 	fun plus() {
 		empty
 			.fieldReader
-			.plus(
-				defineSymbol to term(
-					zeroSymbol to term(),
-					givesSymbol to term(oneSymbol)))
+			.plus(zeroSymbol to term())
+			.plus(givesSymbol to term(oneSymbol))
 			.plus(zeroSymbol to term())
 			.term
 			.script

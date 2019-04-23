@@ -9,7 +9,7 @@ class ByteReaderTest {
 	fun define() {
 		empty
 			.byteReader
-			.plus("define.zero..gives.one....zero..".core)!!
+			.plus("zero..gives.one...zero..".core)!!
 			.symbolReader
 			.fieldReader
 			.term
@@ -21,15 +21,14 @@ class ByteReaderTest {
 	fun quoting() {
 		empty
 			.byteReader
-			.plus("quote.define.zero..gives.one....".core)!!
+			.plus("quote.zero..gives.one...".core)!!
 			.symbolReader
 			.fieldReader
 			.term
 			.script
 			.assertEqualTo(
 				script(
-					defineSymbol to script(
-						zeroSymbol to script(),
-						givesSymbol to script(oneSymbol))))
+					zeroSymbol to script(),
+					givesSymbol to script(oneSymbol)))
 	}
 }

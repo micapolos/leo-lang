@@ -44,14 +44,14 @@ val coreLib: Leo = {
 
 	test {
 		zero.doIt {
-			define { zero.gives { one } }
+			zero.gives { one }
 			zero
 		}
 		gives { zero.one }
 	}
 
 	test {
-		define { zero.gives { one } }
+		zero.gives { one }
 		doIt { quote { zero } }
 		gives { one }
 	}
@@ -77,81 +77,79 @@ val coreLib: Leo = {
 	}
 
 	test {
-		define { zero.gives { one } }
+		zero.gives { one }
 		zero.gives { one }
 	}
 
 	test {
-		define { zero.gives { one } }
-		define { one.gives { zero } }
+		zero.gives { one }
+		one.gives { zero }
 		one.gives { one }
 	}
 
 	test {
-		define { one.gives { two } }
-		define { zero.gives { one } }
+		one.gives { two }
+		zero.gives { one }
 		zero.gives { two }
 	}
 
 	test {
-		define { zero.gives { zero } }
+		zero.gives { zero }
 		zero.gives { zero }
 	}
 
 	test {
-		define { zero.gives { self } }
+		zero.gives { self }
 		zero.gives { self { zero } }
 	}
 
 	test {
-		define { zero.gives { self.negate } }
+		zero.gives { self.negate }
 		zero.gives { zero.self.negate }
 	}
 
 	test {
-		define { zero.gives { self.and { self } } }
+		zero.gives { self.and { self } }
 		zero.gives { zero.self.and { zero.self } }
 	}
 
 	test {
-		define {
-			side.square.area
-			gives { self.area.square.side.times { self.area.square.side } }
-		}
+		side.square.area
+		gives { self.area.square.side.times { self.area.square.side } }
 		side.square.area
 		gives { side.times { side } }
 	}
 
 	test {
-		define { zero.gives { one } }
+		zero.gives { one }
 		quote { zero }.gives { one }
 	}
 
 	test {
-		define { zero.plus { one }.gives { one } }
-		define { one.plus { one }.gives { two } }
+		zero.plus { one }.gives { one }
+		one.plus { one }.gives { two }
 		zero.plus { one }.plus { one }.gives { two }
 	}
 
 	test {
-		define { zero.plus { one }.gives { one } }
-		define { one.plus { one }.gives { two } }
-		define { zero.plus { two }.gives { self.zero.plus { one }.plus { one } } }
+		zero.plus { one }.gives { one }
+		one.plus { one }.gives { two }
+		zero.plus { two }.gives { self.zero.plus { one }.plus { one } }
 		zero.plus { two }.gives { two }
 	}
 
 	test {
-		define { ping.gives { pong } }
+		ping.gives { pong }
 		circle { ping }.gives { circle { pong } }
 	}
 
 	test {
-		define { ping.gives { pong } }
+		ping.gives { pong }
 		circle { with { ping } }.gives { circle { quote { ping } } }
 	}
 
 	test {
-		define { ping.gives { pong } }
+		ping.gives { pong }
 		circle { with { ping { ping } } }.gives { circle { ping { pong } } }
 	}
 

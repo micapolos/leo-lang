@@ -5,17 +5,15 @@ import leo32.leo.*
 val byteLib: Leo = {
 	_import(bitLib)
 
-	define {
-		byte.has {
-			it { bit }
-			it { bit }
-			it { bit }
-			it { bit }
-			it { bit }
-			it { bit }
-			it { bit }
-			it { bit }
-		}
+	byte.has {
+		it { bit }
+		it { bit }
+		it { bit }
+		it { bit }
+		it { bit }
+		it { bit }
+		it { bit }
+		it { bit }
 	}
 }
 

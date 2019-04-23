@@ -261,9 +261,14 @@ fun Term.plusMacroRhs(field: TermField): Term? =
 		clear.plus(field.value.nodeOrNull.field.value)
 	else null
 
-fun Term.plusMacroDefine(field: TermField): Term? =
-	ifOrNull(isEmpty && field.name == defineSymbol) {
-		invokeDefine(field.value)
+fun Term.plusMacroHas(field: TermField): Term? =
+	ifOrNull(!isEmpty && field.name == hasSymbol) {
+		clear.set(scope.define(this has field.value))
+	}
+
+fun Term.plusMacroGives(field: TermField): Term? =
+	ifOrNull(!isEmpty && field.name == givesSymbol) {
+		clear.set(scope.define(this caseTo field.value))
 	}
 
 fun Term.plusMacroTest(field: TermField): Term? =
@@ -310,7 +315,8 @@ fun Term.plusMacro(field: TermField): Term =
 	null
 		?: plusMacroUnquote(field)
 		?: plusMacroEquals(field)
-		?: plusMacroDefine(field)
+		?: plusMacroGives(field)
+		?: plusMacroHas(field)
 		?: plusMacroTest(field)
 		?: plusMacroSelf(field)
 		?: plusMacroGet(field)
@@ -368,7 +374,7 @@ fun invokeTerm(line: Line, vararg lines: Line): Term =
 	term().plus(line).fold(lines) { plus(it) }
 
 val Term.clear get() =
-	scope.emptyTerm
+	scope.emptyTerm.copy(quoteDepth = quoteDepth, isShortQuoted = isShortQuoted)
 
 fun Term.set(scope: Scope) =
 	copy(scope = scope, localScope = scope)

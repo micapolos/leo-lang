@@ -1,77 +1,58 @@
-define
-	bit
-	has
-		either zero
-		either one
+bit
+has
+	either zero
+	either one
 
-define
-	negate bit zero
-	gives bit one
+negate bit zero
+gives bit one
 
-define
-	negate bit one
-	gives bit zero
+negate bit one
+gives bit zero
 
-define
-	bit zero
-	and bit zero
-	gives bit zero
+bit zero
+and bit zero
+gives bit zero
 
-define
-	bit zero
-	and bit one
-	gives bit zero
+bit zero
+and bit one
+gives bit zero
 
-define
-	bit one
-	and bit zero
-	gives bit zero
+bit one
+and bit zero
+gives bit zero
 
-define
-	bit one
-	and bit one
-	gives bit one
+bit one
+and bit one
+gives bit one
 
-define
-	bit zero
-	or bit zero
-	gives bit zero
+bit zero
+or bit zero
+gives bit zero
 
-define
-	bit zero
-	or bit one
-	gives bit one
+bit zero
+or bit one
+gives bit one
 
-define
-	bit one
-	or bit zero
-	gives bit one
+bit one
+or bit zero
+gives bit one
 
-define
-	bit one
-	or bit one
-	gives bit one
+bit one
+or bit one
+gives bit one
 
-define
-	bit zero
-	xor bit zero
-	gives bit zero
+bit zero
+xor bit zero
+gives bit zero
 
-define
-	bit zero
-	xor bit one
-	gives bit one
+bit zero
+xor bit one
+gives bit one
 
-define
-	bit one
-	xor bit zero
-	gives bit one
+bit one
+xor bit zero
+gives bit one
 
-define
-	bit one
-	xor bit one
-	gives bit zero
-
-test
-	negate bit zero
-	gives bit one
+bit one
+xor bit one
+gives bit zero
