@@ -15,17 +15,15 @@ data class Term(
 	val termListOrNull: TermList?,
 	val isList: Boolean,
 	val nodeOrNull: Node?,
-	val alternativesTermOrNull: Term?,
-	val quoteDepth: I32,
-	val isShortQuoted: Boolean) {
+	val alternativesTermOrNull: Term?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.symbolDict(), null, true, null, null, 0.i32, false)
+	Term(this, this, list(), empty.symbolDict(), null, true, null, null)
 
 val Empty.term get() =
-	Term(scope, scope, list(), symbolDict(), null, true, null, null, 0.i32, false)
+	Term(scope, scope, list(), symbolDict(), null, true, null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -108,23 +106,25 @@ fun Term.invoke(term: Term): Term =
 	fold(term.fieldSeq) { invoke(it) }
 
 fun Term.plusResolved(field: TermField) =
-	if (quoteDepth.isZero && !isShortQuoted)
+	if (!scope.isQuoted)
 		if (!isEmpty && field.value.isEmpty) clear.plusMacro(field.name to this).invoke
 		else plusMacro(field).invoke
 	else plus(field)
 
 val Term.begin get() =
-	Term(
-		scope = scope,
-		localScope = scope,
-		fieldList = empty.list(),
-		termListDict = empty.symbolDict(),
-		termListOrNull = null,
-		isList = true,
-		nodeOrNull = null,
-		alternativesTermOrNull = null,
-		quoteDepth = quoteDepth,
-		isShortQuoted = false)
+	scope
+		.copy(isShortQuoted = false)
+		.let { scope ->
+			Term(
+				scope = scope,
+				localScope = scope,
+				fieldList = empty.list(),
+				termListDict = empty.symbolDict(),
+				termListOrNull = null,
+				isList = true,
+				nodeOrNull = null,
+				alternativesTermOrNull = null)
+		}
 
 fun Term.plus(field: TermField): Term {
 	val localScope = localScope.plusValue(field)
@@ -150,9 +150,7 @@ fun Term.plus(field: TermField): Term {
 					}
 				}
 			}
-		},
-		quoteDepth = quoteDepth,
-		isShortQuoted = isShortQuoted)
+		})
 }
 
 val Term.isSimple
@@ -374,7 +372,7 @@ fun invokeTerm(line: Line, vararg lines: Line): Term =
 	term().plus(line).fold(lines) { plus(it) }
 
 val Term.clear get() =
-	scope.emptyTerm.copy(quoteDepth = quoteDepth, isShortQuoted = isShortQuoted)
+	scope.emptyTerm
 
 fun Term.set(scope: Scope) =
 	copy(scope = scope, localScope = scope)
@@ -392,15 +390,15 @@ fun Term.invoke(termHasTerm: TermHasTerm) =
 
 val Term.quote
 	get() =
-		copy(quoteDepth = quoteDepth.inc)
+		copy(scope = scope.quote, localScope = localScope.quote)
 
 val Term.unquote
 	get() =
-		copy(quoteDepth = quoteDepth.dec)
+		copy(scope = scope.unquote, localScope = localScope.unquote)
 
 fun Term.plus(string: String, fn: Term.() -> Term): Term =
 	if (string == "quote") plus(begin.quote.fn())
-	else if (!quoteDepth.isZero || isShortQuoted) plus(string to begin.fn())
+	else if (scope.isQuoted) plus(string to begin.fn())
 	else if (string == "test") plusResolved("test" to begin.quote.fn())
 	else if (string == "error") plusResolved("error" to begin.quote.fn())
 	else if (string == "with") plus(begin.shortQuote.fn())
@@ -426,4 +424,4 @@ val Term.scriptField: TermField
 
 val Term.shortQuote
 	get() =
-		copy(isShortQuoted = true)
+		copy(scope = scope.shortQuote, localScope = localScope.shortQuote)
