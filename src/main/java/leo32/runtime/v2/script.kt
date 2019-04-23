@@ -10,7 +10,7 @@ import leo32.runtime.byteSeq
 data class Script(
 	val symbol: Symbol,
 	val arguments: Arguments,
-	val symbolTreeOrNull: Dict<Symbol, The<Script?>>?,
+	val symbolDictOrNull: Dict<Symbol, The<Script?>>?,
 	val firstSymbolOrNull: Symbol?,
 	val fieldList: List<Field>,
 	val block: Block)
@@ -56,7 +56,7 @@ fun Script.plus(field: Field) =
 	Script(
 		field.symbol,
 		arguments(this to field.script),
-		symbolTreeOrNull?.update(field.symbol) {
+		symbolDictOrNull?.update(field.symbol) {
 			if (this == null) the(field.script)
 			else the(null)
 		},
@@ -65,7 +65,7 @@ fun Script.plus(field: Field) =
 		block.plus(field))
 
 fun Script.at(symbol: Symbol): Script? =
-	symbolTreeOrNull?.at(symbol)?.value
+	symbolDictOrNull?.at(symbol)?.value
 
 fun Script.simpleAt(symbol: Symbol): Script? =
 	ifOrNull(firstSymbolOrNull == null) {
