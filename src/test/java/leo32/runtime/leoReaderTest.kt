@@ -92,5 +92,11 @@ class LeoReaderTest {
 			.apply { plus("a  ").assertEqualTo(null) }
 			.apply { plus("a \t").assertEqualTo(null) }
 			.apply { plus("a \t").assertEqualTo(null) }
+			.apply { plus("a\n\t\t").assertEqualTo(null) }
+			.apply { plus(".").assertEqualTo(null) }
+			.apply { plus("a .").assertEqualTo(null) }
+			.apply { plus("a..").assertEqualTo(null) }
+			.apply { plus("a\n.").assertEqualTo(null) }
+			.apply { plus("a\n\t.").assertEqualTo(null) }
 	}
 }
