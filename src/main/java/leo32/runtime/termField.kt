@@ -3,9 +3,6 @@ package leo32.runtime
 import leo.base.*
 import leo.binary.Bit
 import leo.binary.byteBitSeq
-import leo32.Seq32
-import leo32.base.i32
-import leo32.seq32
 
 data class TermField(
 	val name: Symbol,
@@ -31,27 +28,6 @@ fun TermField.map(fn: Term.() -> Term): TermField =
 const val termBeginChar = '('
 const val termEndChar = ')'
 const val termEscapeChar = '\\'
-
-val String.nameSeq32 get() =
-	seq32
-		.map {
-			when (this) {
-				termBeginChar.i32 -> seq(termEscapeChar.i32, termBeginChar.i32)
-				termEndChar.i32 -> seq(termEscapeChar.i32, termEndChar.i32)
-				termEscapeChar.i32 -> seq(termEscapeChar.i32, termEscapeChar.i32)
-				else -> onlySeq
-			}
-		}
-		.flat
-
-val TermField.seq32: Seq32 get() =
-	name.string.nameSeq32.then {
-		termBeginChar.i32.onlySeq.then {
-			value.seq32.then {
-				termEndChar.i32.onlySeq
-			}
-		}
-	}
 
 val TermField.bitSeq: Seq<Bit>
 	get() =

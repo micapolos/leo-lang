@@ -4,8 +4,6 @@ define
 		either zero
 		either one
 
-comment negate
-
 define
 	negate bit zero
 	gives bit one
@@ -14,8 +12,6 @@ define
 	negate bit one
 	gives bit zero
 
-comment and
-
 define
 	bit zero
 	and bit zero
@@ -36,8 +32,6 @@ define
 	and bit one
 	gives bit one
 
-comment or
-
 define
 	bit zero
 	or bit zero
@@ -57,8 +51,6 @@ define
 	bit one
 	or bit one
 	gives bit one
-
-comment xor
 
 define
 	bit zero

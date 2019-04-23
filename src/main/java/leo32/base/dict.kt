@@ -5,8 +5,6 @@ package leo32.base
 import leo.base.Empty
 import leo.base.Seq
 import leo.binary.Bit
-import leo32.bitSeq
-import leo32.seq32
 
 data class Dict<K, V : Any>(
 	val trie: Trie<V>,
@@ -42,9 +40,3 @@ fun <K, V : Any> Dict<K, V>.computeAt(key: K, compute: () -> V): Effect<Dict<K, 
 
 val <K, V: Any> Dict<K, V>.valueOrNull: V? get() =
 	trie.tree.leafOrNull?.value
-
-// === core dicts ===
-
-@Suppress("unused")
-fun <V : Any> Empty.stringDict(): Dict<String, V> =
-	emptyTrie<V>().dict { seq32.bitSeq }

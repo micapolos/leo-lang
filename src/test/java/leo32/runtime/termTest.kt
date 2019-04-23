@@ -5,7 +5,6 @@ import leo.base.assertEqualTo
 import leo.base.empty
 import leo.base.string
 import leo32.base.list
-import leo32.string32
 import kotlin.test.Test
 
 class TermTest {
@@ -196,34 +195,6 @@ class TermTest {
 	}
 
 	@Test
-	fun seq32() {
-		term(
-			circleSymbol to term(
-				radiusSymbol to term("10"),
-				centerSymbol to term(
-					xSymbol to term("1.2"),
-					ySymbol to term("1.3"))))
-			.seq32
-			.string32
-			.assertEqualTo("circle(radius(10())center(x(1.2())y(1.3())))")
-	}
-
-	@Test
-	fun seq32_escaping() {
-		term("\\()").seq32.string32.assertEqualTo("\\\\\\(\\)()")
-	}
-
-	@Test
-	fun intOrNull() {
-		term(0).assertEqualTo(term("int" to term("0")))
-		term(0).intOrNull.assertEqualTo(0)
-		term(-1).intOrNull.assertEqualTo(-1)
-		term(intSymbol to term("0")).intOrNull.assertEqualTo(0)
-		term(intSymbol to term("-1")).intOrNull.assertEqualTo(-1)
-		term(intSymbol to term("123123123123")).intOrNull.assertEqualTo(null)
-	}
-
-	@Test
 	fun listTermSeqOrNull() {
 		term().listTermSeqOrNull(fooSymbol)!!.assertContains()
 		term(fooSymbol).listTermSeqOrNull(fooSymbol)!!.assertContains(term())
@@ -231,78 +202,6 @@ class TermTest {
 		term(fooSymbol to term(barSymbol), fooSymbol to term("zar")).listTermSeqOrNull(fooSymbol)!!.assertContains(term(barSymbol), term("zar"))
 		term(fooSymbol to term(), "zoo" to term()).listTermSeqOrNull(fooSymbol).assertEqualTo(null)
 	}
-
-//	@Test
-//	fun invoke() {
-//		val bitType = term(bitSymbol)
-//
-//		val bitZero = term(bitSymbol to term(zeroSymbol)) of bitType
-//		val bitOne = term(bitSymbol to term(oneSymbol)) of bitType
-//
-//		val notBitTemplate = template(
-//			argument,
-//			op(
-//				switch(
-//					term(notSymbol to bitZero) caseTo bitOne,
-//					term(notSymbol to bitOne) caseTo bitZero)))
-//
-//		val notBitFunction = notBitTemplate of bitType
-//
-//		val notBitType = term(notSymbol to term(bitSymbol)) gives notBitFunction
-//
-//		val notBitZero = term(notSymbol to bitZero) of notBitType
-//		val notBitOne = term(notSymbol to bitOne) of notBitType
-//
-//		val bitAndBitTemplate = template(
-//			argument,
-//			op(
-//				switch(
-//					bitZero.plus(andSymbol to bitZero) caseTo bitZero,
-//					bitZero.plus(andSymbol to bitOne) caseTo bitZero,
-//					bitOne.plus(andSymbol to bitZero) caseTo bitZero,
-//					bitOne.plus(andSymbol to bitOne) caseTo bitOne)))
-//
-//		val bitAndBitFunction = bitAndBitTemplate of bitType
-//
-//		val bitAndBitType = bitType.plus(andSymbol to bitType) gives bitAndBitFunction
-//
-//		val bitZeroAndBitZero = bitZero.plus(andSymbol to bitZero) of bitAndBitType
-//		val bitZeroAndBitOne = bitZero.plus(andSymbol to bitOne) of bitAndBitType
-//		val bitOneAndBitZero = bitOne.plus(andSymbol to bitZero) of bitAndBitType
-//		val bitOneAndBitOne = bitOne.plus(andSymbol to bitOne) of bitAndBitType
-//
-//		val bitOrBitTemplate = template(
-//			op(notSymbol to template(
-//				op(notSymbol to template(argument, op(get(lhs)))),
-//				op(call(notBitTemplate)),
-//				op(andSymbol to template(
-//					op(notSymbol to template(argument, op(get(rhs)))),
-//					op(call(notBitTemplate)))),
-//				op(call(bitAndBitTemplate)))),
-//			op(call(notBitTemplate)))
-//
-//		val bitOrBitFunction = bitOrBitTemplate of bitType
-//
-//		val bitOrBitType = bitType.plus(orSymbol to bitType) gives bitOrBitFunction
-//
-//		val bitZeroOrBitZero = bitZero.plus(orSymbol to bitZero) of bitOrBitType
-//		val bitZeroOrBitOne = bitZero.plus(orSymbol to bitOne) of bitOrBitType
-//		val bitOneOrBitZero = bitOne.plus(orSymbol to bitZero) of bitOrBitType
-//		val bitOneOrBitOne = bitOne.plus(orSymbol to bitOne) of bitOrBitType
-//
-//		notBitZero.invoke.assertEqualTo(bitOne)
-//		notBitOne.invoke.assertEqualTo(bitZero)
-//
-//		bitZeroAndBitZero.invoke.assertEqualTo(bitZero)
-//		bitZeroAndBitOne.invoke.assertEqualTo(bitZero)
-//		bitOneAndBitZero.invoke.assertEqualTo(bitZero)
-//		bitOneAndBitOne.invoke.assertEqualTo(bitOne)
-//
-//		bitZeroOrBitZero.invoke.assertEqualTo(bitZero)
-//		bitZeroOrBitOne.invoke.assertEqualTo(bitOne)
-//		bitOneOrBitZero.invoke.assertEqualTo(bitOne)
-//		bitOneOrBitOne.invoke.assertEqualTo(bitOne)
-//	}
 
 	@Test
 	fun argumentRaw() {
@@ -355,74 +254,6 @@ class TermTest {
 				givesSymbol to script(oneSymbol)),
 			zeroSymbol to script())
 			.assertEqualTo(script(oneSymbol))
-	}
-
-	@Test
-	fun macroSwitch() {
-		invoke(
-			oneSymbol to script(),
-			switchSymbol to script(
-				caseSymbol to script(
-					oneSymbol to script(),
-					givesSymbol to script(jedenSymbol)),
-				caseSymbol to script(
-					twoSymbol to script(),
-					givesSymbol to script(dwaSymbol))))
-			.assertEqualTo(script(jedenSymbol))
-
-		invoke(
-			twoSymbol to script(),
-			switchSymbol to script(
-				caseSymbol to script(
-					oneSymbol to script(),
-					givesSymbol to script(jedenSymbol)),
-				caseSymbol to script(
-					twoSymbol to script(),
-					givesSymbol to script(dwaSymbol))))
-			.assertEqualTo(script(dwaSymbol))
-
-		invoke(
-			threeSymbol to script(),
-			switchSymbol to script(
-				caseSymbol to script(
-					oneSymbol to script(),
-					toSymbol to script(jedenSymbol)),
-				caseSymbol to script(
-					twoSymbol to script(),
-					toSymbol to script(dwaSymbol))))
-			.assertEqualTo(
-				script(
-					threeSymbol to script(),
-					switchSymbol to script(
-						caseSymbol to script(
-							oneSymbol to script(),
-							toSymbol to script(jedenSymbol)),
-						caseSymbol to script(
-							twoSymbol to script(),
-							toSymbol to script(dwaSymbol)))))
-	}
-
-	@Test
-	fun termSwitchOrNull() {
-		term(switchSymbol)
-			.switchOrNull
-			.assertEqualTo(switch())
-
-		term(
-			switchSymbol to term(
-				caseSymbol to term(
-					oneSymbol to term(),
-					givesSymbol to term(twoSymbol))))
-			.switchOrNull
-			.assertEqualTo(
-				switch(
-					term(oneSymbol) caseTo term(twoSymbol)))
-
-		term(
-			fooSymbol to term(),
-			switchSymbol to term())
-			.switchOrNull
-			.assertEqualTo(null)
 	}
 
 	@Test

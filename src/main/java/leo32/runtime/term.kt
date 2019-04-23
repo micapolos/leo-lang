@@ -4,7 +4,6 @@ package leo32.runtime
 
 import leo.base.*
 import leo.binary.byteBitSeq
-import leo32.Seq32
 import leo32.base.*
 import leo32.base.List
 
@@ -16,8 +15,6 @@ data class Term(
 	val termListOrNull: TermList?,
 	val isList: Boolean,
 	val nodeOrNull: Node?,
-	val intOrNull: Int?,
-	val switchOrNull: Switch?,
 	val alternativesTermOrNull: Term?,
 	val quoteDepth: I32,
 	val isShortQuoted: Boolean) {
@@ -25,10 +22,10 @@ data class Term(
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.symbolDict(), null, true, null, null, null, null, 0.i32, false)
+	Term(this, this, list(), empty.symbolDict(), null, true, null, null, 0.i32, false)
 
 val Empty.term get() =
-	Term(scope, scope, list(), symbolDict(), null, true, null, null, null, null, 0.i32, false)
+	Term(scope, scope, list(), symbolDict(), null, true, null, null, 0.i32, false)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -125,8 +122,6 @@ val Term.begin get() =
 		termListOrNull = null,
 		isList = true,
 		nodeOrNull = null,
-		intOrNull = null,
-		switchOrNull = null,
 		alternativesTermOrNull = null,
 		quoteDepth = quoteDepth,
 		isShortQuoted = false)
@@ -147,8 +142,6 @@ fun Term.plus(field: TermField): Term {
 		},
 		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
 		nodeOrNull = Node(this, field),
-		intOrNull = if (nodeOrNull == null) field.intOrNull else null,
-		switchOrNull = ifOrNull(nodeOrNull == null) { field.switchOrNull },
 		alternativesTermOrNull = alternativesTermForPlusOrNull?.let { alternativesTerm ->
 			ifOrNull(field.name == eitherSymbol) {
 				field.value.nodeOrNull?.let { node ->
@@ -219,9 +212,6 @@ fun Appendable.appendSimple(term: Term): Appendable? =
 			else -> null
 	}
 
-val Term.seq32: Seq32 get() =
-	fieldList.seq.map { seq32 }.flat
-
 val Term.byteSeq
 	get() =
 		fieldList.seq.map { byteSeq }.flat
@@ -290,9 +280,6 @@ fun Term.plusMacroSelf(field: TermField): Term? =
 		scope.bring(self)
 	}
 
-fun Term.plusMacroSwitch(field: TermField): Term? =
-	field.switchOrNull?.invoke(this)
-
 fun Term.plusMacroDo(field: TermField): Term? =
 	ifOrNull(field.name == doSymbol) {
 		invoke(field.value)
@@ -327,7 +314,6 @@ fun Term.plusMacro(field: TermField): Term =
 		?: plusMacroTest(field)
 		?: plusMacroSelf(field)
 		?: plusMacroGet(field)
-		?: plusMacroSwitch(field)
 		?: plusMacroLhs(field)
 		?: plusMacroRhs(field)
 		?: plusMacroDo(field)
@@ -395,12 +381,6 @@ fun term(int: Int) =
 
 fun Term.invoke(termHasTerm: TermHasTerm) =
 	set(scope.define(termHasTerm))
-
-fun Term.switchAdd(case: Case): Term? =
-	if (isEmpty) plus("switch" to case.term)
-	else ifNotNull(switchOrNull) {
-		scope.emptyTerm.plus("switch" to nodeOrNull!!.field.value.plus(case.term))
-	}
 
 // === chained syntax
 

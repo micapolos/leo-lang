@@ -7,8 +7,6 @@ import leo.binary.Bit
 import leo.binary.bit
 import leo.binary.one
 import leo.binary.zero
-import leo32.Seq32
-import leo32.bitSeq
 
 sealed class Tree<out T>
 
@@ -86,12 +84,6 @@ fun <T : Any, R> Tree<T?>.updateEffect(bitSeq: Seq<Bit>, fn: Tree<T?>.() -> Effe
 fun <T> Tree<T>.updateWithDefault(bitSeq: Seq<Bit>, defaultFn: () -> T, fn: Tree<T>.() -> Tree<T>): Tree<T> =
 	cursor.toWithDefault(bitSeq, defaultFn).update(fn).collapse
 
-fun <T> Tree<T>.at32(seq32: Seq32): Tree<T>? =
-	at(seq32.map { bitSeq }.flat)
-
-fun <T: Any> Tree<T?>.put32(pair: Pair<Seq32, T>): Tree<T?> =
-	updateWithDefault(pair.first.bitSeq, { null }) { pair.second.leaf.tree }
-
 fun <T: Any> Tree<T?>.put(bitSeq: Seq<Bit>, value: T) =
 	updateWithDefault(bitSeq, { null }) { value.leaf.tree }
 
@@ -106,20 +98,6 @@ fun <T : Any> Tree<T?>.updateTree(bitSeq: Seq<Bit>, fn: Tree<T?>?.() -> Tree<T?>
 
 val <T: Any> Tree<T?>.valueOrNull get() =
 	leafOrNull?.value
-
-fun <T: Any> Tree<T?>.seq32(valueSeq32: T.() -> Seq32): Seq32 =
-	when (this) {
-		is LeafTree -> 0.i32.onlySeq.then {
-			valueOrNull?.valueSeq32().orIfNull {
-				0.i32.onlySeq
-			}
-		}
-		is BranchTree -> 1.i32.onlySeq.then {
-			branch.seq32 {
-				seq32(valueSeq32)
-			}
-		}
-	}
 
 fun <K, T : Any, R> R.foldKeyValuePairs(tree: Tree<T?>, key: K, keyFn: K.(Bit) -> K, fn: R.(Pair<K, T>) -> R): R =
 	when (tree) {
