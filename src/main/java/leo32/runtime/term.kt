@@ -9,7 +9,6 @@ import leo32.base.List
 
 data class Term(
 	val scope: Scope,
-	val localScope: Scope,
 	val fieldList: List<TermField>,
 	val termListDict: Dict<Symbol, List<Term>>,
 	val termListOrNull: TermList?,
@@ -20,10 +19,10 @@ data class Term(
 }
 
 val Scope.emptyTerm get() =
-	Term(this, this, list(), empty.symbolDict(), null, true, null, null)
+	Term(this, list(), empty.symbolDict(), null, true, null, null)
 
 val Empty.term get() =
-	Term(scope, scope, list(), symbolDict(), null, true, null, null)
+	Term(scope, list(), symbolDict(), null, true, null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -117,7 +116,6 @@ val Term.begin get() =
 		.let { scope ->
 			Term(
 				scope = scope,
-				localScope = scope,
 				fieldList = empty.list(),
 				termListDict = empty.symbolDict(),
 				termListOrNull = null,
@@ -126,11 +124,9 @@ val Term.begin get() =
 				alternativesTermOrNull = null)
 		}
 
-fun Term.plus(field: TermField): Term {
-	val localScope = localScope.plusValue(field)
-	return Term(
+fun Term.plus(field: TermField): Term =
+	Term(
 		scope = scope,
-		localScope = localScope,
 		fieldList = fieldList.add(field),
 		termListDict = termListDict.update(field.name) {
 			(this ?: empty.list()).add(field.value)
@@ -151,7 +147,6 @@ fun Term.plus(field: TermField): Term {
 				}
 			}
 		})
-}
 
 val Term.isSimple
 	get() =
@@ -172,9 +167,9 @@ val Term.invoke
 			.at(this)
 			?.let { body ->
 				body.clear
-					.copy(scope = body.scope.bindSelf(body.scope.bring(term(selfSymbol to this))))
+					.set(body.scope.bindSelf(body.scope.bring(term(selfSymbol to this))))
 					.invoke(body)
-					.copy(scope = body.scope.bindSelf(body.scope.selfOrNull))
+					.set(body.scope.bindSelf(body.scope.selfOrNull))
 					.let { result -> scope.bring(result) }
 			}
 			.orIfNull { this }
@@ -375,7 +370,7 @@ val Term.clear get() =
 	scope.emptyTerm
 
 fun Term.set(scope: Scope) =
-	copy(scope = scope, localScope = scope)
+	copy(scope = scope)
 
 fun term(boolean: Boolean) =
 	term(termField(boolean))
@@ -390,11 +385,11 @@ fun Term.invoke(termHasTerm: TermHasTerm) =
 
 val Term.quote
 	get() =
-		copy(scope = scope.quote, localScope = localScope.quote)
+		set(scope.quote)
 
 val Term.unquote
 	get() =
-		copy(scope = scope.unquote, localScope = localScope.unquote)
+		set(scope.unquote)
 
 fun Term.plus(string: String, fn: Term.() -> Term): Term =
 	if (string == "quote") plus(begin.quote.fn())
@@ -424,4 +419,4 @@ val Term.scriptField: TermField
 
 val Term.shortQuote
 	get() =
-		copy(scope = scope.shortQuote, localScope = localScope.shortQuote)
+		set(scope.shortQuote)
