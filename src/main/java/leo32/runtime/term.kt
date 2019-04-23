@@ -232,7 +232,7 @@ fun Term.plusMacroHas(field: Field): Term? =
 
 fun Term.plusMacroGives(field: Field): Term? =
 	ifOrNull(!isEmpty && field.name == givesSymbol) {
-		clear.set(scope.define(this caseTo field.value))
+		clear.set(scope.define(this gives field.value))
 	}
 
 fun Term.plusMacroTest(field: Field): Term? =
@@ -297,7 +297,7 @@ fun Term.invokeDefine(term: Term) =
 	term.nodeOrNull?.let { node ->
 		ifOrNull(!node.lhs.isEmpty && !node.field.value.isEmpty) {
 			when (node.field.name) {
-				givesSymbol -> clear.set(scope.define(node.lhs caseTo node.field.value))
+				givesSymbol -> clear.set(scope.define(node.lhs gives node.field.value))
 				hasSymbol -> clear.set(scope.define(node.lhs has node.field.value))
 				else -> null
 			}

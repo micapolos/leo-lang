@@ -9,8 +9,8 @@ class DispatcherTest {
 	fun simple() {
 		empty
 			.dispatcher
-			.put(term(pingSymbol) caseTo term(pongSymbol))
-			.put(term(pongSymbol) caseTo term(pingSymbol))
+			.put(term(pingSymbol) gives term(pongSymbol))
+			.put(term(pongSymbol) gives term(pingSymbol))
 			.apply { at(term(pingSymbol)).assertEqualTo(term(pongSymbol)) }
 			.apply { at(term(pongSymbol)).assertEqualTo(term(pingSymbol)) }
 			.apply { at(term(zeroSymbol)).assertEqualTo(null) }
@@ -20,8 +20,8 @@ class DispatcherTest {
 	fun field() {
 		empty
 			.dispatcher
-			.put(term(negateSymbol to term(zeroSymbol)) caseTo term(oneSymbol))
-			.put(term(negateSymbol to term(oneSymbol)) caseTo term(zeroSymbol))
+			.put(term(negateSymbol to term(zeroSymbol)) gives term(oneSymbol))
+			.put(term(negateSymbol to term(oneSymbol)) gives term(zeroSymbol))
 			.apply { at(term(negateSymbol to term(zeroSymbol))).assertEqualTo(term(oneSymbol)) }
 			.apply { at(term(negateSymbol to term(oneSymbol))).assertEqualTo(term(zeroSymbol)) }
 	}
@@ -33,7 +33,7 @@ class DispatcherTest {
 			.put(
 				term(
 					xSymbol to term(zeroSymbol),
-					ySymbol to term(oneSymbol)) caseTo term(selfSymbol))
+					ySymbol to term(oneSymbol)) gives term(selfSymbol))
 			.apply {
 				at(
 					term(
@@ -58,7 +58,7 @@ class DispatcherTest {
 			.put(
 				term(
 					eitherSymbol to term(zeroSymbol),
-					eitherSymbol to term(oneSymbol)) caseTo term(selfSymbol))
+					eitherSymbol to term(oneSymbol)) gives term(selfSymbol))
 			.apply { at(term(zeroSymbol)).assertEqualTo(term(selfSymbol)) }
 			.apply { at(term(oneSymbol)).assertEqualTo(term(selfSymbol)) }
 			.apply { at(term(twoSymbol)).assertEqualTo(null) }
@@ -76,7 +76,7 @@ class DispatcherTest {
 					andSymbol to term(
 						bitSymbol to term(
 							eitherSymbol to term(zeroSymbol),
-							eitherSymbol to term(oneSymbol)))) caseTo term(selfSymbol))
+							eitherSymbol to term(oneSymbol)))) gives term(selfSymbol))
 			.apply {
 				at(
 					term(
@@ -127,7 +127,7 @@ class DispatcherTest {
 					eitherSymbol to term(
 						booleanSymbol to term(
 							eitherSymbol to term("true"),
-							eitherSymbol to term("false")))) caseTo
+							eitherSymbol to term("false")))) gives
 					term(selfSymbol))
 			.apply { at(term(bitSymbol to term(zeroSymbol))).assertEqualTo(term(selfSymbol)) }
 			.apply { at(term(bitSymbol to term(oneSymbol))).assertEqualTo(term(selfSymbol)) }

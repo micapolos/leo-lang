@@ -16,9 +16,9 @@ val Empty.scope get() =
 
 fun Scope.define(termHasTerm: TermHasTerm): Scope =
 	copy(dispatcher = dispatcher
-		.put(termHasTerm.lhs caseTo termHasTerm.lhs.leafPlus(termHasTerm.rhs)))
+		.put(termHasTerm.lhs gives termHasTerm.lhs.leafPlus(termHasTerm.rhs)))
 
-fun Scope.define(case: Case): Scope =
+fun Scope.define(case: TermGivesTerm): Scope =
 	copy(
 		dispatcher = dispatcher.put(case))
 

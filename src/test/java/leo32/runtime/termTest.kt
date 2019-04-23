@@ -315,7 +315,7 @@ class TermTest {
 
 		scopedTerm
 			.scope
-			.assertEqualTo(empty.scope.define(term(zeroSymbol) caseTo term(oneSymbol)))
+			.assertEqualTo(empty.scope.define(term(zeroSymbol) gives term(oneSymbol)))
 
 		scopedTerm
 			.invoke(zeroSymbol to script())

@@ -17,9 +17,9 @@ val Empty.dispatcher
 	get() =
 		tree<Term>().dispatcher
 
-fun Dispatcher.put(case: Case) =
-	update(case.key) {
-		case.value.leaf.tree.dispatcher
+fun Dispatcher.put(case: TermGivesTerm) =
+	update(case.lhs) {
+		case.rhs.leaf.tree.dispatcher
 	}
 
 fun Dispatcher.update(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher =
