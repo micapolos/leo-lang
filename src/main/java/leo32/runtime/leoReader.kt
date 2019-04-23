@@ -29,6 +29,7 @@ fun LeoReader.plus(byte: Byte): LeoReader? =
 		' '.clampedByte -> plusSpace
 		'\t'.clampedByte -> plusTab
 		'\n'.clampedByte -> plusNewline
+		'.'.clampedByte -> plusDot
 		0.clampedByte -> null
 		else -> plusOther(byte)
 	}
@@ -73,6 +74,20 @@ val LeoReader.plusNewline: LeoReader?
 							leadingTabStackStackOrNull.push(stack(tab)).reverse)
 					}
 			else -> null
+		}
+
+val LeoReader.plusDot: LeoReader?
+	get() =
+		ifOrNull(byteReader.symbolOrNull != null && trailingTabStackStackOrNull == null) {
+			byteReader
+				.plus(0)
+				?.plus(0)
+				?.let { byteReader ->
+					LeoReader(
+						byteReader,
+						leadingTabStackStackOrNull,
+						trailingTabStackStackOrNull)
+				}
 		}
 
 fun LeoReader.plusOther(byte: Byte) =

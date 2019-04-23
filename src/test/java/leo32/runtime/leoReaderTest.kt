@@ -69,6 +69,20 @@ class LeoReaderTest {
 	}
 
 	@Test
+	fun dots() {
+		empty
+			.leoReader
+			.plus("radius\n\tx.plus y")!!
+			.termOrNull!!
+			.script
+			.assertEqualTo(
+				script(
+					radiusSymbol to script(
+						xSymbol to script(),
+						plusSymbol to script(ySymbol))))
+	}
+
+	@Test
 	fun errors() {
 		empty
 			.leoReader
