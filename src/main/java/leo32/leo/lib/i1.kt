@@ -5,7 +5,7 @@ import leo32.leo.*
 val i1Lib = _leo {
 	_import(bitLib)
 
-	define { i1.has { bit } }
+	i1.has { bit }
 }
 
 fun main() {

@@ -5,21 +5,19 @@ import leo.base.string
 import leo32.base.size
 import leo32.runtime.*
 
-data class Builder(var _term: Term)
+data class Builder(var symbolReader: SymbolReader)
 
 typealias T = Builder
 typealias Leo = Builder.() -> Unit
 
-val Term.builder
+val SymbolReader.builder
 	get() =
 		Builder(this)
 
 fun Builder._term(string: String, fn: Builder.() -> Unit): Builder {
-	_term = _term.plus(string) {
-		val termBuilder = builder
-		termBuilder.fn()
-		termBuilder._term
-	}
+	symbolReader = symbolReader.plus(symbol(string))!!
+	fn()
+	symbolReader = symbolReader.plus(null)!!
 	return this
 }
 
@@ -27,9 +25,9 @@ fun Builder._term(string: String): Builder =
 	_term(string) { Unit }
 
 fun _term(leo: Leo): Term {
-	val termBuilder = empty.term.builder
+	val termBuilder = empty.symbolReader.builder
 	termBuilder.leo()
-	return termBuilder._term.descope
+	return termBuilder.symbolReader.termOrNull!!
 }
 
 fun T.int(int: Int): T = _term("int") { _term(int.toString()) }

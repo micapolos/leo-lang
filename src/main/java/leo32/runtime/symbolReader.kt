@@ -2,6 +2,7 @@ package leo32.runtime
 
 import leo.base.Empty
 import leo.base.notNullIf
+import leo.base.runIf
 
 data class SymbolReader(
 	val symbolReaderParentOrNull: SymbolReaderParent?,
@@ -29,7 +30,12 @@ infix fun SymbolReaderParent.to(fieldReader: FieldReader) =
 // TODO: Resolve quoting here, and possibly more
 fun SymbolReader.begin(symbol: Symbol) =
 	if (!isQuoted && symbol == quoteSymbol) quote
-	else beginDefault(symbol)
+	else beginDefault(symbol).handleQuote(symbol)
+
+fun SymbolReader.handleQuote(symbol: Symbol) =
+	runIf(symbol == testSymbol) {
+		copy(fieldReader = fieldReader.quote)
+	}
 
 val SymbolReader.end
 	get() =

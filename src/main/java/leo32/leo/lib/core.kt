@@ -42,19 +42,19 @@ val coreLib: Leo = {
 		gives { zero.plus { zero } }
 	}
 
-	test {
-		zero.doIt {
-			zero.gives { one }
-			zero
-		}
-		gives { zero.one }
-	}
-
-	test {
-		zero.gives { one }
-		doIt { quote { zero } }
-		gives { one }
-	}
+//	test {
+//		zero.doIt {
+//			zero.gives { one }
+//			zero
+//		}
+//		gives { zero.one }
+//	}
+//
+//	test {
+//		zero.gives { one }
+//		doIt { quote { zero } }
+//		gives { one }
+//	}
 
 	test { lhs.gives { quote { lhs } } }
 	test { zero.lhs.gives { quote { zero.lhs } } }
@@ -76,81 +76,83 @@ val coreLib: Leo = {
 		gives { zero.negate }
 	}
 
-	test {
+	doIt {
 		zero.gives { one }
-		zero.gives { one }
+		test { zero.gives { one } }
 	}
 
-	test {
+	doIt {
 		zero.gives { one }
 		one.gives { zero }
-		one.gives { one }
+		test { one.gives { one } }
 	}
 
-	test {
+	doIt {
 		one.gives { two }
 		zero.gives { one }
-		zero.gives { two }
+		test { zero.gives { two } }
 	}
 
-	test {
+	doIt {
 		zero.gives { zero }
-		zero.gives { zero }
+		test { zero.gives { zero } }
 	}
 
-	test {
+	doIt {
 		zero.gives { self }
-		zero.gives { self { zero } }
+		test { zero.gives { quote { quote { self { zero } } } } }
 	}
 
-	test {
+	doIt {
 		zero.gives { self.negate }
-		zero.gives { zero.self.negate }
+		test { zero.gives { zero.self.negate } }
 	}
 
-	test {
+	doIt {
 		zero.gives { self.and { self } }
-		zero.gives { zero.self.and { zero.self } }
+		test { zero.gives { quote { quote { zero.self.and { zero.self } } } } }
 	}
 
-	test {
+	doIt {
 		side.square.area
 		gives { self.area.square.side.times { self.area.square.side } }
-		side.square.area
-		gives { side.times { side } }
+		test {
+			side.square.area
+			gives { side.times { side } }
+		}
 	}
 
-	test {
+	doIt {
 		zero.gives { one }
-		quote { zero }.gives { one }
+		test { quote { zero }.gives { one } }
 	}
 
-	test {
+	doIt {
 		zero.plus { one }.gives { one }
 		one.plus { one }.gives { two }
-		zero.plus { one }.plus { one }.gives { two }
+		test { zero.plus { one }.plus { one }.gives { two } }
 	}
 
-	test {
+	doIt {
 		zero.plus { one }.gives { one }
 		one.plus { one }.gives { two }
 		zero.plus { two }.gives { self.zero.plus { one }.plus { one } }
-		zero.plus { two }.gives { two }
+		test { zero.plus { two }.gives { two } }
 	}
 
-	test {
+	doIt {
 		ping.gives { pong }
-		circle { ping }.gives { circle { pong } }
+		test { circle { ping }.gives { circle { pong } } }
 	}
 
-	test {
+	doIt {
 		ping.gives { pong }
-		circle { with { ping } }.gives { circle { quote { ping } } }
+		test { circle { with { ping } }.gives { circle { quote { quote { ping } } } } }
 	}
 
-	test {
+	doIt {
 		ping.gives { pong }
-		circle { with { ping { ping } } }.gives { circle { ping { pong } } }
+		test { circle { with { ping { ping } } }.gives { circle { ping { pong } } } }
 	}
 
 	test {

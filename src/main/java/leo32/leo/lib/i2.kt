@@ -5,11 +5,9 @@ import leo32.leo.*
 val i2Lib = _leo {
 	_import(i1Lib)
 
-	define {
-		i2.has {
-			high { i1 }
-			low { i1 }
-		}
+	i2.has {
+		high { i1 }
+		low { i1 }
 	}
 }
 

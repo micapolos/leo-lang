@@ -362,17 +362,6 @@ val Term.unquote
 	get() =
 		set(scope.unquote)
 
-fun Term.plus(string: String, fn: Term.() -> Term): Term =
-	if (string == "quote") plus(begin.quote.fn())
-	else if (scope.isQuoted) plus(string to begin.fn())
-	else if (string == "test") plusResolved("test" to begin.quote.fn())
-	else if (string == "error") plusResolved("error" to begin.quote.fn())
-	else if (string == "with") plus(begin.shortQuote.fn())
-	else plusResolved(string to begin.fn())
-
-fun Term.plus(string: String) =
-	plus(string) { this }
-
 val Term.descope: Term
 	get() =
 		empty.term.fold(fieldSeq) {
