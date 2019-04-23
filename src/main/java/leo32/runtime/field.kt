@@ -26,10 +26,6 @@ fun Field.atOrNull(symbol: Symbol) =
 fun Field.map(fn: Term.() -> Term): Field =
 	name to value.fn()
 
-const val termBeginChar = '('
-const val termEndChar = ')'
-const val termEscapeChar = '\\'
-
 val Field.bitSeq: Seq<Bit>
 	get() =
 		byteSeq.byteBitSeq
@@ -59,14 +55,10 @@ val Field.line
 	Line(name, value.script)
 
 fun termField(boolean: Boolean) =
-	"boolean" to term("$boolean")
+	booleanSymbol to term("$boolean")
 
 fun termField(int: Int) =
-	"int" to term("$int")
-
-val Field.intOrNull
-	get() =
-	atOrNull(intSymbol)?.simpleNameOrNull?.string?.toIntOrNull()
+	intSymbol to term("$int")
 
 fun Field.leafPlus(term: Term) =
 	name to value.leafPlus(term)
@@ -76,8 +68,3 @@ val Field.lineField
 		lineSymbol to term(
 			name.stringField,
 			value.scriptField)
-
-fun <R : Any> Field.ifSimpleOrNull(symbol: Symbol, fn: () -> R): R? =
-	simpleNameOrNull?.let { name ->
-		ifOrNull(name == symbol, fn)
-	}

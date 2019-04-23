@@ -1,14 +1,9 @@
 package leo32.runtime
 
-import leo.base.appendableString
-import leo.base.fold
 import leo32.base.*
 import leo32.base.List
 
-data class Script(
-	val lineList: List<Line>) {
-	override fun toString() = appendableString { it.append(this) }
-}
+data class Script(val lineList: List<Line>)
 
 val List<Line>.script
 	get() =
@@ -25,9 +20,6 @@ fun script(symbol: Symbol) =
 
 val Script.lineSeq get() =
 	lineList.seq
-
-fun Appendable.append(script: Script): Appendable =
-	fold(script.lineSeq) { append(it) }
 
 val Script.isEmpty
 	get() =
