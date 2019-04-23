@@ -71,3 +71,7 @@ define
 	bit one
 	xor bit one
 	gives bit zero
+
+test
+	negate bit zero
+	gives bit one
