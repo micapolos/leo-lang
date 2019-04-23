@@ -10,7 +10,7 @@ import leo32.base.List
 data class Term(
 	val scope: Scope,
 	val fieldList: List<Field>,
-	val termListDict: Dict<Symbol, List<Term>>,
+	val symbolDict: Dict<Symbol, The<Term?>>,
 	val nodeOrNull: Node?,
 	val alternativesTermOrNull: Term?) {
 	override fun toString() = appendableString { it.append(this) }
@@ -31,23 +31,8 @@ val Term.isEmpty get() =
 val Term.simpleNameOrNull get() =
 	nodeOrNull?.simpleNameOrNull
 
-fun Term.fieldAt(index: I32): Field =
-	fieldList.at(index)
-
-fun Term.at(name: Symbol): List<Term> =
-	termListDict.uncheckedAt(name) ?: empty.list()
-
-fun Term.countAt(name: Symbol): I32 =
-	at(name).size
-
-fun Term.at(name: Symbol, index: I32): Term =
-	at(name).at(index)
-
-fun Term.onlyAt(name: Symbol): Term =
-	at(name).only
-
-fun Term.onlyOrNullAt(name: Symbol): Term? =
-	at(name).onlyOrNull
+fun Term.at(name: Symbol): Term? =
+	symbolDict.at(name)?.value
 
 fun Term.simpleAtOrNull(symbol: Symbol): Term? =
 	nodeOrNull?.simpleAtOrNull(symbol)
@@ -110,7 +95,7 @@ val Term.begin get() =
 			Term(
 				scope = scope,
 				fieldList = empty.list(),
-				termListDict = empty.symbolDict(),
+				symbolDict = empty.symbolDict(),
 				nodeOrNull = null,
 				alternativesTermOrNull = null)
 		}
@@ -119,8 +104,9 @@ fun Term.plus(field: Field): Term =
 	Term(
 		scope = scope,
 		fieldList = fieldList.add(field),
-		termListDict = termListDict.update(field.name) {
-			(this ?: empty.list()).add(field.value)
+		symbolDict = symbolDict.update(field.name) {
+			if (this == null) the(field.value)
+			else the(null)
 		},
 		nodeOrNull = Node(this, field),
 		alternativesTermOrNull = alternativesTermForPlusOrNull?.let { alternativesTerm ->
@@ -212,7 +198,7 @@ fun Term.plusMacroGet(field: Field): Term? =
 	ifOrNull(isEmpty) {
 		field.value.nodeOrNull?.let { fieldNode ->
 			ifOrNull(fieldNode.lhs.isEmpty) {
-				fieldNode.field.value.onlyOrNullAt(field.name)?.let { value ->
+				fieldNode.field.value.at(field.name)?.let { value ->
 					clear.plus(field.name to value)
 				}
 			}

@@ -56,10 +56,6 @@ val Symbol.string
 fun Appendable.append(symbol: Symbol): Appendable =
 	append(symbol.string)
 
-@Suppress("unused")
-fun <V : Any> Empty.symbolDict(): Dict<Symbol, V> =
-	emptyTrie<V>().dict { bitSeq }
-
 val Symbol.stringField
 	get() =
 		stringSymbol to term(this)

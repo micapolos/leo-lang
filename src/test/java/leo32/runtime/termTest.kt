@@ -119,9 +119,9 @@ class TermTest {
 				"result" to term("i32"),
 				"body" to term()))
 
-		term.at(symbol("param")).assertEqualTo(list(term("0"), term("1")))
-		term.at(symbol("result")).assertEqualTo(list(term("i32")))
-		term.at(bodySymbol).assertEqualTo(list(empty.term))
+		term.at(symbol("param")).assertEqualTo(null)
+		term.at(symbol("result")).assertEqualTo(term("i32"))
+		term.at(bodySymbol).assertEqualTo(term())
 	}
 
 	@Test
