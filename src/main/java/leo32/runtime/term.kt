@@ -11,18 +11,16 @@ data class Term(
 	val scope: Scope,
 	val fieldList: List<TermField>,
 	val termListDict: Dict<Symbol, List<Term>>,
-	val termListOrNull: TermList?,
-	val isList: Boolean,
 	val nodeOrNull: Node?,
 	val alternativesTermOrNull: Term?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 val Scope.emptyTerm get() =
-	Term(this, list(), empty.symbolDict(), null, true, null, null)
+	Term(this, list(), empty.symbolDict(), null, null)
 
 val Empty.term get() =
-	Term(scope, list(), symbolDict(), null, true, null, null)
+	Term(scope, list(), symbolDict(), null, null)
 
 val Term.fieldCount get() =
 	fieldList.size
@@ -53,11 +51,6 @@ fun Term.onlyOrNullAt(name: Symbol): Term? =
 
 fun Term.simpleAtOrNull(symbol: Symbol): Term? =
 	nodeOrNull?.simpleAtOrNull(symbol)
-
-fun Term.listTermSeqOrNull(key: Symbol): Seq<Term>? =
-	notNullIf(isList && (nodeOrNull == null || nodeOrNull.field.name == key)) {
-		fieldList.seq.map { value }
-	}
 
 val Term.fieldSeq get() =
 	fieldList.seq
@@ -118,8 +111,6 @@ val Term.begin get() =
 				scope = scope,
 				fieldList = empty.list(),
 				termListDict = empty.symbolDict(),
-				termListOrNull = null,
-				isList = true,
 				nodeOrNull = null,
 				alternativesTermOrNull = null)
 		}
@@ -131,12 +122,6 @@ fun Term.plus(field: TermField): Term =
 		termListDict = termListDict.update(field.name) {
 			(this ?: empty.list()).add(field.value)
 		},
-		termListOrNull = when {
-			termListOrNull != null -> termListOrNull.plus(field)
-			fieldCount.int == 1 -> termListOrNull(fieldList.at(0.i32), field)
-			else -> null
-		},
-		isList = nodeOrNull == null || nodeOrNull.field.name == field.name,
 		nodeOrNull = Node(this, field),
 		alternativesTermOrNull = alternativesTermForPlusOrNull?.let { alternativesTerm ->
 			ifOrNull(field.name == eitherSymbol) {

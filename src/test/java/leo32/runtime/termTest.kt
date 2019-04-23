@@ -1,6 +1,5 @@
 package leo32.runtime
 
-import leo.base.assertContains
 import leo.base.assertEqualTo
 import leo.base.empty
 import leo.base.string
@@ -192,15 +191,6 @@ class TermTest {
 		term(zeroSymbol to term())
 			.plusMacroEquals(equalsSymbol to term(oneSymbol))
 			.assertEqualTo(term(false))
-	}
-
-	@Test
-	fun listTermSeqOrNull() {
-		term().listTermSeqOrNull(fooSymbol)!!.assertContains()
-		term(fooSymbol).listTermSeqOrNull(fooSymbol)!!.assertContains(term())
-		term(fooSymbol to term(barSymbol)).listTermSeqOrNull(fooSymbol)!!.assertContains(term(barSymbol))
-		term(fooSymbol to term(barSymbol), fooSymbol to term("zar")).listTermSeqOrNull(fooSymbol)!!.assertContains(term(barSymbol), term("zar"))
-		term(fooSymbol to term(), "zoo" to term()).listTermSeqOrNull(fooSymbol).assertEqualTo(null)
 	}
 
 	@Test
