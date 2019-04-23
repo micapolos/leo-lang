@@ -22,7 +22,7 @@ fun Scope.define(case: Case): Scope =
 	copy(
 		dispatcher = dispatcher.put(case))
 
-fun Scope.plusValue(field: TermField) =
+fun Scope.plusValue(field: Field) =
 	copy(
 		dispatcher = dispatcher.invoke(field))
 

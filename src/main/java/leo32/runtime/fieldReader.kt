@@ -16,7 +16,7 @@ val Empty.fieldReader
 	get() =
 		term.fieldReader
 
-fun FieldReader.plus(field: TermField) =
+fun FieldReader.plus(field: Field) =
 	_if(field.value.isEmpty)
 		._then { term.clear.plusResolved(field.name to term) }
 		._else { term.plusResolved(field) }

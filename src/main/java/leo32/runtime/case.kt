@@ -10,7 +10,7 @@ data class Case(
 infix fun Term.caseTo(term: Term) =
 	Case(this, term)
 
-val TermField.caseOrNull: Case?
+val Field.caseOrNull: Case?
 	get() =
 		ifOrNull(name == caseSymbol) {
 			value.nodeOrNull?.bodyCaseOrNull

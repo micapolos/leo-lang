@@ -4,36 +4,37 @@ import leo.base.*
 import leo.binary.Bit
 import leo.binary.byteBitSeq
 
-data class TermField(
+data class Field(
 	val name: Symbol,
 	val value: Term) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
 infix fun Symbol.to(term: Term) =
-	TermField(this, term)
+	Field(this, term)
 
 infix fun String.to(term: Term) =
 	symbol(this) to term
 
-val TermField.simpleNameOrNull get() =
+val Field.simpleNameOrNull
+	get() =
 	notNullIf(value.isEmpty) { name }
 
-fun TermField.atOrNull(symbol: Symbol) =
+fun Field.atOrNull(symbol: Symbol) =
 	notNullIf(name == symbol) { value }
 
-fun TermField.map(fn: Term.() -> Term): TermField =
+fun Field.map(fn: Term.() -> Term): Field =
 	name to value.fn()
 
 const val termBeginChar = '('
 const val termEndChar = ')'
 const val termEscapeChar = '\\'
 
-val TermField.bitSeq: Seq<Bit>
+val Field.bitSeq: Seq<Bit>
 	get() =
 		byteSeq.byteBitSeq
 
-val TermField.byteSeq: Seq<Byte>
+val Field.byteSeq: Seq<Byte>
 	get() =
 		name.byteSeq.then {
 			value.byteSeq.then {
@@ -41,7 +42,7 @@ val TermField.byteSeq: Seq<Byte>
 			}
 		}
 
-fun Appendable.append(field: TermField): Appendable =
+fun Appendable.append(field: Field): Appendable =
 	append(field.name).let {
 		if (field.value.isEmpty) this
 		else this
@@ -49,10 +50,12 @@ fun Appendable.append(field: TermField): Appendable =
 			?: append('(').append(field.value).append(')')
 	}
 
-val Line.field: TermField get() =
+val Line.field: Field
+	get() =
 	name to value.term
 
-val TermField.line get() =
+val Field.line
+	get() =
 	Line(name, value.script)
 
 fun termField(boolean: Boolean) =
@@ -61,19 +64,20 @@ fun termField(boolean: Boolean) =
 fun termField(int: Int) =
 	"int" to term("$int")
 
-val TermField.intOrNull get() =
+val Field.intOrNull
+	get() =
 	atOrNull(intSymbol)?.simpleNameOrNull?.string?.toIntOrNull()
 
-fun TermField.leafPlus(term: Term) =
+fun Field.leafPlus(term: Term) =
 	name to value.leafPlus(term)
 
-val TermField.lineField
+val Field.lineField
 	get() =
 		lineSymbol to term(
 			name.stringField,
 			value.scriptField)
 
-fun <R : Any> TermField.ifSimpleOrNull(symbol: Symbol, fn: () -> R): R? =
+fun <R : Any> Field.ifSimpleOrNull(symbol: Symbol, fn: () -> R): R? =
 	simpleNameOrNull?.let { name ->
 		ifOrNull(name == symbol, fn)
 	}

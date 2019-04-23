@@ -5,7 +5,7 @@ import leo.base.ifOrNull
 
 data class Node(
 	val lhs: Term,
-	val field: TermField)
+	val field: Field)
 
 val Node.term get() =
 	lhs.plus(field)
@@ -23,7 +23,7 @@ fun Node.simpleAtOrNull(symbol: Symbol) =
 		field.atOrNull(symbol)
 	}
 
-fun Node.plus(field: TermField) =
+fun Node.plus(field: Field) =
 	Node(term, field)
 
 fun Node.plus(term: Term) =

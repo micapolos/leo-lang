@@ -32,14 +32,14 @@ fun Dispatcher.update(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher =
 		}
 		?: updateField(term.fieldSeq, fn)
 
-fun Dispatcher.update(field: TermField, fn: Dispatcher.() -> Dispatcher): Dispatcher =
+fun Dispatcher.update(field: Field, fn: Dispatcher.() -> Dispatcher): Dispatcher =
 	updateBit(field.name.bitSeq) {
 		update(field.value) {
 			updateBit(0.toByte().bitSeq, fn)
 		}
 	}
 
-fun Dispatcher.updateField(fieldSeq: Seq<TermField>, fn: Dispatcher.() -> Dispatcher): Dispatcher =
+fun Dispatcher.updateField(fieldSeq: Seq<Field>, fn: Dispatcher.() -> Dispatcher): Dispatcher =
 	fieldSeq
 		.seqNodeOrNull
 		?.let { fieldSeqNode ->
@@ -60,7 +60,7 @@ fun Dispatcher.at(term: Term): Term? =
 fun Dispatcher.invoke(term: Term) =
 	invokeBit(term.bitSeq)
 
-fun Dispatcher.invoke(field: TermField) =
+fun Dispatcher.invoke(field: Field) =
 	invokeBit(field.bitSeq)
 
 fun Dispatcher.invokeBit(bitSeq: Seq<Bit>) =

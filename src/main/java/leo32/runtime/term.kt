@@ -9,7 +9,7 @@ import leo32.base.List
 
 data class Term(
 	val scope: Scope,
-	val fieldList: List<TermField>,
+	val fieldList: List<Field>,
 	val termListDict: Dict<Symbol, List<Term>>,
 	val nodeOrNull: Node?,
 	val alternativesTermOrNull: Term?) {
@@ -31,7 +31,7 @@ val Term.isEmpty get() =
 val Term.simpleNameOrNull get() =
 	nodeOrNull?.simpleNameOrNull
 
-fun Term.fieldAt(index: I32): TermField =
+fun Term.fieldAt(index: I32): Field =
 	fieldList.at(index)
 
 fun Term.at(name: Symbol): List<Term> =
@@ -84,7 +84,7 @@ fun Term.invoke(line: Line): Term =
 fun Term.invoke(script: Script): Term =
 	fold(script.lineSeq) { invoke(it) }
 
-fun Term.invoke(field: TermField): Term =
+fun Term.invoke(field: Field): Term =
 	if (field.name == withSymbol) shortQuote.invoke(field.value)
 	else if (field.name == quoteSymbol) quote.invoke(field.value)
 	else if (field.name == unquoteSymbol) unquote.invoke(field.value)
@@ -97,7 +97,7 @@ fun Term.invoke(field: TermField): Term =
 fun Term.invoke(term: Term): Term =
 	fold(term.fieldSeq) { invoke(it) }
 
-fun Term.plusResolved(field: TermField) =
+fun Term.plusResolved(field: Field) =
 	if (!scope.isQuoted)
 		if (!isEmpty && field.value.isEmpty) clear.plusMacro(field.name to this).invoke
 		else plusMacro(field).invoke
@@ -115,7 +115,7 @@ val Term.begin get() =
 				alternativesTermOrNull = null)
 		}
 
-fun Term.plus(field: TermField): Term =
+fun Term.plus(field: Field): Term =
 	Term(
 		scope = scope,
 		fieldList = fieldList.add(field),
@@ -172,7 +172,7 @@ fun term(name: String) =
 fun Term.leafPlus(term: Term): Term =
 	nodeOrNull?.leafPlus(term)?.term ?: plus(term)
 
-fun term(vararg fields: TermField): Term =
+fun term(vararg fields: Field): Term =
 	empty.term.fold(fields) { plus(it) }
 
 fun Appendable.append(term: Term): Appendable =
@@ -208,7 +208,7 @@ fun Term.map(fn: Term.() -> Term): Term =
 	if (nodeOrNull == null) this
 	else nodeOrNull.lhs.fn().plus(nodeOrNull.field.map(fn))
 
-fun Term.plusMacroGet(field: TermField): Term? =
+fun Term.plusMacroGet(field: Field): Term? =
 	ifOrNull(isEmpty) {
 		field.value.nodeOrNull?.let { fieldNode ->
 			ifOrNull(fieldNode.lhs.isEmpty) {
@@ -219,11 +219,11 @@ fun Term.plusMacroGet(field: TermField): Term? =
 		}
 	}
 
-fun Term.plusMacroEquals(field: TermField): Term? =
+fun Term.plusMacroEquals(field: Field): Term? =
 	if (field.name == equalsSymbol) clear.plus(termField(this == field.value))
 	else null
 
-fun Term.plusMacroLhs(field: TermField): Term? =
+fun Term.plusMacroLhs(field: Field): Term? =
 	if (isEmpty
 		&& field.name == lhsSymbol
 		&& field.value.nodeOrNull != null
@@ -231,7 +231,7 @@ fun Term.plusMacroLhs(field: TermField): Term? =
 		clear.plus(field.value.nodeOrNull.lhs)
 	else null
 
-fun Term.plusMacroRhs(field: TermField): Term? =
+fun Term.plusMacroRhs(field: Field): Term? =
 	if (isEmpty
 		&& field.name == rhsSymbol
 		&& field.value.nodeOrNull != null
@@ -239,57 +239,57 @@ fun Term.plusMacroRhs(field: TermField): Term? =
 		clear.plus(field.value.nodeOrNull.field.value)
 	else null
 
-fun Term.plusMacroHas(field: TermField): Term? =
+fun Term.plusMacroHas(field: Field): Term? =
 	ifOrNull(!isEmpty && field.name == hasSymbol) {
 		clear.set(scope.define(this has field.value))
 	}
 
-fun Term.plusMacroGives(field: TermField): Term? =
+fun Term.plusMacroGives(field: Field): Term? =
 	ifOrNull(!isEmpty && field.name == givesSymbol) {
 		clear.set(scope.define(this caseTo field.value))
 	}
 
-fun Term.plusMacroTest(field: TermField): Term? =
+fun Term.plusMacroTest(field: Field): Term? =
 	ifOrNull(isEmpty && field.name == testSymbol) {
 		invokeTest(field.value)
 	}
 
-fun Term.plusMacroUnquote(field: TermField): Term? =
+fun Term.plusMacroUnquote(field: Field): Term? =
 	if (field.name == unquoteSymbol) clear.plus(termField(this == field.value))
 	else null
 
-fun Term.plusMacroSelf(field: TermField): Term? =
+fun Term.plusMacroSelf(field: Field): Term? =
 	notNullIf(isEmpty && field.name == selfSymbol && field.value.isEmpty) {
 		scope.bring(self)
 	}
 
-fun Term.plusMacroDo(field: TermField): Term? =
+fun Term.plusMacroDo(field: Field): Term? =
 	ifOrNull(field.name == doSymbol) {
 		invoke(field.value)
 	}
 
-fun Term.plusMacroComment(field: TermField): Term? =
+fun Term.plusMacroComment(field: Field): Term? =
 	ifOrNull(field.name == commentSymbol) { this }
 
-fun Term.plusMacroScript(field: TermField): Term? =
+fun Term.plusMacroScript(field: Field): Term? =
 	ifOrNull(isEmpty && field.name == scriptSymbol) {
 		clear.plus(field.value.scriptField)
 	}
 
-fun Term.plusMacroStringPlusString(field: TermField): Term? =
+fun Term.plusMacroStringPlusString(field: Field): Term? =
 	simpleAtOrNull(stringSymbol)?.simpleNameOrNull?.let { lhsSymbol ->
 		field.atOrNull(plusSymbol)?.simpleAtOrNull(stringSymbol)?.simpleNameOrNull?.let { rhsSymbol ->
 			clear.plus(stringSymbol to term(lhsSymbol.plus(rhsSymbol)!!))
 		}
 	}
 
-fun Term.plusMacroPrint(field: TermField): Term? =
+fun Term.plusMacroPrint(field: Field): Term? =
 	notNullIf(isEmpty && field.name == printSymbol) {
 		println(field.value.script.code)
 		clear
 	}
 
-fun Term.plusMacro(field: TermField): Term =
+fun Term.plusMacro(field: Field): Term =
 	null
 		?: plusMacroUnquote(field)
 		?: plusMacroEquals(field)
@@ -398,7 +398,7 @@ fun Scope.bring(term: Term): Term =
 		plus(field.name to bring(field.value))
 	}
 
-val Term.scriptField: TermField
+val Term.scriptField: Field
 	get() =
 		scriptSymbol to term().fold(fieldSeq) { plus(it.lineField) }
 
