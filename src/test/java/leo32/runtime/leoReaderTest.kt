@@ -9,7 +9,7 @@ class LeoReaderTest {
 	fun symbol() {
 		empty
 			.leoReader
-			.plus("zero\n")!!
+			.plus("zero")!!
 			.termOrNull!!
 			.script
 			.assertEqualTo(script(zeroSymbol))
@@ -19,7 +19,7 @@ class LeoReaderTest {
 	fun field() {
 		empty
 			.leoReader
-			.plus("zero one\n")!!
+			.plus("zero one")!!
 			.termOrNull!!
 			.script
 			.assertEqualTo(script(zeroSymbol to script(oneSymbol)))
@@ -29,7 +29,7 @@ class LeoReaderTest {
 	fun fields() {
 		empty
 			.leoReader
-			.plus("x one\ny two\n")!!
+			.plus("x one\ny two")!!
 			.termOrNull!!
 			.script
 			.assertEqualTo(
@@ -42,7 +42,7 @@ class LeoReaderTest {
 	fun complex() {
 		empty
 			.leoReader
-			.plus("circle\n\tradius zero\n\tcenter\n\t\tx one\n\t\ty two\n")!!
+			.plus("circle\n\tradius zero\n\tcenter\n\t\tx one\n\t\ty two")!!
 			.termOrNull!!
 			.script
 			.assertEqualTo(
@@ -52,6 +52,20 @@ class LeoReaderTest {
 						centerSymbol to script(
 							xSymbol to script(oneSymbol),
 							ySymbol to script(twoSymbol)))))
+	}
+
+	@Test
+	fun newlines() {
+		empty
+			.leoReader
+			.plus("center\n\tx zero\n\n\ty one")!!
+			.termOrNull!!
+			.script
+			.assertEqualTo(
+				script(
+					centerSymbol to script(
+						xSymbol to script(zeroSymbol),
+						ySymbol to script(oneSymbol))))
 	}
 
 	@Test

@@ -62,18 +62,7 @@ val LeoReader.plusNewline: LeoReader?
 	get() =
 		when {
 			byteReader.symbolOrNull == null && leadingTabStackStackOrNull == null ->
-				byteReader
-					.orNull
-					.fold(trailingTabStackStackOrNull) { tabStack ->
-						fold(tabStack) { tab ->
-							this?.plus(0)
-						}
-					}?.let { byteReader ->
-						LeoReader(
-							byteReader,
-							null,
-							null)
-					}
+				this
 			byteReader.symbolOrNull != null && trailingTabStackStackOrNull == null ->
 				byteReader
 					.plus(0)
@@ -99,11 +88,16 @@ fun LeoReader.plusOther(byte: Byte) =
 			LeoReader(byteReader, leadingTabStackStackOrNull, null)
 		}
 
-val LeoReader.termOrNull
+val LeoReader.termOrNull: Term?
 	get() =
-		ifOrNull(leadingTabStackStackOrNull == null) {
-			orNull
-				.runIf(trailingTabStackStackOrNull != null) { plusNewline }
-				?.byteReader
+		plusNewline
+			?.run {
+				byteReader
+					.orNull
+					.fold(trailingTabStackStackOrNull) { tabStack ->
+						fold(tabStack) { tab ->
+							this?.plus(0)
+						}
+					}
 				?.termOrNull
 		}
