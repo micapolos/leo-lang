@@ -134,3 +134,34 @@ val LeoReader.termOrNull: Term?
 				}
 				?.termOrNull
 		}
+
+val FieldReader.leoByteSeq
+	get() =
+		term.script.code.string.utf8ByteSeq
+
+val SymbolReader.leoByteSeq: Seq<Byte>
+	get() =
+		symbolReaderParentOrNull
+			?.leoByteSeq
+			.orIfNull { seq() }
+			.then { fieldReader.leoByteSeq }
+
+val SymbolReaderParent.leoByteSeq: Seq<Byte>
+	get() =
+		symbolReader.leoByteSeq.then {
+			symbol.noTrailingZeroByteSeq.then {
+				' '.clampedByte.onlySeq
+			}
+		}
+
+val ByteReader.leoByteSeq
+	get() =
+		symbolReader.leoByteSeq.then {
+			symbolOrNull?.noTrailingZeroByteSeq.orIfNull { seq() }
+		}
+
+val LeoReader.byteSeq: Seq<Byte>
+	get() =
+		byteReader.leoByteSeq.then {
+			leadingTabStackStackOrNull.seq.map { seq }.flat.map { byte }
+		}

@@ -129,3 +129,11 @@ val <V> Stack<V>.pushProcessor: Processor<Stack<V>, V>
 		Processor(this) { value ->
 			push(value).pushProcessor
 		}
+
+val <V> Stack<V>?.seq: Seq<V>
+	get() =
+		Seq {
+			ifNotNull { stack ->
+				stack.head.then(stack.tail.seq)
+			}
+		}
