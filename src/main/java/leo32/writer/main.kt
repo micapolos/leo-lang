@@ -13,6 +13,7 @@ fun main() {
 			.leoWriter(empty.leoReader)
 			.fold(System.`in`.byteSeq) { write(it) }
 	} finally {
-		Runtime.getRuntime().exec(arrayOf("sh", "-c", "stty sane < /dev/tty"))
+		Runtime.getRuntime().exec(arrayOf("sh", "-c", "stty icanon < /dev/tty"))
+		Runtime.getRuntime().exec(arrayOf("sh", "-c", "stty echo < /dev/tty"))
 	}
 }
