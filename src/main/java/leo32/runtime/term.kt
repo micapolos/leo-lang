@@ -70,14 +70,7 @@ fun Term.invoke(script: Script): Term =
 	fold(script.lineSeq) { invoke(it) }
 
 fun Term.invoke(field: Field): Term =
-	if (field.name == withSymbol) shortQuote.invoke(field.value)
-	else if (field.name == quoteSymbol) quote.invoke(field.value)
-	else if (field.name == unquoteSymbol) unquote.invoke(field.value)
-	else begin
-		.invoke(field.value)
-		.let { childTerm ->
-			plusResolved(field.name to childTerm)
-		}
+	byteReader.plus(field.byteSeq)?.termOrNull!!
 
 fun Term.invoke(term: Term): Term =
 	fold(term.fieldSeq) { invoke(it) }

@@ -100,7 +100,7 @@ val coreLib: Leo = {
 
 	doIt {
 		zero.gives { self }
-		test { zero.gives { quote { quote { self { zero } } } } }
+		test { zero.gives { quote { self { zero } } } }
 	}
 
 	doIt {
@@ -110,7 +110,7 @@ val coreLib: Leo = {
 
 	doIt {
 		zero.gives { self.and { self } }
-		test { zero.gives { quote { quote { zero.self.and { zero.self } } } } }
+		test { zero.gives { quote { zero.self.and { zero.self } } } }
 	}
 
 	doIt {
@@ -147,7 +147,7 @@ val coreLib: Leo = {
 
 	doIt {
 		ping.gives { pong }
-		test { circle { with { ping } }.gives { circle { quote { quote { ping } } } } }
+		test { circle { with { ping } }.gives { circle { quote { ping } } } }
 	}
 
 	doIt {
