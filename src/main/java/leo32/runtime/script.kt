@@ -1,9 +1,12 @@
 package leo32.runtime
 
+import leo.base.string
 import leo32.base.*
 import leo32.base.List
 
-data class Script(val lineList: List<Line>)
+data class Script(val lineList: List<Line>) {
+	override fun toString() = code.string
+}
 
 val List<Line>.script
 	get() =

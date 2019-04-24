@@ -25,21 +25,31 @@ bit one
 and bit one
 gives bit one
 
-bit zero
-or bit zero
-gives bit zero
+bit
+or bit
+gives negate
+	negate bit self
+	and negate bit or self
 
-bit zero
-or bit one
-gives bit one
+test
+	bit zero
+	or bit zero
+	gives bit zero
 
-bit one
-or bit zero
-gives bit one
+test
+	bit zero
+	or bit one
+	gives bit one
 
-bit one
-or bit one
-gives bit one
+test
+	bit one
+	or bit zero
+	gives bit one
+
+test
+	bit one
+	or bit one
+	gives bit one
 
 bit zero
 xor bit zero

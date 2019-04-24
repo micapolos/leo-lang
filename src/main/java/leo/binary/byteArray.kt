@@ -1,6 +1,7 @@
 package leo.binary
 
 import leo.base.*
+import java.io.ByteArrayOutputStream
 
 fun ByteArray.bitSeq(range: IntRange): Seq<Bit> =
 	if (range.isEmpty()) emptySeq()
@@ -22,3 +23,13 @@ val ByteArray.seq
 val ByteArray.bitSeq: Seq<Bit>
 	get() =
 		bitSeq(intRange)
+
+val Seq<Byte>.byteArray
+	get() =
+		ByteArrayOutputStream()
+			.fold(this) { byte ->
+				apply {
+					write(byte.uint)
+				}
+			}
+			.toByteArray()

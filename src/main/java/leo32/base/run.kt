@@ -10,6 +10,9 @@ fun <T, R> T.effect(value: R) =
 fun <T1, T2, R> Effect<T1, R>.mapTarget(fn: T1.() -> T2) =
 	Effect(fn(target), value)
 
+fun <T, R1, R2> Effect<T, R1>.mapValue(fn: R1.() -> R2) =
+	Effect(target, fn(value))
+
 fun <T, V, R> Effect<T, V>.apply(fn: T.(V) -> R) =
 	target.fn(value)
 
