@@ -1,13 +1,13 @@
 package leo32.runtime
 
 import leo.base.Empty
+import leo.base.empty
 import leo.base.notNullIf
 import leo.base.runIf
 
 data class SymbolReader(
 	val symbolReaderParentOrNull: SymbolReaderParent?,
-	val fieldReader: FieldReader,
-	val isQuoted: Boolean)
+	val fieldReader: FieldReader)
 
 data class SymbolReaderParent(
 	val symbolReader: SymbolReader,
@@ -15,7 +15,7 @@ data class SymbolReaderParent(
 
 val FieldReader.symbolReader
 	get() =
-		SymbolReader(null, this, false)
+		SymbolReader(null, this)
 
 val Empty.symbolReader
 	get() =
@@ -25,39 +25,37 @@ infix fun SymbolReader.to(symbol: Symbol) =
 	SymbolReaderParent(this, symbol)
 
 infix fun SymbolReaderParent.to(fieldReader: FieldReader) =
-	SymbolReader(this, fieldReader, false)
+	SymbolReader(this, fieldReader)
 
-// TODO: Resolve quoting here, and possibly more
 fun SymbolReader.begin(symbol: Symbol) =
-	if (!isQuoted && symbol == quoteSymbol) quote
-	else beginDefault(symbol).handleQuote(symbol)
+	this
+		.fieldReaderBegin(symbol)
+		.applyQuote(symbol)
+		.applyShortQuote(symbol)
 
-fun SymbolReader.handleQuote(symbol: Symbol) =
-	runIf(symbol == testSymbol) {
+val quotedSymbolSet = empty
+	.symbolSet
+	.add(quoteSymbol)
+	.add(testSymbol)
+
+fun SymbolReader.applyQuote(symbol: Symbol) =
+	runIf(quotedSymbolSet.contains(symbol)) {
 		copy(fieldReader = fieldReader.quote)
 	}
 
-val SymbolReader.end
-	get() =
-		if (isQuoted) unquote
-		else endDefault
+fun SymbolReader.applyShortQuote(symbol: Symbol) =
+	runIf(symbol == withSymbol) {
+		copy(fieldReader = fieldReader.shortQuote)
+	}
 
 fun SymbolReader.plus(symbolOrNull: Symbol?): SymbolReader? =
 	if (symbolOrNull != null) begin(symbolOrNull)
 	else end
 
-val SymbolReader.quote
-	get() =
-		copy(isQuoted = true, fieldReader = fieldReader.quote)
-
-fun SymbolReader.beginDefault(symbol: Symbol) =
+fun SymbolReader.fieldReaderBegin(symbol: Symbol) =
 	this to symbol to fieldReader.begin
 
-val SymbolReader.unquote
-	get() =
-		copy(isQuoted = false, fieldReader = fieldReader.unquote)
-
-val SymbolReader.endDefault
+val SymbolReader.end
 	get() =
 		symbolReaderParentOrNull?.let { symbolReaderParent ->
 			symbolReaderParent
@@ -70,6 +68,6 @@ val SymbolReader.endDefault
 
 val SymbolReader.termOrNull
 	get() =
-		notNullIf(symbolReaderParentOrNull == null && !isQuoted) {
+		notNullIf(symbolReaderParentOrNull == null) {
 			fieldReader.term
 		}

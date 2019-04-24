@@ -240,6 +240,14 @@ fun Term.plusMacroTest(field: Field): Term? =
 		invokeTest(field.value)
 	}
 
+fun Term.plusMacroQuote(field: Field): Term? =
+	if (field.name == quoteSymbol) clear.plus(field.value)
+	else null
+
+fun Term.plusMacroWith(field: Field): Term? =
+	if (field.name == withSymbol) clear.plus(field.value)
+	else null
+
 fun Term.plusMacroUnquote(field: Field): Term? =
 	if (field.name == unquoteSymbol) clear.plus(termField(this == field.value))
 	else null
@@ -277,6 +285,8 @@ fun Term.plusMacroPrint(field: Field): Term? =
 
 fun Term.plusMacro(field: Field): Term =
 	null
+		?: plusMacroQuote(field)
+		?: plusMacroWith(field)
 		?: plusMacroUnquote(field)
 		?: plusMacroEquals(field)
 		?: plusMacroGives(field)

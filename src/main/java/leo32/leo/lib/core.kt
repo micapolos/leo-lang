@@ -63,7 +63,7 @@ val coreLib: Leo = {
 
 	test { rhs.gives { quote { rhs } } }
 	test { zero.rhs.gives { quote { zero.rhs } } }
-	test { and { one }.rhs.gives { quote { rhs { and { one } } } } }
+	test { and { one }.rhs.gives { quote { one } } }
 	test { zero.and { one }.rhs.gives { one } }
 
 	test {
@@ -124,7 +124,7 @@ val coreLib: Leo = {
 
 	doIt {
 		zero.gives { one }
-		test { quote { zero }.gives { one } }
+		test { zero.gives { one } }
 	}
 
 	doIt {
@@ -161,8 +161,16 @@ val coreLib: Leo = {
 	}
 
 	test {
-		circle { with { radius { circle } } }
+		with { circle { radius { circle } } }
 		gives { quote { circle { radius { circle } } } }
+	}
+
+	doIt {
+		zero.gives { one }
+		test {
+			with { circle { radius { circle { zero } } } }
+			gives { quote { circle { radius { circle { one } } } } }
+		}
 	}
 }
 
