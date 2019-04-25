@@ -11,7 +11,7 @@ class TreeTest {
 	@Test
 	fun longCursor() {
 		0.leaf.tree.cursor
-			.iterate(1000000) { toWithDefault(randomBit) { 0 } }
+			.iterate(10000) { toWithDefault(randomBit) { 0 } }
 			.update { 128.leaf.tree }
 			.collapse
 			.assertNotNull

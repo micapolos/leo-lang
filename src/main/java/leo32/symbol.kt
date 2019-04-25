@@ -64,6 +64,12 @@ val Symbol.stringField
 	get() =
 		stringSymbol to term(this)
 
+fun Symbol.fieldNameContains(symbol: Symbol): Boolean =
+	this == symbol
+
+fun Symbol.fieldNameUnion(symbol: Symbol): Symbol? =
+	notNullIf(this == symbol) { this }
+
 val actualSymbol = symbol("actual")
 val andSymbol = symbol("and")
 val anythingSymbol = symbol("anything")

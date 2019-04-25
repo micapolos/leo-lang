@@ -31,6 +31,10 @@ val Term.isEmpty get() =
 val Term.simpleNameOrNull get() =
 	nodeOrNull?.simpleNameOrNull
 
+val Term.simpleFieldOrNull
+	get() =
+		nodeOrNull?.simpleFieldOrNull
+
 fun Term.at(name: Symbol): Term? =
 	symbolDict.at(name)?.value
 
@@ -390,10 +394,10 @@ val Term.shortQuote
 
 fun Term.contains(term: Term): Boolean =
 	null
-		?: alternativesContain(term)
+		?: maybeAlternativesContain(term)
 		?: fieldsContain(term)
 
-fun Term.alternativesContain(term: Term): Boolean? =
+fun Term.maybeAlternativesContain(term: Term): Boolean? =
 	alternativesTermOrNull?.run {
 		term.alternativesTermOrNull?.let { alternatives ->
 			symbolDict.contains(alternatives.symbolDict) { theTermOrNull ->
@@ -407,6 +411,55 @@ fun Term.alternativesContain(term: Term): Boolean? =
 fun Term.fieldsContain(term: Term): Boolean =
 	true.fold(zip(fieldSeq, term.fieldSeq)) { (fieldOrNull1, fieldOrNull2) ->
 		fieldOrNull1.nullableEq(fieldOrNull2) { field ->
-			(name == field.name) && value.contains(field.value)
+			contains(field)
 		}
 	}
+
+fun Term.union(term: Term): Term? =
+	null
+		?: maybeSimpleUnion(term)
+		?: maybePartialAlternativesUnion(term)
+		?: fieldsUnion(term)
+
+fun Term.maybeSimpleUnion(term: Term): Term? =
+	simpleFieldOrNull?.run {
+		term.simpleFieldOrNull?.let { field ->
+			simpleUnion(field)
+		}
+	}
+
+fun Term.maybePartialAlternativesUnion(term: Term): Term? =
+	alternativesTermOrNull.run {
+		term.alternativesTermOrNull.let { termAlternativesOrNull ->
+			if (this == null)
+				if (termAlternativesOrNull == null) null
+				else TODO()
+			else
+				if (termAlternativesOrNull == null) TODO()
+				else TODO()
+		}
+	}
+
+fun Term.maybeSimpleFieldAndAlternativesUnion(term: Term): Term? =
+	simpleFieldOrNull?.run {
+		term.alternativesTermOrNull?.let { termAlternatives ->
+			termAlternatives
+				.simpleAtOrNull(name)
+				?.let { TODO() }
+				?: termAlternatives.plus(this)
+		}
+	}
+
+fun Term.fieldsUnion(term: Term): Term? =
+	empty
+		.term
+		.orNull
+		.fold(zip(fieldSeq, term.fieldSeq)) { (fieldOrNull, termFieldOrNull) ->
+			fieldOrNull?.let { field ->
+				termFieldOrNull?.let { termField ->
+					field.union(termField)?.let { fieldUnion ->
+						plus(fieldUnion)
+					}
+				}
+			}
+		}

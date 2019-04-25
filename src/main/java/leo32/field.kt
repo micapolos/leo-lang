@@ -68,3 +68,17 @@ val Field.lineField
 		lineSymbol to term(
 			name.stringField,
 			value.scriptField)
+
+fun Field.contains(field: Field): Boolean =
+	name.fieldNameContains(field.name) && value.contains(field.value)
+
+fun Field.simpleUnion(field: Field): Term? =
+	if (name == field.name) union(field)?.let { term(it) }
+	else term(eitherSymbol to term(this), eitherSymbol to term(field))
+
+fun Field.union(field: Field): Field? =
+	name.fieldNameUnion(field.name)?.let { symbolUnion ->
+		value.union(field.value)?.let { valueUnion ->
+			symbolUnion to valueUnion
+		}
+	}

@@ -2,6 +2,7 @@ package leo32
 
 import leo.base.fold
 import leo.base.ifOrNull
+import leo.base.notNullIf
 
 data class Node(
 	val lhs: Term,
@@ -10,9 +11,12 @@ data class Node(
 val Node.term get() =
 	lhs.plus(field)
 
+val Node.simpleFieldOrNull
+	get() =
+		notNullIf(lhs.isEmpty) { field }
+
 val Node.simpleNameOrNull get() =
-	if (lhs.isEmpty) field.simpleNameOrNull
-	else null
+	simpleFieldOrNull?.simpleNameOrNull
 
 val Node.isSimple
 	get() =
