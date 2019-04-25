@@ -4,7 +4,7 @@ import leo.base.empty
 import leo.base.fold
 import leo.java.io.byteSeq
 import leo.java.lang.sttyPrivateMode
-import leo32.runtime.leoReader
+import leo32.leoReader
 
 fun main() {
 	sttyPrivateMode()

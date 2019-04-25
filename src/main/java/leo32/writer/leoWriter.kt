@@ -2,9 +2,9 @@ package leo32.writer
 
 import leo.base.*
 import leo.binary.utf8ByteSeq
-import leo32.runtime.LeoReader
-import leo32.runtime.byteSeq
-import leo32.runtime.plus
+import leo32.LeoReader
+import leo32.byteSeq
+import leo32.plus
 
 fun Writer<Seq<Byte>>.leoWriter(leoReader: LeoReader): Writer<Byte> =
 	Writer {

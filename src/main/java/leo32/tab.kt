@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package leo32.runtime
+package leo32
 
 import leo.base.clampedByte
 

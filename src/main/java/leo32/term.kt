@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package leo32.runtime
+package leo32
 
 import leo.base.*
 import leo.binary.byteBitSeq
@@ -334,8 +334,9 @@ fun Term.invokeTest(term: Term) =
 val Script.term get() =
 	term().fold(lineSeq) { plus(it.field) }
 
-val Term.script: Script get() =
-	Script(list<Line>().fold(fieldSeq) { add(it.line) })
+val Term.script: Script
+	get() =
+		Script(list<Line>().fold(fieldSeq) { add(it.line) })
 
 fun invoke(line: Line, vararg lines: Line): Script =
 	invokeTerm(line, *lines).script

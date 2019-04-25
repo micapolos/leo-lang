@@ -1,6 +1,6 @@
 @file:Suppress("UNUSED_ANONYMOUS_PARAMETER")
 
-package leo32.runtime
+package leo32
 
 import leo.base.*
 import leo.binary.utf8ByteSeq

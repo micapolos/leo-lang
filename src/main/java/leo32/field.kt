@@ -1,4 +1,4 @@
-package leo32.runtime
+package leo32
 
 import leo.base.*
 import leo.binary.Bit
@@ -52,7 +52,7 @@ val Line.field: Field
 
 val Field.line
 	get() =
-	Line(name, value.script)
+		Line(name, value.script)
 
 fun termField(boolean: Boolean) =
 	booleanSymbol to term("$boolean")

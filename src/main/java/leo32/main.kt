@@ -4,7 +4,6 @@ import leo.base.empty
 import leo.base.fold
 import leo.base.orNull
 import leo.java.io.byteSeq
-import leo32.runtime.*
 
 fun main() {
 	empty

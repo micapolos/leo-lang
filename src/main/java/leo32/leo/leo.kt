@@ -2,8 +2,8 @@ package leo32.leo
 
 import leo.base.empty
 import leo.base.string
+import leo32.*
 import leo32.base.size
-import leo32.runtime.*
 
 data class Builder(var symbolReader: SymbolReader)
 

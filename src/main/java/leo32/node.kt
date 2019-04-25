@@ -1,4 +1,4 @@
-package leo32.runtime
+package leo32
 
 import leo.base.fold
 import leo.base.ifOrNull

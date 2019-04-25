@@ -1,10 +1,11 @@
-package leo32.runtime
+package leo32
 
 import leo.base.assertEqualTo
 import leo.base.empty
 import leo.base.string
 import leo32.base.list
 import kotlin.test.Test
+
 
 class TermTest {
 	@Test

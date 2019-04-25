@@ -1,4 +1,4 @@
-package leo32.runtime
+package leo32
 
 data class TermHasTerm(
 	val lhs: Term,

@@ -1,8 +1,9 @@
-package leo32.runtime
+package leo32
 
 import leo.base.assertEqualTo
 import leo.base.empty
 import kotlin.test.Test
+
 
 class SymbolReaderTest {
 	@Test
