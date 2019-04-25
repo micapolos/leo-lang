@@ -31,8 +31,11 @@ fun Dispatcher.maybeUpdateAlternatives(term: Term, fn: Dispatcher.() -> Dispatch
 	term
 		.alternativesTermOrNull
 		?.let { alternativesTerm ->
-			fold(alternativesTerm.fieldSeq) { alternative ->
-				update(alternative, fn)
+			@Suppress("ReplaceSingleLineLet") // this is Kotlin bug
+			newLazy<Dispatcher>().let { lazyDispatcher ->
+				fold(alternativesTerm.fieldSeq) { alternative ->
+					update(alternative) { lazyDispatcher { fn() } }
+				}
 			}
 		}
 

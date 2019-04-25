@@ -4,13 +4,12 @@ import leo.base.The
 import leo.base.the
 
 data class Lazy<T>(
-	var theValueOrNullVar: The<T>?,
-	val fn: () -> T)
+	var theValueOrNullVar: The<T>?)
 
-fun <T> lazy(fn: () -> T) =
-	Lazy(null, fn)
+fun <T> newLazy() =
+	Lazy<T>(null)
 
-operator fun <T> Lazy<T>.invoke(): T {
+operator fun <T> Lazy<T>.invoke(fn: () -> T): T {
 	val theValueOrNull = theValueOrNullVar
 	return if (theValueOrNull != null) {
 		theValueOrNull.value

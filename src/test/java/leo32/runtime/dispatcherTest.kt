@@ -139,7 +139,7 @@ class DispatcherTest {
 
 	@Test
 	fun intTerm() {
-		val size = 4
+		val size = 32
 		empty
 			.dispatcher
 			.put(
