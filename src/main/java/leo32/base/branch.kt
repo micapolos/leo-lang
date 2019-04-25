@@ -1,5 +1,6 @@
 package leo32.base
 
+import leo.base.The
 import leo.binary.Bit
 import leo.binary.isZero
 
@@ -53,3 +54,10 @@ fun <T> Branch<T>.contains(branch: Branch<T>, fn: T.(T) -> Boolean): Boolean =
 
 fun <T> Branch<T>.all(fn: T.() -> Boolean): Boolean =
 	at0.fn() && at1.fn()
+
+fun <V> Branch<V>.union(branch: Branch<V>, fn: V.(V) -> The<V>?): Branch<V>? =
+	at0.fn(branch.at0)?.let { theUnion0 ->
+		at0.fn(branch.at0)?.let { theUnion1 ->
+			branch(theUnion0.value, theUnion1.value)
+		}
+	}

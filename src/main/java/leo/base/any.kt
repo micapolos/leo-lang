@@ -80,9 +80,6 @@ fun <V> V.runIf(boolean: Boolean, fn: V.() -> V): V =
 	if (boolean) fn()
 	else this
 
-fun <V, R> V.ifThenElse(condition: Boolean, thenFn: V.() -> R, elseFn: V.() -> R): R =
-	if (condition) thenFn() else elseFn()
-
 fun <V : Any> V?.nullableEq(value: V?, fn: V.(V) -> Boolean): Boolean =
 	if (this == null) value == null
 	else value != null && fn(value)
@@ -90,3 +87,8 @@ fun <V : Any> V?.nullableEq(value: V?, fn: V.(V) -> Boolean): Boolean =
 fun <V : Any> V?.nullableContains(value: V?, fn: V.(V) -> Boolean): Boolean =
 	if (this == null) value == null
 	else value == null || fn(value)
+
+fun <V : Any> V?.theNullableUnion(valueOrNull: V?, union: V.(V) -> V?): The<V?>? =
+	if (this == null) the(valueOrNull)
+	else if (valueOrNull == null) the(this)
+	else union(valueOrNull)?.the

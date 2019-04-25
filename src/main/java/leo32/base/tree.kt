@@ -160,3 +160,21 @@ fun <T : Any> Tree<T?>.all(fn: T.() -> Boolean): Boolean =
 		is LeafTree -> leaf.value?.fn() ?: true
 		is BranchTree -> branch.all { all(fn) }
 	}
+
+fun <T> Tree<T>.union(tree: Tree<T>, union: T.(T) -> The<T>?): Tree<T>? =
+	when (this) {
+		is LeafTree ->
+			when (tree) {
+				is LeafTree -> leaf.value.union(tree.leaf.value)?.value?.leaf?.tree
+				is BranchTree -> null
+			}
+		is BranchTree ->
+			when (tree) {
+				is LeafTree -> null
+				is BranchTree -> branch.union(tree.branch) { innerTreeOrNull ->
+					theNullableUnion(innerTreeOrNull) { innerTree ->
+						union(innerTree, union)
+					}
+				}?.tree
+			}
+	}
