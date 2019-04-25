@@ -3,6 +3,7 @@ package leo32.runtime
 import leo.base.Empty
 import leo.base.Seq
 import leo.base.fail
+import leo.base.nullableEq
 import leo.binary.Bit
 import leo.binary.byteBitSeq
 import leo32.base.*
@@ -36,3 +37,6 @@ fun <K, V : Any> Dict<K, V>.update(key: K, fn: V?.() -> V): Dict<K, V> =
 
 fun <K, V : Any> Dict<K, V>.put(key: K, value: V) =
 	update(key) { value }
+
+fun <V : Any> Dict<*, V>.eq(dict: Dict<*, V>, fn: V.(V) -> Boolean): Boolean =
+	tree.eq(dict.tree) { nullableEq(it, fn) }

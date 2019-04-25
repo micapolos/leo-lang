@@ -129,3 +129,17 @@ fun <T, R> R.foldValues(tree: Tree<T>, fn: R.(T) -> R): R =
 val <T> Tree<T>.seq
 	get() =
 		cursor.treeSeq.filterMap { theValueOrNull }
+
+fun <T> Tree<T>.eq(tree: Tree<T>, fn: T.(T) -> Boolean): Boolean =
+	when (this) {
+		is LeafTree ->
+			when (tree) {
+				is LeafTree -> leaf.value.fn(tree.leaf.value)
+				is BranchTree -> false
+			}
+		is BranchTree ->
+			when (tree) {
+				is LeafTree -> false
+				is BranchTree -> branch.eq(tree.branch) { eq(it, fn) }
+			}
+	}

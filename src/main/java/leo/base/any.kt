@@ -82,3 +82,7 @@ fun <V> V.runIf(boolean: Boolean, fn: V.() -> V): V =
 
 fun <V, R> V.ifThenElse(condition: Boolean, thenFn: V.() -> R, elseFn: V.() -> R): R =
 	if (condition) thenFn() else elseFn()
+
+fun <V : Any> V?.nullableEq(value: V?, fn: V.(V) -> Boolean): Boolean =
+	if (this == null) value == null
+	else value != null && fn(value)

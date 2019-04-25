@@ -44,3 +44,6 @@ fun <T : Any> Branch<T?>.putOrNull(bit: Bit, value: T?): Branch<T?>? =
 fun <T> branch(bit: Bit, value: T, otherValue: T) =
 	if (bit.isZero) branch(value, otherValue)
 	else branch(otherValue, value)
+
+fun <T> Branch<T>.eq(branch: Branch<T>, fn: T.(T) -> Boolean): Boolean =
+	at0.fn(branch.at0) && at1.fn(branch.at1)

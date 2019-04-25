@@ -387,12 +387,19 @@ val Term.shortQuote
 	get() =
 		set(scope.shortQuote)
 
-//fun Term.contains(term: Term): Boolean =
-//	alternativesTermOrNull
-//		?.alternativesContain(term)
-//		?:fieldsContain(term)
-//
-//fun Term.alternativesContain(term: Term): Boolean =
-//	alternativesTermOrNull
-//
-//fun Term.fieldsContain(term: Term): Boolean =
+fun Term.contains(term: Term): Boolean =
+	null
+		?: alternativesTermOrNull?.alternativesContain(term)
+		?: fieldsContain(term)
+
+fun Term.alternativesContain(term: Term): Boolean =
+	false
+
+fun Term.fieldsContain(term: Term): Boolean =
+	true.fold(zip(fieldSeq, term.fieldSeq)) { (fieldOrNull1, fieldOrNull2) ->
+		fieldOrNull1?.let { field1 ->
+			fieldOrNull2?.let { field2 ->
+				(field1.name == field2.name) && field1.value.contains(field2.value)
+			}
+		} ?: false
+	}
