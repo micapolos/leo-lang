@@ -10,7 +10,7 @@ import leo32.base.List
 data class Term(
 	val scope: Scope,
 	val fieldList: List<Field>,
-	val symbolDict: Dict<Symbol, The<Term?>>,
+	val symbolDictOrNull: Dict<Symbol, Term>?,
 	val nodeOrNull: Node?,
 	val alternativesTermOrNull: Term?) {
 	override fun toString() = appendableString { it.append(this) }
@@ -36,7 +36,7 @@ val Term.simpleFieldOrNull
 		nodeOrNull?.simpleFieldOrNull
 
 fun Term.at(name: Symbol): Term? =
-	symbolDict.at(name)?.value
+	symbolDictOrNull?.at(name)
 
 fun Term.simpleAtOrNull(symbol: Symbol): Term? =
 	nodeOrNull?.simpleAtOrNull(symbol)
@@ -92,7 +92,7 @@ val Term.begin get() =
 			Term(
 				scope = scope,
 				fieldList = empty.list(),
-				symbolDict = empty.symbolDict(),
+				symbolDictOrNull = empty.symbolDict(),
 				nodeOrNull = null,
 				alternativesTermOrNull = null)
 		}
@@ -101,9 +101,10 @@ fun Term.plus(field: Field): Term =
 	Term(
 		scope = scope,
 		fieldList = fieldList.add(field),
-		symbolDict = symbolDict.update(field.name) {
-			if (this == null) the(field.value)
-			else the(null)
+		symbolDictOrNull = symbolDictOrNull?.let { symbolDict ->
+			notNullIf(symbolDict.at(field.name) == null) {
+				symbolDict.put(field.name, field.value)
+			}
 		},
 		nodeOrNull = Node(this, field),
 		alternativesTermOrNull = alternativesTermForPlusOrNull?.let { alternativesTerm ->
@@ -400,8 +401,8 @@ fun Term.contains(term: Term): Boolean =
 fun Term.maybeAlternativesContain(term: Term): Boolean? =
 	alternativesTermOrNull?.run {
 		term.alternativesTermOrNull?.let { alternatives ->
-			symbolDict.contains(alternatives.symbolDict) { theTermOrNull ->
-				value.nullableContains(theTermOrNull.value) { innerTerm ->
+			symbolDictOrNull.nullableContains(alternatives.symbolDictOrNull) { symbolDict ->
+				contains(symbolDict) { innerTerm ->
 					contains(innerTerm)
 				}
 			}

@@ -109,18 +109,16 @@ class TermTest {
 	fun at() {
 		val term = term(
 			"param" to term("0"),
-			"param" to term("1"),
 			"result" to term("i32"),
 			"body" to term())
 
 		term.fieldList.assertEqualTo(
 			list(
 				"param" to term("0"),
-				"param" to term("1"),
 				"result" to term("i32"),
 				"body" to term()))
 
-		term.at(symbol("param")).assertEqualTo(null)
+		term.at(symbol("param")).assertEqualTo(term("0"))
 		term.at(symbol("result")).assertEqualTo(term("i32"))
 		term.at(bodySymbol).assertEqualTo(term())
 	}
