@@ -143,3 +143,23 @@ fun <T> Tree<T>.eq(tree: Tree<T>, fn: T.(T) -> Boolean): Boolean =
 				is BranchTree -> branch.eq(tree.branch) { eq(it, fn) }
 			}
 	}
+
+fun <T> Tree<T>.contains(tree: Tree<T>, fn: T.(T) -> Boolean): Boolean =
+	when (this) {
+		is LeafTree ->
+			when (tree) {
+				is LeafTree -> leaf.value.fn(tree.leaf.value)
+				is BranchTree -> false
+			}
+		is BranchTree ->
+			when (tree) {
+				is LeafTree -> true
+				is BranchTree -> branch.contains(tree.branch) { contains(it, fn) }
+			}
+	}
+
+fun <T : Any> Tree<T?>.all(fn: T.() -> Boolean): Boolean =
+	when (this) {
+		is LeafTree -> leaf.value?.fn() ?: true
+		is BranchTree -> branch.all { all(fn) }
+	}

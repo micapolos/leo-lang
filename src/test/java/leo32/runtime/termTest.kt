@@ -434,4 +434,57 @@ class TermTest {
 							selfSymbol to term(zeroSymbol),
 							andSymbol to term(selfSymbol to term(zeroSymbol)))))
 	}
+
+	@Test
+	fun contains_empty() {
+		term().contains(term()).assertEqualTo(true)
+	}
+
+	@Test
+	fun contains_simple() {
+		term(zeroSymbol).contains(term(zeroSymbol)).assertEqualTo(true)
+		term(zeroSymbol).contains(term(oneSymbol)).assertEqualTo(false)
+	}
+
+	@Test
+	fun contains_fields() {
+		term(zeroSymbol to term(), oneSymbol to term())
+			.contains(term(zeroSymbol to term(), oneSymbol to term()))
+			.assertEqualTo(true)
+
+		term(zeroSymbol to term())
+			.contains(term(zeroSymbol to term(), oneSymbol to term()))
+			.assertEqualTo(false)
+
+		term(zeroSymbol to term(), zeroSymbol to term())
+			.contains(term(zeroSymbol to term(), oneSymbol to term()))
+			.assertEqualTo(false)
+	}
+
+	@Test
+	fun contains_alternatives() {
+		term(eitherSymbol to term(zeroSymbol))
+			.contains(term(eitherSymbol to term(zeroSymbol)))
+			.assertEqualTo(true)
+
+		term(eitherSymbol to term(zeroSymbol), eitherSymbol to term(oneSymbol))
+			.contains(term(eitherSymbol to term(zeroSymbol)))
+			.assertEqualTo(true)
+
+		term(eitherSymbol to term(zeroSymbol), eitherSymbol to term(oneSymbol))
+			.contains(term(eitherSymbol to term(oneSymbol)))
+			.assertEqualTo(true)
+
+		term(eitherSymbol to term(zeroSymbol), eitherSymbol to term(oneSymbol))
+			.contains(term(eitherSymbol to term(zeroSymbol), eitherSymbol to term(oneSymbol)))
+			.assertEqualTo(true)
+
+		term(eitherSymbol to term(zeroSymbol), eitherSymbol to term(oneSymbol))
+			.contains(term(eitherSymbol to term(oneSymbol), eitherSymbol to term(zeroSymbol)))
+			.assertEqualTo(true)
+
+		term(eitherSymbol to term(zeroSymbol))
+			.contains(term(eitherSymbol to term(oneSymbol), eitherSymbol to term(zeroSymbol)))
+			.assertEqualTo(false)
+	}
 }

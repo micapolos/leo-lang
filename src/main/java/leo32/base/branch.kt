@@ -47,3 +47,9 @@ fun <T> branch(bit: Bit, value: T, otherValue: T) =
 
 fun <T> Branch<T>.eq(branch: Branch<T>, fn: T.(T) -> Boolean): Boolean =
 	at0.fn(branch.at0) && at1.fn(branch.at1)
+
+fun <T> Branch<T>.contains(branch: Branch<T>, fn: T.(T) -> Boolean): Boolean =
+	at0.fn(branch.at0) && at1.fn(branch.at1)
+
+fun <T> Branch<T>.all(fn: T.() -> Boolean): Boolean =
+	at0.fn() && at1.fn()

@@ -389,17 +389,23 @@ val Term.shortQuote
 
 fun Term.contains(term: Term): Boolean =
 	null
-		?: alternativesTermOrNull?.alternativesContain(term)
+		?: alternativesContain(term)
 		?: fieldsContain(term)
 
-fun Term.alternativesContain(term: Term): Boolean =
-	false
+fun Term.alternativesContain(term: Term): Boolean? =
+	alternativesTermOrNull?.run {
+		term.alternativesTermOrNull?.let { alternatives ->
+			symbolDict.contains(alternatives.symbolDict) { theTermOrNull ->
+				value.nullableContains(theTermOrNull.value) { innerTerm ->
+					contains(innerTerm)
+				}
+			}
+		}
+	}
 
 fun Term.fieldsContain(term: Term): Boolean =
 	true.fold(zip(fieldSeq, term.fieldSeq)) { (fieldOrNull1, fieldOrNull2) ->
-		fieldOrNull1?.let { field1 ->
-			fieldOrNull2?.let { field2 ->
-				(field1.name == field2.name) && field1.value.contains(field2.value)
-			}
-		} ?: false
+		fieldOrNull1.nullableEq(fieldOrNull2) { field ->
+			(name == field.name) && value.contains(field.value)
+		}
 	}

@@ -1,12 +1,10 @@
 package leo32.runtime
 
-import leo.base.Empty
-import leo.base.Seq
-import leo.base.fail
-import leo.base.nullableEq
+import leo.base.*
 import leo.binary.Bit
 import leo.binary.byteBitSeq
 import leo32.base.*
+import leo32.base.Tree
 
 data class Dict<K, V : Any>(
 	val tree: Tree<V?>,
@@ -40,3 +38,6 @@ fun <K, V : Any> Dict<K, V>.put(key: K, value: V) =
 
 fun <V : Any> Dict<*, V>.eq(dict: Dict<*, V>, fn: V.(V) -> Boolean): Boolean =
 	tree.eq(dict.tree) { nullableEq(it, fn) }
+
+fun <V : Any> Dict<*, V>.contains(dict: Dict<*, V>, fn: V.(V) -> Boolean): Boolean =
+	tree.contains(dict.tree) { nullableContains(it, fn) }
