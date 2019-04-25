@@ -12,7 +12,7 @@ data class Term(
 	val fieldList: List<Field>,
 	val symbolDictOrNull: Dict<Symbol, Term>?,
 	val nodeOrNull: Node?,
-	val alternativesTermOrNull: Term?) {
+	val eitherFieldsDictOrNull: Dict<Symbol, Field>?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
@@ -94,7 +94,7 @@ val Term.begin get() =
 				fieldList = empty.list(),
 				symbolDictOrNull = empty.symbolDict(),
 				nodeOrNull = null,
-				alternativesTermOrNull = null)
+				eitherFieldsDictOrNull = null)
 		}
 
 fun Term.plus(field: Field): Term =
@@ -107,11 +107,11 @@ fun Term.plus(field: Field): Term =
 			}
 		},
 		nodeOrNull = Node(this, field),
-		alternativesTermOrNull = alternativesTermForPlusOrNull?.let { alternativesTerm ->
+		eitherFieldsDictOrNull = eitherFieldsDictForPlusOrNull?.let { alternativesSymbolDict ->
 			ifOrNull(field.name == eitherSymbol) {
-				field.value.nodeOrNull?.let { node ->
-					ifOrNull(node.lhs.isEmpty) {
-						alternativesTerm.plus(node.field)
+				field.value.simpleFieldOrNull?.let { alternativeField ->
+					alternativesSymbolDict.computeIfAbsent(alternativeField.name) {
+						alternativeField
 					}
 				}
 			}
@@ -124,10 +124,10 @@ val Term.isSimple
 fun Term.plus(term: Term) =
 	fold(term.fieldSeq) { plus(it) }
 
-val Term.alternativesTermForPlusOrNull
+val Term.eitherFieldsDictForPlusOrNull: Dict<Symbol, Field>?
 	get() =
-		if (isEmpty) term()
-		else alternativesTermOrNull
+		if (isEmpty) empty.symbolDict()
+		else eitherFieldsDictOrNull
 
 val Term.invoke
 	get() =
@@ -399,12 +399,10 @@ fun Term.contains(term: Term): Boolean =
 		?: fieldsContain(term)
 
 fun Term.maybeAlternativesContain(term: Term): Boolean? =
-	alternativesTermOrNull?.run {
-		term.alternativesTermOrNull?.let { alternatives ->
-			symbolDictOrNull.nullableContains(alternatives.symbolDictOrNull) { symbolDict ->
-				contains(symbolDict) { innerTerm ->
-					contains(innerTerm)
-				}
+	eitherFieldsDictOrNull?.run {
+		term.eitherFieldsDictOrNull?.let { alternativesSymbolDict ->
+			contains(alternativesSymbolDict) { innerTerm ->
+				contains(innerTerm)
 			}
 		}
 	}
@@ -430,8 +428,8 @@ fun Term.maybeSimpleUnion(term: Term): Term? =
 	}
 
 fun Term.maybePartialAlternativesUnion(term: Term): Term? =
-	alternativesTermOrNull.run {
-		term.alternativesTermOrNull.let { termAlternativesOrNull ->
+	eitherFieldsDictOrNull.run {
+		term.eitherFieldsDictOrNull.let { termAlternativesOrNull ->
 			if (this == null)
 				if (termAlternativesOrNull == null) null
 				else TODO()
@@ -443,11 +441,11 @@ fun Term.maybePartialAlternativesUnion(term: Term): Term? =
 
 fun Term.maybeSimpleFieldAndAlternativesUnion(term: Term): Term? =
 	simpleFieldOrNull?.run {
-		term.alternativesTermOrNull?.let { termAlternatives ->
+		term.eitherFieldsDictOrNull?.let { termAlternatives ->
 			termAlternatives
-				.simpleAtOrNull(name)
+				.at(name)
 				?.let { TODO() }
-				?: termAlternatives.plus(this)
+				?: TODO()
 		}
 	}
 

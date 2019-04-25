@@ -243,64 +243,72 @@ class TermTest {
 	}
 
 	@Test
-	fun alternativesTermOrNull() {
+	fun eitherFieldsDictOrNull() {
 		term()
-			.alternativesTermOrNull
+			.eitherFieldsDictOrNull
 			.assertEqualTo(null)
 
 		term(zeroSymbol to term())
-			.alternativesTermOrNull
+			.eitherFieldsDictOrNull
 			.assertEqualTo(null)
 
 		term(eitherSymbol to term())
-			.alternativesTermOrNull
+			.eitherFieldsDictOrNull
 			.assertEqualTo(null)
 
 		term(eitherSymbol to term(zeroSymbol))
-			.alternativesTermOrNull
-			.assertEqualTo(term(zeroSymbol))
+			.eitherFieldsDictOrNull
+			.assertEqualTo(
+				empty
+					.symbolDict<Field>()
+					.put(zeroSymbol, zeroSymbol to term()))
 
 		term(eitherSymbol to term(zeroSymbol to term(oneSymbol)))
-			.alternativesTermOrNull
-			.assertEqualTo(term(zeroSymbol to term(oneSymbol)))
+			.eitherFieldsDictOrNull
+			.assertEqualTo(
+				empty
+					.symbolDict<Field>()
+					.put(zeroSymbol, zeroSymbol to term(oneSymbol)))
 
 		term(
 			eitherSymbol to term(
 				zeroSymbol to term(),
 				oneSymbol to term()))
-			.alternativesTermOrNull
+			.eitherFieldsDictOrNull
 			.assertEqualTo(null)
 
 		term(
 			eitherSymbol to term(zeroSymbol),
 			eitherSymbol to term(oneSymbol))
-			.alternativesTermOrNull
+			.eitherFieldsDictOrNull
 			.assertEqualTo(
-				term(
-					zeroSymbol to term(),
-					oneSymbol to term()))
+				empty
+					.symbolDict<Field>()
+					.put(zeroSymbol, zeroSymbol to term())
+					.put(oneSymbol, oneSymbol to term()))
 
 		term(
 			eitherSymbol to term(xSymbol to term(zeroSymbol)),
 			eitherSymbol to term(ySymbol to term(oneSymbol)))
-			.alternativesTermOrNull
+			.eitherFieldsDictOrNull
 			.assertEqualTo(
-				term(
-					xSymbol to term(zeroSymbol),
-					ySymbol to term(oneSymbol)))
+				empty
+					.symbolDict<Field>()
+					.put(xSymbol, xSymbol to term(zeroSymbol))
+					.put(ySymbol, ySymbol to term(oneSymbol)))
 
 		term(
 			eitherSymbol to term(xSymbol to term(zeroSymbol)),
 			eitherSymbol to term(ySymbol to term(oneSymbol)),
 			eitherSymbol to term())
-			.alternativesTermOrNull
+			.eitherFieldsDictOrNull
 			.assertEqualTo(null)
 
 		term(
 			eitherSymbol to term(xSymbol to term(zeroSymbol)),
 			eitherSymbol to term(ySymbol to term(oneSymbol)),
 			zeroSymbol to term())
-			.alternativesTermOrNull
+			.eitherFieldsDictOrNull
 			.assertEqualTo(null)
 	}
 

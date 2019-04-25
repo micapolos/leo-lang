@@ -29,11 +29,11 @@ fun Dispatcher.update(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher =
 
 fun Dispatcher.maybeUpdateAlternatives(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher? =
 	term
-		.alternativesTermOrNull
-		?.let { alternativesTerm ->
+		.eitherFieldsDictOrNull
+		?.let { alternativesSymbolDict ->
 			lazily { lazyDispatcher: Lazy<Dispatcher> ->
-				fold(alternativesTerm.fieldSeq) { alternative ->
-					update(alternative) { lazyDispatcher { fn() } }
+				fold(alternativesSymbolDict.valueSeq) { eitherField ->
+					update(term(eitherField)) { lazyDispatcher { fn() } }
 				}
 			}
 		}

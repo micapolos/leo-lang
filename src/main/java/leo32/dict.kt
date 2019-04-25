@@ -16,6 +16,9 @@ fun <K, V : Any> Empty.dict(getBitSeq: K.() -> Seq<Bit>) =
 fun <T : Any> Empty.symbolDict() =
 	dict<Symbol, T> { byteSeq.byteBitSeq }
 
+fun <K, V : Any> Dict<K, V>.contains(key: K): Boolean =
+	at(key) != null
+
 fun <K, V : Any> Dict<K, V>.at(key: K): V? =
 	tree.at(key.getBitSeq())?.let { tree ->
 		when (tree) {
@@ -36,8 +39,16 @@ fun <K, V : Any> Dict<K, V>.update(key: K, fn: V?.() -> V): Dict<K, V> =
 fun <K, V : Any> Dict<K, V>.put(key: K, value: V) =
 	update(key) { value }
 
+val <V : Any> Dict<*, V>.valueSeq: Seq<V>
+	get() =
+		tree.seq.filterMap { this?.the }
+
 fun <V : Any> Dict<*, V>.eq(dict: Dict<*, V>, fn: V.(V) -> Boolean): Boolean =
 	tree.eq(dict.tree) { nullableEq(it, fn) }
 
 fun <V : Any> Dict<*, V>.contains(dict: Dict<*, V>, fn: V.(V) -> Boolean): Boolean =
 	tree.contains(dict.tree) { nullableContains(it, fn) }
+
+fun <K, V : Any> Dict<K, V>.computeIfAbsent(key: K, fn: () -> V): Dict<K, V> =
+	if (!contains(key)) put(key, fn())
+	else this
