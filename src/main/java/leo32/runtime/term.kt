@@ -386,3 +386,13 @@ val Term.scriptField: Field
 val Term.shortQuote
 	get() =
 		set(scope.shortQuote)
+
+//fun Term.contains(term: Term): Boolean =
+//	alternativesTermOrNull
+//		?.alternativesContain(term)
+//		?:fieldsContain(term)
+//
+//fun Term.alternativesContain(term: Term): Boolean =
+//	alternativesTermOrNull
+//
+//fun Term.fieldsContain(term: Term): Boolean =

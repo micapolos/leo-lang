@@ -39,6 +39,16 @@ class SeqTest {
 		seq("one", "two").intercept(",").assertContains("one", ",", "two")
 		seq("one", "two", "three").intercept(",").assertContains("one", ",", "two", ",", "three")
 	}
+
+	@Test
+	fun zip() {
+		zip(seq(), seq()).assertContains()
+		zip(seq(1, 2), seq()).assertContains(1 to null, 2 to null)
+		zip(seq(), seq("a", "b")).assertContains(null to "a", null to "b")
+		zip(seq(1), seq("a", "b")).assertContains(1 to "a", null to "b")
+		zip(seq(1, 2), seq("a")).assertContains(1 to "a", 2 to null)
+		zip(seq(1, 2), seq("a", "b")).assertContains(1 to "a", 2 to "b")
+	}
 }
 
 fun <T> Seq<T>.assertContains(vararg items: T) {

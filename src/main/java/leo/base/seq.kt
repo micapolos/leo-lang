@@ -174,3 +174,14 @@ fun <T, R : Any> R.foldUntilNullEffect(seqNodeOrNull: SeqNode<T>?, fn: R.(T) -> 
 	}
 	return folded.effect(remainingSeqNodeOrNull)
 }
+
+fun <A : Any, B : Any> zip(aSeq: Seq<A>, bSeq: Seq<B>): Seq<Pair<A?, B?>> =
+	Seq { zip(aSeq.seqNodeOrNull, bSeq.seqNodeOrNull) }
+
+fun <A : Any, B : Any> zip(aSeqNode: SeqNode<A>?, bSeqNode: SeqNode<B>?): SeqNode<Pair<A?, B?>>? =
+	if (aSeqNode != null)
+		if (bSeqNode != null) (aSeqNode.first to bSeqNode.first).then(zip(aSeqNode.remaining, bSeqNode.remaining))
+		else (aSeqNode.first to nullOf<B>()).then(zip(aSeqNode.remaining, seq<B>()))
+	else
+		if (bSeqNode != null) (nullOf<A>() to bSeqNode.first).then(zip(seq<A>(), bSeqNode.remaining))
+		else null
