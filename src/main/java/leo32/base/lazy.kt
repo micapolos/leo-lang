@@ -6,8 +6,8 @@ import leo.base.the
 data class Lazy<T>(
 	var theValueOrNullVar: The<T>?)
 
-fun <T> newLazy() =
-	Lazy<T>(null)
+fun <T, R> R.lazily(fn: R.(Lazy<T>) -> R): R =
+	fn(Lazy(null))
 
 operator fun <T> Lazy<T>.invoke(fn: () -> T): T {
 	val theValueOrNull = theValueOrNullVar
