@@ -67,6 +67,7 @@ val Symbol.stringField
 val actualSymbol = symbol("actual")
 val andSymbol = symbol("and")
 val anythingSymbol = symbol("anything")
+val arraySymbol = symbol("array")
 val argumentSymbol = symbol("argument")
 val barSymbol = symbol("bar")
 val bitSymbol = symbol("bit")

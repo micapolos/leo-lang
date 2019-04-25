@@ -138,7 +138,7 @@ class DispatcherTest {
 	}
 
 	@Test
-	fun intTerm() {
+	fun int() {
 		val size = 32
 		empty
 			.dispatcher
