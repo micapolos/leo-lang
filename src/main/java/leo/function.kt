@@ -54,7 +54,7 @@ fun Function.define(rule: Rule): Function? =
 	define(rule.patternTerm, null, rule.body)
 
 fun Function.define(patternTerm: Term<Pattern>, backTraceOrNull: BackTrace?, body: Body): Function? =
-	define(patternTerm, backTraceOrNull) { backTrace -> body.match }
+	define(patternTerm, backTraceOrNull) { body.match }
 
 fun Function.define(patternTerm: Term<Pattern>, backTraceOrNull: BackTrace?, defineNext: Function.(BackTrace?) -> Match?): Function? =
 	defineToken(patternTerm.tokenStream, backTraceOrNull.push(patternTerm), defineNext)
