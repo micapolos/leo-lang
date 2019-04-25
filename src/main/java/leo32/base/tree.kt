@@ -14,12 +14,12 @@ data class LeafTree<T>(
 	val leaf: Leaf<T>) : Tree<T>()
 
 data class BranchTree<T>(
-	val branch: Branch<Tree<T>>) : Tree<T>()
+	val branch: Branch<Tree<T>?>) : Tree<T>()
 
 fun <T> tree(value: T) =
 	value.leaf.tree
 
-fun <T> tree(at0: Tree<T>, at1: Tree<T>) =
+fun <T> tree(at0: Tree<T>?, at1: Tree<T>?) =
 	BranchTree(branch(at0, at1))
 
 fun <T: Any> Empty.tree() =
@@ -29,7 +29,7 @@ val <T> Leaf<T>.tree: Tree<T>
 	get() =
 		LeafTree(this)
 
-val <T> Branch<Tree<T>>.tree
+val <T> Branch<Tree<T>?>.tree
 	get() =
 		BranchTree(this)
 
@@ -48,10 +48,10 @@ val <T> Tree<T>.theValueOrNull
 			is BranchTree -> null
 		}
 
-val <T : Any> Tree<T?>.branch: Branch<Tree<T?>>
+val <T> Tree<T>.branchForUpdate: Branch<Tree<T>?>
 	get() =
 		when (this) {
-			is LeafTree -> (null as T?).leaf.tree.fullBranch
+			is LeafTree -> nullOf<Tree<T>>().fullBranch
 			is BranchTree -> branch
 		}
 
@@ -61,25 +61,14 @@ fun <T> Tree<T>.at(bit: Bit): Tree<T>? =
 		is BranchTree -> branch.at(bit)
 	}
 
-fun <T> Tree<T>.updateAt(bit: Bit, fn: Tree<T>.() -> Tree<T>): Tree<T> =
+fun <T> Tree<T>.updateAt(bit: Bit, fn: Tree<T>?.() -> Tree<T>): Tree<T> =
 	when (this) {
 		is LeafTree -> branch(bit, fn(), this).tree
-		is BranchTree -> branch.update(bit, fn).tree
+		is BranchTree -> branchForUpdate.update(bit, fn).tree
 	}
 
 fun <T> Tree<T>.at(bitSeq: Seq<Bit>): Tree<T>? =
 	orNull.fold(bitSeq) { this?.at(it) }
-
-fun <T : Any, R> Tree<T?>.updateEffect(bit: Bit, fn: Tree<T?>.() -> Effect<Tree<T?>, R>): Effect<Tree<T?>, R> =
-	branch.updateEffect(bit, fn).mapTarget { tree }
-
-fun <T : Any, R> Tree<T?>.updateEffect(bitSeq: Seq<Bit>, fn: Tree<T?>.() -> Effect<Tree<T?>, R>): Effect<Tree<T?>, R> {
-	val seqNodeOrNull = bitSeq.seqNodeOrNull
-	return if (seqNodeOrNull == null) fn()
-	else updateEffect(seqNodeOrNull.first) {
-		updateEffect(seqNodeOrNull.remaining, fn)
-	}
-}
 
 fun <T> Tree<T>.updateWithDefault(bitSeq: Seq<Bit>, defaultFn: () -> T, fn: Tree<T>.() -> Tree<T>): Tree<T> =
 	cursor.toWithDefault(bitSeq, defaultFn).update(fn).collapse
@@ -99,20 +88,20 @@ fun <T : Any> Tree<T?>.updateTree(bitSeq: Seq<Bit>, fn: Tree<T?>?.() -> Tree<T?>
 val <T: Any> Tree<T?>.valueOrNull get() =
 	leafOrNull?.value
 
-fun <K, T : Any, R> R.foldKeyValuePairs(tree: Tree<T?>, key: K, keyFn: K.(Bit) -> K, fn: R.(Pair<K, T>) -> R): R =
+fun <K, T, R> R.foldKeyValuePairs(tree: Tree<T>, key: K, keyFn: K.(Bit) -> K, fn: R.(Pair<K, T>) -> R): R =
 	when (tree) {
-		is LeafTree -> tree.leaf.value?.let { fn(key to it) } ?: this
+		is LeafTree -> fn(key to tree.leaf.value)
 		is BranchTree -> this
-			.foldKeyValuePairs(tree.branch.at0, key.keyFn(zero.bit), keyFn, fn)
-			.foldKeyValuePairs(tree.branch.at1, key.keyFn(one.bit), keyFn, fn)
+			.ifNotNull(tree.branch.at0) { foldKeyValuePairs(it, key.keyFn(zero.bit), keyFn, fn) }
+			.ifNotNull(tree.branch.at1) { foldKeyValuePairs(it, key.keyFn(one.bit), keyFn, fn) }
 	}
 
 fun <T, R> R.fold(tree: Tree<T>, key: List<Bit>, fn: R.(Pair<List<Bit>, T>) -> R): R =
 	when (tree) {
 		is LeafTree -> fn(key to tree.leaf.value)
 		is BranchTree -> this
-			.fold(tree.branch.at0, key.add(zero.bit), fn)
-			.fold(tree.branch.at1, key.add(one.bit), fn)
+			.ifNotNull(tree.branch.at0) { fold(it, key.add(zero.bit), fn) }
+			.ifNotNull(tree.branch.at1) { fold(it, key.add(one.bit), fn) }
 	}
 
 fun <T, R> R.foldKeyed(tree: Tree<T>, fn: R.(Pair<List<Bit>, T>) -> R): R =
@@ -122,8 +111,8 @@ fun <T, R> R.foldValues(tree: Tree<T>, fn: R.(T) -> R): R =
 	when (tree) {
 		is LeafTree -> fn(tree.leaf.value)
 		is BranchTree -> this
-			.foldValues(tree.branch.at0, fn)
-			.foldValues(tree.branch.at1, fn)
+			.ifNotNull(tree.branch.at0) { foldValues(it, fn) }
+			.ifNotNull(tree.branch.at1) { foldValues(it, fn) }
 	}
 
 val <T> Tree<T>.seq
@@ -140,7 +129,11 @@ fun <T> Tree<T>.eq(tree: Tree<T>, fn: T.(T) -> Boolean): Boolean =
 		is BranchTree ->
 			when (tree) {
 				is LeafTree -> false
-				is BranchTree -> branch.eq(tree.branch) { eq(it, fn) }
+				is BranchTree -> branch.eq(tree.branch) { treeOrNull ->
+					nullableEq(treeOrNull) { childTree ->
+						eq(childTree, fn)
+					}
+				}
 			}
 	}
 
@@ -154,7 +147,11 @@ fun <T> Tree<T>.contains(tree: Tree<T>, fn: T.(T) -> Boolean): Boolean =
 		is BranchTree ->
 			when (tree) {
 				is LeafTree -> true
-				is BranchTree -> branch.contains(tree.branch) { contains(it, fn) }
+				is BranchTree -> branch.contains(tree.branch) { treeOrNull ->
+					nullableContains(treeOrNull) { childTree ->
+						contains(childTree, fn)
+					}
+				}
 			}
 	}
 

@@ -2,7 +2,7 @@ group 'leo'
 version '0.1'
 
 buildscript {
-	ext.kotlin_version = '1.3.10'
+	ext.kotlin_version = '1.3.31'
 	repositories {
 		mavenLocal()
 		mavenCentral()
@@ -48,7 +48,7 @@ compileTestKotlin {
 
 jar {
 	manifest {
-		attributes 'Main-Class': 'leo32.writer.MainKt'
+		attributes 'Main-Class': 'leo32.MainKt'
 	}
 
 	// This line of code recursively collects and copies all of a project's files
