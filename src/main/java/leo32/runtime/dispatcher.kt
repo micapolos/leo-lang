@@ -23,6 +23,11 @@ fun Dispatcher.put(case: TermGivesTerm) =
 	}
 
 fun Dispatcher.update(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher =
+	null
+		?: maybeUpdateAlternatives(term, fn)
+		?: updateField(term.fieldSeq, fn)
+
+fun Dispatcher.maybeUpdateAlternatives(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher? =
 	term
 		.alternativesTermOrNull
 		?.let { alternativesTerm ->
@@ -30,7 +35,6 @@ fun Dispatcher.update(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher =
 				update(alternative, fn)
 			}
 		}
-		?: updateField(term.fieldSeq, fn)
 
 fun Dispatcher.update(field: Field, fn: Dispatcher.() -> Dispatcher): Dispatcher =
 	updateBit(field.name.bitSeq) {

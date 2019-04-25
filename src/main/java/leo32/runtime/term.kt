@@ -154,6 +154,9 @@ fun Term.leafPlus(term: Term): Term =
 fun term(vararg fields: Field): Term =
 	empty.term.fold(fields) { plus(it) }
 
+fun term(size: Int, field: Field): Term =
+	term().iterate(size) { plus(field) }
+
 fun Appendable.append(term: Term): Appendable =
 	tryAppend { appendSimple(term) } ?: appendComplex(term)
 

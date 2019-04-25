@@ -136,4 +136,22 @@ class DispatcherTest {
 			.apply { at(term(booleanSymbol to term(trueSymbol))).assertEqualTo(term(selfSymbol)) }
 			.apply { at(term(booleanSymbol to term(maybeSymbol))).assertEqualTo(null) }
 	}
+
+	@Test
+	fun intTerm() {
+		val size = 4
+		empty
+			.dispatcher
+			.put(
+				term(intSymbol to term(size,
+					bitSymbol to term(
+						eitherSymbol to term(zeroSymbol),
+						eitherSymbol to term(oneSymbol)))) gives
+					term(intSymbol))
+			.apply {
+				at(term(intSymbol to term(size, bitSymbol to term(zeroSymbol)))).assertEqualTo(term(intSymbol))
+				at(term(intSymbol to term(size, bitSymbol to term(oneSymbol)))).assertEqualTo(term(intSymbol))
+				at(term(intSymbol to term(size, bitSymbol to term(twoSymbol)))).assertEqualTo(null)
+			}
+	}
 }
