@@ -1,21 +1,17 @@
 package leo32.vm
 
 import java.nio.ByteBuffer
-import java.nio.ByteBuffer.allocateDirect
 
-class Mem(
-	val byteBuffer: ByteBuffer)
+var memByteArray: ByteArray = ByteArray(65536)
+var memByteBuffer: ByteBuffer = ByteBuffer.wrap(memByteArray)
+var memSize = 0
 
-val ByteBuffer.mem
-	get() =
-		Mem(this)
-
-fun mem(size: Int) =
-	allocateDirect(size)
-
-fun Mem.set(index: Int, int: Int) {
-	byteBuffer.putInt(index, int)
+fun memAlloc(byteCount: Size): Ptr {
+	val ptr = memSize
+	memSize += byteCount
+	while (memByteArray.size < byteCount) {
+		memByteArray = memByteArray.copyOf(memByteArray.size shl 1)
+		memByteBuffer = ByteBuffer.wrap(memByteArray)
+	}
+	return ptr
 }
-
-fun Mem.int(index: Int) =
-	byteBuffer.getInt(index)

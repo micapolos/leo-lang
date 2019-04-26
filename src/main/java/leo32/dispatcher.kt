@@ -7,11 +7,12 @@ import leo32.base.*
 import leo32.base.Tree
 
 data class Dispatcher(
+	var previousOrNull: Dispatcher?,
 	val tree: Tree<Term?>)
 
 val Tree<Term?>.dispatcher
 	get() =
-		Dispatcher(this)
+		Dispatcher(null, this)
 
 val Empty.dispatcher
 	get() =
