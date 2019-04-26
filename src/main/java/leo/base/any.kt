@@ -88,7 +88,7 @@ fun <V : Any> V?.nullableContains(value: V?, fn: V.(V) -> Boolean): Boolean =
 	if (this == null) value == null
 	else value == null || fn(value)
 
-fun <V : Any> V?.theNullableUnion(valueOrNull: V?, union: V.(V) -> V?): The<V?>? =
+fun <V : Any> V?.nullableMerge(valueOrNull: V?, union: V.(V) -> V?): The<V?>? =
 	if (this == null) the(valueOrNull)
 	else if (valueOrNull == null) the(this)
 	else union(valueOrNull)?.the

@@ -161,20 +161,29 @@ fun <T : Any> Tree<T?>.all(fn: T.() -> Boolean): Boolean =
 		is BranchTree -> branch.all { all(fn) }
 	}
 
-fun <T> Tree<T>.union(tree: Tree<T>, union: T.(T) -> The<T>?): Tree<T>? =
+fun <T> Tree<T>.merge(
+	tree: Tree<T>,
+	leafMergeBranch: Leaf<T>.(Branch<Tree<T>?>) -> Tree<T>?,
+	branchMergeLeaf: Branch<Tree<T>?>.(Leaf<T>) -> Tree<T>?,
+	valueMergeValue: T.(T) -> Tree<T>?): Tree<T>? =
 	when (this) {
 		is LeafTree ->
 			when (tree) {
-				is LeafTree -> leaf.value.union(tree.leaf.value)?.value?.leaf?.tree
-				is BranchTree -> null
+				is LeafTree -> leaf.value.valueMergeValue(tree.leaf.value)
+				is BranchTree -> leaf.leafMergeBranch(tree.branch)
 			}
 		is BranchTree ->
 			when (tree) {
-				is LeafTree -> null
+				is LeafTree -> branch.branchMergeLeaf(tree.leaf)
 				is BranchTree -> branch.union(tree.branch) { innerTreeOrNull ->
-					theNullableUnion(innerTreeOrNull) { innerTree ->
-						union(innerTree, union)
+					nullableMerge(innerTreeOrNull) { innerTree ->
+						merge(innerTree, leafMergeBranch, branchMergeLeaf, valueMergeValue)
 					}
 				}?.tree
 			}
+	}
+
+fun <T> Tree<T>.merge(tree: Tree<T>, valueMergeValue: T.(T) -> The<T>?): Tree<T>? =
+	merge(tree, { null }, { null }) { value ->
+		valueMergeValue(value)?.value?.leaf?.tree
 	}
