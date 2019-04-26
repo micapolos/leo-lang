@@ -1,5 +1,6 @@
 package leo32.vm
 
+import leo.base.clampedByte
 import leo.base.uint
 
 var pc = 0
@@ -14,8 +15,7 @@ fun run() {
 	while (true) {
 		if (pc == 0) return
 		when (val op = fetch8()) {
-			noOp -> {
-			}
+			noOp -> Unit
 
 			i32invOp -> i32op1(Int::inv)
 			i32andOp -> i32op2(Int::and)
@@ -61,7 +61,7 @@ fun run() {
 fun fetch8() = memByteArray[pc--].uint
 
 fun fetch32(): Int {
-	val int = memByteBuffer.getInt(pc--)
+	val int = memByteBuffer.getInt(pc)
 	pc -= 4
 	return int
 }
@@ -88,34 +88,73 @@ inline fun f32op2(fn: Float.(Float) -> Float) {
 	f32setTop(rhs.fn(lhs))
 }
 
-fun i32top() = memByteBuffer.getInt(sp)
-fun i32pop() = memByteBuffer.getInt(sp--)
-fun i32setTop(i32: Int) {
-	memByteBuffer.putInt(sp, i32)
+fun i32get(ptr: Ptr): Int {
+	return memByteBuffer.getInt(ptr)
 }
 
-fun i32push(i32: Int) {
-	memByteBuffer.putInt(++sp, i32)
-}
-
-fun i32get(ptr: Ptr): Int = memByteBuffer.getInt(ptr)
 fun i32set(ptr: Ptr, i32: Int) {
 	memByteBuffer.putInt(ptr, i32)
 }
 
-fun f32top() = memByteBuffer.getFloat(sp)
-fun f32pop() = memByteBuffer.getFloat(sp--)
+fun i32top(): Int {
+	return i32get(sp - 4)
+}
+
+fun i32pop(): Int {
+	sp -= 4
+	return i32get(sp)
+}
+
+fun i32setTop(i32: Int) {
+	i32set(sp - 4, i32)
+}
+
+fun i32push(i32: Int) {
+	i32set(sp, i32)
+	sp += 4
+}
+
+fun f32top(): Float {
+	return memByteBuffer.getFloat(sp - 4)
+}
+
+fun f32pop(): Float {
+	sp -= 4
+	return f32get(sp)
+}
+
 fun f32setTop(f32: Float) {
-	memByteBuffer.putFloat(sp, f32)
+	f32set(sp - 4, f32)
 }
 
 fun f32push(f32: Float) {
-	memByteBuffer.putFloat(++sp, f32)
+	f32set(sp, f32)
+	sp += 4
 }
 
-fun f32get(ptr: Ptr): Float = memByteBuffer.getFloat(ptr)
+fun f32get(ptr: Ptr): Float {
+	return memByteBuffer.getFloat(ptr)
+}
+
 fun f32set(ptr: Ptr, f32: Float) {
 	memByteBuffer.putFloat(ptr, f32)
+}
+
+fun byte(ptr: Ptr): Byte {
+	return memByteArray[ptr]
+}
+
+fun set(ptr: Ptr, i8: Byte) {
+	memByteArray[ptr] = i8
+}
+
+fun push(byte: Byte) {
+	set(sp, byte)
+	sp += 1
+}
+
+fun pushOp(int: Int) {
+	push(int.clampedByte)
 }
 
 fun jump() {
