@@ -30,17 +30,18 @@ fun treo(bit: Bit, treo: Treo): Treo = BitTreo(bit, treo)
 fun treo0(treo: Treo): Treo = treo(bit0, treo)
 fun treo1(treo: Treo): Treo = treo(bit1, treo)
 
-val Treo.isUnit: Boolean get() = this is UnitTreo
-
 fun Treo.at(bit: Bit): Treo? =
 	when (this) {
 		is UnitTreo -> null
-		is BitTreo -> notNullIf(this.bit == bit) { treo }
-		is BranchTreo -> this.branchAt(bit)
+		is BitTreo -> treoAt(bit)
+		is BranchTreo -> treoAt(bit)
 		is InvokeTreo -> null
 	}
 
-fun BranchTreo.branchAt(bit: Bit): Treo =
+fun BitTreo.treoAt(bit: Bit): Treo? =
+	notNullIf(this.bit == bit) { treo }
+
+fun BranchTreo.treoAt(bit: Bit): Treo =
 	if (bit.isZero) at0 else at1
 
 fun Treo.withTrace(treo: Treo): Treo {
@@ -119,15 +120,15 @@ val Treo.reenter: Treo?
 			is InvokeTreo -> null
 		}
 
-fun Treo.consumeEnteredBit(): Bit =
+fun Treo.consume(): Bit =
 	when (this) {
 		is UnitTreo -> error("not bit to consume")
 		is BitTreo -> bit
-		is BranchTreo -> this.consumeEnteredBit()
+		is BranchTreo -> treoConsume()
 		is InvokeTreo -> error("no bit to consume")
 	}
 
-fun BranchTreo.consumeEnteredBit(): Bit {
+fun BranchTreo.treoConsume(): Bit {
 	val bit = enteredBitOrNull
 	enteredBitOrNull = null
 	return bit ?: error("no bit to consume")
@@ -149,8 +150,8 @@ tailrec fun Treo.invoke(argument: Treo): Treo? =
 					if (bit == argument.bit) treo.invoke(argument.treo.withoutTrace)
 					else null
 				is BranchTreo -> {
-					val argumentBit = argument.consumeEnteredBit()
-					if (bit == argumentBit) treo.invoke(argument.branchAt(argumentBit).withoutTrace)
+					val argumentBit = argument.treoConsume()
+					if (bit == argumentBit) treo.invoke(argument.treoAt(argumentBit).withoutTrace)
 					else null
 				}
 				is InvokeTreo -> TODO()
@@ -160,8 +161,8 @@ tailrec fun Treo.invoke(argument: Treo): Treo? =
 				is UnitTreo -> this
 				is BitTreo -> branchEnter(argument.bit).invoke(argument.treo.withoutTrace)
 				is BranchTreo -> {
-					val argumentBit = argument.consumeEnteredBit()
-					branchAt(argumentBit).invoke(argument.branchAt(argumentBit).withoutTrace)
+					val argumentBit = argument.treoConsume()
+					treoAt(argumentBit).invoke(argument.treoAt(argumentBit).withoutTrace)
 				}
 				is InvokeTreo -> null
 			}
