@@ -14,7 +14,7 @@ class ValueTest {
 		treo0(treo1(treo(unit))).string.assertEqualTo("01")
 
 		val variable = variable(treo(unit))
-		treo0(capture(variable, treo1(invoke(treo(unit), variable)))).string.assertEqualTo("0_1.(!)")
+		treo0(capture(variable, treo1(invoke(treo(unit), variable, 2)))).string.assertEqualTo("0_1.(!)<<")
 	}
 }
 

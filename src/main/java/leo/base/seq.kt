@@ -63,6 +63,9 @@ val <T> T.onlySeqNode: SeqNode<T>
 	get() =
 		SeqNode(this, emptySeq())
 
+fun <T> seqNode(value: T): SeqNode<T> =
+	value.onlySeqNode
+
 val <T> T.onlySeq: Seq<T>
 	get() =
 		Seq { onlySeqNode }
@@ -72,6 +75,9 @@ fun <T> seq(vararg items: T): Seq<T> =
 
 fun <T> flatSeq(vararg seqs: Seq<T>): Seq<T> =
 	seq(*seqs).flat
+
+fun <T> seqNodeOrNull(vararg seqs: Seq<T>): SeqNode<T>? =
+	flatSeq(*seqs).seqNodeOrNull
 
 fun <T> seqFrom(index: Int, items: List<T>): Seq<T> =
 	Seq {
@@ -188,3 +194,10 @@ fun <A : Any, B : Any> zip(aSeqNode: SeqNode<A>?, bSeqNode: SeqNode<B>?): SeqNod
 	else
 		if (bSeqNode != null) (nullOf<A>() to bSeqNode.first).then(zip(seq<A>(), bSeqNode.remaining))
 		else null
+
+fun <V> repeatSeq(value: V, int: Int): Seq<V> =
+	Seq {
+		notNullIf(int != 0) {
+			value.then(repeatSeq(value, int.dec()))
+		}
+	}
