@@ -16,5 +16,23 @@ class ValueTest {
 		val variable = variable(treo(unit))
 		treo0(capture(variable, treo1(invoke(treo(unit), variable, 2)))).string.assertEqualTo("0_1.(!)<<")
 	}
+
+	val nandTreo
+		get() =
+			branch(
+				branch(
+					treo1(treo(unit)),
+					treo1(treo(unit))),
+				branch(
+					treo1(treo(unit)),
+					treo0(treo(unit))))
+
+	@Test
+	fun nand() {
+		nandTreo.invoke("00").assertEqualTo("1")
+		nandTreo.invoke("01").assertEqualTo("1")
+		nandTreo.invoke("10").assertEqualTo("1")
+		nandTreo.invoke("11").assertEqualTo("0")
+	}
 }
 

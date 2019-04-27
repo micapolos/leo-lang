@@ -63,3 +63,14 @@ val Seq<Int>.codePointString
 
 val Int.codePointString: String get() =
 	StringBuilder().appendCodePoint(this).toString()
+
+fun String.charSeqAt(index: Int): Seq<Char> =
+	Seq {
+		notNullIf(index < length) {
+			this[index] then charSeqAt(index.inc())
+		}
+	}
+
+val String.charSeq
+	get() =
+		charSeqAt(0)

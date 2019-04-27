@@ -89,3 +89,11 @@ val firstBit
 val Bit.nextOrNull
 	get() =
 		notNullIf(isZero) { one.bit }
+
+val Char.digitBitOrNull
+	get() =
+		when (this) {
+			'0' -> bit0
+			'1' -> bit1
+			else -> null
+		}

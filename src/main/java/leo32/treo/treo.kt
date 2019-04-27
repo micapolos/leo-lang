@@ -54,7 +54,7 @@ fun capture(variableTreo: VariableTreo, treo: Treo) = CaptureTreo(variableTreo, 
 fun invoke(treo: Treo, argument: Treo, returnDepth: Int) = InvokeTreo(treo, argument, returnDepth)
 
 fun Treo.withExitTrace(treo: Treo) =
-	failIfOr(exitTrace == null) {
+	failIfOr(exitTrace != null) {
 		apply {
 			exitTrace = treo
 		}
@@ -85,7 +85,7 @@ val Treo.erase: Treo
 			is BitTreo -> this
 			is VariableTreo -> this
 			is BranchTreo -> this
-			is CaptureTreo -> apply { variableTreo.reset() }
+			is CaptureTreo -> apply { variableTreo.erase() }
 			is InvokeTreo -> this
 		}
 
@@ -102,7 +102,7 @@ val VariableTreo.bit: Bit
 fun VariableTreo.set(bit: Bit): VariableTreo =
 	failIfOr(bitOrNull != null) { apply { bitOrNull = bit } }
 
-fun VariableTreo.reset(): VariableTreo =
+fun VariableTreo.erase(): VariableTreo =
 	failIfOr(bitOrNull == null) { apply { bitOrNull = null } }
 
 fun BranchTreo.write(bit: Bit): Treo =
@@ -113,6 +113,9 @@ fun CaptureTreo.write(bit: Bit): Treo =
 
 fun Treo.invoke(bit: Bit): Treo =
 	enter(bit)!!.resolve()
+
+fun Treo.invoke(string: String): String =
+	fold(string.charSeq.map { digitBitOrNull!! }, Treo::invoke).string
 
 tailrec fun Treo.invoke(treo: Treo): Treo =
 	when (treo) {
