@@ -10,9 +10,9 @@ import kotlin.test.Test
 class TreeTest {
 	@Test
 	fun longCursor() {
-		0.leaf.tree.cursor
+		0.toLeaf.tree.cursor
 			.iterate(10000) { toWithDefault(randomBit) { 0 } }
-			.update { 128.leaf.tree }
+			.update { 128.toLeaf.tree }
 			.collapse
 			.assertNotNull
 	}

@@ -1,6 +1,7 @@
 package leo32
 
 import leo.base.*
+import leo.base.Stack
 import leo.binary.Bit
 import leo.binary.bitSeq
 import leo32.base.*
@@ -20,7 +21,7 @@ val Empty.dispatcher
 
 fun Dispatcher.put(case: TermGivesTerm) =
 	update(case.lhs) {
-		case.rhs.leaf.tree.dispatcher
+		case.rhs.toLeaf.tree.dispatcher
 	}
 
 fun Dispatcher.update(term: Term, fn: Dispatcher.() -> Dispatcher): Dispatcher =
@@ -75,6 +76,12 @@ fun Dispatcher.invokeBit(bitSeq: Seq<Bit>) =
 		.at(bitSeq)
 		?.dispatcher
 		?: empty.dispatcher
+
+fun Stack<Dispatcher>.dispatcherInvoke(bit: Bit): Stack<Dispatcher>? =
+	head.tree.at(bit)?.let { tree -> push(tree.dispatcher) }
+
+fun Stack<Dispatcher>.dispatcherInvokeBit(bitSeq: Seq<Bit>): Stack<Dispatcher>? =
+	orNullFold(bitSeq) { bit -> dispatcherInvoke(bit) }
 
 val Dispatcher.termOrNull
 	get() =

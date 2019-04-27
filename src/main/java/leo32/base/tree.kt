@@ -17,13 +17,13 @@ data class BranchTree<T>(
 	val branch: Branch<Tree<T>?>) : Tree<T>()
 
 fun <T> tree(value: T) =
-	value.leaf.tree
+	value.toLeaf.tree
 
 fun <T> tree(at0: Tree<T>?, at1: Tree<T>?) =
 	BranchTree(branch(at0, at1))
 
 fun <T: Any> Empty.tree() =
-	nullOf<T>().leaf.tree
+	nullOf<T>().toLeaf.tree
 
 val <T> Leaf<T>.tree: Tree<T>
 	get() =
@@ -74,7 +74,7 @@ fun <T> Tree<T>.updateWithDefault(bitSeq: Seq<Bit>, defaultFn: () -> T, fn: Tree
 	cursor.toWithDefault(bitSeq, defaultFn).update(fn).collapse
 
 fun <T: Any> Tree<T?>.put(bitSeq: Seq<Bit>, value: T) =
-	updateWithDefault(bitSeq, { null }) { value.leaf.tree }
+	updateWithDefault(bitSeq, { null }) { value.toLeaf.tree }
 
 fun <T : Any> Tree<T?>.putTree(bitSeq: Seq<Bit>, tree: Tree<T?>) =
 	updateWithDefault(bitSeq, { null }) { tree }
@@ -185,5 +185,5 @@ fun <T> Tree<T>.merge(
 
 fun <T> Tree<T>.merge(tree: Tree<T>, valueMergeValue: T.(T) -> The<T>?): Tree<T>? =
 	merge(tree, { null }, { null }) { value ->
-		valueMergeValue(value)?.value?.leaf?.tree
+		valueMergeValue(value)?.value?.toLeaf?.tree
 	}

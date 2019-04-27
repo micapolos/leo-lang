@@ -12,13 +12,13 @@ val <T : Any> Tree<T?>.trie
 		Trie(this)
 
 fun <T : Any> emptyTrie() =
-	nullOf<T>().leaf.tree.trie
+	nullOf<T>().toLeaf.tree.trie
 
 fun <T : Any> Trie<T>.uncheckedAt(bitSeq: Seq<Bit>): T? =
 	tree.at(bitSeq)?.leafOrNull?.value
 
 fun <T : Any> Trie<T>.uncheckedPut(bitSeq: Seq<Bit>, value: T?): Trie<T> =
-	tree.updateWithDefault(bitSeq, { null }) { value.leaf.tree }.trie
+	tree.updateWithDefault(bitSeq, { null }) { value.toLeaf.tree }.trie
 
 fun <T: Any> Trie<T?>.atOrNull(bitSeq: Seq<Bit>): Trie<T>? =
 	tree.at(bitSeq)?.trie

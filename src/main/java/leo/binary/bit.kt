@@ -13,6 +13,9 @@ data class OneBit(
 	val one: One
 ) : Bit()
 
+val bit0 = zero.bit
+val bit1 = one.bit
+
 val Zero.bit: Bit
 	get() =
 		ZeroBit(this)
