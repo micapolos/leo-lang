@@ -38,9 +38,9 @@ data class CaptureTreo(
 }
 
 data class InvokeTreo(
-	val treo: Treo,
-	val argument: Treo,
-	val returnDepth: Int) : Treo() {
+	val fn: Treo,
+	val arg: Treo,
+	val cont: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
 
@@ -51,7 +51,7 @@ fun treo0(treo: Treo) = treo(bit0, treo)
 fun treo1(treo: Treo) = treo(bit1, treo)
 fun variable(treo: Treo) = VariableTreo(null, treo)
 fun capture(variableTreo: VariableTreo, treo: Treo) = CaptureTreo(variableTreo, treo)
-fun invoke(treo: Treo, argument: Treo, returnDepth: Int) = InvokeTreo(treo, argument, returnDepth)
+fun invoke(fn: Treo, arg: Treo, cont: Treo) = InvokeTreo(fn, arg, cont)
 
 fun Treo.withExitTrace(treo: Treo) =
 	failIfOr(exitTrace != null) {
@@ -131,8 +131,8 @@ fun Treo.resolve(): Treo =
 	(this as? InvokeTreo)?.resolve() ?: this
 
 fun InvokeTreo.resolve(): Treo =
-	treo.invoke(argument).let { result ->
-		treo.iterate(returnDepth) { exit!! }.invoke(result)
+	fn.invoke(arg).let { result ->
+		cont.invoke(result)
 	}
 
 val Treo.charSeq: Seq<Char>
@@ -146,11 +146,11 @@ val Treo.charSeq: Seq<Char>
 				is CaptureTreo -> '_' then treo.charSeq
 				is InvokeTreo -> seqNodeOrNull(
 					seq('.'),
-					treo.charSeq,
+					fn.charSeq,
 					seq('('),
-					argument.charSeq,
+					arg.charSeq,
 					seq(')'),
-					repeatSeq('<', returnDepth))
+					cont.charSeq)
 			}
 		}
 
