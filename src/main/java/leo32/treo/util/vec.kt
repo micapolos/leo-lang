@@ -23,28 +23,45 @@ var Vec2<Variable>.int
 	set(int) {
 		hi.bit = int.ushr(1).clampedBit; lo.bit = int.clampedBit
 	}
+
 var Vec4<Variable>.int
 	get() = hi.int.shl(2).or(lo.int)
 	set(int) {
 		hi.int = int.ushr(2); lo.int = int
 	}
+
 var Vec8<Variable>.int
 	get() = hi.int.shl(4).or(lo.int)
 	set(int) {
 		hi.int = int.ushr(4); lo.int = int
 	}
+
 var Vec16<Variable>.int
 	get() = hi.int.shl(8).or(lo.int)
 	set(int) {
 		hi.int = int.ushr(8); lo.int = int
 	}
+
 var Vec32<Variable>.int
 	get() = hi.int.shl(16).or(lo.int)
 	set(int) {
 		hi.int = int.ushr(16); lo.int = int
 	}
+
 var Vec64<Variable>.long
-	get() = hi.int.shl(32).or(lo.int)
-	set(int) {
-		hi.int = int.ushr(32); lo.int = int
+	get() = hi.int.toLong().shl(32).or(lo.int.toLong())
+	set(long) {
+		hi.int = long.ushr(32).toInt(); lo.int = long.toInt()
+	}
+
+var Vec32<Variable>.float
+	get() = Float.fromBits(int)
+	set(float) {
+		int = float.toRawBits()
+	}
+
+var Vec64<Variable>.double
+	get() = Double.fromBits(long)
+	set(double) {
+		long = double.toRawBits()
 	}
