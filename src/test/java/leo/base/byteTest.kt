@@ -1,5 +1,9 @@
 package leo.base
 
+import leo.binary.bitByteSeq
+import leo.binary.byteBitSeq
+import leo.binary.utf8ByteSeq
+import leo.binary.utf8String
 import kotlin.test.Test
 
 class ByteTest {
@@ -135,6 +139,11 @@ class ByteTest {
 			.setByte1(0x30.toByte())
 			.setByte0(0x40.toByte())
 			.assertEqualTo(0x10203040)
+	}
+
+	@Test
+	fun bitByteSeq() {
+		"fąfel".utf8ByteSeq.byteBitSeq.bitByteSeq.utf8String.assertEqualTo("fąfel")
 	}
 }
 
