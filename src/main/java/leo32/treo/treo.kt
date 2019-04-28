@@ -19,14 +19,14 @@ data class SelectTreo(
 	override fun toString() = super.toString()
 }
 
-data class VarTreo(
-	val variable: Var,
-	val treo: Treo) : Treo() {
+data class BranchTreo(
+	val branch: Branch) : Treo() {
 	override fun toString() = super.toString()
 }
 
-data class BranchTreo(
-	val branch: Branch) : Treo() {
+data class VarTreo(
+	val variable: Var,
+	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
 
