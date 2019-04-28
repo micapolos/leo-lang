@@ -211,7 +211,7 @@ val Treo.exitCharSeq: Seq<Char>
 			}
 		}
 
-// TODO(micapolos): Implement without stack allocation.
+// TODO: Implement without stack allocation.
 val Treo.enteredCharSeq: Seq<Char>
 	get() =
 		nullOf<Stack<Char>>().fold(exitCharSeq) { push(it) }.seq
