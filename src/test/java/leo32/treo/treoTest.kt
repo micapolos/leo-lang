@@ -75,6 +75,14 @@ class TreoTest {
 	}
 
 	@Test
+	fun invoke() {
+		invoke(treo0(treo0(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
+		invoke(treo0(treo1(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
+		invoke(treo1(treo0(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
+		invoke(treo1(treo1(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("0")
+	}
+
+	@Test
 	fun negTreo() {
 		val lhsVar = variable()
 		val rhsVar = variable()
