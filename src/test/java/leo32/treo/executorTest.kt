@@ -23,7 +23,7 @@ class ExecutorTest {
 									at0(treo(leaf)))))),
 						param(treo(inputVar, treo(leaf)))),
 					treo(back.back.back))))
-			.enter(bit0)!!
+			.enter(bit0)!! // initialization
 
 		val executor = executor(negatorTreo)
 		executor.bitString.assertEqualTo("0")
