@@ -24,7 +24,10 @@ class ExecutorTest {
 					treo(back.back.back))))
 
 		val executor = executor(negateMachine)
-		executor.plusBit("0") // initialization
+		executor.bitString.assertEqualTo("")
+
+		// Initialization
+		executor.plusBit("0")
 		executor.bitString.assertEqualTo("0")
 
 		executor.plusBit("1")
