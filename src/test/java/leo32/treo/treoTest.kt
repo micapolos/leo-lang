@@ -83,11 +83,11 @@ class TreoTest {
 
 	@Test
 	fun expandResolve() {
-		treo(expand(fn(treo1(treo(leaf))), param(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(fn(nandTreo), param(treo0(treo0(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(fn(nandTreo), param(treo0(treo1(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(fn(nandTreo), param(treo1(treo0(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(fn(nandTreo), param(treo1(treo1(treo(leaf)))))).resolve().cut.string.assertEqualTo("|0")
+		treo(expand(macro(treo1(treo(leaf))), param(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo0(treo0(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo0(treo1(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo1(treo0(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo1(treo1(treo(leaf)))))).resolve().cut.string.assertEqualTo("|0")
 	}
 
 	@Test
@@ -115,11 +115,11 @@ class TreoTest {
 	fun captureExpand() {
 		val variable = newVar()
 
-		treo(capture(variable), treo(expand(fn(negTreo), param(treo(variable, treo(leaf))))))
+		treo(capture(variable), treo(expand(macro(negTreo), param(treo(variable, treo(leaf))))))
 			.invoke("0")
 			.assertEqualTo("?|1")
 
-		treo(capture(variable), treo(expand(fn(negTreo), param(treo(variable, treo(leaf))))))
+		treo(capture(variable), treo(expand(macro(negTreo), param(treo(variable, treo(leaf))))))
 			.invoke("1")
 			.assertEqualTo("?|0")
 	}
@@ -150,7 +150,7 @@ class TreoTest {
 						param(treo(lhsVar, treo(leaf)))),
 					treo(
 						capture(rhsVar),
-						treo(expand(fn(nandTreo), param(treo(lhsVar, treo(rhsVar, treo(leaf)))))))))
+						treo(expand(macro(nandTreo), param(treo(lhsVar, treo(rhsVar, treo(leaf)))))))))
 
 		neg.invoke("0").assertEqualTo("??|1")
 	}

@@ -157,9 +157,9 @@ fun Treo.resolve(): Treo =
 	}
 
 fun ExpandTreo.resolve(): Treo {
-	val result = expand.fn.treo.invoke(expand.param.treo)
+	val result = expand.macro.treo.invoke(expand.param.treo)
 	rewind()
-	expand.fn.treo.rewind()
+	expand.macro.treo.rewind()
 	return result
 }
 
@@ -187,7 +187,7 @@ val Treo.trailingCharSeq: Seq<Char>
 				is BranchTreo -> seqNode('?')
 				is CaptureTreo -> seqNodeOrNull(seq('_'), treo.trailingCharSeq)
 				is ExpandTreo -> seqNodeOrNull(seq('.'),
-					expand.fn.treo.trailingCharSeq,
+					expand.macro.treo.trailingCharSeq,
 					seq('<'),
 					expand.param.treo.trailingCharSeq,
 					seq('>'))

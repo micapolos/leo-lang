@@ -1,7 +1,7 @@
 package leo32.treo
 
 data class Expand(
-	val fn: Fn,
+	val macro: Macro,
 	val param: Param)
 
-fun expand(fn: Fn, param: Param) = Expand(fn, param)
+fun expand(macro: Macro, param: Param) = Expand(macro, param)
