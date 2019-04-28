@@ -179,7 +179,10 @@ class TreoTest {
 					treo(back.back.back))))
 		negateForever.string.assertEqualTo("_0_0.?(_0)<<<")
 		negateForever.invoke("01").assertEqualTo("_1.?(_1)<<<")
+		resultVar.bit.assertEqualTo(bit0)
 		negateForever.invoke("010").assertEqualTo("_0.?(_0)<<<")
+		resultVar.bit.assertEqualTo(bit1)
 		negateForever.invoke("0101").assertEqualTo("_1.?(_1)<<<")
+		resultVar.bit.assertEqualTo(bit0)
 	}
 }
