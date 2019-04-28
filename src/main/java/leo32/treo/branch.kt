@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package leo32.treo
 
 import leo.base.Seq
@@ -19,4 +21,6 @@ fun Branch.at(bit: Bit) =
 
 val Branch.charSeq: Seq<Char>
 	get() =
-		flatSeq(at0.treo.charSeq, seq('|'), at1.treo.charSeq)
+		flatSeq(at0.treo.trailingCharSeq, seq('|'), at1.treo.trailingCharSeq)
+
+val Branch.shortCharSeq get() = seq('?')

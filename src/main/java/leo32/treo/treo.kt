@@ -179,27 +179,15 @@ val Treo.charSeq: Seq<Char>
 
 val Treo.trailingCharSeq: Seq<Char>
 	get() =
-		Seq {
-			when (this) {
-				is LeafTreo -> null
-				is SelectTreo -> select.charSeq.seqNodeOrNull
-				is VarTreo -> seqNodeOrNull(variable.charSeq, treo.trailingCharSeq)
-				is BranchTreo -> seqNode('?')
-				is CaptureTreo -> seqNodeOrNull(seq('_'), treo.trailingCharSeq)
-				is ExpandTreo -> seqNodeOrNull(seq('.'),
-					expand.macro.treo.trailingCharSeq,
-					seq('<'),
-					expand.param.treo.trailingCharSeq,
-					seq('>'))
-				is CallTreo -> seqNodeOrNull(
-					seq('.'),
-					call.fn.treo.trailingCharSeq,
-					seq('('),
-					call.param.treo.trailingCharSeq,
-					seq(')'),
-					treo.trailingCharSeq)
-				is BackTreo -> back.charSeq.seqNodeOrNull
-			}
+		when (this) {
+			is LeafTreo -> leaf.charSeq
+			is SelectTreo -> select.charSeq
+			is VarTreo -> flatSeq(variable.charSeq, treo.trailingCharSeq)
+			is BranchTreo -> branch.shortCharSeq
+			is CaptureTreo -> flatSeq(capture.charSeq, treo.trailingCharSeq)
+			is ExpandTreo -> expand.charSeq
+			is CallTreo -> flatSeq(call.charSeq, treo.trailingCharSeq)
+			is BackTreo -> back.charSeq
 		}
 
 val Treo.exitChar: Char
