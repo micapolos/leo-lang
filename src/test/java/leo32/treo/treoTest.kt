@@ -25,6 +25,18 @@ class TreoTest {
 			.assertEqualTo("_.0(1)_")
 	}
 
+	private val negTreo
+		get() =
+			branch(
+				treo1(treo(unit)),
+				treo0(treo(unit)))
+
+	@Test
+	fun neg() {
+		negTreo.invoke("0").assertEqualTo("1")
+		negTreo.invoke("1").assertEqualTo("0")
+	}
+
 	private val nandTreo
 		get() =
 			branch(
@@ -66,7 +78,7 @@ class TreoTest {
 	}
 
 	@Test
-	fun expand() {
+	fun expandResolve() {
 		expand(treo1(treo(unit)), treo(unit)).resolve().string.assertEqualTo("1")
 		expand(nandTreo, treo0(treo0(treo(unit)))).resolve().string.assertEqualTo("1")
 		expand(nandTreo, treo0(treo1(treo(unit)))).resolve().string.assertEqualTo("1")
@@ -75,7 +87,7 @@ class TreoTest {
 	}
 
 	@Test
-	fun invoke() {
+	fun invokeResolve() {
 		invoke(treo0(treo0(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
 		invoke(treo0(treo1(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
 		invoke(treo1(treo0(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
@@ -96,14 +108,40 @@ class TreoTest {
 	}
 
 	@Test
-	fun negTreo() {
+	fun captureExpand() {
+		val variable = variable()
+
+		capture(variable, expand(negTreo, treo(variable, treo(unit))))
+			.invoke("0")
+			.assertEqualTo("1")
+
+		capture(variable, expand(negTreo, treo(variable, treo(unit))))
+			.invoke("1")
+			.assertEqualTo("0")
+	}
+
+	@Test
+	fun captureInvoke() {
+		val variable = variable()
+
+		capture(variable, invoke(negTreo, treo(variable, treo(unit)), selfTreo))
+			.invoke("0")
+			.assertEqualTo("1")
+
+		capture(variable, invoke(negTreo, treo(variable, treo(unit)), selfTreo))
+			.invoke("1")
+			.assertEqualTo("0")
+	}
+
+	@Test
+	fun negUsingNandTreo() {
 		val lhsVar = variable()
 		val rhsVar = variable()
 		val neg =
 			capture(
 				lhsVar,
 				invoke(
-					dupTreo,
+					selfTreo,
 					treo(lhsVar, treo(unit)),
 					capture(
 						rhsVar,
