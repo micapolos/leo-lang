@@ -206,16 +206,16 @@ val Treo.trailingCharSeq: Seq<Char>
 
 val Treo.exitChar: Char
 	get() =
-	when (this) {
-		is LeafTreo -> '.'
-		is SelectTreo -> select.bit.digitChar
-		is VarTreo -> bitVar.bit.digitChar
-		is BranchTreo -> '?'
-		is CaptureTreo -> bitVar.bit.digitChar
-		is ExpandTreo -> 'x'
-		is InvokeTreo -> 'i'
-		is BackTreo -> '<'
-	}
+		when (this) {
+			is LeafTreo -> '.'
+			is SelectTreo -> select.bit.digitChar
+			is VarTreo -> bitVar.bit.digitChar
+			is BranchTreo -> '?'
+			is CaptureTreo -> bitVar.bit.digitChar
+			is ExpandTreo -> 'x'
+			is InvokeTreo -> 'i'
+			is BackTreo -> '<'
+		}
 
 val Treo.exitCharSeq: Seq<Char>
 	get() =
