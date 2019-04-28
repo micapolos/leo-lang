@@ -12,13 +12,13 @@ class TreoTest {
 		treo(leaf).string.assertEqualTo("|")
 		treo(newVar(bit0), treo(leaf)).string.assertEqualTo("|0")
 		treo(newVar(bit1), treo(leaf)).string.assertEqualTo("|1")
-		capture(newVar(), treo(leaf)).string.assertEqualTo("|_")
+		treo(capture(newVar()), treo(leaf)).string.assertEqualTo("|_")
 		treo0(treo1(treo(leaf))).string.assertEqualTo("|01")
-		capture(
-			newVar(),
+		treo(
+			capture(newVar()),
 			treo(
 				call(fn(treo0(treo(leaf))), param(treo1(treo(leaf)))),
-				capture(newVar(), treo(leaf))))
+				treo(capture(newVar()), treo(leaf))))
 			.string
 			.assertEqualTo("|_.0(1)_")
 		treo(back.back.back).string.assertEqualTo("|<<<")
@@ -83,11 +83,11 @@ class TreoTest {
 
 	@Test
 	fun expandResolve() {
-		expand(treo1(treo(leaf)), treo(leaf)).resolve().cut.string.assertEqualTo("|1")
-		expand(nandTreo, treo0(treo0(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
-		expand(nandTreo, treo0(treo1(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
-		expand(nandTreo, treo1(treo0(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
-		expand(nandTreo, treo1(treo1(treo(leaf)))).resolve().cut.string.assertEqualTo("|0")
+		treo(expand(fn(treo1(treo(leaf))), param(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(fn(nandTreo), param(treo0(treo0(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(fn(nandTreo), param(treo0(treo1(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(fn(nandTreo), param(treo1(treo0(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(fn(nandTreo), param(treo1(treo1(treo(leaf)))))).resolve().cut.string.assertEqualTo("|0")
 	}
 
 	@Test
@@ -99,11 +99,11 @@ class TreoTest {
 	}
 
 	@Test
-	fun capture() {
+	fun captur() {
 		val variable1 = newVar(bit1)
 		val variable2 = newVar(bit0)
 		val variable3 = newVar(bit0)
-		capture(variable1, capture(variable2, capture(variable3, treo(leaf))))
+		treo(capture(variable1), treo(capture(variable2), treo(capture(variable3), treo(leaf))))
 			.invoke("01")
 			.assertEqualTo("01|_")
 		variable1.bit.assertEqualTo(bit0)
@@ -115,11 +115,11 @@ class TreoTest {
 	fun captureExpand() {
 		val variable = newVar()
 
-		capture(variable, expand(negTreo, treo(variable, treo(leaf))))
+		treo(capture(variable), treo(expand(fn(negTreo), param(treo(variable, treo(leaf))))))
 			.invoke("0")
 			.assertEqualTo("?|1")
 
-		capture(variable, expand(negTreo, treo(variable, treo(leaf))))
+		treo(capture(variable), treo(expand(fn(negTreo), param(treo(variable, treo(leaf))))))
 			.invoke("1")
 			.assertEqualTo("?|0")
 	}
@@ -128,11 +128,11 @@ class TreoTest {
 	fun captureInvoke() {
 		val variable = newVar()
 
-		capture(variable, treo(call(fn(negTreo), param(treo(variable, treo(leaf)))), selfTreo))
+		treo(capture(variable), treo(call(fn(negTreo), param(treo(variable, treo(leaf)))), selfTreo))
 			.invoke("0")
 			.assertEqualTo("0i?|1")
 
-		capture(variable, treo(call(fn(negTreo), param(treo(variable, treo(leaf)))), selfTreo))
+		treo(capture(variable), treo(call(fn(negTreo), param(treo(variable, treo(leaf)))), selfTreo))
 			.invoke("1")
 			.assertEqualTo("1i?|0")
 	}
@@ -142,15 +142,15 @@ class TreoTest {
 		val lhsVar = newVar()
 		val rhsVar = newVar()
 		val neg =
-			capture(
-				lhsVar,
+			treo(
+				capture(lhsVar),
 				treo(
 					call(
 						fn(selfTreo),
 						param(treo(lhsVar, treo(leaf)))),
-					capture(
-						rhsVar,
-						expand(nandTreo, treo(lhsVar, treo(rhsVar, treo(leaf)))))))
+					treo(
+						capture(rhsVar),
+						treo(expand(fn(nandTreo), param(treo(lhsVar, treo(rhsVar, treo(leaf)))))))))
 
 		neg.invoke("0").assertEqualTo("??|1")
 	}
@@ -158,7 +158,7 @@ class TreoTest {
 	@Test
 	fun captureForever() {
 		val variable = newVar()
-		val captureForever = capture(variable, treo(back))
+		val captureForever = treo(capture(variable), treo(back))
 		captureForever.invoke("1").assertEqualTo("|_<")
 		captureForever.invoke("10").assertEqualTo("|_<")
 		captureForever.invoke("101").assertEqualTo("|_<")
@@ -168,10 +168,10 @@ class TreoTest {
 	fun negateForever() {
 		val resultVar = newVar()
 		val inputVar = newVar()
-		val negateForever = capture(
-			resultVar,
-			capture(
-				inputVar,
+		val negateForever = treo(
+			capture(resultVar),
+			treo(
+				capture(inputVar),
 				treo(
 					call(
 						fn(negTreo),

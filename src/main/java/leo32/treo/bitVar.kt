@@ -17,9 +17,6 @@ fun newVar(bit: Bit) =
 fun newVar() =
 	newVar(bit0)
 
-fun Var.set(bit: Bit) =
-	apply { this.bit = bit }
-
 val Var.charSeq: Seq<Char>
 	get() =
 		bit.digitChar.onlySeq

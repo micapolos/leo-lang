@@ -31,14 +31,13 @@ data class BranchTreo(
 }
 
 data class CaptureTreo(
-	val bitVar: Var,
+	val capture: Capture,
 	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
 
 data class ExpandTreo(
-	val fn: Treo,
-	val arg: Treo) : Treo() {
+	val expand: Expand) : Treo() {
 	override fun toString() = super.toString()
 }
 
@@ -61,8 +60,8 @@ fun treo(bit: Bit, treo: Treo) = treo(bit select treo)
 fun treo0(treo: Treo) = treo(bit0, treo)
 fun treo1(treo: Treo) = treo(bit1, treo)
 fun treo(bitVar: Var, treo: Treo) = VarTreo(bitVar, treo)
-fun capture(bitVar: Var, treo: Treo) = CaptureTreo(bitVar, treo)
-fun expand(fn: Treo, arg: Treo) = ExpandTreo(fn, arg)
+fun treo(capture: Capture, treo: Treo) = CaptureTreo(capture, treo)
+fun treo(expand: Expand) = ExpandTreo(expand)
 fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
 
@@ -111,7 +110,7 @@ fun SelectTreo.write(bit: Bit): Treo? =
 	select.at(bit)
 
 fun VarTreo.write(bit: Bit): Treo? =
-	apply { bitVar.set(bit) }
+	apply { bitVar.bit = bit }
 
 val VarTreo.bit: Bit
 	get() =
@@ -121,7 +120,7 @@ fun BranchTreo.write(bit: Bit): Treo =
 	branch.at(bit)
 
 fun CaptureTreo.write(bit: Bit): Treo =
-	apply { bitVar.set(bit) }.treo
+	apply { capture.variable.bit = bit }.treo
 
 fun Treo.invoke(bit: Bit): Treo =
 	(enter(bit) ?: error("$this.enter($bit)")).resolve()
@@ -158,9 +157,9 @@ fun Treo.resolve(): Treo =
 	}
 
 fun ExpandTreo.resolve(): Treo {
-	val result = fn.invoke(arg)
+	val result = expand.fn.treo.invoke(expand.param.treo)
 	rewind()
-	fn.rewind()
+	expand.fn.treo.rewind()
 	return result
 }
 
@@ -188,9 +187,9 @@ val Treo.trailingCharSeq: Seq<Char>
 				is BranchTreo -> seqNode('?')
 				is CaptureTreo -> seqNodeOrNull(seq('_'), treo.trailingCharSeq)
 				is ExpandTreo -> seqNodeOrNull(seq('.'),
-					fn.trailingCharSeq,
+					expand.fn.treo.trailingCharSeq,
 					seq('<'),
-					arg.trailingCharSeq,
+					expand.param.treo.trailingCharSeq,
 					seq('>'))
 				is CallTreo -> seqNodeOrNull(
 					seq('.'),
@@ -210,7 +209,7 @@ val Treo.exitChar: Char
 			is SelectTreo -> select.bit.digitChar
 			is VarTreo -> bitVar.bit.digitChar
 			is BranchTreo -> '?'
-			is CaptureTreo -> bitVar.bit.digitChar
+			is CaptureTreo -> capture.variable.bit.digitChar
 			is ExpandTreo -> 'x'
 			is CallTreo -> 'i'
 			is BackTreo -> '<'
