@@ -13,11 +13,11 @@ class TreoTest {
 		treo(newVar(bit0), treo(leaf)).string.assertEqualTo("|0")
 		treo(newVar(bit1), treo(leaf)).string.assertEqualTo("|1")
 		treo(capture(newVar()), treo(leaf)).string.assertEqualTo("|_")
-		treo0(treo1(treo(leaf))).string.assertEqualTo("|01")
+		treo(at0(treo(at1(treo(leaf))))).string.assertEqualTo("|01")
 		treo(
 			capture(newVar()),
 			treo(
-				call(fn(treo0(treo(leaf))), param(treo1(treo(leaf)))),
+				call(fn(treo(at0(treo(leaf)))), param(treo(at1(treo(leaf))))),
 				treo(capture(newVar()), treo(leaf))))
 			.string
 			.assertEqualTo("|_.0(1)_")
@@ -33,8 +33,10 @@ class TreoTest {
 
 	private val negTreo =
 		treo(
-			at0(treo1(treo(leaf))),
-			at1(treo0(treo(leaf))))
+			at0(treo(
+				at1(treo(leaf)))),
+			at1(treo(
+				at0(treo(leaf)))))
 
 	@Test
 	fun neg() {
@@ -46,12 +48,12 @@ class TreoTest {
 		treo(
 			at0(
 				treo(
-					at0(treo1(treo(leaf))),
-					at1(treo1(treo(leaf))))),
+					at0(treo(at1(treo(leaf)))),
+					at1(treo(at1(treo(leaf)))))),
 			at1(
 				treo(
-					at0(treo1(treo(leaf))),
-					at1(treo0(treo(leaf))))))
+					at0(treo(at1(treo(leaf)))),
+					at1(treo(at0(treo(leaf)))))))
 
 	@Test
 	fun nand() {
@@ -63,8 +65,8 @@ class TreoTest {
 
 	private val selfTreo =
 		treo(
-			at0(treo0(treo(leaf))),
-			at1(treo1(treo(leaf))))
+			at0(treo(at0(treo(leaf)))),
+			at1(treo(at1(treo(leaf)))))
 
 	@Test
 	fun self() {
@@ -74,8 +76,8 @@ class TreoTest {
 
 	private val dupTreo =
 		treo(
-			at0(treo0(treo0(treo(leaf)))),
-			at1(treo1(treo1(treo(leaf)))))
+			at0(treo(at0(treo(at0(treo(leaf)))))),
+			at1(treo(at1(treo(at1(treo(leaf)))))))
 
 	@Test
 	fun dup() {
@@ -85,19 +87,19 @@ class TreoTest {
 
 	@Test
 	fun expandResolve() {
-		treo(expand(macro(treo1(treo(leaf))), param(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(macro(nandTreo), param(treo0(treo0(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(macro(nandTreo), param(treo0(treo1(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(macro(nandTreo), param(treo1(treo0(treo(leaf)))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(macro(nandTreo), param(treo1(treo1(treo(leaf)))))).resolve().cut.string.assertEqualTo("|0")
+		treo(expand(macro(treo(at1(treo(leaf)))), param(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo(at0(treo(at0(treo(leaf)))))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo(at0(treo(at1(treo(leaf)))))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo(at1(treo(at0(treo(leaf)))))))).resolve().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo(at1(treo(at1(treo(leaf)))))))).resolve().cut.string.assertEqualTo("|0")
 	}
 
 	@Test
 	fun invokeResolve() {
-		treo(call(fn(treo0(treo0(treo(leaf)))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		treo(call(fn(treo0(treo1(treo(leaf)))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		treo(call(fn(treo1(treo0(treo(leaf)))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		treo(call(fn(treo1(treo1(treo(leaf)))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|0")
+		treo(call(fn(treo(at0(treo(at0(treo(leaf)))))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
+		treo(call(fn(treo(at0(treo(at1(treo(leaf)))))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
+		treo(call(fn(treo(at1(treo(at0(treo(leaf)))))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
+		treo(call(fn(treo(at1(treo(at1(treo(leaf)))))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|0")
 	}
 
 	@Test
