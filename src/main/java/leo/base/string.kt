@@ -74,3 +74,7 @@ fun String.charSeqAt(index: Int): Seq<Char> =
 val String.charSeq
 	get() =
 		charSeqAt(0)
+
+val Seq<Char>.charString
+	get() =
+		appendableString { fold(it, Appendable::append) }
