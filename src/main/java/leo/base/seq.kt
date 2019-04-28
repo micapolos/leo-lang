@@ -195,9 +195,10 @@ fun <A : Any, B : Any> zip(aSeqNode: SeqNode<A>?, bSeqNode: SeqNode<B>?): SeqNod
 		if (bSeqNode != null) (nullOf<A>() to bSeqNode.first).then(zip(seq<A>(), bSeqNode.remaining))
 		else null
 
-fun <V> repeatSeq(value: V, int: Int): Seq<V> =
-	Seq {
-		notNullIf(int != 0) {
-			value.then(repeatSeq(value, int.dec()))
-		}
+fun <V> repeatSeq(value: V, count: Int): Seq<V> =
+	Seq { repeatSeqNodeOrNull(value, count) }
+
+fun <V> repeatSeqNodeOrNull(value: V, count: Int): SeqNode<V>? =
+	notNullIf(count != 0) {
+		value.then(repeatSeq(value, count.dec()))
 	}

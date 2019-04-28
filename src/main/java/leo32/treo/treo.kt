@@ -3,7 +3,8 @@ package leo32.treo
 import leo.base.*
 import leo.binary.*
 
-sealed class Treo {
+sealed class Treo(
+	var exitTrace: Treo? = null) {
 	override fun toString() = charSeq.charString
 }
 
@@ -49,6 +50,12 @@ data class InvokeTreo(
 	override fun toString() = super.toString()
 }
 
+data class RecurseTreo(
+	val depth: Int,
+	val treo: Treo) : Treo() {
+	override fun toString() = super.toString()
+}
+
 fun treo(unit: Unit) = UnitTreo(unit)
 fun branch(at0: Treo, at1: Treo) = BranchTreo(at0, at1)
 fun treo(bit: Bit, treo: Treo) = BitTreo(bit, treo)
@@ -58,6 +65,13 @@ fun treo(variable: Variable, treo: Treo) = VariableTreo(variable, treo)
 fun capture(variable: Variable, treo: Treo) = CaptureTreo(variable, treo)
 fun expand(fn: Treo, arg: Treo) = ExpandTreo(fn, arg)
 fun invoke(fn: Treo, arg: Treo, cont: Treo) = InvokeTreo(fn, arg, cont)
+fun recurse(depth: Int, treo: Treo) = RecurseTreo(depth, treo)
+
+fun Treo.withExitTrace(treo: Treo): Treo {
+	if (exitTrace != null) error("already traced: $this")
+	exitTrace = treo
+	return this
+}
 
 fun Treo.enter(bit: Bit): Treo? =
 	when (this) {
@@ -68,7 +82,20 @@ fun Treo.enter(bit: Bit): Treo? =
 		is CaptureTreo -> write(bit)
 		is ExpandTreo -> null
 		is InvokeTreo -> null
-	}
+		is RecurseTreo -> null
+	}?.withExitTrace(this)
+
+val Treo.exit: Treo?
+	get() =
+		run {
+			val treo = exitTrace
+			exitTrace = null
+			treo
+		}
+
+tailrec fun Treo.rewind() {
+	exit?.rewind()
+}
 
 fun BitTreo.write(bit: Bit): Treo? =
 	notNullIf(this.bit == bit) { treo }
@@ -101,6 +128,7 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 		is CaptureTreo -> null!!
 		is ExpandTreo -> null!!
 		is InvokeTreo -> null!!
+		is RecurseTreo -> null!!
 	}
 
 fun Treo.resolve(): Treo =
@@ -112,6 +140,7 @@ fun Treo.resolve(): Treo =
 		is CaptureTreo -> this
 		is ExpandTreo -> resolve()
 		is InvokeTreo -> resolve()
+		is RecurseTreo -> iterate(depth) { exit!! }
 	}
 
 fun ExpandTreo.resolve(): Treo =
@@ -143,5 +172,6 @@ val Treo.charSeq: Seq<Char>
 					arg.charSeq,
 					seq(')'),
 					cont.charSeq)
+				is RecurseTreo -> repeatSeqNodeOrNull('<', depth)
 			}
 		}
