@@ -47,6 +47,10 @@ val Bit.digitChar
 	get() =
 		match({ digitChar }, { digitChar })
 
+val Bit.digitString
+	get() =
+		digitChar.toString()
+
 val Bit.inverse
 	get() =
 		match({ one.bit }, { zero.bit })
@@ -59,6 +63,9 @@ fun Bit.and(bit: Bit) =
 
 fun Bit.or(bit: Bit) =
 	isOne.or(bit.isOne).bit
+
+fun Bit.xor(bit: Bit) =
+	isOne.xor(bit.isOne).bit
 
 val Int.bit
 	get() =
