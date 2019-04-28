@@ -34,9 +34,9 @@ class TreoTest {
 	}
 
 	private val negTreo =
-			branch(
-				treo1(treo(unit)),
-				treo0(treo(unit)))
+		treo(
+			treo1(treo(unit)),
+			treo0(treo(unit)))
 
 	@Test
 	fun neg() {
@@ -45,11 +45,11 @@ class TreoTest {
 	}
 
 	private val nandTreo =
-			branch(
-				branch(
+		treo(
+			treo(
 					treo1(treo(unit)),
 					treo1(treo(unit))),
-				branch(
+			treo(
 					treo1(treo(unit)),
 					treo0(treo(unit))))
 
@@ -62,7 +62,7 @@ class TreoTest {
 	}
 
 	private val selfTreo =
-		branch(
+		treo(
 			treo0(treo(unit)),
 			treo1(treo(unit)))
 
@@ -73,7 +73,7 @@ class TreoTest {
 	}
 
 	private val dupTreo =
-		branch(
+		treo(
 			treo0(treo0(treo(unit))),
 			treo1(treo1(treo(unit))))
 

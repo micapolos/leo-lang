@@ -26,8 +26,7 @@ data class VariableTreo(
 }
 
 data class BranchTreo(
-	val at0: Treo,
-	val at1: Treo) : Treo() {
+	val branch: Branch) : Treo() {
 	override fun toString() = super.toString()
 }
 
@@ -56,7 +55,8 @@ data class BackTreo(
 }
 
 fun treo(unit: Unit) = UnitTreo(unit)
-fun branch(at0: Treo, at1: Treo) = BranchTreo(at0, at1)
+fun treo(branch: Branch) = BranchTreo(branch)
+fun treo(at0: Treo, at1: Treo) = treo(branch(at0, at1))
 fun treo(bit: Bit, treo: Treo) = BitTreo(bit, treo)
 fun treo0(treo: Treo) = treo(bit0, treo)
 fun treo1(treo: Treo) = treo(bit1, treo)
@@ -118,7 +118,7 @@ val VariableTreo.bit: Bit
 		variable.bit
 
 fun BranchTreo.write(bit: Bit): Treo =
-	if (bit.isZero) at0 else at1
+	branch.at(bit)
 
 fun CaptureTreo.write(bit: Bit): Treo =
 	apply { variable.set(bit) }.treo
