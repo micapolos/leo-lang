@@ -25,6 +25,13 @@ class TreoTest {
 			.assertEqualTo("_.0(1)_")
 	}
 
+	@Test
+	fun rewind() {
+		val result = negTreo.invoke(bit0)
+		result.rewind()
+		negTreo.invoke(bit0)
+	}
+
 	private val negTreo =
 			branch(
 				treo1(treo(unit)),
@@ -77,19 +84,19 @@ class TreoTest {
 
 	@Test
 	fun expandResolve() {
-		expand(treo1(treo(unit)), treo(unit)).resolve().string.assertEqualTo("1")
-		expand(nandTreo, treo0(treo0(treo(unit)))).resolve().string.assertEqualTo("1")
-		expand(nandTreo, treo0(treo1(treo(unit)))).resolve().string.assertEqualTo("1")
-		expand(nandTreo, treo1(treo0(treo(unit)))).resolve().string.assertEqualTo("1")
-		expand(nandTreo, treo1(treo1(treo(unit)))).resolve().string.assertEqualTo("0")
+		expand(treo1(treo(unit)), treo(unit)).resolve().cut.string.assertEqualTo("1")
+		expand(nandTreo, treo0(treo0(treo(unit)))).resolve().cut.string.assertEqualTo("1")
+		expand(nandTreo, treo0(treo1(treo(unit)))).resolve().cut.string.assertEqualTo("1")
+		expand(nandTreo, treo1(treo0(treo(unit)))).resolve().cut.string.assertEqualTo("1")
+		expand(nandTreo, treo1(treo1(treo(unit)))).resolve().cut.string.assertEqualTo("0")
 	}
 
 	@Test
 	fun invokeResolve() {
-		invoke(treo0(treo0(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
-		invoke(treo0(treo1(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
-		invoke(treo1(treo0(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("1")
-		invoke(treo1(treo1(treo(unit))), treo(unit), nandTreo).resolve().string.assertEqualTo("0")
+		invoke(treo0(treo0(treo(unit))), treo(unit), nandTreo).resolve().cut.string.assertEqualTo("1")
+		invoke(treo0(treo1(treo(unit))), treo(unit), nandTreo).resolve().cut.string.assertEqualTo("1")
+		invoke(treo1(treo0(treo(unit))), treo(unit), nandTreo).resolve().cut.string.assertEqualTo("1")
+		invoke(treo1(treo1(treo(unit))), treo(unit), nandTreo).resolve().cut.string.assertEqualTo("0")
 	}
 
 	@Test

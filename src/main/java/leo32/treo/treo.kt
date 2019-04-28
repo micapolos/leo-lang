@@ -97,6 +97,10 @@ tailrec fun Treo.rewind() {
 	exit?.rewind()
 }
 
+val Treo.cut: Treo
+	get() =
+		apply { rewind() }
+
 fun BitTreo.write(bit: Bit): Treo? =
 	notNullIf(this.bit == bit) { treo }
 
@@ -116,8 +120,11 @@ fun CaptureTreo.write(bit: Bit): Treo =
 fun Treo.invoke(bit: Bit): Treo =
 	(enter(bit) ?: error("$this.enter($bit)")).resolve()
 
-fun Treo.invoke(string: String): String =
-	fold(string.charSeq.map { digitBitOrNull!! }, Treo::invoke).string
+fun Treo.invoke(string: String): String {
+	val result = fold(string.charSeq.map { digitBitOrNull!! }, Treo::invoke)
+	result.rewind()
+	return result.string
+}
 
 tailrec fun Treo.invoke(treo: Treo): Treo =
 	when (treo) {
@@ -143,13 +150,21 @@ fun Treo.resolve(): Treo =
 		is RecurseTreo -> iterate(depth) { exit!! }
 	}
 
-fun ExpandTreo.resolve(): Treo =
-	fn.invoke(arg)
+fun ExpandTreo.resolve(): Treo {
+	val result = fn.invoke(arg)
+	rewind()
+	fn.rewind()
+	return result
+}
 
-fun InvokeTreo.resolve(): Treo =
-	fn.invoke(arg).let { result ->
+fun InvokeTreo.resolve(): Treo {
+	val result = fn.invoke(arg).let { result ->
 		cont.invoke(result)
 	}
+	fn.rewind()
+	arg.rewind()
+	return result
+}
 
 val Treo.charSeq: Seq<Char>
 	get() =
