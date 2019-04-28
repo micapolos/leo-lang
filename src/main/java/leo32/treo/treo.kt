@@ -46,12 +46,12 @@ data class ExpandTreo(
 data class InvokeTreo(
 	val fn: Treo,
 	val arg: Treo,
-	val cont: Treo) : Treo() {
+	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
 
-data class RecurseTreo(
-	val depth: Int) : Treo() {
+data class BackTreo(
+	val back: Back) : Treo() {
 	override fun toString() = super.toString()
 }
 
@@ -63,8 +63,8 @@ fun treo1(treo: Treo) = treo(bit1, treo)
 fun treo(variable: Variable, treo: Treo) = VariableTreo(variable, treo)
 fun capture(variable: Variable, treo: Treo) = CaptureTreo(variable, treo)
 fun expand(fn: Treo, arg: Treo) = ExpandTreo(fn, arg)
-fun invoke(fn: Treo, arg: Treo, cont: Treo) = InvokeTreo(fn, arg, cont)
-fun recurse(depth: Int) = failIfOr(depth < 0) { RecurseTreo(depth) }
+fun invoke(fn: Treo, arg: Treo, treo: Treo) = InvokeTreo(fn, arg, treo)
+fun treo(back: Back) = BackTreo(back)
 
 fun Treo.withExitTrace(treo: Treo): Treo {
 	if (exitTrace != null) error("already traced: $this")
@@ -81,7 +81,7 @@ fun Treo.enter(bit: Bit): Treo? =
 		is CaptureTreo -> write(bit)
 		is ExpandTreo -> null
 		is InvokeTreo -> null
-		is RecurseTreo -> null
+		is BackTreo -> null
 	}?.withExitTrace(this)
 
 val Treo.exit: Treo?
@@ -94,6 +94,13 @@ val Treo.exit: Treo?
 
 tailrec fun Treo.rewind() {
 	exit?.rewind()
+}
+
+tailrec fun Treo.invoke(back: Back): Treo {
+	val exited = exit!!
+	val nextBackOrNull = back.nextOrNull
+	return if (nextBackOrNull == null) exited
+	else exited.invoke(nextBackOrNull)
 }
 
 val Treo.cut: Treo
@@ -134,7 +141,7 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 		is CaptureTreo -> null!!
 		is ExpandTreo -> null!!
 		is InvokeTreo -> null!!
-		is RecurseTreo -> null!!
+		is BackTreo -> null!!
 	}
 
 fun Treo.resolve(): Treo =
@@ -146,7 +153,7 @@ fun Treo.resolve(): Treo =
 		is CaptureTreo -> this
 		is ExpandTreo -> resolve()
 		is InvokeTreo -> resolve()
-		is RecurseTreo -> iterate(depth) { exit!! }
+		is BackTreo -> invoke(back)
 	}
 
 fun ExpandTreo.resolve(): Treo {
@@ -158,7 +165,7 @@ fun ExpandTreo.resolve(): Treo {
 
 fun InvokeTreo.resolve(): Treo {
 	val result = fn.invoke(arg).let { result ->
-		cont.invoke(result)
+		treo.invoke(result)
 	}
 	fn.rewind()
 	arg.rewind()
@@ -185,7 +192,7 @@ val Treo.charSeq: Seq<Char>
 					seq('('),
 					arg.charSeq,
 					seq(')'),
-					cont.charSeq)
-				is RecurseTreo -> repeatSeqNodeOrNull('<', depth)
+					treo.charSeq)
+				is BackTreo -> back.charSeq.seqNodeOrNull
 			}
 		}
