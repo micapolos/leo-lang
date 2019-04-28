@@ -1,5 +1,9 @@
 package leo32.treo.util
 
+import leo.binary.clampedBit
+import leo.binary.int
+import leo32.treo.Variable
+
 data class Vec2<T>(val hi: T, val lo: T)
 data class Vec4<T>(val hi: Vec2<T>, val lo: Vec2<T>)
 data class Vec8<T>(val hi: Vec4<T>, val lo: Vec4<T>)
@@ -14,3 +18,33 @@ fun <T> vec16(fn: () -> T) = Vec16(vec8(fn), vec8(fn))
 fun <T> vec32(fn: () -> T) = Vec32(vec16(fn), vec16(fn))
 fun <T> vec64(fn: () -> T) = Vec64(vec32(fn), vec32(fn))
 
+var Vec2<Variable>.int
+	get() = hi.bit.int.shl(1).or(lo.bit.int)
+	set(int) {
+		hi.bit = int.ushr(1).clampedBit; lo.bit = int.clampedBit
+	}
+var Vec4<Variable>.int
+	get() = hi.int.shl(2).or(lo.int)
+	set(int) {
+		hi.int = int.ushr(2); lo.int = int
+	}
+var Vec8<Variable>.int
+	get() = hi.int.shl(4).or(lo.int)
+	set(int) {
+		hi.int = int.ushr(4); lo.int = int
+	}
+var Vec16<Variable>.int
+	get() = hi.int.shl(8).or(lo.int)
+	set(int) {
+		hi.int = int.ushr(8); lo.int = int
+	}
+var Vec32<Variable>.int
+	get() = hi.int.shl(16).or(lo.int)
+	set(int) {
+		hi.int = int.ushr(16); lo.int = int
+	}
+var Vec64<Variable>.long
+	get() = hi.int.shl(32).or(lo.int)
+	set(int) {
+		hi.int = int.ushr(32); lo.int = int
+	}
