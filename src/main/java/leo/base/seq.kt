@@ -70,6 +70,9 @@ val <T> T.onlySeq: Seq<T>
 	get() =
 		Seq { onlySeqNode }
 
+fun <T : Any, R> T?.orNullSeq(fn: T.() -> Seq<R>): Seq<R> =
+	if (this == null) seq() else fn()
+
 fun <T> seq(vararg items: T): Seq<T> =
 	seqFrom(0, listOf(*items))
 
