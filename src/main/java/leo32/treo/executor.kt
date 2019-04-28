@@ -10,6 +10,9 @@ import leo.binary.digitBitOrNull
 data class Executor(
 	var currentTreo: Treo)
 
+fun executor(treo: Treo) =
+	Executor(treo)
+
 fun Executor.plus(bit: Bit) =
 	apply { currentTreo = currentTreo.invoke(bit) }
 
