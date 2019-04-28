@@ -187,7 +187,7 @@ val Treo.trailingCharSeq: Seq<Char>
 				is SelectTreo -> select.charSeq.seqNodeOrNull
 				is VarTreo -> seqNodeOrNull(bitVar.charSeq, treo.trailingCharSeq)
 				is BranchTreo -> seqNode('?')
-				is CaptureTreo -> seqNodeOrNull(bitVar.charSeq, treo.trailingCharSeq)
+				is CaptureTreo -> seqNodeOrNull(seq('_'), treo.trailingCharSeq)
 				is ExpandTreo -> seqNodeOrNull(seq('.'),
 					fn.trailingCharSeq,
 					seq('<'),
@@ -204,12 +204,13 @@ val Treo.trailingCharSeq: Seq<Char>
 			}
 		}
 
-fun Treo.exitCharFrom(treo: Treo): Char =
+val Treo.exitChar: Char
+	get() =
 	when (this) {
 		is LeafTreo -> '.'
 		is SelectTreo -> select.bit.digitChar
 		is VarTreo -> bitVar.bit.digitChar
-		is BranchTreo -> if (branch.at0 === treo) bit0.digitChar else bit1.digitChar
+		is BranchTreo -> '?'
 		is CaptureTreo -> bitVar.bit.digitChar
 		is ExpandTreo -> 'x'
 		is InvokeTreo -> 'i'
@@ -220,7 +221,7 @@ val Treo.exitCharSeq: Seq<Char>
 	get() =
 		Seq {
 			exitTrace?.let { treo ->
-				treo.exitCharFrom(this) then treo.exitCharSeq
+				treo.exitChar then treo.exitCharSeq
 			}
 		}
 

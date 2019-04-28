@@ -3,7 +3,6 @@ package leo32.treo
 import leo.base.Seq
 import leo.base.charString
 import leo.base.onlySeq
-import leo.base.then
 import leo.binary.Bit
 import leo.binary.bit0
 import leo.binary.digitChar
@@ -23,4 +22,4 @@ fun Var.set(bit: Bit) =
 
 val Var.charSeq: Seq<Char>
 	get() =
-		Seq { '_' then bit.digitChar.onlySeq }
+		bit.digitChar.onlySeq
