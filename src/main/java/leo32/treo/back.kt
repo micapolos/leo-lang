@@ -1,7 +1,7 @@
 package leo32.treo
 
 import leo.base.Seq
-import leo.base.orNullSeq
+import leo.base.orEmptyIfNullSeq
 import leo.base.then
 
 data class Back(
@@ -12,4 +12,4 @@ val back = null.back
 
 val Back.charSeq: Seq<Char>
 	get() =
-		Seq { '<' then nextOrNull.orNullSeq { charSeq } }
+		Seq { '<' then nextOrNull.orEmptyIfNullSeq { charSeq } }

@@ -142,7 +142,7 @@ val FieldReader.leoByteSeq
 val SymbolReader.leoByteSeq: Seq<Byte>
 	get() =
 		symbolReaderParentOrNull
-			.orNullSeq { leoByteSeq }
+			.orEmptyIfNullSeq { leoByteSeq }
 			.then { fieldReader.leoByteSeq }
 
 val SymbolReaderParent.leoByteSeq: Seq<Byte>
@@ -156,7 +156,7 @@ val SymbolReaderParent.leoByteSeq: Seq<Byte>
 val ByteReader.leoByteSeq
 	get() =
 		symbolReader.leoByteSeq.then {
-			symbolOrNull.orNullSeq { noTrailingZeroByteSeq }
+			symbolOrNull.orEmptyIfNullSeq { noTrailingZeroByteSeq }
 		}
 
 val LeoReader.byteSeq: Seq<Byte>

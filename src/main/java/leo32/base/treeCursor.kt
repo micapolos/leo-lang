@@ -2,7 +2,7 @@ package leo32.base
 
 import leo.base.Seq
 import leo.base.fold
-import leo.base.orNullSeq
+import leo.base.orEmptyIfNullSeq
 import leo.base.then
 import leo.binary.Bit
 import leo.binary.bit
@@ -73,4 +73,4 @@ val <T> TreeCursor<T>.nextLeafOrNull
 
 val <T> TreeCursor<T>.treeSeq: Seq<Tree<T>>
 	get() =
-		Seq { tree then nextLeafOrNull.orNullSeq { treeSeq } }
+		Seq { tree then nextLeafOrNull.orEmptyIfNullSeq { treeSeq } }
