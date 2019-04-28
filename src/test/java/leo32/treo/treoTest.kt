@@ -13,7 +13,7 @@ class TreoTest {
 		treo(unit).string.assertEqualTo("")
 		treo(variable(bit0), treo(unit)).string.assertEqualTo("0")
 		treo(variable(bit1), treo(unit)).string.assertEqualTo("1")
-		capture(variable(), treo(unit)).string.assertEqualTo("_")
+		capture(variable(), treo(unit)).string.assertEqualTo("_0")
 		treo0(treo1(treo(unit))).string.assertEqualTo("01")
 		capture(
 			variable(),
@@ -22,7 +22,7 @@ class TreoTest {
 				treo1(treo(unit)),
 				capture(variable(), treo(unit))))
 			.string
-			.assertEqualTo("_.0(1)_")
+			.assertEqualTo("_0.0(1)_0")
 		recurse(0).string.assertEqualTo("|")
 		recurse(3).string.assertEqualTo("<<<")
 	}
@@ -108,7 +108,7 @@ class TreoTest {
 		val variable3 = variable(bit0)
 		capture(variable1, capture(variable2, capture(variable3, treo(unit))))
 			.invoke("01")
-			.assertEqualTo("_")
+			.assertEqualTo("_0")
 		variable1.bit.assertEqualTo(bit0)
 		variable2.bit.assertEqualTo(bit1)
 		variable3.bit.assertEqualTo(bit0)
@@ -164,10 +164,8 @@ class TreoTest {
 		val variable = variable()
 		val captureForever = capture(variable, recurse(1))
 
-		captureForever.invoke("1").assertEqualTo("_<")
-		variable.bit.assertEqualTo(bit1)
-
-		captureForever.invoke("10").assertEqualTo("_<")
-		variable.bit.assertEqualTo(bit0)
+		captureForever.invoke("1").assertEqualTo("_1<")
+		captureForever.invoke("10").assertEqualTo("_0<")
+		captureForever.invoke("101").assertEqualTo("_1<")
 	}
 }

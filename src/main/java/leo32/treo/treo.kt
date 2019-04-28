@@ -173,7 +173,9 @@ val Treo.charSeq: Seq<Char>
 				is BitTreo -> bit.digitChar then treo.charSeq
 				is VariableTreo -> seqNodeOrNull(variable.charSeq, treo.charSeq)
 				is BranchTreo -> seqNode('?')
-				is CaptureTreo -> '_' then treo.charSeq
+				is CaptureTreo -> seqNodeOrNull(
+					"_${variable.bit.digitChar}".charSeq,
+					treo.charSeq)
 				is ExpandTreo -> seqNodeOrNull(seq('.'),
 					fn.charSeq,
 					seq('<'),
