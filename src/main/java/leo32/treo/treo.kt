@@ -165,12 +165,12 @@ fun ExpandTreo.resolve(): Treo {
 }
 
 fun CallTreo.resolve(): Treo {
-	val result = call.fn.invoke(call.param).let { result ->
+	val result = call.fn.treo.invoke(call.param.treo).let { result ->
 		result.rewind()
 		treo.withExitTrace(this).resolve().invoke(result)
 	}
-	call.fn.rewind()
-	call.param.rewind()
+	call.fn.treo.rewind()
+	call.param.treo.rewind()
 	return result
 }
 
@@ -194,9 +194,9 @@ val Treo.trailingCharSeq: Seq<Char>
 					seq('>'))
 				is CallTreo -> seqNodeOrNull(
 					seq('.'),
-					call.fn.trailingCharSeq,
+					call.fn.treo.trailingCharSeq,
 					seq('('),
-					call.param.trailingCharSeq,
+					call.param.treo.trailingCharSeq,
 					seq(')'),
 					treo.trailingCharSeq)
 				is BackTreo -> back.charSeq.seqNodeOrNull
