@@ -3,6 +3,7 @@ package leo32.treo
 import leo.base.*
 import leo.binary.Bit
 import leo.binary.digitBitOrNull
+import leo.binary.digitChar
 
 data class Executor(
 	var currentTreo: Treo)
@@ -21,4 +22,4 @@ fun Executor.plusBit(string: String) =
 
 val Executor.bitString
 	get() =
-		currentTreo.enteredCharSeq.charString
+		currentTreo.enteredBitSeq.map { digitChar }.charString

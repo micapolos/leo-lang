@@ -127,7 +127,7 @@ fun Treo.invoke(bit: Bit): Treo =
 
 fun Treo.invoke(string: String): String {
 	val result = fold(string.charSeq.map { digitBitOrNull!! }, Treo::invoke)
-	val resultString = result.charSeq.charString
+	val resultString = result.enteredBitSeq.map { digitChar }.charString
 	result.rewind()
 	return resultString
 }
@@ -156,6 +156,7 @@ fun Treo.resolve(): Treo =
 		is BackTreo -> invoke(back)
 	}
 
+// TODO: Resolve recursively until done
 fun ExpandTreo.resolve(): Treo {
 	val result = expand.macro.treo.invoke(expand.param.treo)
 	rewind()
@@ -175,7 +176,7 @@ fun CallTreo.resolve(): Treo {
 
 val Treo.charSeq: Seq<Char>
 	get() =
-		flatSeq(enteredCharSeq, seq('|'), trailingCharSeq)
+		flatSeq(enteredBitSeq.map { digitChar }, seq('|'), trailingCharSeq)
 
 val Treo.trailingCharSeq: Seq<Char>
 	get() =
@@ -190,28 +191,26 @@ val Treo.trailingCharSeq: Seq<Char>
 			is BackTreo -> back.charSeq
 		}
 
-val Treo.exitChar: Char
-	get() =
-		when (this) {
-			is LeafTreo -> '.'
-			is SelectTreo -> select.bit.digitChar
-			is VarTreo -> variable.bit.digitChar
-			is BranchTreo -> '?'
-			is CaptureTreo -> capture.variable.bit.digitChar
-			is ExpandTreo -> 'x'
-			is CallTreo -> 'i'
-			is BackTreo -> '<'
-		}
+fun Treo.exitBitFrom(treo: Treo): Bit =
+	when (this) {
+		is LeafTreo -> fail()
+		is SelectTreo -> select.bit
+		is VarTreo -> variable.bit
+		is BranchTreo -> branch.bit(treo)
+		is CaptureTreo -> capture.variable.bit
+		is ExpandTreo -> fail()
+		is CallTreo -> fail()
+		is BackTreo -> fail()
+	}
 
-val Treo.exitCharSeq: Seq<Char>
+val Treo.exitBitSeq: Seq<Bit>
 	get() =
 		Seq {
 			exitTrace?.let { treo ->
-				treo.exitChar then treo.exitCharSeq
+				treo.exitBitFrom(this) then treo.exitBitSeq
 			}
 		}
 
-// TODO: Implement without stack allocation.
-val Treo.enteredCharSeq: Seq<Char>
+val Treo.enteredBitSeq: Seq<Bit>
 	get() =
-		nullOf<Stack<Char>>().fold(exitCharSeq) { push(it) }.seq
+		nullOf<Stack<Bit>>().fold(exitBitSeq) { push(it) }.seq
