@@ -11,8 +11,8 @@ class TreoTest {
 	@Test
 	fun string() {
 		treo(unit).string.assertEqualTo("")
-		treo(variable(bit0), treo(unit)).string.assertEqualTo("0")
-		treo(variable(bit1), treo(unit)).string.assertEqualTo("1")
+		treo(variable(bit0), treo(unit)).string.assertEqualTo("_0")
+		treo(variable(bit1), treo(unit)).string.assertEqualTo("_1")
 		capture(variable(), treo(unit)).string.assertEqualTo("_0")
 		treo0(treo1(treo(unit))).string.assertEqualTo("01")
 		capture(
