@@ -25,8 +25,7 @@ class TreoTest {
 			.assertEqualTo("_.0(1)_")
 	}
 
-	private val negTreo
-		get() =
+	private val negTreo =
 			branch(
 				treo1(treo(unit)),
 				treo0(treo(unit)))
@@ -37,8 +36,7 @@ class TreoTest {
 		negTreo.invoke("1").assertEqualTo("0")
 	}
 
-	private val nandTreo
-		get() =
+	private val nandTreo =
 			branch(
 				branch(
 					treo1(treo(unit)),

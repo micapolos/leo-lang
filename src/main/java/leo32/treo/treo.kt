@@ -3,8 +3,7 @@ package leo32.treo
 import leo.base.*
 import leo.binary.*
 
-sealed class Treo(
-	var exitTrace: Treo? = null) {
+sealed class Treo {
 	override fun toString() = charSeq.charString
 }
 
@@ -60,13 +59,6 @@ fun capture(variable: Variable, treo: Treo) = CaptureTreo(variable, treo)
 fun expand(fn: Treo, arg: Treo) = ExpandTreo(fn, arg)
 fun invoke(fn: Treo, arg: Treo, cont: Treo) = InvokeTreo(fn, arg, cont)
 
-fun Treo.withExitTrace(treo: Treo): Treo =
-	failIfOr(exitTrace != null) {
-		apply {
-			exitTrace = treo
-		}
-	}
-
 fun Treo.enter(bit: Bit): Treo? =
 	when (this) {
 		is UnitTreo -> null
@@ -76,15 +68,7 @@ fun Treo.enter(bit: Bit): Treo? =
 		is CaptureTreo -> write(bit)
 		is ExpandTreo -> null
 		is InvokeTreo -> null
-	}?.withExitTrace(this)
-
-val Treo.exit: Treo?
-	get() =
-		run {
-			val treo = exitTrace
-			exitTrace = null
-			treo
-		}
+	}
 
 fun BitTreo.write(bit: Bit): Treo? =
 	notNullIf(this.bit == bit) { treo }
