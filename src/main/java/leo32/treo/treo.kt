@@ -58,7 +58,7 @@ data class BackTreo(
 
 fun treo(unit: Unit) = UnitTreo(unit)
 fun treo(branch: Branch) = BranchTreo(branch)
-fun treo(at0: Treo, at1: Treo) = treo(branch(at0, at1))
+fun treo01(at0: Treo, at1: Treo) = treo(branch(at0, at1))
 fun treo(select: Select) = SelectTreo(select)
 fun treo(bit: Bit, treo: Treo) = treo(bit select treo)
 fun treo0(treo: Treo) = treo(bit0, treo)
