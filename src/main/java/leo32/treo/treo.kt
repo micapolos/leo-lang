@@ -11,8 +11,8 @@ sealed class Treo(
 	override fun toString() = charSeq.charString
 }
 
-data class UnitTreo(
-	val unit: Unit) : Treo() {
+data class LeafTreo(
+	val leaf: Leaf) : Treo() {
 	override fun toString() = super.toString()
 }
 
@@ -56,7 +56,7 @@ data class BackTreo(
 	override fun toString() = super.toString()
 }
 
-fun treo(unit: Unit) = UnitTreo(unit)
+fun treo(leaf: Leaf) = LeafTreo(leaf)
 fun treo(branch: Branch) = BranchTreo(branch)
 fun treo01(at0: Treo, at1: Treo) = treo(branch(at0, at1))
 fun treo(select: Select) = SelectTreo(select)
@@ -77,7 +77,7 @@ fun Treo.withExitTrace(treo: Treo): Treo {
 
 fun Treo.enter(bit: Bit): Treo? =
 	when (this) {
-		is UnitTreo -> null
+		is LeafTreo -> null
 		is SelectTreo -> write(bit)
 		is VariableTreo -> write(bit)
 		is BranchTreo -> write(bit)
@@ -137,7 +137,7 @@ fun Treo.invoke(string: String): String {
 
 tailrec fun Treo.invoke(treo: Treo): Treo =
 	when (treo) {
-		is UnitTreo -> this
+		is LeafTreo -> this
 		is SelectTreo -> invoke(treo.select.bit).invoke(treo.select.treo)
 		is VariableTreo -> invoke(treo.bit).invoke(treo.treo)
 		is BranchTreo -> null!!
@@ -149,7 +149,7 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 
 fun Treo.resolve(): Treo =
 	when (this) {
-		is UnitTreo -> this
+		is LeafTreo -> this
 		is SelectTreo -> this
 		is VariableTreo -> this
 		is BranchTreo -> this
@@ -180,7 +180,7 @@ val Treo.charSeq: Seq<Char>
 	get() =
 		Seq {
 			when (this) {
-				is UnitTreo -> null
+				is LeafTreo -> null
 				is SelectTreo -> select.charSeq.seqNodeOrNull
 				is VariableTreo -> seqNodeOrNull(variable.charSeq, treo.charSeq)
 				is BranchTreo -> seqNode('?')

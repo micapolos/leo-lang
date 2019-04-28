@@ -9,7 +9,7 @@ import kotlin.test.Test
 class VariableTest {
 	@Test
 	fun string() {
-		variable().apply { set(bit0) }.string.assertEqualTo("0")
-		variable().apply { set(bit1) }.string.assertEqualTo("1")
+		variable().apply { set(bit0) }.string.assertEqualTo("_0")
+		variable().apply { set(bit1) }.string.assertEqualTo("_1")
 	}
 }
