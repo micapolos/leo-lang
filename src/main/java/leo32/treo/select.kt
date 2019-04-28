@@ -17,4 +17,4 @@ fun Select.at(bit: Bit): Treo? =
 
 val Select.charSeq: Seq<Char>
 	get() =
-		flatSeq(bit.charSeq, treo.charSeq)
+		flatSeq(bit.charSeq, treo.trailingCharSeq)
