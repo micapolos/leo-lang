@@ -21,8 +21,8 @@ data class SelectTreo(
 	override fun toString() = super.toString()
 }
 
-data class VariableTreo(
-	val variable: Variable,
+data class VarTreo(
+	val `var`: Var,
 	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
@@ -33,7 +33,7 @@ data class BranchTreo(
 }
 
 data class CaptureTreo(
-	val variable: Variable,
+	val `var`: Var,
 	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
@@ -63,8 +63,8 @@ fun treo(select: Select) = SelectTreo(select)
 fun treo(bit: Bit, treo: Treo) = treo(bit select treo)
 fun treo0(treo: Treo) = treo(bit0, treo)
 fun treo1(treo: Treo) = treo(bit1, treo)
-fun treo(variable: Variable, treo: Treo) = VariableTreo(variable, treo)
-fun capture(variable: Variable, treo: Treo) = CaptureTreo(variable, treo)
+fun treo(`var`: Var, treo: Treo) = VarTreo(`var`, treo)
+fun capture(`var`: Var, treo: Treo) = CaptureTreo(`var`, treo)
 fun expand(fn: Treo, arg: Treo) = ExpandTreo(fn, arg)
 fun invoke(fn: Treo, arg: Treo, treo: Treo) = InvokeTreo(fn, arg, treo)
 fun treo(back: Back) = BackTreo(back)
@@ -79,7 +79,7 @@ fun Treo.enter(bit: Bit): Treo? =
 	when (this) {
 		is LeafTreo -> null
 		is SelectTreo -> write(bit)
-		is VariableTreo -> write(bit)
+		is VarTreo -> write(bit)
 		is BranchTreo -> write(bit)
 		is CaptureTreo -> write(bit)
 		is ExpandTreo -> null
@@ -113,18 +113,18 @@ val Treo.cut: Treo
 fun SelectTreo.write(bit: Bit): Treo? =
 	select.at(bit)
 
-fun VariableTreo.write(bit: Bit): Treo? =
-	apply { variable.set(bit) }
+fun VarTreo.write(bit: Bit): Treo? =
+	apply { `var`.set(bit) }
 
-val VariableTreo.bit: Bit
+val VarTreo.bit: Bit
 	get() =
-		variable.bit
+		`var`.bit
 
 fun BranchTreo.write(bit: Bit): Treo =
 	branch.at(bit)
 
 fun CaptureTreo.write(bit: Bit): Treo =
-	apply { variable.set(bit) }.treo
+	apply { `var`.set(bit) }.treo
 
 fun Treo.invoke(bit: Bit): Treo =
 	(enter(bit) ?: error("$this.enter($bit)")).resolve()
@@ -139,7 +139,7 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 	when (treo) {
 		is LeafTreo -> this
 		is SelectTreo -> invoke(treo.select.bit).invoke(treo.select.treo)
-		is VariableTreo -> invoke(treo.bit).invoke(treo.treo)
+		is VarTreo -> invoke(treo.bit).invoke(treo.treo)
 		is BranchTreo -> null!!
 		is CaptureTreo -> null!!
 		is ExpandTreo -> null!!
@@ -151,7 +151,7 @@ fun Treo.resolve(): Treo =
 	when (this) {
 		is LeafTreo -> this
 		is SelectTreo -> this
-		is VariableTreo -> this
+		is VarTreo -> this
 		is BranchTreo -> this
 		is CaptureTreo -> this
 		is ExpandTreo -> resolve()
@@ -182,9 +182,9 @@ val Treo.charSeq: Seq<Char>
 			when (this) {
 				is LeafTreo -> null
 				is SelectTreo -> select.charSeq.seqNodeOrNull
-				is VariableTreo -> seqNodeOrNull(variable.charSeq, treo.charSeq)
+				is VarTreo -> seqNodeOrNull(`var`.charSeq, treo.charSeq)
 				is BranchTreo -> seqNode('?')
-				is CaptureTreo -> seqNodeOrNull(variable.charSeq, treo.charSeq)
+				is CaptureTreo -> seqNodeOrNull(`var`.charSeq, treo.charSeq)
 				is ExpandTreo -> seqNodeOrNull(seq('.'),
 					fn.charSeq,
 					seq('<'),

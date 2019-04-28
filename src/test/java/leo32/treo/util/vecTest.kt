@@ -1,31 +1,31 @@
 package leo32.treo.util
 
 import leo.base.assertEqualTo
-import leo32.treo.variable
+import leo32.treo.newVar
 import kotlin.test.Test
 
 class VecTest {
 	@Test
 	fun test32() {
-		val vec32 = vec32 { variable() }
+		val vec32 = vec32 { newVar() }
 
-		vec32.int.assertEqualTo(0)
-		vec32.int = 128
-		vec32.int.assertEqualTo(128)
+		vec32.varInt.assertEqualTo(0)
+		vec32.varInt = 128
+		vec32.varInt.assertEqualTo(128)
 
-		vec32.float = 3.14f
-		vec32.float.assertEqualTo(3.14f)
+		vec32.varFloat = 3.14f
+		vec32.varFloat.assertEqualTo(3.14f)
 	}
 
 	@Test
 	fun test64() {
-		val vec64 = vec64 { variable() }
+		val vec64 = vec64 { newVar() }
 
-		vec64.long.assertEqualTo(0)
-		vec64.long = 128
-		vec64.long.assertEqualTo(128)
+		vec64.varLong.assertEqualTo(0)
+		vec64.varLong = 128
+		vec64.varLong.assertEqualTo(128)
 
-		vec64.double = 3.14
-		vec64.double.assertEqualTo(3.14)
+		vec64.varDouble = 3.14
+		vec64.varDouble.assertEqualTo(3.14)
 	}
 }

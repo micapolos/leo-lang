@@ -1,8 +1,9 @@
 package leo32.treo.util
 
+import leo.binary.Bit
 import leo.binary.bit0
 import leo.binary.int
-import leo32.treo.Variable
+import leo32.treo.Var
 
 data class Vec2<T>(val hi: T, val lo: T)
 data class Vec4<T>(val hi: Vec2<T>, val lo: Vec2<T>)
@@ -18,50 +19,59 @@ fun <T> vec16(fn: () -> T) = Vec16(vec8(fn), vec8(fn))
 fun <T> vec32(fn: () -> T) = Vec32(vec16(fn), vec16(fn))
 fun <T> vec64(fn: () -> T) = Vec64(vec32(fn), vec32(fn))
 
-var Vec2<Variable>.int
+val Vec2<Bit>.bitInt get() = hi.int.shl(1).or(lo.int)
+val Vec4<Bit>.bitInt get() = hi.bitInt.shl(2).or(lo.bitInt)
+val Vec8<Bit>.bitInt get() = hi.bitInt.shl(4).or(lo.bitInt)
+val Vec16<Bit>.bitInt get() = hi.bitInt.shl(8).or(lo.bitInt)
+val Vec32<Bit>.bitInt get() = hi.bitInt.shl(16).or(lo.bitInt)
+val Vec64<Bit>.bitLong get() = hi.bitInt.toLong().shl(32).or(lo.bitInt.toLong().and(0xFFFFFFFF))
+val Vec32<Bit>.bitFloat get() = Float.fromBits(bitInt)
+val Vec64<Bit>.bitDouble get() = Double.fromBits(bitLong)
+
+var Vec2<Var>.varInt
 	get() = hi.bit.int.shl(1).or(lo.bit.int)
 	set(int) {
 		hi.bit = int.shr(1).bit0; lo.bit = int.bit0
 	}
 
-var Vec4<Variable>.int
-	get() = hi.int.shl(2).or(lo.int)
+var Vec4<Var>.varInt
+	get() = hi.varInt.shl(2).or(lo.varInt)
 	set(int) {
-		hi.int = int.shr(2); lo.int = int
+		hi.varInt = int.shr(2); lo.varInt = int
 	}
 
-var Vec8<Variable>.int
-	get() = hi.int.shl(4).or(lo.int)
+var Vec8<Var>.varInt
+	get() = hi.varInt.shl(4).or(lo.varInt)
 	set(int) {
-		hi.int = int.shr(4); lo.int = int
+		hi.varInt = int.shr(4); lo.varInt = int
 	}
 
-var Vec16<Variable>.int
-	get() = hi.int.shl(8).or(lo.int)
+var Vec16<Var>.varInt
+	get() = hi.varInt.shl(8).or(lo.varInt)
 	set(int) {
-		hi.int = int.shr(8); lo.int = int
+		hi.varInt = int.shr(8); lo.varInt = int
 	}
 
-var Vec32<Variable>.int
-	get() = hi.int.shl(16).or(lo.int)
+var Vec32<Var>.varInt
+	get() = hi.varInt.shl(16).or(lo.varInt)
 	set(int) {
-		hi.int = int.shr(16); lo.int = int
+		hi.varInt = int.shr(16); lo.varInt = int
 	}
 
-var Vec64<Variable>.long: Long
-	get() = hi.int.toLong().shl(32).or(lo.int.toLong().and(0xFFFFFFFF))
+var Vec64<Var>.varLong: Long
+	get() = hi.varInt.toLong().shl(32).or(lo.varInt.toLong().and(0xFFFFFFFF))
 	set(long) {
-		hi.int = long.ushr(32).toInt(); lo.int = long.toInt()
+		hi.varInt = long.ushr(32).toInt(); lo.varInt = long.toInt()
 	}
 
-var Vec32<Variable>.float
-	get() = Float.fromBits(int)
+var Vec32<Var>.varFloat
+	get() = Float.fromBits(varInt)
 	set(float) {
-		int = float.toRawBits()
+		varInt = float.toRawBits()
 	}
 
-var Vec64<Variable>.double
-	get() = Double.fromBits(long)
+var Vec64<Var>.varDouble
+	get() = Double.fromBits(varLong)
 	set(double) {
-		long = double.toRawBits()
+		varLong = double.toRawBits()
 	}
