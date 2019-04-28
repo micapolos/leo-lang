@@ -42,9 +42,8 @@ data class ExpandTreo(
 	override fun toString() = super.toString()
 }
 
-data class InvokeTreo(
-	val fn: Treo,
-	val arg: Treo,
+data class CallTreo(
+	val call: Call,
 	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
@@ -64,7 +63,7 @@ fun treo1(treo: Treo) = treo(bit1, treo)
 fun treo(bitVar: Var, treo: Treo) = VarTreo(bitVar, treo)
 fun capture(bitVar: Var, treo: Treo) = CaptureTreo(bitVar, treo)
 fun expand(fn: Treo, arg: Treo) = ExpandTreo(fn, arg)
-fun invoke(fn: Treo, arg: Treo, treo: Treo) = InvokeTreo(fn, arg, treo)
+fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
 
 fun Treo.withExitTrace(treo: Treo): Treo {
@@ -81,7 +80,7 @@ fun Treo.enter(bit: Bit): Treo? =
 		is BranchTreo -> write(bit)
 		is CaptureTreo -> write(bit)
 		is ExpandTreo -> null
-		is InvokeTreo -> null
+		is CallTreo -> null
 		is BackTreo -> null
 	}?.withExitTrace(this)
 
@@ -142,7 +141,7 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 		is BranchTreo -> null!!
 		is CaptureTreo -> null!!
 		is ExpandTreo -> null!!
-		is InvokeTreo -> null!!
+		is CallTreo -> null!!
 		is BackTreo -> null!!
 	}
 
@@ -154,7 +153,7 @@ fun Treo.resolve(): Treo =
 		is BranchTreo -> this
 		is CaptureTreo -> this
 		is ExpandTreo -> resolve()
-		is InvokeTreo -> resolve()
+		is CallTreo -> resolve()
 		is BackTreo -> invoke(back)
 	}
 
@@ -165,13 +164,13 @@ fun ExpandTreo.resolve(): Treo {
 	return result
 }
 
-fun InvokeTreo.resolve(): Treo {
-	val result = fn.invoke(arg).let { result ->
+fun CallTreo.resolve(): Treo {
+	val result = call.fn.invoke(call.param).let { result ->
 		result.rewind()
 		treo.withExitTrace(this).resolve().invoke(result)
 	}
-	fn.rewind()
-	arg.rewind()
+	call.fn.rewind()
+	call.param.rewind()
 	return result
 }
 
@@ -193,11 +192,11 @@ val Treo.trailingCharSeq: Seq<Char>
 					seq('<'),
 					arg.trailingCharSeq,
 					seq('>'))
-				is InvokeTreo -> seqNodeOrNull(
+				is CallTreo -> seqNodeOrNull(
 					seq('.'),
-					fn.trailingCharSeq,
+					call.fn.trailingCharSeq,
 					seq('('),
-					arg.trailingCharSeq,
+					call.param.trailingCharSeq,
 					seq(')'),
 					treo.trailingCharSeq)
 				is BackTreo -> back.charSeq.seqNodeOrNull
@@ -213,7 +212,7 @@ val Treo.exitChar: Char
 			is BranchTreo -> '?'
 			is CaptureTreo -> bitVar.bit.digitChar
 			is ExpandTreo -> 'x'
-			is InvokeTreo -> 'i'
+			is CallTreo -> 'i'
 			is BackTreo -> '<'
 		}
 

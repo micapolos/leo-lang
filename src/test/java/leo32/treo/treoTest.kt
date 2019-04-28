@@ -16,9 +16,8 @@ class TreoTest {
 		treo0(treo1(treo(leaf))).string.assertEqualTo("|01")
 		capture(
 			newVar(),
-			invoke(
-				treo0(treo(leaf)),
-				treo1(treo(leaf)),
+			treo(
+				call(treo0(treo(leaf)), treo1(treo(leaf))),
 				capture(newVar(), treo(leaf))))
 			.string
 			.assertEqualTo("|_.0(1)_")
@@ -93,10 +92,10 @@ class TreoTest {
 
 	@Test
 	fun invokeResolve() {
-		invoke(treo0(treo0(treo(leaf))), treo(leaf), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		invoke(treo0(treo1(treo(leaf))), treo(leaf), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		invoke(treo1(treo0(treo(leaf))), treo(leaf), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		invoke(treo1(treo1(treo(leaf))), treo(leaf), nandTreo).resolve().cut.string.assertEqualTo("|0")
+		treo(call(treo0(treo0(treo(leaf))), treo(leaf)), nandTreo).resolve().cut.string.assertEqualTo("|1")
+		treo(call(treo0(treo1(treo(leaf))), treo(leaf)), nandTreo).resolve().cut.string.assertEqualTo("|1")
+		treo(call(treo1(treo0(treo(leaf))), treo(leaf)), nandTreo).resolve().cut.string.assertEqualTo("|1")
+		treo(call(treo1(treo1(treo(leaf))), treo(leaf)), nandTreo).resolve().cut.string.assertEqualTo("|0")
 	}
 
 	@Test
@@ -129,11 +128,11 @@ class TreoTest {
 	fun captureInvoke() {
 		val variable = newVar()
 
-		capture(variable, invoke(negTreo, treo(variable, treo(leaf)), selfTreo))
+		capture(variable, treo(call(negTreo, treo(variable, treo(leaf))), selfTreo))
 			.invoke("0")
 			.assertEqualTo("0i?|1")
 
-		capture(variable, invoke(negTreo, treo(variable, treo(leaf)), selfTreo))
+		capture(variable, treo(call(negTreo, treo(variable, treo(leaf))), selfTreo))
 			.invoke("1")
 			.assertEqualTo("1i?|0")
 	}
@@ -145,9 +144,10 @@ class TreoTest {
 		val neg =
 			capture(
 				lhsVar,
-				invoke(
-					selfTreo,
-					treo(lhsVar, treo(leaf)),
+				treo(
+					call(
+						selfTreo,
+						treo(lhsVar, treo(leaf))),
 					capture(
 						rhsVar,
 						expand(nandTreo, treo(lhsVar, treo(rhsVar, treo(leaf)))))))
@@ -172,9 +172,10 @@ class TreoTest {
 			resultVar,
 			capture(
 				inputVar,
-				invoke(
-					negTreo,
-					treo(inputVar, treo(leaf)),
+				treo(
+					call(
+						negTreo,
+						treo(inputVar, treo(leaf))),
 					treo(back.back.back))))
 		negateForever.string.assertEqualTo("|__.?(0)<<<")
 		negateForever.invoke("01").assertEqualTo("0|_.?(1)<<<")
