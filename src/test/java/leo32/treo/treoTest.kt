@@ -32,9 +32,9 @@ class TreoTest {
 	}
 
 	private val negTreo =
-		treo01(
-			treo1(treo(leaf)),
-			treo0(treo(leaf)))
+		treo(
+			at0(treo1(treo(leaf))),
+			at1(treo0(treo(leaf))))
 
 	@Test
 	fun neg() {
@@ -43,13 +43,15 @@ class TreoTest {
 	}
 
 	private val nandTreo =
-		treo01(
-			treo01(
-				treo1(treo(leaf)),
-				treo1(treo(leaf))),
-			treo01(
-				treo1(treo(leaf)),
-				treo0(treo(leaf))))
+		treo(
+			at0(
+				treo(
+					at0(treo1(treo(leaf))),
+					at1(treo1(treo(leaf))))),
+			at1(
+				treo(
+					at0(treo1(treo(leaf))),
+					at1(treo0(treo(leaf))))))
 
 	@Test
 	fun nand() {
@@ -60,9 +62,9 @@ class TreoTest {
 	}
 
 	private val selfTreo =
-		treo01(
-			treo0(treo(leaf)),
-			treo1(treo(leaf)))
+		treo(
+			at0(treo0(treo(leaf))),
+			at1(treo1(treo(leaf))))
 
 	@Test
 	fun self() {
@@ -71,9 +73,9 @@ class TreoTest {
 	}
 
 	private val dupTreo =
-		treo01(
-			treo0(treo0(treo(leaf))),
-			treo1(treo1(treo(leaf))))
+		treo(
+			at0(treo0(treo0(treo(leaf)))),
+			at1(treo1(treo1(treo(leaf)))))
 
 	@Test
 	fun dup() {

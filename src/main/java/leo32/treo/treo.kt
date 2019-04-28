@@ -20,7 +20,7 @@ data class SelectTreo(
 }
 
 data class VarTreo(
-	val bitVar: Var,
+	val variable: Var,
 	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
@@ -54,7 +54,7 @@ data class BackTreo(
 
 fun treo(leaf: Leaf) = LeafTreo(leaf)
 fun treo(branch: Branch) = BranchTreo(branch)
-fun treo01(at0: Treo, at1: Treo) = treo(branch(at0, at1))
+fun treo(at0: At0, at1: At1) = treo(branch(at0, at1))
 fun treo(select: Select) = SelectTreo(select)
 fun treo(bit: Bit, treo: Treo) = treo(bit select treo)
 fun treo0(treo: Treo) = treo(bit0, treo)
@@ -110,11 +110,11 @@ fun SelectTreo.write(bit: Bit): Treo? =
 	select.at(bit)
 
 fun VarTreo.write(bit: Bit): Treo? =
-	apply { bitVar.bit = bit }
+	apply { variable.bit = bit }
 
 val VarTreo.bit: Bit
 	get() =
-		bitVar.bit
+		variable.bit
 
 fun BranchTreo.write(bit: Bit): Treo =
 	branch.at(bit)
@@ -183,7 +183,7 @@ val Treo.trailingCharSeq: Seq<Char>
 			when (this) {
 				is LeafTreo -> null
 				is SelectTreo -> select.charSeq.seqNodeOrNull
-				is VarTreo -> seqNodeOrNull(bitVar.charSeq, treo.trailingCharSeq)
+				is VarTreo -> seqNodeOrNull(variable.charSeq, treo.trailingCharSeq)
 				is BranchTreo -> seqNode('?')
 				is CaptureTreo -> seqNodeOrNull(seq('_'), treo.trailingCharSeq)
 				is ExpandTreo -> seqNodeOrNull(seq('.'),
@@ -207,7 +207,7 @@ val Treo.exitChar: Char
 		when (this) {
 			is LeafTreo -> '.'
 			is SelectTreo -> select.bit.digitChar
-			is VarTreo -> bitVar.bit.digitChar
+			is VarTreo -> variable.bit.digitChar
 			is BranchTreo -> '?'
 			is CaptureTreo -> capture.variable.bit.digitChar
 			is ExpandTreo -> 'x'
