@@ -83,6 +83,19 @@ class TreoTest {
 	}
 
 	@Test
+	fun capture() {
+		val variable1 = variable(bit1)
+		val variable2 = variable(bit0)
+		val variable3 = variable(bit0)
+		capture(variable1, capture(variable2, capture(variable3, treo(unit))))
+			.invoke("01")
+			.assertEqualTo("_")
+		variable1.bit.assertEqualTo(bit0)
+		variable2.bit.assertEqualTo(bit1)
+		variable3.bit.assertEqualTo(bit0)
+	}
+
+	@Test
 	fun negTreo() {
 		val lhsVar = variable()
 		val rhsVar = variable()
