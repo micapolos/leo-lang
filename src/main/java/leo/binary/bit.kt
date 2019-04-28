@@ -41,9 +41,7 @@ val Boolean.bit
 	get() =
 		if (this) one.bit else zero.bit
 
-val Bit.int
-	get() =
-		match({ int }, { int })
+val Bit.int get() = if (isZero) 0 else 1
 
 val Bit.digitChar
 	get() =
