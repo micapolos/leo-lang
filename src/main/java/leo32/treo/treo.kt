@@ -64,7 +64,7 @@ fun treo(variable: Variable, treo: Treo) = VariableTreo(variable, treo)
 fun capture(variable: Variable, treo: Treo) = CaptureTreo(variable, treo)
 fun expand(fn: Treo, arg: Treo) = ExpandTreo(fn, arg)
 fun invoke(fn: Treo, arg: Treo, cont: Treo) = InvokeTreo(fn, arg, cont)
-fun recurse(depth: Int) = RecurseTreo(depth)
+fun recurse(depth: Int) = failIfOr(depth < 0) { RecurseTreo(depth) }
 
 fun Treo.withExitTrace(treo: Treo): Treo {
 	if (exitTrace != null) error("already traced: $this")
@@ -186,8 +186,6 @@ val Treo.charSeq: Seq<Char>
 					arg.charSeq,
 					seq(')'),
 					cont.charSeq)
-				is RecurseTreo ->
-					if (depth == 0) seqNode('|')
-					else repeatSeqNodeOrNull('<', depth)
+				is RecurseTreo -> repeatSeqNodeOrNull('<', depth)
 			}
 		}

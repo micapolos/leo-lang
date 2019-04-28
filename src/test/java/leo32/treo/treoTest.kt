@@ -23,7 +23,6 @@ class TreoTest {
 				capture(variable(), treo(unit))))
 			.string
 			.assertEqualTo("_0.0(1)_0")
-		recurse(0).string.assertEqualTo("|")
 		recurse(3).string.assertEqualTo("<<<")
 	}
 
@@ -158,7 +157,7 @@ class TreoTest {
 	}
 
 	@Test
-	fun recursion() {
+	fun captureForever() {
 		val variable = variable()
 		val captureForever = capture(variable, recurse(1))
 		captureForever.invoke("1").assertEqualTo("_1<")
