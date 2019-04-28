@@ -214,3 +214,7 @@ val Treo.exitBitSeq: Seq<Bit>
 val Treo.enteredBitSeq: Seq<Bit>
 	get() =
 		nullOf<Stack<Bit>>().fold(exitBitSeq) { push(it) }.seq
+
+val Treo.bitString: String
+	get() =
+		enteredBitSeq.map { digitChar }.charString
