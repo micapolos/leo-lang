@@ -159,11 +159,8 @@ class TreoTest {
 
 	@Test
 	fun recursion() {
-		recurse(0).resolve().cut.assertEqualTo(recurse(0))
-
 		val variable = variable()
 		val captureForever = capture(variable, recurse(1))
-
 		captureForever.invoke("1").assertEqualTo("_1<")
 		captureForever.invoke("10").assertEqualTo("_0<")
 		captureForever.invoke("101").assertEqualTo("_1<")
