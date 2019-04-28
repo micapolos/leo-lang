@@ -167,11 +167,19 @@ class TreoTest {
 
 	@Test
 	fun negateForever() {
-		val variable = variable()
-		val negateForever = capture(variable, invoke(negTreo, treo(variable, treo(unit)), treo(back.back)))
-		negateForever.string.assertEqualTo("_0.?(_0)<<")
-		negateForever.invoke("1").assertEqualTo("_1<")
-		negateForever.invoke("10").assertEqualTo("_0<")
-		negateForever.invoke("101").assertEqualTo("_1<")
+		val resultVar = variable()
+		val inputVar = variable()
+		val negateForever = capture(
+			resultVar,
+			capture(
+				inputVar,
+				invoke(
+					negTreo,
+					treo(inputVar, treo(unit)),
+					treo(back.back.back))))
+		negateForever.string.assertEqualTo("_0_0.?(_0)<<<")
+		negateForever.invoke("01").assertEqualTo("_1.?(_1)<<<")
+		negateForever.invoke("010").assertEqualTo("_0.?(_0)<<<")
+		negateForever.invoke("0101").assertEqualTo("_1.?(_1)<<<")
 	}
 }

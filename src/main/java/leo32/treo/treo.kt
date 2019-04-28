@@ -168,7 +168,8 @@ fun ExpandTreo.resolve(): Treo {
 
 fun InvokeTreo.resolve(): Treo {
 	val result = fn.invoke(arg).let { result ->
-		treo.invoke(result)
+		result.rewind()
+		treo.withExitTrace(this).resolve().invoke(result)
 	}
 	fn.rewind()
 	arg.rewind()
