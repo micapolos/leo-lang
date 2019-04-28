@@ -1,6 +1,7 @@
 package leo32.treo
 
 import leo.base.assertEqualTo
+import leo.binary.bit0
 import kotlin.test.Test
 
 class ExecutorTest {
@@ -8,7 +9,7 @@ class ExecutorTest {
 	fun negation() {
 		val resultVar = newVar()
 		val inputVar = newVar()
-		val negateMachine = treo(
+		val negatorTreo = treo(
 			capture(resultVar),
 			treo(
 				capture(inputVar),
@@ -22,12 +23,9 @@ class ExecutorTest {
 									at0(treo(leaf)))))),
 						param(treo(inputVar, treo(leaf)))),
 					treo(back.back.back))))
+			.enter(bit0)!!
 
-		val executor = executor(negateMachine)
-		executor.bitString.assertEqualTo("")
-
-		// Initialization
-		executor.plusBit("0")
+		val executor = executor(negatorTreo)
 		executor.bitString.assertEqualTo("0")
 
 		executor.plusBit("1")
