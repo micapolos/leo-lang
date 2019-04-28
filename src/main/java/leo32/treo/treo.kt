@@ -1,7 +1,10 @@
 package leo32.treo
 
 import leo.base.*
-import leo.binary.*
+import leo.binary.Bit
+import leo.binary.bit0
+import leo.binary.bit1
+import leo.binary.digitBitOrNull
 
 sealed class Treo(
 	var exitTrace: Treo? = null) {
@@ -13,9 +16,8 @@ data class UnitTreo(
 	override fun toString() = super.toString()
 }
 
-data class BitTreo(
-	val bit: Bit,
-	val treo: Treo) : Treo() {
+data class SelectTreo(
+	val select: Select) : Treo() {
 	override fun toString() = super.toString()
 }
 
@@ -57,7 +59,8 @@ data class BackTreo(
 fun treo(unit: Unit) = UnitTreo(unit)
 fun treo(branch: Branch) = BranchTreo(branch)
 fun treo(at0: Treo, at1: Treo) = treo(branch(at0, at1))
-fun treo(bit: Bit, treo: Treo) = BitTreo(bit, treo)
+fun treo(select: Select) = SelectTreo(select)
+fun treo(bit: Bit, treo: Treo) = treo(bit select treo)
 fun treo0(treo: Treo) = treo(bit0, treo)
 fun treo1(treo: Treo) = treo(bit1, treo)
 fun treo(variable: Variable, treo: Treo) = VariableTreo(variable, treo)
@@ -75,7 +78,7 @@ fun Treo.withExitTrace(treo: Treo): Treo {
 fun Treo.enter(bit: Bit): Treo? =
 	when (this) {
 		is UnitTreo -> null
-		is BitTreo -> write(bit)
+		is SelectTreo -> write(bit)
 		is VariableTreo -> write(bit)
 		is BranchTreo -> write(bit)
 		is CaptureTreo -> write(bit)
@@ -107,8 +110,8 @@ val Treo.cut: Treo
 	get() =
 		apply { rewind() }
 
-fun BitTreo.write(bit: Bit): Treo? =
-	notNullIf(this.bit == bit) { treo }
+fun SelectTreo.write(bit: Bit): Treo? =
+	select.at(bit)
 
 fun VariableTreo.write(bit: Bit): Treo? =
 	apply { variable.set(bit) }
@@ -135,7 +138,7 @@ fun Treo.invoke(string: String): String {
 tailrec fun Treo.invoke(treo: Treo): Treo =
 	when (treo) {
 		is UnitTreo -> this
-		is BitTreo -> invoke(treo.bit).invoke(treo.treo)
+		is SelectTreo -> invoke(treo.select.bit).invoke(treo.select.treo)
 		is VariableTreo -> invoke(treo.bit).invoke(treo.treo)
 		is BranchTreo -> null!!
 		is CaptureTreo -> null!!
@@ -147,7 +150,7 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 fun Treo.resolve(): Treo =
 	when (this) {
 		is UnitTreo -> this
-		is BitTreo -> this
+		is SelectTreo -> this
 		is VariableTreo -> this
 		is BranchTreo -> this
 		is CaptureTreo -> this
@@ -177,7 +180,7 @@ val Treo.charSeq: Seq<Char>
 		Seq {
 			when (this) {
 				is UnitTreo -> null
-				is BitTreo -> bit.digitChar then treo.charSeq
+				is SelectTreo -> select.charSeq.seqNodeOrNull
 				is VariableTreo -> seqNodeOrNull(variable.charSeq, treo.charSeq)
 				is BranchTreo -> seqNode('?')
 				is CaptureTreo -> seqNodeOrNull(variable.charSeq, treo.charSeq)
