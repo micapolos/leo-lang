@@ -6,12 +6,14 @@ import leo.base.fold
 import leo.base.map
 import leo.binary.Bit
 import leo.binary.digitBitOrNull
+import leo32.c.Mem
 
 data class Executor(
+	val mem: Mem,
 	var currentTreo: Treo)
 
-fun executor(treo: Treo) =
-	Executor(treo)
+fun executor(mem: Mem, treo: Treo) =
+	Executor(mem, treo)
 
 fun Executor.plus(bit: Bit) =
 	apply { currentTreo = currentTreo.invoke(bit) }
