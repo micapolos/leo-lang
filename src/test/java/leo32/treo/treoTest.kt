@@ -2,6 +2,8 @@ package leo32.treo
 
 import leo.base.assertEqualTo
 import leo.base.string
+import leo.base.throwableOrNull
+import leo.base.tryRun
 import leo.binary.bit0
 import leo.binary.bit1
 import kotlin.test.Test
@@ -149,6 +151,25 @@ class TreoTest {
 		captureForever.invoke("1").assertEqualTo("")
 		captureForever.invoke("10").assertEqualTo("")
 		captureForever.invoke("101").assertEqualTo("")
+	}
+
+	@Test
+	fun resolve() {
+		treo(leaf).resolve().assertEqualTo(treo(leaf))
+		treo(
+			call(fn(treo(leaf)), param(treo(leaf))),
+			treo(leaf)).resolve().assertEqualTo(treo(leaf))
+		treo(
+			call(fn(treo(leaf)), param(treo(leaf))),
+			treo(
+				call(fn(treo(leaf)), param(treo(leaf))),
+				treo(leaf))).resolve().assertEqualTo(treo(leaf))
+		treo(
+			call(fn(treo(leaf)), param(treo(leaf))),
+			treo(back))
+			.tryRun { resolve() }
+			.throwableOrNull::class
+			.assertEqualTo(StackOverflowError::class)
 	}
 
 	@Test

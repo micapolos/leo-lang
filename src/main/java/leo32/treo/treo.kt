@@ -117,11 +117,17 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 		is BackTreo -> null!!
 	}
 
-fun Treo.resolve(): Treo =
+tailrec fun Treo.resolve(): Treo {
+	val resolvedOnce = resolveOnce()
+	return if (resolvedOnce == null) this
+	else resolvedOnce.resolve()
+}
+
+fun Treo.resolveOnce(): Treo? =
 	when (this) {
-		is LeafTreo -> this
-		is SelectTreo -> this
-		is BranchTreo -> this
+		is LeafTreo -> null
+		is SelectTreo -> null
+		is BranchTreo -> null
 		is ExpandTreo -> resolve()
 		is CallTreo -> resolve()
 		is BackTreo -> invoke(back)
