@@ -24,12 +24,6 @@ data class BranchTreo(
 	override fun toString() = super.toString()
 }
 
-data class CaptureTreo(
-	val capture: Capture,
-	val treo: Treo) : Treo() {
-	override fun toString() = super.toString()
-}
-
 data class ExpandTreo(
 	val expand: Expand) : Treo() {
 	override fun toString() = super.toString()
@@ -54,7 +48,6 @@ fun treo(bit: Bit, treo: Treo) = treo(bit select treo)
 fun treo(at0: At0) = treo(bit0, at0.treo)
 fun treo(at1: At1) = treo(bit1, at1.treo)
 fun treo(variable: Var, treo: Treo) = treo(branch(variable, at0(treo), at1(treo)))
-fun treo(capture: Capture, treo: Treo) = CaptureTreo(capture, treo)
 fun treo(expand: Expand) = ExpandTreo(expand)
 fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
@@ -70,7 +63,6 @@ fun Treo.enter(bit: Bit): Treo? =
 		is LeafTreo -> null
 		is SelectTreo -> write(bit)
 		is BranchTreo -> write(bit)
-		is CaptureTreo -> write(bit)
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
@@ -105,9 +97,6 @@ fun SelectTreo.write(bit: Bit): Treo? =
 fun BranchTreo.write(bit: Bit): Treo =
 	branch.select(bit)
 
-fun CaptureTreo.write(bit: Bit): Treo =
-	apply { capture.variable.bit = bit }.treo
-
 fun Treo.invoke(bit: Bit): Treo =
 	(enter(bit) ?: error("$this.enter($bit)")).resolve()
 
@@ -123,7 +112,6 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 		is LeafTreo -> this
 		is SelectTreo -> invoke(treo.select.bit).invoke(treo.select.treo)
 		is BranchTreo -> invoke(treo.branch.enteredVar.bit).invoke(treo.branch.entered)
-		is CaptureTreo -> null!!
 		is ExpandTreo -> null!!
 		is CallTreo -> null!!
 		is BackTreo -> null!!
@@ -134,7 +122,6 @@ fun Treo.resolve(): Treo =
 		is LeafTreo -> this
 		is SelectTreo -> this
 		is BranchTreo -> this
-		is CaptureTreo -> this
 		is ExpandTreo -> resolve()
 		is CallTreo -> resolve()
 		is BackTreo -> invoke(back)
@@ -168,7 +155,6 @@ val Treo.trailingCharSeq: Seq<Char>
 			is LeafTreo -> leaf.charSeq
 			is SelectTreo -> select.charSeq
 			is BranchTreo -> branch.charSeqFrom(this)
-			is CaptureTreo -> flatSeq(capture.charSeq, treo.trailingCharSeq)
 			is ExpandTreo -> expand.charSeq
 			is CallTreo -> flatSeq(call.charSeq, treo.trailingCharSeq)
 			is BackTreo -> back.charSeq
@@ -180,7 +166,6 @@ val Treo.exitBit: Bit
 		is LeafTreo -> fail()
 		is SelectTreo -> select.bit
 		is BranchTreo -> branch.enteredVar.bit
-		is CaptureTreo -> capture.variable.bit
 		is ExpandTreo -> fail()
 		is CallTreo -> fail()
 		is BackTreo -> fail()

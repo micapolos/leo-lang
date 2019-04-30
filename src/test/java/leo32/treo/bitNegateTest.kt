@@ -4,94 +4,105 @@ import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class BitNegateTest {
-	private val zeroTreo = treo(at0(treo(leaf)))
-	private val oneTreo = treo(at1(treo(leaf)))
+	private val zero = treo(at0(treo(leaf)))
+	private val one = treo(at1(treo(leaf)))
 
-	private val notTreo = treo(at0(treo(at0(treo(leaf)))))
-	private val andTreo = treo(at0(treo(at1(treo(leaf)))))
-	private val orTreo = treo(at1(treo(at0(treo(leaf)))))
-	private val xorTreo = treo(at1(treo(at1(treo(leaf)))))
+	private val notOp = treo(at0(treo(at0(treo(leaf)))))
+	private val andOp = treo(at0(treo(at1(treo(leaf)))))
+	private val orOp = treo(at1(treo(at0(treo(leaf)))))
+	private val xorOp = treo(at1(treo(at1(treo(leaf)))))
 
-	private val bitMathTreo =
+	private val nandFn =
+		fn(treo(
+			at0(treo(
+				at0(treo(at1(treo(leaf)))),
+				at1(treo(at1(treo(leaf)))))),
+			at1(treo(
+				at0(treo(at1(treo(leaf)))),
+				at1(treo(at0(treo(leaf))))))))
+
+	private val notVar = newVar()
+
+	private val bitMath =
 		treo(
 			at0(treo(
 				at0(treo(
 					at0(treo(
-						call(fn(oneTreo), param(treo(leaf))),
+						call(fn(one), param(treo(leaf))),
 						treo(back.back.back.back))),
 					at1(treo(
 						at0(treo(
-							call(fn(zeroTreo), param(treo(leaf))),
+							call(fn(zero), param(treo(leaf))),
 							treo(back.back.back.back.back))),
 						at1(treo(
-							call(fn(zeroTreo), param(treo(leaf))),
+							call(fn(zero), param(treo(leaf))),
 							treo(back.back.back.back.back))))))),
 				at1(treo(
 					at0(treo(
 						at0(treo(
-							call(fn(zeroTreo), param(treo(leaf))),
+							call(fn(zero), param(treo(leaf))),
 							treo(back.back.back.back.back))),
 						at1(treo(
-							call(fn(oneTreo), param(treo(leaf))),
+							call(fn(one), param(treo(leaf))),
 							treo(back.back.back.back.back))))),
 					at1(treo(
 						at0(treo(
-							call(fn(zeroTreo), param(treo(leaf))),
+							call(fn(zero), param(treo(leaf))),
 							treo(back.back.back.back.back))),
 						at1(treo(
-							call(fn(oneTreo), param(treo(leaf))),
+							call(fn(one), param(treo(leaf))),
 							treo(back.back.back.back.back))))))))),
 			at1(treo(
 				at0(treo(
 					at0(treo(
-						call(fn(zeroTreo), param(treo(leaf))),
+						call(fn(zero), param(treo(leaf))),
 						treo(back.back.back.back))),
 					at1(treo(
 						at0(treo(
-							call(fn(zeroTreo), param(treo(leaf))),
+							call(fn(zero), param(treo(leaf))),
 							treo(back.back.back.back.back))),
 						at1(treo(
-							call(fn(oneTreo), param(treo(leaf))),
+							call(fn(one), param(treo(leaf))),
 							treo(back.back.back.back.back))))))),
 				at1(treo(
 					at0(treo(
 						at0(treo(
-							call(fn(oneTreo), param(treo(leaf))),
+							call(fn(one), param(treo(leaf))),
 							treo(back.back.back.back.back))),
 						at1(treo(
-							call(fn(zeroTreo), param(treo(leaf))),
+							call(fn(zero), param(treo(leaf))),
 							treo(back.back.back.back.back))))),
 					at1(treo(
 						at0(treo(
-							call(fn(oneTreo), param(treo(leaf))),
+							call(fn(one), param(treo(leaf))),
 							treo(back.back.back.back.back))),
 						at1(treo(
-							call(fn(oneTreo), param(treo(leaf))),
+							call(fn(one), param(treo(leaf))),
 							treo(back.back.back.back.back))))))))))
 
 	@Test
 	fun bitMath() {
-		bitMathTreo.invoke("000").assertEqualTo("1") // !0 => 1
-		bitMathTreo.invoke("100").assertEqualTo("0") // !1 => 0
+		bitMath.invoke("000").assertEqualTo("1") // !0 => 1
+		bitMath.invoke("100").assertEqualTo("0") // !1 => 0
 
-		bitMathTreo.invoke("0010").assertEqualTo("0") // 0&0 => 0
-		bitMathTreo.invoke("0011").assertEqualTo("0") // 0&1 => 0
-		bitMathTreo.invoke("1010").assertEqualTo("0") // 1&0 => 0
-		bitMathTreo.invoke("1011").assertEqualTo("1") // 1&1 => 1
+		bitMath.invoke("0010").assertEqualTo("0") // 0&0 => 0
+		bitMath.invoke("0011").assertEqualTo("0") // 0&1 => 0
+		bitMath.invoke("1010").assertEqualTo("0") // 1&0 => 0
+		bitMath.invoke("1011").assertEqualTo("1") // 1&1 => 1
 
-		bitMathTreo.invoke("0100").assertEqualTo("0") // 0^0 => 0
-		bitMathTreo.invoke("0101").assertEqualTo("1") // 0^1 => 1
-		bitMathTreo.invoke("1100").assertEqualTo("1") // 1^0 => 1
-		bitMathTreo.invoke("1101").assertEqualTo("0") // 1^1 => 0
+		bitMath.invoke("0100").assertEqualTo("0") // 0^0 => 0
+		bitMath.invoke("0101").assertEqualTo("1") // 0^1 => 1
+		bitMath.invoke("1100").assertEqualTo("1") // 1^0 => 1
+		bitMath.invoke("1101").assertEqualTo("0") // 1^1 => 0
 
-		bitMathTreo.invoke("0110").assertEqualTo("0") // 0|0 => 0
-		bitMathTreo.invoke("0111").assertEqualTo("1") // 0|1 => 1
-		bitMathTreo.invoke("1110").assertEqualTo("1") // 1|0 => 1
-		bitMathTreo.invoke("1111").assertEqualTo("1") // 1|1 => 1
+		bitMath.invoke("0110").assertEqualTo("0") // 0|0 => 0
+		bitMath.invoke("0111").assertEqualTo("1") // 0|1 => 1
+		bitMath.invoke("1110").assertEqualTo("1") // 1|0 => 1
+		bitMath.invoke("1111").assertEqualTo("1") // 1|1 => 1
 
-		bitMathTreo.invoke("00000").assertEqualTo("0") // !!0 => 0
-		bitMathTreo.invoke("0000000").assertEqualTo("1") // !!!0 => 1
-		bitMathTreo.invoke("000010").assertEqualTo("0") // !0&0 => 0
+		bitMath.invoke("00000").assertEqualTo("0") // !!0 => 0
+		bitMath.invoke("0000000").assertEqualTo("1") // !!!0 => 1
+		bitMath.invoke("000010").assertEqualTo("0") // !0&0 => 0
 	}
 
 	val lhsBitVar = newVar()
@@ -106,8 +117,8 @@ class BitNegateTest {
 							at0(treo(
 								at0(treo(
 									at0(treo(
-										at0(zeroTreo),
-										at1(oneTreo)))))))))))))))))
+										at0(zero),
+										at1(one)))))))))))))))))
 
 	val encodeOpCharFn =
 		fn(treo(
@@ -118,23 +129,23 @@ class BitNegateTest {
 							at0(treo(
 								at0(treo(
 									at0(treo(
-										at1(notTreo))))),
+										at1(notOp))))),
 								at1(treo(
 									at1(treo(
-										at0(andTreo))))))))))))))),
+										at0(andOp))))))))))))))),
 			at1(treo(
 				at0(treo(
 					at1(treo(
 						at1(treo(
 							at1(treo(
 								at1(treo(
-									at0(xorTreo))))))))))),
+									at0(xorOp))))))))))),
 				at1(treo(
 					at1(treo(
 						at1(treo(
 							at1(treo(
 								at0(treo(
-									at0(orTreo)))))))))))))))
+									at0(orOp)))))))))))))))
 
 	@Test
 	fun charMath() {

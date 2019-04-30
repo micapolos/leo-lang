@@ -10,9 +10,9 @@ class ExecutorTest {
 		val resultVar = newVar()
 		val inputVar = newVar()
 		val negatorTreo = treo(
-			capture(resultVar),
+			resultVar,
 			treo(
-				capture(inputVar),
+				inputVar,
 				treo(
 					call(
 						fn(
