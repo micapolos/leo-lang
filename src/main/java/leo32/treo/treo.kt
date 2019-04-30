@@ -75,18 +75,25 @@ fun Treo.enter(bit: Bit): Treo? =
 		is EditTreo -> null
 	}?.withExitTrace(this)
 
-fun Treo.edit(bit: Bit, fn: () -> Treo) =
+inline fun Treo.edit(bit: Bit, fn: () -> Treo) =
 	when (this) {
-		is LeafTreo -> treo(bit, fn())
+		is LeafTreo -> treo(bit, fn().withExitTrace(this))
 		is SelectTreo ->
-			if (select.bit == bit) treo(bit, fn())
-			else treo(branch(bit, fn(), select.treo))
-		is BranchTreo -> treo(branch(bit, fn(), branch.at(bit.inverse)))
+			if (select.bit == bit) treo(bit, fn().withExitTrace(this))
+			else treo(branch(bit, fn().withExitTrace(this), select.treo))
+		is BranchTreo -> treo(branch(bit, fn().withExitTrace(this), branch.at(bit.inverse)))
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
 		is EditTreo -> null
 	}
+
+fun Treo.replace(treo: Treo): Treo {
+	val oldExitTrace = exitTrace
+	exitTrace = null
+	treo.exitTrace = oldExitTrace
+	return treo
+}
 
 val Treo.exit: Treo?
 	get() =
@@ -95,6 +102,13 @@ val Treo.exit: Treo?
 			exitTrace = null
 			treo
 		}
+
+val Treo.exitRoot: Treo
+	get() {
+		val exited = exit
+		return if (exited == null) this
+		else exited.exitRoot
+	}
 
 tailrec fun Treo.rewind() {
 	exit?.rewind()
