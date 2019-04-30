@@ -12,3 +12,7 @@ fun call(fn: Fn, param: Param) =
 val Call.charSeq
 	get() =
 		flatSeq(fn.charSeq, param.charSeq)
+
+val Call.invoke
+	get() =
+		fn.invoke(param.treo)

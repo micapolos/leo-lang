@@ -8,3 +8,9 @@ data class Fn(val treo: Treo)
 fun fn(treo: Treo) = Fn(treo)
 
 val Fn.charSeq get() = flatSeq(seq('.'), treo.trailingCharSeq)
+
+fun Fn.invoke(param: Treo): Treo {
+	val result = treo.invoke(param)
+	result.rewind()
+	return result
+}

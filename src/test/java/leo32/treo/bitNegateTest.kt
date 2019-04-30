@@ -7,21 +7,70 @@ class BitNegateTest {
 	private val zero = treo(at0(treo(leaf)))
 	private val one = treo(at1(treo(leaf)))
 
+	private val selfTreo = treo(
+		at0(treo(at0(treo(leaf)))),
+		at1(treo(at1(treo(leaf)))))
+
+	private val selfFn = fn(selfTreo)
+
+	@Test
+	fun self() {
+		selfFn.invoke(zero).assertEqualTo(zero)
+		selfFn.invoke(one).assertEqualTo(one)
+	}
+
+	private val zeroZero = treo(at0(zero))
+	private val zeroOne = treo(at0(one))
+	private val oneZero = treo(at1(zero))
+	private val oneOne = treo(at1(one))
+
+	private val dupTreo = treo(
+		at0(zeroZero),
+		at1(oneOne))
+
+	private val dupFn = fn(dupTreo)
+
+	@Test
+	fun dup() {
+		dupFn.invoke(zero).assertEqualTo(zeroZero)
+		dupFn.invoke(one).assertEqualTo(oneOne)
+	}
+
+	private val nandTreo = treo(
+		at0(treo(
+			at0(treo(at1(treo(leaf)))),
+			at1(treo(at1(treo(leaf)))))),
+		at1(treo(
+			at0(treo(at1(treo(leaf)))),
+			at1(treo(at0(treo(leaf)))))))
+
+	private val nandFn = fn(nandTreo)
+
+	@Test
+	fun nand() {
+		nandFn.invoke(zeroZero).assertEqualTo(one)
+		nandFn.invoke(zeroOne).assertEqualTo(one)
+		nandFn.invoke(oneZero).assertEqualTo(one)
+		nandFn.invoke(oneOne).assertEqualTo(zero)
+	}
+
+	private val lhsVar = newVar()
+	private val rhsVar = newVar()
+	private val negTreo = treo(lhsVar, treo(
+		call(dupFn, param(treo(lhsVar, treo(leaf)))),
+		nandTreo))
+	private val negFn = fn(negTreo)
+
+	@Test
+	fun neg() {
+		negFn.invoke(zero).assertEqualTo(one)
+		negFn.invoke(one).assertEqualTo(zero)
+	}
+
 	private val notOp = treo(at0(treo(at0(treo(leaf)))))
 	private val andOp = treo(at0(treo(at1(treo(leaf)))))
 	private val orOp = treo(at1(treo(at0(treo(leaf)))))
 	private val xorOp = treo(at1(treo(at1(treo(leaf)))))
-
-	private val nandFn =
-		fn(treo(
-			at0(treo(
-				at0(treo(at1(treo(leaf)))),
-				at1(treo(at1(treo(leaf)))))),
-			at1(treo(
-				at0(treo(at1(treo(leaf)))),
-				at1(treo(at0(treo(leaf))))))))
-
-	private val notVar = newVar()
 
 	private val bitMath =
 		treo(

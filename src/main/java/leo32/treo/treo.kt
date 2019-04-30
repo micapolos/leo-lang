@@ -136,7 +136,7 @@ fun ExpandTreo.resolve(): Treo {
 }
 
 fun CallTreo.resolve(): Treo {
-	val result = call.fn.treo.invoke(call.param.treo).let { result ->
+	val result = call.invoke.let { result ->
 		result.rewind()
 		treo.withExitTrace(this).resolve().invoke(result)
 	}
