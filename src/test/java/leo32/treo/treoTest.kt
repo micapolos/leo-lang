@@ -85,19 +85,19 @@ class TreoTest {
 
 	@Test
 	fun expandResolve() {
-		treo(expand(macro(treo(at1(treo(leaf)))), param(treo(leaf)))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(macro(nandTreo), param(treo(at0(treo(at0(treo(leaf)))))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(macro(nandTreo), param(treo(at0(treo(at1(treo(leaf)))))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(macro(nandTreo), param(treo(at1(treo(at0(treo(leaf)))))))).resolve().cut.string.assertEqualTo("|1")
-		treo(expand(macro(nandTreo), param(treo(at1(treo(at1(treo(leaf)))))))).resolve().cut.string.assertEqualTo("|0")
+		treo(expand(macro(treo(at1(treo(leaf)))), param(treo(leaf)))).resolveOnce().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo(at0(treo(at0(treo(leaf)))))))).resolveOnce().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo(at0(treo(at1(treo(leaf)))))))).resolveOnce().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo(at1(treo(at0(treo(leaf)))))))).resolveOnce().cut.string.assertEqualTo("|1")
+		treo(expand(macro(nandTreo), param(treo(at1(treo(at1(treo(leaf)))))))).resolveOnce().cut.string.assertEqualTo("|0")
 	}
 
 	@Test
 	fun invokeResolve() {
-		treo(call(fn(treo(at0(treo(at0(treo(leaf)))))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		treo(call(fn(treo(at0(treo(at1(treo(leaf)))))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		treo(call(fn(treo(at1(treo(at0(treo(leaf)))))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|1")
-		treo(call(fn(treo(at1(treo(at1(treo(leaf)))))), param(treo(leaf))), nandTreo).resolve().cut.string.assertEqualTo("|0")
+		treo(call(fn(treo(at0(treo(at0(treo(leaf)))))), param(treo(leaf))), nandTreo).resolveOnce().cut.string.assertEqualTo("|1")
+		treo(call(fn(treo(at0(treo(at1(treo(leaf)))))), param(treo(leaf))), nandTreo).resolveOnce().cut.string.assertEqualTo("|1")
+		treo(call(fn(treo(at1(treo(at0(treo(leaf)))))), param(treo(leaf))), nandTreo).resolveOnce().cut.string.assertEqualTo("|1")
+		treo(call(fn(treo(at1(treo(at1(treo(leaf)))))), param(treo(leaf))), nandTreo).resolveOnce().cut.string.assertEqualTo("|0")
 	}
 
 	@Test
@@ -158,16 +158,16 @@ class TreoTest {
 		treo(leaf).resolve().assertEqualTo(treo(leaf))
 		treo(
 			call(fn(treo(leaf)), param(treo(leaf))),
-			treo(leaf)).resolve().assertEqualTo(treo(leaf))
+			treo(leaf)).resolveOnce().assertEqualTo(treo(leaf))
 		treo(
 			call(fn(treo(leaf)), param(treo(leaf))),
 			treo(
 				call(fn(treo(leaf)), param(treo(leaf))),
-				treo(leaf))).resolve().assertEqualTo(treo(leaf))
+				treo(leaf))).resolveOnce().assertEqualTo(treo(leaf))
 		treo(
 			call(fn(treo(leaf)), param(treo(leaf))),
 			treo(back))
-			.tryRun { resolve() }
+			.tryRun { resolveOnce() }
 			.throwableOrNull::class
 			.assertEqualTo(StackOverflowError::class)
 	}

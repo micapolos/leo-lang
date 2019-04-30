@@ -128,20 +128,19 @@ fun Treo.resolveOnce(): Treo? =
 		is LeafTreo -> null
 		is SelectTreo -> null
 		is BranchTreo -> null
-		is ExpandTreo -> resolve()
-		is CallTreo -> resolve()
+		is ExpandTreo -> resolveOnce()
+		is CallTreo -> resolveOnce()
 		is BackTreo -> invoke(back)
 	}
 
-// TODO: Resolve recursively until done
-fun ExpandTreo.resolve(): Treo {
+fun ExpandTreo.resolveOnce(): Treo {
 	val result = expand.macro.treo.invoke(expand.param.treo)
 	rewind()
 	expand.macro.treo.rewind()
 	return result
 }
 
-fun CallTreo.resolve(): Treo {
+fun CallTreo.resolveOnce(): Treo {
 	val result = call.invoke.let { result ->
 		result.rewind()
 		treo.withExitTrace(this).resolve().invoke(result)
