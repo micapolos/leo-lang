@@ -40,11 +40,6 @@ data class BackTreo(
 	override fun toString() = super.toString()
 }
 
-data class EditTreo(
-	val edit: Edit) : Treo() {
-	override fun toString() = super.toString()
-}
-
 fun treo(leaf: Leaf) = LeafTreo(leaf)
 fun treo(branch: Branch) = BranchTreo(branch)
 fun treo(at0: At0, at1: At1) = treo(branch(at0, at1))
@@ -56,7 +51,6 @@ fun treo(variable: Var, treo: Treo) = treo(branch(variable, at0(treo), at1(treo)
 fun treo(expand: Expand) = ExpandTreo(expand)
 fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
-fun treo(edit: Edit) = EditTreo(edit)
 
 fun Treo.withExitTrace(treo: Treo): Treo {
 	if (exitTrace != null) error("already traced: $this")
@@ -72,10 +66,9 @@ fun Treo.enter(bit: Bit): Treo? =
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
-		is EditTreo -> null
 	}?.withExitTrace(this)
 
-inline fun Treo.edit(bit: Bit, fn: () -> Treo) =
+inline fun Treo.edit(bit: Bit, fn: () -> Treo): Treo? =
 	when (this) {
 		is LeafTreo -> treo(bit, fn().withExitTrace(this))
 		is SelectTreo ->
@@ -85,7 +78,6 @@ inline fun Treo.edit(bit: Bit, fn: () -> Treo) =
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
-		is EditTreo -> null
 	}
 
 fun Treo.replace(treo: Treo): Treo {
@@ -149,7 +141,6 @@ tailrec fun Treo.invoke(treo: Treo): Treo =
 		is ExpandTreo -> null!!
 		is CallTreo -> null!!
 		is BackTreo -> null!!
-		is EditTreo -> null!!
 	}
 
 tailrec fun Treo.resolve(): Treo {
@@ -166,7 +157,6 @@ fun Treo.resolveOnce(): Treo? =
 		is ExpandTreo -> resolveOnce()
 		is CallTreo -> resolveOnce()
 		is BackTreo -> invoke(back)
-		is EditTreo -> TODO()
 	}
 
 fun ExpandTreo.resolveOnce(): Treo {
@@ -199,7 +189,6 @@ val Treo.trailingCharSeq: Seq<Char>
 			is ExpandTreo -> expand.charSeq
 			is CallTreo -> flatSeq(call.charSeq, treo.trailingCharSeq)
 			is BackTreo -> back.charSeq
-			is EditTreo -> edit.charSeq
 		}
 
 val Treo.exitBit: Bit
@@ -211,7 +200,6 @@ val Treo.exitBit: Bit
 		is ExpandTreo -> fail()
 		is CallTreo -> fail()
 		is BackTreo -> fail()
-		is EditTreo -> fail()
 	}
 
 val Treo.exitBitSeq: Seq<Bit>

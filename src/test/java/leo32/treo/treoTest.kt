@@ -20,7 +20,6 @@ class TreoTest {
 		treo(newVar(bit0), treo(leaf)).enter(bit1)!!.exitTrace!!.string.assertEqualTo("|1")
 		treo(at0(treo(at1(treo(leaf))))).string.assertEqualTo("|01")
 		treo(back.back.back).string.assertEqualTo("|<<<")
-		treo(edit).string.assertEqualTo("|#")
 	}
 
 	@Test
