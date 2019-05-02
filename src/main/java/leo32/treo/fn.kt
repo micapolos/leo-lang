@@ -9,8 +9,8 @@ fun fn(treo: Treo) = Fn(treo)
 
 val Fn.charSeq get() = flatSeq(seq('.'), treo.trailingCharSeq)
 
-fun Fn.invoke(param: Treo): Treo {
-	val result = treo.invoke(param)
+fun Fn.invoke(param: Treo, writer: Writer = nullWriter): Treo {
+	val result = treo.invoke(param, writer)
 	result.rewind()
 	return result
 }

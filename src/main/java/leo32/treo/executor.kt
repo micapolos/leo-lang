@@ -8,10 +8,11 @@ import leo.binary.Bit
 import leo.binary.digitBitOrNull
 
 data class Executor(
+	val writer: Writer,
 	var currentTreo: Treo)
 
 fun executor(treo: Treo) =
-	Executor(treo)
+	Executor(nullWriter, treo)
 
 fun Executor.plus(bit: Bit) =
 	apply { currentTreo = currentTreo.invoke(bit) }

@@ -193,4 +193,17 @@ class TreoTest {
 		negateForever.invoke("0101").assertEqualTo("0")
 		resultVar.bit.assertEqualTo(bit0)
 	}
+
+	@Test
+	fun calling() {
+		val variable = newVar()
+		val treo = treo(variable, treo(variable, treo(
+			call(fn(selfTreo), param(treo(variable, treo(leaf)))),
+			treo(back.back.back))))
+
+		treo.invoke("00").assertEqualTo("0")
+		treo.invoke("01").assertEqualTo("1")
+		treo.invoke("010").assertEqualTo("0")
+		treo.invoke("011").assertEqualTo("1")
+	}
 }

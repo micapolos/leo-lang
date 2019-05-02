@@ -6,8 +6,8 @@ data class Writer<in V>(
 fun <V> Writer<V>.write(value: V): Writer<V> =
 	writeFn(value)
 
-fun <V> nullWriter(): Writer<V> =
-	Writer { nullWriter() }
+fun <V> ignoreWriter(): Writer<V> =
+	Writer { ignoreWriter() }
 
 fun <V> printlnWriter(): Writer<V> =
 	Writer { println(it); printlnWriter() }

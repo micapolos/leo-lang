@@ -40,6 +40,12 @@ data class BackTreo(
 	override fun toString() = super.toString()
 }
 
+data class WriteTreo(
+	val write: Write,
+	val treo: Treo) : Treo() {
+	override fun toString() = super.toString()
+}
+
 fun treo(leaf: Leaf) = LeafTreo(leaf)
 fun treo(branch: Branch) = BranchTreo(branch)
 fun treo(at0: At0, at1: At1) = treo(branch(at0, at1))
@@ -51,6 +57,7 @@ fun treo(variable: Var, treo: Treo) = treo(branch(variable, at0(treo), at1(treo)
 fun treo(expand: Expand) = ExpandTreo(expand)
 fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
+fun treo(write: Write, treo: Treo) = WriteTreo(write, treo)
 
 fun Treo.withExitTrace(treo: Treo): Treo {
 	if (exitTrace != null) error("already traced: $this")
@@ -58,7 +65,7 @@ fun Treo.withExitTrace(treo: Treo): Treo {
 	return this
 }
 
-fun Treo.enter(bit: Bit): Treo? =
+fun Treo.enter(bit: Bit, writer: Writer = nullWriter): Treo? =
 	when (this) {
 		is LeafTreo -> null
 		is SelectTreo -> write(bit)
@@ -66,6 +73,7 @@ fun Treo.enter(bit: Bit): Treo? =
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
+		is WriteTreo -> write(bit, writer)
 	}?.withExitTrace(this)
 
 inline fun Treo.edit(bit: Bit, fn: () -> Treo): Treo? =
@@ -78,6 +86,7 @@ inline fun Treo.edit(bit: Bit, fn: () -> Treo): Treo? =
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
+		is WriteTreo -> null
 	}
 
 fun Treo.replace(treo: Treo): Treo {
@@ -123,53 +132,58 @@ fun SelectTreo.write(bit: Bit): Treo? =
 fun BranchTreo.write(bit: Bit): Treo =
 	branch.select(bit)
 
-fun Treo.invoke(bit: Bit): Treo =
-	(enter(bit) ?: error("$this.enter($bit)")).resolve()
+fun WriteTreo.write(bit: Bit, writer: Writer): Treo =
+	apply { write.invoke(writer, bit) }.treo
 
-fun Treo.invoke(string: String): String {
-	val result = fold(string.charSeq.map { digitBitOrNull!! }, Treo::invoke)
-	val resultString = result.enteredBitSeq.map { digitChar }.charString
+fun Treo.invoke(bit: Bit, writer: Writer = nullWriter): Treo =
+	(enter(bit, writer) ?: error("$this.enter($bit)")).resolve(writer)
+
+fun Treo.invoke(string: String, writer: Writer = nullWriter): String {
+	val result = fold(string.charSeq.map { digitBitOrNull!! }) { bit -> invoke(bit, writer) }
+	val resultString = result.bitString
 	result.rewind()
 	return resultString
 }
 
-tailrec fun Treo.invoke(treo: Treo): Treo =
+tailrec fun Treo.invoke(treo: Treo, writer: Writer): Treo =
 	when (treo) {
 		is LeafTreo -> this
-		is SelectTreo -> invoke(treo.select.bit).invoke(treo.select.treo)
-		is BranchTreo -> invoke(treo.branch.enteredVar.bit).invoke(treo.branch.entered)
+		is SelectTreo -> invoke(treo.select.bit, writer).invoke(treo.select.treo, writer)
+		is BranchTreo -> invoke(treo.branch.enteredVar.bit, writer).invoke(treo.branch.entered, writer)
 		is ExpandTreo -> null!!
 		is CallTreo -> null!!
 		is BackTreo -> null!!
+		is WriteTreo -> null!!
 	}
 
-tailrec fun Treo.resolve(): Treo {
-	val resolvedOnce = resolveOnce()
+tailrec fun Treo.resolve(writer: Writer = nullWriter): Treo {
+	val resolvedOnce = resolveOnce(writer)
 	return if (resolvedOnce == null) this
-	else resolvedOnce.resolve()
+	else resolvedOnce.resolve(writer)
 }
 
-fun Treo.resolveOnce(): Treo? =
+fun Treo.resolveOnce(writer: Writer = nullWriter): Treo? =
 	when (this) {
 		is LeafTreo -> null
 		is SelectTreo -> null
 		is BranchTreo -> null
-		is ExpandTreo -> resolveOnce()
-		is CallTreo -> resolveOnce()
+		is ExpandTreo -> resolveOnce(writer)
+		is CallTreo -> resolveOnce(writer)
 		is BackTreo -> invoke(back)
+		is WriteTreo -> null
 	}
 
-fun ExpandTreo.resolveOnce(): Treo {
-	val result = expand.macro.treo.invoke(expand.param.treo)
+fun ExpandTreo.resolveOnce(writer: Writer = nullWriter): Treo {
+	val result = expand.macro.treo.invoke(expand.param.treo, writer)
 	rewind()
 	expand.macro.treo.rewind()
 	return result
 }
 
-fun CallTreo.resolveOnce(): Treo {
+fun CallTreo.resolveOnce(writer: Writer = nullWriter): Treo {
 	val result = call.invoke.let { result ->
 		result.rewind()
-		treo.withExitTrace(this).resolve().invoke(result)
+		treo.withExitTrace(this).resolve(writer).invoke(result, writer)
 	}
 	call.fn.treo.rewind()
 	call.param.treo.rewind()
@@ -189,7 +203,32 @@ val Treo.trailingCharSeq: Seq<Char>
 			is ExpandTreo -> expand.charSeq
 			is CallTreo -> flatSeq(call.charSeq, treo.trailingCharSeq)
 			is BackTreo -> back.charSeq
+			is WriteTreo -> write.charSeq
 		}
+
+val Treo.exitCharSeq: Seq<Char>
+	get() =
+		when (this) {
+			is LeafTreo -> seq()
+			is SelectTreo -> seq(select.bit.digitChar)
+			is BranchTreo -> seq(branch.enteredVar.bit.digitChar)
+			is ExpandTreo -> seq()
+			is CallTreo -> seq()
+			is BackTreo -> seq()
+			is WriteTreo -> seq()
+		}
+
+val Treo.exitCharSeqSeq: Seq<Seq<Char>>
+	get() =
+		Seq {
+			exitTrace?.let { treo ->
+				treo.exitCharSeq then treo.exitCharSeqSeq
+			}
+		}
+
+val Treo.enteredCharSeq: Seq<Char>
+	get() =
+		nullOf<Stack<Seq<Char>>>().fold(exitCharSeqSeq) { push(it) }.seq.flat
 
 val Treo.exitBit: Bit
 	get() =
@@ -200,6 +239,7 @@ val Treo.exitBit: Bit
 		is ExpandTreo -> fail()
 		is CallTreo -> fail()
 		is BackTreo -> fail()
+		is WriteTreo -> fail()
 	}
 
 val Treo.exitBitSeq: Seq<Bit>
@@ -216,4 +256,4 @@ val Treo.enteredBitSeq: Seq<Bit>
 
 val Treo.bitString: String
 	get() =
-		enteredBitSeq.map { digitChar }.charString
+		enteredCharSeq.charString
