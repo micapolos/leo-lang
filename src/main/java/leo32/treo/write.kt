@@ -9,7 +9,7 @@ val write = Write
 
 @Suppress("unused")
 fun Write.invoke(writer: Writer, bit: Bit) =
-	writer.invoke(bit)
+	writer.write(bit)
 
 @Suppress("unused")
 val Write.char
