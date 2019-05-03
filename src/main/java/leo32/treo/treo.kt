@@ -40,8 +40,8 @@ data class BackTreo(
 	override fun toString() = super.toString()
 }
 
-data class WriteTreo(
-	val write: Put,
+data class PutTreo(
+	val put: Put,
 	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
@@ -58,7 +58,7 @@ fun treo(variable: Variable, treo: Treo) = treo(value(variable), treo)
 fun treo(expand: Expand) = ExpandTreo(expand)
 fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
-fun treo(write: Put, treo: Treo) = WriteTreo(write, treo)
+fun treo(write: Put, treo: Treo) = PutTreo(write, treo)
 
 fun Treo.withExitTrace(treo: Treo): Treo {
 	if (exitTrace != null) error("already traced: $this")
@@ -66,7 +66,7 @@ fun Treo.withExitTrace(treo: Treo): Treo {
 	return this
 }
 
-fun Treo.enter(bit: Bit, sink: Sink = voidSink): Treo? =
+fun Treo.enter(bit: Bit): Treo? =
 	when (this) {
 		is LeafTreo -> null
 		is SelectTreo -> write(bit)
@@ -74,7 +74,7 @@ fun Treo.enter(bit: Bit, sink: Sink = voidSink): Treo? =
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
-		is WriteTreo -> write(bit, sink)
+		is PutTreo -> null
 	}?.withExitTrace(this)
 
 inline fun Treo.edit(bit: Bit, fn: () -> Treo): Treo? =
@@ -87,7 +87,7 @@ inline fun Treo.edit(bit: Bit, fn: () -> Treo): Treo? =
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
-		is WriteTreo -> null
+		is PutTreo -> null
 	}
 
 fun Treo.replace(treo: Treo): Treo {
@@ -133,11 +133,8 @@ fun SelectTreo.write(bit: Bit): Treo? =
 fun BranchTreo.write(bit: Bit): Treo =
 	branch.select(bit)
 
-fun WriteTreo.write(bit: Bit, sink: Sink): Treo =
-	apply { write.invoke(sink, bit) }.treo
-
 fun Treo.invoke(bit: Bit, sink: Sink = voidSink): Treo =
-	(enter(bit, sink) ?: error("$this.enter($bit)")).resolve(sink)
+	(enter(bit) ?: error("$this.enter($bit)")).resolve(sink)
 
 fun Treo.invoke(string: String, sink: Sink = voidSink): String {
 	val result = fold(string.charSeq.map { digitBitOrNull!! }) { bit -> invoke(bit, sink) }
@@ -154,7 +151,7 @@ tailrec fun Treo.invoke(treo: Treo, sink: Sink): Treo =
 		is ExpandTreo -> null!!
 		is CallTreo -> null!!
 		is BackTreo -> null!!
-		is WriteTreo -> null!!
+		is PutTreo -> null!!
 	}
 
 tailrec fun Treo.resolve(sink: Sink = voidSink): Treo {
@@ -171,7 +168,7 @@ fun Treo.resolveOnce(sink: Sink = voidSink): Treo? =
 		is ExpandTreo -> resolveOnce(sink)
 		is CallTreo -> resolveOnce(sink)
 		is BackTreo -> invoke(back)
-		is WriteTreo -> null
+		is PutTreo -> resolveOnce(sink)
 	}
 
 fun ExpandTreo.resolveOnce(sink: Sink = voidSink): Treo {
@@ -191,6 +188,11 @@ fun CallTreo.resolveOnce(sink: Sink = voidSink): Treo {
 	return result
 }
 
+fun PutTreo.resolveOnce(sink: Sink = voidSink): Treo {
+	put.invoke(sink)
+	return treo
+}
+
 val Treo.charSeq: Seq<Char>
 	get() =
 		flatSeq(enteredBitSeq.map { digitChar }, seq('|'), trailingCharSeq)
@@ -204,7 +206,7 @@ val Treo.trailingCharSeq: Seq<Char>
 			is ExpandTreo -> expand.charSeq
 			is CallTreo -> flatSeq(call.charSeq, treo.trailingCharSeq)
 			is BackTreo -> back.charSeq
-			is WriteTreo -> write.charSeq
+			is PutTreo -> put.charSeq
 		}
 
 val Treo.exitCharSeq: Seq<Char>
@@ -216,7 +218,7 @@ val Treo.exitCharSeq: Seq<Char>
 			is ExpandTreo -> seq()
 			is CallTreo -> seq()
 			is BackTreo -> seq()
-			is WriteTreo -> seq()
+			is PutTreo -> seq()
 		}
 
 val Treo.exitCharSeqSeq: Seq<Seq<Char>>
@@ -240,7 +242,7 @@ val Treo.exitBit: Bit
 		is ExpandTreo -> fail()
 		is CallTreo -> fail()
 		is BackTreo -> fail()
-		is WriteTreo -> fail()
+		is PutTreo -> fail()
 	}
 
 val Treo.exitBitSeq: Seq<Bit>

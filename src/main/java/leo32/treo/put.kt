@@ -1,18 +1,13 @@
+@file:Suppress("unused")
+
 package leo32.treo
 
 import leo.base.seq
 import leo.binary.Bit
 
-object Put
+data class Put(val bit: Bit)
 
-val put = Put
-
-@Suppress("unused")
-fun Put.invoke(sink: Sink, bit: Bit) =
-	sink.put(bit)
-
-@Suppress("unused")
-val Put.char
-	get() = 'w'
-
+fun put(bit: Bit) = Put(bit)
+fun Put.invoke(sink: Sink) = sink.put(bit)
+val Put.char get() = 'w'
 val Put.charSeq get() = seq(char)
