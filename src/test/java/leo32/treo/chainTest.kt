@@ -7,7 +7,7 @@ import org.junit.Test
 
 class ChainTest {
 	@Test
-	fun chaining() {
+	fun chainVararg() {
 		chain(value(constant(bit0)))
 			.assertEqualTo(chain(head(value(constant(bit0))), tail(null)))
 		chain(value(constant(bit0)), value(constant(bit1)))

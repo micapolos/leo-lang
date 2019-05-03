@@ -7,7 +7,7 @@ import kotlin.test.Test
 
 class TailTest {
 	@Test
-	fun tail() {
+	fun tailVararg() {
 		tail().assertEqualTo(tail(null))
 		tail(value(constant(bit0)), value(constant(bit1)))
 			.assertEqualTo(
