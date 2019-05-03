@@ -3,7 +3,7 @@ package leo32.treo.util
 import leo.binary.Bit
 import leo.binary.bit0
 import leo.binary.int
-import leo32.treo.Var
+import leo32.treo.Variable
 
 data class Vec2<T>(val hi: T, val lo: T)
 data class Vec4<T>(val hi: Vec2<T>, val lo: Vec2<T>)
@@ -28,49 +28,49 @@ val Vec64<Bit>.bitLong get() = hi.bitInt.toLong().shl(32).or(lo.bitInt.toLong().
 val Vec32<Bit>.bitFloat get() = Float.fromBits(bitInt)
 val Vec64<Bit>.bitDouble get() = Double.fromBits(bitLong)
 
-var Vec2<Var>.varInt
+var Vec2<Variable>.varInt
 	get() = hi.bit.int.shl(1).or(lo.bit.int)
 	set(int) {
 		hi.bit = int.shr(1).bit0; lo.bit = int.bit0
 	}
 
-var Vec4<Var>.varInt
+var Vec4<Variable>.varInt
 	get() = hi.varInt.shl(2).or(lo.varInt)
 	set(int) {
 		hi.varInt = int.shr(2); lo.varInt = int
 	}
 
-var Vec8<Var>.varInt
+var Vec8<Variable>.varInt
 	get() = hi.varInt.shl(4).or(lo.varInt)
 	set(int) {
 		hi.varInt = int.shr(4); lo.varInt = int
 	}
 
-var Vec16<Var>.varInt
+var Vec16<Variable>.varInt
 	get() = hi.varInt.shl(8).or(lo.varInt)
 	set(int) {
 		hi.varInt = int.shr(8); lo.varInt = int
 	}
 
-var Vec32<Var>.varInt
+var Vec32<Variable>.varInt
 	get() = hi.varInt.shl(16).or(lo.varInt)
 	set(int) {
 		hi.varInt = int.shr(16); lo.varInt = int
 	}
 
-var Vec64<Var>.varLong: Long
+var Vec64<Variable>.varLong: Long
 	get() = hi.varInt.toLong().shl(32).or(lo.varInt.toLong().and(0xFFFFFFFF))
 	set(long) {
 		hi.varInt = long.ushr(32).toInt(); lo.varInt = long.toInt()
 	}
 
-var Vec32<Var>.varFloat
+var Vec32<Variable>.varFloat
 	get() = Float.fromBits(varInt)
 	set(float) {
 		varInt = float.toRawBits()
 	}
 
-var Vec64<Var>.varDouble
+var Vec64<Variable>.varDouble
 	get() = Double.fromBits(varLong)
 	set(double) {
 		varLong = double.toRawBits()

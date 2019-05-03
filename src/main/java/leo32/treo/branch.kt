@@ -10,15 +10,15 @@ import leo.binary.digitChar
 import leo.binary.isZero
 
 data class Branch(
-	val enteredVar: Var,
+	val enteredVariable: Variable,
 	val at0: At0,
 	val at1: At1)
 
-fun branch(variable: Var, at0: At0, at1: At1) =
+fun branch(variable: Variable, at0: At0, at1: At1) =
 	Branch(variable, at0, at1)
 
 fun branch(at0: At0, at1: At1) =
-	Branch(newVar(), at0, at1)
+	Branch(variable(), at0, at1)
 
 fun branch(bit: Bit, treo: Treo, inverseTreo: Treo) =
 	if (bit.isZero) branch(at0(treo), at1(inverseTreo))
@@ -29,13 +29,13 @@ fun Branch.at(bit: Bit) =
 	else at1.treo
 
 fun Branch.select(bit: Bit): Treo {
-	enteredVar.bit = bit
+	enteredVariable.bit = bit
 	return entered
 }
 
 val Branch.entered
 	get() =
-		at(enteredVar.bit)
+		at(enteredVariable.bit)
 
 val Branch.charSeq: Seq<Char>
 	get() =
@@ -45,5 +45,5 @@ fun Branch.charSeqFrom(treo: Treo) =
 	seq(charFrom(treo))
 
 fun Branch.charFrom(treo: Treo) =
-	if (entered.exitTrace === treo) enteredVar.bit.digitChar
+	if (entered.exitTrace === treo) enteredVariable.bit.digitChar
 	else '?'

@@ -7,8 +7,8 @@ import kotlin.test.Test
 class ExecutorTest {
 	@Test
 	fun negation() {
-		val resultVar = newVar()
-		val inputVar = newVar()
+		val resultVar = variable()
+		val inputVar = variable()
 		val negatorTreo = treo(
 			resultVar,
 			treo(

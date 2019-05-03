@@ -6,10 +6,10 @@ import leo.binary.bit0
 import leo.binary.bit1
 import kotlin.test.Test
 
-class VarTest {
+class VariableTest {
 	@Test
 	fun string() {
-		newVar().apply { bit = bit0 }.string.assertEqualTo("0")
-		newVar().apply { bit = bit1 }.string.assertEqualTo("1")
+		variable().apply { bit = bit0 }.string.assertEqualTo("0")
+		variable().apply { bit = bit1 }.string.assertEqualTo("1")
 	}
 }

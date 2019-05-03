@@ -7,16 +7,16 @@ import leo.binary.Bit
 import leo.binary.bit0
 import leo.binary.digitChar
 
-data class Var(var bit: Bit) {
+class Variable(var bit: Bit) {
 	override fun toString() = charSeq.charString
 }
 
-fun newVar(bit: Bit) =
-	Var(bit)
+fun variable(bit: Bit) =
+	Variable(bit)
 
-fun newVar() =
-	newVar(bit0)
+fun variable() =
+	variable(bit0)
 
-val Var.charSeq: Seq<Char>
+val Variable.charSeq: Seq<Char>
 	get() =
 		bit.digitChar.onlySeq

@@ -41,7 +41,7 @@ data class BackTreo(
 }
 
 data class WriteTreo(
-	val write: Write,
+	val write: Put,
 	val treo: Treo) : Treo() {
 	override fun toString() = super.toString()
 }
@@ -53,11 +53,11 @@ fun treo(select: Select) = SelectTreo(select)
 fun treo(bit: Bit, treo: Treo) = treo(bit select treo)
 fun treo(at0: At0) = treo(bit0, at0.treo)
 fun treo(at1: At1) = treo(bit1, at1.treo)
-fun treo(variable: Var, treo: Treo) = treo(branch(variable, at0(treo), at1(treo)))
+fun treo(variable: Variable, treo: Treo) = treo(branch(variable, at0(treo), at1(treo)))
 fun treo(expand: Expand) = ExpandTreo(expand)
 fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
-fun treo(write: Write, treo: Treo) = WriteTreo(write, treo)
+fun treo(write: Put, treo: Treo) = WriteTreo(write, treo)
 
 fun Treo.withExitTrace(treo: Treo): Treo {
 	if (exitTrace != null) error("already traced: $this")
@@ -65,7 +65,7 @@ fun Treo.withExitTrace(treo: Treo): Treo {
 	return this
 }
 
-fun Treo.enter(bit: Bit, writer: Writer = nullWriter): Treo? =
+fun Treo.enter(bit: Bit, sink: Sink = voidSink): Treo? =
 	when (this) {
 		is LeafTreo -> null
 		is SelectTreo -> write(bit)
@@ -73,7 +73,7 @@ fun Treo.enter(bit: Bit, writer: Writer = nullWriter): Treo? =
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
-		is WriteTreo -> write(bit, writer)
+		is WriteTreo -> write(bit, sink)
 	}?.withExitTrace(this)
 
 inline fun Treo.edit(bit: Bit, fn: () -> Treo): Treo? =
@@ -132,58 +132,58 @@ fun SelectTreo.write(bit: Bit): Treo? =
 fun BranchTreo.write(bit: Bit): Treo =
 	branch.select(bit)
 
-fun WriteTreo.write(bit: Bit, writer: Writer): Treo =
-	apply { write.invoke(writer, bit) }.treo
+fun WriteTreo.write(bit: Bit, sink: Sink): Treo =
+	apply { write.invoke(sink, bit) }.treo
 
-fun Treo.invoke(bit: Bit, writer: Writer = nullWriter): Treo =
-	(enter(bit, writer) ?: error("$this.enter($bit)")).resolve(writer)
+fun Treo.invoke(bit: Bit, sink: Sink = voidSink): Treo =
+	(enter(bit, sink) ?: error("$this.enter($bit)")).resolve(sink)
 
-fun Treo.invoke(string: String, writer: Writer = nullWriter): String {
-	val result = fold(string.charSeq.map { digitBitOrNull!! }) { bit -> invoke(bit, writer) }
+fun Treo.invoke(string: String, sink: Sink = voidSink): String {
+	val result = fold(string.charSeq.map { digitBitOrNull!! }) { bit -> invoke(bit, sink) }
 	val resultString = result.bitString
 	result.rewind()
 	return resultString
 }
 
-tailrec fun Treo.invoke(treo: Treo, writer: Writer): Treo =
+tailrec fun Treo.invoke(treo: Treo, sink: Sink): Treo =
 	when (treo) {
 		is LeafTreo -> this
-		is SelectTreo -> invoke(treo.select.bit, writer).invoke(treo.select.treo, writer)
-		is BranchTreo -> invoke(treo.branch.enteredVar.bit, writer).invoke(treo.branch.entered, writer)
+		is SelectTreo -> invoke(treo.select.bit, sink).invoke(treo.select.treo, sink)
+		is BranchTreo -> invoke(treo.branch.enteredVariable.bit, sink).invoke(treo.branch.entered, sink)
 		is ExpandTreo -> null!!
 		is CallTreo -> null!!
 		is BackTreo -> null!!
 		is WriteTreo -> null!!
 	}
 
-tailrec fun Treo.resolve(writer: Writer = nullWriter): Treo {
-	val resolvedOnce = resolveOnce(writer)
+tailrec fun Treo.resolve(sink: Sink = voidSink): Treo {
+	val resolvedOnce = resolveOnce(sink)
 	return if (resolvedOnce == null) this
-	else resolvedOnce.resolve(writer)
+	else resolvedOnce.resolve(sink)
 }
 
-fun Treo.resolveOnce(writer: Writer = nullWriter): Treo? =
+fun Treo.resolveOnce(sink: Sink = voidSink): Treo? =
 	when (this) {
 		is LeafTreo -> null
 		is SelectTreo -> null
 		is BranchTreo -> null
-		is ExpandTreo -> resolveOnce(writer)
-		is CallTreo -> resolveOnce(writer)
+		is ExpandTreo -> resolveOnce(sink)
+		is CallTreo -> resolveOnce(sink)
 		is BackTreo -> invoke(back)
 		is WriteTreo -> null
 	}
 
-fun ExpandTreo.resolveOnce(writer: Writer = nullWriter): Treo {
-	val result = expand.macro.treo.invoke(expand.param.treo, writer)
+fun ExpandTreo.resolveOnce(sink: Sink = voidSink): Treo {
+	val result = expand.macro.treo.invoke(expand.param.treo, sink)
 	rewind()
 	expand.macro.treo.rewind()
 	return result
 }
 
-fun CallTreo.resolveOnce(writer: Writer = nullWriter): Treo {
+fun CallTreo.resolveOnce(sink: Sink = voidSink): Treo {
 	val result = call.invoke.let { result ->
 		result.rewind()
-		treo.withExitTrace(this).resolve(writer).invoke(result, writer)
+		treo.withExitTrace(this).resolve(sink).invoke(result, sink)
 	}
 	call.fn.treo.rewind()
 	call.param.treo.rewind()
@@ -211,7 +211,7 @@ val Treo.exitCharSeq: Seq<Char>
 		when (this) {
 			is LeafTreo -> seq()
 			is SelectTreo -> seq(select.bit.digitChar)
-			is BranchTreo -> seq(branch.enteredVar.bit.digitChar)
+			is BranchTreo -> seq(branch.enteredVariable.bit.digitChar)
 			is ExpandTreo -> seq()
 			is CallTreo -> seq()
 			is BackTreo -> seq()
@@ -235,7 +235,7 @@ val Treo.exitBit: Bit
 	when (this) {
 		is LeafTreo -> fail()
 		is SelectTreo -> select.bit
-		is BranchTreo -> branch.enteredVar.bit
+		is BranchTreo -> branch.enteredVariable.bit
 		is ExpandTreo -> fail()
 		is CallTreo -> fail()
 		is BackTreo -> fail()
