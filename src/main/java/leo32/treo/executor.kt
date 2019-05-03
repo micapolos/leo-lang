@@ -11,11 +11,8 @@ data class Executor(
 	val parentScope: Scope,
 	var currentTreo: Treo)
 
-fun executor(treo: Treo) =
-	scope(printDigitSink).executor(treo)
-
-fun Scope.executor(treo: Treo) =
-	Executor(this, treo)
+fun executor(scope: Scope, treo: Treo) =
+	Executor(scope, treo)
 
 fun Executor.put(bit: Bit) =
 	apply { currentTreo = currentTreo.invoke(bit, parentScope) }

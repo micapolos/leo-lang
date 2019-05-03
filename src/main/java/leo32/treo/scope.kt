@@ -1,6 +1,11 @@
 package leo32.treo
 
+import leo.base.Seq
+import leo.base.applyEach
+import leo.base.charSeq
+import leo.base.map
 import leo.binary.Bit
+import leo.binary.digitBitOrNull
 
 sealed class Scope
 
@@ -22,5 +27,11 @@ fun Scope.put(bit: Bit) {
 		is SinkScope -> sink.put(bit)
 	}
 }
+
+fun Scope.putBit(bitSeq: Seq<Bit>) =
+	applyEach(bitSeq, Scope::put)
+
+fun Scope.putBit(string: String) =
+	applyEach(string.charSeq.map { digitBitOrNull!! }, Scope::put)
 
 val voidScope = scope(voidSink)

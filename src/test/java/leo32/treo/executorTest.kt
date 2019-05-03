@@ -25,7 +25,7 @@ class ExecutorTest {
 					treo(back.back.back))))
 			.enter(bit0)!! // initialization
 
-		val executor = executor(negatorTreo)
+		val executor = executor(voidScope, negatorTreo)
 		executor.bitString.assertEqualTo("0")
 
 		executor.plusBit("1")

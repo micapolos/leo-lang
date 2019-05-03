@@ -101,6 +101,9 @@ fun <T> Seq<T>.then(fn: () -> Seq<T>): Seq<T> =
 fun <T, R> R.fold(seq: Seq<T>, fn: R.(T) -> R) =
 	seq.fold(this, fn)
 
+fun <T, R> R.applyEach(seq: Seq<T>, fn: R.(T) -> Unit): R =
+	fold(seq) { apply { fn(it) } }
+
 fun <T, R : Any> R?.orNullFold(seq: Seq<T>, fn: R.(T) -> R?): R? =
 	orNull.fold(seq) { this?.fn(it) }
 
