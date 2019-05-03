@@ -9,8 +9,8 @@ fun fn(treo: Treo) = Fn(treo)
 
 val Fn.charSeq get() = flatSeq(seq('.'), treo.trailingCharSeq)
 
-fun Fn.invoke(param: Treo, sink: Sink = voidSink): Treo {
-	val result = treo.invoke(param, sink)
+fun Fn.invoke(param: Treo, scope: Scope = voidScope): Treo {
+	val result = treo.invoke(param, scope)
 	result.rewind()
 	return result
 }

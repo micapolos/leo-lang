@@ -1,6 +1,7 @@
 package leo32.treo
 
 import leo.binary.Bit
+import leo.binary.digitChar
 
 typealias WriteFn = Bit.() -> Unit
 
@@ -11,5 +12,5 @@ fun Sink.put(bit: Bit) = putFn(bit)
 
 val voidSink: Sink = Sink { Unit }
 
-fun Sink.filter(treo: Treo): Sink =
-	Executor(this, treo).sink
+val printDigitSink: Sink =
+	Sink { print(digitChar) }

@@ -3,11 +3,10 @@
 package leo32.treo
 
 import leo.base.seq
-import leo.binary.Bit
 
-data class Put(val bit: Bit)
+data class Put(val value: Value)
 
-fun put(bit: Bit) = Put(bit)
-fun Put.invoke(sink: Sink) = sink.put(bit)
+fun put(value: Value) = Put(value)
+fun Put.invoke(scope: Scope) = scope.put(value.bit)
 val Put.char get() = 'w'
 val Put.charSeq get() = seq(char)
