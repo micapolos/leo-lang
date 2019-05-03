@@ -12,8 +12,8 @@ class TreoTest {
 	@Test
 	fun string() {
 		treo(leaf).string.assertEqualTo("|")
-		treo(variable(bit0), treo(leaf)).string.assertEqualTo("|?")
-		treo(variable(bit1), treo(leaf)).string.assertEqualTo("|?")
+		treo(variable(bit0), treo(leaf)).string.assertEqualTo("|0")
+		treo(variable(bit1), treo(leaf)).string.assertEqualTo("|1")
 		treo(variable(bit0), treo(leaf)).enter(bit0).string.assertEqualTo("0|")
 		treo(variable(bit0), treo(leaf)).enter(bit1).string.assertEqualTo("1|")
 		treo(variable(bit0), treo(leaf)).enter(bit0)!!.exitTrace!!.string.assertEqualTo("|0")
@@ -185,7 +185,7 @@ class TreoTest {
 						fn(negTreo),
 						param(treo(inputVar, treo(leaf)))),
 					treo(back.back.back))))
-		negateForever.string.assertEqualTo("|?")
+		negateForever.string.assertEqualTo("|00.?(0)<<<")
 		negateForever.invoke("01").assertEqualTo("0")
 		resultVar.bit.assertEqualTo(bit0)
 		negateForever.invoke("010").assertEqualTo("1")

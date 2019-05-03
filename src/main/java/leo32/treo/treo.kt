@@ -50,10 +50,11 @@ fun treo(leaf: Leaf) = LeafTreo(leaf)
 fun treo(branch: Branch) = BranchTreo(branch)
 fun treo(at0: At0, at1: At1) = treo(branch(at0, at1))
 fun treo(select: Select) = SelectTreo(select)
-fun treo(bit: Bit, treo: Treo) = treo(bit select treo)
+fun treo(bit: Bit, treo: Treo) = treo(value(constant(bit)), treo)
+fun treo(value: Value, treo: Treo) = treo(value select treo)
 fun treo(at0: At0) = treo(bit0, at0.treo)
 fun treo(at1: At1) = treo(bit1, at1.treo)
-fun treo(variable: Variable, treo: Treo) = treo(branch(variable, at0(treo), at1(treo)))
+fun treo(variable: Variable, treo: Treo) = treo(value(variable), treo)
 fun treo(expand: Expand) = ExpandTreo(expand)
 fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
@@ -80,7 +81,7 @@ inline fun Treo.edit(bit: Bit, fn: () -> Treo): Treo? =
 	when (this) {
 		is LeafTreo -> treo(bit, fn().withExitTrace(this))
 		is SelectTreo ->
-			if (select.bit == bit) treo(bit, fn().withExitTrace(this))
+			if (select.value.bit == bit) treo(bit, fn().withExitTrace(this))
 			else treo(branch(bit, fn().withExitTrace(this), select.treo))
 		is BranchTreo -> treo(branch(bit, fn().withExitTrace(this), branch.at(bit.inverse)))
 		is ExpandTreo -> null
@@ -127,7 +128,7 @@ val Treo.cut: Treo
 		apply { rewind() }
 
 fun SelectTreo.write(bit: Bit): Treo? =
-	select.at(bit)
+	select.enter(bit)
 
 fun BranchTreo.write(bit: Bit): Treo =
 	branch.select(bit)
@@ -148,7 +149,7 @@ fun Treo.invoke(string: String, sink: Sink = voidSink): String {
 tailrec fun Treo.invoke(treo: Treo, sink: Sink): Treo =
 	when (treo) {
 		is LeafTreo -> this
-		is SelectTreo -> invoke(treo.select.bit, sink).invoke(treo.select.treo, sink)
+		is SelectTreo -> invoke(treo.select.value.bit, sink).invoke(treo.select.treo, sink)
 		is BranchTreo -> invoke(treo.branch.enteredVariable.bit, sink).invoke(treo.branch.entered, sink)
 		is ExpandTreo -> null!!
 		is CallTreo -> null!!
@@ -210,7 +211,7 @@ val Treo.exitCharSeq: Seq<Char>
 	get() =
 		when (this) {
 			is LeafTreo -> seq()
-			is SelectTreo -> seq(select.bit.digitChar)
+			is SelectTreo -> seq(select.value.bit.digitChar)
 			is BranchTreo -> seq(branch.enteredVariable.bit.digitChar)
 			is ExpandTreo -> seq()
 			is CallTreo -> seq()
@@ -234,7 +235,7 @@ val Treo.exitBit: Bit
 	get() =
 	when (this) {
 		is LeafTreo -> fail()
-		is SelectTreo -> select.bit
+		is SelectTreo -> select.value.bit
 		is BranchTreo -> branch.enteredVariable.bit
 		is ExpandTreo -> fail()
 		is CallTreo -> fail()
