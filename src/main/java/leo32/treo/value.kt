@@ -16,11 +16,6 @@ val Value.bit
 			is VariableValue -> variable.bit
 		}
 
-fun Value.enter(bit: Bit): Boolean =
-	when (this) {
-		is ConstantValue -> constant.bit == bit
-		is VariableValue -> {
-			variable.bit = bit; true
-		}
-	}
+fun Value.canEnter(bit: Bit): Boolean =
+	this.bit == bit
 

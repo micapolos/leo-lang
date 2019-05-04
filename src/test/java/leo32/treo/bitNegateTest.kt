@@ -65,8 +65,8 @@ class BitNegateTest {
 	}
 
 	private val negVar = variable()
-	private val negTreo = treo(negVar, treo(
-		call(dupFn, param(treo(negVar, treo(leaf)))),
+	private val negTreo = treo(capture(negVar), treo(
+		call(dupFn, param(treo(value(negVar), treo(leaf)))),
 		nandTreo))
 	private val negFn = fn(negTreo)
 
@@ -78,10 +78,10 @@ class BitNegateTest {
 
 	private val andLhsVar = variable()
 	private val andRhsVar = variable()
-	private val andUsingNandTreo = treo(andLhsVar, treo(andRhsVar, treo(
-		call(nandFn, param(treo(andLhsVar, treo(andRhsVar, treo(leaf))))),
-		treo(andLhsVar, treo(
-			call(negFn, param(treo(andLhsVar, treo(leaf)))),
+	private val andUsingNandTreo = treo(capture(andLhsVar), treo(capture(andRhsVar), treo(
+		call(nandFn, param(treo(value(andLhsVar), treo(value(andRhsVar), treo(leaf))))),
+		treo(capture(andLhsVar), treo(
+			call(negFn, param(treo(value(andLhsVar), treo(leaf)))),
 			selfTreo)))))
 	private val andUsingNandFn = fn(andUsingNandTreo)
 
@@ -349,25 +349,25 @@ class BitNegateTest {
 	private val charVar6 = variable()
 	private val charVar7 = variable()
 	private val charVar =
-		treo(charVar0,
-			treo(charVar1,
-				treo(charVar2,
-					treo(charVar3,
-						treo(charVar4,
-							treo(charVar5,
-								treo(charVar6,
-									treo(charVar7,
+		treo(capture(charVar0),
+			treo(capture(charVar1),
+				treo(capture(charVar2),
+					treo(capture(charVar3),
+						treo(capture(charVar4),
+							treo(capture(charVar5),
+								treo(capture(charVar6),
+									treo(capture(charVar7),
 										treo(leaf)))))))))
 
 	fun charTreo(treo: Treo) =
-		treo(charVar0,
-			treo(charVar1,
-				treo(charVar2,
-					treo(charVar3,
-						treo(charVar4,
-							treo(charVar5,
-								treo(charVar6,
-									treo(charVar7,
+		treo(value(charVar0),
+			treo(value(charVar1),
+				treo(value(charVar2),
+					treo(value(charVar3),
+						treo(value(charVar4),
+							treo(value(charVar5),
+								treo(value(charVar6),
+									treo(value(charVar7),
 										treo))))))))
 
 	private val lhsVar = variable()
@@ -376,36 +376,36 @@ class BitNegateTest {
 	private val charMath =
 		charTreo(treo(
 			call(encodeBitFn, param(charVar)),
-			treo(lhsVar,
+			treo(capture(lhsVar),
 				charTreo(treo(
 					call(encodeOpFn, param(charVar)),
 					treo(
 						at0(treo(
 							at0(treo(
-								call(negFn, param(treo(lhsVar, treo(leaf)))),
-								treo(lhsVar, treo(
-									call(decodeBitFn, param(treo(lhsVar, treo(leaf)))),
+								call(negFn, param(treo(value(lhsVar), treo(leaf)))),
+								treo(capture(lhsVar), treo(
+									call(decodeBitFn, param(treo(value(lhsVar), treo(leaf)))),
 									treo(back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back.back))))),
 							at1(charTreo(treo(
 								call(encodeBitFn, param(charVar)),
-								treo(rhsVar, treo(
-									call(andFn, param(treo(lhsVar, treo(rhsVar, treo(leaf))))),
-									treo(lhsVar, treo(
-										call(decodeBitFn, param(treo(lhsVar, treo(leaf)))),
+								treo(capture(rhsVar), treo(
+									call(andFn, param(treo(value(lhsVar), treo(value(rhsVar), treo(leaf))))),
+									treo(capture(lhsVar), treo(
+										call(decodeBitFn, param(treo(value(lhsVar), treo(leaf)))),
 										treo(back.back.back.back.back.back.back.back)))))))))),
 						at1(treo(
 							at0(charTreo(treo(
 								call(encodeBitFn, param(charVar)),
-								treo(rhsVar, treo(
-									call(andFn, param(treo(lhsVar, treo(rhsVar, treo(leaf))))),
-									treo(lhsVar, treo(
-										call(decodeBitFn, param(treo(lhsVar, treo(leaf)))),
+								treo(capture(rhsVar), treo(
+									call(andFn, param(treo(value(lhsVar), treo(value(rhsVar), treo(leaf))))),
+									treo(capture(lhsVar), treo(
+										call(decodeBitFn, param(treo(value(lhsVar), treo(leaf)))),
 										treo(back.back.back.back)))))))),
 							at1(charTreo(treo(
 								call(encodeBitFn, param(charVar)),
-								treo(rhsVar, treo(
-									call(andFn, param(treo(lhsVar, treo(rhsVar, treo(leaf))))),
-									treo(lhsVar, treo(
-										call(decodeBitFn, param(treo(lhsVar, treo(leaf)))),
+								treo(capture(rhsVar), treo(
+									call(andFn, param(treo(value(lhsVar), treo(value(rhsVar), treo(leaf))))),
+									treo(capture(lhsVar), treo(
+										call(decodeBitFn, param(treo(value(lhsVar), treo(leaf)))),
 										treo(back.back.back.back))))))))))))))))
 }

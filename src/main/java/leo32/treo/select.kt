@@ -16,7 +16,7 @@ fun Select.at(bit: Bit): Treo? =
 	notNullIf(value.bit == bit) { treo }
 
 fun Select.enter(bit: Bit): Treo? =
-	notNullIf(value.enter(bit)) { treo }
+	notNullIf(value.canEnter(bit)) { treo }
 
 val Select.charSeq: Seq<Char>
 	get() =

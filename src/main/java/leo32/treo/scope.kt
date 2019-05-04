@@ -35,3 +35,7 @@ fun Scope.putBit(string: String) =
 	applyEach(string.charSeq.map { digitBitOrNull!! }, Scope::put)
 
 val voidScope = scope(voidSink)
+
+fun scopeString(fn: Scope.() -> Unit) =
+	sinkString { scope(this).fn() }
+

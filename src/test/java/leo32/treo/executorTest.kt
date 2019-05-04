@@ -10,9 +10,9 @@ class ExecutorTest {
 		val resultVar = variable()
 		val inputVar = variable()
 		val negatorTreo = treo(
-			resultVar,
+			capture(resultVar),
 			treo(
-				inputVar,
+				capture(inputVar),
 				treo(
 					call(
 						fn(
@@ -21,7 +21,7 @@ class ExecutorTest {
 									at1(treo(leaf)))),
 								at1(treo(
 									at0(treo(leaf)))))),
-						param(treo(inputVar, treo(leaf)))),
+						param(treo(value(inputVar), treo(leaf)))),
 					treo(back.back.back))))
 			.enter(bit0)!! // initialization
 

@@ -40,6 +40,12 @@ data class BackTreo(
 	override fun toString() = super.toString()
 }
 
+data class CaptureTreo(
+	val capture: Capture,
+	val treo: Treo) : Treo() {
+	override fun toString() = super.toString()
+}
+
 data class PutTreo(
 	val put: Put,
 	val treo: Treo) : Treo() {
@@ -54,11 +60,11 @@ fun treo(bit: Bit, treo: Treo) = treo(value(constant(bit)), treo)
 fun treo(value: Value, treo: Treo) = treo(value select treo)
 fun treo(at0: At0) = treo(bit0, at0.treo)
 fun treo(at1: At1) = treo(bit1, at1.treo)
-fun treo(variable: Variable, treo: Treo) = treo(value(variable), treo)
 fun treo(expand: Expand) = ExpandTreo(expand)
 fun treo(call: Call, treo: Treo) = CallTreo(call, treo)
 fun treo(back: Back) = BackTreo(back)
-fun treo(write: Put, treo: Treo) = PutTreo(write, treo)
+fun treo(capture: Capture, treo: Treo) = CaptureTreo(capture, treo)
+fun treo(put: Put, treo: Treo) = PutTreo(put, treo)
 
 fun Treo.withExitTrace(treo: Treo): Treo {
 	if (exitTrace != null) error("already traced: $this")
@@ -74,6 +80,7 @@ fun Treo.enter(bit: Bit): Treo? =
 		is ExpandTreo -> null
 		is CallTreo -> null
 		is BackTreo -> null
+		is CaptureTreo -> write(bit)
 		is PutTreo -> null
 	}?.withExitTrace(this)
 
@@ -113,6 +120,11 @@ fun SelectTreo.write(bit: Bit): Treo? =
 fun BranchTreo.write(bit: Bit): Treo =
 	branch.select(bit)
 
+fun CaptureTreo.write(bit: Bit): Treo {
+	capture.enter(bit)
+	return treo
+}
+
 fun Treo.invoke(bit: Bit, scope: Scope = voidScope): Treo =
 	(enter(bit) ?: error("$this.enter($bit)")).resolve(scope)
 
@@ -131,6 +143,7 @@ tailrec fun Treo.invoke(treo: Treo, scope: Scope): Treo =
 		is ExpandTreo -> null!!
 		is CallTreo -> null!!
 		is BackTreo -> null!!
+		is CaptureTreo -> null!!
 		is PutTreo -> null!!
 	}
 
@@ -148,6 +161,7 @@ fun Treo.resolveOnce(scope: Scope = voidScope): Treo? =
 		is ExpandTreo -> resolveOnce(scope)
 		is CallTreo -> resolveOnce(scope)
 		is BackTreo -> invoke(back)
+		is CaptureTreo -> null
 		is PutTreo -> resolveOnce(scope)
 	}
 
@@ -186,6 +200,7 @@ val Treo.trailingCharSeq: Seq<Char>
 			is ExpandTreo -> expand.charSeq
 			is CallTreo -> flatSeq(call.charSeq, treo.trailingCharSeq)
 			is BackTreo -> back.charSeq
+			is CaptureTreo -> flatSeq(capture.charSeq, treo.trailingCharSeq)
 			is PutTreo -> put.charSeq
 		}
 
@@ -198,6 +213,7 @@ val Treo.exitCharSeq: Seq<Char>
 			is ExpandTreo -> seq()
 			is CallTreo -> seq()
 			is BackTreo -> seq()
+			is CaptureTreo -> capture.charSeq
 			is PutTreo -> seq()
 		}
 
@@ -222,6 +238,7 @@ val Treo.exitBit: Bit
 		is ExpandTreo -> fail()
 		is CallTreo -> fail()
 		is BackTreo -> fail()
+		is CaptureTreo -> capture.variable.bit
 		is PutTreo -> fail()
 	}
 

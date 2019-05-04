@@ -1,12 +1,16 @@
 package leo32.treo
 
+import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class ScopeTest {
 	@Test
 	fun bypass() {
 		val variable = variable()
-		val scope = scope(executor(scope(printDigitSink), treo(value(variable), treo(put(value(variable)), treo(back.back)))))
-		scope.putBit("0010")
+		scopeString {
+			val scope = scope(executor(this, treo(capture(variable), treo(put(value(variable)), treo(back.back)))))
+			scope.putBit("0010")
+		}.assertEqualTo("0010")
 	}
 }
+

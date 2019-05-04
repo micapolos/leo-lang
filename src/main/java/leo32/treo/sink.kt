@@ -12,5 +12,8 @@ fun Sink.put(bit: Bit) = putFn(bit)
 
 val voidSink: Sink = Sink { Unit }
 
-val printDigitSink: Sink =
-	Sink { print(digitChar) }
+fun sinkString(fn: Sink.() -> Unit): String {
+	val stringBuilder = StringBuilder()
+	Sink { stringBuilder.append(digitChar) }.fn()
+	return stringBuilder.toString()
+}
