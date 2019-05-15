@@ -42,7 +42,7 @@ val <V : Any> Stack<V>.onlyOrNull: V?
 fun <V> Stack<V>.pop(int: Int): Stack<V>? =
 	orNull.iterate(int) { this?.tail }
 
-fun <V : Any> Stack<V>.theOnlyOrNull(fn: (V) -> Boolean): V? =
+fun <V : Any> Stack<V>.onlyOrNull(fn: (V) -> Boolean): V? =
 	all(fn)?.onlyOrNull
 
 fun <V : Any> Stack<V>.all(fn: (V) -> Boolean): Stack<V>? =
