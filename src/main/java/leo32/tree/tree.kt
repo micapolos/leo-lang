@@ -3,6 +3,7 @@ package leo32.tree
 import leo.binary.Bit
 import leo32.base.Branch
 import leo32.base.Leaf
+import leo32.base.Link
 import leo32.base.at
 
 sealed class Tree<out V>

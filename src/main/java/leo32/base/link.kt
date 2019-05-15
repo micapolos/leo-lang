@@ -1,4 +1,4 @@
-package leo32.tree
+package leo32.base
 
 import leo.base.ifOrNull
 import leo.binary.Bit

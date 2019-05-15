@@ -3,27 +3,36 @@ package leo32.tree
 import leo.binary.Bit
 import leo.binary.inverse
 import leo32.base.branch
+import leo32.base.link
+import leo32.base.other
 
 data class TreeCursor<out V>(
 	val tree: Tree<V>,
-	val parentTraceOrNull: TreeParentTrace<V>?)
+	val parentOrNull: TreeParent<V>?)
 
-fun <V> treeCursor(tree: Tree<V>, parentTraceOrNull: TreeParentTrace<V>?) =
-	TreeCursor(tree, parentTraceOrNull)
+fun <V> cursor(tree: Tree<V>, parentOrNull: TreeParent<V>? = null) =
+	TreeCursor(tree, parentOrNull)
 
 val <V> TreeCursor<V>.back
-	get() = parentTraceOrNull?.let { parentTrace ->
+	get() = parentOrNull?.let { parentTrace ->
 		if (parentTrace.otherTreeOrNull == null)
-			treeCursor(
+			cursor(
 				tree(link(parentTrace.bit, tree)),
-				parentTrace.parentTraceOrNull)
+				parentTrace.parentOrNull)
 		else
-			treeCursor(
-				tree(branch(parentTrace.bit, tree, parentTrace.otherTreeOrNull)),
-				parentTrace.parentTraceOrNull)
+			cursor(
+				tree(branch(
+					link(parentTrace.bit, tree),
+					other(parentTrace.otherTreeOrNull))),
+				parentTrace.parentOrNull)
 	}
 
 fun <V> TreeCursor<V>.at(bit: Bit) =
 	tree.at(bit)?.let { treeAtBit ->
-		treeCursor(treeAtBit, treeParentTrace(bit, tree.at(bit.inverse), parentTraceOrNull))
+		cursor(
+			treeAtBit,
+			parent(
+				bit,
+				tree.at(bit.inverse),
+				parentOrNull))
 	}
