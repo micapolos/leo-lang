@@ -9,9 +9,9 @@ fun template(argument: Argument): Template = ArgumentTemplate(argument)
 fun template(selector: Selector): Template = SelectorTemplate(selector)
 fun template(application: Application): Template = ApplicationTemplate(application)
 
-fun Template.apply(parameter: Parameter): Result? =
+fun Template.apply(value: Value): Value =
 	when (this) {
-		is ArgumentTemplate -> argument.apply(parameter)
-		is SelectorTemplate -> selector.apply(parameter)
-		is ApplicationTemplate -> application.apply(parameter)
+		is ArgumentTemplate -> argument.apply(value)
+		is SelectorTemplate -> selector.apply(value)
+		is ApplicationTemplate -> TODO()//application.apply(parameter)
 	}

@@ -7,8 +7,8 @@ data class RhsGetter(val rhs: Rhs) : Getter()
 fun getter(lhs: Lhs): Getter = LhsGetter(lhs)
 fun getter(rhs: Rhs): Getter = RhsGetter(rhs)
 
-fun Getter.apply(parameter: Parameter): Result? =
+fun Getter.apply(script: Script): Script =
 	when (this) {
-		is LhsGetter -> lhs.apply(parameter)
-		is RhsGetter -> rhs.apply(parameter)
+		is LhsGetter -> lhs.apply(script)
+		is RhsGetter -> rhs.apply(script)
 	}

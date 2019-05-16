@@ -3,25 +3,45 @@ package leo3
 import leo.base.*
 
 data class Script(
-	val lineStackOrNull: Stack<Line>?) {
+	val parentOrNull: ScriptParent?,
+	val termOrNull: Term?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-fun script(vararg lines: Line) =
-	Script(stackOrNull(*lines))
+data class ScriptParent(
+	val script: Script,
+	val begin: Begin) {
+	override fun toString() = appendableString { it.append(this) }
+}
 
-fun Appendable.append(script: Script): Appendable =
-	fold(script.lineStackOrNull?.reverse.seq, Appendable::append)
+val Empty.script
+	get() = Script(null, null)
 
-fun Script.lineAt(word: Word) =
-	lineStackOrNull?.onlyOrNull { it.word == word }
+fun script(termOrNull: Term?) =
+	Script(null, termOrNull)
 
-fun Script.scriptAt(word: Word) =
-	lineAt(word)?.script
+fun Script.plus(token: Token): Script? =
+	when (token) {
+		is BeginToken -> Script(ScriptParent(this, token.begin), null)
+		is EndToken -> parentOrNull?.let { parent ->
+			Script(
+				parent.script.parentOrNull,
+				parent.script.termOrNull.plus(parent.begin.word, termOrNull))
+		}
+	}
 
-val Script.onlyLine
-	get() =
-		lineStackOrNull?.onlyOrNull
+fun Script.plus(termOrNull: Term?): Script =
+	orNullFold(termOrNull.tokenSeq, Script::plus)!!
 
-fun Script.onlyScriptAt(word: Word) =
-	onlyLine?.scriptAt(word)
+val Script.resultOrNull: Result?
+	get() = parentOrNull.ifNull { result(termOrNull) }
+
+fun Appendable.append(script: Script) =
+	this
+		.ifNotNull(script.parentOrNull) { append(it) }
+		.ifNotNull(script.termOrNull) { append(it) }
+
+fun Appendable.append(scriptParent: ScriptParent): Appendable =
+	this
+		.append(scriptParent.script)
+		.append(scriptParent.begin)

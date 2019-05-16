@@ -20,6 +20,9 @@ fun function(vararg pairs: Pair<Token, Match>) =
 fun Function.at(token: Token) =
 	tokenToMatchDict.at(token)
 
+val Function.isEmpty
+	get() = tokenToMatchDict.isEmpty
+
 fun Appendable.append(function: Function): Appendable =
-	if (function.tokenToMatchDict.isEmpty) this
+	if (function.isEmpty) this
 	else append('?')
