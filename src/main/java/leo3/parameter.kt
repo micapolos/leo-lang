@@ -1,5 +1,5 @@
 package leo3
 
-data class Parameter(val termOrNull: Term?)
+data class Parameter(val nodeOrNull: Node?)
 
-fun parameter(termOrNull: Term?) = Parameter(termOrNull)
+fun parameter(nodeOrNull: Node?) = Parameter(nodeOrNull)

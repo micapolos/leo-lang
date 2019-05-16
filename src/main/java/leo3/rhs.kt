@@ -5,4 +5,4 @@ object Rhs
 val rhs = Rhs
 
 fun Rhs.apply(script: Script): Script =
-	script.termOrNull!!.run { script(rhs) }
+	script.nodeOrNull!!.run { script(rhs) }

@@ -1,10 +1,13 @@
 package leo3
 
-import leo.base.*
+import leo.base.Empty
+import leo.base.appendableString
+import leo.base.ifNotNull
+import leo.base.orNullFold
 
 data class Script(
 	val parentOrNull: ScriptParent?,
-	val termOrNull: Term?) {
+	val nodeOrNull: Node?) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
@@ -17,8 +20,8 @@ data class ScriptParent(
 val Empty.script
 	get() = Script(null, null)
 
-fun script(termOrNull: Term?) =
-	Script(null, termOrNull)
+fun script(nodeOrNull: Node?) =
+	Script(null, nodeOrNull)
 
 fun Script.plus(token: Token): Script? =
 	when (token) {
@@ -26,20 +29,17 @@ fun Script.plus(token: Token): Script? =
 		is EndToken -> parentOrNull?.let { parent ->
 			Script(
 				parent.script.parentOrNull,
-				parent.script.termOrNull.plus(parent.begin.word, termOrNull))
+				parent.script.nodeOrNull.plus(parent.begin.word, nodeOrNull))
 		}
 	}
 
-fun Script.plus(termOrNull: Term?): Script =
-	orNullFold(termOrNull.tokenSeq, Script::plus)!!
-
-val Script.resultOrNull: Result?
-	get() = parentOrNull.ifNull { result(termOrNull) }
+fun Script.plus(nodeOrNull: Node?): Script =
+	orNullFold(nodeOrNull.tokenSeq, Script::plus)!!
 
 fun Appendable.append(script: Script) =
 	this
 		.ifNotNull(script.parentOrNull) { append(it) }
-		.ifNotNull(script.termOrNull) { append(it) }
+		.ifNotNull(script.nodeOrNull) { append(it) }
 
 fun Appendable.append(scriptParent: ScriptParent): Appendable =
 	this
