@@ -7,5 +7,5 @@ data class Selector(
 fun selector(template: Template, getter: Getter) =
 	Selector(template, getter)
 
-fun Selector.apply(term: Term): Term? =
-	getter.apply(template.apply(term))
+fun Selector.apply(parameter: Parameter): Result? =
+	template.apply(parameter)?.run { getter.apply(parameter(termOrNull)) }

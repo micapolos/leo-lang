@@ -52,3 +52,6 @@ fun <V : Any> Dict<*, V>.contains(dict: Dict<*, V>, fn: V.(V) -> Boolean): Boole
 fun <K, V : Any> Dict<K, V>.computeIfAbsent(key: K, fn: () -> V): Dict<K, V> =
 	if (!contains(key)) put(key, fn())
 	else this
+
+val Dict<*, *>.isEmpty
+	get() = tree is LeafTree

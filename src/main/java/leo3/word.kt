@@ -23,6 +23,9 @@ fun word(string: String) =
 fun Appendable.append(word: Word): Appendable =
 	append(word.nonZeroByteStack.reverse.seq.utf8String)
 
+val Word.byteSeq
+	get() = nonZeroByteStack.reverse.seq
+
 val defineWord = word("define")
 val quoteWord = word("quote")
 val unquoteWord = word("unquote")
