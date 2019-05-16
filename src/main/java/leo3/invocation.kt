@@ -3,26 +3,26 @@ package leo3
 import leo.base.appendableString
 import leo.base.empty
 
-data class Invocation(
-	val tokenReader: TokenReader,
+data class Value(
+	val termParser: TermParser,
 	val function: Function) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-fun invocation(function: Function) =
-	Invocation(empty.tokenReader, function)
+fun value(function: Function) =
+	Value(empty.termParser, function)
 
-fun invocation(termOrNull: Term?) =
-	Invocation(empty.tokenReader.plus(termOrNull), function())
+fun value(termOrNull: Term?) =
+	Value(empty.termParser.plus(termOrNull), function())
 
-fun Invocation.plus(token: Token): Invocation? =
+fun Value.plus(token: Token): Value? =
 	function.at(token)?.let { matchAtToken ->
-		tokenReader.plus(token)?.let { tokenReaderPlusToken ->
+		termParser.plus(token)?.let { tokenReaderPlusToken ->
 			matchAtToken.resolve(tokenReaderPlusToken)
 		}
 	}
 
-fun Appendable.append(invocation: Invocation): Appendable =
+fun Appendable.append(value: Value): Appendable =
 	this
-		.append(invocation.tokenReader)
-		.append(invocation.function)
+		.append(value.termParser)
+		.append(value.function)

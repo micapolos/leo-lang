@@ -9,11 +9,11 @@ fun match(function: Function): Match = FunctionMatch(function)
 fun match(template: Template): Match = TemplateMatch(template)
 fun match(call: Call): Match = CallMatch(call)
 
-fun Match.resolve(tokenReader: TokenReader): Invocation? =
+fun Match.resolve(termParser: TermParser): Value? =
 	when (this) {
-		is FunctionMatch -> Invocation(tokenReader, function)
-		is TemplateMatch -> tokenReader.parameterOrNull?.let { parameter ->
-			template.apply(parameter)?.termOrNull.run { invocation(this) }
+		is FunctionMatch -> Value(termParser, function)
+		is TemplateMatch -> termParser.parameterOrNull?.let { parameter ->
+			template.apply(parameter)?.termOrNull.run { value(this) }
 		}
 		is CallMatch -> TODO()
 	}

@@ -20,7 +20,7 @@ class FunctionTest {
 					token(begin(word("zero"))) to match(cont),
 					token(begin(word("one"))) to match(cont))))
 
-		invocation(bitNegateFunction)
+		value(bitNegateFunction)
 			.plus(token(begin(word("bit"))))!!
 			.plus(token(begin(word("zero"))))!!
 			.plus(token(end))!!
