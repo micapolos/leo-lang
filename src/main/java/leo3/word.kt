@@ -1,6 +1,8 @@
 package leo3
 
 import leo.base.*
+import leo.binary.Bit
+import leo.binary.byteBitSeq
 import leo.binary.utf8ByteSeq
 import leo.binary.utf8String
 
@@ -11,6 +13,11 @@ data class Word(
 
 fun word(nonZeroByteStack: Stack<Byte>) =
 	Word(nonZeroByteStack)
+
+fun Word?.plus(byte: Byte): Word? =
+	notNullIf(byte != 0.toByte()) {
+		this?.nonZeroByteStack.push(byte).run(::word)
+	}
 
 fun wordOrNull(string: String) =
 	nullOf<Stack<Byte>>()
@@ -25,6 +32,9 @@ fun Appendable.append(word: Word): Appendable =
 
 val Word.byteSeq
 	get() = nonZeroByteStack.reverse.seq
+
+val Word.bitSeq: Seq<Bit>
+	get() = byteSeq.byteBitSeq
 
 val defineWord = word("define")
 val quoteWord = word("quote")

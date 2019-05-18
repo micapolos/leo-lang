@@ -1,27 +1,28 @@
 package leo3
 
 import leo.base.*
+import leo.binary.Bit
 
 data class Node(
-	val lhs: Node?,
+	val lhs: Value,
 	val word: Word,
-	val rhs: Node?)
+	val rhs: Value)
 
-fun term(lhs: Node?, word: Word, rhs: Node?) =
+fun node(lhs: Value, word: Word, rhs: Value) =
 	Node(lhs, word, rhs)
 
-fun Node?.plus(word: Word, rhs: Node? = null) =
-	term(this, word, rhs)
+fun Value.plus(word: Word, rhs: Value) =
+	node(this, word, rhs)
 
-val Node.tokenSeqNode: SeqNode<Token>?
-	get() = seqNodeOrNull(
+val Node.tokenSeq: Seq<Token>
+	get() = flatSeq(
 		lhs.tokenSeq,
 		token(begin(word)).onlySeq,
 		rhs.tokenSeq,
 		token(end).onlySeq)
 
-val Node?.tokenSeq: Seq<Token>
-	get() = Seq { this?.tokenSeqNode }
+val Node.bitSeq: Seq<Bit>
+	get() = tokenSeq.map { bitSeq }.flat
 
 fun Appendable.append(node: Node): Appendable =
 	fold(node.tokenSeq) { append(it) }

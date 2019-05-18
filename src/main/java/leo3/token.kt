@@ -15,10 +15,13 @@ data class EndToken(val end: End) : Token() {
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
 
-val Token.byteSeq
+fun token(wordOrNull: Word?) =
+	if (wordOrNull == null) token(end) else token(begin(wordOrNull))
+
+val Token.bitSeq
 	get() = when (this) {
-		is BeginToken -> begin.byteSeq
-		is EndToken -> end.byteSeq
+		is BeginToken -> begin.bitSeq
+		is EndToken -> end.bitSeq
 	}
 
 fun Appendable.append(token: Token) =

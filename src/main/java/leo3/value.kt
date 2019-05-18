@@ -1,33 +1,31 @@
 package leo3
 
-import leo.base.appendableString
-import leo.base.empty
-import leo.base.failIfOr
+import leo.base.*
+import leo.binary.Bit
 
 data class Value(
-	val script: Script,
-	val function: Function) {
+	val nodeOrNull: Node?,
+	val scope: Scope) {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-fun value(function: Function) =
-	Value(empty.script, function)
+val Scope.emptyValue
+	get() = Value(null, this)
 
-fun value(script: Script) =
-	Value(script, function())
+fun value(vararg lines: Line) =
+	empty.scope.emptyValue.fold(lines, Value::plus)
 
-fun Value.plus(token: Token): Value? =
-	function.at(token)?.let { matchAtToken ->
-		script.plus(token)?.let { scriptPlusToken ->
-			matchAtToken.resolve(scriptPlusToken)
-		}
-	}
-
-val Value.fullScript
-	get() =
-		failIfOr(!function.isEmpty) { script }
+fun Value.plus(line: Line) =
+	Value(node(this, line.word, line.value), scope)
 
 fun Appendable.append(value: Value): Appendable =
-	this
-		.append(value.script)
-		.append(value.function)
+	ifNotNull(value.nodeOrNull) { append(it) }
+
+fun Value.apply(parameter: Parameter) = this
+fun Value.apply(value: Value): Value = TODO()
+
+val Value.tokenSeq: Seq<Token>
+	get() = nodeOrNull.orEmptyIfNullSeq { tokenSeq }
+
+val Value.bitSeq: Seq<Bit>
+	get() = nodeOrNull.orEmptyIfNullSeq { bitSeq }

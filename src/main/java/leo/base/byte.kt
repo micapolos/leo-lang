@@ -1,6 +1,9 @@
 package leo.base
 
 import leo.binary.Zero
+import leo.binary.bit
+
+fun byte(int: Int) = int.toByte()
 
 // TODO: Check if it's properly inlined in java.
 fun byte(bit7: EnumBit, bit6: EnumBit, bit5: EnumBit, bit4: EnumBit, bit3: EnumBit, bit2: EnumBit, bit1: EnumBit, bit0: EnumBit): Byte = 0
@@ -157,3 +160,6 @@ val Byte.ushr1
 @Suppress("unused")
 val Zero.byte
 	get() = 0.clampedByte
+
+val Byte.isZero get() = this == byte(0)
+val Byte.bit get() = isZero.not().bit

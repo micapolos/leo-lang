@@ -1,10 +1,10 @@
 package leo3
 
+import leo.base.Seq
 import leo.base.appendableString
 import leo.base.byte
-import leo.base.flatSeq
-import leo.base.onlySeq
-import leo.binary.zero
+import leo.base.seqNodeOrNull
+import leo.binary.bitSeq
 
 data class Begin(
 	val word: Word) {
@@ -13,8 +13,8 @@ data class Begin(
 
 fun begin(word: Word) = Begin(word)
 
-val Begin.byteSeq
-	get() = flatSeq(word.byteSeq, zero.byte.onlySeq)
+val Begin.bitSeq
+	get() = Seq { seqNodeOrNull(word.bitSeq, byte(0).bitSeq) }
 
 fun Appendable.append(begin: Begin): Appendable =
 	append(begin.word).append('(')

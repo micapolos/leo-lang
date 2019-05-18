@@ -7,8 +7,5 @@ data class Selector(
 fun selector(template: Template, getter: Getter) =
 	Selector(template, getter)
 
-fun Selector.apply(value: Value): Value =
-	template
-		.apply(value)
-		.fullScript
-		.let { script -> value(getter.apply(script)) }
+fun Selector.apply(parameter: Parameter): Value =
+	getter.apply(template.apply(parameter).nodeOrNull!!)
