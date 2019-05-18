@@ -15,6 +15,9 @@ val Scope.emptyValue
 fun value(vararg lines: Line) =
 	empty.scope.emptyValue.fold(lines, Value::plus)
 
+fun value(string: String) =
+	value(line(word(string)))
+
 fun Value.plus(line: Line) =
 	Value(node(this, line.word, line.value), scope)
 
@@ -22,7 +25,9 @@ fun Appendable.append(value: Value): Appendable =
 	ifNotNull(value.nodeOrNull) { append(it) }
 
 fun Value.apply(parameter: Parameter) = this
-fun Value.apply(value: Value): Value = TODO()
+
+fun Value.apply(value: Value): Value =
+	scope.apply(value)
 
 val Value.tokenSeq: Seq<Token>
 	get() = nodeOrNull.orEmptyIfNullSeq { tokenSeq }

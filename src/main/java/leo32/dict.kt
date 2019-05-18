@@ -19,6 +19,11 @@ fun <T : Any> Empty.symbolDict() =
 fun <K, V : Any> Dict<K, V>.contains(key: K): Boolean =
 	at(key) != null
 
+fun <K, V : Any> Dict<K, V>.at(bit: Bit): Dict<K, V>? =
+	tree.at(bit)?.let { treeAtBit ->
+		copy(tree = treeAtBit)
+	}
+
 fun <K, V : Any> Dict<K, V>.at(key: K): V? =
 	tree.at(key.getBitSeq())?.let { tree ->
 		when (tree) {

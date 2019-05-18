@@ -7,13 +7,13 @@ data class BitReader(
 	val byteReader: ByteReader,
 	val partialByte: PartialByte)
 
-val ByteReader.completedBitParser
+val ByteReader.completedBitReader
 	get() = BitReader(this, empty.partialByte)
 
 fun BitReader.read(bit: Bit): BitReader? {
 	val nextPartialByte = partialByte.plus(bit)
 	return nextPartialByte.fullByteOrNull.ifNotNullOr(
-		{ completeByte -> byteReader.read(completeByte)?.completedBitParser },
+		{ completeByte -> byteReader.read(completeByte)?.completedBitReader },
 		{ copy(partialByte = nextPartialByte) })
 }
 

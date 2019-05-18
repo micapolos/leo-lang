@@ -9,6 +9,9 @@ data class LineReader(
 fun lineReader(value: Value) =
 	LineReader(value)
 
+val Value.lineReader
+	get() = lineReader(this)
+
 val LineReader.begin
 	get() = lineReader(value.scope.emptyValue)
 
