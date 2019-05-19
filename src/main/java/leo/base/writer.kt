@@ -3,6 +3,8 @@ package leo.base
 data class Writer<in V>(
 	val writeFn: (V) -> Writer<V>)
 
+typealias Write<V, T> = Writer<V>.(T) -> Writer<V>
+
 fun <V> Writer<V>.write(value: V): Writer<V> =
 	writeFn(value)
 

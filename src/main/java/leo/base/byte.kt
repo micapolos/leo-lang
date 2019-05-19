@@ -1,12 +1,24 @@
 package leo.base
 
+import leo.binary.Bit
 import leo.binary.Zero
 import leo.binary.bit
+import leo.binary.int
 
 fun byte(int: Int) = int.toByte()
 
 // TODO: Check if it's properly inlined in java.
 fun byte(bit7: EnumBit, bit6: EnumBit, bit5: EnumBit, bit4: EnumBit, bit3: EnumBit, bit2: EnumBit, bit1: EnumBit, bit0: EnumBit): Byte = 0
+	.or(bit7.int.shl(7))
+	.or(bit6.int.shl(6))
+	.or(bit5.int.shl(5))
+	.or(bit4.int.shl(4))
+	.or(bit3.int.shl(3))
+	.or(bit2.int.shl(2))
+	.or(bit1.int.shl(1))
+	.or(bit0.int.shl(0)).clampedByte
+
+fun byte(bit7: Bit, bit6: Bit, bit5: Bit, bit4: Bit, bit3: Bit, bit2: Bit, bit1: Bit, bit0: Bit): Byte = 0
 	.or(bit7.int.shl(7))
 	.or(bit6.int.shl(6))
 	.or(bit5.int.shl(5))

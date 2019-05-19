@@ -1,6 +1,7 @@
 package leo3
 
 import leo.base.appendableString
+import leo.base.nullOf
 
 sealed class Token
 
@@ -28,4 +29,12 @@ fun Appendable.append(token: Token) =
 	when (token) {
 		is BeginToken -> append(token.begin)
 		is EndToken -> append(token.end)
+	}
+
+fun Reader.readToken(): Read<Token> =
+	readByte().let { readByte ->
+		nullOf<Word>()
+			.plus(readByte.value)
+			?.let { word -> readByte.reader.readWordTo(word).map { token(begin(it)) } }
+			?: readByte.map { token(end) }
 	}

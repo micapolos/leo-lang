@@ -36,6 +36,13 @@ val Word.byteSeq
 val Word.bitSeq: Seq<Bit>
 	get() = byteSeq.byteBitSeq
 
+tailrec fun Reader.readWordTo(word: Word): Read<Word> {
+	val read = readByte()
+	val wordPlusByteOrNull = word.plus(read.value)
+	return if (wordPlusByteOrNull == null) Read(word, read.reader)
+	else read.reader.readWordTo(wordPlusByteOrNull)
+}
+
 val defineWord = word("define")
 val quoteWord = word("quote")
 val unquoteWord = word("unquote")
