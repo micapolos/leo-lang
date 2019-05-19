@@ -5,11 +5,13 @@ sealed class Template
 data class ArgumentTemplate(val argument: Argument) : Template()
 data class ValueTemplate(val value: Value) : Template()
 data class SelectorTemplate(val selector: Selector) : Template()
+data class PlusTemplate(val plus: Plus) : Template()
 data class CallTemplate(val call: Call) : Template()
 
 fun template(argument: Argument): Template = ArgumentTemplate(argument)
 fun template(value: Value): Template = ValueTemplate(value)
 fun template(selector: Selector): Template = SelectorTemplate(selector)
+fun template(plus: Plus): Template = PlusTemplate(plus)
 fun template(call: Call): Template = CallTemplate(call)
 
 fun Template.apply(parameter: Parameter): Value =
@@ -17,5 +19,6 @@ fun Template.apply(parameter: Parameter): Value =
 		is ArgumentTemplate -> argument.apply(parameter)
 		is ValueTemplate -> value.apply(parameter)
 		is SelectorTemplate -> selector.apply(parameter)
+		is PlusTemplate -> plus.apply(parameter)
 		is CallTemplate -> call.apply(parameter)
 	}

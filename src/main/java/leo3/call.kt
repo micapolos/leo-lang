@@ -1,12 +1,12 @@
 package leo3
 
-data class Call(
-	val lhsTemplate: Template,
-	val rhsTemplate: Template)
+data class Call(val lhs: Body, val rhs: BodyLine)
+
+fun call(lhs: Body, rhs: BodyLine) = Call(lhs, rhs)
 
 fun Call.apply(parameter: Parameter) =
-	lhsTemplate.apply(parameter).let { lhsValue ->
-		rhsTemplate.apply(parameter).let { rhsValue ->
-			lhsValue.apply(rhsValue)
+	lhs.apply(parameter).let { lhsApplied ->
+		rhs.apply(parameter).let { rhsApplied ->
+			lhsApplied.call(rhsApplied)
 		}
 	}

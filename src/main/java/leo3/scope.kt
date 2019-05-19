@@ -2,6 +2,7 @@ package leo3
 
 import leo.base.Empty
 import leo.base.empty
+import leo.base.fold
 import leo.binary.Bit
 import leo32.Dict
 import leo32.at
@@ -21,15 +22,15 @@ fun Scope.matchAt(bit: Bit): Match? =
 		match(Scope(templateTreeAtBit))
 	}
 
-fun Scope.templateAt(value: Value): Template? =
-	Dict<Value, Template>(templateTree) { bitSeq }.at(value)
+fun Scope.templateAt(line: Line): Template? =
+	Dict<Line, Template>(templateTree) { bitSeq }.at(line)
 
 fun Scope.put(value: Value, template: Template) =
 	Scope(Dict<Value, Template>(templateTree) { bitSeq }.put(value, template).tree)
 
+fun scope(vararg pairs: Pair<Value, Template>) =
+	empty.scope.fold(pairs) { put(it.first, it.second) }
+
 val Scope.completedBitReader
 	get() =
 		emptyValue.lineReader.completedTokenReader.completedWordReader.completedByteReader.completedBitReader
-
-fun Scope.apply(value: Value) =
-	templateAt(value)!!.apply(parameter(value))

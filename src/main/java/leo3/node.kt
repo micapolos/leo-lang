@@ -24,5 +24,8 @@ val Node.tokenSeq: Seq<Token>
 val Node.bitSeq: Seq<Bit>
 	get() = tokenSeq.map { bitSeq }.flat
 
+val Node.lineSeq: Seq<Line>
+	get() = lhs.lineSeq.then { line(word, rhs).onlySeq }
+
 fun Appendable.append(node: Node): Appendable =
 	fold(node.tokenSeq) { append(it) }
