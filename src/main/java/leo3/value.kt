@@ -44,3 +44,6 @@ val Value.tokenSeq: Seq<Token>
 
 val Value.bitSeq: Seq<Bit>
 	get() = nodeOrNull.orEmptyIfNullSeq { bitSeq }
+
+fun valueOrNull(bitSeq: Seq<Bit>) =
+	empty.scope.completedBitReader.orNullFold(bitSeq) { read(it) }?.valueOrNull
