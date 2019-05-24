@@ -26,10 +26,20 @@ val BitReader.completedByteReaderOrNull
 val BitReader.bitSeq: Seq<Bit>
 	get() = flatSeq(byteReader.bitSeq, partialByte.bitSeq)
 
+val Value.completedBitReader
+	get() =
+		this
+			.lineReader
+			.completedTokenReader
+			.completedWordReader
+			.completedByteReader
+			.completedBitReader
+
 val BitReader.valueOrNull
-	get() = orNull
-		?.completedByteReaderOrNull
-		?.completedWordReader
-		?.tokenReader
-		?.lineReader
-		?.value
+	get() =
+		orNull
+			?.completedByteReaderOrNull
+			?.completedWordReader
+			?.tokenReader
+			?.lineReader
+			?.value

@@ -1,7 +1,6 @@
 package leo3
 
 import leo.base.assertEqualTo
-import leo.base.empty
 import kotlin.test.Test
 
 class TemplateTest {
@@ -26,13 +25,13 @@ class TemplateTest {
 			.assertEqualTo(value("bar"))
 	}
 
-	@Test
-	fun callTemplate() {
-		template(
-			call(
-				body(template(empty.scope.put(value("foo"), template(value("bar"))).emptyValue)),
-				line(word("foo"), body())))
-			.apply(parameter(value()))
-			.assertEqualTo(value("bar"))
-	}
+//	@Test
+//	fun callTemplate() {
+//		template(
+//			call(
+//				body(template(empty.scope.put(value("foo"), template(value("bar"))).emptyValue)),
+//				line(word("foo"), body())))
+//			.apply(parameter(value()))
+//			.assertEqualTo(value("bar"))
+//	}
 }

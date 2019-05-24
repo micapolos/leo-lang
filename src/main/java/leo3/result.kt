@@ -1,5 +1,5 @@
 package leo3
 
-data class Result(val nodeOrNull: Node?)
+data class Result(val termOrNull: Term?)
 
-fun result(nodeOrNull: Node?) = Result(nodeOrNull)
+fun result(termOrNull: Term?) = Result(termOrNull)

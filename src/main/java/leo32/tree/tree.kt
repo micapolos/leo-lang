@@ -1,6 +1,10 @@
 package leo32.tree
 
-import leo.binary.*
+import leo.base.Seq
+import leo.base.seqNodeOrNull
+import leo.binary.Bit
+import leo.binary.inverse
+import leo.binary.isZero
 import leo3.*
 import leo32.base.*
 
@@ -10,13 +14,15 @@ data class LeafTree<V>(
 	val leaf: Leaf<V>
 ) : Tree<V>()
 
+sealed class InnerTree<out V> : Tree<V>()
+
 data class LinkTree<V>(
 	val link: Link<Tree<V>>
-) : Tree<V>()
+) : InnerTree<V>()
 
 data class BranchTree<V>(
 	val branch: Branch<Tree<V>>
-) : Tree<V>()
+) : InnerTree<V>()
 
 fun <V> tree(leaf: Leaf<V>) = LeafTree(leaf)
 fun <V> tree(link: Link<Tree<V>>) = LinkTree(link)
@@ -40,11 +46,23 @@ fun <V> Tree<V>.update(bit: Bit, fn: Tree<V>?.() -> Tree<V>): Tree<V> =
 			tree(branch(bit, branch.at(bit).fn(), branch.at(bit.inverse)))
 	}
 
+fun <V> Tree<V>.put(bit: Bit, value: V): Tree<V> =
+	update(bit) { tree(leaf(value)) }
+
+fun <V> Tree<V>.update(bitSeq: Seq<Bit>, fn: Tree<V>?.() -> Tree<V>): Tree<V> {
+	val seqNodeOrNull = bitSeq.seqNodeOrNull
+	return if (seqNodeOrNull == null) fn()
+	else update(seqNodeOrNull.first) { update(seqNodeOrNull.remaining, fn) }
+}
+
+fun <V> Tree<V>.put(bitSeq: Seq<Bit>, value: V): Tree<V> =
+	update(bitSeq) { tree(leaf(value)) }
+
 fun <V> Writer.write(tree: Tree<V>, writeValueFn: WriteValueFn<V>): Writer =
 	when (tree) {
-		is LeafTree -> write(bit(zero)).write(tree.leaf, writeValueFn)
-		is LinkTree -> write(bit(one)).write(bit(zero)).write(tree.link) { write(it, writeValueFn) }
-		is BranchTree -> write(bit(one)).write(bit(one)).write(tree.branch) { write(it, writeValueFn) }
+		is LeafTree -> write0.write(tree.leaf, writeValueFn)
+		is LinkTree -> write1.write0.write(tree.link) { write(it, writeValueFn) }
+		is BranchTree -> write1.write1.write(tree.branch) { write(it, writeValueFn) }
 	}
 
 fun <V> Reader.readTree(readValue: ReadFn<V>): Read<Tree<V>> =

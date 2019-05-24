@@ -1,6 +1,7 @@
 package leo3
 
 import leo.base.Seq
+import leo.base.empty
 import leo.binary.Bit
 
 data class LineReader(
@@ -13,7 +14,7 @@ val Value.lineReader
 	get() = lineReader(this)
 
 val LineReader.begin
-	get() = lineReader(value.scope.emptyValue)
+	get() = lineReader(value(empty))
 
 fun LineReader.plus(line: Line): LineReader =
 	copy(value = value.plus(line))

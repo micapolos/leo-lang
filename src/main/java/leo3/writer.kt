@@ -5,14 +5,15 @@ import leo32.base.Branch
 import leo32.base.Leaf
 import leo32.base.Link
 
-data class Writer(var writeFn: Writer.(Bit) -> Writer)
+data class Writer(var writeFn: (Bit) -> Writer)
 
-fun writer(write: Writer.(Bit) -> Writer) = Writer(write)
+fun writer(write: (Bit) -> Writer) = Writer(write)
 
 typealias WriteValueFn<V> = Writer.(V) -> Writer
 
-fun Writer.write(bit: Bit) =
-	writeFn(bit)
+fun Writer.write(bit: Bit) = writeFn(bit)
+val Writer.write0 get() = write(bit(zero))
+val Writer.write1 get() = write(bit(one))
 
 fun <V> Writer.write(leaf: Leaf<V>, writeValueFn: WriteValueFn<V>) =
 	writeValueFn(leaf.value)
@@ -33,3 +34,7 @@ fun Writer.write(byte: Byte) =
 		.writeFn(byte.bit2)
 		.writeFn(byte.bit1)
 		.writeFn(byte.bit0)
+
+fun bitSeq(fn: Writer.() -> Writer) {
+
+}

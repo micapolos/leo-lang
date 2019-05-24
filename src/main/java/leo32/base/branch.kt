@@ -1,6 +1,8 @@
 package leo32.base
 
+import leo.base.Seq
 import leo.base.The
+import leo.base.flatSeq
 import leo.binary.Bit
 import leo.binary.isZero
 
@@ -64,3 +66,6 @@ fun <V> Branch<V>.union(branch: Branch<V>, fn: V.(V) -> The<V>?): Branch<V>? =
 			branch(theUnion0.value, theUnion1.value)
 		}
 	}
+
+fun <V> Branch<V>.bitSeq(valueBitSeqFn: V.() -> Seq<Bit>): Seq<Bit> =
+	flatSeq(at0.valueBitSeqFn(), at1.valueBitSeqFn())

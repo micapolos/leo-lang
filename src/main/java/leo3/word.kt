@@ -43,6 +43,9 @@ tailrec fun Reader.readWordTo(word: Word): Read<Word> {
 	else read.reader.readWordTo(wordPlusByteOrNull)
 }
 
+fun Writer.write(word: Word) =
+	fold(word.nonZeroByteStack) { write(it) }.write(byte(0))
+
 val defineWord = word("define")
 val quoteWord = word("quote")
 val unquoteWord = word("unquote")

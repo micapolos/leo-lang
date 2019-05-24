@@ -2,4 +2,4 @@ package leo3
 
 object Lhs
 val lhs = Lhs
-fun Lhs.apply(node: Node): Value = node.lhs
+fun Lhs.apply(term: Term): Value = term.lhs

@@ -8,4 +8,4 @@ fun selector(template: Template, getter: Getter) =
 	Selector(template, getter)
 
 fun Selector.apply(parameter: Parameter): Value =
-	getter.apply(template.apply(parameter).nodeOrNull!!)
+	getter.apply(template.apply(parameter).termOrNull!!)
