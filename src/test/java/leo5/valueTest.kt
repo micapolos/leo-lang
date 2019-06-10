@@ -7,11 +7,11 @@ import kotlin.test.Test
 class ValueTest {
 	@Test
 	fun constructor() {
-		val zero = value(script(line("zero")))
-		val one = value(script(line("one")))
+		val zero = value("zero" lineTo value())
+		val one = value("one" lineTo value())
 
-		val bitZero = value(script(line("bit", zero)))
-		val bitOne = value(script(line("bit", one)))
+		val bitZero = value("bit" lineTo zero)
+		val bitOne = value("bit" lineTo one)
 
 		val bitSelfFn = value(
 			function(
@@ -19,9 +19,8 @@ class ValueTest {
 				body(argument)
 					.rhs
 					.dispatch(
-						dictionary(
-							line("zero", body(bitOne)),
-							line("one", body(bitZero))))))
+						"zero" lineTo body(bitOne),
+						"one" lineTo body(bitZero))))
 		bitSelfFn.invoke(parameter(bitOne)).assertEqualTo(bitZero)
 	}
 }

@@ -12,11 +12,12 @@ data class ApplicationScript(val application: Application) : Script()
 fun script(empty: Empty): Script = EmptyScript(empty)
 fun script(application: Application): Script = ApplicationScript(application)
 
-val Script.emptyOrNull get() = (this as? EmptyScript)?.empty
+val Script.isEmpty get() = this is EmptyScript
 val Script.applicationOrNull get() = (this as? ApplicationScript)?.application
 
-fun Script.plus(vararg lines: Line) = fold(lines) { script(application(value(this), it)) }
-fun script(vararg lines: Line) = script(empty).plus(*lines)
+fun Script.apply(line: ValueLine) = script(application(value(this), line))
+fun Script.apply(vararg lines: ValueLine) = fold(lines) { apply(it) }
+fun script(vararg lines: ValueLine) = script(empty).apply(*lines)
 
 fun Appendable.append(script: Script): Appendable = when (script) {
 	is EmptyScript -> this

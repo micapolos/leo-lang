@@ -7,13 +7,13 @@ import kotlin.test.assertFails
 class DispatcherTest {
 	private val dictionary
 		get() = dictionary(
-			line("zero", body(value(script(line("zero"))))),
-			line("one", body(value(script(line("one"))))))
+			"zero" lineTo body(value(line("zero", value()))),
+			"one" lineTo body(value(line("one", value()))))
 
 	@Test
 	fun at() {
-		dictionary.at("zero").assertEqualTo(body(value(script(line("zero")))))
-		dictionary.at("one").assertEqualTo(body(value(script(line("one")))))
+		dictionary.at("zero").assertEqualTo(body(value("zero" lineTo value())))
+		dictionary.at("one").assertEqualTo(body(value("one" lineTo value())))
 		assertFails { dictionary.at("two") }
 	}
 }

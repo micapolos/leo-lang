@@ -1,5 +1,8 @@
 package leo5
 
+import leo.base.empty
+import leo.base.fold
+
 sealed class Body
 
 data class ValueBody(val value: Value) : Body()
@@ -17,11 +20,12 @@ fun body(rhs: Rhs): Body = RhsBody(rhs)
 fun body(application: BodyApplication): Body = ApplicationBody(application)
 fun body(dispatch: Dispatch): Body = DispatchBody(dispatch)
 fun body(call: Call): Body = CallBody(call)
+fun body(vararg lines: BodyLine) = body(value(script(empty))).fold(lines) { apply(it) }
 
 val Body.lhs get() = body(lhs(this))
 val Body.rhs get() = body(rhs(this))
-fun Body.plus(line: BodyLine) = body(application(this, line))
-fun Body.dispatch(dictionary: BodyDictionary) = body(dispatch(this, dictionary))
+fun Body.apply(line: BodyLine) = body(application(this, line))
+fun Body.dispatch(vararg lines: BodyLine) = body(dispatch(this, bodyDictionary(*lines)))
 fun Body.call(parameter: BodyParameter) = body(call(this, parameter))
 
 fun Body.invoke(parameter: ValueParameter): Value = when (this) {

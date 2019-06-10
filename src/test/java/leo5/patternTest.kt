@@ -7,27 +7,27 @@ class PatternTest {
 	@Test
 	fun contains() {
 		pattern()
-			.contains(value(script()))
+			.contains(value())
 			.assertEqualTo(true)
 
 		pattern()
-			.contains(value(script(line("one"))))
+			.contains(value("one" lineTo value()))
 			.assertEqualTo(false)
 
-		pattern(dictionary(line("one", pattern())))
-			.contains(value(script()))
+		pattern(dictionary("one" lineTo pattern()))
+			.contains(value())
 			.assertEqualTo(false)
 
-		pattern(dictionary(line("one", pattern())))
-			.contains(value(script(line("one", value()))))
+		pattern(dictionary("one" lineTo pattern()))
+			.contains(value("one" lineTo value()))
 			.assertEqualTo(true)
 
-		pattern(dictionary(line("one", pattern())))
-			.contains(value(script(line("two", value()))))
+		pattern(dictionary("one" lineTo pattern()))
+			.contains(value("two" lineTo value()))
 			.assertEqualTo(false)
 
-		pattern(dictionary(line("one", pattern(dictionary(line("two", pattern()))))))
-			.contains(value(script(line("one", value(script(line("two")))))))
+		pattern(dictionary("one" lineTo pattern(dictionary("two" lineTo pattern()))))
+			.contains(value("one" lineTo value("two" lineTo value())))
 			.assertEqualTo(true)
 	}
 }
