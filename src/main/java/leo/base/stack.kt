@@ -137,3 +137,8 @@ val <V> Stack<V>?.seq: Seq<V>
 				stack.head.then(stack.tail.seq)
 			}
 		}
+
+val <V> Stack<V>?.toList: List<V>
+	get() {
+		return ArrayList<V>().fold(this) { apply { add(it) } }.toList()
+	}
