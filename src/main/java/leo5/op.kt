@@ -14,9 +14,9 @@ fun op(plus: Plus): Op = PlusOp(plus)
 fun op(dispatcher: Dispatcher): Op = DispatchOp(dispatcher)
 
 fun Op.invoke(value: Value, argument: Value): Value = when (this) {
-	is LhsOp -> value.script.invokeLhs
-	is RhsOp -> value.script.invokeRhs
-	is CallOp -> value.script.invokeCall(argument)
-	is PlusOp -> value.plus(line(plus.name, plus.body.invoke(argument)))
-	is DispatchOp -> dispatcher.at(value.script.nameOrNull!!).invoke(argument)
+	is LhsOp -> value.invokeLhs
+	is RhsOp -> value.invokeRhs
+	is CallOp -> call.body.invoke(value)
+	is PlusOp -> value.invokePlus(line(plus.name, plus.body.invoke(argument)))
+	is DispatchOp -> value.invokeDispatch(dispatcher, argument)
 }

@@ -1,31 +1,26 @@
 package leo5
 
-import leo.base.appendableString
-import leo.base.empty
-import leo.base.fold
+sealed class Value
 
-data class Value(val script: Script, val type: Type) {
-	override fun toString() = appendableString { it.append(this) }
+data class ScriptValue(val script: Script) : Value()
+data class FunctionValue(val function: Function) : Value()
+
+fun value() = value(script())
+fun value(script: Script): Value = ScriptValue(script)
+fun value(function: Function): Value = FunctionValue(function)
+
+val Value.isEmpty get() = (this is ScriptValue) && script is EmptyScript
+val Value.scriptOrNull get() = (this as? ScriptValue)?.script
+val Value.functionOrNull get() = (this as? FunctionValue)?.function
+
+fun Value.invoke(argument: Value) = functionOrNull!!.body.invoke(argument)
+val Value.invokeLhs get() = scriptOrNull!!.applicationOrNull!!.value
+val Value.invokeRhs get() = scriptOrNull!!.applicationOrNull!!.line.value
+fun Value.invokePlus(line: Line) = value(scriptOrNull!!.plus(line))
+fun Value.invokeDispatch(dispatcher: Dispatcher, argument: Value) =
+	dispatcher.at(scriptOrNull!!.applicationOrNull!!.line.name).invoke(argument)
+
+fun Appendable.append(value: Value): Appendable = when (value) {
+	is ScriptValue -> append(value.script)
+	is FunctionValue -> append('*')
 }
-
-fun value(script: Script, type: Type = type(self)) = Value(script, type)
-fun Value.plus(vararg lines: Line) = fold(lines) { plus(it) }
-fun value(vararg lines: Line) = value(script(empty)).plus(*lines)
-
-fun Value.plus(line: Line): Value =
-	plus(
-		line,
-		if (type.isSelf && line.value.type.isSelf) type(self)
-		else type(typeValue.plus(line(line.name, line.value.typeValue))))
-
-fun Value.plus(line: Line, type: Type): Value = value(script(application(this, line)), type)
-
-val Value.typeValue: Value get() = type.valueOrNull ?: this
-
-infix fun Script.of(type: Type) = value(this, type)
-infix fun Script.of(self: Self) = this of type(self)
-infix fun Script.of(value: Value) = this of type(value)
-
-fun Value.invoke(argument: Value) = script.invoke(argument)
-
-fun Appendable.append(value: Value): Appendable = append(value.script)

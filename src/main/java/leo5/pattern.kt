@@ -18,8 +18,8 @@ fun pattern(function: PatternFunction): Pattern = FunctionPattern(function)
 fun Pattern.apply(dictionary: PatternDictionary) = pattern(application(this, dictionary))
 fun pattern(vararg dictionaries: PatternDictionary) = pattern(empty).fold(dictionaries, Pattern::apply)
 
-fun Pattern.contains(script: Script): Boolean = when (this) {
-	is EmptyPattern -> script is EmptyScript
-	is ApplicationPattern -> (script is ApplicationScript) && application.contains(script.application)
-	is FunctionPattern -> (script is FunctionScript) && script.function.pattern == function.pattern
+fun Pattern.contains(value: Value): Boolean = when (this) {
+	is EmptyPattern -> value is ScriptValue && value.script is EmptyScript
+	is ApplicationPattern -> value is ScriptValue && value.script is ApplicationScript && application.contains(value.script.application)
+	is FunctionPattern -> value is FunctionValue && value.function.pattern == function.pattern
 }

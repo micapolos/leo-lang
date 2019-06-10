@@ -11,4 +11,4 @@ fun PatternDictionary.plus(line: PatternLine) = PatternDictionary(map.plus(line.
 fun dictionary(line: PatternLine, vararg lines: PatternLine) =
 	patternDictionary(empty).fold(line, lines) { plus(it) }
 
-fun PatternDictionary.contains(line: Line) = map[line.name]?.contains(line.value.script) ?: false
+fun PatternDictionary.contains(line: Line) = map[line.name]?.contains(line.value) ?: false

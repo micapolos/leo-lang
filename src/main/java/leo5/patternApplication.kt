@@ -5,7 +5,7 @@ data class PatternApplication(val pattern: Pattern, val dictionary: PatternDicti
 fun application(pattern: Pattern, dictionary: PatternDictionary) = PatternApplication(pattern, dictionary)
 
 fun PatternApplication.contains(application: Application) =
-	pattern.contains(application.value.script) && dictionary.contains(application.line)
+	pattern.contains(application.value) && dictionary.contains(application.line)
 
 
 //fun PatternApplication.coreValue(application: Application): leo5.core.Value = when (this) {
