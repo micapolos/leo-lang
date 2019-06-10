@@ -1,7 +1,6 @@
 package leo5
 
-object Self
+object Argument
 
-val self = Self
-
-fun Self.invoke(value: Value) = value
+val argument = Argument
+fun Argument.invoke(parameter: ValueParameter) = parameter.value

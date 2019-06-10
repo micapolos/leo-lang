@@ -1,4 +1,6 @@
 package leo5
 
-object Lhs
-val lhs = Lhs
+data class Lhs(val body: Body)
+
+fun lhs(body: Body) = Lhs(body)
+fun Lhs.invoke(parameter: ValueParameter) = body.invoke(parameter).invokeLhs

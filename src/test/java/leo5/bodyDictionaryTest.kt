@@ -6,9 +6,9 @@ import kotlin.test.assertFails
 
 class DispatcherTest {
 	private val dictionary
-		get() = dispatcher(
-			"zero" to body(value(script(line("zero")))),
-			"one" to body(value(script(line("one")))))
+		get() = dictionary(
+			line("zero", body(value(script(line("zero"))))),
+			line("one", body(value(script(line("one"))))))
 
 	@Test
 	fun at() {

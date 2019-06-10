@@ -13,12 +13,11 @@ val Value.isEmpty get() = (this is ScriptValue) && script is EmptyScript
 val Value.scriptOrNull get() = (this as? ScriptValue)?.script
 val Value.functionOrNull get() = (this as? FunctionValue)?.function
 
-fun Value.invoke(argument: Value) = functionOrNull!!.body.invoke(argument)
 val Value.invokeLhs get() = scriptOrNull!!.applicationOrNull!!.value
 val Value.invokeRhs get() = scriptOrNull!!.applicationOrNull!!.line.value
-fun Value.invokePlus(line: Line) = value(scriptOrNull!!.plus(line))
-fun Value.invokeDispatch(dispatcher: Dispatcher, argument: Value) =
-	dispatcher.at(scriptOrNull!!.applicationOrNull!!.line.name).invoke(argument)
+fun Value.invoke(parameter: ValueParameter) = functionOrNull!!.body.invoke(parameter)
+fun Value.invokeDispatch(bodyDictionary: BodyDictionary, parameter: ValueParameter) =
+	bodyDictionary.at(scriptOrNull!!.applicationOrNull!!.line.name).invoke(parameter)
 
 fun Appendable.append(value: Value): Appendable = when (value) {
 	is ScriptValue -> append(value.script)

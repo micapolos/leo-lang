@@ -3,20 +3,33 @@ package leo5
 sealed class Body
 
 data class ValueBody(val value: Value) : Body()
-data class SelfBody(val self: Self) : Body()
-data class ApplyBody(val apply: Apply) : Body()
+data class ArgumentBody(val argument: Argument) : Body()
+data class LhsBody(val lhs: Lhs) : Body()
+data class RhsBody(val rhs: Rhs) : Body()
+data class ApplicationBody(val application: BodyApplication) : Body()
+data class DispatchBody(val dispatch: Dispatch) : Body()
+data class CallBody(val call: Call) : Body()
 
 fun body(value: Value): Body = ValueBody(value)
-fun body(self: Self): Body = SelfBody(self)
-fun body(apply: Apply): Body = ApplyBody(apply)
+fun body(self: Argument): Body = ArgumentBody(self)
+fun body(lhs: Lhs): Body = LhsBody(lhs)
+fun body(rhs: Rhs): Body = RhsBody(rhs)
+fun body(application: BodyApplication): Body = ApplicationBody(application)
+fun body(dispatch: Dispatch): Body = DispatchBody(dispatch)
+fun body(call: Call): Body = CallBody(call)
 
-fun Body.invoke(argument: Value): Value = when (this) {
+val Body.lhs get() = body(lhs(this))
+val Body.rhs get() = body(rhs(this))
+fun Body.plus(line: BodyLine) = body(application(this, line))
+fun Body.dispatch(dictionary: BodyDictionary) = body(dispatch(this, dictionary))
+fun Body.call(parameter: BodyParameter) = body(call(this, parameter))
+
+fun Body.invoke(parameter: ValueParameter): Value = when (this) {
 	is ValueBody -> value
-	is SelfBody -> self.invoke(argument)
-	is ApplyBody -> apply.invoke(argument)
+	is ArgumentBody -> argument.invoke(parameter)
+	is LhsBody -> lhs.invoke(parameter)
+	is RhsBody -> rhs.invoke(parameter)
+	is ApplicationBody -> application.invoke(parameter)
+	is DispatchBody -> dispatch.invoke(parameter)
+	is CallBody -> call.invoke(parameter)
 }
-
-val Body.lhs get() = body(apply(this, op(leo5.lhs)))
-val Body.rhs get() = body(apply(this, op(leo5.rhs)))
-fun Body.plus(name: String, body: Body = body(value())) = body(apply(this, op(leo5.plus(name, body))))
-fun Body.dispatch(vararg pairs: Pair<String, Body>) = body(apply(this, op(dispatcher(*pairs))))

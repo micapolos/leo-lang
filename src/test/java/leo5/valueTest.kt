@@ -16,11 +16,12 @@ class ValueTest {
 		val bitSelfFn = value(
 			function(
 				pattern(empty),
-				body(self)
+				body(argument)
 					.rhs
 					.dispatch(
-						"zero" to body(bitOne),
-						"one" to body(bitZero))))
-		bitSelfFn.invoke(bitOne).assertEqualTo(bitZero)
+						dictionary(
+							line("zero", body(bitOne)),
+							line("one", body(bitZero))))))
+		bitSelfFn.invoke(parameter(bitOne)).assertEqualTo(bitZero)
 	}
 }
