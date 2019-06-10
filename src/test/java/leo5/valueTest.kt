@@ -1,7 +1,6 @@
 package leo5
 
 import leo.base.assertEqualTo
-import leo.base.empty
 import kotlin.test.Test
 
 class ValueTest {
@@ -15,12 +14,17 @@ class ValueTest {
 
 		val bitSelfFn = value(
 			function(
-				pattern(empty),
+				pattern(),
 				body(argument)
 					.rhs
 					.dispatch(
 						"zero" lineTo body(bitOne),
 						"one" lineTo body(bitZero))))
 		bitSelfFn.invoke(parameter(bitOne)).assertEqualTo(bitZero)
+
+		bitZero
+			.rhs
+			.dispatch("zero" to { bitOne }, "one" to { bitZero })
+			.assertEqualTo(bitOne)
 	}
 }

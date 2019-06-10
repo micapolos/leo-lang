@@ -11,15 +11,20 @@ fun value(function: Function): Value = FunctionValue(function)
 fun Value.apply(line: ValueLine) = value(script(application(this, line)))
 fun value(vararg lines: ValueLine) = value(script(*lines))
 
-val Value.isEmpty get() = (this is ScriptValue) && script.isEmpty
-val Value.scriptOrNull get() = (this as? ScriptValue)?.script
-val Value.functionOrNull get() = (this as? FunctionValue)?.function
+val Value.isEmpty get() = this is ScriptValue && script is EmptyScript
+val Value.script get() = (this as ScriptValue).script
+val Value.function get() = (this as FunctionValue).function
 
-val Value.invokeLhs get() = scriptOrNull!!.applicationOrNull!!.value
-val Value.invokeRhs get() = scriptOrNull!!.applicationOrNull!!.line.value
-fun Value.invoke(parameter: ValueParameter) = functionOrNull!!.body.invoke(parameter)
+val Value.lhs get() = script.lhs
+val Value.name get() = script.name
+val Value.rhs get() = script.rhs
+fun Value.call(value: Value) = invoke(parameter(value))
+fun Value.dispatch(vararg pairs: Pair<String, () -> Value>) =
+	mapOf(*pairs).getValue(name).invoke()
+
+fun Value.invoke(parameter: ValueParameter) = function.body.invoke(parameter)
 fun Value.invokeDispatch(bodyDictionary: BodyDictionary, parameter: ValueParameter) =
-	bodyDictionary.at(scriptOrNull!!.applicationOrNull!!.line.name).invoke(parameter)
+	bodyDictionary.at(name).invoke(parameter)
 
 fun Appendable.append(value: Value): Appendable = when (value) {
 	is ScriptValue -> append(value.script)
