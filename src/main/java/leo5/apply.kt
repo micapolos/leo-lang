@@ -1,6 +1,6 @@
 package leo5
 
-data class Apply(val function: Function, val op: Op)
+data class Apply(val body: Body, val op: Op)
 
-fun apply(function: Function, op: Op) = Apply(function, op)
-fun Apply.invoke(argument: Value) = op.invoke(function.invoke(argument), argument)
+fun apply(body: Body, op: Op) = Apply(body, op)
+fun Apply.invoke(argument: Value) = op.invoke(body.invoke(argument), argument)

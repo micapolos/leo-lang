@@ -17,6 +17,6 @@ fun Op.invoke(value: Value, argument: Value): Value = when (this) {
 	is LhsOp -> value.script.invokeLhs
 	is RhsOp -> value.script.invokeRhs
 	is CallOp -> value.script.invokeCall(argument)
-	is PlusOp -> value.plus(line(plus.name, plus.function.invoke(argument)))
+	is PlusOp -> value.plus(line(plus.name, plus.body.invoke(argument)))
 	is DispatchOp -> dispatcher.at(value.script.nameOrNull!!).invoke(argument)
 }

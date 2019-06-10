@@ -23,12 +23,12 @@ fun script(vararg lines: Line) = script(empty).plus(*lines)
 
 val Script.invokeLhs get() = applicationOrNull!!.value
 val Script.invokeRhs get() = applicationOrNull!!.line.value
-fun Script.invokeCall(argument: Value) = (lhs as FunctionScript).function.invoke(argument)
+fun Script.invokeCall(argument: Value) = (lhs as FunctionScript).function.body.invoke(argument)
 
 val Script.isEmpty get() = emptyOrNull == empty
 val Script.simpleLineOrNull get() = applicationOrNull?.simpleLineOrNull
 val Script.nameOrNull get() = simpleLineOrNull?.name
-fun Script.invoke(argument: Value) = functionOrNull!!.invoke(argument)
+fun Script.invoke(argument: Value) = functionOrNull!!.body.invoke(argument)
 
 fun Appendable.append(script: Script): Appendable = when (script) {
 	is EmptyScript -> this
