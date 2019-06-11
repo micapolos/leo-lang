@@ -106,7 +106,7 @@ class RuntimeTest {
 			memory(intSize(1)),
 			code(
 				op(read(intPtr(0))),
-				op(jump(3).with(condition(intPtr(0), predicate(zero)))),
+				op(jump(3), condition(intPtr(0), predicate(isZero))),
 				op(write(intPtr(0))),
 				op(exit)),
 			input(0),
@@ -116,7 +116,7 @@ class RuntimeTest {
 			memory(intSize(1)),
 			code(
 				op(read(intPtr(0))),
-				op(jump(3).with(condition(intPtr(0), predicate(notZero)))),
+				op(jump(3), condition(intPtr(0), predicate(isNotZero))),
 				op(write(intPtr(0))),
 				op(exit)),
 			input(0),

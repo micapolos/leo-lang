@@ -2,19 +2,19 @@ package leo5.asm
 
 sealed class Predicate
 
-data class ZeroPredicate(val zero: Zero) : Predicate()
-data class NotZeroPredicate(val notZero: NotZero) : Predicate()
-data class PositivePredicate(val positive: Positive) : Predicate()
-data class NegativePredicate(val negative: Negative) : Predicate()
+data class IsZeroPredicate(val isZero: IsZero) : Predicate()
+data class IsNotZeroPredicate(val isNotZero: IsNotZero) : Predicate()
+data class IsPositivePredicate(val isPositive: IsPositive) : Predicate()
+data class IsNegativePredicate(val isNegative: IsNegative) : Predicate()
 
-fun predicate(zero: Zero): Predicate = ZeroPredicate(zero)
-fun predicate(notZero: NotZero): Predicate = NotZeroPredicate(notZero)
-fun predicate(positive: Positive): Predicate = PositivePredicate(positive)
-fun predicate(negative: Negative): Predicate = NegativePredicate(negative)
+fun predicate(isZero: IsZero): Predicate = IsZeroPredicate(isZero)
+fun predicate(isNotZero: IsNotZero): Predicate = IsNotZeroPredicate(isNotZero)
+fun predicate(isPositive: IsPositive): Predicate = IsPositivePredicate(isPositive)
+fun predicate(isNegative: IsNegative): Predicate = IsNegativePredicate(isNegative)
 
 fun Predicate.test(int: Int) = when (this) {
-	is ZeroPredicate -> zero.test(int)
-	is NotZeroPredicate -> notZero.test(int)
-	is PositivePredicate -> positive.test(int)
-	is NegativePredicate -> negative.test(int)
+	is IsZeroPredicate -> isZero.test(int)
+	is IsNotZeroPredicate -> isNotZero.test(int)
+	is IsPositivePredicate -> isPositive.test(int)
+	is IsNegativePredicate -> isNegative.test(int)
 }
