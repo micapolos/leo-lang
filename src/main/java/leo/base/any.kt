@@ -21,6 +21,9 @@ fun <V: Any> V?.orIfNull(fn: () -> V) =
 fun <V : Any, R> V?.ifNotNull(fn: (V) -> R?): R? =
 	if (this != null) fn(this) else null
 
+fun <V : Any> V?.notNullAnd(fn: (V) -> Boolean): Boolean =
+	if (this != null) fn(this) else false
+
 fun <V: Any> notNullIf(condition: Boolean, fn: () -> V): V? =
 	if (condition) fn() else null
 

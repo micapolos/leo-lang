@@ -11,6 +11,9 @@ fun value(function: Function): Value = FunctionValue(function)
 fun Value.apply(line: ValueLine) = value(script(application(this, line)))
 fun value(vararg lines: ValueLine) = value(script(*lines))
 
+val Value.scriptOrNull get() = (this as? ScriptValue)?.script
+val Value.functionOrNull get() = (this as? FunctionValue)?.function
+
 val Value.isEmpty get() = this is ScriptValue && script is EmptyScript
 val Value.script get() = (this as ScriptValue).script
 val Value.function get() = (this as FunctionValue).function

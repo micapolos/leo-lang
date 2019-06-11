@@ -1,6 +1,7 @@
 package leo5
 
 import leo.base.assertEqualTo
+import leo.base.empty
 import kotlin.test.Test
 
 class ValueTest {
@@ -14,7 +15,7 @@ class ValueTest {
 
 		val bitSelfFn = value(
 			function(
-				pattern(),
+				type(empty),
 				body(argument)
 					.rhs
 					.dispatch(

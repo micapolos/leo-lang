@@ -12,6 +12,8 @@ data class ApplicationScript(val application: Application) : Script()
 fun script(empty: Empty): Script = EmptyScript(empty)
 fun script(application: Application): Script = ApplicationScript(application)
 
+val Script.applicationOrNull get() = (this as? ApplicationScript)?.application
+
 val Script.empty get() = (this as EmptyScript).empty
 val Script.application get() = (this as ApplicationScript).application
 val Script.lhs get() = application.value
