@@ -13,7 +13,14 @@ fun Memory.grow(pageCount: Int) {
 }
 
 fun Memory.int(index: Int) = byteBuffer.getInt(index)
-fun Memory.put(index: Int, int: Int) = byteBuffer.putInt(index, int)
+fun Memory.put(index: Int, int: Int) {
+	byteBuffer.putInt(index, int)
+}
 
-inline fun Memory.intOp1(index: Int, fn: Int.() -> Int) = put(index, int(index).fn())
-inline fun Memory.intOp2(index: Int, argIndex: Int, fn: Int.(Int) -> Int) = intOp1(index) { fn(int(argIndex)) }
+inline fun Memory.intOp1(index: Int, fn: Int.() -> Int) {
+	put(index, int(index).fn())
+}
+
+inline fun Memory.intOp2(index: Int, argIndex: Int, fn: Int.(Int) -> Int) {
+	put(index, int(index).fn(int(argIndex)))
+}

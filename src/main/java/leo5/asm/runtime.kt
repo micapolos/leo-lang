@@ -4,7 +4,7 @@ data class Runtime(val memory: Memory, val code: Code, var pc: Int, var input: I
 
 val newRuntime = Runtime(newMemory, newCode, 0, input { 0 }, output { })
 fun Runtime.run() {
-	while (pc != 0) {
-		code.ops[pc--].invoke(this)
+	while (pc != code.ops.size) {
+		code.ops[pc++].invoke(this)
 	}
 }
