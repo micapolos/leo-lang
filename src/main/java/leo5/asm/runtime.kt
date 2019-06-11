@@ -5,10 +5,12 @@ data class Runtime(
 	val code: Code,
 	val pc: Pc,
 	val input: Input,
-	val output: Output)
+	val output: Output,
+	var exit: Boolean = false)
 
 fun Runtime.run() {
-	while (pc.int != code.ops.size) {
+	exit = false
+	do {
 		code.ops[pc.int++].invoke(this)
-	}
+	} while (!exit)
 }
