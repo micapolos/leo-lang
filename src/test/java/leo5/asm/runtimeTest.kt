@@ -101,12 +101,12 @@ class RuntimeTest {
 	}
 
 	@Test
-	fun ifZeroJump() {
+	fun conditionalJump() {
 		test(
 			memory(intSize(1)),
 			code(
 				op(read(intPtr(0))),
-				op(ifZero(intPtr(0), jump(3))),
+				op(jump(3).with(condition(intPtr(0), predicate(zero)))),
 				op(write(intPtr(0))),
 				op(exit)),
 			input(0),
@@ -116,11 +116,11 @@ class RuntimeTest {
 			memory(intSize(1)),
 			code(
 				op(read(intPtr(0))),
-				op(ifZero(intPtr(0), jump(3))),
+				op(jump(3).with(condition(intPtr(0), predicate(notZero)))),
 				op(write(intPtr(0))),
 				op(exit)),
-			input(1),
-			expectedOutput(1))
+			input(0),
+			expectedOutput(0))
 	}
 
 	@Test
@@ -129,7 +129,7 @@ class RuntimeTest {
 			memory(intSize(1)),
 			code(
 				op(read(intPtr(0))),
-				op(branch(intPtr(0), table(2, 3))),
+				op(branch(intPtr(0), jumpTable(2, 3))),
 				op(write(intPtr(0))),
 				op(write(intPtr(0))),
 				op(exit)),
@@ -140,7 +140,7 @@ class RuntimeTest {
 			memory(intSize(1)),
 			code(
 				op(read(intPtr(0))),
-				op(branch(intPtr(0), table(2, 3))),
+				op(branch(intPtr(0), jumpTable(2, 3))),
 				op(write(intPtr(0))),
 				op(write(intPtr(0))),
 				op(exit)),
@@ -152,7 +152,7 @@ class RuntimeTest {
 				memory(intSize(1)),
 				code(
 					op(read(intPtr(0))),
-					op(branch(intPtr(0), table(2, 3))),
+					op(branch(intPtr(0), jumpTable(2, 3))),
 					op(write(intPtr(0))),
 					op(write(intPtr(0))),
 					op(exit)),

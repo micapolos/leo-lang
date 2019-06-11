@@ -1,9 +1,9 @@
 package leo5.asm
 
-data class Branch(val ptr: Ptr, val table: Table)
+data class Branch(val ptr: Ptr, val jumpTable: JumpTable)
 
-fun branch(ptr: Ptr, table: Table) = Branch(ptr, table)
+fun branch(ptr: Ptr, jumpTable: JumpTable) = Branch(ptr, jumpTable)
 
 fun Branch.invoke(runtime: Runtime) {
-	runtime.pc.int = table[runtime.memory.int(ptr)]
+	runtime.pc.int = jumpTable[runtime.memory.int(ptr)]
 }
