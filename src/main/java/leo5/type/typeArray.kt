@@ -18,5 +18,5 @@ fun TypeArray.compile(value: Value): Any =
 fun TypeArray.compile(value: Value, acc: Stack<Any>?): Stack<Any>? =
 	if (size == 0) value.script.empty.run { acc }
 	else value.script.application.let { application ->
-		array(type, size - 1).compile(application.value, acc.push(type.compile(leo5.value(application.line))))
+		array(cell, size - 1).compile(application.value, acc.push(cell.type.compile(leo5.value(application.line))))
 	}

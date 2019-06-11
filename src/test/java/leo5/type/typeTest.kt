@@ -19,11 +19,11 @@ class TypeTest {
 		type(int).compile(value(123)).assertEqualTo(123)
 		assertFails { type(int).compile(value("int" lineTo value("123123123123" lineTo value()))) }
 
-		type(array(type(int), 0)).compile(value()).assertEqualTo(listOf<Int>())
-		type(array(type(int), 1)).compile(value(valueLine(10))).assertEqualTo(listOf(10))
-		type(array(type(int), 2)).compile(value(valueLine(10), valueLine(20))).assertEqualTo(listOf(10, 20))
-		assertFails { type(array(type(int), 2)).compile(value(valueLine(10))) }
-		assertFails { type(array(type(int), 2)).compile(value(valueLine(10), valueLine(20), valueLine(30))) }
+		type(array(cell(type(int)), 0)).compile(value()).assertEqualTo(listOf<Int>())
+		type(array(cell(type(int)), 1)).compile(value(valueLine(10))).assertEqualTo(listOf(10))
+		type(array(cell(type(int)), 2)).compile(value(valueLine(10), valueLine(20))).assertEqualTo(listOf(10, 20))
+		assertFails { type(array(cell(type(int)), 2)).compile(value(valueLine(10))) }
+		assertFails { type(array(cell(type(int)), 2)).compile(value(valueLine(10), valueLine(20), valueLine(30))) }
 
 		type(field("age", type(int))).compile(value("age" lineTo value(42))).assertEqualTo(42)
 		assertFails { type(field("age", type(int))).compile(value(42)) }
