@@ -11,6 +11,12 @@ data class Runtime(
 fun Runtime.run() {
 	exit = false
 	do {
-		code.ops[pc.int++].invoke(this)
+		step()
 	} while (!exit)
 }
+
+fun Runtime.step() {
+	fetch().invoke(this)
+}
+
+fun Runtime.fetch() = code.ops[pc.int++]
