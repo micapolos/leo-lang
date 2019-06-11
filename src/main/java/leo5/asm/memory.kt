@@ -6,6 +6,7 @@ const val pageSize = 65536
 
 class Memory(var byteBuffer: ByteBuffer)
 
+fun memory(size: Size) = Memory(ByteBuffer.allocate(size.int))
 val newMemory get() = Memory(ByteBuffer.allocate(pageSize))
 val Memory.size get() = byteBuffer.capacity()
 fun Memory.grow(pageCount: Int) {

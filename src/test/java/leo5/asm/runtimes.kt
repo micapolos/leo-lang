@@ -1,8 +1,8 @@
 package leo5.asm
 
-fun test(input: Input, code: Code, expectedOutput: ExpectedOutput) {
+fun test(memory: Memory, code: Code, input: Input, expectedOutput: ExpectedOutput) {
 	assertOutputs(expectedOutput.array) { output ->
-		Runtime(newMemory, code, 0, input, output).run()
+		Runtime(memory, code, 0, input, output).run()
 	}
 }
 
