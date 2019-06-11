@@ -1,8 +1,9 @@
 package leo5.asm
 
-data class Write(val index: Int)
+data class Write(val ptr: Ptr)
 
-fun write(index: Int) = Write(index)
+fun write(ptr: Ptr) = Write(ptr)
+
 fun Write.invoke(runtime: Runtime) {
-	runtime.output.put(runtime.memory.int(index))
+	runtime.output.write(runtime.memory.int(ptr))
 }

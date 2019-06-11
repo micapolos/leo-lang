@@ -1,9 +1,9 @@
 package leo5.asm
 
-data class IntAdd(val index: Int, val argIndex: Int)
+data class IntAdd(val lhs: Ptr, val rhs: Ptr)
 
-fun intAdd(index: Int, argIndex: Int) = IntAdd(index, argIndex)
+fun intAdd(lhs: Ptr, rhs: Ptr) = IntAdd(lhs, rhs)
 
 fun IntAdd.invoke(runtime: Runtime) {
-	runtime.memory.intOp2(index, argIndex, Int::plus)
+	runtime.memory.intOp2(lhs, rhs, Int::plus)
 }

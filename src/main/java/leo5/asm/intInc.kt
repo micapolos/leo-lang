@@ -1,8 +1,9 @@
 package leo5.asm
 
-data class IntInc(val index: Int)
+data class IntInc(val ptr: Ptr)
 
-fun intInc(index: Int) = IntInc(index)
+fun intInc(ptr: Ptr) = IntInc(ptr)
+
 fun IntInc.invoke(runtime: Runtime) {
-	runtime.memory.intOp1(index, Int::inc)
+	runtime.memory.intOp1(ptr, Int::inc)
 }

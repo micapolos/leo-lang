@@ -4,5 +4,5 @@ object Exit
 
 val exit = Exit
 fun Exit.invoke(runtime: Runtime) {
-	runtime.pc = 0
+	runtime.pc.int = runtime.code.ops.size
 }

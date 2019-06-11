@@ -6,8 +6,10 @@ class RuntimeTest {
 	@Test
 	fun readWrite() {
 		test(
-			memory(size(4)),
-			code(op(read(0)), op(write(0))),
+			memory(intSize(4)),
+			code(
+				op(read(intPtr(0))),
+				op(write(intPtr(0)))),
 			input(10),
 			expectedOutput(10))
 	}
@@ -15,8 +17,11 @@ class RuntimeTest {
 	@Test
 	fun intSet() {
 		test(
-			memory(size(8)),
-			code(op(read(0)), op(intSet(4, 0)), op(write(4))),
+			memory(intSize(2)),
+			code(
+				op(read(intPtr(0))),
+				op(intSet(intPtr(1), intPtr(0))),
+				op(write(intPtr(1)))),
 			input(10),
 			expectedOutput(10))
 	}
@@ -24,8 +29,11 @@ class RuntimeTest {
 	@Test
 	fun intInc() {
 		test(
-			memory(size(4)),
-			code(op(read(0)), op(intInc(0)), op(write(0))),
+			memory(intSize(1)),
+			code(
+				op(read(intPtr(0))),
+				op(intInc(intPtr(0))),
+				op(write(intPtr(0)))),
 			input(1),
 			expectedOutput(2))
 	}
@@ -33,8 +41,12 @@ class RuntimeTest {
 	@Test
 	fun intAdd() {
 		test(
-			memory(size(8)),
-			code(op(read(0)), op(read(4)), op(intAdd(0, 4)), op(write(0))),
+			memory(intSize(2)),
+			code(
+				op(read(intPtr(0))),
+				op(read(intPtr(1))),
+				op(intAdd(intPtr(0), intPtr(1))),
+				op(write(intPtr(0)))),
 			input(1, 2),
 			expectedOutput(3))
 	}

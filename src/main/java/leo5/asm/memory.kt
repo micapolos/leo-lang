@@ -2,26 +2,20 @@ package leo5.asm
 
 import java.nio.ByteBuffer
 
-const val pageSize = 65536
-
 class Memory(var byteBuffer: ByteBuffer)
 
 fun memory(size: Size) = Memory(ByteBuffer.allocate(size.int))
-val newMemory get() = Memory(ByteBuffer.allocate(pageSize))
-val Memory.size get() = byteBuffer.capacity()
-fun Memory.grow(pageCount: Int) {
-	TODO()
+
+fun Memory.int(ptr: Ptr) = byteBuffer.getInt(ptr.int)
+
+fun Memory.set(ptr: Ptr, int: Int) {
+	byteBuffer.putInt(ptr.int, int)
 }
 
-fun Memory.int(index: Int) = byteBuffer.getInt(index)
-fun Memory.put(index: Int, int: Int) {
-	byteBuffer.putInt(index, int)
+inline fun Memory.intOp1(ptr: Ptr, fn: Int.() -> Int) {
+	set(ptr, int(ptr).fn())
 }
 
-inline fun Memory.intOp1(index: Int, fn: Int.() -> Int) {
-	put(index, int(index).fn())
-}
-
-inline fun Memory.intOp2(index: Int, argIndex: Int, fn: Int.(Int) -> Int) {
-	put(index, int(index).fn(int(argIndex)))
+inline fun Memory.intOp2(lhs: Ptr, rhs: Ptr, fn: Int.(Int) -> Int) {
+	set(lhs, int(lhs).fn(int(rhs)))
 }

@@ -1,8 +1,9 @@
 package leo5.asm
 
-data class Read(val index: Int)
+data class Read(val ptr: Ptr)
 
-fun read(index: Int) = Read(index)
+fun read(ptr: Ptr) = Read(ptr)
+
 fun Read.invoke(runtime: Runtime) {
-	runtime.memory.put(index, runtime.input.int)
+	runtime.memory.set(ptr, runtime.input.read)
 }
