@@ -5,17 +5,9 @@ import leo.base.appendableString
 import leo.base.empty
 import leo.base.fold
 
-sealed class Script {
-	override fun toString() = appendableString { it.append(this) }
-}
-
-data class EmptyScript(val empty: Empty): Script() {
-	override fun toString() = super.toString()
-}
-
-data class ExtensionScript(val extension: Extension): Script() {
-	override fun toString() = super.toString()
-}
+sealed class Script
+data class EmptyScript(val empty: Empty) : Script()
+data class ExtensionScript(val extension: Extension) : Script()
 
 fun script(empty: Empty): Script = EmptyScript(empty)
 fun script(extension: Extension): Script = ExtensionScript(extension)
@@ -31,6 +23,8 @@ fun Appendable.append(script: Script): Appendable = when (script) {
 	is EmptyScript -> this
 	is ExtensionScript -> append(script.extension)
 }
+
+val Script.string get() = appendableString { it.append(this) }
 
 tailrec fun Script.extendReversedLines(script: Script): Script = when (script) {
 	is EmptyScript -> this
