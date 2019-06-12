@@ -36,6 +36,7 @@ class ScriptTest {
 					"bit" lineTo script("zero"),
 					"and" lineTo script(
 						"bit" lineTo script("one"),
-						"negate" lineTo script())))
+						"negate" lineTo script()))
+					.extensionOrNull!!)
 	}
 }

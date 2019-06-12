@@ -28,21 +28,28 @@ val one get() = _span("one")
 
 fun plus(vararg spans: Span) = _span("plus", *spans)
 fun plus(fn: CodeFn) = _span("plus", fn)
-operator fun Code.plus(span: Span) = _code("plus", span)
+operator fun Code.plus(code: Code) = _code("plus", code)
 
 fun radius(vararg spans: Span) = _span("radius", *spans)
-var radius
+fun radius(code: Code) = _span("radius", code)
+var radius: Code
 	get() = radius()
 	set(span) { radius(span) }
 
 fun x(vararg spans: Span) = _span("x", *spans)
-var x: Span
+fun x(code: Code) = _span("x", code)
+var x: Code
   get() = x()
-	set(span) { x(span) }
+	set(code) {
+		x(code)
+	}
 
 fun y(vararg spans: Span) = _span("y", *spans)
-var y: Span
+fun y(code: Code) = _span("y", code)
+var y: Code
 	get() = y()
-	set(span) { y(span) }
+	set(code) {
+		y(code)
+	}
 
 val zero get() = _span("zero")

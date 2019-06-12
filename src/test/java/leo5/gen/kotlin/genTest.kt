@@ -11,7 +11,7 @@ class GenTest {
 	fun yooo() {
 		appendableString {
 			it.appendFields(script(
-				"radius" lineTo script("float" lineTo script()),
+				"int" lineTo script(),
 				"float" lineTo script()))
 		}.assertEqualTo("")
 	}

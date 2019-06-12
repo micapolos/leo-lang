@@ -16,4 +16,16 @@ class WritingTest {
 					"bit" lineTo script("one"),
 					"negate" lineTo script())))
 	}
+
+	@Test
+	fun oneArg() {
+		writeScript {
+			span("script", span("zero").code("one").code("three"))
+		}.assertEqualTo(
+			script(
+				"script" lineTo script(
+					"zero" lineTo script(),
+					"one" lineTo script(),
+					"three" lineTo script())))
+	}
 }

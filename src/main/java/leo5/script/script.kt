@@ -18,6 +18,8 @@ data class ExtensionScript(val extension: Extension): Script() {
 }
 
 fun script(empty: Empty): Script = EmptyScript(empty)
+fun script(extension: Extension): Script = ExtensionScript(extension)
+
 fun Script.extend(line: Line): Script = ExtensionScript(Extension(this, line))
 fun script(vararg lines: Line) = script(empty).fold(lines, Script::extend)
 fun script(string: String) = script(string lineTo script(empty))
@@ -37,9 +39,16 @@ tailrec fun Script.extendReversedLines(script: Script): Script = when (script) {
 
 val Script.reverseLines get() = script().extendReversedLines(this)
 
-tailrec fun Script.wrap(string: String, count: Int, acc: Script = script()): Script? =
-	if (count == 0) extend(string lineTo acc.reverseLines)
+tailrec fun Script.wrap(string: String, count: Int, acc: Script = script()): Extension? =
+	if (count == 0) extension(this, string lineTo acc.reverseLines)
  	else {
 		val extensionOrNull = extensionOrNull
 		extensionOrNull?.script?.wrap(string, count.dec(), acc.extend(extensionOrNull.line))
 	}
+
+tailrec fun Script.lineCount(acc: Int = 0): Int = when (this) {
+	is EmptyScript -> acc
+	is ExtensionScript -> extension.script.lineCount(acc.inc())
+}
+
+val Script.lineCount get() = lineCount()
