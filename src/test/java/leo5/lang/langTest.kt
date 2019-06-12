@@ -11,7 +11,7 @@ class LangTest {
 	fun lang() {
 		writeScript {
 			bit(zero)
-			plus(bit(zero), negate)
+			plus(bit(zero), negate())
 			plus { bit(zero).negate }
 			plus { bit(zero); negate }
 			plus {
