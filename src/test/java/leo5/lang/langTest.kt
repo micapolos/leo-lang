@@ -150,4 +150,23 @@ class LangTest {
 					"one" lineTo script(),
 					"negate" lineTo script())))
 	}
+
+	@Test
+	fun syntax() {
+		leo {
+			circle {
+				radius = float(12)
+				center {
+					x = int(12)
+					y = int(15)
+				}
+			}
+			move {
+				x = int(15)
+				y = int(11)
+			}
+			rotate { degrees = int(90) }
+			scale { times = int(2) }
+		}
+	}
 }

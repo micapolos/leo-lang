@@ -1,7 +1,6 @@
 package leo5.script
 
-var writtenScriptOrNull = null as Script?
-val writtenScript get() = writtenScriptOrNull!!
+var writtenScript = script()
 
 sealed class Code {
 	abstract val tailOrNull: Code?
@@ -21,48 +20,48 @@ typealias CodeFn = () -> Unit
 
 fun Code.code(string: String, vararg spans: Span): Code {
 	val extension = writtenScript.wrap(string, spans.size)!!
-	writtenScriptOrNull = script(extension)
+	writtenScript = script(extension)
 	return Block(this)
 }
 
 fun Code.code(string: String, fn: CodeFn): Code {
 	val line = string lineTo writeScript(fn)
-	writtenScriptOrNull = writtenScript.extend(line)
+	writtenScript = writtenScript.extend(line)
 	return Block(this)
 }
 
 fun Code.code(string: String, code: Code): Code {
 	val extension = writtenScript.wrap(string, code.size)!!
-	writtenScriptOrNull = script(extension)
+	writtenScript = script(extension)
 	return Block(this)
 }
 
 fun span(string: String, vararg spans: Span): Span {
 	val script = script(writtenScript.wrap(string, spans.size)!!)
-	writtenScriptOrNull = script
+	writtenScript = script
 	return Span(null)
 }
 
 fun span(string: String, code: Code): Span {
 	val script = script(writtenScript.wrap(string, code.size)!!)
-	writtenScriptOrNull = script
+	writtenScript = script
 	return Span(null)
 }
 
 fun span(string: String, fn: CodeFn): Span {
 	val script = writtenScript.extend(string lineTo writeScript(fn))
-	writtenScriptOrNull = script
+	writtenScript = script
 	return Span(null)
 }
 
 fun Script.write(fn: CodeFn): Script {
-	val previouslyWrittenScriptOrNull = writtenScriptOrNull
-	writtenScriptOrNull = this
+	val previouslyWrittenScript = writtenScript
+	writtenScript = this
 	try {
 		fn()
 		return writtenScript
 	} finally {
-		writtenScriptOrNull = previouslyWrittenScriptOrNull
+		writtenScript = previouslyWrittenScript
 	}
 }
 

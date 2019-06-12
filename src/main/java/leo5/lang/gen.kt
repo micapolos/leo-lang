@@ -2172,6 +2172,16 @@ var define: Code
   get() = define()
   set(code) { define(code) }
 
+fun degrees(vararg spans: Span) = span("degrees", *spans)
+fun degrees(code: Code) = span("degrees", code)
+fun degrees(fn: CodeFn) = span("degrees", fn)
+var Code.degrees: Code
+  get() = code("degrees")
+  set(code) { code("degrees", code) }
+var degrees: Code
+  get() = degrees()
+  set(code) { degrees(code) }
+
 fun delete(vararg spans: Span) = span("delete", *spans)
 fun delete(code: Code) = span("delete", code)
 fun delete(fn: CodeFn) = span("delete", fn)
@@ -5632,6 +5642,16 @@ var mouse: Code
   get() = mouse()
   set(code) { mouse(code) }
 
+fun move(vararg spans: Span) = span("move", *spans)
+fun move(code: Code) = span("move", code)
+fun move(fn: CodeFn) = span("move", fn)
+var Code.move: Code
+  get() = code("move")
+  set(code) { code("move", code) }
+var move: Code
+  get() = move()
+  set(code) { move(code) }
+
 fun mul(vararg spans: Span) = span("mul", *spans)
 fun mul(code: Code) = span("mul", code)
 fun mul(fn: CodeFn) = span("mul", fn)
@@ -6492,6 +6512,16 @@ var pc: Code
   get() = pc()
   set(code) { pc(code) }
 
+fun percent(vararg spans: Span) = span("percent", *spans)
+fun percent(code: Code) = span("percent", code)
+fun percent(fn: CodeFn) = span("percent", fn)
+var Code.percent: Code
+  get() = code("percent")
+  set(code) { code("percent", code) }
+var percent: Code
+  get() = percent()
+  set(code) { percent(code) }
+
 fun period(vararg spans: Span) = span("period", *spans)
 fun period(code: Code) = span("period", code)
 fun period(fn: CodeFn) = span("period", fn)
@@ -7032,6 +7062,16 @@ var r: Code
   get() = r()
   set(code) { r(code) }
 
+fun radians(vararg spans: Span) = span("radians", *spans)
+fun radians(code: Code) = span("radians", code)
+fun radians(fn: CodeFn) = span("radians", fn)
+var Code.radians: Code
+  get() = code("radians")
+  set(code) { code("radians", code) }
+var radians: Code
+  get() = radians()
+  set(code) { radians(code) }
+
 fun radius(vararg spans: Span) = span("radius", *spans)
 fun radius(code: Code) = span("radius", code)
 fun radius(fn: CodeFn) = span("radius", fn)
@@ -7462,6 +7502,16 @@ var root: Code
   get() = root()
   set(code) { root(code) }
 
+fun rotate(vararg spans: Span) = span("rotate", *spans)
+fun rotate(code: Code) = span("rotate", code)
+fun rotate(fn: CodeFn) = span("rotate", fn)
+var Code.rotate: Code
+  get() = code("rotate")
+  set(code) { code("rotate", code) }
+var rotate: Code
+  get() = rotate()
+  set(code) { rotate(code) }
+
 fun round(vararg spans: Span) = span("round", *spans)
 fun round(code: Code) = span("round", code)
 fun round(fn: CodeFn) = span("round", fn)
@@ -7561,6 +7611,16 @@ var Code.sawtooth: Code
 var sawtooth: Code
   get() = sawtooth()
   set(code) { sawtooth(code) }
+
+fun scale(vararg spans: Span) = span("scale", *spans)
+fun scale(code: Code) = span("scale", code)
+fun scale(fn: CodeFn) = span("scale", fn)
+var Code.scale: Code
+  get() = code("scale")
+  set(code) { code("scale", code) }
+var scale: Code
+  get() = scale()
+  set(code) { scale(code) }
 
 fun scheme(vararg spans: Span) = span("scheme", *spans)
 fun scheme(code: Code) = span("scheme", code)
