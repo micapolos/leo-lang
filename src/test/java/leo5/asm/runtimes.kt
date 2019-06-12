@@ -2,7 +2,7 @@ package leo5.asm
 
 fun test(memory: Memory, code: Code, input: Input, expectedOutput: ExpectedOutput) {
 	assertOutputs(expectedOutput.array) { output ->
-		Runtime(memory, code, pc(0), input, output).run()
+		Runtime(memory, code, pc(0), base(ptr(0)), input, output).run()
 	}
 }
 

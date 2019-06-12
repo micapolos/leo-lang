@@ -6,6 +6,18 @@ class Memory(var byteBuffer: ByteBuffer)
 
 fun memory(size: Size) = Memory(ByteBuffer.allocate(size.int))
 
+fun Memory.getInt(address: Int) = byteBuffer.getInt(address)
+
+fun Memory.set(address: Int, int: Int) = byteBuffer.putInt(address, int)
+
+inline fun Memory.intOp1(lhs: Int, fn: Int.() -> Int) {
+	set(lhs, getInt(lhs).fn())
+}
+
+inline fun Memory.intOp2(lhs: Int, rhs: Int, fn: Int.(Int) -> Int) {
+	set(lhs, getInt(lhs).fn(getInt(rhs)))
+}
+
 fun Memory.int(ptr: Ptr) = byteBuffer.getInt(ptr.int)
 
 fun Memory.set(ptr: Ptr, int: Int) {

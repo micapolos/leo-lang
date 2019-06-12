@@ -1,9 +1,9 @@
 package leo5.asm
 
-data class IntSetConst(val lhs: Ptr, val int: Int)
+data class IntSetConst(val offset: Offset, val int: Int)
 
-fun set(lhs: Ptr, int: Int) = IntSetConst(lhs, int)
+fun set(offset: Offset, int: Int) = IntSetConst(offset, int)
 
 fun IntSetConst.invoke(runtime: Runtime) {
-	runtime.memory.set(lhs, int)
+	runtime.set(offset, int)
 }

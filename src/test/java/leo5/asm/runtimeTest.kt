@@ -41,7 +41,7 @@ class RuntimeTest {
 		test(
 			memory(intSize(1)),
 			code(
-				op(set(intPtr(0), 123)),
+				op(set(intOffset(0), 123)),
 				op(write(intPtr(0))),
 				op(exit)),
 			input(),
@@ -159,5 +159,18 @@ class RuntimeTest {
 				input(2),
 				expectedOutput())
 		}
+	}
+
+	@Test
+	fun call() {
+		test(
+			memory(intSize(1)),
+			code(
+				op(call(2, ret(intPtr(0)))),
+				op(exit),
+				op(write(intPtr(0))),
+				op(ret(intPtr(0)))),
+			input(),
+			expectedOutput(1))
 	}
 }
