@@ -30,9 +30,6 @@ fun Runtime.getInt() =
 fun Runtime.set(ptr: Ptr, int: Int) =
 	memory.set(ptr.int, int)
 
-fun Runtime.set(ptr: Ptr, int: Int) =
-	memory.set(ptr.int, int)
-
 fun Runtime.intOp1(fn: Int.() -> Int) {
 	memory.intOp1(lhs.base.ptr.int, fn)
 }
