@@ -1,6 +1,6 @@
 package leo5.lang
 
-import org.junit.Test
+import kotlin.test.Test
 
 class SyntaxTest {
 	@Test
@@ -39,6 +39,23 @@ class SyntaxTest {
 			line(word(int(12)), script())
 			line(word(int(12)).script)
 			line(word(int(12)).script)
+		}
+	}
+
+	@Test
+	fun structs() {
+		kotlin {
+			word { contains { string } }
+			script {
+				split {
+					empty
+					non { empty { contains {
+
+					} } }
+				} } }
+				is_ { list { of { line } } }
+				line { contains { word; script } }
+			}
 		}
 	}
 }

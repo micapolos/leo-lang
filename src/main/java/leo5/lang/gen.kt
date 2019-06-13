@@ -522,15 +522,15 @@ var arrow: Code
   get() = arrow()
   set(code) { arrow(code) }
 
-fun _as(vararg spans: Span) = span("as", *spans)
-fun _as(code: Code) = span("as", code)
-fun _as(fn: CodeFn) = span("as", fn)
-var Code._as: Code
+fun as_(vararg spans: Span) = span("as", *spans)
+fun as_(code: Code) = span("as", code)
+fun as_(fn: CodeFn) = span("as", fn)
+var Code.as_: Code
   get() = code("as")
   set(code) { code("as", code) }
-var _as: Code
-  get() = _as()
-  set(code) { _as(code) }
+var as_: Code
+  get() = as_()
+  set(code) { as_(code) }
 
 fun asin(vararg spans: Span) = span("asin", *spans)
 fun asin(code: Code) = span("asin", code)
@@ -1272,15 +1272,15 @@ var circle: Code
   get() = circle()
   set(code) { circle(code) }
 
-fun _class(vararg spans: Span) = span("class", *spans)
-fun _class(code: Code) = span("class", code)
-fun _class(fn: CodeFn) = span("class", fn)
-var Code._class: Code
+fun class_(vararg spans: Span) = span("class", *spans)
+fun class_(code: Code) = span("class", code)
+fun class_(fn: CodeFn) = span("class", fn)
+var Code.class_: Code
   get() = code("class")
   set(code) { code("class", code) }
-var _class: Code
-  get() = _class()
-  set(code) { _class(code) }
+var class_: Code
+  get() = class_()
+  set(code) { class_(code) }
 
 fun classes(vararg spans: Span) = span("classes", *spans)
 fun classes(code: Code) = span("classes", code)
@@ -2372,15 +2372,15 @@ var divmod: Code
   get() = divmod()
   set(code) { divmod(code) }
 
-fun _do(vararg spans: Span) = span("do", *spans)
-fun _do(code: Code) = span("do", code)
-fun _do(fn: CodeFn) = span("do", fn)
-var Code._do: Code
+fun do_(vararg spans: Span) = span("do", *spans)
+fun do_(code: Code) = span("do", code)
+fun do_(fn: CodeFn) = span("do", fn)
+var Code.do_: Code
   get() = code("do")
   set(code) { code("do", code) }
-var _do: Code
-  get() = _do()
-  set(code) { _do(code) }
+var do_: Code
+  get() = do_()
+  set(code) { do_(code) }
 
 fun document(vararg spans: Span) = span("document", *spans)
 fun document(code: Code) = span("document", code)
@@ -2562,15 +2562,15 @@ var elements: Code
   get() = elements()
   set(code) { elements(code) }
 
-fun _else(vararg spans: Span) = span("else", *spans)
-fun _else(code: Code) = span("else", code)
-fun _else(fn: CodeFn) = span("else", fn)
-var Code._else: Code
+fun else_(vararg spans: Span) = span("else", *spans)
+fun else_(code: Code) = span("else", code)
+fun else_(fn: CodeFn) = span("else", fn)
+var Code.else_: Code
   get() = code("else")
   set(code) { code("else", code) }
-var _else: Code
-  get() = _else()
-  set(code) { _else(code) }
+var else_: Code
+  get() = else_()
+  set(code) { else_(code) }
 
 fun email(vararg spans: Span) = span("email", *spans)
 fun email(code: Code) = span("email", code)
@@ -2682,15 +2682,15 @@ var equal: Code
   get() = equal()
   set(code) { equal(code) }
 
-fun _equals(vararg spans: Span) = span("equals", *spans)
-fun _equals(code: Code) = span("equals", code)
-fun _equals(fn: CodeFn) = span("equals", fn)
-var Code._equals: Code
+fun equals_(vararg spans: Span) = span("equals", *spans)
+fun equals_(code: Code) = span("equals", code)
+fun equals_(fn: CodeFn) = span("equals", fn)
+var Code.equals_: Code
   get() = code("equals")
   set(code) { code("equals", code) }
-var _equals: Code
-  get() = _equals()
-  set(code) { _equals(code) }
+var equals_: Code
+  get() = equals_()
+  set(code) { equals_(code) }
 
 fun equatable(vararg spans: Span) = span("equatable", *spans)
 fun equatable(code: Code) = span("equatable", code)
@@ -3022,15 +3022,15 @@ var failures: Code
   get() = failures()
   set(code) { failures(code) }
 
-fun _false(vararg spans: Span) = span("false", *spans)
-fun _false(code: Code) = span("false", code)
-fun _false(fn: CodeFn) = span("false", fn)
-var Code._false: Code
+fun false_(vararg spans: Span) = span("false", *spans)
+fun false_(code: Code) = span("false", code)
+fun false_(fn: CodeFn) = span("false", fn)
+var Code.false_: Code
   get() = code("false")
   set(code) { code("false", code) }
-var _false: Code
-  get() = _false()
-  set(code) { _false(code) }
+var false_: Code
+  get() = false_()
+  set(code) { false_(code) }
 
 fun family(vararg spans: Span) = span("family", *spans)
 fun family(code: Code) = span("family", code)
@@ -3342,15 +3342,15 @@ var footer: Code
   get() = footer()
   set(code) { footer(code) }
 
-fun _for(vararg spans: Span) = span("for", *spans)
-fun _for(code: Code) = span("for", code)
-fun _for(fn: CodeFn) = span("for", fn)
-var Code._for: Code
+fun for_(vararg spans: Span) = span("for", *spans)
+fun for_(code: Code) = span("for", code)
+fun for_(fn: CodeFn) = span("for", fn)
+var Code.for_: Code
   get() = code("for")
   set(code) { code("for", code) }
-var _for: Code
-  get() = _for()
-  set(code) { _for(code) }
+var for_: Code
+  get() = for_()
+  set(code) { for_(code) }
 
 fun foreground(vararg spans: Span) = span("foreground", *spans)
 fun foreground(code: Code) = span("foreground", code)
@@ -3492,15 +3492,15 @@ var fully: Code
   get() = fully()
   set(code) { fully(code) }
 
-fun _fun(vararg spans: Span) = span("fun", *spans)
-fun _fun(code: Code) = span("fun", code)
-fun _fun(fn: CodeFn) = span("fun", fn)
-var Code._fun: Code
+fun fun_(vararg spans: Span) = span("fun", *spans)
+fun fun_(code: Code) = span("fun", code)
+fun fun_(fn: CodeFn) = span("fun", fn)
+var Code.fun_: Code
   get() = code("fun")
   set(code) { code("fun", code) }
-var _fun: Code
-  get() = _fun()
-  set(code) { _fun(code) }
+var fun_: Code
+  get() = fun_()
+  set(code) { fun_(code) }
 
 fun func(vararg spans: Span) = span("func", *spans)
 fun func(code: Code) = span("func", code)
@@ -4012,15 +4012,15 @@ var identifiers: Code
   get() = identifiers()
   set(code) { identifiers(code) }
 
-fun _if(vararg spans: Span) = span("if", *spans)
-fun _if(code: Code) = span("if", code)
-fun _if(fn: CodeFn) = span("if", fn)
-var Code._if: Code
+fun if_(vararg spans: Span) = span("if", *spans)
+fun if_(code: Code) = span("if", code)
+fun if_(fn: CodeFn) = span("if", fn)
+var Code.if_: Code
   get() = code("if")
   set(code) { code("if", code) }
-var _if: Code
-  get() = _if()
-  set(code) { _if(code) }
+var if_: Code
+  get() = if_()
+  set(code) { if_(code) }
 
 fun immediate(vararg spans: Span) = span("immediate", *spans)
 fun immediate(code: Code) = span("immediate", code)
@@ -4082,15 +4082,15 @@ var import: Code
   get() = import()
   set(code) { import(code) }
 
-fun _in(vararg spans: Span) = span("in", *spans)
-fun _in(code: Code) = span("in", code)
-fun _in(fn: CodeFn) = span("in", fn)
-var Code._in: Code
+fun in_(vararg spans: Span) = span("in", *spans)
+fun in_(code: Code) = span("in", code)
+fun in_(fn: CodeFn) = span("in", fn)
+var Code.in_: Code
   get() = code("in")
   set(code) { code("in", code) }
-var _in: Code
-  get() = _in()
-  set(code) { _in(code) }
+var in_: Code
+  get() = in_()
+  set(code) { in_(code) }
 
 fun inbpm(vararg spans: Span) = span("inbpm", *spans)
 fun inbpm(code: Code) = span("inbpm", code)
@@ -4412,15 +4412,15 @@ var intercept: Code
   get() = intercept()
   set(code) { intercept(code) }
 
-fun _interface(vararg spans: Span) = span("interface", *spans)
-fun _interface(code: Code) = span("interface", code)
-fun _interface(fn: CodeFn) = span("interface", fn)
-var Code._interface: Code
+fun interface_(vararg spans: Span) = span("interface", *spans)
+fun interface_(code: Code) = span("interface", code)
+fun interface_(fn: CodeFn) = span("interface", fn)
+var Code.interface_: Code
   get() = code("interface")
   set(code) { code("interface", code) }
-var _interface: Code
-  get() = _interface()
-  set(code) { _interface(code) }
+var interface_: Code
+  get() = interface_()
+  set(code) { interface_(code) }
 
 fun intern(vararg spans: Span) = span("intern", *spans)
 fun intern(code: Code) = span("intern", code)
@@ -4492,15 +4492,15 @@ var iphone: Code
   get() = iphone()
   set(code) { iphone(code) }
 
-fun _is(vararg spans: Span) = span("is", *spans)
-fun _is(code: Code) = span("is", code)
-fun _is(fn: CodeFn) = span("is", fn)
-var Code._is: Code
+fun is_(vararg spans: Span) = span("is", *spans)
+fun is_(code: Code) = span("is", code)
+fun is_(fn: CodeFn) = span("is", fn)
+var Code.is_: Code
   get() = code("is")
   set(code) { code("is", code) }
-var _is: Code
-  get() = _is()
-  set(code) { _is(code) }
+var is_: Code
+  get() = is_()
+  set(code) { is_(code) }
 
 fun it(vararg spans: Span) = span("it", *spans)
 fun it(code: Code) = span("it", code)
@@ -5922,15 +5922,15 @@ var now: Code
   get() = now()
   set(code) { now(code) }
 
-fun _null(vararg spans: Span) = span("null", *spans)
-fun _null(code: Code) = span("null", code)
-fun _null(fn: CodeFn) = span("null", fn)
-var Code._null: Code
+fun null_(vararg spans: Span) = span("null", *spans)
+fun null_(code: Code) = span("null", code)
+fun null_(fn: CodeFn) = span("null", fn)
+var Code.null_: Code
   get() = code("null")
   set(code) { code("null", code) }
-var _null: Code
-  get() = _null()
-  set(code) { _null(code) }
+var null_: Code
+  get() = null_()
+  set(code) { null_(code) }
 
 fun nullable(vararg spans: Span) = span("nullable", *spans)
 fun nullable(code: Code) = span("nullable", code)
@@ -5972,15 +5972,15 @@ var obj: Code
   get() = obj()
   set(code) { obj(code) }
 
-fun _object(vararg spans: Span) = span("object", *spans)
-fun _object(code: Code) = span("object", code)
-fun _object(fn: CodeFn) = span("object", fn)
-var Code._object: Code
+fun object_(vararg spans: Span) = span("object", *spans)
+fun object_(code: Code) = span("object", code)
+fun object_(fn: CodeFn) = span("object", fn)
+var Code.object_: Code
   get() = code("object")
   set(code) { code("object", code) }
-var _object: Code
-  get() = _object()
-  set(code) { _object(code) }
+var object_: Code
+  get() = object_()
+  set(code) { object_(code) }
 
 fun objects(vararg spans: Span) = span("objects", *spans)
 fun objects(code: Code) = span("objects", code)
@@ -6292,15 +6292,15 @@ var p: Code
   get() = p()
   set(code) { p(code) }
 
-fun _package(vararg spans: Span) = span("package", *spans)
-fun _package(code: Code) = span("package", code)
-fun _package(fn: CodeFn) = span("package", fn)
-var Code._package: Code
+fun package_(vararg spans: Span) = span("package", *spans)
+fun package_(code: Code) = span("package", code)
+fun package_(fn: CodeFn) = span("package", fn)
+var Code.package_: Code
   get() = code("package")
   set(code) { code("package", code) }
-var _package: Code
-  get() = _package()
-  set(code) { _package(code) }
+var package_: Code
+  get() = package_()
+  set(code) { package_(code) }
 
 fun packages(vararg spans: Span) = span("packages", *spans)
 fun packages(code: Code) = span("packages", code)
@@ -7422,15 +7422,15 @@ var reti: Code
   get() = reti()
   set(code) { reti(code) }
 
-fun _return(vararg spans: Span) = span("return", *spans)
-fun _return(code: Code) = span("return", code)
-fun _return(fn: CodeFn) = span("return", fn)
-var Code._return: Code
+fun return_(vararg spans: Span) = span("return", *spans)
+fun return_(code: Code) = span("return", code)
+fun return_(fn: CodeFn) = span("return", fn)
+var Code.return_: Code
   get() = code("return")
   set(code) { code("return", code) }
-var _return: Code
-  get() = _return()
-  set(code) { _return(code) }
+var return_: Code
+  get() = return_()
+  set(code) { return_(code) }
 
 fun returns(vararg spans: Span) = span("returns", *spans)
 fun returns(code: Code) = span("returns", code)
@@ -8482,15 +8482,15 @@ var sum: Code
   get() = sum()
   set(code) { sum(code) }
 
-fun _super(vararg spans: Span) = span("super", *spans)
-fun _super(code: Code) = span("super", code)
-fun _super(fn: CodeFn) = span("super", fn)
-var Code._super: Code
+fun super_(vararg spans: Span) = span("super", *spans)
+fun super_(code: Code) = span("super", code)
+fun super_(fn: CodeFn) = span("super", fn)
+var Code.super_: Code
   get() = code("super")
   set(code) { code("super", code) }
-var _super: Code
-  get() = _super()
-  set(code) { _super(code) }
+var super_: Code
+  get() = super_()
+  set(code) { super_(code) }
 
 fun superclass(vararg spans: Span) = span("superclass", *spans)
 fun superclass(code: Code) = span("superclass", code)
@@ -8802,15 +8802,15 @@ var the: Code
   get() = the()
   set(code) { the(code) }
 
-fun _then(vararg spans: Span) = span("then", *spans)
-fun _then(code: Code) = span("then", code)
-fun _then(fn: CodeFn) = span("then", fn)
-var Code._then: Code
+fun then_(vararg spans: Span) = span("then", *spans)
+fun then_(code: Code) = span("then", code)
+fun then_(fn: CodeFn) = span("then", fn)
+var Code.then_: Code
   get() = code("then")
   set(code) { code("then", code) }
-var _then: Code
-  get() = _then()
-  set(code) { _then(code) }
+var then_: Code
+  get() = then_()
+  set(code) { then_(code) }
 
 fun third(vararg spans: Span) = span("third", *spans)
 fun third(code: Code) = span("third", code)
@@ -8822,15 +8822,15 @@ var third: Code
   get() = third()
   set(code) { third(code) }
 
-fun _this(vararg spans: Span) = span("this", *spans)
-fun _this(code: Code) = span("this", code)
-fun _this(fn: CodeFn) = span("this", fn)
-var Code._this: Code
+fun this_(vararg spans: Span) = span("this", *spans)
+fun this_(code: Code) = span("this", code)
+fun this_(fn: CodeFn) = span("this", fn)
+var Code.this_: Code
   get() = code("this")
   set(code) { code("this", code) }
-var _this: Code
-  get() = _this()
-  set(code) { _this(code) }
+var this_: Code
+  get() = this_()
+  set(code) { this_(code) }
 
 fun thread(vararg spans: Span) = span("thread", *spans)
 fun thread(code: Code) = span("thread", code)
@@ -8852,15 +8852,15 @@ var three: Code
   get() = three()
   set(code) { three(code) }
 
-fun _throw(vararg spans: Span) = span("throw", *spans)
-fun _throw(code: Code) = span("throw", code)
-fun _throw(fn: CodeFn) = span("throw", fn)
-var Code._throw: Code
+fun throw_(vararg spans: Span) = span("throw", *spans)
+fun throw_(code: Code) = span("throw", code)
+fun throw_(fn: CodeFn) = span("throw", fn)
+var Code.throw_: Code
   get() = code("throw")
   set(code) { code("throw", code) }
-var _throw: Code
-  get() = _throw()
-  set(code) { _throw(code) }
+var throw_: Code
+  get() = throw_()
+  set(code) { throw_(code) }
 
 fun throwable(vararg spans: Span) = span("throwable", *spans)
 fun throwable(code: Code) = span("throwable", code)
@@ -9032,15 +9032,15 @@ var trigger: Code
   get() = trigger()
   set(code) { trigger(code) }
 
-fun _true(vararg spans: Span) = span("true", *spans)
-fun _true(code: Code) = span("true", code)
-fun _true(fn: CodeFn) = span("true", fn)
-var Code._true: Code
+fun true_(vararg spans: Span) = span("true", *spans)
+fun true_(code: Code) = span("true", code)
+fun true_(fn: CodeFn) = span("true", fn)
+var Code.true_: Code
   get() = code("true")
   set(code) { code("true", code) }
-var _true: Code
-  get() = _true()
-  set(code) { _true(code) }
+var true_: Code
+  get() = true_()
+  set(code) { true_(code) }
 
 fun truth(vararg spans: Span) = span("truth", *spans)
 fun truth(code: Code) = span("truth", code)
@@ -9402,15 +9402,15 @@ var v: Code
   get() = v()
   set(code) { v(code) }
 
-fun _val(vararg spans: Span) = span("val", *spans)
-fun _val(code: Code) = span("val", code)
-fun _val(fn: CodeFn) = span("val", fn)
-var Code._val: Code
+fun val_(vararg spans: Span) = span("val", *spans)
+fun val_(code: Code) = span("val", code)
+fun val_(fn: CodeFn) = span("val", fn)
+var Code.val_: Code
   get() = code("val")
   set(code) { code("val", code) }
-var _val: Code
-  get() = _val()
-  set(code) { _val(code) }
+var val_: Code
+  get() = val_()
+  set(code) { val_(code) }
 
 fun value(vararg spans: Span) = span("value", *spans)
 fun value(code: Code) = span("value", code)
@@ -9432,15 +9432,15 @@ var values: Code
   get() = values()
   set(code) { values(code) }
 
-fun _var(vararg spans: Span) = span("var", *spans)
-fun _var(code: Code) = span("var", code)
-fun _var(fn: CodeFn) = span("var", fn)
-var Code._var: Code
+fun var_(vararg spans: Span) = span("var", *spans)
+fun var_(code: Code) = span("var", code)
+fun var_(fn: CodeFn) = span("var", fn)
+var Code.var_: Code
   get() = code("var")
   set(code) { code("var", code) }
-var _var: Code
-  get() = _var()
-  set(code) { _var(code) }
+var var_: Code
+  get() = var_()
+  set(code) { var_(code) }
 
 fun variable(vararg spans: Span) = span("variable", *spans)
 fun variable(code: Code) = span("variable", code)
@@ -9702,15 +9702,15 @@ var week: Code
   get() = week()
   set(code) { week(code) }
 
-fun _while(vararg spans: Span) = span("while", *spans)
-fun _while(code: Code) = span("while", code)
-fun _while(fn: CodeFn) = span("while", fn)
-var Code._while: Code
+fun while_(vararg spans: Span) = span("while", *spans)
+fun while_(code: Code) = span("while", code)
+fun while_(fn: CodeFn) = span("while", fn)
+var Code.while_: Code
   get() = code("while")
   set(code) { code("while", code) }
-var _while: Code
-  get() = _while()
-  set(code) { _while(code) }
+var while_: Code
+  get() = while_()
+  set(code) { while_(code) }
 
 fun white(vararg spans: Span) = span("white", *spans)
 fun white(code: Code) = span("white", code)
