@@ -5,11 +5,11 @@ import leo.base.runIf
 import leo5.script.*
 
 fun Appendable.appendType(script: Script): Appendable =
-	ifNotNull(script.extensionOrNull) { appendType(it) }
+	ifNotNull(script.nonEmptyOrNull) { appendType(it) }
 
-fun Appendable.appendType(extension: Extension): Appendable =
-	extension.script.emptyOrNull!!.run {
-		appendType(extension.line)
+fun Appendable.appendType(scriptNonEmpty: ScriptNonEmpty): Appendable =
+	scriptNonEmpty.script.emptyOrNull!!.run {
+		appendType(scriptNonEmpty.line)
 	}
 
 fun Appendable.appendType(line: Line): Appendable =
@@ -17,7 +17,7 @@ fun Appendable.appendType(line: Line): Appendable =
 
 fun Appendable.appendFields(script: Script, hasMore: Boolean = false): Appendable = when (script) {
 	is EmptyScript -> this
-	is ExtensionScript -> appendFields(script.extension.script, true).appendField(script.extension.line).runIf(hasMore) { append(", ") }
+	is NonEmptyScript -> appendFields(script.nonEmpty.script, true).appendField(script.nonEmpty.line).runIf(hasMore) { append(", ") }
 }
 
 fun Appendable.appendField(line: Line): Appendable =

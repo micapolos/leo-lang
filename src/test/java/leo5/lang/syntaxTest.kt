@@ -41,21 +41,4 @@ class SyntaxTest {
 			line(word(int(12)).script)
 		}
 	}
-
-	@Test
-	fun structs() {
-		kotlin {
-			word { contains { string } }
-			script {
-				split {
-					empty
-					non { empty { contains {
-
-					} } }
-				} } }
-				is_ { list { of { line } } }
-				line { contains { word; script } }
-			}
-		}
-	}
 }
