@@ -5,6 +5,8 @@ data class Writer<in V>(
 
 typealias Write<V, T> = Writer<V>.(T) -> Writer<V>
 
+fun <V> writer(fn: (V) -> Writer<V>) = Writer(fn)
+
 fun <V> Writer<V>.write(value: V): Writer<V> =
 	writeFn(value)
 
