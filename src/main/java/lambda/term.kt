@@ -1,5 +1,7 @@
 package lambda
 
+import leo.base.fold
+
 sealed class Term {
 	override fun toString() = code
 	override fun equals(other: Any?) = other is Term && eq(other)
@@ -13,14 +15,16 @@ fun term(variable: Variable): Term = VariableTerm(variable)
 fun term(application: Application): Term = ApplicationTerm(application)
 fun term(function: Function): Term = FunctionTerm(function)
 
-val Term.applicationOrNull get() = (this as? ApplicationTerm)?.application
-val Term.functionOrNull get() = (this as? FunctionTerm)?.function
+operator fun Term.invoke(term: Term): Term = when (this) {
+	is VariableTerm -> this
+	is ApplicationTerm -> term(application(this, term))
+	is FunctionTerm -> function(term)
+}
 
-fun Term.apply(term: Term): Term = ApplicationTerm(application(this, term)).reduce
+operator fun Term.invoke(term1: Term, vararg terms: Term): Term =
+	invoke(term1).fold(terms) { invoke(it) }
+
 fun term(fn: (Term) -> Term): Term = FunctionTerm(function(fn))
-
-val Term.reduce: Term get() = applicationOrNull?.reduce ?: this
-fun Term.invoke(term: Term) = functionOrNull?.invoke(term) ?: this
 
 val Term.code: String
 	get() = when (this) {

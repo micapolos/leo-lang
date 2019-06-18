@@ -4,24 +4,43 @@ import leo.base.assertEqualTo
 import org.junit.Test
 
 class TermTest {
-	val falseTerm get() = term { x -> term { y -> x } }
-	val trueTerm get() = term { x -> term { y -> y } }
-	val notTerm get() = term { b -> b.apply(trueTerm).apply(falseTerm) }
+	val no = term { x -> term { y -> x } }
+	val yes = term { x -> term { y -> y } }
+
+	val id = term { x -> x }
+	val nand = term { a -> term { b -> a.invoke(yes).invoke(b.invoke(yes).invoke(no)) } }
+	val not = term { b -> b.invoke(yes).invoke(no) }
+
+	fun pair(a: Term, b: Term) = term { at -> at(a, b) }
+	val pairAt = term { at -> term { pair -> pair(at) } }
+
+	fun branchFirst(first: Term) = term { ifFirst -> term { ifSecond -> ifFirst(first) } }
+	fun branchSecond(second: Term) = term { ifFirst -> term { ifSecond -> ifSecond(second) } }
+	val branchSwitch get() = term { ifFirst -> term { ifSecond -> term { branch -> branch(ifFirst, ifSecond) } } }
+
+	fun Term.dot(term: Term) = term.invoke(this)
 
 	@Test
 	fun boolean() {
-		falseTerm.eq(falseTerm).assertEqualTo(true)
-		falseTerm.eq(trueTerm).assertEqualTo(false)
-		trueTerm.eq(falseTerm).assertEqualTo(false)
-		trueTerm.eq(trueTerm).assertEqualTo(true)
+		no.eq(no).assertEqualTo(true)
+		no.eq(yes).assertEqualTo(false)
+		yes.eq(no).assertEqualTo(false)
+		yes.eq(yes).assertEqualTo(true)
 
-		falseTerm.reduce.assertEqualTo(falseTerm)
-		trueTerm.reduce.assertEqualTo(trueTerm)
-		notTerm.reduce.assertEqualTo(notTerm)
+		nand(no, no).assertEqualTo(yes)
+		nand(no, yes).assertEqualTo(yes)
+		nand(yes, no).assertEqualTo(yes)
+		nand(yes, yes).assertEqualTo(no)
 
-		notTerm.invoke(falseTerm).assertEqualTo(trueTerm)
-		notTerm.invoke(trueTerm).assertEqualTo(falseTerm)
-		notTerm.invoke(notTerm.invoke(falseTerm)).assertEqualTo(falseTerm)
-		notTerm.invoke(notTerm.invoke(trueTerm)).assertEqualTo(trueTerm)
+		not(no).assertEqualTo(yes)
+		not(yes).assertEqualTo(no)
+		not(not(no)).assertEqualTo(no)
+		not(not(yes)).assertEqualTo(yes)
+
+		pair(pair(no, no), pair(yes, yes)).dot(pairAt(no)).assertEqualTo(pair(no, no))
+		pair(pair(no, no), pair(yes, yes)).dot(pairAt((yes))).assertEqualTo(pair(yes, yes))
+
+		branchFirst(pair(no, no)).dot(branchSwitch(id, id)).assertEqualTo(pair(no, no))
+		branchSecond(pair(yes, yes)).dot(branchSwitch(id, id)).assertEqualTo(pair(yes, yes))
 	}
 }

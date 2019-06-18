@@ -6,6 +6,9 @@ class Function(val fn: (Term) -> Term) {
 }
 
 fun function(fn: (Term) -> Term) = Function(fn)
+
 operator fun Function.invoke(term: Term) = fn(term)
+
 fun Function.eq(function: Function) = term(newVariable).let { variable -> fn(variable).eq(function.fn(variable)) }
+
 val Function.code get() = newVariable.let { variable -> "${variable.code} -> ${fn(term(variable)).code}" }

@@ -6,5 +6,7 @@ class Variable {
 }
 
 val newVariable get() = Variable()
+
 fun Variable.eq(variable: Variable) = this === variable
+
 val Variable.code get() = "x${hashCode()}"
