@@ -30,19 +30,3 @@ fun generate(fn: Writer<Token>.() -> Unit) {
 		generating.write(token)
 	}.fn()
 }
-
-leo
-word contains super super kotlin string
-script
-contains one of
-nothing
-it
-super super script
-and super super line
-line contains
-super super word
-and super super super script
-path
-switch
-empty
-non empty super path
