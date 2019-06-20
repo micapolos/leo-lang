@@ -1,5 +1,5 @@
 package leo5.script
 
-data class ScriptNonEmpty(val script: Script, val line: Line)
+data class ScriptNonEmpty(val line: Line, val script: Script)
 
-fun nonEmpty(script: Script, line: Line) = ScriptNonEmpty(script, line)
+fun nonEmpty(line: Line, script: Script) = ScriptNonEmpty(line, script)

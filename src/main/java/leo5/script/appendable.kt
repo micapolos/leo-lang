@@ -10,4 +10,4 @@ fun Appendable.append(line: Line) =
 	append(line.string).append('(').append(line.script).append(')')
 
 fun Appendable.append(scriptNonEmpty: ScriptNonEmpty) =
-	append(scriptNonEmpty.script).append(scriptNonEmpty.line)
+	append(scriptNonEmpty.line).append(scriptNonEmpty.script)

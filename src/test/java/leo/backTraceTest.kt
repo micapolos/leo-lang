@@ -9,6 +9,6 @@ class BackTraceTest {
 	fun string() {
 		backTrace(oneWord.term, twoWord.term)
 			.string
-			.assertEqualTo("back trace(the one, the two)")
+			.assertEqualTo("back parent(the one, the two)")
 	}
 }
