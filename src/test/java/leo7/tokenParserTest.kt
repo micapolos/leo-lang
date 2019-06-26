@@ -10,8 +10,14 @@ class TokenParserTest {
 	fun read() {
 		newTokenParser
 			.orNull
-			.fold("jajeczko(") { this?.read(it) }!!
+			.fold("zero(") { this?.read(it) }!!
 			.parsedTokenOrNull
-			.assertEqualTo("jajeczko".wordOrNull!!.begin.token)
+			.assertEqualTo(zeroWord.begin.token)
+
+		newTokenParser
+			.orNull
+			.fold(")") { this?.read(it) }!!
+			.parsedTokenOrNull
+			.assertEqualTo(end.token)
 	}
 }
