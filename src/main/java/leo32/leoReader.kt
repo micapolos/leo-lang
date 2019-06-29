@@ -143,24 +143,24 @@ val SymbolReader.leoByteSeq: Seq<Byte>
 	get() =
 		symbolReaderParentOrNull
 			.orEmptyIfNullSeq { leoByteSeq }
-			.then { fieldReader.leoByteSeq }
+			.thenFn { fieldReader.leoByteSeq }
 
 val SymbolReaderParent.leoByteSeq: Seq<Byte>
 	get() =
-		symbolReader.leoByteSeq.then {
-			symbol.noTrailingZeroByteSeq.then {
+		symbolReader.leoByteSeq.thenFn {
+			symbol.noTrailingZeroByteSeq.thenFn {
 				' '.clampedByte.onlySeq
 			}
 		}
 
 val ByteReader.leoByteSeq
 	get() =
-		symbolReader.leoByteSeq.then {
+		symbolReader.leoByteSeq.thenFn {
 			symbolOrNull.orEmptyIfNullSeq { noTrailingZeroByteSeq }
 		}
 
 val LeoReader.byteSeq: Seq<Byte>
 	get() =
-		byteReader.leoByteSeq.then {
+		byteReader.leoByteSeq.thenFn {
 			leadingTabStackStackOrNull.seq.map { seq }.flat.map { byte }
 		}

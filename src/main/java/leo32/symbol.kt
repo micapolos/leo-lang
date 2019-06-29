@@ -43,7 +43,7 @@ fun Symbol.plus(string: String) =
 
 val Symbol.byteSeq
 	get() =
-		noTrailingZeroByteSeq.then { 0.toByte().onlySeq }
+		noTrailingZeroByteSeq.thenFn { 0.toByte().onlySeq }
 
 val Symbol.noTrailingZeroByteSeq
 	get() =

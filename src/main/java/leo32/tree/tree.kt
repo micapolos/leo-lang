@@ -1,7 +1,7 @@
 package leo32.tree
 
 import leo.base.Seq
-import leo.base.seqNodeOrNull
+import leo.base.nodeOrNull
 import leo.binary.Bit
 import leo.binary.inverse
 import leo.binary.isZero
@@ -50,7 +50,7 @@ fun <V> Tree<V>.put(bit: Bit, value: V): Tree<V> =
 	update(bit) { tree(leaf(value)) }
 
 fun <V> Tree<V>.update(bitSeq: Seq<Bit>, fn: Tree<V>?.() -> Tree<V>): Tree<V> {
-	val seqNodeOrNull = bitSeq.seqNodeOrNull
+	val seqNodeOrNull = bitSeq.nodeOrNull
 	return if (seqNodeOrNull == null) fn()
 	else update(seqNodeOrNull.first) { update(seqNodeOrNull.remaining, fn) }
 }

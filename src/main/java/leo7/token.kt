@@ -10,6 +10,12 @@ data class EndToken(val end: End) : Token()
 val WordBegin.token: Token get() = BeginToken(this)
 val End.token: Token get() = EndToken(this)
 
+fun <R> Token.switch(beginFn: WordBegin.() -> R, endFn: End.() -> R): R =
+	when (this) {
+		is BeginToken -> begin.beginFn()
+		is EndToken -> end.endFn()
+	}
+
 fun Writer<Token>.characterWriter(wordOrNull: Word?): Writer<Character> =
 	writer { character ->
 		when (character) {

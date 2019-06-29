@@ -49,7 +49,7 @@ fun Dispatcher.update(field: Field, fn: Dispatcher.() -> Dispatcher): Dispatcher
 
 fun Dispatcher.updateField(fieldSeq: Seq<Field>, fn: Dispatcher.() -> Dispatcher): Dispatcher =
 	fieldSeq
-		.seqNodeOrNull
+		.nodeOrNull
 		?.let { fieldSeqNode ->
 			update(fieldSeqNode.first) {
 				updateField(fieldSeqNode.remaining, fn)

@@ -32,8 +32,8 @@ val Field.bitSeq: Seq<Bit>
 
 val Field.byteSeq: Seq<Byte>
 	get() =
-		name.byteSeq.then {
-			value.byteSeq.then {
+		name.byteSeq.thenFn {
+			value.byteSeq.thenFn {
 				0.toByte().onlySeq
 			}
 		}

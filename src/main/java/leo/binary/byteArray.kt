@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream
 
 fun ByteArray.bitSeq(range: IntRange): Seq<Bit> =
 	if (range.isEmpty()) emptySeq()
-	else this[range.first].bitSeq.then {
+	else this[range.first].bitSeq.thenFn {
 		bitSeq(IntRange(range.first + 1, range.last))
 	}
 

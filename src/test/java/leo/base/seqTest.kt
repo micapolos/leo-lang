@@ -55,7 +55,7 @@ fun <T> Seq<T>.assertContains(vararg items: T) {
 	val list = ArrayList<T>()
 	var sequence = this
 	while (true) {
-		val nonEmptySequence = sequence.seqNodeOrNullFn() ?: break
+		val nonEmptySequence = sequence.nodeOrNullFn() ?: break
 		list.add(nonEmptySequence.first)
 		sequence = nonEmptySequence.remaining
 	}

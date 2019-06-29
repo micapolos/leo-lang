@@ -13,7 +13,7 @@ data class SeqNode<T>(
 }
 
 data class Seq<T>(
-	val seqNodeOrNullFn: () -> SeqNode<T>?) : Iterable<T> {
+	val nodeOrNullFn: () -> SeqNode<T>?) : Iterable<T> {
 	override fun iterator() = object : Iterator<T> {
 		var seqOrEmptyOrNull: Seq<T>? = this@Seq
 		var nextSeqNodeOrNull: SeqNode<T>? = null
@@ -33,21 +33,24 @@ data class Seq<T>(
 
 		private fun prepareNext() {
 			if (nextSeqNodeOrNull == null && seqOrEmptyOrNull != null) {
-				nextSeqNodeOrNull = seqOrEmptyOrNull!!.seqNodeOrNull
+				nextSeqNodeOrNull = seqOrEmptyOrNull!!.nodeOrNull
 			}
 		}
 	}
 }
 
-val <T> Seq<T>.seqNodeOrNull: SeqNode<T>?
+val <T> Seq<T>.nodeOrNull: SeqNode<T>?
 	get() =
-		seqNodeOrNullFn()
+		nodeOrNullFn()
 
 fun <T> Empty.seq() =
 	emptySeq<T>()
 
 fun <T> emptySeq(): Seq<T> =
 	Seq { null }
+
+fun <T> seq(fn: () -> SeqNode<T>?) =
+	Seq(fn)
 
 val <T> SeqNode<T>.seq: Seq<T>
 	get() =
@@ -80,7 +83,7 @@ fun <T> flatSeq(vararg seqs: Seq<T>): Seq<T> =
 	seq(*seqs).flat
 
 fun <T> seqNodeOrNull(vararg seqs: Seq<T>): SeqNode<T>? =
-	flatSeq(*seqs).seqNodeOrNull
+	flatSeq(*seqs).nodeOrNull
 
 fun <T> seqFrom(index: Int, items: List<T>): Seq<T> =
 	Seq {
@@ -88,13 +91,23 @@ fun <T> seqFrom(index: Int, items: List<T>): Seq<T> =
 		else items[index] then seqFrom(index + 1, items)
 	}
 
-fun <T> Seq<T>.then(fn: () -> Seq<T>): Seq<T> =
+fun <T> Seq<T>.thenFn(fn: () -> Seq<T>): Seq<T> =
 	Seq {
-		seqNodeOrNull.let { seqNodeOrNull ->
+		nodeOrNull.let { seqNodeOrNull ->
 			seqNodeOrNull
 				?.first
-				?.then(seqNodeOrNull.remaining.then(fn))
-				?: fn().seqNodeOrNull
+				?.then(seqNodeOrNull.remaining.thenFn(fn))
+				?: fn().nodeOrNull
+		}
+	}
+
+fun <T> Seq<T>.then(seq: Seq<T>): Seq<T> =
+	Seq {
+		nodeOrNull.let { seqNodeOrNull ->
+			seqNodeOrNull
+				?.first
+				?.then(seqNodeOrNull.remaining.then(seq))
+				?: seq.nodeOrNull
 		}
 	}
 
@@ -114,15 +127,18 @@ fun <T, R> SeqNode<T>.map(fn: T.() -> R): SeqNode<R> =
 	first.fn() then remaining.map(fn)
 
 fun <T, R> Seq<T>.map(fn: T.() -> R): Seq<R> =
-	Seq { seqNodeOrNull?.map(fn) }
+	Seq { nodeOrNull?.map(fn) }
 
-val <T> SeqNode<Seq<T>>.flatten: Seq<T>
+val <T> SeqNode<Seq<T>>.flat: Seq<T>
 	get() =
-		first.then { remaining.flat }
+		first.thenFn { remaining.flat }
 
 val <T> Seq<Seq<T>>.flat: Seq<T>
 	get() =
-		Seq { seqNodeOrNull?.flatten?.seqNodeOrNull }
+		Seq { nodeOrNull?.flat?.nodeOrNull }
+
+fun <T, R> Seq<T>.mapFlat(fn: T.() -> Seq<R>) =
+	map(fn).flat
 
 val <T> Iterator<T>.seq: Seq<T>
 	get() =
@@ -151,7 +167,7 @@ val <T: Any> Seq<T>.nullIntercept: Seq<T?> get() =
 
 
 fun <T> Seq<T>.intercept(addValue: Boolean, value: T): Seq<T> =
-	Seq { seqNodeOrNull?.intercept(addValue, value)	}
+	Seq { nodeOrNull?.intercept(addValue, value) }
 
 fun <T> SeqNode<T>.intercept(addValue: Boolean, value: T): SeqNode<T> =
 	if (!addValue) first.then(remaining.intercept(true, value))
@@ -161,7 +177,7 @@ fun <T> Seq<T>.replace(fromToPair: Pair<T, T>) =
 	map { value -> if (value == fromToPair.first) fromToPair.second else value }
 
 fun <T, V> Seq<T>.filterMap(fn: T.() -> The<V>?): Seq<V> {
-	val seqNodeOrNull = seqNodeOrNull
+	val seqNodeOrNull = nodeOrNull
 	return if (seqNodeOrNull == null) Seq { null }
 	else {
 		val theMappedFirst = seqNodeOrNull.first.fn()
@@ -171,7 +187,7 @@ fun <T, V> Seq<T>.filterMap(fn: T.() -> The<V>?): Seq<V> {
 }
 
 fun <T, R : Any> R.foldUntilNullEffect(seq: Seq<T>, fn: R.(T) -> R?): Effect<R, Seq<T>> =
-	foldUntilNullEffect(seq.seqNodeOrNull, fn).mapValue { Seq { this } }
+	foldUntilNullEffect(seq.nodeOrNull, fn).mapValue { Seq { this } }
 
 fun <T, R : Any> R.foldUntilNullEffect(seqNodeOrNull: SeqNode<T>?, fn: R.(T) -> R?): Effect<R, SeqNode<T>?> {
 	var folded = this
@@ -181,7 +197,7 @@ fun <T, R : Any> R.foldUntilNullEffect(seqNodeOrNull: SeqNode<T>?, fn: R.(T) -> 
 		if (nextFolded == null) break
 		else {
 			folded = nextFolded
-			remainingSeqNodeOrNull = remainingSeqNodeOrNull.remaining.seqNodeOrNull
+			remainingSeqNodeOrNull = remainingSeqNodeOrNull.remaining.nodeOrNull
 		}
 	}
 	return folded.effect(remainingSeqNodeOrNull)
@@ -191,7 +207,7 @@ fun <A : Any, B : Any, R> R.zipFold(aSeq: Seq<A>, bSeq: Seq<B>, fn: R.(A?, B?) -
 	fold(zip(aSeq, bSeq)) { (a, b) -> fn(a, b) }
 
 fun <A : Any, B : Any> zip(aSeq: Seq<A>, bSeq: Seq<B>): Seq<Pair<A?, B?>> =
-	Seq { zip(aSeq.seqNodeOrNull, bSeq.seqNodeOrNull) }
+	Seq { zip(aSeq.nodeOrNull, bSeq.nodeOrNull) }
 
 fun <A : Any, B : Any> zip(aSeqNode: SeqNode<A>?, bSeqNode: SeqNode<B>?): SeqNode<Pair<A?, B?>>? =
 	if (aSeqNode != null)

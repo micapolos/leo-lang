@@ -11,11 +11,11 @@ fun Writer<Seq<Byte>>.leoWriter(leoReader: LeoReader): Writer<Byte> =
 		leoReader
 			.plus(this)
 			?.let { newLeoReader ->
-				this@leoWriter.write("Leonardo (v0.1) char: ${this}\n".utf8ByteSeq.then { newLeoReader.byteSeq })
+				this@leoWriter.write("Leonardo (v0.1) char: ${this}\n".utf8ByteSeq.thenFn { newLeoReader.byteSeq })
 				leoWriter(newLeoReader)
 			}
 			.orIfNull {
-				this@leoWriter.write(leoReader.byteSeq.then { 7.clampedByte.onlySeq })
+				this@leoWriter.write(leoReader.byteSeq.thenFn { 7.clampedByte.onlySeq })
 				leoWriter(leoReader)
 			}
 	}

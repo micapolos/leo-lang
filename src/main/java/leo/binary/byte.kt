@@ -32,11 +32,11 @@ val Seq<Bit>.bitByteSeq
 
 fun Seq<Bit>.bitByteSeq(acc: Int, mask: Int): Seq<Byte> =
 	Seq {
-		seqNodeOrNull?.let { bitSeqNode ->
+		nodeOrNull?.let { bitSeqNode ->
 			acc.or(if (bitSeqNode.first.isZero) 0 else mask).let { newAcc ->
 				mask.ushr(1).let { newMask ->
 					if (newMask == 0) newAcc.clampedByte.then(bitSeqNode.remaining.bitByteSeq)
-					else bitSeqNode.remaining.bitByteSeq(newAcc, newMask).seqNodeOrNull
+					else bitSeqNode.remaining.bitByteSeq(newAcc, newMask).nodeOrNull
 				}
 			}
 		}
