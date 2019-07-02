@@ -3,6 +3,7 @@ package leo3
 import leo.base.Seq
 import leo.base.appendableString
 import leo.base.byte
+import leo.base.seqNodeOrNull
 import leo.binary.bitSeq
 
 data class Begin(

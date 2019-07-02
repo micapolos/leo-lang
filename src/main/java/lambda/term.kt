@@ -21,8 +21,8 @@ operator fun Term.invoke(term: Term): Term = when (this) {
 	is FunctionTerm -> function(term)
 }
 
-operator fun Term.invoke(term1: Term, vararg terms: Term): Term =
-	invoke(term1).fold(terms) { invoke(it) }
+operator fun Term.invoke(term: Term, vararg terms: Term): Term =
+	invoke(term).fold(terms) { invoke(it) }
 
 fun term(fn: (Term) -> Term): Term = FunctionTerm(function(fn))
 

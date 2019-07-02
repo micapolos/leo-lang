@@ -1,6 +1,12 @@
 package leo7
 
-val bitWord = "bit".wordOrNull!!
-val oneWord = "one".wordOrNull!!
-val plusWord = "plus".wordOrNull!!
-val zeroWord = "zero".wordOrNull!!
+private val String.word get() = wordOrNull!!
+
+val bitWord = "bit".word
+val isWord = "is".word
+val metaWord = "meta".word
+val oneWord = "one".word
+val plusWord = "plus".word
+val quoteWord = "quote".word
+val unquoteWord = "unquote".word
+val zeroWord = "zero".word
