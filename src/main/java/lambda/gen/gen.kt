@@ -129,7 +129,7 @@ fun Appendable.appendLisp(term: Term, variableStringMap: MutableMap<Variable, In
 			}
 	}
 
-fun Appendable.appendLeo(term: Term, variableStringMap: MutableMap<Variable, Int>): Appendable =
+fun Appendable.appendLeo(term: Term, variableStringMap: MutableMap<Variable, Int>, isLeft: Boolean = false): Appendable =
 	when (term) {
 		is VariableTerm ->
 			this
@@ -137,19 +137,32 @@ fun Appendable.appendLeo(term: Term, variableStringMap: MutableMap<Variable, Int
 				.append(variableStringMap[term.variable]?.toString() ?: error("Unbound ${term.variable}"))
 		is ApplicationTerm ->
 			this
-				.appendLeo(term.application.left, variableStringMap)
-				.append(" apply: ")
+				.appendLeo(term.application.left, variableStringMap, true)
+				.append(" ")
+				.runIf(term.application.left !is VariableTerm || isLeft) { append('(') }
+				.append("apply: ")
 				.appendLeo(term.application.right, variableStringMap)
+				.runIf(term.application.left !is VariableTerm || isLeft) { append(')') }
 		is FunctionTerm ->
 			newVariable.let { variable ->
 				val variableInt = variableStringMap.size
 				variableStringMap[variable] = variableInt
-				append("v$variableInt is: ")
+				append("v$variableInt ")
+				if (isLeft) {
+					append('(')
+				}
+				append("is: ")
 				appendLeo(term.function(term(variable)), variableStringMap)
+				if (isLeft) {
+					append(')')
+				}
 				variableStringMap.remove(variable)
 				this
 			}
 	}
+
+fun Appendable.appendParenthesized(fn: Appendable.() -> Appendable) =
+	append('(').fn().append(')')
 
 val Term.js get() = appendableString { it.appendJs(this, mutableMapOf()) }
 val Term.haskell get() = appendableString { it.appendHaskell(this, mutableMapOf()) }
