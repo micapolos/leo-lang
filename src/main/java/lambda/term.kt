@@ -33,8 +33,9 @@ operator fun Term.invoke(term: Term, vararg terms: Term): Term =
 	invoke(term).fold(terms) { invoke(it) }
 
 fun term(fn: (Term) -> Term): Term = FunctionTerm(function(fn))
-fun term(fn: (Term, Term) -> Term): Term = term { t1 -> term { t2 -> fn(t1, t2) } }
-fun term(fn: (Term, Term, Term) -> Term): Term = term { t1 -> term { t2 -> term { t3 -> fn(t1, t2, t3) } } }
+
+fun ap(fn: Term.() -> Term) = term { t -> t.fn() }
+fun ap2(fn: Term.() -> Term) = term { t1 -> term { t2 -> t1.invoke(t2) } }
 
 fun Term.termLet(fn: (Term) -> Term) =
 	term { x -> fn(x) }.invoke(this)

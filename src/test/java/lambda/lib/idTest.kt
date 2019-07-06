@@ -9,7 +9,7 @@ class IdTest {
 	fun test() {
 		id.assertEqualTo(id)
 
-		id(zero).assertEqualTo(zero)
-		id(one).assertEqualTo(one)
+		id(zeroBit).assertEqualTo(zeroBit)
+		id(oneBit).assertEqualTo(oneBit)
 	}
 }

@@ -8,39 +8,39 @@ import kotlin.test.Test
 class PairTest {
 	@Test
 	fun equality() {
-		pair(zero, zero).assertEqualTo(pair(zero, zero))
-		pair(zero, zero).assertNotEqualTo(pair(zero, one))
-		pair(zero, zero).assertNotEqualTo(pair(one, zero))
-		pair(zero, zero).assertNotEqualTo(pair(one, one))
+		pair(zeroBit, zeroBit).assertEqualTo(pair(zeroBit, zeroBit))
+		pair(zeroBit, zeroBit).assertNotEqualTo(pair(zeroBit, oneBit))
+		pair(zeroBit, zeroBit).assertNotEqualTo(pair(oneBit, zeroBit))
+		pair(zeroBit, zeroBit).assertNotEqualTo(pair(oneBit, oneBit))
 
-		pair(zero, one).assertNotEqualTo(pair(zero, zero))
-		pair(zero, one).assertEqualTo(pair(zero, one))
-		pair(zero, one).assertNotEqualTo(pair(one, zero))
-		pair(zero, one).assertNotEqualTo(pair(one, one))
+		pair(zeroBit, oneBit).assertNotEqualTo(pair(zeroBit, zeroBit))
+		pair(zeroBit, oneBit).assertEqualTo(pair(zeroBit, oneBit))
+		pair(zeroBit, oneBit).assertNotEqualTo(pair(oneBit, zeroBit))
+		pair(zeroBit, oneBit).assertNotEqualTo(pair(oneBit, oneBit))
 
-		pair(one, zero).assertNotEqualTo(pair(zero, zero))
-		pair(one, zero).assertNotEqualTo(pair(zero, one))
-		pair(one, zero).assertEqualTo(pair(one, zero))
-		pair(one, zero).assertNotEqualTo(pair(one, one))
+		pair(oneBit, zeroBit).assertNotEqualTo(pair(zeroBit, zeroBit))
+		pair(oneBit, zeroBit).assertNotEqualTo(pair(zeroBit, oneBit))
+		pair(oneBit, zeroBit).assertEqualTo(pair(oneBit, zeroBit))
+		pair(oneBit, zeroBit).assertNotEqualTo(pair(oneBit, oneBit))
 
-		pair(one, one).assertNotEqualTo(pair(zero, zero))
-		pair(one, one).assertNotEqualTo(pair(zero, one))
-		pair(one, one).assertNotEqualTo(pair(one, zero))
-		pair(one, one).assertEqualTo(pair(one, one))
+		pair(oneBit, oneBit).assertNotEqualTo(pair(zeroBit, zeroBit))
+		pair(oneBit, oneBit).assertNotEqualTo(pair(zeroBit, oneBit))
+		pair(oneBit, oneBit).assertNotEqualTo(pair(oneBit, zeroBit))
+		pair(oneBit, oneBit).assertEqualTo(pair(oneBit, oneBit))
 	}
 
 	@Test
 	fun math() {
-		pair(zero, zero).at(zero).assertEqualTo(zero)
-		pair(zero, zero).at(one).assertEqualTo(zero)
+		pair(zeroBit, zeroBit).pairAt(zeroBit).assertEqualTo(zeroBit)
+		pair(zeroBit, zeroBit).pairAt(oneBit).assertEqualTo(zeroBit)
 
-		pair(zero, one).at(zero).assertEqualTo(zero)
-		pair(zero, one).at(one).assertEqualTo(one)
+		pair(zeroBit, oneBit).pairAt(zeroBit).assertEqualTo(zeroBit)
+		pair(zeroBit, oneBit).pairAt(oneBit).assertEqualTo(oneBit)
 
-		pair(one, zero).at(zero).assertEqualTo(one)
-		pair(one, zero).at(one).assertEqualTo(zero)
+		pair(oneBit, zeroBit).pairAt(zeroBit).assertEqualTo(oneBit)
+		pair(oneBit, zeroBit).pairAt(oneBit).assertEqualTo(zeroBit)
 
-		pair(one, one).at(zero).assertEqualTo(one)
-		pair(one, one).at(one).assertEqualTo(one)
+		pair(oneBit, oneBit).pairAt(zeroBit).assertEqualTo(oneBit)
+		pair(oneBit, oneBit).pairAt(oneBit).assertEqualTo(oneBit)
 	}
 }

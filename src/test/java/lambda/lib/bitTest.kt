@@ -1,49 +1,37 @@
 package lambda.lib
 
+import lambda.invoke
 import leo.base.assertEqualTo
-import leo.base.assertFails
 import leo.base.assertNotEqualTo
-import leo.binary.bit0
-import leo.binary.bit1
 import kotlin.test.Test
 
 class BitTest {
 	@Test
 	fun equality() {
-		zero.assertEqualTo(zero)
-		zero.assertNotEqualTo(one)
-		one.assertNotEqualTo(zero)
-		one.assertEqualTo(one)
+		zeroBit.assertEqualTo(zeroBit)
+		zeroBit.assertNotEqualTo(oneBit)
+		oneBit.assertNotEqualTo(zeroBit)
+		oneBit.assertEqualTo(oneBit)
 	}
 
 	@Test
 	fun math() {
-		zero.not.assertEqualTo(one)
-		one.not.assertEqualTo(zero)
+		zeroBit.bitNegate.assertEqualTo(oneBit)
+		oneBit.bitNegate.assertEqualTo(zeroBit)
 
-		zero.and(zero).assertEqualTo(zero)
-		zero.and(one).assertEqualTo(zero)
-		one.and(zero).assertEqualTo(zero)
-		one.and(one).assertEqualTo(one)
+		zeroBit.bitAnd(zeroBit).assertEqualTo(zeroBit)
+		zeroBit.bitAnd(oneBit).assertEqualTo(zeroBit)
+		oneBit.bitAnd(zeroBit).assertEqualTo(zeroBit)
+		oneBit.bitAnd(oneBit).assertEqualTo(oneBit)
 
-		zero.or(zero).assertEqualTo(zero)
-		zero.or(one).assertEqualTo(one)
-		one.or(zero).assertEqualTo(one)
-		one.or(one).assertEqualTo(one)
+		zeroBit.bitOr(zeroBit).assertEqualTo(zeroBit)
+		zeroBit.bitOr(oneBit).assertEqualTo(oneBit)
+		oneBit.bitOr(zeroBit).assertEqualTo(oneBit)
+		oneBit.bitOr(oneBit).assertEqualTo(oneBit)
 
-		zero.xor(zero).assertEqualTo(zero)
-		zero.xor(one).assertEqualTo(one)
-		one.xor(zero).assertEqualTo(one)
-		one.xor(one).assertEqualTo(zero)
-	}
-
-	@Test
-	fun reflection() {
-		zero.bit.assertEqualTo(bit0)
-		one.bit.assertEqualTo(bit1)
-		assertFails { id.bit }
-
-		bit0.term.assertEqualTo(zero)
-		bit1.term.assertEqualTo(one)
+		zeroBit.bitXor(zeroBit).assertEqualTo(zeroBit)
+		zeroBit.bitXor(oneBit).assertEqualTo(oneBit)
+		oneBit.bitXor(zeroBit).assertEqualTo(oneBit)
+		oneBit.bitXor(oneBit).assertEqualTo(zeroBit)
 	}
 }

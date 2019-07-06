@@ -7,14 +7,14 @@ import kotlin.test.Test
 class BranchTest {
 	@Test
 	fun test() {
-		branch0(zero).assertEqualTo(branch0(zero))
-		branch0(one).assertEqualTo(branch0(one))
-		branch1(zero).assertEqualTo(branch1(zero))
-		branch1(one).assertEqualTo(branch1(one))
+		branch0(zeroBit).assertEqualTo(branch0(zeroBit))
+		branch0(oneBit).assertEqualTo(branch0(oneBit))
+		branch1(zeroBit).assertEqualTo(branch1(zeroBit))
+		branch1(oneBit).assertEqualTo(branch1(oneBit))
 
-		branch0(zero).switch(not, id).assertEqualTo(one)
-		branch0(one).switch(not, id).assertEqualTo(zero)
-		branch1(zero).switch(not, id).assertEqualTo(zero)
-		branch1(one).switch(not, id).assertEqualTo(one)
+		branch0(zeroBit).branchSwitch(bitNegate, id).assertEqualTo(oneBit)
+		branch0(oneBit).branchSwitch(bitNegate, id).assertEqualTo(zeroBit)
+		branch1(zeroBit).branchSwitch(bitNegate, id).assertEqualTo(zeroBit)
+		branch1(oneBit).branchSwitch(bitNegate, id).assertEqualTo(oneBit)
 	}
 }
