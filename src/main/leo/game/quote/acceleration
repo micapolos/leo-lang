@@ -1,0 +1,14 @@
+x: animation
+	start: 0
+	step: x plus
+		if: pressed: key: left
+		then: -1
+		else: 0
+		plus
+			if: pressed: key: right
+			then: 1
+			else: 0
+y: animation
+	start: 0
+	step: y plus: 1
+	reset: on: space key press

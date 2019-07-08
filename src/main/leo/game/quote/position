@@ -1,0 +1,12 @@
+x: variable
+	type: integer
+		minimum: 0
+		maximum: 320 minus: 1
+	start: 0
+	step: previous plus: acceleration: x
+y: variable
+	type: integer
+		minimum: 0
+		maximum: 240
+	start: 0
+	step: previous plus: acceleration: x

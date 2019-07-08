@@ -11,6 +11,6 @@ val Term.pairAt get() = term { bit -> this(bit) }
 val Term.pairAt0 get() = pairAt(zeroBit)
 val Term.pairAt1 get() = pairAt(oneBit)
 
-val at = term(Term::pairAt)
-val at0 = term(Term::pairAt0)
-val at1 = term(Term::pairAt1)
+val atInPair = term(Term::pairAt)
+val at0InPair = term(Term::pairAt0)
+val at1InPair = term(Term::pairAt1)

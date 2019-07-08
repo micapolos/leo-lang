@@ -4,8 +4,8 @@ import lambda.Term
 
 val link = pair
 
-val Term.head get() = pairAt0
-val Term.tail get() = pairAt1
+val Term.linkHead get() = pairAt0
+val Term.linkTail get() = pairAt1
 
-val head = at0
-val tail = at1
+val headInLink = at0InPair
+val tailInLink = at1InPair

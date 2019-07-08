@@ -2,7 +2,7 @@ package lambda.lib.typed
 
 import lambda.invoke
 
-val bitType = genType
+val bitType = Name.BIT.term
 
-val zeroBit = lambda.lib.zeroBit.typedOf.invoke(bitType)
-val oneBit = lambda.lib.oneBit.typedOf.invoke(bitType)
+val zeroBit = lambda.lib.zeroBit.valueOfType(bitType)
+val oneBit = lambda.lib.zeroBit.valueOfType(bitType)
