@@ -14,4 +14,4 @@ fun <V> list(link: ListLinkOf<V>): ListOf<V> = LinkListOf(link)
 
 fun <V> V.plus(listOf: ListOf<V>) = list(link(this, listOf))
 
-fun <V> listOf(vararg values: V) = listOf<V>(empty).foldRight(values) { plus(it) }
+fun <V> listOf(vararg values: V): ListOf<V> = listOf<V>(empty).foldRight(values) { plus(it) }

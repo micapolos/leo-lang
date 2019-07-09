@@ -41,3 +41,13 @@ val Nat.int: Int
 			is ZeroNat -> 0
 			is SuccNat -> succ.nat.int + 1
 		}
+
+tailrec fun <R> Nat.switch(fnStackOrNull: Stack<() -> R>?): R? =
+	if (fnStackOrNull == null) null
+	else when (this) {
+		is ZeroNat -> fnStackOrNull.head()
+		is SuccNat -> succ.nat.switch(fnStackOrNull.tail)
+	}
+
+fun <R> Nat.switch(vararg fns: () -> R): R? =
+	switch(stackOrNull(*fns))

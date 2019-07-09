@@ -84,6 +84,12 @@ tailrec operator fun <V : Any> Stack<V>.get(index: Int): V? =
 		else -> tail[index - 1]
 	}
 
+tailrec operator fun <V : Any> Stack<V>.get(nat: Nat): V? =
+	when (nat) {
+		is ZeroNat -> head
+		is SuccNat -> tail?.get(nat.succ.nat)
+	}
+
 fun <V> Stack<V>.split(acc: Pair<Stack<V>?, Stack<V>?>, predicate: (V) -> Boolean): Pair<Stack<V>?, Stack<V>?> =
 	when (predicate(head)) {
 		false -> acc.first.push(head) to acc.second
