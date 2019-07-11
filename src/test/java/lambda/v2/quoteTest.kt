@@ -9,9 +9,9 @@ import kotlin.test.Test
 class QuoteTest {
 	@Test
 	fun nat() {
-		zero.nat.quotedTerm.natOrNull.assertEqualTo(zero.nat)
-		zero.nat.inc.quotedTerm.natOrNull.assertEqualTo(zero.nat.inc)
-		zero.nat.inc.inc.quotedTerm.natOrNull.assertEqualTo(zero.nat.inc.inc)
+		zero.nat.term.natOrNull.assertEqualTo(zero.nat)
+		zero.nat.inc.term.natOrNull.assertEqualTo(zero.nat.inc)
+		zero.nat.inc.inc.term.natOrNull.assertEqualTo(zero.nat.inc.inc)
 	}
 
 	@Test
@@ -19,7 +19,7 @@ class QuoteTest {
 		argument(0.nat).quotedTerm.unquoteArgument.assertEqualTo(argument(0.nat))
 		argument(1.nat).quotedTerm.unquoteArgument.assertEqualTo(argument(1.nat))
 		application(arg0(0), arg0(1)).quotedTerm.unquoteApplication.assertEqualTo(application(arg0(0), arg0(1)))
-		function(arg0(0)).quotedTerm.unquoteFunction.assertEqualTo(function(arg0(0)))
+		function(body(arg0(0))).quotedTerm.unquoteFunction.assertEqualTo(function(body(arg0(0))))
 		quote.quotedTerm.unquoteQuote.assertEqualTo(quote)
 		unquote.quotedTerm.unquoteUnquote.assertEqualTo(unquote)
 

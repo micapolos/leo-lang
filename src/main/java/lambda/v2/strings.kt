@@ -13,7 +13,7 @@ fun Application.string(argCount: Int) =
 	"${lhs.string(argCount)}(${rhs.string(argCount)})"
 
 fun Function.string(argCount: Int) =
-	"${varString(argCount)} -> ${term.string(argCount.inc())}"
+	"${varString(argCount)} -> ${body.term.string(argCount.inc())}"
 
 fun Quote.string(argCount: Int) =
 	"quote"

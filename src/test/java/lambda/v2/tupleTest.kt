@@ -1,15 +1,18 @@
 package lambda.v2
 
 import leo.base.assertEqualTo
+import leo.base.nat
 import kotlin.test.Test
 
 class TupleTest {
 	@Test
 	fun all() {
-		nthOf(1, 2).assertEqualTo(fn { fn { arg0(1) } } )
-		nthOf(2, 2).assertEqualTo(fn { fn { arg0(0) } } )
-		nthOf(1, 2).invoke(id).assertEqualTo(id)
-		tuple(2).assertEqualTo(fn { fn { fn { arg0(0)(arg0(2), arg0(1)) } } })
-		tuple(2)(nthOf(1, 3), nthOf(2, 3))(nthOf(1, 2)).assertEqualTo(nthOf(1, 4))
+		tuple(2).assertEqualTo(fn(3) { arg(3)(arg(1), arg(2)) })
+
+		tuple(2)(10.nat.term, 20.nat.term)(nthOf(1, 2)).assertEqualTo(10.nat.term)
+		tuple(2)(10.nat.term, 20.nat.term)(nthOf(2, 2)).assertEqualTo(20.nat.term)
+
+		nthOf(1, 2).assertEqualTo(fn(2) { arg(1) })
+		nthOf(2, 2).assertEqualTo(fn(2) { arg(2) })
 	}
 }

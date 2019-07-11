@@ -10,7 +10,7 @@ fun Application.substitute(depth: Nat, parameter: Term): Term =
 	term(application(lhs.substitute(depth, parameter), rhs.substitute(depth, parameter)))
 
 fun Function.substitute(depth: Nat, parameter: Term): Term =
-	term(function(term.substitute(depth.inc, parameter)))
+	term(function(body(body.term.substitute(depth.inc, parameter))))
 
 fun Quote.substitute(depth: Nat, parameter: Term): Term =
 	term(this)

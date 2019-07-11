@@ -1,7 +1,7 @@
 package lambda.v2
 
-data class Function(val term: Term) {
+data class Function(val body: Body) {
 	override fun toString() = string(0)
 }
 
-fun function(term: Term) = Function(term)
+fun function(body: Body) = Function(body)

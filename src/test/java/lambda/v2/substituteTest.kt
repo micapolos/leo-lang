@@ -33,20 +33,20 @@ class SubstituteTest {
 
 	@Test
 	fun functionApplication() {
-		term(function(term(argument(0.nat))))
+		term(function(body(term(argument(0.nat)))))
 			.substitute(0.nat, term(argument(128.nat)))
-			.assertEqualTo(term(function(term(argument(0.nat)))))
+			.assertEqualTo(term(function(body(term(argument(0.nat))))))
 
-		term(function(term(argument(1.nat))))
+		term(function(body(term(argument(1.nat)))))
 			.substitute(0.nat, term(argument(128.nat)))
-			.assertEqualTo(term(function(term(argument(128.nat)))))
+			.assertEqualTo(term(function(body(term(argument(128.nat))))))
 
-		term(function(term(argument(0.nat))))
+		term(function(body(term(argument(0.nat)))))
 			.substitute(1.nat, term(argument(128.nat)))
-			.assertEqualTo(term(function(term(argument(0.nat)))))
+			.assertEqualTo(term(function(body(term(argument(0.nat))))))
 
-		term(function(term(argument(1.nat))))
+		term(function(body(term(argument(1.nat)))))
 			.substitute(1.nat, term(argument(128.nat)))
-			.assertEqualTo(term(function(term(argument(1.nat)))))
+			.assertEqualTo(term(function(body(term(argument(1.nat))))))
 	}
 }

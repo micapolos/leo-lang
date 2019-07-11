@@ -14,7 +14,7 @@ fun Application.evalOrNull(trace: Stack<Term>?) =
 			when (lhsEval) {
 				is ArgumentTerm -> null
 				is ApplicationTerm -> null
-				is FunctionTerm -> lhsEval.function.term.eval(trace.push(rhsEval))
+				is FunctionTerm -> lhsEval.function.body.term.eval(trace.push(rhsEval))
 				is QuoteTerm -> rhsEval.quotedTerm
 				is UnquoteTerm -> rhsEval.unquoteTerm
 			}
@@ -44,7 +44,7 @@ val Application.eval: Term
 		when (lhsEval) {
 			is ArgumentTerm -> null
 			is ApplicationTerm -> null
-			is FunctionTerm -> lhsEval.function.term.substitute(0.nat, rhs).eval
+			is FunctionTerm -> lhsEval.function.body.term.substitute(0.nat, rhs).eval
 			is QuoteTerm -> rhs.eval.quotedTerm
 			is UnquoteTerm -> rhs.eval.unquoteTerm
 		} ?: term(application(lhsEval, rhs.eval))

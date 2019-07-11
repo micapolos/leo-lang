@@ -9,7 +9,7 @@ val unquote = Unquote
 
 val Term.isId
 	get() =
-		functionOrNull?.term?.argumentOrNull?.nat?.zeroOrNull != null
+		functionOrNull?.body?.term?.argumentOrNull?.nat?.zeroOrNull != null
 
 val Term.zeroOrNull: Nat?
 	get() =
@@ -24,6 +24,11 @@ val Term.natOrNull: Nat?
 					{ application.rhs.zeroOrNull },
 					{ application.rhs.natOrNull?.inc })
 			}
+
+val Term.unquoteBody: Body?
+	get() =
+		unquoteTerm?.let(::body)
+
 
 val Term.unquoteArgument: Argument?
 	get() =
@@ -46,7 +51,7 @@ val Term.unquoteApplication: Application?
 
 val Term.unquoteFunction: Function?
 	get() =
-		unquoteTerm?.let(::function)
+		unquoteBody?.let(::function)
 
 val Term.unquoteQuote: Quote?
 	get() =

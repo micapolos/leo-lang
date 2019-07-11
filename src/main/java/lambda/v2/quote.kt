@@ -11,19 +11,19 @@ val quote = Quote
 
 val id = fn(1) { arg(1) }
 
-val Zero.quotedTerm get() = id
+val Zero.term get() = id
 
-val Nat.quotedTerm: Term
+val Nat.term: Term
 	get() = when (this) {
-		is ZeroNat -> fn(2) { arg(1)(zero.quotedTerm) }
-		is SuccNat -> fn(2) { arg(2)(succ.nat.quotedTerm) }
+		is ZeroNat -> fn(2) { arg(1)(zero.term) }
+		is SuccNat -> fn(2) { arg(2)(succ.nat.term) }
 	}
 
-val Argument.quotedTerm get() = nat.quotedTerm
+val Argument.quotedTerm get() = nat.term
 
 val Application.quotedTerm get() = fn(1) { arg(1)(lhs.quotedTerm, rhs.quotedTerm) }
 
-val Function.quotedTerm get() = term.quotedTerm
+val Function.quotedTerm get() = body.term.quotedTerm
 
 val Quote.quotedTerm get() = id
 
