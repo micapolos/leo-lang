@@ -38,11 +38,18 @@ fun Term.eval(trace: Stack<Term>?): Term =
 
 // ----------------------
 
-val Application.eval get() =
+val Application.eval: Term
+	get() =
 	lhs.eval.let { lhsEval ->
-		lhsEval.functionOrNull?.substitute(0.nat, rhs)?.eval
-			?:term(application(lhsEval, rhs.eval))
+		when (lhsEval) {
+			is ArgumentTerm -> null
+			is ApplicationTerm -> null
+			is FunctionTerm -> lhsEval.function.term.substitute(0.nat, rhs).eval
+			is QuoteTerm -> rhs.eval.quotedTerm
+			is UnquoteTerm -> rhs.eval.unquoteTerm
+		} ?: term(application(lhsEval, rhs.eval))
 	}
 
-val Term.eval get(): Term =
+val Term.eval: Term
+	get() =
 	applicationOrNull?.eval ?: this

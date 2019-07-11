@@ -35,6 +35,8 @@ val Int.nat: Nat
 		if (this == 0) nat(zero)
 		else dec().nat.inc
 
+fun nat(int: Int) = int.nat
+
 val Nat.int: Int
 	get() =
 		when (this) {
