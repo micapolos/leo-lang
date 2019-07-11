@@ -18,21 +18,21 @@ class QuoteTest {
 	fun term() {
 		argument(0.nat).quotedTerm.unquoteArgument.assertEqualTo(argument(0.nat))
 		argument(1.nat).quotedTerm.unquoteArgument.assertEqualTo(argument(1.nat))
-		application(arg(0), arg(1)).quotedTerm.unquoteApplication.assertEqualTo(application(arg(0), arg(1)))
-		function(arg(0)).quotedTerm.unquoteFunction.assertEqualTo(function(arg(0)))
+		application(arg0(0), arg0(1)).quotedTerm.unquoteApplication.assertEqualTo(application(arg0(0), arg0(1)))
+		function(arg0(0)).quotedTerm.unquoteFunction.assertEqualTo(function(arg0(0)))
 		quote.quotedTerm.unquoteQuote.assertEqualTo(quote)
 		unquote.quotedTerm.unquoteUnquote.assertEqualTo(unquote)
 
-		arg(0).quotedTerm.unquoteTerm.assertEqualTo(arg(0))
-		arg(1).quotedTerm.unquoteTerm.assertEqualTo(arg(1))
-		arg(0).apply(arg(1)).quotedTerm.unquoteTerm.assertEqualTo(arg(0).apply(arg(1)))
-		fn { arg(0) }.quotedTerm.unquoteTerm.assertEqualTo(fn { arg(0) })
+		arg0(0).quotedTerm.unquoteTerm.assertEqualTo(arg0(0))
+		arg0(1).quotedTerm.unquoteTerm.assertEqualTo(arg0(1))
+		arg0(0).apply(arg0(1)).quotedTerm.unquoteTerm.assertEqualTo(arg0(0).apply(arg0(1)))
+		fn { arg0(0) }.quotedTerm.unquoteTerm.assertEqualTo(fn { arg0(0) })
 		term(quote).quotedTerm.unquoteTerm.assertEqualTo(term(quote))
 		term(unquote).quotedTerm.unquoteTerm.assertEqualTo(term(unquote))
 	}
 
 	@Test
 	fun evalQuoting() {
-		term(unquote)(term(quote)(arg(0))).assertEqualTo(arg(0))
+		term(unquote)(term(quote)(arg0(0))).assertEqualTo(arg0(0))
 	}
 }

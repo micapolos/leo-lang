@@ -18,3 +18,6 @@ fun File.write(fn: Appendable.() -> Unit) {
 fun string(fn: Appendable.() -> Unit) {
 	StringBuilder().apply { fn() }.toString()
 }
+
+fun Appendable.appendParenthesized(fn: Appendable.() -> Appendable) =
+	append('(').fn().append(')')

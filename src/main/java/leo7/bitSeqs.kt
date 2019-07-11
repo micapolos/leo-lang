@@ -1,15 +1,15 @@
 package leo7
 
 import leo.base.*
+import leo.binary.Bit
 import leo.binary.bitSeq
 
 val Letter.bitSeq
 	get() =
 		char.toByte().bitSeq
 
-val Word.bitSeq
-	get() =
-		letterStack.seq.map { bitSeq }.flat
+val Word.bitSeq: Seq<Bit>
+	get() = TODO()//letterStack.seq.map { bitSeq }.flat
 
 val WordBegin.bitSeq
 	get() =

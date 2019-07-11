@@ -21,8 +21,8 @@ val Term.natOrNull: Nat?
 			?.applicationOrNull
 			?.let { application ->
 				application.lhs.argumentOrNull?.nat?.switch(
-					{ application.rhs.natOrNull?.inc },
-					{ application.rhs.zeroOrNull })
+					{ application.rhs.zeroOrNull },
+					{ application.rhs.natOrNull?.inc })
 			}
 
 val Term.unquoteArgument: Argument?
@@ -64,9 +64,9 @@ val Term.unquoteTerm: Term?
 				application.lhs.argumentOrNull
 					?.nat
 					?.switch(
-						{ application.rhs.unquoteUnquote?.let(::term) },
-						{ application.rhs.unquoteQuote?.let(::term) },
-						{ application.rhs.unquoteFunction?.let(::term) },
+						{ application.rhs.unquoteArgument?.let(::term) },
 						{ application.rhs.unquoteApplication?.let(::term) },
-						{ application.rhs.unquoteArgument?.let(::term) })
+						{ application.rhs.unquoteFunction?.let(::term) },
+						{ application.rhs.unquoteQuote?.let(::term) },
+						{ application.rhs.unquoteUnquote?.let(::term) })
 			}

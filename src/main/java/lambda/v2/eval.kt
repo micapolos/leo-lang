@@ -2,6 +2,7 @@ package lambda.v2
 
 import leo.base.Stack
 import leo.base.get
+import leo.base.nat
 import leo.base.push
 
 fun Argument.evalOrNull(trace: Stack<Term>?) =
@@ -35,4 +36,13 @@ fun Term.eval(trace: Stack<Term>?): Term =
 		is UnquoteTerm -> unquote.evalOrNull(trace)
 	} ?: this
 
-val Term.eval get() = eval(null)
+// ----------------------
+
+val Application.eval get() =
+	lhs.eval.let { lhsEval ->
+		lhsEval.functionOrNull?.substitute(0.nat, rhs)?.eval
+			?:term(application(lhsEval, rhs.eval))
+	}
+
+val Term.eval get(): Term =
+	applicationOrNull?.eval ?: this

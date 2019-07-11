@@ -1,14 +1,13 @@
 package leo7
 
-import leo.base.Stack
 import leo.base.orNull
-import leo.base.push
-import leo.base.stack
 
-data class Word(val letterStack: Stack<Letter>)
+sealed class Word
+data class LetterWord(val letter: Letter): Word()
+data class ExtensionWord(val extension: WordExtension): Word()
 
-val Letter.word get() = Word(stack(this))
-operator fun Word.plus(letter: Letter) = Word(letterStack.push(letter))
+val Letter.word: Word get() = LetterWord(this)
+operator fun Word.plus(letter: Letter): Word = ExtensionWord(extensionWith(letter))
 
 val String.wordOrNull
 	get() =
