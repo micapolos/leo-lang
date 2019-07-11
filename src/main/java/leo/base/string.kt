@@ -78,3 +78,5 @@ val String.charSeq
 val Seq<Char>.charString
 	get() =
 		appendableString { fold(it, Appendable::append) }
+
+val String.parenthesized get() = "($this)"

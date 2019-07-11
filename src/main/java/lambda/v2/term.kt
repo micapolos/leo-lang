@@ -1,7 +1,7 @@
 package lambda.v2
 
 sealed class Term {
-	override fun toString() = string(0)
+	override fun toString() = string
 }
 
 data class ArgumentTerm(val argument: Argument) : Term() {

@@ -26,13 +26,13 @@ class QuoteTest {
 		arg0(0).quotedTerm.unquoteTerm.assertEqualTo(arg0(0))
 		arg0(1).quotedTerm.unquoteTerm.assertEqualTo(arg0(1))
 		arg0(0).apply(arg0(1)).quotedTerm.unquoteTerm.assertEqualTo(arg0(0).apply(arg0(1)))
-		fn { arg0(0) }.quotedTerm.unquoteTerm.assertEqualTo(fn { arg0(0) })
+		fn { arg.term }.quotedTerm.unquoteTerm.assertEqualTo(fn { arg.term })
 		term(quote).quotedTerm.unquoteTerm.assertEqualTo(term(quote))
 		term(unquote).quotedTerm.unquoteTerm.assertEqualTo(term(unquote))
 	}
 
 	@Test
 	fun evalQuoting() {
-		term(unquote)(term(quote)(arg0(0))).assertEqualTo(arg0(0))
+		term(unquote)(term(quote)(arg0(0))).eval.assertEqualTo(arg0(0))
 	}
 }

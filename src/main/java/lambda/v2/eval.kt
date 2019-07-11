@@ -52,4 +52,10 @@ val Application.eval: Term
 
 val Term.eval: Term
 	get() =
-	applicationOrNull?.eval ?: this
+		when (this) {
+			is ArgumentTerm -> null
+			is ApplicationTerm -> application.eval
+			is FunctionTerm -> null
+			is QuoteTerm -> null
+			is UnquoteTerm -> null
+		} ?: this

@@ -12,6 +12,8 @@ val quote = Quote
 val id = fn(1) { arg(1) }
 val constant = fn(2) { arg(1) }
 
+val Term.constant get() = constant(this)
+
 val Zero.term get() = id
 
 val Nat.term: Term

@@ -2,29 +2,31 @@ package lambda.v2
 
 import leo.base.int
 
-fun varString(index: Int) =
-	if (index < 0) "?${-index}"
-	else "x$index"
+val Argument.string
+	get() =
+		"a${nat.int}"
 
-fun Argument.string(argCount: Int) =
-	varString(argCount - nat.int - 1)
+val Application.string
+	get() =
+		"${lhs.string}(${rhs.string})"
 
-fun Application.string(argCount: Int) =
-	"${lhs.string(argCount)}(${rhs.string(argCount)})"
+val Function.string
+	get() =
+		"fn { ${body.term.string} }"
 
-fun Function.string(argCount: Int) =
-	"${varString(argCount)} -> ${body.term.string(argCount.inc())}"
-
-fun Quote.string(argCount: Int) =
+val Quote.string
+	get() =
 	"quote"
 
-fun Unquote.string(argCount: Int) =
+val Unquote.string
+	get() =
 	"unquote"
 
-fun Term.string(argCount: Int = 0): String = when (this) {
-	is ArgumentTerm -> argument.string(argCount)
-	is ApplicationTerm -> application.string(argCount)
-	is FunctionTerm -> function.string(argCount)
-	is QuoteTerm -> quote.string(argCount)
-	is UnquoteTerm -> unquote.string(argCount)
+val Term.string: String
+	get() = when (this) {
+		is ArgumentTerm -> argument.string
+		is ApplicationTerm -> application.string
+		is FunctionTerm -> function.string
+		is QuoteTerm -> quote.string
+		is UnquoteTerm -> unquote.string
 }
