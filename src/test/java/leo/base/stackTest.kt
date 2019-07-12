@@ -77,4 +77,12 @@ class StackTest {
 		stack(1, 2, 3).pop(2).assertEqualTo(stack(1))
 		stack(1, 2, 3).pop(3).assertEqualTo(null)
 	}
+
+	@Test
+	fun natOrNull() {
+		stack(1, 2, 3).natOrNull(3).assertEqualTo(leo.binary.zero.nat)
+		stack(1, 2, 3).natOrNull(2).assertEqualTo(leo.binary.zero.nat.inc)
+		stack(1, 2, 3).natOrNull(1).assertEqualTo(leo.binary.zero.nat.inc.inc)
+		stack(1, 2, 3).natOrNull(0).assertEqualTo(null)
+	}
 }

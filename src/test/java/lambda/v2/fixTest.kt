@@ -19,7 +19,7 @@ class FixTest {
 				a0.pairSecond.forZeroOrPred(fn { a1.pairFirst }, fn { a2(pair(succ(a1.pairFirst), a0)) })
 			}
 		})
-		accNatRebuild(pair(zero, zero)).eval.assertEqualTo(id)
+		accNatRebuild(pair(zero, zero)).eval.assertEqualTo(zero)
 		accNatRebuild(pair(zero, zero.succ)).eval.assertEqualTo(zero.succ)
 		accNatRebuild(pair(zero, zero.succ.succ)).eval.assertEqualTo(zero.succ.succ)
 	}

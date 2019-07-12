@@ -90,6 +90,10 @@ tailrec operator fun <V : Any> Stack<V>.get(nat: Nat): V? =
 		is SuccNat -> tail?.get(nat.succ.nat)
 	}
 
+tailrec fun <V> Stack<V>.natOrNull(value: V, acc: Nat = leo.binary.zero.nat): Nat? =
+	if (head == value) acc
+	else tail?.natOrNull(value, acc.inc)
+
 fun <V> Stack<V>.split(acc: Pair<Stack<V>?, Stack<V>?>, predicate: (V) -> Boolean): Pair<Stack<V>?, Stack<V>?> =
 	when (predicate(head)) {
 		false -> acc.first.push(head) to acc.second

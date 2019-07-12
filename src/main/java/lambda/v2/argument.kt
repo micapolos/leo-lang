@@ -7,3 +7,4 @@ data class Argument(val nat: Nat) {
 }
 
 fun argument(nat: Nat) = Argument(nat)
+val Nat.argument get() = argument(this)

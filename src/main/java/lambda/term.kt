@@ -28,7 +28,7 @@ val Term.eval
 		else -> this
 }
 
-operator fun Term.invoke(term: Term): Term = apply(term).eval
+operator fun Term.invoke(term: Term): Term = apply(term)
 operator fun Term.invoke(term: Term, vararg terms: Term): Term =
 	invoke(term).fold(terms) { invoke(it) }
 
