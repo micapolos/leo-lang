@@ -53,3 +53,16 @@ tailrec fun <R> Nat.switch(fnStackOrNull: Stack<() -> R>?): R? =
 
 fun <R> Nat.switch(vararg fns: () -> R): R? =
 	switch(stackOrNull(*fns))
+
+
+tailrec fun Nat.plus(nat: Nat): Nat =
+	when (nat) {
+		is ZeroNat -> this
+		is SuccNat -> inc.plus(nat.succ.nat)
+	}
+
+tailrec fun Nat.minusOrNull(nat: Nat): Nat? =
+	when (nat) {
+		is ZeroNat -> this
+		is SuccNat -> succOrNull?.nat?.minusOrNull(nat.succ.nat)
+	}
