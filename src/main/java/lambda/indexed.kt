@@ -24,4 +24,4 @@ fun Term.indexed(trace: Stack<Variable>?): lambda.indexed.Term =
 		is FunctionTerm -> lambda.indexed.term(function.indexed(trace))
 	}
 
-val Term.v2 get() = indexed(null)
+val Term.indexed get() = indexed(null)

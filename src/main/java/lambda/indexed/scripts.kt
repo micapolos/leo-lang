@@ -1,10 +1,7 @@
 package lambda.indexed
 
 import lambda.script.variable
-import leo.base.Nat
-import leo.base.fail
-import leo.base.inc
-import leo.base.minusOrNull
+import leo.base.*
 
 val Nat.scriptVariable get() = variable("x$this")
 
@@ -27,3 +24,5 @@ fun Term.script(depth: Nat): lambda.script.Term =
 		is QuoteTerm -> fail()
 		is UnquoteTerm -> fail()
 	}
+
+val Term.script get() = script(leo.binary.zero.nat)

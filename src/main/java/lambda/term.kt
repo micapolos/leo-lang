@@ -1,6 +1,8 @@
 package lambda
 
+import lambda.indexed.script
 import leo.base.fold
+import leo.base.string
 
 sealed class Term {
 	override fun toString() = code
@@ -44,11 +46,8 @@ fun Term.termRun(fn: (Term) -> Unit) =
 	termLet { it }
 
 val Term.code: String
-	get() = when (this) {
-		is VariableTerm -> variable.code
-		is ApplicationTerm -> application.code
-		is FunctionTerm -> function.code
-	}
+	get() =
+		indexed.script.string
 
 fun Term.eq(term: Term): Boolean = when (this) {
 	is VariableTerm -> (term is VariableTerm) && variable.eq(term.variable)

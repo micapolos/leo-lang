@@ -7,6 +7,6 @@ import kotlin.test.Test
 class V2Test {
 	@Test
 	fun test() {
-		fix.v2.assertEqualTo(null)
+		fix.indexed.assertEqualTo(null)
 	}
 }

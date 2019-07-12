@@ -1,5 +1,6 @@
 package lambda.lib
 
+import lambda.assertEvalsTo
 import lambda.invoke
 import leo.base.assertEqualTo
 import leo.base.assertNotEqualTo
@@ -16,22 +17,22 @@ class BitTest {
 
 	@Test
 	fun math() {
-		zeroBit.bitNegate.assertEqualTo(oneBit)
-		oneBit.bitNegate.assertEqualTo(zeroBit)
+		zeroBit.bitNegate.assertEvalsTo(oneBit)
+		oneBit.bitNegate.assertEvalsTo(zeroBit)
 
-		zeroBit.bitAnd(zeroBit).assertEqualTo(zeroBit)
-		zeroBit.bitAnd(oneBit).assertEqualTo(zeroBit)
-		oneBit.bitAnd(zeroBit).assertEqualTo(zeroBit)
-		oneBit.bitAnd(oneBit).assertEqualTo(oneBit)
+		zeroBit.bitAnd(zeroBit).assertEvalsTo(zeroBit)
+		zeroBit.bitAnd(oneBit).assertEvalsTo(zeroBit)
+		oneBit.bitAnd(zeroBit).assertEvalsTo(zeroBit)
+		oneBit.bitAnd(oneBit).assertEvalsTo(oneBit)
 
-		zeroBit.bitOr(zeroBit).assertEqualTo(zeroBit)
-		zeroBit.bitOr(oneBit).assertEqualTo(oneBit)
-		oneBit.bitOr(zeroBit).assertEqualTo(oneBit)
-		oneBit.bitOr(oneBit).assertEqualTo(oneBit)
+		zeroBit.bitOr(zeroBit).assertEvalsTo(zeroBit)
+		zeroBit.bitOr(oneBit).assertEvalsTo(oneBit)
+		oneBit.bitOr(zeroBit).assertEvalsTo(oneBit)
+		oneBit.bitOr(oneBit).assertEvalsTo(oneBit)
 
-		zeroBit.bitXor(zeroBit).assertEqualTo(zeroBit)
-		zeroBit.bitXor(oneBit).assertEqualTo(oneBit)
-		oneBit.bitXor(zeroBit).assertEqualTo(oneBit)
-		oneBit.bitXor(oneBit).assertEqualTo(zeroBit)
+		zeroBit.bitXor(zeroBit).assertEvalsTo(zeroBit)
+		zeroBit.bitXor(oneBit).assertEvalsTo(oneBit)
+		oneBit.bitXor(zeroBit).assertEvalsTo(oneBit)
+		oneBit.bitXor(oneBit).assertEvalsTo(zeroBit)
 	}
 }

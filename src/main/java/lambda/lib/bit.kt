@@ -2,8 +2,8 @@ package lambda.lib
 
 import lambda.*
 
-val zeroBit = term { x -> term { _ -> x } }
-val oneBit = term { _ -> term { y -> y } }
+val zeroBit = term { x -> term { x } }
+val oneBit = term { term { y -> y } }
 
 val Term.bitNegate get() = invoke(oneBit, zeroBit)
 val Term.bitAnd get() = term { bit -> this(bit(zeroBit, zeroBit), bit(zeroBit, oneBit)) }
