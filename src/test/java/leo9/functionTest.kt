@@ -8,11 +8,11 @@ class FunctionTest {
 	@Test
 	fun call() {
 		function(empty)
-			.call(script(line("one", script())))
+			.call(script("one" lineTo script()))
 			.assertEqualTo(script())
 
-		function(argument)
-			.call(script(line("one", script())))
-			.assertEqualTo(script(line("one", script())))
+		function(argument())
+			.call(script("one" lineTo script()))
+			.assertEqualTo(script("one" lineTo script()))
 	}
 }

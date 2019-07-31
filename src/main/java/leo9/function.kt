@@ -34,7 +34,9 @@ data class SwitchOperation(
 data class CallOperation(
 	val call: FunctionCall) : Operation()
 
-object Argument
+data class Argument(val backStack: Stack<Back>)
+
+object Back
 object Lhs
 object Rhs
 
@@ -48,9 +50,17 @@ data class FunctionSwitch(
 data class FunctionCall(
 	val function: Function)
 
+data class Trace(
+	val scriptStack: Stack<Script>)
+
 // ---------------
 
-val argument = Argument
+val Stack<Back>.argument get() = Argument(this)
+val Stack<Script>.trace get() = Trace(this)
+
+fun argument(vararg backs: Back) = stack(*backs).argument
+fun trace(vararg scripts: Script) = stack(*scripts).trace
+
 val lhs = Lhs
 val rhs = Rhs
 
@@ -70,43 +80,47 @@ fun switch(vararg pairs: Pair<String, Function>) = FunctionSwitch(mapOf(*pairs))
 
 // ---------------
 
-fun Function.call(parameter: Script): Script =
+fun Function.call(script: Script) =
+	call(trace(script))
+
+fun Function.call(trace: Trace): Script =
 	when (this) {
-		is EmptyFunction -> empty.call(parameter)
-		is ArgumentFunction -> argument.call(parameter)
-		is ApplicationFunction -> application.call(parameter)
+		is EmptyFunction -> empty.call(trace)
+		is ArgumentFunction -> argument.call(trace)
+		is ApplicationFunction -> application.call(trace)
 	}
 
-fun Empty.call(parameter: Script) = script(this)
+fun Empty.call(trace: Trace) = script()
 
-fun Argument.call(parameter: Script) = parameter
-
-fun FunctionApplication.call(parameter: Script): Script =
-	operation.call(target.call(parameter), parameter)
-
-fun Operation.call(target: Script, parameter: Script): Script =
-	when (this) {
-		is LineOperation -> line.call(target, parameter)
-		is LhsOperation -> lhs.call(target, parameter)
-		is RhsOperation -> rhs.call(target, parameter)
-		is SwitchOperation -> switch.call(target, parameter)
-		is CallOperation -> call.call(target, parameter)
+tailrec fun Argument.call(trace: Trace): Script =
+	when (backStack) {
+		is EmptyStack -> trace.scriptStack.top
+		is LinkStack -> backStack.pop.argument.call(trace.scriptStack.pop.trace)
 	}
 
-fun FunctionLine.call(target: Script, parameter: Script): Script =
-	script(
-		application(
-			target,
-			line(name, function.call(parameter))))
+fun FunctionApplication.call(trace: Trace): Script =
+	operation.call(target.call(trace), trace)
 
-fun Lhs.call(target: Script, parameter: Script): Script =
-	target.application.script
+fun Operation.call(target: Script, trace: Trace): Script =
+	when (this) {
+		is LineOperation -> line.call(target, trace)
+		is LhsOperation -> lhs.call(target, trace)
+		is RhsOperation -> rhs.call(target, trace)
+		is SwitchOperation -> switch.call(target, trace)
+		is CallOperation -> call.call(target, trace)
+	}
 
-fun Rhs.call(target: Script, parameter: Script): Script =
-	target.application.line.script
+fun FunctionLine.call(target: Script, trace: Trace): Script =
+	target.push(name lineTo function.call(trace))
 
-fun FunctionSwitch.call(target: Script, parameter: Script): Script =
-	map.getValue(target.application.line.name).call(parameter)
+fun Lhs.call(target: Script, trace: Trace): Script =
+	target.lhs
 
-fun FunctionCall.call(target: Script, parameter: Script): Script =
-	function.call(target)
+fun Rhs.call(target: Script, trace: Trace): Script =
+	target.rhs
+
+fun FunctionSwitch.call(target: Script, trace: Trace): Script =
+	map.getValue(target.name).call(trace)
+
+fun FunctionCall.call(target: Script, trace: Trace): Script =
+	function.call(trace.scriptStack.push(target).trace)
