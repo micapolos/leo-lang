@@ -1,5 +1,8 @@
 package leo10
 
+import leo.base.fail
+import leo.base.failIfOr
+
 data class Interpreter(
 	val parentOrNull: InterpreterParent?,
 	val dispatcher: Dispatcher,
@@ -9,6 +12,27 @@ data class Interpreter(
 data class InterpreterParent(
 	val interpreter: Interpreter,
 	val name: String)
+
+val Script.eval
+	get() =
+		interpreter.push(this).rootScript
+
+val interpreter =
+	Interpreter(null, dispatcher, null, script())
+
+val Interpreter.rootScript get() = failIfOr(parentOrNull != null) { script }
+
+fun Interpreter.push(token: Token) =
+	when (token) {
+		is BeginToken -> push(token.begin)
+		is EndToken -> push(token.end)
+	}
+
+fun Interpreter.push(begin: StringBegin) =
+	begin(begin.string)
+
+fun Interpreter.push(end: End) =
+	this.end
 
 fun Interpreter.begin(name: String) =
 	Interpreter(
@@ -21,6 +45,19 @@ val Interpreter.end
 	get() =
 		parentOrNull!!.endWith(script)
 
+fun Interpreter.push(script: Script): Interpreter =
+	when (script) {
+		is EmptyScript -> this
+		is LinkScript -> push(script.link)
+		is FunctionScript -> fail()
+	}
+
+fun Interpreter.push(link: ScriptLink): Interpreter =
+	push(link.script).push(link.line)
+
+fun Interpreter.push(line: ScriptLine): Interpreter =
+	begin(line.name).push(line.script).end
+
 fun InterpreterParent.endWith(script: Script) =
 	interpreter.endWith(name lineTo script)
 
@@ -28,10 +65,11 @@ fun Interpreter.endWith(line: ScriptLine): Interpreter =
 	when (line.script) {
 		is EmptyScript -> maybeEndWithGet(line.name) ?: dispatch(line)
 		is LinkScript -> dispatch(line)
+		is FunctionScript -> dispatch(line)
 	}
 
 fun Interpreter.maybeEndWithGet(name: String) =
-	scriptAtOrNull(name)?.let { replace(it) }
+	get(name)?.let { replace(it) }
 
 fun Interpreter.dispatch(line: ScriptLine): Interpreter =
 	script.plus(line).let { script ->
@@ -63,8 +101,8 @@ fun Interpreter.replace(script: Script): Interpreter =
 		dispatcher.push(script)?.dispatcherOrNull,
 		script)
 
-fun Interpreter.scriptAtOrNull(name: String): Script? =
-	script.atOrNull(name) ?: parentOrNull?.scriptAtOrNull(name)
+fun Interpreter.get(name: String): Script? =
+	script[name] ?: parentOrNull?.get(name)
 
-fun InterpreterParent.scriptAtOrNull(name: String): Script? =
-	interpreter.scriptAtOrNull(name)
+fun InterpreterParent.get(name: String): Script? =
+	interpreter.get(name)

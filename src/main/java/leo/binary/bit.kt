@@ -7,11 +7,15 @@ sealed class Bit
 
 data class ZeroBit(
 	val zero: Zero
-) : Bit()
+) : Bit() {
+	override fun toString() = "bit0"
+}
 
 data class OneBit(
 	val one: One
-) : Bit()
+) : Bit() {
+	override fun toString() = "bit1"
+}
 
 val bit0 = zero.bit
 val bit1 = one.bit

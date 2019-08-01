@@ -12,6 +12,8 @@ data class FunctionDispatcherEntry(
 data class DispatcherDispatcherEntry(
 	val dispatcher: Dispatcher) : DispatcherEntry()
 
+val dispatcher = Dispatcher(mapOf(), null)
+
 val DispatcherEntry.dispatcherOrNull get() = (this as? DispatcherDispatcherEntry)?.dispatcher
 
 fun Dispatcher.begin(name: String): DispatcherEntry? =

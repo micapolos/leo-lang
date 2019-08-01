@@ -7,14 +7,20 @@ import leo.base.fold
 sealed class Stack<out T>
 
 data class EmptyStack<out T>(
-	val empty: Empty) : Stack<T>()
+	val empty: Empty) : Stack<T>() {
+	override fun toString() = "stack"
+}
 
 data class LinkStack<out T>(
-	val link: StackLink<T>) : Stack<T>()
+	val link: StackLink<T>) : Stack<T>() {
+	override fun toString() = "${link.stack}.push(${link.value})"
+}
 
 data class StackLink<out T>(
 	val stack: Stack<T>,
-	val value: T)
+	val value: T) {
+	override fun toString() = "link($stack, $value)"
+}
 
 // ------------
 
@@ -27,3 +33,11 @@ val <T> Stack<T>.linkOrNull get() = (this as? LinkStack)?.link
 val <T> Stack<T>.link get() = linkOrNull!!
 val <T> Stack<T>.pop get() = link.stack
 val <T> Stack<T>.top get() = link.value
+
+tailrec fun <R, T> R.fold(stack: Stack<T>, fn: R.(T) -> R): R =
+	when (stack) {
+		is EmptyStack -> this
+		is LinkStack -> fn(stack.link.value).fold(stack.link.stack, fn)
+	}
+
+val <T> Stack<T>.reverse get() = stack<T>().fold(this) { push(it) }
