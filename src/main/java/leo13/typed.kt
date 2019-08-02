@@ -5,3 +5,6 @@ data class TypedExpr(val expr: Expr, val type: Type)
 
 infix fun Script.of(type: Type) = TypedScript(this, type)
 infix fun Expr.of(type: Type) = TypedExpr(this, type)
+
+val TypedScript.value get() = type.value(script)
+val TypedScript.code get() = "${script.code} : $type"
