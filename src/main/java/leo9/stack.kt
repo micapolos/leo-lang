@@ -65,6 +65,13 @@ tailrec fun <T, R : Any> Stack<T>.mapFirst(fn: T.() -> R?): R? =
 		is LinkStack -> link.value.fn() ?: link.stack.mapFirst(fn)
 	}
 
+fun <T, R> Stack<T>.flatMap(fn: T.() -> Stack<R>): Stack<R> =
+	stack<R>().fold(this) { value ->
+		fold(value.fn()) { mappedValue ->
+			push(mappedValue)
+		}
+	}.reverse
+
 fun <T, R : Any> Stack<T>.mapOrNull(fn: T.() -> R?): Stack<R>? =
 	stack<R>().orNull.fold(this) { value ->
 		this?.run {
@@ -95,9 +102,8 @@ tailrec fun <A : Any, B : Any, R> R.zipFold(stackA: Stack<A>, stackB: Stack<B>, 
 fun <A : Any, B : Any> zip(stackA: Stack<A>, stackB: Stack<B>): Stack<Pair<A?, B?>> =
 	stack<Pair<A?, B?>>().zipFold(stackA, stackB) { a, b -> push(a to b) }.reverse
 
-val <T> Stack<T>.indexed get() = indexedFrom(0)
-
-fun <T> Stack<T>.indexedFrom(int: Int): Stack<IndexedValue<T>> =
+val <T> Stack<T>.indexed
+	get() =
 	stack<IndexedValue<T>>().fold(this) {
 		push((linkOrNull?.value?.index?.inc() ?: 0) indexed it)
 	}.reverse

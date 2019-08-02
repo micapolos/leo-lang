@@ -21,4 +21,11 @@ class StackTest {
 		zip(stack(1, 0), stack("two", "one", "zero"))
 			.assertEqualTo(stack(null to "two", 1 to "one", 0 to "zero"))
 	}
+
+	@Test
+	fun flatMap() {
+		stack(stack(1, 2), stack(3, 4))
+			.flatMap { push(0) }
+			.assertEqualTo(stack(1, 2, 0, 3, 4, 0))
+	}
 }
