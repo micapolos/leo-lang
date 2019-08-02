@@ -1,6 +1,5 @@
 package leo13
 
-import leo.base.Empty
 import leo9.*
 
 object Argument
@@ -13,15 +12,10 @@ data class ArgumentOp(val argument: Argument) : Op()
 data class AccessOp(val access: IntAccess) : Op()
 data class LinkOp(val link: OpLink) : Op()
 data class SwitchOp(val switch: OpSwitch) : Op()
-data class CallOp(val call: OpCall) : Op()
 
 data class IntAccess(val int: Int)
-data class OpCall(val parameterExpr: Expr)
 
-sealed class OpSwitch
-data class EmptyOpSwitch(val empty: Empty) : OpSwitch()
-data class LinkOpSwitch(val link: SwitchLink) : OpSwitch()
-data class SwitchLink(val lhs: OpSwitch, val rhs: Expr)
+data class OpSwitch(val exprList: List<Expr>)
 
 data class OpLink(val line: ExprLine)
 
@@ -36,10 +30,13 @@ fun expr(vararg ops: Op) = expr(stack(*ops))
 fun op(argument: Argument): Op = ArgumentOp(argument)
 fun op(access: IntAccess): Op = AccessOp(access)
 fun op(link: OpLink): Op = LinkOp(link)
+fun op(switch: OpSwitch): Op = SwitchOp(switch)
 
 fun access(int: Int) = IntAccess(int)
 fun opLink(exprLine: ExprLine) = OpLink(exprLine)
 infix fun Int.lineTo(expr: Expr) = ExprLine(this, expr)
+
+fun switchOp(vararg exprs: Expr) = op(OpSwitch(exprs.toList().reversed()))
 
 // --- eval
 
@@ -53,12 +50,12 @@ fun Op.eval(parameter: Value, lhs: Value): Value =
 		is ArgumentOp -> parameter
 		is AccessOp -> access.eval(parameter, lhs)
 		is LinkOp -> link.eval(parameter, lhs)
-		is SwitchOp -> TODO()
-		is CallOp -> TODO()
+		is SwitchOp -> switch.eval(parameter, lhs)
 	}
 
 fun IntAccess.eval(parameter: Value, lhs: Value) = lhs.access(int)
 fun OpLink.eval(parameter: Value, lhs: Value) = lhs.plus(line.int lineTo line.rhs.eval(parameter))
+fun OpSwitch.eval(parameter: Value, lhs: Value) = exprList[lhs.lastLine.int].eval(parameter)
 
 // --- constant expr from value
 

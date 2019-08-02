@@ -1,6 +1,7 @@
 package leo13
 
 import leo.base.assertEqualTo
+import leo.base.assertFails
 import org.junit.Test
 
 class ExprTest {
@@ -28,5 +29,26 @@ class ExprTest {
 			.apply {
 				eval(value()).assertEqualTo(value(3 lineTo value()))
 			}
+
+		run {
+			val switchOp = switchOp(
+				expr(op(argument)).plus(op(opLink(20 lineTo expr()))),
+				expr(op(argument)).plus(op(opLink(10 lineTo expr()))))
+			val parameter = 100 lineTo value()
+
+			expr(value(0 lineTo value()))
+				.plus(switchOp)
+				.eval(value(parameter))
+				.assertEqualTo(value(parameter, 10 lineTo value()))
+
+			expr(value(1 lineTo value()))
+				.plus(switchOp)
+				.eval(value(parameter))
+				.assertEqualTo(value(parameter, 20 lineTo value()))
+
+			expr(value(2 lineTo value()))
+				.plus(switchOp)
+				.assertFails { eval(value(parameter)) }
+		}
 	}
 }
