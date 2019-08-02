@@ -23,6 +23,11 @@ class StackTest {
 	}
 
 	@Test
+	fun map() {
+		stack(1, 2, 3).map { inc() }.assertEqualTo(stack(2, 3, 4))
+	}
+
+	@Test
 	fun flatMap() {
 		stack(stack(1, 2), stack(3, 4))
 			.flatMap { push(0) }
