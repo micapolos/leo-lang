@@ -20,12 +20,12 @@ val Script.onlyLineOrNull get() = lineStack.onlyOrNull
 
 val Script.code: String
 	get() = appendableString { appendable ->
-		appendable.fold(lineStack) { line ->
+		appendable.fold(lineStack.reverse) { line ->
 			appendable.append(line.code)
 		}
 	}
 
-val ScriptLine.code get() = "$name($rhs)"
+val ScriptLine.code get() = "$name(${rhs.code})"
 
 // --- access int
 
