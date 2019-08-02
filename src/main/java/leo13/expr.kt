@@ -1,6 +1,10 @@
 package leo13
 
 import leo.base.Empty
+import leo.base.empty
+import leo9.fold
+import leo9.map
+import leo9.reverse
 
 sealed class Expr
 data class EmptyExpr(val empty: Empty) : Expr()
@@ -45,18 +49,10 @@ fun expr(value: Value) = value.expr
 
 val Value.expr: Expr
 	get() =
-		when (this) {
-			is EmptyValue -> expr(empty)
-			is LinkValue -> link.expr
+		expr(empty).fold(lineStack.map { exprLine }.reverse) {
+			expr(exec(this, op(opLink(it))))
 		}
-
-val ValueLink.expr
-	get() =
-		expr(exec(lhs.expr, op(opLink(line.exprLine))))
 
 val ValueLine.exprLine
 	get() =
 		int lineTo rhs.expr
-
-// --- script + pattern -> expr
-

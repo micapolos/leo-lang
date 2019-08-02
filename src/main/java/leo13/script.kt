@@ -1,26 +1,30 @@
 package leo13
 
-import leo.base.*
+import leo.base.appendableString
+import leo.base.fold
+import leo.base.notNullIf
+import leo9.*
 
-sealed class Script
-data class EmptyScript(val empty: Empty) : Script()
-data class LinkScript(val link: ScriptLink) : Script()
-data class ScriptLink(val lhs: Script, val line: ScriptLine)
+data class Script(val lineStack: Stack<ScriptLine>)
 data class ScriptLine(val name: String, val rhs: Script)
 
-val Script.isEmpty get() = (this is EmptyScript)
-val Script.emptyOrNull get() = (this as? EmptyScript)?.empty
-val Script.linkOrNull get() = (this as? LinkScript)?.link
+val Script.isEmpty get() = lineStack.isEmpty
 
-fun script(empty: Empty): Script = EmptyScript(empty)
-fun script(link: ScriptLink): Script = LinkScript(link)
-fun link(lhs: Script, line: ScriptLine) = ScriptLink(lhs, line)
+fun script(lineStack: Stack<ScriptLine>) = Script(lineStack)
+fun Script.plus(line: ScriptLine) = Script(lineStack.push(line))
+fun script(vararg lines: ScriptLine) = Script(stack()).fold(lines) { plus(it) }
 infix fun String.lineTo(rhs: Script) = ScriptLine(this, rhs)
-fun Script.plus(line: ScriptLine) = script(link(this, line))
-fun script(vararg lines: ScriptLine) = script(empty).fold(lines) { plus(it) }
+val Script.onlyLineOrNull get() = lineStack.onlyOrNull
 
-val Script.code: String get() = linkOrNull?.code ?: ""
-val ScriptLink.code get() = "$lhs$line"
+// --- code
+
+val Script.code: String
+	get() = appendableString { appendable ->
+		appendable.fold(lineStack) { line ->
+			appendable.append(line.code)
+		}
+	}
+
 val ScriptLine.code get() = "$name($rhs)"
 
 // --- access int
@@ -29,23 +33,14 @@ data class ScriptAccess(val line: ScriptLine, val int: Int)
 
 val Script.accessOrNull
 	get() =
-		linkOrNull?.accessOrNull
-
-val ScriptLink.accessOrNull
-	get() =
-		ifOrNull(lhs.isEmpty) {
-			line.accessOrNull
-		}
+		onlyLineOrNull?.accessOrNull
 
 val ScriptLine.accessOrNull
 	get() =
 		rhs.accessOrNull(name, 0)
 
 fun Script.accessOrNull(name: String, int: Int): ScriptAccess? =
-	linkOrNull?.accessOrNull(name, int)
-
-fun ScriptLink.accessOrNull(name: String, int: Int) =
-	line.accessOrNull(name, int) ?: lhs.accessOrNull(name, int.inc())
+	lineStack.mapFirst { accessOrNull(name, int) }
 
 fun ScriptLine.accessOrNull(name: String, int: Int) =
 	notNullIf(name == this.name) {

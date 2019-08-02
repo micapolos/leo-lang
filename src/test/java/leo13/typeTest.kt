@@ -13,29 +13,29 @@ class TypeTest {
 
 		script("one" lineTo script())
 			.type
-			.assertEqualTo(type(choice("one" caseTo type())))
+			.assertEqualTo(type(choice("one" lineTo type())))
 
 		script("one" lineTo script("two" lineTo script()))
 			.type
-			.assertEqualTo(type(choice("one" caseTo type(choice("two" caseTo type())))))
+			.assertEqualTo(type(choice("one" lineTo type(choice("two" lineTo type())))))
 
 		script("one" lineTo script(), "two" lineTo script())
 			.type
-			.assertEqualTo(type(choice("one" caseTo type()), choice("two" caseTo type())))
+			.assertEqualTo(type(choice("one" lineTo type()), choice("two" lineTo type())))
 
 		script("either" lineTo script())
 			.type
-			.assertEqualTo(type(choice("either" caseTo type())))
+			.assertEqualTo(type(choice("either" lineTo type())))
 
 		script("either" lineTo script("one" lineTo script()))
 			.type
-			.assertEqualTo(type(choice("one" caseTo type())))
+			.assertEqualTo(type(choice("one" lineTo type())))
 
 		script(
 			"either" lineTo script("one" lineTo script()),
 			"either" lineTo script("two" lineTo script()))
 			.type
-			.assertEqualTo(type(choice("one" caseTo type(), "two" caseTo type())))
+			.assertEqualTo(type(choice("one" lineTo type(), "two" lineTo type())))
 
 		script(
 			"either" lineTo script("one" lineTo script()),
@@ -44,15 +44,16 @@ class TypeTest {
 			.type
 			.assertEqualTo(
 				type(
-					choice("one" caseTo type(), "two" caseTo type()),
-					choice("negate" caseTo type())))
+					choice("either" lineTo type(choice("one" lineTo type()))),
+					choice("either" lineTo type(choice("two" lineTo type()))),
+					choice("negate" lineTo type())))
 
 		script("either" lineTo script("one" lineTo script(), "two" lineTo script()))
 			.type
 			.assertEqualTo(type(choice(
-				"either" caseTo type(
-					choice("one" caseTo type()),
-					choice("two" caseTo type())))))
+				"either" lineTo type(
+					choice("one" lineTo type()),
+					choice("two" lineTo type())))))
 
 		script(
 			"one" lineTo script(),
@@ -61,11 +62,11 @@ class TypeTest {
 			.type
 			.assertEqualTo(
 				type(
-					choice("one" caseTo type()),
+					choice("one" lineTo type()),
 					choice(
-						"either" caseTo type(
+						"either" lineTo type(
 							choice(
-								"two" caseTo type())))))
+								"two" lineTo type())))))
 	}
 
 	@Test
@@ -76,14 +77,14 @@ class TypeTest {
 				assertFails { value(script("one" lineTo script())) }
 			}
 
-		type(choice("one" caseTo type()))
+		type(choice("one" lineTo type()))
 			.apply {
 				value(script("one" lineTo script())).assertEqualTo(value(0 lineTo value()))
 				assertFails { value(script("two" lineTo script())) }
 				assertFails { value(script()) }
 			}
 
-		type(choice("one" caseTo type(), "two" caseTo type()))
+		type(choice("one" lineTo type(), "two" lineTo type()))
 			.apply {
 				value(script("one" lineTo script())).assertEqualTo(value(1 lineTo value()))
 				value(script("two" lineTo script())).assertEqualTo(value(0 lineTo value()))
@@ -91,8 +92,8 @@ class TypeTest {
 			}
 
 		type(
-			choice("one" caseTo type()),
-			choice("two" caseTo type()))
+			choice("one" lineTo type()),
+			choice("two" lineTo type()))
 			.apply {
 				value(script("one" lineTo script(), "two" lineTo script()))
 					.assertEqualTo(value(0 lineTo value(), 0 lineTo value()))
@@ -103,11 +104,11 @@ class TypeTest {
 			}
 		type(
 			choice(
-				"one" caseTo type(),
-				"two" caseTo type()),
+				"one" lineTo type(),
+				"two" lineTo type()),
 			choice(
-				"one" caseTo type(),
-				"two" caseTo type()))
+				"one" lineTo type(),
+				"two" lineTo type()))
 			.apply {
 				value(script("one" lineTo script(), "one" lineTo script()))
 					.assertEqualTo(value(1 lineTo value(), 1 lineTo value()))
@@ -132,7 +133,7 @@ class TypeTest {
 				assertFails { script(value(0 lineTo value())) }
 			}
 
-		type(choice("one" caseTo type()))
+		type(choice("one" lineTo type()))
 			.apply {
 				script(value(0 lineTo value())).assertEqualTo(script("one" lineTo script()))
 				assertFails { script(value()) }
@@ -140,7 +141,7 @@ class TypeTest {
 				assertFails { script(value(0 lineTo value(), 1 lineTo value())) }
 			}
 
-		type(choice("one" caseTo type(), "two" caseTo type()))
+		type(choice("one" lineTo type(), "two" lineTo type()))
 			.apply {
 				script(value(0 lineTo value())).assertEqualTo(script("two" lineTo script()))
 				script(value(1 lineTo value())).assertEqualTo(script("one" lineTo script()))
@@ -149,7 +150,7 @@ class TypeTest {
 				assertFails { script(value(0 lineTo value(), 0 lineTo value())) }
 			}
 
-		type(choice("one" caseTo type()), choice("two" caseTo type()))
+		type(choice("one" lineTo type()), choice("two" lineTo type()))
 			.apply {
 				script(value(0 lineTo value(), 0 lineTo value()))
 					.assertEqualTo(script("one" lineTo script(), "two" lineTo script()))

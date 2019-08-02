@@ -34,5 +34,5 @@ fun Op.eval(parameter: Value, lhs: Value): Value =
 		is CallOp -> TODO()
 	}
 
-fun OpGet.eval(parameter: Value, lhs: Value) = lhs.get(int)
-fun OpLink.eval(parameter: Value, lhs: Value) = value(link(lhs, line.eval(parameter)))
+fun OpGet.eval(parameter: Value, lhs: Value) = lhs.access(int)
+fun OpLink.eval(parameter: Value, lhs: Value) = lhs.plus(line.eval(parameter))

@@ -1,8 +1,6 @@
 package leo9
 
-import leo.base.Empty
-import leo.base.empty
-import leo.base.fold
+import leo.base.*
 import leo10.list
 import leo10.prepend
 
@@ -35,6 +33,12 @@ val <T> Stack<T>.linkOrNull get() = (this as? LinkStack)?.link
 val <T> Stack<T>.link get() = linkOrNull!!
 val <T> Stack<T>.pop get() = link.stack
 val <T> Stack<T>.top get() = link.value
+val <T : Any> Stack<T>.onlyOrNull
+	get() = linkOrNull?.let { link ->
+		notNullIf(link.stack.isEmpty) {
+			link.value
+		}
+	}
 
 tailrec fun <R, T> R.fold(stack: Stack<T>, fn: R.(T) -> R): R =
 	when (stack) {
@@ -55,18 +59,45 @@ fun <T> Stack<T>.all(fn: T.() -> Boolean): Boolean =
 fun <T, R> Stack<T>.map(fn: T.() -> R): Stack<R> =
 	stack<R>().fold(this) { push(fn(it)) }.reverse
 
-fun <T, R : Any> Stack<T>.mapOrNull(fn: T.() -> R?): Stack<R>? =
-	when (this) {
-		is EmptyStack -> stack()
-		is LinkStack -> link.stack.mapOrNull(fn)?.let { stack ->
-			link.value.fn()?.let { value ->
-				stack.push(value)
-			}
-		}
-	}
-
-fun <T, R : Any> Stack<T>.mapFirst(fn: T.() -> R?): R? =
+tailrec fun <T, R : Any> Stack<T>.mapFirst(fn: T.() -> R?): R? =
 	when (this) {
 		is EmptyStack -> null
 		is LinkStack -> link.value.fn() ?: link.stack.mapFirst(fn)
 	}
+
+fun <T, R : Any> Stack<T>.mapOrNull(fn: T.() -> R?): Stack<R>? =
+	stack<R>().orNull.fold(this) { value ->
+		this?.run {
+			value.fn()?.let { mapped -> push(mapped) }
+		}
+	}?.reverse
+
+tailrec fun <T : Any> Stack<T>.get(int: Int): T? =
+	when (this) {
+		is EmptyStack -> null
+		is LinkStack -> if (int == 0) link.value else link.stack.get(int.dec())
+	}
+
+tailrec fun <A : Any, B : Any, R> R.zipFold(stackA: Stack<A>, stackB: Stack<B>, fn: R.(A?, B?) -> R): R =
+	when (stackA) {
+		is EmptyStack ->
+			when (stackB) {
+				is EmptyStack -> this
+				is LinkStack -> fn(null, stackB.link.value).zipFold(stackA, stackB.link.stack, fn)
+			}
+		is LinkStack ->
+			when (stackB) {
+				is EmptyStack -> fn(stackA.link.value, null).zipFold(stackA.link.stack, stackB, fn)
+				is LinkStack -> fn(stackA.link.value, stackB.link.value).zipFold(stackA.link.stack, stackB.link.stack, fn)
+			}
+	}
+
+fun <A : Any, B : Any> zip(stackA: Stack<A>, stackB: Stack<B>): Stack<Pair<A?, B?>> =
+	stack<Pair<A?, B?>>().zipFold(stackA, stackB) { a, b -> push(a to b) }.reverse
+
+val <T> Stack<T>.indexed get() = indexedFrom(0)
+
+fun <T> Stack<T>.indexedFrom(int: Int): Stack<IndexedValue<T>> =
+	stack<IndexedValue<T>>().fold(this) {
+		push((linkOrNull?.value?.index?.inc() ?: 0) indexed it)
+	}.reverse
