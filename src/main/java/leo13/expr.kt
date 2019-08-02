@@ -1,58 +1,70 @@
 package leo13
 
 import leo.base.Empty
-import leo.base.empty
-import leo9.fold
-import leo9.map
-import leo9.reverse
-
-sealed class Expr
-data class EmptyExpr(val empty: Empty) : Expr()
-data class ArgumentExpr(val argument: Argument) : Expr()
-data class ExecExpr(val apply: ExprApply) : Expr()
-
-data class ExprApply(val lhs: Expr, val op: Op)
+import leo9.*
 
 object Argument
 
-data class ExprLine(val int: Int, val expr: Expr)
+data class Expr(val opStack: Stack<Op>)
+data class ExprLine(val int: Int, val rhs: Expr)
+
+sealed class Op
+data class ArgumentOp(val argument: Argument) : Op()
+data class AccessOp(val access: IntAccess) : Op()
+data class LinkOp(val link: OpLink) : Op()
+data class SwitchOp(val switch: OpSwitch) : Op()
+data class CallOp(val call: OpCall) : Op()
+
+data class IntAccess(val int: Int)
+data class OpCall(val parameterExpr: Expr)
+
+sealed class OpSwitch
+data class EmptyOpSwitch(val empty: Empty) : OpSwitch()
+data class LinkOpSwitch(val link: SwitchLink) : OpSwitch()
+data class SwitchLink(val lhs: OpSwitch, val rhs: Expr)
+
+data class OpLink(val line: ExprLine)
 
 // --- constructors
 
-fun expr(empty: Empty): Expr = EmptyExpr(empty)
-fun expr(argument: Argument): Expr = ArgumentExpr(argument)
-fun expr(exec: ExprApply): Expr = ExecExpr(exec)
-
-fun exec(lhs: Expr, op: Op) = ExprApply(lhs, op)
 val argument = Argument
 
+fun expr(opStack: Stack<Op>) = Expr(opStack)
+fun Expr.plus(op: Op) = expr(opStack.push(op))
+fun expr(vararg ops: Op) = expr(stack(*ops))
+
+fun op(argument: Argument): Op = ArgumentOp(argument)
+fun op(access: IntAccess): Op = AccessOp(access)
+fun op(link: OpLink): Op = LinkOp(link)
+
+fun access(int: Int) = IntAccess(int)
+fun opLink(exprLine: ExprLine) = OpLink(exprLine)
 infix fun Int.lineTo(expr: Expr) = ExprLine(this, expr)
 
 // --- eval
 
 fun Expr.eval(parameter: Value): Value =
-	when (this) {
-		is EmptyExpr -> empty.eval(parameter)
-		is ArgumentExpr -> argument.eval(parameter)
-		is ExecExpr -> apply.eval(parameter)
+	value().fold(opStack.reverse) { op ->
+		op.eval(parameter, this)
 	}
 
-fun Empty.eval(parameter: Value): Value = value()
-fun Argument.eval(parameter: Value): Value = parameter
-fun ExprApply.eval(parameter: Value): Value = op.eval(parameter, lhs.eval(parameter))
+fun Op.eval(parameter: Value, lhs: Value): Value =
+	when (this) {
+		is ArgumentOp -> parameter
+		is AccessOp -> access.eval(parameter, lhs)
+		is LinkOp -> link.eval(parameter, lhs)
+		is SwitchOp -> TODO()
+		is CallOp -> TODO()
+	}
 
-fun ExprLine.eval(parameter: Value) = int lineTo expr.eval(parameter)
+fun IntAccess.eval(parameter: Value, lhs: Value) = lhs.access(int)
+fun OpLink.eval(parameter: Value, lhs: Value) = lhs.plus(line.int lineTo line.rhs.eval(parameter))
 
 // --- constant expr from value
 
-fun expr(value: Value) = value.expr
+fun expr(value: Value): Expr =
+	expr(value.lineStack.map(::op))
 
-val Value.expr: Expr
-	get() =
-		expr(empty).fold(lineStack.map { exprLine }.reverse) {
-			expr(exec(this, op(opLink(it))))
-		}
+fun op(valueLine: ValueLine) =
+	op(opLink(valueLine.int lineTo expr(valueLine.rhs)))
 
-val ValueLine.exprLine
-	get() =
-		int lineTo rhs.expr
