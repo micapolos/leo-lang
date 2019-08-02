@@ -45,3 +45,17 @@ fun ScriptLine.accessOrNull(name: String, int: Int) =
 	notNullIf(name == this.name) {
 		ScriptAccess(this, int)
 	}
+
+// --- normalize
+
+val Script.normalize: Script
+	get() =
+		script().fold(lineStack.reverse) { plusNormalized(it.normalize) }
+
+val ScriptLine.normalize
+	get() =
+		name lineTo rhs.normalize
+
+fun Script.plusNormalized(line: ScriptLine) =
+	if (line.rhs.isEmpty) script(line.name lineTo this)
+	else plus(line)
