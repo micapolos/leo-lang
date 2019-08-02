@@ -1,8 +1,6 @@
 package leo13
 
-import leo.base.Empty
-import leo.base.empty
-import leo.base.fold
+import leo.base.*
 
 sealed class Script
 data class EmptyScript(val empty: Empty) : Script()
@@ -24,3 +22,32 @@ fun script(vararg lines: ScriptLine) = script(empty).fold(lines) { plus(it) }
 val Script.code: String get() = linkOrNull?.code ?: ""
 val ScriptLink.code get() = "$lhs$line"
 val ScriptLine.code get() = "$name($rhs)"
+
+// --- access int
+
+data class ScriptAccess(val line: ScriptLine, val int: Int)
+
+val Script.accessOrNull
+	get() =
+		linkOrNull?.accessOrNull
+
+val ScriptLink.accessOrNull
+	get() =
+		ifOrNull(lhs.isEmpty) {
+			line.accessOrNull
+		}
+
+val ScriptLine.accessOrNull
+	get() =
+		rhs.accessOrNull(name, 0)
+
+fun Script.accessOrNull(name: String, int: Int): ScriptAccess? =
+	linkOrNull?.accessOrNull(name, int)
+
+fun ScriptLink.accessOrNull(name: String, int: Int) =
+	line.accessOrNull(name, int) ?: lhs.accessOrNull(name, int.inc())
+
+fun ScriptLine.accessOrNull(name: String, int: Int) =
+	notNullIf(name == this.name) {
+		ScriptAccess(this, int)
+	}

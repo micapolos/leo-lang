@@ -4,114 +4,95 @@ import leo.base.assertEqualTo
 import kotlin.test.Test
 import kotlin.test.assertFails
 
-class PatternTest {
+class TypeTest {
 	@Test
 	fun parse() {
 		script()
-			.pattern
-			.assertEqualTo(pattern())
+			.type
+			.assertEqualTo(type())
 
 		script("one" lineTo script())
-			.pattern
-			.assertEqualTo(pattern(choice("one" caseTo pattern())))
+			.type
+			.assertEqualTo(type(choice("one" caseTo type())))
 
 		script("one" lineTo script("two" lineTo script()))
-			.pattern
-			.assertEqualTo(pattern(choice("one" caseTo pattern(choice("two" caseTo pattern())))))
+			.type
+			.assertEqualTo(type(choice("one" caseTo type(choice("two" caseTo type())))))
 
 		script("one" lineTo script(), "two" lineTo script())
-			.pattern
-			.assertEqualTo(pattern(choice("one" caseTo pattern()), choice("two" caseTo pattern())))
+			.type
+			.assertEqualTo(type(choice("one" caseTo type()), choice("two" caseTo type())))
 
 		script("either" lineTo script())
-			.pattern
-			.assertEqualTo(pattern(choice("either" caseTo pattern())))
+			.type
+			.assertEqualTo(type(choice("either" caseTo type())))
 
 		script("either" lineTo script("one" lineTo script()))
-			.pattern
-			.assertEqualTo(pattern(choice("one" caseTo pattern())))
+			.type
+			.assertEqualTo(type(choice("one" caseTo type())))
 
 		script(
 			"either" lineTo script("one" lineTo script()),
 			"either" lineTo script("two" lineTo script()))
-			.pattern
-			.assertEqualTo(pattern(choice("one" caseTo pattern(), "two" caseTo pattern())))
+			.type
+			.assertEqualTo(type(choice("one" caseTo type(), "two" caseTo type())))
 
 		script(
 			"either" lineTo script("one" lineTo script()),
 			"either" lineTo script("two" lineTo script()),
 			"negate" lineTo script())
-			.pattern
+			.type
 			.assertEqualTo(
-				pattern(
-					choice("one" caseTo pattern(), "two" caseTo pattern()),
-					choice("negate" caseTo pattern())))
+				type(
+					choice("one" caseTo type(), "two" caseTo type()),
+					choice("negate" caseTo type())))
 
 		script("either" lineTo script("one" lineTo script(), "two" lineTo script()))
-			.pattern
-			.assertEqualTo(pattern(choice(
-				"either" caseTo pattern(
-					choice("one" caseTo pattern()),
-					choice("two" caseTo pattern())))))
+			.type
+			.assertEqualTo(type(choice(
+				"either" caseTo type(
+					choice("one" caseTo type()),
+					choice("two" caseTo type())))))
 
 		script(
 			"one" lineTo script(),
 			"either" lineTo script(
 				"two" lineTo script()))
-			.pattern
+			.type
 			.assertEqualTo(
-				pattern(
-					choice("one" caseTo pattern()),
+				type(
+					choice("one" caseTo type()),
 					choice(
-						"either" caseTo pattern(
+						"either" caseTo type(
 							choice(
-								"two" caseTo pattern())))))
-	}
-
-	@Test
-	fun isConstant() {
-		pattern()
-			.isConstant
-			.assertEqualTo(true)
-
-		pattern(choice("one" caseTo pattern()))
-			.isConstant
-			.assertEqualTo(true)
-
-		pattern(choice("one" caseTo pattern()), choice("two" caseTo pattern()))
-			.isConstant
-			.assertEqualTo(true)
-
-		pattern(choice("one" caseTo pattern(), "two" caseTo pattern()))
-			.isConstant
-			.assertEqualTo(false)
+								"two" caseTo type())))))
 	}
 
 	@Test
 	fun scriptToValue() {
-		pattern()
+		type()
 			.apply {
 				value(script()).assertEqualTo(value())
 				assertFails { value(script("one" lineTo script())) }
 			}
 
-		pattern(choice("one" caseTo pattern()))
+		type(choice("one" caseTo type()))
 			.apply {
 				value(script("one" lineTo script())).assertEqualTo(value(0 lineTo value()))
 				assertFails { value(script("two" lineTo script())) }
 				assertFails { value(script()) }
 			}
 
-		pattern(choice("one" caseTo pattern(), "two" caseTo pattern()))
+		type(choice("one" caseTo type(), "two" caseTo type()))
 			.apply {
 				value(script("one" lineTo script())).assertEqualTo(value(1 lineTo value()))
 				value(script("two" lineTo script())).assertEqualTo(value(0 lineTo value()))
 				assertFails { value(script("three" lineTo script())) }
 			}
 
-		pattern(
-			choice("one" caseTo pattern()),
-			choice("two" caseTo pattern()))
+		type(
+			choice("one" caseTo type()),
+			choice("two" caseTo type()))
 			.apply {
 				value(script("one" lineTo script(), "two" lineTo script()))
 					.assertEqualTo(value(0 lineTo value(), 0 lineTo value()))
@@ -120,13 +101,13 @@ class PatternTest {
 				assertFails { value(script("one" lineTo script(), "three" lineTo script())) }
 				assertFails { value(script("one" lineTo script(), "two" lineTo script(), "three" lineTo script())) }
 			}
-		pattern(
+		type(
 			choice(
-				"one" caseTo pattern(),
-				"two" caseTo pattern()),
+				"one" caseTo type(),
+				"two" caseTo type()),
 			choice(
-				"one" caseTo pattern(),
-				"two" caseTo pattern()))
+				"one" caseTo type(),
+				"two" caseTo type()))
 			.apply {
 				value(script("one" lineTo script(), "one" lineTo script()))
 					.assertEqualTo(value(1 lineTo value(), 1 lineTo value()))
@@ -145,13 +126,13 @@ class PatternTest {
 
 	@Test
 	fun valueToScript() {
-		pattern()
+		type()
 			.apply {
 				script(value()).assertEqualTo(script())
 				assertFails { script(value(0 lineTo value())) }
 			}
 
-		pattern(choice("one" caseTo pattern()))
+		type(choice("one" caseTo type()))
 			.apply {
 				script(value(0 lineTo value())).assertEqualTo(script("one" lineTo script()))
 				assertFails { script(value()) }
@@ -159,7 +140,7 @@ class PatternTest {
 				assertFails { script(value(0 lineTo value(), 1 lineTo value())) }
 			}
 
-		pattern(choice("one" caseTo pattern(), "two" caseTo pattern()))
+		type(choice("one" caseTo type(), "two" caseTo type()))
 			.apply {
 				script(value(0 lineTo value())).assertEqualTo(script("two" lineTo script()))
 				script(value(1 lineTo value())).assertEqualTo(script("one" lineTo script()))
@@ -168,7 +149,7 @@ class PatternTest {
 				assertFails { script(value(0 lineTo value(), 0 lineTo value())) }
 			}
 
-		pattern(choice("one" caseTo pattern()), choice("two" caseTo pattern()))
+		type(choice("one" caseTo type()), choice("two" caseTo type()))
 			.apply {
 				script(value(0 lineTo value(), 0 lineTo value()))
 					.assertEqualTo(script("one" lineTo script(), "two" lineTo script()))

@@ -57,3 +57,6 @@ val ValueLink.expr
 val ValueLine.exprLine
 	get() =
 		int lineTo rhs.expr
+
+// --- script + pattern -> expr
+
