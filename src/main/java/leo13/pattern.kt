@@ -1,8 +1,6 @@
 package leo13
 
-import leo.base.Empty
-import leo.base.empty
-import leo.base.fold
+import leo.base.*
 
 sealed class Pattern
 data class EmptyPattern(val empty: Empty) : Pattern()
@@ -112,3 +110,53 @@ val PatternChoice.isConstant: Boolean
 val PatternCase.isConstant
 	get() =
 		rhs.isConstant
+
+// --- value -> script
+
+fun Pattern.script(value: Value): Script =
+	when (this) {
+		is EmptyPattern -> script(value.empty)
+		is LinkPattern -> script(link.scriptLink(value.link))
+	}
+
+fun PatternLink.scriptLink(link: ValueLink): ScriptLink =
+	link(lhs.script(link.lhs), choice.scriptLine(link.line))
+
+fun PatternChoice.scriptLine(valueLine: ValueLine): ScriptLine =
+	when (this) {
+		is EmptyPatternChoice -> fail()
+		is LinkPatternChoice -> link.scriptLine(valueLine)
+	}
+
+fun ChoiceLink.scriptLine(valueLine: ValueLine): ScriptLine =
+	if (valueLine.int == 0) case.scriptLine(valueLine.rhs)
+	else lhs.scriptLine(valueLine.int.dec() lineTo valueLine.rhs)
+
+fun PatternCase.scriptLine(value: Value): ScriptLine =
+	name lineTo rhs.script(value)
+
+
+// --- script -> value
+
+fun Pattern.value(script: Script) =
+	when (this) {
+		is EmptyPattern -> value(script.emptyOrNull!!)
+		is LinkPattern -> value(link.valueLink(script.linkOrNull!!))
+	}
+
+fun PatternLink.valueLink(scriptLink: ScriptLink): ValueLink =
+	link(lhs.value(scriptLink.lhs), choice.valueLine(scriptLink.line, 0))
+
+fun PatternChoice.valueLine(scriptLine: ScriptLine, int: Int): ValueLine =
+	when (this) {
+		is EmptyPatternChoice -> fail()
+		is LinkPatternChoice -> link.valueLine(scriptLine, int)
+	}
+
+fun ChoiceLink.valueLine(scriptLine: ScriptLine, int: Int): ValueLine =
+	case.valueLineOrNull(scriptLine, int) ?: lhs.valueLine(scriptLine, int.inc())
+
+fun PatternCase.valueLineOrNull(scriptLine: ScriptLine, int: Int): ValueLine? =
+	notNullIf(name == scriptLine.name) {
+		int lineTo rhs.value(scriptLine.rhs)
+	}

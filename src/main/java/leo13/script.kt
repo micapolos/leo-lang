@@ -11,6 +11,7 @@ data class ScriptLink(val lhs: Script, val line: ScriptLine)
 data class ScriptLine(val name: String, val rhs: Script)
 
 val Script.isEmpty get() = (this is EmptyScript)
+val Script.emptyOrNull get() = (this as? EmptyScript)?.empty
 val Script.linkOrNull get() = (this as? LinkScript)?.link
 
 fun script(empty: Empty): Script = EmptyScript(empty)
