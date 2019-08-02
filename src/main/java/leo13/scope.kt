@@ -15,10 +15,23 @@ fun Scope.typedExprOrNull(parameter: TypeParameter) =
 	functionStack.mapFirst { typedExprOrNull(parameter) }
 
 fun Scope.eval(typedScript: TypedScript): TypedScript =
+	evalOrNull(typedScript) ?: typedScript
+
+fun Scope.evalOrNull(typedScript: TypedScript): TypedScript? =
 	typedExprOrNull(parameter(typedScript.type))
 		?.let { typedExpr ->
 			typedExpr.expr.eval(typedScript.value).let { evaledValue ->
 				typedExpr.type.script(evaledValue) of typedExpr.type
 			}
 		}
-		?: typedScript
+
+fun Scope.eval(typedValue: TypedValue): TypedValue =
+	evalOrNull(typedValue) ?: typedValue
+
+fun Scope.evalOrNull(typedValue: TypedValue): TypedValue? =
+	typedExprOrNull(parameter(typedValue.type))
+		?.let { typedExpr ->
+			typedExpr.expr.eval(typedValue.value).let { evaledValue ->
+				evaledValue of typedExpr.type
+			}
+		}
