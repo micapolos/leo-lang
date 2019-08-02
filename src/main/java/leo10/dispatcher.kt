@@ -1,7 +1,7 @@
 package leo10
 
 data class Dispatcher(
-	val beginEntryMap: Map<String, DispatcherEntry>,
+	val beginEntryDict: Dict<DispatcherEntry>,
 	val endEntryOrNull: DispatcherEntry?)
 
 sealed class DispatcherEntry
@@ -12,12 +12,12 @@ data class FunctionDispatcherEntry(
 data class DispatcherDispatcherEntry(
 	val dispatcher: Dispatcher) : DispatcherEntry()
 
-val dispatcher = Dispatcher(mapOf(), null)
+val dispatcher = Dispatcher(stringDict(), null)
 
 val DispatcherEntry.dispatcherOrNull get() = (this as? DispatcherDispatcherEntry)?.dispatcher
 
 fun Dispatcher.begin(name: String): DispatcherEntry? =
-	beginEntryMap[name]
+	beginEntryDict.at(name)
 
 val Dispatcher.end: DispatcherEntry?
 	get() =

@@ -8,7 +8,7 @@ import leo.binary.utf8ByteSeq
 // TODO: Escape zeros
 val String.wordBitSeq: Seq<Bit>
 	get() =
-		string.utf8ByteSeq.thenFn { byte(0).onlySeq }.byteBitSeq
+		utf8ByteSeq.thenFn { byte(0).onlySeq }.byteBitSeq
 
 val Line.bitSeq: Seq<Bit>
 	get() = Seq {

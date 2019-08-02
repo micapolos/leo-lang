@@ -3,6 +3,8 @@ package leo9
 import leo.base.Empty
 import leo.base.empty
 import leo.base.fold
+import leo10.list
+import leo10.prepend
 
 sealed class Stack<out T>
 
@@ -41,3 +43,30 @@ tailrec fun <R, T> R.fold(stack: Stack<T>, fn: R.(T) -> R): R =
 	}
 
 val <T> Stack<T>.reverse get() = stack<T>().fold(this) { push(it) }
+val <T> Stack<T>.list get() = list<T>().fold(this) { prepend(it) }
+val Stack<*>.isEmpty get() = this is EmptyStack
+
+fun <T> Stack<T>.any(fn: T.() -> Boolean): Boolean =
+	false.fold(this) { or(fn(it)) }
+
+fun <T> Stack<T>.all(fn: T.() -> Boolean): Boolean =
+	true.fold(this) { and(fn(it)) }
+
+fun <T, R> Stack<T>.map(fn: T.() -> R): Stack<R> =
+	stack<R>().fold(this) { push(fn(it)) }.reverse
+
+fun <T, R : Any> Stack<T>.mapOrNull(fn: T.() -> R?): Stack<R>? =
+	when (this) {
+		is EmptyStack -> stack()
+		is LinkStack -> link.stack.mapOrNull(fn)?.let { stack ->
+			link.value.fn()?.let { value ->
+				stack.push(value)
+			}
+		}
+	}
+
+fun <T, R : Any> Stack<T>.mapFirst(fn: T.() -> R?): R? =
+	when (this) {
+		is EmptyStack -> null
+		is LinkStack -> link.value.fn() ?: link.stack.mapFirst(fn)
+	}

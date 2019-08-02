@@ -23,6 +23,7 @@ data class DictLeaf<out T : Any>(val value: T)
 data class DictCase<out T : Any>(val bit: Bit, val link: DictLink<T>)
 data class DictBranch<out T : Any>(val at0: DictLink<T>, val at1: DictLink<T>)
 
+data class DictKey(val bitList: List<Bit>)
 data class DictEntry<out T : Any>(val key: Stack<Bit>, val value: T)
 
 // constructors
@@ -162,3 +163,6 @@ fun <R, T : Any> R.foldEntries(key: Stack<Bit>, link: DictLink<T>, fn: R.(DictEn
 	}
 
 val Dict<*>.size get() = 0.foldEntries(this) { inc() }
+
+fun <T : Any> stringDict(vararg pairs: Pair<String, T>) =
+	dict<T>(empty).fold(pairs) { set(it.first, it.second) }
