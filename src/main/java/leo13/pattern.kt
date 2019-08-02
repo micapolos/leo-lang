@@ -135,7 +135,6 @@ fun ChoiceLink.scriptLine(valueLine: ValueLine): ScriptLine =
 fun PatternCase.scriptLine(value: Value): ScriptLine =
 	name lineTo rhs.script(value)
 
-
 // --- script -> value
 
 fun Pattern.value(script: Script) =

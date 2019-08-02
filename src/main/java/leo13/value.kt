@@ -20,3 +20,8 @@ fun link(lhs: Value, line: ValueLine) = ValueLink(lhs, line)
 infix fun Int.lineTo(rhs: Value) = ValueLine(this, rhs)
 fun Value.plus(line: ValueLine) = value(link(this, line))
 fun value(vararg lines: ValueLine): Value = value(empty).fold(lines) { plus(it) }
+
+fun Value.get(int: Int): Value = value(link.line.rhs.link.getLine(int))
+tailrec fun ValueLink.getLine(int: Int): ValueLine =
+	if (int == 0) line
+	else lhs.link.getLine(int.dec())
