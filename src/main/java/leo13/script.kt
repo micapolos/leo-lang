@@ -30,7 +30,7 @@ val ScriptLine.code get() = "$name(${rhs.code})"
 
 data class ScriptAccess(val line: ScriptLine, val int: Int)
 
-val Script.accessOrNull
+val Script.accessOrNull: ScriptAccess?
 	get() =
 		onlyLineOrNull?.accessOrNull
 
