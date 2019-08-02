@@ -23,9 +23,9 @@ data class OpLink(val line: ExprLine)
 
 val argument = Argument
 
-fun expr(opStack: Stack<Op>) = Expr(opStack)
-fun Expr.plus(op: Op) = expr(opStack.push(op))
-fun expr(vararg ops: Op) = expr(stack(*ops))
+val Stack<Op>.expr get() = Expr(this)
+fun Expr.plus(op: Op) = opStack.push(op).expr
+fun expr(vararg ops: Op) = stack(*ops).expr
 
 fun op(argument: Argument): Op = ArgumentOp(argument)
 fun op(access: IntAccess): Op = AccessOp(access)
@@ -47,21 +47,24 @@ fun Expr.eval(parameter: Value): Value =
 
 fun Op.eval(parameter: Value, lhs: Value): Value =
 	when (this) {
-		is ArgumentOp -> parameter
+		is ArgumentOp -> argument.eval(parameter, lhs)
 		is AccessOp -> access.eval(parameter, lhs)
 		is LinkOp -> link.eval(parameter, lhs)
 		is SwitchOp -> switch.eval(parameter, lhs)
 	}
 
+fun Argument.eval(parameter: Value, lhs: Value) = parameter
 fun IntAccess.eval(parameter: Value, lhs: Value) = lhs.access(int)
 fun OpLink.eval(parameter: Value, lhs: Value) = lhs.plus(line.int lineTo line.rhs.eval(parameter))
 fun OpSwitch.eval(parameter: Value, lhs: Value) = exprList[lhs.lastLine.int].eval(parameter)
 
-// --- constant expr from value
+// --- value -> expr
 
-fun expr(value: Value): Expr =
-	expr(value.lineStack.map(::op))
+val Value.expr: Expr
+	get() =
+		lineStack.map { op }.expr
 
-fun op(valueLine: ValueLine) =
-	op(opLink(valueLine.int lineTo expr(valueLine.rhs)))
+val ValueLine.op
+	get() =
+		op(opLink(int lineTo rhs.expr))
 

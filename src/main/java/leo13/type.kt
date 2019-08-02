@@ -10,13 +10,13 @@ data class TypeLine(val name: String, val rhs: Type)
 
 // --- constructors
 
-fun type(choiceStack: Stack<Choice>) = Type(choiceStack)
-fun type(vararg lines: Choice) = Type(stack(*lines))
-fun Type.plus(choice: Choice) = Type(choiceStack.push(choice))
+val Stack<Choice>.type get() = Type(this)
+fun type(vararg choices: Choice) = stack(*choices).type
+fun Type.plus(choice: Choice) = choiceStack.push(choice).type
 
-fun choice(lineStack: Stack<TypeLine>) = Choice(lineStack)
-fun choice(vararg lines: TypeLine) = Choice(stack(*lines))
-fun Choice.plus(line: TypeLine) = Choice(lineStack.push(line))
+val Stack<TypeLine>.choice get() = Choice(this)
+fun choice(vararg lines: TypeLine) = stack(*lines).choice
+fun Choice.plus(line: TypeLine) = lineStack.push(line).choice
 
 infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
@@ -30,13 +30,13 @@ val Script.eitherTypeOrNull: Type?
 			.mapOrNull { eitherTypeLineOrNull }
 			?.let { typeLineStack ->
 				ifOrNull(!typeLineStack.isEmpty) {
-					type(choice(typeLineStack))
+					type(typeLineStack.choice)
 				}
 		}
 
 val Script.exactType
 	get() =
-		type(lineStack.map { choice(typeLine) })
+		lineStack.map { choice(typeLine) }.type
 
 val ScriptLine.eitherTypeLineOrNull: TypeLine?
 	get() =
@@ -51,7 +51,7 @@ val ScriptLine.typeLine: TypeLine
 // --- value -> script
 
 fun Type.script(value: Value): Script =
-	script(zip(choiceStack, value.lineStack).map { first!!.scriptLine(second!!) })
+	zip(choiceStack, value.lineStack).map { first!!.scriptLine(second!!) }.script
 
 fun Choice.scriptLine(valueLine: ValueLine): ScriptLine =
 	lineStack.get(valueLine.int)!!.scriptLine(valueLine.rhs)
@@ -62,7 +62,7 @@ fun TypeLine.scriptLine(value: Value): ScriptLine =
 // --- script -> value
 
 fun Type.value(script: Script): Value =
-	value(zip(choiceStack, script.lineStack).map { first!!.valueLine(second!!) })
+	zip(choiceStack, script.lineStack).map { first!!.valueLine(second!!) }.value
 
 fun Choice.valueLine(scriptLine: ScriptLine): ValueLine =
 	lineStack.indexed.mapFirst { value.valueLineOrNull(scriptLine, index) }!!

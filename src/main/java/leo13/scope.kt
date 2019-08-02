@@ -6,8 +6,6 @@ import leo9.stack
 
 data class Scope(val functionStack: Stack<Function>)
 
-fun Scope.plus(function: Function) = Scope(functionStack.push(function))
-fun scope(vararg functions: Function) = Scope(stack(*functions))
-
-//fun Scope.functionBodyOrNull(parameter: PatternParameter) =
-//	functionStack.mapFirst { bodyOrNull(parameter) }
+val Stack<Function>.scope get() = Scope(this)
+fun Scope.plus(function: Function) = functionStack.push(function).scope
+fun scope(vararg functions: Function) = stack(*functions).scope

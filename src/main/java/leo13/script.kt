@@ -1,7 +1,6 @@
 package leo13
 
 import leo.base.appendableString
-import leo.base.fold
 import leo.base.notNullIf
 import leo9.*
 
@@ -10,9 +9,9 @@ data class ScriptLine(val name: String, val rhs: Script)
 
 val Script.isEmpty get() = lineStack.isEmpty
 
-fun script(lineStack: Stack<ScriptLine>) = Script(lineStack)
-fun Script.plus(line: ScriptLine) = Script(lineStack.push(line))
-fun script(vararg lines: ScriptLine) = Script(stack()).fold(lines) { plus(it) }
+val Stack<ScriptLine>.script get() = Script(this)
+fun Script.plus(line: ScriptLine) = lineStack.push(line).script
+fun script(vararg lines: ScriptLine) = stack(*lines).script
 infix fun String.lineTo(rhs: Script) = ScriptLine(this, rhs)
 val Script.onlyLineOrNull get() = lineStack.onlyOrNull
 
