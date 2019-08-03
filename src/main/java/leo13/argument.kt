@@ -1,12 +1,13 @@
 package leo13
 
-import leo.base.Nat
+import leo9.Stack
+import leo9.stack
 
-data class IntArgument(val int: Int)
-data class NatArgument(val nat: Nat)
+object Previous
 
-val Int.argument get() = IntArgument(this)
-val Nat.argument get() = NatArgument(this)
+val previous = Previous
 
-fun argument(int: Int) = int.argument
-fun argument(nat: Nat) = nat.argument
+data class Argument(val previousStack: Stack<Previous>)
+
+val Stack<Previous>.argument get() = Argument(this)
+fun argument(vararg previouses: Previous) = stack(*previouses).argument

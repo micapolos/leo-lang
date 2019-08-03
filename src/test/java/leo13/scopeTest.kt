@@ -13,10 +13,10 @@ class ScopeTest {
 		val scope = scope(
 			function(
 				parameter(enType),
-				expr(op(argument(0))) of plType),
+				expr(op(argument())) of plType),
 			function(
 				parameter(plType),
-				expr(op(argument(0))) of deType))
+				expr(op(argument())) of deType))
 
 		scope
 			.eval(script("one" lineTo script()) of enType)

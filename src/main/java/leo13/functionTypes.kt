@@ -20,7 +20,7 @@ fun Script.typedExpr(arrows: FunctionTypes, parameter: TypeParameter) =
 
 fun Script.argumentTypedExprOrNull(arrows: FunctionTypes, parameter: TypeParameter) =
 	notNullIf(this == script("given" lineTo script())) {
-		expr(op(argument(0))) of parameter.type
+		expr(op(argument())) of parameter.type
 	}
 
 fun Script.accessTypedExprOrNull(arrows: FunctionTypes, parameter: TypeParameter) =

@@ -97,6 +97,16 @@ tailrec fun <T : Any> Stack<T>.get(nat: Nat): T? =
 			else null
 	}
 
+tailrec fun <T> Stack<T>.drop(stack: Stack<*>): Stack<T>? =
+	when (stack) {
+		is EmptyStack -> this
+		is LinkStack ->
+			when (this) {
+				is EmptyStack -> null
+				is LinkStack -> link.stack.drop(stack.link.stack)
+			}
+	}
+
 tailrec fun <A : Any, B : Any, R> R.zipFold(stackA: Stack<A>, stackB: Stack<B>, fn: R.(A?, B?) -> R): R =
 	when (stackA) {
 		is EmptyStack ->
