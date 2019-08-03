@@ -2,13 +2,11 @@ package leo13
 
 import leo9.*
 
-object Argument
-
 data class Expr(val opStack: Stack<Op>)
 data class ExprLine(val int: Int, val rhs: Expr)
 
 sealed class Op
-data class ArgumentOp(val argument: Argument) : Op()
+data class ArgumentOp(val argument: IntArgument) : Op()
 data class AccessOp(val access: IntAccess) : Op()
 data class LinkOp(val link: OpLink) : Op()
 data class SwitchOp(val switch: OpSwitch) : Op()
@@ -21,13 +19,11 @@ data class OpLink(val line: ExprLine)
 
 // --- constructors
 
-val argument = Argument
-
 val Stack<Op>.expr get() = Expr(this)
 fun Expr.plus(op: Op) = opStack.push(op).expr
 fun expr(vararg ops: Op) = stack(*ops).expr
 
-fun op(argument: Argument): Op = ArgumentOp(argument)
+fun op(argument: IntArgument): Op = ArgumentOp(argument)
 fun op(access: IntAccess): Op = AccessOp(access)
 fun op(link: OpLink): Op = LinkOp(link)
 fun op(switch: OpSwitch): Op = SwitchOp(switch)
@@ -53,7 +49,7 @@ fun Op.eval(bindings: ValueBindings, lhs: Value): Value =
 		is SwitchOp -> switch.eval(bindings, lhs)
 	}
 
-fun Argument.eval(bindings: ValueBindings, lhs: Value) = bindings.stack.top
+fun IntArgument.eval(bindings: ValueBindings, lhs: Value) = bindings.stack.get(int)!!
 fun IntAccess.eval(bindings: ValueBindings, lhs: Value) = lhs.access(int)
 fun OpLink.eval(bindings: ValueBindings, lhs: Value) = lhs.plus(line.int lineTo line.rhs.eval(bindings))
 fun OpSwitch.eval(bindings: ValueBindings, lhs: Value) = exprList[lhs.lastLine.int].eval(bindings)

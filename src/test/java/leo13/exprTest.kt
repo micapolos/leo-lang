@@ -15,7 +15,7 @@ class ExprTest {
 			.eval(bindings(value(1 lineTo value())))
 			.assertEqualTo(value(0 lineTo value()))
 
-		expr(op(argument))
+		expr(op(argument(0)))
 			.eval(bindings(value(0 lineTo value())))
 			.assertEqualTo(value(0 lineTo value()))
 
@@ -32,8 +32,8 @@ class ExprTest {
 
 		run {
 			val switchOp = switchOp(
-				expr(op(argument)).plus(op(opLink(20 lineTo expr()))),
-				expr(op(argument)).plus(op(opLink(10 lineTo expr()))))
+				expr(op(argument(0))).plus(op(opLink(20 lineTo expr()))),
+				expr(op(argument(0))).plus(op(opLink(10 lineTo expr()))))
 			val parameter = 100 lineTo value()
 			val bindings = bindings(value(parameter))
 
