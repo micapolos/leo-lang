@@ -88,6 +88,15 @@ tailrec fun <T : Any> Stack<T>.get(int: Int): T? =
 		is LinkStack -> if (int == 0) link.value else link.stack.get(int.dec())
 	}
 
+tailrec fun <T : Any> Stack<T>.get(nat: Nat): T? =
+	when (this) {
+		is EmptyStack -> null
+		is LinkStack ->
+			if (nat is ZeroNat) link.value
+			else if (nat is SuccNat) link.stack.get(nat.succ.nat)
+			else null
+	}
+
 tailrec fun <A : Any, B : Any, R> R.zipFold(stackA: Stack<A>, stackB: Stack<B>, fn: R.(A?, B?) -> R): R =
 	when (stackA) {
 		is EmptyStack ->
