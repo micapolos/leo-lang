@@ -8,13 +8,14 @@ data class Type(val headFunctionTypeOrNull: FunctionType?, val choiceStack: Stac
 data class Choice(val lineStack: Stack<TypeLine>)
 data class TypeLine(val name: String, val rhs: Type)
 data class TypeArrow(val lhs: Type, val rhs: Type)
+data class TypeAccess(val int: Int, val type: Type)
 
 // --- constructors
 
 val Stack<Choice>.type get() = Type(null, this)
-fun Type.plus(choice: Choice) = choiceStack.push(choice).type
+fun Type.plus(choice: Choice) = copy(choiceStack = choiceStack.push(choice))
 fun type(vararg choices: Choice) = stack(*choices).type
-fun FunctionType.type(vararg choices: Choice) = Type(this, stack(*choices))
+fun FunctionType?.type(vararg choices: Choice) = Type(this, stack(*choices))
 infix fun Type.arrowTo(rhs: Type) = TypeArrow(this, rhs)
 
 val Stack<TypeLine>.choice get() = Choice(this)
@@ -25,6 +26,7 @@ infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
 val Type.isEmpty get() = choiceStack.isEmpty
 val Type.functionTypeOrNull get() = ifOrNull(choiceStack.isEmpty) { headFunctionTypeOrNull }
+fun access(int: Int, type: Type) = TypeAccess(int, type)
 
 // --- script -> type
 
@@ -77,3 +79,24 @@ fun TypeLine.valueLineOrNull(scriptLine: ScriptLine, int: Int): ValueLine? =
 	notNullIf(name == scriptLine.name) {
 		int lineTo rhs.value(scriptLine.rhs)
 	}
+
+// --- access
+
+//fun Type.rhsAccessOrNull(name: String): TypeAccess? =
+//	choiceStack.onlyOrNull?.let { choice ->
+//		choice.lineStack.onlyOrNull?.let { line ->
+//			line.rhs.let { rhs ->
+//				notNullIf(rhs.headFunctionTypeOrNull == null) {
+//					rhs.choiceStack.mapOnly {
+//						choice.lineStack.linkOrNull?.let { link ->
+//							orNullIf(link.stack.isEmpty) {
+//								notNullIf(link.value.name == name) {
+//									link.value
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}

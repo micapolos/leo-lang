@@ -68,6 +68,17 @@ tailrec fun <T, R : Any> Stack<T>.mapFirst(fn: T.() -> R?): R? =
 		is LinkStack -> link.value.fn() ?: link.stack.mapFirst(fn)
 	}
 
+fun <T, R : Any> Stack<T>.mapOnly(fn: T.() -> R?): R? =
+	the(null as R?).orNull.fold(this) { value ->
+		this?.let { theOnlyOrNull ->
+			value.fn().let { mapped ->
+				if (mapped == null) theOnlyOrNull
+				else if (theOnlyOrNull.value == null) the(mapped)
+				else null
+			}
+		}
+	}?.value
+
 fun <T, R> Stack<T>.flatMap(fn: T.() -> Stack<R>): Stack<R> =
 	stack<R>().fold(this) { value ->
 		fold(value.fn()) { mappedValue ->
