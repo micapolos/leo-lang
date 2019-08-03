@@ -6,6 +6,8 @@ import leo9.*
 
 data class Script(val lineStack: Stack<ScriptLine>)
 data class ScriptLine(val name: String, val rhs: Script)
+data class ScriptLink(val lhs: Script, val line: ScriptLine)
+data class ScriptArrow(val lhs: Script, val rhs: Script)
 
 val Script.isEmpty get() = lineStack.isEmpty
 
@@ -13,7 +15,22 @@ val Stack<ScriptLine>.script get() = Script(this)
 fun Script.plus(line: ScriptLine) = lineStack.push(line).script
 fun script(vararg lines: ScriptLine) = stack(*lines).script
 infix fun String.lineTo(rhs: Script) = ScriptLine(this, rhs)
+fun link(lhs: Script, line: ScriptLine) = ScriptLink(lhs, line)
+infix fun Script.arrowTo(rhs: Script) = ScriptArrow(this, rhs)
 val Script.onlyLineOrNull get() = lineStack.onlyOrNull
+
+val Script.linkOrNull
+	get() =
+		lineStack.linkOrNull?.let { link ->
+			link(link.stack.script, link.value)
+		}
+
+fun Script.arrowOrNull(name: String) =
+	linkOrNull?.let { link ->
+		notNullIf(link.line.name == name) {
+			link.lhs arrowTo link.line.rhs
+		}
+	}
 
 // --- code
 

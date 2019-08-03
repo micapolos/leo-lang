@@ -4,15 +4,18 @@ import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo9.*
 
-data class Type(val choiceStack: Stack<Choice>)
+data class Type(val headFunctionTypeOrNull: FunctionType?, val choiceStack: Stack<Choice>)
 data class Choice(val lineStack: Stack<TypeLine>)
 data class TypeLine(val name: String, val rhs: Type)
+data class TypeArrow(val lhs: Type, val rhs: Type)
 
 // --- constructors
 
-val Stack<Choice>.type get() = Type(this)
-fun type(vararg choices: Choice) = stack(*choices).type
+val Stack<Choice>.type get() = Type(null, this)
 fun Type.plus(choice: Choice) = choiceStack.push(choice).type
+fun type(vararg choices: Choice) = stack(*choices).type
+fun FunctionType.type(vararg choices: Choice) = Type(this, stack(*choices))
+infix fun Type.arrowTo(rhs: Type) = TypeArrow(this, rhs)
 
 val Stack<TypeLine>.choice get() = Choice(this)
 fun choice(vararg lines: TypeLine) = stack(*lines).choice
@@ -21,6 +24,7 @@ fun Choice.plus(line: TypeLine) = lineStack.push(line).choice
 infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
 val Type.isEmpty get() = choiceStack.isEmpty
+val Type.functionTypeOrNull get() = ifOrNull(choiceStack.isEmpty) { headFunctionTypeOrNull }
 
 // --- script -> type
 

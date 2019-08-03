@@ -1,5 +1,6 @@
 package leo13
 
+import leo.base.fold
 import leo9.*
 
 data class Expr(val opStack: Stack<Op>)
@@ -21,7 +22,9 @@ data class OpLink(val line: ExprLine)
 
 val Stack<Op>.expr get() = Expr(this)
 fun Expr.plus(op: Op) = opStack.push(op).expr
+fun Expr.plus(line: ExprLine) = plus(op(opLink(line)))
 fun expr(vararg ops: Op) = stack(*ops).expr
+fun expr(line: ExprLine, vararg lines: ExprLine) = expr().plus(line).fold(lines) { plus(it) }
 
 fun op(argument: Argument): Op = ArgumentOp(argument)
 fun op(access: IntAccess): Op = AccessOp(access)
