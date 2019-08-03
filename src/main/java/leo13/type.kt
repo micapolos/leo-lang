@@ -20,6 +20,8 @@ fun Choice.plus(line: TypeLine) = lineStack.push(line).choice
 
 infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
+val Type.isEmpty get() = choiceStack.isEmpty
+
 // --- script -> type
 
 val Script.type get() = eitherTypeOrNull ?: exactType

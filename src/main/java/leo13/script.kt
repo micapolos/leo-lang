@@ -46,7 +46,7 @@ fun ScriptLine.accessOrNull(name: String, int: Int) =
 		ScriptAccess(this, int)
 	}
 
-// --- normalize
+// --- normalization
 
 val Script.normalize: Script
 	get() =
@@ -59,3 +59,4 @@ val ScriptLine.normalize
 fun Script.plusNormalized(line: ScriptLine) =
 	if (line.rhs.isEmpty) script(line.name lineTo this)
 	else plus(line)
+
