@@ -40,23 +40,23 @@ fun switchOp(vararg exprs: Expr) = op(OpSwitch(exprs.toList().reversed()))
 
 // --- eval
 
-fun Expr.eval(parameter: Value): Value =
+fun Expr.eval(bindings: ValueBindings): Value =
 	value().fold(opStack.reverse) { op ->
-		op.eval(parameter, this)
+		op.eval(bindings, this)
 	}
 
-fun Op.eval(parameter: Value, lhs: Value): Value =
+fun Op.eval(bindings: ValueBindings, lhs: Value): Value =
 	when (this) {
-		is ArgumentOp -> argument.eval(parameter, lhs)
-		is AccessOp -> access.eval(parameter, lhs)
-		is LinkOp -> link.eval(parameter, lhs)
-		is SwitchOp -> switch.eval(parameter, lhs)
+		is ArgumentOp -> argument.eval(bindings, lhs)
+		is AccessOp -> access.eval(bindings, lhs)
+		is LinkOp -> link.eval(bindings, lhs)
+		is SwitchOp -> switch.eval(bindings, lhs)
 	}
 
-fun Argument.eval(parameter: Value, lhs: Value) = parameter
-fun IntAccess.eval(parameter: Value, lhs: Value) = lhs.access(int)
-fun OpLink.eval(parameter: Value, lhs: Value) = lhs.plus(line.int lineTo line.rhs.eval(parameter))
-fun OpSwitch.eval(parameter: Value, lhs: Value) = exprList[lhs.lastLine.int].eval(parameter)
+fun Argument.eval(bindings: ValueBindings, lhs: Value) = bindings.stack.top
+fun IntAccess.eval(bindings: ValueBindings, lhs: Value) = lhs.access(int)
+fun OpLink.eval(bindings: ValueBindings, lhs: Value) = lhs.plus(line.int lineTo line.rhs.eval(bindings))
+fun OpSwitch.eval(bindings: ValueBindings, lhs: Value) = exprList[lhs.lastLine.int].eval(bindings)
 
 // --- value -> expr
 

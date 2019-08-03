@@ -8,15 +8,15 @@ class ExprTest {
 	@Test
 	fun eval() {
 		value().expr
-			.eval(value(0 lineTo value()))
+			.eval(bindings(value(0 lineTo value())))
 			.assertEqualTo(value())
 
 		value(0 lineTo value()).expr
-			.eval(value(1 lineTo value()))
+			.eval(bindings(value(1 lineTo value())))
 			.assertEqualTo(value(0 lineTo value()))
 
 		expr(op(argument))
-			.eval(value(0 lineTo value()))
+			.eval(bindings(value(0 lineTo value())))
 			.assertEqualTo(value(0 lineTo value()))
 
 		value(
@@ -27,7 +27,7 @@ class ExprTest {
 			.expr
 			.plus(op(access(0)))
 			.apply {
-				eval(value()).assertEqualTo(value(3 lineTo value()))
+				eval(valueBindings()).assertEqualTo(value(3 lineTo value()))
 			}
 
 		run {
@@ -35,23 +35,24 @@ class ExprTest {
 				expr(op(argument)).plus(op(opLink(20 lineTo expr()))),
 				expr(op(argument)).plus(op(opLink(10 lineTo expr()))))
 			val parameter = 100 lineTo value()
+			val bindings = bindings(value(parameter))
 
 			value(0 lineTo value())
 				.expr
 				.plus(switchOp)
-				.eval(value(parameter))
+				.eval(bindings)
 				.assertEqualTo(value(parameter, 10 lineTo value()))
 
 			value(1 lineTo value())
 				.expr
 				.plus(switchOp)
-				.eval(value(parameter))
+				.eval(bindings)
 				.assertEqualTo(value(parameter, 20 lineTo value()))
 
 			value(2 lineTo value())
 				.expr
 				.plus(switchOp)
-				.assertFails { eval(value(parameter)) }
+				.assertFails { eval(bindings) }
 		}
 	}
 }
