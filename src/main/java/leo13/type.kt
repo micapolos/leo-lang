@@ -132,3 +132,4 @@ fun Choice.onlyRhsOrNull(name: String) =
 
 fun TypeLine.rhsOrNull(name: String) =
 	notNullIf(this.name == name) { rhs }
+

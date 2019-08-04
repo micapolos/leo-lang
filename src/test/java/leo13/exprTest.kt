@@ -52,4 +52,27 @@ class ExprTest {
 				.assertFails { eval(valueBindings()) }
 		}
 	}
+
+	@Test
+	fun fromType() {
+		type()
+			.exprOrNull
+			.assertEqualTo(expr())
+
+		type("one" lineTo type())
+			.exprOrNull
+			.assertEqualTo(expr(0 lineTo expr()))
+
+		type("one" lineTo type("two" lineTo type()))
+			.exprOrNull
+			.assertEqualTo(expr(0 lineTo expr(0 lineTo expr())))
+
+		type("one" lineTo type(), "two" lineTo type())
+			.exprOrNull
+			.assertEqualTo(expr(0 lineTo expr(), 0 lineTo expr()))
+
+		type(choice("one" lineTo type(), "two" lineTo type()))
+			.exprOrNull
+			.assertEqualTo(null)
+	}
 }

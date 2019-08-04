@@ -1,6 +1,7 @@
 package leo13
 
 import leo.base.fold
+import leo.base.orNull
 import leo9.*
 
 data class Expr(val opStack: Stack<Op>)
@@ -78,3 +79,22 @@ val ValueLine.op
 	get() =
 		op(opLink(int lineTo rhs.expr))
 
+// --- type -> expr
+
+val Type.exprOrNull: Expr?
+	get() =
+		onlyChoiceStackOrNull?.let { choiceStack ->
+			expr().orNull.fold(choiceStack) { choice ->
+				this?.run {
+					choice.exprLineOrNull?.let(::plus)
+				}
+			}
+		}
+
+val Choice.exprLineOrNull: ExprLine?
+	get() =
+		onlyLineOrNull?.let { line ->
+			line.rhs.exprOrNull?.let { rhsExpr ->
+				0 lineTo rhsExpr
+			}
+		}
