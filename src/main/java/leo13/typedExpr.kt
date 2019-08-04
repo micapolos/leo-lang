@@ -1,12 +1,16 @@
 package leo13
 
+import leo.base.notNullIf
+
 data class TypedExpr(val expr: Expr, val type: Type)
+data class TypedExprLink(val lhs: TypedExpr, val line: TypedExprLine)
 data class TypedExprLine(val name: String, val rhs: TypedExpr)
 
 // --- constructors
 
 infix fun Expr.of(type: Type) = TypedExpr(this, type)
 infix fun String.lineTo(rhs: TypedExpr) = TypedExprLine(this, rhs)
+infix fun TypedExpr.linkTo(line: TypedExprLine) = TypedExprLink(this, line)
 
 // --- normalization
 
@@ -16,6 +20,11 @@ fun TypedExpr.plusNormalized(line: TypedExprLine) =
 
 fun TypedExpr.plus(line: TypedExprLine) =
 	expr.plus(op(opLink(0 lineTo line.rhs.expr))) of type.plus(choice(line.name lineTo line.rhs.type))
+
+val TypedExprLink.normalizedLineOrNull
+	get() =
+		if (lhs.type.isEmpty) notNullIf(!line.rhs.type.isEmpty) { line }
+		else notNullIf(line.rhs.type.isEmpty) { line.name lineTo lhs }
 
 // --- script -> typed expr
 
@@ -71,3 +80,30 @@ fun TypedExpr.accessOrNull(name: String) =
 	type.accessOrNull(name)?.let { access ->
 		expr.plus(op(access(access.int))) of access.type
 	}
+
+// --- argument
+
+val TypedExprLink.argumentOrNull
+	get() =
+		notNullIf(lhs.type.isEmpty && line.name == "argument" && line.rhs.type.isEmpty) {
+			argument()
+		}
+
+val TypedExprLink.accessTypedExprOrNull
+	get() =
+		normalizedLineOrNull?.let { line ->
+			line.rhs.type.accessOrNull(line.name)?.let { access ->
+				line.rhs.expr.plus(op(access(access.int))) of access.type
+			}
+		}
+
+val TypedExprLink.typedExpr
+	get() =
+		lhs.plus(line)
+
+//val TypedExprLink.switchTypedExpr get() =
+//	notNullIf(line.name == "switch") {
+//		line.rhs.caseStackOrNull
+//	}
+//
+//val TypedExpr.caseTypedExprStackOrNull get() =
