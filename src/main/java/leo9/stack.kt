@@ -133,16 +133,28 @@ tailrec fun <A : Any, B : Any, R> R.zipFold(stackA: Stack<A>, stackB: Stack<B>, 
 			}
 	}
 
+fun <A : Any, B : Any, R : Any> R.zipFoldOrNull(stackA: Stack<A>, stackB: Stack<B>, fn: R.(A, B) -> R): R? =
+	orNull.zipFold(stackA, stackB) { aOrNull, bOrNull ->
+		this?.run {
+			if (aOrNull != null && bOrNull != null) fn(aOrNull, bOrNull)
+			else null
+		}
+	}
+
 fun <A : Any, B : Any> zip(stackA: Stack<A>, stackB: Stack<B>): Stack<Pair<A?, B?>> =
 	stack<Pair<A?, B?>>().zipFold(stackA, stackB) { a, b -> push(a to b) }.reverse
 
-fun <A, B> pairStackOrNull(aStack: Stack<A>, bStack: Stack<B>): Stack<Pair<A, B>>? =
-	stack<Pair<A, B>>().orNull.zipFold(aStack.map { the }, bStack.map { the }) { theAOrNull, theBOrNull ->
+fun <A, B, R> zipMapOrNull(aStack: Stack<A>, bStack: Stack<B>, fn: (A, B) -> R): Stack<R>? =
+	stack<R>().orNull.zipFold(aStack.map { the }, bStack.map { the }) { theAOrNull, theBOrNull ->
 		this?.run {
-			if (theAOrNull != null && theBOrNull != null) push(theAOrNull.value to theBOrNull.value)
+			if (theAOrNull != null && theBOrNull != null) push(fn(theAOrNull.value, theBOrNull.value))
 			else null
 		}
 	}?.reverse
+
+val <A : Any> Stack<A?>.filterNulls: Stack<A>
+	get() =
+		stack<A>().fold(this) { ifNotNull(it) { value -> push(value) } }
 
 val <T> Stack<T>.indexed
 	get() =

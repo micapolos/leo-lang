@@ -9,6 +9,14 @@ fun context() = Context(scope(), typedExprBindings())
 fun context(scope: Scope, bindings: TypedExprBindings) =
 	Context(scope, bindings)
 
+fun Context.bind(typedExpr: TypedExpr) =
+	context(scope, bindings.push(typedExpr))
+
+fun Context.plus(function: Function) =
+	context(scope.plus(function), bindings)
+
+fun Context.typedExpr(script: Script): TypedExpr = TODO()
+
 fun Context.typedExpr(link: TypedExprLink): TypedExpr =
 	null
 		?: argumentTypedExprOrNull(link)
@@ -20,3 +28,5 @@ fun Context.argumentTypedExprOrNull(link: TypedExprLink): TypedExpr? =
 		bindings.typedExprOrNull(argument)
 	}
 
+fun Context.pushGives(lhs: TypedExpr, rhs: Script) =
+	rhs

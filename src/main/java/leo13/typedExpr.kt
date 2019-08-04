@@ -5,12 +5,14 @@ import leo.base.notNullIf
 data class TypedExpr(val expr: Expr, val type: Type)
 data class TypedExprLink(val lhs: TypedExpr, val line: TypedExprLine)
 data class TypedExprLine(val name: String, val rhs: TypedExpr)
+data class TypedExprScriptLink(val lhs: TypedExpr, val line: ScriptLine)
 
 // --- constructors
 
 infix fun Expr.of(type: Type) = TypedExpr(this, type)
 infix fun String.lineTo(rhs: TypedExpr) = TypedExprLine(this, rhs)
 infix fun TypedExpr.linkTo(line: TypedExprLine) = TypedExprLink(this, line)
+infix fun TypedExpr.linkTo(line: ScriptLine) = TypedExprScriptLink(this, line)
 
 // --- normalization
 

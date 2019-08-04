@@ -11,12 +11,11 @@ sealed class Op
 data class ArgumentOp(val argument: Argument) : Op()
 data class AccessOp(val access: IntAccess) : Op()
 data class LinkOp(val link: OpLink) : Op()
-data class SwitchOp(val switch: OpSwitch) : Op()
+data class SwitchOp(val switch: ExprSwitch) : Op()
 data class CallOp(val call: OpCall) : Op()
 
 data class IntAccess(val int: Int)
 
-data class OpSwitch(val exprList: List<Expr>)
 data class OpLink(val line: ExprLine)
 data class OpCall(val expr: Expr)
 
@@ -31,14 +30,15 @@ fun expr(line: ExprLine, vararg lines: ExprLine) = expr().plus(line).fold(lines)
 fun op(argument: Argument): Op = ArgumentOp(argument)
 fun op(access: IntAccess): Op = AccessOp(access)
 fun op(link: OpLink): Op = LinkOp(link)
-fun op(switch: OpSwitch): Op = SwitchOp(switch)
+fun op(switch: ExprSwitch): Op = SwitchOp(switch)
 fun op(call: OpCall): Op = CallOp(call)
 
 fun access(int: Int) = IntAccess(int)
 fun opLink(exprLine: ExprLine) = OpLink(exprLine)
 infix fun Int.lineTo(expr: Expr) = ExprLine(this, expr)
 
-fun switchOp(vararg exprs: Expr) = op(OpSwitch(exprs.toList().reversed()))
+fun op(switch: TypedExprSwitch) = op(ExprSwitch(switch.exprStack))
+fun switchOp(vararg exprs: Expr) = op(ExprSwitch(stack(*exprs)))
 fun call(expr: Expr) = OpCall(expr)
 
 val Op.linkOrNull get() = (this as? LinkOp)?.link
@@ -63,9 +63,9 @@ fun Argument.eval(bindings: ValueBindings, lhs: Value) = bindings.stack.drop(pre
 fun IntAccess.eval(bindings: ValueBindings, lhs: Value) = lhs.access(int)
 fun OpLink.eval(bindings: ValueBindings, lhs: Value) = lhs.plus(line.int lineTo line.rhs.eval(bindings))
 
-fun OpSwitch.eval(bindings: ValueBindings, lhs: Value) =
+fun ExprSwitch.eval(bindings: ValueBindings, lhs: Value) =
 	lhs.lastLine.let { line ->
-		exprList[line.int].eval(bindings.push(line.rhs))
+		exprStack.get(line.int)!!.eval(bindings.push(line.rhs))
 	}
 
 fun OpCall.eval(bindings: ValueBindings, lhs: Value): Value =

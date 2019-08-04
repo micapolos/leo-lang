@@ -1,9 +1,8 @@
 package leo13
 
 import leo.base.ifOrNull
-import leo9.fold
-import leo9.push
-import leo9.reverse
+import leo.base.notNullIf
+import leo9.*
 
 data class Interpreter(
 	val context: Context,
@@ -15,10 +14,50 @@ fun interpreter(context: Context, typedExpr: TypedExpr) =
 fun interpreter() = interpreter(context(), expr() of type())
 
 fun Interpreter.push(script: Script): Interpreter =
-	fold(script.lineStack.reverse, Interpreter::push)
+	fold(script.lineStack.reverse) { push(it) }
 
-fun Interpreter.push(line: ScriptLine) =
-	push(line.typedExprLine(context))
+fun Interpreter.push(line: ScriptLine): Interpreter =
+	when (line.name) {
+		"case" -> pushCase(line.rhs)
+		"gives" -> pushGives(line.rhs)
+		"switch" -> pushSwitch(line.rhs)
+		else -> push(line.typedExprLine(context))
+	}
+
+fun Interpreter.pushCase(rhs: Script): Interpreter = TODO()
+
+fun Interpreter.pushGives(rhs: Script): Interpreter =
+	interpreter(
+		context.plus(
+			function(
+				parameter(typedExpr.type),
+				context.bind(typedExpr).typedExpr(rhs))),
+		expr() of type())
+
+fun Interpreter.pushSwitch(rhs: Script): Interpreter =
+	switchOrNull(rhs)!!.let { switch ->
+		interpreter(
+			context,
+			typedExpr.expr.plus(op(switch)) of typedExpr.type)
+	}
+
+fun Interpreter.switchOrNull(casesScript: Script): TypedExprSwitch? =
+	typedExpr.type.onlyChoiceOrNull?.let { choice ->
+		zipMapOrNull(choice.lineStack, casesScript.lineStack) { typeLine, caseScriptLine ->
+			caseTypedExprOrNull(typeLine, caseScriptLine)
+		}
+			?.mapOrNull { this }
+			?.let { switchOrNull(it) }
+	}
+
+fun Interpreter.caseTypedExprOrNull(typeLine: TypeLine, caseScriptLine: ScriptLine): TypedExpr? =
+	ifOrNull(caseScriptLine.name == "case") {
+		caseScriptLine.rhs.onlyLineOrNull?.let { scriptLine ->
+			notNullIf(typeLine.name == scriptLine.name) {
+				context.bind(typedExpr).typedExpr(scriptLine.rhs)
+			}
+		}
+	}
 
 fun Interpreter.push(line: TypedExprLine): Interpreter =
 	null

@@ -1,32 +1,31 @@
 package leo13
 
-import leo.base.ifOrNull
+import leo.base.notNullIf
+import leo.base.orNull
 import leo9.*
 
-data class ExprSwitch(val caseStack: Stack<ExprCase>)
-data class ExprCase(val name: String, val expr: Expr)
+data class ExprSwitch(val exprStack: Stack<Expr>)
+data class TypedExprSwitch(val type: Type, val exprStack: Stack<Expr>)
+data class TypedExprSwitchBuilder(val switchOrNull: TypedExprSwitch?)
 
-val Stack<ExprCase>.exprSwitch get() = ExprSwitch(this)
-fun exprSwitch() = ExprSwitch(stack())
-fun ExprSwitch.plus(case: ExprCase) = caseStack.push(case).exprSwitch
-fun switch(case: ExprCase, vararg cases: ExprCase) = nonEmptyStack(case, *cases).exprSwitch
-infix fun String.caseTo(expr: Expr) = ExprCase(this, expr)
+val Stack<Expr>.exprSwitch get() = ExprSwitch(this)
+fun switch(typedExpr: TypedExpr) = TypedExprSwitch(typedExpr.type, stack(typedExpr.expr))
+fun builder(switch: TypedExprSwitch?) = TypedExprSwitchBuilder(switch)
 
-val TypeLine.exprSwitchOrNull: ExprSwitch?
-	get() =
-		ifOrNull(name == "switch") {
-			rhs
-				.choiceStack
-				.mapOrNull { onlyLineOrNull?.exprCaseOrNull }
-				?.exprSwitch
-		}
+fun TypedExprSwitchBuilder.plus(typedExpr: TypedExpr): TypedExprSwitchBuilder? =
+	if (switchOrNull == null) builder(switch(typedExpr))
+	else switchOrNull.plus(typedExpr)?.let(::builder)
 
-val TypeLine.exprCaseOrNull: ExprCase?
-	get() =
-		ifOrNull(name == "case") {
-			rhs.onlyLineOrNull?.let { line ->
-				line.rhs.exprOrNull?.let { expr ->
-					line.name caseTo expr
-				}
-			}
-		}
+fun TypedExprSwitch.plus(expr: Expr) =
+	TypedExprSwitch(type, exprStack.push(expr))
+
+fun TypedExprSwitch.plus(typedExpr: TypedExpr): TypedExprSwitch? =
+	notNullIf(type == typedExpr.type) {
+		plus(typedExpr.expr)
+	}
+
+fun switchOrNull(typedExprStack: Stack<TypedExpr>): TypedExprSwitch? =
+	builder(null as TypedExprSwitch?)
+		.orNull
+		.fold(typedExprStack.reverse) { this?.plus(it) }
+		?.switchOrNull
