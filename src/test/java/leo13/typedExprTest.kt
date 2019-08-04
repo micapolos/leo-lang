@@ -6,7 +6,10 @@ import kotlin.test.Test
 class TypedExprTest {
 	@Test
 	fun parse() {
-		val scope = scope()
+		val scope = scope(
+			function(
+				parameter(type("foo" lineTo type())),
+				expr(0 lineTo expr()) of type("bar" lineTo type())))
 		val bindings = typedExprBindings(
 			expr(0 lineTo expr()) of type(choice("binding" lineTo type())))
 		val context = Context(scope, bindings)
@@ -76,6 +79,13 @@ class TypedExprTest {
 							.plus(op(access(0)))
 							.of(type("y" lineTo type("two" lineTo type()))))
 			}
+
+		script("foo" lineTo script())
+			.typedExpr(context)
+			.assertEqualTo(
+				expr(0 lineTo expr())
+					.plus(op(call(expr(0 lineTo expr()))))
+					.of(type("bar" lineTo type())))
 	}
 
 	@Test

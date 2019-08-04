@@ -22,6 +22,7 @@ fun TypedExpr.plus(line: TypedExprLine) =
 fun Script.typedExpr(context: Context): TypedExpr =
 	null
 		?: argumentTypedExprOrNull(context)
+		?: switchTypedExprOrNull(context)
 		?: accessTypedExprOrNull(context)
 		?: callTypedExprOrNull(context)
 		?: scriptTypedExpr(context)
@@ -31,13 +32,28 @@ fun Script.argumentTypedExprOrNull(context: Context): TypedExpr? =
 		context.bindings.typedExprOrNull(argument)
 	}
 
+fun Script.switchTypedExprOrNull(context: Context) =
+	null //TODO()
+
 fun Script.accessTypedExprOrNull(context: Context): TypedExpr? =
 	linkLineOrNull?.let { linkLine ->
 		linkLine.rhs.script.typedExpr(context).accessOrNull(linkLine.name)
 	}
 
 fun Script.callTypedExprOrNull(context: Context): TypedExpr? =
-	null // TODO()
+	linkOrNull?.let { link ->
+		link.lhs.typedExpr(context).let { lhsTypedExpr ->
+			link.line.rhs.typedExpr(context).let { rhsTypedExpr ->
+				lhsTypedExpr.expr.plus(0 lineTo rhsTypedExpr.expr).let { expr ->
+					lhsTypedExpr.type.plus(link.line.name lineTo rhsTypedExpr.type).let { type ->
+						context.scope.typedExprOrNull(parameter(type))?.let { typedExpr ->
+							expr.plus(op(call(typedExpr.expr))) of typedExpr.type
+						}
+					}
+				}
+			}
+		}
+	}
 
 fun Script.scriptTypedExpr(context: Context): TypedExpr =
 	linkOrNull
