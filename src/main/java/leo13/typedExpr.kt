@@ -32,12 +32,9 @@ fun Script.argumentTypedExprOrNull(context: Context): TypedExpr? =
 	}
 
 fun Script.accessTypedExprOrNull(context: Context): TypedExpr? =
-	null // TODO
-//	linkOrNull?.linkLineOrNull?.let { linkLine ->
-//		linkLine.rhs.typedExpr(context).let { typedExpr ->
-//			}
-//		}
-//	}
+	linkLineOrNull?.let { linkLine ->
+		linkLine.rhs.script.typedExpr(context).accessOrNull(linkLine.name)
+	}
 
 fun Script.callTypedExprOrNull(context: Context): TypedExpr? =
 	null // TODO()
@@ -51,3 +48,10 @@ fun Script.scriptTypedExpr(context: Context): TypedExpr =
 
 fun ScriptLine.typedExprLine(context: Context): TypedExprLine =
 	name lineTo rhs.typedExpr(context)
+
+// --- access
+
+fun TypedExpr.accessOrNull(name: String) =
+	type.accessOrNull(name)?.let { access ->
+		expr.plus(op(access(access.int))) of access.type
+	}

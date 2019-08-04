@@ -1,6 +1,7 @@
 package leo13
 
 import leo.base.assertEqualTo
+import leo.base.indexed
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -158,6 +159,31 @@ class TypeTest {
 				assertFails { script(value(0 lineTo value())) }
 				assertFails { script(value(0 lineTo value(), 0 lineTo value(), 0 lineTo value())) }
 				assertFails { script(value(0 lineTo value(), 1 lineTo value())) }
+			}
+	}
+
+	@Test
+	fun access() {
+		type(choice(
+			"vec" lineTo type(
+				choice("x" lineTo type(choice("one" lineTo type()))),
+				choice("y" lineTo type(choice("two" lineTo type()))))))
+			.apply {
+				accessOrNull("x").assertEqualTo(access(1, type(choice("x" lineTo type(choice("one" lineTo type()))))))
+				accessOrNull("y").assertEqualTo(access(0, type(choice("y" lineTo type(choice("two" lineTo type()))))))
+				accessOrNull("z").assertEqualTo(null)
+			}
+	}
+
+	@Test
+	fun indexedRhsOrNull() {
+		type(
+			choice("x" lineTo type(choice("one" lineTo type()))),
+			choice("y" lineTo type(choice("two" lineTo type()))))
+			.apply {
+				indexedRhsOrNull("x").assertEqualTo(1 indexed type(choice("one" lineTo type())))
+				indexedRhsOrNull("y").assertEqualTo(0 indexed type(choice("two" lineTo type())))
+				indexedRhsOrNull("z").assertEqualTo(null)
 			}
 	}
 }

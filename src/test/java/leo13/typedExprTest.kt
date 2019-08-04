@@ -46,5 +46,59 @@ class TypedExprTest {
 						choice("binding" lineTo type()),
 						choice("plus" lineTo type(
 							choice("one" lineTo type())))))
+
+		script(
+			"vec" lineTo script(
+				"x" lineTo script(
+					"one" lineTo script()),
+				"y" lineTo script(
+					"two" lineTo script())))
+			.apply {
+				plus("x" lineTo script())
+					.typedExpr(context)
+					.assertEqualTo(
+						expr(0 lineTo expr(
+							0 lineTo expr(
+								0 lineTo expr()),
+							0 lineTo expr(
+								0 lineTo expr())))
+							.plus(op(access(1)))
+							.of(type("x" lineTo type("one" lineTo type()))))
+
+				plus("y" lineTo script())
+					.typedExpr(context)
+					.assertEqualTo(
+						expr(0 lineTo expr(
+							0 lineTo expr(
+								0 lineTo expr()),
+							0 lineTo expr(
+								0 lineTo expr())))
+							.plus(op(access(0)))
+							.of(type("y" lineTo type("two" lineTo type()))))
+			}
+	}
+
+	@Test
+	fun accessOrNull() {
+		expr(128 lineTo expr())
+			.of(type(
+				"vec" lineTo type(
+					"x" lineTo type(
+						"one" lineTo type()),
+					"y" lineTo type(
+						"two" lineTo type()))))
+			.apply {
+				accessOrNull("x").assertEqualTo(
+					expr(128 lineTo expr())
+						.plus(op(access(1)))
+						.of(type("x" lineTo type("one" lineTo type()))))
+
+				accessOrNull("y").assertEqualTo(
+					expr(128 lineTo expr())
+						.plus(op(access(0)))
+						.of(type("y" lineTo type("two" lineTo type()))))
+
+				accessOrNull("z").assertEqualTo(null)
+			}
 	}
 }

@@ -33,6 +33,7 @@ fun <T> link(tail: Stack<T>, head: T) = StackLink(tail, head)
 fun <T> Stack<T>.push(value: T) = stack(link(this, value))
 fun <T> StackLink<T>.push(value: T) = link(stack(this), value)
 val <T> Stack<T>.linkOrNull get() = (this as? LinkStack)?.link
+val <T> Stack<T>.onlyLinkOrNull get() = linkOrNull?.run { orNullIf(!link.stack.isEmpty) }
 val <T> Stack<T>.link get() = linkOrNull!!
 val <T> Stack<T>.pop get() = link.stack
 val <T> Stack<T>.top get() = link.value

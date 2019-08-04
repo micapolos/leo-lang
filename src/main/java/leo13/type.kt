@@ -1,10 +1,12 @@
 package leo13
 
+import leo.base.fold
 import leo.base.ifOrNull
+import leo.base.indexed
 import leo.base.notNullIf
 import leo9.*
 
-data class Type(val headFunctionTypeOrNull: FunctionType?, val choiceStack: Stack<Choice>)
+data class Type(val functionTypeOrNull: FunctionType?, val choiceStack: Stack<Choice>)
 data class Choice(val lineStack: Stack<TypeLine>)
 data class TypeLine(val name: String, val rhs: Type)
 data class TypeArrow(val lhs: Type, val rhs: Type)
@@ -14,9 +16,12 @@ data class TypeAccess(val int: Int, val type: Type)
 
 val Stack<Choice>.type get() = Type(null, this)
 fun Type.plus(choice: Choice) = copy(choiceStack = choiceStack.push(choice))
+fun Type.plus(line: TypeLine) = plus(choice(line))
 fun type(vararg choices: Choice) = stack(*choices).type
+fun type(line: TypeLine, vararg lines: TypeLine) = type().plus(line).fold(lines) { plus(it) }
 fun FunctionType?.type(vararg choices: Choice) = Type(this, stack(*choices))
 infix fun Type.arrowTo(rhs: Type) = TypeArrow(this, rhs)
+fun access(int: Int, type: Type) = TypeAccess(int, type)
 
 val Stack<TypeLine>.choice get() = Choice(this)
 fun choice(vararg lines: TypeLine) = stack(*lines).choice
@@ -25,8 +30,27 @@ fun Choice.plus(line: TypeLine) = lineStack.push(line).choice
 infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
 val Type.isEmpty get() = choiceStack.isEmpty
-val Type.functionTypeOrNull get() = ifOrNull(choiceStack.isEmpty) { headFunctionTypeOrNull }
-fun access(int: Int, type: Type) = TypeAccess(int, type)
+val Type.onlyFunctionTypeOrNull get() = ifOrNull(choiceStack.isEmpty) { functionTypeOrNull }
+
+val Type.onlyLineOrNull
+	get() =
+		onlyChoiceOrNull?.onlyLineOrNull
+
+val Type.onlyChoiceStackOrNull
+	get() =
+		notNullIf(functionTypeOrNull == null) {
+			choiceStack
+		}
+
+val Type.onlyChoiceOrNull
+	get() =
+		ifOrNull(functionTypeOrNull == null) {
+			choiceStack.onlyOrNull
+		}
+
+val Choice.onlyLineOrNull
+	get() =
+		lineStack.onlyOrNull
 
 // --- script -> type
 
@@ -82,21 +106,29 @@ fun TypeLine.valueLineOrNull(scriptLine: ScriptLine, int: Int): ValueLine? =
 
 // --- access
 
-//fun Type.rhsAccessOrNull(name: String): TypeAccess? =
-//	choiceStack.onlyOrNull?.let { choice ->
-//		choice.lineStack.onlyOrNull?.let { line ->
-//			line.rhs.let { rhs ->
-//				notNullIf(rhs.headFunctionTypeOrNull == null) {
-//					rhs.choiceStack.mapOnly {
-//						choice.lineStack.linkOrNull?.let { link ->
-//							orNullIf(link.stack.isEmpty) {
-//								notNullIf(link.value.name == name) {
-//									link.value
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
+val Type.accessOrNull
+	get(): TypeAccess? =
+		onlyLineOrNull?.accessOrNull
+
+val TypeLine.accessOrNull
+	get(): TypeAccess? =
+		rhs.accessOrNull(name)
+
+fun Type.accessOrNull(name: String): TypeAccess? =
+	onlyLineOrNull
+		?.rhs
+		?.indexedRhsOrNull(name)
+		?.let { access(it.index, type(choice(name lineTo it.value))) }
+
+fun Type.indexedRhsOrNull(name: String): IndexedValue<Type>? =
+	onlyChoiceStackOrNull?.indexed?.mapOnly {
+		value.onlyRhsOrNull(name)?.let { rhs ->
+			index indexed rhs
+		}
+	}
+
+fun Choice.onlyRhsOrNull(name: String) =
+	onlyLineOrNull?.rhsOrNull(name)
+
+fun TypeLine.rhsOrNull(name: String) =
+	notNullIf(this.name == name) { rhs }

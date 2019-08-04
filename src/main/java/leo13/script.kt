@@ -27,6 +27,10 @@ val Script.linkOrNull
 			link(link.stack.script, link.value)
 		}
 
+val ScriptLink.script
+	get() =
+		lhs.lineStack.push(line).script
+
 fun Script.arrowOrNull(name: String) =
 	linkOrNull?.let { link ->
 		notNullIf(link.line.name == name) {
@@ -79,7 +83,11 @@ fun Script.plusNormalized(line: ScriptLine) =
 	if (line.rhs.isEmpty) script(line.name lineTo this)
 	else plus(line)
 
-val ScriptLink.linkLineOrNull
+val Script.linkLineOrNull: ScriptLinkLine?
+	get() =
+		linkOrNull?.linkLineOrNull
+
+val ScriptLink.linkLineOrNull: ScriptLinkLine?
 	get() =
 		if (lhs.isEmpty) line.rhs.linkOrNull?.let { line.name lineTo it }
 		else if (line.rhs.isEmpty) lhs.linkOrNull?.let { line.name lineTo it }
