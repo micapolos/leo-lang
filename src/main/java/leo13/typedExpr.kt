@@ -100,10 +100,3 @@ val TypedExprLink.accessTypedExprOrNull
 val TypedExprLink.typedExpr
 	get() =
 		lhs.plus(line)
-
-//val TypedExprLink.switchTypedExpr get() =
-//	notNullIf(line.name == "switch") {
-//		line.rhs.caseStackOrNull
-//	}
-//
-//val TypedExpr.caseTypedExprStackOrNull get() =

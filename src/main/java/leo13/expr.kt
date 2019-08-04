@@ -41,6 +41,8 @@ infix fun Int.lineTo(expr: Expr) = ExprLine(this, expr)
 fun switchOp(vararg exprs: Expr) = op(OpSwitch(exprs.toList().reversed()))
 fun call(expr: Expr) = OpCall(expr)
 
+val Op.linkOrNull get() = (this as? LinkOp)?.link
+
 // --- eval
 
 fun Expr.eval(bindings: ValueBindings): Value =
@@ -96,5 +98,15 @@ val Choice.exprLineOrNull: ExprLine?
 		onlyLineOrNull?.let { line ->
 			line.rhs.exprOrNull?.let { rhsExpr ->
 				0 lineTo rhsExpr
+			}
+		}
+
+val Expr.lineStackOrNull: Stack<ExprLine>?
+	get() =
+		stack<ExprLine>().orNull.fold(opStack) { op ->
+			this?.run {
+				op.linkOrNull?.line?.let { line ->
+					push(line)
+				}
 			}
 		}

@@ -136,6 +136,14 @@ tailrec fun <A : Any, B : Any, R> R.zipFold(stackA: Stack<A>, stackB: Stack<B>, 
 fun <A : Any, B : Any> zip(stackA: Stack<A>, stackB: Stack<B>): Stack<Pair<A?, B?>> =
 	stack<Pair<A?, B?>>().zipFold(stackA, stackB) { a, b -> push(a to b) }.reverse
 
+fun <A, B> pairStackOrNull(aStack: Stack<A>, bStack: Stack<B>): Stack<Pair<A, B>>? =
+	stack<Pair<A, B>>().orNull.zipFold(aStack.map { the }, bStack.map { the }) { theAOrNull, theBOrNull ->
+		this?.run {
+			if (theAOrNull != null && theBOrNull != null) push(theAOrNull.value to theBOrNull.value)
+			else null
+		}
+	}?.reverse
+
 val <T> Stack<T>.indexed
 	get() =
 	stack<IndexedValue<T>>().fold(this) {
