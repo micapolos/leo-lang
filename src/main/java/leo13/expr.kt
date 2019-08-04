@@ -55,7 +55,12 @@ fun Op.eval(bindings: ValueBindings, lhs: Value): Value =
 fun Argument.eval(bindings: ValueBindings, lhs: Value) = bindings.stack.drop(previousStack)!!.top
 fun IntAccess.eval(bindings: ValueBindings, lhs: Value) = lhs.access(int)
 fun OpLink.eval(bindings: ValueBindings, lhs: Value) = lhs.plus(line.int lineTo line.rhs.eval(bindings))
-fun OpSwitch.eval(bindings: ValueBindings, lhs: Value) = exprList[lhs.lastLine.int].eval(bindings)
+
+fun OpSwitch.eval(bindings: ValueBindings, lhs: Value) =
+	lhs.lastLine.let { line ->
+		exprList[line.int].eval(bindings.push(line.rhs))
+	}
+
 
 // --- value -> expr
 

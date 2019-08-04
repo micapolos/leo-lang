@@ -32,27 +32,24 @@ class ExprTest {
 
 		run {
 			val switchOp = switchOp(
-				expr(op(argument())).plus(op(opLink(20 lineTo expr()))),
-				expr(op(argument())).plus(op(opLink(10 lineTo expr()))))
-			val parameter = 100 lineTo value()
-			val bindings = bindings(value(parameter))
-
-			value(0 lineTo value())
+				expr(op(argument()), op(opLink(20 lineTo expr()))),
+				expr(op(argument()), op(opLink(10 lineTo expr()))))
+			value(0 lineTo value(30 lineTo value()))
 				.expr
 				.plus(switchOp)
-				.eval(bindings)
-				.assertEqualTo(value(parameter, 10 lineTo value()))
+				.eval(valueBindings())
+				.assertEqualTo(value(30 lineTo value(), 10 lineTo value()))
 
-			value(1 lineTo value())
+			value(1 lineTo value(30 lineTo value()))
 				.expr
 				.plus(switchOp)
-				.eval(bindings)
-				.assertEqualTo(value(parameter, 20 lineTo value()))
+				.eval(valueBindings())
+				.assertEqualTo(value(30 lineTo value(), 20 lineTo value()))
 
 			value(2 lineTo value())
 				.expr
 				.plus(switchOp)
-				.assertFails { eval(bindings) }
+				.assertFails { eval(valueBindings()) }
 		}
 	}
 }
