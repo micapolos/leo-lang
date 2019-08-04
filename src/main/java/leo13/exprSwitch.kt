@@ -29,3 +29,4 @@ fun switchOrNull(typedExprStack: Stack<TypedExpr>): TypedExprSwitch? =
 		.orNull
 		.fold(typedExprStack.reverse) { this?.plus(it) }
 		?.switchOrNull
+

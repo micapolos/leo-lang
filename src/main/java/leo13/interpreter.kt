@@ -18,13 +18,10 @@ fun Interpreter.push(script: Script): Interpreter =
 
 fun Interpreter.push(line: ScriptLine): Interpreter =
 	when (line.name) {
-		"case" -> pushCase(line.rhs)
 		"gives" -> pushGives(line.rhs)
 		"switch" -> pushSwitch(line.rhs)
 		else -> push(line.typedExprLine(context))
 	}
-
-fun Interpreter.pushCase(rhs: Script): Interpreter = TODO()
 
 fun Interpreter.pushGives(rhs: Script): Interpreter =
 	interpreter(
@@ -35,11 +32,9 @@ fun Interpreter.pushGives(rhs: Script): Interpreter =
 		expr() of type())
 
 fun Interpreter.pushSwitch(rhs: Script): Interpreter =
-	switchOrNull(rhs)!!.let { switch ->
-		interpreter(
-			context,
-			typedExpr.expr.plus(op(switch)) of typedExpr.type)
-	}
+	interpreter(
+		context,
+		typedExpr.expr.plus(op(switchOrNull(rhs)!!)) of typedExpr.type)
 
 fun Interpreter.switchOrNull(casesScript: Script): TypedExprSwitch? =
 	typedExpr.type.onlyChoiceOrNull?.let { choice ->

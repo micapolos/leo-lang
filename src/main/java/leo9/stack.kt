@@ -3,6 +3,10 @@ package leo9
 import leo.base.*
 import leo10.list
 import leo10.prepend
+import leo13.Either
+import leo13.eitherLet
+import leo13.firstEither
+import leo13.secondEither
 
 sealed class Stack<out T>
 
@@ -161,3 +165,8 @@ val <T> Stack<T>.indexed
 	stack<IndexedValue<T>>().fold(this) {
 		push((linkOrNull?.value?.index?.inc() ?: 0) indexed it)
 	}.reverse
+
+fun <V, R, E> R.foldEither(stack: Stack<V>, fn: R.(V) -> Either<R, E>): Either<R, E> =
+	firstEither<R, E>().fold(stack) { value ->
+		eitherLet({ it.fn(value) }, { it.secondEither() })
+	}
