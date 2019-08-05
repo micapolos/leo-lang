@@ -8,6 +8,9 @@ data class Interpreter(
 	val context: Context,
 	val typedExpr: TypedExpr)
 
+fun interpret(script: Script) =
+	interpreter().push(script).typedExpr.script(valueBindings())
+
 fun interpreter(context: Context, typedExpr: TypedExpr) =
 	Interpreter(context, typedExpr)
 
@@ -32,18 +35,19 @@ fun Interpreter.pushGives(rhs: Script): Interpreter =
 		expr() of type())
 
 fun Interpreter.pushSwitch(rhs: Script): Interpreter =
-	interpreter(
-		context,
-		typedExpr.expr.plus(op(switchOrNull(rhs)!!)) of typedExpr.type)
+	push(typedSwitchOrNull(rhs)!!)
 
-fun Interpreter.switchOrNull(casesScript: Script): TypedExprSwitch? =
+fun Interpreter.typedSwitchOrNull(casesScript: Script): TypedExprSwitch? =
 	typedExpr.type.onlyChoiceOrNull?.let { choice ->
 		zipMapOrNull(choice.lineStack, casesScript.lineStack) { typeLine, caseScriptLine ->
 			caseTypedExprOrNull(typeLine, caseScriptLine)
 		}
 			?.mapOrNull { this }
-			?.let { switchOrNull(it) }
+			?.let { typedSwitchOrNull(it) }
 	}
+
+fun Interpreter.push(typedSwitch: TypedExprSwitch): Interpreter =
+	interpreter(context, typedExpr.expr.typedExpr(typedSwitch))
 
 fun Interpreter.caseTypedExprOrNull(typeLine: TypeLine, caseScriptLine: ScriptLine): TypedExpr? =
 	ifOrNull(caseScriptLine.name == "case") {
@@ -57,7 +61,7 @@ fun Interpreter.caseTypedExprOrNull(typeLine: TypeLine, caseScriptLine: ScriptLi
 fun Interpreter.push(line: TypedExprLine): Interpreter =
 	null
 		?: pushDefineOrNull(line)
-		?: pushEval(line)
+		?: pushRaw(line)
 
 fun Interpreter.pushDefineOrNull(line: TypedExprLine) =
 	pushDefineRhsOrNull(line) ?: pushLhsDefineOrNull(line)
@@ -87,5 +91,8 @@ fun Context.defineInterpreterOrNull(typedExpr: TypedExpr): Interpreter? =
 			expr() of type())
 	}
 
-fun Interpreter.pushEval(line: TypedExprLine): Interpreter =
-	TODO()
+fun Interpreter.pushRaw(line: TypedExprLine): Interpreter =
+	interpreter(
+		context,
+		context.typedExpr(typedExpr linkTo line))
+

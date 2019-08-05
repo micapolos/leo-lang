@@ -110,3 +110,6 @@ val Expr.lineStackOrNull: Stack<ExprLine>?
 				}
 			}
 		}
+
+fun TypedExpr.script(bindings: ValueBindings) =
+	type.script(expr.eval(bindings))

@@ -15,7 +15,8 @@ fun Context.bind(typedExpr: TypedExpr) =
 fun Context.plus(function: Function) =
 	context(scope.plus(function), bindings)
 
-fun Context.typedExpr(script: Script): TypedExpr = TODO()
+fun Context.typedExpr(script: Script): TypedExpr =
+	interpreter(this, typedExpr()).push(script).typedExpr
 
 fun Context.typedExpr(link: TypedExprLink): TypedExpr =
 	null
@@ -27,6 +28,3 @@ fun Context.argumentTypedExprOrNull(link: TypedExprLink): TypedExpr? =
 	link.argumentOrNull?.let { argument ->
 		bindings.typedExprOrNull(argument)
 	}
-
-fun Context.pushGives(lhs: TypedExpr, rhs: Script) =
-	rhs

@@ -24,9 +24,11 @@ fun TypedExprSwitch.plus(typedExpr: TypedExpr): TypedExprSwitch? =
 		plus(typedExpr.expr)
 	}
 
-fun switchOrNull(typedExprStack: Stack<TypedExpr>): TypedExprSwitch? =
+fun typedSwitchOrNull(typedExprStack: Stack<TypedExpr>): TypedExprSwitch? =
 	builder(null as TypedExprSwitch?)
 		.orNull
 		.fold(typedExprStack.reverse) { this?.plus(it) }
 		?.switchOrNull
 
+fun Expr.typedExpr(typedSwitch: TypedExprSwitch): TypedExpr =
+	plus(op(typedSwitch.exprStack.exprSwitch)) of typedSwitch.type

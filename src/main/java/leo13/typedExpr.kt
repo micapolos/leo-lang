@@ -13,6 +13,7 @@ infix fun Expr.of(type: Type) = TypedExpr(this, type)
 infix fun String.lineTo(rhs: TypedExpr) = TypedExprLine(this, rhs)
 infix fun TypedExpr.linkTo(line: TypedExprLine) = TypedExprLink(this, line)
 infix fun TypedExpr.linkTo(line: ScriptLine) = TypedExprScriptLink(this, line)
+fun typedExpr() = expr() of type()
 
 // --- normalization
 
