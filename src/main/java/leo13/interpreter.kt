@@ -63,8 +63,12 @@ fun Interpreter.caseTypedExprOrNull(typeLine: TypeLine, caseScriptLine: ScriptLi
 
 fun Interpreter.push(line: TypedExprLine): Interpreter =
 	null
+		?: notNullIf(line.name == "contains") { pushContains(line.rhs) }
 		?: pushDefineOrNull(line)
 		?: pushRaw(line)
+
+fun Interpreter.pushContains(typedExpr: TypedExpr): Interpreter =
+	TODO()
 
 fun Interpreter.pushDefineOrNull(line: TypedExprLine) =
 	pushDefineRhsOrNull(line) ?: pushLhsDefineOrNull(line)

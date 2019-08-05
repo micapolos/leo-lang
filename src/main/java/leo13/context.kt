@@ -1,23 +1,23 @@
 package leo13
 
 data class Context(
-	val types: Types,
+	val typeFunctions: TypeFunctions,
 	val scope: Scope,
 	val bindings: TypedExprBindings)
 
 fun context() = Context(types(), scope(), typedExprBindings())
 
-fun context(types: Types, scope: Scope, bindings: TypedExprBindings) =
-	Context(types, scope, bindings)
+fun context(typeFunctions: TypeFunctions, scope: Scope, bindings: TypedExprBindings) =
+	Context(typeFunctions, scope, bindings)
 
 fun Context.plus(function: Function) =
-	context(types, scope.plus(function), bindings)
+	context(typeFunctions, scope.plus(function), bindings)
 
-fun Context.plus(typeEntry: TypeEntry) =
-	context(types.plus(typeEntry), scope, bindings)
+fun Context.plus(typeFunction: TypeFunction) =
+	context(typeFunctions.plus(typeFunction), scope, bindings)
 
 fun Context.bind(typedExpr: TypedExpr) =
-	context(types, scope, bindings.push(typedExpr))
+	context(typeFunctions, scope, bindings.push(typedExpr))
 
 fun Context.typedExpr(script: Script): TypedExpr =
 	interpreter(this, typedExpr()).push(script).typedExpr

@@ -71,6 +71,39 @@ class TypeTest {
 	}
 
 	@Test
+	fun matches() {
+		type()
+			.apply {
+				matches(script()).assertEqualTo(true)
+				matches(script("one" lineTo script())).assertEqualTo(false)
+			}
+
+		type("one" lineTo type())
+			.apply {
+				matches(script()).assertEqualTo(false)
+				matches(script("one" lineTo script())).assertEqualTo(true)
+				matches(script("two" lineTo script())).assertEqualTo(false)
+			}
+
+		type("one" lineTo type("two" lineTo type()))
+			.apply {
+				matches(script("one" lineTo script("two" lineTo script()))).assertEqualTo(true)
+			}
+
+		type("one" lineTo type(), "two" lineTo type())
+			.apply {
+				matches(script("one" lineTo script(), "two" lineTo script())).assertEqualTo(true)
+			}
+
+		type(choice("one" lineTo type(), "two" lineTo type()))
+			.apply {
+				matches(script("one" lineTo script())).assertEqualTo(true)
+				matches(script("two" lineTo script())).assertEqualTo(true)
+				matches(script("three" lineTo script())).assertEqualTo(false)
+			}
+	}
+
+	@Test
 	fun scriptToValue() {
 		type()
 			.apply {

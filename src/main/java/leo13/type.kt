@@ -82,6 +82,22 @@ val ScriptLine.typeLine: TypeLine
 	get() =
 		name lineTo rhs.type
 
+// --- type matches script
+
+fun Type.matches(script: Script): Boolean =
+	true.zipFoldOrNull(choiceStack, script.lineStack) { choice, line ->
+		this and choice.matches(line)
+	} ?: false
+
+fun Choice.matches(scriptLine: ScriptLine): Boolean =
+	lineStack.any { matches(scriptLine) }
+
+fun TypeLine.matches(scriptLine: ScriptLine): Boolean =
+	name == scriptLine.name && rhs.matches(scriptLine.rhs)
+
+fun TypeLink.matches(scriptLink: ScriptLink) =
+	lhs.matches(scriptLink.lhs) && line.matches(scriptLink.line)
+
 // --- value -> script
 
 fun Type.script(value: Value): Script =
@@ -93,6 +109,25 @@ fun Choice.scriptLine(valueLine: ValueLine): ScriptLine =
 fun TypeLine.scriptLine(value: Value): ScriptLine =
 	name lineTo rhs.script(value)
 
+val Type.scriptOrNull: Script?
+	get() =
+		onlyChoiceStackOrNull?.mapOrNull { scriptLineOrNull }?.script
+
+val Choice.scriptLineOrNull: ScriptLine?
+	get() =
+		onlyLineOrNull?.scriptLineOrNull
+
+val TypeLine.scriptLineOrNull: ScriptLine?
+	get() =
+		rhs.scriptOrNull?.let { name lineTo it }
+
+val TypeLink.scriptLinkOrNull: ScriptLink?
+	get() =
+		lhs.scriptOrNull?.let { lhsScript ->
+			line.scriptLineOrNull?.let { scriptLine ->
+				link(lhsScript, scriptLine)
+			}
+		}
 // --- script -> value
 
 fun Type.value(script: Script): Value =
@@ -135,3 +170,6 @@ fun Choice.onlyRhsOrNull(name: String) =
 fun TypeLine.rhsOrNull(name: String) =
 	notNullIf(this.name == name) { rhs }
 
+val TypeLink.type
+	get() =
+		lhs.plus(line)
