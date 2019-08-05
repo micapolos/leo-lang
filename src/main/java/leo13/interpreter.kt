@@ -2,7 +2,10 @@ package leo13
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo9.*
+import leo9.fold
+import leo9.mapOrNull
+import leo9.reverse
+import leo9.zipMapOrNull
 
 data class Interpreter(
 	val context: Context,
@@ -79,15 +82,10 @@ fun Interpreter.pushLhsDefineOrNull(line: TypedExprLine): Interpreter? =
 fun Context.defineInterpreterOrNull(typedExpr: TypedExpr): Interpreter? =
 	typedExpr.type.onlyFunctionTypeOrNull?.let { functionType ->
 		interpreter(
-			context(
-				scope
-					.functionStack
-					.push(
-						function(
-							parameter(functionType.parameter),
-							typedExpr.expr of functionType.result))
-					.scope,
-				bindings),
+			plus(
+				function(
+					parameter(functionType.parameter),
+					typedExpr.expr of functionType.result)),
 			expr() of type())
 	}
 

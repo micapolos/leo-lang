@@ -6,13 +6,14 @@ import kotlin.test.Test
 class TypedExprTest {
 	@Test
 	fun parse() {
+		val types = types()
 		val scope = scope(
 			function(
 				parameter(type("foo" lineTo type())),
 				expr(0 lineTo expr()) of type("bar" lineTo type())))
 		val bindings = typedExprBindings(
 			expr(0 lineTo expr()) of type(choice("binding" lineTo type())))
-		val context = Context(scope, bindings)
+		val context = Context(types, scope, bindings)
 
 		script()
 			.typedExpr(context)

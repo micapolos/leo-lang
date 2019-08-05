@@ -9,6 +9,7 @@ import leo9.*
 data class Type(val functionTypeOrNull: FunctionType?, val choiceStack: Stack<Choice>)
 data class Choice(val lineStack: Stack<TypeLine>)
 data class TypeLine(val name: String, val rhs: Type)
+data class TypeLink(val lhs: Type, val line: TypeLine)
 data class TypeArrow(val lhs: Type, val rhs: Type)
 data class TypeAccess(val int: Int, val type: Type)
 
@@ -22,6 +23,7 @@ fun type(line: TypeLine, vararg lines: TypeLine) = type().plus(line).fold(lines)
 fun FunctionType?.type(vararg choices: Choice) = Type(this, stack(*choices))
 infix fun Type.arrowTo(rhs: Type) = TypeArrow(this, rhs)
 fun access(int: Int, type: Type) = TypeAccess(int, type)
+infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
 
 val Stack<TypeLine>.choice get() = Choice(this)
 fun choice(vararg lines: TypeLine) = stack(*lines).choice
