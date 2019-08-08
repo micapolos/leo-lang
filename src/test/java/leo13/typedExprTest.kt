@@ -7,7 +7,7 @@ class TypedExprTest {
 	@Test
 	fun parse() {
 		val types = types()
-		val scope = scope(
+		val scope = functions(
 			function(
 				parameter(type("foo" lineTo type())),
 				expr(0 lineTo expr()) of type("bar" lineTo type())))

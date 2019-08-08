@@ -17,3 +17,8 @@ fun Script.functionOrNull(context: Context) =
 			parameter(arrow.lhs.type),
 			arrow.rhs.typedExpr(context))
 	}
+
+fun ScriptArrow.functionOrNull(context: Context) =
+	function(
+		parameter(lhs.type),
+		rhs.typedExpr(context))

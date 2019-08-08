@@ -3,30 +3,30 @@ package leo13
 import leo.base.assertEqualTo
 import kotlin.test.Test
 
-class InterpreterTest {
+class CompilerTest {
 	@Test
 	fun empty() {
-		interpret(script())
+		compile(script())
 			.assertEqualTo(script())
 	}
 
 	@Test
 	fun name() {
-		interpret(
+		compile(
 			script("one" lineTo script()))
 			.assertEqualTo(script("one" lineTo script()))
 	}
 
 	@Test
 	fun rhsLine() {
-		interpret(
+		compile(
 			script("one" lineTo script("two" lineTo script())))
 			.assertEqualTo(script("one" lineTo script("two" lineTo script())))
 	}
 
 	@Test
 	fun lhsLine() {
-		interpret(
+		compile(
 			script(
 				"one" lineTo script(),
 				"two" lineTo script()))
@@ -38,7 +38,7 @@ class InterpreterTest {
 
 	@Test
 	fun link() {
-		interpret(
+		compile(
 			script(
 				"one" lineTo script(),
 				"plus" lineTo script(

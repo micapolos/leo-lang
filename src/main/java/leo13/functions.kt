@@ -5,19 +5,19 @@ import leo9.mapFirst
 import leo9.push
 import leo9.stack
 
-data class Scope(val functionStack: Stack<Function>)
+data class Functions(val functionStack: Stack<Function>)
 
-val Stack<Function>.scope get() = Scope(this)
-fun Scope.plus(function: Function) = functionStack.push(function).scope
-fun scope(vararg functions: Function) = stack(*functions).scope
+val Stack<Function>.functions get() = Functions(this)
+fun Functions.plus(function: Function) = functionStack.push(function).functions
+fun functions(vararg functions: Function) = stack(*functions).functions
 
-fun Scope.typedExprOrNull(parameter: TypeParameter) =
+fun Functions.typedExprOrNull(parameter: TypeParameter) =
 	functionStack.mapFirst { typedExprOrNull(parameter) }
 
-fun Scope.eval(typedScript: TypedScript): TypedScript =
+fun Functions.eval(typedScript: TypedScript): TypedScript =
 	evalOrNull(typedScript) ?: typedScript
 
-fun Scope.evalOrNull(typedScript: TypedScript): TypedScript? =
+fun Functions.evalOrNull(typedScript: TypedScript): TypedScript? =
 	typedExprOrNull(parameter(typedScript.type))
 		?.let { typedExpr ->
 			typedExpr.expr.eval(bindings(typedScript.value)).let { evaledValue ->
@@ -25,10 +25,10 @@ fun Scope.evalOrNull(typedScript: TypedScript): TypedScript? =
 			}
 		}
 
-fun Scope.eval(typedValue: TypedValue): TypedValue =
+fun Functions.eval(typedValue: TypedValue): TypedValue =
 	evalOrNull(typedValue) ?: typedValue
 
-fun Scope.evalOrNull(typedValue: TypedValue): TypedValue? =
+fun Functions.evalOrNull(typedValue: TypedValue): TypedValue? =
 	typedExprOrNull(parameter(typedValue.type))
 		?.let { typedExpr ->
 			typedExpr.expr.eval(bindings(typedValue.value)).let { evaledValue ->

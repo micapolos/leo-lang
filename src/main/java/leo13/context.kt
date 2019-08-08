@@ -2,25 +2,25 @@ package leo13
 
 data class Context(
 	val typeFunctions: TypeFunctions,
-	val scope: Scope,
+	val functions: Functions,
 	val bindings: TypedExprBindings)
 
-fun context() = Context(types(), scope(), typedExprBindings())
+fun context() = Context(types(), functions(), typedExprBindings())
 
-fun context(typeFunctions: TypeFunctions, scope: Scope, bindings: TypedExprBindings) =
-	Context(typeFunctions, scope, bindings)
+fun context(typeFunctions: TypeFunctions, functions: Functions, bindings: TypedExprBindings) =
+	Context(typeFunctions, functions, bindings)
 
 fun Context.plus(function: Function) =
-	context(typeFunctions, scope.plus(function), bindings)
+	context(typeFunctions, functions.plus(function), bindings)
 
 fun Context.plus(typeFunction: TypeFunction) =
-	context(typeFunctions.plus(typeFunction), scope, bindings)
+	context(typeFunctions.plus(typeFunction), functions, bindings)
 
 fun Context.bind(typedExpr: TypedExpr) =
-	context(typeFunctions, scope, bindings.push(typedExpr))
+	context(typeFunctions, functions, bindings.push(typedExpr))
 
 fun Context.typedExpr(script: Script): TypedExpr =
-	interpreter(this, typedExpr()).push(script).typedExpr
+	compiler(this, typedExpr()).push(script).typedExpr
 
 fun Context.typedExpr(link: TypedExprLink): TypedExpr =
 	null
@@ -32,3 +32,8 @@ fun Context.argumentTypedExprOrNull(link: TypedExprLink): TypedExpr? =
 	link.argumentOrNull?.let { argument ->
 		bindings.typedExprOrNull(argument)
 	}
+
+fun Context.functionOrNull(arrow: ScriptArrow) =
+	function(
+		parameter(arrow.lhs.type),
+		arrow.rhs.typedExpr(this))

@@ -4,7 +4,7 @@ import leo.base.assertEqualTo
 import leo.base.string
 import kotlin.test.Test
 
-class InterpreterTest {
+class CompilerTest {
 	@Test
 	fun test() {
 		script("foo" lineTo script())

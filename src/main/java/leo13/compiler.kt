@@ -7,40 +7,40 @@ import leo9.mapOrNull
 import leo9.reverse
 import leo9.zipMapOrNull
 
-data class Interpreter(
+data class Compiler(
 	val context: Context,
 	val typedExpr: TypedExpr)
 
-fun interpret(script: Script) =
-	interpreter().push(script).typedExpr.script(valueBindings())
+fun compile(script: Script) =
+	compiler().push(script).typedExpr.script(valueBindings())
 
-fun interpreter(context: Context, typedExpr: TypedExpr) =
-	Interpreter(context, typedExpr)
+fun compiler(context: Context, typedExpr: TypedExpr) =
+	Compiler(context, typedExpr)
 
-fun interpreter() = interpreter(context(), expr() of type())
+fun compiler() = compiler(context(), expr() of type())
 
-fun Interpreter.push(script: Script): Interpreter =
+fun Compiler.push(script: Script): Compiler =
 	fold(script.lineStack.reverse) { push(it) }
 
-fun Interpreter.push(line: ScriptLine): Interpreter =
+fun Compiler.push(line: ScriptLine): Compiler =
 	when (line.name) {
 		"gives" -> pushGives(line.rhs)
 		"switch" -> pushSwitch(line.rhs)
 		else -> push(line.typedExprLine(context))
 	}
 
-fun Interpreter.pushGives(rhs: Script): Interpreter =
-	interpreter(
+fun Compiler.pushGives(rhs: Script): Compiler =
+	compiler(
 		context.plus(
 			function(
 				parameter(typedExpr.type),
 				context.bind(typedExpr).typedExpr(rhs))),
 		expr() of type())
 
-fun Interpreter.pushSwitch(rhs: Script): Interpreter =
+fun Compiler.pushSwitch(rhs: Script): Compiler =
 	push(typedSwitchOrNull(rhs)!!)
 
-fun Interpreter.typedSwitchOrNull(casesScript: Script): TypedExprSwitch? =
+fun Compiler.typedSwitchOrNull(casesScript: Script): TypedExprSwitch? =
 	typedExpr.type.onlyChoiceOrNull?.let { choice ->
 		zipMapOrNull(choice.lineStack, casesScript.lineStack) { typeLine, caseScriptLine ->
 			caseTypedExprOrNull(typeLine, caseScriptLine)
@@ -49,10 +49,10 @@ fun Interpreter.typedSwitchOrNull(casesScript: Script): TypedExprSwitch? =
 			?.let { typedSwitchOrNull(it) }
 	}
 
-fun Interpreter.push(typedSwitch: TypedExprSwitch): Interpreter =
-	interpreter(context, typedExpr.expr.typedExpr(typedSwitch))
+fun Compiler.push(typedSwitch: TypedExprSwitch): Compiler =
+	compiler(context, typedExpr.expr.typedExpr(typedSwitch))
 
-fun Interpreter.caseTypedExprOrNull(typeLine: TypeLine, caseScriptLine: ScriptLine): TypedExpr? =
+fun Compiler.caseTypedExprOrNull(typeLine: TypeLine, caseScriptLine: ScriptLine): TypedExpr? =
 	ifOrNull(caseScriptLine.name == "case") {
 		caseScriptLine.rhs.onlyLineOrNull?.let { scriptLine ->
 			notNullIf(typeLine.name == scriptLine.name) {
@@ -61,31 +61,31 @@ fun Interpreter.caseTypedExprOrNull(typeLine: TypeLine, caseScriptLine: ScriptLi
 		}
 	}
 
-fun Interpreter.push(line: TypedExprLine): Interpreter =
+fun Compiler.push(line: TypedExprLine): Compiler =
 	null
 		?: notNullIf(line.name == "contains") { pushContains(line.rhs) }
 		?: pushDefineOrNull(line)
 		?: pushRaw(line)
 
-fun Interpreter.pushContains(typedExpr: TypedExpr): Interpreter =
+fun Compiler.pushContains(typedExpr: TypedExpr): Compiler =
 	TODO()
 
-fun Interpreter.pushDefineOrNull(line: TypedExprLine) =
+fun Compiler.pushDefineOrNull(line: TypedExprLine) =
 	pushDefineRhsOrNull(line) ?: pushLhsDefineOrNull(line)
 
-fun Interpreter.pushDefineRhsOrNull(line: TypedExprLine) =
+fun Compiler.pushDefineRhsOrNull(line: TypedExprLine) =
 	ifOrNull(typedExpr.type.isEmpty) {
-		context.defineInterpreterOrNull(line.rhs)
+		context.defineOrNull(line.rhs)
 	}
 
-fun Interpreter.pushLhsDefineOrNull(line: TypedExprLine): Interpreter? =
+fun Compiler.pushLhsDefineOrNull(line: TypedExprLine): Compiler? =
 	ifOrNull(line.rhs.type.isEmpty) {
-		context.defineInterpreterOrNull(typedExpr)
+		context.defineOrNull(typedExpr)
 	}
 
-fun Context.defineInterpreterOrNull(typedExpr: TypedExpr): Interpreter? =
+fun Context.defineOrNull(typedExpr: TypedExpr): Compiler? =
 	typedExpr.type.onlyFunctionTypeOrNull?.let { functionType ->
-		interpreter(
+		compiler(
 			plus(
 				function(
 					parameter(functionType.parameter),
@@ -93,8 +93,8 @@ fun Context.defineInterpreterOrNull(typedExpr: TypedExpr): Interpreter? =
 			expr() of type())
 	}
 
-fun Interpreter.pushRaw(line: TypedExprLine): Interpreter =
-	interpreter(
+fun Compiler.pushRaw(line: TypedExprLine): Compiler =
+	compiler(
 		context,
 		context.typedExpr(typedExpr linkTo line))
 

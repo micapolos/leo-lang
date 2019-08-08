@@ -58,7 +58,7 @@ fun Script.callTypedExprOrNull(context: Context): TypedExpr? =
 			link.line.rhs.typedExpr(context).let { rhsTypedExpr ->
 				lhsTypedExpr.expr.plus(0 lineTo rhsTypedExpr.expr).let { expr ->
 					lhsTypedExpr.type.plus(link.line.name lineTo rhsTypedExpr.type).let { type ->
-						context.scope.typedExprOrNull(parameter(type))?.let { typedExpr ->
+						context.functions.typedExprOrNull(parameter(type))?.let { typedExpr ->
 							expr.plus(op(call(typedExpr.expr))) of typedExpr.type
 						}
 					}
