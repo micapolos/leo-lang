@@ -13,15 +13,14 @@ data class Evaluator(
 fun evaluator() = Evaluator(context(), typedValueBindings(), typedValue())
 
 fun Evaluator.push(script: Script): Evaluator? =
-	orNull.fold(script.lineStack.reverse) { push(it) }
+	orNull.fold(script.lineStack.reverse) { this?.push(it) }
 
 fun Evaluator.pushBinding(typedValue: TypedValue) =
 	copy(bindings = bindings.plus(typedValue))
 
 fun Evaluator.push(line: ScriptLine): Evaluator? =
-//	if (line.rhs.type.isEmpty) copy(typedValue = value() of type()).pushNormalized(line.name lineTo typedValue.script)
-//	else
-	pushNormalized(line)
+	if (line.rhs.type.isEmpty) begin.pushNormalized(line.name lineTo typedValue.script)
+	else pushNormalized(line)
 
 fun Evaluator.pushNormalized(line: ScriptLine): Evaluator? =
 	when (line.name) {
@@ -55,8 +54,12 @@ fun Evaluator.pushSwitch(rhs: Script): Evaluator? =
 			}
 		}
 
+val Evaluator.begin
+	get() =
+		copy(typedValue = typedValue())
+
 fun Evaluator.pushTyped(line: ScriptLine): Evaluator? =
-	copy(typedValue = value() of type())
+	begin
 		.push(line.rhs)
 		?.let { rhsEvaluator ->
 			push(line.name lineTo rhsEvaluator.typedValue)
@@ -65,4 +68,4 @@ fun Evaluator.pushTyped(line: ScriptLine): Evaluator? =
 fun Evaluator.push(line: TypedValueLine): Evaluator? =
 	copy(typedValue = typedValue.plus(line))
 
-val Evaluator.script get() = typedValue.script
+val Evaluator.typedScript get() = typedValue.typedScript
