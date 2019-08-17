@@ -173,3 +173,19 @@ fun TypeLine.rhsOrNull(name: String) =
 val TypeLink.type
 	get() =
 		lhs.plus(line)
+
+// --- contains
+
+fun Type.contains(type: Type): Boolean =
+	true.zipFoldOrNull(choiceStack, type.choiceStack) { choice, typeChoice ->
+		choice.contains(typeChoice)
+	} ?: false
+
+fun Choice.contains(choice: Choice): Boolean =
+	choice.lineStack.all { this@contains.contains(this) }
+
+fun Choice.contains(line: TypeLine): Boolean =
+	lineStack.any { contains(line) }
+
+fun TypeLine.contains(line: TypeLine): Boolean =
+	name == line.name && rhs.contains(line.rhs)

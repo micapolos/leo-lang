@@ -18,6 +18,9 @@ fun Evaluator.push(script: Script): Evaluator? =
 fun Evaluator.pushBinding(typedValue: TypedValue) =
 	copy(bindings = bindings.plus(typedValue))
 
+fun Evaluator.pushType(type: Type) =
+	copy(context = context.plus(type))
+
 fun Evaluator.push(line: ScriptLine): Evaluator? =
 	if (line.rhs.type.isEmpty) begin.pushNormalized(line.name lineTo typedValue.script)
 	else pushNormalized(line)
@@ -66,6 +69,12 @@ fun Evaluator.pushTyped(line: ScriptLine): Evaluator? =
 		}
 
 fun Evaluator.push(line: TypedValueLine): Evaluator? =
-	copy(typedValue = typedValue.plus(line))
+	typedValue.value.plus(line.valueLine).let { value ->
+		typedValue.type.plus(line.typeLine).let { type ->
+			context.types.containingType(type).let { containingType ->
+				copy(typedValue = value of containingType)
+			}
+		}
+	}
 
 val Evaluator.typedScript get() = typedValue.typedScript

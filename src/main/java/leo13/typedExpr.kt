@@ -1,6 +1,9 @@
 package leo13
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
+import leo9.indexed
+import leo9.mapFirst
 
 data class TypedExpr(val expr: Expr, val type: Type)
 data class TypedExprLink(val lhs: TypedExpr, val line: TypedExprLine)
@@ -103,3 +106,23 @@ val TypedExprLink.accessTypedExprOrNull
 val TypedExprLink.typedExpr
 	get() =
 		lhs.plus(line)
+
+// --- cast
+
+fun Type.cast(typedExpr: TypedExpr): Expr? =
+	if (this == typedExpr.type) typedExpr.expr
+	else reinterpret(typedExpr)
+
+fun Type.reinterpret(typedExpr: TypedExpr): Expr? =
+	typedExpr.type.onlyChoiceOrNull?.onlyLineOrNull?.let { exprLine ->
+		onlyChoiceOrNull?.let { choice ->
+			exprLine.reinterpret(choice, typedExpr.expr.plus(op(access(0))))
+		}
+	}
+
+fun TypeLine.reinterpret(choice: Choice, expr: Expr): Expr? =
+	choice.lineStack.indexed.mapFirst {
+		ifOrNull(value.name == name) {
+			rhs.cast(expr of value.rhs)?.plus(op(access(index)))
+		}
+	}

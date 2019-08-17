@@ -5,19 +5,25 @@ import org.junit.Test
 
 class EvaluatorTest {
 	@Test
-	fun plain() {
+	fun name() {
 		evaluator()
 			.push(script("one" lineTo script()))!!
 			.typedScript
 			.assertEqualTo(script("one" lineTo script()) of type("one" lineTo type()))
+	}
 
+	@Test
+	fun line() {
 		evaluator()
 			.push(script("one" lineTo script("two" lineTo script())))!!
 			.typedScript
 			.assertEqualTo(
 				script("one" lineTo script("two" lineTo script())) of
 					type("one" lineTo type("two" lineTo type())))
+	}
 
+	@Test
+	fun link() {
 		evaluator()
 			.push(script("one" lineTo script(), "plus" lineTo script("two" lineTo script())))!!
 			.typedScript
@@ -43,5 +49,28 @@ class EvaluatorTest {
 			.push("given" lineTo script())!!
 			.typedScript
 			.assertEqualTo(script("one" lineTo script()) of type("one" lineTo type()))
+	}
+
+	@Test
+	fun gives() {
+		evaluator()
+			.push(
+				script(
+					"one" lineTo script(),
+					"gives" lineTo script(
+						"two" lineTo script())))!!
+			.typedScript
+			.assertEqualTo(script() of type())
+	}
+
+	@Test
+	fun typeResolution() {
+		evaluator()
+			.pushType(type("bit" lineTo type(choice("zero" lineTo type(), "one" lineTo type()))))
+			.push("bit" lineTo script("zero" lineTo script()))!!
+			.typedScript
+			.assertEqualTo(
+				script("bit" lineTo script("zero" lineTo script())) of
+					type("bit" lineTo type(choice("zero" lineTo type(), "one" lineTo type()))))
 	}
 }

@@ -9,9 +9,9 @@ import leo9.stack
 data class TypeFunctions(val functionStack: Stack<TypeFunction>)
 data class TypeFunction(val typeLink: TypeLink, val type: Type)
 
-val Stack<TypeFunction>.types get() = TypeFunctions(this)
-fun TypeFunctions.plus(function: TypeFunction) = functionStack.push(function).types
-fun types(vararg functions: TypeFunction) = stack(*functions).types
+val Stack<TypeFunction>.typeFunctions get() = TypeFunctions(this)
+fun TypeFunctions.plus(function: TypeFunction) = functionStack.push(function).typeFunctions
+fun typeFunctions(vararg functions: TypeFunction) = stack(*functions).typeFunctions
 fun function(link: TypeLink, type: Type) = TypeFunction(link, type)
 
 fun TypeFunctions.type(typeLink: TypeLink): Type =

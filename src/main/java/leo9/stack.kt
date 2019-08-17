@@ -170,3 +170,14 @@ fun <V, R, E> R.foldEither(stack: Stack<V>, fn: R.(V) -> Either<R, E>): Either<R
 	firstEither<R, E>().fold(stack) { value ->
 		eitherLet({ it.fn(value) }, { it.secondEither() })
 	}
+
+val <V> Stack<V>.seq: Seq<V>
+	get() =
+		when (this) {
+			is EmptyStack -> empty.seq()
+			is LinkStack -> link.seqNode.seq
+		}
+
+val <V> StackLink<V>.seqNode: SeqNode<V>
+	get() =
+		value then stack.seq
