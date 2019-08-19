@@ -14,3 +14,7 @@ val Value.lastLine get() = lineStack.top
 fun Value.line(int: Int): ValueLine = lineStack.get(int)!!
 
 fun Value.access(int: Int): Value = value(lastLine.rhs.line(int))
+
+val Value.headOrNull get() = lineStack.linkOrNull?.value?.onlyStack?.value
+val Value.tailOrNull get() = lineStack.linkOrNull?.stack?.value
+val Value.rhsOrNull get() = lineStack.linkOrNull?.value?.rhs

@@ -1,6 +1,5 @@
 package leo13
 
-
 import leo9.Stack
 import leo9.nonEmptyStack
 import leo9.push

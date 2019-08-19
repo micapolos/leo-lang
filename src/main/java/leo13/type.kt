@@ -113,6 +113,10 @@ val Type.scriptOrNull: Script?
 	get() =
 		onlyChoiceStackOrNull?.mapOrNull { scriptLineOrNull }?.script
 
+val Type.scriptOrError: Script
+	get() =
+		scriptOrNull ?: error("type is not compile-time constant")
+
 val Choice.scriptLineOrNull: ScriptLine?
 	get() =
 		onlyLineOrNull?.scriptLineOrNull

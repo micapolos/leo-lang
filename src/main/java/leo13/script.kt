@@ -69,6 +69,13 @@ fun ScriptLine.accessOrNull(name: String, int: Int) =
 		ScriptAccess(this, int)
 	}
 
+fun Script.accessOrNull(name: String): Script? =
+	onlyLineOrNull?.rhs?.lineStack?.mapOnly {
+		notNullIf(name == this.name) {
+			script(this)
+		}
+	}
+
 // --- normalization
 
 val Script.normalize: Script

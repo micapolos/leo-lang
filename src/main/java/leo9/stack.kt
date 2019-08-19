@@ -48,6 +48,8 @@ val <T : Any> Stack<T>.onlyOrNull
 		}
 	}
 
+val <T> T.onlyStack get() = stack(this)
+
 tailrec fun <R, T> R.fold(stack: Stack<T>, fn: R.(T) -> R): R =
 	when (stack) {
 		is EmptyStack -> this

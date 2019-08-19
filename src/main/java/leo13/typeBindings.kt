@@ -11,3 +11,6 @@ fun bindings(type: Type, vararg types: Type) = nonEmptyStack(type, *types).typeB
 
 fun TypeBindings.typeOrNull(argument: Argument): Type? =
 	stack.drop(argument.previousStack)?.linkOrNull?.value
+
+fun TypeBindings.typeOrError(argument: Argument): Type =
+	typeOrNull(argument) ?: error("argument not bound")
