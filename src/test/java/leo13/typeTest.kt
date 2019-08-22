@@ -82,7 +82,6 @@ class TypeTest {
 			"three" lineTo script())
 			.type
 			.assertEqualTo(type(choice("one" caseTo type(), "two" caseTo type()), "three" lineTo type()))
-
 	}
 
 	@Test
