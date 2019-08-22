@@ -183,3 +183,10 @@ val <V> Stack<V>.seq: Seq<V>
 val <V> StackLink<V>.seqNode: SeqNode<V>
 	get() =
 		value then stack.seq
+
+fun <V> Stack<V>.toString(valueToString: (V) -> String): String =
+	appendableString { appendable ->
+		appendable.fold(this) { value ->
+			append(valueToString(value))
+		}
+	}

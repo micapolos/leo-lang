@@ -1,96 +1,108 @@
 package leo13
 
-import leo.base.fold
+import leo.base.ifNotNull
 import leo.base.ifOrNull
-import leo.base.indexed
-import leo.base.notNullIf
+import leo.base.orNull
 import leo9.*
 
-data class Type(val functionTypeOrNull: FunctionType?, val choiceStack: Stack<Choice>)
-data class Choice(val lineStack: Stack<TypeLine>)
-data class TypeLine(val name: String, val rhs: Type)
+data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) {
+	override fun toString() = asScript.toString()
+}
+
+data class TypeLine(val name: String, val rhs: Type) {
+	override fun toString() = asRawScriptLine.toString()
+}
+
 data class TypeLink(val lhs: Type, val line: TypeLine)
 data class TypeArrow(val lhs: Type, val rhs: Type)
 data class TypeAccess(val int: Int, val type: Type)
 
 // --- constructors
 
-val Stack<Choice>.type get() = Type(null, this)
-fun Type.plus(choice: Choice) = copy(choiceStack = choiceStack.push(choice))
-fun Type.plus(line: TypeLine) = plus(choice(line))
-fun type(vararg choices: Choice) = stack(*choices).type
-fun type(line: TypeLine, vararg lines: TypeLine) = type().plus(line).fold(lines) { plus(it) }
-fun FunctionType?.type(vararg choices: Choice) = Type(this, stack(*choices))
+fun type(vararg lines: TypeLine) = Type(null, stack(*lines))
+fun type(choice: Choice, vararg lines: TypeLine) = Type(choice, stack(*lines))
+fun Type.plus(line: TypeLine) = Type(choiceOrNull, lineStack.push(line))
 infix fun Type.arrowTo(rhs: Type) = TypeArrow(this, rhs)
 fun access(int: Int, type: Type) = TypeAccess(int, type)
 infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
 
-val Stack<TypeLine>.choice get() = Choice(this)
-fun choice(vararg lines: TypeLine) = stack(*lines).choice
-fun Choice.plus(line: TypeLine) = lineStack.push(line).choice
-
 infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
-val Type.isEmpty get() = choiceStack.isEmpty
-val Type.onlyFunctionTypeOrNull get() = ifOrNull(choiceStack.isEmpty) { functionTypeOrNull }
+val Type.asScript: Script
+	get() =
+		(choiceOrNull?.asScript ?: script()).fold(lineStack.reverse) { plus(it.asScriptLine) }
+
+val TypeLine.asRawScriptLine
+	get() =
+		name lineTo rhs.asScript
+
+val TypeLine.asScriptLine
+	get() =
+		if (name == "or" && rhs.onlyLineOrNull != null) "meta" lineTo script(asRawScriptLine)
+		else asRawScriptLine
+
+val Type.isEmpty get() = choiceOrNull == null && lineStack.isEmpty
 
 val Type.onlyLineOrNull
 	get() =
-		onlyChoiceOrNull?.onlyLineOrNull
-
-val Type.onlyChoiceStackOrNull
-	get() =
-		notNullIf(functionTypeOrNull == null) {
-			choiceStack
+		ifOrNull(choiceOrNull == null) {
+			lineStack.onlyOrNull
 		}
 
 val Type.onlyChoiceOrNull
 	get() =
-		ifOrNull(functionTypeOrNull == null) {
-			choiceStack.onlyOrNull
+		ifOrNull(lineStack.isEmpty) {
+			choiceOrNull
 		}
-
-val Choice.onlyLineOrNull
-	get() =
-		lineStack.onlyOrNull
 
 // --- script -> type
 
-val Script.type get() = eitherTypeOrNull ?: exactType
+fun Type.plus(scriptLine: ScriptLine): Type =
+	casePlusOrNull(scriptLine) ?: linePlus(scriptLine)
 
-val Script.eitherTypeOrNull: Type?
-	get() =
-		lineStack
-			.mapOrNull { eitherTypeLineOrNull }
-			?.let { typeLineStack ->
-				ifOrNull(!typeLineStack.isEmpty) {
-					type(typeLineStack.choice)
-				}
+fun Type.casePlusOrNull(scriptLine: ScriptLine): Type? =
+	if (choiceOrNull == null)
+		lineStack.onlyOrNull?.let { line ->
+			scriptLine
+				.nextCaseOrNull
+				?.let { case -> type(choice(line.firstCase, case)) }
 		}
-
-val Script.exactType
-	get() =
-		lineStack.map { choice(typeLine) }.type
-
-val ScriptLine.eitherTypeLineOrNull: TypeLine?
-	get() =
-		ifOrNull(name == "either") {
-			rhs.onlyLineOrNull?.typeLine
+	else ifOrNull(lineStack.isEmpty) {
+		choiceOrNull.plusOrNull(scriptLine)?.let { choice ->
+			type(choice)
 		}
+	}
+
+fun Type.linePlus(scriptLine: ScriptLine): Type =
+	plus(scriptLine.typeLine)
+
+val Script.type get() = type().fold(lineStack.reverse) { plus(it) }
 
 val ScriptLine.typeLine: TypeLine
 	get() =
 		name lineTo rhs.type
 
+val Script.exactType
+	get() = type().fold(lineStack.reverse) { linePlus(it) }
+
 // --- type matches script
 
 fun Type.matches(script: Script): Boolean =
-	true.zipFoldOrNull(choiceStack, script.lineStack) { choice, line ->
-		this and choice.matches(line)
-	} ?: false
-
-fun Choice.matches(scriptLine: ScriptLine): Boolean =
-	lineStack.any { matches(scriptLine) }
+	script()
+		.orNull
+		.zipFold(lineStack, script.lineStack) { lineOrNull, scriptLineOrNull ->
+			this?.run {
+				if (lineOrNull != null)
+					scriptLineOrNull.ifNotNull { ifOrNull(lineOrNull.matches(it)) { this } }
+				else
+					scriptLineOrNull.ifNotNull { plus(it) }
+			}
+		}
+		?.run {
+			choiceOrNull
+				?.let { choice -> onlyLineOrNull?.let { choice.matches(it) } ?: false }
+				?: true
+		} ?: false
 
 fun TypeLine.matches(scriptLine: ScriptLine): Boolean =
 	name == scriptLine.name && rhs.matches(scriptLine.rhs)
@@ -98,28 +110,13 @@ fun TypeLine.matches(scriptLine: ScriptLine): Boolean =
 fun TypeLink.matches(scriptLink: ScriptLink) =
 	lhs.matches(scriptLink.lhs) && line.matches(scriptLink.line)
 
-// --- value -> script
-
-fun Type.script(value: Value): Script =
-	zip(choiceStack, value.lineStack).map { first!!.scriptLine(second!!) }.script
-
-fun Choice.scriptLine(valueLine: ValueLine): ScriptLine =
-	lineStack.get(valueLine.int)!!.scriptLine(valueLine.rhs)
-
-fun TypeLine.scriptLine(value: Value): ScriptLine =
-	name lineTo rhs.script(value)
+// type to script
 
 val Type.scriptOrNull: Script?
 	get() =
-		onlyChoiceStackOrNull?.mapOrNull { scriptLineOrNull }?.script
-
-val Type.scriptOrError: Script
-	get() =
-		scriptOrNull ?: error("type is not compile-time constant")
-
-val Choice.scriptLineOrNull: ScriptLine?
-	get() =
-		onlyLineOrNull?.scriptLineOrNull
+		ifOrNull(choiceOrNull == null) {
+			lineStack.mapOrNull { scriptLineOrNull }?.script
+		}
 
 val TypeLine.scriptLineOrNull: ScriptLine?
 	get() =
@@ -132,47 +129,10 @@ val TypeLink.scriptLinkOrNull: ScriptLink?
 				link(lhsScript, scriptLine)
 			}
 		}
-// --- script -> value
 
-fun Type.value(script: Script): Value =
-	zip(choiceStack, script.lineStack).map { first!!.valueLine(second!!) }.value
-
-fun Choice.valueLine(scriptLine: ScriptLine): ValueLine =
-	lineStack.indexed.mapFirst { value.valueLineOrNull(scriptLine, index) }!!
-
-fun TypeLine.valueLineOrNull(scriptLine: ScriptLine, int: Int): ValueLine? =
-	notNullIf(name == scriptLine.name) {
-		int lineTo rhs.value(scriptLine.rhs)
-	}
-
-// --- access
-
-val Type.accessOrNull
-	get(): TypeAccess? =
-		onlyLineOrNull?.accessOrNull
-
-val TypeLine.accessOrNull
-	get(): TypeAccess? =
-		rhs.accessOrNull(name)
-
-fun Type.accessOrNull(name: String): TypeAccess? =
-	onlyLineOrNull
-		?.rhs
-		?.indexedRhsOrNull(name)
-		?.let { access(it.index, type(choice(name lineTo it.value))) }
-
-fun Type.indexedRhsOrNull(name: String): IndexedValue<Type>? =
-	onlyChoiceStackOrNull?.indexed?.mapOnly {
-		value.onlyRhsOrNull(name)?.let { rhs ->
-			index indexed rhs
-		}
-	}
-
-fun Choice.onlyRhsOrNull(name: String) =
-	onlyLineOrNull?.rhsOrNull(name)
-
-fun TypeLine.rhsOrNull(name: String) =
-	notNullIf(this.name == name) { rhs }
+val Type.scriptOrError: Script
+	get() =
+		scriptOrNull ?: error("type is not compile-time constant")
 
 val TypeLink.type
 	get() =
@@ -181,15 +141,16 @@ val TypeLink.type
 // --- contains
 
 fun Type.contains(type: Type): Boolean =
-	true.zipFoldOrNull(choiceStack, type.choiceStack) { choice, typeChoice ->
-		choice.contains(typeChoice)
+	lineContains(type) && choiceContains(type)
+
+fun Type.lineContains(type: Type): Boolean =
+	true.zipFoldOrNull(lineStack, type.lineStack) { line, typeLine ->
+		line.contains(typeLine)
 	} ?: false
 
-fun Choice.contains(choice: Choice): Boolean =
-	choice.lineStack.all { this@contains.contains(this) }
-
-fun Choice.contains(line: TypeLine): Boolean =
-	lineStack.any { contains(line) }
+fun Type.choiceContains(type: Type) =
+	if (choiceOrNull != null) type.choiceOrNull != null && choiceOrNull.contains(type.choiceOrNull)
+	else type.choiceOrNull == null
 
 fun TypeLine.contains(line: TypeLine): Boolean =
 	name == line.name && rhs.contains(line.rhs)

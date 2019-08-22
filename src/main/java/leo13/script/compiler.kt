@@ -22,7 +22,9 @@ fun Compiler.plus(function: Function) = copy(functions = functions.plus(function
 
 fun Compiler.with(typedExpr: TypedExpr) = copy(typedExpr = typedExpr)
 
-val Script.compileTypedExpr get() = compiler().push(this).typedExpr
+val Script.compile
+	get() =
+		compiler().push(this).typedExpr.expr.eval(bindings())
 
 fun Compiler.push(script: Script): Compiler =
 	fold(script.lineStack.reverse, Compiler::push)

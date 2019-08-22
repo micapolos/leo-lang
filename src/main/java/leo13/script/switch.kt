@@ -21,3 +21,4 @@ fun Case.eval(bindings: Bindings, scriptLine: ScriptLine): Script? =
 	notNullIf(name == scriptLine.name) {
 		expr.eval(bindings.push(scriptLine.rhs))
 	}
+

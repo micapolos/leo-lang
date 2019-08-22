@@ -17,6 +17,3 @@ fun Types.containingType(type: Type): Type =
 			this
 		}
 	} ?: type
-
-fun Types.resolveType(typedValue: TypedValue): TypedValue =
-	typedValue.value of containingType(typedValue.type)

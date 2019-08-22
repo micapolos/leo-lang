@@ -43,6 +43,10 @@ val <T> Seq<T>.nodeOrNull: SeqNode<T>?
 	get() =
 		nodeOrNullFn()
 
+val <T : Any> Seq<T>.firstOrNull: T?
+	get() =
+		nodeOrNull?.first
+
 fun <T> Empty.seq() =
 	emptySeq<T>()
 
@@ -129,6 +133,9 @@ fun <T, R> SeqNode<T>.map(fn: T.() -> R): SeqNode<R> =
 fun <T, R> Seq<T>.map(fn: T.() -> R): Seq<R> =
 	Seq { nodeOrNull?.map(fn) }
 
+fun <T> Seq<T>.filter(fn: T.() -> Boolean): Seq<T> =
+	map { ifOrNull(fn()) { the } }.noNulls.map { value }
+
 val <T> SeqNode<Seq<T>>.flat: Seq<T>
 	get() =
 		first.thenFn { remaining.flat }
@@ -175,6 +182,14 @@ fun <T> SeqNode<T>.intercept(addValue: Boolean, value: T): SeqNode<T> =
 
 fun <T> Seq<T>.replace(fromToPair: Pair<T, T>) =
 	map { value -> if (value == fromToPair.first) fromToPair.second else value }
+
+val <T : Any> Seq<T?>.noNulls: Seq<T>
+	get() = seq {
+		nodeOrNull?.let { node ->
+			if (node.first != null) node.first then node.remaining.noNulls
+			else node.remaining.noNulls.nodeOrNull
+		}
+	}
 
 fun <T, V> Seq<T>.filterMap(fn: T.() -> The<V>?): Seq<V> {
 	val seqNodeOrNull = nodeOrNull

@@ -31,6 +31,7 @@ fun Evaluator.pushMeta(scriptLine: ScriptLine): Evaluator =
 
 fun Evaluator.resolve(typedScriptLine: TypedScriptLine): Evaluator =
 	when (typedScriptLine.name) {
+		"of" -> TODO()
 		"gives" -> TODO()
 		else -> eval(typedScriptLine)
 	}

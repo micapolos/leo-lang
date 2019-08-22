@@ -2,11 +2,12 @@ package leo13
 
 data class TypedScript(val script: Script, val type: Type)
 data class TypedScriptLine(val name: String, val rhs: TypedScript)
+data class TypedScriptLink(val lhs: TypedScript, val line: TypedScriptLine)
 
 infix fun Script.of(type: Type) = TypedScript(this, type)
 infix fun String.lineTo(rhs: TypedScript) = TypedScriptLine(this, rhs)
+fun TypedScript.linkTo(line: TypedScriptLine) = TypedScriptLink(this, line)
 
-val TypedScript.value get() = type.value(script)
 val TypedScript.code get() = "${script.code} : $type"
 
 fun TypedScript.plus(line: TypedScriptLine) =

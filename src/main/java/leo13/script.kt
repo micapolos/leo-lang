@@ -4,9 +4,18 @@ import leo.base.appendableString
 import leo.base.notNullIf
 import leo9.*
 
-data class Script(val lineStack: Stack<ScriptLine>)
-data class ScriptLine(val name: String, val rhs: Script)
-data class ScriptLink(val lhs: Script, val line: ScriptLine)
+data class Script(val lineStack: Stack<ScriptLine>) {
+	override fun toString() = code
+}
+
+data class ScriptLine(val name: String, val rhs: Script) {
+	override fun toString() = code
+}
+
+data class ScriptLink(val lhs: Script, val line: ScriptLine) {
+	override fun toString() = code
+}
+
 data class ScriptLinkLine(val name: String, val rhs: ScriptLink)
 data class ScriptArrow(val lhs: Script, val rhs: Script)
 
@@ -48,6 +57,8 @@ val Script.code: String
 	}
 
 val ScriptLine.code get() = "$name(${rhs.code})"
+
+val ScriptLink.code get() = "$lhs$line"
 
 // --- access int
 

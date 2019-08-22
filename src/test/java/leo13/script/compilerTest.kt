@@ -67,13 +67,70 @@ class CompilerTest {
 	@Test
 	fun compileTypeResolution() {
 		compiler()
-			.plus(type("bit" lineTo type(choice("zero" lineTo type()), choice("one" lineTo type()))))
-			.push(script("bit" lineTo script("one" lineTo script())))
+			.plus(type("bit" lineTo type(choice("zero" caseTo type(), "one" caseTo type()))))
+			.let { compiler ->
+				compiler
+					.push(script("bit" lineTo script("one" lineTo script())))
+					.assertEqualTo(
+						compiler
+							.with(
+								script("bit" lineTo script("one" lineTo script())).expr of
+									type("bit" lineTo type(choice("zero" caseTo type(), "one" caseTo type())))))
+			}
+	}
+
+	@Test
+	fun compileTypeResolutionAndFunction() {
+		compiler()
+			.plus(type("bit" lineTo type(choice("zero" caseTo type(), "one" caseTo type()))))
+			.plus(
+				function(
+					type("bit" lineTo type(choice("zero" caseTo type(), "one" caseTo type()))),
+					expr(op(argument())).plus(op("applied" lineTo expr())) of type("applied" lineTo type())))
+			.let { compiler ->
+				compiler
+					.push(script("bit" lineTo script("one" lineTo script())))
+					.assertEqualTo(
+						compiler
+							.with(
+								script("bit" lineTo script("one" lineTo script()))
+									.expr.plus(op(expr(op(argument()), op("applied" lineTo expr()))))
+									of type("applied" lineTo type())))
+			}
+	}
+
+	@Test
+	fun scriptCompileName() {
+		script("foo" lineTo script())
+			.compile
 			.assertEqualTo(
-				compiler()
-					.plus(type("bit" lineTo type(choice("zero" lineTo type()), choice("one" lineTo type()))))
-					.with(
-						script("bit" lineTo script("one" lineTo script())).expr of
-							type("bit" lineTo type(choice("zero" lineTo type()), choice("one" lineTo type())))))
+				script("foo" lineTo script()))
+	}
+
+	@Test
+	fun scriptCompileLine() {
+		script("foo" lineTo script("bar" lineTo script()))
+			.compile
+			.assertEqualTo(
+				script("foo" lineTo script("bar" lineTo script())))
+	}
+
+	@Test
+	fun scriptCompile() {
+		script(
+			"bit" lineTo script(
+				"zero" lineTo script()),
+			"negate" lineTo script(),
+			"gives" lineTo script(
+				"bit" lineTo script(
+					"one" lineTo script())),
+			"bit" lineTo script(
+				"zero" lineTo script()),
+			"negate" lineTo script())
+			.compile
+			.assertEqualTo(
+				script(
+					"bit" lineTo script(
+						"one" lineTo script())))
 	}
 }
