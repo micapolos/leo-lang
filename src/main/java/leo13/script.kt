@@ -1,19 +1,19 @@
 package leo13
 
-import leo.base.appendableString
-import leo.base.notNullIf
+import leo.base.*
 import leo9.*
+import leo9.Stack
 
 data class Script(val lineStack: Stack<ScriptLine>) {
-	override fun toString() = code
+	override fun toString() = indentedCode
 }
 
 data class ScriptLine(val name: String, val rhs: Script) {
-	override fun toString() = code
+	override fun toString() = script(this).toString()
 }
 
 data class ScriptLink(val lhs: Script, val line: ScriptLine) {
-	override fun toString() = code
+	override fun toString() = script.toString()
 }
 
 data class ScriptLinkLine(val name: String, val rhs: ScriptLink)
@@ -110,3 +110,46 @@ val ScriptLink.linkLineOrNull: ScriptLinkLine?
 		if (lhs.isEmpty) line.rhs.linkOrNull?.let { line.name lineTo it }
 		else if (line.rhs.isEmpty) lhs.linkOrNull?.let { line.name lineTo it }
 		else null
+
+// --- isSingleLine
+
+val Script.isSingleLine: Boolean
+	get() =
+		linkOrNull?.isSingleLine ?: true
+
+val ScriptLink.isSingleLine
+	get() =
+		lhsIsSingleLine && line.isSingleLine
+
+val ScriptLink.lhsIsSingleLine
+	get() =
+		lhs.linkOrNull?.line?.rhs?.isEmpty ?: true
+
+val ScriptLine.isSingleLine
+	get() =
+		rhs.isSingleLine
+
+// --- appendable
+
+val Script.indentedCode get() = appendableString { it.append(this, 0.indent) }
+
+fun Appendable.append(script: Script, indent: Indent): Appendable =
+	script.linkOrNull?.let { append(it, indent) } ?: this
+
+fun Appendable.append(scriptLink: ScriptLink, indent: Indent): Appendable =
+	this
+		.append(scriptLink.lhs, indent)
+		.run {
+			scriptLink.lhs.linkOrNull?.let { lhsLink ->
+				if (lhsLink.line.rhs.isEmpty) append(' ').append(scriptLink.line, indent)
+				else append('\n').append(indent).append(scriptLink.line, indent)
+			} ?: append(scriptLink.line, indent)
+		}
+
+fun Appendable.append(line: ScriptLine, indent: Indent): Appendable =
+	append(line.name).appendRhs(line.rhs, indent)
+
+fun Appendable.appendRhs(script: Script, indent: Indent): Appendable =
+	if (script.isEmpty) this
+	else if (script.isSingleLine) append(": ").append(script, indent)
+	else append('\n').append(indent.inc).append(script, indent.inc)

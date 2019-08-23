@@ -13,6 +13,43 @@ class ScriptTest {
 	}
 
 	@Test
+	fun indentedCode() {
+		script().indentedCode.assertEqualTo("")
+
+		script("one" lineTo script())
+			.indentedCode
+			.assertEqualTo("one")
+
+		script("one" lineTo script(), "two" lineTo script())
+			.indentedCode
+			.assertEqualTo("one two")
+
+		script("one" lineTo script("two" lineTo script()))
+			.indentedCode
+			.assertEqualTo("one: two")
+
+		script("one" lineTo script(), "two" lineTo script("three" lineTo script()))
+			.indentedCode
+			.assertEqualTo("one two: three")
+
+		script("one" lineTo script("two" lineTo script(), "three" lineTo script()))
+			.indentedCode
+			.assertEqualTo("one: two three")
+
+		script("one" lineTo script("two" lineTo script(), "plus" lineTo script("three" lineTo script())))
+			.indentedCode
+			.assertEqualTo("one: two plus: three")
+
+		script("x" lineTo script("one" lineTo script()), "y" lineTo script("two" lineTo script()))
+			.indentedCode
+			.assertEqualTo("x: one\ny: two")
+
+		script("vec" lineTo script("x" lineTo script("one" lineTo script()), "y" lineTo script("two" lineTo script())))
+			.indentedCode
+			.assertEqualTo("vec\n\tx: one\n\ty: two")
+	}
+
+	@Test
 	fun normalize() {
 		script()
 			.normalize
