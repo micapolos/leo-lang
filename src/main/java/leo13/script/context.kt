@@ -21,7 +21,8 @@ fun Context.plus(type: Type) = copy(types = types.plus(type))
 fun Context.plus(function: Function) = copy(functions = functions.plus(function))
 
 fun Context.compile(script: Script): Typed? =
-	compiled
+	metable
+		.compiled
 		.head
 		.compiler
 		.fold(script.tokenSeq) { push(it) }

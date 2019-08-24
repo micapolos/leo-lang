@@ -62,7 +62,7 @@ class CompilerTest {
 					head(
 						compiledOpeners(),
 						compiled(
-							context(),
+							metable(),
 							"zero()".unsafeScript.typed))))
 	}
 
@@ -75,7 +75,19 @@ class CompilerTest {
 	}
 
 	@Test
-	fun pushOf_success() {
+	fun pushOf() {
+		compiler("of()")
+			.assertEqualTo(compiler().set(head(typed())))
+	}
+
+	@Test
+	fun pushMetaOf() {
+		compiler("meta(of())")
+			.assertEqualTo(compiler().set(head("meta(of())".unsafeScript.typed)))
+	}
+
+	@Test
+	fun pushOf_complex() {
 		compiler("zero()of(zero()or(one()))")
 			.assertEqualTo(
 				compiler()
@@ -97,14 +109,32 @@ class CompilerTest {
 	}
 
 	@Test
-	fun pushExists_success() {
+	fun pushExists() {
+		compiler("exists()")
+			.assertEqualTo(
+				compiler()
+					.set(head(
+						compiledOpeners(),
+						compiled(
+							context().plus(type()).metable,
+							typed()))))
+	}
+
+	@Test
+	fun pushMetaExists() {
+		compiler("meta(exists())")
+			.assertEqualTo(compiler().set(head("meta(exists())".unsafeScript.typed)))
+	}
+
+	@Test
+	fun pushExists_complex() {
 		compiler("zero()or(one())exists()")
 			.assertEqualTo(
 				compiler()
 					.set(head(
 						compiledOpeners(),
 						compiled(
-							context().plus("zero()or(one())".unsafeScript.type),
+							context().plus("zero()or(one())".unsafeScript.type).metable,
 							typed()))))
 	}
 
@@ -125,22 +155,28 @@ class CompilerTest {
 	}
 
 	@Test
-	fun pushGives_success_minimum() {
+	fun pushGives() {
 		compiler("gives()")
 			.assertEqualTo(
 				compiler().set(
-					context().plus(function(type(), typed())).compiled.head))
+					context().plus(function(type(), typed())).metable.compiled.head))
 	}
 
 	@Test
-	fun pushGives_success() {
+	fun pushMetaGives() {
+		compiler("meta(gives())")
+			.assertEqualTo(compiler().set(head("meta(gives())".unsafeScript.typed)))
+	}
+
+	@Test
+	fun pushGives_complex() {
 		compiler("zero()or(one())gives(bit())")
 			.assertEqualTo(
 				compiler().set(
 					context().plus(
 						function(
 							"zero()or(one())".unsafeScript.type,
-							"bit()".unsafeScript.typed)).compiled.head))
+							"bit()".unsafeScript.typed)).metable.compiled.head))
 	}
 
 	@Test

@@ -4,9 +4,9 @@ import leo.base.notNullIf
 import leo13.*
 import leo9.*
 
-data class Compiled(val context: Context, val typed: Typed) : Scriptable() {
+data class Compiled(val metable: Metable, val typed: Typed) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine = "compiled" lineTo script(context.asScriptLine, typed.asScriptLine)
+	override val asScriptLine = "compiled" lineTo script(metable.asScriptLine, typed.asScriptLine)
 }
 
 data class CompiledLine(val name: String, val rhs: Compiled) : Scriptable() {
@@ -34,17 +34,18 @@ data class CompiledHead(val openers: CompiledOpeners, val compiled: Compiled) : 
 
 // --- constructors
 
-fun compiled() = compiled(context(), typed())
-fun compiled(context: Context, typed: Typed) = Compiled(context, typed)
-fun compiled(typed: Typed) = Compiled(context(), typed)
+fun compiled() = compiled(metable(), typed())
+fun compiled(metable: Metable, typed: Typed) = Compiled(metable, typed)
+fun compiled(typed: Typed) = Compiled(metable(context(), false), typed)
 fun compiledOpeners(stack: Stack<CompiledOpener>) = CompiledOpeners(stack)
 fun compiledOpeners(vararg openers: CompiledOpener) = CompiledOpeners(stack(*openers))
 fun head(openers: CompiledOpeners, compiled: Compiled) = CompiledHead(openers, compiled)
-fun head(typed: Typed) = head(compiledOpeners(), compiled(context(), typed))
+fun head(typed: Typed) = head(compiledOpeners(), compiled(metable(), typed))
 infix fun Compiled.openerTo(opening: Opening) = CompiledOpener(this, opening)
 infix fun String.lineTo(rhs: Compiled) = CompiledLine(this, rhs)
 
-val Context.compiled get() = compiled(this, typed())
+val Context.metable get() = metable(this, false)
+val Metable.compiled get() = compiled(this, typed())
 val Compiled.head get() = head(compiledOpeners(), this)
 
 fun CompiledOpeners.push(opener: CompiledOpener) = compiledOpeners(stack.push(opener))
@@ -59,7 +60,11 @@ fun CompiledHead.plus(token: Token): CompiledHead? =
 	}
 
 fun CompiledHead.plus(opening: Opening): CompiledHead =
-	head(openers.push(compiled openerTo opening), compiled(compiled.context, typed()))
+	head(
+		openers.push(compiled openerTo opening),
+		compiled(
+			compiled.metable.setMeta(!compiled.metable.isMeta && opening.name == "meta"),
+			typed()))
 
 fun CompiledHead.plus(closing: Closing): CompiledHead? =
 	openers.stack.linkOrNull?.let { openerStackLink ->
@@ -71,39 +76,40 @@ fun CompiledHead.plus(closing: Closing): CompiledHead? =
 	}
 
 fun Compiled.push(typedLine: TypedLine): Compiled? =
-	when (typedLine.name) {
-		"exists" -> pushExists(typedLine.rhs)
-		"gives" -> pushGives(typedLine.rhs)
-		"of" -> pushOf(typedLine.rhs)
+	if (head.compiled.metable.isMeta) append(typedLine)
+	else when (typedLine.name) {
+		"exists" -> resolveExists(typedLine.rhs)
+		"gives" -> resolveGives(typedLine.rhs)
+		"of" -> resolveOf(typedLine.rhs)
 		else -> resolve(typedLine)
 	}
 
-fun Compiled.pushExists(rhsTyped: Typed): Compiled? =
+fun Compiled.resolveExists(rhsTyped: Typed): Compiled? =
 	typed.type.staticScriptOrNull?.type?.let { type ->
 		rhsTyped.type.staticScriptOrNull?.let { rhsScript ->
 			notNullIf(rhsScript.isEmpty) {
-				compiled(context.plus(type), typed())
+				compiled(metable.context.plus(type).metable, typed())
 			}
 		}
 	}
 
-fun Compiled.pushGives(rhsTyped: Typed): Compiled? =
+fun Compiled.resolveGives(rhsTyped: Typed): Compiled? =
 	typed.type.staticScriptOrNull?.type?.let { parameterType ->
 		rhsTyped.type.staticScriptOrNull?.let { bodyScript ->
-			context.bind(parameterType).compile(bodyScript)?.let { bodyTyped ->
-				compiled(context.plus(function(parameterType, bodyTyped)), typed())
+			metable.context.bind(parameterType).compile(bodyScript)?.let { bodyTyped ->
+				compiled(metable.context.plus(function(parameterType, bodyTyped)).metable, typed())
 			}
 		}
 	}
 
-fun Compiled.pushOf(rhsTyped: Typed): Compiled? =
+fun Compiled.resolveOf(rhsTyped: Typed): Compiled? =
 	rhsTyped
 		.type
 		.staticScriptOrNull
 		?.let { ofScript ->
 			ofScript.type.let { ofScriptType ->
 				notNullIf(ofScriptType.contains(this.typed.type)) {
-					compiled(context, typed.expr of ofScriptType)
+					compiled(metable, typed.expr of ofScriptType)
 				}
 			}
 		}
@@ -112,4 +118,4 @@ fun Compiled.resolve(typedLine: TypedLine): Compiled =
 	append(typedLine)
 
 fun Compiled.append(typedLine: TypedLine): Compiled =
-	compiled(context, typed.plus(typedLine))
+	compiled(metable, typed.plus(typedLine))
