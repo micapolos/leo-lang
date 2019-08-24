@@ -1,13 +1,30 @@
 package leo13.script
 
-import leo13.TypeBindings
-import leo13.Types
-import leo13.typeBindings
-import leo13.types
+import leo.base.fold
+import leo13.*
 
 data class Context(
 	val types: Types,
 	val functions: Functions,
-	val typeBindings: TypeBindings)
+	val typeBindings: TypeBindings) : Scriptable() {
+	override fun toString() = super.toString()
+	override val asScriptLine = "context" lineTo script(
+		types.asScriptLine,
+		functions.asScriptLine,
+		typeBindings.asScriptLine)
+}
 
 fun context() = Context(types(), functions(), typeBindings())
+
+fun Context.bind(type: Type) = copy(typeBindings = typeBindings.push(type))
+fun Context.plus(type: Type) = copy(types = types.plus(type))
+fun Context.plus(function: Function) = copy(functions = functions.plus(function))
+
+fun Context.compile(script: Script): Typed? =
+	compiled
+		.head
+		.compiler
+		.fold(script.tokenSeq) { push(it) }
+		.successHeadOrNull
+		?.completedCompiledOrNull
+		?.typed

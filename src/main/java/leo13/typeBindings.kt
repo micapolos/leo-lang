@@ -2,8 +2,9 @@ package leo13
 
 import leo9.*
 
-data class TypeBindings(val stack: Stack<Type>) {
-	override fun toString() = asScript.toString()
+data class TypeBindings(val stack: Stack<Type>) : Scriptable() {
+	override fun toString() = super.toString()
+	override val asScriptLine = stack.asScriptLine("bindings") { asScriptLine }
 }
 
 val Stack<Type>.typeBindings get() = TypeBindings(this)

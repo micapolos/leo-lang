@@ -2,135 +2,160 @@ package leo13.script
 
 import leo.base.assertEqualTo
 import leo13.*
+import leo13.script.parser.error
 import kotlin.test.Test
 
 class CompilerTest {
 	@Test
-	fun compileName() {
-		compiler()
-			.push(script("foo" lineTo script()))
+	fun pushOpening() {
+		compiler("foo(")
 			.assertEqualTo(
 				compiler()
-					.with(script("foo" lineTo script()).exactTypedExpr))
+					.set(head(
+						compiledOpeners(compiled() openerTo opening("foo")),
+						compiled())))
 	}
 
 	@Test
-	fun compileLine() {
-		compiler()
-			.push(script("foo" lineTo script("bar" lineTo script())))
+	fun pushOpeningOpening() {
+		compiler("foo(bar(")
 			.assertEqualTo(
 				compiler()
-					.with(script("foo" lineTo script("bar" lineTo script())).exactTypedExpr))
+					.set(head(
+						compiledOpeners(
+							compiled() openerTo opening("foo"),
+							compiled() openerTo opening("bar")),
+						compiled())))
 	}
 
 	@Test
-	fun compileLink() {
-		compiler()
-			.push(script("foo" lineTo script(), "bar" lineTo script("goo" lineTo script())))
+	fun pushOpeningOpeningClosing() {
+		compiler("foo(bar()")
 			.assertEqualTo(
 				compiler()
-					.with(script("foo" lineTo script(), "bar" lineTo script("goo" lineTo script())).exactTypedExpr))
+					.set(head(
+						compiledOpeners(compiled() openerTo opening("foo")),
+						compiled("bar()".unsafeScript.typed))))
 	}
 
 	@Test
-	fun compileArgument() {
-		compiler()
-			.bind(type("foo" lineTo type()))
-			.push(script("given" lineTo script()))
+	fun pushOpeningOpeningClosingClosing() {
+		compiler("foo(bar())")
 			.assertEqualTo(
 				compiler()
-					.bind(type("foo" lineTo type()))
-					.with(expr(op(argument())) of type("foo" lineTo type())))
+					.set(head("foo(bar())".unsafeScript.typed)))
 	}
 
 	@Test
-	fun compileExists() {
-		compiler()
-			.push(script("foo" lineTo script(), "exists" lineTo script()))
+	fun pushOpeningOpeningClosingClosingClosing() {
+		compiler("foo(bar()))")
 			.assertEqualTo(
-				compiler()
-					.plus(type("foo" lineTo type())))
+				compiler("foo(bar())")
+					.set(error(token(closing))))
 	}
 
 	@Test
-	fun compileGives() {
-		compiler()
-			.push(script("foo" lineTo script(), "gives" lineTo script("bar" lineTo script())))
+	fun pushAppend() {
+		compiler("zero()")
+			.assertEqualTo(
+				compiler().set(
+					head(
+						compiledOpeners(),
+						compiled(
+							context(),
+							"zero()".unsafeScript.typed))))
+	}
+
+	@Test
+	fun pushClosing() {
+		compiler("zero())")
+			.assertEqualTo(
+				compiler("zero()")
+					.set(error(token(closing))))
+	}
+
+	@Test
+	fun pushOf_success() {
+		compiler("zero()of(zero()or(one()))")
 			.assertEqualTo(
 				compiler()
-					.plus(
+					.set(head(typed(
+						"zero()".unsafeScript.expr,
+						"zero()or(one())".unsafeScript.type))))
+	}
+
+	@Test
+	fun pushOf_error_typeMismatch() {
+		compiler("zero()of(one())")
+			.assertEqualTo(compiler("zero()of(one()").set(error(token(closing))))
+	}
+
+	@Test
+	fun pushOf_error_dynamicType() {
+		compiler("of(zero()of(zero()or(one())))")
+			.assertEqualTo(compiler("of(zero()of(zero()or(one()))").set(error(token(closing))))
+	}
+
+	@Test
+	fun pushExists_success() {
+		compiler("zero()or(one())exists()")
+			.assertEqualTo(
+				compiler()
+					.set(head(
+						compiledOpeners(),
+						compiled(
+							context().plus("zero()or(one())".unsafeScript.type),
+							typed()))))
+	}
+
+	@Test
+	fun pushExists_error_dynamicLhs() {
+		compiler("zero()of(zero()or(one()))exists()")
+			.assertEqualTo(
+				compiler("zero()of(zero()or(one()))exists(")
+					.set(error(token(closing))))
+	}
+
+	@Test
+	fun pushExists_error_nonEmptyRhs() {
+		compiler("exists(zero())")
+			.assertEqualTo(
+				compiler("exists(zero()")
+					.set(error(token(closing))))
+	}
+
+	@Test
+	fun pushGives_success_minimum() {
+		compiler("gives()")
+			.assertEqualTo(
+				compiler().set(
+					context().plus(function(type(), typed())).compiled.head))
+	}
+
+	@Test
+	fun pushGives_success() {
+		compiler("zero()or(one())gives(bit())")
+			.assertEqualTo(
+				compiler().set(
+					context().plus(
 						function(
-							type("foo" lineTo type()),
-							script("bar" lineTo script()).exactTypedExpr)))
+							"zero()or(one())".unsafeScript.type,
+							"bit()".unsafeScript.typed)).compiled.head))
 	}
 
 	@Test
-	fun compileTypeResolution() {
-		compiler()
-			.plus(type("bit" lineTo type(choice("zero" caseTo type(), "one" caseTo type()))))
-			.let { compiler ->
-				compiler
-					.push(script("bit" lineTo script("one" lineTo script())))
-					.assertEqualTo(
-						compiler
-							.with(
-								script("bit" lineTo script("one" lineTo script())).expr of
-									type("bit" lineTo type(choice("zero" caseTo type(), "one" caseTo type())))))
-			}
-	}
-
-	@Test
-	fun compileTypeResolutionAndFunction() {
-		compiler()
-			.plus(type("bit" lineTo type(choice("zero" caseTo type(), "one" caseTo type()))))
-			.plus(
-				function(
-					type("bit" lineTo type(choice("zero" caseTo type(), "one" caseTo type()))),
-					expr(op(argument())).plus(op("applied" lineTo expr())) of type("applied" lineTo type())))
-			.let { compiler ->
-				compiler
-					.push(script("bit" lineTo script("one" lineTo script())))
-					.assertEqualTo(
-						compiler
-							.with(
-								script("bit" lineTo script("one" lineTo script()))
-									.expr.plus(op(call(expr(op(argument()), op("applied" lineTo expr())))))
-									of type("applied" lineTo type())))
-			}
-	}
-
-	@Test
-	fun scriptCompileName() {
-		script("foo" lineTo script())
-			.compile
+	fun pushGives_error_dynamicLhs() {
+		compiler("zero()of(zero()or(one()))gives(bit())")
 			.assertEqualTo(
-				script("foo" lineTo script()))
+				compiler("zero()of(zero()or(one()))gives(bit()")
+					.set(error(token(closing))))
 	}
 
 	@Test
-	fun scriptCompileLine() {
-		script("foo" lineTo script("bar" lineTo script()))
-			.compile
+	fun pushGives_error_dynamicRhs() {
+		compiler("gives(zero()of(zero()or(one())))")
 			.assertEqualTo(
-				script("foo" lineTo script("bar" lineTo script())))
-	}
-
-	@Test
-	fun scriptCompile() {
-		script(
-			"bit" lineTo script(
-				"zero" lineTo script()),
-			"negate" lineTo script(),
-			"gives" lineTo script(
-				"bit" lineTo script(
-					"one" lineTo script())),
-			"bit" lineTo script(
-				"zero" lineTo script()),
-			"negate" lineTo script())
-			.compile
-			.assertEqualTo(
-				script(
-					"bit" lineTo script(
-						"one" lineTo script())))
+				compiler("gives(zero()of(zero()or(one()))")
+					.set(error(token(closing))))
 	}
 }

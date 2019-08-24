@@ -114,19 +114,19 @@ class ScriptTest {
 
 	@Test
 	fun unsafeScript() {
-		script("")
+		unsafeScript("")
 			.assertEqualTo(script())
 
-		script("one()")
+		unsafeScript("one()")
 			.assertEqualTo(script("one" lineTo script()))
 
-		script("one()two()")
+		unsafeScript("one()two()")
 			.assertEqualTo(script("one" lineTo script(), "two" lineTo script()))
 
-		script("one(two())")
+		unsafeScript("one(two())")
 			.assertEqualTo(script("one" lineTo script("two" lineTo script())))
 
-		script("one()plus(two())")
+		unsafeScript("one()plus(two())")
 			.assertEqualTo(script("one" lineTo script(), "plus" lineTo script("two" lineTo script())))
 	}
 
@@ -134,7 +134,7 @@ class ScriptTest {
 	fun stackAsScriptLine() {
 		stack<Int>()
 			.asScriptLine("ints") { toString() lineTo script() }
-			.assertEqualTo("ints" lineTo script())
+			.assertEqualTo("ints" lineTo nullScript)
 
 		stack(1, 2)
 			.asScriptLine("ints") { toString() lineTo script() }

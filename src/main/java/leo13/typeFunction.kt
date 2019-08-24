@@ -18,7 +18,7 @@ fun TypeFunctions.type(typeLink: TypeLink): Type =
 	typeOrNull(typeLink) ?: typeLink.type
 
 fun TypeFunctions.typeOrNull(typeLink: TypeLink): Type? =
-	typeLink.scriptLinkOrNull?.let { typeOrNull(it) }
+	typeLink.staticScriptLinkOrNull?.let { typeOrNull(it) }
 
 fun TypeFunctions.typeOrNull(scriptLink: ScriptLink): Type? =
 	functionStack.mapFirst { typeOrNull(scriptLink) }

@@ -17,12 +17,12 @@ data class Tokenizer(
 		get() = "tokenizer" lineTo script(
 			tokenStack.asScriptLine("tokens") { asScriptLine },
 			charStack.asScriptLine("chars") { "char" lineTo script(toString() lineTo script()) },
-			errorOrNull.orNullAsScriptLine("error") { asScriptLine })
+			errorOrNull.orNullAsScriptLine("error"))
 }
 
-data class CharError(val char: Char) {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "error" lineTo script(char.toString() lineTo script()) // TODO: Escape!!!
+data class CharError(val char: Char) : Scriptable() {
+	override fun toString() = super.toString()
+	override val asScriptLine get() = "error" lineTo script(char.toString() lineTo script()) // TODO: Escape!!!
 }
 
 fun error(char: Char) = CharError(char)

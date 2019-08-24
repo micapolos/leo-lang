@@ -10,12 +10,12 @@ data class Parser(
 	val asScriptLine
 		get() = "parser" lineTo script(
 			scriptHead.asScriptLine,
-			errorOrNull.orNullAsScriptLine("error") { asScriptLine })
+			errorOrNull.orNullAsScriptLine("error"))
 }
 
-data class TokenError(val token: Token) {
+data class TokenError(val token: Token) : Scriptable() {
 	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "error" lineTo script(token.asScriptLine)
+	override val asScriptLine get() = "error" lineTo script(token.asScriptLine)
 }
 
 fun error(token: Token) = TokenError(token)

@@ -3,8 +3,9 @@ package leo13
 import leo.base.ifOrNull
 import leo9.*
 
-data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) {
+data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : Scriptable() {
 	override fun toString() = asScript.toString()
+	override val asScriptLine = "type" lineTo asScript
 }
 
 data class TypeLine(val name: String, val rhs: Type) {
@@ -95,27 +96,27 @@ fun Type.matches(script: Script): Boolean =
 
 // === type to script
 
-val Type.scriptOrNull: Script?
+val Type.staticScriptOrNull: Script?
 	get() =
 		ifOrNull(choiceOrNull == null) {
-			lineStack.mapOrNull { scriptLineOrNull }?.script
+			lineStack.mapOrNull { staticScriptLineOrNull }?.script
 		}
 
-val TypeLine.scriptLineOrNull: ScriptLine?
+val TypeLine.staticScriptLineOrNull: ScriptLine?
 	get() =
-		rhs.scriptOrNull?.let { name lineTo it }
+		rhs.staticScriptOrNull?.let { name lineTo it }
 
-val TypeLink.scriptLinkOrNull: ScriptLink?
+val TypeLink.staticScriptLinkOrNull: ScriptLink?
 	get() =
-		lhs.scriptOrNull?.let { lhsScript ->
-			line.scriptLineOrNull?.let { scriptLine ->
+		lhs.staticScriptOrNull?.let { lhsScript ->
+			line.staticScriptLineOrNull?.let { scriptLine ->
 				link(lhsScript, scriptLine)
 			}
 		}
 
 val Type.scriptOrError: Script
 	get() =
-		scriptOrNull ?: error("type is not compile-time constant")
+		staticScriptOrNull ?: error("type is not compile-time constant")
 
 val TypeLink.type
 	get() =

@@ -11,7 +11,7 @@ import leo9.stack
 data class Leo(
 	val parentOrNull: LeoParent?,
 	val context: Context,
-	val typedExpr: TypedExpr,
+	val typed: Typed,
 	val isMeta: Boolean,
 	val quoteStack: Stack<Quote>) {
 	val asScript get() = script(toString() lineTo script()) // TODO
@@ -64,7 +64,7 @@ val Leo.beginMeta: Interpreter
 			Leo(
 				parentOrNull,
 				context,
-				typedExpr,
+				typed,
 				false,
 				quoteStack))
 
@@ -88,21 +88,21 @@ val Leo.metaEnd: Interpreter
 			Leo(
 				parentOrNull,
 				context,
-				typedExpr,
+				typed,
 				false,
 				quoteStack))
 
 val Leo.nonMetaEnd: Interpreter
 	get() =
 		if (parentOrNull == null) interpreter(error("unexpected end"))
-		else parentOrNull.leo.resolveOrAppend(parentOrNull.name lineTo typedExpr)
+		else parentOrNull.leo.resolveOrAppend(parentOrNull.name lineTo typed)
 
-fun Leo.resolveOrAppend(typedExprLine: TypedExprLine): Interpreter =
-	if (isMeta || !quoteStack.isEmpty) append(typedExprLine)
-	else resolve(typedExprLine)
+fun Leo.resolveOrAppend(typedLine: TypedLine): Interpreter =
+	if (isMeta || !quoteStack.isEmpty) append(typedLine)
+	else resolve(typedLine)
 
-fun Leo.resolve(typedExprLine: TypedExprLine): Interpreter =
-	when (typedExprLine.name) {
+fun Leo.resolve(typedLine: TypedLine): Interpreter =
+	when (typedLine.name) {
 		"quote" -> TODO()
 		"unquote" -> TODO()
 		"exists" -> TODO()
@@ -111,35 +111,35 @@ fun Leo.resolve(typedExprLine: TypedExprLine): Interpreter =
 		else -> TODO()
 	}
 
-fun Leo.resolveQuote(typedExpr: TypedExpr): Interpreter =
+fun Leo.resolveQuote(typed: Typed): Interpreter =
 	interpreter(
 		Leo(
 			parentOrNull,
 			context,
-			typedExpr,
+			typed,
 			false,
 			quoteStack))
 
-fun Leo.resolveAccessOrNull(typedExprLine: TypedExprLine): Leo? =
-	ifOrNull(typedExpr.expr.isEmpty) {
-		typedExprLine.rhs.accessOrNull(typedExprLine.name)?.let { accessTypedExpr ->
-			copy(typedExpr = accessTypedExpr)
+fun Leo.resolveAccessOrNull(typedLine: TypedLine): Leo? =
+	ifOrNull(typed.expr.isEmpty) {
+		typedLine.rhs.accessOrNull(typedLine.name)?.let { accessTypedExpr ->
+			copy(typed = accessTypedExpr)
 		}
 	}
 
-fun Leo.resolveCastOrNull(typedExprLine: TypedExprLine): Leo? =
-	typedExpr
-		.linkTo(typedExprLine)
+fun Leo.resolveCastOrNull(typedLine: TypedLine): Leo? =
+	typed
+		.linkTo(typedLine)
 		.ofTypedExprOrNull
 		?.let { ofTypedExpr ->
-			copy(typedExpr = ofTypedExpr)
+			copy(typed = ofTypedExpr)
 		}
 
-fun Leo.append(typedExprLine: TypedExprLine): Interpreter =
+fun Leo.append(typedLine: TypedLine): Interpreter =
 	interpreter(
 		Leo(
 			parentOrNull,
 			context,
-			typedExpr.plus(typedExprLine),
+			typed.plus(typedLine),
 			isMeta,
 			quoteStack))

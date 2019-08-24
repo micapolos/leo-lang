@@ -196,18 +196,20 @@ val ScriptLine.tokenSeq: Seq<Token>
 			seq(token(closing)))
 
 val nullScriptLine = "null" lineTo script()
+val nullScript = script(nullScriptLine)
 val nativeScriptLine = "native" lineTo script()
 
 fun <V> Stack<V>.asScript(fn: V.() -> ScriptLine) =
-	map { fn() }.script
+	if (isEmpty) script(nullScriptLine)
+	else map { fn() }.script
 
 fun <V> Stack<V>.asScriptLine(name: String, fn: V.() -> ScriptLine) =
 	name lineTo asScript(fn)
 
-fun <V : Any> V?.orNullAsScriptLine(name: String, fn: V.() -> ScriptLine) =
-	this?.fn() ?: name lineTo script(nullScriptLine)
+fun <V : Scriptable> V?.orNullAsScriptLine(name: String) =
+	this?.asScriptLine ?: name lineTo script(nullScriptLine)
 
-fun script(string: String) =
+fun unsafeScript(string: String) =
 	tokenizer()
 		.push(string)
 		.completedTokenStackOrNull
@@ -218,6 +220,8 @@ fun script(string: String) =
 				.completedScriptOrNull
 				.notNullOrError("parser error")
 		}
+
+val String.unsafeScript get() = unsafeScript(this)
 
 fun ScriptHead.plus(token: Token): ScriptHead? =
 	when (token) {

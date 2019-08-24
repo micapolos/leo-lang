@@ -2,7 +2,6 @@ package leo13.script.evaluator
 
 import leo13.Script
 import leo13.asScript
-import leo13.asScriptLine
 import leo13.lineTo
 import leo9.Stack
 import leo9.push
