@@ -1,5 +1,6 @@
 package leo13.script
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.*
 import leo9.*
@@ -115,7 +116,16 @@ fun Compiled.resolveOf(rhsTyped: Typed): Compiled? =
 		}
 
 fun Compiled.resolve(typedLine: TypedLine): Compiled =
-	append(typedLine)
+	null
+		?: resolveGetOrNull(typedLine)
+		?: append(typedLine)
+
+fun Compiled.resolveGetOrNull(typedLine: TypedLine): Compiled? =
+	ifOrNull(typedLine.rhs.expr.isEmpty) {
+		typed.accessOrNull(typedLine.name)?.let { typed ->
+			copy(typed = typed)
+		}
+	}
 
 fun Compiled.append(typedLine: TypedLine): Compiled =
 	compiled(metable, typed.plus(typedLine))

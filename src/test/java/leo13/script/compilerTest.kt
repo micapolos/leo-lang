@@ -180,6 +180,16 @@ class CompilerTest {
 	}
 
 	@Test
+	fun pushGives_metaDynamicRhs() {
+		compiler("gives(zero()meta(of(zero()or(one()))))")
+		compiler().set(
+			context().plus(
+				function(
+					"".unsafeScript.type,
+					"zero()of(zero()or(one()))".unsafeScript.typed)).metable.compiled.head)
+	}
+
+	@Test
 	fun pushGives_error_dynamicLhs() {
 		compiler("zero()of(zero()or(one()))gives(bit())")
 			.assertEqualTo(
@@ -193,5 +203,14 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler("gives(zero()of(zero()or(one()))")
 					.set(error(token(closing))))
+	}
+
+	@Test
+	fun pushGet() {
+		compiler("vec(x(zero())y(one()))x()")
+			.assertEqualTo(compiler()
+				.set(head(typed(
+					"vec(x(zero())y(one()))".unsafeScript.expr.plus(op(get("x"))),
+					"x(zero())".unsafeScript.type))))
 	}
 }
