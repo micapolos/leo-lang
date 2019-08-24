@@ -7,6 +7,7 @@ object Rhs
 object RhsLine
 object Meta
 object Quote
+object Evaluator
 
 val append = Append
 val lhs = Lhs
@@ -15,3 +16,4 @@ val line = RhsLine
 val meta = Meta
 val resolve = Resolve
 val quote = Quote
+val evaluator = Evaluator

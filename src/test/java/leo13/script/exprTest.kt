@@ -4,6 +4,7 @@ import leo.base.assertEqualTo
 import leo13.argument
 import leo13.lineTo
 import leo13.script
+import leo13.script.evaluator.bindings
 import kotlin.test.Test
 
 class ExprTest {

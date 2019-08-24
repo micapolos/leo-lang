@@ -27,7 +27,7 @@ fun Types.cast(typedExpr: TypedExpr): TypedExpr =
 
 fun Types.cast(typedScript: TypedScript): TypedScript =
 	cast(typedScript.script.expr of typedScript.type).let { castTypedScript ->
-		castTypedScript.expr.eval(bindings()) of castTypedScript.type
+		castTypedScript.expr.eval(leo13.script.evaluator.bindings()) of castTypedScript.type
 	}
 
 fun TypedExpr.accessOrNull(name: String): TypedExpr? =
@@ -37,7 +37,7 @@ fun TypedExpr.accessOrNull(name: String): TypedExpr? =
 		?.lineStack
 		?.mapOnly {
 			notNullIf(this.name == name) {
-				expr.plus(op(name)) of type(this)
+				expr.plus(op(get(name))) of type(this)
 			}
 		}
 

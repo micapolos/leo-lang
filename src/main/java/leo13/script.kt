@@ -166,3 +166,11 @@ val ScriptLine.tokenSeq: Seq<Token>
 			seq(token(begin(name))),
 			rhs.tokenSeq,
 			seq(token(end)))
+
+val nullScript = script("null" lineTo script())
+
+val Script.asScript
+	get() =
+		if (isEmpty) nullScript
+		else if (this == nullScript) script("meta" lineTo this)
+		else this

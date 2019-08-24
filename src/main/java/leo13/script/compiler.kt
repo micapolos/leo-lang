@@ -24,7 +24,7 @@ fun Compiler.with(typedExpr: TypedExpr) = copy(typedExpr = typedExpr)
 
 val Script.compile
 	get() =
-		compiler().push(this).typedExpr.expr.eval(bindings())
+		compiler().push(this).typedExpr.expr.eval(leo13.script.evaluator.bindings())
 
 fun Compiler.push(script: Script): Compiler =
 	fold(script.lineStack.reverse, Compiler::push)
