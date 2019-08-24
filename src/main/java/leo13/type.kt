@@ -1,8 +1,6 @@
 package leo13
 
-import leo.base.ifNotNull
 import leo.base.ifOrNull
-import leo.base.orNull
 import leo9.*
 
 data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) {
@@ -82,33 +80,18 @@ val ScriptLine.typeLine: TypeLine
 	get() =
 		name lineTo rhs.type
 
-val Script.exactType
-	get() = type().fold(lineStack.reverse) { linePlus(it) }
+// --- exact type
+
+val Script.exactType: Type
+	get() = type().fold(lineStack.reverse) { plus(it.exactTypeLine) }
+
+val ScriptLine.exactTypeLine
+	get() = name lineTo rhs.exactType
 
 // --- type matches script
 
 fun Type.matches(script: Script): Boolean =
-	script()
-		.orNull
-		.zipFold(lineStack, script.lineStack) { lineOrNull, scriptLineOrNull ->
-			this?.run {
-				if (lineOrNull != null)
-					scriptLineOrNull.ifNotNull { ifOrNull(lineOrNull.matches(it)) { this } }
-				else
-					scriptLineOrNull.ifNotNull { plus(it) }
-			}
-		}
-		?.run {
-			choiceOrNull
-				?.let { choice -> onlyLineOrNull?.let { choice.matches(it) } ?: false }
-				?: true
-		} ?: false
-
-fun TypeLine.matches(scriptLine: ScriptLine): Boolean =
-	name == scriptLine.name && rhs.matches(scriptLine.rhs)
-
-fun TypeLink.matches(scriptLink: ScriptLink) =
-	lhs.matches(scriptLink.lhs) && line.matches(scriptLink.line)
+	contains(script.exactType)
 
 // === type to script
 

@@ -24,4 +24,4 @@ fun TypeFunctions.typeOrNull(scriptLink: ScriptLink): Type? =
 	functionStack.mapFirst { typeOrNull(scriptLink) }
 
 fun TypeFunction.typeOrNull(scriptLink: ScriptLink): Type? =
-	notNullIf(typeLink.matches(scriptLink)) { type }
+	notNullIf(typeLink.type.matches(scriptLink.script)) { type }
