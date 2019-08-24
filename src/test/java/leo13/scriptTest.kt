@@ -114,19 +114,19 @@ class ScriptTest {
 
 	@Test
 	fun unsafeScript() {
-		unsafeScript("")
+		script("")
 			.assertEqualTo(script())
 
-		unsafeScript("one()")
+		script("one()")
 			.assertEqualTo(script("one" lineTo script()))
 
-		unsafeScript("one()two()")
+		script("one()two()")
 			.assertEqualTo(script("one" lineTo script(), "two" lineTo script()))
 
-		unsafeScript("one(two())")
+		script("one(two())")
 			.assertEqualTo(script("one" lineTo script("two" lineTo script())))
 
-		unsafeScript("one()plus(two())")
+		script("one()plus(two())")
 			.assertEqualTo(script("one" lineTo script(), "plus" lineTo script("two" lineTo script())))
 	}
 }

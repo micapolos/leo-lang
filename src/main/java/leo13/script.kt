@@ -210,7 +210,7 @@ fun <V> Stack<V>.asScript(fn: V.() -> ScriptLine) =
 fun <V : Any> V?.orNullAsScript(fn: V.() -> Script) =
 	this?.fn() ?: nullScript
 
-fun unsafeScript(string: String) =
+fun script(string: String) =
 	tokenizer()
 		.push(string)
 		.completedTokenStackOrNull!!

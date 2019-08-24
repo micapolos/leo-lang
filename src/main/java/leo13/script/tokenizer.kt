@@ -16,7 +16,7 @@ data class Tokenizer(
 	override fun toString() = asScript.toString()
 	val asScript: Script
 		get() = script(
-			"tokens" lineTo tokenStack.asScript { "token" lineTo this.asScript },
+			"tokens" lineTo tokenStack.asScript { "token" lineTo asScript },
 			"chars" lineTo charStack.asScript { "char" lineTo script(toString() lineTo script()) },
 			"error" lineTo errorOrNull.orNullAsScript { asScript })
 }

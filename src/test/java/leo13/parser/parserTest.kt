@@ -2,6 +2,7 @@ package leo13.parser
 
 import leo.base.assertEqualTo
 import leo13.*
+import leo13.script.parser.error
 import leo13.script.parser.parser
 import leo13.script.parser.push
 import leo13.script.parser.put
@@ -19,13 +20,13 @@ class ParserTest {
 
 		parser
 			.push(token(closing))
-			.assertEqualTo(head.parser.put(leo13.script.parser.error(token(closing))))
+			.assertEqualTo(head.parser.put(error(token(closing))))
 	}
 
 	@Test
 	fun errorParser_push() {
 		val head = script("one" lineTo script()).head
-		val parser = head.parser.put(leo13.script.parser.error(token(closing)))
+		val parser = head.parser.put(error(token(closing)))
 
 		parser
 			.push(token(opening("foo")))
