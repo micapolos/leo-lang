@@ -10,34 +10,34 @@ class EvaluatorTest {
 	fun begin() {
 		evaluator
 			.begin
-			.assertEqualTo(Evaluator(bindings(), evaluated(script())))
+			.assertEqualTo(Evaluator(bindings(), script()))
 	}
 
 	private val argumentEvaluator = evaluator.begin
 		.bind(script("one" lineTo script()))
 		.bind(script("two" lineTo script()))
 		.bind(script("three" lineTo script()))
-		.put(evaluated(script("evaluated" lineTo script())))
+		.put(script("evaluated" lineTo script()))
 
 	@Test
 	fun pushArgument() {
 		argumentEvaluator
 			.push(argument())
-			.assertEqualTo(argumentEvaluator.put(evaluated(script("three" lineTo script()))))
+			.assertEqualTo(argumentEvaluator.put(script("three" lineTo script())))
 	}
 
 	@Test
 	fun pushPreviousArgument() {
 		argumentEvaluator
 			.push(argument(previous))
-			.assertEqualTo(argumentEvaluator.put(evaluated(script("two" lineTo script()))))
+			.assertEqualTo(argumentEvaluator.put(script("two" lineTo script())))
 	}
 
 	@Test
 	fun pushPreviousPreviousArgument() {
 		argumentEvaluator
 			.push(argument(previous, previous))
-			.assertEqualTo(argumentEvaluator.put(evaluated(script("one" lineTo script()))))
+			.assertEqualTo(argumentEvaluator.put(script("one" lineTo script())))
 	}
 
 	private val switch =
@@ -47,24 +47,25 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_firstCase() {
-		evaluator.begin.put(evaluated(script("one" lineTo script("rhs" lineTo script()))))
+		evaluator.begin.put(script("one" lineTo script("rhs" lineTo script())))
 			.push(switch)
 			.assertEqualTo(
 				evaluator.begin.put(
-					evaluated(script(
+					script(
 						"rhs" lineTo script(),
-						"jeden" lineTo script()))))
+						"jeden" lineTo script())))
 	}
 
 	@Test
 	fun pushSwitch_secondCase() {
-		evaluator.begin.put(evaluated(script("two" lineTo script("rhs" lineTo script()))))
+		evaluator.begin
+			.put(script("two" lineTo script("rhs" lineTo script())))
 			.push(switch)
 			.assertEqualTo(
 				evaluator.begin.put(
-					evaluated(script(
+					script(
 						"rhs" lineTo script(),
-						"dwa" lineTo script()))))
+						"dwa" lineTo script())))
 	}
 
 	private val case =
@@ -73,15 +74,15 @@ class EvaluatorTest {
 	@Test
 	fun pushCase_match() {
 		evaluator.begin
-			.put(evaluated(script("one" lineTo script("rhs" lineTo script()))))
+			.put(script("one" lineTo script("rhs" lineTo script())))
 			.pushOrNull(case)
-			.assertEqualTo(evaluator.begin.put(evaluated(script("rhs" lineTo script(), "jeden" lineTo script()))))
+			.assertEqualTo(evaluator.begin.put(script("rhs" lineTo script(), "jeden" lineTo script())))
 	}
 
 	@Test
 	fun pushCase_mismatch() {
 		evaluator.begin
-			.put(evaluated(script("two" lineTo script("rhs" lineTo script()))))
+			.put(script("two" lineTo script("rhs" lineTo script())))
 			.pushOrNull(case)
 			.assertEqualTo(null)
 	}

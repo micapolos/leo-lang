@@ -5,47 +5,6 @@ import kotlin.test.Test
 
 class TypeTest {
 	@Test
-	fun string() {
-		type().toString().assertEqualTo("")
-
-		type("one" lineTo type())
-			.toString()
-			.assertEqualTo("one()")
-
-		type("one" lineTo type(), "two" lineTo type())
-			.toString()
-			.assertEqualTo("one()two()")
-
-		type("one" lineTo type("two" lineTo type()))
-			.toString()
-			.assertEqualTo("one(two())")
-
-		type("or" lineTo type())
-			.toString()
-			.assertEqualTo("or()")
-
-		type("or" lineTo type("one" lineTo type()))
-			.toString()
-			.assertEqualTo("meta(or(one()))")
-
-		type("or" lineTo type("one" lineTo type(), "two" lineTo type()))
-			.toString()
-			.assertEqualTo("or(one()two())")
-
-		type(choice("one" caseTo type(), "two" caseTo type()))
-			.toString()
-			.assertEqualTo("one()or(two())")
-
-		type(choice("one" caseTo type(), "two" caseTo type()), "three" lineTo type())
-			.toString()
-			.assertEqualTo("one()or(two())three()")
-
-		type(choice("one" caseTo type(), "two" caseTo type()), "or" lineTo type("three" lineTo type()))
-			.toString()
-			.assertEqualTo("one()or(two())meta(or(three()))")
-	}
-
-	@Test
 	fun parse() {
 		script()
 			.type

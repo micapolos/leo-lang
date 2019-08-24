@@ -6,7 +6,6 @@ import leo13.ScriptLine
 import leo13.lineTo
 import leo13.plus
 import leo13.script
-import leo13.script.evaluator.*
 import leo9.*
 import leo9.fold
 
@@ -46,9 +45,3 @@ val ExprLine.scriptLineOrNull: ScriptLine?
 		rhs.scriptOrNull?.let { rhsScript ->
 			name lineTo rhsScript
 		}
-
-fun Script.eval(bindings: Bindings, expr: Expr): Script =
-	Evaluator(bindings, evaluated(this)).push(expr).end
-
-fun Expr.eval(bindings: Bindings): Script =
-	script().eval(bindings, this)
