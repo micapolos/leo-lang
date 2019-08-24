@@ -1,93 +1,124 @@
 package leo13.script
 
+import lambda.indexed.Quote
 import leo.base.Empty
 import leo.base.ifOrNull
 import leo13.*
+import leo9.Stack
+import leo9.isEmpty
+import leo9.stack
 
 data class Leo(
 	val parentOrNull: LeoParent?,
-	val types: Types,
-	val functions: Functions,
-	val typeBindings: TypeBindings,
+	val context: Context,
 	val typedExpr: TypedExpr,
-	val errorOrNull: StringError?,
-	val isMeta: Boolean)
+	val isMeta: Boolean,
+	val quoteStack: Stack<Quote>) {
+	val asScript get() = script(toString() lineTo script()) // TODO
+}
 
 data class LeoParent(
 	val leo: Leo,
 	val name: String)
 
-data class StringError(
-	val string: String)
+sealed class LeoOp
+data class NameLeoOp(val name: String) : LeoOp()
+data class EmptyLeoOp(val empty: Empty) : LeoOp()
 
 val Empty.leo
 	get() =
-		Leo(null as LeoParent?, types(), functions(), typeBindings(), expr() of type(), null, false)
+		Leo(null as LeoParent?, context(), expr() of type(), false, stack())
 
-fun Leo.begin(name: String): Leo =
-	if (errorOrNull != null) this
-	else noErrorBegin(name)
+fun Leo.push(token: Token): Interpreter =
+	when (token) {
+		is BeginToken -> begin(token.begin.name)
+		is EndToken -> end
+	}
 
-val Leo.end
-	get(): Leo =
-		if (errorOrNull != null) this
-		else noErrorEnd
-
-fun Leo.noErrorBegin(name: String): Leo =
+fun Leo.begin(name: String): Interpreter =
 	if (isMeta) metaBegin(name)
 	else nonMetaBegin(name)
 
-fun Leo.metaBegin(name: String) =
-	Leo(
-		LeoParent(this, name),
-		types,
-		functions,
-		typeBindings,
-		expr() of type(),
-		null,
-		false)
+fun Leo.metaBegin(name: String): Interpreter =
+	interpreter(
+		Leo(
+			LeoParent(this, name),
+			context,
+			expr() of type(),
+			false,
+			quoteStack))
 
-fun Leo.nonMetaBegin(name: String) =
+fun Leo.nonMetaBegin(name: String): Interpreter =
 	if (name == "meta") beginMeta
-	else Leo(
-		LeoParent(this, name),
-		types,
-		functions,
-		typeBindings,
-		expr() of type(),
-		null,
-		false)
+	else interpreter(
+		Leo(
+			LeoParent(this, name),
+			context,
+			expr() of type(),
+			name == "meta",
+			quoteStack))
 
-val Leo.beginMeta
+val Leo.beginMeta: Interpreter
 	get() =
-		copy(isMeta = true)
+		interpreter(
+			Leo(
+				parentOrNull,
+				context,
+				typedExpr,
+				false,
+				quoteStack))
 
-val Leo.noErrorEnd
-	get(): Leo =
+fun Leo.beginNonMeta(name: String): Interpreter =
+	interpreter(
+		Leo(
+			parentOrNull,
+			context,
+			expr() of type(),
+			false,
+			quoteStack))
+
+val Leo.end: Interpreter
+	get() =
 		if (isMeta) metaEnd
 		else nonMetaEnd
 
-val Leo.metaEnd
-	get(): Leo =
-		copy(isMeta = false)
+val Leo.metaEnd: Interpreter
+	get() =
+		interpreter(
+			Leo(
+				parentOrNull,
+				context,
+				typedExpr,
+				false,
+				quoteStack))
 
-val Leo.nonMetaEnd
-	get(): Leo =
-		if (parentOrNull == null) endError("unexpected end")
-		else parentOrNull.leo.resolve(parentOrNull.name lineTo typedExpr)
+val Leo.nonMetaEnd: Interpreter
+	get() =
+		if (parentOrNull == null) interpreter(error("unexpected end"))
+		else parentOrNull.leo.resolveOrAppend(parentOrNull.name lineTo typedExpr)
 
-fun Leo.resolve(typedExprLine: TypedExprLine): Leo =
-	if (!typedExpr.expr.isEmpty && typedExprLine.rhs.expr.isEmpty) normalize(typedExprLine.name)
-	else normalizedResolve(typedExprLine)
+fun Leo.resolveOrAppend(typedExprLine: TypedExprLine): Interpreter =
+	if (isMeta || !quoteStack.isEmpty) append(typedExprLine)
+	else resolve(typedExprLine)
 
-fun Leo.normalize(name: String) =
-	copy(typedExpr = expr() of type()).resolve(name lineTo typedExpr)
+fun Leo.resolve(typedExprLine: TypedExprLine): Interpreter =
+	when (typedExprLine.name) {
+		"quote" -> TODO()
+		"unquote" -> TODO()
+		"exists" -> TODO()
+		"gives" -> TODO()
+		"of" -> TODO()
+		else -> TODO()
+	}
 
-fun Leo.normalizedResolve(typedExprLine: TypedExprLine): Leo =
-	null
-		?: resolveAccessOrNull(typedExprLine)
-		?: resolveCastOrNull(typedExprLine)
-		?: copy(typedExpr = typedExpr.plus(typedExprLine))
+fun Leo.resolveQuote(typedExpr: TypedExpr): Interpreter =
+	interpreter(
+		Leo(
+			parentOrNull,
+			context,
+			typedExpr,
+			false,
+			quoteStack))
 
 fun Leo.resolveAccessOrNull(typedExprLine: TypedExprLine): Leo? =
 	ifOrNull(typedExpr.expr.isEmpty) {
@@ -104,5 +135,11 @@ fun Leo.resolveCastOrNull(typedExprLine: TypedExprLine): Leo? =
 			copy(typedExpr = ofTypedExpr)
 		}
 
-fun Leo.endError(string: String): Leo =
-	copy(errorOrNull = StringError(string))
+fun Leo.append(typedExprLine: TypedExprLine): Interpreter =
+	interpreter(
+		Leo(
+			parentOrNull,
+			context,
+			typedExpr.plus(typedExprLine),
+			isMeta,
+			quoteStack))

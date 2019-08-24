@@ -153,3 +153,16 @@ fun Appendable.appendRhs(script: Script, indent: Indent): Appendable =
 	if (script.isEmpty) this
 	else if (script.isSingleLine) append(": ").append(script, indent)
 	else append('\n').append(indent.inc).append(script, indent.inc)
+
+// --- token seq
+
+val Script.tokenSeq: Seq<Token>
+	get() =
+		lineStack.reverse.seq.mapFlat { tokenSeq }
+
+val ScriptLine.tokenSeq: Seq<Token>
+	get() =
+		flatSeq(
+			seq(token(begin(name))),
+			rhs.tokenSeq,
+			seq(token(end)))

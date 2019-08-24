@@ -25,6 +25,9 @@ val Script.expr: Expr
 			plus(op(it.exprLine))
 		}
 
+fun expr(script: Script) =
+	script.expr
+
 val ScriptLine.exprLine: ExprLine
 	get() =
 		name lineTo rhs.expr
@@ -43,7 +46,10 @@ val ExprLine.scriptLineOrNull: ScriptLine?
 			name lineTo rhsScript
 		}
 
-fun Expr.eval(bindings: Bindings): Script =
-	script().fold(opStack.reverse) { op ->
+fun Script.eval(bindings: Bindings, expr: Expr): Script =
+	fold(expr.opStack.reverse) { op ->
 		op.eval(bindings, this)
 	}
+
+fun Expr.eval(bindings: Bindings): Script =
+	script().eval(bindings, this)

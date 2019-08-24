@@ -14,7 +14,7 @@ data class RhsOp(val rhs: Rhs) : Op()
 data class NameOp(val name: String) : Op()
 data class SwitchOp(val switch: Switch) : Op()
 data class LineOp(val line: ExprLine) : Op()
-data class ExprOp(val expr: Expr) : Op()
+data class CallOp(val call: Call) : Op()
 
 fun op(argument: Argument): Op = ArgumentOp(argument)
 fun op(lhs: Lhs): Op = LhsOp(lhs)
@@ -23,7 +23,7 @@ fun op(rhsLine: RhsLine): Op = RhsLineOp(rhsLine)
 fun op(name: String): Op = NameOp(name)
 fun op(switch: Switch): Op = SwitchOp(switch)
 fun op(line: ExprLine): Op = LineOp(line)
-fun op(expr: Expr): Op = ExprOp(expr)
+fun op(call: Call): Op = CallOp(call)
 
 val Op.lineOrNull get() = (this as? LineOp)?.line
 
@@ -36,7 +36,7 @@ fun Op.eval(bindings: Bindings, script: Script): Script =
 		is NameOp -> name.eval(bindings, script)
 		is SwitchOp -> switch.eval(bindings, script)
 		is LineOp -> line.eval(bindings, script)
-		is ExprOp -> expr.eval(bindings, script)
+		is CallOp -> call.eval(bindings, script)
 	}
 
 fun Argument.eval(bindings: Bindings, script: Script): Script =
@@ -56,6 +56,3 @@ fun String.eval(bindings: Bindings, script: Script): Script =
 
 fun ExprLine.eval(bindings: Bindings, script: Script): Script =
 	script.plus(name lineTo rhs.eval(bindings))
-
-fun Expr.eval(bindings: Bindings, script: Script): Script =
-	eval(bindings.push(script))

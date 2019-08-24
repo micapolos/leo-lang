@@ -3,25 +3,29 @@ package leo13.script
 import leo.base.assertEqualTo
 import leo13.argument
 import leo13.lineTo
-import leo13.previous
 import leo13.script
 import kotlin.test.Test
-import kotlin.test.assertFails
 
 class ExprTest {
 	@Test
 	fun evalArgument() {
 		expr(op(argument()))
-			.eval(bindings(script("zero" lineTo script()), script("one" lineTo script())))
+			.eval(bindings(script("one" lineTo script())))
 			.assertEqualTo(script("one" lineTo script()))
+	}
 
-		expr(op(argument(previous)))
-			.eval(bindings(script("zero" lineTo script()), script("one" lineTo script())))
-			.assertEqualTo(script("zero" lineTo script()))
-
-		assertFails {
-			expr(op(argument(previous, previous)))
-				.eval(bindings(script("zero" lineTo script()), script("one" lineTo script())))
-		}
+	@Test
+	fun evalSwitch() {
+		expr(
+			op("one" lineTo expr(op("rhs" lineTo expr()))),
+			op(
+				switch(
+					"one" caseTo expr(op("jeden" lineTo expr())),
+					"two" caseTo expr(op("dwa" lineTo expr())))))
+			.eval(bindings())
+			.assertEqualTo(
+				script(
+					"rhs" lineTo script(),
+					"jeden" lineTo script()))
 	}
 }

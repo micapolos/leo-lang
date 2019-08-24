@@ -86,6 +86,6 @@ fun Compiler.push(line: TypedExprLine): Compiler =
 
 fun Compiler.pushFunctionCallOrNull(typedExpr: TypedExpr): Compiler? =
 	functions.typedExprOrNull(typedExpr.type)?.let { functionTypedExpr ->
-		copy(typedExpr = typedExpr.expr.plus(op(functionTypedExpr.expr)) of functionTypedExpr.type)
+		copy(typedExpr = typedExpr.expr.plus(op(call(functionTypedExpr.expr))) of functionTypedExpr.type)
 	}
 

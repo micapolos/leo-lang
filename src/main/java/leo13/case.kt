@@ -11,7 +11,7 @@ infix fun String.caseTo(type: Type) = Case(this, type)
 val Case.asFirstScriptLine get() = name lineTo type.asScript
 val Case.asNextScriptLine get() = "or" lineTo script(asFirstScriptLine)
 
-val TypeLine.firstCase
+val TypeLine.case
 	get() =
 		name caseTo rhs
 

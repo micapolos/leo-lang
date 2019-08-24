@@ -25,10 +25,15 @@ fun Choice.plusOrNull(scriptLine: ScriptLine) =
 fun Choice.matches(scriptLine: ScriptLine): Boolean =
 	caseStack.any { matches(scriptLine) } || secondCase.matches(scriptLine) || firstCase.matches(scriptLine)
 
+fun Choice.contains(type: Type): Boolean =
+	if (type.choiceOrNull == null)
+		type.onlyLineOrNull?.let { contains(it.case) } ?: false
+	else type.lineStack.isEmpty && contains(type.choiceOrNull)
+
 fun Choice.contains(choice: Choice): Boolean =
 	choice.caseStack.all { this@contains.contains(this) }
-		&& contains(secondCase)
-		&& contains(firstCase)
+		&& contains(choice.secondCase)
+		&& contains(choice.firstCase)
 
 fun Choice.contains(case: Case): Boolean =
 	caseStack.any { contains(case) } || secondCase.contains(case) || firstCase.contains(case)

@@ -94,7 +94,7 @@ class CompilerTest {
 						compiler
 							.with(
 								script("bit" lineTo script("one" lineTo script()))
-									.expr.plus(op(expr(op(argument()), op("applied" lineTo expr()))))
+									.expr.plus(op(call(expr(op(argument()), op("applied" lineTo expr())))))
 									of type("applied" lineTo type())))
 			}
 	}

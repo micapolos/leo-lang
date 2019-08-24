@@ -65,7 +65,7 @@ fun Type.casePlusOrNull(scriptLine: ScriptLine): Type? =
 		lineStack.onlyOrNull?.let { line ->
 			scriptLine
 				.nextCaseOrNull
-				?.let { case -> type(choice(line.firstCase, case)) }
+				?.let { case -> type(choice(line.case, case)) }
 		}
 	else ifOrNull(lineStack.isEmpty) {
 		choiceOrNull.plusOrNull(scriptLine)?.let { choice ->
@@ -110,7 +110,7 @@ fun TypeLine.matches(scriptLine: ScriptLine): Boolean =
 fun TypeLink.matches(scriptLink: ScriptLink) =
 	lhs.matches(scriptLink.lhs) && line.matches(scriptLink.line)
 
-// type to script
+// === type to script
 
 val Type.scriptOrNull: Script?
 	get() =
@@ -141,16 +141,17 @@ val TypeLink.type
 // --- contains
 
 fun Type.contains(type: Type): Boolean =
-	lineContains(type) && choiceContains(type)
-
-fun Type.lineContains(type: Type): Boolean =
-	true.zipFoldOrNull(lineStack, type.lineStack) { line, typeLine ->
-		line.contains(typeLine)
-	} ?: false
-
-fun Type.choiceContains(type: Type) =
-	if (choiceOrNull != null) type.choiceOrNull != null && choiceOrNull.contains(type.choiceOrNull)
-	else type.choiceOrNull == null
+	when (lineStack) {
+		is EmptyStack ->
+			if (choiceOrNull == null) type.isEmpty
+			else choiceOrNull.contains(type)
+		is LinkStack ->
+			when (type.lineStack) {
+				is EmptyStack -> false
+				is LinkStack -> lineStack.link.value.contains(type.lineStack.link.value)
+					&& Type(choiceOrNull, lineStack.link.stack).contains(Type(choiceOrNull, type.lineStack.link.stack))
+			}
+	}
 
 fun TypeLine.contains(line: TypeLine): Boolean =
 	name == line.name && rhs.contains(line.rhs)
