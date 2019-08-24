@@ -15,7 +15,7 @@ data class Expr(val opStack: Stack<Op>) {
 
 data class ExprLine(val name: String, val rhs: Expr) {
 	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "line" lineTo script(name.nameAsScriptLine, rhs.asScriptLine)
+	val asScriptLine get() = "line" lineTo script(name lineTo script(rhs.asScriptLine))
 }
 
 val Stack<Op>.expr get() = Expr(this)

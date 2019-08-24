@@ -95,3 +95,6 @@ fun <V : Any> V?.nullableMerge(valueOrNull: V?, union: V.(V) -> V?): The<V?>? =
 	if (this == null) the(valueOrNull)
 	else if (valueOrNull == null) the(this)
 	else union(valueOrNull)?.the
+
+fun <V : Any> V?.notNullOrError(message: String): V =
+	this ?: error(message)

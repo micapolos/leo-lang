@@ -1,15 +1,13 @@
 package leo13.script
 
+import leo13.Scriptable
 import leo13.lineTo
-import leo13.nameAsScriptLine
 import leo13.script
 
-data class Case(val name: String, val expr: Expr) {
+data class Case(val name: String, val expr: Expr) : Scriptable() {
 	override fun toString() = asScriptLine.toString()
-	val asScriptLine
-		get() = "case" lineTo script(
-			name.nameAsScriptLine,
-			expr.asScriptLine)
+	override val asScriptLine
+		get() = "case" lineTo script(name lineTo script(), "to" lineTo script(expr.asScriptLine))
 }
 
 infix fun String.caseTo(expr: Expr) = Case(this, expr)

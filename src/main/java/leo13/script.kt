@@ -10,12 +10,14 @@ import leo13.script.tokenizer
 import leo9.*
 import leo9.Stack
 
-data class Script(val lineStack: Stack<ScriptLine>) {
+data class Script(val lineStack: Stack<ScriptLine>) : Scriptable() {
 	override fun toString() = indentedCode
+	override val asScriptLine get() = "script" lineTo this
 }
 
-data class ScriptLine(val name: String, val rhs: Script) {
+data class ScriptLine(val name: String, val rhs: Script) : Scriptable() {
 	override fun toString() = script(this).toString()
+	override val asScriptLine get() = "line" lineTo script(name lineTo script("to" lineTo rhs))
 }
 
 data class ScriptLink(val lhs: Script, val line: ScriptLine) {
@@ -196,9 +198,6 @@ val ScriptLine.tokenSeq: Seq<Token>
 val nullScriptLine = "null" lineTo script()
 val nativeScriptLine = "native" lineTo script()
 
-val Script.asScriptLine
-	get() = "script" lineTo this
-
 fun <V> Stack<V>.asScript(fn: V.() -> ScriptLine) =
 	map { fn() }.script
 
@@ -211,11 +210,13 @@ fun <V : Any> V?.orNullAsScriptLine(name: String, fn: V.() -> ScriptLine) =
 fun script(string: String) =
 	tokenizer()
 		.push(string)
-		.completedTokenStackOrNull!!
+		.completedTokenStackOrNull
+		.notNullOrError("tokenizer error")
 		.let { tokenStack ->
 			parser()
 				.fold(tokenStack.reverse) { push(it) }
-				.completedScriptOrNull!!
+				.completedScriptOrNull
+				.notNullOrError("parser error")
 		}
 
 fun ScriptHead.plus(token: Token): ScriptHead? =
