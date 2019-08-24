@@ -4,38 +4,31 @@ import leo.base.notNullIf
 import leo13.*
 
 data class Parser(
-	val parentOrNull: ParserParent?,
-	val script: Script) {
+	val scriptHead: ScriptHead,
+	val errorOrNull: TokenError?) {
 	override fun toString() = asScript.toString()
-	val asScript: Script
+	val asScript
 		get() = script(
-			"parent" lineTo (parentOrNull?.asScript ?: nullScript),
-			"script" lineTo script.asScript)
+			"head" lineTo nullScript,
+			"error" lineTo errorOrNull.orNullAsScript { asScript })
 }
 
-data class ParserParent(
-	val parser: Parser,
-	val opening: Opening) {
+data class TokenError(val token: Token) {
 	override fun toString() = asScript.toString()
-	val asScript: Script
-		get() = script(
-			"parser" lineTo parser.asScript,
-			"opening" lineTo opening.asScript)
+	val asScript get() = script("token" lineTo token.asScript)
 }
 
-fun parser(): Parser = Parser(null, script())
-val Parser.completedScript: Script? get() = notNullIf(parentOrNull == null) { script }
+fun error(token: Token) = TokenError(token)
 
-fun Parser.push(token: Token): Parser? =
-	when (token) {
-		is OpeningToken -> push(token.opening)
-		is ClosingToken -> push(token.end)
-	}
+val ScriptHead.parser: Parser get() = Parser(this, null)
+val TokenError.parser: Parser get() = Parser(scriptHead(), this)
+fun parser(): Parser = scriptHead().parser
 
-fun Parser.push(opening: Opening): Parser =
-	Parser(ParserParent(this, opening), script())
+fun Parser.push(token: Token): Parser =
+	if (errorOrNull != null) this
+	else scriptHead.plus(token)?.parser ?: put(error(token))
 
-fun Parser.push(closing: Closing): Parser? =
-	parentOrNull?.let { parent ->
-		parent.parser.copy(script = script.plus(parent.opening.name lineTo script))
-	}
+val Parser.okScriptHeadOrNull get() = notNullIf(errorOrNull == null) { scriptHead }
+val Parser.completedScriptOrNull get() = okScriptHeadOrNull?.completeScriptOrNull
+
+fun Parser.put(error: TokenError) = copy(errorOrNull = error)

@@ -3,7 +3,6 @@ package leo13.script
 import leo.base.charSeq
 import leo.base.fold
 import leo.base.notNullIf
-import leo.base.orNull
 import leo13.*
 import leo13.Script
 import leo13.lineTo
@@ -12,40 +11,57 @@ import leo9.*
 
 data class Tokenizer(
 	val tokenStack: Stack<Token>,
-	val charStack: Stack<Char>) {
+	val charStack: Stack<Char>,
+	val errorOrNull: CharError?) {
 	override fun toString() = asScript.toString()
 	val asScript: Script
 		get() = script(
 			"tokens" lineTo tokenStack.asScript { "token" lineTo this.asScript },
-			"chars" lineTo charStack.asScript { "char" lineTo script(toString() lineTo script()) })
+			"chars" lineTo charStack.asScript { "char" lineTo script(toString() lineTo script()) },
+			"error" lineTo errorOrNull.orNullAsScript { asScript })
 }
 
-fun tokenizer() = Tokenizer(stack(), stack())
-fun tokenizer(tokenStack: Stack<Token>, charStack: Stack<Char>) = Tokenizer(tokenStack, charStack)
-val Tokenizer.isComplete get() = charStack.isEmpty
+data class CharError(val char: Char) {
+	override fun toString() = asScript.toString()
+	val asScript get() = script("char" lineTo script(char.toString() lineTo script()))
+}
 
-fun Tokenizer.push(char: Char): Tokenizer? =
-	when (char) {
+fun error(char: Char) = CharError(char)
+
+fun tokenizer() = Tokenizer(stack(), stack(), null)
+fun tokenizer(tokenStack: Stack<Token>, charStack: Stack<Char>, error: CharError?) =
+	Tokenizer(tokenStack, charStack, error)
+
+val Tokenizer.completedTokenStackOrNull
+	get() =
+		notNullIf(charStack.isEmpty && errorOrNull == null) { tokenStack }
+
+fun Tokenizer.push(char: Char): Tokenizer =
+	if (errorOrNull != null) this
+	else when (char) {
 		'(' -> open()
 		')' -> close()
 		else -> charPush(char)
 	}
 
-fun Tokenizer.push(string: String): Tokenizer? =
-	orNull.fold(string.charSeq) { this?.push(it) }
+fun Tokenizer.push(string: String): Tokenizer =
+	fold(string.charSeq) { push(it) }
 
-fun Tokenizer.open(): Tokenizer? =
-	openingOrNull?.let { opening ->
-		Tokenizer(tokenStack.push(token(opening)), stack())
-	}
+fun Tokenizer.open(): Tokenizer =
+	openingOrNull
+		?.let { opening -> tokenPush(token(opening)) }
+		?: put(error('('))
 
-fun Tokenizer.close(): Tokenizer? =
+fun Tokenizer.close(): Tokenizer =
 	notNullIf(charStack.isEmpty) {
-		Tokenizer(tokenStack.push(token(closing)), stack())
-	}
+		tokenPush(token(closing))
+	} ?: put(error(')'))
 
 fun Tokenizer.charPush(char: Char): Tokenizer =
-	Tokenizer(tokenStack, charStack.push(char))
+	copy(charStack = charStack.push(char))
+
+fun Tokenizer.tokenPush(token: Token): Tokenizer =
+	copy(tokenStack = tokenStack.push(token), charStack = stack())
 
 val Tokenizer.string
 	get() =
@@ -59,6 +75,5 @@ val Tokenizer.openingOrNull: Opening?
 			notNullIf(string.isNotEmpty()) { opening(string) }
 		}
 
-val Tokenizer.closingOrNull: Closing?
-	get() =
-		notNullIf(charStack.isEmpty) { closing }
+fun Tokenizer.put(error: CharError) =
+	copy(errorOrNull = error)

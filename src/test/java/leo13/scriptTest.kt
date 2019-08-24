@@ -1,6 +1,7 @@
 package leo13
 
 import leo.base.assertEqualTo
+import leo9.stack
 import kotlin.test.Test
 
 class ScriptTest {
@@ -72,18 +73,60 @@ class ScriptTest {
 			.assertEqualTo(script("three" lineTo script("two" lineTo script("one" lineTo script()))))
 	}
 
-//	@Test
-//	fun unsafeScript() {
-//		unsafeScript("")
-//			.assertEqualTo(script())
-//
-//		unsafeScript("one()")
-//			.assertEqualTo(script("one" lineTo script()))
-//
-//		unsafeScript("one()two()")
-//			.assertEqualTo(script("one" lineTo script(), "two" lineTo script()))
-//
-//		unsafeScript("one(two())")
-//			.assertEqualTo(script("one" lineTo script("two" lineTo script())))
-//	}
+	@Test
+	fun emptyHeadPlus() {
+		val head = scriptHead()
+
+		head
+			.plus(opening("foo"))
+			.assertEqualTo(head(stack(script() openerTo opening("foo")), script()))
+
+		head
+			.plus(closing)
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun nonEmptyHeadPlus() {
+		val head = head(
+			stack(
+				script("one" lineTo script()) openerTo opening("plus"),
+				script("two" lineTo script()) openerTo opening("times")),
+			script("three" lineTo script()))
+
+		head
+			.plus(opening("negate"))
+			.assertEqualTo(head(
+				stack(
+					script("one" lineTo script()) openerTo opening("plus"),
+					script("two" lineTo script()) openerTo opening("times"),
+					script("three" lineTo script()) openerTo opening("negate")),
+				script()))
+
+		head
+			.plus(closing)
+			.assertEqualTo(head(
+				stack(script("one" lineTo script()) openerTo opening("plus")),
+				script(
+					"two" lineTo script(),
+					"times" lineTo script("three" lineTo script()))))
+	}
+
+	@Test
+	fun unsafeScript() {
+		unsafeScript("")
+			.assertEqualTo(script())
+
+		unsafeScript("one()")
+			.assertEqualTo(script("one" lineTo script()))
+
+		unsafeScript("one()two()")
+			.assertEqualTo(script("one" lineTo script(), "two" lineTo script()))
+
+		unsafeScript("one(two())")
+			.assertEqualTo(script("one" lineTo script("two" lineTo script())))
+
+		unsafeScript("one()plus(two())")
+			.assertEqualTo(script("one" lineTo script(), "plus" lineTo script("two" lineTo script())))
+	}
 }

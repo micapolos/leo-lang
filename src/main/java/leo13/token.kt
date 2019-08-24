@@ -10,10 +10,17 @@ data class OpeningToken(val opening: Opening) : Token() {
 	override val asScript = script("opening" lineTo opening.asScript)
 }
 
-data class ClosingToken(val end: Closing) : Token() {
+data class ClosingToken(val closing: Closing) : Token() {
 	override fun toString() = super.toString()
 	override val asScript = script("end" lineTo script())
 }
 
 fun token(opening: Opening): Token = OpeningToken(opening)
 fun token(end: Closing): Token = ClosingToken(end)
+
+fun Token.canAppend(token: Token): Boolean =
+	this is ClosingToken || token is ClosingToken
+
+fun Token?.orNullCanAppend(token: Token): Boolean =
+	if (this == null) token is OpeningToken
+	else canAppend(token)

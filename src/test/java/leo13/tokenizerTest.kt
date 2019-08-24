@@ -1,51 +1,58 @@
 package leo13
 
 import leo.base.assertEqualTo
-import leo13.script.push
-import leo13.script.tokenizer
-import leo9.push
-import leo9.stack
+import leo13.script.*
 import kotlin.test.Test
 
 class TokenizerTest {
 	@Test
-	fun writing() {
-		val tokenStack = stack(token(opening("foo")))
+	fun writing_emptyChars() {
+		val tokenizer = tokenizer().tokenPush(token(opening("foo")))
 
-		tokenizer(tokenStack, stack())
+		tokenizer
 			.push('a')
-			.assertEqualTo(tokenizer(tokenStack, stack('a')))
+			.assertEqualTo(tokenizer.charPush('a'))
 
-		tokenizer(tokenStack, stack())
+		tokenizer
 			.push('(')
-			.assertEqualTo(null)
+			.assertEqualTo(tokenizer.put(error('(')))
 
-		tokenizer(tokenStack, stack())
+		tokenizer
 			.push(')')
-			.assertEqualTo(tokenizer(tokenStack.push(token(closing)), stack()))
+			.assertEqualTo(tokenizer.tokenPush(token(closing)))
+	}
 
-		tokenizer(tokenStack, stack('a'))
-			.push('b')
-			.assertEqualTo(tokenizer(tokenStack, stack('a', 'b')))
+	@Test
+	fun writing_someChars() {
+		val tokenizer = tokenizer().charPush('a').charPush('b')
 
-		tokenizer(tokenStack, stack('a'))
-			.push('(')
-			.assertEqualTo(tokenizer(tokenStack.push(token(opening("a"))), stack()))
-
-		tokenizer(tokenStack, stack('a'))
-			.push(')')
-			.assertEqualTo(null)
-
-		tokenizer(tokenStack, stack('a', 'b'))
+		tokenizer
 			.push('c')
-			.assertEqualTo(tokenizer(tokenStack, stack('a', 'b', 'c')))
+			.assertEqualTo(tokenizer.charPush('c'))
 
-		tokenizer(tokenStack, stack('a', 'b'))
+		tokenizer
 			.push('(')
-			.assertEqualTo(tokenizer(tokenStack.push(token(opening("ab"))), stack()))
+			.assertEqualTo(tokenizer.tokenPush(token(opening("ab"))))
 
-		tokenizer(tokenStack, stack('a', 'b'))
+		tokenizer
 			.push(')')
-			.assertEqualTo(null)
+			.assertEqualTo(tokenizer.put(error(')')))
+	}
+
+	@Test
+	fun writing_error() {
+		val tokenizer = tokenizer().put(error('('))
+
+		tokenizer
+			.push('c')
+			.assertEqualTo(tokenizer)
+
+		tokenizer
+			.push('(')
+			.assertEqualTo(tokenizer)
+
+		tokenizer
+			.push(')')
+			.assertEqualTo(tokenizer)
 	}
 }
