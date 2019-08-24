@@ -71,4 +71,19 @@ class ScriptTest {
 			.normalize
 			.assertEqualTo(script("three" lineTo script("two" lineTo script("one" lineTo script()))))
 	}
+
+//	@Test
+//	fun unsafeScript() {
+//		unsafeScript("")
+//			.assertEqualTo(script())
+//
+//		unsafeScript("one()")
+//			.assertEqualTo(script("one" lineTo script()))
+//
+//		unsafeScript("one()two()")
+//			.assertEqualTo(script("one" lineTo script(), "two" lineTo script()))
+//
+//		unsafeScript("one(two())")
+//			.assertEqualTo(script("one" lineTo script("two" lineTo script())))
+//	}
 }

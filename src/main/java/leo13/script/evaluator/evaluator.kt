@@ -19,16 +19,15 @@ data class Evaluator(val bindings: Bindings, val script: Script) {
 			"script" lineTo script.asScript)
 }
 
-val leo13.Evaluator.begin get() = Evaluator(bindings(), script())
+fun evaluator() = Evaluator(bindings(), script())
 fun Evaluator.put(bindings: Bindings) = copy(bindings = bindings)
 fun Evaluator.put(script: Script) = copy(script = script)
 
 fun Evaluator.bind(script: Script) = put(bindings.push(script))
 
 val Evaluator.begin get() = put(script())
-val Evaluator.end get() = script
 
-fun Expr.evaluate(bindings: Bindings) = evaluator.begin.put(bindings).push(this).end
+fun Expr.evaluate(bindings: Bindings) = evaluator().put(bindings).push(this).script
 val Expr.evaluate get() = evaluate(bindings())
 
 fun Evaluator.push(expr: Expr) =
@@ -72,7 +71,7 @@ fun Evaluator.pushOrNull(case: Case): Evaluator? =
 	}
 
 fun Evaluator.push(line: ExprLine): Evaluator =
-	put(script.plus(line.name lineTo begin.push(line.rhs).end))
+	put(script.plus(line.name lineTo begin.push(line.rhs).script))
 
 fun Evaluator.push(call: Call): Evaluator =
 	bind(script).push(call.expr)

@@ -1,19 +1,21 @@
 package leo13.script.evaluator
 
 import leo.base.assertEqualTo
-import leo13.*
+import leo13.argument
+import leo13.lineTo
+import leo13.previous
+import leo13.script
 import leo13.script.*
 import org.junit.Test
 
 class EvaluatorTest {
 	@Test
 	fun begin() {
-		evaluator
-			.begin
+		evaluator()
 			.assertEqualTo(Evaluator(bindings(), script()))
 	}
 
-	private val argumentEvaluator = evaluator.begin
+	private val argumentEvaluator = evaluator()
 		.bind(script("one" lineTo script()))
 		.bind(script("two" lineTo script()))
 		.bind(script("three" lineTo script()))
@@ -47,10 +49,10 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_firstCase() {
-		evaluator.begin.put(script("one" lineTo script("rhs" lineTo script())))
+		evaluator().put(script("one" lineTo script("rhs" lineTo script())))
 			.push(switch)
 			.assertEqualTo(
-				evaluator.begin.put(
+				evaluator().put(
 					script(
 						"rhs" lineTo script(),
 						"jeden" lineTo script())))
@@ -58,11 +60,12 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_secondCase() {
-		evaluator.begin
+		evaluator()
 			.put(script("two" lineTo script("rhs" lineTo script())))
 			.push(switch)
 			.assertEqualTo(
-				evaluator.begin.put(
+				evaluator()
+					.put(
 					script(
 						"rhs" lineTo script(),
 						"dwa" lineTo script())))
@@ -73,15 +76,15 @@ class EvaluatorTest {
 
 	@Test
 	fun pushCase_match() {
-		evaluator.begin
+		evaluator()
 			.put(script("one" lineTo script("rhs" lineTo script())))
 			.pushOrNull(case)
-			.assertEqualTo(evaluator.begin.put(script("rhs" lineTo script(), "jeden" lineTo script())))
+			.assertEqualTo(evaluator().put(script("rhs" lineTo script(), "jeden" lineTo script())))
 	}
 
 	@Test
 	fun pushCase_mismatch() {
-		evaluator.begin
+		evaluator()
 			.put(script("two" lineTo script("rhs" lineTo script())))
 			.pushOrNull(case)
 			.assertEqualTo(null)

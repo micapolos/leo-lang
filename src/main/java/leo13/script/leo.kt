@@ -31,8 +31,8 @@ val Empty.leo
 
 fun Leo.push(token: Token): Interpreter =
 	when (token) {
-		is BeginToken -> begin(token.begin.name)
-		is EndToken -> end
+		is OpeningToken -> begin(token.opening.name)
+		is ClosingToken -> end
 	}
 
 fun Leo.begin(name: String): Interpreter =

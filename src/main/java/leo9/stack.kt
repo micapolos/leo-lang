@@ -190,3 +190,6 @@ fun <V> Stack<V>.toString(valueToString: (V) -> String): String =
 			append(valueToString(value))
 		}
 	}
+
+fun <V> writtenStack(fn: Writer<V>.() -> Unit): Stack<V>? =
+	stack<V>().writerFold(Stack<V>::push, fn)

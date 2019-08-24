@@ -163,14 +163,24 @@ val Script.tokenSeq: Seq<Token>
 val ScriptLine.tokenSeq: Seq<Token>
 	get() =
 		flatSeq(
-			seq(token(begin(name))),
+			seq(token(opening(name))),
 			rhs.tokenSeq,
-			seq(token(end)))
+			seq(token(closing)))
 
 val nullScript = script("null" lineTo script())
+val nativeScript = script("native" lineTo script())
 
 val Script.asScript
 	get() =
 		if (isEmpty) nullScript
 		else if (this == nullScript) script("meta" lineTo this)
 		else this
+
+fun <V> Stack<V>.asScript(fn: V.() -> ScriptLine) =
+	if (isEmpty) nullScript
+	else map { fn() }.script
+
+//fun unsafeScript(string: String) =
+//	tokenizer()
+//		.fold(string.charSeq) { push(it)!! }
+//		.completedScript!!

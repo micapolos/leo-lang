@@ -3,8 +3,7 @@ package leo13.script
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.*
-import leo13.script.evaluator.begin
-import leo13.script.evaluator.end
+import leo13.script.evaluator.evaluator
 import leo13.script.evaluator.push
 import leo9.fold
 import leo9.reverse
@@ -27,7 +26,7 @@ fun Compiler.with(typedExpr: TypedExpr) = copy(typedExpr = typedExpr)
 
 val Script.compile
 	get() =
-		evaluator.begin.push(compiler().push(this).typedExpr.expr).end
+		evaluator().push(compiler().push(this).typedExpr.expr).script
 
 fun Compiler.push(script: Script): Compiler =
 	fold(script.lineStack.reverse, Compiler::push)
