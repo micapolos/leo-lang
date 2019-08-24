@@ -1,16 +1,22 @@
 package leo13.script
 
 import leo.base.orNull
+import leo13.*
 import leo13.Script
 import leo13.ScriptLine
-import leo13.lineTo
-import leo13.plus
 import leo13.script
 import leo9.*
 import leo9.fold
 
-data class Expr(val opStack: Stack<Op>)
-data class ExprLine(val name: String, val rhs: Expr)
+data class Expr(val opStack: Stack<Op>) {
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine get() = opStack.asScriptLine("expr") { asScriptLine }
+}
+
+data class ExprLine(val name: String, val rhs: Expr) {
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine get() = "line" lineTo script(name.nameAsScriptLine, rhs.asScriptLine)
+}
 
 val Stack<Op>.expr get() = Expr(this)
 fun expr(vararg ops: Op) = stack(*ops).expr

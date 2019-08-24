@@ -12,11 +12,9 @@ import leo13.script.Case
 import leo9.*
 
 data class Evaluator(val bindings: Bindings, val script: Script) {
-	override fun toString() = asScript.toString()
-	val asScript
-		get() = script(
-			"bindings" lineTo bindings.asScript,
-			"script" lineTo script.asScript)
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine
+		get() = "evaluator" lineTo script(bindings.asScriptLine, script.asScriptLine)
 }
 
 fun evaluator() = Evaluator(bindings(), script())

@@ -1,20 +1,52 @@
 package leo13.script
 
-import leo13.Argument
-import leo13.Lhs
-import leo13.Rhs
-import leo13.RhsLine
+import leo13.*
 
-sealed class Op
+sealed class Op {
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine get() = "op" lineTo script(opAsScriptLine)
+	abstract val opAsScriptLine: ScriptLine
+}
 
-data class ArgumentOp(val argument: Argument) : Op()
-data class LhsOp(val lhs: Lhs) : Op()
-data class RhsLineOp(val rhsLine: RhsLine) : Op()
-data class RhsOp(val rhs: Rhs) : Op()
-data class GetOp(val get: Get) : Op()
-data class SwitchOp(val switch: Switch) : Op()
-data class LineOp(val line: ExprLine) : Op()
-data class CallOp(val call: Call) : Op()
+data class ArgumentOp(val argument: Argument) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = argument.asScriptLine
+}
+
+data class LhsOp(val lhs: Lhs) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = lhs.asScriptLine
+}
+
+data class RhsLineOp(val rhsLine: RhsLine) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = rhsLine.asScriptLine
+}
+
+data class RhsOp(val rhs: Rhs) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = rhs.asScriptLine
+}
+
+data class GetOp(val get: Get) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = get.asScriptLine
+}
+
+data class SwitchOp(val switch: Switch) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = switch.asScriptLine
+}
+
+data class LineOp(val line: ExprLine) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = line.asScriptLine
+}
+
+data class CallOp(val call: Call) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = call.asScriptLine
+}
 
 fun op(argument: Argument): Op = ArgumentOp(argument)
 fun op(lhs: Lhs): Op = LhsOp(lhs)

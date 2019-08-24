@@ -6,16 +6,16 @@ import leo13.*
 data class Parser(
 	val scriptHead: ScriptHead,
 	val errorOrNull: TokenError?) {
-	override fun toString() = asScript.toString()
-	val asScript
-		get() = script(
-			"head" lineTo nullScript,
-			"error" lineTo errorOrNull.orNullAsScript { asScript })
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine
+		get() = "parser" lineTo script(
+			scriptHead.asScriptLine,
+			errorOrNull.orNullAsScriptLine("error") { asScriptLine })
 }
 
 data class TokenError(val token: Token) {
-	override fun toString() = asScript.toString()
-	val asScript get() = script("token" lineTo token.asScript)
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine get() = "error" lineTo script(token.asScriptLine)
 }
 
 fun error(token: Token) = TokenError(token)

@@ -5,11 +5,17 @@ import leo.base.notNullIf
 import leo9.Stack
 import leo9.stack
 
-object Previous
+object Previous {
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine get() = "previous".scriptLine
+}
 
 val previous = Previous
 
-data class Argument(val previousStack: Stack<Previous>)
+data class Argument(val previousStack: Stack<Previous>) {
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine get() = previousStack.asScriptLine("argument") { asScriptLine }
+}
 
 val Stack<Previous>.argument get() = Argument(this)
 fun argument(vararg previouses: Previous) = stack(*previouses).argument

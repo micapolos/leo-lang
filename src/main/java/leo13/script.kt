@@ -23,19 +23,17 @@ data class ScriptLink(val lhs: Script, val line: ScriptLine) {
 }
 
 data class ScriptOpener(val lhs: Script, val opening: Opening) {
-	override fun toString() = asScript.toString()
-	val asScript
-		get() = script(
-			"lhs" lineTo lhs.asScript,
-			"opening" lineTo opening.asScript)
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine
+		get() = "opener" lineTo script(lhs.asScriptLine, opening.asScriptLine)
 }
 
 data class ScriptHead(val openerStack: Stack<ScriptOpener>, val script: Script) {
-	override fun toString() = asScript.toString()
-	val asScript
-		get() = script(
-			"openers" lineTo openerStack.asScript { "opener" lineTo asScript },
-			"script" lineTo script.asScript)
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine
+		get() = "head" lineTo script(
+			"openers" lineTo openerStack.asScript { asScriptLine },
+			script.asScriptLine)
 }
 
 data class ScriptLinkLine(val name: String, val rhs: ScriptLink)
@@ -47,6 +45,7 @@ val Stack<ScriptLine>.script get() = Script(this)
 fun Script.plus(line: ScriptLine) = lineStack.push(line).script
 fun script(vararg lines: ScriptLine) = stack(*lines).script
 infix fun String.lineTo(rhs: Script) = ScriptLine(this, rhs)
+val String.scriptLine get() = lineTo(script())
 infix fun String.lineTo(rhs: ScriptLink) = ScriptLinkLine(this, rhs)
 fun link(lhs: Script, line: ScriptLine) = ScriptLink(lhs, line)
 infix fun Script.arrowTo(rhs: Script) = ScriptArrow(this, rhs)
@@ -194,21 +193,20 @@ val ScriptLine.tokenSeq: Seq<Token>
 			rhs.tokenSeq,
 			seq(token(closing)))
 
-val nullScript = script("null" lineTo script())
-val nativeScript = script("native" lineTo script())
+val nullScriptLine = "null" lineTo script()
+val nativeScriptLine = "native" lineTo script()
 
-val Script.asScript
-	get() =
-		if (isEmpty) nullScript
-		else if (this == nullScript) script("meta" lineTo this)
-		else this
+val Script.asScriptLine
+	get() = "script" lineTo this
 
 fun <V> Stack<V>.asScript(fn: V.() -> ScriptLine) =
-	if (isEmpty) nullScript
-	else map { fn() }.script
+	map { fn() }.script
 
-fun <V : Any> V?.orNullAsScript(fn: V.() -> Script) =
-	this?.fn() ?: nullScript
+fun <V> Stack<V>.asScriptLine(name: String, fn: V.() -> ScriptLine) =
+	name lineTo asScript(fn)
+
+fun <V : Any> V?.orNullAsScriptLine(name: String, fn: V.() -> ScriptLine) =
+	this?.fn() ?: name lineTo script(nullScriptLine)
 
 fun script(string: String) =
 	tokenizer()

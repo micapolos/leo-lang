@@ -129,4 +129,17 @@ class ScriptTest {
 		script("one()plus(two())")
 			.assertEqualTo(script("one" lineTo script(), "plus" lineTo script("two" lineTo script())))
 	}
+
+	@Test
+	fun stackAsScriptLine() {
+		stack<Int>()
+			.asScriptLine("ints") { toString() lineTo script() }
+			.assertEqualTo("ints" lineTo script())
+
+		stack(1, 2)
+			.asScriptLine("ints") { toString() lineTo script() }
+			.assertEqualTo("ints" lineTo script(
+				"1" lineTo script(),
+				"2" lineTo script()))
+	}
 }

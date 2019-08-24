@@ -4,7 +4,6 @@ import leo.base.charSeq
 import leo.base.fold
 import leo.base.notNullIf
 import leo13.*
-import leo13.Script
 import leo13.lineTo
 import leo13.script
 import leo9.*
@@ -13,17 +12,17 @@ data class Tokenizer(
 	val tokenStack: Stack<Token>,
 	val charStack: Stack<Char>,
 	val errorOrNull: CharError?) {
-	override fun toString() = asScript.toString()
-	val asScript: Script
-		get() = script(
-			"tokens" lineTo tokenStack.asScript { "token" lineTo asScript },
-			"chars" lineTo charStack.asScript { "char" lineTo script(toString() lineTo script()) },
-			"error" lineTo errorOrNull.orNullAsScript { asScript })
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine
+		get() = "tokenizer" lineTo script(
+			tokenStack.asScriptLine("tokens") { asScriptLine },
+			charStack.asScriptLine("chars") { "char" lineTo script(toString() lineTo script()) },
+			errorOrNull.orNullAsScriptLine("error") { asScriptLine })
 }
 
 data class CharError(val char: Char) {
-	override fun toString() = asScript.toString()
-	val asScript get() = script("char" lineTo script(char.toString() lineTo script()))
+	override fun toString() = asScriptLine.toString()
+	val asScriptLine get() = "error" lineTo script(char.toString() lineTo script()) // TODO: Escape!!!
 }
 
 fun error(char: Char) = CharError(char)
