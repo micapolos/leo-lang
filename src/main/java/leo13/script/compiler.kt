@@ -16,7 +16,7 @@ data class Compiler(
 		errorOrNull.orNullAsScriptLine("error"))
 }
 
-fun compiler() = Compiler(head(compiledOpeners(), compiled()), null)
+fun compiler() = Compiler(head(compiledOpeners(), metable()), null)
 fun compiler(head: CompiledHead, errorOrNull: TokenError?) = Compiler(head, errorOrNull)
 fun compiler(code: String) = compiler().push(code)
 

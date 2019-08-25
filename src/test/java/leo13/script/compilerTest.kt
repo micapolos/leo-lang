@@ -12,8 +12,8 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler()
 					.set(head(
-						compiledOpeners(compiled() openerTo opening("foo")),
-						compiled())))
+						compiledOpeners(metable() openerTo opening("foo")),
+						metable())))
 	}
 
 	@Test
@@ -23,9 +23,9 @@ class CompilerTest {
 				compiler()
 					.set(head(
 						compiledOpeners(
-							compiled() openerTo opening("foo"),
-							compiled() openerTo opening("bar")),
-						compiled())))
+							metable() openerTo opening("foo"),
+							metable() openerTo opening("bar")),
+						metable())))
 	}
 
 	@Test
@@ -34,8 +34,8 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler()
 					.set(head(
-						compiledOpeners(compiled() openerTo opening("foo")),
-						compiled("bar()".unsafeScript.typed))))
+						compiledOpeners(metable() openerTo opening("foo")),
+						metable(compiled("bar()".unsafeScript.typed)))))
 	}
 
 	@Test
@@ -61,9 +61,7 @@ class CompilerTest {
 				compiler().set(
 					head(
 						compiledOpeners(),
-						compiled(
-							metable(),
-							"zero()".unsafeScript.typed))))
+						metable(compiled("zero()".unsafeScript.typed)))))
 	}
 
 	@Test
@@ -123,9 +121,10 @@ class CompilerTest {
 				compiler()
 					.set(head(
 						compiledOpeners(),
-						compiled(
-							context().plus(type()).metable,
-							typed()))))
+						metable(
+							compiled(
+								context().plus(type()),
+								typed())))))
 	}
 
 	@Test
@@ -141,9 +140,10 @@ class CompilerTest {
 				compiler()
 					.set(head(
 						compiledOpeners(),
-						compiled(
-							context().plus("zero()or(one())".unsafeType).metable,
-							typed()))))
+						metable(
+							compiled(
+								context().plus("zero()or(one())".unsafeType),
+								typed())))))
 	}
 
 	@Test
@@ -167,7 +167,7 @@ class CompilerTest {
 		compiler("gives()")
 			.assertEqualTo(
 				compiler().set(
-					context().plus(function(type(), typed())).metable.compiled.head))
+					context().plus(function(type(), typed())).compiled.metable.head))
 	}
 
 	@Test
@@ -184,7 +184,7 @@ class CompilerTest {
 					context().plus(
 						function(
 							"zero()or(one())".unsafeType,
-							"bit()".unsafeScript.typed)).metable.compiled.head))
+							"bit()".unsafeScript.typed)).compiled.metable.head))
 	}
 
 	@Test
@@ -194,7 +194,7 @@ class CompilerTest {
 			context().plus(
 				function(
 					"".unsafeType,
-					"zero()of(zero()or(one()))".unsafeScript.typed)).metable.compiled.head)
+					"zero()of(zero()or(one()))".unsafeScript.typed)).compiled.metable.head)
 	}
 
 	@Test
