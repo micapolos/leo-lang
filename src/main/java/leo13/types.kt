@@ -6,7 +6,7 @@ import leo9.mapFirst
 import leo9.push
 import leo9.stack
 
-data class Types(val typeStack: Stack<Type>) : Scriptable() {
+data class Types(val typeStack: Stack<Type>) : AsScriptLine() {
 	override val asScriptLine = typeStack.asScriptLine("types") { asScriptLine }
 }
 

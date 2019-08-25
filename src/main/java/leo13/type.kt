@@ -4,9 +4,9 @@ import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo9.*
 
-data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : Scriptable() {
+data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : AsScriptLine() {
 	override fun toString() = asScript.toString()
-	override val asScriptLine = "type" lineTo asScript
+	override val asScriptLine get() = "type" lineTo asScript2
 }
 
 data class TypeLine(val name: String, val rhs: Type) {
@@ -20,6 +20,7 @@ data class TypeAccess(val int: Int, val type: Type)
 // --- constructors
 
 fun type(vararg lines: TypeLine) = Type(null, stack(*lines))
+fun type(name: String) = type(name lineTo type())
 fun type(choice: Choice, vararg lines: TypeLine) = Type(choice, stack(*lines))
 fun Type.plus(line: TypeLine) = Type(choiceOrNull, lineStack.push(line))
 infix fun Type.arrowTo(rhs: Type) = TypeArrow(this, rhs)
@@ -28,9 +29,10 @@ infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
 
 infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
-val Type.asScript: Script
+val Type.asScript2: Script
 	get() =
-		(choiceOrNull?.asScript ?: script()).fold(lineStack.reverse) { plus(it.asScriptLine) }
+		(choiceOrNull?.asScriptLine?.script ?: script())
+			.fold(lineStack.reverse) { plus(it.asScriptLine) }
 
 val TypeLine.asRawScriptLine
 	get() =
@@ -95,6 +97,40 @@ val Script.type get() = type().fold(lineStack.reverse) { plus(it) }
 val ScriptLine.typeLine: TypeLine
 	get() =
 		name lineTo rhs.type
+
+// --- asTypeOrNull
+
+val ScriptLine.typeOrNull: Type?
+	get() =
+		ifOrNull(name == "type") {
+			rhs.typeOrNull
+		}
+
+val Script.typeOrNull: Type?
+	get() =
+		lineStack.reverse.let { reverseLineStack ->
+			when (reverseLineStack) {
+				is EmptyStack -> type()
+				is LinkStack ->
+					reverseLineStack.link.value.choiceOrNull.let { choiceOrNull ->
+						if (choiceOrNull == null) plainTypeOrNull
+						else reverseLineStack.link.stack.reverse.script.plainTypeOrNull?.let { plainTypeOrNull ->
+							Type(choiceOrNull, plainTypeOrNull.lineStack)
+						}
+					}
+			}
+		}
+
+val Script.plainTypeOrNull: Type?
+	get() =
+		if (lineStack.isEmpty) type()
+		else asStackOrNull { typeLineOrNull }?.let { lineStack ->
+			Type(null, lineStack)
+		}
+
+val ScriptLine.typeLineOrNull: TypeLine?
+	get() =
+		rhs.typeOrNull?.let { type -> name lineTo type }
 
 // --- exact type
 

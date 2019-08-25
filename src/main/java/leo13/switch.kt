@@ -4,7 +4,7 @@ import leo.base.notNullOrError
 import leo9.Stack
 import leo9.stack
 
-data class Switch(val caseStack: Stack<Case>) : Scriptable() {
+data class Switch(val caseStack: Stack<Case>) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = caseStack.asScriptLine("switch")
 }

@@ -9,7 +9,7 @@ import leo9.isEmpty
 import leo9.mapFirst
 import leo9.mapOnly
 
-data class Typed(val expr: Expr, val type: Type) : Scriptable() {
+data class Typed(val expr: Expr, val type: Type) : AsScriptLine() {
 	override val asScriptLine = "typed" lineTo script(expr.asScriptLine, type.asScriptLine)
 }
 

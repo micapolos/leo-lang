@@ -13,7 +13,7 @@ data class Parser(
 			errorOrNull.orNullAsScriptLine("error"))
 }
 
-data class TokenError(val token: Token) : Scriptable() {
+data class TokenError(val token: Token) : AsScriptLine() {
 	override fun toString() = asScriptLine.toString()
 	override val asScriptLine get() = "error" lineTo script(token.asScriptLine)
 }

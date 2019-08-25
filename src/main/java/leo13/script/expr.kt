@@ -8,12 +8,12 @@ import leo13.script
 import leo9.*
 import leo9.fold
 
-data class Expr(val opStack: Stack<Op>) : Scriptable() {
+data class Expr(val opStack: Stack<Op>) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine get() = opStack.asScriptLine("expr") { asScriptLine }
 }
 
-data class ExprLine(val name: String, val rhs: Expr) : Scriptable() {
+data class ExprLine(val name: String, val rhs: Expr) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine get() = "line" lineTo script(name lineTo script(), "to" lineTo script(rhs.asScriptLine))
 }

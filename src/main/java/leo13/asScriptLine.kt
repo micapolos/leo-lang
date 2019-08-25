@@ -4,21 +4,23 @@ import leo.base.ifOrNull
 import leo.base.orNull
 import leo9.*
 
-abstract class Scriptable {
+// TODO: Convert to interface, and replace "super.toString()" with "asScriptLine.toString()" in implementations
+abstract class AsScriptLine {
 	override fun toString() = asScriptLine.toString()
 	abstract val asScriptLine: ScriptLine
+	val asScript: Script get() = asScriptLine.rhs
 }
 
-fun <V : Scriptable> V?.orNullAsScriptLine(name: String) =
+fun <V : AsScriptLine> V?.orNullAsScriptLine(name: String) =
 	this?.asScriptLine ?: name lineTo script(nullScriptLine)
 
-val <V : Scriptable> Stack<V>.asScript: Script
+val <V : AsScriptLine> Stack<V>.asScript: Script
 	get() = asScript { asScriptLine }
 
-fun <V : Scriptable> Stack<V>.asScriptLine(name: String): ScriptLine =
+fun <V : AsScriptLine> Stack<V>.asScriptLine(name: String): ScriptLine =
 	name lineTo asScript
 
-fun <V : Scriptable> Stack<V>.asSeparatedScript(name: String): Script =
+fun <V : AsScriptLine> Stack<V>.asSeparatedScript(name: String): Script =
 	(false to script()).fold(reverse) {
 		true to second.plus(if (!first) it.asScriptLine else name lineTo script(it.asScriptLine))
 	}.second

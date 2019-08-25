@@ -1,10 +1,10 @@
 package leo13.script
 
-import leo13.Scriptable
+import leo13.AsScriptLine
 import leo13.lineTo
 import leo13.script
 
-data class Metable(val context: Context, val isMeta: Boolean) : Scriptable() {
+data class Metable(val context: Context, val isMeta: Boolean) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = "metable" lineTo script(
 		context.asScriptLine,

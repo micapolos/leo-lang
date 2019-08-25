@@ -10,12 +10,12 @@ import leo13.script.tokenizer
 import leo9.*
 import leo9.Stack
 
-data class Script(val lineStack: Stack<ScriptLine>) : Scriptable() {
+data class Script(val lineStack: Stack<ScriptLine>) : AsScriptLine() {
 	override fun toString() = indentedCode
 	override val asScriptLine get() = "script" lineTo this
 }
 
-data class ScriptLine(val name: String, val rhs: Script) : Scriptable() {
+data class ScriptLine(val name: String, val rhs: Script) : AsScriptLine() {
 	override fun toString() = script(this).toString()
 	override val asScriptLine get() = "line" lineTo script(name lineTo script("to" lineTo rhs))
 }
@@ -54,6 +54,7 @@ infix fun String.lineTo(rhs: ScriptLink) = ScriptLinkLine(this, rhs)
 fun link(lhs: Script, line: ScriptLine) = ScriptLink(lhs, line)
 infix fun Script.arrowTo(rhs: Script) = ScriptArrow(this, rhs)
 val Script.onlyLineOrNull get() = lineStack.onlyOrNull
+val ScriptLine.script get() = script(this)
 
 fun scriptHead(vararg openers: ScriptOpener) = ScriptHead(stack(*openers), script())
 infix fun Script.openerTo(opening: Opening) = ScriptOpener(this, opening)

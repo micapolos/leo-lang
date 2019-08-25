@@ -6,7 +6,7 @@ import leo13.*
 data class Context(
 	val types: Types,
 	val functions: Functions,
-	val typeBindings: TypeBindings) : Scriptable() {
+	val typeBindings: TypeBindings) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = "context" lineTo script(
 		types.asScriptLine,

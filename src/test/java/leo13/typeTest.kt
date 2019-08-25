@@ -5,6 +5,36 @@ import kotlin.test.Test
 
 class TypeTest {
 	@Test
+	fun asScriptLine() {
+		type()
+			.assertEqualsToScriptLine("type()")
+
+		type(choice())
+			.assertEqualsToScriptLine("type(choice(null()))")
+
+		type("zero" lineTo type(), "one" lineTo type())
+			.assertEqualsToScriptLine("type(zero()one())")
+
+		type(choice(), "zero" lineTo type(), "one" lineTo type())
+			.assertEqualsToScriptLine("type(choice(null())zero()one())")
+	}
+
+	@Test
+	fun typeOrNull() {
+		type()
+			.assertAsScriptLineWorks { typeOrNull }
+
+		type(choice())
+			.assertAsScriptLineWorks { typeOrNull }
+
+		type("zero" lineTo type(), "one" lineTo type())
+			.assertAsScriptLineWorks { typeOrNull }
+
+		type(choice(), "zero" lineTo type(), "one" lineTo type())
+			.assertAsScriptLineWorks { typeOrNull }
+	}
+
+	@Test
 	fun parse() {
 		script()
 			.type

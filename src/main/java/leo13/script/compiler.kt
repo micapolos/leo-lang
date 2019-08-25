@@ -9,7 +9,7 @@ import leo9.reverse
 
 data class Compiler(
 	val head: CompiledHead,
-	val errorOrNull: TokenError?) : Scriptable() {
+	val errorOrNull: TokenError?) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = "compiler" lineTo script(
 		head.asScriptLine,

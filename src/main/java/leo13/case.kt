@@ -3,7 +3,7 @@ package leo13
 import leo.base.ifOrNull
 import leo.base.notNullOrError
 
-data class Case(val name: String, val rhs: Script) : Scriptable() {
+data class Case(val name: String, val rhs: Script) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = "case" lineTo script(name lineTo rhs)
 }

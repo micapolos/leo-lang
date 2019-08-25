@@ -5,29 +5,29 @@ import leo.base.notNullIf
 import leo13.*
 import leo9.*
 
-data class Compiled(val metable: Metable, val typed: Typed) : Scriptable() {
+data class Compiled(val metable: Metable, val typed: Typed) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = "compiled" lineTo script(metable.asScriptLine, typed.asScriptLine)
 }
 
-data class CompiledLine(val name: String, val rhs: Compiled) : Scriptable() {
+data class CompiledLine(val name: String, val rhs: Compiled) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = "line" lineTo script(name lineTo script("to" lineTo script(rhs.asScriptLine)))
 }
 
-data class CompiledOpener(val lhs: Compiled, val opening: Opening) : Scriptable() {
+data class CompiledOpener(val lhs: Compiled, val opening: Opening) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine
 		get() = "opener" lineTo script(lhs.asScriptLine, opening.asScriptLine)
 }
 
-data class CompiledOpeners(val stack: Stack<CompiledOpener>) : Scriptable() {
+data class CompiledOpeners(val stack: Stack<CompiledOpener>) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine
 		get() = stack.asScriptLine("openers") { asScriptLine }
 }
 
-data class CompiledHead(val openers: CompiledOpeners, val compiled: Compiled) : Scriptable() {
+data class CompiledHead(val openers: CompiledOpeners, val compiled: Compiled) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine
 		get() = "head" lineTo script(openers.asScriptLine, compiled.asScriptLine)

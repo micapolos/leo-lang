@@ -1,6 +1,6 @@
 package leo13.script
 
-import leo13.Scriptable
+import leo13.AsScriptLine
 import leo13.Type
 import leo13.asScriptLine
 import leo9.Stack
@@ -8,7 +8,7 @@ import leo9.mapFirst
 import leo9.push
 import leo9.stack
 
-data class Functions(val functionStack: Stack<Function>) : Scriptable() {
+data class Functions(val functionStack: Stack<Function>) : AsScriptLine() {
 	override val asScriptLine = functionStack.asScriptLine("functions") { asScriptLine }
 }
 
