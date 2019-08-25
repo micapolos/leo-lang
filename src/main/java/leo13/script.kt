@@ -48,6 +48,8 @@ fun Script.plus(line: ScriptLine) = lineStack.push(line).script
 fun script(vararg lines: ScriptLine) = stack(*lines).script
 infix fun String.lineTo(rhs: Script) = ScriptLine(this, rhs)
 val String.scriptLine get() = lineTo(script())
+fun script(name: String) = script(name.scriptLine)
+fun scriptLine(name: String) = name.scriptLine
 infix fun String.lineTo(rhs: ScriptLink) = ScriptLinkLine(this, rhs)
 fun link(lhs: Script, line: ScriptLine) = ScriptLink(lhs, line)
 infix fun Script.arrowTo(rhs: Script) = ScriptArrow(this, rhs)
@@ -206,22 +208,20 @@ fun <V> Stack<V>.asScript(fn: V.() -> ScriptLine) =
 fun <V> Stack<V>.asScriptLine(name: String, fn: V.() -> ScriptLine) =
 	name lineTo asScript(fn)
 
-fun <V : Scriptable> V?.orNullAsScriptLine(name: String) =
-	this?.asScriptLine ?: name lineTo script(nullScriptLine)
-
 fun unsafeScript(string: String) =
 	tokenizer()
 		.push(string)
 		.completedTokenStackOrNull
-		.notNullOrError("tokenizer error")
+		.notNullOrError("tokenizer")
 		.let { tokenStack ->
 			parser()
 				.fold(tokenStack.reverse) { push(it) }
 				.completedScriptOrNull
-				.notNullOrError("parser error")
+				.notNullOrError("parser")
 		}
 
 val String.unsafeScript get() = unsafeScript(this)
+val String.unsafeScriptLine get() = unsafeScript.onlyLineOrNull.notNullOrError("only line")
 
 fun ScriptHead.plus(token: Token): ScriptHead? =
 	when (token) {

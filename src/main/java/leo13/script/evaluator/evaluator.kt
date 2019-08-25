@@ -9,6 +9,7 @@ import leo13.Script
 import leo13.script
 import leo13.script.*
 import leo13.script.Case
+import leo13.script.Switch
 import leo9.*
 
 data class Evaluator(val bindings: Bindings, val script: Script) {

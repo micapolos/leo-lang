@@ -9,6 +9,6 @@ class SwitchTest {
 		switch().scriptableAssert("switch(null())")
 
 		switch("zero" caseTo expr(), "one" caseTo expr())
-			.scriptableAssert("switch(case(zero()to(expr(null())))case(one()to(expr(null()))))")
+			.scriptableAssert("switch(case(zero(expr(null())))case(one(expr(null()))))")
 	}
 }

@@ -1,32 +1,25 @@
 package leo13
 
 import leo.base.ifOrNull
+import leo.base.notNullOrError
 
-data class Case(val name: String, val type: Type) {
-	override fun toString() = asFirstScriptLine.toString()
+data class Case(val name: String, val rhs: Script) : Scriptable() {
+	override fun toString() = super.toString()
+	override val asScriptLine = "case" lineTo script(name lineTo rhs)
 }
 
-infix fun String.caseTo(type: Type) = Case(this, type)
+infix fun String.caseTo(rhs: Script) = Case(this, rhs)
 
-val Case.asFirstScriptLine get() = name lineTo type.asScript
-val Case.asNextScriptLine get() = "or" lineTo script(asFirstScriptLine)
+val ScriptLine.case: Case
+	get() = name caseTo rhs
 
-val TypeLine.case
+val ScriptLine.caseOrNull: Case?
+	get() = ifOrNull(name == "case") {
+		rhs.onlyLineOrNull?.case
+	}
+
+val String.unsafeCase
 	get() =
-		name caseTo rhs
-
-val ScriptLine.firstCase
-	get() =
-		name caseTo rhs.type
-
-val ScriptLine.nextCaseOrNull: Case?
-	get() =
-		ifOrNull(name == "or") {
-			rhs.onlyLineOrNull?.firstCase
-		}
-
-fun Case.matches(scriptLine: ScriptLine): Boolean =
-	name == scriptLine.name && type.matches(scriptLine.rhs)
-
-fun Case.contains(case: Case) =
-	name == case.name && type.contains(case.type)
+		unsafeScriptLine
+			.caseOrNull
+			.notNullOrError("case")

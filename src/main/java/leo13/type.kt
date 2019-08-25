@@ -78,8 +78,8 @@ fun Type.casePlusOrNull(scriptLine: ScriptLine): Type? =
 	if (choiceOrNull == null)
 		lineStack.onlyOrNull?.let { line ->
 			scriptLine
-				.nextCaseOrNull
-				?.let { case -> type(choice(line.case, case)) }
+				.nextEitherOrNull
+				?.let { case -> type(choice(line.either, case)) }
 		}
 	else ifOrNull(lineStack.isEmpty) {
 		choiceOrNull.plusOrNull(scriptLine)?.let { choice ->

@@ -3,37 +3,39 @@ package leo13
 import leo9.*
 
 data class Choice(
-	val firstCase: Case,
-	val secondCase: Case,
-	val caseStack: Stack<Case>) {
+	val firstEither: Either,
+	val secondEither: Either,
+	val remainingEitherStack: Stack<Either>) {
 	override fun toString() = asScript.toString()
 }
 
 val Choice.asScript
 	get() =
 		script()
-			.plus(firstCase.asFirstScriptLine)
-			.plus(secondCase.asNextScriptLine)
-			.fold(caseStack) { plus(it.asNextScriptLine) }
+			.plus(firstEither.asFirstScriptLine)
+			.plus(secondEither.asNextScriptLine)
+			.fold(remainingEitherStack) { plus(it.asNextScriptLine) }
 
-fun choice(firstCase: Case, secondCase: Case, vararg cases: Case) = Choice(firstCase, secondCase, stack(*cases))
-fun Choice.plus(case: Case) = Choice(firstCase, secondCase, caseStack.push(case))
+fun choice(firstEither: Either, secondEither: Either, vararg eithers: Either) = Choice(firstEither, secondEither, stack(*eithers))
+fun Choice.plus(either: Either) = Choice(firstEither, secondEither, remainingEitherStack.push(either))
 
 fun Choice.plusOrNull(scriptLine: ScriptLine) =
-	scriptLine.nextCaseOrNull?.let { plus(it) }
+	scriptLine.nextEitherOrNull?.let { plus(it) }
 
 fun Choice.matches(scriptLine: ScriptLine): Boolean =
-	caseStack.any { matches(scriptLine) } || secondCase.matches(scriptLine) || firstCase.matches(scriptLine)
+	caseStack.any { matches(scriptLine) }
 
 fun Choice.contains(type: Type): Boolean =
 	if (type.choiceOrNull == null)
-		type.onlyLineOrNull?.let { contains(it.case) } ?: false
+		type.onlyLineOrNull?.let { contains(it.either) } ?: false
 	else type.lineStack.isEmpty && contains(type.choiceOrNull)
 
 fun Choice.contains(choice: Choice): Boolean =
 	choice.caseStack.all { this@contains.contains(this) }
-		&& contains(choice.secondCase)
-		&& contains(choice.firstCase)
 
-fun Choice.contains(case: Case): Boolean =
-	caseStack.any { contains(case) } || secondCase.contains(case) || firstCase.contains(case)
+fun Choice.contains(either: Either): Boolean =
+	caseStack.any { contains(either) }
+
+val Choice.caseStack
+	get() =
+		stack(firstEither, secondEither).fold(remainingEitherStack.reverse) { push(it) }

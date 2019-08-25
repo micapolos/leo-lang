@@ -1,11 +1,7 @@
-package leo13.parser
+package leo13.script.parser
 
 import leo.base.assertEqualTo
 import leo13.*
-import leo13.script.parser.error
-import leo13.script.parser.parser
-import leo13.script.parser.push
-import leo13.script.parser.put
 import kotlin.test.Test
 
 class ParserTest {

@@ -3,7 +3,9 @@ package leo13.script
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.*
+import leo13.Switch
 import leo13.script.evaluator.evaluate
+import leo9.isEmpty
 import leo9.mapFirst
 import leo9.mapOnly
 
@@ -58,6 +60,13 @@ val Typed.lineOrNull: Typed?
 		type.lineOrNull?.let { lineType ->
 			typed(expr.plus(op(rhsLine)), lineType)
 		}
+
+fun Typed.switchOrNull(switch: Switch): Typed? =
+	ifOrNull(type.lineStack.isEmpty) {
+		type.choiceOrNull?.let { choice ->
+			TODO()
+		}
+	}
 
 val Script.typed
 	get() =
