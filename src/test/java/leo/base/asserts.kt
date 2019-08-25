@@ -19,5 +19,9 @@ val <V : Any> V?.assertNotNull
 	get() =
 		kotlin.test.assertNotNull(this)
 
+val <V : Any> V?.assertNull
+	get() =
+		kotlin.test.assertNull(this)
+
 fun <V, R> V.assertFails(fn: V.() -> R) =
 	kotlin.test.assertFails { fn() }

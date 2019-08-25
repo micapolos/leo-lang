@@ -6,7 +6,7 @@ import kotlin.test.Test
 class TypesTest {
 	@Test
 	fun lookup() {
-		val bitType = type("bit" lineTo type(choice("zero" eitherTo type(), "one" eitherTo type())))
+		val bitType = type("bit" lineTo type(unsafeChoice("zero" eitherTo type(), "one" eitherTo type())))
 
 		types()
 			.plus(bitType)
@@ -16,10 +16,10 @@ class TypesTest {
 				containingType(type("bit" lineTo type("two" lineTo type()))).assertEqualTo(
 					type("bit" lineTo type("two" lineTo type())))
 
-				containingType(type("bit" lineTo type(choice("zero" eitherTo type(), "one" eitherTo type()))))
+				containingType(type("bit" lineTo type(unsafeChoice("zero" eitherTo type(), "one" eitherTo type()))))
 					.assertEqualTo(bitType)
-				containingType(type("bit" lineTo type(choice("zero" eitherTo type(), "two" eitherTo type()))))
-					.assertEqualTo(type("bit" lineTo type(choice("zero" eitherTo type(), "two" eitherTo type()))))
+				containingType(type("bit" lineTo type(unsafeChoice("zero" eitherTo type(), "two" eitherTo type()))))
+					.assertEqualTo(type("bit" lineTo type(unsafeChoice("zero" eitherTo type(), "two" eitherTo type()))))
 			}
 	}
 }

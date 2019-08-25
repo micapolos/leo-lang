@@ -2,7 +2,6 @@ package leo13
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo.base.orNullIf
 import leo9.*
 
 data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : AsScriptLine() {
@@ -86,7 +85,7 @@ val Script.typeOrNull: Type?
 			when (reverseLineStack) {
 				is EmptyStack -> type()
 				is LinkStack ->
-					reverseLineStack.link.value.choiceOrNull?.orNullIf { !isValid }.let { choiceOrNull ->
+					reverseLineStack.link.value.choiceOrNull.let { choiceOrNull ->
 						if (choiceOrNull == null) plainTypeOrNull
 						else reverseLineStack.link.stack.reverse.script.plainTypeOrNull?.let { plainTypeOrNull ->
 							Type(choiceOrNull, plainTypeOrNull.lineStack)
