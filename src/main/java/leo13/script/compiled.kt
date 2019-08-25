@@ -68,6 +68,7 @@ fun compiledOpeners(stack: Stack<CompiledOpener>) = CompiledOpeners(stack)
 fun compiledOpeners(vararg openers: CompiledOpener) = CompiledOpeners(stack(*openers))
 fun head(openers: CompiledOpeners, metable: Metable) = CompiledHead(openers, metable)
 fun head(typed: Typed) = head(compiledOpeners(), metable(compiled(typed)))
+fun opener(metable: Metable, opening: Opening) = metable openerTo opening
 infix fun Metable.openerTo(opening: Opening) = CompiledOpener(this, opening)
 infix fun String.lineTo(rhs: Metable) = CompiledLine(this, rhs)
 
@@ -87,17 +88,17 @@ fun CompiledHead.plus(token: Token): CompiledHead? =
 	}
 
 fun CompiledHead.plus(opening: Opening): CompiledHead =
-	head(
+	if (!metable.isMeta && opening.name == "meta") head(openers, metable.setMeta(true))
+	else head(
 		openers.push(metable openerTo opening),
-		metable(
-			compiled(metable.compiled.context, typed()),
-			!metable.isMeta && opening.name == "meta"))
+		metable(compiled(metable.compiled.context, typed())))
 
 fun CompiledHead.plus(closing: Closing): CompiledHead? =
-	openers.stack.linkOrNull?.let { openerStackLink ->
+	if (metable.isMeta) head(openers, metable.setMeta(false))
+	else openers.stack.linkOrNull?.let { openerStackLink ->
 		openerStackLink.value.let { opener ->
 			opener.lhs.push(opener.opening.name lineTo metable.compiled.typed)?.let { compiled ->
-				head(compiledOpeners(openerStackLink.stack), metable(compiled))
+				head(compiledOpeners(openerStackLink.stack), metable(compiled, openerStackLink.value.lhs.isMeta))
 			}
 		}
 	}
@@ -108,16 +109,16 @@ fun Metable.push(typedLine: TypedLine): Compiled? =
 
 fun Compiled.push(typedLine: TypedLine): Compiled? =
 	when (typedLine.name) {
-		"exists" -> resolveExists(typedLine.rhs)
-		"gives" -> resolveGives(typedLine.rhs)
-		"line" -> resolveLine(typedLine.rhs)
-		"of" -> resolveOf(typedLine.rhs)
-		"previous" -> resolvePrevious(typedLine.rhs)
-		"switch" -> resolveSwitch(typedLine.rhs)
-		else -> resolve(typedLine)
+		"exists" -> pushExists(typedLine.rhs)
+		"gives" -> pushGives(typedLine.rhs)
+		"line" -> pushLine(typedLine.rhs)
+		"of" -> pushOf(typedLine.rhs)
+		"previous" -> pushPrevious(typedLine.rhs)
+		"switch" -> pushSwitch(typedLine.rhs)
+		else -> pushOther(typedLine)
 	}
 
-fun Compiled.resolveExists(rhsTyped: Typed): Compiled? =
+fun Compiled.pushExists(rhsTyped: Typed): Compiled? =
 	typed.type.staticScriptOrNull?.typeOrNull?.let { type ->
 		rhsTyped.type.staticScriptOrNull?.let { rhsScript ->
 			notNullIf(rhsScript.isEmpty) {
@@ -126,7 +127,7 @@ fun Compiled.resolveExists(rhsTyped: Typed): Compiled? =
 		}
 	}
 
-fun Compiled.resolveGives(rhsTyped: Typed): Compiled? =
+fun Compiled.pushGives(rhsTyped: Typed): Compiled? =
 	typed.type.staticScriptOrNull?.typeOrNull?.let { parameterType ->
 		rhsTyped.type.staticScriptOrNull?.let { bodyScript ->
 			context.bind(parameterType).typedOrNull(bodyScript)?.let { bodyTyped ->
@@ -135,7 +136,7 @@ fun Compiled.resolveGives(rhsTyped: Typed): Compiled? =
 		}
 	}
 
-fun Compiled.resolveOf(rhsTyped: Typed): Compiled? =
+fun Compiled.pushOf(rhsTyped: Typed): Compiled? =
 	rhsTyped
 		.type
 		.staticScriptOrNull
@@ -147,22 +148,22 @@ fun Compiled.resolveOf(rhsTyped: Typed): Compiled? =
 			}
 		}
 
-fun Compiled.resolvePrevious(rhsTyped: Typed): Compiled? =
+fun Compiled.pushPrevious(rhsTyped: Typed): Compiled? =
 	ifOrNull(rhsTyped.expr.isEmpty) {
 		typed.previousOrNull?.let { set(it) }
 	}
 
-fun Compiled.resolveLine(rhsTyped: Typed): Compiled? =
+fun Compiled.pushLine(rhsTyped: Typed): Compiled? =
 	ifOrNull(rhsTyped.expr.isEmpty) {
 		typed.lineOrNull?.let { set(it) }
 	}
 
-fun Compiled.resolveSwitch(rhsTyped: Typed): Compiled? =
+fun Compiled.pushSwitch(rhsTyped: Typed): Compiled? =
 	rhsTyped.type.staticScriptOrNull?.let { rhsStaticScript ->
-		resolveSwitch(rhsStaticScript)
+		pushSwitch(rhsStaticScript)
 	}
 
-fun Compiled.resolveSwitch(rhsScript: Script): Compiled? =
+fun Compiled.pushSwitch(rhsScript: Script): Compiled? =
 	("switch" lineTo rhsScript)
 		.switchOrNull
 		?.let { switch ->
@@ -196,12 +197,12 @@ fun Compiled.typedOrNull(script: Script): Typed? =
 		?.completedCompiledOrNull
 		?.typed
 
-fun Compiled.resolve(typedLine: TypedLine): Compiled =
+fun Compiled.pushOther(typedLine: TypedLine): Compiled =
 	null
-		?: resolveGetOrNull(typedLine)
+		?: pushGetOrNull(typedLine)
 		?: append(typedLine)
 
-fun Compiled.resolveGetOrNull(typedLine: TypedLine): Compiled? =
+fun Compiled.pushGetOrNull(typedLine: TypedLine): Compiled? =
 	ifOrNull(typedLine.rhs.expr.isEmpty) {
 		typed.accessOrNull(typedLine.name)?.let { set(it) }
 	}

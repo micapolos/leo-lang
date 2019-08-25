@@ -73,6 +73,72 @@ class CompilerTest {
 	}
 
 	@Test
+	fun pushMeta() {
+		compiler()
+			.push(token(opening("meta")))
+			.apply {
+				assertEqualTo(
+					compiler(
+						head(
+							compiledOpeners(),
+							metable(
+								compiled(),
+								true)),
+						null))
+			}
+			.push(token(opening("foo")))
+			.apply {
+				assertEqualTo(
+					compiler(
+						head(
+							compiledOpeners(
+								opener(
+									metable(
+										compiled(),
+										true),
+									opening("foo"))),
+							metable()),
+						null))
+			}
+			.push(token(closing))
+			.apply {
+				assertEqualTo(
+					compiler(
+						head(
+							compiledOpeners(),
+							metable(
+								compiled(
+									context(),
+									typed(
+										expr(op("foo" lineTo expr())),
+										type("foo" lineTo type()))),
+								true)),
+						null))
+			}
+			.push(token(closing))
+			.apply {
+				assertEqualTo(
+					compiler(
+						head(
+							compiledOpeners(),
+							metable(
+								compiled(
+									context(),
+									typed(
+										expr(op("foo" lineTo expr())),
+										type("foo" lineTo type()))),
+								false)),
+						null))
+			}
+	}
+
+	@Test
+	fun pushMetaFoo() {
+		compiler("meta(foo())")
+			.assertEqualTo(compiler().set(head("foo()".unsafeScript.typed)))
+	}
+
+	@Test
 	fun pushOf() {
 		compiler("of()")
 			.assertEqualTo(compiler().set(head(typed())))
@@ -81,7 +147,7 @@ class CompilerTest {
 	@Test
 	fun pushMetaOf() {
 		compiler("meta(of())")
-			.assertEqualTo(compiler().set(head("meta(of())".unsafeScript.typed)))
+			.assertEqualTo(compiler().set(head("of()".unsafeScript.typed)))
 	}
 
 	@Test
@@ -140,7 +206,7 @@ class CompilerTest {
 	@Test
 	fun pushMetaExists() {
 		compiler("meta(exists())")
-			.assertEqualTo(compiler().set(head("meta(exists())".unsafeScript.typed)))
+			.assertEqualTo(compiler().set(head("exists()".unsafeScript.typed)))
 	}
 
 	@Test
@@ -183,7 +249,7 @@ class CompilerTest {
 	@Test
 	fun pushMetaGives() {
 		compiler("meta(gives())")
-			.assertEqualTo(compiler().set(head("meta(gives())".unsafeScript.typed)))
+			.assertEqualTo(compiler().set(head("gives()".unsafeScript.typed)))
 	}
 
 	@Test
