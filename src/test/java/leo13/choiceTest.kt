@@ -1,5 +1,6 @@
 package leo13
 
+import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class ChoiceTest {
@@ -25,5 +26,12 @@ class ChoiceTest {
 
 		choice(either("zero", type("foo")), either("one", type("bar")))
 			.assertAsScriptLineWorks { choiceOrNull }
+	}
+
+	@Test
+	fun isValid() {
+		choice().isValid.assertEqualTo(true)
+		choice(either("zero"), either("one")).isValid.assertEqualTo(true)
+		choice(either("zero"), either("zero")).isValid.assertEqualTo(false)
 	}
 }

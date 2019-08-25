@@ -27,3 +27,7 @@ fun Choice.contains(either: Either): Boolean =
 
 val ScriptLine.choiceOrNull: Choice?
 	get() = asStackOrNull("choice") { eitherOrNull }?.choice
+
+val Choice.isValid: Boolean
+	get() =
+		eitherStack.map { name }.containsDistinct

@@ -34,6 +34,7 @@ fun <T> Stack<T>.push(value: T) = stack(link(this, value))
 fun <T> StackLink<T>.push(value: T) = link(stack(this), value)
 val <T> Stack<T>.linkOrNull get() = (this as? LinkStack)?.link
 val <T> Stack<T>.onlyLinkOrNull get() = linkOrNull?.run { orNullIf(!link.stack.isEmpty) }
+val <T : Any> Stack<T>.valueOrNull: T? get() = linkOrNull?.value
 val <T> Stack<T>.link get() = linkOrNull!!
 val <T> Stack<T>.pop get() = link.stack
 val <T> Stack<T>.top get() = link.value
@@ -61,6 +62,9 @@ fun <T> Stack<T>.any(fn: T.() -> Boolean): Boolean =
 
 fun <T> Stack<T>.all(fn: T.() -> Boolean): Boolean =
 	true.fold(this) { and(fn(it)) }
+
+fun <T> Stack<T>.contains(value: T): Boolean =
+	any { this == value }
 
 fun <T, R> Stack<T>.map(fn: T.() -> R): Stack<R> =
 	stack<R>().fold(this) { push(fn(it)) }.reverse
@@ -184,3 +188,13 @@ fun <V> Stack<V>.toString(valueToString: (V) -> String): String =
 
 fun <V> writtenStack(fn: Writer<V>.() -> Unit): Stack<V>? =
 	stack<V>().writerFold(Stack<V>::push, fn)
+
+val <V> Stack<V>.deduplicate: Stack<V>
+	get() =
+		stack<V>().fold(this) {
+			runIf(!contains(it)) { push(it) }
+		}.reverse
+
+val <V> Stack<V>.containsDistinct: Boolean
+	get() =
+		deduplicate == this
