@@ -87,8 +87,16 @@ class CompilerTest {
 	}
 
 	@Test
+	fun pushOf_simple() {
+		compiler("zero()of(zero())")
+			.assertEqualTo(
+				compiler()
+					.set(head("zero()".unsafeScript.typed)))
+	}
+
+	@Test
 	fun pushOf_complex() {
-		compiler("zero()of(choice(either(zero())either(one()))")
+		compiler("zero()of(choice(either(zero())either(one())))")
 			.assertEqualTo(
 				compiler()
 					.set(head(typed(
