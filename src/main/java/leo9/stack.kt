@@ -67,7 +67,10 @@ fun <T> Stack<T>.contains(value: T): Boolean =
 	any { this == value }
 
 fun <T, R> Stack<T>.map(fn: T.() -> R): Stack<R> =
-	stack<R>().fold(this) { push(fn(it)) }.reverse
+	reverseMap(fn).reverse
+
+fun <T, R> Stack<T>.reverseMap(fn: T.() -> R): Stack<R> =
+	stack<R>().fold(this) { push(fn(it)) }
 
 tailrec fun <T, R : Any> Stack<T>.mapFirst(fn: T.() -> R?): R? =
 	when (this) {

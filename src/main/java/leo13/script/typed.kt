@@ -35,7 +35,7 @@ fun Types.cast(typed: Typed): Typed =
 
 fun Types.cast(typedScript: TypedScript): TypedScript =
 	cast(typedScript.script.expr of typedScript.type).let { castTypedScript ->
-		castTypedScript.expr.evaluate(leo13.script.evaluator.bindings()) of castTypedScript.type
+		castTypedScript.expr.evaluate(leo13.script.evaluator.bindings()).scriptOrNull!! of castTypedScript.type
 	}
 
 fun Typed.accessOrNull(name: String): Typed? =

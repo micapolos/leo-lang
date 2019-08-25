@@ -6,7 +6,7 @@ import leo9.stack
 import org.junit.Test
 
 fun <V : AsScriptLine> V.assertEqualsToScript(code: String) =
-	script(asScriptLine).assertEqualTo(unsafeScript(code))
+	asScript.assertEqualTo(unsafeScript(code))
 
 fun <V : AsScriptLine> V.assertEqualsToScriptLine(code: String) =
 	asScriptLine.assertEqualTo(code.unsafeScriptLine)

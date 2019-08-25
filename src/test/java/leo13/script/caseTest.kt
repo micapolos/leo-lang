@@ -6,6 +6,6 @@ import kotlin.test.Test
 class CaseTest {
 	@Test
 	fun scriptable() {
-		("zero" caseTo expr()).assertEqualsToScript("case(zero(expr(null())))")
+		("zero" caseTo expr()).assertEqualsToScript("zero(expr(null()))")
 	}
 }

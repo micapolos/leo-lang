@@ -6,9 +6,9 @@ import kotlin.test.Test
 class SwitchTest {
 	@Test
 	fun asScriptLine() {
-		switch().assertEqualsToScript("switch(null())")
+		switch().assertEqualsToScript("null()")
 
 		switch("zero" caseTo expr(), "one" caseTo expr())
-			.assertEqualsToScript("switch(case(zero(expr(null())))case(one(expr(null()))))")
+			.assertEqualsToScript("case(zero(expr(null())))case(one(expr(null())))")
 	}
 }

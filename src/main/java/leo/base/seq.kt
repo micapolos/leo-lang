@@ -5,6 +5,7 @@ package leo.base
 import leo32.base.Effect
 import leo32.base.effect
 import leo32.base.mapValue
+import leo9.push
 
 data class SeqNode<T>(
 	val first: T,
@@ -14,6 +15,9 @@ data class SeqNode<T>(
 
 data class Seq<T>(
 	val nodeOrNullFn: () -> SeqNode<T>?) : Iterable<T> {
+	private val stack: leo9.Stack<T> get() = leo9.stack<T>().fold(this) { push(it) }
+	override fun hashCode() = stack.hashCode()
+	override fun equals(other: Any?) = (other is Seq<*>) && stack == other.stack
 	override fun iterator() = object : Iterator<T> {
 		var seqOrEmptyOrNull: Seq<T>? = this@Seq
 		var nextSeqNodeOrNull: SeqNode<T>? = null
@@ -238,4 +242,11 @@ fun <V> repeatSeq(value: V, count: Int): Seq<V> =
 fun <V> repeatSeqNodeOrNull(value: V, count: Int): SeqNode<V>? =
 	notNullIf(count != 0) {
 		value.then(repeatSeq(value, count.dec()))
+	}
+
+fun <V> Seq<V>.mapFirst(fn: V.() -> V): Seq<V> =
+	Seq {
+		nodeOrNull?.let { node ->
+			node.first.fn() then node.remaining
+		}
 	}

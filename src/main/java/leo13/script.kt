@@ -45,6 +45,7 @@ val Script.isEmpty get() = lineStack.isEmpty
 
 val Stack<ScriptLine>.script get() = Script(this)
 fun Script.plus(line: ScriptLine) = lineStack.push(line).script
+fun Script.plus(script: Script) = fold(script.lineStack.reverse) { plus(it) }
 fun script(vararg lines: ScriptLine) = stack(*lines).script
 infix fun String.lineTo(rhs: Script) = ScriptLine(this, rhs)
 val String.scriptLine get() = lineTo(script())
@@ -243,3 +244,7 @@ fun ScriptHead.plus(closing: Closing): ScriptHead? =
 val ScriptHead.completeScriptOrNull
 	get() =
 		notNullIf(openerStack.isEmpty) { script }
+
+fun ScriptLine.meta(name: String): ScriptLine =
+	if (this.name == name) "meta" lineTo script
+	else this

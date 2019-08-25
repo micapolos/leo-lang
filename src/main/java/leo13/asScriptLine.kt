@@ -1,8 +1,8 @@
 package leo13
 
-import leo.base.ifOrNull
-import leo.base.orNull
+import leo.base.*
 import leo9.*
+import leo9.Stack
 
 // TODO: Convert to interface, and replace "super.toString()" with "asScriptLine.toString()" in implementations
 abstract class AsScriptLine {
@@ -14,8 +14,26 @@ abstract class AsScriptLine {
 fun <V : AsScriptLine> V?.orNullAsScriptLine(name: String) =
 	this?.asScriptLine ?: name lineTo script(nullScriptLine)
 
+val <V : AsScriptLine> V?.orNullAsScript: Script
+	get() =
+		if (this == null) script()
+		else asScriptLine.script
+
 val <V : AsScriptLine> Stack<V>.asScript: Script
 	get() = asScript { asScriptLine }
+
+val <V : AsScriptLine> Stack<V>.asNoNullScript: Script
+	get() = map { asScriptLine }.script
+
+fun <F : AsScriptLine, R : AsScriptLine> asMetaFirstScript(firstName: String, firstOrNull: F?, remaining: Seq<R>): Script =
+	firstOrNull
+		?.asScriptLine
+		.let { firstLineOrNull ->
+			remaining.map { asScriptLine }.let { remainingLines ->
+				if (firstLineOrNull != null) firstLineOrNull.script.fold(remainingLines) { plus(it) }
+				else script().fold(remainingLines.mapFirst { meta(firstName) }) { plus(it) }
+			}
+		}
 
 fun <V : AsScriptLine> Stack<V>.asScriptLine(name: String): ScriptLine =
 	name lineTo asScript
