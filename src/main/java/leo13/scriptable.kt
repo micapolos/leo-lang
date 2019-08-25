@@ -1,9 +1,8 @@
 package leo13
 
 import leo.base.ifOrNull
-import leo9.Stack
-import leo9.mapOrNull
-import leo9.stack
+import leo.base.orNull
+import leo9.*
 
 abstract class Scriptable {
 	override fun toString() = asScriptLine.toString()
@@ -19,6 +18,11 @@ val <V : Scriptable> Stack<V>.asScript: Script
 fun <V : Scriptable> Stack<V>.asScriptLine(name: String): ScriptLine =
 	name lineTo asScript
 
+fun <V : Scriptable> Stack<V>.asSeparatedScript(name: String): Script =
+	(false to script()).fold(reverse) {
+		true to second.plus(if (!first) it.asScriptLine else name lineTo script(it.asScriptLine))
+	}.second
+
 fun <V : Any> Script.asStackOrNull(fn: ScriptLine.() -> V?): Stack<V>? =
 	ifOrNull(!isEmpty) {
 		if (this == nullScript) stack()
@@ -27,3 +31,15 @@ fun <V : Any> Script.asStackOrNull(fn: ScriptLine.() -> V?): Stack<V>? =
 
 fun <V : Any> ScriptLine.asStackOrNull(name: String, fn: ScriptLine.() -> V?): Stack<V>? =
 	ifOrNull(this.name == name) { rhs.asStackOrNull(fn) }
+
+fun <V : Any> Script.asSeparatedStackOrNull(name: String, fn: ScriptLine.() -> V?): Stack<V>? =
+	stack<V>().orNull.fold(lineStack.reverse) { line ->
+		this?.run {
+			if (this.isEmpty) line.fn()?.let { push(it) }
+			else ifOrNull(line.name == name) {
+				line.rhs.onlyLineOrNull?.let { line ->
+					line.fn()?.let { push(it) }
+				}
+			}
+		}
+	}
