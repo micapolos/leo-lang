@@ -36,7 +36,7 @@ class CompilerTest {
 				compiler()
 					.set(head(
 						compiledOpeners(metable() openerTo opening("foo")),
-						metable(false, compiled("bar()".unsafeScript.typed)))))
+						metable(false, compiled(context(), "bar()".unsafeScript.typed)))))
 	}
 
 	@Test
@@ -44,14 +44,14 @@ class CompilerTest {
 		compiler("foo(bar())")
 			.assertEqualTo(
 				compiler(
+					null,
 					head(
 						compiledOpeners(),
 						metable(
 							false,
 							compiled(
 								context(),
-								"foo(bar())".unsafeScript.typed))),
-					null))
+								"foo(bar())".unsafeScript.typed)))))
 	}
 
 	@Test
@@ -69,7 +69,7 @@ class CompilerTest {
 				compiler().set(
 					head(
 						compiledOpeners(),
-						metable(false, compiled("zero()".unsafeScript.typed)))))
+						metable(false, compiled(context(), "zero()".unsafeScript.typed)))))
 	}
 
 	@Test
@@ -85,12 +85,12 @@ class CompilerTest {
 		compiler("meta(")
 			.assertEqualTo(
 				compiler(
+					null,
 					head(
 						compiledOpeners(),
 						metable(
 							true,
-							compiled())),
-					null))
+							compiled()))))
 
 		compiler("meta()")
 			.assertEqualTo(compiler())
@@ -98,6 +98,7 @@ class CompilerTest {
 		compiler("meta(meta(")
 			.assertEqualTo(
 				compiler(
+					null,
 					head(
 						compiledOpeners(
 							opener(
@@ -105,12 +106,12 @@ class CompilerTest {
 									true,
 									compiled()),
 								opening("meta"))),
-						metable()),
-					null))
+						metable())))
 
 		compiler("meta(meta()")
 			.assertEqualTo(
 				compiler(
+					null,
 					head(
 						compiledOpeners(),
 						metable(
@@ -119,12 +120,12 @@ class CompilerTest {
 								context(),
 								typed(
 									expr(op("meta" lineTo expr())),
-									type("meta" lineTo type()))))),
-					null))
+									type("meta" lineTo type())))))))
 
 		compiler("meta(meta())")
 			.assertEqualTo(
 				compiler(
+					null,
 					head(
 						compiledOpeners(),
 						metable(
@@ -133,8 +134,7 @@ class CompilerTest {
 								context(),
 								typed(
 									expr(op("meta" lineTo expr())),
-									type("meta" lineTo type()))))),
-					null))
+									type("meta" lineTo type())))))))
 	}
 
 	@Test
@@ -267,29 +267,48 @@ class CompilerTest {
 
 	@Test
 	fun pushGives_complex() {
-		compiler("zero()or(one())gives(bit())")
+		compiler("choice(either(zero())either(one()))gives(bit())")
 			.assertEqualTo(
-				compiler().set(
+				compiler(
+					null,
 					head(
 						compiledOpeners(),
 						metable(
 							false,
 							compiled(
-								context().plus(function("zero()or(one())".unsafeType, "bit()".unsafeScript.typed)),
+								context(
+									types(),
+									functions(
+										function(
+											type(unsafeChoice(either("zero"), either("one"))),
+											typed(
+												expr(op("bit" lineTo expr())),
+												type("bit" lineTo type())))),
+									typeBindings()),
 								typed())))))
 	}
 
 	@Test
 	fun pushGives_metaDynamicRhs() {
-		compiler("gives(zero()meta(of(zero()or(one()))))")
-		compiler().set(
-			head(
-				compiledOpeners(),
-				metable(
-					false,
-					compiled(
-						context().plus(function("".unsafeType, "zero()of(zero()or(one()))".unsafeScript.typed)),
-						typed()))))
+		compiler("gives(zero()meta(of(choice(either(zero())either(one())))))")
+			.assertEqualTo(
+				compiler(
+					null,
+					head(
+						compiledOpeners(),
+						metable(
+							false,
+							compiled(
+								context(
+									types(),
+									functions(
+										function(
+											type(),
+											typed(
+												expr(op("zero" lineTo expr())),
+												type(unsafeChoice(either("zero"), either("one")))))),
+									typeBindings()),
+								typed())))))
 	}
 
 	@Test
@@ -331,7 +350,7 @@ class CompilerTest {
 		compiler("vec(x(zero())y(one()))x()")
 			.assertEqualTo(compiler()
 				.set(head(typed(
-					"vec(x(zero())y(one()))".unsafeScript.expr.plus(op(leo13.script.get("x"))),
+					"vec(x(zero())y(one()))".unsafeScript.expr.plus(op(get("x"))),
 					"x(zero())".unsafeType))))
 	}
 
@@ -350,11 +369,27 @@ class CompilerTest {
 			"zero(foo())" +
 				"of(choice(either(zero(foo()))either(one(bar()))))" +
 				"switch(case(zero(meta(previous()zoo()previous())))case(one(meta(previous()zar()previous()))))")
-			.assertEqualTo(compiler()
-				.set(head(typed(
-					"zero(foo())".unsafeExpr.plus(op(switch(
-						"zero" caseTo expr(op(lhs), op("zoo" lineTo expr()), op(lhs)),
-						"one" caseTo expr(op(lhs), op("zar" lineTo expr()), op(lhs))))),
-					"".unsafeType))))
+			.assertEqualTo(
+				compiler(
+					null,
+					head(
+						compiledOpeners(),
+						metable(
+							false,
+							compiled(
+								context(),
+								typed(
+									expr(
+										op("zero" lineTo expr(op("foo" lineTo expr()))),
+										op(switch(
+											"zero" caseTo expr(
+												op(lhs),
+												op("zoo" lineTo expr()),
+												op(lhs)),
+											"one" caseTo expr(
+												op(lhs),
+												op("zar" lineTo expr()),
+												op(lhs))))),
+									type()))))))
 	}
 }

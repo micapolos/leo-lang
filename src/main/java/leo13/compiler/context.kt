@@ -17,13 +17,13 @@ data class Context(
 }
 
 fun context() = Context(types(), functions(), typeBindings())
-
+fun context(types: Types, functions: Functions, typeBindings: TypeBindings) = Context(types, functions, typeBindings)
 fun Context.bind(type: Type) = copy(typeBindings = typeBindings.push(type))
 fun Context.plus(type: Type) = copy(types = types.plus(type))
 fun Context.plus(function: Function) = copy(functions = functions.plus(function))
 
 fun Context.typedOrNull(script: Script): Typed? =
-	metable(false, compiled)
+	metable(false, compiled(this, typed()))
 		.head
 		.compiler
 		.fold(script.tokenSeq) { push(it) }

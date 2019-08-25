@@ -17,10 +17,7 @@ data class Compiled(
 // --- constructors
 
 fun compiled(context: Context, typed: Typed) = Compiled(context, typed)
-fun compiled(typed: Typed) = Compiled(context(), typed)
 fun compiled() = compiled(context(), typed())
-
-val Context.compiled get() = compiled(this, typed())
 
 fun Compiled.push(typedLine: TypedLine): Compiled? =
 	when (typedLine.name) {
@@ -58,7 +55,7 @@ fun Compiled.pushOf(rhsTyped: Typed): Compiled? =
 		?.let { ofScript ->
 			ofScript.typeOrNull?.let { ofScriptType ->
 				notNullIf(ofScriptType.contains(this.typed.type)) {
-					compiled(typed.expr of ofScriptType)
+					compiled(context, typed.expr of ofScriptType)
 				}
 			}
 		}
@@ -123,7 +120,7 @@ fun Compiled.pushGetOrNull(typedLine: TypedLine): Compiled? =
 	}
 
 fun Compiled.append(typedLine: TypedLine): Compiled =
-	compiled(typed.plus(typedLine))
+	compiled(context, typed.plus(typedLine))
 
 fun Compiled.set(typed: Typed): Compiled =
 	copy(typed = typed)

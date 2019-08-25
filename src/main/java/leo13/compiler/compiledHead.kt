@@ -17,7 +17,7 @@ data class CompiledHead(
 }
 
 fun head(openers: CompiledOpeners, metable: Metable) = CompiledHead(openers, metable)
-fun head(typed: Typed) = head(compiledOpeners(), metable(false, compiled(typed)))
+fun head(typed: Typed) = head(compiledOpeners(), metable(false, compiled(context(), typed)))
 val CompiledHead.completedCompiledOrNull: Compiled? get() = notNullIf(openers.stack.isEmpty) { metable.compiled }
 val Metable.head get() = head(compiledOpeners(), this)
 
