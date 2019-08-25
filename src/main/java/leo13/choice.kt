@@ -38,5 +38,17 @@ fun Choice.contains(choice: Choice): Boolean =
 fun Choice.contains(either: Either): Boolean =
 	distinctEitherStack.any { contains(either) }
 
+fun Choice.contains(name: String): Boolean =
+	distinctEitherStack.any { this.name == name }
+
+fun Choice.eitherOrNull(name: String) =
+	distinctEitherStack.mapFirst { notNullIf(this.name == name) { this } }
+
 val ScriptLine.choiceOrNull: Choice?
 	get() = asStackOrNull("choice") { eitherOrNull }?.choiceOrNull
+
+fun Choice.matches(switch: Switch): Boolean =
+	true
+		.fold(switch.distinctCaseStack) { case ->
+			and(contains(case.name))
+		}

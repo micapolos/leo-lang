@@ -198,3 +198,6 @@ val <V> Stack<V>.deduplicate: Stack<V>
 val <V> Stack<V>.containsDistinct: Boolean
 	get() =
 		deduplicate == this
+
+fun <V> Stack<V>.filter(fn: V.() -> Boolean): Stack<V> =
+	stack<V>().fold(this) { if (it.fn()) push(it) else this }.reverse

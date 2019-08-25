@@ -29,3 +29,8 @@ fun Context.typedOrNull(script: Script): Typed? =
 		.successHeadOrNull
 		?.completedCompiledOrNull
 		?.typed
+
+fun Context.caseTypedOrNull(case: leo13.Case): CaseTyped? =
+	typedOrNull(case.rhs)?.let { rhsTyped ->
+		typed(case.name caseTo rhsTyped.expr, rhsTyped.type)
+	}

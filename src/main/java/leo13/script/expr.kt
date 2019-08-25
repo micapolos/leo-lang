@@ -31,6 +31,10 @@ val Script.expr: Expr
 			plus(op(it.exprLine))
 		}
 
+val String.unsafeExpr
+	get() =
+		unsafeScript.expr
+
 fun expr(script: Script) =
 	script.expr
 

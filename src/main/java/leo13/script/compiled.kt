@@ -1,8 +1,10 @@
 package leo13.script
 
+import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.*
+import leo13.Script
 import leo9.*
 
 data class Metable(
@@ -111,6 +113,7 @@ fun Compiled.push(typedLine: TypedLine): Compiled? =
 		"line" -> resolveLine(typedLine.rhs)
 		"of" -> resolveOf(typedLine.rhs)
 		"previous" -> resolvePrevious(typedLine.rhs)
+		"switch" -> resolveSwitch(typedLine.rhs)
 		else -> resolve(typedLine)
 	}
 
@@ -146,17 +149,52 @@ fun Compiled.resolveOf(rhsTyped: Typed): Compiled? =
 
 fun Compiled.resolvePrevious(rhsTyped: Typed): Compiled? =
 	ifOrNull(rhsTyped.expr.isEmpty) {
-		typed.previousOrNull?.let { typed ->
-			copy(typed = typed)
-		}
+		typed.previousOrNull?.let { set(it) }
 	}
 
 fun Compiled.resolveLine(rhsTyped: Typed): Compiled? =
 	ifOrNull(rhsTyped.expr.isEmpty) {
-		typed.lineOrNull?.let { typed ->
-			copy(typed = typed)
-		}
+		typed.lineOrNull?.let { set(it) }
 	}
+
+fun Compiled.resolveSwitch(rhsTyped: Typed): Compiled? =
+	rhsTyped.type.staticScriptOrNull?.let { rhsStaticScript ->
+		resolveSwitch(rhsStaticScript)
+	}
+
+fun Compiled.resolveSwitch(rhsScript: Script): Compiled? =
+	("switch" lineTo rhsScript)
+		.switchOrNull
+		?.let { switch ->
+			typed.type.onlyChoiceOrNull?.let { choice ->
+				switch
+					.choiceMatchOrNull(choice)
+					?.eitherMatchStack
+					?.mapOrNull { caseTypedOrNull(this) }
+					?.typedSwitch
+					?.switchTypedOrNull
+					?.let { switchTyped ->
+						set(
+							typed(
+								typed.expr.plus(op(switchTyped.switch)),
+								switchTyped.type))
+					}
+			}
+		}
+
+fun Compiled.caseTypedOrNull(eitherMatch: EitherMatch): CaseTyped? =
+	set(typed(expr(), eitherMatch.either.type))
+		.typedOrNull(eitherMatch.script)
+		?.let { rhsTyped -> typed(eitherMatch.either.name caseTo rhsTyped.expr, rhsTyped.type) }
+
+fun Compiled.typedOrNull(script: Script): Typed? =
+	metable
+		.head
+		.compiler
+		.fold(script.tokenSeq) { push(it) }
+		.successHeadOrNull
+		?.completedCompiledOrNull
+		?.typed
 
 fun Compiled.resolve(typedLine: TypedLine): Compiled =
 	null
@@ -165,10 +203,11 @@ fun Compiled.resolve(typedLine: TypedLine): Compiled =
 
 fun Compiled.resolveGetOrNull(typedLine: TypedLine): Compiled? =
 	ifOrNull(typedLine.rhs.expr.isEmpty) {
-		typed.accessOrNull(typedLine.name)?.let { typed ->
-			copy(typed = typed)
-		}
+		typed.accessOrNull(typedLine.name)?.let { set(it) }
 	}
 
 fun Compiled.append(typedLine: TypedLine): Compiled =
 	compiled(typed.plus(typedLine))
+
+fun Compiled.set(typed: Typed): Compiled =
+	copy(typed = typed)

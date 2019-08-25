@@ -103,6 +103,16 @@ class CompilerTest {
 	}
 
 	@Test
+	fun pushOf_moreComplex() {
+		compiler("zero(foo())of(choice(either(zero(foo()))either(one(bar()))))")
+			.assertEqualTo(
+				compiler()
+					.set(head(typed(
+						"zero(foo())".unsafeScript.expr,
+						"choice(either(zero(foo()))either(one(bar())))".unsafeType))))
+	}
+
+	@Test
 	fun pushOf_error_typeMismatch() {
 		compiler("zero()of(one())")
 			.assertEqualTo(compiler("zero()of(one()").set(error(token(closing))))
@@ -238,5 +248,25 @@ class CompilerTest {
 				.set(head(typed(
 					"vec(x(zero())y(one()))".unsafeScript.expr.plus(op(get("x"))),
 					"x(zero())".unsafeType))))
+	}
+
+	@Test
+	fun pushSwitch_simple() {
+		compiler("zero(foo())of(choice(either(zero(foo()))))switch(case(zero(bar())))")
+			.assertEqualTo(compiler()
+				.set(head(typed(
+					"zero(foo())".unsafeExpr.plus(op(switch("zero" caseTo script("bar").expr))),
+					"foo()bar()".unsafeType))))
+	}
+
+	@Test
+	fun pushSwitch_dynamic() {
+		compiler("zero(foo())of(choice(either(zero(foo()))either(one(foo()))))switch(case(zero(bar()))case(one(bar())))")
+			.assertEqualTo(compiler()
+				.set(head(typed(
+					"zero(foo())".unsafeExpr.plus(op(switch(
+						"zero" caseTo script("bar").expr,
+						"one" caseTo script("bar").expr))),
+					"foo()bar()".unsafeType))))
 	}
 }

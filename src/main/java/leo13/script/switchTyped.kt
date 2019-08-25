@@ -14,7 +14,7 @@ fun typed(switch: Switch, type: Type) = SwitchTyped(switch, type)
 
 fun switchTyped() = SwitchTyped(switch(), type())
 
-val TypedSwitch.typedOrNull: SwitchTyped?
+val TypedSwitch.switchTypedOrNull: SwitchTyped?
 	get() =
 		switchTyped().orNull.fold(caseTypedStack.reverse) {
 			this?.plusOrNull(it)

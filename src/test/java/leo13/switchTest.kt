@@ -33,4 +33,33 @@ class SwitchTest {
 					"one" caseTo script("jeden"),
 					"two" caseTo script("dwa")))
 	}
+
+	@Test
+	fun choiceMatchOrNull() {
+		switchOrNull()!!
+			.choiceMatchOrNull(choiceOrNull()!!)
+			.assertEqualTo(choiceMatch())
+
+		switchOrNull(
+			"zero" caseTo script("zero"),
+			"one" caseTo script("one"))!!
+			.choiceMatchOrNull(
+				choiceOrNull(
+					either("one", type("one")),
+					either("zero", type("zero")))!!)
+			.assertEqualTo(
+				choiceMatch(
+					match(either("zero", type("zero")), script("zero")),
+					match(either("one", type("one")), script("one"))))
+
+		switchOrNull(
+			"zero" caseTo script("zero"),
+			"one" caseTo script("one"))!!
+			.choiceMatchOrNull(
+				choiceOrNull(
+					either("two", type("two")),
+					either("one", type("one")),
+					either("zero", type("zero")))!!)
+			.assertEqualTo(null)
+	}
 }

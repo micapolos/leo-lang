@@ -35,3 +35,13 @@ val String.unsafeSwitch
 		unsafeScriptLine
 			.switchOrNull
 			.notNullOrError("switch")
+
+fun Switch.choiceMatchOrNull(choice: Choice): ChoiceMatch? =
+	distinctCaseStack
+		.mapOrNull {
+			choice
+				.eitherOrNull(name)
+				?.let { either -> match(either, rhs) }
+		}
+		?.choiceMatch
+		?.orNullIf { !(choice.distinctEitherStack.drop(eitherMatchStack)?.isEmpty ?: true) }
