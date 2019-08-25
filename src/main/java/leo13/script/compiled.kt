@@ -81,7 +81,9 @@ fun Compiled.push(typedLine: TypedLine): Compiled? =
 	else when (typedLine.name) {
 		"exists" -> resolveExists(typedLine.rhs)
 		"gives" -> resolveGives(typedLine.rhs)
+		"line" -> resolveLine(typedLine.rhs)
 		"of" -> resolveOf(typedLine.rhs)
+		"previous" -> resolvePrevious(typedLine.rhs)
 		else -> resolve(typedLine)
 	}
 
@@ -114,6 +116,20 @@ fun Compiled.resolveOf(rhsTyped: Typed): Compiled? =
 				}
 			}
 		}
+
+fun Compiled.resolvePrevious(rhsTyped: Typed): Compiled? =
+	ifOrNull(rhsTyped.expr.isEmpty) {
+		typed.previousOrNull?.let { typed ->
+			copy(typed = typed)
+		}
+	}
+
+fun Compiled.resolveLine(rhsTyped: Typed): Compiled? =
+	ifOrNull(rhsTyped.expr.isEmpty) {
+		typed.lineOrNull?.let { typed ->
+			copy(typed = typed)
+		}
+	}
 
 fun Compiled.resolve(typedLine: TypedLine): Compiled =
 	null

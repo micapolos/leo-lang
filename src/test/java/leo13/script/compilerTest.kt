@@ -206,6 +206,24 @@ class CompilerTest {
 	}
 
 	@Test
+	fun pushPrevious() {
+		compiler("x(one())y(two())z(three())previous()")
+			.assertEqualTo(compiler()
+				.set(head(typed(
+					"x(one())y(two())z(three())".unsafeScript.expr.plus(op(lhs)),
+					"x(one())y(two())".unsafeScript.type))))
+	}
+
+	@Test
+	fun pushLine() {
+		compiler("x(one())y(two())z(three())line()")
+			.assertEqualTo(compiler()
+				.set(head(typed(
+					"x(one())y(two())z(three())".unsafeScript.expr.plus(op(rhsLine)),
+					"z(three())".unsafeScript.type))))
+	}
+
+	@Test
 	fun pushGet() {
 		compiler("vec(x(zero())y(one()))x()")
 			.assertEqualTo(compiler()

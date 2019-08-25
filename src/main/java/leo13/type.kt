@@ -1,6 +1,7 @@
 package leo13
 
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo9.*
 
 data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : Scriptable() {
@@ -41,6 +42,20 @@ val TypeLine.asScriptLine
 		else asRawScriptLine
 
 val Type.isEmpty get() = choiceOrNull == null && lineStack.isEmpty
+
+val Type.previousOrNull
+	get() =
+		lineStack
+			.linkOrNull
+			?.let { lineStackLink -> Type(choiceOrNull, lineStackLink.stack) }
+			?: notNullIf(choiceOrNull != null) { type() }
+
+val Type.lineOrNull
+	get() =
+		lineStack
+			.linkOrNull
+			?.let { lineStackLink -> Type(null, stack(lineStackLink.value)) }
+			?: choiceOrNull?.let { choice -> Type(choice, stack()) }
 
 val Type.onlyLineOrNull
 	get() =

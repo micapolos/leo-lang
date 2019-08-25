@@ -47,6 +47,18 @@ fun Typed.accessOrNull(name: String): Typed? =
 			}
 		}
 
+val Typed.previousOrNull: Typed?
+	get() =
+		type.previousOrNull?.let { previousType ->
+			typed(expr.plus(op(lhs)), previousType)
+		}
+
+val Typed.lineOrNull: Typed?
+	get() =
+		type.lineOrNull?.let { lineType ->
+			typed(expr.plus(op(rhsLine)), lineType)
+		}
+
 val Script.typed
 	get() =
 		expr of exactType
