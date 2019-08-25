@@ -14,8 +14,9 @@ val Stack<Either>.uncheckedChoice get() = Choice(this)
 
 val Stack<Either>.choiceOrNull
 	get() =
-		stack<Either>().uncheckedChoice.orNull.fold(reverse) { this?.plusOrNull(it) }
+		choice().orNull.fold(reverse) { this?.plusOrNull(it) }
 
+fun choice(): Choice = stack<Either>().uncheckedChoice
 fun choiceOrNull(vararg eithers: Either): Choice? = stack(*eithers).choiceOrNull
 fun unsafeChoice(vararg eithers: Either): Choice = choiceOrNull(*eithers)!!
 

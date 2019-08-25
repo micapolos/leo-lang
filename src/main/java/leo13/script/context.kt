@@ -20,7 +20,7 @@ fun Context.bind(type: Type) = copy(typeBindings = typeBindings.push(type))
 fun Context.plus(type: Type) = copy(types = types.plus(type))
 fun Context.plus(function: Function) = copy(functions = functions.plus(function))
 
-fun Context.compile(script: Script): Typed? =
+fun Context.typedOrNull(script: Script): Typed? =
 	metable
 		.compiled
 		.head

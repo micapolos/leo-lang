@@ -5,29 +5,42 @@ import leo.base.notNullIf
 import leo13.*
 import leo9.*
 
-data class Compiled(val metable: Metable, val typed: Typed) : AsScriptLine() {
+data class ContextAndTyped(
+	val context: Context,
+	val typed: Typed)
+
+data class Compiled(
+	val metable: Metable,
+	val typed: Typed) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = "compiled" lineTo script(metable.asScriptLine, typed.asScriptLine)
 }
 
-data class CompiledLine(val name: String, val rhs: Compiled) : AsScriptLine() {
+data class CompiledLine(
+	val name: String,
+	val rhs: Compiled) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine = "line" lineTo script(name lineTo script("to" lineTo script(rhs.asScriptLine)))
 }
 
-data class CompiledOpener(val lhs: Compiled, val opening: Opening) : AsScriptLine() {
+data class CompiledOpener(
+	val lhs: Compiled,
+	val opening: Opening) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine
 		get() = "opener" lineTo script(lhs.asScriptLine, opening.asScriptLine)
 }
 
-data class CompiledOpeners(val stack: Stack<CompiledOpener>) : AsScriptLine() {
+data class CompiledOpeners(
+	val stack: Stack<CompiledOpener>) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine
 		get() = stack.asScriptLine("openers") { asScriptLine }
 }
 
-data class CompiledHead(val openers: CompiledOpeners, val compiled: Compiled) : AsScriptLine() {
+data class CompiledHead(
+	val openers: CompiledOpeners,
+	val compiled: Compiled) : AsScriptLine() {
 	override fun toString() = super.toString()
 	override val asScriptLine
 		get() = "head" lineTo script(openers.asScriptLine, compiled.asScriptLine)
@@ -99,7 +112,7 @@ fun Compiled.resolveExists(rhsTyped: Typed): Compiled? =
 fun Compiled.resolveGives(rhsTyped: Typed): Compiled? =
 	typed.type.staticScriptOrNull?.typeOrNull?.let { parameterType ->
 		rhsTyped.type.staticScriptOrNull?.let { bodyScript ->
-			metable.context.bind(parameterType).compile(bodyScript)?.let { bodyTyped ->
+			metable.context.bind(parameterType).typedOrNull(bodyScript)?.let { bodyTyped ->
 				compiled(metable.context.plus(function(parameterType, bodyTyped)).metable, typed())
 			}
 		}
