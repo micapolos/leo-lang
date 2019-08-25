@@ -261,12 +261,12 @@ class CompilerTest {
 
 	@Test
 	fun pushSwitch_dynamic() {
-		compiler("zero(foo())of(choice(either(zero(foo()))either(one(foo()))))switch(case(zero(bar()))case(one(bar())))")
+		compiler("zero(foo())of(choice(either(zero(foo()))either(one(foo()))))switch(case(zero())case(one()))")
 			.assertEqualTo(compiler()
 				.set(head(typed(
 					"zero(foo())".unsafeExpr.plus(op(switch(
-						"zero" caseTo script("bar").expr,
-						"one" caseTo script("bar").expr))),
-					"foo()bar()".unsafeType))))
+						"zero" caseTo expr(),
+						"one" caseTo expr()))),
+					"foo()".unsafeType))))
 	}
 }
