@@ -33,4 +33,17 @@ class StackTest {
 			.flatMap { push(0) }
 			.assertEqualTo(stack(1, 2, 0, 3, 4, 0))
 	}
+
+	@Test
+	fun deduplicate() {
+		stack<Int>().deduplicate.assertEqualTo(stack())
+		stack(1, 2, 3, 2).deduplicate.assertEqualTo(stack(1, 3, 2))
+	}
+
+	@Test
+	fun containsDistinct() {
+		stack<Int>().containsDistinct.assertEqualTo(true)
+		stack(1, 2).containsDistinct.assertEqualTo(true)
+		stack(1, 2, 1).containsDistinct.assertEqualTo(false)
+	}
 }
