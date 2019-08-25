@@ -74,50 +74,34 @@ class CompilerTest {
 
 	@Test
 	fun pushMeta() {
-		compiler()
-			.push(token(opening("meta")))
-			.apply {
-				assertEqualTo(
-					compiler(
-						head(
-							compiledOpeners(),
-							metable(
-								compiled(),
-								true)),
-						null))
-			}
-			.push(token(opening("foo")))
-			.apply {
-				assertEqualTo(
-					compiler(
-						head(
-							compiledOpeners(
-								opener(
-									metable(
-										compiled(),
-										true),
-									opening("foo"))),
-							metable()),
-						null))
-			}
-			.push(token(closing))
-			.apply {
-				assertEqualTo(
-					compiler(
-						head(
-							compiledOpeners(),
-							metable(
-								compiled(
-									context(),
-									typed(
-										expr(op("foo" lineTo expr())),
-										type("foo" lineTo type()))),
-								true)),
-						null))
-			}
-			.push(token(closing))
-			.apply {
-				assertEqualTo(
+		compiler("meta(")
+			.assertEqualTo(
+				compiler(
+					head(
+						compiledOpeners(),
+						metable(
+							compiled(),
+							true)),
+					null))
+
+		compiler("meta()")
+			.assertEqualTo(compiler())
+
+		compiler("meta(meta(")
+			.assertEqualTo(
+				compiler(
+					head(
+						compiledOpeners(
+							opener(
+								metable(
+									compiled(),
+									true),
+								opening("meta"))),
+						metable()),
+					null))
+
+		compiler("meta(meta()")
+			.assertEqualTo(
 					compiler(
 						head(
 							compiledOpeners(),
@@ -125,11 +109,24 @@ class CompilerTest {
 								compiled(
 									context(),
 									typed(
-										expr(op("foo" lineTo expr())),
-										type("foo" lineTo type()))),
+										expr(op("meta" lineTo expr())),
+										type("meta" lineTo type()))),
+								true)),
+						null))
+
+		compiler("meta(meta())")
+			.assertEqualTo(
+					compiler(
+						head(
+							compiledOpeners(),
+							metable(
+								compiled(
+									context(),
+									typed(
+										expr(op("meta" lineTo expr())),
+										type("meta" lineTo type()))),
 								false)),
 						null))
-			}
 	}
 
 	@Test
@@ -327,12 +324,15 @@ class CompilerTest {
 
 	@Test
 	fun pushSwitch_dynamic() {
-		compiler("zero(foo())of(choice(either(zero(foo()))either(one(foo()))))switch(case(zero())case(one()))")
+		compiler(
+			"zero(foo())" +
+				"of(choice(either(zero(foo()))either(one(bar()))))" +
+				"switch(case(zero(meta(previous()zoo()previous())))case(one(meta(previous()zar()previous()))))")
 			.assertEqualTo(compiler()
 				.set(head(typed(
 					"zero(foo())".unsafeExpr.plus(op(switch(
-						"zero" caseTo expr(),
-						"one" caseTo expr()))),
-					"foo()".unsafeType))))
+						"zero" caseTo expr(op(lhs), op("zoo" lineTo expr()), op(lhs)),
+						"one" caseTo expr(op(lhs), op("zar" lineTo expr()), op(lhs))))),
+					"".unsafeType))))
 	}
 }
