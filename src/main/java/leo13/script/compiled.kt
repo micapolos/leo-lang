@@ -88,7 +88,7 @@ fun Compiled.push(typedLine: TypedLine): Compiled? =
 	}
 
 fun Compiled.resolveExists(rhsTyped: Typed): Compiled? =
-	typed.type.staticScriptOrNull?.type?.let { type ->
+	typed.type.staticScriptOrNull?.typeOrNull?.let { type ->
 		rhsTyped.type.staticScriptOrNull?.let { rhsScript ->
 			notNullIf(rhsScript.isEmpty) {
 				compiled(metable.context.plus(type).metable, typed())
@@ -97,7 +97,7 @@ fun Compiled.resolveExists(rhsTyped: Typed): Compiled? =
 	}
 
 fun Compiled.resolveGives(rhsTyped: Typed): Compiled? =
-	typed.type.staticScriptOrNull?.type?.let { parameterType ->
+	typed.type.staticScriptOrNull?.typeOrNull?.let { parameterType ->
 		rhsTyped.type.staticScriptOrNull?.let { bodyScript ->
 			metable.context.bind(parameterType).compile(bodyScript)?.let { bodyTyped ->
 				compiled(metable.context.plus(function(parameterType, bodyTyped)).metable, typed())
@@ -110,7 +110,7 @@ fun Compiled.resolveOf(rhsTyped: Typed): Compiled? =
 		.type
 		.staticScriptOrNull
 		?.let { ofScript ->
-			ofScript.type.let { ofScriptType ->
+			ofScript.typeOrNull?.let { ofScriptType ->
 				notNullIf(ofScriptType.contains(this.typed.type)) {
 					compiled(metable, typed.expr of ofScriptType)
 				}

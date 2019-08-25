@@ -71,34 +71,7 @@ val Type.onlyChoiceOrNull
 			choiceOrNull
 		}
 
-// --- script -> type
-
-fun Type.plus(scriptLine: ScriptLine): Type =
-	casePlusOrNull(scriptLine) ?: linePlus(scriptLine)
-
-fun Type.casePlusOrNull(scriptLine: ScriptLine): Type? =
-	if (choiceOrNull == null)
-		lineStack.onlyOrNull?.let { line ->
-			scriptLine
-				.nextEitherOrNull
-				?.let { case -> type(choice(line.either, case)) }
-		}
-	else ifOrNull(lineStack.isEmpty) {
-		choiceOrNull.plusOrNull(scriptLine)?.let { choice ->
-			type(choice)
-		}
-	}
-
-fun Type.linePlus(scriptLine: ScriptLine): Type =
-	plus(scriptLine.typeLine)
-
-val Script.type get() = type().fold(lineStack.reverse) { plus(it) }
-
-val ScriptLine.typeLine: TypeLine
-	get() =
-		name lineTo rhs.type
-
-// --- asTypeOrNull
+// --- typeOrNull
 
 val ScriptLine.typeOrNull: Type?
 	get() =
@@ -131,6 +104,8 @@ val Script.plainTypeOrNull: Type?
 val ScriptLine.typeLineOrNull: TypeLine?
 	get() =
 		rhs.typeOrNull?.let { type -> name lineTo type }
+
+val String.unsafeType get() = unsafeScript.typeOrNull!!
 
 // --- exact type
 

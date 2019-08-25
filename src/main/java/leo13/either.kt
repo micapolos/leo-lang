@@ -27,16 +27,6 @@ val ScriptLine.eitherOrNull: Either?
 			}
 		}
 
-val ScriptLine.firstEither
-	get() =
-		name eitherTo rhs.type
-
-val ScriptLine.nextEitherOrNull: Either?
-	get() =
-		ifOrNull(name == "or") {
-			rhs.onlyLineOrNull?.firstEither
-		}
-
 fun Either.matches(scriptLine: ScriptLine): Boolean =
 	name == scriptLine.name && type.matches(scriptLine.rhs)
 

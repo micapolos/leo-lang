@@ -20,5 +20,7 @@ fun TypedScript.plus(line: TypedScriptLine) =
 val ScriptLink.parseTypedScript
 	get() =
 		ifOrNull(line.name == "of") {
-			lhs of line.rhs.type
+			line.rhs.typeOrNull?.let { type ->
+				lhs of type
+			}
 		}

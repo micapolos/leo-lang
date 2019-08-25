@@ -35,45 +35,6 @@ class TypeTest {
 	}
 
 	@Test
-	fun parse() {
-		script()
-			.type
-			.assertEqualTo(type())
-
-		script("one" lineTo script())
-			.type
-			.assertEqualTo(type("one" lineTo type()))
-
-		script("one" lineTo script("two" lineTo script()))
-			.type
-			.assertEqualTo(type("one" lineTo type("two" lineTo type())))
-
-		script("one" lineTo script(), "two" lineTo script())
-			.type
-			.assertEqualTo(type("one" lineTo type(), "two" lineTo type()))
-
-		script(
-			"one" lineTo script(),
-			"or" lineTo script("two" lineTo script()))
-			.type
-			.assertEqualTo(type(choice("one" eitherTo type(), "two" eitherTo type())))
-
-		script(
-			"one" lineTo script(),
-			"or" lineTo script("two" lineTo script()),
-			"or" lineTo script("three" lineTo script()))
-			.type
-			.assertEqualTo(type(choice("one" eitherTo type(), "two" eitherTo type(), "three" eitherTo type())))
-
-		script(
-			"one" lineTo script(),
-			"or" lineTo script("two" lineTo script()),
-			"three" lineTo script())
-			.type
-			.assertEqualTo(type(choice("one" eitherTo type(), "two" eitherTo type()), "three" lineTo type()))
-	}
-
-	@Test
 	fun matches() {
 		type()
 			.apply {

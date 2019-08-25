@@ -88,12 +88,12 @@ class CompilerTest {
 
 	@Test
 	fun pushOf_complex() {
-		compiler("zero()of(zero()or(one()))")
+		compiler("zero()of(choice(either(zero())either(one()))")
 			.assertEqualTo(
 				compiler()
 					.set(head(typed(
 						"zero()".unsafeScript.expr,
-						"zero()or(one())".unsafeScript.type))))
+						"choice(either(zero())either(one()))".unsafeType))))
 	}
 
 	@Test
@@ -134,7 +134,7 @@ class CompilerTest {
 					.set(head(
 						compiledOpeners(),
 						compiled(
-							context().plus("zero()or(one())".unsafeScript.type).metable,
+							context().plus("zero()or(one())".unsafeType).metable,
 							typed()))))
 	}
 
@@ -175,7 +175,7 @@ class CompilerTest {
 				compiler().set(
 					context().plus(
 						function(
-							"zero()or(one())".unsafeScript.type,
+							"zero()or(one())".unsafeType,
 							"bit()".unsafeScript.typed)).metable.compiled.head))
 	}
 
@@ -185,7 +185,7 @@ class CompilerTest {
 		compiler().set(
 			context().plus(
 				function(
-					"".unsafeScript.type,
+					"".unsafeType,
 					"zero()of(zero()or(one()))".unsafeScript.typed)).metable.compiled.head)
 	}
 
@@ -211,7 +211,7 @@ class CompilerTest {
 			.assertEqualTo(compiler()
 				.set(head(typed(
 					"x(one())y(two())z(three())".unsafeScript.expr.plus(op(lhs)),
-					"x(one())y(two())".unsafeScript.type))))
+					"x(one())y(two())".unsafeType))))
 	}
 
 	@Test
@@ -220,7 +220,7 @@ class CompilerTest {
 			.assertEqualTo(compiler()
 				.set(head(typed(
 					"x(one())y(two())z(three())".unsafeScript.expr.plus(op(rhsLine)),
-					"z(three())".unsafeScript.type))))
+					"z(three())".unsafeType))))
 	}
 
 	@Test
@@ -229,6 +229,6 @@ class CompilerTest {
 			.assertEqualTo(compiler()
 				.set(head(typed(
 					"vec(x(zero())y(one()))".unsafeScript.expr.plus(op(get("x"))),
-					"x(zero())".unsafeScript.type))))
+					"x(zero())".unsafeType))))
 	}
 }

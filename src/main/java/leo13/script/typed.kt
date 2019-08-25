@@ -79,7 +79,7 @@ val ScriptLine.typed
 val TypedLink.ofTypedExprOrNull
 	get() =
 		ifOrNull(typedLine.name == "of") {
-			typedLine.rhs.type.staticScriptOrNull?.type?.let { type ->
+			typedLine.rhs.type.staticScriptOrNull?.typeOrNull?.let { type ->
 				type.castOrNull(lhs)?.of(type)
 			}
 		}

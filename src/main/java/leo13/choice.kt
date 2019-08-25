@@ -12,9 +12,6 @@ val Stack<Either>.choice get() = Choice(this)
 fun choice(vararg eithers: Either) = stack(*eithers).choice
 fun Choice.plus(either: Either) = eitherStack.push(either).choice
 
-fun Choice.plusOrNull(scriptLine: ScriptLine) =
-	scriptLine.nextEitherOrNull?.let { plus(it) }
-
 fun Choice.matches(scriptLine: ScriptLine): Boolean =
 	eitherStack.any { matches(scriptLine) }
 
