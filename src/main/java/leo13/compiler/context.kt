@@ -1,7 +1,9 @@
-package leo13.script
+package leo13.compiler
 
 import leo.base.fold
 import leo13.*
+import leo13.script.*
+import leo13.script.Function
 
 data class Context(
 	val types: Types,
@@ -21,16 +23,10 @@ fun Context.plus(type: Type) = copy(types = types.plus(type))
 fun Context.plus(function: Function) = copy(functions = functions.plus(function))
 
 fun Context.typedOrNull(script: Script): Typed? =
-	compiled
-		.metable
+	metable(false, compiled)
 		.head
 		.compiler
 		.fold(script.tokenSeq) { push(it) }
 		.successHeadOrNull
 		?.completedCompiledOrNull
 		?.typed
-
-fun Context.caseTypedOrNull(case: leo13.Case): CaseTyped? =
-	typedOrNull(case.rhs)?.let { rhsTyped ->
-		typed(case.name caseTo rhsTyped.expr, rhsTyped.type)
-	}

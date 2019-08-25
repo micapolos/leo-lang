@@ -1,20 +1,11 @@
-package leo13.script
+package leo13.compiler
 
 import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.*
-import leo13.Script
-import leo9.*
-
-data class Metable(
-	val compiled: Compiled,
-	val isMeta: Boolean) : AsScriptLine() {
-	override fun toString() = super.toString()
-	override val asScriptLine = "metable" lineTo script(
-		compiled.asScriptLine,
-		"meta" lineTo script(isMeta.toString()))
-}
+import leo13.script.*
+import leo9.mapOrNull
 
 data class Compiled(
 	val context: Context,
@@ -23,89 +14,13 @@ data class Compiled(
 	override val asScriptLine = "compiled" lineTo script(context.asScriptLine, typed.asScriptLine)
 }
 
-data class CompiledLine(
-	val name: String,
-	val rhs: Metable) : AsScriptLine() {
-	override fun toString() = super.toString()
-	override val asScriptLine = "line" lineTo script(name lineTo script("to" lineTo script(rhs.asScriptLine)))
-}
-
-data class CompiledOpener(
-	val lhs: Metable,
-	val opening: Opening) : AsScriptLine() {
-	override fun toString() = super.toString()
-	override val asScriptLine
-		get() = "opener" lineTo script(lhs.asScriptLine, opening.asScriptLine)
-}
-
-data class CompiledOpeners(
-	val stack: Stack<CompiledOpener>) : AsScriptLine() {
-	override fun toString() = super.toString()
-	override val asScriptLine
-		get() = stack.asScriptLine("openers") { asScriptLine }
-}
-
-data class CompiledHead(
-	val openers: CompiledOpeners,
-	val metable: Metable) : AsScriptLine() {
-	override fun toString() = super.toString()
-	override val asScriptLine
-		get() = "head" lineTo script(openers.asScriptLine, metable.asScriptLine)
-}
-
 // --- constructors
-
-fun metable(compiled: Compiled, isMeta: Boolean) = Metable(compiled, isMeta)
-fun metable(compiled: Compiled) = metable(compiled, false)
-fun metable() = metable(compiled())
-fun Metable.setMeta(isMeta: Boolean) = metable(compiled, isMeta)
 
 fun compiled(context: Context, typed: Typed) = Compiled(context, typed)
 fun compiled(typed: Typed) = Compiled(context(), typed)
 fun compiled() = compiled(context(), typed())
 
-fun compiledOpeners(stack: Stack<CompiledOpener>) = CompiledOpeners(stack)
-fun compiledOpeners(vararg openers: CompiledOpener) = CompiledOpeners(stack(*openers))
-fun head(openers: CompiledOpeners, metable: Metable) = CompiledHead(openers, metable)
-fun head(typed: Typed) = head(compiledOpeners(), metable(compiled(typed)))
-fun opener(metable: Metable, opening: Opening) = metable openerTo opening
-infix fun Metable.openerTo(opening: Opening) = CompiledOpener(this, opening)
-infix fun String.lineTo(rhs: Metable) = CompiledLine(this, rhs)
-
 val Context.compiled get() = compiled(this, typed())
-val Compiled.metable get() = metable(this)
-val Metable.head get() = head(compiledOpeners(), this)
-
-fun CompiledOpeners.push(opener: CompiledOpener) = compiledOpeners(stack.push(opener))
-val CompiledHead.completedCompiledOrNull: Compiled? get() = notNullIf(openers.stack.isEmpty) { metable.compiled }
-
-// --- plus
-
-fun CompiledHead.plus(token: Token): CompiledHead? =
-	when (token) {
-		is OpeningToken -> plus(token.opening)
-		is ClosingToken -> plus(token.closing)
-	}
-
-fun CompiledHead.plus(opening: Opening): CompiledHead =
-	if (!metable.isMeta && opening.name == "meta") head(openers, metable.setMeta(true))
-	else head(
-		openers.push(metable openerTo opening),
-		metable(compiled(metable.compiled.context, typed())))
-
-fun CompiledHead.plus(closing: Closing): CompiledHead? =
-	if (metable.isMeta) head(openers, metable.setMeta(false))
-	else openers.stack.linkOrNull?.let { openerStackLink ->
-		openerStackLink.value.let { opener ->
-			opener.lhs.push(opener.opening.name lineTo metable.compiled.typed)?.let { compiled ->
-				head(compiledOpeners(openerStackLink.stack), metable(compiled, openerStackLink.value.lhs.isMeta))
-			}
-		}
-	}
-
-fun Metable.push(typedLine: TypedLine): Compiled? =
-	if (isMeta) compiled.append(typedLine)
-	else compiled.push(typedLine)
 
 fun Compiled.push(typedLine: TypedLine): Compiled? =
 	when (typedLine.name) {
@@ -189,7 +104,7 @@ fun Compiled.caseTypedOrNull(eitherMatch: EitherMatch): CaseTyped? =
 		?.let { rhsTyped -> typed(eitherMatch.either.name caseTo rhsTyped.expr, rhsTyped.type) }
 
 fun Compiled.typedOrNull(script: Script): Typed? =
-	metable
+	metable(false, this)
 		.head
 		.compiler
 		.fold(script.tokenSeq) { push(it) }

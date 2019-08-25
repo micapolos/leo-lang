@@ -4,6 +4,8 @@ import lambda.indexed.Quote
 import leo.base.Empty
 import leo.base.ifOrNull
 import leo13.*
+import leo13.compiler.Context
+import leo13.compiler.context
 import leo9.Stack
 import leo9.isEmpty
 import leo9.stack
