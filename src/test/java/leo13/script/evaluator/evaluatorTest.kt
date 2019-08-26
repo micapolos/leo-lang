@@ -15,11 +15,13 @@ class EvaluatorTest {
 			.assertEqualTo(Evaluator(bindings(), value()))
 	}
 
-	private val argumentEvaluator = evaluator()
-		.bind(value("one" lineTo value()))
-		.bind(value("two" lineTo value()))
-		.bind(value("three" lineTo value()))
-		.put(value("evaluated" lineTo value()))
+	private val argumentEvaluator =
+		evaluator(
+			bindings(
+				value("one" lineTo value()),
+				value("two" lineTo value()),
+				value("three" lineTo value())),
+			value("evaluated" lineTo value()))
 
 	@Test
 	fun pushArgument() {
@@ -49,8 +51,7 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_firstCase() {
-		evaluator()
-			.put(value("one" lineTo value("rhs" lineTo value())))
+		evaluator(bindings(), value("one" lineTo value("rhs" lineTo value())))
 			.evaluate(switch)
 			.assertEqualTo(
 				value(
@@ -60,8 +61,7 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_secondCase() {
-		evaluator()
-			.put(value("two" lineTo value("rhs" lineTo value())))
+		evaluator(bindings(), value("two" lineTo value("rhs" lineTo value())))
 			.evaluate(switch)
 			.assertEqualTo(
 				value(
@@ -74,16 +74,14 @@ class EvaluatorTest {
 
 	@Test
 	fun pushCase_match() {
-		evaluator()
-			.put(value("one" lineTo value("rhs" lineTo value())))
+		evaluator(bindings(), value("one" lineTo value("rhs" lineTo value())))
 			.evaluateOrNull(case)
 			.assertEqualTo(value("rhs" lineTo value(), "jeden" lineTo value()))
 	}
 
 	@Test
 	fun pushCase_mismatch() {
-		evaluator()
-			.put(value("two" lineTo value("rhs" lineTo value())))
+		evaluator(bindings(), value("two" lineTo value("rhs" lineTo value())))
 			.evaluateOrNull(case)
 			.assertEqualTo(null)
 	}

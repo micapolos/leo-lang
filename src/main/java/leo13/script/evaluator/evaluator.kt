@@ -17,21 +17,12 @@ data class Evaluator(val bindings: Bindings, val value: Value) : Scriptable() {
 
 fun evaluator() = Evaluator(bindings(), value())
 fun evaluator(bindings: Bindings, value: Value) = Evaluator(bindings, value)
-fun Evaluator.put(bindings: Bindings) = copy(bindings = bindings)
-fun Evaluator.put(value: Value) = copy(value = value)
-
-fun Evaluator.bind(value: Value) = put(bindings.push(value))
-
-val Evaluator.begin get() = put(value())
-
-fun Expr.evaluate(bindings: Bindings) = evaluator().put(bindings).push(this).value
-val Expr.evaluate get() = evaluate(bindings())
 
 fun Evaluator.push(expr: Expr) =
 	fold(expr.opStack.reverse) { push(it) }
 
 fun Evaluator.push(op: Op): Evaluator =
-	put(evaluate(op))
+	evaluator(bindings, evaluate(op))
 
 fun Evaluator.evaluate(expr: Expr): Value =
 	push(expr).value
@@ -69,14 +60,14 @@ fun Evaluator.evaluate(switch: Switch): Value =
 fun Evaluator.evaluateOrNull(case: Case): Value? =
 	value.linkOrNull!!.line.let { line ->
 		notNullIf(line.name == case.name) {
-			put(line.rhs).evaluate(case.expr)
+			evaluator(bindings, line.rhs).evaluate(case.expr)
 		}
 	}
 
 fun Evaluator.evaluate(line: ExprLine): Value =
-	value.plus(line.name lineTo begin.evaluate(line.rhs))
+	value.plus(line.name lineTo bindings.evaluate(line.rhs))
 
 fun Evaluator.evaluate(call: Call): Value =
 		value
 			.fnOrNull!!
-			.let { fn -> fn.expr.evaluate(fn.bindings.push(call.expr.evaluate(bindings))) }
+			.let { fn -> fn.bindings.push(bindings.evaluate(call.expr)).evaluate(fn.expr) }
