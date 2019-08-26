@@ -80,4 +80,28 @@ class EvaluatorTest {
 			.evaluateOrNull(case)
 			.assertEqualTo(null)
 	}
+
+	@Test
+	fun evaluateCall_exprGiven() {
+		evaluator(
+			valueBindings(value("outside")),
+			value(
+				fn(
+					valueBindings(value("inside")),
+					expr(
+						op("first" lineTo expr(op(given()))),
+						op("second" lineTo expr(op(given(outside))))))))
+			.evaluate(
+				call(
+					expr(
+						op(given()),
+						op("argument" lineTo expr()))))
+			.assertEqualTo(
+				value(
+					"first" lineTo value(
+						"outside" lineTo value(),
+						"argument" lineTo value()),
+					"second" lineTo value(
+						"inside" lineTo value())))
+	}
 }

@@ -6,4 +6,4 @@ import leo13.script.script
 data class Name(val string: String)
 
 fun name(string: String) = Name(string)
-val String.nameAsScriptLine get() = "name" lineTo script(this lineTo script())
+val String.scriptableLine get() = "name" lineTo script(this lineTo script())
