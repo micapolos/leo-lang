@@ -5,16 +5,17 @@ import org.junit.Test
 
 class ValueBuilderTest {
 	@Test
-	fun asScript() {
-		value().assertEqualsToScript("")
-		value("zero" lineTo value()).assertEqualsToScript("zero()")
-		value("zero" lineTo value(), "one" lineTo value()).assertEqualsToScript("zero()one()")
-		value("zero" lineTo value("one" lineTo value())).assertEqualsToScript("zero(one())")
-		value("fn" lineTo value()).assertEqualsToScript("meta(fn())")
+	fun constructors() {
+		value()
 
-		value(fn()).assertEqualsToScript("fn(bindings(null())expr(null()))")
-		value(fn(), "zero" lineTo value()).assertEqualsToScript("fn(bindings(null())expr(null()))zero()")
-		value(fn(), "expr" lineTo value()).assertEqualsToScript("fn(bindings(null())expr(null()))expr()")
+		value("zero" lineTo value())
+		value("zero" lineTo value(), "one" lineTo value())
+		value("zero" lineTo value("one" lineTo value()))
+		value("fn" lineTo value())
+
+		value(fn())
+		value(fn(), "zero" lineTo value())
+		value(fn(), "expr" lineTo value())
 	}
 
 	@Test

@@ -74,5 +74,5 @@ fun Evaluator.push(line: ExprLine): Evaluator =
 fun Evaluator.push(call: Call): Evaluator =
 	put(
 		value
-			.onlyFnOrNull!!
+			.fnOrNull!!
 			.let { fn -> fn.expr.evaluate(fn.bindings.push(call.expr.evaluate(bindings))) })
