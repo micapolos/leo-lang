@@ -2,8 +2,8 @@ package leo13.type
 
 import leo.base.assertNotNull
 import leo.base.assertNull
-import leo13.assertAsScriptLineWorks
-import leo13.assertEqualsToScriptLine
+import leo13.script.assertAsScriptLineWorks
+import leo13.script.assertEqualsToScriptLine
 import kotlin.test.Test
 
 class ChoiceTest {

@@ -2,8 +2,8 @@ package leo13.type
 
 import leo.base.notNullIf
 import leo.base.orNull
-import leo13.*
-import leo13.ScriptLine
+import leo13.script.*
+import leo13.script.ScriptLine
 import leo9.*
 
 data class Choice(

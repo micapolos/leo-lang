@@ -1,10 +1,10 @@
 package leo13.value
 
 import leo.base.orNull
-import leo13.*
-import leo13.Script
-import leo13.ScriptLine
-import leo13.script
+import leo13.script.*
+import leo13.script.Script
+import leo13.script.ScriptLine
+import leo13.script.script
 import leo9.*
 import leo9.fold
 

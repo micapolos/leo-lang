@@ -1,13 +1,12 @@
 package leo13.compiler
 
 import leo.base.fold
-import leo13.Script
-import leo13.Scriptable
-import leo13.script
-import leo13.script.*
-import leo13.script.Function
-import leo13.tokenSeq
+import leo13.script.Script
+import leo13.script.Scriptable
+import leo13.script.script
+import leo13.script.tokenSeq
 import leo13.type.*
+import leo13.type.Function
 
 data class Context(
 	val types: Types,

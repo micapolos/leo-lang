@@ -1,14 +1,26 @@
 package leo13.script
 
-import leo13.Scriptable
-import leo13.lineTo
-import leo13.script
-import leo13.value.Expr
+import leo.base.ifOrNull
+import leo.base.notNullOrError
 
-data class Case(val name: String, val expr: Expr) : Scriptable() {
-	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "case"
-	override val scriptableBody get() = script(name lineTo script(expr.scriptableLine))
+data class Case(val name: String, val rhs: Script) : Scriptable() {
+	override fun toString() = super.toString()
+	override val scriptableName = "case"
+	override val scriptableBody = script(name lineTo rhs)
 }
 
-infix fun String.caseTo(expr: Expr) = Case(this, expr)
+infix fun String.caseTo(rhs: Script) = Case(this, rhs)
+
+val ScriptLine.case: Case
+	get() = name caseTo rhs
+
+val ScriptLine.caseOrNull: Case?
+	get() = ifOrNull(name == "case") {
+		rhs.onlyLineOrNull?.case
+	}
+
+val String.unsafeCase
+	get() =
+		unsafeScriptLine
+			.caseOrNull
+			.notNullOrError("case")

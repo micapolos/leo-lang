@@ -1,8 +1,8 @@
 package leo13.compiler
 
-import leo13.Opening
-import leo13.Scriptable
-import leo13.script
+import leo13.script.Scriptable
+import leo13.script.script
+import leo13.token.Opening
 
 data class CompiledOpener(
 	val lhs: Metable,

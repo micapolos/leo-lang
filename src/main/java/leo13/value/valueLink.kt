@@ -2,8 +2,8 @@ package leo13.value
 
 import leo.base.SeqNode
 import leo.base.then
-import leo13.Scriptable
-import leo13.script
+import leo13.script.Scriptable
+import leo13.script.script
 
 data class ValueLink(val lhs: Value, val line: ValueLine) : Scriptable() {
 	override fun toString() = super.toString()

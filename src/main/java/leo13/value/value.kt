@@ -1,7 +1,7 @@
 package leo13.value
 
 import leo.base.*
-import leo13.*
+import leo13.script.*
 import leo9.fold
 import leo9.push
 import leo9.reverse

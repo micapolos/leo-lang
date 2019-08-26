@@ -1,9 +1,9 @@
 package leo13.compiler
 
-import leo13.Scriptable
-import leo13.lineTo
-import leo13.script
-import leo13.script.TypedLine
+import leo13.script.Scriptable
+import leo13.script.lineTo
+import leo13.script.script
+import leo13.type.TypedLine
 
 data class Metable(
 	val isMeta: Boolean,
@@ -13,7 +13,7 @@ data class Metable(
 	override val scriptableBody
 		get() = script(
 			compiled.scriptableLine,
-		"meta" lineTo script(isMeta.toString()))
+			"meta" lineTo script(isMeta.toString()))
 }
 
 fun metable(isMeta: Boolean, compiled: Compiled) = Metable(isMeta, compiled)

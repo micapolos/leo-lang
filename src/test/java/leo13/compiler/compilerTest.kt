@@ -1,9 +1,14 @@
 package leo13.compiler
 
 import leo.base.assertEqualTo
-import leo13.*
-import leo13.script.*
-import leo13.script.parser.error
+import leo13.lhs
+import leo13.rhsLine
+import leo13.script.error
+import leo13.script.script
+import leo13.script.unsafeScript
+import leo13.token.closing
+import leo13.token.opening
+import leo13.token.token
 import leo13.type.*
 import leo13.value.*
 import kotlin.test.Test

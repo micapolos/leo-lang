@@ -1,9 +1,11 @@
 package leo13.value
 
-import leo13.*
-import leo13.script.Call
-import leo13.script.Get
-import leo13.script.Switch
+import leo13.Lhs
+import leo13.Rhs
+import leo13.RhsLine
+import leo13.script.ScriptLine
+import leo13.script.lineTo
+import leo13.script.script
 
 sealed class Op {
 	override fun toString() = asScriptLine.toString()

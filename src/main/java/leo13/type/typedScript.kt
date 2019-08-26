@@ -1,10 +1,10 @@
 package leo13.type
 
 import leo.base.ifOrNull
-import leo13.Script
-import leo13.ScriptLink
-import leo13.lineTo
-import leo13.plus
+import leo13.script.Script
+import leo13.script.ScriptLink
+import leo13.script.lineTo
+import leo13.script.plus
 
 data class TypedScript(val script: Script, val type: Type) {
 	override fun toString() = asScript.toString()

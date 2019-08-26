@@ -1,5 +1,8 @@
 package leo13
 
+import leo13.script.lineTo
+import leo13.script.script
+
 object Append {
 	override fun toString() = asScriptLine.toString()
 	val asScriptLine get() = "append" lineTo script()

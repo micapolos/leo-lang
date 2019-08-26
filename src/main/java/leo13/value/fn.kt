@@ -1,7 +1,7 @@
 package leo13.value
 
-import leo13.Scriptable
-import leo13.script
+import leo13.script.Scriptable
+import leo13.script.script
 
 data class Fn(val valueBindings: ValueBindings, val expr: Expr) : Scriptable() {
 	override fun toString() = super.toString()

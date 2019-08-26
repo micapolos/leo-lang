@@ -1,10 +1,10 @@
 package leo13.compiler
 
 import leo.base.notNullIf
-import leo13.*
-import leo13.script.Typed
-import leo13.script.parser.TokenError
-import leo13.script.parser.error
+import leo13.script.*
+import leo13.token.Token
+import leo13.token.unsafeTokens
+import leo13.type.Typed
 import leo9.fold
 import leo9.reverse
 

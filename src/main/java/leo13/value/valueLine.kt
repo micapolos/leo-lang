@@ -1,8 +1,8 @@
 package leo13.value
 
-import leo13.ScriptLine
-import leo13.Scriptable
-import leo13.lineTo
+import leo13.script.ScriptLine
+import leo13.script.Scriptable
+import leo13.script.lineTo
 
 data class ValueLine(
 	val name: String,

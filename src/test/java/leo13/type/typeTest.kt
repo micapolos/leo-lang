@@ -1,10 +1,10 @@
 package leo13.type
 
 import leo.base.assertEqualTo
-import leo13.assertAsScriptLineWorks
-import leo13.assertEqualsToScriptLine
-import leo13.lineTo
-import leo13.script
+import leo13.script.assertAsScriptLineWorks
+import leo13.script.assertEqualsToScriptLine
+import leo13.script.lineTo
+import leo13.script.script
 import kotlin.test.Test
 
 class TypeTest {

@@ -1,8 +1,8 @@
 package leo13.dsl
 
-import leo13.ScriptLine
-import leo13.lineTo
-import leo13.script
+import leo13.script.ScriptLine
+import leo13.script.lineTo
+import leo13.script.script
 
 typealias X = ScriptLine
 

@@ -1,19 +1,16 @@
 package leo13.value
 
 import leo.base.notNullIf
-import leo13.*
 import leo13.Lhs
 import leo13.Rhs
-import leo13.script.Call
-import leo13.script.Case
-import leo13.script.Get
-import leo13.script.Switch
+import leo13.RhsLine
+import leo13.script.Scriptable
 import leo9.*
 
 data class Evaluator(val valueBindings: ValueBindings, val value: Value) : Scriptable() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "evaluator"
-	override val scriptableBody get() = script(valueBindings.scriptableLine, value.scriptableLine)
+	override val scriptableBody get() = leo13.script.script(valueBindings.scriptableLine, value.scriptableLine)
 }
 
 fun evaluator() = Evaluator(valueBindings(), value())

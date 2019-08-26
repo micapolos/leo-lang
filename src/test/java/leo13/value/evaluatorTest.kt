@@ -1,10 +1,6 @@
 package leo13.value
 
 import leo.base.assertEqualTo
-import leo13.given
-import leo13.outside
-import leo13.script.caseTo
-import leo13.script.switch
 import org.junit.Test
 
 class EvaluatorTest {

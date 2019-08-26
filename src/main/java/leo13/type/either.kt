@@ -1,7 +1,7 @@
 package leo13.type
 
 import leo.base.ifOrNull
-import leo13.*
+import leo13.script.*
 
 data class Either(val name: String, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()

@@ -2,7 +2,7 @@ package leo13.script
 
 import leo.base.Empty
 import leo.base.fold
-import leo13.*
+import leo13.token.Token
 
 sealed class Interpreter {
 	override fun toString() = asScript.toString()

@@ -3,13 +3,9 @@ package leo13.compiler
 import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo13.*
 import leo13.script.*
 import leo13.type.*
-import leo13.value.expr
-import leo13.value.isEmpty
-import leo13.value.op
-import leo13.value.plus
+import leo13.value.*
 import leo9.mapOrNull
 
 data class Compiled(

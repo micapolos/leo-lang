@@ -3,10 +3,12 @@ package leo13.script
 import lambda.indexed.Quote
 import leo.base.Empty
 import leo.base.ifOrNull
-import leo13.*
 import leo13.compiler.Context
 import leo13.compiler.context
-import leo13.type.type
+import leo13.token.ClosingToken
+import leo13.token.OpeningToken
+import leo13.token.Token
+import leo13.type.*
 import leo13.value.expr
 import leo13.value.isEmpty
 import leo9.Stack

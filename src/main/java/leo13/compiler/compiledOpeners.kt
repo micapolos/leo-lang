@@ -1,7 +1,7 @@
 package leo13.compiler
 
-import leo13.Scriptable
-import leo13.asScript
+import leo13.script.Scriptable
+import leo13.script.asScript
 import leo9.Stack
 import leo9.push
 import leo9.stack

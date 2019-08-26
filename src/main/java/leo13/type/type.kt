@@ -2,9 +2,9 @@ package leo13.type
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo13.*
-import leo13.Script
-import leo13.ScriptLine
+import leo13.script.*
+import leo13.script.Script
+import leo13.script.ScriptLine
 import leo9.*
 
 data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : Scriptable() {
@@ -35,7 +35,7 @@ infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
 val Type.asCustomScript: Script
 	get() =
-		(choiceOrNull?.scriptableLine?.script ?: leo13.script())
+		(choiceOrNull?.scriptableLine?.script ?: leo13.script.script())
 			.fold(lineStack.reverse) { plus(it.asScriptLine) }
 
 val TypeLine.asRawScriptLine
@@ -44,7 +44,7 @@ val TypeLine.asRawScriptLine
 
 val TypeLine.asScriptLine
 	get() =
-		if (name == "or" && rhs.onlyLineOrNull != null) "meta" lineTo script(asRawScriptLine)
+		if (name == "or" && rhs.onlyLineOrNull != null) "meta" lineTo leo13.script.script(asRawScriptLine)
 		else asRawScriptLine
 
 val Type.isEmpty get() = choiceOrNull == null && lineStack.isEmpty
@@ -140,7 +140,7 @@ val TypeLink.staticScriptLinkOrNull: ScriptLink?
 	get() =
 		lhs.staticScriptOrNull?.let { lhsScript ->
 			line.staticScriptLineOrNull?.let { scriptLine ->
-				link(lhsScript, scriptLine)
+				leo13.script.link(lhsScript, scriptLine)
 			}
 		}
 

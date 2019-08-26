@@ -1,8 +1,8 @@
 package leo13.value
 
 import leo.base.assertEqualTo
-import leo13.lineTo
-import leo13.script
+import leo13.script.lineTo
+import leo13.script.script
 import org.junit.Test
 
 class ValueBuilderTest {

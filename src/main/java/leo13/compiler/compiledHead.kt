@@ -1,10 +1,12 @@
 package leo13.compiler
 
 import leo.base.notNullIf
-import leo13.*
-import leo13.script.Typed
-import leo13.script.lineTo
-import leo13.script.typed
+import leo13.script.Scriptable
+import leo13.script.script
+import leo13.token.*
+import leo13.type.Typed
+import leo13.type.lineTo
+import leo13.type.typed
 import leo9.isEmpty
 import leo9.linkOrNull
 
