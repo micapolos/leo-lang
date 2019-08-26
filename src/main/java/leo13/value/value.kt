@@ -40,7 +40,7 @@ val Value.emptyOrNull get() = (this as? EmptyValue)?.empty
 val Value.linkOrNull get() = (this as? LinkValue)?.link
 val Value.fnOrNull get() = (this as? FnValue)?.fn
 
-val ValueLink.onlyLineOrNull get() = notNullIf(lhs.emptyOrNull == null) { line }
+val ValueLink.onlyLineOrNull get() = notNullIf(lhs.emptyOrNull != null) { line }
 
 fun value(fn: Fn, vararg lines: ValueLine): Value = value(fn).fold(lines) { plus(it) }
 fun value(vararg lines: ValueLine): Value = value(empty).fold(lines) { plus(it) }
@@ -48,7 +48,7 @@ fun value(name: String): Value = value(valueLine(name))
 fun Value.plus(line: ValueLine): Value = value(link(this, line))
 
 val Value.lineOrNullSeq: Seq<ValueLine?>
-	get() = Seq<ValueLine?> {
+	get() = Seq {
 		when (this) {
 			is EmptyValue -> null
 			is LinkValue -> link.lineOrNullSeqNode
@@ -62,7 +62,7 @@ val Script.value: Value get() = value().fold(lineStack.reverse) { plus(it.valueL
 val Value.scriptOrNull: Script?
 	get() = leo9.stack<ScriptLine>().orNull.orNullFold(lineOrNullSeq) {
 		it?.scriptLineOrNull?.let { push(it) }
-	}?.script
+	}?.reverse?.script
 
 val Value.onlyLineOrNull get() = linkOrNull?.onlyLineOrNull
 

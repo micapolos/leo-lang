@@ -1,7 +1,11 @@
 package leo13.script
 
 import leo.base.notNullIf
+import leo.base.orNullFold
 import leo13.token.Token
+import leo13.token.Tokens
+import leo9.reverse
+import leo9.seq
 
 data class Parser(
 	val scriptHead: ScriptHead,
@@ -33,3 +37,9 @@ val Parser.okScriptHeadOrNull get() = notNullIf(errorOrNull == null) { scriptHea
 val Parser.completedScriptOrNull get() = okScriptHeadOrNull?.completeScriptOrNull
 
 fun Parser.put(error: TokenError) = copy(errorOrNull = error)
+
+val Tokens.parse: Script?
+	get() =
+		parser().orNullFold(stack.reverse.seq) { push(it) }?.completedScriptOrNull
+
+

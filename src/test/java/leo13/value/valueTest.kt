@@ -33,4 +33,29 @@ class ValueBuilderTest {
 					"zero" lineTo value(),
 					"plus" lineTo value("one" lineTo value())))
 	}
+
+	@Test
+	fun firstLineOrNull() {
+		value(
+			"x" lineTo value("zero"),
+			"y" lineTo value("one"),
+			"x" lineTo value("two"))
+			.run {
+				firstLineOrNull("x").assertEqualTo("x" lineTo value("two"))
+				firstLineOrNull("y").assertEqualTo("y" lineTo value("one"))
+				firstLineOrNull("z").assertEqualTo(null)
+			}
+	}
+
+	@Test
+	fun accessOrNull() {
+		value("vec" lineTo value(
+			"x" lineTo value("zero"),
+			"y" lineTo value("one")))
+			.run {
+				accessOrNull("x").assertEqualTo(value("x" lineTo value("zero")))
+				accessOrNull("y").assertEqualTo(value("y" lineTo value("one")))
+				accessOrNull("z").assertEqualTo(null)
+			}
+	}
 }

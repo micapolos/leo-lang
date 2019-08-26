@@ -140,3 +140,7 @@ fun Compiler.append(typedLine: TypedLine): Compiler =
 
 fun Compiler.set(typed: Typed): Compiler =
 	compiler(context, typed)
+
+val Script.compile: Typed?
+	get() =
+		context().compile(this)

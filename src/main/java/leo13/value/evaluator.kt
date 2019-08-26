@@ -69,3 +69,7 @@ fun Evaluator.evaluate(call: Call): Value =
 		value
 			.fnOrNull!!
 			.let { fn -> fn.valueBindings.push(valueBindings.evaluate(call.expr)).evaluate(fn.expr) }
+
+val Expr.evaluate: Value
+	get() =
+		evaluator().evaluate(this)

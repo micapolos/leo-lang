@@ -33,7 +33,7 @@ fun tokenizer() = Tokenizer(stack(), stack(), null)
 fun tokenizer(tokenStack: Stack<Token>, charStack: Stack<Char>, error: CharError?) =
 	Tokenizer(tokenStack, charStack, error)
 
-val Tokenizer.completedTokenStackOrNull
+val Tokenizer.completedTokenStackOrNull: Stack<Token>?
 	get() =
 		notNullIf(charStack.isEmpty && errorOrNull == null) { tokenStack }
 
@@ -78,3 +78,7 @@ val Tokenizer.openingOrNull: Opening?
 
 fun Tokenizer.put(error: CharError) =
 	copy(errorOrNull = error)
+
+val String.tokenize: Tokens?
+	get() =
+		tokenizer().push(this).completedTokenStackOrNull?.tokens
