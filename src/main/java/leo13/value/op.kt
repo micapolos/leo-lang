@@ -20,22 +20,22 @@ data class ArgumentOp(val given: Given) : Op() {
 
 data class LhsOp(val lhs: Lhs) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = lhs.asScriptLine
+	override val opAsScriptLine = lhs.scriptableLine
 }
 
 data class RhsLineOp(val rhsLine: RhsLine) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = rhsLine.asScriptLine
+	override val opAsScriptLine = rhsLine.scriptableLine
 }
 
 data class RhsOp(val rhs: Rhs) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = rhs.asScriptLine
+	override val opAsScriptLine = rhs.scriptableLine
 }
 
 data class GetOp(val get: Get) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = get.asScriptLine
+	override val opAsScriptLine = get.scriptableLine
 }
 
 data class SwitchOp(val switch: Switch) : Op() {
