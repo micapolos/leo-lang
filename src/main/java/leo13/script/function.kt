@@ -2,9 +2,9 @@ package leo13.script
 
 import leo.base.notNullIf
 import leo13.Scriptable
-import leo13.Type
 import leo13.lineTo
 import leo13.script
+import leo13.type.Type
 
 data class Function(val parameterType: Type, val typed: Typed) : Scriptable() {
 	override val scriptableName get() = "function"

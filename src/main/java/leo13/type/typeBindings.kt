@@ -1,5 +1,6 @@
-package leo13
+package leo13.type
 
+import leo13.*
 import leo9.*
 
 data class TypeBindings(val stack: Stack<Type>) : Scriptable() {

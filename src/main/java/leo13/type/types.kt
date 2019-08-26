@@ -1,6 +1,8 @@
-package leo13
+package leo13.type
 
 import leo.base.notNullIf
+import leo13.Scriptable
+import leo13.asScript
 import leo9.Stack
 import leo9.mapFirst
 import leo9.push

@@ -1,5 +1,7 @@
-package leo13
+package leo13.type
 
+import leo13.assertAsScriptLineWorks
+import leo13.assertEqualsToScriptLine
 import kotlin.test.Test
 
 class EitherTest {

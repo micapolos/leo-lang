@@ -1,4 +1,6 @@
-package leo13
+package leo13.type
+
+import leo13.Script
 
 data class EitherMatch(val either: Either, val script: Script)
 

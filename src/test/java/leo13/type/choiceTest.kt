@@ -1,15 +1,17 @@
-package leo13
+package leo13.type
 
 import leo.base.assertNotNull
 import leo.base.assertNull
+import leo13.assertAsScriptLineWorks
+import leo13.assertEqualsToScriptLine
 import kotlin.test.Test
 
 class ChoiceTest {
 	@Test
 	fun construction() {
 		choiceOrNull().assertNotNull
-		choiceOrNull(either("zero"), either("one")).assertNotNull
-		choiceOrNull(either("zero"), either("one"), either("zero")).assertNull
+		leo13.type.choiceOrNull(either("zero"), either("one")).assertNotNull
+		leo13.type.choiceOrNull(either("zero"), either("one"), either("zero")).assertNull
 	}
 
 	@Test

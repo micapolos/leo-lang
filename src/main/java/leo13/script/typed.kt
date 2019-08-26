@@ -4,7 +4,8 @@ import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.*
 import leo13.Switch
-import leo13.script.evaluator.evaluate
+import leo13.type.*
+import leo13.value.*
 import leo9.isEmpty
 import leo9.mapFirst
 import leo9.mapOnly
@@ -37,7 +38,7 @@ fun Types.cast(typed: Typed): Typed =
 
 fun Types.cast(typedScript: TypedScript): TypedScript =
 	cast(typedScript.script.expr of typedScript.type).let { castTypedScript ->
-		leo13.script.evaluator.bindings().evaluate(castTypedScript.expr).scriptOrNull!! of castTypedScript.type
+		valueBindings().evaluate(castTypedScript.expr).scriptOrNull!! of castTypedScript.type
 	}
 
 fun Typed.accessOrNull(name: String): Typed? =

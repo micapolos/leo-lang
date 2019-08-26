@@ -1,6 +1,7 @@
-package leo13
+package leo13.value
 
 import leo.base.*
+import leo13.*
 import leo9.fold
 import leo9.push
 import leo9.reverse

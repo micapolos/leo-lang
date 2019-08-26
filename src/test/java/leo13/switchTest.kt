@@ -3,6 +3,7 @@ package leo13
 import leo.base.assertEqualTo
 import leo.base.assertNotNull
 import leo.base.assertNull
+import leo13.type.*
 import kotlin.test.Test
 
 class SwitchTest {

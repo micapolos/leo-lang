@@ -1,23 +1,22 @@
-package leo13.script.evaluator
+package leo13.value
 
 import leo.base.assertEqualTo
 import leo13.given
-import leo13.lineTo
 import leo13.outside
-import leo13.script.*
-import leo13.value
+import leo13.script.caseTo
+import leo13.script.switch
 import org.junit.Test
 
 class EvaluatorTest {
 	@Test
 	fun begin() {
 		evaluator()
-			.assertEqualTo(Evaluator(bindings(), value()))
+			.assertEqualTo(Evaluator(valueBindings(), value()))
 	}
 
 	private val argumentEvaluator =
 		evaluator(
-			bindings(
+			valueBindings(
 				value("one" lineTo value()),
 				value("two" lineTo value()),
 				value("three" lineTo value())),
@@ -51,7 +50,7 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_firstCase() {
-		evaluator(bindings(), value("one" lineTo value("rhs" lineTo value())))
+		evaluator(valueBindings(), value("one" lineTo value("rhs" lineTo value())))
 			.evaluate(switch)
 			.assertEqualTo(
 				value(
@@ -61,7 +60,7 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_secondCase() {
-		evaluator(bindings(), value("two" lineTo value("rhs" lineTo value())))
+		evaluator(valueBindings(), value("two" lineTo value("rhs" lineTo value())))
 			.evaluate(switch)
 			.assertEqualTo(
 				value(
@@ -74,14 +73,14 @@ class EvaluatorTest {
 
 	@Test
 	fun pushCase_match() {
-		evaluator(bindings(), value("one" lineTo value("rhs" lineTo value())))
+		evaluator(valueBindings(), value("one" lineTo value("rhs" lineTo value())))
 			.evaluateOrNull(case)
 			.assertEqualTo(value("rhs" lineTo value(), "jeden" lineTo value()))
 	}
 
 	@Test
 	fun pushCase_mismatch() {
-		evaluator(bindings(), value("two" lineTo value("rhs" lineTo value())))
+		evaluator(valueBindings(), value("two" lineTo value("rhs" lineTo value())))
 			.evaluateOrNull(case)
 			.assertEqualTo(null)
 	}

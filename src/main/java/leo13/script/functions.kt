@@ -1,8 +1,8 @@
 package leo13.script
 
 import leo13.Scriptable
-import leo13.Type
 import leo13.asScript
+import leo13.type.Type
 import leo9.Stack
 import leo9.mapFirst
 import leo9.push

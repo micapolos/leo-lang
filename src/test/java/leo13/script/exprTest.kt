@@ -2,6 +2,9 @@ package leo13.script
 
 import leo.base.assertReturns
 import leo13.*
+import leo13.value.expr
+import leo13.value.lineTo
+import leo13.value.op
 import org.junit.Test
 
 class ExprTest {

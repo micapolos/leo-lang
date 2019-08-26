@@ -6,6 +6,9 @@ import leo.base.ifOrNull
 import leo13.*
 import leo13.compiler.Context
 import leo13.compiler.context
+import leo13.type.type
+import leo13.value.expr
+import leo13.value.isEmpty
 import leo9.Stack
 import leo9.isEmpty
 import leo9.stack

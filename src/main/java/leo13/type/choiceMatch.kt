@@ -1,4 +1,4 @@
-package leo13
+package leo13.type
 
 import leo9.Stack
 import leo9.stack

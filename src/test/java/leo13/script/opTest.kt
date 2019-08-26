@@ -4,6 +4,7 @@ import leo.base.assertEqualTo
 import leo13.lhs
 import leo13.lineTo
 import leo13.script
+import leo13.value.op
 import kotlin.test.Test
 
 class OpTest {

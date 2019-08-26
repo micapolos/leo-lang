@@ -4,6 +4,8 @@ import leo.base.assertEqualTo
 import leo13.*
 import leo13.script.*
 import leo13.script.parser.error
+import leo13.type.*
+import leo13.value.*
 import kotlin.test.Test
 
 class CompilerTest {
@@ -277,7 +279,7 @@ class CompilerTest {
 							false,
 							compiled(
 								context(
-									types(),
+									leo13.type.types(),
 									functions(
 										function(
 											type(unsafeChoice(either("zero"), either("one"))),
@@ -300,7 +302,7 @@ class CompilerTest {
 							false,
 							compiled(
 								context(
-									types(),
+									leo13.type.types(),
 									functions(
 										function(
 											type(),

@@ -2,8 +2,8 @@ package leo13.script
 
 import leo.base.notNullIf
 import leo.base.orNull
-import leo13.Type
-import leo13.type
+import leo13.type.Type
+import leo13.type.type
 import leo9.fold
 import leo9.isEmpty
 import leo9.reverse

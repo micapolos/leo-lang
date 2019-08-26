@@ -1,4 +1,4 @@
-package leo13
+package leo13.type
 
 import leo.base.assertEqualTo
 import kotlin.test.Test
@@ -8,7 +8,7 @@ class TypesTest {
 	fun lookup() {
 		val bitType = type("bit" lineTo type(unsafeChoice("zero" eitherTo type(), "one" eitherTo type())))
 
-		types()
+		leo13.type.types()
 			.plus(bitType)
 			.apply {
 				containingType(type("bit" lineTo type("zero" lineTo type()))).assertEqualTo(bitType)

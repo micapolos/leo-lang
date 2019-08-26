@@ -4,7 +4,6 @@ import leo.base.charSeq
 import leo.base.fold
 import leo.base.notNullIf
 import leo13.*
-import leo13.lineTo
 import leo13.script
 import leo9.*
 

@@ -1,7 +1,10 @@
-package leo13
+package leo13.type
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
+import leo13.*
+import leo13.Script
+import leo13.ScriptLine
 import leo9.*
 
 data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : Scriptable() {
@@ -32,7 +35,7 @@ infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
 val Type.asCustomScript: Script
 	get() =
-		(choiceOrNull?.scriptableLine?.script ?: script())
+		(choiceOrNull?.scriptableLine?.script ?: leo13.script())
 			.fold(lineStack.reverse) { plus(it.asScriptLine) }
 
 val TypeLine.asRawScriptLine
