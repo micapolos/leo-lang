@@ -82,26 +82,26 @@ class EvaluatorTest {
 	}
 
 	@Test
-	fun evaluateCall_exprGiven() {
+	fun evaluateCall() {
 		evaluator(
 			valueBindings(value("outside")),
 			value(
 				fn(
 					valueBindings(value("inside")),
 					expr(
-						op("first" lineTo expr(op(given()))),
-						op("second" lineTo expr(op(given(outside))))))))
+						op("argument" lineTo expr(op(given()))),
+						op("closure" lineTo expr(op(given(outside))))))))
 			.evaluate(
 				call(
 					expr(
 						op(given()),
-						op("argument" lineTo expr()))))
+						op("parameter" lineTo expr()))))
 			.assertEqualTo(
 				value(
-					"first" lineTo value(
+					"argument" lineTo value(
 						"outside" lineTo value(),
-						"argument" lineTo value()),
-					"second" lineTo value(
+						"parameter" lineTo value()),
+					"closure" lineTo value(
 						"inside" lineTo value())))
 	}
 }
