@@ -16,6 +16,7 @@ data class Types(val typeStack: Stack<Type>) : Scriptable() {
 
 val Stack<Type>.types get() = Types(this)
 fun types() = stack<Type>().types
+fun types(vararg types: Type) = stack(*types).types
 fun Types.plus(type: Type) = typeStack.push(type).types
 fun Types.containingType(type: Type): Type =
 	typeStack.mapFirst {

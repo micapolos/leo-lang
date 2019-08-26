@@ -1,10 +1,8 @@
 package leo13.compiler
 
-import leo.base.fold
 import leo13.script.Script
 import leo13.script.Scriptable
 import leo13.script.script
-import leo13.script.tokenSeq
 import leo13.type.*
 import leo13.type.Function
 
@@ -27,11 +25,5 @@ fun Context.bind(type: Type) = copy(typeBindings = typeBindings.push(type))
 fun Context.plus(type: Type) = copy(types = types.plus(type))
 fun Context.plus(function: Function) = copy(functions = functions.plus(function))
 
-fun Context.typedOrNull(script: Script): Typed? =
-	metable(false, compiled(this, typed()))
-		.head
-		.compiler
-		.fold(script.tokenSeq) { push(it) }
-		.successHeadOrNull
-		?.completedCompiledOrNull
-		?.typed
+fun Context.compile(script: Script): Typed? =
+	compiler(this, typed()).push(script)?.typed

@@ -27,6 +27,8 @@ fun Typed.linkTo(typedLine: TypedLine) = TypedLink(this, typedLine)
 fun Typed.plus(typedLine: TypedLine) = expr.plus(op(typedLine.name lineTo typedLine.rhs.expr)) of type.plus(typedLine.name lineTo typedLine.rhs.type)
 fun typed(expr: Expr, type: Type) = Typed(expr, type)
 
+fun typed(script: Script) = typed(expr(script), script.exactType)
+
 fun Type.castOrNull(typed: Typed): Expr? =
 	notNullIf(contains(typed.type)) {
 		typed.expr
