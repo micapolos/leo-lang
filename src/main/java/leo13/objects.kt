@@ -1,47 +1,55 @@
 package leo13
 
-import leo13.script.lineTo
+import leo13.script.Scriptable
 import leo13.script.script
 
-object Append {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "append" lineTo script()
+object Append : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
 }
 
-object Resolve {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "resolve" lineTo script()
+object Resolve : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
 }
 
 
-object Lhs {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "lhs" lineTo script()
+object Lhs : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
 }
 
-object Rhs {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "rhs" lineTo script()
+object Rhs : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
 }
 
-object RhsLine {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "rhsline" lineTo script()
+object RhsLine : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
 }
 
-object Meta {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "meta" lineTo script()
+object Meta : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
 }
 
-object Quote {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "quote" lineTo script()
+object Quote : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
 }
 
-object Evaluator {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "evaluator" lineTo script()
+object Evaluator : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
 }
 
 val append = Append
