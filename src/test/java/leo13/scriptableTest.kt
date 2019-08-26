@@ -5,16 +5,16 @@ import leo.base.notNullIf
 import leo9.stack
 import org.junit.Test
 
-fun <V : AsScriptLine> V.assertEqualsToScript(code: String) =
-	asScript.assertEqualTo(unsafeScript(code))
+fun <V : Scriptable> V.assertEqualsToScript(code: String) =
+	scriptableBody.assertEqualTo(unsafeScript(code))
 
-fun <V : AsScriptLine> V.assertEqualsToScriptLine(code: String) =
-	asScriptLine.assertEqualTo(code.unsafeScriptLine)
+fun <V : Scriptable> V.assertEqualsToScriptLine(code: String) =
+	scriptableLine.assertEqualTo(code.unsafeScriptLine)
 
-fun <V : AsScriptLine> V.assertAsScriptLineWorks(fn: ScriptLine.() -> V?) =
-	asScriptLine.fn().assertEqualTo(this)
+fun <V : Scriptable> V.assertAsScriptLineWorks(fn: ScriptLine.() -> V?) =
+	scriptableLine.fn().assertEqualTo(this)
 
-class AsScriptLineTest {
+class ScriptableTest {
 	@Test
 	fun asSeparatedScript() {
 		stack<Script>()

@@ -8,12 +8,14 @@ import leo13.script.Function
 data class Context(
 	val types: Types,
 	val functions: Functions,
-	val typeBindings: TypeBindings) : AsScriptLine() {
+	val typeBindings: TypeBindings) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine = "context" lineTo script(
-		types.asScriptLine,
-		functions.asScriptLine,
-		typeBindings.asScriptLine)
+	override val scriptableName get() = "context"
+	override val scriptableBody
+		get() = script(
+			types.scriptableLine,
+			functions.scriptableLine,
+			typeBindings.scriptableLine)
 }
 
 fun context() = Context(types(), functions(), typeBindings())

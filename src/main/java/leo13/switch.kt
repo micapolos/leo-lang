@@ -6,9 +6,10 @@ import leo.base.orNull
 import leo.base.orNullIf
 import leo9.*
 
-data class Switch(val distinctCaseStack: Stack<Case>) : AsScriptLine() {
+data class Switch(val distinctCaseStack: Stack<Case>) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine = distinctCaseStack.asScriptLine("switch")
+	override val scriptableName get() = "switch"
+	override val scriptableBody get() = distinctCaseStack.asScript
 }
 
 val Stack<Case>.uncheckedSwitch: Switch get() = Switch(this)

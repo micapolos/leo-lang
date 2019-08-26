@@ -10,11 +10,10 @@ import leo9.reverse
 
 data class Compiler(
 	val errorOrNull: TokenError?,
-	val head: CompiledHead) : AsScriptLine() {
+	val head: CompiledHead) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine = "compiler" lineTo script(
-		head.asScriptLine,
-		errorOrNull.orNullAsScriptLine("error"))
+	override val scriptableName get() = "compiler"
+	override val scriptableBody get() = script(head.scriptableLine, errorOrNull.orNullAsScriptLine("error"))
 }
 
 fun compiler() = Compiler(null, head(compiledOpeners(), metable()))

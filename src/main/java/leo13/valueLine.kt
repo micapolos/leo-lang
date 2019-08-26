@@ -2,9 +2,10 @@ package leo13
 
 data class ValueLine(
 	val name: String,
-	val rhs: Value) : AsScriptLine() {
+	val rhs: Value) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine get() = name lineTo rhs.asScriptLine.rhs
+	override val scriptableName get() = name
+	override val scriptableBody get() = rhs.scriptableLine.rhs
 }
 
 fun valueLine(name: String, rhs: Value = value()) = ValueLine(name, rhs)

@@ -6,9 +6,10 @@ import leo9.*
 
 data class Value(
 	val fnOrNull: Fn?,
-	val lineStack: Stack<ValueLine>) : AsScriptLine() {
+	val lineStack: Stack<ValueLine>) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine get() = "value" lineTo asMetaFirstScript("fn", fnOrNull, lineStack.reverse.seq)
+	override val scriptableName get() = "value"
+	override val scriptableBody get() = asMetaFirstScript("fn", fnOrNull, lineStack.reverse.seq)
 }
 
 fun value(fnOrNull: Fn?, lineStack: Stack<ValueLine>) = Value(fnOrNull, lineStack)

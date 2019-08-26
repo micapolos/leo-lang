@@ -5,15 +5,17 @@ import leo.base.notNullIf
 import leo9.Stack
 import leo9.stack
 
-object Outside : AsScriptLine() {
-	override val asScriptLine get() = "outside" lineTo script()
+object Outside : Scriptable() {
+	override val scriptableName get() = "outside"
+	override val scriptableBody get() = script()
 }
 
 val outside = Outside
 
-data class Given(val previousStack: Stack<Outside>) : AsScriptLine() {
+data class Given(val previousStack: Stack<Outside>) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine get() = previousStack.asScriptLine("given") { asScriptLine }
+	override val scriptableName get() = "given"
+	override val scriptableBody get() = previousStack.asScript { scriptableLine }
 }
 
 val Stack<Outside>.argument get() = Given(this)
@@ -29,7 +31,7 @@ val ScriptLine.givenOrNull: Given?
 			rhs.rhsGivenOrNull
 		}
 
-// TODO: Support "given"
+// TODO: Support "outside"
 val Script.rhsGivenOrNull: Given?
 	get() =
 		notNullIf(isEmpty) { argument() }

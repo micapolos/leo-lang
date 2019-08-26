@@ -5,9 +5,10 @@ import leo.base.orNull
 import leo9.*
 
 data class Choice(
-	val distinctEitherStack: Stack<Either>) : AsScriptLine() {
+	val distinctEitherStack: Stack<Either>) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine get() = distinctEitherStack.asScriptLine("choice")
+	override val scriptableName get() = "choice"
+	override val scriptableBody get() = distinctEitherStack.asScript
 }
 
 val Stack<Either>.uncheckedChoice get() = Choice(this)

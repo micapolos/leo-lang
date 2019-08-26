@@ -10,10 +10,10 @@ import leo9.linkOrNull
 
 data class CompiledHead(
 	val openers: CompiledOpeners,
-	val metable: Metable) : AsScriptLine() {
+	val metable: Metable) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine
-		get() = "head" lineTo script(openers.asScriptLine, metable.asScriptLine)
+	override val scriptableName get() = "head"
+	override val scriptableBody get() = script(openers.scriptableLine, metable.scriptableLine)
 }
 
 fun head(openers: CompiledOpeners, metable: Metable) = CompiledHead(openers, metable)

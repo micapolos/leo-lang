@@ -9,9 +9,10 @@ import leo9.mapOrNull
 
 data class Compiled(
 	val context: Context,
-	val typed: Typed) : AsScriptLine() {
+	val typed: Typed) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine = "compiled" lineTo script(context.asScriptLine, typed.asScriptLine)
+	override val scriptableName get() = "compiled"
+	override val scriptableBody get() = script(context.scriptableLine, typed.scriptableLine)
 }
 
 // --- constructors

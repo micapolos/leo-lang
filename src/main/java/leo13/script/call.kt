@@ -5,7 +5,7 @@ import leo13.script
 
 data class Call(val expr: Expr) {
 	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "call" lineTo script(expr.asScriptLine)
+	val asScriptLine get() = "call" lineTo script(expr.scriptableLine)
 }
 
 fun call(expr: Expr) = Call(expr)

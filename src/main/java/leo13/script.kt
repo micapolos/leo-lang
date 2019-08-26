@@ -10,14 +10,16 @@ import leo13.script.tokenizer
 import leo9.*
 import leo9.Stack
 
-data class Script(val lineStack: Stack<ScriptLine>) : AsScriptLine() {
+data class Script(val lineStack: Stack<ScriptLine>) : Scriptable() {
 	override fun toString() = indentedCode
-	override val asScriptLine get() = "script" lineTo this
+	override val scriptableName get() = "script"
+	override val scriptableBody get() = this
 }
 
-data class ScriptLine(val name: String, val rhs: Script) : AsScriptLine() {
+data class ScriptLine(val name: String, val rhs: Script) : Scriptable() {
 	override fun toString() = script(this).toString()
-	override val asScriptLine get() = "line" lineTo script(name lineTo script("to" lineTo rhs))
+	override val scriptableName get() = "line"
+	override val scriptableBody get() = script(name lineTo script("to" lineTo rhs))
 }
 
 data class ScriptLink(val lhs: Script, val line: ScriptLine) {
@@ -27,7 +29,7 @@ data class ScriptLink(val lhs: Script, val line: ScriptLine) {
 data class ScriptOpener(val lhs: Script, val opening: Opening) {
 	override fun toString() = asScriptLine.toString()
 	val asScriptLine
-		get() = "opener" lineTo script(lhs.asScriptLine, opening.asScriptLine)
+		get() = "opener" lineTo script(lhs.scriptableLine, opening.asScriptLine)
 }
 
 data class ScriptHead(val openerStack: Stack<ScriptOpener>, val script: Script) {
@@ -35,7 +37,7 @@ data class ScriptHead(val openerStack: Stack<ScriptOpener>, val script: Script) 
 	val asScriptLine
 		get() = "head" lineTo script(
 			"openers" lineTo openerStack.asScript { asScriptLine },
-			script.asScriptLine)
+			script.scriptableLine)
 }
 
 data class ScriptLinkLine(val name: String, val rhs: ScriptLink)

@@ -4,7 +4,7 @@ import leo.base.ifOrNull
 
 data class TypedScript(val script: Script, val type: Type) {
 	override fun toString() = asScript.toString()
-	val asScript get() = script.plus("of" lineTo type.asScript)
+	val asScript get() = script.plus("of" lineTo type.scriptableBody)
 }
 
 data class TypedScriptLine(val name: String, val rhs: TypedScript)

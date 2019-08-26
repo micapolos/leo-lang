@@ -2,15 +2,16 @@ package leo13
 
 import leo.base.ifOrNull
 
-data class Either(val name: String, val type: Type) : AsScriptLine() {
+data class Either(val name: String, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine get() = "either" lineTo script(name lineTo type.asScript)
+	override val scriptableName get() = "either"
+	override val scriptableBody get() = script(name lineTo type.scriptableBody)
 }
 
 infix fun String.eitherTo(type: Type) = Either(this, type)
 fun either(name: String, type: Type = type()) = Either(name, type)
 
-val Either.asFirstScriptLine get() = name lineTo type.asScript
+val Either.asFirstScriptLine get() = name lineTo type.scriptableBody
 val Either.asNextScriptLine get() = "or" lineTo script(asFirstScriptLine)
 
 val TypeLine.either

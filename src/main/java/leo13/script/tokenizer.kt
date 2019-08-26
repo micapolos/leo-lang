@@ -20,9 +20,10 @@ data class Tokenizer(
 			errorOrNull.orNullAsScriptLine("error"))
 }
 
-data class CharError(val char: Char) : AsScriptLine() {
+data class CharError(val char: Char) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine get() = "error" lineTo script(char.toString() lineTo script()) // TODO: Escape!!!
+	override val scriptableName get() = "error"
+	override val scriptableBody get() = script(char.toString() lineTo script()) // TODO: Escape!!!
 }
 
 fun error(char: Char) = CharError(char)

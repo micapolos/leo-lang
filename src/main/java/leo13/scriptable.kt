@@ -5,42 +5,43 @@ import leo9.*
 import leo9.Stack
 
 // TODO: Convert to interface, and replace "super.toString()" with "asScriptLine.toString()" in implementations
-abstract class AsScriptLine {
-	override fun toString() = asScriptLine.toString()
-	abstract val asScriptLine: ScriptLine
-	val asScript: Script get() = asScriptLine.rhs
+abstract class Scriptable {
+	override fun toString() = scriptableLine.toString()
+	abstract val scriptableName: String
+	abstract val scriptableBody: Script
+	val scriptableLine: ScriptLine get() = scriptableName lineTo scriptableBody
 }
 
-fun <V : AsScriptLine> V?.orNullAsScriptLine(name: String) =
-	this?.asScriptLine ?: name lineTo script(nullScriptLine)
+fun <V : Scriptable> V?.orNullAsScriptLine(name: String) =
+	this?.scriptableLine ?: name lineTo script(nullScriptLine)
 
-val <V : AsScriptLine> V?.orNullAsScript: Script
+val <V : Scriptable> V?.orNullAsScript: Script
 	get() =
 		if (this == null) script()
-		else asScriptLine.script
+		else scriptableLine.script
 
-val <V : AsScriptLine> Stack<V>.asScript: Script
-	get() = asScript { asScriptLine }
+val <V : Scriptable> Stack<V>.asScript: Script
+	get() = asScript { scriptableLine }
 
-val <V : AsScriptLine> Stack<V>.asNoNullScript: Script
-	get() = map { asScriptLine }.script
+val <V : Scriptable> Stack<V>.asNoNullScript: Script
+	get() = map { scriptableLine }.script
 
-fun <F : AsScriptLine, R : AsScriptLine> asMetaFirstScript(firstName: String, firstOrNull: F?, remaining: Seq<R>): Script =
+fun <F : Scriptable, R : Scriptable> asMetaFirstScript(firstName: String, firstOrNull: F?, remaining: Seq<R>): Script =
 	firstOrNull
-		?.asScriptLine
+		?.scriptableLine
 		.let { firstLineOrNull ->
-			remaining.map { asScriptLine }.let { remainingLines ->
+			remaining.map { scriptableLine }.let { remainingLines ->
 				if (firstLineOrNull != null) firstLineOrNull.script.fold(remainingLines) { plus(it) }
 				else script().fold(remainingLines.mapFirst { meta(firstName) }) { plus(it) }
 			}
 		}
 
-fun <V : AsScriptLine> Stack<V>.asScriptLine(name: String): ScriptLine =
+fun <V : Scriptable> Stack<V>.asScriptLine(name: String): ScriptLine =
 	name lineTo asScript
 
-fun <V : AsScriptLine> Stack<V>.asSeparatedScript(name: String): Script =
+fun <V : Scriptable> Stack<V>.asSeparatedScript(name: String): Script =
 	(false to script()).fold(reverse) {
-		true to second.plus(if (!first) it.asScriptLine else name lineTo script(it.asScriptLine))
+		true to second.plus(if (!first) it.scriptableLine else name lineTo script(it.scriptableLine))
 	}.second
 
 fun <V : Any> Script.asStackOrNull(fn: ScriptLine.() -> V?): Stack<V>? =

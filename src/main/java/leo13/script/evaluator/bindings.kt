@@ -10,7 +10,7 @@ import leo9.stack
 data class Bindings(val stack: Stack<Value>) {
 	override fun toString() = asScriptLine.toString()
 	val asScriptLine
-		get() = "bindings" lineTo stack.asScript { asScriptLine }
+		get() = "bindings" lineTo stack.asScript { scriptableLine }
 }
 
 val Stack<Value>.bindings get() = Bindings(this)

@@ -4,9 +4,10 @@ import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo9.*
 
-data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : AsScriptLine() {
-	override fun toString() = asScript.toString()
-	override val asScriptLine get() = "type" lineTo asScript2
+data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : Scriptable() {
+	override fun toString() = scriptableBody.toString()
+	override val scriptableName get() = "type"
+	override val scriptableBody get() = asCustomScript
 }
 
 data class TypeLine(val name: String, val rhs: Type) {
@@ -29,14 +30,14 @@ infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
 
 infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
-val Type.asScript2: Script
+val Type.asCustomScript: Script
 	get() =
-		(choiceOrNull?.asScriptLine?.script ?: script())
+		(choiceOrNull?.scriptableLine?.script ?: script())
 			.fold(lineStack.reverse) { plus(it.asScriptLine) }
 
 val TypeLine.asRawScriptLine
 	get() =
-		name lineTo rhs.asScript
+		name lineTo rhs.scriptableBody
 
 val TypeLine.asScriptLine
 	get() =

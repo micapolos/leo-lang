@@ -7,9 +7,10 @@ import leo9.Stack
 import leo9.push
 import leo9.stack
 
-data class Tokens(val stack: Stack<Token>) : AsScriptLine() {
+data class Tokens(val stack: Stack<Token>) : Scriptable() {
 	override fun toString() = super.toString()
-	override val asScriptLine = stack.asScriptLine("tokens") { asScriptLine }
+	override val scriptableName get() = "tokens"
+	override val scriptableBody get() = stack.asScript { asScriptLine }
 }
 
 val Stack<Token>.tokens get() = Tokens(this)

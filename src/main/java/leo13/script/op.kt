@@ -10,7 +10,7 @@ sealed class Op {
 
 data class ArgumentOp(val given: Given) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = given.asScriptLine
+	override val opAsScriptLine = given.scriptableLine
 }
 
 data class LhsOp(val lhs: Lhs) : Op() {
@@ -35,12 +35,12 @@ data class GetOp(val get: Get) : Op() {
 
 data class SwitchOp(val switch: Switch) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = switch.asScriptLine
+	override val opAsScriptLine = switch.scriptableLine
 }
 
 data class LineOp(val line: ExprLine) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = line.asScriptLine
+	override val opAsScriptLine = line.scriptableLine
 }
 
 data class CallOp(val call: Call) : Op() {
