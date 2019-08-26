@@ -1,7 +1,7 @@
 package leo13
 
 import leo.base.assertEqualTo
-import leo13.script.expr
+import leo13.script.evaluator.fn
 import org.junit.Test
 
 class ValueBuilderTest {
@@ -11,11 +11,11 @@ class ValueBuilderTest {
 		value("zero" lineTo value()).assertEqualsToScript("zero()")
 		value("zero" lineTo value(), "one" lineTo value()).assertEqualsToScript("zero()one()")
 		value("zero" lineTo value("one" lineTo value())).assertEqualsToScript("zero(one())")
-		value("expr" lineTo value()).assertEqualsToScript("meta(expr())")
+		value("fn" lineTo value()).assertEqualsToScript("meta(fn())")
 
-		value(expr()).assertEqualsToScript("expr(null())")
-		value(expr(), "zero" lineTo value()).assertEqualsToScript("expr(null())zero()")
-		value(expr(), "expr" lineTo value()).assertEqualsToScript("expr(null())expr()")
+		value(fn()).assertEqualsToScript("fn(bindings(null())expr(null()))")
+		value(fn(), "zero" lineTo value()).assertEqualsToScript("fn(bindings(null())expr(null()))zero()")
+		value(fn(), "expr" lineTo value()).assertEqualsToScript("fn(bindings(null())expr(null()))expr()")
 	}
 
 	@Test

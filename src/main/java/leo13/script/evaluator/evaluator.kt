@@ -17,6 +17,7 @@ data class Evaluator(val bindings: Bindings, val value: Value) {
 }
 
 fun evaluator() = Evaluator(bindings(), value())
+fun evaluator(bindings: Bindings, value: Value) = Evaluator(bindings, value)
 fun Evaluator.put(bindings: Bindings) = copy(bindings = bindings)
 fun Evaluator.put(value: Value) = copy(value = value)
 
@@ -26,6 +27,7 @@ val Evaluator.begin get() = put(value())
 
 fun Expr.evaluate(bindings: Bindings) = evaluator().put(bindings).push(this).value
 val Expr.evaluate get() = evaluate(bindings())
+fun Evaluator.evaluate(expr: Expr): Value = push(expr).value
 
 fun Evaluator.push(expr: Expr) =
 	fold(expr.opStack.reverse) { push(it) }
@@ -71,4 +73,7 @@ fun Evaluator.push(line: ExprLine): Evaluator =
 	put(value.plus(line.name lineTo begin.push(line.rhs).value))
 
 fun Evaluator.push(call: Call): Evaluator =
-	bind(value).push(call.expr)
+	put(
+		value
+			.onlyFnOrNull!!
+			.let { fn -> fn.expr.evaluate(fn.bindings.push(call.expr.evaluate(bindings))) })
