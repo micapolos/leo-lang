@@ -1,7 +1,7 @@
 package leo13.script.evaluator
 
 import leo.base.assertEqualTo
-import leo13.argument
+import leo13.given
 import leo13.lineTo
 import leo13.outside
 import leo13.script.*
@@ -24,22 +24,22 @@ class EvaluatorTest {
 	@Test
 	fun pushArgument() {
 		argumentEvaluator
-			.push(argument())
-			.assertEqualTo(argumentEvaluator.put(value("three" lineTo value())))
+			.evaluate(given())
+			.assertEqualTo(value("three" lineTo value()))
 	}
 
 	@Test
 	fun pushPreviousArgument() {
 		argumentEvaluator
-			.push(argument(outside))
-			.assertEqualTo(argumentEvaluator.put(value("two" lineTo value())))
+			.evaluate(given(outside))
+			.assertEqualTo(value("two" lineTo value()))
 	}
 
 	@Test
 	fun pushPreviousPreviousArgument() {
 		argumentEvaluator
-			.push(argument(outside, outside))
-			.assertEqualTo(argumentEvaluator.put(value("one" lineTo value())))
+			.evaluate(given(outside, outside))
+			.assertEqualTo(value("one" lineTo value()))
 	}
 
 	private val switch =
@@ -49,26 +49,24 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_firstCase() {
-		evaluator().put(value("one" lineTo value("rhs" lineTo value())))
-			.push(switch)
+		evaluator()
+			.put(value("one" lineTo value("rhs" lineTo value())))
+			.evaluate(switch)
 			.assertEqualTo(
-				evaluator().put(
-					value(
-						"rhs" lineTo value(),
-						"jeden" lineTo value())))
+				value(
+					"rhs" lineTo value(),
+					"jeden" lineTo value()))
 	}
 
 	@Test
 	fun pushSwitch_secondCase() {
 		evaluator()
 			.put(value("two" lineTo value("rhs" lineTo value())))
-			.push(switch)
+			.evaluate(switch)
 			.assertEqualTo(
-				evaluator()
-					.put(
-						value(
-							"rhs" lineTo value(),
-							"dwa" lineTo value())))
+				value(
+					"rhs" lineTo value(),
+					"dwa" lineTo value()))
 	}
 
 	private val case =
@@ -78,15 +76,15 @@ class EvaluatorTest {
 	fun pushCase_match() {
 		evaluator()
 			.put(value("one" lineTo value("rhs" lineTo value())))
-			.pushOrNull(case)
-			.assertEqualTo(evaluator().put(value("rhs" lineTo value(), "jeden" lineTo value())))
+			.evaluateOrNull(case)
+			.assertEqualTo(value("rhs" lineTo value(), "jeden" lineTo value()))
 	}
 
 	@Test
 	fun pushCase_mismatch() {
 		evaluator()
 			.put(value("two" lineTo value("rhs" lineTo value())))
-			.pushOrNull(case)
+			.evaluateOrNull(case)
 			.assertEqualTo(null)
 	}
 }

@@ -8,15 +8,15 @@ class ExprTest {
 	@Test
 	fun constructor() {
 		expr(
-			op(argument()),
-			op(argument(outside, outside)),
+			op(given()),
+			op(given(outside, outside)),
 			op(lhs),
 			op(rhs),
 			op(rhsLine),
 			op(get("zero")),
 			op(switch("zero" caseTo expr(), "one" caseTo expr())),
-			op("zero" lineTo expr(op(argument()))),
-			op(call(expr(op(argument())))))
+			op("zero" lineTo expr(op(given()))),
+			op(call(expr(op(given())))))
 			.toString()
 			.assertReturns()
 	}

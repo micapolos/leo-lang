@@ -9,10 +9,10 @@ import leo13.script.Case
 import leo13.script.Switch
 import leo9.*
 
-data class Evaluator(val bindings: Bindings, val value: Value) {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine
-		get() = "evaluator" lineTo script(bindings.asScriptLine, value.scriptableLine)
+data class Evaluator(val bindings: Bindings, val value: Value) : Scriptable() {
+	override fun toString() = super.toString()
+	override val scriptableName get() = "evaluator"
+	override val scriptableBody get() = script(bindings.asScriptLine, value.scriptableLine)
 }
 
 fun evaluator() = Evaluator(bindings(), value())
@@ -26,53 +26,57 @@ val Evaluator.begin get() = put(value())
 
 fun Expr.evaluate(bindings: Bindings) = evaluator().put(bindings).push(this).value
 val Expr.evaluate get() = evaluate(bindings())
-fun Evaluator.evaluate(expr: Expr): Value = push(expr).value
 
 fun Evaluator.push(expr: Expr) =
 	fold(expr.opStack.reverse) { push(it) }
 
 fun Evaluator.push(op: Op): Evaluator =
+	put(evaluate(op))
+
+fun Evaluator.evaluate(expr: Expr): Value =
+	push(expr).value
+
+fun Evaluator.evaluate(op: Op): Value =
 	when (op) {
-		is ArgumentOp -> push(op.given)
-		is LhsOp -> push(op.lhs)
-		is RhsLineOp -> push(op.rhsLine)
-		is RhsOp -> push(op.rhs)
-		is GetOp -> push(op.get)
-		is SwitchOp -> push(op.switch)
-		is LineOp -> push(op.line)
-		is CallOp -> push(op.call)
+		is ArgumentOp -> evaluate(op.given)
+		is LhsOp -> evaluate(op.lhs)
+		is RhsLineOp -> evaluate(op.rhsLine)
+		is RhsOp -> evaluate(op.rhs)
+		is GetOp -> evaluate(op.get)
+		is SwitchOp -> evaluate(op.switch)
+		is LineOp -> evaluate(op.line)
+		is CallOp -> evaluate(op.call)
 	}
 
-fun Evaluator.push(given: Given): Evaluator =
-	put(bindings.stack.drop(given.previousStack)!!.linkOrNull!!.value)
+fun Evaluator.evaluate(given: Given): Value =
+	bindings.stack.drop(given.previousStack)!!.linkOrNull!!.value
 
-fun Evaluator.push(lhs: Lhs): Evaluator =
-	put(value.linkOrNull!!.lhs)
+fun Evaluator.evaluate(lhs: Lhs): Value =
+	value.linkOrNull!!.lhs
 
-fun Evaluator.push(rhsLine: RhsLine): Evaluator =
-	put(value(value.linkOrNull!!.line))
+fun Evaluator.evaluate(rhsLine: RhsLine): Value =
+	value(value.linkOrNull!!.line)
 
-fun Evaluator.push(rhs: Rhs): Evaluator =
-	put(value.linkOrNull!!.line.rhs)
+fun Evaluator.evaluate(rhs: Rhs): Value =
+	value.linkOrNull!!.line.rhs
 
-fun Evaluator.push(get: Get): Evaluator =
-	put(value.accessOrNull(get.name)!!)
+fun Evaluator.evaluate(get: Get): Value =
+	value.accessOrNull(get.name)!!
 
-fun Evaluator.push(switch: Switch): Evaluator =
-	switch.caseStack.mapFirst { pushOrNull(this) }!!
+fun Evaluator.evaluate(switch: Switch): Value =
+	switch.caseStack.mapFirst { evaluateOrNull(this) }!!
 
-fun Evaluator.pushOrNull(case: Case): Evaluator? =
+fun Evaluator.evaluateOrNull(case: Case): Value? =
 	value.linkOrNull!!.line.let { line ->
 		notNullIf(line.name == case.name) {
-			put(line.rhs).push(case.expr)
+			put(line.rhs).evaluate(case.expr)
 		}
 	}
 
-fun Evaluator.push(line: ExprLine): Evaluator =
-	put(value.plus(line.name lineTo begin.push(line.rhs).value))
+fun Evaluator.evaluate(line: ExprLine): Value =
+	value.plus(line.name lineTo begin.evaluate(line.rhs))
 
-fun Evaluator.push(call: Call): Evaluator =
-	put(
+fun Evaluator.evaluate(call: Call): Value =
 		value
 			.fnOrNull!!
-			.let { fn -> fn.expr.evaluate(fn.bindings.push(call.expr.evaluate(bindings))) })
+			.let { fn -> fn.expr.evaluate(fn.bindings.push(call.expr.evaluate(bindings))) }

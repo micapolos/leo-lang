@@ -18,8 +18,8 @@ data class Given(val previousStack: Stack<Outside>) : Scriptable() {
 	override val scriptableBody get() = previousStack.asScript { scriptableLine }
 }
 
-val Stack<Outside>.argument get() = Given(this)
-fun argument(vararg previouses: Outside) = stack(*previouses).argument
+val Stack<Outside>.given get() = Given(this)
+fun given(vararg outsides: Outside) = stack(*outsides).given
 
 val Script.givenOrNull
 	get() =
@@ -34,4 +34,4 @@ val ScriptLine.givenOrNull: Given?
 // TODO: Support "outside"
 val Script.rhsGivenOrNull: Given?
 	get() =
-		notNullIf(isEmpty) { argument() }
+		notNullIf(isEmpty) { given() }
