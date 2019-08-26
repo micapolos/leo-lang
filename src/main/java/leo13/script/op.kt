@@ -8,9 +8,9 @@ sealed class Op {
 	abstract val opAsScriptLine: ScriptLine
 }
 
-data class ArgumentOp(val argument: Argument) : Op() {
+data class ArgumentOp(val given: Given) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = argument.asScriptLine
+	override val opAsScriptLine = given.asScriptLine
 }
 
 data class LhsOp(val lhs: Lhs) : Op() {
@@ -48,7 +48,7 @@ data class CallOp(val call: Call) : Op() {
 	override val opAsScriptLine = call.asScriptLine
 }
 
-fun op(argument: Argument): Op = ArgumentOp(argument)
+fun op(given: Given): Op = ArgumentOp(given)
 fun op(lhs: Lhs): Op = LhsOp(lhs)
 fun op(rhs: Rhs): Op = RhsOp(rhs)
 fun op(rhsLine: RhsLine): Op = RhsLineOp(rhsLine)

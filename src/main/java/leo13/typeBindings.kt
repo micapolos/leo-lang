@@ -14,8 +14,8 @@ fun bindings(type: Type, vararg types: Type) = nonEmptyStack(type, *types).typeB
 
 val TypeBindings.asScript get() = stack.map { "bind" lineTo asScript }.script
 
-fun TypeBindings.typeOrNull(argument: Argument): Type? =
-	stack.drop(argument.previousStack)?.linkOrNull?.value
+fun TypeBindings.typeOrNull(given: Given): Type? =
+	stack.drop(given.previousStack)?.linkOrNull?.value
 
-fun TypeBindings.typeOrError(argument: Argument): Type =
-	typeOrNull(argument) ?: error("argument not bound")
+fun TypeBindings.typeOrError(given: Given): Type =
+	typeOrNull(given) ?: error("argument not bound")

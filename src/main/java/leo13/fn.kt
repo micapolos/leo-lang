@@ -1,9 +1,8 @@
-package leo13.script.evaluator
+package leo13
 
-import leo13.AsScriptLine
-import leo13.lineTo
-import leo13.script
 import leo13.script.Expr
+import leo13.script.evaluator.Bindings
+import leo13.script.evaluator.bindings
 import leo13.script.expr
 
 data class Fn(val bindings: Bindings, val expr: Expr) : AsScriptLine() {

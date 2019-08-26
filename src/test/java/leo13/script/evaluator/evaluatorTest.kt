@@ -3,7 +3,7 @@ package leo13.script.evaluator
 import leo.base.assertEqualTo
 import leo13.argument
 import leo13.lineTo
-import leo13.previous
+import leo13.outside
 import leo13.script.*
 import leo13.value
 import org.junit.Test
@@ -31,14 +31,14 @@ class EvaluatorTest {
 	@Test
 	fun pushPreviousArgument() {
 		argumentEvaluator
-			.push(argument(previous))
+			.push(argument(outside))
 			.assertEqualTo(argumentEvaluator.put(value("two" lineTo value())))
 	}
 
 	@Test
 	fun pushPreviousPreviousArgument() {
 		argumentEvaluator
-			.push(argument(previous, previous))
+			.push(argument(outside, outside))
 			.assertEqualTo(argumentEvaluator.put(value("one" lineTo value())))
 	}
 

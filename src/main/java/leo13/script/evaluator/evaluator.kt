@@ -2,7 +2,6 @@ package leo13.script.evaluator
 
 import leo.base.notNullIf
 import leo13.*
-import leo13.Argument
 import leo13.Lhs
 import leo13.Rhs
 import leo13.script.*
@@ -34,7 +33,7 @@ fun Evaluator.push(expr: Expr) =
 
 fun Evaluator.push(op: Op): Evaluator =
 	when (op) {
-		is ArgumentOp -> push(op.argument)
+		is ArgumentOp -> push(op.given)
 		is LhsOp -> push(op.lhs)
 		is RhsLineOp -> push(op.rhsLine)
 		is RhsOp -> push(op.rhs)
@@ -44,8 +43,8 @@ fun Evaluator.push(op: Op): Evaluator =
 		is CallOp -> push(op.call)
 	}
 
-fun Evaluator.push(argument: Argument): Evaluator =
-	put(bindings.stack.drop(argument.previousStack)!!.linkOrNull!!.value)
+fun Evaluator.push(given: Given): Evaluator =
+	put(bindings.stack.drop(given.previousStack)!!.linkOrNull!!.value)
 
 fun Evaluator.push(lhs: Lhs): Evaluator =
 	put(value.linkOrNull!!.lhs)

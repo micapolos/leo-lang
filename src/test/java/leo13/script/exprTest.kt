@@ -9,7 +9,7 @@ class ExprTest {
 	fun constructor() {
 		expr(
 			op(argument()),
-			op(argument(previous, previous)),
+			op(argument(outside, outside)),
 			op(lhs),
 			op(rhs),
 			op(rhsLine),

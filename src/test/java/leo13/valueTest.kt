@@ -1,7 +1,6 @@
 package leo13
 
 import leo.base.assertEqualTo
-import leo13.script.evaluator.fn
 import org.junit.Test
 
 class ValueBuilderTest {
