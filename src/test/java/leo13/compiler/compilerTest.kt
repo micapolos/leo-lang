@@ -4,9 +4,7 @@ import leo.base.assertEqualTo
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.type.*
-import leo13.value.expr
-import leo13.value.given
-import leo13.value.op
+import leo13.value.*
 import kotlin.test.Test
 
 class CompilerTest {
@@ -149,5 +147,31 @@ class CompilerTest {
 									type(unsafeChoice(either("zero"), either("one")))))),
 						typeBindings()),
 					typed()))
+	}
+
+	@Test
+	fun pushGivesAndCall() {
+		compiler(context(), typed())
+			.push(script(
+				"zero" lineTo script(),
+				"gives" lineTo script(
+					"one" lineTo script()),
+				"zero" lineTo script()))
+			.assertEqualTo(
+				compiler(
+					context(
+						types(),
+						functions(
+							function(
+								type("zero" lineTo type()),
+								typed(
+									expr(op("one" lineTo expr())),
+									type("one" lineTo type())))),
+						typeBindings()),
+					typed(
+						expr(
+							op("zero" lineTo expr()),
+							op(call(expr(op("one" lineTo expr()))))),
+						type("one" lineTo type()))))
 	}
 }

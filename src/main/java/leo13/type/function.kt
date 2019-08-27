@@ -15,7 +15,7 @@ data class Function(val parameterType: Type, val typed: Typed) : Scriptable() {
 
 fun function(parameterType: Type, typed: Typed) = Function(parameterType, typed)
 
-fun Function.typedExprOrNull(parameter: Type) =
+fun Function.typedOrNull(parameter: Type): Typed? =
 	notNullIf(parameterType == parameter) {
 		typed
 	}

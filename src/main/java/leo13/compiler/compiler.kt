@@ -78,7 +78,7 @@ fun Compiler.pushMeta(script: Script): Compiler? =
 fun Compiler.rhsPush(scriptLine: ScriptLine): Compiler? =
 	context
 		.compile(scriptLine.rhs)
-		?.let { rhsTyped -> append(scriptLine.name lineTo rhsTyped) }
+		?.let { rhsTyped -> push(scriptLine.name lineTo rhsTyped) }
 
 fun Compiler.pushPrevious(script: Script): Compiler? =
 	ifOrNull(script.isEmpty) {
@@ -123,17 +123,33 @@ fun Compiler.caseTypedOrNull(eitherMatch: EitherMatch): CaseTyped? =
 fun Compiler.pushOther(typedLine: ScriptLine): Compiler? =
 	null
 		?: pushGetOrNull(typedLine)
-		?: append(typedLine)
+		?: pushRhsCompiled(typedLine)
 
 fun Compiler.pushGetOrNull(typedLine: ScriptLine): Compiler? =
 	ifOrNull(typedLine.rhs.isEmpty) {
 		typed.accessOrNull(typedLine.name)?.let { set(it) }
 	}
 
-fun Compiler.append(scriptLine: ScriptLine): Compiler? =
+fun Compiler.pushRhsCompiled(scriptLine: ScriptLine): Compiler? =
 	context
 		.compile(scriptLine.rhs)
-		?.let { typed -> append(scriptLine.name lineTo typed) }
+		?.let { typed -> push(scriptLine.name lineTo typed) }
+
+fun Compiler.push(typedLine: TypedLine): Compiler =
+	typed.type.plus(typedLine.name lineTo typedLine.rhs.type).let { type ->
+		typed.expr.plus(op(typedLine.name lineTo typedLine.rhs.expr)).let { expr ->
+			context.types.containingType(type).let { containingType ->
+				context.functions.typedOrNull(containingType)
+					?.let { functionBody ->
+						set(
+							typed(
+								expr.plus(op(call(functionBody.expr))),
+								functionBody.type))
+					}
+					?: set(typed(expr, containingType))
+			}
+		}
+	}
 
 fun Compiler.append(typedLine: TypedLine): Compiler =
 	compiler(context, typed.plus(typedLine))
