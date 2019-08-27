@@ -211,11 +211,10 @@ fun <V> Stack<V>.asScriptLine(name: String, fn: V.() -> ScriptLine) =
 fun unsafeScript(string: String) =
 	tokenizer()
 		.push(string)
-		.completedTokenStackOrNull
-		.notNullOrError("tokenizer")
-		.let { tokenStack ->
+		.completedTokensOrThrow
+		.let { tokens ->
 			parser()
-				.fold(tokenStack.reverse) { push(it) }
+				.fold(tokens.stack.reverse) { push(it) }
 				.completedScriptOrNull
 				.notNullOrError("parser")
 		}

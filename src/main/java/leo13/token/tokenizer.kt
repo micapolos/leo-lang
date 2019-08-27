@@ -12,10 +12,11 @@ import leo9.*
 data class Tokenizer(
 	val tokenStack: Stack<Token>,
 	val charStack: Stack<Char>,
-	val errorOrNull: CharError?) {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine
-		get() = "tokenizer" lineTo leo13.script.script(
+	val errorOrNull: CharError?) : Scriptable() {
+	override fun toString() = super.toString()
+	override val scriptableName get() = "tokenizer"
+	override val scriptableBody
+		get() = leo13.script.script(
 			tokenStack.asScriptLine("tokens") { asScriptLine },
 			charStack.asScriptLine("chars") { "char" lineTo leo13.script.script(toString() lineTo leo13.script.script()) },
 			errorOrNull.orNullAsScriptLine("error"))
@@ -33,9 +34,11 @@ fun tokenizer() = Tokenizer(stack(), stack(), null)
 fun tokenizer(tokenStack: Stack<Token>, charStack: Stack<Char>, error: CharError?) =
 	Tokenizer(tokenStack, charStack, error)
 
-val Tokenizer.completedTokenStackOrNull: Stack<Token>?
+val Tokenizer.completedTokensOrThrow: Tokens
 	get() =
-		notNullIf(charStack.isEmpty && errorOrNull == null) { tokenStack }
+		if (charStack.isEmpty && errorOrNull == null) {
+			tokenStack.tokens
+		} else throw RuntimeException(scriptableLine.toString())
 
 fun Tokenizer.push(char: Char): Tokenizer =
 	if (errorOrNull != null) this
@@ -81,4 +84,4 @@ fun Tokenizer.put(error: CharError) =
 
 val String.tokenize: Tokens?
 	get() =
-		tokenizer().push(this).completedTokenStackOrNull?.tokens
+		tokenizer().push(this).completedTokensOrThrow

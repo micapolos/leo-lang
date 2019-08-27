@@ -170,8 +170,8 @@ class CompilerTest {
 						typeBindings()),
 					typed(
 						expr(
-							op("zero" lineTo expr()),
-							op(call(expr(op("one" lineTo expr()))))),
+							op("one" lineTo expr()),
+							op(call(expr(op("zero" lineTo expr()))))),
 						type("one" lineTo type()))))
 	}
 }

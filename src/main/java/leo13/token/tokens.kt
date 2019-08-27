@@ -15,4 +15,4 @@ data class Tokens(val stack: Stack<Token>) : Scriptable() {
 val Stack<Token>.tokens get() = Tokens(this)
 fun Tokens.plus(token: Token) = stack.push(token).tokens
 fun tokens(vararg tokens: Token) = Tokens(stack(*tokens))
-val String.unsafeTokens get() = tokenizer().push(this).completedTokenStackOrNull!!
+val String.unsafeTokens get() = tokenizer().push(this).completedTokensOrThrow
