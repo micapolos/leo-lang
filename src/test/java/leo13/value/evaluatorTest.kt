@@ -1,6 +1,7 @@
 package leo13.value
 
 import leo.base.assertEqualTo
+import leo13.wrap
 import org.junit.Test
 
 class EvaluatorTest {
@@ -79,6 +80,13 @@ class EvaluatorTest {
 		evaluator(valueBindings(), value("two" lineTo value("rhs" lineTo value())))
 			.evaluateOrNull(case)
 			.assertEqualTo(null)
+	}
+
+	@Test
+	fun evaluateWrap() {
+		evaluator(valueBindings(), value("red" lineTo value(), "color" lineTo value()))
+			.evaluate(wrap)
+			.assertEqualTo(value("color" lineTo value("red")))
 	}
 
 	@Test

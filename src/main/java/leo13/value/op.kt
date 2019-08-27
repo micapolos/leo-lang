@@ -3,6 +3,7 @@ package leo13.value
 import leo13.Lhs
 import leo13.Rhs
 import leo13.RhsLine
+import leo13.Wrap
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -36,6 +37,11 @@ data class RhsOp(val rhs: Rhs) : Op() {
 data class GetOp(val get: Get) : Op() {
 	override fun toString() = super.toString()
 	override val opAsScriptLine = get.scriptableLine
+}
+
+data class WrapOp(val wrap: Wrap) : Op() {
+	override fun toString() = super.toString()
+	override val opAsScriptLine = wrap.scriptableLine
 }
 
 data class SwitchOp(val switch: Switch) : Op() {

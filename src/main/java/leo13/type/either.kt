@@ -32,5 +32,5 @@ val ScriptLine.eitherOrNull: Either?
 fun Either.matches(scriptLine: ScriptLine): Boolean =
 	name == scriptLine.name && type.matches(scriptLine.rhs)
 
-fun Either.contains(either: Either) =
-	name == either.name && type.contains(either.type)
+fun Either.contains(line: TypeLine) =
+	name == line.name && type == line.rhs

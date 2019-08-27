@@ -40,6 +40,8 @@ val Value.emptyOrNull get() = (this as? EmptyValue)?.empty
 val Value.linkOrNull get() = (this as? LinkValue)?.link
 val Value.fnOrNull get() = (this as? FnValue)?.fn
 
+val Value.isEmpty get() = emptyOrNull != null
+
 val ValueLink.onlyLineOrNull get() = notNullIf(lhs.emptyOrNull != null) { line }
 
 fun value(fn: Fn, vararg lines: ValueLine): Value = value(fn).fold(lines) { plus(it) }
@@ -71,3 +73,11 @@ fun Value.firstLineOrNull(name: String): ValueLine? =
 
 fun Value.accessOrNull(name: String): Value? =
 	onlyLineOrNull?.rhs?.firstLineOrNull(name)?.let { value(it) }
+
+val Value.wrapOrNull: Value?
+	get() =
+		linkOrNull?.run {
+			notNullIf(line.rhs.isEmpty) {
+				value(line.name lineTo lhs)
+			}
+		}

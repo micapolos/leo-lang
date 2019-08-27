@@ -15,10 +15,15 @@ object Resolve : Scriptable() {
 	override val scriptableBody get() = script()
 }
 
-
 object Lhs : Scriptable() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "append"
+	override val scriptableBody get() = script()
+}
+
+object Wrap : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "wrap"
 	override val scriptableBody get() = script()
 }
 
@@ -58,5 +63,6 @@ val rhs = Rhs
 val rhsLine = RhsLine
 val meta = Meta
 val resolve = Resolve
+val wrap = Wrap
 val quote = Quote
 val evaluator = Evaluator

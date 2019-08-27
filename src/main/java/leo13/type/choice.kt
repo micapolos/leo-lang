@@ -32,14 +32,14 @@ fun Choice.matches(scriptLine: ScriptLine): Boolean =
 	distinctEitherStack.any { matches(scriptLine) }
 
 fun Choice.contains(type: Type): Boolean =
-	if (type.choiceOrNull == null) type.onlyLineOrNull?.let { contains(it.either) } ?: false
+	if (type.choiceOrNull == null) type.onlyLineOrNull?.let { contains(it) } ?: false
 	else type.lineStack.isEmpty && contains(type.choiceOrNull)
 
 fun Choice.contains(choice: Choice): Boolean =
-	choice.distinctEitherStack.all { this@contains.contains(this) }
+	this == choice
 
-fun Choice.contains(either: Either): Boolean =
-	distinctEitherStack.any { contains(either) }
+fun Choice.contains(line: TypeLine): Boolean =
+	distinctEitherStack.any { contains(line) }
 
 fun Choice.contains(name: String): Boolean =
 	distinctEitherStack.any { this.name == name }

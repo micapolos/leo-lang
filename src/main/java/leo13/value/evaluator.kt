@@ -4,6 +4,7 @@ import leo.base.notNullIf
 import leo13.Lhs
 import leo13.Rhs
 import leo13.RhsLine
+import leo13.Wrap
 import leo13.script.Scriptable
 import leo9.*
 
@@ -32,6 +33,7 @@ fun Evaluator.evaluate(op: Op): Value =
 		is RhsLineOp -> evaluate(op.rhsLine)
 		is RhsOp -> evaluate(op.rhs)
 		is GetOp -> evaluate(op.get)
+		is WrapOp -> evaluate(op.wrap)
 		is SwitchOp -> evaluate(op.switch)
 		is LineOp -> evaluate(op.line)
 		is CallOp -> evaluate(op.call)
@@ -51,6 +53,9 @@ fun Evaluator.evaluate(rhs: Rhs): Value =
 
 fun Evaluator.evaluate(get: Get): Value =
 	value.accessOrNull(get.name)!!
+
+fun Evaluator.evaluate(wrap: Wrap): Value =
+	value.wrapOrNull!!
 
 fun Evaluator.evaluate(switch: Switch): Value =
 	switch.caseStack.mapFirst { evaluateOrNull(this) }!!
