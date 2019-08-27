@@ -1,6 +1,12 @@
 package leo13.type.pattern
 
-data class Case(val name: String, val rhs: Pattern)
+import leo13.script.Scriptable
+
+data class Case(val name: String, val rhs: Pattern) : Scriptable() {
+	override fun toString() = super.toString()
+	override val scriptableName get() = name
+	override val scriptableBody get() = rhs.scriptableBody
+}
 
 infix fun String.caseTo(rhs: Pattern) = Case(this, rhs)
 

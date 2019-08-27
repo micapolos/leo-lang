@@ -3,11 +3,29 @@ package leo13.type.pattern
 import leo.base.Empty
 import leo.base.empty
 import leo.base.fold
+import leo13.script.Script
+import leo13.script.Scriptable
+import leo13.script.script
 
-sealed class Choice
+sealed class Choice : Scriptable() {
+	override val scriptableName get() = "choice"
+	abstract val choiceScriptableName: String
+	abstract val choiceScriptableBody: Script
+}
 
-data class EmptyChoice(val empty: Empty) : Choice()
-data class LinkChoice(val link: ChoiceLink) : Choice()
+data class EmptyChoice(val empty: Empty) : Choice() {
+	override fun toString() = super.toString()
+	override val scriptableBody get() = script()
+	override val choiceScriptableName get() = "empty"
+	override val choiceScriptableBody get() = script()
+}
+
+data class LinkChoice(val link: ChoiceLink) : Choice() {
+	override fun toString() = super.toString()
+	override val scriptableBody get() = choiceScriptableBody
+	override val choiceScriptableName get() = "link"
+	override val choiceScriptableBody get() = link.scriptableBody
+}
 
 fun choice(empty: Empty): Choice = EmptyChoice(empty)
 fun choice(link: ChoiceLink): Choice = LinkChoice(link)
@@ -21,7 +39,6 @@ fun Choice.contains(pattern: Pattern): Boolean =
 		is LinkPattern -> contains(pattern.link)
 		is ChoicePattern -> contains(pattern.choice)
 		is ArrowPattern -> false
-		is TypePattern -> false
 	}
 
 fun Choice.contains(patternLink: PatternLink): Boolean =

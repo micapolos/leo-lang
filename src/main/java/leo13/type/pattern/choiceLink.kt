@@ -1,6 +1,13 @@
 package leo13.type.pattern
 
-data class ChoiceLink(val lhs: Choice, val case: Case)
+import leo13.script.Scriptable
+import leo13.script.plus
+
+data class ChoiceLink(val lhs: Choice, val case: Case) : Scriptable() {
+	override fun toString() = super.toString()
+	override val scriptableName get() = "link"
+	override val scriptableBody get() = lhs.scriptableBody.plus(case.scriptableLine)
+}
 
 fun link(lhs: Choice, case: Case) = ChoiceLink(lhs, case)
 
