@@ -6,27 +6,42 @@ import kotlin.test.Test
 
 class PatternTest {
 	@Test
-	fun scriptable() {
+	fun scriptableEmpty() {
 		pattern()
 			.assertEqualsToScriptLine("pattern()")
+	}
 
+	@Test
+	fun scriptableLines() {
 		pattern(
 			"zero" lineTo pattern(),
 			"plus" lineTo pattern("one"))
 			.assertEqualsToScriptLine("pattern(zero()plus(one()))")
+	}
 
+	@Test
+	fun scriptableEmptyChoice() {
+		pattern(choice())
+			.assertEqualsToScriptLine("pattern(choice())")
+	}
+
+	@Test
+	fun scriptableChoice() {
 		pattern(
 			choice(
 				"zero" caseTo pattern(),
 				"one" caseTo pattern()))
 			.assertEqualsToScriptLine("pattern(choice(zero()one()))")
+	}
 
-		pattern(choice())
-			.assertEqualsToScriptLine("pattern(choice())")
-
+	@Test
+	fun scriptableChoiceLine() {
 		pattern("choice" lineTo pattern())
 			.assertEqualsToScriptLine("pattern(meta(choice()))")
+	}
 
+	@Test
+	fun scriptableChoiceAndLines() {
 		pattern(
 			choice(
 				"zero" caseTo pattern(),
@@ -34,21 +49,18 @@ class PatternTest {
 			.plus("two" lineTo pattern())
 			.plus("three" lineTo pattern())
 			.assertEqualsToScriptLine("pattern(choice(zero()one())two()three())")
+	}
 
-		pattern(
-			"choice" lineTo pattern(
-				"zero" lineTo pattern(),
-				"one" lineTo pattern()),
-			"two" lineTo pattern(),
-			"three" lineTo pattern())
-			.assertEqualsToScriptLine("pattern(meta(choice(zero()one()))two()three())")
-
+	@Test
+	fun scriptableArrow() {
 		pattern(pattern("zero") arrowTo pattern("one"))
 			.assertEqualsToScriptLine("pattern(arrow(zero()to(one())))")
+	}
 
+	@Test
+	fun scriptableArrowLine() {
 		pattern("arrow" lineTo pattern())
 			.assertEqualsToScriptLine("pattern(meta(arrow()))")
-
 	}
 
 	@Test

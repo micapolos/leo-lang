@@ -4,9 +4,11 @@ import leo13.script.Scriptable
 import leo13.script.lineTo
 import leo13.script.plus
 
+val arrowScriptableName = "arrow"
+
 data class PatternArrow(val lhs: Pattern, val rhs: Pattern) : Scriptable() {
 	override fun toString() = super.toString()
-	override val scriptableName get() = "arrow"
+	override val scriptableName get() = arrowScriptableName
 	override val scriptableBody get() = lhs.scriptableBody.plus("to" lineTo rhs.scriptableBody)
 }
 

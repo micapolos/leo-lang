@@ -7,8 +7,10 @@ import leo13.script.Script
 import leo13.script.Scriptable
 import leo13.script.script
 
+val choiceScriptableName = "choice"
+
 sealed class Choice : Scriptable() {
-	override val scriptableName get() = "choice"
+	override val scriptableName get() = leo13.type.pattern.choiceScriptableName
 	abstract val choiceScriptableName: String
 	abstract val choiceScriptableBody: Script
 }

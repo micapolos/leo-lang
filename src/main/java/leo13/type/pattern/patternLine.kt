@@ -11,7 +11,7 @@ data class PatternLine(val name: String, val rhs: Pattern) : Scriptable() {
 	override val scriptableBody get() = rhs.scriptableBody
 	val firstScriptableLine: ScriptLine
 		get() =
-			if (name == "choice" || name == "arrow") "meta" lineTo script(scriptableLine)
+			if (name == choiceScriptableName || name == arrowScriptableName) "meta" lineTo script(scriptableLine)
 			else scriptableLine
 }
 
