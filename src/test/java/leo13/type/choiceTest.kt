@@ -2,8 +2,8 @@ package leo13.type
 
 import leo.base.assertNotNull
 import leo.base.assertNull
-import leo13.script.assertAsScriptLineWorks
 import leo13.script.assertEqualsToScriptLine
+import leo13.script.assertScriptableLineWorks
 import kotlin.test.Test
 
 class ChoiceTest {
@@ -29,12 +29,12 @@ class ChoiceTest {
 	@Test
 	fun choiceOrNull() {
 		unsafeChoice()
-			.assertAsScriptLineWorks { choiceOrNull }
+			.assertScriptableLineWorks { choiceOrNull }
 
 		unsafeChoice(either("zero"), either("one"))
-			.assertAsScriptLineWorks { choiceOrNull }
+			.assertScriptableLineWorks { choiceOrNull }
 
 		unsafeChoice(either("zero", type("foo")), either("one", type("bar")))
-			.assertAsScriptLineWorks { choiceOrNull }
+			.assertScriptableLineWorks { choiceOrNull }
 	}
 }

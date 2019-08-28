@@ -1,7 +1,7 @@
 package leo13.type
 
-import leo13.script.assertAsScriptLineWorks
 import leo13.script.assertEqualsToScriptLine
+import leo13.script.assertScriptableLineWorks
 import kotlin.test.Test
 
 class EitherTest {
@@ -17,9 +17,9 @@ class EitherTest {
 	@Test
 	fun eitherOrNull() {
 		either("foo")
-			.assertAsScriptLineWorks { eitherOrNull }
+			.assertScriptableLineWorks { eitherOrNull }
 
 		either("foo", type("bar"))
-			.assertAsScriptLineWorks { eitherOrNull }
+			.assertScriptableLineWorks { eitherOrNull }
 	}
 }

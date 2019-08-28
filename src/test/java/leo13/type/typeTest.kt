@@ -1,8 +1,8 @@
 package leo13.type
 
 import leo.base.assertEqualTo
-import leo13.script.assertAsScriptLineWorks
 import leo13.script.assertEqualsToScriptLine
+import leo13.script.assertScriptableLineWorks
 import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test
@@ -26,16 +26,16 @@ class TypeTest {
 	@Test
 	fun typeOrNull() {
 		type()
-			.assertAsScriptLineWorks { typeOrNull }
+			.assertScriptableLineWorks { typeOrNull }
 
 		type(unsafeChoice())
-			.assertAsScriptLineWorks { typeOrNull }
+			.assertScriptableLineWorks { typeOrNull }
 
 		type("zero" lineTo type(), "one" lineTo type())
-			.assertAsScriptLineWorks { typeOrNull }
+			.assertScriptableLineWorks { typeOrNull }
 
 		type(unsafeChoice(), "zero" lineTo type(), "one" lineTo type())
-			.assertAsScriptLineWorks { typeOrNull }
+			.assertScriptableLineWorks { typeOrNull }
 	}
 
 	@Test

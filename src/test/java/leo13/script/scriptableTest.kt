@@ -11,8 +11,11 @@ fun <V : Scriptable> V.assertEqualsToScript(code: String) =
 fun <V : Scriptable> V.assertEqualsToScriptLine(code: String) =
 	scriptableLine.assertEqualTo(code.unsafeScriptLine)
 
-fun <V : Scriptable> V.assertAsScriptLineWorks(fn: ScriptLine.() -> V?) =
+fun <V : Scriptable> V.assertScriptableLineWorks(fn: ScriptLine.() -> V?) =
 	scriptableLine.fn().assertEqualTo(this)
+
+fun <V : Scriptable> V.assertScriptableBodyWorks(fn: Script.() -> V?) =
+	scriptableBody.fn().assertEqualTo(this)
 
 class ScriptableTest {
 	@Test
