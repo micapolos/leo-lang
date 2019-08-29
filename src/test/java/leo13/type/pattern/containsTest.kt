@@ -20,7 +20,7 @@ class ContainsTest {
 			.assertEqualTo(true)
 
 		type(
-			choice(
+			unsafeChoice(
 				"zero" caseTo type(),
 				"one" caseTo type()))
 			.contains(
@@ -28,34 +28,34 @@ class ContainsTest {
 			.assertEqualTo(true)
 
 		type(
-			choice(
+			unsafeChoice(
 				"zero" caseTo type(),
 				"one" caseTo type()))
 			.contains(
 				type(
-					choice(
+					unsafeChoice(
 						"zero" caseTo type(),
 						"one" caseTo type())))
 			.assertEqualTo(true)
 
 		type(
-			choice(
+			unsafeChoice(
 				"zero" caseTo type(),
 				"one" caseTo type()))
 			.contains(
 				type(
-					choice(
+					unsafeChoice(
 						"one" caseTo type(),
 						"zero" caseTo type())))
 			.assertEqualTo(false)
 
 		type(
-			choice(
+			unsafeChoice(
 				"zero" caseTo type(),
 				"one" caseTo type()))
 			.contains(
 				type(
-					choice(
+					unsafeChoice(
 						"one" caseTo type(),
 						"zero" caseTo type())))
 			.assertEqualTo(false)

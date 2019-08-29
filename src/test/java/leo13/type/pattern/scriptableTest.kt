@@ -29,7 +29,7 @@ class ScriptableTest {
 	@Test
 	fun choice() {
 		type(
-			choice(
+			unsafeChoice(
 				"zero" caseTo type(),
 				"one" caseTo type(),
 				"two" caseTo type()))
@@ -63,7 +63,7 @@ class ScriptableTest {
 	@Test
 	fun choiceAndLines() {
 		type(
-			choice(
+			unsafeChoice(
 				"zero" caseTo type(),
 				"one" caseTo type()))
 			.plus("two" lineTo type())

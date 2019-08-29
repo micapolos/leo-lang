@@ -8,16 +8,16 @@ import kotlin.test.assertFails
 class ChoiceTest {
 	@Test
 	fun constructor() {
-		choice("one" caseTo type(), "two" caseTo type()).assertNotNull
-		choice("one" caseTo type(), "two" caseTo type(), "three" caseTo type()).assertNotNull
+		unsafeChoice("one" caseTo type(), "two" caseTo type()).assertNotNull
+		unsafeChoice("one" caseTo type(), "two" caseTo type(), "three" caseTo type()).assertNotNull
 
-		assertFails { choice("one" caseTo type(), "two" caseTo type(), "one" caseTo type()) }
-		assertFails { choice("one" caseTo type(), "two" caseTo type(), "three" caseTo type(), "two" caseTo type()) }
+		assertFails { unsafeChoice("one" caseTo type(), "two" caseTo type(), "one" caseTo type()) }
+		assertFails { unsafeChoice("one" caseTo type(), "two" caseTo type(), "three" caseTo type(), "two" caseTo type()) }
 	}
 
 	@Test
 	fun rhsOrNull() {
-		choice(
+		unsafeChoice(
 			"one" caseTo type("jeden"),
 			"two" caseTo type("dwa"),
 			"three" caseTo type("trzy"))

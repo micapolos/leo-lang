@@ -4,6 +4,7 @@ import leo.base.Empty
 import leo13.script.*
 
 sealed class Type : Scriptable() {
+	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "type"
 	override val scriptableBody get() = typeScriptableBody
 	abstract val typeScriptableName: String
@@ -62,6 +63,7 @@ data class Choice(val lhsNode: ChoiceNode, val case: Case) : Scriptable() {
 }
 
 sealed class ChoiceNode : Scriptable() {
+	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "node"
 	override val scriptableBody get() = nodeScriptableBody
 	abstract val nodeScriptableName: String

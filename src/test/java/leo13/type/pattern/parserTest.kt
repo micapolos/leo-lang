@@ -3,10 +3,10 @@ package leo13.type.pattern
 import leo13.script.assertScriptableLineWorks
 import kotlin.test.Test
 
-class ParseTest {
+class ParserTest {
 	@Test
 	fun empty() {
-		type().assertScriptableLineWorks { typeOrNull }
+		type().assertScriptableLineWorks { unsafeType }
 	}
 
 	@Test
@@ -15,17 +15,17 @@ class ParseTest {
 			"zero" lineTo type(),
 			"plus" lineTo type(
 				"one" lineTo type()))
-			.assertScriptableLineWorks { typeOrNull }
+			.assertScriptableLineWorks { unsafeType }
 	}
 
 	@Test
 	fun choice() {
 		type(
-			choice(
+			unsafeChoice(
 				"zero" caseTo type(),
 				"one" caseTo type(),
 				"two" caseTo type()))
-			.assertScriptableLineWorks { typeOrNull }
+			.assertScriptableLineWorks { unsafeType }
 	}
 
 	@Test
@@ -34,17 +34,17 @@ class ParseTest {
 			"zero" lineTo type(),
 			"or" lineTo type("one" lineTo type()),
 			"or" lineTo type("two" lineTo type()))
-			.assertScriptableLineWorks { typeOrNull }
+			.assertScriptableLineWorks { unsafeType }
 	}
 
 	@Test
 	fun choiceAndLines() {
 		type(
-			choice(
+			unsafeChoice(
 				"zero" caseTo type(),
 				"one" caseTo type()))
 			.plus("two" lineTo type())
-			.assertScriptableLineWorks { typeOrNull }
+			.assertScriptableLineWorks { unsafeType }
 	}
 
 	@Test
@@ -53,6 +53,6 @@ class ParseTest {
 			arrow(
 				type("zero"),
 				type("one")))
-			.assertScriptableLineWorks { typeOrNull }
+			.assertScriptableLineWorks { unsafeType }
 	}
 }
