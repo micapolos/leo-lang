@@ -77,12 +77,12 @@ class CompilerTest {
 			.assertEqualTo(compiler(context(), typed()))
 
 		compiler(context(), typed())
-			.unsafePush(script(
-				"zero" lineTo script(),
-				"of" lineTo script(
-					"choice" lineTo script(
-						"either" lineTo script("zero"),
-						"either" lineTo script("one")))))
+			.unsafePush(
+				script(
+					"zero" lineTo script(),
+					"of" lineTo script(
+						"zero" lineTo script(),
+						"or" lineTo script("one"))))
 			.assertEqualTo(
 				compiler(
 					context(),
