@@ -1,66 +1,57 @@
 package leo13.script
 
-import leo.base.assertEqualTo
-import leo.base.assertNotNull
-import leo.base.assertNull
-import leo13.type.*
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class SwitchTest {
 	@Test
 	fun construction() {
-		leo13.script.switchOrNull().assertNotNull
-		leo13.script.switchOrNull("zero" caseTo script(), "one" caseTo script()).assertNotNull
-		leo13.script.switchOrNull("zero" caseTo script(), "one" caseTo script(), "zero" caseTo script()).assertNull
+		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
+		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
+		assertFails { unsafeSwitch("one" caseTo script(), "one" caseTo script()) }
+		assertFails { unsafeSwitch("one" caseTo script(), "two" caseTo script(), "one" caseTo script()) }
+	}
+
+	@Test
+	fun scriptableBody() {
+		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
+			.assertEqualsToScript("one(jeden())two(dwa())")
+
+		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
+			.assertEqualsToScript("one(jeden())two(dwa())three(trzy())")
 	}
 
 	@Test
 	fun parsing() {
-		"switch()"
-			.unsafeScriptLine
-			.switchOrNull
-			.assertEqualTo(null)
+		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
+			.assertScriptableBodyWorks { unsafeSwitch }
 
-		"switch(null())"
-			.unsafeScriptLine
-			.switchOrNull
-			.assertEqualTo(leo13.script.switchOrNull())
-
-		"switch(case(one(jeden()))case(two(dwa())))"
-			.unsafeScriptLine
-			.switchOrNull
-			.assertEqualTo(
-				leo13.script.switchOrNull(
-					"one" caseTo script("jeden"),
-					"two" caseTo script("dwa")))
+		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
+			.assertScriptableBodyWorks { unsafeSwitch }
 	}
 
-	@Test
-	fun choiceMatchOrNull() {
-		leo13.script.switchOrNull()!!
-			.choiceMatchOrNull(choiceOrNull()!!)
-			.assertEqualTo(choiceMatch())
-
-		leo13.script.switchOrNull(
-			"zero" caseTo script("zero"),
-			"one" caseTo script("one"))!!
-			.choiceMatchOrNull(
-				choiceOrNull(
-					either("one", type("one")),
-					either("zero", type("zero")))!!)
-			.assertEqualTo(
-				choiceMatch(
-					match(either("zero", type("zero")), script("zero")),
-					match(either("one", type("one")), script("one"))))
-
-		leo13.script.switchOrNull(
-			"zero" caseTo script("zero"),
-			"one" caseTo script("one"))!!
-			.choiceMatchOrNull(
-				choiceOrNull(
-					either("two", type("two")),
-					either("one", type("one")),
-					either("zero", type("zero")))!!)
-			.assertEqualTo(null)
-	}
+//	@Test
+//	fun choiceMatchOrNull() {
+//		leo13.script.switchOrNull(
+//			"zero" caseTo script("zero"),
+//			"one" caseTo script("one"))!!
+//			.choiceMatchOrNull(
+//				unsafeChoice(
+//					"one" caseTo type("one"),
+//					"zero" caseTo type("zero"))))
+//			.assertEqualTo(
+//				choiceMatch(
+//					match(either("zero", type("zero")), script("zero")),
+//					match(either("one", type("one")), script("one"))))
+//
+//		leo13.script.switchOrNull(
+//			"zero" caseTo script("zero"),
+//			"one" caseTo script("one"))!!
+//			.choiceMatchOrNull(
+//				choiceOrNull(
+//					either("two", type("two")),
+//					either("one", type("one")),
+//					either("zero", type("zero")))!!)
+//			.assertEqualTo(null)
+//	}
 }

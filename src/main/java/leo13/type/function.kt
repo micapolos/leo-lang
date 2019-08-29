@@ -5,17 +5,15 @@ import leo13.script.Scriptable
 import leo13.script.lineTo
 import leo13.script.script
 
-data class Function(val parameterType: Type, val typed: Typed) : Scriptable() {
+data class Function(val parameter: Type, val body: Typed) : Scriptable() {
 	override val scriptableName get() = "function"
 	override val scriptableBody
 		get() = script(
-			"parameter" lineTo script(parameterType.scriptableLine),
-			typed.scriptableLine)
+			"parameter" lineTo script(parameter.scriptableLine),
+			body.scriptableLine)
 }
 
-fun function(parameterType: Type, typed: Typed) = Function(parameterType, typed)
+fun function(parameter: Type, body: Typed) = Function(parameter, body)
 
-fun Function.typedOrNull(parameter: Type): Typed? =
-	notNullIf(parameterType == parameter) {
-		typed
-	}
+fun Function.bodyOrNull(parameter: Type): Typed? =
+	notNullIf(this.parameter == parameter) { body }

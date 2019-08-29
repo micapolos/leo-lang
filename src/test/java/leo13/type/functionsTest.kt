@@ -10,7 +10,7 @@ class FunctionsTest {
 	@Test
 	fun typedOrNull() {
 		functions()
-			.typedOrNull(type("zero" lineTo type()))
+			.bodyOrNull(type("zero" lineTo type()))
 			.assertEqualTo(null)
 
 		functions(
@@ -19,7 +19,7 @@ class FunctionsTest {
 				typed(
 					expr(op("one" lineTo expr())),
 					type("one" lineTo type()))))
-			.typedOrNull(type("zero" lineTo type()))
+			.bodyOrNull(type("zero" lineTo type()))
 			.assertEqualTo(
 				typed(
 					expr(op("one" lineTo expr())),

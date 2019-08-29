@@ -16,7 +16,7 @@ val Stack<Function>.functions get() = Functions(this)
 fun Functions.plus(function: Function) = functionStack.push(function).functions
 fun functions(vararg functions: Function) = stack(*functions).functions
 
-fun Functions.typedOrNull(parameter: Type) =
+fun Functions.bodyOrNull(parameter: Type) =
 	functionStack.mapFirst {
-		typedOrNull(parameter)
+		bodyOrNull(parameter)
 	}

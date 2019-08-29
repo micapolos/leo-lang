@@ -1,40 +1,31 @@
 package leo13.type
 
+import leo.base.assertEqualTo
 import leo.base.assertNotNull
-import leo.base.assertNull
-import leo13.script.assertEqualsToScriptLine
-import leo13.script.assertScriptableLineWorks
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class ChoiceTest {
 	@Test
-	fun construction() {
-		choiceOrNull().assertNotNull
-		leo13.type.choiceOrNull(either("zero"), either("one")).assertNotNull
-		leo13.type.choiceOrNull(either("zero"), either("one"), either("zero")).assertNull
+	fun constructor() {
+		unsafeChoice("one" caseTo type(), "two" caseTo type()).assertNotNull
+		unsafeChoice("one" caseTo type(), "two" caseTo type(), "three" caseTo type()).assertNotNull
+
+		assertFails { unsafeChoice("one" caseTo type(), "two" caseTo type(), "one" caseTo type()) }
+		assertFails { unsafeChoice("one" caseTo type(), "two" caseTo type(), "three" caseTo type(), "two" caseTo type()) }
 	}
 
 	@Test
-	fun asScriptLine() {
-		unsafeChoice()
-			.assertEqualsToScriptLine("choice(null())")
-
-		unsafeChoice(either("zero"), either("one"))
-			.assertEqualsToScriptLine("choice(either(zero())either(one()))")
-
-		unsafeChoice(either("zero", type("foo")), either("one", type("bar")))
-			.assertEqualsToScriptLine("choice(either(zero(foo()))either(one(bar())))")
-	}
-
-	@Test
-	fun choiceOrNull() {
-		unsafeChoice()
-			.assertScriptableLineWorks { choiceOrNull }
-
-		unsafeChoice(either("zero"), either("one"))
-			.assertScriptableLineWorks { choiceOrNull }
-
-		unsafeChoice(either("zero", type("foo")), either("one", type("bar")))
-			.assertScriptableLineWorks { choiceOrNull }
+	fun rhsOrNull() {
+		unsafeChoice(
+			"one" caseTo type("jeden"),
+			"two" caseTo type("dwa"),
+			"three" caseTo type("trzy"))
+			.run {
+				rhsOrNull("one").assertEqualTo(type("jeden"))
+				rhsOrNull("two").assertEqualTo(type("dwa"))
+				rhsOrNull("three").assertEqualTo(type("trzy"))
+				rhsOrNull("four").assertEqualTo(null)
+			}
 	}
 }

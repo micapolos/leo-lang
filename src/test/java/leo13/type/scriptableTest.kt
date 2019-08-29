@@ -1,4 +1,4 @@
-package leo13.type.pattern
+package leo13.type
 
 import leo.base.assertEqualTo
 import leo13.script.lineTo

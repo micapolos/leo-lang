@@ -1,15 +1,12 @@
 package leo13.type
 
-import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.lhs
 import leo13.rhsLine
 import leo13.script.*
 import leo13.script.Switch
 import leo13.value.*
-import leo9.isEmpty
 import leo9.mapFirst
-import leo9.mapOnly
 
 data class Typed(val expr: Expr, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
@@ -27,7 +24,7 @@ fun Typed.linkTo(typedLine: TypedLine) = TypedLink(this, typedLine)
 fun Typed.plus(typedLine: TypedLine) = expr.plus(op(typedLine.name lineTo typedLine.rhs.expr)) of type.plus(typedLine.name lineTo typedLine.rhs.type)
 fun typed(expr: Expr, type: Type) = Typed(expr, type)
 
-fun typed(script: Script) = typed(expr(script), script.exactType)
+fun typed(script: Script) = typed(expr(script), script.type)
 
 fun Type.castOrNull(typed: Typed): Expr? =
 	notNullIf(contains(typed.type)) {
@@ -45,15 +42,9 @@ fun Types.cast(typedScript: TypedScript): TypedScript =
 	}
 
 fun Typed.accessOrNull(name: String): Typed? =
-	type
-		.onlyLineOrNull
-		?.rhs
-		?.lineStack
-		?.mapOnly {
-			notNullIf(this.name == name) {
-				expr.plus(op(get(name))) of type(this)
-			}
-		}
+	type.accessOrNull(name)?.let { accessType ->
+		expr.plus(op(get(name))) of accessType
+	}
 
 val Typed.previousOrNull: Typed?
 	get() =
@@ -68,24 +59,17 @@ val Typed.lineOrNull: Typed?
 		}
 
 fun Typed.switchOrNull(switch: Switch): Typed? =
-	ifOrNull(type.lineStack.isEmpty) {
-		type.choiceOrNull?.let { choice ->
-			TODO()
-		}
-	}
+	TODO()
+//	ifOrNull(type.lineStack.isEmpty) {
+//		type.choiceOrNull?.let { choice ->
+//			TODO()
+//		}
+//	}
 
 val Script.typed
 	get() =
-		expr of exactType
+		expr of type
 
 val ScriptLine.typed
 	get() =
 		name lineTo rhs.typed
-
-val TypedLink.ofTypedExprOrNull
-	get() =
-		ifOrNull(typedLine.name == "of") {
-			typedLine.rhs.type.staticScriptOrNull?.typeOrNull?.let { type ->
-				type.castOrNull(lhs)?.of(type)
-			}
-		}

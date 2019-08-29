@@ -3,7 +3,7 @@ package leo13.type
 import leo9.Stack
 import leo9.stack
 
-data class ChoiceMatch(val eitherMatchStack: Stack<EitherMatch>)
+data class ChoiceMatch(val caseMatchStack: Stack<CaseMatch>)
 
-val Stack<EitherMatch>.choiceMatch get() = ChoiceMatch(this)
-fun choiceMatch(vararg eitherMatches: EitherMatch) = stack(*eitherMatches).choiceMatch
+val Stack<CaseMatch>.choiceMatch get() = ChoiceMatch(this)
+fun choiceMatch(vararg caseMatches: CaseMatch) = stack(*caseMatches).choiceMatch

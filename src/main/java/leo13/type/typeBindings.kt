@@ -19,5 +19,5 @@ fun typeBindings(vararg types: Type) = stack(*types).typeBindings
 
 val TypeBindings.asScript get() = stack.map { "bind" lineTo scriptableBody }.script
 
-fun TypeBindings.typeOrNull(given: Given): Type? =
-	stack.drop(given.previousStack)?.linkOrNull?.value
+fun TypeBindings.unsafeType(given: Given): Type =
+	stack.drop(given.previousStack)!!.linkOrNull!!.value

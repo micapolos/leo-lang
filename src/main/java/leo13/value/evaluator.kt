@@ -28,6 +28,7 @@ fun Evaluator.evaluate(expr: Expr): Value =
 
 fun Evaluator.evaluate(op: Op): Value =
 	when (op) {
+		is ValueOp -> evaluate(op.value)
 		is ArgumentOp -> evaluate(op.given)
 		is LhsOp -> evaluate(op.lhs)
 		is RhsLineOp -> evaluate(op.rhsLine)
@@ -38,6 +39,9 @@ fun Evaluator.evaluate(op: Op): Value =
 		is LineOp -> evaluate(op.line)
 		is CallOp -> evaluate(op.call)
 	}
+
+fun Evaluator.evaluate(value: Value): Value =
+	value
 
 fun Evaluator.evaluate(given: Given): Value =
 	valueBindings.stack.drop(given.previousStack)!!.linkOrNull!!.value

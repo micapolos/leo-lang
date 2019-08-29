@@ -1,171 +1,243 @@
 package leo13.type
 
-import leo.base.ifOrNull
-import leo.base.notNullIf
+import leo.base.*
 import leo13.script.*
-import leo13.script.Script
-import leo13.script.ScriptLine
-import leo9.*
 
-data class Type(val choiceOrNull: Choice?, val lineStack: Stack<TypeLine>) : Scriptable() {
-	override fun toString() = scriptableBody.toString()
+sealed class Type : Scriptable() {
+	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "type"
-	override val scriptableBody get() = asCustomScript
+	override val scriptableBody get() = typeScriptableBody
+	abstract val typeScriptableName: String
+	abstract val typeScriptableBody: Script
 }
 
-data class TypeLine(val name: String, val rhs: Type) {
-	override fun toString() = asRawScriptLine.toString()
+data class EmptyType(val empty: Empty) : Type() {
+	override fun toString() = super.toString()
+	override val typeScriptableName get() = "empty"
+	override val typeScriptableBody get() = script()
 }
 
-data class TypeLink(val lhs: Type, val line: TypeLine)
-data class TypeArrow(val lhs: Type, val rhs: Type)
-data class TypeAccess(val int: Int, val type: Type)
+data class LinkType(val link: TypeLink) : Type() {
+	override fun toString() = super.toString()
+	override val typeScriptableName get() = link.scriptableName
+	override val typeScriptableBody get() = link.scriptableBody
+}
+
+data class ChoiceType(val choice: Choice) : Type() {
+	override fun toString() = super.toString()
+	override val typeScriptableName get() = choice.scriptableName
+	override val typeScriptableBody get() = choice.scriptableBody
+}
+
+data class ArrowType(val arrow: TypeArrow) : Type() {
+	override fun toString() = super.toString()
+	override val typeScriptableName get() = arrow.scriptableName
+	override val typeScriptableBody get() = arrow.scriptableBody
+}
 
 // --- constructors
 
-fun type(vararg lines: TypeLine) = Type(null, stack(*lines))
-fun type(name: String) = type(name lineTo type())
-fun type(choice: Choice, vararg lines: TypeLine) = Type(choice, stack(*lines))
-fun Type.plus(line: TypeLine) = Type(choiceOrNull, lineStack.push(line))
-infix fun Type.arrowTo(rhs: Type) = TypeArrow(this, rhs)
-fun access(int: Int, type: Type) = TypeAccess(int, type)
-infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
+fun type(empty: Empty): Type = EmptyType(empty)
+fun type(link: TypeLink): Type = LinkType(link)
+fun type(choice: Choice): Type = ChoiceType(choice)
+fun type(arrow: TypeArrow): Type = ArrowType(arrow)
 
-infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
+fun type(vararg lines: TypeLine): Type = type(empty).fold(lines) { plus(it) }
+fun type(name: String): Type = type(name lineTo type())
 
-val Type.asCustomScript: Script
+fun Type.plus(line: TypeLine): Type = type(link(this, line))
+
+val Script.type: Type
 	get() =
-		(choiceOrNull?.scriptableLine?.script ?: leo13.script.script())
-			.fold(lineStack.reverse) { plus(it.asScriptLine) }
+		type().fold(lineSeq) { plus(it.typeLine) }
 
-val TypeLine.asRawScriptLine
+val ScriptLine.typeLine: TypeLine
 	get() =
-		name lineTo rhs.scriptableBody
-
-val TypeLine.asScriptLine
-	get() =
-		if (name == "or" && rhs.onlyLineOrNull != null) "meta" lineTo leo13.script.script(asRawScriptLine)
-		else asRawScriptLine
-
-val Type.isEmpty get() = choiceOrNull == null && lineStack.isEmpty
-
-val Type.previousOrNull
-	get() =
-		lineStack
-			.linkOrNull
-			?.let { lineStackLink -> Type(choiceOrNull, lineStackLink.stack) }
-			?: notNullIf(choiceOrNull != null) { type() }
-
-val Type.lineOrNull
-	get() =
-		lineStack
-			.linkOrNull
-			?.let { lineStackLink -> Type(null, stack(lineStackLink.value)) }
-			?: choiceOrNull?.let { choice -> Type(choice, stack()) }
-
-val Type.onlyLineOrNull
-	get() =
-		ifOrNull(choiceOrNull == null) {
-			lineStack.onlyOrNull
-		}
-
-val Type.onlyChoiceOrNull
-	get() =
-		ifOrNull(lineStack.isEmpty) {
-			choiceOrNull
-		}
-
-// --- typeOrNull
-
-val ScriptLine.typeOrNull: Type?
-	get() =
-		ifOrNull(name == "type") {
-			rhs.typeOrNull
-		}
-
-val Script.typeOrNull: Type?
-	get() =
-		lineStack.reverse.let { reverseLineStack ->
-			when (reverseLineStack) {
-				is EmptyStack -> type()
-				is LinkStack ->
-					reverseLineStack.link.value.choiceOrNull.let { choiceOrNull ->
-						if (choiceOrNull == null) plainTypeOrNull
-						else reverseLineStack.link.stack.reverse.script.plainTypeOrNull?.let { plainTypeOrNull ->
-							Type(choiceOrNull, plainTypeOrNull.lineStack)
-						}
-					}
-			}
-		}
-
-val Script.plainTypeOrNull: Type?
-	get() =
-		if (lineStack.isEmpty) type()
-		else asStackOrNull { typeLineOrNull }?.let { lineStack ->
-			Type(null, lineStack)
-		}
-
-val ScriptLine.typeLineOrNull: TypeLine?
-	get() =
-		rhs.typeOrNull?.let { type -> name lineTo type }
-
-val String.unsafeType get() = unsafeScript.typeOrNull!!
-
-// --- exact type
-
-val Script.exactType: Type
-	get() = type().fold(lineStack.reverse) { plus(it.exactTypeLine) }
-
-val ScriptLine.exactTypeLine
-	get() = name lineTo rhs.exactType
-
-// --- type matches script
-
-fun Type.matches(script: Script): Boolean =
-	contains(script.exactType)
-
-// === type to script
-
-val Type.staticScriptOrNull: Script?
-	get() =
-		ifOrNull(choiceOrNull == null) {
-			lineStack.mapOrNull { staticScriptLineOrNull }?.script
-		}
-
-val TypeLine.staticScriptLineOrNull: ScriptLine?
-	get() =
-		rhs.staticScriptOrNull?.let { name lineTo it }
-
-val TypeLink.staticScriptLinkOrNull: ScriptLink?
-	get() =
-		lhs.staticScriptOrNull?.let { lhsScript ->
-			line.staticScriptLineOrNull?.let { scriptLine ->
-				leo13.script.link(lhsScript, scriptLine)
-			}
-		}
-
-val Type.scriptOrError: Script
-	get() =
-		staticScriptOrNull ?: error("type is not compile-time constant")
-
-val TypeLink.type
-	get() =
-		lhs.plus(line)
-
-// --- contains
+		name lineTo rhs.type
 
 fun Type.contains(type: Type): Boolean =
-	when (lineStack) {
-		is EmptyStack ->
-			if (choiceOrNull == null) type.isEmpty
-			else choiceOrNull.contains(type)
-		is LinkStack ->
-			when (type.lineStack) {
-				is EmptyStack -> false
-				is LinkStack -> lineStack.link.value.contains(type.lineStack.link.value)
-					&& Type(choiceOrNull, lineStack.link.stack).contains(Type(choiceOrNull, type.lineStack.link.stack))
-			}
+	when (this) {
+		is EmptyType -> type is EmptyType
+		is ChoiceType -> choice.contains(type)
+		is ArrowType -> type is ArrowType && arrow == type.arrow
+		is LinkType -> type is LinkType && link.contains(type.link)
 	}
 
-fun TypeLine.contains(line: TypeLine): Boolean =
-	name == line.name && rhs.contains(line.rhs)
+val ScriptLine.unsafeType: Type
+	get() =
+		failIfOr(name != "type") {
+			rhs.unsafeType
+		}
+
+val Script.unsafeType: Type
+	get() =
+		type().fold(lineSeq) { unsafePlus(it) }
+
+fun Type.unsafePlus(scriptLine: ScriptLine): Type =
+	when (this) {
+		is EmptyType -> plus(scriptLine.unsafeTypeLine)
+		is LinkType -> link.unsafePlusType(scriptLine)
+		is ChoiceType -> choice.unsafePlusType(scriptLine)
+		is ArrowType -> arrow.unsafePlusType(scriptLine)
+	}
+
+fun TypeLink.unsafePlusType(scriptLine: ScriptLine): Type =
+	when {
+		scriptLine.name == "or" && lhs is EmptyType -> type(uncheckedChoice(choiceNode(line.case), scriptLine.rhs.unsafeCase))
+		scriptLine.name == "to" -> type(arrow(type(this), scriptLine.rhs.unsafeType))
+		else -> type(plus(scriptLine.unsafeTypeLine))
+	}
+
+fun Choice.unsafePlusType(scriptLine: ScriptLine): Type =
+	if (scriptLine.name == "or") type(unsafePlus(scriptLine.rhs.unsafeCase))
+	else type(this).plus(scriptLine.unsafeTypeLine)
+
+fun TypeArrow.unsafePlusType(scriptLine: ScriptLine): Type =
+	if (scriptLine.name == "to") type(arrow(type(this), scriptLine.rhs.unsafeType))
+	else type(this).plus(scriptLine.unsafeTypeLine)
+
+//val Type.asCustomScript: Script
+//	get() =
+//		(choiceOrNull?.scriptableLine?.script ?: leo13.script.script())
+//			.fold(lineStack.reverse) { plus(it.asScriptLine) }
+//
+//val TypeLine.asRawScriptLine
+//	get() =
+//		name lineTo rhs.scriptableBody
+//
+//val TypeLine.asScriptLine
+//	get() =
+//		if (name == "or" && rhs.onlyLineOrNull != null) "meta" lineTo leo13.script.script(asRawScriptLine)
+//		else asRawScriptLine
+//
+//val Type.isEmpty get() = choiceOrNull == null && lineStack.isEmpty
+
+val Type.previousOrNull: Type?
+	get() = when (this) {
+		is EmptyType -> null
+		is LinkType -> link.lhs
+		is ChoiceType -> type()
+		is ArrowType -> arrow.rhs.previousOrNull
+	}
+
+val Type.lineOrNull: Type?
+	get() = when (this) {
+		is EmptyType -> null
+		is LinkType -> type(link.line)
+		is ChoiceType -> this
+		is ArrowType -> arrow.rhs.lineOrNull
+	}
+
+//val Type.onlyLineOrNull
+//	get() =
+//		ifOrNull(choiceOrNull == null) {
+//			lineStack.onlyOrNull
+//		}
+//
+//val Type.onlyChoiceOrNull
+//	get() =
+//		ifOrNull(lineStack.isEmpty) {
+//			choiceOrNull
+//		}
+//
+//// --- typeOrNull
+//
+//val ScriptLine.typeOrNull: Type?
+//	get() =
+//		ifOrNull(name == "type") {
+//			rhs.typeOrNull
+//		}
+//
+//val Script.typeOrNull: Type?
+//	get() =
+//		lineStack.reverse.let { reverseLineStack ->
+//			when (reverseLineStack) {
+//				is EmptyStack -> type()
+//				is LinkStack ->
+//					reverseLineStack.link.value.choiceOrNull.let { choiceOrNull ->
+//						if (choiceOrNull == null) plainTypeOrNull
+//						else reverseLineStack.link.stack.reverse.script.plainTypeOrNull?.let { plainTypeOrNull ->
+//							Type(choiceOrNull, plainTypeOrNull.lineStack)
+//						}
+//					}
+//			}
+//		}
+//
+//val Script.plainTypeOrNull: Type?
+//	get() =
+//		if (lineStack.isEmpty) type()
+//		else asStackOrNull { typeLineOrNull }?.let { lineStack ->
+//			Type(null, lineStack)
+//		}
+//
+//val ScriptLine.typeLineOrNull: TypeLine?
+//	get() =
+//		rhs.typeOrNull?.let { type -> name lineTo type }
+//
+//val String.unsafeType get() = unsafeScript.typeOrNull!!
+//
+//// --- exact type
+//
+//val Script.exactType: Type
+//	get() = type().fold(lineStack.reverse) { plus(it.exactTypeLine) }
+//
+//val ScriptLine.exactTypeLine
+//	get() = name lineTo rhs.exactType
+//
+//// --- type matches script
+//
+//fun Type.matches(script: Script): Boolean =
+//	contains(script.exactType)
+//
+// === type to script
+
+val Type.unsafeStaticScript: Script
+	get() = when (this) {
+		is EmptyType -> script()
+		is LinkType -> link.unsafeStaticScriptLink.script
+		is ChoiceType -> error("non-static")
+		is ArrowType -> error("non-static")
+	}
+
+val TypeLine.unsafeStaticScriptLine: ScriptLine
+	get() =
+		name lineTo rhs.unsafeStaticScript
+
+val TypeLink.unsafeStaticScriptLink: ScriptLink
+	get() =
+		link(lhs.unsafeStaticScript, line.unsafeStaticScriptLine)
+
+//val TypeLink.type
+//	get() =
+//		lhs.plus(line)
+
+// --- rhsOrNull
+
+fun Type.rhsOrNull(name: String): Type? =
+	when (this) {
+		is EmptyType -> null
+		is LinkType -> link.rhsOrNull(name)
+		is ChoiceType -> null
+		is ArrowType -> arrow.rhs.rhsOrNull(name)
+	}
+
+fun TypeLink.rhsOrNull(name: String): Type? =
+	if (line.name == name) line.rhs
+	else lhs.rhsOrNull(name)
+
+// --- accessOrNull
+
+fun Type.accessOrNull(name: String): Type? =
+	when (this) {
+		is EmptyType -> null
+		is LinkType -> link.accessTypeOrNull(name)
+		is ChoiceType -> null
+		is ArrowType -> arrow.rhs.accessOrNull(name)
+	}
+
+fun TypeLink.accessTypeOrNull(name: String): Type? =
+	ifOrNull(lhs is EmptyType) {
+		line.rhs.rhsOrNull(name)?.let { rhs ->
+			type(name lineTo rhs)
+		}
+	}

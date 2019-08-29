@@ -24,7 +24,7 @@ fun TypedScript.plus(line: TypedScriptLine) =
 val ScriptLink.parseTypedScript
 	get() =
 		ifOrNull(line.name == "of") {
-			line.rhs.typeOrNull?.let { type ->
+			line.rhs.unsafeType.let { type ->
 				lhs of type
 			}
 		}

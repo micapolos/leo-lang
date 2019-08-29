@@ -5,8 +5,8 @@ import leo.base.notNullOrError
 
 data class Case(val name: String, val rhs: Script) : Scriptable() {
 	override fun toString() = super.toString()
-	override val scriptableName = "case"
-	override val scriptableBody = script(name lineTo rhs)
+	override val scriptableName = name
+	override val scriptableBody = rhs
 }
 
 infix fun String.caseTo(rhs: Script) = Case(this, rhs)

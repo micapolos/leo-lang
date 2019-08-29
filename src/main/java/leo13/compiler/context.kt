@@ -19,11 +19,11 @@ data class Context(
 			typeBindings.scriptableLine)
 }
 
-fun context() = Context(leo13.type.types(), functions(), typeBindings())
+fun context() = Context(types(), functions(), typeBindings())
 fun context(types: Types, functions: Functions, typeBindings: TypeBindings) = Context(types, functions, typeBindings)
 fun Context.bind(type: Type) = copy(typeBindings = typeBindings.push(type))
 fun Context.plus(type: Type) = copy(types = types.plus(type))
 fun Context.plus(function: Function) = copy(functions = functions.plus(function))
 
-fun Context.compile(script: Script): Typed? =
-	compiler(this, typed()).push(script)?.typed
+fun Context.unsafeCompile(script: Script): Typed =
+	compiler(this, typed()).unsafePush(script).typed

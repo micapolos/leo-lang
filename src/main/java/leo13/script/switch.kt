@@ -1,49 +1,61 @@
 package leo13.script
 
-import leo.base.notNullIf
-import leo.base.notNullOrError
-import leo.base.orNull
-import leo.base.orNullIf
-import leo13.type.*
-import leo9.*
+import leo.base.failIfOr
+import leo.base.fold
+import leo13.type.Choice
+import leo13.type.ChoiceMatch
+import leo9.EmptyStack
+import leo9.LinkStack
 
-data class Switch(val distinctCaseStack: Stack<Case>) : Scriptable() {
+data class Switch(val lhsNode: SwitchNode, val case: Case) : Scriptable() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "switch"
-	override val scriptableBody get() = distinctCaseStack.asScript
+	override val scriptableBody get() = lhsNode.scriptableBody.plus(case.scriptableLine)
 }
 
-val Stack<Case>.uncheckedSwitch: Switch get() = Switch(this)
+fun uncheckedSwitch(lhsNode: SwitchNode, case: Case) = Switch(lhsNode, case)
 
-val Stack<Case>.switchOrNull: Switch?
-	get() =
-		stack<Case>().uncheckedSwitch.orNull.fold(reverse) { this?.plusOrNull(it) }
+fun Switch.uncheckedPlus(case: Case): Switch =
+	uncheckedSwitch(node(this), case)
 
-fun Switch.plusOrNull(case: Case): Switch? =
-	notNullIf(!containsCase(case.name)) {
-		distinctCaseStack.push(case).uncheckedSwitch
-	}
+fun Switch.unsafePlus(case: Case): Switch =
+	if (containsCase(case.name)) error("duplicate case")
+	else uncheckedPlus(case)
 
 fun Switch.containsCase(name: String): Boolean =
-	distinctCaseStack.mapFirst { orNullIf(this.name != name) } != null
+	case.name == name || lhsNode.containsCase(name)
 
-fun switchOrNull(vararg cases: Case): Switch? = stack(*cases).switchOrNull
+fun unsafeSwitch(firstCase: Case, secondCase: Case, vararg cases: Case): Switch =
+	switchNode(firstCase).unsafePlusSwitch(secondCase).fold(cases) { unsafePlus(it) }
 
-val ScriptLine.switchOrNull: Switch?
-	get() = asStackOrNull("switch") { caseOrNull }?.switchOrNull
+val Script.unsafeSwitch: Switch
+	get() =
+		when (lineStack) {
+			is EmptyStack -> error("empty switch")
+			is LinkStack -> when (lineStack.link.stack) {
+				is EmptyStack -> error("single case switch")
+				is LinkStack -> when (lineStack.link.stack.link.stack) {
+					is EmptyStack -> unsafeSwitch(lineStack.link.stack.link.value.case, lineStack.link.value.case)
+					is LinkStack -> lineStack.link.stack.script.unsafeSwitch.unsafePlus(lineStack.link.value.case)
+				}
+			}
+		}
+
+val ScriptLine.unsafeSwitch: Switch
+	get() =
+		failIfOr(name != "switch") { rhs.unsafeSwitch }
 
 val String.unsafeSwitch
 	get() =
-		unsafeScriptLine
-			.switchOrNull
-			.notNullOrError("switch")
+		unsafeScriptLine.unsafeSwitch
 
 fun Switch.choiceMatchOrNull(choice: Choice): ChoiceMatch? =
-	distinctCaseStack
-		.mapOrNull {
-			choice
-				.eitherOrNull(name)
-				?.let { either -> match(either, rhs) }
-		}
-		?.choiceMatch
-		?.orNullIf { !(choice.distinctEitherStack.drop(eitherMatchStack)?.isEmpty ?: true) }
+	TODO()
+//	distinctCaseStack
+//		.mapOrNull {
+//			choice
+//				.rhsOrNull(name)
+//				?.let { either -> match(either, rhs) }
+//		}
+//		?.choiceMatch
+//		?.orNullIf { !(choice.caseStack.drop(caseMatchStack)?.isEmpty ?: true) }
