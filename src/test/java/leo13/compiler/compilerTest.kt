@@ -113,9 +113,8 @@ class CompilerTest {
 	fun pushExists() {
 		compiler(context(), typed())
 			.unsafePush(script(
-				"choice" lineTo script(
-					"either" lineTo script("zero"),
-					"either" lineTo script("one")),
+				"zero" lineTo script(),
+				"or" lineTo script("one"),
 				"exists" lineTo script()))
 			.assertEqualTo(
 				compiler(
@@ -123,8 +122,9 @@ class CompilerTest {
 						types(type(unsafeChoice("zero" caseTo type(), "one" caseTo type()))),
 						functions(),
 						typeBindings()),
-					typed()))
-
+					typed(
+						expr(op(value())),
+						type())))
 	}
 
 	@Test
@@ -167,32 +167,6 @@ class CompilerTest {
 						expr(
 							op(value(fn(valueBindings(), expr(op("one" lineTo expr()))))),
 							op(call(expr(op("zero" lineTo expr()))))),
-						type("one" lineTo type()))))
-	}
-
-	@Test
-	fun pushGivesAndCall() {
-		compiler(context(), typed())
-			.unsafePush(script(
-				"zero" lineTo script(),
-				"gives" lineTo script(
-					"one" lineTo script()),
-				"zero" lineTo script()))
-			.assertEqualTo(
-				compiler(
-					context(
-						types(),
-						functions(
-							function(
-								type("zero" lineTo type()),
-								typed(
-									expr(op("one" lineTo expr())),
-									type("one" lineTo type())))),
-						typeBindings()),
-					typed(
-						expr(
-							op("zero" lineTo expr()),
-							op(call(expr(op("one" lineTo expr()))))),
 						type("one" lineTo type()))))
 	}
 }
