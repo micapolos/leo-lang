@@ -1,12 +1,10 @@
 package leo13.type
 
-import leo.base.notNullIf
 import leo13.lhs
 import leo13.rhsLine
 import leo13.script.*
 import leo13.script.Switch
 import leo13.value.*
-import leo9.mapFirst
 
 data class Typed(val expr: Expr, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
@@ -25,21 +23,6 @@ fun Typed.plus(typedLine: TypedLine) = expr.plus(op(typedLine.name lineTo typedL
 fun typed(expr: Expr, type: Type) = Typed(expr, type)
 
 fun typed(script: Script) = typed(expr(script), script.type)
-
-fun Type.castOrNull(typed: Typed): Expr? =
-	notNullIf(contains(typed.type)) {
-		typed.expr
-	}
-
-fun Types.cast(typed: Typed): Typed =
-	typeStack.mapFirst {
-		castOrNull(typed)?.of(this)
-	} ?: typed
-
-fun Types.cast(typedScript: TypedScript): TypedScript =
-	cast(typedScript.script.expr of typedScript.type).let { castTypedScript ->
-		valueBindings().evaluate(castTypedScript.expr).scriptOrNull!! of castTypedScript.type
-	}
 
 fun Typed.accessOrNull(name: String): Typed? =
 	type.accessOrNull(name)?.let { accessType ->
