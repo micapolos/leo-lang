@@ -129,17 +129,43 @@ class CompilerTest {
 
 	@Test
 	fun pushGives() {
-		compiler(context(), typed())
-			.unsafePush(
-				script(
-					"zero" lineTo script(),
-					"gives" lineTo script(
-						"one" lineTo script())))
+		compiler(
+			context(),
+			typed(
+				expr(op("zero" lineTo expr())),
+				type("zero" lineTo type())))
+			.unsafePush("gives" lineTo script("one" lineTo script()))
+			.assertEqualTo(
+				compiler(
+					context()
+						.plus(
+							function(
+								type("zero" lineTo type()),
+								typed(
+									expr(op("one" lineTo expr())),
+									type("one" lineTo type())))),
+					typed(
+						expr(
+							op("zero" lineTo expr()),
+							op(value())),
+						type())))
+	}
+
+	@Test
+	fun pushGiving() {
+		compiler(
+			context(),
+			typed(
+				expr(op("zero" lineTo expr())),
+				type("zero" lineTo type())))
+			.unsafePush("giving" lineTo script("one" lineTo script()))
 			.assertEqualTo(
 				compiler(
 					context(),
 					typed(
-						expr(op(value(fn(valueBindings(), expr(op("one" lineTo expr())))))),
+						expr(
+							op("zero" lineTo expr()),
+							op(value(fn(valueBindings(), expr(op("one" lineTo expr())))))),
 						type(
 							arrow(
 								type("zero" lineTo type()),
@@ -156,10 +182,7 @@ class CompilerTest {
 					arrow(
 						type("zero" lineTo type()),
 						type("one" lineTo type())))))
-			.unsafePush(
-				script(
-					"apply" lineTo script(
-						"zero" lineTo script())))
+			.unsafePush("apply" lineTo script("zero" lineTo script()))
 			.assertEqualTo(
 				compiler(
 					context(),

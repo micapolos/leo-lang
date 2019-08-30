@@ -24,10 +24,10 @@ fun Compiler.unsafePush(script: Script): Compiler =
 fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 	when (scriptLine.name) {
 		"apply" -> unsafePushApply(scriptLine.rhs)
-		"define" -> unsafePushDefine(scriptLine.rhs)
 		"exists" -> unsafePushExists(scriptLine.rhs)
 		"given" -> unsafePushGiven(scriptLine.rhs)
 		"gives" -> unsafePushGives(scriptLine.rhs)
+		"giving" -> unsafePushGiving(scriptLine.rhs)
 		"line" -> unsafePushLine(scriptLine.rhs)
 		"meta" -> unsafePushMeta(scriptLine.rhs)
 		"of" -> unsafePushOf(scriptLine.rhs)
@@ -35,9 +35,6 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 		"switch" -> unsafePushSwitch(scriptLine.rhs)
 		else -> unsafePushOther(scriptLine)
 	}
-
-fun Compiler.unsafePushDefine(script: Script): Compiler =
-	TODO()
 
 fun Compiler.unsafePushExists(script: Script): Compiler =
 	failIfOr(!script.isEmpty) {
@@ -48,9 +45,20 @@ fun Compiler.unsafePushGives(script: Script): Compiler =
 	typed.type.unsafeStaticScript.unsafeType.let { parameterType ->
 		context.bind(parameterType).unsafeCompile(script).let { typedExpr ->
 			compiler(
+				context.plus(function(parameterType, typedExpr)),
+				typed(
+					typed.expr.plus(op(value())),
+					type()))
+		}
+	}
+
+fun Compiler.unsafePushGiving(script: Script): Compiler =
+	typed.type.unsafeStaticScript.unsafeType.let { parameterType ->
+		context.bind(parameterType).unsafeCompile(script).let { typedExpr ->
+			compiler(
 				context,
 				typed(
-					expr(op(value(fn(valueBindings(), typedExpr.expr)))),
+					typed.expr.plus(op(value(fn(valueBindings(), typedExpr.expr)))),
 					type(arrow(parameterType, typedExpr.type))))
 		}
 	}
