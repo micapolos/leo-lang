@@ -96,22 +96,6 @@ fun TypeArrow.unsafePlusType(scriptLine: ScriptLine): Type =
 	if (scriptLine.name == "to") type(arrow(type(this), scriptLine.rhs.unsafeType))
 	else type(this).plus(scriptLine.unsafeTypeLine)
 
-//val Type.asCustomScript: Script
-//	get() =
-//		(choiceOrNull?.scriptableLine?.script ?: leo13.script.script())
-//			.fold(lineStack.reverse) { plus(it.asScriptLine) }
-//
-//val TypeLine.asRawScriptLine
-//	get() =
-//		name lineTo rhs.scriptableBody
-//
-//val TypeLine.asScriptLine
-//	get() =
-//		if (name == "or" && rhs.onlyLineOrNull != null) "meta" lineTo leo13.script.script(asRawScriptLine)
-//		else asRawScriptLine
-//
-//val Type.isEmpty get() = choiceOrNull == null && lineStack.isEmpty
-
 val Type.previousOrNull: Type?
 	get() = when (this) {
 		is EmptyType -> null
@@ -128,67 +112,6 @@ val Type.lineOrNull: Type?
 		is ArrowType -> arrow.rhs.lineOrNull
 	}
 
-//val Type.onlyLineOrNull
-//	get() =
-//		ifOrNull(choiceOrNull == null) {
-//			lineStack.onlyOrNull
-//		}
-//
-//val Type.onlyChoiceOrNull
-//	get() =
-//		ifOrNull(lineStack.isEmpty) {
-//			choiceOrNull
-//		}
-//
-//// --- typeOrNull
-//
-//val ScriptLine.typeOrNull: Type?
-//	get() =
-//		ifOrNull(name == "type") {
-//			rhs.typeOrNull
-//		}
-//
-//val Script.typeOrNull: Type?
-//	get() =
-//		lineStack.reverse.let { reverseLineStack ->
-//			when (reverseLineStack) {
-//				is EmptyStack -> type()
-//				is LinkStack ->
-//					reverseLineStack.link.value.choiceOrNull.let { choiceOrNull ->
-//						if (choiceOrNull == null) plainTypeOrNull
-//						else reverseLineStack.link.stack.reverse.script.plainTypeOrNull?.let { plainTypeOrNull ->
-//							Type(choiceOrNull, plainTypeOrNull.lineStack)
-//						}
-//					}
-//			}
-//		}
-//
-//val Script.plainTypeOrNull: Type?
-//	get() =
-//		if (lineStack.isEmpty) type()
-//		else asStackOrNull { typeLineOrNull }?.let { lineStack ->
-//			Type(null, lineStack)
-//		}
-//
-//val ScriptLine.typeLineOrNull: TypeLine?
-//	get() =
-//		rhs.typeOrNull?.let { type -> name lineTo type }
-//
-//val String.unsafeType get() = unsafeScript.typeOrNull!!
-//
-//// --- exact type
-//
-//val Script.exactType: Type
-//	get() = type().fold(lineStack.reverse) { plus(it.exactTypeLine) }
-//
-//val ScriptLine.exactTypeLine
-//	get() = name lineTo rhs.exactType
-//
-//// --- type matches script
-//
-//fun Type.matches(script: Script): Boolean =
-//	contains(script.exactType)
-//
 // === type to script
 
 val Type.unsafeStaticScript: Script
@@ -206,10 +129,6 @@ val TypeLine.unsafeStaticScriptLine: ScriptLine
 val TypeLink.unsafeStaticScriptLink: ScriptLink
 	get() =
 		link(lhs.unsafeStaticScript, line.unsafeStaticScriptLine)
-
-//val TypeLink.type
-//	get() =
-//		lhs.plus(line)
 
 // --- rhsOrNull
 

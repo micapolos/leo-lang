@@ -21,6 +21,12 @@ object Lhs : Scriptable() {
 	override val scriptableBody get() = script()
 }
 
+object Back : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "back"
+	override val scriptableBody get() = script()
+}
+
 object Wrap : Scriptable() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "wrap"
