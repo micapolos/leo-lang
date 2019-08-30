@@ -137,7 +137,7 @@ fun Type.rhsOrNull(name: String): Type? =
 		is EmptyType -> null
 		is LinkType -> link.rhsOrNull(name)
 		is ChoiceType -> null
-		is ArrowType -> arrow.rhs.rhsOrNull(name)
+		is ArrowType -> null
 	}
 
 fun TypeLink.rhsOrNull(name: String): Type? =
@@ -151,7 +151,7 @@ fun Type.accessOrNull(name: String): Type? =
 		is EmptyType -> null
 		is LinkType -> link.accessTypeOrNull(name)
 		is ChoiceType -> null
-		is ArrowType -> arrow.rhs.accessOrNull(name)
+		is ArrowType -> null
 	}
 
 fun TypeLink.accessTypeOrNull(name: String): Type? =
