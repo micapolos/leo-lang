@@ -34,7 +34,7 @@ fun ChoiceNode.unsafePlusChoice(case: Case): Choice =
 	if (rhsOrNull(case.name) != null) error("duplicate" lineTo script("case" lineTo script(case.name)))
 	else uncheckedChoice(this, case)
 
-fun ChoiceNode.rhsOrNull(name: String): Type? = when (this) {
+fun ChoiceNode.rhsOrNull(name: String): TypeThunk? = when (this) {
 	is CaseChoiceNode -> case.rhsOrNull(name)
 	is ChoiceChoiceNode -> choice.rhsOrNull(name)
 }

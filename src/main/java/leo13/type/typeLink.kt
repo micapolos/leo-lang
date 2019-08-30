@@ -1,5 +1,6 @@
 package leo13.type
 
+import leo.base.notNullIf
 import leo13.script.Scriptable
 import leo13.script.plus
 
@@ -17,6 +18,7 @@ data class TypeLink(val lhs: Type, val line: TypeLine) : Scriptable() {
 
 fun link(lhs: Type, line: TypeLine) = TypeLink(lhs, line)
 fun TypeLink.plus(line: TypeLine): TypeLink = link(type(this), line)
+val TypeLink.onlyLineOrNull: TypeLine? get() = notNullIf(lhs.isEmpty) { line }
 
 fun TypeLink.contains(link: TypeLink): Boolean =
 	lhs.contains(link.lhs) && line.contains(link.line)

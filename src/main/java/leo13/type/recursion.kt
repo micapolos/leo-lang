@@ -9,4 +9,4 @@ data class Recursion(val lhsOrNull: Recursion?) : Scriptable() {
 }
 
 val recursion = Recursion(null)
-val Recursion?.increase get() = Recursion(this)
+val Recursion?.recursion get() = Recursion(this)

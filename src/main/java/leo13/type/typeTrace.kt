@@ -16,3 +16,17 @@ fun TypeTrace.applyOrNull(thunk: TypeThunk): TypeTrace? =
 		is TypeTypeThunk -> plus(thunk.type)
 		is RecursionTypeThunk -> applyOrNull(thunk.recursion)
 	}
+
+fun TypeTrace.rhsOrNull(name: String): TypeTrace? =
+	type.rhsThunkOrNull(name)?.let { thunk ->
+		applyOrNull(thunk)
+	}
+
+fun TypeTrace.accessOrNull(name: String): TypeTrace? =
+	type.onlyLineOrNull?.let { line ->
+		applyOrNull(line.rhs)?.let { structTrace ->
+			structTrace.type.rhsThunkOrNull(name)?.let { rhsThunk ->
+				structTrace.lhsOrNull.plus(type(name lineTo rhsThunk))
+			}
+		}
+	}

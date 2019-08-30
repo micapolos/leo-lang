@@ -22,9 +22,9 @@ class ChoiceTest {
 			"two" caseTo type("dwa"),
 			"three" caseTo type("trzy"))
 			.run {
-				rhsOrNull("one").assertEqualTo(type("jeden"))
-				rhsOrNull("two").assertEqualTo(type("dwa"))
-				rhsOrNull("three").assertEqualTo(type("trzy"))
+				rhsOrNull("one").assertEqualTo(thunk(type("jeden")))
+				rhsOrNull("two").assertEqualTo(thunk(type("dwa")))
+				rhsOrNull("three").assertEqualTo(thunk(type("trzy")))
 				rhsOrNull("four").assertEqualTo(null)
 			}
 	}

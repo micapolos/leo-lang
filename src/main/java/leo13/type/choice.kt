@@ -22,7 +22,7 @@ fun Choice.unsafePlus(case: Case): Choice =
 	if (rhsOrNull(case.name) != null) kotlin.error("duplicate" lineTo script("case" lineTo script(case.name)))
 	else uncheckedChoice(node(this), case)
 
-fun Choice.rhsOrNull(name: String): Type? = case.rhsOrNull(name) ?: lhsNode.rhsOrNull(name)
+fun Choice.rhsOrNull(name: String): TypeThunk? = case.rhsOrNull(name) ?: lhsNode.rhsOrNull(name)
 
 fun Choice.contains(type: Type): Boolean =
 	when (type) {

@@ -1,6 +1,9 @@
 package leo13.type
 
-import leo.base.*
+import leo.base.Empty
+import leo.base.empty
+import leo.base.failIfOr
+import leo.base.fold
 import leo13.script.*
 
 sealed class Type : Scriptable() {
@@ -46,6 +49,10 @@ fun type(vararg lines: TypeLine): Type = type(empty).fold(lines) { plus(it) }
 fun type(name: String): Type = type(name lineTo type())
 
 fun Type.plus(line: TypeLine): Type = type(link(this, line))
+
+val Type.isEmpty: Boolean get() = this is EmptyType
+val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
+val Type.onlyLineOrNull: TypeLine? get() = linkOrNull?.onlyLineOrNull
 
 val Script.type: Type
 	get() =
@@ -133,30 +140,21 @@ val TypeLink.unsafeStaticScriptLink: ScriptLink
 // --- rhsOrNull
 
 fun Type.rhsOrNull(name: String): Type? =
+	trace.rhsOrNull(name)?.type
+
+fun Type.rhsThunkOrNull(name: String): TypeThunk? =
 	when (this) {
 		is EmptyType -> null
-		is LinkType -> link.rhsOrNull(name)
+		is LinkType -> link.rhsThunkOrNull(name)
 		is ChoiceType -> null
 		is ArrowType -> null
 	}
 
-fun TypeLink.rhsOrNull(name: String): Type? =
+fun TypeLink.rhsThunkOrNull(name: String): TypeThunk? =
 	if (line.name == name) line.rhs
-	else lhs.rhsOrNull(name)
+	else lhs.rhsThunkOrNull(name)
 
 // --- accessOrNull
 
 fun Type.accessOrNull(name: String): Type? =
-	when (this) {
-		is EmptyType -> null
-		is LinkType -> link.accessTypeOrNull(name)
-		is ChoiceType -> null
-		is ArrowType -> null
-	}
-
-fun TypeLink.accessTypeOrNull(name: String): Type? =
-	ifOrNull(lhs is EmptyType) {
-		line.rhs.rhsOrNull(name)?.let { rhs ->
-			type(name lineTo rhs)
-		}
-	}
+	trace.accessOrNull(name)?.type
