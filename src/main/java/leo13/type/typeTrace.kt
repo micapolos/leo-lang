@@ -1,9 +1,12 @@
 package leo13.type
 
+import leo.base.fold
+
 data class TypeTrace(val lhsOrNull: TypeTrace?, val type: Type)
 
 val Type.trace get() = TypeTrace(null, this)
 fun TypeTrace?.plus(type: Type) = TypeTrace(this, type)
+fun trace(type: Type, vararg types: Type): TypeTrace = type.trace.fold(types) { plus(it) }
 
 fun TypeTrace.applyOrNull(recursion: Recursion): TypeTrace? =
 	lhsOrNull?.let { lhs ->
