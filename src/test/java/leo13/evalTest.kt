@@ -8,5 +8,6 @@ class EvalTest {
 	fun eval() {
 		"vec(x(zero())y(one()))x()".eval.assertEqualTo("x(zero())")
 		"vec(x(zero())y(one()))y()".eval.assertEqualTo("y(one())")
+		"zero()gives(one())zero()".eval.assertEqualTo("one()")
 	}
 }

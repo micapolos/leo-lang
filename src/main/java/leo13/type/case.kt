@@ -19,7 +19,7 @@ fun Case.rhsOrNull(name: String): Type? = notNullIf(this.name == name) { rhs }
 val TypeLine.case: Case get() = name caseTo rhs
 
 fun Case.contains(typeLine: TypeLine): Boolean =
-	name == typeLine.name && rhs == typeLine.rhs
+	name == typeLine.name && rhs.contains(typeLine.rhs)
 
 val Script.unsafeCase: Case
 	get() =

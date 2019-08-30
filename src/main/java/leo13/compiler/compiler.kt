@@ -25,6 +25,7 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 	when (scriptLine.name) {
 		"apply" -> unsafePushApply(scriptLine.rhs)
 		"exists" -> unsafePushExists(scriptLine.rhs)
+		"contains" -> unsafePushContains(scriptLine.rhs)
 		"given" -> unsafePushGiven(scriptLine.rhs)
 		"gives" -> unsafePushGives(scriptLine.rhs)
 		"giving" -> unsafePushGiving(scriptLine.rhs)
@@ -39,6 +40,20 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 fun Compiler.unsafePushExists(script: Script): Compiler =
 	failIfOr(!script.isEmpty) {
 		compiler(context.plus(typed.type.unsafeStaticScript.unsafeType), typed(expr(op(value())), type()))
+	}
+
+fun Compiler.unsafePushContains(script: Script): Compiler =
+	script.unsafeType.let { type ->
+		compiler(
+			context()
+				.plus(type)
+				.plus(
+					function(
+						typed.type.unsafeStaticScript.unsafeType,
+						script.typed)),
+			typed(
+				typed.expr.plus(op(value())),
+				type()))
 	}
 
 fun Compiler.unsafePushGives(script: Script): Compiler =
@@ -150,7 +165,9 @@ fun Compiler.push(typedLine: TypedLine): Compiler =
 					?.let { functionBody ->
 						set(
 							typed(
-								expr.plus(op(call(functionBody.expr))),
+								expr(
+									op(value(fn(valueBindings(), functionBody.expr))),
+									op(call(expr))),
 								functionBody.type))
 					}
 					?: set(typed(expr, containingType))

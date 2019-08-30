@@ -1,11 +1,13 @@
 package leo13.compiler
 
 import leo.base.assertEqualTo
+import leo13.lhs
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.type.*
 import leo13.value.*
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class CompilerTest {
 	@Test
@@ -44,6 +46,52 @@ class CompilerTest {
 		compiler(context(), typed())
 			.unsafePush(script("meta" lineTo script("meta" lineTo script("meta" lineTo script("meta")))))
 			.assertEqualTo(compiler(context(), typed(script("meta" lineTo script("meta")))))
+	}
+
+	@Test
+	fun pushPrevious() {
+		compiler(
+			context(),
+			typed(
+				expr(op(given())),
+				type(
+					"zero" lineTo type(),
+					"one" lineTo type(),
+					"two" lineTo type())))
+			.unsafePush("previous" lineTo script())
+			.assertEqualTo(
+				compiler(
+					context(),
+					typed(
+						expr(
+							op(given()),
+							op(lhs)),
+						type(
+							"zero" lineTo type(),
+							"one" lineTo type()))))
+
+		compiler(context(), typed())
+			.unsafePush(script("meta" lineTo script("meta")))
+			.assertEqualTo(compiler(context(), typed(script("meta"))))
+	}
+
+	@Test
+	fun pushPrevious_emptyLhs() {
+		assertFails {
+			compiler(context(), typed()).unsafePush("previous" lineTo script())
+		}
+	}
+
+	@Test
+	fun pushPrevious_nonEmptyRhs() {
+		assertFails {
+			compiler(
+				context(),
+				typed(
+					expr(op(given())),
+					type("zero" lineTo type())))
+				.unsafePush("previous" lineTo script("foo" lineTo script()))
+		}
 	}
 
 	@Test
@@ -128,6 +176,44 @@ class CompilerTest {
 	}
 
 	@Test
+	fun pushContains() {
+		compiler(
+			context(),
+			typed(
+				expr(op("bit" lineTo expr())),
+				type("bit" lineTo type())))
+			.unsafePush(
+				"contains" lineTo script(
+					"bit" lineTo script(
+						"zero" lineTo script(),
+						"or" lineTo script(
+							"one" lineTo script()))))
+			.assertEqualTo(
+				compiler(
+					context(
+						types(
+							type(
+								"bit" lineTo type(
+									unsafeChoice(
+										"zero" caseTo type(),
+										"one" caseTo type())))),
+						functions(
+							function(
+								type("bit" lineTo type()),
+								script(
+									"bit" lineTo script(
+										"zero" lineTo script(),
+										"or" lineTo script(
+											"one" lineTo script()))).typed)),
+						typeBindings()),
+					typed(
+						expr(
+							op("bit" lineTo expr()),
+							op(value())),
+						type())))
+	}
+
+	@Test
 	fun pushGives() {
 		compiler(
 			context(),
@@ -149,6 +235,42 @@ class CompilerTest {
 							op("zero" lineTo expr()),
 							op(value())),
 						type())))
+	}
+
+	@Test
+	fun pushFunctionApplication() {
+		compiler(
+			context(
+				types(),
+				functions(
+					function(
+						type("zero" lineTo type()),
+						typed(
+							expr(op("one" lineTo expr())),
+							type("one" lineTo type())))),
+				typeBindings()),
+			typed())
+			.unsafePush("zero" lineTo script())
+			.assertEqualTo(
+				compiler(
+					context(
+						types(),
+						functions(
+							function(
+								type("zero" lineTo type()),
+								typed(
+									expr(op("one" lineTo expr())),
+									type("one" lineTo type())))),
+						typeBindings()),
+					typed(
+						expr(
+							op(
+								value(
+									fn(
+										valueBindings(),
+										expr(op("one" lineTo expr()))))),
+							op(call(expr(op("zero" lineTo expr()))))),
+						type("one" lineTo type()))))
 	}
 
 	@Test
