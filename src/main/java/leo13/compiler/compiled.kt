@@ -3,12 +3,11 @@ package leo13.compiler
 import leo13.lhs
 import leo13.rhs
 import leo13.rhsLine
+import leo13.script.Script
 import leo13.script.Scriptable
 import leo13.script.script
 import leo13.type.*
-import leo13.value.Expr
-import leo13.value.op
-import leo13.value.plus
+import leo13.value.*
 
 data class Compiled(val expr: Expr, val trace: Trace) : Scriptable() {
 	override fun toString() = super.toString()
@@ -17,6 +16,17 @@ data class Compiled(val expr: Expr, val trace: Trace) : Scriptable() {
 }
 
 fun compiled(expr: Expr, trace: Trace) = Compiled(expr, trace)
+fun compiled() = compiled(expr(), trace())
+
+fun compiled(script: Script): Compiled =
+	compiled(script.expr, trace(script.type))
+
+fun Compiled.plus(compiledLine: CompiledLine): Compiled =
+	compiled(
+		expr(op(compiledLine.name lineTo compiledLine.rhs.expr)),
+		trace.updateType {
+			plus(compiledLine.name lineTo compiledLine.rhs.trace.type)
+		})
 
 val Compiled.lhsOrNull: Compiled?
 	get() =
@@ -26,6 +36,16 @@ val Compiled.lhsOrNull: Compiled?
 				compiled(
 					expr.plus(op(lhs)),
 					lhsTrace)
+			}
+
+val Compiled.lineOrNull: Compiled?
+	get() =
+		trace
+			.lineOrNull
+			?.let { lineTrace ->
+				compiled(
+					expr.plus(op(rhsLine)),
+					lineTrace)
 			}
 
 val Compiled.rhsOrNull: Compiled?

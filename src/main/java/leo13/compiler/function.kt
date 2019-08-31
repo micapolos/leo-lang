@@ -1,11 +1,11 @@
-package leo13.type
+package leo13.compiler
 
 import leo.base.notNullIf
 import leo13.script.Scriptable
 import leo13.script.lineTo
 import leo13.script.script
 
-data class Function(val parameter: Type, val body: Typed) : Scriptable() {
+data class Function(val parameter: Trace, val body: Compiled) : Scriptable() {
 	override val scriptableName get() = "function"
 	override val scriptableBody
 		get() = script(
@@ -13,7 +13,7 @@ data class Function(val parameter: Type, val body: Typed) : Scriptable() {
 			body.scriptableLine)
 }
 
-fun function(parameter: Type, body: Typed) = Function(parameter, body)
+fun function(parameter: Trace, body: Compiled) = Function(parameter, body)
 
-fun Function.bodyOrNull(parameter: Type): Typed? =
+fun Function.compiledOrNull(parameter: Trace): Compiled? =
 	notNullIf(this.parameter == parameter) { body }

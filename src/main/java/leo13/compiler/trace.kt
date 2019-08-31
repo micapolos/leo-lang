@@ -1,4 +1,4 @@
-package leo13.type
+package leo13.compiler
 
 import leo.base.fold
 import leo.base.orIfNull
@@ -6,6 +6,7 @@ import leo13.script.Script
 import leo13.script.Scriptable
 import leo13.script.plus
 import leo13.script.script
+import leo13.type.*
 
 data class Trace(val popOrNull: Trace?, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
@@ -19,6 +20,10 @@ val Type.trace get() = Trace(null, this)
 fun Trace?.push(type: Type) = Trace(this, type)
 fun trace(type: Type, vararg types: Type): Trace = type.trace.fold(types) { push(it) }
 fun trace() = trace(type())
+
+val Trace.unsafeStaticScript
+	get() =
+		type.unsafeStaticScript
 
 fun Trace.plus(line: TypeLine): Trace =
 	updateType { plus(line) }
@@ -45,6 +50,12 @@ val Trace.lhsOrNull: Trace?
 			updateType { lhsType }
 		}
 
+val Trace.lineOrNull: Trace?
+	get() =
+		type.lineOrNull?.let { type ->
+			set(type)
+		}
+
 val Trace.rhsOrNull: Trace?
 	get() =
 		type.rhsThunkOrNull?.let { rhsThunk ->
@@ -64,3 +75,7 @@ fun Trace.accessOrNull(name: String): Trace? =
 			}
 		}
 	}
+
+fun Trace.contains(trace: Trace): Boolean =
+	// TODO: Check for recursion!!!
+	type.contains(trace.type)

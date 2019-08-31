@@ -4,6 +4,9 @@ import leo.base.Empty
 import leo.base.empty
 import leo.base.failIfOr
 import leo.base.fold
+import leo13.compiler.accessOrNull
+import leo13.compiler.rhsOrNull
+import leo13.compiler.trace
 import leo13.script.*
 
 sealed class Type : Scriptable() {
@@ -161,3 +164,8 @@ fun TypeLink.rhsThunkOrNull(name: String): TypeThunk? =
 
 fun Type.accessOrNull(name: String): Type? =
 	trace.accessOrNull(name)?.type
+
+val Type.unsafeArrow
+	get() =
+		if (this is ArrowType) arrow
+		else error("not arrow $this")

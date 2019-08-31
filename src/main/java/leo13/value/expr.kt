@@ -1,5 +1,6 @@
 package leo13.value
 
+import leo.base.fold
 import leo.base.orNull
 import leo13.script.*
 import leo13.script.Script
@@ -21,7 +22,8 @@ data class ExprLine(val name: String, val rhs: Expr) : Scriptable() {
 }
 
 val Stack<Op>.expr get() = Expr(this)
-fun expr(vararg ops: Op) = stack(*ops).expr
+fun expr(op: Op, vararg ops: Op) = stack<Op>().expr.plus(op).fold(ops) { plus(it) }
+fun expr() = expr(op(value()))
 fun Expr.plus(op: Op) = opStack.push(op).expr
 infix fun String.lineTo(rhs: Expr) = ExprLine(this, rhs)
 

@@ -2,6 +2,7 @@ package leo13.interpreter
 
 import leo.base.assertEqualTo
 import leo13.compiler.context
+import leo13.compiler.trace
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.type.lineTo
@@ -21,7 +22,8 @@ class InterpreterTest {
 			.assertEqualTo(
 				interpreter(
 					context(),
-					value("color" lineTo value("red" lineTo value())),
-					type("color" lineTo type("red" lineTo type()))))
+					interpreted(
+						value("color" lineTo value("red" lineTo value())),
+						trace(type("color" lineTo type("red" lineTo type()))))))
 	}
 }

@@ -2,8 +2,10 @@ package leo13.type
 
 import leo13.lhs
 import leo13.rhsLine
-import leo13.script.*
+import leo13.script.Script
+import leo13.script.Scriptable
 import leo13.script.Switch
+import leo13.script.script
 import leo13.value.*
 
 data class Typed(val expr: Expr, val type: Type) : Scriptable() {
@@ -48,11 +50,3 @@ fun Typed.switchOrNull(switch: Switch): Typed? =
 //			TODO()
 //		}
 //	}
-
-val Script.typed
-	get() =
-		expr of type
-
-val ScriptLine.typed
-	get() =
-		name lineTo rhs.typed

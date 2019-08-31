@@ -1,4 +1,4 @@
-package leo13.type
+package leo13.compiler
 
 import leo13.script.Scriptable
 import leo13.script.asScript
@@ -16,7 +16,7 @@ val Stack<Function>.functions get() = Functions(this)
 fun Functions.plus(function: Function) = functionStack.push(function).functions
 fun functions(vararg functions: Function) = stack(*functions).functions
 
-fun Functions.bodyOrNull(parameter: Type) =
+fun Functions.compiledOrNull(parameter: Trace): Compiled? =
 	functionStack.mapFirst {
-		bodyOrNull(parameter)
+		compiledOrNull(parameter)
 	}

@@ -1,6 +1,10 @@
-package leo13.type
+package leo13.compiler
 
 import leo.base.assertEqualTo
+import leo13.type.lineTo
+import leo13.type.recursion
+import leo13.type.thunk
+import leo13.type.type
 import kotlin.test.Test
 
 class TraceTest {
