@@ -4,8 +4,6 @@ import leo.base.failIfOr
 import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo13.type.Choice
-import leo13.type.ChoiceMatch
 import leo9.EmptyStack
 import leo9.LinkStack
 
@@ -76,6 +74,8 @@ fun caseOrNull(firstScriptLine: ScriptLine, secondScriptLine: ScriptLine): Case?
 		firstScriptLine.name caseTo secondScriptLine.rhs
 	}
 
+// === Parsing
+
 val Script.unsafeSwitch: Switch
 	get() =
 		switchOrNull ?: error("switch parse error")
@@ -87,14 +87,3 @@ val ScriptLine.unsafeSwitch: Switch
 val String.unsafeSwitch
 	get() =
 		unsafeScriptLine.unsafeSwitch
-
-fun Switch.choiceMatchOrNull(choice: Choice): ChoiceMatch? =
-	TODO()
-//	distinctCaseStack
-//		.mapOrNull {
-//			choice
-//				.rhsOrNull(name)
-//				?.let { either -> match(either, rhs) }
-//		}
-//		?.choiceMatch
-//		?.orNullIf { !(choice.caseStack.drop(caseMatchStack)?.isEmpty ?: true) }

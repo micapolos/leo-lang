@@ -102,7 +102,7 @@ class CompilerTest {
 			context(
 				types(),
 				functions(),
-				typeBindings(pattern("zero"), pattern("one"))),
+				typeBindings(type(pattern("zero")), type(pattern("one")))),
 			compiled())
 
 		compiled
@@ -112,7 +112,7 @@ class CompilerTest {
 					context(
 						types(),
 						functions(),
-						typeBindings(pattern("zero"), pattern("one"))),
+						typeBindings(type(pattern("zero")), type(pattern("one")))),
 					compiled(
 						expr(given()),
 						type(pattern("one")))))
@@ -282,8 +282,8 @@ class CompilerTest {
 						type(
 							pattern(
 								arrow(
-									pattern("zero" lineTo pattern()),
-									pattern("one" lineTo pattern())))))))
+									type(pattern("zero" lineTo pattern())),
+									type(pattern("one" lineTo pattern()))))))))
 	}
 
 	@Test
@@ -295,8 +295,8 @@ class CompilerTest {
 				type(
 					pattern(
 						arrow(
-							pattern("zero" lineTo pattern()),
-							pattern("one" lineTo pattern()))))))
+							type(pattern("zero" lineTo pattern())),
+							type(pattern("one" lineTo pattern())))))))
 			.unsafePush("apply" lineTo script("zero" lineTo script()))
 			.assertEqualTo(
 				compiler(

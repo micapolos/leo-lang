@@ -51,8 +51,8 @@ class ParserTest {
 	fun arrow() {
 		pattern(
 			arrow(
-				pattern("zero"),
-				pattern("one")))
+				type(pattern("zero")),
+				type(pattern("one"))))
 			.assertScriptableLineWorks { unsafePattern }
 	}
 }

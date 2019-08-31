@@ -94,7 +94,7 @@ fun Pattern.unsafePlus(scriptLine: ScriptLine): Pattern =
 fun PatternLink.unsafePlusType(scriptLine: ScriptLine): Pattern =
 	when {
 		scriptLine.name == "or" && lhs is EmptyPattern -> pattern(uncheckedChoice(choiceNode(line.case), scriptLine.rhs.unsafeCase))
-		scriptLine.name == "to" -> pattern(arrow(pattern(this), scriptLine.rhs.unsafePattern))
+		scriptLine.name == "to" -> pattern(arrow(type(pattern(this)), type(scriptLine.rhs.unsafePattern)))
 		else -> pattern(plus(scriptLine.unsafePatternLine))
 	}
 
@@ -103,7 +103,7 @@ fun Choice.unsafePlusType(scriptLine: ScriptLine): Pattern =
 	else pattern(this).plus(scriptLine.unsafePatternLine)
 
 fun TypeArrow.unsafePlusType(scriptLine: ScriptLine): Pattern =
-	if (scriptLine.name == "to") pattern(arrow(pattern(this), scriptLine.rhs.unsafePattern))
+	if (scriptLine.name == "to") pattern(arrow(type(pattern(this)), type(scriptLine.rhs.unsafePattern)))
 	else pattern(this).plus(scriptLine.unsafePatternLine)
 
 val Pattern.previousOrNull: Pattern?

@@ -80,8 +80,8 @@ class ScriptableTest {
 	fun scriptableArrow() {
 		pattern(
 			arrow(
-				pattern("zero"),
-				pattern("one")))
+				type(pattern("zero")),
+				type(pattern("one"))))
 			.scriptableBody
 			.assertEqualTo(
 				script(

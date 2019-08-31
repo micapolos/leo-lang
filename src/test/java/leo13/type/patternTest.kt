@@ -22,7 +22,7 @@ class PatternTest {
 			.previousOrNull
 			.assertEqualTo(pattern())
 
-		pattern(arrow(pattern("one"), pattern("two")))
+		pattern(arrow(type(pattern("one")), type(pattern("two"))))
 			.previousOrNull
 			.assertEqualTo(pattern())
 	}

@@ -4,6 +4,7 @@ import leo.base.failIfOr
 import leo.base.fold
 import leo.base.ifOrNull
 import leo13.script.*
+import leo13.script.Switch
 import leo13.type.*
 import leo13.value.*
 
@@ -57,23 +58,23 @@ fun Compiler.unsafePushContains(script: Script): Compiler =
 	}
 
 fun Compiler.unsafePushGives(script: Script): Compiler =
-	compiled.type.pattern.unsafeStaticScript.unsafePattern.let { parameterType ->
+	type(compiled.type.pattern.unsafeStaticScript.unsafePattern).let { parameterType ->
 		context.bind(parameterType).unsafeCompile(script).let { compiled ->
 			compiler(
-				context.plus(function(type(parameterType), compiled)),
+				context.plus(function(parameterType, compiled)),
 				compiled())
 		}
 	}
 
 fun Compiler.unsafePushGiving(script: Script): Compiler =
-	compiled.type.pattern.unsafeStaticScript.unsafePattern.let { parameterType ->
+	type(compiled.type.pattern.unsafeStaticScript.unsafePattern).let { parameterType ->
 		context.bind(parameterType).unsafeCompile(script).let { scriptCompiled ->
 			compiler(
 				context,
 				compiled(
 					expr(value(fn(valueBindings(), scriptCompiled.expr))),
 					// TODO: Traces!!!
-					type(pattern(arrow(parameterType, scriptCompiled.type.pattern)))))
+					type(pattern(arrow(parameterType, scriptCompiled.type)))))
 		}
 	}
 
@@ -81,12 +82,12 @@ fun Compiler.unsafePushApply(script: Script): Compiler =
 	compiled.type.pattern.unsafeArrow.let { arrow ->
 		context.unsafeCompile(script).let { scriptCompiled ->
 			// TODO: Traces!!!
-			if (scriptCompiled.type.pattern != arrow.lhs) error("apply type invalid")
+			if (scriptCompiled.type != arrow.lhs) error("apply type invalid")
 			else compiler(
 				context,
 				compiled(
 					compiled.expr.plus(op(call(scriptCompiled.expr))),
-					type(arrow.rhs)))
+					arrow.rhs))
 		}
 	}
 
@@ -96,7 +97,7 @@ fun Compiler.unsafePushGiven(script: Script): Compiler =
 			context,
 			compiled(
 				expr(given()),
-				type(context.typeBindings.unsafeType(given()))))
+				context.typeBindings.unsafeType(given())))
 	}
 
 fun Compiler.unsafePushOf(script: Script): Compiler =
@@ -131,33 +132,10 @@ fun Compiler.unsafePushLine(script: Script): Compiler =
 	}
 
 fun Compiler.unsafePushSwitch(script: Script): Compiler =
+	unsafePush(script.unsafeSwitch)
+
+fun Compiler.unsafePush(switch: Switch): Compiler =
 	TODO()
-//	("switch" lineTo script)
-//		.switchOrNull
-//		?.let { switch ->
-//			(typed.type as ChoiceType).choice.let { choice ->
-//				switch
-//					.choiceMatchOrNull(choice)
-//					?.caseMatchStack
-//					?.mapOrNull { caseTypedOrNull(this) }
-//					?.typedSwitch
-//					?.switchTypedOrNull
-//					?.let { switchTyped ->
-//						set(
-//							typed(
-//								typed.expr.plus(op(switchTyped.switch)),
-//								switchTyped.type))
-//					}
-//			}
-//		}
-//
-//fun Compiler.caseTypedOrNull(caseMatch: CaseMatch): CaseTyped? =
-//	compiler(context, typed(expr(), caseMatch.case.type))
-//		.unsafePush(caseMatch.script)
-//		?.typed
-//		?.let { rhsTyped ->
-//			typed(caseMatch.case.name caseTo rhsTyped.expr, rhsTyped.type)
-//		}
 
 fun Compiler.unsafePushOther(typedLine: ScriptLine): Compiler =
 	null
