@@ -4,68 +4,65 @@ import leo13.Lhs
 import leo13.Rhs
 import leo13.RhsLine
 import leo13.Wrap
-import leo13.script.ScriptLine
-import leo13.script.lineTo
-import leo13.script.script
+import leo13.script.*
 
-sealed class Op {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "op" lineTo script(opAsScriptLine)
-	abstract val opAsScriptLine: ScriptLine
-}
-
-data class ValueOp(val value: Value) : Op() {
-	override fun toString() = super.toString()
-	override val opAsScriptLine get() = value.scriptableLine
-}
-
-data class ArgumentOp(val given: Given) : Op() {
-	override fun toString() = super.toString()
-	override val opAsScriptLine = given.scriptableLine
+sealed class Op : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "op"
+	override val scriptableBody get() = script(opScriptableLine)
+	abstract val opScriptableName: String
+	abstract val opScriptableBody: Script
+	val opScriptableLine: ScriptLine get() = opScriptableName lineTo opScriptableBody
 }
 
 data class LhsOp(val lhs: Lhs) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = lhs.scriptableLine
+	override val opScriptableName get() = lhs.scriptableName
+	override val opScriptableBody get() = lhs.scriptableBody
 }
 
 data class RhsLineOp(val rhsLine: RhsLine) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = rhsLine.scriptableLine
+	override val opScriptableName get() = rhsLine.scriptableName
+	override val opScriptableBody get() = rhsLine.scriptableBody
 }
 
 data class RhsOp(val rhs: Rhs) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = rhs.scriptableLine
+	override val opScriptableName get() = rhs.scriptableName
+	override val opScriptableBody get() = rhs.scriptableBody
 }
 
 data class GetOp(val get: Get) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = get.scriptableLine
+	override val opScriptableName get() = get.scriptableName
+	override val opScriptableBody get() = get.scriptableBody
 }
 
 data class WrapOp(val wrap: Wrap) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = wrap.scriptableLine
+	override val opScriptableName get() = wrap.scriptableName
+	override val opScriptableBody get() = wrap.scriptableBody
 }
 
 data class SwitchOp(val switch: Switch) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = switch.scriptableLine
+	override val opScriptableName get() = switch.scriptableName
+	override val opScriptableBody get() = switch.scriptableBody
 }
 
 data class LineOp(val line: ExprLine) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = line.scriptableLine
+	override val opScriptableName get() = line.scriptableName
+	override val opScriptableBody get() = line.scriptableBody
 }
 
 data class CallOp(val call: Call) : Op() {
 	override fun toString() = super.toString()
-	override val opAsScriptLine = call.asScriptLine
+	override val opScriptableName get() = call.scriptableName
+	override val opScriptableBody get() = call.scriptableBody
 }
 
-fun op(value: Value): Op = ValueOp(value)
-fun op(given: Given): Op = ArgumentOp(given)
 fun op(lhs: Lhs): Op = LhsOp(lhs)
 fun op(rhs: Rhs): Op = RhsOp(rhs)
 fun op(rhsLine: RhsLine): Op = RhsLineOp(rhsLine)

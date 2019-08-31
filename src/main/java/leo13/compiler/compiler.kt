@@ -71,7 +71,7 @@ fun Compiler.unsafePushGiving(script: Script): Compiler =
 			compiler(
 				context,
 				compiled(
-					expr(op(value(fn(valueBindings(), scriptCompiled.expr)))),
+					expr(value(fn(valueBindings(), scriptCompiled.expr))),
 					// TODO: Traces!!!
 					type(pattern(arrow(parameterType, scriptCompiled.type.pattern)))))
 		}
@@ -95,7 +95,7 @@ fun Compiler.unsafePushGiven(script: Script): Compiler =
 		compiler(
 			context,
 			compiled(
-				expr(op(given())),
+				expr(given()),
 				type(context.typeBindings.unsafeType(given()))))
 	}
 
@@ -181,9 +181,8 @@ fun Compiler.push(compiledLine: CompiledLine): Compiler =
 					compiler(
 						context,
 						compiled(
-							expr(
-								op(value(fn(valueBindings(), functionBody.expr))),
-								op(call(plusCompiled.expr))),
+							expr(value(fn(valueBindings(), functionBody.expr)))
+								.plus(op(call(plusCompiled.expr))),
 							functionBody.type))
 				}
 				?: compiler(

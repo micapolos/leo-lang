@@ -22,21 +22,21 @@ class EvaluatorTest {
 	@Test
 	fun pushArgument() {
 		argumentEvaluator
-			.evaluate(given())
+			.evaluate(expr(given()))
 			.assertEqualTo(value("three" lineTo value()))
 	}
 
 	@Test
 	fun pushPreviousArgument() {
 		argumentEvaluator
-			.evaluate(given(outside))
+			.evaluate(expr(given(outside)))
 			.assertEqualTo(value("two" lineTo value()))
 	}
 
 	@Test
 	fun pushPreviousPreviousArgument() {
 		argumentEvaluator
-			.evaluate(given(outside, outside))
+			.evaluate(expr(given(outside, outside)))
 			.assertEqualTo(value("one" lineTo value()))
 	}
 
@@ -65,20 +65,17 @@ class EvaluatorTest {
 					"dwa" lineTo value()))
 	}
 
-	private val case =
-		"one" caseTo expr(op("jeden" lineTo expr()))
-
 	@Test
 	fun pushCase_match() {
 		evaluator(valueBindings(), value("one" lineTo value("rhs" lineTo value())))
-			.evaluateOrNull(case)
+			.evaluateOrNull("one" caseTo expr(op("jeden" lineTo expr())))
 			.assertEqualTo(value("rhs" lineTo value(), "jeden" lineTo value()))
 	}
 
 	@Test
 	fun pushCase_mismatch() {
 		evaluator(valueBindings(), value("two" lineTo value("rhs" lineTo value())))
-			.evaluateOrNull(case)
+			.evaluateOrNull("one" caseTo expr(op("jeden" lineTo expr())))
 			.assertEqualTo(null)
 	}
 
@@ -97,12 +94,12 @@ class EvaluatorTest {
 				fn(
 					valueBindings(value("inside")),
 					expr(
-						op("argument" lineTo expr(op(given()))),
-						op("closure" lineTo expr(op(given(outside))))))))
+						op("argument" lineTo expr(given())),
+						op("closure" lineTo expr(given(outside)))))))
 			.evaluate(
 				call(
 					expr(
-						op(given()),
+						given(),
 						op("parameter" lineTo expr()))))
 			.assertEqualTo(
 				value(

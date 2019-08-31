@@ -53,7 +53,7 @@ class CompilerTest {
 		compiler(
 			context(),
 			compiled(
-				expr(op(given())),
+				expr(given()),
 				type(
 					pattern(
 						"zero" lineTo pattern(),
@@ -65,7 +65,7 @@ class CompilerTest {
 					context(),
 					compiled(
 						expr(
-							op(given()),
+							given(),
 							op(lhs)),
 						type(
 							pattern(
@@ -90,7 +90,7 @@ class CompilerTest {
 			compiler(
 				context(),
 				compiled(
-					expr(op(given())),
+					expr(given()),
 					type(pattern("zero" lineTo pattern()))))
 				.unsafePush("previous" lineTo script("foo" lineTo script()))
 		}
@@ -114,7 +114,7 @@ class CompilerTest {
 						functions(),
 						typeBindings(pattern("zero"), pattern("one"))),
 					compiled(
-						expr(op(given())),
+						expr(given()),
 						type(pattern("one")))))
 
 		// TODO: outside given
@@ -180,7 +180,7 @@ class CompilerTest {
 		compiler(
 			context(),
 			compiled(
-				expr(op("bit" lineTo expr())),
+				expr(given()),
 				type(pattern("bit" lineTo pattern()))))
 			.unsafePush(
 				"contains" lineTo script(
@@ -216,7 +216,7 @@ class CompilerTest {
 		compiler(
 			context(),
 			compiled(
-				expr(op("zero" lineTo expr())),
+				expr(given()),
 				type(pattern("zero" lineTo pattern()))))
 			.unsafePush("gives" lineTo script("one" lineTo script()))
 			.assertEqualTo(
@@ -226,7 +226,7 @@ class CompilerTest {
 							function(
 								type(pattern("zero" lineTo pattern())),
 								compiled(
-									expr(op("one" lineTo expr())),
+									expr(given()),
 									type(pattern("one" lineTo pattern()))))),
 					compiled()))
 	}
@@ -240,7 +240,7 @@ class CompilerTest {
 					function(
 						type(pattern("zero" lineTo pattern())),
 						compiled(
-							expr(op("one" lineTo expr())),
+							expr(given()),
 							type(pattern("one" lineTo pattern()))))),
 				typeBindings()),
 			compiled())
@@ -253,17 +253,16 @@ class CompilerTest {
 							function(
 								type(pattern("zero" lineTo pattern())),
 								compiled(
-									expr(op("one" lineTo expr())),
+									expr(value(), op("one" lineTo expr())),
 									type(pattern("one" lineTo pattern()))))),
 						typeBindings()),
 					compiled(
 						expr(
-							op(
-								value(
-									fn(
-										valueBindings(),
-										expr(op("one" lineTo expr()))))),
-							op(call(expr(op("zero" lineTo expr()))))),
+							value(
+								fn(
+									valueBindings(),
+									expr(value(), op("one" lineTo expr())))),
+							op(call(expr(value(), op("zero" lineTo expr()))))),
 						type(pattern("one" lineTo pattern())))))
 	}
 
@@ -279,9 +278,7 @@ class CompilerTest {
 				compiler(
 					context(),
 					compiled(
-						expr(
-							op("zero" lineTo expr()),
-							op(value(fn(valueBindings(), expr(op("one" lineTo expr())))))),
+						expr(value(fn(valueBindings(), expr(value(), op("one" lineTo expr()))))),
 						type(
 							pattern(
 								arrow(
@@ -294,7 +291,7 @@ class CompilerTest {
 		compiler(
 			context(),
 			compiled(
-				expr(op(value(fn(valueBindings(), expr(op("one" lineTo expr())))))),
+				expr(value(fn(valueBindings(), expr(op("one" lineTo expr()))))),
 				type(
 					pattern(
 						arrow(
@@ -306,7 +303,7 @@ class CompilerTest {
 					context(),
 					compiled(
 						expr(
-							op(value(fn(valueBindings(), expr(op("one" lineTo expr()))))),
+							value(fn(valueBindings(), expr(op("one" lineTo expr())))),
 							op(call(expr(op("zero" lineTo expr()))))),
 						type(pattern("one" lineTo pattern())))))
 	}

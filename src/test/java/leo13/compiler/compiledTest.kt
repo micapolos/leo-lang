@@ -5,15 +5,15 @@ import leo13.lhs
 import leo13.rhs
 import leo13.type.*
 import leo13.value.expr
-import leo13.value.lineTo
 import leo13.value.op
+import leo13.value.value
 import kotlin.test.Test
 
 class CompiledTest {
 	@Test
 	fun lhsOrNull() {
 		compiled(
-			expr(op("expr" lineTo expr())),
+			expr(value("foo")),
 			type(
 				pattern("type"),
 				pattern(
@@ -23,7 +23,7 @@ class CompiledTest {
 			.assertEqualTo(
 				compiled(
 					expr(
-						op("expr" lineTo expr()),
+						value("foo"),
 						op(lhs)),
 					type(
 						pattern("type"),
@@ -33,7 +33,7 @@ class CompiledTest {
 	@Test
 	fun lhsOrNull_noLhs() {
 		compiled(
-			expr(op("expr" lineTo expr())),
+			expr(value("foo")),
 			type(
 				pattern("foo"),
 				pattern()))
@@ -44,7 +44,7 @@ class CompiledTest {
 	@Test
 	fun rhsOrNull_noRhs() {
 		compiled(
-			expr(op("expr" lineTo expr())),
+			expr(value("foo")),
 			type(
 				pattern("type"),
 				pattern()))
@@ -55,7 +55,7 @@ class CompiledTest {
 	@Test
 	fun rhsOrNull_type() {
 		compiled(
-			expr(op("expr" lineTo expr())),
+			expr(value("foo")),
 			type(
 				pattern("type"),
 				pattern(
@@ -65,7 +65,7 @@ class CompiledTest {
 			.assertEqualTo(
 				compiled(
 					expr(
-						op("expr" lineTo expr()),
+						value("foo"),
 						op(rhs)),
 					type(
 						pattern("type"),
@@ -78,7 +78,7 @@ class CompiledTest {
 	@Test
 	fun rhsOrNull_recursion() {
 		compiled(
-			expr(op("expr" lineTo expr())),
+			expr(value("foo")),
 			type(
 				pattern("type"),
 				pattern(
@@ -88,7 +88,7 @@ class CompiledTest {
 			.assertEqualTo(
 				compiled(
 					expr(
-						op("expr" lineTo expr()),
+						value("foo"),
 						op(rhs)),
 					type(pattern("type"))))
 	}
@@ -96,7 +96,7 @@ class CompiledTest {
 	@Test
 	fun rhsOrNull_invalidRecursion() {
 		compiled(
-			expr(op("expr" lineTo expr())),
+			expr(value("foo")),
 			type(
 				pattern("type"),
 				pattern(

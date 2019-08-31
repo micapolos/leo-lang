@@ -6,30 +6,46 @@ import leo13.Rhs
 import leo13.RhsLine
 import leo13.Wrap
 import leo13.script.Scriptable
-import leo9.*
+import leo9.drop
+import leo9.linkOrNull
+import leo9.mapFirst
 
-data class Evaluator(val valueBindings: ValueBindings, val value: Value) : Scriptable() {
+data class Evaluator(val bindings: ValueBindings, val value: Value) : Scriptable() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "evaluator"
-	override val scriptableBody get() = leo13.script.script(valueBindings.scriptableLine, value.scriptableLine)
+	override val scriptableBody get() = leo13.script.script(bindings.scriptableLine, value.scriptableLine)
 }
 
 fun evaluator() = Evaluator(valueBindings(), value())
 fun evaluator(valueBindings: ValueBindings, value: Value) = Evaluator(valueBindings, value)
 
-fun Evaluator.push(expr: Expr) =
-	fold(expr.opStack.reverse) { push(it) }
+fun Evaluator.push(expr: Expr): Evaluator =
+	when (expr) {
+		is EmptyExpr -> this
+		is ValueExpr -> push(expr.value)
+		is GivenExpr -> push(expr.given)
+		is LinkExpr -> push(expr.link)
+	}
+
+fun Evaluator.push(value: Value): Evaluator =
+	evaluator(bindings, value)
+
+fun Evaluator.push(given: Given): Evaluator =
+	evaluator(
+		bindings,
+		bindings.stack.drop(given.previousStack)!!.linkOrNull!!.value)
+
+fun Evaluator.push(link: ExprLink): Evaluator =
+	push(link.lhs).push(link.op)
 
 fun Evaluator.push(op: Op): Evaluator =
-	evaluator(valueBindings, evaluate(op))
+	evaluator(bindings, evaluate(op))
 
 fun Evaluator.evaluate(expr: Expr): Value =
 	push(expr).value
 
 fun Evaluator.evaluate(op: Op): Value =
 	when (op) {
-		is ValueOp -> evaluate(op.value)
-		is ArgumentOp -> evaluate(op.given)
 		is LhsOp -> evaluate(op.lhs)
 		is RhsLineOp -> evaluate(op.rhsLine)
 		is RhsOp -> evaluate(op.rhs)
@@ -39,12 +55,6 @@ fun Evaluator.evaluate(op: Op): Value =
 		is LineOp -> evaluate(op.line)
 		is CallOp -> evaluate(op.call)
 	}
-
-fun Evaluator.evaluate(value: Value): Value =
-	value
-
-fun Evaluator.evaluate(given: Given): Value =
-	valueBindings.stack.drop(given.previousStack)!!.linkOrNull!!.value
 
 fun Evaluator.evaluate(lhs: Lhs): Value =
 	value.linkOrNull!!.lhs
@@ -67,18 +77,18 @@ fun Evaluator.evaluate(switch: Switch): Value =
 fun Evaluator.evaluateOrNull(case: Case): Value? =
 	value.linkOrNull!!.line.let { line ->
 		notNullIf(line.name == case.name) {
-			evaluator(valueBindings, line.rhs).evaluate(case.expr)
+			evaluator(bindings, line.rhs).evaluate(case.expr)
 		}
 	}
 
 fun Evaluator.evaluate(line: ExprLine): Value =
-	value.plus(line.name lineTo valueBindings.evaluate(line.rhs))
+	value.plus(line.name lineTo bindings.evaluate(line.rhs))
 
 fun Evaluator.evaluate(call: Call): Value =
 		value
 			.fnOrNull!!
-			.let { fn -> fn.valueBindings.push(valueBindings.evaluate(call.expr)).evaluate(fn.expr) }
+			.let { fn -> fn.valueBindings.push(bindings.evaluate(call.expr)).evaluate(fn.expr) }
 
 val Expr.evaluate: Value
 	get() =
-		evaluator().evaluate(this)
+		evaluator().push(this).value

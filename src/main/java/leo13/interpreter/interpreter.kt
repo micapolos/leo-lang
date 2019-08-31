@@ -3,7 +3,10 @@ package leo13.interpreter
 import leo.base.fold
 import leo13.compiler.*
 import leo13.script.*
-import leo13.value.*
+import leo13.value.evaluate
+import leo13.value.evaluator
+import leo13.value.expr
+import leo13.value.valueBindings
 
 data class Interpreter(
 	val context: Context,
@@ -20,7 +23,7 @@ fun Interpreter.unsafePush(script: Script): Interpreter =
 	fold(script.lineSeq) { unsafePush(it) }
 
 fun Interpreter.unsafePush(scriptLine: ScriptLine): Interpreter =
-	compiler(context, compiled(expr(op(interpreted.value)), interpreted.type))
+	compiler(context, compiled(expr(interpreted.value), interpreted.type))
 		.unsafePush(scriptLine)
 		.let { compiler ->
 			evaluator(valueBindings(), interpreted.value)

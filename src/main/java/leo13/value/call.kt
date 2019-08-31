@@ -1,11 +1,12 @@
 package leo13.value
 
-import leo13.script.lineTo
+import leo13.script.Scriptable
 import leo13.script.script
 
-data class Call(val expr: Expr) {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "call" lineTo script(expr.scriptableLine)
+data class Call(val expr: Expr) : Scriptable() {
+	override fun toString() = super.toString()
+	override val scriptableName get() = "call"
+	override val scriptableBody get() = script(expr.scriptableLine)
 }
 
 fun call(expr: Expr) = Call(expr)

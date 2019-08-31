@@ -17,4 +17,7 @@ fun ValueBindings.push(value: Value) = stack.push(value).valueBindings
 fun valueBindings(vararg values: Value) = stack(*values).valueBindings
 
 fun ValueBindings.evaluate(expr: Expr): Value =
-	evaluator(this, value()).evaluate(expr)
+	evaluator(this, value()).push(expr).value
+
+fun ValueBindings.evaluate(op: Op): Value =
+	evaluator(this, value()).push(op).value

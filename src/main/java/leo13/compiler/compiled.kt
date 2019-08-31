@@ -23,7 +23,7 @@ fun compiled(script: Script): Compiled =
 
 fun Compiled.plus(compiledLine: CompiledLine): Compiled =
 	compiled(
-		expr(op(compiledLine.name lineTo compiledLine.rhs.expr)),
+		expr.plus(op(compiledLine.name lineTo compiledLine.rhs.expr)),
 		type.updatePattern {
 			plus(compiledLine.name lineTo compiledLine.rhs.type.pattern)
 		})
