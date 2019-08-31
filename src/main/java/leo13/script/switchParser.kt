@@ -27,11 +27,11 @@ fun SwitchParser.push(scriptLine: ScriptLine): SwitchParser =
 
 val SwitchParser.switch: Switch
 	get() =
-		failRun<Switch>("switch") {
-			if (nameOrNull != null) failRun<Switch>("case") { fail(nameOrNull) }
-			else if (switchNodeOrNull == null) fail<Switch>(script())
+		failRun("switch") {
+			if (nameOrNull != null) fail("case" lineTo script(nameOrNull))
+			else if (switchNodeOrNull == null) fail(script())
 			else when (switchNodeOrNull) {
-				is CaseSwitchNode -> fail<Switch>("single" lineTo script(switchNodeOrNull.case.scriptableLine))
+				is CaseSwitchNode -> fail("single" lineTo script(switchNodeOrNull.case.scriptableLine))
 				is SwitchSwitchNode -> switchNodeOrNull.switch
 			}
 		}
