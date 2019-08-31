@@ -1,7 +1,6 @@
 package leo13.value
 
 import leo.base.assertEqualTo
-import leo13._this
 import leo13.wrap
 import org.junit.Test
 
@@ -43,8 +42,8 @@ class EvaluatorTest {
 
 	private val switch =
 		switch(
-			"one" caseTo expr(_this, op("jeden" lineTo expr())),
-			"two" caseTo expr(_this, op("dwa" lineTo expr())))
+			"one" caseTo expr(given(), op("jeden" lineTo expr())),
+			"two" caseTo expr(given(), op("dwa" lineTo expr())))
 
 	@Test
 	fun pushSwitch_firstCase() {
@@ -69,14 +68,14 @@ class EvaluatorTest {
 	@Test
 	fun pushCase_match() {
 		evaluator(valueBindings(), value("one" lineTo value("rhs" lineTo value())))
-			.evaluateOrNull("one" caseTo expr(_this, op("jeden" lineTo expr())))
+			.evaluateOrNull("one" caseTo expr(given(), op("jeden" lineTo expr())))
 			.assertEqualTo(value("rhs" lineTo value(), "jeden" lineTo value()))
 	}
 
 	@Test
 	fun pushCase_mismatch() {
 		evaluator(valueBindings(), value("two" lineTo value("rhs" lineTo value())))
-			.evaluateOrNull("one" caseTo expr(_this, op("jeden" lineTo expr())))
+			.evaluateOrNull("one" caseTo expr(given(), op("jeden" lineTo expr())))
 			.assertEqualTo(null)
 	}
 

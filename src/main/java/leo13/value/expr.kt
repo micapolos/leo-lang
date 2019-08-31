@@ -1,8 +1,6 @@
 package leo13.value
 
 import leo.base.fold
-import leo13.This
-import leo13._this
 import leo13.script.*
 import leo9.fold
 import leo9.reverse
@@ -14,12 +12,6 @@ sealed class Expr : Scriptable() {
 	abstract val exprScriptableName: String
 	abstract val exprScriptableBody: Script
 	val exprScriptableLine get() = exprScriptableName lineTo exprScriptableBody
-}
-
-data class ThisExpr(val thiz: This) : Expr() {
-	override fun toString() = super.toString()
-	override val exprScriptableName get() = thiz.scriptableName
-	override val exprScriptableBody get() = thiz.scriptableBody
 }
 
 data class ValueExpr(val value: Value) : Expr() {
@@ -40,15 +32,14 @@ data class LinkExpr(val link: ExprLink) : Expr() {
 	override val exprScriptableBody get() = link.scriptableBody
 }
 
-fun expr(_this: This): Expr = ThisExpr(_this)
 fun expr(value: Value): Expr = ValueExpr(value)
 fun expr(given: Given): Expr = GivenExpr(given)
 fun expr(link: ExprLink): Expr = LinkExpr(link)
 fun expr() = expr(value())
 
-fun expr(_this: This, vararg ops: Op) = expr(_this).fold(ops) { plus(it) }
-fun expr(value: Value, vararg ops: Op) = expr(value).fold(ops) { plus(it) }
-fun expr(given: Given, vararg ops: Op) = expr(given).fold(ops) { plus(it) }
+fun expr(vararg ops: Op): Expr = expr(value(), *ops)
+fun expr(value: Value, vararg ops: Op): Expr = expr(value).fold(ops) { plus(it) }
+fun expr(given: Given, vararg ops: Op): Expr = expr(given).fold(ops) { plus(it) }
 
 fun Expr.plus(op: Op) = expr(link(this, op))
 
@@ -57,7 +48,7 @@ val Expr.isEmpty get() = valueOrNull?.isEmpty ?: false
 
 val Script.expr: Expr
 	get() =
-		expr(_this).fold(lineStack.reverse) {
+		expr().fold(lineStack.reverse) {
 			plus(op(it.exprLine))
 		}
 

@@ -21,7 +21,6 @@ fun evaluator(valueBindings: ValueBindings, value: Value) = Evaluator(valueBindi
 
 fun Evaluator.push(expr: Expr): Evaluator =
 	when (expr) {
-		is ThisExpr -> this
 		is ValueExpr -> push(expr.value)
 		is GivenExpr -> push(expr.given)
 		is LinkExpr -> push(expr.link)
@@ -77,7 +76,7 @@ fun Evaluator.evaluate(switch: Switch): Value =
 fun Evaluator.evaluateOrNull(case: Case): Value? =
 	value.linkOrNull!!.line.let { line ->
 		notNullIf(line.name == case.name) {
-			evaluator(bindings, line.rhs).evaluate(case.expr)
+			bindings.push(line.rhs).evaluate(case.expr)
 		}
 	}
 

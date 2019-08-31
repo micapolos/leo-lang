@@ -21,12 +21,6 @@ object Lhs : Scriptable() {
 	override val scriptableBody get() = script()
 }
 
-object This : Scriptable() {
-	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "this"
-	override val scriptableBody get() = script()
-}
-
 object Back : Scriptable() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "back"
@@ -73,7 +67,6 @@ val append = Append
 val lhs = Lhs
 val rhs = Rhs
 val rhsLine = RhsLine
-val _this = This
 val meta = Meta
 val resolve = Resolve
 val wrap = Wrap
