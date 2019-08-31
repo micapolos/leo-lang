@@ -4,10 +4,7 @@ import leo13.script.Script
 import leo13.script.Scriptable
 import leo13.script.Switch
 import leo13.script.script
-import leo13.type.Type
-import leo13.type.TypeBindings
-import leo13.type.push
-import leo13.type.typeBindings
+import leo13.type.*
 
 data class Context(
 	val types: Types,
@@ -31,5 +28,5 @@ fun Context.plus(function: Function) = copy(functions = functions.plus(function)
 fun Context.unsafeCompile(script: Script): Compiled =
 	compiler(this, compiled()).unsafePush(script).compiled
 
-fun Context.compile(switch: Switch): SwitchCompiled =
-	compiler(this, null).push(switch).compiled
+fun Context.compile(choice: Choice, switch: Switch): SwitchCompiled =
+	compiler(this, null).push(choice, switch).compiled

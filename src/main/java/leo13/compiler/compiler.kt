@@ -3,6 +3,7 @@ package leo13.compiler
 import leo.base.failIfOr
 import leo.base.fold
 import leo.base.ifOrNull
+import leo13.fail
 import leo13.script.*
 import leo13.script.Switch
 import leo13.type.*
@@ -135,9 +136,11 @@ fun Compiler.unsafePushSwitch(script: Script): Compiler =
 	unsafePush(script.switch)
 
 fun Compiler.unsafePush(switch: Switch): Compiler =
-	context
+	if (compiled.type.pattern !is ChoicePattern)
+		fail("not" lineTo script("choice"))
+	else context
 		.bind(compiled.type)
-		.compile(switch)
+		.compile(compiled.type.pattern.choice, switch)
 		.let { switchCompiled ->
 			compiler(
 				context,

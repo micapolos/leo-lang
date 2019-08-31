@@ -2,6 +2,10 @@ package leo13.compiler
 
 import leo13.fail
 import leo13.script.*
+import leo13.type.CaseChoiceNode
+import leo13.type.Choice
+import leo13.type.ChoiceChoiceNode
+import leo13.type.ChoiceNode
 import leo13.value.caseTo
 import leo13.value.plus
 import leo13.value.switch
@@ -13,19 +17,21 @@ data class SwitchCompiler(
 fun compiler(context: Context, compiledOrNull: SwitchCompiled?) =
 	SwitchCompiler(context, compiledOrNull)
 
-fun switchCompiler() = compiler(context(), null)
+fun SwitchCompiler.push(choice: Choice, switch: Switch): SwitchCompiler =
+	push(choice.lhsNode, switch.lhsNode).push(choice.case, switch.case)
 
-fun SwitchCompiler.push(switch: Switch): SwitchCompiler =
-	push(switch.lhsNode).push(switch.case)
-
-fun SwitchCompiler.push(switchNode: SwitchNode): SwitchCompiler =
+fun SwitchCompiler.push(choiceNode: ChoiceNode, switchNode: SwitchNode): SwitchCompiler =
 	when (switchNode) {
-		is CaseSwitchNode -> push(switchNode.case)
-		is SwitchSwitchNode -> push(switchNode.switch)
+		is CaseSwitchNode -> push((choiceNode as CaseChoiceNode).case, switchNode.case)
+		is SwitchSwitchNode -> push((choiceNode as ChoiceChoiceNode).choice, switchNode.switch)
 	}
 
-fun SwitchCompiler.push(case: Case): SwitchCompiler =
-	context
+fun SwitchCompiler.push(choiceCase: leo13.type.Case, case: leo13.script.Case): SwitchCompiler =
+	if (choiceCase.name != case.name) fail(
+		"mismatch" lineTo script(
+			"choice" lineTo script(choiceCase.name),
+			"case" lineTo script(case.name)))
+	else context
 		.unsafeCompile(case.rhs)
 		.let { caseCompiled ->
 			if (compiledOrNull == null)
