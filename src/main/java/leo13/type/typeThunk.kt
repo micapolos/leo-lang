@@ -3,35 +3,35 @@ package leo13.type
 import leo13.script.Script
 import leo13.script.Scriptable
 
-sealed class TypeThunk : Scriptable() {
+sealed class PatternRhs : Scriptable() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "thunk"
 	override val scriptableBody get() = thunkScriptableBody
 	abstract val thunkScriptableBody: Script
 }
 
-data class TypeTypeThunk(val type: Type) : TypeThunk() {
+data class TypePatternRhs(val pattern: Pattern) : PatternRhs() {
 	override fun toString() = super.toString()
-	override val thunkScriptableBody get() = type.scriptableBody
+	override val thunkScriptableBody get() = pattern.scriptableBody
 }
 
-data class RecursionTypeThunk(val recursion: Recursion) : TypeThunk() {
+data class RecursionPatternRhs(val recursion: Recursion) : PatternRhs() {
 	override fun toString() = super.toString()
 	override val thunkScriptableBody get() = recursion.scriptableBody
 }
 
-fun thunk(type: Type): TypeThunk = TypeTypeThunk(type)
-fun thunk(recursion: Recursion): TypeThunk = RecursionTypeThunk(recursion)
+fun thunk(pattern: Pattern): PatternRhs = TypePatternRhs(pattern)
+fun thunk(recursion: Recursion): PatternRhs = RecursionPatternRhs(recursion)
 
-fun TypeThunk.contains(thunk: TypeThunk): Boolean =
+fun PatternRhs.contains(thunk: PatternRhs): Boolean =
 	when (this) {
-		is TypeTypeThunk -> thunk is TypeTypeThunk && type.contains(thunk.type)
-		is RecursionTypeThunk -> thunk is RecursionTypeThunk && recursion == thunk.recursion
+		is TypePatternRhs -> thunk is TypePatternRhs && pattern.contains(thunk.pattern)
+		is RecursionPatternRhs -> thunk is RecursionPatternRhs && recursion == thunk.recursion
 	}
 
-val TypeThunk.unsafeStaticScript: Script
+val PatternRhs.unsafeStaticScript: Script
 	get() =
 		when (this) {
-			is TypeTypeThunk -> type.unsafeStaticScript
-			is RecursionTypeThunk -> TODO()
+			is TypePatternRhs -> pattern.unsafeStaticScript
+			is RecursionPatternRhs -> TODO()
 		}

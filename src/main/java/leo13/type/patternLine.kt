@@ -5,7 +5,7 @@ import leo13.script.Scriptable
 import leo13.script.lineTo
 import leo13.script.script
 
-data class TypeLine(val name: String, val rhs: TypeThunk) : Scriptable() {
+data class PatternLine(val name: String, val rhs: PatternRhs) : Scriptable() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = name
 	override val scriptableBody get() = rhs.scriptableBody
@@ -14,13 +14,13 @@ data class TypeLine(val name: String, val rhs: TypeThunk) : Scriptable() {
 		else scriptableLine
 }
 
-infix fun String.lineTo(rhs: TypeThunk) = TypeLine(this, rhs)
-infix fun String.lineTo(rhs: Type) = lineTo(thunk(rhs))
+infix fun String.lineTo(rhs: PatternRhs) = PatternLine(this, rhs)
+infix fun String.lineTo(rhs: Pattern) = lineTo(thunk(rhs))
 
-fun TypeLine.contains(line: TypeLine): Boolean =
+fun PatternLine.contains(line: PatternLine): Boolean =
 	name == line.name && rhs.contains(line.rhs)
 
-val ScriptLine.unsafeTypeLine: TypeLine
+val ScriptLine.unsafePatternLine: PatternLine
 	get() =
-		name lineTo rhs.unsafeType
+		name lineTo rhs.unsafePattern
 

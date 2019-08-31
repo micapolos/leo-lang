@@ -6,53 +6,53 @@ import kotlin.test.Test
 class ParserTest {
 	@Test
 	fun empty() {
-		type().assertScriptableLineWorks { unsafeType }
+		pattern().assertScriptableLineWorks { unsafePattern }
 	}
 
 	@Test
 	fun plain() {
-		type(
-			"zero" lineTo type(),
-			"plus" lineTo type(
-				"one" lineTo type()))
-			.assertScriptableLineWorks { unsafeType }
+		pattern(
+			"zero" lineTo pattern(),
+			"plus" lineTo pattern(
+				"one" lineTo pattern()))
+			.assertScriptableLineWorks { unsafePattern }
 	}
 
 	@Test
 	fun choice() {
-		type(
+		pattern(
 			unsafeChoice(
-				"zero" caseTo type(),
-				"one" caseTo type(),
-				"two" caseTo type()))
-			.assertScriptableLineWorks { unsafeType }
+				"zero" caseTo pattern(),
+				"one" caseTo pattern(),
+				"two" caseTo pattern()))
+			.assertScriptableLineWorks { unsafePattern }
 	}
 
 	@Test
 	fun choiceLines() {
-		type(
-			"zero" lineTo type(),
-			"or" lineTo type("one" lineTo type()),
-			"or" lineTo type("two" lineTo type()))
-			.assertScriptableLineWorks { unsafeType }
+		pattern(
+			"zero" lineTo pattern(),
+			"or" lineTo pattern("one" lineTo pattern()),
+			"or" lineTo pattern("two" lineTo pattern()))
+			.assertScriptableLineWorks { unsafePattern }
 	}
 
 	@Test
 	fun choiceAndLines() {
-		type(
+		pattern(
 			unsafeChoice(
-				"zero" caseTo type(),
-				"one" caseTo type()))
-			.plus("two" lineTo type())
-			.assertScriptableLineWorks { unsafeType }
+				"zero" caseTo pattern(),
+				"one" caseTo pattern()))
+			.plus("two" lineTo pattern())
+			.assertScriptableLineWorks { unsafePattern }
 	}
 
 	@Test
 	fun arrow() {
-		type(
+		pattern(
 			arrow(
-				type("zero"),
-				type("one")))
-			.assertScriptableLineWorks { unsafeType }
+				pattern("zero"),
+				pattern("one")))
+			.assertScriptableLineWorks { unsafePattern }
 	}
 }

@@ -6,58 +6,58 @@ import kotlin.test.Test
 class ContainsTest {
 	@Test
 	fun contains() {
-		type()
-			.contains(type())
+		pattern()
+			.contains(pattern())
 			.assertEqualTo(true)
 
-		type(
-			"zero" lineTo type(),
-			"plus" lineTo type("one"))
+		pattern(
+			"zero" lineTo pattern(),
+			"plus" lineTo pattern("one"))
 			.contains(
-				type(
-					"zero" lineTo type(),
-					"plus" lineTo type("one")))
+				pattern(
+					"zero" lineTo pattern(),
+					"plus" lineTo pattern("one")))
 			.assertEqualTo(true)
 
-		type(
+		pattern(
 			unsafeChoice(
-				"zero" caseTo type(),
-				"one" caseTo type()))
+				"zero" caseTo pattern(),
+				"one" caseTo pattern()))
 			.contains(
-				type("zero" lineTo type()))
+				pattern("zero" lineTo pattern()))
 			.assertEqualTo(true)
 
-		type(
+		pattern(
 			unsafeChoice(
-				"zero" caseTo type(),
-				"one" caseTo type()))
+				"zero" caseTo pattern(),
+				"one" caseTo pattern()))
 			.contains(
-				type(
+				pattern(
 					unsafeChoice(
-						"zero" caseTo type(),
-						"one" caseTo type())))
+						"zero" caseTo pattern(),
+						"one" caseTo pattern())))
 			.assertEqualTo(true)
 
-		type(
+		pattern(
 			unsafeChoice(
-				"zero" caseTo type(),
-				"one" caseTo type()))
+				"zero" caseTo pattern(),
+				"one" caseTo pattern()))
 			.contains(
-				type(
+				pattern(
 					unsafeChoice(
-						"one" caseTo type(),
-						"zero" caseTo type())))
+						"one" caseTo pattern(),
+						"zero" caseTo pattern())))
 			.assertEqualTo(false)
 
-		type(
+		pattern(
 			unsafeChoice(
-				"zero" caseTo type(),
-				"one" caseTo type()))
+				"zero" caseTo pattern(),
+				"one" caseTo pattern()))
 			.contains(
-				type(
+				pattern(
 					unsafeChoice(
-						"one" caseTo type(),
-						"zero" caseTo type())))
+						"one" caseTo pattern(),
+						"zero" caseTo pattern())))
 			.assertEqualTo(false)
 	}
 }

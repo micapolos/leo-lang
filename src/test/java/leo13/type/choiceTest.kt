@@ -8,23 +8,23 @@ import kotlin.test.assertFails
 class ChoiceTest {
 	@Test
 	fun constructor() {
-		unsafeChoice("one" caseTo type(), "two" caseTo type()).assertNotNull
-		unsafeChoice("one" caseTo type(), "two" caseTo type(), "three" caseTo type()).assertNotNull
+		unsafeChoice("one" caseTo pattern(), "two" caseTo pattern()).assertNotNull
+		unsafeChoice("one" caseTo pattern(), "two" caseTo pattern(), "three" caseTo pattern()).assertNotNull
 
-		assertFails { unsafeChoice("one" caseTo type(), "two" caseTo type(), "one" caseTo type()) }
-		assertFails { unsafeChoice("one" caseTo type(), "two" caseTo type(), "three" caseTo type(), "two" caseTo type()) }
+		assertFails { unsafeChoice("one" caseTo pattern(), "two" caseTo pattern(), "one" caseTo pattern()) }
+		assertFails { unsafeChoice("one" caseTo pattern(), "two" caseTo pattern(), "three" caseTo pattern(), "two" caseTo pattern()) }
 	}
 
 	@Test
 	fun rhsOrNull() {
 		unsafeChoice(
-			"one" caseTo type("jeden"),
-			"two" caseTo type("dwa"),
-			"three" caseTo type("trzy"))
+			"one" caseTo pattern("jeden"),
+			"two" caseTo pattern("dwa"),
+			"three" caseTo pattern("trzy"))
 			.run {
-				rhsOrNull("one").assertEqualTo(thunk(type("jeden")))
-				rhsOrNull("two").assertEqualTo(thunk(type("dwa")))
-				rhsOrNull("three").assertEqualTo(thunk(type("trzy")))
+				rhsOrNull("one").assertEqualTo(thunk(pattern("jeden")))
+				rhsOrNull("two").assertEqualTo(thunk(pattern("dwa")))
+				rhsOrNull("three").assertEqualTo(thunk(pattern("trzy")))
 				rhsOrNull("four").assertEqualTo(null)
 			}
 	}

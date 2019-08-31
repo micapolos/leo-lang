@@ -18,12 +18,12 @@ fun Interpreter.unsafePush(script: Script): Interpreter =
 	fold(script.lineSeq) { unsafePush(it) }
 
 fun Interpreter.unsafePush(scriptLine: ScriptLine): Interpreter =
-	compiler(context, compiled(expr(op(interpreted.value)), interpreted.trace))
+	compiler(context, compiled(expr(op(interpreted.value)), interpreted.type))
 		.unsafePush(scriptLine)
 		.let { compiler ->
 			evaluator(valueBindings(), interpreted.value)
 				.evaluate(compiler.compiled.expr)
 				.let { value ->
-					interpreter(context, interpreted(value, compiler.compiled.trace))
+					interpreter(context, interpreted(value, compiler.compiled.type))
 				}
 		}

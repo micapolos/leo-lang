@@ -14,29 +14,29 @@ class CompiledTest {
 	fun lhsOrNull() {
 		compiled(
 			expr(op("expr" lineTo expr())),
-			trace(
-				type("type"),
-				type(
-					"one" lineTo type(),
-					"two" lineTo type())))
+			type(
+				pattern("type"),
+				pattern(
+					"one" lineTo pattern(),
+					"two" lineTo pattern())))
 			.lhsOrNull
 			.assertEqualTo(
 				compiled(
 					expr(
 						op("expr" lineTo expr()),
 						op(lhs)),
-					trace(
-						type("type"),
-						type("one" lineTo type()))))
+					type(
+						pattern("type"),
+						pattern("one" lineTo pattern()))))
 	}
 
 	@Test
 	fun lhsOrNull_noLhs() {
 		compiled(
 			expr(op("expr" lineTo expr())),
-			trace(
-				type("foo"),
-				type()))
+			type(
+				pattern("foo"),
+				pattern()))
 			.lhsOrNull
 			.assertEqualTo(null)
 	}
@@ -45,9 +45,9 @@ class CompiledTest {
 	fun rhsOrNull_noRhs() {
 		compiled(
 			expr(op("expr" lineTo expr())),
-			trace(
-				type("type"),
-				type()))
+			type(
+				pattern("type"),
+				pattern()))
 			.rhsOrNull
 			.assertEqualTo(null)
 	}
@@ -56,33 +56,33 @@ class CompiledTest {
 	fun rhsOrNull_type() {
 		compiled(
 			expr(op("expr" lineTo expr())),
-			trace(
-				type("type"),
-				type(
-					"one" lineTo type(),
-					"two" lineTo type("three"))))
+			type(
+				pattern("type"),
+				pattern(
+					"one" lineTo pattern(),
+					"two" lineTo pattern("three"))))
 			.rhsOrNull
 			.assertEqualTo(
 				compiled(
 					expr(
 						op("expr" lineTo expr()),
 						op(rhs)),
-					trace(
-						type("type"),
-						type(
-							"one" lineTo type(),
-							"two" lineTo type("three")),
-						type("three"))))
+					type(
+						pattern("type"),
+						pattern(
+							"one" lineTo pattern(),
+							"two" lineTo pattern("three")),
+						pattern("three"))))
 	}
 
 	@Test
 	fun rhsOrNull_recursion() {
 		compiled(
 			expr(op("expr" lineTo expr())),
-			trace(
-				type("type"),
-				type(
-					"one" lineTo type(),
+			type(
+				pattern("type"),
+				pattern(
+					"one" lineTo pattern(),
 					"two" lineTo thunk(recursion.recursion))))
 			.rhsOrNull
 			.assertEqualTo(
@@ -90,17 +90,17 @@ class CompiledTest {
 					expr(
 						op("expr" lineTo expr()),
 						op(rhs)),
-					trace(type("type"))))
+					type(pattern("type"))))
 	}
 
 	@Test
 	fun rhsOrNull_invalidRecursion() {
 		compiled(
 			expr(op("expr" lineTo expr())),
-			trace(
-				type("type"),
-				type(
-					"one" lineTo type(),
+			type(
+				pattern("type"),
+				pattern(
+					"one" lineTo pattern(),
 					"two" lineTo thunk(recursion.recursion.recursion))))
 			.rhsOrNull
 			.assertEqualTo(null)

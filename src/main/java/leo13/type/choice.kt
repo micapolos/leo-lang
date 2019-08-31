@@ -22,21 +22,21 @@ fun Choice.unsafePlus(case: Case): Choice =
 	if (rhsOrNull(case.name) != null) kotlin.error("duplicate" lineTo script("case" lineTo script(case.name)))
 	else uncheckedChoice(node(this), case)
 
-fun Choice.rhsOrNull(name: String): TypeThunk? = case.rhsOrNull(name) ?: lhsNode.rhsOrNull(name)
+fun Choice.rhsOrNull(name: String): PatternRhs? = case.rhsOrNull(name) ?: lhsNode.rhsOrNull(name)
 
-fun Choice.contains(type: Type): Boolean =
-	when (type) {
-		is EmptyType -> false
-		is LinkType -> contains(type.link)
-		is ChoiceType -> this == type.choice
-		is ArrowType -> false
+fun Choice.contains(pattern: Pattern): Boolean =
+	when (pattern) {
+		is EmptyPattern -> false
+		is LinkPattern -> contains(pattern.link)
+		is ChoicePattern -> this == pattern.choice
+		is ArrowPattern -> false
 	}
 
-fun Choice.contains(typeLink: TypeLink): Boolean =
-	typeLink.lhs is EmptyType && contains(typeLink.line)
+fun Choice.contains(patternLink: PatternLink): Boolean =
+	patternLink.lhs is EmptyPattern && contains(patternLink.line)
 
-fun Choice.contains(typeLine: TypeLine): Boolean =
-	case.contains(typeLine) || lhsNode.contains(typeLine)
+fun Choice.contains(patternLine: PatternLine): Boolean =
+	case.contains(patternLine) || lhsNode.contains(patternLine)
 
 //
 //val Stack<Either>.uncheckedChoice get() = Choice(this)

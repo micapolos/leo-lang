@@ -9,28 +9,28 @@ import leo13.script.script
 import leo13.type.*
 import leo13.value.*
 
-data class Compiled(val expr: Expr, val trace: Trace) : Scriptable() {
+data class Compiled(val expr: Expr, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "traced"
-	override val scriptableBody get() = script(expr.scriptableLine, trace.scriptableLine)
+	override val scriptableBody get() = script(expr.scriptableLine, type.scriptableLine)
 }
 
-fun compiled(expr: Expr, trace: Trace) = Compiled(expr, trace)
-fun compiled() = compiled(expr(), trace())
+fun compiled(expr: Expr, type: Type) = Compiled(expr, type)
+fun compiled() = compiled(expr(), type())
 
 fun compiled(script: Script): Compiled =
-	compiled(script.expr, trace(script.type))
+	compiled(script.expr, type(script.pattern))
 
 fun Compiled.plus(compiledLine: CompiledLine): Compiled =
 	compiled(
 		expr(op(compiledLine.name lineTo compiledLine.rhs.expr)),
-		trace.updateType {
-			plus(compiledLine.name lineTo compiledLine.rhs.trace.type)
+		type.updatePattern {
+			plus(compiledLine.name lineTo compiledLine.rhs.type.pattern)
 		})
 
 val Compiled.lhsOrNull: Compiled?
 	get() =
-		trace
+		type
 			.lhsOrNull
 			?.let { lhsTrace ->
 				compiled(
@@ -40,7 +40,7 @@ val Compiled.lhsOrNull: Compiled?
 
 val Compiled.lineOrNull: Compiled?
 	get() =
-		trace
+		type
 			.lineOrNull
 			?.let { lineTrace ->
 				compiled(
@@ -50,7 +50,7 @@ val Compiled.lineOrNull: Compiled?
 
 val Compiled.rhsOrNull: Compiled?
 	get() =
-		trace
+		type
 			.rhsOrNull
 			?.let { rhsTrace ->
 				compiled(
@@ -59,27 +59,27 @@ val Compiled.rhsOrNull: Compiled?
 			}
 
 fun Compiled.lineOrNull(name: String): Compiled? =
-	trace
-		.type
+	type
+		.pattern
 		.linkOrNull
 		?.let { typeLink ->
 			if (typeLink.line.name == name)
 				compiled(
 					expr.plus(op(rhsLine)),
-					trace.set(type(typeLink)))
+					type.set(pattern(typeLink)))
 			else compiled(
 				expr.plus(op(lhs)),
-				trace.set(typeLink.lhs))
+				type.set(typeLink.lhs))
 				.lineOrNull(name)
 		}
 
 fun Compiled.accessOrNull(name: String): Compiled? =
-	trace
-		.type
+	type
+		.pattern
 		.onlyLineOrNull
 		?.let { onlyLine ->
 			compiled(
 				expr.plus(op(rhs)),
-				trace.push(type(onlyLine)))
+				type.push(pattern(onlyLine)))
 				.lineOrNull(name)
 		}

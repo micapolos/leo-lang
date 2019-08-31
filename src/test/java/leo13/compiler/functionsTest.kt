@@ -2,6 +2,7 @@ package leo13.compiler
 
 import leo.base.assertEqualTo
 import leo13.type.lineTo
+import leo13.type.pattern
 import leo13.type.type
 import leo13.value.expr
 import leo13.value.lineTo
@@ -12,19 +13,19 @@ class FunctionsTest {
 	@Test
 	fun typedOrNull() {
 		functions()
-			.compiledOrNull(trace(type("zero" lineTo type())))
+			.compiledOrNull(type(pattern("zero" lineTo pattern())))
 			.assertEqualTo(null)
 
 		functions(
 			function(
-				trace(type("zero" lineTo type())),
+				type(pattern("zero" lineTo pattern())),
 				compiled(
 					expr(op("one" lineTo expr())),
-					trace(type("one" lineTo type())))))
-			.compiledOrNull(trace(type("zero" lineTo type())))
+					type(pattern("one" lineTo pattern())))))
+			.compiledOrNull(type(pattern("zero" lineTo pattern())))
 			.assertEqualTo(
 				compiled(
 					expr(op("one" lineTo expr())),
-					trace(type("one" lineTo type()))))
+					type(pattern("one" lineTo pattern()))))
 	}
 }

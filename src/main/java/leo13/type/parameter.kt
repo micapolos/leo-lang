@@ -1,5 +1,5 @@
 package leo13.type
 
-data class TypeParameter(val type: Type)
+data class TypeParameter(val pattern: Pattern)
 
-fun parameter(type: Type) = TypeParameter(type)
+fun parameter(pattern: Pattern) = TypeParameter(pattern)

@@ -9,11 +9,11 @@ import leo9.fold
 import leo9.isEmpty
 import leo9.reverse
 
-data class SwitchTyped(val switch: Switch, val type: Type)
+data class SwitchTyped(val switch: Switch, val pattern: Pattern)
 
-fun typed(switch: Switch, type: Type) = SwitchTyped(switch, type)
+fun typed(switch: Switch, pattern: Pattern) = SwitchTyped(switch, pattern)
 
-fun switchTyped() = SwitchTyped(switch(), type())
+fun switchTyped() = SwitchTyped(switch(), pattern())
 
 val TypedSwitch.switchTypedOrNull: SwitchTyped?
 	get() =
@@ -22,7 +22,7 @@ val TypedSwitch.switchTypedOrNull: SwitchTyped?
 		}
 
 fun SwitchTyped.plusOrNull(caseTyped: CaseTyped): SwitchTyped? =
-	if (switch.caseStack.isEmpty) typed(switch(caseTyped.case), caseTyped.type)
-	else notNullIf(caseTyped.type == type) {
-		typed(switch.plus(caseTyped.case), type)
+	if (switch.caseStack.isEmpty) typed(switch(caseTyped.case), caseTyped.pattern)
+	else notNullIf(caseTyped.pattern == pattern) {
+		typed(switch.plus(caseTyped.case), pattern)
 	}
