@@ -63,6 +63,18 @@ object Evaluator : Scriptable() {
 	override val scriptableBody get() = script()
 }
 
+object Space : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "space"
+	override val scriptableBody get() = script()
+}
+
+object Tab : Scriptable() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "tab"
+	override val scriptableBody get() = script()
+}
+
 val append = Append
 val lhs = Lhs
 val rhs = Rhs
@@ -72,3 +84,5 @@ val resolve = Resolve
 val wrap = Wrap
 val quote = Quote
 val evaluator = Evaluator
+val space = Space
+val tab = Tab
