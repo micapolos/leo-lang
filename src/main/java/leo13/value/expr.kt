@@ -40,6 +40,9 @@ val String.unsafeExpr
 fun expr(script: Script) =
 	script.expr
 
+fun expr(name: String) =
+	expr(op(name lineTo expr()))
+
 val ScriptLine.exprLine: ExprLine
 	get() =
 		name lineTo rhs.expr

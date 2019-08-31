@@ -4,6 +4,9 @@ import leo.base.Empty
 import leo.base.empty
 import leo.base.failIfOr
 import leo.base.fold
+import leo13.compiler.accessOrNull
+import leo13.compiler.rhsOrNull
+import leo13.compiler.trace
 import leo13.script.*
 
 sealed class Type : Scriptable() {

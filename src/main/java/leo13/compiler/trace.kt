@@ -1,4 +1,4 @@
-package leo13.type
+package leo13.compiler
 
 import leo.base.fold
 import leo.base.orIfNull
@@ -6,6 +6,7 @@ import leo13.script.Script
 import leo13.script.Scriptable
 import leo13.script.plus
 import leo13.script.script
+import leo13.type.*
 
 data class Trace(val popOrNull: Trace?, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
@@ -23,8 +24,11 @@ fun trace() = trace(type())
 fun Trace.plus(line: TypeLine): Trace =
 	updateType { plus(line) }
 
+fun Trace.set(type: Type): Trace =
+	popOrNull.push(type)
+
 fun Trace.updateType(fn: Type.() -> Type): Trace =
-	popOrNull.push(type.fn())
+	set(type.fn())
 
 fun Trace.applyOrNull(recursion: Recursion): Trace? =
 	popOrNull?.let { lhs ->
@@ -37,6 +41,18 @@ fun Trace.applyOrNull(thunk: TypeThunk): Trace? =
 		is TypeTypeThunk -> push(thunk.type)
 		is RecursionTypeThunk -> applyOrNull(thunk.recursion)
 	}
+
+val Trace.lhsOrNull: Trace?
+	get() =
+		type.previousOrNull?.let { lhsType ->
+			updateType { lhsType }
+		}
+
+val Trace.rhsOrNull: Trace?
+	get() =
+		type.rhsThunkOrNull?.let { rhsThunk ->
+			applyOrNull(rhsThunk)
+		}
 
 fun Trace.rhsOrNull(name: String): Trace? =
 	type.rhsThunkOrNull(name)?.let { thunk ->
@@ -51,15 +67,3 @@ fun Trace.accessOrNull(name: String): Trace? =
 			}
 		}
 	}
-
-val Trace.lhsOrNull: Trace?
-	get() =
-		type.previousOrNull?.let { lhsType ->
-			updateType { lhsType }
-		}
-
-val Trace.rhsOrNull: Trace?
-	get() =
-		type.rhsThunkOrNull?.let { rhsThunk ->
-			applyOrNull(rhsThunk)
-		}
