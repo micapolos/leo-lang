@@ -1,5 +1,6 @@
 package leo13.script
 
+import leo.base.assertEqualTo
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -13,12 +14,26 @@ class SwitchTest {
 	}
 
 	@Test
-	fun scriptableBody() {
+	fun scriptableLine() {
 		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
-			.assertEqualsToScript("one(jeden())two(dwa())")
+			.scriptableLine
+			.assertEqualTo(
+				"switch" lineTo script(
+					"one" lineTo script(),
+					"gives" lineTo script("jeden"),
+					"two" lineTo script(),
+					"gives" lineTo script("dwa")))
 
 		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
-			.assertEqualsToScript("one(jeden())two(dwa())three(trzy())")
+			.scriptableLine
+			.assertEqualTo(
+				"switch" lineTo script(
+					"one" lineTo script(),
+					"gives" lineTo script("jeden"),
+					"two" lineTo script(),
+					"gives" lineTo script("dwa"),
+					"three" lineTo script(),
+					"gives" lineTo script("trzy")))
 	}
 
 	@Test

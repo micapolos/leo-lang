@@ -9,7 +9,7 @@ sealed class SwitchNode : Scriptable() {
 
 data class CaseSwitchNode(val case: Case) : SwitchNode() {
 	override fun toString() = super.toString()
-	override val nodeScriptableBody get() = script(case.scriptableLine)
+	override val nodeScriptableBody get() = case.scriptableBody
 }
 
 data class SwitchSwitchNode(val switch: Switch) : SwitchNode() {
@@ -26,9 +26,12 @@ fun SwitchNode.containsCase(name: String): Boolean =
 		is SwitchSwitchNode -> switch.containsCase(name)
 	}
 
-fun SwitchNode.unsafePlusSwitch(case: Case): Switch =
-	if (containsCase(case.name)) error("duplicate case")
+fun SwitchNode.plusSwitchOrNull(case: Case): Switch? =
+	if (containsCase(case.name)) null
 	else uncheckedPlusSwitch(case)
+
+fun SwitchNode.unsafePlusSwitch(case: Case): Switch =
+	plusSwitchOrNull(case) ?: error("duplicate case")
 
 fun SwitchNode.uncheckedPlusSwitch(case: Case): Switch =
 	uncheckedSwitch(this, case)

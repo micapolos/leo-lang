@@ -2,6 +2,8 @@ package leo13.script
 
 import leo.base.failIfOr
 import leo.base.fold
+import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo13.type.Choice
 import leo13.type.ChoiceMatch
 import leo9.EmptyStack
@@ -10,7 +12,7 @@ import leo9.LinkStack
 data class Switch(val lhsNode: SwitchNode, val case: Case) : Scriptable() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "switch"
-	override val scriptableBody get() = lhsNode.scriptableBody.plus(case.scriptableLine)
+	override val scriptableBody get() = lhsNode.scriptableBody.plus(case.scriptableBody)
 }
 
 fun uncheckedSwitch(lhsNode: SwitchNode, case: Case) = Switch(lhsNode, case)
@@ -18,9 +20,13 @@ fun uncheckedSwitch(lhsNode: SwitchNode, case: Case) = Switch(lhsNode, case)
 fun Switch.uncheckedPlus(case: Case): Switch =
 	uncheckedSwitch(node(this), case)
 
+fun Switch.plusOrNull(case: Case): Switch? =
+	notNullIf(!containsCase(case.name)) {
+		uncheckedPlus(case)
+	}
+
 fun Switch.unsafePlus(case: Case): Switch =
-	if (containsCase(case.name)) error("duplicate case")
-	else uncheckedPlus(case)
+	plusOrNull(case) ?: error("duplicate case")
 
 fun Switch.containsCase(name: String): Boolean =
 	case.name == name || lhsNode.containsCase(name)
@@ -28,18 +34,51 @@ fun Switch.containsCase(name: String): Boolean =
 fun unsafeSwitch(firstCase: Case, secondCase: Case, vararg cases: Case): Switch =
 	switchNode(firstCase).unsafePlusSwitch(secondCase).fold(cases) { unsafePlus(it) }
 
-val Script.unsafeSwitch: Switch
+val ScriptLine.switchOrNull: Switch?
+	get() =
+		ifOrNull(name == "switch") {
+			rhs.switchOrNull
+		}
+
+val Script.switchOrNull: Switch?
 	get() =
 		when (lineStack) {
-			is EmptyStack -> error("empty switch")
+			is EmptyStack -> null
 			is LinkStack -> when (lineStack.link.stack) {
-				is EmptyStack -> error("single case switch")
-				is LinkStack -> when (lineStack.link.stack.link.stack) {
-					is EmptyStack -> unsafeSwitch(lineStack.link.stack.link.value.case, lineStack.link.value.case)
-					is LinkStack -> lineStack.link.stack.script.unsafeSwitch.unsafePlus(lineStack.link.value.case)
-				}
+				is EmptyStack -> null
+				is LinkStack ->
+					caseOrNull(lineStack.link.stack.link.value, lineStack.link.value)?.let { case ->
+						lineStack.link.stack.link.stack.script.switchNodeOrNull?.let { node ->
+							node.plusSwitchOrNull(case)
+						}
+					}
 			}
 		}
+
+val Script.switchNodeOrNull: SwitchNode?
+	get() =
+		when (lineStack) {
+			is EmptyStack -> null
+			is LinkStack -> when (lineStack.link.stack) {
+				is EmptyStack -> null
+				is LinkStack ->
+					caseOrNull(lineStack.link.stack.link.value, lineStack.link.value)?.let { case ->
+						when (lineStack.link.stack.link.stack) {
+							is EmptyStack -> switchNode(case)
+							is LinkStack -> switchOrNull?.let { switch -> node(switch) }
+						}
+					}
+			}
+		}
+
+fun caseOrNull(firstScriptLine: ScriptLine, secondScriptLine: ScriptLine): Case? =
+	ifOrNull(firstScriptLine.rhs.isEmpty && secondScriptLine.name == "gives") {
+		firstScriptLine.name caseTo secondScriptLine.rhs
+	}
+
+val Script.unsafeSwitch: Switch
+	get() =
+		switchOrNull ?: error("switch parse error")
 
 val ScriptLine.unsafeSwitch: Switch
 	get() =

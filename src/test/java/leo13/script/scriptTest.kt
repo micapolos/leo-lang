@@ -50,6 +50,14 @@ class ScriptTest {
 		script("vec" lineTo script("x" lineTo script("one" lineTo script()), "y" lineTo script("two" lineTo script())))
 			.indentedCode
 			.assertEqualTo("vec\n\tx: one\n\ty: two")
+
+		script(
+			"one" lineTo script(),
+			"gives" lineTo script("jeden"),
+			"two" lineTo script(),
+			"gives" lineTo script("dwa"))
+			.indentedCode
+			.assertEqualTo("one gives: jeden\ntwo gives: dwa")
 	}
 
 	@Test
