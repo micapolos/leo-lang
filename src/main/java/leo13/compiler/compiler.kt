@@ -132,7 +132,7 @@ fun Compiler.unsafePushLine(script: Script): Compiler =
 	}
 
 fun Compiler.unsafePushSwitch(script: Script): Compiler =
-	unsafePush(script.unsafeSwitch)
+	unsafePush(script.switch)
 
 fun Compiler.unsafePush(switch: Switch): Compiler =
 	TODO()

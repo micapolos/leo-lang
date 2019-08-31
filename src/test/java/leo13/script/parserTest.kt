@@ -6,25 +6,25 @@ import leo13.token.opening
 import leo13.token.token
 import kotlin.test.Test
 
-class ParserTest {
+class ScriptParserTest {
 	@Test
 	fun nodeParser_push() {
 		val head = script("one" lineTo script()).head
-		val parser = head.parser
+		val parser = head.scriptParser
 
 		parser
 			.push(token(opening("foo")))
-			.assertEqualTo(head.plus(token(opening("foo")))!!.parser)
+			.assertEqualTo(head.plus(token(opening("foo")))!!.scriptParser)
 
 		parser
 			.push(token(closing))
-			.assertEqualTo(head.parser.put(leo13.script.error(token(closing))))
+			.assertEqualTo(head.scriptParser.put(leo13.script.error(token(closing))))
 	}
 
 	@Test
 	fun errorParser_push() {
 		val head = script("one" lineTo script()).head
-		val parser = head.parser.put(leo13.script.error(token(closing)))
+		val parser = head.scriptParser.put(leo13.script.error(token(closing)))
 
 		parser
 			.push(token(opening("foo")))

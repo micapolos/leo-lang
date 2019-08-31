@@ -1,21 +1,22 @@
 package leo13.script
 
 import leo.base.assertEqualTo
+import leo13.assertFailsWith
 import kotlin.test.Test
 import kotlin.test.assertFails
 
 class SwitchTest {
 	@Test
 	fun construction() {
-		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
-		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
-		assertFails { unsafeSwitch("one" caseTo script(), "one" caseTo script()) }
-		assertFails { unsafeSwitch("one" caseTo script(), "two" caseTo script(), "one" caseTo script()) }
+		switch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
+		switch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
+		assertFails { switch("one" caseTo script(), "one" caseTo script()) }
+		assertFails { switch("one" caseTo script(), "two" caseTo script(), "one" caseTo script()) }
 	}
 
 	@Test
 	fun scriptableLine() {
-		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
+		switch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
 			.scriptableLine
 			.assertEqualTo(
 				"switch" lineTo script(
@@ -24,7 +25,7 @@ class SwitchTest {
 					"two" lineTo script(),
 					"gives" lineTo script("dwa")))
 
-		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
+		switch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
 			.scriptableLine
 			.assertEqualTo(
 				"switch" lineTo script(
@@ -38,11 +39,72 @@ class SwitchTest {
 
 	@Test
 	fun parsing() {
-		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
-			.assertScriptableBodyWorks { unsafeSwitch }
+		assertFailsWith(script("switch")) {
+			script().switch
+		}
 
-		unsafeSwitch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
-			.assertScriptableBodyWorks { unsafeSwitch }
+		assertFailsWith(
+			script(
+				"switch" lineTo script(
+					"case" lineTo script("one")))) {
+			script("one").switch
+		}
+
+		assertFailsWith(
+			script(
+				"switch" lineTo script(
+					"case" lineTo script(
+						"one" lineTo script("more"))))) {
+			script("one" lineTo script("more")).switch
+		}
+
+		assertFailsWith(
+			script(
+				"switch" lineTo script(
+					"case" lineTo script(
+						"one" lineTo script(),
+						"give" lineTo script("two"))))) {
+			script(
+				"one" lineTo script(),
+				"give" lineTo script("two")).switch
+		}
+
+		assertFailsWith(
+			script(
+				"switch" lineTo script(
+					"single" lineTo script(
+						"case" lineTo script(
+							"one" lineTo script(),
+							"gives" lineTo script("two")))))) {
+			script(
+				"one" lineTo script(),
+				"gives" lineTo script("two")).switch
+		}
+
+		assertFailsWith(
+			script(
+				"switch" lineTo script(
+					"duplicate" lineTo script(
+						"case" lineTo script(
+							"one" lineTo script(),
+							"gives" lineTo script("two")),
+						"case" lineTo script(
+							"one" lineTo script(),
+							"gives" lineTo script("four")))))) {
+			script(
+				"one" lineTo script(),
+				"gives" lineTo script("two"),
+				"two" lineTo script(),
+				"gives" lineTo script("three"),
+				"one" lineTo script(),
+				"gives" lineTo script("four")).switch
+		}
+
+		switch("one" caseTo script("jeden"), "two" caseTo script("dwa"))
+			.assertScriptableBodyWorks { switch }
+
+		switch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
+			.assertScriptableBodyWorks { switch }
 	}
 
 //	@Test

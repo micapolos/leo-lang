@@ -7,7 +7,7 @@ import leo13.token.Tokens
 import leo9.reverse
 import leo9.seq
 
-data class Parser(
+data class ScriptParser(
 	val scriptHead: ScriptHead,
 	val errorOrNull: TokenError?) {
 	override fun toString() = asScriptLine.toString()
@@ -25,18 +25,18 @@ data class TokenError(val token: Token) : Scriptable() {
 
 fun error(token: Token) = TokenError(token)
 
-val ScriptHead.parser: Parser get() = Parser(this, null)
-val TokenError.parser: Parser get() = Parser(scriptHead(), this)
-fun parser(): Parser = scriptHead().parser
+val ScriptHead.scriptParser: ScriptParser get() = ScriptParser(this, null)
+val TokenError.scriptParser: ScriptParser get() = ScriptParser(scriptHead(), this)
+fun parser(): ScriptParser = scriptHead().scriptParser
 
-fun Parser.push(token: Token): Parser =
+fun ScriptParser.push(token: Token): ScriptParser =
 	if (errorOrNull != null) this
-	else scriptHead.plus(token)?.parser ?: put(error(token))
+	else scriptHead.plus(token)?.scriptParser ?: put(error(token))
 
-val Parser.okScriptHeadOrNull get() = notNullIf(errorOrNull == null) { scriptHead }
-val Parser.completedScriptOrNull get() = okScriptHeadOrNull?.completeScriptOrNull
+val ScriptParser.okScriptHeadOrNull get() = notNullIf(errorOrNull == null) { scriptHead }
+val ScriptParser.completedScriptOrNull get() = okScriptHeadOrNull?.completeScriptOrNull
 
-fun Parser.put(error: TokenError) = copy(errorOrNull = error)
+fun ScriptParser.put(error: TokenError) = copy(errorOrNull = error)
 
 val Tokens.parse: Script?
 	get() =

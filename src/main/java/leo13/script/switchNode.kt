@@ -1,5 +1,8 @@
 package leo13.script
 
+import leo.base.notNullIf
+import leo13.fail
+
 sealed class SwitchNode : Scriptable() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "node"
@@ -20,18 +23,20 @@ data class SwitchSwitchNode(val switch: Switch) : SwitchNode() {
 fun switchNode(case: Case): SwitchNode = CaseSwitchNode(case)
 fun node(switch: Switch): SwitchNode = SwitchSwitchNode(switch)
 
-fun SwitchNode.containsCase(name: String): Boolean =
+fun SwitchNode.caseOrNull(name: String): Case? =
 	when (this) {
-		is CaseSwitchNode -> case.name == name
-		is SwitchSwitchNode -> switch.containsCase(name)
+		is CaseSwitchNode -> notNullIf(case.name == name) { case }
+		is SwitchSwitchNode -> switch.caseOrNull(name)
 	}
 
-fun SwitchNode.plusSwitchOrNull(case: Case): Switch? =
-	if (containsCase(case.name)) null
-	else uncheckedPlusSwitch(case)
+fun SwitchNode.plus(case: Case): SwitchNode =
+	node(plusSwitch(case))
 
-fun SwitchNode.unsafePlusSwitch(case: Case): Switch =
-	plusSwitchOrNull(case) ?: error("duplicate case")
+fun SwitchNode.plusSwitch(case: Case): Switch =
+	caseOrNull(case.name).let { existingCase ->
+		if (existingCase != null) fail("duplicate" lineTo script(existingCase.scriptableLine, case.scriptableLine))
+		else uncheckedPlusSwitch(case)
+	}
 
 fun SwitchNode.uncheckedPlusSwitch(case: Case): Switch =
 	uncheckedSwitch(this, case)
