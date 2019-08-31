@@ -1,10 +1,6 @@
 package leo13.type
 
 import leo.base.assertEqualTo
-import leo13.compiler.applyOrNull
-import leo13.compiler.lhsOrNull
-import leo13.compiler.rhsOrNull
-import leo13.compiler.trace
 import kotlin.test.Test
 
 class TraceTest {

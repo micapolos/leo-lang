@@ -1,4 +1,4 @@
-package leo13.compiler
+package leo13.type
 
 import leo.base.fold
 import leo.base.orIfNull
@@ -6,7 +6,6 @@ import leo13.script.Script
 import leo13.script.Scriptable
 import leo13.script.plus
 import leo13.script.script
-import leo13.type.*
 
 data class Trace(val popOrNull: Trace?, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()

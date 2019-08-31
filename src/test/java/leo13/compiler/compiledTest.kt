@@ -3,19 +3,16 @@ package leo13.compiler
 import leo.base.assertEqualTo
 import leo13.lhs
 import leo13.rhs
-import leo13.type.lineTo
-import leo13.type.recursion
-import leo13.type.thunk
-import leo13.type.type
+import leo13.type.*
 import leo13.value.expr
 import leo13.value.lineTo
 import leo13.value.op
 import kotlin.test.Test
 
-class TracedExprTest {
+class CompiledTest {
 	@Test
 	fun lhsOrNull() {
-		traced(
+		compiled(
 			expr(op("expr" lineTo expr())),
 			trace(
 				type("type"),
@@ -24,7 +21,7 @@ class TracedExprTest {
 					"two" lineTo type())))
 			.lhsOrNull
 			.assertEqualTo(
-				traced(
+				compiled(
 					expr(
 						op("expr" lineTo expr()),
 						op(lhs)),
@@ -35,7 +32,7 @@ class TracedExprTest {
 
 	@Test
 	fun lhsOrNull_noLhs() {
-		traced(
+		compiled(
 			expr(op("expr" lineTo expr())),
 			trace(
 				type("foo"),
@@ -46,7 +43,7 @@ class TracedExprTest {
 
 	@Test
 	fun rhsOrNull_noRhs() {
-		traced(
+		compiled(
 			expr(op("expr" lineTo expr())),
 			trace(
 				type("type"),
@@ -57,7 +54,7 @@ class TracedExprTest {
 
 	@Test
 	fun rhsOrNull_type() {
-		traced(
+		compiled(
 			expr(op("expr" lineTo expr())),
 			trace(
 				type("type"),
@@ -66,7 +63,7 @@ class TracedExprTest {
 					"two" lineTo type("three"))))
 			.rhsOrNull
 			.assertEqualTo(
-				traced(
+				compiled(
 					expr(
 						op("expr" lineTo expr()),
 						op(rhs)),
@@ -80,7 +77,7 @@ class TracedExprTest {
 
 	@Test
 	fun rhsOrNull_recursion() {
-		traced(
+		compiled(
 			expr(op("expr" lineTo expr())),
 			trace(
 				type("type"),
@@ -89,7 +86,7 @@ class TracedExprTest {
 					"two" lineTo thunk(recursion.recursion))))
 			.rhsOrNull
 			.assertEqualTo(
-				traced(
+				compiled(
 					expr(
 						op("expr" lineTo expr()),
 						op(rhs)),
@@ -98,7 +95,7 @@ class TracedExprTest {
 
 	@Test
 	fun rhsOrNull_invalidRecursion() {
-		traced(
+		compiled(
 			expr(op("expr" lineTo expr())),
 			trace(
 				type("type"),
