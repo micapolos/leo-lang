@@ -41,7 +41,10 @@ fun SwitchCompiler.push(case: Case): SwitchCompiler =
 						compiledOrNull.switch.plus(case.name caseTo caseCompiled.expr),
 						caseCompiled.type))
 			else
-				fail("type")
+				fail(
+					"mismatch" lineTo script(
+						compiledOrNull.type.scriptableLine,
+						caseCompiled.type.scriptableLine))
 		}
 
 val SwitchCompiler.compiled: SwitchCompiled
