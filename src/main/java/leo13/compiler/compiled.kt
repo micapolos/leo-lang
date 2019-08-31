@@ -11,7 +11,7 @@ import leo13.value.*
 
 data class Compiled(val expr: Expr, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
-	override val scriptableName get() = "traced"
+	override val scriptableName get() = "compiled"
 	override val scriptableBody get() = script(expr.scriptableLine, type.scriptableLine)
 }
 

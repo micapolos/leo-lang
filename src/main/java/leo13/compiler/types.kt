@@ -12,7 +12,7 @@ import leo9.stack
 
 data class Types(val typeStack: Stack<Type>) : Scriptable() {
 	override fun toString() = super.toString()
-	override val scriptableName get() = "traces"
+	override val scriptableName get() = "types"
 	override val scriptableBody get() = typeStack.asScript { scriptableLine }
 }
 

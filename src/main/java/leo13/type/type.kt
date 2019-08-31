@@ -9,7 +9,7 @@ import leo13.script.script
 
 data class Type(val popOrNull: Type?, val pattern: Pattern) : Scriptable() {
 	override fun toString() = super.toString()
-	override val scriptableName: String get() = "trace"
+	override val scriptableName: String get() = "type"
 	override val scriptableBody: Script
 		get() =
 			popOrNull?.scriptableBody.orIfNull { script() }.plus(pattern.scriptableLine)

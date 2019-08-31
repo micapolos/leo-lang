@@ -8,7 +8,7 @@ import leo13.script.*
 
 sealed class Pattern : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "type"
+	override val scriptableName get() = "pattern"
 	override val scriptableBody get() = typeScriptableBody
 	abstract val typeScriptableName: String
 	abstract val typeScriptableBody: Script
