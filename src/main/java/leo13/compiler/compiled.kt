@@ -66,7 +66,7 @@ fun Compiled.lineOrNull(name: String): Compiled? =
 			if (typeLink.line.name == name)
 				compiled(
 					expr.plus(op(rhsLine)),
-					type.set(pattern(typeLink)))
+					type.set(pattern(typeLink.line)))
 			else compiled(
 				expr.plus(op(lhs)),
 				type.set(typeLink.lhs))
@@ -78,8 +78,7 @@ fun Compiled.accessOrNull(name: String): Compiled? =
 		.pattern
 		.onlyLineOrNull
 		?.let { onlyLine ->
-			compiled(
-				expr.plus(op(rhs)),
-				type.push(pattern(onlyLine)))
-				.lineOrNull(name)
+			type.applyOrNull(onlyLine.rhs)?.let { rhsType ->
+				compiled(expr.plus(op(rhs)), rhsType).lineOrNull(name)
+			}
 		}

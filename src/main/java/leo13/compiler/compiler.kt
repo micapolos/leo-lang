@@ -135,14 +135,23 @@ fun Compiler.unsafePushSwitch(script: Script): Compiler =
 	unsafePush(script.switch)
 
 fun Compiler.unsafePush(switch: Switch): Compiler =
-	TODO()
+	context
+		.bind(compiled.type)
+		.compile(switch)
+		.let { switchCompiled ->
+			compiler(
+				context,
+				compiled(
+					compiled.expr.plus(op(switchCompiled.switch)),
+					switchCompiled.type))
+		}
 
 fun Compiler.unsafePushOther(typedLine: ScriptLine): Compiler =
 	null
-		?: pushGetOrNull(typedLine)
+		?: pushAccessOrNull(typedLine)
 		?: unsafeRhsPush(typedLine)
 
-fun Compiler.pushGetOrNull(typedLine: ScriptLine): Compiler? =
+fun Compiler.pushAccessOrNull(typedLine: ScriptLine): Compiler? =
 	ifOrNull(typedLine.rhs.isEmpty) {
 		compiled
 			.accessOrNull(typedLine.name)

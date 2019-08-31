@@ -24,6 +24,8 @@ class InterpreterTest {
 					context(),
 					interpreted(
 						value("color" lineTo value("red" lineTo value())),
-						type(pattern("color" lineTo pattern("red" lineTo pattern()))))))
+						type(
+							pattern("rect" lineTo pattern("color" lineTo pattern("red" lineTo pattern()))),
+							pattern("color" lineTo pattern("red" lineTo pattern()))))))
 	}
 }

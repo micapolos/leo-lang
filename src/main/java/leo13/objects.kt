@@ -11,13 +11,13 @@ object Append : Scriptable() {
 
 object Resolve : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "append"
+	override val scriptableName get() = "resolve"
 	override val scriptableBody get() = script()
 }
 
 object Lhs : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "append"
+	override val scriptableName get() = "lhs"
 	override val scriptableBody get() = script()
 }
 
@@ -35,31 +35,31 @@ object Wrap : Scriptable() {
 
 object Rhs : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "append"
+	override val scriptableName get() = "rhs"
 	override val scriptableBody get() = script()
 }
 
 object RhsLine : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "append"
+	override val scriptableName get() = "line"
 	override val scriptableBody get() = script()
 }
 
 object Meta : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "append"
+	override val scriptableName get() = "meta"
 	override val scriptableBody get() = script()
 }
 
 object Quote : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "append"
+	override val scriptableName get() = "quote"
 	override val scriptableBody get() = script()
 }
 
 object Evaluator : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "append"
+	override val scriptableName get() = "evaluator"
 	override val scriptableBody get() = script()
 }
 

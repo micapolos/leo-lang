@@ -30,6 +30,27 @@ class CompilerTest {
 	}
 
 	@Test
+	fun pushAccess() {
+		compiler(
+			context(),
+			compiled(
+				expr(given()),
+				type(
+					pattern(
+						"vec" lineTo pattern(
+							"x" lineTo pattern("zero"),
+							"y" lineTo pattern("one"))))))
+			.let { compiler ->
+				compiler
+					.unsafePush("x" lineTo script())
+					.assertEqualTo(
+						compiler(
+							context(),
+							compiler.compiled.accessOrNull("x")!!))
+			}
+	}
+
+	@Test
 	fun pushMeta() {
 		compiler(context(), compiled())
 			.unsafePush(script("meta"))
@@ -226,7 +247,7 @@ class CompilerTest {
 							function(
 								type(pattern("zero" lineTo pattern())),
 								compiled(
-									expr(given()),
+									expr(op("one" lineTo expr())),
 									type(pattern("one" lineTo pattern()))))),
 					compiled()))
 	}
@@ -253,7 +274,7 @@ class CompilerTest {
 							function(
 								type(pattern("zero" lineTo pattern())),
 								compiled(
-									expr(value(), op("one" lineTo expr())),
+									expr(given()),
 									type(pattern("one" lineTo pattern()))))),
 						typeBindings()),
 					compiled(
@@ -261,7 +282,7 @@ class CompilerTest {
 							value(
 								fn(
 									valueBindings(),
-									expr(value(), op("one" lineTo expr())))),
+									expr(given()))),
 							op(call(expr(value(), op("zero" lineTo expr()))))),
 						type(pattern("one" lineTo pattern())))))
 	}
