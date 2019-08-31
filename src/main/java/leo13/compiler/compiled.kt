@@ -16,7 +16,7 @@ data class Compiled(val expr: Expr, val type: Type) : Scriptable() {
 }
 
 fun compiled(expr: Expr, type: Type) = Compiled(expr, type)
-fun compiled() = compiled(expr(), type())
+fun compiled() = compiled(expr(value()), type())
 
 fun compiled(script: Script): Compiled =
 	compiled(script.expr, type(script.pattern))

@@ -6,9 +6,12 @@ import leo.base.failIfOr
 import leo.base.fold
 import leo13.script.*
 
+val patternName = "pattern"
+val emptyName = "empty"
+
 sealed class Pattern : Scriptable() {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "pattern"
+	override val scriptableName get() = patternName
 	override val scriptableBody get() = typeScriptableBody
 	abstract val typeScriptableName: String
 	abstract val typeScriptableBody: Script
@@ -16,7 +19,7 @@ sealed class Pattern : Scriptable() {
 
 data class EmptyPattern(val empty: Empty) : Pattern() {
 	override fun toString() = super.toString()
-	override val typeScriptableName get() = "empty"
+	override val typeScriptableName get() = emptyName
 	override val typeScriptableBody get() = script()
 }
 
@@ -72,7 +75,7 @@ fun Pattern.contains(pattern: Pattern): Boolean =
 
 val ScriptLine.unsafePattern: Pattern
 	get() =
-		failIfOr(name != "type") {
+		failIfOr(name != patternName) {
 			rhs.unsafePattern
 		}
 

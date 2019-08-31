@@ -271,7 +271,7 @@ class CompilerTest {
 		compiler(
 			context(),
 			compiled(
-				expr(op("zero" lineTo expr())),
+				expr(value(), op("zero" lineTo expr())),
 				type(pattern("zero" lineTo pattern()))))
 			.unsafePush("giving" lineTo script("one" lineTo script()))
 			.assertEqualTo(
@@ -291,7 +291,7 @@ class CompilerTest {
 		compiler(
 			context(),
 			compiled(
-				expr(value(fn(valueBindings(), expr(op("one" lineTo expr()))))),
+				expr(value(fn(valueBindings(), expr(value(), op("one" lineTo expr()))))),
 				type(
 					pattern(
 						arrow(
@@ -303,8 +303,8 @@ class CompilerTest {
 					context(),
 					compiled(
 						expr(
-							value(fn(valueBindings(), expr(op("one" lineTo expr())))),
-							op(call(expr(op("zero" lineTo expr()))))),
+							value(fn(valueBindings(), expr(value(), op("one" lineTo expr())))),
+							op(call(expr(value(), op("zero" lineTo expr()))))),
 						type(pattern("one" lineTo pattern())))))
 	}
 }

@@ -5,8 +5,7 @@ import leo13.type.lineTo
 import leo13.type.pattern
 import leo13.type.type
 import leo13.value.expr
-import leo13.value.lineTo
-import leo13.value.op
+import leo13.value.value
 import kotlin.test.Test
 
 class FunctionsTest {
@@ -20,12 +19,12 @@ class FunctionsTest {
 			function(
 				type(pattern("zero" lineTo pattern())),
 				compiled(
-					expr(op("one" lineTo expr())),
+					expr(value("one")),
 					type(pattern("one" lineTo pattern())))))
 			.compiledOrNull(type(pattern("zero" lineTo pattern())))
 			.assertEqualTo(
 				compiled(
-					expr(op("one" lineTo expr())),
+					expr(value("one")),
 					type(pattern("one" lineTo pattern()))))
 	}
 }

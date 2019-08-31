@@ -21,7 +21,7 @@ fun evaluator(valueBindings: ValueBindings, value: Value) = Evaluator(valueBindi
 
 fun Evaluator.push(expr: Expr): Evaluator =
 	when (expr) {
-		is EmptyExpr -> this
+		is ThisExpr -> this
 		is ValueExpr -> push(expr.value)
 		is GivenExpr -> push(expr.given)
 		is LinkExpr -> push(expr.link)
