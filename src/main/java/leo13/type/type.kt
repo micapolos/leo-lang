@@ -108,7 +108,7 @@ val Type.previousOrNull: Type?
 		is EmptyType -> null
 		is LinkType -> link.lhs
 		is ChoiceType -> type()
-		is ArrowType -> arrow.rhs.previousOrNull
+		is ArrowType -> type()
 	}
 
 val Type.lineOrNull: Type?
@@ -116,8 +116,11 @@ val Type.lineOrNull: Type?
 		is EmptyType -> null
 		is LinkType -> type(link.line)
 		is ChoiceType -> this
-		is ArrowType -> arrow.rhs.lineOrNull
+		is ArrowType -> this
 	}
+
+val Type.rhsThunkOrNull: TypeThunk?
+	get() = linkOrNull?.line?.rhs
 
 // === type to script
 

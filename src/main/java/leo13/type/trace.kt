@@ -7,26 +7,27 @@ import leo13.script.Scriptable
 import leo13.script.plus
 import leo13.script.script
 
-data class Trace(val lhsOrNull: Trace?, val type: Type) : Scriptable() {
+data class Trace(val popOrNull: Trace?, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
 	override val scriptableName: String get() = "trace"
 	override val scriptableBody: Script
 		get() =
-			lhsOrNull?.scriptableBody.orIfNull { script() }.plus(type.scriptableLine)
+			popOrNull?.scriptableBody.orIfNull { script() }.plus(type.scriptableLine)
 }
 
 val Type.trace get() = Trace(null, this)
 fun Trace?.push(type: Type) = Trace(this, type)
 fun trace(type: Type, vararg types: Type): Trace = type.trace.fold(types) { push(it) }
+fun trace() = trace(type())
 
 fun Trace.plus(line: TypeLine): Trace =
 	updateType { plus(line) }
 
 fun Trace.updateType(fn: Type.() -> Type): Trace =
-	lhsOrNull.push(type.fn())
+	popOrNull.push(type.fn())
 
 fun Trace.applyOrNull(recursion: Recursion): Trace? =
-	lhsOrNull?.let { lhs ->
+	popOrNull?.let { lhs ->
 		if (recursion.lhsOrNull == null) lhs
 		else lhs.applyOrNull(recursion.lhsOrNull)
 	}
@@ -50,3 +51,15 @@ fun Trace.accessOrNull(name: String): Trace? =
 			}
 		}
 	}
+
+val Trace.lhsOrNull: Trace?
+	get() =
+		type.previousOrNull?.let { lhsType ->
+			updateType { lhsType }
+		}
+
+val Trace.rhsOrNull: Trace?
+	get() =
+		type.rhsThunkOrNull?.let { rhsThunk ->
+			applyOrNull(rhsThunk)
+		}

@@ -24,7 +24,65 @@ class TraceTest {
 	}
 
 	@Test
+	fun lhsOrNull() {
+		trace(
+			type("foo"),
+			type())
+			.lhsOrNull
+			.assertEqualTo(null)
+
+		trace(
+			type("foo"),
+			type("two"))
+			.lhsOrNull
+			.assertEqualTo(
+				trace(
+					type("foo"),
+					type()))
+
+		trace(
+			type("foo"),
+			type(
+				"one" lineTo type(),
+				"two" lineTo type()))
+			.lhsOrNull
+			.assertEqualTo(
+				trace(
+					type("foo"),
+					type("one")))
+	}
+
+	@Test
 	fun rhsOrNull() {
+		trace(
+			type("foo"),
+			type())
+			.rhsOrNull
+			.assertEqualTo(null)
+
+		trace(
+			type("foo"),
+			type("one"))
+			.rhsOrNull
+			.assertEqualTo(
+				trace(
+					type("foo"),
+					type("one"),
+					type()))
+
+		trace(
+			type("foo"),
+			type("one" lineTo type("two")))
+			.rhsOrNull
+			.assertEqualTo(
+				trace(
+					type("foo"),
+					type("one" lineTo type("two")),
+					type("two")))
+	}
+
+	@Test
+	fun nameRhsOrNull() {
 		trace(type("one"), type("two" lineTo type("three")))
 			.rhsOrNull("two")
 			.assertEqualTo(
