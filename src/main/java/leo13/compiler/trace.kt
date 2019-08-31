@@ -31,10 +31,8 @@ fun Trace.updateType(fn: Type.() -> Type): Trace =
 	set(type.fn())
 
 fun Trace.applyOrNull(recursion: Recursion): Trace? =
-	popOrNull?.let { lhs ->
-		if (recursion.lhsOrNull == null) lhs
-		else lhs.applyOrNull(recursion.lhsOrNull)
-	}
+	if (recursion.lhsOrNull == null) this
+	else popOrNull?.applyOrNull(recursion.lhsOrNull)
 
 fun Trace.applyOrNull(thunk: TypeThunk): Trace? =
 	when (thunk) {

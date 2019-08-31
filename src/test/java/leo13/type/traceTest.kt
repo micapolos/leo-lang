@@ -14,15 +14,15 @@ class TraceTest {
 			.applyOrNull(thunk(type("three")))
 			.assertEqualTo(trace(type("one"), type("two"), type("three")))
 
-		trace(type("one"), type("two"), type("three"))
+		trace(type("one"), type("two"))
 			.applyOrNull(thunk(recursion))
 			.assertEqualTo(trace(type("one"), type("two")))
 
-		trace(type("one"), type("two"), type("three"))
+		trace(type("one"), type("two"))
 			.applyOrNull(thunk(recursion.recursion))
 			.assertEqualTo(trace(type("one")))
 
-		trace(type("one"), type("two"), type("three"))
+		trace(type("one"), type("two"))
 			.applyOrNull(thunk(recursion.recursion.recursion))
 			.assertEqualTo(null)
 	}
@@ -96,9 +96,9 @@ class TraceTest {
 
 		trace(type("one"), type("two" lineTo thunk(recursion)))
 			.rhsOrNull("two")
-			.assertEqualTo(trace(type("one")))
+			.assertEqualTo(trace(type("one"), type("two" lineTo thunk(recursion))))
 
-		trace(type("one"), type("two" lineTo thunk(recursion)))
+		trace(type("one"), type("two" lineTo thunk(recursion.recursion)))
 			.rhsOrNull("two")
 			.assertEqualTo(trace(type("one")))
 	}

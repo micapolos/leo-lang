@@ -86,7 +86,7 @@ class TracedExprTest {
 				type("type"),
 				type(
 					"one" lineTo type(),
-					"two" lineTo thunk(recursion))))
+					"two" lineTo thunk(recursion.recursion))))
 			.rhsOrNull
 			.assertEqualTo(
 				traced(
@@ -104,7 +104,7 @@ class TracedExprTest {
 				type("type"),
 				type(
 					"one" lineTo type(),
-					"two" lineTo thunk(recursion.recursion))))
+					"two" lineTo thunk(recursion.recursion.recursion))))
 			.rhsOrNull
 			.assertEqualTo(null)
 	}
