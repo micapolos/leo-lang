@@ -1,6 +1,5 @@
 package leo13
 
-import leo13.script.Scriptable
 import leo13.script.script
 
 object Append : Scriptable() {

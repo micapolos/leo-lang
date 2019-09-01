@@ -1,8 +1,5 @@
-bit: zero or: one
-exists
-bit gives: bit: zero or: one
-bit
-negate
-gives: given bit meta: switch
-	zero gives: one
-	one gives: zero
+one
+of: zero or: one
+switch
+	zero gives: foo of: foo or: bar
+	one gives: bar of: foo or: bar

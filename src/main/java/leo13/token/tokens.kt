@@ -1,6 +1,6 @@
 package leo13.token
 
-import leo13.script.Scriptable
+import leo13.Scriptable
 import leo13.script.asScript
 import leo9.Stack
 import leo9.push

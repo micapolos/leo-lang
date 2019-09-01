@@ -1,7 +1,7 @@
 package leo13.value
 
+import leo13.Scriptable
 import leo13.script.ScriptLine
-import leo13.script.Scriptable
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.scriptableLine

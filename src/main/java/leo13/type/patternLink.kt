@@ -1,7 +1,7 @@
 package leo13.type
 
 import leo.base.notNullIf
-import leo13.script.Scriptable
+import leo13.Scriptable
 import leo13.script.plus
 
 data class PatternLink(val lhs: Pattern, val line: PatternLine) : Scriptable() {

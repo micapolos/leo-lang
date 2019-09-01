@@ -3,10 +3,10 @@ package leo13.token
 import leo.base.charSeq
 import leo.base.fold
 import leo.base.notNullIf
-import leo13.script.Scriptable
+import leo13.Scriptable
+import leo13.orNullAsScriptLine
 import leo13.script.asScriptLine
 import leo13.script.lineTo
-import leo13.script.orNullAsScriptLine
 import leo9.*
 
 data class Tokenizer(

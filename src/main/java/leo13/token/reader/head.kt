@@ -1,7 +1,7 @@
 package leo13.token.reader
 
+import leo13.Scriptable
 import leo13.script.Script
-import leo13.script.Scriptable
 import leo13.script.lineTo
 import leo13.script.script
 

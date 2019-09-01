@@ -1,5 +1,7 @@
 package leo13.script
 
+import leo13.Scriptable
+
 data class Case(val name: String, val rhs: Script) : Scriptable() {
 	override fun toString() = super.toString()
 	override val scriptableName = "case"

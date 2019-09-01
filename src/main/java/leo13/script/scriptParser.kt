@@ -2,6 +2,8 @@ package leo13.script
 
 import leo.base.notNullIf
 import leo.base.orNullFold
+import leo13.Scriptable
+import leo13.orNullAsScriptLine
 import leo13.token.Token
 import leo13.token.Tokens
 import leo9.reverse

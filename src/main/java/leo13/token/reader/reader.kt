@@ -2,12 +2,8 @@ package leo13.token.reader
 
 import leo.base.fold
 import leo.base.updateIfNotNull
-import leo13.fail
-import leo13.script.Scriptable
-import leo13.script.orNullAsScriptLine
+import leo13.*
 import leo13.script.script
-import leo13.space
-import leo13.tab
 import leo13.token.*
 
 data class Reader(

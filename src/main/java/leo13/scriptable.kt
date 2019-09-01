@@ -1,6 +1,9 @@
-package leo13.script
+package leo13
 
 import leo.base.*
+import leo13.script.*
+import leo13.script.Script
+import leo13.script.ScriptLine
 import leo9.*
 import leo9.Stack
 
@@ -13,11 +16,11 @@ abstract class Scriptable {
 }
 
 fun <V : Scriptable> V?.orNullAsScriptLine(name: String) =
-	this?.scriptableLine ?: name lineTo script(nullScriptLine)
+	this?.scriptableLine ?: name lineTo leo13.script.script(nullScriptLine)
 
 val <V : Scriptable> V?.orNullAsScript: Script
 	get() =
-		if (this == null) script()
+		if (this == null) leo13.script.script()
 		else scriptableLine.script
 
 val <V : Scriptable> Stack<V>.asScript: Script
@@ -32,7 +35,7 @@ fun <F : Scriptable, R : Scriptable> asMetaFirstScript(firstName: String, firstO
 		.let { firstLineOrNull ->
 			remaining.map { scriptableLine }.let { remainingLines ->
 				if (firstLineOrNull != null) firstLineOrNull.script.fold(remainingLines) { plus(it) }
-				else script().fold(remainingLines.mapFirst { meta(firstName) }) { plus(it) }
+				else leo13.script.script().fold(remainingLines.mapFirst { meta(firstName) }) { plus(it) }
 			}
 		}
 
@@ -40,8 +43,8 @@ fun <V : Scriptable> Stack<V>.asScriptLine(name: String): ScriptLine =
 	name lineTo asScript
 
 fun <V : Scriptable> Stack<V>.asSeparatedScript(name: String): Script =
-	(false to script()).fold(reverse) {
-		true to second.plus(if (!first) it.scriptableLine else name lineTo script(it.scriptableLine))
+	(false to leo13.script.script()).fold(reverse) {
+		true to second.plus(if (!first) it.scriptableLine else name lineTo leo13.script.script(it.scriptableLine))
 	}.second
 
 fun <V : Any> Script.asStackOrNull(fn: ScriptLine.() -> V?): Stack<V>? =

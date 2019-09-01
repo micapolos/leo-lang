@@ -1,10 +1,10 @@
 package leo13.compiler
 
+import leo13.Scriptable
 import leo13.lhs
 import leo13.rhs
 import leo13.rhsLine
 import leo13.script.Script
-import leo13.script.Scriptable
 import leo13.script.script
 import leo13.type.*
 import leo13.value.*

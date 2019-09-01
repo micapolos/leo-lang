@@ -1,6 +1,7 @@
 package leo13.script
 
 import leo.base.*
+import leo13.Scriptable
 import leo13.token.*
 import leo9.*
 import leo9.Stack

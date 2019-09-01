@@ -1,7 +1,11 @@
 package leo13.value
 
 import leo.base.*
-import leo13.script.*
+import leo13.Scriptable
+import leo13.script.Script
+import leo13.script.ScriptLine
+import leo13.script.lineTo
+import leo13.script.script
 import leo9.fold
 import leo9.push
 import leo9.reverse

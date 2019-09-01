@@ -1,6 +1,6 @@
 package leo13.type
 
-import leo13.script.Scriptable
+import leo13.Scriptable
 import leo13.script.asScript
 import leo13.script.lineTo
 import leo13.script.script

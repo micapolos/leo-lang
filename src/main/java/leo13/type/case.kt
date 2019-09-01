@@ -1,6 +1,7 @@
 package leo13.type
 
 import leo.base.notNullIf
+import leo13.Scriptable
 import leo13.script.*
 
 data class Case(val name: String, val rhs: PatternRhs) : Scriptable() {

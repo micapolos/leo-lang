@@ -1,6 +1,7 @@
 package leo13.script
 
 import leo.base.notNullIf
+import leo13.Scriptable
 import leo13.fail
 
 sealed class SwitchNode : Scriptable() {

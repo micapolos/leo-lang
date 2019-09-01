@@ -1,8 +1,12 @@
 package leo13.interpreter
 
 import leo.base.fold
+import leo13.Scriptable
 import leo13.compiler.*
-import leo13.script.*
+import leo13.script.Script
+import leo13.script.ScriptLine
+import leo13.script.lineSeq
+import leo13.script.script
 import leo13.value.evaluate
 import leo13.value.evaluator
 import leo13.value.expr

@@ -3,6 +3,7 @@ package leo13.compiler
 import leo.base.failIfOr
 import leo.base.fold
 import leo.base.ifOrNull
+import leo13.Scriptable
 import leo13.fail
 import leo13.script.*
 import leo13.script.Switch

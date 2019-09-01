@@ -1,7 +1,7 @@
 package leo13.type
 
+import leo13.Scriptable
 import leo13.script.Script
-import leo13.script.Scriptable
 
 sealed class PatternRhs : Scriptable() {
 	override fun toString() = scriptableLine.toString()

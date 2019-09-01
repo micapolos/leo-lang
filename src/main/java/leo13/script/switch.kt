@@ -1,6 +1,7 @@
 package leo13.script
 
 import leo.base.fold
+import leo13.Scriptable
 import leo13.fail
 import leo13.failRun
 

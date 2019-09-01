@@ -1,7 +1,7 @@
 package leo13.compiler
 
+import leo13.Scriptable
 import leo13.script.Script
-import leo13.script.Scriptable
 import leo13.script.Switch
 import leo13.script.script
 import leo13.type.*

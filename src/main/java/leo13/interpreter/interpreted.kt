@@ -1,6 +1,6 @@
 package leo13.interpreter
 
-import leo13.script.Scriptable
+import leo13.Scriptable
 import leo13.script.script
 import leo13.type.Type
 import leo13.type.type
