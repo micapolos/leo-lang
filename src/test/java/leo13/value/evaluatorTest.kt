@@ -47,29 +47,29 @@ class EvaluatorTest {
 
 	@Test
 	fun pushSwitch_firstCase() {
-		evaluator(valueBindings(), value("one" lineTo value("rhs" lineTo value())))
+		evaluator(valueBindings(), value("foo" lineTo value("one" lineTo value("rhs" lineTo value()))))
 			.evaluate(switch)
 			.assertEqualTo(
 				value(
-					"rhs" lineTo value(),
+					"one" lineTo value("rhs" lineTo value()),
 					"jeden" lineTo value()))
 	}
 
 	@Test
 	fun pushSwitch_secondCase() {
-		evaluator(valueBindings(), value("two" lineTo value("rhs" lineTo value())))
+		evaluator(valueBindings(), value("foo" lineTo value("two" lineTo value("rhs" lineTo value()))))
 			.evaluate(switch)
 			.assertEqualTo(
 				value(
-					"rhs" lineTo value(),
+					"two" lineTo value("rhs" lineTo value()),
 					"dwa" lineTo value()))
 	}
 
 	@Test
 	fun pushCase_match() {
-		evaluator(valueBindings(), value("one" lineTo value("rhs" lineTo value())))
+		evaluator(valueBindings(), value("foo" lineTo value("one" lineTo value("rhs" lineTo value()))))
 			.evaluateOrNull("one" caseTo expr(given(), op("jeden" lineTo expr())))
-			.assertEqualTo(value("rhs" lineTo value(), "jeden" lineTo value()))
+			.assertEqualTo(value("one" lineTo value("rhs" lineTo value()), "jeden" lineTo value()))
 	}
 
 	@Test

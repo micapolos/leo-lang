@@ -61,7 +61,7 @@ fun Evaluator.evaluate(rhs: Rhs): Value =
 	value.linkOrNull!!.line.rhs
 
 fun Evaluator.evaluate(get: Get): Value =
-	value.accessOrNull(get.name)!!
+	value.getOrNull(get.name)!!
 
 fun Evaluator.evaluate(wrap: Wrap): Value =
 	value.wrapOrNull!!
@@ -70,9 +70,9 @@ fun Evaluator.evaluate(switch: Switch): Value =
 	switch.caseStack.mapFirst { evaluateOrNull(this) }!!
 
 fun Evaluator.evaluateOrNull(case: Case): Value? =
-	value.linkOrNull!!.line.let { line ->
+	value.linkOrNull!!.line.rhs.linkOrNull!!.line.let { line ->
 		notNullIf(line.name == case.name) {
-			bindings.push(line.rhs).evaluate(case.expr)
+			bindings.push(value(line)).evaluate(case.expr)
 		}
 	}
 

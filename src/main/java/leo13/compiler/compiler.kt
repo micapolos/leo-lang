@@ -136,18 +136,17 @@ fun Compiler.unsafePushSwitch(script: Script): Compiler =
 	unsafePush(script.switch)
 
 fun Compiler.unsafePush(switch: Switch): Compiler =
-	if (compiled.type !is ChoiceType)
-		fail("not" lineTo script("choice"))
-	else context
-		.bind(compiled.type)
-		.compile(compiled.type.choice, switch)
-		.let { switchCompiled ->
-			compiler(
-				context,
-				compiled(
-					compiled.expr.plus(op(switchCompiled.switch)),
-					switchCompiled.type))
-		}
+	compiled.type.linkOrNull?.line?.rhs?.typeOrNull?.choiceOrNull?.let { choice ->
+		context
+			.compile(choice, switch)
+			.let { switchCompiled ->
+				compiler(
+					context,
+					compiled(
+						compiled.expr.plus(op(switchCompiled.switch)),
+						switchCompiled.type))
+			}
+	} ?: fail("not" lineTo script("choice"))
 
 fun Compiler.unsafePushDebug(script: Script): Compiler =
 	failIfOr(!script.isEmpty) {

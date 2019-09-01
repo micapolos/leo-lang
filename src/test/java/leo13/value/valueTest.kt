@@ -53,9 +53,9 @@ class ValueBuilderTest {
 			"x" lineTo value("zero"),
 			"y" lineTo value("one")))
 			.run {
-				accessOrNull("x").assertEqualTo(value("x" lineTo value("zero")))
-				accessOrNull("y").assertEqualTo(value("y" lineTo value("one")))
-				accessOrNull("z").assertEqualTo(null)
+				getOrNull("x").assertEqualTo(value("x" lineTo value("zero")))
+				getOrNull("y").assertEqualTo(value("y" lineTo value("one")))
+				getOrNull("z").assertEqualTo(null)
 			}
 	}
 }

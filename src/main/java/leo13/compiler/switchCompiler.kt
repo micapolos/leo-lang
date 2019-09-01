@@ -2,10 +2,7 @@ package leo13.compiler
 
 import leo13.fail
 import leo13.script.*
-import leo13.type.CaseChoiceNode
-import leo13.type.Choice
-import leo13.type.ChoiceChoiceNode
-import leo13.type.ChoiceNode
+import leo13.type.*
 import leo13.value.caseTo
 import leo13.value.plus
 import leo13.value.switch
@@ -32,6 +29,7 @@ fun SwitchCompiler.push(choiceCase: leo13.type.Case, case: leo13.script.Case): S
 			"choice" lineTo script(choiceCase.name),
 			"case" lineTo script(case.name)))
 	else context
+		.bind(type(choiceCase.name lineTo choiceCase.rhs))
 		.unsafeCompile(case.rhs)
 		.let { caseCompiled ->
 			if (compiledOrNull == null)

@@ -1,6 +1,8 @@
 bit: zero or: one
 exists
-bit gives: bit: zero or: one
+zwierzę: kura or: jajko
+exists
 bit: zero
-bit
-debug
+switch
+	zero gives: zwierzę: kura
+	one gives: zwierzę: jajko

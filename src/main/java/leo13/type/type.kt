@@ -148,3 +148,14 @@ val TypeLink.unsafeStaticScriptLink: ScriptLink
 		link(lhs.unsafeStaticScript, line.unsafeStaticScriptLine)
 
 val Type.unsafeArrow get() = (this as ArrowType).arrow
+
+val Type.choiceOrNull get() = (this as? ChoiceType)?.choice
+
+fun Type.lineOrNull(name: String): Type? =
+	linkOrNull?.let { link ->
+		if (link.line.name == name) type(link.line)
+		else link.lhs.lineOrNull(name)
+	}
+
+fun Type.getOrNull(name: String): Type? =
+	linkOrNull?.line?.rhs?.typeOrNull?.lineOrNull(name)

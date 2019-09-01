@@ -72,9 +72,7 @@ fun Compiled.lineOrNull(name: String): Compiled? =
 
 fun Compiled.accessOrNull(name: String): Compiled? =
 	type
-		.onlyLineOrNull
-		?.let { onlyLine ->
-			(onlyLine.rhs as? TypeTypeRhs)?.type?.let { rhsType ->
-				compiled(expr.plus(op(rhs)), rhsType).lineOrNull(name)
-			}
+		.getOrNull(name)
+		?.let { type ->
+			compiled(expr.plus(op(get(name))), type)
 		}

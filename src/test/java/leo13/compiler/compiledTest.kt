@@ -90,7 +90,7 @@ class CompiledTest {
 	}
 
 	@Test
-	fun accessOrNull() {
+	fun getOrNull() {
 		compiled(
 			expr(given()),
 			type(
@@ -100,7 +100,7 @@ class CompiledTest {
 			.accessOrNull("x")
 			.assertEqualTo(
 				compiled(
-					expr(given(), op(rhs), op(lhs), op(rhsLine)),
+					expr(given(), op(leo13.value.get("x"))),
 					type("x" lineTo type("zero"))))
 	}
 }

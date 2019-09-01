@@ -75,7 +75,7 @@ val Value.onlyLineOrNull get() = linkOrNull?.onlyLineOrNull
 fun Value.firstLineOrNull(name: String): ValueLine? =
 	lineSeq.firstOrNull { it.name == name }
 
-fun Value.accessOrNull(name: String): Value? =
+fun Value.getOrNull(name: String): Value? =
 	onlyLineOrNull?.rhs?.firstLineOrNull(name)?.let { value(it) }
 
 val Value.wrapOrNull: Value?
