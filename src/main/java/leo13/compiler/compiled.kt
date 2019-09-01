@@ -19,19 +19,17 @@ fun compiled(expr: Expr, type: Type) = Compiled(expr, type)
 fun compiled() = compiled(expr(value()), type())
 
 fun compiled(script: Script): Compiled =
-	compiled(script.expr, type(script.pattern))
+	compiled(script.expr, script.type)
 
 fun Compiled.plus(compiledLine: CompiledLine): Compiled =
 	compiled(
 		expr.plus(op(compiledLine.name lineTo compiledLine.rhs.expr)),
-		type.updatePattern {
-			plus(compiledLine.name lineTo compiledLine.rhs.type.pattern)
-		})
+		type.plus(compiledLine.name lineTo compiledLine.rhs.type))
 
 val Compiled.lhsOrNull: Compiled?
 	get() =
 		type
-			.lhsOrNull
+			.previousOrNull
 			?.let { lhsTrace ->
 				compiled(
 					expr.plus(op(lhs)),
@@ -60,25 +58,23 @@ val Compiled.rhsOrNull: Compiled?
 
 fun Compiled.lineOrNull(name: String): Compiled? =
 	type
-		.pattern
 		.linkOrNull
 		?.let { typeLink ->
 			if (typeLink.line.name == name)
 				compiled(
 					expr.plus(op(rhsLine)),
-					type.set(pattern(typeLink.line)))
+					type(typeLink.line))
 			else compiled(
 				expr.plus(op(lhs)),
-				type.set(typeLink.lhs))
+				typeLink.lhs)
 				.lineOrNull(name)
 		}
 
 fun Compiled.accessOrNull(name: String): Compiled? =
 	type
-		.pattern
 		.onlyLineOrNull
 		?.let { onlyLine ->
-			type.applyOrNull(onlyLine.rhs)?.let { rhsType ->
+			(onlyLine.rhs as? TypeTypeRhs)?.type?.let { rhsType ->
 				compiled(expr.plus(op(rhs)), rhsType).lineOrNull(name)
 			}
 		}

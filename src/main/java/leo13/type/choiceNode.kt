@@ -34,15 +34,15 @@ fun ChoiceNode.unsafePlusChoice(case: Case): Choice =
 	if (rhsOrNull(case.name) != null) error("duplicate" lineTo script("case" lineTo script(case.name)))
 	else uncheckedChoice(this, case)
 
-fun ChoiceNode.rhsOrNull(name: String): PatternRhs? = when (this) {
+fun ChoiceNode.rhsOrNull(name: String): TypeRhs? = when (this) {
 	is CaseChoiceNode -> case.rhsOrNull(name)
 	is ChoiceChoiceNode -> choice.rhsOrNull(name)
 }
 
-fun ChoiceNode.contains(patternLine: PatternLine): Boolean =
+fun ChoiceNode.contains(typeLine: TypeLine): Boolean =
 	when (this) {
-		is CaseChoiceNode -> case.contains(patternLine)
-		is ChoiceChoiceNode -> choice.contains(patternLine)
+		is CaseChoiceNode -> case.contains(typeLine)
+		is ChoiceChoiceNode -> choice.contains(typeLine)
 	}
 
 val ChoiceNode.caseStack: Stack<Case>

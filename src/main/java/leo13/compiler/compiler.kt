@@ -44,24 +44,24 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 fun Compiler.unsafePushExists(script: Script): Compiler =
 	failIfOr(!script.isEmpty) {
 		compiler(
-			context.plus(type(compiled.type.pattern.unsafeStaticScript.unsafePattern)),
+			context.plus(compiled.type.unsafeStaticScript.unsafeType),
 			compiled())
 	}
 
 fun Compiler.unsafePushContains(script: Script): Compiler =
-	script.unsafePattern.let { type ->
+	script.unsafeType.let { type ->
 		compiler(
 			context()
-				.plus(type.type)
+				.plus(type)
 				.plus(
 					function(
-						type(compiled.type.pattern.unsafeStaticScript.unsafePattern),
+						compiled.type.unsafeStaticScript.unsafeType,
 						compiled(script))),
 			compiled())
 	}
 
 fun Compiler.unsafePushGives(script: Script): Compiler =
-	type(compiled.type.pattern.unsafeStaticScript.unsafePattern).let { parameterType ->
+	compiled.type.unsafeStaticScript.unsafeType.let { parameterType ->
 		context.bind(parameterType).unsafeCompile(script).let { compiled ->
 			compiler(
 				context.plus(function(parameterType, compiled)),
@@ -70,21 +70,19 @@ fun Compiler.unsafePushGives(script: Script): Compiler =
 	}
 
 fun Compiler.unsafePushGiving(script: Script): Compiler =
-	type(compiled.type.pattern.unsafeStaticScript.unsafePattern).let { parameterType ->
+	compiled.type.unsafeStaticScript.unsafeType.let { parameterType ->
 		context.bind(parameterType).unsafeCompile(script).let { scriptCompiled ->
 			compiler(
 				context,
 				compiled(
 					expr(value(fn(valueBindings(), scriptCompiled.expr))),
-					// TODO: Traces!!!
-					type(pattern(arrow(parameterType, scriptCompiled.type)))))
+					type(arrow(parameterType, scriptCompiled.type))))
 		}
 	}
 
 fun Compiler.unsafePushApply(script: Script): Compiler =
-	compiled.type.pattern.unsafeArrow.let { arrow ->
+	compiled.type.unsafeArrow.let { arrow ->
 		context.unsafeCompile(script).let { scriptCompiled ->
-			// TODO: Traces!!!
 			if (scriptCompiled.type != arrow.lhs) error("apply type invalid")
 			else compiler(
 				context,
@@ -104,13 +102,13 @@ fun Compiler.unsafePushGiven(script: Script): Compiler =
 	}
 
 fun Compiler.unsafePushOf(script: Script): Compiler =
-	script.unsafePattern.let { ofScriptType ->
-		failIfOr(!ofScriptType.contains(compiled.type.pattern)) {
+	script.unsafeType.let { ofScriptType ->
+		failIfOr(!ofScriptType.contains(compiled.type)) {
 			compiler(
 				context,
 				compiled(
 					compiled.expr,
-					type(ofScriptType)))
+					ofScriptType))
 		}
 	}
 
@@ -138,11 +136,11 @@ fun Compiler.unsafePushSwitch(script: Script): Compiler =
 	unsafePush(script.switch)
 
 fun Compiler.unsafePush(switch: Switch): Compiler =
-	if (compiled.type.pattern !is ChoicePattern)
+	if (compiled.type !is ChoiceType)
 		fail("not" lineTo script("choice"))
 	else context
 		.bind(compiled.type)
-		.compile(compiled.type.pattern.choice, switch)
+		.compile(compiled.type.choice, switch)
 		.let { switchCompiled ->
 			compiler(
 				context,

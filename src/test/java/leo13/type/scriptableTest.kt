@@ -8,16 +8,16 @@ import kotlin.test.Test
 class ScriptableTest {
 	@Test
 	fun empty() {
-		pattern()
+		type()
 			.scriptableBody
 			.assertEqualTo(script())
 	}
 
 	@Test
 	fun lines() {
-		pattern(
-			"zero" lineTo pattern(),
-			"plus" lineTo pattern("one"))
+		type(
+			"zero" lineTo type(),
+			"plus" lineTo type("one"))
 			.scriptableBody
 			.assertEqualTo(
 				script(
@@ -28,11 +28,11 @@ class ScriptableTest {
 
 	@Test
 	fun choice() {
-		pattern(
+		type(
 			unsafeChoice(
-				"zero" caseTo pattern(),
-				"one" caseTo pattern(),
-				"two" caseTo pattern()))
+				"zero" caseTo type(),
+				"one" caseTo type(),
+				"two" caseTo type()))
 			.scriptableBody
 			.assertEqualTo(
 				script(
@@ -45,10 +45,10 @@ class ScriptableTest {
 
 	@Test
 	fun choiceLines() {
-		pattern(
-			"zero" lineTo pattern(),
-			"or" lineTo pattern("one" lineTo pattern()),
-			"or" lineTo pattern("two" lineTo pattern()))
+		type(
+			"zero" lineTo type(),
+			"or" lineTo type("one" lineTo type()),
+			"or" lineTo type("two" lineTo type()))
 			.scriptableBody
 			.assertEqualTo(
 				script(
@@ -62,11 +62,11 @@ class ScriptableTest {
 
 	@Test
 	fun choiceAndLines() {
-		pattern(
+		type(
 			unsafeChoice(
-				"zero" caseTo pattern(),
-				"one" caseTo pattern()))
-			.plus("two" lineTo pattern())
+				"zero" caseTo type(),
+				"one" caseTo type()))
+			.plus("two" lineTo type())
 			.scriptableBody
 			.assertEqualTo(
 				script(
@@ -78,10 +78,10 @@ class ScriptableTest {
 
 	@Test
 	fun scriptableArrow() {
-		pattern(
+		type(
 			arrow(
-				type(pattern("zero")),
-				type(pattern("one"))))
+				type("zero"),
+				type("one")))
 			.scriptableBody
 			.assertEqualTo(
 				script(

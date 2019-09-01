@@ -5,7 +5,7 @@ import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 
-data class PatternLine(val name: String, val rhs: PatternRhs) : LeoObject() {
+data class TypeLine(val name: String, val rhs: TypeRhs) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = name
 	override val scriptableBody get() = rhs.scriptableBody
@@ -14,13 +14,13 @@ data class PatternLine(val name: String, val rhs: PatternRhs) : LeoObject() {
 		else scriptableLine
 }
 
-infix fun String.lineTo(rhs: PatternRhs) = PatternLine(this, rhs)
-infix fun String.lineTo(rhs: Pattern) = lineTo(rhs(rhs))
+infix fun String.lineTo(rhs: TypeRhs) = TypeLine(this, rhs)
+infix fun String.lineTo(rhs: Type) = lineTo(rhs(rhs))
 
-fun PatternLine.contains(line: PatternLine): Boolean =
+fun TypeLine.contains(line: TypeLine): Boolean =
 	name == line.name && rhs.contains(line.rhs)
 
-val ScriptLine.unsafePatternLine: PatternLine
+val ScriptLine.unsafeTypeLine: TypeLine
 	get() =
-		name lineTo rhs.unsafePattern
+		name lineTo rhs.unsafeType
 

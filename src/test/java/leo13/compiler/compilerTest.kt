@@ -36,10 +36,9 @@ class CompilerTest {
 			compiled(
 				expr(given()),
 				type(
-					pattern(
-						"vec" lineTo pattern(
-							"x" lineTo pattern("zero"),
-							"y" lineTo pattern("one"))))))
+					"vec" lineTo type(
+						"x" lineTo type("zero"),
+						"y" lineTo type("one")))))
 			.let { compiler ->
 				compiler
 					.unsafePush("x" lineTo script())
@@ -76,10 +75,9 @@ class CompilerTest {
 			compiled(
 				expr(given()),
 				type(
-					pattern(
-						"zero" lineTo pattern(),
-						"one" lineTo pattern(),
-						"two" lineTo pattern()))))
+					"zero" lineTo type(),
+					"one" lineTo type(),
+					"two" lineTo type())))
 			.unsafePush("previous" lineTo script())
 			.assertEqualTo(
 				compiler(
@@ -89,9 +87,8 @@ class CompilerTest {
 							given(),
 							op(lhs)),
 						type(
-							pattern(
-								"zero" lineTo pattern(),
-								"one" lineTo pattern())))))
+							"zero" lineTo type(),
+							"one" lineTo type()))))
 
 		compiler(context(), compiled())
 			.unsafePush(script("meta" lineTo script("meta")))
@@ -112,7 +109,7 @@ class CompilerTest {
 				context(),
 				compiled(
 					expr(given()),
-					type(pattern("zero" lineTo pattern()))))
+					type("zero" lineTo type())))
 				.unsafePush("previous" lineTo script("foo" lineTo script()))
 		}
 	}
@@ -123,7 +120,7 @@ class CompilerTest {
 			context(
 				types(),
 				functions(),
-				typeBindings(type(pattern("zero")), type(pattern("one")))),
+				typeBindings(type("zero"), type("one"))),
 			compiled())
 
 		compiled
@@ -133,10 +130,10 @@ class CompilerTest {
 					context(
 						types(),
 						functions(),
-						typeBindings(type(pattern("zero")), type(pattern("one")))),
+						typeBindings(type("zero"), type("one"))),
 					compiled(
 						expr(given()),
-						type(pattern("one")))))
+						type("one"))))
 
 		// TODO: outside given
 	}
@@ -159,7 +156,7 @@ class CompilerTest {
 					context(),
 					compiled(
 						expr(script("zero")),
-						type(pattern(unsafeChoice("zero" caseTo pattern(), "one" caseTo pattern()))))))
+						type(unsafeChoice("zero" caseTo type(), "one" caseTo type())))))
 
 		compiler(context(), compiled())
 			.unsafePush(script(
@@ -190,7 +187,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					context(
-						types(type(pattern(unsafeChoice("zero" caseTo pattern(), "one" caseTo pattern())))),
+						types(type(unsafeChoice("zero" caseTo type(), "one" caseTo type()))),
 						functions(),
 						typeBindings()),
 					compiled()))
@@ -202,7 +199,7 @@ class CompilerTest {
 			context(),
 			compiled(
 				expr(given()),
-				type(pattern("bit" lineTo pattern()))))
+				type("bit" lineTo type())))
 			.unsafePush(
 				"contains" lineTo script(
 					"bit" lineTo script(
@@ -214,14 +211,13 @@ class CompilerTest {
 					context(
 						types(
 							type(
-								pattern(
-									"bit" lineTo pattern(
-										unsafeChoice(
-											"zero" caseTo pattern(),
-											"one" caseTo pattern()))))),
+								"bit" lineTo type(
+									unsafeChoice(
+										"zero" caseTo type(),
+										"one" caseTo type())))),
 						functions(
 							function(
-								type(pattern("bit" lineTo pattern())),
+								type("bit" lineTo type()),
 								compiled(
 									script(
 										"bit" lineTo script(
@@ -238,17 +234,17 @@ class CompilerTest {
 			context(),
 			compiled(
 				expr(given()),
-				type(pattern("zero" lineTo pattern()))))
+				type("zero" lineTo type())))
 			.unsafePush("gives" lineTo script("one" lineTo script()))
 			.assertEqualTo(
 				compiler(
 					context()
 						.plus(
 							function(
-								type(pattern("zero" lineTo pattern())),
+								type("zero" lineTo type()),
 								compiled(
 									expr(op("one" lineTo expr())),
-									type(pattern("one" lineTo pattern()))))),
+									type("one" lineTo type())))),
 					compiled()))
 	}
 
@@ -259,10 +255,10 @@ class CompilerTest {
 				types(),
 				functions(
 					function(
-						type(pattern("zero" lineTo pattern())),
+						type("zero" lineTo type()),
 						compiled(
 							expr(given()),
-							type(pattern("one" lineTo pattern()))))),
+							type("one" lineTo type())))),
 				typeBindings()),
 			compiled())
 			.unsafePush("zero" lineTo script())
@@ -272,10 +268,10 @@ class CompilerTest {
 						types(),
 						functions(
 							function(
-								type(pattern("zero" lineTo pattern())),
+								type("zero" lineTo type()),
 								compiled(
 									expr(given()),
-									type(pattern("one" lineTo pattern()))))),
+									type("one" lineTo type())))),
 						typeBindings()),
 					compiled(
 						expr(
@@ -284,7 +280,7 @@ class CompilerTest {
 									valueBindings(),
 									expr(given()))),
 							op(call(expr(value(), op("zero" lineTo expr()))))),
-						type(pattern("one" lineTo pattern())))))
+						type("one" lineTo type()))))
 	}
 
 	@Test
@@ -293,7 +289,7 @@ class CompilerTest {
 			context(),
 			compiled(
 				expr(value(), op("zero" lineTo expr())),
-				type(pattern("zero" lineTo pattern()))))
+				type("zero" lineTo type())))
 			.unsafePush("giving" lineTo script("one" lineTo script()))
 			.assertEqualTo(
 				compiler(
@@ -301,10 +297,9 @@ class CompilerTest {
 					compiled(
 						expr(value(fn(valueBindings(), expr(value(), op("one" lineTo expr()))))),
 						type(
-							pattern(
-								arrow(
-									type(pattern("zero" lineTo pattern())),
-									type(pattern("one" lineTo pattern()))))))))
+							arrow(
+								type("zero" lineTo type()),
+								type("one" lineTo type()))))))
 	}
 
 	@Test
@@ -314,10 +309,9 @@ class CompilerTest {
 			compiled(
 				expr(value(fn(valueBindings(), expr(value(), op("one" lineTo expr()))))),
 				type(
-					pattern(
-						arrow(
-							type(pattern("zero" lineTo pattern())),
-							type(pattern("one" lineTo pattern())))))))
+					arrow(
+						type("zero" lineTo type()),
+						type("one" lineTo type())))))
 			.unsafePush("apply" lineTo script("zero" lineTo script()))
 			.assertEqualTo(
 				compiler(
@@ -326,6 +320,6 @@ class CompilerTest {
 						expr(
 							value(fn(valueBindings(), expr(value(), op("one" lineTo expr())))),
 							op(call(expr(value(), op("zero" lineTo expr()))))),
-						type(pattern("one" lineTo pattern())))))
+						type("one" lineTo type()))))
 	}
 }

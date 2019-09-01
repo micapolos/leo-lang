@@ -4,7 +4,8 @@ import leo.base.assertEqualTo
 import leo13.lhs
 import leo13.rhs
 import leo13.rhsLine
-import leo13.type.*
+import leo13.type.lineTo
+import leo13.type.type
 import leo13.value.expr
 import leo13.value.given
 import leo13.value.op
@@ -17,28 +18,20 @@ class CompiledTest {
 		compiled(
 			expr(value("foo")),
 			type(
-				pattern("type"),
-				pattern(
-					"one" lineTo pattern(),
-					"two" lineTo pattern())))
+				"one" lineTo type(),
+				"two" lineTo type()))
 			.lhsOrNull
 			.assertEqualTo(
 				compiled(
-					expr(
-						value("foo"),
-						op(lhs)),
-					type(
-						pattern("type"),
-						pattern("one" lineTo pattern()))))
+					expr(value("foo"), op(lhs)),
+					type("one" lineTo type())))
 	}
 
 	@Test
 	fun lhsOrNull_noLhs() {
 		compiled(
 			expr(value("foo")),
-			type(
-				pattern("foo"),
-				pattern()))
+			type())
 			.lhsOrNull
 			.assertEqualTo(null)
 	}
@@ -47,9 +40,7 @@ class CompiledTest {
 	fun rhsOrNull_noRhs() {
 		compiled(
 			expr(value("foo")),
-			type(
-				pattern("type"),
-				pattern()))
+			type())
 			.rhsOrNull
 			.assertEqualTo(null)
 	}
@@ -59,53 +50,15 @@ class CompiledTest {
 		compiled(
 			expr(value("foo")),
 			type(
-				pattern("type"),
-				pattern(
-					"one" lineTo pattern(),
-					"two" lineTo pattern("three"))))
+				"one" lineTo type(),
+				"two" lineTo type("three")))
 			.rhsOrNull
 			.assertEqualTo(
 				compiled(
 					expr(
 						value("foo"),
 						op(rhs)),
-					type(
-						pattern("type"),
-						pattern(
-							"one" lineTo pattern(),
-							"two" lineTo pattern("three")),
-						pattern("three"))))
-	}
-
-	@Test
-	fun rhsOrNull_recursion() {
-		compiled(
-			expr(value("foo")),
-			type(
-				pattern("type"),
-				pattern(
-					"one" lineTo pattern(),
-					"two" lineTo rhs(recursion.recursion))))
-			.rhsOrNull
-			.assertEqualTo(
-				compiled(
-					expr(
-						value("foo"),
-						op(rhs)),
-					type(pattern("type"))))
-	}
-
-	@Test
-	fun rhsOrNull_invalidRecursion() {
-		compiled(
-			expr(value("foo")),
-			type(
-				pattern("type"),
-				pattern(
-					"one" lineTo pattern(),
-					"two" lineTo rhs(recursion.recursion.recursion))))
-			.rhsOrNull
-			.assertEqualTo(null)
+					type("three")))
 	}
 
 	@Test
@@ -113,23 +66,22 @@ class CompiledTest {
 		compiled(
 			expr(given()),
 			type(
-				pattern(
-					"x" lineTo pattern("zero"),
-					"y" lineTo pattern("one"))))
+				"x" lineTo type("zero"),
+				"y" lineTo type("one")))
 			.let { compiled ->
 				compiled
 					.lineOrNull("x")
 					.assertEqualTo(
 						compiled(
 							expr(given(), op(lhs), op(rhsLine)),
-							type(pattern("x" lineTo pattern("zero")))))
+							type("x" lineTo type("zero"))))
 
 				compiled
 					.lineOrNull("y")
 					.assertEqualTo(
 						compiled(
 							expr(given(), op(rhsLine)),
-							type(pattern("y" lineTo pattern("one")))))
+							type("y" lineTo type("one"))))
 
 				compiled
 					.lineOrNull("z")
@@ -142,19 +94,13 @@ class CompiledTest {
 		compiled(
 			expr(given()),
 			type(
-				pattern(
-					"vec" lineTo pattern(
-						"x" lineTo pattern("zero"),
-						"y" lineTo pattern("one")))))
+				"vec" lineTo type(
+					"x" lineTo type("zero"),
+					"y" lineTo type("one"))))
 			.accessOrNull("x")
 			.assertEqualTo(
 				compiled(
 					expr(given(), op(rhs), op(lhs), op(rhsLine)),
-					type(
-						pattern(
-							"vec" lineTo pattern(
-								"x" lineTo pattern("zero"),
-								"y" lineTo pattern("one"))),
-						pattern("x" lineTo pattern("zero")))))
+					type("x" lineTo type("zero"))))
 	}
 }

@@ -5,7 +5,6 @@ import leo13.compiler.context
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.type.lineTo
-import leo13.type.pattern
 import leo13.type.type
 import leo13.value.lineTo
 import leo13.value.value
@@ -24,8 +23,6 @@ class InterpreterTest {
 					context(),
 					interpreted(
 						value("color" lineTo value("red" lineTo value())),
-						type(
-							pattern("rect" lineTo pattern("color" lineTo pattern("red" lineTo pattern()))),
-							pattern("color" lineTo pattern("red" lineTo pattern()))))))
+						type("color" lineTo type("red" lineTo type())))))
 	}
 }
