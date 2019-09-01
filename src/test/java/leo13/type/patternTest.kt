@@ -29,27 +29,27 @@ class PatternTest {
 
 	@Test
 	fun resolveRecursion_simple() {
-		pattern("foo" lineTo rhs(recursion))
-			.resolveRecursion(pattern("bar"))
+		type(pattern("foo" lineTo rhs(recursion)))
+			.resolve(pattern("bar"))
 			.assertEqualTo(pattern("foo" lineTo pattern("bar")))
 	}
 
 	@Test
 	fun resolveRecursion_mismatch() {
-		pattern("foo" lineTo pattern("bar" lineTo rhs(recursion)))
-			.resolveRecursion(pattern("bar"))
+		type(pattern("foo" lineTo pattern("bar" lineTo rhs(recursion))))
+			.resolve(pattern("bar"))
 			.assertEqualTo(pattern("foo" lineTo pattern("bar" lineTo rhs(recursion))))
 	}
 
 	@Test
 	fun resolveRecursion_choice() {
-		pattern(
+		type(pattern(
 			unsafeChoice(
 				"node" caseTo pattern(
 					"value" lineTo pattern("foo"),
 					"next" lineTo rhs(recursion.recursion)),
-				"empty" caseTo pattern()))
-			.resolveRecursion(pattern("replaced"))
+				"empty" caseTo pattern())))
+			.resolve(pattern("replaced"))
 			.assertEqualTo(
 				pattern(
 					unsafeChoice(

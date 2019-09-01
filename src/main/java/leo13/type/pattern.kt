@@ -5,6 +5,7 @@ import leo.base.empty
 import leo.base.failIfOr
 import leo.base.fold
 import leo13.LeoObject
+import leo13.fail
 import leo13.script.*
 
 val patternName = "pattern"
@@ -173,41 +174,44 @@ val Pattern.unsafeArrow
 
 // --- resolve recursion
 
-fun Pattern.resolveRecursion(pattern: Pattern): Pattern =
-	resolve(recursion, pattern)
+fun Type.resolve(pattern: Pattern): Pattern =
+	resolve(pattern, recursion)
 
-fun Pattern.resolve(recursion: Recursion, pattern: Pattern): Pattern =
-	when (this) {
-		is EmptyPattern -> this
-		is LinkPattern -> pattern(link.resolve(recursion, pattern))
-		is ChoicePattern -> pattern(choice.resolve(recursion, pattern))
-		is ArrowPattern -> this
+fun Type.resolve(pattern: Pattern, recursion: Recursion): Pattern =
+	when (pattern) {
+		is EmptyPattern -> pattern
+		is LinkPattern -> pattern(resolve(pattern.link, recursion))
+		is ChoicePattern -> pattern(resolve(pattern.choice, recursion))
+		is ArrowPattern -> pattern
 	}
 
-fun PatternLink.resolve(recursion: Recursion, pattern: Pattern): PatternLink =
-	link(lhs.resolve(recursion, pattern), line.resolve(recursion, pattern))
+fun Type.resolve(patternLink: PatternLink, recursion: Recursion): PatternLink =
+	link(resolve(patternLink.lhs, recursion), resolve(patternLink.line, recursion))
 
-fun PatternLine.resolve(recursion: Recursion, pattern: Pattern): PatternLine =
-	name lineTo rhs.resolve(recursion, pattern)
+fun Type.resolve(patternLine: PatternLine, recursion: Recursion): PatternLine =
+	patternLine.name lineTo resolve(patternLine.rhs, recursion)
 
-fun Choice.resolve(recursion: Recursion, pattern: Pattern): Choice =
+fun Type.resolve(choice: Choice, recursion: Recursion): Choice =
 	uncheckedChoice(
-		lhsNode.resolve(recursion, pattern),
-		case.resolve(recursion, pattern))
+		resolve(choice.lhsNode, recursion),
+		resolve(choice.case, recursion))
 
-fun ChoiceNode.resolve(recursion: Recursion, pattern: Pattern): ChoiceNode =
-	when (this) {
-		is CaseChoiceNode -> choiceNode(case.resolve(recursion, pattern))
-		is ChoiceChoiceNode -> node(choice.resolve(recursion, pattern))
+fun Type.resolve(choiceNode: ChoiceNode, recursion: Recursion): ChoiceNode =
+	when (choiceNode) {
+		is CaseChoiceNode -> choiceNode(resolve(choiceNode.case, recursion))
+		is ChoiceChoiceNode -> node(resolve(choiceNode.choice, recursion))
 	}
 
-fun Case.resolve(recursion: Recursion, pattern: Pattern): Case =
-	name caseTo rhs.resolve(recursion, pattern)
+fun Type.resolve(case: Case, recursion: Recursion): Case =
+	case.name caseTo resolve(case.rhs, recursion)
 
-fun PatternRhs.resolve(recursion: Recursion, pattern: Pattern): PatternRhs =
-	when (this) {
-		is PatternPatternRhs -> rhs(this.pattern.resolve(recursion.recursion, pattern))
-		is RecursionPatternRhs ->
-			if (this.recursion == recursion) rhs(pattern)
-			else this
+fun Type.resolve(patternRhs: PatternRhs, recursion: Recursion): PatternRhs =
+	when (patternRhs) {
+		is PatternPatternRhs -> rhs(resolve(patternRhs.pattern, recursion.recursion))
+		is RecursionPatternRhs -> patternOrNull(recursion)?.let { rhs(it) }
+			?: fail(
+				scriptableBody
+					.plus("resolve" lineTo script(
+						patternRhs.scriptableLine,
+						recursion.scriptableLine)))
 	}

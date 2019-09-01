@@ -9,7 +9,10 @@ import leo13.token.tokens
 import kotlin.test.Test
 import kotlin.test.assertFails
 
-class ReaderTest {
+fun test(string: String, tokenizer: Tokenizer) =
+	reader().push(string).assertEqualTo(tokenizer)
+
+class TokenizerTest {
 	@Test
 	fun letter() {
 		reader()
@@ -17,8 +20,8 @@ class ReaderTest {
 			.assertEqualTo(
 				reader(
 					tokens(),
-					null,
-					head("f")))
+					parent(),
+					head(input(line(new), "f"))))
 	}
 
 	@Test
@@ -53,8 +56,8 @@ class ReaderTest {
 			.assertEqualTo(
 				reader(
 					tokens(),
-					null,
-					head("fo")))
+					parent(),
+					head(input(line(new), "fo"))))
 	}
 
 	@Test
@@ -66,8 +69,8 @@ class ReaderTest {
 					tokens(
 						token(opening("f")),
 						token(closing)),
-					null,
-					head("")))
+					parent(),
+					head(input(line(new), ""))))
 	}
 
 	@Test
@@ -82,7 +85,7 @@ class ReaderTest {
 			.assertEqualTo(
 				reader(
 					tokens(token(opening("f"))),
-					indent(indent(space)),
+					parent(indent(tab(space))),
 					head(colon)))
 	}
 
@@ -93,8 +96,8 @@ class ReaderTest {
 			.assertEqualTo(
 				reader(
 					tokens(token(opening("f"))),
-					null,
-					head(indent(indent(space)))))
+					parent(),
+					head(indent(tab(space)))))
 	}
 
 	@Test
@@ -104,8 +107,8 @@ class ReaderTest {
 			.assertEqualTo(
 				reader(
 					tokens(token(opening("f"))),
-					indent(indent(space)),
-					head("")))
+					parent(indent(tab(space))),
+					head(input(line(new), ""))))
 	}
 
 	@Test
@@ -115,8 +118,8 @@ class ReaderTest {
 			.assertEqualTo(
 				reader(
 					tokens(token(opening("f"))),
-					indent(indent(space)),
-					head("")))
+					parent(indent(tab(space))),
+					head(input(line(same), ""))))
 	}
 
 	@Test
@@ -126,8 +129,8 @@ class ReaderTest {
 			.assertEqualTo(
 				reader(
 					tokens(token(opening("f"))),
-					indent(indent(space)),
-					head("g")))
+					parent(indent(tab(space))),
+					head(input(line(same), "g"))))
 	}
 
 	@Test
@@ -139,8 +142,8 @@ class ReaderTest {
 					tokens(
 						token(opening("f")),
 						token(opening("g"))),
-					null,
-					head(indent(indent(space, space)))))
+					parent(),
+					head(indent(tab(space, space)))))
 	}
 
 	@Test
@@ -152,8 +155,8 @@ class ReaderTest {
 					tokens(
 						token(opening("f")),
 						token(opening("g"))),
-					indent(indent(space, space)),
-					head("")))
+					parent(indent(tab(space, space))),
+					head(input(line(new), ""))))
 	}
 
 	@Test
@@ -166,8 +169,8 @@ class ReaderTest {
 						token(opening("f")),
 						token(opening("g")),
 						token(closing)),
-					indent(indent(space)),
-					head("")))
+					parent(indent(tab(space))),
+					head(input(line(new), ""))))
 	}
 
 	@Test
@@ -178,8 +181,8 @@ class ReaderTest {
 				reader(
 					tokens(
 						token(opening("switch"))),
-					indent(indent(space)),
-					head("one")))
+					parent(indent(tab(space))),
+					head(input(line(new), "one"))))
 	}
 
 	@Test
@@ -192,8 +195,8 @@ class ReaderTest {
 						token(opening("switch")),
 						token(opening("one")),
 						token(closing)),
-					indent(indent(space)),
-					head("")))
+					parent(indent(tab(space))),
+					head(input(line(new), ""))))
 	}
 
 	@Test
@@ -206,8 +209,8 @@ class ReaderTest {
 						token(opening("switch")),
 						token(opening("one")),
 						token(closing)),
-					indent(indent(space)),
-					head("gives")))
+					parent(indent(tab(space))),
+					head(input(line(new), "gives"))))
 	}
 
 	@Test
@@ -221,7 +224,7 @@ class ReaderTest {
 						token(opening("one")),
 						token(closing),
 						token(opening("gives"))),
-					indent(indent(space), indent(space)),
+					parent(indent(tab(space), tab(space))),
 					head(colon)))
 	}
 
@@ -236,8 +239,8 @@ class ReaderTest {
 						token(opening("one")),
 						token(closing),
 						token(opening("gives"))),
-					indent(indent(space), indent(space)),
-					head("")))
+					parent(indent(tab(space), tab(space))),
+					head(input(line(same), ""))))
 	}
 
 	@Test
@@ -251,13 +254,61 @@ class ReaderTest {
 						token(opening("one")),
 						token(closing),
 						token(opening("gives"))),
-					indent(indent(space), indent(space)),
-					head("jeden")))
+					parent(indent(tab(space), tab(space))),
+					head(input(line(same), "jeden"))))
+	}
+
+	@Test
+	fun circle_radius_one() {
+		test(
+			"circle: radius: x\n\t",
+			reader(
+				tokens(
+					token(opening("circle")),
+					token(opening("radius")),
+					token(opening("x"))),
+				parent(indent(tab(space, space, space))),
+				head(input(line(new), ""))))
+	}
+
+	@Test
+	fun one__gives_two__gives_three() {
+		test(
+			"one gives: two gives: three",
+			reader(
+				tokens(
+					token(opening("one")),
+					token(closing),
+					token(opening("gives")),
+					token(opening("two")),
+					token(closing),
+					token(opening("gives"))),
+				parent(indent(tab(space), tab(space))),
+				head(input(line(same), "three"))))
+	}
+
+	@Test
+	fun one__gives_two__gives_three__() {
+		test(
+			"one gives: two gives: three\n",
+			reader(
+				tokens(
+					token(opening("one")),
+					token(closing),
+					token(opening("gives")),
+					token(opening("two")),
+					token(closing),
+					token(opening("gives")),
+					token(opening("three"))),
+				parent(),
+				head(indent(tab(space, space), tab(space)))))
 	}
 
 	@Test
 	fun complex() {
-		tokens("switch\n\tone gives: jeden\n\ttwo gives: dwa\n")
+		reader()
+			.push("switch\n\tone gives: jeden\n\ttwo gives: dwa\n")
+			.finish
 			.assertEqualTo(
 				tokens(
 					token(opening("switch")),

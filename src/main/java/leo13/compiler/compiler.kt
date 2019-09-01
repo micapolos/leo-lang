@@ -37,6 +37,7 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 		"of" -> unsafePushOf(scriptLine.rhs)
 		"previous" -> unsafePushPrevious(scriptLine.rhs)
 		"switch" -> unsafePushSwitch(scriptLine.rhs)
+		"debug" -> unsafePushDebug(scriptLine.rhs)
 		else -> unsafePushOther(scriptLine)
 	}
 
@@ -149,6 +150,13 @@ fun Compiler.unsafePush(switch: Switch): Compiler =
 					compiled.expr.plus(op(switchCompiled.switch)),
 					switchCompiled.type))
 		}
+
+fun Compiler.unsafePushDebug(script: Script): Compiler =
+	failIfOr(!script.isEmpty) {
+		compiler(
+			context,
+			compiled(script(scriptableLine)))
+	}
 
 fun Compiler.unsafePushOther(typedLine: ScriptLine): Compiler =
 	null

@@ -37,6 +37,9 @@ fun Type.applyOrNull(recursion: Recursion): Type? =
 	if (recursion.lhsOrNull == null) this
 	else popOrNull?.applyOrNull(recursion.lhsOrNull)
 
+fun Type.patternOrNull(recursion: Recursion): Pattern? =
+	applyOrNull(recursion)?.pattern
+
 fun Type.applyOrNull(thunk: PatternRhs): Type? =
 	when (thunk) {
 		is PatternPatternRhs -> push(thunk.pattern)

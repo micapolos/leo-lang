@@ -15,10 +15,10 @@ sealed class Head : LeoObject() {
 	val headScriptableLine get() = headScriptableName lineTo headScriptableBody
 }
 
-data class NameHead(val name: String) : Head() {
+data class InputHead(val input: Input) : Head() {
 	override fun toString() = super.toString()
-	override val headScriptableName get() = "name"
-	override val headScriptableBody get() = script(name)
+	override val headScriptableName get() = input.scriptableName
+	override val headScriptableBody get() = input.scriptableBody
 }
 
 data class ColonHead(val colon: Colon) : Head() {
@@ -27,12 +27,12 @@ data class ColonHead(val colon: Colon) : Head() {
 	override val headScriptableBody get() = script()
 }
 
-data class BlockIndentHead(val tabIndent: TabIndent) : Head() {
+data class IndentHead(val indent: Indent) : Head() {
 	override fun toString() = super.toString()
-	override val headScriptableName get() = tabIndent.scriptableName
-	override val headScriptableBody get() = tabIndent.scriptableBody
+	override val headScriptableName get() = indent.scriptableName
+	override val headScriptableBody get() = indent.scriptableBody
 }
 
-fun head(name: String): Head = NameHead(name)
+fun head(input: Input): Head = InputHead(input)
 fun head(colon: Colon): Head = ColonHead(colon)
-fun head(tabIndent: TabIndent): Head = BlockIndentHead(tabIndent)
+fun head(indent: Indent): Head = IndentHead(indent)
