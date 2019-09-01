@@ -31,6 +31,8 @@ fun reader() = reader(tokens(), null, NameHead(""))
 fun tokens(string: String): Tokens =
 	reader().push(string).finish
 
+val String.tokens get() = tokens(this)
+
 object Colon
 
 val colon = Colon
