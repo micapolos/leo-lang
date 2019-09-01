@@ -17,7 +17,7 @@ data class Tokenizer(
 	override val scriptableName get() = "tokenizer"
 	override val scriptableBody
 		get() = leo13.script.script(
-			tokenStack.asScriptLine("tokens") { asScriptLine },
+			tokenStack.asScriptLine("tokens") { scriptableLine },
 			charStack.asScriptLine("chars") { "char" lineTo leo13.script.script(toString() lineTo leo13.script.script()) },
 			errorOrNull.orNullAsScriptLine("error"))
 }

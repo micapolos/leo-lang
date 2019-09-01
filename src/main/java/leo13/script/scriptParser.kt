@@ -22,7 +22,7 @@ data class ScriptParser(
 data class TokenError(val token: Token) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "error"
-	override val scriptableBody get() = script(token.asScriptLine)
+	override val scriptableBody get() = script(token.scriptableLine)
 }
 
 fun error(token: Token) = TokenError(token)

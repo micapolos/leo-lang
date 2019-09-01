@@ -1,23 +1,29 @@
 package leo13.token
 
-import leo13.script.ScriptLine
+import leo13.LeoObject
+import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
 
-sealed class Token {
-	override fun toString() = asScriptLine.toString()
-	val asScriptLine get() = "token" lineTo script(tokenAsScriptLine)
-	abstract val tokenAsScriptLine: ScriptLine
+sealed class Token : LeoObject() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "token"
+	override val scriptableBody get() = script(tokenScriptableLine)
+	abstract val tokenScriptableName: String
+	abstract val tokenScriptableBody: Script
+	val tokenScriptableLine get() = tokenScriptableName lineTo tokenScriptableBody
 }
 
 data class OpeningToken(val opening: Opening) : Token() {
 	override fun toString() = super.toString()
-	override val tokenAsScriptLine = opening.asScriptLine
+	override val tokenScriptableName get() = opening.asScriptLine.name
+	override val tokenScriptableBody get() = opening.asScriptLine.rhs
 }
 
 data class ClosingToken(val closing: Closing) : Token() {
 	override fun toString() = super.toString()
-	override val tokenAsScriptLine = Closing.asScriptLine
+	override val tokenScriptableName get() = closing.asScriptLine.name
+	override val tokenScriptableBody get() = closing.asScriptLine.rhs
 }
 
 fun token(opening: Opening): Token = OpeningToken(opening)
