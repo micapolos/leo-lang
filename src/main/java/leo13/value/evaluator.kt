@@ -82,7 +82,12 @@ fun Evaluator.evaluate(line: ExprLine): Value =
 fun Evaluator.evaluate(call: Call): Value =
 		value
 			.fnOrNull!!
-			.let { fn -> fn.valueBindings.push(bindings.evaluate(call.expr)).evaluate(fn.expr) }
+			.let { fn ->
+				fn
+					.valueBindings
+					.push(value("given" lineTo bindings.evaluate(call.expr)))
+					.evaluate(fn.expr)
+			}
 
 val Expr.evaluate: Value
 	get() =

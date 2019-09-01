@@ -105,8 +105,9 @@ class EvaluatorTest {
 			.assertEqualTo(
 				value(
 					"argument" lineTo value(
-						"outside" lineTo value(),
-						"parameter" lineTo value()),
+						"given" lineTo value(
+							"outside" lineTo value(),
+							"parameter" lineTo value())),
 					"closure" lineTo value(
 						"inside" lineTo value())))
 	}

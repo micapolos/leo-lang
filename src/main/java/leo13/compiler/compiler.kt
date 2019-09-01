@@ -14,7 +14,7 @@ data class Compiler(
 	val context: Context,
 	val compiled: Compiled) : LeoObject() {
 	override fun toString() = super.toString()
-	override val scriptableName get() = "compiled"
+	override val scriptableName get() = "compiler"
 	override val scriptableBody get() = script(context.scriptableLine, compiled.scriptableLine)
 }
 
@@ -37,7 +37,7 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 		"of" -> unsafePushOf(scriptLine.rhs)
 		"previous" -> unsafePushPrevious(scriptLine.rhs)
 		"switch" -> unsafePushSwitch(scriptLine.rhs)
-		"debug" -> unsafePushDebug(scriptLine.rhs)
+		"compiler" -> unsafePushCompiler(scriptLine.rhs)
 		else -> unsafePushOther(scriptLine)
 	}
 
@@ -62,22 +62,26 @@ fun Compiler.unsafePushContains(script: Script): Compiler =
 
 fun Compiler.unsafePushGives(script: Script): Compiler =
 	compiled.type.unsafeStaticScript.unsafeType.let { parameterType ->
-		context.bind(parameterType).unsafeCompile(script).let { compiled ->
-			compiler(
-				context.plus(function(parameterType, compiled)),
-				compiled())
-		}
+		context.bind(type("given" lineTo parameterType))
+			.unsafeCompile(script)
+			.let { compiled ->
+				compiler(
+					context.plus(function(parameterType, compiled)),
+					compiled())
+			}
 	}
 
 fun Compiler.unsafePushGiving(script: Script): Compiler =
 	compiled.type.unsafeStaticScript.unsafeType.let { parameterType ->
-		context.bind(parameterType).unsafeCompile(script).let { scriptCompiled ->
-			compiler(
-				context,
-				compiled(
-					expr(value(fn(valueBindings(), scriptCompiled.expr))),
-					type(arrow(parameterType, scriptCompiled.type))))
-		}
+		context.bind(type("given" lineTo parameterType))
+			.unsafeCompile(script)
+			.let { scriptCompiled ->
+				compiler(
+					context,
+					compiled(
+						expr(value(fn(valueBindings(), scriptCompiled.expr))),
+						type(arrow(parameterType, scriptCompiled.type))))
+			}
 	}
 
 fun Compiler.unsafePushApply(script: Script): Compiler =
@@ -148,7 +152,7 @@ fun Compiler.unsafePush(switch: Switch): Compiler =
 			}
 	} ?: fail("not" lineTo script("choice"))
 
-fun Compiler.unsafePushDebug(script: Script): Compiler =
+fun Compiler.unsafePushCompiler(script: Script): Compiler =
 	failIfOr(!script.isEmpty) {
 		compiler(
 			context,
