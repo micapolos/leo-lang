@@ -14,7 +14,7 @@ data class Tokenizer(
 	val parent: Parent,
 	val head: Head) : LeoObject(), Writer<CharLeo> {
 	override fun toString() = super.toString()
-	override val scriptableName get() = "reader"
+	override val scriptableName get() = "tokenizer"
 	override val scriptableBody get() = script(tokens.scriptableLine, parent.scriptableLine, head.scriptableLine)
 
 	override fun write(leo: CharLeo) = push(leo.char)
@@ -41,7 +41,7 @@ fun Tokenizer.push(string: String): Tokenizer =
 
 fun Tokenizer.push(char: Char): Tokenizer =
 	pushOrNull(char)
-		?: fail(scriptableBody.plus("push" lineTo script(leo(char).scriptableLine)))
+		?: fail(script(scriptableLine).plus("push" lineTo script(leo(char).scriptableLine)))
 
 fun Tokenizer.pushOrNull(char: Char): Tokenizer? =
 	when (char) {

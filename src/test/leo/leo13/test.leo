@@ -1,5 +1,5 @@
-circle
-	radius: one
-	center
-		x: two
-		y: :three
+zero
+gives: one
+one
+gives: zero
+debug
