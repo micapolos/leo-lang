@@ -28,11 +28,21 @@ class PatternTest {
 	}
 
 	@Test
-	fun resolveRecursion() {
+	fun resolveRecursion_simple() {
 		pattern("foo" lineTo rhs(recursion))
 			.resolveRecursion(pattern("bar"))
 			.assertEqualTo(pattern("foo" lineTo pattern("bar")))
+	}
 
+	@Test
+	fun resolveRecursion_mismatch() {
+		pattern("foo" lineTo pattern("bar" lineTo rhs(recursion)))
+			.resolveRecursion(pattern("bar"))
+			.assertEqualTo(pattern("foo" lineTo pattern("bar" lineTo rhs(recursion))))
+	}
+
+	@Test
+	fun resolveRecursion_choice() {
 		pattern(
 			unsafeChoice(
 				"node" caseTo pattern(
