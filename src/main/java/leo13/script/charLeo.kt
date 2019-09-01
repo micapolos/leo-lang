@@ -14,6 +14,7 @@ val CharLeo.nameScript: Script
 			'(' -> script("opening" lineTo script("bracket"))
 			')' -> script("closing" lineTo script("bracket"))
 			' ' -> script("space")
+			':' -> script("colon")
 			'\n' -> script("newline")
 			'\t' -> script("tab")
 			// TODO: Escape all!!!

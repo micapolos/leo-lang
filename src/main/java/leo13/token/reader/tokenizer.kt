@@ -135,7 +135,7 @@ fun Tokens.flush(tab: Tab): Tokens =
 
 val Tokenizer.finish: Tokens
 	get() =
-		finishOrNull ?: fail("finish")
+		finishOrNull ?: fail(script(scriptableLine).plus("finish" lineTo script()))
 
 val Tokenizer.finishOrNull: Tokens?
 	get() =
