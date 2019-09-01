@@ -6,7 +6,7 @@ import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 
-sealed class Op : Scriptable() {
+sealed class Op : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "op"
 	override val scriptableBody get() = script(opScriptableLine)

@@ -1,6 +1,6 @@
 package leo13.compiler
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.Script
 import leo13.script.Switch
 import leo13.script.script
@@ -9,7 +9,7 @@ import leo13.type.*
 data class Context(
 	val types: Types,
 	val functions: Functions,
-	val typeBindings: TypeBindings) : Scriptable() {
+	val typeBindings: TypeBindings) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "context"
 	override val scriptableBody

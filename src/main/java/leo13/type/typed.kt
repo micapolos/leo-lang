@@ -1,6 +1,6 @@
 package leo13.type
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.lhs
 import leo13.rhsLine
 import leo13.script.Script
@@ -8,7 +8,7 @@ import leo13.script.Switch
 import leo13.script.script
 import leo13.value.*
 
-data class Typed(val expr: Expr, val pattern: Pattern) : Scriptable() {
+data class Typed(val expr: Expr, val pattern: Pattern) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "typed"
 	override val scriptableBody get() = script(expr.scriptableLine, pattern.scriptableLine)

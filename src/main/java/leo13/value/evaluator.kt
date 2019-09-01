@@ -6,7 +6,7 @@ import leo9.drop
 import leo9.linkOrNull
 import leo9.mapFirst
 
-data class Evaluator(val bindings: ValueBindings, val value: Value) : Scriptable() {
+data class Evaluator(val bindings: ValueBindings, val value: Value) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "evaluator"
 	override val scriptableBody get() = leo13.script.script(bindings.scriptableLine, value.scriptableLine)

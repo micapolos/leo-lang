@@ -1,12 +1,12 @@
 package leo13.token
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.asScript
 import leo9.Stack
 import leo9.push
 import leo9.stack
 
-data class Tokens(val stack: Stack<Token>) : Scriptable() {
+data class Tokens(val stack: Stack<Token>) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "tokens"
 	override val scriptableBody get() = stack.asScript { asScriptLine }

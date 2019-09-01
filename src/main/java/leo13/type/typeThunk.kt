@@ -1,9 +1,9 @@
 package leo13.type
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.Script
 
-sealed class PatternRhs : Scriptable() {
+sealed class PatternRhs : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "thunk"
 	override val scriptableBody get() = thunkScriptableBody

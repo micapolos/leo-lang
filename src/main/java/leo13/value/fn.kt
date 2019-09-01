@@ -1,9 +1,9 @@
 package leo13.value
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.script
 
-data class Fn(val valueBindings: ValueBindings, val expr: Expr) : Scriptable() {
+data class Fn(val valueBindings: ValueBindings, val expr: Expr) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "fn"
 	override val scriptableBody get() = script(valueBindings.scriptableLine, expr.scriptableLine)

@@ -1,10 +1,10 @@
 package leo13.type
 
 import leo.base.notNullIf
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.plus
 
-data class PatternLink(val lhs: Pattern, val line: PatternLine) : Scriptable() {
+data class PatternLink(val lhs: Pattern, val line: PatternLine) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "link"
 	override val scriptableBody get() = lhs.scriptableBody.plus(line.scriptableLineWithMeta(needsMeta(line.name)))

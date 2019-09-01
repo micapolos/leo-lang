@@ -1,8 +1,8 @@
 package leo13.script
 
-import leo13.Scriptable
+import leo13.LeoObject
 
-data class Case(val name: String, val rhs: Script) : Scriptable() {
+data class Case(val name: String, val rhs: Script) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName = "case"
 	override val scriptableBody = script(name lineTo script(), "gives" lineTo rhs.scriptableBody)

@@ -1,10 +1,10 @@
 package leo13.script
 
 import leo.base.notNullIf
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.fail
 
-sealed class SwitchNode : Scriptable() {
+sealed class SwitchNode : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "node"
 	override val scriptableBody get() = nodeScriptableBody

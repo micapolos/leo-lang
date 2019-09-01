@@ -2,12 +2,12 @@ package leo13.type
 
 import leo.base.fold
 import leo.base.orIfNull
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.Script
 import leo13.script.plus
 import leo13.script.script
 
-data class Type(val popOrNull: Type?, val pattern: Pattern) : Scriptable() {
+data class Type(val popOrNull: Type?, val pattern: Pattern) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName: String get() = "type"
 	override val scriptableBody: Script

@@ -4,13 +4,13 @@ import leo.base.Empty
 import leo.base.empty
 import leo.base.failIfOr
 import leo.base.fold
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.*
 
 val patternName = "pattern"
 val emptyName = "empty"
 
-sealed class Pattern : Scriptable() {
+sealed class Pattern : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = patternName
 	override val scriptableBody get() = typeScriptableBody

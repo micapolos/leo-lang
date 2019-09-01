@@ -1,7 +1,7 @@
 package leo13.interpreter
 
 import leo.base.fold
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.compiler.*
 import leo13.script.Script
 import leo13.script.ScriptLine
@@ -14,7 +14,7 @@ import leo13.value.valueBindings
 
 data class Interpreter(
 	val context: Context,
-	val interpreted: Interpreted) : Scriptable() {
+	val interpreted: Interpreted) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "interpreter"
 	override val scriptableBody get() = script(context.scriptableLine, interpreted.scriptableLine)

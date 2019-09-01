@@ -1,13 +1,13 @@
 package leo13.type
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
 import leo9.Stack
 import leo9.stack
 
-sealed class ChoiceNode : Scriptable() {
+sealed class ChoiceNode : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "node"
 	override val scriptableBody get() = nodeScriptableBody

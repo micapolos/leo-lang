@@ -7,11 +7,9 @@ import leo13.script.ScriptLine
 import leo9.*
 import leo9.Stack
 
-// TODO: Convert to interface, and replace "super.toString()" with "asScriptLine.toString()" in implementations
-abstract class Scriptable {
-	override fun toString() = scriptableLine.toString()
-	abstract val scriptableName: String
-	abstract val scriptableBody: Script
+interface Scriptable {
+	val scriptableName: String
+	val scriptableBody: Script
 	val scriptableLine: ScriptLine get() = scriptableName lineTo scriptableBody
 }
 

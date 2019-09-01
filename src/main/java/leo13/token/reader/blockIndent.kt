@@ -2,14 +2,14 @@ package leo13.token.reader
 
 import leo.base.fold
 import leo.base.orIfNull
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.Space
 import leo13.Tab
 import leo13.script.Script
 import leo13.script.plus
 import leo13.script.script
 
-data class TabIndent(val lhsOrNull: TabIndent?, val spaceIndent: SpaceIndent) : Scriptable() {
+data class TabIndent(val lhsOrNull: TabIndent?, val spaceIndent: SpaceIndent) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "indent"
 	override val scriptableBody: Script

@@ -1,11 +1,11 @@
 package leo13.script
 
 import leo.base.fold
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.fail
 import leo13.failRun
 
-data class Switch(val lhsNode: SwitchNode, val case: Case) : Scriptable() {
+data class Switch(val lhsNode: SwitchNode, val case: Case) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "switch"
 	override val scriptableBody get() = lhsNode.scriptableBody.plus(case.scriptableBody)

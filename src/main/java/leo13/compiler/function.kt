@@ -1,12 +1,12 @@
 package leo13.compiler
 
 import leo.base.notNullIf
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.type.Type
 
-data class Function(val parameter: Type, val body: Compiled) : Scriptable() {
+data class Function(val parameter: Type, val body: Compiled) : LeoObject() {
 	override val scriptableName get() = "function"
 	override val scriptableBody
 		get() = script(

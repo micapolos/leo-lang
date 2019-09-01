@@ -6,16 +6,16 @@ import leo13.*
 import leo9.stack
 import org.junit.Test
 
-fun <V : Scriptable> V.assertEqualsToScript(code: String) =
+fun <V : LeoObject> V.assertEqualsToScript(code: String) =
 	scriptableBody.assertEqualTo(unsafeScript(code))
 
-fun <V : Scriptable> V.assertEqualsToScriptLine(code: String) =
+fun <V : LeoObject> V.assertEqualsToScriptLine(code: String) =
 	scriptableLine.assertEqualTo(code.unsafeScriptLine)
 
-fun <V : Scriptable> V.assertScriptableLineWorks(fn: ScriptLine.() -> V?) =
+fun <V : LeoObject> V.assertScriptableLineWorks(fn: ScriptLine.() -> V?) =
 	scriptableLine.fn().assertEqualTo(this)
 
-fun <V : Scriptable> V.assertScriptableBodyWorks(fn: Script.() -> V?) =
+fun <V : LeoObject> V.assertScriptableBodyWorks(fn: Script.() -> V?) =
 	scriptableBody.fn().assertEqualTo(this)
 
 class ScriptableTest {

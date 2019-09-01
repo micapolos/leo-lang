@@ -1,13 +1,13 @@
 package leo13.type
 
 import leo.base.fold
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.lineTo
 import leo13.script.plus
 import leo13.script.script
 import leo9.push
 
-data class Choice(val lhsNode: ChoiceNode, val case: Case) : Scriptable() {
+data class Choice(val lhsNode: ChoiceNode, val case: Case) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "choice"
 	override val scriptableBody get() = lhsNode.scriptableBody.plus(case.scriptableLineWithOr(true))

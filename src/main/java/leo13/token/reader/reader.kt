@@ -9,7 +9,7 @@ import leo13.token.*
 data class Reader(
 	val tokens: Tokens,
 	val tabIndentOrNull: TabIndent?,
-	val head: Head) : Scriptable() {
+	val head: Head) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "reader"
 	override val scriptableBody

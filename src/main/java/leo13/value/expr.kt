@@ -1,12 +1,12 @@
 package leo13.value
 
 import leo.base.fold
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.*
 import leo9.fold
 import leo9.reverse
 
-sealed class Expr : Scriptable() {
+sealed class Expr : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "expr"
 	override val scriptableBody get() = script(exprScriptableLine)

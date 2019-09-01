@@ -1,12 +1,12 @@
 package leo13.script
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.fail
 import leo13.failRun
 
 data class SwitchParser(
 	val switchNodeOrNull: SwitchNode?,
-	val nameOrNull: String?) : Scriptable() {
+	val nameOrNull: String?) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "parser"
 	override val scriptableBody get() = script() // not relevant

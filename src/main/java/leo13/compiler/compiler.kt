@@ -3,7 +3,7 @@ package leo13.compiler
 import leo.base.failIfOr
 import leo.base.fold
 import leo.base.ifOrNull
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.fail
 import leo13.script.*
 import leo13.script.Switch
@@ -12,7 +12,7 @@ import leo13.value.*
 
 data class Compiler(
 	val context: Context,
-	val compiled: Compiled) : Scriptable() {
+	val compiled: Compiled) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "compiled"
 	override val scriptableBody get() = script(context.scriptableLine, compiled.scriptableLine)

@@ -1,6 +1,6 @@
 package leo13.value
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -8,7 +8,7 @@ import leo13.token.scriptableLine
 
 data class ValueLine(
 	val name: String,
-	val rhs: Value) : Scriptable() {
+	val rhs: Value) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "line"
 	override val scriptableBody get() = script(name.scriptableLine, rhs.scriptableLine)

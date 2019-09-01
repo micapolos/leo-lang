@@ -1,18 +1,18 @@
 package leo13.script
 
 import leo.base.*
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.token.*
 import leo9.*
 import leo9.Stack
 
-data class Script(val lineStack: Stack<ScriptLine>) : Scriptable() {
+data class Script(val lineStack: Stack<ScriptLine>) : LeoObject() {
 	override fun toString() = indentedCode
 	override val scriptableName get() = "script"
 	override val scriptableBody get() = this
 }
 
-data class ScriptLine(val name: String, val rhs: Script) : Scriptable() {
+data class ScriptLine(val name: String, val rhs: Script) : LeoObject() {
 	override fun toString() = script(this).toString()
 	override val scriptableName get() = "line"
 	override val scriptableBody get() = script(name lineTo script("to" lineTo rhs))

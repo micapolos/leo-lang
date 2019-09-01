@@ -1,6 +1,6 @@
 package leo13.compiler
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.lhs
 import leo13.rhs
 import leo13.rhsLine
@@ -9,7 +9,7 @@ import leo13.script.script
 import leo13.type.*
 import leo13.value.*
 
-data class Compiled(val expr: Expr, val type: Type) : Scriptable() {
+data class Compiled(val expr: Expr, val type: Type) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "compiled"
 	override val scriptableBody get() = script(expr.scriptableLine, type.scriptableLine)

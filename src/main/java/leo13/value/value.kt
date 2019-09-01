@@ -1,7 +1,7 @@
 package leo13.value
 
 import leo.base.*
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.lineTo
@@ -10,7 +10,7 @@ import leo9.fold
 import leo9.push
 import leo9.reverse
 
-sealed class Value : Scriptable() {
+sealed class Value : LeoObject() {
 	override val scriptableName get() = "value"
 	override val scriptableBody get() = script(scriptableValueName lineTo scriptableValueBody)
 

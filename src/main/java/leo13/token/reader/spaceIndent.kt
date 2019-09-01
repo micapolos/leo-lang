@@ -2,14 +2,14 @@ package leo13.token.reader
 
 import leo.base.fold
 import leo.base.orIfNull
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.Space
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.plus
 import leo13.script.script
 
-data class SpaceIndent(val lhsOrNull: SpaceIndent?, val space: Space) : Scriptable() {
+data class SpaceIndent(val lhsOrNull: SpaceIndent?, val space: Space) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "indent"
 	override val scriptableBody: Script

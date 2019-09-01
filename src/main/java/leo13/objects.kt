@@ -2,73 +2,73 @@ package leo13
 
 import leo13.script.script
 
-object Append : Scriptable() {
+object Append : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "append"
 	override val scriptableBody get() = script()
 }
 
-object Resolve : Scriptable() {
+object Resolve : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "resolve"
 	override val scriptableBody get() = script()
 }
 
-object Lhs : Scriptable() {
+object Lhs : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "lhs"
 	override val scriptableBody get() = script()
 }
 
-object Back : Scriptable() {
+object Back : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "back"
 	override val scriptableBody get() = script()
 }
 
-object Wrap : Scriptable() {
+object Wrap : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "wrap"
 	override val scriptableBody get() = script()
 }
 
-object Rhs : Scriptable() {
+object Rhs : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "rhs"
 	override val scriptableBody get() = script()
 }
 
-object RhsLine : Scriptable() {
+object RhsLine : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "line"
 	override val scriptableBody get() = script()
 }
 
-object Meta : Scriptable() {
+object Meta : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "meta"
 	override val scriptableBody get() = script()
 }
 
-object Quote : Scriptable() {
+object Quote : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "quote"
 	override val scriptableBody get() = script()
 }
 
-object Evaluator : Scriptable() {
+object Evaluator : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "evaluator"
 	override val scriptableBody get() = script()
 }
 
-object Space : Scriptable() {
+object Space : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "space"
 	override val scriptableBody get() = script()
 }
 
-object Tab : Scriptable() {
+object Tab : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "tab"
 	override val scriptableBody get() = script()

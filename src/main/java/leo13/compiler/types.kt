@@ -1,7 +1,7 @@
 package leo13.compiler
 
 import leo.base.notNullIf
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.asScript
 import leo13.type.Type
 import leo13.type.contains
@@ -10,7 +10,7 @@ import leo9.mapFirst
 import leo9.push
 import leo9.stack
 
-data class Types(val typeStack: Stack<Type>) : Scriptable() {
+data class Types(val typeStack: Stack<Type>) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "types"
 	override val scriptableBody get() = typeStack.asScript { scriptableLine }

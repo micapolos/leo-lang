@@ -3,7 +3,7 @@ package leo13.token
 import leo.base.charSeq
 import leo.base.fold
 import leo.base.notNullIf
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.orNullAsScriptLine
 import leo13.script.asScriptLine
 import leo13.script.lineTo
@@ -12,7 +12,7 @@ import leo9.*
 data class Tokenizer(
 	val tokenStack: Stack<Token>,
 	val charStack: Stack<Char>,
-	val errorOrNull: CharError?) : Scriptable() {
+	val errorOrNull: CharError?) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "tokenizer"
 	override val scriptableBody
@@ -22,7 +22,7 @@ data class Tokenizer(
 			errorOrNull.orNullAsScriptLine("error"))
 }
 
-data class CharError(val char: Char) : Scriptable() {
+data class CharError(val char: Char) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "error"
 	override val scriptableBody get() = leo13.script.script(char.toString() lineTo leo13.script.script()) // TODO: Escape!!!

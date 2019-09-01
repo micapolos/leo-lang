@@ -2,7 +2,7 @@ package leo13.script
 
 import leo.base.notNullIf
 import leo.base.orNullFold
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.orNullAsScriptLine
 import leo13.token.Token
 import leo13.token.Tokens
@@ -19,7 +19,7 @@ data class ScriptParser(
 			errorOrNull.orNullAsScriptLine("error"))
 }
 
-data class TokenError(val token: Token) : Scriptable() {
+data class TokenError(val token: Token) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "error"
 	override val scriptableBody get() = script(token.asScriptLine)

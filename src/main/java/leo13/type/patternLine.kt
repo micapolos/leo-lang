@@ -1,11 +1,11 @@
 package leo13.type
 
-import leo13.Scriptable
+import leo13.LeoObject
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 
-data class PatternLine(val name: String, val rhs: PatternRhs) : Scriptable() {
+data class PatternLine(val name: String, val rhs: PatternRhs) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = name
 	override val scriptableBody get() = rhs.scriptableBody
