@@ -85,7 +85,7 @@ class CompiledTest {
 				pattern("type"),
 				pattern(
 					"one" lineTo pattern(),
-					"two" lineTo thunk(recursion.recursion))))
+					"two" lineTo rhs(recursion.recursion))))
 			.rhsOrNull
 			.assertEqualTo(
 				compiled(
@@ -103,7 +103,7 @@ class CompiledTest {
 				pattern("type"),
 				pattern(
 					"one" lineTo pattern(),
-					"two" lineTo thunk(recursion.recursion.recursion))))
+					"two" lineTo rhs(recursion.recursion.recursion))))
 			.rhsOrNull
 			.assertEqualTo(null)
 	}

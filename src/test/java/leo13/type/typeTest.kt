@@ -7,19 +7,19 @@ class TypeTest {
 	@Test
 	fun applyThunk() {
 		type(pattern("one"), pattern("two"))
-			.applyOrNull(thunk(pattern("three")))
+			.applyOrNull(rhs(pattern("three")))
 			.assertEqualTo(type(pattern("one"), pattern("two"), pattern("three")))
 
 		type(pattern("one"), pattern("two"))
-			.applyOrNull(thunk(recursion))
+			.applyOrNull(rhs(recursion))
 			.assertEqualTo(type(pattern("one"), pattern("two")))
 
 		type(pattern("one"), pattern("two"))
-			.applyOrNull(thunk(recursion.recursion))
+			.applyOrNull(rhs(recursion.recursion))
 			.assertEqualTo(type(pattern("one")))
 
 		type(pattern("one"), pattern("two"))
-			.applyOrNull(thunk(recursion.recursion.recursion))
+			.applyOrNull(rhs(recursion.recursion.recursion))
 			.assertEqualTo(null)
 	}
 
@@ -90,11 +90,11 @@ class TypeTest {
 					pattern("one"), pattern("two" lineTo pattern("three")),
 					pattern("three")))
 
-		type(pattern("one"), pattern("two" lineTo thunk(recursion)))
+		type(pattern("one"), pattern("two" lineTo rhs(recursion)))
 			.rhsOrNull("two")
-			.assertEqualTo(type(pattern("one"), pattern("two" lineTo thunk(recursion))))
+			.assertEqualTo(type(pattern("one"), pattern("two" lineTo rhs(recursion))))
 
-		type(pattern("one"), pattern("two" lineTo thunk(recursion.recursion)))
+		type(pattern("one"), pattern("two" lineTo rhs(recursion.recursion)))
 			.rhsOrNull("two")
 			.assertEqualTo(type(pattern("one")))
 	}

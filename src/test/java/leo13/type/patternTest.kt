@@ -26,4 +26,26 @@ class PatternTest {
 			.previousOrNull
 			.assertEqualTo(pattern())
 	}
+
+	@Test
+	fun resolveRecursion() {
+		pattern("foo" lineTo rhs(recursion))
+			.resolveRecursion(pattern("bar"))
+			.assertEqualTo(pattern("foo" lineTo pattern("bar")))
+
+		pattern(
+			unsafeChoice(
+				"node" caseTo pattern(
+					"value" lineTo pattern("foo"),
+					"next" lineTo rhs(recursion.recursion)),
+				"empty" caseTo pattern()))
+			.resolveRecursion(pattern("replaced"))
+			.assertEqualTo(
+				pattern(
+					unsafeChoice(
+						"node" caseTo pattern(
+							"value" lineTo pattern("foo"),
+							"next" lineTo pattern("replaced")),
+						"empty" caseTo pattern())))
+	}
 }

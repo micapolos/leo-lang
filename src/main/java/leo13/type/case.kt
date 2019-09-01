@@ -14,7 +14,7 @@ data class Case(val name: String, val rhs: PatternRhs) : LeoObject() {
 }
 
 infix fun String.caseTo(rhs: PatternRhs) = Case(this, rhs)
-infix fun String.caseTo(rhs: Pattern) = caseTo(thunk(rhs))
+infix fun String.caseTo(rhs: Pattern) = caseTo(rhs(rhs))
 
 fun Case.rhsOrNull(name: String): PatternRhs? = notNullIf(this.name == name) { rhs }
 

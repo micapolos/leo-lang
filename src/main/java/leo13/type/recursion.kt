@@ -6,7 +6,7 @@ import leo13.script.script
 data class Recursion(val lhsOrNull: Recursion?) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "recursion"
-	override val scriptableBody get() = script()
+	override val scriptableBody get() = lhsOrNull?.run { script(scriptableLine) } ?: script()
 }
 
 val recursion = Recursion(null)

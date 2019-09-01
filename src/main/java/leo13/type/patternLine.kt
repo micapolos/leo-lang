@@ -15,7 +15,7 @@ data class PatternLine(val name: String, val rhs: PatternRhs) : LeoObject() {
 }
 
 infix fun String.lineTo(rhs: PatternRhs) = PatternLine(this, rhs)
-infix fun String.lineTo(rhs: Pattern) = lineTo(thunk(rhs))
+infix fun String.lineTo(rhs: Pattern) = lineTo(rhs(rhs))
 
 fun PatternLine.contains(line: PatternLine): Boolean =
 	name == line.name && rhs.contains(line.rhs)

@@ -170,3 +170,44 @@ val Pattern.unsafeArrow
 	get() =
 		if (this is ArrowPattern) arrow
 		else error("not arrow $this")
+
+// --- resolve recursion
+
+fun Pattern.resolveRecursion(pattern: Pattern): Pattern =
+	resolve(recursion, pattern)
+
+fun Pattern.resolve(recursion: Recursion, pattern: Pattern): Pattern =
+	when (this) {
+		is EmptyPattern -> this
+		is LinkPattern -> pattern(link.resolve(recursion, pattern))
+		is ChoicePattern -> pattern(choice.resolve(recursion, pattern))
+		is ArrowPattern -> this
+	}
+
+fun PatternLink.resolve(recursion: Recursion, pattern: Pattern): PatternLink =
+	link(lhs.resolve(recursion, pattern), line.resolve(recursion, pattern))
+
+fun PatternLine.resolve(recursion: Recursion, pattern: Pattern): PatternLine =
+	name lineTo rhs.resolve(recursion, pattern)
+
+fun Choice.resolve(recursion: Recursion, pattern: Pattern): Choice =
+	uncheckedChoice(
+		lhsNode.resolve(recursion, pattern),
+		case.resolve(recursion, pattern))
+
+fun ChoiceNode.resolve(recursion: Recursion, pattern: Pattern): ChoiceNode =
+	when (this) {
+		is CaseChoiceNode -> choiceNode(case.resolve(recursion, pattern))
+		is ChoiceChoiceNode -> node(choice.resolve(recursion, pattern))
+	}
+
+fun Case.resolve(recursion: Recursion, pattern: Pattern): Case =
+	name caseTo rhs.resolve(recursion, pattern)
+
+fun PatternRhs.resolve(recursion: Recursion, pattern: Pattern): PatternRhs =
+	when (this) {
+		is PatternPatternRhs -> rhs(this.pattern.resolve(recursion.recursion, pattern))
+		is RecursionPatternRhs ->
+			if (this.recursion == recursion) rhs(pattern)
+			else this
+	}
