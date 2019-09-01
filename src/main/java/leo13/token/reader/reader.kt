@@ -3,13 +3,16 @@ package leo13.token.reader
 import leo.base.fold
 import leo.base.updateIfNotNull
 import leo13.*
+import leo13.base.Writer
+import leo13.script.CharLeo
+import leo13.script.Script
 import leo13.script.script
 import leo13.token.*
 
 data class Reader(
 	val tokens: Tokens,
 	val tabIndentOrNull: TabIndent?,
-	val head: Head) : LeoObject() {
+	val head: Head) : LeoObject(), Writer<CharLeo> {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "reader"
 	override val scriptableBody
@@ -17,6 +20,10 @@ data class Reader(
 			tokens.scriptableLine,
 			tabIndentOrNull.orNullAsScriptLine("indent"),
 			head.scriptableLine)
+
+	override fun write(leo: CharLeo) = push(leo.char)
+	override fun writeError(script: Script) = fail<CharLeo>(script).run { Unit }
+	override val finishWriting get() = finish.run { Unit }
 }
 
 fun reader(tokens: Tokens, parentTabIndentOrNull: TabIndent?, head: Head) =

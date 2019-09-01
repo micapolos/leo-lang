@@ -14,8 +14,8 @@ data class StackWriter<V : Scriptable>(val stack: Stack<V>) : LeoObject(), Write
 	override val scriptableBody get() = stack.asScript { scriptableLine }
 
 	override fun write(value: V) = writer(stack.push(value))
-	override fun error(script: Script) = fail<Unit>(script)
-	override val finish = Unit
+	override fun writeError(script: Script) = fail<Unit>(script)
+	override val finishWriting = Unit
 }
 
 fun <V : Scriptable> writer(stack: Stack<V>): Writer<V> =

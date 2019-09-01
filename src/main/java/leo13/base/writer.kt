@@ -6,8 +6,8 @@ import leo9.stack
 
 interface Writer<in V> : Scriptable {
 	fun write(value: V): Writer<V>
-	fun error(script: Script)
-	val finish: Unit
+	fun writeError(script: Script)
+	val finishWriting: Unit
 }
 
 fun <V : Scriptable> writer(vararg values: V): Writer<V> =
