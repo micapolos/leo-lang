@@ -5,6 +5,7 @@ import leo13.lhs
 import leo13.rhs
 import leo13.rhsLine
 import leo13.script.Script
+import leo13.script.ScriptLine
 import leo13.script.script
 import leo13.type.*
 import leo13.value.*
@@ -20,6 +21,9 @@ fun compiled() = compiled(expr(value()), type())
 
 fun compiled(script: Script): Compiled =
 	compiled(script.expr, script.type)
+
+fun compiled(scriptLine: ScriptLine): CompiledLine =
+	scriptLine.name lineTo compiled(scriptLine.rhs)
 
 fun Compiled.plus(compiledLine: CompiledLine): Compiled =
 	compiled(

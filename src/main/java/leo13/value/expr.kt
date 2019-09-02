@@ -46,6 +46,7 @@ fun Expr.plus(op: Op) = expr(link(this, op))
 
 val Expr.valueOrNull: Value? get() = (this as? ValueExpr)?.value
 val Expr.isEmpty get() = valueOrNull?.isEmpty ?: false
+val Expr.linkOrNull get() = (this as? LinkExpr)?.link
 
 val Script.expr: Expr
 	get() =

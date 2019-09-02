@@ -40,6 +40,8 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 			"set" -> unsafePushSet(scriptLine.rhs)
 			"switch" -> unsafePushSwitch(scriptLine.rhs)
 			"compiler" -> unsafePushCompiler(scriptLine.rhs)
+			"quote" -> unsafePushQuote(scriptLine.rhs)
+			"compile" -> unsafePushCompile(scriptLine.rhs)
 			else -> unsafePushOther(scriptLine)
 		}
 	} catch (exception: Exception) {
@@ -164,6 +166,18 @@ fun Compiler.unsafePushCompiler(script: Script): Compiler =
 		compiler(
 			context,
 			compiled(script(scriptableLine)))
+	}
+
+fun Compiler.unsafePushQuote(script: Script): Compiler =
+	fold(script.lineSeq) { append(compiled(it)) }
+
+fun Compiler.unsafePushCompile(script: Script): Compiler =
+	failIfOr(!script.isEmpty) {
+		compiler(context, compiled())
+			.unsafePush(
+				valueBindings()
+					.evaluate(compiled.expr)
+					.scriptOrNull!!)
 	}
 
 fun Compiler.unsafePushSet(script: Script): Compiler =
