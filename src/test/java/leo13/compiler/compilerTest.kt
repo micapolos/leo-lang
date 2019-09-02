@@ -202,10 +202,11 @@ class CompilerTest {
 	@Test
 	fun pushExists() {
 		compiler(context(), compiled())
-			.unsafePush(script(
-				"zero" lineTo script(),
-				"or" lineTo script("one"),
-				"exists" lineTo script()))
+			.unsafePush(
+				"define" lineTo script(
+					"zero" lineTo script(),
+					"or" lineTo script("one"),
+					"exists" lineTo script()))
 			.assertEqualTo(
 				compiler(
 					context(
@@ -217,16 +218,14 @@ class CompilerTest {
 
 	@Test
 	fun pushContains() {
-		compiler(
-			context(),
-			compiled(
-				expr(given()),
-				type("bit" lineTo type())))
+		compiler()
 			.unsafePush(
-				"contains" lineTo script(
-					"zero" lineTo script(),
-					"or" lineTo script(
-						"one" lineTo script())))
+				"define" lineTo script(
+					"bit" lineTo script(),
+					"contains" lineTo script(
+						"zero" lineTo script(),
+						"or" lineTo script(
+							"one" lineTo script()))))
 			.assertEqualTo(
 				compiler(
 					context(
@@ -251,12 +250,11 @@ class CompilerTest {
 
 	@Test
 	fun pushGives() {
-		compiler(
-			context(),
-			compiled(
-				expr(given()),
-				type("zero" lineTo type())))
-			.unsafePush("gives" lineTo script("one" lineTo script()))
+		compiler()
+			.unsafePush(
+				"define" lineTo script(
+					"zero" lineTo script(),
+					"gives" lineTo script("one" lineTo script())))
 			.assertEqualTo(
 				compiler(
 					context()

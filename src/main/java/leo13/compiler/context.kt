@@ -1,10 +1,8 @@
 package leo13.compiler
 
+import leo.base.fold
 import leo13.LeoObject
-import leo13.script.Script
-import leo13.script.ScriptLine
-import leo13.script.Switch
-import leo13.script.script
+import leo13.script.*
 import leo13.type.*
 
 data class Context(
@@ -34,3 +32,6 @@ fun Context.unsafeCompile(scriptLine: ScriptLine): CompiledLine =
 
 fun Context.compile(choice: Choice, switch: Switch): SwitchCompiled =
 	compiler(this, null).push(choice, switch).compiled
+
+fun Context.compileDefine(script: Script): Context =
+	defineCompiler(this, script()).fold(script.lineSeq) { push(it) }.finishedContext

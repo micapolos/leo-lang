@@ -27,12 +27,10 @@ fun Compiler.unsafePush(script: Script): Compiler =
 fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 	try {
 		when (scriptLine.name) {
-			"as" -> unsafePushAs(scriptLine.rhs)
 			"apply" -> unsafePushApply(scriptLine.rhs)
-			"exists" -> unsafePushExists(scriptLine.rhs)
-			"contains" -> unsafePushContains(scriptLine.rhs)
+			"as" -> unsafePushAs(scriptLine.rhs)
+			"define" -> unsafePushDefine(scriptLine.rhs)
 			"given" -> unsafePushGiven(scriptLine.rhs)
-			"gives" -> unsafePushGives(scriptLine.rhs)
 			"giving" -> unsafePushGiving(scriptLine.rhs)
 			"line" -> unsafePushLine(scriptLine.rhs)
 			"meta" -> unsafePushMeta(scriptLine.rhs)
@@ -47,38 +45,6 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 		}
 	} catch (exception: Exception) {
 		fail(compiled.type.scriptableBody.plus(scriptLine))
-	}
-
-fun Compiler.unsafePushExists(script: Script): Compiler =
-	failIfOr(!script.isEmpty) {
-		compiler(
-			context.plus(compiled.type.unsafeStaticScript.unsafeType),
-			compiled())
-	}
-
-fun Compiler.unsafePushContains(script: Script): Compiler =
-	compiled.type.unsafeStaticScript.onlyLineOrNull!!.onlyNameOrNull!!.let { name ->
-		script.unsafeType.let { type ->
-			compiler(
-				context()
-					.plus(type(name lineTo type))
-					.plus(
-						function(
-							type(name),
-							compiled(script(name lineTo script)))),
-				compiled())
-		}
-	}
-
-fun Compiler.unsafePushGives(script: Script): Compiler =
-	compiled.type.unsafeStaticScript.unsafeType.let { parameterType ->
-		context.bind(type("given" lineTo parameterType))
-			.unsafeCompile(script)
-			.let { compiled ->
-				compiler(
-					context.plus(function(parameterType, compiled)),
-					compiled())
-			}
 	}
 
 fun Compiler.unsafePushGiving(script: Script): Compiler =
@@ -201,6 +167,9 @@ fun Compiler.unsafePushAs(script: Script): Compiler =
 					script.type,
 					compiled)),
 		compiled())
+
+fun Compiler.unsafePushDefine(script: Script): Compiler =
+	compiler(context.compileDefine(script), compiled)
 
 fun Compiler.unsafePushOther(typedLine: ScriptLine): Compiler =
 	null
