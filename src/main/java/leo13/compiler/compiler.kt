@@ -34,7 +34,6 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 			"giving" -> unsafePushGiving(scriptLine.rhs)
 			"line" -> unsafePushLine(scriptLine.rhs)
 			"meta" -> unsafePushMeta(scriptLine.rhs)
-			"of" -> unsafePushOf(scriptLine.rhs)
 			"previous" -> unsafePushPrevious(scriptLine.rhs)
 			"set" -> unsafePushSet(scriptLine.rhs)
 			"switch" -> unsafePushSwitch(scriptLine.rhs)
@@ -79,17 +78,6 @@ fun Compiler.unsafePushGiven(script: Script): Compiler =
 			compiled(
 				expr(given()),
 				context.typeBindings.unsafeType(given())))
-	}
-
-fun Compiler.unsafePushOf(script: Script): Compiler =
-	script.unsafeType.let { ofScriptType ->
-		failIfOr(!ofScriptType.contains(compiled.type)) {
-			compiler(
-				context,
-				compiled(
-					compiled.expr,
-					ofScriptType))
-		}
 	}
 
 fun Compiler.unsafePushMeta(script: Script): Compiler =
