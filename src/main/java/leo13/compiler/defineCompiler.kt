@@ -37,20 +37,16 @@ fun DefineCompiler.pushContains(script: Script): DefineCompiler =
 	compiledScript.onlyLineOrNull!!.onlyNameOrNull!!.let { name ->
 		script.unsafeType.let { type ->
 			defineCompiler(
-				context
-					.plus(type(name lineTo type))
-					.plus(
-						function(
-							type(name),
-							compiled(script(name lineTo script)))),
+				context.plus(function(name, type(name lineTo type))),
 				script())
 		}
 	}
 
+// TODO: Maybe we don't need "exists" at all, if we have "contains"?
 fun DefineCompiler.pushExists(script: Script): DefineCompiler =
 	failIfOr(!script.isEmpty) {
 		defineCompiler(
-			context.plus(compiledScript.unsafeType),
+			context.plus(function("???", compiledScript.unsafeType)),
 			script())
 	}
 

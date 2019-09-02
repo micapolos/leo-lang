@@ -140,7 +140,7 @@ class CompilerTest {
 	fun pushGiven() {
 		val compiled = compiler(
 			context(
-				types(),
+				typeFunctions(),
 				functions(),
 				typeBindings(type("zero"), type("one"))),
 			compiled())
@@ -150,7 +150,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					context(
-						types(),
+						typeFunctions(),
 						functions(),
 						typeBindings(type("zero"), type("one"))),
 					compiled(
@@ -210,7 +210,10 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					context(
-						types(type(unsafeChoice("zero" caseTo type(), "one" caseTo type()))),
+						typeFunctions(
+							function(
+								"???",
+								type(unsafeChoice("zero" caseTo type(), "one" caseTo type())))),
 						functions(),
 						typeBindings()),
 					compiled()))
@@ -229,21 +232,15 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					context(
-						types(
-							type(
-								"bit" lineTo type(
-									unsafeChoice(
-										"zero" caseTo type(),
-										"one" caseTo type())))),
-						functions(
+						typeFunctions(
 							function(
-								type("bit" lineTo type()),
-								compiled(
-									script(
-										"bit" lineTo script(
-											"zero" lineTo script(),
-											"or" lineTo script(
-												"one" lineTo script())))))),
+								"bit",
+								type(
+									"bit" lineTo type(
+										unsafeChoice(
+											"zero" caseTo type(),
+											"one" caseTo type()))))),
+						functions(),
 						typeBindings()),
 					compiled()))
 	}
@@ -271,7 +268,7 @@ class CompilerTest {
 	fun pushFunctionApplication() {
 		compiler(
 			context(
-				types(),
+				typeFunctions(),
 				functions(
 					function(
 						type("zero" lineTo type()),
@@ -284,7 +281,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					context(
-						types(),
+						typeFunctions(),
 						functions(
 							function(
 								type("zero" lineTo type()),

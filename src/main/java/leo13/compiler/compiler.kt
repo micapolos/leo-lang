@@ -187,7 +187,7 @@ fun Compiler.pushGetOrNull(typedLine: ScriptLine): Compiler? =
 
 fun Compiler.push(compiledLine: CompiledLine): Compiler =
 	compiled.plus(compiledLine).let { plusCompiled ->
-		context.types.resolve(plusCompiled.type).let { resolvedTrace ->
+		context.typeFunctions.resolve(plusCompiled.type).let { resolvedTrace ->
 			context.functions.compiledOrNull(resolvedTrace)
 				?.let { functionBody ->
 					compiler(

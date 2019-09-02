@@ -6,22 +6,22 @@ import leo13.script.*
 import leo13.type.*
 
 data class Context(
-	val types: Types,
+	val typeFunctions: TypeFunctions,
 	val functions: Functions,
 	val typeBindings: TypeBindings) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "context"
 	override val scriptableBody
 		get() = script(
-			types.scriptableLine,
+			typeFunctions.scriptableLine,
 			functions.scriptableLine,
 			typeBindings.scriptableLine)
 }
 
-fun context() = Context(types(), functions(), typeBindings())
-fun context(types: Types, functions: Functions, typeBindings: TypeBindings) = Context(types, functions, typeBindings)
+fun context() = Context(typeFunctions(), functions(), typeBindings())
+fun context(typeFunctions: TypeFunctions, functions: Functions, typeBindings: TypeBindings) = Context(typeFunctions, functions, typeBindings)
 fun Context.bind(type: Type) = copy(typeBindings = typeBindings.push(type))
-fun Context.plus(type: Type) = copy(types = types.plus(type))
+fun Context.plus(type: TypeFunction) = copy(typeFunctions = typeFunctions.plus(type))
 fun Context.plus(function: Function) = copy(functions = functions.plus(function))
 
 fun Context.unsafeCompile(script: Script): Compiled =
