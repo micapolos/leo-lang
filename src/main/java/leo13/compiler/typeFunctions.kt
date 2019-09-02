@@ -2,9 +2,13 @@ package leo13.compiler
 
 import leo.base.notNullIf
 import leo13.LeoObject
+import leo13.script.Script
+import leo13.script.ScriptLine
 import leo13.script.asScript
+import leo13.script.lineTo
 import leo13.type.Type
 import leo13.type.contains
+import leo13.type.type
 import leo9.Stack
 import leo9.mapFirst
 import leo9.push
@@ -28,9 +32,15 @@ fun TypeFunctions.resolve(type: Type): Type =
 		}
 	} ?: type
 
-fun TypeFunctions.typeOrNull(name: String): Type? =
+fun TypeFunctions.resolve(name: String): Type =
 	stack.mapFirst {
 		notNullIf(this.name == name) {
 			this.type
 		}
-	}
+	} ?: type(name)
+
+fun TypeFunctions.resolve(script: Script): Script =
+	resolver(this, script).push(script).resolvedScript
+
+fun TypeFunctions.resolve(scriptLine: ScriptLine): ScriptLine =
+	scriptLine.name lineTo resolve(scriptLine.rhs)

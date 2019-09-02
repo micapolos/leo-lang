@@ -1,6 +1,5 @@
 package leo13.compiler
 
-import leo.base.failIfOr
 import leo13.fail
 import leo13.script.*
 import leo13.type.lineTo
@@ -17,7 +16,6 @@ fun DefineCompiler.push(scriptLine: ScriptLine): DefineCompiler =
 	when (scriptLine.name) {
 		"gives" -> pushGives(scriptLine.rhs)
 		"contains" -> pushContains(scriptLine.rhs)
-		"exists" -> pushExists(scriptLine.rhs)
 		else -> pushOther(scriptLine)
 	}
 
@@ -42,16 +40,10 @@ fun DefineCompiler.pushContains(script: Script): DefineCompiler =
 		}
 	}
 
-// TODO: Maybe we don't need "exists" at all, if we have "contains"?
-fun DefineCompiler.pushExists(script: Script): DefineCompiler =
-	failIfOr(!script.isEmpty) {
-		defineCompiler(
-			context.plus(function("???", compiledScript.unsafeType)),
-			script())
-	}
-
 fun DefineCompiler.pushOther(scriptLine: ScriptLine): DefineCompiler =
-	defineCompiler(context, compiledScript.plus(scriptLine))
+	defineCompiler(
+		context,
+		compiledScript.plus(context.typeFunctions.resolve(scriptLine)))
 
 val DefineCompiler.finishedContext: Context
 	get() =

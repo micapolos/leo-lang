@@ -200,26 +200,6 @@ class CompilerTest {
 	}
 
 	@Test
-	fun pushExists() {
-		compiler(context(), compiled())
-			.unsafePush(
-				"define" lineTo script(
-					"zero" lineTo script(),
-					"or" lineTo script("one"),
-					"exists" lineTo script()))
-			.assertEqualTo(
-				compiler(
-					context(
-						typeFunctions(
-							function(
-								"???",
-								type(unsafeChoice("zero" caseTo type(), "one" caseTo type())))),
-						functions(),
-						typeBindings()),
-					compiled()))
-	}
-
-	@Test
 	fun pushContains() {
 		compiler()
 			.unsafePush(
