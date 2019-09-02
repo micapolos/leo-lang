@@ -24,7 +24,7 @@ fun TypeResolver.push(script: Script): TypeResolver =
 
 fun TypeResolver.push(scriptLine: ScriptLine): TypeResolver =
 	if (resolvedScript.isEmpty && scriptLine.rhs.isEmpty)
-		append(typeFunctions.resolve(scriptLine.name).scriptableBody)
+		resolver(typeFunctions, typeFunctions.resolve(scriptLine.name).scriptableBody)
 	else
 		append(scriptLine.name lineTo typeFunctions.resolve(scriptLine.rhs))
 

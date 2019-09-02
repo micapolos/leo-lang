@@ -43,7 +43,7 @@ fun DefineCompiler.pushContains(script: Script): DefineCompiler =
 fun DefineCompiler.pushOther(scriptLine: ScriptLine): DefineCompiler =
 	defineCompiler(
 		context,
-		compiledScript.plus(context.typeFunctions.resolve(scriptLine)))
+		compiledScript.plus(context.typeFunctions.resolve(script(scriptLine))))
 
 val DefineCompiler.finishedContext: Context
 	get() =

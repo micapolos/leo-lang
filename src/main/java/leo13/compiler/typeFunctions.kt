@@ -2,10 +2,7 @@ package leo13.compiler
 
 import leo.base.notNullIf
 import leo13.LeoObject
-import leo13.script.Script
-import leo13.script.ScriptLine
-import leo13.script.asScript
-import leo13.script.lineTo
+import leo13.script.*
 import leo13.type.Type
 import leo13.type.contains
 import leo13.type.type
@@ -40,7 +37,7 @@ fun TypeFunctions.resolve(name: String): Type =
 	} ?: type(name)
 
 fun TypeFunctions.resolve(script: Script): Script =
-	resolver(this, script).push(script).resolvedScript
+	resolver(this, script()).push(script).resolvedScript
 
 fun TypeFunctions.resolve(scriptLine: ScriptLine): ScriptLine =
 	scriptLine.name lineTo resolve(scriptLine.rhs)

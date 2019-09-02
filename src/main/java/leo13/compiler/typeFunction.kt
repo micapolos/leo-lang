@@ -5,6 +5,7 @@ import leo13.script.lineTo
 import leo13.script.script
 import leo13.type.Type
 
+// TODO: This should be just typeLine.
 data class TypeFunction(val name: String, val type: Type) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "function"
