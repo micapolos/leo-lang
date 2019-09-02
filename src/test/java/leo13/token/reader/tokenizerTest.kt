@@ -183,7 +183,7 @@ class TokenizerTest {
 						token(opening("g")),
 						token(closing)),
 					parent(indent(tab(space))),
-					head(input(colon(false), "")),
+					head(input(colon(true), "")),
 					status(ok)))
 	}
 
@@ -304,7 +304,7 @@ class TokenizerTest {
 					token(opening("two")),
 					token(closing),
 					token(opening("gives"))),
-				parent(indent(tab(space), tab(space))),
+				parent(indent(tab(space, space))),
 				head(input(colon(true), "three")),
 				status(ok)))
 	}
@@ -323,7 +323,7 @@ class TokenizerTest {
 					token(opening("gives")),
 					token(opening("three"))),
 				parent(),
-				head(indent(tab(space, space), tab(space))),
+				head(indent(tab(space, space, space))),
 				status(ok)))
 	}
 
@@ -337,7 +337,7 @@ class TokenizerTest {
 					token(opening("two")),
 					token(closing)),
 				parent(indent(tab(space))),
-				head(input(colon(false), "three")),
+				head(input(colon(true), "three")),
 				status(ok)))
 	}
 
@@ -353,6 +353,39 @@ class TokenizerTest {
 					token(opening("three"))),
 				parent(null),
 				head(indent(tab(space, space))),
+				status(ok)))
+	}
+
+	@Test
+	fun maliciousStuff2_before() {
+		test(
+			"circle\n\tradius: zero\n\tcenter",
+			tokenizer(
+				tokens(
+					token(opening("circle")),
+					token(opening("radius")),
+					token(opening("zero")),
+					token(closing),
+					token(closing)),
+				parent(indent(tab(space))),
+				head(input(colon(false), "center")),
+				status(ok)))
+	}
+
+	@Test
+	fun maliciousStuff2_after() {
+		test(
+			"circle\n\tradius: zero\n\tcenter\n",
+			tokenizer(
+				tokens(
+					token(opening("circle")),
+					token(opening("radius")),
+					token(opening("zero")),
+					token(closing),
+					token(closing),
+					token(opening("center"))),
+				parent(),
+				head(indent(tab(space), tab(space))),
 				status(ok)))
 	}
 

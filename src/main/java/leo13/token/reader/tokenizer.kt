@@ -65,7 +65,7 @@ val Tokenizer.pushSpaceOrNull: Tokenizer?
 						.plus(token(opening(head.input.name)))
 						.plus(token(closing)),
 					parent,
-					head(input(colon(false), "")),
+					head(input(head.input.colon, "")),
 					status)
 			is ColonHead ->
 				tokenizer(tokens, parent, head(input(colon(true), "")), status)
@@ -110,7 +110,8 @@ val Tokenizer.pushNewlineOrNull: Tokenizer?
 				else Tokenizer(
 					tokens.plus(token(opening(head.input.name))),
 					parent(),
-					head(parent.indentOrNull.orNullPlus(space).reverse),
+					if (head.input.colon.boolean) head(parent.indentOrNull.orNullPlus(space).reverse)
+					else head(parent.indentOrNull.orNullPlus(tab(space)).reverse),
 					status)
 			is ColonHead -> null
 			is IndentHead -> null

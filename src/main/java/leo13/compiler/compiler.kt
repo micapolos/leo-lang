@@ -27,6 +27,7 @@ fun Compiler.unsafePush(script: Script): Compiler =
 fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 	try {
 		when (scriptLine.name) {
+			"as" -> unsafePushAs(scriptLine.rhs)
 			"apply" -> unsafePushApply(scriptLine.rhs)
 			"exists" -> unsafePushExists(scriptLine.rhs)
 			"contains" -> unsafePushContains(scriptLine.rhs)
@@ -191,6 +192,15 @@ fun Compiler.unsafePushSet(scriptLine: ScriptLine): Compiler =
 				context,
 				compiled.setOrNull(compiledLine)!!)
 		}
+
+fun Compiler.unsafePushAs(script: Script): Compiler =
+	compiler(
+		context
+			.plus(
+				function(
+					script.type,
+					compiled)),
+		compiled())
 
 fun Compiler.unsafePushOther(typedLine: ScriptLine): Compiler =
 	null
