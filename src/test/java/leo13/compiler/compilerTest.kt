@@ -161,45 +161,6 @@ class CompilerTest {
 	}
 
 	@Test
-	fun pushOf() {
-		compiler(context(), compiled())
-			.unsafePush(script("of" lineTo script()))
-			.assertEqualTo(compiler(context(), compiled()))
-
-		compiler(context(), compiled())
-			.unsafePush(
-				script(
-					"zero" lineTo script(),
-					"of" lineTo script(
-						"zero" lineTo script(),
-						"or" lineTo script("one"))))
-			.assertEqualTo(
-				compiler(
-					context(),
-					compiled(
-						expr(script("zero")),
-						type(unsafeChoice("zero" caseTo type(), "one" caseTo type())))))
-
-		compiler(context(), compiled())
-			.unsafePush(script(
-				"zero" lineTo script(),
-				"meta" lineTo script(
-					"of" lineTo script(
-						"choice" lineTo script(
-							"either" lineTo script("zero"),
-							"either" lineTo script("one"))))))
-			.assertEqualTo(
-				compiler(
-					context(),
-					compiled(script(
-						"zero" lineTo script(),
-						"of" lineTo script(
-							"choice" lineTo script(
-								"either" lineTo script("zero"),
-								"either" lineTo script("one")))))))
-	}
-
-	@Test
 	fun pushContains() {
 		compiler()
 			.unsafePush(

@@ -29,15 +29,6 @@ class ParserTest {
 	}
 
 	@Test
-	fun choiceLines() {
-		type(
-			"zero" lineTo type(),
-			"or" lineTo type("one" lineTo type()),
-			"or" lineTo type("two" lineTo type()))
-			.assertScriptableLineWorks { unsafeType }
-	}
-
-	@Test
 	fun choiceAndLines() {
 		type(
 			unsafeChoice(
