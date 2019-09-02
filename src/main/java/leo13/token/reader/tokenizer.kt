@@ -2,43 +2,49 @@ package leo13.token.reader
 
 import leo.base.fold
 import leo.base.updateIfNotNull
-import leo13.LeoObject
-import leo13.base.Writer
-import leo13.colon
-import leo13.fail
+import leo13.*
 import leo13.script.*
-import leo13.space
 import leo13.token.*
 
 data class Tokenizer(
 	val tokens: Tokens,
 	val parent: Parent,
-	val head: Head) : LeoObject(), Writer<CharLeo> {
+	val head: Head,
+	val status: Status) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "tokenizer"
-	override val scriptableBody get() = script(tokens.scriptableLine, parent.scriptableLine, head.scriptableLine)
-
-	override fun write(leo: CharLeo) = push(leo.char)
-	override fun writeError(script: Script) = fail<CharLeo>(script).run { Unit }
-	override val finishWriting get() = finish.run { Unit }
+	override val scriptableBody
+		get() = script(
+			tokens.scriptableLine,
+			parent.scriptableLine,
+			head.scriptableLine,
+			status.scriptableLine)
 }
 
-fun reader(tokens: Tokens, parent: Parent, head: Head) =
-	Tokenizer(tokens, parent, head)
+fun tokenizer(tokens: Tokens, parent: Parent, head: Head, status: Status): Tokenizer =
+	Tokenizer(tokens, parent, head, status)
 
-fun reader() = reader(tokens(), parent(), head(input(colon(false), "")))
+fun tokenizer(): Tokenizer = tokenizer(
+	tokens(),
+	parent(),
+	head(input(colon(false), "")),
+	status(ok))
 
 fun tokens(string: String): Tokens =
-	reader().push(string).finish
+	tokenizer().push(string).finish
 
 val String.tokens get() = tokens(this)
+
+fun Tokenizer.unsafePush(string: String): Tokenizer =
+	push(string).let { failIfError(it.status) }
 
 fun Tokenizer.push(string: String): Tokenizer =
 	fold(string) { push(it) }
 
 fun Tokenizer.push(char: Char): Tokenizer =
-	pushOrNull(char)
-		?: fail(script(scriptableLine).plus("push" lineTo script(leo(char).scriptableLine)))
+	updateIfOk(status) {
+		pushOrNull(char) ?: error(script(leo(char).scriptableLine))
+	}
 
 fun Tokenizer.pushOrNull(char: Char): Tokenizer? =
 	when (char) {
@@ -54,14 +60,15 @@ val Tokenizer.pushSpaceOrNull: Tokenizer?
 		when (head) {
 			is InputHead ->
 				if (head.input.name.isEmpty()) null
-				else Tokenizer(
+				else tokenizer(
 					tokens
 						.plus(token(opening(head.input.name)))
 						.plus(token(closing)),
 					parent,
-					head(input(colon(false), "")))
+					head(input(colon(false), "")),
+					status)
 			is ColonHead ->
-				reader(tokens, parent, head(input(colon(true), "")))
+				tokenizer(tokens, parent, head(input(colon(true), "")), status)
 			is IndentHead -> null
 		}
 
@@ -71,12 +78,13 @@ val Tokenizer.pushTabOrNull: Tokenizer?
 			is InputHead -> null
 			is ColonHead -> null
 			is IndentHead ->
-				reader(
+				tokenizer(
 					tokens,
 					parent.plus(head.indent.tab),
 					head.indent.previousOrNull
 						?.let { previous -> head(previous) }
-						?: head(input(colon(false), "")))
+						?: head(input(colon(false), "")),
+					status)
 		}
 
 val Tokenizer.pushColonOrNull: Tokenizer?
@@ -84,11 +92,12 @@ val Tokenizer.pushColonOrNull: Tokenizer?
 		when (head) {
 			is InputHead ->
 				if (head.input.name.isEmpty()) null
-				else reader(
+				else tokenizer(
 					tokens.plus(token(opening(head.input.name))),
 					if (head.input.colon.boolean) parent.plus(space)
 					else parent.plus(tab(space)),
-					head(colon))
+					head(colon),
+					status)
 			is ColonHead -> null
 			is IndentHead -> null
 		}
@@ -101,7 +110,8 @@ val Tokenizer.pushNewlineOrNull: Tokenizer?
 				else Tokenizer(
 					tokens.plus(token(opening(head.input.name))),
 					parent(),
-					head(parent.indentOrNull.orNullPlus(space).reverse))
+					head(parent.indentOrNull.orNullPlus(space).reverse),
+					status)
 			is ColonHead -> null
 			is IndentHead -> null
 		}
@@ -110,13 +120,18 @@ fun Tokenizer.pushOtherOrNull(char: Char): Tokenizer? =
 	when (head) {
 		is InputHead ->
 			if (!char.isLetter()) null
-			else reader(tokens, parent, head(input(head.input.colon, head.input.name + char)))
+			else tokenizer(
+				tokens,
+				parent,
+				head(input(head.input.colon, head.input.name + char)),
+				status)
 		is ColonHead -> null
 		is IndentHead ->
-			reader(
+			tokenizer(
 				tokens.flush(head.indent),
 				parent,
-				head(input(colon(false), "$char")))
+				head(input(colon(false), "$char")),
+				status)
 	}
 
 fun Tokens.flush(indent: Indent): Tokens =
@@ -137,3 +152,6 @@ val Tokenizer.finishOrNull: Tokens?
 			is ColonHead -> null
 			is IndentHead -> tokens.flush(head.indent)
 		}
+
+fun Tokenizer.error(script: Script): Tokenizer =
+	copy(status = status(leo13.error(script)))

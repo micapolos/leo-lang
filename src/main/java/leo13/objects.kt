@@ -62,7 +62,14 @@ object Evaluator : LeoObject() {
 	override val scriptableBody get() = script()
 }
 
+object Ok : LeoObject() {
+	override fun toString() = scriptableLine.toString()
+	override val scriptableName get() = "ok"
+	override val scriptableBody get() = script()
+}
+
 val append = Append
+val ok = Ok
 val lhs = Lhs
 val rhs = Rhs
 val rhsLine = RhsLine
