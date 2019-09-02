@@ -1,6 +1,5 @@
-bit contains: bit: zero or: one
-bit negate gives: given bit switch
-	zero gives: bit: one
-	one gives: bit: zero
-bit: zero
-negate
+vec
+	x: zero
+	y: one
+set
+	z: migros

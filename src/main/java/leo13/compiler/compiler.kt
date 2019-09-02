@@ -25,21 +25,25 @@ fun Compiler.unsafePush(script: Script): Compiler =
 	fold(script.lineSeq) { unsafePush(it) }
 
 fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
-	when (scriptLine.name) {
-		"apply" -> unsafePushApply(scriptLine.rhs)
-		"exists" -> unsafePushExists(scriptLine.rhs)
-		"contains" -> unsafePushContains(scriptLine.rhs)
-		"given" -> unsafePushGiven(scriptLine.rhs)
-		"gives" -> unsafePushGives(scriptLine.rhs)
-		"giving" -> unsafePushGiving(scriptLine.rhs)
-		"line" -> unsafePushLine(scriptLine.rhs)
-		"meta" -> unsafePushMeta(scriptLine.rhs)
-		"of" -> unsafePushOf(scriptLine.rhs)
-		"previous" -> unsafePushPrevious(scriptLine.rhs)
-		"set" -> unsafePushSet(scriptLine.rhs)
-		"switch" -> unsafePushSwitch(scriptLine.rhs)
-		"compiler" -> unsafePushCompiler(scriptLine.rhs)
-		else -> unsafePushOther(scriptLine)
+	try {
+		when (scriptLine.name) {
+			"apply" -> unsafePushApply(scriptLine.rhs)
+			"exists" -> unsafePushExists(scriptLine.rhs)
+			"contains" -> unsafePushContains(scriptLine.rhs)
+			"given" -> unsafePushGiven(scriptLine.rhs)
+			"gives" -> unsafePushGives(scriptLine.rhs)
+			"giving" -> unsafePushGiving(scriptLine.rhs)
+			"line" -> unsafePushLine(scriptLine.rhs)
+			"meta" -> unsafePushMeta(scriptLine.rhs)
+			"of" -> unsafePushOf(scriptLine.rhs)
+			"previous" -> unsafePushPrevious(scriptLine.rhs)
+			"set" -> unsafePushSet(scriptLine.rhs)
+			"switch" -> unsafePushSwitch(scriptLine.rhs)
+			"compiler" -> unsafePushCompiler(scriptLine.rhs)
+			else -> unsafePushOther(scriptLine)
+		}
+	} catch (exception: Exception) {
+		fail(compiled.type.scriptableBody.plus(scriptLine))
 	}
 
 fun Compiler.unsafePushExists(script: Script): Compiler =
