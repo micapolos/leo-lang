@@ -9,7 +9,7 @@ import leo13.script.lineTo
 import leo13.script.plus
 import leo13.script.script
 
-data class Tab(val previousOrNull: Tab?, val space: Space) : LeoObject() {
+data class SpacesTab(val previousOrNull: SpacesTab?, val space: Space) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "tab"
 	override val scriptableBody: Script
@@ -20,5 +20,5 @@ data class Tab(val previousOrNull: Tab?, val space: Space) : LeoObject() {
 				.plus("space" lineTo script())
 }
 
-fun tab(space: Space, vararg spaces: Space) = Tab(null, space).fold(spaces) { plus(it) }
-fun Tab?.plus(space: Space): Tab = Tab(this, space)
+fun tab(space: Space, vararg spaces: Space) = SpacesTab(null, space).fold(spaces) { plus(it) }
+fun SpacesTab?.plus(space: Space): SpacesTab = SpacesTab(this, space)

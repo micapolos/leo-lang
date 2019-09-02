@@ -1,7 +1,6 @@
-bit: zero or: one
-negate gives: given bit switch
-	zero gives: zero
-	one gives: zero
-bit: one
-of: bit: zero or: one
+bit contains: bit: zero or: one
+bit negate gives: given bit switch
+	zero gives: bit: one
+	one gives: bit: zero
+bit: zero
 negate

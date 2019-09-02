@@ -4,6 +4,7 @@ import leo.base.fold
 import leo.base.updateIfNotNull
 import leo13.LeoObject
 import leo13.base.Writer
+import leo13.colon
 import leo13.fail
 import leo13.script.*
 import leo13.space
@@ -25,16 +26,12 @@ data class Tokenizer(
 fun reader(tokens: Tokens, parent: Parent, head: Head) =
 	Tokenizer(tokens, parent, head)
 
-fun reader() = reader(tokens(), parent(), head(input(line(new), "")))
+fun reader() = reader(tokens(), parent(), head(input(colon(false), "")))
 
 fun tokens(string: String): Tokens =
 	reader().push(string).finish
 
 val String.tokens get() = tokens(this)
-
-object Colon
-
-val colon = Colon
 
 fun Tokenizer.push(string: String): Tokenizer =
 	fold(string) { push(it) }
@@ -62,9 +59,9 @@ val Tokenizer.pushSpaceOrNull: Tokenizer?
 						.plus(token(opening(head.input.name)))
 						.plus(token(closing)),
 					parent,
-					head(input(line(new), "")))
+					head(input(colon(false), "")))
 			is ColonHead ->
-				reader(tokens, parent, head(input(line(same), "")))
+				reader(tokens, parent, head(input(colon(true), "")))
 			is IndentHead -> null
 		}
 
@@ -79,7 +76,7 @@ val Tokenizer.pushTabOrNull: Tokenizer?
 					parent.plus(head.indent.tab),
 					head.indent.previousOrNull
 						?.let { previous -> head(previous) }
-						?: head(input(line(new), "")))
+						?: head(input(colon(false), "")))
 		}
 
 val Tokenizer.pushColonOrNull: Tokenizer?
@@ -89,10 +86,8 @@ val Tokenizer.pushColonOrNull: Tokenizer?
 				if (head.input.name.isEmpty()) null
 				else reader(
 					tokens.plus(token(opening(head.input.name))),
-					when (head.input.line) {
-						is SameLine -> parent.plus(space)
-						is NewLine -> parent.plus(tab(space))
-					},
+					if (head.input.colon.boolean) parent.plus(space)
+					else parent.plus(tab(space)),
 					head(colon))
 			is ColonHead -> null
 			is IndentHead -> null
@@ -106,10 +101,7 @@ val Tokenizer.pushNewlineOrNull: Tokenizer?
 				else Tokenizer(
 					tokens.plus(token(opening(head.input.name))),
 					parent(),
-					when (head.input.line) {
-						is SameLine -> head(parent.indentOrNull.orNullPlus(space).reverse)
-						is NewLine -> head(parent.indentOrNull.orNullPlus(tab(space)).reverse)
-					})
+					head(parent.indentOrNull.orNullPlus(space).reverse))
 			is ColonHead -> null
 			is IndentHead -> null
 		}
@@ -118,19 +110,19 @@ fun Tokenizer.pushOtherOrNull(char: Char): Tokenizer? =
 	when (head) {
 		is InputHead ->
 			if (!char.isLetter()) null
-			else reader(tokens, parent, head(input(head.input.line, head.input.name + char)))
+			else reader(tokens, parent, head(input(head.input.colon, head.input.name + char)))
 		is ColonHead -> null
 		is IndentHead ->
 			reader(
 				tokens.flush(head.indent),
 				parent,
-				head(input(line(new), "$char")))
+				head(input(colon(false), "$char")))
 	}
 
 fun Tokens.flush(indent: Indent): Tokens =
 	flush(indent.tab).updateIfNotNull(indent.previousOrNull) { flush(it) }
 
-fun Tokens.flush(tab: Tab): Tokens =
+fun Tokens.flush(tab: SpacesTab): Tokens =
 	plus(token(closing)).updateIfNotNull(tab.previousOrNull) { flush(it) }
 
 val Tokenizer.finish: Tokens

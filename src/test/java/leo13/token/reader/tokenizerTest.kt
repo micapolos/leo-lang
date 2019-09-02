@@ -1,6 +1,7 @@
 package leo13.token.reader
 
 import leo.base.assertEqualTo
+import leo13.colon
 import leo13.space
 import leo13.token.closing
 import leo13.token.opening
@@ -21,11 +22,11 @@ class TokenizerTest {
 				reader(
 					tokens(),
 					parent(),
-					head(input(line(new), "f"))))
+					head(input(colon(false), "f"))))
 	}
 
 	@Test
-	fun tab() {
+	fun pushTab() {
 		assertFails { reader().push("\t") }
 	}
 
@@ -57,7 +58,7 @@ class TokenizerTest {
 				reader(
 					tokens(),
 					parent(),
-					head(input(line(new), "fo"))))
+					head(input(colon(false), "fo"))))
 	}
 
 	@Test
@@ -70,7 +71,7 @@ class TokenizerTest {
 						token(opening("f")),
 						token(closing)),
 					parent(),
-					head(input(line(new), ""))))
+					head(input(colon(false), ""))))
 	}
 
 	@Test
@@ -108,7 +109,7 @@ class TokenizerTest {
 				reader(
 					tokens(token(opening("f"))),
 					parent(indent(tab(space))),
-					head(input(line(new), ""))))
+					head(input(colon(false), ""))))
 	}
 
 	@Test
@@ -119,7 +120,7 @@ class TokenizerTest {
 				reader(
 					tokens(token(opening("f"))),
 					parent(indent(tab(space))),
-					head(input(line(same), ""))))
+					head(input(colon(true), ""))))
 	}
 
 	@Test
@@ -130,7 +131,7 @@ class TokenizerTest {
 				reader(
 					tokens(token(opening("f"))),
 					parent(indent(tab(space))),
-					head(input(line(same), "g"))))
+					head(input(colon(true), "g"))))
 	}
 
 	@Test
@@ -156,7 +157,7 @@ class TokenizerTest {
 						token(opening("f")),
 						token(opening("g"))),
 					parent(indent(tab(space, space))),
-					head(input(line(new), ""))))
+					head(input(colon(false), ""))))
 	}
 
 	@Test
@@ -170,7 +171,7 @@ class TokenizerTest {
 						token(opening("g")),
 						token(closing)),
 					parent(indent(tab(space))),
-					head(input(line(new), ""))))
+					head(input(colon(false), ""))))
 	}
 
 	@Test
@@ -182,7 +183,7 @@ class TokenizerTest {
 					tokens(
 						token(opening("switch"))),
 					parent(indent(tab(space))),
-					head(input(line(new), "one"))))
+					head(input(colon(false), "one"))))
 	}
 
 	@Test
@@ -196,7 +197,7 @@ class TokenizerTest {
 						token(opening("one")),
 						token(closing)),
 					parent(indent(tab(space))),
-					head(input(line(new), ""))))
+					head(input(colon(false), ""))))
 	}
 
 	@Test
@@ -210,7 +211,7 @@ class TokenizerTest {
 						token(opening("one")),
 						token(closing)),
 					parent(indent(tab(space))),
-					head(input(line(new), "gives"))))
+					head(input(colon(false), "gives"))))
 	}
 
 	@Test
@@ -240,7 +241,7 @@ class TokenizerTest {
 						token(closing),
 						token(opening("gives"))),
 					parent(indent(tab(space), tab(space))),
-					head(input(line(same), ""))))
+					head(input(colon(true), ""))))
 	}
 
 	@Test
@@ -255,7 +256,7 @@ class TokenizerTest {
 						token(closing),
 						token(opening("gives"))),
 					parent(indent(tab(space), tab(space))),
-					head(input(line(same), "jeden"))))
+					head(input(colon(true), "jeden"))))
 	}
 
 	@Test
@@ -268,7 +269,7 @@ class TokenizerTest {
 					token(opening("radius")),
 					token(opening("x"))),
 				parent(indent(tab(space, space, space))),
-				head(input(line(new), ""))))
+				head(input(colon(false), ""))))
 	}
 
 	@Test
@@ -284,7 +285,7 @@ class TokenizerTest {
 					token(closing),
 					token(opening("gives"))),
 				parent(indent(tab(space), tab(space))),
-				head(input(line(same), "three"))))
+				head(input(colon(true), "three"))))
 	}
 
 	@Test
@@ -302,6 +303,33 @@ class TokenizerTest {
 					token(opening("three"))),
 				parent(),
 				head(indent(tab(space, space), tab(space)))))
+	}
+
+	@Test
+	fun maliciousStuff_before() {
+		test(
+			"one: two three",
+			reader(
+				tokens(
+					token(opening("one")),
+					token(opening("two")),
+					token(closing)),
+				parent(indent(tab(space))),
+				head(input(colon(false), "three"))))
+	}
+
+	@Test
+	fun maliciousStuff_after() {
+		test(
+			"one: two three\n",
+			reader(
+				tokens(
+					token(opening("one")),
+					token(opening("two")),
+					token(closing),
+					token(opening("three"))),
+				parent(null),
+				head(indent(tab(space, space)))))
 	}
 
 	@Test

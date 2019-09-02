@@ -1,10 +1,10 @@
 package leo13.token.reader
 
+import leo13.Colon
 import leo13.LeoObject
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
-
 
 sealed class Head : LeoObject() {
 	override fun toString() = scriptableLine.toString()

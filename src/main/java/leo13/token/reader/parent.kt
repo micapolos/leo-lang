@@ -15,7 +15,7 @@ fun parent(indent: Indent? = null) = Parent(indent)
 
 val Parent.isEmpty: Boolean get() = indentOrNull == null
 
-fun Parent.plus(tab: Tab): Parent =
+fun Parent.plus(tab: SpacesTab): Parent =
 	if (indentOrNull == null) parent(indent(tab))
 	else parent(indentOrNull.plus(tab))
 

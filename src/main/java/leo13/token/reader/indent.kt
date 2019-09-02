@@ -8,7 +8,7 @@ import leo13.script.Script
 import leo13.script.plus
 import leo13.script.script
 
-data class Indent(val previousOrNull: Indent?, val tab: Tab) : LeoObject() {
+data class Indent(val previousOrNull: Indent?, val tab: SpacesTab) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "indent"
 	override val scriptableBody: Script
@@ -16,7 +16,7 @@ data class Indent(val previousOrNull: Indent?, val tab: Tab) : LeoObject() {
 			previousOrNull?.scriptableBody.orIfNull { script() }.plus(tab.scriptableLine)
 }
 
-fun indent(tab: Tab, vararg tabs: Tab): Indent =
+fun indent(tab: SpacesTab, vararg tabs: SpacesTab): Indent =
 	Indent(null, tab).fold(tabs) { plus(it) }
 
 fun Indent.plus(space: Space): Indent =
@@ -26,10 +26,10 @@ fun Indent?.orNullPlus(space: Space): Indent =
 	if (this == null) indent(tab(space))
 	else plus(space)
 
-fun Indent.plus(tab: Tab): Indent =
+fun Indent.plus(tab: SpacesTab): Indent =
 	Indent(this, tab)
 
-fun Indent?.orNullPlus(tab: Tab): Indent =
+fun Indent?.orNullPlus(tab: SpacesTab): Indent =
 	if (this == null) indent(tab)
 	else plus(tab)
 
