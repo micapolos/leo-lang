@@ -48,7 +48,7 @@ class ValueBuilderTest {
 	}
 
 	@Test
-	fun accessOrNull() {
+	fun getOrNull() {
 		value("vec" lineTo value(
 			"x" lineTo value("zero"),
 			"y" lineTo value("one")))
@@ -57,5 +57,58 @@ class ValueBuilderTest {
 				getOrNull("y").assertEqualTo(value("y" lineTo value("one")))
 				getOrNull("z").assertEqualTo(null)
 			}
+	}
+
+	@Test
+	fun replaceOrNull() {
+		val value = value(
+			"x" lineTo value("zero"),
+			"y" lineTo value("one"))
+
+		value
+			.replaceOrNull("x" lineTo value("ten"))
+			.assertEqualTo(
+				value(
+					"x" lineTo value("ten"),
+					"y" lineTo value("one")))
+
+		value
+			.replaceOrNull("y" lineTo value("ten"))
+			.assertEqualTo(
+				value(
+					"x" lineTo value("zero"),
+					"y" lineTo value("ten")))
+
+		value
+			.replaceOrNull("z" lineTo value("ten"))
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun setOrNull() {
+		val value = value(
+			"vec" lineTo value(
+				"x" lineTo value("zero"),
+				"y" lineTo value("one")))
+
+		value
+			.setOrNull("x" lineTo value("ten"))
+			.assertEqualTo(
+				value(
+					"vec" lineTo value(
+						"x" lineTo value("ten"),
+						"y" lineTo value("one"))))
+
+		value
+			.setOrNull("y" lineTo value("ten"))
+			.assertEqualTo(
+				value(
+					"vec" lineTo value(
+						"x" lineTo value("zero"),
+						"y" lineTo value("ten"))))
+
+		value
+			.setOrNull("z" lineTo value("ten"))
+			.assertEqualTo(null)
 	}
 }

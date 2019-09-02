@@ -19,5 +19,8 @@ fun valueBindings(vararg values: Value) = stack(*values).valueBindings
 fun ValueBindings.evaluate(expr: Expr): Value =
 	evaluator(this, value()).push(expr).value
 
+fun ValueBindings.evaluate(exprLine: ExprLine): ValueLine =
+	exprLine.name lineTo evaluate(exprLine.rhs)
+
 fun ValueBindings.evaluate(op: Op): Value =
 	evaluator(this, value()).push(op).value

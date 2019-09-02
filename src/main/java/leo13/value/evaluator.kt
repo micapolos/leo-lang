@@ -45,6 +45,7 @@ fun Evaluator.evaluate(op: Op): Value =
 		is RhsLineOp -> evaluate(op.rhsLine)
 		is RhsOp -> evaluate(op.rhs)
 		is GetOp -> evaluate(op.get)
+		is SetOp -> evaluate(op.set)
 		is WrapOp -> evaluate(op.wrap)
 		is SwitchOp -> evaluate(op.switch)
 		is LineOp -> evaluate(op.line)
@@ -62,6 +63,9 @@ fun Evaluator.evaluate(rhs: Rhs): Value =
 
 fun Evaluator.evaluate(get: Get): Value =
 	value.getOrNull(get.name)!!
+
+fun Evaluator.evaluate(set: Set): Value =
+	value.setOrNull(bindings.evaluate(set.line))!!
 
 fun Evaluator.evaluate(wrap: Wrap): Value =
 	value.wrapOrNull!!

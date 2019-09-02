@@ -70,9 +70,18 @@ fun Compiled.lineOrNull(name: String): Compiled? =
 				.lineOrNull(name)
 		}
 
-fun Compiled.accessOrNull(name: String): Compiled? =
+fun Compiled.getOrNull(name: String): Compiled? =
 	type
 		.getOrNull(name)
 		?.let { type ->
 			compiled(expr.plus(op(get(name))), type)
+		}
+
+fun Compiled.setOrNull(line: CompiledLine): Compiled? =
+	type
+		.setOrNull(line.name lineTo line.rhs.type)
+		?.let { setType ->
+			compiled(
+				expr.plus(op(set(line.name lineTo line.rhs.expr))),
+				setType)
 		}

@@ -30,7 +30,7 @@ class CompilerTest {
 	}
 
 	@Test
-	fun pushAccess() {
+	fun pushGet() {
 		compiler(
 			context(),
 			compiled(
@@ -45,8 +45,30 @@ class CompilerTest {
 					.assertEqualTo(
 						compiler(
 							context(),
-							compiler.compiled.accessOrNull("x")!!))
+							compiler.compiled.getOrNull("x")!!))
 			}
+	}
+
+	@Test
+	fun pushSet() {
+		val compiler = compiler(
+			context(),
+			compiled(
+				expr(given()),
+				type(
+					"vec" lineTo type(
+						"x" lineTo type("zero"),
+						"y" lineTo type("one")))))
+
+		compiler
+			.unsafePush(
+				"set" lineTo script(
+					"x" lineTo script("ten"),
+					"y" lineTo script("eleven")))
+			.assertEqualTo(
+				compiler
+					.unsafePushSet("x" lineTo script("ten"))
+					.unsafePushSet("y" lineTo script("eleven")))
 	}
 
 	@Test

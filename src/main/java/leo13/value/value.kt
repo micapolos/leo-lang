@@ -75,8 +75,23 @@ val Value.onlyLineOrNull get() = linkOrNull?.onlyLineOrNull
 fun Value.firstLineOrNull(name: String): ValueLine? =
 	lineSeq.firstOrNull { it.name == name }
 
+fun Value.replaceOrNull(line: ValueLine): Value? =
+	linkOrNull?.let { link ->
+		if (link.line.name == line.name) value(link(link.lhs, line))
+		else link.lhs.replaceOrNull(line)?.let { replacedLhs ->
+			value(link(replacedLhs, link.line))
+		}
+	}
+
 fun Value.getOrNull(name: String): Value? =
 	onlyLineOrNull?.rhs?.firstLineOrNull(name)?.let { value(it) }
+
+fun Value.setOrNull(line: ValueLine): Value? =
+	onlyLineOrNull?.let { onlyLine ->
+		onlyLine.rhs.replaceOrNull(line)?.let { replaced ->
+			value(onlyLine.name lineTo replaced)
+		}
+	}
 
 val Value.wrapOrNull: Value?
 	get() =

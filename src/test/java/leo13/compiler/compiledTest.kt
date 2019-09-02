@@ -6,10 +6,7 @@ import leo13.rhs
 import leo13.rhsLine
 import leo13.type.lineTo
 import leo13.type.type
-import leo13.value.expr
-import leo13.value.given
-import leo13.value.op
-import leo13.value.value
+import leo13.value.*
 import kotlin.test.Test
 
 class CompiledTest {
@@ -97,10 +94,28 @@ class CompiledTest {
 				"vec" lineTo type(
 					"x" lineTo type("zero"),
 					"y" lineTo type("one"))))
-			.accessOrNull("x")
+			.getOrNull("x")
 			.assertEqualTo(
 				compiled(
 					expr(given(), op(leo13.value.get("x"))),
 					type("x" lineTo type("zero"))))
+	}
+
+	@Test
+	fun setOrNull() {
+		compiled(
+			expr(given()),
+			type(
+				"vec" lineTo type(
+					"x" lineTo type("zero"),
+					"y" lineTo type("one"))))
+			.setOrNull("x" lineTo compiled(expr(value("eleven")), type("eleven")))
+			.assertEqualTo(
+				compiled(
+					expr(given(), op(set("x" lineTo expr(value("eleven"))))),
+					type(
+						"vec" lineTo type(
+							"x" lineTo type("eleven"),
+							"y" lineTo type("one")))))
 	}
 }

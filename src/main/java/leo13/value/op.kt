@@ -39,6 +39,12 @@ data class GetOp(val get: Get) : Op() {
 	override val opScriptableBody get() = get.scriptableBody
 }
 
+data class SetOp(val set: Set) : Op() {
+	override fun toString() = super.toString()
+	override val opScriptableName get() = set.scriptableName
+	override val opScriptableBody get() = set.scriptableBody
+}
+
 data class WrapOp(val wrap: Wrap) : Op() {
 	override fun toString() = super.toString()
 	override val opScriptableName get() = wrap.scriptableName
@@ -67,6 +73,7 @@ fun op(lhs: Lhs): Op = LhsOp(lhs)
 fun op(rhs: Rhs): Op = RhsOp(rhs)
 fun op(rhsLine: RhsLine): Op = RhsLineOp(rhsLine)
 fun op(get: Get): Op = GetOp(get)
+fun op(set: Set): Op = SetOp(set)
 fun op(switch: Switch): Op = SwitchOp(switch)
 fun op(line: ExprLine): Op = LineOp(line)
 fun op(call: Call): Op = CallOp(call)

@@ -157,5 +157,20 @@ fun Type.lineOrNull(name: String): Type? =
 		else link.lhs.lineOrNull(name)
 	}
 
+fun Type.replaceOrNull(line: TypeLine): Type? =
+	linkOrNull?.let { link ->
+		if (link.line.name == line.name) type(link(link.lhs, line))
+		else link.lhs.replaceOrNull(line)?.let { it.plus(link.line) }
+	}
+
 fun Type.getOrNull(name: String): Type? =
-	linkOrNull?.line?.rhs?.typeOrNull?.lineOrNull(name)
+	onlyLineOrNull?.rhs?.typeOrNull?.lineOrNull(name)
+
+fun Type.setOrNull(typeLine: TypeLine): Type? =
+	onlyLineOrNull?.let { line ->
+		line.rhs.typeOrNull?.let { rhs ->
+			rhs.replaceOrNull(typeLine)?.let { replacedRhs ->
+				type(line.name lineTo replacedRhs)
+			}
+		}
+	}

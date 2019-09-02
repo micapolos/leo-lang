@@ -26,4 +26,32 @@ class TypeTest {
 			.previousOrNull
 			.assertEqualTo(type())
 	}
+
+	@Test
+	fun setOrNull() {
+		val type = type(
+			"vec" lineTo type(
+				"x" lineTo type("zero"),
+				"y" lineTo type("one")))
+
+		type
+			.setOrNull("x" lineTo type("ten"))
+			.assertEqualTo(
+				type(
+					"vec" lineTo type(
+						"x" lineTo type("ten"),
+						"y" lineTo type("one"))))
+
+		type
+			.setOrNull("y" lineTo type("ten"))
+			.assertEqualTo(
+				type(
+					"vec" lineTo type(
+						"x" lineTo type("zero"),
+						"y" lineTo type("ten"))))
+
+		type
+			.setOrNull("z" lineTo type("ten"))
+			.assertEqualTo(null)
+	}
 }

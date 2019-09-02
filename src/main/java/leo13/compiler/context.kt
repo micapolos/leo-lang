@@ -2,6 +2,7 @@ package leo13.compiler
 
 import leo13.LeoObject
 import leo13.script.Script
+import leo13.script.ScriptLine
 import leo13.script.Switch
 import leo13.script.script
 import leo13.type.*
@@ -27,6 +28,9 @@ fun Context.plus(function: Function) = copy(functions = functions.plus(function)
 
 fun Context.unsafeCompile(script: Script): Compiled =
 	compiler(this, compiled()).unsafePush(script).compiled
+
+fun Context.unsafeCompile(scriptLine: ScriptLine): CompiledLine =
+	scriptLine.name lineTo unsafeCompile(scriptLine.rhs)
 
 fun Context.compile(choice: Choice, switch: Switch): SwitchCompiled =
 	compiler(this, null).push(choice, switch).compiled

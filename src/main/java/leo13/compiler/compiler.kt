@@ -36,6 +36,7 @@ fun Compiler.unsafePush(scriptLine: ScriptLine): Compiler =
 		"meta" -> unsafePushMeta(scriptLine.rhs)
 		"of" -> unsafePushOf(scriptLine.rhs)
 		"previous" -> unsafePushPrevious(scriptLine.rhs)
+		"set" -> unsafePushSet(scriptLine.rhs)
 		"switch" -> unsafePushSwitch(scriptLine.rhs)
 		"compiler" -> unsafePushCompiler(scriptLine.rhs)
 		else -> unsafePushOther(scriptLine)
@@ -159,15 +160,27 @@ fun Compiler.unsafePushCompiler(script: Script): Compiler =
 			compiled(script(scriptableLine)))
 	}
 
+fun Compiler.unsafePushSet(script: Script): Compiler =
+	fold(script.lineSeq) { line -> unsafePushSet(line) }
+
+fun Compiler.unsafePushSet(scriptLine: ScriptLine): Compiler =
+	context
+		.unsafeCompile(scriptLine)
+		.let { compiledLine ->
+			compiler(
+				context,
+				compiled.setOrNull(compiledLine)!!)
+		}
+
 fun Compiler.unsafePushOther(typedLine: ScriptLine): Compiler =
 	null
-		?: pushAccessOrNull(typedLine)
+		?: pushGetOrNull(typedLine)
 		?: unsafeRhsPush(typedLine)
 
-fun Compiler.pushAccessOrNull(typedLine: ScriptLine): Compiler? =
+fun Compiler.pushGetOrNull(typedLine: ScriptLine): Compiler? =
 	ifOrNull(typedLine.rhs.isEmpty) {
 		compiled
-			.accessOrNull(typedLine.name)
+			.getOrNull(typedLine.name)
 			?.let { compiledAccess ->
 				compiler(context, compiledAccess)
 			}
