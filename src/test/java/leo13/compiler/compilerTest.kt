@@ -224,10 +224,9 @@ class CompilerTest {
 				type("bit" lineTo type())))
 			.unsafePush(
 				"contains" lineTo script(
-					"bit" lineTo script(
-						"zero" lineTo script(),
-						"or" lineTo script(
-							"one" lineTo script()))))
+					"zero" lineTo script(),
+					"or" lineTo script(
+						"one" lineTo script())))
 			.assertEqualTo(
 				compiler(
 					context(

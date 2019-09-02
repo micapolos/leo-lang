@@ -23,4 +23,3 @@ fun TypeLine.contains(line: TypeLine): Boolean =
 val ScriptLine.unsafeTypeLine: TypeLine
 	get() =
 		name lineTo rhs.unsafeType
-

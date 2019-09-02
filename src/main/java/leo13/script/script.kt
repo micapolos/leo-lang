@@ -12,16 +12,6 @@ data class Script(val lineStack: Stack<ScriptLine>) : LeoObject() {
 	override val scriptableBody get() = this
 }
 
-data class ScriptLine(val name: String, val rhs: Script) : LeoObject() {
-	override fun toString() = script(this).toString()
-	override val scriptableName get() = "line"
-	override val scriptableBody get() = script(name lineTo script("to" lineTo rhs))
-}
-
-data class ScriptLink(val lhs: Script, val line: ScriptLine) {
-	override fun toString() = script.toString()
-}
-
 data class ScriptOpener(val lhs: Script, val opening: Opening) {
 	override fun toString() = asScriptLine.toString()
 	val asScriptLine

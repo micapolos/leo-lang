@@ -54,15 +54,17 @@ fun Compiler.unsafePushExists(script: Script): Compiler =
 	}
 
 fun Compiler.unsafePushContains(script: Script): Compiler =
-	script.unsafeType.let { type ->
-		compiler(
-			context()
-				.plus(type)
-				.plus(
-					function(
-						compiled.type.unsafeStaticScript.unsafeType,
-						compiled(script))),
-			compiled())
+	compiled.type.unsafeStaticScript.onlyLineOrNull!!.onlyNameOrNull!!.let { name ->
+		script.unsafeType.let { type ->
+			compiler(
+				context()
+					.plus(type(name lineTo type))
+					.plus(
+						function(
+							type(name),
+							compiled(script(name lineTo script)))),
+				compiled())
+		}
 	}
 
 fun Compiler.unsafePushGives(script: Script): Compiler =
