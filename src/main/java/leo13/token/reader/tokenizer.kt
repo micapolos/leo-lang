@@ -1,50 +1,52 @@
 package leo13.token.reader
 
-import leo.base.fold
 import leo.base.updateIfNotNull
-import leo13.*
-import leo13.script.*
-import leo13.token.*
+import leo13.base.Writer
+import leo13.base.WriterObject
+import leo13.base.writer
+import leo13.colon
+import leo13.fail
+import leo13.script.CharLeo
+import leo13.script.ScriptLine
+import leo13.script.leo
+import leo13.script.script
+import leo13.space
+import leo13.token.Token
+import leo13.token.closing
+import leo13.token.opening
+import leo13.token.token
 
 data class Tokenizer(
-	val tokens: Tokens,
+	val tokenWriter: Writer<Token>,
 	val parent: Parent,
-	val head: Head,
-	val status: Status) : LeoObject() {
+	val head: Head) : WriterObject<CharLeo>() {
 	override fun toString() = super.toString()
-	override val scriptableName get() = "tokenizer"
-	override val scriptableBody
+	override val writerScriptableName get() = "tokenizer"
+	override val writerScriptableBody
 		get() = script(
-			tokens.scriptableLine,
+			tokenWriter.scriptableLine,
 			parent.scriptableLine,
-			head.scriptableLine,
-			status.scriptableLine)
+			head.scriptableLine)
+
+	override fun writerWrite(leo: CharLeo): Writer<CharLeo> = push(leo.char)
+	override val writerFinishWriting: Unit get() = finish
 }
 
-fun tokenizer(tokens: Tokens, parent: Parent, head: Head, status: Status): Tokenizer =
-	Tokenizer(tokens, parent, head, status)
+fun tokenizerWriter(tokenWriter: Writer<Token>): Writer<CharLeo> =
+	tokenizer(tokenWriter)
 
-fun tokenizer(): Tokenizer = tokenizer(
-	tokens(),
+fun tokenizer(tokenWriter: Writer<Token>, parent: Parent, head: Head): Tokenizer =
+	Tokenizer(tokenWriter, parent, head)
+
+fun tokenizer(): Tokenizer = tokenizer(writer())
+
+fun tokenizer(tokenWriter: Writer<Token>): Tokenizer = tokenizer(
+	tokenWriter,
 	parent(),
-	head(input(colon(false), "")),
-	status(ok))
-
-fun tokens(string: String): Tokens =
-	tokenizer().push(string).finish
-
-val String.tokens get() = tokens(this)
-
-fun Tokenizer.unsafePush(string: String): Tokenizer =
-	push(string).let { failIfError(it.status) }
-
-fun Tokenizer.push(string: String): Tokenizer =
-	fold(string) { push(it) }
+	head(input(colon(false), "")))
 
 fun Tokenizer.push(char: Char): Tokenizer =
-	updateIfOk(status) {
-		pushOrNull(char) ?: error(script(leo(char).scriptableLine))
-	}
+	pushOrNull(char) ?: fail(script(leo(char).scriptableLine))
 
 fun Tokenizer.pushOrNull(char: Char): Tokenizer? =
 	when (char) {
@@ -61,14 +63,13 @@ val Tokenizer.pushSpaceOrNull: Tokenizer?
 			is InputHead ->
 				if (head.input.name.isEmpty()) null
 				else tokenizer(
-					tokens
-						.plus(token(opening(head.input.name)))
-						.plus(token(closing)),
+					tokenWriter
+						.write(token(opening(head.input.name)))
+						.write(token(closing)),
 					parent,
-					head(input(head.input.colon, "")),
-					status)
+					head(input(head.input.colon, "")))
 			is ColonHead ->
-				tokenizer(tokens, parent, head(input(colon(true), "")), status)
+				tokenizer(tokenWriter, parent, head(input(colon(true), "")))
 			is IndentHead -> null
 		}
 
@@ -79,12 +80,11 @@ val Tokenizer.pushTabOrNull: Tokenizer?
 			is ColonHead -> null
 			is IndentHead ->
 				tokenizer(
-					tokens,
+					tokenWriter,
 					parent.plus(head.indent.tab),
 					head.indent.previousOrNull
 						?.let { previous -> head(previous) }
-						?: head(input(colon(false), "")),
-					status)
+						?: head(input(colon(false), "")))
 		}
 
 val Tokenizer.pushColonOrNull: Tokenizer?
@@ -93,11 +93,10 @@ val Tokenizer.pushColonOrNull: Tokenizer?
 			is InputHead ->
 				if (head.input.name.isEmpty()) null
 				else tokenizer(
-					tokens.plus(token(opening(head.input.name))),
+					tokenWriter.write(token(opening(head.input.name))),
 					if (head.input.colon.boolean) parent.plus(space)
 					else parent.plus(tab(space)),
-					head(colon),
-					status)
+					head(colon))
 			is ColonHead -> null
 			is IndentHead -> null
 		}
@@ -108,11 +107,10 @@ val Tokenizer.pushNewlineOrNull: Tokenizer?
 			is InputHead ->
 				if (head.input.name.isEmpty()) null
 				else Tokenizer(
-					tokens.plus(token(opening(head.input.name))),
+					tokenWriter.write(token(opening(head.input.name))),
 					parent(),
 					if (head.input.colon.boolean) head(parent.indentOrNull.orNullPlus(space).reverse)
-					else head(parent.indentOrNull.orNullPlus(tab(space)).reverse),
-					status)
+					else head(parent.indentOrNull.orNullPlus(tab(space)).reverse))
 			is ColonHead -> null
 			is IndentHead -> null
 		}
@@ -122,37 +120,32 @@ fun Tokenizer.pushOtherOrNull(char: Char): Tokenizer? =
 		is InputHead ->
 			if (!char.isLetter()) null
 			else tokenizer(
-				tokens,
+				tokenWriter,
 				parent,
-				head(input(head.input.colon, head.input.name + char)),
-				status)
+				head(input(head.input.colon, head.input.name + char)))
 		is ColonHead -> null
 		is IndentHead ->
 			tokenizer(
-				tokens.flush(head.indent),
+				tokenWriter.flush(head.indent),
 				parent,
-				head(input(colon(false), "$char")),
-				status)
+				head(input(colon(false), "$char")))
 	}
 
-fun Tokens.flush(indent: Indent): Tokens =
+fun Writer<Token>.flush(indent: Indent): Writer<Token> =
 	flush(indent.tab).updateIfNotNull(indent.previousOrNull) { flush(it) }
 
-fun Tokens.flush(tab: SpacesTab): Tokens =
-	plus(token(closing)).updateIfNotNull(tab.previousOrNull) { flush(it) }
+fun Writer<Token>.flush(tab: SpacesTab): Writer<Token> =
+	write(token(closing)).updateIfNotNull(tab.previousOrNull) { flush(it) }
 
-val Tokenizer.finish: Tokens
+val Tokenizer.finish: Unit
 	get() =
-		finishOrNull ?: fail(script(scriptableLine).plus("finish" lineTo script()))
-
-val Tokenizer.finishOrNull: Tokens?
-	get() =
-		if (!parent.isEmpty) null
+		if (!parent.isEmpty) fail("empty")
 		else when (head) {
-			is InputHead -> null
-			is ColonHead -> null
-			is IndentHead -> tokens.flush(head.indent)
+			is InputHead -> fail("input")
+			is ColonHead -> fail("colon")
+			is IndentHead -> tokenWriter.flush(head.indent).finishWriting
 		}
 
-fun Tokenizer.error(script: Script): Tokenizer =
-	copy(status = status(leo13.error(script)))
+fun Tokenizer.fail(scriptLine: ScriptLine): Tokenizer =
+	//copy(status = status(error(script(scriptLine))))
+	fail(scriptLine)

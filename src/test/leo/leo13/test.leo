@@ -5,3 +5,5 @@ define
 	gives: given bit switch
 		zero gives: bit: one
 		one gives: bit: zero
+bit: zero
+negate
