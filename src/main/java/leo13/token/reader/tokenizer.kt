@@ -7,7 +7,6 @@ import leo13.base.writer
 import leo13.colon
 import leo13.fail
 import leo13.script.CharLeo
-import leo13.script.ScriptLine
 import leo13.script.leo
 import leo13.script.script
 import leo13.space
@@ -145,7 +144,3 @@ val Tokenizer.finish: Unit
 			is ColonHead -> fail("colon")
 			is IndentHead -> tokenWriter.flush(head.indent).finishWriting
 		}
-
-fun Tokenizer.fail(scriptLine: ScriptLine): Tokenizer =
-	//copy(status = status(error(script(scriptLine))))
-	fail(scriptLine)

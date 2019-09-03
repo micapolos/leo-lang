@@ -23,7 +23,9 @@ abstract class WriterObject<I : Scriptable> : LeoObject(), Writer<I> {
 		try {
 			writerWrite(value)
 		} catch (se: ScriptException) {
-			fail(se.script.plus("write" lineTo script(value.scriptableLine)))
+			fail(script(scriptableLine)
+				.plus("write" lineTo script(value.scriptableLine))
+				.plus("reason" lineTo se.script))
 		}
 
 	final override val finishWriting: Unit
@@ -31,7 +33,9 @@ abstract class WriterObject<I : Scriptable> : LeoObject(), Writer<I> {
 			try {
 				writerFinishWriting
 			} catch (se: ScriptException) {
-				fail(se.script.plus("finish" lineTo script("writing")))
+				fail(script(scriptableLine)
+					.plus("finish" lineTo script("writing"))
+					.plus("reason" lineTo se.script))
 			}
 
 	abstract fun writerWrite(value: I): Writer<I>
