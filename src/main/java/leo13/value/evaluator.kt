@@ -2,8 +2,6 @@ package leo13.value
 
 import leo.base.notNullIf
 import leo13.*
-import leo9.drop
-import leo9.linkOrNull
 import leo9.mapFirst
 
 data class Evaluator(val bindings: ValueBindings, val value: Value) : LeoObject() {
@@ -28,7 +26,7 @@ fun Evaluator.push(value: Value): Evaluator =
 fun Evaluator.push(given: Given): Evaluator =
 	evaluator(
 		bindings,
-		bindings.stack.drop(given.previousStack)!!.linkOrNull!!.value)
+		bindings.valueOrNull(given)!!)
 
 fun Evaluator.push(link: ExprLink): Evaluator =
 	push(link.lhs).push(link.op)

@@ -1,6 +1,7 @@
 package leo13.token.reader
 
 import leo.base.assertEqualTo
+import leo13.base.write
 import leo13.base.writer
 import leo13.colon
 import leo13.space
@@ -12,13 +13,13 @@ import kotlin.test.Test
 import kotlin.test.assertFails
 
 fun test(string: String, tokenizer: Tokenizer) =
-	tokenizer().push(string).assertEqualTo(tokenizer)
+	tokenizer().write(string).assertEqualTo(tokenizer)
 
 class TokenizerTest {
 	@Test
 	fun letter() {
 		tokenizer()
-			.push("f")
+			.write("f")
 			.assertEqualTo(
 				tokenizer(
 					writer(stack()),
@@ -28,33 +29,33 @@ class TokenizerTest {
 
 	@Test
 	fun pushTab() {
-		assertFails { tokenizer().push("\t") }
+		assertFails { tokenizer().write("\t") }
 	}
 
 	@Test
 	fun pushSpace() {
-		assertFails { tokenizer().push(" ") }
+		assertFails { tokenizer().write(" ") }
 	}
 
 	@Test
 	fun colon() {
-		assertFails { tokenizer().push(":") }
+		assertFails { tokenizer().write(":") }
 	}
 
 	@Test
 	fun newline() {
-		assertFails { tokenizer().push("\n") }
+		assertFails { tokenizer().write("\n") }
 	}
 
 	@Test
 	fun other() {
-		assertFails { tokenizer().push("1") }
+		assertFails { tokenizer().write("1") }
 	}
 
 	@Test
 	fun letterLetter() {
 		tokenizer()
-			.push("fo")
+			.write("fo")
 			.assertEqualTo(
 				tokenizer(
 					writer(),
@@ -65,7 +66,7 @@ class TokenizerTest {
 	@Test
 	fun letterSpace() {
 		tokenizer()
-			.push("f ")
+			.write("f ")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -77,13 +78,13 @@ class TokenizerTest {
 
 	@Test
 	fun letterTab() {
-		assertFails { tokenizer().push("f\t") }
+		assertFails { tokenizer().write("f\t") }
 	}
 
 	@Test
 	fun letterColon() {
 		tokenizer()
-			.push("f:")
+			.write("f:")
 			.assertEqualTo(
 				tokenizer(
 					writer(token(opening("f"))),
@@ -94,7 +95,7 @@ class TokenizerTest {
 	@Test
 	fun letterNewline() {
 		tokenizer()
-			.push("f\n")
+			.write("f\n")
 			.assertEqualTo(
 				tokenizer(
 					writer(token(opening("f"))),
@@ -105,7 +106,7 @@ class TokenizerTest {
 	@Test
 	fun letterNewlineTab() {
 		tokenizer()
-			.push("f\n\t")
+			.write("f\n\t")
 			.assertEqualTo(
 				tokenizer(
 					writer(token(opening("f"))),
@@ -116,7 +117,7 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpace() {
 		tokenizer()
-			.push("f: ")
+			.write("f: ")
 			.assertEqualTo(
 				tokenizer(
 					writer(token(opening("f"))),
@@ -127,7 +128,7 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpaceLetter() {
 		tokenizer()
-			.push("f: g")
+			.write("f: g")
 			.assertEqualTo(
 				tokenizer(
 					writer(token(opening("f"))),
@@ -138,7 +139,7 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpaceLetterNewline() {
 		tokenizer()
-			.push("f: g\n")
+			.write("f: g\n")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -151,7 +152,7 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpaceLetterNewlineTab() {
 		tokenizer()
-			.push("f: g\n\t")
+			.write("f: g\n\t")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -164,7 +165,7 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpaceLetterSpace() {
 		tokenizer()
-			.push("f: g ")
+			.write("f: g ")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -178,7 +179,7 @@ class TokenizerTest {
 	@Test
 	fun switch_one() {
 		tokenizer()
-			.push("switch\n\tone")
+			.write("switch\n\tone")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -190,7 +191,7 @@ class TokenizerTest {
 	@Test
 	fun switch_one__() {
 		tokenizer()
-			.push("switch\n\tone ")
+			.write("switch\n\tone ")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -204,7 +205,7 @@ class TokenizerTest {
 	@Test
 	fun switch_one__gives() {
 		tokenizer()
-			.push("switch\n\tone gives")
+			.write("switch\n\tone gives")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -218,7 +219,7 @@ class TokenizerTest {
 	@Test
 	fun switch_one__gives_() {
 		tokenizer()
-			.push("switch\n\tone gives:")
+			.write("switch\n\tone gives:")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -233,7 +234,7 @@ class TokenizerTest {
 	@Test
 	fun switch_one__gives_space() {
 		tokenizer()
-			.push("switch\n\tone gives: ")
+			.write("switch\n\tone gives: ")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -248,7 +249,7 @@ class TokenizerTest {
 	@Test
 	fun switch_one__gives_jeden() {
 		tokenizer()
-			.push("switch\n\tone gives: jeden")
+			.write("switch\n\tone gives: jeden")
 			.assertEqualTo(
 				tokenizer(
 					writer(
@@ -367,7 +368,7 @@ class TokenizerTest {
 	@Test
 	fun complex() {
 		tokenizer()
-			.push("switch\n\tone gives: jeden\n\ttwo gives: dwa\nok")
+			.write("switch\n\tone gives: jeden\n\ttwo gives: dwa\nok")
 			.assertEqualTo(
 				tokenizer(
 					writer(

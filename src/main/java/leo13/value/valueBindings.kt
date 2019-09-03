@@ -2,9 +2,7 @@ package leo13.value
 
 import leo13.LeoObject
 import leo13.asScript
-import leo9.Stack
-import leo9.push
-import leo9.stack
+import leo9.*
 
 data class ValueBindings(val stack: Stack<Value>) : LeoObject() {
 	override fun toString() = super.toString()
@@ -24,3 +22,6 @@ fun ValueBindings.evaluate(exprLine: ExprLine): ValueLine =
 
 fun ValueBindings.evaluate(op: Op): Value =
 	evaluator(this, value()).push(op).value
+
+fun ValueBindings.valueOrNull(given: Given): Value? =
+	stack.drop(given.previousStack)?.linkOrNull?.value
