@@ -48,6 +48,7 @@ fun Evaluator.evaluate(op: Op): Value =
 		is SwitchOp -> evaluate(op.switch)
 		is LineOp -> evaluate(op.line)
 		is CallOp -> evaluate(op.call)
+		is BindOp -> evaluate(op.bind)
 	}
 
 fun Evaluator.evaluate(lhs: Lhs): Value =
@@ -90,6 +91,9 @@ fun Evaluator.evaluate(call: Call): Value =
 					.push(value("given" lineTo bindings.evaluate(call.expr)))
 					.evaluate(fn.expr)
 			}
+
+fun Evaluator.evaluate(bind: Bind): Value =
+	bindings.push(value).evaluate(bind.expr)
 
 val Expr.evaluate: Value
 	get() =
