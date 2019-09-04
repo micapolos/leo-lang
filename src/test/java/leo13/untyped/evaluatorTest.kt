@@ -42,7 +42,7 @@ class EvaluatorTest {
 			.assertEqualTo(
 				evaluator(
 					context,
-					script("bar" lineTo script())))
+					evaluated(script("bar" lineTo script()))))
 	}
 
 	@Test
@@ -66,12 +66,12 @@ class EvaluatorTest {
 	fun resolveAs() {
 		evaluator(
 			context(),
-			script("foo" lineTo script()))
+			evaluated(script("foo" lineTo script())))
 			.plus("as" lineTo script("bar"))
 			.assertEqualTo(
 				evaluator(
 					context().plus(binding(key(script("foo")), value(script("bar")))),
-					script()))
+					evaluated(script())))
 	}
 
 	@Test
@@ -82,6 +82,6 @@ class EvaluatorTest {
 			.assertEqualTo(
 				evaluator(
 					context().plus(binding(key(script("foo")), value(script("bar")))),
-					script("bar")))
+					evaluated(script("bar"))))
 	}
 }

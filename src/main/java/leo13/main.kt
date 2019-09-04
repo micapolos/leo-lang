@@ -6,14 +6,20 @@ import leo13.script.leo
 import leo13.script.lineTo
 import leo13.script.scriptWriter
 import leo13.token.reader.tokenizerWriter
+import leo13.untyped.interpret
 import leo13.value.evaluate
 import leo13.value.scriptOrNull
+
+val typed = false
 
 fun main() {
 	try {
 		var tokenizer = tokenizerWriter(
 			scriptWriter {
-				println("ok" lineTo compile?.expr?.evaluate?.scriptOrNull!!)
+				val result =
+					if (typed) compile?.expr?.evaluate?.scriptOrNull!!
+					else interpret
+				println("ok" lineTo result)
 			})
 		while (true) {
 			val lineOrNull = readLine()
