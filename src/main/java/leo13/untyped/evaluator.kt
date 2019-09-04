@@ -33,8 +33,8 @@ fun evaluator.plusResolved(line: ScriptLine): evaluator =
 
 fun evaluator.plusSwitchOrNull(switchScript: Script): evaluator? =
 	script
-		.caseOrNull(switchScript)
-		?.let { caseRhs -> evaluator(context, context.evaluate(script.plus(caseRhs))) }
+		.resolveCaseOrNull(switchScript)
+		?.let { case -> evaluator(context, context.evaluate(script.plus(case))) }
 
 fun evaluator.plusDefineOrNull(script: Script): evaluator? =
 	TODO()
