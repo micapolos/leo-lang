@@ -16,3 +16,4 @@ data class Link<out V : Scriptable>(val lhsOrNull: Link<V>?, val value: V) : Leo
 
 infix fun <V : Scriptable> Link<V>?.linkTo(value: V) = Link(this, value)
 val <V : Scriptable> Link<V>.seqNode: SeqNode<V> get() = value then Seq { lhsOrNull?.seqNode }
+fun <V : Scriptable, R> Link<V>.mapFirst(fn: V.() -> R?): R? = value.fn() ?: lhsOrNull?.mapFirst(fn)

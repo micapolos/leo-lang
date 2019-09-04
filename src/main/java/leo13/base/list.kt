@@ -16,3 +16,4 @@ fun <V : Scriptable> list(linkOrNull: Link<V>?) = List(linkOrNull)
 fun <V : Scriptable> List<V>.plus(value: V) = List(linkOrNull.linkTo(value))
 fun <V : Scriptable> list(vararg values: V) = list<V>(null).fold(values) { plus(it) }
 val <V : Scriptable> List<V>.seq: Seq<V> get() = Seq { linkOrNull?.seqNode }
+fun <V : Scriptable, R> List<V>.mapFirst(fn: V.() -> R?): R? = linkOrNull?.mapFirst(fn)
