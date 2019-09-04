@@ -5,13 +5,14 @@ import leo.base.SeqNode
 import leo.base.then
 import leo13.LeoObject
 import leo13.Scriptable
-import leo13.orNullAsScript
+import leo13.script.Script
 import leo13.script.plus
+import leo13.script.script
 
 data class Link<out V : Scriptable>(val lhsOrNull: Link<V>?, val value: V) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "link"
-	override val scriptableBody get() = lhsOrNull.orNullAsScript.plus(value.scriptableLine)
+	override val scriptableBody: Script get() = (lhsOrNull?.scriptableBody ?: script()).plus(value.scriptableLine)
 }
 
 infix fun <V : Scriptable> Link<V>?.linkTo(value: V) = Link(this, value)

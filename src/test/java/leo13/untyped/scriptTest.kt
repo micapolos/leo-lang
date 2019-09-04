@@ -82,43 +82,6 @@ class ScriptTest {
 	}
 
 	@Test
-	fun caseOrNull() {
-		script("zero" lineTo script("foo"))
-			.caseOrNull(
-				script(
-					"case" lineTo script("zero" lineTo script("ten")),
-					"case" lineTo script("one" lineTo script("eleven"))))
-			.assertEqualTo(script("zero" lineTo script("ten")))
-
-		script("one" lineTo script("foo"))
-			.caseOrNull(
-				script(
-					"case" lineTo script("zero" lineTo script("ten")),
-					"case" lineTo script("one" lineTo script("eleven"))))
-			.assertEqualTo(script("one" lineTo script("eleven")))
-
-		script("two" lineTo script("foo"))
-			.caseOrNull(
-				script(
-					"case" lineTo script("zero" lineTo script("ten")),
-					"case" lineTo script("one" lineTo script("eleven"))))
-			.assertEqualTo(null)
-	}
-
-	@Test
-	fun resolveSwitchOrNull() {
-		script(
-			"bit" lineTo script(
-				"zero" lineTo script(
-					"foo")))
-			.resolveCaseOrNull(
-				script(
-					"case" lineTo script("zero" lineTo script("ten")),
-					"case" lineTo script("one" lineTo script("eleven"))))
-			.assertEqualTo(script("zero" lineTo script("ten")))
-	}
-
-	@Test
 	fun matchesAnything() {
 		script("foo" lineTo script("bar"))
 			.matches(script("anything"))

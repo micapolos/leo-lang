@@ -54,27 +54,6 @@ fun Script.resolveSetOrNull(rhs: Script): Script? =
 			?.let { setLine -> script(line.name lineTo setLine) }
 	}
 
-fun Script.resolveCaseOrNull(cases: Script): Script? =
-	onlyLineOrNull?.rhs?.caseOrNull(cases)
-
-fun Script.caseOrNull(cases: Script): Script? =
-	onlyLineOrNull?.let { line ->
-		cases.linkOrNull?.let { cases ->
-			line.caseOrNull(cases)
-		}
-	}
-
-fun ScriptLine.caseOrNull(cases: Script): Script? =
-	cases.linkOrNull?.let { caseOrNull(it) }
-
-fun ScriptLine.caseOrNull(cases: ScriptLink): Script? =
-	ifOrNull(cases.line.name == "case") {
-		cases.line.rhs.onlyLineOrNull?.let { caseLine ->
-			if (name == caseLine.name) script(caseLine)
-			else caseOrNull(cases.lhs)
-		}
-	}
-
 val Script.evaluate
 	get() =
 		evaluator().plus(this).evaluated.script

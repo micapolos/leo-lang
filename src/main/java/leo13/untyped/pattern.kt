@@ -15,7 +15,7 @@ fun Script.matches(pattern: pattern): Boolean =
 	matches(pattern.script)
 
 fun Script.matches(pattern: Script): Boolean =
-	if (pattern == script("anything")) true
+	if (pattern == script("any")) true
 	else when (pattern.lineStack) {
 		is EmptyStack -> lineStack is EmptyStack
 		is LinkStack -> lineStack is LinkStack

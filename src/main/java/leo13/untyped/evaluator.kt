@@ -39,13 +39,14 @@ fun evaluator.plusResolved(line: ScriptLine): evaluator =
 
 fun evaluator.plusAs(script: Script): evaluator =
 	evaluator(
-		context.plus(binding(key(evaluated.script), value(script.normalize))),
+		context.plus(binding(key(script.normalize), value(evaluated.script))),
 		evaluated(script()))
 
 fun evaluator.plusSwitchOrNull(switchScript: Script): evaluator? =
-	evaluated.script
-		.resolveCaseOrNull(switchScript)
-		?.let { case -> evaluator(context, context.evaluate(evaluated.script.plus(case))) }
+	switchScript
+		.parseSwitch
+		?.resolveCaseRhsOrNull(evaluated.script)
+		?.let { caseRhs -> evaluator(context, context.evaluate(caseRhs)) }
 
 fun evaluator.plusDefineOrNull(script: Script): evaluator? =
 	context
@@ -62,7 +63,7 @@ fun evaluator.applyFunctionOrNull(line: ScriptLine): evaluator? =
 	context
 		.functions
 		.bodyOrNull(evaluated.script.plus(line))
-		?.let { body -> plus(body.script) }
+		?.let { body -> plusStatic(line).plus(body.script) }
 
 fun evaluator.applyBindingOrNull(line: ScriptLine): evaluator? =
 	context
