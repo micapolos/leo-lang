@@ -74,4 +74,3 @@ fun ScriptLine.caseOrNull(cases: ScriptLink): Script? =
 			else caseOrNull(cases.lhs)
 		}
 	}
-

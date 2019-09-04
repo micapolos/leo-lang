@@ -1,16 +1,87 @@
 package leo13.untyped
 
+import leo.base.assertEqualTo
+import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test
+import kotlin.test.fail
 
 class EvaluatorTest {
 	@Test
-	fun resolveSwitch() {
+	fun resolveDefine() {
+		evaluator()
+			.plus(
+				"define" lineTo script(
+					"zero" lineTo script(),
+					"gives" lineTo script("one")))
+			.assertEqualTo(
+				evaluator(
+					context(
+						functions(
+							function(
+								pattern(script("zero")),
+								body(script("one")))),
+						bindings())))
+	}
+
+	@Test
+	fun resolveApplyFunction() {
+		val context =
+			context()
+				.plus(
+					function(
+						pattern(script("foo")),
+						body(script("bar"))))
+				.plus(
+					function(
+						pattern(script("zoo")),
+						body(script("foo"))))
+
+		evaluator(context)
+			.plus("zoo" lineTo script())
+			.assertEqualTo(
+				evaluator(
+					context,
+					script("bar" lineTo script())))
+	}
+
+	@Test
+	fun resolveApplyFunction_SOE() {
+		val context =
+			context()
+				.plus(
+					function(
+						pattern(script("foo")),
+						body(script("foo"))))
+
+		try {
+			evaluator(context).plus("foo" lineTo script())
+			fail("StackOverflowError expected")
+		} catch (soe: StackOverflowError) {
+
+		}
+	}
+
+	@Test
+	fun resolveAs() {
 		evaluator(
 			context(),
-			script(
+			script("foo" lineTo script()))
+			.plus("as" lineTo script("bar"))
+			.assertEqualTo(
+				evaluator(
+					context().plus(binding(key(script("foo")), value(script("bar")))),
+					script()))
+	}
 
-			)
-		)
+	@Test
+	fun resolveGetAs() {
+		evaluator(
+			context().plus(binding(key(script("foo")), value(script("bar")))))
+			.plus("foo" lineTo script())
+			.assertEqualTo(
+				evaluator(
+					context().plus(binding(key(script("foo")), value(script("bar")))),
+					script("bar")))
 	}
 }

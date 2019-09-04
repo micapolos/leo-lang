@@ -117,4 +117,39 @@ class ScriptTest {
 					"case" lineTo script("one" lineTo script("eleven"))))
 			.assertEqualTo(script("zero" lineTo script("ten")))
 	}
+
+	@Test
+	fun matchesAnything() {
+		script("foo" lineTo script("bar"))
+			.matches(script("anything"))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun matchesDeep() {
+		script(
+			"vec" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")))
+			.matches(
+				script(
+					"vec" lineTo script(
+						"x" lineTo script("anything"),
+						"y" lineTo script("anything"))))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun matchesFalse() {
+		script(
+			"vec" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")))
+			.matches(
+				script(
+					"vec" lineTo script(
+						"x" lineTo script("anything"),
+						"y" lineTo script("zero"))))
+			.assertEqualTo(false)
+	}
 }
