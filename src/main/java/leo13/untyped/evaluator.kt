@@ -22,19 +22,21 @@ fun evaluator.plusNormalized(line: ScriptLine): evaluator =
 	when (line.name) {
 		"as" -> plusResolved(line)
 		"define" -> plusResolved(line)
+		"macro" -> plusResolved(line)
 		"switch" -> plusResolved(line)
 		"quote" -> plusResolved(line)
 		else -> plusOther(line)
 	}
 
 fun evaluator.plusOther(line: ScriptLine): evaluator =
-	plusResolved(line.name lineTo context.evaluate(line.rhs).script)
+	plusResolved(line.name lineTo context.evaluate(line.rhs))
 
 fun evaluator.plusResolved(line: ScriptLine): evaluator =
 	when (line.name) {
 		"as" -> plusAs(line.rhs)
 		"define" -> plusDefineOrNull(line.rhs)
 		"evaluate" -> plusEvaluateOrNull(line.rhs)
+		"macro" -> plusMacro(line.rhs)
 		"switch" -> plusSwitchOrNull(line.rhs)
 		"quote" -> plusQuoteOrNull(line.rhs)
 		else -> null
@@ -52,12 +54,17 @@ fun evaluator.plusSwitchOrNull(switchScript: Script): evaluator? =
 	switchScript
 		.parseSwitch
 		?.resolveCaseRhsOrNull(evaluated.script)
-		?.let { caseRhs -> evaluator(context, context.evaluate(caseRhs)) }
+		?.let { caseRhs -> evaluator(context, evaluated(context.evaluate(caseRhs))) }
 
 fun evaluator.plusDefineOrNull(script: Script): evaluator? =
 	context
 		.resolveDefineOrNull(script)
 		?.let { evaluator(it) }
+
+fun evaluator.plusMacro(script: Script): evaluator =
+	evaluator(context.parent)
+		.plus(script)
+		.let { macroEvaluator -> evaluator(context.withParent(macroEvaluator.context), evaluated) }
 
 fun evaluator.plusQuoteOrNull(script: Script): evaluator =
 	fold(script.lineSeq) { plusQuoted(it) }
@@ -79,9 +86,10 @@ fun evaluator.applyFunctionOrNull(line: ScriptLine): evaluator? =
 				?.let { body ->
 					evaluator(
 						context,
-						context
-							.plus(binding(key(script("given")), value(script("given" lineTo given))))
-							.evaluate(body.script))
+						evaluated(
+							context
+								.plus(binding(key(script("given")), value(script("given" lineTo given))))
+								.evaluate(body.script)))
 				}
 		}
 

@@ -15,8 +15,13 @@ data class switchParser(
 }
 
 fun switchParser.plus(line: ScriptLine): switchParser? =
-	if (nameOrNull == null) notNullIf(line.rhs.isEmpty) { switchParser(switch, name(line.name)) }
-	else notNullIf(line.name == "gives") { switchParser(switch.plus(case(nameOrNull, line.rhs))) }
+	if (nameOrNull == null)
+		notNullIf(line.rhs.isEmpty) { switchParser(switch, name(line.name)) }
+	else notNullIf(line.name == "gives") {
+		switchParser(
+			if (nameOrNull.string == "else") switch.plusElse(line.rhs)
+			else switch.plus(case(nameOrNull, line.rhs)))
+	}
 
 val switchParser.parsedSwitchOrNull: switch?
 	get() =

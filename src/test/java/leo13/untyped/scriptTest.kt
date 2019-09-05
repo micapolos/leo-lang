@@ -82,9 +82,9 @@ class ScriptTest {
 	}
 
 	@Test
-	fun matchesAnything() {
+	fun matchesAny() {
 		script("foo" lineTo script("bar"))
-			.matches(script("anything"))
+			.matches(script("any"))
 			.assertEqualTo(true)
 	}
 
@@ -97,8 +97,8 @@ class ScriptTest {
 			.matches(
 				script(
 					"vec" lineTo script(
-						"x" lineTo script("anything"),
-						"y" lineTo script("anything"))))
+						"x" lineTo script("any"),
+						"y" lineTo script("any"))))
 			.assertEqualTo(true)
 	}
 
@@ -111,7 +111,7 @@ class ScriptTest {
 			.matches(
 				script(
 					"vec" lineTo script(
-						"x" lineTo script("anything"),
+						"x" lineTo script("any"),
 						"y" lineTo script("zero"))))
 			.assertEqualTo(false)
 	}

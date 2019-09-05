@@ -16,12 +16,11 @@ class EvaluatorTest {
 					"gives" lineTo script("one")))
 			.assertEqualTo(
 				evaluator(
-					context(
-						functions(
+					context()
+						.plus(
 							function(
 								pattern(script("zero")),
-								body(script("one")))),
-						bindings())))
+								body(script("one"))))))
 	}
 
 	@Test
@@ -70,7 +69,7 @@ class EvaluatorTest {
 			.plus("as" lineTo script("bar"))
 			.assertEqualTo(
 				evaluator(
-					context().plus(binding(key(script("foo")), value(script("bar")))),
+					context().plus(binding(key(script("bar")), value(script("foo")))),
 					evaluated(script())))
 	}
 
