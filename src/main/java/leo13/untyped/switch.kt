@@ -9,19 +9,20 @@ import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.onlyLineOrNull
 
-data class switch(val cases: List<case> = list(), val elseOrNull: Script? = null) : LeoStruct("switch", cases, elseOrNull) {
+data class Switch(val cases: List<Case>, val elseOrNull: Script?) : LeoStruct("switch", cases, elseOrNull) {
 	override fun toString() = super.toString()
 }
 
-fun switch.plus(case: case) = switch(cases.plus(case), elseOrNull)
-fun switch.plusElse(rhs: Script) = switch(cases, rhs)
+fun switch(cases: List<Case> = list(), elseOrNull: Script? = null) = Switch(cases, elseOrNull)
+fun Switch.plus(case: Case) = Switch(cases.plus(case), elseOrNull)
+fun Switch.plusElse(rhs: Script) = Switch(cases, rhs)
 
-fun switch.resolveCaseRhsOrNull(script: Script): Script? =
+fun Switch.resolveCaseRhsOrNull(script: Script): Script? =
 	script
 		.onlyLineOrNull
 		?.rhs
 		?.onlyLineOrNull
 		?.let { line -> caseRhsOrNull(line) }
 
-fun switch.caseRhsOrNull(line: ScriptLine): Script? =
+fun Switch.caseRhsOrNull(line: ScriptLine): Script? =
 	cases.mapFirst { rhsOrNull(line) } ?: elseOrNull

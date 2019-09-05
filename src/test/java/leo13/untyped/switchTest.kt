@@ -9,8 +9,8 @@ class SwitchTest {
 	@Test
 	fun caseOrNull() {
 		val switch = switch()
-			.plus(case(name("zero"), script("ten")))
-			.plus(case(name("one"), script("eleven")))
+			.plus(Case(name("zero"), script("ten")))
+			.plus(Case(name("one"), script("eleven")))
 
 		switch
 			.resolveCaseRhsOrNull(script("bit" lineTo script("zero")))

@@ -4,21 +4,24 @@ import leo.base.fold
 import leo13.LeoStruct
 import leo13.script.*
 
-data class evaluator(
-	val context: context = context(),
-	val evaluated: evaluated = evaluated(script())) : LeoStruct("evaluator", context, evaluated) {
+data class Evaluator(
+	val context: Context,
+	val evaluated: Evaluated) : LeoStruct("evaluator", context, evaluated) {
 	override fun toString() = super.toString()
 }
 
-fun evaluator.plus(script: Script): evaluator =
+fun evaluator(context: Context = context(), evaluated: Evaluated = evaluated(script())) =
+	Evaluator(context, evaluated)
+
+fun Evaluator.plus(script: Script): Evaluator =
 	fold(script.lineSeq) { plus(it) }
 
-fun evaluator.plus(line: ScriptLine): evaluator =
+fun Evaluator.plus(line: ScriptLine): Evaluator =
 	evaluated.script.normalizedLineOrNull(line)
 		?.let { evaluator(context).plusResolved(it) }
 		?: plusNormalized(line)
 
-fun evaluator.plusNormalized(line: ScriptLine): evaluator =
+fun Evaluator.plusNormalized(line: ScriptLine): Evaluator =
 	when (line.name) {
 		"as" -> plusResolved(line)
 		"define" -> plusResolved(line)
@@ -28,54 +31,48 @@ fun evaluator.plusNormalized(line: ScriptLine): evaluator =
 		else -> plusOther(line)
 	}
 
-fun evaluator.plusOther(line: ScriptLine): evaluator =
+fun Evaluator.plusOther(line: ScriptLine): Evaluator =
 	plusResolved(line.name lineTo context.evaluate(line.rhs))
 
-fun evaluator.plusResolved(line: ScriptLine): evaluator =
+fun Evaluator.plusResolved(line: ScriptLine): Evaluator =
 	when (line.name) {
 		"as" -> plusAs(line.rhs)
 		"define" -> plusDefineOrNull(line.rhs)
 		"evaluate" -> plusEvaluateOrNull(line.rhs)
-		"macro" -> plusMacro(line.rhs)
 		"switch" -> plusSwitchOrNull(line.rhs)
 		"quote" -> plusQuoteOrNull(line.rhs)
 		else -> null
 	} ?: plusResolvedOther(line)
 
-fun evaluator.plusAs(script: Script): evaluator =
-	evaluator(
-		context.plus(binding(key(script.normalize), value(evaluated.script))),
-		evaluated(script()))
+fun Evaluator.plusAs(script: Script): Evaluator =
+	Evaluator(
+		context.plus(Binding(Key(script.normalize), Value(evaluated.script))),
+		Evaluated(script()))
 
-fun evaluator.plusEvaluateOrNull(script: Script): evaluator =
+fun Evaluator.plusEvaluateOrNull(script: Script): Evaluator =
 	plus(script)
 
-fun evaluator.plusSwitchOrNull(switchScript: Script): evaluator? =
+fun Evaluator.plusSwitchOrNull(switchScript: Script): Evaluator? =
 	switchScript
 		.parseSwitch
 		?.resolveCaseRhsOrNull(evaluated.script)
-		?.let { caseRhs -> evaluator(context, evaluated(context.evaluate(caseRhs))) }
+		?.let { caseRhs -> Evaluator(context, Evaluated(context.evaluate(caseRhs))) }
 
-fun evaluator.plusDefineOrNull(script: Script): evaluator? =
+fun Evaluator.plusDefineOrNull(script: Script): Evaluator? =
 	context
 		.resolveDefineOrNull(script)
 		?.let { evaluator(it) }
 
-fun evaluator.plusMacro(script: Script): evaluator =
-	evaluator(context.parent)
-		.plus(script)
-		.let { macroEvaluator -> evaluator(context.withParent(macroEvaluator.context), evaluated) }
-
-fun evaluator.plusQuoteOrNull(script: Script): evaluator =
+fun Evaluator.plusQuoteOrNull(script: Script): Evaluator =
 	fold(script.lineSeq) { plusQuoted(it) }
 
-fun evaluator.plusResolvedOther(line: ScriptLine): evaluator =
+fun Evaluator.plusResolvedOther(line: ScriptLine): Evaluator =
 	null
 		?: applyBindingOrNull(line)
 		?: applyFunctionOrNull(line)
 		?: plusStatic(line)
 
-fun evaluator.applyFunctionOrNull(line: ScriptLine): evaluator? =
+fun Evaluator.applyFunctionOrNull(line: ScriptLine): Evaluator? =
 	evaluated
 		.script
 		.plus(line)
@@ -84,23 +81,23 @@ fun evaluator.applyFunctionOrNull(line: ScriptLine): evaluator? =
 				.functions
 				.bodyOrNull(given)
 				?.let { body ->
-					evaluator(
+					Evaluator(
 						context,
-						evaluated(
+						Evaluated(
 							context
-								.plus(binding(key(script("given")), value(script("given" lineTo given))))
+								.plus(Binding(Key(script("given")), Value(script("given" lineTo given))))
 								.evaluate(body.script)))
 				}
 		}
 
-fun evaluator.applyBindingOrNull(line: ScriptLine): evaluator? =
+fun Evaluator.applyBindingOrNull(line: ScriptLine): Evaluator? =
 	context
 		.bindings
 		.valueOrNull(evaluated.script.plus(line))
-		?.let { value -> evaluator(context, evaluated(value.script)) }
+		?.let { value -> Evaluator(context, Evaluated(value.script)) }
 
-fun evaluator.plusStatic(line: ScriptLine): evaluator =
-	evaluator(context, evaluated(evaluated.script.resolve(line)))
+fun Evaluator.plusStatic(line: ScriptLine): Evaluator =
+	Evaluator(context, Evaluated(evaluated.script.resolve(line)))
 
-fun evaluator.plusQuoted(line: ScriptLine): evaluator =
-	evaluator(context, evaluated(evaluated.script.plus(line)))
+fun Evaluator.plusQuoted(line: ScriptLine): Evaluator =
+	Evaluator(context, Evaluated(evaluated.script.plus(line)))

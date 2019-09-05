@@ -7,12 +7,13 @@ import leo13.base.mapFirst
 import leo13.base.plus
 import leo13.script.Script
 
-data class bindings(val list: List<binding> = list()) : LeoStruct("bindings", list) {
+data class Bindings(val list: List<Binding>) : LeoStruct("bindings", list) {
 	override fun toString() = super.toString()
 }
 
-fun bindings(vararg bindings: binding) = bindings(list(*bindings))
-fun bindings.plus(binding: binding) = bindings(list.plus(binding))
+fun bindings(list: List<Binding>) = Bindings(list)
+fun bindings(vararg bindings: Binding) = Bindings(list(*bindings))
+fun Bindings.plus(binding: Binding) = Bindings(list.plus(binding))
 
-fun bindings.valueOrNull(script: Script): value? =
+fun Bindings.valueOrNull(script: Script): Value? =
 	list.mapFirst { valueOrNull(script) }

@@ -7,27 +7,29 @@ import leo13.script.script
 import leo9.EmptyStack
 import leo9.LinkStack
 
-data class pattern(val script: Script = script()) : LeoStruct("pattern", script) {
+data class Pattern(val script: Script) : LeoStruct("pattern", script) {
 	override fun toString() = super.toString()
 }
 
-val pattern.isAny: Boolean
+fun pattern(script: Script = script()) = Pattern(script)
+
+val Pattern.isAny: Boolean
 	get() =
 		script == script("any")
 
-fun Script.matches(pattern: pattern): Boolean =
+fun Script.matches(pattern: Pattern): Boolean =
 	pattern.isAny || matchesPlain(pattern.script)
 
 fun Script.matches(script: Script): Boolean =
-	matches(pattern(script))
+	matches(Pattern(script))
 
 fun Script.matchesPlain(pattern: Script): Boolean =
 	when (pattern.lineStack) {
 		is EmptyStack -> lineStack is EmptyStack
 		is LinkStack -> lineStack is LinkStack
 			&& lineStack.link.value.matches(pattern.lineStack.link.value)
-			&& lineStack.link.stack.script.matches(pattern(pattern.lineStack.link.stack.script))
+			&& lineStack.link.stack.script.matches(Pattern(pattern.lineStack.link.stack.script))
 	}
 
 fun ScriptLine.matches(patternLine: ScriptLine): Boolean =
-	name == patternLine.name && rhs.matches(pattern(patternLine.rhs))
+	name == patternLine.name && rhs.matches(Pattern(patternLine.rhs))

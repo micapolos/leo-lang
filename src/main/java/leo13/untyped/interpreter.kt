@@ -5,26 +5,28 @@ import leo.base.notNullIf
 import leo13.LeoStruct
 import leo13.script.*
 
-data class interpreter(val evaluator: evaluator = evaluator()) : LeoStruct("interpreter", evaluator) {
+data class Interpreter(val evaluator: Evaluator) : LeoStruct("interpreter", evaluator) {
 	override fun toString() = super.toString()
 }
 
-fun interpreter.plus(script: Script): interpreter =
+fun interpreter(evaluator: Evaluator = evaluator()) = Interpreter(evaluator)
+
+fun Interpreter.plus(script: Script): Interpreter =
 	fold(script.lineSeq) { plus(it) }
 
-fun interpreter.plus(line: ScriptLine): interpreter =
+fun Interpreter.plus(line: ScriptLine): Interpreter =
 	plusOrNull(line) ?: plusFallback(line)
 
-fun interpreter.plusOrNull(line: ScriptLine): interpreter? =
+fun Interpreter.plusOrNull(line: ScriptLine): Interpreter? =
 	when (line.name) {
 		"interpreter" -> plusInterpreterOrNull(line.rhs)
 		else -> null
 	}
 
-fun interpreter.plusInterpreterOrNull(script: Script): interpreter? =
+fun Interpreter.plusInterpreterOrNull(script: Script): Interpreter? =
 	notNullIf(script.isEmpty) {
-		interpreter(evaluator(evaluator.context, evaluated(script(scriptableLine))))
+		Interpreter(Evaluator(evaluator.context, Evaluated(script(scriptableLine))))
 	}
 
-fun interpreter.plusFallback(line: ScriptLine): interpreter =
-	interpreter(evaluator.plus(line))
+fun Interpreter.plusFallback(line: ScriptLine): Interpreter =
+	Interpreter(evaluator.plus(line))

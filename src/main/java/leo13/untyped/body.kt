@@ -4,6 +4,8 @@ import leo13.LeoStruct
 import leo13.script.Script
 import leo13.script.script
 
-data class body(val script: Script = script()) : LeoStruct("body", script) {
+data class Body(val script: Script) : LeoStruct("body", script) {
 	override fun toString() = super.toString()
 }
+
+fun body(script: Script = script()) = Body(script)

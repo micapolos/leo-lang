@@ -8,27 +8,29 @@ import leo13.script.ScriptLine
 import leo13.script.isEmpty
 import leo13.script.lineSeq
 
-data class switchParser(
-	val switch: switch = switch(),
-	val nameOrNull: name? = null) : LeoStruct("parser", switch, nameOrNull) {
+data class SwitchParser(
+	val switch: Switch,
+	val nameOrNull: Name?) : LeoStruct("parser", switch, nameOrNull) {
 	override fun toString() = super.toString()
 }
 
-fun switchParser.plus(line: ScriptLine): switchParser? =
+fun parser(switch: Switch, nameOrNull: Name? = null) = SwitchParser(switch, nameOrNull)
+
+fun SwitchParser.plus(line: ScriptLine): SwitchParser? =
 	if (nameOrNull == null)
-		notNullIf(line.rhs.isEmpty) { switchParser(switch, name(line.name)) }
+		notNullIf(line.rhs.isEmpty) { SwitchParser(switch, Name(line.name)) }
 	else notNullIf(line.name == "gives") {
-		switchParser(
+		parser(
 			if (nameOrNull.string == "else") switch.plusElse(line.rhs)
-			else switch.plus(case(nameOrNull, line.rhs)))
+			else switch.plus(Case(nameOrNull, line.rhs)))
 	}
 
-val switchParser.parsedSwitchOrNull: switch?
+val SwitchParser.parsedSwitchOrNull: Switch?
 	get() =
 		notNullIf(nameOrNull == null) { switch }
 
-val Script.parseSwitch: switch?
+val Script.parseSwitch: Switch?
 	get() =
-		switchParser()
+		parser(switch())
 			.orNullFold(lineSeq) { plus(it) }
 			?.parsedSwitchOrNull

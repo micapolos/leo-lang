@@ -6,7 +6,7 @@ import leo13.script.script
 import kotlin.test.Test
 import kotlin.test.fail
 
-class EvaluatorTest {
+class evaluatorTest {
 	@Test
 	fun resolveDefine() {
 		evaluator()
@@ -18,9 +18,9 @@ class EvaluatorTest {
 				evaluator(
 					context()
 						.plus(
-							function(
-								pattern(script("zero")),
-								body(script("one"))))))
+							Function(
+								Pattern(script("zero")),
+								Body(script("one"))))))
 	}
 
 	@Test
@@ -28,20 +28,20 @@ class EvaluatorTest {
 		val context =
 			context()
 				.plus(
-					function(
-						pattern(script("foo")),
-						body(script("bar"))))
+					Function(
+						Pattern(script("foo")),
+						Body(script("bar"))))
 				.plus(
-					function(
-						pattern(script("zoo")),
-						body(script("foo"))))
+					Function(
+						Pattern(script("zoo")),
+						Body(script("foo"))))
 
 		evaluator(context)
 			.plus("zoo" lineTo script())
 			.assertEqualTo(
 				evaluator(
 					context,
-					evaluated(script("bar" lineTo script()))))
+					Evaluated(script("bar" lineTo script()))))
 	}
 
 	@Test
@@ -49,9 +49,9 @@ class EvaluatorTest {
 		val context =
 			context()
 				.plus(
-					function(
-						pattern(script("foo")),
-						body(script("foo"))))
+					Function(
+						Pattern(script("foo")),
+						Body(script("foo"))))
 
 		try {
 			evaluator(context).plus("foo" lineTo script())
@@ -65,12 +65,12 @@ class EvaluatorTest {
 	fun resolveAs() {
 		evaluator(
 			context(),
-			evaluated(script("foo" lineTo script())))
+			Evaluated(script("foo" lineTo script())))
 			.plus("as" lineTo script("bar"))
 			.assertEqualTo(
 				evaluator(
 					context().plus(binding(key(script("bar")), value(script("foo")))),
-					evaluated(script())))
+					Evaluated(script())))
 	}
 
 	@Test
@@ -81,6 +81,6 @@ class EvaluatorTest {
 			.assertEqualTo(
 				evaluator(
 					context().plus(binding(key(script("foo")), value(script("bar")))),
-					evaluated(script("bar"))))
+					Evaluated(script("bar"))))
 	}
 }

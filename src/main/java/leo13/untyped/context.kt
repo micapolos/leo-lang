@@ -6,27 +6,24 @@ import leo13.script.Script
 import leo13.script.lineSeq
 import leo13.script.linkOrNull
 
-data class context(
-	val parentOrNull: context? = null,
-	val functions: functions = functions(),
-	val bindings: bindings = bindings()) : LeoStruct("context", functions, bindings) {
+data class Context(
+	val functions: Functions,
+	val bindings: Bindings) : LeoStruct("context", functions, bindings) {
 	override fun toString() = super.toString()
 }
 
-fun context.withParent(parent: context) = copy(parentOrNull = parent)
-fun context.plus(function: function) = context(null, functions.plus(function), bindings)
-fun context.plus(binding: binding) = context(null, functions, bindings.plus(binding))
-fun context.evaluate(script: Script) =
+fun context(functions: Functions = functions(), bindings: Bindings = bindings()) = Context(functions, bindings)
+fun Context.plus(function: Function) = Context(functions.plus(function), bindings)
+fun Context.plus(binding: Binding) = Context(functions, bindings.plus(binding))
+fun Context.evaluate(script: Script) =
 	evaluator(this).fold(script.lineSeq) { plus(it) }.evaluated.script
 
-fun context.resolveDefineOrNull(script: Script): context? =
+fun Context.resolveDefineOrNull(script: Script): Context? =
 	script
 		.linkOrNull
 		?.let { link ->
 			when (link.line.name) {
-				"gives" -> plus(function(pattern(parent.evaluate(link.lhs)), body(link.line.rhs)))
+				"gives" -> plus(function(pattern(link.lhs.normalize), Body(link.line.rhs)))
 				else -> null
 			}
 		}
-
-val context.parent: context get() = parentOrNull ?: context()

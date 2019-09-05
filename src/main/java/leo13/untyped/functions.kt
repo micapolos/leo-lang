@@ -7,12 +7,12 @@ import leo13.base.mapFirst
 import leo13.base.plus
 import leo13.script.Script
 
-data class functions(val list: List<function> = list()) : LeoStruct("functions", list) {
+data class Functions(val list: List<Function>) : LeoStruct("functions", list) {
 	override fun toString() = super.toString()
 }
 
-fun functions(vararg functions: function) = functions(list(*functions))
-fun functions.plus(function: function) = functions(list.plus(function))
+fun functions(vararg functions: Function) = Functions(list(*functions))
+fun Functions.plus(function: Function) = Functions(list.plus(function))
 
-fun functions.bodyOrNull(script: Script): body? =
+fun Functions.bodyOrNull(script: Script): Body? =
 	list.mapFirst { bodyOrNull(script) }
