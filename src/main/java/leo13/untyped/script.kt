@@ -15,6 +15,9 @@ fun Script.firstRhsOrNull(name: String): Script? =
 fun ScriptLine.rhsOrNull(name: String): Script? =
 	notNullIf(this.name == name) { rhs }
 
+fun ScriptLine.has(name: String): Boolean =
+	this.name == name
+
 fun Script.setFirstRhsOrNull(line: ScriptLine): Script? =
 	when (lineStack) {
 		is EmptyStack -> null

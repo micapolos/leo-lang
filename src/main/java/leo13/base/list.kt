@@ -4,12 +4,12 @@ import leo.base.Seq
 import leo.base.fold
 import leo13.LeoObject
 import leo13.Scriptable
-import leo13.orNullAsScript
+import leo13.script.script
 
 data class List<out V : Scriptable>(val linkOrNull: Link<V>?) : LeoObject() {
 	override fun toString() = super.toString()
 	override val scriptableName get() = "list"
-	override val scriptableBody get() = linkOrNull.orNullAsScript
+	override val scriptableBody get() = linkOrNull?.scriptableBody ?: script()
 }
 
 fun <V : Scriptable> list(linkOrNull: Link<V>?) = List(linkOrNull)

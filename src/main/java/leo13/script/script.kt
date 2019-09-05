@@ -134,6 +134,10 @@ val ScriptLink.linkLineOrNull: ScriptLinkLine?
 
 // --- isSingleLine
 
+val Script.isName: Boolean
+	get() =
+		onlyLineOrNull?.isName ?: false
+
 val Script.isSingleLine: Boolean
 	get() =
 		linkOrNull?.isSingleLine ?: true
@@ -157,6 +161,8 @@ val Script.isDeep: Boolean
 val ScriptLink.isDeep: Boolean
 	get() =
 		lhs.isDeep || !line.rhs.isEmpty
+
+val ScriptLine.isName get() = rhs.isEmpty
 
 // --- appendable
 
