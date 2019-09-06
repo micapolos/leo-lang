@@ -109,6 +109,12 @@ tailrec fun <T : Any> Stack<T>.get(int: Int): T? =
 		is LinkStack -> if (int == 0) link.value else link.stack.get(int.dec())
 	}
 
+tailrec fun <T> Stack<T>.unsafeGet(int: Int): T =
+	when (this) {
+		is EmptyStack -> fail()
+		is LinkStack -> if (int == 0) link.value else link.stack.unsafeGet(int.dec())
+	}
+
 tailrec fun <T : Any> Stack<T>.get(nat: Nat): T? =
 	when (this) {
 		is EmptyStack -> null
@@ -204,3 +210,15 @@ val <V> Stack<V>.containsDistinct: Boolean
 
 fun <V> Stack<V>.filter(fn: V.() -> Boolean): Stack<V> =
 	stack<V>().fold(this) { if (it.fn()) push(it) else this }.reverse
+
+operator fun <V : Any> Stack<V>.component1(): V? =
+	linkOrNull?.value
+
+operator fun <V : Any> Stack<V>.component2(): V? =
+	linkOrNull?.stack?.linkOrNull?.value
+
+operator fun <V : Any> Stack<V>.component3(): V? =
+	linkOrNull?.stack?.linkOrNull?.stack?.linkOrNull?.value
+
+operator fun <V : Any> Stack<V>.component4(): V? =
+	linkOrNull?.stack?.linkOrNull?.stack?.linkOrNull?.stack?.linkOrNull?.value
