@@ -22,3 +22,6 @@ fun <V : Any> Type<V>.unsafeValue(scriptLine: ScriptLine): V =
 
 fun <V : Any> Type<V>.unsafeBodyValue(script: Script): V =
 	body.unsafeValue(script)
+
+fun <V : Any> Type<V>.toString(value: V): String =
+	scriptLine(value).toString()
