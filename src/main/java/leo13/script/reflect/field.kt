@@ -4,7 +4,9 @@ import leo13.fail
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 
-data class Field<V : Any, A : Any>(val type: Type<A>, val getFn: V.() -> A)
+data class Field<V : Any, A : Any>(
+	val type: Type<A>,
+	val getFn: V.() -> A)
 
 fun <V : Any, A : Any> field(type: Type<A>, getFn: V.() -> A) = Field(type, getFn)
 

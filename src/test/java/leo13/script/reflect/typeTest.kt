@@ -19,9 +19,13 @@ class TypeTest {
 	fun struct() {
 		val structType = type(
 			"zeroone",
-			body(struct(field(zeroType) { zero }, field(oneType) { one }) { zero: Zero, one: One ->
-				ZeroOne(zero, one)
-			}))
+			body(
+				struct(
+					field(zeroType) { zero },
+					field(oneType) { one }
+				) { zero: Zero, one: One ->
+					ZeroOne(zero, one)
+				}))
 
 		structType
 			.scriptLine(ZeroOne(zero, one))
