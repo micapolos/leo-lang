@@ -25,6 +25,7 @@ fun Context.resolveDefineOrNull(script: Script): Context? =
 		?.let { link ->
 			when (link.line.name) {
 				"gives" -> plus(function(pattern(link.lhs.normalize), body(this, link.line.rhs)))
+				"writes" -> plus(function(pattern(link.lhs.normalize), macroBody(this, link.line.rhs)))
 				else -> null
 			}
 		}

@@ -17,7 +17,8 @@ fun Evaluator.plus(script: Script): Evaluator =
 	fold(script.lineSeq) { plus(it) }
 
 fun Evaluator.plus(line: ScriptLine): Evaluator =
-	evaluated.script.normalizedLineOrNull(line)
+	if (line.name == "meta") plusMeta(line.rhs)
+	else evaluated.script.normalizedLineOrNull(line)
 		?.let { evaluator(context).plusResolved(it) }
 		?: plusNormalized(line)
 
@@ -28,7 +29,6 @@ fun Evaluator.plusNormalized(line: ScriptLine): Evaluator =
 		"macro" -> plusResolved(line)
 		"switch" -> plusResolved(line)
 		"quote" -> plusResolved(line)
-		"meta" -> plusMeta(line.rhs)
 		else -> plusOther(line)
 	}
 
@@ -89,7 +89,7 @@ fun Evaluator.applyFunctionOrNull(line: ScriptLine): Evaluator? =
 						.plus(binding(key(script("given")), value(script("given" lineTo given))))
 						.evaluate(body.script)
 						.let { script ->
-							if (body.isMacro) plus(script)
+							if (body.isMacro) evaluator(context).plus(script)
 							else evaluator(context, evaluated(script))
 						}
 				}

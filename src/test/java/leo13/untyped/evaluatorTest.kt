@@ -110,7 +110,6 @@ class evaluatorTest {
 			.assertEqualTo(
 				evaluator(context, evaluated(script("one"))))
 
-
 		evaluator(context)
 			.plus("meta" lineTo script("zero" lineTo script()))
 			.assertEqualTo(
@@ -120,5 +119,16 @@ class evaluatorTest {
 			.plus("meta" lineTo script("meta" lineTo script("zero")))
 			.assertEqualTo(
 				evaluator(context, evaluated(script("meta" lineTo script("one")))))
+
+		evaluator(context)
+			.plus("foo" lineTo script())
+			.plus("meta" lineTo script("bar"))
+			.assertEqualTo(
+				evaluator(
+					context,
+					evaluated(
+						script(
+							"foo" lineTo script(),
+							"bar" lineTo script()))))
 	}
 }
