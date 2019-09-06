@@ -12,8 +12,9 @@ data class Context(
 	override fun toString() = super.toString()
 }
 
-fun context(functions: Functions = functions(), bindings: Bindings = bindings()) = Context(functions, bindings)
+fun context() = Context(functions(), bindings())
 fun Context.plus(function: Function) = Context(functions.plus(function), bindings)
+fun Context.plusFunction(fn: (Context) -> Function) = Context(functions.plus(fn(this)), bindings)
 fun Context.plus(binding: Binding) = Context(functions, bindings.plus(binding))
 fun Context.evaluate(script: Script) =
 	evaluator(this).fold(script.lineSeq) { plus(it) }.evaluated.script
@@ -23,7 +24,7 @@ fun Context.resolveDefineOrNull(script: Script): Context? =
 		.linkOrNull
 		?.let { link ->
 			when (link.line.name) {
-				"gives" -> plus(function(pattern(link.lhs.normalize), Body(link.line.rhs)))
+				"gives" -> plus(function(pattern(link.lhs.normalize), body(this, link.line.rhs)))
 				else -> null
 			}
 		}

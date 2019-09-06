@@ -56,7 +56,7 @@ fun Evaluator.plusSwitchOrNull(switchScript: Script): Evaluator? =
 	switchScript
 		.parseSwitch
 		?.resolveCaseRhsOrNull(evaluated.script)
-		?.let { caseRhs -> Evaluator(context, Evaluated(context.evaluate(caseRhs))) }
+		?.let { caseRhs -> evaluator(context, evaluated(context.evaluate(caseRhs))) }
 
 fun Evaluator.plusDefineOrNull(script: Script): Evaluator? =
 	context
@@ -81,11 +81,11 @@ fun Evaluator.applyFunctionOrNull(line: ScriptLine): Evaluator? =
 				.functions
 				.bodyOrNull(given)
 				?.let { body ->
-					Evaluator(
+					evaluator(
 						context,
-						Evaluated(
-							context
-								.plus(Binding(Key(script("given")), Value(script("given" lineTo given))))
+						evaluated(
+							body.context
+								.plus(binding(key(script("given")), value(script("given" lineTo given))))
 								.evaluate(body.script)))
 				}
 		}
@@ -94,10 +94,10 @@ fun Evaluator.applyBindingOrNull(line: ScriptLine): Evaluator? =
 	context
 		.bindings
 		.valueOrNull(evaluated.script.plus(line))
-		?.let { value -> Evaluator(context, Evaluated(value.script)) }
+		?.let { value -> evaluator(context, Evaluated(value.script)) }
 
 fun Evaluator.plusStatic(line: ScriptLine): Evaluator =
-	Evaluator(context, Evaluated(evaluated.script.resolve(line)))
+	evaluator(context, evaluated(evaluated.script.resolve(line)))
 
 fun Evaluator.plusQuoted(line: ScriptLine): Evaluator =
-	Evaluator(context, Evaluated(evaluated.script.plus(line)))
+	evaluator(context, evaluated(evaluated.script.plus(line)))

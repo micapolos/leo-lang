@@ -4,7 +4,6 @@ import leo.base.assertEqualTo
 import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test
-import kotlin.test.fail
 
 class evaluatorTest {
 	@Test
@@ -18,59 +17,77 @@ class evaluatorTest {
 				evaluator(
 					context()
 						.plus(
-							Function(
-								Pattern(script("zero")),
-								Body(script("one"))))))
+							function(
+								pattern(script("zero")),
+								body(context(), script("one"))))))
 	}
 
 	@Test
 	fun resolveApplyFunction() {
 		val context =
 			context()
-				.plus(
-					Function(
-						Pattern(script("foo")),
-						Body(script("bar"))))
-				.plus(
-					Function(
-						Pattern(script("zoo")),
-						Body(script("foo"))))
+				.plusFunction { context ->
+					function(
+						pattern(script("foo")),
+						body(context, script("bar")))
+				}
+
+		evaluator(context)
+			.plus("foo" lineTo script())
+			.assertEqualTo(
+				evaluator(
+					context,
+					evaluated(script("bar" lineTo script()))))
+	}
+
+	@Test
+	fun resolveApplyFunction_chaining() {
+		val context =
+			context()
+				.plusFunction { context ->
+					function(
+						pattern(script("foo")),
+						body(context, script("bar")))
+				}
+				.plusFunction { context ->
+					function(
+						pattern(script("zoo")),
+						body(context, script("foo")))
+				}
 
 		evaluator(context)
 			.plus("zoo" lineTo script())
 			.assertEqualTo(
 				evaluator(
 					context,
-					Evaluated(script("bar" lineTo script()))))
+					evaluated(script("bar" lineTo script()))))
 	}
 
 	@Test
-	fun resolveApplyFunction_SOE() {
+	fun resolveApplyFunction_noImplicitRecursion() {
 		val context =
 			context()
-				.plus(
-					Function(
-						Pattern(script("foo")),
-						Body(script("foo"))))
+				.plusFunction { context ->
+					function(
+						pattern(script("foo")),
+						body(context, script("foo")))
+				}
 
-		try {
-			evaluator(context).plus("foo" lineTo script())
-			fail("StackOverflowError expected")
-		} catch (soe: StackOverflowError) {
-
-		}
+		evaluator(context)
+			.plus("foo" lineTo script())
+			.assertEqualTo(evaluator(context, evaluated(script("foo"))))
 	}
 
 	@Test
 	fun resolveAs() {
 		evaluator(
 			context(),
-			Evaluated(script("foo" lineTo script())))
+			evaluated(script("foo" lineTo script())))
 			.plus("as" lineTo script("bar"))
 			.assertEqualTo(
 				evaluator(
 					context().plus(binding(key(script("bar")), value(script("foo")))),
-					Evaluated(script())))
+					evaluated(script())))
 	}
 
 	@Test
@@ -81,6 +98,6 @@ class evaluatorTest {
 			.assertEqualTo(
 				evaluator(
 					context().plus(binding(key(script("foo")), value(script("bar")))),
-					Evaluated(script("bar"))))
+					evaluated(script("bar"))))
 	}
 }
