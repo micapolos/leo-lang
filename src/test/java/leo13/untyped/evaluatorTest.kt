@@ -100,4 +100,25 @@ class evaluatorTest {
 					context().plus(binding(key(script("foo")), value(script("bar")))),
 					evaluated(script("bar"))))
 	}
+
+	@Test
+	fun resolveMeta() {
+		val context = context().plus(binding(key(script("zero")), value(script("one"))))
+
+		evaluator(context)
+			.plus("zero" lineTo script())
+			.assertEqualTo(
+				evaluator(context, evaluated(script("one"))))
+
+
+		evaluator(context)
+			.plus("meta" lineTo script("zero" lineTo script()))
+			.assertEqualTo(
+				evaluator(context, evaluated(script("zero"))))
+
+		evaluator(context)
+			.plus("meta" lineTo script("meta" lineTo script("zero")))
+			.assertEqualTo(
+				evaluator(context, evaluated(script("meta" lineTo script("one")))))
+	}
 }

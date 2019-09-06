@@ -61,6 +61,20 @@ class ScriptTest {
 	}
 
 	@Test
+	fun resolveBody() {
+		script()
+			.resolve(
+				"body" lineTo script(
+					"vec" lineTo script(
+						"x" lineTo script("one"),
+						"y" lineTo script("two"))))
+			.assertEqualTo(
+				script(
+					"x" lineTo script("one"),
+					"y" lineTo script("two")))
+	}
+
+	@Test
 	fun setFirstRhsOrNull() {
 		script(
 			"x" lineTo script("one"),

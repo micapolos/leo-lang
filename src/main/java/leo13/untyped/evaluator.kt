@@ -28,6 +28,7 @@ fun Evaluator.plusNormalized(line: ScriptLine): Evaluator =
 		"macro" -> plusResolved(line)
 		"switch" -> plusResolved(line)
 		"quote" -> plusResolved(line)
+		"meta" -> plusMeta(line.rhs)
 		else -> plusOther(line)
 	}
 
@@ -66,6 +67,9 @@ fun Evaluator.plusDefineOrNull(script: Script): Evaluator? =
 fun Evaluator.plusQuoteOrNull(script: Script): Evaluator =
 	fold(script.lineSeq) { plusQuoted(it) }
 
+fun Evaluator.plusMeta(script: Script): Evaluator =
+	fold(script.lineSeq) { plusQuoted(it.name lineTo context.evaluate(it.rhs)) }
+
 fun Evaluator.plusResolvedOther(line: ScriptLine): Evaluator =
 	null
 		?: applyBindingOrNull(line)
@@ -81,12 +85,13 @@ fun Evaluator.applyFunctionOrNull(line: ScriptLine): Evaluator? =
 				.functions
 				.bodyOrNull(given)
 				?.let { body ->
-					evaluator(
-						context,
-						evaluated(
-							body.context
-								.plus(binding(key(script("given")), value(script("given" lineTo given))))
-								.evaluate(body.script)))
+					body.context
+						.plus(binding(key(script("given")), value(script("given" lineTo given))))
+						.evaluate(body.script)
+						.let { script ->
+							if (body.isMacro) plus(script)
+							else evaluator(context, evaluated(script))
+						}
 				}
 		}
 

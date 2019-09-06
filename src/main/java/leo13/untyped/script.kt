@@ -38,6 +38,7 @@ fun Script.resolve(line: ScriptLine): Script =
 fun Script.resolveOrNull(line: ScriptLine): Script? =
 	when (line.name) {
 		"set" -> resolveSetOrNull(line.rhs)
+		"body" -> resolveBodyOrNull(line.rhs)
 		else -> resolveGetOrNull(line)
 	}
 
@@ -56,6 +57,9 @@ fun Script.resolveSetOrNull(rhs: Script): Script? =
 			.orNullFold(rhs.lineSeq) { setFirstRhsOrNull(it) }
 			?.let { setLine -> script(line.name lineTo setLine) }
 	}
+
+fun Script.resolveBodyOrNull(rhs: Script): Script? =
+	ifOrNull(isEmpty) { rhs.onlyLineOrNull?.rhs }
 
 val Script.evaluate
 	get() =
