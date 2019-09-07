@@ -6,6 +6,6 @@ import kotlin.test.Test
 class TextTest {
 	@Test
 	fun type() {
-		text(" ").assertEqualTo()
+		text(" ").assertEqualTo(null)
 	}
 }

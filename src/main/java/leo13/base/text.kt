@@ -2,10 +2,10 @@ package leo13.base
 
 import leo.base.fold
 import leo.binary.utf8ByteSeq
+import leo.binary.utf8String
 import leo13.base.type.*
-import leo9.Stack
-import leo9.push
-import leo9.stack
+import leo13.base.typed.byteType
+import leo9.*
 
 val textType: Type<Text> =
 	type(
@@ -33,3 +33,7 @@ fun Text.plus(char: Char): Text =
 
 fun Text.plus(string: String): Text =
 	fold(string.utf8ByteSeq) { plusUtf8(it) }
+
+val Text.string: String
+	get() =
+		utf8ByteStack.reverse.seq.utf8String

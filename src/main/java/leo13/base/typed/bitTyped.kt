@@ -1,6 +1,7 @@
-package leo13.base
+package leo13.base.typed
 
 import leo.binary.*
+import leo13.base.Typed
 import leo13.base.type.*
 
 val zeroType: Type<Zero> = type("zero", body(struct(zero)))

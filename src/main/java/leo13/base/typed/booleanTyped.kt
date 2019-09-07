@@ -1,5 +1,6 @@
-package leo13.base
+package leo13.base.typed
 
+import leo13.base.Typed
 import leo13.base.type.*
 
 val trueType: Type<Boolean> = type("true", body(struct(true)))

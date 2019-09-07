@@ -1,7 +1,8 @@
-package leo13.base
+package leo13.base.typed
 
 import leo.base.byte
 import leo.binary.*
+import leo13.base.Typed
 import leo13.base.type.*
 
 val byteType: Type<Byte> =

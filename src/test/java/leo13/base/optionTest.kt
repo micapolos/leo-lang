@@ -3,6 +3,8 @@ package leo13.base
 import leo.base.assertEqualTo
 import leo.binary.one
 import leo.binary.zero
+import leo13.base.typed.oneType
+import leo13.base.typed.zeroType
 import kotlin.test.Test
 
 class OptionTest {
