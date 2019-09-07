@@ -5,11 +5,11 @@ import leo13.base.option
 import leo13.script.*
 import leo13.base.Option as ValueOption
 
-data class Option<V : Any>(val orNullType: Type<V>)
+data class TypeOption<V : Any>(val orNullType: Type<V>)
 
-fun <V : Any> option(orNullType: Type<V>) = Option(orNullType)
+fun <V : Any> option(orNullType: Type<V>) = TypeOption(orNullType)
 
-fun <V : Any> Option<V>.unsafeBodyValue(script: Script): ValueOption<V> =
+fun <V : Any> TypeOption<V>.unsafeBodyValue(script: Script): ValueOption<V> =
 	script
 		.unsafeOnlyLine
 		.unsafeRhs("option")
@@ -22,7 +22,7 @@ fun <V : Any> Option<V>.unsafeBodyValue(script: Script): ValueOption<V> =
 			)
 		}
 
-fun <V : Any> Option<V>.bodyScript(value: ValueOption<V>): Script =
+fun <V : Any> TypeOption<V>.bodyScript(value: ValueOption<V>): Script =
 	script(
 		"option" lineTo script(
 			if (value.orNull == null) "null" lineTo script()
