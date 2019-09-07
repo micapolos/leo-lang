@@ -46,3 +46,5 @@ val Byte.bit3: Bit get() = isOneBit(toInt().and(0x08) != 0)
 val Byte.bit2: Bit get() = isOneBit(toInt().and(0x04) != 0)
 val Byte.bit1: Bit get() = isOneBit(toInt().and(0x02) != 0)
 val Byte.bit0: Bit get() = isOneBit(toInt().and(0x01) != 0)
+
+fun byte(int: Int) = leo.base.byte(int)

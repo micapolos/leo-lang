@@ -11,11 +11,13 @@ import leo13.script.unsafeRhs
 import leo9.Stack
 import leo9.map
 
+const val stackTypeName = "list"
+
 fun <V : Any> stackType(itemType: Type<V>): Type<Stack<V>> =
 	Type(
 		itemType.name,
-		{ script("list" lineTo map { itemType.scriptLine(this) }.script) },
-		{ unsafeOnlyLine.unsafeRhs("list").lineStack.map { itemType.unsafeValue(this) } })
+		{ script(stackTypeName lineTo map { itemType.scriptLine(this) }.script) },
+		{ unsafeOnlyLine.unsafeRhs(stackTypeName).lineStack.map { itemType.unsafeValue(this) } })
 
 data class StackLeo<V : Any>(val itemType: Type<V>, val stack: Stack<V>) {
 	override fun toString() = stackType(itemType).toString(stack)
