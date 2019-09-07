@@ -1,7 +1,7 @@
 package leo13.base
 
-import leo13.script.reflect.Type
-import leo13.script.reflect.scriptLine
+import leo13.base.type.Type
+import leo13.base.type.scriptLine
 
 data class Option<V : Any>(val type: Type<V>, val orNull: V?) {
 	override fun toString() = type.scriptLine(this).toString()

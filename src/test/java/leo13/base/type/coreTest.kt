@@ -1,4 +1,4 @@
-package leo13.script.reflect
+package leo13.base.type
 
 import leo.base.assertEqualTo
 import leo.binary.bit
