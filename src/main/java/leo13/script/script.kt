@@ -2,6 +2,7 @@ package leo13.script
 
 import leo.base.*
 import leo13.LeoObject
+import leo13.fail
 import leo13.token.*
 import leo9.*
 import leo9.Stack
@@ -45,6 +46,15 @@ infix fun Script.arrowTo(rhs: Script) = ScriptArrow(this, rhs)
 val Script.onlyLineOrNull get() = lineStack.onlyOrNull
 val ScriptLine.script get() = script(this)
 val Script.lineSeq get() = lineStack.reverse.seq
+
+val Script.unsafeOnlyLine: ScriptLine
+	get() =
+		onlyLineOrNull
+			?: fail(
+				script(
+					"only" lineTo script(),
+					"line" lineTo script(),
+					"expected" lineTo script()))
 
 fun scriptHead(vararg openers: ScriptOpener) = ScriptHead(stack(*openers), script())
 infix fun Script.openerTo(opening: Opening) = ScriptOpener(this, opening)

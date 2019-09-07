@@ -9,6 +9,8 @@ import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test
 import kotlin.test.assertFails
+import leo13.base.Option as ValueOption
+import leo13.base.option as valueOption
 
 data class ZeroOne(
 	val zero: Zero,
@@ -37,6 +39,39 @@ class TypeTest {
 
 		assertFails {
 			structType.unsafeValue("zeroonie" lineTo script("zero" lineTo script(), "one" lineTo script()))
+		}
+	}
+
+	@Test
+	fun optionTest() {
+		val optionType: Type<ValueOption<Zero>> = type("zeroable", body(option(zeroType)))
+
+		optionType
+			.scriptLine(valueOption(zero))
+			.assertEqualTo("zeroable" lineTo script("option" lineTo script("zero")))
+
+		optionType
+			.scriptLine(valueOption<Zero>(null))
+			.assertEqualTo("zeroable" lineTo script("option" lineTo script("null")))
+
+		optionType
+			.unsafeValue("zeroable" lineTo script("option" lineTo script("zero")))
+			.assertEqualTo(valueOption(zero))
+
+		optionType
+			.unsafeValue("zeroable" lineTo script("option" lineTo script("null")))
+			.assertEqualTo(valueOption(null))
+
+		assertFails {
+			optionType.unsafeValue("zeroable2" lineTo script("option" lineTo script("null")))
+		}
+
+		assertFails {
+			optionType.unsafeValue("zeroable" lineTo script("option2" lineTo script("nulla")))
+		}
+
+		assertFails {
+			optionType.unsafeValue("zeroable" lineTo script("option" lineTo script("null2")))
 		}
 	}
 }
