@@ -1,27 +1,27 @@
 package leo13.base
 
-import leo13.base.type.Type
-import leo13.base.type.field
-import leo13.base.type.toString
-import leo13.base.type.type
+import leo13.scripter.Scripter
+import leo13.scripter.field
+import leo13.scripter.scripter
+import leo13.scripter.toString
 
 data class ByteLeo(val byte: Byte) {
-	override fun toString() = byteType.toString(byte)
+	override fun toString() = byteScripter.toString(byte)
 }
 
 fun leo(byte: Byte) = ByteLeo(byte)
 
-val byteType: Type<Byte> =
-	type(
+val byteScripter: Scripter<Byte> =
+	scripter(
 		"byte",
-		field(type("first", bitType)) { bit7 },
-		field(type("second", bitType)) { bit6 },
-		field(type("third", bitType)) { bit5 },
-		field(type("fourth", bitType)) { bit4 },
-		field(type("fifth", bitType)) { bit3 },
-		field(type("sixth", bitType)) { bit2 },
-		field(type("seventh", bitType)) { bit1 },
-		field(type("eight", bitType)) { bit0 })
+		field(scripter("first", bitScripter)) { bit7 },
+		field(scripter("second", bitScripter)) { bit6 },
+		field(scripter("third", bitScripter)) { bit5 },
+		field(scripter("fourth", bitScripter)) { bit4 },
+		field(scripter("fifth", bitScripter)) { bit3 },
+		field(scripter("sixth", bitScripter)) { bit2 },
+		field(scripter("seventh", bitScripter)) { bit1 },
+		field(scripter("eight", bitScripter)) { bit0 })
 	{ bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0 ->
 		byte(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)
 	}

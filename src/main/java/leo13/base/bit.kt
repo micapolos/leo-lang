@@ -1,23 +1,23 @@
 package leo13.base
 
-import leo13.base.type.Type
-import leo13.base.type.case
-import leo13.base.type.toString
-import leo13.base.type.type
 import leo13.script.lineTo
 import leo13.script.script
+import leo13.scripter.Scripter
+import leo13.scripter.case
+import leo13.scripter.scripter
+import leo13.scripter.toString
 
-val bitType: Type<Bit> =
-	type(
+val bitScripter: Scripter<Bit> =
+	scripter(
 		"bit",
-		case(type("zero")) { zeroBit },
-		case(type("one")) { oneBit })
+		case(scripter("zero")) { zeroBit },
+		case(scripter("one")) { oneBit })
 	{
 		(if (isOne) "one" else "zero") lineTo script()
 	}
 
 data class Bit(val isOne: Boolean) {
-	override fun toString() = bitType.toString(this)
+	override fun toString() = bitScripter.toString(this)
 }
 
 fun isOneBit(isOne: Boolean) = Bit(isOne)
