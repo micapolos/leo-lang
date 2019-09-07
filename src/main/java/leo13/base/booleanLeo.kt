@@ -1,8 +1,8 @@
-package leo13.base.typed
+package leo13.base
 
-import leo13.base.Typed
 import leo13.base.type.Type
 import leo13.base.type.case
+import leo13.base.type.toString
 import leo13.base.type.type
 import leo13.script.lineTo
 import leo13.script.script
@@ -16,9 +16,8 @@ val booleanType: Type<Boolean> =
 		(if (this) "true" else "false") lineTo script()
 	}
 
-data class BooleanTyped(val boolean: Boolean) : Typed<BooleanTyped>() {
-	override fun toString() = super.toString()
-	override val type = type(booleanType, { boolean }, { typed(this) })
+data class BooleanLeo(val boolean: Boolean) {
+	override fun toString() = booleanType.toString(boolean)
 }
 
-fun typed(boolean: Boolean) = BooleanTyped(boolean)
+fun leo(boolean: Boolean) = BooleanLeo(boolean)

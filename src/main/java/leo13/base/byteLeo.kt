@@ -1,10 +1,10 @@
-package leo13.base.typed
+package leo13.base
 
 import leo.base.byte
 import leo.binary.*
-import leo13.base.Typed
 import leo13.base.type.Type
 import leo13.base.type.field
+import leo13.base.type.toString
 import leo13.base.type.type
 
 val byteType: Type<Byte> =
@@ -22,9 +22,8 @@ val byteType: Type<Byte> =
 		byte(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)
 	}
 
-data class ByteTyped(val byte: Byte) : Typed<Byte>() {
-	override fun toString() = super.toString()
-	override val type = byteType
+data class ByteLeo(val byte: Byte) {
+	override fun toString() = byteType.toString(byte)
 }
 
-fun typed(byte: Byte) = ByteTyped(byte)
+fun leo(byte: Byte) = ByteLeo(byte)

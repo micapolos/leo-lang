@@ -18,3 +18,6 @@ fun <V : Any> Type<V>.unsafeValue(scriptLine: ScriptLine): V =
 
 fun <V : Any> Type<V>.unsafeValue(script: Script): V =
 	unsafeValue(script.unsafeOnlyLine)
+
+fun <V : Any> Type<V>.toString(value: V): String =
+	scriptLine(value).toString()

@@ -5,9 +5,8 @@ import leo.binary.utf8ByteSeq
 import leo.binary.utf8String
 import leo13.base.type.Type
 import leo13.base.type.field
+import leo13.base.type.toString
 import leo13.base.type.type
-import leo13.base.typed.byteType
-import leo13.base.typed.stackType
 import leo9.*
 
 val textType: Type<Text> =
@@ -16,9 +15,8 @@ val textType: Type<Text> =
 		field(type("utf", type("eight", stackType(byteType)))) { utf8ByteStack }
 	) { Text(it) }
 
-data class Text(val utf8ByteStack: Stack<Byte>) : Typed<Text>() {
-	override fun toString() = super.toString()
-	override val type = textType
+data class Text(val utf8ByteStack: Stack<Byte>) {
+	override fun toString() = textType.toString(this)
 }
 
 fun text(): Text = Text(stack())

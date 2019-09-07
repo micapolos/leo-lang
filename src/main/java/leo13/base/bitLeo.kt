@@ -1,9 +1,9 @@
-package leo13.base.typed
+package leo13.base
 
 import leo.binary.*
-import leo13.base.Typed
 import leo13.base.type.Type
 import leo13.base.type.case
+import leo13.base.type.toString
 import leo13.base.type.type
 import leo13.script.lineTo
 import leo13.script.script
@@ -17,9 +17,8 @@ val bitType: Type<Bit> =
 		(if (isZero) "zero" else "one") lineTo script()
 	}
 
-data class BitTyped(val bit: Bit) : Typed<Bit>() {
-	override fun toString() = super.toString()
-	override val type = bitType
+data class BitLeo(val bit: Bit) {
+	override fun toString() = bitType.toString(bit)
 }
 
-fun typed(bit: Bit) = BitTyped(bit)
+fun leo(bit: Bit) = BitLeo(bit)
