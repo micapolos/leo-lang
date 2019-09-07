@@ -32,6 +32,7 @@ fun <T> nonEmptyStack(value: T, vararg values: T) = stack(stackLink(value, *valu
 fun <T> link(tail: Stack<T>, head: T) = StackLink(tail, head)
 fun <T> Stack<T>.push(value: T) = stack(link(this, value))
 fun <T> StackLink<T>.push(value: T) = link(stack(this), value)
+val <T> Stack<T>.emptyOrNull get() = (this as? EmptyStack)?.empty
 val <T> Stack<T>.linkOrNull get() = (this as? LinkStack)?.link
 val <T> Stack<T>.onlyLinkOrNull get() = linkOrNull?.run { orNullIf(!link.stack.isEmpty) }
 val <T : Any> Stack<T>.valueOrNull: T? get() = linkOrNull?.value
@@ -222,3 +223,48 @@ operator fun <V : Any> Stack<V>.component3(): V? =
 
 operator fun <V : Any> Stack<V>.component4(): V? =
 	linkOrNull?.stack?.linkOrNull?.stack?.linkOrNull?.stack?.linkOrNull?.value
+
+fun <V, R : Any> Stack<V>.map1OrNull(fn: (V) -> R): R? =
+	linkOrNull?.let { link0 ->
+		link0.stack.emptyOrNull?.run {
+			fn(link0.value)
+		}
+	}
+
+fun <V, R : Any> Stack<V>.map2OrNull(fn: (V, V) -> R): R? =
+	linkOrNull?.let { link0 ->
+		link0.stack.linkOrNull?.let { link1 ->
+			link1.stack.emptyOrNull?.run {
+				fn(link1.value, link0.value)
+			}
+		}
+	}
+
+fun <V, R : Any> Stack<V>.map8OrNull(fn: (V, V, V, V, V, V, V, V) -> R): R? =
+	linkOrNull?.let { link0 ->
+		link0.stack.linkOrNull?.let { link1 ->
+			link1.stack.linkOrNull?.let { link2 ->
+				link2.stack.linkOrNull?.let { link3 ->
+					link3.stack.linkOrNull?.let { link4 ->
+						link4.stack.linkOrNull?.let { link5 ->
+							link5.stack.linkOrNull?.let { link6 ->
+								link6.stack.linkOrNull?.let { link7 ->
+									link7.stack.emptyOrNull?.run {
+										fn(
+											link7.value,
+											link6.value,
+											link5.value,
+											link4.value,
+											link3.value,
+											link2.value,
+											link1.value,
+											link0.value)
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}

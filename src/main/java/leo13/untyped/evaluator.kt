@@ -1,12 +1,20 @@
 package leo13.untyped
 
 import leo.base.fold
-import leo13.LeoStruct
 import leo13.script.*
 
-data class Evaluator(
-	val context: Context,
-	val evaluated: Evaluated) : LeoStruct("evaluator", context, evaluated) {
+val evaluatorName = "evaluator"
+
+val evaluatorReader: Reader<Evaluator> =
+	reader(evaluatorName, contextReader, evaluatedReader, ::evaluator)
+
+val evaluatorWriter: Writer<Evaluator> =
+	writer(
+		contextName,
+		field(contextWriter) { context },
+		field(evaluatedWriter) { evaluated })
+
+data class Evaluator(val context: Context, val evaluated: Evaluated) {
 	override fun toString() = super.toString()
 }
 
@@ -54,9 +62,9 @@ fun Evaluator.plusEvaluateOrNull(script: Script): Evaluator =
 	plus(script)
 
 fun Evaluator.plusSwitchOrNull(switchScript: Script): Evaluator? =
-	switchScript
-		.parseSwitch
-		?.resolveCaseRhsOrNull(evaluated.script)
+	switchReader
+		.unsafeBodyValue(switchScript)
+		.resolveCaseRhsOrNull(evaluated.script)
 		?.let { caseRhs -> evaluator(context, evaluated(context.evaluate(caseRhs))) }
 
 fun Evaluator.plusDefineOrNull(script: Script): Evaluator? =
@@ -82,22 +90,17 @@ fun Evaluator.applyFunctionOrNull(line: ScriptLine): Evaluator? =
 		.plus(line)
 		.let { given ->
 			context
-				.functions
 				.bodyOrNull(given)
 				?.let { body ->
 					body.context
 						.plus(binding(key(script("given")), value(script("given" lineTo given))))
 						.evaluate(body.script)
-						.let { script ->
-							if (body.isMacro) evaluator(context).plus(script)
-							else evaluator(context, evaluated(script))
-						}
+						.let { script -> evaluator(context, evaluated(script)) }
 				}
 		}
 
 fun Evaluator.applyBindingOrNull(line: ScriptLine): Evaluator? =
 	context
-		.bindings
 		.valueOrNull(evaluated.script.plus(line))
 		?.let { value -> evaluator(context, Evaluated(value.script)) }
 

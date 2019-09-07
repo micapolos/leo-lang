@@ -2,10 +2,15 @@ package leo13.untyped
 
 import leo.base.fold
 import leo.base.notNullIf
-import leo13.LeoStruct
 import leo13.script.*
 
-data class Interpreter(val evaluator: Evaluator) : LeoStruct("interpreter", evaluator) {
+const val interpreterName = "interpreter"
+val interpreterReader: Reader<Interpreter> =
+	reader(interpreterName, evaluatorReader, ::interpreter)
+val interpreterWriter: Writer<Interpreter> =
+	writer(interpreterName, field(evaluatorWriter) { evaluator })
+
+data class Interpreter(val evaluator: Evaluator) {
 	override fun toString() = super.toString()
 }
 
@@ -25,7 +30,7 @@ fun Interpreter.plusOrNull(line: ScriptLine): Interpreter? =
 
 fun Interpreter.plusInterpreterOrNull(script: Script): Interpreter? =
 	notNullIf(script.isEmpty) {
-		Interpreter(Evaluator(evaluator.context, Evaluated(script(scriptableLine))))
+		Interpreter(Evaluator(evaluator.context, Evaluated(script(interpreterWriter.scriptLine(this)))))
 	}
 
 fun Interpreter.plusFallback(line: ScriptLine): Interpreter =

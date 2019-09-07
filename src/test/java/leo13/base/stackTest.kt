@@ -3,33 +3,33 @@ package leo13.base
 import leo.base.assertEqualTo
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.scripter.scriptLine
-import leo13.scripter.unsafeValue
+import leo13.script.scriptLine
+import leo13.script.unsafeValue
 import leo9.stack
 import kotlin.test.Test
 
 class StackTest {
 	@Test
 	fun scriptLine() {
-		stackType(bitScripter)
+		stackWriter(bitWriter)
 			.scriptLine(stack(zeroBit, oneBit, oneBit))
 			.assertEqualTo(
-				bitScripter.name lineTo script(
+				bitWriter.name lineTo script(
 					"list" lineTo script(
-						bitScripter.scriptLine(zeroBit),
-						bitScripter.scriptLine(oneBit),
-						bitScripter.scriptLine(oneBit))))
+						bitWriter.scriptLine(zeroBit),
+						bitWriter.scriptLine(oneBit),
+						bitWriter.scriptLine(oneBit))))
 	}
 
 	@Test
 	fun unsafeValue() {
-		stackType(bitScripter)
+		stackReader(bitReader)
 			.unsafeValue(
-				bitScripter.name lineTo script(
+				bitWriter.name lineTo script(
 					"list" lineTo script(
-						bitScripter.scriptLine(zeroBit),
-						bitScripter.scriptLine(oneBit),
-						bitScripter.scriptLine(oneBit))))
+						bitWriter.scriptLine(zeroBit),
+						bitWriter.scriptLine(oneBit),
+						bitWriter.scriptLine(oneBit))))
 			.assertEqualTo(stack(zeroBit, oneBit, oneBit))
 	}
 }

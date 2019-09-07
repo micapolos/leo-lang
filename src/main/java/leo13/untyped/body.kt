@@ -1,11 +1,20 @@
 package leo13.untyped
 
-import leo13.LeoStruct
-import leo13.script.Script
+import leo13.script.*
 
-data class Body(val context: Context, val script: Script, val isMacro: Boolean) : LeoStruct("body", context, script) {
+data class Body(val context: Context, val script: Script) {
 	override fun toString() = super.toString()
 }
 
-fun body(context: Context, script: Script) = Body(context, script, false)
-fun macroBody(context: Context, script: Script) = Body(context, script, true)
+fun body(context: Context, script: Script) = Body(context, script)
+
+const val bodyName = "body"
+
+val bodyReader: Reader<Body> =
+	reader(bodyName, contextReader, scriptReader, ::Body)
+
+val bodyWriter: Writer<Body> =
+	writer(
+		bodyName,
+		field(contextWriter) { context },
+		field(scriptWriter) { script })

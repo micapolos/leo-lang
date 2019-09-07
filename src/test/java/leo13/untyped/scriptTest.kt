@@ -94,39 +94,4 @@ class ScriptTest {
 					"x" lineTo script("one"),
 					"y" lineTo script("ten")))
 	}
-
-	@Test
-	fun matchesAny() {
-		script("foo" lineTo script("bar"))
-			.matches(script("any"))
-			.assertEqualTo(true)
-	}
-
-	@Test
-	fun matchesDeep() {
-		script(
-			"vec" lineTo script(
-				"x" lineTo script("zero"),
-				"y" lineTo script("one")))
-			.matches(
-				script(
-					"vec" lineTo script(
-						"x" lineTo script("any"),
-						"y" lineTo script("any"))))
-			.assertEqualTo(true)
-	}
-
-	@Test
-	fun matchesFalse() {
-		script(
-			"vec" lineTo script(
-				"x" lineTo script("zero"),
-				"y" lineTo script("one")))
-			.matches(
-				script(
-					"vec" lineTo script(
-						"x" lineTo script("any"),
-						"y" lineTo script("zero"))))
-			.assertEqualTo(false)
-	}
 }

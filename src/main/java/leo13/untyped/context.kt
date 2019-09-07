@@ -1,31 +1,51 @@
 package leo13.untyped
 
 import leo.base.fold
-import leo13.LeoStruct
-import leo13.script.Script
-import leo13.script.lineSeq
-import leo13.script.linkOrNull
+import leo13.base.stackReader
+import leo13.base.stackWriter
+import leo13.script.*
+import leo9.Stack
+import leo9.mapFirst
+import leo9.push
+import leo9.stack
+
+const val contextName = "context"
+
+val contextReader: Reader<Context> =
+	reader(
+		contextName,
+		stackReader(functionReader),
+		stackReader(bindingReader),
+		::Context)
+
+val contextWriter: Writer<Context> =
+	writer(
+		contextName,
+		field(stackWriter(functionWriter)) { functionStack },
+		field(stackWriter(bindingWriter)) { bindingStack })
 
 data class Context(
-	val functions: Functions,
-	val bindings: Bindings) : LeoStruct("context", functions, bindings) {
+	val functionStack: Stack<Function>,
+	val bindingStack: Stack<Binding>) {
 	override fun toString() = super.toString()
 }
 
-fun context() = Context(functions(), bindings())
-fun Context.plus(function: Function) = Context(functions.plus(function), bindings)
-fun Context.plusFunction(fn: (Context) -> Function) = Context(functions.plus(fn(this)), bindings)
-fun Context.plus(binding: Binding) = Context(functions, bindings.plus(binding))
+fun context() = Context(stack(), stack())
+fun Context.plus(function: Function) = Context(functionStack.push(function), bindingStack)
+fun Context.plusFunction(fn: (Context) -> Function) = plus(fn(this))
+fun Context.plus(binding: Binding) = Context(functionStack, bindingStack.push(binding))
 fun Context.evaluate(script: Script) =
 	evaluator(this).fold(script.lineSeq) { plus(it) }.evaluated.script
+
+fun Context.bodyOrNull(script: Script) = functionStack.mapFirst { bodyOrNull(script) }
+fun Context.valueOrNull(script: Script) = bindingStack.mapFirst { valueOrNull(script) }
 
 fun Context.resolveDefineOrNull(script: Script): Context? =
 	script
 		.linkOrNull
 		?.let { link ->
 			when (link.line.name) {
-				"gives" -> plus(function(pattern(link.lhs.normalize), body(this, link.line.rhs)))
-				"writes" -> plus(function(pattern(link.lhs.normalize), macroBody(this, link.line.rhs)))
+				"gives" -> plus(function(patternReader.unsafeBodyValue(link.lhs.normalize), body(this, link.line.rhs)))
 				else -> null
 			}
 		}

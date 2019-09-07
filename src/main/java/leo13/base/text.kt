@@ -3,21 +3,15 @@ package leo13.base
 import leo.base.fold
 import leo.binary.utf8ByteSeq
 import leo.binary.utf8String
-import leo13.scripter.Scripter
-import leo13.scripter.field
-import leo13.scripter.scripter
-import leo13.scripter.toString
+import leo13.script.*
+import leo13.script.Writer
 import leo9.*
 
-val textScripter: Scripter<Text> =
-	scripter(
-		"text",
-		field(scripter("utf", scripter("eight", stackType(byteScripter)))) { utf8ByteStack }
-	) { Text(it) }
-
 data class Text(val utf8ByteStack: Stack<Byte>) {
-	override fun toString() = textScripter.toString(this)
+	override fun toString() = textWriter.string(this)
 }
+
+fun text(utf8ByteStack: Stack<Byte>) = Text(utf8ByteStack)
 
 fun text(): Text = Text(stack())
 
@@ -36,3 +30,16 @@ fun Text.plus(string: String): Text =
 val Text.string: String
 	get() =
 		utf8ByteStack.reverse.seq.utf8String
+
+val textName = "text"
+
+val textReader: Reader<Text> =
+	reader(textName) {
+		text(reader("utf", reader("eight", stackReader(byteReader))).unsafeValue(this))
+	}
+
+val textWriter: Writer<Text> =
+	writer(textName) {
+		writer("utf", writer("eight", stackWriter(byteWriter))).script(utf8ByteStack)
+	}
+

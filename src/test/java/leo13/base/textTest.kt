@@ -3,21 +3,20 @@ package leo13.base
 import leo.base.assertEqualTo
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.scripter.script
-import leo13.scripter.scriptLine
-import leo13.scripter.unsafeValue
+import leo13.script.scriptLine
+import leo13.script.unsafeValue
 import leo9.stack
 import kotlin.test.Test
 
 class TextTest {
 	@Test
 	fun scriptLine() {
-		textScripter
+		textWriter
 			.scriptLine(text(" \t"))
 			.assertEqualTo(
 				"text" lineTo script(
 					"utf" lineTo script(
-						"eight" lineTo stackType(byteScripter)
+						"eight" lineTo stackWriter(byteWriter)
 							.script(
 								stack(
 									byte(32),
@@ -26,11 +25,11 @@ class TextTest {
 
 	@Test
 	fun unsafeValue() {
-		textScripter
+		textReader
 			.unsafeValue(
 				"text" lineTo script(
 					"utf" lineTo script(
-						"eight" lineTo stackType(byteScripter)
+						"eight" lineTo stackWriter(byteWriter)
 							.script(
 								stack(
 									byte(32),

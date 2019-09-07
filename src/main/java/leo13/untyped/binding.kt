@@ -2,7 +2,18 @@ package leo13.untyped
 
 import leo.base.notNullIf
 import leo13.LeoStruct
-import leo13.script.Script
+import leo13.script.*
+
+const val bindingName = "binding"
+
+val bindingReader: Reader<Binding> =
+	reader(bindingName, keyReader, valueReader, ::binding)
+
+val bindingWriter: Writer<Binding> =
+	writer(
+		bindingName,
+		field(keyWriter) { key },
+		field(valueWriter) { value })
 
 data class Binding(val key: Key, val value: Value) : LeoStruct("binding", key, value) {
 	override fun toString() = super.toString()

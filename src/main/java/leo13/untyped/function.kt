@@ -1,15 +1,29 @@
 package leo13.untyped
 
 import leo.base.notNullIf
-import leo13.LeoStruct
-import leo13.script.Script
+import leo13.script.*
 
-data class Function(
-	val pattern: Pattern,
-	val body: Body) : LeoStruct("function", pattern, body) {
+data class Function(val pattern: Pattern, val body: Body) {
 	override fun toString() = super.toString()
 }
 
-fun function(pattern: Pattern, body: Body) = Function(pattern, body)
+fun function(pattern: Pattern, body: Body) =
+	Function(pattern, body)
+
 fun Function.bodyOrNull(script: Script): Body? =
-	notNullIf(script.matches(pattern)) { body }
+	notNullIf(pattern.matches(script)) { body }
+
+val functionName = "function"
+
+val functionReader =
+	reader(
+		functionName,
+		patternReader,
+		bodyReader,
+		::function)
+
+val functionWriter: Writer<Function> =
+	writer(
+		functionName,
+		field(patternWriter) { pattern },
+		field(bodyWriter) { body })

@@ -7,6 +7,10 @@ import leo13.token.*
 import leo9.*
 import leo9.Stack
 
+val scriptName = "script"
+val scriptReader: Reader<Script> = reader(scriptName) { this }
+val scriptWriter: Writer<Script> = writer(scriptName) { this }
+
 data class Script(val lineStack: Stack<ScriptLine>) : LeoObject() {
 	override fun toString() = indentedCode
 	override val scriptableName get() = "script"
@@ -31,6 +35,10 @@ data class ScriptLinkLine(val name: String, val rhs: ScriptLink)
 data class ScriptArrow(val lhs: Script, val rhs: Script)
 
 val Script.isEmpty get() = lineStack.isEmpty
+val Script.unsafeEmpty: Empty
+	get() =
+		if (isEmpty) empty
+		else fail("expected" lineTo script("empty"))
 
 val Stack<ScriptLine>.script get() = Script(this)
 fun Script.plus(line: ScriptLine) = lineStack.push(line).script
@@ -66,6 +74,10 @@ val Script.linkOrNull
 		lineStack.linkOrNull?.let { link ->
 			link(link.stack.script, link.value)
 		}
+
+val Script.unsafeLink: ScriptLink
+	get() =
+		linkOrNull ?: fail("empty")
 
 val ScriptLink.script
 	get() =

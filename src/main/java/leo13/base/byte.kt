@@ -1,29 +1,38 @@
 package leo13.base
 
-import leo13.scripter.Scripter
-import leo13.scripter.field
-import leo13.scripter.scripter
-import leo13.scripter.toString
+import leo13.fail
+import leo13.script.*
+import leo13.script.Writer
+import leo9.map8OrNull
 
-data class ByteLeo(val byte: Byte) {
-	override fun toString() = byteScripter.toString(byte)
-}
+val byteName = "byte"
 
-fun leo(byte: Byte) = ByteLeo(byte)
+val byteReader: Reader<Byte> =
+	reader(byteName) {
+		lineStack.map8OrNull { l7, l6, l5, l4, l3, l2, l1, l0 ->
+			byte(
+				bitReader.unsafeValue(l7),
+				bitReader.unsafeValue(l6),
+				bitReader.unsafeValue(l5),
+				bitReader.unsafeValue(l4),
+				bitReader.unsafeValue(l3),
+				bitReader.unsafeValue(l2),
+				bitReader.unsafeValue(l1),
+				bitReader.unsafeValue(l0))
+		} ?: fail("byte")
+	}
 
-val byteScripter: Scripter<Byte> =
-	scripter(
-		"byte",
-		field(scripter("first", bitScripter)) { bit7 },
-		field(scripter("second", bitScripter)) { bit6 },
-		field(scripter("third", bitScripter)) { bit5 },
-		field(scripter("fourth", bitScripter)) { bit4 },
-		field(scripter("fifth", bitScripter)) { bit3 },
-		field(scripter("sixth", bitScripter)) { bit2 },
-		field(scripter("seventh", bitScripter)) { bit1 },
-		field(scripter("eight", bitScripter)) { bit0 })
-	{ bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0 ->
-		byte(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)
+val byteWriter: Writer<Byte> =
+	writer(byteName) {
+		script(
+			bitWriter.scriptLine(bit7),
+			bitWriter.scriptLine(bit6),
+			bitWriter.scriptLine(bit5),
+			bitWriter.scriptLine(bit4),
+			bitWriter.scriptLine(bit3),
+			bitWriter.scriptLine(bit2),
+			bitWriter.scriptLine(bit1),
+			bitWriter.scriptLine(bit0))
 	}
 
 fun byte(bit7: Bit, bit6: Bit, bit5: Bit, bit4: Bit, bit3: Bit, bit2: Bit, bit1: Bit, bit0: Bit): Byte =

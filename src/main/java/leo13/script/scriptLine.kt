@@ -14,6 +14,11 @@ val ScriptLine.onlyNameOrNull: String?
 	get() =
 		notNullIf(rhs.isEmpty) { name }
 
+val ScriptLine.unsafeOnlyName: String
+	get() =
+		if (rhs.isEmpty) name
+		else fail("expected" lineTo script("name"))
+
 fun ScriptLine.unsafeRhs(name: String): Script =
 	if (this.name == name) rhs
 	else fail(

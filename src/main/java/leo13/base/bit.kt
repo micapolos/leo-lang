@@ -1,23 +1,28 @@
 package leo13.base
 
-import leo13.script.lineTo
-import leo13.script.script
-import leo13.scripter.Scripter
-import leo13.scripter.case
-import leo13.scripter.scripter
-import leo13.scripter.toString
+import leo13.fail
+import leo13.script.*
+import leo13.script.Writer
 
-val bitScripter: Scripter<Bit> =
-	scripter(
-		"bit",
-		case(scripter("zero")) { zeroBit },
-		case(scripter("one")) { oneBit })
-	{
-		(if (isOne) "one" else "zero") lineTo script()
+val bitName = "bit"
+
+val bitReader: Reader<Bit> =
+	reader(bitName) {
+		when (unsafeOnlyLine.unsafeOnlyName) {
+			"zero" -> zeroBit
+			"one" -> oneBit
+			else -> fail("bit")
+		}
+	}
+
+val bitWriter: Writer<Bit> =
+	writer(bitName) {
+		if (isOne) script("one")
+		else script("zero")
 	}
 
 data class Bit(val isOne: Boolean) {
-	override fun toString() = bitScripter.toString(this)
+	override fun toString() = bitWriter.string(this)
 }
 
 fun isOneBit(isOne: Boolean) = Bit(isOne)
