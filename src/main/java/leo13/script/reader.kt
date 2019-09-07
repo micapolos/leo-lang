@@ -10,6 +10,7 @@ fun <V> reader(name: String, unsafeBodyValueFn: Script.() -> V) = Reader(name, u
 fun <V> Reader<V>.unsafeBodyValue(script: Script) = script.unsafeBodyValueFn()
 fun <V> Reader<V>.unsafeValue(line: ScriptLine) = line.unsafeRhs(name).unsafeBodyValueFn()
 fun <V> Reader<V>.unsafeValue(script: Script) = unsafeValue(script.unsafeOnlyLine)
+fun <V> Reader<V>.unsafeBodyValue(line: ScriptLine) = unsafeBodyValue(script(line))
 
 fun <V> reader(name: String, value: V) = reader(name) { unsafeEmpty.run { value } }
 fun <V> reader(name: String, reader: Reader<V>) = reader(name) { reader.unsafeValue(unsafeOnlyLine) }

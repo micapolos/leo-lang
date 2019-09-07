@@ -12,14 +12,7 @@ fun PatternLink.matches(script: Script): Boolean =
 fun PatternLink.matches(scriptLink: ScriptLink): Boolean =
 	lhs.matches(scriptLink.lhs) && line.matches(scriptLink.line)
 
-val patternLinkName = "link"
-
-val patternLinkWriter: Writer<PatternLink> =
-	writer(patternLinkName) {
-		patternWriter
-			.bodyScript(lhs)
-			.plus(patternLineWriter.bodyScript(line))
-	}
+const val patternLinkName = "link"
 
 val patternLinkReader: Reader<PatternLink> =
 	reader(patternLinkName) {
@@ -27,6 +20,13 @@ val patternLinkReader: Reader<PatternLink> =
 			.run {
 				link(
 					patternReader.unsafeBodyValue(lhs),
-					patternLineReader.unsafeValue(line))
+					patternLineReader.unsafeBodyValue(line))
 			}
+	}
+
+val patternLinkWriter: Writer<PatternLink> =
+	writer(patternLinkName) {
+		patternWriter
+			.bodyScript(lhs)
+			.plus(patternLineWriter.bodyScript(line))
 	}

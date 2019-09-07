@@ -10,6 +10,7 @@ fun pattern(nodeOrNull: PatternNode?) = Pattern(nodeOrNull)
 
 fun pattern(vararg lines: PatternLine) = pattern(null).fold(lines) { plus(it) }
 fun pattern(choice: Choice, vararg lines: PatternLine) = pattern(node(choice)).fold(lines) { plus(it) }
+fun pattern(name: String) = pattern(name lineTo pattern())
 
 fun Pattern.plus(line: PatternLine) =
 	if (nodeOrNull == null) pattern(node(line))
@@ -27,7 +28,7 @@ val patternName: String = "pattern"
 val patternReader: Reader<Pattern> =
 	reader(patternName) {
 		if (isEmpty) pattern(null)
-		else pattern(patternNodeReader.unsafeValue(this))
+		else pattern(patternNodeReader.unsafeBodyValue(this))
 	}
 
 val patternWriter: Writer<Pattern> =
