@@ -2,24 +2,24 @@ package leo13.base.typed
 
 import leo.binary.*
 import leo13.base.Typed
-import leo13.base.type.*
+import leo13.base.type.Type
+import leo13.base.type.case
+import leo13.base.type.type
+import leo13.script.lineTo
+import leo13.script.script
 
-val zeroType: Type<Zero> = type("zero", body(struct(zero)))
-val oneType: Type<One> = type("one", body(struct(one)))
-
-val bitType: Type<Bit> = type(
-	"bit",
-	body(
-		choice(
-			case(zeroType) { bit },
-			case(oneType) { bit }) {
-			when (this) {
-				is ZeroBit -> zeroType to zero
-				is OneBit -> oneType to one
-			}
-		}))
+val bitType: Type<Bit> =
+	type(
+		"bit",
+		case(type("zero")) { zero.bit },
+		case(type("one")) { one.bit })
+	{
+		(if (isZero) "zero" else "one") lineTo script()
+	}
 
 data class BitTyped(val bit: Bit) : Typed<Bit>() {
 	override fun toString() = super.toString()
 	override val type = bitType
 }
+
+fun typed(bit: Bit) = BitTyped(bit)

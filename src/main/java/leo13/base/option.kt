@@ -1,7 +1,30 @@
 package leo13.base
 
 import leo13.base.type.Type
-import leo13.base.type.optionType
+import leo13.base.type.scriptLine
+import leo13.base.type.unsafeValue
+import leo13.script.lineTo
+import leo13.script.script
+import leo13.script.unsafeOnlyLine
+import leo13.script.unsafeRhs
+
+fun <V : Any> optionType(orNullType: Type<V>): Type<Option<V>> =
+	Type(
+		orNullType.name,
+		{
+			script(
+				"option" lineTo script(
+					if (orNull == null) "null" lineTo script()
+					else orNullType.scriptLine(orNull)))
+		},
+		{
+			unsafeOnlyLine
+				.unsafeRhs("option")
+				.let { rhs ->
+					if (rhs == script("null")) option(orNullType)
+					else option(orNullType, orNullType.unsafeValue(this))
+				}
+		})
 
 data class Option<V : Any>(val orNullType: Type<V>, val orNull: V?) : Typed<Option<V>>() {
 	override fun toString() = super.toString()
