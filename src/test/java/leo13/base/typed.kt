@@ -11,23 +11,23 @@ import kotlin.test.assertFails
 class TypedTest {
 	@Test
 	fun boolean() {
-		booleanType
+		boolType
 			.scriptLine(true)
 			.assertEqualTo("boolean" lineTo script("true"))
 
-		booleanType
+		boolType
 			.scriptLine(false)
 			.assertEqualTo("boolean" lineTo script("false"))
 
-		booleanType
+		boolType
 			.unsafeValue("boolean" lineTo script("true"))
 			.assertEqualTo(true)
 
-		booleanType
+		boolType
 			.unsafeValue("boolean" lineTo script("false"))
 			.assertEqualTo(false)
 
-		assertFails { booleanType.unsafeValue("boolean" lineTo script("no")) }
-		assertFails { booleanType.unsafeValue("bool" lineTo script("true")) }
+		assertFails { boolType.unsafeValue("boolean" lineTo script("no")) }
+		assertFails { boolType.unsafeValue("bool" lineTo script("true")) }
 	}
 }

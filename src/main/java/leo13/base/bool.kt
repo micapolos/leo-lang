@@ -7,7 +7,7 @@ import leo13.base.type.type
 import leo13.script.lineTo
 import leo13.script.script
 
-val booleanType: Type<Boolean> =
+val boolType: Type<Boolean> =
 	type(
 		"boolean",
 		case(type("true")) { true },
@@ -16,8 +16,8 @@ val booleanType: Type<Boolean> =
 		(if (this) "true" else "false") lineTo script()
 	}
 
-data class BooleanLeo(val boolean: Boolean) {
-	override fun toString() = booleanType.toString(boolean)
+data class Bool(val boolean: Boolean) {
+	override fun toString() = boolType.toString(boolean)
 }
 
-fun leo(boolean: Boolean) = BooleanLeo(boolean)
+fun bool(boolean: Boolean) = Bool(boolean)
