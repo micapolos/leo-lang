@@ -1,11 +1,16 @@
 package leo13.base
 
-data class Option<out V : Any>(val orNull: V?)
+import leo13.script.reflect.Type
+import leo13.script.reflect.scriptLine
 
-fun <V : Any> option(orNull: V? = null): Option<V> = Option(orNull)
+data class Option<V : Any>(val type: Type<V>, val orNull: V?) {
+	override fun toString() = type.scriptLine(this).toString()
+}
 
-fun <V : Any, R : Any> Option<V>.map(fn: V.() -> R): Option<R> =
-	option(orNull?.fn())
+fun <V : Any> option(type: Type<V>, orNull: V? = null): Option<V> = Option(type, orNull)
 
-fun <V : Any, R : Any> Option<V>.optionMap(fn: V.() -> Option<R>): Option<R> =
-	orNull?.fn() ?: option(null)
+fun <V : Any, R : Any> Option<V>.map(type: Type<R>, fn: V.() -> R): Option<R> =
+	option(type, orNull?.fn())
+
+fun <V : Any, R : Any> Option<V>.optionMap(type: Type<R>, fn: V.() -> Option<R>): Option<R> =
+	orNull?.fn() ?: option(type, null)

@@ -3,7 +3,7 @@ package leo13.script.reflect
 import leo13.script.Script
 import leo13.base.Option as ValueOption
 
-sealed class Body<V : Any>
+sealed class Body<out V : Any>
 data class OptionBody<V : Any>(val option: Option<V>) : Body<ValueOption<V>>()
 data class StructBody<V : Any>(val struct: Struct<V>) : Body<V>()
 data class ChoiceBody<V : Any>(val choice: Choice<V>) : Body<V>()

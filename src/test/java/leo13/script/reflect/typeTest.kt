@@ -46,20 +46,20 @@ class TypeTest {
 		val optionType = optionType(zeroType)
 
 		optionType
-			.scriptLine(valueOption(zero))
+			.scriptLine(valueOption(zeroType, zero))
 			.assertEqualTo("zero" lineTo script("option" lineTo script("zero")))
 
 		optionType
-			.scriptLine(valueOption(null))
+			.scriptLine(valueOption(zeroType))
 			.assertEqualTo("zero" lineTo script("option" lineTo script("null")))
 
 		optionType
 			.unsafeValue("zero" lineTo script("option" lineTo script("zero")))
-			.assertEqualTo(valueOption(zero))
+			.assertEqualTo(valueOption(zeroType, zero))
 
 		optionType
 			.unsafeValue("zero" lineTo script("option" lineTo script("null")))
-			.assertEqualTo(valueOption(null))
+			.assertEqualTo(valueOption(zeroType))
 
 		assertFails {
 			optionType.unsafeValue("zero2" lineTo script("option" lineTo script("null")))

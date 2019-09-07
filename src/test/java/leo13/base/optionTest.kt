@@ -1,20 +1,24 @@
 package leo13.base
 
 import leo.base.assertEqualTo
+import leo.binary.one
+import leo.binary.zero
+import leo13.script.reflect.oneType
+import leo13.script.reflect.zeroType
 import kotlin.test.Test
 
 class OptionTest {
 	@Test
 	fun map() {
-		option<Int>().map { toString() }.assertEqualTo(option())
-		option(123).map { toString() }.assertEqualTo(option("123"))
+		option(zeroType).map(oneType) { one }.assertEqualTo(option(oneType))
+		option(zeroType, zero).map(oneType) { one }.assertEqualTo(option(oneType, one))
 	}
 
 	@Test
 	fun optionMap() {
-		option<Int>().optionMap { option<String>() }.assertEqualTo(option())
-		option<Int>().optionMap { option(toString()) }.assertEqualTo(option())
-		option(123).optionMap { option<String>() }.assertEqualTo(option())
-		option(123).optionMap { option(toString()) }.assertEqualTo(option("123"))
+		option(zeroType).optionMap(oneType) { option(oneType) }.assertEqualTo(option(oneType))
+		option(zeroType).optionMap(oneType) { option(oneType, one) }.assertEqualTo(option(oneType))
+		option(zeroType, zero).optionMap(oneType) { option(oneType) }.assertEqualTo(option(oneType))
+		option(zeroType, zero).optionMap(oneType) { option(oneType, one) }.assertEqualTo(option(oneType, one))
 	}
 }

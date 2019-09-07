@@ -15,6 +15,7 @@ fun <V : Any> Option<V>.unsafeBodyValue(script: Script): ValueOption<V> =
 		.unsafeRhs("option")
 		.let { rhs ->
 			option(
+				orNullType,
 				notNullIf(rhs != script("null")) {
 					orNullType.unsafeValue(rhs)
 				}

@@ -1,9 +1,12 @@
 package leo13.script.reflect
 
 import leo13.fail
-import leo13.script.*
+import leo13.script.Script
+import leo13.script.ScriptLine
+import leo13.script.lineTo
+import leo13.script.unsafeOnlyLine
 
-data class Type<V : Any>(val name: String, val body: Body<V>)
+data class Type<out V : Any>(val name: String, val body: Body<V>)
 
 fun <V : Any> type(name: String, body: Body<V>) = Type(name, body)
 
