@@ -1,10 +1,11 @@
 package leo13.base
 
 import leo13.base.type.Type
-import leo13.base.type.scriptLine
+import leo13.base.type.optionType
 
-data class Option<V : Any>(val type: Type<V>, val orNull: V?) {
-	override fun toString() = type.scriptLine(this).toString()
+data class Option<V : Any>(val orNullType: Type<V>, val orNull: V?) : Typed<Option<V>>() {
+	override fun toString() = super.toString()
+	override val type get() = optionType(orNullType)
 }
 
 fun <V : Any> option(type: Type<V>, orNull: V? = null): Option<V> = Option(type, orNull)

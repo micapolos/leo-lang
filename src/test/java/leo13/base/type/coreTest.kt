@@ -4,6 +4,8 @@ import leo.base.assertEqualTo
 import leo.binary.bit
 import leo.binary.one
 import leo.binary.zero
+import leo13.base.bitType
+import leo13.base.zeroType
 import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test

@@ -5,6 +5,8 @@ import leo.binary.One
 import leo.binary.Zero
 import leo.binary.one
 import leo.binary.zero
+import leo13.base.oneType
+import leo13.base.zeroType
 import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test

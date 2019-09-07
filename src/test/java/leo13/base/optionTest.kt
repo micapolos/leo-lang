@@ -3,11 +3,14 @@ package leo13.base
 import leo.base.assertEqualTo
 import leo.binary.one
 import leo.binary.zero
-import leo13.base.type.oneType
-import leo13.base.type.zeroType
 import kotlin.test.Test
 
 class OptionTest {
+	@Test
+	fun string() {
+		option(zeroType, zero).toString().assertEqualTo("zero: option: zero")
+	}
+
 	@Test
 	fun map() {
 		option(zeroType).map(oneType) { one }.assertEqualTo(option(oneType))
