@@ -9,8 +9,3 @@ fun <V : Any, R : Any> Option<V>.map(fn: V.() -> R): Option<R> =
 
 fun <V : Any, R : Any> Option<V>.optionMap(fn: V.() -> Option<R>): Option<R> =
 	orNull?.fn() ?: option(null)
-
-//fun <V: Any> optionType(orNullType: Type<V>): Type<Option<V>> =
-//	type<Option<V>>(
-//		orNullType.name,
-//		body(typeOption(orNullType)))

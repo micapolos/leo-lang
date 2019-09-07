@@ -7,6 +7,11 @@ data class Type<V : Any>(val name: String, val body: Body<V>)
 
 fun <V : Any> type(name: String, body: Body<V>) = Type(name, body)
 
+fun <V : Any> optionType(orNullType: Type<V>): Type<leo13.base.Option<V>> =
+	type(
+		orNullType.name,
+		body(option(orNullType)))
+
 fun <V : Any> Type<V>.scriptLine(value: V): ScriptLine =
 	name lineTo bodyScript(value)
 
