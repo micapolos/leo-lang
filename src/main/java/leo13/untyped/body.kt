@@ -12,11 +12,15 @@ const val bodyName = "body"
 
 val bodyReader: Reader<Body>
 	get() =
-	reader(bodyName, contextReader, scriptReader, ::Body)
+		reader(
+			bodyName,
+			recursiveReader { contextReader },
+			scriptReader,
+			::Body)
 
 val bodyWriter: Writer<Body>
 	get() =
 	writer(
 		bodyName,
-		field(contextWriter) { context },
+		field(recursiveWriter { contextWriter }) { context },
 		field(scriptWriter) { script })

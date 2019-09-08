@@ -3,9 +3,14 @@ package leo13.script
 import leo9.Stack
 import leo9.map
 
-data class Writer<in V>(val name: String, val bodyScriptFn: V.() -> Script)
+interface Writer<in V> {
+	val name: String
+	val bodyScriptFn: V.() -> Script
+}
 
-fun <V> writer(name: String, scriptFn: V.() -> Script) = Writer(name, scriptFn)
+data class WriterData<in V>(override val name: String, override val bodyScriptFn: V.() -> Script) : Writer<V>
+
+fun <V> writer(name: String, scriptFn: V.() -> Script): Writer<V> = WriterData(name, scriptFn)
 fun <V> Writer<V>.bodyScript(value: V): Script = value.bodyScriptFn()
 fun <V> Writer<V>.scriptLine(value: V): ScriptLine = name lineTo bodyScript(value)
 fun <V> Writer<V>.script(value: V): Script = script(scriptLine(value))
@@ -52,3 +57,10 @@ fun <V, A> stackWriter(name: String, itemWriter: Writer<A>, fn: V.() -> Stack<A>
 	writer(name) {
 		fn().map { itemWriter.scriptLine(this) }.script
 	}
+
+fun <V> recursiveWriter(fn: () -> Writer<V>): Writer<V> =
+	object : Writer<V> {
+		override val name get() = fn().name
+		override val bodyScriptFn get() = fn().bodyScriptFn
+	}
+

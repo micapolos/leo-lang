@@ -1,7 +1,5 @@
 package leo13.untyped
 
-import leo13.base.stackReader
-import leo13.base.stackWriter
 import leo13.script.*
 import leo9.Stack
 import leo9.mapFirst
@@ -11,10 +9,10 @@ import leo9.stack
 val switchName = "switch"
 
 val switchReader: Reader<Switch> =
-	reader(switchName, stackReader(caseReader), ::Switch)
+	stackReader(switchName, caseReader, ::switch)
 
 val switchWriter: Writer<Switch> =
-	writer(switchName, field(stackWriter(caseWriter)) { caseStack })
+	stackWriter(switchName, caseWriter, Switch::caseStack)
 
 data class Switch(val caseStack: Stack<Case>) {
 	override fun toString() = super.toString()

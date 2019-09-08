@@ -4,9 +4,14 @@ import leo13.ScriptException
 import leo13.fail
 import leo9.*
 
-data class Reader<out V>(val name: String, val unsafeBodyValueFn: Script.() -> V)
+interface Reader<out V> {
+	val name: String
+	val unsafeBodyValueFn: Script.() -> V
+}
 
-fun <V> reader(name: String, unsafeBodyValueFn: Script.() -> V) = Reader(name, unsafeBodyValueFn)
+data class ReaderData<out V>(override val name: String, override val unsafeBodyValueFn: Script.() -> V) : Reader<V>
+
+fun <V> reader(name: String, unsafeBodyValueFn: Script.() -> V): Reader<V> = ReaderData(name, unsafeBodyValueFn)
 
 fun <V> Reader<V>.unsafeBodyValue(script: Script) =
 	try {
@@ -86,4 +91,10 @@ fun <V : Any, V1, V2, V3, V4, V5, V6, V7, V8> reader(
 					reader8.unsafeValue(line8))
 			}
 			?: fail(name)
+	}
+
+fun <V> recursiveReader(fn: () -> Reader<V>): Reader<V> =
+	object : Reader<V> {
+		override val name get() = fn().name
+		override val unsafeBodyValueFn get() = fn().unsafeBodyValueFn
 	}
