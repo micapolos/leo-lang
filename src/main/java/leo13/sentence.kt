@@ -27,14 +27,11 @@ fun sentence(link: SentenceLink): Sentence = LinkSentence(link)
 
 val Sentence.lineOrNull: SentenceLine? get() = (this as? LineSentence)?.line
 
-fun sentence(string: String) =
-	sentence(word(string))
-
 infix fun Sentence.plus(line: SentenceLine): Sentence =
 	sentence(link(this, line))
 
-infix fun Sentence.plus(word: String): Sentence =
-	sentence(word plus this)
+infix fun Sentence.plus(word: Word): Sentence =
+	sentence(word lineTo this)
 
 fun sentence(line: SentenceLine, vararg lines: SentenceLine) =
 	sentence(line).fold(lines) { plus(it) }
@@ -81,18 +78,18 @@ val Sentence.failableWord: Failable<Word>
 		(this as? WordSentence)
 			?.word
 			?.run(::success)
-			?: failure(sentence("word"))
+			?: failure(sentence(wordWord))
 
 val Sentence.failableLine: Failable<SentenceLine>
 	get() =
 		(this as? LineSentence)
 			?.line
 			?.run(::success)
-			?: failure(sentence("line"))
+			?: failure(sentence(lineWord))
 
 val Sentence.failableLink: Failable<SentenceLink>
 	get() =
 		(this as? LinkSentence)
 			?.link
 			?.run(::success)
-			?: failure(sentence("link"))
+			?: failure(sentence(linkWord))

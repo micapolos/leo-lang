@@ -13,7 +13,7 @@ fun script(sentenceOrNull: Sentence?) = Script(sentenceOrNull)
 infix fun Script.plus(line: SentenceLine): Script =
 	script(sentenceOrNull?.run { plus(line) } ?: sentence(line))
 
-infix fun Script.plus(word: String): Script =
+infix fun Script.plus(word: Word): Script =
 	script(sentenceOrNull?.run { plus(word) } ?: sentence(word))
 
 fun script(vararg lines: SentenceLine): Script =

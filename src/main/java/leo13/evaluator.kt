@@ -2,19 +2,32 @@ package leo13
 
 import leo.base.ifNull
 
-data class Evaluator(val script: ValueScript) {
+data class Evaluator(
+	val context: Context,
+	val script: ValueScript) {
 	override fun toString() = sentenceLine.toString()
 }
 
-fun evaluator(script: ValueScript = valueScript()) =
-	Evaluator(script)
+fun evaluator(context: Context = context(), script: ValueScript = valueScript()) =
+	Evaluator(context, script)
 
 fun Evaluator.set(script: ValueScript): Evaluator =
 	copy(script = script)
 
+fun Evaluator.plusError(line: ValueLine): Evaluator =
+	set(
+		script(
+			value(
+				sentence(
+					errorWord lineTo sentence(
+						sentenceLine,
+						plusWord lineTo sentence(line.sentenceLine))),
+				pattern(errorWord))))
+
 fun Evaluator.plus(line: ValueLine): Evaluator =
-	when (line.word) {
-		setWord -> plusSetOrNull(line.value) ?: fail("set")
+	if (hasError) this
+	else when (line.word) {
+		setWord -> plusSetOrNull(line.value) ?: plusError(line)
 		else -> plusOther(line)
 	}
 
@@ -58,3 +71,7 @@ fun Evaluator.append(line: ValueLine): Evaluator =
 val Evaluator.sentenceLine: SentenceLine
 	get() =
 		evaluatorWord lineTo sentence(script.sentenceLine)
+
+val Evaluator.hasError
+	get() : Boolean =
+		script.valueOrNull?.sentence?.lineOrNull?.word == errorWord

@@ -8,22 +8,22 @@ class SentenceTest {
 	@Test
 	fun string() {
 		sentence(
-			"vec" plus sentence(
-				"x" plus sentence("zero"),
-				"y" plus sentence("one")),
-			"plus" plus sentence(
-				"vec" plus sentence(
-					"x" plus sentence("two"),
-					"y" plus sentence("three"))))
+			pointWord lineTo sentence(
+				xWord lineTo sentence(zeroWord),
+				yWord lineTo sentence(oneWord)),
+			plusWord lineTo sentence(
+				pointWord lineTo sentence(
+					xWord lineTo sentence(oneWord),
+					yWord lineTo sentence(zeroWord))))
 			.toString()
 			.assertEqualTo(
 				linesString(
-					"vec",
+					"point",
 					"\tx: zero",
 					"\ty: one",
-					"plus: vec",
-					"\tx: two",
-					"\ty: three"))
+					"plus: point",
+					"\tx: one",
+					"\ty: zero"))
 	}
 
 	val xSentenceLine = xWord lineTo sentence(zeroWord)

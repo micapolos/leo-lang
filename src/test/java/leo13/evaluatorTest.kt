@@ -18,7 +18,8 @@ class EvaluatorTest {
 							xWord lineTo pattern(zeroWord),
 							yWord lineTo pattern(oneWord)))))
 			.assertEqualTo(
-				evaluator().set(
+				evaluator(
+					context(),
 					script(
 						value(
 							sentence(xWord lineTo sentence(zeroWord)),
@@ -28,6 +29,7 @@ class EvaluatorTest {
 	@Test
 	fun set() {
 		evaluator(
+			context(),
 			script(
 				value(
 					sentence(
@@ -44,6 +46,7 @@ class EvaluatorTest {
 					pattern(xWord lineTo pattern(poisonWord))))
 			.assertEqualTo(
 				evaluator(
+					context(),
 					script(
 						value(
 							sentence(
