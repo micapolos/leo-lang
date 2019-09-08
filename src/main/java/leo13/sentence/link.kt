@@ -4,6 +4,9 @@ import leo.base.Indent
 import leo.base.append
 import leo.base.appendableString
 import leo.base.indent
+import leo13.Sentence
+import leo13.append
+import leo13.sentence
 
 data class Link(val sentence: Sentence, val line: Line) {
 	override fun toString() = appendableString { it.append(this) }

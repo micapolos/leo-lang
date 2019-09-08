@@ -1,6 +1,7 @@
 package leo13.sentence
 
 import leo.base.*
+import leo13.*
 
 data class Line(val word: Word, val sentence: Sentence) {
 	override fun toString() = appendableString { it.append(this) }
