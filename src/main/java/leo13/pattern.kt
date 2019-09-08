@@ -140,3 +140,10 @@ fun Pattern.setOrNull(newLine: PatternLine): Pattern? =
 			pattern(line.word lineTo it)
 		}
 	}
+
+fun pattern(sentence: Sentence): Pattern =
+	when (sentence) {
+		is WordSentence -> pattern(sentence.word)
+		is LineSentence -> pattern(patternLine(sentence.line))
+		is LinkSentence -> pattern(patternLink(sentence.link))
+	}

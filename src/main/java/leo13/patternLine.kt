@@ -26,3 +26,6 @@ fun PatternLine.patternOrNull(word: Word): Pattern? =
 
 fun PatternLine.replaceOrNull(newLine: PatternLine): PatternLine? =
 	notNullIf(word == newLine.word) { newLine }
+
+fun patternLine(line: SentenceLine): PatternLine =
+	line.word lineTo pattern(line.sentence)

@@ -6,6 +6,9 @@ data class Value(val sentence: Sentence, val pattern: Pattern) {
 
 fun value(sentence: Sentence, pattern: Pattern) = Value(sentence, pattern)
 
+fun value(sentence: Sentence): Value =
+	value(sentence, pattern(sentence))
+
 infix fun Sentence.valueOf(pattern: Pattern) = Value(this, pattern)
 
 fun value(line: ValueLine): Value =

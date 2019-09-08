@@ -29,3 +29,6 @@ fun PatternLink.replaceOrNull(newLine: PatternLine): PatternLink? =
 		.replaceOrNull(newLine)
 		?.let { pattern linkTo it }
 		?: pattern.replaceOrNull(newLine)?.linkTo(line)
+
+fun patternLink(link: SentenceLink): PatternLink =
+	pattern(link.sentence) linkTo patternLine(link.line)

@@ -12,18 +12,13 @@ class EvaluatorTest {
 					sentence(
 						pointWord lineTo sentence(
 							xWord lineTo sentence(zeroWord),
-							yWord lineTo sentence(oneWord))),
-					pattern(
-						pointWord lineTo pattern(
-							xWord lineTo pattern(zeroWord),
-							yWord lineTo pattern(oneWord)))))
+							yWord lineTo sentence(oneWord)))))
 			.assertEqualTo(
 				evaluator(
 					context(),
 					script(
 						value(
-							sentence(xWord lineTo sentence(zeroWord)),
-							pattern(xWord lineTo pattern(zeroWord))))))
+							sentence(xWord lineTo sentence(zeroWord))))))
 	}
 
 	@Test
@@ -35,15 +30,10 @@ class EvaluatorTest {
 					sentence(
 						pointWord lineTo sentence(
 							xWord lineTo sentence(zeroWord),
-							yWord lineTo sentence(oneWord))),
-					pattern(
-						pointWord lineTo pattern(
-							xWord lineTo pattern(zeroWord),
-							yWord lineTo pattern(oneWord))))))
+							yWord lineTo sentence(oneWord))))))
 			.plus(
 				setWord lineTo value(
-					sentence(xWord lineTo sentence(poisonWord)),
-					pattern(xWord lineTo pattern(poisonWord))))
+					sentence(xWord lineTo sentence(poisonWord))))
 			.assertEqualTo(
 				evaluator(
 					context(),
@@ -52,10 +42,14 @@ class EvaluatorTest {
 							sentence(
 								pointWord lineTo sentence(
 									xWord lineTo sentence(poisonWord),
-									yWord lineTo sentence(oneWord))),
-							pattern(
-								pointWord lineTo pattern(
-									xWord lineTo pattern(poisonWord),
-									yWord lineTo pattern(oneWord)))))))
+									yWord lineTo sentence(oneWord)))))))
+	}
+
+	@Test
+	fun setError() {
+		evaluator()
+			.plus(setWord lineTo value(sentence(xWord)))
+			.assertEqualTo(
+				evaluator().plusError(setWord lineTo value(sentence(xWord))))
 	}
 }

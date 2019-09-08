@@ -21,8 +21,11 @@ fun Evaluator.plusError(line: ValueLine): Evaluator =
 				sentence(
 					errorWord lineTo sentence(
 						sentenceLine,
-						plusWord lineTo sentence(line.sentenceLine))),
-				pattern(errorWord))))
+						plusWord lineTo sentence(line.sentenceLine))))))
+
+fun Evaluator.plus(word: Word): Evaluator =
+	if (hasError) this
+	else TODO()
 
 fun Evaluator.plus(line: ValueLine): Evaluator =
 	if (hasError) this
