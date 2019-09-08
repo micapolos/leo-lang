@@ -1,22 +1,18 @@
 package leo13.untyped
 
 import leo13.script.*
-import leo13.script.Script
-import leo13.script.ScriptLine
-import leo9.*
+import leo9.Stack
+import leo9.any
+import leo9.push
+import leo9.stack
 
 const val choiceName = "choice"
 
 val choiceReader: Reader<Choice> =
-	reader(choiceName) {
-		choice(lineStack.map { optionReader.unsafeValue(this) })
-	}
+	stackReader(choiceName, optionReader, ::choice)
 
 val choiceWriter: Writer<Choice> =
-	writer(choiceName) {
-		optionStack.map { optionWriter.scriptLine(this) }.script
-	}
-
+	stackWriter(choiceName, optionWriter, Choice::optionStack)
 
 data class Choice(val optionStack: Stack<Option>) {
 	override fun toString() = choiceWriter.string(this)

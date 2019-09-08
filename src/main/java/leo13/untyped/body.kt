@@ -10,10 +10,12 @@ fun body(context: Context, script: Script) = Body(context, script)
 
 const val bodyName = "body"
 
-val bodyReader: Reader<Body> =
+val bodyReader: Reader<Body>
+	get() =
 	reader(bodyName, contextReader, scriptReader, ::Body)
 
-val bodyWriter: Writer<Body> =
+val bodyWriter: Writer<Body>
+	get() =
 	writer(
 		bodyName,
 		field(contextWriter) { context },

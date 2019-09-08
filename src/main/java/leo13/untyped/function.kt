@@ -15,14 +15,16 @@ fun Function.bodyOrNull(script: Script): Body? =
 
 val functionName = "function"
 
-val functionReader =
+val functionReader: Reader<Function>
+	get() =
 	reader(
 		functionName,
 		patternReader,
 		bodyReader,
 		::function)
 
-val functionWriter: Writer<Function> =
+val functionWriter: Writer<Function>
+	get() =
 	writer(
 		functionName,
 		field(patternWriter) { pattern },

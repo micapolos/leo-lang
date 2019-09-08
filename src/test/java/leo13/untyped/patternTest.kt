@@ -48,11 +48,28 @@ class PatternTest {
 	}
 
 	@Test
-	fun reader() {
+	fun reader_empty() {
 		patternReader
 			.unsafeValue("pattern" lineTo script())
 			.assertEqualTo(pattern())
+	}
 
+	@Test
+	fun reader_static() {
+		patternReader
+			.unsafeValue("pattern" lineTo script("zero"))
+			.assertEqualTo(pattern("zero"))
+	}
+
+	@Test
+	fun reader_dynamicScript() {
+		patternReader
+			.unsafeValue("pattern" lineTo script("script"))
+			.assertEqualTo(pattern(script))
+	}
+
+	@Test
+	fun reader_dynamic() {
 		patternReader
 			.unsafeValue(
 				"pattern" lineTo script(

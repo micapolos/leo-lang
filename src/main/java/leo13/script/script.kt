@@ -58,11 +58,7 @@ val Script.lineSeq get() = lineStack.reverse.seq
 val Script.unsafeOnlyLine: ScriptLine
 	get() =
 		onlyLineOrNull
-			?: fail(
-				script(
-					"only" lineTo script(),
-					"line" lineTo script(),
-					"expected" lineTo script()))
+			?: fail("only" lineTo script("line"))
 
 fun scriptHead(vararg openers: ScriptOpener) = ScriptHead(stack(*openers), script())
 infix fun Script.openerTo(opening: Opening) = ScriptOpener(this, opening)

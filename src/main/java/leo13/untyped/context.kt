@@ -11,14 +11,16 @@ import leo9.stack
 
 const val contextName = "context"
 
-val contextReader: Reader<Context> =
+val contextReader: Reader<Context>
+	get() =
 	reader(
 		contextName,
 		stackReader(functionReader),
 		stackReader(bindingReader),
 		::Context)
 
-val contextWriter: Writer<Context> =
+val contextWriter: Writer<Context>
+	get() =
 	writer(
 		contextName,
 		field(stackWriter(functionWriter)) { functionStack },

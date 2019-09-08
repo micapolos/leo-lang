@@ -5,10 +5,12 @@ import leo13.script.*
 
 val evaluatorName = "evaluator"
 
-val evaluatorReader: Reader<Evaluator> =
+val evaluatorReader: Reader<Evaluator>
+	get() =
 	reader(evaluatorName, contextReader, evaluatedReader, ::evaluator)
 
-val evaluatorWriter: Writer<Evaluator> =
+val evaluatorWriter: Writer<Evaluator>
+	get() =
 	writer(
 		contextName,
 		field(contextWriter) { context },
