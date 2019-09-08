@@ -88,4 +88,46 @@ class PatternTest {
 			.failablePattern
 			.assertSucceedsWith(pattern(sentence))
 	}
+
+	val xPatternLine = xWord lineTo pattern(zeroWord)
+	val yPatternLine = yWord lineTo pattern(oneWord)
+	val pointPattern = pattern(pointWord lineTo pattern(xPatternLine, yPatternLine))
+
+	@Test
+	fun getOrNull() {
+		pointPattern
+			.getOrNull(xWord)
+			.assertEqualTo(pattern(xPatternLine))
+
+		pointPattern
+			.getOrNull(yWord)
+			.assertEqualTo(pattern(yPatternLine))
+
+		pointPattern
+			.getOrNull(zWord)
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun setOrNull() {
+		pointPattern
+			.setOrNull(xWord lineTo pattern(poisonWord))
+			.assertEqualTo(
+				pattern(
+					pointWord lineTo pattern(
+						xWord lineTo pattern(poisonWord),
+						yWord lineTo pattern(oneWord))))
+
+		pointPattern
+			.setOrNull(yWord lineTo pattern(poisonWord))
+			.assertEqualTo(
+				pattern(
+					pointWord lineTo pattern(
+						xWord lineTo pattern(zeroWord),
+						yWord lineTo pattern(poisonWord))))
+
+		pointPattern
+			.setOrNull(zWord lineTo pattern(poisonWord))
+			.assertEqualTo(null)
+	}
 }

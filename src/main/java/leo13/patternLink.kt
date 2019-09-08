@@ -20,3 +20,12 @@ val SentenceLink.failableBodyPatternLink: Failable<PatternLink>
 				}
 			}
 		}
+
+fun PatternLink.linePatternOrNull(word: Word): Pattern? =
+	line.patternOrNull(word) ?: pattern.linePatternOrNull(word)
+
+fun PatternLink.replaceOrNull(newLine: PatternLine): PatternLink? =
+	line
+		.replaceOrNull(newLine)
+		?.let { pattern linkTo it }
+		?: pattern.replaceOrNull(newLine)?.linkTo(line)

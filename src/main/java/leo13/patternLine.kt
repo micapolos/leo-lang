@@ -1,5 +1,7 @@
 package leo13
 
+import leo.base.notNullIf
+
 data class PatternLine(val word: Word, val pattern: Pattern)
 
 infix fun Word.lineTo(pattern: Pattern) = PatternLine(this, pattern)
@@ -18,3 +20,9 @@ val PatternLine.bodySentence: Sentence
 val SentenceLine.failableBodyPatternLine: Failable<PatternLine>
 	get() =
 		sentence.failableBodyPattern.map { word lineTo this }
+
+fun PatternLine.patternOrNull(word: Word): Pattern? =
+	notNullIf(this.word == word) { pattern }
+
+fun PatternLine.replaceOrNull(newLine: PatternLine): PatternLine? =
+	notNullIf(word == newLine.word) { newLine }
