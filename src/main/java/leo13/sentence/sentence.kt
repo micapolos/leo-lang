@@ -27,6 +27,7 @@ fun sentence(link: Link): Sentence = LinkSentence(link)
 
 fun sentence(string: String) = sentence(word(string))
 fun Sentence.plus(line: Line) = sentence(link(this, line))
+fun Sentence.plus(word: String) = sentence(word lineTo this)
 fun sentence(line: Line, vararg lines: Line) = sentence(line).fold(lines) { plus(it) }
 
 fun Appendable.append(sentence: Sentence, indent: Indent = 0.indent): Appendable =
