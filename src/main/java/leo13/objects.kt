@@ -56,7 +56,7 @@ object Quote : LeoObject() {
 	override val scriptableBody get() = script()
 }
 
-object Evaluator : LeoObject() {
+object ObjectEvaluator : LeoObject() {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "evaluator"
 	override val scriptableBody get() = script()
@@ -77,4 +77,4 @@ val meta = Meta
 val resolve = Resolve
 val wrap = Wrap
 val quote = Quote
-val evaluator = Evaluator
+val evaluator = ObjectEvaluator
