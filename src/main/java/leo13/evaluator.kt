@@ -14,6 +14,15 @@ fun evaluator(context: Context = context(), script: ValueScript = valueScript())
 fun Evaluator.set(script: ValueScript): Evaluator =
 	copy(script = script)
 
+fun Evaluator.plusError(word: Word): Evaluator =
+	set(
+		script(
+			value(
+				sentence(
+					errorWord lineTo sentence(
+						sentenceLine,
+						plusWord lineTo sentence(word))))))
+
 fun Evaluator.plusError(line: ValueLine): Evaluator =
 	set(
 		script(
@@ -24,11 +33,32 @@ fun Evaluator.plusError(line: ValueLine): Evaluator =
 						plusWord lineTo sentence(line.sentenceLine))))))
 
 fun Evaluator.plus(script: SentenceScript): Evaluator =
-	TODO()
+	if (script.sentenceOrNull == null) this
+	else plus(script.sentenceOrNull)
+
+fun Evaluator.plus(sentence: Sentence): Evaluator =
+	when (sentence) {
+		is WordSentence -> plus(sentence.word)
+		is LineSentence -> plus(sentence.line)
+		is LinkSentence -> plus(sentence.link)
+	}
+
+fun Evaluator.plus(line: SentenceLine): Evaluator =
+	set(valueScript())
+		.plus(line.sentence)
+		.script
+		.let { script ->
+			if (script.valueOrNull == null) plus(line.word)
+			else plus(line.word lineTo script.valueOrNull)
+		}
+
+fun Evaluator.plus(link: SentenceLink): Evaluator =
+	plus(link.sentence).plus(link.line)
 
 fun Evaluator.plus(word: Word): Evaluator =
 	if (hasError) this
-	else TODO()
+	else if (script.valueOrNull != null) plusError(word)
+	else set(script(value(sentence(word))))
 
 fun Evaluator.plus(line: ValueLine): Evaluator =
 	if (hasError) this

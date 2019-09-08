@@ -11,7 +11,7 @@ import leo13.value.evaluate
 import leo13.value.scriptOrNull
 
 val typed = false
-val sentences = false
+val sentences = true
 
 fun main() {
 	try {
@@ -23,7 +23,7 @@ fun main() {
 						else interpret
 					println("ok" lineTo result)
 				} else {
-					println(evaluator(context()).plus(sentenceScript(this)).script)
+					println(evaluator(context()).plus(sentenceScript(this)).script.valueOrNull?.sentence ?: sentenceScript())
 				}
 			})
 		while (true) {
