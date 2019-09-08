@@ -4,9 +4,23 @@ import leo.base.assertEqualTo
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.script.scriptLine
+import leo13.script.unsafeValue
 import kotlin.test.Test
 
 class SwitchTest {
+	@Test
+	fun reader() {
+		switchReader
+			.unsafeValue(
+				"switch" lineTo script(
+					caseWriter.scriptLine("zero" caseTo script("foo")),
+					caseWriter.scriptLine("one" caseTo script("bar"))))
+			.assertEqualTo(
+				switch(
+					"zero" caseTo script("foo"),
+					"one" caseTo script("bar")))
+	}
+
 	@Test
 	fun writer() {
 		switchWriter
@@ -16,10 +30,8 @@ class SwitchTest {
 					"one" caseTo script("bar")))
 			.assertEqualTo(
 				"switch" lineTo script(
-					"case" lineTo script(
-						"zero" lineTo script("foo")),
-					"case" lineTo script(
-						"one" lineTo script("bar"))))
+					caseWriter.scriptLine("zero" caseTo script("foo")),
+					caseWriter.scriptLine("one" caseTo script("bar"))))
 	}
 
 	@Test
