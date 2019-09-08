@@ -2,7 +2,6 @@ package leo13
 
 import leo.base.assertEqualTo
 import leo13.base.linesString
-import leo13.sentence.plus
 import kotlin.test.Test
 
 class SentenceTest {

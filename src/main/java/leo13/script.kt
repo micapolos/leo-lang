@@ -1,12 +1,8 @@
-package leo13.sentence
+package leo13
 
 import leo.base.appendableString
 import leo.base.fold
 import leo.base.updateIfNotNull
-import leo13.Sentence
-import leo13.append
-import leo13.plus
-import leo13.sentence
 
 data class Script(val sentenceOrNull: Sentence?) {
 	override fun toString() = appendableString { it.append(this) }
@@ -14,13 +10,13 @@ data class Script(val sentenceOrNull: Sentence?) {
 
 fun script(sentenceOrNull: Sentence?) = Script(sentenceOrNull)
 
-infix fun Script.plus(line: Line): Script =
+infix fun Script.plus(line: SentenceLine): Script =
 	script(sentenceOrNull?.run { plus(line) } ?: sentence(line))
 
 infix fun Script.plus(word: String): Script =
 	script(sentenceOrNull?.run { plus(word) } ?: sentence(word))
 
-fun script(vararg lines: Line): Script =
+fun script(vararg lines: SentenceLine): Script =
 	script(null).fold(lines) { plus(it) }
 
 fun Appendable.append(script: Script) =
