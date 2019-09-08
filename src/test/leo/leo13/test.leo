@@ -3,4 +3,7 @@ circle
 	center: point
 		x: zero
 		y: eleven
-center
+set: radius: ten
+set: center: point
+	x: zero
+	y: zero
