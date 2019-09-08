@@ -11,15 +11,20 @@ import leo13.value.evaluate
 import leo13.value.scriptOrNull
 
 val typed = false
+val sentences = false
 
 fun main() {
 	try {
 		var tokenizer = tokenizerWriter(
 			scriptWriter {
-				val result =
-					if (typed) compile?.expr?.evaluate?.scriptOrNull!!
-					else interpret
-				println("ok" lineTo result)
+				if (!sentences) {
+					val result =
+						if (typed) compile?.expr?.evaluate?.scriptOrNull!!
+						else interpret
+					println("ok" lineTo result)
+				} else {
+					println(evaluator(context()).plus(sentenceScript(this)).script)
+				}
 			})
 		while (true) {
 			val lineOrNull = readLine()

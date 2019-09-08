@@ -4,6 +4,7 @@ import leo.base.Indent
 import leo.base.appendableString
 import leo.base.fold
 import leo.base.indent
+import leo13.script.Script
 
 sealed class Sentence {
 	override fun toString() = appendableString { it.append(this) }
@@ -93,3 +94,15 @@ val Sentence.failableLink: Failable<SentenceLink>
 			?.link
 			?.run(::success)
 			?: failure(sentence(linkWord))
+
+// Normalizing conversion from legacy Script
+fun sentence(script: Script): Sentence =
+	sentenceScript(script).sentenceOrNull!!
+
+val Sentence.legacyScript
+	get(): Script =
+		when (this) {
+			is WordSentence -> leo13.script.script(word.toString())
+			is LineSentence -> leo13.script.script(line.legacyLine)
+			is LinkSentence -> link.legacyScript
+		}

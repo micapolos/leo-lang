@@ -4,6 +4,8 @@ import leo.base.Indent
 import leo.base.append
 import leo.base.appendableString
 import leo.base.indent
+import leo13.script.Script
+import leo13.script.plus
 
 data class SentenceLink(val sentence: Sentence, val line: SentenceLine) {
 	override fun toString() = appendableString { it.append(this) }
@@ -24,3 +26,7 @@ fun SentenceLink.replaceOrNull(newLine: SentenceLine): SentenceLink? =
 		.replaceOrNull(newLine)
 		?.let { sentence linkTo it }
 		?: sentence.replaceOrNull(newLine)?.linkTo(line)
+
+val SentenceLink.legacyScript: Script
+	get() =
+		sentence.legacyScript.plus(line.legacyLine)

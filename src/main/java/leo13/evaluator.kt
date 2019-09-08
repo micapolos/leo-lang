@@ -23,6 +23,9 @@ fun Evaluator.plusError(line: ValueLine): Evaluator =
 						sentenceLine,
 						plusWord lineTo sentence(line.sentenceLine))))))
 
+fun Evaluator.plus(script: SentenceScript): Evaluator =
+	TODO()
+
 fun Evaluator.plus(word: Word): Evaluator =
 	if (hasError) this
 	else TODO()

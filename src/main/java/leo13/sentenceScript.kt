@@ -3,6 +3,10 @@ package leo13
 import leo.base.appendableString
 import leo.base.fold
 import leo.base.updateIfNotNull
+import leo13.script.Script
+import leo13.script.ScriptLine
+import leo13.script.isEmpty
+import leo13.script.lineSeq
 
 data class SentenceScript(val sentenceOrNull: Sentence?) {
 	override fun toString() = appendableString { it.append(this) }
@@ -22,3 +26,24 @@ fun script(vararg lines: SentenceLine): SentenceScript =
 
 fun Appendable.append(script: SentenceScript) =
 	updateIfNotNull(script.sentenceOrNull) { append(it) }
+
+// Legacy conversion
+
+fun sentenceScript(legacyScript: Script): SentenceScript =
+	sentenceScript().fold(legacyScript.lineSeq) { plus(it) }
+
+// Normalizing conversion from legacy Script
+fun SentenceScript.plus(legacyLine: ScriptLine): SentenceScript =
+	word(legacyLine.name).let { word ->
+		if (legacyLine.rhs.isEmpty)
+			if (sentenceOrNull == null) script(sentence(word))
+			else script(sentence(word lineTo sentenceOrNull))
+		else
+			plus(word lineTo sentence(legacyLine.rhs))
+	}
+
+val SentenceScript.legacyScript
+	get(): Script =
+		if (sentenceOrNull == null) leo13.script.script()
+		else sentenceOrNull.legacyScript
+

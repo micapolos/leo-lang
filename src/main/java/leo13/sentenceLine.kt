@@ -1,6 +1,8 @@
 package leo13
 
 import leo.base.*
+import leo13.script.ScriptLine
+import leo13.script.lineTo
 
 data class SentenceLine(val word: Word, val sentence: Sentence) {
 	override fun toString() = appendableString { it.append(this) }
@@ -26,3 +28,7 @@ fun SentenceLine.sentenceOrNull(selectedWord: Word): Sentence? =
 
 fun SentenceLine.replaceOrNull(newLine: SentenceLine): SentenceLine? =
 	notNullIf(word == newLine.word) { newLine }
+
+val SentenceLine.legacyLine: ScriptLine
+	get() =
+		word.toString() lineTo sentence.legacyScript
