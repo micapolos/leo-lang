@@ -25,4 +25,46 @@ class SentenceTest {
 					"\tx: two",
 					"\ty: three"))
 	}
+
+	val xSentenceLine = xWord lineTo sentence(zeroWord)
+	val ySentenceLine = yWord lineTo sentence(oneWord)
+	val pointSentence = sentence(pointWord lineTo sentence(xSentenceLine, ySentenceLine))
+
+	@Test
+	fun getOrNull() {
+		pointSentence
+			.getOrNull(xWord)
+			.assertEqualTo(sentence(xSentenceLine))
+
+		pointSentence
+			.getOrNull(yWord)
+			.assertEqualTo(sentence(ySentenceLine))
+
+		pointSentence
+			.getOrNull(zWord)
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun setOrNull() {
+		pointSentence
+			.setOrNull(xWord lineTo sentence(poisonWord))
+			.assertEqualTo(
+				sentence(
+					pointWord lineTo sentence(
+						xWord lineTo sentence(poisonWord),
+						yWord lineTo sentence(oneWord))))
+
+		pointSentence
+			.setOrNull(yWord lineTo sentence(poisonWord))
+			.assertEqualTo(
+				sentence(
+					pointWord lineTo sentence(
+						xWord lineTo sentence(zeroWord),
+						yWord lineTo sentence(poisonWord))))
+
+		pointSentence
+			.setOrNull(zWord lineTo sentence(poisonWord))
+			.assertEqualTo(null)
+	}
 }

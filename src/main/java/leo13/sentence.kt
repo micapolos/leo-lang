@@ -25,6 +25,8 @@ fun sentence(word: Word): Sentence = WordSentence(word)
 fun sentence(line: SentenceLine): Sentence = LineSentence(line)
 fun sentence(link: SentenceLink): Sentence = LinkSentence(link)
 
+val Sentence.lineOrNull: SentenceLine? get() = (this as? LineSentence)?.line
+
 fun sentence(string: String) =
 	sentence(word(string))
 
@@ -45,6 +47,33 @@ fun Appendable.append(sentence: Sentence, indent: Indent = 0.indent): Appendable
 		is WordSentence -> append(sentence.word)
 		is LineSentence -> append(sentence.line, indent)
 		is LinkSentence -> append(sentence.link, indent)
+	}
+
+fun Sentence.lineSentenceOrNull(selectedWord: Word): Sentence? =
+	when (this) {
+		is WordSentence -> null
+		is LineSentence -> line.sentenceOrNull(selectedWord)
+		is LinkSentence -> link.lineSentenceOrNull(selectedWord)
+	}
+
+fun Sentence.replaceOrNull(newLine: SentenceLine): Sentence? =
+	when (this) {
+		is WordSentence -> null
+		is LineSentence -> line.replaceOrNull(newLine)?.let { sentence(it) }
+		is LinkSentence -> link.replaceOrNull(newLine)?.let { sentence(it) }
+	}
+
+fun Sentence.getOrNull(word: Word): Sentence? =
+	lineOrNull
+		?.sentence
+		?.lineSentenceOrNull(word)
+		?.let { sentence(word lineTo it) }
+
+fun Sentence.setOrNull(line: SentenceLine): Sentence? =
+	lineOrNull?.run {
+		sentence
+			.replaceOrNull(line)
+			?.let { sentence(word lineTo it) }
 	}
 
 val Sentence.failableWord: Failable<Word>

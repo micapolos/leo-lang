@@ -20,3 +20,9 @@ fun Appendable.append(line: SentenceLine, indent: Indent = 0.indent): Appendable
 
 fun SentenceLine.failableSentence(word: Word): Failable<Sentence> =
 	this.word.failableUnit(word).map { sentence }
+
+fun SentenceLine.sentenceOrNull(selectedWord: Word): Sentence? =
+	notNullIf(word == selectedWord) { sentence }
+
+fun SentenceLine.replaceOrNull(newLine: SentenceLine): SentenceLine? =
+	notNullIf(word == newLine.word) { newLine }
