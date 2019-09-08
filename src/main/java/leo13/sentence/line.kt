@@ -7,7 +7,7 @@ data class Line(val word: Word, val sentence: Sentence) {
 }
 
 fun line(word: Word, sentence: Sentence) = Line(word, sentence)
-infix fun String.lineTo(sentence: Sentence) = line(word(this), sentence)
+infix fun String.plus(sentence: Sentence) = line(word(this), sentence)
 
 fun Appendable.append(line: Line, indent: Indent = 0.indent): Appendable =
 	append(line.word)

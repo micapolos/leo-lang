@@ -8,13 +8,13 @@ class SentenceTest {
 	@Test
 	fun string() {
 		sentence(
-			"vec" lineTo sentence(
-				"x" lineTo sentence("zero"),
-				"y" lineTo sentence("one")),
-			"plus" lineTo sentence(
-				"vec" lineTo sentence(
-					"x" lineTo sentence("two"),
-					"y" lineTo sentence("three"))))
+			"vec" plus sentence(
+				"x" plus sentence("zero"),
+				"y" plus sentence("one")),
+			"plus" plus sentence(
+				"vec" plus sentence(
+					"x" plus sentence("two"),
+					"y" plus sentence("three"))))
 			.toString()
 			.assertEqualTo(
 				linesString(

@@ -9,7 +9,7 @@ data class Script(val sentenceOrNull: Sentence?) {
 }
 
 fun script(sentenceOrNull: Sentence?) = Script(sentenceOrNull)
-fun Script.plus(line: Line): Script = script(sentenceOrNull?.run { plus(line) } ?: sentence(line))
-fun Script.plus(word: String): Script = script(sentenceOrNull?.run { plus(word) } ?: sentence(word))
+infix fun Script.plus(line: Line): Script = script(sentenceOrNull?.run { plus(line) } ?: sentence(line))
+infix fun Script.plus(word: String): Script = script(sentenceOrNull?.run { plus(word) } ?: sentence(word))
 fun script(vararg lines: Line): Script = script(null).fold(lines) { plus(it) }
 fun Appendable.append(script: Script) = updateIfNotNull(script.sentenceOrNull) { append(it) }
