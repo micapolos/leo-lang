@@ -37,3 +37,7 @@ fun Appendable.append(word: Word) =
 		is LetterWord -> append(word.letter)
 		is LinkWord -> append(word.link)
 	}
+
+fun Word.failableUnit(word: Word): Failable<Unit> =
+	if (this != word) failure(sentence(this).plus(expectedWord lineTo sentence(word)))
+	else success(Unit)

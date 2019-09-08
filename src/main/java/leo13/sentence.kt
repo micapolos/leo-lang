@@ -37,9 +37,33 @@ infix fun Sentence.plus(word: String): Sentence =
 fun sentence(line: SentenceLine, vararg lines: SentenceLine) =
 	sentence(line).fold(lines) { plus(it) }
 
+fun sentence(word: Word, vararg lines: SentenceLine) =
+	sentence(word).fold(lines) { plus(it) }
+
 fun Appendable.append(sentence: Sentence, indent: Indent = 0.indent): Appendable =
 	when (sentence) {
 		is WordSentence -> append(sentence.word)
 		is LineSentence -> append(sentence.line, indent)
 		is LinkSentence -> append(sentence.link, indent)
 	}
+
+val Sentence.failableWord: Failable<Word>
+	get() =
+		(this as? WordSentence)
+			?.word
+			?.run(::success)
+			?: failure(sentence("word"))
+
+val Sentence.failableLine: Failable<SentenceLine>
+	get() =
+		(this as? LineSentence)
+			?.line
+			?.run(::success)
+			?: failure(sentence("line"))
+
+val Sentence.failableLink: Failable<SentenceLink>
+	get() =
+		(this as? LinkSentence)
+			?.link
+			?.run(::success)
+			?: failure(sentence("link"))

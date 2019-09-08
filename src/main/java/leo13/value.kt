@@ -1,3 +1,5 @@
 package leo13
 
-sealed class Value
+data class Value(val sentence: Sentence, val pattern: Pattern)
+
+infix fun Sentence.valueOf(pattern: Pattern) = Value(this, pattern)
