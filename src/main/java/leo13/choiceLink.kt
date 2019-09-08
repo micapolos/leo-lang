@@ -7,7 +7,7 @@ infix fun Choice.linkTo(either: Either) = ChoiceLink(this, either)
 fun ChoiceLink.matches(line: SentenceLine): Boolean =
 	either.matches(line) || choice.matches(line)
 
-val ChoiceLink.bodyScript: Script
+val ChoiceLink.bodyScript: SentenceScript
 	get() =
 		choice.bodyScript.plus(either.sentenceLine)
 

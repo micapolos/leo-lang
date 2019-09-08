@@ -18,7 +18,7 @@ val Choice.sentenceLine: SentenceLine
 	get() =
 		choiceWord lineTo bodySentence
 
-val Choice.bodyScript: Script
+val Choice.bodyScript: SentenceScript
 	get() =
 		linkOrNull?.bodyScript ?: script()
 
