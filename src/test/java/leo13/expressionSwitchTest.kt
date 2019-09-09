@@ -6,10 +6,16 @@ import kotlin.test.Test
 class ExpressionSwitchTest {
 	@Test
 	fun atom() {
-		switch(
+		val switch = switch(
 			operation(plus(expression(atom(sentence(zeroWord))))),
 			operation(plus(expression(atom(sentence(oneWord))))))
+
+		switch
 			.atom(atomBindings(), atom(atom linkTo atom(sentence(pointWord))))
-			.assertEqualTo(null)
+			.assertEqualTo(atom(atom(sentence(pointWord)) linkTo atom(sentence(oneWord))))
+
+		switch
+			.atom(atomBindings(), atom(atom(atom linkTo atom) linkTo atom(sentence(pointWord))))
+			.assertEqualTo(atom(atom(sentence(pointWord)) linkTo atom(sentence(zeroWord))))
 	}
 }
