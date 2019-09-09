@@ -32,3 +32,7 @@ fun SentenceLine.replaceOrNull(newLine: SentenceLine): SentenceLine? =
 val SentenceLine.legacyLine: ScriptLine
 	get() =
 		word.toString() lineTo sentence.legacyScript
+
+val SentenceLine.scriptLine: SentenceScriptLine
+	get() =
+		word lineTo script(sentence)

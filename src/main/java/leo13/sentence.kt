@@ -1,10 +1,11 @@
 package leo13
 
-import leo.base.Indent
-import leo.base.appendableString
-import leo.base.fold
-import leo.base.indent
+import leo.base.*
 import leo13.script.Script
+import leo9.Stack
+import leo9.push
+import leo9.seq
+import leo9.stack
 
 sealed class Sentence {
 	override fun toString() = appendableString { it.append(this) }
@@ -106,3 +107,14 @@ val Sentence.legacyScript
 			is LineSentence -> leo13.script.script(line.legacyLine)
 			is LinkSentence -> link.legacyScript
 		}
+
+fun Stack<SentenceScriptLine>.pushSentence(sentence: Sentence): Stack<SentenceScriptLine> =
+	when (sentence) {
+		is WordSentence -> push(sentence.word lineTo sentenceScript())
+		is LineSentence -> push(sentence.line.scriptLine)
+		is LinkSentence -> pushSentence(sentence.link)
+	}
+
+val Sentence.scriptLineSeq: Seq<SentenceScriptLine>
+	get() =
+		stack<SentenceScriptLine>().pushSentence(this).seq

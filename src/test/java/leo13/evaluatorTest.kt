@@ -13,34 +13,34 @@ class EvaluatorTest {
 						xWord lineTo sentence(zeroWord),
 						yWord lineTo sentence(oneWord))))
 			.assertEqualTo(
-				evaluator(
-					context(),
-					script(
-						value(
-							sentence(xWord lineTo sentence(zeroWord))))))
+				evaluator()
+					.set(
+						script(
+							value(
+								sentence(xWord lineTo sentence(zeroWord))))))
 	}
 
 	@Test
 	fun set() {
-		evaluator(
-			context(),
-			script(
-				value(
-					sentence(
-						pointWord lineTo sentence(
-							xWord lineTo sentence(zeroWord),
-							yWord lineTo sentence(oneWord))))))
+		evaluator()
+			.set(
+				script(
+					value(
+						sentence(
+							pointWord lineTo sentence(
+								xWord lineTo sentence(zeroWord),
+								yWord lineTo sentence(oneWord))))))
 			.plus(
 				setWord lineTo sentence(xWord lineTo sentence(poisonWord)))
 			.assertEqualTo(
-				evaluator(
-					context(),
-					script(
-						value(
-							sentence(
-								pointWord lineTo sentence(
-									xWord lineTo sentence(poisonWord),
-									yWord lineTo sentence(oneWord)))))))
+				evaluator()
+					.set(
+						script(
+							value(
+								sentence(
+									pointWord lineTo sentence(
+										xWord lineTo sentence(poisonWord),
+										yWord lineTo sentence(oneWord)))))))
 	}
 
 	@Test

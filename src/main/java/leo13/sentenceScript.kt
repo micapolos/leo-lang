@@ -1,8 +1,6 @@
 package leo13
 
-import leo.base.appendableString
-import leo.base.fold
-import leo.base.updateIfNotNull
+import leo.base.*
 import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.isEmpty
@@ -47,3 +45,6 @@ val SentenceScript.legacyScript
 		if (sentenceOrNull == null) leo13.script.script()
 		else sentenceOrNull.legacyScript
 
+val SentenceScript.lineSeq: Seq<SentenceScriptLine>
+	get() =
+		sentenceOrNull?.scriptLineSeq ?: seq()
