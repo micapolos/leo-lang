@@ -1,6 +1,8 @@
 package leo13
 
-data class AtomFunction(val expression: Expression)
+data class AtomFunction(val bindings: AtomBindings, val expression: Expression)
 
-fun function(expression: Expression) = AtomFunction(expression)
+fun function(bindings: AtomBindings, expression: Expression) = AtomFunction(bindings, expression)
 
+fun AtomFunction.apply(atom: Atom) =
+	expression.atom(bindings.plus(atom))
