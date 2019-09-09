@@ -1,5 +1,2 @@
-circle
-	radius: five
-	center: point
-		x: zero
-		y: eleven
+one: foo
+two: bar
