@@ -1,6 +1,8 @@
 package leo13
 
-data class ExpressionBinding(val previousBindingOrNull: ExpressionBinding?)
+data class ExpressionBinding(val previousBindingOrNull: ExpressionBinding?) {
+	override fun toString() = sentenceLine.toString()
+}
 
 fun expressionBinding(previousBindingOrNull: ExpressionBinding?) = ExpressionBinding(previousBindingOrNull)
 val lastExpressionBinding = ExpressionBinding(null)
@@ -12,3 +14,7 @@ fun ExpressionBinding.atom(bindings: AtomBindings): Atom =
 fun ExpressionBinding.atom(link: AtomBindingsLink): Atom =
 	if (previousBindingOrNull == null) link.atom
 	else previousBindingOrNull.atom(link.bindings)
+
+val ExpressionBinding.sentenceLine: SentenceLine
+	get() =
+		bindingWord lineTo sentence(zeroWord) // TODO()

@@ -14,10 +14,13 @@ fun sentenceScript(sentenceOrNull: Sentence? = null) = SentenceScript(sentenceOr
 fun script(sentence: Sentence) = sentenceScript(sentence)
 
 infix fun SentenceScript.plus(line: SentenceLine): SentenceScript =
-	script(sentenceOrNull?.run { plus(line) } ?: sentence(line))
+	script(plusSentence(line))
 
 infix fun SentenceScript.plus(word: Word): SentenceScript =
 	script(sentenceOrNull?.run { plus(word) } ?: sentence(word))
+
+infix fun SentenceScript.plusSentence(line: SentenceLine): Sentence =
+	sentenceOrNull?.run { plus(line) } ?: sentence(line)
 
 fun script(vararg lines: SentenceLine): SentenceScript =
 	sentenceScript().fold(lines) { plus(it) }

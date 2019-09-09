@@ -1,11 +1,22 @@
 package leo13
 
-sealed class Atom
+sealed class Atom {
+	override fun toString() = sentenceLine.toString()
+}
 
 object UnitAtom : Atom()
-data class LinkAtom(val link: AtomLink) : Atom()
-data class FunctionAtom(val function: AtomFunction) : Atom()
-data class SentenceAtom(val sentence: Sentence) : Atom()
+
+data class LinkAtom(val link: AtomLink) : Atom() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionAtom(val function: AtomFunction) : Atom() {
+	override fun toString() = super.toString()
+}
+
+data class SentenceAtom(val sentence: Sentence) : Atom() {
+	override fun toString() = super.toString()
+}
 
 val atom: Atom = UnitAtom
 fun atom(link: AtomLink): Atom = LinkAtom(link)
@@ -15,6 +26,19 @@ fun atom(sentence: Sentence): Atom = SentenceAtom(sentence)
 val Atom.link: AtomLink get() = (this as LinkAtom).link
 val Atom.sentence: Sentence get() = (this as SentenceAtom).sentence
 val Atom.function: AtomFunction get() = (this as FunctionAtom).function
+
+val Atom.sentenceLine: SentenceLine
+	get() =
+		atomWord lineTo bodySentence
+
+val Atom.bodySentence: Sentence
+	get() =
+		when (this) {
+			is UnitAtom -> sentence(unitWord)
+			is LinkAtom -> sentence(link.sentenceLine)
+			is FunctionAtom -> sentence(function.sentenceLine)
+			is SentenceAtom -> sentence(sentenceWord lineTo sentence)
+		}
 
 // === Atom to Sentence conversion
 

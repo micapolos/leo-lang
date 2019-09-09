@@ -1,13 +1,30 @@
 package leo13
 
-sealed class ExpressionOperation
+sealed class ExpressionOperation {
+	override fun toString() = sentenceLine.toString()
+}
 
-object LeftExpressionOperation : ExpressionOperation()
-object RightExpressionOperation : ExpressionOperation()
-data class PlusExpressionOperation(val plus: ExpressionPlus) : ExpressionOperation()
-data class SwitchExpressionOperation(val switch: ExpressionSwitch) : ExpressionOperation()
-data class ApplyExpressionOperation(val apply: ExpressionApply) : ExpressionOperation()
-data class BindExpressionOperation(val bind: ExpressionBind) : ExpressionOperation()
+object LeftExpressionOperation : ExpressionOperation() {
+}
+
+object RightExpressionOperation : ExpressionOperation() {
+}
+
+data class PlusExpressionOperation(val plus: ExpressionPlus) : ExpressionOperation() {
+	override fun toString() = super.toString()
+}
+
+data class SwitchExpressionOperation(val switch: ExpressionSwitch) : ExpressionOperation() {
+	override fun toString() = super.toString()
+}
+
+data class ApplyExpressionOperation(val apply: ExpressionApply) : ExpressionOperation() {
+	override fun toString() = super.toString()
+}
+
+data class BindExpressionOperation(val bind: ExpressionBind) : ExpressionOperation() {
+	override fun toString() = super.toString()
+}
 
 val leftExpressionOperation: ExpressionOperation = LeftExpressionOperation
 val rightExpressionOperation: ExpressionOperation = RightExpressionOperation
@@ -25,3 +42,18 @@ fun ExpressionOperation.atom(bindings: AtomBindings, atom: Atom): Atom =
 		is ApplyExpressionOperation -> apply.atom(bindings, atom)
 		is BindExpressionOperation -> bind.atom(bindings, atom)
 	}
+
+val ExpressionOperation.sentenceLine: SentenceLine
+	get() =
+		operationWord lineTo bodySentence
+
+val ExpressionOperation.bodySentence: Sentence
+	get() =
+		when (this) {
+			is LeftExpressionOperation -> sentence(leftWord)
+			is RightExpressionOperation -> sentence(rightWord)
+			is PlusExpressionOperation -> sentence(plus.sentenceLine)
+			is SwitchExpressionOperation -> sentence(switch.sentenceLine)
+			is ApplyExpressionOperation -> sentence(apply.sentenceLine)
+			is BindExpressionOperation -> sentence(bind.sentenceLine)
+		}
