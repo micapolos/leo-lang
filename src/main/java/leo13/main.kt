@@ -23,8 +23,10 @@ fun main() {
 						else interpret
 					println("ok" lineTo result)
 				} else {
-					println(evaluator(context()).plus(sentenceScript(this)).script.valueOrNull?.sentence
-						?: sentenceScript())
+					val evaluator = evaluator(context()).plus(sentenceScript(this))
+					val script = evaluator.script.valueOrNull?.sentence ?: sentenceScript()
+					val out = if (evaluator.hasError) System.err else System.out
+					out.println(script)
 				}
 			})
 		while (true) {
