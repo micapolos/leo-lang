@@ -12,8 +12,7 @@ class EvaluatorTest {
 				xWord lineTo sentence(
 					pointWord lineTo sentence(
 						xWord lineTo sentence(zeroWord),
-						yWord lineTo sentence(oneWord))),
-				evaluator.evaluateFn)
+						yWord lineTo sentence(oneWord))))
 			.assertEqualTo(
 				evaluator
 					.set(
@@ -33,9 +32,7 @@ class EvaluatorTest {
 								xWord lineTo sentence(zeroWord),
 								yWord lineTo sentence(oneWord))))))
 		evaluator
-			.plus(
-				setWord lineTo sentence(xWord lineTo sentence(poisonWord)),
-				evaluator.evaluateFn)
+			.plus(setWord lineTo sentence(xWord lineTo sentence(poisonWord)))
 			.assertEqualTo(
 				evaluator
 					.set(
@@ -51,7 +48,7 @@ class EvaluatorTest {
 	fun setError() {
 		val evaluator = evaluator()
 		evaluator
-			.plus(setWord lineTo sentence(xWord), evaluator.evaluateFn)
+			.plus(setWord lineTo sentence(xWord))
 			.assertEqualTo(
 				evaluator.plusError(setWord lineTo value(sentence(xWord))))
 	}

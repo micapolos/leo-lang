@@ -7,6 +7,5 @@ data class Context(val empty: Empty)
 
 fun context() = Context(empty)
 
-val Context.evaluateFn: EvaluateFn
-	get() =
-		{ evaluator(this).plus(it, evaluateFn).script }
+fun Context.evaluate(sentence: Sentence): ValueScript =
+	evaluator(this).plus(sentence).script

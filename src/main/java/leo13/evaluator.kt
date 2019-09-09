@@ -3,8 +3,6 @@ package leo13
 import leo.base.fold
 import leo.base.ifNull
 
-typealias EvaluateFn = Context.(Sentence) -> ValueScript
-
 data class Evaluator(
 	val context: Context,
 	val script: ValueScript) {
@@ -13,9 +11,6 @@ data class Evaluator(
 
 fun evaluator(context: Context = context(), script: ValueScript = valueScript()) =
 	Evaluator(context, script)
-
-val Evaluator.evaluateFn: EvaluateFn
-	get() = context.evaluateFn
 
 fun Evaluator.set(script: ValueScript): Evaluator =
 	copy(script = script)
@@ -38,26 +33,26 @@ fun Evaluator.plusError(line: ValueLine): Evaluator =
 						sentenceLine,
 						plusWord lineTo sentence(line.sentenceLine))))))
 
-fun Evaluator.plus(script: SentenceScript, evaluateFn: EvaluateFn): Evaluator =
-	fold(script.lineSeq) { plus(it, evaluateFn) }
+fun Evaluator.plus(script: SentenceScript): Evaluator =
+	fold(script.lineSeq) { plus(it) }
 
-fun Evaluator.plus(sentence: Sentence, evaluateFn: EvaluateFn): Evaluator =
-	fold(sentence.scriptLineSeq) { plus(it, evaluateFn) }
+fun Evaluator.plus(sentence: Sentence): Evaluator =
+	fold(sentence.scriptLineSeq) { plus(it) }
 
-fun Evaluator.plus(line: SentenceScriptLine, evaluateFn: EvaluateFn): Evaluator =
+fun Evaluator.plus(line: SentenceScriptLine): Evaluator =
 	if (line.script.sentenceOrNull == null) plus(line.word)
-	else plus(line.word lineTo line.script.sentenceOrNull, evaluateFn)
+	else plus(line.word lineTo line.script.sentenceOrNull)
 
-fun Evaluator.plus(line: SentenceLine, evaluateFn: EvaluateFn): Evaluator =
+fun Evaluator.plus(line: SentenceLine): Evaluator =
 	context
-		.evaluateFn(line.sentence)
+		.evaluate(line.sentence)
 		.let { script ->
 			if (script.valueOrNull == null) plus(line.word)
 			else plus(line.word lineTo script.valueOrNull)
 		}
 
-fun Evaluator.plus(link: SentenceLink, evaluateFn: EvaluateFn): Evaluator =
-	plus(link.sentence, evaluateFn).plus(link.line, evaluateFn)
+fun Evaluator.plus(link: SentenceLink): Evaluator =
+	plus(link.sentence).plus(link.line)
 
 fun Evaluator.plus(word: Word): Evaluator =
 	if (hasError) this
