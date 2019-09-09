@@ -111,7 +111,7 @@ class PatternTest {
 	@Test
 	fun setOrNull() {
 		pointPattern
-			.setOrNull(xWord lineTo pattern(poisonWord))
+			.setOrNull(pattern(xWord lineTo pattern(poisonWord)))
 			.assertEqualTo(
 				pattern(
 					pointWord lineTo pattern(
@@ -119,7 +119,7 @@ class PatternTest {
 						yWord lineTo pattern(oneWord))))
 
 		pointPattern
-			.setOrNull(yWord lineTo pattern(poisonWord))
+			.setOrNull(pattern(yWord lineTo pattern(poisonWord)))
 			.assertEqualTo(
 				pattern(
 					pointWord lineTo pattern(
@@ -127,7 +127,18 @@ class PatternTest {
 						yWord lineTo pattern(poisonWord))))
 
 		pointPattern
-			.setOrNull(zWord lineTo pattern(poisonWord))
+			.setOrNull(
+				pattern(
+					xWord lineTo pattern(oneWord),
+					yWord lineTo pattern(zeroWord)))
+			.assertEqualTo(
+				pattern(
+					pointWord lineTo pattern(
+						xWord lineTo pattern(oneWord),
+						yWord lineTo pattern(zeroWord))))
+
+		pointPattern
+			.setOrNull(pattern(zWord lineTo pattern(poisonWord)))
 			.assertEqualTo(null)
 	}
 }

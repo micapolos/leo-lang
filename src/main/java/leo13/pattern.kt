@@ -128,15 +128,28 @@ fun Pattern.replaceOrNull(newLine: PatternLine): Pattern? =
 		is ArrowPattern -> null
 	}
 
+fun Pattern.replaceOrNull(pattern: Pattern): Pattern? =
+	when (pattern) {
+		is WordPattern -> null
+		is LinePattern -> replaceOrNull(pattern.line)
+		is LinkPattern -> replaceOrNull(pattern.link)
+		is ChoicePattern -> null
+		is SentencePattern -> null
+		is ArrowPattern -> null
+	}
+
+fun Pattern.replaceOrNull(link: PatternLink): Pattern? =
+	replaceOrNull(link.pattern)?.replaceOrNull(link.line)
+
 fun Pattern.getOrNull(word: Word): Pattern? =
 	lineOrNull
 		?.pattern
 		?.linePatternOrNull(word)
 		?.let { pattern(word lineTo it) }
 
-fun Pattern.setOrNull(newLine: PatternLine): Pattern? =
+fun Pattern.setOrNull(pattern: Pattern): Pattern? =
 	lineOrNull?.let { line ->
-		line.pattern.replaceOrNull(newLine)?.let {
+		line.pattern.replaceOrNull(pattern)?.let {
 			pattern(line.word lineTo it)
 		}
 	}

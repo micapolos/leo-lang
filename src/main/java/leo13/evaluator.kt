@@ -71,21 +71,19 @@ fun Evaluator.plusSetOrNull(newValue: Value): Evaluator? =
 		.valueOrNull
 		?.let { value ->
 			newValue
-				.pattern
-				.lineOrNull
-				?.let { newPatternLine ->
-					value
-						.pattern
-						.setOrNull(newPatternLine)
-						?.let { setPattern ->
-							set(
-								script(
-									value
-										.sentence
-										.setOrNull(newValue.sentence.lineOrNull!!)!!
-										.valueOf(setPattern)))
-						}
-				}
+				.pattern.let { pattern ->
+				value
+					.pattern
+					.setOrNull(pattern)
+					?.let { setPattern ->
+						set(
+							script(
+								value
+									.sentence
+									.setOrNull(newValue.sentence)!!
+									.valueOf(setPattern)))
+					}
+			}
 		}
 
 fun Evaluator.plusOther(line: ValueLine): Evaluator =

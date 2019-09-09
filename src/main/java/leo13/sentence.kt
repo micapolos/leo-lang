@@ -62,16 +62,26 @@ fun Sentence.replaceOrNull(newLine: SentenceLine): Sentence? =
 		is LinkSentence -> link.replaceOrNull(newLine)?.let { sentence(it) }
 	}
 
+fun Sentence.replaceOrNull(sentence: Sentence): Sentence? =
+	when (sentence) {
+		is WordSentence -> null
+		is LineSentence -> replaceOrNull(sentence.line)
+		is LinkSentence -> replaceOrNull(sentence.link)
+	}
+
+fun Sentence.replaceOrNull(link: SentenceLink): Sentence? =
+	replaceOrNull(link.sentence)?.replaceOrNull(link.line)
+
 fun Sentence.getOrNull(word: Word): Sentence? =
 	lineOrNull
 		?.sentence
 		?.lineSentenceOrNull(word)
 		?.let { sentence(word lineTo it) }
 
-fun Sentence.setOrNull(line: SentenceLine): Sentence? =
+fun Sentence.setOrNull(newSentence: Sentence): Sentence? =
 	lineOrNull?.run {
 		sentence
-			.replaceOrNull(line)
+			.replaceOrNull(newSentence)
 			?.let { sentence(word lineTo it) }
 	}
 

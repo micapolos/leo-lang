@@ -48,7 +48,7 @@ class SentenceTest {
 	@Test
 	fun setOrNull() {
 		pointSentence
-			.setOrNull(xWord lineTo sentence(poisonWord))
+			.setOrNull(sentence(xWord lineTo sentence(poisonWord)))
 			.assertEqualTo(
 				sentence(
 					pointWord lineTo sentence(
@@ -56,7 +56,7 @@ class SentenceTest {
 						yWord lineTo sentence(oneWord))))
 
 		pointSentence
-			.setOrNull(yWord lineTo sentence(poisonWord))
+			.setOrNull(sentence(yWord lineTo sentence(poisonWord)))
 			.assertEqualTo(
 				sentence(
 					pointWord lineTo sentence(
@@ -64,7 +64,18 @@ class SentenceTest {
 						yWord lineTo sentence(poisonWord))))
 
 		pointSentence
-			.setOrNull(zWord lineTo sentence(poisonWord))
+			.setOrNull(
+				sentence(
+					xWord lineTo sentence(oneWord),
+					yWord lineTo sentence(zeroWord)))
+			.assertEqualTo(
+				sentence(
+					pointWord lineTo sentence(
+						xWord lineTo sentence(oneWord),
+						yWord lineTo sentence(zeroWord))))
+
+		pointSentence
+			.setOrNull(sentence(zWord lineTo sentence(poisonWord)))
 			.assertEqualTo(null)
 	}
 }
