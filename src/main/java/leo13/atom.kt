@@ -3,7 +3,6 @@ package leo13
 sealed class Atom
 
 object UnitAtom : Atom()
-
 data class LinkAtom(val link: AtomLink) : Atom()
 data class FunctionAtom(val function: AtomFunction) : Atom()
 data class SentenceAtom(val sentence: Sentence) : Atom()
@@ -11,6 +10,7 @@ data class SentenceAtom(val sentence: Sentence) : Atom()
 val atom: Atom = UnitAtom
 fun atom(link: AtomLink): Atom = LinkAtom(link)
 fun atom(function: AtomFunction): Atom = FunctionAtom(function)
+fun atom(sentence: Sentence): Atom = SentenceAtom(sentence)
 
 val Atom.link: AtomLink get() = (this as LinkAtom).link
 val Atom.sentence: Sentence get() = (this as SentenceAtom).sentence
