@@ -3,6 +3,7 @@ package leo13
 sealed class Atom
 
 object UnitAtom : Atom()
+
 data class LinkAtom(val link: AtomLink) : Atom()
 data class FunctionAtom(val function: AtomFunction) : Atom()
 data class SentenceAtom(val sentence: Sentence) : Atom()
@@ -56,7 +57,7 @@ fun Pattern.atom(sentence: Sentence): Atom =
 		is LinkPattern -> atom(link.atom(sentence.linkOrNull!!))
 		is ChoicePattern -> atom(choice.atomLink(sentence.scriptLineOrNull!!))
 		is SentencePattern -> atom(sentence)
-		is ArrowPattern -> TODO()
+		is ArrowPattern -> throw IllegalArgumentException()
 	}
 
 fun PatternLine.atom(sentenceLine: SentenceLine): Atom =
