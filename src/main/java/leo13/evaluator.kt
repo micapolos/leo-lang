@@ -3,7 +3,7 @@ package leo13
 import leo.base.fold
 import leo.base.ifNull
 
-typealias EvaluateFn = Evaluator.(Sentence) -> Evaluator
+typealias EvaluateFn = Context.(Sentence) -> ValueScript
 
 data class Evaluator(
 	val context: Context,
@@ -15,8 +15,7 @@ fun evaluator(context: Context = context(), script: ValueScript = valueScript())
 	Evaluator(context, script)
 
 val Evaluator.evaluateFn: EvaluateFn
-	get() =
-		{ plus(it, evaluateFn) }
+	get() = context.evaluateFn
 
 fun Evaluator.set(script: ValueScript): Evaluator =
 	copy(script = script)
@@ -39,26 +38,25 @@ fun Evaluator.plusError(line: ValueLine): Evaluator =
 						sentenceLine,
 						plusWord lineTo sentence(line.sentenceLine))))))
 
-fun Evaluator.plus(script: SentenceScript, evaluateFn: EvaluateFn = this.evaluateFn): Evaluator =
+fun Evaluator.plus(script: SentenceScript, evaluateFn: EvaluateFn): Evaluator =
 	fold(script.lineSeq) { plus(it, evaluateFn) }
 
-fun Evaluator.plus(sentence: Sentence, evaluateFn: EvaluateFn = this.evaluateFn): Evaluator =
+fun Evaluator.plus(sentence: Sentence, evaluateFn: EvaluateFn): Evaluator =
 	fold(sentence.scriptLineSeq) { plus(it, evaluateFn) }
 
-fun Evaluator.plus(line: SentenceScriptLine, evaluateFn: EvaluateFn = this.evaluateFn): Evaluator =
+fun Evaluator.plus(line: SentenceScriptLine, evaluateFn: EvaluateFn): Evaluator =
 	if (line.script.sentenceOrNull == null) plus(line.word)
 	else plus(line.word lineTo line.script.sentenceOrNull, evaluateFn)
 
-fun Evaluator.plus(line: SentenceLine, evaluateFn: EvaluateFn = this.evaluateFn): Evaluator =
-	set(valueScript())
-		.plus(line.sentence, evaluateFn)
-		.script
+fun Evaluator.plus(line: SentenceLine, evaluateFn: EvaluateFn): Evaluator =
+	context
+		.evaluateFn(line.sentence)
 		.let { script ->
 			if (script.valueOrNull == null) plus(line.word)
 			else plus(line.word lineTo script.valueOrNull)
 		}
 
-fun Evaluator.plus(link: SentenceLink, evaluateFn: EvaluateFn = this.evaluateFn): Evaluator =
+fun Evaluator.plus(link: SentenceLink, evaluateFn: EvaluateFn): Evaluator =
 	plus(link.sentence, evaluateFn).plus(link.line, evaluateFn)
 
 fun Evaluator.plus(word: Word): Evaluator =

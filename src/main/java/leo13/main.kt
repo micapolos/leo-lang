@@ -23,7 +23,8 @@ fun main() {
 						else interpret
 					println("ok" lineTo result)
 				} else {
-					println(evaluator(context()).plus(sentenceScript(this)).script.valueOrNull?.sentence ?: sentenceScript())
+					println(evaluator(context()).plus(sentenceScript(this), context().evaluateFn).script.valueOrNull?.sentence
+						?: sentenceScript())
 				}
 			})
 		while (true) {

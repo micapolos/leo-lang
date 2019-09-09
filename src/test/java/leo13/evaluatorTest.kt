@@ -6,14 +6,16 @@ import kotlin.test.Test
 class EvaluatorTest {
 	@Test
 	fun get() {
-		evaluator()
+		val evaluator = evaluator()
+		evaluator
 			.plus(
 				xWord lineTo sentence(
 					pointWord lineTo sentence(
 						xWord lineTo sentence(zeroWord),
-						yWord lineTo sentence(oneWord))))
+						yWord lineTo sentence(oneWord))),
+				evaluator.evaluateFn)
 			.assertEqualTo(
-				evaluator()
+				evaluator
 					.set(
 						script(
 							value(
@@ -22,7 +24,7 @@ class EvaluatorTest {
 
 	@Test
 	fun set() {
-		evaluator()
+		val evaluator = evaluator()
 			.set(
 				script(
 					value(
@@ -30,10 +32,12 @@ class EvaluatorTest {
 							pointWord lineTo sentence(
 								xWord lineTo sentence(zeroWord),
 								yWord lineTo sentence(oneWord))))))
+		evaluator
 			.plus(
-				setWord lineTo sentence(xWord lineTo sentence(poisonWord)))
+				setWord lineTo sentence(xWord lineTo sentence(poisonWord)),
+				evaluator.evaluateFn)
 			.assertEqualTo(
-				evaluator()
+				evaluator
 					.set(
 						script(
 							value(
@@ -45,9 +49,10 @@ class EvaluatorTest {
 
 	@Test
 	fun setError() {
-		evaluator()
-			.plus(setWord lineTo sentence(xWord))
+		val evaluator = evaluator()
+		evaluator
+			.plus(setWord lineTo sentence(xWord), evaluator.evaluateFn)
 			.assertEqualTo(
-				evaluator().plusError(setWord lineTo value(sentence(xWord))))
+				evaluator.plusError(setWord lineTo value(sentence(xWord))))
 	}
 }
