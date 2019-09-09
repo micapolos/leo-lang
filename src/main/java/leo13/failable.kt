@@ -45,3 +45,10 @@ fun <V, R> Failable<V>.failableMap(word: Word, fn: V.() -> Failable<R>): Failabl
 		is SuccessFailable -> value.fn()
 		is FailureFailable -> failure(sentence(word lineTo sentence))
 	}
+
+val <V : Any> Failable<V>.orNull: V?
+	get() =
+		when (this) {
+			is SuccessFailable -> value
+			is FailureFailable -> null
+		}

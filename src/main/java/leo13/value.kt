@@ -1,5 +1,7 @@
 package leo13
 
+import leo.base.notNullIf
+
 data class Value(val sentence: Sentence, val pattern: Pattern) {
 	override fun toString() = sentenceLine.toString()
 }
@@ -25,3 +27,8 @@ infix fun Value?.orNullPlus(line: ValueLine): Value =
 val Value.sentenceLine: SentenceLine
 	get() =
 		valueWord lineTo sentence(sentenceWord lineTo sentence, pattern.sentenceLine)
+
+fun Value.castOrNull(otherPattern: Pattern): Value? =
+	notNullIf(otherPattern.contains(pattern)) {
+		value(sentence, otherPattern)
+	}

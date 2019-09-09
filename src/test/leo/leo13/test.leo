@@ -1,6 +1,4 @@
-circle
-	radius: ten
-	center: point
-		x: eleven
-		y: twelve
-center point x
+bit: zero
+of: bit: choice
+	either: zero
+	either: one

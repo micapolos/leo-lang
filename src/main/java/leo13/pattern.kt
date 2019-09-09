@@ -166,7 +166,7 @@ fun Pattern.contains(pattern: Pattern): Boolean =
 		is WordPattern -> pattern is WordPattern && word == pattern.word
 		is LinePattern -> pattern is LinePattern && line.contains(pattern.line)
 		is LinkPattern -> pattern is LinkPattern && link == pattern.link
-		is ChoicePattern -> TODO()
+		is ChoicePattern -> choice.contains(pattern)
 		is SentencePattern -> true
 		is ArrowPattern -> TODO()
 	}

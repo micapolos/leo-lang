@@ -2,6 +2,7 @@ package leo13
 
 import leo.base.fold
 import leo.base.ifNull
+import leo.base.notNullIf
 
 data class Evaluator(
 	val context: Context,
@@ -24,6 +25,15 @@ fun Evaluator.plusError(word: Word): Evaluator =
 						sentenceLine,
 						plusWord lineTo sentence(word))))))
 
+fun Evaluator.plusError(line: SentenceLine): Evaluator =
+	set(
+		script(
+			value(
+				sentence(
+					errorWord lineTo sentence(
+						sentenceLine,
+						plusWord lineTo sentence(line))))))
+
 fun Evaluator.plusError(line: ValueLine): Evaluator =
 	set(
 		script(
@@ -44,6 +54,12 @@ fun Evaluator.plus(line: SentenceScriptLine): Evaluator =
 	else plus(line.word lineTo line.script.sentenceOrNull)
 
 fun Evaluator.plus(line: SentenceLine): Evaluator =
+	when (line.word) {
+		ofWord -> plusOfOrNull(line.sentence) ?: plusError(line)
+		else -> plusEvaluated(line)
+	}
+
+fun Evaluator.plusEvaluated(line: SentenceLine): Evaluator =
 	context
 		.evaluate(line.sentence)
 		.let { script ->
@@ -63,7 +79,24 @@ fun Evaluator.plus(line: ValueLine): Evaluator =
 	if (hasError) this
 	else when (line.word) {
 		setWord -> plusSetOrNull(line.value) ?: plusError(line)
+		evaluatorWord -> plusEvaluatorOrNull(line.value) ?: plusError(line)
 		else -> plusOther(line)
+	}
+
+fun Evaluator.plusEvaluatorOrNull(value: Value): Evaluator? =
+	notNullIf(script.valueOrNull == null) {
+		set(script(value)).run {
+			set(script(value(sentence(sentenceLine))))
+		}
+	}
+
+fun Evaluator.plusOfOrNull(sentence: Sentence): Evaluator? =
+	script.valueOrNull?.let { value ->
+		sentence.failableBodyPattern.orNull?.let { pattern ->
+			value.castOrNull(pattern)?.let { castValue ->
+				set(script(castValue))
+			}
+		}
 	}
 
 fun Evaluator.plusSetOrNull(newValue: Value): Evaluator? =

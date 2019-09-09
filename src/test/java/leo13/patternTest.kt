@@ -144,13 +144,20 @@ class PatternTest {
 
 	@Test
 	fun contains() {
-		pattern(
-			bitWord lineTo pattern(
-				choice(
-					xWord eitherTo script(pattern(zeroWord)),
-					yWord eitherTo script(pattern(oneWord)))))
-			.contains(
-				pattern(pointWord))
+		pattern(bitWord lineTo pattern(
+			choice(
+				either(zeroWord),
+				either(oneWord))))
+			.contains(pattern(bitWord lineTo pattern(zeroWord)))
 
+		pattern(bitWord lineTo pattern(
+			choice(
+				either(zeroWord),
+				either(oneWord))))
+			.contains(
+				pattern(bitWord lineTo pattern(
+					choice(
+						either(zeroWord),
+						either(oneWord)))))
 	}
 }
