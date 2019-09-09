@@ -28,6 +28,15 @@ fun sentence(line: SentenceLine): Sentence = LineSentence(line)
 fun sentence(link: SentenceLink): Sentence = LinkSentence(link)
 
 val Sentence.lineOrNull: SentenceLine? get() = (this as? LineSentence)?.line
+val Sentence.linkOrNull: SentenceLink? get() = (this as? LinkSentence)?.link
+
+val Sentence.scriptLineOrNull: SentenceScriptLine?
+	get() =
+		when (this) {
+			is WordSentence -> sentenceScriptLine(word)
+			is LineSentence -> line.word lineTo script(line.sentence)
+			is LinkSentence -> null
+		}
 
 infix fun Sentence.plus(line: SentenceLine): Sentence =
 	sentence(link(this, line))
