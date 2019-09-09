@@ -1,32 +1,39 @@
 package leo13
 
-data class Either(val word: Word, val pattern: Pattern)
+data class Either(val word: Word, val script: PatternScript)
 
-infix fun Word.eitherTo(pattern: Pattern) = Either(this, pattern)
+infix fun Word.eitherTo(script: PatternScript) = Either(this, script)
+fun either(word: Word) = word eitherTo patternScript()
+
+fun Either.matches(otherWord: Word): Boolean =
+	word == otherWord && script.patternOrNull == null
 
 fun Either.matches(line: SentenceLine): Boolean =
-	word == line.word && pattern.matches(line.sentence)
+	word == line.word && script.patternOrNull != null && script.patternOrNull.matches(line.sentence)
 
 val Either.sentenceLine: SentenceLine
 	get() =
-		eitherWord lineTo bodySentence
+		eitherWord lineTo bodySentenceScriptLine.sentence
 
-val Either.bodySentenceLine: SentenceLine
+val Either.bodySentenceScriptLine: SentenceScriptLine
 	get() =
-		word lineTo pattern.bodySentence
+		word lineTo script.bodySentenceScript
 
-val Either.bodySentence: Sentence
+val SentenceScriptLine.failableBodyEither: Failable<Either>
 	get() =
-		sentence(bodySentenceLine)
-
-val SentenceLine.failableBodyEither: Failable<Either>
-	get() =
-		sentence.failableBodyPattern.map { word eitherTo this }
+		if (script.sentenceOrNull == null) success(either(word))
+		else script.sentenceOrNull.failableBodyPattern.map { word eitherTo script(this) }
 
 val Sentence.failableBodyEither: Failable<Either>
 	get() =
-		failableLine.failableMap { failableBodyEither }
+		failableScriptLine.failableMap { failableBodyEither }
 
 val SentenceLine.failableEither: Failable<Either>
 	get() =
 		failableSentence(eitherWord).failableMap { failableBodyEither }
+
+fun Either.contains(otherWord: Word): Boolean =
+	word == otherWord && script.patternOrNull == null
+
+fun Either.contains(line: PatternLine): Boolean =
+	word == line.word && script.patternOrNull != null && script.patternOrNull == line.pattern

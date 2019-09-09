@@ -160,3 +160,13 @@ fun pattern(sentence: Sentence): Pattern =
 		is LineSentence -> pattern(patternLine(sentence.line))
 		is LinkSentence -> pattern(patternLink(sentence.link))
 	}
+
+fun Pattern.contains(pattern: Pattern): Boolean =
+	when (this) {
+		is WordPattern -> pattern is WordPattern && word == pattern.word
+		is LinePattern -> pattern is LinePattern && line.contains(pattern.line)
+		is LinkPattern -> pattern is LinkPattern && link == pattern.link
+		is ChoicePattern -> TODO()
+		is SentencePattern -> true
+		is ArrowPattern -> TODO()
+	}

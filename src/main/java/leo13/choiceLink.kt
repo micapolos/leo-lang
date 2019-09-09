@@ -4,6 +4,9 @@ data class ChoiceLink(val choice: Choice, val either: Either)
 
 infix fun Choice.linkTo(either: Either) = ChoiceLink(this, either)
 
+fun ChoiceLink.matches(word: Word): Boolean =
+	either.matches(word) || choice.matches(word)
+
 fun ChoiceLink.matches(line: SentenceLine): Boolean =
 	either.matches(line) || choice.matches(line)
 
@@ -20,3 +23,9 @@ val SentenceLink.failableChoiceLink: Failable<ChoiceLink>
 				}
 			}
 		}
+
+fun ChoiceLink.contains(word: Word): Boolean =
+	either.contains(word) || choice.contains(word)
+
+fun ChoiceLink.contains(line: PatternLine): Boolean =
+	either.contains(line) || choice.contains(line)

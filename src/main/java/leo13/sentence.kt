@@ -99,6 +99,14 @@ val Sentence.failableLine: Failable<SentenceLine>
 			?.run(::success)
 			?: failure(sentence(lineWord))
 
+val Sentence.failableScriptLine: Failable<SentenceScriptLine>
+	get() =
+		when (this) {
+			is WordSentence -> success(sentenceScriptLine(word))
+			is LineSentence -> success(line.scriptLine)
+			is LinkSentence -> failure(sentence(scriptWord))
+		}
+
 val Sentence.failableLink: Failable<SentenceLink>
 	get() =
 		(this as? LinkSentence)

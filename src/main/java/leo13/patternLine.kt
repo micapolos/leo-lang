@@ -29,3 +29,6 @@ fun PatternLine.replaceOrNull(newLine: PatternLine): PatternLine? =
 
 fun patternLine(line: SentenceLine): PatternLine =
 	line.word lineTo pattern(line.sentence)
+
+fun PatternLine.contains(line: PatternLine): Boolean =
+	word == line.word && pattern.contains(line.pattern)

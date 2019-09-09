@@ -141,4 +141,16 @@ class PatternTest {
 			.setOrNull(pattern(zWord lineTo pattern(poisonWord)))
 			.assertEqualTo(null)
 	}
+
+	@Test
+	fun contains() {
+		pattern(
+			bitWord lineTo pattern(
+				choice(
+					xWord eitherTo script(pattern(zeroWord)),
+					yWord eitherTo script(pattern(oneWord)))))
+			.contains(
+				pattern(pointWord))
+
+	}
 }

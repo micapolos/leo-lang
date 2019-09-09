@@ -32,3 +32,6 @@ fun PatternLink.replaceOrNull(newLine: PatternLine): PatternLink? =
 
 fun patternLink(link: SentenceLink): PatternLink =
 	pattern(link.sentence) linkTo patternLine(link.line)
+
+fun PatternLink.contains(link: PatternLink): Boolean =
+	this == link

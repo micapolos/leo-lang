@@ -8,6 +8,9 @@ fun choice(linkOrNull: ChoiceLink?) = Choice(linkOrNull)
 fun Choice.plus(either: Either) = choice(linkTo(either))
 fun choice(vararg eithers: Either) = choice(null).fold(eithers) { plus(it) }
 
+fun Choice.matches(word: Word): Boolean =
+	linkOrNull != null && linkOrNull.matches(word)
+
 fun Choice.matches(sentence: Sentence): Boolean =
 	sentence is LineSentence && matches(sentence.line)
 
@@ -41,3 +44,19 @@ val Sentence.failableBodyChoice: Failable<Choice>
 			is LineSentence -> line.failableEither.map(choiceWord) { choice(this) }
 			is LinkSentence -> link.failableChoiceLink.map(choiceWord) { choice(this) }
 		}
+
+fun Choice.contains(pattern: Pattern): Boolean =
+	when (pattern) {
+		is WordPattern -> contains(pattern.word)
+		is LinePattern -> contains(pattern.line)
+		is LinkPattern -> false
+		is ChoicePattern -> this == pattern.choice
+		is SentencePattern -> false
+		is ArrowPattern -> TODO()
+	}
+
+fun Choice.contains(word: Word): Boolean =
+	linkOrNull?.contains(word) ?: false
+
+fun Choice.contains(line: PatternLine): Boolean =
+	linkOrNull?.contains(line) ?: false

@@ -6,7 +6,11 @@ import kotlin.test.Test
 class EitherTest {
 	@Test
 	fun sentenceLine() {
-		(zeroWord eitherTo pattern(oneWord))
+		either(zeroWord)
+			.sentenceLine
+			.assertEqualTo(eitherWord lineTo sentence(zeroWord))
+
+		(zeroWord eitherTo script(pattern(oneWord)))
 			.sentenceLine
 			.assertEqualTo(
 				eitherWord lineTo sentence(
@@ -15,15 +19,21 @@ class EitherTest {
 
 	@Test
 	fun failableEither() {
+		(eitherWord lineTo sentence(zeroWord))
+			.failableEither
+			.assertSucceedsWith(either(zeroWord))
+
 		(eitherWord lineTo sentence(zeroWord lineTo pattern(oneWord).bodySentence))
 			.failableEither
-			.assertSucceedsWith(zeroWord eitherTo pattern(oneWord))
+			.assertSucceedsWith(zeroWord eitherTo script(pattern(oneWord)))
 
 		(poisonWord lineTo sentence(zeroWord lineTo pattern(oneWord).bodySentence))
 			.failableEither
 			.assertFails
 
-		(eitherWord lineTo sentence(zeroWord))
+		(eitherWord lineTo sentence(
+			xWord lineTo sentence(zeroWord),
+			yWord lineTo sentence(oneWord)))
 			.failableEither
 			.assertFails
 	}

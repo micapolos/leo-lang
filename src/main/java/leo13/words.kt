@@ -1,5 +1,6 @@
 package leo13
 
+val bitWord = word("bit")
 val caseWord = word("case")
 val choiceWord = word("choice")
 val defineWord = word("define")
