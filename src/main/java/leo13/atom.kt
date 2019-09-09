@@ -13,6 +13,7 @@ fun atom(function: AtomFunction): Atom = FunctionAtom(function)
 
 val Atom.link: AtomLink get() = (this as LinkAtom).link
 val Atom.sentence: Sentence get() = (this as SentenceAtom).sentence
+val Atom.function: AtomFunction get() = (this as FunctionAtom).function
 
 // === Atom to Sentence conversion
 
