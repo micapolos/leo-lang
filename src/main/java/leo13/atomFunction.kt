@@ -1,4 +1,6 @@
 package leo13
 
-object AtomFunction
+data class AtomFunction(val expression: Expression)
+
+fun function(expression: Expression) = AtomFunction(expression)
 
