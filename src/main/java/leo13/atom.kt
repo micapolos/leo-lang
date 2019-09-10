@@ -1,10 +1,10 @@
 package leo13
 
 sealed class Atom {
-	override fun toString() = sentenceLine.toString()
+	override fun toString() = atomSentenceWriter.toString(this)
 }
 
-object UnitAtom : Atom()
+data class EmptyAtom(val empty: Empty) : Atom()
 
 data class LinkAtom(val link: AtomLink) : Atom() {
 	override fun toString() = super.toString()
@@ -18,7 +18,25 @@ data class SentenceAtom(val sentence: Sentence) : Atom() {
 	override fun toString() = super.toString()
 }
 
-val atom: Atom = UnitAtom
+val atomSentenceWriter =
+	recursiveWriter<Atom> {
+		sealedSentenceWriter(
+			atomWord,
+			emptySentenceWriter,
+			atomLinkSentenceWriter,
+			atomFunctionSentenceWriter,
+			sentenceWriter
+		) { fn1, fn2, fn3, fn4 ->
+			when (this) {
+				is EmptyAtom -> empty.fn1()
+				is LinkAtom -> link.fn2()
+				is FunctionAtom -> function.fn3()
+				is SentenceAtom -> sentence.fn4()
+			}
+		}
+	}
+
+val emptyAtom: Atom = EmptyAtom(empty)
 fun atom(link: AtomLink): Atom = LinkAtom(link)
 fun atom(function: AtomFunction): Atom = FunctionAtom(function)
 fun atom(sentence: Sentence): Atom = SentenceAtom(sentence)
@@ -34,7 +52,7 @@ val Atom.sentenceLine: SentenceLine
 val Atom.bodySentence: Sentence
 	get() =
 		when (this) {
-			is UnitAtom -> sentence(unitWord)
+			is EmptyAtom -> sentence(unitWord)
 			is LinkAtom -> sentence(link.sentenceLine)
 			is FunctionAtom -> sentence(function.sentenceLine)
 			is SentenceAtom -> sentence(sentenceWord lineTo sentence)
@@ -65,18 +83,18 @@ fun Choice.sentence(link: AtomLink): Sentence =
 	linkOrNull!!.sentence(link)
 
 fun ChoiceLink.sentence(link: AtomLink): Sentence =
-	if (link.leftAtom == atom) sentence(either.word lineTo either.script.sentenceScript(link.rightAtom))
+	if (link.leftAtom == emptyAtom) sentence(either.word lineTo either.script.sentenceScript(link.rightAtom))
 	else choice.sentence(link.leftAtom.link.leftAtom linkTo link.rightAtom)
 
 // === Sentence to Atom conversion
 
 fun PatternScript.atom(sentenceScript: SentenceScript): Atom =
-	if (patternOrNull == null) atom
+	if (patternOrNull == null) emptyAtom
 	else patternOrNull.atom(sentenceScript.sentenceOrNull!!)
 
 fun Pattern.atom(sentence: Sentence): Atom =
 	when (this) {
-		is WordPattern -> atom
+		is WordPattern -> emptyAtom
 		is LinePattern -> line.atom(sentence.lineOrNull!!)
 		is LinkPattern -> atom(link.atom(sentence.linkOrNull!!))
 		is ChoicePattern -> atom(choice.atomLink(sentence.scriptLineOrNull!!))
@@ -94,7 +112,7 @@ fun Choice.atomLink(line: SentenceScriptLine): AtomLink =
 	linkOrNull!!.atomLink(line)
 
 fun ChoiceLink.atomLink(line: SentenceScriptLine): AtomLink =
-	if (either.word == line.word) atom linkTo either.script.atom(line.script)
+	if (either.word == line.word) emptyAtom linkTo either.script.atom(line.script)
 	else choice.atomLink(line).let { atomLink ->
-		atom(atomLink.leftAtom linkTo atom) linkTo atomLink.rightAtom
+		atom(atomLink.leftAtom linkTo emptyAtom) linkTo atomLink.rightAtom
 	}

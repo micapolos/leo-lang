@@ -11,11 +11,11 @@ class ExpressionSwitchTest {
 			operation(plus(expression(atom(sentence(oneWord))))))
 
 		switch
-			.atom(atomBindings(), atom(atom linkTo atom(sentence(pointWord))))
+			.atom(atomBindings(), atom(emptyAtom linkTo atom(sentence(pointWord))))
 			.assertEqualTo(atom(atom(sentence(pointWord)) linkTo atom(sentence(oneWord))))
 
 		switch
-			.atom(atomBindings(), atom(atom(atom linkTo atom) linkTo atom(sentence(pointWord))))
+			.atom(atomBindings(), atom(atom(emptyAtom linkTo emptyAtom) linkTo atom(sentence(pointWord))))
 			.assertEqualTo(atom(atom(sentence(pointWord)) linkTo atom(sentence(zeroWord))))
 	}
 }

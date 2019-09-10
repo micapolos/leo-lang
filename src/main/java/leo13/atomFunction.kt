@@ -1,8 +1,13 @@
 package leo13
 
 data class AtomFunction(val bindings: AtomBindings, val expression: Expression) {
-	override fun toString() = sentenceLine.toString()
+	override fun toString() = atomFunctionSentenceWriter.toString(this)
 }
+
+val atomFunctionSentenceWriter: SentenceWriter<AtomFunction> = writer(
+	functionWord,
+	field(TODO() as SentenceWriter<AtomBindings>) { bindings },
+	field(TODO() as SentenceWriter<Expression>) { expression })
 
 fun function(bindings: AtomBindings, expression: Expression) = AtomFunction(bindings, expression)
 
