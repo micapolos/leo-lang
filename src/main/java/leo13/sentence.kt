@@ -27,6 +27,7 @@ fun sentence(word: Word): Sentence = WordSentence(word)
 fun sentence(line: SentenceLine): Sentence = LineSentence(line)
 fun sentence(link: SentenceLink): Sentence = LinkSentence(link)
 
+val Sentence.wordOrNull: Word? get() = (this as? WordSentence)?.word
 val Sentence.lineOrNull: SentenceLine? get() = (this as? LineSentence)?.line
 val Sentence.linkOrNull: SentenceLink? get() = (this as? LinkSentence)?.link
 
