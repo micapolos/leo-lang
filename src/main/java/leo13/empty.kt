@@ -1,6 +1,6 @@
 package leo13
 
-val emptySentenceWriter: SentenceWriter<Empty> =
+val emptySentenceWriter: SentenceLineWriter<Empty> =
 	sentenceWriter(emptyWord) { sentence(unitWord) }
 
 object Empty {

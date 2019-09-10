@@ -97,32 +97,6 @@ fun Sentence.setOrNull(newSentence: Sentence): Sentence? =
 			?.let { sentence(word lineTo it) }
 	}
 
-val Sentence.failableWord: Failable<Word>
-	get() =
-		wordOrNull
-			?.run(::success)
-			?: failure(sentence(wordWord))
-
-val Sentence.failableLine: Failable<SentenceLine>
-	get() =
-		lineOrNull
-			?.run(::success)
-			?: failure(sentence(lineWord))
-
-val Sentence.failableOptionLine: Failable<SentenceOptionLine>
-	get() =
-		when (this) {
-			is StartSentence -> start.failableOptionLine
-			is LinkSentence -> failure(sentence(scriptWord))
-		}
-
-val Sentence.failableLink: Failable<SentenceLink>
-	get() =
-		(this as? LinkSentence)
-			?.link
-			?.run(::success)
-			?: failure(sentence(linkWord))
-
 // Normalizing conversion from legacy Script
 fun sentence(script: Script): Sentence =
 	sentenceOption(script).sentenceOrNull!!

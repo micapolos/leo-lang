@@ -6,7 +6,7 @@ data class AtomLink(val leftAtom: Atom, val rightAtom: Atom) {
 
 infix fun Atom.linkTo(rightAtom: Atom) = AtomLink(this, rightAtom)
 
-val atomLinkSentenceWriter: SentenceWriter<AtomLink> = writer(
+val atomLinkSentenceWriter: SentenceLineWriter<AtomLink> = writer(
 	linkWord,
 	field(writer(leftWord, atomSentenceWriter)) { leftAtom },
 	field(writer(rightWord, atomSentenceWriter)) { rightAtom })

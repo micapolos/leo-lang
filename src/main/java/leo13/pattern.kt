@@ -3,14 +3,10 @@ package leo13
 import leo.base.fold
 
 sealed class Pattern {
-	override fun toString() = sentenceLine.toString()
+	override fun toString() = patternSentenceWriter.toString(this)
 }
 
-data class WordPattern(val word: Word) : Pattern() {
-	override fun toString() = super.toString()
-}
-
-data class LinePattern(val line: PatternLine) : Pattern() {
+data class StartPattern(val start: PatternStart) : Pattern() {
 	override fun toString() = super.toString()
 }
 
@@ -18,146 +14,43 @@ data class LinkPattern(val link: PatternLink) : Pattern() {
 	override fun toString() = super.toString()
 }
 
-data class ChoicePattern(val choice: Choice) : Pattern() {
-	override fun toString() = super.toString()
-}
-
-data class SentencePattern(val sentence: ObjectSentence) : Pattern() {
-	override fun toString() = super.toString()
-}
-
-data class ArrowPattern(val arrow: PatternArrow) : Pattern() {
-	override fun toString() = super.toString()
-}
-
-fun pattern(word: Word): Pattern = WordPattern(word)
-fun pattern(line: PatternLine): Pattern = LinePattern(line)
+fun pattern(start: PatternStart): Pattern = StartPattern(start)
 fun pattern(link: PatternLink): Pattern = LinkPattern(link)
-fun pattern(choice: Choice): Pattern = ChoicePattern(choice)
-fun pattern(sentence: ObjectSentence): Pattern = SentencePattern(sentence)
-fun pattern(arrow: PatternArrow): Pattern = ArrowPattern(arrow)
+
+fun pattern(word: Word): Pattern = pattern(start(choice(either(word))))
+fun pattern(line: PatternLine): Pattern = pattern(start(choice(either(line))))
+fun pattern(choice: WordChoice): Pattern = pattern(start(choice))
+fun pattern(choice: LineChoice): Pattern = pattern(start(choice))
+fun pattern(any: SentenceAny): Pattern = pattern(start(any))
+fun pattern(arrow: PatternArrow): Pattern = pattern(start(arrow))
 
 fun Pattern.plus(line: PatternLine): Pattern = pattern(linkTo(line))
 
 fun pattern(word: Word, vararg lines: PatternLine) = pattern(word).fold(lines) { plus(it) }
 fun pattern(line: PatternLine, vararg lines: PatternLine) = pattern(line).fold(lines) { plus(it) }
-fun pattern(choice: Choice, vararg lines: PatternLine) = pattern(choice).fold(lines) { plus(it) }
-fun pattern(sentence: ObjectSentence, vararg lines: PatternLine) = pattern(sentence).fold(lines) { plus(it) }
+fun pattern(choice: WordChoice, vararg lines: PatternLine) = pattern(choice).fold(lines) { plus(it) }
+fun pattern(choice: LineChoice, vararg lines: PatternLine) = pattern(choice).fold(lines) { plus(it) }
+fun pattern(any: SentenceAny, vararg lines: PatternLine) = pattern(any).fold(lines) { plus(it) }
 fun pattern(arrow: PatternArrow, vararg lines: PatternLine) = pattern(arrow).fold(lines) { plus(it) }
 
-val Pattern.lineOrNull: PatternLine? get() = (this as? LinePattern)?.line
-
-val Pattern.failableLine: Failable<PatternLine>
-	get() =
-		if (this is LinePattern) success(line)
-		else failure(expectedWord lineTo sentence(lineWord))
+val patternSentenceWriter =
+	recursiveWriter<Pattern> {
+		sealedWriter(
+			patternWord,
+			patternStartSentenceWriter,
+			patternLinkSentenceWriter
+		) { fn1, fn2 ->
+			when (this) {
+				is StartPattern -> start.fn1()
+				is LinkPattern -> link.fn2()
+			}
+		}
+	}
 
 fun Pattern.matches(sentence: Sentence): Boolean =
 	when (this) {
-		is WordPattern -> sentence is StartSentence && sentence.start is WordSentenceStart && word == sentence.start.word
-		is LinePattern -> sentence is StartSentence && sentence.start is LineSentenceStart && line.matches(sentence.start.line)
+		is StartPattern -> sentence is StartSentence && start.matches(sentence.start)
 		is LinkPattern -> sentence is LinkSentence && link.matches(sentence.link)
-		is ChoicePattern -> choice.matches(sentence)
-		is SentencePattern -> true
-		is ArrowPattern -> arrow.matches(sentence)
-	}
-
-val Pattern.sentenceLine: SentenceLine
-	get() =
-		patternWord lineTo bodySentence
-
-val Pattern.bodySentence: Sentence
-	get() =
-		when (this) {
-			is WordPattern -> sentence(word) // TODO: handle meta
-			is LinePattern -> line.bodySentence // TODO: handle meta
-			is LinkPattern -> link.bodySentence
-			is ChoicePattern -> choice.sentence
-			is SentencePattern -> sentence.sentence
-			is ArrowPattern -> TODO()
-		}
-
-val SentenceLine.failablePattern: Failable<Pattern>
-	get() =
-		failableSentence(patternWord).failableMap(patternWord) { failableBodyPattern }
-
-val Sentence.failableBodyPattern: Failable<Pattern>
-	get() =
-		when (this) {
-			is StartSentence -> start.failableBodyPattern
-			is LinkSentence -> link.failableBodyPattern
-		}
-
-val SentenceStart.failableBodyPattern: Failable<Pattern>
-	get() =
-		when (this) {
-			is WordSentenceStart -> word.failableBodyPattern
-			is LineSentenceStart -> line.failableBodyPattern
-		}
-
-val Word.failableBodyPattern: Failable<Pattern>
-	get() =
-		when (this) {
-			sentenceWord -> success(pattern(sentence))
-			else -> success(pattern(this))
-		}
-
-val SentenceLine.failableBodyPattern: Failable<Pattern>
-	get() =
-		when (word) {
-			choiceWord -> sentence.failableBodyChoice.map { pattern(this) }
-			sentenceWord -> sentence.failableWord.map { pattern(leo13.sentence) }
-			else -> failableBodyPatternLine.map { pattern(this) }
-		}
-
-val SentenceLink.failableBodyPattern: Failable<Pattern>
-	get() =
-		failableBodyPatternLink.map { pattern(this) }
-
-fun Pattern.linePatternOrNull(word: Word): Pattern? =
-	when (this) {
-		is WordPattern -> null
-		is LinePattern -> line.patternOrNull(word)
-		is LinkPattern -> link.linePatternOrNull(word)
-		is ChoicePattern -> null
-		is SentencePattern -> null
-		is ArrowPattern -> null
-	}
-
-fun Pattern.replaceOrNull(newLine: PatternLine): Pattern? =
-	when (this) {
-		is WordPattern -> null
-		is LinePattern -> line.replaceOrNull(newLine)?.let { pattern(it) }
-		is LinkPattern -> link.replaceOrNull(newLine)?.let { pattern(it) }
-		is ChoicePattern -> null
-		is SentencePattern -> null
-		is ArrowPattern -> null
-	}
-
-fun Pattern.replaceOrNull(pattern: Pattern): Pattern? =
-	when (pattern) {
-		is WordPattern -> null
-		is LinePattern -> replaceOrNull(pattern.line)
-		is LinkPattern -> replaceOrNull(pattern.link)
-		is ChoicePattern -> null
-		is SentencePattern -> null
-		is ArrowPattern -> null
-	}
-
-fun Pattern.replaceOrNull(link: PatternLink): Pattern? =
-	replaceOrNull(link.pattern)?.replaceOrNull(link.line)
-
-fun Pattern.getOrNull(word: Word): Pattern? =
-	lineOrNull
-		?.pattern
-		?.linePatternOrNull(word)
-		?.let { pattern(word lineTo it) }
-
-fun Pattern.setOrNull(pattern: Pattern): Pattern? =
-	lineOrNull?.let { line ->
-		line.pattern.replaceOrNull(pattern)?.let {
-			pattern(line.word lineTo it)
-		}
 	}
 
 fun pattern(sentence: Sentence): Pattern =
@@ -174,10 +67,6 @@ fun pattern(start: SentenceStart): Pattern =
 
 fun Pattern.contains(pattern: Pattern): Boolean =
 	when (this) {
-		is WordPattern -> pattern is WordPattern && word == pattern.word
-		is LinePattern -> pattern is LinePattern && line.contains(pattern.line)
+		is StartPattern -> pattern is StartPattern && start.contains(pattern.start)
 		is LinkPattern -> pattern is LinkPattern && link == pattern.link
-		is ChoicePattern -> choice.contains(pattern)
-		is SentencePattern -> true
-		is ArrowPattern -> TODO()
 	}

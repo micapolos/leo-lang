@@ -26,7 +26,8 @@ infix fun Value?.orNullPlus(line: ValueLine): Value =
 
 val Value.sentenceLine: SentenceLine
 	get() =
-		valueWord lineTo sentence(sentenceWord lineTo sentence, pattern.sentenceLine)
+		TODO()
+//valueWord lineTo sentence(sentenceWord lineTo sentence, pattern.sentenceLine)
 
 fun Value.castOrNull(otherPattern: Pattern): Value? =
 	notNullIf(otherPattern.contains(pattern)) {

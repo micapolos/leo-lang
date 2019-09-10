@@ -1,8 +1,10 @@
 package leo13.generic
 
 import leo.base.fold
+import leo.base.notNullIf
 import leo.base.nullOf
 import leo.base.updateIfNotNull
+import leo13.*
 
 data class List<out V>(val tail: List<V>?, val head: V)
 
@@ -20,6 +22,18 @@ fun <V> list(value: V, vararg values: V): List<V> =
 
 fun <V> listOrNull(vararg values: V): List<V>? =
 	nullOf<List<V>>().fold(values) { orNullPlus(it) }
+
+fun <V, R> SentenceLineWriter<V>.map(fn: R.() -> V): SentenceLineWriter<R> =
+	sentenceWriter(word) { bodySentence(fn()) }
+
+fun <V> listSentenceWriter(word: Word, itemWriter: SentenceLineWriter<V>): SentenceLineWriter<List<V>> =
+	sentenceWriter(word) {
+		reverse.run {
+			sentence(itemWriter.sentenceLine(head)).foldOrNull(tail) {
+				plus(itemWriter.sentenceLine(it))
+			}
+		}
+	}
 
 fun <V, R: Any> R.foldUntilNull(list: List<V>, fn: R.(V) -> R?): R =
 	fn(list.head).let { foldedOrNull ->
@@ -47,3 +61,17 @@ fun <V, R> List<V>.map(fn: V.() -> R): List<R> =
 
 fun <V, R> List<V>?.orNullMap(fn: V.() -> R): List<R>? =
 	nullOf<List<R>>().foldOrNull(this) { orNullPlus(it.fn()) }.orNullReverse
+
+fun <V, R : Any> List<V>.mapFirstOrNull(fn: V.() -> R?): R? =
+	head.fn() ?: tail?.mapFirstOrNull(fn)
+
+fun <V> List<V>.any(fn: V.() -> Boolean): Boolean =
+	mapFirstOrNull { notNullIf(fn()) { Unit } } != null
+
+val <V : Any> List<V>.onlyHeadOrNull: V?
+	get() =
+		notNullIf(tail == null) { head }
+
+val List<*>.hasOnlyHead: Boolean
+	get() =
+		tail == null

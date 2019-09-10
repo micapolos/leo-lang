@@ -4,10 +4,10 @@ data class AtomFunction(val bindings: AtomBindings, val expression: Expression) 
 	override fun toString() = atomFunctionSentenceWriter.toString(this)
 }
 
-val atomFunctionSentenceWriter: SentenceWriter<AtomFunction> = writer(
+val atomFunctionSentenceWriter: SentenceLineWriter<AtomFunction> = writer(
 	functionWord,
-	field(TODO() as SentenceWriter<AtomBindings>) { bindings },
-	field(TODO() as SentenceWriter<Expression>) { expression })
+	field(TODO() as SentenceLineWriter<AtomBindings>) { bindings },
+	field(TODO() as SentenceLineWriter<Expression>) { expression })
 
 fun function(bindings: AtomBindings, expression: Expression) = AtomFunction(bindings, expression)
 

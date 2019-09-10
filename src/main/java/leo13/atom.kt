@@ -20,7 +20,7 @@ data class SentenceAtom(val sentence: Sentence) : Atom() {
 
 val atomSentenceWriter =
 	recursiveWriter<Atom> {
-		sealedSentenceWriter(
+		sealedWriter(
 			atomWord,
 			emptySentenceWriter,
 			atomLinkSentenceWriter,
@@ -65,26 +65,31 @@ fun PatternOption.sentenceOption(atom: Atom): SentenceOption =
 
 fun Pattern.sentence(atom: Atom): Sentence =
 	when (this) {
-		is WordPattern -> sentence(word)
-		is LinePattern -> sentence(line.sentenceLine(atom))
+		is StartPattern -> start.sentence(atom)
 		is LinkPattern -> sentence(link.sentenceLink(atom.link))
-		is ChoicePattern -> choice.sentence(atom.link)
-		is SentencePattern -> atom.sentence
-		is ArrowPattern -> error("ArrowPattern")
+	}
+
+fun PatternStart.sentence(atom: Atom): Sentence =
+	when (this) {
+		is WordChoicePatternStart -> sentence(choice.word(atom))
+		is LineChoicePatternStart -> sentence(choice.sentenceLine(atom.link))
+		is AnyPatternStart -> atom.sentence
+		is ArrowPatternStart -> error("ArrowPattern")
 	}
 
 fun PatternLine.sentenceLine(atom: Atom): SentenceLine =
 	word lineTo pattern.sentence(atom)
 
 fun PatternLink.sentenceLink(link: AtomLink): SentenceLink =
-	pattern.sentence(link.leftAtom) linkTo line.sentenceLine(link.rightAtom)
+	pattern.sentence(link.leftAtom) linkTo choice.sentenceLine(link.rightAtom.link)
 
-fun Choice.sentence(link: AtomLink): Sentence =
-	linkOrNull!!.sentence(link)
+fun WordChoice.word(atom: Atom): Word =
+	if (atom == emptyAtom) eitherList.head.word
+	else wordChoice(eitherList.tail!!).word(atom(atom.link.leftAtom linkTo atom))
 
-fun ChoiceLink.sentence(link: AtomLink): Sentence =
-	if (link.leftAtom == emptyAtom) sentence(either.word lineTo either.option.sentenceOption(link.rightAtom))
-	else choice.sentence(link.leftAtom.link.leftAtom linkTo link.rightAtom)
+fun LineChoice.sentenceLine(link: AtomLink): SentenceLine =
+	if (link.leftAtom == emptyAtom) eitherList.head.line.word lineTo eitherList.head.line.pattern.sentence(link.rightAtom)
+	else lineChoice(eitherList.tail!!).sentenceLine(link.leftAtom.link.leftAtom linkTo link.rightAtom)
 
 // === Sentence to Atom conversion
 
@@ -94,25 +99,34 @@ fun PatternOption.atom(sentenceScript: SentenceOption): Atom =
 
 fun Pattern.atom(sentence: Sentence): Atom =
 	when (this) {
-		is WordPattern -> emptyAtom
-		is LinePattern -> line.atom(sentence.lineOrNull!!)
+		is StartPattern -> start.atom(sentence)
 		is LinkPattern -> atom(link.atom(sentence.linkOrNull!!))
-		is ChoicePattern -> atom(choice.atomLink(sentence.optionLineOrNull!!))
-		is SentencePattern -> atom(sentence)
-		is ArrowPattern -> throw IllegalArgumentException()
+	}
+
+fun PatternStart.atom(sentence: Sentence): Atom =
+	when (this) {
+		is WordChoicePatternStart -> emptyAtom
+		is LineChoicePatternStart -> emptyAtom
+		is AnyPatternStart -> atom(sentence)
+		is ArrowPatternStart -> throw IllegalArgumentException()
 	}
 
 fun PatternLine.atom(sentenceLine: SentenceLine): Atom =
 	pattern.atom(sentenceLine.sentence)
 
-fun PatternLink.atom(sentenceLink: SentenceLink): AtomLink =
-	pattern.atom(sentenceLink.sentence) linkTo line.atom(sentenceLink.line)
+fun PatternLink.atom(link: SentenceLink): AtomLink =
+	pattern.atom(link.sentence) linkTo atom(choice.atomLink(link.line))
 
-fun Choice.atomLink(line: SentenceOptionLine): AtomLink =
-	linkOrNull!!.atomLink(line)
-
-fun ChoiceLink.atomLink(line: SentenceOptionLine): AtomLink =
-	if (either.word == line.word) emptyAtom linkTo either.option.atom(line.option)
-	else choice.atomLink(line).let { atomLink ->
-		atom(atomLink.leftAtom linkTo emptyAtom) linkTo atomLink.rightAtom
+fun WordChoice.atom(word: Word): Atom =
+	if (eitherList.head.word == word) emptyAtom
+	else wordChoice(eitherList.tail!!).atom(word).let { atom ->
+		atom(atom linkTo emptyAtom)
 	}
+
+fun LineChoice.atomLink(line: SentenceLine): AtomLink =
+	if (eitherList.head.line.word == line.word)
+		emptyAtom linkTo eitherList.head.line.pattern.atom(line.sentence)
+	else
+		lineChoice(eitherList.tail!!).atomLink(line).let { atomLink ->
+			atom(atomLink.leftAtom linkTo emptyAtom) linkTo atomLink.rightAtom
+		}

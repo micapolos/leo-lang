@@ -1,7 +1,6 @@
 package leo13
 
 import leo.base.fold
-import leo.base.ifNull
 import leo.base.notNullIf
 
 data class Evaluator(
@@ -91,33 +90,35 @@ fun Evaluator.plusEvaluatorOrNull(value: Value): Evaluator? =
 	}
 
 fun Evaluator.plusOfOrNull(sentence: Sentence): Evaluator? =
-	option.valueOrNull?.let { value ->
-		sentence.failableBodyPattern.orNull?.let { pattern ->
-			value.castOrNull(pattern)?.let { castValue ->
-				set(option(castValue))
-			}
-		}
-	}
+	TODO()
+//	option.valueOrNull?.let { value ->
+//		sentence.failableBodyPattern.orNull?.let { pattern ->
+//			value.castOrNull(pattern)?.let { castValue ->
+//				set(option(castValue))
+//			}
+//		}
+//	}
 
 fun Evaluator.plusSetOrNull(newValue: Value): Evaluator? =
-	option
-		.valueOrNull
-		?.let { value ->
-			newValue
-				.pattern.let { pattern ->
-				value
-					.pattern
-					.setOrNull(pattern)
-					?.let { setPattern ->
-						set(
-							option(
-								value
-									.sentence
-									.setOrNull(newValue.sentence)!!
-									.valueOf(setPattern)))
-					}
-			}
-		}
+	TODO()
+//	option
+//		.valueOrNull
+//		?.let { value ->
+//			newValue
+//				.pattern.let { pattern ->
+//				value
+//					.pattern
+//					.setOrNull(pattern)
+//					?.let { setPattern ->
+//						set(
+//							option(
+//								value
+//									.sentence
+//									.setOrNull(newValue.sentence)!!
+//									.valueOf(setPattern)))
+//					}
+//			}
+//		}
 
 fun Evaluator.plusOther(line: ValueLine): Evaluator =
 	null
@@ -125,11 +126,12 @@ fun Evaluator.plusOther(line: ValueLine): Evaluator =
 		?: append(line)
 
 fun Evaluator.plusGetOrNull(line: ValueLine): Evaluator? =
-	option.valueOrNull.ifNull {
-		line.value.pattern.getOrNull(line.word)?.let { getPattern ->
-			set(option(line.value.sentence.getOrNull(line.word)!!.valueOf(getPattern)))
-		}
-	}
+	TODO()
+//	option.valueOrNull.ifNull {
+//		line.value.pattern.getOrNull(line.word)?.let { getPattern ->
+//			set(option(line.value.sentence.getOrNull(line.word)!!.valueOf(getPattern)))
+//		}
+//	}
 
 fun Evaluator.append(line: ValueLine): Evaluator =
 	set(option.plus(line))

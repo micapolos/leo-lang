@@ -1,6 +1,8 @@
 package leo13
 
+val anyWord = word("any")
 val applyWord = word("apply")
+val arrowWord = word("arrow")
 val atomWord = word("atom")
 val bindWord = word("bind")
 val bindingWord = word("binding")
@@ -38,6 +40,7 @@ val rightWord = word("right")
 val scriptWord = word("script")
 val sentenceWord = word("sentence")
 val setWord = word("set")
+val startWord = word("start")
 val switchWord = word("switch")
 val todoWord = word("todo")
 val unquoteWord = word("unquote")
