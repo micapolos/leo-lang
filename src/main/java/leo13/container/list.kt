@@ -37,7 +37,7 @@ fun <V, R> R.foldOrNull(listOrNull: List<V>?, fn: R.(V) -> R): R =
 
 val <V> List<V>.reverse: List<V>
 	get() =
-	list(head).fold(this) { plus(it) }
+		list(head).foldOrNull(tail) { plus(it) }
 
 val <V> List<V>?.orNullReverse: List<V>? get() =
 	nullOf<List<V>>().foldOrNull(this) { orNullPlus(it) }
