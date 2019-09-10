@@ -24,7 +24,7 @@ fun main() {
 					println("ok" lineTo result)
 				} else {
 					val evaluator = evaluator(context()).plus(sentenceOption(this))
-					val script = evaluator.script.valueOrNull?.sentence ?: sentenceOption()
+					val script = evaluator.option.valueOrNull?.sentence ?: sentenceOption()
 					val out = if (evaluator.hasError) System.err else System.out
 					out.println(script)
 				}

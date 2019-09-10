@@ -16,7 +16,7 @@ class EvaluatorTest {
 			.assertEqualTo(
 				evaluator
 					.set(
-						script(
+						option(
 							value(
 								sentence(xWord lineTo sentence(zeroWord))))))
 	}
@@ -25,7 +25,7 @@ class EvaluatorTest {
 	fun set() {
 		val evaluator = evaluator()
 			.set(
-				script(
+				option(
 					value(
 						sentence(
 							pointWord lineTo sentence(
@@ -36,7 +36,7 @@ class EvaluatorTest {
 			.assertEqualTo(
 				evaluator
 					.set(
-						script(
+						option(
 							value(
 								sentence(
 									pointWord lineTo sentence(

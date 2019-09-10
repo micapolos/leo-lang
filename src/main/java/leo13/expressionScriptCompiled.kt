@@ -1,5 +1,5 @@
 package leo13
 
-data class ExpressionScriptCompiled(
-	val expressionScript: ExpressionScript,
+data class ExpressionOptionCompiled(
+	val expressionOption: ExpressionOption,
 	val patternOption: PatternOption)

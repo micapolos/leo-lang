@@ -6,19 +6,19 @@ import leo.base.notNullIf
 
 data class Evaluator(
 	val context: Context,
-	val script: ValueScript) {
+	val option: ValueOption) {
 	override fun toString() = sentenceLine.toString()
 }
 
-fun evaluator(context: Context = context(), script: ValueScript = valueScript()) =
-	Evaluator(context, script)
+fun evaluator(context: Context = context(), option: ValueOption = valueOption()) =
+	Evaluator(context, option)
 
-fun Evaluator.set(script: ValueScript): Evaluator =
-	copy(script = script)
+fun Evaluator.set(option: ValueOption): Evaluator =
+	copy(option = option)
 
 fun Evaluator.plusError(word: Word): Evaluator =
 	set(
-		script(
+		option(
 			value(
 				sentence(
 					errorWord lineTo sentence(
@@ -27,7 +27,7 @@ fun Evaluator.plusError(word: Word): Evaluator =
 
 fun Evaluator.plusError(line: SentenceLine): Evaluator =
 	set(
-		script(
+		option(
 			value(
 				sentence(
 					errorWord lineTo sentence(
@@ -36,7 +36,7 @@ fun Evaluator.plusError(line: SentenceLine): Evaluator =
 
 fun Evaluator.plusError(line: ValueLine): Evaluator =
 	set(
-		script(
+		option(
 			value(
 				sentence(
 					errorWord lineTo sentence(
@@ -72,8 +72,8 @@ fun Evaluator.plus(link: SentenceLink): Evaluator =
 
 fun Evaluator.plus(word: Word): Evaluator =
 	if (hasError) this
-	else if (script.valueOrNull != null) plusError(word)
-	else set(script(value(sentence(word))))
+	else if (option.valueOrNull != null) plusError(word)
+	else set(option(value(sentence(word))))
 
 fun Evaluator.plus(line: ValueLine): Evaluator =
 	if (hasError) this
@@ -84,23 +84,23 @@ fun Evaluator.plus(line: ValueLine): Evaluator =
 	}
 
 fun Evaluator.plusEvaluatorOrNull(value: Value): Evaluator? =
-	notNullIf(script.valueOrNull == null) {
-		set(script(value)).run {
-			set(script(value(sentence(sentenceLine))))
+	notNullIf(option.valueOrNull == null) {
+		set(option(value)).run {
+			set(option(value(sentence(sentenceLine))))
 		}
 	}
 
 fun Evaluator.plusOfOrNull(sentence: Sentence): Evaluator? =
-	script.valueOrNull?.let { value ->
+	option.valueOrNull?.let { value ->
 		sentence.failableBodyPattern.orNull?.let { pattern ->
 			value.castOrNull(pattern)?.let { castValue ->
-				set(script(castValue))
+				set(option(castValue))
 			}
 		}
 	}
 
 fun Evaluator.plusSetOrNull(newValue: Value): Evaluator? =
-	script
+	option
 		.valueOrNull
 		?.let { value ->
 			newValue
@@ -110,7 +110,7 @@ fun Evaluator.plusSetOrNull(newValue: Value): Evaluator? =
 					.setOrNull(pattern)
 					?.let { setPattern ->
 						set(
-							script(
+							option(
 								value
 									.sentence
 									.setOrNull(newValue.sentence)!!
@@ -125,19 +125,19 @@ fun Evaluator.plusOther(line: ValueLine): Evaluator =
 		?: append(line)
 
 fun Evaluator.plusGetOrNull(line: ValueLine): Evaluator? =
-	script.valueOrNull.ifNull {
+	option.valueOrNull.ifNull {
 		line.value.pattern.getOrNull(line.word)?.let { getPattern ->
-			set(script(line.value.sentence.getOrNull(line.word)!!.valueOf(getPattern)))
+			set(option(line.value.sentence.getOrNull(line.word)!!.valueOf(getPattern)))
 		}
 	}
 
 fun Evaluator.append(line: ValueLine): Evaluator =
-	set(script.plus(line))
+	set(option.plus(line))
 
 val Evaluator.sentenceLine: SentenceLine
 	get() =
-		evaluatorWord lineTo sentence(script.sentenceLine)
+		evaluatorWord lineTo sentence(option.sentenceLine)
 
 val Evaluator.hasError
 	get() : Boolean =
-		script.valueOrNull?.sentence?.lineOrNull?.word == errorWord
+		option.valueOrNull?.sentence?.lineOrNull?.word == errorWord

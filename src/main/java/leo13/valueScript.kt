@@ -1,15 +1,15 @@
 package leo13
 
-data class ValueScript(val valueOrNull: Value?) {
+data class ValueOption(val valueOrNull: Value?) {
 	override fun toString() = sentenceLine.toString()
 }
 
-fun valueScript(valueOrNull: Value? = null) = ValueScript(valueOrNull)
-fun script(value: Value) = valueScript(value)
+fun valueOption(valueOrNull: Value? = null) = ValueOption(valueOrNull)
+fun option(value: Value) = valueOption(value)
 
-fun ValueScript.plus(line: ValueLine): ValueScript =
-	script(valueOrNull?.plus(line) ?: value(line))
+fun ValueOption.plus(line: ValueLine): ValueOption =
+	option(valueOrNull?.plus(line) ?: value(line))
 
-val ValueScript.sentenceLine: SentenceLine
+val ValueOption.sentenceLine: SentenceLine
 	get() =
 		scriptWord lineTo (valueOrNull?.sentenceLine?.let { sentence(it) } ?: sentence(noneWord))
