@@ -1,11 +1,11 @@
 package leo13
 
-data class PatternScript(val patternOrNull: Pattern?)
+data class PatternOption(val patternOrNull: Pattern?)
 
-fun patternScript(patternOrNull: Pattern? = null) = PatternScript(patternOrNull)
-fun script(pattern: Pattern) = patternScript(pattern)
+fun patternOption(patternOrNull: Pattern? = null) = PatternOption(patternOrNull)
+fun option(pattern: Pattern) = patternOption(pattern)
 
-val PatternScript.bodySentenceScript: SentenceOption
+val PatternOption.bodySentenceOption: SentenceOption
 	get() =
 		if (patternOrNull == null) sentenceOption()
 		else option(patternOrNull.bodySentence)

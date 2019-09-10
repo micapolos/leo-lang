@@ -18,13 +18,13 @@ class ChoiceTest {
 					either(oneWord).sentenceLine))
 
 		choice(
-			zeroWord eitherTo script(pattern(oneWord)),
-			oneWord eitherTo script(pattern(zeroWord)))
+			zeroWord eitherTo option(pattern(oneWord)),
+			oneWord eitherTo option(pattern(zeroWord)))
 			.sentenceLine
 			.assertEqualTo(
 				choiceWord lineTo sentence(
-					(zeroWord eitherTo script(pattern(oneWord))).sentenceLine,
-					(oneWord eitherTo script(pattern(zeroWord))).sentenceLine))
+					(zeroWord eitherTo option(pattern(oneWord))).sentenceLine,
+					(oneWord eitherTo option(pattern(zeroWord))).sentenceLine))
 	}
 
 	@Test

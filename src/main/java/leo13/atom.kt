@@ -60,7 +60,7 @@ val Atom.bodySentence: Sentence
 
 // === Atom to Sentence conversion
 
-fun PatternScript.sentenceOption(atom: Atom): SentenceOption =
+fun PatternOption.sentenceOption(atom: Atom): SentenceOption =
 	patternOrNull?.sentence(atom)?.let { option(it) } ?: sentenceOption()
 
 fun Pattern.sentence(atom: Atom): Sentence =
@@ -83,12 +83,12 @@ fun Choice.sentence(link: AtomLink): Sentence =
 	linkOrNull!!.sentence(link)
 
 fun ChoiceLink.sentence(link: AtomLink): Sentence =
-	if (link.leftAtom == emptyAtom) sentence(either.word lineTo either.script.sentenceOption(link.rightAtom))
+	if (link.leftAtom == emptyAtom) sentence(either.word lineTo either.option.sentenceOption(link.rightAtom))
 	else choice.sentence(link.leftAtom.link.leftAtom linkTo link.rightAtom)
 
 // === Sentence to Atom conversion
 
-fun PatternScript.atom(sentenceScript: SentenceOption): Atom =
+fun PatternOption.atom(sentenceScript: SentenceOption): Atom =
 	if (patternOrNull == null) emptyAtom
 	else patternOrNull.atom(sentenceScript.sentenceOrNull!!)
 
@@ -112,7 +112,7 @@ fun Choice.atomLink(line: SentenceOptionLine): AtomLink =
 	linkOrNull!!.atomLink(line)
 
 fun ChoiceLink.atomLink(line: SentenceOptionLine): AtomLink =
-	if (either.word == line.word) emptyAtom linkTo either.script.atom(line.option)
+	if (either.word == line.word) emptyAtom linkTo either.option.atom(line.option)
 	else choice.atomLink(line).let { atomLink ->
 		atom(atomLink.leftAtom linkTo emptyAtom) linkTo atomLink.rightAtom
 	}

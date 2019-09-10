@@ -10,7 +10,7 @@ class EitherTest {
 			.sentenceLine
 			.assertEqualTo(eitherWord lineTo sentence(zeroWord))
 
-		(zeroWord eitherTo script(pattern(oneWord)))
+		(zeroWord eitherTo option(pattern(oneWord)))
 			.sentenceLine
 			.assertEqualTo(
 				eitherWord lineTo sentence(
@@ -25,7 +25,7 @@ class EitherTest {
 
 		(eitherWord lineTo sentence(zeroWord lineTo pattern(oneWord).bodySentence))
 			.failableEither
-			.assertSucceedsWith(zeroWord eitherTo script(pattern(oneWord)))
+			.assertSucceedsWith(zeroWord eitherTo option(pattern(oneWord)))
 
 		(poisonWord lineTo sentence(zeroWord lineTo pattern(oneWord).bodySentence))
 			.failableEither
