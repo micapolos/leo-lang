@@ -44,7 +44,7 @@ class TokenizerTest {
 
 	@Test
 	fun newline() {
-		assertFails { tokenizer().write("\n") }
+		tokenizer().write("\n").assertEqualTo(tokenizer())
 	}
 
 	@Test
