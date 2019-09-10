@@ -7,8 +7,9 @@ import leo9.push
 import leo9.seq
 import leo9.stack
 
-sealed class Sentence {
+sealed class Sentence: SentenceObject<Sentence>() {
 	override fun toString() = appendableString { it.append(this) }
+	override val sentenceWriter get() = sentenceWriter<Sentence>(sentenceWord) { this }
 }
 
 data class WordSentence(val word: Word) : Sentence() {
@@ -26,6 +27,8 @@ data class LinkSentence(val link: SentenceLink) : Sentence() {
 fun sentence(word: Word): Sentence = WordSentence(word)
 fun sentence(line: SentenceLine): Sentence = LineSentence(line)
 fun sentence(link: SentenceLink): Sentence = LinkSentence(link)
+
+val sentenceReader = sentenceReader(sentenceWord) { read(this) }
 
 val Sentence.wordOrNull: Word? get() = (this as? WordSentence)?.word
 val Sentence.lineOrNull: SentenceLine? get() = (this as? LineSentence)?.line

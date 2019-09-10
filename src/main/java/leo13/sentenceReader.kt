@@ -12,3 +12,9 @@ interface SentenceReader<out V> {
 	fun read(sentence: Sentence): Read<V> =
 		sentence.lineRead.readMap { read(this) }
 }
+
+fun <V> sentenceReader(word: Word, readBodyFn: Sentence.() -> Read<V>) =
+	object : SentenceReader<V> {
+		override val word = word
+		override fun readBody(sentence: Sentence) = sentence.readBodyFn()
+	}
