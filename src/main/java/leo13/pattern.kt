@@ -54,8 +54,8 @@ val Pattern.failableLine: Failable<PatternLine>
 
 fun Pattern.matches(sentence: Sentence): Boolean =
 	when (this) {
-		is WordPattern -> sentence is WordSentence && word == sentence.word
-		is LinePattern -> sentence is LineSentence && line.matches(sentence.line)
+		is WordPattern -> sentence is StartSentence && sentence.start is WordSentenceStart && word == sentence.start.word
+		is LinePattern -> sentence is StartSentence && sentence.start is LineSentenceStart && line.matches(sentence.start.line)
 		is LinkPattern -> sentence is LinkSentence && link.matches(sentence.link)
 		is ChoicePattern -> choice.matches(sentence)
 		is SentencePattern -> true
@@ -84,9 +84,15 @@ val SentenceLine.failablePattern: Failable<Pattern>
 val Sentence.failableBodyPattern: Failable<Pattern>
 	get() =
 		when (this) {
-			is WordSentence -> word.failableBodyPattern
-			is LineSentence -> line.failableBodyPattern
+			is StartSentence -> start.failableBodyPattern
 			is LinkSentence -> link.failableBodyPattern
+		}
+
+val SentenceStart.failableBodyPattern: Failable<Pattern>
+	get() =
+		when (this) {
+			is WordSentenceStart -> word.failableBodyPattern
+			is LineSentenceStart -> line.failableBodyPattern
 		}
 
 val Word.failableBodyPattern: Failable<Pattern>
@@ -156,9 +162,14 @@ fun Pattern.setOrNull(pattern: Pattern): Pattern? =
 
 fun pattern(sentence: Sentence): Pattern =
 	when (sentence) {
-		is WordSentence -> pattern(sentence.word)
-		is LineSentence -> pattern(patternLine(sentence.line))
+		is StartSentence -> pattern(sentence.start)
 		is LinkSentence -> pattern(patternLink(sentence.link))
+	}
+
+fun pattern(start: SentenceStart): Pattern =
+	when (start) {
+		is WordSentenceStart -> pattern(start.word)
+		is LineSentenceStart -> pattern(patternLine(start.line))
 	}
 
 fun Pattern.contains(pattern: Pattern): Boolean =

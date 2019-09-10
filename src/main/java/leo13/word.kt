@@ -3,8 +3,8 @@ package leo13
 import leo.base.appendableString
 import leo.base.fold
 import leo.base.nullOf
-import leo13.container.*
-import leo13.container.List
+import leo13.generic.*
+import leo13.generic.List
 
 data class Word(val letterList: List<Letter>) {
 	override fun toString() = appendableString { it.append(this) }

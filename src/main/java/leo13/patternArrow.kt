@@ -6,9 +6,14 @@ infix fun Pattern.arrowTo(pattern: Pattern) = PatternArrow(this, pattern)
 
 fun PatternArrow.matches(sentence: Sentence): Boolean =
 	when (sentence) {
-		is WordSentence -> false
-		is LineSentence -> false
+		is StartSentence -> matches(sentence.start)
 		is LinkSentence -> matches(sentence.link)
+	}
+
+fun PatternArrow.matches(sentence: SentenceStart): Boolean =
+	when (sentence) {
+		is WordSentenceStart -> false
+		is LineSentenceStart -> false
 	}
 
 fun PatternArrow.matches(link: SentenceLink): Boolean =

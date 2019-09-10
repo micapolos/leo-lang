@@ -12,7 +12,7 @@ fun Choice.matches(word: Word): Boolean =
 	linkOrNull != null && linkOrNull.matches(word)
 
 fun Choice.matches(sentence: Sentence): Boolean =
-	sentence is LineSentence && matches(sentence.line)
+	sentence is StartSentence && sentence.start is LineSentenceStart && matches(sentence.start.line)
 
 fun Choice.matches(line: SentenceLine): Boolean =
 	linkOrNull != null && linkOrNull.matches(line)
@@ -40,9 +40,15 @@ val SentenceLine.failableChoice: Failable<Choice>
 val Sentence.failableBodyChoice: Failable<Choice>
 	get() =
 		when (this) {
-			is WordSentence -> word.failableUnit(noneWord).map(choiceWord) { choice() }
-			is LineSentence -> line.failableEither.map(choiceWord) { choice(this) }
+			is StartSentence -> start.failableBodyChoice
 			is LinkSentence -> link.failableChoiceLink.map(choiceWord) { choice(this) }
+		}
+
+val SentenceStart.failableBodyChoice: Failable<Choice>
+	get() =
+		when (this) {
+			is WordSentenceStart -> word.failableUnit(noneWord).map(choiceWord) { choice() }
+			is LineSentenceStart -> line.failableEither.map(choiceWord) { choice(this) }
 		}
 
 fun Choice.contains(pattern: Pattern): Boolean =

@@ -3,7 +3,6 @@ package leo13
 import leo.base.*
 import leo13.script.Script
 import leo9.Stack
-import leo9.push
 import leo9.seq
 import leo9.stack
 
@@ -13,11 +12,7 @@ sealed class Sentence {
 	override fun toString() = appendableString { it.append(this) }
 }
 
-data class WordSentence(val word: Word) : Sentence() {
-	override fun toString() = super.toString()
-}
-
-data class LineSentence(val line: SentenceLine) : Sentence() {
+data class StartSentence(val start: SentenceStart) : Sentence() {
 	override fun toString() = super.toString()
 }
 
@@ -25,21 +20,22 @@ data class LinkSentence(val link: SentenceLink) : Sentence() {
 	override fun toString() = super.toString()
 }
 
-fun sentence(word: Word): Sentence = WordSentence(word)
-fun sentence(line: SentenceLine): Sentence = LineSentence(line)
+fun sentence(start: SentenceStart): Sentence = StartSentence(start)
 fun sentence(link: SentenceLink): Sentence = LinkSentence(link)
+fun sentence(word: Word): Sentence = sentence(start(word))
+fun sentence(line: SentenceLine): Sentence = sentence(start(line))
 
 val sentenceReader = sentenceReader(sentenceWord) { read(this) }
 
-val Sentence.wordOrNull: Word? get() = (this as? WordSentence)?.word
-val Sentence.lineOrNull: SentenceLine? get() = (this as? LineSentence)?.line
+val Sentence.startOrNull: SentenceStart? get() = (this as? StartSentence)?.start
 val Sentence.linkOrNull: SentenceLink? get() = (this as? LinkSentence)?.link
+val Sentence.wordOrNull: Word? get() = startOrNull?.wordOrNull
+val Sentence.lineOrNull: SentenceLine? get() = startOrNull?.lineOrNull
 
 val Sentence.optionLineOrNull: SentenceOptionLine?
 	get() =
 		when (this) {
-			is WordSentence -> sentenceOptionLine(word)
-			is LineSentence -> line.word lineTo option(line.sentence)
+			is StartSentence -> start.optionLineOrNull
 			is LinkSentence -> null
 		}
 
@@ -57,30 +53,32 @@ fun sentence(word: Word, vararg lines: SentenceLine) =
 
 fun Appendable.append(sentence: Sentence, indent: Indent = 0.indent): Appendable =
 	when (sentence) {
-		is WordSentence -> append(sentence.word)
-		is LineSentence -> append(sentence.line, indent)
+		is StartSentence -> append(sentence.start)
 		is LinkSentence -> append(sentence.link, indent)
 	}
 
 fun Sentence.lineSentenceOrNull(selectedWord: Word): Sentence? =
 	when (this) {
-		is WordSentence -> null
-		is LineSentence -> line.sentenceOrNull(selectedWord)
+		is StartSentence -> start.lineSentenceOrNull(selectedWord)
 		is LinkSentence -> link.lineSentenceOrNull(selectedWord)
 	}
 
 fun Sentence.replaceOrNull(newLine: SentenceLine): Sentence? =
 	when (this) {
-		is WordSentence -> null
-		is LineSentence -> line.replaceOrNull(newLine)?.let { sentence(it) }
+		is StartSentence -> start.replaceOrNull(newLine)?.let { sentence(it) }
 		is LinkSentence -> link.replaceOrNull(newLine)?.let { sentence(it) }
 	}
 
 fun Sentence.replaceOrNull(sentence: Sentence): Sentence? =
 	when (sentence) {
-		is WordSentence -> null
-		is LineSentence -> replaceOrNull(sentence.line)
+		is StartSentence -> replaceOrNull(sentence.start)
 		is LinkSentence -> replaceOrNull(sentence.link)
+	}
+
+fun Sentence.replaceOrNull(start: SentenceStart): Sentence? =
+	when (start) {
+		is WordSentenceStart -> null
+		is LineSentenceStart -> replaceOrNull(start.line)
 	}
 
 fun Sentence.replaceOrNull(link: SentenceLink): Sentence? =
@@ -101,23 +99,20 @@ fun Sentence.setOrNull(newSentence: Sentence): Sentence? =
 
 val Sentence.failableWord: Failable<Word>
 	get() =
-		(this as? WordSentence)
-			?.word
+		wordOrNull
 			?.run(::success)
 			?: failure(sentence(wordWord))
 
 val Sentence.failableLine: Failable<SentenceLine>
 	get() =
-		(this as? LineSentence)
-			?.line
+		lineOrNull
 			?.run(::success)
 			?: failure(sentence(lineWord))
 
 val Sentence.failableOptionLine: Failable<SentenceOptionLine>
 	get() =
 		when (this) {
-			is WordSentence -> success(sentenceOptionLine(word))
-			is LineSentence -> success(line.optionLine)
+			is StartSentence -> start.failableOptionLine
 			is LinkSentence -> failure(sentence(scriptWord))
 		}
 
@@ -135,15 +130,13 @@ fun sentence(script: Script): Sentence =
 val Sentence.legacyScript
 	get(): Script =
 		when (this) {
-			is WordSentence -> leo13.script.script(word.toString())
-			is LineSentence -> leo13.script.script(line.legacyLine)
+			is StartSentence -> start.legacyScript
 			is LinkSentence -> link.legacyScript
 		}
 
 fun Stack<SentenceOptionLine>.pushSentence(sentence: Sentence): Stack<SentenceOptionLine> =
 	when (sentence) {
-		is WordSentence -> push(sentence.word lineTo sentenceOption())
-		is LineSentence -> push(sentence.line.optionLine)
+		is StartSentence -> pushSentence(sentence.start)
 		is LinkSentence -> pushSentence(sentence.link)
 	}
 

@@ -1,4 +1,4 @@
-package leo13.container
+package leo13.generic
 
 import leo.base.fold
 import leo.base.nullOf
