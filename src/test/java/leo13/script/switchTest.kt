@@ -109,7 +109,7 @@ class SwitchTest {
 
 //	@Test
 //	fun choiceMatchOrNull() {
-//		leo13.script.switchOrNull(
+//		leo13.generic.script.switchOrNull(
 //			"zero" caseTo script("zero"),
 //			"one" caseTo script("one"))!!
 //			.choiceMatchOrNull(
@@ -121,7 +121,7 @@ class SwitchTest {
 //					match(either("zero", type("zero")), script("zero")),
 //					match(either("one", type("one")), script("one"))))
 //
-//		leo13.script.switchOrNull(
+//		leo13.generic.script.switchOrNull(
 //			"zero" caseTo script("zero"),
 //			"one" caseTo script("one"))!!
 //			.choiceMatchOrNull(

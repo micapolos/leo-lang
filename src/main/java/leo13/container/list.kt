@@ -1,4 +1,4 @@
-package leo13
+package leo13.container
 
 import leo.base.fold
 import leo.base.nullOf
@@ -35,7 +35,8 @@ fun <V, R> R.fold(list: List<V>, fn: R.(V) -> R): R =
 fun <V, R> R.foldOrNull(listOrNull: List<V>?, fn: R.(V) -> R): R =
 	updateIfNotNull(listOrNull) { fold(it, fn) }
 
-val <V> List<V>.reverse: List<V> get() =
+val <V> List<V>.reverse: List<V>
+	get() =
 	list(head).fold(this) { plus(it) }
 
 val <V> List<V>?.orNullReverse: List<V>? get() =
