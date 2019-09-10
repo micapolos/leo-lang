@@ -17,11 +17,4 @@ class ExpressionOperationTest {
 			.atom(atomBindings(), atom(atom(sentence(zeroWord)) linkTo atom(sentence(oneWord))))
 			.assertEqualTo(atom(sentence(oneWord)))
 	}
-//
-//	@Test
-//	fun switch() {
-//		operation(switch())
-//			.atom(atomBindings(), atom(atom(sentence(zeroWord)) linkTo atom(sentence(oneWord))))
-//			.assertEqualTo(atom(sentence(oneWord)))
-//	}
 }
