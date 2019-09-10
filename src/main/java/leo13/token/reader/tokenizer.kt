@@ -1,5 +1,6 @@
 package leo13.token.reader
 
+import leo.base.orNullIf
 import leo.base.updateIfNotNull
 import leo13.base.Writer
 import leo13.base.WriterObject
@@ -104,7 +105,8 @@ val Tokenizer.pushNewlineOrNull: Tokenizer?
 	get() =
 		when (head) {
 			is InputHead ->
-				if (head.input.name.isEmpty()) null
+				if (head.input.name.isEmpty())
+					orNullIf(parent.indentOrNull != null)
 				else Tokenizer(
 					tokenWriter.write(token(opening(head.input.name))),
 					parent(),
