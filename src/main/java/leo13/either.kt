@@ -13,20 +13,20 @@ fun Either.matches(line: SentenceLine): Boolean =
 
 val Either.sentenceLine: SentenceLine
 	get() =
-		eitherWord lineTo bodySentenceScriptLine.sentence
+		eitherWord lineTo bodySentenceOptionLine.sentence
 
-val Either.bodySentenceScriptLine: SentenceScriptLine
+val Either.bodySentenceOptionLine: SentenceOptionLine
 	get() =
 		word lineTo script.bodySentenceScript
 
-val SentenceScriptLine.failableBodyEither: Failable<Either>
+val SentenceOptionLine.failableBodyEither: Failable<Either>
 	get() =
-		if (script.sentenceOrNull == null) success(either(word))
-		else script.sentenceOrNull.failableBodyPattern.map { word eitherTo script(this) }
+		if (option.sentenceOrNull == null) success(either(word))
+		else option.sentenceOrNull.failableBodyPattern.map { word eitherTo script(this) }
 
 val Sentence.failableBodyEither: Failable<Either>
 	get() =
-		failableScriptLine.failableMap { failableBodyEither }
+		failableOptionLine.failableMap { failableBodyEither }
 
 val SentenceLine.failableEither: Failable<Either>
 	get() =

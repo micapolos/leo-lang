@@ -5,7 +5,7 @@ data class PatternScript(val patternOrNull: Pattern?)
 fun patternScript(patternOrNull: Pattern? = null) = PatternScript(patternOrNull)
 fun script(pattern: Pattern) = patternScript(pattern)
 
-val PatternScript.bodySentenceScript: SentenceScript
+val PatternScript.bodySentenceScript: SentenceOption
 	get() =
-		if (patternOrNull == null) sentenceScript()
-		else script(patternOrNull.bodySentence)
+		if (patternOrNull == null) sentenceOption()
+		else option(patternOrNull.bodySentence)

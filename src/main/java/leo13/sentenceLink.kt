@@ -33,5 +33,5 @@ val SentenceLink.legacyScript: Script
 	get() =
 		sentence.legacyScript.plus(line.legacyLine)
 
-fun Stack<SentenceScriptLine>.pushSentence(link: SentenceLink): Stack<SentenceScriptLine> =
-	push(link.line.scriptLine).pushSentence(link.sentence)
+fun Stack<SentenceOptionLine>.pushSentence(link: SentenceLink): Stack<SentenceOptionLine> =
+	push(link.line.optionLine).pushSentence(link.sentence)

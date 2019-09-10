@@ -1,6 +1,6 @@
 package leo13
 
-var errorSentenceScript: SentenceScript = sentenceScript()
+var errorSentenceScript: SentenceOption = sentenceOption()
 
 fun errorWrite(line: SentenceLine) {
 	errorSentenceScript = errorSentenceScript.plus(line)

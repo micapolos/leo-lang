@@ -10,7 +10,7 @@ fun ChoiceLink.matches(word: Word): Boolean =
 fun ChoiceLink.matches(line: SentenceLine): Boolean =
 	either.matches(line) || choice.matches(line)
 
-val ChoiceLink.bodyScript: SentenceScript
+val ChoiceLink.bodyScript: SentenceOption
 	get() =
 		choice.bodyScript.plus(either.sentenceLine)
 

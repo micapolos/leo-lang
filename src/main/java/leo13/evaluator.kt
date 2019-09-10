@@ -43,15 +43,15 @@ fun Evaluator.plusError(line: ValueLine): Evaluator =
 						sentenceLine,
 						plusWord lineTo sentence(line.sentenceLine))))))
 
-fun Evaluator.plus(script: SentenceScript): Evaluator =
+fun Evaluator.plus(script: SentenceOption): Evaluator =
 	fold(script.lineSeq) { plus(it) }
 
 fun Evaluator.plus(sentence: Sentence): Evaluator =
-	fold(sentence.scriptLineSeq) { plus(it) }
+	fold(sentence.optionLineSeq) { plus(it) }
 
-fun Evaluator.plus(line: SentenceScriptLine): Evaluator =
-	if (line.script.sentenceOrNull == null) plus(line.word)
-	else plus(line.word lineTo line.script.sentenceOrNull)
+fun Evaluator.plus(line: SentenceOptionLine): Evaluator =
+	if (line.option.sentenceOrNull == null) plus(line.word)
+	else plus(line.word lineTo line.option.sentenceOrNull)
 
 fun Evaluator.plus(line: SentenceLine): Evaluator =
 	when (line.word) {

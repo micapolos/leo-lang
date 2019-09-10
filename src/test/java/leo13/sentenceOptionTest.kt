@@ -6,19 +6,19 @@ import leo13.script.lineTo
 import leo13.script.script
 import org.junit.Test
 
-class SentenceScriptTest {
+class SentenceOptionTest {
 	@Test
 	fun sentenceScriptFromLegacy() {
-		sentenceScript(script())
-			.assertEqualTo(sentenceScript())
+		sentenceOption(script())
+			.assertEqualTo(sentenceOption())
 
-		sentenceScript(
+		sentenceOption(
 			script(
 				"x" lineTo script("zero"),
 				"y" lineTo script("one"),
 				"point" lineTo script()))
 			.assertEqualTo(
-				sentenceScript(
+				sentenceOption(
 					sentence(
 						pointWord lineTo sentence(
 							xWord lineTo sentence(zeroWord),
@@ -27,11 +27,11 @@ class SentenceScriptTest {
 
 	@Test
 	fun legacyScript() {
-		sentenceScript()
+		sentenceOption()
 			.legacyScript
 			.assertEqualTo(script())
 
-		sentenceScript(
+		sentenceOption(
 			sentence(
 				pointWord lineTo sentence(
 					xWord lineTo sentence(zeroWord),
@@ -46,27 +46,27 @@ class SentenceScriptTest {
 
 	@Test
 	fun lineSeq() {
-		sentenceScript()
+		sentenceOption()
 			.lineSeq
 			.assertContains()
 
-		sentenceScript(
+		sentenceOption(
 			sentence(
 				xWord lineTo sentence(zeroWord),
 				yWord lineTo sentence(oneWord)))
 			.lineSeq
 			.assertContains(
-				xWord lineTo script(sentence(zeroWord)),
-				yWord lineTo script(sentence(oneWord)))
+				xWord lineTo option(sentence(zeroWord)),
+				yWord lineTo option(sentence(oneWord)))
 
-		sentenceScript(
+		sentenceOption(
 			sentence(
 				zeroWord,
 				plusWord lineTo sentence(oneWord)))
 			.lineSeq
 			.assertContains(
-				zeroWord lineTo sentenceScript(),
-				plusWord lineTo script(sentence(oneWord)))
+				zeroWord lineTo sentenceOption(),
+				plusWord lineTo option(sentence(oneWord)))
 
 	}
 }

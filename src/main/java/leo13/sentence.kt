@@ -35,11 +35,11 @@ val Sentence.wordOrNull: Word? get() = (this as? WordSentence)?.word
 val Sentence.lineOrNull: SentenceLine? get() = (this as? LineSentence)?.line
 val Sentence.linkOrNull: SentenceLink? get() = (this as? LinkSentence)?.link
 
-val Sentence.scriptLineOrNull: SentenceScriptLine?
+val Sentence.optionLineOrNull: SentenceOptionLine?
 	get() =
 		when (this) {
-			is WordSentence -> sentenceScriptLine(word)
-			is LineSentence -> line.word lineTo script(line.sentence)
+			is WordSentence -> sentenceOptionLine(word)
+			is LineSentence -> line.word lineTo option(line.sentence)
 			is LinkSentence -> null
 		}
 
@@ -113,11 +113,11 @@ val Sentence.failableLine: Failable<SentenceLine>
 			?.run(::success)
 			?: failure(sentence(lineWord))
 
-val Sentence.failableScriptLine: Failable<SentenceScriptLine>
+val Sentence.failableOptionLine: Failable<SentenceOptionLine>
 	get() =
 		when (this) {
-			is WordSentence -> success(sentenceScriptLine(word))
-			is LineSentence -> success(line.scriptLine)
+			is WordSentence -> success(sentenceOptionLine(word))
+			is LineSentence -> success(line.optionLine)
 			is LinkSentence -> failure(sentence(scriptWord))
 		}
 
@@ -130,7 +130,7 @@ val Sentence.failableLink: Failable<SentenceLink>
 
 // Normalizing conversion from legacy Script
 fun sentence(script: Script): Sentence =
-	sentenceScript(script).sentenceOrNull!!
+	sentenceOption(script).sentenceOrNull!!
 
 val Sentence.legacyScript
 	get(): Script =
@@ -140,13 +140,13 @@ val Sentence.legacyScript
 			is LinkSentence -> link.legacyScript
 		}
 
-fun Stack<SentenceScriptLine>.pushSentence(sentence: Sentence): Stack<SentenceScriptLine> =
+fun Stack<SentenceOptionLine>.pushSentence(sentence: Sentence): Stack<SentenceOptionLine> =
 	when (sentence) {
-		is WordSentence -> push(sentence.word lineTo sentenceScript())
-		is LineSentence -> push(sentence.line.scriptLine)
+		is WordSentence -> push(sentence.word lineTo sentenceOption())
+		is LineSentence -> push(sentence.line.optionLine)
 		is LinkSentence -> pushSentence(sentence.link)
 	}
 
-val Sentence.scriptLineSeq: Seq<SentenceScriptLine>
+val Sentence.optionLineSeq: Seq<SentenceOptionLine>
 	get() =
-		stack<SentenceScriptLine>().pushSentence(this).seq
+		stack<SentenceOptionLine>().pushSentence(this).seq

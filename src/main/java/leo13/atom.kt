@@ -60,8 +60,8 @@ val Atom.bodySentence: Sentence
 
 // === Atom to Sentence conversion
 
-fun PatternScript.sentenceScript(atom: Atom): SentenceScript =
-	patternOrNull?.sentence(atom)?.let { script(it) } ?: sentenceScript()
+fun PatternScript.sentenceOption(atom: Atom): SentenceOption =
+	patternOrNull?.sentence(atom)?.let { option(it) } ?: sentenceOption()
 
 fun Pattern.sentence(atom: Atom): Sentence =
 	when (this) {
@@ -83,12 +83,12 @@ fun Choice.sentence(link: AtomLink): Sentence =
 	linkOrNull!!.sentence(link)
 
 fun ChoiceLink.sentence(link: AtomLink): Sentence =
-	if (link.leftAtom == emptyAtom) sentence(either.word lineTo either.script.sentenceScript(link.rightAtom))
+	if (link.leftAtom == emptyAtom) sentence(either.word lineTo either.script.sentenceOption(link.rightAtom))
 	else choice.sentence(link.leftAtom.link.leftAtom linkTo link.rightAtom)
 
 // === Sentence to Atom conversion
 
-fun PatternScript.atom(sentenceScript: SentenceScript): Atom =
+fun PatternScript.atom(sentenceScript: SentenceOption): Atom =
 	if (patternOrNull == null) emptyAtom
 	else patternOrNull.atom(sentenceScript.sentenceOrNull!!)
 
@@ -97,7 +97,7 @@ fun Pattern.atom(sentence: Sentence): Atom =
 		is WordPattern -> emptyAtom
 		is LinePattern -> line.atom(sentence.lineOrNull!!)
 		is LinkPattern -> atom(link.atom(sentence.linkOrNull!!))
-		is ChoicePattern -> atom(choice.atomLink(sentence.scriptLineOrNull!!))
+		is ChoicePattern -> atom(choice.atomLink(sentence.optionLineOrNull!!))
 		is SentencePattern -> atom(sentence)
 		is ArrowPattern -> throw IllegalArgumentException()
 	}
@@ -108,11 +108,11 @@ fun PatternLine.atom(sentenceLine: SentenceLine): Atom =
 fun PatternLink.atom(sentenceLink: SentenceLink): AtomLink =
 	pattern.atom(sentenceLink.sentence) linkTo line.atom(sentenceLink.line)
 
-fun Choice.atomLink(line: SentenceScriptLine): AtomLink =
+fun Choice.atomLink(line: SentenceOptionLine): AtomLink =
 	linkOrNull!!.atomLink(line)
 
-fun ChoiceLink.atomLink(line: SentenceScriptLine): AtomLink =
-	if (either.word == line.word) emptyAtom linkTo either.script.atom(line.script)
+fun ChoiceLink.atomLink(line: SentenceOptionLine): AtomLink =
+	if (either.word == line.word) emptyAtom linkTo either.script.atom(line.option)
 	else choice.atomLink(line).let { atomLink ->
 		atom(atomLink.leftAtom linkTo emptyAtom) linkTo atomLink.rightAtom
 	}
