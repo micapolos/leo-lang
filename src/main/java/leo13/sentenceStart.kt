@@ -1,18 +1,40 @@
 package leo13
 
 import leo.base.Indent
+import leo.base.appendableString
+import leo.base.fold
 import leo.base.indent
+import leo13.generic.List
+import leo13.generic.foldOrNull
 import leo13.script.Script
 import leo9.Stack
 import leo9.push
 
-sealed class SentenceStart
+sealed class SentenceStart {
+	override fun toString() = appendableString { it.append(this) }
+}
 
-data class WordSentenceStart(val word: Word) : SentenceStart()
-data class LineSentenceStart(val line: SentenceLine) : SentenceStart()
+data class WordSentenceStart(val word: Word) : SentenceStart() {
+	override fun toString() = super.toString()
+}
+
+data class LineSentenceStart(val line: SentenceLine) : SentenceStart() {
+	override fun toString() = super.toString()
+}
 
 fun start(word: Word): SentenceStart = WordSentenceStart(word)
 fun start(line: SentenceLine): SentenceStart = LineSentenceStart(line)
+
+fun start(word: Word, sentenceStartOrNull: SentenceStart?): SentenceStart =
+	if (sentenceStartOrNull == null) start(word)
+	else start(word lineTo sentence(sentenceStartOrNull))
+
+fun start(word: Word, sentenceOrNull: Sentence?): SentenceStart =
+	if (sentenceOrNull == null) start(word)
+	else start(word lineTo sentenceOrNull)
+
+fun SentenceStart.plus(word: Word): SentenceStart =
+	start(word lineTo sentence(this))
 
 val SentenceStart.wordOrNull get() = (this as? WordSentenceStart)?.word
 val SentenceStart.lineOrNull get() = (this as? LineSentenceStart)?.line
@@ -62,3 +84,10 @@ fun Stack<SentenceOptionLine>.pushSentence(start: SentenceStart): Stack<Sentence
 		is LineSentenceStart -> push(start.line.optionLine)
 	}
 
+fun sentenceStart(wordList: List<Word>): SentenceStart =
+	wordList.run {
+		start(head).foldOrNull(tail) { plus(it) }
+	}
+
+fun sentenceStart(word: Word, vararg words: Word) =
+	start(word).fold(words) { plus(it) }

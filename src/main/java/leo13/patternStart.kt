@@ -13,20 +13,21 @@ fun start(any: SentenceAny): PatternStart = AnyPatternStart(any)
 fun start(arrow: PatternArrow): PatternStart = ArrowPatternStart(arrow)
 
 val patternStartSentenceWriter: SentenceLineWriter<PatternStart> =
-	sealedWriter(
-		startWord,
-		wordChoiceSentenceWriter,
-		lineChoiceSentenceWriter,
-		sentenceAnySentenceWriter,
-		patternArrowSentenceWriter
-	) { fn1, fn2, fn3, fn4 ->
-		when (this) {
-			is WordChoicePatternStart -> choice.fn1()
-			is LineChoicePatternStart -> choice.fn2()
-			is AnyPatternStart -> any.fn3()
-			is ArrowPatternStart -> arrow.fn4()
-		}
-	}
+	TODO()
+//	sealedWriter(
+//		startWord,
+//		wordChoiceSentenceWriter,
+//		lineChoiceSentenceWriter,
+//		sentenceAnySentenceWriter,
+//		patternArrowSentenceWriter
+//	) { fn1, fn2, fn3, fn4 ->
+//		when (this) {
+//			is WordChoicePatternStart -> choice.fn1()
+//			is LineChoicePatternStart -> choice.fn2()
+//			is AnyPatternStart -> any.fn3()
+//			is ArrowPatternStart -> arrow.fn4()
+//		}
+//	}
 
 fun PatternStart.matches(start: SentenceStart): Boolean =
 	when (this) {

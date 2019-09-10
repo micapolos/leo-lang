@@ -47,6 +47,10 @@ val patternSentenceWriter =
 		}
 	}
 
+val Pattern.sentence
+	get() =
+		patternSentenceWriter.bodySentence(this)
+
 fun Pattern.matches(sentence: Sentence): Boolean =
 	when (this) {
 		is StartPattern -> sentence is StartSentence && start.matches(sentence.start)

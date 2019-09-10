@@ -1,6 +1,9 @@
 package leo13
 
 import leo.base.*
+import leo13.generic.List
+import leo13.generic.foldOrNull
+import leo13.generic.reverse
 import leo13.script.Script
 import leo9.Stack
 import leo9.seq
@@ -47,6 +50,11 @@ infix fun Sentence.plus(word: Word): Sentence =
 
 fun sentence(line: SentenceLine, vararg lines: SentenceLine) =
 	sentence(line).fold(lines) { plus(it) }
+
+fun sentence(lineList: List<SentenceLine>) =
+	lineList.reverse.run {
+		sentence(head).foldOrNull(tail) { plus(it) }
+	}
 
 fun sentence(word: Word, vararg lines: SentenceLine) =
 	sentence(word).fold(lines) { plus(it) }
