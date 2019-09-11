@@ -38,3 +38,14 @@ val Choice.scriptLine: ScriptLine
 			.onlyOrNull
 			?.run { bodyScriptLine }
 			?: choiceName lineTo eitherStack.map { scriptLine }.script
+
+fun Choice.linePatternOrNull(name: String): Pattern? =
+	eitherStack
+		.onlyOrNull
+		?.run { linePatternOrNull(name) }
+
+fun Choice.replaceLineOrNull(line: PatternLine): Choice? =
+	eitherStack
+		.onlyOrNull
+		?.run { replaceLineOrNull(line) }
+		?.run { choice(this) }

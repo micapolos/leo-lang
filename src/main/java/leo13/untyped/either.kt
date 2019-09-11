@@ -1,5 +1,6 @@
 package leo13.untyped
 
+import leo.base.notNullIf
 import leo.base.notNullOrError
 import leo13.script.ScriptLine
 import leo13.script.lineTo
@@ -37,3 +38,13 @@ val Either.bodyScriptLine: ScriptLine
 val Either.scriptLine: ScriptLine
 	get() =
 		eitherName lineTo script(bodyScriptLine)
+
+fun Either.linePatternOrNull(name: String): Pattern? =
+	notNullIf(this.name == name) {
+		pattern(name lineTo rhs)
+	}
+
+fun Either.replaceLineOrNull(line: PatternLine): Either? =
+	notNullIf(name == line.name) {
+		name eitherTo line.rhs
+	}

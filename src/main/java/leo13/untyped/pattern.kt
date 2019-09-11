@@ -37,6 +37,28 @@ fun Pattern.matches(script: Script): Boolean =
 		}
 	}
 
+fun Pattern.linePatternOrNull(name: String): Pattern? =
+	choiceStack.mapFirst { linePatternOrNull(name) }
+
+fun Pattern.replaceLineOrNull(line: PatternLine): Pattern? =
+	when (choiceStack) {
+		is EmptyStack -> null
+		is LinkStack -> choiceStack
+			.link
+			.value
+			.replaceLineOrNull(line)
+			?.let { replaced -> choiceStack.link.stack.push(replaced).pattern }
+			?: choiceStack
+				.link
+				.stack
+				.pattern
+				.replaceLineOrNull(line)
+				?.plus(choiceStack.link.value)
+	}
+
+fun Pattern.getOrNull(name: String): Pattern? =
+	choiceStack.linkOrNull?.value?.linePatternOrNull(name)
+
 val patternName: String = "pattern"
 
 val Script.unsafeBodyPattern: Pattern
