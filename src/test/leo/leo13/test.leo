@@ -1,4 +1,2 @@
-bit: zero
-of: bit: choice
-	either: zero
-	either: one
+define: zero gives: one
+zero

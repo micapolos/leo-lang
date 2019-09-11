@@ -1,49 +1,62 @@
 package leo13.untyped
 
-import leo.base.fold
-import leo.base.orIfNull
+import leo.base.notNullOrError
 import leo13.script.*
+import leo13.script.Script
+import leo9.*
 
-data class Pattern(val ruleOrNull: PatternRule?)
+data class Pattern(val choiceStack: Stack<Choice>) {
+	override fun toString() = bodyScript.toString()
+}
 
-fun pattern(ruleOrNull: PatternRule?) = Pattern(ruleOrNull)
+val Stack<Choice>.pattern get() = pattern(this)
 
-fun pattern(vararg lines: PatternLine) =
-	pattern(null).fold(lines) { plus(it) }
+fun pattern(choiceStack: Stack<Choice>) = Pattern(choiceStack)
 
-fun pattern(dynamic: PatternRuleDynamic, vararg lines: PatternLine) =
-	pattern(rule(dynamic)).fold(lines) { plus(it) }
+fun pattern(vararg choices: Choice) =
+	pattern(stack(*choices))
 
-fun pattern(choice: Choice, vararg lines: PatternLine) =
-	pattern(dynamic(choice), *lines)
-
-fun pattern(script: ObjectScript, vararg lines: PatternLine) =
-	pattern(dynamic(script), *lines)
+fun pattern(line: PatternLine, vararg lines: PatternLine): Pattern =
+	pattern(stack(line, *lines).map { choice(name eitherTo rhs) })
 
 fun pattern(name: String) = pattern(name lineTo pattern())
 
-fun Pattern.plus(line: PatternLine) =
-	if (ruleOrNull == null) pattern(rule(line))
-	else pattern(ruleOrNull.plus(line))
+fun Pattern.plus(choice: Choice) =
+	pattern(choiceStack.push(choice))
 
-fun pattern(script: Script): Pattern =
-	patternReader.unsafeBodyValue(script)
+fun Pattern.plus(line: PatternLine) =
+	plus(choice(line))
 
 fun Pattern.matches(script: Script): Boolean =
-	if (ruleOrNull == null) script.isEmpty
-	else ruleOrNull.matches(script)
+	when (choiceStack) {
+		is EmptyStack -> true
+		is LinkStack -> when (script.lineStack) {
+			is EmptyStack -> false
+			is LinkStack -> choiceStack.link.value.matches(script.lineStack.link.value)
+				&& pattern(choiceStack.link.stack).matches(Script(script.lineStack.link.stack))
+		}
+	}
 
 val patternName: String = "pattern"
 
-val patternReader: Reader<Pattern> =
-	reader(patternName) {
-		if (isEmpty) pattern(null)
-		else pattern(patternRuleReader.unsafeBodyValue(this))
-	}
+val Script.unsafeBodyPattern: Pattern
+	get() =
+		lineStack.map { unsafeChoice }.pattern
 
-val patternWriter: Writer<Pattern> =
-	writer(patternName) {
-		ruleOrNull
-			?.run { patternRuleWriter.bodyScript(this) }
-			.orIfNull { script() }
-	}
+val Script.unsafePattern: Pattern
+	get() =
+		onlyLineOrNull
+			?.rhsOrNull(patternName)
+			.notNullOrError("pattern")
+			.unsafeBodyPattern
+
+val Pattern.bodyScript: Script
+	get() =
+		choiceStack.map { scriptLine }.script
+
+val Pattern.script: Script
+	get() =
+		script(patternName lineTo bodyScript)
+
+val patternReader get() = reader(patternName) { unsafeBodyPattern }
+val patternWriter get() = writer<Pattern>(patternName) { bodyScript }

@@ -1,26 +1,21 @@
 package leo13.untyped
 
 import leo13.script.*
-import leo9.Stack
-import leo9.any
-import leo9.push
-import leo9.stack
+import leo13.script.Script
+import leo13.script.ScriptLine
+import leo9.*
 
 const val choiceName = "choice"
 
-val choiceReader: Reader<Choice> =
-	stackReader(choiceName, optionReader, ::choice)
-
-val choiceWriter: Writer<Choice> =
-	stackWriter(choiceName, optionWriter, Choice::optionStack)
-
-data class Choice(val optionStack: Stack<Option>) {
-	override fun toString() = choiceWriter.string(this)
+data class Choice(val eitherStack: Stack<Either>) {
+	override fun toString() = scriptLine.toString()
 }
 
-fun choice(optionStack: Stack<Option>) = Choice(optionStack)
-fun choice(vararg options: Option) = choice(stack(*options))
-fun Choice.plus(option: Option) = choice(optionStack.push(option))
+val Stack<Either>.choice get() = Choice(this)
+fun choice(eitherStack: Stack<Either>) = Choice(eitherStack)
+fun choice(vararg eithers: Either) = choice(stack(*eithers))
+fun Choice.plus(either: Either) = choice(eitherStack.push(either))
+fun choice(line: PatternLine) = choice(line.name eitherTo line.rhs)
 
 fun Choice.matches(script: Script): Boolean =
 	script
@@ -29,4 +24,17 @@ fun Choice.matches(script: Script): Boolean =
 		?: false
 
 fun Choice.matches(scriptLine: ScriptLine): Boolean =
-	optionStack.any { matches(scriptLine) }
+	eitherStack.any { matches(scriptLine) }
+
+val ScriptLine.unsafeChoice: Choice
+	get() =
+		if (name == choiceName)
+			rhs.lineStack.map { unsafeEither }.choice
+		else choice(unsafeBodyEither)
+
+val Choice.scriptLine: ScriptLine
+	get() =
+		eitherStack
+			.onlyOrNull
+			?.run { bodyScriptLine }
+			?: choiceName lineTo eitherStack.map { scriptLine }.script

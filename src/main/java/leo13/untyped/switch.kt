@@ -24,7 +24,8 @@ fun Switch.plus(case: Case) = Switch(caseStack.push(case))
 
 fun Switch.resolveCaseRhsOrNull(script: Script): Script? =
 	script
-		.onlyLineOrNull
+		.linkOrNull
+		?.line
 		?.rhs
 		?.onlyLineOrNull
 		?.let { line -> caseRhsOrNull(line) }

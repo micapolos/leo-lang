@@ -47,7 +47,7 @@ fun Context.resolveDefineOrNull(script: Script): Context? =
 		.linkOrNull
 		?.let { link ->
 			when (link.line.name) {
-				"gives" -> plus(function(patternReader.unsafeBodyValue(link.lhs.normalize), body(this, link.line.rhs)))
+				"gives" -> plus(function(link.lhs.normalize.unsafeBodyPattern, body(this, link.line.rhs)))
 				else -> null
 			}
 		}

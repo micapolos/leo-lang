@@ -32,16 +32,16 @@ class PatternTest {
 			.scriptLine(
 				pattern(
 					choice(
-						"zero" optionTo pattern("one"),
-						"one" optionTo pattern("two")),
-					"foo" lineTo pattern("bar"),
-					"zoo" lineTo pattern("zar")))
+						"zero" eitherTo pattern("one"),
+						"one" eitherTo pattern("two")))
+					.plus("foo" lineTo pattern("bar"))
+					.plus("zoo" lineTo pattern("zar")))
 			.assertEqualTo(
 				"pattern" lineTo script(
 					"choice" lineTo script(
-						"option" lineTo script(
+						"either" lineTo script(
 							"zero" lineTo script("one")),
-						"option" lineTo script(
+						"either" lineTo script(
 							"one" lineTo script("two"))),
 					"foo" lineTo script("bar"),
 					"zoo" lineTo script("zar")))
@@ -62,30 +62,23 @@ class PatternTest {
 	}
 
 	@Test
-	fun reader_dynamicScript() {
-		patternReader
-			.unsafeValue("pattern" lineTo script("script"))
-			.assertEqualTo(pattern(script))
-	}
-
-	@Test
 	fun reader_dynamic() {
 		patternReader
 			.unsafeValue(
 				"pattern" lineTo script(
 					"choice" lineTo script(
-						"option" lineTo script(
+						"either" lineTo script(
 							"zero" lineTo script("one")),
-						"option" lineTo script(
+						"either" lineTo script(
 							"one" lineTo script("two"))),
 					"foo" lineTo script("bar"),
 					"zoo" lineTo script("zar")))
 			.assertEqualTo(
 				pattern(
 					choice(
-						"zero" optionTo pattern("one"),
-						"one" optionTo pattern("two")),
-					"foo" lineTo pattern("bar"),
-					"zoo" lineTo pattern("zar")))
+						"zero" eitherTo pattern("one"),
+						"one" eitherTo pattern("two")))
+					.plus("foo" lineTo pattern("bar"))
+					.plus("zoo" lineTo pattern("zar")))
 	}
 }

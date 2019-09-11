@@ -44,7 +44,7 @@ fun Script.resolveOrNull(line: ScriptLine): Script? =
 
 fun Script.resolveGetOrNull(line: ScriptLine): Script? =
 	ifOrNull(isEmpty) {
-		line.rhs.onlyLineOrNull?.let { line2 ->
+		line.rhs.linkOrNull?.line?.let { line2 ->
 			line2.rhs.firstRhsOrNull(line.name)?.let { rhs ->
 				script(line.name lineTo rhs)
 			}
@@ -52,10 +52,12 @@ fun Script.resolveGetOrNull(line: ScriptLine): Script? =
 	}
 
 fun Script.resolveSetOrNull(rhs: Script): Script? =
-	onlyLineOrNull?.let { line ->
-		line.rhs
-			.orNullFold(rhs.lineSeq) { setFirstRhsOrNull(it) }
-			?.let { setLine -> script(line.name lineTo setLine) }
+	linkOrNull?.let { link ->
+		link.line.let { line ->
+			line.rhs
+				.orNullFold(rhs.lineSeq) { setFirstRhsOrNull(it) }
+				?.let { setLine -> link(link.lhs, line.name lineTo setLine).script }
+		}
 	}
 
 fun Script.resolveBodyOrNull(rhs: Script): Script? =

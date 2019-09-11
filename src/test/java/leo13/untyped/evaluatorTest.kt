@@ -18,7 +18,7 @@ class evaluatorTest {
 					context()
 						.plus(
 							function(
-								pattern(script("zero")),
+								pattern("zero"),
 								body(context(), script("one"))))))
 	}
 
@@ -28,7 +28,7 @@ class evaluatorTest {
 			context()
 				.plusFunction { context ->
 					function(
-						pattern(script("foo")),
+						pattern("foo"),
 						body(context, script("bar")))
 				}
 
@@ -46,12 +46,12 @@ class evaluatorTest {
 			context()
 				.plusFunction { context ->
 					function(
-						pattern(script("foo")),
+						pattern("foo"),
 						body(context, script("bar")))
 				}
 				.plusFunction { context ->
 					function(
-						pattern(script("zoo")),
+						pattern("zoo"),
 						body(context, script("foo")))
 				}
 
@@ -69,7 +69,7 @@ class evaluatorTest {
 			context()
 				.plusFunction { context ->
 					function(
-						pattern(script("foo")),
+						pattern("foo"),
 						body(context, script("foo")))
 				}
 
