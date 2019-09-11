@@ -13,3 +13,9 @@ val SentenceLine.wordCaseRead: Read<WordCase>
 		sentenceRead(caseWord)
 			.readMap { wordRead }
 			.map { case(this) }
+
+fun wordCaseResult(sentence: Sentence): Result<WordCase, WordCaseError> =
+	sentence
+		.wordResult
+		.mapSuccess { case(this) }
+		.mapFailure { wordCaseError(this) }

@@ -132,3 +132,9 @@ val Sentence.lineListOrNull: List<SentenceLine>?
 			is StartSentence -> start.lineListOrNull
 			is LinkSentence -> link.lineListOrNull
 		}
+
+val Sentence.wordResult: Result<Word, SentenceWordError>
+	get() =
+		wordOrNull
+			?.let { successResult(it) }
+			?: failureResult(sentenceWordError(this))
