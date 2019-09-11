@@ -3,7 +3,7 @@ package leo13
 import leo.base.assertEqualTo
 import kotlin.test.Test
 
-class SyntaxCaseTest {
+class LineCaseTest {
 	@Test
 	fun sentenceLine() {
 		(zeroWord caseTo syntax(start(syntax(oneWord))))

@@ -26,3 +26,7 @@ build/*
 out/*
 .idea/*
 .gradle/*
+
+# Idris compiled
+*.ibc
+

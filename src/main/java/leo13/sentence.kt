@@ -125,3 +125,10 @@ fun Stack<SentenceOptionLine>.pushSentence(sentence: Sentence): Stack<SentenceOp
 val Sentence.optionLineSeq: Seq<SentenceOptionLine>
 	get() =
 		stack<SentenceOptionLine>().pushSentence(this).seq
+
+val Sentence.lineListOrNull: List<SentenceLine>?
+	get() =
+		when (this) {
+			is StartSentence -> start.lineListOrNull
+			is LinkSentence -> link.lineListOrNull
+		}

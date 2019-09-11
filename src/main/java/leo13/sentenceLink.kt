@@ -4,6 +4,8 @@ import leo.base.Indent
 import leo.base.append
 import leo.base.appendableString
 import leo.base.indent
+import leo13.generic.List
+import leo13.generic.plus
 import leo13.script.Script
 import leo13.script.plus
 import leo9.Stack
@@ -35,3 +37,7 @@ val SentenceLink.legacyScript: Script
 
 fun Stack<SentenceOptionLine>.pushSentence(link: SentenceLink): Stack<SentenceOptionLine> =
 	push(link.line.optionLine).pushSentence(link.sentence)
+
+val SentenceLink.lineListOrNull: List<SentenceLine>?
+	get() =
+		sentence.lineListOrNull?.plus(line)

@@ -6,6 +6,7 @@ import leo.base.fold
 import leo.base.indent
 import leo13.generic.List
 import leo13.generic.foldOrNull
+import leo13.generic.list
 import leo13.script.Script
 import leo9.Stack
 import leo9.push
@@ -24,6 +25,8 @@ data class LineSentenceStart(val line: SentenceLine) : SentenceStart() {
 
 fun start(word: Word): SentenceStart = WordSentenceStart(word)
 fun start(line: SentenceLine): SentenceStart = LineSentenceStart(line)
+
+val StartSentence.lineOrNull get() = (this as? LineSentenceStart)?.line
 
 fun start(word: Word, sentenceStartOrNull: SentenceStart?): SentenceStart =
 	if (sentenceStartOrNull == null) start(word)
@@ -91,3 +94,7 @@ fun sentenceStart(wordList: List<Word>): SentenceStart =
 
 fun sentenceStart(word: Word, vararg words: Word) =
 	start(word).fold(words) { plus(it) }
+
+val SentenceStart.lineListOrNull: List<SentenceLine>?
+	get() =
+		lineOrNull?.let { list(it) }

@@ -36,3 +36,7 @@ val Sentence.linkRead: Read<SentenceLink> get() =
 fun Word.unitRead(word: Word): Read<Unit> =
 	if (this != expectedWord) errorRead(sentence(word))
 	else read(Unit)
+
+fun SentenceLine.sentenceRead(word: Word): Read<Sentence> =
+	if (this.word != word) errorRead(wordWord lineTo sentence(word))
+	else read(sentence)
