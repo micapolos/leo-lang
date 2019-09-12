@@ -17,8 +17,6 @@ fun either(name: String) = name eitherTo pattern()
 fun Either.matches(scriptLine: ScriptLine): Boolean =
 	name == scriptLine.name && rhs.matches(scriptLine.rhs)
 
-val eitherName = "either"
-
 val ScriptLine.unsafeBodyEither: Either
 	get() =
 		name eitherTo rhs.unsafeBodyPattern

@@ -6,8 +6,6 @@ import leo9.mapFirst
 import leo9.push
 import leo9.stack
 
-val switchName = "switch"
-
 val switchReader: Reader<Switch> =
 	stackReader(switchName, caseReader, ::switch)
 

@@ -3,8 +3,7 @@ package leo13.untyped.evaluator
 import leo.base.orNullFold
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.TokenReader
-import leo13.untyped.evaluatorName
+import leo13.untyped.*
 import leo9.Stack
 import leo9.reverse
 import leo9.seq
@@ -18,7 +17,7 @@ data class Evaluator(
 	override fun begin(name: String) =
 		when (name) {
 			"get" -> getEvaluator
-			"set" -> setEvaluator
+			setName -> setEvaluator
 			else -> linkEvaluator(name)
 		}
 
@@ -55,6 +54,6 @@ fun Evaluator.set(value: Value): Evaluator =
 
 val Evaluator.scriptLine get() =
 	evaluatorName lineTo script(
-		"parent" lineTo script("todo"),
-		"context" lineTo script("todo"),
+		parentName lineTo script("todo"),
+		contextName lineTo script("todo"),
 		value.scriptLine)

@@ -9,8 +9,6 @@ import leo9.mapFirst
 import leo9.push
 import leo9.stack
 
-const val contextName = "context"
-
 val contextReader: Reader<Context>
 	get() =
 	reader(

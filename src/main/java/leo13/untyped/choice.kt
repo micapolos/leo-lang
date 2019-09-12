@@ -5,8 +5,6 @@ import leo13.script.Script
 import leo13.script.ScriptLine
 import leo9.*
 
-const val choiceName = "choice"
-
 data class Choice(val eitherStack: Stack<Either>) {
 	override fun toString() = scriptLine.toString()
 }

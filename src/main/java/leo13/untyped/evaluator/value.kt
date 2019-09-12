@@ -1,9 +1,10 @@
 package leo13.untyped.evaluator
 
 import leo.base.updateIfNotNull
-import leo13.script.plus
 import leo13.script.lineTo
+import leo13.script.plus
 import leo13.script.script
+import leo13.untyped.functionName
 import leo13.untyped.valueName
 import leo9.*
 
@@ -59,5 +60,5 @@ val Value.scriptLine get() =
 
 val Value.bodyScript get() =
 	script()
-		.updateIfNotNull(lhsFunctionOrNull) { plus("function" lineTo script()) }
+		.updateIfNotNull(lhsFunctionOrNull) { plus(functionName lineTo script()) }
 		.fold(rhsLineStack.reverse) { plus(it.bodyScriptLine) }

@@ -3,8 +3,6 @@ package leo13.untyped
 import leo.base.notNullIf
 import leo13.script.*
 
-const val caseName = "case"
-
 val caseReader: Reader<Case> =
 	reader(caseName) {
 		unsafeOnlyLine.run {

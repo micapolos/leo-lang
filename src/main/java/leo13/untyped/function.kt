@@ -13,8 +13,6 @@ fun function(pattern: Pattern, body: Body) =
 fun Function.bodyOrNull(script: Script): Body? =
 	notNullIf(pattern.matches(script)) { body }
 
-val functionName = "function"
-
 val functionReader: Reader<Function>
 	get() =
 	reader(

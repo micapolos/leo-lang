@@ -4,6 +4,8 @@ import leo13.script.lineTo
 import leo13.script.plus
 import leo13.untyped.Context
 import leo13.untyped.TokenReader
+import leo13.untyped.setName
+import leo13.untyped.switchName
 
 data class Compiler(
 	val parent: CompilerParent,
@@ -13,8 +15,8 @@ data class Compiler(
 
 	override fun begin(name: String) =
 		when (name) {
-			"set" -> setCompiler()
-			"switch" -> switchCompiler()
+			setName -> setCompiler()
+			switchName -> switchCompiler()
 			else -> SelfCompilerParent(linkTo(name)).compiler(context)
 		}
 
@@ -37,18 +39,7 @@ fun Compiler.plusSet(compiledSet: Compiled): TokenReader? =
 			compiledSet.pattern))
 
 fun Compiler.plus(line: CompiledLine): Compiler? =
-	TODO()
-//	if (line.rhs.expression.isEmpty) copy(compiled = value()).plusResolved(line.name lineTo compiled)
-//	else resolve(line)
-
-fun Compiler.resolve(line: CompiledLine): TokenReader? =
-	when (line.name) {
-		"set" -> setCompiler()
-		else -> TODO()
-	}
-
-fun Compiler.plusResolved(line: CompiledLine): TokenReader? =
-	TODO()
+	set(compiled.plus(line))
 
 fun Compiler.set(compiled: Compiled) =
 	copy(compiled = compiled)
