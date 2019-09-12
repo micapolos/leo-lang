@@ -1,13 +1,13 @@
 package leo13.untyped.compiler
 
 import leo.base.ifOrNull
+import leo.base.notNullIf
+import leo13.untyped.*
+import leo13.untyped.expression.constant
 import leo13.untyped.expression.get
 import leo13.untyped.expression.op
 import leo13.untyped.expression.plus
-import leo13.untyped.getOrNull
-import leo13.untyped.isEmpty
-import leo13.untyped.setName
-import leo13.untyped.setOrNull
+import leo13.untyped.value.value
 
 data class Compiler(
 	val patternArrows: PatternArrows,
@@ -16,6 +16,7 @@ data class Compiler(
 fun Compiler.plus(line: MatchLine): Compiler? =
 	when (line.name) {
 		setName -> plusSet(line.rhs)
+		forgetName -> plusForget(line.rhs)
 		else -> plusOther(line)
 	}
 
@@ -36,6 +37,15 @@ fun Compiler.plusSet(line: MatchLine): Compiler? =
 					.plus(leo13.untyped.expression.set(line.expressionLine).op)
 					.match(setPattern))
 		}
+
+fun Compiler.plusForget(rhs: Match): Compiler? =
+	notNullIf(rhs.pattern.isEmpty) {
+		set(
+			match
+				.expression
+				.plus(constant(value()).op)
+				.match(pattern()))
+	}
 
 fun Compiler.plusOther(line: MatchLine): Compiler =
 	null
