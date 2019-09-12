@@ -23,7 +23,7 @@ data class Compiler(
 			is SelfCompilerParent -> parent.link.compiler.plus(parent.link.name lineTo compiled)
 			is CaseCompilerParent -> parent.link.case.plus(parent.link.name caseTo compiled)
 			is SetCompilerParent -> parent.link.setCompiler.plus(parent.link.name lineTo compiled)
-			is EvaluatorCompilerParent -> parent.link.evaluator.plus(parent.link.name lineTo compiled)
+			is EvaluatorCompilerParent -> TODO()//parent.link.evaluator.plus(parent.link.name lineTo compiled)
 		}
 }
 
@@ -38,8 +38,9 @@ fun Compiler.plus(compiledSwitch: CompiledSwitch): TokenReader? =
 	TODO()
 
 fun Compiler.plus(line: CompiledLine): TokenReader? =
-	if (line.rhs.script.isEmpty) copy(compiled = value()).plusResolved(line.name lineTo compiled)
-	else resolve(line)
+	TODO()
+//	if (line.rhs.expression.isEmpty) copy(compiled = value()).plusResolved(line.name lineTo compiled)
+//	else resolve(line)
 
 fun Compiler.plus(line: CompiledSet): TokenReader? =
 	TODO()

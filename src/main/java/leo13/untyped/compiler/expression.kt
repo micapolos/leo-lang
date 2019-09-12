@@ -1,5 +1,6 @@
 package leo13.untyped.compiler
 
+import leo13.untyped.evaluator.Function
 import leo9.Stack
 import leo9.pushAll
 import leo9.stack
