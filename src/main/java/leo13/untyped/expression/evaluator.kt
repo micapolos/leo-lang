@@ -11,9 +11,9 @@ data class Evaluator(val bindings: Bindings, val value: Value) {
 	override fun toString() = scriptLine.toString()
 }
 
-fun Bindings.evaluator(value: Value = leo13.untyped.value.value()) = Evaluator(this, value)
+fun Bindings.evaluator(value: Value = value()) = Evaluator(this, value)
 
-fun evaluator(value: Value = leo13.untyped.value.value()) = bindings().evaluator(value)
+fun evaluator(value: Value = value()) = bindings().evaluator(value)
 
 fun Evaluator.set(value: Value) = bindings.evaluator(value)
 
@@ -64,7 +64,7 @@ fun Evaluator.plus(bind: Bind): Evaluator =
 	set(bindings.plus(value).evaluate(bind.expression))
 
 fun Evaluator.plus(apply: Apply): Evaluator =
-	set(bindings.plus(bindings.evaluate(apply.expression)).evaluate(value.functionOrNull!!.expression))
+	set(value.functionOrNull!!.apply(bindings.evaluate(apply.expression)))
 
 val Evaluator.scriptLine
 	get() =

@@ -20,6 +20,9 @@ fun bindings(vararg values: Value) =
 fun Bindings.plus(value: Value) =
 	valueStack.push(value).bindings
 
+fun Bindings.plus(bindings: Bindings) =
+	fold(bindings.valueStack.reverse) { plus(it) }
+
 fun Bindings.valueOrNull(bound: Bound): Value? =
 	valueStack.drop(bound.previousStack)?.valueOrNull
 
