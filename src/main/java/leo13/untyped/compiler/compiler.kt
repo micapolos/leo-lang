@@ -1,44 +1,37 @@
 package leo13.untyped.compiler
 
-import leo13.script.lineTo
-import leo13.script.plus
-import leo13.untyped.Context
-import leo13.untyped.TokenReader
-import leo13.untyped.setName
-import leo13.untyped.switchName
+import leo.base.ifOrNull
+import leo13.untyped.expression.get
+import leo13.untyped.expression.op
+import leo13.untyped.expression.plus
+import leo13.untyped.getOrNull
+import leo13.untyped.isEmpty
 
 data class Compiler(
-	val parent: CompilerParent,
-	val context: Context,
-	val compiled: Compiled) : TokenReader {
+	val patternArrows: PatternArrows,
+	val match: Match)
 
-	override fun begin(name: String) =
-		when (name) {
-			setName -> setCompiler()
-			switchName -> switchCompiler()
-			else -> SelfCompilerParent(linkTo(name)).compiler(context)
-		}
+fun Compiler.plus(line: MatchLine): Compiler =
+	when (line.name) {
+		else -> plusOther(line)
+	}
 
-	override val end get() = parent.plus(compiled)
-}
+fun Compiler.plusOther(line: MatchLine): Compiler =
+	null
+		?: plusGetOrNull(line)
+		?: append(line)
 
-fun CompilerParent.compiler(context: Context, compiled: Compiled = compiled()) =
-	Compiler(this, context, compiled)
+fun Compiler.plusGetOrNull(line: MatchLine): Compiler? =
+	ifOrNull(match.pattern.isEmpty) {
+		line
+			.rhs
+			.pattern
+			.getOrNull(line.name)
+			?.let { set(match.expression.plus(get(line.name).op).match(it)) }
+	}
 
-fun Compiler.plusSwitch(switch: Compiled): TokenReader? =
-	set(
-		compiled(
-			compiled.script.plus(switchName lineTo switch.script),
-			switch.pattern))
+fun Compiler.append(line: MatchLine): Compiler =
+	TODO()
 
-fun Compiler.plusSet(compiledSet: Compiled): TokenReader? =
-	set(
-		compiled(
-			compiled.script.plus(compiledSet.script),
-			compiledSet.pattern))
-
-fun Compiler.plus(line: CompiledLine): Compiler? =
-	set(compiled.plus(line))
-
-fun Compiler.set(compiled: Compiled) =
-	copy(compiled = compiled)
+fun Compiler.set(match: Match) =
+	copy(match = match)

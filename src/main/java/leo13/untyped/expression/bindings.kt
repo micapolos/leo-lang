@@ -5,6 +5,8 @@ import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.bindingsName
 import leo13.untyped.value.Value
+import leo13.untyped.value.ValueLine
+import leo13.untyped.value.lineTo
 import leo13.untyped.value.scriptLine
 import leo9.*
 
@@ -28,6 +30,9 @@ fun Bindings.valueOrNull(bound: Bound): Value? =
 
 fun Bindings.evaluate(expression: Expression): Value =
 	evaluator().plus(expression).value
+
+fun Bindings.evaluate(line: ExpressionLine): ValueLine =
+	line.name lineTo evaluate(line.rhs)
 
 val Bindings.scriptLine
 	get() =

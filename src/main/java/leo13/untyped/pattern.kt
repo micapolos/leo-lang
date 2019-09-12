@@ -27,6 +27,8 @@ fun Pattern.plus(choice: Choice) =
 fun Pattern.plus(line: PatternLine) =
 	plus(choice(line))
 
+val Pattern.isEmpty get() = choiceStack.isEmpty
+
 fun Pattern.matches(script: Script): Boolean =
 	when (choiceStack) {
 		is EmptyStack -> true

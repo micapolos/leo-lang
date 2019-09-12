@@ -23,6 +23,7 @@ fun Evaluator.plus(expression: Expression): Evaluator =
 fun Evaluator.plus(op: Op): Evaluator =
 	when (op) {
 		is ConstantOp -> plus(op.constant)
+		is PlusOp -> plus(op.plus)
 		is GetOp -> plus(op.get)
 		is SetOp -> plus(op.set)
 		is PreviousOp -> plus(op.previous)
@@ -37,6 +38,9 @@ fun Evaluator.plus(constant: Constant): Evaluator =
 
 fun Evaluator.plus(get: Get): Evaluator =
 	set(value.getOrNull(get.name)!!)
+
+fun Evaluator.plus(plus: Plus): Evaluator =
+	set(value.plus(bindings.evaluate(plus.line)))
 
 fun Evaluator.plus(set: Set): Evaluator =
 	set(value.setOrNull(set.line)!!)
