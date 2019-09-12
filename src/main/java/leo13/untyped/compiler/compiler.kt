@@ -30,8 +30,11 @@ fun Compiler.plusSwitch(switch: Compiled): TokenReader? =
 			compiled.script.plus("switch" lineTo switch.script),
 			switch.pattern))
 
-fun Compiler.plusSet(compiled: Compiled): TokenReader? =
-	TODO()
+fun Compiler.plusSet(compiledSet: Compiled): TokenReader? =
+	set(
+		compiled(
+			compiled.script.plus(compiledSet.script),
+			compiledSet.pattern))
 
 fun Compiler.plus(line: CompiledLine): Compiler? =
 	TODO()

@@ -59,6 +59,21 @@ fun Pattern.replaceLineOrNull(line: PatternLine): Pattern? =
 fun Pattern.getOrNull(name: String): Pattern? =
 	choiceStack.linkOrNull?.value?.linePatternOrNull(name)
 
+fun Pattern.setOrNull(line: PatternLine): Pattern? =
+	choiceStack
+		.linkOrNull
+		?.let { choiceStackLink ->
+			choiceStackLink
+				.value
+				.eitherStack
+				.onlyOrNull
+				?.rhs
+				?.replaceLineOrNull(line)
+				?.let { replacedRhs ->
+					pattern(choiceStackLink.stack.push(choice(line.name eitherTo replacedRhs)))
+				}
+		}
+
 val patternName: String = "pattern"
 
 val Script.unsafeBodyPattern: Pattern
