@@ -25,6 +25,10 @@ fun <R, V : Any> R.updateIfNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
 	if (valueOrNull != null) fn(valueOrNull)
 	else this
 
+fun <V> V.updateIf(boolean: Boolean, fn: V.() -> V): V =
+	if (boolean) fn()
+	else this
+
 fun <R, V : Any> R.updateOrNullIfNotNull(valueOrNull: V?, fn: R.(V) -> R?): R? =
 	if (valueOrNull != null) fn(valueOrNull)
 	else this

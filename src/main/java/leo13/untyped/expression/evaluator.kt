@@ -1,12 +1,19 @@
 package leo13.untyped.expression
 
 import leo.base.notNullIf
+import leo13.script.lineTo
+import leo13.script.script
 import leo13.untyped.evaluator.*
+import leo13.untyped.evaluatorName
 import leo9.*
 
-data class Evaluator(val bindings: Bindings, val value: Value)
+data class Evaluator(val bindings: Bindings, val value: Value) {
+	override fun toString() = scriptLine.toString()
+}
 
 fun Bindings.evaluator(value: Value = value()) = Evaluator(this, value)
+
+fun evaluator(value: Value = value()) = bindings().evaluator(value)
 
 fun Evaluator.set(value: Value) = bindings.evaluator(value)
 
@@ -58,3 +65,7 @@ fun Evaluator.plus(bind: Bind): Evaluator =
 
 fun Evaluator.plus(apply: Apply): Evaluator =
 	set(bindings.plus(bindings.evaluate(apply.expression)).evaluate(value.functionOrNull!!.expression))
+
+val Evaluator.scriptLine
+	get() =
+		evaluatorName lineTo script(bindings.scriptLine, value.scriptLine)

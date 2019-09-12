@@ -2,6 +2,7 @@ package leo13.untyped.evaluator
 
 import leo.base.ifOrNull
 import leo.base.updateIfNotNull
+import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.plus
 import leo13.script.script
@@ -62,8 +63,10 @@ fun Value.setOrNull(line: ValueLine): Value? =
 				}
 		}
 
+val Value.isEmpty get() = lhsFunctionOrNull == null && rhsLineStack.isEmpty
+
 val Value.scriptLine get() =
-	valueName lineTo bodyScript
+	valueName lineTo bodyScript.emptyIfEmpty
 
 val Value.bodyScript get() =
 	script()

@@ -4,6 +4,8 @@ import leo.base.*
 import leo13.LeoObject
 import leo13.fail
 import leo13.token.*
+import leo13.untyped.emptyName
+import leo13.untyped.noneName
 import leo9.*
 import leo9.Stack
 
@@ -268,3 +270,15 @@ val ScriptHead.completeScriptOrNull
 fun ScriptLine.meta(name: String): ScriptLine =
 	if (this.name == name) "meta" lineTo script
 	else this
+
+fun <V> Stack<V>.script(fn: V.() -> ScriptLine) =
+	map { fn() }.script
+
+fun <V> Stack<V>.noneScript(fn: V.() -> ScriptLine) =
+	if (isEmpty) script(noneName)
+	else script(fn)
+
+val Script.emptyIfEmpty
+	get() =
+		if (isEmpty) script(emptyName)
+		else this

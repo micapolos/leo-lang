@@ -1,5 +1,7 @@
 package leo13.untyped.expression
 
+import leo13.script.ScriptLine
+
 sealed class Op
 
 data class ConstantOp(val constant: Constant) : Op()
@@ -19,3 +21,17 @@ val Switch.op: Op get() = SwitchOp(this)
 val Bind.op: Op get() = BindOp(this)
 val Bound.op: Op get() = BoundOp(this)
 val Apply.op: Op get() = ApplyOp(this)
+
+val Op.bodyScriptLine: ScriptLine
+	get() =
+		when (this) {
+			is ConstantOp -> constant.scriptLine
+			is GetOp -> get.scriptLine
+			is SetOp -> set.scriptLine
+			is PreviousOp -> previous.scriptLine
+			is SwitchOp -> switch.scriptLine
+			is BindOp -> bind.scriptLine
+			is BoundOp -> bound.scriptLine
+			is ApplyOp -> apply.scriptLine
+
+		}
