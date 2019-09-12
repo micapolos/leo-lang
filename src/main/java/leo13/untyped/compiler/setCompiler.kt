@@ -14,10 +14,6 @@ data class SetCompiler(
 			parentCompiler.plusSet(compiled)
 }
 
-data class SetCompilerLink(val setCompiler: SetCompiler, val name: String)
-
-infix fun SetCompiler.linkTo(name: String) = SetCompilerLink(this, name)
-
 fun SetCompiler.plus(line: CompiledLine) =
 	copy(compiled = compiled.plus(line))
 

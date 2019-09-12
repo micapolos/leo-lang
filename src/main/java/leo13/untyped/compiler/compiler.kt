@@ -18,18 +18,8 @@ data class Compiler(
 			else -> SelfCompilerParent(linkTo(name)).compiler(context)
 		}
 
-	override val end
-		get() = when (parent) {
-			is SelfCompilerParent -> parent.link.compiler.plus(parent.link.name lineTo compiled)
-			is CaseCompilerParent -> parent.link.caseCompiler.plus(parent.link.name lineTo compiled)
-			is SetCompilerParent -> parent.link.setCompiler.plus(parent.link.name lineTo compiled)
-			is EvaluatorCompilerParent -> TODO()//parent.link.evaluator.plus(parent.link.name lineTo compiled)
-		}
+	override val end get() = parent.plus(compiled)
 }
-
-data class CompilerLink(val compiler: Compiler, val name: String)
-
-infix fun Compiler.linkTo(name: String) = CompilerLink(this, name)
 
 fun CompilerParent.compiler(context: Context, compiled: Compiled = compiled()) =
 	Compiler(this, context, compiled)
@@ -43,7 +33,7 @@ fun Compiler.plusSwitch(switch: Compiled): TokenReader? =
 fun Compiler.plusSet(compiled: Compiled): TokenReader? =
 	TODO()
 
-fun Compiler.plus(line: CompiledLine): TokenReader? =
+fun Compiler.plus(line: CompiledLine): Compiler? =
 	TODO()
 //	if (line.rhs.expression.isEmpty) copy(compiled = value()).plusResolved(line.name lineTo compiled)
 //	else resolve(line)
