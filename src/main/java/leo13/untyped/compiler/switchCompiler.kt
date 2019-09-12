@@ -1,34 +1,41 @@
 package leo13.untyped.compiler
 
 import leo.base.notNullIf
+import leo13.script.plus
+import leo13.script.script
 import leo13.untyped.TokenReader
 import leo13.untyped.caseName
+import leo9.EmptyStack
+import leo9.LinkStack
+import leo9.any
 
 data class SwitchCompiler(
 	val parentCompiler: Compiler,
-	val compiledSwitch: CompiledSwitch) : TokenReader {
+	val compiled: Compiled) : TokenReader {
 
 	override fun begin(name: String): CaseCompiler? =
 		notNullIf(name == caseName) {
-			caseInterpreter(this)
+			caseCompiler()
 		}
 
-	override val end get() = parentCompiler.plus(compiledSwitch)
+	override val end
+		get() =
+			parentCompiler.plusSwitch(compiled)
 }
 
-fun Compiler.switchInterpreter(compiledSwitch: CompiledSwitch = compiledSwitch()) =
-	SwitchCompiler(this, compiledSwitch)
+fun Compiler.switchCompiler(compiled: Compiled = compiled()) =
+	SwitchCompiler(this, compiled)
 
-fun SwitchCompiler.begin(name: String): CaseCompiler? =
-	notNullIf(name == caseName) {
-		caseInterpreter(this)
+fun SwitchCompiler.plusCase(line: CompiledLine): SwitchCompiler? =
+	when (compiled.script.lineStack) {
+		is EmptyStack -> set(compiled(script(line.scriptLine), line.rhs.pattern))
+		is LinkStack -> notNullIf(line.rhs.pattern == compiled.pattern) {
+			set(compiled(compiled.script.plus(line.scriptLine), line.rhs.pattern))
+		}
 	}
 
-fun SwitchCompiler.plus(compiledCase: CompiledCase) =
-	compiledSwitch
-		.plus(compiledCase)
-		?.let { copy(compiledSwitch = it) }
+fun SwitchCompiler.set(compiled: Compiled) =
+	copy(compiled = compiled)
 
-
-fun SwitchCompiler.containsCase(name: String): Boolean =
-	compiledSwitch.containsCase(name)
+fun SwitchCompiler.containsCase(caseName: String): Boolean =
+	compiled.script.lineStack.any { name == caseName }

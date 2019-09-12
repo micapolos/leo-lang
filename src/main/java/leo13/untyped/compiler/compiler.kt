@@ -1,10 +1,9 @@
 package leo13.untyped.compiler
 
-import leo13.script.isEmpty
+import leo13.script.lineTo
+import leo13.script.plus
 import leo13.untyped.Context
 import leo13.untyped.TokenReader
-import leo13.untyped.evaluator.plus
-import leo13.untyped.switchName
 
 data class Compiler(
 	val parent: CompilerParent,
@@ -14,14 +13,15 @@ data class Compiler(
 
 	override fun begin(name: String) =
 		when (name) {
-			switchName -> switchInterpreter()
+			"set" -> setCompiler()
+			"switch" -> switchCompiler()
 			else -> SelfCompilerParent(linkTo(name)).compiler(context)
 		}
 
 	override val end
 		get() = when (parent) {
 			is SelfCompilerParent -> parent.link.compiler.plus(parent.link.name lineTo compiled)
-			is CaseCompilerParent -> parent.link.case.plus(parent.link.name caseTo compiled)
+			is CaseCompilerParent -> parent.link.caseCompiler.plus(parent.link.name lineTo compiled)
 			is SetCompilerParent -> parent.link.setCompiler.plus(parent.link.name lineTo compiled)
 			is EvaluatorCompilerParent -> TODO()//parent.link.evaluator.plus(parent.link.name lineTo compiled)
 		}
@@ -31,19 +31,22 @@ data class CompilerLink(val compiler: Compiler, val name: String)
 
 infix fun Compiler.linkTo(name: String) = CompilerLink(this, name)
 
-fun CompilerParent.compiler(context: Context, compiled: Compiled = value()) =
+fun CompilerParent.compiler(context: Context, compiled: Compiled = compiled()) =
 	Compiler(this, context, compiled)
 
-fun Compiler.plus(compiledSwitch: CompiledSwitch): TokenReader? =
+fun Compiler.plusSwitch(switch: Compiled): TokenReader? =
+	set(
+		compiled(
+			compiled.script.plus("switch" lineTo switch.script),
+			switch.pattern))
+
+fun Compiler.plusSet(compiled: Compiled): TokenReader? =
 	TODO()
 
 fun Compiler.plus(line: CompiledLine): TokenReader? =
 	TODO()
 //	if (line.rhs.expression.isEmpty) copy(compiled = value()).plusResolved(line.name lineTo compiled)
 //	else resolve(line)
-
-fun Compiler.plus(line: CompiledSet): TokenReader? =
-	TODO()
 
 fun Compiler.resolve(line: CompiledLine): TokenReader? =
 	when (line.name) {
@@ -53,3 +56,6 @@ fun Compiler.resolve(line: CompiledLine): TokenReader? =
 
 fun Compiler.plusResolved(line: CompiledLine): TokenReader? =
 	TODO()
+
+fun Compiler.set(compiled: Compiled) =
+	copy(compiled = compiled)
