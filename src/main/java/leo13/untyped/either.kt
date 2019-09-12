@@ -46,3 +46,7 @@ fun Either.replaceLineOrNull(line: PatternLine): Either? =
 	notNullIf(name == line.name) {
 		name eitherTo line.rhs
 	}
+
+val Either.patternLine
+	get() =
+		name lineTo rhs

@@ -43,7 +43,7 @@ fun Evaluator.plus(plus: Plus): Evaluator =
 	set(value.plus(bindings.evaluate(plus.line)))
 
 fun Evaluator.plus(set: Set): Evaluator =
-	set(value.setOrNull(set.line)!!)
+	set(value.setOrNull(bindings.evaluate(set.line))!!)
 
 fun Evaluator.plus(previous: Previous): Evaluator =
 	set(value.previousOrNull!!)

@@ -1,6 +1,7 @@
 package leo13.untyped
 
 import leo.base.notNullOrError
+import leo.base.orNullFold
 import leo13.script.*
 import leo13.script.Script
 import leo9.*
@@ -76,6 +77,11 @@ fun Pattern.setOrNull(line: PatternLine): Pattern? =
 				}
 		}
 
+fun Pattern.setOrNull(pattern: Pattern): Pattern? =
+	pattern.lineStackOrNull?.let { lineStack ->
+		orNullFold(lineStack.reverse.seq) { setOrNull(it) }
+	}
+
 val patternName: String = "pattern"
 
 val Script.unsafeBodyPattern: Pattern
@@ -99,3 +105,7 @@ val Pattern.script: Script
 
 val patternReader get() = reader(patternName) { unsafeBodyPattern }
 val patternWriter get() = writer<Pattern>(patternName) { bodyScript }
+
+val Pattern.lineStackOrNull: Stack<PatternLine>?
+	get() =
+		choiceStack.mapOrNull { patternLineOrNull }

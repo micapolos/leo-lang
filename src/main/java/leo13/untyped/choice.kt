@@ -47,3 +47,7 @@ fun Choice.replaceLineOrNull(line: PatternLine): Choice? =
 		.onlyOrNull
 		?.run { replaceLineOrNull(line) }
 		?.run { choice(this) }
+
+val Choice.patternLineOrNull
+	get() =
+		eitherStack.onlyOrNull?.patternLine
