@@ -20,6 +20,9 @@ fun Evaluator.plus(op: Op): Evaluator =
 		is SetOp -> plus(op.set)
 		is PreviousOp -> plus(op.previous)
 		is SwitchOp -> plus(op.switch)
+		is BindOp -> plus(op.bind)
+		is BoundOp -> plus(op.bound)
+		is ApplyOp -> plus(op.apply)
 	}
 
 fun Evaluator.plus(constant: Constant): Evaluator =
@@ -46,3 +49,12 @@ fun Evaluator.plusOrNull(case: Case): Evaluator? =
 			}
 		}
 	}
+
+fun Evaluator.plus(bound: Bound): Evaluator =
+	set(bindings.valueOrNull(bound)!!)
+
+fun Evaluator.plus(bind: Bind): Evaluator =
+	set(bindings.plus(value).evaluate(bind.expression))
+
+fun Evaluator.plus(apply: Apply): Evaluator =
+	set(bindings.plus(bindings.evaluate(apply.expression)).evaluate(value.functionOrNull!!.expression))

@@ -1,5 +1,6 @@
 package leo13.untyped.evaluator
 
+import leo.base.ifOrNull
 import leo.base.updateIfNotNull
 import leo13.script.lineTo
 import leo13.script.plus
@@ -22,6 +23,12 @@ fun value(name: String) = value(name lineTo value())
 
 fun value(function: Function, vararg lines: ValueLine) =
 	Value(function, stack(*lines))
+
+val Value.functionOrNull: Function?
+	get() =
+		ifOrNull(rhsLineStack.isEmpty) {
+			lhsFunctionOrNull
+		}
 
 val Stack<ValueLine>.value get() =
 	Value(null, this)
