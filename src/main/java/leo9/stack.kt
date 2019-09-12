@@ -31,6 +31,7 @@ fun <T> stackLink(value: T, vararg values: T) = link(stack(), value).fold(values
 fun <T> nonEmptyStack(value: T, vararg values: T) = stack(stackLink(value, *values))
 fun <T> link(tail: Stack<T>, head: T) = StackLink(tail, head)
 fun <T> Stack<T>.push(value: T) = stack(link(this, value))
+fun <T> Stack<T>.pushAll(vararg values: T) = fold(values) { push(it) }
 fun <T> StackLink<T>.push(value: T) = link(stack(this), value)
 val <T> Stack<T>.emptyOrNull get() = (this as? EmptyStack)?.empty
 val <T> Stack<T>.linkOrNull get() = (this as? LinkStack)?.link

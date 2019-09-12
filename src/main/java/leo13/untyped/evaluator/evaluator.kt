@@ -9,8 +9,3 @@ data class Evaluator(
 	override fun begin(name: String) = TODO()
 	override val end = TODO()
 }
-
-fun Evaluator.plus(line: CompiledLine): Evaluator? =
-	when (line.name) {
-		else -> TODO()
-	}

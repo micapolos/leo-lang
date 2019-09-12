@@ -5,7 +5,7 @@ import leo13.script.script
 import leo13.untyped.Pattern
 import leo13.untyped.pattern
 
-data class Compiled(val script: Script, val pattern: Pattern)
+data class Compiled(val expression: Expression, val pattern: Pattern)
 
-fun value(script: Script = script(), pattern: Pattern = pattern()) =
-	Compiled(script, pattern)
+fun value(expression: Expression = expression(), pattern: Pattern = pattern()) =
+	Compiled(expression, pattern)
