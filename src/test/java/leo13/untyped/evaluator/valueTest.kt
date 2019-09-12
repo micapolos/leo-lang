@@ -1,6 +1,10 @@
 package leo13.untyped.evaluator
 
 import leo.base.assertEqualTo
+import leo13.untyped.value.lineTo
+import leo13.untyped.value.replaceLineOrNull
+import leo13.untyped.value.setOrNull
+import leo13.untyped.value.value
 import kotlin.test.Test
 
 class ValueTest {

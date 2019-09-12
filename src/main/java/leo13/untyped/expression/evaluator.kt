@@ -3,17 +3,17 @@ package leo13.untyped.expression
 import leo.base.notNullIf
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.evaluator.*
 import leo13.untyped.evaluatorName
+import leo13.untyped.value.*
 import leo9.*
 
 data class Evaluator(val bindings: Bindings, val value: Value) {
 	override fun toString() = scriptLine.toString()
 }
 
-fun Bindings.evaluator(value: Value = value()) = Evaluator(this, value)
+fun Bindings.evaluator(value: Value = leo13.untyped.value.value()) = Evaluator(this, value)
 
-fun evaluator(value: Value = value()) = bindings().evaluator(value)
+fun evaluator(value: Value = leo13.untyped.value.value()) = bindings().evaluator(value)
 
 fun Evaluator.set(value: Value) = bindings.evaluator(value)
 

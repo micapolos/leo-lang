@@ -1,5 +1,8 @@
 package leo13.untyped.evaluator
 
+import leo13.untyped.value.Value
+import leo13.untyped.value.lineTo
+
 data class SetEvaluatorLink(val setEvaluator: SetEvaluator, val name: String)
 
 infix fun SetEvaluator.linkTo(name: String) =

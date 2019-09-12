@@ -4,6 +4,8 @@ import leo.base.orNullFold
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.*
+import leo13.untyped.value.*
+import leo13.untyped.value.Value
 import leo9.Stack
 import leo9.reverse
 import leo9.seq
@@ -25,10 +27,10 @@ data class Evaluator(
 		parentOrNull?.plus(value)
 }
 
-fun EvaluatorParent?.evaluator(context: Context = context(), value: Value = value()) =
+fun EvaluatorParent?.evaluator(context: Context = context(), value: Value = leo13.untyped.value.value()) =
 	Evaluator(this, context, value)
 
-fun evaluator(context: Context = context(), value: Value = value()) =
+fun evaluator(context: Context = context(), value: Value = leo13.untyped.value.value()) =
 	null.evaluator(context, value)
 
 fun EvaluatorLink.evaluator(value: Value) =

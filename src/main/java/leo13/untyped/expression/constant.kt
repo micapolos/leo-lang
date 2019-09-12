@@ -3,7 +3,7 @@ package leo13.untyped.expression
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.constantName
-import leo13.untyped.evaluator.Value
+import leo13.untyped.value.Value
 
 data class Constant(val value: Value)
 

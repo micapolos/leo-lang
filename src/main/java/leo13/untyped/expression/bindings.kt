@@ -4,8 +4,8 @@ import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.bindingsName
-import leo13.untyped.evaluator.Value
-import leo13.untyped.evaluator.scriptLine
+import leo13.untyped.value.Value
+import leo13.untyped.value.scriptLine
 import leo9.*
 
 data class Bindings(val valueStack: Stack<Value>)
