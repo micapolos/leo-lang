@@ -1,7 +1,9 @@
 package leo13.untyped.value
 
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo.base.updateIfNotNull
+import leo13.script.Script
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.plus
@@ -29,6 +31,12 @@ val Value.functionOrNull: Function?
 	get() =
 		ifOrNull(rhsLineStack.isEmpty) {
 			lhsFunctionOrNull
+		}
+
+val Value.lineStackOrNull: Stack<ValueLine>?
+	get() =
+		notNullIf(lhsFunctionOrNull == null) {
+			rhsLineStack
 		}
 
 val Stack<ValueLine>.value get() =
@@ -78,3 +86,7 @@ val Value.previousOrNull: Value?
 		rhsLineStack.linkOrNull?.stack?.let {
 			value(lhsFunctionOrNull, it)
 		}
+
+val Value.scriptOrNull: Script?
+	get() =
+		rhsLineStack.mapOrNull { scriptLineOrNull }?.script
