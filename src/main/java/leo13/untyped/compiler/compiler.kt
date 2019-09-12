@@ -29,6 +29,7 @@ fun CompilerParent.compiler(context: Context, compiled: Compiled = compiled()) =
 fun Compiler.plusSwitch(switch: Compiled): TokenReader? =
 	set(
 		compiled(
+
 			compiled.script.plus(switchName lineTo switch.script),
 			switch.pattern))
 

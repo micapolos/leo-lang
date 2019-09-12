@@ -62,3 +62,9 @@ val Value.bodyScript get() =
 	script()
 		.updateIfNotNull(lhsFunctionOrNull) { plus(functionName lineTo script()) }
 		.fold(rhsLineStack.reverse) { plus(it.bodyScriptLine) }
+
+val Value.previousOrNull: Value?
+	get() =
+		rhsLineStack.linkOrNull?.stack?.let {
+			value(lhsFunctionOrNull, it)
+		}
