@@ -12,7 +12,6 @@ data class Compiler(
 	val context: Context,
 	val compiled: Compiled) : TokenReader {
 
-
 	override fun begin(name: String) =
 		when (name) {
 			setName -> setCompiler()
@@ -29,7 +28,6 @@ fun CompilerParent.compiler(context: Context, compiled: Compiled = compiled()) =
 fun Compiler.plusSwitch(switch: Compiled): TokenReader? =
 	set(
 		compiled(
-
 			compiled.script.plus(switchName lineTo switch.script),
 			switch.pattern))
 
