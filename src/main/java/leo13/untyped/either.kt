@@ -6,6 +6,7 @@ import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.onlyLineOrNull
 import leo13.script.script
+import leo13.untyped.value.ValueLine
 
 data class Either(val name: String, val rhs: Pattern) {
 	override fun toString() = scriptLine.toString()
@@ -16,6 +17,9 @@ fun either(name: String) = name eitherTo pattern()
 
 fun Either.matches(scriptLine: ScriptLine): Boolean =
 	name == scriptLine.name && rhs.matches(scriptLine.rhs)
+
+fun Either.matches(line: ValueLine): Boolean =
+	name == scriptLine.name && rhs.matches(line.rhs)
 
 val ScriptLine.unsafeBodyEither: Either
 	get() =

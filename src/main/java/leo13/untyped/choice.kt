@@ -3,6 +3,7 @@ package leo13.untyped
 import leo13.script.*
 import leo13.script.Script
 import leo13.script.ScriptLine
+import leo13.untyped.value.ValueLine
 import leo9.*
 
 data class Choice(val eitherStack: Stack<Either>) {
@@ -23,6 +24,9 @@ fun Choice.matches(script: Script): Boolean =
 
 fun Choice.matches(scriptLine: ScriptLine): Boolean =
 	eitherStack.any { matches(scriptLine) }
+
+fun Choice.matches(line: ValueLine): Boolean =
+	eitherStack.any { matches(line) }
 
 val ScriptLine.unsafeChoice: Choice
 	get() =

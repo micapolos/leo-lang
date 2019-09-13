@@ -4,6 +4,7 @@ import leo.base.notNullOrError
 import leo.base.orNullFold
 import leo13.script.*
 import leo13.script.Script
+import leo13.untyped.value.Value
 import leo9.*
 
 data class Pattern(val choiceStack: Stack<Choice>) {
@@ -39,6 +40,9 @@ fun Pattern.matches(script: Script): Boolean =
 				&& pattern(choiceStack.link.stack).matches(Script(script.lineStack.link.stack))
 		}
 	}
+
+fun Pattern.matches(value: Value): Boolean =
+	TODO()
 
 fun Pattern.linePatternOrNull(name: String): Pattern? =
 	choiceStack.mapFirst { linePatternOrNull(name) }
