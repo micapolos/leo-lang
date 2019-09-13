@@ -26,7 +26,7 @@ val Trace.scriptLine get() = scriptLineFn()
 
 fun trace(scriptLineFn: () -> ScriptLine) = Trace(scriptLineFn)
 
-fun <V> Trace.that(fn: () -> V): V =
+fun <V> Trace.with(fn: () -> V): V =
 	try {
 		fn()
 	} catch (tracedError: TracedError) {

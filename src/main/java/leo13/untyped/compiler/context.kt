@@ -1,13 +1,14 @@
 package leo13.untyped.compiler
 
 import leo.base.fold
-import leo13.script.Case
-import leo13.script.Script
-import leo13.script.ScriptLine
-import leo13.script.lineSeq
+import leo13.script.*
+import leo13.trace
+import leo13.untyped.caseName
+import leo13.untyped.compileName
 import leo13.untyped.pattern.Choice
 import leo13.untyped.pattern.Either
 import leo13.untyped.pattern.PatternArrow
+import leo13.with
 import leo9.Stack
 
 data class Context(val arrowStack: Stack<PatternArrow>)
@@ -32,18 +33,17 @@ fun Context.compileSwitch(choice: Choice, script: Script): CompiledSwitch =
 //	}
 
 fun Context.compileCase(either: Either, line: ScriptLine): Case =
-	TODO()
-//	compile(caseName) {
-//		line.compileRhs(caseName) {
-//			compileOnlyLine {
-//				compileRhs(either.name) {
-//					compile(this).run {
-//						either.name caseTo this
-//					}
-//				}
-//			}
-//		}
-//	}
+	trace {
+		compileName lineTo script(caseName lineTo script(line))
+	}.with {
+		line.tracedRhs(caseName) {
+			tracedOnlyLine {
+				tracedRhs(either.name) {
+					TODO()
+				}
+			}
+		}
+	}
 
 fun Context.compileSet(rhs: Script): CompiledSet =
 	TODO()
