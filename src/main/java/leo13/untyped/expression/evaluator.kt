@@ -22,7 +22,7 @@ fun Evaluator.plus(expression: Expression): Evaluator =
 
 fun Evaluator.plus(op: Op): Evaluator =
 	when (op) {
-		is ReplacetOp -> plus(op.replace)
+		is ReplaceOp -> plus(op.replace)
 		is PlusOp -> plus(op.plus)
 		is GetOp -> plus(op.get)
 		is SetOp -> plus(op.set)

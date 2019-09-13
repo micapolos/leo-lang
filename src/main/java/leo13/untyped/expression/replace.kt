@@ -7,10 +7,12 @@ import leo13.untyped.replaceName
 import leo13.untyped.value.Value
 import leo13.untyped.value.bodyScript
 import leo13.untyped.value.isEmpty
+import leo13.untyped.value.value
 
 data class Replace(val value: Value)
 
 fun replace(value: Value) = Replace(value)
+fun forget() = replace(value())
 
 val Replace.scriptLine
 	get() =
