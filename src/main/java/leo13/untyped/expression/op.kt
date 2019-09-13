@@ -4,7 +4,7 @@ import leo13.script.ScriptLine
 
 sealed class Op
 
-data class ConstantOp(val constant: Constant) : Op()
+data class ReplacetOp(val replace: Replace) : Op()
 data class PlusOp(val plus: Plus) : Op()
 data class GetOp(val get: Get) : Op()
 data class SetOp(val set: Set) : Op()
@@ -14,7 +14,7 @@ data class BindOp(val bind: Bind) : Op()
 data class BoundOp(val bound: Bound) : Op()
 data class ApplyOp(val apply: Apply) : Op()
 
-val Constant.op: Op get() = ConstantOp(this)
+val Replace.op: Op get() = ReplacetOp(this)
 val Plus.op: Op get() = PlusOp(this)
 val Get.op: Op get() = GetOp(this)
 val Set.op: Op get() = SetOp(this)
@@ -27,7 +27,7 @@ val Apply.op: Op get() = ApplyOp(this)
 val Op.bodyScriptLine: ScriptLine
 	get() =
 		when (this) {
-			is ConstantOp -> constant.scriptLine
+			is ReplacetOp -> replace.scriptLine
 			is PlusOp -> plus.scriptLine
 			is GetOp -> get.scriptLine
 			is SetOp -> set.scriptLine

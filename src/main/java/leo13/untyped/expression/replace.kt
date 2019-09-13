@@ -5,10 +5,10 @@ import leo13.script.script
 import leo13.untyped.constantName
 import leo13.untyped.value.Value
 
-data class Constant(val value: Value)
+data class Replace(val value: Value)
 
-fun constant(value: Value) = Constant(value)
+fun constant(value: Value) = Replace(value)
 
-val Constant.scriptLine
+val Replace.scriptLine
 	get() =
 		constantName lineTo script()
