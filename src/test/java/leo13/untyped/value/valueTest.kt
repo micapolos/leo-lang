@@ -1,9 +1,25 @@
 package leo13.untyped.value
 
 import leo.base.assertEqualTo
+import leo13.script.lineTo
+import leo13.script.script
 import kotlin.test.Test
 
 class ValueTest {
+	@Test
+	fun scriptLine() {
+		value(
+			item("x" lineTo value("zero")),
+			item(function()),
+			item("function" lineTo value("one")))
+			.scriptLine
+			.assertEqualTo(
+				"value" lineTo script(
+					item("x" lineTo value("zero")).bodyScriptLine,
+					item(function()).bodyScriptLine,
+					item("function" lineTo value("one")).bodyScriptLine))
+	}
+
 	@Test
 	fun replaceLineOrNull() {
 		value(

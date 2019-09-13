@@ -29,4 +29,7 @@ fun ScriptLine.unsafeRhs(name: String): Script =
 			"expected" lineTo script()))
 
 fun ScriptLine.metaFor(vararg names: String): ScriptLine =
-	updateIf(names.contains(this.name)) { metaName lineTo script(this) }
+	updateIf(names.contains(this.name)) { meta }
+
+val ScriptLine.meta get()  =
+	metaName lineTo script(this)

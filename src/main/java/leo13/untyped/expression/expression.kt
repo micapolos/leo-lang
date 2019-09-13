@@ -7,10 +7,13 @@ import leo13.untyped.expressionName
 import leo9.Stack
 import leo9.map
 import leo9.push
+import leo9.stack
 
 data class Expression(val opStack: Stack<Op>)
 
 val Stack<Op>.expression get() = Expression(this)
+
+fun expression(vararg ops: Op) = stack(*ops).expression
 
 val Expression.scriptLine
 	get() =
