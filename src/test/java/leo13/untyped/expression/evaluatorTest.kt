@@ -9,27 +9,24 @@ class EvaluatorTest {
 	@Test
 	fun evaluate() {
 		evaluator()
-			.plus(replace(value("foo")))
-			.assertEqualTo(evaluator().set(value("foo")))
+			.plus(plus("foo" lineTo expression()))
+			.assertEqualTo(evaluator().set(value("foo").evaluated))
 	}
 
 	@Test
 	fun given() {
-		val evaluator = given(value("zero"), value("one")).evaluator()
+		val evaluator = given(value())
+			.plus(value("zero"))
+			.plus(value("one"))
+			.evaluator()
 
 		evaluator
 			.plus(given.op)
 			.assertEqualTo(
 				evaluator.set(
-					value(
-						"given" lineTo value("zero"),
-						"given" lineTo value("one")))
-			)
-
-		evaluator
-			.plus(given.op)
-			.plus(previous.op)
-			.plus(get("zero").op)
-			.assertEqualTo(evaluator.set(value("zero")))
+					evaluated(
+						value(
+							"given" lineTo value("zero"),
+							"given" lineTo value("one")))))
 	}
 }

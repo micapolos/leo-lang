@@ -4,6 +4,7 @@ import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.expressionName
+import leo13.untyped.value.Value
 import leo9.Stack
 import leo9.map
 import leo9.push
@@ -25,3 +26,6 @@ val Expression.bodyScript
 
 fun Expression.plus(op: Op): Expression =
 	opStack.push(op).expression
+
+fun Expression.evaluate(value: Value): Value =
+	given(value).evaluator().plus(this).evaluated.value

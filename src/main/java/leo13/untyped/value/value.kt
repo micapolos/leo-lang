@@ -74,6 +74,10 @@ val Value.previousOrNull: Value?
 	get() =
 		itemStack.linkOrNull?.stack?.value
 
+val Value.everythingOrNull: Value?
+	get() =
+		itemStack.linkOrNull?.value?.lineOrNull?.rhs
+
 val Value.scriptOrNull: Script?
 	get() =
 		itemStack.mapOrNull { scriptLineOrNull }?.script

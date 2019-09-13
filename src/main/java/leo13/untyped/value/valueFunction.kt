@@ -9,12 +9,12 @@ import leo13.untyped.pattern.PatternArrow
 import leo13.untyped.pattern.arrowTo
 import leo13.untyped.pattern.pattern
 
-data class ValueFunction(val given: ValuesGiven, val expression: Expression, val patternArrow: PatternArrow) {
+data class ValueFunction(val given: ValueGiven, val expression: Expression, val patternArrow: PatternArrow) {
 	override fun toString() = scriptLine.toString()
 }
 
 fun function(
-	valueGiven: ValuesGiven = givenValues(),
+	valueGiven: ValueGiven = given(value()),
 	expression: Expression = expression(),
 	patternArrow: PatternArrow = pattern().arrowTo(pattern())) =
 	ValueFunction(valueGiven, expression, patternArrow)

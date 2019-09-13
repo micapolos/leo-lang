@@ -124,3 +124,7 @@ val patternWriter get() = writer<Pattern>(patternName) { bodyScript }
 val Pattern.lineStackOrNull: Stack<PatternLine>?
 	get() =
 		itemStack.mapOrNull { choiceOrNull?.patternLineOrNull }
+
+val Pattern.previousOrNull: Pattern?
+	get() =
+		itemStack.linkOrNull?.stack?.pattern
