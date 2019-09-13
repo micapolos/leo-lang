@@ -26,7 +26,7 @@ val Trace.scriptLine get() = scriptLineFn()
 
 fun trace(scriptLineFn: () -> ScriptLine) = Trace(scriptLineFn)
 
-fun <V> Trace.run(fn: () -> V): V =
+fun <V> Trace.that(fn: () -> V): V =
 	try {
 		fn()
 	} catch (tracedError: TracedError) {
@@ -46,3 +46,7 @@ fun <V> Traced<V>.onError(errorFn: Script.() -> V): V =
 	} catch (tracedError: TracedError) {
 		tracedError.scriptLine.rhs.errorFn()
 	}
+
+val <V : Any> V?.orTracedError: V
+	get() =
+		this ?: tracedError()

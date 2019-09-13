@@ -8,8 +8,8 @@ class TraceTest {
 	@Test
 	fun tracing() {
 		traced {
-			trace { "step" lineTo script("zero") }.run {
-				trace { "step" lineTo script("one") }.run {
+			trace { "step" lineTo script("zero") }.that {
+				trace { "step" lineTo script("one") }.that {
 					tracedError<Integer>()
 				}
 			}

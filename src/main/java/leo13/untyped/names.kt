@@ -1,7 +1,8 @@
 package leo13.untyped
 
-const val arrowName = "arrow"
+const val actualName = "actual"
 const val applyName = "apply"
+const val arrowName = "arrow"
 const val bindName = "bind"
 const val bindingsName = "bindings"
 const val boundName = "bound"
@@ -25,6 +26,7 @@ const val givesName = "gives"
 const val givingName = "giving"
 const val hasName = "has"
 const val lineName = "line"
+const val matchName = "match"
 const val metaName = "meta"
 const val mismatchName = "mismatch"
 const val nameName = "name"
