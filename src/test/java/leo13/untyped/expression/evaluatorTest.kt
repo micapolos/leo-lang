@@ -8,7 +8,7 @@ class EvaluatorTest {
 	@Test
 	fun evaluate() {
 		evaluator()
-			.plus(constant(value("foo")))
+			.plus(replace(value("foo")))
 			.assertEqualTo(evaluator().set(value("foo")))
 	}
 }

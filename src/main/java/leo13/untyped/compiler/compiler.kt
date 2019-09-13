@@ -3,7 +3,7 @@ package leo13.untyped.compiler
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.untyped.*
-import leo13.untyped.expression.constant
+import leo13.untyped.expression.replace
 import leo13.untyped.expression.get
 import leo13.untyped.expression.op
 import leo13.untyped.expression.plus
@@ -43,7 +43,7 @@ fun Compiler.plusForget(rhs: Match): Compiler? =
 		set(
 			match
 				.expression
-				.plus(constant(value()).op)
+				.plus(replace(value()).op)
 				.match(pattern()))
 	}
 
