@@ -1,11 +1,20 @@
-package leo13.untyped
+package leo13.untyped.pattern
 
 import leo.base.assertEqualTo
 import leo13.script.lineTo
 import leo13.script.script
+import leo13.untyped.eitherName
 import org.junit.Test
 
 class EitherTest {
+	@Test
+	fun eitherScriptLine() {
+		"zero"
+			.eitherTo(pattern("foo"))
+			.scriptLine
+			.assertEqualTo(eitherName lineTo pattern("zero" lineTo pattern("foo")).bodyScript)
+	}
+
 	@Test
 	fun reader() {
 		("either" lineTo script("zero" lineTo script("one")))

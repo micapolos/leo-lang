@@ -2,11 +2,16 @@ package leo13.untyped.compiler
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo13.untyped.*
-import leo13.untyped.expression.replace
 import leo13.untyped.expression.get
 import leo13.untyped.expression.op
 import leo13.untyped.expression.plus
+import leo13.untyped.expression.replace
+import leo13.untyped.forgetName
+import leo13.untyped.pattern.getOrNull
+import leo13.untyped.pattern.isEmpty
+import leo13.untyped.pattern.pattern
+import leo13.untyped.pattern.setOrNull
+import leo13.untyped.setName
 import leo13.untyped.value.value
 
 data class Compiler(

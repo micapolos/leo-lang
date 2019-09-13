@@ -1,8 +1,9 @@
-package leo13.untyped
+package leo13.untyped.pattern
 
 import leo13.script.*
 import leo13.script.Script
 import leo13.script.ScriptLine
+import leo13.untyped.choiceName
 import leo13.untyped.value.ValueLine
 import leo9.*
 

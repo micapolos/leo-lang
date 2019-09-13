@@ -1,5 +1,6 @@
-package leo13.untyped
+package leo13.untyped.pattern
 
+import leo13.script.ScriptLine
 import leo13.untyped.value.FunctionValueItem
 import leo13.untyped.value.LineValueItem
 import leo13.untyped.value.ValueItem
@@ -20,3 +21,13 @@ fun PatternItem.matches(valueItem: ValueItem): Boolean =
 		is ChoicePatternItem -> valueItem is LineValueItem && choice.matches(valueItem.line)
 		is ArrowPatternItem -> valueItem is FunctionValueItem && arrow.matches(valueItem.function)
 	}
+
+fun PatternItem.replaceLineOrNull(line: PatternLine): PatternItem? =
+	choiceOrNull?.replaceLineOrNull(line)?.let { item(it) }
+
+val PatternItem.scriptLine: ScriptLine
+	get() =
+		when (this) {
+			is ChoicePatternItem -> choice.scriptLine
+			is ArrowPatternItem -> arrow.scriptLine
+		}

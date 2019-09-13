@@ -3,6 +3,7 @@ package leo13.untyped
 import leo.base.assertEqualTo
 import leo13.script.lineTo
 import leo13.script.script
+import leo13.untyped.pattern.pattern
 import kotlin.test.Test
 
 class evaluatorTest {

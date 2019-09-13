@@ -1,6 +1,7 @@
 package leo13.untyped
 
 import leo.base.fold
+import leo13.LeoStruct
 import leo13.script.*
 
 val evaluatorName = "evaluator"
@@ -16,7 +17,8 @@ val evaluatorWriter: Writer<Evaluator>
 		field(contextWriter) { context },
 		field(evaluatedWriter) { evaluated })
 
-data class Evaluator(val context: Context, val evaluated: Evaluated) {
+data class Evaluator(val context: Context, val evaluated: Evaluated) :
+	LeoStruct(evaluatorName, context, evaluated) {
 	override fun toString() = super.toString()
 }
 

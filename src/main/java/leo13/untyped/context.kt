@@ -1,9 +1,11 @@
 package leo13.untyped
 
 import leo.base.fold
+import leo13.LeoStruct
 import leo13.base.stackReader
 import leo13.base.stackWriter
 import leo13.script.*
+import leo13.untyped.pattern.unsafeBodyPattern
 import leo9.Stack
 import leo9.mapFirst
 import leo9.push
@@ -26,7 +28,7 @@ val contextWriter: Writer<Context>
 
 data class Context(
 	val functionStack: Stack<Function>,
-	val bindingStack: Stack<Binding>) {
+	val bindingStack: Stack<Binding>) : LeoStruct(contextName) {
 	override fun toString() = super.toString()
 }
 

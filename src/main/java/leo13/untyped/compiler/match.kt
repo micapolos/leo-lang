@@ -1,9 +1,9 @@
 package leo13.untyped.compiler
 
-import leo13.untyped.Pattern
 import leo13.untyped.expression.Expression
 import leo13.untyped.expression.plus
-import leo13.untyped.plus
+import leo13.untyped.pattern.Pattern
+import leo13.untyped.pattern.plus
 
 data class Match(val expression: Expression, val pattern: Pattern)
 

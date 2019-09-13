@@ -1,5 +1,6 @@
 package leo13.untyped.value
 
+import leo13.script.ScriptLine
 import leo13.script.metaFor
 import leo13.untyped.functionName
 
@@ -28,3 +29,7 @@ val ValueItem.bodyScriptLine get() =
 
 val ValueItem.scriptLineOrNull get() =
 	lineOrNull?.scriptLine
+
+val ScriptLine.valueItem: ValueItem
+	get() =
+		item(valueLine)

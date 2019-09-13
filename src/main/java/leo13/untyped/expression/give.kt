@@ -3,10 +3,10 @@ package leo13.untyped.expression
 import leo13.script.lineTo
 import leo13.untyped.bindName
 
-data class Bind(val expression: Expression)
+data class Give(val expression: Expression)
 
-fun bind(expression: Expression) = Bind(expression)
+fun bind(expression: Expression) = Give(expression)
 
-val Bind.scriptLine
+val Give.scriptLine
 	get() =
 		bindName lineTo expression.bodyScript

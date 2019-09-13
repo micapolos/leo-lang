@@ -27,3 +27,7 @@ val ValueLine.bodyScriptLine: ScriptLine get() =
 val ValueLine.scriptLineOrNull: ScriptLine?
 	get() =
 		rhs.scriptOrNull?.let { name lineTo it }
+
+val ScriptLine.valueLine: ValueLine
+	get() =
+		name lineTo rhs.value

@@ -2,6 +2,10 @@ package leo13.untyped
 
 import leo.base.notNullIf
 import leo13.script.*
+import leo13.untyped.pattern.Pattern
+import leo13.untyped.pattern.matches
+import leo13.untyped.pattern.patternReader
+import leo13.untyped.pattern.patternWriter
 
 data class Function(val pattern: Pattern, val body: Body) {
 	override fun toString() = super.toString()

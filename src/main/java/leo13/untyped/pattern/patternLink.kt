@@ -1,4 +1,4 @@
-package leo13.untyped
+package leo13.untyped.pattern
 
 data class PatternLink(val lhs: Pattern, val choice: Choice)
 

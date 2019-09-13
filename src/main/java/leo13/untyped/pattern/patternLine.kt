@@ -1,4 +1,4 @@
-package leo13.untyped
+package leo13.untyped.pattern
 
 import leo13.script.*
 

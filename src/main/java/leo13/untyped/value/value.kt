@@ -32,6 +32,9 @@ val Value.firstItemOrNull: ValueItem?
 fun Value.plus(vararg items: ValueItem) =
 	itemStack.pushAll(*items).value
 
+fun Value.plus(value: Value): Value =
+	itemStack.pushAll(value.itemStack).value
+
 fun Value.plus(line: ValueLine, vararg lines: ValueLine) =
 	plus(item(line)).fold(lines) { plus(item(it)) }
 
@@ -74,3 +77,7 @@ val Value.previousOrNull: Value?
 val Value.scriptOrNull: Script?
 	get() =
 		itemStack.mapOrNull { scriptLineOrNull }?.script
+
+val Script.value: Value
+	get() =
+		lineStack.map { valueItem }.value
