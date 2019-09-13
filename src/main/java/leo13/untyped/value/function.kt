@@ -1,5 +1,6 @@
 package leo13.untyped.value
 
+import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.expression.*
@@ -9,7 +10,7 @@ data class Function(val bindings: Bindings, val expression: Expression) {
 	override fun toString() = scriptLine.toString()
 }
 
-val Function.scriptLine
+val Function.scriptLine: ScriptLine
 	get() =
 		functionName lineTo script(bindings.scriptLine, expression.scriptLine)
 

@@ -1,92 +1,76 @@
 package leo13.untyped.value
 
-import leo.base.ifOrNull
-import leo.base.notNullIf
-import leo.base.updateIfNotNull
+import leo.base.fold
 import leo13.script.Script
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
-import leo13.script.plus
 import leo13.script.script
-import leo13.untyped.functionName
 import leo13.untyped.valueName
 import leo9.*
 
-data class Value(val lhsFunctionOrNull: Function?, val rhsLineStack: Stack<ValueLine>) {
+data class Value(val itemStack: Stack<ValueItem>) {
 	override fun toString() = scriptLine.toString()
 }
 
-fun value(lhsFunctionOrNull: Function?, rhsLineStack: Stack<ValueLine>) =
-	Value(lhsFunctionOrNull, rhsLineStack)
+val Stack<ValueItem>.value get() = Value(this)
 
-fun value(vararg lines: ValueLine) =
-	Value(null, stack(*lines))
+fun value(vararg items: ValueItem) =
+	stack(*items).value
+
+fun value(line: ValueLine, vararg lines: ValueLine) =
+	stack(line, *lines).map { item(this) }.value
 
 fun value(name: String) = value(name lineTo value())
 
-fun value(function: Function, vararg lines: ValueLine) =
-	Value(function, stack(*lines))
+val Value.linkOrNull get() =
+	itemStack.linkOrNull?.run { stack.value linkTo value }
 
-val Value.functionOrNull: Function?
+val Value.firstItemOrNull: ValueItem?
 	get() =
-		ifOrNull(rhsLineStack.isEmpty) {
-			lhsFunctionOrNull
-		}
+		linkOrNull?.rhsItem
 
-val Value.lineStackOrNull: Stack<ValueLine>?
-	get() =
-		notNullIf(lhsFunctionOrNull == null) {
-			rhsLineStack
-		}
+fun Value.plus(vararg items: ValueItem) =
+	itemStack.pushAll(*items).value
 
-val Stack<ValueLine>.value get() =
-	Value(null, this)
-
-fun Value.plus(vararg lines: ValueLine) =
-	rhsLineStack.pushAll(*lines).value
+fun Value.plus(line: ValueLine, vararg lines: ValueLine) =
+	plus(item(line)).fold(lines) { plus(item(it)) }
 
 fun Value.firstLineRhsOrNull(name: String): Value? =
-	rhsLineStack.mapFirst { rhsOrNull(name) }
+	itemStack.mapFirst { rhsOrNull(name) }
 
 fun Value.replaceLineOrNull(line: ValueLine): Value? =
-	rhsLineStack
-		.updateFirst { replaceOrNull(line) }
-		?.let { value(lhsFunctionOrNull, it) }
+	itemStack.updateFirst { replaceOrNull(line) }?.value
 
 fun Value.getOrNull(name: String): Value? =
-	rhsLineStack
-		.valueOrNull
+	firstItemOrNull
+		?.lineOrNull
 		?.rhs
 		?.firstLineRhsOrNull(name)
 		?.let { value(name lineTo it) }
 
-fun Value.setOrNull(line: ValueLine): Value? =
-	rhsLineStack
-		.linkOrNull
-		?.let { link ->
-			link.value.rhs
-				.replaceLineOrNull(line)
-				?.let { rhs ->
-					value(lhsFunctionOrNull, link.stack.push(link.value.name lineTo rhs))
+fun Value.setOrNull(newLine: ValueLine): Value? =
+	linkOrNull?.run {
+		rhsItem.lineOrNull?.let { line ->
+			line
+				.rhs
+				.replaceLineOrNull(newLine)?.let { rhs ->
+					lhsValue.plus(item(line.name lineTo rhs))
 				}
 		}
+	}
 
-val Value.isEmpty get() = lhsFunctionOrNull == null && rhsLineStack.isEmpty
+val Value.isEmpty get() = itemStack.isEmpty
 
 val Value.scriptLine get() =
 	valueName lineTo bodyScript.emptyIfEmpty
 
 val Value.bodyScript get() =
-	script()
-		.updateIfNotNull(lhsFunctionOrNull) { plus(functionName lineTo script()) }
-		.fold(rhsLineStack.reverse) { plus(it.bodyScriptLine) }
+	itemStack.map { bodyScriptLine }.script
 
 val Value.previousOrNull: Value?
 	get() =
-		rhsLineStack.linkOrNull?.stack?.let {
-			value(lhsFunctionOrNull, it)
-		}
+		itemStack.linkOrNull?.stack?.value
 
 val Value.scriptOrNull: Script?
 	get() =
-		rhsLineStack.mapOrNull { scriptLineOrNull }?.script
+		itemStack.mapOrNull { scriptLineOrNull }?.script

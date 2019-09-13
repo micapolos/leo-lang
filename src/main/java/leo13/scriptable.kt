@@ -33,7 +33,7 @@ fun <F : Scriptable, R : Scriptable> asMetaFirstScript(firstName: String, firstO
 		.let { firstLineOrNull ->
 			remaining.map { scriptableLine }.let { remainingLines ->
 				if (firstLineOrNull != null) firstLineOrNull.script.fold(remainingLines) { plus(it) }
-				else leo13.script.script().fold(remainingLines.mapFirst { meta(firstName) }) { plus(it) }
+				else leo13.script.script().fold(remainingLines.mapFirst { metaFor(firstName) }) { plus(it) }
 			}
 		}
 

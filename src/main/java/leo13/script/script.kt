@@ -267,10 +267,6 @@ val ScriptHead.completeScriptOrNull
 	get() =
 		notNullIf(openerStack.isEmpty) { script }
 
-fun ScriptLine.meta(name: String): ScriptLine =
-	if (this.name == name) "meta" lineTo script
-	else this
-
 fun <V> Stack<V>.script(fn: V.() -> ScriptLine) =
 	map { fn() }.script
 

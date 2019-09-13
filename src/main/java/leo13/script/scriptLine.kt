@@ -1,8 +1,10 @@
 package leo13.script
 
 import leo.base.notNullIf
+import leo.base.updateIf
 import leo13.LeoObject
 import leo13.fail
+import leo13.untyped.metaName
 
 data class ScriptLine(val name: String, val rhs: Script) : LeoObject() {
 	override fun toString() = script(this).toString()
@@ -26,3 +28,5 @@ fun ScriptLine.unsafeRhs(name: String): Script =
 			name lineTo script(),
 			"expected" lineTo script()))
 
+fun ScriptLine.metaFor(vararg names: String): ScriptLine =
+	updateIf(names.contains(this.name)) { metaName lineTo script(this) }

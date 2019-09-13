@@ -52,9 +52,9 @@ fun Evaluator.plus(switch: Switch): Evaluator =
 	switch.caseStack.mapFirst { plusOrNull(this) }!!
 
 fun Evaluator.plusOrNull(case: Case): Evaluator? =
-	when (value.rhsLineStack) {
+	when (value.itemStack) {
 		is EmptyStack -> null
-		is LinkStack -> value.rhsLineStack.link.value.let { line ->
+		is LinkStack -> value.itemStack.link.value.lineOrNull?.let { line ->
 			notNullIf(line.name == case.name) {
 				plus(case.expression)
 			}
@@ -68,7 +68,7 @@ fun Evaluator.plus(bind: Bind): Evaluator =
 	set(bindings.plus(value).evaluate(bind.expression))
 
 fun Evaluator.plus(apply: Apply): Evaluator =
-	set(value.functionOrNull!!.apply(bindings.evaluate(apply.expression)))
+	set(value.firstItemOrNull?.functionOrNull!!.apply(bindings.evaluate(apply.expression)))
 
 val Evaluator.scriptLine
 	get() =
