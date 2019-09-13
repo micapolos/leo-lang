@@ -1,5 +1,6 @@
 package leo13
 
+import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -16,6 +17,10 @@ data class TracedError(val stack: Stack<Trace> = leo9.stack()) : Exception() {
 data class Trace(val scriptLineFn: () -> ScriptLine) {
 	override fun toString() = scriptLine.toString()
 }
+
+data class Traced<out V>(val fn: () -> V)
+
+fun <V> traced(fn: () -> V) = Traced(fn)
 
 val Trace.scriptLine get() = scriptLineFn()
 
@@ -35,3 +40,9 @@ val TracedError.scriptLine
 	get() =
 		errorName lineTo stack.reverse.map { scriptLine }.script
 
+fun <V> Traced<V>.onError(errorFn: Script.() -> V): V =
+	try {
+		fn()
+	} catch (tracedError: TracedError) {
+		tracedError.scriptLine.rhs.errorFn()
+	}
