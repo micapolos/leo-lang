@@ -5,8 +5,7 @@ import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
 import leo13.untyped.expression.*
-import leo13.untyped.pattern.lineTo
-import leo13.untyped.pattern.pattern
+import leo13.untyped.pattern.*
 import org.junit.Test
 
 class CompilerTest {
@@ -146,5 +145,30 @@ class CompilerTest {
 						compiled(
 							expression(given.op),
 							pattern("given" lineTo pattern("zero")))))
+	}
+
+	@Test
+	fun processOf() {
+		compiler()
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(opening("of")))
+			.process(token(opening("choice")))
+			.process(token(opening("either")))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("either")))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				compiler()
+					.set(
+						compiled(
+							expression("zero"),
+							pattern(item(choice(either("zero"), either("one")))))))
 	}
 }
