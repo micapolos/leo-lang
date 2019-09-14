@@ -81,4 +81,47 @@ class PatternTest {
 					.plus("foo" lineTo pattern("bar"))
 					.plus("zoo" lineTo pattern("zar")))
 	}
+
+	@Test
+	fun contains() {
+		pattern()
+			.contains(pattern())
+			.assertEqualTo(true)
+
+		pattern("foo")
+			.contains(pattern("foo"))
+			.assertEqualTo(true)
+
+		pattern("foo")
+			.contains(pattern("bar"))
+			.assertEqualTo(false)
+
+		pattern(item(choice(either("zero"), either("one"))))
+			.contains(pattern("zero"))
+			.assertEqualTo(true)
+
+		pattern(item(choice(either("zero"), either("one"))))
+			.contains(pattern("one"))
+			.assertEqualTo(true)
+
+		pattern(item(choice(either("zero"), either("one"))))
+			.contains(pattern("two"))
+			.assertEqualTo(false)
+
+		pattern(item(choice(either("zero"), either("one"))))
+			.contains(pattern(item(choice(either("zero"), either("one")))))
+			.assertEqualTo(true)
+
+		pattern(item(choice(either("zero"), either("one"))))
+			.contains(pattern(item(choice(either("one"), either("zero")))))
+			.assertEqualTo(false)
+
+		pattern(item(pattern("zero") arrowTo pattern("one")))
+			.contains(pattern(item(pattern("zero") arrowTo pattern("one"))))
+			.assertEqualTo(true)
+
+		pattern(item(pattern("zero") arrowTo pattern("one")))
+			.contains(pattern(item(pattern("one") arrowTo pattern("zero"))))
+			.assertEqualTo(false)
+	}
 }

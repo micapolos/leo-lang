@@ -13,6 +13,9 @@ infix fun Pattern.arrowTo(rhs: Pattern) = PatternArrow(this, rhs)
 fun PatternArrow.matches(function: ValueFunction): Boolean =
 	this == function.patternArrow
 
+fun PatternArrow.contains(arrow: PatternArrow) =
+	this == arrow
+
 val PatternArrow.scriptLine
 	get() =
 		functionName lineTo lhs.bodyScript.plus(givingName lineTo rhs.bodyScript)

@@ -23,6 +23,12 @@ fun Either.matches(scriptLine: ScriptLine): Boolean =
 fun Either.matches(line: ValueLine): Boolean =
 	name == scriptLine.name && rhs.matches(line.rhs)
 
+fun Either.contains(line: PatternLine): Boolean =
+	name == line.name && rhs.contains(line.rhs)
+
+fun Either.contains(either: Either): Boolean =
+	name == either.name && rhs.contains(either.rhs)
+
 val ScriptLine.unsafeBodyEither: Either
 	get() =
 		name eitherTo rhs.unsafeBodyPattern

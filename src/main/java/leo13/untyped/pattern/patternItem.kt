@@ -22,6 +22,12 @@ fun PatternItem.matches(valueItem: ValueItem): Boolean =
 		is ArrowPatternItem -> valueItem is FunctionValueItem && arrow.matches(valueItem.function)
 	}
 
+fun PatternItem.contains(item: PatternItem): Boolean =
+	when (this) {
+		is ChoicePatternItem -> choice.contains(item)
+		is ArrowPatternItem -> item is ArrowPatternItem && arrow.contains(item.arrow)
+	}
+
 fun PatternItem.replaceLineOrNull(line: PatternLine): PatternItem? =
 	choiceOrNull?.replaceLineOrNull(line)?.let { item(it) }
 

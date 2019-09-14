@@ -9,7 +9,10 @@ import leo13.token.Token
 import leo13.untyped.expression.expression
 import leo13.untyped.expression.given
 import leo13.untyped.expression.op
+import leo13.untyped.pattern.Pattern
+import leo13.untyped.pattern.contains
 import leo13.untyped.pattern.isEmpty
+import leo13.untyped.pattern.pattern
 import leo9.Stack
 import leo9.fold
 import leo9.reverse
@@ -74,7 +77,11 @@ data class Compiler(
 				converter { plusIn(it) },
 				context.bind(compiled.pattern))
 
-	val beginOf: Processor<Token> get() = TODO()
+	val beginOf: Processor<Token>
+		get() =
+			compiler(
+				converter { plusOf(it) },
+				pattern())
 
 	val beginPrevious: Processor<Token>
 		get() =
@@ -130,6 +137,10 @@ fun Compiler.plusGiven(rhs: Compiled): Compiler =
 fun Compiler.plusPrevious(rhs: Compiled): Compiler =
 	if (!compiled.pattern.isEmpty) tracedError()
 	else rhs.previousOrNull?.let { set(it) } ?: tracedError()
+
+fun Compiler.plusOf(rhs: Pattern): Compiler =
+	if (!rhs.contains(compiled.pattern)) tracedError()
+	else set(compiled(compiled.expression, rhs))
 
 fun Compiler.plus(name: String): Compiler =
 	set(compiled()).plusNormalized(name lineTo compiled)

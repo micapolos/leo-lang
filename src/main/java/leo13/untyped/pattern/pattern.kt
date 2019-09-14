@@ -61,6 +61,11 @@ fun Pattern.matches(value: Value): Boolean =
 fun Pattern.matches(script: Script): Boolean =
 	matches(script.value)
 
+fun Pattern.contains(pattern: Pattern): Boolean =
+	zipMapOrNull(itemStack, pattern.itemStack) { item1, item2 ->
+		item1.contains(item2)
+	}?.all { this } ?: false
+
 fun Pattern.patternLineOrNull(name: String): PatternLine? =
 	itemStack.mapFirst { choiceOrNull?.onlyEitherOrNull?.patternLineOrNull(name) }
 

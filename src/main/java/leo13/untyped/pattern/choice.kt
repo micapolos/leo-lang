@@ -29,6 +29,29 @@ fun Choice.matches(scriptLine: ScriptLine): Boolean =
 fun Choice.matches(line: ValueLine): Boolean =
 	eitherStack.any { matches(line) }
 
+fun Choice.contains(line: PatternLine): Boolean =
+	eitherStack.any { contains(line) }
+
+fun Choice.contains(either: Either): Boolean =
+	eitherStack.any { contains(either) }
+
+fun Choice.contains(choice: Choice): Boolean =
+	choice
+		.onlyEitherOrNull
+		?.let { contains(it) }
+		?: containsAll(choice)
+
+fun Choice.containsAll(choice: Choice): Boolean =
+	zipMapOrNull(eitherStack, choice.eitherStack) { either1, either2 ->
+		either1.contains(either2)
+	}?.all { this } ?: false
+
+fun Choice.contains(item: PatternItem): Boolean =
+	when (item) {
+		is ChoicePatternItem -> contains(item.choice)
+		is ArrowPatternItem -> false
+	}
+
 val Choice.onlyEitherOrNull: Either?
 	get() =
 		eitherStack.onlyOrNull
