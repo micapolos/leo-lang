@@ -1,140 +1,155 @@
 package leo13.untyped.compiler
 
-import leo.base.ifOrNull
-import leo13.script.Script
-import leo13.script.ScriptLine
-import leo13.script.isEmpty
-import leo13.untyped.*
-import leo13.untyped.expression.get
+import leo13.*
+import leo13.script.lineTo
+import leo13.script.script
+import leo13.token.ClosingToken
+import leo13.token.OpeningToken
+import leo13.token.Token
+import leo13.untyped.expression.expression
+import leo13.untyped.expression.given
 import leo13.untyped.expression.op
-import leo13.untyped.expression.plus
-import leo13.untyped.expression.set
-import leo13.untyped.pattern.choiceOrNull
-import leo13.untyped.pattern.getOrNull
 import leo13.untyped.pattern.isEmpty
-import leo13.untyped.pattern.setOrNull
-import leo9.linkOrNull
-import leo9.onlyOrNull
+import leo9.Stack
+import leo9.fold
+import leo9.reverse
 
 data class Compiler(
+	val converter: Converter<Compiled, Token>,
 	val context: Context,
-	val compiled: ExpressionCompiled)
+	val compiled: Compiled
+) :
+	ObjectScripting(),
+	Processor<Token> {
+	override fun toString() = super.toString()
 
-fun compiler(arrows: Context, compiled: ExpressionCompiled) =
-	Compiler(arrows, compiled)
+	override val scriptingLine
+		get() =
+			"expression" lineTo script(
+				"compiler" lineTo script(
+					converter.scriptingLine,
+					context.scriptingLine,
+					compiled.scriptingLine))
 
-fun Compiler.plus(line: ScriptLine): Compiler =
-	if (isError) this
-	else if (line.rhs.isEmpty) plus(line.name)
-	else plusNormalized(line)
-
-fun Compiler.plus(name: String): Compiler =
-	compiler(context, compiled()).plus(name lineTo compiled)
-
-fun Compiler.plusNormalized(line: ScriptLine): Compiler =
-	when (line.name) {
-		defineName -> plusDefineOrNull(line.rhs)
-		quoteName -> plusQuoteOrNull(line.rhs)
-		quoteName -> plusUnquoteOrNull(line.rhs)
-		scriptName -> plusScriptOrNull(line.rhs)
-		switchName -> plusSwitch(line.rhs)
-		else -> plusOtherOrNull(line)
-	} ?: TODO()
-
-fun Compiler.plusDefineOrNull(rhs: Script): Compiler? =
-	TODO()
-
-fun Compiler.plusQuoteOrNull(rhs: Script): Compiler? =
-	TODO()
-
-fun Compiler.plusUnquoteOrNull(rhs: Script): Compiler? =
-	TODO()
-
-fun Compiler.plusScriptOrNull(rhs: Script): Compiler? =
-	TODO()
-
-fun Compiler.plusSwitch(rhs: Script): Compiler =
-	TODO()
-//	plus(context.compileSwitch(rhs))
-
-fun Compiler.plus(switch: CompiledSwitch): Compiler =
-	TODO()
-//	compiler(
-//		context,
-//		compiled)
-//	context
-//		.compileSwitch(rhs)
-//		.let { switch ->
-//			compiler(
-//				context,
-//				context.compileSwitch(rhs))
-//		}
-
-fun Compiler.plusOtherOrNull(line: ScriptLine): Compiler? =
-	context.compile(line).let { plus(it) }
-
-fun Compiler.plus(line: CompiledLine): Compiler =
-	when (line.name) {
-		setName -> plusSetOrNull(line.rhs)
-		forgetName -> plusForgetOrNull(line.rhs)
-		replaceName -> plusReplace(line.rhs)
-		previousName -> plusPreviousOrNull(line.rhs)
-		else -> plusOther(line)
-	} ?: plusError(line)
-
-fun Compiler.plusSetOrNull(rhs: ExpressionCompiled): Compiler? =
-	TODO()
-//	rhs.pattern.lineStackOrNull?.let { lineStack ->
-//		orNullFold(lineStack.reverse.seq) { plusSet(it) }
-//	}
-
-fun Compiler.plusReplace(rhs: ExpressionCompiled): Compiler =
-	TODO()
-
-fun Compiler.plusSetOrNull(line: CompiledLine): Compiler? =
-	compiled
-		.pattern
-		.setOrNull(line.patternLine)
-		?.let { setPattern ->
-			set(
-				compiled(
-					compiled.expression.plus(set(line.expressionLine).op),
-					setPattern))
+	override fun process(token: Token): Processor<Token> =
+		when (token) {
+			is OpeningToken -> begin(token.opening.name)
+			is ClosingToken -> end
 		}
 
-fun Compiler.plusForgetOrNull(rhs: ExpressionCompiled): Compiler? =
-	ifOrNull(compiled.pattern.isEmpty) {
-		compiler(context, compiled())
+	fun begin(name: String): Processor<Token> =
+		when (name) {
+			"define" -> beginOf
+			"given" -> beginGiven
+			"in" -> beginIn
+			"of" -> beginOf
+			"everything" -> beginEverything
+			"previous" -> beginPrevious
+			"set" -> beginSet
+			"switch" -> beginSwitch
+			else -> beginOther(name)
+		}
+
+	val end
+		get() =
+			converter.convert(compiled)
+
+	val beginDefine: Processor<Token> get() = TODO()
+
+	val beginEverything: Processor<Token>
+		get() =
+			compiler(
+				converter { plusEverything(it) },
+				context)
+
+	val beginGiven: Processor<Token>
+		get() =
+			compiler(
+				converter { plusGiven(it) },
+				context)
+
+	val beginIn: Processor<Token>
+		get() =
+			compiler(
+				converter { plusIn(it) },
+				context.bind(compiled.pattern))
+
+	val beginOf: Processor<Token> get() = TODO()
+
+	val beginPrevious: Processor<Token>
+		get() =
+			compiler(
+				converter { plusPrevious(it) },
+				context)
+
+	val beginSet: Processor<Token>
+		get() =
+			lineCompiler(
+				converter { plusSet(it) },
+				context)
+
+	val beginSwitch: Processor<Token> get() = TODO()
+
+	fun beginOther(name: String): Processor<Token> =
+		compiler(
+			converter { plus(name lineTo it) },
+			context)
+}
+
+fun compiler() =
+	compiler(errorConverter(), context(), compiled())
+
+fun compiler(
+	converter: Converter<Compiled, Token>,
+	context: Context,
+	compiled: Compiled = compiled()) =
+	Compiler(converter, context, compiled)
+
+fun Compiler.set(context: Context) =
+	copy(context = context)
+
+fun Compiler.set(compiled: Compiled) =
+	copy(compiled = compiled)
+
+// TODO: Implement normalization outside of the compiler, as Processor<Token>
+fun Compiler.plus(line: CompiledLine): Compiler =
+	if (line.rhs.pattern.isEmpty) plus(line.name)
+	else plusNormalized(line)
+
+fun Compiler.plusEverything(rhs: Compiled): Compiler =
+	if (!compiled.pattern.isEmpty) tracedError()
+	else rhs.everythingOrNull?.let { set(it) } ?: tracedError()
+
+fun Compiler.plusIn(rhs: Compiled): Compiler =
+	set(compiled.plusIn(rhs))
+
+fun Compiler.plusGiven(rhs: Compiled): Compiler =
+	if (!compiled.pattern.isEmpty || !rhs.pattern.isEmpty) tracedError()
+	else set(compiled(expression(given.op), context.givenPattern))
+
+fun Compiler.plusPrevious(rhs: Compiled): Compiler =
+	if (!compiled.pattern.isEmpty) tracedError()
+	else rhs.previousOrNull?.let { set(it) } ?: tracedError()
+
+fun Compiler.plus(name: String): Compiler =
+	set(compiled()).plusNormalized(name lineTo compiled)
+
+fun Compiler.plusNormalized(line: CompiledLine): Compiler =
+	when (line.name) {
+		else -> plusOther(line)
 	}
 
-fun Compiler.plusPreviousOrNull(rhs: ExpressionCompiled): Compiler? =
-	ifOrNull(compiled.pattern.isEmpty) {
-		rhs.previousOrNull?.let { compiler(context, it) }
-	}
+fun Compiler.plusSet(lineStack: Stack<CompiledLine>): Compiler =
+	fold(lineStack.reverse) { plus(it) }
+
+fun Compiler.plusSet(line: CompiledLine): Compiler =
+	TODO()
 
 fun Compiler.plusOther(line: CompiledLine): Compiler =
-	null
-		?: plusGetOrNull(line)
-		?: append(line)
+	plusGetOrNull(line) ?: append(line)
 
 fun Compiler.plusGetOrNull(line: CompiledLine): Compiler? =
-	ifOrNull(compiled.pattern.isEmpty) {
-		line
-			.rhs
-			.pattern
-			.getOrNull(line.name)
-			?.let { set(compiled(compiled.expression.plus(get(line.name).op), it)) }
-	}
-
-fun Compiler.plusError(line: CompiledLine): Compiler =
-	compiler(context, compiled.plus(errorName lineTo compiled(line)))
+	line.rhs.getOrNull(line.name)?.run { set(this) } // TODO: Don't set(), but plus(line)
 
 fun Compiler.append(line: CompiledLine): Compiler =
 	set(compiled.plus(line))
-
-fun Compiler.set(compiled: ExpressionCompiled) =
-	copy(compiled = compiled)
-
-val Compiler.isError
-	get() =
-		compiled.pattern.itemStack.linkOrNull?.value?.choiceOrNull?.eitherStack?.onlyOrNull?.name == errorName

@@ -8,7 +8,7 @@ import leo13.script.script
 import leo13.untyped.expression.*
 import leo13.untyped.pattern.*
 
-data class ExpressionCompiled(val expression: Expression, val pattern: Pattern) : ObjectScripting() {
+data class Compiled(val expression: Expression, val pattern: Pattern) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine
 		get() =
@@ -16,38 +16,32 @@ data class ExpressionCompiled(val expression: Expression, val pattern: Pattern) 
 }
 
 fun compiled(expression: Expression, pattern: Pattern) =
-	ExpressionCompiled(expression, pattern)
+	Compiled(expression, pattern)
 
 fun compiled(vararg lines: CompiledLine) =
-	ExpressionCompiled(expression(), pattern()).fold(lines) { plus(it) }
+	Compiled(expression(), pattern()).fold(lines) { plus(it) }
 
-fun compiled(script: Script): ExpressionCompiled =
+fun compiled(script: Script): Compiled =
 	TODO()
 
-fun ExpressionCompiled.plus(line: CompiledLine) =
+fun Compiled.plus(line: CompiledLine) =
 	compiled(
 		expression.plus(line.op),
 		pattern.plus(line.patternLine))
 
-val ExpressionCompiled.previousOrNull: ExpressionCompiled?
+val Compiled.previousOrNull: Compiled?
 	get() =
 		pattern
 			.previousOrNull
 			?.run { compiled(expression.plus(previous.op), this) }
 
-val ExpressionCompiled.everythingOrNull: ExpressionCompiled?
+val Compiled.everythingOrNull: Compiled?
 	get() =
 		pattern
 			.everythingOrNull
 			?.run { compiled(expression.plus(everything.op), this) }
 
-fun ExpressionCompiled.plus(switch: CompiledSwitch): ExpressionCompiled =
-	TODO()
-//	compiled(
-//		expression.plus(switch),
-//		switch.caseStack.valueOrNull?.rhs?.pattern?:pattern)
-
-fun ExpressionCompiled.getOrNull(name: String): ExpressionCompiled? =
+fun Compiled.getOrNull(name: String): Compiled? =
 	pattern
 		.getOrNull(name)
 		?.run {
@@ -56,7 +50,7 @@ fun ExpressionCompiled.getOrNull(name: String): ExpressionCompiled? =
 				this)
 		}
 
-fun ExpressionCompiled.plusIn(rhs: ExpressionCompiled): ExpressionCompiled =
+fun Compiled.plusIn(rhs: Compiled): Compiled =
 	compiled(
 		expression.plus(bind(rhs.expression).op),
 		rhs.pattern)

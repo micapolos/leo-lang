@@ -9,10 +9,10 @@ import leo13.untyped.pattern.lineTo
 import leo13.untyped.pattern.pattern
 import org.junit.Test
 
-class ExpressionCompilerTest {
+class CompilerTest {
 	@Test
 	fun lines() {
-		expressionCompiler()
+		compiler()
 			.process(token(opening("zero")))
 			.process(token(closing))
 			.process(token(opening("plus")))
@@ -20,7 +20,7 @@ class ExpressionCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				expressionCompiler().set(
+				compiler().set(
 					compiled(
 						expression(
 							"zero" lineTo expression(),
@@ -32,13 +32,13 @@ class ExpressionCompilerTest {
 
 	@Test
 	fun normalization() {
-		expressionCompiler()
+		compiler()
 			.process(token(opening("red")))
 			.process(token(closing))
 			.process(token(opening("color")))
 			.process(token(closing))
 			.assertEqualTo(
-				expressionCompiler().set(
+				compiler().set(
 					compiled(
 						expression("color" lineTo expression("red")),
 						pattern("color" lineTo pattern("red")))))
@@ -46,7 +46,7 @@ class ExpressionCompilerTest {
 
 	@Test
 	fun get() {
-		expressionCompiler()
+		compiler()
 			.process(token(opening("color")))
 			.process(token(opening("circle")))
 			.process(token(opening("color")))
@@ -56,7 +56,7 @@ class ExpressionCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				expressionCompiler().set(
+				compiler().set(
 					compiled(
 						expression(
 							"circle" lineTo expression(
@@ -68,14 +68,14 @@ class ExpressionCompilerTest {
 
 	@Test
 	fun bind() {
-		expressionCompiler()
+		compiler()
 			.set(compiled(expression("zero"), pattern("zero")))
 			.process(token(opening("in")))
 			.process(token(opening("given")))
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				expressionCompiler().set(
+				compiler().set(
 					compiled(
 						expression("zero")
 							.plus(bind(expression(given.op)).op),
@@ -84,7 +84,7 @@ class ExpressionCompilerTest {
 
 	@Test
 	fun previous() {
-		expressionCompiler()
+		compiler()
 			.process(token(opening("previous")))
 			.process(token(opening("x")))
 			.process(token(opening("zero")))
@@ -96,7 +96,7 @@ class ExpressionCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				expressionCompiler().set(
+				compiler().set(
 					compiled(
 						expression(
 							"x" lineTo expression("zero"),
@@ -107,7 +107,7 @@ class ExpressionCompilerTest {
 
 	@Test
 	fun everything() {
-		expressionCompiler()
+		compiler()
 			.process(token(opening("everything")))
 			.process(token(opening("vec")))
 			.process(token(opening("x")))
@@ -121,7 +121,7 @@ class ExpressionCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				expressionCompiler().set(
+				compiler().set(
 					compiled(
 						expression(
 							"vec" lineTo expression(
@@ -135,12 +135,12 @@ class ExpressionCompilerTest {
 
 	@Test
 	fun given() {
-		expressionCompiler()
+		compiler()
 			.set(context().bind(pattern("zero")))
 			.process(token(opening("given")))
 			.process(token(closing))
 			.assertEqualTo(
-				expressionCompiler()
+				compiler()
 					.set(context().bind(pattern("zero")))
 					.set(
 						compiled(
