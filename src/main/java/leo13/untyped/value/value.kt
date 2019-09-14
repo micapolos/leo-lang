@@ -56,9 +56,8 @@ fun Value.setOrNull(newLine: ValueLine): Value? =
 		rhsItem.lineOrNull?.let { line ->
 			line
 				.rhs
-				.replaceLineOrNull(newLine)?.let { rhs ->
-					lhsValue.plus(item(line.name lineTo rhs))
-				}
+				.run { replaceLineOrNull(newLine) ?: plus(newLine) }
+				.let { rhs -> lhsValue.plus(item(line.name lineTo rhs)) }
 		}
 	}
 

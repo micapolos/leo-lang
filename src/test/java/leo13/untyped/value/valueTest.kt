@@ -60,5 +60,15 @@ class ValueTest {
 				value("point" lineTo value(
 					"x" lineTo value("zero"),
 					"y" lineTo value("two"))))
+
+		value("point" lineTo value(
+			"x" lineTo value("zero"),
+			"y" lineTo value("one")))
+			.setOrNull("z" lineTo value("two"))
+			.assertEqualTo(
+				value("point" lineTo value(
+					"x" lineTo value("zero"),
+					"y" lineTo value("one"),
+					"z" lineTo value("two"))))
 	}
 }

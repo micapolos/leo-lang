@@ -98,10 +98,8 @@ fun Pattern.setOrNull(line: PatternLine): Pattern? =
 			itemStackLink
 				.stack
 				.pattern
-				.replaceLineOrNull(line)
-				?.let { replacedRhs ->
-					pattern(itemStackLink.stack.push(item(choice(line.name eitherTo replacedRhs))))
-				}
+				.run { replaceLineOrNull(line) ?: plus(line) }
+				.let { pattern(itemStackLink.stack.push(item(choice(line.name eitherTo it)))) }
 		}
 
 fun Pattern.setOrNull(pattern: Pattern): Pattern? =
