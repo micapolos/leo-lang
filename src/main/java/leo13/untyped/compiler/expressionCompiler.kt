@@ -9,7 +9,7 @@ import leo13.token.Token
 import leo13.untyped.pattern.isEmpty
 
 data class ExpressionCompiler(
-	val converter: Converter<ExpressionCompiled, Processor<Token>>,
+	val converter: Converter<ExpressionCompiled, Token>,
 	val context: Context,
 	val compiled: ExpressionCompiled
 ) :
@@ -29,6 +29,7 @@ data class ExpressionCompiler(
 		when (token) {
 			is OpeningToken -> when (token.opening.name) {
 				"define" -> beginOf
+				"in" -> beginIn
 				"of" -> beginOf
 				"set" -> beginSet
 				"switch" -> beginSwitch
@@ -38,6 +39,7 @@ data class ExpressionCompiler(
 		}
 
 	val beginDefine: Processor<Token> get() = TODO()
+	val beginIn: Processor<Token> get() = TODO()
 	val beginOf: Processor<Token> get() = TODO()
 	val beginSet: Processor<Token> get() = TODO()
 	val beginSwitch: Processor<Token> get() = TODO()
@@ -53,7 +55,7 @@ fun expressionCompiler() =
 	compiler(errorConverter(), context(), compiled())
 
 fun compiler(
-	converter: Converter<ExpressionCompiled, Processor<Token>>,
+	converter: Converter<ExpressionCompiled, Token>,
 	context: Context,
 	compiled: ExpressionCompiled) =
 	ExpressionCompiler(converter, context, compiled)
