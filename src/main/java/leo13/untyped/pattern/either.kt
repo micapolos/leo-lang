@@ -43,9 +43,9 @@ val Either.scriptLine: ScriptLine
 	get() =
 		eitherName lineTo script(bodyScriptLine)
 
-fun Either.linePatternOrNull(name: String): Pattern? =
+fun Either.patternLineOrNull(name: String): PatternLine? =
 	notNullIf(this.name == name) {
-		pattern(name lineTo rhs)
+		name lineTo rhs
 	}
 
 fun Either.replaceLineOrNull(line: PatternLine): Either? =
@@ -56,3 +56,7 @@ fun Either.replaceLineOrNull(line: PatternLine): Either? =
 val Either.patternLine
 	get() =
 		name lineTo rhs
+
+val PatternLine.either
+	get() =
+		name eitherTo rhs

@@ -31,6 +31,12 @@ fun pattern(line: PatternLine, vararg lines: PatternLine): Pattern =
 
 fun pattern(name: String) = pattern(name lineTo pattern())
 
+val Pattern.linkOrNull: PatternLink?
+	get() =
+		itemStack.linkOrNull?.let { link ->
+			link.stack.pattern linkTo link.value
+		}
+
 fun Pattern.plus(item: PatternItem) =
 	pattern(itemStack.push(item))
 
@@ -55,8 +61,8 @@ fun Pattern.matches(value: Value): Boolean =
 fun Pattern.matches(script: Script): Boolean =
 	matches(script.value)
 
-fun Pattern.linePatternOrNull(name: String): Pattern? =
-	itemStack.mapFirst { linePatternOrNull(name) }
+fun Pattern.patternLineOrNull(name: String): PatternLine? =
+	itemStack.mapFirst { choiceOrNull?.onlyEitherOrNull?.patternLineOrNull(name) }
 
 fun Pattern.replaceLineOrNull(line: PatternLine): Pattern? =
 	when (itemStack) {
@@ -75,7 +81,15 @@ fun Pattern.replaceLineOrNull(line: PatternLine): Pattern? =
 	}
 
 fun Pattern.getOrNull(name: String): Pattern? =
-	itemStack.linkOrNull?.value?.choiceOrNull?.linePatternOrNull(name)
+	linkOrNull?.let { link ->
+		link
+			.item
+			.choiceOrNull
+			?.onlyEitherOrNull
+			?.rhs
+			?.patternLineOrNull(name)
+			?.let { link.lhs.plus(item(choice(it.either))) }
+	}
 
 fun Pattern.setOrNull(line: PatternLine): Pattern? =
 	itemStack

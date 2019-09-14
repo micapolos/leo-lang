@@ -40,3 +40,12 @@ fun ExpressionCompiled.plus(switch: CompiledSwitch): ExpressionCompiled =
 //	compiled(
 //		expression.plus(switch),
 //		switch.caseStack.valueOrNull?.rhs?.pattern?:pattern)
+
+fun ExpressionCompiled.getOrNull(name: String): ExpressionCompiled? =
+	pattern
+		.getOrNull(name)
+		?.run {
+			compiled(
+				expression.plus(get(name).op),
+				this)
+		}

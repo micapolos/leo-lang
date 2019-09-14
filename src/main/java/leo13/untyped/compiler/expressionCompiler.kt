@@ -28,7 +28,7 @@ data class ExpressionCompiler(
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken -> when (token.opening.name) {
-				"define" -> beginDefine
+				"define" -> beginOf
 				"of" -> beginOf
 				"set" -> beginSet
 				"switch" -> beginSwitch
@@ -61,6 +61,7 @@ fun compiler(
 fun ExpressionCompiler.set(compiled: ExpressionCompiled) =
 	copy(compiled = compiled)
 
+// TODO: Implement normalization outside of the compiler, as Processor<Token>
 fun ExpressionCompiler.plus(line: CompiledLine): ExpressionCompiler =
 	if (line.rhs.pattern.isEmpty) plus(line.name)
 	else plusNormalized(line)
@@ -69,4 +70,15 @@ fun ExpressionCompiler.plus(name: String): ExpressionCompiler =
 	set(compiled()).plusNormalized(name lineTo compiled)
 
 fun ExpressionCompiler.plusNormalized(line: CompiledLine): ExpressionCompiler =
+	when (line.name) {
+		else -> plusOther(line)
+	}
+
+fun ExpressionCompiler.plusOther(line: CompiledLine): ExpressionCompiler =
+	plusGetOrNull(line) ?: append(line)
+
+fun ExpressionCompiler.plusGetOrNull(line: CompiledLine): ExpressionCompiler? =
+	line.rhs.getOrNull(line.name)?.run { set(this) } // TODO: Don't set(), but plus(line)
+
+fun ExpressionCompiler.append(line: CompiledLine): ExpressionCompiler =
 	set(compiled.plus(line))
