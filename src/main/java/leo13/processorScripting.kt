@@ -7,7 +7,7 @@ import leo9.Stack
 import leo9.push
 import leo9.stack
 
-data class ProcessorScripting<S : ScriptingObject, V>(
+data class ProcessorScripting<S : Scripting, V>(
 	val state: S,
 	val processFn: S.(V) -> S) : Processor<V>, ScriptingObject() {
 	override fun toString() = super.toString()
@@ -15,7 +15,7 @@ data class ProcessorScripting<S : ScriptingObject, V>(
 	override val scriptingLine get() = "processor" lineTo script(state.scriptingLine)
 }
 
-fun <S : ScriptingObject, V> S.processor(processFn: S.(V) -> S): Processor<V> =
+fun <S : Scripting, V> S.processor(processFn: S.(V) -> S): Processor<V> =
 	ProcessorScripting(this, processFn)
 
 fun <V> Stack<V>.processor(scriptLineFn: V.() -> ScriptLine): Processor<V> =
@@ -29,6 +29,8 @@ fun <V : Scripting> processor(vararg values: V): Processor<V> =
 val Stack<Char>.charProcessor: Processor<Char>
 	get() =
 		processor { scriptLine }
+
+val charProcessor = stack<Char>().charProcessor
 
 fun <V> errorProcessor(): Processor<V> =
 	stack<Unit>()

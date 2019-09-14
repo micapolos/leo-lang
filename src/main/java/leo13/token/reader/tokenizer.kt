@@ -13,15 +13,18 @@ import leo13.token.opening
 import leo13.token.token
 
 data class Tokenizer(
-	val processor: Processor<Token>,
+	val tokenProcessor: Processor<Token>,
 	val parent: Parent,
-	val head: Head) : ScriptingObject() {
+	val head: Head) : ScriptingObject(), Processor<Char> {
 	override fun toString() = super.toString()
+
 	override val scriptingLine: ScriptLine
 		get() = "tokenizer" lineTo script(
-			processor.scriptingLine,
+			tokenProcessor.scriptingLine,
 			parent.scriptableLine,
 			head.scriptableLine)
+
+	override fun process(char: Char) = push(char)
 }
 
 fun Processor<Token>.tokenizer(parent: Parent = parent(), head: Head = head()): Tokenizer =
@@ -54,12 +57,12 @@ val Tokenizer.pushSpaceOrNull: Tokenizer?
 		when (head) {
 			is InputHead ->
 				if (head.input.name.isEmpty()) null
-				else processor
+				else tokenProcessor
 					.process(token(opening(head.input.name)))
 					.process(token(closing))
 					.tokenizer(parent, head(input(head.input.colon, "")))
 			is ColonHead ->
-				processor.tokenizer(parent, head(input(colon(true), "")))
+				tokenProcessor.tokenizer(parent, head(input(colon(true), "")))
 			is IndentHead -> null
 		}
 
@@ -69,7 +72,7 @@ val Tokenizer.pushTabOrNull: Tokenizer?
 			is InputHead -> null
 			is ColonHead -> null
 			is IndentHead ->
-				processor.tokenizer(
+				tokenProcessor.tokenizer(
 					parent.plus(head.indent.tab),
 					head.indent.previousOrNull
 						?.let { previous -> head(previous) }
@@ -81,7 +84,7 @@ val Tokenizer.pushColonOrNull: Tokenizer?
 		when (head) {
 			is InputHead ->
 				if (head.input.name.isEmpty()) null
-				else processor
+				else tokenProcessor
 					.process(token(opening(head.input.name)))
 					.tokenizer(
 						if (head.input.colon.boolean) parent.plus(space)
@@ -97,7 +100,7 @@ val Tokenizer.pushNewlineOrNull: Tokenizer?
 			is InputHead ->
 				if (head.input.name.isEmpty())
 					orNullIf(parent.indentOrNull != null)
-				else processor
+				else tokenProcessor
 					.process(token(opening(head.input.name)))
 					.tokenizer(
 						parent(),
@@ -112,12 +115,12 @@ fun Tokenizer.pushOtherOrNull(char: Char): Tokenizer? =
 		is InputHead ->
 			if (!char.isLetter()) null
 			else
-				processor.tokenizer(
+				tokenProcessor.tokenizer(
 				parent,
 				head(input(head.input.colon, head.input.name + char)))
 		is ColonHead -> null
 		is IndentHead ->
-			processor.flush(head.indent).tokenizer(
+			tokenProcessor.flush(head.indent).tokenizer(
 				parent,
 				head(input(colon(false), "$char")))
 	}
@@ -134,5 +137,9 @@ val Tokenizer.finish: Unit
 		else when (head) {
 			is InputHead -> fail("input")
 			is ColonHead -> fail("colon")
-			is IndentHead -> processor.flush(head.indent).run { Unit }
+			is IndentHead -> tokenProcessor.flush(head.indent).run { Unit }
 		}
+
+val Tokenizer.charProcessor: Processor<Char>
+	get() =
+		processor { push(it) }

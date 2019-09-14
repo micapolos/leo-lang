@@ -1,9 +1,13 @@
 package leo13.token.reader
 
 import leo.base.assertEqualTo
-import leo13.colon
-import leo13.processor
-import leo13.space
+import leo13.*
+import leo13.locator.column
+import leo13.locator.line
+import leo13.locator.location
+import leo13.locator.locator
+import leo13.script.lineTo
+import leo13.script.script
 import leo13.token.Token
 import leo13.token.closing
 import leo13.token.opening
@@ -363,5 +367,17 @@ class TokenizerTest {
 					token(closing)).tokenizer(
 					parent(),
 					head(input(colon(false), "ok"))))
+	}
+
+	@Test
+	fun withLocator() {
+		traced {
+			processor<Token>()
+				.tokenizer()
+				.locator()
+				.charProcess("jajko)")
+		}.assertFailsWith(
+			location(line(1), column(6)).scriptingLine,
+			"tokenizer" lineTo script(')'.scriptLine))
 	}
 }
