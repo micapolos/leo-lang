@@ -14,7 +14,7 @@ fun PatternArrow.matches(function: ValueFunction): Boolean =
 	this == function.patternArrow
 
 fun PatternArrow.contains(arrow: PatternArrow) =
-	this == arrow
+	this == arrow // TODO: Consider weaker version, lhs.arrow.contains(lhs) && rhs.contains(arrow.rhs)
 
 val PatternArrow.scriptLine
 	get() =
