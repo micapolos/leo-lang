@@ -6,6 +6,7 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.untyped.pattern.isEmpty
 
 data class ExpressionCompiler(
 	val converter: Converter<ExpressionCompiled, Processor<Token>>,
@@ -42,21 +43,30 @@ data class ExpressionCompiler(
 	val beginSwitch: Processor<Token> get() = TODO()
 
 	fun beginOther(name: String): Processor<Token> =
-		converter<ExpressionCompiler, ExpressionCompiled, Processor<Token>> {
-			converter.compilerTo(context, compiled.plus(name lineTo it))
-		}.compilerTo(context)
+		compiler(
+			converter { plus(name lineTo it) },
+			context,
+			compiled())
 }
 
-fun expressionCompiler(
-	converter: Converter<ExpressionCompiled, Processor<Token>> = errorConverter(),
-	context: Context = context(),
-	compiled: ExpressionCompiled = compiled()) =
-	ExpressionCompiler(converter, context, compiled)
+fun expressionCompiler() =
+	compiler(errorConverter(), context(), compiled())
 
-fun Converter<ExpressionCompiled, Processor<Token>>.compilerTo(
-	context: Context = context(),
-	compiled: ExpressionCompiled = compiled()
-) = ExpressionCompiler(this, context, compiled)
+fun compiler(
+	converter: Converter<ExpressionCompiled, Processor<Token>>,
+	context: Context,
+	compiled: ExpressionCompiled) =
+	ExpressionCompiler(converter, context, compiled)
 
 fun ExpressionCompiler.set(compiled: ExpressionCompiled) =
 	copy(compiled = compiled)
+
+fun ExpressionCompiler.plus(line: CompiledLine): ExpressionCompiler =
+	if (line.rhs.pattern.isEmpty) plus(line.name)
+	else plusNormalized(line)
+
+fun ExpressionCompiler.plus(name: String): ExpressionCompiler =
+	set(compiled()).plusNormalized(name lineTo compiled)
+
+fun ExpressionCompiler.plusNormalized(line: CompiledLine): ExpressionCompiler =
+	set(compiled.plus(line))
