@@ -1,9 +1,6 @@
 package leo13.untyped.compiler
 
-import leo13.Converter
-import leo13.ObjectScripting
-import leo13.Processor
-import leo13.converter
+import leo13.*
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -17,32 +14,38 @@ data class PatternCompiler(
 ) :
 	ObjectScripting(),
 	Processor<Token> {
+	override fun toString() = super.toString()
 	override val scriptingLine
 		get() =
 			"compiler" lineTo script(converter.scriptingLine, pattern.scriptLine)
 
-	override fun process(token: Token) =
+	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken -> begin(token.opening.name)
 			is ClosingToken -> end
 		}
 
-	fun begin(name: String) =
+	fun begin(name: String): Processor<Token> =
 		when (name) {
-			"choice" -> TODO()
+			"choice" -> choiceCompiler(converter { plus(item(it)) })
 			else -> beginOther(name)
 		}
 
-	fun beginOther(name: String) =
-		compiler(
+	fun beginOther(name: String): Processor<Token> =
+		patternCompiler(
 			converter { plus(item(choice(name lineTo it))) },
 			pattern())
 
-	val end get() = converter.convert(pattern)
+	val end: Processor<Token> get() = converter.convert(pattern)
 }
 
-fun compiler(converter: Converter<Pattern, Token>, pattern: Pattern) =
+fun patternCompiler(
+	converter: Converter<Pattern, Token> = errorConverter(),
+	pattern: Pattern = pattern()) =
 	PatternCompiler(converter, pattern)
 
 fun PatternCompiler.plus(item: PatternItem) =
-	copy(pattern = pattern.plus(item))
+	set(pattern.plus(item))
+
+fun PatternCompiler.set(pattern: Pattern) =
+	copy(pattern = pattern)

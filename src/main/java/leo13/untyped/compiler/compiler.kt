@@ -79,7 +79,7 @@ data class Compiler(
 
 	val beginOf: Processor<Token>
 		get() =
-			compiler(
+			patternCompiler(
 				converter { plusOf(it) },
 				pattern())
 

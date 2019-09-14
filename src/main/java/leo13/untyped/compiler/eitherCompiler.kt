@@ -16,6 +16,8 @@ data class EitherCompiler(
 ) :
 	ObjectScripting(),
 	Processor<Token> {
+	override fun toString() = super.toString()
+
 	override val scriptingLine
 		get() =
 			"compiler" lineTo script(
@@ -30,7 +32,7 @@ data class EitherCompiler(
 
 	fun begin(name: String) =
 		if (eitherOrNull != null) tracedError()
-		else compiler(
+		else patternCompiler(
 			converter { plus(name eitherTo it) },
 			pattern())
 
