@@ -21,7 +21,8 @@ fun compiled(expression: Expression, pattern: Pattern) =
 fun compiled(vararg lines: CompiledLine) =
 	ExpressionCompiled(expression(), pattern()).fold(lines) { plus(it) }
 
-fun compiled(script: Script): ExpressionCompiled = TODO()
+fun compiled(script: Script): ExpressionCompiled =
+	TODO()
 
 fun ExpressionCompiled.plus(line: CompiledLine) =
 	compiled(

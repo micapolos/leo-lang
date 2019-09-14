@@ -1,9 +1,6 @@
 package leo13.untyped.compiler
 
-import leo13.Converter
-import leo13.ObjectScripting
-import leo13.Processor
-import leo13.converter
+import leo13.*
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -46,12 +43,20 @@ data class ExpressionCompiler(
 
 	fun beginOther(name: String): Processor<Token> =
 		converter<ExpressionCompiler, ExpressionCompiled, Processor<Token>> {
-			converter.expressionCompiler(context, compiled.plus(name lineTo it))
-		}.expressionCompiler(context)
+			converter.compilerTo(context, compiled.plus(name lineTo it))
+		}.compilerTo(context)
 }
 
-fun Converter<ExpressionCompiled, Processor<Token>>.expressionCompiler(
+fun expressionCompiler(
+	converter: Converter<ExpressionCompiled, Processor<Token>> = errorConverter(),
+	context: Context = context(),
+	compiled: ExpressionCompiled = compiled()) =
+	ExpressionCompiler(converter, context, compiled)
+
+fun Converter<ExpressionCompiled, Processor<Token>>.compilerTo(
 	context: Context = context(),
 	compiled: ExpressionCompiled = compiled()
 ) = ExpressionCompiler(this, context, compiled)
 
+fun ExpressionCompiler.set(compiled: ExpressionCompiled) =
+	copy(compiled = compiled)
