@@ -30,18 +30,25 @@ data class ExpressionCompiler(
 
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
-			is OpeningToken -> when (token.opening.name) {
-				"define" -> beginOf
-				"given" -> beginGiven
-				"in" -> beginIn
-				"of" -> beginOf
-				"previous" -> beginPrevious
-				"set" -> beginSet
-				"switch" -> beginSwitch
-				else -> beginOther(token.opening.name)
-			}
-			is ClosingToken -> converter.convert(compiled)
+			is OpeningToken -> begin(token.opening.name)
+			is ClosingToken -> end
 		}
+
+	fun begin(name: String): Processor<Token> =
+		when (name) {
+			"define" -> beginOf
+			"given" -> beginGiven
+			"in" -> beginIn
+			"of" -> beginOf
+			"previous" -> beginPrevious
+			"set" -> beginSet
+			"switch" -> beginSwitch
+			else -> beginOther(name)
+		}
+
+	val end
+		get() =
+			converter.convert(compiled)
 
 	val beginDefine: Processor<Token> get() = TODO()
 
