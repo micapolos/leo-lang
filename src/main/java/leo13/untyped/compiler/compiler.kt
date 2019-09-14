@@ -18,9 +18,9 @@ import leo9.onlyOrNull
 
 data class Compiler(
 	val context: Context,
-	val compiled: Compiled)
+	val compiled: ExpressionCompiled)
 
-fun compiler(arrows: Context, compiled: Compiled) =
+fun compiler(arrows: Context, compiled: ExpressionCompiled) =
 	Compiler(arrows, compiled)
 
 fun Compiler.plus(line: ScriptLine): Compiler =
@@ -82,13 +82,13 @@ fun Compiler.plus(line: CompiledLine): Compiler =
 		else -> plusOther(line)
 	} ?: plusError(line)
 
-fun Compiler.plusSetOrNull(rhs: Compiled): Compiler? =
+fun Compiler.plusSetOrNull(rhs: ExpressionCompiled): Compiler? =
 	TODO()
 //	rhs.pattern.lineStackOrNull?.let { lineStack ->
 //		orNullFold(lineStack.reverse.seq) { plusSet(it) }
 //	}
 
-fun Compiler.plusReplace(rhs: Compiled): Compiler =
+fun Compiler.plusReplace(rhs: ExpressionCompiled): Compiler =
 	TODO()
 
 fun Compiler.plusSetOrNull(line: CompiledLine): Compiler? =
@@ -102,12 +102,12 @@ fun Compiler.plusSetOrNull(line: CompiledLine): Compiler? =
 					setPattern))
 		}
 
-fun Compiler.plusForgetOrNull(rhs: Compiled): Compiler? =
+fun Compiler.plusForgetOrNull(rhs: ExpressionCompiled): Compiler? =
 	ifOrNull(compiled.pattern.isEmpty) {
 		compiler(context, compiled())
 	}
 
-fun Compiler.plusPreviousOrNull(rhs: Compiled): Compiler? =
+fun Compiler.plusPreviousOrNull(rhs: ExpressionCompiled): Compiler? =
 	ifOrNull(compiled.pattern.isEmpty) {
 		rhs.previousOrNull?.let { compiler(context, it) }
 	}
@@ -132,7 +132,7 @@ fun Compiler.plusError(line: CompiledLine): Compiler =
 fun Compiler.append(line: CompiledLine): Compiler =
 	set(compiled.plus(line))
 
-fun Compiler.set(compiled: Compiled) =
+fun Compiler.set(compiled: ExpressionCompiled) =
 	copy(compiled = compiled)
 
 val Compiler.isError

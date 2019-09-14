@@ -1,10 +1,10 @@
 package leo13.locator
 
-import leo13.ScriptingObject
+import leo13.ObjectScripting
 import leo13.script.lineTo
 import leo13.script.script
 
-data class Location(val line: Line, val column: Column) : ScriptingObject() {
+data class Location(val line: Line, val column: Column) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine get() = "location" lineTo script(line.scriptingLine, column.scriptingLine)
 }

@@ -11,24 +11,24 @@ class LocatorTest {
 	@Test
 	fun scripting() {
 		stack('a')
-			.charProcessor
+			.charPushProcessor
 			.locator()
 			.scriptingLine
 			.assertEqualTo(
 				"locator" lineTo script(
-					stack('a').processor { scriptLine }.scriptingLine,
+					stack('a').pushProcessor { scriptLine }.scriptingLine,
 					location().scriptingLine))
 	}
 
 	@Test
 	fun pushSuccess() {
 		stack('a')
-			.charProcessor
+			.charPushProcessor
 			.locator(location(line(2), column(4)))
 			.plus('b')
 			.assertEqualTo(
 				stack('a', 'b')
-					.charProcessor
+					.charPushProcessor
 					.locator(location(line(2), column(5))))
 	}
 

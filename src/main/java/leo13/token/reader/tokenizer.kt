@@ -15,7 +15,7 @@ import leo13.token.token
 data class Tokenizer(
 	val tokenProcessor: Processor<Token>,
 	val parent: Parent,
-	val head: Head) : ScriptingObject(), Processor<Char> {
+	val head: Head) : ObjectScripting(), Processor<Char> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine

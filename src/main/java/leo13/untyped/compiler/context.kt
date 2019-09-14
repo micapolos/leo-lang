@@ -1,6 +1,7 @@
 package leo13.untyped.compiler
 
 import leo.base.fold
+import leo13.ObjectScripting
 import leo13.script.*
 import leo13.trace
 import leo13.traced
@@ -9,11 +10,19 @@ import leo13.untyped.compileName
 import leo13.untyped.pattern.Choice
 import leo13.untyped.pattern.Either
 import leo13.untyped.pattern.PatternArrow
+import leo13.untyped.pattern.scriptLine
 import leo9.Stack
+import leo9.stack
 
-data class Context(val arrowStack: Stack<PatternArrow>)
+data class Context(val arrowStack: Stack<PatternArrow>) : ObjectScripting() {
+	override val scriptingLine
+		get() =
+			"context" lineTo arrowStack.script { scriptLine }.emptyIfEmpty
+}
 
-fun Context.compile(script: Script): Compiled =
+fun context(vararg arrows: PatternArrow) = Context(stack(*arrows))
+
+fun Context.compile(script: Script): ExpressionCompiled =
 	compiler(this, compiled())
 		.fold(script.lineSeq) { plus(it) }
 		.compiled

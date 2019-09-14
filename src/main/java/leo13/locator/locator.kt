@@ -1,7 +1,7 @@
 package leo13.locator
 
+import leo13.ObjectScripting
 import leo13.Processor
-import leo13.ScriptingObject
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -10,7 +10,7 @@ import leo13.traced
 
 data class Locator(
 	val processor: Processor<Char>,
-	val location: Location) : ScriptingObject(), Processor<Char> {
+	val location: Location) : ObjectScripting(), Processor<Char> {
 	override fun toString() = super.toString()
 	override val scriptingLine: ScriptLine
 		get() =

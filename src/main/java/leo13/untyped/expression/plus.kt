@@ -7,6 +7,7 @@ import leo13.untyped.plusName
 data class Plus(val line: ExpressionLine)
 
 fun plus(line: ExpressionLine) = Plus(line)
+fun plus(name: String) = plus(name lineTo expression())
 
 val Plus.scriptLine
 	get() =

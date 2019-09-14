@@ -1,35 +1,40 @@
 package leo13.untyped.compiler
 
 import leo.base.fold
+import leo13.ObjectScripting
 import leo13.script.Script
+import leo13.script.lineTo
+import leo13.script.script
 import leo13.untyped.expression.*
-import leo13.untyped.pattern.Pattern
-import leo13.untyped.pattern.pattern
-import leo13.untyped.pattern.plus
-import leo13.untyped.pattern.previousOrNull
+import leo13.untyped.pattern.*
 
-data class Compiled(val expression: Expression, val pattern: Pattern)
+data class ExpressionCompiled(val expression: Expression, val pattern: Pattern) : ObjectScripting() {
+	override fun toString() = super.toString()
+	override val scriptingLine
+		get() =
+			"compiled" lineTo script(expression.scriptLine, pattern.scriptLine)
+}
 
 fun compiled(expression: Expression, pattern: Pattern) =
-	Compiled(expression, pattern)
+	ExpressionCompiled(expression, pattern)
 
 fun compiled(vararg lines: CompiledLine) =
-	Compiled(expression(), pattern()).fold(lines) { plus(it) }
+	ExpressionCompiled(expression(), pattern()).fold(lines) { plus(it) }
 
-fun compiled(script: Script): Compiled = TODO()
+fun compiled(script: Script): ExpressionCompiled = TODO()
 
-fun Compiled.plus(line: CompiledLine) =
+fun ExpressionCompiled.plus(line: CompiledLine) =
 	compiled(
 		expression.plus(line.op),
 		pattern.plus(line.patternLine))
 
-val Compiled.previousOrNull: Compiled?
+val ExpressionCompiled.previousOrNull: ExpressionCompiled?
 	get() =
 		pattern
 			.previousOrNull
 			?.run { compiled(expression.plus(previous.op), this) }
 
-fun Compiled.plus(switch: CompiledSwitch): Compiled =
+fun ExpressionCompiled.plus(switch: CompiledSwitch): ExpressionCompiled =
 	TODO()
 //	compiled(
 //		expression.plus(switch),
