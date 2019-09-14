@@ -23,6 +23,9 @@ fun <V> Stack<V>.processor(scriptLineFn: V.() -> ScriptLine): Processor<V> =
 		it.processor { update { push(it) } }
 	}
 
+fun <V : Scripting> processor(vararg values: V): Processor<V> =
+	stack(*values).processor { scriptingLine }
+
 val Stack<Char>.charProcessor: Processor<Char>
 	get() =
 		processor { scriptLine }

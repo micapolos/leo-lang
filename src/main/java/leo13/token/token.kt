@@ -1,17 +1,19 @@
 package leo13.token
 
 import leo13.LeoObject
+import leo13.Scripting
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
 
-sealed class Token : LeoObject() {
+sealed class Token : LeoObject(), Scripting {
 	override fun toString() = scriptableLine.toString()
 	override val scriptableName get() = "token"
 	override val scriptableBody get() = script(tokenScriptableLine)
 	abstract val tokenScriptableName: String
 	abstract val tokenScriptableBody: Script
 	val tokenScriptableLine get() = tokenScriptableName lineTo tokenScriptableBody
+	override val scriptingLine get() = scriptableLine
 }
 
 data class OpeningToken(val opening: Opening) : Token() {

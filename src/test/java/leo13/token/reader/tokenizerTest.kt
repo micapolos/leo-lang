@@ -1,64 +1,62 @@
 package leo13.token.reader
 
 import leo.base.assertEqualTo
-import leo13.base.write
-import leo13.base.writer
 import leo13.colon
+import leo13.processor
 import leo13.space
+import leo13.token.Token
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
-import leo9.stack
 import kotlin.test.Test
 import kotlin.test.assertFails
 
 fun test(string: String, tokenizer: Tokenizer) =
-	tokenizer().write(string).assertEqualTo(tokenizer)
+	tokenizer().push(string).assertEqualTo(tokenizer)
 
 class TokenizerTest {
 	@Test
 	fun letter() {
 		tokenizer()
-			.write("f")
+			.push("f")
 			.assertEqualTo(
-				tokenizer(
-					writer(stack()),
-					parent(),
-					head(input(colon(false), "f"))))
+				processor<Token>()
+					.tokenizer(
+						parent(),
+						head(input(colon(false), "f"))))
 	}
 
 	@Test
 	fun pushTab() {
-		assertFails { tokenizer().write("\t") }
+		assertFails { tokenizer().push("\t") }
 	}
 
 	@Test
 	fun pushSpace() {
-		assertFails { tokenizer().write(" ") }
+		assertFails { tokenizer().push(" ") }
 	}
 
 	@Test
 	fun colon() {
-		assertFails { tokenizer().write(":") }
+		assertFails { tokenizer().push(":") }
 	}
 
 	@Test
 	fun newline() {
-		tokenizer().write("\n").assertEqualTo(tokenizer())
+		tokenizer().push("\n").assertEqualTo(tokenizer())
 	}
 
 	@Test
 	fun other() {
-		assertFails { tokenizer().write("1") }
+		assertFails { tokenizer().push("1") }
 	}
 
 	@Test
 	fun letterLetter() {
 		tokenizer()
-			.write("fo")
+			.push("fo")
 			.assertEqualTo(
-				tokenizer(
-					writer(),
+				processor<Token>().tokenizer(
 					parent(),
 					head(input(colon(false), "fo"))))
 	}
@@ -66,28 +64,26 @@ class TokenizerTest {
 	@Test
 	fun letterSpace() {
 		tokenizer()
-			.write("f ")
+			.push("f ")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("f")),
-						token(closing)),
+				processor(
+					token(opening("f")),
+					token(closing)).tokenizer(
 					parent(),
 					head(input(colon(false), ""))))
 	}
 
 	@Test
 	fun letterTab() {
-		assertFails { tokenizer().write("f\t") }
+		assertFails { tokenizer().push("f\t") }
 	}
 
 	@Test
 	fun letterColon() {
 		tokenizer()
-			.write("f:")
+			.push("f:")
 			.assertEqualTo(
-				tokenizer(
-					writer(token(opening("f"))),
+				processor(token(opening("f"))).tokenizer(
 					parent(indent(tab(space))),
 					head(colon)))
 	}
@@ -95,10 +91,9 @@ class TokenizerTest {
 	@Test
 	fun letterNewline() {
 		tokenizer()
-			.write("f\n")
+			.push("f\n")
 			.assertEqualTo(
-				tokenizer(
-					writer(token(opening("f"))),
+				processor(token(opening("f"))).tokenizer(
 					parent(),
 					head(indent(tab(space)))))
 	}
@@ -106,10 +101,9 @@ class TokenizerTest {
 	@Test
 	fun letterNewlineTab() {
 		tokenizer()
-			.write("f\n\t")
+			.push("f\n\t")
 			.assertEqualTo(
-				tokenizer(
-					writer(token(opening("f"))),
+				processor(token(opening("f"))).tokenizer(
 					parent(indent(tab(space))),
 					head(input(colon(false), ""))))
 	}
@@ -117,10 +111,9 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpace() {
 		tokenizer()
-			.write("f: ")
+			.push("f: ")
 			.assertEqualTo(
-				tokenizer(
-					writer(token(opening("f"))),
+				processor(token(opening("f"))).tokenizer(
 					parent(indent(tab(space))),
 					head(input(colon(true), ""))))
 	}
@@ -128,10 +121,9 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpaceLetter() {
 		tokenizer()
-			.write("f: g")
+			.push("f: g")
 			.assertEqualTo(
-				tokenizer(
-					writer(token(opening("f"))),
+				processor(token(opening("f"))).tokenizer(
 					parent(indent(tab(space))),
 					head(input(colon(true), "g"))))
 	}
@@ -139,12 +131,11 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpaceLetterNewline() {
 		tokenizer()
-			.write("f: g\n")
+			.push("f: g\n")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("f")),
-						token(opening("g"))),
+				processor(
+					token(opening("f")),
+					token(opening("g"))).tokenizer(
 					parent(),
 					head(indent(tab(space, space)))))
 	}
@@ -152,12 +143,11 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpaceLetterNewlineTab() {
 		tokenizer()
-			.write("f: g\n\t")
+			.push("f: g\n\t")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("f")),
-						token(opening("g"))),
+				processor(
+					token(opening("f")),
+					token(opening("g"))).tokenizer(
 					parent(indent(tab(space, space))),
 					head(input(colon(false), ""))))
 	}
@@ -165,13 +155,12 @@ class TokenizerTest {
 	@Test
 	fun letterColonSpaceLetterSpace() {
 		tokenizer()
-			.write("f: g ")
+			.push("f: g ")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("f")),
-						token(opening("g")),
-						token(closing)),
+				processor(
+					token(opening("f")),
+					token(opening("g")),
+					token(closing)).tokenizer(
 					parent(indent(tab(space))),
 					head(input(colon(true), ""))))
 	}
@@ -179,11 +168,10 @@ class TokenizerTest {
 	@Test
 	fun switch_one() {
 		tokenizer()
-			.write("switch\n\tone")
+			.push("switch\n\tone")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("switch"))),
+				processor(
+					token(opening("switch"))).tokenizer(
 					parent(indent(tab(space))),
 					head(input(colon(false), "one"))))
 	}
@@ -191,13 +179,12 @@ class TokenizerTest {
 	@Test
 	fun switch_one__() {
 		tokenizer()
-			.write("switch\n\tone ")
+			.push("switch\n\tone ")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("switch")),
-						token(opening("one")),
-						token(closing)),
+				processor(
+					token(opening("switch")),
+					token(opening("one")),
+					token(closing)).tokenizer(
 					parent(indent(tab(space))),
 					head(input(colon(false), ""))))
 	}
@@ -205,13 +192,12 @@ class TokenizerTest {
 	@Test
 	fun switch_one__gives() {
 		tokenizer()
-			.write("switch\n\tone gives")
+			.push("switch\n\tone gives")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("switch")),
-						token(opening("one")),
-						token(closing)),
+				processor(
+					token(opening("switch")),
+					token(opening("one")),
+					token(closing)).tokenizer(
 					parent(indent(tab(space))),
 					head(input(colon(false), "gives"))))
 	}
@@ -219,14 +205,13 @@ class TokenizerTest {
 	@Test
 	fun switch_one__gives_() {
 		tokenizer()
-			.write("switch\n\tone gives:")
+			.push("switch\n\tone gives:")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("switch")),
-						token(opening("one")),
-						token(closing),
-						token(opening("gives"))),
+				processor(
+					token(opening("switch")),
+					token(opening("one")),
+					token(closing),
+					token(opening("gives"))).tokenizer(
 					parent(indent(tab(space), tab(space))),
 					head(colon)))
 	}
@@ -234,14 +219,13 @@ class TokenizerTest {
 	@Test
 	fun switch_one__gives_space() {
 		tokenizer()
-			.write("switch\n\tone gives: ")
+			.push("switch\n\tone gives: ")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("switch")),
-						token(opening("one")),
-						token(closing),
-						token(opening("gives"))),
+				processor(
+					token(opening("switch")),
+					token(opening("one")),
+					token(closing),
+					token(opening("gives"))).tokenizer(
 					parent(indent(tab(space), tab(space))),
 					head(input(colon(true), ""))))
 	}
@@ -249,14 +233,13 @@ class TokenizerTest {
 	@Test
 	fun switch_one__gives_jeden() {
 		tokenizer()
-			.write("switch\n\tone gives: jeden")
+			.push("switch\n\tone gives: jeden")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("switch")),
-						token(opening("one")),
-						token(closing),
-						token(opening("gives"))),
+				processor(
+					token(opening("switch")),
+					token(opening("one")),
+					token(closing),
+					token(opening("gives"))).tokenizer(
 					parent(indent(tab(space), tab(space))),
 					head(input(colon(true), "jeden"))))
 	}
@@ -265,11 +248,10 @@ class TokenizerTest {
 	fun circle_radius_one() {
 		test(
 			"circle: radius: x\n\t",
-			tokenizer(
-				writer(
-					token(opening("circle")),
-					token(opening("radius")),
-					token(opening("x"))),
+			processor(
+				token(opening("circle")),
+				token(opening("radius")),
+				token(opening("x"))).tokenizer(
 				parent(indent(tab(space, space, space))),
 				head(input(colon(false), ""))))
 	}
@@ -278,14 +260,13 @@ class TokenizerTest {
 	fun one__gives_two__gives_three() {
 		test(
 			"one gives: two gives: three",
-			tokenizer(
-				writer(
-					token(opening("one")),
-					token(closing),
-					token(opening("gives")),
-					token(opening("two")),
-					token(closing),
-					token(opening("gives"))),
+			processor(
+				token(opening("one")),
+				token(closing),
+				token(opening("gives")),
+				token(opening("two")),
+				token(closing),
+				token(opening("gives"))).tokenizer(
 				parent(indent(tab(space, space))),
 				head(input(colon(true), "three"))))
 	}
@@ -294,15 +275,14 @@ class TokenizerTest {
 	fun one__gives_two__gives_three__() {
 		test(
 			"one gives: two gives: three\n",
-			tokenizer(
-				writer(
-					token(opening("one")),
-					token(closing),
-					token(opening("gives")),
-					token(opening("two")),
-					token(closing),
-					token(opening("gives")),
-					token(opening("three"))),
+			processor(
+				token(opening("one")),
+				token(closing),
+				token(opening("gives")),
+				token(opening("two")),
+				token(closing),
+				token(opening("gives")),
+				token(opening("three"))).tokenizer(
 				parent(),
 				head(indent(tab(space, space, space)))))
 	}
@@ -311,11 +291,10 @@ class TokenizerTest {
 	fun maliciousStuff_before() {
 		test(
 			"one: two three",
-			tokenizer(
-				writer(
-					token(opening("one")),
-					token(opening("two")),
-					token(closing)),
+			processor(
+				token(opening("one")),
+				token(opening("two")),
+				token(closing)).tokenizer(
 				parent(indent(tab(space))),
 				head(input(colon(true), "three"))))
 	}
@@ -324,12 +303,11 @@ class TokenizerTest {
 	fun maliciousStuff_after() {
 		test(
 			"one: two three\n",
-			tokenizer(
-				writer(
-					token(opening("one")),
-					token(opening("two")),
-					token(closing),
-					token(opening("three"))),
+			processor(
+				token(opening("one")),
+				token(opening("two")),
+				token(closing),
+				token(opening("three"))).tokenizer(
 				parent(null),
 				head(indent(tab(space, space)))))
 	}
@@ -338,13 +316,12 @@ class TokenizerTest {
 	fun maliciousStuff2_before() {
 		test(
 			"circle\n\tradius: zero\n\tcenter",
-			tokenizer(
-				writer(
-					token(opening("circle")),
-					token(opening("radius")),
-					token(opening("zero")),
-					token(closing),
-					token(closing)),
+			processor(
+				token(opening("circle")),
+				token(opening("radius")),
+				token(opening("zero")),
+				token(closing),
+				token(closing)).tokenizer(
 				parent(indent(tab(space))),
 				head(input(colon(false), "center"))))
 	}
@@ -353,14 +330,13 @@ class TokenizerTest {
 	fun maliciousStuff2_after() {
 		test(
 			"circle\n\tradius: zero\n\tcenter\n",
-			tokenizer(
-				writer(
-					token(opening("circle")),
-					token(opening("radius")),
-					token(opening("zero")),
-					token(closing),
-					token(closing),
-					token(opening("center"))),
+			processor(
+				token(opening("circle")),
+				token(opening("radius")),
+				token(opening("zero")),
+				token(closing),
+				token(closing),
+				token(opening("center"))).tokenizer(
 				parent(),
 				head(indent(tab(space), tab(space)))))
 	}
@@ -368,24 +344,23 @@ class TokenizerTest {
 	@Test
 	fun complex() {
 		tokenizer()
-			.write("switch\n\tone gives: jeden\n\ttwo gives: dwa\nok")
+			.push("switch\n\tone gives: jeden\n\ttwo gives: dwa\nok")
 			.assertEqualTo(
-				tokenizer(
-					writer(
-						token(opening("switch")),
-						token(opening("one")),
-						token(closing),
-						token(opening("gives")),
-						token(opening("jeden")),
-						token(closing),
-						token(closing),
-						token(opening("two")),
-						token(closing),
-						token(opening("gives")),
-						token(opening("dwa")),
-						token(closing),
-						token(closing),
-						token(closing)),
+				processor(
+					token(opening("switch")),
+					token(opening("one")),
+					token(closing),
+					token(opening("gives")),
+					token(opening("jeden")),
+					token(closing),
+					token(closing),
+					token(opening("two")),
+					token(closing),
+					token(opening("gives")),
+					token(opening("dwa")),
+					token(closing),
+					token(closing),
+					token(closing)).tokenizer(
 					parent(),
 					head(input(colon(false), "ok"))))
 	}
