@@ -7,20 +7,24 @@ import leo13.trace
 import leo13.traced
 import leo13.untyped.caseName
 import leo13.untyped.compileName
-import leo13.untyped.pattern.Choice
-import leo13.untyped.pattern.Either
-import leo13.untyped.pattern.PatternArrow
-import leo13.untyped.pattern.scriptLine
+import leo13.untyped.pattern.*
 import leo9.Stack
 import leo9.stack
 
-data class Context(val arrowStack: Stack<PatternArrow>) : ObjectScripting() {
+data class Context(
+	val arrowStack: Stack<PatternArrow>,
+	val givenPattern: Pattern) : ObjectScripting() {
 	override val scriptingLine
 		get() =
-			"context" lineTo arrowStack.script { scriptLine }.emptyIfEmpty
+			"context" lineTo script(
+				"arrows" lineTo arrowStack.script { scriptLine }.emptyIfEmpty,
+				"binding" lineTo givenPattern.bodyScript)
 }
 
-fun context(vararg arrows: PatternArrow) = Context(stack(*arrows))
+fun context(vararg arrows: PatternArrow) = Context(stack(*arrows), pattern())
+
+fun Context.bind(pattern: Pattern) =
+	Context(arrowStack, givenPattern.plus("given" lineTo pattern))
 
 fun Context.compile(script: Script): ExpressionCompiled =
 	compiler(this, compiled())

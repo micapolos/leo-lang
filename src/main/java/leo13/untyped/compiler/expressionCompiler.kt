@@ -6,6 +6,9 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.untyped.expression.expression
+import leo13.untyped.expression.given
+import leo13.untyped.expression.op
 import leo13.untyped.pattern.isEmpty
 
 data class ExpressionCompiler(
@@ -29,8 +32,10 @@ data class ExpressionCompiler(
 		when (token) {
 			is OpeningToken -> when (token.opening.name) {
 				"define" -> beginOf
+				"given" -> beginGiven
 				"in" -> beginIn
 				"of" -> beginOf
+				"previous" -> beginPrevious
 				"set" -> beginSet
 				"switch" -> beginSwitch
 				else -> beginOther(token.opening.name)
@@ -39,16 +44,34 @@ data class ExpressionCompiler(
 		}
 
 	val beginDefine: Processor<Token> get() = TODO()
-	val beginIn: Processor<Token> get() = TODO()
+
+	val beginGiven: Processor<Token>
+		get() =
+			compiler(
+				converter { plusGiven(it) },
+				context)
+
+	val beginIn: Processor<Token>
+		get() =
+			compiler(
+				converter { plusIn(it) },
+				context.bind(compiled.pattern))
+
 	val beginOf: Processor<Token> get() = TODO()
+
+	val beginPrevious: Processor<Token>
+		get() =
+			compiler(
+				converter { plusPrevious(it) },
+				context)
+
 	val beginSet: Processor<Token> get() = TODO()
 	val beginSwitch: Processor<Token> get() = TODO()
 
 	fun beginOther(name: String): Processor<Token> =
 		compiler(
 			converter { plus(name lineTo it) },
-			context,
-			compiled())
+			context)
 }
 
 fun expressionCompiler() =
@@ -57,8 +80,11 @@ fun expressionCompiler() =
 fun compiler(
 	converter: Converter<ExpressionCompiled, Token>,
 	context: Context,
-	compiled: ExpressionCompiled) =
+	compiled: ExpressionCompiled = compiled()) =
 	ExpressionCompiler(converter, context, compiled)
+
+fun ExpressionCompiler.set(context: Context) =
+	copy(context = context)
 
 fun ExpressionCompiler.set(compiled: ExpressionCompiled) =
 	copy(compiled = compiled)
@@ -67,6 +93,17 @@ fun ExpressionCompiler.set(compiled: ExpressionCompiled) =
 fun ExpressionCompiler.plus(line: CompiledLine): ExpressionCompiler =
 	if (line.rhs.pattern.isEmpty) plus(line.name)
 	else plusNormalized(line)
+
+fun ExpressionCompiler.plusIn(rhs: ExpressionCompiled): ExpressionCompiler =
+	set(compiled.plusIn(rhs))
+
+fun ExpressionCompiler.plusGiven(rhs: ExpressionCompiled): ExpressionCompiler =
+	if (!compiled.pattern.isEmpty || !rhs.pattern.isEmpty) tracedError()
+	else set(compiled(expression(given.op), context.givenPattern))
+
+fun ExpressionCompiler.plusPrevious(rhs: ExpressionCompiled): ExpressionCompiler =
+	if (!compiled.pattern.isEmpty) tracedError()
+	else rhs.previousOrNull?.let { set(it) } ?: tracedError()
 
 fun ExpressionCompiler.plus(name: String): ExpressionCompiler =
 	set(compiled()).plusNormalized(name lineTo compiled)

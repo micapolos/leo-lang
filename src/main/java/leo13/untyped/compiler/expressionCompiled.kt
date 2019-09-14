@@ -49,3 +49,8 @@ fun ExpressionCompiled.getOrNull(name: String): ExpressionCompiled? =
 				expression.plus(get(name).op),
 				this)
 		}
+
+fun ExpressionCompiled.plusIn(rhs: ExpressionCompiled): ExpressionCompiled =
+	compiled(
+		expression.plus(bind(rhs.expression).op),
+		rhs.pattern)

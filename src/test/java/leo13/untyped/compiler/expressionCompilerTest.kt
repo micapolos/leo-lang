@@ -47,7 +47,6 @@ class ExpressionCompilerTest {
 						pattern("color" lineTo pattern("red")))))
 	}
 
-
 	@Test
 	fun get() {
 		expressionCompiler()
@@ -68,5 +67,58 @@ class ExpressionCompilerTest {
 									"red" lineTo expression())))
 							.plus(leo13.untyped.expression.get("color").op),
 						pattern("color" lineTo pattern("red")))))
+	}
+
+	@Test
+	fun bind() {
+		expressionCompiler()
+			.set(compiled(expression("zero"), pattern("zero")))
+			.process(token(opening("in")))
+			.process(token(opening("given")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				expressionCompiler().set(
+					compiled(
+						expression("zero"),
+						pattern("given" lineTo pattern("zero")))))
+	}
+
+	@Test
+	fun previous() {
+		expressionCompiler()
+			.process(token(opening("previous")))
+			.process(token(opening("x")))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("y")))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				expressionCompiler().set(
+					compiled(
+						expression(
+							"x" lineTo expression("zero"),
+							"y" lineTo expression("one"))
+							.plus(leo13.untyped.expression.previous.op),
+						pattern("x" lineTo pattern("zero")))))
+	}
+
+	@Test
+	fun given() {
+		expressionCompiler()
+			.set(context().bind(pattern("zero")))
+			.process(token(opening("given")))
+			.process(token(closing))
+			.assertEqualTo(
+				expressionCompiler()
+					.set(context().bind(pattern("zero")))
+					.set(
+						compiled(
+							expression(leo13.untyped.expression.given.op),
+							pattern("given" lineTo pattern("zero")))))
 	}
 }
