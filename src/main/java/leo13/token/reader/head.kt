@@ -36,3 +36,5 @@ data class IndentHead(val indent: Indent) : Head() {
 fun head(input: Input): Head = InputHead(input)
 fun head(colon: Colon): Head = ColonHead(colon)
 fun head(indent: Indent): Head = IndentHead(indent)
+
+fun head() = head(input(colon(false), ""))

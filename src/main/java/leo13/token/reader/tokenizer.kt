@@ -2,15 +2,13 @@ package leo13.token.reader
 
 import leo.base.orNullIf
 import leo.base.updateIfNotNull
+import leo13.*
 import leo13.base.Writer
 import leo13.base.WriterObject
 import leo13.base.writer
-import leo13.colon
-import leo13.fail
 import leo13.script.CharLeo
-import leo13.script.leo
+import leo13.script.lineTo
 import leo13.script.script
-import leo13.space
 import leo13.token.Token
 import leo13.token.closing
 import leo13.token.opening
@@ -46,7 +44,11 @@ fun tokenizer(tokenWriter: Writer<Token>): Tokenizer = tokenizer(
 	head(input(colon(false), "")))
 
 fun Tokenizer.push(char: Char): Tokenizer =
-	pushOrNull(char) ?: fail(script(leo(char).scriptableLine))
+	trace {
+		"tokenizer" lineTo script(char.scriptLine)
+	}.traced {
+		pushOrNull(char).orTracedError
+	}
 
 fun Tokenizer.pushOrNull(char: Char): Tokenizer? =
 	when (char) {

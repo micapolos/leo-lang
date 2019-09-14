@@ -1,18 +1,29 @@
 package leo13.locator
 
-import leo13.trace
-import leo13.traced
+import leo13.*
+import leo13.script.ScriptLine
+import leo13.script.lineTo
+import leo13.script.script
 
-data class Locator<out S>(
-	val state: S,
-	val location: Location)
+data class Locator(
+	val processor: Processor<Char>,
+	val location: Location) : ScriptingObject() {
+	override fun toString() = super.toString()
+	override val scriptingLine: ScriptLine
+		get() =
+			"locator" lineTo script(processor.scriptingLine, location.scriptingLine)
+}
 
-fun <S> S.locator(location: Location = location()): Locator<S> =
+fun Processor<Char>.locator(location: Location = location()): Locator =
 	Locator(this, location)
 
-fun <S> Locator<S>.plus(char: Char, fn: S.(Char) -> S): Locator<S> =
+fun Locator.plus(char: Char): Locator =
 	trace {
-		location.scriptLine
+		location.scriptingLine
 	}.traced {
-		state.fn(char).run { locator(location.plus(char)) }
+		processor.process(char).run { locator(location.plus(char)) }
 	}
+
+val Locator.processor: Processor<Char>
+	get() =
+		processor { plus(it) }
