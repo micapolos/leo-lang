@@ -4,10 +4,7 @@ import leo.base.assertEqualTo
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
-import leo13.untyped.expression.expression
-import leo13.untyped.expression.lineTo
-import leo13.untyped.expression.op
-import leo13.untyped.expression.plus
+import leo13.untyped.expression.*
 import leo13.untyped.pattern.lineTo
 import leo13.untyped.pattern.pattern
 import org.junit.Test
@@ -65,7 +62,7 @@ class ExpressionCompilerTest {
 							"circle" lineTo expression(
 								"color" lineTo expression(
 									"red" lineTo expression())))
-							.plus(leo13.untyped.expression.get("color").op),
+							.plus(get("color").op),
 						pattern("color" lineTo pattern("red")))))
 	}
 
@@ -80,7 +77,8 @@ class ExpressionCompilerTest {
 			.assertEqualTo(
 				expressionCompiler().set(
 					compiled(
-						expression("zero"),
+						expression("zero")
+							.plus(bind(expression(given.op)).op),
 						pattern("given" lineTo pattern("zero")))))
 	}
 
@@ -103,7 +101,7 @@ class ExpressionCompilerTest {
 						expression(
 							"x" lineTo expression("zero"),
 							"y" lineTo expression("one"))
-							.plus(leo13.untyped.expression.previous.op),
+							.plus(previous.op),
 						pattern("x" lineTo pattern("zero")))))
 	}
 
@@ -118,7 +116,7 @@ class ExpressionCompilerTest {
 					.set(context().bind(pattern("zero")))
 					.set(
 						compiled(
-							expression(leo13.untyped.expression.given.op),
+							expression(given.op),
 							pattern("given" lineTo pattern("zero")))))
 	}
 }
