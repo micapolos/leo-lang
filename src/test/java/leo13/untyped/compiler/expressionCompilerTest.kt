@@ -106,6 +106,34 @@ class ExpressionCompilerTest {
 	}
 
 	@Test
+	fun everything() {
+		expressionCompiler()
+			.process(token(opening("everything")))
+			.process(token(opening("vec")))
+			.process(token(opening("x")))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("y")))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				expressionCompiler().set(
+					compiled(
+						expression(
+							"vec" lineTo expression(
+								"x" lineTo expression("zero"),
+								"y" lineTo expression("one")))
+							.plus(everything.op),
+						pattern(
+							"x" lineTo pattern("zero"),
+							"y" lineTo pattern("one")))))
+	}
+
+	@Test
 	fun given() {
 		expressionCompiler()
 			.set(context().bind(pattern("zero")))

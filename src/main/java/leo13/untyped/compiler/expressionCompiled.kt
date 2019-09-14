@@ -35,6 +35,12 @@ val ExpressionCompiled.previousOrNull: ExpressionCompiled?
 			.previousOrNull
 			?.run { compiled(expression.plus(previous.op), this) }
 
+val ExpressionCompiled.everythingOrNull: ExpressionCompiled?
+	get() =
+		pattern
+			.everythingOrNull
+			?.run { compiled(expression.plus(everything.op), this) }
+
 fun ExpressionCompiled.plus(switch: CompiledSwitch): ExpressionCompiled =
 	TODO()
 //	compiled(

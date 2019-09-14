@@ -40,6 +40,7 @@ data class ExpressionCompiler(
 			"given" -> beginGiven
 			"in" -> beginIn
 			"of" -> beginOf
+			"everything" -> beginEverything
 			"previous" -> beginPrevious
 			"set" -> beginSet
 			"switch" -> beginSwitch
@@ -51,6 +52,12 @@ data class ExpressionCompiler(
 			converter.convert(compiled)
 
 	val beginDefine: Processor<Token> get() = TODO()
+
+	val beginEverything: Processor<Token>
+		get() =
+			compiler(
+				converter { plusEverything(it) },
+				context)
 
 	val beginGiven: Processor<Token>
 		get() =
@@ -100,6 +107,10 @@ fun ExpressionCompiler.set(compiled: ExpressionCompiled) =
 fun ExpressionCompiler.plus(line: CompiledLine): ExpressionCompiler =
 	if (line.rhs.pattern.isEmpty) plus(line.name)
 	else plusNormalized(line)
+
+fun ExpressionCompiler.plusEverything(rhs: ExpressionCompiled): ExpressionCompiler =
+	if (!compiled.pattern.isEmpty) tracedError()
+	else rhs.everythingOrNull?.let { set(it) } ?: tracedError()
 
 fun ExpressionCompiler.plusIn(rhs: ExpressionCompiled): ExpressionCompiler =
 	set(compiled.plusIn(rhs))
