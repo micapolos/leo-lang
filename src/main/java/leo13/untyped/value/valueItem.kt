@@ -28,7 +28,7 @@ val ValueItem.bodyScriptLine get() =
 	}
 
 val ValueItem.scriptLineOrNull get() =
-	lineOrNull?.scriptLine
+	lineOrNull?.scriptLineOrNull
 
 val ScriptLine.valueItem: ValueItem
 	get() =
