@@ -124,6 +124,9 @@ data class Compiler(
 fun compiler() =
 	compiler(errorConverter(), context(), compiled())
 
+fun Converter<Compiled, Token>.compiler() =
+	compiler(this, context(), compiled())
+
 fun compiler(
 	converter: Converter<Compiled, Token>,
 	context: Context,
