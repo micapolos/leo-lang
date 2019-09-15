@@ -36,6 +36,9 @@ fun <V> Trace.traced(fn: () -> V): V =
 fun <V> tracedError(): V =
 	throw TracedError()
 
+fun <V> tracedError(line: ScriptLine): V =
+	trace { line }.traced { tracedError() }
+
 val TracedError.scriptLine
 	get() =
 		errorName lineTo stack.reverse.map { scriptLine }.script

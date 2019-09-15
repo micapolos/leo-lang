@@ -5,6 +5,7 @@ import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
 import leo9.Stack
+import leo9.map
 import leo9.push
 
 data class StackScripting<V>(val stack: Stack<V>, val scriptLineFn: V.() -> ScriptLine) : ObjectScripting() {
@@ -25,3 +26,8 @@ fun <V> StackScripting<V>.update(fn: Stack<V>.() -> Stack<V>): StackScripting<V>
 
 fun <V> StackScripting<V>.push(value: V): StackScripting<V> =
 	update { push(value) }
+
+val <V : Scripting> StackScripting<V>.script
+	get() =
+		stack.map { scriptingLine }.script
+
