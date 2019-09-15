@@ -8,8 +8,8 @@ import leo13.token.*
 import leo9.*
 
 data class Normalizer(
-	val parentConverter: Converter<Normalizer, Token>,
 	val processor: Processor<Token>,
+	val parentConverter: Converter<Normalizer, Token>,
 	val initialProcessor: Processor<Token>,
 	val tokenStack: Stack<Token>) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
@@ -24,7 +24,7 @@ data class Normalizer(
 	override fun process(token: Token) =
 		when (token) {
 			is OpeningToken ->
-				normalizer(
+				processor.process(token).normalizer(
 					converter { childNormalizer ->
 						if (childNormalizer.tokenStack.isEmpty)
 							stack<Token>()
@@ -32,31 +32,27 @@ data class Normalizer(
 								.pushAll(tokenStack)
 								.push(token(closing))
 								.let { normalizedTokenStack ->
-									normalizer(
+									initialProcessor.process(normalizedTokenStack).normalizer(
 										parentConverter,
-										initialProcessor.process(normalizedTokenStack),
 										initialProcessor,
 										normalizedTokenStack)
 								}
 						else
-							normalizer(
-								parentConverter,
-								childNormalizer.processor.process(token(closing)),
-								initialProcessor,
-								tokenStack
-									.push(token)
-									.pushAll(childNormalizer.tokenStack)
-									.push(token(closing)))
-					},
-					processor.process(token))
+							childNormalizer.processor.process(token(closing))
+								.normalizer(parentConverter,
+									initialProcessor,
+									tokenStack
+										.push(token)
+										.pushAll(childNormalizer.tokenStack)
+										.push(token(closing)))
+					})
 			is ClosingToken ->
 				parentConverter.convert(this)
 		}
 }
 
-fun normalizer(
+fun Processor<Token>.normalizer(
 	parentConverter: Converter<Normalizer, Token> = errorConverter(),
-	processor: Processor<Token>,
-	initialProcessor: Processor<Token> = processor,
+	initialProcessor: Processor<Token> = this,
 	tokenStack: Stack<Token> = stack()) =
-	Normalizer(parentConverter, processor, initialProcessor, tokenStack)
+	Normalizer(this, parentConverter, initialProcessor, tokenStack)
