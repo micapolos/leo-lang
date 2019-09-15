@@ -49,7 +49,7 @@ fun Tokenizer.pushOrNull(char: Char): Tokenizer? =
 		'\t' -> pushTabOrNull
 		':' -> pushColonOrNull
 		'\n' -> pushNewlineOrNull
-		'\u0004' -> pushEndOfTransmission
+		endOfTransmissionChar -> pushEndOfTransmission
 		else -> pushOtherOrNull(char)
 	}
 

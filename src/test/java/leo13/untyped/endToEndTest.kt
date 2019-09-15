@@ -3,6 +3,7 @@ package leo13.untyped
 import leo.base.assertEqualTo
 import leo13.charProcess
 import leo13.converterCapture
+import leo13.endOfTransmissionChar
 import leo13.token.Token
 import leo13.token.reader.tokenizer
 import leo13.untyped.compiler.Compiled
@@ -20,7 +21,7 @@ class EndToEndTest {
 	@Test
 	fun compiling() {
 		converterCapture<Compiled, Token> {
-			compiler().normalizer().tokenizer().charProcess("jajko\n\u0004")
+			compiler().normalizer().tokenizer().charProcess("jajko\n").process(endOfTransmissionChar)
 		}.assertEqualTo(null)
 	}
 }

@@ -30,7 +30,7 @@ fun <V> Trace.traced(fn: () -> V): V =
 	try {
 		fn()
 	} catch (tracedError: TracedError) {
-		throw TracedError(tracedError.stack.push(this))
+		throw TracedError(tracedError.stack.push(this)).initCause(tracedError)
 	}
 
 fun <V> tracedError(): V =

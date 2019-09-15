@@ -19,18 +19,24 @@ fun <V, R> Processor<R>.bind(fn: V.() -> Processor<R>): Processor<V> =
 fun Processor<Char>.charProcess(string: String): Processor<Char> =
 	fold(string) { process(it) }
 
-fun <V> Processor<V>.process(stack: Stack<V>): Processor<V> =
+fun <V> Processor<V>.processAll(stack: Stack<V>): Processor<V> =
 	fold(stack.reverse) { process(it) }
 
-fun <V : Scripting> processStack(fn: Processor<V>.() -> Processor<V>): Stack<V> =
-	(StackProcessor<V>(stack()).fn() as StackProcessor).stack
+fun <V : Scripting> processorStack(fn: Processor<V>.() -> Unit): Stack<V> {
+	val processor = CapturingProcessor<V>(stack())
+	processor.fn()
+	return processor.stack
+}
 
-data class StackProcessor<V : Scripting>(val stack: Stack<V>) : ObjectScripting(), Processor<V> {
+data class CapturingProcessor<V : Scripting>(var stack: Stack<V>) : ObjectScripting(), Processor<V> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
 		get() = "processor" lineTo script(
 			"captured" lineTo stack.scripting.script)
 
-	override fun process(value: V) = StackProcessor(stack.push(value))
+	override fun process(value: V): Processor<V> {
+		stack = stack.push(value)
+		return this
+	}
 }

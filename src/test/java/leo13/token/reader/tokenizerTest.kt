@@ -398,7 +398,8 @@ class TokenizerTest {
 	@Test
 	fun endOfTransmission() {
 		tokenizer()
-			.push("switch\n\u0004")
+			.push("switch\n")
+			.push(endOfTransmissionChar)
 			.assertEqualTo(
 				processor(
 					token(opening("switch")),

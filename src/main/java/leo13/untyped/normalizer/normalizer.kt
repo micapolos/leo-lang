@@ -32,14 +32,15 @@ data class Normalizer(
 								.pushAll(tokenStack)
 								.push(token(closing))
 								.let { normalizedTokenStack ->
-									initialProcessor.process(normalizedTokenStack).normalizer(
+									initialProcessor.processAll(normalizedTokenStack).normalizer(
 										parentConverter,
 										initialProcessor,
 										normalizedTokenStack)
 								}
 						else
 							childNormalizer.processor.process(token(closing))
-								.normalizer(parentConverter,
+								.normalizer(
+									parentConverter,
 									initialProcessor,
 									tokenStack
 										.push(token)
@@ -52,7 +53,7 @@ data class Normalizer(
 }
 
 fun Processor<Token>.normalizer(
-	parentConverter: Converter<Normalizer, Token> = errorConverter(),
+	parentConverter: Converter<Normalizer, Token> = converter { it.processor.process(token(closing)) },
 	initialProcessor: Processor<Token> = this,
 	tokenStack: Stack<Token> = stack()) =
 	Normalizer(this, parentConverter, initialProcessor, tokenStack)

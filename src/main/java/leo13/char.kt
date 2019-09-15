@@ -17,3 +17,5 @@ val Char.scriptLine
 				':' -> script("colon")
 				else -> script("$this")
 			}
+
+const val endOfTransmissionChar = '\u0004'
