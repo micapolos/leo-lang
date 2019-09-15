@@ -43,11 +43,14 @@ data class CaseCompiler(
 
 	val end
 		get() =
-			if (compiledOrNull == null) tracedError()
+			if (compiledOrNull == null) tracedError("empty" lineTo script("case"))
 			else converter.convert(compiledOrNull)
 
 	fun plus(compiled: CaseCompiled) =
-		copy(compiledOrNull = compiled)
+		set(compiled)
+
+	fun set(compiledOrNull: CaseCompiled?) =
+		copy(compiledOrNull = compiledOrNull)
 }
 
 fun caseCompiler(

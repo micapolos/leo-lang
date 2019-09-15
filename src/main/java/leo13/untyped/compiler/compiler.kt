@@ -9,10 +9,8 @@ import leo13.token.Token
 import leo13.untyped.expression.expression
 import leo13.untyped.expression.given
 import leo13.untyped.expression.op
-import leo13.untyped.pattern.Pattern
-import leo13.untyped.pattern.contains
-import leo13.untyped.pattern.isEmpty
-import leo13.untyped.pattern.pattern
+import leo13.untyped.expression.switch
+import leo13.untyped.pattern.*
 import leo9.Stack
 import leo9.fold
 import leo9.reverse
@@ -95,7 +93,27 @@ data class Compiler(
 				converter { plusSet(it) },
 				context)
 
-	val beginSwitch: Processor<Token> get() = TODO()
+	val beginSwitch: Processor<Token>
+		get() =
+			compiled
+				.pattern
+				.linkOrNull
+				?.let { patternLink ->
+					patternLink
+						.item
+						.choiceOrNull
+						?.let { choice ->
+							switchCompiler(
+								converter { plus(it) },
+								context,
+								choice.eitherStack.reverse,
+								compiled(
+									switch(),
+									compiled.pattern))
+						}
+						?: tracedError("expected" lineTo script("choice"))
+				} ?: tracedError("empty" lineTo script())
+
 
 	fun beginOther(name: String): Processor<Token> =
 		compiler(
@@ -141,6 +159,9 @@ fun Compiler.plusPrevious(rhs: Compiled): Compiler =
 fun Compiler.plusOf(rhs: Pattern): Compiler =
 	if (!rhs.contains(compiled.pattern)) tracedError()
 	else set(compiled(compiled.expression, rhs))
+
+fun Compiler.plus(switchCompiled: SwitchCompiled): Compiler =
+	set(compiled.plus(switchCompiled))
 
 fun Compiler.plus(name: String): Compiler =
 	set(compiled()).plusNormalized(name lineTo compiled)

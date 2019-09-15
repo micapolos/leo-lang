@@ -33,9 +33,4 @@ val Stack<Char>.charPushProcessor: Processor<Char>
 val charProcessor = stack<Char>().charPushProcessor
 
 fun <V> errorProcessor(): Processor<V> =
-	stack<Unit>()
-		.scripting { "unit" lineTo script() }
-		.processor { tracedError() }
-
-fun <S : Scripting, V> S.errorProcessor(): Processor<V> =
-	processor { tracedError() }
+	error.processor { tracedError() }
