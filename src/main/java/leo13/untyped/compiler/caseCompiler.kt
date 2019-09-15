@@ -9,6 +9,8 @@ import leo13.token.Token
 import leo13.untyped.expression.caseTo
 import leo13.untyped.expression.expression
 import leo13.untyped.pattern.Either
+import leo13.untyped.pattern.lineTo
+import leo13.untyped.pattern.pattern
 
 data class CaseCompiler(
 	val converter: Converter<CaseCompiled, Token>,
@@ -37,9 +39,14 @@ data class CaseCompiler(
 		if (compiledOrNull != null) tracedError("single" lineTo script("line"))
 		else if (name != either.name) tracedError("expected" lineTo script(either.name))
 		else compiler(
-			converter { plus(compiled(name caseTo it.expression, it.pattern)) },
+			converter {
+				plus(
+					compiled(
+						name caseTo it.expression,
+						it.pattern))
+			},
 			context,
-			compiled(expression(), either.rhs))
+			compiled(expression(), pattern(either.name lineTo either.rhs)))
 
 	val end
 		get() =

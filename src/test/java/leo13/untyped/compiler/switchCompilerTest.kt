@@ -26,7 +26,9 @@ class SwitchCompilerTest {
 		switchCompiler
 			.process(token(opening("case")))
 			.process(token(opening("square")))
-			.process(token(opening("foo")))
+			.process(token(opening("got")))
+			.process(token(opening("square")))
+			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
@@ -37,8 +39,9 @@ class SwitchCompilerTest {
 					stack("circle" eitherTo pattern("radius")),
 					compiled(
 						switch(
-							"square" caseTo expression(plus("foo" lineTo expression()).op)),
+							"square" caseTo expression(plus("got" lineTo expression("square")).op)),
 						pattern(
-							"foo" lineTo pattern("side")))))
+							"square" lineTo pattern("side"),
+							"got" lineTo pattern("square")))))
 	}
 }

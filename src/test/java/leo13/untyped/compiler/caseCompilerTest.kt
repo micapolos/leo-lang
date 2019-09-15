@@ -34,7 +34,7 @@ class CaseCompilerTest {
 						compiled(
 							"circle" caseTo expression("times" lineTo expression("two")),
 							pattern(
-								"radius" lineTo pattern("zero"),
+								"circle" lineTo pattern("radius" lineTo pattern("zero")),
 								"times" lineTo pattern("two")))))
 	}
 }

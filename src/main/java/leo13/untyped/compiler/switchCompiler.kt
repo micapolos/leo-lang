@@ -35,13 +35,13 @@ data class SwitchCompiler(
 		if (name != "case") tracedError("expected" lineTo script("case"))
 		else remainingEitherStack
 			.linkOrNull
-			?.let { link ->
+			?.let { eitherStackLink ->
 				caseCompiler(
 					converter { caseCompiled ->
-						switchCompiler(converter, context, link.stack, compiled.plus(caseCompiled))
+						switchCompiler(converter, context, eitherStackLink.stack, compiled.plus(caseCompiled))
 					},
 					context,
-					link.value)
+					eitherStackLink.value)
 			}
 			?: tracedError("missing" lineTo script("either"))
 

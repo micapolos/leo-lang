@@ -30,20 +30,6 @@ class CompilerTest {
 	}
 
 	@Test
-	fun normalization() {
-		compiler()
-			.process(token(opening("red")))
-			.process(token(closing))
-			.process(token(opening("color")))
-			.process(token(closing))
-			.assertEqualTo(
-				compiler().set(
-					compiled(
-						expression("color" lineTo expression("red")),
-						pattern("color" lineTo pattern("red")))))
-	}
-
-	@Test
 	fun get() {
 		compiler()
 			.process(token(opening("color")))

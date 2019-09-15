@@ -136,10 +136,11 @@ fun Compiler.set(context: Context) =
 fun Compiler.set(compiled: Compiled) =
 	copy(compiled = compiled)
 
-// TODO: Implement normalization outside of the compiler, as Processor<Token>
 fun Compiler.plus(line: CompiledLine): Compiler =
-	if (line.rhs.pattern.isEmpty) plus(line.name)
-	else plusNormalized(line)
+	if (line.rhs.pattern.isEmpty && !compiled.pattern.isEmpty) tracedError("normalization" lineTo script())
+	else when (line.name) {
+		else -> plusOther(line)
+	}
 
 fun Compiler.plusEverything(rhs: Compiled): Compiler =
 	if (!compiled.pattern.isEmpty) tracedError()
@@ -162,14 +163,6 @@ fun Compiler.plusOf(rhs: Pattern): Compiler =
 
 fun Compiler.plus(switchCompiled: SwitchCompiled): Compiler =
 	set(compiled.plus(switchCompiled))
-
-fun Compiler.plus(name: String): Compiler =
-	set(compiled()).plusNormalized(name lineTo compiled)
-
-fun Compiler.plusNormalized(line: CompiledLine): Compiler =
-	when (line.name) {
-		else -> plusOther(line)
-	}
 
 fun Compiler.plusSet(lineStack: Stack<CompiledLine>): Compiler =
 	fold(lineStack.reverse) { plus(it) }
