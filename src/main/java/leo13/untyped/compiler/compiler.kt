@@ -6,10 +6,7 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
-import leo13.untyped.expression.expression
-import leo13.untyped.expression.given
-import leo13.untyped.expression.op
-import leo13.untyped.expression.switch
+import leo13.untyped.expression.*
 import leo13.untyped.pattern.*
 import leo9.Stack
 import leo9.fold
@@ -171,7 +168,10 @@ fun Compiler.plusSet(lineStack: Stack<CompiledLine>): Compiler =
 	fold(lineStack.reverse) { plus(it) }
 
 fun Compiler.plusSet(line: CompiledLine): Compiler =
-	TODO()
+	set(
+		compiled(
+			compiled.expression.plus(set(line.expressionLine).op),
+			pattern(line.patternLine)))
 
 fun Compiler.plusOther(line: CompiledLine): Compiler =
 	plusGetOrNull(line) ?: append(line)

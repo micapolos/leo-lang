@@ -1,7 +1,6 @@
-bit: zero
-of: bit: choice
-	either: zero
-	either: one
-switch
-	case: zero: foo
-	case: one: foo
+circle
+	radius: one
+	center: point
+		x: zero
+		y: one
+set: radius: ten
