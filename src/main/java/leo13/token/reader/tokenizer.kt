@@ -107,7 +107,9 @@ val Tokenizer.pushNewlineOrNull: Tokenizer?
 						if (head.input.colon.boolean) head(parent.indentOrNull.orNullPlus(space).reverse)
 						else head(parent.indentOrNull.orNullPlus(tab(space)).reverse))
 			is ColonHead -> null
-			is IndentHead -> null
+			is IndentHead -> tokenProcessor.flush(head.indent).tokenizer(
+				parent,
+				head(input(colon(false), "")))
 		}
 
 fun Tokenizer.pushOtherOrNull(char: Char): Tokenizer? =

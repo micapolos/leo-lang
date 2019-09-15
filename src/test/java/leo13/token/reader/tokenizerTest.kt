@@ -346,6 +346,32 @@ class TokenizerTest {
 	}
 
 	@Test
+	fun newlineFlushesIndent() {
+		test(
+			"circle\n\tradius\n\n",
+			processor(
+				token(opening("circle")),
+				token(opening("radius")),
+				token(closing),
+				token(closing)).tokenizer(
+				parent(),
+				head(input(colon(false), ""))))
+	}
+
+	@Test
+	fun newlineTwiceDoesNothing() {
+		test(
+			"circle\n\tradius\n\n\n",
+			processor(
+				token(opening("circle")),
+				token(opening("radius")),
+				token(closing),
+				token(closing)).tokenizer(
+				parent(),
+				head(input(colon(false), ""))))
+	}
+
+	@Test
 	fun complex() {
 		tokenizer()
 			.push("switch\n\tone gives: jeden\n\ttwo gives: dwa\nok")
