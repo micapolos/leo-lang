@@ -7,9 +7,12 @@ import leo13.endOfTransmissionChar
 import leo13.token.Token
 import leo13.token.reader.tokenizer
 import leo13.untyped.compiler.Compiled
+import leo13.untyped.compiler.compiled
 import leo13.untyped.compiler.compiler
+import leo13.untyped.expression.expression
 import leo13.untyped.interpreter.interpreter
 import leo13.untyped.normalizer.normalizer
+import leo13.untyped.pattern.pattern
 import kotlin.test.Test
 
 class EndToEndTest {
@@ -22,6 +25,9 @@ class EndToEndTest {
 	fun compiling() {
 		converterCapture<Compiled, Token> {
 			compiler().normalizer().tokenizer().charProcess("jajko\n").process(endOfTransmissionChar)
-		}.assertEqualTo(null)
+		}.assertEqualTo(
+			compiled(
+				expression("jajko"),
+				pattern("jajko")))
 	}
 }

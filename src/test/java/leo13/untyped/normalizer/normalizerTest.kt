@@ -1,7 +1,6 @@
 package leo13.untyped.normalizer
 
 import leo.base.assertEqualTo
-import leo13.converter
 import leo13.errorConverter
 import leo13.processor
 import leo13.processorStack
@@ -135,7 +134,7 @@ class NormalizerTest {
 	@Test
 	fun endToken() {
 		processorStack<Token> {
-			normalizer(converter { process(token(closing)) })
+			normalizer()
 				.process(token(opening("zero")))
 				.process(token(closing))
 				.process(token(closing))
