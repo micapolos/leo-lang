@@ -20,7 +20,7 @@ class EndToEndTest {
 	@Test
 	fun compiling() {
 		converterCapture<Compiled, Token> {
-			compiler().normalizer().tokenizer().charProcess("jajko\n\n")
+			compiler().normalizer().tokenizer().charProcess("jajko\n\u0004")
 		}.assertEqualTo(null)
 	}
 }

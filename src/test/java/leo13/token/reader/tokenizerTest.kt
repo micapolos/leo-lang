@@ -396,6 +396,18 @@ class TokenizerTest {
 	}
 
 	@Test
+	fun endOfTransmission() {
+		tokenizer()
+			.push("switch\n\u0004")
+			.assertEqualTo(
+				processor(
+					token(opening("switch")),
+					token(closing),
+					token(closing))
+					.tokenizer())
+	}
+
+	@Test
 	fun withLocator() {
 		traced {
 			processor<Token>()

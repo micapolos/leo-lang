@@ -49,6 +49,7 @@ fun Tokenizer.pushOrNull(char: Char): Tokenizer? =
 		'\t' -> pushTabOrNull
 		':' -> pushColonOrNull
 		'\n' -> pushNewlineOrNull
+		'\u0004' -> pushEndOfTransmission
 		else -> pushOtherOrNull(char)
 	}
 
@@ -133,15 +134,13 @@ fun Processor<Token>.flush(indent: Indent): Processor<Token> =
 fun Processor<Token>.flush(tab: SpacesTab): Processor<Token> =
 	process(token(closing)).updateIfNotNull(tab.previousOrNull) { flush(it) }
 
-val Tokenizer.finish: Unit
+val Tokenizer.pushEndOfTransmission: Tokenizer
 	get() =
 		if (!parent.isEmpty) fail("empty")
 		else when (head) {
 			is InputHead -> fail("input")
 			is ColonHead -> fail("colon")
-			is IndentHead -> tokenProcessor.flush(head.indent).run { Unit }
+			is IndentHead -> tokenProcessor.flush(head.indent).process(token(closing)).run {
+				tokenizer() // TODO: We should probably return failing tokenizer
+			}
 		}
-
-val Tokenizer.charProcessor: Processor<Char>
-	get() =
-		processor { push(it) }
