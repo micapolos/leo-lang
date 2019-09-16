@@ -157,4 +157,31 @@ class CompilerTest {
 							expression("zero"),
 							pattern(item(choice(either("zero"), either("one")))))))
 	}
+
+	@Test
+	fun processSwitch() {
+		compiler()
+			.process(token(opening("bit")))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("switch")))
+			.process(token(opening("case")))
+			.process(token(opening("zero")))
+			.process(token(opening("and")))
+			.process(token(opening("bit")))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				compiler()
+					.set(
+						compiled(
+							expression("zero"),
+							pattern(item(choice(either("zero"), either("one")))))))
+	}
 }

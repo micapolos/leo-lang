@@ -10,19 +10,17 @@ import leo13.untyped.compiler.Compiled
 import leo13.untyped.compiler.compiled
 import leo13.untyped.compiler.compiler
 import leo13.untyped.expression.expression
-import leo13.untyped.interpreter.Interpreted
-import leo13.untyped.interpreter.interpreter
 import leo13.untyped.normalizer.normalizer
 import leo13.untyped.pattern.pattern
 import kotlin.test.Test
 
 class EndToEndTest {
-	@Test
-	fun interpreting() {
-		converterCapture<Interpreted, Token> {
-			interpreter().normalizer().tokenizer().charProcess("jajko\n").process(endOfTransmissionChar)
-		}.assertEqualTo(null)
-	}
+//	@Test
+//	fun interpreting() {
+//		converterCapture<Interpreted, Token> {
+//			interpreter().normalizer().tokenizer().charProcess("jajko\n").process(endOfTransmissionChar)
+//		}.assertEqualTo(null)
+//	}
 
 	@Test
 	fun compiling() {

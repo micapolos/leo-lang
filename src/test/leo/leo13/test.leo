@@ -1,6 +1,2 @@
-circle
-	radius: one
-	center: point
-		x: zero
-		y: one
-set: radius: ten
+bit: zero
+switch: case: zero: bit: one
