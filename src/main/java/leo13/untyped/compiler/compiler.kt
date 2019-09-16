@@ -49,7 +49,7 @@ data class Compiler(
 			"previous" -> beginPrevious
 			"set" -> beginSet
 			"switch" -> beginSwitch
-			"type" -> beginType
+			"pattern" -> beginPattern
 			else -> beginOther(name)
 		}
 
@@ -159,10 +159,10 @@ data class Compiler(
 						?: tracedError("expected" lineTo script("choice"))
 				} ?: tracedError("empty" lineTo script())
 
-	val beginType: Processor<Token>
+	val beginPattern: Processor<Token>
 		get() =
 			compiler(
-				converter { plusType(it) },
+				converter { plusPattern(it) },
 				context)
 
 	fun beginOther(name: String): Processor<Token> =
@@ -237,8 +237,8 @@ fun Compiler.plusOther(line: CompiledLine): Compiler =
 fun Compiler.plusGetOrNull(line: CompiledLine): Compiler? =
 	line.rhs.getOrNull(line.name)?.run { set(this) } // TODO: Don't set(), but plus(line)
 
-fun Compiler.plusType(rhs: Compiled): Compiler =
-	append("type" lineTo compiled(script(rhs.pattern.scriptingLine)))
+fun Compiler.plusPattern(rhs: Compiled): Compiler =
+	append("pattern" lineTo compiled(rhs.pattern.scriptingLine.rhs))
 
 fun Compiler.append(line: CompiledLine): Compiler =
 	set(compiled.plus(line))
