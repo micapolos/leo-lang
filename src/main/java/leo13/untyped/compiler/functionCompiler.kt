@@ -29,7 +29,7 @@ data class FunctionCompiler(
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken ->
-				if (functionCompiledOrNull != null) tracedError<Processor<Token>>("expected" lineTo script("end"))
+				if (functionCompiledOrNull != null) tracedError("expected" lineTo script("end"))
 				else if (token.opening.name == "gives")
 					if (parameterPattern.isEmpty) tracedError<Processor<Token>>("empty" lineTo script("pattern"))
 					else compiler(
@@ -44,7 +44,7 @@ data class FunctionCompiler(
 										bodyCompiled.expression),
 									parameterPattern arrowTo bodyCompiled.pattern))
 						},
-						context)
+						context.bind(parameterPattern))
 				else patternCompiler(
 					converter { compiledPattern ->
 						FunctionCompiler(
@@ -62,3 +62,9 @@ data class FunctionCompiler(
 				}
 		}
 }
+
+fun functionCompiler(
+	context: Context = context(),
+	parameterPattern: Pattern = pattern(),
+	functionCompiledOrNull: FunctionCompiled? = null) =
+	FunctionCompiler(errorConverter(), context, parameterPattern, functionCompiledOrNull)

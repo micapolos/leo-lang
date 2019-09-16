@@ -9,13 +9,13 @@ function
 			of: bit: choice
 				either: zero
 				either: one
-		case: zero
-			bit: one
+		case: one
+			bit: zero
 			of: bit: choice
 				either: zero
 				either: one
 apply
-	bit: zero
+	bit: one
 	of: bit: choice
 		either: zero
 		either: one
