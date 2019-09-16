@@ -49,6 +49,7 @@ data class Compiler(
 			"previous" -> beginPrevious
 			"set" -> beginSet
 			"switch" -> beginSwitch
+			"type" -> beginType
 			else -> beginOther(name)
 		}
 
@@ -158,6 +159,13 @@ data class Compiler(
 						?: tracedError("expected" lineTo script("choice"))
 				} ?: tracedError("empty" lineTo script())
 
+	val beginType: Processor<Token>
+		get() =
+			compiler(
+				converter { rhsCompiled ->
+					append(compiledLine("type" lineTo script(rhsCompiled.pattern.scriptingLine)))
+				},
+				context)
 
 	fun beginOther(name: String): Processor<Token> =
 		compiler(

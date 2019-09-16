@@ -33,3 +33,6 @@ val patternLineWriter: Writer<PatternLine> =
 val PatternLine.staticScriptLineOrNull: ScriptLine?
 	get() =
 		rhs.staticScriptOrNull?.let { name lineTo it }
+
+fun patternLine(scriptLine: ScriptLine) =
+	scriptLine.name lineTo pattern(scriptLine.rhs)

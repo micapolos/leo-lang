@@ -159,3 +159,6 @@ val Pattern.contentOrNull: Pattern?
 val Pattern.staticScriptOrNull: Script?
 	get() =
 		itemStack.mapOrNull { staticScriptLineOrNull }?.script
+
+fun pattern(script: Script): Pattern =
+	pattern(script.lineStack.map { item(choice(patternLine(this))) })

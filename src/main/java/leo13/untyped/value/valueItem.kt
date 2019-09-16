@@ -36,7 +36,10 @@ val ValueItem.bodyScriptLine get() =
 	}
 
 val ValueItem.scriptLineOrNull get() =
-	lineOrNull?.scriptLineOrNull
+	when (this) {
+		is FunctionValueItem -> function.scriptLine
+		is LineValueItem -> line.scriptLineOrNull
+	}
 
 val ScriptLine.valueItem: ValueItem
 	get() =

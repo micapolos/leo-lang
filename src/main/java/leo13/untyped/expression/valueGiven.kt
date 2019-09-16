@@ -1,6 +1,7 @@
 package leo13.untyped.expression
 
 import leo13.script.ScriptLine
+import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.untyped.givenName
 import leo13.untyped.value.*
@@ -21,4 +22,4 @@ fun ValueGiven.evaluate(line: ExpressionLine): ValueLine =
 
 val ValueGiven.scriptLine: ScriptLine
 	get() =
-		givenName lineTo value.bodyScript
+		"context" lineTo value.bodyScript.emptyIfEmpty

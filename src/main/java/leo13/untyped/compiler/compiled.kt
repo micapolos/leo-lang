@@ -2,7 +2,6 @@ package leo13.untyped.compiler
 
 import leo.base.fold
 import leo13.ObjectScripting
-import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.expression.*
@@ -20,9 +19,6 @@ fun compiled(expression: Expression, pattern: Pattern) =
 
 fun compiled(vararg lines: CompiledLine) =
 	Compiled(expression(), pattern()).fold(lines) { plus(it) }
-
-fun compiled(script: Script): Compiled =
-	TODO()
 
 fun Compiled.plus(line: CompiledLine) =
 	compiled(
