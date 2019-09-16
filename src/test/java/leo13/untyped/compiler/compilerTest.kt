@@ -229,7 +229,7 @@ class CompilerTest {
 				compiler()
 					.set(
 						compiled(
-							expression(item(function(given(value()), expression("one"))).op),
+							expression(value(item(function(given(value()), expression("one")))).op),
 							pattern(item(pattern("zero") arrowTo pattern("one"))))))
 	}
 }
