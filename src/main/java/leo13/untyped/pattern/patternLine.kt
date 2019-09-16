@@ -29,3 +29,7 @@ val patternLineWriter: Writer<PatternLine> =
 	writer(patternLineName) {
 		script(name lineTo patternWriter.bodyScript(rhs))
 	}
+
+val PatternLine.staticScriptLineOrNull: ScriptLine?
+	get() =
+		rhs.staticScriptOrNull?.let { name lineTo it }

@@ -7,6 +7,9 @@ import leo13.token.token
 import leo13.untyped.contentName
 import leo13.untyped.expression.*
 import leo13.untyped.pattern.*
+import leo13.untyped.value.function
+import leo13.untyped.value.item
+import leo13.untyped.value.value
 import org.junit.Test
 
 class CompilerTest {
@@ -211,5 +214,22 @@ class CompilerTest {
 							expression("shape" lineTo expression("circle" lineTo expression("radius")))
 								.plus(switch("circle" caseTo expression("times" lineTo expression("two"))).op),
 							pattern("radius" lineTo pattern(), "times" lineTo pattern("two")))))
+	}
+
+	@Test
+	fun processGives() {
+		compiler()
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(opening("gives")))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				compiler()
+					.set(
+						compiled(
+							expression(item(function(given(value()), expression("one"))).op),
+							pattern(item(pattern("zero") arrowTo pattern("one"))))))
 	}
 }

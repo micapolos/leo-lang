@@ -38,3 +38,7 @@ val PatternItem.scriptLine: ScriptLine
 			is ChoicePatternItem -> choice.scriptLine
 			is ArrowPatternItem -> arrow.scriptLine
 		}
+
+val PatternItem.staticScriptLineOrNull: ScriptLine?
+	get() =
+		choiceOrNull?.onlyEitherOrNull?.patternLine?.staticScriptLineOrNull

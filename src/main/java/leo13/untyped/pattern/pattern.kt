@@ -155,3 +155,7 @@ val Pattern.previousOrNull: Pattern?
 val Pattern.contentOrNull: Pattern?
 	get() =
 		linkOrNull?.item?.choiceOrNull?.onlyEitherOrNull?.rhs
+
+val Pattern.staticScriptOrNull: Script?
+	get() =
+		itemStack.mapOrNull { staticScriptLineOrNull }?.script
