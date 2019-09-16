@@ -98,15 +98,19 @@ fun Pattern.getOrNull(name: String): Pattern? =
 			?.let { link.lhs.plus(item(choice(it.either))) }
 	}
 
-fun Pattern.setOrNull(line: PatternLine): Pattern? =
+fun Pattern.setOrNull(newLine: PatternLine): Pattern? =
 	itemStack
 		.linkOrNull
 		?.let { itemStackLink ->
 			itemStackLink
-				.stack
-				.pattern
-				.run { replaceLineOrNull(line) ?: plus(line) }
-				.let { pattern(itemStackLink.stack.push(item(choice(line.name eitherTo it)))) }
+				.value
+				.lineOrNull
+				?.let { line ->
+					line
+						.rhs
+						.run { replaceLineOrNull(newLine) ?: plus(newLine) }
+						.let { pattern(itemStackLink.stack.push(item(choice(line.name eitherTo it)))) }
+			}
 		}
 
 fun Pattern.setOrNull(pattern: Pattern): Pattern? =

@@ -52,6 +52,32 @@ class CompilerTest {
 	}
 
 	@Test
+	fun set() {
+		compiler()
+			.process(token(opening("circle")))
+			.process(token(opening("color")))
+			.process(token(opening("red")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("set")))
+			.process(token(opening("color")))
+			.process(token(opening("blue")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				compiler().set(
+					compiled(
+						expression(
+							"circle" lineTo expression(
+								"color" lineTo expression(
+									"red" lineTo expression())))
+							.plus(set("color" lineTo expression("blue")).op),
+						pattern("circle" lineTo pattern("color" lineTo pattern("blue"))))))
+	}
+
+	@Test
 	fun bind() {
 		compiler()
 			.set(compiled(expression("zero"), pattern("zero")))

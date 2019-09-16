@@ -124,4 +124,45 @@ class PatternTest {
 			.contains(pattern(item(pattern("one") arrowTo pattern("zero"))))
 			.assertEqualTo(false)
 	}
+
+	@Test
+	fun setOrNull() {
+		val pattern = pattern(
+			"point" lineTo pattern(
+				"x" lineTo pattern("zero"),
+				"y" lineTo pattern("one")))
+
+		pattern
+			.setOrNull("x" lineTo pattern("two"))
+			.assertEqualTo(
+				pattern(
+					"point" lineTo pattern(
+						"x" lineTo pattern("two"),
+						"y" lineTo pattern("one"))))
+
+		pattern
+			.setOrNull("y" lineTo pattern("two"))
+			.assertEqualTo(
+				pattern(
+					"point" lineTo pattern(
+						"x" lineTo pattern("zero"),
+						"y" lineTo pattern("two"))))
+
+		pattern
+			.setOrNull("z" lineTo pattern("two"))
+			.assertEqualTo(
+				pattern(
+					"point" lineTo pattern(
+						"x" lineTo pattern("zero"),
+						"y" lineTo pattern("one"),
+						"z" lineTo pattern("two"))))
+
+		pattern()
+			.setOrNull("x" lineTo pattern("two"))
+			.assertEqualTo(null)
+
+		pattern(choice(either("point"), either("line")))
+			.setOrNull("x" lineTo pattern("two"))
+			.assertEqualTo(null)
+	}
 }

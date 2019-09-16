@@ -175,13 +175,16 @@ fun Compiler.plus(switchCompiled: SwitchCompiled): Compiler =
 	set(compiled.plus(switchCompiled))
 
 fun Compiler.plusSet(lineStack: Stack<CompiledLine>): Compiler =
-	fold(lineStack.reverse) { plus(it) }
+	fold(lineStack.reverse) { plusSet(it) }
 
 fun Compiler.plusSet(line: CompiledLine): Compiler =
-	set(
-		compiled(
-			compiled.expression.plus(set(line.expressionLine).op),
-			pattern(line.patternLine)))
+	compiled.pattern.setOrNull(line.patternLine)
+		?.let { setPattern ->
+			set(
+				compiled(
+					compiled.expression.plus(set(line.expressionLine).op),
+					setPattern))
+		}?: tracedError("set" lineTo script())
 
 fun Compiler.plusOther(line: CompiledLine): Compiler =
 	plusGetOrNull(line) ?: append(line)
