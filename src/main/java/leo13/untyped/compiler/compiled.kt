@@ -2,10 +2,12 @@ package leo13.untyped.compiler
 
 import leo.base.fold
 import leo13.ObjectScripting
+import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.expression.*
 import leo13.untyped.pattern.*
+import leo13.untyped.value.value
 
 data class Compiled(val expression: Expression, val pattern: Pattern) : ObjectScripting() {
 	override fun toString() = super.toString()
@@ -55,3 +57,7 @@ fun Compiled.plus(switchCompiled: SwitchCompiled) =
 	compiled(
 		expression.plus(switchCompiled.switch.op),
 		switchCompiled.pattern)
+
+fun compiled(script: Script): Compiled =
+	compiled(expression(script.value.op), pattern(script))
+

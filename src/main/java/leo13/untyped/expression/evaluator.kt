@@ -26,7 +26,7 @@ fun Evaluator.plus(expression: Expression): Evaluator =
 
 fun Evaluator.plus(op: Op): Evaluator =
 	when (op) {
-		is ValueItemOp -> plus(op.item)
+		is ValueOp -> plus(op.value)
 		is PlusOp -> plus(op.plus)
 		is GetOp -> plus(op.get)
 		is SetOp -> plus(op.set)
@@ -38,8 +38,8 @@ fun Evaluator.plus(op: Op): Evaluator =
 		is ApplyOp -> plus(op.apply)
 	}
 
-fun Evaluator.plus(item: ValueItem): Evaluator =
-	set(evaluated.value.plus(item).evaluated)
+fun Evaluator.plus(value: Value): Evaluator =
+	set(evaluated(evaluated.value.plus(value)))
 
 fun Evaluator.plus(get: Get): Evaluator =
 	set(evaluated.value.getOrNull(get.name)!!.evaluated)
@@ -83,9 +83,6 @@ fun Evaluator.plus(give: Give): Evaluator =
 
 fun Evaluator.plus(apply: Apply): Evaluator =
 	set(evaluated.value.firstItemOrNull?.functionOrNull!!.apply(given.evaluate(apply.expression)).evaluated)
-
-fun Evaluator.plus(value: Value): Evaluator =
-	set(evaluated(evaluated.value.plus(value)))
 
 val Evaluator.scriptLine
 	get() =

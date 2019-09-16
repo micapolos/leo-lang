@@ -91,7 +91,7 @@ data class Compiler(
 							converter { compiled ->
 								set(
 									compiled(
-										expression(leo13.untyped.value.item(function(given(value()), compiled.expression)).op),
+										expression(value(leo13.untyped.value.item(function(given(value()), compiled.expression))).op),
 										pattern(item(pattern arrowTo compiled.pattern))))
 							},
 							context.bind(pattern))
@@ -162,9 +162,7 @@ data class Compiler(
 	val beginType: Processor<Token>
 		get() =
 			compiler(
-				converter { rhsCompiled ->
-					append(compiledLine("type" lineTo script(rhsCompiled.pattern.scriptingLine)))
-				},
+				converter { plusType(it) },
 				context)
 
 	fun beginOther(name: String): Processor<Token> =
@@ -238,6 +236,9 @@ fun Compiler.plusOther(line: CompiledLine): Compiler =
 
 fun Compiler.plusGetOrNull(line: CompiledLine): Compiler? =
 	line.rhs.getOrNull(line.name)?.run { set(this) } // TODO: Don't set(), but plus(line)
+
+fun Compiler.plusType(rhs: Compiled): Compiler =
+	append("type" lineTo compiled(script(rhs.pattern.scriptingLine)))
 
 fun Compiler.append(line: CompiledLine): Compiler =
 	set(compiled.plus(line))
