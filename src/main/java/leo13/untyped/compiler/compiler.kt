@@ -40,6 +40,7 @@ data class Compiler(
 			"define" -> beginOf
 			"given" -> beginGiven
 			"in" -> beginIn
+			"function" -> beginFunction
 			"of" -> beginOf
 			"content" -> beginContent
 			"previous" -> beginPrevious
@@ -59,6 +60,18 @@ data class Compiler(
 			compiler(
 				converter { plusContent(it) },
 				context)
+
+	val beginFunction: Processor<Token>
+		get() = FunctionCompiler(
+			converter { functionCompiled ->
+				set(
+					compiled(
+						compiled.expression.plus(leo13.untyped.value.item(functionCompiled.function).op),
+						pattern(item(functionCompiled.arrow))))
+			},
+			context,
+			pattern(),
+			null)
 
 	val beginGiven: Processor<Token>
 		get() =

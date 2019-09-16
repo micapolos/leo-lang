@@ -1,13 +1,21 @@
 package leo13.untyped.value
 
+import leo13.ObjectScripting
 import leo13.script.ScriptLine
 import leo13.script.metaFor
 import leo13.untyped.functionName
 
-sealed class ValueItem
+sealed class ValueItem : ObjectScripting()
 
-data class FunctionValueItem(val function: ValueFunction): ValueItem()
-data class LineValueItem(val line: ValueLine): ValueItem()
+data class FunctionValueItem(val function: ValueFunction) : ValueItem() {
+	override fun toString() = super.toString()
+	override val scriptingLine get() = function.scriptLine
+}
+
+data class LineValueItem(val line: ValueLine) : ValueItem() {
+	override fun toString() = super.toString()
+	override val scriptingLine = line.scriptLine
+}
 
 fun item(function: ValueFunction): ValueItem = FunctionValueItem(function)
 fun item(line: ValueLine): ValueItem = LineValueItem(line)

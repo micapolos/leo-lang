@@ -11,7 +11,7 @@ data class PatternArrow(val lhs: Pattern, val rhs: Pattern)
 infix fun Pattern.arrowTo(rhs: Pattern) = PatternArrow(this, rhs)
 
 fun PatternArrow.matches(function: ValueFunction): Boolean =
-	this == function.patternArrow
+	TODO() // Do we need pattern.matches(value) anyway?
 
 fun PatternArrow.contains(arrow: PatternArrow) =
 	this == arrow // TODO: Consider weaker version, lhs.arrow.contains(lhs) && rhs.contains(arrow.rhs)

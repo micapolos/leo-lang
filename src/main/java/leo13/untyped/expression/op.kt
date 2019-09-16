@@ -1,9 +1,11 @@
 package leo13.untyped.expression
 
 import leo13.script.ScriptLine
+import leo13.untyped.value.ValueItem
 
 sealed class Op
 
+data class ValueItemOp(val item: ValueItem) : Op()
 data class PlusOp(val plus: Plus) : Op()
 data class GetOp(val get: Get) : Op()
 data class SetOp(val set: Set) : Op()
@@ -14,6 +16,7 @@ data class GiveOp(val give: Give) : Op()
 data class GivenOp(val given: Given) : Op()
 data class ApplyOp(val apply: Apply) : Op()
 
+val ValueItem.op: Op get() = ValueItemOp(this)
 val Plus.op: Op get() = PlusOp(this)
 val Get.op: Op get() = GetOp(this)
 val Set.op: Op get() = SetOp(this)
@@ -27,6 +30,7 @@ val Apply.op: Op get() = ApplyOp(this)
 val Op.bodyScriptLine: ScriptLine
 	get() =
 		when (this) {
+			is ValueItemOp -> item.scriptingLine
 			is PlusOp -> plus.scriptLine
 			is GetOp -> get.scriptLine
 			is SetOp -> set.scriptLine

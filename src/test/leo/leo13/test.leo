@@ -1,5 +1,6 @@
-circle
-	radius: zero
-	center: point
-		x: two
-		y: three
+function
+	zero
+	gives: one
+of: function
+	zero
+	giving: one
