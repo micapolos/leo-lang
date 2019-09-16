@@ -15,6 +15,7 @@ import leo13.untyped.pattern.pattern
 data class CaseCompiler(
 	val converter: Converter<CaseCompiled, Token>,
 	val context: Context,
+	val lineName: String,
 	val either: Either,
 	val compiledOrNull: CaseCompiled?) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
@@ -46,7 +47,7 @@ data class CaseCompiler(
 						it.pattern))
 			},
 			context,
-			compiled(expression(), pattern(either.name lineTo either.rhs)))
+			compiled(expression(), pattern(lineName lineTo pattern(either.name lineTo either.rhs))))
 
 	val end
 		get() =
@@ -63,7 +64,8 @@ data class CaseCompiler(
 fun caseCompiler(
 	converter: Converter<CaseCompiled, Token>,
 	context: Context,
+	lineName: String,
 	either: Either,
 	compiledOrNull: CaseCompiled? = null) =
-	CaseCompiler(converter, context, either, compiledOrNull)
+	CaseCompiler(converter, context, lineName, either, compiledOrNull)
 

@@ -169,9 +169,7 @@ class CompilerTest {
 			.process(token(opening("case")))
 			.process(token(opening("zero")))
 			.process(token(opening("and")))
-			.process(token(opening("bit")))
 			.process(token(opening("one")))
-			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
@@ -181,7 +179,8 @@ class CompilerTest {
 				compiler()
 					.set(
 						compiled(
-							expression("zero"),
-							pattern(item(choice(either("zero"), either("one")))))))
+							expression("bit" lineTo expression("zero"))
+								.plus(switch("zero" caseTo expression("and" lineTo expression("one"))).op),
+							pattern("bit" lineTo pattern("zero"), "and" lineTo pattern("one")))))
 	}
 }

@@ -15,6 +15,7 @@ fun item(arrow: PatternArrow): PatternItem = ArrowPatternItem(arrow)
 
 val PatternItem.choiceOrNull get() = (this as? ChoicePatternItem)?.choice
 val PatternItem.arrowOrNull get() = (this as? ArrowPatternItem)?.arrow
+val PatternItem.lineOrNull get() = choiceOrNull?.onlyEitherOrNull?.patternLine
 
 fun PatternItem.matches(valueItem: ValueItem): Boolean =
 	when (this) {

@@ -13,6 +13,7 @@ import leo9.linkOrNull
 data class SwitchCompiler(
 	val converter: Converter<SwitchCompiled, Token>,
 	val context: Context,
+	val lineName: String,
 	val remainingEitherStack: Stack<Either>,
 	val compiled: SwitchCompiled) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
@@ -22,6 +23,7 @@ data class SwitchCompiler(
 			"compiler" lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
+				"line" lineTo script("name" lineTo script(lineName)),
 				"remaining" lineTo remainingEitherStack.scripting.script,
 				compiled.scriptingLine)
 
@@ -38,9 +40,10 @@ data class SwitchCompiler(
 			?.let { eitherStackLink ->
 				caseCompiler(
 					converter { caseCompiled ->
-						switchCompiler(converter, context, eitherStackLink.stack, compiled.plus(caseCompiled))
+						switchCompiler(converter, context, lineName, eitherStackLink.stack, compiled.plus(caseCompiled))
 					},
 					context,
+					lineName,
 					eitherStackLink.value)
 			}
 			?: tracedError("missing" lineTo script("either"))
@@ -51,9 +54,10 @@ data class SwitchCompiler(
 fun switchCompiler(
 	converter: Converter<SwitchCompiled, Token> = errorConverter(),
 	context: Context,
+	lineName: String,
 	remainingEitherStack: Stack<Either>,
 	switch: SwitchCompiled) =
-	SwitchCompiler(converter, context, remainingEitherStack, switch)
+	SwitchCompiler(converter, context, lineName, remainingEitherStack, switch)
 
 fun SwitchCompiler.plus(case: CaseCompiled) =
 	copy(

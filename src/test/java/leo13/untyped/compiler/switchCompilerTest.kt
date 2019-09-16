@@ -18,15 +18,16 @@ class SwitchCompilerTest {
 		val switchCompiler = switchCompiler(
 			errorConverter(),
 			context(),
+			"shape",
 			stack(
-				"circle" eitherTo pattern("radius"),
-				"square" eitherTo pattern("side")),
+				"square" eitherTo pattern("side"),
+				"circle" eitherTo pattern("radius")),
 			compiled(switch(), pattern("lhs")))
 
 		switchCompiler
 			.process(token(opening("case")))
-			.process(token(opening("square")))
-			.process(token(opening("got")))
+			.process(token(opening("circle")))
+			.process(token(opening("as")))
 			.process(token(opening("square")))
 			.process(token(closing))
 			.process(token(closing))
@@ -36,12 +37,13 @@ class SwitchCompilerTest {
 				switchCompiler(
 					errorConverter(),
 					context(),
-					stack("circle" eitherTo pattern("radius")),
+					"shape",
+					stack("square" eitherTo pattern("side")),
 					compiled(
 						switch(
-							"square" caseTo expression(plus("got" lineTo expression("square")).op)),
+							"circle" caseTo expression(plus("as" lineTo expression("square")).op)),
 						pattern(
-							"square" lineTo pattern("side"),
-							"got" lineTo pattern("square")))))
+							"shape" lineTo pattern("circle" lineTo pattern("radius")),
+							"as" lineTo pattern("square")))))
 	}
 }

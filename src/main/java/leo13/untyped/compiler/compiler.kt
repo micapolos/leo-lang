@@ -98,22 +98,24 @@ data class Compiler(
 				?.let { patternLink0 ->
 					patternLink0
 						.item
-						.choiceOrNull
-						?.onlyEitherOrNull
-						?.rhs
-						?.linkOrNull
-						?.let { patternLink ->
-							patternLink
-								.item
-								.choiceOrNull
-								?.let { choice ->
-									switchCompiler(
-										converter { plus(it) },
-										context,
-										choice.eitherStack.reverse,
-										compiled(
-											switch(),
-											compiled.pattern))
+						.lineOrNull?.let { line ->
+							line
+								.rhs
+								.linkOrNull
+								?.let { patternLink ->
+									patternLink
+										.item
+										.choiceOrNull
+										?.let { choice ->
+											switchCompiler(
+												converter { plus(it) },
+												context,
+												line.name,
+												choice.eitherStack.reverse,
+												compiled(
+													switch(),
+													compiled.pattern))
+										}
 								}
 						}
 						?: tracedError("expected" lineTo script("choice"))
