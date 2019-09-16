@@ -29,4 +29,17 @@ class EvaluatorTest {
 							"given" lineTo value("zero"),
 							"given" lineTo value("one")))))
 	}
+
+	@Test
+	fun switch() {
+		evaluator()
+			.set(evaluated(value("shape" lineTo value("circle" lineTo value("radius")))))
+			.plus(switch(
+				"circle" caseTo expression("times" lineTo expression("two"))).op)
+			.assertEqualTo(
+				evaluator()
+					.set(evaluated(value(
+						"radius" lineTo value(),
+						"times" lineTo value("two")))))
+	}
 }

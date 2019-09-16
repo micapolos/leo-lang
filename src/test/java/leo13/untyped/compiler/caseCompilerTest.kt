@@ -19,7 +19,6 @@ class CaseCompilerTest {
 		val caseCompiler = caseCompiler(
 			errorConverter(),
 			context(),
-			"shape",
 			"circle" eitherTo pattern("radius"))
 
 		caseCompiler
@@ -35,7 +34,7 @@ class CaseCompilerTest {
 						compiled(
 							"circle" caseTo expression("as" lineTo expression("square")),
 							pattern(
-								"shape" lineTo pattern("circle" lineTo pattern("radius")),
+								"radius" lineTo pattern(),
 								"as" lineTo pattern("square")))))
 	}
 }

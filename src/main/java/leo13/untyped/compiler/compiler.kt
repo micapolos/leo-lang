@@ -110,7 +110,6 @@ data class Compiler(
 											switchCompiler(
 												converter { plus(it) },
 												context,
-												line.name,
 												choice.eitherStack.reverse,
 												compiled(
 													switch(),

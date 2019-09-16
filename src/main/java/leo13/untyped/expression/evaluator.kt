@@ -5,7 +5,9 @@ import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.evaluatorName
 import leo13.untyped.value.*
-import leo9.*
+import leo9.fold
+import leo9.mapFirst
+import leo9.reverse
 
 data class Evaluator(val given: ValueGiven, val evaluated: ValueEvaluated) {
 	override fun toString() = scriptLine.toString()
@@ -51,16 +53,22 @@ fun Evaluator.plus(everything: Everything): Evaluator =
 	set(evaluated.value.previousOrNull!!.evaluated)
 
 fun Evaluator.plus(switch: Switch): Evaluator =
-	switch.caseStack.mapFirst { plusOrNull(this) }!!
-
-fun Evaluator.plusOrNull(case: Case): Evaluator? =
-	when (evaluated.value.itemStack) {
-		is EmptyStack -> null
-		is LinkStack -> evaluated.value.itemStack.link.value.lineOrNull?.let { line ->
-			notNullIf(line.name == case.name) {
-				plus(case.expression)
+	evaluated.value.linkOrNull!!.let { valueLink ->
+		valueLink.rhsItem.lineOrNull!!.let { line ->
+			line.rhs.onlyLineOrNull!!.let { caseLine ->
+				given
+					.evaluator(evaluated(valueLink.lhsValue))
+					.plus(caseLine, switch)
 			}
 		}
+	}
+
+fun Evaluator.plus(line: ValueLine, switch: Switch): Evaluator =
+	switch.caseStack.mapFirst { plusOrNull(line, this) }!!
+
+fun Evaluator.plusOrNull(line: ValueLine, case: Case): Evaluator? =
+	notNullIf(line.name == case.name) {
+		plus(line.rhs).plus(case.expression)
 	}
 
 fun Evaluator.plus(given: Given): Evaluator =
@@ -71,6 +79,9 @@ fun Evaluator.plus(give: Give): Evaluator =
 
 fun Evaluator.plus(apply: Apply): Evaluator =
 	set(evaluated.value.firstItemOrNull?.functionOrNull!!.apply(given.evaluate(apply.expression)).evaluated)
+
+fun Evaluator.plus(value: Value): Evaluator =
+	set(evaluated(evaluated.value.plus(value)))
 
 val Evaluator.scriptLine
 	get() =

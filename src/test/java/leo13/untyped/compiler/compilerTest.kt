@@ -187,15 +187,17 @@ class CompilerTest {
 	@Test
 	fun processSwitch() {
 		compiler()
-			.process(token(opening("bit")))
-			.process(token(opening("zero")))
+			.process(token(opening("shape")))
+			.process(token(opening("circle")))
+			.process(token(opening("radius")))
+			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(opening("switch")))
 			.process(token(opening("case")))
-			.process(token(opening("zero")))
-			.process(token(opening("and")))
-			.process(token(opening("one")))
+			.process(token(opening("circle")))
+			.process(token(opening("times")))
+			.process(token(opening("two")))
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
@@ -205,8 +207,8 @@ class CompilerTest {
 				compiler()
 					.set(
 						compiled(
-							expression("bit" lineTo expression("zero"))
-								.plus(switch("zero" caseTo expression("and" lineTo expression("one"))).op),
-							pattern("bit" lineTo pattern("zero"), "and" lineTo pattern("one")))))
+							expression("shape" lineTo expression("circle" lineTo expression("radius")))
+								.plus(switch("circle" caseTo expression("times" lineTo expression("two"))).op),
+							pattern("radius" lineTo pattern(), "times" lineTo pattern("two")))))
 	}
 }

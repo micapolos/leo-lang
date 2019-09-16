@@ -18,7 +18,6 @@ class SwitchCompilerTest {
 		val switchCompiler = switchCompiler(
 			errorConverter(),
 			context(),
-			"shape",
 			stack(
 				"square" eitherTo pattern("side"),
 				"circle" eitherTo pattern("radius")),
@@ -37,13 +36,12 @@ class SwitchCompilerTest {
 				switchCompiler(
 					errorConverter(),
 					context(),
-					"shape",
 					stack("square" eitherTo pattern("side")),
 					compiled(
 						switch(
 							"circle" caseTo expression(plus("as" lineTo expression("square")).op)),
 						pattern(
-							"shape" lineTo pattern("circle" lineTo pattern("radius")),
+							"radius" lineTo pattern(),
 							"as" lineTo pattern("square")))))
 	}
 }

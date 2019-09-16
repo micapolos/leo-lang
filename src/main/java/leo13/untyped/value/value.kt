@@ -1,6 +1,7 @@
 package leo13.untyped.value
 
 import leo.base.fold
+import leo.base.ifOrNull
 import leo13.script.Script
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
@@ -22,12 +23,21 @@ fun value(line: ValueLine, vararg lines: ValueLine) =
 
 fun value(name: String) = value(name lineTo value())
 
-val Value.linkOrNull get() =
+val Value.linkOrNull: ValueLink?
+	get() =
 	itemStack.linkOrNull?.run { stack.value linkTo value }
 
 val Value.firstItemOrNull: ValueItem?
 	get() =
 		linkOrNull?.rhsItem
+
+val Value.onlyLineOrNull
+	get() =
+		linkOrNull?.let { link ->
+			ifOrNull(link.lhsValue.isEmpty) {
+				link.rhsItem.lineOrNull
+			}
+		}
 
 fun Value.plus(vararg items: ValueItem) =
 	itemStack.pushAll(*items).value
