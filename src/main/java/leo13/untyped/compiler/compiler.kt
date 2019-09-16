@@ -37,6 +37,7 @@ data class Compiler(
 
 	fun begin(name: String): Processor<Token> =
 		when (name) {
+			"apply" -> beginApply
 			"define" -> beginOf
 			"given" -> beginGiven
 			"in" -> beginIn
@@ -52,6 +53,23 @@ data class Compiler(
 	val end
 		get() =
 			converter.convert(compiled)
+
+	val beginApply: Processor<Token>
+		get() =
+			compiled.pattern.linkOrNull?.item?.arrowOrNull?.let { arrow ->
+				compiler(
+					converter { parameterCompiled ->
+						if (parameterCompiled.pattern != arrow.lhs) tracedError(
+							"mismatch" lineTo script(
+								"expected" lineTo script(arrow.lhs.scriptingLine),
+								"actual" lineTo script(parameterCompiled.pattern.scriptingLine)))
+						else set(
+							compiled(
+								compiled.expression.plus(apply(parameterCompiled.expression).op),
+								arrow.rhs))
+					},
+					context)
+			} ?: tracedError("not" lineTo script("arrow"))
 
 	val beginDefine: Processor<Token> get() = TODO()
 
