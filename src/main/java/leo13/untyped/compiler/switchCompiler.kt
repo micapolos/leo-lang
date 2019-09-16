@@ -8,6 +8,7 @@ import leo13.token.OpeningToken
 import leo13.token.Token
 import leo13.untyped.pattern.Either
 import leo9.Stack
+import leo9.isEmpty
 import leo9.linkOrNull
 
 data class SwitchCompiler(
@@ -45,7 +46,10 @@ data class SwitchCompiler(
 			}
 			?: tracedError("missing" lineTo script("either"))
 
-	val end get() = converter.convert(compiled)
+	val end
+		get() =
+			if (remainingEitherStack.isEmpty) converter.convert(compiled)
+			else tracedError("non" lineTo script("exhaustive"))
 }
 
 fun switchCompiler(

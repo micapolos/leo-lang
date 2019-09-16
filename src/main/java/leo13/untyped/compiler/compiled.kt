@@ -35,11 +35,11 @@ val Compiled.previousOrNull: Compiled?
 			.previousOrNull
 			?.run { compiled(expression.plus(previous.op), this) }
 
-val Compiled.everythingOrNull: Compiled?
+val Compiled.contentOrNull: Compiled?
 	get() =
 		pattern
-			.everythingOrNull
-			?.run { compiled(expression.plus(everything.op), this) }
+			.contentOrNull
+			?.run { compiled(expression.plus(content.op), this) }
 
 fun Compiled.getOrNull(name: String): Compiled? =
 	pattern

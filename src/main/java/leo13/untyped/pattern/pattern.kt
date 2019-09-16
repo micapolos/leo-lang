@@ -152,6 +152,6 @@ val Pattern.previousOrNull: Pattern?
 	get() =
 		itemStack.linkOrNull?.stack?.pattern
 
-val Pattern.everythingOrNull: Pattern?
+val Pattern.contentOrNull: Pattern?
 	get() =
 		linkOrNull?.item?.choiceOrNull?.onlyEitherOrNull?.rhs

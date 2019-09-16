@@ -4,6 +4,7 @@ import leo.base.assertEqualTo
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
+import leo13.untyped.contentName
 import leo13.untyped.expression.*
 import leo13.untyped.pattern.*
 import org.junit.Test
@@ -117,9 +118,9 @@ class CompilerTest {
 	}
 
 	@Test
-	fun everything() {
+	fun content() {
 		compiler()
-			.process(token(opening("everything")))
+			.process(token(opening(contentName)))
 			.process(token(opening("vec")))
 			.process(token(opening("x")))
 			.process(token(opening("zero")))
@@ -138,7 +139,7 @@ class CompilerTest {
 							"vec" lineTo expression(
 								"x" lineTo expression("zero"),
 								"y" lineTo expression("one")))
-							.plus(everything.op),
+							.plus(content.op),
 						pattern(
 							"x" lineTo pattern("zero"),
 							"y" lineTo pattern("one")))))

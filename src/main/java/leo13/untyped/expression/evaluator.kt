@@ -30,7 +30,7 @@ fun Evaluator.plus(op: Op): Evaluator =
 		is GetOp -> plus(op.get)
 		is SetOp -> plus(op.set)
 		is PreviousOp -> plus(op.previous)
-		is EverythingOp -> plus(op.everything)
+		is ContentOp -> plus(op.content)
 		is SwitchOp -> plus(op.switch)
 		is GiveOp -> plus(op.give)
 		is GivenOp -> plus(op.given)
@@ -49,8 +49,8 @@ fun Evaluator.plus(set: Set): Evaluator =
 fun Evaluator.plus(previous: Previous): Evaluator =
 	set(evaluated.value.previousOrNull!!.evaluated)
 
-fun Evaluator.plus(everything: Everything): Evaluator =
-	set(evaluated.value.previousOrNull!!.evaluated)
+fun Evaluator.plus(content: Content): Evaluator =
+	set(evaluated.value.firstItemOrNull!!.lineOrNull!!.rhs.evaluated)
 
 fun Evaluator.plus(switch: Switch): Evaluator =
 	evaluated.value.linkOrNull!!.let { valueLink ->

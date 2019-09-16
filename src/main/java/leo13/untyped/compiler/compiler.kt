@@ -41,7 +41,7 @@ data class Compiler(
 			"given" -> beginGiven
 			"in" -> beginIn
 			"of" -> beginOf
-			"everything" -> beginEverything
+			"content" -> beginContent
 			"previous" -> beginPrevious
 			"set" -> beginSet
 			"switch" -> beginSwitch
@@ -54,10 +54,10 @@ data class Compiler(
 
 	val beginDefine: Processor<Token> get() = TODO()
 
-	val beginEverything: Processor<Token>
+	val beginContent: Processor<Token>
 		get() =
 			compiler(
-				converter { plusEverything(it) },
+				converter { plusContent(it) },
 				context)
 
 	val beginGiven: Processor<Token>
@@ -151,9 +151,9 @@ fun Compiler.plus(line: CompiledLine): Compiler =
 		else -> plusOther(line)
 	}
 
-fun Compiler.plusEverything(rhs: Compiled): Compiler =
+fun Compiler.plusContent(rhs: Compiled): Compiler =
 	if (!compiled.pattern.isEmpty) tracedError()
-	else rhs.everythingOrNull?.let { set(it) } ?: tracedError()
+	else rhs.contentOrNull?.let { set(it) } ?: tracedError()
 
 fun Compiler.plusIn(rhs: Compiled): Compiler =
 	set(compiled.plusIn(rhs))
@@ -167,8 +167,10 @@ fun Compiler.plusPrevious(rhs: Compiled): Compiler =
 	else rhs.previousOrNull?.let { set(it) } ?: tracedError()
 
 fun Compiler.plusOf(rhs: Pattern): Compiler =
-	if (!rhs.contains(compiled.pattern)) tracedError()
-	else set(compiled(compiled.expression, rhs))
+	if (rhs.contains(compiled.pattern)) set(compiled(compiled.expression, rhs))
+	else tracedError("not" lineTo script(
+		rhs.scriptingLine,
+		"contains" lineTo script(compiled.pattern.scriptingLine)))
 
 fun Compiler.plus(switchCompiled: SwitchCompiled): Compiler =
 	set(compiled.plus(switchCompiled))

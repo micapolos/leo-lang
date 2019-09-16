@@ -1,2 +1,5 @@
-bit: zero
-switch: case: zero: bit: one
+circle
+	radius: zero
+	center: point
+		x: two
+		y: three
