@@ -1,13 +1,11 @@
 package leo13.untyped.compiler
 
 import leo.base.assertEqualTo
+import leo13.errorConverter
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
-import leo13.untyped.pattern.choice
-import leo13.untyped.pattern.either
-import leo13.untyped.pattern.item
-import leo13.untyped.pattern.pattern
+import leo13.untyped.pattern.*
 import kotlin.test.Test
 
 class PatternCompilerTest {
@@ -35,5 +33,30 @@ class PatternCompilerTest {
 			.assertEqualTo(
 				patternCompiler().set(
 					pattern(item(choice(either("zero"), either("one"))))))
+	}
+
+	@Test
+	fun resolution() {
+		val bitPattern = pattern(
+			"bit" lineTo pattern(
+				choice(
+					either("zero"),
+					either("one"))))
+
+		val compiler = patternCompiler(
+			errorConverter(),
+			patternArrows().plus(
+				pattern("bit") arrowTo bitPattern))
+
+		compiler
+			.process(token(opening("bit")))
+			.process(token(closing))
+			.process(token(opening("and")))
+			.process(token(opening("bit")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				compiler
+					.set(bitPattern.plus("and" lineTo bitPattern)))
 	}
 }

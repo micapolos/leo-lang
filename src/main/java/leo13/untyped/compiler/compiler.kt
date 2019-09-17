@@ -40,7 +40,7 @@ data class Compiler(
 	fun begin(name: String): Processor<Token> =
 		when (name) {
 			"apply" -> beginApply
-			"define" -> beginOf
+			"define" -> beginDefine
 			"given" -> beginGiven
 			"gives" -> beginGives
 			"in" -> beginIn
@@ -95,7 +95,8 @@ data class Compiler(
 										pattern(item(pattern arrowTo compiled.pattern))))
 							},
 							context.bind(pattern))
-					}) as Processor<Token>).fold(script.tokenSeq) { process(it) }
+					},
+					context.arrows) as Processor<Token>).fold(script.tokenSeq) { process(it) }
 					.process(token(closing))
 			} ?: tracedError("not" lineTo script("static"))
 
@@ -115,7 +116,7 @@ data class Compiler(
 		get() =
 			patternCompiler(
 				converter { plusOf(it) },
-				pattern())
+				context.arrows)
 
 	val beginPrevious: Processor<Token>
 		get() =

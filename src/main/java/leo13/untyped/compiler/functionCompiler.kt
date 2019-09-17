@@ -53,6 +53,7 @@ data class FunctionCompiler(
 							parameterPattern.plus(token.opening.name lineTo compiledPattern),
 							null)
 					},
+					context.arrows,
 					parameterPattern)
 			is ClosingToken ->
 				when {

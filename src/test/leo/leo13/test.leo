@@ -1,5 +1,4 @@
-bit: zero
-of: bit: choice
+bit
+has: choice
 	either: zero
 	either: one
-type

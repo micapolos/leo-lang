@@ -11,6 +11,7 @@ import leo13.untyped.pattern.*
 
 data class ChoiceCompiler(
 	val converter: Converter<Choice, Token>,
+	val arrows: PatternArrows,
 	val choice: Choice) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -28,15 +29,16 @@ data class ChoiceCompiler(
 
 	fun begin(name: String) =
 		if (name != eitherName) tracedError()
-		else eitherCompiler(converter { plus(it) })
+		else eitherCompiler(converter { plus(it) }, arrows)
 
 	val end get() = converter.convert(choice)
 }
 
 fun choiceCompiler(
 	converter: Converter<Choice, Token> = errorConverter(),
+	arrows: PatternArrows,
 	choice: Choice = choice()) =
-	ChoiceCompiler(converter, choice)
+	ChoiceCompiler(converter, arrows, choice)
 
 fun ChoiceCompiler.plus(either: Either) =
 	copy(choice = choice.plus(either))

@@ -12,6 +12,7 @@ import leo13.untyped.pattern.pattern
 
 data class EitherCompiler(
 	val converter: Converter<Either, Token>,
+	val arrows: PatternArrows,
 	val eitherOrNull: Either?
 ) :
 	ObjectScripting(),
@@ -34,6 +35,7 @@ data class EitherCompiler(
 		if (eitherOrNull != null) tracedError()
 		else patternCompiler(
 			converter { plus(name eitherTo it) },
+			arrows,
 			pattern())
 
 
@@ -46,6 +48,6 @@ data class EitherCompiler(
 		copy(eitherOrNull = either)
 }
 
-fun eitherCompiler(converter: Converter<Either, Token>, eitherOrNull: Either? = null) =
-	EitherCompiler(converter, eitherOrNull)
+fun eitherCompiler(converter: Converter<Either, Token>, arrows: PatternArrows, eitherOrNull: Either? = null) =
+	EitherCompiler(converter, arrows, eitherOrNull)
 
