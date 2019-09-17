@@ -205,9 +205,12 @@ fun Appendable.append(line: ScriptLine, indent: Indent): Appendable =
 	append(line.name).appendRhs(line.rhs, indent)
 
 fun Appendable.appendRhs(script: Script, indent: Indent): Appendable =
-	if (script.isEmpty) this
-	else if (script.isSingleLine) append(": ").append(script, indent)
-	else append('\n').append(indent.inc).append(script, indent.inc)
+	script
+		.linkOrNull
+		?.let { link ->
+			if (link.lhs.isEmpty || link.lhs.isName) append(": ").append(script, indent)
+			else append('\n').append(indent.inc).append(script, indent.inc)
+		}?:this
 
 // --- token seq
 

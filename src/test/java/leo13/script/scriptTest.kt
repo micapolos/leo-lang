@@ -58,6 +58,15 @@ class ScriptTest {
 			"gives" lineTo script("dwa"))
 			.indentedCode
 			.assertEqualTo("one gives: jeden\ntwo gives: dwa")
+
+		script(
+			"center" lineTo script(
+				"point" lineTo script(
+					"x" lineTo script("one" lineTo script()),
+					"y" lineTo script("two" lineTo script()))))
+			.indentedCode
+			.assertEqualTo("center: point\n\tx: one\n\ty: two")
+
 	}
 
 	@Test
