@@ -1,5 +1,6 @@
 package leo13.untyped.compiler
 
+import leo.base.notNullIf
 import leo13.ObjectScripting
 import leo13.script
 import leo13.script.emptyIfEmpty
@@ -7,6 +8,7 @@ import leo13.script.lineTo
 import leo13.scripting
 import leo13.untyped.pattern.Pattern
 import leo13.untyped.pattern.PatternArrow
+import leo13.untyped.pattern.contains
 import leo13.untyped.pattern.rhsOrNull
 import leo9.Stack
 import leo9.mapFirst
@@ -28,3 +30,10 @@ fun PatternArrows.rhsOrNull(pattern: Pattern): Pattern? =
 
 fun PatternArrows.resolve(pattern: Pattern): Pattern =
 	rhsOrNull(pattern) ?: pattern
+
+fun PatternArrows.resolve(compiled: Compiled): Compiled =
+	arrowStack.mapFirst {
+		notNullIf(rhs.contains(compiled.pattern)) {
+			compiled(compiled.expression, rhs)
+		}
+	} ?: compiled

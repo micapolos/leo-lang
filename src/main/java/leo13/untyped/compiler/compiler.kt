@@ -251,4 +251,4 @@ fun Compiler.plusPattern(rhs: Compiled): Compiler =
 	append("pattern" lineTo compiled(rhs.pattern.scriptingLine.rhs))
 
 fun Compiler.append(line: CompiledLine): Compiler =
-	set(compiled.plus(line))
+	set(context.arrows.resolve(compiled.plus(line)))
