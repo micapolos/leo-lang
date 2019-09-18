@@ -96,6 +96,7 @@ data class Compiler(
 							},
 							context.bind(pattern))
 					},
+					false,
 					context.arrows) as Processor<Token>).fold(script.tokenSeq) { process(it) }
 					.process(token(closing))
 			} ?: tracedError("not" lineTo script("static"))
@@ -116,6 +117,7 @@ data class Compiler(
 		get() =
 			patternCompiler(
 				converter { plusOf(it) },
+				false,
 				context.arrows)
 
 	val beginPrevious: Processor<Token>

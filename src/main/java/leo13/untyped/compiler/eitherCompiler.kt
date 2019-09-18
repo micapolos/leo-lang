@@ -35,6 +35,7 @@ data class EitherCompiler(
 		if (eitherOrNull != null) tracedError()
 		else patternCompiler(
 			converter { plus(name eitherTo it) },
+			false,
 			arrows,
 			pattern())
 

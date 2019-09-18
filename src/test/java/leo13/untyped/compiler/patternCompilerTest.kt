@@ -45,6 +45,7 @@ class PatternCompilerTest {
 
 		val compiler = patternCompiler(
 			errorConverter(),
+			false,
 			patternArrows().plus(
 				pattern("bit") arrowTo bitPattern))
 

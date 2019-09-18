@@ -9,8 +9,8 @@ import leo13.token.Token
 import leo13.untyped.pattern.*
 
 data class PatternCompiler(
-	val processor: Processor<Pattern>,
 	val converter: Converter<Pattern, Token>,
+	val partial: Boolean,
 	val arrows: PatternArrows,
 	val pattern: Pattern
 ) :
@@ -36,6 +36,7 @@ data class PatternCompiler(
 	fun beginOther(name: String): Processor<Token> =
 		patternCompiler(
 			converter { plus(item(choice(name lineTo it))) },
+			false,
 			arrows,
 			pattern())
 
@@ -44,23 +45,18 @@ data class PatternCompiler(
 
 fun patternCompiler(
 	converter: Converter<Pattern, Token> = errorConverter(),
+	parent: Boolean = false,
 	arrows: PatternArrows = patternArrows(),
 	pattern: Pattern = pattern()) =
-	PatternCompiler(voidProcessor(), converter, arrows, pattern)
-
-fun Processor<Pattern>.patternCompiler(arrows: PatternArrows = patternArrows()) =
-	PatternCompiler(this, errorConverter(), arrows, pattern())
+	PatternCompiler(converter, parent, arrows, pattern)
 
 fun PatternCompiler.plus(item: PatternItem) =
 	pattern
 		.plus(item)
 		.let { arrows.resolve(it) }
 		.let {
-			PatternCompiler(
-				processor.process(it),
-				converter,
-				arrows,
-				it)
+			if (partial) converter.convert(it)
+			else PatternCompiler(converter, partial, arrows, it)
 		}
 
 fun PatternCompiler.set(pattern: Pattern) =
