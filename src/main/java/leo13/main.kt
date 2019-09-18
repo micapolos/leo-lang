@@ -8,7 +8,6 @@ import leo13.untyped.compiler.Compiled
 import leo13.untyped.compiler.compiler
 import leo13.untyped.expression.evaluate
 import leo13.untyped.expression.given
-import leo13.untyped.normalizer.normalizer
 import leo13.untyped.value.scriptOrNull
 import leo13.untyped.value.value
 import kotlin.system.exitProcess
@@ -16,7 +15,7 @@ import kotlin.system.exitProcess
 fun main() {
 	converterCapture<Compiled, Token> {
 		traced {
-			var charProcessor: Processor<Char> = compiler().normalizer().tokenizer().locator()
+			var charProcessor: Processor<Char> = compiler().tokenizer().locator()
 			val reader = System.`in`.reader()
 			while (true) {
 				val charInt = reader.read()

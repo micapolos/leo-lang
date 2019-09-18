@@ -7,6 +7,7 @@ import leo13.untyped.value.scriptLine
 sealed class Op
 
 data class ValueOp(val value: Value) : Op()
+data class WrapOp(val wrap: Wrap) : Op()
 data class PlusOp(val plus: Plus) : Op()
 data class GetOp(val get: Get) : Op()
 data class SetOp(val set: Set) : Op()
@@ -18,6 +19,7 @@ data class GivenOp(val given: Given) : Op()
 data class ApplyOp(val apply: Apply) : Op()
 
 val Value.op: Op get() = ValueOp(this)
+val Wrap.op: Op get() = WrapOp(this)
 val Plus.op: Op get() = PlusOp(this)
 val Get.op: Op get() = GetOp(this)
 val Set.op: Op get() = SetOp(this)
@@ -32,6 +34,7 @@ val Op.bodyScriptLine: ScriptLine
 	get() =
 		when (this) {
 			is ValueOp -> value.scriptLine
+			is WrapOp -> wrap.scriptingLine
 			is PlusOp -> plus.scriptLine
 			is GetOp -> get.scriptLine
 			is SetOp -> set.scriptLine

@@ -1,6 +1,7 @@
 package leo13.untyped.compiler
 
 import leo13.ObjectScripting
+import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.pattern.*
@@ -12,7 +13,7 @@ data class Context(
 		get() =
 			"context" lineTo script(
 				arrows.scriptingLine,
-				"binding" lineTo givenPattern.bodyScript)
+				"binding" lineTo givenPattern.bodyScript.emptyIfEmpty)
 }
 
 fun context() = Context(patternArrows(), pattern())

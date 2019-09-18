@@ -27,6 +27,7 @@ fun Evaluator.plus(expression: Expression): Evaluator =
 fun Evaluator.plus(op: Op): Evaluator =
 	when (op) {
 		is ValueOp -> plus(op.value)
+		is WrapOp -> plus(op.wrap)
 		is PlusOp -> plus(op.plus)
 		is GetOp -> plus(op.get)
 		is SetOp -> plus(op.set)
@@ -40,6 +41,9 @@ fun Evaluator.plus(op: Op): Evaluator =
 
 fun Evaluator.plus(value: Value): Evaluator =
 	set(evaluated(evaluated.value.plus(value)))
+
+fun Evaluator.plus(wrap: Wrap): Evaluator =
+	set(evaluated(value(item(wrap.name lineTo evaluated.value))))
 
 fun Evaluator.plus(get: Get): Evaluator =
 	set(evaluated.value.getOrNull(get.name)!!.evaluated)

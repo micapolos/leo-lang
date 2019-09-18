@@ -23,9 +23,15 @@ fun compiled(vararg lines: CompiledLine) =
 	Compiled(expression(), pattern()).fold(lines) { plus(it) }
 
 fun Compiled.plus(line: CompiledLine) =
-	compiled(
+	if (line.rhs.pattern.isEmpty) plus(line.name)
+	else compiled(
 		expression.plus(line.op),
 		pattern.plus(line.patternLine))
+
+fun Compiled.plus(name: String) =
+	compiled(
+		expression.plus(wrap(name).op),
+		pattern(name lineTo pattern))
 
 val Compiled.previousOrNull: Compiled?
 	get() =

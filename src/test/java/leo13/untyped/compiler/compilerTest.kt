@@ -25,9 +25,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler().set(
 					compiled(
-						expression(
-							"zero" lineTo expression(),
-							"plus" lineTo expression("one")),
+						expression("zero").plus("plus" lineTo expression("one")),
 						pattern(
 							"zero" lineTo pattern(),
 							"plus" lineTo pattern("one")))))
@@ -36,21 +34,20 @@ class CompilerTest {
 	@Test
 	fun get() {
 		compiler()
-			.process(token(opening("color")))
 			.process(token(opening("circle")))
 			.process(token(opening("color")))
 			.process(token(opening("red")))
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
+			.process(token(opening("color")))
 			.process(token(closing))
 			.assertEqualTo(
 				compiler().set(
 					compiled(
 						expression(
 							"circle" lineTo expression(
-								"color" lineTo expression(
-									"red" lineTo expression())))
+								"color" lineTo expression("red")))
 							.plus(get("color").op),
 						pattern("color" lineTo pattern("red")))))
 	}
@@ -75,8 +72,7 @@ class CompilerTest {
 					compiled(
 						expression(
 							"circle" lineTo expression(
-								"color" lineTo expression(
-									"red" lineTo expression())))
+								"color" lineTo expression("red")))
 							.plus(set("color" lineTo expression("blue")).op),
 						pattern("circle" lineTo pattern("color" lineTo pattern("blue"))))))
 	}

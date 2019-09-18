@@ -1,6 +1,7 @@
 package leo13.untyped.compiler
 
 import leo.base.fold
+import leo.base.ifOrNull
 import leo13.*
 import leo13.script.lineTo
 import leo13.script.script
@@ -50,6 +51,7 @@ data class Compiler(
 			"set" -> beginSet
 			"switch" -> beginSwitch
 			"pattern" -> beginPattern
+			"compiler" -> beginCompiler
 			else -> beginOther(name)
 		}
 
@@ -77,8 +79,8 @@ data class Compiler(
 	val beginDefine: Processor<Token>
 		get() =
 			DefineCompiler(
-				converter { context ->
-					copy(context = context)
+				converter { newContext ->
+					copy(context = newContext)
 				},
 				context,
 				pattern())
@@ -175,6 +177,12 @@ data class Compiler(
 				converter { plusPattern(it) },
 				context)
 
+	val beginCompiler: Processor<Token>
+		get() =
+			compiler(
+				converter { plusCompiler(it) },
+				context)
+
 	fun beginOther(name: String): Processor<Token> =
 		compiler(
 			converter { plus(name lineTo it) },
@@ -197,13 +205,10 @@ fun Compiler.set(context: Context) =
 	copy(context = context)
 
 fun Compiler.set(compiled: Compiled) =
-	copy(compiled = compiled)
+	copy(compiled = context.arrows.resolve(compiled))
 
 fun Compiler.plus(line: CompiledLine): Compiler =
-	if (line.rhs.pattern.isEmpty && !compiled.pattern.isEmpty) tracedError("normalization" lineTo script())
-	else when (line.name) {
-		else -> plusOther(line)
-	}
+	plusOther(line)
 
 fun Compiler.plusContent(rhs: Compiled): Compiler =
 	if (!compiled.pattern.isEmpty) tracedError()
@@ -245,10 +250,15 @@ fun Compiler.plusOther(line: CompiledLine): Compiler =
 	plusGetOrNull(line) ?: append(line)
 
 fun Compiler.plusGetOrNull(line: CompiledLine): Compiler? =
-	line.rhs.getOrNull(line.name)?.run { set(this) } // TODO: Don't set(), but plus(line)
+	ifOrNull(line.rhs.pattern.isEmpty) {
+		compiled.getOrNull(line.name)?.run { set(this) }
+	}
 
 fun Compiler.plusPattern(rhs: Compiled): Compiler =
 	append("pattern" lineTo compiled(rhs.pattern.scriptingLine.rhs))
 
+fun Compiler.plusCompiler(rhs: Compiled): Compiler =
+	set(compiled(script(set(rhs).scriptingLine)))
+
 fun Compiler.append(line: CompiledLine): Compiler =
-	set(context.arrows.resolve(compiled.plus(line)))
+	set(compiled.plus(line))
