@@ -7,7 +7,10 @@ import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
 import leo13.untyped.expression.given
-import leo13.untyped.pattern.*
+import leo13.untyped.pattern.Pattern
+import leo13.untyped.pattern.arrowTo
+import leo13.untyped.pattern.isEmpty
+import leo13.untyped.pattern.pattern
 import leo13.untyped.value.function
 import leo13.untyped.value.value
 
@@ -29,7 +32,7 @@ data class FunctionCompiler(
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken ->
-				if (functionCompiledOrNull != null) tracedError("expected" lineTo script("end"))
+				if (functionCompiledOrNull != null) tracedError<Processor<Token>>("expected" lineTo script("end"))
 				else if (token.opening.name == "gives")
 					if (parameterPattern.isEmpty) tracedError<Processor<Token>>("empty" lineTo script("pattern"))
 					else compiler(
@@ -37,7 +40,7 @@ data class FunctionCompiler(
 							FunctionCompiler(
 								converter,
 								context,
-								parameterPattern,
+								pattern(),
 								compiled(
 									function(
 										given(value()),
@@ -46,27 +49,19 @@ data class FunctionCompiler(
 						},
 						context.bind(parameterPattern))
 				else patternCompiler(
-					converter { compiledPattern ->
+					converter { newPattern ->
 						FunctionCompiler(
 							converter,
 							context,
-							parameterPattern.plus(token.opening.name lineTo compiledPattern),
-							null)
+							newPattern,
+							functionCompiledOrNull)
 					},
-					false,
+					true,
 					context.arrows,
-					parameterPattern)
-			is ClosingToken ->
-				when {
-					parameterPattern.isEmpty -> tracedError("expected" lineTo script("pattern"))
-					functionCompiledOrNull == null -> tracedError("expected" lineTo script("gives"))
-					else -> converter.convert(functionCompiledOrNull)
-				}
+					pattern()).process(token)
+			is ClosingToken -> {
+				if (functionCompiledOrNull == null) tracedError("expected" lineTo script("gives"))
+				else converter.convert(functionCompiledOrNull)
+			}
 		}
 }
-
-fun functionCompiler(
-	context: Context = context(),
-	parameterPattern: Pattern = pattern(),
-	functionCompiledOrNull: FunctionCompiled? = null) =
-	FunctionCompiler(errorConverter(), context, parameterPattern, functionCompiledOrNull)

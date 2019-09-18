@@ -215,10 +215,12 @@ class CompilerTest {
 	@Test
 	fun processGives() {
 		compiler()
+			.process(token(opening("function")))
 			.process(token(opening("zero")))
 			.process(token(closing))
 			.process(token(opening("gives")))
 			.process(token(opening("one")))
+			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(

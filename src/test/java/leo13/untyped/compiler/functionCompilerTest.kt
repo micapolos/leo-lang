@@ -15,7 +15,11 @@ import kotlin.test.Test
 class FunctionCompilerTest {
 	@Test
 	fun process() {
-		functionCompiler()
+		FunctionCompiler(
+			errorConverter(),
+			context(),
+			pattern(),
+			null)
 			.process(token(opening("bit")))
 			.process(token(opening("choice")))
 			.process(token(opening("either")))
@@ -36,7 +40,7 @@ class FunctionCompilerTest {
 				FunctionCompiler(
 					errorConverter(),
 					context(),
-					pattern("bit" lineTo pattern(item(choice(either("zero"), either("one"))))),
+					pattern(),
 					compiled(
 						function(
 							given(value()),

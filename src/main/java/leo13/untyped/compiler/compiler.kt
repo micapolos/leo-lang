@@ -1,15 +1,14 @@
 package leo13.untyped.compiler
 
-import leo.base.fold
 import leo.base.ifOrNull
 import leo13.*
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.script.tokenSeq
-import leo13.token.*
+import leo13.token.ClosingToken
+import leo13.token.OpeningToken
+import leo13.token.Token
 import leo13.untyped.expression.*
 import leo13.untyped.pattern.*
-import leo13.untyped.value.function
 import leo13.untyped.value.value
 import leo9.Stack
 import leo9.fold
@@ -43,7 +42,7 @@ data class Compiler(
 			"apply" -> beginApply
 			"define" -> beginDefine
 			"given" -> beginGiven
-			"gives" -> beginGives
+			"function" -> beginFunction
 			"in" -> beginIn
 			"of" -> beginOf
 			"content" -> beginContent
@@ -91,24 +90,18 @@ data class Compiler(
 				converter { plusContent(it) },
 				context)
 
-	val beginGives: Processor<Token>
+	val beginFunction: Processor<Token>
 		get() =
-			compiled.pattern.staticScriptOrNull?.let { script ->
-				(patternCompiler(
-					converter { pattern ->
-						compiler(
-							converter { compiled ->
-								set(
-									compiled(
-										expression(value(leo13.untyped.value.item(function(given(value()), compiled.expression))).op),
-										pattern(item(pattern arrowTo compiled.pattern))))
-							},
-							context.bind(pattern))
-					},
-					false,
-					context.arrows) as Processor<Token>).fold(script.tokenSeq) { process(it) }
-					.process(token(closing))
-			} ?: tracedError("not" lineTo script("static"))
+			FunctionCompiler(
+				converter { compiledFunction ->
+					set(
+						compiled(
+							compiled.expression.plus(value(leo13.untyped.value.item(compiledFunction.function)).op),
+							compiled.pattern.plus(item(compiledFunction.arrow))))
+				},
+				context,
+				pattern(),
+				null)
 
 	val beginGiven: Processor<Token>
 		get() =

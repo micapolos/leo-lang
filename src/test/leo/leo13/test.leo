@@ -3,4 +3,3 @@ define: bit has: choice
 	either: one
 zero bit
 and: one bit
-compiler
