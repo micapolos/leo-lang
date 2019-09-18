@@ -42,3 +42,6 @@ val PatternItem.scriptLine: ScriptLine
 val PatternItem.staticScriptLineOrNull: ScriptLine?
 	get() =
 		choiceOrNull?.onlyEitherOrNull?.patternLine?.staticScriptLineOrNull
+
+fun PatternItem.leafPlusOrNull(pattern: Pattern): PatternItem? =
+	choiceOrNull?.leafPlusOrNull(pattern)?.let { item(it) }

@@ -80,3 +80,6 @@ fun Choice.replaceLineOrNull(line: PatternLine): Choice? =
 val Choice.patternLineOrNull
 	get() =
 		eitherStack.onlyOrNull?.patternLine
+
+fun Choice.leafPlusOrNull(pattern: Pattern): Choice? =
+	onlyEitherOrNull?.leafPlusOrNull(pattern)?.let { choice(it) }

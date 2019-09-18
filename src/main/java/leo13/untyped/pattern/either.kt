@@ -68,3 +68,6 @@ val Either.patternLine
 val PatternLine.either
 	get() =
 		name eitherTo rhs
+
+fun Either.leafPlusOrNull(pattern: Pattern): Either? =
+	rhs.leafPlusOrNull(pattern)?.let { name eitherTo it }

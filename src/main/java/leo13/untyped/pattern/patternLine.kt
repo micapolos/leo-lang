@@ -36,3 +36,6 @@ val PatternLine.staticScriptLineOrNull: ScriptLine?
 
 fun patternLine(scriptLine: ScriptLine) =
 	scriptLine.name lineTo pattern(scriptLine.rhs)
+
+fun PatternLine.leafPlusOrNull(pattern: Pattern): PatternLine? =
+	rhs.leafPlusOrNull(pattern)?.let { name lineTo it }

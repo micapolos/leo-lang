@@ -162,3 +162,9 @@ val Pattern.staticScriptOrNull: Script?
 
 fun pattern(script: Script): Pattern =
 	pattern(script.lineStack.map { item(choice(patternLine(this))) })
+
+fun Pattern.leafPlusOrNull(pattern: Pattern): Pattern? =
+	linkOrNull.let { link ->
+		if (link != null) link.leafPlusOrNull(pattern)?.pattern
+		else pattern
+	}
