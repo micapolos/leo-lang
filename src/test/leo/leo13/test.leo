@@ -1,28 +1,14 @@
 define
-	bit has: choice
+	bit has
 		either: zero
 		either: one
 
 define
 	negate: bit
-	gives: given negate bit switch
-		case: zero: bit: one
-		case: one: bit: zero
-
-define
-	bit
-	and: bit
-	gives: given bit switch
-		case: zero: bit: zero
-		case: one: given and bit
-
-define
-	bit
-	or: bit
-	gives: given bit switch
-		case: zero: given or bit
-		case: one: bit: one
+	gives: given negate bit
+		if: zero: bit: one
+		if: one: bit: zero
 
 bit: zero
-or: bit: zero
 negate
+compiler

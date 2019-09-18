@@ -27,11 +27,13 @@ fun main() {
 			}
 			charProcessor
 		}.onError {
+			print("\u001b[31m")
 			println("error" lineTo this)
+			print("\u001b[0m")
 			exitProcess(-1)
 		}
 	}.let { compiled ->
 		val script = given(value()).evaluate(compiled.expression).scriptOrNull!!
-		println(script)
+		println("ok" lineTo script)
 	}
 }
