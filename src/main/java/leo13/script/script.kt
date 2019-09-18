@@ -281,3 +281,5 @@ val Script.emptyIfEmpty
 	get() =
 		if (isEmpty) script(emptyName)
 		else this
+
+val todoScriptLine = "todo" lineTo script()
