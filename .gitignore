@@ -30,3 +30,4 @@ out/*
 # Idris compiled
 *.ibc
 
+*.DS_Store
