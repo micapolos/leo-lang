@@ -1,3 +1,17 @@
 define
-	zero
-	gives: one
+	bit has: choice
+		either: zero
+		either: one
+
+define
+	negate: bit
+	gives: given negate bit switch
+		case: zero: bit: one
+		case: one: bit: zero
+
+define
+	bit
+	and: bit
+	gives: given bit switch
+		case: zero: bit: zero
+		case: one: given and bit

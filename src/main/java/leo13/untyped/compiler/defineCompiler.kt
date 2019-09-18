@@ -69,7 +69,8 @@ data class DefineCompiler(
 								lhsPattern)
 						},
 						true,
-						context.arrows).process(token)
+						context.arrows,
+						pattern).process(token)
 				}
 			is ClosingToken ->
 				if (pattern.isEmpty) converter.convert(context)
