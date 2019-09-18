@@ -25,3 +25,4 @@ define
 
 bit: zero
 or: bit: zero
+negate
