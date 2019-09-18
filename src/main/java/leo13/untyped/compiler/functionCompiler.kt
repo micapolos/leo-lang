@@ -58,7 +58,7 @@ data class FunctionCompiler(
 					},
 					true,
 					context.arrows,
-					pattern()).process(token)
+					parameterPattern).process(token)
 			is ClosingToken -> {
 				if (functionCompiledOrNull == null) tracedError("expected" lineTo script("gives"))
 				else converter.convert(functionCompiledOrNull)

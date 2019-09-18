@@ -1,5 +1,13 @@
 define: bit has: choice
 	either: zero
 	either: one
-zero bit
-and: one bit
+function
+	bit
+	and: bit
+	gives: given bit switch
+		case: zero: bit: zero
+		case: one: given and bit
+apply
+	bit: zero
+	and: bit: zero
+compiler
