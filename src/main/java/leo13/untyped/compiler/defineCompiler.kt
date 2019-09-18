@@ -3,11 +3,15 @@ package leo13.untyped.compiler
 import leo13.*
 import leo13.script.ScriptLine
 import leo13.script.lineTo
+import leo13.script.plus
 import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.untyped.expression.given
 import leo13.untyped.pattern.*
+import leo13.untyped.value.function
+import leo13.untyped.value.value
 
 data class DefineCompiler(
 	val converter: Converter<Context, Token>,
@@ -42,6 +46,21 @@ data class DefineCompiler(
 							},
 							false,
 							context.arrows)
+					"gives" ->
+						if (pattern.isEmpty) tracedError("expected" lineTo script("pattern"))
+						else compiler(
+							converter { bodyCompiled ->
+								DefineCompiler(
+									converter,
+									context.plus(
+										compiled(
+											function(
+												given(value()),
+												bodyCompiled.expression),
+											pattern arrowTo bodyCompiled.pattern)),
+									pattern())
+							},
+							context.bind(pattern))
 					else -> patternCompiler(
 						converter { lhsPattern ->
 							DefineCompiler(
@@ -54,6 +73,6 @@ data class DefineCompiler(
 				}
 			is ClosingToken ->
 				if (pattern.isEmpty) converter.convert(context)
-				else tracedError("expected" lineTo script("has"))
+				else tracedError("expected" lineTo script("has").plus("or" lineTo script("gives")))
 		}
 }
