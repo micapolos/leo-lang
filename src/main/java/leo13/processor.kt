@@ -2,6 +2,7 @@ package leo13
 
 import leo.base.fold
 import leo13.script.ScriptLine
+import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
 import leo9.*
@@ -22,16 +23,21 @@ fun Processor<Char>.charProcess(string: String): Processor<Char> =
 fun <V> Processor<V>.processAll(stack: Stack<V>): Processor<V> =
 	fold(stack.reverse) { process(it) }
 
-fun <V : Scripting> processorStack(fn: Processor<V>.() -> Processor<V>): Stack<V> =
-	(CapturingProcessor<V>(stack()).fn() as CapturingProcessor).stack
+fun <A : Scripting> processorStack(fn: Processor<A>.() -> Unit): Stack<A> {
+	val capturingProcessor = CapturingProcessor<A>(stack())
+	capturingProcessor.fn()
+	return capturingProcessor.capturedStack
+}
 
-data class CapturingProcessor<V : Scripting>(val stack: Stack<V>) : ObjectScripting(), Processor<V> {
+data class CapturingProcessor<V : Scripting>(var capturedStack: Stack<V>) : ObjectScripting(), Processor<V> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
 		get() = "processor" lineTo script(
-			"captured" lineTo stack.scripting.script)
+			"captured" lineTo capturedStack.scripting.script.emptyIfEmpty)
 
-	override fun process(value: V): Processor<V> =
-		CapturingProcessor(stack.push(value))
+	override fun process(value: V): Processor<V> {
+		capturedStack = capturedStack.push(value)
+		return this
+	}
 }

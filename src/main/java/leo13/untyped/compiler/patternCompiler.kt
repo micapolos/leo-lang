@@ -9,6 +9,7 @@ import leo13.token.Token
 import leo13.untyped.pattern.*
 
 data class PatternCompiler(
+	val processor: Processor<Pattern>,
 	val converter: Converter<Pattern, Token>,
 	val arrows: PatternArrows,
 	val pattern: Pattern
@@ -45,14 +46,22 @@ fun patternCompiler(
 	converter: Converter<Pattern, Token> = errorConverter(),
 	arrows: PatternArrows = patternArrows(),
 	pattern: Pattern = pattern()) =
-	PatternCompiler(converter, arrows, pattern)
+	PatternCompiler(voidProcessor(), converter, arrows, pattern)
+
+fun Processor<Pattern>.patternCompiler(arrows: PatternArrows = patternArrows()) =
+	PatternCompiler(this, errorConverter(), arrows, pattern())
 
 fun PatternCompiler.plus(item: PatternItem) =
-	set(
-		pattern
-			.plus(item)
-			.let { arrows.resolve(it) }
-	)
+	pattern
+		.plus(item)
+		.let { arrows.resolve(it) }
+		.let {
+			PatternCompiler(
+				processor.process(it),
+				converter,
+				arrows,
+				it)
+		}
 
 fun PatternCompiler.set(pattern: Pattern) =
 	copy(pattern = pattern)

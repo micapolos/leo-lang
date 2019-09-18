@@ -12,6 +12,6 @@ class ExpressionTest {
 	fun scriptLine() {
 		expression(previous.op)
 			.scriptLine
-			.assertEqualTo(expressionName lineTo script(previousName))
+			.assertEqualTo(expressionName lineTo script("script" lineTo script(previousName)))
 	}
 }
