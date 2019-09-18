@@ -1,6 +1,7 @@
 package leo13.untyped.pattern
 
 import leo.base.fold
+import leo.base.notNullIf
 import leo.base.notNullOrError
 import leo.base.orNullFold
 import leo13.ObjectScripting
@@ -40,7 +41,11 @@ val Pattern.linkOrNull: PatternLink?
 		}
 
 fun Pattern.plus(item: PatternItem) =
-	pattern(itemStack.push(item))
+	item.choiceOrNull?.onlyEitherOrNull?.let { either ->
+		notNullIf(either.rhs.isEmpty) {
+			pattern(either.name lineTo this)
+		}
+	} ?: pattern(itemStack.push(item))
 
 fun Pattern.plus(choice: Choice) =
 	plus(item(choice))
