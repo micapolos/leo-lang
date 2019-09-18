@@ -74,7 +74,14 @@ data class Compiler(
 					context)
 			} ?: tracedError("not" lineTo script("arrow"))
 
-	val beginDefine: Processor<Token> get() = TODO()
+	val beginDefine: Processor<Token>
+		get() =
+			DefineCompiler(
+				converter { context ->
+					copy(context = context)
+				},
+				context,
+				pattern())
 
 	val beginContent: Processor<Token>
 		get() =
