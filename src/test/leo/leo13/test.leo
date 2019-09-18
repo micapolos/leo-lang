@@ -15,3 +15,13 @@ define
 	gives: given bit switch
 		case: zero: bit: zero
 		case: one: given and bit
+
+define
+	bit
+	or: bit
+	gives: given bit switch
+		case: zero: given or bit
+		case: one: bit: one
+
+bit: zero
+or: bit: zero
