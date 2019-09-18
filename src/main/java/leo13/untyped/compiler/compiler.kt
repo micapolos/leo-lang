@@ -258,7 +258,8 @@ fun Compiler.plusPattern(rhs: Compiled): Compiler =
 	append("pattern" lineTo compiled(rhs.pattern.scriptingLine.rhs))
 
 fun Compiler.plusCompiler(rhs: Compiled): Compiler =
-	set(compiled(script(set(rhs).scriptingLine)))
+	if (!rhs.pattern.isEmpty) tracedError("expected" lineTo script("empty"))
+	else set(compiled(script(scriptingLine)))
 
 fun Compiler.append(line: CompiledLine): Compiler =
 	set(compiled.plus(line))

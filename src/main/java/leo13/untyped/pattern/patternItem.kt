@@ -36,7 +36,7 @@ val PatternItem.scriptLine: ScriptLine
 	get() =
 		when (this) {
 			is ChoicePatternItem -> choice.scriptLine
-			is ArrowPatternItem -> arrow.scriptLine
+			is ArrowPatternItem -> arrow.scriptingLine
 		}
 
 val PatternItem.staticScriptLineOrNull: ScriptLine?
