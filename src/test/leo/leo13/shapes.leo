@@ -25,5 +25,8 @@ define
 
 	shape area gives
 		given shape switch
-			circle: area
-			rectangle: area
+			circle: switched circle area
+			rectangle: switched rectangle area
+
+shape: circle: radius: number
+area
