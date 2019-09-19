@@ -50,6 +50,7 @@ data class Compiler(
 			"previous" -> beginPrevious
 			"set" -> beginSet
 			"switch" -> beginSwitch
+			"switched" -> beginSwitched
 			"pattern" -> beginPattern
 			"compiler" -> beginCompiler
 			else -> beginOther(name)
@@ -116,11 +117,17 @@ data class Compiler(
 				converter { plusGiven(it) },
 				context)
 
+	val beginSwitched: Processor<Token>
+		get() =
+			compiler(
+				converter { plusSwitched(it) },
+				context)
+
 	val beginIn: Processor<Token>
 		get() =
 			compiler(
 				converter { plusIn(it) },
-				context.bind(compiled.pattern))
+				context.give(compiled.pattern))
 
 	val beginOf: Processor<Token>
 		get() =
@@ -233,6 +240,10 @@ fun Compiler.plusIn(rhs: Compiled): Compiler =
 fun Compiler.plusGiven(rhs: Compiled): Compiler =
 	if (!compiled.pattern.isEmpty || !rhs.pattern.isEmpty) tracedError()
 	else set(compiled(expression(given.op), context.givenPattern))
+
+fun Compiler.plusSwitched(rhs: Compiled): Compiler =
+	if (!compiled.pattern.isEmpty || !rhs.pattern.isEmpty) tracedError()
+	else set(compiled(expression(switched.op), context.switchedPattern))
 
 fun Compiler.plusPrevious(rhs: Compiled): Compiler =
 	if (!compiled.pattern.isEmpty) tracedError()

@@ -147,12 +147,12 @@ class CompilerTest {
 	@Test
 	fun given() {
 		compiler()
-			.set(context().bind(pattern("zero")))
+			.set(context().give(pattern("zero")))
 			.process(token(opening("given")))
 			.process(token(closing))
 			.assertEqualTo(
 				compiler()
-					.set(context().bind(pattern("zero")))
+					.set(context().give(pattern("zero")))
 					.set(
 						compiled(
 							expression(given.op),

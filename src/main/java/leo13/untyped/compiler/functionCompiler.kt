@@ -46,7 +46,7 @@ data class FunctionCompiler(
 										bodyCompiled.expression),
 									parameterPattern arrowTo bodyCompiled.pattern))
 						},
-						context.bind(parameterPattern))
+						context.give(parameterPattern))
 				else patternCompiler(
 					converter { newPattern ->
 						FunctionCompiler(

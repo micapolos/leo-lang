@@ -64,20 +64,16 @@ fun Evaluator.plus(content: Content): Evaluator =
 fun Evaluator.plus(switch: Switch): Evaluator =
 	evaluated.value.linkOrNull!!.let { valueLink ->
 		valueLink.rhsItem.lineOrNull!!.let { line ->
-			line.rhs.onlyLineOrNull!!.let { caseLine ->
-				context
-					.evaluator(evaluated(valueLink.lhsValue))
-					.plus(caseLine, switch)
-			}
+			plus(switch, line)
 		}
 	}
 
-fun Evaluator.plus(line: ValueLine, switch: Switch): Evaluator =
-	switch.caseStack.mapFirst { plusOrNull(line, this) }!!
+fun Evaluator.plus(switch: Switch, line: ValueLine): Evaluator =
+	switch.caseStack.mapFirst { plusOrNull(this, line) }!!
 
-fun Evaluator.plusOrNull(line: ValueLine, case: Case): Evaluator? =
+fun Evaluator.plusOrNull(case: Case, line: ValueLine): Evaluator? =
 	notNullIf(line.name == case.name) {
-		plus(line.rhs).plus(case.expression)
+		plus(context.switch(value(item(line))).evaluate(case.expression))
 	}
 
 fun Evaluator.plus(given: Given): Evaluator =

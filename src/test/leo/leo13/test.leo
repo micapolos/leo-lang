@@ -1,2 +1,2 @@
-function: red color gives: foo
-apply: red color
+bit: zero: foo
+switch: zero: switched

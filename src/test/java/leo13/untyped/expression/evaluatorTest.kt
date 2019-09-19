@@ -34,8 +34,7 @@ class EvaluatorTest {
 	fun switch() {
 		evaluator()
 			.set(evaluated(value("shape" lineTo value("circle" lineTo value("radius")))))
-			.plus(switch(
-				"circle" caseTo expression("times" lineTo expression("two"))).op)
+			.plus(switch("circle" caseTo expression(switched.op)))
 			.assertEqualTo(
 				evaluator()
 					.set(evaluated(value(

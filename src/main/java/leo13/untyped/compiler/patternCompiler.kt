@@ -33,8 +33,7 @@ data class PatternCompiler(
 
 	fun begin(name: String): Processor<Token> =
 		when (name) {
-			// TODO: There should be slightly different path for "either" and "or":
-			// - "either" should be allowed only at the beginning of pattern, and after another "either"
+			// TODO: "either" should not be allowed after a line without "either"
 			"either" -> beginEither
 			else -> beginOther(name)
 		}

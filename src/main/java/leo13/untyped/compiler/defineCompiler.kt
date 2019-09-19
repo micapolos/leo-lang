@@ -69,7 +69,7 @@ data class DefineCompiler(
 											pattern arrowTo bodyCompiled.pattern)),
 									pattern())
 							},
-							context.bind(pattern))
+							context.give(pattern))
 					else -> patternCompiler(
 						converter { lhsPattern ->
 							DefineCompiler(

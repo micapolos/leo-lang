@@ -6,9 +6,11 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.untyped.expression.caseTo
 import leo13.untyped.pattern.Either
+import leo13.untyped.pattern.lineTo
+import leo13.untyped.pattern.pattern
 import leo9.Stack
-import leo9.isEmpty
 import leo9.linkOrNull
 
 data class SwitchCompiler(
@@ -33,23 +35,25 @@ data class SwitchCompiler(
 		}
 
 	fun begin(name: String) =
-		if (name != "case") tracedError("expected" lineTo script("case"))
-		else remainingEitherStack
+		remainingEitherStack
 			.linkOrNull
 			?.let { eitherStackLink ->
-				caseCompiler(
-					converter { caseCompiled ->
-						switchCompiler(converter, context, eitherStackLink.stack, compiled.plus(caseCompiled))
+				if (eitherStackLink.value.name != name) tracedError("expected" lineTo script(eitherStackLink.value.name))
+				else compiler(
+					converter { rhsCompiled ->
+						plus(compiled(name caseTo rhsCompiled.expression, rhsCompiled.pattern))
+							.copy(remainingEitherStack = eitherStackLink.stack)
 					},
-					context,
-					eitherStackLink.value)
+					context.switch(pattern(eitherStackLink.value.name lineTo eitherStackLink.value.rhs)))
 			}
-			?: tracedError("missing" lineTo script("either"))
+			?: tracedError("exhausted" lineTo script("switch"))
 
-	val end
+	val end: Processor<Token>
 		get() =
-			if (remainingEitherStack.isEmpty) converter.convert(compiled)
-			else tracedError("non" lineTo script("exhaustive"))
+			remainingEitherStack
+				.linkOrNull
+				?.let { tracedError<Processor<Token>>("expected" lineTo script(it.value.name)) }
+				?: converter.convert(compiled)
 }
 
 fun switchCompiler(

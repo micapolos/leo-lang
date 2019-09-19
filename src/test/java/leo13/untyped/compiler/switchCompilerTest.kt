@@ -24,12 +24,8 @@ class SwitchCompilerTest {
 			compiled(switch(), pattern("lhs")))
 
 		switchCompiler
-			.process(token(opening("case")))
 			.process(token(opening("circle")))
-			.process(token(opening("to")))
-			.process(token(opening("square")))
-			.process(token(closing))
-			.process(token(closing))
+			.process(token(opening("circled")))
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
@@ -38,10 +34,32 @@ class SwitchCompilerTest {
 					context(),
 					stack("square" eitherTo pattern("side")),
 					compiled(
-						switch(
-							"circle" caseTo expression(plus("to" lineTo expression("square")).op)),
-						pattern(
-							"radius" lineTo pattern(),
-							"to" lineTo pattern("square")))))
+						switch("circle" caseTo expression("circled")),
+						pattern("circled"))))
+	}
+
+	@Test
+	fun processSwitched() {
+		val switchCompiler = switchCompiler(
+			errorConverter(),
+			context(),
+			stack(
+				"square" eitherTo pattern("side"),
+				"circle" eitherTo pattern("radius")),
+			compiled(switch(), pattern("lhs")))
+
+		switchCompiler
+			.process(token(opening("circle")))
+			.process(token(opening("switched")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				switchCompiler(
+					errorConverter(),
+					context(),
+					stack("square" eitherTo pattern("side")),
+					compiled(
+						switch("circle" caseTo expression(switched.op)),
+						pattern("switched" lineTo pattern("circle" lineTo pattern("radius"))))))
 	}
 }

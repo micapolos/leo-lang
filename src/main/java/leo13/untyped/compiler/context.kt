@@ -1,26 +1,30 @@
 package leo13.untyped.compiler
 
 import leo13.ObjectScripting
-import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.pattern.*
+import leo13.untyped.pattern.Pattern
+import leo13.untyped.pattern.lineTo
+import leo13.untyped.pattern.pattern
+import leo13.untyped.pattern.plus
 
 data class Context(
 	val patternDefinitions: PatternDefinitions,
 	val patterns: Patterns,
 	val functions: Functions,
-	val givenPattern: Pattern) : ObjectScripting() {
+	val givenPattern: Pattern,
+	val switchedPattern: Pattern) : ObjectScripting() {
 	override val scriptingLine
 		get() =
 			"context" lineTo script(
 				patternDefinitions.scriptingLine,
 				patterns.scriptingLine,
 				functions.scriptingLine,
-				"binding" lineTo givenPattern.bodyScript.emptyIfEmpty)
+				"given" lineTo script(givenPattern.scriptingLine),
+				"switched" lineTo script(switchedPattern.scriptingLine))
 }
 
-fun context() = Context(patternDefinitions(), patterns(), functions(), pattern())
+fun context() = Context(patternDefinitions(), patterns(), functions(), pattern(), pattern())
 
 fun Context.plus(definition: PatternDefinition) =
 	copy(patternDefinitions = patternDefinitions.plus(definition))
@@ -31,5 +35,8 @@ fun Context.plus(pattern: Pattern) =
 fun Context.plus(function: FunctionCompiled) =
 	copy(functions = functions.plus(function))
 
-fun Context.bind(pattern: Pattern) =
+fun Context.give(pattern: Pattern) =
 	copy(givenPattern = givenPattern.plus("given" lineTo pattern))
+
+fun Context.switch(pattern: Pattern) =
+	copy(switchedPattern = switchedPattern.plus("switched" lineTo pattern))
