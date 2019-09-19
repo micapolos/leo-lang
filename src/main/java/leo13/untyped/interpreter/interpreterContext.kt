@@ -5,25 +5,23 @@ import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.compiler.Context
 import leo13.untyped.compiler.context
-import leo13.untyped.expression.ValueGiven
-import leo13.untyped.expression.given
-import leo13.untyped.expression.scriptLine
-import leo13.untyped.value.value
+import leo13.untyped.expression.ValueContext
+import leo13.untyped.expression.valueContext
 
 data class InterpreterContext(
 	val compilerContext: Context,
-	val valueGiven: ValueGiven) : ObjectScripting() {
+	val valueContext: ValueContext) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
 		get() =
 			"context" lineTo script(
 				compilerContext.scriptingLine,
-				valueGiven.scriptLine)
+				valueContext.scriptingLine)
 }
 
-fun interpreterContext(compilerContext: Context, valueGiven: ValueGiven) =
-	InterpreterContext(compilerContext, valueGiven)
+fun interpreterContext(compilerContext: Context, valueContext: ValueContext) =
+	InterpreterContext(compilerContext, valueContext)
 
 fun interpreterContext() =
-	interpreterContext(context(), given(value()))
+	interpreterContext(context(), valueContext())

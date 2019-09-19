@@ -6,8 +6,7 @@ import leo13.token.Token
 import leo13.token.reader.tokenizer
 import leo13.untyped.compiler.Compiled
 import leo13.untyped.compiler.compiler
-import leo13.untyped.expression.evaluate
-import leo13.untyped.expression.given
+import leo13.untyped.expression.valueContext
 import leo13.untyped.value.scriptOrNull
 import leo13.untyped.value.value
 import kotlin.system.exitProcess
@@ -33,7 +32,7 @@ fun main() {
 			exitProcess(-1)
 		}
 	}.let { compiled ->
-		val script = given(value()).evaluate(compiled.expression).scriptOrNull!!
+		val script = valueContext().give(value()).evaluate(compiled.expression).scriptOrNull!!
 		println("ok" lineTo script)
 	}
 }

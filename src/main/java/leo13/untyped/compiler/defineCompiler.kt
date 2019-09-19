@@ -8,10 +8,9 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
-import leo13.untyped.expression.given
+import leo13.untyped.expression.valueContext
 import leo13.untyped.pattern.*
 import leo13.untyped.value.function
-import leo13.untyped.value.value
 
 data class DefineCompiler(
 	val converter: Converter<Context, Token>,
@@ -65,7 +64,7 @@ data class DefineCompiler(
 									context.plus(
 										compiled(
 											function(
-												given(value()),
+												valueContext(), // TODO()
 												bodyCompiled.expression),
 											pattern arrowTo bodyCompiled.pattern)),
 									pattern())

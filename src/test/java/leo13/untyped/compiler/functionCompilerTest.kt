@@ -6,10 +6,9 @@ import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
 import leo13.untyped.expression.expression
-import leo13.untyped.expression.given
+import leo13.untyped.expression.valueContext
 import leo13.untyped.pattern.*
 import leo13.untyped.value.function
-import leo13.untyped.value.value
 import kotlin.test.Test
 
 class FunctionCompilerTest {
@@ -41,7 +40,7 @@ class FunctionCompilerTest {
 					pattern(),
 					compiled(
 						function(
-							given(value()),
+							valueContext(),
 							expression("foo")),
 						pattern("bit" lineTo pattern(item(choice(either("zero"), either("one"))))) arrowTo pattern("foo"))))
 	}

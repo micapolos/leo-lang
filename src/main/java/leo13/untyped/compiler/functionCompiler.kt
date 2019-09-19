@@ -6,13 +6,12 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
-import leo13.untyped.expression.given
+import leo13.untyped.expression.valueContext
 import leo13.untyped.pattern.Pattern
 import leo13.untyped.pattern.arrowTo
 import leo13.untyped.pattern.isEmpty
 import leo13.untyped.pattern.pattern
 import leo13.untyped.value.function
-import leo13.untyped.value.value
 
 data class FunctionCompiler(
 	val converter: Converter<FunctionCompiled, Token>,
@@ -32,7 +31,7 @@ data class FunctionCompiler(
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken ->
-				if (functionCompiledOrNull != null) tracedError<Processor<Token>>("expected" lineTo script("end"))
+				if (functionCompiledOrNull != null) tracedError("expected" lineTo script("end"))
 				else if (token.opening.name == "gives")
 					if (parameterPattern.isEmpty) tracedError<Processor<Token>>("empty" lineTo script("pattern"))
 					else compiler(
@@ -43,7 +42,7 @@ data class FunctionCompiler(
 								pattern(),
 								compiled(
 									function(
-										given(value()),
+										valueContext(), // TODO
 										bodyCompiled.expression),
 									parameterPattern arrowTo bodyCompiled.pattern))
 						},

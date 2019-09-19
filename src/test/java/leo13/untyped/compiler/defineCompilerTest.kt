@@ -6,13 +6,12 @@ import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
 import leo13.untyped.expression.expression
-import leo13.untyped.expression.given
+import leo13.untyped.expression.valueContext
 import leo13.untyped.pattern.arrowTo
 import leo13.untyped.pattern.lineTo
 import leo13.untyped.pattern.pattern
 import leo13.untyped.pattern.plus
 import leo13.untyped.value.function
-import leo13.untyped.value.value
 import kotlin.test.Test
 
 class DefineCompilerTest {
@@ -54,7 +53,7 @@ class DefineCompilerTest {
 					errorConverter(),
 					context().plus(
 						compiled(
-							function(given(value()), expression("one")),
+							function(valueContext(), expression("one")),
 							pattern("zero") arrowTo pattern("one"))),
 					pattern()))
 	}
@@ -80,7 +79,7 @@ class DefineCompilerTest {
 					errorConverter(),
 					context().plus(
 						compiled(
-							function(given(value()), expression("one")),
+							function(valueContext(), expression("one")),
 							pattern("zero").plus("plus" lineTo pattern("one")) arrowTo pattern("one"))),
 					pattern()))
 	}

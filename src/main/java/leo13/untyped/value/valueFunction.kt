@@ -6,18 +6,18 @@ import leo13.script.script
 import leo13.untyped.expression.*
 import leo13.untyped.functionName
 
-data class ValueFunction(val given: ValueGiven, val expression: Expression) {
+data class ValueFunction(val context: ValueContext, val expression: Expression) {
 	override fun toString() = scriptLine.toString()
 }
 
 fun function(
-	valueGiven: ValueGiven = given(value()),
+	context: ValueContext = valueContext(),
 	expression: Expression = expression()) =
-	ValueFunction(valueGiven, expression)
+	ValueFunction(context, expression)
 
 val ValueFunction.scriptLine: ScriptLine
 	get() =
-		functionName lineTo script(given.scriptLine, expression.scriptLine)
+		functionName lineTo script(context.scriptingLine, expression.scriptLine)
 
 fun ValueFunction.apply(value: Value): Value =
-	given.plus(value).evaluate(expression)
+	context.give(value).evaluate(expression)

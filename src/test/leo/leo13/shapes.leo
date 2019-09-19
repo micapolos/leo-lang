@@ -25,5 +25,5 @@ define
 
 	shape area gives
 		given shape switch
-			case: circle: given area
-			case: rectangle: given area
+			circle: area
+			rectangle: area

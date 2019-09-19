@@ -15,9 +15,9 @@ class EvaluatorTest {
 
 	@Test
 	fun given() {
-		val evaluator = given(value())
-			.plus(value("zero"))
-			.plus(value("one"))
+		val evaluator = valueContext()
+			.give(value("zero"))
+			.give(value("one"))
 			.evaluator()
 
 		evaluator

@@ -7,7 +7,6 @@ import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
 import leo13.untyped.compiler.compiler
-import leo13.untyped.expression.evaluate
 
 data class Interpreter(
 	val converter: Converter<Interpreted, Token>,
@@ -28,7 +27,7 @@ data class Interpreter(
 				compiler(
 					converter { compiled ->
 						context
-							.valueGiven
+							.valueContext
 							.evaluate(compiled.expression)
 							.let { value ->
 								Interpreter(

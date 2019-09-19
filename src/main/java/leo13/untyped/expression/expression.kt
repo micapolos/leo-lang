@@ -37,4 +37,4 @@ fun Expression.plus(line: ExpressionLine): Expression =
 	opStack.push(leo13.untyped.expression.plus(line).op).expression
 
 fun Expression.evaluate(value: Value): Value =
-	given(value).evaluator().plus(this).evaluated.value
+	valueContext().give(value).evaluator().plus(this).evaluated.value
