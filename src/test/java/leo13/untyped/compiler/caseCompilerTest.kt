@@ -23,7 +23,7 @@ class CaseCompilerTest {
 
 		caseCompiler
 			.process(token(opening("circle")))
-			.process(token(opening("as")))
+			.process(token(opening("to")))
 			.process(token(opening("square")))
 			.process(token(closing))
 			.process(token(closing))
@@ -32,9 +32,9 @@ class CaseCompilerTest {
 				caseCompiler
 					.plus(
 						compiled(
-							"circle" caseTo expression("as" lineTo expression("square")),
+							"circle" caseTo expression("to" lineTo expression("square")),
 							pattern(
 								"radius" lineTo pattern(),
-								"as" lineTo pattern("square")))))
+								"to" lineTo pattern("square")))))
 	}
 }

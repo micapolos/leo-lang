@@ -20,7 +20,7 @@ fun expression(vararg ops: Op) = stack(*ops).expression
 fun expression(line: ExpressionLine, vararg lines: ExpressionLine) =
 	expression().plus(line).fold(lines) { plus(it) }
 
-fun expression(name: String) = expression(wrap(name).op)
+fun expression(name: String) = expression(plus(name lineTo expression()).op)
 
 val Expression.scriptLine
 	get() =

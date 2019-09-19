@@ -40,6 +40,7 @@ data class Compiler(
 	fun begin(name: String): Processor<Token> =
 		when (name) {
 			"apply" -> beginApply
+			"as" -> beginAs
 			"define" -> beginDefine
 			"given" -> beginGiven
 			"function" -> beginFunction
@@ -74,6 +75,12 @@ data class Compiler(
 					},
 					context)
 			} ?: tracedError("not" lineTo script("arrow"))
+
+	val beginAs: Processor<Token>
+		get() =
+			compiler(
+				converter { plusAs(it) },
+				context)
 
 	val beginDefine: Processor<Token>
 		get() =
@@ -202,6 +209,19 @@ fun Compiler.set(compiled: Compiled) =
 
 fun Compiler.plus(line: CompiledLine): Compiler =
 	plusOther(line)
+
+// TODO: Support multiple names.
+fun Compiler.plusAs(rhs: Compiled): Compiler =
+	rhs
+		.pattern
+		.onlyNameOrNull
+		?.let { name ->
+			set(
+				compiled(
+					compiled.expression.plus(wrap(name).op),
+					pattern(name lineTo compiled.pattern)))
+		}
+		?: tracedError("expected" lineTo script("name"))
 
 fun Compiler.plusContent(rhs: Compiled): Compiler =
 	if (!compiled.pattern.isEmpty) tracedError()

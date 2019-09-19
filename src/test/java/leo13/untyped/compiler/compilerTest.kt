@@ -228,4 +228,21 @@ class CompilerTest {
 							expression(value(item(function(given(value()), expression("one")))).op),
 							pattern(item(pattern("zero") arrowTo pattern("one"))))))
 	}
+
+	@Test
+	fun processAs() {
+		compiler()
+			.process(token(opening("red")))
+			.process(token(closing))
+			.process(token(opening("as")))
+			.process(token(opening("color")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				compiler()
+					.set(
+						compiled(
+							expression("red").plus(wrap("color").op),
+							pattern("color" lineTo pattern("red")))))
+	}
 }

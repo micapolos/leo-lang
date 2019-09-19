@@ -23,8 +23,7 @@ fun compiled(vararg lines: CompiledLine) =
 	Compiled(expression(), pattern()).fold(lines) { plus(it) }
 
 fun Compiled.plus(line: CompiledLine) =
-	if (line.rhs.pattern.isEmpty) plus(line.name)
-	else compiled(
+	compiled(
 		expression.plus(line.op),
 		pattern.plus(line.patternLine))
 
