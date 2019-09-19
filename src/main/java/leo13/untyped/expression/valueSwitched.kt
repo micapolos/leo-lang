@@ -16,7 +16,7 @@ data class ValueSwitched(val value: Value) : ObjectScripting() {
 			"switched" lineTo script(value.scriptLine)
 
 	fun plus(value: Value) =
-		ValueSwitched(value.plus("switched" lineTo value))
+		ValueSwitched(this.value.plus("switched" lineTo value))
 }
 
 fun switched(value: Value) = ValueSwitched(value)

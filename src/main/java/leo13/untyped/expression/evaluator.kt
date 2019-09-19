@@ -64,7 +64,9 @@ fun Evaluator.plus(content: Content): Evaluator =
 fun Evaluator.plus(switch: Switch): Evaluator =
 	evaluated.value.linkOrNull!!.let { valueLink ->
 		valueLink.rhsItem.lineOrNull!!.let { line ->
-			plus(switch, line)
+			line.rhs.linkOrNull?.rhsItem?.lineOrNull!!.let { caseLine ->
+				set(valueLink.lhsValue.evaluated).plus(switch, caseLine)
+			}
 		}
 	}
 

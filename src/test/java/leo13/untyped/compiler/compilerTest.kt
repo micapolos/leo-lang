@@ -192,12 +192,8 @@ class CompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(opening("switch")))
-			.process(token(opening("case")))
 			.process(token(opening("circle")))
-			.process(token(opening("times")))
-			.process(token(opening("two")))
-			.process(token(closing))
-			.process(token(closing))
+			.process(token(opening("switched")))
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
@@ -206,8 +202,8 @@ class CompilerTest {
 					.set(
 						compiled(
 							expression("shape" lineTo expression("circle" lineTo expression("radius")))
-								.plus(switch("circle" caseTo expression("times" lineTo expression("two"))).op),
-							pattern("radius" lineTo pattern(), "times" lineTo pattern("two")))))
+								.plus(switch("circle" caseTo expression(switched.op)).op),
+							pattern("switched" lineTo pattern("circle" lineTo pattern("radius"))))))
 	}
 
 	@Test

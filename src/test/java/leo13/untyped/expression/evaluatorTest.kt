@@ -38,7 +38,6 @@ class EvaluatorTest {
 			.assertEqualTo(
 				evaluator()
 					.set(evaluated(value(
-						"radius" lineTo value(),
-						"times" lineTo value("two")))))
+						"switched" lineTo value("circle" lineTo value("radius"))))))
 	}
 }
