@@ -18,24 +18,6 @@ class PatternCompilerTest {
 	}
 
 	@Test
-	fun processChoice() {
-		patternCompiler()
-			.process(token(opening("choice")))
-			.process(token(opening("either")))
-			.process(token(opening("zero")))
-			.process(token(closing))
-			.process(token(closing))
-			.process(token(opening("either")))
-			.process(token(opening("one")))
-			.process(token(closing))
-			.process(token(closing))
-			.process(token(closing))
-			.assertEqualTo(
-				patternCompiler().set(
-					pattern(item(choice(either("zero"), either("one"))))))
-	}
-
-	@Test
 	fun resolution() {
 		val bitPattern = pattern(
 			"bit" lineTo pattern(
@@ -59,5 +41,55 @@ class PatternCompilerTest {
 			.assertEqualTo(
 				compiler
 					.set(bitPattern.plus("and" lineTo bitPattern)))
+	}
+
+	@Test
+	fun processEithers() {
+		patternCompiler()
+			.process(token(opening("either")))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("either")))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				patternCompiler().set(
+					pattern(item(choice(either("zero"), either("one"))))))
+	}
+
+	@Test
+	fun processEithersAndOthers() {
+		patternCompiler()
+			.process(token(opening("either")))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("plus")))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				patternCompiler().set(
+					pattern(choice(either("zero"))).plus("plus" lineTo pattern("one"))))
+	}
+
+	@Test
+	fun processOthersAndEither() {
+		patternCompiler()
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(opening("or")))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("or")))
+			.process(token(opening("two")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				patternCompiler().set(
+					pattern(choice(either("zero"), either("one"), either("two")))))
 	}
 }

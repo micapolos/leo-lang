@@ -1,30 +1,4 @@
-define: bit has: choice
+define: bit has
 	either: zero
 	either: one
-
-define
-	negate: bit
-	gives: given negate bit switch
-		case: zero: bit: one
-		case: one: bit: zero
-
-define
-	bit
-	and: bit
-	gives: given bit switch
-		case: zero: bit: zero
-		case: one: given and bit
-
-define
-	bit
-	or: bit
-	gives: given bit switch
-		case: zero: bit: one
-		case: one: given or bit
-
-define
-	bit
-	xor: bit
-	gives: given bit switch
-		case: zero: given xor bit
-		case: one: given xor bit negate
+zero bit
