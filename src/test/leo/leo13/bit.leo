@@ -1,4 +1,4 @@
-define: bit has: choice
+define: bit has
 	either: zero
 	either: one
 
