@@ -19,7 +19,11 @@ data class PatternCompiler(
 	override fun toString() = super.toString()
 	override val scriptingLine
 		get() =
-			"compiler" lineTo script(converter.scriptingLine, pattern.scriptLine)
+			"compiler" lineTo script(
+				converter.scriptingLine,
+				"partial" lineTo script("$partial"),
+				arrows.scriptingLine,
+				pattern.scriptLine)
 
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
@@ -48,7 +52,7 @@ data class PatternCompiler(
 						?.let { choice ->
 							eitherCompiler(
 								converter { either ->
-									copy(pattern = link.lhs).plus(item(choice.plus(either)))
+									set(link.lhs.plus(choice.plus(either)))
 								},
 								arrows)
 						}
@@ -78,13 +82,10 @@ fun patternCompiler(
 	PatternCompiler(converter, parent, arrows, pattern)
 
 fun PatternCompiler.plus(item: PatternItem) =
-	pattern
-		.plus(item)
-		.let { arrows.resolve(it) }
-		.let {
-			if (partial) converter.convert(it)
-			else PatternCompiler(converter, partial, arrows, it)
-		}
+	set(pattern.plus(item))
 
-fun PatternCompiler.set(pattern: Pattern) =
-	copy(pattern = pattern)
+fun PatternCompiler.set(newPattern: Pattern) =
+	arrows.resolve(newPattern).let {
+		if (partial) converter.convert(it)
+		else PatternCompiler(converter, partial, arrows, it)
+	}

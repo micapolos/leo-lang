@@ -6,9 +6,7 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
-import leo13.untyped.pattern.Either
-import leo13.untyped.pattern.eitherTo
-import leo13.untyped.pattern.pattern
+import leo13.untyped.pattern.*
 
 data class EitherCompiler(
 	val converter: Converter<Either, Token>,
@@ -23,7 +21,8 @@ data class EitherCompiler(
 		get() =
 			"compiler" lineTo script(
 				converter.scriptingLine,
-				"either" lineTo script("todo"))
+				arrows.scriptingLine,
+				eitherOrNull?.scriptingLine ?: "either" lineTo script("null"))
 
 	override fun process(token: Token) =
 		when (token) {
@@ -46,7 +45,10 @@ data class EitherCompiler(
 			else converter.convert(eitherOrNull)
 
 	fun plus(either: Either) =
-		copy(eitherOrNull = either)
+		// TODO: Type arrows should be pattern-line-based?
+		arrows.resolve(pattern(either.name lineTo either.rhs)).linkOrNull!!.item.lineOrNull!!.let { resolved ->
+			copy(eitherOrNull = resolved.name eitherTo resolved.rhs)
+		}
 }
 
 fun eitherCompiler(converter: Converter<Either, Token>, arrows: PatternArrows, eitherOrNull: Either? = null) =
