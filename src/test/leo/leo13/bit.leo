@@ -1,4 +1,6 @@
-define: bit has: zero or: one
+define: bit has
+	either: zero
+	either: one
 
 define
 	negate: bit
