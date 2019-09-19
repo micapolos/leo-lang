@@ -346,29 +346,15 @@ class TokenizerTest {
 	}
 
 	@Test
-	fun newlineFlushesIndent() {
-		test(
-			"circle\n\tradius\n\n",
-			processor(
-				token(opening("circle")),
-				token(opening("radius")),
-				token(closing),
-				token(closing)).tokenizer(
-				parent(),
-				head(input(colon(false), ""))))
-	}
-
-	@Test
-	fun newlineTwiceDoesNothing() {
+	fun newlinesIgnored() {
 		test(
 			"circle\n\tradius\n\n\n",
 			processor(
 				token(opening("circle")),
-				token(opening("radius")),
-				token(closing),
-				token(closing)).tokenizer(
-				parent(),
-				head(input(colon(false), ""))))
+				token(opening("radius")))
+				.tokenizer(
+					parent(),
+					head(indent(tab(space), tab(space)))))
 	}
 
 	@Test
