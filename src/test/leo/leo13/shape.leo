@@ -8,15 +8,11 @@ define: shape has
 	either: circle
 	either: rectangle
 
-define
-	area: circle
-	gives
-		pi number
-		times: given area circle radius number
-		times: given area circle radius number
+define: circle area gives
+	pi number
+	times: given circle radius number
+	times: given circle radius number
 
-define
-	area: rectangle
-	gives
-		given area rectangle width number
-		times: given area rectangle height number
+define: rectangle area gives
+	given rectangle width number
+	times: given rectangle height number
