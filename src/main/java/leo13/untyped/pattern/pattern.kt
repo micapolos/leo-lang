@@ -1,6 +1,9 @@
 package leo13.untyped.pattern
 
-import leo.base.*
+import leo.base.fold
+import leo.base.ifOrNull
+import leo.base.notNullOrError
+import leo.base.orNullFold
 import leo13.ObjectScripting
 import leo13.script.*
 import leo13.script.Script
@@ -10,7 +13,6 @@ import leo13.untyped.rhsOrNull
 import leo13.untyped.value.Value
 import leo13.untyped.value.value
 import leo9.*
-import leo9.Stack
 
 data class Pattern(val itemStack: Stack<PatternItem>) : ObjectScripting() {
 	override fun toString() = bodyScript.toString()
@@ -39,11 +41,7 @@ val Pattern.linkOrNull: PatternLink?
 		}
 
 fun Pattern.plus(item: PatternItem) =
-	item.choiceOrNull?.onlyEitherOrNull?.let { either ->
-		notNullIf(either.rhs.isEmpty) {
-			pattern(either.name lineTo this)
-		}
-	} ?: pattern(itemStack.push(item))
+	pattern(itemStack.push(item))
 
 fun Pattern.plus(choice: Choice) =
 	plus(item(choice))

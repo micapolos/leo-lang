@@ -1,4 +1,2 @@
-define: bit has
-	either: zero
-	either: one
-zero bit
+function: red color gives: foo
+apply: red color
