@@ -120,7 +120,7 @@ data class Compiler(
 			patternCompiler(
 				converter { plusOf(it) },
 				false,
-				context.arrows)
+				context.patternDefinitions)
 
 	val beginPrevious: Processor<Token>
 		get() =
@@ -198,7 +198,7 @@ fun Compiler.set(context: Context) =
 	copy(context = context)
 
 fun Compiler.set(compiled: Compiled) =
-	copy(compiled = context.functions.resolve(context.arrows.resolve(compiled)))
+	copy(compiled = context.functions.resolve(context.patterns.resolve(compiled)))
 
 fun Compiler.plus(line: CompiledLine): Compiler =
 	plusOther(line)

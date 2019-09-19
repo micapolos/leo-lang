@@ -28,8 +28,13 @@ class PatternCompilerTest {
 		val compiler = patternCompiler(
 			errorConverter(),
 			false,
-			patternArrows().plus(
-				pattern("bit") arrowTo bitPattern))
+			patternDefinitions().plus(
+				definition(
+					"bit" lineTo pattern(),
+					pattern(
+						choice(
+							either("zero"),
+							either("one"))))))
 
 		compiler
 			.process(token(opening("bit")))
@@ -76,40 +81,24 @@ class PatternCompilerTest {
 	}
 
 	@Test
-	fun processOthersAndOrs() {
-		patternCompiler()
-			.process(token(opening("zero")))
-			.process(token(closing))
-			.process(token(opening("or")))
-			.process(token(opening("one")))
-			.process(token(closing))
-			.process(token(closing))
-			.process(token(opening("or")))
-			.process(token(opening("two")))
-			.process(token(closing))
-			.process(token(closing))
-			.assertEqualTo(
-				patternCompiler().set(
-					pattern(choice(either("zero"), either("one"), either("two")))))
-	}
-
-	@Test
 	fun processResolution() {
 		val patternCompiler = patternCompiler(
 			errorConverter(),
 			false,
-			patternArrows()
-				.plus(pattern("zero") arrowTo pattern("zero" lineTo pattern("resolved")))
-				.plus(pattern("one") arrowTo pattern("one" lineTo pattern("resolved"))))
+			patternDefinitions()
+				.plus(definition("zero" lineTo pattern(), pattern("resolved")))
+				.plus(definition("one" lineTo pattern(), pattern("resolved"))))
 
 		patternCompiler
+			.process(token(opening("either")))
 			.process(token(opening("zero")))
 			.process(token(closing))
-			.process(token(opening("or")))
+			.process(token(closing))
+			.process(token(opening("either")))
 			.process(token(opening("one")))
 			.process(token(closing))
 			.process(token(closing))
-			.process(token(opening("or")))
+			.process(token(opening("either")))
 			.process(token(opening("two")))
 			.process(token(closing))
 			.process(token(closing))

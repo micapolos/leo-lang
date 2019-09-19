@@ -11,7 +11,7 @@ import leo13.untyped.pattern.*
 data class PatternCompiler(
 	val converter: Converter<Pattern, Token>,
 	val partial: Boolean,
-	val arrows: PatternArrows,
+	val definitions: PatternDefinitions,
 	val pattern: Pattern
 ) :
 	ObjectScripting(),
@@ -22,7 +22,7 @@ data class PatternCompiler(
 			"compiler" lineTo script(
 				converter.scriptingLine,
 				"partial" lineTo script("$partial"),
-				arrows.scriptingLine,
+				definitions.scriptingLine,
 				pattern.scriptLine)
 
 	override fun process(token: Token): Processor<Token> =
@@ -52,7 +52,7 @@ data class PatternCompiler(
 								converter { either ->
 									set(link.lhs.plus(choice.plus(either)))
 								},
-								arrows)
+								definitions)
 						}
 						?: tracedError("not" lineTo script("expected" lineTo script("either")))
 				}
@@ -60,13 +60,13 @@ data class PatternCompiler(
 					converter { either ->
 						plus(item(choice(either)))
 					},
-					arrows)
+					definitions)
 
 	fun beginOther(name: String): Processor<Token> =
 		patternCompiler(
 			converter { plus(item(choice(name lineTo it))) },
 			false,
-			arrows,
+			definitions,
 			pattern())
 
 	val end: Processor<Token> get() = converter.convert(pattern)
@@ -75,15 +75,18 @@ data class PatternCompiler(
 fun patternCompiler(
 	converter: Converter<Pattern, Token> = errorConverter(),
 	parent: Boolean = false,
-	arrows: PatternArrows = patternArrows(),
+	definitions: PatternDefinitions = patternDefinitions(),
 	pattern: Pattern = pattern()) =
-	PatternCompiler(converter, parent, arrows, pattern)
+	PatternCompiler(converter, parent, definitions, pattern)
 
 fun PatternCompiler.plus(item: PatternItem) =
-	set(pattern.plus(item))
+	item.lineOrNull
+		?.let { plus(it) }
+		?: set(pattern.plus(item))
+
+fun PatternCompiler.plus(line: PatternLine) =
+	set(pattern.plus(definitions.resolve(line)))
 
 fun PatternCompiler.set(newPattern: Pattern) =
-	arrows.resolve(newPattern).let {
-		if (partial) converter.convert(it)
-		else PatternCompiler(converter, partial, arrows, it)
-	}
+	if (partial) converter.convert(newPattern)
+	else PatternCompiler(converter, partial, definitions, newPattern)

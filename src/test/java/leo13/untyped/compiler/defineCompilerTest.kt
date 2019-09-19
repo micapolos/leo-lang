@@ -22,7 +22,7 @@ class DefineCompilerTest {
 			errorConverter(),
 			context(),
 			pattern())
-			.process(token(opening("zero")))
+			.process(token(opening("bit")))
 			.process(token(closing))
 			.process(token(opening("has")))
 			.process(token(opening("one")))
@@ -31,7 +31,9 @@ class DefineCompilerTest {
 			.assertEqualTo(
 				DefineCompiler(
 					errorConverter(),
-					context().plus(pattern("zero") arrowTo pattern("zero" lineTo pattern("one"))),
+					context()
+						.plus(definition("bit" lineTo pattern(), pattern("one")))
+						.plus(pattern("bit" lineTo pattern("one"))),
 					pattern()))
 	}
 

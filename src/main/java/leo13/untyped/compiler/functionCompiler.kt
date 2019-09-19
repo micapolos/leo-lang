@@ -57,7 +57,7 @@ data class FunctionCompiler(
 							functionCompiledOrNull)
 					},
 					true,
-					context.arrows,
+					context.patternDefinitions,
 					parameterPattern).process(token)
 			is ClosingToken -> {
 				if (functionCompiledOrNull == null) tracedError("expected" lineTo script("gives"))

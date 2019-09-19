@@ -31,21 +31,31 @@ data class DefineCompiler(
 			is OpeningToken ->
 				when (token.opening.name) {
 					"has" ->
-						if (pattern.isEmpty) tracedError("expected" lineTo script("pattern"))
-						else patternCompiler(
-							converter { rhsPattern ->
-								pattern
-									.leafPlusOrNull(rhsPattern)
-									?.let {
-										DefineCompiler(
-											converter,
-											context.plus(pattern arrowTo it),
-											pattern())
+						pattern
+							.linkOrNull
+							?.let { patternLink ->
+								if (!patternLink.lhs.isEmpty) tracedError("expected" lineTo script("line" lineTo script("pattern")))
+								else patternLink
+									.item
+									.lineOrNull
+									?.let { patternLine ->
+										patternCompiler(
+											converter { rhsPattern ->
+												pattern
+													.leafPlusOrNull(rhsPattern)
+													?.let { fullPattern ->
+														DefineCompiler(
+															converter,
+															context.plus(definition(patternLine, rhsPattern)).plus(fullPattern),
+															pattern())
+													}
+													?: tracedError("error" lineTo script("has"))
+											},
+											false,
+											context.patternDefinitions)
 									}
-									?: tracedError("error" lineTo script("has"))
-							},
-							false,
-							context.arrows)
+							}
+							?: tracedError("expected" lineTo script("pattern"))
 					"gives" ->
 						if (pattern.isEmpty) tracedError("expected" lineTo script("pattern"))
 						else compiler(
@@ -69,7 +79,7 @@ data class DefineCompiler(
 								lhsPattern)
 						},
 						true,
-						context.arrows,
+						context.patternDefinitions,
 						pattern).process(token)
 				}
 			is ClosingToken ->

@@ -21,9 +21,11 @@ class FunctionCompilerTest {
 			pattern(),
 			null)
 			.process(token(opening("bit")))
+			.process(token(opening("either")))
 			.process(token(opening("zero")))
 			.process(token(closing))
-			.process(token(opening("or")))
+			.process(token(closing))
+			.process(token(opening("either")))
 			.process(token(opening("one")))
 			.process(token(closing))
 			.process(token(closing))

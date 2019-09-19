@@ -6,11 +6,14 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
-import leo13.untyped.pattern.*
+import leo13.untyped.pattern.Either
+import leo13.untyped.pattern.eitherTo
+import leo13.untyped.pattern.lineTo
+import leo13.untyped.pattern.pattern
 
 data class EitherCompiler(
 	val converter: Converter<Either, Token>,
-	val arrows: PatternArrows,
+	val definitions: PatternDefinitions,
 	val eitherOrNull: Either?
 ) :
 	ObjectScripting(),
@@ -21,7 +24,7 @@ data class EitherCompiler(
 		get() =
 			"compiler" lineTo script(
 				converter.scriptingLine,
-				arrows.scriptingLine,
+				definitions.scriptingLine,
 				eitherOrNull?.scriptingLine ?: "either" lineTo script("null"))
 
 	override fun process(token: Token) =
@@ -35,7 +38,7 @@ data class EitherCompiler(
 		else patternCompiler(
 			converter { plus(name eitherTo it) },
 			false,
-			arrows,
+			definitions,
 			pattern())
 
 
@@ -46,11 +49,11 @@ data class EitherCompiler(
 
 	fun plus(either: Either) =
 		// TODO: Type arrows should be pattern-line-based?
-		arrows.resolve(pattern(either.name lineTo either.rhs)).linkOrNull!!.item.lineOrNull!!.let { resolved ->
-			copy(eitherOrNull = resolved.name eitherTo resolved.rhs)
+		definitions.resolve(either.name lineTo either.rhs).let {
+			copy(eitherOrNull = it.name eitherTo it.rhs)
 		}
 }
 
-fun eitherCompiler(converter: Converter<Either, Token>, arrows: PatternArrows, eitherOrNull: Either? = null) =
-	EitherCompiler(converter, arrows, eitherOrNull)
+fun eitherCompiler(converter: Converter<Either, Token>, definitions: PatternDefinitions, eitherOrNull: Either? = null) =
+	EitherCompiler(converter, definitions, eitherOrNull)
 
