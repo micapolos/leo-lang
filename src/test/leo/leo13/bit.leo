@@ -17,6 +17,13 @@ define
 
 define
 	bit
+	or: bit
+	gives: given bit switch
+		case: zero: given or bit
+		case: one: bit: one
+
+define
+	bit
 	xor: bit
 	gives: given bit switch
 		case: zero: given xor bit
