@@ -1,16 +1,16 @@
-define: circle has: radius: float
+define: circle has: radius: number
 
 define: rectangle has
-	width: float
-	height: float
+	width: number
+	height: number
 
 define: shape has: circle or: rectangle
 
 define: circle area gives
-	pi float
-	times: given area circle radius float
-	times: given area circle radius float
+	pi number
+	times: given area circle radius number
+	times: given area circle radius number
 
 define: rectangle area gives
-	given area rectangle width float
-	times: given area rectangle height float
+	given area rectangle width number
+	times: given area rectangle height number
