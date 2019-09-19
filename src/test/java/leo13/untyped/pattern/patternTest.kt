@@ -148,15 +148,6 @@ class PatternTest {
 						"x" lineTo pattern("zero"),
 						"y" lineTo pattern("two"))))
 
-		pattern
-			.setOrNull("z" lineTo pattern("two"))
-			.assertEqualTo(
-				pattern(
-					"point" lineTo pattern(
-						"x" lineTo pattern("zero"),
-						"y" lineTo pattern("one"),
-						"z" lineTo pattern("two"))))
-
 		pattern()
 			.setOrNull("x" lineTo pattern("two"))
 			.assertEqualTo(null)
