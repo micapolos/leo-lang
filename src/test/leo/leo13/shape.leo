@@ -14,6 +14,3 @@ define: circle area gives
 define: rectangle area gives
 	given area rectangle width float
 	times: given area rectangle height float
-
-shape: circle
-compiler
