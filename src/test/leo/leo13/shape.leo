@@ -4,9 +4,7 @@ define: rectangle has
 	width: float
 	height: float
 
-define: shape has
-	either: circle
-	either: rectangle
+define: shape has: circle or: rectangle
 
 define: circle area gives
 	pi float

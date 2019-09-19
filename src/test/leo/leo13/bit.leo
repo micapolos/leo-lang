@@ -1,6 +1,4 @@
-define: bit has
-	either: zero
-	either: one
+define: bit has: zero or: one
 
 define
 	negate: bit
@@ -14,13 +12,6 @@ define
 	gives: given bit switch
 		case: zero: bit: zero
 		case: one: given and bit
-
-define
-	bit
-	or: bit
-	gives: given bit switch
-		case: zero: bit: one
-		case: one: given or bit
 
 define
 	bit

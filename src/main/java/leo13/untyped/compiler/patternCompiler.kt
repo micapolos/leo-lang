@@ -36,6 +36,7 @@ data class PatternCompiler(
 			// TODO: There shouid be slightly different path for "either" and "or":
 			// - "either" should be allowed only at the beginning of pattern, and after another "either"
 			// - "or" should be allowed only after first pattern line, and after another "or"
+			// - "meta", because otherwise it's not possible to define "bit or: bit" function
 			"either" -> beginEither
 			"or" -> beginEither
 			else -> beginOther(name)
