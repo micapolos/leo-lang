@@ -9,11 +9,11 @@ define
 		either: circle
 		either: rectangle
 
-	circle area gives
+	circle area gives: area
 		pi number
 		times: given circle radius number
 		times: given circle radius number
 
-	rectangle area gives
+	rectangle area gives: area
 		given rectangle width number
 		times: given rectangle height number
