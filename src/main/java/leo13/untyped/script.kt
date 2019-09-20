@@ -62,19 +62,3 @@ fun Script.resolveSetOrNull(rhs: Script): Script? =
 
 fun Script.resolveBodyOrNull(rhs: Script): Script? =
 	ifOrNull(isEmpty) { rhs.onlyLineOrNull?.rhs }
-
-val Script.evaluate
-	get() =
-		evaluator().plus(this).evaluated.script
-
-val Script.interpret
-	get() =
-		interpreter().plus(this).evaluator.evaluated.script
-
-val Script.normalize: Script
-	get() =
-		normalizer().plus(this).normalized.script
-
-val ScriptLine.normalize: ScriptLine
-	get() =
-		name lineTo rhs.normalize
