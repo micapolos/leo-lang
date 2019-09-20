@@ -1,8 +1,8 @@
 package leo13.untyped.expression
 
+import leo13.plusName
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.plusName
 
 data class Plus(val line: ExpressionLine)
 

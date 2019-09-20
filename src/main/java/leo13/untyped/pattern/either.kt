@@ -3,12 +3,8 @@ package leo13.untyped.pattern
 import leo.base.notNullIf
 import leo.base.notNullOrError
 import leo13.ObjectScripting
-import leo13.script.ScriptLine
-import leo13.script.lineTo
-import leo13.script.onlyLineOrNull
-import leo13.script.script
-import leo13.untyped.eitherName
-import leo13.untyped.rhsOrNull
+import leo13.eitherName
+import leo13.script.*
 import leo13.untyped.value.ValueLine
 
 data class Either(val name: String, val rhs: Pattern) : ObjectScripting() {

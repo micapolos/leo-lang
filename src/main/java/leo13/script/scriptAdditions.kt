@@ -1,4 +1,4 @@
-package leo13.untyped
+package leo13.script
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
@@ -7,7 +7,6 @@ import leo13.EmptyStack
 import leo13.LinkStack
 import leo13.mapFirst
 import leo13.push
-import leo13.script.*
 
 fun Script.firstRhsOrNull(name: String): Script? =
 	lineStack.mapFirst { rhsOrNull(name) }

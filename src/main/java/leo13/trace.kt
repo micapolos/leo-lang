@@ -4,7 +4,6 @@ import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.errorName
 
 data class TracedError(val stack: Stack<Trace> = stack()) : Exception() {
 	override fun toString() = scriptLine.toString()

@@ -2,7 +2,6 @@ package leo13.untyped.pattern
 
 import leo13.*
 import leo13.script.*
-import leo13.untyped.choiceName
 import leo13.untyped.value.ValueLine
 
 data class Choice(val eitherStack: Stack<Either>) : ObjectScripting() {

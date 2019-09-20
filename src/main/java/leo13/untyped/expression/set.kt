@@ -2,7 +2,7 @@ package leo13.untyped.expression
 
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.setName
+import leo13.setName
 
 data class Set(val line: ExpressionLine)
 

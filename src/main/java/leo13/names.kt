@@ -1,4 +1,4 @@
-package leo13.untyped
+package leo13
 
 const val actualName = "actual"
 const val applyName = "apply"

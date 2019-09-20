@@ -1,10 +1,10 @@
 package leo13.untyped.value
 
+import leo13.functionName
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.expression.*
-import leo13.untyped.functionName
 
 data class ValueFunction(val context: ValueContext, val expression: Expression) {
 	override fun toString() = scriptLine.toString()

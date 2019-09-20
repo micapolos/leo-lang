@@ -4,8 +4,6 @@ import leo.base.*
 import leo13.*
 import leo13.Stack
 import leo13.token.*
-import leo13.untyped.emptyName
-import leo13.untyped.noneName
 
 val scriptName = "script"
 val scriptReader: Reader<Script> = reader(scriptName) { this }

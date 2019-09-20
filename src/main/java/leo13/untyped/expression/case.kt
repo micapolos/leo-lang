@@ -1,9 +1,9 @@
 package leo13.untyped.expression
 
 import leo13.ObjectScripting
+import leo13.caseName
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.caseName
 
 data class Case(val name: String, val expression: Expression) : ObjectScripting() {
 	override fun toString() = super.toString()

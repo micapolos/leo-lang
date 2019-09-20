@@ -1,10 +1,10 @@
 package leo13.untyped.expression
 
 import leo.base.assertEqualTo
+import leo13.expressionName
+import leo13.previousName
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.expressionName
-import leo13.untyped.previousName
 import kotlin.test.Test
 
 class ExpressionTest {

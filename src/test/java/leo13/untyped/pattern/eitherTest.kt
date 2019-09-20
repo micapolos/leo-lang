@@ -1,9 +1,9 @@
 package leo13.untyped.pattern
 
 import leo.base.assertEqualTo
+import leo13.eitherName
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.eitherName
 import org.junit.Test
 
 class EitherTest {

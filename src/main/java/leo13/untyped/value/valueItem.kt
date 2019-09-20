@@ -1,9 +1,9 @@
 package leo13.untyped.value
 
 import leo13.ObjectScripting
+import leo13.functionName
 import leo13.script.ScriptLine
 import leo13.script.metaFor
-import leo13.untyped.functionName
 
 sealed class ValueItem : ObjectScripting()
 

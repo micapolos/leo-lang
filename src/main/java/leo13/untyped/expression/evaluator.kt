@@ -1,10 +1,10 @@
 package leo13.untyped.expression
 
+import leo13.evaluatorName
 import leo13.fold
 import leo13.reverse
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.evaluatorName
 import leo13.untyped.value.*
 
 data class Evaluator(val context: ValueContext, val evaluated: ValueEvaluated) {

@@ -3,7 +3,6 @@ package leo13.untyped.expression
 import leo13.*
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.switchName
 
 data class Switch(val caseStack: Stack<Case>) : ObjectScripting() {
 	override fun toString() = super.toString()

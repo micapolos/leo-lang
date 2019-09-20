@@ -1,10 +1,10 @@
 package leo13.untyped.value
 
 import leo.base.notNullIf
+import leo13.lineName
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.lineName
 
 data class ValueLine(val name: String, val rhs: Value) {
 	override fun toString() = scriptLine.toString()

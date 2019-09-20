@@ -4,7 +4,7 @@ import leo.base.notNullIf
 import leo.base.updateIf
 import leo13.LeoObject
 import leo13.fail
-import leo13.untyped.metaName
+import leo13.metaName
 
 data class ScriptLine(val name: String, val rhs: Script) : LeoObject() {
 	override fun toString() = script(this).toString()

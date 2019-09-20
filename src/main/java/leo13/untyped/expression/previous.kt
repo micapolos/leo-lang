@@ -1,9 +1,9 @@
 package leo13.untyped.expression
 
+import leo13.previousName
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.script.scriptName
-import leo13.untyped.previousName
 
 object Previous
 

@@ -1,9 +1,9 @@
 package leo13.untyped.expression
 
+import leo13.givenName
 import leo13.script.ScriptLine
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
-import leo13.untyped.givenName
 import leo13.untyped.value.Value
 import leo13.untyped.value.bodyScript
 import leo13.untyped.value.lineTo

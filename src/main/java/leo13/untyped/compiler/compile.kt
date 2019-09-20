@@ -1,11 +1,7 @@
 package leo13.untyped.compiler
 
-import leo13.orTracedError
+import leo13.*
 import leo13.script.*
-import leo13.trace
-import leo13.traced
-import leo13.tracedError
-import leo13.untyped.*
 import leo13.untyped.pattern.Pattern
 import leo13.untyped.pattern.bodyScript
 

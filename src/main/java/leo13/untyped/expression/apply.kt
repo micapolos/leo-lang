@@ -1,7 +1,7 @@
 package leo13.untyped.expression
 
+import leo13.applyName
 import leo13.script.lineTo
-import leo13.untyped.applyName
 
 data class Apply(val expression: Expression)
 

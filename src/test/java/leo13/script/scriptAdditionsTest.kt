@@ -1,11 +1,9 @@
-package leo13.untyped
+package leo13.script
 
 import leo.base.assertEqualTo
-import leo13.script.lineTo
-import leo13.script.script
 import kotlin.test.Test
 
-class ScriptTest {
+class ScriptAdditionsTest {
 	@Test
 	fun resolveLine() {
 		script()

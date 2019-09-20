@@ -7,7 +7,6 @@ import leo13.script.Script
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.valueName
 
 data class Value(val itemStack: Stack<ValueItem>) {
 	override fun toString() = scriptLine.toString()

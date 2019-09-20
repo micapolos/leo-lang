@@ -1,7 +1,7 @@
 package leo13.untyped.expression
 
+import leo13.bindName
 import leo13.script.lineTo
-import leo13.untyped.bindName
 
 data class Give(val expression: Expression)
 

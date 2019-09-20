@@ -1,10 +1,10 @@
 package leo13.untyped.compiler
 
 import leo.base.assertEqualTo
+import leo13.contentName
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
-import leo13.untyped.contentName
 import leo13.untyped.expression.*
 import leo13.untyped.pattern.*
 import leo13.untyped.value.function

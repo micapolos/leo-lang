@@ -1,8 +1,8 @@
 package leo13.untyped.expression
 
+import leo13.evaluatedName
 import leo13.script.ScriptLine
 import leo13.script.lineTo
-import leo13.untyped.evaluatedName
 import leo13.untyped.value.Value
 import leo13.untyped.value.bodyScript
 

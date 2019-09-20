@@ -6,8 +6,6 @@ import leo.base.notNullOrError
 import leo.base.orNullFold
 import leo13.*
 import leo13.script.*
-import leo13.untyped.patternName
-import leo13.untyped.rhsOrNull
 import leo13.untyped.value.Value
 import leo13.untyped.value.value
 
