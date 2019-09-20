@@ -5,7 +5,6 @@ import leo13.compiler.Compiled
 import leo13.compiler.compiled
 import leo13.compiler.compiler
 import leo13.expression.expression
-import leo13.normalizer.normalizer
 import leo13.pattern.pattern
 import leo13.token.Token
 import leo13.token.reader.tokenizer
@@ -22,7 +21,7 @@ class EndToEndTest {
 	@Test
 	fun compiling() {
 		converterCapture<Compiled, Token> {
-			compiler().normalizer().tokenizer().charProcess("jajko\n").process(endOfTransmissionChar)
+			compiler().tokenizer().charProcess("jajko\n").process(endOfTransmissionChar)
 		}.assertEqualTo(
 			compiled(
 				expression("jajko"),
