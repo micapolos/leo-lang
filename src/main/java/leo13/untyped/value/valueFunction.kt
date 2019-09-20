@@ -21,3 +21,6 @@ val ValueFunction.scriptLine: ScriptLine
 
 fun ValueFunction.apply(value: Value): Value =
 	context.give(value).evaluate(expression)
+
+fun ValueFunction.fix(value: Value): Value =
+	context.give(value(item(this))).give(value).evaluate(expression)

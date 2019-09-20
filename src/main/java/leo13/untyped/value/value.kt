@@ -55,7 +55,7 @@ fun Value.replaceLineOrNull(line: ValueLine): Value? =
 	itemStack.updateFirst { replaceOrNull(line) }?.value
 
 fun Value.getOrNull(name: String): Value? =
-	updateOrNull {
+	updateLineRhsOrNull {
 		firstLineRhsOrNull(name)?.run {
 			value(name lineTo this)
 		}
@@ -95,7 +95,7 @@ val Script.value: Value
 	get() =
 		lineStack.map { valueItem }.value
 
-fun Value.updateOrNull(fn: Value.() -> Value?): Value? =
+fun Value.updateLineRhsOrNull(fn: Value.() -> Value?): Value? =
 	linkOrNull?.run {
-		rhsItem.lineOrNull?.rhs?.fn()?.let { lhsValue.plus(it) }
+		rhsItem.lineOrNull?.rhs?.fn()
 	}

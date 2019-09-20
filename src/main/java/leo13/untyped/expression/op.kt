@@ -18,6 +18,7 @@ data class SwitchedOp(val switched: Switched) : Op()
 data class GiveOp(val give: Give) : Op()
 data class GivenOp(val given: Given) : Op()
 data class ApplyOp(val apply: Apply) : Op()
+data class FixOp(val fix: Fix) : Op()
 
 val Value.op: Op get() = ValueOp(this)
 val Wrap.op: Op get() = WrapOp(this)
@@ -31,6 +32,7 @@ val Switched.op: Op get() = SwitchedOp(this)
 val Give.op: Op get() = GiveOp(this)
 val Given.op: Op get() = GivenOp(this)
 val Apply.op: Op get() = ApplyOp(this)
+val Fix.op: Op get() = FixOp(this)
 
 fun op(value: Value) = value.op
 fun op(wrap: Wrap) = wrap.op
@@ -44,6 +46,7 @@ fun op(switched: Switched) = switched.op
 fun op(give: Give) = give.op
 fun op(given: Given) = given.op
 fun op(apply: Apply) = apply.op
+fun op(fix: Fix) = fix.op
 
 val Op.bodyScriptLine: ScriptLine
 	get() =
@@ -60,4 +63,5 @@ val Op.bodyScriptLine: ScriptLine
 			is GiveOp -> give.scriptLine
 			is GivenOp -> given.scriptLine
 			is ApplyOp -> apply.scriptLine
+			is FixOp -> fix.scriptingLine
 		}

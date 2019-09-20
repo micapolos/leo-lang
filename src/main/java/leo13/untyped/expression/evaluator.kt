@@ -1,8 +1,6 @@
 package leo13.untyped.expression
 
-import leo.base.notNullIf
 import leo13.fold
-import leo13.mapFirst
 import leo13.reverse
 import leo13.script.lineTo
 import leo13.script.script
@@ -38,6 +36,7 @@ fun Evaluator.plus(op: Op): Evaluator =
 		is GiveOp -> plus(op.give)
 		is GivenOp -> plus(op.given)
 		is ApplyOp -> plus(op.apply)
+		is FixOp -> plus(op.fix)
 	}
 
 fun Evaluator.plus(value: Value): Evaluator =
@@ -50,7 +49,7 @@ fun Evaluator.plus(get: Get): Evaluator =
 	set(evaluated.value.getOrNull(get.name)!!.evaluated)
 
 fun Evaluator.plus(plus: Plus): Evaluator =
-	set(evaluated.value.plus(context.evaluate(plus.line)).evaluated)
+	set(value(context.evaluate(plus.line)).evaluated)
 
 fun Evaluator.plus(set: Set): Evaluator =
 	set(evaluated.value.setOrNull(context.evaluate(set.line))!!.evaluated)
@@ -62,24 +61,14 @@ fun Evaluator.plus(content: Content): Evaluator =
 	set(evaluated.value.firstItemOrNull!!.lineOrNull!!.rhs.evaluated)
 
 fun Evaluator.plus(switch: Switch): Evaluator =
-	evaluated.value.linkOrNull!!.let { valueLink ->
-		valueLink.rhsItem.lineOrNull!!.let { line ->
-			line.rhs.linkOrNull?.rhsItem?.lineOrNull!!.let { caseLine ->
-				set(valueLink.lhsValue.evaluated).plus(switch, caseLine)
-			}
+	set(evaluated.value.updateLineRhsOrNull {
+		linkOrNull!!.rhsItem.lineOrNull!!.let {
+			context.evaluate(switch, it)
 		}
-	}
-
-fun Evaluator.plus(switch: Switch, line: ValueLine): Evaluator =
-	switch.caseStack.mapFirst { plusOrNull(this, line) }!!
-
-fun Evaluator.plusOrNull(case: Case, line: ValueLine): Evaluator? =
-	notNullIf(line.name == case.name) {
-		plus(context.switch(value(item(line))).evaluate(case.expression))
-	}
+	}!!.evaluated)
 
 fun Evaluator.plus(given: Given): Evaluator =
-	set(evaluated.value.plus(context.given.value).evaluated)
+	set(context.given.value.evaluated)
 
 fun Evaluator.plus(switched: Switched): Evaluator =
 	set(context.switched.value.evaluated)
@@ -88,19 +77,14 @@ fun Evaluator.plus(give: Give): Evaluator =
 	set(context.give(evaluated.value).evaluate(give.expression).evaluated)
 
 fun Evaluator.plus(apply: Apply): Evaluator =
-	evaluated.value.linkOrNull!!.let { link ->
-		set(
-			link
-				.lhsValue
-				.plus(
-					link
-						.rhsItem
-						.lineOrNull!!
-						.rhs
-						.firstItemOrNull!!
-						.functionOrNull!!
-						.apply(context.evaluate(apply.expression))).evaluated)
-	}
+	set(evaluated.value.updateLineRhsOrNull {
+		firstItemOrNull!!.functionOrNull!!.apply(context.evaluate(apply.expression))
+	}!!.evaluated)
+
+fun Evaluator.plus(fix: Fix): Evaluator =
+	set(evaluated.value.updateLineRhsOrNull {
+		firstItemOrNull!!.functionOrNull!!.fix(context.evaluate(fix.expression))
+	}!!.evaluated)
 
 val Evaluator.scriptLine
 	get() =

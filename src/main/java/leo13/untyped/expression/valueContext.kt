@@ -1,13 +1,12 @@
 package leo13.untyped.expression
 
+import leo.base.notNullIf
 import leo13.ObjectScripting
+import leo13.mapFirst
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.untyped.value.Value
-import leo13.untyped.value.ValueLine
-import leo13.untyped.value.lineTo
-import leo13.untyped.value.value
+import leo13.untyped.value.*
 
 data class ValueContext(
 	val given: ValueGiven,
@@ -30,6 +29,16 @@ data class ValueContext(
 
 	fun evaluate(line: ExpressionLine): ValueLine =
 		line.name lineTo evaluate(line.rhs)
+
+	fun evaluate(switch: Switch, line: ValueLine): Value =
+		switch.caseStack.mapFirst { evaluateOrNull(this, line) }!!
+
+	fun evaluateOrNull(case: Case, line: ValueLine): Value? =
+		notNullIf(line.name == case.name) {
+			switch(value(item(line))).evaluate(case.expression)
+		}
+
+
 }
 
 fun valueContext() = ValueContext(given(value()), switched(value()))

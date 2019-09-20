@@ -6,7 +6,6 @@ import leo13.untyped.value.item
 import leo13.untyped.value.lineTo
 import leo13.untyped.value.value
 import kotlin.test.Test
-import kotlin.test.assertFails
 
 class EvaluatorTest {
 	@Test
@@ -20,12 +19,13 @@ class EvaluatorTest {
 	fun evaluateGet() {
 		valueContext().evaluate(
 			expression(
-				op(value("foo" lineTo value(), "plus" lineTo value("one" lineTo value("more")))),
+				op(
+					value(
+						"foo" lineTo value(),
+						"plus" lineTo value("one" lineTo value("more")))),
 				op(get("one"))))
 			.assertEqualTo(
-				value(
-					"foo" lineTo value(),
-					"one" lineTo value("more")))
+				value("one" lineTo value("more")))
 	}
 
 	@Test
@@ -39,7 +39,6 @@ class EvaluatorTest {
 					op(given)))
 			.assertEqualTo(
 				value(
-					"foo" lineTo value(),
 					"given" lineTo value("zero"),
 					"given" lineTo value("one")))
 	}
@@ -65,30 +64,45 @@ class EvaluatorTest {
 						valueContext(),
 						expression(given.op)))))))
 					.plus(op(apply(expression(op(value("foo")))))))
-			.assertEqualTo(value("zoo" lineTo value(), "given" lineTo value("foo")))
+			.assertEqualTo(value("given" lineTo value("foo")))
 	}
 
 	@Test
-	fun recursionStackOverflow() {
-		assertFails {
-			val expression =
-				expression(
-					op(given),
-					op(get("function")),
-					op(
-						apply(
-							expression(
-								op(given),
-								op(get("function")),
-								op(given),
-								op(get("value"))))))
+	fun fix() {
+		valueContext()
+			.evaluate(
+				expression()
+					.plus(op(value("zoo")))
+					.plus(op(value("function" lineTo value(item(function(
+						valueContext(),
+						expression(given.op)))))))
+					.plus(op(fix(expression(op(value("foo")))))))
+			.assertEqualTo(value(
+				"given" lineTo value(item(function(valueContext(), expression(given.op)))),
+				"given" lineTo value("foo")))
+	}
 
-			valueContext()
-				.give(
-					value(
-						"function" lineTo value(item(function(valueContext(), expression))),
-						"value" lineTo value("foo")))
-				.evaluate(expression)
-		}
+	@Test
+	fun recursion() {
+		valueContext()
+			.evaluate(
+				expression(
+					op(value("foo")),
+					op(
+						value("function" lineTo value(
+							item(
+								function(
+									valueContext(),
+									expression(
+										op(given),
+										op(
+											switch(
+												"foo" caseTo expression(
+													op(given),
+													op(previous),
+													op(fix(expression(op(switched), op(get("foo")), op(content))))),
+												"bar" caseTo expression("ok"))))))))),
+					op(fix(expression(op(value("foo" lineTo value("foo" lineTo value("bar")))))))))
+			.assertEqualTo(value("ok"))
 	}
 }
