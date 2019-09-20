@@ -4,9 +4,6 @@ package leo.base
 
 import leo13.Stack
 import leo13.push
-import leo32.base.Effect
-import leo32.base.effect
-import leo32.base.mapValue
 
 data class SeqNode<T>(
 	val first: T,
@@ -204,23 +201,6 @@ fun <T, V> Seq<T>.filterMap(fn: T.() -> The<V>?): Seq<V> {
 		if (theMappedFirst == null) seqNodeOrNull.remaining.filterMap(fn)
 		else Seq { theMappedFirst.value.then(seqNodeOrNull.remaining.filterMap(fn)) }
 	}
-}
-
-fun <T, R : Any> R.foldUntilNullEffect(seq: Seq<T>, fn: R.(T) -> R?): Effect<R, Seq<T>> =
-	foldUntilNullEffect(seq.nodeOrNull, fn).mapValue { Seq { this } }
-
-fun <T, R : Any> R.foldUntilNullEffect(seqNodeOrNull: SeqNode<T>?, fn: R.(T) -> R?): Effect<R, SeqNode<T>?> {
-	var folded = this
-	var remainingSeqNodeOrNull = seqNodeOrNull
-	while (remainingSeqNodeOrNull != null) {
-		val nextFolded = folded.fn(remainingSeqNodeOrNull.first)
-		if (nextFolded == null) break
-		else {
-			folded = nextFolded
-			remainingSeqNodeOrNull = remainingSeqNodeOrNull.remaining.nodeOrNull
-		}
-	}
-	return folded.effect(remainingSeqNodeOrNull)
 }
 
 fun <A : Any, B : Any, R> R.zipFold(aSeq: Seq<A>, bSeq: Seq<B>, fn: R.(A?, B?) -> R): R =
