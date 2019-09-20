@@ -4,10 +4,10 @@ import leo.base.notNullIf
 import leo.base.orNullFold
 import leo13.LeoObject
 import leo13.orNullAsScriptLine
+import leo13.reverse
+import leo13.seq
 import leo13.token.Token
 import leo13.token.Tokens
-import leo9.reverse
-import leo9.seq
 
 data class ScriptParser(
 	val scriptHead: ScriptHead,

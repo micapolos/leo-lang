@@ -1,11 +1,10 @@
 package leo13.type
 
-import leo13.LeoObject
+import leo13.*
 import leo13.script.asScript
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.value.Given
-import leo9.*
 
 data class TypeBindings(val stack: Stack<Type>) : LeoObject() {
 	override fun toString() = super.toString()

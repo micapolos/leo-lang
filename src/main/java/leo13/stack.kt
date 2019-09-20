@@ -1,8 +1,6 @@
-package leo9
+package leo13
 
 import leo.base.*
-import leo10.list
-import leo10.prepend
 
 sealed class Stack<out T>
 
@@ -57,7 +55,6 @@ tailrec fun <R, T> R.fold(stack: Stack<T>, fn: R.(T) -> R): R =
 	}
 
 val <T> Stack<T>.reverse get() = stack<T>().fold(this) { push(it) }
-val <T> Stack<T>.list get() = list<T>().fold(this) { prepend(it) }
 val Stack<*>.isEmpty get() = this is EmptyStack
 
 fun <T> Stack<T>.any(fn: T.() -> Boolean): Boolean =

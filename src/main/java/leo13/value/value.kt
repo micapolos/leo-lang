@@ -2,13 +2,13 @@ package leo13.value
 
 import leo.base.*
 import leo13.LeoObject
+import leo13.fold
+import leo13.push
+import leo13.reverse
 import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
-import leo9.fold
-import leo9.push
-import leo9.reverse
 
 sealed class Value : LeoObject() {
 	override val scriptableName get() = "value"
@@ -66,7 +66,7 @@ val Value.lineSeq: Seq<ValueLine> get() = lineOrNullSeq.noNulls
 
 val Script.value: Value get() = value().fold(lineStack.reverse) { plus(it.valueLine) }
 val Value.scriptOrNull: Script?
-	get() = leo9.stack<ScriptLine>().orNull.orNullFold(lineOrNullSeq) {
+	get() = leo13.stack<ScriptLine>().orNull.orNullFold(lineOrNullSeq) {
 		it?.scriptLineOrNull?.let { push(it) }
 	}?.reverse?.script
 

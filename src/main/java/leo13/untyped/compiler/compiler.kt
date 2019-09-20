@@ -10,9 +10,6 @@ import leo13.token.Token
 import leo13.untyped.expression.*
 import leo13.untyped.pattern.*
 import leo13.untyped.value.value
-import leo9.Stack
-import leo9.fold
-import leo9.reverse
 
 data class Compiler(
 	val converter: Converter<Compiled, Token>,

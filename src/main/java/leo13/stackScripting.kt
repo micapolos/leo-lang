@@ -4,9 +4,6 @@ import leo13.script.ScriptLine
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
-import leo9.Stack
-import leo9.map
-import leo9.push
 
 data class StackScripting<V>(val stack: Stack<V>, val scriptLineFn: V.() -> ScriptLine) : ObjectScripting() {
 	override fun toString() = super.toString()

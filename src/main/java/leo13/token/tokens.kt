@@ -1,10 +1,10 @@
 package leo13.token
 
 import leo13.LeoObject
+import leo13.Stack
+import leo13.push
 import leo13.script.asScript
-import leo9.Stack
-import leo9.push
-import leo9.stack
+import leo13.stack
 
 data class Tokens(val stack: Stack<Token>) : LeoObject() {
 	override fun toString() = super.toString()

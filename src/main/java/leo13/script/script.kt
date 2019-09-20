@@ -1,13 +1,11 @@
 package leo13.script
 
 import leo.base.*
-import leo13.LeoObject
-import leo13.fail
+import leo13.*
+import leo13.Stack
 import leo13.token.*
 import leo13.untyped.emptyName
 import leo13.untyped.noneName
-import leo9.*
-import leo9.Stack
 
 val scriptName = "script"
 val scriptReader: Reader<Script> = reader(scriptName) { this }
@@ -45,7 +43,7 @@ val Script.unsafeEmpty: Empty
 val Stack<ScriptLine>.script get() = Script(this)
 fun Script.plus(line: ScriptLine) = lineStack.push(line).script
 fun Script.plus(script: Script) = fold(script.lineStack.reverse) { plus(it) }
-fun script(vararg lines: ScriptLine) = stack(*lines).script
+fun script(vararg lines: ScriptLine) = leo13.stack(*lines).script
 infix fun String.lineTo(rhs: Script) = ScriptLine(this, rhs)
 val String.scriptLine get() = lineTo(script())
 fun script(name: String) = script(name.scriptLine)
@@ -62,10 +60,10 @@ val Script.unsafeOnlyLine: ScriptLine
 		onlyLineOrNull
 			?: fail("only" lineTo script("line"))
 
-fun scriptHead(vararg openers: ScriptOpener) = ScriptHead(stack(*openers), script())
+fun scriptHead(vararg openers: ScriptOpener) = ScriptHead(leo13.stack(*openers), script())
 infix fun Script.openerTo(opening: Opening) = ScriptOpener(this, opening)
 fun head(openerStack: Stack<ScriptOpener>, script: Script) = ScriptHead(openerStack, script)
-val Script.head get() = head(stack(), this)
+val Script.head get() = head(leo13.stack(), this)
 
 val Script.linkOrNull
 	get() =

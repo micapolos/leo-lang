@@ -1,15 +1,11 @@
 package leo13.untyped
 
 import leo.base.fold
-import leo13.LeoStruct
+import leo13.*
 import leo13.base.stackReader
 import leo13.base.stackWriter
 import leo13.script.*
 import leo13.untyped.pattern.unsafeBodyPattern
-import leo9.Stack
-import leo9.mapFirst
-import leo9.push
-import leo9.stack
 
 val contextReader: Reader<Context>
 	get() =

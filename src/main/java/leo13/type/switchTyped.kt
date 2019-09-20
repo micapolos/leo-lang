@@ -2,12 +2,12 @@ package leo13.type
 
 import leo.base.notNullIf
 import leo.base.orNull
+import leo13.fold
+import leo13.isEmpty
+import leo13.reverse
 import leo13.value.Switch
 import leo13.value.plus
 import leo13.value.switch
-import leo9.fold
-import leo9.isEmpty
-import leo9.reverse
 
 data class SwitchTyped(val switch: Switch, val type: Type)
 

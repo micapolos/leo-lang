@@ -2,10 +2,11 @@
 
 package leo.base
 
+import leo13.Stack
+import leo13.push
 import leo32.base.Effect
 import leo32.base.effect
 import leo32.base.mapValue
-import leo9.push
 
 data class SeqNode<T>(
 	val first: T,
@@ -15,7 +16,7 @@ data class SeqNode<T>(
 
 data class Seq<T>(
 	val nodeOrNullFn: () -> SeqNode<T>?) : Iterable<T> {
-	private val stack: leo9.Stack<T> get() = leo9.stack<T>().fold(this) { push(it) }
+	private val stack: Stack<T> get() = leo13.stack<T>().fold(this) { push(it) }
 	override fun hashCode() = stack.hashCode()
 	override fun equals(other: Any?) = (other is Seq<*>) && stack == other.stack
 	override fun iterator() = object : Iterator<T> {

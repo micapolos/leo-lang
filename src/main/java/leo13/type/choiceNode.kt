@@ -1,11 +1,11 @@
 package leo13.type
 
 import leo13.LeoObject
+import leo13.Stack
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
-import leo9.Stack
-import leo9.stack
+import leo13.stack
 
 sealed class ChoiceNode : LeoObject() {
 	override fun toString() = scriptableLine.toString()

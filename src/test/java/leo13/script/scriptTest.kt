@@ -1,9 +1,9 @@
 package leo13.script
 
 import leo.base.assertEqualTo
+import leo13.stack
 import leo13.token.closing
 import leo13.token.opening
-import leo9.stack
 import kotlin.test.Test
 
 class ScriptTest {

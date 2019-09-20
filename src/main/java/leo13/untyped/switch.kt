@@ -1,13 +1,7 @@
 package leo13.untyped
 
-import leo13.ObjectScripting
-import leo13.script
+import leo13.*
 import leo13.script.*
-import leo13.scripting
-import leo9.Stack
-import leo9.mapFirst
-import leo9.push
-import leo9.stack
 
 val switchReader: Reader<Switch> =
 	stackReader(switchName, caseReader, ::switch)

@@ -1,15 +1,9 @@
 package leo13.untyped.expression
 
-import leo13.ObjectScripting
-import leo13.script
+import leo13.*
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.scripting
 import leo13.untyped.switchName
-import leo9.Stack
-import leo9.map
-import leo9.push
-import leo9.stack
 
 data class Switch(val caseStack: Stack<Case>) : ObjectScripting() {
 	override fun toString() = super.toString()

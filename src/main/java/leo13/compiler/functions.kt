@@ -1,12 +1,8 @@
 package leo13.compiler
 
-import leo13.LeoObject
+import leo13.*
 import leo13.script.asScript
 import leo13.type.Type
-import leo9.Stack
-import leo9.mapFirst
-import leo9.push
-import leo9.stack
 
 data class Functions(val functionStack: Stack<Function>) : LeoObject() {
 	override val scriptableName get() = "functions"

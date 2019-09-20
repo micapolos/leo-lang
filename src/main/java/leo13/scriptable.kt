@@ -2,10 +2,6 @@ package leo13
 
 import leo.base.*
 import leo13.script.*
-import leo13.script.Script
-import leo13.script.ScriptLine
-import leo9.*
-import leo9.Stack
 
 interface Scriptable {
 	val scriptableName: String

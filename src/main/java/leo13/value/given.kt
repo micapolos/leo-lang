@@ -3,9 +3,9 @@ package leo13.value
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.LeoObject
+import leo13.Stack
 import leo13.script.*
-import leo9.Stack
-import leo9.stack
+import leo13.stack
 
 object Outside : LeoObject() {
 	override val scriptableName get() = "outside"

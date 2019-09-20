@@ -2,12 +2,12 @@ package leo13.untyped.value
 
 import leo.base.fold
 import leo.base.ifOrNull
+import leo13.*
 import leo13.script.Script
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.untyped.valueName
-import leo9.*
 
 data class Value(val itemStack: Stack<ValueItem>) {
 	override fun toString() = scriptLine.toString()

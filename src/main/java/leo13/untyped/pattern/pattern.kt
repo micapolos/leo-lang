@@ -4,15 +4,12 @@ import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.notNullOrError
 import leo.base.orNullFold
-import leo13.ObjectScripting
+import leo13.*
 import leo13.script.*
-import leo13.script.Script
-import leo13.script.ScriptLine
 import leo13.untyped.patternName
 import leo13.untyped.rhsOrNull
 import leo13.untyped.value.Value
 import leo13.untyped.value.value
-import leo9.*
 
 data class Pattern(val itemStack: Stack<PatternItem>) : ObjectScripting() {
 	override fun toString() = bodyScript.toString()

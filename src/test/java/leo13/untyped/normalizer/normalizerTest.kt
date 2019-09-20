@@ -3,11 +3,11 @@ package leo13.untyped.normalizer
 import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.processor
+import leo13.stack
 import leo13.token.Token
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
-import leo9.stack
 import kotlin.test.Test
 
 class NormalizerTest {

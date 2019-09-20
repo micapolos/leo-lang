@@ -1,8 +1,8 @@
 package leo13.type
 
+import leo13.Stack
 import leo13.script.Switch
-import leo9.Stack
-import leo9.stack
+import leo13.stack
 
 data class ChoiceMatch(val caseMatchStack: Stack<CaseMatch>)
 

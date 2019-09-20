@@ -1,15 +1,15 @@
 package leo13.untyped.expression
 
 import leo.base.fold
+import leo13.Stack
+import leo13.map
+import leo13.push
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
+import leo13.stack
 import leo13.untyped.expressionName
 import leo13.untyped.value.Value
-import leo9.Stack
-import leo9.map
-import leo9.push
-import leo9.stack
 
 data class Expression(val opStack: Stack<Op>)
 

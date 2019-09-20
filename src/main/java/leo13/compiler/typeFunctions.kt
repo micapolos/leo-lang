@@ -1,15 +1,11 @@
 package leo13.compiler
 
 import leo.base.notNullIf
-import leo13.LeoObject
+import leo13.*
 import leo13.script.*
 import leo13.type.Type
 import leo13.type.contains
 import leo13.type.type
-import leo9.Stack
-import leo9.mapFirst
-import leo9.push
-import leo9.stack
 
 data class TypeFunctions(val stack: Stack<TypeFunction>) : LeoObject() {
 	override fun toString() = super.toString()

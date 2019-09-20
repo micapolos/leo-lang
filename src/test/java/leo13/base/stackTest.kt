@@ -5,7 +5,7 @@ import leo13.script.lineTo
 import leo13.script.script
 import leo13.script.scriptLine
 import leo13.script.unsafeValue
-import leo9.stack
+import leo13.stack
 import kotlin.test.Test
 
 class StackTest {

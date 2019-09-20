@@ -2,7 +2,6 @@ package leo13
 
 import leo13.script.lineTo
 import leo13.script.script
-import leo9.Stack
 
 data class ObjectConverter<S : Scripting, A, B>(
 	val state: S,

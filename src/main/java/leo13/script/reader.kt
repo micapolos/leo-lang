@@ -1,8 +1,6 @@
 package leo13.script
 
-import leo13.ScriptException
-import leo13.fail
-import leo9.*
+import leo13.*
 
 interface Reader<out V> {
 	val name: String

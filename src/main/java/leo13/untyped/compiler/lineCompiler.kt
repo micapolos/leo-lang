@@ -6,9 +6,6 @@ import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
-import leo9.Stack
-import leo9.push
-import leo9.stack
 
 data class LineCompiler(
 	val converter: Converter<Stack<CompiledLine>, Token>,

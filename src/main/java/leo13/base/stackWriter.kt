@@ -2,9 +2,9 @@ package leo13.base
 
 import leo13.LeoObject
 import leo13.Scriptable
+import leo13.Stack
+import leo13.push
 import leo13.script.asScript
-import leo9.Stack
-import leo9.push
 
 data class StackWriter<V : Scriptable>(val stack: Stack<V>) : LeoObject(), Writer<V> {
 	override fun toString() = super.toString()

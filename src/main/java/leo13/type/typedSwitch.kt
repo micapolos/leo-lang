@@ -1,6 +1,6 @@
 package leo13.type
 
-import leo9.Stack
+import leo13.Stack
 
 data class TypedSwitch(val caseTypedStack: Stack<CaseTyped>)
 

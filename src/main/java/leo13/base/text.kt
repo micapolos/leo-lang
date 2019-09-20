@@ -3,9 +3,9 @@ package leo13.base
 import leo.base.fold
 import leo.binary.utf8ByteSeq
 import leo.binary.utf8String
+import leo13.*
 import leo13.script.*
 import leo13.script.Writer
-import leo9.*
 
 data class Text(val utf8ByteStack: Stack<Byte>) {
 	override fun toString() = textWriter.string(this)

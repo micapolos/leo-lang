@@ -10,8 +10,6 @@ import leo13.untyped.expression.caseTo
 import leo13.untyped.pattern.Either
 import leo13.untyped.pattern.lineTo
 import leo13.untyped.pattern.pattern
-import leo9.Stack
-import leo9.linkOrNull
 
 data class SwitchCompiler(
 	val converter: Converter<SwitchCompiled, Token>,

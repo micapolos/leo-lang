@@ -5,7 +5,6 @@ import leo13.script.ScriptLine
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
-import leo9.*
 
 interface Processor<V> : Scripting {
 	fun process(value: V): Processor<V>

@@ -3,11 +3,11 @@ package leo13.untyped
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo.base.orNullFold
+import leo13.EmptyStack
+import leo13.LinkStack
+import leo13.mapFirst
+import leo13.push
 import leo13.script.*
-import leo9.EmptyStack
-import leo9.LinkStack
-import leo9.mapFirst
-import leo9.push
 
 fun Script.firstRhsOrNull(name: String): Script? =
 	lineStack.mapFirst { rhsOrNull(name) }

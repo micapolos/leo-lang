@@ -3,9 +3,6 @@ package leo13
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
-import leo9.Stack
-import leo9.push
-import leo9.stack
 
 data class ObjectProcessor<S : Scripting, V>(
 	val state: S,

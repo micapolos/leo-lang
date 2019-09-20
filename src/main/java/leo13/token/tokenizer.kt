@@ -3,11 +3,9 @@ package leo13.token
 import leo.base.charSeq
 import leo.base.fold
 import leo.base.notNullIf
-import leo13.LeoObject
-import leo13.orNullAsScriptLine
+import leo13.*
 import leo13.script.asScriptLine
 import leo13.script.lineTo
-import leo9.*
 
 data class Tokenizer(
 	val tokenStack: Stack<Token>,

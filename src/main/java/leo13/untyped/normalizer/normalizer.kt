@@ -5,7 +5,6 @@ import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.*
-import leo9.*
 
 data class Normalizer(
 	val processor: Processor<Token>,

@@ -2,7 +2,6 @@ package leo13.value
 
 import leo.base.notNullIf
 import leo13.*
-import leo9.mapFirst
 
 data class Evaluator(val bindings: ValueBindings, val value: Value) : LeoObject() {
 	override fun toString() = super.toString()

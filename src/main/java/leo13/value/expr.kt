@@ -2,9 +2,9 @@ package leo13.value
 
 import leo.base.fold
 import leo13.LeoObject
+import leo13.fold
+import leo13.reverse
 import leo13.script.*
-import leo9.fold
-import leo9.reverse
 
 sealed class Expr : LeoObject() {
 	override fun toString() = scriptableLine.toString()

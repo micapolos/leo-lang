@@ -1,12 +1,9 @@
 package leo13.untyped.pattern
 
-import leo13.ObjectScripting
+import leo13.*
 import leo13.script.*
-import leo13.script.Script
-import leo13.script.ScriptLine
 import leo13.untyped.choiceName
 import leo13.untyped.value.ValueLine
-import leo9.*
 
 data class Choice(val eitherStack: Stack<Either>) : ObjectScripting() {
 	override fun toString() = super.toString()
