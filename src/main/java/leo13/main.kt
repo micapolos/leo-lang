@@ -1,14 +1,14 @@
 package leo13
 
+import leo13.compiler.Compiled
+import leo13.compiler.compiler
+import leo13.expression.valueContext
 import leo13.locator.locator
 import leo13.script.lineTo
 import leo13.token.Token
 import leo13.token.reader.tokenizer
-import leo13.untyped.compiler.Compiled
-import leo13.untyped.compiler.compiler
-import leo13.untyped.expression.valueContext
-import leo13.untyped.value.scriptOrNull
-import leo13.untyped.value.value
+import leo13.value.scriptOrNull
+import leo13.value.value
 import kotlin.system.exitProcess
 
 fun main() {
