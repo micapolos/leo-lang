@@ -79,7 +79,7 @@ fun Evaluator.plusOrNull(case: Case, line: ValueLine): Evaluator? =
 	}
 
 fun Evaluator.plus(given: Given): Evaluator =
-	set(context.given.value.evaluated)
+	set(evaluated.value.plus(context.given.value).evaluated)
 
 fun Evaluator.plus(switched: Switched): Evaluator =
 	set(context.switched.value.evaluated)
@@ -88,7 +88,19 @@ fun Evaluator.plus(give: Give): Evaluator =
 	set(context.give(evaluated.value).evaluate(give.expression).evaluated)
 
 fun Evaluator.plus(apply: Apply): Evaluator =
-	set(evaluated.value.firstItemOrNull?.functionOrNull!!.apply(context.evaluate(apply.expression)).evaluated)
+	evaluated.value.linkOrNull!!.let { link ->
+		set(
+			link
+				.lhsValue
+				.plus(
+					link
+						.rhsItem
+						.lineOrNull!!
+						.rhs
+						.firstItemOrNull!!
+						.functionOrNull!!
+						.apply(context.evaluate(apply.expression))).evaluated)
+	}
 
 val Evaluator.scriptLine
 	get() =

@@ -55,11 +55,11 @@ fun Value.replaceLineOrNull(line: ValueLine): Value? =
 	itemStack.updateFirst { replaceOrNull(line) }?.value
 
 fun Value.getOrNull(name: String): Value? =
-	firstItemOrNull
-		?.lineOrNull
-		?.rhs
-		?.firstLineRhsOrNull(name)
-		?.let { value(name lineTo it) }
+	updateOrNull {
+		firstLineRhsOrNull(name)?.run {
+			value(name lineTo this)
+		}
+	}
 
 fun Value.setOrNull(newLine: ValueLine): Value? =
 	linkOrNull?.run {
@@ -94,3 +94,8 @@ val Value.scriptOrNull: Script?
 val Script.value: Value
 	get() =
 		lineStack.map { valueItem }.value
+
+fun Value.updateOrNull(fn: Value.() -> Value?): Value? =
+	linkOrNull?.run {
+		rhsItem.lineOrNull?.rhs?.fn()?.let { lhsValue.plus(it) }
+	}

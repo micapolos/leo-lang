@@ -32,6 +32,19 @@ val Give.op: Op get() = GiveOp(this)
 val Given.op: Op get() = GivenOp(this)
 val Apply.op: Op get() = ApplyOp(this)
 
+fun op(value: Value) = value.op
+fun op(wrap: Wrap) = wrap.op
+fun op(plus: Plus) = plus.op
+fun op(get: Get) = get.op
+fun op(set: Set) = set.op
+fun op(previous: Previous) = previous.op
+fun op(content: Content) = content.op
+fun op(switch: Switch) = switch.op
+fun op(switched: Switched) = switched.op
+fun op(give: Give) = give.op
+fun op(given: Given) = given.op
+fun op(apply: Apply) = apply.op
+
 val Op.bodyScriptLine: ScriptLine
 	get() =
 		when (this) {
