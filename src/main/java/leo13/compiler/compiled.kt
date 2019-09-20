@@ -58,10 +58,10 @@ fun Compiled.plusIn(rhs: Compiled): Compiled =
 		expression.plus(bind(rhs.expression).op),
 		rhs.pattern)
 
-fun Compiled.plus(switchCompiled: SwitchCompiled) =
+fun Compiled.plus(compiled: SwitchCompiled) =
 	compiled(
-		expression.plus(switchCompiled.switch.op),
-		switchCompiled.pattern)
+		expression.plus(compiled.switch.op),
+		compiled.pattern)
 
 fun compiled(script: Script): Compiled =
 	compiled(expression(script.value.op), pattern(script))
