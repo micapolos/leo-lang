@@ -1,4 +1,4 @@
-package leo13.token.reader
+package leo13.tokenizer
 
 import leo.base.fold
 import leo.base.orIfNull

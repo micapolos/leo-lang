@@ -1,4 +1,4 @@
-package leo13.token.reader
+package leo13.tokenizer
 
 import leo.base.fold
 import leo.base.orNullIf
@@ -118,7 +118,7 @@ fun Tokenizer.pushOtherOrNull(char: Char): Tokenizer? =
 			else
 				tokenProcessor.tokenizer(
 				parent,
-				head(input(head.input.colon, head.input.name + char)))
+					head(input(head.input.colon, head.input.name + char)))
 		is ColonHead -> null
 		is IndentHead ->
 			tokenProcessor.flush(head.indent).tokenizer(

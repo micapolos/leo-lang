@@ -7,7 +7,7 @@ import leo13.compiler.compiler
 import leo13.expression.expression
 import leo13.pattern.pattern
 import leo13.token.Token
-import leo13.token.reader.tokenizer
+import leo13.tokenizer.tokenizer
 import kotlin.test.Test
 
 class EndToEndTest {

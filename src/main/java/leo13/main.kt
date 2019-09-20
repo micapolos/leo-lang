@@ -6,7 +6,7 @@ import leo13.expression.valueContext
 import leo13.locator.locator
 import leo13.script.lineTo
 import leo13.token.Token
-import leo13.token.reader.tokenizer
+import leo13.tokenizer.tokenizer
 import leo13.value.scriptOrNull
 import leo13.value.value
 import kotlin.system.exitProcess
