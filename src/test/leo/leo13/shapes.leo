@@ -10,9 +10,7 @@ define
 		width: number
 		height: number
 
-	shape has
-		either: circle
-		either: rectangle
+	shape has: options: circle rectangle
 
 	circle area gives
 		pi number

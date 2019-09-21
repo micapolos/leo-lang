@@ -23,11 +23,9 @@ class FunctionCompilerTest {
 			pattern(),
 			null)
 			.process(token(opening("bit")))
-			.process(token(opening("either")))
+			.process(token(opening("options")))
 			.process(token(opening("zero")))
 			.process(token(closing))
-			.process(token(closing))
-			.process(token(opening("either")))
 			.process(token(opening("one")))
 			.process(token(closing))
 			.process(token(closing))
@@ -45,10 +43,6 @@ class FunctionCompilerTest {
 						function(
 							valueContext(),
 							expression("foo")),
-						pattern("bit" lineTo pattern(
-							choice(
-								"zero" lineTo pattern(),
-								"one" lineTo pattern()))) arrowTo
-							pattern("foo"))))
+						pattern("bit" lineTo pattern(choice("zero", "one"))) arrowTo pattern("foo"))))
 	}
 }

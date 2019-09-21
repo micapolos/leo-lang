@@ -44,35 +44,17 @@ class PatternCompilerTest {
 	}
 
 	@Test
-	fun processEithers() {
+	fun processOptions() {
 		patternCompiler()
-			.process(token(opening("either")))
+			.process(token(opening("options")))
 			.process(token(opening("zero")))
 			.process(token(closing))
-			.process(token(closing))
-			.process(token(opening("either")))
 			.process(token(opening("one")))
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
 				patternCompiler().set(
-					pattern(choice("zero" lineTo pattern(), "one" lineTo pattern()))))
-	}
-
-	@Test
-	fun processEithersAndOthers() {
-		patternCompiler()
-			.process(token(opening("either")))
-			.process(token(opening("zero")))
-			.process(token(closing))
-			.process(token(closing))
-			.process(token(opening("plus")))
-			.process(token(opening("one")))
-			.process(token(closing))
-			.process(token(closing))
-			.assertEqualTo(
-				patternCompiler().set(
-					pattern(choice("zero" lineTo pattern())).plus("plus" lineTo pattern("one"))))
+					pattern(choice("zero", "one"))))
 	}
 
 	@Test
@@ -85,15 +67,11 @@ class PatternCompilerTest {
 				.plus(definition("one" lineTo pattern(), pattern("resolved"))))
 
 		patternCompiler
-			.process(token(opening("either")))
+			.process(token(opening("options")))
 			.process(token(opening("zero")))
 			.process(token(closing))
-			.process(token(closing))
-			.process(token(opening("either")))
 			.process(token(opening("one")))
 			.process(token(closing))
-			.process(token(closing))
-			.process(token(opening("either")))
 			.process(token(opening("two")))
 			.process(token(closing))
 			.process(token(closing))

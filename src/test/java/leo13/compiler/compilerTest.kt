@@ -168,11 +168,9 @@ class CompilerTest {
 			.process(token(opening("zero")))
 			.process(token(closing))
 			.process(token(opening("of")))
-			.process(token(opening("either")))
+			.process(token(opening("options")))
 			.process(token(opening("zero")))
 			.process(token(closing))
-			.process(token(closing))
-			.process(token(opening("either")))
 			.process(token(opening("one")))
 			.process(token(closing))
 			.process(token(closing))
@@ -182,7 +180,7 @@ class CompilerTest {
 					.set(
 						compiled(
 							expression("zero"),
-							pattern(choice("zero" lineTo pattern(), "one" lineTo pattern())))))
+							pattern(choice("zero", "one")))))
 	}
 
 	@Test

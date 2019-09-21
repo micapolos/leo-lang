@@ -33,22 +33,23 @@ data class PatternCompiler(
 
 	fun begin(name: String): Processor<Token> =
 		when (name) {
-			// TODO: "either" should not be allowed after a line without "either"
-			"either" -> beginEither
+			"options" -> beginOptions
 			else -> beginOther(name)
 		}
 
-	val beginEither: Processor<Token>
+	val beginOptions: Processor<Token>
 		get() =
-			pattern
-				.beginChoiceOrNull
-				?.let { choice ->
-					PatternLineCompiler(
-						converter { set(pattern(choice.plus(it))) },
+			if (!pattern.isEmpty) tracedError("not" lineTo script("expected" lineTo script("options")))
+			else ChoiceCompiler(
+				converter { choice ->
+					patternCompiler(
+						converter,
+						partial,
 						definitions,
-						null)
-				}
-				?: tracedError("not" lineTo script("expected" lineTo script("either")))
+						pattern(choice))
+				},
+				definitions,
+				choice())
 
 	fun beginOther(name: String): Processor<Token> =
 		patternCompiler(
