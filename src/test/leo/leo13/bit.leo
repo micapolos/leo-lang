@@ -22,5 +22,3 @@ define
 	gives: given bit switch
 		zero: given xor bit
 		one: given xor bit negate
-
-compiler
