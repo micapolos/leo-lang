@@ -66,7 +66,7 @@ class CompilerTest {
 			.process(token(closing))
 			.process(token(opening("set")))
 			.process(token(opening("color")))
-			.process(token(opening("blue")))
+			.process(token(opening("red")))
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
@@ -76,8 +76,8 @@ class CompilerTest {
 						expression(
 							"circle" lineTo expression(
 								"color" lineTo expression("red")))
-							.plus(set("color" lineTo expression("blue")).op),
-						pattern("circle" lineTo pattern("color" lineTo pattern("blue"))))))
+							.plus(set("color" lineTo expression("red")).op),
+						pattern("circle" lineTo pattern("color" lineTo pattern("red"))))))
 	}
 
 	@Test

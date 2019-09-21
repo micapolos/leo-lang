@@ -264,12 +264,16 @@ fun Compiler.plusSet(lineStack: Stack<CompiledLine>): Compiler =
 	fold(lineStack.reverse) { plusSet(it) }
 
 fun Compiler.plusSet(line: CompiledLine): Compiler =
-	compiled.pattern.setOrNull(line.patternLine)
-		?.let { setPattern ->
-			set(
+	compiled.pattern.getOrNull(line.name)
+		?.let { lineRhsPattern ->
+			if (pattern(line.name lineTo line.rhs.pattern) != lineRhsPattern)
+				tracedError("mismatch" lineTo script(
+					"expected" lineTo script(lineRhsPattern.scriptingLine),
+					"actual" lineTo script(pattern(line.name lineTo line.rhs.pattern).scriptingLine)))
+			else set(
 				compiled(
 					compiled.expression.plus(set(line.expressionLine).op),
-					setPattern))
+					compiled.pattern))
 		}?: tracedError("set" lineTo script())
 
 fun Compiler.plusOther(line: CompiledLine): Compiler =
