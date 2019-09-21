@@ -1,8 +1,14 @@
 package leo13.pattern
 
 import leo.base.ifOrNull
+import leo13.ObjectScripting
+import leo13.script.lineTo
+import leo13.script.script
 
-data class PatternLink(val lhs: Pattern, val item: PatternItem)
+data class PatternLink(val lhs: Pattern, val item: PatternItem) : ObjectScripting() {
+	override fun toString() = super.toString()
+	override val scriptingLine get() = "link" lineTo script(lhs.scriptingLine, item.scriptLine)
+}
 
 infix fun Pattern.linkTo(item: PatternItem) = PatternLink(this, item)
 

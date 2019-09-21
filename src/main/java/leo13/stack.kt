@@ -188,7 +188,7 @@ val <T> Stack<T>.indexed
 val <V> Stack<V>.seq: Seq<V>
 	get() =
 		when (this) {
-			is EmptyStack -> empty.seq()
+			is EmptyStack -> emptySeq()
 			is LinkStack -> link.seqNode.seq
 		}
 

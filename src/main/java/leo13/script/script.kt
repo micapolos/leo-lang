@@ -2,6 +2,7 @@ package leo13.script
 
 import leo.base.*
 import leo13.*
+import leo13.Empty
 import leo13.Stack
 import leo13.token.*
 
@@ -35,7 +36,7 @@ data class ScriptArrow(val lhs: Script, val rhs: Script)
 val Script.isEmpty get() = lineStack.isEmpty
 val Script.unsafeEmpty: Empty
 	get() =
-		if (isEmpty) empty
+		if (isEmpty) leo13.empty
 		else fail("expected" lineTo script("empty"))
 
 val Stack<ScriptLine>.script get() = Script(this)
