@@ -25,13 +25,12 @@ class PatternTest {
 				"plus" lineTo script("one")))
 
 		pattern(
-			choice(
+			options(
 				"zero" lineTo pattern(),
 				"one" lineTo pattern()))
 			.scriptingLine
 			.assertEqualTo("pattern" lineTo script(
-				"either" lineTo script("zero"),
-				"either" lineTo script("one")))
+				"options" lineTo script("zero", "one")))
 	}
 
 	@Test
@@ -50,11 +49,11 @@ class PatternTest {
 					"y" lineTo pattern("one")))
 			.assertEqualTo(true)
 
-		pattern(choice("zero", "one")).contains(pattern("zero")).assertEqualTo(true)
-		pattern(choice("zero", "one")).contains(pattern("one")).assertEqualTo(true)
-		pattern(choice("zero", "one")).contains(pattern("two")).assertEqualTo(false)
+		pattern(options("zero", "one")).contains(pattern("zero")).assertEqualTo(true)
+		pattern(options("zero", "one")).contains(pattern("one")).assertEqualTo(true)
+		pattern(options("zero", "one")).contains(pattern("two")).assertEqualTo(false)
 
-		pattern("bit" lineTo pattern(choice("zero", "one")))
+		pattern("bit" lineTo pattern(options("zero", "one")))
 			.contains(pattern("bit" lineTo pattern("zero")))
 			.assertEqualTo(true)
 	}

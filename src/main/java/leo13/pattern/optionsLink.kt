@@ -4,12 +4,12 @@ import leo13.ObjectScripting
 import leo13.script.lineTo
 import leo13.script.plus
 
-data class ChoiceLink(val lhs: Choice, val line: PatternLine) : ObjectScripting() {
+data class OptionsLink(val lhs: Options, val line: PatternLine) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
 		get() =
-			"choice" lineTo lhs.scriptingLine.rhs.plus("either" lineTo line.scriptingLine.rhs)
+			"link" lineTo lhs.scriptingLine.rhs.plus(line.scriptingLine.rhs)
 
 	fun contains(link: PatternLink) =
 		link.lhs.isEmpty && contains(link.line)
@@ -17,8 +17,8 @@ data class ChoiceLink(val lhs: Choice, val line: PatternLine) : ObjectScripting(
 	fun contains(line: PatternLine): Boolean =
 		this.line.contains(line) || lhs.contains(line)
 
-	fun contains(link: ChoiceLink) =
+	fun contains(link: OptionsLink) =
 		line.contains(link.line) && lhs.contains(link.lhs)
 }
 
-infix fun Choice.linkTo(line: PatternLine) = ChoiceLink(this, line)
+infix fun Options.linkTo(line: PatternLine) = OptionsLink(this, line)

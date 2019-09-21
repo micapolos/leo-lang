@@ -166,18 +166,18 @@ data class Compiler(
 						.let { line ->
 							line
 								.rhs
-								.choiceOrNull
-								?.let { choice ->
+								.optionsOrNull
+								?.let { options ->
 									switchCompiler(
 										converter { plus(it) },
 										context,
-										leo13.pattern.choice().plusReversed(choice),
+										leo13.pattern.options().plusReversed(options),
 										compiled(
 											switch(),
 											compiled.pattern))
 								}
 						}
-						?: tracedError("expected" lineTo script("choice"))
+						?: tracedError("expected" lineTo script("options"))
 				} ?: tracedError("empty" lineTo script())
 
 	val beginPattern: Processor<Token>

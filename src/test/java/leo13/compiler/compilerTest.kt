@@ -4,8 +4,8 @@ import leo.base.assertEqualTo
 import leo13.contentName
 import leo13.expression.*
 import leo13.pattern.arrowTo
-import leo13.pattern.choice
 import leo13.pattern.lineTo
+import leo13.pattern.options
 import leo13.pattern.pattern
 import leo13.token.closing
 import leo13.token.opening
@@ -180,7 +180,7 @@ class CompilerTest {
 					.set(
 						compiled(
 							expression("zero"),
-							pattern(choice("zero", "one")))))
+							pattern(options("zero", "one")))))
 	}
 
 	@Test
@@ -189,7 +189,7 @@ class CompilerTest {
 			.set(
 				compiled(
 					expression(op(value("foo"))),
-					pattern("bit" lineTo pattern(choice("zero", "one")))))
+					pattern("bit" lineTo pattern(options("zero", "one")))))
 			.process(token(opening("switch")))
 			.process(token(opening("zero")))
 			.process(token(opening("foo")))

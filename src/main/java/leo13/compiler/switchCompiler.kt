@@ -2,9 +2,9 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.caseTo
-import leo13.pattern.Choice
-import leo13.pattern.EmptyChoice
-import leo13.pattern.LinkChoice
+import leo13.pattern.EmptyOptions
+import leo13.pattern.LinkOptions
+import leo13.pattern.Options
 import leo13.pattern.pattern
 import leo13.script.lineTo
 import leo13.script.script
@@ -15,7 +15,7 @@ import leo13.token.Token
 data class SwitchCompiler(
 	val converter: Converter<SwitchCompiled, Token>,
 	val context: Context,
-	val remainingChoice: Choice,
+	val remainingOptions: Options,
 	val compiled: SwitchCompiled) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -24,7 +24,7 @@ data class SwitchCompiler(
 			"compiler" lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
-				"remaining" lineTo script(remainingChoice.scriptingLine),
+				"remaining" lineTo script(remainingOptions.scriptingLine),
 				compiled.scriptingLine)
 
 	override fun process(token: Token) =
@@ -34,35 +34,35 @@ data class SwitchCompiler(
 		}
 
 	fun begin(name: String) =
-		when (remainingChoice) {
-			is EmptyChoice -> tracedError("exhausted" lineTo script("switch"))
-			is LinkChoice ->
-				remainingChoice.link.line.name.let { choiceName ->
-					if (choiceName != name)
-						tracedError("expected" lineTo script(choiceName))
+		when (remainingOptions) {
+			is EmptyOptions -> tracedError("exhausted" lineTo script("switch"))
+			is LinkOptions ->
+				remainingOptions.link.line.name.let { optionName ->
+					if (optionName != name)
+						tracedError("expected" lineTo script(optionName))
 					else compiler(
 						converter { rhsCompiled ->
-							plus(compiled(choiceName caseTo rhsCompiled.expression, rhsCompiled.pattern))
-								.copy(remainingChoice = this@SwitchCompiler.remainingChoice.link.lhs)
+							plus(compiled(optionName caseTo rhsCompiled.expression, rhsCompiled.pattern))
+								.copy(remainingOptions = this@SwitchCompiler.remainingOptions.link.lhs)
 						},
-						context.switch(pattern(remainingChoice.link.line)))
+						context.switch(pattern(remainingOptions.link.line)))
 				}
 		}
 
 	val end: Processor<Token>
 		get() =
-			when (remainingChoice) {
-				is EmptyChoice -> converter.convert(compiled)
-				is LinkChoice -> tracedError("expected" lineTo script(remainingChoice.link.line.name))
+			when (remainingOptions) {
+				is EmptyOptions -> converter.convert(compiled)
+				is LinkOptions -> tracedError("expected" lineTo script(remainingOptions.link.line.name))
 			}
 }
 
 fun switchCompiler(
 	converter: Converter<SwitchCompiled, Token> = errorConverter(),
 	context: Context,
-	remainingChoice: Choice,
+	remainingOptions: Options,
 	switch: SwitchCompiled) =
-	SwitchCompiler(converter, context, remainingChoice, switch)
+	SwitchCompiler(converter, context, remainingOptions, switch)
 
 fun SwitchCompiler.plus(case: CaseCompiled) =
 	copy(

@@ -2,8 +2,8 @@ package leo13.compiler
 
 import leo.base.assertEqualTo
 import leo13.errorConverter
-import leo13.pattern.choice
 import leo13.pattern.lineTo
+import leo13.pattern.options
 import leo13.pattern.pattern
 import leo13.token.closing
 import leo13.token.opening
@@ -28,7 +28,7 @@ class PatternCompilerTest {
 				definition(
 					"bit" lineTo pattern(),
 					pattern(
-						choice(
+						options(
 							"zero" lineTo pattern(),
 							"one" lineTo pattern())))))
 
@@ -38,7 +38,7 @@ class PatternCompilerTest {
 			.assertEqualTo(
 				compiler.set(
 					pattern("bit" lineTo pattern(
-						choice(
+						options(
 							"zero" lineTo pattern(),
 							"one" lineTo pattern())))))
 	}
@@ -54,7 +54,7 @@ class PatternCompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				patternCompiler().set(
-					pattern(choice("zero", "one"))))
+					pattern(options("zero", "one"))))
 	}
 
 	@Test
@@ -78,7 +78,7 @@ class PatternCompilerTest {
 			.assertEqualTo(
 				patternCompiler.set(
 					pattern(
-						choice(
+						options(
 							"zero" lineTo pattern("resolved"),
 							"one" lineTo pattern("resolved"),
 							"two" lineTo pattern()))))

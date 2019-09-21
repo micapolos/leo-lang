@@ -5,6 +5,7 @@ import leo13.*
 import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.lineTo
+import leo13.script.script
 
 sealed class Pattern : ObjectScripting() {
 	override fun toString() = scriptingLine.toString()
@@ -13,7 +14,7 @@ sealed class Pattern : ObjectScripting() {
 		get() = "pattern" lineTo
 			when (this) {
 				is EmptyPattern -> empty.scriptingLine.rhs
-				is ChoicePattern -> choice.scriptingLine.rhs
+				is OptionsPattern -> script(options.scriptingLine)
 				is ArrowPattern -> arrow.scriptingLine.rhs
 				is FunctionPattern -> function.scriptingLine.rhs
 				is GivenPattern -> given.scriptLine.rhs
@@ -22,7 +23,7 @@ sealed class Pattern : ObjectScripting() {
 			}
 
 	val isEmpty get() = this is EmptyPattern
-	val choiceOrNull get() = (this as? ChoicePattern)?.choice
+	val optionsOrNull get() = (this as? OptionsPattern)?.options
 	val arrowOrNull get() = (this as? ArrowPattern)?.arrow
 	val functionOrNull get() = (this as? FunctionPattern)?.function
 	val givenOrNull get() = (this as? GivenPattern)?.given
@@ -36,7 +37,7 @@ sealed class Pattern : ObjectScripting() {
 	fun contains(pattern: Pattern, context: PatternContext = patternContext()): Boolean =
 		when (this) {
 			is EmptyPattern -> pattern.isEmpty
-			is ChoicePattern -> choice.contains(pattern)
+			is OptionsPattern -> options.contains(pattern)
 			is ArrowPattern -> pattern is ArrowPattern && arrow.contains(pattern.arrow)
 			is FunctionPattern -> false // TODO: Or maybe we can do something about it?
 			is GivenPattern -> TODO()
@@ -75,17 +76,17 @@ sealed class Pattern : ObjectScripting() {
 			else -> null
 		}
 
-	val beginChoiceOrNull: Choice?
+	val beginOptionsOrNull: Options?
 		get() =
 			when (this) {
-				is EmptyPattern -> choice()
-				is ChoicePattern -> choice
+				is EmptyPattern -> options()
+				is OptionsPattern -> options
 				else -> null
 			}
 }
 
 data class EmptyPattern(val empty: Empty) : Pattern()
-data class ChoicePattern(val choice: Choice) : Pattern()
+data class OptionsPattern(val options: Options) : Pattern()
 data class ArrowPattern(val arrow: PatternArrow) : Pattern()
 data class FunctionPattern(val function: PatternFunction) : Pattern()
 data class GivenPattern(val given: Given) : Pattern()
@@ -94,7 +95,7 @@ data class LinkPattern(val link: PatternLink) : Pattern()
 
 fun pattern() = pattern(empty)
 fun pattern(empty: Empty): Pattern = EmptyPattern(empty)
-fun pattern(choice: Choice): Pattern = ChoicePattern(choice)
+fun pattern(options: Options): Pattern = OptionsPattern(options)
 fun pattern(arrow: PatternArrow): Pattern = ArrowPattern(arrow)
 fun pattern(function: PatternFunction): Pattern = FunctionPattern(function)
 fun pattern(given: Given): Pattern = GivenPattern(given)

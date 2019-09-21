@@ -1,8 +1,8 @@
 package leo13.compiler
 
 import leo.base.assertEqualTo
-import leo13.pattern.choice
 import leo13.pattern.lineTo
+import leo13.pattern.options
 import leo13.pattern.pattern
 import kotlin.test.Test
 
@@ -12,13 +12,13 @@ class PatternDefinitionTest {
 		definition(
 			"bit" lineTo pattern(),
 			pattern(
-				choice(
+				options(
 					"zero" lineTo pattern(),
 					"one" lineTo pattern())))
 			.resolveOrNull("bit" lineTo pattern())
 			.assertEqualTo(
 				"bit" lineTo pattern(
-					choice(
+					options(
 						"zero" lineTo pattern(),
 						"one" lineTo pattern())))
 	}

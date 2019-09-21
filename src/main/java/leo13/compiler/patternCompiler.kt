@@ -40,16 +40,16 @@ data class PatternCompiler(
 	val beginOptions: Processor<Token>
 		get() =
 			if (!pattern.isEmpty) tracedError("not" lineTo script("expected" lineTo script("options")))
-			else ChoiceCompiler(
-				converter { choice ->
+			else OptionsCompiler(
+				converter { options ->
 					patternCompiler(
 						converter,
 						partial,
 						definitions,
-						pattern(choice))
+						pattern(options))
 				},
 				definitions,
-				choice())
+				options())
 
 	fun beginOther(name: String): Processor<Token> =
 		patternCompiler(

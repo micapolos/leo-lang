@@ -3,8 +3,8 @@ package leo13.compiler
 import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.expression.*
-import leo13.pattern.choice
 import leo13.pattern.lineTo
+import leo13.pattern.options
 import leo13.pattern.pattern
 import leo13.token.closing
 import leo13.token.opening
@@ -17,7 +17,7 @@ class SwitchCompilerTest {
 		val switchCompiler = switchCompiler(
 			errorConverter(),
 			context(),
-			choice(
+			options(
 				"square" lineTo pattern("side"),
 				"circle" lineTo pattern("radius")),
 			compiled(switch(), pattern("lhs")))
@@ -31,7 +31,7 @@ class SwitchCompilerTest {
 				switchCompiler(
 					errorConverter(),
 					context(),
-					choice("square" lineTo pattern("side")),
+					options("square" lineTo pattern("side")),
 					compiled(
 						switch("circle" caseTo expression("circled")),
 						pattern("circled"))))
@@ -42,7 +42,7 @@ class SwitchCompilerTest {
 		val switchCompiler = switchCompiler(
 			errorConverter(),
 			context(),
-			choice(
+			options(
 				"square" lineTo pattern("side"),
 				"circle" lineTo pattern("radius")),
 			compiled(switch(), pattern("lhs")))
@@ -56,7 +56,7 @@ class SwitchCompilerTest {
 				switchCompiler(
 					errorConverter(),
 					context(),
-					choice("square" lineTo pattern("side")),
+					options("square" lineTo pattern("side")),
 					compiled(
 						switch("circle" caseTo expression(switched.op)),
 						pattern("switched" lineTo pattern("circle" lineTo pattern("radius"))))))

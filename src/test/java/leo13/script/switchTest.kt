@@ -106,29 +106,4 @@ class SwitchTest {
 		switch("one" caseTo script("jeden"), "two" caseTo script("dwa"), "three" caseTo script("trzy"))
 			.assertScriptableBodyWorks { switch }
 	}
-
-//	@Test
-//	fun choiceMatchOrNull() {
-//		leo13.generic.script.switchOrNull(
-//			"zero" caseTo script("zero"),
-//			"one" caseTo script("one"))!!
-//			.choiceMatchOrNull(
-//				unsafeChoice(
-//					"one" caseTo type("one"),
-//					"zero" caseTo type("zero"))))
-//			.assertEqualTo(
-//				choiceMatch(
-//					match(either("zero", type("zero")), script("zero")),
-//					match(either("one", type("one")), script("one"))))
-//
-//		leo13.generic.script.switchOrNull(
-//			"zero" caseTo script("zero"),
-//			"one" caseTo script("one"))!!
-//			.choiceMatchOrNull(
-//				choiceOrNull(
-//					either("two", type("two")),
-//					either("one", type("one")),
-//					either("zero", type("zero")))!!)
-//			.assertEqualTo(null)
-//	}
 }

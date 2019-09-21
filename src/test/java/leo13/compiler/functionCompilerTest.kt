@@ -5,8 +5,8 @@ import leo13.errorConverter
 import leo13.expression.expression
 import leo13.expression.valueContext
 import leo13.pattern.arrowTo
-import leo13.pattern.choice
 import leo13.pattern.lineTo
+import leo13.pattern.options
 import leo13.pattern.pattern
 import leo13.token.closing
 import leo13.token.opening
@@ -43,6 +43,6 @@ class FunctionCompilerTest {
 						function(
 							valueContext(),
 							expression("foo")),
-						pattern("bit" lineTo pattern(choice("zero", "one"))) arrowTo pattern("foo"))))
+						pattern("bit" lineTo pattern(options("zero", "one"))) arrowTo pattern("foo"))))
 	}
 }
