@@ -10,7 +10,3 @@ define
 
 	bit neguj
 	gives: given bit negate
-
-bit: zero
-neguj
-compiler
