@@ -89,7 +89,7 @@ class CompilerTest {
 				compiler().set(
 					compiled(
 						expression("zero")
-							.plus(bind(expression(given.op)).op),
+							.plus(bind(expression(leo13.given.op)).op),
 						pattern("given" lineTo pattern("zero")))))
 	}
 
@@ -155,7 +155,7 @@ class CompilerTest {
 					.set(context().give(pattern("zero")))
 					.set(
 						compiled(
-							expression(given.op),
+							expression(leo13.given.op),
 							pattern("given" lineTo pattern("zero")))))
 	}
 

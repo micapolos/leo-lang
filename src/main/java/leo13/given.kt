@@ -1,6 +1,5 @@
-package leo13.expression
+package leo13
 
-import leo13.givenName
 import leo13.script.lineTo
 import leo13.script.script
 

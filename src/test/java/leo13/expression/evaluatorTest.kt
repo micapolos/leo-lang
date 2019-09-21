@@ -36,7 +36,7 @@ class EvaluatorTest {
 			.evaluate(
 				expression(
 					op(value("foo" lineTo value())),
-					op(given)))
+					op(leo13.given)))
 			.assertEqualTo(
 				value(
 					"given" lineTo value("zero"),
@@ -62,7 +62,7 @@ class EvaluatorTest {
 					.plus(op(value("zoo")))
 					.plus(op(value("function" lineTo value(item(function(
 						valueContext(),
-						expression(given.op)))))))
+						expression(leo13.given.op)))))))
 					.plus(op(apply(expression(op(value("foo")))))))
 			.assertEqualTo(value("given" lineTo value("foo")))
 	}
@@ -75,10 +75,10 @@ class EvaluatorTest {
 					.plus(op(value("zoo")))
 					.plus(op(value("function" lineTo value(item(function(
 						valueContext(),
-						expression(given.op)))))))
+						expression(leo13.given.op)))))))
 					.plus(op(fix(expression(op(value("foo")))))))
 			.assertEqualTo(value(
-				"given" lineTo value(item(function(valueContext(), expression(given.op)))),
+				"given" lineTo value(item(function(valueContext(), expression(leo13.given.op)))),
 				"given" lineTo value("foo")))
 	}
 
@@ -94,11 +94,11 @@ class EvaluatorTest {
 								function(
 									valueContext(),
 									expression(
-										op(given),
+										op(leo13.given),
 										op(
 											switch(
 												"foo" caseTo expression(
-													op(given),
+													op(leo13.given),
 													op(previous),
 													op(fix(expression(op(switched), op(get("foo")), op(content))))),
 												"bar" caseTo expression("ok"))))))))),

@@ -48,6 +48,7 @@ fun Choice.contains(item: PatternItem): Boolean =
 	when (item) {
 		is ChoicePatternItem -> contains(item.choice)
 		is ArrowPatternItem -> false
+		else -> TODO()
 	}
 
 val Choice.onlyEitherOrNull: Either?
