@@ -2,6 +2,7 @@ package leo13.pattern
 
 import leo13.ObjectScripting
 import leo13.script.lineTo
+import leo13.script.plus
 
 data class ChoiceLink(val lhs: Choice, val line: PatternLine) : ObjectScripting() {
 	override fun toString() = super.toString()

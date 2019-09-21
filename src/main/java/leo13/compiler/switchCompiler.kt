@@ -37,14 +37,16 @@ data class SwitchCompiler(
 		when (remainingChoice) {
 			is EmptyChoice -> tracedError("exhausted" lineTo script("switch"))
 			is LinkChoice ->
-				if (remainingChoice.link.line.name != name)
-					tracedError("expected" lineTo script(remainingChoice.link.line.name))
-				else compiler(
-					converter { rhsCompiled ->
-						plus(compiled(name caseTo rhsCompiled.expression, rhsCompiled.pattern))
-							.copy(remainingChoice = this@SwitchCompiler.remainingChoice.link.lhs)
-					},
-					context.switch(pattern(remainingChoice.link.line)))
+				remainingChoice.link.line.name.let { choiceName ->
+					if (choiceName != name)
+						tracedError("expected" lineTo script(choiceName))
+					else compiler(
+						converter { rhsCompiled ->
+							plus(compiled(choiceName caseTo rhsCompiled.expression, rhsCompiled.pattern))
+								.copy(remainingChoice = this@SwitchCompiler.remainingChoice.link.lhs)
+						},
+						context.switch(pattern(remainingChoice.link.line)))
+				}
 		}
 
 	val end: Processor<Token>

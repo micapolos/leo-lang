@@ -5,6 +5,7 @@ import leo13.ObjectScripting
 import leo13.pattern.Pattern
 import leo13.pattern.PatternLine
 import leo13.script.lineTo
+import leo13.script.plus
 import leo13.script.script
 
 data class PatternDefinition(
@@ -13,9 +14,8 @@ data class PatternDefinition(
 	override fun toString() = super.toString()
 
 	override val scriptingLine
-		get() = "definition" lineTo script(
-			line.scriptingLine,
-			"has" lineTo script(hasPattern.scriptingLine))
+		get() = "definition" lineTo
+			line.scriptingLine.rhs.plus("has" lineTo script(hasPattern.scriptingLine))
 
 	fun hasPatternOrNull(line: PatternLine): Pattern? =
 		notNullIf(this.line == line) {

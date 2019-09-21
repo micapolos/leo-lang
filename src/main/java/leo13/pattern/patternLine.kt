@@ -14,7 +14,7 @@ data class PatternLine(val name: String, val rhs: Pattern) : ObjectScripting() {
 			"line" lineTo script(name lineTo rhs.scriptingLine.rhs)
 
 	fun contains(line: PatternLine) =
-		name == line.name && rhs.contains(rhs)
+		name == line.name && rhs.contains(line.rhs)
 
 	fun rhsOrNull(name: String) =
 		notNullIf(this.name == name) { rhs }
