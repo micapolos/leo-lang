@@ -43,11 +43,17 @@ fun Choice.contains(choice: Choice): Boolean =
 	}
 
 fun Choice.contains(pattern: Pattern): Boolean =
-	when (this) {
-		is EmptyChoice -> false
-		is LinkChoice -> pattern is LinkPattern && link.contains(pattern.link)
+	when (pattern) {
+		is LinkPattern -> contains(pattern.link)
+		is ChoicePattern -> contains(pattern.choice)
+		else -> false
 	}
 
+fun Choice.contains(patternLink: PatternLink): Boolean =
+	when (this) {
+		is EmptyChoice -> false
+		is LinkChoice -> link.contains(patternLink)
+	}
 
 fun Choice.contains(line: PatternLine) =
 	when (this) {

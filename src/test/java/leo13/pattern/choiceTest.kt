@@ -21,4 +21,32 @@ class ChoiceTest {
 					"either" lineTo script("zero" lineTo script("foo")),
 					"either" lineTo script("one" lineTo script("bar"))))
 	}
+
+	@Test
+	fun containsLine() {
+		choice("zero", "one")
+			.contains("zero" lineTo pattern())
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun containsChoice() {
+		choice("zero", "one")
+			.contains(choice("zero", "one"))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun containsLinePattern() {
+		choice("zero", "one")
+			.contains(pattern("zero" lineTo pattern()))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun containsChoicePattern() {
+		choice("zero", "one")
+			.contains(pattern(choice("zero", "one")))
+			.assertEqualTo(true)
+	}
 }

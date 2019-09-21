@@ -8,6 +8,9 @@ define
 		zero: bit: one
 		one: bit: zero
 
+	bit neguj
+	gives: given bit negate
+
 bit: zero
-negate
+neguj
 compiler
