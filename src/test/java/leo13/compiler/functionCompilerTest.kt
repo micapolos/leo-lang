@@ -4,7 +4,10 @@ import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.expression.expression
 import leo13.expression.valueContext
-import leo13.pattern.*
+import leo13.pattern.arrowTo
+import leo13.pattern.choice
+import leo13.pattern.lineTo
+import leo13.pattern.pattern
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -42,6 +45,10 @@ class FunctionCompilerTest {
 						function(
 							valueContext(),
 							expression("foo")),
-						pattern("bit" lineTo pattern(item(choice(either("zero"), either("one"))))) arrowTo pattern("foo"))))
+						pattern("bit" lineTo pattern(
+							choice(
+								"zero" lineTo pattern(),
+								"one" lineTo pattern()))) arrowTo
+							pattern("foo"))))
 	}
 }

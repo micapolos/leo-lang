@@ -3,7 +3,10 @@ package leo13.compiler
 import leo.base.fold
 import leo13.ObjectScripting
 import leo13.expression.*
-import leo13.pattern.*
+import leo13.isEmpty
+import leo13.pattern.Pattern
+import leo13.pattern.lineTo
+import leo13.pattern.pattern
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
@@ -13,7 +16,7 @@ data class Compiled(val expression: Expression, val pattern: Pattern) : ObjectSc
 	override fun toString() = super.toString()
 	override val scriptingLine
 		get() =
-			"compiled" lineTo script(expression.scriptLine, pattern.scriptLine)
+			"compiled" lineTo script(expression.scriptLine, pattern.scriptingLine)
 }
 
 fun compiled(expression: Expression, pattern: Pattern) =
@@ -64,5 +67,8 @@ fun Compiled.plus(compiled: SwitchCompiled) =
 		compiled.pattern)
 
 fun compiled(script: Script): Compiled =
-	compiled(expression(script.value.op), pattern(script))
+	compiled(expression(script.value.op), script.pattern)
 
+val Compiled.isEmpty
+	get() =
+		expression.opStack.isEmpty && pattern.isEmpty

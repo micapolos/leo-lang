@@ -4,7 +4,6 @@ import leo.base.notNullIf
 import leo13.ObjectScripting
 import leo13.pattern.Pattern
 import leo13.pattern.PatternLine
-import leo13.pattern.leafPlusOrNull
 import leo13.script.lineTo
 import leo13.script.script
 

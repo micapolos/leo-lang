@@ -3,12 +3,16 @@ package leo13.compiler
 import leo.base.ifOrNull
 import leo13.*
 import leo13.expression.*
-import leo13.pattern.*
+import leo13.pattern.Pattern
+import leo13.pattern.lineTo
+import leo13.pattern.pattern
+import leo13.pattern.plusReversed
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.value.item
 import leo13.value.value
 
 data class Compiler(
@@ -59,20 +63,24 @@ data class Compiler(
 
 	val beginApply: Processor<Token>
 		get() =
-			compiled.pattern.linkOrNull?.item?.arrowOrNull?.let { arrow ->
-				compiler(
-					converter { parameterCompiled ->
-						if (parameterCompiled.pattern != arrow.lhs) tracedError(
-							"mismatch" lineTo script(
-								"expected" lineTo script(arrow.lhs.scriptingLine),
-								"actual" lineTo script(parameterCompiled.pattern.scriptingLine)))
-						else set(
-							compiled(
-								compiled.expression.plus(apply(parameterCompiled.expression).op),
-								arrow.rhs))
-					},
-					context)
-			} ?: tracedError("not" lineTo script("arrow"))
+			compiled
+				.pattern
+				.arrowOrNull
+				?.let { arrow ->
+					compiler(
+						converter { parameterCompiled ->
+							if (parameterCompiled.pattern != arrow.lhs) tracedError(
+								"mismatch" lineTo script(
+									"expected" lineTo script(arrow.lhs.scriptingLine),
+									"actual" lineTo script(parameterCompiled.pattern.scriptingLine)))
+							else set(
+								compiled(
+									compiled.expression.plus(apply(parameterCompiled.expression).op),
+									arrow.rhs))
+						},
+						context)
+				}
+				?: tracedError("expected" lineTo script("arrow"))
 
 	val beginAs: Processor<Token>
 		get() =
@@ -97,12 +105,14 @@ data class Compiler(
 
 	val beginFunction: Processor<Token>
 		get() =
-			FunctionCompiler(
+			if (!compiled.isEmpty)
+				tracedError<Processor<Token>>("not" lineTo script("expected" lineTo script("function")))
+			else FunctionCompiler(
 				converter { compiledFunction ->
 					set(
 						compiled(
-							compiled.expression.plus(value(leo13.value.item(compiledFunction.function)).op),
-							compiled.pattern.plus(item(compiledFunction.arrow))))
+							expression(op(value(item(compiledFunction.function)))),
+							pattern(compiledFunction.arrow)))
 				},
 				context,
 				pattern(),
@@ -150,26 +160,21 @@ data class Compiler(
 			compiled
 				.pattern
 				.linkOrNull
-				?.let { patternLink0 ->
-					patternLink0
-						.item
-						.lineOrNull?.let { line ->
+				?.let { link ->
+					link
+						.line
+						.let { line ->
 							line
 								.rhs
-								.linkOrNull
-								?.let { patternLink ->
-									patternLink
-										.item
-										.choiceOrNull
-										?.let { choice ->
-											switchCompiler(
-												converter { plus(it) },
-												context,
-												choice.eitherStack.reverse,
-												compiled(
-													switch(),
-													compiled.pattern))
-										}
+								.choiceOrNull
+								?.let { choice ->
+									switchCompiler(
+										converter { plus(it) },
+										context,
+										leo13.pattern.choice().plusReversed(choice),
+										compiled(
+											switch(),
+											compiled.pattern))
 								}
 						}
 						?: tracedError("expected" lineTo script("choice"))

@@ -1,178 +1,112 @@
 package leo13.pattern
 
 import leo.base.fold
-import leo.base.ifOrNull
-import leo.base.notNullOrError
-import leo.base.orNullFold
 import leo13.*
-import leo13.script.*
-import leo13.value.Value
-import leo13.value.value
+import leo13.script.Script
+import leo13.script.ScriptLine
+import leo13.script.lineTo
 
-data class Pattern(val itemStack: Stack<PatternItem>) : ObjectScripting() {
-	override fun toString() = bodyScript.toString()
-	override val scriptingLine get() = scriptLine
+sealed class Pattern : ObjectScripting() {
+	override fun toString() = scriptingLine.toString()
+
+	override val scriptingLine: ScriptLine
+		get() = "pattern" lineTo
+			when (this) {
+				is EmptyPattern -> empty.scriptingLine.rhs
+				is ChoicePattern -> choice.scriptingLine.rhs
+				is ArrowPattern -> arrow.scriptingLine.rhs
+				is FunctionPattern -> function.scriptingLine.rhs
+				is GivenPattern -> given.scriptLine.rhs
+				is ApplyPattern -> apply.scriptingLine.rhs
+				is LinkPattern -> link.scriptingLine.rhs
+			}
+
+	val isEmpty get() = this is EmptyPattern
+	val choiceOrNull get() = (this as? ChoicePattern)?.choice
+	val arrowOrNull get() = (this as? ArrowPattern)?.arrow
+	val functionOrNull get() = (this as? FunctionPattern)?.function
+	val givenOrNull get() = (this as? GivenPattern)?.given
+	val applyOrNull get() = (this as? ApplyPattern)?.apply
+	val linkOrNull get() = (this as? LinkPattern)?.link
+	val lineOrNull get() = linkOrNull?.line
+
+	fun plus(vararg lines: PatternLine): Pattern =
+		fold(lines) { pattern(linkTo(it)) }
+
+	fun contains(pattern: Pattern, context: PatternContext = patternContext()): Boolean =
+		when (this) {
+			is EmptyPattern -> pattern.isEmpty
+			is ChoicePattern -> choice.contains(pattern)
+			is ArrowPattern -> pattern is ArrowPattern && arrow.contains(pattern.arrow)
+			is FunctionPattern -> false // TODO: Or maybe we can do something about it?
+			is GivenPattern -> TODO()
+			is ApplyPattern -> TODO()
+			is LinkPattern -> pattern is LinkPattern && link.contains(pattern.link)
+		}
+
+	fun lineRhsOrNull(name: String): Pattern? =
+		linkOrNull?.lineRhsOrNull(name)
+
+	fun setLineRhsOrNull(line: PatternLine): Pattern? =
+		linkOrNull?.setLineRhsOrNull(line)?.let { pattern(it) }
+
+	fun getOrNull(name: String): Pattern? =
+		linkOrNull?.getOrNull(name)
+
+	fun setOrNull(line: PatternLine): Pattern? =
+		linkOrNull?.setOrNull(line)?.let { pattern(it) }
+
+	val previousOrNull: Pattern?
+		get() =
+			linkOrNull?.lhs
+
+	val contentOrNull: Pattern?
+		get() =
+			linkOrNull?.line?.rhs
+
+	val onlyNameOrNull: String?
+		get() =
+			linkOrNull?.onlyLineOrNull?.onlyNameOrNull
+
+	fun leafPlusOrNull(pattern: Pattern): Pattern? =
+		when (this) {
+			is EmptyPattern -> pattern
+			is LinkPattern -> link.leafPlusOrNull(pattern)?.let { pattern(it) }
+			else -> null
+		}
+
+	val beginChoiceOrNull: Choice?
+		get() =
+			when (this) {
+				is EmptyPattern -> choice()
+				is ChoicePattern -> choice
+				else -> null
+			}
 }
 
-val Stack<PatternItem>.pattern get() = pattern(this)
+data class EmptyPattern(val empty: Empty) : Pattern()
+data class ChoicePattern(val choice: Choice) : Pattern()
+data class ArrowPattern(val arrow: PatternArrow) : Pattern()
+data class FunctionPattern(val function: PatternFunction) : Pattern()
+data class GivenPattern(val given: Given) : Pattern()
+data class ApplyPattern(val apply: PatternApply) : Pattern()
+data class LinkPattern(val link: PatternLink) : Pattern()
 
-fun pattern(itemStack: Stack<PatternItem>) = Pattern(itemStack)
+fun pattern() = pattern(empty)
+fun pattern(empty: Empty): Pattern = EmptyPattern(empty)
+fun pattern(choice: Choice): Pattern = ChoicePattern(choice)
+fun pattern(arrow: PatternArrow): Pattern = ArrowPattern(arrow)
+fun pattern(function: PatternFunction): Pattern = FunctionPattern(function)
+fun pattern(given: Given): Pattern = GivenPattern(given)
+fun pattern(apply: PatternApply): Pattern = ApplyPattern(apply)
+fun pattern(link: PatternLink): Pattern = LinkPattern(link)
 
-fun pattern(vararg items: PatternItem) =
-	pattern(stack(*items))
+fun pattern(line: PatternLine, vararg lines: PatternLine) =
+	pattern(pattern() linkTo line).plus(*lines)
 
-fun pattern(choice: Choice, vararg choices: Choice) =
-	pattern(item(choice)).fold(choices) { plus(it) }
+fun pattern(name: String, vararg names: String) =
+	pattern(name lineTo pattern()).fold(names) { plus(name lineTo pattern()) }
 
-fun pattern(line: PatternLine, vararg lines: PatternLine): Pattern =
-	pattern(item(choice(line))).fold(lines) { plus(it) }
-
-fun pattern(name: String) = pattern(name lineTo pattern())
-
-val Pattern.linkOrNull: PatternLink?
+val Script.pattern
 	get() =
-		itemStack.linkOrNull?.let { link ->
-			link.stack.pattern linkTo link.value
-		}
-
-fun Pattern.plus(item: PatternItem) =
-	pattern(itemStack.push(item))
-
-fun Pattern.plus(choice: Choice) =
-	plus(item(choice))
-
-fun Pattern.plus(line: PatternLine) =
-	plus(choice(line))
-
-val Pattern.isEmpty get() = itemStack.isEmpty
-
-fun Pattern.matches(value: Value): Boolean =
-	when (itemStack) {
-		is EmptyStack -> true
-		is LinkStack -> when (script.lineStack) {
-			is EmptyStack -> false
-			is LinkStack -> itemStack.link.value.matches(value.itemStack.link.value)
-				&& pattern(itemStack.link.stack).matches(Script(script.lineStack.link.stack))
-		}
-	}
-
-fun Pattern.matches(script: Script): Boolean =
-	matches(script.value)
-
-fun Pattern.contains(pattern: Pattern, context: PatternContext = patternContext()): Boolean =
-	zipMapOrNull(itemStack, pattern.itemStack) { item1, item2 ->
-		item1.contains(item2, context)
-	}?.all { this } ?: false
-
-fun Pattern.patternLineOrNull(name: String): PatternLine? =
-	itemStack.mapFirst { choiceOrNull?.onlyEitherOrNull?.patternLineOrNull(name) }
-
-fun Pattern.replaceLineOrNull(line: PatternLine): Pattern? =
-	when (itemStack) {
-		is EmptyStack -> null
-		is LinkStack -> itemStack
-			.link
-			.value
-			.replaceLineOrNull(line)
-			?.let { replaced -> itemStack.link.stack.push(replaced).pattern }
-			?: itemStack
-				.link
-				.stack
-				.pattern
-				.replaceLineOrNull(line)
-				?.plus(itemStack.link.value)
-	}
-
-fun Pattern.getOrNull(name: String): Pattern? =
-	linkOrNull?.let { link ->
-		link
-			.item
-			.choiceOrNull
-			?.onlyEitherOrNull
-			?.rhs
-			?.patternLineOrNull(name)
-			?.let { link.lhs.plus(item(choice(it.either))) }
-	}
-
-fun Pattern.setOrNull(newLine: PatternLine): Pattern? =
-	itemStack
-		.linkOrNull
-		?.let { itemStackLink ->
-			itemStackLink
-				.value
-				.lineOrNull
-				?.let { line ->
-					line
-						.rhs
-						.replaceLineOrNull(newLine)
-						?.let { pattern(itemStackLink.stack.push(item(choice(line.name eitherTo it)))) }
-			}
-		}
-
-fun Pattern.setOrNull(pattern: Pattern): Pattern? =
-	pattern.lineStackOrNull?.let { lineStack ->
-		orNullFold(lineStack.reverse.seq) { setOrNull(it) }
-	}
-
-val Script.unsafeBodyPattern: Pattern
-	get() =
-		lineStack.map { item(unsafeChoice) }.pattern
-
-val Script.unsafePattern: Pattern
-	get() =
-		onlyLineOrNull
-			?.rhsOrNull(patternName)
-			.notNullOrError("pattern")
-			.unsafeBodyPattern
-
-val Pattern.bodyScript: Script
-	get() =
-		itemStack.map { scriptLine }.script
-
-val Pattern.scriptLine: ScriptLine
-	get() =
-		patternName lineTo bodyScript
-
-val Pattern.script: Script
-	get() =
-		script(patternName lineTo bodyScript)
-
-val patternReader get() = reader(patternName) { unsafeBodyPattern }
-val patternWriter get() = writer<Pattern>(patternName) { bodyScript }
-
-val Pattern.lineStackOrNull: Stack<PatternLine>?
-	get() =
-		itemStack.mapOrNull { choiceOrNull?.patternLineOrNull }
-
-val Pattern.previousOrNull: Pattern?
-	get() =
-		itemStack.linkOrNull?.stack?.pattern
-
-val Pattern.contentOrNull: Pattern?
-	get() =
-		linkOrNull?.item?.choiceOrNull?.onlyEitherOrNull?.rhs
-
-val Pattern.staticScriptOrNull: Script?
-	get() =
-		itemStack.mapOrNull { staticScriptLineOrNull }?.script
-
-fun pattern(script: Script): Pattern =
-	pattern(script.lineStack.map { item(choice(patternLine(this))) })
-
-fun Pattern.leafPlusOrNull(pattern: Pattern): Pattern? =
-	linkOrNull.let { link ->
-		if (link != null) link.leafPlusOrNull(pattern)?.pattern
-		else pattern
-	}
-
-val Pattern.onlyNameOrNull: String?
-	get() =
-		linkOrNull?.run {
-			ifOrNull(lhs.isEmpty) {
-				item.lineOrNull?.run {
-					ifOrNull(rhs.isEmpty) {
-						name
-					}
-				}
-			}
-		}
+		pattern().fold(lineStack.reverse) { plus(it.patternLine) }

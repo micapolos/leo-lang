@@ -7,39 +7,18 @@ import kotlin.test.Test
 
 class ChoiceTest {
 	@Test
-	fun writer() {
+	fun scriptingLine() {
+		choice()
+			.scriptingLine
+			.assertEqualTo("choice" lineTo script())
+
 		choice(
-			"zero" eitherTo pattern("foo"),
-			"one" eitherTo pattern("bar"))
-			.scriptLine
+			"zero" lineTo pattern("foo"),
+			"one" lineTo pattern("bar"))
+			.scriptingLine
 			.assertEqualTo(
 				"choice" lineTo script(
-					"either" lineTo script(
-						"zero" lineTo script("foo")),
-					"either" lineTo script(
-						"one" lineTo script("bar"))))
-	}
-
-	@Test
-	fun reader() {
-		("choice" lineTo script())
-			.unsafeChoice
-			.assertEqualTo(choice())
-
-		("zero" lineTo script("foo"))
-			.unsafeChoice
-			.assertEqualTo(choice("zero" eitherTo pattern("foo")))
-
-		("choice" lineTo script(
-			"either" lineTo script(
-						"zero" lineTo script("foo")),
-			"either" lineTo script(
-						"one" lineTo script("bar"))))
-			.unsafeChoice
-			.assertEqualTo(
-				choice(
-					"zero" eitherTo pattern("foo"),
-					"one" eitherTo pattern("bar")))
-
+					"either" lineTo script("zero" lineTo script("foo")),
+					"either" lineTo script("one" lineTo script("bar"))))
 	}
 }

@@ -1,21 +1,39 @@
 package leo13.pattern
 
-import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo13.ObjectScripting
 import leo13.script.lineTo
-import leo13.script.script
+import leo13.script.plus
 
-data class PatternLink(val lhs: Pattern, val item: PatternItem) : ObjectScripting() {
+data class PatternLink(val lhs: Pattern, val line: PatternLine) : ObjectScripting() {
 	override fun toString() = super.toString()
-	override val scriptingLine get() = "link" lineTo script(lhs.scriptingLine, item.scriptLine)
+
+	override val scriptingLine
+		get() =
+			"link" lineTo lhs.scriptingLine.rhs.plus(line.scriptingLine.rhs)
+
+	val pattern get() = lhs.plus(line)
+	val onlyLineOrNull get() = notNullIf(lhs.isEmpty) { line }
+
+	fun contains(link: PatternLink) =
+		line.contains(link.line) && lhs.contains(link.lhs)
+
+	fun lineRhsOrNull(name: String): Pattern? =
+		line.rhsOrNull(name) ?: lhs.lineRhsOrNull(name)
+
+	fun setLineRhsOrNull(line: PatternLine): PatternLink? =
+		line.setRhsOrNull(line)
+			?.let { lhs linkTo it }
+			?: lhs.setLineRhsOrNull(line)?.let { it linkTo line }
+
+	fun leafPlusOrNull(pattern: Pattern): PatternLink? =
+		line.leafPlusOrNull(pattern)?.let { lhs linkTo it }
+
+	fun getOrNull(name: String): Pattern? =
+		line.rhs.lineRhsOrNull(name)?.let { pattern(name lineTo it) }
+
+	fun setOrNull(setLine: PatternLine): PatternLink? =
+		line.rhs.setLineRhsOrNull(setLine)?.let { lhs linkTo (line.name lineTo it) }
 }
 
-infix fun Pattern.linkTo(item: PatternItem) = PatternLink(this, item)
-
-val PatternLink.pattern get() =
-	lhs.plus(item)
-
-fun PatternLink.leafPlusOrNull(pattern: Pattern): PatternLink? =
-	ifOrNull(lhs.isEmpty) {
-		item.leafPlusOrNull(pattern)?.let { lhs linkTo it }
-	}
+infix fun Pattern.linkTo(line: PatternLine) = PatternLink(this, line)

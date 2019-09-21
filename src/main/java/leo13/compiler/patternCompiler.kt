@@ -23,7 +23,7 @@ data class PatternCompiler(
 				converter.scriptingLine,
 				"partial" lineTo script("$partial"),
 				definitions.scriptingLine,
-				pattern.scriptLine)
+				pattern.scriptingLine)
 
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
@@ -41,29 +41,18 @@ data class PatternCompiler(
 	val beginEither: Processor<Token>
 		get() =
 			pattern
-				.linkOrNull
-				?.let { link ->
-					link
-						.item
-						.choiceOrNull
-						?.let { choice ->
-							eitherCompiler(
-								converter { either ->
-									set(link.lhs.plus(choice.plus(either)))
-								},
-								definitions)
-						}
-						?: tracedError("not" lineTo script("expected" lineTo script("either")))
+				.beginChoiceOrNull
+				?.let { choice ->
+					PatternLineCompiler(
+						converter { set(pattern(choice.plus(it))) },
+						definitions,
+						null)
 				}
-				?: eitherCompiler(
-					converter { either ->
-						plus(item(choice(either)))
-					},
-					definitions)
+				?: tracedError("not" lineTo script("expected" lineTo script("either")))
 
 	fun beginOther(name: String): Processor<Token> =
 		patternCompiler(
-			converter { plus(item(choice(name lineTo it))) },
+			converter { plus(name lineTo it) },
 			false,
 			definitions,
 			pattern())
@@ -77,11 +66,6 @@ fun patternCompiler(
 	definitions: PatternDefinitions = patternDefinitions(),
 	pattern: Pattern = pattern()) =
 	PatternCompiler(converter, parent, definitions, pattern)
-
-fun PatternCompiler.plus(item: PatternItem) =
-	item.lineOrNull
-		?.let { plus(it) }
-		?: set(pattern.plus(item))
 
 fun PatternCompiler.plus(line: PatternLine) =
 	set(pattern.plus(definitions.resolve(line)))

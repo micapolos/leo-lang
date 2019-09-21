@@ -1,82 +1,61 @@
 package leo13.pattern
 
-import leo13.*
-import leo13.script.*
-import leo13.value.ValueLine
+import leo.base.fold
+import leo13.Empty
+import leo13.ObjectScripting
+import leo13.empty
+import leo13.script.lineTo
+import leo13.script.script
 
-data class Choice(val eitherStack: Stack<Either>) : ObjectScripting() {
-	override fun toString() = super.toString()
-	override val scriptingLine get() = scriptLine
+sealed class Choice : ObjectScripting() {
+	override fun toString() = scriptingLine.toString()
+
+	override val scriptingLine
+		get() =
+			"choice" lineTo when (this) {
+				is EmptyChoice -> script()
+				is LinkChoice -> link.scriptingLine.rhs
+			}
 }
 
-val Stack<Either>.choice get() = Choice(this)
-fun choice(eitherStack: Stack<Either>) = Choice(eitherStack)
-fun choice(vararg eithers: Either) = choice(stack(*eithers))
-fun Choice.plus(either: Either) = choice(eitherStack.push(either))
-fun choice(line: PatternLine) = choice(line.name eitherTo line.rhs)
+data class EmptyChoice(val empty: Empty) : Choice() {
+	override fun toString() = super.toString()
+}
 
-fun Choice.matches(script: Script): Boolean =
-	script
-		.onlyLineOrNull
-		?.let { matches(it) }
-		?: false
+data class LinkChoice(val link: ChoiceLink) : Choice() {
+	override fun toString() = super.toString()
+}
 
-fun Choice.matches(scriptLine: ScriptLine): Boolean =
-	eitherStack.any { matches(scriptLine) }
+fun choice(empty: Empty): Choice = EmptyChoice(empty)
+fun choice(link: ChoiceLink): Choice = LinkChoice(link)
 
-fun Choice.matches(line: ValueLine): Boolean =
-	eitherStack.any { matches(line) }
+// TODO: Rename to plusOrNull and detect duplicates
+fun Choice.plus(line: PatternLine) = choice(linkTo(line))
 
-fun Choice.contains(line: PatternLine): Boolean =
-	eitherStack.any { contains(line) }
-
-fun Choice.contains(either: Either): Boolean =
-	eitherStack.any { contains(either) }
+fun choice(vararg lines: PatternLine) = choice(empty).fold(lines) { plus(it) }
+fun choice(name: String, vararg names: String) = choice(name lineTo pattern()).fold(names) { plus(it lineTo pattern()) }
 
 fun Choice.contains(choice: Choice): Boolean =
-	choice
-		.onlyEitherOrNull
-		?.let { contains(it) }
-		?: containsAll(choice)
-
-fun Choice.containsAll(choice: Choice): Boolean =
-	zipMapOrNull(eitherStack, choice.eitherStack) { either1, either2 ->
-		either1.contains(either2)
-	}?.all { this } ?: false
-
-fun Choice.contains(item: PatternItem): Boolean =
-	when (item) {
-		is ChoicePatternItem -> contains(item.choice)
-		is ArrowPatternItem -> false
-		else -> TODO()
+	when (this) {
+		is EmptyChoice -> choice is EmptyChoice
+		is LinkChoice -> choice is LinkChoice && link.contains(choice.link)
 	}
 
-val Choice.onlyEitherOrNull: Either?
-	get() =
-		eitherStack.onlyOrNull
+fun Choice.contains(pattern: Pattern): Boolean =
+	when (this) {
+		is EmptyChoice -> false
+		is LinkChoice -> pattern is LinkPattern && link.contains(pattern.link)
+	}
 
-val ScriptLine.unsafeChoice: Choice
-	get() =
-		if (name == choiceName)
-			rhs.lineStack.map { unsafeEither }.choice
-		else choice(unsafeBodyEither)
 
-val Choice.scriptLine: ScriptLine
-	get() =
-		eitherStack
-			.onlyOrNull
-			?.run { bodyScriptLine }
-			?: choiceName lineTo eitherStack.map { scriptLine }.script
+fun Choice.contains(line: PatternLine) =
+	when (this) {
+		is EmptyChoice -> false
+		is LinkChoice -> link.contains(line)
+	}
 
-fun Choice.replaceLineOrNull(line: PatternLine): Choice? =
-	eitherStack
-		.onlyOrNull
-		?.run { replaceLineOrNull(line) }
-		?.run { choice(this) }
-
-val Choice.patternLineOrNull
-	get() =
-		eitherStack.onlyOrNull?.patternLine
-
-fun Choice.leafPlusOrNull(pattern: Pattern): Choice? =
-	onlyEitherOrNull?.leafPlusOrNull(pattern)?.let { choice(it) }
+tailrec fun Choice.plusReversed(choice: Choice): Choice =
+	when (choice) {
+		is EmptyChoice -> this
+		is LinkChoice -> plus(choice.link.line).plusReversed(choice.link.lhs)
+	}

@@ -7,7 +7,6 @@ import leo13.expression.valueContext
 import leo13.pattern.arrowTo
 import leo13.pattern.lineTo
 import leo13.pattern.pattern
-import leo13.pattern.plus
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token

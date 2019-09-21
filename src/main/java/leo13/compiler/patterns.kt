@@ -3,7 +3,6 @@ package leo13.compiler
 import leo.base.notNullIf
 import leo13.*
 import leo13.pattern.Pattern
-import leo13.pattern.contains
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 

@@ -2,7 +2,9 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.valueContext
-import leo13.pattern.*
+import leo13.pattern.Pattern
+import leo13.pattern.arrowTo
+import leo13.pattern.pattern
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.plus
@@ -35,9 +37,8 @@ data class DefineCompiler(
 							?.let { patternLink ->
 								if (!patternLink.lhs.isEmpty) tracedError("expected" lineTo script("line" lineTo script("pattern")))
 								else patternLink
-									.item
-									.lineOrNull
-									?.let { patternLine ->
+									.line
+									.let { patternLine ->
 										patternCompiler(
 											converter { rhsPattern ->
 												pattern

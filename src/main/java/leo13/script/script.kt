@@ -43,6 +43,7 @@ val Stack<ScriptLine>.script get() = Script(this)
 fun Script.plus(line: ScriptLine) = lineStack.push(line).script
 fun Script.plus(script: Script) = fold(script.lineStack.reverse) { plus(it) }
 fun script(vararg lines: ScriptLine) = leo13.stack(*lines).script
+fun script(name: String, vararg names: String) = script(name).fold(names) { plus(it lineTo script()) }
 infix fun String.lineTo(rhs: Script) = ScriptLine(this, rhs)
 val String.scriptLine get() = lineTo(script())
 fun script(name: String) = script(name.scriptLine)

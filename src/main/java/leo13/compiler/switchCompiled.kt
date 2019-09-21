@@ -8,6 +8,7 @@ import leo13.isEmpty
 import leo13.pattern.Pattern
 import leo13.script.lineTo
 import leo13.script.script
+import leo13.tracedError
 
 data class SwitchCompiled(val switch: Switch, val pattern: Pattern) : ObjectScripting() {
 	override fun toString() = super.toString()
@@ -21,6 +22,7 @@ fun compiled(switch: Switch, pattern: Pattern) =
 
 fun SwitchCompiled.plus(compiled: CaseCompiled) =
 	compiled(switch.plus(compiled.case), compiled.pattern).let { compiled ->
-		if (!switch.caseStack.isEmpty) pattern.tracedMatch(compiled.pattern) { compiled }
+		if (!switch.caseStack.isEmpty && pattern != compiled.pattern)
+			tracedError("mismatch" lineTo script("pattern")) // TODO: Better message
 		else compiled
 	}

@@ -12,3 +12,5 @@ data class PatternApply(val lhsPattern: Pattern, val rhsPattern: Pattern) : Obje
 			"lhs" lineTo script(lhsPattern.scriptingLine),
 			"rhs" lineTo script(rhsPattern.scriptingLine))
 }
+
+fun Pattern.apply(rhs: Pattern) = PatternApply(this, rhs)

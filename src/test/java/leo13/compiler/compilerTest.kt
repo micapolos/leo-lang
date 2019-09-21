@@ -3,7 +3,10 @@ package leo13.compiler
 import leo.base.assertEqualTo
 import leo13.contentName
 import leo13.expression.*
-import leo13.pattern.*
+import leo13.pattern.arrowTo
+import leo13.pattern.choice
+import leo13.pattern.lineTo
+import leo13.pattern.pattern
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -179,21 +182,23 @@ class CompilerTest {
 					.set(
 						compiled(
 							expression("zero"),
-							pattern(item(choice(either("zero"), either("one")))))))
+							pattern(choice("zero" lineTo pattern(), "one" lineTo pattern())))))
 	}
 
 	@Test
 	fun processSwitch() {
 		compiler()
-			.process(token(opening("shape")))
-			.process(token(opening("circle")))
-			.process(token(opening("radius")))
-			.process(token(closing))
-			.process(token(closing))
-			.process(token(closing))
+			.set(
+				compiled(
+					expression(op(value("foo"))),
+					pattern("bit" lineTo pattern(choice("zero", "one")))))
 			.process(token(opening("switch")))
-			.process(token(opening("circle")))
-			.process(token(opening("switched")))
+			.process(token(opening("zero")))
+			.process(token(opening("foo")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("one")))
+			.process(token(opening("foo")))
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
@@ -201,9 +206,12 @@ class CompilerTest {
 				compiler()
 					.set(
 						compiled(
-							expression("shape" lineTo expression("circle" lineTo expression("radius")))
-								.plus(switch("circle" caseTo expression(switched.op)).op),
-							pattern("switched" lineTo pattern("circle" lineTo pattern("radius"))))))
+							expression(
+								op(value("foo")),
+								op(switch(
+									"zero" caseTo expression("foo"),
+									"one" caseTo expression("foo")))),
+							pattern("foo"))))
 	}
 
 	@Test
@@ -222,7 +230,7 @@ class CompilerTest {
 					.set(
 						compiled(
 							expression(value(item(function(valueContext(), expression("one")))).op),
-							pattern(item(pattern("zero") arrowTo pattern("one"))))))
+							pattern(pattern("zero") arrowTo pattern("one")))))
 	}
 
 	@Test

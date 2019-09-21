@@ -4,7 +4,6 @@ import leo13.ObjectScripting
 import leo13.pattern.Pattern
 import leo13.pattern.lineTo
 import leo13.pattern.pattern
-import leo13.pattern.plus
 import leo13.script.lineTo
 import leo13.script.script
 

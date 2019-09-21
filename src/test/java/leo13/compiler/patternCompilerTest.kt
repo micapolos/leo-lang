@@ -2,7 +2,9 @@ package leo13.compiler
 
 import leo.base.assertEqualTo
 import leo13.errorConverter
-import leo13.pattern.*
+import leo13.pattern.choice
+import leo13.pattern.lineTo
+import leo13.pattern.pattern
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -19,12 +21,6 @@ class PatternCompilerTest {
 
 	@Test
 	fun resolution() {
-		val bitPattern = pattern(
-			"bit" lineTo pattern(
-				choice(
-					either("zero"),
-					either("one"))))
-
 		val compiler = patternCompiler(
 			errorConverter(),
 			false,
@@ -33,19 +29,18 @@ class PatternCompilerTest {
 					"bit" lineTo pattern(),
 					pattern(
 						choice(
-							either("zero"),
-							either("one"))))))
+							"zero" lineTo pattern(),
+							"one" lineTo pattern())))))
 
 		compiler
 			.process(token(opening("bit")))
 			.process(token(closing))
-			.process(token(opening("and")))
-			.process(token(opening("bit")))
-			.process(token(closing))
-			.process(token(closing))
 			.assertEqualTo(
-				compiler
-					.set(bitPattern.plus("and" lineTo bitPattern)))
+				compiler.set(
+					pattern("bit" lineTo pattern(
+						choice(
+							"zero" lineTo pattern(),
+							"one" lineTo pattern())))))
 	}
 
 	@Test
@@ -61,7 +56,7 @@ class PatternCompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				patternCompiler().set(
-					pattern(item(choice(either("zero"), either("one"))))))
+					pattern(choice("zero" lineTo pattern(), "one" lineTo pattern()))))
 	}
 
 	@Test
@@ -77,7 +72,7 @@ class PatternCompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				patternCompiler().set(
-					pattern(choice(either("zero"))).plus("plus" lineTo pattern("one"))))
+					pattern(choice("zero" lineTo pattern())).plus("plus" lineTo pattern("one"))))
 	}
 
 	@Test
@@ -106,8 +101,8 @@ class PatternCompilerTest {
 				patternCompiler.set(
 					pattern(
 						choice(
-							"zero" eitherTo pattern("resolved"),
-							"one" eitherTo pattern("resolved"),
-							either("two")))))
+							"zero" lineTo pattern("resolved"),
+							"one" lineTo pattern("resolved"),
+							"two" lineTo pattern()))))
 	}
 }

@@ -1,41 +1,33 @@
 package leo13.pattern
 
+import leo.base.notNullIf
 import leo13.ObjectScripting
-import leo13.script.*
+import leo13.script.ScriptLine
+import leo13.script.lineTo
+import leo13.script.script
 
 data class PatternLine(val name: String, val rhs: Pattern) : ObjectScripting() {
 	override fun toString() = super.toString()
-	override val scriptingLine get() = patternLineWriter.scriptLine(this)
+
+	override val scriptingLine
+		get() =
+			"line" lineTo script(name lineTo rhs.scriptingLine.rhs)
+
+	fun contains(line: PatternLine) =
+		name == line.name && rhs.contains(rhs)
+
+	fun rhsOrNull(name: String) =
+		notNullIf(this.name == name) { rhs }
+
+	fun setRhsOrNull(line: PatternLine): PatternLine? =
+		notNullIf(name == line.name) { line }
+
+	fun leafPlusOrNull(pattern: Pattern): PatternLine? =
+		rhs.leafPlusOrNull(pattern)?.let { name lineTo it }
+
+	val onlyNameOrNull: String? get() = notNullIf(rhs.isEmpty) { name }
 }
 
 infix fun String.lineTo(rhs: Pattern) = PatternLine(this, rhs)
 
-fun PatternLine.matches(scriptLine: ScriptLine): Boolean =
-	name == scriptLine.name && rhs.matches(scriptLine.rhs)
-
-fun PatternLine.contains(line: PatternLine) =
-	name == line.name && rhs.contains(rhs)
-
-val patternLineName = "line"
-
-val patternLineReader: Reader<PatternLine> =
-	reader(patternLineName) {
-		unsafeOnlyLine.run {
-			name lineTo patternReader.unsafeBodyValue(rhs)
-		}
-	}
-
-val patternLineWriter: Writer<PatternLine> =
-	writer(patternLineName) {
-		script(name lineTo patternWriter.bodyScript(rhs))
-	}
-
-val PatternLine.staticScriptLineOrNull: ScriptLine?
-	get() =
-		rhs.staticScriptOrNull?.let { name lineTo it }
-
-fun patternLine(scriptLine: ScriptLine) =
-	scriptLine.name lineTo pattern(scriptLine.rhs)
-
-fun PatternLine.leafPlusOrNull(pattern: Pattern): PatternLine? =
-	rhs.leafPlusOrNull(pattern)?.let { name lineTo it }
+val ScriptLine.patternLine: PatternLine get() = name lineTo rhs.pattern
