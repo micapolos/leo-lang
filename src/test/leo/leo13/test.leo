@@ -2,7 +2,7 @@ define
 	bit has: options: zero one
 
 	bit negate
-	gives: given bit switch
+	gives: given bit match
 		zero: bit: one
 		one: bit: zero
 

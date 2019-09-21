@@ -50,8 +50,8 @@ data class Compiler(
 			"content" -> beginContent
 			"previous" -> beginPrevious
 			"set" -> beginSet
-			"switch" -> beginSwitch
-			"switched" -> beginSwitched
+			"match" -> beginMatch
+			"matching" -> beginMatching
 			"pattern" -> beginPattern
 			"compiler" -> beginCompiler
 			else -> beginOther(name)
@@ -124,7 +124,7 @@ data class Compiler(
 				converter { plusGiven(it) },
 				context)
 
-	val beginSwitched: Processor<Token>
+	val beginMatching: Processor<Token>
 		get() =
 			compiler(
 				converter { plusSwitched(it) },
@@ -155,7 +155,7 @@ data class Compiler(
 				converter { plusSet(it) },
 				context)
 
-	val beginSwitch: Processor<Token>
+	val beginMatch: Processor<Token>
 		get() =
 			compiled
 				.pattern

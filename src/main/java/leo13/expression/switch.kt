@@ -6,7 +6,7 @@ import leo13.script.script
 
 data class Switch(val caseStack: Stack<Case>) : ObjectScripting() {
 	override fun toString() = super.toString()
-	override val scriptingLine = switchName lineTo caseStack.scripting.script
+	override val scriptingLine = "match" lineTo caseStack.scripting.script
 }
 
 val Stack<Case>.switch get() = Switch(this)

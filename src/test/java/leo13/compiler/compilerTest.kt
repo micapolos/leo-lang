@@ -184,13 +184,13 @@ class CompilerTest {
 	}
 
 	@Test
-	fun processSwitch() {
+	fun processMatch() {
 		compiler()
 			.set(
 				compiled(
 					expression(op(value("foo"))),
 					pattern("bit" lineTo pattern(options("zero", "one")))))
-			.process(token(opening("switch")))
+			.process(token(opening("match")))
 			.process(token(opening("zero")))
 			.process(token(opening("foo")))
 			.process(token(closing))

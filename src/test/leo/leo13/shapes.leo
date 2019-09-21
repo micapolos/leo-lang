@@ -22,9 +22,9 @@ define
 		times: given rectangle height number
 
 	shape area gives
-		given shape switch
-			circle: switched circle area
-			rectangle: switched rectangle area
+		given shape match
+			circle: matching circle area
+			rectangle: matching rectangle area
 
 shape: circle: radius: number
 area

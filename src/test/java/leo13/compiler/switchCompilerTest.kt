@@ -38,7 +38,7 @@ class SwitchCompilerTest {
 	}
 
 	@Test
-	fun processSwitched() {
+	fun processMatching() {
 		val switchCompiler = switchCompiler(
 			errorConverter(),
 			context(),
@@ -49,7 +49,7 @@ class SwitchCompilerTest {
 
 		switchCompiler
 			.process(token(opening("circle")))
-			.process(token(opening("switched")))
+			.process(token(opening("matching")))
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(

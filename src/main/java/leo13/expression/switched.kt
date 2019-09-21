@@ -6,4 +6,4 @@ import leo13.script.script
 object Switched
 
 val switched = Switched
-val Switched.scriptLine get() = "switched" lineTo script()
+val Switched.scriptLine get() = "matching" lineTo script()
