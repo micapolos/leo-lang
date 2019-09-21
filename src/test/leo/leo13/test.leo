@@ -1,7 +1,5 @@
 define
-	bit has
-		either: zero
-		either: one
+	bit has: options: zero one
 
 	bit negate
 	gives: given bit switch
