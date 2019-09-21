@@ -249,4 +249,24 @@ class CompilerTest {
 							expression("red").plus(wrap("color").op),
 							pattern("color" lineTo pattern("red")))))
 	}
+
+	@Test
+	fun addWord() {
+		compiler()
+			.process(token(opening("bit")))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("negate")))
+			.process(token(closing))
+			.assertEqualTo(compiler()
+				.set(
+					compiled(
+						expression(
+							"bit" lineTo expression("zero"),
+							"negate" lineTo expression()),
+						pattern(
+							"bit" lineTo pattern("zero"),
+							"negate" lineTo pattern()))))
+	}
 }

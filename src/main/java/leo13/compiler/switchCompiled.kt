@@ -23,6 +23,8 @@ fun compiled(switch: Switch, pattern: Pattern) =
 fun SwitchCompiled.plus(compiled: CaseCompiled) =
 	compiled(switch.plus(compiled.case), compiled.pattern).let { compiled ->
 		if (!switch.caseStack.isEmpty && pattern != compiled.pattern)
-			tracedError("mismatch" lineTo script("pattern")) // TODO: Better message
+			tracedError("mismatch" lineTo script(
+				"expected" lineTo script(pattern.scriptingLine),
+				"actual" lineTo script(compiled.pattern.scriptingLine)))
 		else compiled
 	}

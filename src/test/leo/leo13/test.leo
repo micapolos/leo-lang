@@ -1,8 +1,13 @@
-define: bit has
-	either: zero
-	either: one
+define
+	bit has
+		either: zero
+		either: one
+
+	bit negate
+	gives: given bit switch
+		zero: bit: one
+		one: bit: zero
 
 bit: zero
-switch
-	zero: bit: one
-	one: bit: zero
+negate
+compiler

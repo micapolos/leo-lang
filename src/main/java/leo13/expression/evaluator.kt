@@ -50,7 +50,7 @@ fun Evaluator.plus(get: Get): Evaluator =
 	set(evaluated.value.getOrNull(get.name)!!.evaluated)
 
 fun Evaluator.plus(plus: Plus): Evaluator =
-	set(value(context.evaluate(plus.line)).evaluated)
+	set(evaluated.value.plus(context.evaluate(plus.line)).evaluated)
 
 fun Evaluator.plus(set: Set): Evaluator =
 	set(evaluated.value.setOrNull(context.evaluate(set.line))!!.evaluated)
