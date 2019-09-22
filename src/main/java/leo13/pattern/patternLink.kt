@@ -16,6 +16,9 @@ data class PatternLink(val lhs: Pattern, val line: PatternLine) : ObjectScriptin
 	val pattern get() = lhs.plus(line)
 	val onlyLineOrNull get() = notNullIf(lhs.isEmpty) { line }
 
+	fun plus(line: PatternLine) =
+		pattern(node(this)) linkTo line
+
 	fun contains(link: PatternLink) =
 		line.contains(link.line) && lhs.contains(link.lhs)
 

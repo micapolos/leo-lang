@@ -1,5 +1,6 @@
 package leo13.pattern
 
+import leo.base.fold
 import leo13.*
 import leo13.script.Script
 import leo13.script.ScriptLine
@@ -23,6 +24,9 @@ sealed class PatternNode : ObjectScripting() {
 	val arrowOrNull get() = (this as? ArrowPatternNode)?.arrow
 	val linkOrNull get() = (this as? LinkPatternNode)?.link
 	val lineOrNull get() = linkOrNull?.line
+
+	fun plus(line: PatternLine) =
+		node(pattern(this) linkTo line)
 
 	fun contains(pattern: Pattern): Boolean =
 		pattern is NodePattern && contains(pattern.node)
@@ -85,6 +89,9 @@ fun node(empty: Empty): PatternNode = EmptyPatternNode(empty)
 fun node(options: Options): PatternNode = OptionsPatternNode(options)
 fun node(arrow: PatternArrow): PatternNode = ArrowPatternNode(arrow)
 fun node(link: PatternLink): PatternNode = LinkPatternNode(link)
+
+fun node(line: PatternLine, vararg lines: PatternLine) =
+	node(pattern() linkTo line).fold(lines) { plus(it) }
 
 val Script.pattern
 	get() =
