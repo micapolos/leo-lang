@@ -3,4 +3,4 @@ circle
 	center: point
 		x: zero
 		y: one
-center point x
+set: radius: eleven

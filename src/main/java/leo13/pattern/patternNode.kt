@@ -14,15 +14,15 @@ sealed class PatternNode : ObjectScripting() {
 		get() = patternName lineTo
 			when (this) {
 				is EmptyPatternNode -> empty.scriptingLine.rhs
+				is LinkPatternNode -> link.scriptingLine.rhs
 				is OptionsPatternNode -> script(options.scriptingLine)
 				is ArrowPatternNode -> arrow.scriptingLine.rhs
-				is LinkPatternNode -> link.scriptingLine.rhs
 			}
 
 	val isEmpty get() = this is EmptyPatternNode
+	val linkOrNull get() = (this as? LinkPatternNode)?.link
 	val optionsOrNull get() = (this as? OptionsPatternNode)?.options
 	val arrowOrNull get() = (this as? ArrowPatternNode)?.arrow
-	val linkOrNull get() = (this as? LinkPatternNode)?.link
 	val lineOrNull get() = linkOrNull?.line
 
 	fun plus(line: PatternLine) =
@@ -34,9 +34,9 @@ sealed class PatternNode : ObjectScripting() {
 	fun contains(pattern: PatternNode): Boolean =
 		when (this) {
 			is EmptyPatternNode -> pattern.isEmpty
+			is LinkPatternNode -> pattern is LinkPatternNode && link.contains(pattern.link)
 			is OptionsPatternNode -> options.contains(pattern)
 			is ArrowPatternNode -> pattern is ArrowPatternNode && arrow.contains(pattern.arrow)
-			is LinkPatternNode -> pattern is LinkPatternNode && link.contains(pattern.link)
 		}
 
 	fun lineRhsOrNull(name: String): Pattern? =
@@ -80,15 +80,15 @@ sealed class PatternNode : ObjectScripting() {
 }
 
 data class EmptyPatternNode(val empty: Empty) : PatternNode()
+data class LinkPatternNode(val link: PatternLink) : PatternNode()
 data class OptionsPatternNode(val options: Options) : PatternNode()
 data class ArrowPatternNode(val arrow: PatternArrow) : PatternNode()
-data class LinkPatternNode(val link: PatternLink) : PatternNode()
 
 fun patternNode() = node(empty)
 fun node(empty: Empty): PatternNode = EmptyPatternNode(empty)
+fun node(link: PatternLink): PatternNode = LinkPatternNode(link)
 fun node(options: Options): PatternNode = OptionsPatternNode(options)
 fun node(arrow: PatternArrow): PatternNode = ArrowPatternNode(arrow)
-fun node(link: PatternLink): PatternNode = LinkPatternNode(link)
 
 fun node(line: PatternLine, vararg lines: PatternLine) =
 	node(pattern() linkTo line).fold(lines) { plus(it) }

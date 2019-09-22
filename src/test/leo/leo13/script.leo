@@ -5,15 +5,12 @@ define
 	word
 	has: options
 		letter
-		link
-			recursive: word
-			letter
+		link: word letter
 
 	script
 	has: options
 		empty
 		link
-			recursive: script
-			line
-				word
-				recursive: script
+			script
+			line: word script
+compiler

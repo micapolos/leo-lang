@@ -84,4 +84,101 @@ class PatternTraceTest {
 			.getOrNull("z")
 			.assertEqualTo(null)
 	}
+
+	@Test
+	fun linesContains() {
+		val trace = trace(
+			node(
+				"x" lineTo pattern("zero"),
+				"y" lineTo pattern("one")))
+
+		trace
+			.contains(
+				pattern(
+					"x" lineTo pattern("zero"),
+					"y" lineTo pattern("one")))
+			.assertEqualTo(true)
+
+		trace
+			.contains(
+				pattern(
+					"x" lineTo pattern("zero"),
+					"y" lineTo pattern("two")))
+			.assertEqualTo(false)
+
+		trace
+			.contains(
+				pattern(
+					"y" lineTo pattern("one"),
+					"x" lineTo pattern("zero")))
+			.assertEqualTo(false)
+
+		trace
+			.contains(
+				pattern(
+					"x" lineTo pattern("zero"),
+					"y" lineTo pattern("one"),
+					"z" lineTo pattern("two")))
+			.assertEqualTo(false)
+	}
+
+	@Test
+	fun choiceContains() {
+		val trace = trace(node(options("zero", "one")))
+
+		trace
+			.contains(pattern("zero"))
+			.assertEqualTo(true)
+
+		trace
+			.contains(pattern("one"))
+			.assertEqualTo(true)
+
+		trace
+			.contains(pattern("two"))
+			.assertEqualTo(false)
+
+		trace
+			.contains(pattern(trace.node))
+			.assertEqualTo(true)
+	}
+
+	@Test
+	fun recurseContains() {
+		val trace = trace(
+			node(
+				"list" lineTo pattern(
+					options(
+						"empty" lineTo pattern(),
+						"link" lineTo pattern(recurse.recurse).plus("unit" lineTo pattern())))))
+
+		trace
+			.contains(pattern("list" lineTo pattern("empty")))
+			.assertEqualTo(true)
+
+		trace
+			.contains(
+				pattern(
+					"list" lineTo pattern(
+						"link" lineTo pattern(
+							"list" lineTo pattern("empty"),
+							"unit" lineTo pattern()))))
+			.assertEqualTo(true)
+
+		trace
+			.contains(
+				pattern(
+					"list" lineTo pattern(
+						"link" lineTo pattern(
+							"list" lineTo pattern(
+								"link" lineTo pattern(
+									"list" lineTo pattern("empty"),
+									"unit" lineTo pattern())),
+							"unit" lineTo pattern()))))
+			.assertEqualTo(true)
+
+		trace
+			.contains(pattern(trace.node))
+			.assertEqualTo(true)
+	}
 }
