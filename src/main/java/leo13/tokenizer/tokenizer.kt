@@ -136,7 +136,12 @@ val Tokenizer.pushEndOfTransmission: Tokenizer
 	get() =
 		if (!parent.isEmpty) fail("empty")
 		else when (head) {
-			is InputHead -> fail("input")
+			is InputHead ->
+				if (head.input.name.isEmpty())
+					tokenProcessor.process(token(closing)).run {
+						tokenizer() // TODO: We should probably return failing tokenizer
+					}
+				else fail("input")
 			is ColonHead -> fail("colon")
 			is IndentHead -> tokenProcessor.flush(head.indent).process(token(closing)).run {
 				tokenizer() // TODO: We should probably return failing tokenizer
