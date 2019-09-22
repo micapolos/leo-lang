@@ -10,7 +10,7 @@ data class PatternDefinitions(val stack: Stack<PatternDefinition>) : ObjectScrip
 
 	override val scriptingLine
 		get() =
-			"definitions" lineTo stack.scripting.script.emptyIfEmpty
+			definitionsName lineTo stack.scripting.script.emptyIfEmpty
 
 	fun plus(definition: PatternDefinition) =
 		PatternDefinitions(stack.push(definition))

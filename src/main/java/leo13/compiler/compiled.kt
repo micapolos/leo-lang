@@ -2,6 +2,7 @@ package leo13.compiler
 
 import leo.base.fold
 import leo13.ObjectScripting
+import leo13.compiledName
 import leo13.expression.*
 import leo13.isEmpty
 import leo13.pattern.Pattern
@@ -16,7 +17,7 @@ data class Compiled(val expression: Expression, val pattern: Pattern) : ObjectSc
 	override fun toString() = super.toString()
 	override val scriptingLine
 		get() =
-			"compiled" lineTo script(expression.scriptLine, pattern.scriptingLine)
+			compiledName lineTo script(expression.scriptLine, pattern.scriptingLine)
 }
 
 fun compiled(expression: Expression, pattern: Pattern) =

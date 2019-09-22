@@ -12,7 +12,7 @@ import leo13.value.value
 
 data class Functions(val functionStack: Stack<FunctionCompiled>) : ObjectScripting() {
 	override fun toString() = super.toString()
-	override val scriptingLine get() = "functions" lineTo functionStack.scripting.script.emptyIfEmpty
+	override val scriptingLine get() = functionsName lineTo functionStack.scripting.script.emptyIfEmpty
 }
 
 fun functions() = Functions(stack())

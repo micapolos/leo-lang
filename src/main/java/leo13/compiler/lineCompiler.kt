@@ -1,6 +1,7 @@
 package leo13.compiler
 
 import leo13.*
+import leo13.base.stackName
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -16,10 +17,10 @@ data class LineCompiler(
 	Processor<Token> {
 	override val scriptingLine
 		get() =
-			"compiler" lineTo script(
+			compilerName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
-				"stack" lineTo script(compiled.scripting.scriptingLine))
+				stackName lineTo script(compiled.scripting.scriptingLine))
 
 	override fun process(token: Token) =
 		when (token) {

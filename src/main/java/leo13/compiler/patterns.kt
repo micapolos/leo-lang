@@ -8,7 +8,7 @@ import leo13.script.lineTo
 
 data class PatternLines(val stack: Stack<PatternLine>) : ObjectScripting() {
 	override fun toString() = super.toString()
-	override val scriptingLine get() = "patterns" lineTo stack.scripting.script.emptyIfEmpty
+	override val scriptingLine get() = linesName lineTo stack.scripting.script.emptyIfEmpty
 	fun plus(line: PatternLine) = PatternLines(stack.push(line))
 
 	fun resolve(line: CompiledLine): CompiledLine =

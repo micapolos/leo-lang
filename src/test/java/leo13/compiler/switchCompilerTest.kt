@@ -3,6 +3,7 @@ package leo13.compiler
 import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.expression.*
+import leo13.matchingName
 import leo13.pattern.lineTo
 import leo13.pattern.options
 import leo13.pattern.pattern
@@ -49,7 +50,7 @@ class SwitchCompilerTest {
 
 		switchCompiler
 			.process(token(opening("circle")))
-			.process(token(opening("matching")))
+			.process(token(opening(matchingName)))
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
@@ -59,6 +60,6 @@ class SwitchCompilerTest {
 					options("square" lineTo pattern("side")),
 					compiled(
 						switch("circle" caseTo expression(switched.op)),
-						pattern("switched" lineTo pattern("circle" lineTo pattern("radius"))))))
+						pattern(matchingName lineTo pattern("circle" lineTo pattern("radius"))))))
 	}
 }

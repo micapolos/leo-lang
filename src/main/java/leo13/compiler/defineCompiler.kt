@@ -7,7 +7,6 @@ import leo13.pattern.arrowTo
 import leo13.pattern.pattern
 import leo13.script.ScriptLine
 import leo13.script.lineTo
-import leo13.script.plus
 import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
@@ -21,8 +20,8 @@ data class DefineCompiler(
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
-		get() = "compiler" lineTo script(
-			"define" lineTo script(
+		get() = compilerName lineTo script(
+			defineName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
 				pattern.scriptingLine))
@@ -31,11 +30,11 @@ data class DefineCompiler(
 		when (token) {
 			is OpeningToken ->
 				when (token.opening.name) {
-					"has" ->
+					hasName ->
 						pattern
 							.linkOrNull
 							?.let { patternLink ->
-								if (!patternLink.lhs.isEmpty) tracedError("expected" lineTo script("line" lineTo script("pattern")))
+								if (!patternLink.lhs.isEmpty) tracedError(expectedName lineTo script(lineName lineTo script(patternName)))
 								else patternLink
 									.line
 									.let { patternLine ->
@@ -49,15 +48,15 @@ data class DefineCompiler(
 															context.plus(definition(patternLine, rhsPattern)).plus(fullPatternLine),
 															pattern())
 													}
-													?: tracedError("error" lineTo script("has"))
+													?: tracedError(errorName lineTo script(hasName))
 											},
 											false,
 											context.patternDefinitions)
 									}
 							}
-							?: tracedError("expected" lineTo script("pattern"))
-					"gives" ->
-						if (pattern.isEmpty) tracedError("expected" lineTo script("pattern"))
+							?: tracedError(expectedName lineTo script(patternName))
+					givesName ->
+						if (pattern.isEmpty) tracedError(expectedName lineTo script(patternName))
 						else compiler(
 							converter { bodyCompiled ->
 								DefineCompiler(
@@ -84,6 +83,6 @@ data class DefineCompiler(
 				}
 			is ClosingToken ->
 				if (pattern.isEmpty) converter.convert(context)
-				else tracedError("expected" lineTo script("has").plus("or" lineTo script("gives")))
+				else tracedError(expectedName lineTo script(optionsName lineTo script(hasName, givesName)))
 		}
 }

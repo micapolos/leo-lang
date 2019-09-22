@@ -21,10 +21,10 @@ data class SwitchCompiler(
 
 	override val scriptingLine
 		get() =
-			"compiler" lineTo script(
+			compilerName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
-				"remaining" lineTo script(remainingOptions.scriptingLine),
+				remainingName lineTo script(remainingOptions.scriptingLine),
 				compiled.scriptingLine)
 
 	override fun process(token: Token) =
@@ -35,17 +35,17 @@ data class SwitchCompiler(
 
 	fun begin(name: String) =
 		when (remainingOptions) {
-			is EmptyOptions -> tracedError("exhausted" lineTo script("switch"))
+			is EmptyOptions -> tracedError(notName lineTo script(expectedName lineTo script(name)))
 			is LinkOptions ->
 				remainingOptions.link.line.name.let { optionName ->
 					if (optionName != name)
-						tracedError("expected" lineTo script(optionName))
+						tracedError(expectedName lineTo script(optionName))
 					else compiler(
 						converter { rhsCompiled ->
 							plus(compiled(optionName caseTo rhsCompiled.expression, rhsCompiled.pattern))
 								.copy(remainingOptions = this@SwitchCompiler.remainingOptions.link.lhs)
 						},
-						context.switch(pattern(remainingOptions.link.line)))
+						context.match(pattern(remainingOptions.link.line)))
 				}
 		}
 
@@ -53,7 +53,7 @@ data class SwitchCompiler(
 		get() =
 			when (remainingOptions) {
 				is EmptyOptions -> converter.convert(compiled)
-				is LinkOptions -> tracedError("expected" lineTo script(remainingOptions.link.line.name))
+				is LinkOptions -> tracedError(expectedName lineTo script(remainingOptions.link.line.name))
 			}
 }
 

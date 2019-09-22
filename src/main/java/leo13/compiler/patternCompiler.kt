@@ -19,9 +19,9 @@ data class PatternCompiler(
 	override fun toString() = super.toString()
 	override val scriptingLine
 		get() =
-			"compiler" lineTo script(
+			compilerName lineTo script(
 				converter.scriptingLine,
-				"partial" lineTo script("$partial"),
+				partialName lineTo script("$partial"),
 				definitions.scriptingLine,
 				pattern.scriptingLine)
 
@@ -33,13 +33,13 @@ data class PatternCompiler(
 
 	fun begin(name: String): Processor<Token> =
 		when (name) {
-			"options" -> beginOptions
+			optionsName -> beginOptions
 			else -> beginOther(name)
 		}
 
 	val beginOptions: Processor<Token>
 		get() =
-			if (!pattern.isEmpty) tracedError("not" lineTo script("expected" lineTo script("options")))
+			if (!pattern.isEmpty) tracedError(notName lineTo script(expectedName lineTo script(optionsName)))
 			else OptionsCompiler(
 				converter { options ->
 					patternCompiler(

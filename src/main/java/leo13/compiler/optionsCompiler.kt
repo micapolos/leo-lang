@@ -1,9 +1,6 @@
 package leo13.compiler
 
-import leo13.Converter
-import leo13.ObjectScripting
-import leo13.Processor
-import leo13.converter
+import leo13.*
 import leo13.pattern.Options
 import leo13.pattern.lineTo
 import leo13.pattern.plus
@@ -21,7 +18,7 @@ data class OptionsCompiler(
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
-		get() = "compiler" lineTo script(
+		get() = compilerName lineTo script(
 			converter.scriptingLine,
 			definitions.scriptingLine,
 			options.scriptingLine)

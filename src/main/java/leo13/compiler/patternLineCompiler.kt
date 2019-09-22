@@ -17,10 +17,10 @@ data class PatternLineCompiler(
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
-		get() = "converter" lineTo script(
+		get() = compilerName lineTo script(
 			converter.scriptingLine,
 			definitions.scriptingLine,
-			patternLineOrNull?.scriptingLine ?: "line" lineTo script("pattern" lineTo script("null")))
+			patternLineOrNull?.scriptingLine ?: lineName lineTo script(patternName lineTo script(noneName)))
 
 
 	override fun process(token: Token): Processor<Token> =
@@ -35,9 +35,9 @@ data class PatternLineCompiler(
 					},
 					false,
 					definitions)
-				else tracedError("expected" lineTo script("end"))
+				else tracedError(expectedName lineTo script(endName))
 			is ClosingToken ->
 				if (patternLineOrNull != null) converter.convert(patternLineOrNull)
-				else tracedError("expected" lineTo script("pattern", "line"))
+				else tracedError(expectedName lineTo script(patternName, lineName))
 		}
 }

@@ -21,18 +21,18 @@ data class FunctionCompiler(
 
 	override val scriptingLine
 		get() =
-			"compiler" lineTo script(
+			compilerName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
 				parameterPattern.scriptingLine,
-				functionCompiledOrNull?.scriptingLine ?: "compiled" lineTo script("function" lineTo script("none")))
+				functionCompiledOrNull?.scriptingLine ?: compiledName lineTo script(functionName lineTo script(emptyName)))
 
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken ->
-				if (functionCompiledOrNull != null) tracedError("expected" lineTo script("end"))
+				if (functionCompiledOrNull != null) tracedError(expectedName lineTo script(endName))
 				else if (token.opening.name == "gives")
-					if (parameterPattern.isEmpty) tracedError<Processor<Token>>("empty" lineTo script("pattern"))
+					if (parameterPattern.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(patternName))
 					else compiler(
 						converter { bodyCompiled ->
 							FunctionCompiler(
@@ -58,7 +58,7 @@ data class FunctionCompiler(
 					context.patternDefinitions,
 					parameterPattern).process(token)
 			is ClosingToken -> {
-				if (functionCompiledOrNull == null) tracedError("expected" lineTo script("gives"))
+				if (functionCompiledOrNull == null) tracedError(expectedName lineTo script(givesName))
 				else converter.convert(functionCompiledOrNull)
 			}
 		}

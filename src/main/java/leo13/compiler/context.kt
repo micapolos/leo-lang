@@ -1,6 +1,9 @@
 package leo13.compiler
 
 import leo13.ObjectScripting
+import leo13.contextName
+import leo13.givenName
+import leo13.matchingName
 import leo13.pattern.Pattern
 import leo13.pattern.PatternLine
 import leo13.pattern.lineTo
@@ -13,15 +16,15 @@ data class Context(
 	val patternLines: PatternLines,
 	val functions: Functions,
 	val givenPattern: Pattern,
-	val switchedPattern: Pattern) : ObjectScripting() {
+	val matchingPattern: Pattern) : ObjectScripting() {
 	override val scriptingLine
 		get() =
-			"context" lineTo script(
+			contextName lineTo script(
 				patternDefinitions.scriptingLine,
 				patternLines.scriptingLine,
 				functions.scriptingLine,
-				"given" lineTo script(givenPattern.scriptingLine),
-				"switched" lineTo script(switchedPattern.scriptingLine))
+				givenName lineTo script(givenPattern.scriptingLine),
+				matchingName lineTo script(matchingPattern.scriptingLine))
 }
 
 fun context() = Context(patternDefinitions(), patternLines(), functions(), pattern(), pattern())
@@ -36,7 +39,7 @@ fun Context.plus(function: FunctionCompiled) =
 	copy(functions = functions.plus(function))
 
 fun Context.give(pattern: Pattern) =
-	copy(givenPattern = givenPattern.plus("given" lineTo pattern))
+	copy(givenPattern = givenPattern.plus(givenName lineTo pattern))
 
-fun Context.switch(pattern: Pattern) =
-	copy(switchedPattern = switchedPattern.plus("switched" lineTo pattern))
+fun Context.match(pattern: Pattern) =
+	copy(matchingPattern = matchingPattern.plus(matchingName lineTo pattern))
