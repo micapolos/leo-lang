@@ -9,7 +9,9 @@ import kotlin.test.Test
 class EvaluateTest {
 	@Test
 	fun evaluate() {
-		this::class.java.classLoader
+		this::class
+			.java
+			.classLoader
 			.useResourceCharSeq("leo/leo13/point.leo") { charEvaluateScriptLine }
 			.assertEqualTo(
 				okName lineTo script(
