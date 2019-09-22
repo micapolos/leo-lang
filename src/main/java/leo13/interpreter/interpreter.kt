@@ -16,7 +16,7 @@ data class Interpreter(
 
 	override val scriptingLine
 		get() =
-			"interpreter" lineTo script(
+			interpreterName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
 				interpreted.scriptingLine)

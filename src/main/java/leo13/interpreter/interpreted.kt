@@ -1,6 +1,7 @@
 package leo13.interpreter
 
 import leo13.ObjectScripting
+import leo13.interpretedName
 import leo13.pattern.Pattern
 import leo13.pattern.pattern
 import leo13.script.lineTo
@@ -12,7 +13,7 @@ import leo13.value.value
 data class Interpreted(val value: Value, val pattern: Pattern) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine
-		get() = "interpreted" lineTo script(
+		get() = interpretedName lineTo script(
 			value.scriptLine, pattern.scriptingLine)
 }
 
