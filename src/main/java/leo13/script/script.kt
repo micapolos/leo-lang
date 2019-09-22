@@ -161,7 +161,7 @@ val Script.isNames: Boolean
 
 val ScriptLink.isNames
 	get() =
-		lhs.isNames && line.isName
+		(lhs.isEmpty || lhs.isNames) && line.isName
 
 val Script.isSingleLine: Boolean
 	get() =
@@ -200,10 +200,14 @@ fun Appendable.append(scriptLink: ScriptLink, indent: Indent): Appendable =
 	this
 		.append(scriptLink.lhs, indent)
 		.run {
-			scriptLink.lhs.linkOrNull?.let { lhsLink ->
-				if (lhsLink.line.rhs.isEmpty) append(' ').append(scriptLink.line, indent)
-				else append('\n').append(indent).append(scriptLink.line, indent)
-			} ?: append(scriptLink.line, indent)
+			scriptLink
+				.lhs
+				.linkOrNull
+				?.let { lhsLink ->
+					if (lhsLink.isNames && scriptLink.line.isName) append(' ').append(scriptLink.line, indent)
+					else append('\n').append(indent).append(scriptLink.line, indent)
+				}
+				?: append(scriptLink.line, indent)
 		}
 
 fun Appendable.append(line: ScriptLine, indent: Indent): Appendable =
@@ -213,9 +217,10 @@ fun Appendable.appendRhs(script: Script, indent: Indent): Appendable =
 	script
 		.linkOrNull
 		?.let { link ->
-			if (link.lhs.isEmpty || link.lhs.isName) append(": ").append(script, indent)
+			if (link.lhs.isEmpty || link.isNames) append(": ").append(script, indent)
 			else append('\n').append(indent.inc).append(script, indent.inc)
-		}?:this
+		}
+		?: this
 
 // --- token seq
 

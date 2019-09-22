@@ -30,6 +30,27 @@ class PatternTraceTest {
 	}
 
 	@Test
+	fun plusLine() {
+		trace(node("zero" lineTo pattern()))
+			.plus("one" lineTo pattern())
+			.assertEqualTo(
+				trace(
+					node(
+						"zero" lineTo pattern(),
+						"one" lineTo pattern())))
+	}
+
+	@Test
+	fun previousOrNull() {
+		trace(
+			node(
+				"zero" lineTo pattern(),
+				"one" lineTo pattern()))
+			.previousOrNull
+			.assertEqualTo(trace(node("zero" lineTo pattern())))
+	}
+
+	@Test
 	fun contentOrNull() {
 		val contentNode =
 			node(

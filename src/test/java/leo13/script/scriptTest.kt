@@ -33,7 +33,7 @@ class ScriptTest {
 
 		script("one" lineTo script(), "two" lineTo script("three" lineTo script()))
 			.indentedCode
-			.assertEqualTo("one two: three")
+			.assertEqualTo("one\ntwo: three")
 
 		script("one" lineTo script("two" lineTo script(), "three" lineTo script()))
 			.indentedCode
@@ -41,7 +41,7 @@ class ScriptTest {
 
 		script("one" lineTo script("two" lineTo script(), "plus" lineTo script("three" lineTo script())))
 			.indentedCode
-			.assertEqualTo("one: two plus: three")
+			.assertEqualTo("one\n\ttwo\n\tplus: three")
 
 		script("x" lineTo script("one" lineTo script()), "y" lineTo script("two" lineTo script()))
 			.indentedCode
@@ -57,7 +57,7 @@ class ScriptTest {
 			"two" lineTo script(),
 			"gives" lineTo script("dwa"))
 			.indentedCode
-			.assertEqualTo("one gives: jeden\ntwo gives: dwa")
+			.assertEqualTo("one\ngives: jeden\ntwo\ngives: dwa")
 
 		script(
 			"center" lineTo script(
