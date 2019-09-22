@@ -44,9 +44,12 @@ fun Options.contains(options: Options): Boolean =
 	}
 
 fun Options.contains(pattern: Pattern): Boolean =
+	pattern is NodePattern && contains(pattern.node)
+
+fun Options.contains(pattern: PatternNode): Boolean =
 	when (pattern) {
-		is LinkPattern -> contains(pattern.link)
-		is OptionsPattern -> contains(pattern.options)
+		is LinkPatternNode -> contains(pattern.link)
+		is OptionsPatternNode -> contains(pattern.options)
 		else -> false
 	}
 

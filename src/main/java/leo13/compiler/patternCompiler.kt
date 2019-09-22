@@ -46,7 +46,7 @@ data class PatternCompiler(
 						converter,
 						partial,
 						definitions,
-						pattern(options))
+						pattern(node(options)))
 				},
 				definitions,
 				options())

@@ -4,6 +4,7 @@ import leo13.*
 import leo13.expression.valueContext
 import leo13.pattern.Pattern
 import leo13.pattern.arrowTo
+import leo13.pattern.nodeOrNull
 import leo13.pattern.pattern
 import leo13.script.ScriptLine
 import leo13.script.lineTo
@@ -32,7 +33,8 @@ data class DefineCompiler(
 				when (token.opening.name) {
 					hasName ->
 						pattern
-							.linkOrNull
+							.nodeOrNull
+							?.linkOrNull
 							?.let { patternLink ->
 								if (!patternLink.lhs.isEmpty) tracedError(expectedName lineTo script(lineName lineTo script(patternName)))
 								else patternLink

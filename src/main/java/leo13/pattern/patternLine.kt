@@ -32,3 +32,5 @@ data class PatternLine(val name: String, val rhs: Pattern) : ObjectScripting() {
 infix fun String.lineTo(rhs: Pattern) = PatternLine(this, rhs)
 
 val ScriptLine.patternLine: PatternLine get() = name lineTo rhs.pattern
+
+val String.patternLine: PatternLine get() = lineTo(pattern())

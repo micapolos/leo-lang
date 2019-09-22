@@ -2,7 +2,10 @@ package leo13.compiler
 
 import leo.base.orIfNull
 import leo13.ObjectScripting
-import leo13.pattern.*
+import leo13.pattern.NodePattern
+import leo13.pattern.Pattern
+import leo13.pattern.Recurse
+import leo13.pattern.RecursePattern
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.plus
@@ -18,23 +21,15 @@ data class TypeContext(val lhsOrNull: TypeContext?, val pattern: Pattern) : Obje
 
 	fun plus(pattern: Pattern) = TypeContext(this, pattern)
 
-	fun resolveOrNull(type: Type): TypeContext? =
-		when (type) {
-			is PatternType -> plus(pattern)
-			is RecurseType -> resolveOrNull(type.traced)
-		}
-
-	fun resolveOrNull(traced: Recurse): TypeContext? =
-		if (traced.lhsOrNull == null) this
-		else lhsOrNull?.resolveOrNull(traced.lhsOrNull)
-
-	fun contains(otherPattern: Pattern): Boolean =
+	fun resolveOrNull(pattern: Pattern): TypeContext? =
 		when (pattern) {
-			is EmptyPattern -> otherPattern.isEmpty
-			is OptionsPattern -> pattern.options.contains(otherPattern)
-			is ArrowPattern -> otherPattern is ArrowPattern && pattern.arrow.contains(otherPattern.arrow)
-			is LinkPattern -> otherPattern is LinkPattern && pattern.link.contains(otherPattern.link)
+			is NodePattern -> plus(this.pattern)
+			is RecursePattern -> resolveOrNull(pattern.recurse)
 		}
+
+	fun resolveOrNull(recurse: Recurse): TypeContext? =
+		if (recurse.lhsOrNull == null) this
+		else lhsOrNull?.resolveOrNull(recurse.lhsOrNull)
 }
 
 val Pattern.trace get() = TypeContext(null, this)

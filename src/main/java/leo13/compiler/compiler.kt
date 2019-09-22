@@ -3,10 +3,7 @@ package leo13.compiler
 import leo.base.ifOrNull
 import leo13.*
 import leo13.expression.*
-import leo13.pattern.Pattern
-import leo13.pattern.lineTo
-import leo13.pattern.pattern
-import leo13.pattern.plusReversed
+import leo13.pattern.*
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -65,7 +62,8 @@ data class Compiler(
 		get() =
 			compiled
 				.pattern
-				.arrowOrNull
+				.nodeOrNull
+				?.arrowOrNull
 				?.let { arrow ->
 					compiler(
 						converter { parameterCompiled ->
@@ -112,7 +110,7 @@ data class Compiler(
 					set(
 						compiled(
 							expression(op(value(item(compiledFunction.function)))),
-							pattern(compiledFunction.arrow)))
+							pattern(node(compiledFunction.arrow))))
 				},
 				context,
 				pattern(),
@@ -159,19 +157,21 @@ data class Compiler(
 		get() =
 			compiled
 				.pattern
-				.linkOrNull
+				.nodeOrNull
+				?.linkOrNull
 				?.let { link ->
 					link
 						.line
 						.let { line ->
 							line
 								.rhs
-								.optionsOrNull
+								.nodeOrNull
+								?.optionsOrNull
 								?.let { options ->
 									switchCompiler(
 										converter { plus(it) },
 										context,
-										leo13.pattern.options().plusReversed(options),
+										options().plusReversed(options),
 										compiled(
 											switch(),
 											compiled.pattern))
