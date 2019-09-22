@@ -1,22 +1,24 @@
 package leo13.atom
 
 import leo13.ObjectScripting
+import leo13.atomName
+import leo13.emptyName
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 
 sealed class Atom : ObjectScripting() {
-	override val scriptingLine get() = "atom" lineTo script(scriptingAtomLine)
+	override val scriptingLine get() = atomName lineTo script(scriptingAtomLine)
 	abstract val scriptingAtomLine: ScriptLine
 }
 
 object EmptyAtom : Atom() {
-	override val scriptingAtomLine get() = "empty" lineTo script()
+	override val scriptingAtomLine get() = emptyName lineTo script()
 }
 
-data class PairAtom(val pair: AtomPair) : Atom() {
+data class PairAtom(val arrow: AtomArrow) : Atom() {
 	override fun toString() = super.toString()
-	override val scriptingAtomLine get() = pair.scriptingLine
+	override val scriptingAtomLine get() = arrow.scriptingLine
 }
 
 data class FunctionAtom(val function: Function) : Atom() {
@@ -25,7 +27,7 @@ data class FunctionAtom(val function: Function) : Atom() {
 }
 
 val emptyAtom: Atom = EmptyAtom
-fun atom(pair: AtomPair): Atom = PairAtom(pair)
+fun atom(arrow: AtomArrow): Atom = PairAtom(arrow)
 fun atom(function: Function): Atom = FunctionAtom(function)
 
 tailrec fun Atom.evaluate(expression: Expression, given: Atom): Atom {

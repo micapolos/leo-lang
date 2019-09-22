@@ -1,7 +1,6 @@
 package leo13.compiler
 
 import leo13.*
-import leo13.base.stackName
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -20,7 +19,7 @@ data class LineCompiler(
 			compilerName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
-				stackName lineTo script(compiled.scripting.scriptingLine))
+				listName lineTo script(compiled.scripting.scriptingLine))
 
 	override fun process(token: Token) =
 		when (token) {

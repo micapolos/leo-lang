@@ -1,6 +1,8 @@
 package leo13.base
 
 import leo13.Scriptable
+import leo13.errorName
+import leo13.metaName
 import leo13.script.Script
 import leo13.script.script
 
@@ -8,15 +10,15 @@ sealed class Result<out V : Scriptable> : Scriptable {
 	override val scriptableName
 		get() = when (this) {
 			is OkResult ->
-				if (value.scriptableName == "error") "meta"
+				if (value.scriptableName == errorName) metaName
 				else value.scriptableName
-			is ErrorResult -> "error"
+			is ErrorResult -> errorName
 		}
 
 	override val scriptableBody
 		get() = when (this) {
 			is OkResult ->
-				if (value.scriptableName == "error") script(value.scriptableLine)
+				if (value.scriptableName == errorName) script(value.scriptableLine)
 				else value.scriptableBody
 			is ErrorResult -> script
 		}

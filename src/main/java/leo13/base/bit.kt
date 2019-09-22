@@ -1,24 +1,25 @@
 package leo13.base
 
+import leo13.bitName
 import leo13.fail
+import leo13.oneName
 import leo13.script.*
 import leo13.script.Writer
-
-val bitName = "bit"
+import leo13.zeroName
 
 val bitReader: Reader<Bit> =
 	reader(bitName) {
 		when (unsafeOnlyLine.unsafeOnlyName) {
-			"zero" -> zeroBit
-			"one" -> oneBit
-			else -> fail("bit")
+			zeroName -> zeroBit
+			oneName -> oneBit
+			else -> fail(bitName)
 		}
 	}
 
 val bitWriter: Writer<Bit> =
 	writer(bitName) {
-		if (isOne) script("one")
-		else script("zero")
+		if (isOne) script(oneName)
+		else script(zeroName)
 	}
 
 data class Bit(val isOne: Boolean) {

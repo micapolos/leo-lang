@@ -1,13 +1,15 @@
 package leo13.atom
 
 import leo13.ObjectScripting
+import leo13.arrowName
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.plus
 import leo13.script.script
+import leo13.toName
 
-data class AtomPair(val lhs: Atom, val rhs: Atom) : ObjectScripting() {
+data class AtomArrow(val lhs: Atom, val rhs: Atom) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine: ScriptLine
-		get() = "pair" lineTo script(lhs.scriptingAtomLine).plus("to" lineTo script(rhs.scriptingAtomLine))
+		get() = arrowName lineTo script(lhs.scriptingAtomLine).plus(toName lineTo script(rhs.scriptingAtomLine))
 }

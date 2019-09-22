@@ -1,9 +1,8 @@
 package leo13.base
 
+import leo13.byteName
 import leo13.script.*
 import leo13.script.Writer
-
-val byteName = "byte"
 
 val byteReader: Reader<Byte> =
 	reader(
