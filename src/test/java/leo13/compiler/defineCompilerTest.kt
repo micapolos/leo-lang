@@ -31,7 +31,7 @@ class DefineCompilerTest {
 					errorConverter(),
 					context()
 						.plus(definition("bit" lineTo pattern(), pattern("one")))
-						.plus(pattern("bit" lineTo pattern("one"))),
+						.plus("bit" lineTo pattern("one")),
 					pattern()))
 	}
 

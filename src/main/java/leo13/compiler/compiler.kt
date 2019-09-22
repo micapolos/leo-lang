@@ -214,7 +214,7 @@ fun Compiler.set(context: Context) =
 	copy(context = context)
 
 fun Compiler.set(compiled: Compiled) =
-	copy(compiled = context.functions.resolve(context.patterns.resolve(compiled)))
+	copy(compiled = context.functions.resolve(compiled))
 
 fun Compiler.plus(line: CompiledLine): Compiler =
 	plusOther(line)
@@ -292,4 +292,4 @@ fun Compiler.plusCompiler(rhs: Compiled): Compiler =
 	else set(compiled(script(scriptingLine)))
 
 fun Compiler.append(line: CompiledLine): Compiler =
-	set(compiled.plus(line))
+	set(compiled.plus(context.patternLines.resolve(line)))

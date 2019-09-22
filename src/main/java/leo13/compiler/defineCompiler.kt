@@ -41,12 +41,12 @@ data class DefineCompiler(
 									.let { patternLine ->
 										patternCompiler(
 											converter { rhsPattern ->
-												pattern
+												patternLine
 													.leafPlusOrNull(rhsPattern)
-													?.let { fullPattern ->
+													?.let { fullPatternLine ->
 														DefineCompiler(
 															converter,
-															context.plus(definition(patternLine, rhsPattern)).plus(fullPattern),
+															context.plus(definition(patternLine, rhsPattern)).plus(fullPatternLine),
 															pattern())
 													}
 													?: tracedError("error" lineTo script("has"))

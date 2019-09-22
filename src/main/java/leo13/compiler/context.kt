@@ -2,6 +2,7 @@ package leo13.compiler
 
 import leo13.ObjectScripting
 import leo13.pattern.Pattern
+import leo13.pattern.PatternLine
 import leo13.pattern.lineTo
 import leo13.pattern.pattern
 import leo13.script.lineTo
@@ -9,7 +10,7 @@ import leo13.script.script
 
 data class Context(
 	val patternDefinitions: PatternDefinitions,
-	val patterns: Patterns,
+	val patternLines: PatternLines,
 	val functions: Functions,
 	val givenPattern: Pattern,
 	val switchedPattern: Pattern) : ObjectScripting() {
@@ -17,19 +18,19 @@ data class Context(
 		get() =
 			"context" lineTo script(
 				patternDefinitions.scriptingLine,
-				patterns.scriptingLine,
+				patternLines.scriptingLine,
 				functions.scriptingLine,
 				"given" lineTo script(givenPattern.scriptingLine),
 				"switched" lineTo script(switchedPattern.scriptingLine))
 }
 
-fun context() = Context(patternDefinitions(), patterns(), functions(), pattern(), pattern())
+fun context() = Context(patternDefinitions(), patternLines(), functions(), pattern(), pattern())
 
 fun Context.plus(definition: PatternDefinition) =
 	copy(patternDefinitions = patternDefinitions.plus(definition))
 
-fun Context.plus(pattern: Pattern) =
-	copy(patterns = patterns.plus(pattern))
+fun Context.plus(line: PatternLine) =
+	copy(patternLines = patternLines.plus(line))
 
 fun Context.plus(function: FunctionCompiled) =
 	copy(functions = functions.plus(function))

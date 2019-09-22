@@ -20,3 +20,6 @@ define
 	gives: given bit match
 		zero: given xor bit
 		one: given xor bit negate
+
+circle: bit: zero
+set: bit: one

@@ -2,22 +2,22 @@ package leo13.compiler
 
 import leo.base.notNullIf
 import leo13.*
-import leo13.pattern.Pattern
+import leo13.pattern.PatternLine
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 
-data class Patterns(val stack: Stack<Pattern>) : ObjectScripting() {
+data class PatternLines(val stack: Stack<PatternLine>) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine get() = "patterns" lineTo stack.scripting.script.emptyIfEmpty
-	fun plus(pattern: Pattern) = Patterns(stack.push(pattern))
+	fun plus(line: PatternLine) = PatternLines(stack.push(line))
 
-	fun resolve(compiled: Compiled): Compiled =
+	fun resolve(line: CompiledLine): CompiledLine =
 		stack.mapFirst {
-			notNullIf(contains(compiled.pattern)) {
-				compiled(compiled.expression, this)
+			notNullIf(contains(line.patternLine)) {
+				line.name lineTo compiled(line.rhs.expression, rhs)
 			}
-		} ?: compiled
+		} ?: line
 }
 
-fun patterns() = Patterns(stack())
+fun patternLines() = PatternLines(stack())
 
