@@ -6,13 +6,12 @@ import leo13.Empty
 import leo13.Stack
 import leo13.token.*
 
-val scriptName = "script"
 val scriptReader: Reader<Script> = reader(scriptName) { this }
 val scriptWriter: Writer<Script> = writer(scriptName) { this }
 
 data class Script(val lineStack: Stack<ScriptLine>) : LeoObject() {
 	override fun toString() = indentedCode
-	override val scriptableName get() = "script"
+	override val scriptableName get() = scriptName
 	override val scriptableBody get() = this
 }
 

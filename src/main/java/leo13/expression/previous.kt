@@ -3,7 +3,7 @@ package leo13.expression
 import leo13.previousName
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.script.scriptName
+import leo13.scriptName
 
 object Previous
 
