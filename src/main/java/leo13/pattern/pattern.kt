@@ -16,32 +16,23 @@ sealed class Pattern : ObjectScripting() {
 				is EmptyPattern -> empty.scriptingLine.rhs
 				is OptionsPattern -> script(options.scriptingLine)
 				is ArrowPattern -> arrow.scriptingLine.rhs
-				is FunctionPattern -> function.scriptingLine.rhs
-				is GivenPattern -> given.scriptLine.rhs
-				is ApplyPattern -> apply.scriptingLine.rhs
 				is LinkPattern -> link.scriptingLine.rhs
 			}
 
 	val isEmpty get() = this is EmptyPattern
 	val optionsOrNull get() = (this as? OptionsPattern)?.options
 	val arrowOrNull get() = (this as? ArrowPattern)?.arrow
-	val functionOrNull get() = (this as? FunctionPattern)?.function
-	val givenOrNull get() = (this as? GivenPattern)?.given
-	val applyOrNull get() = (this as? ApplyPattern)?.apply
 	val linkOrNull get() = (this as? LinkPattern)?.link
 	val lineOrNull get() = linkOrNull?.line
 
 	fun plus(vararg lines: PatternLine): Pattern =
 		fold(lines) { pattern(linkTo(it)) }
 
-	fun contains(pattern: Pattern, context: PatternContext = patternContext()): Boolean =
+	fun contains(pattern: Pattern): Boolean =
 		when (this) {
 			is EmptyPattern -> pattern.isEmpty
 			is OptionsPattern -> options.contains(pattern)
 			is ArrowPattern -> pattern is ArrowPattern && arrow.contains(pattern.arrow)
-			is FunctionPattern -> false // TODO: Or maybe we can do something about it?
-			is GivenPattern -> TODO()
-			is ApplyPattern -> TODO()
 			is LinkPattern -> pattern is LinkPattern && link.contains(pattern.link)
 		}
 
@@ -88,18 +79,12 @@ sealed class Pattern : ObjectScripting() {
 data class EmptyPattern(val empty: Empty) : Pattern()
 data class OptionsPattern(val options: Options) : Pattern()
 data class ArrowPattern(val arrow: PatternArrow) : Pattern()
-data class FunctionPattern(val function: PatternFunction) : Pattern()
-data class GivenPattern(val given: Given) : Pattern()
-data class ApplyPattern(val apply: PatternApply) : Pattern()
 data class LinkPattern(val link: PatternLink) : Pattern()
 
 fun pattern() = pattern(empty)
 fun pattern(empty: Empty): Pattern = EmptyPattern(empty)
 fun pattern(options: Options): Pattern = OptionsPattern(options)
 fun pattern(arrow: PatternArrow): Pattern = ArrowPattern(arrow)
-fun pattern(function: PatternFunction): Pattern = FunctionPattern(function)
-fun pattern(given: Given): Pattern = GivenPattern(given)
-fun pattern(apply: PatternApply): Pattern = ApplyPattern(apply)
 fun pattern(link: PatternLink): Pattern = LinkPattern(link)
 
 fun pattern(line: PatternLine, vararg lines: PatternLine) =
