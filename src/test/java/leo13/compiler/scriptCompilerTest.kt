@@ -43,11 +43,11 @@ class ScriptCompilerTest {
 		ScriptCompiler(
 			errorConverter(),
 			script())
-			.process(token(opening("point")))
+			.process(token(opening("x")))
 			.process(token(opening("zero")))
 			.process(token(closing))
 			.process(token(closing))
-			.process(token(opening("point")))
+			.process(token(opening("y")))
 			.process(token(opening("one")))
 			.process(token(closing))
 			.process(token(closing))
@@ -55,7 +55,7 @@ class ScriptCompilerTest {
 				ScriptCompiler(
 					errorConverter(),
 					script(
-						"point" lineTo script("zero"),
-						"point" lineTo script("one"))))
+						"x" lineTo script("zero"),
+						"y" lineTo script("one"))))
 	}
 }
