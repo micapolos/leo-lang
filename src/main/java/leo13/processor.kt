@@ -1,5 +1,6 @@
 package leo13
 
+import leo.base.Seq
 import leo.base.fold
 import leo13.script.ScriptLine
 import leo13.script.emptyIfEmpty
@@ -21,6 +22,9 @@ fun Processor<Char>.charProcess(string: String): Processor<Char> =
 
 fun <V> Processor<V>.processAll(stack: Stack<V>): Processor<V> =
 	fold(stack.reverse) { process(it) }
+
+fun <V> Processor<V>.process(seq: Seq<V>): Processor<V> =
+	fold(seq) { process(it) }
 
 fun <A : Scripting> processorStack(fn: Processor<A>.() -> Unit): Stack<A> {
 	val capturingProcessor = CapturingProcessor<A>(stack())

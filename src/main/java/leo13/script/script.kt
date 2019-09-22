@@ -156,6 +156,14 @@ val Script.isName: Boolean
 	get() =
 		onlyLineOrNull?.isName ?: false
 
+val Script.isNames: Boolean
+	get() =
+		linkOrNull?.isNames ?: false
+
+val ScriptLink.isNames
+	get() =
+		lhs.isNames && line.isName
+
 val Script.isSingleLine: Boolean
 	get() =
 		linkOrNull?.isSingleLine ?: true
