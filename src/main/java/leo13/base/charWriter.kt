@@ -1,11 +1,11 @@
 package leo13.base
 
 import leo.base.fold
-import leo13.script.CharLeo
-import leo13.script.leo
+import leo13.Character
+import leo13.character
 
-fun Writer<CharLeo>.write(char: Char): Writer<CharLeo> =
-	write(leo(char))
+fun Writer<Character>.write(char: Char): Writer<Character> =
+	write(character(char))
 
-fun Writer<CharLeo>.write(string: String): Writer<CharLeo> =
+fun Writer<Character>.write(string: String): Writer<Character> =
 	fold(string) { write(it) }
