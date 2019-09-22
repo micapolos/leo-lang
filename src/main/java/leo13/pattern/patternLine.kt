@@ -2,6 +2,7 @@ package leo13.pattern
 
 import leo.base.notNullIf
 import leo13.ObjectScripting
+import leo13.lineName
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -11,7 +12,7 @@ data class PatternLine(val name: String, val rhs: Pattern) : ObjectScripting() {
 
 	override val scriptingLine
 		get() =
-			"line" lineTo script(name lineTo rhs.scriptingLine.rhs)
+			lineName lineTo script(name lineTo rhs.scriptingLine.rhs)
 
 	fun contains(line: PatternLine) =
 		name == line.name && rhs.contains(line.rhs)

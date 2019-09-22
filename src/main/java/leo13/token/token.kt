@@ -5,10 +5,11 @@ import leo13.Scripting
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
+import leo13.tokenName
 
 sealed class Token : LeoObject(), Scripting {
 	override fun toString() = scriptableLine.toString()
-	override val scriptableName get() = "token"
+	override val scriptableName get() = tokenName
 	override val scriptableBody get() = script(tokenScriptableLine)
 	abstract val tokenScriptableName: String
 	abstract val tokenScriptableBody: Script

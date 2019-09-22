@@ -11,7 +11,7 @@ sealed class Pattern : ObjectScripting() {
 	override fun toString() = scriptingLine.toString()
 
 	override val scriptingLine: ScriptLine
-		get() = "pattern" lineTo
+		get() = patternName lineTo
 			when (this) {
 				is EmptyPattern -> empty.scriptingLine.rhs
 				is OptionsPattern -> script(options.scriptingLine)

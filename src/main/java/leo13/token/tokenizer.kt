@@ -12,17 +12,17 @@ data class Tokenizer(
 	val charStack: Stack<Char>,
 	val errorOrNull: CharError?) : LeoObject() {
 	override fun toString() = super.toString()
-	override val scriptableName get() = "tokenizer"
+	override val scriptableName get() = tokenizerName
 	override val scriptableBody
 		get() = leo13.script.script(
-			tokenStack.asScriptLine("tokens") { scriptableLine },
-			charStack.asScriptLine("chars") { "char" lineTo leo13.script.script(toString() lineTo leo13.script.script()) },
-			errorOrNull.orNullAsScriptLine("error"))
+			tokenStack.asScriptLine(tokensName) { scriptableLine },
+			charStack.asScriptLine(charactersName) { characterName lineTo leo13.script.script(toString() lineTo leo13.script.script()) },
+			errorOrNull.orNullAsScriptLine(errorName))
 }
 
 data class CharError(val char: Char) : LeoObject() {
 	override fun toString() = super.toString()
-	override val scriptableName get() = "error"
+	override val scriptableName get() = errorName
 	override val scriptableBody get() = leo13.script.script(char.toString() lineTo leo13.script.script()) // TODO: Escape!!!
 }
 

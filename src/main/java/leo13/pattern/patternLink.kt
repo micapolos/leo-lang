@@ -2,6 +2,7 @@ package leo13.pattern
 
 import leo.base.notNullIf
 import leo13.ObjectScripting
+import leo13.linkName
 import leo13.script.lineTo
 import leo13.script.plus
 
@@ -10,7 +11,7 @@ data class PatternLink(val lhs: Pattern, val line: PatternLine) : ObjectScriptin
 
 	override val scriptingLine
 		get() =
-			"link" lineTo lhs.scriptingLine.rhs.plus(line.scriptingLine.rhs)
+			linkName lineTo lhs.scriptingLine.rhs.plus(line.scriptingLine.rhs)
 
 	val pattern get() = lhs.plus(line)
 	val onlyLineOrNull get() = notNullIf(lhs.isEmpty) { line }

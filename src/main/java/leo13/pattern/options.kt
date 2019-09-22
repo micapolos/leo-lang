@@ -4,6 +4,7 @@ import leo.base.fold
 import leo13.Empty
 import leo13.ObjectScripting
 import leo13.empty
+import leo13.optionsName
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -13,7 +14,7 @@ sealed class Options : ObjectScripting() {
 
 	override val scriptingLine: ScriptLine
 		get() =
-			"options" lineTo when (this) {
+			optionsName lineTo when (this) {
 				is EmptyOptions -> script()
 				is LinkOptions -> link.scriptingLine.rhs
 			}

@@ -1,6 +1,7 @@
 package leo13.pattern
 
 import leo13.ObjectScripting
+import leo13.linkName
 import leo13.script.lineTo
 import leo13.script.plus
 
@@ -9,7 +10,7 @@ data class OptionsLink(val lhs: Options, val line: PatternLine) : ObjectScriptin
 
 	override val scriptingLine
 		get() =
-			"link" lineTo lhs.scriptingLine.rhs.plus(line.scriptingLine.rhs)
+			linkName lineTo lhs.scriptingLine.rhs.plus(line.scriptingLine.rhs)
 
 	fun contains(link: PatternLink) =
 		link.lhs.isEmpty && contains(link.line)
