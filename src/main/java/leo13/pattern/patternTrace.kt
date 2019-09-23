@@ -122,7 +122,7 @@ data class PatternTrace(val lhsOrNull: PatternTrace?, val node: PatternNode) : O
 	fun expand(pattern: Pattern): PatternTrace =
 		when (pattern) {
 			is NodePattern -> plus(pattern.node)
-			is RecursePattern -> plus(recurse).let { trace ->
+			is RecursePattern -> plus(onceRecurse).let { trace ->
 				if (trace.lhsOrNull == null) duplicate
 				else trace
 			}

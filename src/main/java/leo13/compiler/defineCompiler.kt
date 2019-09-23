@@ -2,10 +2,7 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.valueContext
-import leo13.pattern.Pattern
-import leo13.pattern.arrowTo
-import leo13.pattern.nodeOrNull
-import leo13.pattern.pattern
+import leo13.pattern.*
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -53,7 +50,9 @@ data class DefineCompiler(
 													?: tracedError(errorName lineTo script(hasName))
 											},
 											false,
-											context.patternDefinitions)
+											context.patternDefinitions,
+											definition(patternLine, onceRecurse), // TODO: Calculate "recurse" from patternLine!!!
+											pattern())
 									}
 							}
 							?: tracedError(expectedName lineTo script(patternName))
@@ -81,6 +80,7 @@ data class DefineCompiler(
 						},
 						true,
 						context.patternDefinitions,
+						null,
 						pattern).process(token)
 				}
 			is ClosingToken ->

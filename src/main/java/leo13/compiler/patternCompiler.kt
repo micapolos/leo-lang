@@ -12,6 +12,7 @@ data class PatternCompiler(
 	val converter: Converter<Pattern, Token>,
 	val partial: Boolean,
 	val definitions: PatternDefinitions,
+	val recurseDefinitionOrNull: RecurseDefinition?,
 	val pattern: Pattern
 ) :
 	ObjectScripting(),
@@ -23,6 +24,7 @@ data class PatternCompiler(
 				converter.scriptingLine,
 				partialName lineTo script("$partial"),
 				definitions.scriptingLine,
+				recurseDefinitionOrNull?.scriptingLine ?: definitionName lineTo script(recurseName lineTo script(noneName)),
 				pattern.scriptingLine)
 
 	override fun process(token: Token): Processor<Token> =
@@ -46,6 +48,7 @@ data class PatternCompiler(
 						converter,
 						partial,
 						definitions,
+						recurseDefinitionOrNull?.recurseIncrease,
 						pattern(node(options)))
 				},
 				definitions,
@@ -56,6 +59,7 @@ data class PatternCompiler(
 			converter { plus(name lineTo it) },
 			false,
 			definitions,
+			recurseDefinitionOrNull?.recurseIncrease,
 			pattern())
 
 	val end: Processor<Token> get() = converter.convert(pattern)
@@ -65,12 +69,13 @@ fun patternCompiler(
 	converter: Converter<Pattern, Token> = errorConverter(),
 	parent: Boolean = false,
 	definitions: PatternDefinitions = patternDefinitions(),
+	recurseDefinitionOrNull: RecurseDefinition? = null,
 	pattern: Pattern = pattern()) =
-	PatternCompiler(converter, parent, definitions, pattern)
+	PatternCompiler(converter, parent, definitions, recurseDefinitionOrNull, pattern)
 
 fun PatternCompiler.plus(line: PatternLine) =
 	set(pattern.plus(definitions.resolve(line)))
 
 fun PatternCompiler.set(newPattern: Pattern) =
 	if (partial) converter.convert(newPattern)
-	else PatternCompiler(converter, partial, definitions, newPattern)
+	else PatternCompiler(converter, partial, definitions, recurseDefinitionOrNull, newPattern)

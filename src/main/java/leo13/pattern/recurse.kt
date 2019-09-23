@@ -13,5 +13,5 @@ data class Recurse(val lhsOrNull: Recurse?) : ObjectScripting() {
 		get() = recurseName lineTo lhsOrNull?.scriptingLine?.let { script(it) }.orIfNull { script() }
 }
 
-val recurse = Recurse(null)
-val Recurse?.recurse get() = Recurse(this)
+val onceRecurse = Recurse(null)
+val Recurse?.increase get() = Recurse(this)
