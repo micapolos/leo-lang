@@ -121,4 +121,62 @@ class PatternTest {
 							"zero" lineTo pattern(
 								"one" lineTo pattern(recurse.recurse))))))
 	}
+
+	@Test
+	fun recurseContains() {
+		pattern().recurseContains(pattern()).assertEqualTo(true)
+
+		pattern("zero").recurseContains(pattern("zero")).assertEqualTo(true)
+		pattern("zero").recurseContains(pattern("one")).assertEqualTo(false)
+
+		pattern(
+			"x" lineTo pattern("zero"),
+			"y" lineTo pattern("one"))
+			.recurseContains(
+				pattern(
+					"x" lineTo pattern("zero"),
+					"y" lineTo pattern("one")))
+			.assertEqualTo(true)
+
+		pattern(options("zero", "one")).recurseContains(pattern("zero")).assertEqualTo(true)
+		pattern(options("zero", "one")).recurseContains(pattern("one")).assertEqualTo(true)
+		pattern(options("zero", "one")).recurseContains(pattern("two")).assertEqualTo(false)
+
+		pattern("bit" lineTo pattern(options("zero", "one")))
+			.recurseContains(pattern("bit" lineTo pattern("zero")))
+			.assertEqualTo(true)
+
+		pattern("zero" lineTo pattern(recurse))
+			.recurseContains(pattern("zero" lineTo pattern(recurse)))
+			.assertEqualTo(true)
+
+		pattern("zero" lineTo pattern(recurse))
+			.recurseContains(
+				pattern(
+					"zero" lineTo pattern(
+						"zero" lineTo pattern(recurse))))
+			.assertEqualTo(true)
+
+		pattern("zero" lineTo pattern(recurse))
+			.recurseContains(
+				pattern(
+					"zero" lineTo pattern(
+						"zero" lineTo pattern(
+							"zero" lineTo pattern(recurse)))))
+			.assertEqualTo(true)
+
+		pattern("zero" lineTo pattern("one" lineTo pattern(recurse.recurse)))
+			.recurseContains(pattern("zero" lineTo pattern("one" lineTo pattern(recurse.recurse))))
+			.assertEqualTo(true)
+
+		pattern("zero" lineTo pattern("one" lineTo pattern(recurse.recurse)))
+			.recurseContains(
+				pattern(
+					"zero" lineTo pattern(
+						"one" lineTo pattern(
+							"zero" lineTo pattern(
+								"one" lineTo pattern(
+									recurse.recurse))))))
+			.assertEqualTo(true)
+	}
 }

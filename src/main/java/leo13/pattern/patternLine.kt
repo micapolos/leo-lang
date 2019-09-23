@@ -30,6 +30,9 @@ data class PatternLine(val name: String, val rhs: Pattern) : ObjectScripting() {
 
 	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): PatternLine =
 		name lineTo rhs.recurseExpand(rootRecurse.recurse, rootNode)
+
+	fun recurseContains(line: PatternLine, trace: PatternTrace): Boolean =
+		name == line.name && rhs.recurseContains(line.rhs, trace)
 }
 
 infix fun String.lineTo(rhs: Pattern) = PatternLine(this, rhs)

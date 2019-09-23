@@ -24,6 +24,29 @@ sealed class Options : ObjectScripting() {
 			is EmptyOptions -> this
 			is LinkOptions -> options(link.recurseExpand(rootRecurse, rootNode))
 		}
+
+	fun recurseContains(options: Options, trace: PatternTrace): Boolean =
+		when (this) {
+			is EmptyOptions -> options is EmptyOptions
+			is LinkOptions -> options is LinkOptions && link.recurseContains(options.link, trace)
+		}
+
+	fun recurseContains(line: PatternLine, trace: PatternTrace): Boolean =
+		when (this) {
+			is EmptyOptions -> false
+			is LinkOptions -> link.recurseContains(line, trace)
+		}
+
+	fun recurseContains(link: PatternLink, trace: PatternTrace): Boolean =
+		link.lhs.isEmpty && recurseContains(link.line, trace)
+
+	fun recurseContains(node: PatternNode, trace: PatternTrace): Boolean =
+		when (node) {
+			is EmptyPatternNode -> false
+			is LinkPatternNode -> recurseContains(node.link, trace)
+			is OptionsPatternNode -> recurseContains(node.options, trace)
+			is ArrowPatternNode -> false
+		}
 }
 
 data class EmptyOptions(val empty: Empty) : Options() {

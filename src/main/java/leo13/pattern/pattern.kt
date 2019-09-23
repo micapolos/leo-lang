@@ -71,9 +71,23 @@ sealed class Pattern : ObjectScripting() {
 	val recurseExpand: Pattern
 		get() =
 			when (this) {
-				is RecursePattern -> error("recurse")
 				is NodePattern -> pattern(node.recurseExpand(null, node))
+				is RecursePattern -> error("recurse")
 			}
+
+	fun recurseContains(pattern: Pattern, trace: PatternTrace? = null): Boolean =
+		when (this) {
+			is NodePattern ->
+				when (pattern) {
+					is NodePattern -> node.recurseContains(pattern.node, trace.plus(node))
+					is RecursePattern -> false
+				}
+			is RecursePattern ->
+				when (pattern) {
+					is NodePattern -> trace.plus(recurse).let { it.node.recurseContains(pattern.node, it) }
+					is RecursePattern -> recurse == pattern.recurse
+				}
+		}
 }
 
 data class NodePattern(val node: PatternNode) : Pattern() {

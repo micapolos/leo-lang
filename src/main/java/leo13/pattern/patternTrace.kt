@@ -1,5 +1,6 @@
 package leo13.pattern
 
+import leo.base.notNullOrError
 import leo.base.updateIfNotNull
 import leo13.Empty
 import leo13.ObjectScripting
@@ -136,3 +137,9 @@ data class PatternTrace(val lhsOrNull: PatternTrace?, val node: PatternNode) : O
 }
 
 fun trace(node: PatternNode) = PatternTrace(null, node)
+
+fun PatternTrace?.plus(node: PatternNode) =
+	this?.plus(node) ?: trace(node)
+
+fun PatternTrace?.plus(recurse: Recurse): PatternTrace =
+	notNullOrError("recurse").plus(recurse)
