@@ -58,10 +58,31 @@ sealed class Pattern : ObjectScripting() {
 
 	fun leafPlusOrNull(pattern: Pattern): Pattern? =
 		nodeOrNull?.leafPlusOrNull(pattern)
+
+	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): Pattern =
+		when (this) {
+			is RecursePattern ->
+				if (recurse == rootRecurse) pattern(rootNode)
+				else this
+			is NodePattern ->
+				pattern(node.recurseExpand(rootRecurse, rootNode))
+		}
+
+	val recurseExpand: Pattern
+		get() =
+			when (this) {
+				is RecursePattern -> error("recurse")
+				is NodePattern -> pattern(node.recurseExpand(null, node))
+			}
 }
 
-data class NodePattern(val node: PatternNode) : Pattern()
-data class RecursePattern(val recurse: Recurse) : Pattern()
+data class NodePattern(val node: PatternNode) : Pattern() {
+	override fun toString() = super.toString()
+}
+
+data class RecursePattern(val recurse: Recurse) : Pattern() {
+	override fun toString() = super.toString()
+}
 
 val Pattern.nodeOrNull get() = (this as? NodePattern)?.node
 val Pattern.recurseOrNull get() = (this as? RecursePattern)?.recurse

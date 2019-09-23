@@ -27,6 +27,9 @@ data class PatternLine(val name: String, val rhs: Pattern) : ObjectScripting() {
 		rhs.leafPlusOrNull(pattern)?.let { name lineTo it }
 
 	val onlyNameOrNull: String? get() = notNullIf(rhs.isEmpty) { name }
+
+	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): PatternLine =
+		name lineTo rhs.recurseExpand(rootRecurse.recurse, rootNode)
 }
 
 infix fun String.lineTo(rhs: Pattern) = PatternLine(this, rhs)

@@ -38,6 +38,9 @@ data class PatternLink(val lhs: Pattern, val line: PatternLine) : ObjectScriptin
 
 	fun setOrNull(setLine: PatternLine): PatternLink? =
 		line.rhs.setLineRhsOrNull(setLine)?.let { lhs linkTo (line.name lineTo it) }
+
+	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): PatternLink =
+		lhs.recurseExpand(rootRecurse, rootNode) linkTo line.recurseExpand(rootRecurse, rootNode)
 }
 
 infix fun Pattern.linkTo(line: PatternLine) = PatternLink(this, line)

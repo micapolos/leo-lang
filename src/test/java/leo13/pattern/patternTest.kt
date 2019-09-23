@@ -4,6 +4,7 @@ import leo.base.assertEqualTo
 import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class PatternTest {
 	@Test
@@ -56,5 +57,50 @@ class PatternTest {
 		pattern("bit" lineTo pattern(options("zero", "one")))
 			.contains(pattern("bit" lineTo pattern("zero")))
 			.assertEqualTo(true)
+	}
+
+	@Test
+	fun recurseExpand() {
+		assertFails { pattern(recurse).recurseExpand }
+
+		pattern()
+			.recurseExpand
+			.assertEqualTo(pattern())
+
+		pattern("foo")
+			.recurseExpand
+			.assertEqualTo(pattern("foo"))
+
+		pattern(
+			"x" lineTo pattern("zero"),
+			"y" lineTo pattern("one"))
+			.recurseExpand
+			.assertEqualTo(
+				pattern(
+					"x" lineTo pattern("zero"),
+					"y" lineTo pattern("one")))
+
+		pattern("zero" lineTo pattern(recurse))
+			.recurseExpand
+			.assertEqualTo(
+				pattern(
+					"zero" lineTo pattern(
+						"zero" lineTo pattern(recurse))))
+
+		pattern("zero" lineTo pattern("one" lineTo pattern(recurse)))
+			.recurseExpand
+			.assertEqualTo(
+				pattern(
+					"zero" lineTo pattern(
+						"one" lineTo pattern(recurse))))
+
+		pattern("zero" lineTo pattern("one" lineTo pattern(recurse.recurse)))
+			.recurseExpand
+			.assertEqualTo(
+				pattern(
+					"zero" lineTo pattern(
+						"one" lineTo pattern(
+							"zero" lineTo pattern(
+								"one" lineTo pattern(recurse.recurse))))))
 	}
 }

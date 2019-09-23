@@ -18,6 +18,12 @@ sealed class Options : ObjectScripting() {
 				is EmptyOptions -> script()
 				is LinkOptions -> link.scriptingLine.rhs
 			}
+
+	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): Options =
+		when (this) {
+			is EmptyOptions -> this
+			is LinkOptions -> options(link.recurseExpand(rootRecurse, rootNode))
+		}
 }
 
 data class EmptyOptions(val empty: Empty) : Options() {

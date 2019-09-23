@@ -2,6 +2,7 @@ package leo13.pattern
 
 import leo.base.assertEqualTo
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class PatternTraceTest {
 	@Test
@@ -10,10 +11,10 @@ class PatternTraceTest {
 		val trace1 = trace0.plus(node("one" lineTo pattern()))
 		val trace2 = trace1.plus(node("two" lineTo pattern()))
 
-		trace2.plusOrNull(recurse).assertEqualTo(trace2)
-		trace2.plusOrNull(recurse.recurse).assertEqualTo(trace1)
-		trace2.plusOrNull(recurse.recurse.recurse).assertEqualTo(trace0)
-		trace2.plusOrNull(recurse.recurse.recurse.recurse).assertEqualTo(null)
+		trace2.plus(recurse).assertEqualTo(trace2)
+		trace2.plus(recurse.recurse).assertEqualTo(trace1)
+		trace2.plus(recurse.recurse.recurse).assertEqualTo(trace0)
+		assertFails { trace2.plus(recurse.recurse.recurse.recurse) }
 	}
 
 	@Test
@@ -21,11 +22,11 @@ class PatternTraceTest {
 		val trace = trace(node("zero" lineTo pattern()))
 
 		trace
-			.plusOrNull(pattern(node("one" lineTo pattern())))
+			.plus(pattern(node("one" lineTo pattern())))
 			.assertEqualTo(trace.plus(node("one" lineTo pattern())))
 
 		trace
-			.plusOrNull(pattern(recurse))
+			.plus(pattern(recurse))
 			.assertEqualTo(trace)
 	}
 

@@ -77,6 +77,14 @@ sealed class PatternNode : ObjectScripting() {
 				is OptionsPatternNode -> options
 				else -> null
 			}
+
+	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): PatternNode =
+		when (this) {
+			is EmptyPatternNode -> this
+			is LinkPatternNode -> node(link.recurseExpand(rootRecurse, rootNode))
+			is OptionsPatternNode -> node(options.recurseExpand(rootRecurse, rootNode))
+			is ArrowPatternNode -> this
+		}
 }
 
 data class EmptyPatternNode(val empty: Empty) : PatternNode()

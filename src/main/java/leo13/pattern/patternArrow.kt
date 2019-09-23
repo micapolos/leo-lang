@@ -10,6 +10,7 @@ import leo13.toName
 
 data class PatternArrow(val lhs: Pattern, val rhs: Pattern) : ObjectScripting() {
 	override fun toString() = super.toString()
+
 	override val scriptingLine: ScriptLine
 		get() = arrowName lineTo
 			lhs.scriptingLine.rhs.plus(toName lineTo rhs.scriptingLine.rhs)
