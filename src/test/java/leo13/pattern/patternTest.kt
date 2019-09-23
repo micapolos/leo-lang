@@ -87,6 +87,14 @@ class PatternTest {
 					"zero" lineTo pattern(
 						"zero" lineTo pattern(recurse))))
 
+		pattern("zero" lineTo pattern(recurse))
+			.recurseExpand
+			.recurseExpand
+			.assertEqualTo(
+				pattern(
+					"zero" lineTo pattern(
+						"zero" lineTo pattern(recurse))))
+
 		pattern("zero" lineTo pattern("one" lineTo pattern(recurse)))
 			.recurseExpand
 			.assertEqualTo(
@@ -95,6 +103,16 @@ class PatternTest {
 						"one" lineTo pattern(recurse))))
 
 		pattern("zero" lineTo pattern("one" lineTo pattern(recurse.recurse)))
+			.recurseExpand
+			.assertEqualTo(
+				pattern(
+					"zero" lineTo pattern(
+						"one" lineTo pattern(
+							"zero" lineTo pattern(
+								"one" lineTo pattern(recurse.recurse))))))
+
+		pattern("zero" lineTo pattern("one" lineTo pattern(recurse.recurse)))
+			.recurseExpand
 			.recurseExpand
 			.assertEqualTo(
 				pattern(
