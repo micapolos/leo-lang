@@ -23,35 +23,38 @@ sealed class Pattern : ObjectScripting() {
 	val arrowOrNull get() = nodeOrNull?.arrowOrNull
 	val optionsOrNull get() = nodeOrNull?.optionsOrNull
 
-	fun plus(line: PatternLine) = pattern(node(recurseExpand.linkTo(line)))
+	fun plus(line: PatternLine) = pattern(node(linkTo(line)))
 	fun plus(name: String) = plus(name.patternLine)
 
 	fun lineRhsOrNull(name: String): Pattern? =
-		recurseExpand.nodeOrNull?.lineRhsOrNull(name)
+		nodeOrNull?.lineRhsOrNull(name)
 
 	fun setLineRhsOrNull(line: PatternLine): Pattern? =
-		recurseExpand.nodeOrNull?.setLineRhsOrNull(line)?.let { pattern(it) }
+		nodeOrNull?.setLineRhsOrNull(line)?.let { pattern(it) }
 
 	fun getOrNull(name: String): Pattern? =
-		recurseExpand.nodeOrNull?.getOrNull(name)
+		nodeOrNull?.getOrNull(name)
 
 	fun setOrNull(line: PatternLine): Pattern? =
-		recurseExpand.nodeOrNull?.setOrNull(line)?.let { pattern(it) }
+		nodeOrNull?.setOrNull(line)?.let { pattern(it) }
 
 	val previousOrNull: Pattern?
 		get() =
-			recurseExpand.nodeOrNull?.previousOrNull
+			nodeOrNull?.previousOrNull
 
 	val contentOrNull: Pattern?
 		get() =
-			recurseExpand.nodeOrNull?.contentOrNull
+			nodeOrNull?.contentOrNull
 
 	val onlyNameOrNull: String?
 		get() =
 			nodeOrNull?.onlyNameOrNull
 
+	fun <V> mutate(fn: Pattern.() -> V): V =
+		recurseExpand.fn()
+
 	fun leafPlusOrNull(pattern: Pattern): Pattern? =
-		recurseExpand.nodeOrNull?.leafPlusOrNull(pattern)
+		nodeOrNull?.leafPlusOrNull(pattern)
 
 	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): Pattern =
 		when (this) {
