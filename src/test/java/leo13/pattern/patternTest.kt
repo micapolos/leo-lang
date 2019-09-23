@@ -167,9 +167,9 @@ class PatternTest {
 	}
 
 	@Test
-	fun mutatePlusLine() {
+	fun append() {
 		pattern("zero" lineTo pattern(recurse))
-			.mutate { plus("one" lineTo pattern()) }
+			.append("one" lineTo pattern())
 			.assertEqualTo(
 				pattern(
 					"zero" lineTo pattern("zero" lineTo pattern(recurse)),
@@ -177,11 +177,11 @@ class PatternTest {
 	}
 
 	@Test
-	fun mutatePreviousOrNull() {
+	fun previousOrNull() {
 		pattern(
 			"zero" lineTo pattern(recurse),
 			"one" lineTo pattern())
-			.mutate { previousOrNull }
+			.previousOrNull
 			.assertEqualTo(
 				pattern(
 					"zero" lineTo pattern(
