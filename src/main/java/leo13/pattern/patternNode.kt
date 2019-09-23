@@ -86,17 +86,17 @@ sealed class PatternNode : ObjectScripting() {
 			is ArrowPatternNode -> this
 		}
 
-	fun recurseContains(pattern: Pattern, trace: PatternTrace): Boolean =
+	fun contains(pattern: Pattern, trace: PatternTrace): Boolean =
 		when (pattern) {
-			is NodePattern -> recurseContains(pattern.node, trace)
+			is NodePattern -> contains(pattern.node, trace)
 			is RecursePattern -> false
 		}
 
-	fun recurseContains(node: PatternNode, trace: PatternTrace): Boolean =
+	fun contains(node: PatternNode, trace: PatternTrace): Boolean =
 		when (this) {
 			is EmptyPatternNode -> node is EmptyPatternNode
-			is LinkPatternNode -> node is LinkPatternNode && link.recurseContains(node.link, trace)
-			is OptionsPatternNode -> options.recurseContains(node, trace)
+			is LinkPatternNode -> node is LinkPatternNode && link.contains(node.link, trace)
+			is OptionsPatternNode -> options.contains(node, trace)
 			is ArrowPatternNode -> node is ArrowPatternNode && arrow.contains(node.arrow)
 		}
 }

@@ -24,11 +24,11 @@ data class OptionsLink(val lhs: Options, val line: PatternLine) : ObjectScriptin
 	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): OptionsLink =
 		lhs.recurseExpand(rootRecurse, rootNode) linkTo line.recurseExpand(rootRecurse, rootNode)
 
-	fun recurseContains(link: OptionsLink, trace: PatternTrace): Boolean =
-		lhs.recurseContains(link.lhs, trace) && line.recurseContains(link.line, trace)
+	fun contains(link: OptionsLink, trace: PatternTrace): Boolean =
+		lhs.contains(link.lhs, trace) && line.contains(link.line, trace)
 
-	fun recurseContains(line: PatternLine, trace: PatternTrace): Boolean =
-		this.line.recurseContains(line, trace) || lhs.recurseContains(line, trace)
+	fun contains(line: PatternLine, trace: PatternTrace): Boolean =
+		this.line.contains(line, trace) || lhs.contains(line, trace)
 }
 
 infix fun Options.linkTo(line: PatternLine) = OptionsLink(this, line)

@@ -50,12 +50,6 @@ sealed class Pattern : ObjectScripting() {
 		get() =
 			nodeOrNull?.onlyNameOrNull
 
-	fun contains(pattern: Pattern): Boolean =
-		when (this) {
-			is NodePattern -> pattern is NodePattern && node.contains(pattern.node)
-			is RecursePattern -> pattern is RecursePattern && recurse == pattern.recurse
-		}
-
 	fun leafPlusOrNull(pattern: Pattern): Pattern? =
 		nodeOrNull?.leafPlusOrNull(pattern)
 
@@ -75,16 +69,16 @@ sealed class Pattern : ObjectScripting() {
 				is RecursePattern -> error("recurse")
 			}
 
-	fun recurseContains(pattern: Pattern, trace: PatternTrace? = null): Boolean =
+	fun contains(pattern: Pattern, trace: PatternTrace? = null): Boolean =
 		when (this) {
 			is NodePattern ->
 				when (pattern) {
-					is NodePattern -> node.recurseContains(pattern.node, trace.plus(node))
+					is NodePattern -> node.contains(pattern.node, trace.plus(node))
 					is RecursePattern -> false
 				}
 			is RecursePattern ->
 				when (pattern) {
-					is NodePattern -> trace.plus(recurse).let { it.node.recurseContains(pattern.node, it) }
+					is NodePattern -> trace.plus(recurse).let { it.node.contains(pattern.node, it) }
 					is RecursePattern -> recurse == pattern.recurse
 				}
 		}
