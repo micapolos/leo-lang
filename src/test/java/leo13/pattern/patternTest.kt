@@ -154,4 +154,14 @@ class PatternTest {
 									recurse.recurse))))))
 			.assertEqualTo(true)
 	}
+
+	@Test
+	fun plusLine() {
+		pattern("zero" lineTo pattern(recurse))
+			.plus("one" lineTo pattern())
+			.assertEqualTo(
+				pattern(
+					"zero" lineTo pattern("zero" lineTo pattern(recurse)),
+					"one" lineTo pattern()))
+	}
 }
