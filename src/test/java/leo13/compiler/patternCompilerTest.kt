@@ -2,10 +2,7 @@ package leo13.compiler
 
 import leo.base.assertEqualTo
 import leo13.errorConverter
-import leo13.pattern.lineTo
-import leo13.pattern.onceRecurse
-import leo13.pattern.options
-import leo13.pattern.pattern
+import leo13.pattern.*
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -91,11 +88,18 @@ class PatternCompilerTest {
 			errorConverter(),
 			false,
 			patternDefinitions(),
-			definition("foo" lineTo pattern(), onceRecurse))
+			definition("foo" lineTo pattern("bar"), onceRecurse.increase))
 
 		patternCompiler
+			.process(token(opening("zoo")))
 			.process(token(opening("foo")))
+			.process(token(opening("bar")))
 			.process(token(closing))
-			.assertEqualTo(patternCompiler.set(pattern("foo" lineTo pattern(onceRecurse))))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(patternCompiler
+				.set(
+					pattern(
+						"foo" lineTo pattern("bar" lineTo pattern("zoo" lineTo pattern(onceRecurse.increase.increase))))))
 	}
 }
