@@ -2,6 +2,8 @@ package leo13.pattern
 
 import leo.base.fold
 import leo13.*
+import leo13.compiler.NameTrace
+import leo13.compiler.nameTrace
 import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.lineTo
@@ -58,6 +60,15 @@ sealed class Pattern : ObjectScripting() {
 		when (this) {
 			is EmptyPattern -> pattern
 			is LinkPattern -> link.leafPlusOrNull(pattern)?.let { pattern(it) }
+			else -> null
+		}
+
+	fun leafNameTraceOrNull(acc: NameTrace = nameTrace()): NameTrace? =
+		when (this) {
+			is EmptyPattern -> acc
+			is LinkPattern -> link.item.unexpandedLineOrNull?.let { line ->
+				line.rhs.leafNameTraceOrNull(acc.plus(line.name))
+			}
 			else -> null
 		}
 

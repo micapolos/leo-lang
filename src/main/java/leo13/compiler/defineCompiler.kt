@@ -51,7 +51,7 @@ data class DefineCompiler(
 													?: tracedError(errorName lineTo script(containsName))
 											},
 											false,
-											patternContext(context),
+											patternContext(context).copy(trace = pattern(patternLine).leafNameTraceOrNull()!!),
 											pattern())
 									}
 							}

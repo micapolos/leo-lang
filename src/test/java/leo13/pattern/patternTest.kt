@@ -1,6 +1,7 @@
 package leo13.pattern
 
 import leo.base.assertEqualTo
+import leo13.compiler.nameTrace
 import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test
@@ -223,5 +224,15 @@ class PatternTest {
 					"zero" lineTo pattern(
 						"bit" lineTo pattern(
 							"zero" lineTo pattern(onceRecurse.increase)))))
+	}
+
+	@Test
+	fun leafNameTraceOrNull() {
+		pattern(
+			"point" lineTo pattern(
+				"x" lineTo pattern("zero"),
+				"y" lineTo pattern("one")))
+			.leafNameTraceOrNull()
+			.assertEqualTo(nameTrace().plus("point").plus("y").plus("one"))
 	}
 }

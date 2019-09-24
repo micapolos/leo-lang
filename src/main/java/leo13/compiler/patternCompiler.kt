@@ -61,7 +61,7 @@ data class PatternCompiler(
 	val end: Processor<Token> get() = converter.convert(pattern)
 
 	fun plus(line: PatternLine) =
-		set(pattern.plus(context.definitions.resolve(line)))
+		set(pattern.plus(context.trace.resolveItem(context.definitions.resolve(line))))
 
 	fun set(newPattern: Pattern) =
 		if (partial) converter.convert(newPattern)

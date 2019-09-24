@@ -1,27 +1,27 @@
 package leo13.compiler
 
-import leo13.*
+import leo13.ObjectScripting
+import leo13.contextName
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.script.scriptLine
 
 data class PatternContext(
 	val definitions: PatternDefinitions,
-	val tracedNameStack: Stack<String>) : ObjectScripting() {
+	val trace: NameTrace) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
 		get() = contextName lineTo script(
 			definitions.scriptingLine,
-			tracedName lineTo script(namesName lineTo tracedNameStack.map { scriptLine }.script))
+			trace.scriptingLine)
 
 	fun plus(definition: PatternDefinition) =
 		copy(definitions = definitions.plus(definition))
 
 	fun trace(name: String) =
-		copy(tracedNameStack = tracedNameStack.push(name))
+		copy(trace = trace.plus(name))
 }
 
-fun patternContext() = PatternContext(patternDefinitions(), stack())
-fun patternContext(context: Context) = PatternContext(context.patternDefinitions, stack())
+fun patternContext() = PatternContext(patternDefinitions(), nameTrace())
+fun patternContext(context: Context) = PatternContext(context.patternDefinitions, nameTrace())
