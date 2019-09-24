@@ -11,5 +11,6 @@ define
 	contains: options
 		empty
 		link
-			script
-			line: word script
+			left: script
+			word
+			right: script
