@@ -104,6 +104,9 @@ fun node(arrow: PatternArrow): PatternNode = ArrowPatternNode(arrow)
 fun node(line: PatternLine, vararg lines: PatternLine) =
 	node(pattern() linkTo line).fold(lines) { plus(it) }
 
+fun node(name: String, vararg names: String) =
+	node(pattern() linkTo name.patternLine).fold(names) { plus(it.patternLine) }
+
 val Script.pattern
 	get() =
 		pattern().fold(lineStack.reverse) { plus(it.patternLine) }
