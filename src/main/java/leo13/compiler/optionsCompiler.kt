@@ -1,9 +1,7 @@
 package leo13.compiler
 
 import leo13.*
-import leo13.pattern.Options
-import leo13.pattern.lineTo
-import leo13.pattern.plus
+import leo13.pattern.*
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -15,6 +13,7 @@ data class OptionsCompiler(
 	val converter: Converter<Options, Token>,
 	val definitions: PatternDefinitions,
 	val recurseDefinitionOrNull: RecurseDefinition?,
+	val traceOrNull: PatternTrace?,
 	val options: Options) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -27,17 +26,20 @@ data class OptionsCompiler(
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken ->
-				patternCompiler(
+				PatternCompiler(
 					converter { pattern ->
 						OptionsCompiler(
 							converter,
 							definitions,
 							recurseDefinitionOrNull?.recurseIncrease,
+							traceOrNull,
 							options.plus(definitions.resolve(token.opening.name lineTo pattern)))
 					},
 					false,
 					definitions,
-					recurseDefinitionOrNull)
+					recurseDefinitionOrNull,
+					traceOrNull,
+					pattern())
 			is ClosingToken -> converter.convert(options)
 		}
 }

@@ -46,7 +46,7 @@ data class FunctionCompiler(
 									parameterPattern arrowTo bodyCompiled.pattern))
 						},
 						context.give(parameterPattern))
-				else patternCompiler(
+				else PatternCompiler(
 					converter { newPattern ->
 						FunctionCompiler(
 							converter,
@@ -56,6 +56,7 @@ data class FunctionCompiler(
 					},
 					true,
 					context.patternDefinitions,
+					null,
 					null,
 					parameterPattern).process(token)
 			is ClosingToken -> {

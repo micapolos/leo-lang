@@ -14,6 +14,8 @@ class OptionsCompilerTest {
 		OptionsCompiler(
 			errorConverter(),
 			patternDefinitions(),
+			null,
+			null,
 			options())
 			.process(token(opening("zero")))
 			.process(token(closing))
@@ -23,6 +25,8 @@ class OptionsCompilerTest {
 				OptionsCompiler(
 					errorConverter(),
 					patternDefinitions(),
+					null,
+					null,
 					options("zero", "one")))
 	}
 }

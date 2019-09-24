@@ -5,21 +5,25 @@ import leo13.linkName
 import leo13.script.lineTo
 import leo13.script.plus
 
-data class OptionsLink(val lhs: Options, val line: PatternLine) : ObjectScripting() {
+data class OptionsLink(val lhs: Options, val item: PatternItem) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
 		get() =
-			linkName lineTo lhs.scriptingLine.rhs.plus(line.scriptingLine.rhs)
+			linkName lineTo lhs.scriptingLine.rhs.plus(item.scriptingLine.rhs)
 
-	fun recurseExpand(rootOrNull: RecurseRoot?): OptionsLink =
-		lhs.recurseExpand(rootOrNull) linkTo line.recurseExpand(rootOrNull)
+	fun expand(rootOrNull: RecurseRoot?): OptionsLink =
+		lhs.expand(rootOrNull) linkTo item.expand(rootOrNull)
 
 	fun contains(link: OptionsLink, trace: PatternTrace?): Boolean =
-		lhs.contains(link.lhs, trace) && line.contains(link.line, trace)
+		lhs.contains(link.lhs, trace) && item.contains(link.item, trace)
+
+	fun contains(item: PatternItem, traceOrNull: PatternTrace?): Boolean =
+		this.item.contains(item, traceOrNull) || lhs.contains(item, traceOrNull)
 
 	fun contains(line: PatternLine, trace: PatternTrace?): Boolean =
-		this.line.contains(line, trace) || lhs.contains(line, trace)
+		this.item.line.contains(line, trace) || lhs.contains(line, trace)
 }
 
-infix fun Options.linkTo(line: PatternLine) = OptionsLink(this, line)
+infix fun Options.linkTo(item: PatternItem) = OptionsLink(this, item)
+infix fun Options.linkTo(line: PatternLine) = linkTo(item(line))

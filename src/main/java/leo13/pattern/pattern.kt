@@ -1,10 +1,8 @@
 package leo13.pattern
 
 import leo.base.fold
-import leo.base.notNullOrError
-import leo13.ObjectScripting
-import leo13.empty
-import leo13.patternName
+import leo13.*
+import leo13.script.Script
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -13,100 +11,115 @@ sealed class Pattern : ObjectScripting() {
 	override fun toString() = scriptingLine.toString()
 
 	override val scriptingLine: ScriptLine
-		get() =
-			patternName lineTo when (this) {
-				is NodePattern -> node.scriptingLine.rhs
-				is RecursePattern -> script(recurse.scriptingLine)
+		get() = patternName lineTo
+			when (this) {
+				is EmptyPattern -> empty.scriptingLine.rhs
+				is LinkPattern -> link.scriptingLine.rhs
+				is OptionsPattern -> script(options.scriptingLine)
+				is ArrowPattern -> arrow.scriptingLine.rhs
 			}
 
-	val isEmpty get() = nodeOrNull?.isEmpty ?: false
-	val linkOrNull get() = nodeOrNull?.linkOrNull
-	val arrowOrNull get() = nodeOrNull?.arrowOrNull
-	val optionsOrNull get() = nodeOrNull?.optionsOrNull
+	val isEmpty get() = this is EmptyPattern
+	val linkOrNull get() = (this as? LinkPattern)?.link
+	val optionsOrNull get() = (this as? OptionsPattern)?.options
+	val arrowOrNull get() = (this as? ArrowPattern)?.arrow
 
-	fun plus(line: PatternLine) = pattern(node(linkTo(line)))
-	fun plus(name: String) = plus(name.patternLine)
+	fun plus(item: PatternItem) =
+		pattern(this linkTo item)
 
-	fun append(line: PatternLine) = recurseExpand().plus(line)
-	fun append(name: String) = plus(name)
+	fun plus(line: PatternLine) =
+		plus(item(line))
 
 	fun lineRhsOrNull(name: String): Pattern? =
-		recurseExpand().nodeOrNull?.lineRhsOrNull(name)
+		linkOrNull?.lineRhsOrNull(name)
 
 	fun setLineRhsOrNull(line: PatternLine): Pattern? =
-		recurseExpand().nodeOrNull?.setLineRhsOrNull(line)?.let { pattern(it) }
+		linkOrNull?.setLineRhsOrNull(line)?.let { pattern(it) }
 
 	fun getOrNull(name: String): Pattern? =
-		recurseExpand().nodeOrNull?.getOrNull(name)
+		linkOrNull?.getOrNull(name)
 
 	fun setOrNull(line: PatternLine): Pattern? =
-		recurseExpand().nodeOrNull?.setOrNull(line)?.let { pattern(it) }
+		linkOrNull?.setOrNull(line)?.let { pattern(it) }
 
 	val previousOrNull: Pattern?
 		get() =
-			recurseExpand().nodeOrNull?.previousOrNull
+			linkOrNull?.lhs
 
 	val contentOrNull: Pattern?
 		get() =
-			recurseExpand().nodeOrNull?.contentOrNull
+			linkOrNull?.item?.line?.rhs
 
 	val onlyNameOrNull: String?
 		get() =
-			nodeOrNull?.onlyNameOrNull
+			linkOrNull?.onlyLineOrNull?.onlyNameOrNull
 
 	fun leafPlusOrNull(pattern: Pattern): Pattern? =
-		recurseExpand().nodeOrNull?.leafPlusOrNull(pattern)
-
-	fun recurseExpand(rootOrNull: RecurseRoot? = null): Pattern =
 		when (this) {
-			is NodePattern ->
-				pattern(node.recurseExpand(rootOrNull))
-			is RecursePattern ->
-				rootOrNull
-					.notNullOrError("root")
-					.let { root ->
-						if (recurse == root.recurse) pattern(root.node)
-						else this
-					}
+			is EmptyPattern -> pattern
+			is LinkPattern -> link.leafPlusOrNull(pattern)?.let { pattern(it) }
+			else -> null
 		}
 
-	fun contains(pattern: Pattern, traceOrNull: PatternTrace? = null): Boolean =
+	val beginOptionsOrNull: Options?
+		get() =
+			when (this) {
+				is EmptyPattern -> options()
+				is OptionsPattern -> options
+				else -> null
+			}
+
+	fun expand(rootOrNull: RecurseRoot? = null): Pattern =
 		when (this) {
-			is NodePattern ->
-				when (pattern) {
-					is NodePattern -> node.contains(pattern.node, traceOrNull)
-					is RecursePattern -> false
-				}
-			is RecursePattern ->
-				when (pattern) {
-					is NodePattern -> traceOrNull.orNullPlus(recurse).let { it.node.contains(pattern.node, it) }
-					is RecursePattern -> recurse == pattern.recurse
-				}
+			is EmptyPattern -> this
+			is LinkPattern -> pattern(link.expand(rootOrNull))
+			is OptionsPattern -> pattern(options.expand(rootOrNull))
+			is ArrowPattern -> this
+		}
+
+	fun contains(pattern: Pattern, trace: PatternTrace? = null): Boolean =
+		when (this) {
+			is EmptyPattern -> pattern is EmptyPattern
+			is LinkPattern -> pattern is LinkPattern && link.contains(pattern.link, trace)
+			is OptionsPattern -> options.contains(pattern, trace)
+			is ArrowPattern -> pattern is ArrowPattern && arrow.contains(pattern.arrow)
 		}
 }
 
-data class NodePattern(val node: PatternNode) : Pattern() {
+data class EmptyPattern(val empty: Empty) : Pattern() {
 	override fun toString() = super.toString()
 }
 
-data class RecursePattern(val recurse: Recurse) : Pattern() {
+data class LinkPattern(val link: PatternLink) : Pattern() {
 	override fun toString() = super.toString()
 }
 
-val Pattern.nodeOrNull get() = (this as? NodePattern)?.node
-val Pattern.recurseOrNull get() = (this as? RecursePattern)?.recurse
+data class OptionsPattern(val options: Options) : Pattern() {
+	override fun toString() = super.toString()
+}
 
-fun pattern(node: PatternNode): Pattern = NodePattern(node)
-fun pattern(recurse: Recurse): Pattern = RecursePattern(recurse)
+data class ArrowPattern(val arrow: PatternArrow) : Pattern() {
+	override fun toString() = super.toString()
+}
 
-fun pattern() = pattern(node(empty))
-fun pattern(options: Options) = pattern(node(options))
-fun pattern(arrow: PatternArrow) = pattern(node(arrow))
-fun pattern(link: PatternLink) = pattern(node(link))
+fun pattern() = pattern(empty)
+fun pattern(empty: Empty): Pattern = EmptyPattern(empty)
+fun pattern(link: PatternLink): Pattern = LinkPattern(link)
+fun pattern(options: Options): Pattern = OptionsPattern(options)
+fun pattern(arrow: PatternArrow): Pattern = ArrowPattern(arrow)
+
+fun pattern(name: String) = pattern(name.patternLine)
+fun pattern(recurse: Recurse) = pattern(item(recurse))
+
+fun pattern(item: PatternItem, vararg items: PatternItem) =
+	pattern(pattern() linkTo item).fold(items) { plus(it) }
 
 fun pattern(line: PatternLine, vararg lines: PatternLine) =
-	pattern(node(pattern() linkTo line)).fold(lines) { plus(it) }
+	pattern(pattern() linkTo line).fold(lines) { plus(it) }
 
 fun pattern(name: String, vararg names: String) =
-	pattern(node(pattern() linkTo name.patternLine)).fold(names) { plus(it) }
+	pattern(pattern() linkTo name.patternLine).fold(names) { plus(it.patternLine) }
 
+val Script.pattern
+	get() =
+		pattern().fold(lineStack.reverse) { plus(it.patternLine) }

@@ -6,16 +6,16 @@ import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 
-data class RecurseRoot(val recurse: Recurse, val node: PatternNode) : ObjectScripting() {
+data class RecurseRoot(val recurse: Recurse, val line: PatternLine) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
-		get() = rootName lineTo script(recurse.scriptingLine, node.scriptingLine)
+		get() = rootName lineTo script(recurse.scriptingLine, line.scriptingLine)
 
-	val recurseIncrease get() = RecurseRoot(recurse.increase, node)
+	val recurseIncrease get() = RecurseRoot(recurse.increase, line)
 }
 
-fun root(recurse: Recurse, node: PatternNode) = RecurseRoot(recurse, node)
+fun root(recurse: Recurse, line: PatternLine) = RecurseRoot(recurse, line)
 
-fun RecurseRoot?.orNullRecurseIncrease(node: PatternNode): RecurseRoot =
-	this?.recurseIncrease ?: root(onceRecurse, node)
+fun RecurseRoot?.orNullRecurseIncrease(line: PatternLine): RecurseRoot =
+	this?.recurseIncrease ?: root(onceRecurse, line)

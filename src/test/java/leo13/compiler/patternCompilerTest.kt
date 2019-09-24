@@ -19,7 +19,7 @@ class PatternCompilerTest {
 
 	@Test
 	fun resolution() {
-		val compiler = patternCompiler(
+		val compiler = PatternCompiler(
 			errorConverter(),
 			false,
 			patternDefinitions().plus(
@@ -28,7 +28,10 @@ class PatternCompilerTest {
 					pattern(
 						options(
 							"zero" lineTo pattern(),
-							"one" lineTo pattern())))))
+							"one" lineTo pattern())))),
+			null,
+			null,
+			pattern())
 
 		compiler
 			.process(token(opening("bit")))
@@ -57,12 +60,15 @@ class PatternCompilerTest {
 
 	@Test
 	fun processResolution() {
-		val patternCompiler = patternCompiler(
+		val patternCompiler = PatternCompiler(
 			errorConverter(),
 			false,
 			patternDefinitions()
 				.plus(definition("zero" lineTo pattern(), pattern("resolved")))
-				.plus(definition("one" lineTo pattern(), pattern("resolved"))))
+				.plus(definition("one" lineTo pattern(), pattern("resolved"))),
+			null,
+			null,
+			pattern())
 
 		patternCompiler
 			.process(token(opening("options")))
@@ -84,11 +90,13 @@ class PatternCompilerTest {
 
 	@Test
 	fun processRecurseResolution() {
-		val patternCompiler = patternCompiler(
+		val patternCompiler = PatternCompiler(
 			errorConverter(),
 			false,
 			patternDefinitions(),
-			definition("foo" lineTo pattern("bar"), onceRecurse.increase))
+			definition("foo" lineTo pattern("bar"), onceRecurse.increase),
+			null,
+			pattern())
 
 		patternCompiler
 			.process(token(opening("zoo")))

@@ -37,7 +37,7 @@ data class SwitchCompiler(
 		when (remainingOptions) {
 			is EmptyOptions -> tracedError(notName lineTo script(expectedName lineTo script(name)))
 			is LinkOptions ->
-				remainingOptions.link.line.name.let { optionName ->
+				remainingOptions.link.item.line.name.let { optionName ->
 					if (optionName != name)
 						tracedError(expectedName lineTo script(optionName))
 					else compiler(
@@ -45,7 +45,7 @@ data class SwitchCompiler(
 							plus(compiled(optionName caseTo rhsCompiled.expression, rhsCompiled.pattern))
 								.copy(remainingOptions = this@SwitchCompiler.remainingOptions.link.lhs)
 						},
-						context.match(pattern(remainingOptions.link.line)))
+						context.match(pattern(remainingOptions.link.item.line)))
 				}
 		}
 
@@ -53,7 +53,7 @@ data class SwitchCompiler(
 		get() =
 			when (remainingOptions) {
 				is EmptyOptions -> converter.convert(compiled)
-				is LinkOptions -> tracedError(expectedName lineTo script(remainingOptions.link.line.name))
+				is LinkOptions -> tracedError(expectedName lineTo script(remainingOptions.link.item.line.name))
 			}
 }
 

@@ -18,7 +18,7 @@ data class RecurseDefinition(val line: PatternLine, val recurse: Recurse) : Obje
 		ifOrNull(this.line == line) { pattern(recurse) }
 
 	fun resolve(pattern: Pattern): Pattern? =
-		pattern.nodeOrNull?.linkOrNull?.onlyLineOrNull?.let { resolve(it) }
+		pattern.linkOrNull?.onlyLineOrNull?.let { resolve(it) }
 
 	val recurseIncrease
 		get() =

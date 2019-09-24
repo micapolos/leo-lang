@@ -61,9 +61,7 @@ data class Compiler(
 	val beginApply: Processor<Token>
 		get() =
 			compiled
-				.pattern
-				.nodeOrNull
-				?.arrowOrNull
+				.pattern.arrowOrNull
 				?.let { arrow ->
 					compiler(
 						converter { parameterCompiled ->
@@ -110,7 +108,7 @@ data class Compiler(
 					set(
 						compiled(
 							expression(op(value(item(compiledFunction.function)))),
-							pattern(node(compiledFunction.arrow))))
+							pattern(compiledFunction.arrow)))
 				},
 				context,
 				pattern(),
@@ -136,10 +134,13 @@ data class Compiler(
 
 	val beginOf: Processor<Token>
 		get() =
-			patternCompiler(
+			PatternCompiler(
 				converter { plusOf(it) },
 				false,
-				context.patternDefinitions)
+				context.patternDefinitions,
+				null,
+				null,
+				pattern())
 
 	val beginPrevious: Processor<Token>
 		get() =
@@ -156,17 +157,15 @@ data class Compiler(
 	val beginMatch: Processor<Token>
 		get() =
 			compiled
-				.pattern
-				.nodeOrNull
-				?.linkOrNull
+				.pattern.linkOrNull
 				?.let { link ->
 					link
+						.item
 						.line
 						.let { line ->
 							line
 								.rhs
-								.nodeOrNull
-								?.optionsOrNull
+								.optionsOrNull
 								?.let { options ->
 									switchCompiler(
 										converter { plus(it) },

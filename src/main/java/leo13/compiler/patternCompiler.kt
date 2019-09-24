@@ -13,6 +13,7 @@ data class PatternCompiler(
 	val partial: Boolean,
 	val definitions: PatternDefinitions,
 	val recurseDefinitionOrNull: RecurseDefinition?,
+	val traceOrNull: PatternTrace?,
 	val pattern: Pattern
 ) :
 	ObjectScripting(),
@@ -44,39 +45,36 @@ data class PatternCompiler(
 			if (!pattern.isEmpty) tracedError(notName lineTo script(expectedName lineTo script(optionsName)))
 			else OptionsCompiler(
 				converter { options ->
-					patternCompiler(
+					PatternCompiler(
 						converter,
 						partial,
 						definitions,
 						recurseDefinitionOrNull?.recurseIncrease,
-						pattern(node(options)))
+						traceOrNull,
+						pattern(options))
 				},
 				definitions,
 				recurseDefinitionOrNull,
+				traceOrNull,
 				options())
 
 	fun beginOther(name: String): Processor<Token> =
-		patternCompiler(
+		PatternCompiler(
 			converter { plus(name lineTo it) },
 			false,
 			definitions,
 			recurseDefinitionOrNull?.recurseIncrease,
+			traceOrNull.orNullPlus(name lineTo pattern()),
 			pattern())
 
 	val end: Processor<Token> get() = converter.convert(pattern)
+
+	fun plus(line: PatternLine) =
+		set(recurseDefinitionOrNull.orNullResolve(pattern.plus(definitions.resolve(line))))
+
+	fun set(newPattern: Pattern) =
+		if (partial) converter.convert(newPattern)
+		else PatternCompiler(converter, partial, definitions, recurseDefinitionOrNull, traceOrNull, newPattern)
 }
 
-fun patternCompiler(
-	converter: Converter<Pattern, Token> = errorConverter(),
-	parent: Boolean = false,
-	definitions: PatternDefinitions = patternDefinitions(),
-	recurseDefinitionOrNull: RecurseDefinition? = null,
-	pattern: Pattern = pattern()) =
-	PatternCompiler(converter, parent, definitions, recurseDefinitionOrNull, pattern)
-
-fun PatternCompiler.plus(line: PatternLine) =
-	set(recurseDefinitionOrNull.orNullResolve(pattern.plus(definitions.resolve(line))))
-
-fun PatternCompiler.set(newPattern: Pattern) =
-	if (partial) converter.convert(newPattern)
-	else PatternCompiler(converter, partial, definitions, recurseDefinitionOrNull, newPattern)
+fun patternCompiler() = PatternCompiler(errorConverter(), false, patternDefinitions(), null, null, pattern())

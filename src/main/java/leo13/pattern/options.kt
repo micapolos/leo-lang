@@ -19,10 +19,10 @@ sealed class Options : ObjectScripting() {
 				is LinkOptions -> link.scriptingLine.rhs
 			}
 
-	fun recurseExpand(rootOrNull: RecurseRoot?): Options =
+	fun expand(rootOrNull: RecurseRoot?): Options =
 		when (this) {
 			is EmptyOptions -> this
-			is LinkOptions -> options(link.recurseExpand(rootOrNull))
+			is LinkOptions -> options(link.expand(rootOrNull))
 		}
 
 	fun contains(options: Options, trace: PatternTrace? = null): Boolean =
@@ -31,6 +31,9 @@ sealed class Options : ObjectScripting() {
 			is LinkOptions -> options is LinkOptions && link.contains(options.link, trace)
 		}
 
+	fun contains(item: PatternItem, traceOrNull: PatternTrace? = null): Boolean =
+		contains(item.line, traceOrNull)
+
 	fun contains(line: PatternLine, trace: PatternTrace? = null): Boolean =
 		when (this) {
 			is EmptyOptions -> false
@@ -38,20 +41,14 @@ sealed class Options : ObjectScripting() {
 		}
 
 	fun contains(link: PatternLink, trace: PatternTrace? = null): Boolean =
-		link.lhs.isEmpty && contains(link.line, trace)
+		link.lhs.isEmpty && contains(link.item, trace)
 
-	fun contains(node: PatternNode, trace: PatternTrace? = null): Boolean =
+	fun contains(node: Pattern, trace: PatternTrace? = null): Boolean =
 		when (node) {
-			is EmptyPatternNode -> false
-			is LinkPatternNode -> contains(node.link, trace)
-			is OptionsPatternNode -> contains(node.options, trace)
-			is ArrowPatternNode -> false
-		}
-
-	fun contains(pattern: Pattern, trace: PatternTrace? = null): Boolean =
-		when (pattern) {
-			is NodePattern -> contains(pattern.node, trace)
-			is RecursePattern -> false
+			is EmptyPattern -> false
+			is LinkPattern -> contains(node.link, trace)
+			is OptionsPattern -> contains(node.options, trace)
+			is ArrowPattern -> false
 		}
 }
 
@@ -67,6 +64,7 @@ fun options(empty: Empty): Options = EmptyOptions(empty)
 fun options(link: OptionsLink): Options = LinkOptions(link)
 
 // TODO: Rename to plusOrNull and detect duplicates
+fun Options.plus(item: PatternItem) = options(linkTo(item))
 fun Options.plus(line: PatternLine) = options(linkTo(line))
 
 fun options(vararg lines: PatternLine) = options(empty).fold(lines) { plus(it) }
@@ -75,5 +73,5 @@ fun options(name: String, vararg names: String) = options(name lineTo pattern())
 tailrec fun Options.plusReversed(options: Options): Options =
 	when (options) {
 		is EmptyOptions -> this
-		is LinkOptions -> plus(options.link.line).plusReversed(options.link.lhs)
+		is LinkOptions -> plus(options.link.item).plusReversed(options.link.lhs)
 	}

@@ -2,7 +2,10 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.valueContext
-import leo13.pattern.*
+import leo13.pattern.Pattern
+import leo13.pattern.arrowTo
+import leo13.pattern.onceRecurse
+import leo13.pattern.pattern
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -29,15 +32,14 @@ data class DefineCompiler(
 			is OpeningToken ->
 				when (token.opening.name) {
 					hasName ->
-						pattern
-							.nodeOrNull
-							?.linkOrNull
+						pattern.linkOrNull
 							?.let { patternLink ->
 								if (!patternLink.lhs.isEmpty) tracedError(expectedName lineTo script(lineName lineTo script(patternName)))
 								else patternLink
-									.line
-									.let { patternLine ->
-										patternCompiler(
+									.item
+									.unexpandedLineOrNull
+									?.let { patternLine ->
+										PatternCompiler(
 											converter { rhsPattern ->
 												patternLine
 													.leafPlusOrNull(rhsPattern)
@@ -52,6 +54,7 @@ data class DefineCompiler(
 											false,
 											context.patternDefinitions,
 											definition(patternLine, onceRecurse), // TODO: Calculate "recurse" from patternLine!!!
+											null,
 											pattern())
 									}
 							}
@@ -71,7 +74,7 @@ data class DefineCompiler(
 									pattern())
 							},
 							context.give(pattern))
-					else -> patternCompiler(
+					else -> PatternCompiler(
 						converter { lhsPattern ->
 							DefineCompiler(
 								converter,
@@ -80,6 +83,7 @@ data class DefineCompiler(
 						},
 						true,
 						context.patternDefinitions,
+						null,
 						null,
 						pattern).process(token)
 				}

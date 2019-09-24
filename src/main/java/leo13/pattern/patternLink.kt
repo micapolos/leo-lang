@@ -6,20 +6,25 @@ import leo13.linkName
 import leo13.script.lineTo
 import leo13.script.plus
 
-data class PatternLink(val lhs: Pattern, val line: PatternLine) : ObjectScripting() {
+data class PatternLink(val lhs: Pattern, val item: PatternItem) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
 		get() =
-			linkName lineTo lhs.scriptingLine.rhs.plus(line.scriptingLine.rhs)
+			linkName lineTo lhs.scriptingLine.rhs.plus(item.scriptingLine.rhs)
 
-	val pattern get() = lhs.plus(line)
-	val onlyLineOrNull get() = notNullIf(lhs.isEmpty) { line }
+	val pattern get() = lhs.plus(item)
+	val onlyItemOrNull get() = notNullIf(lhs.isEmpty) { item }
+	val onlyLineOrNull get() = onlyItemOrNull?.line
+	val line get() = item.line
+
+	fun plus(item: PatternItem) =
+		pattern(this) linkTo item
 
 	fun plus(line: PatternLine) =
-		pattern(node(this)) linkTo line
+		plus(item(line))
 
-	fun lineRhsOrNull(name: String): Pattern? =
+	fun lineRhsOrNull(name: String, traceOrNull: PatternTrace? = null): Pattern? =
 		line.rhsOrNull(name) ?: lhs.lineRhsOrNull(name)
 
 	fun setLineRhsOrNull(line: PatternLine): PatternLink? =
@@ -31,16 +36,17 @@ data class PatternLink(val lhs: Pattern, val line: PatternLine) : ObjectScriptin
 		line.leafPlusOrNull(pattern)?.let { lhs linkTo it }
 
 	fun getOrNull(name: String): Pattern? =
-		line.recurseExpand().rhs.lineRhsOrNull(name)?.let { pattern(name lineTo it) }
+		line.rhs.lineRhsOrNull(name)?.let { pattern(name lineTo it) }
 
 	fun setOrNull(setLine: PatternLine): PatternLink? =
 		line.rhs.setLineRhsOrNull(setLine)?.let { lhs linkTo (line.name lineTo it) }
 
-	fun recurseExpand(rootOrNull: RecurseRoot?): PatternLink =
-		lhs.recurseExpand(rootOrNull) linkTo line.recurseExpand(rootOrNull.orNullRecurseIncrease(node(this)))
+	fun expand(rootOrNull: RecurseRoot?): PatternLink =
+		lhs.expand(rootOrNull) linkTo item.expand(rootOrNull)
 
-	fun contains(link: PatternLink, trace: PatternTrace?): Boolean =
-		lhs.contains(link.lhs, trace) && line.contains(link.line, trace.orNullPlus(node(this)))
+	fun contains(link: PatternLink, traceOrNull: PatternTrace?): Boolean =
+		lhs.contains(link.lhs, traceOrNull) && item.contains(link.item, traceOrNull)
 }
 
-infix fun Pattern.linkTo(line: PatternLine) = PatternLink(this, line)
+infix fun Pattern.linkTo(item: PatternItem) = PatternLink(this, item)
+infix fun Pattern.linkTo(line: PatternLine) = linkTo(item(line))
