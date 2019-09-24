@@ -13,9 +13,7 @@ class OptionsCompilerTest {
 	fun process() {
 		OptionsCompiler(
 			errorConverter(),
-			patternDefinitions(),
-			null,
-			null,
+			patternContext(),
 			options())
 			.process(token(opening("zero")))
 			.process(token(closing))
@@ -24,9 +22,7 @@ class OptionsCompilerTest {
 			.assertEqualTo(
 				OptionsCompiler(
 					errorConverter(),
-					patternDefinitions(),
-					null,
-					null,
+					patternContext(),
 					options("zero", "one")))
 	}
 }

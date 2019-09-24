@@ -2,9 +2,9 @@ package leo13.compiler
 
 import leo13.*
 import leo13.pattern.PatternLine
-import leo13.pattern.PatternTrace
 import leo13.pattern.lineTo
 import leo13.pattern.pattern
+import leo13.pattern.patternLine
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -14,16 +14,14 @@ import leo13.token.Token
 
 data class PatternLineCompiler(
 	val converter: Converter<PatternLine, Token>,
-	val definitions: PatternDefinitions,
-	val recurseDefinitionOrNull: RecurseDefinition?,
-	val traceOrNull: PatternTrace?,
+	val context: PatternContext,
 	val patternLineOrNull: PatternLine?) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
 		get() = compilerName lineTo script(
 			converter.scriptingLine,
-			definitions.scriptingLine,
+			context.scriptingLine,
 			patternLineOrNull?.scriptingLine ?: lineName lineTo script(patternName lineTo script(noneName)))
 
 
@@ -34,15 +32,11 @@ data class PatternLineCompiler(
 					converter { pattern ->
 						PatternLineCompiler(
 							converter,
-							definitions,
-							recurseDefinitionOrNull?.recurseIncrease,
-							traceOrNull,
-							definitions.resolve(token.opening.name lineTo pattern))
+							context,
+							context.definitions.resolve(token.opening.name lineTo pattern))
 					},
 					false,
-					definitions,
-					recurseDefinitionOrNull,
-					traceOrNull,
+					context.trace(token.opening.name.patternLine),
 					pattern())
 				else tracedError(expectedName lineTo script(endName))
 			is ClosingToken ->

@@ -137,9 +137,7 @@ data class Compiler(
 			PatternCompiler(
 				converter { plusOf(it) },
 				false,
-				context.patternDefinitions,
-				null,
-				null,
+				PatternContext(context.patternDefinitions, null),
 				pattern())
 
 	val beginPrevious: Processor<Token>

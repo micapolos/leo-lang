@@ -11,9 +11,7 @@ import leo13.token.Token
 data class PatternCompiler(
 	val converter: Converter<Pattern, Token>,
 	val partial: Boolean,
-	val definitions: PatternDefinitions,
-	val recurseDefinitionOrNull: RecurseDefinition?,
-	val traceOrNull: PatternTrace?,
+	val context: PatternContext,
 	val pattern: Pattern
 ) :
 	ObjectScripting(),
@@ -24,8 +22,7 @@ data class PatternCompiler(
 			compilerName lineTo script(
 				converter.scriptingLine,
 				partialName lineTo script("$partial"),
-				definitions.scriptingLine,
-				recurseDefinitionOrNull?.scriptingLine ?: definitionName lineTo script(recurseName lineTo script(noneName)),
+				context.scriptingLine,
 				pattern.scriptingLine)
 
 	override fun process(token: Token): Processor<Token> =
@@ -48,33 +45,27 @@ data class PatternCompiler(
 					PatternCompiler(
 						converter,
 						partial,
-						definitions,
-						recurseDefinitionOrNull?.recurseIncrease,
-						traceOrNull,
+						context,
 						pattern(options))
 				},
-				definitions,
-				recurseDefinitionOrNull,
-				traceOrNull,
+				context,
 				options())
 
 	fun beginOther(name: String): Processor<Token> =
 		PatternCompiler(
 			converter { plus(name lineTo it) },
 			false,
-			definitions,
-			recurseDefinitionOrNull?.recurseIncrease,
-			traceOrNull.orNullPlus(name lineTo pattern()),
+			context.trace(name.patternLine),
 			pattern())
 
 	val end: Processor<Token> get() = converter.convert(pattern)
 
 	fun plus(line: PatternLine) =
-		set(recurseDefinitionOrNull.orNullResolve(pattern.plus(definitions.resolve(line))))
+		set(pattern.plus(context.definitions.resolve(line)))
 
 	fun set(newPattern: Pattern) =
 		if (partial) converter.convert(newPattern)
-		else PatternCompiler(converter, partial, definitions, recurseDefinitionOrNull, traceOrNull, newPattern)
+		else PatternCompiler(converter, partial, context, newPattern)
 }
 
-fun patternCompiler() = PatternCompiler(errorConverter(), false, patternDefinitions(), null, null, pattern())
+fun patternCompiler() = PatternCompiler(errorConverter(), false, patternContext(), pattern())
