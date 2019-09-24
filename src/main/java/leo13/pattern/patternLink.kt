@@ -40,7 +40,7 @@ data class PatternLink(val lhs: Pattern, val line: PatternLine) : ObjectScriptin
 		lhs.recurseExpand(rootOrNull) linkTo line.recurseExpand(rootOrNull.orNullRecurseIncrease(node(this)))
 
 	fun contains(link: PatternLink, trace: PatternTrace?): Boolean =
-		lhs.contains(link.lhs, trace) && line.contains(link.line, trace)
+		lhs.contains(link.lhs, trace) && line.contains(link.line, trace.orNullPlus(node(this)))
 }
 
 infix fun Pattern.linkTo(line: PatternLine) = PatternLink(this, line)

@@ -59,6 +59,8 @@ sealed class Pattern : ObjectScripting() {
 
 	fun recurseExpand(rootOrNull: RecurseRoot? = null): Pattern =
 		when (this) {
+			is NodePattern ->
+				pattern(node.recurseExpand(rootOrNull))
 			is RecursePattern ->
 				rootOrNull
 					.notNullOrError("root")
@@ -66,8 +68,6 @@ sealed class Pattern : ObjectScripting() {
 						if (recurse == root.recurse) pattern(root.node)
 						else this
 					}
-			is NodePattern ->
-				pattern(node.recurseExpand(rootOrNull))
 		}
 
 	fun contains(pattern: Pattern, traceOrNull: PatternTrace? = null): Boolean =
@@ -79,7 +79,7 @@ sealed class Pattern : ObjectScripting() {
 				}
 			is RecursePattern ->
 				when (pattern) {
-					is NodePattern -> traceOrNull.orNullPlus(recurse).let { pattern(it.line).contains(pattern, it) }
+					is NodePattern -> traceOrNull.orNullPlus(recurse).let { it.node.contains(pattern.node, it) }
 					is RecursePattern -> recurse == pattern.recurse
 				}
 		}
