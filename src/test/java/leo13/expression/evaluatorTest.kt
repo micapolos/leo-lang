@@ -1,6 +1,7 @@
 package leo13.expression
 
 import leo.base.assertEqualTo
+import leo13.matchingName
 import leo13.value.function
 import leo13.value.item
 import leo13.value.lineTo
@@ -51,7 +52,7 @@ class EvaluatorTest {
 			.assertEqualTo(
 				evaluator()
 					.set(evaluated(value(
-						"switched" lineTo value("circle" lineTo value("radius"))))))
+						matchingName lineTo value("circle" lineTo value("radius"))))))
 	}
 
 	@Test

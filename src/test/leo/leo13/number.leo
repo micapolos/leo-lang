@@ -13,3 +13,4 @@ define
 	gives
 		next: given natural
 		plus: given next natural
+compiler

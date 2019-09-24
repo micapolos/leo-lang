@@ -2,6 +2,7 @@ package leo13.expression
 
 import leo.base.notNullIf
 import leo13.ObjectScripting
+import leo13.contextName
 import leo13.mapFirst
 import leo13.script.ScriptLine
 import leo13.script.lineTo
@@ -10,19 +11,19 @@ import leo13.value.*
 
 data class ValueContext(
 	val given: ValueGiven,
-	val switched: ValueSwitched) : ObjectScripting() {
+	val matching: ValueMatching) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
-		get() = "context" lineTo script(
+		get() = contextName lineTo script(
 			given.scriptLine,
-			switched.scriptingLine)
+			matching.scriptingLine)
 
 	fun give(value: Value) =
 		copy(given = given.plus(value))
 
 	fun switch(value: Value) =
-		copy(switched = switched.plus(value))
+		copy(matching = matching.plus(value))
 
 	fun evaluate(expression: Expression): Value =
 		evaluator().plus(expression).evaluated.value
@@ -37,8 +38,6 @@ data class ValueContext(
 		notNullIf(line.name == case.name) {
 			switch(value(item(line))).evaluate(case.expression)
 		}
-
-
 }
 
-fun valueContext() = ValueContext(given(value()), switched(value()))
+fun valueContext() = ValueContext(given(value()), matching(value()))

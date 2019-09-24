@@ -72,7 +72,7 @@ fun Evaluator.plus(given: Given): Evaluator =
 	set(context.given.value.evaluated)
 
 fun Evaluator.plus(switched: Switched): Evaluator =
-	set(context.switched.value.evaluated)
+	set(context.matching.value.evaluated)
 
 fun Evaluator.plus(give: Give): Evaluator =
 	set(context.give(evaluated.value).evaluate(give.expression).evaluated)
