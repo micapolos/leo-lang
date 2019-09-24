@@ -3,6 +3,7 @@ package leo13.compiler
 import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.pattern.lineTo
+import leo13.pattern.onceRecurse
 import leo13.pattern.options
 import leo13.pattern.pattern
 import leo13.token.closing
@@ -82,5 +83,19 @@ class PatternCompilerTest {
 							"zero" lineTo pattern("resolved"),
 							"one" lineTo pattern("resolved"),
 							"two" lineTo pattern()))))
+	}
+
+	@Test
+	fun processRecurseResolution() {
+		val patternCompiler = patternCompiler(
+			errorConverter(),
+			false,
+			patternDefinitions(),
+			definition("foo" lineTo pattern(), onceRecurse))
+
+		patternCompiler
+			.process(token(opening("foo")))
+			.process(token(closing))
+			.assertEqualTo(patternCompiler.set(pattern("foo" lineTo pattern(onceRecurse))))
 	}
 }

@@ -1,5 +1,6 @@
 package leo13.compiler
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.ObjectScripting
 import leo13.definitionName
@@ -15,7 +16,14 @@ data class RecurseDefinition(val line: PatternLine, val recurse: Recurse) : Obje
 		get() = definitionName lineTo script(line.scriptingLine, recurse.scriptingLine)
 
 	fun resolve(line: PatternLine): Pattern? =
-		notNullIf(this.line == line) { pattern(recurse) }
+		ifOrNull(this.line == line) {
+			line
+				.leafPlusOrNull(pattern(recurse))
+				?.let { pattern(it) }
+		}
+
+	fun resolve(pattern: Pattern): Pattern? =
+		pattern.nodeOrNull?.linkOrNull?.onlyLineOrNull?.let { resolve(it) }
 
 	val recurseIncrease
 		get() =
@@ -23,3 +31,6 @@ data class RecurseDefinition(val line: PatternLine, val recurse: Recurse) : Obje
 }
 
 fun definition(line: PatternLine, recurse: Recurse) = RecurseDefinition(line, recurse)
+
+fun RecurseDefinition?.orNullResolve(pattern: Pattern) =
+	this?.resolve(pattern)?:pattern

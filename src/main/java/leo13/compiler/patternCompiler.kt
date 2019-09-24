@@ -74,7 +74,7 @@ fun patternCompiler(
 	PatternCompiler(converter, parent, definitions, recurseDefinitionOrNull, pattern)
 
 fun PatternCompiler.plus(line: PatternLine) =
-	set(pattern.plus(definitions.resolve(line)))
+	set(recurseDefinitionOrNull.orNullResolve(pattern.plus(definitions.resolve(line))))
 
 fun PatternCompiler.set(newPattern: Pattern) =
 	if (partial) converter.convert(newPattern)
