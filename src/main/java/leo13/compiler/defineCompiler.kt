@@ -31,7 +31,7 @@ data class DefineCompiler(
 		when (token) {
 			is OpeningToken ->
 				when (token.opening.name) {
-					hasName ->
+					containsName ->
 						pattern.linkOrNull
 							?.let { patternLink ->
 								if (!patternLink.lhs.isEmpty) tracedError(expectedName lineTo script(lineName lineTo script(patternName)))
@@ -49,7 +49,7 @@ data class DefineCompiler(
 															context.plus(definition(patternLine, rhsPattern)).plus(fullPatternLine),
 															pattern())
 													}
-													?: tracedError(errorName lineTo script(hasName))
+													?: tracedError(errorName lineTo script(containsName))
 											},
 											false,
 											context.patternDefinitions,
@@ -89,6 +89,6 @@ data class DefineCompiler(
 				}
 			is ClosingToken ->
 				if (pattern.isEmpty) converter.convert(context)
-				else tracedError(expectedName lineTo script(optionsName lineTo script(hasName, givesName)))
+				else tracedError(expectedName lineTo script(optionsName lineTo script(containsName, givesName)))
 		}
 }

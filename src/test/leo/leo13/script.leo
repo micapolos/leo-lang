@@ -1,16 +1,16 @@
 define
 	letter
-	has: options: a b c d e f g h i j k l m n o p q r s t u v w x y z
+	contains: options: a b c d e f g h i j k l m n o p q r s t u v w x y z
 
 	word
-	has: options
+	contains: options
 		letter
 		link
 			containing: word
 			letter
 
 	script
-	has: options
+	contains: options
 		empty
 		link
 			containing: script

@@ -1,6 +1,7 @@
 package leo13.compiler
 
 import leo.base.assertEqualTo
+import leo13.containsName
 import leo13.errorConverter
 import leo13.expression.expression
 import leo13.expression.valueContext
@@ -15,14 +16,14 @@ import kotlin.test.Test
 
 class DefineCompilerTest {
 	@Test
-	fun processHas() {
+	fun processContains() {
 		DefineCompiler(
 			errorConverter(),
 			context(),
 			pattern())
 			.process(token(opening("bit")))
 			.process(token(closing))
-			.process(token(opening("has")))
+			.process(token(opening(containsName)))
 			.process(token(opening("one")))
 			.process(token(closing))
 			.process(token(closing))

@@ -1,4 +1,4 @@
 define
 	script
-	has: zero: script
+	contains: zero: script
 compiler
