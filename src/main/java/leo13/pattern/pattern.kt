@@ -68,16 +68,16 @@ sealed class Pattern : ObjectScripting() {
 				pattern(node.recurseExpand(rootOrNull))
 		}
 
-	fun contains(pattern: Pattern, trace: PatternTrace? = null): Boolean =
+	fun contains(pattern: Pattern, traceOrNull: PatternTrace? = null): Boolean =
 		when (this) {
 			is NodePattern ->
 				when (pattern) {
-					is NodePattern -> node.contains(pattern.node, trace.plus(node))
+					is NodePattern -> node.contains(pattern.node, traceOrNull)
 					is RecursePattern -> false
 				}
 			is RecursePattern ->
 				when (pattern) {
-					is NodePattern -> trace.plus(recurse).let { it.node.contains(pattern.node, it) }
+					is NodePattern -> traceOrNull.orNullPlus(recurse).let { pattern(it.line).contains(pattern, it) }
 					is RecursePattern -> recurse == pattern.recurse
 				}
 		}

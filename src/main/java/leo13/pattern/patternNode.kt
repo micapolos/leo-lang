@@ -28,17 +28,6 @@ sealed class PatternNode : ObjectScripting() {
 	fun plus(line: PatternLine) =
 		node(pattern(this) linkTo line)
 
-	fun contains(pattern: Pattern): Boolean =
-		pattern is NodePattern && contains(pattern.node)
-
-	fun contains(pattern: PatternNode): Boolean =
-		when (this) {
-			is EmptyPatternNode -> pattern.isEmpty
-			is LinkPatternNode -> pattern is LinkPatternNode && link.contains(pattern.link)
-			is OptionsPatternNode -> options.contains(pattern)
-			is ArrowPatternNode -> pattern is ArrowPatternNode && arrow.contains(pattern.arrow)
-		}
-
 	fun lineRhsOrNull(name: String): Pattern? =
 		linkOrNull?.lineRhsOrNull(name)
 
@@ -86,13 +75,13 @@ sealed class PatternNode : ObjectScripting() {
 			is ArrowPatternNode -> this
 		}
 
-	fun contains(pattern: Pattern, trace: PatternTrace): Boolean =
+	fun contains(pattern: Pattern, trace: PatternTrace?): Boolean =
 		when (pattern) {
 			is NodePattern -> contains(pattern.node, trace)
 			is RecursePattern -> false
 		}
 
-	fun contains(node: PatternNode, trace: PatternTrace): Boolean =
+	fun contains(node: PatternNode, trace: PatternTrace?): Boolean =
 		when (this) {
 			is EmptyPatternNode -> node is EmptyPatternNode
 			is LinkPatternNode -> node is LinkPatternNode && link.contains(node.link, trace)

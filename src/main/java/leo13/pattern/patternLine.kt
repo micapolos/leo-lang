@@ -14,9 +14,6 @@ data class PatternLine(val name: String, val rhs: Pattern) : ObjectScripting() {
 		get() =
 			lineName lineTo script(name lineTo rhs.scriptingLine.rhs)
 
-	fun contains(line: PatternLine) =
-		name == line.name && rhs.contains(line.rhs)
-
 	fun rhsOrNull(name: String) =
 		notNullIf(this.name == name) { rhs }
 
@@ -31,8 +28,8 @@ data class PatternLine(val name: String, val rhs: Pattern) : ObjectScripting() {
 	fun recurseExpand(rootOrNull: RecurseRoot? = null): PatternLine =
 		name lineTo rhs.recurseExpand(rootOrNull.orNullRecurseIncrease(this))
 
-	fun contains(line: PatternLine, trace: PatternTrace): Boolean =
-		name == line.name && rhs.contains(line.rhs, trace)
+	fun contains(line: PatternLine, trace: PatternTrace?): Boolean =
+		name == line.name && rhs.contains(line.rhs, trace.orNullPlus(this))
 }
 
 infix fun String.lineTo(rhs: Pattern) = PatternLine(this, rhs)

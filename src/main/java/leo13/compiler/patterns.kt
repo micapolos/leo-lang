@@ -13,7 +13,7 @@ data class PatternLines(val stack: Stack<PatternLine>) : ObjectScripting() {
 
 	fun resolve(line: CompiledLine): CompiledLine =
 		stack.mapFirst {
-			notNullIf(contains(line.patternLine)) {
+			notNullIf(contains(line.patternLine, null)) {
 				line.name lineTo compiled(line.rhs.expression, rhs)
 			}
 		} ?: line

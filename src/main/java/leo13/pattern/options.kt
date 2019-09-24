@@ -25,27 +25,33 @@ sealed class Options : ObjectScripting() {
 			is LinkOptions -> options(link.recurseExpand(rootOrNull))
 		}
 
-	fun contains(options: Options, trace: PatternTrace): Boolean =
+	fun contains(options: Options, trace: PatternTrace? = null): Boolean =
 		when (this) {
 			is EmptyOptions -> options is EmptyOptions
 			is LinkOptions -> options is LinkOptions && link.contains(options.link, trace)
 		}
 
-	fun contains(line: PatternLine, trace: PatternTrace): Boolean =
+	fun contains(line: PatternLine, trace: PatternTrace? = null): Boolean =
 		when (this) {
 			is EmptyOptions -> false
 			is LinkOptions -> link.contains(line, trace)
 		}
 
-	fun contains(link: PatternLink, trace: PatternTrace): Boolean =
+	fun contains(link: PatternLink, trace: PatternTrace? = null): Boolean =
 		link.lhs.isEmpty && contains(link.line, trace)
 
-	fun contains(node: PatternNode, trace: PatternTrace): Boolean =
+	fun contains(node: PatternNode, trace: PatternTrace? = null): Boolean =
 		when (node) {
 			is EmptyPatternNode -> false
 			is LinkPatternNode -> contains(node.link, trace)
 			is OptionsPatternNode -> contains(node.options, trace)
 			is ArrowPatternNode -> false
+		}
+
+	fun contains(pattern: Pattern, trace: PatternTrace? = null): Boolean =
+		when (pattern) {
+			is NodePattern -> contains(pattern.node, trace)
+			is RecursePattern -> false
 		}
 }
 
@@ -65,34 +71,6 @@ fun Options.plus(line: PatternLine) = options(linkTo(line))
 
 fun options(vararg lines: PatternLine) = options(empty).fold(lines) { plus(it) }
 fun options(name: String, vararg names: String) = options(name lineTo pattern()).fold(names) { plus(it lineTo pattern()) }
-
-fun Options.contains(options: Options): Boolean =
-	when (this) {
-		is EmptyOptions -> options is EmptyOptions
-		is LinkOptions -> options is LinkOptions && link.contains(options.link)
-	}
-
-fun Options.contains(pattern: Pattern): Boolean =
-	pattern is NodePattern && contains(pattern.node)
-
-fun Options.contains(pattern: PatternNode): Boolean =
-	when (pattern) {
-		is LinkPatternNode -> contains(pattern.link)
-		is OptionsPatternNode -> contains(pattern.options)
-		else -> false
-	}
-
-fun Options.contains(patternLink: PatternLink): Boolean =
-	when (this) {
-		is EmptyOptions -> false
-		is LinkOptions -> link.contains(patternLink)
-	}
-
-fun Options.contains(line: PatternLine) =
-	when (this) {
-		is EmptyOptions -> false
-		is LinkOptions -> link.contains(line)
-	}
 
 tailrec fun Options.plusReversed(options: Options): Options =
 	when (options) {
