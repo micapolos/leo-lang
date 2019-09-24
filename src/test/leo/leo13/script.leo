@@ -5,12 +5,15 @@ define
 	word
 	has: options
 		letter
-		link: word letter
+		link
+			containing: word
+			letter
 
 	script
 	has: options
 		empty
 		link
-			script
-			line: word script
-compiler
+			containing: script
+			line
+				word
+				containing: script
