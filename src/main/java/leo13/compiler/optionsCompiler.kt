@@ -14,6 +14,7 @@ import leo13.token.Token
 data class OptionsCompiler(
 	val converter: Converter<Options, Token>,
 	val definitions: PatternDefinitions,
+	val recurseDefinitionOrNull: RecurseDefinition?,
 	val options: Options) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -31,10 +32,12 @@ data class OptionsCompiler(
 						OptionsCompiler(
 							converter,
 							definitions,
+							recurseDefinitionOrNull?.recurseIncrease,
 							options.plus(definitions.resolve(token.opening.name lineTo pattern)))
 					},
 					false,
-					definitions)
+					definitions,
+					recurseDefinitionOrNull)
 			is ClosingToken -> converter.convert(options)
 		}
 }

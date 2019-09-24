@@ -52,6 +52,7 @@ data class PatternCompiler(
 						pattern(node(options)))
 				},
 				definitions,
+				recurseDefinitionOrNull,
 				options())
 
 	fun beginOther(name: String): Processor<Token> =

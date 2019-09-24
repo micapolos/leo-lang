@@ -13,6 +13,7 @@ import leo13.token.Token
 data class PatternLineCompiler(
 	val converter: Converter<PatternLine, Token>,
 	val definitions: PatternDefinitions,
+	val recurseDefinitionOrNull: RecurseDefinition?,
 	val patternLineOrNull: PatternLine?) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -31,10 +32,12 @@ data class PatternLineCompiler(
 						PatternLineCompiler(
 							converter,
 							definitions,
+							recurseDefinitionOrNull?.recurseIncrease,
 							definitions.resolve(token.opening.name lineTo pattern))
 					},
 					false,
-					definitions)
+					definitions,
+					recurseDefinitionOrNull)
 				else tracedError(expectedName lineTo script(endName))
 			is ClosingToken ->
 				if (patternLineOrNull != null) converter.convert(patternLineOrNull)

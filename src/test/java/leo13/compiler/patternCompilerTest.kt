@@ -98,8 +98,6 @@ class PatternCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(patternCompiler
-				.set(
-					pattern(
-						"foo" lineTo pattern("bar" lineTo pattern("zoo" lineTo pattern(onceRecurse.increase.increase))))))
+				.set(pattern("zoo" lineTo pattern(onceRecurse.increase.increase))))
 	}
 }
