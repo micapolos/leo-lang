@@ -55,7 +55,7 @@ data class PatternCompiler(
 		PatternCompiler(
 			converter { plus(name lineTo it) },
 			false,
-			context.trace(name.patternLine),
+			context.trace(name),
 			pattern())
 
 	val end: Processor<Token> get() = converter.convert(pattern)

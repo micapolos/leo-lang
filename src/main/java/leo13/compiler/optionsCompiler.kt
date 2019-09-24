@@ -4,7 +4,6 @@ import leo13.*
 import leo13.pattern.Options
 import leo13.pattern.lineTo
 import leo13.pattern.pattern
-import leo13.pattern.patternLine
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -31,11 +30,11 @@ data class OptionsCompiler(
 					converter { pattern ->
 						OptionsCompiler(
 							converter,
-							context.trace(token.opening.name.patternLine),
+							context,
 							options.plus(context.definitions.resolve(token.opening.name lineTo pattern)))
 					},
 					false,
-					context,
+					context.trace(token.opening.name),
 					pattern())
 			is ClosingToken -> converter.convert(options)
 		}

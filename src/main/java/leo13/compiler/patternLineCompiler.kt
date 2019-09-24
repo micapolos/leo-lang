@@ -4,7 +4,6 @@ import leo13.*
 import leo13.pattern.PatternLine
 import leo13.pattern.lineTo
 import leo13.pattern.pattern
-import leo13.pattern.patternLine
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
@@ -36,7 +35,7 @@ data class PatternLineCompiler(
 							context.definitions.resolve(token.opening.name lineTo pattern))
 					},
 					false,
-					context.trace(token.opening.name.patternLine),
+					context.trace(token.opening.name),
 					pattern())
 				else tracedError(expectedName lineTo script(endName))
 			is ClosingToken ->

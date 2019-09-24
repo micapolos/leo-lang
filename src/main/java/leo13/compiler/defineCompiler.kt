@@ -51,7 +51,7 @@ data class DefineCompiler(
 													?: tracedError(errorName lineTo script(containsName))
 											},
 											false,
-											PatternContext(context.patternDefinitions, null),
+											patternContext(context),
 											pattern())
 									}
 							}
@@ -79,7 +79,7 @@ data class DefineCompiler(
 								lhsPattern)
 						},
 						true,
-						PatternContext(context.patternDefinitions, null),
+						patternContext(context),
 						pattern).process(token)
 				}
 			is ClosingToken ->
