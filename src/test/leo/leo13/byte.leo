@@ -1,5 +1,6 @@
 define
-	byte has
+	byte
+	contains
 		first: bit
 		second: bit
 		third: bit
@@ -9,7 +10,8 @@ define
 		seventh: bit
 		eight: bit
 
-	zero byte gives: byte
+	zero byte
+	gives: byte
 		first: bit: zero
 		second: bit: zero
 		third: bit: zero
@@ -19,7 +21,8 @@ define
 		seventh: bit: zero
 		eight: bit: zero
 
-	byte inverse gives: byte
+	byte inverse
+	gives: byte
 		first: given byte first bit negate
 		second: given byte second bit negate
 		third: given byte third bit negate
