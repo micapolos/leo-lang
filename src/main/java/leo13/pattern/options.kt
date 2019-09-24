@@ -19,6 +19,12 @@ sealed class Options : ObjectScripting() {
 				is LinkOptions -> link.scriptingLine.rhs
 			}
 
+	// TODO: Rename to plusOrNull and detect duplicates
+	fun plus(item: PatternItem) = options(linkTo(item))
+
+	fun plus(line: PatternLine) = plus(item(line))
+	fun plus(name: String) = plus(name lineTo pattern())
+
 	fun expand(rootOrNull: RecurseRoot?): Options =
 		when (this) {
 			is EmptyOptions -> this
@@ -63,12 +69,9 @@ data class LinkOptions(val link: OptionsLink) : Options() {
 fun options(empty: Empty): Options = EmptyOptions(empty)
 fun options(link: OptionsLink): Options = LinkOptions(link)
 
-// TODO: Rename to plusOrNull and detect duplicates
-fun Options.plus(item: PatternItem) = options(linkTo(item))
-fun Options.plus(line: PatternLine) = options(linkTo(line))
-
-fun options(vararg lines: PatternLine) = options(empty).fold(lines) { plus(it) }
-fun options(name: String, vararg names: String) = options(name lineTo pattern()).fold(names) { plus(it lineTo pattern()) }
+fun options(vararg items: PatternItem) = options(empty).fold(items) { plus(it) }
+fun options(line: PatternLine, vararg lines: PatternLine) = options(empty).plus(line).fold(lines) { plus(it) }
+fun options(name: String, vararg names: String) = options(empty).plus(name).fold(names) { plus(it) }
 
 tailrec fun Options.plusReversed(options: Options): Options =
 	when (options) {

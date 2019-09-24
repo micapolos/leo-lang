@@ -35,6 +35,21 @@ class PatternTest {
 	}
 
 	@Test
+	fun recursiveAccess() {
+		val pattern = pattern(
+			"list" lineTo pattern(
+				item("empty"),
+				item("link" lineTo pattern(
+					item(onceRecurse.increase),
+					item("value")))))
+
+		pattern
+			.getOrNull("link")!!
+			.getOrNull("list")!!
+			.assertEqualTo(pattern)
+	}
+
+	@Test
 	fun recurseExpand() {
 		assertFails { item(onceRecurse).expand() }
 

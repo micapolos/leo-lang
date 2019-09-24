@@ -17,7 +17,7 @@ data class PatternLine(val name: String, val unexpandedRhs: Pattern) : ObjectScr
 	val rhs get() = expand().unexpandedRhs
 
 	fun rhsOrNull(name: String) =
-		notNullIf(this.name == name) { rhs }
+		notNullIf(this.name == name) { unexpandedRhs }
 
 	fun setRhsOrNull(line: PatternLine): PatternLine? =
 		notNullIf(name == line.name) { line }

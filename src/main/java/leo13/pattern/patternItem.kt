@@ -52,3 +52,5 @@ data class RecursePatternItem(val recurse: Recurse) : PatternItem()
 
 fun item(line: PatternLine): PatternItem = LinePatternItem(line)
 fun item(recurse: Recurse): PatternItem = RecursePatternItem(recurse)
+
+fun item(name: String) = item(name.patternLine)
