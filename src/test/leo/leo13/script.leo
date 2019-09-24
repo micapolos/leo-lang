@@ -5,15 +5,11 @@ define
 	word
 	contains: options
 		letter
-		link
-			containing: word
-			letter
+		link: word letter
 
 	script
 	contains: options
 		empty
 		link
-			containing: script
-			line
-				word
-				containing: script
+			script
+			line: word script
