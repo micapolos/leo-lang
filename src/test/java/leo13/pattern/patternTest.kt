@@ -36,60 +36,56 @@ class PatternTest {
 
 	@Test
 	fun recurseExpand() {
-		assertFails { pattern(onceRecurse).recurseExpand }
+		assertFails { pattern(onceRecurse).recurseExpand() }
 
 		pattern()
-			.recurseExpand
+			.recurseExpand()
 			.assertEqualTo(pattern())
 
 		pattern("foo")
-			.recurseExpand
+			.recurseExpand()
 			.assertEqualTo(pattern("foo"))
 
 		pattern(
 			"x" lineTo pattern("zero"),
 			"y" lineTo pattern("one"))
-			.recurseExpand
+			.recurseExpand()
 			.assertEqualTo(
 				pattern(
 					"x" lineTo pattern("zero"),
 					"y" lineTo pattern("one")))
 
 		pattern("zero" lineTo pattern(onceRecurse))
-			.recurseExpand
+			.recurseExpand()
 			.assertEqualTo(
 				pattern(
-					"zero" lineTo pattern(
-						"zero" lineTo pattern(onceRecurse))))
+					"zero" lineTo pattern("zero" lineTo pattern(onceRecurse))))
 
 		pattern("zero" lineTo pattern(onceRecurse))
-			.recurseExpand
-			.recurseExpand
+			.recurseExpand()
+			.recurseExpand()
 			.assertEqualTo(
 				pattern(
-					"zero" lineTo pattern(
-						"zero" lineTo pattern(onceRecurse))))
+					"zero" lineTo pattern("zero" lineTo pattern(onceRecurse))))
 
 		pattern(
 			"zero" lineTo pattern(onceRecurse),
 			"one" lineTo pattern())
-			.recurseExpand
+			.recurseExpand()
 			.assertEqualTo(
 				pattern(
-					"zero" lineTo pattern(
-						"zero" lineTo pattern(onceRecurse),
-						"one" lineTo pattern()),
+					"zero" lineTo pattern("zero" lineTo pattern(onceRecurse)),
 					"one" lineTo pattern()))
 
 		pattern("zero" lineTo pattern("one" lineTo pattern(onceRecurse)))
-			.recurseExpand
+			.recurseExpand()
 			.assertEqualTo(
 				pattern(
 					"zero" lineTo pattern(
 						"one" lineTo pattern(onceRecurse))))
 
 		pattern("zero" lineTo pattern("one" lineTo pattern(onceRecurse.increase)))
-			.recurseExpand
+			.recurseExpand()
 			.assertEqualTo(
 				pattern(
 					"zero" lineTo pattern(
@@ -98,8 +94,8 @@ class PatternTest {
 								"one" lineTo pattern(onceRecurse.increase))))))
 
 		pattern("zero" lineTo pattern("one" lineTo pattern(onceRecurse.increase)))
-			.recurseExpand
-			.recurseExpand
+			.recurseExpand()
+			.recurseExpand()
 			.assertEqualTo(
 				pattern(
 					"zero" lineTo pattern(
@@ -172,7 +168,7 @@ class PatternTest {
 			.append("one" lineTo pattern())
 			.assertEqualTo(
 				pattern(
-					"zero" lineTo pattern("zero" lineTo pattern(onceRecurse)),
+					"zero" lineTo pattern(onceRecurse),
 					"one" lineTo pattern()))
 	}
 
@@ -182,10 +178,20 @@ class PatternTest {
 			"zero" lineTo pattern(onceRecurse),
 			"one" lineTo pattern())
 			.previousOrNull
+			.assertEqualTo(pattern("zero" lineTo pattern(onceRecurse)))
+	}
+
+	@Test
+	fun getOrNull() {
+		pattern(
+			"foo" lineTo pattern(),
+			"bit" lineTo pattern(
+				"zero" lineTo pattern(onceRecurse.increase)))
+			.getOrNull("zero")
 			.assertEqualTo(
 				pattern(
 					"zero" lineTo pattern(
-						"zero" lineTo pattern(onceRecurse),
-						"one" lineTo pattern())))
+						"bit" lineTo pattern(
+							"zero" lineTo pattern(onceRecurse.increase)))))
 	}
 }

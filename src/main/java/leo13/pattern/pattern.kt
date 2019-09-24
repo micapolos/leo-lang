@@ -1,6 +1,7 @@
 package leo13.pattern
 
 import leo.base.fold
+import leo.base.notNullOrError
 import leo13.ObjectScripting
 import leo13.empty
 import leo13.patternName
@@ -26,51 +27,46 @@ sealed class Pattern : ObjectScripting() {
 	fun plus(line: PatternLine) = pattern(node(linkTo(line)))
 	fun plus(name: String) = plus(name.patternLine)
 
-	fun append(line: PatternLine) = recurseExpand.plus(line)
-	fun append(name: String) = recurseExpand.plus(name)
+	fun append(line: PatternLine) = plus(line)
+	fun append(name: String) = plus(name)
 
 	fun lineRhsOrNull(name: String): Pattern? =
-		recurseExpand.nodeOrNull?.lineRhsOrNull(name)
+		nodeOrNull?.lineRhsOrNull(name)
 
 	fun setLineRhsOrNull(line: PatternLine): Pattern? =
-		recurseExpand.nodeOrNull?.setLineRhsOrNull(line)?.let { pattern(it) }
+		nodeOrNull?.setLineRhsOrNull(line)?.let { pattern(it) }
 
 	fun getOrNull(name: String): Pattern? =
-		recurseExpand.nodeOrNull?.getOrNull(name)
+		nodeOrNull?.getOrNull(name)
 
 	fun setOrNull(line: PatternLine): Pattern? =
-		recurseExpand.nodeOrNull?.setOrNull(line)?.let { pattern(it) }
+		nodeOrNull?.setOrNull(line)?.let { pattern(it) }
 
 	val previousOrNull: Pattern?
 		get() =
-			recurseExpand.nodeOrNull?.previousOrNull
+			nodeOrNull?.previousOrNull
 
 	val contentOrNull: Pattern?
 		get() =
-			recurseExpand.nodeOrNull?.contentOrNull
+			nodeOrNull?.contentOrNull
 
 	val onlyNameOrNull: String?
 		get() =
 			nodeOrNull?.onlyNameOrNull
 
 	fun leafPlusOrNull(pattern: Pattern): Pattern? =
-		recurseExpand.nodeOrNull?.leafPlusOrNull(pattern)
+		nodeOrNull?.leafPlusOrNull(pattern)
 
-	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): Pattern =
+	fun recurseExpand(rootOrNull: RecurseRoot? = null): Pattern =
 		when (this) {
 			is RecursePattern ->
-				if (recurse == rootRecurse) pattern(rootNode)
-				else this
+				rootOrNull.notNullOrError("root").let { root ->
+					if (recurse == root.recurse) pattern(root.line)
+					else this
+				}
 			is NodePattern ->
-				pattern(node.recurseExpand(rootRecurse, rootNode))
+				pattern(node.recurseExpand(rootOrNull))
 		}
-
-	val recurseExpand: Pattern
-		get() =
-			when (this) {
-				is NodePattern -> pattern(node.recurseExpand(null, node))
-				is RecursePattern -> error("recurse")
-			}
 
 	fun contains(pattern: Pattern, trace: PatternTrace? = null): Boolean =
 		when (this) {

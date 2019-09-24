@@ -34,13 +34,13 @@ data class PatternLink(val lhs: Pattern, val line: PatternLine) : ObjectScriptin
 		line.leafPlusOrNull(pattern)?.let { lhs linkTo it }
 
 	fun getOrNull(name: String): Pattern? =
-		line.rhs.lineRhsOrNull(name)?.let { pattern(name lineTo it) }
+		line.recurseExpand().rhs.lineRhsOrNull(name)?.let { pattern(name lineTo it) }
 
 	fun setOrNull(setLine: PatternLine): PatternLink? =
 		line.rhs.setLineRhsOrNull(setLine)?.let { lhs linkTo (line.name lineTo it) }
 
-	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): PatternLink =
-		lhs.recurseExpand(rootRecurse, rootNode) linkTo line.recurseExpand(rootRecurse, rootNode)
+	fun recurseExpand(rootOrNull: RecurseRoot?): PatternLink =
+		lhs.recurseExpand(rootOrNull) linkTo line.recurseExpand(rootOrNull)
 
 	fun contains(link: PatternLink, trace: PatternTrace): Boolean =
 		lhs.contains(link.lhs, trace) && line.contains(link.line, trace)

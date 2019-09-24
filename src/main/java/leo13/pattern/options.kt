@@ -19,10 +19,10 @@ sealed class Options : ObjectScripting() {
 				is LinkOptions -> link.scriptingLine.rhs
 			}
 
-	fun recurseExpand(rootRecurse: Recurse?, rootNode: PatternNode): Options =
+	fun recurseExpand(rootOrNull: RecurseRoot?): Options =
 		when (this) {
 			is EmptyOptions -> this
-			is LinkOptions -> options(link.recurseExpand(rootRecurse, rootNode))
+			is LinkOptions -> options(link.recurseExpand(rootOrNull))
 		}
 
 	fun contains(options: Options, trace: PatternTrace): Boolean =
