@@ -27,7 +27,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler().set(
-					compiled(
+					typed(
 						expression("zero").plus("plus" lineTo expression("one")),
 						type(
 							"zero" lineTo type(),
@@ -47,7 +47,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler().set(
-					compiled(
+					typed(
 						expression(
 							"circle" lineTo expression(
 								"color" lineTo expression("red")))
@@ -72,7 +72,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler().set(
-					compiled(
+					typed(
 						expression(
 							"circle" lineTo expression(
 								"color" lineTo expression("red")))
@@ -83,14 +83,14 @@ class CompilerTest {
 	@Test
 	fun bind() {
 		compiler()
-			.set(compiled(expression("zero"), type("zero")))
+			.set(typed(expression("zero"), type("zero")))
 			.process(token(opening("in")))
 			.process(token(opening("given")))
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
 				compiler().set(
-					compiled(
+					typed(
 						expression("zero")
 							.plus(bind(expression(leo13.given.op)).op),
 						type("given" lineTo type("zero")))))
@@ -111,7 +111,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler().set(
-					compiled(
+					typed(
 						expression(
 							"x" lineTo expression("zero"),
 							"y" lineTo expression("one"))
@@ -136,7 +136,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler().set(
-					compiled(
+					typed(
 						expression(
 							"vec" lineTo expression(
 								"x" lineTo expression("zero"),
@@ -157,7 +157,7 @@ class CompilerTest {
 				compiler()
 					.set(context().give(type("zero")))
 					.set(
-						compiled(
+						typed(
 							expression(leo13.given.op),
 							type("given" lineTo type("zero")))))
 	}
@@ -178,7 +178,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler()
 					.set(
-						compiled(
+						typed(
 							expression("zero"),
 							type(options("zero", "one")))))
 	}
@@ -187,7 +187,7 @@ class CompilerTest {
 	fun processMatch() {
 		compiler()
 			.set(
-				compiled(
+				typed(
 					expression(op(value("foo"))),
 					type("bit" lineTo type(options("zero", "one")))))
 			.process(token(opening("match")))
@@ -203,7 +203,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler()
 					.set(
-						compiled(
+						typed(
 							expression(
 								op(value("foo")),
 								op(switch(
@@ -226,7 +226,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler()
 					.set(
-						compiled(
+						typed(
 							expression(value(item(function(valueContext(), expression("one")))).op),
 							type(type("zero") arrowTo type("one")))))
 	}
@@ -243,7 +243,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler()
 					.set(
-						compiled(
+						typed(
 							expression("red").plus(wrap("color").op),
 							type("color" lineTo type("red")))))
 	}
@@ -259,7 +259,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(compiler()
 				.set(
-					compiled(
+					typed(
 						expression(
 							"bit" lineTo expression("zero"),
 							"negate" lineTo expression()),

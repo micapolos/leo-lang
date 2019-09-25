@@ -8,9 +8,9 @@ import leo13.token.OpeningToken
 import leo13.token.Token
 
 data class LineCompiler(
-	val converter: Converter<Stack<CompiledLine>, Token>,
+	val converter: Converter<Stack<TypedExpressionLine>, Token>,
 	val context: Context,
-	val compiled: Stack<CompiledLine>
+	val typedExpression: Stack<TypedExpressionLine>
 ) :
 	ObjectScripting(),
 	Processor<Token> {
@@ -19,7 +19,7 @@ data class LineCompiler(
 			compilerName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
-				listName lineTo script(compiled.scripting.scriptingLine))
+				listName lineTo script(typedExpression.scripting.scriptingLine))
 
 	override fun process(token: Token) =
 		when (token) {
@@ -34,14 +34,14 @@ data class LineCompiler(
 
 	val end: Processor<Token>
 		get() =
-			converter.convert(compiled)
+			converter.convert(typedExpression)
 
-	fun plus(line: CompiledLine) =
-		copy(compiled = compiled.push(context.typeLines.resolve(line)))
+	fun plus(line: TypedExpressionLine) =
+		copy(typedExpression = typedExpression.push(context.typeLines.resolve(line)))
 }
 
 fun lineCompiler(
-	converter: Converter<Stack<CompiledLine>, Token>,
+	converter: Converter<Stack<TypedExpressionLine>, Token>,
 	context: Context,
-	compiledLineStack: Stack<CompiledLine> = stack()) =
-	LineCompiler(converter, context, compiledLineStack)
+	typedExpressionLineStack: Stack<TypedExpressionLine> = stack()) =
+	LineCompiler(converter, context, typedExpressionLineStack)

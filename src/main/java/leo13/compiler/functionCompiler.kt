@@ -13,10 +13,10 @@ import leo13.token.Token
 import leo13.value.function
 
 data class FunctionCompiler(
-	val converter: Converter<FunctionCompiled, Token>,
+	val converter: Converter<TypedFunction, Token>,
 	val context: Context,
 	val parameterType: Type,
-	val functionCompiledOrNull: FunctionCompiled?) : ObjectScripting(), Processor<Token> {
+	val typedFunctionOrNull: TypedFunction?) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
@@ -25,25 +25,25 @@ data class FunctionCompiler(
 				converter.scriptingLine,
 				context.scriptingLine,
 				parameterType.scriptingLine,
-				functionCompiledOrNull?.scriptingLine ?: compiledName lineTo script(functionName lineTo script(emptyName)))
+				typedFunctionOrNull?.scriptingLine ?: typedName lineTo script(functionName lineTo script(emptyName)))
 
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken ->
-				if (functionCompiledOrNull != null) tracedError(expectedName lineTo script(endName))
+				if (typedFunctionOrNull != null) tracedError(expectedName lineTo script(endName))
 				else if (token.opening.name == "gives")
 					if (parameterType.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(typeName))
 					else compiler(
-						converter { bodyCompiled ->
+						converter { typedBody ->
 							FunctionCompiler(
 								converter,
 								context,
 								type(),
-								compiled(
+								typed(
 									function(
 										valueContext(), // TODO
-										bodyCompiled.expression),
-									parameterType arrowTo bodyCompiled.type))
+										typedBody.expression),
+									parameterType arrowTo typedBody.type))
 						},
 						context.give(parameterType))
 				else TypeCompiler(
@@ -52,14 +52,14 @@ data class FunctionCompiler(
 							converter,
 							context,
 							newType,
-							functionCompiledOrNull)
+							typedFunctionOrNull)
 					},
 					true,
 					typeContext(context),
 					parameterType).process(token)
 			is ClosingToken -> {
-				if (functionCompiledOrNull == null) tracedError(expectedName lineTo script(givesName))
-				else converter.convert(functionCompiledOrNull)
+				if (typedFunctionOrNull == null) tracedError(expectedName lineTo script(givesName))
+				else converter.convert(typedFunctionOrNull)
 			}
 		}
 }

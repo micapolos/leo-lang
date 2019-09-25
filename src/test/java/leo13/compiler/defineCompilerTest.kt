@@ -50,7 +50,7 @@ class DefineCompilerTest {
 				DefineCompiler(
 					errorConverter(),
 					context().plus(
-						compiled(
+						typed(
 							function(valueContext(), expression("one")),
 							type("zero") arrowTo type("one"))),
 					type()))
@@ -76,7 +76,7 @@ class DefineCompilerTest {
 				DefineCompiler(
 					errorConverter(),
 					context().plus(
-						compiled(
+						typed(
 							function(valueContext(), expression("one")),
 							type("zero").plus("plus" lineTo type("one")) arrowTo type("one"))),
 					type()))

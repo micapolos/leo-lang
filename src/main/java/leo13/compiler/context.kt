@@ -35,8 +35,8 @@ fun Context.plus(definition: TypeDefinition) =
 fun Context.plus(line: TypeLine) =
 	copy(typeLines = typeLines.plus(line))
 
-fun Context.plus(function: FunctionCompiled) =
-	copy(functions = functions.plus(function))
+fun Context.plus(typedFunction: TypedFunction) =
+	copy(functions = functions.plus(typedFunction))
 
 fun Context.give(type: Type) =
 	copy(givenType = givenType.plus(givenName lineTo type))

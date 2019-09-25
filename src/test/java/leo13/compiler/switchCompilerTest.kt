@@ -21,7 +21,7 @@ class SwitchCompilerTest {
 			options(
 				"square" lineTo type("side"),
 				"circle" lineTo type("radius")),
-			compiled(switch(), type("lhs")))
+			typed(switch(), type("lhs")))
 
 		switchCompiler
 			.process(token(opening("circle")))
@@ -33,7 +33,7 @@ class SwitchCompilerTest {
 					errorConverter(),
 					context(),
 					options("square" lineTo type("side")),
-					compiled(
+					typed(
 						switch("circle" caseTo expression("circled")),
 						type("circled"))))
 	}
@@ -46,7 +46,7 @@ class SwitchCompilerTest {
 			options(
 				"square" lineTo type("side"),
 				"circle" lineTo type("radius")),
-			compiled(switch(), type("lhs")))
+			typed(switch(), type("lhs")))
 
 		switchCompiler
 			.process(token(opening("circle")))
@@ -58,7 +58,7 @@ class SwitchCompilerTest {
 					errorConverter(),
 					context(),
 					options("square" lineTo type("side")),
-					compiled(
+					typed(
 						switch("circle" caseTo expression(switched.op)),
 						type(matchingName lineTo type("circle" lineTo type("radius"))))))
 	}

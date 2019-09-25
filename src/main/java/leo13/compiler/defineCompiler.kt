@@ -59,15 +59,15 @@ data class DefineCompiler(
 					givesName ->
 						if (type.isEmpty) tracedError(expectedName lineTo script(typeName))
 						else compiler(
-							converter { bodyCompiled ->
+							converter { typedBody ->
 								DefineCompiler(
 									converter,
 									context.plus(
-										compiled(
+										typed(
 											function(
 												valueContext(), // TODO()
-												bodyCompiled.expression),
-											type arrowTo bodyCompiled.type)),
+												typedBody.expression),
+											type arrowTo typedBody.type)),
 									type())
 							},
 							context.give(type))

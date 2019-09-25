@@ -11,10 +11,10 @@ data class TypeLines(val stack: Stack<TypeLine>) : ObjectScripting() {
 	override val scriptingLine get() = linesName lineTo stack.scripting.script.emptyIfEmpty
 	fun plus(line: TypeLine) = TypeLines(stack.push(line))
 
-	fun resolve(line: CompiledLine): CompiledLine =
+	fun resolve(line: TypedExpressionLine): TypedExpressionLine =
 		stack.mapFirst {
 			notNullIf(contains(line.typeLine, null)) {
-				line.name lineTo compiled(line.rhs.expression, rhs)
+				line.name lineTo typed(line.rhs.expression, rhs)
 			}
 		} ?: line
 }

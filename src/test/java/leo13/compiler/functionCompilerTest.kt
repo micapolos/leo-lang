@@ -39,7 +39,7 @@ class FunctionCompilerTest {
 					errorConverter(),
 					context(),
 					type(),
-					compiled(
+					typed(
 						function(
 							valueContext(),
 							expression("foo")),

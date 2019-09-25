@@ -13,9 +13,9 @@ import leo13.value.item
 import leo13.value.value
 
 data class Compiler(
-	val converter: Converter<Compiled, Token>,
+	val converter: Converter<TypedExpression, Token>,
 	val context: Context,
-	val compiled: Compiled
+	val typedExpression: TypedExpression
 ) :
 	ObjectScripting(),
 	Processor<Token> {
@@ -27,7 +27,7 @@ data class Compiler(
 				compilerName lineTo script(
 					converter.scriptingLine,
 					context.scriptingLine,
-					compiled.scriptingLine))
+					typedExpression.scriptingLine))
 
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
@@ -56,22 +56,22 @@ data class Compiler(
 
 	val end
 		get() =
-			converter.convert(compiled)
+			converter.convert(typedExpression)
 
 	val beginApply: Processor<Token>
 		get() =
-			compiled
+			typedExpression
 				.type.arrowOrNull
 				?.let { arrow ->
 					compiler(
-						converter { parameterCompiled ->
-							if (parameterCompiled.type != arrow.lhs) tracedError(
+						converter { typedParameter ->
+							if (typedParameter.type != arrow.lhs) tracedError(
 								mismatchName lineTo script(
 									expectedName lineTo script(arrow.lhs.scriptingLine),
-									actualName lineTo script(parameterCompiled.type.scriptingLine)))
+									actualName lineTo script(typedParameter.type.scriptingLine)))
 							else set(
-								compiled(
-									compiled.expression.plus(apply(parameterCompiled.expression).op),
+								typed(
+									typedExpression.expression.plus(apply(typedParameter.expression).op),
 									arrow.rhs))
 						},
 						context)
@@ -101,14 +101,14 @@ data class Compiler(
 
 	val beginFunction: Processor<Token>
 		get() =
-			if (!compiled.isEmpty)
+			if (!typedExpression.isEmpty)
 				tracedError<Processor<Token>>(notName lineTo script(expectedName lineTo script(functionName)))
 			else FunctionCompiler(
-				converter { compiledFunction ->
+				converter { typedFunction ->
 					set(
-						compiled(
-							expression(op(value(item(compiledFunction.function)))),
-							type(compiledFunction.arrow)))
+						typed(
+							expression(op(value(item(typedFunction.function)))),
+							type(typedFunction.arrow)))
 				},
 				context,
 				type(),
@@ -130,7 +130,7 @@ data class Compiler(
 		get() =
 			compiler(
 				converter { plusIn(it) },
-				context.give(compiled.type))
+				context.give(typedExpression.type))
 
 	val beginOf: Processor<Token>
 		get() =
@@ -154,7 +154,7 @@ data class Compiler(
 
 	val beginMatch: Processor<Token>
 		get() =
-			compiled
+			typedExpression
 				.type.linkOrNull
 				?.let { link ->
 					link
@@ -169,9 +169,9 @@ data class Compiler(
 										converter { plus(it) },
 										context,
 										options().plusReversed(options),
-										compiled(
+										typed(
 											switch(),
-											compiled.type))
+											typedExpression.type))
 								}
 						}
 						?: tracedError(expectedName lineTo script(optionsName))
@@ -196,97 +196,97 @@ data class Compiler(
 }
 
 fun compiler() =
-	compiler(errorConverter(), context(), compiled())
+	compiler(errorConverter(), context(), typed())
 
-fun Converter<Compiled, Token>.compiler() =
-	compiler(this, context(), compiled())
+fun Converter<TypedExpression, Token>.compiler() =
+	compiler(this, context(), typed())
 
 fun compiler(
-	converter: Converter<Compiled, Token>,
+	converter: Converter<TypedExpression, Token>,
 	context: Context,
-	compiled: Compiled = compiled()) =
-	Compiler(converter, context, compiled)
+	typedExpression: TypedExpression = typed()) =
+	Compiler(converter, context, typedExpression)
 
 fun Compiler.set(context: Context) =
 	copy(context = context)
 
-fun Compiler.set(compiled: Compiled) =
-	copy(compiled = context.functions.resolve(compiled))
+fun Compiler.set(typedExpression: TypedExpression) =
+	copy(typedExpression = context.functions.resolve(typedExpression))
 
-fun Compiler.plus(line: CompiledLine): Compiler =
+fun Compiler.plus(line: TypedExpressionLine): Compiler =
 	plusOther(line)
 
 // TODO: Support multiple names.
-fun Compiler.plusAs(rhs: Compiled): Compiler =
+fun Compiler.plusAs(rhs: TypedExpression): Compiler =
 	rhs
 		.type
 		.onlyNameOrNull
 		?.let { name ->
 			set(
-				compiled(
-					compiled.expression.plus(wrap(name).op),
-					type(name lineTo compiled.type)))
+				typed(
+					typedExpression.expression.plus(wrap(name).op),
+					type(name lineTo typedExpression.type)))
 		}
 		?: tracedError(expectedName lineTo script(nameName))
 
-fun Compiler.plusContent(rhs: Compiled): Compiler =
-	if (!compiled.type.isEmpty) tracedError()
+fun Compiler.plusContent(rhs: TypedExpression): Compiler =
+	if (!typedExpression.type.isEmpty) tracedError()
 	else rhs.contentOrNull?.let { set(it) } ?: tracedError()
 
-fun Compiler.plusIn(rhs: Compiled): Compiler =
-	set(compiled.plusIn(rhs))
+fun Compiler.plusIn(rhs: TypedExpression): Compiler =
+	set(typedExpression.plusIn(rhs))
 
-fun Compiler.plusGiven(rhs: Compiled): Compiler =
-	if (!compiled.type.isEmpty || !rhs.type.isEmpty) tracedError()
-	else set(compiled(expression(given.op), context.givenType))
+fun Compiler.plusGiven(rhs: TypedExpression): Compiler =
+	if (!typedExpression.type.isEmpty || !rhs.type.isEmpty) tracedError()
+	else set(typed(expression(given.op), context.givenType))
 
-fun Compiler.plusSwitched(rhs: Compiled): Compiler =
-	if (!compiled.type.isEmpty || !rhs.type.isEmpty) tracedError()
-	else set(compiled(expression(switched.op), context.matchingType))
+fun Compiler.plusSwitched(rhs: TypedExpression): Compiler =
+	if (!typedExpression.type.isEmpty || !rhs.type.isEmpty) tracedError()
+	else set(typed(expression(switched.op), context.matchingType))
 
-fun Compiler.plusPrevious(rhs: Compiled): Compiler =
-	if (!compiled.type.isEmpty) tracedError()
+fun Compiler.plusPrevious(rhs: TypedExpression): Compiler =
+	if (!typedExpression.type.isEmpty) tracedError()
 	else rhs.previousOrNull?.let { set(it) } ?: tracedError()
 
 fun Compiler.plusOf(rhs: Type): Compiler =
-	if (rhs.contains(compiled.type)) set(compiled(compiled.expression, rhs))
+	if (rhs.contains(typedExpression.type)) set(typed(typedExpression.expression, rhs))
 	else tracedError(notName lineTo script(
 		rhs.scriptingLine,
-		containsName lineTo script(compiled.type.scriptingLine)))
+		containsName lineTo script(typedExpression.type.scriptingLine)))
 
-fun Compiler.plus(switchCompiled: SwitchCompiled): Compiler =
-	set(compiled.plus(switchCompiled))
+fun Compiler.plus(typedSwitch: TypedSwitch): Compiler =
+	set(typedExpression.plus(typedSwitch))
 
-fun Compiler.plusSet(lineStack: Stack<CompiledLine>): Compiler =
+fun Compiler.plusSet(lineStack: Stack<TypedExpressionLine>): Compiler =
 	fold(lineStack.reverse) { plusSet(it) }
 
-fun Compiler.plusSet(line: CompiledLine): Compiler =
-	compiled.type.getOrNull(line.name)
+fun Compiler.plusSet(line: TypedExpressionLine): Compiler =
+	typedExpression.type.getOrNull(line.name)
 		?.let { lineRhsType ->
 			if (type(line.name lineTo line.rhs.type) != lineRhsType)
 				tracedError(mismatchName lineTo script(
 					expectedName lineTo script(lineRhsType.scriptingLine),
 					actualName lineTo script(type(line.name lineTo line.rhs.type).scriptingLine)))
 			else set(
-				compiled(
-					compiled.expression.plus(set(line.expressionLine).op),
-					compiled.type))
+				typed(
+					typedExpression.expression.plus(set(line.expressionLine).op),
+					typedExpression.type))
 		} ?: tracedError(setName lineTo script())
 
-fun Compiler.plusOther(line: CompiledLine): Compiler =
+fun Compiler.plusOther(line: TypedExpressionLine): Compiler =
 	plusGetOrNull(line) ?: append(line)
 
-fun Compiler.plusGetOrNull(line: CompiledLine): Compiler? =
+fun Compiler.plusGetOrNull(line: TypedExpressionLine): Compiler? =
 	ifOrNull(line.rhs.type.isEmpty) {
-		compiled.getOrNull(line.name)?.run { set(this) }
+		typedExpression.getOrNull(line.name)?.run { set(this) }
 	}
 
-fun Compiler.plusType(rhs: Compiled): Compiler =
-	append(parentName lineTo compiled(rhs.type.scriptingLine.rhs))
+fun Compiler.plusType(rhs: TypedExpression): Compiler =
+	append(parentName lineTo typed(rhs.type.scriptingLine.rhs))
 
-fun Compiler.plusCompiler(rhs: Compiled): Compiler =
+fun Compiler.plusCompiler(rhs: TypedExpression): Compiler =
 	if (!rhs.type.isEmpty) tracedError(expectedName lineTo script(emptyName))
-	else set(compiled(script(scriptingLine)))
+	else set(typed(script(scriptingLine)))
 
-fun Compiler.append(line: CompiledLine): Compiler =
-	set(compiled.plus(context.typeLines.resolve(line)))
+fun Compiler.append(line: TypedExpressionLine): Compiler =
+	set(typedExpression.plus(context.typeLines.resolve(line)))

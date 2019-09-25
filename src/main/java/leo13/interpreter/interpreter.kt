@@ -1,7 +1,7 @@
 package leo13.interpreter
 
 import leo13.*
-import leo13.compiler.compiled
+import leo13.compiler.typed
 import leo13.compiler.compiler
 import leo13.expression.expression
 import leo13.expression.op
@@ -37,7 +37,7 @@ data class Interpreter(
 								compiled.type))
 					},
 					context.compilerContext,
-					compiled(
+					typed(
 						expression(op(interpreted.value)),
 						interpreted.type))
 					.process(token)

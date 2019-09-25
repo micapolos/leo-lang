@@ -13,10 +13,10 @@ import leo13.token.OpeningToken
 import leo13.token.Token
 
 data class SwitchCompiler(
-	val converter: Converter<SwitchCompiled, Token>,
+	val converter: Converter<TypedSwitch, Token>,
 	val context: Context,
 	val remainingOptions: Options,
-	val compiled: SwitchCompiled) : ObjectScripting(), Processor<Token> {
+	val typed: TypedSwitch) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
@@ -25,7 +25,7 @@ data class SwitchCompiler(
 				converter.scriptingLine,
 				context.scriptingLine,
 				remainingName lineTo script(remainingOptions.scriptingLine),
-				compiled.scriptingLine)
+				typed.scriptingLine)
 
 	override fun process(token: Token) =
 		when (token) {
@@ -41,8 +41,8 @@ data class SwitchCompiler(
 					if (optionName != name)
 						tracedError(expectedName lineTo script(optionName))
 					else compiler(
-						converter { rhsCompiled ->
-							plus(compiled(optionName caseTo rhsCompiled.expression, rhsCompiled.type))
+						converter { typedRhs ->
+							plus(typed(optionName caseTo typedRhs.expression, typedRhs.type))
 								.copy(remainingOptions = this@SwitchCompiler.remainingOptions.link.lhs)
 						},
 						context.match(type(remainingOptions.link.item.line)))
@@ -52,18 +52,18 @@ data class SwitchCompiler(
 	val end: Processor<Token>
 		get() =
 			when (remainingOptions) {
-				is EmptyOptions -> converter.convert(compiled)
+				is EmptyOptions -> converter.convert(typed)
 				is LinkOptions -> tracedError(expectedName lineTo script(remainingOptions.link.item.line.name))
 			}
 }
 
 fun switchCompiler(
-	converter: Converter<SwitchCompiled, Token> = errorConverter(),
+	converter: Converter<TypedSwitch, Token> = errorConverter(),
 	context: Context,
 	remainingOptions: Options,
-	switch: SwitchCompiled) =
-	SwitchCompiler(converter, context, remainingOptions, switch)
+	typedSwitch: TypedSwitch) =
+	SwitchCompiler(converter, context, remainingOptions, typedSwitch)
 
-fun SwitchCompiler.plus(case: CaseCompiled) =
+fun SwitchCompiler.plus(typedCase: TypedCase) =
 	copy(
-		compiled = compiled.plus(case))
+		typed = typed.plus(typedCase))

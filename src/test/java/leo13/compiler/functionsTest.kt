@@ -17,17 +17,17 @@ class FunctionsTest {
 	fun resolve() {
 		functions()
 			.plus(
-				compiled(
+				typed(
 					function(
 						valueContext(),
 						expression("bar")),
 					type("foo") arrowTo type("bar")))
 			.resolve(
-				compiled(
+				typed(
 					expression("foo"),
 					type("foo")))
 			.assertEqualTo(
-				compiled(
+				typed(
 					expression(
 						op(
 							value(

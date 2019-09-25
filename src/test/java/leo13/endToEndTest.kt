@@ -1,17 +1,13 @@
 package leo13
 
 import leo.base.assertEqualTo
-import leo13.compiler.Compiled
-import leo13.compiler.compiled
+import leo13.compiler.TypedExpression
+import leo13.compiler.typed
 import leo13.compiler.compiler
 import leo13.expression.expression
-import leo13.interpreter.Interpreted
-import leo13.interpreter.interpreted
-import leo13.interpreter.interpreter
 import leo13.type.type
 import leo13.token.Token
 import leo13.tokenizer.tokenizer
-import leo13.value.value
 import kotlin.test.Test
 
 class EndToEndTest {
@@ -24,10 +20,10 @@ class EndToEndTest {
 
 	@Test
 	fun compiling() {
-		converterCapture<Compiled, Token> {
+		converterCapture<TypedExpression, Token> {
 			compiler().tokenizer().charProcess("jajko\n").process(endOfTransmissionChar)
 		}.assertEqualTo(
-			compiled(
+			typed(
 				expression("jajko"),
 				type("jajko")))
 	}
