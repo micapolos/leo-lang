@@ -10,7 +10,7 @@ import leo13.token.Token
 data class LineCompiler(
 	val converter: Converter<Stack<ExpressionTypedLine>, Token>,
 	val context: Context,
-	val typedExpression: Stack<ExpressionTypedLine>
+	val lineStack: Stack<ExpressionTypedLine>
 ) :
 	ObjectScripting(),
 	Processor<Token> {
@@ -19,7 +19,7 @@ data class LineCompiler(
 			compilerName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
-				listName lineTo script(typedExpression.scripting.scriptingLine))
+				listName lineTo script(lineStack.scripting.scriptingLine))
 
 	override fun process(token: Token) =
 		when (token) {
@@ -35,10 +35,10 @@ data class LineCompiler(
 
 	val end: Processor<Token>
 		get() =
-			converter.convert(typedExpression)
+			converter.convert(lineStack)
 
 	fun plus(line: ExpressionTypedLine) =
-		copy(typedExpression = typedExpression.push(context.typeLines.resolve(line)))
+		copy(lineStack = lineStack.push(context.typeLines.resolve(line)))
 }
 
 fun lineCompiler(
