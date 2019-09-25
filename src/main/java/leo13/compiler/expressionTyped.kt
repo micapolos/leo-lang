@@ -13,7 +13,7 @@ import leo13.type.type
 import leo13.typedName
 import leo13.value.value
 
-data class TypedExpression(val expression: Expression, val type: Type) : ObjectScripting() {
+data class ExpressionTyped(val expression: Expression, val type: Type) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine
 		get() =
@@ -21,34 +21,34 @@ data class TypedExpression(val expression: Expression, val type: Type) : ObjectS
 }
 
 fun typed(expression: Expression, type: Type) =
-	TypedExpression(expression, type)
+	ExpressionTyped(expression, type)
 
-fun typed(vararg lines: TypedExpressionLine) =
-	TypedExpression(expression(), type()).fold(lines) { plus(it) }
+fun typed(vararg lines: ExpressionTypedLine) =
+	ExpressionTyped(expression(), type()).fold(lines) { plus(it) }
 
-fun TypedExpression.plus(line: TypedExpressionLine) =
+fun ExpressionTyped.plus(line: ExpressionTypedLine) =
 	typed(
 		expression.plus(line.op),
 		type.plus(line.typeLine))
 
-fun TypedExpression.plus(name: String) =
+fun ExpressionTyped.plus(name: String) =
 	typed(
 		expression.plus(wrap(name).op),
 		type(name lineTo type))
 
-val TypedExpression.previousOrNull: TypedExpression?
+val ExpressionTyped.previousOrNull: ExpressionTyped?
 	get() =
 		type
 			.previousOrNull
 			?.run { typed(expression.plus(previous.op), this) }
 
-val TypedExpression.contentOrNull: TypedExpression?
+val ExpressionTyped.contentOrNull: ExpressionTyped?
 	get() =
 		type
 			.contentOrNull
 			?.run { typed(expression.plus(content.op), this) }
 
-fun TypedExpression.getOrNull(name: String): TypedExpression? =
+fun ExpressionTyped.getOrNull(name: String): ExpressionTyped? =
 	type
 		.getOrNull(name)
 		?.run {
@@ -57,19 +57,19 @@ fun TypedExpression.getOrNull(name: String): TypedExpression? =
 				this)
 		}
 
-fun TypedExpression.plusIn(rhs: TypedExpression): TypedExpression =
+fun ExpressionTyped.plusIn(rhs: ExpressionTyped): ExpressionTyped =
 	typed(
 		expression.plus(bind(rhs.expression).op),
 		rhs.type)
 
-fun TypedExpression.plus(typed: TypedSwitch) =
+fun ExpressionTyped.plus(typed: SwitchTyped) =
 	typed(
 		expression.plus(typed.switch.op),
 		typed.type)
 
-fun typed(script: Script): TypedExpression =
+fun expressionTyped(script: Script): ExpressionTyped =
 	typed(expression(script.value.op), script.type)
 
-val TypedExpression.isEmpty
+val ExpressionTyped.isEmpty
 	get() =
 		expression.opStack.isEmpty && type.isEmpty

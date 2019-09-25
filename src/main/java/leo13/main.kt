@@ -1,6 +1,6 @@
 package leo13
 
-import leo13.compiler.TypedExpression
+import leo13.compiler.ExpressionTyped
 import leo13.compiler.compiler
 import leo13.expression.valueContext
 import leo13.locator.locator
@@ -12,7 +12,7 @@ import leo13.value.value
 import kotlin.system.exitProcess
 
 fun main() {
-	converterCapture<TypedExpression, Token> {
+	converterCapture<ExpressionTyped, Token> {
 		traced {
 			var charProcessor: Processor<Char> = compiler().tokenizer().locator()
 			val reader = System.`in`.reader()

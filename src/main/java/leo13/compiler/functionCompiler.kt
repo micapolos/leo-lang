@@ -13,10 +13,10 @@ import leo13.type.type
 import leo13.value.function
 
 data class FunctionCompiler(
-	val converter: Converter<TypedFunction, Token>,
+	val converter: Converter<FunctionTyped, Token>,
 	val context: Context,
 	val parameterType: Type,
-	val typedFunctionOrNull: TypedFunction?) : ObjectScripting(), Processor<Token> {
+	val typedFunctionOrNull: FunctionTyped?) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine

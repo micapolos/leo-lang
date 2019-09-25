@@ -8,11 +8,11 @@ import leo13.typedName
 import leo13.value.ValueFunction
 import leo13.value.scriptLine
 
-data class TypedFunction(val function: ValueFunction, val arrow: TypeArrow) : ObjectScripting() {
+data class FunctionTyped(val function: ValueFunction, val arrow: TypeArrow) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine
 		get() =
 			typedName lineTo script(function.scriptLine, arrow.scriptingLine)
 }
 
-fun typed(function: ValueFunction, arrow: TypeArrow) = TypedFunction(function, arrow)
+fun typed(function: ValueFunction, arrow: TypeArrow) = FunctionTyped(function, arrow)

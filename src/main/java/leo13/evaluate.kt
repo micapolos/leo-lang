@@ -3,7 +3,7 @@ package leo13
 import leo.base.Seq
 import leo.base.seq
 import leo.base.thenFn
-import leo13.compiler.TypedExpression
+import leo13.compiler.ExpressionTyped
 import leo13.compiler.compiler
 import leo13.expression.valueContext
 import leo13.locator.locator
@@ -16,7 +16,7 @@ import leo13.value.value
 
 val Seq<Char>.charEvaluateScriptLine: ScriptLine
 	get() =
-		converterCapture<TypedExpression, Token> {
+		converterCapture<ExpressionTyped, Token> {
 			traced {
 				compiler().tokenizer().locator().process(thenFn { seq(endOfTransmissionChar) })
 			}.onError {

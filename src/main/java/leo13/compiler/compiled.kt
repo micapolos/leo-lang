@@ -6,7 +6,7 @@ import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 
-data class Compiled(val context: Context, val typed: TypedExpression): ObjectScripting() {
+data class Compiled(val context: Context, val typed: ExpressionTyped) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine: ScriptLine
 		get() = compiledName lineTo script(context.scriptingLine, typed.scriptingLine)
@@ -14,4 +14,4 @@ data class Compiled(val context: Context, val typed: TypedExpression): ObjectScr
 	val begin get() = Compiled(context, typed())
 }
 
-fun compiled(context: Context = context(), typed: TypedExpression = typed()) = Compiled(context, typed)
+fun compiled(context: Context = context(), typed: ExpressionTyped = typed()) = Compiled(context, typed)

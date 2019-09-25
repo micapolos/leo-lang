@@ -13,10 +13,10 @@ import leo13.type.Options
 import leo13.type.type
 
 data class SwitchCompiler(
-	val converter: Converter<TypedSwitch, Token>,
+	val converter: Converter<SwitchTyped, Token>,
 	val context: Context,
 	val remainingOptions: Options,
-	val typed: TypedSwitch) : ObjectScripting(), Processor<Token> {
+	val typed: SwitchTyped) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
@@ -59,10 +59,10 @@ data class SwitchCompiler(
 }
 
 fun switchCompiler(
-	converter: Converter<TypedSwitch, Token> = errorConverter(),
+	converter: Converter<SwitchTyped, Token> = errorConverter(),
 	context: Context,
 	remainingOptions: Options,
-	typedSwitch: TypedSwitch) =
+	typedSwitch: SwitchTyped) =
 	SwitchCompiler(converter, context, remainingOptions, typedSwitch)
 
 fun SwitchCompiler.plus(typedCase: TypedCase) =

@@ -10,21 +10,21 @@ import leo13.script.lineTo
 import leo13.value.item
 import leo13.value.value
 
-data class Functions(val typedFunctionStack: Stack<TypedFunction>) : ObjectScripting() {
+data class Functions(val typedFunctionStack: Stack<FunctionTyped>) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine get() = functionsName lineTo typedFunctionStack.scripting.script.emptyIfEmpty
 }
 
 fun functions() = Functions(stack())
-fun Functions.plus(typedFunction: TypedFunction) = Functions(typedFunctionStack.push(typedFunction))
+fun Functions.plus(typedFunction: FunctionTyped) = Functions(typedFunctionStack.push(typedFunction))
 
-fun Functions.resolve(typedExpression: TypedExpression): TypedExpression =
+fun Functions.resolve(expressionTyped: ExpressionTyped): ExpressionTyped =
 	typedFunctionStack
 		.mapFirst {
-			notNullIf(arrow.lhs.contains(typedExpression.type)) {
+			notNullIf(arrow.lhs.contains(expressionTyped.type)) {
 				typed(
-					expression(op(value(item(function))), op(apply(typedExpression.expression))),
+					expression(op(value(item(function))), op(apply(expressionTyped.expression))),
 					arrow.rhs)
 			}
 		}
-		?: typedExpression
+		?: expressionTyped
