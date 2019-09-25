@@ -2,15 +2,15 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.valueContext
-import leo13.type.Type
-import leo13.type.arrowTo
-import leo13.type.type
 import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.type.Type
+import leo13.type.arrowTo
+import leo13.type.type
 import leo13.value.function
 
 data class DefineCompiler(
@@ -58,7 +58,7 @@ data class DefineCompiler(
 							?: tracedError(expectedName lineTo script(typeName))
 					givesName ->
 						if (type.isEmpty) tracedError(expectedName lineTo script(typeName))
-						else compiler(
+						else Compiler(
 							converter { typedBody ->
 								DefineCompiler(
 									converter,
@@ -70,7 +70,8 @@ data class DefineCompiler(
 											type arrowTo typedBody.type)),
 									type())
 							},
-							context.give(type))
+							voidProcessor(),
+							compiled(context.give(type)))
 					else -> TypeCompiler(
 						converter { lhsType ->
 							DefineCompiler(

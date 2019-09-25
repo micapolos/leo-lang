@@ -1,8 +1,9 @@
 package leo13.interpreter
 
 import leo13.*
+import leo13.compiler.Compiler
+import leo13.compiler.compiled
 import leo13.compiler.typed
-import leo13.compiler.compiler
 import leo13.expression.expression
 import leo13.expression.op
 import leo13.script.lineTo
@@ -27,7 +28,7 @@ data class Interpreter(
 	override fun process(token: Token) =
 		when (token) {
 			is OpeningToken ->
-				compiler(
+				Compiler(
 					converter { compiled ->
 						Interpreter(
 							converter,
@@ -36,10 +37,12 @@ data class Interpreter(
 								context.valueContext.evaluate(compiled.expression),
 								compiled.type))
 					},
-					context.compilerContext,
-					typed(
-						expression(op(interpreted.value)),
-						interpreted.type))
+					voidProcessor(),
+					compiled(
+						context.compilerContext,
+						typed(
+							expression(op(interpreted.value)),
+							interpreted.type)))
 					.process(token)
 			is ClosingToken ->
 				converter.convert(interpreted)

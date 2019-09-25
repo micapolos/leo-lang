@@ -2,15 +2,15 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.caseTo
-import leo13.type.EmptyOptions
-import leo13.type.LinkOptions
-import leo13.type.Options
-import leo13.type.type
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.type.EmptyOptions
+import leo13.type.LinkOptions
+import leo13.type.Options
+import leo13.type.type
 
 data class SwitchCompiler(
 	val converter: Converter<TypedSwitch, Token>,
@@ -40,12 +40,13 @@ data class SwitchCompiler(
 				remainingOptions.link.item.line.name.let { optionName ->
 					if (optionName != name)
 						tracedError(expectedName lineTo script(optionName))
-					else compiler(
+					else Compiler(
 						converter { typedRhs ->
 							plus(typed(optionName caseTo typedRhs.expression, typedRhs.type))
 								.copy(remainingOptions = this@SwitchCompiler.remainingOptions.link.lhs)
 						},
-						context.match(type(remainingOptions.link.item.line)))
+						voidProcessor(),
+						compiled(context.match(type(remainingOptions.link.item.line))))
 				}
 		}
 

@@ -10,6 +10,8 @@ data class Compiled(val context: Context, val typed: TypedExpression): ObjectScr
 	override fun toString() = super.toString()
 	override val scriptingLine: ScriptLine
 		get() = compiledName lineTo script(context.scriptingLine, typed.scriptingLine)
+
+	val begin get() = Compiled(context, typed())
 }
 
-fun compiled(context: Context, typed: TypedExpression) = Compiled(context, typed)
+fun compiled(context: Context = context(), typed: TypedExpression = typed()) = Compiled(context, typed)

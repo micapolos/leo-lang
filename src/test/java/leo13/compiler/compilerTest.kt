@@ -3,13 +3,13 @@ package leo13.compiler
 import leo.base.assertEqualTo
 import leo13.contentName
 import leo13.expression.*
+import leo13.token.closing
+import leo13.token.opening
+import leo13.token.token
 import leo13.type.arrowTo
 import leo13.type.lineTo
 import leo13.type.options
 import leo13.type.type
-import leo13.token.closing
-import leo13.token.opening
-import leo13.token.token
 import leo13.value.function
 import leo13.value.item
 import leo13.value.value
@@ -26,7 +26,7 @@ class CompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				compiler().set(
+				compiler().process(
 					typed(
 						expression("zero").plus("plus" lineTo expression("one")),
 						type(
@@ -46,7 +46,7 @@ class CompilerTest {
 			.process(token(opening("color")))
 			.process(token(closing))
 			.assertEqualTo(
-				compiler().set(
+				compiler().process(
 					typed(
 						expression(
 							"circle" lineTo expression(
@@ -71,7 +71,7 @@ class CompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				compiler().set(
+				compiler().process(
 					typed(
 						expression(
 							"circle" lineTo expression(
@@ -83,13 +83,13 @@ class CompilerTest {
 	@Test
 	fun bind() {
 		compiler()
-			.set(typed(expression("zero"), type("zero")))
+			.copy(compiled = compiled(context(), typed(expression("zero"), type("zero"))))
 			.process(token(opening("in")))
 			.process(token(opening("given")))
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				compiler().set(
+				compiler().process(
 					typed(
 						expression("zero")
 							.plus(bind(expression(leo13.given.op)).op),
@@ -110,7 +110,7 @@ class CompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				compiler().set(
+				compiler().process(
 					typed(
 						expression(
 							"x" lineTo expression("zero"),
@@ -135,7 +135,7 @@ class CompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				compiler().set(
+				compiler().process(
 					typed(
 						expression(
 							"vec" lineTo expression(
@@ -150,13 +150,13 @@ class CompilerTest {
 	@Test
 	fun given() {
 		compiler()
-			.set(context().give(type("zero")))
+			.copy(compiled = compiled(context().give(type("zero"))))
 			.process(token(opening("given")))
 			.process(token(closing))
 			.assertEqualTo(
 				compiler()
-					.set(context().give(type("zero")))
-					.set(
+					.copy(compiled = compiled(context().give(type("zero"))))
+					.process(
 						typed(
 							expression(leo13.given.op),
 							type("given" lineTo type("zero")))))
@@ -177,7 +177,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler()
-					.set(
+					.process(
 						typed(
 							expression("zero"),
 							type(options("zero", "one")))))
@@ -186,10 +186,10 @@ class CompilerTest {
 	@Test
 	fun processMatch() {
 		compiler()
-			.set(
+			.copy(compiled = compiled(context(),
 				typed(
 					expression(op(value("foo"))),
-					type("bit" lineTo type(options("zero", "one")))))
+					type("bit" lineTo type(options("zero", "one"))))))
 			.process(token(opening("match")))
 			.process(token(opening("zero")))
 			.process(token(opening("foo")))
@@ -202,7 +202,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler()
-					.set(
+					.process(
 						typed(
 							expression(
 								op(value("foo")),
@@ -225,7 +225,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler()
-					.set(
+					.process(
 						typed(
 							expression(value(item(function(valueContext(), expression("one")))).op),
 							type(type("zero") arrowTo type("one")))))
@@ -242,7 +242,7 @@ class CompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				compiler()
-					.set(
+					.process(
 						typed(
 							expression("red").plus(wrap("color").op),
 							type("color" lineTo type("red")))))
@@ -258,7 +258,7 @@ class CompilerTest {
 			.process(token(opening("negate")))
 			.process(token(closing))
 			.assertEqualTo(compiler()
-				.set(
+				.process(
 					typed(
 						expression(
 							"bit" lineTo expression("zero"),

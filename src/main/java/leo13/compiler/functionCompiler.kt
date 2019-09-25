@@ -2,14 +2,14 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.valueContext
-import leo13.type.Type
-import leo13.type.arrowTo
-import leo13.type.type
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.type.Type
+import leo13.type.arrowTo
+import leo13.type.type
 import leo13.value.function
 
 data class FunctionCompiler(
@@ -33,7 +33,7 @@ data class FunctionCompiler(
 				if (typedFunctionOrNull != null) tracedError(expectedName lineTo script(endName))
 				else if (token.opening.name == "gives")
 					if (parameterType.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(typeName))
-					else compiler(
+					else Compiler(
 						converter { typedBody ->
 							FunctionCompiler(
 								converter,
@@ -45,7 +45,8 @@ data class FunctionCompiler(
 										typedBody.expression),
 									parameterType arrowTo typedBody.type))
 						},
-						context.give(parameterType))
+						voidProcessor(),
+						compiled(context.give(parameterType)))
 				else TypeCompiler(
 					converter { newType ->
 						FunctionCompiler(
