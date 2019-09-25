@@ -9,19 +9,18 @@ import leo13.expression.valueContext
 import leo13.locator.locator
 import leo13.script.ScriptLine
 import leo13.script.lineTo
-import leo13.token.Token
 import leo13.tokenizer.tokenizer
 import leo13.value.scriptOrNull
 import leo13.value.value
 
 val Seq<Char>.charEvaluateScriptLine: ScriptLine
 	get() =
-		converterCapture<ExpressionTyped, Token> {
+		processorStack<ExpressionTyped> {
 			traced {
 				compiler().tokenizer().locator().process(thenFn { seq(endOfTransmissionChar) })
 			}.onError {
 				errorName lineTo this
 			}
-		}.let { compiled ->
-			okName lineTo valueContext().give(value()).evaluate(compiled.expression).scriptOrNull!!
+		}.linkOrNull!!.value.let { typed ->
+			okName lineTo valueContext().give(value()).evaluate(typed.expression).scriptOrNull!!
 		}

@@ -23,7 +23,7 @@ data class ExpressionTyped(val expression: Expression, val type: Type) : ObjectS
 fun typed(expression: Expression, type: Type) =
 	ExpressionTyped(expression, type)
 
-fun typed(vararg lines: ExpressionTypedLine) =
+fun expressionTyped(vararg lines: ExpressionTypedLine) =
 	ExpressionTyped(expression(), type()).fold(lines) { plus(it) }
 
 fun ExpressionTyped.plus(line: ExpressionTypedLine) =

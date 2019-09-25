@@ -389,7 +389,6 @@ class TokenizerTest {
 			.assertEqualTo(
 				processor(
 					token(opening("switch")),
-					token(closing),
 					token(closing))
 					.tokenizer())
 	}

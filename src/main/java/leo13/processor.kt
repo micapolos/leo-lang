@@ -32,6 +32,9 @@ fun <A : Scripting> processorStack(fn: Processor<A>.() -> Unit): Stack<A> {
 	return capturingProcessor.capturedStack
 }
 
+fun <A : Scripting> processorUpdate(initial: A, fn: Processor<A>.() -> Unit): A =
+	processorStack(fn).linkOrNull?.value ?: initial
+
 data class CapturingProcessor<V : Scripting>(var capturedStack: Stack<V>) : ObjectScripting(), Processor<V> {
 	override fun toString() = super.toString()
 

@@ -11,7 +11,7 @@ data class Compiled(val context: Context, val typed: ExpressionTyped) : ObjectSc
 	override val scriptingLine: ScriptLine
 		get() = compiledName lineTo script(context.scriptingLine, typed.scriptingLine)
 
-	val begin get() = Compiled(context, typed())
+	val begin get() = Compiled(context, expressionTyped())
 }
 
-fun compiled(context: Context = context(), typed: ExpressionTyped = typed()) = Compiled(context, typed)
+fun compiled(context: Context = context(), typed: ExpressionTyped = expressionTyped()) = Compiled(context, typed)

@@ -94,7 +94,7 @@ data class Compiler(
 	val beginDefine: Processor<Token>
 		get() =
 			DefineCompiler(
-				converter { newContext -> process(compiled(newContext, typed())) },
+				converter { newContext -> process(compiled(newContext, expressionTyped())) },
 				compiled.context,
 				type())
 
@@ -141,7 +141,7 @@ data class Compiler(
 				voidProcessor(),
 				compiled(
 					compiled.context.give(compiled.typed.type),
-					typed()))
+					expressionTyped()))
 
 	val beginOf: Processor<Token>
 		get() =
