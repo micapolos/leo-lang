@@ -11,6 +11,7 @@ import leo13.token.Token
 
 data class ScriptCompiler(
 	val converter: Converter<Script, Token>,
+	val processor: Processor<Script>,
 	val script: Script): ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -18,12 +19,19 @@ data class ScriptCompiler(
 		converter.scriptingLine,
 		script.scriptableLine)
 
-
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken -> ScriptCompiler(
-				converter { ScriptCompiler(converter, script.plus(token.opening.name lineTo it))},
+				converter {
+					script
+						.plus(token.opening.name lineTo it)
+						.let { script -> ScriptCompiler(converter, processor.process(script), script) }
+				},
+				voidProcessor(),
 				script())
 			is ClosingToken -> converter.convert(script)
 		}
 }
+
+val Processor<Script>.scriptTokenProcessor: Processor<Token> get() =
+	ScriptCompiler(errorConverter(), this, script())

@@ -7,6 +7,7 @@ import leo13.script.script
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
+import leo13.voidProcessor
 import kotlin.test.Test
 
 class ScriptCompilerTest {
@@ -14,12 +15,14 @@ class ScriptCompilerTest {
 	fun processName() {
 		ScriptCompiler(
 			errorConverter(),
+			voidProcessor(),
 			script())
 			.process(token(opening("point")))
 			.process(token(closing))
 			.assertEqualTo(
 				ScriptCompiler(
 					errorConverter(),
+					voidProcessor(),
 					script("point")))
 	}
 
@@ -27,6 +30,7 @@ class ScriptCompilerTest {
 	fun processLine() {
 		ScriptCompiler(
 			errorConverter(),
+			voidProcessor(),
 			script())
 			.process(token(opening("point")))
 			.process(token(opening("zero")))
@@ -35,6 +39,7 @@ class ScriptCompilerTest {
 			.assertEqualTo(
 				ScriptCompiler(
 					errorConverter(),
+					voidProcessor(),
 					script("point" lineTo script("zero"))))
 	}
 
@@ -42,6 +47,7 @@ class ScriptCompilerTest {
 	fun processLines() {
 		ScriptCompiler(
 			errorConverter(),
+			voidProcessor(),
 			script())
 			.process(token(opening("x")))
 			.process(token(opening("zero")))
@@ -54,6 +60,7 @@ class ScriptCompilerTest {
 			.assertEqualTo(
 				ScriptCompiler(
 					errorConverter(),
+					voidProcessor(),
 					script(
 						"x" lineTo script("zero"),
 						"y" lineTo script("one"))))
