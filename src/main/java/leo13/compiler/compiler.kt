@@ -14,7 +14,7 @@ import leo13.value.value
 
 data class Compiler(
 	val converter: Converter<ExpressionTyped, Token>,
-	val processor: Processor<ExpressionTyped>,
+	val processor: Processor<Compiled>,
 	val compiled: Compiled) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -27,7 +27,7 @@ data class Compiler(
 					compiled.scriptingLine))
 
 	fun process(compiled: Compiled) =
-		Compiler(converter, processor.process(compiled.typed), compiled)
+		Compiler(converter, processor.process(compiled), compiled)
 
 	fun process(typed: ExpressionTyped) =
 		process(compiled(compiled.context, typed))
@@ -215,7 +215,7 @@ data class Compiler(
 fun Converter<ExpressionTyped, Token>.compiler(context: Context = context()) =
 	Compiler(this, voidProcessor(), compiled(context))
 
-fun Processor<ExpressionTyped>.compiler(compiled: Compiled = compiled()) =
+fun Processor<Compiled>.compiler(compiled: Compiled = compiled()) =
 	Compiler(errorConverter(), this, compiled)
 
 fun compiler() = Compiler(errorConverter(), voidProcessor(), compiled())
