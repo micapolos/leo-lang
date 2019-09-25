@@ -1,2 +1,11 @@
-foo
-interpreter
+define
+	bit
+	contains: options: zero one
+
+	bit negate
+	gives: given bit match
+		zero: bit: one
+		one: bit: zero
+
+bit: zero
+negate

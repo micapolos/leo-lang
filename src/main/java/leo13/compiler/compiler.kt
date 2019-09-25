@@ -26,7 +26,9 @@ data class Compiler(
 					compiled.scriptingLine))
 
 	fun process(compiled: Compiled) =
-		lineConverterOrNull?.convert(compiled) ?: Compiler(converter, lineConverterOrNull, compiled)
+		compiled.resolve.let {
+			lineConverterOrNull?.convert(it) ?: Compiler(converter, lineConverterOrNull, it)
+		}
 
 	fun process(typed: ExpressionTyped) =
 		process(compiled(compiled.context, typed))

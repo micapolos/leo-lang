@@ -12,6 +12,10 @@ data class Compiled(val context: Context, val typed: ExpressionTyped) : ObjectSc
 		get() = compiledName lineTo script(context.scriptingLine, typed.scriptingLine)
 
 	val begin get() = Compiled(context, expressionTyped())
+
+	val resolve
+		get() =
+			context.functions.resolve(typed).let { copy(typed = it) }
 }
 
 fun compiled(context: Context = context(), typed: ExpressionTyped = expressionTyped()) = Compiled(context, typed)
