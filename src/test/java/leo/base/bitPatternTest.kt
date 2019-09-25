@@ -2,7 +2,7 @@ package leo.base
 
 import kotlin.test.Test
 
-class BitPatternTest {
+class BitTypeTest {
 	@Test
 	fun chainRecurse() {
 		val bitPattern =

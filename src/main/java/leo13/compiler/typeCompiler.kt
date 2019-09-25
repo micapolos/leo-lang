@@ -1,18 +1,18 @@
 package leo13.compiler
 
 import leo13.*
-import leo13.pattern.*
+import leo13.type.*
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
 
-data class PatternCompiler(
-	val converter: Converter<Pattern, Token>,
+data class TypeCompiler(
+	val converter: Converter<Type, Token>,
 	val partial: Boolean,
-	val context: PatternContext,
-	val pattern: Pattern
+	val context: TypeContext,
+	val type: Type
 ) :
 	ObjectScripting(),
 	Processor<Token> {
@@ -23,7 +23,7 @@ data class PatternCompiler(
 				converter.scriptingLine,
 				partialName lineTo script("$partial"),
 				context.scriptingLine,
-				pattern.scriptingLine)
+				type.scriptingLine)
 
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
@@ -39,33 +39,33 @@ data class PatternCompiler(
 
 	val beginOptions: Processor<Token>
 		get() =
-			if (!pattern.isEmpty) tracedError(notName lineTo script(expectedName lineTo script(optionsName)))
+			if (!type.isEmpty) tracedError(notName lineTo script(expectedName lineTo script(optionsName)))
 			else OptionsCompiler(
 				converter { options ->
-					PatternCompiler(
+					TypeCompiler(
 						converter,
 						partial,
 						context,
-						pattern(options))
+						type(options))
 				},
 				context,
 				options())
 
 	fun beginOther(name: String): Processor<Token> =
-		PatternCompiler(
+		TypeCompiler(
 			converter { plus(name lineTo it) },
 			false,
 			context.trace(name),
-			pattern())
+			type())
 
-	val end: Processor<Token> get() = converter.convert(pattern)
+	val end: Processor<Token> get() = converter.convert(type)
 
-	fun plus(line: PatternLine) =
-		set(pattern.plus(context.trace.resolveItem(context.definitions.resolve(line))))
+	fun plus(line: TypeLine) =
+		set(type.plus(context.trace.resolveItem(context.definitions.resolve(line))))
 
-	fun set(newPattern: Pattern) =
-		if (partial) converter.convert(newPattern)
-		else PatternCompiler(converter, partial, context, newPattern)
+	fun set(newType: Type) =
+		if (partial) converter.convert(newType)
+		else TypeCompiler(converter, partial, context, newType)
 }
 
-fun patternCompiler() = PatternCompiler(errorConverter(), false, patternContext(), pattern())
+fun typeCompiler() = TypeCompiler(errorConverter(), false, typeContext(), type())

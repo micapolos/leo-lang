@@ -2,10 +2,10 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.caseTo
-import leo13.pattern.EmptyOptions
-import leo13.pattern.LinkOptions
-import leo13.pattern.Options
-import leo13.pattern.pattern
+import leo13.type.EmptyOptions
+import leo13.type.LinkOptions
+import leo13.type.Options
+import leo13.type.type
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -42,10 +42,10 @@ data class SwitchCompiler(
 						tracedError(expectedName lineTo script(optionName))
 					else compiler(
 						converter { rhsCompiled ->
-							plus(compiled(optionName caseTo rhsCompiled.expression, rhsCompiled.pattern))
+							plus(compiled(optionName caseTo rhsCompiled.expression, rhsCompiled.type))
 								.copy(remainingOptions = this@SwitchCompiler.remainingOptions.link.lhs)
 						},
-						context.match(pattern(remainingOptions.link.item.line)))
+						context.match(type(remainingOptions.link.item.line)))
 				}
 		}
 

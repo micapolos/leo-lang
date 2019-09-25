@@ -6,8 +6,8 @@ import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 
-data class PatternContext(
-	val definitions: PatternDefinitions,
+data class TypeContext(
+	val definitions: TypeDefinitions,
 	val trace: NameTrace) : ObjectScripting() {
 	override fun toString() = super.toString()
 
@@ -16,12 +16,12 @@ data class PatternContext(
 			definitions.scriptingLine,
 			trace.scriptingLine)
 
-	fun plus(definition: PatternDefinition) =
+	fun plus(definition: TypeDefinition) =
 		copy(definitions = definitions.plus(definition))
 
 	fun trace(name: String) =
 		copy(trace = trace.plus(name))
 }
 
-fun patternContext() = PatternContext(patternDefinitions(), nameTrace())
-fun patternContext(context: Context) = PatternContext(context.patternDefinitions, nameTrace())
+fun typeContext() = TypeContext(typeDefinitions(), nameTrace())
+fun typeContext(context: Context) = TypeContext(context.typeDefinitions, nameTrace())

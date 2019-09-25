@@ -1,25 +1,25 @@
 package leo13.compiler
 
 import leo.base.assertEqualTo
-import leo13.pattern.lineTo
-import leo13.pattern.options
-import leo13.pattern.pattern
+import leo13.type.lineTo
+import leo13.type.options
+import leo13.type.type
 import kotlin.test.Test
 
-class PatternDefinitionTest {
+class TypeDefinitionTest {
 	@Test
 	fun resolveOrNull() {
 		definition(
-			"bit" lineTo pattern(),
-			pattern(
+			"bit" lineTo type(),
+			type(
 				options(
-					"zero" lineTo pattern(),
-					"one" lineTo pattern())))
-			.resolveOrNull("bit" lineTo pattern())
+					"zero" lineTo type(),
+					"one" lineTo type())))
+			.resolveOrNull("bit" lineTo type())
 			.assertEqualTo(
-				"bit" lineTo pattern(
+				"bit" lineTo type(
 					options(
-						"zero" lineTo pattern(),
-						"one" lineTo pattern())))
+						"zero" lineTo type(),
+						"one" lineTo type())))
 	}
 }

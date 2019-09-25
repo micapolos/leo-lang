@@ -1,4 +1,4 @@
-package leo13.pattern
+package leo13.type
 
 import leo.base.notNullIf
 import leo13.ObjectScripting
@@ -7,7 +7,7 @@ import leo13.script.ScriptLine
 import leo13.script.lineTo
 import leo13.script.script
 
-data class PatternLine(val name: String, val unexpandedRhs: Pattern) : ObjectScripting() {
+data class TypeLine(val name: String, val unexpandedRhs: Type) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
@@ -19,23 +19,23 @@ data class PatternLine(val name: String, val unexpandedRhs: Pattern) : ObjectScr
 	fun rhsOrNull(name: String) =
 		notNullIf(this.name == name) { unexpandedRhs }
 
-	fun setRhsOrNull(line: PatternLine): PatternLine? =
+	fun setRhsOrNull(line: TypeLine): TypeLine? =
 		notNullIf(name == line.name) { line }
 
-	fun leafPlusOrNull(pattern: Pattern): PatternLine? =
-		rhs.leafPlusOrNull(pattern)?.let { name lineTo it }
+	fun leafPlusOrNull(type: Type): TypeLine? =
+		rhs.leafPlusOrNull(type)?.let { name lineTo it }
 
 	val onlyNameOrNull: String? get() = notNullIf(unexpandedRhs.isEmpty) { name }
 
-	fun expand(rootOrNull: RecurseRoot? = null): PatternLine =
+	fun expand(rootOrNull: RecurseRoot? = null): TypeLine =
 		name lineTo unexpandedRhs.expand(rootOrNull.orNullRecurseIncrease(this))
 
-	fun contains(line: PatternLine, traceOrNull: PatternTrace?): Boolean =
+	fun contains(line: TypeLine, traceOrNull: TypeTrace?): Boolean =
 		name == line.name && unexpandedRhs.contains(line.unexpandedRhs, traceOrNull)
 }
 
-infix fun String.lineTo(rhs: Pattern) = PatternLine(this, rhs)
+infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)
 
-val ScriptLine.patternLine: PatternLine get() = name lineTo rhs.pattern
+val ScriptLine.typeLine: TypeLine get() = name lineTo rhs.type
 
-val String.patternLine: PatternLine get() = lineTo(pattern())
+val String.typeLine: TypeLine get() = lineTo(type())

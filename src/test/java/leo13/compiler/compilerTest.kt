@@ -3,10 +3,10 @@ package leo13.compiler
 import leo.base.assertEqualTo
 import leo13.contentName
 import leo13.expression.*
-import leo13.pattern.arrowTo
-import leo13.pattern.lineTo
-import leo13.pattern.options
-import leo13.pattern.pattern
+import leo13.type.arrowTo
+import leo13.type.lineTo
+import leo13.type.options
+import leo13.type.type
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -29,9 +29,9 @@ class CompilerTest {
 				compiler().set(
 					compiled(
 						expression("zero").plus("plus" lineTo expression("one")),
-						pattern(
-							"zero" lineTo pattern(),
-							"plus" lineTo pattern("one")))))
+						type(
+							"zero" lineTo type(),
+							"plus" lineTo type("one")))))
 	}
 
 	@Test
@@ -52,7 +52,7 @@ class CompilerTest {
 							"circle" lineTo expression(
 								"color" lineTo expression("red")))
 							.plus(get("color").op),
-						pattern("color" lineTo pattern("red")))))
+						type("color" lineTo type("red")))))
 	}
 
 	@Test
@@ -77,13 +77,13 @@ class CompilerTest {
 							"circle" lineTo expression(
 								"color" lineTo expression("red")))
 							.plus(set("color" lineTo expression("red")).op),
-						pattern("circle" lineTo pattern("color" lineTo pattern("red"))))))
+						type("circle" lineTo type("color" lineTo type("red"))))))
 	}
 
 	@Test
 	fun bind() {
 		compiler()
-			.set(compiled(expression("zero"), pattern("zero")))
+			.set(compiled(expression("zero"), type("zero")))
 			.process(token(opening("in")))
 			.process(token(opening("given")))
 			.process(token(closing))
@@ -93,7 +93,7 @@ class CompilerTest {
 					compiled(
 						expression("zero")
 							.plus(bind(expression(leo13.given.op)).op),
-						pattern("given" lineTo pattern("zero")))))
+						type("given" lineTo type("zero")))))
 	}
 
 	@Test
@@ -116,7 +116,7 @@ class CompilerTest {
 							"x" lineTo expression("zero"),
 							"y" lineTo expression("one"))
 							.plus(previous.op),
-						pattern("x" lineTo pattern("zero")))))
+						type("x" lineTo type("zero")))))
 	}
 
 	@Test
@@ -142,24 +142,24 @@ class CompilerTest {
 								"x" lineTo expression("zero"),
 								"y" lineTo expression("one")))
 							.plus(content.op),
-						pattern(
-							"x" lineTo pattern("zero"),
-							"y" lineTo pattern("one")))))
+						type(
+							"x" lineTo type("zero"),
+							"y" lineTo type("one")))))
 	}
 
 	@Test
 	fun given() {
 		compiler()
-			.set(context().give(pattern("zero")))
+			.set(context().give(type("zero")))
 			.process(token(opening("given")))
 			.process(token(closing))
 			.assertEqualTo(
 				compiler()
-					.set(context().give(pattern("zero")))
+					.set(context().give(type("zero")))
 					.set(
 						compiled(
 							expression(leo13.given.op),
-							pattern("given" lineTo pattern("zero")))))
+							type("given" lineTo type("zero")))))
 	}
 
 	@Test
@@ -180,7 +180,7 @@ class CompilerTest {
 					.set(
 						compiled(
 							expression("zero"),
-							pattern(options("zero", "one")))))
+							type(options("zero", "one")))))
 	}
 
 	@Test
@@ -189,7 +189,7 @@ class CompilerTest {
 			.set(
 				compiled(
 					expression(op(value("foo"))),
-					pattern("bit" lineTo pattern(options("zero", "one")))))
+					type("bit" lineTo type(options("zero", "one")))))
 			.process(token(opening("match")))
 			.process(token(opening("zero")))
 			.process(token(opening("foo")))
@@ -209,7 +209,7 @@ class CompilerTest {
 								op(switch(
 									"zero" caseTo expression("foo"),
 									"one" caseTo expression("foo")))),
-							pattern("foo"))))
+							type("foo"))))
 	}
 
 	@Test
@@ -228,7 +228,7 @@ class CompilerTest {
 					.set(
 						compiled(
 							expression(value(item(function(valueContext(), expression("one")))).op),
-							pattern(pattern("zero") arrowTo pattern("one")))))
+							type(type("zero") arrowTo type("one")))))
 	}
 
 	@Test
@@ -245,7 +245,7 @@ class CompilerTest {
 					.set(
 						compiled(
 							expression("red").plus(wrap("color").op),
-							pattern("color" lineTo pattern("red")))))
+							type("color" lineTo type("red")))))
 	}
 
 	@Test
@@ -263,8 +263,8 @@ class CompilerTest {
 						expression(
 							"bit" lineTo expression("zero"),
 							"negate" lineTo expression()),
-						pattern(
-							"bit" lineTo pattern("zero"),
-							"negate" lineTo pattern()))))
+						type(
+							"bit" lineTo type("zero"),
+							"negate" lineTo type()))))
 	}
 }

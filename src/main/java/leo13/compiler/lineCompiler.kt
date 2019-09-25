@@ -37,7 +37,7 @@ data class LineCompiler(
 			converter.convert(compiled)
 
 	fun plus(line: CompiledLine) =
-		copy(compiled = compiled.push(context.patternLines.resolve(line)))
+		copy(compiled = compiled.push(context.typeLines.resolve(line)))
 }
 
 fun lineCompiler(

@@ -21,7 +21,7 @@ fun Functions.plus(function: FunctionCompiled) = Functions(functionStack.push(fu
 fun Functions.resolve(compiled: Compiled): Compiled =
 	functionStack
 		.mapFirst {
-			notNullIf(arrow.lhs.contains(compiled.pattern)) {
+			notNullIf(arrow.lhs.contains(compiled.type)) {
 				compiled(
 					expression(op(value(item(function))), op(apply(compiled.expression))),
 					arrow.rhs)

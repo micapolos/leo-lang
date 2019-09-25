@@ -4,9 +4,9 @@ import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.expression.*
 import leo13.matchingName
-import leo13.pattern.lineTo
-import leo13.pattern.options
-import leo13.pattern.pattern
+import leo13.type.lineTo
+import leo13.type.options
+import leo13.type.type
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -19,9 +19,9 @@ class SwitchCompilerTest {
 			errorConverter(),
 			context(),
 			options(
-				"square" lineTo pattern("side"),
-				"circle" lineTo pattern("radius")),
-			compiled(switch(), pattern("lhs")))
+				"square" lineTo type("side"),
+				"circle" lineTo type("radius")),
+			compiled(switch(), type("lhs")))
 
 		switchCompiler
 			.process(token(opening("circle")))
@@ -32,10 +32,10 @@ class SwitchCompilerTest {
 				switchCompiler(
 					errorConverter(),
 					context(),
-					options("square" lineTo pattern("side")),
+					options("square" lineTo type("side")),
 					compiled(
 						switch("circle" caseTo expression("circled")),
-						pattern("circled"))))
+						type("circled"))))
 	}
 
 	@Test
@@ -44,9 +44,9 @@ class SwitchCompilerTest {
 			errorConverter(),
 			context(),
 			options(
-				"square" lineTo pattern("side"),
-				"circle" lineTo pattern("radius")),
-			compiled(switch(), pattern("lhs")))
+				"square" lineTo type("side"),
+				"circle" lineTo type("radius")),
+			compiled(switch(), type("lhs")))
 
 		switchCompiler
 			.process(token(opening("circle")))
@@ -57,9 +57,9 @@ class SwitchCompilerTest {
 				switchCompiler(
 					errorConverter(),
 					context(),
-					options("square" lineTo pattern("side")),
+					options("square" lineTo type("side")),
 					compiled(
 						switch("circle" caseTo expression(switched.op)),
-						pattern(matchingName lineTo pattern("circle" lineTo pattern("radius"))))))
+						type(matchingName lineTo type("circle" lineTo type("radius"))))))
 	}
 }

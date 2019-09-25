@@ -1,4 +1,4 @@
-package leo13.pattern
+package leo13.type
 
 import leo.base.fold
 import leo13.Empty
@@ -20,10 +20,10 @@ sealed class Options : ObjectScripting() {
 			}
 
 	// TODO: Rename to plusOrNull and detect duplicates
-	fun plus(item: PatternItem) = options(linkTo(item))
+	fun plus(item: TypeItem) = options(linkTo(item))
 
-	fun plus(line: PatternLine) = plus(item(line))
-	fun plus(name: String) = plus(name lineTo pattern())
+	fun plus(line: TypeLine) = plus(item(line))
+	fun plus(name: String) = plus(name lineTo type())
 
 	fun expand(rootOrNull: RecurseRoot?): Options =
 		when (this) {
@@ -31,30 +31,30 @@ sealed class Options : ObjectScripting() {
 			is LinkOptions -> options(link.expand(rootOrNull))
 		}
 
-	fun contains(options: Options, trace: PatternTrace? = null): Boolean =
+	fun contains(options: Options, trace: TypeTrace? = null): Boolean =
 		when (this) {
 			is EmptyOptions -> options is EmptyOptions
 			is LinkOptions -> options is LinkOptions && link.contains(options.link, trace)
 		}
 
-	fun contains(item: PatternItem, traceOrNull: PatternTrace? = null): Boolean =
+	fun contains(item: TypeItem, traceOrNull: TypeTrace? = null): Boolean =
 		contains(item.line, traceOrNull)
 
-	fun contains(line: PatternLine, trace: PatternTrace? = null): Boolean =
+	fun contains(line: TypeLine, trace: TypeTrace? = null): Boolean =
 		when (this) {
 			is EmptyOptions -> false
 			is LinkOptions -> link.contains(line, trace)
 		}
 
-	fun contains(link: PatternLink, trace: PatternTrace? = null): Boolean =
+	fun contains(link: TypeLink, trace: TypeTrace? = null): Boolean =
 		link.lhs.isEmpty && contains(link.item, trace)
 
-	fun contains(node: Pattern, trace: PatternTrace? = null): Boolean =
+	fun contains(node: Type, trace: TypeTrace? = null): Boolean =
 		when (node) {
-			is EmptyPattern -> false
-			is LinkPattern -> contains(node.link, trace)
-			is OptionsPattern -> contains(node.options, trace)
-			is ArrowPattern -> false
+			is EmptyType -> false
+			is LinkType -> contains(node.link, trace)
+			is OptionsType -> contains(node.options, trace)
+			is ArrowType -> false
 		}
 }
 
@@ -69,8 +69,8 @@ data class LinkOptions(val link: OptionsLink) : Options() {
 fun options(empty: Empty): Options = EmptyOptions(empty)
 fun options(link: OptionsLink): Options = LinkOptions(link)
 
-fun options(vararg items: PatternItem) = options(empty).fold(items) { plus(it) }
-fun options(line: PatternLine, vararg lines: PatternLine) = options(empty).plus(line).fold(lines) { plus(it) }
+fun options(vararg items: TypeItem) = options(empty).fold(items) { plus(it) }
+fun options(line: TypeLine, vararg lines: TypeLine) = options(empty).plus(line).fold(lines) { plus(it) }
 fun options(name: String, vararg names: String) = options(empty).plus(name).fold(names) { plus(it) }
 
 tailrec fun Options.plusReversed(options: Options): Options =

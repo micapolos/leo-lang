@@ -5,8 +5,8 @@ import leo13.expression.apply
 import leo13.expression.expression
 import leo13.expression.op
 import leo13.expression.valueContext
-import leo13.pattern.arrowTo
-import leo13.pattern.pattern
+import leo13.type.arrowTo
+import leo13.type.type
 import leo13.value.function
 import leo13.value.item
 import leo13.value.value
@@ -21,11 +21,11 @@ class FunctionsTest {
 					function(
 						valueContext(),
 						expression("bar")),
-					pattern("foo") arrowTo pattern("bar")))
+					type("foo") arrowTo type("bar")))
 			.resolve(
 				compiled(
 					expression("foo"),
-					pattern("foo")))
+					type("foo")))
 			.assertEqualTo(
 				compiled(
 					expression(
@@ -36,6 +36,6 @@ class FunctionsTest {
 										valueContext(),
 										expression("bar"))))),
 						op(apply(expression("foo")))),
-					pattern("bar")))
+					type("bar")))
 	}
 }

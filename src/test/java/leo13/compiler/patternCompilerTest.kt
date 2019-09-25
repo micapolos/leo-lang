@@ -2,49 +2,49 @@ package leo13.compiler
 
 import leo.base.assertEqualTo
 import leo13.errorConverter
-import leo13.pattern.*
+import leo13.type.*
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
 import kotlin.test.Test
 
-class PatternCompilerTest {
+class TypeCompilerTest {
 	@Test
 	fun name() {
-		patternCompiler()
+		typeCompiler()
 			.process(token(opening("zero")))
 			.process(token(closing))
-			.assertEqualTo(patternCompiler().set(pattern("zero")))
+			.assertEqualTo(typeCompiler().set(type("zero")))
 	}
 
 	@Test
 	fun resolution() {
-		val compiler = PatternCompiler(
+		val compiler = TypeCompiler(
 			errorConverter(),
 			false,
-			patternContext().plus(
+			typeContext().plus(
 				definition(
-					"bit" lineTo pattern(),
-					pattern(
+					"bit" lineTo type(),
+					type(
 						options(
-							"zero" lineTo pattern(),
-							"one" lineTo pattern())))),
-			pattern())
+							"zero" lineTo type(),
+							"one" lineTo type())))),
+			type())
 
 		compiler
 			.process(token(opening("bit")))
 			.process(token(closing))
 			.assertEqualTo(
 				compiler.set(
-					pattern("bit" lineTo pattern(
+					type("bit" lineTo type(
 						options(
-							"zero" lineTo pattern(),
-							"one" lineTo pattern())))))
+							"zero" lineTo type(),
+							"one" lineTo type())))))
 	}
 
 	@Test
 	fun processOptions() {
-		patternCompiler()
+		typeCompiler()
 			.process(token(opening("options")))
 			.process(token(opening("zero")))
 			.process(token(closing))
@@ -52,19 +52,19 @@ class PatternCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				patternCompiler().set(
-					pattern(options("zero", "one"))))
+				typeCompiler().set(
+					type(options("zero", "one"))))
 	}
 
 	@Test
 	fun processResolution() {
-		val patternCompiler = PatternCompiler(
+		val patternCompiler = TypeCompiler(
 			errorConverter(),
 			false,
-			patternContext()
-				.plus(definition("zero" lineTo pattern(), pattern("resolved")))
-				.plus(definition("one" lineTo pattern(), pattern("resolved"))),
-			pattern())
+			typeContext()
+				.plus(definition("zero" lineTo type(), type("resolved")))
+				.plus(definition("one" lineTo type(), type("resolved"))),
+			type())
 
 		patternCompiler
 			.process(token(opening("options")))
@@ -77,34 +77,34 @@ class PatternCompilerTest {
 			.process(token(closing))
 			.assertEqualTo(
 				patternCompiler.set(
-					pattern(
+					type(
 						options(
-							"zero" lineTo pattern("resolved"),
-							"one" lineTo pattern("resolved"),
-							"two" lineTo pattern()))))
+							"zero" lineTo type("resolved"),
+							"one" lineTo type("resolved"),
+							"two" lineTo type()))))
 	}
 
 	@Test
 	fun processRecurse() {
-		val patternCompiler = PatternCompiler(
+		val patternCompiler = TypeCompiler(
 			errorConverter(),
 			false,
-			patternContext().trace("list").trace("link"),
-			pattern())
+			typeContext().trace("list").trace("link"),
+			type())
 
 		patternCompiler
 			.process(token(opening("link")))
 			.process(token(closing))
-			.assertEqualTo(patternCompiler.set(pattern(onceRecurse)))
+			.assertEqualTo(patternCompiler.set(type(onceRecurse)))
 
 		patternCompiler
 			.process(token(opening("list")))
 			.process(token(closing))
-			.assertEqualTo(patternCompiler.set(pattern(onceRecurse.increase)))
+			.assertEqualTo(patternCompiler.set(type(onceRecurse.increase)))
 
 		patternCompiler
 			.process(token(opening("other")))
 			.process(token(closing))
-			.assertEqualTo(patternCompiler.set(pattern("other")))
+			.assertEqualTo(patternCompiler.set(type("other")))
 	}
 }

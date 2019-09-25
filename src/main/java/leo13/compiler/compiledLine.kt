@@ -5,7 +5,7 @@ import leo13.expression.lineTo
 import leo13.expression.op
 import leo13.expression.plus
 import leo13.lineName
-import leo13.pattern.lineTo
+import leo13.type.lineTo
 import leo13.script.lineTo
 import leo13.script.script
 
@@ -18,4 +18,4 @@ infix fun String.lineTo(rhs: Compiled) = CompiledLine(this, rhs)
 
 val CompiledLine.op get() = plus(name lineTo rhs.expression).op
 val CompiledLine.expressionLine get() = name lineTo rhs.expression
-val CompiledLine.patternLine get() = name lineTo rhs.pattern
+val CompiledLine.typeLine get() = name lineTo rhs.type

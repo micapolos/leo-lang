@@ -2,7 +2,7 @@ package leo13.compiler
 
 import leo.base.assertEqualTo
 import leo13.errorConverter
-import leo13.pattern.options
+import leo13.type.options
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -13,7 +13,7 @@ class OptionsCompilerTest {
 	fun process() {
 		OptionsCompiler(
 			errorConverter(),
-			patternContext(),
+			typeContext(),
 			options())
 			.process(token(opening("zero")))
 			.process(token(closing))
@@ -22,7 +22,7 @@ class OptionsCompilerTest {
 			.assertEqualTo(
 				OptionsCompiler(
 					errorConverter(),
-					patternContext(),
+					typeContext(),
 					options("zero", "one")))
 	}
 }

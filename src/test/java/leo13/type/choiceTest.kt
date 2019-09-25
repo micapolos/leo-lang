@@ -1,4 +1,4 @@
-package leo13.pattern
+package leo13.type
 
 import leo.base.assertEqualTo
 import leo13.script.lineTo
@@ -13,8 +13,8 @@ class OptionsTest {
 			.assertEqualTo("options" lineTo script())
 
 		options(
-			"zero" lineTo pattern("foo"),
-			"one" lineTo pattern("bar"))
+			"zero" lineTo type("foo"),
+			"one" lineTo type("bar"))
 			.scriptingLine
 			.assertEqualTo(
 				"options" lineTo script(
@@ -25,7 +25,7 @@ class OptionsTest {
 	@Test
 	fun containsLine() {
 		options("zero", "one")
-			.contains("zero" lineTo pattern())
+			.contains("zero" lineTo type())
 			.assertEqualTo(true)
 	}
 
@@ -37,16 +37,16 @@ class OptionsTest {
 	}
 
 	@Test
-	fun containsLinePattern() {
+	fun containsLineType() {
 		options("zero", "one")
-			.contains(pattern("zero" lineTo pattern()))
+			.contains(type("zero" lineTo type()))
 			.assertEqualTo(true)
 	}
 
 	@Test
-	fun containsOptionsPattern() {
+	fun containsOptionsType() {
 		options("zero", "one")
-			.contains(pattern(options("zero", "one")))
+			.contains(type(options("zero", "one")))
 			.assertEqualTo(true)
 	}
 }

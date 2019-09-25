@@ -3,7 +3,7 @@ package leo13.compiler
 import leo.base.ifOrNull
 import leo13.*
 import leo13.expression.*
-import leo13.pattern.*
+import leo13.type.*
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -49,7 +49,7 @@ data class Compiler(
 			setName -> beginSet
 			matchName -> beginMatch
 			matchingName -> beginMatching
-			patternName -> beginPattern
+			typeName -> beginType
 			compilerName -> beginCompiler
 			else -> beginOther(name)
 		}
@@ -61,14 +61,14 @@ data class Compiler(
 	val beginApply: Processor<Token>
 		get() =
 			compiled
-				.pattern.arrowOrNull
+				.type.arrowOrNull
 				?.let { arrow ->
 					compiler(
 						converter { parameterCompiled ->
-							if (parameterCompiled.pattern != arrow.lhs) tracedError(
+							if (parameterCompiled.type != arrow.lhs) tracedError(
 								mismatchName lineTo script(
 									expectedName lineTo script(arrow.lhs.scriptingLine),
-									actualName lineTo script(parameterCompiled.pattern.scriptingLine)))
+									actualName lineTo script(parameterCompiled.type.scriptingLine)))
 							else set(
 								compiled(
 									compiled.expression.plus(apply(parameterCompiled.expression).op),
@@ -91,7 +91,7 @@ data class Compiler(
 					copy(context = newContext)
 				},
 				context,
-				pattern())
+				type())
 
 	val beginContent: Processor<Token>
 		get() =
@@ -108,10 +108,10 @@ data class Compiler(
 					set(
 						compiled(
 							expression(op(value(item(compiledFunction.function)))),
-							pattern(compiledFunction.arrow)))
+							type(compiledFunction.arrow)))
 				},
 				context,
-				pattern(),
+				type(),
 				null)
 
 	val beginGiven: Processor<Token>
@@ -130,15 +130,15 @@ data class Compiler(
 		get() =
 			compiler(
 				converter { plusIn(it) },
-				context.give(compiled.pattern))
+				context.give(compiled.type))
 
 	val beginOf: Processor<Token>
 		get() =
-			PatternCompiler(
+			TypeCompiler(
 				converter { plusOf(it) },
 				false,
-				patternContext(context),
-				pattern())
+				typeContext(context),
+				type())
 
 	val beginPrevious: Processor<Token>
 		get() =
@@ -155,7 +155,7 @@ data class Compiler(
 	val beginMatch: Processor<Token>
 		get() =
 			compiled
-				.pattern.linkOrNull
+				.type.linkOrNull
 				?.let { link ->
 					link
 						.item
@@ -171,16 +171,16 @@ data class Compiler(
 										options().plusReversed(options),
 										compiled(
 											switch(),
-											compiled.pattern))
+											compiled.type))
 								}
 						}
 						?: tracedError(expectedName lineTo script(optionsName))
 				} ?: tracedError(emptyName lineTo script())
 
-	val beginPattern: Processor<Token>
+	val beginType: Processor<Token>
 		get() =
 			compiler(
-				converter { plusPattern(it) },
+				converter { plusType(it) },
 				context)
 
 	val beginCompiler: Processor<Token>
@@ -219,40 +219,40 @@ fun Compiler.plus(line: CompiledLine): Compiler =
 // TODO: Support multiple names.
 fun Compiler.plusAs(rhs: Compiled): Compiler =
 	rhs
-		.pattern
+		.type
 		.onlyNameOrNull
 		?.let { name ->
 			set(
 				compiled(
 					compiled.expression.plus(wrap(name).op),
-					pattern(name lineTo compiled.pattern)))
+					type(name lineTo compiled.type)))
 		}
 		?: tracedError(expectedName lineTo script(nameName))
 
 fun Compiler.plusContent(rhs: Compiled): Compiler =
-	if (!compiled.pattern.isEmpty) tracedError()
+	if (!compiled.type.isEmpty) tracedError()
 	else rhs.contentOrNull?.let { set(it) } ?: tracedError()
 
 fun Compiler.plusIn(rhs: Compiled): Compiler =
 	set(compiled.plusIn(rhs))
 
 fun Compiler.plusGiven(rhs: Compiled): Compiler =
-	if (!compiled.pattern.isEmpty || !rhs.pattern.isEmpty) tracedError()
-	else set(compiled(expression(given.op), context.givenPattern))
+	if (!compiled.type.isEmpty || !rhs.type.isEmpty) tracedError()
+	else set(compiled(expression(given.op), context.givenType))
 
 fun Compiler.plusSwitched(rhs: Compiled): Compiler =
-	if (!compiled.pattern.isEmpty || !rhs.pattern.isEmpty) tracedError()
-	else set(compiled(expression(switched.op), context.matchingPattern))
+	if (!compiled.type.isEmpty || !rhs.type.isEmpty) tracedError()
+	else set(compiled(expression(switched.op), context.matchingType))
 
 fun Compiler.plusPrevious(rhs: Compiled): Compiler =
-	if (!compiled.pattern.isEmpty) tracedError()
+	if (!compiled.type.isEmpty) tracedError()
 	else rhs.previousOrNull?.let { set(it) } ?: tracedError()
 
-fun Compiler.plusOf(rhs: Pattern): Compiler =
-	if (rhs.contains(compiled.pattern)) set(compiled(compiled.expression, rhs))
+fun Compiler.plusOf(rhs: Type): Compiler =
+	if (rhs.contains(compiled.type)) set(compiled(compiled.expression, rhs))
 	else tracedError(notName lineTo script(
 		rhs.scriptingLine,
-		containsName lineTo script(compiled.pattern.scriptingLine)))
+		containsName lineTo script(compiled.type.scriptingLine)))
 
 fun Compiler.plus(switchCompiled: SwitchCompiled): Compiler =
 	set(compiled.plus(switchCompiled))
@@ -261,32 +261,32 @@ fun Compiler.plusSet(lineStack: Stack<CompiledLine>): Compiler =
 	fold(lineStack.reverse) { plusSet(it) }
 
 fun Compiler.plusSet(line: CompiledLine): Compiler =
-	compiled.pattern.getOrNull(line.name)
-		?.let { lineRhsPattern ->
-			if (pattern(line.name lineTo line.rhs.pattern) != lineRhsPattern)
+	compiled.type.getOrNull(line.name)
+		?.let { lineRhsType ->
+			if (type(line.name lineTo line.rhs.type) != lineRhsType)
 				tracedError(mismatchName lineTo script(
-					expectedName lineTo script(lineRhsPattern.scriptingLine),
-					actualName lineTo script(pattern(line.name lineTo line.rhs.pattern).scriptingLine)))
+					expectedName lineTo script(lineRhsType.scriptingLine),
+					actualName lineTo script(type(line.name lineTo line.rhs.type).scriptingLine)))
 			else set(
 				compiled(
 					compiled.expression.plus(set(line.expressionLine).op),
-					compiled.pattern))
+					compiled.type))
 		} ?: tracedError(setName lineTo script())
 
 fun Compiler.plusOther(line: CompiledLine): Compiler =
 	plusGetOrNull(line) ?: append(line)
 
 fun Compiler.plusGetOrNull(line: CompiledLine): Compiler? =
-	ifOrNull(line.rhs.pattern.isEmpty) {
+	ifOrNull(line.rhs.type.isEmpty) {
 		compiled.getOrNull(line.name)?.run { set(this) }
 	}
 
-fun Compiler.plusPattern(rhs: Compiled): Compiler =
-	append(parentName lineTo compiled(rhs.pattern.scriptingLine.rhs))
+fun Compiler.plusType(rhs: Compiled): Compiler =
+	append(parentName lineTo compiled(rhs.type.scriptingLine.rhs))
 
 fun Compiler.plusCompiler(rhs: Compiled): Compiler =
-	if (!rhs.pattern.isEmpty) tracedError(expectedName lineTo script(emptyName))
+	if (!rhs.type.isEmpty) tracedError(expectedName lineTo script(emptyName))
 	else set(compiled(script(scriptingLine)))
 
 fun Compiler.append(line: CompiledLine): Compiler =
-	set(compiled.plus(context.patternLines.resolve(line)))
+	set(compiled.plus(context.typeLines.resolve(line)))

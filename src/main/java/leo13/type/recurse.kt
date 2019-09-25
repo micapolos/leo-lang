@@ -1,4 +1,4 @@
-package leo13.pattern
+package leo13.type
 
 import leo.base.orIfNull
 import leo13.ObjectScripting

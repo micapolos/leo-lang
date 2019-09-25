@@ -1,4 +1,4 @@
-package leo13.pattern
+package leo13.type
 
 import leo.base.notNullOrError
 import leo13.ObjectScripting
@@ -8,34 +8,34 @@ import leo13.script.plus
 import leo13.script.script
 import leo13.traceName
 
-data class PatternTrace(val lhsOrNull: PatternTrace?, val line: PatternLine) : ObjectScripting() {
+data class TypeTrace(val lhsOrNull: TypeTrace?, val line: TypeLine) : ObjectScripting() {
 	override fun toString() = super.toString()
 
 	override val scriptingLine: ScriptLine
 		get() = traceName lineTo (lhsOrNull?.scriptingLine?.rhs ?: script()).plus(line.scriptingLine.rhs)
 
-	fun plus(item: PatternItem) =
+	fun plus(item: TypeItem) =
 		when (item) {
-			is LinePatternItem -> plus(item.line)
-			is RecursePatternItem -> plus(item.recurse)
+			is LineTypeItem -> plus(item.line)
+			is RecurseTypeItem -> plus(item.recurse)
 		}
 
-	fun plus(line: PatternLine) =
-		PatternTrace(this, line)
+	fun plus(line: TypeLine) =
+		TypeTrace(this, line)
 
-	fun plus(recurse: Recurse): PatternTrace =
+	fun plus(recurse: Recurse): TypeTrace =
 		if (recurse.lhsOrNull == null) this
 		else lhsOrNull.notNullOrError("recurse").run { plus(recurse.lhsOrNull) }
 
 }
 
-fun trace(line: PatternLine) = PatternTrace(null, line)
+fun trace(line: TypeLine) = TypeTrace(null, line)
 
-fun PatternTrace?.orNullPlus(item: PatternItem) =
+fun TypeTrace?.orNullPlus(item: TypeItem) =
 	this?.plus(item).notNullOrError("recurse")
 
-fun PatternTrace?.orNullPlus(line: PatternLine) =
+fun TypeTrace?.orNullPlus(line: TypeLine) =
 	this?.plus(line) ?: trace(line)
 
-fun PatternTrace?.orNullPlus(recurse: Recurse): PatternTrace =
+fun TypeTrace?.orNullPlus(recurse: Recurse): TypeTrace =
 	notNullOrError("recurse").plus(recurse)

@@ -2,9 +2,9 @@ package leo13.compiler
 
 import leo13.*
 import leo13.expression.valueContext
-import leo13.pattern.Pattern
-import leo13.pattern.arrowTo
-import leo13.pattern.pattern
+import leo13.type.Type
+import leo13.type.arrowTo
+import leo13.type.type
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -15,7 +15,7 @@ import leo13.value.function
 data class FunctionCompiler(
 	val converter: Converter<FunctionCompiled, Token>,
 	val context: Context,
-	val parameterPattern: Pattern,
+	val parameterType: Type,
 	val functionCompiledOrNull: FunctionCompiled?) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -24,7 +24,7 @@ data class FunctionCompiler(
 			compilerName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
-				parameterPattern.scriptingLine,
+				parameterType.scriptingLine,
 				functionCompiledOrNull?.scriptingLine ?: compiledName lineTo script(functionName lineTo script(emptyName)))
 
 	override fun process(token: Token): Processor<Token> =
@@ -32,31 +32,31 @@ data class FunctionCompiler(
 			is OpeningToken ->
 				if (functionCompiledOrNull != null) tracedError(expectedName lineTo script(endName))
 				else if (token.opening.name == "gives")
-					if (parameterPattern.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(patternName))
+					if (parameterType.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(typeName))
 					else compiler(
 						converter { bodyCompiled ->
 							FunctionCompiler(
 								converter,
 								context,
-								pattern(),
+								type(),
 								compiled(
 									function(
 										valueContext(), // TODO
 										bodyCompiled.expression),
-									parameterPattern arrowTo bodyCompiled.pattern))
+									parameterType arrowTo bodyCompiled.type))
 						},
-						context.give(parameterPattern))
-				else PatternCompiler(
-					converter { newPattern ->
+						context.give(parameterType))
+				else TypeCompiler(
+					converter { newType ->
 						FunctionCompiler(
 							converter,
 							context,
-							newPattern,
+							newType,
 							functionCompiledOrNull)
 					},
 					true,
-					patternContext(context),
-					parameterPattern).process(token)
+					typeContext(context),
+					parameterType).process(token)
 			is ClosingToken -> {
 				if (functionCompiledOrNull == null) tracedError(expectedName lineTo script(givesName))
 				else converter.convert(functionCompiledOrNull)

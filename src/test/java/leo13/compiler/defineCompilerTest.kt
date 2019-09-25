@@ -5,7 +5,7 @@ import leo13.containsName
 import leo13.errorConverter
 import leo13.expression.expression
 import leo13.expression.valueContext
-import leo13.pattern.*
+import leo13.type.*
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -18,7 +18,7 @@ class DefineCompilerTest {
 		DefineCompiler(
 			errorConverter(),
 			context(),
-			pattern())
+			type())
 			.process(token(opening("bit")))
 			.process(token(closing))
 			.process(token(opening(containsName)))
@@ -29,9 +29,9 @@ class DefineCompilerTest {
 				DefineCompiler(
 					errorConverter(),
 					context()
-						.plus(definition("bit" lineTo pattern(), pattern("one")))
-						.plus("bit" lineTo pattern("one")),
-					pattern()))
+						.plus(definition("bit" lineTo type(), type("one")))
+						.plus("bit" lineTo type("one")),
+					type()))
 	}
 
 	@Test
@@ -39,7 +39,7 @@ class DefineCompilerTest {
 		DefineCompiler(
 			errorConverter(),
 			context(),
-			pattern())
+			type())
 			.process(token(opening("zero")))
 			.process(token(closing))
 			.process(token(opening("gives")))
@@ -52,8 +52,8 @@ class DefineCompilerTest {
 					context().plus(
 						compiled(
 							function(valueContext(), expression("one")),
-							pattern("zero") arrowTo pattern("one"))),
-					pattern()))
+							type("zero") arrowTo type("one"))),
+					type()))
 	}
 
 	@Test
@@ -61,7 +61,7 @@ class DefineCompilerTest {
 		DefineCompiler(
 			errorConverter(),
 			context(),
-			pattern())
+			type())
 			.process(token(opening("zero")))
 			.process(token(closing))
 			.process(token(opening("plus")))
@@ -78,8 +78,8 @@ class DefineCompilerTest {
 					context().plus(
 						compiled(
 							function(valueContext(), expression("one")),
-							pattern("zero").plus("plus" lineTo pattern("one")) arrowTo pattern("one"))),
-					pattern()))
+							type("zero").plus("plus" lineTo type("one")) arrowTo type("one"))),
+					type()))
 	}
 
 	@Test
@@ -87,7 +87,7 @@ class DefineCompilerTest {
 		val defineCompiler = DefineCompiler(
 			errorConverter(),
 			context(),
-			pattern())
+			type())
 
 		defineCompiler
 			.process(token(opening("list")))
@@ -104,9 +104,9 @@ class DefineCompilerTest {
 					context()
 						.plus(
 							definition(
-								"list" lineTo pattern("link"),
-								pattern(onceRecurse.increase)))
-						.plus("list" lineTo pattern("link" lineTo pattern(onceRecurse.increase))),
-					pattern()))
+								"list" lineTo type("link"),
+								type(onceRecurse.increase)))
+						.plus("list" lineTo type("link" lineTo type(onceRecurse.increase))),
+					type()))
 	}
 }

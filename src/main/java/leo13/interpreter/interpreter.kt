@@ -34,12 +34,12 @@ data class Interpreter(
 							context,
 							interpreted(
 								context.valueContext.evaluate(compiled.expression),
-								compiled.pattern))
+								compiled.type))
 					},
 					context.compilerContext,
 					compiled(
 						expression(op(interpreted.value)),
-						interpreted.pattern))
+						interpreted.type))
 					.process(token)
 			is ClosingToken ->
 				converter.convert(interpreted)

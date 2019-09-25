@@ -4,10 +4,10 @@ import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.expression.expression
 import leo13.expression.valueContext
-import leo13.pattern.arrowTo
-import leo13.pattern.lineTo
-import leo13.pattern.options
-import leo13.pattern.pattern
+import leo13.type.arrowTo
+import leo13.type.lineTo
+import leo13.type.options
+import leo13.type.type
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -20,7 +20,7 @@ class FunctionCompilerTest {
 		FunctionCompiler(
 			errorConverter(),
 			context(),
-			pattern(),
+			type(),
 			null)
 			.process(token(opening("bit")))
 			.process(token(opening("options")))
@@ -38,11 +38,11 @@ class FunctionCompilerTest {
 				FunctionCompiler(
 					errorConverter(),
 					context(),
-					pattern(),
+					type(),
 					compiled(
 						function(
 							valueContext(),
 							expression("foo")),
-						pattern("bit" lineTo pattern(options("zero", "one"))) arrowTo pattern("foo"))))
+						type("bit" lineTo type(options("zero", "one"))) arrowTo type("foo"))))
 	}
 }

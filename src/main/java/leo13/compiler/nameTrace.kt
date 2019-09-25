@@ -1,7 +1,7 @@
 package leo13.compiler
 
 import leo13.*
-import leo13.pattern.*
+import leo13.type.*
 import leo13.script.*
 
 data class NameTrace(val stack: Stack<String>) : ObjectScripting() {
@@ -20,7 +20,7 @@ data class NameTrace(val stack: Stack<String>) : ObjectScripting() {
 				else NameTrace(stack.link.stack).recurseOrNull(name)?.increase
 		}
 
-	fun resolveItem(line: PatternLine): PatternItem =
+	fun resolveItem(line: TypeLine): TypeItem =
 		line
 			.onlyNameOrNull
 			?.let { name -> recurseOrNull(name) }
