@@ -70,7 +70,7 @@ data class DefineCompiler(
 											type arrowTo typedBody.type)),
 									type())
 							},
-							voidProcessor(),
+							null,
 							compiled(context.give(type)))
 					else -> TypeCompiler(
 						converter { lhsType ->

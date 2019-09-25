@@ -56,7 +56,7 @@ data class Interpreter(
 	fun beginOther(name: String) =
 		Compiler(
 			errorConverter(),
-			processor { process(it) },
+			converter { process(it) },
 			compiled(
 				interpreted.context.compilerContext,
 				typed(

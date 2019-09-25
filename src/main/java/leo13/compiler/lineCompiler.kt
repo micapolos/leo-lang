@@ -30,7 +30,7 @@ data class LineCompiler(
 	fun begin(name: String): Processor<Token> =
 		Compiler(
 			converter { plus(name lineTo it) },
-			voidProcessor(),
+			null,
 			compiled(context))
 
 	val end: Processor<Token>

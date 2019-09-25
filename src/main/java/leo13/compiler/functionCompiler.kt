@@ -45,7 +45,7 @@ data class FunctionCompiler(
 										typedBody.expression),
 									parameterType arrowTo typedBody.type))
 						},
-						voidProcessor(),
+						null,
 						compiled(context.give(parameterType)))
 				else TypeCompiler(
 					converter { newType ->

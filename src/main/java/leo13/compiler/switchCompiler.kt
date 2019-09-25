@@ -45,7 +45,7 @@ data class SwitchCompiler(
 							plus(typed(optionName caseTo typedRhs.expression, typedRhs.type))
 								.copy(remainingOptions = this@SwitchCompiler.remainingOptions.link.lhs)
 						},
-						voidProcessor(),
+						null,
 						compiled(context.match(type(remainingOptions.link.item.line))))
 				}
 		}
