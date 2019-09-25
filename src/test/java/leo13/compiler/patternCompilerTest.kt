@@ -58,7 +58,7 @@ class TypeCompilerTest {
 
 	@Test
 	fun processResolution() {
-		val patternCompiler = TypeCompiler(
+		val typeCompiler = TypeCompiler(
 			errorConverter(),
 			false,
 			typeContext()
@@ -66,7 +66,7 @@ class TypeCompilerTest {
 				.plus(definition("one" lineTo type(), type("resolved"))),
 			type())
 
-		patternCompiler
+		typeCompiler
 			.process(token(opening("options")))
 			.process(token(opening("zero")))
 			.process(token(closing))
@@ -76,7 +76,7 @@ class TypeCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.assertEqualTo(
-				patternCompiler.set(
+				typeCompiler.set(
 					type(
 						options(
 							"zero" lineTo type("resolved"),
@@ -86,25 +86,25 @@ class TypeCompilerTest {
 
 	@Test
 	fun processRecurse() {
-		val patternCompiler = TypeCompiler(
+		val typeCompiler = TypeCompiler(
 			errorConverter(),
 			false,
 			typeContext().trace("list").trace("link"),
 			type())
 
-		patternCompiler
+		typeCompiler
 			.process(token(opening("link")))
 			.process(token(closing))
-			.assertEqualTo(patternCompiler.set(type(onceRecurse)))
+			.assertEqualTo(typeCompiler.set(type(onceRecurse)))
 
-		patternCompiler
+		typeCompiler
 			.process(token(opening("list")))
 			.process(token(closing))
-			.assertEqualTo(patternCompiler.set(type(onceRecurse.increase)))
+			.assertEqualTo(typeCompiler.set(type(onceRecurse.increase)))
 
-		patternCompiler
+		typeCompiler
 			.process(token(opening("other")))
 			.process(token(closing))
-			.assertEqualTo(patternCompiler.set(type("other")))
+			.assertEqualTo(typeCompiler.set(type("other")))
 	}
 }
