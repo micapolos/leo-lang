@@ -9,10 +9,12 @@ import leo13.token.*
 val scriptReader: Reader<Script> = reader(scriptName) { this }
 val scriptWriter: Writer<Script> = writer(scriptName) { this }
 
-data class Script(val lineStack: Stack<ScriptLine>) : LeoObject() {
+data class Script(val lineStack: Stack<ScriptLine>) : ObjectScripting() {
 	override fun toString() = indentedCode
-	override val scriptableName get() = scriptName
-	override val scriptableBody get() = this
+	override val scriptingLine get() = scriptName lineTo this
+	val scriptableName get() = scriptName
+	val scriptableBody get() = this
+	val scriptableLine get() = scriptingLine
 }
 
 data class ScriptOpener(val lhs: Script, val opening: Opening) {

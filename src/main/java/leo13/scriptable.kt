@@ -10,11 +10,11 @@ interface Scriptable {
 }
 
 fun <V : Scriptable> V?.orNullAsScriptLine(name: String) =
-	this?.scriptableLine ?: name lineTo leo13.script.script(nullScriptLine)
+	this?.scriptableLine ?: name lineTo script(nullScriptLine)
 
 val <V : Scriptable> V?.orNullAsScript: Script
 	get() =
-		if (this == null) leo13.script.script()
+		if (this == null) script()
 		else scriptableLine.script
 
 val <V : Scriptable> Stack<V>.asScript: Script
@@ -29,7 +29,7 @@ fun <F : Scriptable, R : Scriptable> asMetaFirstScript(firstName: String, firstO
 		.let { firstLineOrNull ->
 			remaining.map { scriptableLine }.let { remainingLines ->
 				if (firstLineOrNull != null) firstLineOrNull.script.fold(remainingLines) { plus(it) }
-				else leo13.script.script().fold(remainingLines.mapFirst { metaFor(firstName) }) { plus(it) }
+				else script().fold(remainingLines.mapFirst { metaFor(firstName) }) { plus(it) }
 			}
 		}
 
@@ -37,8 +37,8 @@ fun <V : Scriptable> Stack<V>.asScriptLine(name: String): ScriptLine =
 	name lineTo asScript
 
 fun <V : Scriptable> Stack<V>.asSeparatedScript(name: String): Script =
-	(false to leo13.script.script()).fold(reverse) {
-		true to second.plus(if (!first) it.scriptableLine else name lineTo leo13.script.script(it.scriptableLine))
+	(false to script()).fold(reverse) {
+		true to second.plus(if (!first) it.scriptableLine else name lineTo script(it.scriptableLine))
 	}.second
 
 fun <V : Any> Script.asStackOrNull(fn: ScriptLine.() -> V?): Stack<V>? =

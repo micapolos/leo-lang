@@ -19,39 +19,6 @@ fun <V : LeoObject> V.assertScriptableBodyWorks(fn: Script.() -> V?) =
 
 class ScriptableTest {
 	@Test
-	fun asSeparatedScript() {
-		stack<Script>()
-			.asSeparatedScript("or")
-			.assertEqualTo("".unsafeScript)
-
-		stack(script("zero"), script("one"))
-			.asSeparatedScript("or")
-			.assertEqualTo("script(zero())or(script(one()))".unsafeScript)
-	}
-
-	@Test
-	fun asScript() {
-		stack<Script>()
-			.asScript
-			.assertEqualTo("null()".unsafeScript)
-
-		stack(script("zero"), script("one"))
-			.asScript
-			.assertEqualTo("script(zero())script(one())".unsafeScript)
-	}
-
-	@Test
-	fun asScriptLine() {
-		stack<Script>()
-			.asScriptLine("stack")
-			.assertEqualTo("stack(null())".unsafeScriptLine)
-
-		stack(script("zero"), script("one"))
-			.asScriptLine("stack")
-			.assertEqualTo("stack(script(zero())script(one()))".unsafeScriptLine)
-	}
-
-	@Test
 	fun asSeparatedStackOrNull() {
 		"".unsafeScript
 			.asSeparatedStackOrNull("or") { null }
