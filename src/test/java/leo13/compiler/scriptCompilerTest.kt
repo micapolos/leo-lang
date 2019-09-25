@@ -1,7 +1,7 @@
 package leo13.compiler
 
-import leo.base.assertEqualTo
-import leo13.*
+import leo13.assertContains
+import leo13.processorStack
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
