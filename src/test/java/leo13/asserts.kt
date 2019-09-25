@@ -25,3 +25,6 @@ fun <V> Traced<V>.assertFailsWith(vararg lines: ScriptLine) {
 		tracedError.scriptLine.rhs.assertEqualTo(script(*lines))
 	}
 }
+
+fun <V> Stack<V>.assertContains(vararg values: V) =
+	assertEqualTo(stack(*values))
