@@ -1,7 +1,10 @@
 package leo13.interpreter
 
 import leo13.*
+import leo13.compiler.compiled
 import leo13.compiler.compiler
+import leo13.expression.expression
+import leo13.expression.op
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
@@ -26,20 +29,22 @@ data class Interpreter(
 			is OpeningToken ->
 				compiler(
 					converter { compiled ->
-						context
-							.valueContext
-							.evaluate(compiled.expression)
-							.let { value ->
-								Interpreter(
-									converter,
-									context,
-									interpreted(value, compiled.pattern))
-							}
+						Interpreter(
+							converter,
+							context,
+							interpreted(
+								context.valueContext.evaluate(compiled.expression),
+								compiled.pattern))
 					},
-					context.compilerContext)
+					context.compilerContext,
+					compiled(
+						expression(op(interpreted.value)),
+						interpreted.pattern))
+					.process(token)
 			is ClosingToken ->
 				converter.convert(interpreted)
 		}
 }
 
-fun interpreter() = Interpreter(errorConverter(), interpreterContext(), interpreted())
+fun Converter<Interpreted, Token>.interpreter() =
+	Interpreter(this, interpreterContext(), interpreted())
