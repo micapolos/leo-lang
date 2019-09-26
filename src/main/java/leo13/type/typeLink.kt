@@ -24,8 +24,8 @@ data class TypeLink(val lhs: Type, val item: TypeItem) : ObjectScripting() {
 	fun plus(line: TypeLine) =
 		plus(item(line))
 
-	fun lineRhsOrNull(name: String, traceOrNull: TypeTrace? = null): Type? =
-		line.rhsOrNull(name) ?: lhs.lineRhsOrNull(name)
+	fun typeOrNull(name: String): Type? =
+		line.rhsOrNull(name)?.let { type(name lineTo it) } ?: lhs.typeOrNull(name)
 
 	fun setLineRhsOrNull(line: TypeLine): TypeLink? =
 		line.setRhsOrNull(line)
@@ -36,7 +36,7 @@ data class TypeLink(val lhs: Type, val item: TypeItem) : ObjectScripting() {
 		line.leafPlusOrNull(type)?.let { lhs linkTo it }
 
 	fun getOrNull(name: String): Type? =
-		line.rhs.lineRhsOrNull(name)?.let { type(name lineTo it) }
+		line.rhs.typeOrNull(name)
 
 	fun setOrNull(setLine: TypeLine): TypeLink? =
 		line.rhs.setLineRhsOrNull(setLine)?.let { lhs linkTo (line.name lineTo it) }

@@ -1,5 +1,6 @@
 package leo13.value
 
+import leo.base.notNullIf
 import leo13.ObjectScripting
 import leo13.functionName
 import leo13.script.ScriptLine
@@ -23,8 +24,11 @@ fun item(line: ValueLine): ValueItem = LineValueItem(line)
 val ValueItem.functionOrNull get() = (this as? FunctionValueItem)?.function
 val ValueItem.lineOrNull get() = (this as? LineValueItem)?.line
 
-fun ValueItem.rhsOrNull(selectedName: String): Value? =
-	lineOrNull?.rhsOrNull(selectedName)
+fun ValueItem.itemOrNull(selectedName: String): ValueItem? =
+	when (this) {
+		is LineValueItem -> line.rhsOrNull(selectedName)?.let { item(selectedName lineTo it) }
+		is FunctionValueItem -> notNullIf(selectedName == functionName) { this }
+	}
 
 fun ValueItem.replaceOrNull(line: ValueLine): ValueItem? =
 	lineOrNull?.replaceOrNull(line)?.let { item(it) }

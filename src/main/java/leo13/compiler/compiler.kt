@@ -106,8 +106,7 @@ data class Compiler(
 
 	val beginFunction: Processor<Token>
 		get() =
-			if (!compiled.typed.isEmpty)
-				tracedError<Processor<Token>>(notName lineTo script(expectedName lineTo script(functionName)))
+			if (!compiled.typed.isEmpty) beginOther(functionName)
 			else FunctionCompiler(
 				converter { typedFunction ->
 					process(

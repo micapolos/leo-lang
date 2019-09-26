@@ -1,6 +1,7 @@
 package leo13.type
 
 import leo.base.fold
+import leo.base.notNullIf
 import leo13.*
 import leo13.compiler.NameTrace
 import leo13.compiler.nameTrace
@@ -32,8 +33,13 @@ sealed class Type : ObjectScripting() {
 	fun plus(line: TypeLine) =
 		plus(item(line))
 
-	fun lineRhsOrNull(name: String): Type? =
-		linkOrNull?.lineRhsOrNull(name)
+	fun typeOrNull(name: String): Type? =
+		when (this) {
+			is EmptyType -> null
+			is LinkType -> link.typeOrNull(name)
+			is OptionsType -> null
+			is ArrowType -> notNullIf(name == functionName) { type(arrow) }
+		}
 
 	fun setLineRhsOrNull(line: TypeLine): Type? =
 		linkOrNull?.setLineRhsOrNull(line)?.let { type(it) }

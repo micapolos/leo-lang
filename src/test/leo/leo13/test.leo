@@ -1,11 +1,5 @@
-define
-	bit
-	contains: options: zero one
-
-	bit negate
-	gives: given bit match
-		zero: bit: one
-		one: bit: zero
-
-bit: zero
-negate
+my: function
+	zero
+	gives: one
+function
+apply: zero

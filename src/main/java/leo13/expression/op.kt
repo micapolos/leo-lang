@@ -55,7 +55,7 @@ val Op.bodyScriptLine: ScriptLine
 		when (this) {
 			is ValueOp -> value.scriptLine
 			is WrapOp -> wrap.scriptingLine
-			is PlusOp -> plus.scriptLine
+			is PlusOp -> plus.line.bodyScriptLine // TODO: escape with meta!!!
 			is GetOp -> get.scriptLine
 			is SetOp -> set.scriptLine
 			is PreviousOp -> previous.scriptLine

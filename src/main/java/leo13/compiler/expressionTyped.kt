@@ -3,7 +3,6 @@ package leo13.compiler
 import leo.base.fold
 import leo13.ObjectScripting
 import leo13.expression.*
-import leo13.isEmpty
 import leo13.script.Script
 import leo13.script.lineTo
 import leo13.script.script
@@ -72,4 +71,4 @@ fun expressionTyped(script: Script): ExpressionTyped =
 
 val ExpressionTyped.isEmpty
 	get() =
-		expression.opStack.isEmpty && type.isEmpty
+		type.isEmpty

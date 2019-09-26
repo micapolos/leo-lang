@@ -47,16 +47,16 @@ fun Value.plus(value: Value): Value =
 fun Value.plus(line: ValueLine, vararg lines: ValueLine) =
 	plus(item(line)).fold(lines) { plus(item(it)) }
 
-fun Value.firstLineRhsOrNull(name: String): Value? =
-	itemStack.mapFirst { rhsOrNull(name) }
+fun Value.firstItemOrNull(name: String): ValueItem? =
+	itemStack.mapFirst { itemOrNull(name) }
 
 fun Value.replaceLineOrNull(line: ValueLine): Value? =
 	itemStack.updateFirst { replaceOrNull(line) }?.value
 
 fun Value.getOrNull(name: String): Value? =
 	updateLineRhsOrNull {
-		firstLineRhsOrNull(name)?.run {
-			value(name lineTo this)
+		firstItemOrNull(name)?.run {
+			value(this)
 		}
 	}
 
