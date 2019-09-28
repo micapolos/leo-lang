@@ -71,9 +71,9 @@ class EvaluatorTest {
 			.evaluate(
 				expression()
 					.plus(op(value("zoo")))
-					.plus(op(value(item(function(
+					.plus("process" lineTo expression(op(value(item(function(
 						valueContext(),
-						expression(leo13.given.op))))))
+						expression(leo13.given.op)))))))
 					.plus(op(apply(expression(op(value("foo")))))))
 			.assertEqualTo(value("given" lineTo value("foo")))
 	}

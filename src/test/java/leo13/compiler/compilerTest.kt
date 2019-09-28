@@ -1,6 +1,7 @@
 package leo13.compiler
 
 import leo.base.assertEqualTo
+import leo13.applyName
 import leo13.contentName
 import leo13.expression.*
 import leo13.token.closing
@@ -266,5 +267,30 @@ class CompilerTest {
 						type(
 							"bit" lineTo type("zero"),
 							"negate" lineTo type()))))
+	}
+
+	@Test
+	fun processApply() {
+		val compiler =
+			compiler()
+				.process(compiled(
+					context(),
+					typed(
+						expression("foo"),
+						type("writer" lineTo type(type("zero") arrowTo type("one"))))))
+
+		compiler
+			.process(token(opening(applyName)))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				compiler()
+					.process(
+						compiled(
+							context(),
+							typed(
+								expression("foo").plus(op(apply(expression("zero")))),
+								type("one")))))
 	}
 }

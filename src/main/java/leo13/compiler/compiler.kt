@@ -65,7 +65,8 @@ data class Compiler(
 			compiled
 				.typed
 				.type
-				.arrowOrNull
+				.contentOrNull
+				?.arrowOrNull
 				?.let { arrow ->
 					Compiler(
 						converter { typedParameter ->

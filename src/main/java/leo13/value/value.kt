@@ -70,6 +70,14 @@ fun Value.setOrNull(newLine: ValueLine): Value? =
 		}
 	}
 
+val Value.contentOrNull
+	get() =
+		firstItemOrNull?.lineOrNull?.rhs
+
+val Value.functionOrNull
+	get() =
+		firstItemOrNull?.functionOrNull
+
 val Value.isEmpty get() = itemStack.isEmpty
 
 val Value.scriptLine get() =

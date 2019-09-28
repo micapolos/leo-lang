@@ -1,10 +1,11 @@
 define
+	bit
+	contains: options: zero one
+
 	processor
 	contains
-		zero
-		gives: one
-processor: function
-	zero
-	gives: one
-function
-apply: zero
+		bit
+		process
+		gives: processor
+
+interpreter
