@@ -1,2 +1,3 @@
-boolean: true
+foo
+equals: foo
 interpreter

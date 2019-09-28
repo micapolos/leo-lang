@@ -1,15 +1,14 @@
 package leo13.compiler
 
 import leo.base.assertEqualTo
-import leo13.*
+import leo13.contentName
+import leo13.doName
+import leo13.equalsName
 import leo13.expression.*
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
-import leo13.type.arrowTo
-import leo13.type.lineTo
-import leo13.type.options
-import leo13.type.type
+import leo13.type.*
 import leo13.value.function
 import leo13.value.item
 import leo13.value.value
@@ -47,7 +46,7 @@ class CompilerTest {
 				compiler().process(
 					typed(
 						expression("foo").plus(op(leo13.expression.equals(expression("foo")))),
-						type(booleanName lineTo type(options(falseName, trueName))))))
+						type(booleanTypeLine))))
 	}
 
 	@Test

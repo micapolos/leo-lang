@@ -238,7 +238,7 @@ fun Compiler.plusEquals(rhs: ExpressionTyped) =
 	else process(
 		typed(
 			compiled.typed.expression.plus(op(leo13.expression.equals(rhs.expression))),
-			type(booleanName lineTo type(options(falseName, trueName)))))
+			type(booleanTypeLine)))
 
 fun Compiler.plusIn(rhs: ExpressionTyped) =
 	process(compiled.typed.plusIn(rhs))

@@ -3,7 +3,7 @@ package leo13.type
 import leo13.*
 
 val booleanTypeLine =
-	booleanName lineTo type(options(falseName, trueName))
+	booleanName lineTo type(options(trueName, falseName))
 
 val bitTypeLine =
 	bitName lineTo type(options(zeroName, oneName))
