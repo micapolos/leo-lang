@@ -2,10 +2,11 @@ package leo13.compiler
 
 import leo.base.assertEqualTo
 import leo13.errorConverter
-import leo13.type.*
+import leo13.givesName
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
+import leo13.type.*
 import kotlin.test.Test
 
 class TypeCompilerTest {
@@ -106,5 +107,17 @@ class TypeCompilerTest {
 			.process(token(opening("other")))
 			.process(token(closing))
 			.assertEqualTo(typeCompiler.set(type("other")))
+	}
+
+	@Test
+	fun processGives() {
+		typeCompiler()
+			.process(token(opening("foo")))
+			.process(token(closing))
+			.process(token(opening(givesName)))
+			.process(token(opening("bar")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(typeCompiler().set(type(type("foo") arrowTo type("bar"))))
 	}
 }

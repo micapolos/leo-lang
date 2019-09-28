@@ -1,8 +1,10 @@
 define
-	bit
-	contains: options: zero one
-
-bit: zero
-match
-	zero: bit: one
-	other: bit: zero
+	processor
+	contains
+		zero
+		gives: one
+processor: function
+	zero
+	gives: one
+function
+apply: zero

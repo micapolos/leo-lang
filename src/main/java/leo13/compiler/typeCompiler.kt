@@ -1,12 +1,12 @@
 package leo13.compiler
 
 import leo13.*
-import leo13.type.*
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
+import leo13.type.*
 
 data class TypeCompiler(
 	val converter: Converter<Type, Token>,
@@ -34,6 +34,7 @@ data class TypeCompiler(
 	fun begin(name: String): Processor<Token> =
 		when (name) {
 			optionsName -> beginOptions
+			givesName -> beginGives
 			else -> beginOther(name)
 		}
 
@@ -50,6 +51,14 @@ data class TypeCompiler(
 				},
 				context,
 				options())
+
+	val beginGives: Processor<Token>
+		get() =
+			TypeCompiler(
+				converter { rhs -> set(type(type arrowTo rhs)) },
+				false,
+				context,
+				type())
 
 	fun beginOther(name: String): Processor<Token> =
 		TypeCompiler(
