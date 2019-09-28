@@ -9,6 +9,7 @@ import leo13.value.scriptLine
 sealed class Op
 
 data class ValueOp(val value: Value) : Op()
+data class EqualsOp(val equals: Equals) : Op()
 data class WrapOp(val wrap: Wrap) : Op()
 data class PlusOp(val plus: Plus) : Op()
 data class GetOp(val get: Get) : Op()
@@ -24,6 +25,7 @@ data class FixOp(val fix: Fix) : Op()
 
 val Value.op: Op get() = ValueOp(this)
 val Wrap.op: Op get() = WrapOp(this)
+val Equals.op: Op get() = EqualsOp(this)
 val Plus.op: Op get() = PlusOp(this)
 val Get.op: Op get() = GetOp(this)
 val Set.op: Op get() = SetOp(this)
@@ -37,6 +39,7 @@ val Apply.op: Op get() = ApplyOp(this)
 val Fix.op: Op get() = FixOp(this)
 
 fun op(value: Value) = value.op
+fun op(equals: Equals) = equals.op
 fun op(wrap: Wrap) = wrap.op
 fun op(plus: Plus) = plus.op
 fun op(get: Get) = get.op
@@ -54,6 +57,7 @@ val Op.bodyScriptLine: ScriptLine
 	get() =
 		when (this) {
 			is ValueOp -> value.scriptLine
+			is EqualsOp -> equals.scriptingLine
 			is WrapOp -> wrap.scriptingLine
 			is PlusOp -> plus.line.bodyScriptLine // TODO: escape with meta!!!
 			is GetOp -> get.scriptLine

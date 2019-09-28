@@ -1,11 +1,5 @@
 define
 	bit
 	contains: options: zero one
-
-	processor
-	contains
-		bit
-		process
-		gives: processor
-
-interpreter
+bit: zero
+equals: bit: zero

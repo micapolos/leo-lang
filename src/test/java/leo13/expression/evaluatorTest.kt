@@ -1,7 +1,10 @@
 package leo13.expression
 
 import leo.base.assertEqualTo
+import leo13.booleanName
+import leo13.falseName
 import leo13.matchingName
+import leo13.trueName
 import leo13.value.function
 import leo13.value.item
 import leo13.value.lineTo
@@ -15,6 +18,17 @@ class EvaluatorTest {
 		evaluator()
 			.plus(plus("foo" lineTo expression()))
 			.assertEqualTo(evaluator().set(value("foo").evaluated))
+	}
+
+	@Test
+	fun evaluateEquals() {
+		valueContext()
+			.evaluate(expression(op(value("zoo")), op(leo13.expression.equals(expression("zoo")))))
+			.assertEqualTo(value(booleanName lineTo value(trueName)))
+
+		valueContext()
+			.evaluate(expression(op(value("zoo")), op(leo13.expression.equals(expression("bar")))))
+			.assertEqualTo(value(booleanName lineTo value(falseName)))
 	}
 
 	@Test

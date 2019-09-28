@@ -1,8 +1,7 @@
 package leo13.compiler
 
 import leo.base.assertEqualTo
-import leo13.applyName
-import leo13.contentName
+import leo13.*
 import leo13.expression.*
 import leo13.token.closing
 import leo13.token.opening
@@ -33,6 +32,22 @@ class CompilerTest {
 						type(
 							"zero" lineTo type(),
 							"plus" lineTo type("one")))))
+	}
+
+	@Test
+	fun processEquals() {
+		compiler()
+			.process(token(opening("foo")))
+			.process(token(closing))
+			.process(token(opening(equalsName)))
+			.process(token(opening("foo")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				compiler().process(
+					typed(
+						expression("foo").plus(op(leo13.expression.equals(expression("foo")))),
+						type(booleanName lineTo type(options(falseName, trueName))))))
 	}
 
 	@Test
@@ -280,7 +295,7 @@ class CompilerTest {
 						type("writer" lineTo type(type("zero") arrowTo type("one"))))))
 
 		compiler
-			.process(token(opening(applyName)))
+			.process(token(opening(doName)))
 			.process(token(opening("zero")))
 			.process(token(closing))
 			.process(token(closing))

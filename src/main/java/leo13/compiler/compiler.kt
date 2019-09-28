@@ -41,9 +41,10 @@ data class Compiler(
 
 	fun begin(name: String): Processor<Token> =
 		when (name) {
-			applyName -> beginApply
+			doName -> beginApply
 			asName -> beginAs
 			defineName -> beginDefine
+			equalsName -> beginEquals
 			givenName -> beginGiven
 			functionName -> beginFunction
 			inName -> beginIn
@@ -97,6 +98,13 @@ data class Compiler(
 				converter { newContext -> process(compiled(newContext, expressionTyped())) },
 				compiled.context,
 				type())
+
+	val beginEquals: Processor<Token>
+		get() =
+			Compiler(
+				converter { plusEquals(it) },
+				null,
+				compiled.begin)
 
 	val beginContent: Processor<Token>
 		get() =
@@ -221,6 +229,16 @@ fun Compiler.plusAs(rhs: ExpressionTyped) =
 fun Compiler.plusContent(rhs: ExpressionTyped) =
 	if (!compiled.typed.type.isEmpty) tracedError()
 	else rhs.contentOrNull?.let { process(it) } ?: tracedError()
+
+fun Compiler.plusEquals(rhs: ExpressionTyped) =
+	if (compiled.typed.type != rhs.type) tracedError(
+		mismatchName lineTo script(
+			expectedName lineTo script(compiled.typed.type.scriptingLine),
+			actualName lineTo script(rhs.type.scriptingLine)))
+	else process(
+		typed(
+			compiled.typed.expression.plus(op(leo13.expression.equals(rhs.expression))),
+			type(booleanName lineTo type(options(falseName, trueName)))))
 
 fun Compiler.plusIn(rhs: ExpressionTyped) =
 	process(compiled.typed.plusIn(rhs))

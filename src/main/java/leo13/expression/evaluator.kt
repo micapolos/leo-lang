@@ -1,9 +1,6 @@
 package leo13.expression
 
-import leo13.Given
-import leo13.evaluatorName
-import leo13.fold
-import leo13.reverse
+import leo13.*
 import leo13.script.lineTo
 import leo13.script.script
 import leo13.value.*
@@ -26,6 +23,7 @@ fun Evaluator.plus(expression: Expression): Evaluator =
 fun Evaluator.plus(op: Op): Evaluator =
 	when (op) {
 		is ValueOp -> plus(op.value)
+		is EqualsOp -> plus(op.equals)
 		is WrapOp -> plus(op.wrap)
 		is PlusOp -> plus(op.plus)
 		is GetOp -> plus(op.get)
@@ -42,6 +40,12 @@ fun Evaluator.plus(op: Op): Evaluator =
 
 fun Evaluator.plus(value: Value): Evaluator =
 	set(evaluated(evaluated.value.plus(value)))
+
+fun Evaluator.plus(equals: Equals): Evaluator =
+	set(
+		evaluated(
+			value(booleanName lineTo value(
+				"${evaluated.value == context.evaluate(equals.expression)}"))))
 
 fun Evaluator.plus(wrap: Wrap): Evaluator =
 	set(evaluated(value(item(wrap.name lineTo evaluated.value))))
