@@ -14,7 +14,7 @@ class TokenizerTest {
 
 		tokenizer
 			.push('(')
-			.assertEqualTo(tokenizer.put(leo13.token.error('(')))
+			.assertEqualTo(tokenizer.put(error('(')))
 
 		tokenizer
 			.push(')')
@@ -35,12 +35,12 @@ class TokenizerTest {
 
 		tokenizer
 			.push(')')
-			.assertEqualTo(tokenizer.put(leo13.token.error(')')))
+			.assertEqualTo(tokenizer.put(error(')')))
 	}
 
 	@Test
 	fun writing_error() {
-		val tokenizer = tokenizer().put(leo13.token.error('('))
+		val tokenizer = tokenizer().put(error('('))
 
 		tokenizer
 			.push('c')

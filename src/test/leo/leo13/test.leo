@@ -1,7 +1,15 @@
-function
-	zero
-	gives: function
-		one
-		gives: given
-apply: zero
-apply: one
+define
+	processor
+	contains: function
+		byte process
+		gives: processor
+
+	void processor
+	of: processor
+	gives: processor: function
+		byte process
+		gives: void processor
+
+void processor
+do: process: byte: zero
+do: process: byte: one

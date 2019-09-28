@@ -7,6 +7,7 @@ import leo13.value.item
 import leo13.value.lineTo
 import leo13.value.value
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class EvaluatorTest {
 	@Test
@@ -53,6 +54,26 @@ class EvaluatorTest {
 				evaluator()
 					.set(evaluated(value(
 						matchingName lineTo value("circle" lineTo value("radius"))))))
+	}
+
+	@Test
+	fun switchOther() {
+		evaluator()
+			.set(evaluated(value("shape" lineTo value("rectangle" lineTo value("side")))))
+			.plus(switch("circle" caseTo expression(switched.op)).with(other(expression(switched.op))))
+			.assertEqualTo(
+				evaluator()
+					.set(evaluated(value(
+						matchingName lineTo value("rectangle" lineTo value("side"))))))
+	}
+
+	@Test
+	fun switchError() {
+		assertFails {
+			evaluator()
+				.set(evaluated(value("shape" lineTo value("rectangle" lineTo value("side")))))
+				.plus(switch("circle" caseTo expression(switched.op)))
+		}
 	}
 
 	@Test

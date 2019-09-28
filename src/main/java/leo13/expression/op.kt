@@ -60,7 +60,7 @@ val Op.bodyScriptLine: ScriptLine
 			is SetOp -> set.scriptLine
 			is PreviousOp -> previous.scriptLine
 			is ContentOp -> content.scriptLine
-			is SwitchOp -> switch.scriptLine
+			is SwitchOp -> switch.scriptingLine
 			is SwitchedOp -> switched.scriptLine
 			is GiveOp -> give.scriptLine
 			is GivenOp -> given.scriptLine
