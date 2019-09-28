@@ -2,11 +2,8 @@ package leo13
 
 import leo.java.io.charSeq
 import leo13.decompiler.decompiler
-import leo13.interpreter.Interpreted
-import leo13.interpreter.ValueTyped
-import leo13.interpreter.interpreter
+import leo13.interpreter.*
 import leo13.locator.locator
-import leo13.script.lineTo
 import leo13.script.script
 import leo13.tokenizer.tokenizer
 import kotlin.system.exitProcess
@@ -19,7 +16,7 @@ fun main() {
 				.use { inputStream ->
 					decompiler()
 						.map<Interpreted, ValueTyped> { typed }
-						.interpreter()
+						.interpreter(interpreted(coreInterpreterContext))
 						.tokenizer()
 						.locator()
 						.process(inputStream.reader().charSeq)
@@ -27,11 +24,11 @@ fun main() {
 				}
 		}.onError {
 			print("\u001b[31m")
-			println("error" lineTo this)
+			println(this)
 			print("\u001b[0m")
 			exitProcess(-1)
 		}
 	}.let { script ->
-		println("ok" lineTo script)
+		println(script)
 	}
 }

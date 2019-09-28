@@ -5,6 +5,7 @@ import leo13.*
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
 import leo13.type.TypeLine
+import leo13.type.booleanTypeLine
 
 data class TypeLines(val stack: Stack<TypeLine>) : ObjectScripting() {
 	override fun toString() = super.toString()
@@ -21,3 +22,4 @@ data class TypeLines(val stack: Stack<TypeLine>) : ObjectScripting() {
 
 fun typeLines() = TypeLines(stack())
 
+val coreTypeLines = typeLines().plus(booleanTypeLine)

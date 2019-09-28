@@ -3,6 +3,7 @@ package leo13.interpreter
 import leo13.ObjectScripting
 import leo13.compiler.Context
 import leo13.compiler.context
+import leo13.compiler.coreContext
 import leo13.contextName
 import leo13.expression.ValueContext
 import leo13.expression.valueContext
@@ -26,3 +27,5 @@ fun interpreterContext(compilerContext: Context, valueContext: ValueContext) =
 
 fun interpreterContext() =
 	interpreterContext(context(), valueContext())
+
+val coreInterpreterContext = InterpreterContext(coreContext, valueContext())

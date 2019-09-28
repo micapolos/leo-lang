@@ -1,9 +1,9 @@
 package leo13.compiler
 
 import leo13.*
-import leo13.type.TypeLine
 import leo13.script.emptyIfEmpty
 import leo13.script.lineTo
+import leo13.type.TypeLine
 
 data class TypeDefinitions(val stack: Stack<TypeDefinition>) : ObjectScripting() {
 	override fun toString() = super.toString()
@@ -20,3 +20,5 @@ data class TypeDefinitions(val stack: Stack<TypeDefinition>) : ObjectScripting()
 }
 
 fun typeDefinitions() = TypeDefinitions(stack())
+
+val coreTypeDefinitions = typeDefinitions().plus(booleanTypeDefinition)

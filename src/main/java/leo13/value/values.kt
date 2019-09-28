@@ -1,10 +1,10 @@
 package leo13.value
 
 import leo.binary.*
-import leo13.bitName
-import leo13.byteName
-import leo13.oneName
-import leo13.zeroName
+import leo13.*
+
+val Boolean.valueLine
+	get() = booleanName lineTo value(if (this) trueName else falseName)
 
 val Bit.valueLine
 	get() =

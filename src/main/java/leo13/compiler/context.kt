@@ -43,3 +43,10 @@ fun Context.give(type: Type) =
 
 fun Context.plusMatch(type: Type) =
 	copy(matchingType = matchingType.plus(matchingName lineTo type))
+
+val coreContext = Context(
+	coreTypeDefinitions,
+	coreTypeLines,
+	functions(),
+	type(),
+	type())
