@@ -41,5 +41,5 @@ fun Context.plus(typedFunction: FunctionTyped) =
 fun Context.give(type: Type) =
 	copy(givenType = givenType.plus(givenName lineTo type))
 
-fun Context.match(type: Type) =
+fun Context.plusMatch(type: Type) =
 	copy(matchingType = matchingType.plus(matchingName lineTo type))
