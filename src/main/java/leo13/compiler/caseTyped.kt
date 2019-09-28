@@ -9,11 +9,11 @@ import leo13.script.script
 import leo13.type.Type
 import leo13.typedName
 
-data class TypedCase(val case: Case, val type: Type) : ObjectScripting() {
+data class CaseTyped(val case: Case, val type: Type) : ObjectScripting() {
 	override fun toString() = super.toString()
 	override val scriptingLine: ScriptLine
 		get() = typedName lineTo script(case.scriptLine, type.scriptingLine)
 }
 
 fun typed(case: Case, type: Type) =
-	TypedCase(case, type)
+	CaseTyped(case, type)

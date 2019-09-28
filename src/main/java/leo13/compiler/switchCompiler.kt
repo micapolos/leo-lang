@@ -57,8 +57,8 @@ data class SwitchCompiler(
 				is LinkOptions -> tracedError(expectedName lineTo script(remainingOptions.link.item.line.name))
 			}
 
-	fun plus(typedCase: TypedCase) =
-		copy(typed = typed.plus(typedCase))
+	fun plus(caseTyped: CaseTyped) =
+		copy(typed = typed.plus(caseTyped))
 }
 
 fun switchCompiler(

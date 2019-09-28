@@ -12,7 +12,7 @@ data class SwitchTyped(val switch: Switch, val type: Type) : ObjectScripting() {
 		get() =
 			typedName lineTo script(switch.scriptingLine, type.scriptingLine)
 
-	fun plus(typed: TypedCase) =
+	fun plus(typed: CaseTyped) =
 		typed(switch.plus(typed.case), typed.type).let { typed ->
 			if (!switch.caseStack.isEmpty && type != typed.type)
 				tracedError(mismatchName lineTo script(
