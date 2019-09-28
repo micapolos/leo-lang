@@ -1,6 +1,5 @@
 package leo13.expression
 
-import leo.base.ifNotNull
 import leo.base.notNullIf
 import leo13.ObjectScripting
 import leo13.contextName
@@ -35,16 +34,12 @@ data class ValueContext(
 	fun evaluate(switch: Switch, line: ValueLine): Value =
 		switch
 			.caseStack.mapFirst { evaluateOrNull(this, line) }
-			?: switch.otherOrNull.ifNotNull { evaluate(it, line) }
 			?: error("switch")
 
 	fun evaluateOrNull(case: Case, line: ValueLine): Value? =
 		notNullIf(line.name == case.name) {
 			plusMatching(value(item(line))).evaluate(case.expression)
 		}
-
-	fun evaluate(other: ExpressionOther, line: ValueLine): Value? =
-		plusMatching(value(item(line))).evaluate(other.expression)
 }
 
 fun valueContext() = ValueContext(given(value()), matching(value()))

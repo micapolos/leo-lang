@@ -4,7 +4,6 @@ import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.expression.*
 import leo13.matchingName
-import leo13.otherName
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -37,29 +36,6 @@ class SwitchCompilerTest {
 					typed(
 						switch("circle" caseTo expression("circled")),
 						type("circled"))))
-	}
-
-	@Test
-	fun processOther() {
-		val switchCompiler = switchCompiler(
-			errorConverter(),
-			context(),
-			options("circle" lineTo type("radius")),
-			typed(switch(), type("lhs")))
-
-		switchCompiler
-			.process(token(opening(otherName)))
-			.process(token(opening("foo")))
-			.process(token(closing))
-			.process(token(closing))
-			.assertEqualTo(
-				switchCompiler(
-					errorConverter(),
-					context(),
-					options("circle" lineTo type("radius")),
-					typed(
-						switch().with(other(expression("foo"))),
-						type("foo"))))
 	}
 
 	@Test

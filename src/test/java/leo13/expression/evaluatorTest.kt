@@ -57,17 +57,6 @@ class EvaluatorTest {
 	}
 
 	@Test
-	fun switchOther() {
-		evaluator()
-			.set(evaluated(value("shape" lineTo value("rectangle" lineTo value("side")))))
-			.plus(switch("circle" caseTo expression(switched.op)).with(other(expression(switched.op))))
-			.assertEqualTo(
-				evaluator()
-					.set(evaluated(value(
-						matchingName lineTo value("rectangle" lineTo value("side"))))))
-	}
-
-	@Test
 	fun switchError() {
 		assertFails {
 			evaluator()

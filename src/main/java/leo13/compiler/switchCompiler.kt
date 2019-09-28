@@ -34,18 +34,6 @@ data class SwitchCompiler(
 		}
 
 	fun begin(name: String) =
-		when (name) {
-			otherName -> beginOther()
-			else -> beginEither(name)
-		}
-
-	fun beginOther() =
-		Compiler(
-			converter { withOther(it) },
-			null,
-			compiled(context))
-
-	fun beginEither(name: String) =
 		when (remainingOptions) {
 			is EmptyOptions -> tracedError(notName lineTo script(expectedName lineTo script(name)))
 			is LinkOptions ->
@@ -71,9 +59,6 @@ data class SwitchCompiler(
 
 	fun plus(typedCase: TypedCase) =
 		copy(typed = typed.plus(typedCase))
-
-	fun withOther(otherTyped: ExpressionTyped) =
-		copy(typed = typed.withOther(otherTyped))
 }
 
 fun switchCompiler(
