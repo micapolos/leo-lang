@@ -41,7 +41,7 @@ data class Compiler(
 
 	fun begin(name: String): Processor<Token> =
 		when (name) {
-			doName -> beginApply
+			doName -> beginDo
 			asName -> beginAs
 			defineName -> beginDefine
 			equalsName -> beginEquals
@@ -61,7 +61,7 @@ data class Compiler(
 		get() =
 			converter.convert(compiled.typed)
 
-	val beginApply: Processor<Token>
+	val beginDo: Processor<Token>
 		get() =
 			compiled
 				.typed

@@ -67,7 +67,8 @@ data class DefineCompiler(
 											function(
 												valueContext(), // TODO()
 												typedBody.expression),
-											type arrowTo typedBody.type)),
+											type arrowTo typedBody.type,
+											recursive(false))),
 									type())
 							},
 							null,

@@ -15,7 +15,7 @@ data class TypeLines(val stack: Stack<TypeLine>) : ObjectScripting() {
 	fun resolve(line: ExpressionTypedLine): ExpressionTypedLine =
 		stack.mapFirst {
 			notNullIf(contains(line.typeLine, null)) {
-				line.name lineTo typed(line.rhs.expression, rhs)
+				line.name lineTo typed(line.rhs.expression, unexpandedRhs)
 			}
 		} ?: line
 }

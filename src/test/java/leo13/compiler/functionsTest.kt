@@ -21,7 +21,8 @@ class FunctionsTest {
 					function(
 						valueContext(),
 						expression("bar")),
-					type("foo") arrowTo type("bar")))
+					type("foo") arrowTo type("bar"),
+					recursive(false)))
 			.resolve(
 				typed(
 					expression("foo"),

@@ -5,10 +5,10 @@ import leo13.containsName
 import leo13.errorConverter
 import leo13.expression.expression
 import leo13.expression.valueContext
-import leo13.type.*
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
+import leo13.type.*
 import leo13.value.function
 import kotlin.test.Test
 
@@ -52,7 +52,8 @@ class DefineCompilerTest {
 					context().plus(
 						typed(
 							function(valueContext(), expression("one")),
-							type("zero") arrowTo type("one"))),
+							type("zero") arrowTo type("one"),
+							recursive(false))),
 					type()))
 	}
 
@@ -78,7 +79,8 @@ class DefineCompilerTest {
 					context().plus(
 						typed(
 							function(valueContext(), expression("one")),
-							type("zero").plus("plus" lineTo type("one")) arrowTo type("one"))),
+							type("zero").plus("plus" lineTo type("one")) arrowTo type("one"),
+							recursive(false))),
 					type()))
 	}
 

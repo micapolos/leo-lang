@@ -82,8 +82,7 @@ data class FunctionCompiler(
 			type())
 
 	fun beginGives() =
-		if (parameterType.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(typeName))
-		else Compiler(
+		Compiler(
 			converter { typedBody ->
 				if (toOrNull != null && toOrNull.type != typedBody.type)
 					tracedError(mismatchName lineTo script(
@@ -99,7 +98,8 @@ data class FunctionCompiler(
 						function(
 							valueContext(), // TODO
 							typedBody.expression),
-						parameterType arrowTo typedBody.type))
+						parameterType arrowTo typedBody.type,
+						recursive))
 			},
 			null,
 			compiled(context.give(parameterType)))

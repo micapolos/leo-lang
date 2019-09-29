@@ -37,6 +37,7 @@ data class Interpreter(
 	fun begin(name: String) =
 		when (name) {
 			interpreterName -> beginInterpreter()
+			typeName -> beginType()
 			else -> beginOther(name)
 		}
 
@@ -51,6 +52,17 @@ data class Interpreter(
 						typed(
 							script(scriptingLine).value,
 							script(scriptingLine).type)))
+			})
+
+	fun beginType() =
+		EmptyTokenizer(
+			converter {
+				process(
+					interpreted(
+						interpreted.context,
+						typed(
+							script(interpreted.typed.type.scriptingLine).value,
+							script(interpreted.typed.type.scriptingLine).type)))
 			})
 
 	fun beginOther(name: String) =

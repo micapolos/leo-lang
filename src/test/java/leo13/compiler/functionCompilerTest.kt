@@ -49,7 +49,8 @@ class FunctionCompilerTest {
 						function(
 							valueContext(),
 							expression("foo")),
-						type("bit" lineTo type(options("zero", "one"))) arrowTo type("foo"))))
+						type("bit" lineTo type(options("zero", "one"))) arrowTo type("foo"),
+						recursive(false))))
 	}
 
 	@Test
@@ -88,6 +89,7 @@ class FunctionCompilerTest {
 						function(
 							valueContext(),
 							expression("foo")),
-						type("bit" lineTo type(options("zero", "one"))) arrowTo type("foo"))))
+						type("bit" lineTo type(options("zero", "one"))) arrowTo type("foo"),
+						recursive(false))))
 	}
 }
