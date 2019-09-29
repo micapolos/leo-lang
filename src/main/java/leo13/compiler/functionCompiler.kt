@@ -14,7 +14,7 @@ import leo13.value.function
 data class FunctionCompiler(
 	val converter: Converter<FunctionTyped, Token>,
 	val context: Context,
-	val recursive: Boolean,
+	val recursive: BooleanRecursive,
 	val parameterType: Type,
 	val toOrNull: TypeTo?,
 	val typedOrNull: FunctionTyped?) : ObjectScripting(), Processor<Token> {
@@ -25,7 +25,9 @@ data class FunctionCompiler(
 			compilerName lineTo script(
 				converter.scriptingLine,
 				context.scriptingLine,
+				recursive.scriptingLine,
 				parameterType.scriptingLine,
+				toOrNull?.scriptingLine ?: toName lineTo script(noneName),
 				typedOrNull?.scriptingLine ?: typedName lineTo script(functionName lineTo script(emptyName)))
 
 	override fun process(token: Token): Processor<Token> =
@@ -45,7 +47,7 @@ data class FunctionCompiler(
 		}
 
 	fun beginRecursive() =
-		if (recursive) tracedError(notName lineTo script(expectedName lineTo script(recursiveName)))
+		if (recursive.boolean) tracedError(notName lineTo script(expectedName lineTo script(recursiveName)))
 		else FunctionCompiler(
 			converter { typed ->
 				FunctionCompiler(
@@ -57,7 +59,7 @@ data class FunctionCompiler(
 					typed)
 			},
 			context,
-			true,
+			recursive(true),
 			parameterType,
 			toOrNull,
 			typedOrNull)

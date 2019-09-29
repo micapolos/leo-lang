@@ -124,6 +124,7 @@ data class Compiler(
 							type(typedFunction.arrow)))
 				},
 				compiled.context,
+				recursive(false),
 				type(),
 				null,
 				null)

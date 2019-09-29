@@ -22,6 +22,7 @@ class FunctionCompilerTest {
 		FunctionCompiler(
 			errorConverter(),
 			context(),
+			recursive(false),
 			type(),
 			null,
 			null)
@@ -41,6 +42,7 @@ class FunctionCompilerTest {
 				FunctionCompiler(
 					errorConverter(),
 					context(),
+					recursive(false),
 					type(),
 					null,
 					typed(
@@ -55,6 +57,7 @@ class FunctionCompilerTest {
 		FunctionCompiler(
 			errorConverter(),
 			context(),
+			recursive(false),
 			type(),
 			null,
 			null)
@@ -78,8 +81,9 @@ class FunctionCompilerTest {
 				FunctionCompiler(
 					errorConverter(),
 					context(),
+					recursive(false),
 					type(),
-					null,
+					leo13.type.to(type("foo")),
 					typed(
 						function(
 							valueContext(),

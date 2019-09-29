@@ -1,8 +1,7 @@
 define
 	bit
 	contains: options: zero one
-my: function
+function: recursive
 	bit
 	to: bit
 	gives: bit: zero
-do: bit: one
