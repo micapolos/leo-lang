@@ -82,7 +82,8 @@ data class FunctionCompiler(
 			type())
 
 	fun beginGives() =
-		Compiler(
+		if (recursive.boolean && toOrNull == null) tracedError(expectedName lineTo script(toName))
+		else Compiler(
 			converter { typedBody ->
 				if (toOrNull != null && toOrNull.type != typedBody.type)
 					tracedError(mismatchName lineTo script(
