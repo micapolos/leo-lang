@@ -4,6 +4,8 @@ import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.expression.expression
 import leo13.expression.valueContext
+import leo13.givesName
+import leo13.toName
 import leo13.token.closing
 import leo13.token.opening
 import leo13.token.token
@@ -31,7 +33,7 @@ class FunctionCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
-			.process(token(opening("gives")))
+			.process(token(opening(givesName)))
 			.process(token(opening("foo")))
 			.process(token(closing))
 			.process(token(closing))
@@ -64,11 +66,11 @@ class FunctionCompilerTest {
 			.process(token(closing))
 			.process(token(closing))
 			.process(token(closing))
-			.process(token(opening("to")))
+			.process(token(opening(toName)))
 			.process(token(opening("foo")))
 			.process(token(closing))
 			.process(token(closing))
-			.process(token(opening("gives")))
+			.process(token(opening(givesName)))
 			.process(token(opening("foo")))
 			.process(token(closing))
 			.process(token(closing))
