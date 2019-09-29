@@ -47,4 +47,41 @@ class FunctionCompilerTest {
 							expression("foo")),
 						type("bit" lineTo type(options("zero", "one"))) arrowTo type("foo"))))
 	}
+
+	@Test
+	fun processWithTo() {
+		FunctionCompiler(
+			errorConverter(),
+			context(),
+			type(),
+			null,
+			null)
+			.process(token(opening("bit")))
+			.process(token(opening("options")))
+			.process(token(opening("zero")))
+			.process(token(closing))
+			.process(token(opening("one")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("to")))
+			.process(token(opening("foo")))
+			.process(token(closing))
+			.process(token(closing))
+			.process(token(opening("gives")))
+			.process(token(opening("foo")))
+			.process(token(closing))
+			.process(token(closing))
+			.assertEqualTo(
+				FunctionCompiler(
+					errorConverter(),
+					context(),
+					type(),
+					null,
+					typed(
+						function(
+							valueContext(),
+							expression("foo")),
+						type("bit" lineTo type(options("zero", "one"))) arrowTo type("foo"))))
+	}
 }
