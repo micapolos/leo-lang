@@ -4,13 +4,8 @@ import leo13.*
 import leo13.expression.valueContext
 import leo13.script.lineTo
 import leo13.script.script
-import leo13.token.ClosingToken
-import leo13.token.OpeningToken
-import leo13.token.Token
-import leo13.type.Type
-import leo13.type.TypeOf
-import leo13.type.arrowTo
-import leo13.type.type
+import leo13.token.*
+import leo13.type.*
 import leo13.value.function
 
 data class FunctionCompiler(
@@ -33,43 +28,66 @@ data class FunctionCompiler(
 		when (token) {
 			is OpeningToken ->
 				if (typedFunctionOrNull != null) tracedError(expectedName lineTo script(endName))
-				else if (token.opening.name == givesName)
-					if (parameterType.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(typeName))
-					else Compiler(
-						converter { typedBody ->
-							if (ofOrNull != null && ofOrNull.type != typedBody.type)
-								tracedError(mismatchName lineTo script(
-									expectedName lineTo script(ofOrNull.type.scriptingLine),
-									actualName lineTo script(typedBody.type.scriptingLine)))
-							else FunctionCompiler(
-								converter,
-								context,
-								type(),
-								null,
-								typed(
-									function(
-										valueContext(), // TODO
-										typedBody.expression),
-									parameterType arrowTo typedBody.type))
-						},
-						null,
-						compiled(context.give(parameterType)))
-				else if (token.opening.name == toName) TODO()
-				else TypeCompiler(
-					converter { newType ->
-						FunctionCompiler(
-							converter,
-							context,
-							newType,
-							ofOrNull,
-							typedFunctionOrNull)
-					},
-					true,
-					typeContext(context),
-					parameterType).process(token)
+				else when (token.opening.name) {
+					ofName -> beginOf()
+					givesName -> beginGives()
+					else -> beginOther(token.opening.name)
+				}
 			is ClosingToken -> {
 				if (typedFunctionOrNull == null) tracedError(expectedName lineTo script(givesName))
 				else converter.convert(typedFunctionOrNull)
 			}
 		}
+
+	fun beginOf(): Processor<Token> =
+		if (ofOrNull != null)
+			tracedError(notName lineTo script(expectedName lineTo script(ofName)))
+		else TypeCompiler(
+			converter { type ->
+				FunctionCompiler(
+					converter,
+					context,
+					parameterType,
+					of(type),
+					typedFunctionOrNull)
+			},
+			false,
+			typeContext(context),
+			type())
+
+	fun beginGives() =
+		if (parameterType.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(typeName))
+		else Compiler(
+			converter { typedBody ->
+				if (ofOrNull != null && ofOrNull.type != typedBody.type)
+					tracedError(mismatchName lineTo script(
+						expectedName lineTo script(ofOrNull.type.scriptingLine),
+						actualName lineTo script(typedBody.type.scriptingLine)))
+				else FunctionCompiler(
+					converter,
+					context,
+					type(),
+					null,
+					typed(
+						function(
+							valueContext(), // TODO
+							typedBody.expression),
+						parameterType arrowTo typedBody.type))
+			},
+			null,
+			compiled(context.give(parameterType)))
+
+	fun beginOther(name: String) =
+		TypeCompiler(
+			converter { newType ->
+				FunctionCompiler(
+					converter,
+					context,
+					newType,
+					ofOrNull,
+					typedFunctionOrNull)
+			},
+			true,
+			typeContext(context),
+			parameterType).process(token(opening(name)))
 }
