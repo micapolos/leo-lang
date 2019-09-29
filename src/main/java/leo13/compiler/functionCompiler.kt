@@ -8,6 +8,7 @@ import leo13.token.ClosingToken
 import leo13.token.OpeningToken
 import leo13.token.Token
 import leo13.type.Type
+import leo13.type.TypeOf
 import leo13.type.arrowTo
 import leo13.type.type
 import leo13.value.function
@@ -16,6 +17,7 @@ data class FunctionCompiler(
 	val converter: Converter<FunctionTyped, Token>,
 	val context: Context,
 	val parameterType: Type,
+	val ofOrNull: TypeOf?,
 	val typedFunctionOrNull: FunctionTyped?) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
@@ -31,14 +33,19 @@ data class FunctionCompiler(
 		when (token) {
 			is OpeningToken ->
 				if (typedFunctionOrNull != null) tracedError(expectedName lineTo script(endName))
-				else if (token.opening.name == "gives")
+				else if (token.opening.name == givesName)
 					if (parameterType.isEmpty) tracedError<Processor<Token>>(emptyName lineTo script(typeName))
 					else Compiler(
 						converter { typedBody ->
-							FunctionCompiler(
+							if (ofOrNull != null && ofOrNull.type != typedBody.type)
+								tracedError(mismatchName lineTo script(
+									expectedName lineTo script(ofOrNull.type.scriptingLine),
+									actualName lineTo script(typedBody.type.scriptingLine)))
+							else FunctionCompiler(
 								converter,
 								context,
 								type(),
+								null,
 								typed(
 									function(
 										valueContext(), // TODO
@@ -47,12 +54,14 @@ data class FunctionCompiler(
 						},
 						null,
 						compiled(context.give(parameterType)))
+				else if (token.opening.name == toName) TODO()
 				else TypeCompiler(
 					converter { newType ->
 						FunctionCompiler(
 							converter,
 							context,
 							newType,
+							ofOrNull,
 							typedFunctionOrNull)
 					},
 					true,

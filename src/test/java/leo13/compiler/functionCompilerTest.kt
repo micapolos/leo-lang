@@ -4,13 +4,13 @@ import leo.base.assertEqualTo
 import leo13.errorConverter
 import leo13.expression.expression
 import leo13.expression.valueContext
+import leo13.token.closing
+import leo13.token.opening
+import leo13.token.token
 import leo13.type.arrowTo
 import leo13.type.lineTo
 import leo13.type.options
 import leo13.type.type
-import leo13.token.closing
-import leo13.token.opening
-import leo13.token.token
 import leo13.value.function
 import kotlin.test.Test
 
@@ -21,6 +21,7 @@ class FunctionCompilerTest {
 			errorConverter(),
 			context(),
 			type(),
+			null,
 			null)
 			.process(token(opening("bit")))
 			.process(token(opening("options")))
@@ -39,6 +40,7 @@ class FunctionCompilerTest {
 					errorConverter(),
 					context(),
 					type(),
+					null,
 					typed(
 						function(
 							valueContext(),
