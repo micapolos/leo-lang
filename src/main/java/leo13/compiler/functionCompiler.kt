@@ -14,9 +14,10 @@ import leo13.value.function
 data class FunctionCompiler(
 	val converter: Converter<FunctionTyped, Token>,
 	val context: Context,
+	val recursive: Boolean,
 	val parameterType: Type,
 	val toOrNull: TypeTo?,
-	val typedFunctionOrNull: FunctionTyped?) : ObjectScripting(), Processor<Token> {
+	val typedOrNull: FunctionTyped?) : ObjectScripting(), Processor<Token> {
 	override fun toString() = super.toString()
 
 	override val scriptingLine
@@ -25,22 +26,41 @@ data class FunctionCompiler(
 				converter.scriptingLine,
 				context.scriptingLine,
 				parameterType.scriptingLine,
-				typedFunctionOrNull?.scriptingLine ?: typedName lineTo script(functionName lineTo script(emptyName)))
+				typedOrNull?.scriptingLine ?: typedName lineTo script(functionName lineTo script(emptyName)))
 
 	override fun process(token: Token): Processor<Token> =
 		when (token) {
 			is OpeningToken ->
-				if (typedFunctionOrNull != null) tracedError(expectedName lineTo script(endName))
+				if (typedOrNull != null) tracedError(expectedName lineTo script(endName))
 				else when (token.opening.name) {
+					recursiveName -> beginRecursive()
 					toName -> beginTo()
 					givesName -> beginGives()
 					else -> beginOther(token.opening.name)
 				}
 			is ClosingToken -> {
-				if (typedFunctionOrNull == null) tracedError(expectedName lineTo script(givesName))
-				else converter.convert(typedFunctionOrNull)
+				if (typedOrNull == null) tracedError(expectedName lineTo script(givesName))
+				else converter.convert(typedOrNull)
 			}
 		}
+
+	fun beginRecursive() =
+		if (recursive) tracedError(notName lineTo script(expectedName lineTo script(recursiveName)))
+		else FunctionCompiler(
+			converter { typed ->
+				FunctionCompiler(
+					converter,
+					context,
+					recursive,
+					parameterType,
+					toOrNull,
+					typed)
+			},
+			context,
+			true,
+			parameterType,
+			toOrNull,
+			typedOrNull)
 
 	fun beginTo(): Processor<Token> =
 		if (toOrNull != null)
@@ -50,9 +70,10 @@ data class FunctionCompiler(
 				FunctionCompiler(
 					converter,
 					context,
+					recursive,
 					parameterType,
 					leo13.type.to(type),
-					typedFunctionOrNull)
+					typedOrNull)
 			},
 			false,
 			typeContext(context),
@@ -69,8 +90,9 @@ data class FunctionCompiler(
 				else FunctionCompiler(
 					converter,
 					context,
+					recursive,
 					type(),
-					null,
+					toOrNull,
 					typed(
 						function(
 							valueContext(), // TODO
@@ -81,14 +103,16 @@ data class FunctionCompiler(
 			compiled(context.give(parameterType)))
 
 	fun beginOther(name: String) =
-		TypeCompiler(
+		if (toOrNull != null) tracedError(expectedName lineTo script(givesName))
+		else TypeCompiler(
 			converter { newType ->
 				FunctionCompiler(
 					converter,
 					context,
+					recursive,
 					newType,
 					toOrNull,
-					typedFunctionOrNull)
+					typedOrNull)
 			},
 			true,
 			typeContext(context),
