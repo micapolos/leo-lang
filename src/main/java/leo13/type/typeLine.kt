@@ -32,6 +32,10 @@ data class TypeLine(val name: String, val unexpandedRhs: Type) : ObjectScripting
 
 	fun contains(line: TypeLine, traceOrNull: TypeTrace?): Boolean =
 		name == line.name && unexpandedRhs.contains(line.unexpandedRhs, traceOrNull)
+
+	val isStatic: Boolean
+		get() =
+			unexpandedRhs.isStatic
 }
 
 infix fun String.lineTo(rhs: Type) = TypeLine(this, rhs)

@@ -236,4 +236,16 @@ class TypeTest {
 			.leafNameTraceOrNull()
 			.assertEqualTo(nameTrace().plus("point").plus("y").plus("one"))
 	}
+
+	@Test
+	fun isStatic() {
+		type().isStatic.assertEqualTo(true)
+		type("x" lineTo type("zero"), "y" lineTo type("one")).isStatic.assertEqualTo(true)
+		type(options()).isStatic.assertEqualTo(false)
+		type(options("zero")).isStatic.assertEqualTo(false)
+		type(options("zero", "one")).isStatic.assertEqualTo(false)
+		type(type(options()) arrowTo type()).isStatic.assertEqualTo(true)
+		type(type(options()) arrowTo type(options())).isStatic.assertEqualTo(false)
+		type(item(onceRecurse)).isStatic.assertEqualTo(false)
+	}
 }

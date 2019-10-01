@@ -101,6 +101,15 @@ sealed class Type : ObjectScripting() {
 			is OptionsType -> options.contains(type, trace)
 			is ArrowType -> type is ArrowType && arrow.contains(type.arrow)
 		}
+
+	val isStatic: Boolean
+		get() =
+			when (this) {
+				is EmptyType -> true
+				is LinkType -> link.isStatic
+				is OptionsType -> options.isStatic
+				is ArrowType -> arrow.isStatic
+			}
 }
 
 data class EmptyType(val empty: Empty) : Type() {

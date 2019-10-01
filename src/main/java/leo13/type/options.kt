@@ -56,6 +56,8 @@ sealed class Options : ObjectScripting() {
 			is OptionsType -> contains(node.options, trace)
 			is ArrowType -> false
 		}
+
+	val isStatic get() = false
 }
 
 data class EmptyOptions(val empty: Empty) : Options() {

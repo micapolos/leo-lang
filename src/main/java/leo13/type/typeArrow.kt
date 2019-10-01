@@ -14,6 +14,8 @@ data class TypeArrow(val lhs: Type, val rhs: Type) : ObjectScripting() {
 	override val scriptingLine: ScriptLine
 		get() = arrowName lineTo
 			lhs.scriptingLine.rhs.plus(toName lineTo rhs.scriptingLine.rhs)
+
+	val isStatic: Boolean get() = rhs.isStatic
 }
 
 infix fun Type.arrowTo(rhs: Type) = TypeArrow(this, rhs)

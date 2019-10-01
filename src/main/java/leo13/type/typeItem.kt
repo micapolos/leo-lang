@@ -45,6 +45,13 @@ sealed class TypeItem : ObjectScripting() {
 					is RecurseTypeItem -> recurse == item.recurse
 				}
 		}
+
+	val isStatic: Boolean
+		get() =
+			when (this) {
+				is LineTypeItem -> line.isStatic
+				is RecurseTypeItem -> false
+			}
 }
 
 data class LineTypeItem(val unexpandedLine: TypeLine) : TypeItem()

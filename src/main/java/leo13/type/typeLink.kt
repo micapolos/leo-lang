@@ -46,6 +46,10 @@ data class TypeLink(val lhs: Type, val item: TypeItem) : ObjectScripting() {
 
 	fun contains(link: TypeLink, traceOrNull: TypeTrace?): Boolean =
 		lhs.contains(link.lhs, traceOrNull) && item.contains(link.item, traceOrNull)
+
+	val isStatic: Boolean
+		get() =
+			lhs.isStatic && item.isStatic
 }
 
 infix fun Type.linkTo(item: TypeItem) = TypeLink(this, item)
