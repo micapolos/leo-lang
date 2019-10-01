@@ -76,9 +76,9 @@ fun TypeItem.scriptLine(value: Any?): ScriptLine =
 	}
 
 fun TypeLine.scriptLine(value: Any?): ScriptLine =
-	coreScriptLineOrNull(value) ?: nonCoreScriptLine(value)
+	nativeScriptLineOrNull(value) ?: nonNativeScriptLine(value)
 
-fun TypeLine.coreScriptLineOrNull(value: Any?): ScriptLine? =
+fun TypeLine.nativeScriptLineOrNull(value: Any?): ScriptLine? =
 	when (this) {
 		booleanTypeLine -> (value as Boolean).scriptLine
 		bitTypeLine -> (value as Bit).scriptLine
@@ -86,22 +86,21 @@ fun TypeLine.coreScriptLineOrNull(value: Any?): ScriptLine? =
 		else -> null
 	}
 
-fun TypeLine.nonCoreScriptLine(value: Any?): ScriptLine =
+fun TypeLine.nonNativeScriptLine(value: Any?): ScriptLine =
 	name lineTo rhs.script(value)
 
 fun Options.scriptLine(value: Any?): ScriptLine =
-	(value as? Pair<Any?, Any?>)
+	if (rhsIsStatic) scriptLine(value as Int, null)
+	else (value as? Pair<Any?, Any?>)
 		.notNullOrError("scriptLine")
-		.let { scriptLine(it.first, it.second) }
+		.let { scriptLine(it.first as Int, it.second) }
 
-fun Options.scriptLine(selector: Any?, value: Any?): ScriptLine =
+fun Options.scriptLine(index: Int, value: Any?): ScriptLine =
 	when (this) {
 		is EmptyOptions -> error("scriptLine")
-		is LinkOptions -> link.scriptLine(selector, value)
+		is LinkOptions -> link.scriptLine(index, value)
 	}
 
-fun OptionsLink.scriptLine(selector: Any?, value: Any?): ScriptLine =
-	if (selector == null) item.scriptLine(value)
-	else (selector as? Pair<Any?, Any?>)
-		.notNullOrError("scriptLine")
-		.let { lhs.scriptLine(it.first, value) }
+fun OptionsLink.scriptLine(index: Int, value: Any?): ScriptLine =
+	if (index == 0) item.scriptLine(value)
+	else lhs.scriptLine(index.dec(), value)

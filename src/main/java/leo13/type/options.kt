@@ -58,6 +58,13 @@ sealed class Options : ObjectScripting() {
 		}
 
 	val isStatic get() = false
+
+	val rhsIsStatic: Boolean
+		get() =
+			when (this) {
+				is EmptyOptions -> true
+				is LinkOptions -> link.rhsIsStatic
+			}
 }
 
 data class EmptyOptions(val empty: Empty) : Options() {

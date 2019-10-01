@@ -23,6 +23,10 @@ data class OptionsLink(val lhs: Options, val item: TypeItem) : ObjectScripting()
 
 	fun contains(line: TypeLine, trace: TypeTrace?): Boolean =
 		this.item.line.contains(line, trace) || lhs.contains(line, trace)
+
+	val rhsIsStatic: Boolean
+		get() =
+			lhs.rhsIsStatic && item.isStatic
 }
 
 infix fun Options.linkTo(item: TypeItem) = OptionsLink(this, item)
