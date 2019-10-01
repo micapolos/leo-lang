@@ -12,7 +12,7 @@ import kotlin.test.Test
 
 class DecompilerTest {
 	@Test
-	fun typeScript() {
+	fun nonCore() {
 		type()
 			.script(null)
 			.assertEqualTo(script())
@@ -34,13 +34,13 @@ class DecompilerTest {
 			.script((null to null) to null)
 			.assertEqualTo(script("zero"))
 
-		type("bitek" lineTo type(options("zero", "one")))
+		type("foo" lineTo type(options("zero", "one")))
 			.script(null to null)
-			.assertEqualTo(script("bitek" lineTo script("one")))
+			.assertEqualTo(script("foo" lineTo script("one")))
 
-		type("bitek" lineTo type(options("zero", "one")))
+		type("foo" lineTo type(options("zero", "one")))
 			.script((null to null) to null)
-			.assertEqualTo(script("bitek" lineTo script("zero")))
+			.assertEqualTo(script("foo" lineTo script("zero")))
 	}
 
 	@Test
