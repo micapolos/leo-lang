@@ -21,6 +21,8 @@ data class LineValueItem(val line: ValueLine) : ValueItem() {
 data class NativeValueItem(val native: Any?, val lineFn: () -> ValueLine) : ValueItem() {
 	override fun toString() = super.toString()
 	override val scriptingLine get() = line.bodyScriptLine
+	override fun equals(other: Any?) = (other is NativeValueItem) && native == other.native
+	override fun hashCode() = native.hashCode()
 	val line get() = lineFn()
 	val unwrap get() = item(line)
 }
@@ -31,6 +33,7 @@ fun nativeItem(native: Any?, lineFn: () -> ValueLine): ValueItem = NativeValueIt
 
 val ValueItem.functionOrNull get() = (this as? FunctionValueItem)?.function
 val ValueItem.lineOrNull get() = (this as? LineValueItem)?.line
+val ValueItem.nativeOrNull get() = (this as? NativeValueItem)?.native
 
 fun ValueItem.itemOrNull(selectedName: String): ValueItem? =
 	when (this) {

@@ -21,3 +21,14 @@ val Byte.valueLine
 			"sixth" lineTo value(bit2.valueLine),
 			"seventh" lineTo value(bit1.valueLine),
 			"eight" lineTo value(bit0.valueLine))
+
+val Boolean.nativeValue: Value
+	get() =
+		value(nativeItem(this) { "$this" lineTo value() })
+
+val booleanNotFunctionNativeValue: Value
+	get() =
+		value(
+			nativeItem({ value: Value -> (value.onlyItemOrNull!!.nativeOrNull!! as Boolean).not().nativeValue }) {
+				notName lineTo value(booleanName)
+			})

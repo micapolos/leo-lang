@@ -1,14 +1,8 @@
 package leo13.expression
 
 import leo.base.assertEqualTo
-import leo13.booleanName
-import leo13.falseName
-import leo13.matchingName
-import leo13.trueName
-import leo13.value.function
-import leo13.value.item
-import leo13.value.lineTo
-import leo13.value.value
+import leo13.*
+import leo13.value.*
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -52,7 +46,7 @@ class EvaluatorTest {
 			.evaluate(
 				expression(
 					op(value("foo" lineTo value())),
-					op(leo13.given)))
+					op(given)))
 			.assertEqualTo(
 				value(
 					"given" lineTo value("zero"),
@@ -87,9 +81,17 @@ class EvaluatorTest {
 					.plus(op(value("zoo")))
 					.plus("process" lineTo expression(op(value(item(function(
 						valueContext(),
-						expression(leo13.given.op)))))))
+						expression(given.op)))))))
 					.plus(op(apply(expression(op(value("foo")))))))
 			.assertEqualTo(value("given" lineTo value("foo")))
+	}
+
+	@Test
+	fun applyNative() {
+		evaluator()
+			.set(evaluated(value(functionName lineTo booleanNotFunctionNativeValue)))
+			.plus(apply(expression(op(false.nativeValue))))
+			.assertEqualTo(evaluator().set(evaluated(true.nativeValue)))
 	}
 
 	@Test
@@ -100,10 +102,10 @@ class EvaluatorTest {
 					.plus(op(value("zoo")))
 					.plus(op(value("function" lineTo value(item(function(
 						valueContext(),
-						expression(leo13.given.op)))))))
+						expression(given.op)))))))
 					.plus(op(fix(expression(op(value("foo")))))))
 			.assertEqualTo(value(
-				"given" lineTo value(item(function(valueContext(), expression(leo13.given.op)))),
+				"given" lineTo value(item(function(valueContext(), expression(given.op)))),
 				"given" lineTo value("foo")))
 	}
 
@@ -119,11 +121,11 @@ class EvaluatorTest {
 								function(
 									valueContext(),
 									expression(
-										op(leo13.given),
+										op(given),
 										op(
 											switch(
 												"foo" caseTo expression(
-													op(leo13.given),
+													op(given),
 													op(previous),
 													op(fix(expression(op(switched), op(get("foo")), op(content))))),
 												"bar" caseTo expression("ok"))))))))),
