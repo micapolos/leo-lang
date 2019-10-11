@@ -61,3 +61,10 @@ val ValueItem.scriptLineOrNull: ScriptLine?
 val ScriptLine.valueItem: ValueItem
 	get() =
 		item(valueLine)
+
+fun ValueItem.valueApply(value: Value): Value =
+	when (this) {
+		is FunctionValueItem -> function.apply(value)
+		is LineValueItem -> error("apply")
+		is NativeValueItem -> (native as (Any?) -> Any?).invoke(value) as Value
+	}

@@ -2,6 +2,7 @@ package leo13.value
 
 import leo.base.fold
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo13.*
 import leo13.script.Script
 import leo13.script.emptyIfEmpty
@@ -29,6 +30,14 @@ val Value.linkOrNull: ValueLink?
 val Value.firstItemOrNull: ValueItem?
 	get() =
 		linkOrNull?.rhsItem
+
+val Value.onlyItemOrNull: ValueItem?
+	get() =
+		linkOrNull?.run {
+			notNullIf(lhsValue.isEmpty) {
+				rhsItem
+			}
+		}
 
 val Value.onlyLineOrNull
 	get() =
@@ -106,3 +115,6 @@ fun Value.updateLineRhsOrNull(fn: Value.() -> Value?): Value? =
 	linkOrNull?.run {
 		rhsItem.lineOrNull?.rhs?.fn()
 	}
+
+fun Value.apply(value: Value): Value =
+	contentOrNull!!.onlyItemOrNull!!.valueApply(value)

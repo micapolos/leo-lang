@@ -83,7 +83,7 @@ fun Evaluator.plus(give: Give): Evaluator =
 	set(context.give(evaluated.value).evaluate(give.expression).evaluated)
 
 fun Evaluator.plus(apply: Apply): Evaluator =
-	set(evaluated.value.contentOrNull!!.functionOrNull!!.apply(context.evaluate(apply.expression)).evaluated)
+	set(evaluated.value.apply(context.evaluate(apply.expression)).evaluated)
 
 fun Evaluator.plus(fix: Fix): Evaluator =
 	set(evaluated.value.updateLineRhsOrNull {
