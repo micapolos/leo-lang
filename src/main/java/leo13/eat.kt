@@ -1,10 +1,19 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package leo13
 
+object Eval
+
+val eval = Eval
+
 fun fn(fn: (Any?) -> Any?) = fn
+fun lazy(fn: (Eval) -> Any?) = fn
+fun intFn(fn: (Int) -> Any?) = fn
+fun listFn(fn: (List<Any?>) -> Any?) = fn
 
 infix fun Any?.eat(any: Any?) = (this as (Any?.() -> Any?)).invoke(any)
-infix fun Any?.dot(any: Any?) = fn { a -> eat(any.eat(a)) }
+infix fun Any?.dot(any: Any?) = fn { eat(any.eat(it)) }
 
-val intInc = fn { a -> (a as Int).inc() }
-val intAdd = fn { a -> fn { b -> a as Int + b as Int } }
-val listAt = fn { list -> fn { index -> (list as List<Any?>)[index as Int] } }
+val intInc = intFn { it.inc() }
+val intAdd = intFn { a -> intFn { b -> a + b } }
+val listAt = listFn { list -> intFn { index -> list[index] } }
