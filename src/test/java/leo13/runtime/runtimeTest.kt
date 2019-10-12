@@ -14,9 +14,18 @@ class RuntimeTest {
 		arrayAt eat arrayOf("foo", "bar") eat 1 assertEqualTo "bar"
 		intInc dot intInc dot intInc eat 1 assertEqualTo 4
 
-		switch
-			.eatArray(fn { "0:$it" }, fn { "1:$it" })
-			.eat(0 indexed false)
+		(0 indexed false)
+			.switch(fn { "0:$it" }, fn { "1:$it" })
 			.assertEqualTo("0:false")
+	}
+
+	@Test
+	fun list() {
+		empty perform isEmpty assertEqualTo true
+		empty put 123 perform isEmpty assertEqualTo false
+
+		empty perform size assertEqualTo 0
+		empty put 123 perform size assertEqualTo 1
+		empty put 123 put 124 perform size assertEqualTo 2
 	}
 }
