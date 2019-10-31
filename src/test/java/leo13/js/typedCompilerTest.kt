@@ -3,7 +3,7 @@ package leo13.js
 import leo.base.assertEqualTo
 import kotlin.test.Test
 
-class ExpressionCompilerTest {
+class TypedCompilerTest {
 	@Test
 	fun empty() {
 		compile { this }.assertEqualTo(nullTyped)

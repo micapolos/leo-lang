@@ -7,7 +7,7 @@ data class CallCompiler(
 	val lhs: Expression,
 	val nameOrNull: String?,
 	val argStack: Stack<Expression>,
-	val ret: Call.() -> Compiler) : Compiler {
+	val ret: (Call) -> Compiler) : Compiler {
 	override fun write(token: Token) =
 		if (nameOrNull == null)
 			when (token) {
@@ -19,15 +19,13 @@ data class CallCompiler(
 				is BeginToken ->
 					when (token.begin.string) {
 						"with" ->
-							ExpressionCompiler(nullTyped) {
-								CallCompiler(lhs, nameOrNull, argStack.push(expression), ret)
+							TypedCompiler(nullTyped) { typed ->
+								CallCompiler(lhs, nameOrNull, argStack.push(typed.expression), ret)
 							}
 						else -> error("with expected")
 					}
 				is EndToken ->
-					lhs.call(nameOrNull, argStack).ret()
-				else ->
-					if (nameOrNull == null) error("name expected")
-					else error("with expected")
+					ret(lhs.call(nameOrNull, argStack))
+				else -> error("with or end expected")
 			}
 }

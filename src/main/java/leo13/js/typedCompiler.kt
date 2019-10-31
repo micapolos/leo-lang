@@ -2,9 +2,9 @@ package leo13.js
 
 import leo13.stack
 
-data class ExpressionCompiler(
+data class TypedCompiler(
 	val typed: Typed,
-	val ret: Typed.() -> Compiler) : Compiler {
+	val ret: (Typed) -> Compiler) : Compiler {
 	override fun write(token: Token) =
 		when (token) {
 			is DoubleToken ->
@@ -15,22 +15,22 @@ data class ExpressionCompiler(
 				"native" -> StringCompiler(null) {
 					copy(typed = typed.expression then expression(native(this)) of nativeType)
 				}
-				"do" -> ExpressionCompiler(nullTyped) {
-					copy(typed = typed.expression then expression of type)
+				"do" -> TypedCompiler(nullTyped) { rhs ->
+					copy(typed = typed.expression then rhs.expression of rhs.type)
 				}
 				"call" ->
 					if (typed.type == nativeType)
-						CallCompiler(typed.expression, null, stack()) {
-							this@ExpressionCompiler.copy(typed = expression(this) of nativeType)
+						CallCompiler(typed.expression, null, stack()) { call ->
+							copy(typed = expression(call) of nativeType)
 						}
 					else error("native lhs expected")
 				else -> TODO()
 			}
-			is EndToken -> typed.ret()
+			is EndToken -> ret(typed)
 		}
 }
 
 fun compile(fn: Compiler.() -> Compiler): Typed =
-	(fn(ExpressionCompiler(nullTyped) {
-		EofCompiler(this)
+	(fn(TypedCompiler(nullTyped) { typed ->
+		EofCompiler(typed)
 	}).write(token(end)) as EofCompiler).typed
