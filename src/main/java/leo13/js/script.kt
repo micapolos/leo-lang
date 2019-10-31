@@ -2,8 +2,6 @@ package leo13.js
 
 import leo.base.fold
 
-typealias Plain = Nothing
-
 sealed class Script
 data class UnitScript(val unit: Unit) : Script()
 data class LinkScript(val link: ScriptLink) : Script()
@@ -26,6 +24,7 @@ fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
 
 infix fun String.fieldTo(rhs: Script) = ScriptField(this, rhs)
+infix fun String.fieldTo(line: ScriptLine) = fieldTo(script(line))
 infix fun String.fieldTo(int: Int) = fieldTo(script(line(number(int))))
 infix fun String.fieldTo(double: Double) = fieldTo(script(line(number(double))))
 infix fun String.fieldTo(string: String) = fieldTo(script(line(string)))

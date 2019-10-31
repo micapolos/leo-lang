@@ -9,7 +9,7 @@ import leo13.token.token
 import leo13.type.*
 import kotlin.test.Test
 
-class TypeCompilerTest {
+class TypesCompilerTest {
 	@Test
 	fun name() {
 		typeCompiler()

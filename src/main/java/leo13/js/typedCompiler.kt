@@ -8,20 +8,20 @@ data class TypedCompiler(
 	override fun write(token: Token) =
 		when (token) {
 			is NumberToken ->
-				copy(typed = typed.expression then expression(token.number) of type(numberLine))
+				copy(typed = typed.expression then expression(token.number) of types(numberType))
 			is StringToken ->
-				copy(typed = typed.expression then expression(token.string) of type(stringLine))
+				copy(typed = typed.expression then expression(token.string) of types(stringType))
 			is BeginToken -> when (token.begin.string) {
 				"native" -> StringCompiler(null) {
-					copy(typed = typed.expression then expression(native(this)) of type(nativeLine))
+					copy(typed = typed.expression then expression(native(this)) of types(nativeType))
 				}
 				"do" -> TypedCompiler(nullTyped) { rhs ->
-					copy(typed = typed.expression then rhs.expression of rhs.type)
+					copy(typed = typed.expression then rhs.expression of rhs.types)
 				}
 				"call" ->
-					if (typed.type == type(nativeLine))
+					if (typed.types == types(nativeType))
 						CallCompiler(typed.expression, null, stack()) { call ->
-							copy(typed = expression(call) of type(nativeLine))
+							copy(typed = expression(call) of types(nativeType))
 						}
 					else error("native lhs expected")
 				else -> TODO()

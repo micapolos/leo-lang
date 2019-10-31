@@ -1,9 +1,9 @@
 package leo13.js
 
-data class Typed(val expression: Expression, val type: Type)
+data class Typed(val expression: Expression, val types: Types)
 
-infix fun Expression.of(type: Type) = Typed(this, type)
-val nullTyped = nullExpression of emptyType
+infix fun Expression.of(types: Types) = Typed(this, types)
+val nullTyped = nullExpression of emptyTypes
 
-fun typed(number: Number) = expression(number) of type(numberLine)
-fun typed(string: String) = expression(string) of type(stringLine)
+fun typed(number: Number) = expression(number) of types(numberType)
+fun typed(string: String) = expression(string) of types(stringType)

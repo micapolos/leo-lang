@@ -6,7 +6,7 @@ data class Functions(val stack: Stack<Function>)
 
 fun functions(vararg functions: Function) = Functions(stack(*functions))
 fun Functions.plus(function: Function) = Functions(stack.push(function))
-fun Functions.indexedAt(lhs: Type): IndexedValue<Function>? = stack.firstIndexed { this.lhsType == lhs }
+fun Functions.indexedAt(lhs: Types): IndexedValue<Function>? = stack.firstIndexed { this.lhsTypes == lhs }
 fun Functions.at(index: Int): Function? = stack.atIndex(index)
 
 val Functions.code

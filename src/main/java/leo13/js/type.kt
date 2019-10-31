@@ -3,30 +3,28 @@ package leo13.js
 import leo.base.fold
 
 sealed class Type
+object NumberType : Type()
+object StringType : Type()
+object NativeType : Type()
+data class FieldType(val field: TypeField) : Type()
+data class ArrowType(val arrow: Arrow) : Type()
 
-object EmptyType : Type()
-data class LinkType(val link: TypeLink) : Type()
+sealed class Types
+object EmptyTypes : Types()
+data class LinkTypes(val link: TypeLink) : Types()
 
-data class TypeLink(val type: Type, val line: TypeLine)
+data class TypeLink(val types: Types, val type: Type)
+data class TypeField(val string: String, val types: Types)
 
-data class TypeField(val string: String, val type: Type)
+infix fun Types.linkTo(line: Type) = TypeLink(this, line)
+infix fun String.fieldTo(types: Types) = TypeField(this, types)
 
-sealed class TypeLine
-object NumberTypeLine : TypeLine()
-object StringTypeLine : TypeLine()
-object NativeTypeLine : TypeLine()
-data class FieldTypeLine(val field: TypeField) : TypeLine()
-data class ArrowTypeLine(val arrow: Arrow) : TypeLine()
+val emptyTypes: Types = EmptyTypes
+val numberType: Type = NumberType
+val stringType: Type = StringType
+val nativeType: Type = NativeType
+fun type(field: TypeField): Type = FieldType(field)
+fun type(arrow: Arrow): Type = ArrowType(arrow)
 
-infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
-infix fun String.fieldTo(type: Type) = TypeField(this, type)
-
-val emptyType: Type = EmptyType
-val numberLine: TypeLine = NumberTypeLine
-val stringLine: TypeLine = StringTypeLine
-val nativeLine: TypeLine = NativeTypeLine
-fun line(field: TypeField): TypeLine = FieldTypeLine(field)
-fun line(arrow: Arrow): TypeLine = ArrowTypeLine(arrow)
-
-fun Type.plus(line: TypeLine): Type = LinkType(this linkTo line)
-fun type(vararg lines: TypeLine): Type = emptyType.fold(lines) { plus(it) }
+fun Types.plus(line: Type): Types = LinkTypes(this linkTo line)
+fun types(vararg lines: Type): Types = emptyTypes.fold(lines) { plus(it) }
