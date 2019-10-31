@@ -275,3 +275,6 @@ fun <V, R : Any> Stack<V>.map8OrNull(fn: (V, V, V, V, V, V, V, V) -> R): R? =
 			}
 		}
 	}
+
+fun <V> Stack<V>.toList(): List<V> =
+	mutableListOf<V>().fold(reverse) { item -> also { it.add(item) } }.toList()
