@@ -17,7 +17,7 @@ fun Compiler.write(string: String, writeRhs: Compiler.() -> Compiler) =
 fun Compiler.write(expression: Expression): Compiler =
 	when (expression) {
 		is NullExpression -> writeNull()
-		is DoubleExpression -> write(expression.double)
+		is NumberExpression -> write(expression.number)
 		is StringExpression -> write(expression.string)
 		is NativeExpression -> write(expression.native)
 		is LinkExpression -> write(expression.link)
@@ -28,8 +28,8 @@ fun Compiler.write(expression: Expression): Compiler =
 fun Compiler.writeNull() =
 	write("null") { this }
 
-fun Compiler.write(double: Double) =
-	write(token(double))
+fun Compiler.write(number: Number) =
+	write(token(number))
 
 fun Compiler.write(string: String) =
 	write(token(string))

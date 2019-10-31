@@ -11,7 +11,7 @@ class TypedCompilerTest {
 
 	@Test
 	fun double() {
-		compile { write(token(1.0)) }.assertEqualTo(typed(1.0))
+		compile { write(token(1.0)) }.assertEqualTo(typed(number(1.0)))
 	}
 
 	@Test
@@ -27,6 +27,6 @@ class TypedCompilerTest {
 				.write(token(2.0))
 				.write(token(end))
 				.write(token(end))
-		}.assertEqualTo(expression(expression(native("Math")).call("sin", expression(2.0))) of nativeType)
+		}.assertEqualTo(expression(expression(native("Math")).call("sin", expression(number(2.0)))) of nativeType)
 	}
 }

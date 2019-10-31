@@ -278,3 +278,18 @@ fun <V, R : Any> Stack<V>.map8OrNull(fn: (V, V, V, V, V, V, V, V) -> R): R? =
 
 fun <V> Stack<V>.toList(): List<V> =
 	mutableListOf<V>().fold(reverse) { item -> also { it.add(item) } }.toList()
+
+val Stack<*>.size
+	get() =
+		0.fold(this) { inc() }
+
+fun <V : Any> Stack<V>.atIndex(index: Int): V? =
+	reverse.get(index)
+
+tailrec fun <V : Any> Stack<V>.firstIndexed(fn: V.() -> Boolean): IndexedValue<V>? =
+	when (this) {
+		is EmptyStack -> null
+		is LinkStack ->
+			if (link.value.fn()) link.stack.size indexed link.value
+			else link.stack.firstIndexed(fn)
+	}

@@ -7,13 +7,13 @@ class ScriptTest {
 	@Test
 	fun code() {
 		script(
-			line(2),
+			line(number(2)),
 			line("plus" fieldTo 3))
 			.code
 			.assertEqualTo("2.plus(3)")
 
 		script(
-			line(2.5),
+			line(number(2.5)),
 			line("plus" fieldTo 3.5))
 			.code
 			.assertEqualTo("2.5.plus(3.5)")

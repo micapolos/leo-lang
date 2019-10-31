@@ -7,8 +7,8 @@ data class TypedCompiler(
 	val ret: (Typed) -> Compiler) : Compiler {
 	override fun write(token: Token) =
 		when (token) {
-			is DoubleToken ->
-				copy(typed = typed.expression then expression(token.double) of doubleType)
+			is NumberToken ->
+				copy(typed = typed.expression then expression(token.number) of doubleType)
 			is StringToken ->
 				copy(typed = typed.expression then expression(token.string) of stringType)
 			is BeginToken -> when (token.begin.string) {

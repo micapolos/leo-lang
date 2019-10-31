@@ -46,4 +46,19 @@ class StackTest {
 		stack(1, 2).containsDistinct.assertEqualTo(true)
 		stack(1, 2, 1).containsDistinct.assertEqualTo(false)
 	}
+
+	@Test
+	fun indexing() {
+		val stack = stack("zero", "one", "two")
+
+		stack.firstIndexed { this == "zero" }.assertEqualTo(0 indexed "zero")
+		stack.firstIndexed { this == "one" }.assertEqualTo(1 indexed "one")
+		stack.firstIndexed { this == "two" }.assertEqualTo(2 indexed "two")
+		stack.firstIndexed { this == "three" }.assertEqualTo(null)
+
+		stack.atIndex(0).assertEqualTo("zero")
+		stack.atIndex(1).assertEqualTo("one")
+		stack.atIndex(2).assertEqualTo("two")
+		stack.atIndex(3).assertEqualTo(null)
+	}
 }
