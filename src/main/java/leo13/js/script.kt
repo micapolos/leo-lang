@@ -5,54 +5,55 @@ import java.math.BigDecimal
 
 typealias Plain = Nothing
 
-sealed class Script<out T>
-data class UnitScript<T>(val unit: Unit) : Script<T>()
-data class LinkScript<T>(val link: ScriptLink<T>) : Script<T>()
+sealed class Script
+data class UnitScript(val unit: Unit) : Script()
+data class LinkScript(val link: ScriptLink) : Script()
 
-sealed class ScriptLine<T>
-data class ValueScriptLine<T>(val value: T) : ScriptLine<T>()
-data class StringScriptLine<T>(val string: String) : ScriptLine<T>()
-data class BigDecimalScriptLine<T>(val bigDecimal: BigDecimal) : ScriptLine<T>()
-data class ScriptLineLine<T>(val field: ScriptField<T>) : ScriptLine<T>()
+sealed class ScriptLine
+data class StringScriptLine(val string: String) : ScriptLine()
+data class BigDecimalScriptLine(val bigDecimal: BigDecimal) : ScriptLine()
+data class ScriptFieldLine(val field: ScriptField) : ScriptLine()
 
-data class ScriptLink<T>(val lhs: Script<T>, val line: ScriptLine<T>)
-data class ScriptField<T>(val string: String, val rhs: Script<T>)
+data class ScriptLink(val lhs: Script, val line: ScriptLine)
+data class ScriptField(val string: String, val rhs: Script)
 
-fun <T> script(unit: Unit): Script<T> = UnitScript(unit)
-fun <T> line(value: T): ScriptLine<T> = ValueScriptLine(value)
-fun <T> line(string: String): ScriptLine<T> = StringScriptLine(string)
-fun <T> line(bigDecimal: BigDecimal): ScriptLine<T> = BigDecimalScriptLine(bigDecimal)
-fun <T> line(field: ScriptField<T>): ScriptLine<T> = ScriptLineLine(field)
-fun <T> line(int: Int): ScriptLine<T> = line(BigDecimal(int))
-fun <T> line(double: Double): ScriptLine<T> = line(BigDecimal(double))
-fun <T> Script<T>.plus(vararg lines: ScriptLine<T>) = fold(lines) { LinkScript(this linkTo it) }
-fun <T> script(vararg lines: ScriptLine<T>): Script<T> = script<T>(Unit).plus(*lines)
-fun <T> script(field: ScriptField<T>, vararg fields: ScriptField<T>): Script<T> =
+fun script(unit: Unit): Script = UnitScript(unit)
+fun line(string: String): ScriptLine = StringScriptLine(string)
+fun line(bigDecimal: BigDecimal): ScriptLine = BigDecimalScriptLine(bigDecimal)
+fun line(field: ScriptField): ScriptLine = ScriptFieldLine(field)
+fun line(int: Int): ScriptLine = line(BigDecimal(int))
+fun line(double: Double): ScriptLine = line(BigDecimal(double))
+fun Script.plus(vararg lines: ScriptLine) = fold(lines) { LinkScript(this linkTo it) }
+fun script(vararg lines: ScriptLine): Script = script(Unit).plus(*lines)
+fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
 
-infix fun <T> String.fieldTo(rhs: Script<T>) = ScriptField(this, rhs)
-infix fun <T> String.fieldTo(int: Int) = fieldTo(script(line<T>(int)))
-infix fun <T> String.fieldTo(double: Double) = fieldTo(script(line<T>(double)))
-infix fun <T> String.fieldTo(string: String) = fieldTo(script(line<T>(string)))
-infix fun <T> Script<T>.linkTo(line: ScriptLine<T>) = ScriptLink(this, line)
+infix fun String.fieldTo(rhs: Script) = ScriptField(this, rhs)
+infix fun String.fieldTo(int: Int) = fieldTo(script(line(int)))
+infix fun String.fieldTo(double: Double) = fieldTo(script(line(double)))
+infix fun String.fieldTo(string: String) = fieldTo(script(line(string)))
+infix fun Script.linkTo(line: ScriptLine) = ScriptLink(this, line)
 
-fun <T> Script<T>.code(fn: T.() -> String): String =
+val Script.code: String
+	get() =
 	when (this) {
 		is UnitScript -> ""
-		is LinkScript -> link.code(fn)
+		is LinkScript -> link.code
 	}
 
-fun <T> ScriptLine<T>.code(fn: T.() -> String): String =
+val ScriptLine.code
+	get() =
 	when (this) {
-		is ValueScriptLine -> value.fn()
 		is StringScriptLine -> "\"$string\""
 		is BigDecimalScriptLine -> "$bigDecimal"
-		is ScriptLineLine -> field.code(fn)
+		is ScriptFieldLine -> field.code
 	}
 
-fun <T> ScriptLink<T>.code(fn: T.() -> String) =
-	if (lhs is UnitScript) "${line.code(fn)}"
-	else "${lhs.code(fn)}.${line.code(fn)}"
+val ScriptLink.code
+	get() =
+		if (lhs is UnitScript) "${line.code}"
+		else "${lhs.code}.${line.code}"
 
-fun <T> ScriptField<T>.code(fn: T.() -> String) =
-	"$string(${rhs.code(fn)})"
+val ScriptField.code
+	get() =
+		"$string(${rhs.code})"
