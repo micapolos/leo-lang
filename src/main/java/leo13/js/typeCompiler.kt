@@ -11,7 +11,7 @@ data class TypeCompiler(
 					"string" -> EmptyCompiler { copy(type = stringType) }
 					"null" -> EmptyCompiler { copy(type = nullType) }
 					else -> TypeCompiler(emptyType) { rhs ->
-						copy(type = type.plus(token.begin.string lineTo rhs))
+						copy(type = type.plus(token.begin.string fieldTo rhs))
 					}
 				}
 			is EndToken -> ret(type)

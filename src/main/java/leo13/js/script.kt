@@ -9,27 +9,32 @@ sealed class Script<out T>
 data class UnitScript<T>(val unit: Unit) : Script<T>()
 data class LinkScript<T>(val link: ScriptLink<T>) : Script<T>()
 
-sealed class ScriptItem<T>
-data class ValueScriptItem<T>(val value: T) : ScriptItem<T>()
-data class StringScriptItem<T>(val string: String) : ScriptItem<T>()
-data class BigDecimalScriptItem<T>(val bigDecimal: BigDecimal) : ScriptItem<T>()
-data class ScriptLineItem<T>(val line: ScriptLine<T>) : ScriptItem<T>()
+sealed class ScriptLine<T>
+data class ValueScriptLine<T>(val value: T) : ScriptLine<T>()
+data class StringScriptLine<T>(val string: String) : ScriptLine<T>()
+data class BigDecimalScriptLine<T>(val bigDecimal: BigDecimal) : ScriptLine<T>()
+data class ScriptLineLine<T>(val field: ScriptField<T>) : ScriptLine<T>()
 
-data class ScriptLink<T>(val lhs: Script<T>, val item: ScriptItem<T>)
-data class ScriptLine<T>(val string: String, val rhs: Script<T>)
+data class ScriptLink<T>(val lhs: Script<T>, val line: ScriptLine<T>)
+data class ScriptField<T>(val string: String, val rhs: Script<T>)
 
 fun <T> script(unit: Unit): Script<T> = UnitScript(unit)
-fun <T> item(value: T): ScriptItem<T> = ValueScriptItem(value)
-fun <T> item(string: String): ScriptItem<T> = StringScriptItem(string)
-fun <T> item(bigDecimal: BigDecimal): ScriptItem<T> = BigDecimalScriptItem(bigDecimal)
-fun <T> item(line: ScriptLine<T>): ScriptItem<T> = ScriptLineItem(line)
-fun <T> item(int: Int): ScriptItem<T> = item(BigDecimal(int))
-fun <T> item(double: Double): ScriptItem<T> = item(BigDecimal(double))
-fun <T> Script<T>.plus(vararg items: ScriptItem<T>) = fold(items) { LinkScript(this linkTo it) }
-fun <T> script(vararg items: ScriptItem<T>): Script<T> = script<T>(Unit).plus(*items)
+fun <T> line(value: T): ScriptLine<T> = ValueScriptLine(value)
+fun <T> line(string: String): ScriptLine<T> = StringScriptLine(string)
+fun <T> line(bigDecimal: BigDecimal): ScriptLine<T> = BigDecimalScriptLine(bigDecimal)
+fun <T> line(field: ScriptField<T>): ScriptLine<T> = ScriptLineLine(field)
+fun <T> line(int: Int): ScriptLine<T> = line(BigDecimal(int))
+fun <T> line(double: Double): ScriptLine<T> = line(BigDecimal(double))
+fun <T> Script<T>.plus(vararg lines: ScriptLine<T>) = fold(lines) { LinkScript(this linkTo it) }
+fun <T> script(vararg lines: ScriptLine<T>): Script<T> = script<T>(Unit).plus(*lines)
+fun <T> script(field: ScriptField<T>, vararg fields: ScriptField<T>): Script<T> =
+	script(line(field)).fold(fields) { plus(line(it)) }
 
-infix fun <T> String.lineTo(rhs: Script<T>) = ScriptLine(this, rhs)
-infix fun <T> Script<T>.linkTo(item: ScriptItem<T>) = ScriptLink(this, item)
+infix fun <T> String.fieldTo(rhs: Script<T>) = ScriptField(this, rhs)
+infix fun <T> String.fieldTo(int: Int) = fieldTo(script(line<T>(int)))
+infix fun <T> String.fieldTo(double: Double) = fieldTo(script(line<T>(double)))
+infix fun <T> String.fieldTo(string: String) = fieldTo(script(line<T>(string)))
+infix fun <T> Script<T>.linkTo(line: ScriptLine<T>) = ScriptLink(this, line)
 
 fun <T> Script<T>.code(fn: T.() -> String): String =
 	when (this) {
@@ -37,17 +42,17 @@ fun <T> Script<T>.code(fn: T.() -> String): String =
 		is LinkScript -> link.code(fn)
 	}
 
-fun <T> ScriptItem<T>.code(fn: T.() -> String): String =
+fun <T> ScriptLine<T>.code(fn: T.() -> String): String =
 	when (this) {
-		is ValueScriptItem -> value.fn()
-		is StringScriptItem -> "\"$string\""
-		is BigDecimalScriptItem -> "$bigDecimal"
-		is ScriptLineItem -> line.code(fn)
+		is ValueScriptLine -> value.fn()
+		is StringScriptLine -> "\"$string\""
+		is BigDecimalScriptLine -> "$bigDecimal"
+		is ScriptLineLine -> field.code(fn)
 	}
 
 fun <T> ScriptLink<T>.code(fn: T.() -> String) =
-	if (lhs is UnitScript) "${item.code(fn)}"
-	else "${lhs.code(fn)}.${item.code(fn)}"
+	if (lhs is UnitScript) "${line.code(fn)}"
+	else "${lhs.code(fn)}.${line.code(fn)}"
 
-fun <T> ScriptLine<T>.code(fn: T.() -> String) =
+fun <T> ScriptField<T>.code(fn: T.() -> String) =
 	"$string(${rhs.code(fn)})"
