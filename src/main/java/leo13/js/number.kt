@@ -1,5 +1,6 @@
 package leo13.js
 
+// TODO: Refactor to allow arbitrary large number, represented as syntax and not value
 sealed class Number
 
 data class IntNumber(val int: Int) : Number()

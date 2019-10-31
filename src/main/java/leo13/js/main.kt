@@ -3,7 +3,7 @@ package leo13.js
 import java.awt.Desktop
 import java.io.File
 
-fun main(args: Array<String>) {
+fun main() {
 	val file = File.createTempFile("index", ".html")
 	val typed = compile {
 		this

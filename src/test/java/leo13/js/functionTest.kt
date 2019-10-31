@@ -7,7 +7,7 @@ import org.junit.Test
 class FunctionTest {
 	@Test
 	fun code() {
-		Function(nullType, nullType, expression("jajeczko").then(expression(argument)))
+		Function(emptyType, emptyType, expression("jajeczko").then(expression(argument)))
 			.code(12)
 			.assertEqualTo(
 				linesString(

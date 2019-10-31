@@ -7,11 +7,10 @@ data class TypeCompiler(
 		when (token) {
 			is BeginToken ->
 				when (token.begin.string) {
-					"double" -> EmptyCompiler { copy(type = doubleType) }
-					"string" -> EmptyCompiler { copy(type = stringType) }
-					"null" -> EmptyCompiler { copy(type = nullType) }
+					"number" -> EmptyCompiler { copy(type = type(numberLine)) }
+					"string" -> EmptyCompiler { copy(type = type(stringLine)) }
 					else -> TypeCompiler(emptyType) { rhs ->
-						copy(type = type.plus(token.begin.string fieldTo rhs))
+						copy(type = type.plus(line(token.begin.string fieldTo rhs)))
 					}
 				}
 			is EndToken -> ret(type)
