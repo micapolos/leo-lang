@@ -1,7 +1,11 @@
 package leo13.js
 
-data class Call(val lhs: Expression, val name: String, val args: List<Expression>)
+import leo13.Stack
+import leo13.stack
 
-fun Expression.call(name: String, vararg args: Expression) = Call(this, name, listOf(*args))
+data class Call(val lhs: Expression, val name: String, val argStack: Stack<Expression>)
 
-val Call.code get() = "${lhs.code}.$name(${args.joinToString(separator = ", ") { it.code }})"
+fun Expression.call(name: String, argStack: Stack<Expression>) = Call(this, name, argStack)
+fun Expression.call(name: String, vararg args: Expression) = call(name, stack(*args))
+
+val Call.code get() = "${lhs.code}.$name(...)"
