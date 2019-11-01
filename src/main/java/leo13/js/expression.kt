@@ -15,6 +15,7 @@ data class GetExpression(val get: Get) : Expression()
 data class SetExpression(val set: Set) : Expression()
 data class InvokeExpression(val invoke: Invoke) : Expression()
 data class ArgumentExpression(val argument: Argument) : Expression()
+data class LambdaExpression(val lambda: Lambda) : Expression()
 
 val nullExpression: Expression = NullExpression
 fun expression(number: Number): Expression = NumberExpression(number)
@@ -29,6 +30,7 @@ fun expression(get: Get): Expression = GetExpression(get)
 fun expression(set: Set): Expression = SetExpression(set)
 fun expression(invoke: Invoke): Expression = InvokeExpression(invoke)
 fun expression(argument: Argument): Expression = ArgumentExpression(argument)
+fun expression(lambda: Lambda): Expression = LambdaExpression(lambda)
 
 val Expression.code: String
 	get() =
@@ -46,6 +48,7 @@ val Expression.code: String
 			is SetExpression -> set.code
 			is InvokeExpression -> invoke.code
 			is ArgumentExpression -> argument.code
+			is LambdaExpression -> lambda.code
 		}
 
 val Expression.returnCode

@@ -4,4 +4,4 @@ data class Bound(val index: Int)
 
 fun bound(index: Int) = Bound(index)
 
-val Bound.code get() = "bound($index)"
+val Bound.code get() = "__bound($index)"
