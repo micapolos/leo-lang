@@ -6,25 +6,25 @@ import org.junit.Test
 class CodeTest {
 	@Test
 	fun fnCode() {
-		fn(args(), seq())
-			.code
-			.assertEqualTo("function() {  }")
+		fn(args(), block())
+			.exprCode
+			.assertEqualTo("function() {}")
 
-		fn(args(), seq(expr("jajko")))
-			.code
+		fn(args(), block(stmt(ret(expr("jajko")))))
+			.exprCode
 			.assertEqualTo("function() { return 'jajko'; }")
 
-		fn(args(), seq(expr("jajko"), expr("kura")))
-			.code
-			.assertEqualTo("function() { 'jajko'; return 'kura'; }")
+		fn(args(), block(stmt(expr("jajko")), stmt(expr("kura"))))
+			.exprCode
+			.assertEqualTo("function() { 'jajko'; 'kura'; }")
 
-		fn(args("x1"), seq())
-			.code
-			.assertEqualTo("function(x1) {  }")
+		fn(args("x1"), block())
+			.exprCode
+			.assertEqualTo("function(x1) {}")
 
-		fn(args("x1", "x2"), seq())
-			.code
-			.assertEqualTo("function(x1, x2) {  }")
+		fn(args("x1", "x2"), block())
+			.exprCode
+			.assertEqualTo("function(x1, x2) {}")
 	}
 
 	@Test

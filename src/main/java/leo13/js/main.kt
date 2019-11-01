@@ -3,6 +3,14 @@ package leo13.js
 import java.awt.Desktop
 import java.io.File
 
+fun String.htmlOpen() {
+	val file = File.createTempFile("index", ".html")
+	file.writeText(this)
+	val uri = file.toURI()
+	file.deleteOnExit()
+	Desktop.getDesktop().browse(uri)
+}
+
 fun main() {
 	val file = File.createTempFile("index", ".html")
 	val typed = compile {

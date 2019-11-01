@@ -2,7 +2,7 @@ package leo.base
 
 import kotlin.test.Test
 
-class SeqTest {
+class BlockTest {
 	@Test
 	fun content() {
 		seq<Int>().assertContains()
