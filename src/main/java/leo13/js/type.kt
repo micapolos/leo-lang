@@ -26,5 +26,5 @@ val nativeType: Type = NativeType
 fun type(field: TypeField): Type = FieldType(field)
 fun type(arrow: Arrow): Type = ArrowType(arrow)
 
-fun Types.plus(line: Type): Types = LinkTypes(this linkTo line)
-fun types(vararg lines: Type): Types = emptyTypes.fold(lines) { plus(it) }
+fun Types.plus(type: Type): Types = LinkTypes(this linkTo type)
+fun types(vararg types: Type): Types = emptyTypes.fold(types) { plus(it) }

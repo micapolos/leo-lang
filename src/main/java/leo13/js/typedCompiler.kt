@@ -3,6 +3,7 @@ package leo13.js
 import leo13.stack
 
 data class TypedCompiler(
+	val functions: Functions,
 	val typed: Typed,
 	val ret: (Typed) -> Compiler) : Compiler {
 	override fun write(token: Token) =
@@ -15,7 +16,7 @@ data class TypedCompiler(
 				"native" -> StringCompiler(null) {
 					copy(typed = typed.expression then expression(native(this)) of types(nativeType))
 				}
-				"do" -> TypedCompiler(nullTyped) { rhs ->
+				"do" -> TypedCompiler(functions, nullTyped) { rhs ->
 					copy(typed = typed.expression then rhs.expression of rhs.types)
 				}
 				"call" ->
@@ -24,13 +25,17 @@ data class TypedCompiler(
 							copy(typed = expression(call) of types(nativeType))
 						}
 					else error("native lhs expected")
-				else -> TODO()
+				else -> typed(functions) { rhs ->
+					copy(typed = typed.plus(token.begin.string, rhs).resolve(functions))
+				}
 			}
 			is EndToken -> ret(typed)
 		}
 }
 
+fun typed(functions: Functions, ret: (Typed) -> Compiler) = TypedCompiler(functions, nullTyped, ret)
+
 fun compile(fn: Compiler.() -> Compiler): Typed =
-	(fn(TypedCompiler(nullTyped) { typed ->
+	(fn(TypedCompiler(functions(), nullTyped) { typed ->
 		EofCompiler(typed)
 	}).write(token(end)) as EofCompiler).typed

@@ -17,3 +17,5 @@ data class TypesCompiler(
 			else -> TODO()
 		}
 }
+
+fun types(ret: (Types) -> Compiler) = TypesCompiler(emptyTypes, ret)

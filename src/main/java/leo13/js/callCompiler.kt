@@ -19,7 +19,7 @@ data class CallCompiler(
 				is BeginToken ->
 					when (token.begin.string) {
 						"with" ->
-							TypedCompiler(nullTyped) { typed ->
+							TypedCompiler(functions(), nullTyped) { typed ->
 								CallCompiler(lhs, nameOrNull, argStack.push(typed.expression), ret)
 							}
 						else -> error("with expected")

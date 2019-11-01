@@ -52,3 +52,24 @@ fun Compiler.write(apply: Apply) =
 				.write(apply.rhs)
 				.write(token(end))
 		}
+
+fun Compiler.write(script: Script): Compiler =
+	when (script) {
+		is UnitScript -> this
+		is LinkScript -> write(script.link)
+	}
+
+fun Compiler.write(link: ScriptLink) =
+	write(link.lhs).write(link.line)
+
+fun Compiler.write(line: ScriptLine) =
+	when (line) {
+		is StringScriptLine -> write(line.string)
+		is NumberScriptLine -> write(line.number)
+		is FieldScriptLine -> write(line.field)
+	}
+
+fun Compiler.write(field: ScriptField) =
+	write(field.string) {
+		write(field.rhs)
+	}
