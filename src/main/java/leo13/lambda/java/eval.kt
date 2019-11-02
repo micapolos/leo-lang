@@ -3,7 +3,7 @@ package leo13.lambda.java
 import leo.java.lang.exec
 import java.io.File.createTempFile
 
-fun String.run(): String {
+fun String.mainCodeEval(): String {
 	val tmpFile = createTempFile("just-to-get-temp-dir", ".tmp")
 	tmpFile.deleteOnExit()
 	val dir = tmpFile.parentFile
@@ -24,4 +24,4 @@ fun String.run(): String {
 
 val Value.eval
 	get() =
-		printCode.mainCode.run()
+		printCode.mainCode.mainCodeEval()

@@ -47,7 +47,5 @@ val Int.varCode
 fun paramCode(gen: Gen) =
 	gen.depth.varCode
 
-val arg = variable<Native>()
-
 fun Variable<Native>.index(gen: Gen) =
 	gen.depth - index - 1
