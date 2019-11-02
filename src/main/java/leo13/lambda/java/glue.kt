@@ -14,7 +14,3 @@ val jsArg = arg<Java>()
 
 fun JavaArg.index(gen: Gen) =
 	gen.depth - index - 1
-
-fun expr(int: Int) = expr(Java("$int"))
-fun expr(double: Double) = expr("$double")
-fun expr(string: String) = expr(Java("\"$string\""))
