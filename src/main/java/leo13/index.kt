@@ -21,6 +21,10 @@ val Index.next: Index get() = NextIndex(this)
 val Index.int get() = 0.plus(this)
 val Int.index get() = zero.index.plus(this)
 
+val index0 = zero.index
+val index1 = index0.next
+val index2 = index1.next
+
 tailrec operator fun Int.plus(index: Index): Int =
 	when (index) {
 		is ZeroIndex -> this
