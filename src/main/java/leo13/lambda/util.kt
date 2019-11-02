@@ -13,8 +13,13 @@ fun <T> arg2(): Value<T> = arg(2)
 
 fun <T> first(): Value<T> = fn2(arg(1))
 fun <T> second(): Value<T> = fn2(arg(0))
+fun <T> Value<T>.switch(firstFn: Value<T>, secondFn: Value<T>) = this(firstFn)(secondFn)
 
 fun <T> pair(lhs: Value<T>, rhs: Value<T>) = fn3(arg<T>(0)(arg(2))(arg(1)))(lhs)(rhs)
 
 val <T> Value<T>.first get() = this(first())
 val <T> Value<T>.second get() = this(second())
+
+fun <T> list() = pair<T>(first(), first())
+fun <T> Value<T>.append(head: Value<T>) = pair(second(), pair(this, head))
+val <T> Value<T>.isEmpty get() = first
