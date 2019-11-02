@@ -132,6 +132,16 @@ tailrec fun <T : Any> Stack<T>.get(nat: Nat): T? =
 			else null
 	}
 
+tailrec fun <T : Any> Stack<T>.get(index: Index): T? =
+	when (this) {
+		is EmptyStack -> null
+		is LinkStack ->
+			when (index) {
+				is ZeroIndex -> link.value
+				is NextIndex -> link.stack.get(index.previous)
+			}
+	}
+
 tailrec fun <T> Stack<T>.drop(stack: Stack<*>): Stack<T>? =
 	when (stack) {
 		is EmptyStack -> this

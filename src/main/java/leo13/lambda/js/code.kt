@@ -1,6 +1,7 @@
 package leo13.lambda.js
 
 import leo.base.failIfOr
+import leo13.int
 import leo13.js2.Expr
 import leo13.js2.code
 import leo13.lambda.Variable
@@ -18,4 +19,4 @@ fun paramCode(gen: Gen) =
 	gen.depth.varCode
 
 fun Variable<Expr>.index(gen: Gen) =
-	gen.depth - index - 1
+	gen.depth - index.int - 1

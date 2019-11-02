@@ -1,7 +1,12 @@
 package leo13.lambda
 
-data class Variable<out T>(val index: Int)
+import leo.binary.zero
+import leo13.Index
+import leo13.index
+import leo13.next
 
-fun <T> variable(index: Int) = Variable<T>(index)
-fun <T> variable() = variable<T>(0)
-val <T> Variable<T>.inc get() = variable<T>(index.inc())
+data class Variable<out T>(val index: Index)
+
+fun <T> variable(index: Index) = Variable<T>(index)
+fun <T> variable() = variable<T>(zero.index)
+val <T> Variable<T>.previous get() = variable<T>(index.next)

@@ -1,10 +1,11 @@
 package leo13.lambda.java
 
+import leo13.index
 import leo13.lambda.Value
 
 typealias Value = Value<Native>
 
-fun arg(index: Int): Value<Native> = leo13.lambda.arg(index)
+fun arg(int: Int): Value<Native> = leo13.lambda.arg(int.index)
 val arg0 get() = arg(0)
 val arg1 get() = arg(1)
 val arg2 get() = arg(2)
