@@ -31,17 +31,11 @@ val JavaExpr.printCode get() = "object(() -> System.out.print($code))"
 fun JavaExpr.code(gen: Gen): String =
 	when (this) {
 		is ValueExpr -> value.code.string
-		is ArrowExpr -> arrow.code(gen)
-		is LhsExpr -> lhs.code(gen)
-		is RhsExpr -> rhs.code(gen)
 		is FnExpr -> fn.code(gen)
 		is ApExpr -> ap.code(gen)
 		is ArgExpr -> arg.code(gen)
 	}
 
-fun JavaArrow.code(gen: Gen) = "new Object[] {${lhs.code(gen)}, ${rhs.code(gen)}}"
-fun JavaLhs.code(gen: Gen) = "(${value.code(gen)})[0]"
-fun JavaRhs.code(gen: Gen) = "(${value.code(gen)})[1]"
 fun JavaFn.code(gen: Gen) = "fn(${paramCode(gen)} -> ${gen.inc { body.code(it) }})"
 fun JavaAp.code(gen: Gen) = "apply(${lhs.code(gen)}, ${rhs.code(gen)})"
 fun JavaArg.code(gen: Gen) = index(gen).varCode

@@ -3,9 +3,6 @@ package leo13.lambda.java
 import leo13.lambda.*
 
 typealias JavaExpr = Expr<Java>
-typealias JavaArrow = Arrow<JavaExpr>
-typealias JavaLhs = Lhs<JavaExpr>
-typealias JavaRhs = Rhs<JavaExpr>
 typealias JavaFn = Fn<JavaExpr>
 typealias JavaAp = Ap<JavaExpr>
 typealias JavaArg = Arg<Java>

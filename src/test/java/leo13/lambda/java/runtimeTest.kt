@@ -22,32 +22,16 @@ class RuntimeTest {
 
 	@Test
 	fun evalArrowLhs() {
-		arrow(expr(java("lhs")), expr(java("rhs")))
-			.lhs
+		pair(expr(java("lhs")), expr(java("rhs")))
+			.first
 			.eval
 			.assertEqualTo("lhs")
 	}
 
 	@Test
 	fun evalArrowRhs() {
-		arrow(expr(java("lhs")), expr(java("rhs")))
-			.rhs
-			.eval
-			.assertEqualTo("rhs")
-	}
-
-	@Test
-	fun evalUtilArrowLhs() {
-		utilArrow(expr(java("lhs")), expr(java("rhs")))
-			.utilLhs
-			.eval
-			.assertEqualTo("lhs")
-	}
-
-	@Test
-	fun evalUtilArrowRhs() {
-		utilArrow(expr(java("lhs")), expr(java("rhs")))
-			.utilRhs
+		pair(expr(java("lhs")), expr(java("rhs")))
+			.second
 			.eval
 			.assertEqualTo("rhs")
 	}
