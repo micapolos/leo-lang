@@ -14,16 +14,15 @@ class JsTest {
 		a.jsCode.assertEqualTo("a")
 		b.jsCode.assertEqualTo("b")
 		expr(arrow(a, b)).jsCode.assertEqualTo("[a, b]")
-		expr(lhs(a)).jsCode.assertEqualTo("a[0]")
-		expr(rhs(a)).jsCode.assertEqualTo("a[1]")
-		expr(fn(a)).jsCode.assertEqualTo("function(v0) { return a; }")
-		expr(fn(expr<Js>(arg(0)))).jsCode.assertEqualTo("function(v0) { return v0; }")
-		expr(fn(expr(fn(expr<Js>(arg(0)))))).jsCode.assertEqualTo("function(v0) { return function(v1) { return v1; }; }")
-		expr(fn(expr(fn(expr<Js>(arg(1)))))).jsCode.assertEqualTo("function(v0) { return function(v1) { return v0; }; }")
-		expr(ap(a, b)).jsCode.assertEqualTo("a(b)")
-		expr<Js>(arg(0)).code(JsGen(10)).assertEqualTo("v9")
-		expr<Js>(arg(2)).code(JsGen(10)).assertEqualTo("v7")
-		expr<Js>(arg(9)).code(JsGen(10)).assertEqualTo("v0")
-		assertFails { expr<Js>(arg(10)).code(JsGen(10)) }
+		expr(lhs(a)).jsCode.assertEqualTo("(a)[0]")
+		expr(rhs(a)).jsCode.assertEqualTo("(a)[1]")
+		expr(fn(a)).jsCode.assertEqualTo("v0 => a")
+		expr(fn(expr(jsArg))).jsCode.assertEqualTo("v0 => v0")
+		expr(fn(expr(fn(expr(jsArg))))).jsCode.assertEqualTo("v0 => v1 => v1")
+		expr(fn(expr(fn(expr(jsArg.inc))))).jsCode.assertEqualTo("v0 => v1 => v0")
+		expr(ap(a, b)).jsCode.assertEqualTo("(a)(b)")
+		expr(jsArg).code(jsGen.inc.inc).assertEqualTo("v1")
+		expr(jsArg.inc).code(jsGen.inc.inc).assertEqualTo("v0")
+		assertFails { expr(jsArg.inc.inc).code(jsGen.inc.inc) }
 	}
 }
