@@ -1,17 +1,20 @@
 package leo13.lambda.js
 
 import leo.base.assertEqualTo
-import leo13.js2.id
-import leo13.lambda.*
+import leo13.lambda.code.code
+import leo13.lambda.code.gen
+import leo13.lambda.code.inc
+import leo13.lambda.fn
+import leo13.lambda.fn2
+import leo13.lambda.invoke
 import kotlin.test.Test
 import kotlin.test.assertFails
-import leo13.js2.expr as jsExpr
 
 class GenTest {
 	@Test
 	fun jsCode() {
-		val a = value(jsExpr(id("a")))
-		val b = value(jsExpr(id("b")))
+		val a = value(code("a"))
+		val b = value(code("b"))
 		a.code.assertEqualTo("a")
 		b.code.assertEqualTo("b")
 		fn(a).code.assertEqualTo("v0=>a")

@@ -2,9 +2,9 @@ package leo13.lambda.java
 
 import leo13.base.linesString
 import leo13.lambda.*
-
-data class Code(val string: String)
-fun code(string: String) = Code(string)
+import leo13.lambda.code.Gen
+import leo13.lambda.code.gen
+import leo13.lambda.code.inc
 
 val Value.mainCode get() = code.mainCode
 
@@ -48,3 +48,6 @@ fun paramCode(gen: Gen) =
 	gen.depth.varCode
 
 val arg = variable<Native>()
+
+fun Variable<Native>.index(gen: Gen) =
+	gen.depth - index - 1

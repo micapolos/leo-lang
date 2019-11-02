@@ -1,5 +1,8 @@
 package leo13.lambda.java
 
+import leo13.lambda.code.Code
+import leo13.lambda.code.code
+
 data class Native(val code: Code)
 
 fun native(code: Code) = Native(code)

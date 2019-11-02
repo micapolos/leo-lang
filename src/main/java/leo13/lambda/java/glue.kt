@@ -1,9 +1,14 @@
 package leo13.lambda.java
 
-import leo13.lambda.Gen
-import leo13.lambda.Variable
+import leo13.lambda.Value
 
-typealias Value = leo13.lambda.Value<Native>
+typealias Value = Value<Native>
 
-fun Variable<Native>.index(gen: Gen) =
-	gen.depth - index - 1
+fun arg(index: Int): Value<Native> = leo13.lambda.arg(index)
+val arg0 get() = arg(0)
+val arg1 get() = arg(1)
+val arg2 get() = arg(2)
+
+fun value(int: Int) = leo13.lambda.value(native(int))
+fun value(double: Double) = leo13.lambda.value(native(double))
+fun value(string: String) = leo13.lambda.value(native(string))

@@ -2,6 +2,9 @@ package leo13.lambda.java
 
 import leo.base.assertEqualTo
 import leo13.lambda.*
+import leo13.lambda.code.code
+import leo13.lambda.code.gen
+import leo13.lambda.code.inc
 import org.junit.Test
 import kotlin.test.assertFails
 
@@ -12,14 +15,14 @@ class CodeTest {
 		val b = value(native(code("b")))
 		a.code.assertEqualTo("a")
 		b.code.assertEqualTo("b")
-		value(abstraction(a)).code.assertEqualTo("fn(v0 -> a)")
-		value(abstraction(value(arg))).code.assertEqualTo("fn(v0 -> v0)")
-		value(abstraction(value(abstraction(value(arg))))).code.assertEqualTo("fn(v0 -> fn(v1 -> v1))")
-		value(abstraction(value(abstraction(value(arg.inc))))).code.assertEqualTo("fn(v0 -> fn(v1 -> v0))")
-		value(application(a, b)).code.assertEqualTo("apply(a, b)")
-		value(arg).code(gen.inc.inc).assertEqualTo("v1")
-		value(arg.inc).code(gen.inc.inc).assertEqualTo("v0")
-		assertFails { value(arg.inc.inc).code(gen.inc.inc) }
+		fn(a).code.assertEqualTo("fn(v0 -> a)")
+		fn(arg0).code.assertEqualTo("fn(v0 -> v0)")
+		fn2(arg0).code.assertEqualTo("fn(v0 -> fn(v1 -> v1))")
+		fn2(arg1).code.assertEqualTo("fn(v0 -> fn(v1 -> v0))")
+		a(b).code.assertEqualTo("apply(a, b)")
+		arg0.code(gen.inc.inc).assertEqualTo("v1")
+		arg1.code(gen.inc.inc).assertEqualTo("v0")
+		assertFails { arg2.code(gen.inc.inc) }
 	}
 
 	@Test

@@ -1,4 +1,4 @@
-package leo13.lambda
+package leo13.lambda.code
 
 data class Gen(val depth: Int)
 
