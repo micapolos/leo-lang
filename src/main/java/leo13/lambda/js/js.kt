@@ -1,6 +1,9 @@
 package leo13.lambda.js
 
-import leo13.js2.*
+import leo13.js.ast.Expr
+import leo13.js.ast.id
+import leo13.js.ast.invoke
+import leo13.js.ast.ret
 import leo13.lambda.*
 import leo13.lambda.code.Gen
 import leo13.lambda.code.gen
@@ -18,4 +21,4 @@ fun Value.expr(gen: Gen): Expr =
 
 fun Abstraction<Value>.expr(gen: Gen) = paramCode(gen) ret gen.inc { body.expr(it) }
 fun Application<Value>.expr(gen: Gen) = lhs.expr(gen).invoke(rhs.expr(gen))
-fun Variable<Expr>.expr(gen: Gen) = expr(id(index(gen).varCode))
+fun Variable<Expr>.expr(gen: Gen) = leo13.js.ast.expr(id(index(gen).varCode))

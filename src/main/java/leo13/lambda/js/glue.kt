@@ -4,9 +4,9 @@ import leo13.Index
 import leo13.index0
 import leo13.index1
 import leo13.index2
-import leo13.js2.Expr
-import leo13.js2.expr
-import leo13.js2.id
+import leo13.js.ast.Expr
+import leo13.js.ast.expr
+import leo13.js.ast.id
 import leo13.lambda.code.Code
 import leo13.lambda.value
 

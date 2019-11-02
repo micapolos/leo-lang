@@ -2,8 +2,8 @@ package leo13.lambda.js
 
 import leo.base.failIfOr
 import leo13.int
-import leo13.js2.Expr
-import leo13.js2.code
+import leo13.js.ast.Expr
+import leo13.js.ast.code
 import leo13.lambda.Variable
 import leo13.lambda.code.Gen
 import leo13.lambda.code.gen
