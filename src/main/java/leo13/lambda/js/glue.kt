@@ -8,6 +8,7 @@ import leo13.js.ast.Expr
 import leo13.js.ast.expr
 import leo13.js.ast.id
 import leo13.lambda.code.Code
+import leo13.lambda.code.code
 import leo13.lambda.value
 
 typealias Value = leo13.lambda.Value<Expr>
@@ -18,6 +19,9 @@ val arg1 get() = arg(index1)
 val arg2 get() = arg(index2)
 
 fun value(code: Code) = value(expr(id(code.string)))
+
+val nullValue get() = value(code("null"))
+fun value(boolean: Boolean) = value(code("$boolean"))
 fun value(int: Int) = value(expr(int))
 fun value(double: Double) = value(expr(double))
 fun value(string: String) = value(expr(string))

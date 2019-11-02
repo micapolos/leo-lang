@@ -43,3 +43,5 @@ val Expr.code: String
 		}
 
 val Expr.stmtCode get() = code
+
+val nullExpr get() = expr(id("null"))

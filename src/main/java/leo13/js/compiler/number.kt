@@ -1,5 +1,8 @@
 package leo13.js.compiler
 
+import leo13.lambda.js.Value
+import leo13.lambda.js.value
+
 // TODO: Refactor to allow arbitrary large number, represented as syntax and not value
 sealed class Number
 
@@ -14,4 +17,11 @@ val Number.code
 		when (this) {
 			is IntNumber -> "$int"
 			is DoubleNumber -> "$double"
+		}
+
+val Number.value: Value
+	get() =
+		when (this) {
+			is IntNumber -> value(int)
+			is DoubleNumber -> value(double)
 		}

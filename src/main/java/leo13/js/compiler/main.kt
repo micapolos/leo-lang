@@ -1,5 +1,6 @@
 package leo13.js.compiler
 
+import leo13.lambda.js.code
 import java.awt.Desktop
 import java.io.File
 
@@ -25,7 +26,7 @@ fun main() {
 			.write(token(end))
 			.write(token(end))
 	}
-	file.writeText(typed.expression.code.jsInHtml)
+	file.writeText(typed.value.code.jsInHtml)
 	val uri = file.toURI()
 	println(uri)
 	file.deleteOnExit()

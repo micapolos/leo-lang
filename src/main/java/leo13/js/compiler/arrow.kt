@@ -1,5 +1,5 @@
 package leo13.js.compiler
 
-data class Arrow(val lhs: Types, val rhs: Types)
+data class Arrow(val lhs: Type, val rhs: Type)
 
-infix fun Types.arrowTo(rhs: Types) = Arrow(this, rhs)
+infix fun Type.arrowTo(rhs: Type) = Arrow(this, rhs)
