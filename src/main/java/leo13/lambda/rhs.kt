@@ -1,4 +1,4 @@
-package leo13.js2.lambda
+package leo13.lambda
 
 data class Rhs<out T>(val value: T)
 

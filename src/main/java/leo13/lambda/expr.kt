@@ -1,4 +1,4 @@
-package leo13.js2.lambda
+package leo13.lambda
 
 sealed class Expr<out T>
 
