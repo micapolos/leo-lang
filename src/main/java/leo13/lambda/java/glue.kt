@@ -7,7 +7,5 @@ typealias JavaFn = Fn<JavaExpr>
 typealias JavaAp = Ap<JavaExpr>
 typealias JavaArg = Arg<Java>
 
-val jsArg = arg<Java>()
-
 fun JavaArg.index(gen: Gen) =
 	gen.depth - index - 1

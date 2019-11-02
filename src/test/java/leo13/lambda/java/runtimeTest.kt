@@ -1,38 +1,39 @@
 package leo13.lambda.java
 
 import leo.base.assertEqualTo
-import leo13.lambda.expr
 import leo13.lambda.expr.*
+import leo13.lambda.java.expr.arg0
+import leo13.lambda.java.expr.expr
 import kotlin.test.Test
 
 class RuntimeTest {
 	@Test
 	fun evalHelloWorld() {
-		expr(java("Hello, world!"))
+		expr("Hello, world!")
 			.eval
 			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
 	fun evalFnAp() {
-		fn(arg<Java>(0))(expr(java("Hello, world!")))
+		fn(arg0)(expr("Hello, world!"))
 			.eval
 			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
-	fun evalArrowLhs() {
-		pair(expr(java("lhs")), expr(java("rhs")))
+	fun evalPairFirst() {
+		pair(expr("first"), expr("second"))
 			.first
 			.eval
-			.assertEqualTo("lhs")
+			.assertEqualTo("first")
 	}
 
 	@Test
-	fun evalArrowRhs() {
-		pair(expr(java("lhs")), expr(java("rhs")))
+	fun evalPairSecond() {
+		pair(expr("first"), expr("second"))
 			.second
 			.eval
-			.assertEqualTo("rhs")
+			.assertEqualTo("second")
 	}
 }
