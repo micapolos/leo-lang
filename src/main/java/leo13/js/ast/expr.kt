@@ -2,7 +2,7 @@ package leo13.js.ast
 
 sealed class Expr
 
-data class NilExpr(val nil: Nil) : Expr()
+data class NilExpr(val nil: Null) : Expr()
 data class StringExpr(val string: String) : Expr()
 data class IntExpr(val int: Int) : Expr()
 data class DoubleExpr(val double: Double) : Expr()
@@ -14,7 +14,7 @@ data class IdExpr(val id: Id) : Expr()
 data class ArrExpr(val arr: Arr) : Expr()
 data class LambdaExpr(val lambda: Lambda) : Expr()
 
-fun expr(nil: Nil): Expr = NilExpr(nil)
+fun expr(nil: Null): Expr = NilExpr(nil)
 fun expr(string: String): Expr = StringExpr(string)
 fun expr(int: Int): Expr = IntExpr(int)
 fun expr(double: Double): Expr = DoubleExpr(double)
