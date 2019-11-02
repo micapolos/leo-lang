@@ -1,14 +1,10 @@
 package leo13.lambda.js
 
-import leo13.lambda.*
+import leo13.js2.Expr
+import leo13.lambda.Gen
+import leo13.lambda.Variable
 
-typealias Js = leo13.js2.Expr
-typealias JsValue = Value<Js>
-typealias JsFn = Abstraction<JsValue>
-typealias JsAp = Application<JsValue>
-typealias JsArg = Variable<Js>
+typealias Value = leo13.lambda.Value<Expr>
 
-val jsArg = variable<Js>()
-
-fun JsArg.index(gen: Gen) =
+fun Variable<Expr>.index(gen: Gen) =
 	gen.depth - index - 1

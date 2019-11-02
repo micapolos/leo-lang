@@ -4,10 +4,9 @@ import leo13.base.linesString
 import leo13.lambda.*
 
 data class Code(val string: String)
-
 fun code(string: String) = Code(string)
 
-val JavaValue.mainCode get() = code.mainCode
+val Value.mainCode get() = code.mainCode
 
 val String.mainCode
 	get() =
@@ -25,20 +24,21 @@ val String.mainCode
 			"}"
 		)
 
-val JavaValue.code get() = code(gen)
-val JavaValue.printCode get() = "object(() -> System.out.print($code))"
+val Value.code get() = code(gen)
+val Value.printCode get() = "object(() -> System.out.print($code))"
 
-fun JavaValue.code(gen: Gen): String =
+fun Value.code(gen: Gen): String =
 	when (this) {
-		is NativeValue -> native.code.string
+		is NativeValue -> native.code(gen)
 		is AbstractionValue -> abstraction.code(gen)
 		is ApplicationValue -> application.code(gen)
 		is VariableValue -> variable.code(gen)
 	}
 
-fun JavaAbstraction.code(gen: Gen) = "fn(${paramCode(gen)} -> ${gen.inc { body.code(it) }})"
-fun JavaApplication.code(gen: Gen) = "apply(${lhs.code(gen)}, ${rhs.code(gen)})"
-fun JavaVariable.code(gen: Gen) = index(gen).varCode
+fun Abstraction<Value>.code(gen: Gen) = "fn(${paramCode(gen)} -> ${gen.inc { body.code(it) }})"
+fun Application<Value>.code(gen: Gen) = "apply(${lhs.code(gen)}, ${rhs.code(gen)})"
+fun Variable<Native>.code(gen: Gen) = index(gen).varCode
+fun Native.code(gen: Gen) = code.string
 
 val Int.varCode
 	get() =
@@ -47,4 +47,4 @@ val Int.varCode
 fun paramCode(gen: Gen) =
 	gen.depth.varCode
 
-val arg = variable<Java>()
+val arg = variable<Native>()

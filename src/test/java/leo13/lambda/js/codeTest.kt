@@ -12,15 +12,15 @@ class GenTest {
 	fun jsCode() {
 		val a = value(jsExpr(id("a")))
 		val b = value(jsExpr(id("b")))
-		a.jsCode.assertEqualTo("a")
-		b.jsCode.assertEqualTo("b")
-		value(abstraction(a)).jsCode.assertEqualTo("v0=>a")
-		value(abstraction(value(jsArg))).jsCode.assertEqualTo("v0=>v0")
-		value(abstraction(value(abstraction(value(jsArg))))).jsCode.assertEqualTo("v0=>v1=>v1")
-		value(abstraction(value(abstraction(value(jsArg.inc))))).jsCode.assertEqualTo("v0=>v1=>v0")
-		value(application(a, b)).jsCode.assertEqualTo("(a)(b)")
-		value(jsArg).code(gen.inc.inc).assertEqualTo("v1")
-		value(jsArg.inc).code(gen.inc.inc).assertEqualTo("v0")
-		assertFails { value(jsArg.inc.inc).code(gen.inc.inc) }
+		a.code.assertEqualTo("a")
+		b.code.assertEqualTo("b")
+		fn(a).code.assertEqualTo("v0=>a")
+		fn(arg0).code.assertEqualTo("v0=>v0")
+		fn2(arg0).code.assertEqualTo("v0=>v1=>v1")
+		fn2(arg1).code.assertEqualTo("v0=>v1=>v0")
+		a(b).code.assertEqualTo("(a)(b)")
+		arg0.code(gen.inc.inc).assertEqualTo("v1")
+		arg1.code(gen.inc.inc).assertEqualTo("v0")
+		assertFails { arg2.code(gen.inc.inc) }
 	}
 }

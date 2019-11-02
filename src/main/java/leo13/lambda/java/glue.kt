@@ -1,11 +1,9 @@
 package leo13.lambda.java
 
-import leo13.lambda.*
+import leo13.lambda.Gen
+import leo13.lambda.Variable
 
-typealias JavaValue = Value<Java>
-typealias JavaAbstraction = Abstraction<JavaValue>
-typealias JavaApplication = Application<JavaValue>
-typealias JavaVariable = Variable<Java>
+typealias Value = leo13.lambda.Value<Native>
 
-fun JavaVariable.index(gen: Gen) =
+fun Variable<Native>.index(gen: Gen) =
 	gen.depth - index - 1

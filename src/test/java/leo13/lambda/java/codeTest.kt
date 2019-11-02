@@ -8,8 +8,8 @@ import kotlin.test.assertFails
 class CodeTest {
 	@Test
 	fun code() {
-		val a = value(java(code("a")))
-		val b = value(java(code("b")))
+		val a = value(native(code("a")))
+		val b = value(native(code("b")))
 		a.code.assertEqualTo("a")
 		b.code.assertEqualTo("b")
 		value(abstraction(a)).code.assertEqualTo("fn(v0 -> a)")
@@ -24,6 +24,6 @@ class CodeTest {
 
 	@Test
 	fun mainCode() {
-		value(java("Hello, world!")).mainCode
+		value("Hello, world!").mainCode
 	}
 }

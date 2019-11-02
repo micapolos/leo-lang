@@ -22,6 +22,6 @@ fun String.run(): String {
 	return exec("java", "-cp", "$dir", className)
 }
 
-val JavaValue.eval
+val Value.eval
 	get() =
 		printCode.mainCode.run()
