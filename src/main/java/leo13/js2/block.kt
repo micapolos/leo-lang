@@ -12,7 +12,7 @@ fun block(vararg stmts: Stmt) = Block(stack(*stmts))
 val Block.code
 	get() =
 		if (stack.isEmpty) "{}"
-		else "{ " + stack.toList().joinToString("; ") { it.code } + "; }"
+		else "{" + stack.toList().joinToString(";") { it.code } + ";}"
 
 val Block.stmtCode
 	get() =

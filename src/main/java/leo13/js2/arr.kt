@@ -7,4 +7,4 @@ import leo13.toList
 data class Arr(val exprs: Stack<Expr>)
 
 fun arr(vararg exprs: Expr) = Arr(stack(*exprs))
-val Arr.exprCode get() = "[${exprs.toList().joinToString(", ") { it.code }}]"
+val Arr.exprCode get() = "[${exprs.toList().joinToString(",") { it.code }}]"

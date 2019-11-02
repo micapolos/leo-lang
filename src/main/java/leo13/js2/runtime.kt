@@ -16,7 +16,7 @@ fun Stmt.open() =
 fun open(vararg stmts: Stmt) = stmt(block(*stmts)).open()
 
 val String.jsOpen get() = jsInHtml.htmlOpen()
-val String.jsShow get() = "document.body.textContent = $this".jsOpen
+val String.jsShow get() = "document.body.textContent=$this".jsOpen
 
 val Expr.open get() = code.jsOpen
 val Expr.show get() = code.jsShow

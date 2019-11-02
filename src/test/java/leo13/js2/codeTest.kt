@@ -8,23 +8,23 @@ class CodeTest {
 	fun fnCode() {
 		fn(args(), block())
 			.exprCode
-			.assertEqualTo("function() {}")
+			.assertEqualTo("function(){}")
 
 		fn(args(), block(stmt(ret(expr("jajko")))))
 			.exprCode
-			.assertEqualTo("function() { return 'jajko'; }")
+			.assertEqualTo("function(){return 'jajko';}")
 
 		fn(args(), block(stmt(expr("jajko")), stmt(expr("kura"))))
 			.exprCode
-			.assertEqualTo("function() { 'jajko'; 'kura'; }")
+			.assertEqualTo("function(){'jajko';'kura';}")
 
 		fn(args("x1"), block())
 			.exprCode
-			.assertEqualTo("function(x1) {}")
+			.assertEqualTo("function(x1){}")
 
 		fn(args("x1", "x2"), block())
 			.exprCode
-			.assertEqualTo("function(x1, x2) {}")
+			.assertEqualTo("function(x1,x2){}")
 	}
 
 	@Test
@@ -41,7 +41,7 @@ class CodeTest {
 	fun apCode() {
 		expr(id("foo"))().code.assertEqualTo("(foo)()")
 		expr(id("sin"))(expr(1)).code.assertEqualTo("(sin)(1)")
-		expr(id("max"))(expr(1), expr(2)).code.assertEqualTo("(max)(1, 2)")
+		expr(id("max"))(expr(1), expr(2)).code.assertEqualTo("(max)(1,2)")
 		expr(id("foo")).get("round")().code.assertEqualTo("((foo).round)()")
 	}
 }

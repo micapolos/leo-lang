@@ -7,4 +7,4 @@ import leo13.toList
 data class Args(val stack: Stack<String>)
 
 fun args(vararg strings: String) = Args(stack(*strings))
-val Args.code get() = stack.toList().joinToString()
+val Args.code get() = stack.toList().joinToString(",")
