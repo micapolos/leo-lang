@@ -6,23 +6,23 @@ import leo13.lambda.java.expr.arg0
 import leo13.lambda.java.expr.expr
 import kotlin.test.Test
 
-class RuntimeTest {
+class EvalTest {
 	@Test
-	fun evalHelloWorld() {
+	fun helloWorld() {
 		expr("Hello, world!")
 			.eval
 			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
-	fun evalFnAp() {
+	fun invoke() {
 		fn(arg0)(expr("Hello, world!"))
 			.eval
 			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
-	fun evalPairFirst() {
+	fun pairFirst() {
 		pair(expr("first"), expr("second"))
 			.first
 			.eval
@@ -30,7 +30,7 @@ class RuntimeTest {
 	}
 
 	@Test
-	fun evalPairSecond() {
+	fun pairSecond() {
 		pair(expr("first"), expr("second"))
 			.second
 			.eval
