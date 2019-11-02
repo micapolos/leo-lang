@@ -7,21 +7,21 @@ import org.junit.Test
 class EvalTest {
 	@Test
 	fun helloWorld() {
-		expr("Hello, world!")
+		value("Hello, world!")
 			.eval
 			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
 	fun invoke() {
-		fn(arg0)(expr("Hello, world!"))
+		fn(arg0)(value("Hello, world!"))
 			.eval
 			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
 	fun pairFirst() {
-		pair(expr("first"), expr("second"))
+		pair(value("first"), value("second"))
 			.first
 			.eval
 			.assertEqualTo("first")
@@ -29,7 +29,7 @@ class EvalTest {
 
 	@Test
 	fun pairSecond() {
-		pair(expr("first"), expr("second"))
+		pair(value("first"), value("second"))
 			.second
 			.eval
 			.assertEqualTo("second")

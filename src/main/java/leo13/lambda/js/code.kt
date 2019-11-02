@@ -5,8 +5,8 @@ import leo13.js2.code
 import leo13.lambda.Gen
 import leo13.lambda.gen
 
-fun JsExpr.code(gen: Gen) = js(gen).code
-val JsExpr.jsCode get() = code(gen)
+fun JsValue.code(gen: Gen) = js(gen).code
+val JsValue.jsCode get() = code(gen)
 
 val Int.jsVarCode
 	get() =

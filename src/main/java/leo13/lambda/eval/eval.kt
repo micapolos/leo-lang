@@ -4,16 +4,16 @@ import leo13.get
 import leo13.lambda.*
 import leo13.stack
 
-val Expr.eval get() = eval(stack())
+val Value.eval get() = eval(stack())
 
-fun Expr.eval(evalStack: Stack): Any =
+fun Value.eval(stack: Stack): Any =
 	when (this) {
-		is ValueExpr -> value
-		is AbstractionExpr -> abstraction.eval(evalStack)
-		is ApplicationExpr -> application.eval(evalStack)
-		is VariableExpr -> variable.eval(evalStack)
+		is NativeValue -> native
+		is AbstractionValue -> abstraction.eval(stack)
+		is ApplicationValue -> application.eval(stack)
+		is VariableValue -> variable.eval(stack)
 	}
 
-fun Abstraction<Expr>.eval(stack: Stack) = function(stack, body)
-fun Application<Expr>.eval(stack: Stack) = (lhs.eval(stack) as Function)(rhs.eval(stack))
+fun Abstraction<Value>.eval(stack: Stack) = function(stack, body)
+fun Application<Value>.eval(stack: Stack) = (lhs.eval(stack) as Function)(rhs.eval(stack))
 fun Variable<Any>.eval(stack: Stack) = stack.get(index)!!

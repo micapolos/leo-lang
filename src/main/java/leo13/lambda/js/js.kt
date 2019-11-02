@@ -6,14 +6,14 @@ import leo13.js2.invoke
 import leo13.js2.ret
 import leo13.lambda.*
 
-val JsExpr.js get() = js(gen)
+val JsValue.js get() = js(gen)
 
-fun JsExpr.js(gen: Gen): leo13.js2.Expr =
+fun JsValue.js(gen: Gen): leo13.js2.Expr =
 	when (this) {
-		is ValueExpr -> value
-		is AbstractionExpr -> abstraction.js(gen)
-		is ApplicationExpr -> application.js(gen)
-		is VariableExpr -> variable.js(gen)
+		is NativeValue -> native
+		is AbstractionValue -> abstraction.js(gen)
+		is ApplicationValue -> application.js(gen)
+		is VariableValue -> variable.js(gen)
 	}
 
 fun JsFn.js(gen: Gen) = paramCode(gen) ret gen.inc { body.js(it) }

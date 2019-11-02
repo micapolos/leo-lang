@@ -7,7 +7,7 @@ data class Code(val string: String)
 
 fun code(string: String) = Code(string)
 
-val JavaExpr.mainCode get() = code.mainCode
+val JavaValue.mainCode get() = code.mainCode
 
 val String.mainCode
 	get() =
@@ -25,15 +25,15 @@ val String.mainCode
 			"}"
 		)
 
-val JavaExpr.code get() = code(gen)
-val JavaExpr.printCode get() = "object(() -> System.out.print($code))"
+val JavaValue.code get() = code(gen)
+val JavaValue.printCode get() = "object(() -> System.out.print($code))"
 
-fun JavaExpr.code(gen: Gen): String =
+fun JavaValue.code(gen: Gen): String =
 	when (this) {
-		is ValueExpr -> value.code.string
-		is AbstractionExpr -> abstraction.code(gen)
-		is ApplicationExpr -> application.code(gen)
-		is VariableExpr -> variable.code(gen)
+		is NativeValue -> native.code.string
+		is AbstractionValue -> abstraction.code(gen)
+		is ApplicationValue -> application.code(gen)
+		is VariableValue -> variable.code(gen)
 	}
 
 fun JavaAbstraction.code(gen: Gen) = "fn(${paramCode(gen)} -> ${gen.inc { body.code(it) }})"
