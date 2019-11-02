@@ -15,8 +15,3 @@ val jsArg = arg<Js>()
 
 fun JsArg.index(gen: Gen) =
 	gen.depth - index - 1
-
-fun jsExpr(int: Int) = expr(leo13.js2.expr(int))
-fun jsExpr(double: Double) = expr(leo13.js2.expr(double))
-fun jsExpr(string: String) = expr(leo13.js2.expr(string))
-

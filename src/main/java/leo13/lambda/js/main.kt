@@ -1,3 +1,6 @@
 package leo13.lambda.js
 
-fun main() = jsExpr("jajeczko").jsShow
+import leo13.js2.dsl.js
+import leo13.lambda.expr
+
+fun main() = expr(js("Hello, world!")).show

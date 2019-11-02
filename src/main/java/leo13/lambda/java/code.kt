@@ -3,6 +3,10 @@ package leo13.lambda.java
 import leo13.base.linesString
 import leo13.lambda.*
 
+data class Code(val string: String)
+
+fun code(string: String) = Code(string)
+
 val JavaExpr.mainCode get() = code.mainCode
 
 val String.mainCode
@@ -26,7 +30,7 @@ val JavaExpr.printCode get() = "object(() -> System.out.print($code))"
 
 fun JavaExpr.code(gen: Gen): String =
 	when (this) {
-		is ValueExpr -> value.string
+		is ValueExpr -> value.code.string
 		is ArrowExpr -> arrow.code(gen)
 		is LhsExpr -> lhs.code(gen)
 		is RhsExpr -> rhs.code(gen)

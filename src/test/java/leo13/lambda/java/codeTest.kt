@@ -8,8 +8,8 @@ import kotlin.test.assertFails
 class CodeTest {
 	@Test
 	fun code() {
-		val a = expr(nativeJava("a"))
-		val b = expr(nativeJava("b"))
+		val a = expr(java(code("a")))
+		val b = expr(java(code("b")))
 		a.code.assertEqualTo("a")
 		b.code.assertEqualTo("b")
 		expr(arrow(a, b)).code.assertEqualTo("new Object[] {a, b}")

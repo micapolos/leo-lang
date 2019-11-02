@@ -9,11 +9,13 @@ import kotlin.test.Test
 class RuntimeTest {
 	@Test
 	fun evalHelloWorld() {
-		expr(java("Hello, world!")).eval.assertEqualTo("Hello, world!")
+		expr(java("Hello, world!"))
+			.eval
+			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
-	fun evalIdentity() {
+	fun evalFnAp() {
 		expr(
 			ap(
 				expr(fn(expr(arg))),
