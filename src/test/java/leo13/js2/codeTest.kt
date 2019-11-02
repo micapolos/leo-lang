@@ -29,19 +29,19 @@ class CodeTest {
 
 	@Test
 	fun getCode() {
-		expr("jajko").get("kura").code.assertEqualTo("'jajko'.kura")
+		expr("jajko").get("kura").code.assertEqualTo("('jajko').kura")
 	}
 
 	@Test
 	fun atCode() {
-		expr("jajko")[expr("kura")].code.assertEqualTo("'jajko'['kura']")
+		expr("jajko")[expr("kura")].code.assertEqualTo("('jajko')['kura']")
 	}
 
 	@Test
 	fun apCode() {
-		expr(id("foo"))().code.assertEqualTo("foo()")
-		expr(id("sin"))(expr(1)).code.assertEqualTo("sin(1)")
-		expr(id("max"))(expr(1), expr(2)).code.assertEqualTo("max(1, 2)")
-		expr(id("foo")).get("round")().code.assertEqualTo("foo.round()")
+		expr(id("foo"))().code.assertEqualTo("(foo)()")
+		expr(id("sin"))(expr(1)).code.assertEqualTo("(sin)(1)")
+		expr(id("max"))(expr(1), expr(2)).code.assertEqualTo("(max)(1, 2)")
+		expr(id("foo")).get("round")().code.assertEqualTo("((foo).round)()")
 	}
 }
