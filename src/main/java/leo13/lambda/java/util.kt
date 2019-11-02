@@ -1,9 +1,7 @@
-package leo13.lambda.java.expr
+package leo13.lambda.java
 
 import leo13.lambda.Expr
 import leo13.lambda.expr
-import leo13.lambda.java.Java
-import leo13.lambda.java.java
 
 fun arg(index: Int): Expr<Java> = leo13.lambda.arg(index)
 val arg0 get() = arg(0)
