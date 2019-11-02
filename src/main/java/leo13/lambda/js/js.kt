@@ -11,9 +11,9 @@ val JsExpr.js get() = js(gen)
 fun JsExpr.js(gen: Gen): leo13.js2.Expr =
 	when (this) {
 		is ValueExpr -> value
-		is FnExpr -> fn.js(gen)
-		is ApExpr -> ap.js(gen)
-		is ArgExpr -> arg.js(gen)
+		is AbstractionExpr -> abstraction.js(gen)
+		is ApplicationExpr -> application.js(gen)
+		is VariableExpr -> variable.js(gen)
 	}
 
 fun JsFn.js(gen: Gen) = paramCode(gen) ret gen.inc { body.js(it) }

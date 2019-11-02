@@ -1,7 +1,7 @@
 package leo13.lambda.java
 
 import leo.base.assertEqualTo
-import leo13.lambda.expr.*
+import leo13.lambda.*
 import leo13.lambda.java.expr.arg0
 import leo13.lambda.java.expr.expr
 import kotlin.test.Test

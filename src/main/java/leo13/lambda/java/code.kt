@@ -31,14 +31,14 @@ val JavaExpr.printCode get() = "object(() -> System.out.print($code))"
 fun JavaExpr.code(gen: Gen): String =
 	when (this) {
 		is ValueExpr -> value.code.string
-		is FnExpr -> fn.code(gen)
-		is ApExpr -> ap.code(gen)
-		is ArgExpr -> arg.code(gen)
+		is AbstractionExpr -> abstraction.code(gen)
+		is ApplicationExpr -> application.code(gen)
+		is VariableExpr -> variable.code(gen)
 	}
 
-fun JavaFn.code(gen: Gen) = "fn(${paramCode(gen)} -> ${gen.inc { body.code(it) }})"
-fun JavaAp.code(gen: Gen) = "apply(${lhs.code(gen)}, ${rhs.code(gen)})"
-fun JavaArg.code(gen: Gen) = index(gen).varCode
+fun JavaAbstraction.code(gen: Gen) = "fn(${paramCode(gen)} -> ${gen.inc { body.code(it) }})"
+fun JavaApplication.code(gen: Gen) = "apply(${lhs.code(gen)}, ${rhs.code(gen)})"
+fun JavaVariable.code(gen: Gen) = index(gen).varCode
 
 val Int.varCode
 	get() =
@@ -47,4 +47,4 @@ val Int.varCode
 fun paramCode(gen: Gen) =
 	gen.depth.varCode
 
-val arg = arg<Java>()
+val arg = variable<Java>()
