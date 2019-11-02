@@ -2,13 +2,6 @@ package leo13.lambda.js
 
 import leo13.lambda.*
 
-data class Gen(val depth: Int)
-
-fun gen(depth: Int) = Gen(depth)
-val gen = gen(0)
-val Gen.inc get() = Gen(depth.inc())
-fun <T> Gen.inc(fn: (Gen) -> T) = fn(inc)
-
 typealias Js = leo13.js2.Expr
 typealias JsExpr = Expr<Js>
 typealias JsArrow = Arrow<JsExpr>
@@ -22,3 +15,8 @@ val jsArg = arg<Js>()
 
 fun JsArg.index(gen: Gen) =
 	gen.depth - index - 1
+
+fun jsExpr(int: Int) = expr(leo13.js2.expr(int))
+fun jsExpr(double: Double) = expr(leo13.js2.expr(double))
+fun jsExpr(string: String) = expr(leo13.js2.expr(string))
+

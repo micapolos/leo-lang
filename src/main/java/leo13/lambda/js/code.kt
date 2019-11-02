@@ -2,6 +2,8 @@ package leo13.lambda.js
 
 import leo.base.failIfOr
 import leo13.js2.code
+import leo13.lambda.Gen
+import leo13.lambda.gen
 
 fun JsExpr.code(gen: Gen) = js(gen).code
 val JsExpr.jsCode get() = code(gen)
