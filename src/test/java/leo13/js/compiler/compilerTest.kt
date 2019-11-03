@@ -33,7 +33,7 @@ class CompilerTest {
 
 	@Test
 	fun choice() {
-		val booleanCompiler = compiler(
+		val booleanCompiler = switchCompiler(
 			choice(
 				"false",
 				endCompiler { resultCompiler(false) }),

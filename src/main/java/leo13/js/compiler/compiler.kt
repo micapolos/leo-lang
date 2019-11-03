@@ -11,6 +11,13 @@ interface Compiler {
 	fun write(token: Token): Compiler
 }
 
+fun compiler(write: (Token) -> Compiler): Compiler =
+	object : Compiler {
+		override fun write(token: Token) = write(token)
+	}
+
+val compileNothing: Compile<Nothing> = { compiler { error("nothing") } }
+
 val eofCompiler = object : Compiler {
 	override fun write(token: Token) = error("eof")
 }
@@ -88,7 +95,7 @@ fun beginCompiler(string: String, ret: () -> Compiler): Compiler =
 fun endCompiler(ret: () -> Compiler): Compiler =
 	compiler(token(end), ret)
 
-fun compiler(choice: Choice, vararg choices: Choice): Compiler =
+fun switchCompiler(choice: Choice, vararg choices: Choice): Compiler =
 	stack(choice, *choices).let { stack ->
 		object : Compiler {
 			override fun write(token: Token): Compiler =
@@ -98,4 +105,21 @@ fun compiler(choice: Choice, vararg choices: Choice): Compiler =
 						.orIfNull { error("$token is none of: ${stack.toList().joinToString { it.string }}") }
 				else error("$token is not field")
 		}
+	}
+
+fun switchCompiler(fallback: Fallback, vararg choices: Choice): Compiler =
+	stack(*choices).let { stack ->
+		object : Compiler {
+			override fun write(token: Token): Compiler =
+				if (token is BeginToken)
+					stack
+						.mapFirst { compile(token.begin.string) }
+						.orIfNull { fallback.compiler }
+				else error("$token is not field")
+		}
+	}
+
+fun recursive(fn: () -> Compiler): Compiler =
+	compiler { token ->
+		fn().write(token)
 	}
