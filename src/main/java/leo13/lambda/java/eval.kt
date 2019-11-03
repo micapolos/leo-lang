@@ -1,6 +1,11 @@
 package leo13.lambda.java
 
+import leo.base.ifNotNull
 import leo.java.lang.exec
+import leo13.push
+import leo13.stack
+import leo13.toList
+import java.io.File
 import java.io.File.createTempFile
 
 fun String.mainCodeEval(): String {
@@ -17,10 +22,22 @@ fun String.mainCodeEval(): String {
 	val classFile = dir.resolve("$className.class")
 	classFile.deleteOnExit()
 
-	exec("javac", "$javaFile")
+	javaCompile(javaFile)
 
-	return exec("java", "-cp", "$dir", className)
+	return javaRun(className, dir)
 }
+
+fun javaCompile(file: File) =
+	exec("javac", "$file")
+
+fun javaRun(className: String, classPathFile: File? = null): String =
+	stack<String>()
+		.push("java")
+		.ifNotNull(classPathFile) { push("-cp").push("$it") }
+		.push(className)
+		.toList()
+		.toTypedArray()
+		.let { exec(*it) }
 
 val Value.eval
 	get() =
