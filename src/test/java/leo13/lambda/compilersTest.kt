@@ -19,17 +19,17 @@ class CompilerTest {
 	}
 
 	@Test
-	fun variable0() {
+	fun argument() {
 		valueCompiler(compileFallback, compileString) { resultCompiler(it) }
-			.write(script(field("variable")))
+			.write(script(field("argument")))
 			.write(token(end))
 			.assertResult(arg0<String>())
 	}
 
 	@Test
-	fun variable1() {
+	fun argument_previous() {
 		valueCompiler(compileFallback, compileString) { resultCompiler(it) }
-			.write(script("variable" fieldTo script("previous" fieldTo script())))
+			.write(script("argument" fieldTo script("previous" fieldTo script())))
 			.write(token(end))
 			.assertResult(arg1<String>())
 	}
@@ -72,7 +72,7 @@ class CompilerTest {
 
 	@Test
 	fun fallback() {
-		valueCompiler({ resultCompiler(value("fallback")) }, compileString) { resultCompiler(it) }
+		valueCompiler({ beginCompiler("jajeczko") { resultCompiler(value("fallback")) } }, compileString) { resultCompiler(it) }
 			.write(token(begin("jajeczko")))
 			.assertResult(value("fallback"))
 	}

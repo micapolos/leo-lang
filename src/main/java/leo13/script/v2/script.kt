@@ -18,6 +18,9 @@ data class ScriptLink(val lhs: Script, val line: ScriptLine)
 data class ScriptField(val string: String, val rhs: Script)
 
 fun script(unit: Unit): Script = UnitScript(unit)
+fun script(string: String): Script = script(line(string))
+fun script(int: Int): Script = script(line(number(int)))
+fun script(double: Double): Script = script(line(number(double)))
 fun line(string: String): ScriptLine = StringScriptLine(string)
 fun line(number: Number): ScriptLine = NumberScriptLine(number)
 fun line(field: ScriptField): ScriptLine = FieldScriptLine(field)
@@ -33,6 +36,7 @@ infix fun String.fieldTo(double: Double) = fieldTo(script(line(number(double))))
 infix fun String.fieldTo(string: String) = fieldTo(script(line(string)))
 fun field(string: String) = string fieldTo script()
 infix fun Script.linkTo(line: ScriptLine) = ScriptLink(this, line)
+infix fun String.lineTo(script: Script) = line(fieldTo(script))
 
 val String.code get() = "\"$this\"" // TODO: Escape
 

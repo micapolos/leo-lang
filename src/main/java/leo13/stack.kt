@@ -289,6 +289,10 @@ fun <V, R : Any> Stack<V>.map8OrNull(fn: (V, V, V, V, V, V, V, V) -> R): R? =
 fun <V> Stack<V>.toList(): List<V> =
 	mutableListOf<V>().fold(reverse) { item -> also { it.add(item) } }.toList()
 
+inline val <reified V> Stack<V>.array: Array<V>
+	get() =
+		toList().toTypedArray()
+
 val Stack<*>.size
 	get() =
 		0.fold(this) { inc() }

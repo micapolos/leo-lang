@@ -20,7 +20,7 @@ fun <T> valueCompiler(fallbackCompile: Compile<Value<T>>, nativeCompile: Compile
 				value(abstraction(body)).plusCompiler(fallbackCompile, nativeCompile, ret)
 			}
 		}),
-		choice("variable",
+		choice("argument",
 			indexCompiler { index ->
 				value(variable<T>(index)).plusCompiler(fallbackCompile, nativeCompile, ret)
 			}))

@@ -6,6 +6,8 @@ data class ResultCompiler<T>(val result: T) : Compiler {
 
 fun <T> resultCompiler(result: T) = ResultCompiler(result)
 
+fun <T> ret(): (T) -> Compiler = { resultCompiler(it) }
+
 fun <T> Compiler.result(): T =
 	(this as ResultCompiler<T>).result
 

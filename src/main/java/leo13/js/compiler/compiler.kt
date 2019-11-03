@@ -1,6 +1,7 @@
 package leo13.js.compiler
 
 import leo.base.orIfNull
+import leo13.array
 import leo13.mapFirst
 import leo13.script.v2.*
 import leo13.stack
@@ -25,6 +26,8 @@ val eofCompiler = object : Compiler {
 
 fun errorCompiler(string: String) =
 	compiler { error(string) }
+
+fun <T> compileError(string: String): Compile<T> = { errorCompiler(string) }
 
 fun Compiler.write(string: String, writeRhs: Compiler.() -> Compiler) =
 	this
@@ -101,14 +104,13 @@ fun endCompiler(ret: () -> Compiler): Compiler =
 
 fun switchCompiler(choice: Choice, vararg choices: Choice): Compiler =
 	stack(choice, *choices).let { stack ->
-		object : Compiler {
-			override fun write(token: Token): Compiler =
-				if (token is BeginToken)
-					stack
-						.mapFirst { compile(token.begin.string) }
-						.orIfNull { error("$token is none of: ${stack.toList().joinToString { it.string }}") }
-				else error("$token is not field")
-		}
+		switchCompiler(
+			fallback(
+				compiler { token ->
+					error("$token is not one of: ${stack.toList().joinToString { it.string }}")
+				}
+			),
+			*stack.array)
 	}
 
 fun switchCompiler(fallback: Fallback, vararg choices: Choice): Compiler =
@@ -118,7 +120,7 @@ fun switchCompiler(fallback: Fallback, vararg choices: Choice): Compiler =
 				if (token is BeginToken)
 					stack
 						.mapFirst { compile(token.begin.string) }
-						.orIfNull { fallback.compiler }
+						.orIfNull { fallback.compiler.write(token) }
 				else error("$token is not field")
 		}
 	}

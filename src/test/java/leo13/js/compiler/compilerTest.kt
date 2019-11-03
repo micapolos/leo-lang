@@ -1,8 +1,5 @@
 package leo13.js.compiler
 
-import leo13.script.v2.field
-import leo13.script.v2.fieldTo
-import leo13.script.v2.script
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -37,24 +34,45 @@ class CompilerTest {
 	@Test
 	fun choice() {
 		val booleanCompiler = switchCompiler(
-			choice(
-				"false",
-				endCompiler { resultCompiler(false) }),
-			choice(
-				"true",
-				endCompiler { resultCompiler(true) }))
+			choice("false", resultCompiler(false)),
+			choice("true", resultCompiler(true)))
 
 		booleanCompiler
-			.write(script(field("false")))
+			.write(token(begin("false")))
 			.assertResult(false)
 
 		booleanCompiler
-			.write(script(field("true")))
+			.write(token(begin("true")))
 			.assertResult(true)
 
 		assertFails {
 			booleanCompiler
-				.write(script("maybe" fieldTo script()))
+				.write(token(begin("maybe")))
+		}
+	}
+
+	@Test
+	fun choiceWithFallback() {
+		val booleanCompiler = switchCompiler(
+			fallback(beginCompiler("null") { resultCompiler(null) }),
+			choice("false", resultCompiler(false)),
+			choice("true", resultCompiler(true)))
+
+		booleanCompiler
+			.write(token(begin("false")))
+			.assertResult(false)
+
+		booleanCompiler
+			.write(token(begin("true")))
+			.assertResult(true)
+
+		booleanCompiler
+			.write(token(begin("null")))
+			.assertResult(null)
+
+		assertFails {
+			booleanCompiler
+				.write(token(begin("maybe")))
 		}
 	}
 }
