@@ -2,14 +2,14 @@ package leo13.js.compiler
 
 import leo.base.notNullIf
 
-data class CompilerChoice(
+data class Choice(
 	val string: String,
 	val rhsCompiler: Compiler)
 
 fun choice(string: String, rhsCompiler: Compiler) =
-	CompilerChoice(string, rhsCompiler)
+	Choice(string, rhsCompiler)
 
-fun CompilerChoice.compile(string: String): Compiler? =
+fun Choice.compile(string: String): Compiler? =
 	notNullIf(string == this.string) {
 		rhsCompiler
 	}

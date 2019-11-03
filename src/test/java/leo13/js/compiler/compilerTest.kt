@@ -11,6 +11,13 @@ class CompilerTest {
 	}
 
 	@Test
+	fun token() {
+		compiler(token(begin("foo"))) { resultCompiler("ok") }
+			.write(token(begin("foo")))
+			.assertResult("ok")
+	}
+
+	@Test
 	fun begin() {
 		beginCompiler("foo") { resultCompiler("ok") }
 			.write(token(begin("foo")))
@@ -27,15 +34,21 @@ class CompilerTest {
 	@Test
 	fun choice() {
 		val booleanCompiler = compiler(
-			choice("false", resultCompiler(false)),
-			choice("true", resultCompiler(true)))
+			choice(
+				"false",
+				endCompiler { resultCompiler(false) }),
+			choice(
+				"true",
+				endCompiler { resultCompiler(true) }))
 
 		booleanCompiler
 			.write(token(begin("false")))
+			.write(token(end))
 			.assertResult(false)
 
 		booleanCompiler
 			.write(token(begin("true")))
+			.write(token(end))
 			.assertResult(true)
 
 		assertFails {
