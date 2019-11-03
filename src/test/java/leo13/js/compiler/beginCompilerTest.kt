@@ -5,9 +5,9 @@ import kotlin.test.Test
 class BeginCompilerTest {
 	@Test
 	fun all() {
-		begin("name") {
-			end {
-				ResultCompiler("OK")
+		beginCompiler("name") {
+			endCompiler {
+				resultCompiler("OK")
 			}
 		}
 			.write(token(begin("name")))

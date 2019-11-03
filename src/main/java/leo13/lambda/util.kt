@@ -26,3 +26,16 @@ val <T> Value<T>.second get() = this(second())
 fun <T> list() = pair<T>(first(), first())
 fun <T> Value<T>.append(head: Value<T>) = pair(second(), pair(this, head))
 val <T> Value<T>.isEmpty get() = first
+
+// === boolean
+
+fun <T> value(boolean: Boolean): Value<T> =
+	if (boolean) second()
+	else first()
+
+fun <T> Value<T>.booleanOrNull() =
+	when (this) {
+		first<T>() -> false
+		second<T>() -> true
+		else -> null
+	}

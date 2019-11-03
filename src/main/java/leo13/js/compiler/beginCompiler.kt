@@ -12,4 +12,11 @@ data class BeginCompiler(
 		}
 }
 
-fun begin(string: String, ret: () -> Compiler) = BeginCompiler(string, ret)
+fun beginCompiler(string: String, ret: () -> Compiler) = BeginCompiler(string, ret)
+
+fun <T> begin(string: String, then: Compile<T>): Compile<T> =
+	{ ret ->
+		beginCompiler(string) {
+			then(ret)
+		}
+	}

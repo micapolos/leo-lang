@@ -1,5 +1,7 @@
 package leo13.js.compiler
 
+typealias Compile<T> = ((T) -> Compiler) -> Compiler
+
 interface Compiler {
 	fun write(token: Token): Compiler
 }
@@ -43,3 +45,8 @@ fun Compiler.write(field: ScriptField) =
 	write(field.string) {
 		write(field.rhs)
 	}
+
+fun <T> Compile<T>.compile(fn: Compiler.() -> Compiler): T =
+	(fn(invoke { ret ->
+		resultCompiler(ret)
+	}) as ResultCompiler<T>).result

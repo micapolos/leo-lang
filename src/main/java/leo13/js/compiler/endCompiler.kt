@@ -6,4 +6,11 @@ data class EndCompiler(val ret: () -> Compiler) : Compiler {
 		else error("end expected")
 }
 
-fun end(ret: () -> Compiler) = EndCompiler(ret)
+fun endCompiler(ret: () -> Compiler) = EndCompiler(ret)
+
+fun <T> end(value: T): Compile<T> =
+	{ ret ->
+		endCompiler {
+			ret(value)
+		}
+	}

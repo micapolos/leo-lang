@@ -3,28 +3,21 @@ package leo13.js.compiler
 import leo.base.fold
 
 sealed class Type
-object NumberType : Type()
-object StringType : Type()
+object EmptyType : Type()
 object NativeType : Type()
-data class FieldType(val field: TypeField) : Type()
 data class ArrowType(val arrow: Arrow) : Type()
+data class LinkType(val link: TypeLink) : Type()
 
-sealed class Types
-object EmptyTypes : Types()
-data class LinkTypes(val link: TypeLink) : Types()
+data class TypeLink(val type: Type, val field: TypeField)
+data class TypeField(val string: String, val type: Type)
 
-data class TypeLink(val types: Types, val type: Type)
-data class TypeField(val string: String, val types: Types)
+infix fun Type.linkTo(field: TypeField) = TypeLink(this, field)
+infix fun String.fieldTo(type: Type) = TypeField(this, type)
 
-infix fun Types.linkTo(line: Type) = TypeLink(this, line)
-infix fun String.fieldTo(types: Types) = TypeField(this, types)
-
-val emptyTypes: Types = EmptyTypes
-val numberType: Type = NumberType
-val stringType: Type = StringType
+val emptyType: Type = EmptyType
 val nativeType: Type = NativeType
-fun type(field: TypeField): Type = FieldType(field)
 fun type(arrow: Arrow): Type = ArrowType(arrow)
+fun type(link: TypeLink): Type = LinkType(link)
 
-fun Types.plus(type: Type): Types = LinkTypes(this linkTo type)
-fun types(vararg types: Type): Types = emptyTypes.fold(types) { plus(it) }
+fun Type.plus(field: TypeField): Type = type(this linkTo field)
+fun type(vararg fields: TypeField): Type = emptyType.fold(fields) { plus(it) }

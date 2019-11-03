@@ -15,30 +15,6 @@ interface Writer {
 
 	fun writeLines(vararg strings: String): Writer =
 		fold(strings) { writeLine(it) }
-
-	fun writeValueOpening() =
-		writeLines(
-			"function() {",
-			"var $valueLiteral = null")
-
-	fun writeValueClosing() =
-		writeLines(
-			"return $valueLiteral",
-			"}()")
-
-	fun writeLiteral(double: Double) =
-		write("$double")
-
-	fun writeLiteral(string: String) =
-		write("\'$string\'")
-
-	val valueLiteral get() = "__value"
-
-	fun writeValueSet(fn: Writer.() -> Writer) =
-		write("$valueLiteral = ").fn().write('\n')
-
-	fun writeValueUpdate(operator: Char) =
-		write("$valueLiteral $operator= ")
 }
 
 data class StackWriter(val stack: Stack<Char>) : Writer {
