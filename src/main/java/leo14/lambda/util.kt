@@ -85,7 +85,7 @@ tailrec fun <T> Stack<Term<T>>.plus(term: Term<T>): Stack<Term<T>> =
 	if (term.isEmpty) this
 	else push(term.link.head).plus(term.link.tail)
 
-fun <T> Term<T>.stack(): Stack<Term<T>> = leo13.stack<Term<T>>().plus(this).reverse
+fun <T> Term<T>.termStack(): Stack<Term<T>> = stack<Term<T>>().plus(this).reverse
 
 // === string
 
@@ -93,4 +93,4 @@ fun <T> stringTerm(string: String): Term<T> =
 	term(stack<Term<T>>().fold(string.utf8ByteSeq.map { term<T>(this) }) { push(it) })
 
 fun <T> Term<T>.string() =
-	stack().reverse.seq.map { byte() }.utf8String
+	termStack().reverse.seq.map { byte() }.utf8String

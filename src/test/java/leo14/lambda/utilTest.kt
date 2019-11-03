@@ -47,9 +47,9 @@ class UtilTest {
 
 	@Test
 	fun stacks() {
-		term(stack<Term<Any>>()).stack().assertEqualTo(stack())
+		term(stack<Term<Any>>()).termStack().assertEqualTo(stack())
 		term(stack(term<Any>(1), term(2), term(3)))
-			.stack()
+			.termStack()
 			.assertEqualTo(stack(term(1), term(2), term(3)))
 	}
 
