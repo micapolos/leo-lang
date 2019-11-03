@@ -1,7 +1,12 @@
 package leo14.lambda
 
+import leo.base.*
+import leo.binary.Bit
+import leo.binary.bit
+import leo.binary.isOne
 import leo13.Index
 import leo13.index
+import leo14.*
 
 fun <T> fn(body: Term<T>) = term(abstraction(body))
 fun <T> fn2(body: Term<T>) = fn(fn(body))
@@ -18,8 +23,6 @@ fun <T> first(): Term<T> = fn2(arg1())
 fun <T> second(): Term<T> = fn2(arg0())
 fun <T> Term<T>.switch(firstFn: Term<T>, secondFn: Term<T>) = this(firstFn)(secondFn)
 
-fun <T> pair(lhs: Term<T>, rhs: Term<T>) = fn3(arg0<T>()(arg2())(arg1()))(lhs)(rhs)
-
 val <T> Term<T>.first get() = this(first())
 val <T> Term<T>.second get() = this(second())
 
@@ -33,9 +36,39 @@ fun <T> term(boolean: Boolean): Term<T> =
 	if (boolean) second()
 	else first()
 
-fun <T> Term<T>.booleanOrNull() =
+fun <T> Term<T>.boolean(): Boolean =
 	when (this) {
 		first<T>() -> false
 		second<T>() -> true
-		else -> null
+		else -> error("$this is not a boolean")
 	}
+
+// === pair
+
+fun <T> pair(lhs: Term<T>, rhs: Term<T>) = fn3(arg0<T>()(arg2())(arg1()))(lhs)(rhs)
+fun <T> Term<T>.pair(): Pair<Term<T>, Term<T>> =
+	application { lhs, second ->
+		lhs.application { fn, first ->
+			if (fn == fn3(arg0<T>()(arg2())(arg1()))) first to second
+			else error("$this is not a pair")
+		}
+	}
+
+// === bit
+
+fun <T> term(bit: Bit): Term<T> = term(bit.isOne)
+fun <T> Term<T>.bit(): Bit = boolean().bit
+
+// === ints
+
+fun <T> term(int2: Int2): Term<T> = pair(term(int2.hi), term(int2.lo))
+fun <T> term(int4: Int4): Term<T> = pair(term(int4.hi), term(int4.lo))
+fun <T> term(byte: Byte): Term<T> = pair(term(byte.hi), term(byte.lo))
+fun <T> term(short: Short): Term<T> = pair(term(short.byte1), term(short.byte0))
+fun <T> term(int: Int): Term<T> = pair(term(int.short1), term(int.short0))
+
+fun <T> Term<T>.int2() = pair().run { int2(first.bit(), second.bit()) }
+fun <T> Term<T>.int4() = pair().run { int4(first.int2(), second.int2()) }
+fun <T> Term<T>.byte() = pair().run { byte(first.int4(), second.int4()) }
+fun <T> Term<T>.short() = pair().run { short(first.byte(), second.byte()) }
+fun <T> Term<T>.int() = pair().run { int(first.short(), second.short()) }

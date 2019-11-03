@@ -137,6 +137,11 @@ fun Short.updateByte0(fn: Byte.() -> Byte) = short(byte0.fn(), byte1)
 fun Short.setByte1(byte1: Byte) = updateByte1 { byte1 }
 fun Short.setByte0(byte0: Byte) = updateByte0 { byte0 }
 
+val Int.short1 get() = shr(16).clampedShort
+val Int.short0 get() = clampedShort
+
+fun int(hi: Short, lo: Short) = hi.uint.shl(16) or lo.uint
+
 val Int.byte3 get() = shr(24).and(0xff).clampedByte
 val Int.byte2 get() = shr(16).and(0xff).clampedByte
 val Int.byte1 get() = shr(8).and(0xff).clampedByte
