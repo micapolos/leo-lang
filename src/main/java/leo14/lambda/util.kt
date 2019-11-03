@@ -1,12 +1,12 @@
 package leo14.lambda
 
 import leo.base.*
-import leo.binary.Bit
-import leo.binary.bit
-import leo.binary.isOne
-import leo13.Index
-import leo13.index
+import leo.binary.*
+import leo13.*
+import leo13.Stack
 import leo14.*
+import leo14.Int2
+import leo14.Int4
 
 fun <T> fn(body: Term<T>) = term(abstraction(body))
 fun <T> fn2(body: Term<T>) = fn(fn(body))
@@ -28,7 +28,10 @@ val <T> Term<T>.second get() = this(second())
 
 fun <T> list() = pair<T>(first(), first())
 fun <T> Term<T>.append(head: Term<T>) = pair(second(), pair(this, head))
-val <T> Term<T>.isEmpty get() = first
+val <T> Term<T>.isEmpty: Boolean get() = pair().first == first<T>()
+val <T> Term<T>.link: Term<T> get() = pair().second
+val <T> Term<T>.tail: Term<T> get() = pair().first
+val <T> Term<T>.head: Term<T> get() = pair().second
 
 // === boolean
 
@@ -72,3 +75,22 @@ fun <T> Term<T>.int4() = pair().run { int4(first.int2(), second.int2()) }
 fun <T> Term<T>.byte() = pair().run { byte(first.int4(), second.int4()) }
 fun <T> Term<T>.short() = pair().run { short(first.byte(), second.byte()) }
 fun <T> Term<T>.int() = pair().run { int(first.short(), second.short()) }
+
+// === stack
+
+fun <T> term(stack: Stack<Term<T>>): Term<T> =
+	list<T>().fold(stack.reverse) { append(it) }
+
+tailrec fun <T> Stack<Term<T>>.plus(term: Term<T>): Stack<Term<T>> =
+	if (term.isEmpty) this
+	else push(term.link.head).plus(term.link.tail)
+
+fun <T> Term<T>.stack(): Stack<Term<T>> = leo13.stack<Term<T>>().plus(this).reverse
+
+// === string
+
+fun <T> stringTerm(string: String): Term<T> =
+	term(stack<Term<T>>().fold(string.utf8ByteSeq.map { term<T>(this) }) { push(it) })
+
+fun <T> Term<T>.string() =
+	stack().reverse.seq.map { byte() }.utf8String

@@ -5,6 +5,7 @@ import leo.base.clampedByte
 import leo.base.clampedShort
 import leo.binary.bit0
 import leo.binary.bit1
+import leo13.stack
 import leo14.clampedInt2
 import leo14.clampedInt4
 import kotlin.test.Test
@@ -34,5 +35,27 @@ class UtilTest {
 		term<Any>(123.clampedByte).byte().assertEqualTo(123.clampedByte)
 		term<Any>(12345.clampedShort).short().assertEqualTo(12345.clampedShort)
 		term<Any>(12345678).int().assertEqualTo(12345678)
+	}
+
+	@Test
+	fun lists() {
+		list<Any>().isEmpty.assertEqualTo(true)
+		list<Any>().append(term(1)).isEmpty.assertEqualTo(false)
+		list<Any>().append(term(1)).link.head.assertEqualTo(term(1))
+		list<Any>().append(term(1)).link.tail.assertEqualTo(list())
+	}
+
+	@Test
+	fun stacks() {
+		term(stack<Term<Any>>()).stack().assertEqualTo(stack())
+		term(stack(term<Any>(1), term(2), term(3)))
+			.stack()
+			.assertEqualTo(stack(term(1), term(2), term(3)))
+	}
+
+	@Test
+	fun strings() {
+		stringTerm<Any>("").string().assertEqualTo("")
+		stringTerm<Any>("foo").string().assertEqualTo("foo")
 	}
 }
