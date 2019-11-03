@@ -1,7 +1,9 @@
 package leo13.js.compiler
 
+import leo.base.orIfNull
 import leo13.mapFirst
 import leo13.stack
+import leo13.toList
 
 typealias Compile<T> = ((T) -> Compiler) -> Compiler
 
@@ -50,9 +52,14 @@ fun Compiler.write(field: ScriptField) =
 	}
 
 fun <T> Compile<T>.compile(fn: Compiler.() -> Compiler): T =
-	(fn(invoke { ret ->
-		resultCompiler(ret)
-	}) as ResultCompiler<T>).result
+	fn(
+		invoke { ret ->
+			resultCompiler(ret)
+		}
+	).let { compiler ->
+		if (compiler is ResultCompiler<*>) compiler.result as T
+		else error("not yet compiled")
+	}
 
 fun compiler(expectedToken: Token, fn: () -> Compiler): Compiler =
 	object : Compiler {
@@ -64,13 +71,15 @@ fun compiler(expectedToken: Token, fn: () -> Compiler): Compiler =
 fun stringCompiler(fn: (String) -> Compiler): Compiler =
 	object : Compiler {
 		override fun write(token: Token) =
-			(token as StringToken).run { fn(string) }
+			if (token is StringToken) fn(token.string)
+			else error("$token is not a string")
 	}
 
 fun numberCompiler(fn: (Number) -> Compiler): Compiler =
 	object : Compiler {
 		override fun write(token: Token) =
-			(token as NumberToken).run { fn(number) }
+			if (token is NumberToken) fn(token.number)
+			else error("$token is not a number")
 	}
 
 fun beginCompiler(string: String, ret: () -> Compiler): Compiler =
@@ -83,10 +92,10 @@ fun compiler(choice: Choice, vararg choices: Choice): Compiler =
 	stack(choice, *choices).let { stack ->
 		object : Compiler {
 			override fun write(token: Token): Compiler =
-				(token as BeginToken).let { token ->
-					stack.mapFirst {
-						compile(token.begin.string)
-					}!!
-				}
+				if (token is BeginToken)
+					stack
+						.mapFirst { compile(token.begin.string) }
+						.orIfNull { error("$token is none of: ${stack.toList().joinToString { it.string }}") }
+				else error("$token is not field")
 		}
 	}

@@ -42,17 +42,16 @@ class CompilerTest {
 				endCompiler { resultCompiler(true) }))
 
 		booleanCompiler
-			.write(token(begin("false")))
-			.write(token(end))
+			.write(script(field("false")))
 			.assertResult(false)
 
 		booleanCompiler
-			.write(token(begin("true")))
-			.write(token(end))
+			.write(script(field("true")))
 			.assertResult(true)
 
 		assertFails {
-			booleanCompiler.write(token(begin("maybe")))
+			booleanCompiler
+				.write(script("maybe" fieldTo script()))
 		}
 	}
 }

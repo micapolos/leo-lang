@@ -28,6 +28,7 @@ infix fun String.fieldTo(line: ScriptLine) = fieldTo(script(line))
 infix fun String.fieldTo(int: Int) = fieldTo(script(line(number(int))))
 infix fun String.fieldTo(double: Double) = fieldTo(script(line(number(double))))
 infix fun String.fieldTo(string: String) = fieldTo(script(line(string)))
+fun field(string: String) = string fieldTo script()
 infix fun Script.linkTo(line: ScriptLine) = ScriptLink(this, line)
 
 val String.code get() = "\"$this\"" // TODO: Escape
