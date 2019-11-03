@@ -30,3 +30,10 @@ val Number.expr: Expr
 			is IntNumber -> expr(int)
 			is DoubleNumber -> expr(double)
 		}
+
+val Number.any: Any
+	get() =
+		when (this) {
+			is IntNumber -> int
+			is DoubleNumber -> double
+		}

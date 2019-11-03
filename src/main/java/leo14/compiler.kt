@@ -64,6 +64,9 @@ fun Compiler.write(script: Script): Compiler =
 		is LinkScript -> write(script.link)
 	}
 
+fun <T> Compiler.compile(script: Script): T =
+	write(script).write(token(end)).result()
+
 fun Compiler.write(link: ScriptLink) =
 	write(link.lhs).write(link.line)
 

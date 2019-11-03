@@ -5,6 +5,8 @@ import leo.java.lang.exec
 import leo13.push
 import leo13.stack
 import leo13.toList
+import leo14.Script
+import leo14.compile
 import java.io.File
 import java.io.File.createTempFile
 
@@ -42,3 +44,7 @@ fun javaRun(className: String, classPathFile: File? = null): String =
 val Value.eval
 	get() =
 		printCode.mainCode.mainCodeEval()
+
+val Script.eval
+	get() =
+		compiler.compile<Value>(this).eval
