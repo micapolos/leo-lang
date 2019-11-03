@@ -1,5 +1,8 @@
 package leo13.js.compiler
 
+import leo13.script.v2.field
+import leo13.script.v2.fieldTo
+import leo13.script.v2.script
 import kotlin.test.Test
 import kotlin.test.assertFails
 

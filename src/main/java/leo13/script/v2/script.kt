@@ -1,6 +1,9 @@
-package leo13.js.compiler
+package leo13.script.v2
 
 import leo.base.fold
+import leo13.js.compiler.Number
+import leo13.js.compiler.code
+import leo13.js.compiler.number
 
 sealed class Script
 data class UnitScript(val unit: Unit) : Script()

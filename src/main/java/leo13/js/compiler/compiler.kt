@@ -2,6 +2,7 @@ package leo13.js.compiler
 
 import leo.base.orIfNull
 import leo13.mapFirst
+import leo13.script.v2.*
 import leo13.stack
 import leo13.toList
 
@@ -21,6 +22,9 @@ val compileNothing: Compile<Nothing> = { compiler { error("nothing") } }
 val eofCompiler = object : Compiler {
 	override fun write(token: Token) = error("eof")
 }
+
+fun errorCompiler(string: String) =
+	compiler { error(string) }
 
 fun Compiler.write(string: String, writeRhs: Compiler.() -> Compiler) =
 	this

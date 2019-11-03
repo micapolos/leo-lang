@@ -1,6 +1,10 @@
 package leo13.js.compiler
 
 import leo.base.assertEqualTo
+import leo13.script.v2.code
+import leo13.script.v2.fieldTo
+import leo13.script.v2.line
+import leo13.script.v2.script
 import kotlin.test.Test
 
 class ScriptTest {
