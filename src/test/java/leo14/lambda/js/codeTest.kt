@@ -13,8 +13,8 @@ import kotlin.test.assertFails
 class GenTest {
 	@Test
 	fun jsCode() {
-		val a = value(code("a"))
-		val b = value(code("b"))
+		val a = term(code("a"))
+		val b = term(code("b"))
 		a.code.assertEqualTo("a")
 		b.code.assertEqualTo("b")
 		fn(a).code.assertEqualTo("v0=>a")

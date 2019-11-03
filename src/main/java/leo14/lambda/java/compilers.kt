@@ -1,7 +1,7 @@
 package leo14.lambda.java
 
 import leo14.*
-import leo14.lambda.valueCompiler
+import leo14.lambda.termCompiler
 
 fun nativeCompiler(ret: (Native) -> Compiler): Compiler =
 	compiler { token ->
@@ -16,7 +16,7 @@ val compileNative: Compile<Native> = { nativeCompiler(it) }
 
 val compiler
 	get() =
-		valueCompiler(
+		termCompiler(
 			compileError("fallback"),
 			compileNative,
 			ret())

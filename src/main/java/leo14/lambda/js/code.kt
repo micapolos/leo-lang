@@ -8,8 +8,8 @@ import leo14.lambda.Variable
 import leo14.lambda.code.Gen
 import leo14.lambda.code.gen
 
-fun Value.code(gen: Gen) = expr(gen).code
-val Value.code get() = code(gen)
+fun Term.code(gen: Gen) = expr(gen).code
+val Term.code get() = code(gen)
 
 val Int.varCode
 	get() =

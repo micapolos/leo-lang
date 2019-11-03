@@ -7,21 +7,21 @@ import kotlin.test.Test
 class EvalTest {
 	@Test
 	fun helloWorld() {
-		value("Hello, world!")
+		term("Hello, world!")
 			.eval
 			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
 	fun invoke() {
-		fn(arg0)(value("Hello, world!"))
+		fn(arg0)(term("Hello, world!"))
 			.eval
 			.assertEqualTo("Hello, world!")
 	}
 
 	@Test
 	fun pairFirst() {
-		pair(value("first"), value("second"))
+		pair(term("first"), term("second"))
 			.first
 			.eval
 			.assertEqualTo("first")
@@ -29,7 +29,7 @@ class EvalTest {
 
 	@Test
 	fun pairSecond() {
-		pair(value("first"), value("second"))
+		pair(term("first"), term("second"))
 			.second
 			.eval
 			.assertEqualTo("second")

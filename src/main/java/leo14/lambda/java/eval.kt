@@ -41,10 +41,10 @@ fun javaRun(className: String, classPathFile: File? = null): String =
 		.toTypedArray()
 		.let { exec(*it) }
 
-val Value.eval
+val Term.eval
 	get() =
 		printCode.mainCode.mainCodeEval()
 
 val Script.eval
 	get() =
-		compiler.compile<Value>(this).eval
+		compiler.compile<Term>(this).eval

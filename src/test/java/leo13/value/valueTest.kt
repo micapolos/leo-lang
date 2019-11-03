@@ -5,7 +5,7 @@ import leo13.script.lineTo
 import leo13.script.script
 import kotlin.test.Test
 
-class ValueTest {
+class TermTest {
 	@Test
 	fun scriptLine() {
 		value(

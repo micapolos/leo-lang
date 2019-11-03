@@ -11,8 +11,8 @@ import kotlin.test.assertFails
 class CodeTest {
 	@Test
 	fun code() {
-		val a = value(native(code("a")))
-		val b = value(native(code("b")))
+		val a = term(native(code("a")))
+		val b = term(native(code("b")))
 		a.code.assertEqualTo("a")
 		b.code.assertEqualTo("b")
 		fn(a).code.assertEqualTo("fn(v0 -> a)")
@@ -27,6 +27,6 @@ class CodeTest {
 
 	@Test
 	fun mainCode() {
-		value("Hello, world!").mainCode
+		term("Hello, world!").mainCode
 	}
 }

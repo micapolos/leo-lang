@@ -9,19 +9,19 @@ import leo13.js.ast.expr
 import leo13.js.ast.id
 import leo14.lambda.code.Code
 import leo14.lambda.code.code
-import leo14.lambda.value
+import leo14.lambda.term
 
-typealias Value = leo14.lambda.Value<Expr>
+typealias Term = leo14.lambda.Term<Expr>
 
-fun arg(index: Index): Value = leo14.lambda.arg(index)
+fun arg(index: Index): Term = leo14.lambda.arg(index)
 val arg0 get() = arg(index0)
 val arg1 get() = arg(index1)
 val arg2 get() = arg(index2)
 
-fun value(code: Code) = value(expr(id(code.string)))
+fun term(code: Code) = term(expr(id(code.string)))
 
-val nullValue get() = value(code("null"))
-fun value(boolean: Boolean) = value(code("$boolean"))
-fun value(int: Int) = value(expr(int))
-fun value(double: Double) = value(expr(double))
-fun value(string: String) = value(expr(string))
+val nullTerm get() = term(code("null"))
+fun term(boolean: Boolean) = term(code("$boolean"))
+fun term(int: Int) = term(expr(int))
+fun term(double: Double) = term(expr(double))
+fun term(string: String) = term(expr(string))

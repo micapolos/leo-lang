@@ -7,7 +7,7 @@ import leo14.lambda.code.Gen
 import leo14.lambda.code.gen
 import leo14.lambda.code.inc
 
-val Value.mainCode get() = code.mainCode
+val Term.mainCode get() = code.mainCode
 
 val String.mainCode
 	get() =
@@ -25,19 +25,19 @@ val String.mainCode
 			"}"
 		)
 
-val Value.code get() = code(gen)
-val Value.printCode get() = "object(() -> System.out.print($code))"
+val Term.code get() = code(gen)
+val Term.printCode get() = "object(() -> System.out.print($code))"
 
-fun Value.code(gen: Gen): String =
+fun Term.code(gen: Gen): String =
 	when (this) {
-		is NativeValue -> native.code(gen)
-		is AbstractionValue -> abstraction.code(gen)
-		is ApplicationValue -> application.code(gen)
-		is VariableValue -> variable.code(gen)
+		is NativeTerm -> native.code(gen)
+		is AbstractionTerm -> abstraction.code(gen)
+		is ApplicationTerm -> application.code(gen)
+		is VariableTerm -> variable.code(gen)
 	}
 
-fun Abstraction<Value>.code(gen: Gen) = "fn(${paramCode(gen)} -> ${gen.inc { body.code(it) }})"
-fun Application<Value>.code(gen: Gen) = "apply(${lhs.code(gen)}, ${rhs.code(gen)})"
+fun Abstraction<Term>.code(gen: Gen) = "fn(${paramCode(gen)} -> ${gen.inc { body.code(it) }})"
+fun Application<Term>.code(gen: Gen) = "apply(${lhs.code(gen)}, ${rhs.code(gen)})"
 fun Variable<Native>.code(gen: Gen) = index(gen).varCode
 fun Native.code(gen: Gen) = code.string
 

@@ -3,7 +3,7 @@ package leo14.lambda.js
 import leo13.js.ast.Expr
 import leo13.js.ast.expr
 import leo14.*
-import leo14.lambda.valueCompiler
+import leo14.lambda.termCompiler
 
 fun exprCompiler(ret: (Expr) -> Compiler): Compiler =
 	compiler { token ->
@@ -18,7 +18,7 @@ val compileExpr: Compile<Expr> = { exprCompiler(it) }
 
 val compiler
 	get() =
-		valueCompiler(
+		termCompiler(
 			compileError("fallback"),
 			compileExpr,
 			ret())

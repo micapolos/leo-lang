@@ -29,7 +29,7 @@ fun main() {
 			.write(token(end))
 			.write(token(end))
 	}
-	file.writeText(typed.value.code.jsInHtml)
+	file.writeText(typed.term.code.jsInHtml)
 	val uri = file.toURI()
 	println(uri)
 	file.deleteOnExit()

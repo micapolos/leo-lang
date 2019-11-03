@@ -7,8 +7,8 @@ import kotlin.test.Test
 class UtilTest {
 	@Test
 	fun boolean() {
-		value<Any>(false).booleanOrNull().assertEqualTo(false)
-		value<Any>(true).booleanOrNull().assertEqualTo(true)
-		value<Any>(0).booleanOrNull().assertNull
+		term<Any>(false).booleanOrNull().assertEqualTo(false)
+		term<Any>(true).booleanOrNull().assertEqualTo(true)
+		term<Any>(0).booleanOrNull().assertNull
 	}
 }

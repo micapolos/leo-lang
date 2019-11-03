@@ -4,9 +4,9 @@ import leo13.js.ast.Expr
 import leo13.js.ast.expr
 import leo13.js.compiler.Typed
 import leo14.lambda.booleanOrNull
-import leo14.lambda.js.Value
+import leo14.lambda.js.Term
 
-val Value.exprOrNull: Expr?
+val Term.exprOrNull: Expr?
 	get() =
 		null
 			?: booleanOrNull()?.run(::expr)

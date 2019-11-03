@@ -1,7 +1,7 @@
 package leo14.lambda.eval
 
 import leo14.*
-import leo14.lambda.valueCompiler
+import leo14.lambda.termCompiler
 
 fun anyCompiler(ret: (Any) -> Compiler): Compiler =
 	compiler { token ->
@@ -16,7 +16,7 @@ val compileAny: Compile<Any> = { anyCompiler(it) }
 
 val compiler
 	get() =
-		valueCompiler(
+		termCompiler(
 			compileError("fallback"),
 			compileAny,
 			ret())

@@ -2,8 +2,8 @@ package leo14
 
 import leo13.js.ast.Expr
 import leo13.js.ast.expr
-import leo14.lambda.js.Value
-import leo14.lambda.value
+import leo14.lambda.js.Term
+import leo14.lambda.term
 
 // TODO: Refactor to allow arbitrary large number, represented as syntax and not value
 sealed class Number
@@ -21,8 +21,8 @@ val Number.code
 			is DoubleNumber -> "$double"
 		}
 
-val Number.value: Value
-	get() = value(expr)
+val Number.term: Term
+	get() = term(expr)
 
 val Number.expr: Expr
 	get() =

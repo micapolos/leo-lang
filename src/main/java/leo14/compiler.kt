@@ -10,7 +10,8 @@ import leo13.mapFirst
 import leo13.stack
 import leo13.toList
 
-typealias Compile<T> = ((T) -> Compiler) -> Compiler
+typealias Ret<T> = (T) -> Compiler
+typealias Compile<T> = (Ret<T>) -> Compiler
 
 interface Compiler {
 	fun write(token: Token): Compiler

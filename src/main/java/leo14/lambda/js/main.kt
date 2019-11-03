@@ -5,8 +5,8 @@ import leo14.lambda.first
 import leo14.lambda.pair
 import leo14.lambda.second
 
-val helloWorld get() = value("Hello, world!")
-val pair = pair(value("first"), value("second"))
+val helloWorld get() = term("Hello, world!")
+val pair = pair(term("first"), term("second"))
 val pairFirst get() = pair.first
 val pairSecond get() = pair.second
 

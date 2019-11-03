@@ -7,6 +7,6 @@ import leo14.script
 
 val Script.show
 	get() =
-		typed.value.show
+		typed.term.show
 
 fun main() = script(line("Hello, world!")).show

@@ -4,15 +4,15 @@ import leo13.Index
 import leo13.index0
 import leo13.index1
 import leo13.index2
-import leo14.lambda.Value
+import leo14.lambda.Term
 
-typealias Value = Value<Native>
+typealias Term = Term<Native>
 
-fun arg(index: Index): Value<Native> = leo14.lambda.arg(index)
+fun arg(index: Index): Term<Native> = leo14.lambda.arg(index)
 val arg0 get() = arg(index0)
 val arg1 get() = arg(index1)
 val arg2 get() = arg(index2)
 
-fun value(int: Int) = leo14.lambda.value(native(int))
-fun value(double: Double) = leo14.lambda.value(native(double))
-fun value(string: String) = leo14.lambda.value(native(string))
+fun term(int: Int) = leo14.lambda.term(native(int))
+fun term(double: Double) = leo14.lambda.term(native(double))
+fun term(string: String) = leo14.lambda.term(native(string))
