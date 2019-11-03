@@ -22,6 +22,7 @@ fun line(string: String): ScriptLine = StringScriptLine(string)
 fun line(number: Number): ScriptLine = NumberScriptLine(number)
 fun line(field: ScriptField): ScriptLine = FieldScriptLine(field)
 fun Script.plus(vararg lines: ScriptLine) = fold(lines) { LinkScript(this linkTo it) }
+fun Script.plus(field: ScriptField, vararg fields: ScriptField): Script = plus(line(field)).fold(fields) { plus(it) }
 fun script(vararg lines: ScriptLine): Script = script(Unit).plus(*lines)
 fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
