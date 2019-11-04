@@ -12,6 +12,9 @@ data class Arrow(val lhs: Type, val rhs: Type)
 data class Link(val lhs: Type, val line: Line)
 data class Line(val string: String, val type: Type)
 
+val emptyType: Type = EmptyType
+val nativeType: Type = NativeType
+
 val Type.isConstant: Boolean
 	get() =
 		when (this) {

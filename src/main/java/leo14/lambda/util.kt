@@ -19,6 +19,8 @@ fun <T> arg0(): Term<T> = arg(index(0))
 fun <T> arg1(): Term<T> = arg(index(1))
 fun <T> arg2(): Term<T> = arg(index(2))
 
+fun <T> id(): Term<T> = fn(arg0())
+
 fun <T> first(): Term<T> = fn2(arg1())
 fun <T> second(): Term<T> = fn2(arg0())
 fun <T> Term<T>.switch(firstFn: Term<T>, secondFn: Term<T>) = this(firstFn)(secondFn)
@@ -26,7 +28,7 @@ fun <T> Term<T>.switch(firstFn: Term<T>, secondFn: Term<T>) = this(firstFn)(seco
 val <T> Term<T>.first get() = this(first())
 val <T> Term<T>.second get() = this(second())
 
-fun <T> list() = pair<T>(first(), first())
+fun <T> list() = pair<T>(first(), id())
 fun <T> Term<T>.append(head: Term<T>) = pair(second(), pair(this, head))
 val <T> Term<T>.isEmpty: Boolean get() = pair().first == first<T>()
 val <T> Term<T>.link: Term<T> get() = pair().second
