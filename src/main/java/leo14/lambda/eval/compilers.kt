@@ -6,8 +6,7 @@ import leo14.lambda.termCompiler
 fun anyCompiler(ret: (Any) -> Compiler): Compiler =
 	compiler { token ->
 		when (token) {
-			is StringToken -> ret(token.string)
-			is NumberToken -> ret(token.number.any)
+			is LiteralToken -> ret(token.literal.any)
 			else -> error("$token is not native java")
 		}
 	}

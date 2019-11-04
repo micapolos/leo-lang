@@ -4,14 +4,13 @@ import leo.base.notNullIf
 import leo13.Stack
 import leo13.mapFirst
 import leo14.Compiler
-import leo14.Number
+import leo14.Literal
 import leo14.Ret
 import leo14.lambda.Term
 
 data class Context<T>(
 	val entryStack: Stack<Entry<T>>,
-	val compileString: (String) -> Term<T>,
-	val compileNumber: (Number) -> Term<T>)
+	val literalTerm: (Literal) -> Term<T>)
 
 data class Entry<T>(val string: String, val compile: (Compiled<T>, Ret<Compiled<T>>) -> Compiler)
 

@@ -108,15 +108,8 @@ fun compiler(expectedToken: Token, fn: () -> Compiler): Compiler =
 fun stringCompiler(fn: (String) -> Compiler): Compiler =
 	object : Compiler {
 		override fun write(token: Token) =
-			if (token is StringToken) fn(token.string)
+			if (token is LiteralToken) fn((token.literal as StringLiteral).string)
 			else error("$token is not a string")
-	}
-
-fun numberCompiler(fn: (Number) -> Compiler): Compiler =
-	object : Compiler {
-		override fun write(token: Token) =
-			if (token is NumberToken) fn(token.number)
-			else error("$token is not a number")
 	}
 
 fun beginCompiler(string: String, ret: () -> Compiler): Compiler =
@@ -145,20 +138,6 @@ fun switchCompiler(fallback: Fallback, vararg choices: Choice): Compiler =
 						.mapFirst { compile(token.begin.string) }
 						.orIfNull { fallback.compiler.write(token) }
 				else error("$token is not field")
-		}
-	}
-
-fun switchCompiler(
-	retNumber: Ret<Number>,
-	retString: Ret<String>,
-	retBegin: Ret<Begin>,
-	retEnd: Ret<End>) =
-	compiler { token ->
-		when (token) {
-			is NumberToken -> retNumber(token.number)
-			is StringToken -> retString(token.string)
-			is BeginToken -> retBegin(token.begin)
-			is EndToken -> retEnd(token.end)
 		}
 	}
 
