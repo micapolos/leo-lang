@@ -39,10 +39,10 @@ class UtilTest {
 
 	@Test
 	fun lists() {
-		list<Any>().isEmpty.assertEqualTo(true)
-		list<Any>().append(term(1)).isEmpty.assertEqualTo(false)
-		list<Any>().append(term(1)).link.head.assertEqualTo(term(1))
-		list<Any>().append(term(1)).link.tail.assertEqualTo(list())
+		empty<Any>().isEmpty.assertEqualTo(true)
+		empty<Any>().append(term(1)).isEmpty.assertEqualTo(false)
+		empty<Any>().append(term(1)).link.head.assertEqualTo(term(1))
+		empty<Any>().append(term(1)).link.tail.assertEqualTo(empty())
 	}
 
 	@Test

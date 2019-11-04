@@ -28,7 +28,7 @@ fun <T> Term<T>.switch(firstFn: Term<T>, secondFn: Term<T>) = this(firstFn)(seco
 val <T> Term<T>.first get() = this(first())
 val <T> Term<T>.second get() = this(second())
 
-fun <T> list() = pair<T>(first(), id())
+fun <T> empty() = pair<T>(first(), id())
 fun <T> Term<T>.append(head: Term<T>) = pair(second(), pair(this, head))
 val <T> Term<T>.isEmpty: Boolean get() = pair().first == first<T>()
 val <T> Term<T>.link: Term<T> get() = pair().second
@@ -81,7 +81,7 @@ fun <T> Term<T>.int() = pair().run { int(first.short(), second.short()) }
 // === stack
 
 fun <T> term(stack: Stack<Term<T>>): Term<T> =
-	list<T>().fold(stack.reverse) { append(it) }
+	empty<T>().fold(stack.reverse) { append(it) }
 
 tailrec fun <T> Stack<Term<T>>.plus(term: Term<T>): Stack<Term<T>> =
 	if (term.isEmpty) this

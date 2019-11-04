@@ -17,3 +17,6 @@ fun <T> Compiled<T>.compilerNative(literal: Literal, ret: Ret<Typed<T>>): Compil
 
 infix fun <T> Context<T>.with(typed: Typed<T>): Compiled<T> =
 	Compiled(this, typed)
+
+fun <T> Compiled<T>.resolvePlus(string: String, rhs: Compiled<T>): Compiled<T> =
+	copy(typed = typed.resolvePlus(string, rhs.typed))

@@ -1,5 +1,7 @@
 package leo14.typed
 
+import leo.base.fold
+
 sealed class Type
 
 object EmptyType : Type()
@@ -9,11 +11,18 @@ data class ArrowType(val arrow: Arrow) : Type()
 data class LinkType(val link: Link) : Type()
 
 data class Arrow(val lhs: Type, val rhs: Type)
-data class Link(val lhs: Type, val line: Line)
-data class Line(val string: String, val type: Type)
+data class Link(val lhs: Type, val field: Field)
+data class Field(val string: String, val type: Type)
 
 val emptyType: Type = EmptyType
 val nativeType: Type = NativeType
+fun type(link: Link): Type = LinkType(link)
+
+fun Type.plus(field: Field) = type(this linkTo field)
+fun type(vararg fields: Field) = emptyType.fold(fields) { plus(it) }
+
+infix fun Type.linkTo(field: Field) = Link(this, field)
+infix fun String.fieldTo(type: Type) = Field(this, type)
 
 val Type.isConstant: Boolean
 	get() =
@@ -31,8 +40,16 @@ val Arrow.isConstant
 
 val Link.isConstant
 	get() =
-		lhs.isConstant && line.isConstant
+		lhs.isConstant && field.isConstant
 
-val Line.isConstant
+val Field.isConstant
 	get() =
 		type.isConstant
+
+val Type.headOrNull: Type?
+	get() =
+		(this as? LinkType)?.link?.field?.type
+
+val Type.tailOrNull: Type?
+	get() =
+		(this as? LinkType)?.link?.lhs
