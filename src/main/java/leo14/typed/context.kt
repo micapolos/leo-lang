@@ -18,7 +18,7 @@ fun <T> Context<T>.compiler(string: String, typed: Typed<T>, ret: Ret<Compiled<T
 	entryStack
 		.mapFirst { compiler(string, Compiled(this@compiler, typed), ret) }
 		?: compiledCompiler(Compiled(this, emptyTyped())) { rhsCompiled ->
-			compiledCompiler(Compiled(this, typed.resolvePlus(string, rhsCompiled.typed)), ret)
+			compiledCompiler(Compiled(this, typed.eval(string, rhsCompiled.typed)), ret)
 		}
 
 fun <T> Entry<T>.compiler(string: String, compiled: Compiled<T>, ret: Ret<Compiled<T>>): Compiler? =

@@ -3,9 +3,6 @@ package leo14.typed.eval
 import leo.base.assertEqualTo
 import leo14.compile
 import leo14.fieldTo
-import leo14.lambda.first
-import leo14.lambda.pair
-import leo14.lambda.second
 import leo14.lambda.term
 import leo14.resultCompiler
 import leo14.script
@@ -37,6 +34,13 @@ class EvalTest {
 	}
 
 	@Test
+	fun deepField() {
+		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+			.compile<Any>(script("text" fieldTo script("foo" fieldTo "Hello, world!")))
+			.assertEqualTo(evalContext.with(term("Hello, world!") of type("text" fieldTo type("foo" fieldTo nativeType))))
+	}
+
+	@Test
 	fun link() {
 		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
@@ -45,7 +49,7 @@ class EvalTest {
 					"hint" fieldTo "and everyone"))
 			.assertEqualTo(
 				evalContext.with(
-					pair(term("Hello, world!"), term("and everyone"))
+					term("Hello, world!").typedPlus(term("and everyone"))
 						of type("text" fieldTo nativeType, "hint" fieldTo nativeType)))
 	}
 
@@ -59,7 +63,7 @@ class EvalTest {
 					"head" fieldTo script()))
 			.assertEqualTo(
 				evalContext.with(
-					pair(term("Hello, world!"), term("and everyone")).second
+					term("Hello, world!").typedPlus(term("and everyone")).typedHead
 						of nativeType))
 	}
 
@@ -73,7 +77,54 @@ class EvalTest {
 					"tail" fieldTo script()))
 			.assertEqualTo(
 				evalContext.with(
-					pair(term("Hello, world!"), term("and everyone")).first
+					term("Hello, world!").typedPlus(term("and everyone")).typedTail
 						of type("text" fieldTo nativeType)))
+	}
+
+	@Test
+	fun access0() {
+		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+			.compile<Any>(
+				script(
+					"vec" fieldTo script(
+						"x" fieldTo "zero",
+						"y" fieldTo "one"),
+					"x" fieldTo script()))
+			.assertEqualTo(
+				evalContext.with(
+					term("zero").typedPlus(term("one")).typedTail.typedHead
+						of type("x" fieldTo nativeType)))
+	}
+
+	@Test
+	fun access1() {
+		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+			.compile<Any>(
+				script(
+					"vec" fieldTo script(
+						"x" fieldTo "zero",
+						"y" fieldTo "one"),
+					"y" fieldTo script()))
+			.assertEqualTo(
+				evalContext.with(
+					term("zero").typedPlus(term("one")).typedHead of type("y" fieldTo nativeType)))
+	}
+
+	@Test
+	fun wrap() {
+		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+			.compile<Any>(
+				script(
+					"vec" fieldTo script(
+						"x" fieldTo "zero",
+						"y" fieldTo "one"),
+					"z" fieldTo script()))
+			.assertEqualTo(
+				evalContext.with(
+					term("zero").typedPlus(term("one")) of
+						type("z" fieldTo type(
+							"vec" fieldTo type(
+								"x" fieldTo nativeType,
+								"y" fieldTo nativeType)))))
 	}
 }
