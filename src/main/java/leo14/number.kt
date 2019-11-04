@@ -4,6 +4,7 @@ import leo13.js.ast.Expr
 import leo13.js.ast.expr
 import leo14.lambda.js.Term
 import leo14.lambda.term
+import kotlin.math.roundToInt
 
 // TODO: Refactor to allow arbitrary large number, represented as syntax and not value
 sealed class Number
@@ -36,4 +37,11 @@ val Number.any: Any
 		when (this) {
 			is IntNumber -> int
 			is DoubleNumber -> double
+		}
+
+val Number.roundInt
+	get() =
+		when (this) {
+			is IntNumber -> int
+			is DoubleNumber -> double.roundToInt()
 		}

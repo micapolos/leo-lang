@@ -55,3 +55,33 @@ fun <T> Term<T>.plusCompiler(fallbackCompile: Compile<Term<T>>, nativeCompile: C
 			else -> error("$token not expected")
 		}
 	}
+
+// compiler2 - number and strings becomes terms
+
+fun <T> termCompiler2(fallbackCompile: Compile<Term<T>>, nativeCompile: Compile<T>, ret: (Term<T>) -> Compiler): Compiler =
+	compiler { token ->
+		when (token) {
+			is NumberToken -> ret(term(token.number.roundInt))
+			is StringToken -> ret(stringTerm(token.string))
+			is BeginToken ->
+				when (token.begin.string) {
+					"native" -> nativeCompile { native ->
+						endCompiler {
+							term(native).plusCompiler(fallbackCompile, nativeCompile, ret)
+						}
+					}
+					"function" -> termCompiler2(fallbackCompile, nativeCompile) { body ->
+						term(abstraction(body)).plusCompiler(fallbackCompile, nativeCompile, ret)
+					}
+					"argument" -> indexCompiler { index ->
+						term(variable<T>(index)).plusCompiler(fallbackCompile, nativeCompile, ret)
+					}
+					else -> fallbackCompile { fallback ->
+						ret(fallback)
+					}
+				}
+			is EndToken -> error("empty term") // TODO: Should we return null term, like: identity?
+		}
+	}
+
+
