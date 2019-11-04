@@ -6,6 +6,20 @@ import kotlin.test.assertFails
 
 class CompilerTest {
 	@Test
+	fun switchToken() {
+		val compiler = switchCompiler(
+			{ number -> resultCompiler(token(number)) },
+			{ string -> resultCompiler(token(string)) },
+			{ begin -> resultCompiler(token(begin)) },
+			{ end -> resultCompiler(token(end)) })
+
+		compiler.write(token(123)).assertResult(token(123))
+		compiler.write(token("foo")).assertResult(token("foo"))
+		compiler.write(token(begin("foo"))).assertResult(token(begin("foo")))
+		compiler.write(token(end)).assertResult(token(end))
+	}
+
+	@Test
 	fun result() {
 		resultCompiler("ok")
 			.assertResult("ok")

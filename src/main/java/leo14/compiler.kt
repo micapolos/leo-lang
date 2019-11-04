@@ -148,6 +148,20 @@ fun switchCompiler(fallback: Fallback, vararg choices: Choice): Compiler =
 		}
 	}
 
+fun switchCompiler(
+	retNumber: Ret<Number>,
+	retString: Ret<String>,
+	retBegin: Ret<Begin>,
+	retEnd: Ret<End>) =
+	compiler { token ->
+		when (token) {
+			is NumberToken -> retNumber(token.number)
+			is StringToken -> retString(token.string)
+			is BeginToken -> retBegin(token.begin)
+			is EndToken -> retEnd(token.end)
+		}
+	}
+
 fun recursive(fn: () -> Compiler): Compiler =
 	compiler { token ->
 		fn().write(token)

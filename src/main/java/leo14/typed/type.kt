@@ -17,7 +17,7 @@ val Type.isConstant: Boolean
 		when (this) {
 			is EmptyType -> true
 			is TermType -> false // TODO: Can it be optimized? Lambda expressions without free variables can be made empty.
-			is NativeType -> false // TODO: We should ask native type-system
+			is NativeType -> false // TODO: We should parametrize type by native type, as ask native if it's empty
 			is ArrowType -> arrow.isConstant
 			is LinkType -> link.isConstant
 		}
