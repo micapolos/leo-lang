@@ -53,7 +53,7 @@ class CompilerTest {
 	@Test
 	fun valuePlusCompiler_empty() {
 		term("lhs")
-			.plusCompiler(compileFallback, compileString) { resultCompiler(it) }
+			.plusCompiler(compileTerm(compileFallback, compileString)) { resultCompiler(it) }
 			.write(token(end))
 			.assertResult(term("lhs"))
 	}
@@ -61,7 +61,7 @@ class CompilerTest {
 	@Test
 	fun valuePlusCompiler_nonEmpty() {
 		term("lhs")
-			.plusCompiler(compileFallback, compileString) { resultCompiler(it) }
+			.plusCompiler(compileTerm(compileFallback, compileString)) { resultCompiler(it) }
 			.write(script("apply" fieldTo script("native" fieldTo "rhs")))
 			.write(token(end))
 			.assertResult(term("lhs")(term("rhs")))
