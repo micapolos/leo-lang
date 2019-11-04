@@ -73,9 +73,14 @@ fun Compiler.write(link: ScriptLink) =
 
 fun Compiler.write(line: ScriptLine) =
 	when (line) {
-		is StringScriptLine -> write(line.string)
-		is NumberScriptLine -> write(line.number)
+		is LiteralScriptLine -> write(line.literal)
 		is FieldScriptLine -> write(line.field)
+	}
+
+fun Compiler.write(literal: Literal) =
+	when (literal) {
+		is StringLiteral -> write(literal.string)
+		is NumberLiteral -> write(literal.number)
 	}
 
 fun Compiler.write(field: ScriptField) =

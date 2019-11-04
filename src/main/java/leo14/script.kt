@@ -7,8 +7,7 @@ data class UnitScript(val unit: Unit) : Script()
 data class LinkScript(val link: ScriptLink) : Script()
 
 sealed class ScriptLine
-data class StringScriptLine(val string: String) : ScriptLine()
-data class NumberScriptLine(val number: Number) : ScriptLine()
+data class LiteralScriptLine(val literal: Literal) : ScriptLine()
 data class FieldScriptLine(val field: ScriptField) : ScriptLine()
 
 data class ScriptLink(val lhs: Script, val line: ScriptLine)
@@ -18,8 +17,9 @@ fun script(unit: Unit): Script = UnitScript(unit)
 fun script(string: String): Script = script(line(string))
 fun script(int: Int): Script = script(line(number(int)))
 fun script(double: Double): Script = script(line(number(double)))
-fun line(string: String): ScriptLine = StringScriptLine(string)
-fun line(number: Number): ScriptLine = NumberScriptLine(number)
+fun line(literal: Literal): ScriptLine = LiteralScriptLine(literal)
+fun line(string: String): ScriptLine = line(literal(string))
+fun line(number: Number): ScriptLine = line(literal(number))
 fun line(field: ScriptField): ScriptLine = FieldScriptLine(field)
 fun Script.plus(vararg lines: ScriptLine) = fold(lines) { LinkScript(this linkTo it) }
 fun Script.plus(field: ScriptField, vararg fields: ScriptField): Script = plus(line(field)).fold(fields) { plus(it) }
@@ -48,10 +48,17 @@ val Script.code: String
 val ScriptLine.code
 	get() =
 	when (this) {
-		is StringScriptLine -> string.code
-		is NumberScriptLine -> number.code
+		is LiteralScriptLine -> literal.code
+		is LiteralScriptLine -> literal.code
 		is FieldScriptLine -> field.code
 	}
+
+val Literal.code
+	get() =
+		when (this) {
+			is StringLiteral -> string.code
+			is NumberLiteral -> number.code
+		}
 
 val ScriptLink.code
 	get() =
