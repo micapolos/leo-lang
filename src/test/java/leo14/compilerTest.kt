@@ -28,21 +28,21 @@ class CompilerTest {
 	@Test
 	fun token() {
 		compiler(token(begin("foo"))) { resultCompiler("ok") }
-			.write(leo14.token(leo14.begin("foo")))
+			.write(token(begin("foo")))
 			.assertResult("ok")
 	}
 
 	@Test
 	fun begin() {
 		beginCompiler("foo") { resultCompiler("ok") }
-			.write(leo14.token(leo14.begin("foo")))
+			.write(token(begin("foo")))
 			.assertResult("ok")
 	}
 
 	@Test
 	fun end() {
 		endCompiler { resultCompiler("ok") }
-			.write(leo14.token(leo14.end))
+			.write(token(end))
 			.assertResult("ok")
 	}
 
@@ -53,16 +53,16 @@ class CompilerTest {
 			leo13.js.compiler.choice("true", resultCompiler(true)))
 
 		booleanCompiler
-			.write(leo14.token(leo14.begin("false")))
+			.write(token(begin("false")))
 			.assertResult(false)
 
 		booleanCompiler
-			.write(leo14.token(leo14.begin("true")))
+			.write(token(begin("true")))
 			.assertResult(true)
 
 		assertFails {
 			booleanCompiler
-				.write(leo14.token(leo14.begin("maybe")))
+				.write(token(begin("maybe")))
 		}
 	}
 
@@ -74,20 +74,20 @@ class CompilerTest {
 			leo13.js.compiler.choice("true", resultCompiler(true)))
 
 		booleanCompiler
-			.write(leo14.token(leo14.begin("false")))
+			.write(token(begin("false")))
 			.assertResult(false)
 
 		booleanCompiler
-			.write(leo14.token(leo14.begin("true")))
+			.write(token(begin("true")))
 			.assertResult(true)
 
 		booleanCompiler
-			.write(leo14.token(leo14.begin("null")))
+			.write(token(begin("null")))
 			.assertResult(null)
 
 		assertFails {
 			booleanCompiler
-				.write(leo14.token(leo14.begin("maybe")))
+				.write(token(begin("maybe")))
 		}
 	}
 }
