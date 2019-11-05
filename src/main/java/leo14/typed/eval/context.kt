@@ -1,5 +1,6 @@
 package leo14.typed.eval
 
+import leo.base.failIfOr
 import leo13.stack
 import leo14.Script
 import leo14.any
@@ -16,5 +17,4 @@ val Script.evalAny: Any
 		compiledCompiler(evalContext.with(emptyTyped()), ret())
 			.compile<Compiled<Any>>(this)
 			.typed
-			.term
-			.eval
+			.run { failIfOr(type != nativeType) { term.eval } }

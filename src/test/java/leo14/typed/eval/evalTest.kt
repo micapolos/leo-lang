@@ -17,29 +17,12 @@ class EvalTest {
 	}
 
 	@Test
-	fun accessNative() {
+	fun field() {
 		script(
 			"text" fieldTo "foo",
 			"native" fieldTo script())
 			.evalAny
 			.assertEqualTo("foo")
-	}
-
-	@Test
-	fun field() {
-		script("x" fieldTo "first")
-			.evalAny
-			.assertEqualTo("first")
-	}
-
-	@Test
-	fun struct() {
-		script(
-			"vec" fieldTo script(
-				"x" fieldTo "first",
-				"y" fieldTo "second"))
-			.evalAny
-			.assertEqualTo(term("first").typedPlus(term("second")).eval)
 	}
 
 	@Test
@@ -64,5 +47,17 @@ class EvalTest {
 			"native" fieldTo script())
 			.evalAny
 			.assertEqualTo("second")
+	}
+
+	@Test
+	fun wrap() {
+		script(
+			"x" fieldTo "first",
+			"y" fieldTo "second",
+			"vec" fieldTo script(),
+			"x" fieldTo script(),
+			"native" fieldTo script())
+			.evalAny
+			.assertEqualTo("first")
 	}
 }
