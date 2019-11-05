@@ -12,7 +12,7 @@ data class LinkType(val link: Link) : Type()
 
 data class Arrow(val lhs: Type, val rhs: Type)
 data class Link(val lhs: Type, val field: Field)
-data class Field(val string: String, val type: Type)
+data class Field(val string: String, val rhs: Type)
 
 val emptyType: Type = EmptyType
 val nativeType: Type = NativeType
@@ -44,11 +44,11 @@ val Link.isConstant
 
 val Field.isConstant
 	get() =
-		type.isConstant
+		rhs.isConstant
 
 val Type.headOrNull: Type?
 	get() =
-		(this as? LinkType)?.link?.field?.type
+		(this as? LinkType)?.link?.field?.rhs
 
 val Type.tailOrNull: Type?
 	get() =

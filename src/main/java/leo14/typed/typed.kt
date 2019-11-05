@@ -42,7 +42,7 @@ fun <T> Typed<T>.resolve(string: String): Typed<T>? =
 
 fun <T> Typed<T>.resolveAccess(string: String): Typed<T>? =
 	when (type) {
-		is LinkType -> (term of type.link.field.type).resolveGet(string) ?: wrap(string)
+		is LinkType -> (term of type.link.field.rhs).resolveGet(string) ?: wrap(string)
 		else -> null
 	}
 
@@ -51,8 +51,8 @@ fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
 		is NativeType -> notNullIf(string == "native") { this }
 		is LinkType ->
 			if (type.link.field.string == string)
-				if (type.link.lhs == emptyType) term of type(string fieldTo type.link.field.type)
-				else term.typedHead of type(string fieldTo type.link.field.type)
+				if (type.link.lhs == emptyType) term of type(string fieldTo type.link.field.rhs)
+				else term.typedHead of type(string fieldTo type.link.field.rhs)
 			else (term.typedTail of type.link.lhs).resolveGet(string)
 		else -> null
 	}

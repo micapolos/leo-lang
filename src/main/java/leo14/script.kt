@@ -3,18 +3,37 @@ package leo14
 import leo.base.fold
 
 sealed class Script
-data class UnitScript(val unit: Unit) : Script()
-data class LinkScript(val link: ScriptLink) : Script()
+
+data class UnitScript(val unit: Unit) : Script() {
+	override fun toString() = ""
+}
+
+data class LinkScript(val link: ScriptLink) : Script() {
+	override fun toString() = link.toString()
+}
 
 sealed class ScriptLine
-data class LiteralScriptLine(val literal: Literal) : ScriptLine()
-data class FieldScriptLine(val field: ScriptField) : ScriptLine()
 
-data class ScriptLink(val lhs: Script, val line: ScriptLine)
-data class ScriptField(val string: String, val rhs: Script)
+data class LiteralScriptLine(val literal: Literal) : ScriptLine() {
+	override fun toString() = literal.toString()
+}
+
+data class FieldScriptLine(val field: ScriptField) : ScriptLine() {
+	override fun toString() = field.toString()
+}
+
+data class ScriptLink(val lhs: Script, val line: ScriptLine) {
+	override fun toString() = "$lhsString$line"
+	val lhsString = if (lhs is UnitScript) "" else "$lhs."
+}
+
+data class ScriptField(val string: String, val rhs: Script) {
+	override fun toString() = "$string($rhs)"
+}
 
 fun script(unit: Unit): Script = UnitScript(unit)
 fun script(string: String): Script = script(line(string))
+fun script(link: ScriptLink): Script = LinkScript(link)
 fun script(int: Int): Script = script(line(number(int)))
 fun script(double: Double): Script = script(line(number(double)))
 fun line(literal: Literal): ScriptLine = LiteralScriptLine(literal)

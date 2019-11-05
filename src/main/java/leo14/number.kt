@@ -9,8 +9,13 @@ import kotlin.math.roundToInt
 // TODO: Refactor to allow arbitrary large number, represented as syntax and not value
 sealed class Number
 
-data class IntNumber(val int: Int) : Number()
-data class DoubleNumber(val double: Double) : Number()
+data class IntNumber(val int: Int) : Number() {
+	override fun toString() = "$int"
+}
+
+data class DoubleNumber(val double: Double) : Number() {
+	override fun toString() = "$double"
+}
 
 fun number(int: Int): Number = IntNumber(int)
 fun number(double: Double): Number = DoubleNumber(double)
