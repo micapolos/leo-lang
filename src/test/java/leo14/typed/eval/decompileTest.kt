@@ -38,4 +38,21 @@ class DecompileTest {
 					"x" fieldTo "zero",
 					"y" fieldTo "one"))
 	}
+
+	@Test
+	fun struct() {
+		term("zero")
+			.typedPlus(term("one"))
+			.of(
+				type(
+					"vec" fieldTo type(
+						"x" fieldTo nativeType,
+						"y" fieldTo nativeType)))
+			.decompile
+			.assertEqualTo(
+				script(
+					"vec" fieldTo script(
+						"x" fieldTo "zero",
+						"y" fieldTo "one")))
+	}
 }

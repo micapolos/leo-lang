@@ -3,6 +3,7 @@ package leo14.typed
 import leo14.*
 import leo14.lambda.NativeTerm
 import leo14.lambda.Term
+import leo14.lambda.pair
 
 fun <T> Typed<T>.decompile(fn: T.() -> Script): Script =
 	term.decompile(type, fn)
@@ -16,11 +17,12 @@ fun <T> Term<T>.decompile(type: Type, fn: T.() -> Script): Script =
 	}
 
 fun <T> Term<T>.decompileNative(fn: T.() -> Script) =
-	(this as NativeTerm).native.fn()
+	if (this is NativeTerm) native.fn()
+	else error("$this as NativeTerm")
 
 fun <T> Term<T>.decompileLink(link: Link, fn: T.() -> Script): ScriptLink =
 	if (link.lhs == emptyType) script() linkTo decompileLine(link.field, fn)
-	else typedTail.decompile(link.lhs, fn) linkTo typedHead.decompileLine(link.field, fn)
+	else pair().run { first.decompile(link.lhs, fn) linkTo second.decompileLine(link.field, fn) }
 
 fun <T> Term<T>.decompileLine(field: Field, fn: T.() -> Script): ScriptLine =
 	line(decompileField(field, fn))

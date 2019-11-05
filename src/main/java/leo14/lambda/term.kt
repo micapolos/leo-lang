@@ -4,10 +4,21 @@ import leo13.Index
 
 sealed class Term<out T>
 
-data class NativeTerm<T>(val native: T) : Term<T>()
-data class AbstractionTerm<T>(val abstraction: Abstraction<Term<T>>) : Term<T>()
-data class ApplicationTerm<T>(val application: Application<Term<T>>) : Term<T>()
-data class VariableTerm<T>(val variable: Variable<T>) : Term<T>()
+data class NativeTerm<T>(val native: T) : Term<T>() {
+	override fun toString() = "$native"
+}
+
+data class AbstractionTerm<T>(val abstraction: Abstraction<Term<T>>) : Term<T>() {
+	override fun toString() = "$abstraction"
+}
+
+data class ApplicationTerm<T>(val application: Application<Term<T>>) : Term<T>() {
+	override fun toString() = "$application"
+}
+
+data class VariableTerm<T>(val variable: Variable<T>) : Term<T>() {
+	override fun toString() = "$variable"
+}
 
 fun <T> term(native: T): Term<T> = NativeTerm(native)
 fun <T> term(abstraction: Abstraction<Term<T>>): Term<T> = AbstractionTerm(abstraction)
