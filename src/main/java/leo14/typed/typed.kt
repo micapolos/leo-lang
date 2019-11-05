@@ -42,10 +42,10 @@ fun <T> Typed<T>.resolveAccess(string: String): Typed<T>? =
 fun <T> Term<T>.resolveRhs(type: Type): Typed<T>? =
 	when (type.lineStack) {
 		is EmptyStack -> null
-		is LinkStack -> type.lineStack.link.let { link ->
-			when (link.stack) {
-				is EmptyStack -> resolveRhs(link.value)
-				is LinkStack -> second.resolveRhs(link.value)
+		is LinkStack -> type.lineStack.link.let { lineLink ->
+			when (lineLink.stack) {
+				is EmptyStack -> resolveRhs(lineLink.value)
+				is LinkStack -> second.resolveRhs(lineLink.value)
 			}
 		}
 	}
@@ -69,11 +69,11 @@ fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
 fun <T> Term<T>.resolveGet(type: Type, string: String): Typed<T>? =
 	when (type.lineStack) {
 		is EmptyStack -> null
-		is LinkStack -> type.lineStack.link.let { link ->
-			when (link.stack) {
-				is EmptyStack -> resolveGet(link.value, string)
-				is LinkStack -> second.resolveGet(link.value, string)
-					?: first.resolveGet(Type(link.stack), string)
+		is LinkStack -> type.lineStack.link.let { lineLink ->
+			when (lineLink.stack) {
+				is EmptyStack -> resolveGet(lineLink.value, string)
+				is LinkStack -> second.resolveGet(lineLink.value, string)
+					?: first.resolveGet(lineLink.stack.type, string)
 			}
 		}
 	}
@@ -100,3 +100,7 @@ fun <T> Typed<T>.eval(string: String, rhs: Typed<T>): Typed<T> =
 
 fun <T> Typed<T>.wrap(string: String) =
 	term of type(string fieldTo type)
+
+fun <T> Typed<T>.plusNative(aterm: Term<T>): Typed<T> =
+	if (type == emptyType) aterm of nativeType
+	else term.typedPlus(aterm) of type.plus(nativeLine)

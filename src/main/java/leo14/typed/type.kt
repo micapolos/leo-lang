@@ -19,8 +19,9 @@ data class Choice(val fieldStack: Stack<Field>)
 data class Field(val string: String, val rhs: Type)
 
 val emptyType = Type(stack())
-fun type(vararg lines: Line) = Type(stack(*lines))
-fun Type.plus(line: Line) = Type(lineStack.push(line))
+val Stack<Line>.type get() = Type(this)
+fun type(vararg lines: Line) = stack(*lines).type
+fun Type.plus(line: Line) = lineStack.push(line).type
 fun Type.plus(field: Field) = plus(line(choice(field)))
 fun type(field: Field, vararg fields: Field) = emptyType.plus(field).fold(fields) { plus(it) }
 
@@ -31,7 +32,8 @@ fun line(arrow: Arrow): Line = ArrowLine(arrow)
 val nativeType = type(nativeLine)
 
 val emptyChoice = Choice(stack())
-fun choice(vararg fields: Field) = Choice(stack(*fields))
-fun Choice.plus(field: Field) = Choice(fieldStack.push(field))
+val Stack<Field>.choice get() = Choice(this)
+fun choice(vararg fields: Field) = stack(*fields).choice
+fun Choice.plus(field: Field) = fieldStack.push(field).choice
 
 infix fun String.fieldTo(type: Type) = Field(this, type)
