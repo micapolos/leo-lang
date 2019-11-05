@@ -10,11 +10,10 @@ val pair = pair(term("first"), term("second"))
 val pairFirst get() = pair.first
 val pairSecond get() = pair.second
 
-val helloWorldScript = native("Hello, world!")
+val helloWorldScript = native(it("Hello, world!"))
 val pairFirstScript =
 	function(function(argument(previous)))
-		.apply(native("first"))
-		.apply(native("second"))
-
+		.apply(native(it("first")))
+		.apply(native(it("second")))
 
 fun main() = helloWorldScript.show

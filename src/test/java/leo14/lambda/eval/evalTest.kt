@@ -1,6 +1,7 @@
 package leo14.lambda.eval
 
 import leo.base.assertEqualTo
+import leo14.dsl.it
 import leo14.dsl.native
 import leo14.lambda.*
 import org.junit.Test
@@ -38,6 +39,6 @@ class EvalTest {
 
 	@Test
 	fun evalScript() {
-		native("Hello, world!").eval.assertEqualTo("Hello, world!")
+		native(it("Hello, world!")).eval.assertEqualTo("Hello, world!")
 	}
 }
