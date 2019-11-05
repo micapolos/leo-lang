@@ -7,7 +7,7 @@ import leo13.int
 import leo13.next
 
 data class Variable<out T>(val index: Index) {
-	override fun toString() = "v${-index.int}"
+	override fun toString() = "${-index.int}"
 }
 
 fun <T> variable(index: Index) = Variable<T>(index)

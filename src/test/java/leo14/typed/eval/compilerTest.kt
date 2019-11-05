@@ -54,34 +54,6 @@ class CompilerTest {
 	}
 
 	@Test
-	fun head() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
-			.compile<Any>(
-				script(
-					"text" fieldTo "Hello, world!",
-					"hint" fieldTo "and everyone",
-					"head" fieldTo script()))
-			.assertEqualTo(
-				evalContext.with(
-					term("Hello, world!").typedPlus(term("and everyone")).typedHead
-						of nativeType))
-	}
-
-	@Test
-	fun tail() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
-			.compile<Any>(
-				script(
-					"text" fieldTo "Hello, world!",
-					"hint" fieldTo "and everyone",
-					"tail" fieldTo script()))
-			.assertEqualTo(
-				evalContext.with(
-					term("Hello, world!").typedPlus(term("and everyone")).typedTail
-						of type("text" fieldTo nativeType)))
-	}
-
-	@Test
 	fun access0() {
 		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
