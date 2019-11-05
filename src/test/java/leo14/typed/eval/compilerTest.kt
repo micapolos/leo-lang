@@ -12,7 +12,7 @@ import kotlin.test.Test
 class CompilerTest {
 	@Test
 	fun empty() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(script())
 			.assertEqualTo(evalContext.with(emptyTyped()))
 
@@ -20,14 +20,14 @@ class CompilerTest {
 
 	@Test
 	fun string() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(script("Hello, world!"))
 			.assertEqualTo(evalContext.with(term("Hello, world!") of nativeType))
 	}
 
 	@Test
 	fun field() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(script("text" fieldTo "Hello, world!"))
 			.assertEqualTo(evalContext.with(term("Hello, world!") of type("text" fieldTo nativeType)))
 
@@ -35,14 +35,14 @@ class CompilerTest {
 
 	@Test
 	fun deepField() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(script("text" fieldTo script("foo" fieldTo "Hello, world!")))
 			.assertEqualTo(evalContext.with(term("Hello, world!") of type("text" fieldTo type("foo" fieldTo nativeType))))
 	}
 
 	@Test
 	fun link() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
 				script(
 					"text" fieldTo "Hello, world!",
@@ -55,7 +55,7 @@ class CompilerTest {
 
 	@Test
 	fun access0() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
 				script(
 					"vec" fieldTo script(
@@ -74,7 +74,7 @@ class CompilerTest {
 
 	@Test
 	fun access1() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
 				script(
 					"vec" fieldTo script(
@@ -92,7 +92,7 @@ class CompilerTest {
 
 	@Test
 	fun access2() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
 				script(
 					"vec" fieldTo script(
@@ -110,7 +110,7 @@ class CompilerTest {
 
 	@Test
 	fun wrap() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
 				script(
 					"vec" fieldTo script(
@@ -128,7 +128,7 @@ class CompilerTest {
 
 	@Test
 	fun native() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
 				script(
 					"string" fieldTo "Hello, world!",
@@ -139,7 +139,7 @@ class CompilerTest {
 
 	@Test
 	fun accessAndNative() {
-		compiledCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
+		termCompiler(evalContext.with(emptyTyped())) { resultCompiler(it) }
 			.compile<Any>(
 				script(
 					"vec" fieldTo script(

@@ -14,7 +14,7 @@ val evalContext = Context(stack()) { term(it.any) }
 
 val Script.eval: Any
 	get() =
-		compiledCompiler(evalContext.with(emptyTyped()), ret())
+		termCompiler(evalContext.with(emptyTyped()), ret())
 			.compile<Compiled<Any>>(this)
 			.typed
 			.run { failIfOr(type != nativeType) { term.eval } }

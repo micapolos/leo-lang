@@ -12,11 +12,10 @@ object NativeLine : Line()
 data class ChoiceLine(val choice: Choice) : Line()
 data class ArrowLine(val arrow: Arrow) : Line()
 
-data class Arrow(val lhs: Type, val rhs: Type)
-
 data class Choice(val fieldStack: Stack<Field>)
-
 data class Field(val string: String, val rhs: Type)
+
+data class Arrow(val lhs: Type, val rhs: Type)
 
 val emptyType = Type(stack())
 val Stack<Line>.type get() = Type(this)
