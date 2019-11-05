@@ -1,5 +1,6 @@
 package leo14.typed
 
+import leo.base.notNullIf
 import leo14.lambda.*
 
 data class Typed<out T>(val term: Term<T>, val type: Type)
@@ -47,8 +48,11 @@ fun <T> Typed<T>.resolveAccess(string: String): Typed<T>? =
 
 fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
 	when (type) {
+		is NativeType -> notNullIf(string == "native") { this }
 		is LinkType ->
-			if (type.link.field.string == string) term.typedHead of type(string fieldTo type.link.field.type)
+			if (type.link.field.string == string)
+				if (type.link.lhs == emptyType) term of type(string fieldTo type.link.field.type)
+				else term.typedHead of type(string fieldTo type.link.field.type)
 			else (term.typedTail of type.link.lhs).resolveGet(string)
 		else -> null
 	}
