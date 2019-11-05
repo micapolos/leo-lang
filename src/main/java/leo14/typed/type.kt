@@ -36,3 +36,4 @@ fun choice(vararg fields: Field) = stack(*fields).choice
 fun Choice.plus(field: Field) = fieldStack.push(field).choice
 
 infix fun String.fieldTo(type: Type) = Field(this, type)
+infix fun Type.arrowTo(rhs: Type) = Arrow(this, rhs)
