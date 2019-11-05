@@ -85,8 +85,8 @@ class TypeCompilerTest {
 		emptyType
 			.plusCompiler { resultCompiler(it) }
 			.compile<Type>(script("function" lineTo script(
-				"from" lineTo script("foo"),
-				"to" lineTo script("bar"))))
+				"from" lineTo script("foo" lineTo script()),
+				"to" lineTo script("bar" lineTo script()))))
 			.assertEqualTo(type(line(
 				type("foo" fieldTo type()) arrowTo type("bar" fieldTo type()))))
 	}

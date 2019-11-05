@@ -1,21 +1,40 @@
 package leo14.typed
 
 import leo.base.fold
-import leo13.Stack
-import leo13.push
-import leo13.stack
+import leo13.*
 
-data class Type(val lineStack: Stack<Line>)
+data class Type(val lineStack: Stack<Line>) {
+	override fun toString() = lineStack.toList().joinToString(".")
+}
 
 sealed class Line
-object NativeLine : Line()
-data class ChoiceLine(val choice: Choice) : Line()
-data class ArrowLine(val arrow: Arrow) : Line()
 
-data class Choice(val fieldStack: Stack<Field>)
-data class Field(val string: String, val rhs: Type)
+object NativeLine : Line() {
+	override fun toString() = "native"
+}
 
-data class Arrow(val lhs: Type, val rhs: Type)
+data class ChoiceLine(val choice: Choice) : Line() {
+	override fun toString() = "$choice"
+}
+
+data class ArrowLine(val arrow: Arrow) : Line() {
+	override fun toString() = "$arrow"
+}
+
+data class Choice(val fieldStack: Stack<Field>) {
+	override fun toString() =
+		fieldStack.onlyOrNull
+			?.let { "$it" }
+			?: "choice(${fieldStack.toList().joinToString(".")})"
+}
+
+data class Field(val string: String, val rhs: Type) {
+	override fun toString() = "$string($rhs)"
+}
+
+data class Arrow(val lhs: Type, val rhs: Type) {
+	override fun toString() = "function(from($lhs).to($rhs))"
+}
 
 val emptyType = Type(stack())
 val Stack<Line>.type get() = Type(this)
