@@ -12,7 +12,7 @@ import leo14.typed.*
 
 val evalContext = Context(stack()) { term(it.any) }
 
-val Script.evalAny: Any
+val Script.eval: Any
 	get() =
 		compiledCompiler(evalContext.with(emptyTyped()), ret())
 			.compile<Compiled<Any>>(this)
