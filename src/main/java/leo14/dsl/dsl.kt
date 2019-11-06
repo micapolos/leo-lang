@@ -23,7 +23,6 @@ fun y(x: X = _x) = _x("y", x)
 fun z(x: X = _x) = _x("z", x)
 
 fun Script.apply(rhs: Script) = plus("apply" fieldTo rhs)
-val Script.native get() = plus(line("native"))
 fun X.x(x: X = _x) = _x("x", x)
 fun X.y(x: X = _x) = _x("y", x)
 fun X.z(x: X = _x) = _x("z", x)
