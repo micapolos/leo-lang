@@ -94,7 +94,7 @@ val Type.script: Script
 val Line.scriptLine: ScriptLine
 	get() =
 		when (this) {
-			is NativeLine -> line(field("native"))
+			is NativeLine -> "native" lineTo script()
 			is ChoiceLine -> choice.scriptLine
 			is ArrowLine -> arrow.scriptLine
 		}
