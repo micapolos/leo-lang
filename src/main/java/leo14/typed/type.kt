@@ -101,8 +101,8 @@ val Line.scriptLine: ScriptLine
 
 val Choice.scriptLine
 	get() =
-		onlyFieldOrNull?.run { scriptLine } ?: "choice"
-		lineTo script().fold(stack(fieldStackLink).reverse) { plus(it.scriptLine) }
+		onlyFieldOrNull?.run { scriptLine }
+			?: "choice".lineTo(script().fold(stack(fieldStackLink).reverse) { plus(it.scriptLine) })
 
 val Field.scriptLine
 	get() =
