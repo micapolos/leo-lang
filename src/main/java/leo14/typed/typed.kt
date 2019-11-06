@@ -7,17 +7,38 @@ import leo13.onlyOrNull
 import leo14.lambda.*
 
 data class Typed<out T>(val term: Term<T>, val type: Type)
+data class TypedLine<T>(val term: Term<T>, val line: Line)
+data class TypedChoice<T>(val term: Term<T>, val choice: Choice)
+data class TypedField<T>(val term: Term<T>, val field: Field)
 
 infix fun <T> Term<T>.of(type: Type) = Typed(this, type)
+infix fun <T> Term<T>.of(line: Line) = TypedLine(this, line)
+infix fun <T> Term<T>.of(choice: Choice) = TypedChoice(this, choice)
+infix fun <T> Term<T>.of(field: Field) = TypedField(this, field)
 
 fun <T> Typed<T>.plus(string: String, rhs: Typed<T>): Typed<T> =
-	term.typedPlus(rhs.term) of type.plus(string fieldTo rhs.type)
+	term.pairTo(rhs.term) of type.plus(string fieldTo rhs.type)
+
+fun <T> Typed<T>.plus(rhs: TypedLine<T>): Typed<T> =
+	when (rhs.line) {
+		is NativeLine -> plusNative(rhs.term)
+		is ChoiceLine -> plus(rhs.term of rhs.line.choice)
+		is ArrowLine -> TODO()
+	}
+
+fun <T> Typed<T>.plus(rhs: TypedChoice<T>): Typed<T> =
+	rhs.choice.fieldStack.onlyOrNull
+		?.let { field -> plus(term of field) }
+		?:TODO()
+
+fun <T> Typed<T>.plus(rhs: TypedField<T>): Typed<T> =
+	term.pairTo(rhs.term) of type.plus(rhs.field.string fieldTo rhs.field.rhs)
 
 fun <T> emptyTyped() = id<T>() of emptyType
 
 val <T> Typed<T>.isEmpty get() = this == emptyTyped<T>()
 
-fun <T> Term<T>.typedPlus(rhs: Term<T>) =
+infix fun <T> Term<T>.pairTo(rhs: Term<T>) =
 	if (this == id<T>()) rhs
 	else pair(this, rhs)
 
@@ -103,4 +124,4 @@ fun <T> Typed<T>.wrap(string: String) =
 
 fun <T> Typed<T>.plusNative(aterm: Term<T>): Typed<T> =
 	if (type == emptyType) aterm of nativeType
-	else term.typedPlus(aterm) of type.plus(nativeLine)
+	else term.pairTo(aterm) of type.plus(nativeLine)

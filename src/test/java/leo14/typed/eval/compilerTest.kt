@@ -49,7 +49,7 @@ class CompilerTest {
 					"hint" fieldTo "and everyone"))
 			.assertEqualTo(
 				evalContext.with(
-					term("Hello, world!").typedPlus(term("and everyone"))
+					term("Hello, world!").pairTo(term("and everyone"))
 						of type("text" fieldTo nativeType, "hint" fieldTo nativeType)))
 	}
 
@@ -66,8 +66,8 @@ class CompilerTest {
 			.assertEqualTo(
 				evalContext.with(
 					term("zero")
-						.typedPlus(term("one"))
-						.typedPlus(term("two"))
+						.pairTo(term("one"))
+						.pairTo(term("two"))
 						.typedTail.typedTail
 						of type("x" fieldTo nativeType)))
 	}
@@ -85,8 +85,8 @@ class CompilerTest {
 			.assertEqualTo(
 				evalContext.with(
 					term("zero")
-						.typedPlus(term("one"))
-						.typedPlus(term("two"))
+						.pairTo(term("one"))
+						.pairTo(term("two"))
 						.typedTail.typedHead of type("y" fieldTo nativeType)))
 	}
 
@@ -103,8 +103,8 @@ class CompilerTest {
 			.assertEqualTo(
 				evalContext.with(
 					term("zero")
-						.typedPlus(term("one"))
-						.typedPlus(term("two"))
+						.pairTo(term("one"))
+						.pairTo(term("two"))
 						.typedHead of type("z" fieldTo nativeType)))
 	}
 
@@ -119,7 +119,7 @@ class CompilerTest {
 					"z" fieldTo script()))
 			.assertEqualTo(
 				evalContext.with(
-					term("zero").typedPlus(term("one")) of
+					term("zero").pairTo(term("one")) of
 						type("z" fieldTo type(
 							"vec" fieldTo type(
 								"x" fieldTo nativeType,
@@ -148,6 +148,6 @@ class CompilerTest {
 					"x" fieldTo script(),
 					"native" fieldTo script()))
 			.assertEqualTo(
-				evalContext.with(term("zero").typedPlus(term("one")).typedTail of nativeType))
+				evalContext.with(term("zero").pairTo(term("one")).typedTail of nativeType))
 	}
 }
