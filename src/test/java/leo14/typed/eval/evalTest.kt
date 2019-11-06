@@ -10,51 +10,57 @@ class EvalTest {
 	fun string() {
 		script("Hello, world!")
 			.eval
-			.assertEqualTo("Hello, world!")
+			.assertEqualTo(script("Hello, world!"))
 	}
 
 	@Test
 	fun field() {
-		script(
-			"text" fieldTo "foo",
-			"native" fieldTo script())
+		script("foo" fieldTo script())
 			.eval
-			.assertEqualTo("foo")
+			.assertEqualTo(script("foo" fieldTo script()))
 	}
 
 	@Test
 	fun accessFirst() {
 		script(
 			"vec" fieldTo script(
-				"x" fieldTo "first",
-				"y" fieldTo "second"),
-			"x" fieldTo script(),
-			"native" fieldTo script())
+				"x" fieldTo script(
+					"first" fieldTo script()),
+				"y" fieldTo script(
+					"second" fieldTo script())),
+			"x" fieldTo script())
 			.eval
-			.assertEqualTo("first")
+			.assertEqualTo(script("x" fieldTo script("first" fieldTo script())))
 	}
 
 	@Test
 	fun accessSecond() {
 		script(
 			"vec" fieldTo script(
-				"x" fieldTo "first",
-				"y" fieldTo "second"),
-			"y" fieldTo script(),
-			"native" fieldTo script())
+				"x" fieldTo script(
+					"first" fieldTo script()),
+				"y" fieldTo script(
+					"second" fieldTo script())),
+			"y" fieldTo script())
 			.eval
-			.assertEqualTo("second")
+			.assertEqualTo(script("y" fieldTo script("second" fieldTo script())))
 	}
 
 	@Test
 	fun wrap() {
 		script(
-			"x" fieldTo "first",
-			"y" fieldTo "second",
-			"vec" fieldTo script(),
-			"x" fieldTo script(),
-			"native" fieldTo script())
+			"x" fieldTo script(
+				"first" fieldTo script()),
+			"y" fieldTo script(
+				"second" fieldTo script()),
+			"vec" fieldTo script())
 			.eval
-			.assertEqualTo("first")
+			.assertEqualTo(
+				script(
+					"vec" fieldTo script(
+						"x" fieldTo script(
+							"first" fieldTo script()),
+						"y" fieldTo script(
+							"second" fieldTo script()))))
 	}
 }

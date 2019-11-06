@@ -47,10 +47,10 @@ fun <T> Typed<T>.resolve(rhs: TypedField<T>): Typed<T>? =
 
 fun <T> Typed<T>.resolve(string: String): Typed<T>? =
 	when (string) {
-		else -> resolveAccess(string) ?: wrap(string)
+		else -> resolveAccess(string) ?: resolveWrap(string)
 	}
 
-val <T> Typed<T>.linkOrNull: Link<Typed<T>, TypedLine<T>>?
+val <T> Typed<T>.resolveLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 	get() =
 		type.lineLinkOrNull?.let { link ->
 			if (link.tail.isStatic)
@@ -61,23 +61,23 @@ val <T> Typed<T>.linkOrNull: Link<Typed<T>, TypedLine<T>>?
 				else (term.first of link.tail) linkTo (term.second of link.head)
 		}
 
-val <T> TypedLine<T>.fieldOrNull: TypedField<T>?
+val <T> TypedLine<T>.resolveFieldOrNull: TypedField<T>?
 	get() =
-		(line as? ChoiceLine)?.choice?.let { term of it }?.fieldOrNull
+		(line as? ChoiceLine)?.choice?.let { term of it }?.resolveFieldOrNull
 
-val <T> TypedChoice<T>.fieldOrNull: TypedField<T>?
+val <T> TypedChoice<T>.resolveFieldOrNull: TypedField<T>?
 	get() =
 		choice.onlyFieldOrNull?.let { term of it }
 
-val <T> TypedField<T>.rhs: Typed<T>?
+val <T> TypedField<T>.resolveRhs: Typed<T>
 	get() =
 		term of field.rhs
 
 fun <T> Typed<T>.resolveAccess(string: String): Typed<T>? =
-	linkOrNull?.head?.fieldOrNull?.rhs?.resolveGet(string)
+	resolveLinkOrNull?.head?.resolveFieldOrNull?.resolveRhs?.resolveGet(string)
 
 fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
-	linkOrNull?.let { link ->
+	resolveLinkOrNull?.let { link ->
 		link.head.resolveGet(string) ?: link.tail.resolveGet(string)
 	}
 
@@ -89,7 +89,7 @@ fun <T> TypedLine<T>.resolveGet(string: String): Typed<T>? =
 	}
 
 fun <T> TypedChoice<T>.resolveGet(string: String): Typed<T>? =
-	fieldOrNull?.resolveGet(string)
+	resolveFieldOrNull?.resolveGet(string)
 
 fun <T> TypedField<T>.resolveGet(string: String): Typed<T>? =
 	notNullIf(field.string == string) {
@@ -99,9 +99,22 @@ fun <T> TypedField<T>.resolveGet(string: String): Typed<T>? =
 fun <T> Typed<T>.eval(rhs: TypedField<T>): Typed<T> =
 	resolve(rhs) ?: plus(term of line(choice(rhs.field)))
 
-fun <T> Typed<T>.wrap(string: String) =
+fun <T> Typed<T>.resolveWrap(string: String) =
 	term of type(string fieldTo type)
 
 fun <T> Typed<T>.plusNative(rhs: Term<T>): Typed<T> =
 	if (type.isStatic) rhs of type.plus(nativeLine)
 	else pair(term, rhs) of type.plus(nativeLine)
+
+// === deconstruction
+
+val <T> Typed<T>.decompileLinkOrNull: Link<Typed<T>, TypedLine<T>>?
+	get() =
+		type.lineLinkOrNull?.let { link ->
+			if (link.tail.isStatic)
+				if (link.head.isStatic) (id<T>() of link.tail) linkTo (id<T>() of link.head)
+				else (id<T>() of link.tail) linkTo (term of link.head)
+			else
+				if (link.head.isStatic) (term of link.tail) linkTo (id<T>() of link.head)
+				else term.pair().run { (first of link.tail) linkTo (second of link.head) }
+		}
