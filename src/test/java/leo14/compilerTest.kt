@@ -1,6 +1,6 @@
 package leo14
 
-import leo13.js.compiler.fallback
+import leo14.js.compiler.fallback
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -35,8 +35,8 @@ class CompilerTest {
 	@Test
 	fun choice() {
 		val booleanCompiler = switchCompiler(
-			leo13.js.compiler.choice("false", resultCompiler(false)),
-			leo13.js.compiler.choice("true", resultCompiler(true)))
+			leo14.js.compiler.choice("false", resultCompiler(false)),
+			leo14.js.compiler.choice("true", resultCompiler(true)))
 
 		booleanCompiler
 			.write(token(begin("false")))
@@ -56,8 +56,8 @@ class CompilerTest {
 	fun choiceWithFallback() {
 		val booleanCompiler = switchCompiler(
 			fallback(beginCompiler("null") { resultCompiler(null) }),
-			leo13.js.compiler.choice("false", resultCompiler(false)),
-			leo13.js.compiler.choice("true", resultCompiler(true)))
+			leo14.js.compiler.choice("false", resultCompiler(false)),
+			leo14.js.compiler.choice("true", resultCompiler(true)))
 
 		booleanCompiler
 			.write(token(begin("false")))

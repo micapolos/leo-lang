@@ -10,7 +10,7 @@ class CompilerTest {
 	@Test
 	fun native() {
 		termCompiler(compileFallback, compileString) { resultCompiler(it) }
-			.write(script("native" fieldTo "ok"))
+			.write(script("native" fieldTo literal("ok")))
 			.write(token(end))
 			.assertResult(term("ok"))
 	}
@@ -34,7 +34,7 @@ class CompilerTest {
 	@Test
 	fun function() {
 		termCompiler(compileFallback, compileString) { resultCompiler(it) }
-			.write(script("function" fieldTo script("native" fieldTo "body")))
+			.write(script("function" fieldTo script("native" fieldTo literal("body"))))
 			.write(token(end))
 			.assertResult(fn(term("body")))
 	}
@@ -44,8 +44,8 @@ class CompilerTest {
 		termCompiler(compileFallback, compileString) { resultCompiler(it) }
 			.write(
 				script(
-					"native" fieldTo "lhs",
-					"apply" fieldTo script("native" fieldTo "rhs")))
+					"native" fieldTo literal("lhs"),
+					"apply" fieldTo script("native" fieldTo literal("rhs"))))
 			.write(token(end))
 			.assertResult(term("lhs")(term("rhs")))
 	}
@@ -62,7 +62,7 @@ class CompilerTest {
 	fun valuePlusCompiler_nonEmpty() {
 		term("lhs")
 			.plusCompiler(compileTerm(compileFallback, compileString)) { resultCompiler(it) }
-			.write(script("apply" fieldTo script("native" fieldTo "rhs")))
+			.write(script("apply" fieldTo script("native" fieldTo literal("rhs"))))
 			.write(token(end))
 			.assertResult(term("lhs")(term("rhs")))
 	}

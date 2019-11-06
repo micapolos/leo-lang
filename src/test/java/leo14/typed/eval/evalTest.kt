@@ -2,15 +2,17 @@ package leo14.typed.eval
 
 import leo.base.assertEqualTo
 import leo14.fieldTo
+import leo14.lineTo
+import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
 class EvalTest {
 	@Test
 	fun string() {
-		script("Hello, world!")
+		script(literal("Hello, world!"))
 			.eval
-			.assertEqualTo(script("Hello, world!"))
+			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test
@@ -62,5 +64,44 @@ class EvalTest {
 							"first" fieldTo script()),
 						"y" fieldTo script(
 							"second" fieldTo script()))))
+	}
+
+	@Test
+	fun let() {
+		script(
+			"let" lineTo script(
+				"it" lineTo script("chicken" lineTo script()),
+				"be" lineTo script("egg" lineTo script())),
+			"chicken" lineTo script())
+			.eval
+			.assertEqualTo(script("egg" lineTo script()))
+
+	}
+
+	@Test
+	fun transitiveLet() {
+		script(
+			"let" lineTo script(
+				"it" lineTo script("chicken" lineTo script()),
+				"be" lineTo script("egg" lineTo script())),
+			"let" lineTo script(
+				"it" lineTo script("farmer" lineTo script()),
+				"be" lineTo script("chicken" lineTo script())),
+			"farmer" lineTo script())
+			.eval
+			.assertEqualTo(script("egg" lineTo script()))
+
+	}
+
+	@Test
+	fun nonRecursiveLet() {
+		script(
+			"let" lineTo script(
+				"it" lineTo script("chicken" lineTo script()),
+				"be" lineTo script("chicken" lineTo script())),
+			"chicken" lineTo script())
+			.eval
+			.assertEqualTo(script("chicken" lineTo script()))
+
 	}
 }

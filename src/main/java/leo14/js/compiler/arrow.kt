@@ -1,4 +1,4 @@
-package leo13.js.compiler
+package leo14.js.compiler
 
 data class Arrow(val lhs: Type, val rhs: Type)
 

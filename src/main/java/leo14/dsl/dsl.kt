@@ -8,9 +8,9 @@ val _x = script()
 fun _x(string: String, x: X = _x) = script(string fieldTo x)
 fun X._x(string: String, x: X = _x) = plus(string fieldTo x)
 
-fun it(string: String) = script(string)
-fun it(int: Int) = script(int)
-fun it(double: Double) = script(double)
+fun it(string: String) = script(literal(string))
+fun it(int: Int) = script(literal(number(int)))
+fun it(double: Double) = script(literal(number(double)))
 
 fun argument(x: X = _x) = _x("argument", x)
 fun function(x: X = _x) = _x("function", x)

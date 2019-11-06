@@ -3,10 +3,7 @@ package leo14.typed
 import leo.base.assertEqualTo
 import leo13.stack
 import leo14.*
-import leo14.lambda.first
-import leo14.lambda.id
-import leo14.lambda.second
-import leo14.lambda.term
+import leo14.lambda.*
 import kotlin.test.Test
 
 class TypedCompilerTest {
@@ -24,7 +21,7 @@ class TypedCompilerTest {
 	fun literal() {
 		emptyTyped<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
-			.compile<Any>(script("foo"))
+			.compile<Any>(script(literal("foo")))
 			.assertEqualTo(emptyTyped<Any>().plusNative(term("foo")))
 	}
 
@@ -40,7 +37,7 @@ class TypedCompilerTest {
 	fun field() {
 		emptyTyped<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
-			.compile<Any>(script("foo" lineTo script("bar")))
+			.compile<Any>(script("foo" lineTo script(literal("bar"))))
 			.assertEqualTo(term("bar") of type("foo" fieldTo nativeType))
 	}
 
@@ -49,8 +46,8 @@ class TypedCompilerTest {
 		emptyTyped<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script(
-				"x" lineTo script("foo"),
-				"y" lineTo script("bar")))
+				"x" lineTo script(literal("foo")),
+				"y" lineTo script(literal("bar"))))
 			.assertEqualTo(
 				term("foo").plus(term("bar")) of
 					type(
@@ -138,5 +135,18 @@ class TypedCompilerTest {
 					"x" fieldTo nativeType,
 					"y" fieldTo nativeType,
 					"z" fieldTo nativeType))))
+	}
+
+	@Test
+	fun letItBe() {
+		emptyTyped<Any>()
+			.plusCompiler(stack(), lit) { resultCompiler(it) }
+			.compile<Any>(
+				script(
+					"let" lineTo script(
+						"it" lineTo script("chicken" lineTo script()),
+						"be" lineTo script("egg" lineTo script())),
+					"chicken" lineTo script()))
+			.assertEqualTo(id<Any>().invoke(id()) of type("egg"))
 	}
 }

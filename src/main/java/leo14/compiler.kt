@@ -2,13 +2,13 @@ package leo14
 
 import leo.base.orIfNull
 import leo13.array
-import leo13.js.compiler.Choice
-import leo13.js.compiler.Fallback
-import leo13.js.compiler.compile
-import leo13.js.compiler.fallback
 import leo13.mapFirst
 import leo13.stack
 import leo13.toList
+import leo14.js.compiler.Choice
+import leo14.js.compiler.Fallback
+import leo14.js.compiler.compile
+import leo14.js.compiler.fallback
 
 typealias Ret<T> = (T) -> Compiler
 typealias Compile<T> = (Ret<T>) -> Compiler
@@ -64,6 +64,9 @@ fun Compiler.write(script: Script): Compiler =
 		is UnitScript -> this
 		is LinkScript -> write(script.link)
 	}
+
+fun Compiler.writeEnd(script: Script): Compiler =
+	write(script).write(token(end))
 
 fun <T> Compiler.compile(script: Script): T =
 	write(script).write(token(end)).result()

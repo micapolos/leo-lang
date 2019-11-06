@@ -31,10 +31,9 @@ data class ScriptField(val string: String, val rhs: Script) {
 }
 
 fun script(unit: Unit): Script = UnitScript(unit)
+fun script(literal: Literal): Script = script(line(literal))
 fun script(string: String): Script = script(line(string))
 fun script(link: ScriptLink): Script = LinkScript(link)
-fun script(int: Int): Script = script(line(number(int)))
-fun script(double: Double): Script = script(line(number(double)))
 fun line(literal: Literal): ScriptLine = LiteralScriptLine(literal)
 fun line(string: String): ScriptLine = line(literal(string))
 fun line(number: Number): ScriptLine = line(literal(number))
@@ -47,9 +46,7 @@ fun script(field: ScriptField, vararg fields: ScriptField): Script =
 
 infix fun String.fieldTo(rhs: Script) = ScriptField(this, rhs)
 infix fun String.fieldTo(line: ScriptLine) = fieldTo(script(line))
-infix fun String.fieldTo(int: Int) = fieldTo(script(line(number(int))))
-infix fun String.fieldTo(double: Double) = fieldTo(script(line(number(double))))
-infix fun String.fieldTo(string: String) = fieldTo(script(line(string)))
+infix fun String.fieldTo(literal: Literal) = fieldTo(script(literal))
 fun field(string: String) = string fieldTo script()
 infix fun Script.linkTo(line: ScriptLine) = ScriptLink(this, line)
 infix fun String.lineTo(script: Script) = line(fieldTo(script))

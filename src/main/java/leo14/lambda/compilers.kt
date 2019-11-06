@@ -2,10 +2,10 @@ package leo14.lambda
 
 import leo13.Index
 import leo13.index0
-import leo13.js.compiler.choice
-import leo13.js.compiler.fallback
 import leo13.next
 import leo14.*
+import leo14.js.compiler.choice
+import leo14.js.compiler.fallback
 
 fun <T> compileTerm(fallbackCompile: Compile<Term<T>>, nativeCompile: Compile<T>): Compile<Term<T>> =
 	{ ret -> termCompiler(fallbackCompile, nativeCompile, ret) }

@@ -16,11 +16,13 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, re
 			is BeginToken ->
 				when (token.begin.string) {
 					"let" ->
-						emptyType.plusCompiler { param ->
-							beginCompiler("gives") {
-								emptyTyped<T>().plusCompiler(stack, lit) { body ->
-									endCompiler {
-										plusCompiler(stack.push(param ret body), lit, ret)
+						beginCompiler("it") {
+							emptyType.plusCompiler { param ->
+								beginCompiler("be") {
+									emptyTyped<T>().plusCompiler(stack, lit) { body ->
+										endCompiler {
+											plusCompiler(stack.push(param ret body), lit, ret)
+										}
 									}
 								}
 							}
