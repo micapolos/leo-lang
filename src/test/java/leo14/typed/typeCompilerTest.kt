@@ -53,14 +53,6 @@ class TypeCompilerTest {
 	}
 
 	@Test
-	fun noChoice() {
-		emptyType
-			.plusCompiler { resultCompiler(it) }
-			.compile<Type>(script("choice" lineTo script()))
-			.assertEqualTo(type(line(choice())))
-	}
-
-	@Test
 	fun singleChoice() {
 		emptyType
 			.plusCompiler { resultCompiler(it) }

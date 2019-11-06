@@ -3,6 +3,7 @@ package leo14.typed
 import leo.base.notNullIf
 import leo13.EmptyStack
 import leo13.LinkStack
+import leo13.isEmpty
 import leo13.onlyOrNull
 import leo14.lambda.*
 
@@ -27,9 +28,10 @@ fun <T> Typed<T>.plus(rhs: TypedLine<T>): Typed<T> =
 	}
 
 fun <T> Typed<T>.plus(rhs: TypedChoice<T>): Typed<T> =
-	rhs.choice.fieldStack.onlyOrNull
-		?.let { field -> plus(term of field) }
-		?:TODO()
+	rhs.choice.fieldStackLink.let { link ->
+		if (link.stack.isEmpty) plus(term of link.value)
+		else TODO()
+	}
 
 fun <T> Typed<T>.plus(rhs: TypedField<T>): Typed<T> =
 	term.pairTo(rhs.term) of type.plus(rhs.field.string fieldTo rhs.field.rhs)
@@ -77,7 +79,7 @@ fun <T> Term<T>.resolveRhs(line: Line): Typed<T>? =
 	}
 
 fun <T> Term<T>.resolveRhs(choice: Choice): Typed<T>? =
-	choice.fieldStack.onlyOrNull?.let { field ->
+	choice.onlyFieldOrNull?.let { field ->
 		resolveRhs(field)
 	}
 
@@ -107,7 +109,7 @@ fun <T> Term<T>.resolveGet(line: Line, string: String): Typed<T>? =
 	}
 
 fun <T> Term<T>.resolveGet(choice: Choice, string: String): Typed<T>? =
-	choice.fieldStack.onlyOrNull?.let { field ->
+	choice.onlyFieldOrNull?.let { field ->
 		resolveGet(field, string)
 	}
 

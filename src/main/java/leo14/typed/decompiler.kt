@@ -40,13 +40,10 @@ fun <T> Term<T>.decompileLine(field: Field, fn: T.() -> ScriptLine): ScriptLine 
 	line(decompileField(field, fn))
 
 fun <T> Term<T>.decompileLine(choice: Choice, fn: T.() -> ScriptLine): ScriptLine =
-	when (choice.fieldStack) {
-		is EmptyStack -> error("empty choice")
-		is LinkStack -> choice.fieldStack.link.let { link ->
-			when (link.stack) {
-				is EmptyStack -> decompileLine(link.value, fn)
-				is LinkStack -> TODO()
-			}
+	choice.fieldStackLink.let { link ->
+		when (link.stack) {
+			is EmptyStack -> decompileLine(link.value, fn)
+			is LinkStack -> TODO()
 		}
 	}
 
