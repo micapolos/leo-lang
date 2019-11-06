@@ -307,12 +307,3 @@ tailrec fun <V : Any> Stack<V>.firstIndexed(fn: V.() -> Boolean): IndexedValue<V
 			if (link.value.fn()) link.stack.size indexed link.value
 			else link.stack.firstIndexed(fn)
 	}
-
-fun <T: Any, H> Stack<H>.linkOrNull(tail: Stack<H>.() -> T): Link<T, H>? =
-	linkOrNull?.link { stack(this).tail() }
-
-fun <T: Any, H> StackLink<H>.link(tail: StackLink<H>.() -> T): Link<T, H> =
-	when (stack) {
-		is EmptyStack -> nullOf<T>() linkTo value
-		is LinkStack -> stack.link.tail() linkTo value
-	}

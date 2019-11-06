@@ -31,7 +31,8 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, re
 						TODO()
 					else ->
 						emptyTyped<T>().plusCompiler(stack, lit) { rhsTyped ->
-							resolve(stack, token.begin.string, rhsTyped).plusCompiler(stack, lit, ret)
+							resolve(stack, rhsTyped.term of (token.begin.string fieldTo rhsTyped.type))
+								.plusCompiler(stack, lit, ret)
 						}
 				}
 			is EndToken ->
@@ -39,9 +40,9 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, re
 		}
 	}
 
-fun <T> Typed<T>.resolve(stack: Stack<Function<T>>, string: String, rhs: Typed<T>): Typed<T> =
-	plus(string, rhs).let { plused ->
-		plused.resolve(stack) ?: resolve(string, rhs) ?: plused
+fun <T> Typed<T>.resolve(stack: Stack<Function<T>>, typed: TypedField<T>): Typed<T> =
+	plus(typed).let { plused ->
+		plused.resolve(stack) ?: resolve(typed) ?: plused
 	}
 
 fun <T> Typed<T>.resolve(stack: Stack<Function<T>>): Typed<T>? =

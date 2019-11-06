@@ -51,6 +51,7 @@ fun <T> Term<T>.boolean(): Boolean =
 // === pair
 
 fun <T> pair(lhs: Term<T>, rhs: Term<T>) = fn3(arg0<T>()(arg2())(arg1()))(lhs)(rhs)
+
 fun <T> Term<T>.pair(): Pair<Term<T>, Term<T>> =
 	application { lhs, second ->
 		lhs.application { fn, first ->

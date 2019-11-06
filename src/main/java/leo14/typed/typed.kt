@@ -1,10 +1,8 @@
 package leo14.typed
 
 import leo.base.notNullIf
-import leo13.EmptyStack
-import leo13.LinkStack
-import leo13.isEmpty
-import leo13.onlyOrNull
+import leo13.Link
+import leo13.linkTo
 import leo14.lambda.*
 
 data class Typed<out T>(val term: Term<T>, val type: Type)
@@ -17,113 +15,93 @@ infix fun <T> Term<T>.of(line: Line) = TypedLine(this, line)
 infix fun <T> Term<T>.of(choice: Choice) = TypedChoice(this, choice)
 infix fun <T> Term<T>.of(field: Field) = TypedField(this, field)
 
-fun <T> Typed<T>.plus(string: String, rhs: Typed<T>): Typed<T> =
-	term.pairTo(rhs.term) of type.plus(string fieldTo rhs.type)
-
-fun <T> Typed<T>.plus(rhs: TypedLine<T>): Typed<T> =
-	when (rhs.line) {
-		is NativeLine -> plusNative(rhs.term)
-		is ChoiceLine -> plus(rhs.term of rhs.line.choice)
-		is ArrowLine -> TODO()
-	}
-
-fun <T> Typed<T>.plus(rhs: TypedChoice<T>): Typed<T> =
-	rhs.choice.fieldStackLink.let { link ->
-		if (link.stack.isEmpty) plus(term of link.value)
-		else TODO()
-	}
-
-fun <T> Typed<T>.plus(rhs: TypedField<T>): Typed<T> =
-	term.pairTo(rhs.term) of type.plus(rhs.field.string fieldTo rhs.field.rhs)
+fun <T> choice(typed: TypedField<T>): TypedChoice<T> = typed.term of choice(typed.field)
+fun <T> line(typed: TypedChoice<T>): TypedLine<T> = typed.term of line(typed.choice)
 
 fun <T> emptyTyped() = id<T>() of emptyType
-
 val <T> Typed<T>.isEmpty get() = this == emptyTyped<T>()
 
-infix fun <T> Term<T>.pairTo(rhs: Term<T>) =
-	if (this == id<T>()) rhs
-	else pair(this, rhs)
+fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
+	plusTerm(typed) of type.plus(typed.line)
+
+fun <T> Typed<T>.plus(typed: TypedField<T>): Typed<T> =
+	plus(typed.term of line(choice(typed.field)))
+
+fun <T> Typed<T>.plusTerm(rhs: TypedLine<T>): Term<T> =
+	if (type.isStatic)
+		if (rhs.line.isStatic) id()
+		else rhs.term
+	else
+		if (rhs.line.isStatic) term
+		else term.plus(rhs.term)
+
+fun <T> Term<T>.plus(rhs: Term<T>) =
+	pair(this, rhs)
 
 val <T> Term<T>.typedHead get() = second
 val <T> Term<T>.typedTail get() = first
 
-fun <T> Typed<T>.resolve(string: String, rhs: Typed<T>): Typed<T>? =
-	if (rhs.isEmpty) resolve(string)
+fun <T> Typed<T>.resolve(rhs: TypedField<T>): Typed<T>? =
+	if (rhs.field.rhs.isEmpty) resolve(rhs.field.string)
 	else null
 
 fun <T> Typed<T>.resolve(string: String): Typed<T>? =
 	when (string) {
-		else -> resolveAccess(string)
+		else -> resolveAccess(string) ?: wrap(string)
 	}
+
+val <T> Typed<T>.linkOrNull: Link<Typed<T>, TypedLine<T>>?
+	get() =
+		type.lineLinkOrNull?.let { link ->
+			if (link.tail.isStatic)
+				if (link.head.isStatic) (id<T>() of link.tail) linkTo (id<T>() of link.head)
+				else (id<T>() of link.tail) linkTo (term of link.head)
+			else
+				if (link.head.isStatic) (term of link.tail) linkTo (id<T>() of link.head)
+				else (term.first of link.tail) linkTo (term.second of link.head)
+		}
+
+val <T> TypedLine<T>.fieldOrNull: TypedField<T>?
+	get() =
+		(line as? ChoiceLine)?.choice?.let { term of it }?.fieldOrNull
+
+val <T> TypedChoice<T>.fieldOrNull: TypedField<T>?
+	get() =
+		choice.onlyFieldOrNull?.let { term of it }
+
+val <T> TypedField<T>.rhs: Typed<T>?
+	get() =
+		term of field.rhs
 
 fun <T> Typed<T>.resolveAccess(string: String): Typed<T>? =
-	term
-		.resolveRhs(type)
-		?.resolveGet(string)
-		?: wrap(string)
-
-fun <T> Term<T>.resolveRhs(type: Type): Typed<T>? =
-	when (type.lineStack) {
-		is EmptyStack -> null
-		is LinkStack -> type.lineStack.link.let { lineLink ->
-			when (lineLink.stack) {
-				is EmptyStack -> resolveRhs(lineLink.value)
-				is LinkStack -> second.resolveRhs(lineLink.value)
-			}
-		}
-	}
-
-fun <T> Term<T>.resolveRhs(line: Line): Typed<T>? =
-	(line as? ChoiceLine)?.choice?.let { choice ->
-		resolveRhs(choice)
-	}
-
-fun <T> Term<T>.resolveRhs(choice: Choice): Typed<T>? =
-	choice.onlyFieldOrNull?.let { field ->
-		resolveRhs(field)
-	}
-
-fun <T> Term<T>.resolveRhs(field: Field): Typed<T> =
-	this of field.rhs
+	linkOrNull?.head?.fieldOrNull?.rhs?.resolveGet(string)
 
 fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
-	term.resolveGet(type, string)
-
-fun <T> Term<T>.resolveGet(type: Type, string: String): Typed<T>? =
-	when (type.lineStack) {
-		is EmptyStack -> null
-		is LinkStack -> type.lineStack.link.let { lineLink ->
-			when (lineLink.stack) {
-				is EmptyStack -> resolveGet(lineLink.value, string)
-				is LinkStack -> second.resolveGet(lineLink.value, string)
-					?: first.resolveGet(lineLink.stack.type, string)
-			}
-		}
+	linkOrNull?.let { link ->
+		link.head.resolveGet(string) ?: link.tail.resolveGet(string)
 	}
 
-fun <T> Term<T>.resolveGet(line: Line, string: String): Typed<T>? =
+fun <T> TypedLine<T>.resolveGet(string: String): Typed<T>? =
 	when (line) {
-		is NativeLine -> notNullIf(string == "native") { this of type(line) }
-		is ChoiceLine -> resolveGet(line.choice, string)
-		is ArrowLine -> notNullIf(string == "function") { this of type(line) }
+		is NativeLine -> notNullIf(string == "native") { term of type(line) }
+		is ChoiceLine -> (term of line.choice).resolveGet(string)
+		is ArrowLine -> notNullIf(string == "function") { term of type(line) }
 	}
 
-fun <T> Term<T>.resolveGet(choice: Choice, string: String): Typed<T>? =
-	choice.onlyFieldOrNull?.let { field ->
-		resolveGet(field, string)
-	}
+fun <T> TypedChoice<T>.resolveGet(string: String): Typed<T>? =
+	fieldOrNull?.resolveGet(string)
 
-fun <T> Term<T>.resolveGet(field: Field, string: String): Typed<T>? =
+fun <T> TypedField<T>.resolveGet(string: String): Typed<T>? =
 	notNullIf(field.string == string) {
-		this of type(field)
+		term of type(field)
 	}
 
-fun <T> Typed<T>.eval(string: String, rhs: Typed<T>): Typed<T> =
-	resolve(string, rhs) ?: plus(string, rhs)
+fun <T> Typed<T>.eval(rhs: TypedField<T>): Typed<T> =
+	resolve(rhs) ?: plus(term of line(choice(rhs.field)))
 
 fun <T> Typed<T>.wrap(string: String) =
 	term of type(string fieldTo type)
 
-fun <T> Typed<T>.plusNative(aterm: Term<T>): Typed<T> =
-	if (type == emptyType) aterm of nativeType
-	else term.pairTo(aterm) of type.plus(nativeLine)
+fun <T> Typed<T>.plusNative(rhs: Term<T>): Typed<T> =
+	if (type.isStatic) rhs of type.plus(nativeLine)
+	else pair(term, rhs) of type.plus(nativeLine)

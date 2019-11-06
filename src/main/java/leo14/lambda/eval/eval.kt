@@ -17,7 +17,7 @@ fun Term.eval(stack: Stack): Any =
 	}
 
 fun Abstraction<Term>.eval(stack: Stack) = function(stack, body)
-fun Application<Term>.eval(stack: Stack) = (lhs.eval(stack) as Function)(rhs.eval(stack))
+fun Application<Term>.eval(stack: Stack) = (lhs.eval(stack) as Function).invoke(rhs.eval(stack))
 fun Variable<Any>.eval(stack: Stack) = stack.get(index)!!
 
 val Script.eval

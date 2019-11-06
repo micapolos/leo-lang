@@ -4,6 +4,7 @@ import leo.base.assertEqualTo
 import leo13.stack
 import leo14.*
 import leo14.lambda.first
+import leo14.lambda.id
 import leo14.lambda.second
 import leo14.lambda.term
 import kotlin.test.Test
@@ -32,7 +33,7 @@ class TypedCompilerTest {
 		emptyTyped<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script("foo" lineTo script()))
-			.assertEqualTo(emptyTyped<Any>().plus("foo", emptyTyped()))
+			.assertEqualTo(id<Any>() of type("foo" fieldTo type()))
 	}
 
 	@Test
@@ -40,7 +41,7 @@ class TypedCompilerTest {
 		emptyTyped<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script("foo" lineTo script("bar")))
-			.assertEqualTo(emptyTyped<Any>().plus("foo", term("bar") of nativeType))
+			.assertEqualTo(term("bar") of type("foo" fieldTo nativeType))
 	}
 
 	@Test
@@ -50,13 +51,15 @@ class TypedCompilerTest {
 			.compile<Any>(script(
 				"x" lineTo script("foo"),
 				"y" lineTo script("bar")))
-			.assertEqualTo(emptyTyped<Any>()
-				.plus("x", term("foo") of nativeType)
-				.plus("y", term("bar") of nativeType))
+			.assertEqualTo(
+				term("foo").plus(term("bar")) of
+					type(
+						"x" fieldTo nativeType,
+						"y" fieldTo nativeType))
 	}
 
 	@Test
-	fun access0() {
+	fun access2() {
 		term("lhs")
 			.of(type(
 				"vec" fieldTo type(
@@ -82,7 +85,7 @@ class TypedCompilerTest {
 	}
 
 	@Test
-	fun access2() {
+	fun access0() {
 		term("lhs")
 			.of(type(
 				"vec" fieldTo type(
@@ -92,6 +95,32 @@ class TypedCompilerTest {
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script("z" lineTo script()))
 			.assertEqualTo(term("lhs").second of type("z" fieldTo nativeType))
+	}
+
+	@Test
+	fun access2_skipStatic() {
+		term("lhs")
+			.of(type(
+				"vec" fieldTo type(
+					"x" fieldTo nativeType,
+					"y" fieldTo type("static"),
+					"z" fieldTo nativeType)))
+			.plusCompiler(stack(), lit) { resultCompiler(it) }
+			.compile<Any>(script("x" lineTo script()))
+			.assertEqualTo(term("lhs").first of type("x" fieldTo nativeType))
+	}
+
+	@Test
+	fun accessNative() {
+		term("lhs")
+			.of(type(
+				"vec" fieldTo type(
+					"x" lineTo nativeType,
+					nativeLine,
+					"z" lineTo nativeType)))
+			.plusCompiler(stack(), lit) { resultCompiler(it) }
+			.compile<Any>(script("native" lineTo script()))
+			.assertEqualTo(term("lhs").first.second of nativeType)
 	}
 
 	@Test

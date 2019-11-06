@@ -23,8 +23,7 @@ data class FieldScriptLine(val field: ScriptField) : ScriptLine() {
 }
 
 data class ScriptLink(val lhs: Script, val line: ScriptLine) {
-	override fun toString() = "$lhsString$line"
-	val lhsString = if (lhs is UnitScript) "" else "$lhs."
+	override fun toString() = "$lhs$line"
 }
 
 data class ScriptField(val string: String, val rhs: Script) {

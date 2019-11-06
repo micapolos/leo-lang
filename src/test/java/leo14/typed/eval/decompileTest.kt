@@ -27,7 +27,7 @@ class DecompileTest {
 	@Test
 	fun fields() {
 		term("zero")
-			.pairTo(term("one"))
+			.plus(term("one"))
 			.of(
 				type(
 					"x" fieldTo nativeType,
@@ -42,7 +42,7 @@ class DecompileTest {
 	@Test
 	fun struct() {
 		term("zero")
-			.pairTo(term("one"))
+			.plus(term("one"))
 			.of(
 				type(
 					"vec" fieldTo type(
