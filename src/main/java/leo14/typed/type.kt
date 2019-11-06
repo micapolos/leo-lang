@@ -2,6 +2,7 @@ package leo14.typed
 
 import leo.base.fold
 import leo.base.notNullIf
+import leo.base.nullOf
 import leo13.*
 
 data class Type(val lineStack: Stack<Line>) {
@@ -55,7 +56,8 @@ val StackLink<Field>.choice get() = Choice(this)
 fun choice(field: Field, vararg fields: Field) = stackLink(field, *fields).choice
 fun Choice.plus(field: Field) = fieldStackLink.push(field).choice
 fun Choice?.orNullPlus(field: Field): Choice = this?.plus(field) ?: choice(field)
-val Choice.onlyFieldOrNull: Field? get() = notNullIf(fieldStackLink.stack.isEmpty) { fieldStackLink.value }
+val Choice.onlyFieldOrNull: Field? get() = fieldLink.onlyHeadOrNull
+val Choice.fieldLink get() = fieldStackLink.link { choice }
 
 infix fun String.fieldTo(type: Type) = Field(this, type)
 infix fun Type.arrowTo(rhs: Type) = Arrow(this, rhs)
