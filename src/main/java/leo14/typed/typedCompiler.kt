@@ -25,11 +25,17 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 								beginCompiler("be") {
 									typedCompiler(stack, lit) { body ->
 										endCompiler {
-											plusCompiler(stack.push(param arrowTo body.type), lit) { typed ->
-												ret(fn(arg0<T>().invoke(typed.term)).invoke(fn(body.term)) of typed.type)
-											}
+											bindPlusCompiler(param ret body, stack, lit, ret)
 										}
 									}
+								}
+							}
+						}
+					"any" ->
+						typeCompiler { param ->
+							beginCompiler("gives") {
+								typedCompiler(stack, lit) { body ->
+									bindPlusCompiler(param ret body, stack, lit, ret)
 								}
 							}
 						}
@@ -80,4 +86,9 @@ fun <T> Typed<T>.resolve(stack: Stack<Arrow>): Typed<T>? =
 fun <T> Typed<T>.resolve(arrow: Arrow): Type? =
 	notNullIf(type == arrow.lhs) {
 		arrow.rhs
+	}
+
+fun <T> Typed<T>.bindPlusCompiler(function: Function<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
+	plusCompiler(stack.push(function.param arrowTo function.body.type), lit) { typed ->
+		ret(fn(arg0<T>().invoke(typed.term)).invoke(fn(function.body.term)) of typed.type)
 	}

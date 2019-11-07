@@ -101,6 +101,16 @@ class EvalTest {
 	}
 
 	@Test
+	fun anyGives() {
+		script(
+			"any" lineTo script("native"),
+			"gives" lineTo script(literal("egg")),
+			line(literal("chicken")))
+			.eval
+			.assertEqualTo(script(literal("egg")))
+	}
+
+	@Test
 	fun nonRecursiveLet() {
 		script(
 			"let" lineTo script(
