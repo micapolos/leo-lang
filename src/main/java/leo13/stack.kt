@@ -1,6 +1,7 @@
 package leo13
 
 import leo.base.*
+import leo.binary.zero
 
 sealed class Stack<out T>
 
@@ -300,10 +301,34 @@ val Stack<*>.size
 fun <V : Any> Stack<V>.atIndex(index: Int): V? =
 	reverse.get(index)
 
-tailrec fun <V : Any> Stack<V>.firstIndexed(fn: V.() -> Boolean): IndexedValue<V>? =
+tailrec fun <V> Stack<V>.firstIndexed(fn: V.() -> Boolean): IndexedValue<V>? =
 	when (this) {
 		is EmptyStack -> null
 		is LinkStack ->
 			if (link.value.fn()) link.stack.size indexed link.value
 			else link.stack.firstIndexed(fn)
 	}
+
+tailrec fun <V, R : Any> Index.plusMapFirstIndexed(stack: Stack<V>, fn: V.() -> R?): Pair<Index, R>? =
+	when (stack) {
+		is EmptyStack -> null
+		is LinkStack -> {
+			val mapped = stack.link.value.fn()
+			if (mapped != null) this to mapped
+			else next.plusMapFirstIndexed(stack.link.stack, fn)
+		}
+	}
+
+fun <V, R : Any> Stack<V>.mapFirstIndexed(fn: V.() -> R?): Pair<Index, R>? =
+	zero.index.plusMapFirstIndexed(this, fn)
+
+tailrec fun <V> Index.plusFirst(stack: Stack<V>, fn: V.() -> Boolean): Index? =
+	when (stack) {
+		is EmptyStack -> null
+		is LinkStack ->
+			if (stack.link.value.fn()) this
+			else next.plusFirst(stack.link.stack, fn)
+	}
+
+fun <V> Stack<V>.firstIndex(fn: V.() -> Boolean): Index? =
+	zero.index.plusFirst(this, fn)
