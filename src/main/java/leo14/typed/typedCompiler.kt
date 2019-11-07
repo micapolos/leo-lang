@@ -23,15 +23,15 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 						typeCompiler { param ->
 							beginCompiler("give") {
 								typedCompiler(stack, lit) { body ->
-									bindPlusCompiler(param ret body, stack, lit, ret)
+									plusCompilerWith(param ret body, stack, lit, ret)
 								}
 							}
 						}
-					"save" ->
+					"remember" ->
 						endCompiler {
 							beginCompiler("as") {
 								typeCompiler { name ->
-									emptyTyped<T>().bindPlusCompiler(name ret this, stack, lit, ret)
+									typedCompilerWith(name ret this, stack, lit, ret)
 								}
 							}
 						}
@@ -84,7 +84,10 @@ fun <T> Typed<T>.resolve(arrow: Arrow): Type? =
 		arrow.rhs
 	}
 
-fun <T> Typed<T>.bindPlusCompiler(function: Function<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
+fun <T> Typed<T>.plusCompilerWith(function: Function<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
 	plusCompiler(stack.push(function.param arrowTo function.body.type), lit) { typed ->
 		ret(fn(arg0<T>().invoke(typed.term)).invoke(fn(function.body.term)) of typed.type)
 	}
+
+fun <T> typedCompilerWith(function: Function<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
+	emptyTyped<T>().plusCompilerWith(function, stack, lit, ret)

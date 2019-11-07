@@ -97,10 +97,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun saveAs() {
+	fun rememberAs() {
 		script(
 			line(literal("chicken")),
-			line("save"),
+			line("remember"),
 			"as" lineTo script("foo"),
 			line("foo"))
 			.eval
