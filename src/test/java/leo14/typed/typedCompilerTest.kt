@@ -144,9 +144,9 @@ class TypedCompilerTest {
 			.compile<Any>(
 				script(
 					"let" lineTo script(
-						"it" lineTo script("chicken" lineTo script()),
-						"be" lineTo script("egg" lineTo script())),
-					"chicken" lineTo script()))
-			.assertEqualTo(fn(arg0<Any>().invoke(id())) of type("egg"))
+						"it" lineTo script("native"),
+						"be" lineTo script(literal("egg"))),
+					line(literal("chicken"))))
+			.assertEqualTo(fn(term("chicken")).invoke(term("egg")) of type(nativeLine))
 	}
 }

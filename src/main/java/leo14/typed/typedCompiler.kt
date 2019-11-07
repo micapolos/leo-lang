@@ -29,7 +29,7 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 									typedCompiler(stack, lit) { body ->
 										endCompiler {
 											plusCompiler(stack.push(param arrowTo body.type), lit) { typed ->
-												ret(fn(typed.term) of typed.type)
+												ret(fn(typed.term).invoke(body.term) of typed.type)
 											}
 										}
 									}
