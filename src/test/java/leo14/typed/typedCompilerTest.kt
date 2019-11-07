@@ -147,6 +147,6 @@ class TypedCompilerTest {
 						"it" lineTo script("native"),
 						"be" lineTo script(literal("egg"))),
 					line(literal("chicken"))))
-			.assertEqualTo(fn(term("chicken")).invoke(term("egg")) of type(nativeLine))
+			.assertEqualTo(fn(arg0<Any>().invoke(term("chicken"))).invoke(fn(term("egg"))) of type(nativeLine))
 	}
 }

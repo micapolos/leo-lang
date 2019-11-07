@@ -6,7 +6,7 @@ import leo14.Script
 import leo14.compile
 import leo14.lambda.*
 
-val Term.eval get() = eval(stack())
+val Term.eval: Any get() = eval(stack())
 
 fun Term.eval(stack: Stack): Any =
 	when (this) {
@@ -16,9 +16,9 @@ fun Term.eval(stack: Stack): Any =
 		is VariableTerm -> variable.eval(stack)
 	}
 
-fun Abstraction<Term>.eval(stack: Stack) = function(stack, body)
-fun Application<Term>.eval(stack: Stack) = (lhs.eval(stack) as Function).invoke(rhs.eval(stack))
-fun Variable<Any>.eval(stack: Stack) = stack.get(index)!!
+fun Abstraction<Term>.eval(stack: Stack): Any = function(stack, body)
+fun Application<Term>.eval(stack: Stack): Any = (lhs.eval(stack) as Function).invoke(rhs.eval(stack))
+fun Variable<Any>.eval(stack: Stack): Any = stack.get(index)!!
 
 val Script.eval
 	get() =

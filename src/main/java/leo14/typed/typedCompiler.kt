@@ -6,10 +6,7 @@ import leo13.Stack
 import leo13.mapFirstIndexed
 import leo13.push
 import leo14.*
-import leo14.lambda.fn
-import leo14.lambda.invoke
-import leo14.lambda.term
-import leo14.lambda.variable
+import leo14.lambda.*
 
 fun <T> typedCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
 	emptyTyped<T>().plusCompiler(stack, lit, ret)
@@ -29,7 +26,7 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 									typedCompiler(stack, lit) { body ->
 										endCompiler {
 											plusCompiler(stack.push(param arrowTo body.type), lit) { typed ->
-												ret(fn(typed.term).invoke(body.term) of typed.type)
+												ret(fn(arg0<T>().invoke(typed.term)).invoke(fn(body.term)) of typed.type)
 											}
 										}
 									}
