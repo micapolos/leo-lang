@@ -20,20 +20,8 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 			is BeginToken ->
 				when (token.begin.string) {
 					"let" ->
-						beginCompiler("it") {
-							typeCompiler { param ->
-								beginCompiler("be") {
-									typedCompiler(stack, lit) { body ->
-										endCompiler {
-											bindPlusCompiler(param ret body, stack, lit, ret)
-										}
-									}
-								}
-							}
-						}
-					"any" ->
 						typeCompiler { param ->
-							beginCompiler("gives") {
+							beginCompiler("give") {
 								typedCompiler(stack, lit) { body ->
 									bindPlusCompiler(param ret body, stack, lit, ret)
 								}

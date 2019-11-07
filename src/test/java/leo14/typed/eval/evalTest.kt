@@ -1,7 +1,10 @@
 package leo14.typed.eval
 
 import leo.base.assertEqualTo
-import leo14.*
+import leo14.fieldTo
+import leo14.lineTo
+import leo14.literal
+import leo14.script
 import kotlin.test.Test
 
 class EvalTest {
@@ -66,9 +69,8 @@ class EvalTest {
 	@Test
 	fun let() {
 		script(
-			"let" lineTo script(
-				"it" lineTo script("chicken" lineTo script()),
-				"be" lineTo script("egg" lineTo script())),
+			"let" lineTo script("chicken" lineTo script()),
+			"give" lineTo script("egg" lineTo script()),
 			"chicken" lineTo script())
 			.eval
 			.assertEqualTo(script("egg" lineTo script()))
@@ -78,44 +80,20 @@ class EvalTest {
 	@Test
 	fun transitiveLet() {
 		script(
-			"let" lineTo script(
-				"it" lineTo script("chicken" lineTo script()),
-				"be" lineTo script("egg" lineTo script())),
-			"let" lineTo script(
-				"it" lineTo script("farmer" lineTo script()),
-				"be" lineTo script("chicken" lineTo script())),
+			"let" lineTo script("chicken" lineTo script()),
+			"give" lineTo script("egg" lineTo script()),
+			"let" lineTo script("farmer" lineTo script()),
+			"give" lineTo script("chicken" lineTo script()),
 			"farmer" lineTo script())
 			.eval
 			.assertEqualTo(script("egg" lineTo script()))
 	}
 
 	@Test
-	fun letWithNatives() {
-		script(
-			"let" lineTo script(
-				"it" lineTo script("native"),
-				"be" lineTo script(literal("egg"))),
-			line(literal("chicken")))
-			.eval
-			.assertEqualTo(script(literal("egg")))
-	}
-
-	@Test
-	fun anyGives() {
-		script(
-			"any" lineTo script("native"),
-			"gives" lineTo script(literal("egg")),
-			line(literal("chicken")))
-			.eval
-			.assertEqualTo(script(literal("egg")))
-	}
-
-	@Test
 	fun nonRecursiveLet() {
 		script(
-			"let" lineTo script(
-				"it" lineTo script("chicken" lineTo script()),
-				"be" lineTo script("chicken" lineTo script())),
+			"let" lineTo script("chicken" lineTo script()),
+			"give" lineTo script("chicken" lineTo script()),
 			"chicken" lineTo script())
 			.eval
 			.assertEqualTo(script("chicken" lineTo script()))
