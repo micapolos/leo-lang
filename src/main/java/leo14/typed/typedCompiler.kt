@@ -1,12 +1,17 @@
 package leo14.typed
 
 import leo.base.notNullIf
+import leo.base.notNullOrError
 import leo13.Stack
 import leo13.mapFirst
 import leo13.push
 import leo14.*
+import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.term
+
+fun <T> typedCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
+	emptyTyped<T>().plusCompiler(stack, lit, ret)
 
 fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
 	compiler { token ->
@@ -17,9 +22,9 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, re
 				when (token.begin.string) {
 					"let" ->
 						beginCompiler("it") {
-							emptyType.plusCompiler { param ->
+							typeCompiler { param ->
 								beginCompiler("be") {
-									emptyTyped<T>().plusCompiler(stack, lit) { body ->
+									typedCompiler(stack, lit) { body ->
 										endCompiler {
 											plusCompiler(stack.push(param ret body), lit, ret)
 										}
@@ -28,11 +33,27 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, re
 							}
 						}
 					"function" ->
-						TODO()
-					"apply" ->
-						TODO()
+						beginCompiler("takes") {
+							typeCompiler { param ->
+								beginCompiler("gives") {
+									typedCompiler(stack, lit) { body ->
+										endCompiler {
+											plus(fn(body.term) of line(param arrowTo body.type))
+												.plusCompiler(stack, lit, ret)
+										}
+									}
+								}
+							}
+						}
+					"give" ->
+						typedCompiler(stack, lit) { param ->
+							type.onlyLineOrNull?.arrowOrNull?.let { arrow ->
+								if (arrow.lhs != param.type) error("${param.type} as ${arrow.lhs}")
+								else term.invoke(param.term).of(arrow.rhs).plusCompiler(stack, lit, ret)
+							}.notNullOrError("$type as function")
+						}
 					else ->
-						emptyTyped<T>().plusCompiler(stack, lit) { rhsTyped ->
+						typedCompiler(stack, lit) { rhsTyped ->
 							resolve(stack, rhsTyped.term of (token.begin.string fieldTo rhsTyped.type))
 								.plusCompiler(stack, lit, ret)
 						}

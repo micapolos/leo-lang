@@ -4,6 +4,9 @@ import leo.base.notNullOrError
 import leo.base.nullOf
 import leo14.*
 
+fun typeCompiler(ret: Ret<Type>): Compiler =
+	emptyType.plusCompiler(ret)
+
 fun Type.plusCompiler(ret: Ret<Type>): Compiler =
 	compiler { token ->
 		when (token) {

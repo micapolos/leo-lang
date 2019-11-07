@@ -113,3 +113,11 @@ val Arrow.scriptLine
 		"function" lineTo script(
 			"from" fieldTo lhs.script,
 			"to" fieldTo rhs.script)
+
+val Type.onlyLineOrNull
+	get() =
+		lineStack.onlyOrNull
+
+val Line.arrowOrNull
+	get() =
+		(this as? ArrowLine)?.arrow

@@ -102,6 +102,19 @@ class EvalTest {
 			"chicken" lineTo script())
 			.eval
 			.assertEqualTo(script("chicken" lineTo script()))
+	}
 
+	@Test
+	fun functionGive() {
+		script(
+			"function" lineTo script(
+				"takes" lineTo script(
+					"chicken" lineTo script()),
+				"gives" lineTo script(
+					"egg" lineTo script())),
+			"give" lineTo script(
+				"chicken" lineTo script()))
+			.eval
+			.assertEqualTo(script("egg"))
 	}
 }
