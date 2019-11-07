@@ -53,6 +53,7 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, re
 								else term.invoke(param.term).of(arrow.rhs).plusCompiler(stack, lit, ret)
 							}.notNullOrError("$type as function")
 						}
+					"match" -> TODO()
 					else ->
 						typedCompiler(stack, lit) { rhs ->
 							resolve(stack, rhs.term of (token.begin.string fieldTo rhs.type))
