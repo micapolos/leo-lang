@@ -1,10 +1,7 @@
 package leo14.typed.eval
 
 import leo.base.assertEqualTo
-import leo14.fieldTo
-import leo14.lineTo
-import leo14.literal
-import leo14.script
+import leo14.*
 import kotlin.test.Test
 
 class EvalTest {
@@ -97,6 +94,17 @@ class EvalTest {
 			"chicken" lineTo script())
 			.eval
 			.assertEqualTo(script("chicken" lineTo script()))
+	}
+
+	@Test
+	fun saveAs() {
+		script(
+			line(literal("chicken")),
+			line("save"),
+			"as" lineTo script("foo"),
+			line("foo"))
+			.eval
+			.assertEqualTo(script(literal("chicken")))
 	}
 
 	@Test

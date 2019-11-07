@@ -34,6 +34,7 @@ fun script(unit: Unit): Script = UnitScript(unit)
 fun script(string: String): Script = script(field(string))
 fun script(literal: Literal): Script = script(line(literal))
 fun script(link: ScriptLink): Script = LinkScript(link)
+fun line(string: String): ScriptLine = line(field(string))
 fun line(literal: Literal): ScriptLine = LiteralScriptLine(literal)
 fun line(field: ScriptField): ScriptLine = FieldScriptLine(field)
 fun Script.plus(vararg lines: ScriptLine) = fold(lines) { LinkScript(this linkTo it) }

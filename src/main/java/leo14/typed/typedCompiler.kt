@@ -27,6 +27,14 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 								}
 							}
 						}
+					"save" ->
+						endCompiler {
+							beginCompiler("as") {
+								typeCompiler { name ->
+									emptyTyped<T>().bindPlusCompiler(name ret this, stack, lit, ret)
+								}
+							}
+						}
 					"function" ->
 						beginCompiler("takes") {
 							typeCompiler { param ->
