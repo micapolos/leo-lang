@@ -17,7 +17,8 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, re
 	compiler { token ->
 		when (token) {
 			is LiteralToken ->
-				plusNative(term(lit(token.literal))).plusCompiler(stack, lit, ret)
+				plus(term(lit(token.literal)) of nativeLine)
+					.plusCompiler(stack, lit, ret)
 			is BeginToken ->
 				when (token.begin.string) {
 					"let" ->
@@ -53,8 +54,8 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Function<T>>, lit: (Literal) -> T, re
 							}.notNullOrError("$type as function")
 						}
 					else ->
-						typedCompiler(stack, lit) { rhsTyped ->
-							resolve(stack, rhsTyped.term of (token.begin.string fieldTo rhsTyped.type))
+						typedCompiler(stack, lit) { rhs ->
+							resolve(stack, rhs.term of (token.begin.string fieldTo rhs.type))
 								.plusCompiler(stack, lit, ret)
 						}
 				}
