@@ -35,6 +35,7 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 								}
 							}
 						}
+					"forget" -> TODO() // forget: type && forget: everything
 					"function" ->
 						beginCompiler("takes") {
 							typeCompiler { param ->
