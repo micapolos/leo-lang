@@ -58,4 +58,16 @@ class UtilTest {
 		stringTerm<Any>("").string().assertEqualTo("")
 		stringTerm<Any>("foo").string().assertEqualTo("foo")
 	}
+
+	@Test
+	fun makeTupleTerm() {
+		tupleTerm<Any>()
+			.assertEqualTo(fn(arg0()))
+		tupleTerm(term("first"))
+			.assertEqualTo(fn(fn(arg0<String>()(arg1())))(term("first")))
+		tupleTerm(term("first"), term("second"))
+			.assertEqualTo(fn(fn(fn(arg0<String>()(arg2())(arg1()))))(term("first"))(term("second")))
+		tupleTerm(term("first"), term("second"), term("third"))
+			.assertEqualTo(fn(fn(fn(fn(arg0<String>()(arg3())(arg2())(arg1())))))(term("first"))(term("second"))(term("third")))
+	}
 }
