@@ -1,7 +1,11 @@
 package leo14.typed
 
+import leo.base.failIfOr
 import leo.base.notNullIf
+import leo.base.notNullOrError
 import leo13.Link
+import leo13.Stack
+import leo13.array
 import leo13.linkTo
 import leo14.lambda.*
 
@@ -61,9 +65,41 @@ val <T> Typed<T>.resolveLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 				else (term.first of link.tail) linkTo (term.second of link.head)
 		}
 
+val <T> Typed<T>.lineLink: Link<Typed<T>, TypedLine<T>>
+	get() =
+		resolveLinkOrNull.notNullOrError("$type as link")
+
+val <T> Typed<T>.lastTypedLine: TypedLine<T>
+	get() =
+		lineLink.head
+
+val <T> Typed<T>.previousTyped: Typed<T>
+	get() =
+		lineLink.tail
+
+val <T> Typed<T>.onlyLine
+	get() =
+		lineLink.run { failIfOr(!tail.isEmpty) { head } }
+
+val <T> TypedLine<T>.choice: TypedChoice<T>
+	get() =
+		resolveChoiceOrNull.notNullOrError("$line as choice")
+
+val <T> TypedChoice<T>.onlyField: TypedField<T>
+	get() =
+		resolveFieldOrNull.notNullOrError("$choice not a field")
+
+val <T> TypedField<T>.rhs: Typed<T>
+	get() =
+		resolveRhs
+
 val <T> TypedLine<T>.resolveFieldOrNull: TypedField<T>?
 	get() =
-		(line as? ChoiceLine)?.choice?.let { term of it }?.resolveFieldOrNull
+		resolveChoiceOrNull?.resolveFieldOrNull
+
+val <T> TypedLine<T>.resolveChoiceOrNull: TypedChoice<T>?
+	get() =
+		(line as? ChoiceLine)?.choice?.let { term of it }
 
 val <T> TypedChoice<T>.resolveFieldOrNull: TypedField<T>?
 	get() =
@@ -84,7 +120,9 @@ fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
 fun <T> TypedLine<T>.resolveGet(string: String): Typed<T>? =
 	when (line) {
 		is NativeLine -> notNullIf(string == "native") { term of type(line) }
-		is ChoiceLine -> (term of line.choice).resolveGet(string)
+		is ChoiceLine ->
+			if (string == "choice") term of type(line)
+			else (term of line.choice).resolveGet(string)
 		is ArrowLine -> notNullIf(string == "function") { term of type(line) }
 	}
 
@@ -118,3 +156,8 @@ val <T> Typed<T>.decompileLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 				if (link.head.isStatic) (term of link.tail) linkTo (id<T>() of link.head)
 				else term.pair().run { (first of link.tail) linkTo (second of link.head) }
 		}
+
+// === switch
+
+fun <T> Typed<T>.switchOf(type: Type, fnStack: Stack<Term<T>>): Typed<T> =
+	term.matchTerm(*fnStack.array) of type

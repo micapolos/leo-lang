@@ -148,4 +148,12 @@ class TypedCompilerTest {
 					line(literal("chicken"))))
 			.assertEqualTo(fn(arg0<Any>().invoke(term("chicken"))).invoke(fn(term("egg"))) of type(nativeLine))
 	}
+
+	@Test
+	fun choice() {
+		term("lhs").of(type("bit" lineTo type(choice("zero", "one"))))
+			.plusCompiler(stack(), lit) { resultCompiler(it) }
+			.compile<String>(script("choice"))
+			.assertEqualTo(term("lhs") of type(choice("zero", "one")))
+	}
 }

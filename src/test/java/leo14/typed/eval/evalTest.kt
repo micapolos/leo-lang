@@ -120,4 +120,25 @@ class EvalTest {
 			.eval
 			.assertEqualTo(script("egg"))
 	}
+
+	@Test
+	fun choice() {
+		script(
+			"bit" lineTo script("zero" lineTo script()),
+			"choice" lineTo script())
+			.eval
+			.assertEqualTo(script("zero"))
+	}
+
+	@Test
+	fun choice_manyLines() {
+		script(
+			"vec" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")),
+			"choice" lineTo script())
+			.eval
+			.assertEqualTo(script("y" lineTo script("one")))
+
+	}
 }

@@ -56,6 +56,7 @@ tailrec fun <R, T> R.fold(stack: Stack<T>, fn: R.(T) -> R): R =
 	}
 
 val <T> Stack<T>.reverse get() = stack<T>().fold(this) { push(it) }
+val <T> StackLink<T>.reverse get() = stackLink(value).fold(stack) { push(it) }
 val Stack<*>.isEmpty get() = this is EmptyStack
 
 fun <T> Stack<T>.any(fn: T.() -> Boolean): Boolean =
@@ -332,3 +333,9 @@ tailrec fun <V> Index.plusFirst(stack: Stack<V>, fn: V.() -> Boolean): Index? =
 
 fun <V> Stack<V>.firstIndex(fn: V.() -> Boolean): Index? =
 	zero.index.plusFirst(this, fn)
+
+operator fun <V> StackLink<V>.component1() = stack
+operator fun <V> StackLink<V>.component2() = value
+
+fun <V, R : Any> Stack<V>.split(fn: (Stack<V>, V) -> R): R? =
+	linkOrNull?.run { fn(stack, value) }

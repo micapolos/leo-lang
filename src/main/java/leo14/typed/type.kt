@@ -37,6 +37,7 @@ data class Arrow(val lhs: Type, val rhs: Type) {
 val emptyType = Type(stack())
 val Stack<Line>.type get() = Type(this)
 fun type(vararg lines: Line) = stack(*lines).type
+fun type(choice: Choice) = type(line(choice))
 fun Type.plus(line: Line) = lineStack.push(line).type
 fun Type.plus(field: Field) = plus(line(choice(field)))
 fun type(field: Field, vararg fields: Field) = emptyType.plus(field).fold(fields) { plus(it) }
@@ -56,10 +57,15 @@ fun line(arrow: Arrow): Line = ArrowLine(arrow)
 val nativeType = type(nativeLine)
 
 val StackLink<Field>.choice get() = Choice(this)
+val Stack<Field>.choiceOrNull get() = linkOrNull?.choice
 fun choice(field: Field, vararg fields: Field) = stackLink(field, *fields).choice
+fun choice(string: String, vararg strings: String): Choice =
+	choice(field(string), *strings.map { field(it) }.toTypedArray())
 fun Choice.plus(field: Field) = fieldStackLink.push(field).choice
 fun Choice?.orNullPlus(field: Field): Choice = this?.plus(field) ?: choice(field)
 val Choice.onlyFieldOrNull: Field? get() = fieldLink.onlyHeadOrNull
+val Choice.lastField get() = fieldLink.head
+val Choice.previousChoiceOrNull get() = fieldLink.tail
 val Choice.fieldLink
 	get() =
 		when (fieldStackLink.stack) {
@@ -67,9 +73,13 @@ val Choice.fieldLink
 			is LinkStack -> fieldStackLink.stack.link.choice
 		} linkTo fieldStackLink.value
 
+fun <R> Choice.split(fn: (Choice?, Field) -> R): R =
+	fn(fieldStackLink.stack.choiceOrNull, fieldStackLink.value)
+
 infix fun String.fieldTo(type: Type) = Field(this, type)
 infix fun String.lineTo(type: Type) = line(choice(fieldTo(type)))
 infix fun Type.arrowTo(rhs: Type) = Arrow(this, rhs)
+fun field(string: String) = string fieldTo type()
 
 // TODO: In case of performance problems, add Type.isStatic field.
 val Type.isStatic: Boolean get() = lineStack.all { isStatic }
@@ -121,3 +131,10 @@ val Type.onlyLineOrNull
 val Line.arrowOrNull
 	get() =
 		(this as? ArrowLine)?.arrow
+
+val Line.choiceOrNull
+	get() =
+		(this as? ChoiceLine)?.choice
+
+fun Type.checkIs(other: Type): Type =
+	apply { if (this != other) error("$this as other") }
