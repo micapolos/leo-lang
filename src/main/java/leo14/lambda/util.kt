@@ -120,3 +120,11 @@ tailrec fun <T> Term<T>.fn(index: Index): Term<T> =
 		is ZeroIndex -> this
 		is NextIndex -> fn(this).fn(index.previous)
 	}
+
+// === one of
+
+fun <T> choiceTerm(index: Index, count: Index, term: Term<T>): Term<T> =
+	arg<T>(index).invoke(term).fn(count)
+
+fun <T> Term<T>.matchTerm(vararg fns: Term<T>): Term<T> =
+	invoke(*fns)

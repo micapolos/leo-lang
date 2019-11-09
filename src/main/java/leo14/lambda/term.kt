@@ -1,11 +1,12 @@
 package leo14.lambda
 
+import leo.base.string
 import leo13.Index
 
 sealed class Term<out T>
 
 data class NativeTerm<T>(val native: T) : Term<T>() {
-	override fun toString() = "$native"
+	override fun toString() = "${native.string}"
 }
 
 data class AbstractionTerm<T>(val abstraction: Abstraction<Term<T>>) : Term<T>() {

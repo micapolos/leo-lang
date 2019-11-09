@@ -5,6 +5,9 @@ import leo.base.clampedByte
 import leo.base.clampedShort
 import leo.binary.bit0
 import leo.binary.bit1
+import leo13.index0
+import leo13.index1
+import leo13.index2
 import leo13.stack
 import leo14.clampedInt2
 import leo14.clampedInt4
@@ -69,5 +72,23 @@ class UtilTest {
 			.assertEqualTo(fn(fn(fn(arg0<String>()(arg2())(arg1()))))(term("first"))(term("second")))
 		tupleTerm(term("first"), term("second"), term("third"))
 			.assertEqualTo(fn(fn(fn(fn(arg0<String>()(arg3())(arg2())(arg1())))))(term("first"))(term("second"))(term("third")))
+	}
+
+	@Test
+	fun choice() {
+		choiceTerm(index0, index1, term("0 of 1"))
+			.assertEqualTo(fn(arg0<Any>().invoke(term("0 of 1"))))
+
+		choiceTerm(index0, index2, term("0 of 2"))
+			.assertEqualTo(fn(fn(arg0<Any>().invoke(term("0 of 2")))))
+		choiceTerm(index1, index2, term("1 of 2"))
+			.assertEqualTo(fn(fn(arg1<Any>().invoke(term("1 of 2")))))
+	}
+
+	@Test
+	fun match() {
+		term("choice")
+			.matchTerm(term("case1"), term("case0"))
+			.assertEqualTo(term("choice").invoke(term("case1")).invoke(term("case0")))
 	}
 }
