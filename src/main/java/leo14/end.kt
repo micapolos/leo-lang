@@ -1,5 +1,7 @@
 package leo14
 
-object End
+object End {
+	override fun toString() = ")"
+}
 
 val end = End

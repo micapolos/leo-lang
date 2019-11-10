@@ -19,6 +19,7 @@ infix fun <T> Term<T>.of(type: Type) = Typed(this, type)
 infix fun <T> Term<T>.of(line: Line) = TypedLine(this, line)
 infix fun <T> Term<T>.of(choice: Choice) = TypedChoice(this, choice)
 infix fun <T> Term<T>.of(field: Field) = TypedField(this, field)
+infix fun <T> Term<T>.of(case: Case) = TypedCase(this, case)
 
 fun <T> choice(typed: TypedCase<T>): TypedChoice<T> = typed.term of choice(typed.case)
 fun <T> line(typed: TypedChoice<T>): TypedLine<T> = typed.term of line(typed.choice)

@@ -1,8 +1,7 @@
 package leo14.typed
 
 import leo.base.assertEqualTo
-import leo14.lambda.id
-import leo14.lambda.term
+import leo14.lambda.*
 import kotlin.test.Test
 
 class TypedTest {
@@ -46,5 +45,13 @@ class TypedTest {
 			.plus(term("bar").of(line("bar")))
 			.assertEqualTo(
 				id<String>().of(type("foo").plus(line("bar"))))
+	}
+
+	@Test
+	fun castChoice() {
+		term("lhs")
+			.of(type("zero" lineTo nativeType))
+			.castTypedTo(type(choice("zero", "one")))
+			.assertEqualTo(fn(fn(arg1<Any>().invoke(arg0()))))
 	}
 }

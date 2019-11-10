@@ -3,10 +3,7 @@ package leo14.typed
 import leo.base.notNullIf
 import leo.base.notNullOrError
 import leo.base.orIfNull
-import leo13.Stack
-import leo13.isEmpty
-import leo13.mapFirstIndexed
-import leo13.push
+import leo13.*
 import leo14.*
 import leo14.lambda.*
 
@@ -59,9 +56,9 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 							}.notNullOrError("$type as function")
 						}
 					"match" ->
-						type.onlyLineOrNull?.choiceOrNull?.let { choice ->
-							plusMatchCompiler(choice, stack, lit, ret)
-						} ?: error("$type as choice")
+						onlyLine.choice.plusMatchCompiler(stack, lit) { typed ->
+							typed.plusCompiler(stack, lit, ret)
+						}
 					"of" ->
 						typeCompiler { type ->
 							castTypedTo(type).plusCompiler(stack, lit, ret)
@@ -71,6 +68,10 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 							script("scope" lineTo stack.script { scriptLine })
 								.typed<T>()
 								.plusCompiler(stack, lit, ret)
+						}
+					"delete" ->
+						endCompiler {
+							typedCompiler(stack, lit, ret)
 						}
 					else ->
 						typedCompiler(stack, lit) { rhs ->
@@ -108,30 +109,33 @@ fun <T> Typed<T>.plusCompilerWith(function: Function<T>, stack: Stack<Arrow>, li
 fun <T> typedCompilerWith(function: Function<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
 	emptyTyped<T>().plusCompilerWith(function, stack, lit, ret)
 
-fun <T> Typed<T>.plusMatchCompiler(choice: Choice, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
-	choice.split { previousChoice, case ->
-		if (previousChoice.caseStack.isEmpty)
-			plusCaseCompiler(case, null, stack, lit, ret)
-		else
-			plusMatchCompiler(previousChoice, stack, lit) { previousTyped ->
-				plusCaseCompiler(case, previousTyped.type, stack, lit, ret)
-			}
+fun <T> TypedChoice<T>.plusMatchCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
+	Match(term, choice.caseStack.reverse, null).plusCompiler(stack, lit, ret)
 
-	} ?: error("impossible")
+fun <T> Match<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
+	when (caseStack) {
+		is EmptyStack ->
+			if (inferredTypeOrNull == null) error("impossible")
+			else endCompiler { ret(term of inferredTypeOrNull) }
+		is LinkStack ->
+			term.of(caseStack.link.value)
+				.plusCaseCompiler(inferredTypeOrNull, stack, lit) { typed ->
+					Match(typed.term, caseStack.link.stack, typed.type).plusCompiler(stack, lit, ret)
+				}
+	}
 
-fun <T> Typed<T>.plusCaseCompiler(
-	case: Case,
+fun <T> TypedCase<T>.plusCaseCompiler(
 	expectedType: Type?,
 	stack: Stack<Arrow>,
 	lit: (Literal) -> T,
 	ret: Ret<Typed<T>>): Compiler =
 	beginCompiler(case.string) {
-		typedCompilerWith(type("matching") ret (arg0<T>() of case.rhs), stack, lit) { typed ->
-			endCompiler {
+		arg0<T>()
+			.of(case.rhs)
+			.plusCompilerWith(type("matching") ret (arg0<T>() of case.rhs), stack, lit) { typed ->
 				ret(term.invoke(typed.term) of
 					expectedType
 						?.apply { typed.type.checkIs(this) }
 						.orIfNull { typed.type })
 			}
-		}
 	}

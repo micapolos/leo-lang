@@ -1,10 +1,7 @@
 package leo14
 
 import leo.base.orIfNull
-import leo13.array
-import leo13.mapFirst
-import leo13.stack
-import leo13.toList
+import leo13.*
 import leo14.js.compiler.Choice
 import leo14.js.compiler.Fallback
 import leo14.js.compiler.compile
@@ -69,7 +66,10 @@ fun Compiler.writeEnd(script: Script): Compiler =
 	write(script).write(token(end))
 
 fun <T> Compiler.compile(script: Script): T =
-	write(script).write(token(end)).result()
+	tracing.write(script).write(token(end)).result()
+
+fun <T> Compiler.compile(scriptLine: ScriptLine): T =
+	tracing.write(scriptLine).result()
 
 fun Compiler.write(link: ScriptLink) =
 	write(link.lhs).write(link.line)
@@ -105,7 +105,7 @@ fun compiler(expectedToken: Token, fn: () -> Compiler): Compiler =
 	object : Compiler {
 		override fun write(token: Token) =
 			if (token == expectedToken) fn()
-			else error("$token expected")
+			else error("expected: $expectedToken")
 	}
 
 fun stringCompiler(fn: (String) -> Compiler): Compiler =
@@ -147,4 +147,18 @@ fun switchCompiler(fallback: Fallback, vararg choices: Choice): Compiler =
 fun recursive(fn: () -> Compiler): Compiler =
 	compiler { token ->
 		fn().write(token)
+	}
+
+val Compiler.tracing get() = tracingIn(stack())
+
+fun Compiler.tracingIn(tokenStack: Stack<Token>): Compiler =
+	compiler { token ->
+		try {
+			write(token).run {
+				if (this is ResultCompiler<*>) this
+				else tracingIn(tokenStack.push(token))
+			}
+		} catch (ise: IllegalStateException) {
+			error("${tokenStack.toList().joinToString("")}, got: $token, error: ${ise.message}")
+		}
 	}

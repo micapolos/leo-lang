@@ -131,6 +131,18 @@ class EvalTest {
 	}
 
 	@Test
+	fun ofChoice() {
+		script(
+			"zero" lineTo script(literal("zero")),
+			"of" lineTo script(
+				"choice" lineTo script(
+					"zero" lineTo script("native"),
+					"one" lineTo script("native"))))
+			.compileTyped.eval
+			.assertEqualTo("zero")
+	}
+
+	@Test
 	fun scope() {
 		script(
 			"let" lineTo script("chicken"),
@@ -151,12 +163,32 @@ class EvalTest {
 	}
 
 	@Test
-	fun ofChoice() {
+	fun matchSimpleEmptyCases() {
 		script(
-			"zero" lineTo script(),
+			"circle" lineTo script(),
 			"of" lineTo script(
-				"choice" lineTo script("zero", "one")))
+				"choice" lineTo script(
+					"circle" lineTo script(),
+					"square" lineTo script())),
+			"match" lineTo script(
+				"circle" lineTo script(),
+				"square" lineTo script()))
 			.eval
-			.assertEqualTo(script("zero"))
+			.assertEqualTo(script())
+	}
+
+	@Test
+	fun matchReturnValues() {
+		script(
+			"circle" lineTo script(),
+			"of" lineTo script(
+				"choice" lineTo script(
+					"circle" lineTo script(),
+					"square" lineTo script())),
+			"match" lineTo script(
+				"circle" lineTo script(literal("circle")),
+				"square" lineTo script(literal("square"))))
+			.eval
+			.assertEqualTo(script())
 	}
 }

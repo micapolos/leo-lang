@@ -14,7 +14,7 @@ import leo14.typed.plusCompiler
 
 val Typed<Any>.eval get() = term(term.eval) of type
 
-val Script.typed: Typed<Any>
+val Script.compileTyped: Typed<Any>
 	get() =
 		emptyTyped<Any>()
 			.plusCompiler(stack(), { it.any }, ret())
@@ -22,7 +22,7 @@ val Script.typed: Typed<Any>
 
 val Script.evalTyped: Typed<Any>
 	get() =
-		typed.eval
+		compileTyped.eval
 
 val Script.eval: Any
 	get() =

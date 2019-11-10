@@ -150,7 +150,16 @@ class TypedCompilerTest {
 	}
 
 	@Test
-	fun choice() {
+	fun compileDelete() {
+		term("lhs")
+			.of(nativeType)
+			.plusCompiler(stack(), lit, ret())
+			.compile<Any>(script("delete"))
+			.assertEqualTo(emptyTyped<Any>())
+	}
+
+	@Test
+	fun compileChoice() {
 		term("lhs").of(type("bit" lineTo type(choice("zero", "one"))))
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<String>(script("choice"))
@@ -188,5 +197,55 @@ class TypedCompilerTest {
 										"one" lineTo script())))))
 					.assertEqualTo(castTypedTo(type("bit" lineTo type(choice("zero", "one")))))
 			}
+	}
+
+	@Test
+	fun compileCase() {
+		term<Any>("lhs")
+			.of("circle" caseTo type("radius"))
+			.plusCaseCompiler(null, stack(), lit, ret())
+			.compile<Any>("circle" lineTo script("plus" lineTo script("one")))
+			.assertEqualTo(
+				term<Any>("lhs")
+					.invoke(fn(id()))
+					.of(
+						type(
+							"radius" lineTo type(),
+							"plus" lineTo type("one"))))
+	}
+
+	@Test
+	fun compileMatch() {
+		term<Any>("lhs")
+			.of(
+				choice(
+					"circle" caseTo type("radius"),
+					"square" caseTo type("side")))
+			.plusMatchCompiler(stack(), lit, ret())
+			.write("circle" lineTo script("delete" lineTo script(), line(literal("circle"))))
+			.write("square" lineTo script("delete" lineTo script(), line(literal("square"))))
+			.result<Any>()
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun compileMatchFull() {
+		term<Any>("lhs")
+			.of(
+				type(
+					choice(
+						"circle" caseTo type("radius"),
+						"square" caseTo type("side"))))
+			.plusCompiler(stack(), lit, ret())
+			.compile<Any>(
+				script(
+					"match" lineTo script(
+						"circle" lineTo script(
+							"delete" lineTo script(),
+							line(literal("circle"))),
+						"square" lineTo script(
+							"delete" lineTo script(),
+							line(literal("square"))))))
+			.assertEqualTo(null)
 	}
 }

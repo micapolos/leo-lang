@@ -142,7 +142,7 @@ val Line.choiceOrNull
 		(this as? ChoiceLine)?.choice
 
 fun Type.checkIs(other: Type): Type =
-	apply { if (this != other) error("$this as other") }
+	apply { if (this != other) error("$this as $other") }
 
 val Choice.countIndex: Index
 	get() =
