@@ -2,7 +2,11 @@ package leo14.typed
 
 import leo.base.assertEqualTo
 import leo.base.empty
-import leo14.lambda.*
+import leo13.index0
+import leo13.index1
+import leo13.index2
+import leo14.lambda.choiceTerm
+import leo14.lambda.term
 import kotlin.test.Test
 
 class CastingTest {
@@ -62,7 +66,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term))
+								choiceTerm(index0, index1, lastTypedLine.typedField.rhs.term)
 									.of("foo" lineTo nativeType)).term)
 			}
 	}
@@ -75,7 +79,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								fn(fn(arg1<Any>().invoke(lastTypedLine.typedField.rhs.term)))
+								choiceTerm(index1, index2, lastTypedLine.typedField.rhs.term)
 									.of("foo" lineTo nativeType)).term)
 			}
 
@@ -85,7 +89,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								fn(fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term)))
+								choiceTerm(index0, index2, lastTypedLine.typedField.rhs.term)
 									.of(line(choice("foo", "bar")))).term)
 			}
 	}
@@ -98,7 +102,9 @@ class CastingTest {
 				castTermTo(type(nativeLine, line(choice("foo"))))
 					.assertEqualTo(
 						previousTyped
-							.plus(fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term)).of(line(choice("foo"))))
+							.plus(
+								choiceTerm(index0, index1, lastTypedLine.typedField.rhs.term)
+									.of(line(choice("foo"))))
 							.term)
 			}
 	}
@@ -112,7 +118,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term))
+								choiceTerm(index0, index1, lastTypedLine.typedField.rhs.term)
 									.of(line(choice("foo"))))
 							.term)
 			}
