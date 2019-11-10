@@ -2,6 +2,8 @@ package leo14.lambda
 
 import leo.base.string
 import leo13.Index
+import leo13.NextIndex
+import leo13.ZeroIndex
 
 sealed class Term<out T>
 
@@ -52,3 +54,10 @@ fun <T, R> Term<T>.native(fn: (T) -> R): R =
 		else -> error("native expected")
 	}
 
+fun <T, R> Term<T>.abstraction(index: Index, fn: (Term<T>) -> R): R =
+	when (index) {
+		is ZeroIndex -> fn(this)
+		is NextIndex -> abstraction {
+			abstraction(index.previous, fn)
+		}
+	}

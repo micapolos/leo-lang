@@ -1,8 +1,8 @@
 package leo14.typed
 
+import leo13.get
 import leo14.*
-import leo14.lambda.NativeTerm
-import leo14.lambda.Term
+import leo14.lambda.*
 
 fun <T> Typed<T>.decompile(fn: T.() -> ScriptLine): Script =
 	decompileLinkOrNull
@@ -22,7 +22,15 @@ fun <T> Term<T>.decompileNative(fn: T.() -> ScriptLine) =
 	else error("$this as NativeTerm")
 
 fun <T> TypedChoice<T>.decompileLine(fn: T.() -> ScriptLine): ScriptLine =
-	TODO()
+	term.abstraction(choice.countIndex) { body ->
+		body.application { fnTerm, argTerm ->
+			argTerm.variable { index ->
+				choice.caseStack.get(index)!!.let { case ->
+					(fnTerm of (case.string fieldTo case.rhs)).decompileLine(fn)
+				}
+			}
+		}
+	}
 
 fun <T> TypedField<T>.decompileLine(fn: T.() -> ScriptLine): ScriptLine =
 	line(field.string fieldTo resolveRhs.decompile(fn))

@@ -131,6 +131,26 @@ class EvalTest {
 	}
 
 	@Test
+	fun scope() {
+		script(
+			"let" lineTo script("chicken"),
+			"give" lineTo script("egg"),
+			"let" lineTo script("horse"),
+			"give" lineTo script("shit"),
+			"scope" lineTo script())
+			.eval
+			.assertEqualTo(
+				script(
+					"scope" lineTo script(
+						"function" lineTo script(
+							"takes" lineTo script("chicken"),
+							"gives" lineTo script("egg")),
+						"function" lineTo script(
+							"takes" lineTo script("horse"),
+							"gives" lineTo script("shit")))))
+	}
+
+	@Test
 	fun ofChoice() {
 		script(
 			"zero" lineTo script(),

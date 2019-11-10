@@ -1,6 +1,9 @@
 package leo14
 
 import leo.base.fold
+import leo13.Stack
+import leo13.fold
+import leo13.reverse
 
 sealed class Script
 
@@ -82,3 +85,6 @@ val ScriptLink.code
 val ScriptField.code
 	get() =
 		"$string(${rhs.code})"
+
+fun <V> Stack<V>.script(fn: V.() -> ScriptLine): Script =
+	script().fold(reverse) { plus(it.fn()) }

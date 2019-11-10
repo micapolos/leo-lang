@@ -143,3 +143,7 @@ val Line.choiceOrNull
 
 fun Type.checkIs(other: Type): Type =
 	apply { if (this != other) error("$this as other") }
+
+val Choice.countIndex: Index
+	get() =
+		index0.fold(caseStack) { next }

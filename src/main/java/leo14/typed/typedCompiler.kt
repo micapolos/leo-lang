@@ -66,6 +66,12 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 						typeCompiler { type ->
 							castTypedTo(type).plusCompiler(stack, lit, ret)
 						}
+					"scope" ->
+						endCompiler {
+							script("scope" lineTo stack.script { scriptLine })
+								.typed<T>()
+								.plusCompiler(stack, lit, ret)
+						}
 					else ->
 						typedCompiler(stack, lit) { rhs ->
 							resolve(stack, rhs.term of (token.begin.string fieldTo rhs.type))
@@ -121,9 +127,11 @@ fun <T> Typed<T>.plusCaseCompiler(
 	ret: Ret<Typed<T>>): Compiler =
 	beginCompiler(case.string) {
 		typedCompilerWith(type("matching") ret (arg0<T>() of case.rhs), stack, lit) { typed ->
-			ret(term.invoke(typed.term) of
-				expectedType
-					?.apply { typed.type.checkIs(this) }
-					.orIfNull { typed.type })
+			endCompiler {
+				ret(term.invoke(typed.term) of
+					expectedType
+						?.apply { typed.type.checkIs(this) }
+						.orIfNull { typed.type })
+			}
 		}
 	}
