@@ -31,7 +31,6 @@ data class ScriptField(val string: String, val rhs: Script) {
 }
 
 fun script(unit: Unit): Script = UnitScript(unit)
-fun script(string: String): Script = script(field(string))
 fun script(literal: Literal): Script = script(line(literal))
 fun script(link: ScriptLink): Script = LinkScript(link)
 fun line(string: String): ScriptLine = line(field(string))
@@ -40,6 +39,7 @@ fun line(field: ScriptField): ScriptLine = FieldScriptLine(field)
 fun Script.plus(vararg lines: ScriptLine) = fold(lines) { LinkScript(this linkTo it) }
 fun Script.plus(field: ScriptField, vararg fields: ScriptField): Script = plus(line(field)).fold(fields) { plus(it) }
 fun script(vararg lines: ScriptLine): Script = script(Unit).plus(*lines)
+fun script(string: String, vararg strings: String) = script(field(string)).fold(strings) { plus(field(it)) }
 fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
 

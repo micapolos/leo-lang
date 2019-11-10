@@ -2,7 +2,9 @@ package leo14.typed
 
 import leo.base.notNullIf
 import leo.base.notNullOrError
+import leo.base.orIfNull
 import leo13.Stack
+import leo13.isEmpty
 import leo13.mapFirstIndexed
 import leo13.push
 import leo14.*
@@ -101,26 +103,27 @@ fun <T> typedCompilerWith(function: Function<T>, stack: Stack<Arrow>, lit: (Lite
 	emptyTyped<T>().plusCompilerWith(function, stack, lit, ret)
 
 fun <T> Typed<T>.plusMatchCompiler(choice: Choice, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
-	TODO()
-//	choice.previousChoiceOrNull?.let { previousChoice ->
-//		plusMatchCompiler(previousChoice, stack, lit) { previousTyped ->
-//			plusCaseCompiler(choice.lastField, previousTyped.type, stack, lit, ret)
-//		}
-//	}.orIfNull {
-//		plusCaseCompiler(choice.lastField, null, stack, lit, ret)
-//	}
-//
-//fun <T> Typed<T>.plusCaseCompiler(
-//	case: Field,
-//	expectedType: Type?,
-//	stack: Stack<Arrow>,
-//	lit: (Literal) -> T,
-//	ret: Ret<Typed<T>>): Compiler =
-//	beginCompiler(case.string) {
-//		typedCompilerWith(type("matching") ret (arg0<T>() of case.rhs), stack, lit) { typed ->
-//			ret(term.invoke(typed.term) of
-//				expectedType
-//					?.apply { typed.type.checkIs(this) }
-//					.orIfNull { typed.type })
-//		}
-//	}
+	choice.split { previousChoice, case ->
+		if (previousChoice.caseStack.isEmpty)
+			plusCaseCompiler(case, null, stack, lit, ret)
+		else
+			plusMatchCompiler(previousChoice, stack, lit) { previousTyped ->
+				plusCaseCompiler(case, previousTyped.type, stack, lit, ret)
+			}
+
+	} ?: error("impossible")
+
+fun <T> Typed<T>.plusCaseCompiler(
+	case: Case,
+	expectedType: Type?,
+	stack: Stack<Arrow>,
+	lit: (Literal) -> T,
+	ret: Ret<Typed<T>>): Compiler =
+	beginCompiler(case.string) {
+		typedCompilerWith(type("matching") ret (arg0<T>() of case.rhs), stack, lit) { typed ->
+			ret(term.invoke(typed.term) of
+				expectedType
+					?.apply { typed.type.checkIs(this) }
+					.orIfNull { typed.type })
+		}
+	}

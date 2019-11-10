@@ -120,4 +120,23 @@ class EvalTest {
 			.eval
 			.assertEqualTo(script("egg"))
 	}
+
+	@Test
+	fun ofStatic() {
+		script(
+			"zero" lineTo script(),
+			"of" lineTo script("zero"))
+			.eval
+			.assertEqualTo(script("zero"))
+	}
+
+	@Test
+	fun ofChoice() {
+		script(
+			"zero" lineTo script(),
+			"of" lineTo script(
+				"choice" lineTo script("zero", "one")))
+			.eval
+			.assertEqualTo(script("zero"))
+	}
 }
