@@ -138,7 +138,7 @@ class EvalTest {
 				"choice" lineTo script(
 					"zero" lineTo script("native"),
 					"one" lineTo script("native"))))
-			.compileTyped.eval
+			.eval
 			.assertEqualTo("zero")
 	}
 

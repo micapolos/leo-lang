@@ -51,7 +51,7 @@ class TypedTest {
 	fun castChoice() {
 		term("lhs")
 			.of(type("zero" lineTo nativeType))
-			.castTypedTo(type(choice("zero", "one")))
-			.assertEqualTo(fn(fn(arg1<Any>().invoke(arg0()))))
+			.castTermTo(type(choice("zero", "one")))
+			.assertEqualTo(fn(fn(arg1<Any>().invoke(term("lhs")))))
 	}
 }

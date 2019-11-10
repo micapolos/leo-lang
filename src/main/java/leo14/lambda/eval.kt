@@ -41,8 +41,7 @@ val <T> Value<T>.evalTerm: Term<T>
 
 val <T> Thunk<T>.evalTerm: Term<T>
 	get() =
-		if (!scope.valueStack.isEmpty) error("free variables")
-		else fn(term)
+		fn(term).fold(scope.valueStack) { fn(this).invoke(it.evalTerm) }
 
 val <T> Term<T>.value get() = value(emptyScope())
 
