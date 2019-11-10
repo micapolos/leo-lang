@@ -58,8 +58,12 @@ class CastingTest {
 		term("foo")
 			.of(type("foo" lineTo nativeType))
 			.run {
-				castTo(type(choice("foo")))
-					.assertEqualTo(cast(id<Any>().plus(fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term)))))
+				castTermTo(type(choice("foo")))
+					.assertEqualTo(
+						previousTyped
+							.plus(
+								fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term))
+									.of("foo" lineTo nativeType)).term)
 			}
 	}
 
@@ -67,24 +71,50 @@ class CastingTest {
 	fun multipleChoice() {
 		term("foo").of(type("foo" lineTo nativeType))
 			.run {
-				castTo(type(choice("foo", "bar")))
-					.assertEqualTo(cast(id<Any>().plus(fn(fn(arg1<Any>().invoke(lastTypedLine.typedField.rhs.term))))))
+				castTermTo(type(choice("foo", "bar")))
+					.assertEqualTo(
+						previousTyped
+							.plus(
+								fn(fn(arg1<Any>().invoke(lastTypedLine.typedField.rhs.term)))
+									.of("foo" lineTo nativeType)).term)
 			}
 
 		term("bar").of(type("bar" lineTo nativeType))
 			.run {
-				castTo(type(choice("foo", "bar")))
-					.assertEqualTo(cast(id<Any>().plus(fn(fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term))))))
+				castTermTo(type(choice("foo", "bar")))
+					.assertEqualTo(
+						previousTyped
+							.plus(
+								fn(fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term)))
+									.of(line(choice("foo", "bar")))).term)
 			}
 	}
 
 	@Test
-	fun deepChoice() {
+	fun deepChoice_native() {
 		term("foo")
 			.of(type(nativeLine, "foo" lineTo type()))
 			.run {
-				castTo(type(nativeLine, line(choice("foo"))))
-					.assertEqualTo(cast(previousTyped.term.plus(fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term)))))
+				castTermTo(type(nativeLine, line(choice("foo"))))
+					.assertEqualTo(
+						previousTyped
+							.plus(fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term)).of(line(choice("foo"))))
+							.term)
+			}
+	}
+
+	@Test
+	fun deepChoice_simple() {
+		term("foo")
+			.of(type("goo" lineTo type(), "foo" lineTo type()))
+			.run {
+				castTermTo(type("goo" lineTo type(), line(choice("foo"))))
+					.assertEqualTo(
+						previousTyped
+							.plus(
+								fn(arg0<Any>().invoke(lastTypedLine.typedField.rhs.term))
+									.of(line(choice("foo"))))
+							.term)
 			}
 	}
 }

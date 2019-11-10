@@ -39,7 +39,7 @@ infix fun <T> Typed<T>.castTo(toType: Type): Cast<T>? =
 							is EmptyCast ->
 								when (headCast) {
 									is EmptyCast -> cast(empty)
-									is TermCast -> cast(typedLink.tail.term.plus(headCast.term))
+									is TermCast -> cast(typedLink.tail.plus(headCast.term of typeLink.head).term)
 								}
 							is TermCast ->
 								when (headCast) {
