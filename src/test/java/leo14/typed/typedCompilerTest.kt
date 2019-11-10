@@ -156,4 +156,37 @@ class TypedCompilerTest {
 			.compile<String>(script("choice"))
 			.assertEqualTo(term("lhs") of type(choice("zero", "one")))
 	}
+
+	@Test
+	fun of() {
+		term("lhs")
+			.of(type("zero"))
+			.run {
+				plusCompiler(stack(), lit) { resultCompiler(it) }
+					.compile<String>(
+						script(
+							"of" lineTo script(
+								"choice" lineTo script(
+									"zero" lineTo script(),
+									"one" lineTo script()))))
+					.assertEqualTo(castTypedTo(type(choice("zero", "one"))))
+			}
+	}
+
+	@Test
+	fun deepOf() {
+		term("lhs")
+			.of(type("bit" lineTo type("zero")))
+			.run {
+				plusCompiler(stack(), lit) { resultCompiler(it) }
+					.compile<String>(
+						script(
+							"of" lineTo script(
+								"bit" lineTo script(
+									"choice" lineTo script(
+										"zero" lineTo script(),
+										"one" lineTo script())))))
+					.assertEqualTo(castTypedTo(type("bit" lineTo type(choice("zero", "one")))))
+			}
+	}
 }

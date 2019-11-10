@@ -60,6 +60,10 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 						type.onlyLineOrNull?.choiceOrNull?.let { choice ->
 							plusMatchCompiler(choice, stack, lit, ret)
 						} ?: error("$type as choice")
+					"of" ->
+						typeCompiler { type ->
+							castTypedTo(type).plusCompiler(stack, lit, ret)
+						}
 					else ->
 						typedCompiler(stack, lit) { rhs ->
 							resolve(stack, rhs.term of (token.begin.string fieldTo rhs.type))

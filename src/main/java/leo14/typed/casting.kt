@@ -1,9 +1,6 @@
 package leo14.typed
 
-import leo.base.Empty
-import leo.base.empty
-import leo.base.ifOrNull
-import leo.base.notNullIf
+import leo.base.*
 import leo13.Index
 import leo13.index0
 import leo13.next
@@ -25,6 +22,9 @@ fun <T> Cast<T>.resolve(input: Term<T>) =
 		is EmptyCast -> input
 		is TermCast -> term
 	}
+
+infix fun <T> Typed<T>.castTypedTo(toType: Type): Typed<T> =
+	castTermTo(toType).notNullOrError("$type as $toType") of toType
 
 infix fun <T> Typed<T>.castTermTo(toType: Type): Term<T>? =
 	castTo(toType)?.resolve(term)
