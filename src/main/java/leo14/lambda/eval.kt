@@ -32,13 +32,18 @@ fun <T> Value<T>.apply(rhs: Value<T>): Value<T> =
 		is ThunkValue -> thunk.term.value(thunk.scope.push(rhs))
 	}
 
-val <T> Value<T>.native: T
+val <T> Value<T>.evalTerm: Term<T>
 	get() =
 		when (this) {
-			is NativeValue -> native
-			is ThunkValue -> error("$this.native")
+			is NativeValue -> term(native)
+			is ThunkValue -> thunk.evalTerm
 		}
+
+val <T> Thunk<T>.evalTerm: Term<T>
+	get() =
+		if (!scope.valueStack.isEmpty) error("free variables")
+		else fn(term)
 
 val <T> Term<T>.value get() = value(emptyScope())
 
-val <T> Term<T>.eval get() = value.native
+val <T> Term<T>.eval get() = value.evalTerm
