@@ -337,5 +337,5 @@ fun <V> Stack<V>.firstIndex(fn: V.() -> Boolean): Index? =
 operator fun <V> StackLink<V>.component1() = stack
 operator fun <V> StackLink<V>.component2() = value
 
-fun <V, R : Any> Stack<V>.split(fn: (Stack<V>, V) -> R): R? =
+fun <V, R> Stack<V>.split(fn: (Stack<V>, V) -> R): R? =
 	linkOrNull?.run { fn(stack, value) }

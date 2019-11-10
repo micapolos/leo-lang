@@ -1,7 +1,5 @@
 package leo14.typed
 
-import leo.base.notNullOrError
-import leo.base.nullOf
 import leo14.*
 
 fun typeCompiler(ret: Ret<Type>): Compiler =
@@ -19,7 +17,7 @@ fun Type.plusCompiler(ret: Ret<Type>): Compiler =
 							plus(nativeLine).plusCompiler(ret)
 						}
 					"choice" ->
-						nullOf<Choice>().orNullPlusCompiler { choice ->
+						choice().plusCompiler { choice ->
 							plus(line(choice)).plusCompiler(ret)
 						}
 					"function" ->
@@ -44,16 +42,16 @@ fun Type.plusCompiler(ret: Ret<Type>): Compiler =
 		}
 	}
 
-fun Choice?.orNullPlusCompiler(ret: Ret<Choice>): Compiler =
+fun Choice.plusCompiler(ret: Ret<Choice>): Compiler =
 	compiler { token ->
 		when (token) {
 			is LiteralToken ->
 				error("$token")
 			is BeginToken ->
 				emptyType.plusCompiler { rhs ->
-					orNullPlus(token.begin.string fieldTo rhs).orNullPlusCompiler(ret)
+					plus(token.begin.string caseTo rhs).plusCompiler(ret)
 				}
 			is EndToken ->
-				ret(notNullOrError("empty choice"))
+				ret(this)
 		}
 	}

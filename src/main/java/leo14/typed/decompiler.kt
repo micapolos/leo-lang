@@ -12,6 +12,7 @@ fun <T> Typed<T>.decompile(fn: T.() -> ScriptLine): Script =
 fun <T> TypedLine<T>.decompileLine(fn: T.() -> ScriptLine): ScriptLine =
 	when (line) {
 		is NativeLine -> term.decompileNative(fn)
+		is FieldLine -> (term of line.field).decompileLine(fn)
 		is ChoiceLine -> (term of line.choice).decompileLine(fn)
 		is ArrowLine -> TODO()
 	}
@@ -21,9 +22,7 @@ fun <T> Term<T>.decompileNative(fn: T.() -> ScriptLine) =
 	else error("$this as NativeTerm")
 
 fun <T> TypedChoice<T>.decompileLine(fn: T.() -> ScriptLine): ScriptLine =
-	choice.onlyFieldOrNull
-		?.let { field -> (term of field).decompileLine(fn) }
-		?: TODO()
+	TODO()
 
 fun <T> TypedField<T>.decompileLine(fn: T.() -> ScriptLine): ScriptLine =
 	line(field.string fieldTo resolveRhs.decompile(fn))

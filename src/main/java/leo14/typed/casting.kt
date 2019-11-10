@@ -1,43 +1,97 @@
 package leo14.typed
 
+import leo.base.Empty
+import leo.base.empty
 import leo.base.ifOrNull
 import leo.base.notNullIf
+import leo13.Index
+import leo13.index0
+import leo13.next
 import leo14.lambda.Term
+import leo14.lambda.arg
+import leo14.lambda.fn
+import leo14.lambda.invoke
 
-infix fun <T> Typed<T>.castTo(toType: Type): Term<T>? =
-	if (type == toType) term // TODO: This can quickly become quadratic. Maybe return (Term, didCast)?
-	else resolveLinkOrNull
+sealed class Cast<T>
+
+data class EmptyCast<T>(val empty: Empty) : Cast<T>()
+data class TermCast<T>(val term: Term<T>) : Cast<T>()
+
+fun <T> cast(empty: Empty): Cast<T> = EmptyCast(empty)
+fun <T> cast(term: Term<T>): Cast<T> = TermCast(term)
+
+fun <T> Cast<T>.resolve(input: Term<T>) =
+	when (this) {
+		is EmptyCast -> input
+		is TermCast -> term
+	}
+
+infix fun <T> Typed<T>.castTermTo(toType: Type): Term<T>? =
+	castTo(toType)?.resolve(term)
+
+infix fun <T> Typed<T>.castTo(toType: Type): Cast<T>? =
+	resolveLinkOrNull
 		?.let { typedLink ->
 			toType.lineLinkOrNull?.let { typeLink ->
-				typedLink.tail.castTo(typeLink.tail)?.let { castTail ->
-					typedLink.head.castTo(typeLink.head)?.let { castHead ->
-						castTail.plus(castHead)
+				typedLink.tail.castTo(typeLink.tail)?.let { tailCast ->
+					typedLink.head.castTo(typeLink.head)?.let { headCast ->
+						when (tailCast) {
+							is EmptyCast ->
+								when (headCast) {
+									is EmptyCast -> cast(empty)
+									is TermCast -> cast(typedLink.tail.term.plus(headCast.term))
+								}
+							is TermCast ->
+								when (headCast) {
+									is EmptyCast -> cast(tailCast.term.plus(typedLink.head.term))
+									is TermCast -> cast(tailCast.term.plus(headCast.term))
+								}
+						}
 					}
 				}
 			}
 		}
-		?: notNullIf(toType.isEmpty) { term }
+		?: notNullIf(toType.isEmpty) { cast<T>(empty) }
 
-infix fun <T> TypedLine<T>.castTo(toLine: Line): Term<T>? =
+infix fun <T> TypedLine<T>.castTo(toLine: Line): Cast<T>? =
 	when (line) {
-		is NativeLine -> ifOrNull(line == toLine) { term }
-		is ChoiceLine ->
-			if (toLine is ChoiceLine) (term of line.choice).castTo(toLine.choice)
-			else null
-		is ArrowLine -> ifOrNull(line == toLine) { term }
+		is NativeLine -> ifOrNull(line == toLine) { cast<T>(empty) }
+		is FieldLine -> (term of line.field).castTo(toLine)
+		is ChoiceLine -> ifOrNull(line == toLine) { cast<T>(empty) }
+		is ArrowLine -> ifOrNull(line == toLine) { cast<T>(empty) }
 	}
 
-infix fun <T> TypedChoice<T>.castTo(toChoice: Choice): Term<T>? =
-	choice.onlyFieldOrNull
-		?.let { onlyField -> (term of onlyField).castTo(toChoice) }
-		?: notNullIf(choice == toChoice) { term }
+infix fun <T> TypedField<T>.castTo(toLine: Line): Cast<T>? =
+	when (toLine) {
+		is NativeLine -> null
+		is FieldLine -> castTo(toLine.field)
+		is ChoiceLine -> castTo(toLine.choice)
+		is ArrowLine -> null
+	}
 
-infix fun <T> TypedField<T>.castTo(toChoice: Choice): Term<T>? =
-	toChoice.onlyFieldOrNull
-		?.let { onlyField -> castTo(onlyField) }
-		?: TODO()
+infix fun <T> TypedField<T>.castTo(choice: Choice): Cast<T>? =
+	castBody(choice, index0)?.bodyCast(choice)?.let { cast(it) }
 
-infix fun <T> TypedField<T>.castTo(toField: Field): Term<T>? =
+fun <T> Term<T>.bodyCast(choice: Choice): Term<T> =
+	choice.split { tailChoice, _ ->
+		fn(bodyCast(tailChoice))
+	} ?: this
+
+fun <T> TypedField<T>.castBody(choice: Choice, index: Index): Term<T>? =
+	choice.split { tailChoice, case ->
+		castBody(case, index) ?: castBody(tailChoice, index.next)
+	}
+
+fun <T> TypedField<T>.castBody(case: Case, index: Index): Term<T>? =
+	ifOrNull(field.string == case.string) {
+		resolveRhs.let { resolvedRhs ->
+			resolvedRhs.castTermTo(case.rhs)?.let { castRhsTerm ->
+				arg<T>(index).invoke(castRhsTerm)
+			}
+		}
+	}
+
+infix fun <T> TypedField<T>.castTo(toField: Field): Cast<T>? =
 	ifOrNull(field.string == toField.string) {
 		(term of field.rhs).castTo(toField.rhs)
 	}

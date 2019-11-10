@@ -13,13 +13,14 @@ data class Typed<out T>(val term: Term<T>, val type: Type)
 data class TypedLine<T>(val term: Term<T>, val line: Line)
 data class TypedChoice<T>(val term: Term<T>, val choice: Choice)
 data class TypedField<T>(val term: Term<T>, val field: Field)
+data class TypedCase<T>(val term: Term<T>, val case: Case)
 
 infix fun <T> Term<T>.of(type: Type) = Typed(this, type)
 infix fun <T> Term<T>.of(line: Line) = TypedLine(this, line)
 infix fun <T> Term<T>.of(choice: Choice) = TypedChoice(this, choice)
 infix fun <T> Term<T>.of(field: Field) = TypedField(this, field)
 
-fun <T> choice(typed: TypedField<T>): TypedChoice<T> = typed.term of choice(typed.field)
+fun <T> choice(typed: TypedCase<T>): TypedChoice<T> = typed.term of choice(typed.case)
 fun <T> line(typed: TypedChoice<T>): TypedLine<T> = typed.term of line(typed.choice)
 
 fun <T> emptyTyped() = id<T>() of emptyType
@@ -29,7 +30,7 @@ fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
 	plusTerm(typed) of type.plus(typed.line)
 
 fun <T> Typed<T>.plus(typed: TypedField<T>): Typed<T> =
-	plus(typed.term of line(choice(typed.field)))
+	plus(typed.term of line(typed.field))
 
 fun <T> Typed<T>.plusTerm(rhs: TypedLine<T>): Term<T> =
 	if (type.isStatic)
@@ -73,6 +74,10 @@ val <T> Typed<T>.lastTypedLine: TypedLine<T>
 	get() =
 		lineLink.head
 
+val <T> TypedLine<T>.typedField: TypedField<T>
+	get() =
+		resolveFieldOrNull.notNullOrError("$line not a field")
+
 val <T> Typed<T>.previousTyped: Typed<T>
 	get() =
 		lineLink.tail
@@ -85,25 +90,17 @@ val <T> TypedLine<T>.choice: TypedChoice<T>
 	get() =
 		resolveChoiceOrNull.notNullOrError("$line as choice")
 
-val <T> TypedChoice<T>.onlyField: TypedField<T>
-	get() =
-		resolveFieldOrNull.notNullOrError("$choice not a field")
-
 val <T> TypedField<T>.rhs: Typed<T>
 	get() =
 		resolveRhs
 
 val <T> TypedLine<T>.resolveFieldOrNull: TypedField<T>?
 	get() =
-		resolveChoiceOrNull?.resolveFieldOrNull
+		(line as? FieldLine)?.field?.let { term of it }
 
 val <T> TypedLine<T>.resolveChoiceOrNull: TypedChoice<T>?
 	get() =
 		(line as? ChoiceLine)?.choice?.let { term of it }
-
-val <T> TypedChoice<T>.resolveFieldOrNull: TypedField<T>?
-	get() =
-		choice.onlyFieldOrNull?.let { term of it }
 
 val <T> TypedField<T>.resolveRhs: Typed<T>
 	get() =
@@ -120,14 +117,10 @@ fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
 fun <T> TypedLine<T>.resolveGet(string: String): Typed<T>? =
 	when (line) {
 		is NativeLine -> notNullIf(string == "native") { term of type(line) }
-		is ChoiceLine ->
-			if (string == "choice") term of type(line)
-			else (term of line.choice).resolveGet(string)
+		is FieldLine -> (term of line.field).resolveGet(string)
+		is ChoiceLine -> notNullIf(string == "choice") { term of type(line) }
 		is ArrowLine -> notNullIf(string == "function") { term of type(line) }
 	}
-
-fun <T> TypedChoice<T>.resolveGet(string: String): Typed<T>? =
-	resolveFieldOrNull?.resolveGet(string)
 
 fun <T> TypedField<T>.resolveGet(string: String): Typed<T>? =
 	notNullIf(field.string == string) {
@@ -135,7 +128,7 @@ fun <T> TypedField<T>.resolveGet(string: String): Typed<T>? =
 	}
 
 fun <T> Typed<T>.eval(rhs: TypedField<T>): Typed<T> =
-	resolve(rhs) ?: plus(term of line(choice(rhs.field)))
+	resolve(rhs) ?: plus(term of line(rhs.field))
 
 fun <T> Typed<T>.resolveWrap(string: String) =
 	term of type(string fieldTo type)

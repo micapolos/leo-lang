@@ -57,7 +57,7 @@ class TypeCompilerTest {
 		emptyType
 			.plusCompiler { resultCompiler(it) }
 			.compile<Type>(script("choice" lineTo script("foo" lineTo script())))
-			.assertEqualTo(type(line(choice("foo" fieldTo type()))))
+			.assertEqualTo(type(choice("foo" caseTo type())))
 	}
 
 	@Test
@@ -67,9 +67,9 @@ class TypeCompilerTest {
 			.compile<Type>(script("choice" lineTo script(
 				"foo" lineTo script(),
 				"bar" lineTo script())))
-			.assertEqualTo(type(line(choice(
-				"foo" fieldTo type(),
-				"bar" fieldTo type()))))
+			.assertEqualTo(type(choice(
+				"foo" caseTo type(),
+				"bar" caseTo type())))
 	}
 
 	@Test
