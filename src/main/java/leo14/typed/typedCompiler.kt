@@ -132,7 +132,7 @@ fun <T> TypedCase<T>.plusCaseCompiler(
 	beginCompiler(case.string) {
 		arg0<T>()
 			.of(case.rhs)
-			.plusCompilerWith(type("matching") ret (arg0<T>() of case.rhs), stack, lit) { typed ->
+			.plusCompiler(stack, lit) { typed ->
 				ret(term.invoke(typed.term) of
 					expectedType
 						?.apply { typed.type.checkIs(this) }

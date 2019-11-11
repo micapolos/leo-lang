@@ -207,7 +207,7 @@ class TypedCompilerTest {
 			.compile<Any>("circle" lineTo script("plus" lineTo script("one")))
 			.assertEqualTo(
 				term<Any>("lhs")
-					.invoke(fn(id()))
+					.invoke(id())
 					.of(
 						type(
 							"radius" lineTo type(),

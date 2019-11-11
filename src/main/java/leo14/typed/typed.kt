@@ -138,6 +138,15 @@ fun <T> Typed<T>.plusNative(rhs: Term<T>): Typed<T> =
 	if (type.isStatic) rhs of type.plus(nativeLine)
 	else pair(term, rhs) of type.plus(nativeLine)
 
+infix fun <T> String.fieldTo(typed: Typed<T>): TypedField<T> =
+	typed.term of (this fieldTo typed.type)
+
+fun <T> line(typed: TypedField<T>): TypedLine<T> =
+	typed.term of line(typed.field)
+
+fun <T> typed(line: TypedLine<T>): Typed<T> =
+	emptyTyped<T>().plus(line)
+
 // === deconstruction
 
 val <T> Typed<T>.decompileLinkOrNull: Link<Typed<T>, TypedLine<T>>?

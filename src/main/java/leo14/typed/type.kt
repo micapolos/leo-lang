@@ -113,7 +113,7 @@ val Line.scriptLine: ScriptLine
 
 val Choice.scriptLine
 	get() =
-		"choice".lineTo(script().fold(caseStack) { plus(it.scriptLine) })
+		"choice".lineTo(script().fold(caseStack.reverse) { plus(it.scriptLine) })
 
 val Case.scriptLine
 	get() =
