@@ -33,31 +33,31 @@ fun <T> term(variable: Variable<T>): Term<T> = VariableTerm(variable)
 fun <T, R> Term<T>.abstraction(fn: (Term<T>) -> R): R =
 	when (this) {
 		is AbstractionTerm -> fn(abstraction.body)
-		else -> error("abstraction expected")
+		else -> error("$this as abstraction")
 	}
 
 fun <T, R> Term<T>.application(fn: (Term<T>, Term<T>) -> R): R =
 	when (this) {
 		is ApplicationTerm -> fn(application.lhs, application.rhs)
-		else -> error("application expected")
+		else -> error("$this as application")
 	}
 
 fun <T, R> Term<T>.variable(fn: (Index) -> R): R =
 	when (this) {
 		is VariableTerm -> fn(variable.index)
-		else -> error("variable expected")
+		else -> error("$this as variable")
 	}
 
 fun <T, R> Term<T>.native(fn: (T) -> R): R =
 	when (this) {
 		is NativeTerm -> fn(native)
-		else -> error("native expected")
+		else -> error("$this as native")
 	}
 
 fun <T, R> Term<T>.abstraction(index: Index, fn: (Term<T>) -> R): R =
 	when (index) {
 		is ZeroIndex -> fn(this)
-		is NextIndex -> abstraction {
-			abstraction(index.previous, fn)
+		is NextIndex -> abstraction { body ->
+			body.abstraction(index.previous, fn)
 		}
 	}

@@ -23,7 +23,7 @@ fun <T> Term<T>.decompileNative(fn: T.() -> ScriptLine) =
 
 fun <T> TypedChoice<T>.decompileLine(fn: T.() -> ScriptLine): ScriptLine =
 	term.abstraction(choice.countIndex) { body ->
-		body.application { fnTerm, argTerm ->
+		body.application { argTerm, fnTerm ->
 			argTerm.variable { index ->
 				choice.caseStack.get(index)!!.let { case ->
 					(fnTerm of (case.string fieldTo case.rhs)).decompileLine(fn)

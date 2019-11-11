@@ -21,3 +21,12 @@ val Literal.any
 			is StringLiteral -> string
 			is NumberLiteral -> number.any
 		}
+
+val Any.anyLiteral: Literal
+	get() =
+		when (this) {
+			is String -> literal(this)
+			is Int -> literal(this)
+			is Double -> literal(this)
+			else -> error("")
+		}
