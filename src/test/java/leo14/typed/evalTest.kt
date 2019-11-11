@@ -1,4 +1,4 @@
-package leo14.typed.eval
+package leo14.typed
 
 import leo.base.assertEqualTo
 import leo14.*
@@ -8,14 +8,14 @@ class EvalTest {
 	@Test
 	fun string() {
 		script(literal("Hello, world!"))
-			.eval
+			.anyEval
 			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test
 	fun field() {
 		script("foo" fieldTo script())
-			.eval
+			.anyEval
 			.assertEqualTo(script("foo" fieldTo script()))
 	}
 
@@ -28,7 +28,7 @@ class EvalTest {
 				"y" fieldTo script(
 					"second" fieldTo script())),
 			"x" fieldTo script())
-			.eval
+			.anyEval
 			.assertEqualTo(script("x" fieldTo script("first" fieldTo script())))
 	}
 
@@ -41,7 +41,7 @@ class EvalTest {
 				"y" fieldTo script(
 					"second" fieldTo script())),
 			"y" fieldTo script())
-			.eval
+			.anyEval
 			.assertEqualTo(script("y" fieldTo script("second" fieldTo script())))
 	}
 
@@ -53,7 +53,7 @@ class EvalTest {
 			"y" fieldTo script(
 				"second" fieldTo script()),
 			"vec" fieldTo script())
-			.eval
+			.anyEval
 			.assertEqualTo(
 				script(
 					"vec" fieldTo script(
@@ -69,7 +69,7 @@ class EvalTest {
 			"let" lineTo script("chicken" lineTo script()),
 			"give" lineTo script("egg" lineTo script()),
 			"chicken" lineTo script())
-			.eval
+			.anyEval
 			.assertEqualTo(script("egg" lineTo script()))
 
 	}
@@ -82,7 +82,7 @@ class EvalTest {
 			"let" lineTo script("farmer" lineTo script()),
 			"give" lineTo script("chicken" lineTo script()),
 			"farmer" lineTo script())
-			.eval
+			.anyEval
 			.assertEqualTo(script("egg" lineTo script()))
 	}
 
@@ -92,7 +92,7 @@ class EvalTest {
 			"let" lineTo script("chicken" lineTo script()),
 			"give" lineTo script("chicken" lineTo script()),
 			"chicken" lineTo script())
-			.eval
+			.anyEval
 			.assertEqualTo(script("chicken" lineTo script()))
 	}
 
@@ -100,10 +100,10 @@ class EvalTest {
 	fun rememberAs() {
 		script(
 			line(literal("chicken")),
-			line("remember"),
+			"remember" lineTo script(),
 			"as" lineTo script("foo"),
-			line("foo"))
-			.eval
+			"foo" lineTo script())
+			.anyEval
 			.assertEqualTo(script(literal("chicken")))
 	}
 
@@ -117,7 +117,7 @@ class EvalTest {
 					"egg" lineTo script())),
 			"give" lineTo script(
 				"chicken" lineTo script()))
-			.eval
+			.anyEval
 			.assertEqualTo(script("egg"))
 	}
 
@@ -126,7 +126,7 @@ class EvalTest {
 		script(
 			"zero" lineTo script(),
 			"of" lineTo script("zero"))
-			.eval
+			.anyEval
 			.assertEqualTo(script("zero"))
 	}
 
@@ -138,8 +138,8 @@ class EvalTest {
 				"choice" lineTo script(
 					"zero" lineTo script("native"),
 					"one" lineTo script("native"))))
-			.eval
-			.assertEqualTo("zero")
+			.anyEval
+			.assertEqualTo(script("zero" lineTo script(literal("zero"))))
 	}
 
 	@Test
@@ -150,7 +150,7 @@ class EvalTest {
 			"let" lineTo script("horse"),
 			"give" lineTo script("shit"),
 			"scope" lineTo script())
-			.eval
+			.anyEval
 			.assertEqualTo(
 				script(
 					"scope" lineTo script(
@@ -173,7 +173,7 @@ class EvalTest {
 			"match" lineTo script(
 				"circle" lineTo script(),
 				"square" lineTo script()))
-			.eval
+			.anyEval
 			.assertEqualTo(script())
 	}
 
@@ -188,7 +188,7 @@ class EvalTest {
 			"match" lineTo script(
 				"circle" lineTo script(literal("circle")),
 				"square" lineTo script(literal("square"))))
-			.eval
+			.anyEval
 			.assertEqualTo(script())
 	}
 }

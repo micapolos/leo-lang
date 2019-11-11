@@ -3,6 +3,7 @@ package leo14.typed
 import leo14.*
 import leo14.lambda.id
 
+
 val Script.type: Type
 	get() =
 		when (this) {

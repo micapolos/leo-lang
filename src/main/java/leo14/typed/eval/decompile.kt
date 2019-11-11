@@ -6,7 +6,7 @@ import leo14.literal
 import leo14.typed.Typed
 import leo14.typed.decompile
 
-val Any.anyDecompile: ScriptLine
+val Any.anyScriptLine: ScriptLine
 	get() = when (this) {
 		is String -> line(literal(this))
 		is Int -> line(literal(this))
@@ -14,4 +14,4 @@ val Any.anyDecompile: ScriptLine
 		else -> line(literal("any($this)"))
 	}
 
-val Typed<Any>.decompile get() = decompile { anyDecompile }
+val Typed<Any>.decompile get() = decompile { anyScriptLine }

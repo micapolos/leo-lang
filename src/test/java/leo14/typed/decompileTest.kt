@@ -1,11 +1,10 @@
-package leo14.typed.eval
+package leo14.typed
 
 import leo.base.assertEqualTo
 import leo14.fieldTo
 import leo14.lambda.term
 import leo14.literal
 import leo14.script
-import leo14.typed.*
 import kotlin.test.Test
 
 class DecompileTest {
@@ -13,7 +12,7 @@ class DecompileTest {
 	fun string() {
 		term("Hello, world!")
 			.of(nativeType)
-			.decompile
+			.anyDecompile
 			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
@@ -21,7 +20,7 @@ class DecompileTest {
 	fun field() {
 		term("Hello, world!")
 			.of(type("text" fieldTo nativeType))
-			.decompile
+			.anyDecompile
 			.assertEqualTo(script("text" fieldTo literal("Hello, world!")))
 	}
 
@@ -33,7 +32,7 @@ class DecompileTest {
 				type(
 					"x" fieldTo nativeType,
 					"y" fieldTo nativeType))
-			.decompile
+			.anyDecompile
 			.assertEqualTo(
 				script(
 					"x" fieldTo literal("zero"),
@@ -49,7 +48,7 @@ class DecompileTest {
 					"vec" fieldTo type(
 						"x" fieldTo nativeType,
 						"y" fieldTo nativeType)))
-			.decompile
+			.anyDecompile
 			.assertEqualTo(
 				script(
 					"vec" fieldTo script(
