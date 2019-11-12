@@ -1,7 +1,6 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
-import leo13.stack
 import leo14.lambda.term
 import leo14.lineTo
 import leo14.script
@@ -9,6 +8,13 @@ import leo14.typed.*
 import kotlin.test.Test
 
 class CompilerTest {
+	@Test
+	fun deleteCompiler() {
+		compiler(term("foo") of nativeType)
+			.compile("delete" lineTo script())
+			.assertEqualTo(compiler(emptyTyped()))
+	}
+
 	@Test
 	fun typeCompilerField() {
 		compiler<Any>(emptyType)
@@ -55,37 +61,21 @@ class CompilerTest {
 
 	@Test
 	fun typedCompilerMatch() {
-		compiler<Any>(
-			term("lhs") of type(
-				choice(
-					"zero" optionTo type("foo"),
-					"one" optionTo type("bar"))))
+		compiler<Any>(emptyTyped())
 			.compile(
 				script(
+					"zero" lineTo script("foo"),
+					"of" lineTo script(
+						"choice" lineTo script(
+							"zero" lineTo script("foo"),
+							"one" lineTo script("bar"))),
 					"match" lineTo script(
 						"zero" lineTo script(
-							"zoo" lineTo script(),
-							"of" lineTo script("choice" lineTo script("zoo", "zar"))),
+							"of" lineTo script(
+								"choice" lineTo script("foo", "bar"))),
 						"one" lineTo script(
-							"zar" lineTo script(),
-							"of" lineTo script("choice" lineTo script("zoo", "zar"))))))
-			.assertEqualTo(
-				compiler(
-					Match<Any>(
-						(term("lhs") of type(
-							choice(
-								"zero" optionTo type("foo"),
-								"one" optionTo type("bar")))).term,
-						stack(
-							"one" optionTo type("bar"),
-							"zero" optionTo type("foo")),
-						null)
-						.begin("zero")
-						.updateTyped { this }
-						.end()
-						.begin("one")
-						.updateTyped { this }
-						.end()
-						.end()))
+							"of" lineTo script(
+								"choice" lineTo script("foo", "bar"))))))
+			.assertEqualTo(null)
 	}
 }

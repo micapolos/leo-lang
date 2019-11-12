@@ -3,14 +3,12 @@ package leo14.typed.compiler
 import leo13.EmptyStack
 import leo13.LinkStack
 import leo13.Stack
+import leo13.reverse
 import leo14.lambda.Term
 import leo14.lambda.arg0
 import leo14.lambda.fn
 import leo14.lambda.invoke
-import leo14.typed.Option
-import leo14.typed.Type
-import leo14.typed.Typed
-import leo14.typed.of
+import leo14.typed.*
 
 data class Match<T>(
 	val term: Term<T>,
@@ -49,4 +47,9 @@ fun <T> Match<T>.end(): Typed<T> =
 	else when (optionStack) {
 		is EmptyStack -> term of typeOrNull
 		is LinkStack -> error("non exhaustive match, expected: ${optionStack.link.value}")
+	}
+
+fun <T> Typed<T>.match(): Match<T> =
+	onlyLine.choice.let { choice ->
+		Match(choice.term, choice.choice.optionStack.reverse, null)
 	}

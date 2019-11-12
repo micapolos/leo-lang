@@ -34,6 +34,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					TODO()
 				is BeginToken ->
 					when (token.begin.string) {
+						"delete" ->
+							DeleteCompiler(this)
 						"of" ->
 							TypeCompiler(OfParent(this), type())
 						"match" ->
@@ -84,6 +86,12 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				}
 				is EndToken ->
 					parent?.copy(typed = match.end())
+			}
+		is DeleteCompiler ->
+			when (token) {
+				is LiteralToken -> TODO()
+				is BeginToken -> TODO()
+				is EndToken -> parent.copy(typed = emptyTyped())
 			}
 	} ?: error("$token")
 
