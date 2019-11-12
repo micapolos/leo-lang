@@ -1,16 +1,12 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
-import leo14.Literal
-import leo14.any
 import leo14.lambda.id
 import leo14.lambda.term
 import leo14.lineTo
 import leo14.script
 import leo14.typed.*
 import kotlin.test.Test
-
-val lit: Literal.() -> Any = { any }
 
 class CompilerTest {
 	@Test
@@ -138,26 +134,23 @@ class CompilerTest {
 
 	@Test
 	fun any() {
-		TypedCompiler(null, typed(), lit)
+		compiler(typed())
 			.compile(script("any" lineTo script("zero")))
-			.assertEqualTo(AnyCompiler(TypedCompiler(null, typed(), lit), type("zero")))
+			.assertEqualTo(AnyCompiler(compiler(typed()), type("zero")))
 	}
 
 	@Test
 	fun function() {
-		TypedCompiler(null, typed(), lit)
+		compiler(typed())
 			.compile(
 				script(
 					"any" lineTo script("zero"),
 					"gives" lineTo script("plus" lineTo script("one"))))
 			.assertEqualTo(
-				TypedCompiler(
-					null,
-					term(id<Any>()) of
+				compiler(term(id<Any>()) of
 						type(
 							line(type("zero") arrowTo type(
 								"zero" lineTo type(),
-								"plus" lineTo type("one")))),
-					lit))
+								"plus" lineTo type("one"))))))
 	}
 }

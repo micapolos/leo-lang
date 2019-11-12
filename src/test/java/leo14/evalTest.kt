@@ -110,4 +110,19 @@ class EvalTest {
 							"x" lineTo script("zero"),
 							"y" lineTo script("one")))))
 	}
+
+	@Test
+	fun evalFunction() {
+		script(
+			"any" lineTo script("zero"),
+			"gives" lineTo script("plus" lineTo script("one")))
+			.eval
+			.assertEqualTo(
+				script(
+					"function" lineTo script(
+						"from" lineTo script("zero"),
+						"to" lineTo script(
+							"zero" lineTo script(),
+							"plus" lineTo script("one")))))
+	}
 }
