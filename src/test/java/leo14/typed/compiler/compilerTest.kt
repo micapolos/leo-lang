@@ -67,7 +67,7 @@ class CompilerTest {
 		compiler(typed(line("zero" fieldTo typed())))
 			.compile(
 				script(
-					"of" lineTo script(
+					"as" lineTo script(
 						"choice" lineTo script(
 							"zero" lineTo script(),
 							"one" lineTo script()))))
@@ -82,7 +82,7 @@ class CompilerTest {
 			.compile(
 				script(
 					"one" lineTo script(),
-					"of" lineTo script("choice" lineTo script("zero", "one")),
+					"as" lineTo script("choice" lineTo script("zero", "one")),
 					"match" lineTo script(
 						"zero" lineTo script(),
 						"one" lineTo script())))
@@ -104,16 +104,16 @@ class CompilerTest {
 			.compile(
 				script(
 					"zero" lineTo script("foo"),
-					"of" lineTo script(
+					"as" lineTo script(
 						"choice" lineTo script(
 							"zero" lineTo script("foo"),
 							"one" lineTo script("bar"))),
 					"match" lineTo script(
 						"zero" lineTo script(
-							"of" lineTo script(
+							"as" lineTo script(
 								"choice" lineTo script("foo", "bar"))),
 						"one" lineTo script(
-							"of" lineTo script(
+							"as" lineTo script(
 								"choice" lineTo script("foo", "bar"))))))
 			.assertEqualTo(
 				compiler(

@@ -23,6 +23,6 @@ data class ApplyParent<T>(val typedCompiler: TypedCompiler<T>, val arrow: TypedA
 
 sealed class TypeParent<T>
 data class BeginTypeParent<T>(val typeCompiler: TypeCompiler<T>, val begin: Begin) : TypeParent<T>()
-data class OfParent<T>(val typedCompiler: TypedCompiler<T>) : TypeParent<T>()
+data class AsParent<T>(val typedCompiler: TypedCompiler<T>) : TypeParent<T>()
 data class ChoiceTypeParent<T>(val choiceCompiler: ChoiceCompiler<T>, val begin: Begin) : TypeParent<T>()
 data class AnyTypeParent<T>(val typedCompiler: TypedCompiler<T>) : TypeParent<T>()

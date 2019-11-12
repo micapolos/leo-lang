@@ -40,8 +40,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					when (token.begin.string) {
 						"delete" ->
 							DeleteCompiler(this)
-						"of" ->
-							TypeCompiler(OfParent(this), type())
+						"as" ->
+							TypeCompiler(AsParent(this), type())
 						"match" ->
 							MatchCompiler(
 								this,
@@ -137,7 +137,7 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 
 fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
 	when (this) {
-		is OfParent ->
+		is AsParent ->
 			typedCompiler.copy(typed = typedCompiler.typed.of(type))
 		is BeginTypeParent ->
 			typeCompiler.copy(type = typeCompiler.type.plus(begin.string lineTo type))

@@ -33,10 +33,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun evalOf() {
+	fun evalAs() {
 		script(
 			"zero" lineTo script(),
-			"of" lineTo script("choice" lineTo script("zero", "one")))
+			"as" lineTo script("choice" lineTo script("zero", "one")))
 			.eval
 			.assertEqualTo(script("zero"))
 	}
@@ -45,14 +45,14 @@ class EvalTest {
 	fun evalMatchFirst() {
 		script(
 			"zero" lineTo script(),
-			"of" lineTo script("choice" lineTo script("zero", "one")),
+			"as" lineTo script("choice" lineTo script("zero", "one")),
 			"match" lineTo script(
 				"zero" lineTo script(
 					"foo" lineTo script(),
-					"of" lineTo script("choice" lineTo script("foo", "bar"))),
+					"as" lineTo script("choice" lineTo script("foo", "bar"))),
 				"one" lineTo script(
 					"bar" lineTo script(),
-					"of" lineTo script("choice" lineTo script("foo", "bar")))))
+					"as" lineTo script("choice" lineTo script("foo", "bar")))))
 			.eval
 			.assertEqualTo(script("foo"))
 	}
@@ -61,14 +61,14 @@ class EvalTest {
 	fun evalMatchSecond() {
 		script(
 			"one" lineTo script(),
-			"of" lineTo script("choice" lineTo script("zero", "one")),
+			"as" lineTo script("choice" lineTo script("zero", "one")),
 			"match" lineTo script(
 				"zero" lineTo script(
 					"foo" lineTo script(),
-					"of" lineTo script("choice" lineTo script("foo", "bar"))),
+					"as" lineTo script("choice" lineTo script("foo", "bar"))),
 				"one" lineTo script(
 					"bar" lineTo script(),
-					"of" lineTo script("choice" lineTo script("foo", "bar")))))
+					"as" lineTo script("choice" lineTo script("foo", "bar")))))
 			.eval
 			.assertEqualTo(script("bar"))
 	}
