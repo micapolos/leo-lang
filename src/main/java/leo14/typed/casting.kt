@@ -78,14 +78,14 @@ fun <T> Term<T>.bodyCast(choice: Choice): Term<T> =
 	} ?: this
 
 fun <T> TypedField<T>.castBody(choice: Choice, index: Index): Term<T>? =
-	choice.split { tailChoice, case ->
-		castBody(case, index) ?: castBody(tailChoice, index.next)
+	choice.split { tailChoice, option ->
+		castBody(option, index) ?: castBody(tailChoice, index.next)
 	}
 
-fun <T> TypedField<T>.castBody(case: Case, index: Index): Term<T>? =
-	ifOrNull(field.string == case.string) {
+fun <T> TypedField<T>.castBody(option: Option, index: Index): Term<T>? =
+	ifOrNull(field.string == option.string) {
 		resolveRhs.let { resolvedRhs ->
-			resolvedRhs.castTermTo(case.rhs)?.let { castRhsTerm ->
+			resolvedRhs.castTermTo(option.rhs)?.let { castRhsTerm ->
 				arg<T>(index).invoke(castRhsTerm)
 			}
 		}

@@ -110,28 +110,28 @@ fun <T> typedCompilerWith(function: Function<T>, stack: Stack<Arrow>, lit: (Lite
 	emptyTyped<T>().plusCompilerWith(function, stack, lit, ret)
 
 fun <T> TypedChoice<T>.plusMatchCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
-	Match(term, choice.caseStack.reverse, null).plusCompiler(stack, lit, ret)
+	Match(term, choice.optionStack.reverse, null).plusCompiler(stack, lit, ret)
 
 fun <T> Match<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
-	when (caseStack) {
+	when (optionStack) {
 		is EmptyStack ->
 			if (inferredTypeOrNull == null) error("impossible")
 			else endCompiler { ret(term of inferredTypeOrNull) }
 		is LinkStack ->
-			term.of(caseStack.link.value)
-				.plusCaseCompiler(inferredTypeOrNull, stack, lit) { typed ->
-					Match(typed.term, caseStack.link.stack, typed.type).plusCompiler(stack, lit, ret)
+			term.of(optionStack.link.value)
+				.plusOptionCompiler(inferredTypeOrNull, stack, lit) { typed ->
+					Match(typed.term, optionStack.link.stack, typed.type).plusCompiler(stack, lit, ret)
 				}
 	}
 
-fun <T> TypedCase<T>.plusCaseCompiler(
+fun <T> TypedOption<T>.plusOptionCompiler(
 	expectedType: Type?,
 	stack: Stack<Arrow>,
 	lit: (Literal) -> T,
 	ret: Ret<Typed<T>>): Compiler =
-	beginCompiler(case.string) {
+	beginCompiler(option.string) {
 		arg0<T>()
-			.of(case.rhs)
+			.of(option.rhs)
 			.plusCompiler(stack, lit) { typed ->
 				ret(term.invoke(typed.term) of
 					expectedType

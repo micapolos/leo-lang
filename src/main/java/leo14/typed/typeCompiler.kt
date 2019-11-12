@@ -49,7 +49,7 @@ fun Choice.plusCompiler(ret: Ret<Choice>): Compiler =
 				error("$token")
 			is BeginToken ->
 				emptyType.plusCompiler { rhs ->
-					plus(token.begin.string caseTo rhs).plusCompiler(ret)
+					plus(token.begin.string optionTo rhs).plusCompiler(ret)
 				}
 			is EndToken ->
 				ret(this)

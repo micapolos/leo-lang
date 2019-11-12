@@ -200,10 +200,10 @@ class TypedCompilerTest {
 	}
 
 	@Test
-	fun compileCase() {
+	fun compileOption() {
 		term<Any>("lhs")
-			.of("circle" caseTo type("radius"))
-			.plusCaseCompiler(null, stack(), lit, ret())
+			.of("circle" optionTo type("radius"))
+			.plusOptionCompiler(null, stack(), lit, ret())
 			.compile<Any>("circle" lineTo script("plus" lineTo script("one")))
 			.assertEqualTo(
 				term<Any>("lhs")
@@ -219,8 +219,8 @@ class TypedCompilerTest {
 		term<Any>("lhs")
 			.of(
 				choice(
-					"circle" caseTo type("radius"),
-					"square" caseTo type("side")))
+					"circle" optionTo type("radius"),
+					"square" optionTo type("side")))
 			.plusMatchCompiler(stack(), lit, ret())
 			.write("circle" lineTo script("delete" lineTo script(), line(literal("circle"))))
 			.write("square" lineTo script("delete" lineTo script(), line(literal("square"))))
@@ -234,8 +234,8 @@ class TypedCompilerTest {
 			.of(
 				type(
 					choice(
-						"circle" caseTo type("radius"),
-						"square" caseTo type("side"))))
+						"circle" optionTo type("radius"),
+						"square" optionTo type("side"))))
 			.plusCompiler(stack(), lit, ret())
 			.compile<Any>(
 				script(

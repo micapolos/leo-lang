@@ -13,15 +13,15 @@ data class Typed<out T>(val term: Term<T>, val type: Type)
 data class TypedLine<T>(val term: Term<T>, val line: Line)
 data class TypedChoice<T>(val term: Term<T>, val choice: Choice)
 data class TypedField<T>(val term: Term<T>, val field: Field)
-data class TypedCase<T>(val term: Term<T>, val case: Case)
+data class TypedOption<T>(val term: Term<T>, val option: Option)
 
 infix fun <T> Term<T>.of(type: Type) = Typed(this, type)
 infix fun <T> Term<T>.of(line: Line) = TypedLine(this, line)
 infix fun <T> Term<T>.of(choice: Choice) = TypedChoice(this, choice)
 infix fun <T> Term<T>.of(field: Field) = TypedField(this, field)
-infix fun <T> Term<T>.of(case: Case) = TypedCase(this, case)
+infix fun <T> Term<T>.of(option: Option) = TypedOption(this, option)
 
-fun <T> choice(typed: TypedCase<T>): TypedChoice<T> = typed.term of choice(typed.case)
+fun <T> choice(typed: TypedOption<T>): TypedChoice<T> = typed.term of choice(typed.option)
 fun <T> line(typed: TypedChoice<T>): TypedLine<T> = typed.term of line(typed.choice)
 
 fun <T> emptyTyped() = id<T>() of emptyType

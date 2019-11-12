@@ -26,7 +26,7 @@ data class ArrowLine(val arrow: Arrow) : Line() {
 	override fun toString() = scriptLine.toString()
 }
 
-data class Choice(val caseStack: Stack<Case>) {
+data class Choice(val optionStack: Stack<Option>) {
 	override fun toString() = scriptLine.toString()
 }
 
@@ -34,7 +34,7 @@ data class Field(val string: String, val rhs: Type) {
 	override fun toString() = scriptLine.toString()
 }
 
-data class Case(val string: String, val rhs: Type) {
+data class Option(val string: String, val rhs: Type) {
 	override fun toString() = scriptLine.toString()
 }
 
@@ -64,21 +64,21 @@ fun line(arrow: Arrow): Line = ArrowLine(arrow)
 
 val nativeType = type(nativeLine)
 
-val Stack<Case>.choice get() = Choice(this)
-fun choice(vararg cases: Case) = stack(*cases).choice
+val Stack<Option>.choice get() = Choice(this)
+fun choice(vararg options: Option) = stack(*options).choice
 fun choice(string: String, vararg strings: String): Choice =
-	choice(case(string), *strings.map { case(it) }.toTypedArray())
+	choice(option(string), *strings.map { option(it) }.toTypedArray())
 
-fun Choice.plus(case: Case) = caseStack.push(case).choice
-fun <R> Choice.split(fn: (Choice, Case) -> R): R? =
-	caseStack.split { stack, case -> fn(stack.choice, case) }
+fun Choice.plus(option: Option) = optionStack.push(option).choice
+fun <R> Choice.split(fn: (Choice, Option) -> R): R? =
+	optionStack.split { stack, option -> fn(stack.choice, option) }
 
 infix fun String.fieldTo(type: Type) = Field(this, type)
-infix fun String.caseTo(type: Type) = Case(this, type)
+infix fun String.optionTo(type: Type) = Option(this, type)
 infix fun String.lineTo(type: Type) = line(this fieldTo type)
 infix fun Type.arrowTo(rhs: Type) = Arrow(this, rhs)
 fun field(string: String) = string fieldTo type()
-fun case(string: String) = string caseTo type()
+fun option(string: String) = string optionTo type()
 
 // TODO: In case of performance problems, add Type.isStatic field.
 val Type.isStatic: Boolean get() = lineStack.all { isStatic }
@@ -91,7 +91,7 @@ val Line.isStatic
 	}
 val Choice.isStatic get() = false
 val Field.isStatic get() = rhs.isStatic
-val Case.isStatic get() = rhs.isStatic
+val Option.isStatic get() = rhs.isStatic
 val Arrow.isStatic get() = rhs.isStatic || lhs.isStatic
 
 val Type.isEmpty get() = lineStack.isEmpty
@@ -113,9 +113,9 @@ val Line.scriptLine: ScriptLine
 
 val Choice.scriptLine
 	get() =
-		"choice".lineTo(script().fold(caseStack.reverse) { plus(it.scriptLine) })
+		"choice".lineTo(script().fold(optionStack.reverse) { plus(it.scriptLine) })
 
-val Case.scriptLine
+val Option.scriptLine
 	get() =
 		string lineTo rhs.script
 
@@ -146,4 +146,4 @@ fun Type.checkIs(other: Type): Type =
 
 val Choice.countIndex: Index
 	get() =
-		index0.fold(caseStack) { next }
+		index0.fold(optionStack) { next }

@@ -10,7 +10,7 @@ class TypedTest {
 		type().isStatic.assertEqualTo(true)
 		type("foo").isStatic.assertEqualTo(true)
 		type("foo" fieldTo type("bar")).isStatic.assertEqualTo(true)
-		type(choice("foo" caseTo type(), "bar" caseTo type())).isStatic.assertEqualTo(false)
+		type(choice("foo" optionTo type(), "bar" optionTo type())).isStatic.assertEqualTo(false)
 		nativeType.isStatic.assertEqualTo(false)
 		type("foo" fieldTo nativeType).isStatic.assertEqualTo(false)
 	}

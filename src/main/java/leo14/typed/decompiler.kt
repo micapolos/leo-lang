@@ -25,8 +25,8 @@ fun <T> TypedChoice<T>.decompileLine(fn: T.() -> ScriptLine): ScriptLine =
 	term.abstraction(choice.countIndex) { body ->
 		body.application { argTerm, fnTerm ->
 			argTerm.variable { index ->
-				choice.caseStack.get(index)!!.let { case ->
-					(fnTerm of (case.string fieldTo case.rhs)).decompileLine(fn)
+				choice.optionStack.get(index)!!.let { option ->
+					(fnTerm of (option.string fieldTo option.rhs)).decompileLine(fn)
 				}
 			}
 		}
