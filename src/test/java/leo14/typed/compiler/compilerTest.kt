@@ -34,14 +34,14 @@ class CompilerTest {
 
 	@Test
 	fun typeCompilerField() {
-		compiler<Any>(emptyType)
+		compiler(emptyType)
 			.compile("foo" lineTo script())
 			.assertEqualTo(compiler(type("foo" lineTo type())))
 	}
 
 	@Test
 	fun typeCompilerChoice() {
-		compiler<Any>(type("foo" lineTo type()))
+		compiler(type("foo" lineTo type()))
 			.compile(
 				"choice" lineTo script(
 					"zero" lineTo script("foo"),
@@ -57,14 +57,14 @@ class CompilerTest {
 
 	@Test
 	fun typedCompilerField() {
-		compiler<Any>(typed())
+		compiler(typed())
 			.compile("zero" lineTo script())
 			.assertEqualTo(compiler(typed<Any>().plus(line("zero" fieldTo typed()))))
 	}
 
 	@Test
 	fun typedCompilerOf() {
-		compiler<Any>(typed(line("zero" fieldTo typed())))
+		compiler(typed(line("zero" fieldTo typed())))
 			.compile(
 				script(
 					"of" lineTo script(
@@ -78,7 +78,7 @@ class CompilerTest {
 
 	@Test
 	fun simpleMatch() {
-		compiler<Any>(typed())
+		compiler(typed())
 			.compile(
 				script(
 					"one" lineTo script(),
@@ -100,7 +100,7 @@ class CompilerTest {
 
 	@Test
 	fun typedCompilerMatch() {
-		compiler<Any>(typed())
+		compiler(typed())
 			.compile(
 				script(
 					"zero" lineTo script("foo"),

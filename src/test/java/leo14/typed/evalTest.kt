@@ -161,34 +161,4 @@ class EvalTest {
 							"takes" lineTo script("horse"),
 							"gives" lineTo script("shit")))))
 	}
-
-	@Test
-	fun matchSimpleEmptyCases() {
-		script(
-			"circle" lineTo script(),
-			"of" lineTo script(
-				"choice" lineTo script(
-					"circle" lineTo script(),
-					"square" lineTo script())),
-			"match" lineTo script(
-				"circle" lineTo script(),
-				"square" lineTo script()))
-			.anyEval
-			.assertEqualTo(script())
-	}
-
-	@Test
-	fun matchReturnValues() {
-		script(
-			"circle" lineTo script(),
-			"of" lineTo script(
-				"choice" lineTo script(
-					"circle" lineTo script(),
-					"square" lineTo script())),
-			"match" lineTo script(
-				"circle" lineTo script(literal("circle")),
-				"square" lineTo script(literal("square"))))
-			.anyEval
-			.assertEqualTo(script())
-	}
 }

@@ -2,6 +2,7 @@ package leo14.typed.compiler
 
 import leo13.reverse
 import leo14.*
+import leo14.lambda.term
 import leo14.typed.*
 
 // === Script writing
@@ -31,7 +32,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 		is TypedCompiler ->
 			when (token) {
 				is LiteralToken ->
-					TODO()
+					copy(typed = typed.plus(term(token.literal.lit()) of nativeLine))
 				is BeginToken ->
 					when (token.begin.string) {
 						"delete" ->
@@ -46,7 +47,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 									typed.onlyLine.choice.choice.optionStack.reverse,
 									null))
 						else ->
-							TypedCompiler(BeginTypedParent(this, token.begin), typed())
+							TypedCompiler(BeginTypedParent(this, token.begin), typed(), lit)
 					}
 				is EndToken ->
 					parent?.compile(typed)
@@ -72,7 +73,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is BeginToken ->
 					TypeCompiler(ChoiceTypeParent(this, token.begin), type())
 				is EndToken ->
-					parent?.copy(type = parent.type.plus(line(choice)))
+					parent.copy(type = parent.type.plus(line(choice)))
 			}
 		is MatchCompiler ->
 			when (token) {
@@ -82,10 +83,11 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					val line = match.beginCase(token.begin.string)
 					TypedCompiler(
 						MatchTypedParent(MatchCompiler(parent, line.match)),
-						line.typed)
+						line.typed,
+						parent.lit)
 				}
 				is EndToken ->
-					parent?.copy(typed = match.end())
+					parent.copy(typed = match.end())
 			}
 		is DeleteCompiler ->
 			when (token) {

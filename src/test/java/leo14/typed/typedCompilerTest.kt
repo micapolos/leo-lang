@@ -213,39 +213,4 @@ class TypedCompilerTest {
 							"radius" lineTo type(),
 							"plus" lineTo type("one"))))
 	}
-
-	@Test
-	fun compileMatch() {
-		term<Any>("lhs")
-			.of(
-				choice(
-					"circle" optionTo type("radius"),
-					"square" optionTo type("side")))
-			.plusMatchCompiler(stack(), lit, ret())
-			.write("circle" lineTo script("delete" lineTo script(), line(literal("circle"))))
-			.write("square" lineTo script("delete" lineTo script(), line(literal("square"))))
-			.result<Any>()
-			.assertEqualTo(null)
-	}
-
-	@Test
-	fun compileMatchFull() {
-		term<Any>("lhs")
-			.of(
-				type(
-					choice(
-						"circle" optionTo type("radius"),
-						"square" optionTo type("side"))))
-			.plusCompiler(stack(), lit, ret())
-			.compile<Any>(
-				script(
-					"match" lineTo script(
-						"circle" lineTo script(
-							"delete" lineTo script(),
-							line(literal("circle"))),
-						"square" lineTo script(
-							"delete" lineTo script(),
-							line(literal("square"))))))
-			.assertEqualTo(null)
-	}
 }
