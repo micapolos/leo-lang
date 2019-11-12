@@ -46,7 +46,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 									typed.onlyLine.choice.choice.optionStack.reverse,
 									null))
 						else ->
-							TypedCompiler(BeginTypedParent(this, token.begin), emptyTyped())
+							TypedCompiler(BeginTypedParent(this, token.begin), typed())
 					}
 				is EndToken ->
 					parent?.compile(typed)
@@ -79,7 +79,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is LiteralToken ->
 					null
 				is BeginToken -> {
-					val line = match.begin(token.begin.string)
+					val line = match.beginCase(token.begin.string)
 					TypedCompiler(
 						MatchTypedParent(MatchCompiler(parent, line.match)),
 						line.typed)
@@ -91,7 +91,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 			when (token) {
 				is LiteralToken -> TODO()
 				is BeginToken -> TODO()
-				is EndToken -> parent.copy(typed = emptyTyped())
+				is EndToken -> parent.copy(typed = typed())
 			}
 	} ?: error("$token")
 

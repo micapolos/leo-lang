@@ -11,23 +11,23 @@ class TypedCompilerTest {
 
 	@Test
 	fun empty() {
-		emptyTyped<Any>()
+		typed<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script())
-			.assertEqualTo(emptyTyped<Any>())
+			.assertEqualTo(typed<Any>())
 	}
 
 	@Test
 	fun literal() {
-		emptyTyped<Any>()
+		typed<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script(literal("foo")))
-			.assertEqualTo(emptyTyped<Any>().plusNative(term("foo")))
+			.assertEqualTo(typed<Any>().plusNative(term("foo")))
 	}
 
 	@Test
 	fun simple() {
-		emptyTyped<Any>()
+		typed<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script("foo" lineTo script()))
 			.assertEqualTo(id<Any>() of type("foo" fieldTo type()))
@@ -35,7 +35,7 @@ class TypedCompilerTest {
 
 	@Test
 	fun field() {
-		emptyTyped<Any>()
+		typed<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script("foo" lineTo script(literal("bar"))))
 			.assertEqualTo(term("bar") of type("foo" fieldTo nativeType))
@@ -43,7 +43,7 @@ class TypedCompilerTest {
 
 	@Test
 	fun fields() {
-		emptyTyped<Any>()
+		typed<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(script(
 				"x" lineTo script(literal("foo")),
@@ -139,7 +139,7 @@ class TypedCompilerTest {
 
 	@Test
 	fun letItBe() {
-		emptyTyped<Any>()
+		typed<Any>()
 			.plusCompiler(stack(), lit) { resultCompiler(it) }
 			.compile<Any>(
 				script(
@@ -155,7 +155,7 @@ class TypedCompilerTest {
 			.of(nativeType)
 			.plusCompiler(stack(), lit, ret())
 			.compile<Any>(script("delete"))
-			.assertEqualTo(emptyTyped<Any>())
+			.assertEqualTo(typed<Any>())
 	}
 
 	@Test

@@ -12,7 +12,7 @@ class CompilerTest {
 	fun deleteCompiler() {
 		compiler(term("foo") of nativeType)
 			.compile("delete" lineTo script())
-			.assertEqualTo(compiler(emptyTyped()))
+			.assertEqualTo(compiler(typed()))
 	}
 
 	@Test
@@ -40,14 +40,14 @@ class CompilerTest {
 
 	@Test
 	fun typedCompilerField() {
-		compiler<Any>(emptyTyped())
+		compiler<Any>(typed())
 			.compile("zero" lineTo script())
-			.assertEqualTo(compiler(emptyTyped<Any>().plus(line("zero" fieldTo emptyTyped()))))
+			.assertEqualTo(compiler(typed<Any>().plus(line("zero" fieldTo typed()))))
 	}
 
 	@Test
 	fun typedCompilerOf() {
-		compiler<Any>(typed(line("zero" fieldTo emptyTyped())))
+		compiler<Any>(typed(line("zero" fieldTo typed())))
 			.compile(
 				script(
 					"of" lineTo script(
@@ -56,12 +56,12 @@ class CompilerTest {
 							"one" lineTo script()))))
 			.assertEqualTo(
 				compiler(
-					typed<Any>(line("zero" fieldTo emptyTyped())).castTypedTo(type(choice("zero", "one")))))
+					typed<Any>(line("zero" fieldTo typed())).castTypedTo(type(choice("zero", "one")))))
 	}
 
 	@Test
 	fun typedCompilerMatch() {
-		compiler<Any>(emptyTyped())
+		compiler<Any>(typed())
 			.compile(
 				script(
 					"zero" lineTo script("foo"),
@@ -76,6 +76,20 @@ class CompilerTest {
 						"one" lineTo script(
 							"of" lineTo script(
 								"choice" lineTo script("foo", "bar"))))))
-			.assertEqualTo(null)
+			.assertEqualTo(
+				compiler(
+					typed<Any>()
+						.plus("zero" fieldTo typed("foo"))
+						.castTypedTo(type(choice(
+							"zero" optionTo type("foo"),
+							"one" optionTo type("bar"))))
+						.beginMatch()
+						.beginCase("zero")
+						.update { castTypedTo(type(choice("foo", "bar"))) }
+						.end()
+						.beginCase("one")
+						.update { castTypedTo(type(choice("foo", "bar"))) }
+						.end()
+						.end()))
 	}
 }

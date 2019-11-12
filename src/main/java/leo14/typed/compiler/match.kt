@@ -20,7 +20,7 @@ data class Case<T>(
 	val typed: Typed<T>)
 
 
-fun <T> Match<T>.begin(string: String): Case<T> =
+fun <T> Match<T>.beginCase(string: String): Case<T> =
 	when (optionStack) {
 		is EmptyStack -> error("match exhausted when adding: $string")
 		is LinkStack -> {
@@ -39,7 +39,7 @@ fun <T> Case<T>.end(): Match<T> {
 	return Match(plusTerm, match.optionStack, plusType)
 }
 
-fun <T> Case<T>.updateTyped(fn: Typed<T>.() -> Typed<T>) =
+fun <T> Case<T>.update(fn: Typed<T>.() -> Typed<T>) =
 	copy(typed = typed.fn())
 
 fun <T> Match<T>.end(): Typed<T> =
@@ -49,7 +49,7 @@ fun <T> Match<T>.end(): Typed<T> =
 		is LinkStack -> error("non exhaustive match, expected: ${optionStack.link.value}")
 	}
 
-fun <T> Typed<T>.match(): Match<T> =
+fun <T> Typed<T>.beginMatch(): Match<T> =
 	onlyLine.choice.let { choice ->
 		Match(choice.term, choice.choice.optionStack.reverse, null)
 	}

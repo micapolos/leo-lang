@@ -8,7 +8,7 @@ import leo14.*
 import leo14.lambda.*
 
 fun <T> typedCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
-	emptyTyped<T>().plusCompiler(stack, lit, ret)
+	typed<T>().plusCompiler(stack, lit, ret)
 
 fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
 	compiler { token ->
@@ -107,7 +107,7 @@ fun <T> Typed<T>.plusCompilerWith(function: Function<T>, stack: Stack<Arrow>, li
 	}
 
 fun <T> typedCompilerWith(function: Function<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
-	emptyTyped<T>().plusCompilerWith(function, stack, lit, ret)
+	typed<T>().plusCompilerWith(function, stack, lit, ret)
 
 fun <T> TypedChoice<T>.plusMatchCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
 	Match(term, choice.optionStack.reverse, null).plusCompiler(stack, lit, ret)

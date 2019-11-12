@@ -22,7 +22,7 @@ class MatchTest {
 				"one" optionTo type("zar"),
 				"zero" optionTo type("zoo")),
 			null)
-			.begin("zero")
+			.beginCase("zero")
 			.assertEqualTo(
 				Case(
 					Match(
@@ -39,7 +39,7 @@ class MatchTest {
 				term("lhs"),
 				stack("zero" optionTo type("zoo")),
 				null)
-				.begin("one")
+				.beginCase("one")
 		}
 	}
 
@@ -50,7 +50,7 @@ class MatchTest {
 				term("lhs"),
 				stack(),
 				null)
-				.begin("one")
+				.beginCase("one")
 		}
 	}
 
@@ -107,11 +107,7 @@ class MatchTest {
 	@Test
 	fun matchEndImpossible() {
 		assertFails {
-			Match(
-				term("lhs"),
-				stack(),
-				null)
-				.end()
+			Match(term("lhs"), stack(), null).end()
 		}
 	}
 }

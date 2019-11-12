@@ -1,6 +1,7 @@
 package leo14.typed
 
 import leo.base.failIfOr
+import leo.base.fold
 import leo.base.notNullIf
 import leo.base.notNullOrError
 import leo13.Link
@@ -24,8 +25,17 @@ infix fun <T> Term<T>.of(option: Option) = TypedOption(this, option)
 fun <T> choice(typed: TypedOption<T>): TypedChoice<T> = typed.term of choice(typed.option)
 fun <T> line(typed: TypedChoice<T>): TypedLine<T> = typed.term of line(typed.choice)
 
-fun <T> emptyTyped() = id<T>() of emptyType
-val <T> Typed<T>.isEmpty get() = this == emptyTyped<T>()
+fun <T> typed() = id<T>() of emptyType
+val <T> Typed<T>.isEmpty get() = this == typed<T>()
+
+fun <T> typed(line: TypedLine<T>, vararg lines: TypedLine<T>) =
+	typed(line).fold(lines) { plus(it) }
+
+fun <T> typed(field: TypedField<T>, vararg fields: TypedField<T>) =
+	typed(line(field)).fold(fields) { plus(line(it)) }
+
+fun <T> typed(string: String, vararg strings: String): Typed<T> =
+	typed(string fieldTo typed<T>()).fold(strings) { plus(it fieldTo typed()) }
 
 fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
 	plusTerm(typed) of type.plus(typed.line)
@@ -145,7 +155,10 @@ fun <T> line(typed: TypedField<T>): TypedLine<T> =
 	typed.term of line(typed.field)
 
 fun <T> typed(line: TypedLine<T>): Typed<T> =
-	emptyTyped<T>().plus(line)
+	typed<T>().plus(line)
+
+fun <T> typed(string: String): Typed<T> =
+	typed(line(string fieldTo typed()))
 
 // === deconstruction
 
