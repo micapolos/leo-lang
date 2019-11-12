@@ -66,7 +66,7 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 					"scope" ->
 						endCompiler {
 							script("scope" lineTo stack.script { scriptLine })
-								.typed<T>()
+								.staticTyped<T>()
 								.plusCompiler(stack, lit, ret)
 						}
 					"delete" ->

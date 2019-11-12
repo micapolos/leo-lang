@@ -1,6 +1,7 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
+import leo14.lambda.id
 import leo14.lambda.term
 import leo14.lineTo
 import leo14.script
@@ -8,6 +9,22 @@ import leo14.typed.*
 import kotlin.test.Test
 
 class CompilerTest {
+	@Test
+	fun structCompiler() {
+		compiler(typed<Any>())
+			.compile(
+				script(
+					"vec" lineTo script(
+						"x" lineTo script("zero"),
+						"y" lineTo script("one"))))
+			.assertEqualTo(
+				compiler(
+					id<Any>() of type(
+						"vec" lineTo type(
+							"x" lineTo type("zero"),
+							"y" lineTo type("one")))))
+	}
+
 	@Test
 	fun deleteCompiler() {
 		compiler(term("foo") of nativeType)

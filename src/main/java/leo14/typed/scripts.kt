@@ -3,24 +3,23 @@ package leo14.typed
 import leo14.*
 import leo14.lambda.id
 
-
-val Script.type: Type
+val Script.staticType: Type
 	get() =
 		when (this) {
 			is UnitScript -> type()
-			is LinkScript -> link.lhs.type.plus(link.line.typeLine)
+			is LinkScript -> link.lhs.staticType.plus(link.line.staticTypeLine)
 		}
 
-val ScriptLine.typeLine
+val ScriptLine.staticTypeLine
 	get() =
 		when (this) {
 			is LiteralScriptLine -> nativeLine
-			is FieldScriptLine -> line(field.typeField)
+			is FieldScriptLine -> line(field.staticTypeField)
 		}
 
-val ScriptField.typeField
+val ScriptField.staticTypeField
 	get() =
-		string fieldTo rhs.type
+		string fieldTo rhs.staticType
 
-fun <T> Script.typed() =
-	id<T>() of type
+fun <T> Script.staticTyped() =
+	id<T>() of staticType

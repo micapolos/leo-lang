@@ -98,7 +98,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 	when (this) {
 		is BeginTypedParent ->
-			typedCompiler.copy(typed = typedCompiler.typed.plus(line(begin.string fieldTo typed)))
+			typedCompiler.copy(typed = typedCompiler.typed.eval(begin.string fieldTo typed))
 		is MatchTypedParent ->
 			matchCompiler.copy(match = Case(matchCompiler.match, typed).end())
 	}
