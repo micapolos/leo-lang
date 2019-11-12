@@ -4,6 +4,7 @@ import leo13.reverse
 import leo14.*
 import leo14.lambda.arg0
 import leo14.lambda.fn
+import leo14.lambda.invoke
 import leo14.lambda.term
 import leo14.typed.*
 
@@ -50,6 +51,10 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 									null))
 						"any" ->
 							TypeCompiler(AnyTypeParent(this), type())
+						"apply" ->
+							typed.onlyLine.arrow.let { arrow ->
+								TypedCompiler(ApplyParent(this, arrow), typed(), lit)
+							}
 						else ->
 							TypedCompiler(BeginTypedParent(this, token.begin), typed(), lit)
 					}
@@ -105,9 +110,9 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					TODO()
 				is BeginToken ->
 					when (token.begin.string) {
-						"gives" ->
+						"does" ->
 							TypedCompiler(
-								AnyGivesParent(parent, type),
+								AnyDoesParent(parent, type),
 								arg0<T>() of type,
 								parent.lit)
 						else ->
@@ -124,8 +129,10 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 			typedCompiler.copy(typed = typedCompiler.typed.eval(begin.string fieldTo typed))
 		is MatchTypedParent ->
 			matchCompiler.copy(match = Case(matchCompiler.match, typed).end())
-		is AnyGivesParent ->
+		is AnyDoesParent ->
 			typedCompiler.copy(typed = typedCompiler.typed.plus(fn(typed.term) of line(paramType arrowTo typed.type)))
+		is ApplyParent ->
+			typedCompiler.copy(typed = arrow.term.invoke(typed.term) of arrow.arrow.rhs)
 	}
 
 fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =

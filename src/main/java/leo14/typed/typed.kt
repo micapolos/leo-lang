@@ -15,12 +15,14 @@ data class TypedLine<T>(val term: Term<T>, val line: Line)
 data class TypedChoice<T>(val term: Term<T>, val choice: Choice)
 data class TypedField<T>(val term: Term<T>, val field: Field)
 data class TypedOption<T>(val term: Term<T>, val option: Option)
+data class TypedArrow<T>(val term: Term<T>, val arrow: Arrow)
 
 infix fun <T> Term<T>.of(type: Type) = Typed(this, type)
 infix fun <T> Term<T>.of(line: Line) = TypedLine(this, line)
 infix fun <T> Term<T>.of(choice: Choice) = TypedChoice(this, choice)
 infix fun <T> Term<T>.of(field: Field) = TypedField(this, field)
 infix fun <T> Term<T>.of(option: Option) = TypedOption(this, option)
+infix fun <T> Term<T>.of(arrow: Arrow) = TypedArrow(this, arrow)
 
 fun <T> choice(typed: TypedOption<T>): TypedChoice<T> = typed.term of choice(typed.option)
 fun <T> line(typed: TypedChoice<T>): TypedLine<T> = typed.term of line(typed.choice)
@@ -100,6 +102,10 @@ val <T> Typed<T>.onlyLine
 val <T> TypedLine<T>.choice: TypedChoice<T>
 	get() =
 		resolveChoiceOrNull.notNullOrError("$line as choice")
+
+val <T> TypedLine<T>.arrow: TypedArrow<T>
+	get() =
+		(line as? ArrowLine)?.arrow?.let { term of it }.notNullOrError("$line as arrow")
 
 val <T> TypedField<T>.rhs: Typed<T>
 	get() =

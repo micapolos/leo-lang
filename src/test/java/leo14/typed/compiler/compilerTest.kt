@@ -145,12 +145,12 @@ class CompilerTest {
 			.compile(
 				script(
 					"any" lineTo script("zero"),
-					"gives" lineTo script("plus" lineTo script("one"))))
+					"does" lineTo script("plus" lineTo script("one"))))
 			.assertEqualTo(
-				compiler(term(id<Any>()) of
-						type(
-							line(type("zero") arrowTo type(
-								"zero" lineTo type(),
-								"plus" lineTo type("one"))))))
+				compiler(id<Any>() of
+					type(
+						line(type("zero") arrowTo type(
+							"zero" lineTo type(),
+							"plus" lineTo type("one"))))))
 	}
 }

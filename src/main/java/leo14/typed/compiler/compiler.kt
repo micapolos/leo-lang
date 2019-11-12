@@ -5,6 +5,7 @@ import leo14.Literal
 import leo14.typed.Choice
 import leo14.typed.Type
 import leo14.typed.Typed
+import leo14.typed.TypedArrow
 
 sealed class Compiler<T>
 data class TypedCompiler<T>(val parent: TypedParent<T>?, val typed: Typed<T>, val lit: Literal.() -> T) : Compiler<T>()
@@ -17,7 +18,8 @@ data class AnyCompiler<T>(val parent: TypedCompiler<T>, val type: Type) : Compil
 sealed class TypedParent<T>
 data class BeginTypedParent<T>(val typedCompiler: TypedCompiler<T>, val begin: Begin) : TypedParent<T>()
 data class MatchTypedParent<T>(val matchCompiler: MatchCompiler<T>) : TypedParent<T>()
-data class AnyGivesParent<T>(val typedCompiler: TypedCompiler<T>, val paramType: Type) : TypedParent<T>()
+data class AnyDoesParent<T>(val typedCompiler: TypedCompiler<T>, val paramType: Type) : TypedParent<T>()
+data class ApplyParent<T>(val typedCompiler: TypedCompiler<T>, val arrow: TypedArrow<T>) : TypedParent<T>()
 
 sealed class TypeParent<T>
 data class BeginTypeParent<T>(val typeCompiler: TypeCompiler<T>, val begin: Begin) : TypeParent<T>()

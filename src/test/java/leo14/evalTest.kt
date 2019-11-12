@@ -115,7 +115,7 @@ class EvalTest {
 	fun evalFunction() {
 		script(
 			"any" lineTo script("zero"),
-			"gives" lineTo script("plus" lineTo script("one")))
+			"does" lineTo script("plus" lineTo script("one")))
 			.eval
 			.assertEqualTo(
 				script(
@@ -124,5 +124,18 @@ class EvalTest {
 						"to" lineTo script(
 							"zero" lineTo script(),
 							"plus" lineTo script("one")))))
+	}
+
+	@Test
+	fun evalFunctionApply() {
+		script(
+			"any" lineTo script("zero"),
+			"does" lineTo script("plus" lineTo script("one")),
+			"apply" lineTo script("zero"))
+			.eval
+			.assertEqualTo(
+				script(
+					"zero" lineTo script(),
+					"plus" lineTo script("one")))
 	}
 }
