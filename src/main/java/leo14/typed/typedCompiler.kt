@@ -61,7 +61,7 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 						}
 					"of" ->
 						typeCompiler { type ->
-							castTypedTo(type).plusCompiler(stack, lit, ret)
+							of(type).plusCompiler(stack, lit, ret)
 						}
 					"scope" ->
 						endCompiler {

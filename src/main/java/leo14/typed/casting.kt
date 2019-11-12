@@ -23,7 +23,7 @@ fun <T> Cast<T>.resolve(input: Term<T>) =
 		is TermCast -> term
 	}
 
-infix fun <T> Typed<T>.castTypedTo(toType: Type): Typed<T> =
+infix fun <T> Typed<T>.of(toType: Type): Typed<T> =
 	castTermTo(toType).notNullOrError("$type as $toType") of toType
 
 infix fun <T> Typed<T>.castTermTo(toType: Type): Term<T>? =

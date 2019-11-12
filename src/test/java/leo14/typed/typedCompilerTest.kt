@@ -178,7 +178,7 @@ class TypedCompilerTest {
 								"choice" lineTo script(
 									"zero" lineTo script(),
 									"one" lineTo script()))))
-					.assertEqualTo(castTypedTo(type(choice("zero", "one"))))
+					.assertEqualTo(of(type(choice("zero", "one"))))
 			}
 	}
 
@@ -195,7 +195,7 @@ class TypedCompilerTest {
 									"choice" lineTo script(
 										"zero" lineTo script(),
 										"one" lineTo script())))))
-					.assertEqualTo(castTypedTo(type("bit" lineTo type(choice("zero", "one")))))
+					.assertEqualTo(of(type("bit" lineTo type(choice("zero", "one")))))
 			}
 	}
 

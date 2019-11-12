@@ -56,7 +56,29 @@ class CompilerTest {
 							"one" lineTo script()))))
 			.assertEqualTo(
 				compiler(
-					typed<Any>(line("zero" fieldTo typed())).castTypedTo(type(choice("zero", "one")))))
+					typed<Any>(line("zero" fieldTo typed())).of(type(choice("zero", "one")))))
+	}
+
+	@Test
+	fun simpleMatch() {
+		compiler<Any>(typed())
+			.compile(
+				script(
+					"one" lineTo script(),
+					"of" lineTo script("choice" lineTo script("zero", "one")),
+					"match" lineTo script(
+						"zero" lineTo script(),
+						"one" lineTo script())))
+			.assertEqualTo(
+				compiler(
+					typed<Any>("one")
+						.of(type(choice("zero", "one")))
+						.beginMatch()
+						.beginCase("zero")
+						.end()
+						.beginCase("one")
+						.end()
+						.end()))
 	}
 
 	@Test
@@ -80,15 +102,15 @@ class CompilerTest {
 				compiler(
 					typed<Any>()
 						.plus("zero" fieldTo typed("foo"))
-						.castTypedTo(type(choice(
+						.of(type(choice(
 							"zero" optionTo type("foo"),
 							"one" optionTo type("bar"))))
 						.beginMatch()
 						.beginCase("zero")
-						.update { castTypedTo(type(choice("foo", "bar"))) }
+						.update { of(type(choice("foo", "bar"))) }
 						.end()
 						.beginCase("one")
-						.update { castTypedTo(type(choice("foo", "bar"))) }
+						.update { of(type(choice("foo", "bar"))) }
 						.end()
 						.end()))
 	}

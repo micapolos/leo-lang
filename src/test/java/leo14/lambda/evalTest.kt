@@ -12,7 +12,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun id() {
+	fun testId() {
 		id<String>()
 			.invoke(term("foo"))
 			.eval
@@ -39,5 +39,12 @@ class EvalTest {
 			.invoke(fn(term("second")))
 			.eval
 			.assertEqualTo(term("second"))
+	}
+
+	@Test
+	fun oneOfId() {
+		fn(fn(arg1<Any>()(id())))(id())(id())
+			.eval
+			.assertEqualTo(id())
 	}
 }

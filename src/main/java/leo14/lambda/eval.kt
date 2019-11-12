@@ -41,7 +41,7 @@ val <T> Value<T>.evalTerm: Term<T>
 
 val <T> Thunk<T>.evalTerm: Term<T>
 	get() =
-		fn(term).fold(scope.valueStack) { fn(this).invoke(it.evalTerm) }
+		fn(term)
 
 val <T> Term<T>.value get() = value(emptyScope())
 
