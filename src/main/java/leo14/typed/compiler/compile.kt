@@ -2,6 +2,8 @@ package leo14.typed.compiler
 
 import leo13.reverse
 import leo14.*
+import leo14.lambda.arg0
+import leo14.lambda.fn
 import leo14.lambda.term
 import leo14.typed.*
 
@@ -46,6 +48,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 									typed.term,
 									typed.onlyLine.choice.choice.optionStack.reverse,
 									null))
+						"any" ->
+							TypeCompiler(AnyTypeParent(this), type())
 						else ->
 							TypedCompiler(BeginTypedParent(this, token.begin), typed(), lit)
 					}
@@ -95,6 +99,23 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is BeginToken -> TODO()
 				is EndToken -> parent.copy(typed = typed())
 			}
+		is AnyCompiler ->
+			when (token) {
+				is LiteralToken ->
+					TODO()
+				is BeginToken ->
+					when (token.begin.string) {
+						"gives" ->
+							TypedCompiler(
+								AnyGivesParent(parent, type),
+								arg0<T>() of type,
+								parent.lit)
+						else ->
+							TODO()
+					}
+				is EndToken ->
+					TODO()
+			}
 	} ?: error("$token")
 
 fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
@@ -103,6 +124,8 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 			typedCompiler.copy(typed = typedCompiler.typed.eval(begin.string fieldTo typed))
 		is MatchTypedParent ->
 			matchCompiler.copy(match = Case(matchCompiler.match, typed).end())
+		is AnyGivesParent ->
+			typedCompiler.copy(typed = typedCompiler.typed.plus(fn(typed.term) of line(paramType arrowTo typed.type)))
 	}
 
 fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
@@ -113,4 +136,6 @@ fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
 			typeCompiler.copy(type = typeCompiler.type.plus(begin.string lineTo type))
 		is ChoiceTypeParent ->
 			choiceCompiler.copy(choice = choiceCompiler.choice.plus(begin.string optionTo type))
+		is AnyTypeParent ->
+			AnyCompiler(typedCompiler, type)
 	}
