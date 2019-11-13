@@ -37,6 +37,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					this.plus(term(token.literal.lit()) of nativeLine)
 				is BeginToken ->
 					when (token.begin.string) {
+						// Remove when macros are implemented
 						"give" ->
 							TypedCompiler(GiveParent(this), typed(), lit)
 						"as" ->
@@ -68,6 +69,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					when (token.begin.string) {
 						"choice" ->
 							ChoiceCompiler(this, choice())
+						"arrow" ->
+							TODO()
 						else ->
 							TypeCompiler(BeginTypeParent(this, token.begin), type())
 					}
@@ -98,24 +101,36 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					parent.updateTyped { match.end() }
 			}
 		is ActionCompiler ->
-			if (token is BeginToken && token.begin.string == "it")
-				TypeCompiler(ActionItParent(this), type())
-			else
-				TODO()
+			when (token) {
+				is LiteralToken -> null
+				is BeginToken ->
+					when (token.begin.string) {
+						"it" -> TypeCompiler(ActionItParent(this), type())
+						else -> null
+					}
+				is EndToken -> null
+			}
 		is ActionItCompiler ->
-			if (token is BeginToken && token.begin.string == "does")
-				TypedCompiler(
-					ActionItDoesParent(parent, type),
-					arg0<T>() of type,
-					parent.lit)
-			else
-				TODO()
+			when (token) {
+				is LiteralToken -> null
+				is BeginToken ->
+					when (token.begin.string) {
+						"does" ->
+							TypedCompiler(
+								ActionItDoesParent(parent, type),
+								arg0<T>() of type,
+								parent.lit)
+						else -> null
+					}
+				is EndToken -> null
+			}
 		is ActionItDoesCompiler ->
-			if (token is EndToken)
-				parent.updateTyped { plus(action) }
-			else
-				TODO()
-	} ?: error("$token")
+			when (token) {
+				is LiteralToken -> null
+				is BeginToken -> null
+				is EndToken -> parent.updateTyped { plus(action) }
+			}
+	} ?: error("$token unexpected")
 
 fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 	when (this) {
