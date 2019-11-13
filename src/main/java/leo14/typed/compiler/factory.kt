@@ -7,5 +7,5 @@ import leo14.typed.Typed
 
 val lit: Literal.() -> Any = { any }
 
-fun compiler(typed: Typed<Any>) = TypedCompiler(null, typed, lit)
+fun compiler(typed: Typed<Any>) = TypedCompiler(null, anyContext, typed)
 fun compiler(type: Type) = TypeCompiler<Any>(null, type)

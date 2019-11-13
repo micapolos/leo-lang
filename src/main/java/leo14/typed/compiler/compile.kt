@@ -34,12 +34,12 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 		is TypedCompiler ->
 			when (token) {
 				is LiteralToken ->
-					this.plus(term(token.literal.lit()) of nativeLine)
+					this.plus(term(context.compile(token.literal)) of nativeLine)
 				is BeginToken ->
 					when (token.begin.string) {
 						// Remove when macros are implemented
 						"give" ->
-							TypedCompiler(GiveParent(this), typed(), lit)
+							TypedCompiler(GiveParent(this), context, typed())
 						"as" ->
 							TypeCompiler(AsParent(this), type())
 						"match" ->
@@ -53,10 +53,10 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 							ActionCompiler(this)
 						"do" ->
 							typed.onlyLine.arrow.let { arrow ->
-								TypedCompiler(DoParent(this, arrow), typed(), lit)
+								TypedCompiler(DoParent(this, arrow), context, typed())
 							}
 						else ->
-							TypedCompiler(BeginTypedParent(this, token.begin), typed(), lit)
+							TypedCompiler(BeginTypedParent(this, token.begin), context, typed())
 					}
 				is EndToken ->
 					parent?.compile(typed)
@@ -94,8 +94,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					val line = match.beginCase(token.begin.string)
 					TypedCompiler(
 						MatchTypedParent(MatchCompiler(parent, line.match)),
-						line.typed,
-						parent.lit)
+						parent.context,
+						line.typed)
 				}
 				is EndToken ->
 					parent.updateTyped { match.end() }
@@ -118,8 +118,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 						"does" ->
 							TypedCompiler(
 								ActionItDoesParent(parent, type),
-								arg0<T>() of type,
-								parent.lit)
+								parent.context,
+								arg0<T>() of type)
 						else -> null
 					}
 				is EndToken -> null

@@ -1,11 +1,10 @@
 package leo14.typed.compiler
 
 import leo14.Begin
-import leo14.Literal
 import leo14.typed.*
 
 sealed class Compiler<T>
-data class TypedCompiler<T>(val parent: TypedParent<T>?, val typed: Typed<T>, val lit: Literal.() -> T) : Compiler<T>()
+data class TypedCompiler<T>(val parent: TypedParent<T>?, val context: Context<T>, val typed: Typed<T>) : Compiler<T>()
 data class TypeCompiler<T>(val parent: TypeParent<T>?, val type: Type) : Compiler<T>()
 data class ChoiceCompiler<T>(val parent: TypeCompiler<T>, val choice: Choice) : Compiler<T>()
 data class MatchCompiler<T>(val parent: TypedCompiler<T>, val match: Match<T>) : Compiler<T>()
