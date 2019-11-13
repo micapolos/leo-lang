@@ -101,13 +101,13 @@ fun <T> Typed<T>.resolve(arrow: Arrow): Type? =
 		arrow.rhs
 	}
 
-fun <T> Typed<T>.plusCompilerWith(function: Function<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
-	plusCompiler(stack.push(function.param arrowTo function.body.type), lit) { typed ->
-		ret(fn(arg0<T>().invoke(typed.term)).invoke(fn(function.body.term)) of typed.type)
+fun <T> Typed<T>.plusCompilerWith(action: Action<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
+	plusCompiler(stack.push(action.param arrowTo action.body.type), lit) { typed ->
+		ret(fn(arg0<T>().invoke(typed.term)).invoke(fn(action.body.term)) of typed.type)
 	}
 
-fun <T> typedCompilerWith(function: Function<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
-	typed<T>().plusCompilerWith(function, stack, lit, ret)
+fun <T> typedCompilerWith(action: Action<T>, stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
+	typed<T>().plusCompilerWith(action, stack, lit, ret)
 
 fun <T> TypedChoice<T>.plusMatchCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret<Typed<T>>): Compiler =
 	Match(term, choice.optionStack.reverse, null).plusCompiler(stack, lit, ret)

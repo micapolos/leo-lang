@@ -137,7 +137,7 @@ class CompilerTest {
 		compiler(typed())
 			.compile(
 				script(
-					"function" lineTo script(
+					"action" lineTo script(
 						"it" lineTo script("zero"),
 						"does" lineTo script("plus" lineTo script("one")))))
 			.assertEqualTo(

@@ -42,8 +42,8 @@ fun <T> typed(string: String, vararg strings: String): Typed<T> =
 fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
 	plusTerm(typed) of type.plus(typed.line)
 
-fun <T> Typed<T>.plus(function: Function<T>): Typed<T> =
-	plus(fn(function.body.term) of line(function.param arrowTo function.body.type))
+fun <T> Typed<T>.plus(action: Action<T>): Typed<T> =
+	plus(fn(action.body.term) of line(action.param arrowTo action.body.type))
 
 fun <T> Typed<T>.plus(typed: TypedField<T>): Typed<T> =
 	plus(typed.term of line(typed.field))

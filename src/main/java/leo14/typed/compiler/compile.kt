@@ -48,8 +48,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 									typed.term,
 									typed.onlyLine.choice.choice.optionStack.reverse,
 									null))
-						"function" ->
-							FunctionCompiler(this)
+						"action" ->
+							ActionCompiler(this)
 						"do" ->
 							typed.onlyLine.arrow.let { arrow ->
 								TypedCompiler(DoParent(this, arrow), typed(), lit)
@@ -103,22 +103,22 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is BeginToken -> TODO()
 				is EndToken -> parent.set(typed())
 			}
-		is FunctionCompiler ->
+		is ActionCompiler ->
 			if (token is BeginToken && token.begin.string == "it")
-				TypeCompiler(FunctionItParent(this), type())
+				TypeCompiler(ActionItParent(this), type())
 			else
 				TODO()
-		is FunctionItCompiler ->
+		is ActionItCompiler ->
 			if (token is BeginToken && token.begin.string == "does")
 				TypedCompiler(
-					FunctionItDoesParent(parent, type),
+					ActionItDoesParent(parent, type),
 					arg0<T>() of type,
 					parent.lit)
 			else
 				TODO()
-		is FunctionItDoesCompiler ->
+		is ActionItDoesCompiler ->
 			if (token is EndToken)
-				parent.updateTyped { plus(function) }
+				parent.updateTyped { plus(action) }
 			else
 				TODO()
 	} ?: error("$token")
@@ -129,8 +129,8 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 			typedCompiler.updateTyped { eval(begin.string fieldTo typed) }
 		is MatchTypedParent ->
 			matchCompiler.copy(match = Case(matchCompiler.match, typed).end())
-		is FunctionItDoesParent ->
-			FunctionItDoesCompiler(typedCompiler, paramType ret typed)
+		is ActionItDoesParent ->
+			ActionItDoesCompiler(typedCompiler, paramType ret typed)
 		is DoParent ->
 			typedCompiler.updateTyped { arrow.term.invoke(typed.term) of arrow.arrow.rhs }
 	}
@@ -143,8 +143,8 @@ fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
 			typeCompiler.copy(type = typeCompiler.type.plus(begin.string lineTo type))
 		is ChoiceTypeParent ->
 			choiceCompiler.copy(choice = choiceCompiler.choice.plus(begin.string optionTo type))
-		is FunctionItParent ->
-			FunctionItCompiler(functionCompiler.parent, type)
+		is ActionItParent ->
+			ActionItCompiler(actionCompiler.parent, type)
 	}
 
 fun <T> TypedCompiler<T>.set(typed: Typed<T>): TypedCompiler<T> =

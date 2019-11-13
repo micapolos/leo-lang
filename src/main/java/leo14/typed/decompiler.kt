@@ -14,9 +14,9 @@ fun <T> TypedLine<T>.decompileLine(fn: T.() -> ScriptLine): ScriptLine =
 		is NativeLine -> term.decompileNative(fn)
 		is FieldLine -> (term of line.field).decompileLine(fn)
 		is ChoiceLine -> (term of line.choice).decompileLine(fn)
-		is ArrowLine -> "function" lineTo script(
-			"from" lineTo line.arrow.lhs.script,
-			"to" lineTo line.arrow.rhs.script)
+		is ArrowLine -> "action" lineTo script(
+			"it" lineTo line.arrow.lhs.script,
+			"gives" lineTo line.arrow.rhs.script)
 	}
 
 fun <T> Term<T>.decompileNative(fn: T.() -> ScriptLine) =
