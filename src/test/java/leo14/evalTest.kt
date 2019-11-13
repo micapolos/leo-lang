@@ -26,10 +26,12 @@ class EvalTest {
 	}
 
 	@Test
-	fun evalDelete() {
-		script("zero", "delete")
+	fun evalGive() {
+		script(
+			"zero" lineTo script(),
+			"give" lineTo script("one"))
 			.eval
-			.assertEqualTo(script())
+			.assertEqualTo(script("one"))
 	}
 
 	@Test

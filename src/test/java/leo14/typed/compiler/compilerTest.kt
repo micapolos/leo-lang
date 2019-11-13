@@ -26,10 +26,10 @@ class CompilerTest {
 	}
 
 	@Test
-	fun deleteCompiler() {
+	fun giveCompiler() {
 		compiler(term("foo") of nativeType)
-			.compile("delete" lineTo script())
-			.assertEqualTo(compiler(typed()))
+			.compile("give" lineTo script("one"))
+			.assertEqualTo(compiler(typed("one")))
 	}
 
 	@Test

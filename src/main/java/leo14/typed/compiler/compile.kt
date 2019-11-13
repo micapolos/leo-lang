@@ -37,8 +37,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					this.plus(term(token.literal.lit()) of nativeLine)
 				is BeginToken ->
 					when (token.begin.string) {
-						"delete" ->
-							DeleteCompiler(this)
+						"give" ->
+							TypedCompiler(GiveParent(this), typed(), lit)
 						"as" ->
 							TypeCompiler(AsParent(this), type())
 						"match" ->
@@ -97,12 +97,6 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is EndToken ->
 					parent.updateTyped { match.end() }
 			}
-		is DeleteCompiler ->
-			when (token) {
-				is LiteralToken -> TODO()
-				is BeginToken -> TODO()
-				is EndToken -> parent.set(typed())
-			}
 		is ActionCompiler ->
 			if (token is BeginToken && token.begin.string == "it")
 				TypeCompiler(ActionItParent(this), type())
@@ -133,6 +127,8 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 			ActionItDoesCompiler(typedCompiler, paramType ret typed)
 		is DoParent ->
 			typedCompiler.updateTyped { arrow.term.invoke(typed.term) of arrow.arrow.rhs }
+		is GiveParent ->
+			typedCompiler.updateTyped { typed }
 	}
 
 fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
