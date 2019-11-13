@@ -3,7 +3,6 @@ package leo14.typed.compiler
 import leo13.reverse
 import leo14.*
 import leo14.lambda.arg0
-import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.term
 import leo14.typed.*
@@ -35,7 +34,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 		is TypedCompiler ->
 			when (token) {
 				is LiteralToken ->
-					copy(typed = typed.plus(term(token.literal.lit()) of nativeLine))
+					this.plus(term(token.literal.lit()) of nativeLine)
 				is BeginToken ->
 					when (token.begin.string) {
 						"delete" ->
@@ -49,11 +48,11 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 									typed.term,
 									typed.onlyLine.choice.choice.optionStack.reverse,
 									null))
-						"any" ->
-							TypeCompiler(AnyTypeParent(this), type())
-						"apply" ->
+						"function" ->
+							FunctionCompiler(this)
+						"do" ->
 							typed.onlyLine.arrow.let { arrow ->
-								TypedCompiler(ApplyParent(this, arrow), typed(), lit)
+								TypedCompiler(DoParent(this, arrow), typed(), lit)
 							}
 						else ->
 							TypedCompiler(BeginTypedParent(this, token.begin), typed(), lit)
@@ -82,7 +81,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is BeginToken ->
 					TypeCompiler(ChoiceTypeParent(this, token.begin), type())
 				is EndToken ->
-					parent.copy(type = parent.type.plus(line(choice)))
+					parent.updateType { plus(line(choice)) }
 			}
 		is MatchCompiler ->
 			when (token) {
@@ -96,43 +95,44 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 						parent.lit)
 				}
 				is EndToken ->
-					parent.copy(typed = match.end())
+					parent.updateTyped { match.end() }
 			}
 		is DeleteCompiler ->
 			when (token) {
 				is LiteralToken -> TODO()
 				is BeginToken -> TODO()
-				is EndToken -> parent.copy(typed = typed())
+				is EndToken -> parent.set(typed())
 			}
-		is AnyCompiler ->
-			when (token) {
-				is LiteralToken ->
-					TODO()
-				is BeginToken ->
-					when (token.begin.string) {
-						"does" ->
-							TypedCompiler(
-								AnyDoesParent(parent, type),
-								arg0<T>() of type,
-								parent.lit)
-						else ->
-							TODO()
-					}
-				is EndToken ->
-					TODO()
-			}
+		is FunctionCompiler ->
+			if (token is BeginToken && token.begin.string == "it")
+				TypeCompiler(FunctionItParent(this), type())
+			else
+				TODO()
+		is FunctionItCompiler ->
+			if (token is BeginToken && token.begin.string == "does")
+				TypedCompiler(
+					FunctionItDoesParent(parent, type),
+					arg0<T>() of type,
+					parent.lit)
+			else
+				TODO()
+		is FunctionItDoesCompiler ->
+			if (token is EndToken)
+				parent.updateTyped { plus(function) }
+			else
+				TODO()
 	} ?: error("$token")
 
 fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 	when (this) {
 		is BeginTypedParent ->
-			typedCompiler.copy(typed = typedCompiler.typed.eval(begin.string fieldTo typed))
+			typedCompiler.updateTyped { eval(begin.string fieldTo typed) }
 		is MatchTypedParent ->
 			matchCompiler.copy(match = Case(matchCompiler.match, typed).end())
-		is AnyDoesParent ->
-			typedCompiler.copy(typed = typedCompiler.typed.plus(fn(typed.term) of line(paramType arrowTo typed.type)))
-		is ApplyParent ->
-			typedCompiler.copy(typed = arrow.term.invoke(typed.term) of arrow.arrow.rhs)
+		is FunctionItDoesParent ->
+			FunctionItDoesCompiler(typedCompiler, paramType ret typed)
+		is DoParent ->
+			typedCompiler.updateTyped { arrow.term.invoke(typed.term) of arrow.arrow.rhs }
 	}
 
 fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
@@ -143,6 +143,20 @@ fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
 			typeCompiler.copy(type = typeCompiler.type.plus(begin.string lineTo type))
 		is ChoiceTypeParent ->
 			choiceCompiler.copy(choice = choiceCompiler.choice.plus(begin.string optionTo type))
-		is AnyTypeParent ->
-			AnyCompiler(typedCompiler, type)
+		is FunctionItParent ->
+			FunctionItCompiler(functionCompiler.parent, type)
 	}
+
+fun <T> TypedCompiler<T>.set(typed: Typed<T>): TypedCompiler<T> =
+	copy(typed = typed)
+
+fun <T> TypedCompiler<T>.updateTyped(fn: Typed<T>.() -> Typed<T>): TypedCompiler<T> =
+	set(typed.fn())
+
+fun <T> TypedCompiler<T>.plus(line: TypedLine<T>): TypedCompiler<T> =
+	updateTyped { plus(line) }
+
+fun <T> TypeCompiler<T>.updateType(fn: Type.() -> Type): TypeCompiler<T> =
+	copy(type = type.fn())
+
+

@@ -133,19 +133,13 @@ class CompilerTest {
 	}
 
 	@Test
-	fun any() {
-		compiler(typed())
-			.compile(script("any" lineTo script("zero")))
-			.assertEqualTo(AnyCompiler(compiler(typed()), type("zero")))
-	}
-
-	@Test
 	fun function() {
 		compiler(typed())
 			.compile(
 				script(
-					"any" lineTo script("zero"),
-					"does" lineTo script("plus" lineTo script("one"))))
+					"function" lineTo script(
+						"it" lineTo script("zero"),
+						"does" lineTo script("plus" lineTo script("one")))))
 			.assertEqualTo(
 				compiler(id<Any>() of
 					type(
