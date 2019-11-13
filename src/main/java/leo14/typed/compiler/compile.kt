@@ -51,6 +51,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 									null))
 						"action" ->
 							ActionCompiler(this)
+						"remember" ->
+							RememberCompiler(this)
 						"do" ->
 							typed.onlyLine.arrow.let { arrow ->
 								TypedCompiler(DoParent(this, arrow), context, typed())
@@ -129,6 +131,18 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is LiteralToken -> null
 				is BeginToken -> null
 				is EndToken -> parent.updateTyped { plus(action) }
+			}
+		is RememberCompiler ->
+			when (token) {
+				is LiteralToken -> null
+				is BeginToken -> null
+				is EndToken ->
+					parent.typed.onlyLine.arrow.let { arrow ->
+						TypedCompiler(
+							parent.parent,
+							parent.context.remember(arrow.arrow),
+							parent.typed) // TODO: the following code must be enclosed inside a function!!!
+					}
 			}
 	} ?: error("$token unexpected")
 

@@ -11,6 +11,7 @@ data class MatchCompiler<T>(val parent: TypedCompiler<T>, val match: Match<T>) :
 data class ActionCompiler<T>(val parent: TypedCompiler<T>) : Compiler<T>()
 data class ActionItCompiler<T>(val parent: TypedCompiler<T>, val type: Type) : Compiler<T>()
 data class ActionItDoesCompiler<T>(val parent: TypedCompiler<T>, val action: Action<T>) : Compiler<T>()
+data class RememberCompiler<T>(val parent: TypedCompiler<T>) : Compiler<T>()
 
 sealed class TypedParent<T>
 data class BeginTypedParent<T>(val typedCompiler: TypedCompiler<T>, val begin: Begin) : TypedParent<T>()
