@@ -144,28 +144,28 @@ class EvalTest {
 	}
 
 	@Test
-	fun rememberItGivesAndRemind() {
+	fun rememberItIsAndRemind() {
 		script(
 			"remember" lineTo script(
 				"it" lineTo script("zero"),
-				"gives" lineTo script("one")),
+				"is" lineTo script("one")),
 			"zero" lineTo script())
 			.eval
 			.assertEqualTo(script("one"))
 	}
 
 	@Test
-	fun simulateHasUsingRememberItGives() {
+	fun simulateHasUsingRememberItIs() {
 		script(
 			"remember" lineTo script(
 				"it" lineTo script("zero"),
-				"gives" lineTo script(
+				"is" lineTo script(
 					"zero" lineTo script(),
 					"as" lineTo script(
 						"choice" lineTo script("zero", "one")))),
 			"remember" lineTo script(
 				"it" lineTo script("one"),
-				"gives" lineTo script(
+				"is" lineTo script(
 					"one" lineTo script(),
 					"as" lineTo script(
 						"choice" lineTo script("zero", "one")))),
@@ -173,7 +173,7 @@ class EvalTest {
 				"it" lineTo script(
 					"choice" lineTo script("zero", "one"),
 					"type" lineTo script()),
-				"gives" lineTo script(
+				"is" lineTo script(
 					"bit" lineTo script())),
 			"zero" lineTo script(),
 			"type" lineTo script())

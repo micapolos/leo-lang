@@ -186,13 +186,13 @@ class CompilerTest {
 	}
 
 	@Test
-	fun rememberItGives() {
+	fun rememberItIs() {
 		compiler(typed())
 			.compile(
 				script(
 					"remember" lineTo script(
 						"it" lineTo script("zero"),
-						"gives" lineTo script("one"))))
+						"is" lineTo script("one"))))
 			.assertEqualTo(
 				compiler(
 					typed(),

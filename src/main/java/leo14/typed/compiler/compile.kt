@@ -159,13 +159,13 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is LiteralToken -> null
 				is BeginToken ->
 					when (token.begin.string) {
-						"gives" -> TypedCompiler(RememberItGivesParent(parent, type), parent.context, typed())
+						"is" -> TypedCompiler(RememberItIsParent(parent, type), parent.context, typed())
 						"does" -> TypedCompiler(RememberItDoesParent(parent, type), parent.context, arg0<T>() of type)
 						else -> null
 					}
 				is EndToken -> null
 			}
-		is RememberItGivesCompiler ->
+		is RememberItIsCompiler ->
 			when (token) {
 				is LiteralToken -> null
 				is BeginToken -> null
@@ -191,8 +191,8 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 			typedCompiler.updateTyped { arrow.term.invoke(typed.term) of arrow.arrow.rhs }
 		is GiveParent ->
 			typedCompiler.updateTyped { typed }
-		is RememberItGivesParent ->
-			RememberItGivesCompiler(typedCompiler, itType does typed)
+		is RememberItIsParent ->
+			RememberItIsCompiler(typedCompiler, itType does typed)
 		is RememberItDoesParent ->
 			RememberItDoesCompiler(typedCompiler, itType does typed)
 	}
