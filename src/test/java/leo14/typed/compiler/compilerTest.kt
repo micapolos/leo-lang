@@ -1,6 +1,9 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
+import leo13.stack
+import leo14.lambda.arg0
+import leo14.lambda.fn
 import leo14.lambda.id
 import leo14.lambda.term
 import leo14.lineTo
@@ -133,7 +136,7 @@ class CompilerTest {
 	}
 
 	@Test
-	fun function() {
+	fun action() {
 		compiler(typed())
 			.compile(
 				script(
@@ -146,5 +149,38 @@ class CompilerTest {
 						line(type("zero") arrowTo type(
 							"zero" lineTo type(),
 							"plus" lineTo type("one"))))))
+	}
+
+	@Test
+	fun actionRemember() {
+		compiler(typed())
+			.compile(
+				script(
+					"action" lineTo script(
+						"it" lineTo script("zero"),
+						"does" lineTo script("give" lineTo script("one"))),
+					"remember" lineTo script()))
+			.assertEqualTo(
+				compiler(
+					typed(),
+					anyContext(stack(
+						type("zero") ret (fn(arg0<Any>()) of type("one"))
+					))))
+	}
+
+	@Test
+	fun actionRememberDo() {
+		compiler(
+			typed(),
+			anyContext(stack(
+				type("zero") ret (fn(arg0<Any>()) of type("one"))
+			)))
+			.compile(script("zero"))
+			.assertEqualTo(
+				compiler(
+					typed("one"),
+					anyContext(stack(
+						type("zero") ret (fn(arg0<Any>()) of type("one"))
+					))))
 	}
 }

@@ -114,7 +114,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun evalFunction() {
+	fun evalAction() {
 		script(
 			"action" lineTo script(
 				"it" lineTo script("zero"),
@@ -130,7 +130,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun evalFunctionDo() {
+	fun evalActionDo() {
 		script(
 			"action" lineTo script(
 				"it" lineTo script("zero"),
@@ -141,5 +141,16 @@ class EvalTest {
 				script(
 					"zero" lineTo script(),
 					"plus" lineTo script("one")))
+	}
+
+	@Test
+	fun evalActionRemember() {
+		script(
+			"action" lineTo script(
+				"it" lineTo script("zero"),
+				"does" lineTo script("plus" lineTo script("one"))),
+			"remember" lineTo script())
+			.eval
+			.assertEqualTo(script())
 	}
 }

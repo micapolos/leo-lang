@@ -61,7 +61,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 							TypedCompiler(BeginTypedParent(this, token.begin), context, typed())
 					}
 				is EndToken ->
-					parent?.compile(typed)
+					parent?.compile(this.retTyped)
 			}
 		is TypeCompiler ->
 			when (token) {
@@ -140,8 +140,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					parent.typed.onlyLine.arrow.let { arrow ->
 						TypedCompiler(
 							parent.parent,
-							parent.context.remember(arrow.arrow),
-							parent.typed) // TODO: the following code must be enclosed inside a function!!!
+							parent.context.remember(arrow.action),
+							typed())
 					}
 			}
 	} ?: error("$token unexpected")
@@ -184,4 +184,6 @@ fun <T> TypedCompiler<T>.plus(line: TypedLine<T>): TypedCompiler<T> =
 fun <T> TypeCompiler<T>.updateType(fn: Type.() -> Type): TypeCompiler<T> =
 	copy(type = type.fn())
 
-
+val <T> TypedCompiler<T>.retTyped: Typed<T>
+	get() =
+		context.ret(typed)

@@ -56,6 +56,8 @@ val Type.lineLinkOrNull: Link<Type, Line>?
 			link.stack.type linkTo link.value
 		}
 
+val impossibleType: Type = type(choice())
+
 val nativeLine: Line = NativeLine
 fun line(choice: Choice): Line = ChoiceLine(choice)
 fun line(field: Field): Line = FieldLine(field)

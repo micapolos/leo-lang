@@ -186,3 +186,10 @@ val <T> Typed<T>.decompileLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 
 fun <T> Typed<T>.switchOf(type: Type, fnStack: Stack<Term<T>>): Typed<T> =
 	term.matchTerm(*fnStack.array) of type
+
+val <T> TypedArrow<T>.action: Action<T>
+	get() =
+		arrow.lhs ret (term of arrow.rhs)
+
+fun <T> Typed<T>.ret(action: Action<T>): Typed<T> =
+	fn(term).invoke(action.body.term) of action.body.type
