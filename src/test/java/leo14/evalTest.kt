@@ -155,6 +155,18 @@ class EvalTest {
 	}
 
 	@Test
+	fun rememberAndForget() {
+		script(
+			"remember" lineTo script(
+				"it" lineTo script("zero"),
+				"is" lineTo script("one")),
+			"forget" lineTo script("zero"),
+			"zero" lineTo script())
+			.eval
+			.assertEqualTo(script("zero"))
+	}
+
+	@Test
 	fun simulateHasUsingRememberItIs() {
 		script(
 			"remember" lineTo script(

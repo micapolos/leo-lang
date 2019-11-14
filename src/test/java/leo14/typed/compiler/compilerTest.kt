@@ -236,4 +236,27 @@ class CompilerTest {
 								type("zero") does typed("zero" fieldTo typed(), "plus" fieldTo typed("one")),
 								needsInvoke = true)))))
 	}
+
+	@Test
+	fun forget() {
+		compiler(
+			typed(),
+			anyContext(
+				memory(
+					remember(
+						type("zero") does typed("one"),
+						needsInvoke = false))))
+			.compile(
+				script(
+					"forget" lineTo script("zero")))
+			.assertEqualTo(
+				compiler(
+					typed(),
+					anyContext(
+						memory(
+							remember(
+								type("zero") does typed("one"),
+								needsInvoke = false),
+							forget(type("zero"))))))
+	}
 }

@@ -54,6 +54,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 							ActionCompiler(this)
 						"remember" ->
 							RememberCompiler(this)
+						"forget" ->
+							TypeCompiler(ForgetParent(this), type())
 						"do" ->
 							typed.onlyLine.arrow.let { arrow ->
 								TypedCompiler(DoParent(this, arrow), context, typed())
@@ -209,6 +211,8 @@ fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
 			ActionItCompiler(actionCompiler.parent, type)
 		is RememberItParent ->
 			RememberItCompiler(rememberCompiler.parent, type)
+		is ForgetParent ->
+			typedCompiler.plus(forget(type))
 	}
 
 fun <T> TypedCompiler<T>.set(typed: Typed<T>): TypedCompiler<T> =
