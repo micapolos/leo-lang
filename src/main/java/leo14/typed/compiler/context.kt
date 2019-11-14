@@ -42,7 +42,6 @@ fun <T> Context<T>.plus(typed: Typed<T>, typedField: TypedField<T>): Typed<T> =
 		resolve(plused) ?: typed.eval(typedField)
 	}
 
-
 fun <T> Context<T>.ret(typed: Typed<T>): Typed<T> =
 	typed.fold(rememberedActionStack) {
 		if (it != null) ret(it) else this
