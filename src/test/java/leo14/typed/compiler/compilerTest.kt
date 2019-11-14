@@ -173,23 +173,6 @@ class CompilerTest {
 	}
 
 	@Test
-	fun actionRemember() {
-		compiler(typed())
-			.compile(
-				script(
-					"action" lineTo script(
-						"it" lineTo script("zero"),
-						"does" lineTo script("give" lineTo script("one"))),
-					"remember" lineTo script()))
-			.assertEqualTo(
-				compiler(
-					typed(),
-					anyContext(
-						memory(
-							remember(type("zero") does (fn(arg0<Any>()) of type("one")))))))
-	}
-
-	@Test
 	fun actionRememberDo() {
 		val context = anyContext(
 			memory(
@@ -200,20 +183,6 @@ class CompilerTest {
 				compiler(
 					context.plus(typed(), "zero" fieldTo typed()),
 					context))
-	}
-
-	@Test
-	fun actionRememberDoScoped() {
-		compiler(typed())
-			.compile(
-				script(
-					"my" lineTo script(
-						"action" lineTo script(
-							"it" lineTo script("zero"),
-							"does" lineTo script("give" lineTo script("one"))),
-						"remember" lineTo script(),
-						"zero" lineTo script())))
-			.assertEqualTo(compiler(typed("my" fieldTo typed("one"))))
 	}
 
 	@Test

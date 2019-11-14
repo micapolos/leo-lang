@@ -152,13 +152,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 						"it" -> TypeCompiler(RememberItParent(this), type())
 						else -> null
 					}
-				is EndToken ->
-					parent.typed.onlyLine.arrow.let { arrow ->
-						TypedCompiler(
-							parent.parent,
-							parent.context.remember(arrow.action),
-							typed())
-					}
+				is EndToken -> null
 			}
 		is RememberItCompiler ->
 			when (token) {
