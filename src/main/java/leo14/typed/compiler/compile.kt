@@ -1,5 +1,6 @@
 package leo14.typed.compiler
 
+import leo.base.notNullOrError
 import leo13.reverse
 import leo14.*
 import leo14.lambda.arg0
@@ -149,7 +150,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 	when (this) {
 		is BeginTypedParent ->
-			typedCompiler.updateTyped { eval(begin.string fieldTo typed) }
+			typedCompiler.updateTyped { typedCompiler.context.plus(typedCompiler.typed, begin.string fieldTo typed) }
 		is MatchTypedParent ->
 			matchCompiler.copy(match = Case(matchCompiler.match, typed).end())
 		is ActionItDoesParent ->
@@ -187,3 +188,9 @@ fun <T> TypeCompiler<T>.updateType(fn: Type.() -> Type): TypeCompiler<T> =
 val <T> TypedCompiler<T>.retTyped: Typed<T>
 	get() =
 		context.ret(typed)
+
+val <T> Compiler<T>.typed: Typed<T>
+	get() =
+		(this as? TypedCompiler)
+			.notNullOrError("$this as TypedCompiler")
+			.retTyped

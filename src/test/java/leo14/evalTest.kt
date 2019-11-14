@@ -153,4 +153,19 @@ class EvalTest {
 			.eval
 			.assertEqualTo(script())
 	}
+
+	@Test
+	fun evalActionRememberInvoke() {
+		script(
+			"action" lineTo script(
+				"it" lineTo script("zero"),
+				"does" lineTo script("plus" lineTo script("one"))),
+			"remember" lineTo script(),
+			"zero" lineTo script())
+			.eval
+			.assertEqualTo(
+				script(
+					"zero" lineTo script(),
+					"plus" lineTo script("one")))
+	}
 }

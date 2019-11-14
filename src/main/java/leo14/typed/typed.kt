@@ -192,4 +192,4 @@ val <T> TypedArrow<T>.action: Action<T>
 		arrow.lhs ret (term of arrow.rhs)
 
 fun <T> Typed<T>.ret(action: Action<T>): Typed<T> =
-	fn(term).invoke(action.body.term) of action.body.type
+	fn(term).invoke(action.body.term) of type

@@ -6,10 +6,7 @@ import leo14.Literal
 import leo14.any
 import leo14.lambda.arg
 import leo14.lambda.invoke
-import leo14.typed.Action
-import leo14.typed.Typed
-import leo14.typed.of
-import leo14.typed.ret
+import leo14.typed.*
 
 val anyLiteralCompile: Literal.() -> Any = { any }
 
@@ -38,6 +35,13 @@ fun <T> Context<T>.resolve(typed: Typed<T>): Typed<T>? =
 		?.let { (index, rhs) ->
 			arg<T>(index).invoke(typed.term) of rhs
 		}
+
+
+fun <T> Context<T>.plus(typed: Typed<T>, typedField: TypedField<T>): Typed<T> =
+	typed.plus(typedField).let { plused ->
+		resolve(plused) ?: typed.eval(typedField)
+	}
+
 
 fun <T> Context<T>.ret(typed: Typed<T>): Typed<T> =
 	typed.fold(rememberedActionStack) {
