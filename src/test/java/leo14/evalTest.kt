@@ -170,17 +170,40 @@ class EvalTest {
 	}
 
 	@Test
+	fun rememberItGivesAndRemind() {
+		script(
+			"remember" lineTo script(
+				"it" lineTo script("zero"),
+				"gives" lineTo script("one")),
+			"zero" lineTo script())
+			.eval
+			.assertEqualTo(script("one"))
+	}
+
+	@Test
 	fun simulateHas() {
 		script(
-			"action" lineTo script(
+			"remember" lineTo script(
 				"it" lineTo script("zero"),
-				"does" lineTo script(
+				"gives" lineTo script(
+					"zero" lineTo script(),
 					"as" lineTo script(
-						"choice" lineTo script(
-							"zero",
-							"one")))),
-			"do" lineTo script("zero"))
+						"choice" lineTo script("zero", "one")))),
+			"remember" lineTo script(
+				"it" lineTo script("one"),
+				"gives" lineTo script(
+					"one" lineTo script(),
+					"as" lineTo script(
+						"choice" lineTo script("zero", "one")))),
+			"remember" lineTo script(
+				"it" lineTo script(
+					"choice" lineTo script("zero", "one"),
+					"type" lineTo script()),
+				"gives" lineTo script(
+					"bit" lineTo script())),
+			"zero" lineTo script(),
+			"type" lineTo script())
 			.eval
-			.assertEqualTo(script("zero"))
+			.assertEqualTo(script("bit"))
 	}
 }

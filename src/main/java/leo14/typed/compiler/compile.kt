@@ -147,7 +147,11 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 		is RememberCompiler ->
 			when (token) {
 				is LiteralToken -> null
-				is BeginToken -> null
+				is BeginToken ->
+					when (token.begin.string) {
+						"it" -> TypeCompiler(RememberItParent(this), type())
+						else -> null
+					}
 				is EndToken ->
 					parent.typed.onlyLine.arrow.let { arrow ->
 						TypedCompiler(
@@ -155,6 +159,23 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 							parent.context.remember(arrow.action),
 							typed())
 					}
+			}
+		is RememberItCompiler ->
+			when (token) {
+				is LiteralToken -> null
+				is BeginToken ->
+					when (token.begin.string) {
+						"gives" -> TypedCompiler(RememberItGivesParent(parent, type), parent.context, typed())
+						"does" -> TODO()
+						else -> null
+					}
+				is EndToken -> null
+			}
+		is RememberItGivesCompiler ->
+			when (token) {
+				is LiteralToken -> null
+				is BeginToken -> null
+				is EndToken -> parent.plus(remember(action, false))
 			}
 	} ?: error("$token unexpected")
 
@@ -165,11 +186,13 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 		is MatchTypedParent ->
 			matchCompiler.copy(match = Case(matchCompiler.match, typed).end())
 		is ActionItDoesParent ->
-			ActionItDoesCompiler(typedCompiler, paramType does typed)
+			ActionItDoesCompiler(typedCompiler, itType does typed)
 		is DoParent ->
 			typedCompiler.updateTyped { arrow.term.invoke(typed.term) of arrow.arrow.rhs }
 		is GiveParent ->
 			typedCompiler.updateTyped { typed }
+		is RememberItGivesParent ->
+			RememberItGivesCompiler(typedCompiler, itType does typed)
 	}
 
 fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
@@ -182,6 +205,8 @@ fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
 			choiceCompiler.copy(choice = choiceCompiler.choice.plus(begin.string optionTo type))
 		is ActionItParent ->
 			ActionItCompiler(actionCompiler.parent, type)
+		is RememberItParent ->
+			RememberItCompiler(rememberCompiler.parent, type)
 	}
 
 fun <T> TypedCompiler<T>.set(typed: Typed<T>): TypedCompiler<T> =
@@ -205,3 +230,6 @@ val <T> Compiler<T>.typed: Typed<T>
 		(this as? TypedCompiler)
 			.notNullOrError("$this as TypedCompiler")
 			.retTyped
+
+fun <T> TypedCompiler<T>.plus(item: MemoryItem<T>) =
+	copy(context = context.copy(memory = context.memory.plus(item)))

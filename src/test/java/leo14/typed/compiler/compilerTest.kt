@@ -1,11 +1,13 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
-import leo14.*
 import leo14.lambda.arg0
 import leo14.lambda.fn
 import leo14.lambda.id
 import leo14.lambda.term
+import leo14.lineTo
+import leo14.literal
+import leo14.script
 import leo14.typed.*
 import kotlin.test.Test
 
@@ -215,21 +217,36 @@ class CompilerTest {
 	}
 
 	@Test
-	fun actionAs() {
+	fun rememberItGives() {
 		compiler(typed())
-			.compile(token(begin("action")))
-			.compile(token(begin("it")))
-			.compile(token(begin("native")))
-			.compile(token(end))
-			.compile(token(end))
-			.compile(token(begin("does")))
-			.compile(token(literal("zero")))
-			.compile(token(end))
-			.compile(token(end))
-			.compile(token(begin("do")))
-			.compile(token(literal("foo")))
-			.compile(token(end))
-			.typed
-			.assertEqualTo(null)
+			.compile(
+				script(
+					"remember" lineTo script(
+						"it" lineTo script("zero"),
+						"gives" lineTo script("one"))))
+			.assertEqualTo(
+				compiler(
+					typed(),
+					anyContext(
+						memory(
+							remember(
+								type("zero") does typed("one"),
+								needsInvoke = false)))))
+	}
+
+	@Test
+	fun remindThing() {
+		val compiler = compiler(
+			typed(),
+			anyContext(
+				memory(
+					remember(
+						type("zero") does typed("one"),
+						needsInvoke = false))))
+
+		compiler
+			.compile(script("zero"))
+			.assertEqualTo(
+				compiler.copy(typed = compiler.context.resolve(typed("zero"))!!))
 	}
 }
