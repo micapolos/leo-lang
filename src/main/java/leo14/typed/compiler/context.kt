@@ -1,41 +1,32 @@
 package leo14.typed.compiler
 
-import leo.base.notNullIf
-import leo13.*
 import leo14.Literal
 import leo14.any
-import leo14.lambda.arg
-import leo14.lambda.invoke
 import leo14.typed.*
 
 val anyLiteralCompile: Literal.() -> Any = { any }
 
 data class Context<T>(
-	val rememberedActionStack: Stack<Action<T>?>,
+	val memory: Memory<T>,
 	val literalCompile: Literal.() -> T)
 
-fun anyContext(rememberedActionStack: Stack<Action<Any>>) =
-	Context(rememberedActionStack, anyLiteralCompile)
+fun anyContext(memory: Memory<Any>) =
+	Context(memory, anyLiteralCompile)
 
-val anyContext: Context<Any> = anyContext(stack())
+val anyContext: Context<Any> = anyContext(anyMemory())
 
 fun <T> Context<T>.compile(literal: Literal): T =
 	literal.literalCompile()
 
-fun <T> Context<T>.remember(action: Action<T>?): Context<T> =
-	copy(rememberedActionStack = rememberedActionStack.push(action))
+fun <T> Context<T>.remember(action: Action<T>): Context<T> =
+	copy(memory = memory.plus(RememberMemoryItem(action, needsInvoke = true)))
 
 fun <T> Context<T>.resolve(typed: Typed<T>): Typed<T>? =
-	rememberedActionStack
-		.mapFirstIndexed {
-			this?.let {
-				notNullIf(param == typed.type) { body.type }
-			}
+	memory
+		.indexedItem(typed.type)
+		?.let { (index, item) ->
+			item.resolve(index, typed.term)
 		}
-		?.let { (index, rhs) ->
-			arg<T>(index).invoke(typed.term) of rhs
-		}
-
 
 fun <T> Context<T>.plus(typed: Typed<T>, typedField: TypedField<T>): Typed<T> =
 	typed.plus(typedField).let { plused ->
@@ -43,6 +34,4 @@ fun <T> Context<T>.plus(typed: Typed<T>, typedField: TypedField<T>): Typed<T> =
 	}
 
 fun <T> Context<T>.ret(typed: Typed<T>): Typed<T> =
-	typed.fold(rememberedActionStack) {
-		if (it != null) ret(it) else this
-	}
+	memory.ret(typed)

@@ -7,6 +7,7 @@ sealed class Compiler<T>
 data class TypedCompiler<T>(val parent: TypedParent<T>?, val context: Context<T>, val typed: Typed<T>) : Compiler<T>()
 data class TypeCompiler<T>(val parent: TypeParent<T>?, val type: Type) : Compiler<T>()
 data class ChoiceCompiler<T>(val parent: TypeCompiler<T>, val choice: Choice) : Compiler<T>()
+data class NativeCompiler<T>(val parent: TypeCompiler<T>) : Compiler<T>()
 data class MatchCompiler<T>(val parent: TypedCompiler<T>, val match: Match<T>) : Compiler<T>()
 data class ActionCompiler<T>(val parent: TypedCompiler<T>) : Compiler<T>()
 data class ActionItCompiler<T>(val parent: TypedCompiler<T>, val type: Type) : Compiler<T>()

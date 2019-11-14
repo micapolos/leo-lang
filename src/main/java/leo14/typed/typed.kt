@@ -8,6 +8,8 @@ import leo13.Link
 import leo13.Stack
 import leo13.array
 import leo13.linkTo
+import leo14.Literal
+import leo14.any
 import leo14.lambda.*
 
 data class Typed<out T>(val term: Term<T>, val type: Type)
@@ -38,6 +40,9 @@ fun <T> typed(field: TypedField<T>, vararg fields: TypedField<T>) =
 
 fun <T> typed(string: String, vararg strings: String): Typed<T> =
 	typed(string fieldTo typed<T>()).fold(strings) { plus(it fieldTo typed()) }
+
+fun anyTyped(literal: Literal): Typed<Any> =
+	term(literal.any) of nativeType
 
 fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
 	plusTerm(typed) of type.plus(typed.line)
@@ -189,7 +194,7 @@ fun <T> Typed<T>.switchOf(type: Type, fnStack: Stack<Term<T>>): Typed<T> =
 
 val <T> TypedArrow<T>.action: Action<T>
 	get() =
-		arrow.lhs ret (term of arrow.rhs)
+		arrow.lhs does (term of arrow.rhs)
 
 fun <T> Typed<T>.ret(action: Action<T>): Typed<T> =
 	fn(term).invoke(action.body.term) of type

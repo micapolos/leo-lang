@@ -22,7 +22,7 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 						typeCompiler { param ->
 							beginCompiler("give") {
 								typedCompiler(stack, lit) { body ->
-									plusCompilerWith(param ret body, stack, lit, ret)
+									plusCompilerWith(param does body, stack, lit, ret)
 								}
 							}
 						}
@@ -30,7 +30,7 @@ fun <T> Typed<T>.plusCompiler(stack: Stack<Arrow>, lit: (Literal) -> T, ret: Ret
 						endCompiler {
 							beginCompiler("as") {
 								typeCompiler { name ->
-									typedCompilerWith(name ret this, stack, lit, ret)
+									typedCompilerWith(name does this, stack, lit, ret)
 								}
 							}
 						}

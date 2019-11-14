@@ -70,6 +70,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					null
 				is BeginToken ->
 					when (token.begin.string) {
+						"native" ->
+							NativeCompiler(this)
 						"choice" ->
 							ChoiceCompiler(this, choice())
 						"arrow" ->
@@ -79,6 +81,15 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 					}
 				is EndToken ->
 					parent?.compile(type)
+			}
+		is NativeCompiler ->
+			when (token) {
+				is LiteralToken ->
+					null
+				is BeginToken ->
+					null
+				is EndToken ->
+					parent.updateType { plus(nativeLine) }
 			}
 		is ChoiceCompiler ->
 			when (token) {
@@ -154,7 +165,7 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 		is MatchTypedParent ->
 			matchCompiler.copy(match = Case(matchCompiler.match, typed).end())
 		is ActionItDoesParent ->
-			ActionItDoesCompiler(typedCompiler, paramType ret typed)
+			ActionItDoesCompiler(typedCompiler, paramType does typed)
 		is DoParent ->
 			typedCompiler.updateTyped { arrow.term.invoke(typed.term) of arrow.arrow.rhs }
 		is GiveParent ->

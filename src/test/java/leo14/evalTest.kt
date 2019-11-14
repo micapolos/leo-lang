@@ -168,4 +168,19 @@ class EvalTest {
 					"zero" lineTo script(),
 					"plus" lineTo script("one")))
 	}
+
+	@Test
+	fun simulateHas() {
+		script(
+			"action" lineTo script(
+				"it" lineTo script("zero"),
+				"does" lineTo script(
+					"as" lineTo script(
+						"choice" lineTo script(
+							"zero",
+							"one")))),
+			"do" lineTo script("zero"))
+			.eval
+			.assertEqualTo(script("zero"))
+	}
 }

@@ -1,17 +1,36 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
-import leo13.stack
+import leo14.*
 import leo14.lambda.arg0
 import leo14.lambda.fn
 import leo14.lambda.id
 import leo14.lambda.term
-import leo14.lineTo
-import leo14.script
 import leo14.typed.*
 import kotlin.test.Test
 
 class CompilerTest {
+	@Test
+	fun nativeCompiler() {
+		compiler(typed())
+			.compile(script(literal("zero")))
+			.assertEqualTo(compiler(anyTyped(literal("zero"))))
+	}
+
+	@Test
+	fun nativePlusNativeCompiler() {
+		compiler(arg0<Any>() of nativeType)
+			.compile(script(literal("one")))
+			.assertEqualTo(compiler(arg0<Any>().of(nativeType).plus(term<Any>("one") of nativeLine)))
+	}
+
+	@Test
+	fun nativeTypeCompiler() {
+		compiler(type())
+			.compile(script("native"))
+			.assertEqualTo(compiler(nativeType))
+	}
+
 	@Test
 	fun structCompiler() {
 		compiler(typed())
@@ -163,24 +182,22 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					typed(),
-					anyContext(stack(
-						type("zero") ret (fn(arg0<Any>()) of type("one"))
-					))))
+					anyContext(
+						memory(
+							remember(type("zero") does (fn(arg0<Any>()) of type("one")))))))
 	}
 
 	@Test
 	fun actionRememberDo() {
-		val context = anyContext(stack(
-			type("zero") ret (fn(arg0<Any>()) of type("one"))
-		))
+		val context = anyContext(
+			memory(
+				remember(type("zero") does (fn(arg0<Any>()) of type("one")))))
 		compiler(typed(), context)
 			.compile(script("zero"))
 			.assertEqualTo(
 				compiler(
 					context.plus(typed(), "zero" fieldTo typed()),
-					anyContext(stack(
-						type("zero") ret (fn(arg0<Any>()) of type("one"))
-					))))
+					context))
 	}
 
 	@Test
@@ -195,5 +212,24 @@ class CompilerTest {
 						"remember" lineTo script(),
 						"zero" lineTo script())))
 			.assertEqualTo(compiler(typed("my" fieldTo typed("one"))))
+	}
+
+	@Test
+	fun actionAs() {
+		compiler(typed())
+			.compile(token(begin("action")))
+			.compile(token(begin("it")))
+			.compile(token(begin("native")))
+			.compile(token(end))
+			.compile(token(end))
+			.compile(token(begin("does")))
+			.compile(token(literal("zero")))
+			.compile(token(end))
+			.compile(token(end))
+			.compile(token(begin("do")))
+			.compile(token(literal("foo")))
+			.compile(token(end))
+			.typed
+			.assertEqualTo(null)
 	}
 }

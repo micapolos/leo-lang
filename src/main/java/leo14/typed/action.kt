@@ -5,7 +5,7 @@ import leo14.lambda.invoke
 
 data class Action<T>(val param: Type, val body: Typed<T>)
 
-infix fun <T> Type.ret(body: Typed<T>) = Action(this, body)
+infix fun <T> Type.does(body: Typed<T>) = Action(this, body)
 
 fun <T> Action<T>.resolve(typed: Typed<T>): Typed<T>? =
 	notNullIf(param == typed.type) {
