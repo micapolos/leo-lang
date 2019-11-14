@@ -15,6 +15,7 @@ data class ActionItDoesCompiler<T>(val parent: TypedCompiler<T>, val action: Act
 data class RememberCompiler<T>(val parent: TypedCompiler<T>) : Compiler<T>()
 data class RememberItCompiler<T>(val parent: TypedCompiler<T>, val type: Type) : Compiler<T>()
 data class RememberItGivesCompiler<T>(val parent: TypedCompiler<T>, val action: Action<T>) : Compiler<T>()
+data class RememberItDoesCompiler<T>(val parent: TypedCompiler<T>, val action: Action<T>) : Compiler<T>()
 
 sealed class TypedParent<T>
 data class BeginTypedParent<T>(val typedCompiler: TypedCompiler<T>, val begin: Begin) : TypedParent<T>()
@@ -23,6 +24,7 @@ data class ActionItDoesParent<T>(val typedCompiler: TypedCompiler<T>, val itType
 data class DoParent<T>(val typedCompiler: TypedCompiler<T>, val arrow: TypedArrow<T>) : TypedParent<T>()
 data class GiveParent<T>(val typedCompiler: TypedCompiler<T>) : TypedParent<T>()
 data class RememberItGivesParent<T>(val typedCompiler: TypedCompiler<T>, val itType: Type) : TypedParent<T>()
+data class RememberItDoesParent<T>(val typedCompiler: TypedCompiler<T>, val itType: Type) : TypedParent<T>()
 
 sealed class TypeParent<T>
 data class BeginTypeParent<T>(val typeCompiler: TypeCompiler<T>, val begin: Begin) : TypeParent<T>()

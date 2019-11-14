@@ -249,4 +249,22 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler.copy(typed = compiler.context.resolve(typed("zero"))!!))
 	}
+
+	@Test
+	fun rememberItDoes() {
+		compiler(typed())
+			.compile(
+				script(
+					"remember" lineTo script(
+						"it" lineTo script("zero"),
+						"does" lineTo script("plus" lineTo script("one")))))
+			.assertEqualTo(
+				compiler(
+					typed(),
+					anyContext(
+						memory(
+							remember(
+								type("zero") does typed("zero" fieldTo typed(), "plus" fieldTo typed("one")),
+								needsInvoke = true)))))
+	}
 }

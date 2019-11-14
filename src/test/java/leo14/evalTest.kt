@@ -181,7 +181,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun simulateHas() {
+	fun simulateHasUsingRememberItGives() {
 		script(
 			"remember" lineTo script(
 				"it" lineTo script("zero"),

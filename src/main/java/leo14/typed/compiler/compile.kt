@@ -166,7 +166,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is BeginToken ->
 					when (token.begin.string) {
 						"gives" -> TypedCompiler(RememberItGivesParent(parent, type), parent.context, typed())
-						"does" -> TODO()
+						"does" -> TypedCompiler(RememberItDoesParent(parent, type), parent.context, arg0<T>() of type)
 						else -> null
 					}
 				is EndToken -> null
@@ -176,6 +176,12 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is LiteralToken -> null
 				is BeginToken -> null
 				is EndToken -> parent.plus(remember(action, false))
+			}
+		is RememberItDoesCompiler ->
+			when (token) {
+				is LiteralToken -> null
+				is BeginToken -> null
+				is EndToken -> parent.plus(remember(action, true))
 			}
 	} ?: error("$token unexpected")
 
@@ -193,6 +199,8 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 			typedCompiler.updateTyped { typed }
 		is RememberItGivesParent ->
 			RememberItGivesCompiler(typedCompiler, itType does typed)
+		is RememberItDoesParent ->
+			RememberItDoesCompiler(typedCompiler, itType does typed)
 	}
 
 fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
