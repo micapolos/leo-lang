@@ -24,6 +24,7 @@ data class VariableTerm<T>(val variable: Variable<T>) : Term<T>() {
 }
 
 fun <T> term(native: T): Term<T> = NativeTerm(native)
+fun <T> nativeTerm(native: T): Term<T> = NativeTerm(native)
 fun <T> term(abstraction: Abstraction<Term<T>>): Term<T> = AbstractionTerm(abstraction)
 fun <T> term(application: Application<Term<T>>): Term<T> = ApplicationTerm(application)
 fun <T> term(variable: Variable<T>): Term<T> = VariableTerm(variable)

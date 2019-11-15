@@ -47,4 +47,11 @@ class EvalTest {
 			.eval
 			.assertEqualTo(id())
 	}
+
+	@Test
+	fun nativePlus() {
+		nativeTerm(1).invoke(nativeTerm(2))
+			.eval { plus(it) }
+			.assertEqualTo(nativeTerm(3))
+	}
 }
