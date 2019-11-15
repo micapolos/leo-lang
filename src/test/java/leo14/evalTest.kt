@@ -1,6 +1,7 @@
 package leo14
 
 import leo.base.assertEqualTo
+import leo14.typed.compiler.polishDictionary
 import kotlin.test.Test
 
 class EvalTest {
@@ -191,5 +192,16 @@ class EvalTest {
 			"type" lineTo script())
 			.eval
 			.assertEqualTo(script("bit"))
+	}
+
+	@Test
+	fun evalUsingPolish() {
+		script(
+			"zapamiętaj" lineTo script(
+				"że" lineTo script("zero"),
+				"to" lineTo script("jeden")),
+			"zero" lineTo script())
+			.evalUsing(polishDictionary)
+			.assertEqualTo(script("jeden"))
 	}
 }

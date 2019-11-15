@@ -7,13 +7,16 @@ import leo14.typed.*
 val anyLiteralCompile: Literal.() -> Any = { any }
 
 data class Context<T>(
+	val dictionary: Dictionary,
 	val memory: Memory<T>,
 	val literalCompile: Literal.() -> T)
 
 fun anyContext(memory: Memory<Any>) =
-	Context(memory, anyLiteralCompile)
+	Context(englishDictionary, memory, anyLiteralCompile)
 
 val anyContext: Context<Any> = anyContext(anyMemory())
+
+val anyPolishContext: Context<Any> = Context(polishDictionary, anyMemory(), anyLiteralCompile)
 
 fun <T> Context<T>.compile(literal: Literal): T =
 	literal.literalCompile()

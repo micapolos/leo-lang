@@ -2,9 +2,7 @@ package leo14
 
 import leo14.typed.anyDecompile
 import leo14.typed.anyEval
-import leo14.typed.compiler.compile
-import leo14.typed.compiler.compiler
-import leo14.typed.compiler.typed
+import leo14.typed.compiler.*
 import leo14.typed.typed
 
 val Script.eval
@@ -14,3 +12,10 @@ val Script.eval
 			.typed
 			.anyEval
 			.anyDecompile
+
+fun Script.evalUsing(dictionary: Dictionary) =
+	TypedCompiler(null, Context(dictionary, memory(), anyLiteralCompile), typed())
+		.compile(this)
+		.typed
+		.anyEval
+		.anyDecompile

@@ -39,24 +39,24 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is BeginToken ->
 					when (token.begin.string) {
 						// Remove when macros are implemented
-						"give" ->
+						context.dictionary.give ->
 							TypedCompiler(GiveParent(this), context, typed())
-						"as" ->
+						context.dictionary.`as` ->
 							TypeCompiler(AsParent(this), type())
-						"match" ->
+						context.dictionary.match ->
 							MatchCompiler(
 								this,
 								Match(
 									typed.term,
 									typed.onlyLine.choice.choice.optionStack.reverse,
 									null))
-						"action" ->
+						context.dictionary.action ->
 							ActionCompiler(this)
-						"remember" ->
+						context.dictionary.remember ->
 							RememberCompiler(this)
-						"forget" ->
+						context.dictionary.forget ->
 							TypeCompiler(ForgetParent(this), type())
-						"do" ->
+						context.dictionary.`do` ->
 							typed.onlyLine.arrow.let { arrow ->
 								TypedCompiler(DoParent(this, arrow), context, typed())
 							}
@@ -121,7 +121,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is LiteralToken -> null
 				is BeginToken ->
 					when (token.begin.string) {
-						"it" -> TypeCompiler(ActionItParent(this), type())
+						parent.context.dictionary.it -> TypeCompiler(ActionItParent(this), type())
 						else -> null
 					}
 				is EndToken -> null
@@ -131,7 +131,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is LiteralToken -> null
 				is BeginToken ->
 					when (token.begin.string) {
-						"does" ->
+						parent.context.dictionary.does ->
 							TypedCompiler(
 								ActionItDoesParent(parent, type),
 								parent.context,
@@ -151,7 +151,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is LiteralToken -> null
 				is BeginToken ->
 					when (token.begin.string) {
-						"it" -> TypeCompiler(RememberItParent(this), type())
+						parent.context.dictionary.it -> TypeCompiler(RememberItParent(this), type())
 						else -> null
 					}
 				is EndToken -> null
@@ -161,8 +161,8 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 				is LiteralToken -> null
 				is BeginToken ->
 					when (token.begin.string) {
-						"is" -> TypedCompiler(RememberItIsParent(parent, type), parent.context, typed())
-						"does" -> TypedCompiler(RememberItDoesParent(parent, type), parent.context, arg0<T>() of type)
+						parent.context.dictionary.`is` -> TypedCompiler(RememberItIsParent(parent, type), parent.context, typed())
+						parent.context.dictionary.does -> TypedCompiler(RememberItDoesParent(parent, type), parent.context, arg0<T>() of type)
 						else -> null
 					}
 				is EndToken -> null
