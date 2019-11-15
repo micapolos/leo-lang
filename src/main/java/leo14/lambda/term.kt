@@ -61,3 +61,7 @@ fun <T, R> Term<T>.abstraction(index: Index, fn: (Term<T>) -> R): R =
 			body.abstraction(index.previous, fn)
 		}
 	}
+
+val <T> Term<T>.native: T
+	get() =
+		(this as NativeTerm).native

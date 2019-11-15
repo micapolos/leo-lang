@@ -204,4 +204,13 @@ class EvalTest {
 			.evalUsing(polishDictionary)
 			.assertEqualTo(script("jeden"))
 	}
+
+//	@Test
+//	fun evalNativePlus() {
+//		script(
+//			line(literal(2)),
+//			"plus" lineTo script(literal(3)))
+//			.eval
+//			.assertEqualTo(script(literal(5)))
+//	}
 }
