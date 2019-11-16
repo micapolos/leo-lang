@@ -44,3 +44,5 @@ val polishDictionary = Dictionary(
 	match = "wybierz",
 	native = "natywny",
 	remember = "zapamiętaj")
+
+val defaultDictionary = englishDictionary
