@@ -1,8 +1,6 @@
 package leo14.lambda
 
 import leo13.*
-import leo14.native.Native
-import leo14.native.invoke
 
 typealias NativeApply<T> = T.(T) -> T
 
@@ -59,7 +57,3 @@ val <T> Term<T>.value get() = value(errorNativeApply())
 fun <T> Term<T>.eval(nativeApply: NativeApply<T>) = value(nativeApply).evalTerm
 val <T> Term<T>.eval get() = eval(errorNativeApply())
 
-// native
-
-val Term<Native>.nativeValue: Value<Native> get() = value { invoke(it) }
-val Term<Native>.nativeEval: Term<Native> get() = nativeValue.evalTerm
