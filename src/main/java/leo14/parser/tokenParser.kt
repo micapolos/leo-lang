@@ -25,9 +25,13 @@ fun TokenParser.parse(char: Char): TokenParser? =
 			null
 	}
 
+val TokenParser.tokenOrNull
+	get() =
+		(this as? EndTokenParser)?.token
+
 val TokenParser.token
 	get() =
-		(this as EndTokenParser).token
+		tokenOrNull!!
 
 fun parseToken(string: String): Token =
 	tokenParser.fold(string) { parse(it)!! }.token
