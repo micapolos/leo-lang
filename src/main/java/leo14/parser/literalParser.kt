@@ -1,6 +1,7 @@
 package leo14.parser
 
 import leo.base.fold
+import leo14.Literal
 import leo14.literal
 
 sealed class LiteralParser
@@ -25,13 +26,15 @@ fun LiteralParser.parse(char: Char): LiteralParser? =
 			intParser.parse(char)?.let(::literalParser)
 	}
 
-val LiteralParser.literal
+val LiteralParser.literalOrNull: Literal?
 	get() =
 		when (this) {
 			is BeginLiteralParser -> null
 			is StringLiteralParser -> literal(stringParser.string)
 			is IntLiteralParser -> literal(intParser.int)
-		}!!
+		}
+
+val LiteralParser.literal get() = literalOrNull!!
 
 fun parseLiteral(string: String) =
 	literalParser.fold(string) { parse(it)!! }.literal
