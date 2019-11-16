@@ -25,38 +25,22 @@ fun plusNative(int: Int): Native = PlusIntNative(int)
 fun plusNative(double: Double): Native = PlusDoubleNative(double)
 fun equalsNative(string: String): Native = EqualsStringNative(string)
 
+val Native.boolean get() = (this as BooleanNative).boolean
+val Native.int get() = (this as IntNative).int
+val Native.double get() = (this as DoubleNative).double
+val Native.string get() = (this as StringNative).string
+
 fun Native.invoke(native: Native): Native =
 	when (this) {
 		is BooleanNative -> null
 		is StringNative -> null
 		is IntNative -> null
 		is DoubleNative -> null
-		is SwitchNative ->
-			(native as? BooleanNative)?.boolean?.let { boolean ->
-				if (boolean) falseNative else trueNative
-			}
-		is IntPlusIntNative ->
-			(native as? IntNative)?.int?.let { int ->
-				plusNative(int)
-			}
-		is DoublePlusDoubleNative ->
-			(native as? DoubleNative)?.double?.let { double ->
-				plusNative(double)
-			}
-		is StringEqualsStringNative ->
-			(native as? StringNative)?.string?.let { string ->
-				equalsNative(string)
-			}
-		is EqualsStringNative ->
-			(native as? StringNative)?.string?.let { rhs ->
-				native(string == rhs)
-			}
-		is PlusIntNative ->
-			(native as? IntNative)?.int?.let { rhs ->
-				native(int + rhs)
-			}
-		is PlusDoubleNative ->
-			(native as? DoubleNative)?.double?.let { rhs ->
-				native(double + rhs)
-			}
+		is SwitchNative -> if (native.boolean) falseNative else trueNative
+		is IntPlusIntNative -> plusNative(native.int)
+		is DoublePlusDoubleNative -> plusNative(native.double)
+		is StringEqualsStringNative -> equalsNative(native.string)
+		is EqualsStringNative -> native(string == native.string)
+		is PlusIntNative -> native(int + native.int)
+		is PlusDoubleNative -> native(double + native.double)
 	} ?: error("$this.invoke($native)")
