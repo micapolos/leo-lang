@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 class TypeParserTest {
 	@Test
-	fun fields() {
+	fun simpleType() {
 		leo(type())
 			.parse(
 				script(
@@ -24,14 +24,14 @@ class TypeParserTest {
 	}
 
 	@Test
-	fun native() {
+	fun nativeType() {
 		leo(type())
 			.parse(script(defaultDictionary.native lineTo script()))
 			.assertEqualTo(leo(nativeType))
 	}
 
 	@Test
-	fun choice() {
+	fun choiceType() {
 		leo(type())
 			.parse(
 				script(
@@ -48,7 +48,7 @@ class TypeParserTest {
 	}
 
 	@Test
-	fun arrow() {
+	fun arrowType() {
 		leo(type())
 			.parse(
 				script(
