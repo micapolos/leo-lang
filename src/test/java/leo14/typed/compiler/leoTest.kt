@@ -64,4 +64,21 @@ class TypeParserTest {
 								"one" lineTo type(),
 								"plus" lineTo type("two")) arrowTo type("three")))))
 	}
+
+	@Test
+	fun fields() {
+		leo(compiled(typed()))
+			.parse(
+				script(
+					"point" lineTo script(
+						"x" lineTo script("zero"),
+						"y" lineTo script("one"))))
+			.assertEqualTo(
+				leo(
+					compiled(
+						typed(
+							"point" fieldTo typed(
+								"x" fieldTo typed("zero"),
+								"y" fieldTo typed("one"))))))
+	}
 }
