@@ -7,6 +7,7 @@ sealed class LiteralParser
 object BeginLiteralParser : LiteralParser()
 data class StringLiteralParser(val stringParser: StringParser) : LiteralParser()
 data class IntLiteralParser(val intParser: IntParser) : LiteralParser()
+// TODO: DoubleLiteralParser
 
 val literalParser: LiteralParser = BeginLiteralParser
 fun literalParser(stringParser: StringParser): LiteralParser = StringLiteralParser(stringParser)
