@@ -1,6 +1,8 @@
 package leo14.lambda
 
 import leo.base.assertEqualTo
+import leo14.native.intPlusIntNative
+import leo14.native.native
 import kotlin.test.Test
 
 class EvalTest {
@@ -50,8 +52,10 @@ class EvalTest {
 
 	@Test
 	fun nativePlus() {
-		nativeTerm(1).invoke(nativeTerm(2))
-			.eval { plus(it) }
-			.assertEqualTo(nativeTerm(3))
+		term(intPlusIntNative)
+			.invoke(term(native(2)))
+			.invoke(term(native(3)))
+			.nativeEval
+			.assertEqualTo(term(native(5)))
 	}
 }
