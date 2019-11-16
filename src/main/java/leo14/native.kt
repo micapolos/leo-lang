@@ -1,9 +1,6 @@
 package leo14
 
-import leo14.native.BooleanNative
-import leo14.native.IntNative
-import leo14.native.Native
-import leo14.native.StringNative
+import leo14.native.*
 
 val Native.scriptLine: ScriptLine
 	get() =
@@ -11,5 +8,15 @@ val Native.scriptLine: ScriptLine
 			is BooleanNative -> "$boolean" lineTo script()
 			is StringNative -> line(literal(string))
 			is IntNative -> line(literal(int))
+			is DoubleNative -> line(literal(double))
 			else -> error("$this.scriptLine")
+		}
+
+val Native.literal: Literal
+	get() =
+		when (this) {
+			is StringNative -> literal(string)
+			is IntNative -> literal(int)
+			is DoubleNative -> literal(double)
+			else -> error("$this.literal")
 		}

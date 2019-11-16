@@ -5,7 +5,6 @@ import leo13.reverse
 import leo14.*
 import leo14.lambda.arg0
 import leo14.lambda.invoke
-import leo14.lambda.term
 import leo14.typed.*
 
 // === Script writing
@@ -35,7 +34,7 @@ fun <T> Compiler<T>.compile(token: Token): Compiler<T> =
 		is TypedCompiler ->
 			when (token) {
 				is LiteralToken ->
-					this.plus(term(context.compile(token.literal)) of nativeLine)
+					this.plus(context.compileLine(token.literal))
 				is BeginToken ->
 					when (token.begin.string) {
 						// Remove when macros are implemented

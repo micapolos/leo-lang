@@ -2,57 +2,36 @@ package leo14.typed
 
 import leo.base.assertEqualTo
 import leo14.fieldTo
-import leo14.lambda.term
 import leo14.literal
+import leo14.native.native
 import leo14.script
 import kotlin.test.Test
 
 class DecompileTest {
 	@Test
 	fun string() {
-		term("Hello, world!")
-			.of(nativeType)
-			.anyDecompile
+		typed(native("Hello, world!"))
+			.nativeDecompile
 			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test
 	fun field() {
-		term("Hello, world!")
-			.of(type("text" fieldTo nativeType))
-			.anyDecompile
+		typed("text" fieldTo typed(native("Hello, world!")))
+			.nativeDecompile
 			.assertEqualTo(script("text" fieldTo literal("Hello, world!")))
 	}
 
 	@Test
-	fun fields() {
-		term("zero")
-			.plus(term("one"))
-			.of(
-				type(
-					"x" fieldTo nativeType,
-					"y" fieldTo nativeType))
-			.anyDecompile
-			.assertEqualTo(
-				script(
-					"x" fieldTo literal("zero"),
-					"y" fieldTo literal("one")))
-	}
-
-	@Test
 	fun struct() {
-		term("zero")
-			.plus(term("one"))
-			.of(
-				type(
-					"vec" fieldTo type(
-						"x" fieldTo nativeType,
-						"y" fieldTo nativeType)))
-			.anyDecompile
+		typed("vec" fieldTo typed(
+			"x" fieldTo typed(native(2.0)),
+			"y" fieldTo typed(native(3.0))))
+			.nativeDecompile
 			.assertEqualTo(
 				script(
 					"vec" fieldTo script(
-						"x" fieldTo literal("zero"),
-						"y" fieldTo literal("one"))))
+						"x" fieldTo literal(2.0),
+						"y" fieldTo literal(3.0))))
 	}
 }

@@ -207,6 +207,27 @@ class EvalTest {
 	}
 
 	@Test
+	fun evalNativeString() {
+		script(line(literal("foo")))
+			.nativeEval
+			.assertEqualTo(script(literal("foo")))
+	}
+
+	@Test
+	fun evalNativeInt() {
+		script(line(literal(2)))
+			.nativeEval
+			.assertEqualTo(script(literal(2)))
+	}
+
+	@Test
+	fun evalNativeDouble() {
+		script(line(literal(2.0)))
+			.nativeEval
+			.assertEqualTo(script(literal(2.0)))
+	}
+
+	@Test
 	fun evalNativePlus() {
 		script(
 			line(literal(2)),

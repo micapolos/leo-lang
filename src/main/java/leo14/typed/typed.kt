@@ -44,6 +44,9 @@ fun <T> typed(string: String, vararg strings: String): Typed<T> =
 fun anyTyped(literal: Literal): Typed<Any> =
 	term(literal.any) of nativeType
 
+fun <T> nativeTyped(native: T): Typed<T> =
+	term(native) of nativeType
+
 fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
 	plusTerm(typed) of type.plus(typed.line)
 

@@ -2,19 +2,17 @@ package leo14.typed.compiler
 
 import leo14.Literal
 import leo14.any
-import leo14.typed.Typed
-import leo14.typed.TypedField
-import leo14.typed.eval
-import leo14.typed.plus
+import leo14.lambda.term
+import leo14.typed.*
 
-val anyLiteralCompile: Literal.() -> Any = { any }
+val anyLiteralCompile: Literal.() -> TypedLine<Any> = { term(any) of nativeLine }
 val anyResolve: Typed<Any>.() -> Typed<Any>? = { null }
 
 data class Context<T>(
 	val dictionary: Dictionary,
 	val memory: Memory<T>,
 	val typedResolve: Typed<T>.() -> Typed<T>?,
-	val literalCompile: Literal.() -> T)
+	val literalCompile: Literal.() -> TypedLine<T>)
 
 fun anyContext(memory: Memory<Any>) =
 	Context(englishDictionary, memory, anyResolve, anyLiteralCompile)
@@ -23,7 +21,7 @@ val anyContext: Context<Any> = anyContext(anyMemory())
 
 val anyPolishContext: Context<Any> = Context(polishDictionary, anyMemory(), anyResolve, anyLiteralCompile)
 
-fun <T> Context<T>.compile(literal: Literal): T =
+fun <T> Context<T>.compileLine(literal: Literal): TypedLine<T> =
 	literal.literalCompile()
 
 fun <T> Context<T>.resolve(typed: Typed<T>): Typed<T>? =
