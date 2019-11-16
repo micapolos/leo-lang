@@ -52,10 +52,10 @@ class TypeParserTest {
 		leo(type())
 			.parse(
 				script(
-					defaultDictionary.arrow lineTo script(
+					defaultDictionary.action lineTo script(
 						"one" lineTo script(),
 						"plus" lineTo script("two"),
-						defaultDictionary.does lineTo script("three"))))
+						defaultDictionary.giving lineTo script("three"))))
 			.assertEqualTo(
 				leo(
 					type(

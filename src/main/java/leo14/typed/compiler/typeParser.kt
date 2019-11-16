@@ -26,7 +26,7 @@ fun <T> TypeParser.parse(token: Token): Leo<T> =
 			is BeginToken ->
 				when (token.begin.string) {
 					dictionary.choice -> leo(ChoiceParser(ChoiceInterceptor(this), dictionary, choice()))
-					dictionary.arrow -> leo(TypeParser(ArrowLhsTypeInterceptor(this), dictionary, type()))
+					dictionary.action -> leo(TypeParser(ArrowLhsTypeInterceptor(this), dictionary, type()))
 					dictionary.native -> leo(NativeParser(this))
 					else -> leo<T>(TypeParser(LineTypeInterceptor(this, token.begin.string), dictionary, type()))
 				}
@@ -44,7 +44,7 @@ fun <T> TypeInterceptor.intercept(type: Type, token: Token): Leo<T>? =
 				leo<T>(typeParser.plus<T>(name lineTo type))
 			}
 		is ArrowLhsTypeInterceptor ->
-			notNullIf(token is BeginToken && token.begin.string == typeParser.dictionary.does) {
+			notNullIf(token is BeginToken && token.begin.string == typeParser.dictionary.giving) {
 				leo<T>(TypeParser(ArrowRhsTypeInterceptor(typeParser, type), typeParser.dictionary, type()))
 			}
 		is ArrowRhsTypeInterceptor ->
