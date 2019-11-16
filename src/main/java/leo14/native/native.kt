@@ -8,17 +8,21 @@ data class IntNative(val int: Int) : Native()
 data class DoubleNative(val double: Double) : Native()
 data class SwitchNative(val falseNative: Native, val trueNative: Native) : Native()
 object IntPlusIntNative : Native()
+object DoublePlusDoubleNative : Native()
 object StringEqualsStringNative : Native()
 data class EqualsStringNative(val string: String) : Native()
 data class PlusIntNative(val int: Int) : Native()
+data class PlusDoubleNative(val double: Double) : Native()
 
 fun native(boolean: Boolean): Native = BooleanNative(boolean)
 fun native(string: String): Native = StringNative(string)
 fun native(int: Int): Native = IntNative(int)
 fun native(double: Double): Native = DoubleNative(double)
 val intPlusIntNative: Native = IntPlusIntNative
+val doublePlusDoubleNative: Native = DoublePlusDoubleNative
 val stringEqualsStringNative: Native = StringEqualsStringNative
 fun plusNative(int: Int): Native = PlusIntNative(int)
+fun plusNative(double: Double): Native = PlusDoubleNative(double)
 fun equalsNative(string: String): Native = EqualsStringNative(string)
 
 fun Native.invoke(native: Native): Native =
@@ -35,6 +39,10 @@ fun Native.invoke(native: Native): Native =
 			(native as? IntNative)?.int?.let { int ->
 				plusNative(int)
 			}
+		is DoublePlusDoubleNative ->
+			(native as? DoubleNative)?.double?.let { double ->
+				plusNative(double)
+			}
 		is StringEqualsStringNative ->
 			(native as? StringNative)?.string?.let { string ->
 				equalsNative(string)
@@ -46,5 +54,9 @@ fun Native.invoke(native: Native): Native =
 		is PlusIntNative ->
 			(native as? IntNative)?.int?.let { rhs ->
 				native(int + rhs)
+			}
+		is PlusDoubleNative ->
+			(native as? DoubleNative)?.double?.let { rhs ->
+				native(double + rhs)
 			}
 	} ?: error("$this.invoke($native)")

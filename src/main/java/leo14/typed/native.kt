@@ -62,6 +62,13 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 					term(intPlusIntNative)
 						.invoke(link.tail.term)
 						.invoke(link.head.term) of type("int" fieldTo nativeType)
+				type(
+					"double" fieldTo nativeType,
+					"plus" fieldTo type(
+						"double" fieldTo nativeType)) ->
+					term(doublePlusDoubleNative)
+						.invoke(link.tail.term)
+						.invoke(link.head.term) of type("double" fieldTo nativeType)
 				else -> null
 			}
 		}
