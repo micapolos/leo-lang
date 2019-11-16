@@ -14,7 +14,7 @@ val Script.eval
 			.anyDecompile
 
 fun Script.evalUsing(dictionary: Dictionary) =
-	TypedCompiler(null, Context(dictionary, memory(), anyResolver, anyLiteralCompile), typed())
+	TypedCompiler(null, Context(dictionary, memory(), anyResolve, anyLiteralCompile), typed())
 		.compile(this)
 		.typed
 		.anyEval

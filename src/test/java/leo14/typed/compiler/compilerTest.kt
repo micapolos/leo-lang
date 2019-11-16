@@ -259,14 +259,4 @@ class CompilerTest {
 								needsInvoke = false),
 							forget(type("zero"))))))
 	}
-
-//	@Test
-//	fun nativePlus() {
-//		compiler(typed())
-//			.compile(
-//				script(
-//					line(literal(2)),
-//					"plus" lineTo script(literal(3))))
-//			.assertEqualTo(compiler(typed()))
-//	}
 }
