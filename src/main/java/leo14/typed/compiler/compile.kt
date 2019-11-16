@@ -5,6 +5,10 @@ import leo13.reverse
 import leo14.*
 import leo14.lambda.arg0
 import leo14.lambda.invoke
+import leo14.parser.TokenParser
+import leo14.parser.parse
+import leo14.parser.tokenOrNull
+import leo14.parser.tokenParser
 import leo14.typed.*
 
 // === Script writing
@@ -238,3 +242,14 @@ val <T> Compiler<T>.typed: Typed<T>
 
 fun <T> TypedCompiler<T>.plus(item: MemoryItem<T>) =
 	copy(context = context.copy(memory = context.memory.plus(item)))
+
+tailrec fun <T> Compiler<T>.compile(chars: CharSequence, accTokenParser: TokenParser = tokenParser): Compiler<T> =
+	if (chars.isEmpty()) this
+	else {
+		val char = chars[0]
+		val tail = chars.subSequence(1, chars.length)
+		val newAccTokenParser = accTokenParser.parse(char)!!
+		val tokenOrNull = newAccTokenParser.tokenOrNull
+		val compiler = if (tokenOrNull != null) compile(tokenOrNull) else this
+		compiler.compile(tail, newAccTokenParser)
+	}

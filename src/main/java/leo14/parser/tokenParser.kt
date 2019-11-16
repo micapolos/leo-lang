@@ -48,3 +48,5 @@ val TokenParser.token
 
 fun parseToken(string: String): Token =
 	tokenParser.fold(string) { parse(it)!! }.token
+
+val TokenParser.isEmpty get() = this is BeginTokenParser

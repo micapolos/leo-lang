@@ -1,11 +1,13 @@
 package leo14
 
-import leo14.typed.anyDecompile
-import leo14.typed.anyEval
+import leo14.typed.*
 import leo14.typed.compiler.*
-import leo14.typed.typed
 
-val Script.eval
+val String.eval: String
+	get() =
+		compile(this).nativeEval.nativeDecompile.toString()
+
+val Script.eval: Script
 	get() =
 		compiler(typed())
 			.compile(this)
