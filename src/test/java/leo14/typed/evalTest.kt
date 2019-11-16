@@ -161,13 +161,4 @@ class EvalTest {
 							"takes" lineTo script("horse"),
 							"gives" lineTo script("shit")))))
 	}
-
-	@Test
-	fun nativePlus() {
-		script(
-			line(literal(2)),
-			"plus" lineTo script(literal(3)))
-			.nativeEval
-			.assertEqualTo(script(literal(5)))
-	}
 }

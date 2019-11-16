@@ -2,6 +2,7 @@ package leo14
 
 import leo.base.assertEqualTo
 import leo14.typed.compiler.polishDictionary
+import leo14.typed.nativeEval
 import kotlin.test.Test
 
 class EvalTest {
@@ -205,12 +206,12 @@ class EvalTest {
 			.assertEqualTo(script("jeden"))
 	}
 
-//	@Test
-//	fun evalNativePlus() {
-//		script(
-//			line(literal(2)),
-//			"plus" lineTo script(literal(3)))
-//			.eval
-//			.assertEqualTo(script(literal(5)))
-//	}
+	@Test
+	fun evalNativePlus() {
+		script(
+			line(literal(2)),
+			"plus" lineTo script(literal(3)))
+			.nativeEval
+			.assertEqualTo(script(literal(5)))
+	}
 }
