@@ -18,6 +18,7 @@ data class AsTypeParserParent<T>(val compiledParser: CompiledParser<T>) : TypePa
 sealed class TypeBeginner<T>
 data class ActionDoesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ArrowGivingTypeBeginner<T>(val typeParser: TypeParser<T>) : TypeBeginner<T>()
+data class RememberTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 
 fun <T> TypeParser<T>.parse(token: Token): Leo<T> =
 	when (token) {
@@ -55,6 +56,22 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 					leo(
 						CompiledParser(
 							ActionDoesParserParent(compiledParser, type),
+							compiledParser.context,
+							compiledParser.compiled.beginDoes(type)))
+				else -> null
+			}
+		is RememberTypeBeginner ->
+			when (begin.string) {
+				dictionary.`is` ->
+					leo(
+						CompiledParser(
+							RememberIsParserParent(compiledParser, type),
+							compiledParser.context,
+							compiledParser.compiled.begin))
+				dictionary.does ->
+					leo(
+						CompiledParser(
+							RememberDoesParserParent(compiledParser, type),
 							compiledParser.context,
 							compiledParser.compiled.beginDoes(type)))
 				else -> null

@@ -219,3 +219,6 @@ fun <T> typed(action: Action<T>): Typed<T> =
 
 fun <T> typed(index: Index, type: Type) =
 	arg<T>(index) of type
+
+fun <T> typed(term: Term<T>, type: Type) =
+	term of type

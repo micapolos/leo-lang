@@ -42,6 +42,12 @@ fun <T> Memory<T>.indexedItem(type: Type): Pair<Index, MemoryItem<T>>? =
 			orNullIf(!matches(type))
 		}
 
+fun <T> Memory<T>.resolve(typed: Typed<T>): Typed<T>? =
+	indexedItem(typed.type)
+		?.let { (index, item) ->
+			item.resolve(index, typed.term)
+		}
+
 fun <T> MemoryItem<T>.matches(type: Type): Boolean =
 	when (this) {
 		is EmptyMemoryItem -> false

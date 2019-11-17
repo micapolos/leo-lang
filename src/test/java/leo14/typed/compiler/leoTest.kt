@@ -1,6 +1,10 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
+import leo13.index0
+import leo14.lambda.arg0
+import leo14.lambda.id
+import leo14.lambda.invoke
 import leo14.lineTo
 import leo14.native.Native
 import leo14.native.native
@@ -160,5 +164,74 @@ class TypeParserTest {
 		leo(compiled(typed(action)))
 			.parse(script("do" lineTo script("zero")))
 			.assertEqualTo(leo(compiled(action.resolve(typed("zero"))!!)))
+	}
+
+	@Test
+	fun compiledRememberIs() {
+		leo(compiled(typed("foo")))
+			.parse(
+				script(
+					"remember" lineTo script(
+						"zero" lineTo script(),
+						"is" lineTo script("one"))))
+			.assertEqualTo(
+				leo(
+					compiled(
+						typed("foo"),
+						memory(
+							remember(
+								type("zero") does typed("one"),
+								needsInvoke = false)))))
+	}
+
+	@Test
+	fun compiledRemindRememberIs() {
+		val compiled = compiled<Native>(
+			typed(),
+			memory(
+				remember(
+					type("zero") does typed("one"),
+					needsInvoke = false)))
+
+		leo(compiled)
+			.parse(script("zero"))
+			.assertEqualTo(leo(compiled.updateTyped { typed(index0, type("one")) }))
+	}
+
+	@Test
+	fun compiledRememberDoes() {
+		leo(compiled(typed("foo")))
+			.parse(
+				script(
+					"remember" lineTo script(
+						"zero" lineTo script(),
+						"does" lineTo script("done"))))
+			.assertEqualTo(
+				leo(
+					compiled(
+						typed("foo"),
+						memory(
+							remember(
+								type("zero") does typed<Native>(id(), type("zero")).resolveWrap("done"),
+								needsInvoke = true)))))
+	}
+
+	@Test
+	fun compiledRemindRememberDoes() {
+		leo(compiled(typed()))
+			.parse(
+				script(
+					"remember" lineTo script(
+						"zero" lineTo script(),
+						"does" lineTo script("done")),
+					"zero" lineTo script()))
+			.assertEqualTo(
+				leo(
+					compiled(
+						typed(arg0<Native>().invoke(typed<Native>("zero").term), type("zero")).resolveWrap("done"),
+						memory(
+							remember(
+								type("zero") does typed<Native>(id(), type("zero")).resolveWrap("done"),
+								needsInvoke = true)))))
 	}
 }

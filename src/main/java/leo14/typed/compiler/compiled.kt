@@ -7,7 +7,7 @@ data class Compiled<T>(
 	val memory: Memory<T>,
 	val typed: Typed<T>)
 
-fun <T> compiled(typed: Typed<T>) = Compiled(memory(), typed)
+fun <T> compiled(typed: Typed<T>, memory: Memory<T> = memory()) = Compiled(memory, typed)
 
 val <T> Compiled<T>.begin: Compiled<T>
 	get() =
@@ -23,10 +23,10 @@ fun <T> Compiled<T>.resolve(line: TypedLine<T>): Compiled<T> =
 	updateTyped {
 		plus(line)
 			.run {
-				// TODO: Resolve memory.
-				resolve ?: this
+				memory.resolve(this) ?: resolve ?: this
 			}
 	}
 
-fun <T> Compiled<T>.ret(typed: Typed<T>): Typed<T> =
-	memory.ret(typed)
+val <T> Compiled<T>.resolveForEnd: Compiled<T>
+	get() =
+		compiled(memory.ret(typed))

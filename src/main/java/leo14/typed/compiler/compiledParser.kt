@@ -16,6 +16,8 @@ data class FieldCompiledParserParent<T>(val compiledParser: CompiledParser<T>, v
 data class ActionDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class ActionDoParserParent<T>(val compiledParser: CompiledParser<T>, val action: Action<T>) : CompiledParserParent<T>()
 data class GiveCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
+data class RememberDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
+data class RememberIsParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 
 fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 	when (token) {
@@ -37,6 +39,8 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 					leo(DeleteParser(this))
 				context.dictionary.nothing ->
 					leo(NothingParser(this))
+				context.dictionary.remember ->
+					leo(TypeParser(null, RememberTypeBeginner(this), context.dictionary, type()))
 				else ->
 					CompiledParserLeo(
 						CompiledParser(
@@ -44,7 +48,7 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 							context,
 							compiled.begin))
 			}
-		is EndToken -> parent?.end(compiled)
+		is EndToken -> parent?.end(compiled.resolveForEnd)
 	} ?: error("$this.parse($token)")
 
 fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Leo<T> =
@@ -57,6 +61,10 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Leo<T> =
 			leo(compiledParser.updateCompiled { updateTyped { action.resolve(compiled.typed)!! } })
 		is GiveCompiledParserParent ->
 			leo(compiledParser.updateCompiled { updateTyped { compiled.typed } })
+		is RememberDoesParserParent ->
+			leo(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = true)))
+		is RememberIsParserParent ->
+			leo(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = false)))
 	}
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
