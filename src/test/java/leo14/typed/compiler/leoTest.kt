@@ -241,4 +241,28 @@ class TypeParserTest {
 			.parse(script("forget" lineTo script("zero")))
 			.assertEqualTo(leo(compiled(typed(), memory(forget(type("zero"))))))
 	}
+
+	@Test
+	fun compiledComment() {
+		leo(compiled(typed()))
+			.parse(
+				script(
+					"comment" lineTo script("one"),
+					"zero" lineTo script(),
+					"comment" lineTo script("two"),
+					"as" lineTo script(
+						"comment" lineTo script("three"),
+						"choice" lineTo script(
+							"comment" lineTo script("four"),
+							"zero" lineTo script(),
+							"comment" lineTo script("five"),
+							"one" lineTo script(),
+							"comment" lineTo script("six")),
+						"comment" lineTo script("seven"))))
+			.assertEqualTo(
+				leo(
+					compiled(
+						typed<Native>("zero")
+							.`as`(type(choice("zero", "one"))))))
+	}
 }
