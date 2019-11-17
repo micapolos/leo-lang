@@ -98,6 +98,13 @@ class TypeParserTest {
 	}
 
 	@Test
+	fun compiledDelete() {
+		leo(compiled(typed("zero")))
+			.parse(script(defaultDictionary.delete))
+			.assertEqualTo(leo(compiled(typed())))
+	}
+
+	@Test
 	fun compiledGive() {
 		leo(compiled(typed("zero")))
 			.parse(

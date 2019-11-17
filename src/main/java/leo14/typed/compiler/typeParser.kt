@@ -72,3 +72,4 @@ fun <T> TypeParserParent<T>.end(type: Type): Leo<T>? =
 		is AsTypeParserParent ->
 			leo(compiledParser.updateCompiled { updateTyped { `as`(type) } })
 	}
+

@@ -33,6 +33,8 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 					}
 				context.dictionary.give ->
 					leo(CompiledParser(GiveCompiledParserParent(this), context, compiled.begin))
+				context.dictionary.delete ->
+					leo(DeleteParser(this))
 				else ->
 					CompiledParserLeo(
 						CompiledParser(
@@ -60,3 +62,7 @@ fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
+
+val <T> CompiledParser<T>.delete
+	get() =
+		updateCompiled { updateTyped { typed() } }
