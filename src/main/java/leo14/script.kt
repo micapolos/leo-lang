@@ -158,7 +158,8 @@ val Script.coreString: String
 
 val ScriptLink.coreString: String
 	get() =
-		"${lhs.coreString}${line.coreString}"
+		if (lhs.isEmpty) line.coreString
+		else "${lhs.coreString} ${line.coreString}"
 
 val ScriptLine.coreString: String
 	get() =
