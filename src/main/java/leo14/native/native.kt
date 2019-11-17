@@ -1,12 +1,15 @@
 package leo14.native
 
+import leo14.lambda.Term
+import leo14.lambda.term
+
 sealed class Native
 
 data class BooleanNative(val boolean: Boolean) : Native()
 data class StringNative(val string: String) : Native()
 data class IntNative(val int: Int) : Native()
 data class DoubleNative(val double: Double) : Native()
-data class SwitchNative(val falseNative: Native, val trueNative: Native) : Native()
+data class SwitchNative(val falseTerm: Term<Native>, val trueTerm: Term<Native>) : Native()
 object IntIsZeroNative : Native()
 object IntDecNative : Native()
 object IntIncNative : Native()
@@ -28,7 +31,7 @@ val intIncNative: Native = IntIncNative
 val intPlusIntNative: Native = IntPlusIntNative
 val doublePlusDoubleNative: Native = DoublePlusDoubleNative
 val stringEqualsStringNative: Native = StringEqualsStringNative
-fun switchNative(falseNative: Native, trueNative: Native): Native = SwitchNative(falseNative, trueNative)
+fun switchNative(falseTerm: Term<Native>, trueTerm: Term<Native>): Native = SwitchNative(falseTerm, trueTerm)
 
 fun plusNative(int: Int): Native = PlusIntNative(int)
 fun plusNative(double: Double): Native = PlusDoubleNative(double)
@@ -40,21 +43,21 @@ val Native.int get() = (this as IntNative).int
 val Native.double get() = (this as DoubleNative).double
 val Native.string get() = (this as StringNative).string
 
-fun Native.invoke(native: Native): Native =
+fun Native.invoke(native: Native): Term<Native> =
 	when (this) {
 		is BooleanNative -> null
 		is StringNative -> null
 		is IntNative -> null
 		is DoubleNative -> null
-		is SwitchNative -> if (native.boolean) falseNative else trueNative
-		is IntIsZeroNative -> native(native.int == 0)
-		is IntIncNative -> native(native.int.inc())
-		is IntDecNative -> native(native.int.dec())
-		is IntPlusIntNative -> plusNative(native.int)
-		is DoublePlusDoubleNative -> plusNative(native.double)
-		is StringEqualsStringNative -> equalsNative(native.string)
-		is EqualsStringNative -> native(string == native.string)
-		is PlusIntNative -> native(int + native.int)
-		is PlusDoubleNative -> native(double + native.double)
-		is LogNative -> native.also { println(it) }
+		is SwitchNative -> if (native.boolean) falseTerm else trueTerm
+		is IntIsZeroNative -> term(native(native.int == 0))
+		is IntIncNative -> term(native(native.int.inc()))
+		is IntDecNative -> term(native(native.int.dec()))
+		is IntPlusIntNative -> term(plusNative(native.int))
+		is DoublePlusDoubleNative -> term(plusNative(native.double))
+		is StringEqualsStringNative -> term(equalsNative(native.string))
+		is EqualsStringNative -> term(native(string == native.string))
+		is PlusIntNative -> term(native(int + native.int))
+		is PlusDoubleNative -> term(native(double + native.double))
+		is LogNative -> term(native.also { println(it) })
 	} ?: error("$this.invoke($native)")

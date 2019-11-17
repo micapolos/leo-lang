@@ -4,4 +4,4 @@ import leo14.native.Native
 import leo14.native.invoke
 
 val Term<Native>.nativeValue: Value<Native> get() = value(Native::invoke)
-val Term<Native>.nativeEval: Term<Native> get() = nativeValue.evalTerm
+val Term<Native>.nativeEval: Term<Native> get() = nativeValue.term
