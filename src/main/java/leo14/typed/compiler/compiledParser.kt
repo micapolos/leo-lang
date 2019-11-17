@@ -19,7 +19,7 @@ data class FieldCompiledInterceptor<T>(val compiledParser: CompiledParser<T>, va
 
 fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 	interceptor
-		?.intercept(token, compiled)
+		?.end(token, compiled)
 		?: when (token) {
 			is LiteralToken ->
 				CompiledParserLeo(plus(context.compileLine(token.literal)))
@@ -36,7 +36,7 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 		}
 		?: error("$this.parse($token)")
 
-fun <T> CompiledInterceptor<T>.intercept(token: Token, compiled: Compiled<T>): Leo<T>? =
+fun <T> CompiledInterceptor<T>.end(token: Token, compiled: Compiled<T>): Leo<T>? =
 	when (this) {
 		is FieldCompiledInterceptor ->
 			notNullIf(token is EndToken) {

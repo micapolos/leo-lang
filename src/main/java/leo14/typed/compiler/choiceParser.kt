@@ -17,15 +17,15 @@ data class ChoiceInterceptor(
 
 fun <T> ChoiceParser.parse(token: Token): Leo<T> =
 	interceptor
-		?.intercept(choice, token)
+		?.end(choice, token)
 		?: when (token) {
 			is LiteralToken -> null
-			is BeginToken -> leo(TypeParser(OptionTypeInterceptor(this, token.begin.string), dictionary, type()))
+			is BeginToken -> leo(TypeParser(OptionTypeEnder(this, token.begin.string), null, dictionary, type()))
 			is EndToken -> null
 		}
 		?: error("$this.parse($token)")
 
-fun <T> ChoiceInterceptor.intercept(choice: Choice, token: Token): Leo<T>? =
+fun <T> ChoiceInterceptor.end(choice: Choice, token: Token): Leo<T>? =
 	notNullIf(token is EndToken) {
 		leo<T>(typeParser.plus<T>(line(choice)))
 	}

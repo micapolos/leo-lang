@@ -17,7 +17,7 @@ fun <T> leo(choiceParser: ChoiceParser): Leo<T> = ChoiceParserLeo(choiceParser)
 fun <T> leo(arrowParser: ArrowParser): Leo<T> = ArrowParserLeo(arrowParser)
 fun <T> leo(nativeParser: NativeParser): Leo<T> = NativeParserLeo(nativeParser)
 
-fun leo(type: Type) = leo<Native>(TypeParser(null, englishDictionary, type))
+fun leo(type: Type) = leo<Native>(TypeParser(null, null, englishDictionary, type))
 fun leo(compiled: Compiled<Native>) = CompiledParserLeo(CompiledParser(null, nativeContext, compiled))
 
 fun <T> Leo<T>.parse(token: Token): Leo<T> =
