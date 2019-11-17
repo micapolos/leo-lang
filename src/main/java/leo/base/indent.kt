@@ -18,3 +18,7 @@ fun <R> R.indented(indent: Indent, fn: R.(Indent) -> R): R =
 val Indent.inc
 	get() =
 		Indent(tabCount.inc())
+
+val Indent.string: String
+	get() =
+		StringBuilder().iterate(tabCount) { append("  ") }.toString()

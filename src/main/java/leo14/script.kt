@@ -1,6 +1,6 @@
 package leo14
 
-import leo.base.fold
+import leo.base.*
 import leo13.Stack
 import leo13.fold
 import leo13.reverse
@@ -53,6 +53,28 @@ fun field(string: String) = string fieldTo script()
 infix fun Script.linkTo(line: ScriptLine) = ScriptLink(this, line)
 infix fun String.lineTo(script: Script) = line(fieldTo(script))
 
+val Script.isEmpty get() = (this is UnitScript)
+
+val Script.isSimple: Boolean
+	get() =
+		when (this) {
+			is UnitScript -> true
+			is LinkScript -> link.isSimple
+		}
+
+val ScriptLink.isSimple
+	get() =
+		lhs.isSimple && line.isSimple
+
+val ScriptLine.isSimple
+	get() =
+		when (this) {
+			is LiteralScriptLine -> true
+			is FieldScriptLine -> field.isSimple
+		}
+
+val ScriptField.isSimple get() = rhs.isEmpty
+
 val String.code get() = "\"$this\"" // TODO: Escape
 
 val Script.code: String
@@ -88,3 +110,35 @@ val ScriptField.code
 
 fun <V> Stack<V>.script(fn: V.() -> ScriptLine): Script =
 	script().fold(reverse) { plus(it.fn()) }
+
+// === Indented string
+
+val Script.indentString get() = string(0.indent)
+
+fun Script.string(indent: Indent): String =
+	when (this) {
+		is UnitScript -> ""
+		is LinkScript -> link.string(indent)
+	}
+
+fun ScriptLink.string(indent: Indent): String =
+	when (lhs) {
+		is UnitScript -> line.string(indent)
+		is LinkScript ->
+			if (lhs.isSimple) lhs.string(indent) + " " + line.string(indent)
+			else lhs.string(indent) + "\n" + indent.string + line.string(indent)
+	}
+
+fun ScriptLine.string(indent: Indent): String =
+	when (this) {
+		is LiteralScriptLine -> literal.toString()
+		is FieldScriptLine -> field.string(indent)
+	}
+
+fun ScriptField.string(indent: Indent): String =
+	when (rhs) {
+		is UnitScript -> string
+		is LinkScript ->
+			if (rhs.link.lhs.isEmpty || rhs.link.isSimple) "$string: ${rhs.string(indent)}"
+			else "$string\n${indent.inc.string}${rhs.string(indent.inc)}"
+	}

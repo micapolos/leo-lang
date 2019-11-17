@@ -1,6 +1,7 @@
 package leo14
 
 import leo.base.assertEqualTo
+import leo13.base.linesString
 import kotlin.test.Test
 
 class ScriptTest {
@@ -25,5 +26,71 @@ class ScriptTest {
 				"name" fieldTo literal("my vector")))
 			.code
 			.assertEqualTo("vec(x(1).y(2).name(\"my vector\"))")
+	}
+
+	@Test
+	fun indentString() {
+		script()
+			.indentString
+			.assertEqualTo("")
+
+		script("zero")
+			.indentString
+			.assertEqualTo("zero")
+
+		script("zero", "one")
+			.indentString
+			.assertEqualTo("zero one")
+
+		script(
+			"zero" lineTo script(),
+			"plus" lineTo script("one"))
+			.indentString
+			.assertEqualTo("zero plus: one")
+
+		script(
+			"zero" lineTo script(),
+			"plus" lineTo script("one"),
+			"plus" lineTo script("two"))
+			.indentString
+			.assertEqualTo(
+				linesString(
+					"zero plus: one",
+					"plus: two"))
+
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero")))
+			.indentString
+			.assertEqualTo("point: x: zero")
+
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")))
+			.indentString
+			.assertEqualTo(
+				linesString(
+					"point",
+					"  x: zero",
+					"  y: one"))
+
+		script(
+			"circle" lineTo script(
+				"name" lineTo script(literal("big")),
+				"radius" lineTo script(literal(10.2)),
+				"center" lineTo script(
+					"point" lineTo script(
+						"x" lineTo script(literal(10)),
+						"y" lineTo script(literal(15))))))
+			.indentString
+			.assertEqualTo(
+				linesString(
+					"circle",
+					"  name: \"big\"",
+					"  radius: 10.2",
+					"  center: point",
+					"    x: 10",
+					"    y: 15"))
 	}
 }
