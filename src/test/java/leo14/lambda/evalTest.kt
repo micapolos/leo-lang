@@ -1,9 +1,12 @@
 package leo14.lambda
 
 import leo.base.assertEqualTo
+import leo14.native.Native
+import leo14.native.intIncNative
 import leo14.native.intPlusIntNative
 import leo14.native.native
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class EvalTest {
 	@Test
@@ -57,5 +60,20 @@ class EvalTest {
 			.invoke(term(native(3)))
 			.nativeEval
 			.assertEqualTo(term(native(5)))
+	}
+
+	@Test
+	fun stackOverflow() {
+		assertFails {
+			val fn =
+				fn(
+					fn(
+						arg1<Native>()
+							.invoke(arg1())
+							.invoke(term(intIncNative).invoke(arg0()))))
+			fn.invoke(fn).invoke(term(native(0)))
+				.nativeEval
+				.assertEqualTo(null)
+		}
 	}
 }
