@@ -11,12 +11,14 @@ data class ChoiceParserLeo<T>(val choiceParser: ChoiceParser<T>) : Leo<T>()
 data class ArrowParserLeo<T>(val arrowParser: ArrowParser<T>) : Leo<T>()
 data class NativeParserLeo<T>(val nativeParser: NativeParser<T>) : Leo<T>()
 data class CompiledParserLeo<T>(val compiledParser: CompiledParser<T>) : Leo<T>()
+data class ActionParserLeo<T>(val actionParser: ActionParser<T>) : Leo<T>()
 
 fun <T> leo(typeParser: TypeParser<T>): Leo<T> = TypeParserLeo(typeParser)
 fun <T> leo(choiceParser: ChoiceParser<T>): Leo<T> = ChoiceParserLeo(choiceParser)
 fun <T> leo(arrowParser: ArrowParser<T>): Leo<T> = ArrowParserLeo(arrowParser)
 fun <T> leo(nativeParser: NativeParser<T>): Leo<T> = NativeParserLeo(nativeParser)
 fun <T> leo(compiledParser: CompiledParser<T>): Leo<T> = CompiledParserLeo(compiledParser)
+fun <T> leo(actionParser: ActionParser<T>): Leo<T> = ActionParserLeo(actionParser)
 
 fun leo(type: Type): Leo<Native> =
 	leo(TypeParser(null, null, englishDictionary, type))
@@ -31,6 +33,7 @@ fun <T> Leo<T>.parse(token: Token): Leo<T> =
 		is ArrowParserLeo -> arrowParser.parse(token)
 		is NativeParserLeo -> nativeParser.parse(token)
 		is CompiledParserLeo -> compiledParser.parse(token)
+		is ActionParserLeo -> actionParser.parse(token)
 	}
 
 fun <T> Leo<T>.parse(script: Script): Leo<T> =

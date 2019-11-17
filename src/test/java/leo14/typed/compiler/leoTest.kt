@@ -3,6 +3,7 @@ package leo14.typed.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.native.Native
+import leo14.native.native
 import leo14.script
 import leo14.typed.*
 import kotlin.test.Test
@@ -84,6 +85,19 @@ class TypeParserTest {
 	}
 
 	@Test
+	fun compiledResolve() {
+		val compiled = compiled(
+			typed(
+				"point" lineTo typed(
+					"x" lineTo typed(native(10)),
+					"y" lineTo typed(native(11)))))
+
+		leo(compiled)
+			.parse(script("x"))
+			.assertEqualTo(leo(compiled.resolve("x" lineTo typed())))
+	}
+
+	@Test
 	fun compiledAs() {
 		leo(compiled(typed()))
 			.parse(
@@ -96,5 +110,23 @@ class TypeParserTest {
 				leo(
 					compiled(
 						typed<Native>("false") `as` type(choice("true", "false")))))
+	}
+
+	@Test
+	fun compiledAction() {
+		leo(compiled(typed()))
+			.parse(
+				script(
+					defaultDictionary.action lineTo script(
+						"zero" lineTo script(),
+						defaultDictionary.does lineTo script(
+							"plus" lineTo script("one")))))
+			.assertEqualTo(
+				leo(
+					compiled(
+						typed<Native>()
+							.plus(type("zero") does typed(
+								"zero" lineTo typed(),
+								"plus" lineTo typed("one"))))))
 	}
 }

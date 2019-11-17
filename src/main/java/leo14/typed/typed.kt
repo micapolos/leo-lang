@@ -79,6 +79,14 @@ fun <T> Typed<T>.resolve(string: String): Typed<T>? =
 		else -> resolveAccess(string) ?: resolveWrap(string)
 	}
 
+val <T> Typed<T>.resolve: Typed<T>?
+	get() =
+		resolveLinkOrNull?.run {
+			head.resolveFieldOrNull?.let { field ->
+				tail.resolve(field)
+			}
+		}
+
 val <T> Typed<T>.resolveLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 	get() =
 		type.lineLinkOrNull?.let { link ->
@@ -167,6 +175,9 @@ fun <T> Typed<T>.plusNative(rhs: Term<T>): Typed<T> =
 
 infix fun <T> String.fieldTo(typed: Typed<T>): TypedField<T> =
 	typed.term of (this fieldTo typed.type)
+
+infix fun <T> String.lineTo(typed: Typed<T>): TypedLine<T> =
+	line(this fieldTo typed)
 
 fun <T> line(typed: TypedField<T>): TypedLine<T> =
 	typed.term of line(typed.field)

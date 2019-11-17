@@ -2,6 +2,7 @@ package leo14.typed
 
 import leo.base.assertEqualTo
 import leo14.lambda.*
+import leo14.native.native
 import kotlin.test.Test
 
 class TypedTest {
@@ -53,5 +54,44 @@ class TypedTest {
 			.of(type("zero" lineTo nativeType))
 			.castTermTo(type(choice("zero", "one")))
 			.assertEqualTo(fn(fn(arg1<Any>().invoke(term("lhs")))))
+	}
+
+	@Test
+	fun resolve() {
+		typed(
+			"point" lineTo typed(
+				"x" lineTo typed(native(10)),
+				"y" lineTo typed(native(11))),
+			"x" lineTo typed())
+			.resolve
+			.assertEqualTo(
+				typed(
+					"point" lineTo typed(
+						"x" lineTo typed(native(10)),
+						"y" lineTo typed(native(11))))
+					.resolve("x" fieldTo typed()))
+	}
+
+	@Test
+	fun resolveField_access() {
+		val typed = typed(
+			"point" lineTo typed(
+				"x" lineTo typed(native(10)),
+				"y" lineTo typed(native(11))))
+
+		typed
+			.resolve("x" fieldTo typed())
+			.assertEqualTo(typed.resolveAccess("x"))
+	}
+
+	@Test
+	fun resolveField_wrap() {
+		val typed = typed(
+			"x" lineTo typed(native(10)),
+			"y" lineTo typed(native(11)))
+
+		typed
+			.resolve("point" fieldTo typed())
+			.assertEqualTo(typed.resolveWrap("point"))
 	}
 }

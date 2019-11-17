@@ -16,6 +16,7 @@ data class OptionTypeEnder<T>(val choiceParser: ChoiceParser<T>, val name: Strin
 data class AsTypeEnder<T>(val compiledParser: CompiledParser<T>) : TypeEnder<T>()
 
 sealed class TypeBeginner<T>
+data class ActionDoesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ArrowGivingTypeBeginner<T>(val typeParser: TypeParser<T>) : TypeBeginner<T>()
 
 fun <T> TypeParser<T>.parse(token: Token): Leo<T> =
@@ -39,7 +40,23 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 	when (this) {
 		is ArrowGivingTypeBeginner ->
 			when (begin.string) {
-				dictionary.giving -> leo(TypeParser(ArrowGivingTypeEnder(typeParser, type), null, typeParser.dictionary, type()))
+				dictionary.giving ->
+					leo(
+						TypeParser(
+							ArrowGivingTypeEnder(typeParser, type),
+							null,
+							typeParser.dictionary,
+							type()))
+				else -> null
+			}
+		is ActionDoesTypeBeginner ->
+			when (begin.string) {
+				dictionary.does ->
+					leo(
+						CompiledParser(
+							ActionDoesEnder(compiledParser, type),
+							compiledParser.context,
+							compiledParser.compiled.beginDoes(type)))
 				else -> null
 			}
 	}
