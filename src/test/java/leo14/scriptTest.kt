@@ -92,5 +92,14 @@ class ScriptTest {
 					"  center: point",
 					"    x: 10",
 					"    y: 15"))
+
+		script(
+			"remember" lineTo script(
+				"my" lineTo script(),
+				"favourite" lineTo script(),
+				"color" lineTo script(),
+				"is" lineTo script("red")))
+			.indentString
+			.assertEqualTo("remember: my favourite color is: red")
 	}
 }

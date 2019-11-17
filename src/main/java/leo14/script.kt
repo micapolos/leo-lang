@@ -143,7 +143,7 @@ fun ScriptField.string(indent: Indent): String =
 	when (rhs) {
 		is UnitScript -> string
 		is LinkScript ->
-			if (rhs.link.lhs.isEmpty || rhs.link.isSimple) "$string: ${rhs.string(indent)}"
+			if (rhs.link.lhs.isSimple) "$string: ${rhs.string(indent)}"
 			else "$string\n${indent.inc.string}${rhs.string(indent.inc)}"
 	}
 
