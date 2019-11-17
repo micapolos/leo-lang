@@ -2,7 +2,7 @@ package leo14.lambda
 
 import leo13.*
 
-typealias NativeApply<T> = T.(T) -> Term<T>
+typealias NativeApply<T> = T.(Term<T>) -> Term<T>
 
 fun <T> errorNativeApply(): NativeApply<T> = { error("nativeApply") }
 
@@ -25,11 +25,7 @@ fun <T> Term<T>.value(scope: Scope<T>): Value<T> =
 
 fun <T> Value<T>.apply(rhs: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 	when (term) {
-		is NativeTerm ->
-			when (rhs.term) {
-				is NativeTerm -> value(scope, term.native.nativeApply(rhs.term.native))
-				else -> error("$this.apply($rhs)")
-			}
+		is NativeTerm -> value(scope, term.native.nativeApply(rhs.term))
 		is AbstractionTerm -> term.abstraction.body.value(scope.push(rhs))
 		else -> null
 	} ?: error("$this.apply($rhs)")

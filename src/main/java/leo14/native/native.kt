@@ -1,5 +1,6 @@
 package leo14.native
 
+import leo14.lambda.NativeTerm
 import leo14.lambda.Term
 import leo14.lambda.term
 
@@ -46,6 +47,10 @@ val Native.boolean get() = (this as BooleanNative).boolean
 val Native.int get() = (this as IntNative).int
 val Native.double get() = (this as DoubleNative).double
 val Native.string get() = (this as StringNative).string
+
+fun Native.invoke(term: Term<Native>): Term<Native> =
+	if (term is NativeTerm) invoke(term.native)
+	else error("$this.invoke($term)")
 
 fun Native.invoke(native: Native): Term<Native> =
 	when (this) {
