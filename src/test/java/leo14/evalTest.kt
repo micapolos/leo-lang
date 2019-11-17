@@ -115,35 +115,35 @@ class EvalTest {
 							"y" lineTo script("one")))))
 	}
 
-	@Test
-	fun evalAction() {
-		script(
-			"action" lineTo script(
-				"it" lineTo script("zero"),
-				"does" lineTo script("plus" lineTo script("one"))))
-			.eval
-			.assertEqualTo(
-				script(
-					"action" lineTo script(
-						"it" lineTo script("zero"),
-						"gives" lineTo script(
-							"zero" lineTo script(),
-							"plus" lineTo script("one")))))
-	}
-
-	@Test
-	fun evalActionDo() {
-		script(
-			"action" lineTo script(
-				"it" lineTo script("zero"),
-				"does" lineTo script("plus" lineTo script("one"))),
-			"do" lineTo script("zero"))
-			.eval
-			.assertEqualTo(
-				script(
-					"zero" lineTo script(),
-					"plus" lineTo script("one")))
-	}
+//	@Test
+//	fun evalAction() {
+//		script(
+//			"action" lineTo script(
+//				"it" lineTo script("zero"),
+//				"does" lineTo script("plus" lineTo script("one"))))
+//			.eval
+//			.assertEqualTo(
+//				script(
+//					"action" lineTo script(
+//						"it" lineTo script("zero"),
+//						"gives" lineTo script(
+//							"zero" lineTo script(),
+//							"plus" lineTo script("one")))))
+//	}
+//
+//	@Test
+//	fun evalActionDo() {
+//		script(
+//			"action" lineTo script(
+//				"it" lineTo script("zero"),
+//				"does" lineTo script("plus" lineTo script("one"))),
+//			"do" lineTo script("zero"))
+//			.eval
+//			.assertEqualTo(
+//				script(
+//					"zero" lineTo script(),
+//					"plus" lineTo script("one")))
+//	}
 
 	@Test
 	fun rememberItIsAndRemind() {

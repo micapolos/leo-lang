@@ -98,6 +98,16 @@ class TypeParserTest {
 	}
 
 	@Test
+	fun compiledGive() {
+		leo(compiled(typed("zero")))
+			.parse(
+				script(
+					defaultDictionary.give lineTo script(
+						"one" lineTo script())))
+			.assertEqualTo(leo(compiled(typed("one"))))
+	}
+
+	@Test
 	fun compiledAs() {
 		leo(compiled(typed()))
 			.parse(
@@ -128,5 +138,13 @@ class TypeParserTest {
 							.plus(type("zero") does typed(
 								"zero" lineTo typed(),
 								"plus" lineTo typed("one"))))))
+	}
+
+	@Test
+	fun compiledDo() {
+		val action = type("zero") does typed<Native>("one")
+		leo(compiled(typed(action)))
+			.parse(script("do" lineTo script("zero")))
+			.assertEqualTo(leo(compiled(action.resolve(typed("zero"))!!)))
 	}
 }

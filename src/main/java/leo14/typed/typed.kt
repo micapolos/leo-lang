@@ -4,10 +4,7 @@ import leo.base.failIfOr
 import leo.base.fold
 import leo.base.notNullIf
 import leo.base.notNullOrError
-import leo13.Link
-import leo13.Stack
-import leo13.array
-import leo13.linkTo
+import leo13.*
 import leo14.Literal
 import leo14.any
 import leo14.lambda.*
@@ -206,9 +203,19 @@ val <T> Typed<T>.decompileLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 fun <T> Typed<T>.switchOf(type: Type, fnStack: Stack<Term<T>>): Typed<T> =
 	term.matchTerm(*fnStack.array) of type
 
+val <T> Typed<T>.action: Action<T>
+	get() =
+		onlyLine.arrow.action
+
 val <T> TypedArrow<T>.action: Action<T>
 	get() =
 		arrow.lhs does (term of arrow.rhs)
 
 fun <T> Typed<T>.ret(action: Action<T>): Typed<T> =
 	fn(term).invoke(action.body.term) of type
+
+fun <T> typed(action: Action<T>): Typed<T> =
+	fn(action.body.term) of type(line(action.param arrowTo action.body.type))
+
+fun <T> typed(index: Index, type: Type) =
+	arg<T>(index) of type

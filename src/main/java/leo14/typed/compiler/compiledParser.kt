@@ -14,6 +14,8 @@ data class CompiledParser<T>(
 sealed class CompiledEnder<T>
 data class FieldCompiledEnder<T>(val compiledParser: CompiledParser<T>, val name: String) : CompiledEnder<T>()
 data class ActionDoesEnder<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledEnder<T>()
+data class ActionDoEnder<T>(val compiledParser: CompiledParser<T>, val action: Action<T>) : CompiledEnder<T>()
+data class GiveEnder<T>(val compiledParser: CompiledParser<T>) : CompiledEnder<T>()
 
 fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 	when (token) {
@@ -25,6 +27,12 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 					leo(TypeParser(null, ActionDoesTypeBeginner(this), context.dictionary, type()))
 				context.dictionary.`as` ->
 					leo(TypeParser(AsTypeEnder(this), null, context.dictionary, type()))
+				context.dictionary.`do` ->
+					compiled.typed.action.let { action ->
+						leo(CompiledParser(ActionDoEnder(this, action), context, compiled.begin))
+					}
+				context.dictionary.give ->
+					leo(CompiledParser(GiveEnder(this), context, compiled.begin))
 				else ->
 					CompiledParserLeo(
 						CompiledParser(
@@ -41,7 +49,10 @@ fun <T> CompiledEnder<T>.end(compiled: Compiled<T>): Leo<T> =
 			leo(compiledParser.resolve(line(name fieldTo compiled.typed)))
 		is ActionDoesEnder ->
 			leo(ActionParser(compiledParser, type does compiled.typed))
-
+		is ActionDoEnder ->
+			leo(compiledParser.updateCompiled { updateTyped { action.resolve(compiled.typed)!! } })
+		is GiveEnder ->
+			leo(compiledParser.updateCompiled { updateTyped { compiled.typed } })
 	}
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =

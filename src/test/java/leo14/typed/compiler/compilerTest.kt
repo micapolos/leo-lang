@@ -156,22 +156,22 @@ class CompilerTest {
 						.end()))
 	}
 
-	@Test
-	fun action() {
-		compiler(typed())
-			.compile(
-				script(
-					"action" lineTo script(
-						"it" lineTo script("zero"),
-						"does" lineTo script("plus" lineTo script("one")))))
-			.assertEqualTo(
-				compiler(id<Any>() of
-					type(
-						line(type("zero") arrowTo type(
-							"zero" lineTo type(),
-							"plus" lineTo type("one"))))))
-	}
-
+	//	@Test
+//	fun action() {
+//		compiler(typed())
+//			.compile(
+//				script(
+//					"action" lineTo script(
+//						"it" lineTo script("zero"),
+//						"does" lineTo script("plus" lineTo script("one")))))
+//			.assertEqualTo(
+//				compiler(id<Any>() of
+//					type(
+//						line(type("zero") arrowTo type(
+//							"zero" lineTo type(),
+//							"plus" lineTo type("one"))))))
+//	}
+//
 	@Test
 	fun actionRememberDo() {
 		val context = anyContext(
