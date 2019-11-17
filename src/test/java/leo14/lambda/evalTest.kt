@@ -1,10 +1,7 @@
 package leo14.lambda
 
 import leo.base.assertEqualTo
-import leo14.native.Native
-import leo14.native.intIncNative
-import leo14.native.intPlusIntNative
-import leo14.native.native
+import leo14.native.*
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -63,6 +60,29 @@ class EvalTest {
 	}
 
 	@Test
+	fun recursionFactorial() {
+		val fact =
+			fn(
+				fn(
+					fn(
+						term(
+							switchNative(
+								fn(arg2()),
+								fn(arg3<Native>()
+									.invoke(arg3())
+									.invoke(term(intTimesIntNative).invoke(arg2()).invoke(arg1()))
+									.invoke(term(intDecNative).invoke(arg1())))))
+							.invoke(term(intIsZeroNative).invoke(arg0()))
+							.invoke(id()))))
+		fn(arg0<Native>().invoke(arg0()))
+			.invoke(fact)
+			.invoke(term(native(1)))
+			.invoke(term(native(10)))
+				.nativeEval
+			.assertEqualTo(term(native(3628800)))
+	}
+
+	@Test
 	fun stackOverflow() {
 		assertFails {
 			val fn =
@@ -71,7 +91,9 @@ class EvalTest {
 						arg1<Native>()
 							.invoke(arg1())
 							.invoke(term(intIncNative).invoke(arg0()))))
-			fn.invoke(fn).invoke(term(native(0)))
+			fn(arg0<Native>().invoke(arg0()))
+				.invoke(fn)
+				.invoke(term(native(0)))
 				.nativeEval
 				.assertEqualTo(null)
 		}
