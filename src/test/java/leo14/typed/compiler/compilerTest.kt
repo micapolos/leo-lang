@@ -97,7 +97,7 @@ class CompilerTest {
 							"one" lineTo script()))))
 			.assertEqualTo(
 				compiler(
-					typed<Any>(line("zero" fieldTo typed())).of(type(choice("zero", "one")))))
+					typed<Any>(line("zero" fieldTo typed())).`as`(type(choice("zero", "one")))))
 	}
 
 	@Test
@@ -113,7 +113,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					typed<Any>("one")
-						.of(type(choice("zero", "one")))
+						.`as`(type(choice("zero", "one")))
 						.beginMatch()
 						.beginCase("zero")
 						.end()
@@ -143,15 +143,15 @@ class CompilerTest {
 				compiler(
 					typed<Any>()
 						.plus("zero" fieldTo typed("foo"))
-						.of(type(choice(
+						.`as`(type(choice(
 							"zero" optionTo type("foo"),
 							"one" optionTo type("bar"))))
 						.beginMatch()
 						.beginCase("zero")
-						.update { of(type(choice("foo", "bar"))) }
+						.update { `as`(type(choice("foo", "bar"))) }
 						.end()
 						.beginCase("one")
-						.update { of(type(choice("foo", "bar"))) }
+						.update { `as`(type(choice("foo", "bar"))) }
 						.end()
 						.end()))
 	}

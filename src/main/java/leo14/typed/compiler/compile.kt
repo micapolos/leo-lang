@@ -205,7 +205,7 @@ fun <T> TypedParent<T>.compile(typed: Typed<T>): Compiler<T> =
 fun <T> TypeParent<T>.compile(type: Type): Compiler<T> =
 	when (this) {
 		is AsParent ->
-			typedCompiler.copy(typed = typedCompiler.typed.of(type))
+			typedCompiler.copy(typed = typedCompiler.typed.`as`(type))
 		is BeginTypeParent ->
 			typeCompiler.copy(type = typeCompiler.type.plus(begin.string lineTo type))
 		is ChoiceTypeParent ->

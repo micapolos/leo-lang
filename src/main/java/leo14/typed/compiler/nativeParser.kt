@@ -5,9 +5,9 @@ import leo14.EndToken
 import leo14.Token
 import leo14.typed.nativeLine
 
-data class NativeParser(val typeParser: TypeParser)
+data class NativeParser<T>(val typeParser: TypeParser<T>)
 
-fun <T> NativeParser.parse(token: Token): Leo<T> =
+fun <T> NativeParser<T>.parse(token: Token): Leo<T> =
 	notNullIf(token is EndToken) {
-		leo<T>(typeParser.plus<T>(nativeLine))
+		leo(typeParser.plus(nativeLine))
 	} ?: error("$this.parse($token)")

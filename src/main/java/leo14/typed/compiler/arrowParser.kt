@@ -7,18 +7,19 @@ import leo14.Token
 import leo14.typed.Arrow
 import leo14.typed.line
 
-data class ArrowParser(
-	val ender: ArrowEnder,
+data class ArrowParser<T>(
+	val ender: ArrowEnder<T>,
 	val arrow: Arrow)
 
-data class ArrowEnder(val typeParser: TypeParser)
+data class ArrowEnder<T>(
+	val typeParser: TypeParser<T>)
 
-fun <T> ArrowParser.parse(token: Token): Leo<T> =
+fun <T> ArrowParser<T>.parse(token: Token): Leo<T> =
 	when (token) {
 		is LiteralToken -> null
 		is BeginToken -> null
 		is EndToken -> ender.end(arrow)
 	} ?: error("$this.parse($token)")
 
-fun <T> ArrowEnder.end(arrow: Arrow): Leo<T> =
-	leo(typeParser.plus<T>(line(arrow)))
+fun <T> ArrowEnder<T>.end(arrow: Arrow): Leo<T> =
+	leo(typeParser.plus(line(arrow)))

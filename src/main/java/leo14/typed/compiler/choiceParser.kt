@@ -1,34 +1,28 @@
 package leo14.typed.compiler
 
-import leo.base.notNullIf
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
 import leo14.typed.*
 
-data class ChoiceParser(
-	val interceptor: ChoiceInterceptor?,
+data class ChoiceParser<T>(
+	val ender: ChoiceEnder<T>?,
 	val dictionary: Dictionary,
 	val choice: Choice)
 
-data class ChoiceInterceptor(
-	val typeParser: TypeParser)
+data class ChoiceEnder<T>(
+	val typeParser: TypeParser<T>)
 
-fun <T> ChoiceParser.parse(token: Token): Leo<T> =
-	interceptor
-		?.end(choice, token)
-		?: when (token) {
-			is LiteralToken -> null
-			is BeginToken -> leo(TypeParser(OptionTypeEnder(this, token.begin.string), null, dictionary, type()))
-			is EndToken -> null
-		}
-		?: error("$this.parse($token)")
+fun <T> ChoiceParser<T>.parse(token: Token): Leo<T> =
+	when (token) {
+		is LiteralToken -> null
+		is BeginToken -> leo(TypeParser<T>(OptionTypeEnder(this, token.begin.string), null, dictionary, type()))
+		is EndToken -> ender?.end(choice)
+	} ?: error("$this.parse($token)")
 
-fun <T> ChoiceInterceptor.end(choice: Choice, token: Token): Leo<T>? =
-	notNullIf(token is EndToken) {
-		leo<T>(typeParser.plus<T>(line(choice)))
-	}
+fun <T> ChoiceEnder<T>.end(choice: Choice): Leo<T> =
+	leo<T>(typeParser.plus(line(choice)))
 
-fun ChoiceParser.plus(option: Option): ChoiceParser =
+fun <T> ChoiceParser<T>.plus(option: Option): ChoiceParser<T> =
 	copy(choice = choice.plus(option))

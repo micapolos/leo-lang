@@ -17,3 +17,6 @@ val <T> Compiled<T>.begin: Compiled<T>
 
 fun <T> Compiled<T>.plus(line: TypedLine<T>): Compiled<T> =
 	copy(typed = typed.plus(line))
+
+fun <T> Compiled<T>.updateTyped(fn: Typed<T>.() -> Typed<T>): Compiled<T> =
+	copy(typed = typed.fn())

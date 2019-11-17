@@ -2,6 +2,7 @@ package leo14.typed.compiler
 
 import leo.base.assertEqualTo
 import leo14.lineTo
+import leo14.native.Native
 import leo14.script
 import leo14.typed.*
 import kotlin.test.Test
@@ -66,7 +67,7 @@ class TypeParserTest {
 	}
 
 	@Test
-	fun fields() {
+	fun compiledFields() {
 		leo(compiled(typed()))
 			.parse(
 				script(
@@ -80,5 +81,20 @@ class TypeParserTest {
 							"point" fieldTo typed(
 								"x" fieldTo typed("zero"),
 								"y" fieldTo typed("one"))))))
+	}
+
+	@Test
+	fun compiledAs() {
+		leo(compiled(typed()))
+			.parse(
+				script(
+					"false" lineTo script(),
+					defaultDictionary.`as` lineTo script(
+						defaultDictionary.choice lineTo script(
+							"true", "false"))))
+			.assertEqualTo(
+				leo(
+					compiled(
+						typed<Native>("false") `as` type(choice("true", "false")))))
 	}
 }
