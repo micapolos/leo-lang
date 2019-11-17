@@ -7,15 +7,15 @@ import leo14.Token
 import leo14.typed.*
 
 data class CompiledParser<T>(
-	val ender: CompiledEnder<T>?,
+	val parent: CompiledParserParent<T>?,
 	val context: Context<T>,
 	val compiled: Compiled<T>)
 
-sealed class CompiledEnder<T>
-data class FieldCompiledEnder<T>(val compiledParser: CompiledParser<T>, val name: String) : CompiledEnder<T>()
-data class ActionDoesEnder<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledEnder<T>()
-data class ActionDoEnder<T>(val compiledParser: CompiledParser<T>, val action: Action<T>) : CompiledEnder<T>()
-data class GiveEnder<T>(val compiledParser: CompiledParser<T>) : CompiledEnder<T>()
+sealed class CompiledParserParent<T>
+data class FieldCompiledParserParent<T>(val compiledParser: CompiledParser<T>, val name: String) : CompiledParserParent<T>()
+data class ActionDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
+data class ActionDoParserParent<T>(val compiledParser: CompiledParser<T>, val action: Action<T>) : CompiledParserParent<T>()
+data class GiveCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
 
 fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 	when (token) {
@@ -26,32 +26,32 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 				context.dictionary.action ->
 					leo(TypeParser(null, ActionDoesTypeBeginner(this), context.dictionary, type()))
 				context.dictionary.`as` ->
-					leo(TypeParser(AsTypeEnder(this), null, context.dictionary, type()))
+					leo(TypeParser(AsTypeParserParent(this), null, context.dictionary, type()))
 				context.dictionary.`do` ->
 					compiled.typed.action.let { action ->
-						leo(CompiledParser(ActionDoEnder(this, action), context, compiled.begin))
+						leo(CompiledParser(ActionDoParserParent(this, action), context, compiled.begin))
 					}
 				context.dictionary.give ->
-					leo(CompiledParser(GiveEnder(this), context, compiled.begin))
+					leo(CompiledParser(GiveCompiledParserParent(this), context, compiled.begin))
 				else ->
 					CompiledParserLeo(
 						CompiledParser(
-							FieldCompiledEnder(this, token.begin.string),
+							FieldCompiledParserParent(this, token.begin.string),
 							context,
 							compiled.begin))
 			}
-		is EndToken -> ender?.end(compiled)
+		is EndToken -> parent?.end(compiled)
 	} ?: error("$this.parse($token)")
 
-fun <T> CompiledEnder<T>.end(compiled: Compiled<T>): Leo<T> =
+fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Leo<T> =
 	when (this) {
-		is FieldCompiledEnder ->
+		is FieldCompiledParserParent ->
 			leo(compiledParser.resolve(line(name fieldTo compiled.typed)))
-		is ActionDoesEnder ->
+		is ActionDoesParserParent ->
 			leo(ActionParser(compiledParser, type does compiled.typed))
-		is ActionDoEnder ->
+		is ActionDoParserParent ->
 			leo(compiledParser.updateCompiled { updateTyped { action.resolve(compiled.typed)!! } })
-		is GiveEnder ->
+		is GiveCompiledParserParent ->
 			leo(compiledParser.updateCompiled { updateTyped { compiled.typed } })
 	}
 

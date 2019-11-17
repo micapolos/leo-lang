@@ -6,13 +6,13 @@ import leo14.typed.Action
 import leo14.typed.plus
 
 data class ActionParser<T>(
-	val compiledParser: CompiledParser<T>,
+	val parentCompiledParser: CompiledParser<T>,
 	val action: Action<T>)
 
 fun <T> ActionParser<T>.parse(token: Token): Leo<T> =
 	if (token is EndToken)
 		leo(
-			compiledParser.updateCompiled {
+			parentCompiledParser.updateCompiled {
 				updateTyped {
 					plus(action)
 				}
