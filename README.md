@@ -1,2 +1,2 @@
 # leo-lang
-Leo language
+Leonardo programming language
