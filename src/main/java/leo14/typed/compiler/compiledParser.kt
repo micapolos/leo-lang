@@ -41,6 +41,8 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 					leo(NothingParser(this))
 				context.dictionary.remember ->
 					leo(TypeParser(null, RememberTypeBeginner(this), context.dictionary, type()))
+				context.dictionary.forget ->
+					leo(TypeParser(ForgetTypeParserParent(this), null, context.dictionary, type()))
 				else ->
 					CompiledParserLeo(
 						CompiledParser(

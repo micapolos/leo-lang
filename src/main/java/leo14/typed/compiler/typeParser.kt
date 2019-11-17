@@ -14,6 +14,7 @@ data class LineTypeParserParent<T>(val typeParser: TypeParser<T>, val name: Stri
 data class ArrowGivingTypeParserParent<T>(val typeParser: TypeParser<T>, val lhsType: Type) : TypeParserParent<T>()
 data class OptionTypeParserParent<T>(val choiceParser: ChoiceParser<T>, val name: String) : TypeParserParent<T>()
 data class AsTypeParserParent<T>(val compiledParser: CompiledParser<T>) : TypeParserParent<T>()
+data class ForgetTypeParserParent<T>(val compiledParser: CompiledParser<T>) : TypeParserParent<T>()
 
 sealed class TypeBeginner<T>
 data class ActionDoesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
@@ -88,5 +89,7 @@ fun <T> TypeParserParent<T>.end(type: Type): Leo<T>? =
 			leo(choiceParser.plus(name optionTo type))
 		is AsTypeParserParent ->
 			leo(compiledParser.updateCompiled { updateTyped { `as`(type) } })
+		is ForgetTypeParserParent ->
+			leo(compiledParser.updateCompiled { updateMemory { plus(forget(type)) } })
 	}
 

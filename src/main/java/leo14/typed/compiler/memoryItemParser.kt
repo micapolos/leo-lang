@@ -11,7 +11,7 @@ fun <T> MemoryItemParser<T>.parse(token: Token): Leo<T> =
 	if (token is EndToken)
 		leo(
 			parentCompiledParser.updateCompiled {
-				copy(memory = memory.plus(memoryItem))
+				updateMemory { plus(memoryItem) }
 			}
 		)
 	else

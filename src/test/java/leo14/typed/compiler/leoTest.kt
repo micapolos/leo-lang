@@ -234,4 +234,11 @@ class TypeParserTest {
 								type("zero") does typed<Native>(id(), type("zero")).resolveWrap("done"),
 								needsInvoke = true)))))
 	}
+
+	@Test
+	fun compiledForget() {
+		leo(compiled(typed()))
+			.parse(script("forget" lineTo script("zero")))
+			.assertEqualTo(leo(compiled(typed(), memory(forget(type("zero"))))))
+	}
 }
