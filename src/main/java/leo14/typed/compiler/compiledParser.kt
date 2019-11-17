@@ -35,6 +35,8 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 					leo(CompiledParser(GiveCompiledParserParent(this), context, compiled.begin))
 				context.dictionary.delete ->
 					leo(DeleteParser(this))
+				context.dictionary.nothing ->
+					leo(NothingParser(this))
 				else ->
 					CompiledParserLeo(
 						CompiledParser(

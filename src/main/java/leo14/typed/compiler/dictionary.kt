@@ -15,6 +15,7 @@ data class Dictionary(
 	val it: String,
 	val match: String,
 	val native: String,
+	val nothing: String,
 	val remember: String)
 
 val englishDictionary = Dictionary(
@@ -32,6 +33,7 @@ val englishDictionary = Dictionary(
 	it = "it",
 	match = "match",
 	native = "native",
+	nothing = "nothing",
 	remember = "remember")
 
 val polishDictionary = Dictionary(
@@ -49,6 +51,7 @@ val polishDictionary = Dictionary(
 	it = "że",
 	match = "wybierz",
 	native = "natywny",
+	nothing = "nic",
 	remember = "zapamiętaj")
 
 val defaultDictionary = englishDictionary

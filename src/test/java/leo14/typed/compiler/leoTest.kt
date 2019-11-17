@@ -85,6 +85,13 @@ class TypeParserTest {
 	}
 
 	@Test
+	fun compiledNothing() {
+		leo(compiled(typed("zero")))
+			.parse(script("nothing"))
+			.assertEqualTo(leo(compiled(typed("zero"))))
+	}
+
+	@Test
 	fun compiledResolve() {
 		val compiled = compiled(
 			typed(
