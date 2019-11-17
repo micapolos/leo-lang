@@ -5,32 +5,36 @@ import leo13.Stack
 import leo13.fold
 import leo13.reverse
 
-sealed class Script
+sealed class Script {
+	override fun toString() = string(0.indent)
+}
 
 data class UnitScript(val unit: Unit) : Script() {
-	override fun toString() = ""
+	override fun toString() = super.toString()
 }
 
 data class LinkScript(val link: ScriptLink) : Script() {
-	override fun toString() = link.toString()
+	override fun toString() = super.toString()
 }
 
-sealed class ScriptLine
+sealed class ScriptLine {
+	override fun toString() = string(0.indent)
+}
 
 data class LiteralScriptLine(val literal: Literal) : ScriptLine() {
-	override fun toString() = literal.toString()
+	override fun toString() = super.toString()
 }
 
 data class FieldScriptLine(val field: ScriptField) : ScriptLine() {
-	override fun toString() = field.toString()
+	override fun toString() = super.toString()
 }
 
 data class ScriptLink(val lhs: Script, val line: ScriptLine) {
-	override fun toString() = "$lhs$line"
+	override fun toString() = string(0.indent)
 }
 
 data class ScriptField(val string: String, val rhs: Script) {
-	override fun toString() = "$string($rhs)"
+	override fun toString() = string(0.indent)
 }
 
 fun script(unit: Unit): Script = UnitScript(unit)
@@ -142,3 +146,27 @@ fun ScriptField.string(indent: Indent): String =
 			if (rhs.link.lhs.isEmpty || rhs.link.isSimple) "$string: ${rhs.string(indent)}"
 			else "$string\n${indent.inc.string}${rhs.string(indent.inc)}"
 	}
+
+// == Core string
+
+val Script.coreString: String
+	get() =
+		when (this) {
+			is UnitScript -> ""
+			is LinkScript -> link.coreString
+		}
+
+val ScriptLink.coreString: String
+	get() =
+		"${lhs.coreString}${line.coreString}"
+
+val ScriptLine.coreString: String
+	get() =
+		when (this) {
+			is LiteralScriptLine -> literal.toString()
+			is FieldScriptLine -> field.coreString
+		}
+
+val ScriptField.coreString: String
+	get() =
+		"$string(${rhs.coreString})"

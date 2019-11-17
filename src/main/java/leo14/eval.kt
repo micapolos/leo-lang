@@ -5,7 +5,7 @@ import leo14.typed.compiler.*
 
 val String.eval: String
 	get() =
-		compile(this).nativeEval.nativeDecompile.toString()
+		compile(this).nativeEval.nativeDecompile.coreString
 
 val Script.eval: Script
 	get() =
