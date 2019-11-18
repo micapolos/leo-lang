@@ -37,3 +37,11 @@ fun parseString(string: String): String =
 	stringParser
 		.parse(string)!!
 		.string
+
+val StringParser.coreString
+	get() =
+		when (this) {
+			is BeginStringParser -> ""
+			is CharStackStringParser -> "\"" + StringBuilder().fold(charStack.reverse) { append(it) }.toString()
+			is EndStringParser -> "\"" + string + "\""
+		}

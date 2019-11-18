@@ -2,20 +2,21 @@ package leo14.typed.compiler
 
 import leo.base.ifNotNull
 import leo14.*
-import leo14.typed.decompile
+import leo14.native.Native
+import leo14.typed.nativeDecompile
 
-fun <T> Processor<Token>.process(leo: Leo<T>): Processor<Token> =
+fun Processor<Token>.process(leo: Leo<Native>): Processor<Token> =
 	when (leo) {
 		is CompiledParserLeo -> process(leo.compiledParser)
 		else -> TODO()
 	}
 
-fun <T> Processor<Token>.process(compiledParser: CompiledParser<T>): Processor<Token> =
+fun Processor<Token>.process(compiledParser: CompiledParser<Native>): Processor<Token> =
 	this
 		.ifNotNull(compiledParser.parent) { process(it) }
-		.process(compiledParser.compiled.typed.decompile { error("") })
+		.process(compiledParser.compiled.typed.nativeDecompile)
 
-fun <T> Processor<Token>.process(compiledParserParent: CompiledParserParent<T>): Processor<Token> =
+fun Processor<Token>.process(compiledParserParent: CompiledParserParent<Native>): Processor<Token> =
 	when (compiledParserParent) {
 		is FieldCompiledParserParent ->
 			this

@@ -38,3 +38,11 @@ val LiteralParser.literal get() = literalOrNull!!
 
 fun parseLiteral(string: String) =
 	literalParser.fold(string) { parse(it)!! }.literal
+
+val LiteralParser.coreString: String
+	get() =
+		when (this) {
+			is BeginLiteralParser -> ""
+			is StringLiteralParser -> stringParser.coreString
+			is IntLiteralParser -> intParser.coreString
+		}

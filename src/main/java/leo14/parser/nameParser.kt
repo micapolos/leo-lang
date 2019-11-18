@@ -25,3 +25,7 @@ val NameParser.isEmpty
 
 fun parseName(string: String): String =
 	nameParser.fold(string) { parse(it)!! }.nameOrNull!!
+
+val NameParser.coreString
+	get() =
+		nameOrNull ?: ""

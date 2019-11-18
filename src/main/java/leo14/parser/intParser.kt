@@ -43,3 +43,11 @@ val Char.digitIntOrNull: Int?
 
 fun parseInt(string: String): Int =
 	intParser.fold(string) { parse(it)!! }.int
+
+val IntParser.coreString
+	get() =
+		when (this) {
+			is BeginIntParser -> ""
+			is NegativeIntParser -> "-"
+			is SignedIntParser -> (if (int == 0 && isNegative) "-" else "") + int.toString()
+		}

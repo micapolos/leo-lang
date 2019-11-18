@@ -50,3 +50,12 @@ fun parseToken(string: String): Token =
 	tokenParser.fold(string) { parse(it)!! }.token
 
 val TokenParser.isEmpty get() = this is BeginTokenParser
+
+val TokenParser.coreString
+	get() =
+		when (this) {
+			is BeginTokenParser -> ""
+			is NameTokenParser -> nameParser.coreString
+			is EndTokenParser -> token.toString()
+			is LiteralTokenParser -> literalParser.coreString
+		}
