@@ -1,6 +1,7 @@
 package leo14.typed.compiler
 
 import leo14.lambda.arg0
+import leo14.lambda.eval
 import leo14.typed.*
 
 data class Compiled<T>(
@@ -30,6 +31,16 @@ fun <T> Compiled<T>.resolve(line: TypedLine<T>): Compiled<T> =
 			}
 	}
 
+fun <T> Compiled<T>.resolve(phase: Phase): Compiled<T> =
+	when (phase) {
+		Phase.COMPILER -> this
+		Phase.EVALUATOR -> eval
+	}
+
 val <T> Compiled<T>.resolveForEnd: Compiled<T>
 	get() =
 		compiled(memory.ret(typed))
+
+val <T> Compiled<T>.eval
+	get() =
+		updateTyped { resolveForEnd.typed.term.eval of typed.type }

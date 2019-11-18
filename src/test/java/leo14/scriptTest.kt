@@ -1,6 +1,7 @@
 package leo14
 
 import leo.base.assertEqualTo
+import leo13.assertContains
 import leo13.base.linesString
 import kotlin.test.Test
 
@@ -101,5 +102,27 @@ class ScriptTest {
 				"is" lineTo script("red")))
 			.indentString
 			.assertEqualTo("remember: my favourite color is: red")
+	}
+
+	@Test
+	fun tokenStack() {
+		script().tokenStack.assertContains()
+
+		script("foo").tokenStack.assertContains(token(begin("foo")), token(end))
+
+		script(
+			"point" lineTo script(
+				"x" lineTo script(literal(10.2)),
+				"y" lineTo script(literal(13.5))))
+			.tokenStack
+			.assertContains(
+				token(begin("point")),
+				token(begin("x")),
+				token(literal(10.2)),
+				token(end),
+				token(begin("y")),
+				token(literal(13.5)),
+				token(end),
+				token(end))
 	}
 }

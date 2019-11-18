@@ -3,6 +3,7 @@ package leo14.typed.compiler
 import leo14.*
 import leo14.native.Native
 import leo14.typed.Type
+import leo14.typed.typed
 
 sealed class Leo<T>
 
@@ -31,8 +32,10 @@ fun <T> leo(commentParser: CommentParser<T>): Leo<T> = CommentParserLeo(commentP
 fun leo(type: Type): Leo<Native> =
 	leo(TypeParser(null, null, englishDictionary, type))
 
-fun leo(compiled: Compiled<Native>): Leo<Native> =
-	CompiledParserLeo(CompiledParser(null, nativeContext, compiled))
+fun leo(compiled: Compiled<Native>, phase: Phase = Phase.COMPILER): Leo<Native> =
+	CompiledParserLeo(CompiledParser(null, nativeContext, phase, compiled))
+
+val emptyLeo: Leo<Native> = leo(compiled(typed()), Phase.EVALUATOR)
 
 fun <T> Leo<T>.parse(token: Token): Leo<T> =
 	parseStatic(token) ?: parseDynamic(token)

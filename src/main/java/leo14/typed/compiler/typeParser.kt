@@ -58,6 +58,7 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 						CompiledParser(
 							ActionDoesParserParent(compiledParser, type),
 							compiledParser.context,
+							Phase.COMPILER,
 							compiledParser.compiled.beginDoes(type)))
 				else -> null
 			}
@@ -68,12 +69,14 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 						CompiledParser(
 							RememberIsParserParent(compiledParser, type),
 							compiledParser.context,
+							compiledParser.phase,
 							compiledParser.compiled.begin))
 				dictionary.does ->
 					leo(
 						CompiledParser(
 							RememberDoesParserParent(compiledParser, type),
 							compiledParser.context,
+							Phase.COMPILER,
 							compiledParser.compiled.beginDoes(type)))
 				else -> null
 			}

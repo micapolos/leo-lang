@@ -9,6 +9,7 @@ import leo14.typed.*
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
 	val context: Context<T>,
+	val phase: Phase,
 	val compiled: Compiled<T>)
 
 sealed class CompiledParserParent<T>
@@ -31,10 +32,10 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 					leo(TypeParser(AsTypeParserParent(this), null, context.dictionary, type()))
 				context.dictionary.`do` ->
 					compiled.typed.action.let { action ->
-						leo(CompiledParser(ActionDoParserParent(this, action), context, compiled.begin))
+						leo(CompiledParser(ActionDoParserParent(this, action), context, phase, compiled.begin))
 					}
 				context.dictionary.give ->
-					leo(CompiledParser(GiveCompiledParserParent(this), context, compiled.begin))
+					leo(CompiledParser(GiveCompiledParserParent(this), context, phase, compiled.begin))
 				context.dictionary.delete ->
 					leo(DeleteParser(this))
 				context.dictionary.nothing ->
@@ -48,6 +49,7 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 						CompiledParser(
 							FieldCompiledParserParent(this, token.begin.string),
 							context,
+							phase,
 							compiled.begin))
 			}
 		is EndToken -> parent?.end(compiled.resolveForEnd)
@@ -70,7 +72,7 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Leo<T> =
 	}
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
-	copy(compiled = compiled.resolve(line))
+	copy(compiled = compiled.resolve(line).resolve(phase))
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
