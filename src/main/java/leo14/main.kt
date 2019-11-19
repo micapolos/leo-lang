@@ -8,9 +8,9 @@ import leo13.linkOrNull
 import leo13.push
 import leo13.stack
 import leo14.typed.compiler.CharLeo
+import leo14.typed.compiler.coreString
 import leo14.typed.compiler.emptyCharLeo
 import leo14.typed.compiler.put
-import leo14.typed.compiler.spacedString
 
 fun main() {
 	sttyPrivateMode()
@@ -25,15 +25,15 @@ fun main() {
 			stack.linkOrNull?.let { link ->
 				charLeo = link.value
 				stack = link.stack
-				print(charLeo.spacedString)
+				print(charLeo.coreString)
 			}
 		} else try {
 			val newCharLeo = charLeo.put(char.toChar())
 			stack = stack.push(charLeo)
 			charLeo = newCharLeo
-			print(charLeo.spacedString)
+			print(charLeo.coreString)
 		} catch (e: RuntimeException) {
-			println(charLeo.spacedString)
+			println(charLeo.coreString)
 			println("ERROR")
 			e.printStackTrace()
 		}

@@ -61,3 +61,12 @@ val SpacedTokenParser.spacedString: String
 			is LiteralSpacedTokenParser -> literalParser.spacedString
 			is NameSpacedTokenParser -> nameParser.spacedString
 		}
+
+val SpacedTokenParser.coreString: String
+	get() =
+		when (this) {
+			is NewSpacedTokenParser -> ""
+			is TokenSpacedTokenParser -> token.toString()
+			is LiteralSpacedTokenParser -> literalParser.coreString
+			is NameSpacedTokenParser -> nameParser.coreString
+		}
