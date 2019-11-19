@@ -36,7 +36,7 @@ fun Processor<Token>.process(arrow: Arrow, dictionary: Dictionary): Processor<To
 	this
 		.process(token(begin(dictionary.action)))
 		.process(arrow.lhs, dictionary)
-		.process(token(begin(dictionary.does)))
+		.process(token(begin(dictionary.giving)))
 		.process(arrow.rhs, dictionary)
 		.process(token(end))
 		.process(token(end))
@@ -45,7 +45,7 @@ fun Processor<Token>.process(action: Action<Native>, dictionary: Dictionary): Pr
 	this
 		.process(token(begin(dictionary.action)))
 		.process(action.param, dictionary)
-		.process(token(begin(dictionary.does)))
-		.process(action.body.nativeDecompile)
+		.process(token(begin(dictionary.giving)))
+		.process(action.body.type, dictionary)
 		.process(token(end))
 		.process(token(end))
