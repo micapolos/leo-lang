@@ -30,12 +30,4 @@ class NativeTest {
 					.invoke(typed.lineLink.tail.term)
 					.invoke(typed.lineLink.head.term) of type("int" fieldTo nativeType))
 	}
-
-	@Test
-	fun nativeEval() {
-		typed(native(123))
-			.plus("plus" lineTo typed(native(123)))
-			.nativeResolve
-			.assertEqualTo(null)
-	}
 }

@@ -41,13 +41,4 @@ class DecompileTest {
 			.nativeDecompile
 			.assertEqualTo(script(literal(123)))
 	}
-
-	@Test
-	fun nativeIntPlusInt() {
-		typed(native(123))
-			.plus("plus" lineTo typed(native(123)))
-			.nativeEval
-			.nativeDecompile
-			.assertEqualTo(script(literal(123)))
-	}
 }
