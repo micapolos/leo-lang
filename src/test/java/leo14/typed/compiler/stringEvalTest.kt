@@ -8,7 +8,7 @@ class StringEvalTest {
 	fun test() {
 		"point x zero   y one    "
 			.leoEval
-			.assertEqualTo("point(x(zero())y(one())))")
+			.assertEqualTo("point(x(zero())y(one()))")
 
 		"remember x  is y    x  "
 			.leoEval
