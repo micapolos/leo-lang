@@ -21,7 +21,7 @@ val Number.nativeTypedLine: TypedLine<Native>
 			is DoubleNumber -> line("double" fieldTo (term(native(double)) of nativeType))
 		}
 
-val Typed<Native>.nativeDecompile
+val Typed<Native>.decompile
 	get() =
 		decompile(TypedLine<Native>::decompileScriptLine)
 
@@ -67,3 +67,5 @@ fun typedLine(native: Native): TypedLine<Native> =
 
 fun typed(native: Native): Typed<Native> =
 	typed(typedLine(native))
+
+val Typed<Native>.eval get() = eval(Native::invoke)

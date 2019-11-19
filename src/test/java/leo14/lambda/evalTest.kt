@@ -22,6 +22,22 @@ class EvalTest {
 	}
 
 	@Test
+	fun invokeIgnoreArgument() {
+		fn(term("foo"))
+			.invoke(term("bar"))
+			.eval
+			.assertEqualTo(term("foo"))
+	}
+
+	@Test
+	fun innerInvoke() {
+		fn(arg0<String>().invoke(term("foo")))
+			.invoke(fn(term("bar")))
+			.eval
+			.assertEqualTo(term("bar"))
+	}
+
+	@Test
 	fun oneOf() {
 		fn(fn(arg1<Any>().invoke(term("foo"))))
 			.eval

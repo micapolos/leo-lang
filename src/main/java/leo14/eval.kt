@@ -2,7 +2,7 @@ package leo14
 
 import leo14.native.Native
 import leo14.typed.compiler.*
-import leo14.typed.nativeDecompile
+import leo14.typed.decompile
 import leo14.typed.typed
 
 val String.eval: String
@@ -16,4 +16,4 @@ val Script.eval: Script
 			.compiledParser
 			.compiled
 			.typed
-			.nativeDecompile
+			.decompile

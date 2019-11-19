@@ -12,14 +12,14 @@ class DecompileTest {
 	@Test
 	fun string() {
 		typed(native("Hello, world!"))
-			.nativeDecompile
+			.decompile
 			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test
 	fun field() {
 		typed("text" fieldTo typed(native("Hello, world!")))
-			.nativeDecompile
+			.decompile
 			.assertEqualTo(script("text" fieldTo literal("Hello, world!")))
 	}
 
@@ -28,7 +28,7 @@ class DecompileTest {
 		typed("vec" fieldTo typed(
 			"x" fieldTo typed(native(2.0)),
 			"y" fieldTo typed(native(3.0))))
-			.nativeDecompile
+			.decompile
 			.assertEqualTo(
 				script(
 					"vec" fieldTo script(
@@ -39,7 +39,7 @@ class DecompileTest {
 	@Test
 	fun nativeInt() {
 		typed(native(123))
-			.nativeDecompile
+			.decompile
 			.assertEqualTo(script(literal(123)))
 	}
 
@@ -48,7 +48,7 @@ class DecompileTest {
 		typed(
 			"x" lineTo typed(native(2)),
 			"y" lineTo typed(native(3)))
-			.nativeDecompile
+			.decompile
 			.assertEqualTo(
 				script(
 					"x" lineTo script(literal(2)),

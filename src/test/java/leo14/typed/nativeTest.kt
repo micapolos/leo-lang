@@ -30,4 +30,12 @@ class NativeTest {
 					.invoke(typed.lineLink.tail.term)
 					.invoke(typed.lineLink.head.term) of type("int" fieldTo nativeType))
 	}
+
+	@Test
+	fun evalNativeFields() {
+		val typed = typed(
+			"x" lineTo typed(native(1)),
+			"y" lineTo typed(native(2)))
+		typed.eval.assertEqualTo(typed)
+	}
 }

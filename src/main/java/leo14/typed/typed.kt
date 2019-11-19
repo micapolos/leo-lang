@@ -222,3 +222,6 @@ fun <T> typed(index: Index, type: Type) =
 
 fun <T> typed(term: Term<T>, type: Type) =
 	term of type
+
+fun <T> Typed<T>.eval(nativeInvoke: NativeApply<T>) =
+	term.eval(nativeInvoke) of type

@@ -33,6 +33,8 @@ fun <T> Value<T>.apply(rhs: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 fun <T> Term<T>.value(nativeApply: NativeApply<T>) = value(emptyScope(nativeApply))
 val <T> Term<T>.value get() = value(errorNativeApply())
 
-fun <T> Term<T>.eval(nativeApply: NativeApply<T>) = value(nativeApply).term
+val <T> Value<T>.evalTerm: Term<T> get() = term//.fold(scope.valueStack) { fn(this) }.fold(scope.valueStack.reverse) { invoke(it.evalTerm) }
+
+fun <T> Term<T>.eval(nativeApply: NativeApply<T>) = value(nativeApply).evalTerm
 val <T> Term<T>.eval get() = eval(errorNativeApply())
 

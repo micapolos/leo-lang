@@ -6,7 +6,7 @@ import leo13.fold
 import leo13.reverse
 import leo14.*
 import leo14.native.Native
-import leo14.typed.nativeDecompile
+import leo14.typed.decompile
 import leo14.typed.process
 
 val types = false
@@ -48,7 +48,7 @@ fun Processor<Token>.process(compiledParser: CompiledParser<Native>): Processor<
 		.run {
 			when (compiledParser.phase) {
 				Phase.COMPILER -> process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
-				Phase.EVALUATOR -> process(compiledParser.compiled.typed.nativeDecompile)
+				Phase.EVALUATOR -> process(compiledParser.compiled.typed.decompile)
 			}
 		}
 		.runIf(types) {
@@ -173,7 +173,7 @@ fun Processor<Token>.process(memoryItem: MemoryItem<Native>, dictionary: Diction
 					else dictionary.`is`)))
 				.run {
 					if (memoryItem.needsInvoke) process(memoryItem.action.body.type, dictionary)
-					else process(memoryItem.action.body.nativeDecompile)
+					else process(memoryItem.action.body.decompile)
 				}
 				.process(token(end))
 		else -> error("$this.process($memoryItem)")
