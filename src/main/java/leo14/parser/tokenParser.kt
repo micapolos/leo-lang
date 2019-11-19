@@ -19,8 +19,8 @@ fun TokenParser.parse(char: Char): TokenParser? =
 	when (this) {
 		is BeginTokenParser ->
 			null
-				?: nameParser.parse(char)?.let(::NameTokenParser)
-				?: literalParser.parse(char)?.let(::LiteralTokenParser)
+				?: newNameParser.parse(char)?.let(::NameTokenParser)
+				?: newLiteralParser.parse(char)?.let(::LiteralTokenParser)
 				?: notNullIf(char == ')') { EndTokenParser(token(end)) }
 		is NameTokenParser ->
 			when (char) {

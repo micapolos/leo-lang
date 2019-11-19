@@ -6,7 +6,7 @@ import leo13.*
 
 data class NameParser(val validCharStack: Stack<Char>)
 
-val nameParser = NameParser(stack())
+val newNameParser = NameParser(stack())
 
 fun NameParser.parse(char: Char): NameParser? =
 	notNullIf(char.isLetter() && char.isLowerCase()) {
@@ -24,7 +24,7 @@ val NameParser.isEmpty
 		validCharStack.isEmpty
 
 fun parseName(string: String): String =
-	nameParser.fold(string) { parse(it)!! }.nameOrNull!!
+	newNameParser.fold(string) { parse(it)!! }.nameOrNull!!
 
 val NameParser.coreString
 	get() =

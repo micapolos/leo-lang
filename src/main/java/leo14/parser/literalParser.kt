@@ -10,7 +10,7 @@ data class StringLiteralParser(val stringParser: StringParser) : LiteralParser()
 data class IntLiteralParser(val intParser: IntParser) : LiteralParser()
 // TODO: DoubleLiteralParser
 
-val literalParser: LiteralParser = BeginLiteralParser
+val newLiteralParser: LiteralParser = BeginLiteralParser
 fun literalParser(stringParser: StringParser): LiteralParser = StringLiteralParser(stringParser)
 fun literalParser(intParser: IntParser): LiteralParser = IntLiteralParser(intParser)
 
@@ -37,7 +37,7 @@ val LiteralParser.literalOrNull: Literal?
 val LiteralParser.literal get() = literalOrNull!!
 
 fun parseLiteral(string: String) =
-	literalParser.fold(string) { parse(it)!! }.literal
+	newLiteralParser.fold(string) { parse(it)!! }.literal
 
 val LiteralParser.coreString: String
 	get() =
