@@ -31,6 +31,8 @@ fun StringParser.parse(char: Char): StringParser? =
 fun StringParser.parse(string: String): StringParser? =
 	orNull.fold(string) { this?.parse(it) }
 
+val StringParser.stringOrNull get() = (this as? EndStringParser)?.string
+
 val StringParser.string get() = (this as EndStringParser).string
 
 fun parseString(string: String): String =

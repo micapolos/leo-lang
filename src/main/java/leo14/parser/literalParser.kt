@@ -30,8 +30,8 @@ val LiteralParser.literalOrNull: Literal?
 	get() =
 		when (this) {
 			is BeginLiteralParser -> null
-			is StringLiteralParser -> literal(stringParser.string)
-			is IntLiteralParser -> literal(intParser.int)
+			is StringLiteralParser -> stringParser.stringOrNull?.let { literal(it) }
+			is IntLiteralParser -> intParser.intOrNull?.let { literal(it) }
 		}
 
 val LiteralParser.literal get() = literalOrNull!!

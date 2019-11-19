@@ -11,6 +11,8 @@ data class SignedIntParser(val int: Int, val isNegative: Boolean) : IntParser()
 
 val intParser: IntParser = BeginIntParser
 
+val IntParser.intOrNull get() = (this as? SignedIntParser)?.int
+
 val IntParser.int get() = (this as SignedIntParser).int
 
 fun IntParser.parse(char: Char): IntParser? =

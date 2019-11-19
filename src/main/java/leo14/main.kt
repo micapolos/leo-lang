@@ -1,5 +1,8 @@
 package leo14
 
+import leo.ansi
+import leo.clear
+import leo.home
 import leo.java.lang.sttyPrivateMode
 import leo13.linkOrNull
 import leo13.push
@@ -13,10 +16,10 @@ fun main() {
 	sttyPrivateMode()
 	var stack = stack<CharLeo>()
 	var charLeo = emptyCharLeo
-	print("\u001B[2J\u001B[Hleo14> ")
+	print("${ansi.clear}${ansi.home}leo14> ")
 	while (true) {
 		val char = System.`in`.read()
-		print("\u001B[2J\u001B[Hleo14> ")
+		print("${ansi.clear}${ansi.home}leo14> ")
 		if (char == -1) break
 		if (char == 127) {
 			stack.linkOrNull?.let { link ->
@@ -30,8 +33,9 @@ fun main() {
 			charLeo = newCharLeo
 			print(charLeo.string)
 		} catch (e: RuntimeException) {
-			print(charLeo.string)
-			print("ERROR")
+			println(charLeo.string)
+			println("ERROR")
+			e.printStackTrace()
 		}
 	}
 }
