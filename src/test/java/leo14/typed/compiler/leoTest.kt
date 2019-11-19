@@ -5,7 +5,9 @@ import leo13.index0
 import leo14.lambda.arg0
 import leo14.lambda.id
 import leo14.lambda.invoke
+import leo14.line
 import leo14.lineTo
+import leo14.literal
 import leo14.native.Native
 import leo14.native.native
 import leo14.script
@@ -264,5 +266,25 @@ class TypeParserTest {
 					compiled(
 						typed<Native>("zero")
 							.`as`(type(choice("zero", "one"))))))
+	}
+
+	@Test
+	fun compileLiteral() {
+		leo(compiled(typed()))
+			.parse(script(literal(123)))
+			.assertEqualTo(leo(compiled(typed(native(123)))))
+	}
+
+	@Test
+	fun compileIntNativePlus() {
+		leo(compiled(typed()))
+			.parse(
+				script(
+					line(literal(123)),
+					"plus" lineTo script(literal(123))))
+			.assertEqualTo(
+				leo(
+					compiled(
+						typed(native(123)).plus("plus" lineTo typed(native(123))))))
 	}
 }

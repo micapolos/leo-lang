@@ -34,4 +34,20 @@ class DecompileTest {
 						"x" fieldTo literal(2.0),
 						"y" fieldTo literal(3.0))))
 	}
+
+	@Test
+	fun nativeInt() {
+		typed(native(123))
+			.nativeDecompile
+			.assertEqualTo(script(literal(123)))
+	}
+
+	@Test
+	fun nativeIntPlusInt() {
+		typed(native(123))
+			.plus("plus" lineTo typed(native(123)))
+			.nativeEval
+			.nativeDecompile
+			.assertEqualTo(script(literal(123)))
+	}
 }

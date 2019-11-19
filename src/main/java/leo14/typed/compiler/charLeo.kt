@@ -21,7 +21,7 @@ fun CharLeo.put(char: Char): CharLeo =
 			parsedTokenParser
 				.tokenOrNull
 				?.let { token ->
-					if (newTokenParser.canContinue) CharLeo(parsedTokenParser, leo)
+					if (parsedTokenParser.canContinue) CharLeo(parsedTokenParser, leo)
 					else CharLeo(newTokenParser, leo.parse(token))
 				}
 				?: CharLeo(parsedTokenParser, leo)
