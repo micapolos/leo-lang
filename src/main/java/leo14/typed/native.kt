@@ -4,17 +4,8 @@ import leo14.*
 import leo14.Number
 import leo14.lambda.invoke
 import leo14.lambda.native
-import leo14.lambda.nativeEval
 import leo14.lambda.term
 import leo14.native.*
-import leo14.typed.compiler.Compiler
-import leo14.typed.compiler.compile
-import leo14.typed.compiler.nativeCompiler
-import leo14.typed.compiler.typed
-
-val Typed<Native>.nativeEval
-	get() =
-		term.nativeEval of type
 
 val Literal.nativeTypedLine: TypedLine<Native>
 	get() =
@@ -30,10 +21,6 @@ val Number.nativeTypedLine: TypedLine<Native>
 			is DoubleNumber -> line("double" fieldTo (term(native(double)) of nativeType))
 		}
 
-val Script.nativeCompile: Compiler<Native>
-	get() =
-		nativeCompiler.compile(this)
-
 val Typed<Native>.nativeDecompile
 	get() =
 		decompile(TypedLine<Native>::decompileScriptLine)
@@ -46,10 +33,6 @@ val TypedLine<Native>.decompileScriptLine: Literal?
 			line("double" fieldTo nativeType) -> term.native.literal
 			else -> null
 		}
-
-val Script.nativeEval: Script
-	get() =
-		nativeCompile.typed.nativeEval.nativeDecompile
 
 val Typed<Native>.nativeResolve: Typed<Native>?
 	get() =

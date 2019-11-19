@@ -1,8 +1,6 @@
 package leo14
 
 import leo.base.assertEqualTo
-import leo14.typed.compiler.polishDictionary
-import leo14.typed.nativeEval
 import kotlin.test.Test
 
 class EvalTest {
@@ -149,7 +147,7 @@ class EvalTest {
 	fun rememberItIsAndRemind() {
 		script(
 			"remember" lineTo script(
-				"it" lineTo script("zero"),
+				"zero" lineTo script(),
 				"is" lineTo script("one")),
 			"zero" lineTo script())
 			.eval
@@ -172,21 +170,20 @@ class EvalTest {
 	fun simulateHasUsingRememberItIs() {
 		script(
 			"remember" lineTo script(
-				"it" lineTo script("zero"),
+				"zero" lineTo script(),
 				"is" lineTo script(
 					"zero" lineTo script(),
 					"as" lineTo script(
 						"choice" lineTo script("zero", "one")))),
 			"remember" lineTo script(
-				"it" lineTo script("one"),
+				"one" lineTo script(),
 				"is" lineTo script(
 					"one" lineTo script(),
 					"as" lineTo script(
 						"choice" lineTo script("zero", "one")))),
 			"remember" lineTo script(
-				"it" lineTo script(
-					"choice" lineTo script("zero", "one"),
-					"type" lineTo script()),
+				"choice" lineTo script("zero", "one"),
+				"type" lineTo script(),
 				"is" lineTo script(
 					"bit" lineTo script())),
 			"zero" lineTo script(),
@@ -196,34 +193,23 @@ class EvalTest {
 	}
 
 	@Test
-	fun evalUsingPolish() {
-		script(
-			"zapamiętaj" lineTo script(
-				"że" lineTo script("zero"),
-				"to" lineTo script("jeden")),
-			"zero" lineTo script())
-			.evalUsing(polishDictionary)
-			.assertEqualTo(script("jeden"))
-	}
-
-	@Test
 	fun evalNativeString() {
 		script(line(literal("foo")))
-			.nativeEval
+			.eval
 			.assertEqualTo(script(literal("foo")))
 	}
 
 	@Test
 	fun evalNativeInt() {
 		script(line(literal(2)))
-			.nativeEval
+			.eval
 			.assertEqualTo(script(literal(2)))
 	}
 
 	@Test
 	fun evalNativeDouble() {
 		script(line(literal(2.0)))
-			.nativeEval
+			.eval
 			.assertEqualTo(script(literal(2.0)))
 	}
 
@@ -232,7 +218,7 @@ class EvalTest {
 		script(
 			line(literal(2)),
 			"plus" lineTo script(literal(3)))
-			.nativeEval
+			.eval
 			.assertEqualTo(script(literal(5)))
 	}
 
@@ -241,7 +227,7 @@ class EvalTest {
 		script(
 			line(literal(2.0)),
 			"plus" lineTo script(literal(3.0)))
-			.nativeEval
+			.eval
 			.assertEqualTo(script(literal(5.0)))
 	}
 }
