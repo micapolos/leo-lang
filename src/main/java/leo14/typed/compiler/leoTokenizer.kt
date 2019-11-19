@@ -53,7 +53,7 @@ fun Processor<Token>.process(parser: TypeParser<Native>): Processor<Token> =
 fun Processor<Token>.process(parser: DeleteParser<Native>): Processor<Token> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.nothing)))
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.delete)))
 
 fun Processor<Token>.process(parser: NativeParser<Native>): Processor<Token> =
 	this
@@ -62,7 +62,7 @@ fun Processor<Token>.process(parser: NativeParser<Native>): Processor<Token> =
 
 fun Processor<Token>.process(parser: NothingParser<Native>): Processor<Token> =
 	process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.delete)))
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.nothing)))
 
 fun Processor<Token>.process(parser: CommentParser<Native>): Processor<Token> =
 	this
@@ -97,7 +97,10 @@ fun Processor<Token>.process(parent: CompiledParserParent<Native>): Processor<To
 				.process(token(begin(parent.compiledParser.context.dictionary.remember)))
 				.process(parent.type, parent.compiledParser.context.dictionary)
 				.process(token(begin(parent.compiledParser.context.dictionary.does)))
-		else -> error("$this.process($parent)")
+		is GiveCompiledParserParent ->
+			this
+				.process(parent.compiledParser)
+				.process(token(begin(parent.compiledParser.context.dictionary.give)))
 	}
 
 fun Processor<Token>.process(parent: TypeParserParent<Native>): Processor<Token> =
