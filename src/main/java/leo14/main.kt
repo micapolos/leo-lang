@@ -10,7 +10,7 @@ import leo13.stack
 import leo14.typed.compiler.CharLeo
 import leo14.typed.compiler.emptyCharLeo
 import leo14.typed.compiler.put
-import leo14.typed.compiler.string
+import leo14.typed.compiler.spacedString
 
 fun main() {
 	sttyPrivateMode()
@@ -25,15 +25,15 @@ fun main() {
 			stack.linkOrNull?.let { link ->
 				charLeo = link.value
 				stack = link.stack
-				print(charLeo.string)
+				print(charLeo.spacedString)
 			}
 		} else try {
 			val newCharLeo = charLeo.put(char.toChar())
 			stack = stack.push(charLeo)
 			charLeo = newCharLeo
-			print(charLeo.string)
+			print(charLeo.spacedString)
 		} catch (e: RuntimeException) {
-			println(charLeo.string)
+			println(charLeo.spacedString)
 			println("ERROR")
 			e.printStackTrace()
 		}

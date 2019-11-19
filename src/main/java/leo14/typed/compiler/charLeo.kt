@@ -7,12 +7,13 @@ import leo14.map
 import leo14.native.Native
 import leo14.parser.*
 import leo14.processorString
+import leo14.spacedString
 
 data class CharLeo(
-	val tokenParser: TokenParser,
+	val tokenParser: SpacedTokenParser,
 	val leo: Leo<Native>)
 
-val emptyCharLeo = CharLeo(newTokenParser, emptyLeo)
+val emptyCharLeo = CharLeo(newSpacedTokenParser, emptyLeo)
 
 fun CharLeo.put(char: Char): CharLeo =
 	tokenParser
@@ -22,24 +23,24 @@ fun CharLeo.put(char: Char): CharLeo =
 				.tokenOrNull
 				?.let { token ->
 					if (parsedTokenParser.canContinue) CharLeo(parsedTokenParser, leo)
-					else CharLeo(newTokenParser, leo.parse(token))
+					else CharLeo(newSpacedTokenParser, leo.parse(token))
 				}
 				?: CharLeo(parsedTokenParser, leo)
 		}
 		.orIfNull {
 			tokenParser
 				.tokenOrNull
-				?.let { token -> CharLeo(newTokenParser, leo.parse(token)).put(char) }
+				?.let { token -> CharLeo(newSpacedTokenParser, leo.parse(token)).put(char) }
 				?: error("$this.put($char)")
 		}
 
 fun CharLeo.put(string: String) =
 	fold(string) { put(it) }
 
-val CharLeo.string: String
+val CharLeo.spacedString: String
 	get() =
 		processorString {
-			map<String, Token> { it.toString() }.process(leo)
-		} + tokenParser.coreString
+			map<String, Token> { it.spacedString }.process(leo)
+		} + tokenParser.spacedString
 
-val String.leoEval get() = emptyCharLeo.put(this).string
+val String.leoEval get() = emptyCharLeo.put(this).spacedString

@@ -6,12 +6,12 @@ import kotlin.test.Test
 class StringEvalTest {
 	@Test
 	fun test() {
-		"point(x(zero())y(one()))"
+		"point x zero   y one    "
 			.leoEval
-			.assertEqualTo("point(x(zero())y(one()))")
+			.assertEqualTo("point x zero   y one    ")
 
-		"remember(x()is(y()))x()"
+		"remember x  is y    x  "
 			.leoEval
-			.assertEqualTo("y()")
+			.assertEqualTo("y  ")
 	}
 }

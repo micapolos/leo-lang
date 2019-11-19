@@ -47,6 +47,10 @@ val LiteralParser.coreString: String
 			is IntLiteralParser -> intParser.coreString
 		}
 
+val LiteralParser.spacedString: String
+	get() =
+		coreString
+
 val LiteralParser.canContinue
 	get() =
 		this is IntLiteralParser

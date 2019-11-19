@@ -29,3 +29,7 @@ fun parseName(string: String): String =
 val NameParser.coreString
 	get() =
 		nameOrNull ?: ""
+
+val NameParser.spacedString
+	get() =
+		nameOrNull ?: ""

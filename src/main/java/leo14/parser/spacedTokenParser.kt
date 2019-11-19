@@ -1,10 +1,7 @@
 package leo14.parser
 
 import leo.base.fold
-import leo14.Token
-import leo14.begin
-import leo14.end
-import leo14.token
+import leo14.*
 
 sealed class SpacedTokenParser
 object NewSpacedTokenParser : SpacedTokenParser()
@@ -55,3 +52,12 @@ val SpacedTokenParser.tokenOrNull: Token?
 val String.spacedToken
 	get() =
 		newSpacedTokenParser.fold(this) { parse(it)!! }.tokenOrNull!!
+
+val SpacedTokenParser.spacedString: String
+	get() =
+		when (this) {
+			is NewSpacedTokenParser -> ""
+			is TokenSpacedTokenParser -> token.spacedString
+			is LiteralSpacedTokenParser -> literalParser.spacedString
+			is NameSpacedTokenParser -> nameParser.spacedString
+		}
