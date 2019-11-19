@@ -46,3 +46,7 @@ val LiteralParser.coreString: String
 			is StringLiteralParser -> stringParser.coreString
 			is IntLiteralParser -> intParser.coreString
 		}
+
+val LiteralParser.canContinue
+	get() =
+		this is IntLiteralParser

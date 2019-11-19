@@ -11,7 +11,7 @@ data class CompilerParser<T>(
 	val compiler: Compiler<T>,
 	val accTokenParser: TokenParser)
 
-val nativeCompilerParser = CompilerParser(nativeCompiler, tokenParser)
+val nativeCompilerParser = CompilerParser(nativeCompiler, newTokenParser)
 
 fun <T> CompilerParser<T>.parse(char: Char): CompilerParser<T> =
 	accTokenParser
@@ -20,7 +20,7 @@ fun <T> CompilerParser<T>.parse(char: Char): CompilerParser<T> =
 		.let { newTokenParser ->
 			newTokenParser
 				.tokenOrNull
-				?.let { token -> CompilerParser(compiler.compile(token), tokenParser) }
+				?.let { token -> CompilerParser(compiler.compile(token), leo14.parser.newTokenParser) }
 				?: CompilerParser(compiler, newTokenParser)
 		}
 

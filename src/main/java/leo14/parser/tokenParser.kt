@@ -13,7 +13,7 @@ data class NameTokenParser(val nameParser: NameParser) : TokenParser()
 data class EndTokenParser(val token: Token) : TokenParser()
 data class LiteralTokenParser(val literalParser: LiteralParser) : TokenParser()
 
-val tokenParser: TokenParser = BeginTokenParser
+val newTokenParser: TokenParser = BeginTokenParser
 
 fun TokenParser.parse(char: Char): TokenParser? =
 	when (this) {
@@ -47,7 +47,7 @@ val TokenParser.token
 		tokenOrNull!!
 
 fun parseToken(string: String): Token =
-	tokenParser.fold(string) { parse(it)!! }.token
+	newTokenParser.fold(string) { parse(it)!! }.token
 
 val TokenParser.isEmpty get() = this is BeginTokenParser
 
@@ -59,3 +59,7 @@ val TokenParser.coreString
 			is EndTokenParser -> token.toString()
 			is LiteralTokenParser -> literalParser.coreString
 		}
+
+val TokenParser.canContinue
+	get() =
+		(this is LiteralTokenParser) && literalParser.canContinue
