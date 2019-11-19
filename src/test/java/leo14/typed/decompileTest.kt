@@ -2,6 +2,7 @@ package leo14.typed
 
 import leo.base.assertEqualTo
 import leo14.fieldTo
+import leo14.lineTo
 import leo14.literal
 import leo14.native.native
 import leo14.script
@@ -40,5 +41,17 @@ class DecompileTest {
 		typed(native(123))
 			.nativeDecompile
 			.assertEqualTo(script(literal(123)))
+	}
+
+	@Test
+	fun nativeFields() {
+		typed(
+			"x" lineTo typed(native(2)),
+			"y" lineTo typed(native(3)))
+			.nativeDecompile
+			.assertEqualTo(
+				script(
+					"x" lineTo script(literal(2)),
+					"y" lineTo script(literal(3))))
 	}
 }
