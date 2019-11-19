@@ -11,7 +11,7 @@ fun Processor<Token>.process(type: Type, dictionary: Dictionary): Processor<Toke
 
 fun Processor<Token>.process(line: Line, dictionary: Dictionary): Processor<Token> =
 	when (line) {
-		is NativeLine -> error("$this.process($line)")
+		is NativeLine -> process(script(dictionary.native))
 		is FieldLine -> process(line.field, dictionary)
 		is ChoiceLine -> process(line.choice, dictionary)
 		is ArrowLine -> process(line.arrow, dictionary)
@@ -44,8 +44,7 @@ fun Processor<Token>.process(arrow: Arrow, dictionary: Dictionary): Processor<To
 fun Processor<Token>.process(action: Action<Native>, dictionary: Dictionary): Processor<Token> =
 	this
 		.process(token(begin(dictionary.action)))
+		.process(token(begin(dictionary.doing)))
 		.process(action.param, dictionary)
-		.process(token(begin(dictionary.giving)))
-		.process(action.body.type, dictionary)
 		.process(token(end))
 		.process(token(end))

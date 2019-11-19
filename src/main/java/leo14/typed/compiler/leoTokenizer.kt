@@ -1,12 +1,15 @@
 package leo14.typed.compiler
 
 import leo.base.ifNotNull
+import leo.base.runIf
 import leo13.fold
 import leo13.reverse
 import leo14.*
 import leo14.native.Native
 import leo14.typed.nativeDecompile
 import leo14.typed.process
+
+val types = false
 
 fun Processor<Token>.process(leo: Leo<Native>): Processor<Token> =
 	when (leo) {
@@ -42,7 +45,18 @@ fun Processor<Token>.process(parser: ChoiceParser<Native>): Processor<Token> =
 fun Processor<Token>.process(compiledParser: CompiledParser<Native>): Processor<Token> =
 	this
 		.ifNotNull(compiledParser.parent) { process(it) }
-		.process(compiledParser.compiled.typed.nativeDecompile)
+		.run {
+			when (compiledParser.phase) {
+				Phase.COMPILER -> process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
+				Phase.EVALUATOR -> process(compiledParser.compiled.typed.nativeDecompile)
+			}
+		}
+		.runIf(types) {
+			this
+				.process(token(begin(compiledParser.context.dictionary.`as`)))
+				.process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
+				.process(token(end))
+		}
 
 fun Processor<Token>.process(parser: TypeParser<Native>): Processor<Token> =
 	this
@@ -157,7 +171,10 @@ fun Processor<Token>.process(memoryItem: MemoryItem<Native>, dictionary: Diction
 				.process(token(begin(
 					if (memoryItem.needsInvoke) dictionary.does
 					else dictionary.`is`)))
-				.process(memoryItem.action.body.nativeDecompile)
+				.run {
+					if (memoryItem.needsInvoke) process(memoryItem.action.body.type, dictionary)
+					else process(memoryItem.action.body.nativeDecompile)
+				}
 				.process(token(end))
 		else -> error("$this.process($memoryItem)")
 	}

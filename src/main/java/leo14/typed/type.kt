@@ -3,6 +3,7 @@ package leo14.typed
 import leo.base.fold
 import leo13.*
 import leo14.*
+import leo14.typed.compiler.defaultDictionary
 
 data class Type(val lineStack: Stack<Line>) {
 	override fun toString() = script.toString()
@@ -149,3 +150,9 @@ fun Type.checkIs(other: Type): Type =
 val Choice.countIndex: Index
 	get() =
 		index0.fold(optionStack) { next }
+
+val Type.coreString: String
+	get() =
+		processorString {
+			map<String, Token> { it.coreString }.process(this@coreString, defaultDictionary)
+		}

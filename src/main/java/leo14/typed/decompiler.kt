@@ -20,8 +20,7 @@ fun <T> TypedLine<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =
 			is NativeLine -> error("$this as NativeTerm")
 			is FieldLine -> (term of line.field).decompileLine(fn)
 			is ChoiceLine -> (term of line.choice).decompileLine(fn)
-			is ArrowLine -> "action" lineTo
-				line.arrow.lhs.script.plus("gives" lineTo line.arrow.rhs.script)
+			is ArrowLine -> "action" lineTo script("doing" lineTo line.arrow.lhs.script)
 		}
 
 fun <T> TypedChoice<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =

@@ -62,7 +62,7 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Leo<T> =
 		is ActionDoesParserParent ->
 			leo(ActionParser(compiledParser, type does compiled.typed))
 		is ActionDoParserParent ->
-			leo(compiledParser.updateCompiled { updateTyped { action.resolve(compiled.typed)!! } })
+			leo(compiledParser.updateCompiled { updateTyped { action.`do`(compiled.typed) } })
 		is GiveCompiledParserParent ->
 			leo(compiledParser.updateCompiled { updateTyped { compiled.typed } })
 		is RememberDoesParserParent ->
