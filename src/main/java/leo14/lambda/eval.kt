@@ -19,7 +19,8 @@ fun <T> Term<T>.value(scope: Scope<T>): Value<T> =
 	when (this) {
 		is NativeTerm -> value(scope, this)
 		is AbstractionTerm -> value(scope, this)
-		is ApplicationTerm -> application.lhs.value(scope).apply(application.rhs.value(scope), scope.nativeApply)
+		is ApplicationTerm -> application.lhs.value(scope)
+			.apply(application.rhs.value(scope), scope.nativeApply)
 		is VariableTerm -> scope[variable.index]
 	}
 
