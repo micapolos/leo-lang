@@ -61,7 +61,9 @@ class EvalTest {
 
 	@Test
 	fun oneOfId() {
-		fn(fn(arg1<Any>()(id())))(id())(id())
+		fn(fn(arg1<Any>().invoke(id())))
+			.invoke(id())
+			.invoke(id())
 			.eval
 			.assertEqualTo(id())
 	}

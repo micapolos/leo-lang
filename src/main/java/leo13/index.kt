@@ -36,3 +36,14 @@ tailrec operator fun Index.plus(int: Int): Index =
 	else next.plus(int.dec())
 
 fun index(int: Int): Index = int.index
+
+// TODO: Make it tail-recursive
+fun Index.max(index: Index): Index =
+	when (this) {
+		is ZeroIndex -> index
+		is NextIndex ->
+			when (index) {
+				is ZeroIndex -> this
+				is NextIndex -> previous.max(index.previous).next
+			}
+	}
