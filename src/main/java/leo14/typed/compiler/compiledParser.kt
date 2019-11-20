@@ -72,7 +72,7 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Leo<T> =
 	}
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
-	copy(compiled = compiled.resolve(line).resolve(phase, context.nativeApply))
+	copy(compiled = compiled.resolve(line, context).resolve(phase, context.nativeApply))
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())

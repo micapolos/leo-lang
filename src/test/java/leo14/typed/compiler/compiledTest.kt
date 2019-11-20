@@ -13,7 +13,7 @@ class CompiledTest {
 	fun resolve() {
 		val compiled = compiled(typed(native(0)))
 		compiled
-			.resolve("x" lineTo typed())
+			.resolve("x" lineTo typed(), nativeContext)
 			.assertEqualTo(compiled.updateTyped { plus("x" lineTo typed()).resolve!! })
 	}
 }

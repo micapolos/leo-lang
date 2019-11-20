@@ -107,7 +107,7 @@ class TypeParserTest {
 
 		leo(compiled)
 			.parse(script("x"))
-			.assertEqualTo(leo(compiled.resolve("x" lineTo typed())))
+			.assertEqualTo(leo(compiled.resolve("x" lineTo typed(), nativeContext)))
 	}
 
 	@Test
@@ -285,6 +285,16 @@ class TypeParserTest {
 			.assertEqualTo(
 				leo(
 					compiled(
-						typed(native(123)).plus("plus" lineTo typed(native(123))))))
+						nativeContext.resolve(typed(native(123)).plus("plus" lineTo typed(native(123))))!!)))
+	}
+
+	@Test
+	fun evalIntNativePlus() {
+		leo(compiled(typed()), Phase.EVALUATOR)
+			.parse(
+				script(
+					line(literal(2)),
+					"plus" lineTo script(literal(3))))
+			.assertEqualTo(leo(compiled(typed(native(5))), Phase.EVALUATOR))
 	}
 }
