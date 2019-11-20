@@ -1,5 +1,6 @@
 package leo14.lambda
 
+import leo.base.iterate
 import leo13.*
 
 typealias NativeApply<T> = T.(Term<T>) -> Term<T>
@@ -32,11 +33,11 @@ fun <T> Value<T>.apply(rhs: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 	} ?: error("$this.apply($rhs)")
 
 fun <T> Term<T>.value(nativeApply: NativeApply<T>) = value(emptyScope(nativeApply))
-val <T> Term<T>.value get() = value(errorNativeApply())
+val <T> Term<T>.value: Value<T> get() = value(errorNativeApply())
 
-val <T> Value<T>.evalTerm: Term<T> get() = term//.freeIndexOrNull?.let { freeIndex -> unwrap(freeIndex) } ?: term
-
-//fun <T> Value<T>.unwrapTerm(freeIndex: Index): Value<T> = term.fold(scope.valueStack) { fn(this) }.fold(scope.valueStack.reverse) { invoke(it.evalTerm) }
+val <T> Value<T>.evalTerm: Term<T> get() = term
+	.iterate(term.freeVariableCount) { fn(this) }
+	.fold(scope.valueStack.takeOrNull(term.freeVariableCount)!!.reverse) { invoke(it.evalTerm) }
 
 fun <T> Term<T>.eval(nativeApply: NativeApply<T>) = value(nativeApply).evalTerm
 val <T> Term<T>.eval get() = eval(errorNativeApply())

@@ -61,4 +61,20 @@ class StackTest {
 		stack.atIndex(2).assertEqualTo("two")
 		stack.atIndex(3).assertEqualTo(null)
 	}
+
+	@Test
+	fun pushOrNull() {
+		stack(1, 2).reversePushOrNull(stack(4, 3), index0).assertEqualTo(stack(1, 2))
+		stack(1, 2).reversePushOrNull(stack(4, 3), index1).assertEqualTo(stack(1, 2, 3))
+		stack(1, 2).reversePushOrNull(stack(4, 3), index2).assertEqualTo(stack(1, 2, 3, 4))
+		stack(1, 2).reversePushOrNull(stack(4, 3), index3).assertEqualTo(null)
+	}
+
+	@Test
+	fun takeOrNull() {
+		stack(1, 2).takeOrNull(index0).assertEqualTo(stack())
+		stack(1, 2).takeOrNull(index1).assertEqualTo(stack(2))
+		stack(1, 2).takeOrNull(index2).assertEqualTo(stack(1, 2))
+		stack(1, 2).takeOrNull(index3).assertEqualTo(null)
+	}
 }

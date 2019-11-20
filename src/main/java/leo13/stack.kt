@@ -339,3 +339,16 @@ operator fun <V> StackLink<V>.component2() = value
 
 fun <V, R> Stack<V>.split(fn: (Stack<V>, V) -> R): R? =
 	linkOrNull?.run { fn(stack, value) }
+
+tailrec fun <V> Stack<V>.reversePushOrNull(stack: Stack<V>, count: Index): Stack<V>? =
+	when (count) {
+		is ZeroIndex -> this
+		is NextIndex ->
+			when (stack) {
+				is EmptyStack -> null
+				is LinkStack -> push(stack.link.value).reversePushOrNull(stack.link.stack, count.previous)
+			}
+	}
+
+fun <V> Stack<V>.takeOrNull(count: Index): Stack<V>? =
+	stack<V>().reversePushOrNull(this, count)?.reverse

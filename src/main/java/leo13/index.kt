@@ -24,12 +24,17 @@ val Index.previousOrNull: Index?
 			is NextIndex -> previous
 		}
 
+val Index.previousOrZero: Index
+	get() =
+		previousOrNull?:index0
+
 val Index.int get() = 0.plus(this)
 val Int.index get() = zero.index.plus(this)
 
 val index0 = zero.index
 val index1 = index0.next
 val index2 = index1.next
+val index3 = index2.next
 
 tailrec operator fun Int.plus(index: Index): Int =
 	when (index) {
