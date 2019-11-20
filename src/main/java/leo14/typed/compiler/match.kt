@@ -19,7 +19,6 @@ data class Case<T>(
 	val match: Match<T>,
 	val typed: Typed<T>)
 
-
 fun <T> Match<T>.beginCase(string: String): Case<T> =
 	when (optionStack) {
 		is EmptyStack -> error("match exhausted when adding: $string")

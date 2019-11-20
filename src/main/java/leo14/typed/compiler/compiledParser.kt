@@ -1,5 +1,6 @@
 package leo14.typed.compiler
 
+import leo13.stack
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
@@ -19,6 +20,7 @@ data class ActionDoParserParent<T>(val compiledParser: CompiledParser<T>, val ac
 data class GiveCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
 data class RememberDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class RememberIsParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
+data class MatchParserParent<T>(val matchParser: MatchParser<T>, val name: String) : CompiledParserParent<T>()
 
 fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 	when (token) {
@@ -40,6 +42,8 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 					leo(DeleteParser(this))
 				context.dictionary.nothing ->
 					leo(NothingParser(this))
+				context.dictionary.match ->
+					leo(MatchParser(this, stack(), compiled.typed.beginMatch()))
 				context.dictionary.remember ->
 					leo(TypeParser(null, RememberTypeBeginner(this), context.dictionary, type()))
 				context.dictionary.forget ->
@@ -69,6 +73,8 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Leo<T> =
 			leo(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = true)))
 		is RememberIsParserParent ->
 			leo(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = false)))
+		is MatchParserParent ->
+			leo(matchParser.plus(name, compiled))
 	}
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
