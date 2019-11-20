@@ -12,9 +12,7 @@ fun Processor<Syntax>.process(type: Type, dictionary: Dictionary): Processor<Syn
 
 fun Processor<Syntax>.process(line: Line, dictionary: Dictionary): Processor<Syntax> =
 	when (line) {
-		is NativeLine -> map<Syntax, Token> { token -> token of valueKind }
-			.process(script(dictionary.native))
-			.map { syntax -> syntax.token }
+		is NativeLine -> map(Token::valueSyntax).process(script(dictionary.native)).map(Syntax::token)
 		is FieldLine -> process(line.field, dictionary)
 		is ChoiceLine -> process(line.choice, dictionary)
 		is ArrowLine -> process(line.arrow, dictionary)

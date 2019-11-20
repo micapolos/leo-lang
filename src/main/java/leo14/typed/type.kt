@@ -156,5 +156,5 @@ val Choice.countIndex: Index
 val Type.coreString: String
 	get() =
 		processorString {
-			map<String, Syntax> { it.coreColorString }.process(this@coreString, defaultDictionary)
+			map(Syntax::coreColorString).process(this@coreString, defaultDictionary)
 		}

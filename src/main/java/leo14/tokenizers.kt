@@ -2,8 +2,7 @@ package leo14
 
 import leo13.Stack
 import leo14.syntax.Syntax
-import leo14.syntax.of
-import leo14.syntax.valueKind
+import leo14.syntax.valueSyntax
 
 fun Processor<Token>.process(script: Script): Processor<Token> =
 	when (script) {
@@ -31,5 +30,5 @@ val Script.tokenStack: Stack<Token>
 		let { processStack { process(it) } }
 
 fun Processor<Syntax>.syntaxProcess(script: Script): Processor<Syntax> =
-	map { token: Token -> token of valueKind }.process(script).map { it.token }
+	map(Token::valueSyntax).process(script).map(Syntax::token)
 

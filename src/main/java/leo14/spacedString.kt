@@ -16,6 +16,6 @@ val Script.spacedString
 	get() =
 		let { script ->
 			processorString {
-				map<String, Token> { it.spacedString }.process(script)
+				map(Token::spacedString).process(script)
 			}
 		}
