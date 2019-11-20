@@ -49,6 +49,6 @@ fun <T> Match<T>.end(): Typed<T> =
 	}
 
 fun <T> Typed<T>.beginMatch(): Match<T> =
-	onlyLine.choice.let { choice ->
-		Match(choice.term, choice.choice.optionStack.reverse, null)
+	type.onlyLine.choice.let { choice ->
+		Match(term, choice.optionStack.reverse, null)
 	}

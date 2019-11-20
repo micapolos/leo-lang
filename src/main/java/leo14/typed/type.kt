@@ -1,6 +1,7 @@
 package leo14.typed
 
 import leo.base.fold
+import leo.base.notNullOrError
 import leo13.*
 import leo14.*
 import leo14.syntax.Syntax
@@ -138,6 +139,10 @@ val Type.onlyLineOrNull
 	get() =
 		lineStack.onlyOrNull
 
+val Type.onlyLine
+	get() =
+		onlyLineOrNull.notNullOrError("$this.onlyLine")
+
 val Line.arrowOrNull
 	get() =
 		(this as? ArrowLine)?.arrow
@@ -145,6 +150,10 @@ val Line.arrowOrNull
 val Line.choiceOrNull
 	get() =
 		(this as? ChoiceLine)?.choice
+
+val Line.choice
+	get() =
+		choiceOrNull.notNullOrError("$this.choice")
 
 fun Type.checkIs(other: Type): Type =
 	apply { if (this != other) error("$this as $other") }

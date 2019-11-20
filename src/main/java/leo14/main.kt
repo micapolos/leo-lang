@@ -22,15 +22,15 @@ fun main() {
 			println("ERROR")
 			printStackTrace()
 		}
-		error = null
 		val char = System.`in`.read()
 		if (char == -1) break
 		if (char == 127) {
-			stack.linkOrNull?.let { link ->
+			if (error != null) error = null
+			else stack.linkOrNull?.let { link ->
 				charLeo = link.value
 				stack = link.stack
 			}
-		} else try {
+		} else if (error == null) try {
 			val newCharLeo = charLeo.put(char.toChar())
 			stack = stack.push(charLeo)
 			charLeo = newCharLeo

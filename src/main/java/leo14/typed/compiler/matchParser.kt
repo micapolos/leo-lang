@@ -18,12 +18,15 @@ fun <T> MatchParser<T>.parse(token: Token): Leo<T> =
 	when (token) {
 		is LiteralToken ->
 			null
-		is BeginToken -> leo(
-			CompiledParser(
-				MatchParserParent(this, token.begin.string),
-				parentCompiledParser.context,
-				parentCompiledParser.phase,
-				parentCompiledParser.compiled.beginDoes(parentCompiledParser.compiled.typed.type)))
+		is BeginToken -> match.beginCase(token.begin.string)
+			.let { case ->
+				leo(
+					CompiledParser(
+						MatchParserParent(copy(match = case.match), token.begin.string),
+						parentCompiledParser.context,
+						Phase.COMPILER,
+						parentCompiledParser.compiled.beginDoes(parentCompiledParser.compiled.typed.type)))
+			}
 		is EndToken ->
 			leo(parentCompiledParser.updateCompiled { updateTyped { match.end() } })
 	} ?: error("$this.parse($token)")

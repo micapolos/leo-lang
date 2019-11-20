@@ -87,9 +87,9 @@ fun Processor<Syntax>.process(parser: CommentParser<Native>): Processor<Syntax> 
 
 fun Processor<Syntax>.process(matchParser: MatchParser<Native>): Processor<Syntax> =
 	this
+		.process(matchParser.parentCompiledParser)
 		.process(token(begin(matchParser.parentCompiledParser.context.dictionary.match)) of valueKeywordKind)
 		.fold(matchParser.caseLineStack.reverse) { process(it, matchParser.parentCompiledParser.context.dictionary) }
-		.process(token(end) of valueKeywordKind)
 
 fun Processor<Syntax>.process(parent: CompiledParserParent<Native>): Processor<Syntax> =
 	when (parent) {
@@ -124,7 +124,9 @@ fun Processor<Syntax>.process(parent: CompiledParserParent<Native>): Processor<S
 				.process(parent.compiledParser)
 				.process(token(begin(parent.compiledParser.context.dictionary.give)) of valueKeywordKind)
 		is MatchParserParent ->
-			TODO()
+			this
+				.process(parent.matchParser)
+				.process(token(begin(parent.name)) of valueKeywordKind)
 	}
 
 fun Processor<Syntax>.process(parent: TypeParserParent<Native>): Processor<Syntax> =
