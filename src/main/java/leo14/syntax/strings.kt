@@ -1,31 +1,24 @@
 package leo14.syntax
 
 import leo.*
-import leo14.Literal
+import leo14.spacedString
 
-val Syntax.colorString get() =
+val Kind.colorString
+	get() =
 	when (this) {
-		is ValueSyntax -> if (isKeyword) ansi.magenta else ansi.white
-		is TypeSyntax -> if (isKeyword) ansi.red else ansi.cyan
-		is CommentSyntax -> ansi.brightBlack
+		is ValueKind -> if (isKeyword) ansi.magenta else ansi.reset
+		is TypeKind -> if (isKeyword) ansi.red else ansi.cyan
+		is CommentKind -> ansi.brightBlack
 	}
 
-val Name.colorString get() =
-	"${syntax.colorString}$string${ansi.reset}"
+fun String.colored(syntax: Kind) =
+	"${syntax.colorString}$this${ansi.reset}"
 
-val Literal.colorString get() =
-	"${ansi.red}$this${ansi.reset}"
+val Syntax.spacedColorString
+	get() =
+		token.spacedString.colored(kind)
 
-val SyntaxToken.spacedColorString get() =
-	when (this) {
-		is LiteralSyntaxToken -> literal.colorString
-		is BeginSyntaxToken -> "${name.colorString} "
-		is EndSyntaxToken -> " "
-	}
+val Syntax.coreColorString
+	get() =
+		token.toString().colored(kind)
 
-val SyntaxToken.coreColorString get() =
-	when (this) {
-		is LiteralSyntaxToken -> literal.colorString
-		is BeginSyntaxToken -> "${name.colorString}("
-		is EndSyntaxToken -> ")"
-	}

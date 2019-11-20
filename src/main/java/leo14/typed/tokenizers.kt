@@ -4,47 +4,53 @@ import leo13.fold
 import leo13.reverse
 import leo14.*
 import leo14.native.Native
+import leo14.syntax.*
 import leo14.typed.compiler.Dictionary
 
-fun Processor<Token>.process(type: Type, dictionary: Dictionary): Processor<Token> =
+fun Processor<Syntax>.process(type: Type, dictionary: Dictionary): Processor<Syntax> =
 	fold(type.lineStack.reverse) { process(it, dictionary) }
 
-fun Processor<Token>.process(line: Line, dictionary: Dictionary): Processor<Token> =
+fun Processor<Syntax>.process(line: Line, dictionary: Dictionary): Processor<Syntax> =
 	when (line) {
-		is NativeLine -> process(script(dictionary.native))
+		is NativeLine -> map<Syntax, Token> { token -> token of valueKind }
+			.process(script(dictionary.native))
+			.map { syntax -> syntax.token }
 		is FieldLine -> process(line.field, dictionary)
 		is ChoiceLine -> process(line.choice, dictionary)
 		is ArrowLine -> process(line.arrow, dictionary)
 	}
 
-fun Processor<Token>.process(field: Field, dictionary: Dictionary): Processor<Token> =
-	process(token(begin(field.string))).process(field.rhs, dictionary).process(token(end))
-
-fun Processor<Token>.process(choice: Choice, dictionary: Dictionary): Processor<Token> =
+fun Processor<Syntax>.process(field: Field, dictionary: Dictionary): Processor<Syntax> =
 	this
-		.process(token(begin(dictionary.choice)))
+		.process(token(begin(field.string)) of typeKind)
+		.process(field.rhs, dictionary)
+		.process(token(end) of typeKind)
+
+fun Processor<Syntax>.process(choice: Choice, dictionary: Dictionary): Processor<Syntax> =
+	this
+		.process(token(begin(dictionary.choice)) of typeKeywordKind)
 		.fold(choice.optionStack.reverse) { process(it, dictionary) }
-		.process(token(end))
+		.process(token(end) of typeKeywordKind)
 
-fun Processor<Token>.process(option: Option, dictionary: Dictionary): Processor<Token> =
+fun Processor<Syntax>.process(option: Option, dictionary: Dictionary): Processor<Syntax> =
 	this
-		.process(token(begin(option.string)))
+		.process(token(begin(option.string)) of typeKind)
 		.process(option.rhs, dictionary)
-		.process(token(end))
+		.process(token(end) of typeKind)
 
-fun Processor<Token>.process(arrow: Arrow, dictionary: Dictionary): Processor<Token> =
+fun Processor<Syntax>.process(arrow: Arrow, dictionary: Dictionary): Processor<Syntax> =
 	this
-		.process(token(begin(dictionary.action)))
+		.process(token(begin(dictionary.action)) of typeKeywordKind)
 		.process(arrow.lhs, dictionary)
-		.process(token(begin(dictionary.giving)))
+		.process(token(begin(dictionary.giving)) of typeKeywordKind)
 		.process(arrow.rhs, dictionary)
-		.process(token(end))
-		.process(token(end))
+		.process(token(end) of typeKeywordKind)
+		.process(token(end) of typeKeywordKind)
 
-fun Processor<Token>.process(action: Action<Native>, dictionary: Dictionary): Processor<Token> =
+fun Processor<Syntax>.process(action: Action<Native>, dictionary: Dictionary): Processor<Syntax> =
 	this
-		.process(token(begin(dictionary.action)))
-		.process(token(begin(dictionary.doing)))
+		.process(token(begin(dictionary.action)) of valueKeywordKind)
+		.process(token(begin(dictionary.doing)) of valueKeywordKind)
 		.process(action.param, dictionary)
-		.process(token(end))
-		.process(token(end))
+		.process(token(end) of valueKeywordKind)
+		.process(token(end) of valueKeywordKind)

@@ -2,9 +2,14 @@ package leo14.typed.compiler
 
 import leo.base.fold
 import leo.base.orIfNull
-import leo14.*
+import leo14.coreString
+import leo14.map
 import leo14.native.Native
 import leo14.parser.*
+import leo14.processorString
+import leo14.spacedString
+import leo14.syntax.Syntax
+import leo14.syntax.coreColorString
 
 data class CharLeo(
 	val tokenParser: SpacedTokenParser,
@@ -37,13 +42,20 @@ fun CharLeo.put(string: String) =
 val CharLeo.spacedString: String
 	get() =
 		processorString {
-			map<String, Token> { it.spacedString }.process(leo)
+			map { syntax: Syntax -> syntax.token.spacedString }.process(leo)
 		} + tokenParser.spacedString
 
 val CharLeo.coreString: String
 	get() =
 		processorString {
-			map<String, Token> { it.coreString }.process(leo)
+			map { syntax: Syntax -> syntax.token.coreString }.process(leo)
 		} + tokenParser.coreString
+
+val CharLeo.coreColorString: String
+	get() =
+		processorString {
+			map<String, Syntax> { it.coreColorString }.process(leo)
+		} + tokenParser.coreString
+
 
 val String.leoEval get() = emptyCharLeo.put(this).coreString

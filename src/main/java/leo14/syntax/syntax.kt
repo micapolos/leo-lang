@@ -1,13 +1,7 @@
 package leo14.syntax
 
-sealed class Syntax
+import leo14.Token
 
-data class ValueSyntax(val isKeyword: Boolean): Syntax()
-data class TypeSyntax(val isKeyword: Boolean): Syntax()
-object CommentSyntax: Syntax()
+data class Syntax(val token: Token, val kind: Kind)
 
-val valueSyntax: Syntax = ValueSyntax(false)
-val valueKeywordKeyword: Syntax = ValueSyntax(true)
-val typeSyntax: Syntax = TypeSyntax(false)
-val typeKeywordSyntaxKeyword: Syntax = TypeSyntax(true)
-val commentSyntax: Syntax = CommentSyntax
+infix fun Token.of(kind: Kind) = Syntax(this, kind)

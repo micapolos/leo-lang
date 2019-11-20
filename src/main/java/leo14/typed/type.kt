@@ -3,6 +3,8 @@ package leo14.typed
 import leo.base.fold
 import leo13.*
 import leo14.*
+import leo14.syntax.Syntax
+import leo14.syntax.coreColorString
 import leo14.typed.compiler.defaultDictionary
 
 data class Type(val lineStack: Stack<Line>) {
@@ -154,5 +156,5 @@ val Choice.countIndex: Index
 val Type.coreString: String
 	get() =
 		processorString {
-			map<String, Token> { it.coreString }.process(this@coreString, defaultDictionary)
+			map<String, Syntax> { it.coreColorString }.process(this@coreString, defaultDictionary)
 		}

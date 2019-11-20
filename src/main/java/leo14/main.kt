@@ -42,5 +42,5 @@ fun main() {
 
 fun print(charLeo: CharLeo) {
 	println("${ansi.clear}${ansi.home}context> ${charLeo.leo.promptString}")
-	print("leo> ${charLeo.coreString}")
+	print("leo> ${charLeo.coreColorString}")
 }
