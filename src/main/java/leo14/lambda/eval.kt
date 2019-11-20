@@ -34,9 +34,9 @@ fun <T> Value<T>.apply(rhs: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 fun <T> Term<T>.value(nativeApply: NativeApply<T>) = value(emptyScope(nativeApply))
 val <T> Term<T>.value get() = value(errorNativeApply())
 
-val <T> Value<T>.evalTerm: Term<T> get() = term
+val <T> Value<T>.evalTerm: Term<T> get() = term//.freeIndexOrNull?.let { freeIndex -> unwrap(freeIndex) } ?: term
 
-val <T> Value<T>.wrapTerm: Term<T> get() = term.fold(scope.valueStack) { fn(this) }.fold(scope.valueStack.reverse) { invoke(it.evalTerm) }
+//fun <T> Value<T>.unwrapTerm(freeIndex: Index): Value<T> = term.fold(scope.valueStack) { fn(this) }.fold(scope.valueStack.reverse) { invoke(it.evalTerm) }
 
 fun <T> Term<T>.eval(nativeApply: NativeApply<T>) = value(nativeApply).evalTerm
 val <T> Term<T>.eval get() = eval(errorNativeApply())

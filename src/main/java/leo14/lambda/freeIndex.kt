@@ -2,15 +2,16 @@ package leo14.lambda
 
 import leo13.Index
 import leo13.max
-import leo13.next
+import leo13.previousOrNull
 
-fun Term<*>.freeIndexOrNull(depth: Index): Index? =
+val Term<*>.freeIndexOrNull: Index?
+	get() =
 	when (this) {
 		is NativeTerm -> null
-		is AbstractionTerm -> abstraction.body.freeIndexOrNull(depth.next)
+		is AbstractionTerm -> abstraction.body.freeIndexOrNull?.previousOrNull
 		is ApplicationTerm -> {
-			val lhsIndexOrNull = application.lhs.freeIndexOrNull(depth)
-			val rhsIndexOrNull = application.rhs.freeIndexOrNull(depth)
+			val lhsIndexOrNull = application.lhs.freeIndexOrNull
+			val rhsIndexOrNull = application.rhs.freeIndexOrNull
 			when {
 				lhsIndexOrNull == null -> rhsIndexOrNull
 				rhsIndexOrNull == null -> lhsIndexOrNull

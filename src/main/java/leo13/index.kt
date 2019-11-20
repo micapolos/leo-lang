@@ -17,6 +17,12 @@ data class NextIndex(val previous: Index) : Index() {
 
 val Zero.index: Index get() = ZeroIndex(this)
 val Index.next: Index get() = NextIndex(this)
+val Index.previousOrNull: Index?
+	get() =
+		when (this) {
+			is ZeroIndex -> null
+			is NextIndex -> previous
+		}
 
 val Index.int get() = 0.plus(this)
 val Int.index get() = zero.index.plus(this)
