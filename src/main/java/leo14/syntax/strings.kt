@@ -11,7 +11,7 @@ val Kind.colorString
 		is CommentKind -> ansi.brightBlack
 	}
 
-fun String.colored(syntax: Kind) =
+infix fun String.colored(syntax: Kind) =
 	"${syntax.colorString}$this${ansi.reset}"
 
 val Syntax.spacedColorString
