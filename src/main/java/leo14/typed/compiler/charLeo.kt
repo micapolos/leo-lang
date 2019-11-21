@@ -56,8 +56,8 @@ val CharLeo.coreColorString: String
 
 val CharLeo.indentColorString: String
 	get() =
-		emptyWriter
-			.foldProcessor<Writer, Syntax>({ write(it).notNullOrError("$this.write($it)") }) {
+		emptyFragment
+			.foldProcessor<Fragment, Syntax>({ plus(it.token).notNullOrError("$this.write($it)") }) {
 				process(leo)
 			}.indentString + tokenParser.coreString
 

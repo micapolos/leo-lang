@@ -41,26 +41,16 @@ val FragmentParent.indent: Indent
 	get() =
 		fragment.indent.runIf(fragment.script.isSimple) { inc }
 
-val Fragment.column: Int
-	get() =
-		parent?.column ?: 0
-
-val FragmentParent.column: Int
-	get() =
-		fragment.column.runIf(fragment.script.isSimple) { plus(begin.string.length) + 2 }
-
 val Fragment.indentString: String
 	get() =
 		if (parent == null)
 			if (script.isEmpty) ""
-			else if (script.isSimple) script.indentString + " "
+			else if (script.isSimple) script.string(indent) + " "
 			else script.string(indent) + "\n"
 		else if (script.isEmpty) parent.indentString + ": "
-		else if (script.isSimple) parent.indentString + ": " + script.indentString + " "
-		else parent.indentString + "\n" + indent.string + script.string(indent) + "\n" + indent.string
+		else if (script.hasWordsOnly) parent.indentString + ": " + script.string(indent) + " "
+		else parent.indentString + "\n" + parent.fragment.indent.inc.string + script.string(parent.fragment.indent.inc) + "\n" + parent.fragment.indent.inc.string
 
 val FragmentParent.indentString: String
 	get() =
-		if (fragment.script.isEmpty) fragment.indentString + begin.string
-		else if (fragment.script.isSimple) fragment.indentString + begin.string
-		else fragment.indentString + begin.string
+		fragment.indentString + begin.string

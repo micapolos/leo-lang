@@ -77,6 +77,24 @@ val ScriptLine.isSimple
 			is FieldScriptLine -> field.isSimple
 		}
 
+val Script.hasWordsOnly: Boolean
+	get() =
+		when (this) {
+			is UnitScript -> true
+			is LinkScript -> link.hasWordsOnly
+		}
+
+val ScriptLink.hasWordsOnly
+	get() =
+		lhs.hasWordsOnly && line.hasWordsOnly
+
+val ScriptLine.hasWordsOnly
+	get() =
+		when (this) {
+			is LiteralScriptLine -> true
+			is FieldScriptLine -> field.rhs.isEmpty
+		}
+
 val ScriptField.isSimple get() = rhs.isEmpty
 
 val String.code get() = "\"$this\"" // TODO: Escape

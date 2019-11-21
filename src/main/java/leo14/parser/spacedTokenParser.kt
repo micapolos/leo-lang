@@ -22,8 +22,11 @@ fun SpacedTokenParser.parse(char: Char): SpacedTokenParser? =
 			}
 		is TokenSpacedTokenParser ->
 			null
-		is LiteralSpacedTokenParser -> null
-			?: literalParser.parse(char)?.let(::LiteralSpacedTokenParser)
+		is LiteralSpacedTokenParser ->
+			when (char) {
+				' ' -> literalParser.literalOrNull?.let(::token)?.let(::TokenSpacedTokenParser)
+				else -> literalParser.parse(char)?.let(::LiteralSpacedTokenParser)
+			}
 		is NameSpacedTokenParser ->
 			when (char) {
 				' ' -> nameParser.nameOrNull?.let { TokenSpacedTokenParser(token(begin(it))) }
@@ -36,7 +39,7 @@ val SpacedTokenParser.canContinue
 		when (this) {
 			is NewSpacedTokenParser -> true
 			is TokenSpacedTokenParser -> false
-			is LiteralSpacedTokenParser -> literalParser.canContinue
+			is LiteralSpacedTokenParser -> false
 			is NameSpacedTokenParser -> true
 		}
 
@@ -45,7 +48,7 @@ val SpacedTokenParser.tokenOrNull: Token?
 		when (this) {
 			is NewSpacedTokenParser -> null
 			is TokenSpacedTokenParser -> token
-			is LiteralSpacedTokenParser -> literalParser.literalOrNull?.let(::token)
+			is LiteralSpacedTokenParser -> null
 			is NameSpacedTokenParser -> null
 		}
 
