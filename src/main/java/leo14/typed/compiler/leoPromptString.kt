@@ -16,6 +16,7 @@ val Leo<*>.promptString: String
 			is RememberParserLeo -> "remember"
 			is TypeParserLeo -> "type"
 			is MatchParserLeo -> "match"
+			is ScriptParserLeo -> "script"
 		}
 
 val CompiledParser<*>.promptString

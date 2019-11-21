@@ -1,10 +1,9 @@
 package leo14.typed.compiler
 
+import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo13.stack
-import leo14.BeginToken
-import leo14.EndToken
-import leo14.LiteralToken
-import leo14.Token
+import leo14.*
 import leo14.typed.*
 
 data class CompiledParser<T>(
@@ -44,6 +43,8 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 					leo(NothingParser(this))
 				context.dictionary.match ->
 					leo(MatchParser(this, stack(), compiled.typed.beginMatch()))
+				context.dictionary.make ->
+					leo(ScriptParser(MakeScriptParserParent(this), script()))
 				context.dictionary.remember ->
 					leo(TypeParser(null, RememberTypeBeginner(this), context.dictionary, type()))
 				context.dictionary.forget ->
@@ -86,3 +87,17 @@ fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 val <T> CompiledParser<T>.delete
 	get() =
 		updateCompiled { updateTyped { typed() } }
+
+fun <T> CompiledParser<T>.make(script: Script): CompiledParser<T> =
+	when (script) {
+		is UnitScript -> null
+		is LinkScript -> ifOrNull(script.link.lhs.isEmpty) {
+			when (script.link.line) {
+				is LiteralScriptLine -> null
+				is FieldScriptLine ->
+					notNullIf(script.link.line.field.rhs.isEmpty) {
+						updateCompiled { updateTyped { resolveWrap(script.link.line.field.string) } }
+					}
+			}
+		}
+	} ?: error("$this.make($script)")
