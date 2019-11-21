@@ -13,34 +13,34 @@ import leo14.typed.compiler.emptyCharLeo
 import leo14.typed.compiler.indentColorString
 import leo14.typed.compiler.put
 
-const val catchErrors = true
+const val printErrors = true
 
 fun main() {
 	sttyPrivateMode()
 	var stack = stack<CharLeo>()
 	var charLeo = emptyCharLeo
-	var error: Throwable? = null
+	var errorToPrint: Throwable? = null
 	while (true) {
 		print(charLeo)
-		error?.run {
-			print(bellChar)
+		errorToPrint?.run {
 			println("ERROR")
 			printStackTrace()
 		}
 		val char = System.`in`.read()
 		if (char == -1) break
 		if (char == 127) {
-			if (error != null) error = null
+			if (errorToPrint != null) errorToPrint = null
 			else stack.linkOrNull?.let { link ->
 				charLeo = link.value
 				stack = link.stack
 			}
-		} else if (error == null) try {
+		} else if (errorToPrint == null) try {
 			val newCharLeo = charLeo.put(char.toChar())
 			stack = stack.push(charLeo)
 			charLeo = newCharLeo
 		} catch (e: RuntimeException) {
-			if (!catchErrors) error = e
+			print(bellChar)
+			if (!printErrors) errorToPrint = e
 		}
 	}
 }

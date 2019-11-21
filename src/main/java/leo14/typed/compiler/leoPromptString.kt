@@ -8,7 +8,6 @@ val Leo<*>.promptString: String
 			is ActionParserLeo -> "action"
 			is ArrowParserLeo -> "arrow"
 			is ChoiceParserLeo -> "option"
-			is CommentParserLeo -> "comment"
 			is CompiledParserLeo -> compiledParser.promptString
 			is DeleteParserLeo -> deleteParser.parentCompiledParser.promptString
 			is NativeParserLeo -> "type"

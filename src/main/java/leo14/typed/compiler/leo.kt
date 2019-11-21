@@ -10,7 +10,6 @@ sealed class Leo<T>
 data class ActionParserLeo<T>(val actionParser: ActionParser<T>) : Leo<T>()
 data class ArrowParserLeo<T>(val arrowParser: ArrowParser<T>) : Leo<T>()
 data class ChoiceParserLeo<T>(val choiceParser: ChoiceParser<T>) : Leo<T>()
-data class CommentParserLeo<T>(val commentParser: CommentParser<T>) : Leo<T>()
 data class CompiledParserLeo<T>(val compiledParser: CompiledParser<T>) : Leo<T>()
 data class DeleteParserLeo<T>(val deleteParser: DeleteParser<T>) : Leo<T>()
 data class NativeParserLeo<T>(val nativeParser: NativeParser<T>) : Leo<T>()
@@ -29,7 +28,6 @@ fun <T> leo(actionParser: ActionParser<T>): Leo<T> = ActionParserLeo(actionParse
 fun <T> leo(deleteParser: DeleteParser<T>): Leo<T> = DeleteParserLeo(deleteParser)
 fun <T> leo(nothingParser: NothingParser<T>): Leo<T> = NothingParserLeo(nothingParser)
 fun <T> leo(memoryItemParser: MemoryItemParser<T>): Leo<T> = RememberParserLeo(memoryItemParser)
-fun <T> leo(commentParser: CommentParser<T>): Leo<T> = CommentParserLeo(commentParser)
 fun <T> leo(matchParser: MatchParser<T>): Leo<T> = MatchParserLeo(matchParser)
 fun <T> leo(scriptParser: ScriptParser<T>): Leo<T> = ScriptParserLeo(scriptParser)
 
@@ -50,7 +48,7 @@ fun <T> Leo<T>.parseStatic(token: Token): Leo<T>? =
 		is LiteralToken -> null
 		is BeginToken ->
 			when (token.begin.string) {
-				"comment" -> leo(CommentParser(this))
+				"comment" -> leo(ScriptParser(CommentScriptParserParent(this), script()))
 				else -> null
 			}
 		is EndToken -> null
@@ -67,7 +65,6 @@ fun <T> Leo<T>.parseDynamic(token: Token): Leo<T> =
 		is DeleteParserLeo -> deleteParser.parse(token)
 		is NothingParserLeo -> nothingParser.parse(token)
 		is RememberParserLeo -> memoryItemParser.parse(token)
-		is CommentParserLeo -> commentParser.parse(token)
 		is MatchParserLeo -> matchParser.parse(token)
 		is ScriptParserLeo -> scriptParser.parse(token)
 	}

@@ -17,7 +17,6 @@ fun Processor<Syntax>.process(leo: Leo<Native>): Processor<Syntax> =
 		is ActionParserLeo -> process(leo.actionParser)
 		is ArrowParserLeo -> process(leo.arrowParser)
 		is ChoiceParserLeo -> process(leo.choiceParser)
-		is CommentParserLeo -> process(leo.commentParser)
 		is CompiledParserLeo -> process(leo.compiledParser)
 		is DeleteParserLeo -> process(leo.deleteParser)
 		is NativeParserLeo -> process(leo.nativeParser)
@@ -81,11 +80,6 @@ fun Processor<Syntax>.process(parser: NothingParser<Native>): Processor<Syntax> 
 	process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.nothing)) of valueKeywordKind)
 
-fun Processor<Syntax>.process(parser: CommentParser<Native>): Processor<Syntax> =
-	this
-		.process(parser.parent)
-		.process(token(begin(defaultDictionary.comment)) of commentKind) // TODO: Leo needs dictionary!!!
-
 fun Processor<Syntax>.process(parser: ScriptParser<Native>): Processor<Syntax> =
 	this
 		.process(parser.parent)
@@ -99,6 +93,9 @@ fun Processor<Syntax>.process(parent: ScriptParserParent<Native>): Processor<Syn
 		is MakeScriptParserParent -> this
 			.process(parent.compiledParser)
 			.process(token(begin(parent.compiledParser.context.dictionary.make)) of valueKind)
+		is CommentScriptParserParent -> this
+			.process(parent.leo)
+			.process(token(begin(defaultDictionary.comment)) of commentKind)
 	}
 
 fun Processor<Syntax>.process(matchParser: MatchParser<Native>): Processor<Syntax> =
