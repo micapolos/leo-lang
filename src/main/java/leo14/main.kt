@@ -8,7 +8,12 @@ import leo.java.lang.sttyPrivateMode
 import leo13.linkOrNull
 import leo13.push
 import leo13.stack
-import leo14.typed.compiler.*
+import leo14.typed.compiler.CharLeo
+import leo14.typed.compiler.emptyCharLeo
+import leo14.typed.compiler.indentColorString
+import leo14.typed.compiler.put
+
+const val catchErrors = true
 
 fun main() {
 	sttyPrivateMode()
@@ -35,12 +40,13 @@ fun main() {
 			stack = stack.push(charLeo)
 			charLeo = newCharLeo
 		} catch (e: RuntimeException) {
-			error = e
+			if (!catchErrors) error = e
 		}
 	}
 }
 
 fun print(charLeo: CharLeo) {
-	println("${ansi.clear}${ansi.home}context> ${charLeo.leo.promptString}")
+	print("${ansi.clear}${ansi.home}")
+//	println("context> ${charLeo.leo.promptString}")
 	print("${charLeo.indentColorString}")
 }
