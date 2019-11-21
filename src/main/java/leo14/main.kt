@@ -13,7 +13,7 @@ import leo14.typed.compiler.emptyCharLeo
 import leo14.typed.compiler.indentColorString
 import leo14.typed.compiler.put
 
-const val printErrors = true
+const val printErrors = false
 
 fun main() {
 	sttyPrivateMode()
@@ -40,7 +40,7 @@ fun main() {
 			charLeo = newCharLeo
 		} catch (e: RuntimeException) {
 			print(bellChar)
-			if (!printErrors) errorToPrint = e
+			if (printErrors) errorToPrint = e
 		}
 	}
 }

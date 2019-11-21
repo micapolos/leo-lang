@@ -30,7 +30,11 @@ fun Processor<Syntax>.process(leo: Leo<Native>): Processor<Syntax> =
 fun Processor<Syntax>.process(parser: ActionParser<Native>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(parser.action, parser.parentCompiledParser.context.dictionary)
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.action)) of typeKeywordKind)
+		.process(parser.action.param, parser.parentCompiledParser.context.dictionary)
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.does)) of typeKeywordKind)
+		.process(parser.action.body.type, parser.parentCompiledParser.context.dictionary)
+		.process(token(end) of typeKeywordKind)
 
 fun Processor<Syntax>.process(parser: ArrowParser<Native>): Processor<Syntax> =
 	this
