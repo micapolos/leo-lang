@@ -84,14 +84,14 @@ class TypedTest {
 			.assertEqualTo(typed.resolveAccess("x"))
 	}
 
-	@Test
-	fun resolveField_wrap() {
-		val typed = typed(
-			"x" lineTo typed(native(10)),
-			"y" lineTo typed(native(11)))
-
-		typed
-			.resolve("point" fieldTo typed())
-			.assertEqualTo(typed.resolveWrap("point"))
-	}
+//	@Test
+//	fun resolveField_wrap() {
+//		val typed = typed(
+//			"x" lineTo typed(native(10)),
+//			"y" lineTo typed(native(11)))
+//
+//		typed
+//			.resolve("point" fieldTo typed())
+//			.assertEqualTo(typed.resolveWrap("point"))
+//	}
 }

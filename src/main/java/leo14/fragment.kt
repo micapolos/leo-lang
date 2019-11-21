@@ -39,17 +39,16 @@ val Fragment.indent: Indent
 
 val FragmentParent.indent: Indent
 	get() =
-		fragment.indent.runIf(!fragment.script.hasWordsOnly) { inc }
+		fragment.indent.inc
 
 val Fragment.indentString: String
 	get() =
 		if (parent == null)
 			if (script.isEmpty) ""
-			else if (script.isSimple) script.string(indent) + " "
-			else script.string(indent) + "\n"
-		else if (script.isEmpty) parent.indentString + ": "
-		else if (script.hasWordsOnly) parent.indentString + ": " + script.string(indent) + " "
-		else parent.indentString + "\n" + indent.inc.string + script.string(indent.inc) + "\n" + indent.inc.string
+			else script.indentString + "\n"
+		else
+			if (script.isEmpty) parent.indentString + "\n" + indent.string
+			else parent.indentString + "\n" + indent.string + script.string(indent) + "\n" + indent.string
 
 val FragmentParent.indentString: String
 	get() =

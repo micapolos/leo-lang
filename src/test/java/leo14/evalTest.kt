@@ -97,21 +97,21 @@ class EvalTest {
 			.assertEqualTo(script("y" lineTo script("one")))
 	}
 
-	@Test
-	fun evalWrap() {
-		script(
-			"vec" lineTo script(
-				"x" lineTo script("zero"),
-				"y" lineTo script("one")),
-			"z" lineTo script())
-			.eval
-			.assertEqualTo(
-				script(
-					"z" lineTo script(
-						"vec" lineTo script(
-							"x" lineTo script("zero"),
-							"y" lineTo script("one")))))
-	}
+//	@Test
+//	fun evalWrap() {
+//		script(
+//			"vec" lineTo script(
+//				"x" lineTo script("zero"),
+//				"y" lineTo script("one")),
+//			"z" lineTo script())
+//			.eval
+//			.assertEqualTo(
+//				script(
+//					"z" lineTo script(
+//						"vec" lineTo script(
+//							"x" lineTo script("zero"),
+//							"y" lineTo script("one")))))
+//	}
 
 //	@Test
 //	fun evalAction() {

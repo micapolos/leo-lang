@@ -59,6 +59,24 @@ infix fun String.lineTo(script: Script) = line(fieldTo(script))
 
 val Script.isEmpty get() = (this is UnitScript)
 
+val Script.isWord
+	get() =
+		when (this) {
+			is UnitScript -> false
+			is LinkScript -> link.isWord
+		}
+
+val ScriptLink.isWord
+	get() =
+		lhs.isEmpty && line.isWord
+
+val ScriptLine.isWord
+	get() =
+		when (this) {
+			is LiteralScriptLine -> true
+			is FieldScriptLine -> field.rhs.isEmpty
+		}
+
 val Script.isSimple: Boolean
 	get() =
 		when (this) {
@@ -76,6 +94,17 @@ val ScriptLine.isSimple
 			is LiteralScriptLine -> true
 			is FieldScriptLine -> field.isSimple
 		}
+
+val Script.isSingleLine: Boolean
+	get() =
+		when (this) {
+			is UnitScript -> true
+			is LinkScript -> link.isSingleLine
+		}
+
+val ScriptLink.isSingleLine
+	get() =
+		lhs.isEmpty
 
 val Script.hasWordsOnly: Boolean
 	get() =
@@ -147,8 +176,8 @@ fun ScriptLink.string(indent: Indent): String =
 	when (lhs) {
 		is UnitScript -> line.string(indent)
 		is LinkScript ->
-			if (lhs.isSimple) lhs.string(indent) + " " + line.string(indent)
-			else lhs.string(indent) + "\n" + indent.string + line.string(indent)
+			/*if (lhs.isSimple) lhs.string(indent) + " " + line.string(indent)
+			else */lhs.string(indent) + "\n" + indent.string + line.string(indent)
 	}
 
 fun ScriptLine.string(indent: Indent): String =
@@ -161,7 +190,7 @@ fun ScriptField.string(indent: Indent): String =
 	when (rhs) {
 		is UnitScript -> string
 		is LinkScript ->
-			if (rhs.link.lhs.isSimple) "$string: ${rhs.string(indent)}"
+			if (rhs.isSingleLine) "$string: ${rhs.string(indent)}"
 			else "$string\n${indent.inc.string}${rhs.string(indent.inc)}"
 	}
 
