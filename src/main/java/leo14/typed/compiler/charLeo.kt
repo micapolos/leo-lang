@@ -1,12 +1,12 @@
 package leo14.typed.compiler
 
 import leo.base.fold
+import leo.base.notNullOrError
 import leo.base.orIfNull
 import leo14.*
 import leo14.native.Native
 import leo14.parser.*
-import leo14.syntax.Syntax
-import leo14.syntax.coreColorString
+import leo14.syntax.*
 
 data class CharLeo(
 	val tokenParser: SpacedTokenParser,
@@ -54,5 +54,11 @@ val CharLeo.coreColorString: String
 			map(Syntax::coreColorString).process(leo)
 		} + tokenParser.coreString
 
+val CharLeo.indentColorString: String
+	get() =
+		emptyWriter
+			.foldProcessor<Writer, Syntax>({ write(it).notNullOrError("$this.write($it)") }) {
+				process(leo)
+			}.indentString + tokenParser.coreString
 
 val String.leoEval get() = emptyCharLeo.put(this).coreString
