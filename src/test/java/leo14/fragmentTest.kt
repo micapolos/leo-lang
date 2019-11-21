@@ -1,0 +1,75 @@
+package leo14
+
+import leo.base.assertEqualTo
+import kotlin.test.Test
+
+class FragmentTest {
+	@Test
+	fun indentString_empty() {
+		emptyFragment
+			.indentString
+			.assertEqualTo("")
+	}
+
+	@Test
+	fun indentString_begin() {
+		emptyFragment
+			.begin("foo")
+			.indentString
+			.assertEqualTo("foo: ")
+	}
+
+	@Test
+	fun indentString_begin_begin() {
+		emptyFragment
+			.begin("foo")
+			.begin("bar")
+			.indentString
+			.assertEqualTo("foo: bar: ")
+	}
+
+	@Test
+	fun indentString_begin_begin_end() {
+		emptyFragment
+			.begin("foo")
+			.begin("bar")
+			.end
+			.indentString
+			.assertEqualTo("foo: bar ")
+	}
+
+	@Test
+	fun indentString_begin_begin_end_end() {
+		emptyFragment
+			.begin("foo")
+			.begin("bar")
+			.end
+			.end
+			.indentString
+			.assertEqualTo("foo: bar\n")
+	}
+
+	@Test
+	fun indentString_begin_begin_end_begin() {
+		emptyFragment
+			.begin("foo")
+			.begin("bar")
+			.end
+			.begin("zoo")
+			.indentString
+			.assertEqualTo("foo: bar zoo: ")
+	}
+
+	@Test
+	fun indentString_struct() {
+		emptyFragment.apply { indentString.assertEqualTo("") }
+			.begin("point").apply { indentString.assertEqualTo("point: ") }
+			.begin("x").apply { indentString.assertEqualTo("point: x: ") }
+			.plus(literal(10)).apply { indentString.assertEqualTo("point: x: 10 ") }
+			.end.apply { indentString.assertEqualTo("point\n  x: 10\n  ") }
+			.begin("y").apply { indentString.assertEqualTo("point\n  x: 10\n  y: ") }
+			.plus(literal(10)).apply { indentString.assertEqualTo("point\n  x: 10\n  y: 10 ") }
+			.end.apply { indentString.assertEqualTo("point\n  x: 10\n  y: 10\n  ") }
+			.end.apply { indentString.assertEqualTo("point\n  x: 10\n  y: 10\n") }
+	}
+}
