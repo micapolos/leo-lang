@@ -1,7 +1,6 @@
 package leo14.typed.compiler
 
 import leo.base.ifNotNull
-import leo.base.runIf
 import leo13.fold
 import leo13.reverse
 import leo14.*
@@ -17,7 +16,7 @@ fun Processor<Syntax>.process(leo: Leo<Native>): Processor<Syntax> =
 		is ActionParserLeo -> process(leo.actionParser)
 		is ArrowParserLeo -> process(leo.arrowParser)
 		is ChoiceParserLeo -> process(leo.choiceParser)
-		is CompiledParserLeo -> process(leo.compiledParser)
+		is CompiledParserLeo -> processWithTypes(leo.compiledParser)
 		is DeleteParserLeo -> process(leo.deleteParser)
 		is NativeParserLeo -> process(leo.nativeParser)
 		is NothingParserLeo -> process(leo.nothingParser)
@@ -48,6 +47,14 @@ fun Processor<Syntax>.process(parser: ChoiceParser<Native>): Processor<Syntax> =
 		.process(token(begin(parser.dictionary.choice)) of typeKeywordKind)
 		.fold(parser.choice.optionStack.reverse) { process(it, parser.dictionary) }
 
+fun Processor<Syntax>.processWithTypes(compiledParser: CompiledParser<Native>): Processor<Syntax> =
+	if (types)
+		this
+			.process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
+			.process(token(begin("with")) of valueKeywordKind)
+			.process(compiledParser)
+	else process(compiledParser)
+
 fun Processor<Syntax>.process(compiledParser: CompiledParser<Native>): Processor<Syntax> =
 	this
 		.ifNotNull(compiledParser.parent) { process(it) }
@@ -56,12 +63,6 @@ fun Processor<Syntax>.process(compiledParser: CompiledParser<Native>): Processor
 				Phase.COMPILER -> process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
 				Phase.EVALUATOR -> syntaxProcess(compiledParser.compiled.typed.decompile)
 			}
-		}
-		.runIf(types) {
-			this
-				.process(token(begin(compiledParser.context.dictionary.`as`)) of valueKeywordKind)
-				.process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
-				.process(token(end) of valueKeywordKind)
 		}
 
 fun Processor<Syntax>.process(parser: TypeParser<Native>): Processor<Syntax> =
