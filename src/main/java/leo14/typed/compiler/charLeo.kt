@@ -36,6 +36,9 @@ fun CharLeo.put(char: Char): CharLeo =
 fun CharLeo.put(string: String) =
 	fold(string) { put(it) }
 
+fun CharLeo.put(script: Script) =
+	copy(leo = leo.parse(script))
+
 val CharLeo.spacedString: String
 	get() =
 		processorString {

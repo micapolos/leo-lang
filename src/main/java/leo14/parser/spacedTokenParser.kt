@@ -1,6 +1,7 @@
 package leo14.parser
 
 import leo.base.fold
+import leo.base.ifOrNull
 import leo14.*
 
 sealed class SpacedTokenParser
@@ -23,10 +24,11 @@ fun SpacedTokenParser.parse(char: Char): SpacedTokenParser? =
 		is TokenSpacedTokenParser ->
 			null
 		is LiteralSpacedTokenParser ->
-			when (char) {
-				' ' -> literalParser.literalOrNull?.let(::token)?.let(::TokenSpacedTokenParser)
-				else -> literalParser.parse(char)?.let(::LiteralSpacedTokenParser)
-			}
+			literalParser.parse(char)
+				?.let(::LiteralSpacedTokenParser)
+				?: ifOrNull(char == ' ') {
+					literalParser.literalOrNull?.let(::token)?.let(::TokenSpacedTokenParser)
+				}
 		is NameSpacedTokenParser ->
 			when (char) {
 				' ' -> nameParser.nameOrNull?.let { TokenSpacedTokenParser(token(begin(it))) }
