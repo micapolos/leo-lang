@@ -1,6 +1,7 @@
 package leo14
 
 import java.lang.Runtime.getRuntime
+import java.lang.System.getProperty
 
 val leonardoScript =
 	script(
@@ -11,23 +12,23 @@ val leonardoScript =
 				literal("Michał Pociecha-Łoś")),
 			"operating" lineTo script(
 				"system" lineTo script(
-					"architecture" lineTo script(
-						literal(System.getProperty("os.arch"))),
 					"name" lineTo script(
-						literal(System.getProperty("os.name"))),
+						literal(getProperty("os.name"))),
 					"version" lineTo script(
-						literal(System.getProperty("os.version"))))),
+						literal(getProperty("os.version"))),
+					"architecture" lineTo script(
+						literal(getProperty("os.arch"))))),
 			"runtime" lineTo script(
 				"name" lineTo script(
 					literal("Java")),
 				"version" lineTo script(
-					literal(System.getProperty("java.version"))),
+					literal(getProperty("java.version"))),
 				"vendor" lineTo script(
-					literal(System.getProperty("java.vendor"))),
+					literal(getProperty("java.vendor"))),
 				"home" lineTo script(
 					"folder" lineTo script(
 						"name" lineTo script(
-							literal(System.getProperty("java.home"))))),
+							literal(getProperty("java.home"))))),
 				"memory" lineTo script(
 					"total" lineTo script(
 						"byte" lineTo script(
@@ -40,12 +41,12 @@ val leonardoScript =
 					"count" lineTo script(
 						literal(getRuntime().availableProcessors())))),
 			"user" lineTo script(
-				"name" lineTo script(literal(System.getProperty("user.name"))),
+				"name" lineTo script(literal(getProperty("user.name"))),
 				"home" lineTo script(
 					"folder" lineTo script(
 						"name" lineTo script(
-							literal(System.getProperty("user.home"))))),
+							literal(getProperty("user.home"))))),
 				"working" lineTo script(
 					"folder" lineTo script(
 						"name" lineTo script(
-							literal(System.getProperty("user.dir"))))))))
+							literal(getProperty("user.dir"))))))))
