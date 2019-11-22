@@ -14,12 +14,12 @@ data class ArrowParser<T>(
 data class ArrowParserParent<T>(
 	val typeParser: TypeParser<T>)
 
-fun <T> ArrowParser<T>.parse(token: Token): Leo<T> =
+fun <T> ArrowParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
 		is LiteralToken -> null
 		is BeginToken -> null
 		is EndToken -> parent.end(arrow)
 	} ?: error("$this.parse($token)")
 
-fun <T> ArrowParserParent<T>.end(arrow: Arrow): Leo<T> =
-	leo(typeParser.plus(line(arrow)))
+fun <T> ArrowParserParent<T>.end(arrow: Arrow): Compiler<T> =
+	compiler(typeParser.plus(line(arrow)))

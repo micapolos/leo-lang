@@ -14,16 +14,15 @@ data class MatchParser<T>(
 	val caseLineStack: Stack<Line>,
 	val match: Match<T>)
 
-fun <T> MatchParser<T>.parse(token: Token): Leo<T> =
+fun <T> MatchParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
 		is LiteralToken ->
 			null
 		is BeginToken -> match.beginCase(token.begin.string)
 			.let { case ->
-				leo(
+				compiler(
 					CompiledParser(
 						MatchParserParent(copy(match = case.match), token.begin.string),
-						null,
 						parentCompiledParser.context,
 						Phase.COMPILER,
 						parentCompiledParser.compiled.beginDoes(parentCompiledParser.compiled.typed.type)))

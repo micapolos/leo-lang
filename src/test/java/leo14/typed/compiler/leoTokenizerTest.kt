@@ -9,7 +9,7 @@ class LeoTokenizerTest {
 	@Test
 	fun tokenize() {
 		processorString {
-			map(Token::coreString).map(Syntax::token).process(emptyLeo.parse(token(begin("foo"))))
+			map(Token::coreString).map(Syntax::token).process(EMPTY_COMPILER.parse(token(begin("foo"))))
 		}.assertEqualTo("foo(")
 	}
 }

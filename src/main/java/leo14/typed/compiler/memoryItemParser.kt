@@ -7,7 +7,7 @@ data class MemoryItemParser<T>(
 	val parentCompiledParser: CompiledParser<T>,
 	val memoryItem: MemoryItem<T>)
 
-fun <T> MemoryItemParser<T>.parse(token: Token): Leo<T> =
+fun <T> MemoryItemParser<T>.parse(token: Token): Compiler<T> =
 	if (token is EndToken)
 		parentCompiledParser.next {
 			updateMemory { plus(memoryItem) }

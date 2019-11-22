@@ -16,20 +16,20 @@ data class MakeScriptParserParent<T>(
 	val compiledParser: CompiledParser<T>) : ScriptParserParent<T>()
 
 data class CommentScriptParserParent<T>(
-	val leo: Leo<T>) : ScriptParserParent<T>()
+	val compiler: Compiler<T>) : ScriptParserParent<T>()
 
-fun <T> ScriptParser<T>.parse(token: Token): Leo<T> =
+fun <T> ScriptParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
-		is LiteralToken -> leo(plus(line(token.literal)))
-		is BeginToken -> leo(ScriptParser(FieldScriptParserParent(this, token.begin.string), script()))
+		is LiteralToken -> compiler(plus(line(token.literal)))
+		is BeginToken -> compiler(ScriptParser(FieldScriptParserParent(this, token.begin.string), script()))
 		is EndToken -> parent.end(script)
 	}
 
-fun <T> ScriptParserParent<T>.end(script: Script): Leo<T> =
+fun <T> ScriptParserParent<T>.end(script: Script): Compiler<T> =
 	when (this) {
-		is FieldScriptParserParent -> leo(scriptParser.plus(name lineTo script))
+		is FieldScriptParserParent -> compiler(scriptParser.plus(name lineTo script))
 		is MakeScriptParserParent -> compiledParser.make(script)
-		is CommentScriptParserParent -> leo
+		is CommentScriptParserParent -> compiler
 	}
 
 fun <T> ScriptParser<T>.plus(line: ScriptLine) =

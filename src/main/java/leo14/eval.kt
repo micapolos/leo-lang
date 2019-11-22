@@ -10,9 +10,9 @@ val String.eval: String
 
 val Script.eval: Script
 	get() =
-		leo(compiled(typed()), Phase.EVALUATOR)
+		compiler(compiled(typed()), Phase.EVALUATOR)
 			.parse(this)
-			.run { this as CompiledParserLeo<Native> }
+			.run { this as CompiledParserCompiler<Native> }
 			.compiledParser
 			.compiled
 			.typed

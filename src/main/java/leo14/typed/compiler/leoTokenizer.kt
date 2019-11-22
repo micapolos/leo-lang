@@ -11,20 +11,19 @@ import leo14.typed.process
 
 val types = false
 
-fun Processor<Syntax>.process(leo: Leo<Native>): Processor<Syntax> =
-	when (leo) {
-		is ActionParserLeo -> process(leo.actionParser)
-		is ArrowParserLeo -> process(leo.arrowParser)
-		is ChoiceParserLeo -> process(leo.choiceParser)
-		is CompiledParserLeo -> processWithTypes(leo.compiledParser)
-		is DeleteParserLeo -> process(leo.deleteParser)
-		is NativeParserLeo -> process(leo.nativeParser)
-		is NothingParserLeo -> process(leo.nothingParser)
-		is RememberParserLeo -> process(leo.memoryItemParser)
-		is TypeParserLeo -> process(leo.typeParser)
-		is MatchParserLeo -> process(leo.matchParser)
-		is ScriptParserLeo -> process(leo.scriptParser)
-		is EvaluatorLeo -> TODO()
+fun Processor<Syntax>.process(compiler: Compiler<Native>): Processor<Syntax> =
+	when (compiler) {
+		is ActionParserCompiler -> process(compiler.actionParser)
+		is ArrowParserCompiler -> process(compiler.arrowParser)
+		is ChoiceParserCompiler -> process(compiler.choiceParser)
+		is CompiledParserCompiler -> processWithTypes(compiler.compiledParser)
+		is DeleteParserCompiler -> process(compiler.deleteParser)
+		is NativeParserCompiler -> process(compiler.nativeParser)
+		is NothingParserCompiler -> process(compiler.nothingParser)
+		is RememberParserCompiler -> process(compiler.memoryItemParser)
+		is TypeParserCompiler -> process(compiler.typeParser)
+		is MatchParserCompiler -> process(compiler.matchParser)
+		is ScriptParserCompiler -> process(compiler.scriptParser)
 	}
 
 fun Processor<Syntax>.process(parser: ActionParser<Native>): Processor<Syntax> =
@@ -100,7 +99,7 @@ fun Processor<Syntax>.process(parent: ScriptParserParent<Native>): Processor<Syn
 			.process(parent.compiledParser)
 			.process(token(begin(parent.compiledParser.context.dictionary.make)) of valueKind)
 		is CommentScriptParserParent -> this
-			.process(parent.leo)
+			.process(parent.compiler)
 			.process(token(begin(defaultDictionary.comment)) of commentKind)
 	}
 

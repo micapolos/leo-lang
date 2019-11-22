@@ -21,16 +21,16 @@ data class ActionDoesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : Ty
 data class ArrowGivingTypeBeginner<T>(val typeParser: TypeParser<T>) : TypeBeginner<T>()
 data class RememberTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 
-fun <T> TypeParser<T>.parse(token: Token): Leo<T> =
+fun <T> TypeParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
 		is LiteralToken -> null
 		is BeginToken -> beginner
 			?.begin(dictionary, type, token.begin)
 			?: when (token.begin.string) {
-				dictionary.choice -> leo(ChoiceParser(ChoiceParserParent(this), dictionary, choice()))
-				dictionary.action -> leo(TypeParser(null, ArrowGivingTypeBeginner(this), dictionary, type()))
-				dictionary.native -> leo(NativeParser(this))
-				else -> leo(TypeParser(LineTypeParserParent(this, token.begin.string), null, dictionary, type()))
+				dictionary.choice -> compiler(ChoiceParser(ChoiceParserParent(this), dictionary, choice()))
+				dictionary.action -> compiler(TypeParser(null, ArrowGivingTypeBeginner(this), dictionary, type()))
+				dictionary.native -> compiler(NativeParser(this))
+				else -> compiler(TypeParser(LineTypeParserParent(this, token.begin.string), null, dictionary, type()))
 			}
 		is EndToken -> parent?.end(type)
 	} ?: error("$this.parse($token)")
@@ -38,12 +38,12 @@ fun <T> TypeParser<T>.parse(token: Token): Leo<T> =
 fun <T> TypeParser<T>.plus(line: Line): TypeParser<T> =
 	copy(type = type.plus(line))
 
-fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin): Leo<T>? =
+fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin): Compiler<T>? =
 	when (this) {
 		is ArrowGivingTypeBeginner ->
 			when (begin.string) {
 				dictionary.giving ->
-					leo(
+					compiler(
 						TypeParser(
 							ArrowGivingTypeParserParent(typeParser, type),
 							null,
@@ -54,10 +54,9 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 		is ActionDoesTypeBeginner ->
 			when (begin.string) {
 				dictionary.does ->
-					leo(
+					compiler(
 						CompiledParser(
 							ActionDoesParserParent(compiledParser, type),
-							null,
 							compiledParser.context,
 							Phase.COMPILER,
 							compiledParser.compiled.beginDoes(type)))
@@ -66,18 +65,16 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 		is RememberTypeBeginner ->
 			when (begin.string) {
 				dictionary.`is` ->
-					leo(
+					compiler(
 						CompiledParser(
 							RememberIsParserParent(compiledParser, type),
-							null,
 							compiledParser.context,
 							compiledParser.phase,
 							compiledParser.compiled.begin))
 				dictionary.does ->
-					leo(
+					compiler(
 						CompiledParser(
 							RememberDoesParserParent(compiledParser, type),
-							null,
 							compiledParser.context,
 							Phase.COMPILER,
 							compiledParser.compiled.beginDoes(type)))
@@ -85,14 +82,14 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 			}
 	}
 
-fun <T> TypeParserParent<T>.end(type: Type): Leo<T>? =
+fun <T> TypeParserParent<T>.end(type: Type): Compiler<T>? =
 	when (this) {
 		is LineTypeParserParent ->
-			leo(typeParser.plus(name lineTo type))
+			compiler(typeParser.plus(name lineTo type))
 		is ArrowGivingTypeParserParent ->
-			leo(ArrowParser(ArrowParserParent(typeParser), lhsType arrowTo type))
+			compiler(ArrowParser(ArrowParserParent(typeParser), lhsType arrowTo type))
 		is OptionTypeParserParent ->
-			leo(choiceParser.plus(name optionTo type))
+			compiler(choiceParser.plus(name optionTo type))
 		is AsTypeParserParent ->
 			compiledParser.next { updateTyped { `as`(type) } }
 		is ForgetTypeParserParent ->

@@ -17,14 +17,14 @@ import kotlin.test.Test
 class TypeParserTest {
 	@Test
 	fun simpleType() {
-		leo(type())
+		compiler(type())
 			.parse(
 				script(
 					"point" lineTo script(
 						"x" lineTo script("zero"),
 						"y" lineTo script("one"))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					type(
 						"point" lineTo type(
 							"x" lineTo type("zero"),
@@ -33,21 +33,21 @@ class TypeParserTest {
 
 	@Test
 	fun nativeType() {
-		leo(type())
+		compiler(type())
 			.parse(script(defaultDictionary.native lineTo script()))
-			.assertEqualTo(leo(nativeType))
+			.assertEqualTo(compiler(nativeType))
 	}
 
 	@Test
 	fun choiceType() {
-		leo(type())
+		compiler(type())
 			.parse(
 				script(
 					defaultDictionary.choice lineTo script(
 						"zero" lineTo script("foo"),
 						"one" lineTo script("bar"))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					type(
 						line(
 							choice(
@@ -57,7 +57,7 @@ class TypeParserTest {
 
 	@Test
 	fun arrowType() {
-		leo(type())
+		compiler(type())
 			.parse(
 				script(
 					defaultDictionary.action lineTo script(
@@ -65,7 +65,7 @@ class TypeParserTest {
 						"plus" lineTo script("two"),
 						defaultDictionary.giving lineTo script("three"))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					type(
 						line(
 							type(
@@ -75,14 +75,14 @@ class TypeParserTest {
 
 	@Test
 	fun compiledFields() {
-		leo(compiled(typed()))
+		compiler(compiled(typed()))
 			.parse(
 				script(
 					"point" lineTo script(
 						"x" lineTo script("zero"),
 						"y" lineTo script("one"))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					compiled(
 						typed(
 							"point" fieldTo typed(
@@ -92,9 +92,9 @@ class TypeParserTest {
 
 	@Test
 	fun compiledNothing() {
-		leo(compiled(typed("zero")))
+		compiler(compiled(typed("zero")))
 			.parse(script("nothing"))
-			.assertEqualTo(leo(compiled(typed("zero"))))
+			.assertEqualTo(compiler(compiled(typed("zero"))))
 	}
 
 	@Test
@@ -105,31 +105,31 @@ class TypeParserTest {
 					"x" lineTo typed(native(10)),
 					"y" lineTo typed(native(11)))))
 
-		leo(compiled)
+		compiler(compiled)
 			.parse(script("x"))
-			.assertEqualTo(leo(compiled.resolve("x" lineTo typed(), nativeContext)))
+			.assertEqualTo(compiler(compiled.resolve("x" lineTo typed(), nativeContext)))
 	}
 
 	@Test
 	fun compiledDelete() {
-		leo(compiled(typed("zero")))
+		compiler(compiled(typed("zero")))
 			.parse(script(defaultDictionary.delete))
-			.assertEqualTo(leo(compiled(typed())))
+			.assertEqualTo(compiler(compiled(typed())))
 	}
 
 	@Test
 	fun compiledGive() {
-		leo(compiled(typed("zero")))
+		compiler(compiled(typed("zero")))
 			.parse(
 				script(
 					defaultDictionary.give lineTo script(
 						"one" lineTo script())))
-			.assertEqualTo(leo(compiled(typed("one"))))
+			.assertEqualTo(compiler(compiled(typed("one"))))
 	}
 
 	@Test
 	fun compiledAs() {
-		leo(compiled(typed()))
+		compiler(compiled(typed()))
 			.parse(
 				script(
 					"false" lineTo script(),
@@ -137,14 +137,14 @@ class TypeParserTest {
 						defaultDictionary.choice lineTo script(
 							"true", "false"))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					compiled(
 						typed<Native>("false") `as` type(choice("true", "false")))))
 	}
 
 	@Test
 	fun compiledAction() {
-		leo(compiled(typed()))
+		compiler(compiled(typed()))
 			.parse(
 				script(
 					defaultDictionary.action lineTo script(
@@ -152,7 +152,7 @@ class TypeParserTest {
 						defaultDictionary.does lineTo script(
 							"plus" lineTo script("one")))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					compiled(
 						typed<Native>()
 							.plus(type("zero") does typed(
@@ -163,21 +163,21 @@ class TypeParserTest {
 	@Test
 	fun compiledDo() {
 		val action = type("zero") does typed<Native>("one")
-		leo(compiled(typed(action)))
+		compiler(compiled(typed(action)))
 			.parse(script("do" lineTo script("zero")))
-			.assertEqualTo(leo(compiled(action.resolve(typed("zero"))!!)))
+			.assertEqualTo(compiler(compiled(action.resolve(typed("zero"))!!)))
 	}
 
 	@Test
 	fun compiledRememberIs() {
-		leo(compiled(typed("foo")))
+		compiler(compiled(typed("foo")))
 			.parse(
 				script(
 					"remember" lineTo script(
 						"zero" lineTo script(),
 						"is" lineTo script("one"))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					compiled(
 						typed("foo"),
 						memory(
@@ -195,21 +195,21 @@ class TypeParserTest {
 					type("zero") does typed("one"),
 					needsInvoke = false)))
 
-		leo(compiled)
+		compiler(compiled)
 			.parse(script("zero"))
-			.assertEqualTo(leo(compiled.updateTyped { typed(index0, type("one")) }))
+			.assertEqualTo(compiler(compiled.updateTyped { typed(index0, type("one")) }))
 	}
 
 	@Test
 	fun compiledRememberDoes() {
-		leo(compiled(typed("foo")))
+		compiler(compiled(typed("foo")))
 			.parse(
 				script(
 					"remember" lineTo script(
 						"zero" lineTo script(),
 						"does" lineTo script("done"))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					compiled(
 						typed("foo"),
 						memory(
@@ -220,7 +220,7 @@ class TypeParserTest {
 
 	@Test
 	fun compiledRemindRememberDoes() {
-		leo(compiled(typed()))
+		compiler(compiled(typed()))
 			.parse(
 				script(
 					"remember" lineTo script(
@@ -228,7 +228,7 @@ class TypeParserTest {
 						"does" lineTo script("done")),
 					"zero" lineTo script()))
 			.assertEqualTo(
-				leo(
+				compiler(
 					compiled(
 						typed(arg0<Native>().invoke(typed<Native>("zero").term), type("zero")).resolveWrap("done"),
 						memory(
@@ -239,14 +239,14 @@ class TypeParserTest {
 
 	@Test
 	fun compiledForget() {
-		leo(compiled(typed()))
+		compiler(compiled(typed()))
 			.parse(script("forget" lineTo script("zero")))
-			.assertEqualTo(leo(compiled(typed(), memory(forget(type("zero"))))))
+			.assertEqualTo(compiler(compiled(typed(), memory(forget(type("zero"))))))
 	}
 
 	@Test
 	fun compiledComment() {
-		leo(compiled(typed()))
+		compiler(compiled(typed()))
 			.parse(
 				script(
 					"comment" lineTo script("one"),
@@ -262,7 +262,7 @@ class TypeParserTest {
 							"comment" lineTo script("six")),
 						"comment" lineTo script("seven"))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					compiled(
 						typed<Native>("zero")
 							.`as`(type(choice("zero", "one"))))))
@@ -270,31 +270,31 @@ class TypeParserTest {
 
 	@Test
 	fun compileLiteral() {
-		leo(compiled(typed()))
+		compiler(compiled(typed()))
 			.parse(script(literal(123)))
-			.assertEqualTo(leo(compiled(typed(native(123)))))
+			.assertEqualTo(compiler(compiled(typed(native(123)))))
 	}
 
 	@Test
 	fun compileIntNativePlus() {
-		leo(compiled(typed()))
+		compiler(compiled(typed()))
 			.parse(
 				script(
 					line(literal(123)),
 					"plus" lineTo script(literal(123))))
 			.assertEqualTo(
-				leo(
+				compiler(
 					compiled(
 						nativeContext.resolve(typed(native(123)).plus("plus" lineTo typed(native(123))))!!)))
 	}
 
 	@Test
 	fun evalIntNativePlus() {
-		leo(compiled(typed()), Phase.EVALUATOR)
+		compiler(compiled(typed()), Phase.EVALUATOR)
 			.parse(
 				script(
 					line(literal(2)),
 					"plus" lineTo script(literal(3))))
-			.assertEqualTo(leo(compiled(typed(native(5))), Phase.EVALUATOR))
+			.assertEqualTo(compiler(compiled(typed(native(5))), Phase.EVALUATOR))
 	}
 }

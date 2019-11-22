@@ -1,23 +1,26 @@
 package leo14.typed.compiler
 
-import leo14.BeginToken
-import leo14.EndToken
-import leo14.LiteralToken
 import leo14.Token
-import leo14.typed.Typed
 
 data class Evaluator<T>(
-	val parent: EvaluatorParent<T>?,
-	val compiledParser: CompiledParser<T>)
+	val compiler: Compiler<T>)
 
-sealed class EvaluatorParent<T>
+fun <T> Evaluator<T>.parse(token: Token): Evaluator<T> =
+	compiler.parse(token).evaluator
 
-fun <T> Evaluator<T>.parse(token: Token): Leo<T> =
-	when (token) {
-		is LiteralToken -> leo(copy(compiledParser = compiledParser.plus(token.literal)))
-		is BeginToken -> TODO()
-		is EndToken -> parent?.ret(compiledParser.compiled.resolveForEnd.typed)
-	} ?: error("$this.parse($token)")
+val <T> Compiler<T>.evaluator: Evaluator<T>
+	get() =
+		when (this) {
+			is ActionParserCompiler -> TODO()
+			is ArrowParserCompiler -> TODO()
+			is ChoiceParserCompiler -> TODO()
+			is CompiledParserCompiler -> TODO()
+			is DeleteParserCompiler -> TODO()
+			is NativeParserCompiler -> TODO()
+			is NothingParserCompiler -> TODO()
+			is RememberParserCompiler -> TODO()
+			is TypeParserCompiler -> TODO()
+			is MatchParserCompiler -> TODO()
+			is ScriptParserCompiler -> TODO()
+		}
 
-fun <T> EvaluatorParent<T>.ret(typed: Typed<T>): Leo<T> =
-	TODO()

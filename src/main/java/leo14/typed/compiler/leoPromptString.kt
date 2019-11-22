@@ -2,21 +2,20 @@ package leo14.typed.compiler
 
 import leo14.typed.coreString
 
-val Leo<*>.promptString: String
+val Compiler<*>.promptString: String
 	get() =
 		when (this) {
-			is ActionParserLeo -> "action"
-			is ArrowParserLeo -> "arrow"
-			is ChoiceParserLeo -> "option"
-			is CompiledParserLeo -> compiledParser.promptString
-			is DeleteParserLeo -> deleteParser.parentCompiledParser.promptString
-			is NativeParserLeo -> "type"
-			is NothingParserLeo -> nothingParser.parentCompiledParser.promptString
-			is RememberParserLeo -> "remember"
-			is TypeParserLeo -> "type"
-			is MatchParserLeo -> "match"
-			is ScriptParserLeo -> "script"
-			is EvaluatorLeo -> "evaluator"
+			is ActionParserCompiler -> "action"
+			is ArrowParserCompiler -> "arrow"
+			is ChoiceParserCompiler -> "option"
+			is CompiledParserCompiler -> compiledParser.promptString
+			is DeleteParserCompiler -> deleteParser.parentCompiledParser.promptString
+			is NativeParserCompiler -> "type"
+			is NothingParserCompiler -> nothingParser.parentCompiledParser.promptString
+			is RememberParserCompiler -> "remember"
+			is TypeParserCompiler -> "type"
+			is MatchParserCompiler -> "match"
+			is ScriptParserCompiler -> "script"
 		}
 
 val CompiledParser<*>.promptString

@@ -8,7 +8,6 @@ import leo14.typed.*
 
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
-	val sibling: CompiledParserSibling<T>?,
 	val context: Context<T>,
 	val phase: Phase,
 	val compiled: Compiled<T>)
@@ -22,41 +21,38 @@ data class RememberDoesParserParent<T>(val compiledParser: CompiledParser<T>, va
 data class RememberIsParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class MatchParserParent<T>(val matchParser: MatchParser<T>, val name: String) : CompiledParserParent<T>()
 
-sealed class CompiledParserSibling<T>
-
-fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
+fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
 		is LiteralToken ->
-			leo(plus(token.literal))
+			compiler(plus(token.literal))
 		is BeginToken ->
 			when (token.begin.string) {
 				context.dictionary.action ->
-					leo(TypeParser(null, ActionDoesTypeBeginner(this), context.dictionary, type()))
+					compiler(TypeParser(null, ActionDoesTypeBeginner(this), context.dictionary, type()))
 				context.dictionary.`as` ->
-					leo(TypeParser(AsTypeParserParent(this), null, context.dictionary, type()))
+					compiler(TypeParser(AsTypeParserParent(this), null, context.dictionary, type()))
 				context.dictionary.`do` ->
 					compiled.typed.action.let { action ->
-						leo(CompiledParser(ActionDoParserParent(this, action), null, context, phase, compiled.begin))
+						compiler(CompiledParser(ActionDoParserParent(this, action), context, phase, compiled.begin))
 					}
 				context.dictionary.give ->
-					leo(CompiledParser(GiveCompiledParserParent(this), null, context, phase, compiled.begin))
+					compiler(CompiledParser(GiveCompiledParserParent(this), context, phase, compiled.begin))
 				context.dictionary.delete ->
-					leo(DeleteParser(this))
+					compiler(DeleteParser(this))
 				context.dictionary.nothing ->
-					leo(NothingParser(this))
+					compiler(NothingParser(this))
 				context.dictionary.match ->
-					leo(MatchParser(this, stack(), compiled.typed.beginMatch()))
+					compiler(MatchParser(this, stack(), compiled.typed.beginMatch()))
 				context.dictionary.make ->
-					leo(ScriptParser(MakeScriptParserParent(this), script()))
+					compiler(ScriptParser(MakeScriptParserParent(this), script()))
 				context.dictionary.remember ->
-					leo(TypeParser(null, RememberTypeBeginner(this), context.dictionary, type()))
+					compiler(TypeParser(null, RememberTypeBeginner(this), context.dictionary, type()))
 				context.dictionary.forget ->
-					leo(TypeParser(ForgetTypeParserParent(this), null, context.dictionary, type()))
+					compiler(TypeParser(ForgetTypeParserParent(this), null, context.dictionary, type()))
 				else ->
-					CompiledParserLeo(
+					CompiledParserCompiler(
 						CompiledParser(
 							FieldCompiledParserParent(this, token.begin.string),
-							null,
 							context,
 							phase,
 							compiled.begin))
@@ -64,29 +60,26 @@ fun <T> CompiledParser<T>.parse(token: Token): Leo<T> =
 		is EndToken -> parent?.end(compiled.resolveForEnd)
 	} ?: error("$this.parse($token)")
 
-fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Leo<T> =
+fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Compiler<T> =
 	when (this) {
 		is FieldCompiledParserParent ->
-			leo(compiledParser.resolve(line(name fieldTo compiled.typed)))
+			compiler(compiledParser.resolve(line(name fieldTo compiled.typed)))
 		is ActionDoesParserParent ->
-			leo(ActionParser(compiledParser, type does compiled.typed))
+			compiler(ActionParser(compiledParser, type does compiled.typed))
 		is ActionDoParserParent ->
 			compiledParser.next { updateTyped { action.`do`(compiled.typed) } }
 		is GiveCompiledParserParent ->
 			compiledParser.next { updateTyped { compiled.typed } }
 		is RememberDoesParserParent ->
-			leo(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = true)))
+			compiler(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = true)))
 		is RememberIsParserParent ->
-			leo(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = false)))
+			compiler(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = false)))
 		is MatchParserParent ->
-			leo(matchParser.plus(name, compiled))
+			compiler(matchParser.plus(name, compiled))
 	}
 
-fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Leo<T> =
-	compiled.fn().let { sibling?.next(it) ?: leo(updateCompiled(fn)) }
-
-fun <T> CompiledParserSibling<T>.next(compiled: Compiled<T>): Leo<T> =
-	TODO()
+fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
+	compiler(updateCompiled(fn))
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
 	copy(compiled = compiled.resolve(line, context).resolve(phase, context.nativeApply))
@@ -98,7 +91,7 @@ val <T> CompiledParser<T>.delete
 	get() =
 		next { updateTyped { typed() } }
 
-fun <T> CompiledParser<T>.make(script: Script): Leo<T> =
+fun <T> CompiledParser<T>.make(script: Script): Compiler<T> =
 	when (script) {
 		is UnitScript -> null
 		is LinkScript -> ifOrNull(script.link.lhs.isEmpty) {

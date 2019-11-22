@@ -8,8 +8,8 @@ import leo.java.lang.sttyPrivateMode
 import leo13.linkOrNull
 import leo13.push
 import leo13.stack
-import leo14.typed.compiler.CharLeo
-import leo14.typed.compiler.emptyCharLeo
+import leo14.typed.compiler.CharCompiler
+import leo14.typed.compiler.emptyCharCompiler
 import leo14.typed.compiler.indentColorString
 import leo14.typed.compiler.put
 import java.io.InputStreamReader
@@ -18,12 +18,12 @@ const val printErrors = false
 
 fun main() {
 	sttyPrivateMode()
-	var stack = stack<CharLeo>()
-	var charLeo = emptyCharLeo.put(leonardoScript)
+	var stack = stack<CharCompiler>()
+	var charCompiler = emptyCharCompiler.put(leonardoScript)
 	var errorToPrint: Throwable? = null
 	val reader = InputStreamReader(System.`in`)
 	while (true) {
-		print(charLeo)
+		print(charCompiler)
 		errorToPrint?.run {
 			println("ERROR")
 			printStackTrace()
@@ -33,13 +33,13 @@ fun main() {
 		if (char == 127) {
 			if (errorToPrint != null) errorToPrint = null
 			else stack.linkOrNull?.let { link ->
-				charLeo = link.value
+				charCompiler = link.value
 				stack = link.stack
 			}
 		} else if (errorToPrint == null) try {
-			val newCharLeo = charLeo.put(char.toChar())
-			stack = stack.push(charLeo)
-			charLeo = newCharLeo
+			val newCharCompiler = charCompiler.put(char.toChar())
+			stack = stack.push(charCompiler)
+			charCompiler = newCharCompiler
 		} catch (e: RuntimeException) {
 			print(bellChar)
 			if (printErrors) errorToPrint = e
@@ -47,8 +47,8 @@ fun main() {
 	}
 }
 
-fun print(charLeo: CharLeo) {
+fun print(charCompiler: CharCompiler) {
 	print("${ansi.clear}${ansi.home}")
 //	println("context> ${charLeo.leo.promptString}")
-	print("${charLeo.indentColorString}")
+	print("${charCompiler.indentColorString}")
 }

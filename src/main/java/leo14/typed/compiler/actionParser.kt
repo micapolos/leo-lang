@@ -9,7 +9,7 @@ data class ActionParser<T>(
 	val parentCompiledParser: CompiledParser<T>,
 	val action: Action<T>)
 
-fun <T> ActionParser<T>.parse(token: Token): Leo<T> =
+fun <T> ActionParser<T>.parse(token: Token): Compiler<T> =
 	if (token is EndToken)
 		parentCompiledParser.next {
 			updateTyped {
