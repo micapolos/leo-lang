@@ -66,6 +66,10 @@ fun <T, R> Term<T>.abstraction(index: Index, fn: (Term<T>) -> R): R =
 		}
 	}
 
+val <T : Any> Term<T>.nativeOrNull: T?
+	get() =
+		(this as? NativeTerm)?.native
+
 val <T> Term<T>.native: T
 	get() =
 		(this as NativeTerm).native
