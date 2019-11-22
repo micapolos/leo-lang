@@ -8,15 +8,10 @@ data class ScriptParser<T>(
 
 sealed class ScriptParserParent<T>
 
-data class FieldScriptParserParent<T>(
-	val scriptParser: ScriptParser<T>,
-	val name: String) : ScriptParserParent<T>()
-
-data class MakeScriptParserParent<T>(
-	val compiledParser: CompiledParser<T>) : ScriptParserParent<T>()
-
-data class CommentScriptParserParent<T>(
-	val compiler: Compiler<T>) : ScriptParserParent<T>()
+data class FieldScriptParserParent<T>(val scriptParser: ScriptParser<T>, val name: String) : ScriptParserParent<T>()
+data class MakeScriptParserParent<T>(val compiledParser: CompiledParser<T>) : ScriptParserParent<T>()
+data class CommentScriptParserParent<T>(val compiler: Compiler<T>) : ScriptParserParent<T>()
+data class CompiledScriptParserParent<T>(val compiledParser: CompiledParser<T>) : ScriptParserParent<T>()
 
 fun <T> ScriptParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
@@ -30,6 +25,7 @@ fun <T> ScriptParserParent<T>.end(script: Script): Compiler<T> =
 		is FieldScriptParserParent -> compiler(scriptParser.plus(name lineTo script))
 		is MakeScriptParserParent -> compiledParser.make(script)
 		is CommentScriptParserParent -> compiler
+		is CompiledScriptParserParent -> compiler(compiledParser.plus(script))
 	}
 
 fun <T> ScriptParser<T>.plus(line: ScriptLine) =

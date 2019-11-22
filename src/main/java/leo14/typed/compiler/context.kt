@@ -6,7 +6,6 @@ import leo14.typed.Typed
 import leo14.typed.TypedLine
 
 typealias TypedResolve<T> = Typed<T>.() -> Typed<T>?
-typealias LiteralCompile<T> = Literal.() -> TypedLine<T>
 
 data class Context<T>(
 	val dictionary: Dictionary,

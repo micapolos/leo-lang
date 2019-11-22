@@ -101,6 +101,9 @@ fun Processor<Syntax>.process(parent: ScriptParserParent<Native>): Processor<Syn
 		is CommentScriptParserParent -> this
 			.process(parent.compiler)
 			.process(token(begin(defaultDictionary.comment)) of commentKind)
+		is CompiledScriptParserParent -> this
+			.process(parent.compiledParser)
+			.process(token(begin(defaultDictionary.script)) of commentKind)
 	}
 
 fun Processor<Syntax>.process(matchParser: MatchParser<Native>): Processor<Syntax> =
