@@ -170,7 +170,8 @@ fun Script.string(indent: Indent, config: IndentConfig): String =
 	when (this) {
 		is UnitScript -> ""
 		is LinkScript ->
-			if (config.maxDepth == 0 || config.maxLength == 0) "..."
+			if (config.maxLength == 0) "...${link.lineCount} more..."
+			else if (config.maxDepth == 0) "..."
 			else link.string(indent, config)
 	}
 
@@ -219,3 +220,24 @@ val ScriptLine.coreString: String
 val ScriptField.coreString: String
 	get() =
 		"$string(${rhs.coreString})"
+
+// === Line count
+
+val Script.lineSeq: Seq<ScriptLine>
+	get() =
+		when (this) {
+			is UnitScript -> emptySeq()
+			is LinkScript -> seq { link.lineSeqNode }
+		}
+
+val ScriptLink.lineSeqNode: SeqNode<ScriptLine>
+	get() =
+		line then lhs.lineSeq
+
+val Script.lineCount
+	get() =
+		0.fold(lineSeq) { inc() }
+
+val ScriptLink.lineCount
+	get() =
+		0.fold(lineSeqNode) { inc() }
