@@ -1,6 +1,6 @@
 package leo14
 
-import leo.base.*
+import leo.base.notNullOrError
 
 data class Fragment(
 	val parent: FragmentParent?,
@@ -30,26 +30,3 @@ fun Fragment.plusOrNull(token: Token): Fragment? =
 
 fun Fragment.plus(token: Token): Fragment =
 	plusOrNull(token).notNullOrError("$this.plus($token)")
-
-// === indentString
-
-val Fragment.indent: Indent
-	get() =
-		parent?.indent ?: 0.indent
-
-val FragmentParent.indent: Indent
-	get() =
-		fragment.indent.inc
-
-val Fragment.indentString: String
-	get() =
-		if (parent == null)
-			if (script.isEmpty) ""
-			else script.indentString + "\n"
-		else
-			if (script.isEmpty) parent.indentString + "\n" + indent.string
-			else parent.indentString + "\n" + indent.string + script.string(indent) + "\n" + indent.string
-
-val FragmentParent.indentString: String
-	get() =
-		fragment.indentString + begin.string

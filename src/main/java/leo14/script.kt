@@ -6,7 +6,7 @@ import leo13.fold
 import leo13.reverse
 
 sealed class Script {
-	override fun toString() = string(0.indent)
+	override fun toString() = string(0.indent, defaultIndentConfig)
 }
 
 data class UnitScript(val unit: Unit) : Script() {
@@ -18,7 +18,7 @@ data class LinkScript(val link: ScriptLink) : Script() {
 }
 
 sealed class ScriptLine {
-	override fun toString() = string(0.indent)
+	override fun toString() = string(0.indent, defaultIndentConfig)
 }
 
 data class LiteralScriptLine(val literal: Literal) : ScriptLine() {
@@ -30,11 +30,11 @@ data class FieldScriptLine(val field: ScriptField) : ScriptLine() {
 }
 
 data class ScriptLink(val lhs: Script, val line: ScriptLine) {
-	override fun toString() = string(0.indent)
+	override fun toString() = string(0.indent, defaultIndentConfig)
 }
 
 data class ScriptField(val string: String, val rhs: Script) {
-	override fun toString() = string(0.indent)
+	override fun toString() = string(0.indent, defaultIndentConfig)
 }
 
 fun script(unit: Unit): Script = UnitScript(unit)
@@ -164,34 +164,35 @@ fun <V> Stack<V>.script(fn: V.() -> ScriptLine): Script =
 
 // === Indented string
 
-val Script.indentString get() = string(0.indent)
+val Script.indentString get() = string(0.indent, defaultIndentConfig)
 
-fun Script.string(indent: Indent): String =
+fun Script.string(indent: Indent, config: IndentConfig): String =
 	when (this) {
 		is UnitScript -> ""
-		is LinkScript -> link.string(indent)
-	}
-
-fun ScriptLink.string(indent: Indent): String =
-	when (lhs) {
-		is UnitScript -> line.string(indent)
 		is LinkScript ->
-			/*if (lhs.isSimple) lhs.string(indent) + " " + line.string(indent)
-			else */lhs.string(indent) + "\n" + indent.string + line.string(indent)
+			if (config.maxDepth == 0 || config.maxLength == 0) "..."
+			else link.string(indent, config)
 	}
 
-fun ScriptLine.string(indent: Indent): String =
+fun ScriptLink.string(indent: Indent, config: IndentConfig): String =
+	when (lhs) {
+		is UnitScript -> line.string(indent, config)
+		is LinkScript ->
+			lhs.string(indent, config.next) + "\n" + indent.string + line.string(indent, config)
+	}
+
+fun ScriptLine.string(indent: Indent, config: IndentConfig): String =
 	when (this) {
 		is LiteralScriptLine -> literal.toString()
-		is FieldScriptLine -> field.string(indent)
+		is FieldScriptLine -> field.string(indent, config)
 	}
 
-fun ScriptField.string(indent: Indent): String =
+fun ScriptField.string(indent: Indent, config: IndentConfig): String =
 	when (rhs) {
 		is UnitScript -> string
 		is LinkScript ->
-			if (rhs.isSingleLine) "$string: ${rhs.string(indent)}"
-			else "$string\n${indent.inc.string}${rhs.string(indent.inc)}"
+			if (rhs.isSingleLine || config.maxDepth <= 1) "$string: ${rhs.string(indent, config.begin)}"
+			else "$string\n${indent.inc.string}${rhs.string(indent.inc, config.beginDeep)}"
 	}
 
 // == Core string
