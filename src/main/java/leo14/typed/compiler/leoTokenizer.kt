@@ -24,6 +24,7 @@ fun Processor<Syntax>.process(leo: Leo<Native>): Processor<Syntax> =
 		is TypeParserLeo -> process(leo.typeParser)
 		is MatchParserLeo -> process(leo.matchParser)
 		is ScriptParserLeo -> process(leo.scriptParser)
+		is EvaluatorLeo -> TODO()
 	}
 
 fun Processor<Syntax>.process(parser: ActionParser<Native>): Processor<Syntax> =

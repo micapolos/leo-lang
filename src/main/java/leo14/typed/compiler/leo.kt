@@ -18,6 +18,7 @@ data class RememberParserLeo<T>(val memoryItemParser: MemoryItemParser<T>) : Leo
 data class TypeParserLeo<T>(val typeParser: TypeParser<T>) : Leo<T>()
 data class MatchParserLeo<T>(val matchParser: MatchParser<T>) : Leo<T>()
 data class ScriptParserLeo<T>(val scriptParser: ScriptParser<T>) : Leo<T>()
+data class EvaluatorLeo<T>(val evaluator: Evaluator<T>) : Leo<T>()
 
 fun <T> leo(typeParser: TypeParser<T>): Leo<T> = TypeParserLeo(typeParser)
 fun <T> leo(choiceParser: ChoiceParser<T>): Leo<T> = ChoiceParserLeo(choiceParser)
@@ -30,12 +31,13 @@ fun <T> leo(nothingParser: NothingParser<T>): Leo<T> = NothingParserLeo(nothingP
 fun <T> leo(memoryItemParser: MemoryItemParser<T>): Leo<T> = RememberParserLeo(memoryItemParser)
 fun <T> leo(matchParser: MatchParser<T>): Leo<T> = MatchParserLeo(matchParser)
 fun <T> leo(scriptParser: ScriptParser<T>): Leo<T> = ScriptParserLeo(scriptParser)
+fun <T> leo(evaluator: Evaluator<T>): Leo<T> = EvaluatorLeo(evaluator)
 
 fun leo(type: Type): Leo<Native> =
 	leo(TypeParser(null, null, englishDictionary, type))
 
 fun leo(compiled: Compiled<Native>, phase: Phase = Phase.COMPILER): Leo<Native> =
-	CompiledParserLeo(CompiledParser(null, nativeContext, phase, compiled))
+	leo(CompiledParser(null, null, nativeContext, phase, compiled))
 
 val emptyLeo: Leo<Native> = leo(compiled(typed()), Phase.EVALUATOR)
 
@@ -67,6 +69,7 @@ fun <T> Leo<T>.parseDynamic(token: Token): Leo<T> =
 		is RememberParserLeo -> memoryItemParser.parse(token)
 		is MatchParserLeo -> matchParser.parse(token)
 		is ScriptParserLeo -> scriptParser.parse(token)
+		is EvaluatorLeo -> evaluator.parse(token)
 	}
 
 fun <T> Leo<T>.parse(script: Script): Leo<T> =

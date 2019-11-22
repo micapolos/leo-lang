@@ -1,6 +1,7 @@
 package leo14
 
 import leo.base.assertEqualTo
+import leo13.base.linesString
 import kotlin.test.Test
 
 class FragmentTest {
@@ -16,7 +17,10 @@ class FragmentTest {
 		emptyFragment
 			.begin("foo")
 			.indentString
-			.assertEqualTo("foo: ")
+			.assertEqualTo(
+				linesString(
+					"foo",
+					"  "))
 	}
 
 	@Test
@@ -25,7 +29,11 @@ class FragmentTest {
 			.begin("foo")
 			.begin("bar")
 			.indentString
-			.assertEqualTo("foo: bar: ")
+			.assertEqualTo(
+				linesString(
+					"foo",
+					"  bar",
+					"    "))
 	}
 
 	@Test
@@ -35,7 +43,11 @@ class FragmentTest {
 			.begin("bar")
 			.end
 			.indentString
-			.assertEqualTo("foo: bar ")
+			.assertEqualTo(
+				linesString(
+					"foo",
+					"  bar",
+					"  "))
 	}
 
 	@Test
@@ -46,7 +58,10 @@ class FragmentTest {
 			.end
 			.end
 			.indentString
-			.assertEqualTo("foo: bar\n")
+			.assertEqualTo(
+				linesString(
+					"foo: bar",
+					""))
 	}
 
 	@Test
@@ -57,15 +72,20 @@ class FragmentTest {
 			.end
 			.begin("zoo")
 			.indentString
-			.assertEqualTo("foo: bar zoo: ")
+			.assertEqualTo(
+				linesString(
+					"foo",
+					"  bar",
+					"  zoo",
+					"    "))
 	}
 
 	@Test
 	fun indentString_struct() {
 		emptyFragment.apply { indentString.assertEqualTo("") }
-			.begin("point").apply { indentString.assertEqualTo("point: ") }
-			.begin("x").apply { indentString.assertEqualTo("point: x: ") }
-			.plus(literal(10)).apply { indentString.assertEqualTo("point: x: 10 ") }
+			.begin("point").apply { indentString.assertEqualTo("point\n  ") }
+			.begin("x").apply { indentString.assertEqualTo("point\n  x\n    ") }
+			.plus(literal(10)).apply { indentString.assertEqualTo("point\n  x: 10 ") }
 			.end.apply { indentString.assertEqualTo("point\n  x: 10\n  ") }
 			.begin("y").apply { indentString.assertEqualTo("point\n  x: 10\n  y: ") }
 			.plus(literal(10)).apply { indentString.assertEqualTo("point\n  x: 10\n  y: 10 ") }

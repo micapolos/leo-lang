@@ -16,6 +16,7 @@ val Leo<*>.promptString: String
 			is TypeParserLeo -> "type"
 			is MatchParserLeo -> "match"
 			is ScriptParserLeo -> "script"
+			is EvaluatorLeo -> "evaluator"
 		}
 
 val CompiledParser<*>.promptString

@@ -57,6 +57,7 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 					leo(
 						CompiledParser(
 							ActionDoesParserParent(compiledParser, type),
+							null,
 							compiledParser.context,
 							Phase.COMPILER,
 							compiledParser.compiled.beginDoes(type)))
@@ -68,6 +69,7 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 					leo(
 						CompiledParser(
 							RememberIsParserParent(compiledParser, type),
+							null,
 							compiledParser.context,
 							compiledParser.phase,
 							compiledParser.compiled.begin))
@@ -75,6 +77,7 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 					leo(
 						CompiledParser(
 							RememberDoesParserParent(compiledParser, type),
+							null,
 							compiledParser.context,
 							Phase.COMPILER,
 							compiledParser.compiled.beginDoes(type)))
@@ -91,8 +94,8 @@ fun <T> TypeParserParent<T>.end(type: Type): Leo<T>? =
 		is OptionTypeParserParent ->
 			leo(choiceParser.plus(name optionTo type))
 		is AsTypeParserParent ->
-			leo(compiledParser.updateCompiled { updateTyped { `as`(type) } })
+			compiledParser.next { updateTyped { `as`(type) } }
 		is ForgetTypeParserParent ->
-			leo(compiledParser.updateCompiled { updateMemory { plus(forget(type)) } })
+			compiledParser.next { updateMemory { plus(forget(type)) } }
 	}
 

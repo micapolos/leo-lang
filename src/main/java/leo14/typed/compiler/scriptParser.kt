@@ -28,7 +28,7 @@ fun <T> ScriptParser<T>.parse(token: Token): Leo<T> =
 fun <T> ScriptParserParent<T>.end(script: Script): Leo<T> =
 	when (this) {
 		is FieldScriptParserParent -> leo(scriptParser.plus(name lineTo script))
-		is MakeScriptParserParent -> leo(compiledParser.make(script))
+		is MakeScriptParserParent -> compiledParser.make(script)
 		is CommentScriptParserParent -> leo
 	}
 

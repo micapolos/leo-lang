@@ -9,10 +9,8 @@ data class MemoryItemParser<T>(
 
 fun <T> MemoryItemParser<T>.parse(token: Token): Leo<T> =
 	if (token is EndToken)
-		leo(
-			parentCompiledParser.updateCompiled {
-				updateMemory { plus(memoryItem) }
-			}
-		)
+		parentCompiledParser.next {
+			updateMemory { plus(memoryItem) }
+		}
 	else
 		error("$this.parse($token)")

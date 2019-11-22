@@ -11,11 +11,9 @@ data class ActionParser<T>(
 
 fun <T> ActionParser<T>.parse(token: Token): Leo<T> =
 	if (token is EndToken)
-		leo(
-			parentCompiledParser.updateCompiled {
-				updateTyped {
-					plus(action)
-				}
+		parentCompiledParser.next {
+			updateTyped {
+				plus(action)
 			}
-		)
+		}
 	else error("$this.parse($token")

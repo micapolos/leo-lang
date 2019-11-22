@@ -23,12 +23,13 @@ fun <T> MatchParser<T>.parse(token: Token): Leo<T> =
 				leo(
 					CompiledParser(
 						MatchParserParent(copy(match = case.match), token.begin.string),
+						null,
 						parentCompiledParser.context,
 						Phase.COMPILER,
 						parentCompiledParser.compiled.beginDoes(parentCompiledParser.compiled.typed.type)))
 			}
 		is EndToken ->
-			leo(parentCompiledParser.updateCompiled { updateTyped { match.end() } })
+			parentCompiledParser.next { updateTyped { match.end() } }
 	} ?: error("$this.parse($token)")
 
 fun <T> MatchParser<T>.plus(name: String, compiled: Compiled<T>): MatchParser<T> =
