@@ -12,6 +12,7 @@ import leo14.typed.compiler.CharLeo
 import leo14.typed.compiler.emptyCharLeo
 import leo14.typed.compiler.indentColorString
 import leo14.typed.compiler.put
+import java.io.InputStreamReader
 
 const val printErrors = false
 
@@ -20,13 +21,14 @@ fun main() {
 	var stack = stack<CharLeo>()
 	var charLeo = emptyCharLeo
 	var errorToPrint: Throwable? = null
+	val reader = InputStreamReader(System.`in`)
 	while (true) {
 		print(charLeo)
 		errorToPrint?.run {
 			println("ERROR")
 			printStackTrace()
 		}
-		val char = System.`in`.read()
+		val char = reader.read()
 		if (char == -1) break
 		if (char == 127) {
 			if (errorToPrint != null) errorToPrint = null
