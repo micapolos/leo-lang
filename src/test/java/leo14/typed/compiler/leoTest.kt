@@ -238,10 +238,23 @@ class TypeParserTest {
 	}
 
 	@Test
-	fun compiledForget() {
-		compiler(compiled(typed()))
+	fun compiledForget_match() {
+		compiler(
+			compiled(
+				typed(),
+				memory(remember(type("zero") does typed()))))
 			.parse(script("forget" lineTo script("zero")))
-			.assertEqualTo(compiler(compiled(typed(), memory(forget(type("zero"))))))
+			.assertEqualTo(compiler(compiled(typed(), memory())))
+	}
+
+	@Test
+	fun compiledForget_mismatch() {
+		compiler(
+			compiled(
+				typed(),
+				memory(remember(type("zero") does typed()))))
+			.parse(script("forget" lineTo script("one")))
+			.assertEqualTo(compiler(compiled(typed(), memory(remember(type("zero") does typed())))))
 	}
 
 	@Test

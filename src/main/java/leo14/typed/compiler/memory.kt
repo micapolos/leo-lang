@@ -16,7 +16,8 @@ data class Memory<T>(val itemStack: Stack<MemoryItem<T>>)
 sealed class MemoryItem<T>
 data class EmptyMemoryItem<T>(val empty: Empty) : MemoryItem<T>()
 data class RememberMemoryItem<T>(val action: Action<T>, val needsInvoke: Boolean) : MemoryItem<T>()
-data class ForgetMemoryItem<T>(val type: Type) : MemoryItem<T>()
+
+val <T> Stack<MemoryItem<T>>.memory get() = Memory(this)
 
 fun <T> memory(vararg items: MemoryItem<T>) =
 	Memory(stack(*items))
@@ -26,9 +27,6 @@ fun <T> memoryItem(empty: Empty): MemoryItem<T> =
 
 fun <T> remember(action: Action<T>, needsInvoke: Boolean = true): MemoryItem<T> =
 	RememberMemoryItem(action, needsInvoke)
-
-fun <T> forget(type: Type): MemoryItem<T> =
-	ForgetMemoryItem(type)
 
 fun anyMemory(): Memory<Any> =
 	Memory(stack())
@@ -52,7 +50,6 @@ fun <T> MemoryItem<T>.matches(type: Type): Boolean =
 	when (this) {
 		is EmptyMemoryItem -> false
 		is RememberMemoryItem -> action.param == type
-		is ForgetMemoryItem -> this.type == type
 	}
 
 fun <T> MemoryItem<T>.resolve(index: Index, term: Term<T>): Typed<T>? =
@@ -61,7 +58,6 @@ fun <T> MemoryItem<T>.resolve(index: Index, term: Term<T>): Typed<T>? =
 		is RememberMemoryItem ->
 			if (needsInvoke) arg<T>(index).invoke(term) of action.body.type
 			else arg<T>(index) of action.body.type
-		is ForgetMemoryItem -> null
 	}
 
 fun <T> Memory<T>.ret(typed: Typed<T>): Typed<T> =
@@ -71,5 +67,7 @@ fun <T> Typed<T>.ret(item: MemoryItem<T>): Typed<T> =
 	when (item) {
 		is EmptyMemoryItem -> this
 		is RememberMemoryItem -> fn(term).invoke(item.action.body.term) of type
-		is ForgetMemoryItem -> this
 	}
+
+fun <T> Memory<T>.forget(type: Type): Memory<T> =
+	itemStack.filter { !matches(type) }.memory
