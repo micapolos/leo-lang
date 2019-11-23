@@ -6,14 +6,14 @@ import leo14.lambda.abstraction
 import leo14.lambda.application
 import leo14.lambda.variable
 
-typealias DecompileLine<T> = TypedLine<T>.() -> Literal?
+typealias DecompileLiteral<T> = TypedLine<T>.() -> Literal?
 
-fun <T> Typed<T>.decompile(fn: DecompileLine<T>): Script =
+fun <T> Typed<T>.decompile(fn: DecompileLiteral<T>): Script =
 	decompileLinkOrNull
 		?.run { tail.decompile(fn).plus(head.decompileLine(fn)) }
 		?: script()
 
-fun <T> TypedLine<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =
+fun <T> TypedLine<T>.decompileLine(fn: DecompileLiteral<T>): ScriptLine =
 	fn()
 		?.let { line(it) }
 		?: when (line) {
@@ -24,7 +24,7 @@ fun <T> TypedLine<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =
 			is AnyLine -> null
 		} ?: error("$this.decompileLine")
 
-fun <T> TypedChoice<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =
+fun <T> TypedChoice<T>.decompileLine(fn: DecompileLiteral<T>): ScriptLine =
 	term.abstraction(choice.countIndex) { body ->
 		body.application { argTerm, fnTerm ->
 			argTerm.variable { index ->
@@ -35,5 +35,5 @@ fun <T> TypedChoice<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =
 		}
 	}
 
-fun <T> TypedField<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =
+fun <T> TypedField<T>.decompileLine(fn: DecompileLiteral<T>): ScriptLine =
 	line(field.string fieldTo resolveRhs.decompile(fn))

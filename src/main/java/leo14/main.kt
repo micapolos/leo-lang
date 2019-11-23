@@ -14,13 +14,14 @@ import leo14.typed.compiler.indentColorString
 import leo14.typed.compiler.put
 import java.io.InputStreamReader
 
-const val printErrors = false
+val errorTriggerCount = 7
 
 fun main() {
 	sttyPrivateMode()
 	var stack = stack<CharCompiler>()
 	var charCompiler = emptyCharCompiler
 	var errorToPrint: Throwable? = null
+	var errorCount = 0
 	val reader = InputStreamReader(System.`in`)
 	while (true) {
 		print(charCompiler)
@@ -40,9 +41,10 @@ fun main() {
 			val newCharCompiler = charCompiler.put(char.toChar())
 			stack = stack.push(charCompiler)
 			charCompiler = newCharCompiler
+			errorCount = errorTriggerCount
 		} catch (e: RuntimeException) {
 			print(bellChar)
-			if (printErrors) errorToPrint = e
+			if (errorCount-- < 0) errorToPrint = e
 		}
 	}
 }

@@ -23,9 +23,9 @@ val Number.nativeTypedLine: TypedLine<Native>
 
 val Typed<Native>.decompile
 	get() =
-		decompile(TypedLine<Native>::decompileScriptLine)
+		decompile(TypedLine<Native>::decompileLiteral)
 
-val TypedLine<Native>.decompileScriptLine: Literal?
+val TypedLine<Native>.decompileLiteral: Literal?
 	get() =
 		when (line) {
 			line("int" fieldTo nativeType) -> term.native.literal

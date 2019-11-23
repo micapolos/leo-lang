@@ -1,13 +1,7 @@
 package leo14.lambda.js
 
-import leo14.Literal
-import leo14.NumberLiteral
-import leo14.StringLiteral
-import leo14.expr
-import leo14.js.ast.Expr
-import leo14.js.ast.expr
-import leo14.js.ast.invoke
-import leo14.js.ast.ret
+import leo14.*
+import leo14.js.ast.*
 import leo14.lambda.*
 import leo14.lambda.code.Gen
 import leo14.lambda.code.gen
@@ -32,4 +26,13 @@ val Literal.expr: Expr
 		when (this) {
 			is StringLiteral -> expr(string)
 			is NumberLiteral -> number.expr
+		}
+
+val Expr.literalOrNull: Literal?
+	get() =
+		when (this) {
+			is StringExpr -> literal(string)
+			is IntExpr -> literal(int)
+			is DoubleExpr -> literal(double)
+			else -> null
 		}
