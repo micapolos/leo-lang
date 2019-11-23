@@ -19,6 +19,8 @@ data class TypeParserCompiler<T>(val typeParser: TypeParser<T>) : Compiler<T>()
 data class MatchParserCompiler<T>(val matchParser: MatchParser<T>) : Compiler<T>()
 data class ScriptParserCompiler<T>(val scriptParser: ScriptParser<T>) : Compiler<T>()
 data class LeonardoParserCompiler<T>(val leonardoParser: LeonardoParser<T>) : Compiler<T>()
+data class ForgetEverythingParserCompiler<T>(val forgetEverythingParser: ForgetEverythingParser<T>) : Compiler<T>()
+data class ForgetEverythingEndParserCompiler<T>(val forgetEverythingEndParser: ForgetEverythingEndParser<T>) : Compiler<T>()
 
 fun <T> compiler(typeParser: TypeParser<T>): Compiler<T> = TypeParserCompiler(typeParser)
 fun <T> compiler(choiceParser: ChoiceParser<T>): Compiler<T> = ChoiceParserCompiler(choiceParser)
@@ -70,6 +72,8 @@ fun <T> Compiler<T>.parseDynamic(token: Token): Compiler<T> =
 		is MatchParserCompiler -> matchParser.parse(token)
 		is ScriptParserCompiler -> scriptParser.parse(token)
 		is LeonardoParserCompiler -> leonardoParser.parse(token)
+		is ForgetEverythingParserCompiler -> forgetEverythingParser.parse(token)
+		is ForgetEverythingEndParserCompiler -> forgetEverythingEndParser.parse(token)
 	}
 
 fun <T> Compiler<T>.parse(script: Script): Compiler<T> =

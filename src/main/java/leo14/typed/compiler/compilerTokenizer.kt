@@ -25,6 +25,8 @@ fun Processor<Syntax>.process(compiler: Compiler<Native>): Processor<Syntax> =
 		is MatchParserCompiler -> process(compiler.matchParser)
 		is ScriptParserCompiler -> process(compiler.scriptParser)
 		is LeonardoParserCompiler -> process(compiler.leonardoParser)
+		is ForgetEverythingParserCompiler -> process(compiler.forgetEverythingParser)
+		is ForgetEverythingEndParserCompiler -> process(compiler.forgetEverythingEndParser)
 	}
 
 fun Processor<Syntax>.process(parser: ActionParser<Native>): Processor<Syntax> =
@@ -95,6 +97,19 @@ fun Processor<Syntax>.process(parser: LeonardoParser<Native>): Processor<Syntax>
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.leonardo)) of valueKeywordKind)
+
+fun Processor<Syntax>.process(parser: ForgetEverythingParser<Native>): Processor<Syntax> =
+	this
+		.process(parser.parentCompiledParser)
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.forget)) of valueKeywordKind)
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.everything)) of valueKeywordKind)
+
+fun Processor<Syntax>.process(parser: ForgetEverythingEndParser<Native>): Processor<Syntax> =
+	this
+		.process(parser.parentCompiledParser)
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.forget)) of valueKeywordKind)
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.everything)) of valueKeywordKind)
+		.process(token(end) of valueKeywordKind)
 
 fun Processor<Syntax>.process(parent: ScriptParserParent<Native>): Processor<Syntax> =
 	when (parent) {
@@ -195,6 +210,7 @@ fun Processor<Syntax>.process(beginner: TypeBeginner<Native>): Processor<Syntax>
 			this
 				.process(beginner.compiledParser)
 				.process(token(begin(beginner.compiledParser.context.dictionary.remember)) of valueKeywordKind)
+		is ForgetTypeBeginner -> this
 	}
 
 fun Processor<Syntax>.process(parser: MemoryItemParser<Native>): Processor<Syntax> =

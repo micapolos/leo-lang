@@ -20,6 +20,7 @@ sealed class TypeBeginner<T>
 data class ActionDoesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ArrowGivingTypeBeginner<T>(val typeParser: TypeParser<T>) : TypeBeginner<T>()
 data class RememberTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
+data class ForgetTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 
 fun <T> TypeParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
@@ -78,6 +79,11 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 							compiledParser.context,
 							Phase.COMPILER,
 							compiledParser.compiled.beginDoes(type)))
+				else -> null
+			}
+		is ForgetTypeBeginner ->
+			when (begin.string) {
+				dictionary.everything -> ForgetEverythingParserCompiler(ForgetEverythingParser(compiledParser))
 				else -> null
 			}
 	}

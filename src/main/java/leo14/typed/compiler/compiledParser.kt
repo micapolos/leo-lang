@@ -48,7 +48,7 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 				context.dictionary.remember ->
 					compiler(TypeParser(null, RememberTypeBeginner(this), context.dictionary, type()))
 				context.dictionary.forget ->
-					compiler(TypeParser(ForgetTypeParserParent(this), null, context.dictionary, type()))
+					compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.dictionary, type()))
 				context.dictionary.script ->
 					notNullIf(phase == Phase.EVALUATOR) {
 						compiler(ScriptParser(CompiledScriptParserParent(this), script()))
@@ -116,3 +116,7 @@ fun <T> CompiledParser<T>.plus(literal: Literal) =
 
 fun <T> CompiledParser<T>.plus(script: Script): CompiledParser<T> =
 	updateCompiled { updateTyped { plus(script, context.literalCompile) } }
+
+val <T> CompiledParser<T>.forgetEverything: CompiledParser<T>
+	get() =
+		updateCompiled { updateMemory { memory() } }
