@@ -53,6 +53,8 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					notNullIf(phase == Phase.EVALUATOR) {
 						compiler(ScriptParser(CompiledScriptParserParent(this), script()))
 					}
+				context.dictionary.leonardo ->
+					compiler(LeonardoParser(this))
 				else ->
 					CompiledParserCompiler(
 						CompiledParser(

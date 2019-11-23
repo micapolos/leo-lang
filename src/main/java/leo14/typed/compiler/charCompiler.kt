@@ -12,7 +12,7 @@ data class CharCompiler(
 	val tokenParser: SpacedTokenParser,
 	val compiler: Compiler<Native>)
 
-val emptyCharCompiler = CharCompiler(newSpacedTokenParser, EMPTY_COMPILER)
+val emptyCharCompiler = CharCompiler(newSpacedTokenParser, emptyCompiler)
 
 fun CharCompiler.put(char: Char): CharCompiler =
 	tokenParser

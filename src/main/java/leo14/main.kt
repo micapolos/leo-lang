@@ -19,7 +19,7 @@ const val printErrors = false
 fun main() {
 	sttyPrivateMode()
 	var stack = stack<CharCompiler>()
-	var charCompiler = emptyCharCompiler.put(leonardoScript)
+	var charCompiler = emptyCharCompiler
 	var errorToPrint: Throwable? = null
 	val reader = InputStreamReader(System.`in`)
 	while (true) {

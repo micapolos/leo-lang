@@ -59,6 +59,7 @@ infix fun <T> TypedLine<T>.castTo(toLine: Line): Cast<T>? =
 		is FieldLine -> (term of line.field).castTo(toLine)
 		is ChoiceLine -> ifOrNull(line == toLine) { cast<T>(empty) }
 		is ArrowLine -> ifOrNull(line == toLine) { cast<T>(empty) }
+		is AnyLine -> notNullIf(toLine is AnyLine) { cast<T>(empty) }
 	}
 
 infix fun <T> TypedField<T>.castTo(toLine: Line): Cast<T>? =
@@ -67,6 +68,7 @@ infix fun <T> TypedField<T>.castTo(toLine: Line): Cast<T>? =
 		is FieldLine -> castTo(toLine.field)
 		is ChoiceLine -> castTo(toLine.choice)
 		is ArrowLine -> null
+		is AnyLine -> null
 	}
 
 infix fun <T> TypedField<T>.castTo(choice: Choice): Cast<T>? =

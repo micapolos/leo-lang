@@ -8,4 +8,4 @@ import leo14.typed.nativeResolve
 import leo14.typed.nativeTypedLine
 
 val nativeContext: Context<Native> =
-	Context(englishDictionary, Typed<Native>::nativeResolve, Literal::nativeTypedLine, Native::invoke)
+	Context(defaultDictionary, Typed<Native>::nativeResolve, Literal::nativeTypedLine, Native::invoke)

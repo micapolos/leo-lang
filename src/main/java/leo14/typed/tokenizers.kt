@@ -16,6 +16,9 @@ fun Processor<Syntax>.process(line: Line, dictionary: Dictionary): Processor<Syn
 		is FieldLine -> process(line.field, dictionary)
 		is ChoiceLine -> process(line.choice, dictionary)
 		is ArrowLine -> process(line.arrow, dictionary)
+		is AnyLine -> this
+			.process(token(begin(dictionary.script)) of typeKind)
+			.process(token(end) of typeKind)
 	}
 
 fun Processor<Syntax>.process(field: Field, dictionary: Dictionary): Processor<Syntax> =

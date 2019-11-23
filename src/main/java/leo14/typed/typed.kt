@@ -153,6 +153,7 @@ fun <T> TypedLine<T>.resolveGet(string: String): Typed<T>? =
 		is FieldLine -> (term of line.field).resolveGet(string)
 		is ChoiceLine -> notNullIf(string == "choice") { term of type(line) }
 		is ArrowLine -> notNullIf(string == "function") { term of type(line) }
+		is AnyLine -> null
 	}
 
 fun <T> TypedField<T>.resolveGet(string: String): Typed<T>? =

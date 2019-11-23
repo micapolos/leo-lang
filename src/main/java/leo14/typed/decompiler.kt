@@ -17,11 +17,12 @@ fun <T> TypedLine<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =
 	fn()
 		?.let { line(it) }
 		?: when (line) {
-			is NativeLine -> error("$this as NativeTerm")
+			is NativeLine -> null
 			is FieldLine -> (term of line.field).decompileLine(fn)
 			is ChoiceLine -> (term of line.choice).decompileLine(fn)
 			is ArrowLine -> "action" lineTo script("doing" lineTo line.arrow.lhs.script)
-		}
+			is AnyLine -> null
+		} ?: error("$this.decompileLine")
 
 fun <T> TypedChoice<T>.decompileLine(fn: DecompileLine<T>): ScriptLine =
 	term.abstraction(choice.countIndex) { body ->

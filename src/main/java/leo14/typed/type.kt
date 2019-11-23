@@ -30,6 +30,8 @@ data class ArrowLine(val arrow: Arrow) : Line() {
 	override fun toString() = scriptLine.toString()
 }
 
+object AnyLine : Line()
+
 data class Choice(val optionStack: Stack<Option>) {
 	override fun toString() = scriptLine.toString()
 }
@@ -61,6 +63,7 @@ val Type.lineLinkOrNull: Link<Type, Line>?
 		}
 
 val impossibleType: Type = type(choice())
+val anyLine: Line get() = AnyLine
 
 val nativeLine: Line = NativeLine
 fun line(choice: Choice): Line = ChoiceLine(choice)
@@ -94,6 +97,7 @@ val Line.isStatic
 		is FieldLine -> field.isStatic
 		is ChoiceLine -> choice.isStatic
 		is ArrowLine -> arrow.isStatic
+		is AnyLine -> false
 	}
 val Choice.isStatic get() = false
 val Field.isStatic get() = rhs.isStatic
@@ -115,6 +119,7 @@ val Line.scriptLine: ScriptLine
 			is FieldLine -> field.scriptLine
 			is ChoiceLine -> choice.scriptLine
 			is ArrowLine -> arrow.scriptLine
+			is AnyLine -> "script" lineTo script()
 		}
 
 val Choice.scriptLine

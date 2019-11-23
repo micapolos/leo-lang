@@ -24,6 +24,7 @@ fun Processor<Syntax>.process(compiler: Compiler<Native>): Processor<Syntax> =
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
 		is ScriptParserCompiler -> process(compiler.scriptParser)
+		is LeonardoParserCompiler -> process(compiler.leonardoParser)
 	}
 
 fun Processor<Syntax>.process(parser: ActionParser<Native>): Processor<Syntax> =
@@ -89,6 +90,11 @@ fun Processor<Syntax>.process(parser: ScriptParser<Native>): Processor<Syntax> =
 	this
 		.process(parser.parent)
 		.syntaxProcess(parser.script)
+
+fun Processor<Syntax>.process(parser: LeonardoParser<Native>): Processor<Syntax> =
+	this
+		.process(parser.parentCompiledParser)
+		.process(token(begin(parser.parentCompiledParser.context.dictionary.leonardo)) of valueKeywordKind)
 
 fun Processor<Syntax>.process(parent: ScriptParserParent<Native>): Processor<Syntax> =
 	when (parent) {

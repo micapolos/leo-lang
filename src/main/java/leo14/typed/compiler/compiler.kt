@@ -18,6 +18,7 @@ data class RememberParserCompiler<T>(val memoryItemParser: MemoryItemParser<T>) 
 data class TypeParserCompiler<T>(val typeParser: TypeParser<T>) : Compiler<T>()
 data class MatchParserCompiler<T>(val matchParser: MatchParser<T>) : Compiler<T>()
 data class ScriptParserCompiler<T>(val scriptParser: ScriptParser<T>) : Compiler<T>()
+data class LeonardoParserCompiler<T>(val leonardoParser: LeonardoParser<T>) : Compiler<T>()
 
 fun <T> compiler(typeParser: TypeParser<T>): Compiler<T> = TypeParserCompiler(typeParser)
 fun <T> compiler(choiceParser: ChoiceParser<T>): Compiler<T> = ChoiceParserCompiler(choiceParser)
@@ -30,6 +31,7 @@ fun <T> compiler(nothingParser: NothingParser<T>): Compiler<T> = NothingParserCo
 fun <T> compiler(memoryItemParser: MemoryItemParser<T>): Compiler<T> = RememberParserCompiler(memoryItemParser)
 fun <T> compiler(matchParser: MatchParser<T>): Compiler<T> = MatchParserCompiler(matchParser)
 fun <T> compiler(scriptParser: ScriptParser<T>): Compiler<T> = ScriptParserCompiler(scriptParser)
+fun <T> compiler(leonardoParser: LeonardoParser<T>): Compiler<T> = LeonardoParserCompiler(leonardoParser)
 
 fun compiler(type: Type): Compiler<Native> =
 	compiler(TypeParser(null, null, englishDictionary, type))
@@ -37,7 +39,7 @@ fun compiler(type: Type): Compiler<Native> =
 fun compiler(compiled: Compiled<Native>, phase: Phase = Phase.COMPILER): Compiler<Native> =
 	compiler(CompiledParser(null, nativeContext, phase, compiled))
 
-val EMPTY_COMPILER: Compiler<Native> = compiler(compiled(typed()), Phase.EVALUATOR)
+val emptyCompiler: Compiler<Native> = compiler(compiled(typed()), Phase.EVALUATOR)
 
 fun <T> Compiler<T>.parse(token: Token): Compiler<T> =
 	parseStatic(token) ?: parseDynamic(token)
@@ -67,6 +69,7 @@ fun <T> Compiler<T>.parseDynamic(token: Token): Compiler<T> =
 		is RememberParserCompiler -> memoryItemParser.parse(token)
 		is MatchParserCompiler -> matchParser.parse(token)
 		is ScriptParserCompiler -> scriptParser.parse(token)
+		is LeonardoParserCompiler -> leonardoParser.parse(token)
 	}
 
 fun <T> Compiler<T>.parse(script: Script): Compiler<T> =
