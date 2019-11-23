@@ -1,22 +1,38 @@
 package leo14.typed.compiler.js
 
-import leo14.js.ast.Expr
-import leo14.js.ast.invoke
-import leo14.js.dsl.alert
-import leo14.js.dsl.window
+import leo14.js.ast.*
 import leo14.lambda.Term
+import leo14.lambda.head
 import leo14.lambda.js.expr
+import leo14.lambda.native
 import leo14.lambda.term
 import leo14.typed.*
 
 val Typed<Expr>.resolve: Typed<Expr>?
 	get() =
 		when (type) {
+			javascriptType(stringLine) -> term of expressionType
+			javascriptType(expressionName lineTo stringType) ->
+				term(expr(id((term.native as StringExpr).string))) of expressionType
+			type(expressionLine, "invoke" lineTo expressionType) ->
+				decompileLinkOrNull!!.run {
+					term(tail.term.expr.invoke(term.head.expr)) of expressionType
+				}
 			type(
-				"javascript" lineTo type(
-					"alert" lineTo type(
-						"string" lineTo nativeType))) ->
-				term(window.alert.invoke(term.expr)) of type()
+				expressionLine,
+				"set" lineTo stringType,
+				"to" lineTo expressionType) ->
+				decompileLinkOrNull!!.let { firstLink ->
+					firstLink.tail.decompileLinkOrNull!!.let { secondLink ->
+						term(expr(fn(args("it"),
+							block(expr(id("it"))
+								.set(
+									(secondLink.head.term.expr as StringExpr).string,
+									firstLink.head.term.expr),
+								stmt(ret(expr(id("it")))))))
+							.invoke(secondLink.tail.term.expr)) of expressionType
+					}
+				}
 			else -> null
 		}
 

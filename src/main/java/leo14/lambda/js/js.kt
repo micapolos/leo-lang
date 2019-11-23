@@ -19,7 +19,7 @@ fun Term.expr(gen: Gen): Expr =
 
 fun Abstraction<Term>.expr(gen: Gen) = paramCode(gen) ret gen.inc { body.expr(it) }
 fun Application<Term>.expr(gen: Gen) = lhs.expr(gen).invoke(rhs.expr(gen))
-fun Variable<Expr>.expr(gen: Gen) = expr(leo14.js.ast.id(index(gen).varCode))
+fun Variable<Expr>.expr(gen: Gen) = expr(id(index(gen).varCode))
 
 val Literal.expr: Expr
 	get() =

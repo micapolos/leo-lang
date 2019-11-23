@@ -172,3 +172,12 @@ val Type.coreString: String
 		processorString {
 			map(Syntax::coreColorString).process(this@coreString, defaultDictionary)
 		}
+
+val stringLine = "string" lineTo nativeType
+val stringType = type(stringLine)
+
+val intLine = "int" lineTo nativeType
+val intType = type(intLine)
+
+val doubleLine = "double" lineTo nativeType
+val doubleType = type(doubleLine)

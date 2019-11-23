@@ -1,6 +1,8 @@
 package leo14.typed.compiler
 
 import leo14.*
+import leo14.typed.compiler.js.open
+import leo14.typed.decompile
 
 data class ScriptParser<T>(
 	val parent: ScriptParserParent<T>,
@@ -27,7 +29,7 @@ fun <T> ScriptParserParent<T>.end(script: Script): Compiler<T> =
 		is CommentScriptParserParent -> compiler
 		is CompiledScriptParserParent -> compiler(compiledParser.plus(script).apply {
 			// TODO: Remove, this is just a fake experiment
-			//compiled.resolveForEnd.typed.decompile(compiledParser.context.decompileLiteral).jsShow
+			compiled.resolveForEnd.typed.decompile(compiledParser.context.decompileLiteral).open
 		})
 	}
 

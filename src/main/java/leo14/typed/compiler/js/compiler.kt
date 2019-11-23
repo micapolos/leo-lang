@@ -2,6 +2,7 @@ package leo14.typed.compiler.js
 
 import leo14.Script
 import leo14.js.ast.Expr
+import leo14.lambda.js.expr
 import leo14.typed.Typed
 import leo14.typed.compiler.*
 import leo14.typed.typed
@@ -24,3 +25,8 @@ val Script.compileTyped: Typed<Expr>
 			.compiled
 			.resolveForEnd
 			.typed
+
+val Typed<Expr>.expr: Expr
+	get() =
+		if (type != expressionType) error("$this.expr")
+		else term.expr
