@@ -1,5 +1,5 @@
 # leo-lang
-Leonardo programming language
+Leonardo programming language.
 
 ##### Building
 
