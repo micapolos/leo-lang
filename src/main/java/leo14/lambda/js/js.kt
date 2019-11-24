@@ -33,7 +33,6 @@ val Expr.literalOrNull: Literal?
 	get() =
 		when (this) {
 			is StringExpr -> literal(string)
-			is IntExpr -> literal(int)
-			is DoubleExpr -> literal(double)
+			is NumberExpr -> literal(double)
 			else -> null
 		}

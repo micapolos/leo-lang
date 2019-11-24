@@ -4,49 +4,29 @@ import leo14.js.ast.Expr
 import leo14.js.ast.expr
 import leo14.lambda.js.Term
 import leo14.lambda.term
-import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 // TODO: Refactor to allow arbitrary large number, represented as syntax and not value
-sealed class Number
-
-data class IntNumber(val int: Int) : Number() {
-	override fun toString() = "$int"
+data class Number(val double: Double) {
+	override fun toString() =
+		if (double.roundToLong().toDouble() == double) "${double.roundToLong()}"
+		else "$double"
 }
 
-data class DoubleNumber(val double: Double) : Number() {
-	override fun toString() = "$double"
-}
-
-fun number(int: Int): Number = IntNumber(int)
-fun number(double: Double): Number = DoubleNumber(double)
+fun number(int: Int): Number = Number(int.toDouble())
+fun number(double: Double): Number = Number(double)
 
 val Number.code
 	get() =
-		when (this) {
-			is IntNumber -> "$int"
-			is DoubleNumber -> "$double"
-		}
+		toString()
 
 val Number.term: Term
 	get() = term(expr)
 
 val Number.expr: Expr
 	get() =
-		when (this) {
-			is IntNumber -> expr(int)
-			is DoubleNumber -> expr(double)
-		}
+		expr(double)
 
 val Number.any: Any
 	get() =
-		when (this) {
-			is IntNumber -> int
-			is DoubleNumber -> double
-		}
-
-val Number.roundInt
-	get() =
-		when (this) {
-			is IntNumber -> int
-			is DoubleNumber -> double.roundToInt()
-		}
+		double

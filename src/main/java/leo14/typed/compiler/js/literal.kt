@@ -1,7 +1,9 @@
 package leo14.typed.compiler.js
 
-import leo14.*
+import leo14.Literal
 import leo14.Number
+import leo14.NumberLiteral
+import leo14.StringLiteral
 import leo14.js.ast.Expr
 import leo14.js.ast.expr
 import leo14.typed.TypedLine
@@ -22,18 +24,7 @@ val String.typedLine: TypedLine<Expr>
 
 val Number.typedLine: TypedLine<Expr>
 	get() =
-		when (this) {
-			is IntNumber -> int.typedLine
-			is DoubleNumber -> double.typedLine
-		}
-
-val Int.typedLine: TypedLine<Expr>
-	get() =
-		"int" lineTo nativeTyped(expr(this))
-
-val Double.typedLine: TypedLine<Expr>
-	get() =
-		"double" lineTo nativeTyped(expr(this))
+		"number" lineTo nativeTyped(expr(double))
 
 // No need for decompiling, since we don't evaluate.
 val TypedLine<Expr>.decompileLiteral: Literal?

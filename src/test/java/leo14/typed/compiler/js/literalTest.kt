@@ -5,6 +5,8 @@ import leo14.js.ast.expr
 import leo14.literal
 import leo14.typed.lineTo
 import leo14.typed.nativeTyped
+import leo14.typed.numberName
+import leo14.typed.textName
 import kotlin.test.Test
 
 class LiteralTest {
@@ -12,14 +14,14 @@ class LiteralTest {
 	fun literalTypedLine() {
 		literal("foo")
 			.typedLine
-			.assertEqualTo("string" lineTo nativeTyped(expr("foo")))
+			.assertEqualTo(textName lineTo nativeTyped(expr("foo")))
 
 		literal(10)
 			.typedLine
-			.assertEqualTo("int" lineTo nativeTyped(expr(10)))
+			.assertEqualTo(numberName lineTo nativeTyped(expr(10)))
 
 		literal(10.2)
 			.typedLine
-			.assertEqualTo("double" lineTo nativeTyped(expr(10.2)))
+			.assertEqualTo(numberName lineTo nativeTyped(expr(10.2)))
 	}
 }

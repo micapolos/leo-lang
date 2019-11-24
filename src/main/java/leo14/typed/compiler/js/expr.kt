@@ -16,8 +16,7 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			type(expressionLine, "show" lineTo type()) ->
 				decompileLinkOrNull!!.tail.apply { expr.show }
 			javascriptType(textLine) -> term of expressionType
-			javascriptType(intLine) -> term of expressionType
-			javascriptType(doubleLine) -> term of expressionType
+			javascriptType(numberLine) -> term of expressionType
 			javascriptType(expressionName lineTo textType) ->
 				term(expr(id((term.native as StringExpr).string))) of expressionType
 			type(expressionLine, "invoke" lineTo expressionType) ->

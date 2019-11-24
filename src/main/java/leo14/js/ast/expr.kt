@@ -1,11 +1,12 @@
 package leo14.js.ast
 
+import kotlin.math.roundToLong
+
 sealed class Expr
 
 data class NilExpr(val nil: Null) : Expr()
 data class StringExpr(val string: String) : Expr()
-data class IntExpr(val int: Int) : Expr()
-data class DoubleExpr(val double: Double) : Expr()
+data class NumberExpr(val double: Double) : Expr()
 data class FnExpr(val fn: Fn) : Expr()
 data class ApExpr(val ap: Ap) : Expr()
 data class GetExpr(val get: Get) : Expr()
@@ -17,8 +18,8 @@ data class LambdaExpr(val lambda: Lambda) : Expr()
 
 fun expr(nil: Null): Expr = NilExpr(nil)
 fun expr(string: String): Expr = StringExpr(string)
-fun expr(int: Int): Expr = IntExpr(int)
-fun expr(double: Double): Expr = DoubleExpr(double)
+fun expr(double: Double): Expr = NumberExpr(double)
+fun expr(int: Int): Expr = expr(int.toDouble())
 fun expr(fn: Fn): Expr = FnExpr(fn)
 fun expr(ap: Ap): Expr = ApExpr(ap)
 fun expr(get: Get): Expr = GetExpr(get)
@@ -33,8 +34,9 @@ val Expr.code: String
 		when (this) {
 			is NilExpr -> nil.exprCode
 			is StringExpr -> "'$string'"
-			is IntExpr -> "$int"
-			is DoubleExpr -> "$double"
+			is NumberExpr ->
+				if (double.roundToLong().toDouble() == double) "${double.roundToLong()}"
+				else "$double"
 			is FnExpr -> fn.exprCode
 			is ApExpr -> ap.exprCode
 			is GetExpr -> get.exprCode

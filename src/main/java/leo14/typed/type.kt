@@ -181,8 +181,6 @@ const val textName = "text"
 val textLine = textName lineTo nativeType
 val textType = type(textLine)
 
-val intLine = "int" lineTo nativeType
-val intType = type(intLine)
-
-val doubleLine = "double" lineTo nativeType
-val doubleType = type(doubleLine)
+const val numberName = "number"
+val numberLine = numberName lineTo nativeType
+val numberType = type(numberLine)
