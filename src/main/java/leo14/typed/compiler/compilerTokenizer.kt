@@ -165,6 +165,10 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 			this
 				.process(parent.compiledParser)
 				.process(token(begin(parent.compiledParser.context.dictionary.give)) of valueKeywordKind)
+		is UseCompiledParserParent ->
+			this
+				.process(parent.compiledParser)
+				.process(token(begin(parent.compiledParser.context.dictionary.use)) of valueKeywordKind)
 		is MatchParserParent ->
 			this
 				.process(parent.matchParser)

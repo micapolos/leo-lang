@@ -44,3 +44,9 @@ val <T> Compiled<T>.resolveForEnd: Compiled<T>
 
 fun <T> Compiled<T>.eval(nativeInvoke: NativeApply<T>) =
 	updateTyped { resolveForEnd.typed.term.eval(nativeInvoke) of typed.type }
+
+val <T> Compiled<T>.use
+	get() =
+		this
+			.updateMemory { plus(remember(type("used") does resolveForEnd.typed)) }
+			.updateTyped { typed() }

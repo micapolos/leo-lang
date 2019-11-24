@@ -22,7 +22,8 @@ data class Dictionary(
 	val native: String,
 	val nothing: String,
 	val remember: String,
-	val script: String)
+	val script: String,
+	val use: String)
 
 val englishDictionary = Dictionary(
 	action = "action",
@@ -46,7 +47,8 @@ val englishDictionary = Dictionary(
 	native = "native",
 	nothing = "nothing",
 	remember = "remember",
-	script = "script")
+	script = "script",
+	use = "use")
 
 val polishDictionary = Dictionary(
 	action = "czynność",
@@ -70,6 +72,7 @@ val polishDictionary = Dictionary(
 	native = "natywny",
 	nothing = "nic",
 	remember = "zapamiętaj",
-	script = "skrypt")
+	script = "skrypt",
+	use = "użyj")
 
 val defaultDictionary = englishDictionary

@@ -17,6 +17,7 @@ data class FieldCompiledParserParent<T>(val compiledParser: CompiledParser<T>, v
 data class ActionDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class ActionDoParserParent<T>(val compiledParser: CompiledParser<T>, val action: Action<T>) : CompiledParserParent<T>()
 data class GiveCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
+data class UseCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
 data class RememberDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class RememberIsParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class MatchParserParent<T>(val matchParser: MatchParser<T>, val name: String) : CompiledParserParent<T>()
@@ -55,6 +56,8 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					}
 				context.dictionary.leonardo ->
 					compiler(LeonardoParser(this))
+				context.dictionary.use ->
+					compiler(use)
 				else ->
 					CompiledParserCompiler(
 						CompiledParser(
@@ -75,6 +78,8 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Compiler<T> =
 		is ActionDoParserParent ->
 			compiledParser.next { updateTyped { action.`do`(compiled.typed) } }
 		is GiveCompiledParserParent ->
+			compiledParser.next { updateTyped { compiled.typed } }
+		is UseCompiledParserParent ->
 			compiledParser.next { updateTyped { compiled.typed } }
 		is RememberDoesParserParent ->
 			compiler(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = true)))
@@ -124,3 +129,11 @@ val <T> CompiledParser<T>.forgetEverything: CompiledParser<T>
 val <T> CompiledParser<T>.decompile: Script
 	get() =
 		compiled.typed.decompile(context.decompileLiteral)
+
+val <T> CompiledParser<T>.use
+	get(): CompiledParser<T> =
+		CompiledParser(
+			UseCompiledParserParent(this),
+			context,
+			phase,
+			compiled.use)
