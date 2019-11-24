@@ -177,8 +177,9 @@ val Type.coreString: String
 			map(Syntax::coreColorString).process(this@coreString, defaultDictionary)
 		}
 
-val stringLine = "string" lineTo nativeType
-val stringType = type(stringLine)
+const val textName = "text"
+val textLine = textName lineTo nativeType
+val textType = type(textLine)
 
 val intLine = "int" lineTo nativeType
 val intType = type(intLine)

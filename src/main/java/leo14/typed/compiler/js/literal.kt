@@ -7,6 +7,7 @@ import leo14.js.ast.expr
 import leo14.typed.TypedLine
 import leo14.typed.lineTo
 import leo14.typed.nativeTyped
+import leo14.typed.textName
 
 val Literal.typedLine: TypedLine<Expr>
 	get() =
@@ -17,7 +18,7 @@ val Literal.typedLine: TypedLine<Expr>
 
 val String.typedLine: TypedLine<Expr>
 	get() =
-		"string" lineTo nativeTyped(expr(this))
+		textName lineTo nativeTyped(expr(this))
 
 val Number.typedLine: TypedLine<Expr>
 	get() =

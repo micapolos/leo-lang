@@ -10,7 +10,7 @@ import leo14.native.*
 val Literal.nativeTypedLine: TypedLine<Native>
 	get() =
 		when (this) {
-			is StringLiteral -> line("string" fieldTo (term(native(string)) of nativeType))
+			is StringLiteral -> line(textName fieldTo (term(native(string)) of nativeType))
 			is NumberLiteral -> number.nativeTypedLine
 		}
 
@@ -29,7 +29,7 @@ val TypedLine<Native>.decompileLiteral: Literal?
 	get() =
 		when (line) {
 			line("int" fieldTo nativeType) -> term.native.literal
-			line("string" fieldTo nativeType) -> term.native.literal
+			line(textName fieldTo nativeType) -> term.native.literal
 			line("double" fieldTo nativeType) -> term.native.literal
 			else -> null
 		}
@@ -58,7 +58,7 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 
 fun typedLine(native: Native): TypedLine<Native> =
 	when (native) {
-		is StringNative -> line("string" fieldTo nativeTyped<Native>(native))
+		is StringNative -> line(textName fieldTo nativeTyped<Native>(native))
 		is IntNative -> line("int" fieldTo nativeTyped<Native>(native))
 		is DoubleNative -> line("double" fieldTo nativeTyped<Native>(native))
 		is BooleanNative -> line("boolean" fieldTo typed("$native.boolean"))

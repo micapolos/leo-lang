@@ -5,9 +5,6 @@ import leo.bellChar
 import leo.clear
 import leo.home
 import leo.java.lang.sttyPrivateMode
-import leo13.linkOrNull
-import leo13.push
-import leo13.stack
 import leo14.typed.compiler.CharCompiler
 import leo14.typed.compiler.indentColorString
 import leo14.typed.compiler.natives.emptyCharCompiler
@@ -20,13 +17,12 @@ fun main() = run(emptyCharCompiler)
 
 fun <T> run(compiler: CharCompiler<T>) {
 	sttyPrivateMode()
-	var stack = stack<CharCompiler<T>>()
-	var charCompiler = compiler
+	val undoableCompilerVariable = variable(undoable(compiler))
 	var errorToPrint: Throwable? = null
 	var errorCount = 0
 	val reader = InputStreamReader(System.`in`)
 	while (true) {
-		print(charCompiler)
+		print(undoableCompilerVariable.current.lastDone)
 		errorToPrint?.run {
 			println("ERROR")
 			printStackTrace()
@@ -35,14 +31,17 @@ fun <T> run(compiler: CharCompiler<T>) {
 		if (char == -1) break
 		if (char == 127) {
 			if (errorToPrint != null) errorToPrint = null
-			else stack.linkOrNull?.let { link ->
-				charCompiler = link.value
-				stack = link.stack
-			}
+			else undoableCompilerVariable.update { undoIfPossible }
 		} else if (errorToPrint == null) try {
-			val newCharCompiler = charCompiler.put(char.toChar())
-			stack = stack.push(charCompiler)
-			charCompiler = newCharCompiler
+			undoableCompilerVariable.update {
+				doIt {
+					put(char.toChar()).apply {
+						// Pre-fetch string for error detection
+						// TODO: This solution sucks, do it properly.
+						indentColorString
+					}
+				}
+			}
 			errorCount = errorTriggerCount
 		} catch (e: RuntimeException) {
 			print(bellChar)

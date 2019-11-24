@@ -3,6 +3,7 @@ package leo14.lambda.js
 import leo14.*
 import leo14.js.ast.*
 import leo14.lambda.*
+import leo14.lambda.Variable
 import leo14.lambda.code.Gen
 import leo14.lambda.code.gen
 import leo14.lambda.code.inc
