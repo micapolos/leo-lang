@@ -1,7 +1,24 @@
 package leo14
 
+import leo.binary.*
 import java.lang.Runtime.getRuntime
 import java.lang.System.getProperty
+
+val Bit.scriptLine
+	get() =
+		"bit" lineTo script(if (isZero) "zero" else "one")
+
+val Byte.scriptLine
+	get() =
+		"byte" lineTo script(
+			bit7.scriptLine,
+			bit6.scriptLine,
+			bit5.scriptLine,
+			bit4.scriptLine,
+			bit3.scriptLine,
+			bit2.scriptLine,
+			bit1.scriptLine,
+			bit0.scriptLine)
 
 val leonardoScript =
 	script(
