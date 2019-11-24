@@ -152,6 +152,10 @@ val Line.arrowOrNull
 	get() =
 		(this as? ArrowLine)?.arrow
 
+val Line.fieldOrNull
+	get() =
+		(this as? FieldLine)?.field
+
 val Line.choiceOrNull
 	get() =
 		(this as? ChoiceLine)?.choice

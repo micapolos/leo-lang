@@ -48,5 +48,10 @@ fun <T> Compiled<T>.eval(nativeInvoke: NativeApply<T>) =
 val <T> Compiled<T>.use
 	get() =
 		this
-			.updateMemory { plus(remember(type("used") does resolveForEnd.typed)) }
+			.updateMemory {
+				plus(
+					remember(
+						type("used") does typed("used" lineTo resolveForEnd.typed),
+						needsInvoke = false))
+			}
 			.updateTyped { typed() }

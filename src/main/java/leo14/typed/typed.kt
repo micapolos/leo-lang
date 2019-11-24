@@ -99,6 +99,10 @@ val <T> Typed<T>.lineLink: Link<Typed<T>, TypedLine<T>>
 	get() =
 		resolveLinkOrNull.notNullOrError("$type as link")
 
+val <T> Typed<T>.resolveFieldOrNull: TypedField<T>?
+	get() =
+		type.onlyLineOrNull?.fieldOrNull?.let { term of it }
+
 val <T> Typed<T>.lastTypedLine: TypedLine<T>
 	get() =
 		lineLink.head
