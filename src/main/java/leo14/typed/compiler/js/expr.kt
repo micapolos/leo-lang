@@ -11,7 +11,13 @@ import leo14.typed.*
 val Typed<Expr>.resolve: Typed<Expr>?
 	get() =
 		when (type) {
+			type(expressionLine, "open" lineTo type()) ->
+				decompileLinkOrNull!!.tail.apply { expr.open }
+			type(expressionLine, "show" lineTo type()) ->
+				decompileLinkOrNull!!.tail.apply { expr.show }
 			javascriptType(stringLine) -> term of expressionType
+			javascriptType(intLine) -> term of expressionType
+			javascriptType(doubleLine) -> term of expressionType
 			javascriptType(expressionName lineTo stringType) ->
 				term(expr(id((term.native as StringExpr).string))) of expressionType
 			type(expressionLine, "invoke" lineTo expressionType) ->

@@ -9,17 +9,19 @@ import leo13.linkOrNull
 import leo13.push
 import leo13.stack
 import leo14.typed.compiler.CharCompiler
-import leo14.typed.compiler.emptyCharCompiler
 import leo14.typed.compiler.indentColorString
+import leo14.typed.compiler.js.emptyCharCompiler
 import leo14.typed.compiler.put
 import java.io.InputStreamReader
 
 val errorTriggerCount = 7
 
-fun main() {
+fun main() = run(emptyCharCompiler)
+
+fun <T> run(compiler: CharCompiler<T>) {
 	sttyPrivateMode()
-	var stack = stack<CharCompiler>()
-	var charCompiler = emptyCharCompiler
+	var stack = stack<CharCompiler<T>>()
+	var charCompiler = compiler
 	var errorToPrint: Throwable? = null
 	var errorCount = 0
 	val reader = InputStreamReader(System.`in`)
@@ -49,7 +51,7 @@ fun main() {
 	}
 }
 
-fun print(charCompiler: CharCompiler) {
+fun <T> print(charCompiler: CharCompiler<T>) {
 	print("${ansi.clear}${ansi.home}")
 //	println("context> ${charLeo.leo.promptString}")
 	print("${charCompiler.indentColorString}")

@@ -4,17 +4,16 @@ import leo.base.fold
 import leo.base.notNullOrError
 import leo.base.orIfNull
 import leo14.*
-import leo14.native.Native
 import leo14.parser.*
 import leo14.syntax.*
 
-data class CharCompiler(
+data class CharCompiler<T>(
 	val tokenParser: SpacedTokenParser,
-	val compiler: Compiler<Native>)
+	val compiler: Compiler<T>)
 
 val emptyCharCompiler = CharCompiler(newSpacedTokenParser, emptyCompiler)
 
-fun CharCompiler.put(char: Char): CharCompiler =
+fun <T> CharCompiler<T>.put(char: Char): CharCompiler<T> =
 	tokenParser
 		.parse(char)
 		?.let { parsedTokenParser ->
@@ -33,31 +32,31 @@ fun CharCompiler.put(char: Char): CharCompiler =
 				?: error("$this.put($char)")
 		}
 
-fun CharCompiler.put(string: String) =
+fun <T> CharCompiler<T>.put(string: String) =
 	fold(string) { put(it) }
 
-fun CharCompiler.put(script: Script) =
+fun <T> CharCompiler<T>.put(script: Script) =
 	copy(compiler = compiler.parse(script))
 
-val CharCompiler.spacedString: String
+val <T> CharCompiler<T>.spacedString: String
 	get() =
 		processorString {
 			map(Token::coreString).map(Syntax::token).process(compiler)
 		} + tokenParser.spacedString
 
-val CharCompiler.coreString: String
+val <T> CharCompiler<T>.coreString: String
 	get() =
 		processorString {
 			map(Token::coreString).map(Syntax::token).process(compiler)
 		} + tokenParser.coreString
 
-val CharCompiler.coreColorString: String
+val <T> CharCompiler<T>.coreColorString: String
 	get() =
 		processorString {
 			map(Syntax::coreColorString).process(compiler)
 		} + tokenParser.coreString
 
-val CharCompiler.indentColorString: String
+val <T> CharCompiler<T>.indentColorString: String
 	get() =
 		emptyFragment
 			.foldProcessor<Fragment, Syntax>({ plus(it.token).notNullOrError("$this.write($it)") }) {
