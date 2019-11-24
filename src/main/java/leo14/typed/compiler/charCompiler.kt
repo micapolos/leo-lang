@@ -12,6 +12,12 @@ data class CharCompiler<T>(
 	val compiler: Compiler<T>)
 
 fun <T> CharCompiler<T>.put(char: Char): CharCompiler<T> =
+	if (char == '\n')
+		if (tokenParser is NewSpacedTokenParser) putRaw(' ')
+		else putRaw(' ').putRaw(' ')
+	else putRaw(char)
+
+fun <T> CharCompiler<T>.putRaw(char: Char): CharCompiler<T> =
 	tokenParser
 		.parse(char)
 		?.let { parsedTokenParser ->
