@@ -24,7 +24,7 @@ val String.typedLine: TypedLine<Expr>
 
 val Number.typedLine: TypedLine<Expr>
 	get() =
-		"number" lineTo nativeTyped(expr(double))
+		"number" lineTo nativeTyped(expr(bigDecimal.toDouble()))
 
 // No need for decompiling, since we don't evaluate.
 val TypedLine<Expr>.decompileLiteral: Literal?

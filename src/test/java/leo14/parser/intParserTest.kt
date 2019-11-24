@@ -1,26 +1,32 @@
 package leo14.parser
 
 import leo.base.assertEqualTo
+import leo14.number
 import kotlin.test.Test
 import kotlin.test.assertFails
 
-class IntParserTest {
+class NumberParserTest {
 	@Test
 	fun test() {
-		parseInt("0").assertEqualTo(0)
-		parseInt("1").assertEqualTo(1)
-		parseInt("12").assertEqualTo(12)
-		parseInt("012").assertEqualTo(12)
-		parseInt("-0").assertEqualTo(0)
-		parseInt("-01").assertEqualTo(-1)
-		parseInt("-012").assertEqualTo(-12)
-		parseInt(Int.MAX_VALUE.toString()).assertEqualTo(Int.MAX_VALUE)
-		parseInt(Int.MIN_VALUE.toString()).assertEqualTo(Int.MIN_VALUE)
+		parseNumber("0").assertEqualTo(number(0))
+		parseNumber("1").assertEqualTo(number(1))
+		parseNumber("12").assertEqualTo(number(12))
+		parseNumber("012").assertEqualTo(number(12))
+		parseNumber("-0").assertEqualTo(number(-0))
+		parseNumber("-01").assertEqualTo(number(-1))
+		parseNumber("-012").assertEqualTo(number(-12))
 
-		assertFails { parseInt("") }
-		assertFails { parseInt("a") }
-		assertFails { parseInt("-a") }
-		assertFails { parseInt(Int.MAX_VALUE.toLong().inc().toString()) }
-		assertFails { parseInt(Int.MIN_VALUE.toLong().dec().toString()) }
+		parseNumber("0.0").assertEqualTo(number(0.0))
+		parseNumber("0.1").assertEqualTo(number(0.1))
+		parseNumber("1.0").assertEqualTo(number(1.0))
+		parseNumber("1.1").assertEqualTo(number(1.1))
+		parseNumber("3.1415").assertEqualTo(number(3.1415))
+		parseNumber("123.456").assertEqualTo(number(123.456))
+
+		assertFails { parseNumber("") }
+		assertFails { parseNumber(".") }
+		assertFails { parseNumber(".1") }
+		assertFails { parseNumber("a") }
+		assertFails { parseNumber("-a") }
 	}
 }

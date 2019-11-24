@@ -7,23 +7,22 @@ import leo14.literal
 sealed class LiteralParser
 object BeginLiteralParser : LiteralParser()
 data class StringLiteralParser(val stringParser: StringParser) : LiteralParser()
-data class IntLiteralParser(val intParser: IntParser) : LiteralParser()
-// TODO: DoubleLiteralParser
+data class NumberLiteralParser(val numberParser: NumberParser) : LiteralParser()
 
 val newLiteralParser: LiteralParser = BeginLiteralParser
 fun literalParser(stringParser: StringParser): LiteralParser = StringLiteralParser(stringParser)
-fun literalParser(intParser: IntParser): LiteralParser = IntLiteralParser(intParser)
+fun literalParser(numberParser: NumberParser): LiteralParser = NumberLiteralParser(numberParser)
 
 fun LiteralParser.parse(char: Char): LiteralParser? =
 	when (this) {
 		is BeginLiteralParser ->
 			null
-				?: stringParser.parse(char)?.let(::literalParser)
-				?: intParser.parse(char)?.let(::literalParser)
+				?: emptyStringParser.parse(char)?.let(::literalParser)
+				?: emptyNumberParser.parse(char)?.let(::literalParser)
 		is StringLiteralParser ->
 			stringParser.parse(char)?.let(::literalParser)
-		is IntLiteralParser ->
-			intParser.parse(char)?.let(::literalParser)
+		is NumberLiteralParser ->
+			numberParser.parse(char)?.let(::literalParser)
 	}
 
 val LiteralParser.literalOrNull: Literal?
@@ -31,7 +30,7 @@ val LiteralParser.literalOrNull: Literal?
 		when (this) {
 			is BeginLiteralParser -> null
 			is StringLiteralParser -> stringParser.stringOrNull?.let { literal(it) }
-			is IntLiteralParser -> intParser.intOrNull?.let { literal(it) }
+			is NumberLiteralParser -> numberParser.numberOrNull?.let { literal(it) }
 		}
 
 val LiteralParser.literal get() = literalOrNull!!
@@ -44,7 +43,7 @@ val LiteralParser.coreString: String
 		when (this) {
 			is BeginLiteralParser -> ""
 			is StringLiteralParser -> stringParser.coreString
-			is IntLiteralParser -> intParser.coreString
+			is NumberLiteralParser -> numberParser.coreString
 		}
 
 val LiteralParser.spacedString: String
@@ -53,4 +52,4 @@ val LiteralParser.spacedString: String
 
 val LiteralParser.canContinue
 	get() =
-		this is IntLiteralParser
+		this is NumberLiteralParser

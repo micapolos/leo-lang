@@ -4,17 +4,15 @@ import leo14.js.ast.Expr
 import leo14.js.ast.expr
 import leo14.lambda.js.Term
 import leo14.lambda.term
-import kotlin.math.roundToLong
+import java.math.BigDecimal
 
-// TODO: Refactor to allow arbitrary large number, represented as syntax and not value
-data class Number(val double: Double) {
-	override fun toString() =
-		if (double.roundToLong().toDouble() == double) "${double.roundToLong()}"
-		else "$double"
+data class Number(val bigDecimal: BigDecimal) {
+	override fun toString() = bigDecimal.toString()
 }
 
-fun number(int: Int): Number = Number(int.toDouble())
-fun number(double: Double): Number = Number(double)
+fun number(bigDecimal: BigDecimal): Number = Number(bigDecimal)
+fun number(int: Int): Number = Number(BigDecimal.valueOf(int.toLong()))
+fun number(double: Double): Number = Number(BigDecimal.valueOf(double))
 
 val Number.code
 	get() =
@@ -25,8 +23,8 @@ val Number.term: Term
 
 val Number.expr: Expr
 	get() =
-		expr(double)
+		expr(bigDecimal.toDouble())
 
 val Number.any: Any
 	get() =
-		double
+		bigDecimal

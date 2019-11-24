@@ -16,7 +16,7 @@ val Literal.nativeTypedLine: TypedLine<Native>
 
 val Number.nativeTypedLine: TypedLine<Native>
 	get() =
-		line(numberName fieldTo (term(native(double)) of nativeType))
+		line(numberName fieldTo (term(native(this)) of nativeType))
 
 val Typed<Native>.decompile
 	get() =
@@ -37,7 +37,7 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 				type(
 					numberLine,
 					"plus" lineTo numberType) ->
-					term(doublePlusDoubleNative)
+					term(numberPlusDoubleNative)
 						.invoke(link.tail.term)
 						.invoke(link.head.term) of numberType
 				else -> null
@@ -47,7 +47,7 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 fun typedLine(native: Native): TypedLine<Native> =
 	when (native) {
 		is StringNative -> line(textName fieldTo nativeTyped<Native>(native))
-		is DoubleNative -> line(numberName fieldTo nativeTyped<Native>(native))
+		is NumberNative -> line(numberName fieldTo nativeTyped<Native>(native))
 		is BooleanNative -> line("boolean" fieldTo typed("$native.boolean"))
 		else -> error("$native.typedLine")
 	}

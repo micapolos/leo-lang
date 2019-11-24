@@ -70,7 +70,7 @@ class EvalTest {
 
 	@Test
 	fun nativePlus() {
-		term(doublePlusDoubleNative)
+		term(numberPlusDoubleNative)
 			.invoke(term(native(2)))
 			.invoke(term(native(3)))
 			.nativeEval
@@ -88,9 +88,9 @@ class EvalTest {
 								fn(arg2()),
 								fn(arg3<Native>()
 									.invoke(arg3())
-									.invoke(term(doubleTimesIntNative).invoke(arg2()).invoke(arg1()))
-									.invoke(term(doubleDecNative).invoke(arg1())))))
-							.invoke(term(doubleIsZeroNative).invoke(arg0()))
+									.invoke(term(numberTimesIntNative).invoke(arg2()).invoke(arg1()))
+									.invoke(term(numberDecNative).invoke(arg1())))))
+							.invoke(term(numberIsZeroNative).invoke(arg0()))
 							.invoke(id()))))
 		fn(arg0<Native>().invoke(arg0()))
 			.invoke(fact)
@@ -108,7 +108,7 @@ class EvalTest {
 					fn(
 						arg1<Native>()
 							.invoke(arg1())
-							.invoke(term(doubleIncNative).invoke(arg0()))))
+							.invoke(term(numberIncNative).invoke(arg0()))))
 			fn(arg0<Native>().invoke(arg0()))
 				.invoke(fn)
 				.invoke(term(native(0)))

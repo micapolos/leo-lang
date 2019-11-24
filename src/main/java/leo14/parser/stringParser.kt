@@ -10,7 +10,7 @@ object BeginStringParser : StringParser()
 data class CharStackStringParser(val charStack: Stack<Char>) : StringParser()
 data class EndStringParser(val string: String) : StringParser()
 
-val stringParser: StringParser = BeginStringParser
+val emptyStringParser: StringParser = BeginStringParser
 fun stringParser(charStack: Stack<Char>): StringParser = CharStackStringParser(charStack)
 fun stringParser(string: String): StringParser = EndStringParser(string)
 
@@ -36,7 +36,7 @@ val StringParser.stringOrNull get() = (this as? EndStringParser)?.string
 val StringParser.string get() = (this as EndStringParser).string
 
 fun parseString(string: String): String =
-	stringParser
+	emptyStringParser
 		.parse(string)!!
 		.string
 
