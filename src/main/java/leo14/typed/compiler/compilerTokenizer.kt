@@ -4,14 +4,14 @@ import leo.base.ifNotNull
 import leo13.fold
 import leo13.reverse
 import leo14.*
-import leo14.native.Native
 import leo14.syntax.*
+import leo14.typed.DecompileLiteral
 import leo14.typed.decompile
 import leo14.typed.process
 
 val types = false
 
-fun Processor<Syntax>.process(compiler: Compiler<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 	when (compiler) {
 		is ActionParserCompiler -> process(compiler.actionParser)
 		is ArrowParserCompiler -> process(compiler.arrowParser)
@@ -29,7 +29,7 @@ fun Processor<Syntax>.process(compiler: Compiler<Native>): Processor<Syntax> =
 		is ForgetEverythingEndParserCompiler -> process(compiler.forgetEverythingEndParser)
 	}
 
-fun Processor<Syntax>.process(parser: ActionParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: ActionParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.action)) of typeKeywordKind)
@@ -38,19 +38,19 @@ fun Processor<Syntax>.process(parser: ActionParser<Native>): Processor<Syntax> =
 		.process(parser.action.body.type, parser.parentCompiledParser.context.dictionary)
 		.process(token(end) of typeKeywordKind)
 
-fun Processor<Syntax>.process(parser: ArrowParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: ArrowParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(parser.parent.typeParser) { process(it) }
 		.process(token(begin(parser.parent.typeParser.dictionary.action)) of typeKeywordKind)
 		.process(parser.arrow, parser.parent.typeParser.dictionary)
 
-fun Processor<Syntax>.process(parser: ChoiceParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: ChoiceParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(parser.parent?.typeParser) { process(it) }
 		.process(token(begin(parser.dictionary.choice)) of typeKeywordKind)
 		.fold(parser.choice.optionStack.reverse) { process(it, parser.dictionary) }
 
-fun Processor<Syntax>.processWithTypes(compiledParser: CompiledParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.processWithTypes(compiledParser: CompiledParser<T>): Processor<Syntax> =
 	if (types)
 		this
 			.process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
@@ -58,60 +58,60 @@ fun Processor<Syntax>.processWithTypes(compiledParser: CompiledParser<Native>): 
 			.process(compiledParser)
 	else process(compiledParser)
 
-fun Processor<Syntax>.process(compiledParser: CompiledParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(compiledParser: CompiledParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(compiledParser.parent) { process(it) }
 		.run {
 			when (compiledParser.phase) {
 				Phase.COMPILER -> process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
-				Phase.EVALUATOR -> syntaxProcess(compiledParser.compiled.typed.decompile)
+				Phase.EVALUATOR -> syntaxProcess(compiledParser.decompile)
 			}
 		}
 
-fun Processor<Syntax>.process(parser: TypeParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: TypeParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(parser.parent) { process(it) }
 		.ifNotNull(parser.beginner) { process(it) }
 		.process(parser.type, parser.dictionary)
 
-fun Processor<Syntax>.process(parser: DeleteParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: DeleteParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.delete)) of valueKeywordKind)
 
-fun Processor<Syntax>.process(parser: NativeParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: NativeParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentTypeParser)
 		.process(token(begin(parser.parentTypeParser.dictionary.native)) of valueKeywordKind)
 
-fun Processor<Syntax>.process(parser: NothingParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: NothingParser<T>): Processor<Syntax> =
 	process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.nothing)) of valueKeywordKind)
 
-fun Processor<Syntax>.process(parser: ScriptParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: ScriptParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parent)
 		.syntaxProcess(parser.script)
 
-fun Processor<Syntax>.process(parser: LeonardoParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: LeonardoParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.leonardo)) of valueKeywordKind)
 
-fun Processor<Syntax>.process(parser: ForgetEverythingParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: ForgetEverythingParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.forget)) of valueKeywordKind)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.everything)) of valueKeywordKind)
 
-fun Processor<Syntax>.process(parser: ForgetEverythingEndParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: ForgetEverythingEndParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.forget)) of valueKeywordKind)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.everything)) of valueKeywordKind)
 		.process(token(end) of valueKeywordKind)
 
-fun Processor<Syntax>.process(parent: ScriptParserParent<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parent: ScriptParserParent<T>): Processor<Syntax> =
 	when (parent) {
 		is FieldScriptParserParent -> this
 			.process(parent.scriptParser)
@@ -127,13 +127,13 @@ fun Processor<Syntax>.process(parent: ScriptParserParent<Native>): Processor<Syn
 			.process(token(begin(defaultDictionary.script)) of commentKind)
 	}
 
-fun Processor<Syntax>.process(matchParser: MatchParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(matchParser: MatchParser<T>): Processor<Syntax> =
 	this
 		.process(matchParser.parentCompiledParser)
 		.process(token(begin(matchParser.parentCompiledParser.context.dictionary.match)) of valueKeywordKind)
 		.fold(matchParser.caseLineStack.reverse) { process(it, matchParser.parentCompiledParser.context.dictionary) }
 
-fun Processor<Syntax>.process(parent: CompiledParserParent<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Syntax> =
 	when (parent) {
 		is ActionDoesParserParent ->
 			this
@@ -171,7 +171,7 @@ fun Processor<Syntax>.process(parent: CompiledParserParent<Native>): Processor<S
 				.process(token(begin(parent.name)) of valueKeywordKind)
 	}
 
-fun Processor<Syntax>.process(parent: TypeParserParent<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parent: TypeParserParent<T>): Processor<Syntax> =
 	when (parent) {
 		is LineTypeParserParent ->
 			this
@@ -196,7 +196,7 @@ fun Processor<Syntax>.process(parent: TypeParserParent<Native>): Processor<Synta
 				.process(token(begin(parent.compiledParser.context.dictionary.forget)) of valueKeywordKind)
 	}
 
-fun Processor<Syntax>.process(beginner: TypeBeginner<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> =
 	when (beginner) {
 		is ActionDoesTypeBeginner ->
 			this
@@ -213,13 +213,16 @@ fun Processor<Syntax>.process(beginner: TypeBeginner<Native>): Processor<Syntax>
 		is ForgetTypeBeginner -> this
 	}
 
-fun Processor<Syntax>.process(parser: MemoryItemParser<Native>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: MemoryItemParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.remember)) of valueKeywordKind)
-		.process(parser.memoryItem, parser.parentCompiledParser.context.dictionary)
+		.process(parser.memoryItem, parser.parentCompiledParser.context.dictionary, parser.parentCompiledParser.context.decompileLiteral)
 
-fun Processor<Syntax>.process(memoryItem: MemoryItem<Native>, dictionary: Dictionary): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(
+	memoryItem: MemoryItem<T>,
+	dictionary: Dictionary,
+	decompileLiteral: DecompileLiteral<T>): Processor<Syntax> =
 	when (memoryItem) {
 		is RememberMemoryItem ->
 			process(memoryItem.action.param, dictionary)
@@ -228,7 +231,7 @@ fun Processor<Syntax>.process(memoryItem: MemoryItem<Native>, dictionary: Dictio
 					else dictionary.`is`)) of valueKeywordKind)
 				.run {
 					if (memoryItem.needsInvoke) process(memoryItem.action.body.type, dictionary)
-					else syntaxProcess(memoryItem.action.body.decompile)
+					else syntaxProcess(memoryItem.action.body.decompile(decompileLiteral))
 				}
 				.process(token(end) of valueKeywordKind)
 		else -> error("$this.process($memoryItem)")

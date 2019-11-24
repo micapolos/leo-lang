@@ -120,3 +120,7 @@ fun <T> CompiledParser<T>.plus(script: Script): CompiledParser<T> =
 val <T> CompiledParser<T>.forgetEverything: CompiledParser<T>
 	get() =
 		updateCompiled { updateMemory { memory() } }
+
+val <T> CompiledParser<T>.decompile: Script
+	get() =
+		compiled.typed.decompile(context.decompileLiteral)

@@ -15,15 +15,15 @@ fun Processor<Token>.process(link: ScriptLink) =
 
 fun Processor<Token>.process(line: ScriptLine) =
 	when (line) {
-		is LiteralScriptLine -> process(token(line.literal))
+		is LiteralScriptLine -> processFn(token(line.literal))
 		is FieldScriptLine -> process(line.field)
 	}
 
 fun Processor<Token>.process(field: ScriptField) =
 	this
-		.process(token(begin(field.string)))
+		.processFn(token(begin(field.string)))
 		.process(field.rhs)
-		.process(token(end))
+		.processFn(token(end))
 
 val Script.tokenStack: Stack<Token>
 	get() =

@@ -4,12 +4,14 @@ import leo13.Stack
 import leo13.push
 import leo13.stack
 
-data class Processor<T>(val process: (T) -> Processor<T>)
+data class Processor<T>(val processFn: (T) -> Processor<T>)
 
 fun <T> processor(process: (T) -> Processor<T>) = Processor(process)
 
+fun <T> Processor<T>.process(value: T) = processFn(value)
+
 fun <T, R> Processor<T>.map(fn: (R) -> T): Processor<R> =
-	processor { process(fn(it)).map(fn) }
+	processor { processFn(fn(it)).map(fn) }
 
 fun <T> printlnProcessor(): Processor<T> =
 	processor { println(it); printlnProcessor() }
