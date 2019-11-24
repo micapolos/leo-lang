@@ -7,8 +7,8 @@ import kotlin.test.Test
 class StaticTest {
 	@Test
 	fun isStatic() {
-		emptyType.isStatic.assertEqualTo(true)
 		nativeType.isStatic.assertEqualTo(false)
+		type().isStatic.assertEqualTo(true)
 		type("foo" fieldTo type()).isStatic.assertEqualTo(true)
 		type("foo" fieldTo type(choice())).isStatic.assertEqualTo(false)
 		type("foo" fieldTo type(), "bar" fieldTo type()).isStatic.assertEqualTo(true)
@@ -19,7 +19,7 @@ class StaticTest {
 		type(type(choice()) actionTo type(choice())).isStatic.assertEqualTo(false)
 		type(recursive(type())).isStatic.assertEqualTo(false)
 
-		reference(index0).isStatic(scope(type())).assertEqualTo(true)
-		reference(index0).isStatic(scope(type(choice()))).assertEqualTo(false)
+		type("foo" fieldTo reference(index0)).with(scope(type())).isStatic.assertEqualTo(true)
+		type("foo" fieldTo reference(index0)).with(scope(type(choice()))).isStatic.assertEqualTo(false)
 	}
 }

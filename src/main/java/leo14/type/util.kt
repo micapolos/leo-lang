@@ -55,11 +55,14 @@ val String.option get() = this optionTo type()
 
 fun recursive(type: Type) = Recursive(type)
 
-infix fun Reference.with(scope: Scope) = Thunk(this, scope)
-fun thunk(type: Type) = reference(type) with scope()
-
-fun Reference.type(scope: Scope) =
+fun Reference.thunk(scope: Scope): TypeThunk =
 	when (this) {
-		is TypeReference -> type
-		is IndexReference -> scope[index]
+		is TypeReference -> type.with(scope)
+		is IndexReference ->
+			scope.typeStack.link.run {
+				when (index) {
+					is ZeroIndex -> value with stack.scope
+					is NextIndex -> reference(index.previous).thunk(stack.scope)
+				}
+			}
 	}

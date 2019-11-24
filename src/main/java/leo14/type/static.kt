@@ -2,29 +2,26 @@ package leo14.type
 
 import leo13.all
 
-val Thunk.isStatic: Boolean
+val Type.isStatic get() = with(scope()).isStatic
+
+val TypeThunk.isStatic: Boolean
 	get() =
-		reference.isStatic(scope)
-
-fun Reference.isStatic(scope: Scope): Boolean =
-	type(scope).isStatic(scope)
-
-val Type.isStatic: Boolean get() = isStatic(scope())
-
-fun Type.isStatic(scope: Scope) =
-	when (this) {
+		when (type) {
 		NativeType -> false
-		is StructureType -> structure.isStatic(scope)
+			is StructureType -> type.structure.with(scope).isStatic
 		is ChoiceType -> false
-		is ActionType -> action.isStatic(scope)
+			is ActionType -> type.action.with(scope).isStatic
 		is RecursiveType -> false
 	}
 
-fun Structure.isStatic(scope: Scope) =
-	fieldStack.all { isStatic(scope) }
+val StructureThunk.isStatic
+	get() =
+		structure.fieldStack.all { with(scope).isStatic }
 
-fun Field.isStatic(scope: Scope) =
-	reference.isStatic(scope)
+val FieldThunk.isStatic
+	get() =
+		field.rhs.thunk(scope).isStatic
 
-fun Action.isStatic(scope: Scope) =
-	lhs.isStatic(scope) || rhs.isStatic(scope)
+val ActionThunk.isStatic
+	get() =
+		action.lhs.thunk(scope).isStatic || action.rhs.thunk(scope).isStatic
