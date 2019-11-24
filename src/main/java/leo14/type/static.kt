@@ -2,15 +2,18 @@ package leo14.type
 
 import leo13.all
 
+val Thunk.isStatic: Boolean
+	get() =
+		reference.isStatic(scope)
+
 fun Reference.isStatic(scope: Scope): Boolean =
 	type(scope).isStatic(scope)
 
-val Type.isStatic get() = isStatic(scope())
+val Type.isStatic: Boolean get() = isStatic(scope())
 
 fun Type.isStatic(scope: Scope) =
 	when (this) {
 		NativeType -> false
-		EmptyType -> true
 		is StructureType -> structure.isStatic(scope)
 		is ChoiceType -> false
 		is ActionType -> action.isStatic(scope)

@@ -4,6 +4,7 @@ import leo13.Index
 import leo13.Stack
 
 data class Scope(val typeStack: Stack<Type>)
+data class Thunk(val reference: Reference, val scope: Scope)
 
 sealed class Reference
 data class TypeReference(val type: Type) : Reference()
@@ -11,7 +12,6 @@ data class IndexReference(val index: Index) : Reference()
 
 sealed class Type
 object NativeType : Type()
-object EmptyType : Type()
 data class StructureType(val structure: Structure) : Type()
 data class ChoiceType(val choice: Choice) : Type()
 data class ActionType(val action: Action) : Type()

@@ -4,7 +4,7 @@ import leo.base.fold
 import leo.base.notNullOrError
 import leo13.*
 
-val Type.isEmpty get() = (this is EmptyType)
+val Type.isEmpty get() = structureOrNull?.isEmpty ?: false
 val Type.isNative get() = (this is NativeType)
 val Type.structureOrNull get() = (this as? StructureType)?.structure
 val Type.choiceOrNull get() = (this as? ChoiceType)?.choice
@@ -19,7 +19,6 @@ fun scope(vararg types: Type) = stack(*types).scope
 operator fun Scope.plus(type: Type) = typeStack.push(type).scope
 operator fun Scope.get(index: Index): Type = typeStack.get(index).notNullOrError("$this[$index]")
 
-val emptyType: Type = EmptyType
 val nativeType: Type = NativeType
 fun type(structure: Structure): Type = StructureType(structure)
 fun type(choice: Choice): Type = ChoiceType(choice)
@@ -28,6 +27,7 @@ fun type(recursive: Recursive): Type = RecursiveType(recursive)
 
 fun type(vararg fields: Field) = type(structure(*fields))
 fun type(string: String, vararg strings: String) = type(structure(string, *strings))
+fun Type.plusOrNull(field: Field) = structureOrNull?.plus(field)?.let(::type)
 
 infix fun Reference.actionTo(rhs: Reference) = Action(this, rhs)
 infix fun Type.actionTo(rhs: Type) = reference(this) actionTo reference(rhs)
@@ -43,6 +43,7 @@ fun structure(vararg fields: Field) = stack(*fields).structure
 fun structure(string: String, vararg strings: String) = structure().fold(string, strings) { plus(it) }
 operator fun Structure.plus(field: Field) = fieldStack.push(field).structure
 operator fun Structure.plus(string: String) = plus(string.field)
+val Structure.isEmpty get() = fieldStack.isEmpty
 
 infix fun String.fieldTo(reference: Reference) = Field(this, reference)
 infix fun String.fieldTo(type: Type) = this fieldTo reference(type)
@@ -53,6 +54,9 @@ infix fun String.optionTo(type: Type) = this optionTo reference(type)
 val String.option get() = this optionTo type()
 
 fun recursive(type: Type) = Recursive(type)
+
+infix fun Reference.with(scope: Scope) = Thunk(this, scope)
+fun thunk(type: Type) = reference(type) with scope()
 
 fun Reference.type(scope: Scope) =
 	when (this) {
