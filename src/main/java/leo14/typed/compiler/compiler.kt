@@ -1,9 +1,6 @@
 package leo14.typed.compiler
 
 import leo14.*
-import leo14.native.Native
-import leo14.typed.Type
-import leo14.typed.typed
 
 sealed class Compiler<T>
 
@@ -34,14 +31,6 @@ fun <T> compiler(memoryItemParser: MemoryItemParser<T>): Compiler<T> = RememberP
 fun <T> compiler(matchParser: MatchParser<T>): Compiler<T> = MatchParserCompiler(matchParser)
 fun <T> compiler(scriptParser: ScriptParser<T>): Compiler<T> = ScriptParserCompiler(scriptParser)
 fun <T> compiler(leonardoParser: LeonardoParser<T>): Compiler<T> = LeonardoParserCompiler(leonardoParser)
-
-fun compiler(type: Type): Compiler<Native> =
-	compiler(TypeParser(null, null, englishDictionary, type))
-
-fun compiler(compiled: Compiled<Native>, phase: Phase = Phase.COMPILER): Compiler<Native> =
-	compiler(CompiledParser(null, nativeContext, phase, compiled))
-
-val emptyCompiler: Compiler<Native> = compiler(compiled(typed()), Phase.EVALUATOR)
 
 fun <T> Compiler<T>.parse(token: Token): Compiler<T> =
 	parseStatic(token) ?: parseDynamic(token)

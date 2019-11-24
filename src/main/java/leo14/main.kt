@@ -10,7 +10,7 @@ import leo13.push
 import leo13.stack
 import leo14.typed.compiler.CharCompiler
 import leo14.typed.compiler.indentColorString
-import leo14.typed.compiler.js.emptyCharCompiler
+import leo14.typed.compiler.natives.emptyCharCompiler
 import leo14.typed.compiler.put
 import java.io.InputStreamReader
 

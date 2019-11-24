@@ -1,6 +1,7 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
+import leo14.typed.compiler.natives.leoEval
 import kotlin.test.Test
 
 class StringEvalTest {

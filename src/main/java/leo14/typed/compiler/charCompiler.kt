@@ -11,8 +11,6 @@ data class CharCompiler<T>(
 	val tokenParser: SpacedTokenParser,
 	val compiler: Compiler<T>)
 
-val emptyCharCompiler = CharCompiler(newSpacedTokenParser, emptyCompiler)
-
 fun <T> CharCompiler<T>.put(char: Char): CharCompiler<T> =
 	tokenParser
 		.parse(char)
@@ -63,4 +61,3 @@ val <T> CharCompiler<T>.indentColorString: String
 				process(compiler)
 			}.indentString + tokenParser.coreString
 
-val String.leoEval get() = emptyCharCompiler.put(this).coreString
