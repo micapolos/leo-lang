@@ -5,7 +5,6 @@ import leo13.reverse
 import leo14.*
 import leo14.native.Native
 import leo14.syntax.*
-import leo14.typed.compiler.Dictionary
 
 fun Processor<Syntax>.process(type: Type, dictionary: Dictionary): Processor<Syntax> =
 	fold(type.lineStack.reverse) { process(it, dictionary) }

@@ -1,4 +1,4 @@
-package leo14.typed.compiler
+package leo14
 
 data class Dictionary(
 	val action: String,

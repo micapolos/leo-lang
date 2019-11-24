@@ -6,7 +6,6 @@ import leo13.*
 import leo14.*
 import leo14.syntax.Syntax
 import leo14.syntax.coreColorString
-import leo14.typed.compiler.defaultDictionary
 
 data class Type(val lineStack: Stack<Line>) {
 	override fun toString() = script.toString()

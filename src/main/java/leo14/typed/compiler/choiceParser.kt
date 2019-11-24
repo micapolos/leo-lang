@@ -1,9 +1,6 @@
 package leo14.typed.compiler
 
-import leo14.BeginToken
-import leo14.EndToken
-import leo14.LiteralToken
-import leo14.Token
+import leo14.*
 import leo14.typed.*
 
 data class ChoiceParser<T>(

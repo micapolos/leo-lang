@@ -1,5 +1,6 @@
 package leo14.typed.compiler.natives
 
+import leo14.englishDictionary
 import leo14.native.Native
 import leo14.typed.Type
 import leo14.typed.compiler.*

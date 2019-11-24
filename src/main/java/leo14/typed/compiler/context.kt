@@ -1,5 +1,6 @@
 package leo14.typed.compiler
 
+import leo14.Dictionary
 import leo14.Literal
 import leo14.lambda.NativeApply
 import leo14.typed.DecompileLiteral

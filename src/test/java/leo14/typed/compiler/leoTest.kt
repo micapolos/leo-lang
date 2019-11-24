@@ -2,15 +2,12 @@ package leo14.typed.compiler
 
 import leo.base.assertEqualTo
 import leo13.index0
+import leo14.*
 import leo14.lambda.arg0
 import leo14.lambda.id
 import leo14.lambda.invoke
-import leo14.line
-import leo14.lineTo
-import leo14.literal
 import leo14.native.Native
 import leo14.native.native
-import leo14.script
 import leo14.typed.*
 import leo14.typed.compiler.natives.context
 import kotlin.test.Test
