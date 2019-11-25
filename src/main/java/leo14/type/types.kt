@@ -1,6 +1,5 @@
 package leo14.type
 
-import leo13.index
 import leo14.Dictionary
 
 val Dictionary.bitField
@@ -10,21 +9,21 @@ val Dictionary.bitField
 val Dictionary.byteField
 	get() =
 		byte fieldTo type(
-			first fieldTo type(bitField),
-			second fieldTo type(bitField),
-			third fieldTo type(bitField),
-			fourth fieldTo type(bitField),
-			fifth fieldTo type(bitField),
-			sixth fieldTo type(bitField),
-			seventh fieldTo type(bitField),
-			eight fieldTo type(bitField))
+			bitField,
+			bitField,
+			bitField,
+			bitField,
+			bitField,
+			bitField,
+			bitField,
+			bitField)
 
 fun Dictionary.listLine(itemType: Type) =
 	"list" fieldTo type(
 		choice(
 			"empty" fieldTo type(),
 			"link" fieldTo type(
-				"previous" fieldTo reference(index(2)),
+				"previous" fieldTo reference(2),
 				"last" fieldTo reference(itemType))))
 
 val Dictionary.typeField: Field
@@ -44,16 +43,12 @@ val Dictionary.nativeField
 val Dictionary.structureField
 	get() =
 		"structure" fieldTo type(
-			"field" fieldTo type(
-				listLine(
-					type(fieldField))))
+			list(fieldField))
 
 val Dictionary.choiceField
 	get() =
 		"choice" fieldTo type(
-			"field" fieldTo type(
-				listLine(
-					type(fieldField))))
+			list(fieldField))
 
 val Dictionary.actionField
 	get() =
@@ -63,7 +58,7 @@ val Dictionary.actionField
 
 val Dictionary.recursiveField
 	get() =
-		"recursive" fieldTo reference(index(2))
+		"recursive" fieldTo reference(2)
 
 val Dictionary.fieldField
 	get() =
@@ -78,4 +73,4 @@ val Dictionary.referenceLine
 		"reference" fieldTo type(
 			choice(
 				typeField,
-				"recursive" fieldTo reference(index(3))))
+				"recursive" fieldTo reference(3)))

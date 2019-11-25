@@ -1,12 +1,11 @@
 package leo14.type
 
-import leo13.index0
 import kotlin.test.Test
 
 class ConstructorsTest {
 	@Test
 	fun constructors() {
-		reference(index0)
+		reference(0)
 		reference(type())
 
 		type()
@@ -18,10 +17,13 @@ class ConstructorsTest {
 		type(choice())
 		type(recursive(type()))
 		type(type() actionTo type())
-		type(reference(index0) actionTo reference(index0))
+		type(reference(0) actionTo reference(0))
+		type(list("bit".field))
+		type(index(size(8)))
+		type(table("bit".field, size(8)))
 
 		"foo" fieldTo type()
-		"foo" fieldTo reference(index0)
+		"foo" fieldTo reference(0)
 
 		structure()
 		structure("foo")
@@ -36,6 +38,9 @@ class ConstructorsTest {
 		choice("foo" fieldTo type(), "bar" fieldTo type())
 
 		type() actionTo type()
+
+		list("bit".field)
+		table("bit".field, size(8))
 
 		recursive(type())
 

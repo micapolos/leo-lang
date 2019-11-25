@@ -8,6 +8,7 @@ import leo14.typed.plus
 infix fun <T> Term<T>.of(thunk: TypeThunk) = Value(this, thunk)
 infix fun <T> Term<T>.of(thunk: NativeThunk) = NativeValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: StructureThunk) = StructureValue(this, thunk)
+infix fun <T> Term<T>.of(thunk: ListThunk) = ListValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: ChoiceThunk) = ChoiceValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: ActionThunk) = ActionValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: RecursiveThunk) = RecursiveValue(this, thunk)

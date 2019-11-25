@@ -12,18 +12,19 @@ val Type.actionOrNull get() = (this as? ActionType)?.action
 val Type.recursiveOrNull get() = (this as? RecursiveType)?.recursive
 
 fun reference(type: Type): Reference = TypeReference(type)
-fun reference(index: Index): Reference = IndexReference(index)
+fun reference(int: Int): Reference = IntReference(int)
 
 val Stack<Type>.scope get() = Scope(this)
 fun scope(vararg types: Type) = stack(*types).scope
 operator fun Scope.plus(type: Type) = typeStack.push(type).scope
-operator fun Scope.get(index: Index): Type = typeStack.get(index).notNullOrError("$this[$index]")
+operator fun Scope.get(int: Int): Type = typeStack.get(int).notNullOrError("$this[$int]")
 
 val nativeType: Type = NativeType
 fun type(structure: Structure): Type = StructureType(structure)
 fun type(choice: Choice): Type = ChoiceType(choice)
 fun type(action: Action): Type = ActionType(action)
 fun type(recursive: Recursive): Type = RecursiveType(recursive)
+fun type(list: List): Type = ListType(list)
 
 fun type(vararg fields: Field) = type(structure(*fields))
 fun type(string: String, vararg strings: String) = type(structure(string, *strings))
@@ -45,6 +46,8 @@ operator fun Structure.plus(field: Field) = fieldStack.push(field).structure
 operator fun Structure.plus(string: String) = plus(string.field)
 val Structure.isEmpty get() = fieldStack.isEmpty
 
+fun list(field: Field) = List(field)
+
 infix fun String.fieldTo(reference: Reference) = Field(this, reference)
 infix fun String.fieldTo(type: Type) = this fieldTo reference(type)
 val String.field get() = this fieldTo type()
@@ -54,11 +57,9 @@ fun recursive(type: Type) = Recursive(type)
 fun Reference.thunk(scope: Scope): TypeThunk =
 	when (this) {
 		is TypeReference -> type.with(scope)
-		is IndexReference ->
+		is IntReference ->
 			scope.typeStack.link.run {
-				when (index) {
-					is ZeroIndex -> value with stack.scope
-					is NextIndex -> reference(index.previous).thunk(stack.scope)
-				}
+				if (int == 0) value with stack.scope
+				else reference(int.dec()).thunk(stack.scope)
 			}
 	}
