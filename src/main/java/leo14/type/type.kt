@@ -16,7 +16,6 @@ data class RecursiveType(val recursive: Recursive) : Type()
 
 data class Recursive(val type: Type)
 data class Structure(val fieldStack: Stack<Field>)
-data class Choice(val optionStack: Stack<Option>)
+data class Choice(val fieldStack: Stack<Field>)
 data class Action(val lhs: Reference, val rhs: Reference)
 data class Field(val name: String, val rhs: Reference)
-data class Option(val name: String, val rhs: Reference)

@@ -12,7 +12,6 @@ infix fun <T> Term<T>.of(thunk: ChoiceThunk) = ChoiceValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: ActionThunk) = ActionValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: RecursiveThunk) = RecursiveValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: FieldThunk) = FieldValue(this, thunk)
-infix fun <T> Term<T>.of(thunk: OptionThunk) = OptionValue(this, thunk)
 
 fun <T> StructureValue<T>.plus(fieldValue: FieldValue<T>): StructureValue<T> =
 	plusTerm(fieldValue) of thunk.structure.plus(fieldValue.thunk.field).with(thunk.scope)

@@ -29,14 +29,11 @@ class ConstructorsTest {
 		structure("foo" fieldTo type())
 		structure("foo" fieldTo type(), "bar" fieldTo type())
 
-		"foo" optionTo type()
-		"foo" optionTo reference(index0)
-
 		choice()
 		choice("foo")
 		choice("foo", "bar")
-		choice("foo" optionTo type())
-		choice("foo" optionTo type(), "bar" optionTo type())
+		choice("foo" fieldTo type())
+		choice("foo" fieldTo type(), "bar" fieldTo type())
 
 		type() actionTo type()
 

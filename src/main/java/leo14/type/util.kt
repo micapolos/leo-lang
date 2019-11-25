@@ -32,11 +32,11 @@ fun Type.plusOrNull(field: Field) = structureOrNull?.plus(field)?.let(::type)
 infix fun Reference.actionTo(rhs: Reference) = Action(this, rhs)
 infix fun Type.actionTo(rhs: Type) = reference(this) actionTo reference(rhs)
 
-val Stack<Option>.choice get() = Choice(this)
-fun choice(vararg options: Option) = stack(*options).choice
+val Stack<Field>.choice get() = Choice(this)
+fun choice(vararg fields: Field) = stack(*fields).choice
 fun choice(string: String, vararg strings: String) = choice().fold(string, strings) { plus(it) }
-operator fun Choice.plus(option: Option) = optionStack.push(option).choice
-operator fun Choice.plus(string: String) = plus(string.option)
+operator fun Choice.plus(field: Field) = fieldStack.push(field).choice
+operator fun Choice.plus(string: String) = plus(string.field)
 
 val Stack<Field>.structure get() = Structure(this)
 fun structure(vararg fields: Field) = stack(*fields).structure
@@ -48,10 +48,6 @@ val Structure.isEmpty get() = fieldStack.isEmpty
 infix fun String.fieldTo(reference: Reference) = Field(this, reference)
 infix fun String.fieldTo(type: Type) = this fieldTo reference(type)
 val String.field get() = this fieldTo type()
-
-infix fun String.optionTo(reference: Reference) = Option(this, reference)
-infix fun String.optionTo(type: Type) = this optionTo reference(type)
-val String.option get() = this optionTo type()
 
 fun recursive(type: Type) = Recursive(type)
 
