@@ -19,8 +19,6 @@ class ConstructorsTest {
 		type(type() actionTo type())
 		type(reference(0) actionTo reference(0))
 		type(list("bit".field))
-		type(index(size(8)))
-		type(table("bit".field, size(8)))
 
 		"foo" fieldTo type()
 		"foo" fieldTo reference(0)
@@ -40,7 +38,6 @@ class ConstructorsTest {
 		type() actionTo type()
 
 		list("bit".field)
-		table("bit".field, size(8))
 
 		recursive(type())
 

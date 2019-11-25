@@ -8,12 +8,6 @@ class StaticTest {
 	fun isStatic() {
 		nativeType.isStatic.assertEqualTo(false)
 		type().isStatic.assertEqualTo(true)
-		type(index(size(0))).isStatic.assertEqualTo(true)
-		type(index(size(1))).isStatic.assertEqualTo(false)
-		type(table("foo".field, size(0))).isStatic.assertEqualTo(true)
-		type(table("foo".field, size(1))).isStatic.assertEqualTo(true)
-		type(table("foo" fieldTo reference(0), size(0))).isStatic.assertEqualTo(true)
-		type(table("foo" fieldTo reference(0), size(1))).isStatic.assertEqualTo(false)
 		type("foo" fieldTo type()).isStatic.assertEqualTo(true)
 		type("foo" fieldTo type(choice())).isStatic.assertEqualTo(false)
 		type("foo" fieldTo type(), "bar" fieldTo type()).isStatic.assertEqualTo(true)
