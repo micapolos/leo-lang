@@ -32,11 +32,25 @@ val <T> StructureValue<T>.split: Pair<StructureValue<T>, FieldValue<T>>?
 	get() =
 		thunk
 			.split
-			?.let { (structureThunk, fieldThunk) ->
-				if (structureThunk.isStatic)
-					if (fieldThunk.isStatic) id<T>().of(structureThunk) to id<T>().of(fieldThunk)
-					else id<T>().of(structureThunk) to term.of(fieldThunk)
+			?.let { (previousThunk, lastThunk) ->
+				if (previousThunk.isStatic)
+					if (lastThunk.isStatic) id<T>().of(previousThunk) to id<T>().of(lastThunk)
+					else id<T>().of(previousThunk) to term.of(lastThunk)
 				else
-					if (fieldThunk.isStatic) term.of(structureThunk) to id<T>().of(fieldThunk)
-					else term.pair().run { first.of(structureThunk) to second.of(fieldThunk) }
+					if (lastThunk.isStatic) term.of(previousThunk) to id<T>().of(lastThunk)
+					else term.pair().let { (previousTerm, lastTerm) ->
+						previousTerm.of(previousThunk) to lastTerm.of(lastThunk)
+					}
 			}
+
+val <T> Value<T>.structureValueOrNull
+	get() =
+		thunk.structureThunkOrNull?.run { term of this }
+
+val <T> StructureValue<T>.lastFieldValueOrNull
+	get() =
+		split?.second
+
+val <T> StructureValue<T>.previousValueOrNull
+	get() =
+		split?.first

@@ -49,6 +49,9 @@ operator fun Structure.plus(field: Field) = fieldStack.push(field).structure
 operator fun Structure.plus(string: String) = plus(string.field)
 val Structure.isEmpty get() = fieldStack.isEmpty
 val Structure.split get() = fieldStack.splitOrNull?.run { first.structure to second }
+val Structure.onlyFieldOrNull get() = fieldStack.onlyOrNull
+val Structure.previousOrNull get() = fieldStack.linkOrNull?.stack?.structure
+val Structure.lastFieldOrNull get() = fieldStack.linkOrNull?.value
 
 fun list(field: Field) = List(field)
 
