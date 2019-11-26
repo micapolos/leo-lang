@@ -1,6 +1,7 @@
 package leo14.type
 
 import leo13.all
+import leo14.type.thunk.*
 
 val Type.isStatic get() = with(scope()).isStatic
 

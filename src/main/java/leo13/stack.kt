@@ -35,6 +35,7 @@ fun <T> Stack<T>.pushAll(stack: Stack<T>): Stack<T> = fold(stack.reverse) { push
 fun <T> StackLink<T>.push(value: T) = link(stack(this), value)
 val <T> Stack<T>.emptyOrNull get() = (this as? EmptyStack)?.empty
 val <T> Stack<T>.linkOrNull get() = (this as? LinkStack)?.link
+val <T> Stack<T>.splitOrNull get() = (this as? LinkStack)?.link?.run { stack to value }
 val <T> Stack<T>.onlyLinkOrNull get() = linkOrNull?.run { orNullIf(!link.stack.isEmpty) }
 val <T : Any> Stack<T>.valueOrNull: T? get() = linkOrNull?.value
 val <T> Stack<T>.link get() = linkOrNull!!

@@ -73,7 +73,7 @@ fun <T> Typed<T>.resolve(rhs: TypedField<T>): Typed<T>? =
 
 fun <T> Typed<T>.resolve(string: String): Typed<T>? =
 	when (string) {
-		else -> resolveAccess(string) ?: resolveWrap(string)
+		else -> resolveAccess(string)// ?: resolveWrap(string)
 	}
 
 val <T> Typed<T>.resolve: Typed<T>?

@@ -1,6 +1,8 @@
-package leo14.type
+package leo14.type.thunk
 
 import leo13.Stack
+import leo14.type.*
+import leo14.type.List
 
 data class Scope(val typeStack: Stack<Type>)
 
@@ -21,3 +23,4 @@ infix fun Choice.with(scope: Scope) = ChoiceThunk(this, scope)
 infix fun Action.with(scope: Scope) = ActionThunk(this, scope)
 infix fun Recursive.with(scope: Scope) = RecursiveThunk(this, scope)
 infix fun Field.with(scope: Scope) = FieldThunk(this, scope)
+

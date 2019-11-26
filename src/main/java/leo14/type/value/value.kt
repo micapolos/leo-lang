@@ -1,7 +1,7 @@
 package leo14.type.value
 
 import leo14.lambda.Term
-import leo14.type.*
+import leo14.type.thunk.*
 
 data class Value<V>(val term: Term<V>, val thunk: TypeThunk)
 

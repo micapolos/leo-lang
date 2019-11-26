@@ -2,7 +2,10 @@ package leo14.type.value
 
 import leo14.lambda.Term
 import leo14.lambda.id
-import leo14.type.*
+import leo14.lambda.pair
+import leo14.type.isStatic
+import leo14.type.plus
+import leo14.type.thunk.*
 import leo14.typed.plus
 
 infix fun <T> Term<T>.of(thunk: TypeThunk) = Value(this, thunk)
@@ -24,3 +27,16 @@ fun <T> StructureValue<T>.plusTerm(fieldValue: FieldValue<T>): Term<T> =
 	else
 		if (fieldValue.thunk.isStatic) term
 		else term.plus(fieldValue.term)
+
+val <T> StructureValue<T>.split: Pair<StructureValue<T>, FieldValue<T>>?
+	get() =
+		thunk
+			.split
+			?.let { (structureThunk, fieldThunk) ->
+				if (structureThunk.isStatic)
+					if (fieldThunk.isStatic) id<T>().of(structureThunk) to id<T>().of(fieldThunk)
+					else id<T>().of(structureThunk) to term.of(fieldThunk)
+				else
+					if (fieldThunk.isStatic) term.of(structureThunk) to id<T>().of(fieldThunk)
+					else term.pair().run { first.of(structureThunk) to second.of(fieldThunk) }
+			}

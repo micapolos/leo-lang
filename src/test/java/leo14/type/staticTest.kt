@@ -1,6 +1,7 @@
 package leo14.type
 
 import leo.base.assertEqualTo
+import leo14.type.thunk.with
 import kotlin.test.Test
 
 class StaticTest {

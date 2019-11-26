@@ -3,6 +3,9 @@ package leo14.type
 import leo.base.fold
 import leo.base.notNullOrError
 import leo13.*
+import leo14.type.thunk.Scope
+import leo14.type.thunk.TypeThunk
+import leo14.type.thunk.with
 
 val Type.isEmpty get() = structureOrNull?.isEmpty ?: false
 val Type.isNative get() = (this is NativeType)
@@ -45,6 +48,7 @@ fun structure(string: String, vararg strings: String) = structure().fold(string,
 operator fun Structure.plus(field: Field) = fieldStack.push(field).structure
 operator fun Structure.plus(string: String) = plus(string.field)
 val Structure.isEmpty get() = fieldStack.isEmpty
+val Structure.split get() = fieldStack.splitOrNull?.run { first.structure to second }
 
 fun list(field: Field) = List(field)
 
