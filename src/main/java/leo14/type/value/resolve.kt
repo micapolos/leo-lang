@@ -50,21 +50,23 @@ val <T> FieldValue<T>.resolveRhsValue
 	get() =
 		term of thunk.rhsThunk
 
-val <T> Value<T>.resolveBody
+val <T> Value<T>.resolveBody: Value<T>?
 	get() =
 		structureValueOrNull
 			?.resolveOnlyFieldValueOrNull
 			?.rhsValue
 
-fun <T> Value<T>.resolveGet(name: String) =
+fun <T> Value<T>.resolveGet(name: String): Value<T>? =
 	resolveBody
 		?.structureValueOrNull
 		?.resolveLastFieldValueOrNull(name)
+		?.structureValue
+		?.typeValue
 
-fun <T> Value<T>.resolveMake(name: String) =
+fun <T> Value<T>.resolveMake(name: String): Value<T>? =
 	term of thunk.make(name)
 
-fun <T> Value<T>.resolveLast(dictionary: Dictionary) =
+fun <T> Value<T>.resolveLast(dictionary: Dictionary): Value<T>? =
 	resolveBody
 		?.structureValueOrNull
 		?.resolveLastFieldValueOrNull
@@ -72,7 +74,7 @@ fun <T> Value<T>.resolveLast(dictionary: Dictionary) =
 		?.typeValue
 		?.resolveMake(dictionary.last)
 
-fun <T> Value<T>.resolvePrevious(dictionary: Dictionary) =
+fun <T> Value<T>.resolvePrevious(dictionary: Dictionary): Value<T>? =
 	resolveBody
 		?.structureValueOrNull
 		?.resolvePreviousValueOrNull

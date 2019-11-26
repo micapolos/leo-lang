@@ -51,4 +51,18 @@ class ResolveTest {
 					.value(id())
 			)
 	}
+
+	@Test
+	fun resolveGet() {
+		scope()
+			.with(
+				type(
+					"punkt" fieldTo type(
+						"x" fieldTo type("zero"),
+						"y" fieldTo type("jeden"))))
+			.value(id<Any>())
+			.apply { resolveGet("x").assertEqualTo(scope().with(type("x" fieldTo type("zero"))).value(id())) }
+			.apply { resolveGet("y").assertEqualTo(scope().with(type("y" fieldTo type("jeden"))).value(id())) }
+			.apply { resolveGet("z").assertEqualTo(null) }
+	}
 }
