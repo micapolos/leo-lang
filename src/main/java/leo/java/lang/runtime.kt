@@ -19,3 +19,13 @@ fun sttyPrivateMode() {
 		}
 	})
 }
+
+fun sendMail(to: String, subject: String, message: String) {
+	val runtime = Runtime.getRuntime()
+	val process = runtime.exec("sendmail $to")
+	val writer = process.outputStream.bufferedWriter()
+	writer.write("Subject: $subject\n\n$message\n.\n")
+	writer.flush()
+	val exitCode = process.waitFor()
+	if (exitCode != 0) error("error")
+}

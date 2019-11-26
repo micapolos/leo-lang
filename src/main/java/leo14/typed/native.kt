@@ -1,9 +1,11 @@
 package leo14.typed
 
+import leo.java.lang.sendMail
 import leo14.*
 import leo14.Number
 import leo14.lambda.invoke
 import leo14.lambda.native
+import leo14.lambda.pair
 import leo14.lambda.term
 import leo14.native.*
 
@@ -40,6 +42,32 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 					term(numberPlusDoubleNative)
 						.invoke(link.tail.term)
 						.invoke(link.head.term) of numberType
+				type(
+					"send" lineTo type(
+						"mail" lineTo type(
+							"to" lineTo textType,
+							"subject" lineTo textType,
+							"message" lineTo textType))) ->
+					term.pair().let { pair ->
+						pair.first.pair().let { pair2 ->
+							pair2.first.native.string.let { to ->
+								pair2.second.native.string.let { subject ->
+									pair.second.native.string.let { message ->
+										sendMail(
+											to = pair2.first.native.string,
+											subject = pair2.second.native.string,
+											message = pair.second.native.string)
+										typed(
+											"sent" lineTo typed(
+												"mail" lineTo typed(
+													"to" lineTo typed(native(to)),
+													"subject" lineTo typed(native(subject)),
+													"message" lineTo typed(native(message)))))
+									}
+								}
+							}
+						}
+					}
 				else -> null
 			}
 		}
