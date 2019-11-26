@@ -17,9 +17,9 @@ class StaticTest {
 		type(type(choice()) actionTo type()).isStatic.assertEqualTo(true)
 		type(type() actionTo type(choice())).isStatic.assertEqualTo(true)
 		type(type(choice()) actionTo type(choice())).isStatic.assertEqualTo(false)
-		type(recursive(type())).isStatic.assertEqualTo(false)
 
 		type("foo" fieldTo reference(0)).with(scope(type())).isStatic.assertEqualTo(true)
 		type("foo" fieldTo reference(0)).with(scope(type(choice()))).isStatic.assertEqualTo(false)
+		type("foo" fieldTo reference(recursive(type()))).with(scope()).isStatic.assertEqualTo(false)
 	}
 }

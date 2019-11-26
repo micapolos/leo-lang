@@ -54,3 +54,7 @@ val <T> StructureValue<T>.lastFieldValueOrNull
 val <T> StructureValue<T>.previousValueOrNull
 	get() =
 		split?.first
+
+val <T> FieldValue<T>.rhsValue
+	get() =
+		term of thunk.rhsThunk

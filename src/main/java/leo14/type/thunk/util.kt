@@ -17,14 +17,18 @@ val StructureThunk.onlyFieldThunkOrNull
 	get() =
 		structure.onlyFieldOrNull?.with(scope)
 
-val StructureThunk.previousOrNull
+val StructureThunk.previousThunkOrNull
 	get() =
 		structure.previousOrNull?.with(scope)
 
-val StructureThunk.lastFieldOrNull
+val StructureThunk.lastFieldThunkOrNull
 	get() =
 		structure.lastFieldOrNull?.with(scope)
 
 val FieldThunk.rhsThunk
 	get() =
 		field.rhs.thunk(scope)
+
+val ReferenceThunk.typeThunk
+	get() =
+		reference.thunk(scope)

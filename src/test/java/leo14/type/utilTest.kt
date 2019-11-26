@@ -7,6 +7,7 @@ class ConstructorsTest {
 	fun constructors() {
 		reference(0)
 		reference(type())
+		reference(recursive(type()))
 
 		type()
 		type("foo")
@@ -15,7 +16,6 @@ class ConstructorsTest {
 		type("foo" fieldTo type(), "bar" fieldTo type())
 		type(structure())
 		type(choice())
-		type(recursive(type()))
 		type(type() actionTo type())
 		type(reference(0) actionTo reference(0))
 		type(list("bit".field))

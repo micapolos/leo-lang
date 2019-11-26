@@ -13,7 +13,6 @@ val TypeThunk.isStatic: Boolean
 			is ListType -> false
 			is ChoiceType -> false
 			is ActionType -> type.action.with(scope).isStatic
-			is RecursiveType -> false
 	}
 
 val StructureThunk.isStatic

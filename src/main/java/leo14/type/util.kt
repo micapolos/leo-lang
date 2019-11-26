@@ -12,10 +12,10 @@ val Type.isNative get() = (this is NativeType)
 val Type.structureOrNull get() = (this as? StructureType)?.structure
 val Type.choiceOrNull get() = (this as? ChoiceType)?.choice
 val Type.actionOrNull get() = (this as? ActionType)?.action
-val Type.recursiveOrNull get() = (this as? RecursiveType)?.recursive
 
 fun reference(type: Type): Reference = TypeReference(type)
 fun reference(int: Int): Reference = IntReference(int)
+fun reference(recursive: Recursive): Reference = RecursiveReference(recursive)
 
 val Stack<Type>.scope get() = Scope(this)
 fun scope(vararg types: Type) = stack(*types).scope
@@ -26,7 +26,6 @@ val nativeType: Type = NativeType
 fun type(structure: Structure): Type = StructureType(structure)
 fun type(choice: Choice): Type = ChoiceType(choice)
 fun type(action: Action): Type = ActionType(action)
-fun type(recursive: Recursive): Type = RecursiveType(recursive)
 fun type(list: List): Type = ListType(list)
 
 fun type(vararg fields: Field) = type(structure(*fields))
@@ -66,7 +65,9 @@ fun Reference.thunk(scope: Scope): TypeThunk =
 		is TypeReference -> type.with(scope)
 		is IntReference ->
 			scope.typeStack.link.run {
-				if (int == 0) value with stack.scope
+				if (int == 0) value with scope
 				else reference(int.dec()).thunk(stack.scope)
 			}
+		is RecursiveReference ->
+			recursive.type with scope.plus(recursive.type)
 	}
