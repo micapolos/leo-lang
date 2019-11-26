@@ -56,6 +56,10 @@ val <T> Value<T>.structureValueOrNull
 	get() =
 		thunk.structureThunkOrNull?.run { term of this }
 
+val <T> Value<T>.listValueOrNull
+	get() =
+		thunk.listThunkOrNull?.run { term of this }
+
 val <T> StructureValue<T>.lastFieldValueOrNull
 	get() =
 		split?.second

@@ -13,6 +13,10 @@ val TypeThunk.structureThunkOrNull
 	get() =
 		type.structureOrNull?.with(scope)
 
+val TypeThunk.listThunkOrNull
+	get() =
+		type.listOrNull?.with(scope)
+
 val StructureThunk.onlyFieldThunkOrNull
 	get() =
 		structure.onlyFieldOrNull?.with(scope)

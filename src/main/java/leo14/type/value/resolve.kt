@@ -1,7 +1,6 @@
 package leo14.type.value
 
 import leo.base.notNullIf
-import leo14.Dictionary
 import leo14.lambda.first
 import leo14.lambda.id
 import leo14.lambda.second
@@ -65,18 +64,3 @@ fun <T> Value<T>.resolveGet(name: String): Value<T>? =
 
 fun <T> Value<T>.resolveMake(name: String): Value<T>? =
 	term of thunk.make(name)
-
-fun <T> Value<T>.resolveLast(dictionary: Dictionary): Value<T>? =
-	resolveBody
-		?.structureValueOrNull
-		?.resolveLastFieldValueOrNull
-		?.structureValue
-		?.typeValue
-		?.resolveMake(dictionary.last)
-
-fun <T> Value<T>.resolvePrevious(dictionary: Dictionary): Value<T>? =
-	resolveBody
-		?.structureValueOrNull
-		?.resolvePreviousValueOrNull
-		?.typeValue
-		?.resolveMake(dictionary.previous)

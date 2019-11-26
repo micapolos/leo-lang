@@ -10,6 +10,7 @@ import leo14.type.thunk.with
 val Type.isEmpty get() = structureOrNull?.isEmpty ?: false
 val Type.isNative get() = (this is NativeType)
 val Type.structureOrNull get() = (this as? StructureType)?.structure
+val Type.listOrNull get() = (this as? ListType)?.list
 val Type.choiceOrNull get() = (this as? ChoiceType)?.choice
 val Type.actionOrNull get() = (this as? ActionType)?.action
 
