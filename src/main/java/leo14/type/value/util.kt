@@ -17,6 +17,15 @@ infix fun <T> Term<T>.of(thunk: ActionThunk) = ActionValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: RecursiveThunk) = RecursiveValue(this, thunk)
 infix fun <T> Term<T>.of(thunk: FieldThunk) = FieldValue(this, thunk)
 
+infix fun <T> TypeThunk.value(term: Term<T>) = term of this
+infix fun <T> NativeThunk.value(term: Term<T>) = term of this
+infix fun <T> StructureThunk.value(term: Term<T>) = term of this
+infix fun <T> ListThunk.value(term: Term<T>) = term of this
+infix fun <T> ChoiceThunk.value(term: Term<T>) = term of this
+infix fun <T> ActionThunk.value(term: Term<T>) = term of this
+infix fun <T> RecursiveThunk.value(term: Term<T>) = term of this
+infix fun <T> FieldThunk.value(term: Term<T>) = term of this
+
 fun <T> StructureValue<T>.plus(fieldValue: FieldValue<T>): StructureValue<T> =
 	plusTerm(fieldValue) of thunk.structure.plus(fieldValue.thunk.field).with(thunk.scope)
 
@@ -58,3 +67,11 @@ val <T> StructureValue<T>.previousValueOrNull
 val <T> FieldValue<T>.rhsValue
 	get() =
 		term of thunk.rhsThunk
+
+val <T> FieldValue<T>.structureValue
+	get() =
+		term of thunk.structureThunk
+
+val <T> StructureValue<T>.typeValue
+	get() =
+		term of thunk.typeThunk

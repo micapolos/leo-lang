@@ -25,6 +25,10 @@ val StructureThunk.lastFieldThunkOrNull
 	get() =
 		structure.lastFieldOrNull?.with(scope)
 
+val StructureThunk.isEmpty
+	get() =
+		structure.isEmpty
+
 val FieldThunk.rhsThunk
 	get() =
 		field.rhs.thunk(scope)
@@ -32,3 +36,18 @@ val FieldThunk.rhsThunk
 val ReferenceThunk.typeThunk
 	get() =
 		reference.thunk(scope)
+
+val TypeThunk.recurse
+	get() =
+		type.with(scope.plus(type))
+
+fun TypeThunk.make(name: String) =
+	type(name fieldTo type) with scope
+
+val FieldThunk.structureThunk
+	get() =
+		structure(field) with scope
+
+val StructureThunk.typeThunk
+	get() =
+		type(structure) with scope

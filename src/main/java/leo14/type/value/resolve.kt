@@ -1,9 +1,13 @@
 package leo14.type.value
 
+import leo.base.notNullIf
+import leo14.Dictionary
 import leo14.lambda.first
 import leo14.lambda.id
 import leo14.lambda.second
 import leo14.type.isStatic
+import leo14.type.thunk.isEmpty
+import leo14.type.thunk.make
 import leo14.type.thunk.rhsThunk
 import leo14.type.thunk.split
 
@@ -28,6 +32,49 @@ val <T> StructureValue<T>.resolveLastFieldValueOrNull
 	get() =
 		resolveSplit?.second
 
+val <T> StructureValue<T>.resolveOnlyFieldValueOrNull
+	get() =
+		resolveSplit?.run {
+			notNullIf(first.thunk.isEmpty) {
+				second
+			}
+		}
+
+fun <T> StructureValue<T>.resolveLastFieldValueOrNull(name: String): FieldValue<T>? =
+	resolveSplit?.run {
+		if (second.thunk.field.name == name) second
+		else first.resolveLastFieldValueOrNull(name)
+	}
+
 val <T> FieldValue<T>.resolveRhsValue
 	get() =
 		term of thunk.rhsThunk
+
+val <T> Value<T>.resolveBody
+	get() =
+		structureValueOrNull
+			?.resolveOnlyFieldValueOrNull
+			?.rhsValue
+
+fun <T> Value<T>.resolveGet(name: String) =
+	resolveBody
+		?.structureValueOrNull
+		?.resolveLastFieldValueOrNull(name)
+
+fun <T> Value<T>.resolveMake(name: String) =
+	term of thunk.make(name)
+
+fun <T> Value<T>.resolveLast(dictionary: Dictionary) =
+	resolveBody
+		?.structureValueOrNull
+		?.resolveLastFieldValueOrNull
+		?.structureValue
+		?.typeValue
+		?.resolveMake(dictionary.last)
+
+fun <T> Value<T>.resolvePrevious(dictionary: Dictionary) =
+	resolveBody
+		?.structureValueOrNull
+		?.resolvePreviousValueOrNull
+		?.typeValue
+		?.resolveMake(dictionary.previous)

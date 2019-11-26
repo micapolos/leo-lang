@@ -32,12 +32,15 @@ class UtilTest {
 
 	@Test
 	fun loop() {
-		val type = type("loop" fieldTo reference(0))
-		val thunk = type.with(scope(type))
-		thunk
-			.structureThunkOrNull!!
-			.onlyFieldThunkOrNull!!
-			.rhsThunk
-			.assertEqualTo(thunk)
+		type("loop" fieldTo reference(0))
+			.with(scope())
+			.recurse
+			.run {
+				this
+					.structureThunkOrNull!!
+					.onlyFieldThunkOrNull!!
+					.rhsThunk
+					.assertEqualTo(this)
+			}
 	}
 }

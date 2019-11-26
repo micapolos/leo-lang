@@ -26,3 +26,4 @@ infix fun Recursive.with(scope: Scope) = RecursiveThunk(this, scope)
 infix fun Reference.with(scope: Scope) = ReferenceThunk(this, scope)
 infix fun Field.with(scope: Scope) = FieldThunk(this, scope)
 
+infix fun Scope.with(type: Type) = type with this
