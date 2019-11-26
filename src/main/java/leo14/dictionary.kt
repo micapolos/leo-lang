@@ -28,6 +28,7 @@ data class Dictionary(
 	val match: String,
 	val native: String,
 	val nothing: String,
+	val number: String,
 	val one: String,
 	val previous: String,
 	val remember: String,
@@ -35,6 +36,7 @@ data class Dictionary(
 	val second: String,
 	val seventh: String,
 	val sixth: String,
+	val text: String,
 	val third: String,
 	val use: String,
 	val zero: String)
@@ -67,6 +69,7 @@ val englishDictionary = Dictionary(
 	match = "match",
 	native = "native",
 	nothing = "nothing",
+	number = "number",
 	one = "one",
 	previous = "previous",
 	remember = "remember",
@@ -74,6 +77,7 @@ val englishDictionary = Dictionary(
 	second = "second",
 	seventh = "seventh",
 	sixth = "sixth",
+	text = "text",
 	third = "third",
 	use = "use",
 	zero = "zero")
@@ -106,6 +110,7 @@ val polishDictionary = Dictionary(
 	match = "wybierz",
 	native = "natywny",
 	nothing = "nic",
+	number = "liczba",
 	one = "jeden",
 	previous = "poprzedni",
 	remember = "zapamiętaj",
@@ -113,6 +118,7 @@ val polishDictionary = Dictionary(
 	second = "drugi",
 	seventh = "siódmy",
 	sixth = "szósty",
+	text = "tekst",
 	third = "trzeci",
 	use = "użyj",
 	zero = "zero")

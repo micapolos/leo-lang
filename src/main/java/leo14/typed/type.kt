@@ -183,3 +183,9 @@ val textType = type(textLine)
 const val numberName = "number"
 val numberLine = numberName lineTo nativeType
 val numberType = type(numberLine)
+
+val Dictionary.textLine get() = text lineTo nativeType
+val Dictionary.textType get() = type(textLine)
+
+val Dictionary.numberLine get() = number lineTo nativeType
+val Dictionary.numberType get() = type(numberLine)
