@@ -22,7 +22,7 @@ fun sttyPrivateMode() {
 
 fun sendMail(to: String, subject: String, message: String) {
 	val runtime = Runtime.getRuntime()
-	val process = runtime.exec("sendmail $to")
+	val process = runtime.exec(arrayOf("sendmail", to))
 	val writer = process.outputStream.bufferedWriter()
 	writer.write("Subject: $subject\n\n$message\n.\n")
 	writer.flush()

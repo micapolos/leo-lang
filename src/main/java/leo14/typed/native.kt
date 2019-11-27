@@ -53,16 +53,8 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 							pair2.first.native.string.let { to ->
 								pair2.second.native.string.let { subject ->
 									pair.second.native.string.let { message ->
-										sendMail(
-											to = pair2.first.native.string,
-											subject = pair2.second.native.string,
-											message = pair.second.native.string)
-										typed(
-											"sent" lineTo typed(
-												"mail" lineTo typed(
-													"to" lineTo typed(native(to)),
-													"subject" lineTo typed(native(subject)),
-													"message" lineTo typed(native(message)))))
+										sendMail(to = to, subject = subject, message = message)
+										typed<Native>("done")
 									}
 								}
 							}
