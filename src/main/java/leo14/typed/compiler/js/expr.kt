@@ -12,16 +12,20 @@ val Typed<Expr>.resolve: Typed<Expr>?
 	get() =
 		when (type) {
 			type(expressionLine, "open" lineTo type()) ->
-				decompileLinkOrNull!!.tail.apply { expr.open }
+				decompileLinkOrNull!!.tail.apply { expr.open }.run { typed<Expr>() }
 			type(expressionLine, "show" lineTo type()) ->
-				decompileLinkOrNull!!.tail.apply { expr.show }
+				decompileLinkOrNull!!.tail.apply { expr.show }.run { typed<Expr>() }
 			javascriptType(textLine) -> term of expressionType
 			javascriptType(numberLine) -> term of expressionType
-			javascriptType(expressionName lineTo textType) ->
+			javascriptType(expressionType) ->
 				term(expr(id((term.native as StringExpr).string))) of expressionType
 			type(expressionLine, "invoke" lineTo expressionType) ->
 				decompileLinkOrNull!!.run {
 					term(tail.term.expr.invoke(term.head.expr)) of expressionType
+				}
+			type(expressionLine, "plus" lineTo expressionType) ->
+				decompileLinkOrNull!!.run {
+					term(expr(tail.term.expr.op("+", term.head.expr))) of expressionType
 				}
 			type(
 				expressionLine,
