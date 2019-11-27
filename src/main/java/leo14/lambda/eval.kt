@@ -11,4 +11,3 @@ val <T> Value<T>.evalTerm: Term<T> get() = term
 
 fun <T> Term<T>.eval(evaluator: Evaluator<T>) = evaluator.evaluate(value).evalTerm
 val <T> Term<T>.eval get() = eval(nullEvaluator())
-
