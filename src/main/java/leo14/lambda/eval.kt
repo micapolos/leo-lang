@@ -5,29 +5,10 @@ import leo13.fold
 import leo13.reverse
 import leo13.takeOrNull
 
-fun <T> Term<T>.evaluate(scope: Scope<T>): Value<T> =
-	when (this) {
-		is NativeTerm -> null
-		is AbstractionTerm -> null
-		is ApplicationTerm -> application.lhs.evaluate(scope)
-			.apply(application.rhs.evaluate(scope), scope.evaluator)
-		is VariableTerm -> scope[variable.index]
-	} ?: value(scope, this)
-
-fun <T> Value<T>.apply(rhs: Value<T>, evaluator: Evaluator<T>): Value<T>? =
-	when (term) {
-		is NativeTerm -> evaluator.resolve(term.native, rhs)
-		is AbstractionTerm -> term.abstraction.body.evaluate(scope.push(rhs))
-		else -> null
-	}
-
-fun <T> Term<T>.value(evaluator: Evaluator<T>): Value<T> = evaluate(emptyScope(evaluator))
-val <T> Term<T>.value: Value<T> get() = value(nullEvaluator())
-
 val <T> Value<T>.evalTerm: Term<T> get() = term
 	.iterate(term.freeVariableCount) { fn(this) }
 	.fold(scope.valueStack.takeOrNull(term.freeVariableCount)!!.reverse) { invoke(it.evalTerm) }
 
-fun <T> Term<T>.eval(evaluator: Evaluator<T>) = value(evaluator).evalTerm
+fun <T> Term<T>.eval(evaluator: Evaluator<T>) = evaluator.evaluate(value(emptyScope(), this)).evalTerm
 val <T> Term<T>.eval get() = eval(nullEvaluator())
 
