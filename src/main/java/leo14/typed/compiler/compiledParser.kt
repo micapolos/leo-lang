@@ -90,7 +90,11 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Compiler<T> =
 	}
 
 fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
-	compiler(updateCompiled(fn).updateCompiled { resolve(phase, context.evaluator) })
+	compiler(updateCompiled(fn).resolvePhase)
+
+val <T> CompiledParser<T>.resolvePhase: CompiledParser<T>
+	get() =
+		updateCompiled { resolve(phase, context.evaluator) }
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
 	copy(compiled = compiled.resolve(line, context).resolve(phase, context.evaluator))
