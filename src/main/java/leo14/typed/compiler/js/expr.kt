@@ -52,7 +52,7 @@ val Typed<Expr>.resolveShow: Typed<Expr>? get() =
 
 val Typed<Expr>.resolveOpen: Typed<Expr>? get() =
 	decompileLinkOrNull?.run {
-		notNullIf(head.typedField.field == "show" fieldTo type()) {
+		notNullIf(head.typedField.field == "open" fieldTo type()) {
 			tail.term.expr.open.run { typed<Expr>() }
 		}
 	}
