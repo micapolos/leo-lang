@@ -1,9 +1,6 @@
 package leo14.lab
 
-import leo14.lambda.Term
-import leo14.lambda.eval
-import leo14.lambda.native
-import leo14.lambda.term
+import leo14.lambda.*
 
 sealed class Expr
 data class ConstExpr(val int: Int) : Expr()
@@ -74,8 +71,8 @@ fun Op.invoke(lhs: Int, rhs: Int): Int =
 		ModOp -> lhs % rhs
 	}
 
-fun Expr.termInvoke(rhs: Term<Expr>): Term<Expr> =
-	invokeOrNull(rhs.native)!!
+fun Expr.termInvoke(rhs: Value<Expr>): Value<Expr>? =
+	invokeOrNull(rhs.term.native)?.let { term -> value(emptyScope(), term) }
 
 val Term<Expr>.exprEval get() = eval(Expr::termInvoke)
 

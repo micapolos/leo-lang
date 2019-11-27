@@ -83,6 +83,5 @@ val Typed<Expr>.resolveTextPlus: Typed<Expr>?
 		}
 
 // No need for invoke, since we don't evaluate JS
-fun Expr.invoke(term: Term<Expr>): Term<Expr> =
-	error("$this.invoke($term)")
+fun Expr.invoke(term: Value<Expr>): Value<Expr>? = null
 

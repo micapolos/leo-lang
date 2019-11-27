@@ -1,9 +1,8 @@
 package leo14.native
 
+import leo.base.notNullIf
 import leo14.Number
-import leo14.lambda.NativeTerm
-import leo14.lambda.Term
-import leo14.lambda.term
+import leo14.lambda.*
 import leo14.number
 import java.math.BigDecimal
 
@@ -51,9 +50,10 @@ val Native.boolean get() = (this as BooleanNative).boolean
 val Native.number get() = (this as NumberNative).number
 val Native.string get() = (this as StringNative).string
 
-fun Native.invoke(term: Term<Native>): Term<Native> =
-	if (term is NativeTerm) invoke(term.native)
-	else error("$this.invoke($term)")
+fun Native.invoke(value: Value<Native>): Value<Native>? =
+	notNullIf(value.term is NativeTerm) {
+		value(value.scope, invoke(value.term.native))
+	}
 
 fun Native.invoke(native: Native): Term<Native> =
 	when (this) {
