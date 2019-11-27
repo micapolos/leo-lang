@@ -1,6 +1,5 @@
 package leo14.lambda.js
 
-import leo.base.failIfOr
 import leo13.int
 import leo14.js.ast.Expr
 import leo14.js.ast.code
@@ -13,7 +12,8 @@ val Term.code get() = code(gen)
 
 val Int.varCode
 	get() =
-		failIfOr(this < 0) { "v$this" }
+		if (this < 0) error("$this.varCode")
+		else "v$this"
 
 fun paramCode(gen: Gen) =
 	gen.depth.varCode

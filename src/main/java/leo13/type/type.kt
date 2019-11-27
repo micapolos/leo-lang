@@ -1,6 +1,5 @@
 package leo13.type
 
-import com.sun.xml.internal.bind.AnyTypeAdapter
 import leo.base.fold
 import leo.base.notNullIf
 import leo13.*
