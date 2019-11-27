@@ -55,6 +55,8 @@ fun Native.invoke(value: Value<Native>): Value<Native>? =
 		value(value.scope, invoke(value.term.native))
 	}
 
+val nativeEvaluator = evaluator(Native::invoke)
+
 fun Native.invoke(native: Native): Term<Native> =
 	when (this) {
 		is BooleanNative -> null

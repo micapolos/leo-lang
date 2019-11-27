@@ -10,24 +10,24 @@ fun <T> Term<T>.value(scope: Scope<T>): Value<T> =
 		is NativeTerm -> value(scope, this)
 		is AbstractionTerm -> value(scope, this)
 		is ApplicationTerm -> application.lhs.value(scope)
-			.apply(application.rhs.value(scope), scope.nativeApply)
+			.apply(application.rhs.value(scope), scope.evaluator)
 		is VariableTerm -> scope[variable.index]
-	}
+	} ?: value(scope, this)
 
-fun <T> Value<T>.apply(rhs: Value<T>, nativeApply: NativeApply<T>): Value<T> =
+fun <T> Value<T>.apply(rhs: Value<T>, evaluator: Evaluator<T>): Value<T>? =
 	when (term) {
-		is NativeTerm -> term.native.nativeApply(rhs)
+		is NativeTerm -> evaluator.resolve(term.native, rhs)
 		is AbstractionTerm -> term.abstraction.body.value(scope.push(rhs))
 		else -> null
-	} ?: error("$this.apply($rhs)")
+	}
 
-fun <T> Term<T>.value(nativeApply: NativeApply<T>): Value<T> = value(emptyScope(nativeApply))
-val <T> Term<T>.value: Value<T> get() = value(errorNativeApply())
+fun <T> Term<T>.value(evaluator: Evaluator<T>): Value<T> = value(emptyScope(evaluator))
+val <T> Term<T>.value: Value<T> get() = value(nullEvaluator())
 
 val <T> Value<T>.evalTerm: Term<T> get() = term
 	.iterate(term.freeVariableCount) { fn(this) }
 	.fold(scope.valueStack.takeOrNull(term.freeVariableCount)!!.reverse) { invoke(it.evalTerm) }
 
-fun <T> Term<T>.eval(nativeApply: NativeApply<T>) = value(nativeApply).evalTerm
-val <T> Term<T>.eval get() = eval(errorNativeApply())
+fun <T> Term<T>.eval(evaluator: Evaluator<T>) = value(evaluator).evalTerm
+val <T> Term<T>.eval get() = eval(nullEvaluator())
 

@@ -3,8 +3,6 @@ package leo14.typed
 import leo.base.ifOrNull
 import leo.java.lang.sendMail
 import leo13.linkOrNull
-import leo13.map2OrNull
-import leo13.mapOrNull2OrNull
 import leo14.*
 import leo14.Number
 import leo14.lambda.invoke
@@ -14,7 +12,6 @@ import leo14.lambda.term
 import leo14.native.*
 import leo14.typed.compiler.js.open
 import leo14.typed.compiler.js.show
-import leo14.typed.compiler.natives.emptyCompiler
 
 val Literal.nativeTypedLine: TypedLine<Native>
 	get() =
@@ -99,4 +96,4 @@ fun typedLine(native: Native): TypedLine<Native> =
 fun typed(native: Native): Typed<Native> =
 	typed(typedLine(native))
 
-val Typed<Native>.eval get() = eval(Native::invoke)
+val Typed<Native>.eval get() = eval(nativeEvaluator)

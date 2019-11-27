@@ -8,10 +8,10 @@ import leo14.typed.TypedLine
 import leo14.typed.compiler.Context
 
 val emptyContext: Context<Expr> =
-	Context<Expr>(
+	Context(
 		defaultDictionary,
 		Typed<Expr>::resolve,
 		Literal::typedLine,
-		Expr::invoke,
+		exprEvaluator,
 		TypedLine<Expr>::decompileLiteral)
 

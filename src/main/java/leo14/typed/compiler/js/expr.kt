@@ -85,3 +85,4 @@ val Typed<Expr>.resolveTextPlus: Typed<Expr>?
 // No need for invoke, since we don't evaluate JS
 fun Expr.invoke(term: Value<Expr>): Value<Expr>? = null
 
+val exprEvaluator = evaluator(Expr::invoke)

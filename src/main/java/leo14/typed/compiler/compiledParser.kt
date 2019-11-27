@@ -93,7 +93,7 @@ fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
 	compiler(updateCompiled(fn))
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
-	copy(compiled = compiled.resolve(line, context).resolve(phase, context.nativeApply))
+	copy(compiled = compiled.resolve(line, context).resolve(phase, context.evaluator))
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
