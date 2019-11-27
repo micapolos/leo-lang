@@ -11,14 +11,14 @@ fun <T> Evaluator<T>.evaluate(value: Value<T>): Value<T> =
 		is NativeTerm -> null
 		is AbstractionTerm -> null
 		is ApplicationTerm -> resolve(
-			evaluate(value(value.scope, value.term.application.lhs)),
-			evaluate(value(value.scope, value.term.application.rhs)))
+			evaluate(value.scope.value(value.term.application.lhs)),
+			evaluate(value.scope.value(value.term.application.rhs)))
 		is VariableTerm -> value.scope[value.term.variable.index]
 	} ?: value
 
 fun <T> Evaluator<T>.resolve(lhs: Value<T>, rhs: Value<T>): Value<T>? =
 	when (lhs.term) {
 		is NativeTerm -> resolve(lhs.term.native, rhs)
-		is AbstractionTerm -> evaluate(value(lhs.scope.push(rhs), lhs.term.abstraction.body))
+		is AbstractionTerm -> evaluate(lhs.scope.push(rhs).value(lhs.term.abstraction.body))
 		else -> null
 	}

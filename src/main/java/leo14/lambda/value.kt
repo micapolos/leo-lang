@@ -2,6 +2,5 @@ package leo14.lambda
 
 data class Value<T>(val scope: Scope<T>, val term: Term<T>)
 
-fun <T> value(scope: Scope<T>, body: Term<T>) = Value(scope, body)
-
-fun <T> Value<T>.with(term: Term<T>) = value(scope, term)
+fun <T> Scope<T>.value(term: Term<T>) = Value(this, term)
+val <T> Term<T>.value get() = scope<T>().value(this)

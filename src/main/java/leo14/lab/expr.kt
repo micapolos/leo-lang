@@ -72,7 +72,7 @@ fun Op.invoke(lhs: Int, rhs: Int): Int =
 	}
 
 fun Expr.termInvoke(rhs: Value<Expr>): Value<Expr>? =
-	invokeOrNull(rhs.term.native)?.let { term -> value(scope(), term) }
+	invokeOrNull(rhs.term.native)?.value
 
 val exprEvaluator = evaluator(Expr::termInvoke)
 

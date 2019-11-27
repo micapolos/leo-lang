@@ -52,7 +52,7 @@ val Native.string get() = (this as StringNative).string
 
 fun Native.invoke(value: Value<Native>): Value<Native>? =
 	notNullIf(value.term is NativeTerm) {
-		value(value.scope, invoke(value.term.native))
+		value.scope.value(invoke(value.term.native))
 	}
 
 val nativeEvaluator = evaluator(Native::invoke)
