@@ -1,14 +1,10 @@
 package leo14.lambda
 
-typealias NativeApply<T> = T.(Value<T>) -> Value<T>?
-
-data class Evaluator<T>(val fn: T.(Value<T>) -> Value<T>?)
-
-fun <T> Evaluator<T>.resolve(lhs: T, rhs: Value<T>): Value<T>? = lhs.fn(rhs)
+data class Evaluator<T>(val resolveFn: T.(Value<T>) -> Value<T>?)
 
 fun <T> evaluator(fn: T.(Value<T>) -> Value<T>?) = Evaluator(fn)
+fun <T> nullEvaluator(): Evaluator<T> = evaluator { null }
+fun <T> Evaluator<T>.resolve(lhs: T, rhs: Value<T>): Value<T>? = lhs.resolveFn(rhs)
 
-fun <T> nullEvaluator(): Evaluator<T> = evaluator { error("$this.resolve($it)") }
-
-fun <T> errorNativeApply(): NativeApply<T> = { error("nativeApply") }
-
+fun <T> Evaluator<T>.evaluate(value: Value<T>): Value<T> =
+	value.term.evaluate(value.scope)
