@@ -24,6 +24,7 @@ fun sendMail(to: String, subject: String, message: String) {
 	val runtime = Runtime.getRuntime()
 	val process = runtime.exec(arrayOf("sendmail", to))
 	val writer = process.outputStream.bufferedWriter()
+	writer.write("From: micapolos@gmail.com\n")
 	writer.write("Subject: $subject\n\n$message\n.\n")
 	writer.flush()
 	val exitCode = process.waitFor()
