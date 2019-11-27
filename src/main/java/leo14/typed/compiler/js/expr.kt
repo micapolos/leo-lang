@@ -4,9 +4,6 @@ import leo.base.notNullIf
 import leo14.js.ast.*
 import leo14.lambda.*
 import leo14.lambda.js.expr
-import leo14.lambda.js.open
-import leo14.lambda.js.show
-import leo14.type.field
 import leo14.typed.*
 
 val Typed<Expr>.resolve: Typed<Expr>?
@@ -16,15 +13,9 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			?: resolveOpen
 			?: resolveInvoke
 			?: resolveJavascript
+			?: resolveNumberPlus
+			?: resolveTextPlus
 			?: when (type) {
-				type(numberLine, "plus" lineTo numberType) ->
-					decompileLinkOrNull!!.run {
-						term(expr(tail.term.expr.op("+", term.head.expr))) of numberType
-					}
-				type(textLine, "plus" lineTo textType) ->
-					decompileLinkOrNull!!.run {
-						term(expr(tail.term.expr.op("+", term.head.expr))) of textType
-					}
 				type(
 					expressionLine,
 					"set" lineTo textType,
@@ -46,7 +37,7 @@ val Typed<Expr>.resolve: Typed<Expr>?
 val Typed<Expr>.resolveShow: Typed<Expr>? get() =
 	decompileLinkOrNull?.run {
 		notNullIf(head.typedField.field == "show" fieldTo type()) {
-			tail.term.eval.show.run { typed<Expr>() }
+			tail.term.expr.show.run { typed<Expr>() }
 		}
 	}
 
@@ -70,6 +61,26 @@ val Typed<Expr>.resolveJavascript: Typed<Expr>? get() =
 			term(expr(id((term.native as StringExpr).string))) of expressionType
 		}
 	}
+
+val Typed<Expr>.resolveNumberPlus: Typed<Expr>?
+	get() =
+		resolveLinkOrNull?.run {
+			notNullIf(tail.type == numberType && head.typedField.field == "plus" fieldTo numberType) {
+				term(expr(id("a=>b=>a+b")))
+					.invoke(tail.term)
+					.invoke(head.term) of numberType
+			}
+		}
+
+val Typed<Expr>.resolveTextPlus: Typed<Expr>?
+	get() =
+		resolveLinkOrNull?.run {
+			notNullIf(tail.type == textType && head.typedField.field == "plus" fieldTo textType) {
+				term(expr(id("a=>b=>a+b")))
+					.invoke(tail.term)
+					.invoke(head.term) of textType
+			}
+		}
 
 // No need for invoke, since we don't evaluate JS
 fun Expr.invoke(term: Term<Expr>): Term<Expr> =
