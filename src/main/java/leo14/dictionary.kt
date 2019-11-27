@@ -39,7 +39,9 @@ data class Dictionary(
 	val text: String,
 	val third: String,
 	val use: String,
-	val zero: String)
+	val zero: String) {
+	override fun toString() = "dictionary(...)"
+}
 
 val englishDictionary = Dictionary(
 	action = "action",

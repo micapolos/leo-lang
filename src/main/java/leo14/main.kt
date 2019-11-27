@@ -7,7 +7,7 @@ import leo.home
 import leo.java.lang.sttyPrivateMode
 import leo14.typed.compiler.CharCompiler
 import leo14.typed.compiler.indentColorString
-import leo14.typed.compiler.js.emptyCharCompiler
+import leo14.typed.compiler.natives.emptyCharCompiler
 import leo14.typed.compiler.put
 import java.io.InputStreamReader
 
@@ -21,17 +21,25 @@ fun <T> run(compiler: CharCompiler<T>) {
 	var errorToPrint: Throwable? = null
 	var errorCount = 0
 	val reader = InputStreamReader(System.`in`)
+	var printDebug = false
 	while (true) {
 		print(undoableCompilerVariable.current.lastDone)
 		errorToPrint?.run {
 			println("ERROR")
 			printStackTrace()
+			println(undoableCompilerVariable.current.lastDone.toString())
+		}
+		if (printDebug) {
+			println(undoableCompilerVariable.current.lastDone)
+			printDebug = false
 		}
 		val char = reader.read()
 		if (char == -1) break
 		if (char == 127) {
 			if (errorToPrint != null) errorToPrint = null
 			else undoableCompilerVariable.update { undoIfPossible }
+		} else if (char == '!'.toInt()) {
+			printDebug = true
 		} else if (errorToPrint == null) try {
 			undoableCompilerVariable.update {
 				doIt {

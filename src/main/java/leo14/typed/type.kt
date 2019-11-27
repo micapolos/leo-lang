@@ -101,7 +101,7 @@ val Line.isStatic
 val Choice.isStatic get() = false
 val Field.isStatic get() = rhs.isStatic
 val Option.isStatic get() = rhs.isStatic
-val Arrow.isStatic get() = rhs.isStatic || lhs.isStatic
+val Arrow.isStatic get() = false//rhs.isStatic || lhs.isStatic
 
 val Type.isEmpty get() = lineStack.isEmpty
 
