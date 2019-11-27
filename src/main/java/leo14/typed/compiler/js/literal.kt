@@ -6,27 +6,25 @@ import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo14.js.ast.Expr
 import leo14.js.ast.expr
-import leo14.lambda.term
-import leo14.typed.*
+import leo14.typed.TypedLine
+import leo14.typed.lineTo
+import leo14.typed.nativeTyped
+import leo14.typed.textName
 
 val Literal.typedLine: TypedLine<Expr>
 	get() =
-		term(expr) of expressionLine
-
-val Literal.expr: Expr
-	get() =
 		when (this) {
-			is StringLiteral -> string.expr
-			is NumberLiteral -> number.expr
+			is StringLiteral -> string.typedLine
+			is NumberLiteral -> number.typedLine
 		}
 
-val String.expr: Expr
+val String.typedLine: TypedLine<Expr>
 	get() =
-		expr(this)
+		textName lineTo nativeTyped(expr(this))
 
-val Number.expr: Expr
+val Number.typedLine: TypedLine<Expr>
 	get() =
-		expr(bigDecimal.toDouble())
+		"number" lineTo nativeTyped(expr(bigDecimal.toDouble()))
 
 // No need for decompiling, since we don't evaluate.
 val TypedLine<Expr>.decompileLiteral: Literal?

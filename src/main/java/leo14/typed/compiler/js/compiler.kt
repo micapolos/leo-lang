@@ -28,5 +28,4 @@ val Script.compileTyped: Typed<Expr>
 
 val Typed<Expr>.expr: Expr
 	get() =
-		if (type != expressionType) error("$this.expr")
-		else term.expr
+		term.expr
