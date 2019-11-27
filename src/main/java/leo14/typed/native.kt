@@ -43,11 +43,11 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 						.invoke(link.tail.term)
 						.invoke(link.head.term) of numberType
 				type(
-					"send" lineTo type(
-						"mail" lineTo type(
-							"to" lineTo textType,
-							"subject" lineTo textType,
-							"message" lineTo textType))) ->
+					"mail" lineTo type(
+						"to" lineTo textType,
+						"subject" lineTo textType,
+						"message" lineTo textType),
+					"send" lineTo type()) ->
 					term.pair().let { pair ->
 						pair.first.pair().let { pair2 ->
 							pair2.first.native.string.let { to ->
