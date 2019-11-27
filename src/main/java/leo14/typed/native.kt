@@ -1,6 +1,10 @@
 package leo14.typed
 
+import leo.base.ifOrNull
 import leo.java.lang.sendMail
+import leo13.linkOrNull
+import leo13.map2OrNull
+import leo13.mapOrNull2OrNull
 import leo14.*
 import leo14.Number
 import leo14.lambda.invoke
@@ -8,6 +12,9 @@ import leo14.lambda.native
 import leo14.lambda.pair
 import leo14.lambda.term
 import leo14.native.*
+import leo14.typed.compiler.js.open
+import leo14.typed.compiler.js.show
+import leo14.typed.compiler.natives.emptyCompiler
 
 val Literal.nativeTypedLine: TypedLine<Native>
 	get() =
@@ -39,9 +46,15 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 				type(
 					numberLine,
 					"plus" lineTo numberType) ->
-					term(numberPlusDoubleNative)
+					term(numberPlusNumberNative)
 						.invoke(link.tail.term)
 						.invoke(link.head.term) of numberType
+				type(
+					textLine,
+					"plus" lineTo textType) ->
+					term(stringPlusStringNative)
+						.invoke(link.tail.term)
+						.invoke(link.head.term) of textType
 				type(
 					"mail" lineTo type(
 						"to" lineTo textType,
@@ -60,7 +73,18 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 							}
 						}
 					}
-				else -> null
+				else ->
+					type.lineStack.linkOrNull?.let { link ->
+						link.value.fieldOrNull?.let { field ->
+							ifOrNull(field.rhs.isEmpty) {
+								when (field.string) {
+									"open" -> decompile(TypedLine<Native>::decompileLiteral).open
+									"show" -> decompile(TypedLine<Native>::decompileLiteral).show
+									else -> null
+								}
+							}
+						}
+					}?.run { typed<Native>() }
 			}
 		}
 

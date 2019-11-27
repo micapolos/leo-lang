@@ -12,6 +12,7 @@ data class Number(val bigDecimal: BigDecimal) {
 
 fun number(bigDecimal: BigDecimal): Number = Number(bigDecimal)
 fun number(int: Int): Number = Number(BigDecimal.valueOf(int.toLong()))
+fun number(long: Long): Number = Number(BigDecimal.valueOf(long))
 fun number(double: Double): Number = Number(BigDecimal.valueOf(double))
 
 val Number.code

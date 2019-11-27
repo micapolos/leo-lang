@@ -49,11 +49,11 @@ val leonardoScript =
 				"memory" lineTo script(
 					"total" lineTo script(
 						"byte" lineTo script(
-							"count" lineTo script(literal(getRuntime().totalMemory().toInt())))),
+							"count" lineTo script(literal(getRuntime().totalMemory())))),
 					"free" lineTo script(
 						"byte" lineTo script(
 							"count" lineTo script(
-								literal(getRuntime().freeMemory().toInt()))))),
+								literal(getRuntime().freeMemory()))))),
 				"processor" lineTo script(
 					"count" lineTo script(
 						literal(getRuntime().availableProcessors())))),

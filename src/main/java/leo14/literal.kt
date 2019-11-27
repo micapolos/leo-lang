@@ -13,6 +13,7 @@ data class NumberLiteral(val number: Number) : Literal() {
 fun literal(string: String): Literal = StringLiteral(string)
 fun literal(number: Number): Literal = NumberLiteral(number)
 fun literal(int: Int): Literal = literal(number(int))
+fun literal(long: Long): Literal = literal(number(long))
 fun literal(double: Double): Literal = literal(number(double))
 
 val Literal.any

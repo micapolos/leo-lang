@@ -5,7 +5,7 @@ import leo14.lambda.invoke
 import leo14.lambda.term
 import leo14.literal
 import leo14.native.native
-import leo14.native.numberPlusDoubleNative
+import leo14.native.numberPlusNumberNative
 import kotlin.test.Test
 
 class NativeTest {
@@ -26,7 +26,7 @@ class NativeTest {
 		typed
 			.nativeResolve
 			.assertEqualTo(
-				term(numberPlusDoubleNative)
+				term(numberPlusNumberNative)
 					.invoke(typed.lineLink.tail.term)
 					.invoke(typed.lineLink.head.term) of numberType)
 	}

@@ -70,7 +70,7 @@ class EvalTest {
 
 	@Test
 	fun nativePlus() {
-		term(numberPlusDoubleNative)
+		term(numberPlusNumberNative)
 			.invoke(term(native(2)))
 			.invoke(term(native(3)))
 			.nativeEval

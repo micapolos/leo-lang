@@ -29,7 +29,7 @@ fun <T> ScriptParserParent<T>.end(script: Script): Compiler<T> =
 		is CommentScriptParserParent -> compiler
 		is CompiledScriptParserParent -> compiler(compiledParser.plus(script).apply {
 			// TODO: Remove, this is just a fake experiment
-			compiled.resolveForEnd.typed.decompile(compiledParser.context.decompileLiteral).open
+			//compiled.resolveForEnd.typed.decompile(compiledParser.context.decompileLiteral).open
 		})
 	}
 

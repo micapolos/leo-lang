@@ -20,8 +20,10 @@ object NumberPlusIntNative : Native()
 object NumberTimesIntNative : Native()
 object NumberPlusDoubleNative : Native()
 object StringEqualsStringNative : Native()
+object StringPlusStringNative : Native()
 data class EqualsStringNative(val string: String) : Native()
-data class PlusDoubleNative(val number: Number) : Native()
+data class PlusNumberNative(val number: Number) : Native()
+data class PlusStringNative(val string: String) : Native()
 data class TimesDoubleNative(val number: Number) : Native()
 object LogNative : Native()
 
@@ -34,13 +36,15 @@ val numberIsZeroNative: Native = NumberIsZeroNative
 val numberDecNative: Native = NumberDecNative
 val numberIncNative: Native = NumberIncNative
 val numberTimesIntNative: Native = NumberTimesIntNative
-val numberPlusDoubleNative: Native = NumberPlusDoubleNative
+val numberPlusNumberNative: Native = NumberPlusDoubleNative
 val stringEqualsStringNative: Native = StringEqualsStringNative
+val stringPlusStringNative: Native = StringPlusStringNative
 fun switchNative(falseTerm: Term<Native>, trueTerm: Term<Native>): Native = SwitchNative(falseTerm, trueTerm)
 
-fun plusNative(int: Number): Native = PlusDoubleNative(int)
+fun plusNative(int: Number): Native = PlusNumberNative(int)
 fun timesNative(int: Number): Native = TimesDoubleNative(int)
 fun equalsNative(string: String): Native = EqualsStringNative(string)
+fun plusNative(string: String): Native = PlusStringNative(string)
 val logNative: Native = LogNative
 
 val Native.boolean get() = (this as BooleanNative).boolean
@@ -64,9 +68,11 @@ fun Native.invoke(native: Native): Term<Native> =
 		is NumberTimesIntNative -> term(timesNative(native.number))
 		is NumberPlusDoubleNative -> term(plusNative(native.number))
 		is StringEqualsStringNative -> term(equalsNative(native.string))
+		is StringPlusStringNative -> term(plusNative(native.string))
 		is EqualsStringNative -> term(native(string == native.string))
-		is PlusDoubleNative -> term(native(number(number.bigDecimal + native.number.bigDecimal)))
+		is PlusNumberNative -> term(native(number(number.bigDecimal + native.number.bigDecimal)))
 		is TimesDoubleNative -> term(native(number(number.bigDecimal * native.number.bigDecimal)))
-		is PlusDoubleNative -> term(native(number(number.bigDecimal + native.number.bigDecimal)))
+		is PlusNumberNative -> term(native(number(number.bigDecimal + native.number.bigDecimal)))
+		is PlusStringNative -> term(native(string + native.string))
 		is LogNative -> term(native.also { println(it) })
 	} ?: error("$this.invoke($native)")

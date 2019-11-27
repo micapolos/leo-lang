@@ -260,6 +260,15 @@ fun <V, R : Any> Stack<V>.map2OrNull(fn: (V, V) -> R): R? =
 		}
 	}
 
+fun <V, R : Any> Stack<V>.mapOrNull2OrNull(fn: (V, V) -> R?): R? =
+	linkOrNull?.let { link0 ->
+		link0.stack.linkOrNull?.let { link1 ->
+			link1.stack.emptyOrNull?.run {
+				fn(link1.value, link0.value)
+			}
+		}
+	}
+
 fun <V, R : Any> Stack<V>.map8OrNull(fn: (V, V, V, V, V, V, V, V) -> R): R? =
 	linkOrNull?.let { link0 ->
 		link0.stack.linkOrNull?.let { link1 ->
