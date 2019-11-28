@@ -15,7 +15,7 @@ data class CharCompiler<T>(
 
 fun <T> CharCompiler<T>.put(char: Char): CharCompiler<T> =
 	if (char == '\n')
-		if (tokenParser is NewSpacedTokenParser) putRaw(' ')
+		if (tokenParser is NewSpacedTokenParser || tokenParser.parse(' ')?.tokenOrNull != null) putRaw(' ')
 		else putRaw(' ').putRaw(' ')
 	else putRaw(char)
 
