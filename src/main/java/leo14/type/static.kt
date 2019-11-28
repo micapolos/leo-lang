@@ -28,5 +28,8 @@ val ActionThunk.isStatic
 		action.lhs.thunk(scope).isStatic || action.rhs.thunk(scope).isStatic
 
 val ReferenceThunk.isStatic get() =
-	if (reference is RecursiveReference) false
-	else typeThunk.isStatic
+	when (reference) {
+		is TypeReference -> typeThunk.isStatic
+		is IntReference -> typeThunk.isStatic
+		is RecursiveReference -> false
+	}

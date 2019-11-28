@@ -85,10 +85,10 @@ class FragmentTest {
 		emptyFragment.apply { indentString.assertEqualTo("") }
 			.begin("point").apply { indentString.assertEqualTo("point\n  ") }
 			.begin("x").apply { indentString.assertEqualTo("point\n  x\n    ") }
-			.plus(literal(10)).apply { indentString.assertEqualTo("point\n  x: 10 ") }
+			.plus(literal(10)).apply { indentString.assertEqualTo("point\n  x\n    10\n    ") }
 			.end.apply { indentString.assertEqualTo("point\n  x: 10\n  ") }
-			.begin("y").apply { indentString.assertEqualTo("point\n  x: 10\n  y: ") }
-			.plus(literal(10)).apply { indentString.assertEqualTo("point\n  x: 10\n  y: 10 ") }
+			.begin("y").apply { indentString.assertEqualTo("point\n  x: 10\n  y\n    ") }
+			.plus(literal(10)).apply { indentString.assertEqualTo("point\n  x: 10\n  y\n    10\n    ") }
 			.end.apply { indentString.assertEqualTo("point\n  x: 10\n  y: 10\n  ") }
 			.end.apply { indentString.assertEqualTo("point\n  x: 10\n  y: 10\n") }
 	}
