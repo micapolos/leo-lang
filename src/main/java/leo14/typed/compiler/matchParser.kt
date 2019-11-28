@@ -25,7 +25,7 @@ fun <T> MatchParser<T>.parse(token: Token): Compiler<T> =
 						MatchParserParent(copy(match = case.match), token.begin.string),
 						parentCompiledParser.context,
 						Phase.COMPILER,
-						parentCompiledParser.compiled.beginDoes(parentCompiledParser.compiled.typed.type)))
+						parentCompiledParser.compiled.beginGives(parentCompiledParser.compiled.typed.type)))
 			}
 		is EndToken ->
 			parentCompiledParser.next { updateTyped { match.end() } }

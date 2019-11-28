@@ -1,7 +1,6 @@
 package leo14
 
 data class Dictionary(
-	val action: String,
 	val arrow: String,
 	val `as`: String,
 	val bit: String,
@@ -18,6 +17,7 @@ data class Dictionary(
 	val first: String,
 	val forget: String,
 	val fourth: String,
+	val function: String,
 	val give: String,
 	val giving: String,
 	val `is`: String,
@@ -44,7 +44,6 @@ data class Dictionary(
 }
 
 val englishDictionary = Dictionary(
-	action = "action",
 	arrow = "arrow",
 	`as` = "as",
 	bit = "bit",
@@ -61,6 +60,7 @@ val englishDictionary = Dictionary(
 	first = "first",
 	forget = "forget",
 	fourth = "fourth",
+	function = "function",
 	give = "give",
 	giving = "giving",
 	`is` = "is",
@@ -85,7 +85,6 @@ val englishDictionary = Dictionary(
 	zero = "zero")
 
 val polishDictionary = Dictionary(
-	action = "czynność",
 	arrow = "strzałka",
 	`as` = "jako",
 	bit = "bit",
@@ -102,6 +101,7 @@ val polishDictionary = Dictionary(
 	first = "pierwszy",
 	forget = "zapomnij",
 	fourth = "czwarty",
+	function = "funkcja",
 	give = "daj",
 	giving = "dająca",
 	`is` = "to",

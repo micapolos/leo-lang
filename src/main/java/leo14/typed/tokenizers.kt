@@ -40,17 +40,17 @@ fun Processor<Syntax>.process(option: Option, dictionary: Dictionary): Processor
 
 fun Processor<Syntax>.process(arrow: Arrow, dictionary: Dictionary): Processor<Syntax> =
 	this
-		.processFn(token(begin(dictionary.action)) of typeKeywordKind)
+		.processFn(token(begin(dictionary.function)) of typeKeywordKind)
 		.process(arrow.lhs, dictionary)
 		.processFn(token(begin(dictionary.giving)) of typeKeywordKind)
 		.process(arrow.rhs, dictionary)
 		.processFn(token(end) of typeKeywordKind)
 		.processFn(token(end) of typeKeywordKind)
 
-fun Processor<Syntax>.process(action: Action<Native>, dictionary: Dictionary): Processor<Syntax> =
+fun Processor<Syntax>.process(function: Function<Native>, dictionary: Dictionary): Processor<Syntax> =
 	this
-		.processFn(token(begin(dictionary.action)) of valueKeywordKind)
+		.processFn(token(begin(dictionary.function)) of valueKeywordKind)
 		.processFn(token(begin(dictionary.doing)) of valueKeywordKind)
-		.process(action.param, dictionary)
+		.process(function.takes, dictionary)
 		.processFn(token(end) of valueKeywordKind)
 		.processFn(token(end) of valueKeywordKind)

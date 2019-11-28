@@ -18,7 +18,7 @@ val <T> Memory<T>.reflectScriptLine get() =
 val <T> MemoryItem<T>.reflectScriptLine get() =
 	when (this) {
 		is EmptyMemoryItem -> "empty" lineTo script()
-		is RememberMemoryItem -> "remember" lineTo script(action.reflectScriptLine)
+		is RememberMemoryItem -> "remember" lineTo script(function.reflectScriptLine)
 	}
 
 val Phase.reflectStringLine get() =
@@ -38,8 +38,8 @@ val <T> CompiledParser<T>.reflectScriptLine: ScriptLine get() =
 val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 	when (this) {
 		is FieldCompiledParserParent -> "begin" lineTo script(compiledParser.reflectScriptLine)
-		is ActionDoesParserParent -> TODO()
-		is ActionDoParserParent -> TODO()
+		is FunctionDoesParserParent -> TODO()
+		is FunctionGiveParserParent -> TODO()
 		is GiveCompiledParserParent -> TODO()
 		is UseCompiledParserParent -> TODO()
 		is RememberDoesParserParent -> TODO()

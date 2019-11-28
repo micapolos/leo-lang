@@ -9,7 +9,8 @@ val <T> Typed<T>.reflectScriptLine get() =
 		"term" lineTo term.script,
 		"type" lineTo type.script)
 
-val <T> Action<T>.reflectScriptLine get() =
+val <T> Function<T>.reflectScriptLine
+	get() =
 	"action" lineTo script(
-		"param" lineTo param.script,
-		"body" lineTo script(body.reflectScriptLine))
+		"param" lineTo takes.script,
+		"body" lineTo script(does.reflectScriptLine))

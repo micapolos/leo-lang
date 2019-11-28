@@ -2,18 +2,18 @@ package leo14.typed.compiler
 
 import leo14.EndToken
 import leo14.Token
-import leo14.typed.Action
+import leo14.typed.Function
 import leo14.typed.plus
 
-data class ActionParser<T>(
+data class FunctionParser<T>(
 	val parentCompiledParser: CompiledParser<T>,
-	val action: Action<T>)
+	val function: Function<T>)
 
-fun <T> ActionParser<T>.parse(token: Token): Compiler<T> =
+fun <T> FunctionParser<T>.parse(token: Token): Compiler<T> =
 	if (token is EndToken)
 		parentCompiledParser.next {
 			updateTyped {
-				plus(action)
+				plus(function)
 			}
 		}
 	else error("$this.parse($token")

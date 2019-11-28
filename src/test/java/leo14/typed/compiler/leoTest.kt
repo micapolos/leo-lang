@@ -59,7 +59,7 @@ class TypeParserTest {
 		compiler(type())
 			.parse(
 				script(
-					defaultDictionary.action lineTo script(
+					defaultDictionary.function lineTo script(
 						"one" lineTo script(),
 						"plus" lineTo script("two"),
 						defaultDictionary.giving lineTo script("three"))))
@@ -146,7 +146,7 @@ class TypeParserTest {
 		compiler(compiled(typed()))
 			.parse(
 				script(
-					defaultDictionary.action lineTo script(
+					defaultDictionary.function lineTo script(
 						"zero" lineTo script(),
 						defaultDictionary.does lineTo script(
 							"plus" lineTo script("one")))))

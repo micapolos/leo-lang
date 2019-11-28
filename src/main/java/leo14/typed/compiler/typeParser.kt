@@ -18,7 +18,7 @@ data class AsTypeParserParent<T>(val compiledParser: CompiledParser<T>) : TypePa
 data class ForgetTypeParserParent<T>(val compiledParser: CompiledParser<T>) : TypeParserParent<T>()
 
 sealed class TypeBeginner<T>
-data class ActionDoesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
+data class FunctionGivesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ArrowGivingTypeBeginner<T>(val typeParser: TypeParser<T>) : TypeBeginner<T>()
 data class RememberTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ForgetTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
@@ -36,7 +36,7 @@ fun <T> TypeParser<T>.parse(token: Token): Compiler<T> =
 							dictionary,
 							typeContext,
 							choice()))
-				dictionary.action ->
+				dictionary.function ->
 					compiler(
 						TypeParser(
 							null,
@@ -73,15 +73,15 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 							type()))
 				else -> null
 			}
-		is ActionDoesTypeBeginner ->
+		is FunctionGivesTypeBeginner ->
 			when (begin.string) {
 				dictionary.does ->
 					compiler(
 						CompiledParser(
-							ActionDoesParserParent(compiledParser, type),
+							FunctionDoesParserParent(compiledParser, type),
 							compiledParser.context,
 							Phase.COMPILER,
-							compiledParser.compiled.beginDoes(type)))
+							compiledParser.compiled.beginGives(type)))
 				else -> null
 			}
 		is RememberTypeBeginner ->
@@ -99,7 +99,7 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 							RememberDoesParserParent(compiledParser, type),
 							compiledParser.context,
 							Phase.COMPILER,
-							compiledParser.compiled.beginDoes(type)))
+							compiledParser.compiled.beginGives(type)))
 				else -> null
 			}
 		is ForgetTypeBeginner ->

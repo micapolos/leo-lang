@@ -41,8 +41,8 @@ fun <T> typed(string: String, vararg strings: String): Typed<T> =
 fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
 	plusTerm(typed) of type.plus(typed.line)
 
-fun <T> Typed<T>.plus(action: Action<T>): Typed<T> =
-	plus(fn(action.body.term) of line(action.param arrowTo action.body.type))
+fun <T> Typed<T>.plus(function: Function<T>): Typed<T> =
+	plus(fn(function.does.term) of line(function.takes arrowTo function.does.type))
 
 fun <T> Typed<T>.plus(typed: TypedField<T>): Typed<T> =
 	plus(typed.term of line(typed.field))
@@ -198,19 +198,19 @@ val <T> Typed<T>.decompileLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 fun <T> Typed<T>.switchOf(type: Type, fnStack: Stack<Term<T>>): Typed<T> =
 	term.matchTerm(*fnStack.array) of type
 
-val <T> Typed<T>.action: Action<T>
+val <T> Typed<T>.function: Function<T>
 	get() =
-		onlyLine.arrow.action
+		onlyLine.arrow.function
 
-val <T> TypedArrow<T>.action: Action<T>
+val <T> TypedArrow<T>.function: Function<T>
 	get() =
 		arrow.lhs does (term of arrow.rhs)
 
-fun <T> Typed<T>.ret(action: Action<T>): Typed<T> =
-	fn(term).invoke(action.body.term) of type
+fun <T> Typed<T>.ret(function: Function<T>): Typed<T> =
+	fn(term).invoke(function.does.term) of type
 
-fun <T> typed(action: Action<T>): Typed<T> =
-	fn(action.body.term) of type(line(action.param arrowTo action.body.type))
+fun <T> typed(function: Function<T>): Typed<T> =
+	fn(function.does.term) of type(line(function.takes arrowTo function.does.type))
 
 fun <T> typed(index: Index, type: Type) =
 	arg<T>(index) of type

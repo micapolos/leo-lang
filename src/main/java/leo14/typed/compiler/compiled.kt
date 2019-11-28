@@ -17,7 +17,7 @@ val <T> Compiled<T>.begin: Compiled<T>
 	get() =
 		copy(typed = typed())
 
-fun <T> Compiled<T>.beginDoes(type: Type): Compiled<T> =
+fun <T> Compiled<T>.beginGives(type: Type): Compiled<T> =
 	this
 		.updateMemory { plus(remember(type("given") does typed(arg0(), type("given" lineTo type)), needsInvoke = false)) }
 		.updateTyped { typed() }

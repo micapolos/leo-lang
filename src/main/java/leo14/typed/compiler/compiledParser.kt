@@ -5,6 +5,7 @@ import leo.base.notNullIf
 import leo13.stack
 import leo14.*
 import leo14.typed.*
+import leo14.typed.Function
 
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
@@ -14,8 +15,8 @@ data class CompiledParser<T>(
 
 sealed class CompiledParserParent<T>
 data class FieldCompiledParserParent<T>(val compiledParser: CompiledParser<T>, val name: String) : CompiledParserParent<T>()
-data class ActionDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
-data class ActionDoParserParent<T>(val compiledParser: CompiledParser<T>, val action: Action<T>) : CompiledParserParent<T>()
+data class FunctionDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
+data class FunctionGiveParserParent<T>(val compiledParser: CompiledParser<T>, val function: Function<T>) : CompiledParserParent<T>()
 data class GiveCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
 data class UseCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
 data class RememberDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
@@ -28,13 +29,13 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 			compiler(plus(token.literal))
 		is BeginToken ->
 			when (token.begin.string) {
-				context.dictionary.action ->
-					compiler(TypeParser(null, ActionDoesTypeBeginner(this), context.dictionary, context.typeContext, type()))
+				context.dictionary.function ->
+					compiler(TypeParser(null, FunctionGivesTypeBeginner(this), context.dictionary, context.typeContext, type()))
 				context.dictionary.`as` ->
 					compiler(TypeParser(AsTypeParserParent(this), null, context.dictionary, context.typeContext, type()))
 				context.dictionary.`do` ->
-					compiled.typed.action.let { action ->
-						compiler(CompiledParser(ActionDoParserParent(this, action), context, phase, compiled.begin))
+					compiled.typed.function.let { action ->
+						compiler(CompiledParser(FunctionGiveParserParent(this, action), context, phase, compiled.begin))
 					}
 				context.dictionary.give ->
 					compiler(CompiledParser(GiveCompiledParserParent(this), context, phase, compiled.begin))
@@ -73,10 +74,10 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Compiler<T> =
 	when (this) {
 		is FieldCompiledParserParent ->
 			compiler(compiledParser.resolve(line(name fieldTo compiled.typed)))
-		is ActionDoesParserParent ->
-			compiler(ActionParser(compiledParser, type does compiled.typed))
-		is ActionDoParserParent ->
-			compiledParser.next { updateTyped { action.`do`(compiled.typed) } }
+		is FunctionDoesParserParent ->
+			compiler(FunctionParser(compiledParser, type does compiled.typed))
+		is FunctionGiveParserParent ->
+			compiledParser.next { updateTyped { function.give(compiled.typed) } }
 		is GiveCompiledParserParent ->
 			compiledParser.next { updateTyped { compiled.typed } }
 		is UseCompiledParserParent ->
