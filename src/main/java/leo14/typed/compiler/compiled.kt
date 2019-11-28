@@ -16,7 +16,7 @@ val <T> Compiled<T>.begin: Compiled<T>
 		copy(typed = typed())
 
 fun <T> Compiled<T>.beginDoes(type: Type): Compiled<T> =
-	copy(typed = arg0<T>() of type)
+	copy(typed = typed("given" lineTo typed(arg0(), type)))
 
 fun <T> Compiled<T>.updateTyped(fn: Typed<T>.() -> Typed<T>): Compiled<T> =
 	copy(typed = typed.fn())
