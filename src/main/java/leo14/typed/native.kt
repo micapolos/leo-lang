@@ -16,13 +16,13 @@ import leo14.typed.compiler.js.show
 val Literal.nativeTypedLine: TypedLine<Native>
 	get() =
 		when (this) {
-			is StringLiteral -> line(textName fieldTo (term(native(string)) of nativeType))
+			is StringLiteral -> term(native(string)) of textLine
 			is NumberLiteral -> number.nativeTypedLine
 		}
 
 val Number.nativeTypedLine: TypedLine<Native>
 	get() =
-		line(numberName fieldTo (term(native(this)) of nativeType))
+		term(native(this)) of numberLine
 
 val Typed<Native>.decompile
 	get() =
@@ -31,8 +31,8 @@ val Typed<Native>.decompile
 val TypedLine<Native>.decompileLiteral: Literal?
 	get() =
 		when (line) {
-			line(textName fieldTo nativeType) -> term.native.literal
-			line(numberName fieldTo nativeType) -> term.native.literal
+			textLine -> term.native.literal
+			numberLine -> term.native.literal
 			else -> null
 		}
 
@@ -87,8 +87,8 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 
 fun typedLine(native: Native): TypedLine<Native> =
 	when (native) {
-		is StringNative -> line(textName fieldTo nativeTyped<Native>(native))
-		is NumberNative -> line(numberName fieldTo nativeTyped<Native>(native))
+		is StringNative -> term(native) of textLine
+		is NumberNative -> term(native) of numberLine
 		is BooleanNative -> line("boolean" fieldTo typed("$native.boolean"))
 		else -> error("$native.typedLine")
 	}

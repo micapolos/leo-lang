@@ -17,7 +17,7 @@ fun <T> TypedLine<T>.decompileLine(fn: DecompileLiteral<T>): ScriptLine =
 	fn()
 		?.let { line(it) }
 		?: when (line) {
-			is NativeLine -> "native" lineTo script()
+			is NativeLine -> "native" lineTo script() // TODO: Decompile literal
 			is FieldLine -> (term of line.field).decompileLine(fn)
 			is ChoiceLine -> (term of line.choice).decompileLine(fn)
 			is ArrowLine -> "action" lineTo script("doing" lineTo line.arrow.lhs.script)

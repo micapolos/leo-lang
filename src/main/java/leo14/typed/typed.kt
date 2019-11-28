@@ -5,8 +5,6 @@ import leo.base.fold
 import leo.base.notNullIf
 import leo.base.notNullOrError
 import leo13.*
-import leo14.Literal
-import leo14.any
 import leo14.lambda.*
 
 data class Typed<out T>(val term: Term<T>, val type: Type) {
@@ -39,12 +37,6 @@ fun <T> typed(field: TypedField<T>, vararg fields: TypedField<T>) =
 
 fun <T> typed(string: String, vararg strings: String): Typed<T> =
 	typed(string fieldTo typed<T>()).fold(strings) { plus(it fieldTo typed()) }
-
-fun anyTyped(literal: Literal): Typed<Any> =
-	term(literal.any) of nativeType
-
-fun <T> nativeTyped(native: T): Typed<T> =
-	term(native) of nativeType
 
 fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
 	plusTerm(typed) of type.plus(typed.line)
@@ -155,7 +147,7 @@ fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
 
 fun <T> TypedLine<T>.resolveGet(string: String): Typed<T>? =
 	when (line) {
-		is NativeLine -> notNullIf(string == "native") { term of type(line) }
+		is NativeLine -> notNullIf(string == line.native.name) { term of type(line) }
 		is FieldLine -> (term of line.field).resolveGet(string)
 		is ChoiceLine -> notNullIf(string == "choice") { term of type(line) }
 		is ArrowLine -> notNullIf(string == "function") { term of type(line) }
@@ -172,10 +164,6 @@ fun <T> Typed<T>.eval(rhs: TypedField<T>): Typed<T> =
 
 fun <T> Typed<T>.resolveWrap(string: String) =
 	term of type(string fieldTo type)
-
-fun <T> Typed<T>.plusNative(rhs: Term<T>): Typed<T> =
-	if (type.isStatic) rhs of type.plus(nativeLine)
-	else pair(term, rhs) of type.plus(nativeLine)
 
 infix fun <T> String.fieldTo(typed: Typed<T>): TypedField<T> =
 	typed.term of (this fieldTo typed.type)

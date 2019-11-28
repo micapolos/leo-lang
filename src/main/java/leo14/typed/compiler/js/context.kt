@@ -13,5 +13,6 @@ val emptyContext: Context<Expr> =
 		Typed<Expr>::resolve,
 		Literal::typedLine,
 		exprEvaluator,
+		jsTypeContext,
 		TypedLine<Expr>::decompileLiteral)
 

@@ -12,32 +12,32 @@ class TypedTest {
 		type("foo").isStatic.assertEqualTo(true)
 		type("foo" fieldTo type("bar")).isStatic.assertEqualTo(true)
 		type(choice("foo" optionTo type(), "bar" optionTo type())).isStatic.assertEqualTo(false)
-		nativeType.isStatic.assertEqualTo(false)
-		type("foo" fieldTo nativeType).isStatic.assertEqualTo(false)
+		numberType.isStatic.assertEqualTo(false)
+		type("foo" fieldTo numberType).isStatic.assertEqualTo(false)
 	}
 
 	@Test
 	fun dynamicPlusDynamic() {
-		term("foo").of(nativeType)
-			.plus(term("bar").of(nativeLine))
+		term("foo").of(numberType)
+			.plus(term("bar").of(numberLine))
 			.assertEqualTo(term("foo").plus(term("bar"))
-				.of(nativeType.plus(nativeLine)))
+				.of(numberType.plus(numberLine)))
 	}
 
 	@Test
 	fun dynamicPlusStatic() {
-		term("foo").of(nativeType)
+		term("foo").of(numberType)
 			.plus(term("bar").of(line("bar")))
 			.assertEqualTo(
-				term("foo").of(nativeType.plus(line("bar"))))
+				term("foo").of(numberType.plus(line("bar"))))
 	}
 
 	@Test
 	fun staticPlusDynamic() {
 		term("foo").of(type("foo"))
-			.plus(term("bar").of(nativeLine))
+			.plus(term("bar").of(numberLine))
 			.assertEqualTo(
-				term("bar").of(type("foo").plus(nativeLine)))
+				term("bar").of(type("foo").plus(numberLine)))
 	}
 
 	@Test
@@ -51,7 +51,7 @@ class TypedTest {
 	@Test
 	fun castChoice() {
 		term("lhs")
-			.of(type("zero" lineTo nativeType))
+			.of(type("zero" lineTo numberType))
 			.castTermTo(type(choice("zero", "one")))
 			.assertEqualTo(fn(fn(arg1<Any>().invoke(term("lhs")))))
 	}

@@ -13,8 +13,8 @@ data class Type(val lineStack: Stack<Line>) {
 
 sealed class Line
 
-object NativeLine : Line() {
-	override fun toString() = scriptLine.toString()
+data class NativeLine(val native: LineNative) : Line() {
+	override fun toString() = native.toString()
 }
 
 data class FieldLine(val field: Field) : Line() {
@@ -64,13 +64,11 @@ val Type.lineLinkOrNull: Link<Type, Line>?
 val impossibleType: Type = type(choice())
 val anyLine: Line get() = AnyLine
 
-val nativeLine: Line = NativeLine
+fun line(lineNative: LineNative): Line = NativeLine(lineNative)
 fun line(choice: Choice): Line = ChoiceLine(choice)
 fun line(field: Field): Line = FieldLine(field)
 fun line(string: String): Line = line(string fieldTo emptyType)
 fun line(arrow: Arrow): Line = ArrowLine(arrow)
-
-val nativeType = type(nativeLine)
 
 val Stack<Option>.choice get() = Choice(this)
 fun choice(vararg options: Option) = stack(*options).choice
@@ -114,7 +112,7 @@ val Type.script: Script
 val Line.scriptLine: ScriptLine
 	get() =
 		when (this) {
-			is NativeLine -> "native" lineTo script()
+			is NativeLine -> native.scriptLine
 			is FieldLine -> field.scriptLine
 			is ChoiceLine -> choice.scriptLine
 			is ArrowLine -> arrow.scriptLine
@@ -177,15 +175,19 @@ val Type.coreString: String
 		}
 
 const val textName = "text"
-val textLine = textName lineTo nativeType
+val textLineNative = native(textName, isStatic = false)
+val textLine = line(textLineNative)
 val textType = type(textLine)
 
 const val numberName = "number"
-val numberLine = numberName lineTo nativeType
+val numberLineNative = native(numberName, isStatic = false)
+val numberLine = line(numberLineNative)
 val numberType = type(numberLine)
 
-val Dictionary.textLine get() = text lineTo nativeType
+val Dictionary.textLineNative get() = native(text, isStatic = false)
+val Dictionary.textLine get() = line(textLineNative)
 val Dictionary.textType get() = type(textLine)
 
-val Dictionary.numberLine get() = number lineTo nativeType
+val Dictionary.numberLineNative get() = native(number, isStatic = false)
+val Dictionary.numberLine get() = line(numberLineNative)
 val Dictionary.numberType get() = type(numberLine)

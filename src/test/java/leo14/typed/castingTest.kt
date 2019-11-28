@@ -39,12 +39,12 @@ class CastingTest {
 			.of(
 				type(
 					"vec" lineTo type(
-						"x" lineTo nativeType,
+						"x" lineTo numberType,
 						"y" lineTo type())))
 			.castTo(
 				type(
 					"vec" lineTo type(
-						"x" lineTo nativeType,
+						"x" lineTo numberType,
 						"y" lineTo type())))
 			.assertEqualTo(cast<Any>(empty))
 	}
@@ -52,38 +52,38 @@ class CastingTest {
 	@Test
 	fun native() {
 		term("lhs")
-			.of(nativeType)
-			.castTo(nativeType)
+			.of(numberType)
+			.castTo(numberType)
 			.assertEqualTo(cast<Any>(empty))
 	}
 
 	@Test
 	fun singleChoice() {
 		term("foo")
-			.of(type("foo" lineTo nativeType))
+			.of(type("foo" lineTo numberType))
 			.run {
 				castTermTo(type(choice("foo")))
 					.assertEqualTo(
 						previousTyped
 							.plus(
 								choiceTerm(index0, index1, lastTypedLine.typedField.rhs.term)
-									.of("foo" lineTo nativeType)).term)
+									.of("foo" lineTo numberType)).term)
 			}
 	}
 
 	@Test
 	fun multipleChoice() {
-		term("foo").of(type("foo" lineTo nativeType))
+		term("foo").of(type("foo" lineTo numberType))
 			.run {
 				castTermTo(type(choice("foo", "bar")))
 					.assertEqualTo(
 						previousTyped
 							.plus(
 								choiceTerm(index1, index2, lastTypedLine.typedField.rhs.term)
-									.of("foo" lineTo nativeType)).term)
+									.of("foo" lineTo numberType)).term)
 			}
 
-		term("bar").of(type("bar" lineTo nativeType))
+		term("bar").of(type("bar" lineTo numberType))
 			.run {
 				castTermTo(type(choice("foo", "bar")))
 					.assertEqualTo(
@@ -97,9 +97,9 @@ class CastingTest {
 	@Test
 	fun deepChoice_native() {
 		term("foo")
-			.of(type(nativeLine, "foo" lineTo type()))
+			.of(type(numberLine, "foo" lineTo type()))
 			.run {
-				castTermTo(type(nativeLine, line(choice("foo"))))
+				castTermTo(type(numberLine, line(choice("foo"))))
 					.assertEqualTo(
 						previousTyped
 							.plus(

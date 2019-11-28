@@ -72,7 +72,6 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is ChoiceParserCompiler -> TODO()
 					is CompiledParserCompiler -> compiledParser.reflectScriptLine
 					is DeleteParserCompiler -> TODO()
-					is NativeParserCompiler -> TODO()
 					is NothingParserCompiler -> TODO()
 					is RememberParserCompiler -> TODO()
 					is TypeParserCompiler -> typeParser.reflectScriptLine

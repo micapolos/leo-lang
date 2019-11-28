@@ -13,8 +13,15 @@ val Script.staticType: Type
 val ScriptLine.staticTypeLine
 	get() =
 		when (this) {
-			is LiteralScriptLine -> nativeLine
+			is LiteralScriptLine -> literal.staticTypeLine
 			is FieldScriptLine -> line(field.staticTypeField)
+		}
+
+val Literal.staticTypeLine
+	get() =
+		when (this) {
+			is StringLiteral -> textLine
+			is NumberLiteral -> numberLine
 		}
 
 val ScriptField.staticTypeField

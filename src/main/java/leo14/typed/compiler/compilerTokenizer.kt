@@ -18,7 +18,6 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is ChoiceParserCompiler -> process(compiler.choiceParser)
 		is CompiledParserCompiler -> processWithTypes(compiler.compiledParser)
 		is DeleteParserCompiler -> process(compiler.deleteParser)
-		is NativeParserCompiler -> process(compiler.nativeParser)
 		is NothingParserCompiler -> process(compiler.nothingParser)
 		is RememberParserCompiler -> process(compiler.memoryItemParser)
 		is TypeParserCompiler -> process(compiler.typeParser)
@@ -78,11 +77,6 @@ fun <T> Processor<Syntax>.process(parser: DeleteParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(parser.parentCompiledParser.context.dictionary.delete)) of valueKeywordKind)
-
-fun <T> Processor<Syntax>.process(parser: NativeParser<T>): Processor<Syntax> =
-	this
-		.process(parser.parentTypeParser)
-		.process(token(begin(parser.parentTypeParser.dictionary.native)) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: NothingParser<T>): Processor<Syntax> =
 	process(parser.parentCompiledParser)

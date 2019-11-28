@@ -13,4 +13,5 @@ val context: Context<Native> =
 		Typed<Native>::nativeResolve,
 		Literal::nativeTypedLine,
 		nativeEvaluator,
+		nativeTypeContext,
 		TypedLine<Native>::decompileLiteral)

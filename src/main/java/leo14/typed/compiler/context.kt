@@ -14,6 +14,7 @@ data class Context<T>(
 	val typedResolve: TypedResolve<T>,
 	val literalCompile: LiteralCompile<T>,
 	val evaluator: Evaluator<T>,
+	val typeContext: TypeContext,
 	val decompileLiteral: DecompileLiteral<T>)
 
 fun <T> Context<T>.compileLine(literal: Literal): TypedLine<T> =

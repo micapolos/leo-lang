@@ -29,9 +29,9 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 		is BeginToken ->
 			when (token.begin.string) {
 				context.dictionary.action ->
-					compiler(TypeParser(null, ActionDoesTypeBeginner(this), context.dictionary, type()))
+					compiler(TypeParser(null, ActionDoesTypeBeginner(this), context.dictionary, context.typeContext, type()))
 				context.dictionary.`as` ->
-					compiler(TypeParser(AsTypeParserParent(this), null, context.dictionary, type()))
+					compiler(TypeParser(AsTypeParserParent(this), null, context.dictionary, context.typeContext, type()))
 				context.dictionary.`do` ->
 					compiled.typed.action.let { action ->
 						compiler(CompiledParser(ActionDoParserParent(this, action), context, phase, compiled.begin))
@@ -47,9 +47,9 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 				context.dictionary.make ->
 					compiler(ScriptParser(MakeScriptParserParent(this), script()))
 				context.dictionary.remember ->
-					compiler(TypeParser(null, RememberTypeBeginner(this), context.dictionary, type()))
+					compiler(TypeParser(null, RememberTypeBeginner(this), context.dictionary, context.typeContext, type()))
 				context.dictionary.forget ->
-					compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.dictionary, type()))
+					compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.dictionary, context.typeContext, type()))
 				context.dictionary.script ->
 					notNullIf(phase == Phase.EVALUATOR) {
 						compiler(ScriptParser(CompiledScriptParserParent(this), script()))

@@ -7,6 +7,7 @@ data class TypeParser<T>(
 	val parent: TypeParserParent<T>?,
 	val beginner: TypeBeginner<T>?,
 	val dictionary: Dictionary,
+	val typeContext: TypeContext,
 	val type: Type)
 
 sealed class TypeParserParent<T>
@@ -28,16 +29,35 @@ fun <T> TypeParser<T>.parse(token: Token): Compiler<T> =
 		is BeginToken -> beginner
 			?.begin(dictionary, type, token.begin)
 			?: when (token.begin.string) {
-				dictionary.choice -> compiler(ChoiceParser(ChoiceParserParent(this), dictionary, choice()))
-				dictionary.action -> compiler(TypeParser(null, ArrowGivingTypeBeginner(this), dictionary, type()))
-				dictionary.native -> compiler(NativeParser(this))
-				else -> compiler(TypeParser(LineTypeParserParent(this, token.begin.string), null, dictionary, type()))
+				dictionary.choice ->
+					compiler(
+						ChoiceParser(
+							ChoiceParserParent(this),
+							dictionary,
+							typeContext,
+							choice()))
+				dictionary.action ->
+					compiler(
+						TypeParser(
+							null,
+							ArrowGivingTypeBeginner(this),
+							dictionary,
+							typeContext,
+							type()))
+				else ->
+					compiler(
+						TypeParser(
+							LineTypeParserParent(this, token.begin.string),
+							null,
+							dictionary,
+							typeContext,
+							type()))
 			}
 		is EndToken -> parent?.end(type)
 	} ?: error("$this.parse($token)")
 
 fun <T> TypeParser<T>.plus(line: Line): TypeParser<T> =
-	copy(type = type.plus(line))
+	copy(type = type.plus(typeContext.resolve(line)))
 
 fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin): Compiler<T>? =
 	when (this) {
@@ -49,6 +69,7 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 							ArrowGivingTypeParserParent(typeParser, type),
 							null,
 							typeParser.dictionary,
+							typeParser.typeContext,
 							type()))
 				else -> null
 			}

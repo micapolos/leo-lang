@@ -10,8 +10,6 @@ fun javascriptLine(type: Type) = javascriptName lineTo type
 fun javascriptType(type: Type) = type(javascriptLine(type))
 fun javascriptType(line: Line) = javascriptType(type(line))
 
-val expressionLine = javascriptLine(type(expressionName lineTo nativeType))
+val expressionLine = line(objectLineNative)
 val expressionType = type(expressionLine)
 
-val statementLine = javascriptLine(type(statementName lineTo nativeType))
-val statementType = type(expressionLine)

@@ -19,9 +19,9 @@ class NativeTest {
 	@Test
 	fun nativeResolve() {
 		val typed = typed(
-			numberName fieldTo nativeTyped(native(2)),
-			"plus" fieldTo typed(
-				numberName fieldTo nativeTyped(native(3))))
+			term(native(2)) of numberLine,
+			"plus" lineTo typed(
+				term(native(3)) of numberLine))
 
 		typed
 			.nativeResolve
