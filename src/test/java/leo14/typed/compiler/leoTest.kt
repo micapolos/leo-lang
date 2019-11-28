@@ -154,7 +154,7 @@ class TypeParserTest {
 					compiled(
 						typed<Native>()
 							.plus(type("zero") does typed(
-								"zero" lineTo typed(),
+								"given" lineTo typed("zero"),
 								"plus" lineTo typed("one"))))))
 	}
 

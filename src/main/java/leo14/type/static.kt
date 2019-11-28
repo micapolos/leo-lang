@@ -21,8 +21,12 @@ val StructureThunk.isStatic
 
 val FieldThunk.isStatic
 	get() =
-		field.rhs.thunk(scope).isStatic
+		field.rhs.with(scope).isStatic
 
 val ActionThunk.isStatic
 	get() =
 		action.lhs.thunk(scope).isStatic || action.rhs.thunk(scope).isStatic
+
+val ReferenceThunk.isStatic get() =
+	if (reference is RecursiveReference) false
+	else typeThunk.isStatic
