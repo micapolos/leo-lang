@@ -9,7 +9,9 @@ import leo14.Literal
 import leo14.any
 import leo14.lambda.*
 
-data class Typed<out T>(val term: Term<T>, val type: Type)
+data class Typed<out T>(val term: Term<T>, val type: Type) {
+	override fun toString() = "$reflectScriptLine"
+}
 data class TypedLine<T>(val term: Term<T>, val line: Line)
 data class TypedChoice<T>(val term: Term<T>, val choice: Choice)
 data class TypedField<T>(val term: Term<T>, val field: Field)

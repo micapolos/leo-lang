@@ -38,7 +38,7 @@ fun <T> run(compiler: CharCompiler<T>) {
 		if (char == 127) {
 			if (errorToPrint != null) errorToPrint = null
 			else undoableCompilerVariable.update { undoIfPossible }
-		} else if (char == '!'.toInt()) {
+		} else if (char == 27) {
 			printDebug = true
 		} else if (errorToPrint == null) try {
 			undoableCompilerVariable.update {

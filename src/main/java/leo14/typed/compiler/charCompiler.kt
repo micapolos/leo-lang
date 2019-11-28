@@ -9,7 +9,9 @@ import leo14.syntax.*
 
 data class CharCompiler<T>(
 	val tokenParser: SpacedTokenParser,
-	val compiler: Compiler<T>)
+	val compiler: Compiler<T>) {
+	override fun toString() = "$reflectScriptLine"
+}
 
 fun <T> CharCompiler<T>.put(char: Char): CharCompiler<T> =
 	if (char == '\n')

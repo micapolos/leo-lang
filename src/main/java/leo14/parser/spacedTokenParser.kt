@@ -75,3 +75,9 @@ val SpacedTokenParser.coreString: String
 			is LiteralSpacedTokenParser -> literalParser.coreString
 			is NameSpacedTokenParser -> nameParser.coreString
 		}
+
+val SpacedTokenParser.reflectScriptLine get() =
+	"spaced" lineTo script(
+		"token" lineTo script(
+			"parser" lineTo script(
+				literal("TODO"))))

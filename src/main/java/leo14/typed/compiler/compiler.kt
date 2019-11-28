@@ -2,22 +2,24 @@ package leo14.typed.compiler
 
 import leo14.*
 
-sealed class Compiler<T>
+sealed class Compiler<T> {
+	override fun toString() = "$reflectScriptLine"
+}
 
-data class ActionParserCompiler<T>(val actionParser: ActionParser<T>) : Compiler<T>()
-data class ArrowParserCompiler<T>(val arrowParser: ArrowParser<T>) : Compiler<T>()
-data class ChoiceParserCompiler<T>(val choiceParser: ChoiceParser<T>) : Compiler<T>()
-data class CompiledParserCompiler<T>(val compiledParser: CompiledParser<T>) : Compiler<T>()
-data class DeleteParserCompiler<T>(val deleteParser: DeleteParser<T>) : Compiler<T>()
-data class NativeParserCompiler<T>(val nativeParser: NativeParser<T>) : Compiler<T>()
-data class NothingParserCompiler<T>(val nothingParser: NothingParser<T>) : Compiler<T>()
-data class RememberParserCompiler<T>(val memoryItemParser: MemoryItemParser<T>) : Compiler<T>()
-data class TypeParserCompiler<T>(val typeParser: TypeParser<T>) : Compiler<T>()
-data class MatchParserCompiler<T>(val matchParser: MatchParser<T>) : Compiler<T>()
-data class ScriptParserCompiler<T>(val scriptParser: ScriptParser<T>) : Compiler<T>()
-data class LeonardoParserCompiler<T>(val leonardoParser: LeonardoParser<T>) : Compiler<T>()
-data class ForgetEverythingParserCompiler<T>(val forgetEverythingParser: ForgetEverythingParser<T>) : Compiler<T>()
-data class ForgetEverythingEndParserCompiler<T>(val forgetEverythingEndParser: ForgetEverythingEndParser<T>) : Compiler<T>()
+data class ActionParserCompiler<T>(val actionParser: ActionParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class ArrowParserCompiler<T>(val arrowParser: ArrowParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class ChoiceParserCompiler<T>(val choiceParser: ChoiceParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class CompiledParserCompiler<T>(val compiledParser: CompiledParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class DeleteParserCompiler<T>(val deleteParser: DeleteParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class NativeParserCompiler<T>(val nativeParser: NativeParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class NothingParserCompiler<T>(val nothingParser: NothingParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class RememberParserCompiler<T>(val memoryItemParser: MemoryItemParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class TypeParserCompiler<T>(val typeParser: TypeParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class MatchParserCompiler<T>(val matchParser: MatchParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class ScriptParserCompiler<T>(val scriptParser: ScriptParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class LeonardoParserCompiler<T>(val leonardoParser: LeonardoParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class ForgetEverythingParserCompiler<T>(val forgetEverythingParser: ForgetEverythingParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class ForgetEverythingEndParserCompiler<T>(val forgetEverythingEndParser: ForgetEverythingEndParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 
 fun <T> compiler(typeParser: TypeParser<T>): Compiler<T> = TypeParserCompiler(typeParser)
 fun <T> compiler(choiceParser: ChoiceParser<T>): Compiler<T> = ChoiceParserCompiler(choiceParser)

@@ -56,6 +56,7 @@ infix fun String.fieldTo(literal: Literal) = fieldTo(script(literal))
 fun field(string: String) = string fieldTo script()
 infix fun Script.linkTo(line: ScriptLine) = ScriptLink(this, line)
 infix fun String.lineTo(script: Script) = line(fieldTo(script))
+val String.line: ScriptLine get() = this lineTo script()
 
 val Script.isEmpty get() = (this is UnitScript)
 

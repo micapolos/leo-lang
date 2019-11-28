@@ -7,7 +7,9 @@ import leo14.typed.*
 
 data class Compiled<T>(
 	val memory: Memory<T>,
-	val typed: Typed<T>)
+	val typed: Typed<T>) {
+	override fun toString() = "$reflectScriptLine"
+}
 
 fun <T> compiled(typed: Typed<T>, memory: Memory<T> = memory()) = Compiled(memory, typed)
 
@@ -16,7 +18,9 @@ val <T> Compiled<T>.begin: Compiled<T>
 		copy(typed = typed())
 
 fun <T> Compiled<T>.beginDoes(type: Type): Compiled<T> =
-	copy(typed = typed("given" lineTo typed(arg0(), type)))
+	this
+		.updateMemory { plus(remember(type("given") does typed(arg0(), type("given" lineTo type)), needsInvoke = false)) }
+		.updateTyped { typed() }
 
 fun <T> Compiled<T>.updateTyped(fn: Typed<T>.() -> Typed<T>): Compiled<T> =
 	copy(typed = typed.fn())

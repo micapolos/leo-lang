@@ -2,10 +2,7 @@ package leo14.parser
 
 import leo.base.fold
 import leo.base.notNullIf
-import leo14.Token
-import leo14.begin
-import leo14.end
-import leo14.token
+import leo14.*
 
 sealed class TokenParser
 object BeginTokenParser : TokenParser()
@@ -63,3 +60,8 @@ val TokenParser.coreString
 val TokenParser.canContinue
 	get() =
 		(this is LiteralTokenParser) && literalParser.canContinue
+
+val TokenParser.reflectScriptLine get() =
+	"token" lineTo script(
+		"parser" lineTo script(
+			literal("TODO")))
