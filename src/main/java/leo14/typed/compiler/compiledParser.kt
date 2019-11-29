@@ -29,35 +29,35 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 			compiler(plus(token.literal))
 		is BeginToken ->
 			when (token.begin.string) {
-				context.dictionary.function ->
-					compiler(TypeParser(null, FunctionGivesTypeBeginner(this), context.dictionary, context.typeContext, type()))
-				context.dictionary.`as` ->
-					compiler(TypeParser(AsTypeParserParent(this), null, context.dictionary, context.typeContext, type()))
-				context.dictionary.`do` ->
+				Keyword.FUNCTION stringIn context.language ->
+					compiler(TypeParser(null, FunctionGivesTypeBeginner(this), context.language, context.typeContext, type()))
+				Keyword.AS stringIn context.language ->
+					compiler(TypeParser(AsTypeParserParent(this), null, context.language, context.typeContext, type()))
+				Keyword.DO stringIn context.language ->
 					compiled.typed.function.let { action ->
 						compiler(CompiledParser(FunctionGiveParserParent(this, action), context, phase, compiled.begin))
 					}
-				context.dictionary.give ->
+				Keyword.GIVE stringIn context.language ->
 					compiler(CompiledParser(GiveCompiledParserParent(this), context, phase, compiled.begin))
-				context.dictionary.delete ->
+				Keyword.DELETE stringIn context.language ->
 					compiler(DeleteParser(this))
-				context.dictionary.nothing ->
+				Keyword.NOTHING stringIn context.language ->
 					compiler(NothingParser(this))
-				context.dictionary.match ->
+				Keyword.MATCH stringIn context.language ->
 					compiler(MatchParser(this, stack(), compiled.typed.beginMatch()))
-				context.dictionary.make ->
+				Keyword.MAKE stringIn context.language ->
 					compiler(ScriptParser(MakeScriptParserParent(this), script()))
-				context.dictionary.remember ->
-					compiler(TypeParser(null, RememberTypeBeginner(this), context.dictionary, context.typeContext, type()))
-				context.dictionary.forget ->
-					compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.dictionary, context.typeContext, type()))
-				context.dictionary.script ->
+				Keyword.REMEMBER stringIn context.language ->
+					compiler(TypeParser(null, RememberTypeBeginner(this), context.language, context.typeContext, type()))
+				Keyword.FORGET stringIn context.language ->
+					compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.language, context.typeContext, type()))
+				Keyword.SCRIPT stringIn context.language ->
 					notNullIf(phase == Phase.EVALUATOR) {
 						compiler(ScriptParser(CompiledScriptParserParent(this), script()))
 					}
-				context.dictionary.leonardo ->
+				Keyword.LEONARDO stringIn context.language ->
 					compiler(LeonardoParser(this))
-				context.dictionary.use ->
+				Keyword.USE stringIn context.language ->
 					compiler(use)
 				else ->
 					CompiledParserCompiler(

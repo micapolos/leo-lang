@@ -171,7 +171,7 @@ val Choice.countIndex: Index
 val Type.coreString: String
 	get() =
 		processorString {
-			map(Syntax::coreColorString).process(this@coreString, defaultDictionary)
+			map(Syntax::coreColorString).process(this@coreString, defaultLanguage)
 		}
 
 const val textName = "text"

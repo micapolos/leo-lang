@@ -31,28 +31,28 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 fun <T> Processor<Syntax>.process(parser: FunctionParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.function)) of typeKeywordKind)
-		.process(parser.function.takes, parser.parentCompiledParser.context.dictionary)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.does)) of typeKeywordKind)
-		.process(parser.function.does.type, parser.parentCompiledParser.context.dictionary)
+		.process(token(begin(Keyword.FUNCTION stringIn parser.parentCompiledParser.context.language)) of typeKeywordKind)
+		.process(parser.function.takes, parser.parentCompiledParser.context.language)
+		.process(token(begin(Keyword.DOES stringIn parser.parentCompiledParser.context.language)) of typeKeywordKind)
+		.process(parser.function.does.type, parser.parentCompiledParser.context.language)
 		.process(token(end) of typeKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: ArrowParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(parser.parent.typeParser) { process(it) }
-		.process(token(begin(parser.parent.typeParser.dictionary.function)) of typeKeywordKind)
-		.process(parser.arrow, parser.parent.typeParser.dictionary)
+		.process(token(begin(Keyword.FUNCTION stringIn parser.parent.typeParser.language)) of typeKeywordKind)
+		.process(parser.arrow, parser.parent.typeParser.language)
 
 fun <T> Processor<Syntax>.process(parser: ChoiceParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(parser.parent?.typeParser) { process(it) }
-		.process(token(begin(parser.dictionary.choice)) of typeKeywordKind)
-		.fold(parser.choice.optionStack.reverse) { process(it, parser.dictionary) }
+		.process(token(begin(Keyword.CHOICE stringIn parser.language)) of typeKeywordKind)
+		.fold(parser.choice.optionStack.reverse) { process(it, parser.language) }
 
 fun <T> Processor<Syntax>.processWithTypes(compiledParser: CompiledParser<T>): Processor<Syntax> =
 	if (types)
 		this
-			.process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
+			.process(compiledParser.compiled.typed.type, compiledParser.context.language)
 			.process(token(begin("with")) of valueKeywordKind)
 			.process(compiledParser)
 	else process(compiledParser)
@@ -62,7 +62,7 @@ fun <T> Processor<Syntax>.process(compiledParser: CompiledParser<T>): Processor<
 		.ifNotNull(compiledParser.parent) { process(it) }
 		.run {
 			when (compiledParser.phase) {
-				Phase.COMPILER -> process(compiledParser.compiled.typed.type, compiledParser.context.dictionary)
+				Phase.COMPILER -> process(compiledParser.compiled.typed.type, compiledParser.context.language)
 				Phase.EVALUATOR -> syntaxProcess(compiledParser.decompile)
 			}
 		}
@@ -71,16 +71,16 @@ fun <T> Processor<Syntax>.process(parser: TypeParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(parser.parent) { process(it) }
 		.ifNotNull(parser.beginner) { process(it) }
-		.process(parser.type, parser.dictionary)
+		.process(parser.type, parser.language)
 
 fun <T> Processor<Syntax>.process(parser: DeleteParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.delete)) of valueKeywordKind)
+		.process(token(begin(Keyword.DELETE stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: NothingParser<T>): Processor<Syntax> =
 	process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.nothing)) of valueKeywordKind)
+		.process(token(begin(Keyword.NOTHING stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: ScriptParser<T>): Processor<Syntax> =
 	this
@@ -90,19 +90,19 @@ fun <T> Processor<Syntax>.process(parser: ScriptParser<T>): Processor<Syntax> =
 fun <T> Processor<Syntax>.process(parser: LeonardoParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.leonardo)) of valueKeywordKind)
+		.process(token(begin(Keyword.LEONARDO stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: ForgetEverythingParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.forget)) of valueKeywordKind)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.everything)) of valueKeywordKind)
+		.process(token(begin(Keyword.FORGET stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
+		.process(token(begin(Keyword.EVERYTHING stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: ForgetEverythingEndParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.forget)) of valueKeywordKind)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.everything)) of valueKeywordKind)
+		.process(token(begin(Keyword.FORGET stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
+		.process(token(begin(Keyword.EVERYTHING stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 		.process(token(end) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parent: ScriptParserParent<T>): Processor<Syntax> =
@@ -112,7 +112,7 @@ fun <T> Processor<Syntax>.process(parent: ScriptParserParent<T>): Processor<Synt
 			.process(token(begin(parent.name)) of valueKind)
 		is MakeScriptParserParent -> this
 			.process(parent.compiledParser)
-			.process(token(begin(parent.compiledParser.context.dictionary.make)) of valueKind)
+			.process(token(begin(Keyword.MAKE stringIn parent.compiledParser.context.language)) of valueKind)
 		is CommentScriptParserParent -> this
 			.process(parent.compiler)
 			.process(token(begin(defaultDictionary.comment)) of commentKind)
@@ -124,21 +124,21 @@ fun <T> Processor<Syntax>.process(parent: ScriptParserParent<T>): Processor<Synt
 fun <T> Processor<Syntax>.process(matchParser: MatchParser<T>): Processor<Syntax> =
 	this
 		.process(matchParser.parentCompiledParser)
-		.process(token(begin(matchParser.parentCompiledParser.context.dictionary.match)) of valueKeywordKind)
-		.fold(matchParser.caseLineStack.reverse) { process(it, matchParser.parentCompiledParser.context.dictionary) }
+		.process(token(begin(Keyword.MATCH stringIn matchParser.parentCompiledParser.context.language)) of valueKeywordKind)
+		.fold(matchParser.caseLineStack.reverse) { process(it, matchParser.parentCompiledParser.context.language) }
 
 fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Syntax> =
 	when (parent) {
 		is FunctionDoesParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(parent.compiledParser.context.dictionary.function)) of valueKeywordKind)
-				.process(parent.type, parent.compiledParser.context.dictionary)
-				.process(token(begin(parent.compiledParser.context.dictionary.does)) of valueKeywordKind)
+				.process(token(begin(Keyword.FUNCTION stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(parent.type, parent.compiledParser.context.language)
+				.process(token(begin(Keyword.DOES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is FunctionGiveParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(parent.compiledParser.context.dictionary.`do`)) of valueKeywordKind)
+				.process(token(begin(Keyword.DO stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is FieldCompiledParserParent ->
 			this
 				.process(parent.compiledParser)
@@ -146,23 +146,23 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 		is RememberIsParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(parent.compiledParser.context.dictionary.remember)) of valueKeywordKind)
-				.process(parent.type, parent.compiledParser.context.dictionary)
-				.process(token(begin(parent.compiledParser.context.dictionary.`is`)) of valueKeywordKind)
+				.process(token(begin(Keyword.REMEMBER stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(parent.type, parent.compiledParser.context.language)
+				.process(token(begin(Keyword.IS stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is RememberDoesParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(parent.compiledParser.context.dictionary.remember)) of valueKeywordKind)
-				.process(parent.type, parent.compiledParser.context.dictionary)
-				.process(token(begin(parent.compiledParser.context.dictionary.does)) of valueKeywordKind)
+				.process(token(begin(Keyword.REMEMBER stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(parent.type, parent.compiledParser.context.language)
+				.process(token(begin(Keyword.DOES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is GiveCompiledParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(parent.compiledParser.context.dictionary.give)) of valueKeywordKind)
+				.process(token(begin(Keyword.GIVE stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is UseCompiledParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(parent.compiledParser.context.dictionary.use)) of valueKeywordKind)
+				.process(token(begin(Keyword.USE stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is MatchParserParent ->
 			this
 				.process(parent.matchParser)
@@ -177,13 +177,13 @@ fun <T> Processor<Syntax>.process(parent: TypeParserParent<T>): Processor<Syntax
 				.process(token(begin(parent.name)) of typeKeywordKind)
 		is ArrowGivingTypeParserParent ->
 			this
-				.process(token(begin(parent.typeParser.dictionary.function)) of typeKeywordKind)
+				.process(token(begin(Keyword.FUNCTION stringIn parent.typeParser.language)) of typeKeywordKind)
 				.process(parent.typeParser)
-				.process(token(begin(parent.typeParser.dictionary.giving)) of typeKeywordKind)
+				.process(token(begin(Keyword.GIVING stringIn parent.typeParser.language)) of typeKeywordKind)
 		is AsTypeParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(parent.compiledParser.context.dictionary.`as`)) of valueKeywordKind)
+				.process(token(begin(Keyword.AS stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is OptionTypeParserParent ->
 			this
 				.process(parent.choiceParser)
@@ -191,7 +191,7 @@ fun <T> Processor<Syntax>.process(parent: TypeParserParent<T>): Processor<Syntax
 		is ForgetTypeParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(parent.compiledParser.context.dictionary.forget)) of valueKeywordKind)
+				.process(token(begin(Keyword.FORGET stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 	}
 
 fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> =
@@ -199,36 +199,36 @@ fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> 
 		is FunctionGivesTypeBeginner ->
 			this
 				.process(beginner.compiledParser)
-				.process(token(begin(beginner.compiledParser.context.dictionary.function)) of valueKeywordKind)
+				.process(token(begin(Keyword.FUNCTION stringIn beginner.compiledParser.context.language)) of valueKeywordKind)
 		is ArrowGivingTypeBeginner ->
 			this
 				.process(beginner.typeParser)
-				.process(token(begin(beginner.typeParser.dictionary.giving)) of valueKeywordKind)
+				.process(token(begin(Keyword.GIVING stringIn beginner.typeParser.language)) of valueKeywordKind)
 		is RememberTypeBeginner ->
 			this
 				.process(beginner.compiledParser)
-				.process(token(begin(beginner.compiledParser.context.dictionary.remember)) of valueKeywordKind)
+				.process(token(begin(Keyword.REMEMBER stringIn beginner.compiledParser.context.language)) of valueKeywordKind)
 		is ForgetTypeBeginner -> this
 	}
 
 fun <T> Processor<Syntax>.process(parser: MemoryItemParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(token(begin(parser.parentCompiledParser.context.dictionary.remember)) of valueKeywordKind)
-		.process(parser.memoryItem, parser.parentCompiledParser.context.dictionary, parser.parentCompiledParser.context.decompileLiteral)
+		.process(token(begin(Keyword.REMEMBER stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
+		.process(parser.memoryItem, parser.parentCompiledParser.context.language, parser.parentCompiledParser.context.decompileLiteral)
 
 fun <T> Processor<Syntax>.process(
 	memoryItem: MemoryItem<T>,
-	dictionary: Dictionary,
+	language: Language,
 	decompileLiteral: DecompileLiteral<T>): Processor<Syntax> =
 	when (memoryItem) {
 		is RememberMemoryItem ->
-			process(memoryItem.function.takes, dictionary)
+			process(memoryItem.function.takes, language)
 				.process(token(begin(
-					if (memoryItem.needsInvoke) dictionary.does
-					else dictionary.`is`)) of valueKeywordKind)
+					if (memoryItem.needsInvoke) Keyword.DOES stringIn language
+					else Keyword.DOES stringIn language)) of valueKeywordKind)
 				.run {
-					if (memoryItem.needsInvoke) process(memoryItem.function.does.type, dictionary)
+					if (memoryItem.needsInvoke) process(memoryItem.function.does.type, language)
 					else syntaxProcess(memoryItem.function.does.decompile(decompileLiteral))
 				}
 				.process(token(end) of valueKeywordKind)

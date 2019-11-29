@@ -5,7 +5,7 @@ import leo14.typed.*
 
 data class ChoiceParser<T>(
 	val parent: ChoiceParserParent<T>?,
-	val dictionary: Dictionary,
+	val language: Language,
 	val typeContext: TypeContext,
 	val choice: Choice)
 
@@ -20,7 +20,7 @@ fun <T> ChoiceParser<T>.parse(token: Token): Compiler<T> =
 				TypeParser(
 					OptionTypeParserParent(this, token.begin.string),
 					null,
-					dictionary,
+					language,
 					typeContext,
 					type()))
 		is EndToken -> parent?.end(choice)

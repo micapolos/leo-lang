@@ -6,7 +6,7 @@ import leo14.typed.*
 data class TypeParser<T>(
 	val parent: TypeParserParent<T>?,
 	val beginner: TypeBeginner<T>?,
-	val dictionary: Dictionary,
+	val language: Language,
 	val typeContext: TypeContext,
 	val type: Type)
 
@@ -27,21 +27,21 @@ fun <T> TypeParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
 		is LiteralToken -> null
 		is BeginToken -> beginner
-			?.begin(dictionary, type, token.begin)
+			?.begin(language, type, token.begin)
 			?: when (token.begin.string) {
-				dictionary.choice ->
+				Keyword.CHOICE stringIn language ->
 					compiler(
 						ChoiceParser(
 							ChoiceParserParent(this),
-							dictionary,
+							language,
 							typeContext,
 							choice()))
-				dictionary.function ->
+				Keyword.FUNCTION stringIn language ->
 					compiler(
 						TypeParser(
 							null,
 							ArrowGivingTypeBeginner(this),
-							dictionary,
+							language,
 							typeContext,
 							type()))
 				else ->
@@ -49,7 +49,7 @@ fun <T> TypeParser<T>.parse(token: Token): Compiler<T> =
 						TypeParser(
 							LineTypeParserParent(this, token.begin.string),
 							null,
-							dictionary,
+							language,
 							typeContext,
 							type()))
 			}
@@ -59,23 +59,23 @@ fun <T> TypeParser<T>.parse(token: Token): Compiler<T> =
 fun <T> TypeParser<T>.plus(line: Line): TypeParser<T> =
 	copy(type = type.plus(typeContext.resolve(line)))
 
-fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin): Compiler<T>? =
+fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Compiler<T>? =
 	when (this) {
 		is ArrowGivingTypeBeginner ->
 			when (begin.string) {
-				dictionary.giving ->
+				Keyword.GIVING stringIn language ->
 					compiler(
 						TypeParser(
 							ArrowGivingTypeParserParent(typeParser, type),
 							null,
-							typeParser.dictionary,
+							typeParser.language,
 							typeParser.typeContext,
 							type()))
 				else -> null
 			}
 		is FunctionGivesTypeBeginner ->
 			when (begin.string) {
-				dictionary.does ->
+				Keyword.DOES stringIn language ->
 					compiler(
 						CompiledParser(
 							FunctionDoesParserParent(compiledParser, type),
@@ -86,14 +86,14 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 			}
 		is RememberTypeBeginner ->
 			when (begin.string) {
-				dictionary.`is` ->
+				Keyword.IS stringIn language ->
 					compiler(
 						CompiledParser(
 							RememberIsParserParent(compiledParser, type),
 							compiledParser.context,
 							compiledParser.phase,
 							compiledParser.compiled.begin))
-				dictionary.does ->
+				Keyword.DOES stringIn language ->
 					compiler(
 						CompiledParser(
 							RememberDoesParserParent(compiledParser, type),
@@ -104,7 +104,7 @@ fun <T> TypeBeginner<T>.begin(dictionary: Dictionary, type: Type, begin: Begin):
 			}
 		is ForgetTypeBeginner ->
 			when (begin.string) {
-				dictionary.everything -> ForgetEverythingParserCompiler(ForgetEverythingParser(compiledParser))
+				Keyword.EVERYTHING stringIn language -> ForgetEverythingParserCompiler(ForgetEverythingParser(compiledParser))
 				else -> null
 			}
 	}
