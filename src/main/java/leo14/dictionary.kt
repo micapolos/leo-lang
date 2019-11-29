@@ -38,6 +38,7 @@ data class Dictionary(
 	val sixth: String,
 	val text: String,
 	val third: String,
+	val `this`: String,
 	val use: String,
 	val zero: String) {
 	override fun toString() = "dictionary(...)"
@@ -81,6 +82,7 @@ val englishDictionary = Dictionary(
 	sixth = "sixth",
 	text = "text",
 	third = "third",
+	`this` = "this",
 	use = "use",
 	zero = "zero")
 
@@ -122,6 +124,7 @@ val polishDictionary = Dictionary(
 	sixth = "szósty",
 	text = "tekst",
 	third = "trzeci",
+	`this` = "ten",
 	use = "użyj",
 	zero = "zero")
 
