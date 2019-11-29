@@ -143,4 +143,5 @@ infix fun Keyword.stringIn(language: Language) =
 	when (language) {
 		Language.ENGLISH -> englishString
 		Language.POLISH -> polishString
+		Language.GERMAN -> germanString
 	}
