@@ -43,11 +43,11 @@ enum class Keyword {
 	ZERO,
 }
 
-val Keyword.string get() = name
+val Keyword.string get() = name.toLowerCase()
 
 val Keyword.englishString: String
 	get() =
-		name.toLowerCase()
+		string
 
 val Keyword.polishString: String
 	get() =
