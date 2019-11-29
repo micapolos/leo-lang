@@ -23,7 +23,8 @@ fun scope(vararg types: Type) = stack(*types).scope
 operator fun Scope.plus(type: Type) = typeStack.push(type).scope
 operator fun Scope.get(int: Int): Type = typeStack.get(int).notNullOrError("$this[$int]")
 
-val nativeType: Type = NativeType
+fun native(type: Type, isStatic: Boolean) = Native(type, isStatic)
+fun type(native: Native): Type = NativeType(native)
 fun type(structure: Structure): Type = StructureType(structure)
 fun type(choice: Choice): Type = ChoiceType(choice)
 fun type(action: Action): Type = ActionType(action)

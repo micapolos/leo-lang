@@ -8,7 +8,7 @@ data class IntReference(val int: Int) : Reference()
 data class RecursiveReference(val recursive: Recursive) : Reference()
 
 sealed class Type
-object NativeType : Type()
+data class NativeType(val native: Native) : Type()
 data class StructureType(val structure: Structure) : Type()
 data class ListType(val list: List) : Type()
 data class ChoiceType(val choice: Choice) : Type()
@@ -20,3 +20,5 @@ data class Choice(val fieldStack: Stack<Field>)
 data class Action(val lhs: Reference, val rhs: Reference)
 data class Field(val name: String, val rhs: Reference)
 data class Recursive(val type: Type)
+
+data class Native(val type: Type, val isStatic: Boolean)

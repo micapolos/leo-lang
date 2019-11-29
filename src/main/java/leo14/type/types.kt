@@ -74,3 +74,7 @@ val Dictionary.referenceLine
 			choice(
 				typeField,
 				"recursive" fieldTo reference(3)))
+
+val Dictionary.numberType: Type get() = type(native(type(number), isStatic = false))
+val Dictionary.textType: Type get() = type(native(type(text), isStatic = false))
+

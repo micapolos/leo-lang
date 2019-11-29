@@ -7,7 +7,9 @@ import kotlin.test.Test
 class StaticTest {
 	@Test
 	fun isStatic() {
-		nativeType.isStatic.assertEqualTo(false)
+		type(native(type("foo"), isStatic = false)).isStatic.assertEqualTo(false)
+		type(native(type("foo"), isStatic = true)).isStatic.assertEqualTo(true)
+
 		type().isStatic.assertEqualTo(true)
 		type("foo" fieldTo type()).isStatic.assertEqualTo(true)
 		type("foo" fieldTo type(choice())).isStatic.assertEqualTo(false)

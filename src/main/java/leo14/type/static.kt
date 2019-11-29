@@ -8,7 +8,7 @@ val Type.isStatic get() = with(scope()).isStatic
 val TypeThunk.isStatic: Boolean
 	get() =
 		when (type) {
-			NativeType -> false
+			is NativeType -> type.native.isStatic
 			is StructureType -> type.structure.with(scope).isStatic
 			is ListType -> false
 			is ChoiceType -> false
