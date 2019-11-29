@@ -15,6 +15,7 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			?: resolveJavascript
 			?: resolveNumberPlus
 			?: resolveTextPlus
+			?: resolveCircle
 			?: when (type) {
 				type(
 					expressionLine,
@@ -79,6 +80,23 @@ val Typed<Expr>.resolveTextPlus: Typed<Expr>?
 				term(expr(id("a=>b=>a+b")))
 					.invoke(tail.term)
 					.invoke(head.term) of textType
+			}
+		}
+
+val Typed<Expr>.resolveCircle: Typed<Expr>?
+	get() =
+		resolveLinkOrNull?.run {
+			notNullIf(tail.type == type() && head.typedField.field == "circle" fieldTo type()) {
+				term(expr(id(
+					"(function() {var div=document.createElement('div');" +
+						"div.style.width='100px';" +
+						"div.style.height='100px';" +
+						"div.style.background='yellow';" +
+						"div.style.border='2px solid black';" +
+						"div.style.borderRadius='50px';" +
+						"document.body.innerHTML='';" +
+						"document.body.appendChild(div);" +
+						"})()"))) of expressionType
 			}
 		}
 

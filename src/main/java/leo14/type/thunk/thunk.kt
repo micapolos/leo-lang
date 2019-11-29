@@ -7,7 +7,7 @@ import leo14.type.List
 data class Scope(val typeStack: Stack<Type>)
 
 data class TypeThunk(val type: Type, val scope: Scope)
-data class NativeThunk(val scope: Scope)
+data class NativeThunk(val native: Native, val scope: Scope)
 data class StructureThunk(val structure: Structure, val scope: Scope)
 data class ListThunk(val list: List, val scope: Scope)
 data class ChoiceThunk(val choice: Choice, val scope: Scope)
@@ -17,7 +17,7 @@ data class ReferenceThunk(val reference: Reference, val scope: Scope)
 data class FieldThunk(val field: Field, val scope: Scope)
 
 infix fun Type.with(scope: Scope) = TypeThunk(this, scope)
-fun nativeWith(scope: Scope) = NativeThunk(scope)
+infix fun Native.with(scope: Scope) = NativeThunk(this, scope)
 infix fun Structure.with(scope: Scope) = StructureThunk(this, scope)
 infix fun List.with(scope: Scope) = ListThunk(this, scope)
 infix fun Choice.with(scope: Scope) = ChoiceThunk(this, scope)

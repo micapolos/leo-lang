@@ -6,7 +6,7 @@ enum class Language {
 	POLISH,
 }
 
-val defaultLanguage = Language.GERMAN
+val defaultLanguage = Language.ENGLISH
 
 operator fun Language.get(keyword: Keyword): String =
 	keyword stringIn this
