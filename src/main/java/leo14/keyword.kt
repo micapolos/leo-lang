@@ -43,6 +43,8 @@ enum class Keyword {
 	ZERO,
 }
 
+val Keyword.string get() = name
+
 val Keyword.englishString: String
 	get() =
 		name.toLowerCase()
@@ -59,7 +61,7 @@ val Keyword.polishString: String
 			Keyword.DELETE -> "usuń"
 			Keyword.DO -> "zrób"
 			Keyword.DOES -> "robi"
-			Keyword.DOING -> "robić"
+			Keyword.DOING -> "robiąca"
 			Keyword.EIGHT -> "osiem"
 			Keyword.EVERYTHING -> "wszystko"
 			Keyword.FIFTH -> "piąty"
@@ -68,20 +70,20 @@ val Keyword.polishString: String
 			Keyword.FOURTH -> "czwarty"
 			Keyword.FUNCTION -> "funkcja"
 			Keyword.GIVE -> "daj"
-			Keyword.GIVING -> "dawać"
+			Keyword.GIVING -> "dająca"
 			Keyword.IS -> "jest"
 			Keyword.IT -> "to"
-			Keyword.LAST -> "ostatnia"
+			Keyword.LAST -> "ostatni"
 			Keyword.LEONARDO -> "leonardo"
 			Keyword.MAKE -> "zrób"
 			Keyword.MATCH -> "dopasuj"
 			Keyword.NATIVE -> "natywny"
 			Keyword.NOTHING -> "nic"
-			Keyword.NUMBER -> "numer"
+			Keyword.NUMBER -> "liczba"
 			Keyword.ONE -> "jeden"
 			Keyword.PREVIOUS -> "poprzedni"
 			Keyword.REMEMBER -> "zapamiętaj"
-			Keyword.SCRIPT -> "sktypt"
+			Keyword.SCRIPT -> "skrypt"
 			Keyword.SECOND -> "drugi"
 			Keyword.SEVENTH -> "siódmy"
 			Keyword.SIXTH -> "szósty"

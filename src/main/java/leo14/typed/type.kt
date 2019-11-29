@@ -174,20 +174,18 @@ val Type.coreString: String
 			map(Syntax::coreColorString).process(this@coreString, defaultLanguage)
 		}
 
-const val textName = "text"
-val textLineNative = native(textName, isStatic = false)
-val textLine = line(textLineNative)
-val textType = type(textLine)
+val textLineNative = defaultLanguage.textLineNative
+val textLine = defaultLanguage.textLine
+val textType = defaultLanguage.textType
 
-const val numberName = "number"
-val numberLineNative = native(numberName, isStatic = false)
-val numberLine = line(numberLineNative)
-val numberType = type(numberLine)
+val numberLineNative = defaultLanguage.numberLineNative
+val numberLine = defaultLanguage.numberLine
+val numberType = defaultLanguage.numberType
 
-val Dictionary.textLineNative get() = native(text, isStatic = false)
-val Dictionary.textLine get() = line(textLineNative)
-val Dictionary.textType get() = type(textLine)
+val Language.textLineNative get() = native(Keyword.TEXT stringIn this, isStatic = false)
+val Language.textLine get() = line(textLineNative)
+val Language.textType get() = type(textLine)
 
-val Dictionary.numberLineNative get() = native(number, isStatic = false)
-val Dictionary.numberLine get() = line(numberLineNative)
-val Dictionary.numberType get() = type(numberLine)
+val Language.numberLineNative get() = native(Keyword.NUMBER stringIn this, isStatic = false)
+val Language.numberLine get() = line(numberLineNative)
+val Language.numberType get() = type(numberLine)

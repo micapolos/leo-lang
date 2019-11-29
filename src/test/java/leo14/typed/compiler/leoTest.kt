@@ -42,7 +42,7 @@ class TypeParserTest {
 		compiler(type())
 			.parse(
 				script(
-					defaultDictionary.choice lineTo script(
+					Keyword.CHOICE.stringIn(defaultLanguage) lineTo script(
 						"zero" lineTo script("foo"),
 						"one" lineTo script("bar"))))
 			.assertEqualTo(
@@ -59,10 +59,10 @@ class TypeParserTest {
 		compiler(type())
 			.parse(
 				script(
-					defaultDictionary.function lineTo script(
+					Keyword.FUNCTION.stringIn(defaultLanguage) lineTo script(
 						"one" lineTo script(),
 						"plus" lineTo script("two"),
-						defaultDictionary.giving lineTo script("three"))))
+						Keyword.GIVING.stringIn(defaultLanguage) lineTo script("three"))))
 			.assertEqualTo(
 				compiler(
 					type(
@@ -112,7 +112,7 @@ class TypeParserTest {
 	@Test
 	fun compiledDelete() {
 		compiler(compiled(typed("zero")))
-			.parse(script(defaultDictionary.delete))
+			.parse(script(Keyword.DELETE.stringIn(defaultLanguage)))
 			.assertEqualTo(compiler(compiled(typed())))
 	}
 
@@ -121,7 +121,7 @@ class TypeParserTest {
 		compiler(compiled(typed("zero")))
 			.parse(
 				script(
-					defaultDictionary.give lineTo script(
+					Keyword.GIVE.stringIn(defaultLanguage) lineTo script(
 						"one" lineTo script())))
 			.assertEqualTo(compiler(compiled(typed("one"))))
 	}
@@ -132,8 +132,8 @@ class TypeParserTest {
 			.parse(
 				script(
 					"false" lineTo script(),
-					defaultDictionary.`as` lineTo script(
-						defaultDictionary.choice lineTo script(
+					Keyword.AS.stringIn(defaultLanguage) lineTo script(
+						Keyword.CHOICE.stringIn(defaultLanguage) lineTo script(
 							"true", "false"))))
 			.assertEqualTo(
 				compiler(
@@ -146,9 +146,9 @@ class TypeParserTest {
 		compiler(compiled(typed()))
 			.parse(
 				script(
-					defaultDictionary.function lineTo script(
+					Keyword.FUNCTION.stringIn(defaultLanguage) lineTo script(
 						"zero" lineTo script(),
-						defaultDictionary.does lineTo script(
+						Keyword.DOES.stringIn(defaultLanguage) lineTo script(
 							"plus" lineTo script("one")))))
 			.assertEqualTo(
 				compiler(

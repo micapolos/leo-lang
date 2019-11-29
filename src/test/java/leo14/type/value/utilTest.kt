@@ -1,7 +1,6 @@
 package leo14.type.value
 
 import leo.base.assertEqualTo
-import leo14.defaultDictionary
 import leo14.lambda.id
 import leo14.lambda.term
 import leo14.type.*
@@ -11,7 +10,7 @@ import kotlin.test.Test
 
 class UtilTest {
 	val staticType = type()
-	val dynamicType = defaultDictionary.numberType
+	val dynamicType = type(native(type(), isStatic = false))
 
 	@Test
 	fun structurePlus_staticLhs_staticRhs() {

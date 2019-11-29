@@ -115,10 +115,10 @@ fun <T> Processor<Syntax>.process(parent: ScriptParserParent<T>): Processor<Synt
 			.process(token(begin(Keyword.MAKE stringIn parent.compiledParser.context.language)) of valueKind)
 		is CommentScriptParserParent -> this
 			.process(parent.compiler)
-			.process(token(begin(defaultDictionary.comment)) of commentKind)
+			.process(token(begin(Keyword.COMMENT stringIn defaultLanguage)) of commentKind)
 		is CompiledScriptParserParent -> this
 			.process(parent.compiledParser)
-			.process(token(begin(defaultDictionary.script)) of commentKind)
+			.process(token(begin(Keyword.SCRIPT stringIn defaultLanguage)) of commentKind)
 	}
 
 fun <T> Processor<Syntax>.process(matchParser: MatchParser<T>): Processor<Syntax> =
