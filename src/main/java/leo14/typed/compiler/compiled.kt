@@ -26,7 +26,7 @@ val <T> Compiled<T>.begin: Compiled<T>
 
 fun <T> Compiled<T>.beginGives(type: Type): Compiled<T> =
 	begin
-		.plus(item(key(type("given")), argumentMemoryValue(type)))
+		.plus(item(key(type("given")), argumentMemoryValue(type("given" lineTo type))))
 
 fun <T> Compiled<T>.updateTyped(fn: Typed<T>.() -> Typed<T>): Compiled<T> =
 	copy(typed = typed.fn())

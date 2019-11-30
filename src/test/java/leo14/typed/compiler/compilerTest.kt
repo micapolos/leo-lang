@@ -172,16 +172,19 @@ class CompilerTest {
 			.parse(
 				script(
 					"remember" lineTo script(
-						"zero" lineTo script(),
-						"is" lineTo script(literal(1)))))
+						"number" lineTo script(),
+						"is" lineTo script(literal("foo")))))
 			.assertEqualTo(
 				compiler(
 					compiled(
 						typed("foo"),
 						memory(
 							item(
-								key(type("zero")),
-								value(memoryBinding(term(native(1)) of numberType, isAction = false)))),
+								key(numberType),
+								value(
+									memoryBinding(
+										term(native("foo")) of textType,
+										isAction = false)))),
 						localMemorySize = index1)))
 	}
 
@@ -250,18 +253,18 @@ class CompilerTest {
 			.parse(
 				script(
 					"remember" lineTo script(
-						"zero" lineTo script(),
-						"does" lineTo script(literal(0)))))
+						"number" lineTo script(),
+						"does" lineTo script(literal("foo")))))
 			.assertEqualTo(
 				compiler(
 					compiled(
 						typed("foo"),
 						memory(
 							item(
-								key(type("zero")),
+								key(numberType),
 								value(
 									memoryBinding(
-										term(native(0)) of numberType,
+										fn(term(native("foo"))) of textType,
 										isAction = true)))),
 						localMemorySize = index1)))
 	}
@@ -283,7 +286,7 @@ class CompilerTest {
 								key(numberType),
 								value(
 									memoryBinding(
-										typed(arg0(), type("given" lineTo numberType)),
+										fn(arg0<Native>()) of type("given" lineTo numberType),
 										isAction = true)))),
 						localMemorySize = index1)))
 	}
@@ -323,7 +326,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					compiled(
-						fn(arg0<Native>()).invoke(term(native(123))) of
+						fn(arg0<Native>().invoke(term(native(123)))).invoke(id()) of
 							type("my" lineTo type("given" lineTo numberType))
 					)))
 	}
@@ -334,18 +337,18 @@ class CompilerTest {
 			typed(),
 			memory(
 				item(
-					key(type("zero")),
+					key(numberType),
 					value(
 						memoryBinding(
-							term(native(0)) of numberType,
+							fn(term(native("foo"))) of textType,
 							isAction = true)))))
 
 		compiler(compiled)
-			.parse(script("zero"))
+			.parse(script(literal(0)))
 			.assertEqualTo(
 				compiler(
 					compiled.updateTyped {
-						arg0<Native>().invoke(id()) of numberType
+						arg0<Native>().invoke(term(native(0))) of textType
 					}))
 	}
 
@@ -388,19 +391,13 @@ class CompilerTest {
 				compiler(
 					compiled(
 						typed(),
-						memory(
+						memory<Native>(
 							item(
 								key(type("zero")),
 								value(
 									memoryBinding(
 										typed(),
-										isAction = false))),
-							item(
-								key(type("zero")),
-								value(
-									memoryBinding(
-										arg0<Native>() of type("zero"),
-										isAction = true)))))))
+										isAction = false)))).forget(key(type("zero"))))))
 	}
 
 	@Test
@@ -420,13 +417,13 @@ class CompilerTest {
 				compiler(
 					compiled(
 						typed(),
-						memory(
+						memory<Native>(
 							item(
 								key(type("zero")),
 								value(
 									memoryBinding(
 										typed(),
-										isAction = false)))))))
+										isAction = false)))).forget(key(type("one"))))))
 	}
 
 	@Test

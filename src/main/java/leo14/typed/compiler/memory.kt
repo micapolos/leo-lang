@@ -29,7 +29,9 @@ fun <T> MemoryValue<T>.resolve(index: Index, term: Term<T>): Typed<T>? =
 		.let { indexTerm ->
 			when (this) {
 				is ArgumentMemoryValue -> indexTerm of type
-				is BindingMemoryValue -> term of binding.typed.type
+				is BindingMemoryValue ->
+					if (binding.isAction) indexTerm.invoke(term) of binding.typed.type
+					else indexTerm of binding.typed.type
 			}
 		}
 
@@ -42,7 +44,7 @@ val <T> MemoryValue<T>.type
 
 fun <T> Term<T>.resolveForEnd(value: MemoryValue<T>): Term<T> =
 	when (value) {
-		is ArgumentMemoryValue -> this
+		is ArgumentMemoryValue -> fn(this)
 		is BindingMemoryValue -> fn(this).invoke(value.binding.typed.term)
 	}
 
