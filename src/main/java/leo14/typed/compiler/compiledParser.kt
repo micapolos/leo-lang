@@ -25,49 +25,27 @@ data class MatchParserParent<T>(val matchParser: MatchParser<T>, val name: Strin
 
 fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
-		is LiteralToken ->
-			compiler(plus(token.literal))
+		is LiteralToken -> parse(token.literal)
 		is BeginToken ->
-			when (token.begin.string.keywordOrNullIn(context.language)) {
-				Keyword.FUNCTION ->
-					compiler(TypeParser(null, FunctionGivesTypeBeginner(this), context.language, context.typeContext, type()))
-				Keyword.AS ->
-					compiler(TypeParser(AsTypeParserParent(this), null, context.language, context.typeContext, type()))
-				Keyword.DO ->
-					compiled.typed.function.let { action ->
-						compiler(CompiledParser(FunctionGiveParserParent(this, action), context, phase, compiled.begin))
-					}
-				Keyword.GIVE ->
-					compiler(CompiledParser(GiveCompiledParserParent(this), context, phase, compiled.begin))
-				Keyword.DELETE ->
-					compiler(DeleteParser(this))
-				Keyword.NOTHING ->
-					compiler(NothingParser(this))
-				Keyword.MATCH ->
-					compiler(MatchParser(this, stack(), compiled.typed.beginMatch()))
-				Keyword.MAKE ->
-					compiler(ScriptParser(MakeScriptParserParent(this), script()))
-				Keyword.REMEMBER ->
-					compiler(TypeParser(null, RememberTypeBeginner(this), context.language, context.typeContext, type()))
-				Keyword.FORGET ->
-					compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.language, context.typeContext, type()))
-				Keyword.SCRIPT ->
-					notNullIf(phase == Phase.EVALUATOR) {
-						compiler(ScriptParser(CompiledScriptParserParent(this), script()))
-					}
-				Keyword.LEONARDO ->
-					compiler(LeonardoParser(this))
-				Keyword.USE ->
-					compiler(use)
-				else ->
-					CompiledParserCompiler(
-						CompiledParser(
-							FieldCompiledParserParent(this, token.begin.string),
-							context,
-							phase,
-							compiled.begin))
+			token.begin.string.let {
+				when (it keywordOrNullIn context.language) {
+					Keyword.FUNCTION -> beginFunction
+					Keyword.AS -> beginAs
+					Keyword.DO -> beginDo
+					Keyword.GIVE -> beginGive
+					Keyword.DELETE -> beginDelete
+					Keyword.NOTHING -> beginNothing
+					Keyword.MATCH -> beginMatch
+					Keyword.MAKE -> beginMake
+					Keyword.REMEMBER -> beginRemember
+					Keyword.FORGET -> beginForget
+					Keyword.SCRIPT -> beginScript
+					Keyword.LEONARDO -> beginLeonardo
+					Keyword.USE -> beginUse
+					else -> begin(it)
+				}
 			}
-		is EndToken -> parent?.end(compiled.resolveForEnd)
+		is EndToken -> end
 	} ?: error("$this.parse($token)")
 
 fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Compiler<T> =
@@ -121,8 +99,8 @@ fun <T> CompiledParser<T>.make(script: Script): Compiler<T> =
 		}
 	} ?: error("$this.make($script)")
 
-fun <T> CompiledParser<T>.plus(literal: Literal) =
-	resolve(context.compileLine(literal))
+fun <T> CompiledParser<T>.parse(literal: Literal) =
+	compiler(resolve(context.compileLine(literal)))
 
 fun <T> CompiledParser<T>.plus(script: Script): CompiledParser<T> =
 	updateCompiled { updateTyped { plus(script, context.literalCompile) } }
@@ -142,3 +120,71 @@ val <T> CompiledParser<T>.use
 			context,
 			phase,
 			compiled.use)
+
+val <T> CompiledParser<T>.beginFunction
+	get() =
+		compiler(TypeParser(null, FunctionGivesTypeBeginner(this), context.language, context.typeContext, type()))
+
+val <T> CompiledParser<T>.beginAs
+	get() =
+		compiler(TypeParser(AsTypeParserParent(this), null, context.language, context.typeContext, type()))
+
+val <T> CompiledParser<T>.beginDo
+	get() =
+		compiled.typed.function.let { action ->
+			compiler(CompiledParser(FunctionGiveParserParent(this, action), context, phase, compiled.begin))
+		}
+
+val <T> CompiledParser<T>.beginGive
+	get() =
+		compiler(CompiledParser(GiveCompiledParserParent(this), context, phase, compiled.begin))
+
+val <T> CompiledParser<T>.beginDelete
+	get() =
+		compiler(DeleteParser(this))
+
+val <T> CompiledParser<T>.beginNothing
+	get() =
+		compiler(NothingParser(this))
+
+val <T> CompiledParser<T>.beginMatch
+	get() =
+		compiler(MatchParser(this, stack(), compiled.typed.beginMatch()))
+
+val <T> CompiledParser<T>.beginMake
+	get() =
+		compiler(ScriptParser(MakeScriptParserParent(this), script()))
+
+val <T> CompiledParser<T>.beginRemember
+	get() =
+		compiler(TypeParser(null, RememberTypeBeginner(this), context.language, context.typeContext, type()))
+
+val <T> CompiledParser<T>.beginForget
+	get() =
+		compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.language, context.typeContext, type()))
+
+val <T> CompiledParser<T>.beginScript
+	get() =
+		notNullIf(phase == Phase.EVALUATOR) {
+			compiler(ScriptParser(CompiledScriptParserParent(this), script()))
+		}
+
+val <T> CompiledParser<T>.beginLeonardo
+	get() =
+		compiler(LeonardoParser(this))
+
+val <T> CompiledParser<T>.beginUse
+	get() =
+		compiler(use)
+
+fun <T> CompiledParser<T>.begin(string: String) =
+	CompiledParserCompiler(
+		CompiledParser(
+			FieldCompiledParserParent(this, string),
+			context,
+			phase,
+			compiled.begin))
+
+val <T> CompiledParser<T>.end
+	get() =
+		parent?.end(compiled.resolveForEnd)

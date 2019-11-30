@@ -38,14 +38,14 @@ val <T> CompiledParser<T>.reflectScriptLine: ScriptLine get() =
 val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 	when (this) {
 		is FieldCompiledParserParent -> "begin" lineTo script(compiledParser.reflectScriptLine)
-		is FunctionDoesParserParent -> TODO()
-		is FunctionGiveParserParent -> TODO()
-		is GiveCompiledParserParent -> TODO()
-		is UseCompiledParserParent -> TODO()
-		is RememberDoesParserParent -> TODO()
-		is RememberIsParserParent -> TODO()
-		is MatchParserParent -> TODO()
-	}
+		is FunctionDoesParserParent -> null
+		is FunctionGiveParserParent -> null
+		is GiveCompiledParserParent -> null
+		is UseCompiledParserParent -> null
+		is RememberDoesParserParent -> null
+		is RememberIsParserParent -> null
+		is MatchParserParent -> null
+	} ?: line(literal(toString()))
 
 val <T> TypeParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
@@ -56,31 +56,31 @@ val <T> TypeParserParent<T>.reflectScriptLine: ScriptLine get() =
 	"parent" lineTo script(
 		when (this) {
 			is LineTypeParserParent -> "begin" lineTo script(typeParser.reflectScriptLine)
-			is ArrowGivingTypeParserParent -> TODO()
-			is OptionTypeParserParent -> TODO()
-			is AsTypeParserParent -> TODO()
-			is ForgetTypeParserParent -> TODO()
-		}
+			is ArrowGivingTypeParserParent -> null
+			is OptionTypeParserParent -> null
+			is AsTypeParserParent -> null
+			is ForgetTypeParserParent -> null
+		} ?: line(literal(toString()))
 	)
 
 val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 	"token" lineTo script(
 		"compiler" lineTo script(
 				when (this) {
-					is ActionParserCompiler -> TODO()
-					is ArrowParserCompiler -> TODO()
-					is ChoiceParserCompiler -> TODO()
+					is ActionParserCompiler -> null
+					is ArrowParserCompiler -> null
+					is ChoiceParserCompiler -> null
 					is CompiledParserCompiler -> compiledParser.reflectScriptLine
-					is DeleteParserCompiler -> TODO()
-					is NothingParserCompiler -> TODO()
-					is RememberParserCompiler -> TODO()
+					is DeleteParserCompiler -> null
+					is NothingParserCompiler -> null
+					is RememberParserCompiler -> null
 					is TypeParserCompiler -> typeParser.reflectScriptLine
-					is MatchParserCompiler -> TODO()
-					is ScriptParserCompiler -> TODO()
-					is LeonardoParserCompiler -> TODO()
-					is ForgetEverythingParserCompiler -> TODO()
-					is ForgetEverythingEndParserCompiler -> TODO()
-				}))
+					is MatchParserCompiler -> null
+					is ScriptParserCompiler -> null
+					is LeonardoParserCompiler -> null
+					is ForgetEverythingParserCompiler -> null
+					is ForgetEverythingEndParserCompiler -> null
+				} ?: line(literal(toString()))))
 
 val <T> CharCompiler<T>.reflectScriptLine get() =
 	"char" lineTo script(
