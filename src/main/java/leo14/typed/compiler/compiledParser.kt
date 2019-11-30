@@ -10,7 +10,6 @@ import leo14.typed.Function
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
 	val context: Context<T>,
-	val phase: Phase,
 	val compiled: Compiled<T>)
 
 sealed class CompiledParserParent<T>
@@ -39,7 +38,6 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.MAKE -> beginMake
 					Keyword.REMEMBER -> beginRemember
 					Keyword.FORGET -> beginForget
-					Keyword.SCRIPT -> beginScript
 					Keyword.LEONARDO -> beginLeonardo
 					Keyword.USE -> beginUse
 					else -> begin(it)
@@ -69,21 +67,14 @@ fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 	}
 
 fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
-	compiler(updateCompiled(fn).resolvePhase)
-
-val <T> CompiledParser<T>.resolvePhase: CompiledParser<T>
-	get() =
-		when (phase) {
-			Phase.COMPILER -> this
-			Phase.EVALUATOR -> evaluate
-		}
+	compiler(updateCompiled(fn))
 
 val <T> CompiledParser<T>.evaluate
 	get() =
 		updateCompiled { eval(context.evaluator) }
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
-	copy(compiled = compiled.resolve(line, context)).resolvePhase
+	copy(compiled = compiled.resolve(line, context))
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
@@ -125,7 +116,6 @@ val <T> CompiledParser<T>.use
 		CompiledParser(
 			UseCompiledParserParent(this),
 			context,
-			phase,
 			compiled.use)
 
 val <T> CompiledParser<T>.beginFunction
@@ -139,12 +129,12 @@ val <T> CompiledParser<T>.beginAs
 val <T> CompiledParser<T>.beginDo
 	get() =
 		compiled.typed.function.let { action ->
-			compiler(CompiledParser(FunctionGiveParserParent(this, action), context, phase, compiled.begin))
+			compiler(CompiledParser(FunctionGiveParserParent(this, action), context, compiled.begin))
 		}
 
 val <T> CompiledParser<T>.beginGive
 	get() =
-		compiler(CompiledParser(GiveCompiledParserParent(this), context, phase, compiled.begin))
+		compiler(CompiledParser(GiveCompiledParserParent(this), context, compiled.begin))
 
 val <T> CompiledParser<T>.beginDelete
 	get() =
@@ -170,12 +160,6 @@ val <T> CompiledParser<T>.beginForget
 	get() =
 		compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.language, context.typeContext, type()))
 
-val <T> CompiledParser<T>.beginScript
-	get() =
-		notNullIf(phase == Phase.EVALUATOR) {
-			compiler(ScriptParser(CompiledScriptParserParent(this), script()))
-		}
-
 val <T> CompiledParser<T>.beginLeonardo
 	get() =
 		compiler(LeonardoParser(this))
@@ -189,7 +173,6 @@ fun <T> CompiledParser<T>.begin(string: String) =
 		CompiledParser(
 			FieldCompiledParserParent(this, string),
 			context,
-			phase,
 			compiled.begin))
 
 val <T> CompiledParser<T>.end

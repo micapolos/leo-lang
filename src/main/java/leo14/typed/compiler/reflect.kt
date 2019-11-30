@@ -46,19 +46,10 @@ val <T> MemoryBinding<T>.reflectScriptLine
 			"kind" lineTo script(if (isAction) "action" else "constant"),
 			typed.reflectScriptLine)
 
-val Phase.reflectStringLine get() =
-	"phase" lineTo script(
-		when (this) {
-			Phase.COMPILER -> "compiler"
-			Phase.EVALUATOR -> "evaluator"
-		}
-	)
-
 val <T> CompiledParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
 		parent?.reflectScriptLine.orIfNull { "parent" lineTo script("nothing") },
 		context.reflectScriptLine,
-		phase.reflectStringLine,
 		compiled.reflectScriptLine)
 
 val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =

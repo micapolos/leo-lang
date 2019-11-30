@@ -71,12 +71,7 @@ fun <T> Processor<Syntax>.processWithTypes(compiledParser: CompiledParser<T>): P
 fun <T> Processor<Syntax>.process(compiledParser: CompiledParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(compiledParser.parent) { process(it) }
-		.run {
-			when (compiledParser.phase) {
-				Phase.COMPILER -> process(compiledParser.compiled.typed.type, compiledParser.context.language)
-				Phase.EVALUATOR -> syntaxProcess(compiledParser.decompile)
-			}
-		}
+		.process(compiledParser.compiled.typed.type, compiledParser.context.language)
 
 fun <T> Processor<Syntax>.process(parser: TypeParser<T>): Processor<Syntax> =
 	this

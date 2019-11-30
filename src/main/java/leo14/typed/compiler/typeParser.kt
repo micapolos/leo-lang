@@ -80,7 +80,6 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 						CompiledParser(
 							FunctionDoesParserParent(compiledParser, type),
 							compiledParser.context,
-							Phase.COMPILER,
 							compiledParser.compiled.beginGives(type)))
 				else -> null
 			}
@@ -91,14 +90,12 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 						CompiledParser(
 							RememberIsParserParent(compiledParser, type),
 							compiledParser.context,
-							compiledParser.phase,
 							compiledParser.compiled.begin))
 				Keyword.DOES ->
 					compiler(
 						CompiledParser(
 							RememberDoesParserParent(compiledParser, type),
 							compiledParser.context,
-							Phase.COMPILER,
 							compiledParser.compiled.beginGives(type)))
 				else -> null
 			}

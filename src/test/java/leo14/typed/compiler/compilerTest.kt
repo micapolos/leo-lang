@@ -6,10 +6,12 @@ import leo14.*
 import leo14.lambda.*
 import leo14.native.Native
 import leo14.native.native
+import leo14.reader.read
+import leo14.reader.tokenReader
 import leo14.typed.*
 import leo14.typed.compiler.natives.compiler
 import leo14.typed.compiler.natives.context
-import leo14.typed.compiler.natives.evaluator
+import leo14.typed.evaluator.evaluator
 import kotlin.test.Test
 
 class CompilerTest {
@@ -238,13 +240,17 @@ class CompilerTest {
 							term(native(1)) of numberType,
 							isAction = false)))))
 
-		evaluator(compiled)
-			.parse(script("zero"))
+		compiler(compiled)
+			.evaluator
+			.tokenReader
+			.read(script("zero"))
 			.assertEqualTo(
-				evaluator(
+				compiler(
 					compiled.updateTyped {
 						term(native(1)) of numberType
-					}))
+					})
+					.evaluator
+					.tokenReader)
 	}
 
 	@Test
@@ -365,13 +371,17 @@ class CompilerTest {
 								fn(term(native(0))) of numberType,
 								isAction = true)))))
 
-		evaluator(compiled)
-			.parse(script("zero"))
+		compiler(compiled)
+			.evaluator
+			.tokenReader
+			.read(script("zero"))
 			.assertEqualTo(
-				evaluator(
+				compiler(
 					compiled.updateTyped {
 						term(native(0)) of numberType
-					}))
+					})
+					.evaluator
+					.tokenReader)
 	}
 
 	@Test
@@ -472,11 +482,13 @@ class CompilerTest {
 
 	@Test
 	fun evalIntNativePlus() {
-		compiler(compiled(typed()), Phase.EVALUATOR)
-			.parse(
+		compiler(compiled(typed()))
+			.evaluator
+			.tokenReader
+			.read(
 				script(
 					line(literal(2)),
 					"plus" lineTo script(literal(3))))
-			.assertEqualTo(compiler(compiled(typed(native(5))), Phase.EVALUATOR))
+			.assertEqualTo(compiler(compiled(typed(native(5)))).evaluator.tokenReader)
 	}
 }

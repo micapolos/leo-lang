@@ -11,7 +11,6 @@ val emptyCompiler =
 		CompiledParser(
 			null,
 			emptyContext,
-			Phase.COMPILER,
 			compiled()))
 
 val Script.compileTyped: Typed<Expr>
