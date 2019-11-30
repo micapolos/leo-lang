@@ -5,11 +5,7 @@ import leo.bellChar
 import leo.clear
 import leo.home
 import leo.java.lang.sttyPrivateMode
-import leo14.typed.compiler.CharReader
-import leo14.typed.compiler.charReader
-import leo14.typed.compiler.indentColorString
 import leo14.typed.compiler.natives.emptyCompiler
-import leo14.typed.compiler.put
 import leo14.typed.evaluator.evaluator
 import java.io.InputStreamReader
 

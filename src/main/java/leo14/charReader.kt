@@ -1,11 +1,12 @@
-package leo14.typed.compiler
+package leo14
 
 import leo.base.fold
 import leo.base.notNullOrError
 import leo.base.orIfNull
-import leo14.*
 import leo14.parser.*
 import leo14.syntax.*
+import leo14.typed.compiler.process
+import leo14.typed.compiler.reflectScriptLine
 
 data class CharReader(
 	val tokenReader: TokenReader,
