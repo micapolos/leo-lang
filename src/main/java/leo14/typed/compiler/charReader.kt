@@ -7,66 +7,66 @@ import leo14.*
 import leo14.parser.*
 import leo14.syntax.*
 
-data class CharCompiler(
+data class CharReader(
 	val tokenReader: TokenReader,
 	val tokenParser: SpacedTokenParser) {
 	override fun toString() = "$reflectScriptLine"
 }
 
-val TokenReader.charCompiler
+val TokenReader.charReader
 	get() =
-		CharCompiler(this, newSpacedTokenParser)
+		CharReader(this, newSpacedTokenParser)
 
-fun CharCompiler.put(char: Char): CharCompiler =
+fun CharReader.put(char: Char): CharReader =
 	if (char == '\n')
 		if (tokenParser is NewSpacedTokenParser || tokenParser.parse(' ')?.tokenOrNull != null) putRaw(' ')
 		else putRaw(' ').putRaw(' ')
 	else putRaw(char)
 
-fun CharCompiler.putRaw(char: Char): CharCompiler =
+fun CharReader.putRaw(char: Char): CharReader =
 	tokenParser
 		.parse(char)
 		?.let { parsedTokenParser ->
 			parsedTokenParser
 				.tokenOrNull
 				?.let { token ->
-					if (parsedTokenParser.canContinue) CharCompiler(tokenReader, parsedTokenParser)
-					else CharCompiler(tokenReader.read(token), newSpacedTokenParser)
+					if (parsedTokenParser.canContinue) CharReader(tokenReader, parsedTokenParser)
+					else CharReader(tokenReader.read(token), newSpacedTokenParser)
 				}
-				?: CharCompiler(tokenReader, parsedTokenParser)
+				?: CharReader(tokenReader, parsedTokenParser)
 		}
 		.orIfNull {
 			tokenParser
 				.tokenOrNull
-				?.let { token -> CharCompiler(tokenReader.read(token), newSpacedTokenParser).put(char) }
+				?.let { token -> CharReader(tokenReader.read(token), newSpacedTokenParser).put(char) }
 				?: error("$this.put($char)")
 		}
 
-fun CharCompiler.put(string: String) =
+fun CharReader.put(string: String) =
 	fold(string) { put(it) }
 
-fun CharCompiler.put(script: Script) =
+fun CharReader.put(script: Script) =
 	copy(tokenReader = tokenReader.read(script))
 
-val CharCompiler.spacedString: String
+val CharReader.spacedString: String
 	get() =
 		processorString {
 			map(Token::coreString).map(Syntax::token).process(tokenReader)
 		} + tokenParser.spacedString
 
-val CharCompiler.coreString: String
+val CharReader.coreString: String
 	get() =
 		processorString {
 			map(Token::coreString).map(Syntax::token).process(tokenReader)
 		} + tokenParser.coreString
 
-val CharCompiler.coreColorString: String
+val CharReader.coreColorString: String
 	get() =
 		processorString {
 			map(Syntax::coreColorString).process(tokenReader)
 		} + tokenParser.coreString
 
-val CharCompiler.indentColorString: String
+val CharReader.indentColorString: String
 	get() =
 		emptyFragment
 			.foldProcessor<Fragment, Syntax>({ plus(it.token).notNullOrError("$this.write($it)") }) {

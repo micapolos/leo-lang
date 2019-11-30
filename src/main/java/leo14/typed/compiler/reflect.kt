@@ -106,7 +106,7 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is ForgetEverythingEndParserCompiler -> null
 				} ?: line(literal(toString()))))
 
-val CharCompiler.reflectScriptLine
+val CharReader.reflectScriptLine
 	get() =
 	"char" lineTo script(
 		"compiler" lineTo script(
