@@ -3,7 +3,6 @@ package leo14.typed
 import leo13.fold
 import leo13.reverse
 import leo14.*
-import leo14.native.Native
 import leo14.syntax.*
 
 fun Processor<Syntax>.process(type: Type, language: Language): Processor<Syntax> =
@@ -47,7 +46,7 @@ fun Processor<Syntax>.process(arrow: Arrow, language: Language): Processor<Synta
 		.processFn(token(end) of typeKeywordKind)
 		.processFn(token(end) of typeKeywordKind)
 
-fun Processor<Syntax>.process(function: Function<Native>, language: Language): Processor<Syntax> =
+fun Processor<Syntax>.process(function: Function<*>, language: Language): Processor<Syntax> =
 	this
 		.processFn(token(begin(Keyword.FUNCTION stringIn language)) of valueKeywordKind)
 		.processFn(token(begin(Keyword.DOING stringIn language)) of valueKeywordKind)

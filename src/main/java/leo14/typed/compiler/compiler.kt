@@ -14,7 +14,9 @@ data class ChoiceParserCompiler<T>(val choiceParser: ChoiceParser<T>) : Compiler
 data class CompiledParserCompiler<T>(val compiledParser: CompiledParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class DeleteParserCompiler<T>(val deleteParser: DeleteParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class NothingParserCompiler<T>(val nothingParser: NothingParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
-data class RememberParserCompiler<T>(val memoryItemParser: MemoryItemParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
+data class RememberParserCompiler<T>(val definitionParser: DefinitionParser<T>) : Compiler<T>() {
+	override fun toString() = super.toString()
+}
 data class TypeParserCompiler<T>(val typeParser: TypeParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class MatchParserCompiler<T>(val matchParser: MatchParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class ScriptParserCompiler<T>(val scriptParser: ScriptParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
@@ -29,7 +31,7 @@ fun <T> compiler(compiledParser: CompiledParser<T>): Compiler<T> = CompiledParse
 fun <T> compiler(functionParser: FunctionParser<T>): Compiler<T> = ActionParserCompiler(functionParser)
 fun <T> compiler(deleteParser: DeleteParser<T>): Compiler<T> = DeleteParserCompiler(deleteParser)
 fun <T> compiler(nothingParser: NothingParser<T>): Compiler<T> = NothingParserCompiler(nothingParser)
-fun <T> compiler(memoryItemParser: MemoryItemParser<T>): Compiler<T> = RememberParserCompiler(memoryItemParser)
+fun <T> compiler(definitionParser: DefinitionParser<T>): Compiler<T> = RememberParserCompiler(definitionParser)
 fun <T> compiler(matchParser: MatchParser<T>): Compiler<T> = MatchParserCompiler(matchParser)
 fun <T> compiler(scriptParser: ScriptParser<T>): Compiler<T> = ScriptParserCompiler(scriptParser)
 fun <T> compiler(leonardoParser: LeonardoParser<T>): Compiler<T> = LeonardoParserCompiler(leonardoParser)
@@ -58,7 +60,7 @@ fun <T> Compiler<T>.parseDynamic(token: Token): Compiler<T> =
 		is ActionParserCompiler -> functionParser.parse(token)
 		is DeleteParserCompiler -> deleteParser.parse(token)
 		is NothingParserCompiler -> nothingParser.parse(token)
-		is RememberParserCompiler -> memoryItemParser.parse(token)
+		is RememberParserCompiler -> definitionParser.parse(token)
 		is MatchParserCompiler -> matchParser.parse(token)
 		is ScriptParserCompiler -> scriptParser.parse(token)
 		is LeonardoParserCompiler -> leonardoParser.parse(token)

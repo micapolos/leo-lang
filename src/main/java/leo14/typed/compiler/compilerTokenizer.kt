@@ -18,7 +18,7 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is CompiledParserCompiler -> processWithTypes(compiler.compiledParser)
 		is DeleteParserCompiler -> process(compiler.deleteParser)
 		is NothingParserCompiler -> process(compiler.nothingParser)
-		is RememberParserCompiler -> process(compiler.memoryItemParser)
+		is RememberParserCompiler -> process(compiler.definitionParser)
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
 		is ScriptParserCompiler -> process(compiler.scriptParser)
@@ -210,14 +210,18 @@ fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> 
 		is ForgetTypeBeginner -> this
 	}
 
-fun <T> Processor<Syntax>.process(parser: MemoryItemParser<T>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: DefinitionParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(Keyword.REMEMBER stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
-		.process(parser.memoryItem, parser.parentCompiledParser.context.language, parser.parentCompiledParser.context.decompileLiteral)
+		.process(parser.definition, parser.parentCompiledParser.context.language, parser.parentCompiledParser.context.decompileLiteral)
 
 fun <T> Processor<Syntax>.process(
-	memoryItem: MemoryItem<T>,
+	definition: Definition<T>,
 	language: Language,
 	decompileLiteral: DecompileLiteral<T>): Processor<Syntax> =
-	syntaxProcess(script(memoryItem.reflectScriptLine))
+	this
+		.process(definition.function.takes, language)
+		.process(token(begin(Keyword.DOES stringIn language)) of valueKeywordKind)
+		.process(definition.function.does.type, language)
+		.process(token(end) of valueKeywordKind)

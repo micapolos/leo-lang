@@ -3,14 +3,14 @@ package leo14.typed.compiler
 import leo14.EndToken
 import leo14.Token
 
-data class MemoryItemParser<T>(
+data class DefinitionParser<T>(
 	val parentCompiledParser: CompiledParser<T>,
-	val memoryItem: MemoryItem<T>)
+	val definition: Definition<T>)
 
-fun <T> MemoryItemParser<T>.parse(token: Token): Compiler<T> =
+fun <T> DefinitionParser<T>.parse(token: Token): Compiler<T> =
 	if (token is EndToken)
 		parentCompiledParser.next {
-			updateMemory { plus(memoryItem) }
+			updateMemory { plus(item(definition)) }
 		}
 	else
 		error("$this.parse($token)")
