@@ -1,5 +1,6 @@
-package leo14
+package leo14.reader
 
+import leo14.*
 import leo14.typed.compiler.Compiler
 import leo14.typed.compiler.parse
 import leo14.typed.compiler.reflectScriptLine
