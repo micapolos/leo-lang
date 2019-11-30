@@ -1,11 +1,8 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
-import leo13.index0
 import leo14.*
-import leo14.lambda.arg0
-import leo14.lambda.id
-import leo14.lambda.invoke
+import leo14.lambda.*
 import leo14.native.Native
 import leo14.native.native
 import leo14.typed.*
@@ -13,7 +10,7 @@ import leo14.typed.compiler.natives.compiler
 import leo14.typed.compiler.natives.context
 import kotlin.test.Test
 
-class TypeParserTest {
+class CompilerTest {
 	@Test
 	fun simpleType() {
 		compiler(type())
@@ -146,9 +143,9 @@ class TypeParserTest {
 		compiler(compiled(typed()))
 			.parse(
 				script(
-					Keyword.FUNCTION.stringIn(defaultLanguage) lineTo script(
+					Keyword.FUNCTION.string lineTo script(
 						"zero" lineTo script(),
-						Keyword.DOES.stringIn(defaultLanguage) lineTo script(
+						Keyword.DOES.string lineTo script(
 							"plus" lineTo script("one")))))
 			.assertEqualTo(
 				compiler(
@@ -174,14 +171,14 @@ class TypeParserTest {
 				script(
 					"remember" lineTo script(
 						"zero" lineTo script(),
-						"is" lineTo script("one"))))
+						"is" lineTo script(literal(1)))))
 			.assertEqualTo(
 				compiler(
 					compiled(
 						typed("foo"),
 						memory(
 							remember(
-								type("zero") does typed("one"),
+								type("zero") does (term(native(1)) of numberType),
 								needsInvoke = false)))))
 	}
 
@@ -196,7 +193,11 @@ class TypeParserTest {
 
 		compiler(compiled)
 			.parse(script("zero"))
-			.assertEqualTo(compiler(compiled.updateTyped { typed(index0, type("one")) }))
+			.assertEqualTo(
+				compiler(
+					compiled.updateTyped {
+						arg0<Native>() of type("one")
+					}))
 	}
 
 	@Test
@@ -206,14 +207,14 @@ class TypeParserTest {
 				script(
 					"remember" lineTo script(
 						"zero" lineTo script(),
-						"does" lineTo script("done"))))
+						"does" lineTo script(literal(0)))))
 			.assertEqualTo(
 				compiler(
 					compiled(
 						typed("foo"),
 						memory(
 							remember(
-								type("zero") does typed<Native>(id(), type("zero")).resolveWrap("done"),
+								type("zero") does typed(fn(term(native(0))), numberType),
 								needsInvoke = true)))))
 	}
 
@@ -224,15 +225,34 @@ class TypeParserTest {
 				script(
 					"remember" lineTo script(
 						"zero" lineTo script(),
-						"does" lineTo script("done")),
+						"does" lineTo script(literal(0))),
 					"zero" lineTo script()))
 			.assertEqualTo(
 				compiler(
 					compiled(
-						typed(arg0<Native>().invoke(typed<Native>("zero").term), type("zero")).resolveWrap("done"),
+						typed(arg0<Native>().invoke(id()), numberType),
 						memory(
 							remember(
-								type("zero") does typed<Native>(id(), type("zero")).resolveWrap("done"),
+								type("zero") does (fn(term(native(0))) of numberType),
+								needsInvoke = true)))))
+	}
+
+	@Test
+	fun evaluateRemindRememberDoes() {
+		compiler(compiled(typed()), Phase.EVALUATOR)
+			.parse(
+				script(
+					"remember" lineTo script(
+						"zero" lineTo script(),
+						"does" lineTo script(literal(0))),
+					"zero" lineTo script()))
+			.assertEqualTo(
+				compiler(
+					compiled(
+						term(native(0)) of numberType,
+						memory(
+							remember(
+								type("zero") does typed(fn(term(native(0))), numberType),
 								needsInvoke = true)))))
 	}
 

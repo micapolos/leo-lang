@@ -85,6 +85,10 @@ val <T> Term<T>.script: Script
 			is VariableTerm -> variable.script
 		}
 
+val <T> Term<T>.scriptLine
+	get() =
+		"term" lineTo script
+
 val <T> Abstraction<Term<T>>.script
 	get() =
 		script("fn" lineTo body.script)

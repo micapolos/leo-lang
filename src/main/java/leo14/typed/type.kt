@@ -109,6 +109,12 @@ val Type.script: Script
 	get() =
 		script().fold(lineStack.reverse) { plus(it.scriptLine) }
 
+val Type.scriptLine: ScriptLine
+	get() =
+		"type" lineTo
+			if (isEmpty) script("empty")
+			else script
+
 val Line.scriptLine: ScriptLine
 	get() =
 		when (this) {

@@ -2,10 +2,11 @@ package leo14.typed.compiler
 
 import leo.base.orIfNull
 import leo13.fold
+import leo13.isEmpty
 import leo14.*
 import leo14.parser.reflectScriptLine
 import leo14.typed.reflectScriptLine
-import leo14.typed.script
+import leo14.typed.scriptLine
 
 val <T> Compiled<T>.reflectScriptLine get() =
 	"compiled" lineTo script(
@@ -13,13 +14,19 @@ val <T> Compiled<T>.reflectScriptLine get() =
 		typed.reflectScriptLine)
 
 val <T> Memory<T>.reflectScriptLine get() =
-	"memory" lineTo script().fold(itemStack) { plus(it.reflectScriptLine) }
+	"memory" lineTo
+		if (itemStack.isEmpty) script("empty")
+		else script().fold(itemStack) { plus(it.reflectScriptLine) }
 
 val <T> MemoryItem<T>.reflectScriptLine get() =
-	when (this) {
-		is EmptyMemoryItem -> "empty" lineTo script()
-		is RememberMemoryItem -> "remember" lineTo script(function.reflectScriptLine)
-	}
+	"item" lineTo script(
+		when (this) {
+			is EmptyMemoryItem -> "empty" lineTo script()
+			is RememberMemoryItem -> "remember" lineTo script(
+				function.reflectScriptLine,
+				"kind" lineTo script(if (needsInvoke) "action" else "value"))
+		}
+	)
 
 val Phase.reflectStringLine get() =
 	"phase" lineTo script(
@@ -31,7 +38,8 @@ val Phase.reflectStringLine get() =
 
 val <T> CompiledParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
-		parent?.reflectScriptLine.orIfNull { "parent".line },
+		parent?.reflectScriptLine.orIfNull { "parent" lineTo script("nothing") },
+		context.reflectScriptLine,
 		phase.reflectStringLine,
 		compiled.reflectScriptLine)
 
@@ -50,7 +58,7 @@ val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 val <T> TypeParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
 		parent?.reflectScriptLine ?: "parent".line,
-		"type" lineTo type.script)
+		type.scriptLine)
 
 val <T> TypeParserParent<T>.reflectScriptLine: ScriptLine get() =
 	"parent" lineTo script(

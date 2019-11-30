@@ -1,7 +1,6 @@
 package leo14.typed.compiler
 
-import leo14.Language
-import leo14.Literal
+import leo14.*
 import leo14.lambda.Evaluator
 import leo14.typed.DecompileLiteral
 import leo14.typed.Typed
@@ -15,10 +14,16 @@ data class Context<T>(
 	val literalCompile: LiteralCompile<T>,
 	val evaluator: Evaluator<T>,
 	val typeContext: TypeContext,
-	val decompileLiteral: DecompileLiteral<T>)
+	val decompileLiteral: DecompileLiteral<T>) {
+	override fun toString() = "$reflectScriptLine"
+}
 
 fun <T> Context<T>.compileLine(literal: Literal): TypedLine<T> =
 	literal.literalCompile()
 
 fun <T> Context<T>.resolve(typed: Typed<T>): Typed<T>? =
 	typedResolve.invoke(typed)
+
+val <T> Context<T>.reflectScriptLine
+	get() =
+		"context" lineTo script(language.reflectScriptLine)

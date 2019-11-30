@@ -1,6 +1,7 @@
 package leo14.typed.compiler
 
 import leo.base.orNullIf
+import leo.base.runIf
 import leo13.*
 import leo14.lambda.Term
 import leo14.lambda.arg
@@ -56,8 +57,9 @@ fun <T> MemoryItem<T>.resolve(index: Index, term: Term<T>): Typed<T>? =
 	when (this) {
 		is EmptyMemoryItem -> error("Can not resolve this")
 		is RememberMemoryItem ->
-			if (needsInvoke) arg<T>(index).invoke(term) of function.does.type
-			else arg<T>(index) of function.does.type
+			arg<T>(index)
+				.runIf(needsInvoke) { invoke(term) }
+				.of(function.does.type)
 	}
 
 fun <T> Memory<T>.ret(typed: Typed<T>): Typed<T> =
@@ -66,7 +68,7 @@ fun <T> Memory<T>.ret(typed: Typed<T>): Typed<T> =
 fun <T> Typed<T>.ret(item: MemoryItem<T>): Typed<T> =
 	when (item) {
 		is EmptyMemoryItem -> this
-		is RememberMemoryItem -> fn(term).invoke(item.function.does.term) of type
+		is RememberMemoryItem -> fn(term) of type
 	}
 
 fun <T> Memory<T>.forget(type: Type): Memory<T> =

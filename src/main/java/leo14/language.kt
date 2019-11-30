@@ -5,7 +5,9 @@ import leo13.first
 enum class Language {
 	ENGLISH,
 	GERMAN,
-	POLISH,
+	POLISH;
+
+	override fun toString() = "$reflectScriptLine"
 }
 
 val defaultLanguage = Language.ENGLISH
@@ -18,3 +20,7 @@ fun Language.keywordOrNull(string: String): Keyword? =
 
 infix fun String.keywordOrNullIn(language: Language): Keyword? =
 	language.keywordOrNull(this)
+
+val Language.reflectScriptLine
+	get() =
+		"language" lineTo script(name.toLowerCase())
