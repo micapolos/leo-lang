@@ -8,10 +8,14 @@ import leo14.parser.*
 import leo14.syntax.*
 
 data class CharCompiler(
-	val tokenParser: SpacedTokenParser,
-	val tokenReader: TokenReader) {
+	val tokenReader: TokenReader,
+	val tokenParser: SpacedTokenParser) {
 	override fun toString() = "$reflectScriptLine"
 }
+
+val TokenReader.charCompiler
+	get() =
+		CharCompiler(this, newSpacedTokenParser)
 
 fun CharCompiler.put(char: Char): CharCompiler =
 	if (char == '\n')
@@ -26,15 +30,15 @@ fun CharCompiler.putRaw(char: Char): CharCompiler =
 			parsedTokenParser
 				.tokenOrNull
 				?.let { token ->
-					if (parsedTokenParser.canContinue) CharCompiler(parsedTokenParser, tokenReader)
-					else CharCompiler(newSpacedTokenParser, tokenReader.read(token))
+					if (parsedTokenParser.canContinue) CharCompiler(tokenReader, parsedTokenParser)
+					else CharCompiler(tokenReader.read(token), newSpacedTokenParser)
 				}
-				?: CharCompiler(parsedTokenParser, tokenReader)
+				?: CharCompiler(tokenReader, parsedTokenParser)
 		}
 		.orIfNull {
 			tokenParser
 				.tokenOrNull
-				?.let { token -> CharCompiler(newSpacedTokenParser, tokenReader.read(token)).put(char) }
+				?.let { token -> CharCompiler(tokenReader.read(token), newSpacedTokenParser).put(char) }
 				?: error("$this.put($char)")
 		}
 
