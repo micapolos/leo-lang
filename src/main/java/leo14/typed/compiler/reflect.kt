@@ -5,6 +5,10 @@ import leo13.fold
 import leo13.isEmpty
 import leo14.*
 import leo14.parser.reflectScriptLine
+import leo14.typed.compiler.Definition.Kind.ACTION
+import leo14.typed.compiler.Definition.Kind.VALUE
+import leo14.typed.compiler.MemoryItemState.FORGOTTEN
+import leo14.typed.compiler.MemoryItemState.REMEMBERED
 import leo14.typed.reflectScriptLine
 import leo14.typed.scriptLine
 
@@ -20,11 +24,30 @@ val <T> Memory<T>.reflectScriptLine get() =
 
 val <T> MemoryItem<T>.reflectScriptLine get() =
 	"item" lineTo script(
-		when (this) {
-			is EmptyMemoryItem -> "empty" lineTo script()
-			is RememberMemoryItem -> "remember" lineTo script(
-				function.reflectScriptLine,
-				"kind" lineTo script(if (needsInvoke) "action" else "value"))
+		definition.reflectScriptLine,
+		state.reflectScriptLine)
+
+val MemoryItemState.reflectScriptLine
+	get() =
+		"state" lineTo script(
+			when (this) {
+				REMEMBERED -> "remembered"
+				FORGOTTEN -> "forgotten"
+			}
+		)
+
+val <T> Definition<T>.reflectScriptLine
+	get() =
+		"value" lineTo script(
+			function.reflectScriptLine,
+			kind.reflectScriptLine)
+
+val Definition.Kind.reflectScriptLine
+	get() =
+		"kind" lineTo script(
+			when (this) {
+				VALUE -> "value"
+				ACTION -> "action"
 		}
 	)
 

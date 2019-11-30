@@ -5,7 +5,6 @@ import leo14.js.ast.Expr
 import leo14.lambda.js.expr
 import leo14.typed.Typed
 import leo14.typed.compiler.*
-import leo14.typed.typed
 
 val emptyCompiler =
 	compiler(
@@ -13,7 +12,7 @@ val emptyCompiler =
 			null,
 			emptyContext,
 			Phase.COMPILER,
-			Compiled(memory(), typed())))
+			compiled()))
 
 val Script.compileTyped: Typed<Expr>
 	get() =

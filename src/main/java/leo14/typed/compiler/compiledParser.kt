@@ -6,6 +6,8 @@ import leo13.stack
 import leo14.*
 import leo14.typed.*
 import leo14.typed.Function
+import leo14.typed.compiler.Definition.Kind.ACTION
+import leo14.typed.compiler.Definition.Kind.VALUE
 
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
@@ -61,9 +63,9 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Compiler<T> =
 		is UseCompiledParserParent ->
 			compiledParser.next { updateTyped { compiled.typed } }
 		is RememberDoesParserParent ->
-			compiler(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = true)))
+			compiler(MemoryItemParser(compiledParser, item(definition(type does compiled.typed, ACTION))))
 		is RememberIsParserParent ->
-			compiler(MemoryItemParser(compiledParser, remember(type does compiled.typed, needsInvoke = false)))
+			compiler(MemoryItemParser(compiledParser, item(definition(type does compiled.typed, VALUE))))
 		is MatchParserParent ->
 			compiler(matchParser.plus(name, compiled))
 	}
@@ -83,7 +85,7 @@ val <T> CompiledParser<T>.evaluate
 		updateCompiled { eval(context.evaluator) }
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
-	copy(compiled = compiled.resolve(line, context).resolve(phase, context.evaluator))
+	copy(compiled = compiled.resolve(line, context)).resolvePhase
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
@@ -114,7 +116,7 @@ fun <T> CompiledParser<T>.plus(script: Script): CompiledParser<T> =
 
 val <T> CompiledParser<T>.forgetEverything: CompiledParser<T>
 	get() =
-		updateCompiled { updateMemory { memory() } }
+		updateCompiled { updateMemory { forgetEverything } }
 
 val <T> CompiledParser<T>.decompile: Script
 	get() =

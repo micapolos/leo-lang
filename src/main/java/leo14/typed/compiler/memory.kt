@@ -1,36 +1,27 @@
 package leo14.typed.compiler
 
+import leo.base.notNullIf
 import leo.base.orNullIf
-import leo.base.runIf
 import leo13.*
 import leo14.lambda.Term
-import leo14.lambda.arg
 import leo14.lambda.fn
-import leo14.lambda.invoke
-import leo14.typed.Function
 import leo14.typed.Type
 import leo14.typed.Typed
+import leo14.typed.compiler.MemoryItemState.FORGOTTEN
+import leo14.typed.compiler.MemoryItemState.REMEMBERED
 import leo14.typed.of
 
+enum class MemoryItemState { REMEMBERED, FORGOTTEN }
 data class Memory<T>(val itemStack: Stack<MemoryItem<T>>)
-
-sealed class MemoryItem<T>
-data class EmptyMemoryItem<T>(val empty: Empty) : MemoryItem<T>()
-data class RememberMemoryItem<T>(val function: Function<T>, val needsInvoke: Boolean) : MemoryItem<T>()
+data class MemoryItem<T>(val definition: Definition<T>, val state: MemoryItemState)
 
 val <T> Stack<MemoryItem<T>>.memory get() = Memory(this)
 
 fun <T> memory(vararg items: MemoryItem<T>) =
-	Memory(stack(*items))
+	stack(*items).memory
 
-fun <T> memoryItem(empty: Empty): MemoryItem<T> =
-	EmptyMemoryItem(empty)
-
-fun <T> remember(function: Function<T>, needsInvoke: Boolean = true): MemoryItem<T> =
-	RememberMemoryItem(function, needsInvoke)
-
-fun anyMemory(): Memory<Any> =
-	Memory(stack())
+fun <T> item(value: Definition<T>, state: MemoryItemState = REMEMBERED) =
+	MemoryItem(value, state)
 
 fun <T> Memory<T>.plus(item: MemoryItem<T>) =
 	Memory(itemStack.push(item))
@@ -48,28 +39,39 @@ fun <T> Memory<T>.resolve(typed: Typed<T>): Typed<T>? =
 		}
 
 fun <T> MemoryItem<T>.matches(type: Type): Boolean =
-	when (this) {
-		is EmptyMemoryItem -> false
-		is RememberMemoryItem -> function.takes == type
+	when (state) {
+		REMEMBERED -> definition.matches(type)
+		FORGOTTEN -> false
 	}
 
 fun <T> MemoryItem<T>.resolve(index: Index, term: Term<T>): Typed<T>? =
-	when (this) {
-		is EmptyMemoryItem -> error("Can not resolve this")
-		is RememberMemoryItem ->
-			arg<T>(index)
-				.runIf(needsInvoke) { invoke(term) }
-				.of(function.does.type)
+	when (state) {
+		REMEMBERED -> definition.resolve(index, term)
+		FORGOTTEN -> null
 	}
 
 fun <T> Memory<T>.ret(typed: Typed<T>): Typed<T> =
 	typed.fold(itemStack) { ret(it) }
 
 fun <T> Typed<T>.ret(item: MemoryItem<T>): Typed<T> =
-	when (item) {
-		is EmptyMemoryItem -> this
-		is RememberMemoryItem -> fn(term) of type
+	when (item.state) {
+		REMEMBERED -> fn(item.definition.function.does.term) of type
+		FORGOTTEN -> this
 	}
 
 fun <T> Memory<T>.forget(type: Type): Memory<T> =
-	itemStack.filter { !matches(type) }.memory
+	itemStack
+		.updateFirst { forgetOrNull(type) }
+		?.memory
+		?: this
+
+val <T> MemoryItem<T>.forget
+	get() =
+		copy(state = FORGOTTEN)
+
+fun <T> MemoryItem<T>.forgetOrNull(type: Type): MemoryItem<T>? =
+	notNullIf(definition.matches(type)) { forget }
+
+val <T> Memory<T>.forgetEverything
+	get() =
+		itemStack.map { forget }.memory

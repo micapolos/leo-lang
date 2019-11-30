@@ -58,3 +58,9 @@ fun Index.max(index: Index): Index =
 				is NextIndex -> previous.max(index.previous).next
 			}
 	}
+
+tailrec fun <T> T.iterate(index: Index, fn: T.() -> T): T =
+	when (index) {
+		is ZeroIndex -> this
+		is NextIndex -> fn().iterate(index.previous, fn)
+	}

@@ -177,9 +177,10 @@ class CompilerTest {
 					compiled(
 						typed("foo"),
 						memory(
-							remember(
-								type("zero") does (term(native(1)) of numberType),
-								needsInvoke = false)))))
+							item(
+								definition(
+									type("zero") does (term(native(1)) of numberType),
+									Definition.Kind.VALUE))))))
 	}
 
 	@Test
@@ -187,9 +188,10 @@ class CompilerTest {
 		val compiled = compiled<Native>(
 			typed(),
 			memory(
-				remember(
-					type("zero") does typed("one"),
-					needsInvoke = false)))
+				item(
+					definition(
+						type("zero") does typed("one"),
+						Definition.Kind.VALUE))))
 
 		compiler(compiled)
 			.parse(script("zero"))
@@ -213,9 +215,10 @@ class CompilerTest {
 					compiled(
 						typed("foo"),
 						memory(
-							remember(
-								type("zero") does typed(fn(term(native(0))), numberType),
-								needsInvoke = true)))))
+							item(
+								definition(
+									type("zero") does typed(fn(term(native(0))), numberType),
+									Definition.Kind.ACTION))))))
 	}
 
 	@Test
@@ -232,9 +235,10 @@ class CompilerTest {
 					compiled(
 						typed(arg0<Native>().invoke(id()), numberType),
 						memory(
-							remember(
-								type("zero") does (fn(term(native(0))) of numberType),
-								needsInvoke = true)))))
+							item(
+								definition(
+									type("zero") does (fn(term(native(0))) of numberType),
+									Definition.Kind.ACTION))))))
 	}
 
 	@Test
@@ -251,9 +255,10 @@ class CompilerTest {
 					compiled(
 						term(native(0)) of numberType,
 						memory(
-							remember(
-								type("zero") does typed(fn(term(native(0))), numberType),
-								needsInvoke = true)))))
+							item(
+								definition(
+									type("zero") does typed(fn(term(native(0))), numberType),
+									Definition.Kind.ACTION))))))
 	}
 
 	@Test
@@ -261,9 +266,23 @@ class CompilerTest {
 		compiler(
 			compiled(
 				typed(),
-				memory(remember(type("zero") does typed()))))
+				memory(
+					item(
+						definition(
+							type("zero") does typed(),
+							Definition.Kind.VALUE),
+						MemoryItemState.REMEMBERED))))
 			.parse(script("forget" lineTo script("zero")))
-			.assertEqualTo(compiler(compiled(typed(), memory())))
+			.assertEqualTo(
+				compiler(
+					compiled(
+						typed(),
+						memory(
+							item(
+								definition(
+									type("zero") does typed(),
+									Definition.Kind.VALUE),
+								MemoryItemState.FORGOTTEN)))))
 	}
 
 	@Test
@@ -271,9 +290,23 @@ class CompilerTest {
 		compiler(
 			compiled(
 				typed(),
-				memory(remember(type("zero") does typed()))))
+				memory(
+					item(
+						definition(
+							type("zero") does typed(),
+							Definition.Kind.VALUE),
+						MemoryItemState.REMEMBERED))))
 			.parse(script("forget" lineTo script("one")))
-			.assertEqualTo(compiler(compiled(typed(), memory(remember(type("zero") does typed())))))
+			.assertEqualTo(
+				compiler(
+					compiled(
+						typed(),
+						memory(
+							item(
+								definition(
+									type("zero") does typed(),
+									Definition.Kind.VALUE),
+								MemoryItemState.REMEMBERED)))))
 	}
 
 	@Test

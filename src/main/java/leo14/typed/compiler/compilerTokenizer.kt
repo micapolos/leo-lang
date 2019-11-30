@@ -6,7 +6,6 @@ import leo13.reverse
 import leo14.*
 import leo14.syntax.*
 import leo14.typed.DecompileLiteral
-import leo14.typed.decompile
 import leo14.typed.process
 
 val types = false
@@ -221,16 +220,4 @@ fun <T> Processor<Syntax>.process(
 	memoryItem: MemoryItem<T>,
 	language: Language,
 	decompileLiteral: DecompileLiteral<T>): Processor<Syntax> =
-	when (memoryItem) {
-		is RememberMemoryItem ->
-			process(memoryItem.function.takes, language)
-				.process(token(begin(
-					if (memoryItem.needsInvoke) Keyword.DOES stringIn language
-					else Keyword.DOES stringIn language)) of valueKeywordKind)
-				.run {
-					if (memoryItem.needsInvoke) process(memoryItem.function.does.type, language)
-					else syntaxProcess(memoryItem.function.does.decompile(decompileLiteral))
-				}
-				.process(token(end) of valueKeywordKind)
-		else -> error("$this.process($memoryItem)")
-	}
+	syntaxProcess(script(memoryItem.reflectScriptLine))
