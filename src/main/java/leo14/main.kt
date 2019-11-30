@@ -15,7 +15,7 @@ val errorTriggerCount = 7
 
 fun main() = run(emptyCharCompiler)
 
-fun <T> run(compiler: CharCompiler<T>) {
+fun run(compiler: CharCompiler) {
 	sttyPrivateMode()
 	val undoableCompilerVariable = variable(undoable(compiler))
 	var errorToPrint: Throwable? = null
@@ -58,8 +58,7 @@ fun <T> run(compiler: CharCompiler<T>) {
 	}
 }
 
-fun <T> print(charCompiler: CharCompiler<T>) {
+fun print(charCompiler: CharCompiler) {
 	print("${ansi.clear}${ansi.home}")
-//	println("context> ${charLeo.leo.promptString}")
 	print("${charCompiler.indentColorString}")
 }

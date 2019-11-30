@@ -5,9 +5,16 @@ import leo13.fold
 import leo13.reverse
 import leo14.*
 import leo14.syntax.*
+import leo14.typed.evaluator.Evaluator
 import leo14.typed.process
 
 val types = false
+
+fun Processor<Syntax>.process(tokenReader: TokenReader): Processor<Syntax> =
+	when (tokenReader) {
+		is CompilerTokenReader -> process(tokenReader.compiler)
+		is EvaluatorTokenReader -> process(tokenReader.evaluator)
+	}
 
 fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 	when (compiler) {
@@ -25,6 +32,9 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is ForgetEverythingParserCompiler -> process(compiler.forgetEverythingParser)
 		is ForgetEverythingEndParserCompiler -> process(compiler.forgetEverythingEndParser)
 	}
+
+fun <T> Processor<Syntax>.process(evaluator: Evaluator<T>): Processor<Syntax> =
+	process(evaluator.compiler)
 
 fun <T> Processor<Syntax>.process(parser: FunctionParser<T>): Processor<Syntax> =
 	this
