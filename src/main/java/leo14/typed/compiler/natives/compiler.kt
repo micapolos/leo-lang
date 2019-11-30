@@ -12,4 +12,7 @@ fun compiler(type: Type): Compiler<Native> =
 fun compiler(compiled: Compiled<Native>, phase: Phase = Phase.COMPILER): Compiler<Native> =
 	compiler(CompiledParser(null, context, phase, compiled))
 
+fun evaluator(compiled: Compiled<Native>): Compiler<Native> =
+	compiler(compiled, Phase.EVALUATOR)
+
 val emptyCompiler: Compiler<Native> = compiler(compiled(typed()), Phase.EVALUATOR)

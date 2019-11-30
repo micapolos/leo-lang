@@ -63,9 +63,9 @@ fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Compiler<T> =
 		is UseCompiledParserParent ->
 			compiledParser.next { updateTyped { compiled.typed } }
 		is RememberDoesParserParent ->
-			compiler(MemoryItemParser(compiledParser, item(definition(type does compiled.typed, ACTION))))
+			compiler(MemoryItemParser(compiledParser, item(definition(ACTION, type does compiled.typed))))
 		is RememberIsParserParent ->
-			compiler(MemoryItemParser(compiledParser, item(definition(type does compiled.typed, VALUE))))
+			compiler(MemoryItemParser(compiledParser, item(definition(VALUE, type does compiled.typed))))
 		is MatchParserParent ->
 			compiler(matchParser.plus(name, compiled))
 	}

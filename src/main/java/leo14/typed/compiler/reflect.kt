@@ -24,8 +24,8 @@ val <T> Memory<T>.reflectScriptLine get() =
 
 val <T> MemoryItem<T>.reflectScriptLine get() =
 	"item" lineTo script(
-		definition.reflectScriptLine,
-		state.reflectScriptLine)
+		state.reflectScriptLine,
+		definition.reflectScriptLine)
 
 val MemoryItemState.reflectScriptLine
 	get() =
@@ -39,8 +39,8 @@ val MemoryItemState.reflectScriptLine
 val <T> Definition<T>.reflectScriptLine
 	get() =
 		"value" lineTo script(
-			function.reflectScriptLine,
-			kind.reflectScriptLine)
+			kind.reflectScriptLine,
+			function.reflectScriptLine)
 
 val Definition.Kind.reflectScriptLine
 	get() =
@@ -104,7 +104,7 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is CompiledParserCompiler -> compiledParser.reflectScriptLine
 					is DeleteParserCompiler -> null
 					is NothingParserCompiler -> null
-					is RememberParserCompiler -> null
+					is RememberParserCompiler -> memoryItemParser.reflectScriptLine
 					is TypeParserCompiler -> typeParser.reflectScriptLine
 					is MatchParserCompiler -> null
 					is ScriptParserCompiler -> null
@@ -118,3 +118,9 @@ val <T> CharCompiler<T>.reflectScriptLine get() =
 		"compiler" lineTo script(
 			compiler.reflectScriptLine,
 			tokenParser.reflectScriptLine))
+
+val <T> MemoryItemParser<T>.reflectScriptLine
+	get() =
+		"parser" lineTo script(
+			"parent" lineTo script(parentCompiledParser.reflectScriptLine),
+			memoryItem.reflectScriptLine)

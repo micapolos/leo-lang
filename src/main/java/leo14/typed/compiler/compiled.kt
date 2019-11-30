@@ -29,8 +29,8 @@ fun <T> Compiled<T>.beginGives(type: Type): Compiled<T> =
 			plus(
 				item(
 					definition(
-						type("given") does typed(arg0(), type("given" lineTo type)),
-						ACTION)))
+						ACTION,
+						type("given") does typed(arg0(), type("given" lineTo type)))))
 		}
 		.updateLocalIndex { next }
 
@@ -50,10 +50,14 @@ fun <T> Compiled<T>.resolve(line: TypedLine<T>, context: Context<T>): Compiled<T
 
 val <T> Compiled<T>.resolveForEnd: Compiled<T>
 	get() =
-		compiled(memory.ret(typed))
+		compiled(memory.ret(typed, localIndex))
+
+val <T> Compiled<T>.typedForEval: Typed<T>
+	get() =
+		memory.resolveForEval(typed.term) of typed.type
 
 fun <T> Compiled<T>.eval(evaluator: Evaluator<T>) =
-	updateTyped { resolveForEnd.typed.term.eval(evaluator) of typed.type }
+	updateTyped { typedForEval.term.eval(evaluator) of typed.type }
 
 val <T> Compiled<T>.use
 	get() =
@@ -62,8 +66,8 @@ val <T> Compiled<T>.use
 				plus(
 					item(
 						definition(
-							type("used") does typed("used" lineTo resolveForEnd.typed),
-							VALUE)))
+							VALUE,
+							type("used") does typed("used" lineTo resolveForEnd.typed))))
 			}
 			.updateLocalIndex { next }
 
