@@ -5,7 +5,6 @@ import leo13.fold
 import leo13.reverse
 import leo14.*
 import leo14.syntax.*
-import leo14.typed.DecompileLiteral
 import leo14.typed.process
 
 val types = false
@@ -18,7 +17,7 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is CompiledParserCompiler -> processWithTypes(compiler.compiledParser)
 		is DeleteParserCompiler -> process(compiler.deleteParser)
 		is NothingParserCompiler -> process(compiler.nothingParser)
-		is RememberParserCompiler -> process(compiler.definitionParser)
+		is RememberParserCompiler -> process(compiler.memoryItemParser)
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
 		is ScriptParserCompiler -> process(compiler.scriptParser)
@@ -210,18 +209,17 @@ fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> 
 		is ForgetTypeBeginner -> this
 	}
 
-fun <T> Processor<Syntax>.process(parser: DefinitionParser<T>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: MemoryItemParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(Keyword.REMEMBER stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
-		.process(parser.definition, parser.parentCompiledParser.context.language, parser.parentCompiledParser.context.decompileLiteral)
+		.process(parser.memoryItem, parser.parentCompiledParser.context.language)
 
 fun <T> Processor<Syntax>.process(
-	definition: Definition<T>,
-	language: Language,
-	decompileLiteral: DecompileLiteral<T>): Processor<Syntax> =
+	memoryItem: MemoryItem<T>,
+	language: Language): Processor<Syntax> =
 	this
-		.process(definition.function.takes, language)
+		.process(memoryItem.key.type, language)
 		.process(token(begin(Keyword.DOES stringIn language)) of valueKeywordKind)
-		.process(definition.function.does.type, language)
+		.process(memoryItem.value.type, language)
 		.process(token(end) of valueKeywordKind)

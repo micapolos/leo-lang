@@ -2,20 +2,19 @@ package leo14.typed.compiler
 
 import leo.base.orIfNull
 import leo13.fold
+import leo13.int
 import leo13.isEmpty
 import leo14.*
 import leo14.parser.reflectScriptLine
-import leo14.typed.compiler.Definition.Kind.ACTION
-import leo14.typed.compiler.Definition.Kind.VALUE
-import leo14.typed.compiler.MemoryItemState.FORGOTTEN
-import leo14.typed.compiler.MemoryItemState.REMEMBERED
 import leo14.typed.reflectScriptLine
+import leo14.typed.script
 import leo14.typed.scriptLine
 
 val <T> Compiled<T>.reflectScriptLine get() =
 	"compiled" lineTo script(
 		memory.reflectScriptLine,
-		typed.reflectScriptLine)
+		typed.reflectScriptLine,
+		"locals" lineTo script(literal(localMemorySize.int)))
 
 val <T> Memory<T>.reflectScriptLine get() =
 	"memory" lineTo
@@ -24,32 +23,26 @@ val <T> Memory<T>.reflectScriptLine get() =
 
 val <T> MemoryItem<T>.reflectScriptLine get() =
 	"item" lineTo script(
-		state.reflectScriptLine,
-		definition.reflectScriptLine)
+		key.reflectScriptLine,
+		value.reflectScriptLine)
 
-val MemoryItemState.reflectScriptLine
+val TypeKey.reflectScriptLine
 	get() =
-		"state" lineTo script(
-			when (this) {
-				REMEMBERED -> "remembered"
-				FORGOTTEN -> "forgotten"
-			}
-		)
+		"key" lineTo type.script
 
-val <T> Definition<T>.reflectScriptLine
+val <T> MemoryValue<T>.reflectScriptLine
 	get() =
 		"value" lineTo script(
-			kind.reflectScriptLine,
-			function.reflectScriptLine)
-
-val Definition.Kind.reflectScriptLine
-	get() =
-		"kind" lineTo script(
 			when (this) {
-				VALUE -> "value"
-				ACTION -> "action"
-		}
-	)
+				is ArgumentMemoryValue -> "argument" lineTo type.script
+				is BindingMemoryValue -> binding.reflectScriptLine
+			})
+
+val <T> MemoryBinding<T>.reflectScriptLine
+	get() =
+		"binding" lineTo script(
+			"kind" lineTo script(if (isAction) "action" else "constant"),
+			typed.reflectScriptLine)
 
 val Phase.reflectStringLine get() =
 	"phase" lineTo script(
@@ -104,7 +97,7 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is CompiledParserCompiler -> compiledParser.reflectScriptLine
 					is DeleteParserCompiler -> null
 					is NothingParserCompiler -> null
-					is RememberParserCompiler -> definitionParser.reflectScriptLine
+					is RememberParserCompiler -> memoryItemParser.reflectScriptLine
 					is TypeParserCompiler -> typeParser.reflectScriptLine
 					is MatchParserCompiler -> null
 					is ScriptParserCompiler -> null
@@ -119,8 +112,8 @@ val <T> CharCompiler<T>.reflectScriptLine get() =
 			compiler.reflectScriptLine,
 			tokenParser.reflectScriptLine))
 
-val <T> DefinitionParser<T>.reflectScriptLine
+val <T> MemoryItemParser<T>.reflectScriptLine
 	get() =
 		"parser" lineTo script(
 			"parent" lineTo script(parentCompiledParser.reflectScriptLine),
-			definition.reflectScriptLine)
+			memoryItem.reflectScriptLine)

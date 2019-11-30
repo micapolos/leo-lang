@@ -1,6 +1,7 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
+import leo13.index1
 import leo14.lambda.arg0
 import leo14.lambda.fn
 import leo14.lambda.invoke
@@ -26,10 +27,22 @@ class CompiledTest {
 			arg0<Native>() of numberType,
 			memory(
 				item(
-					definition(
-						Definition.Kind.VALUE,
-						type("zero") does (term(native(1)) of numberType)))))
+					key(type("zero")),
+					value(memoryBinding(term(native(1)) of numberType, isAction = false)))))
 			.typedForEval
+			.assertEqualTo(fn(arg0<Native>()).invoke(term(native(1))) of numberType)
+	}
+
+	@Test
+	fun typedForEnd() {
+		compiled(
+			arg0<Native>() of numberType,
+			memory(
+				item(
+					key(type("zero")),
+					value(memoryBinding(term(native(1)) of numberType, isAction = false)))),
+			index1)
+			.typedForEnd
 			.assertEqualTo(fn(arg0<Native>()).invoke(term(native(1))) of numberType)
 	}
 }

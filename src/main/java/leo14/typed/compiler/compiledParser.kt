@@ -6,8 +6,6 @@ import leo13.stack
 import leo14.*
 import leo14.typed.*
 import leo14.typed.Function
-import leo14.typed.compiler.Definition.Kind.ACTION
-import leo14.typed.compiler.Definition.Kind.VALUE
 
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
@@ -50,24 +48,24 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 		is EndToken -> end
 	} ?: error("$this.parse($token)")
 
-fun <T> CompiledParserParent<T>.end(compiled: Compiled<T>): Compiler<T> =
+fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 	when (this) {
 		is FieldCompiledParserParent ->
-			compiler(compiledParser.resolve(line(name fieldTo compiled.typed)))
+			compiler(compiledParser.resolve(line(name fieldTo typed)))
 		is FunctionDoesParserParent ->
-			compiler(FunctionParser(compiledParser, type does compiled.typed))
+			compiler(FunctionParser(compiledParser, type does typed))
 		is FunctionGiveParserParent ->
-			compiledParser.next { updateTyped { function.give(compiled.typed) } }
+			compiledParser.next { updateTyped { function.give(typed) } }
 		is GiveCompiledParserParent ->
-			compiledParser.next { updateTyped { compiled.typed } }
+			compiledParser.next { updateTyped { typed } }
 		is UseCompiledParserParent ->
-			compiledParser.next { updateTyped { compiled.typed } }
+			compiledParser.next { updateTyped { typed } }
 		is RememberDoesParserParent ->
-			compiler(DefinitionParser(compiledParser, definition(ACTION, type does compiled.typed)))
+			compiler(MemoryItemParser(compiledParser, item(key(type), value(memoryBinding(typed, isAction = true)))))
 		is RememberIsParserParent ->
-			compiler(DefinitionParser(compiledParser, definition(VALUE, type does compiled.typed)))
+			compiler(MemoryItemParser(compiledParser, item(key(type), value(memoryBinding(typed, isAction = false)))))
 		is MatchParserParent ->
-			compiler(matchParser.plus(name, compiled))
+			compiler(matchParser.plus(name, typed))
 	}
 
 fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
@@ -116,7 +114,7 @@ fun <T> CompiledParser<T>.plus(script: Script): CompiledParser<T> =
 
 val <T> CompiledParser<T>.forgetEverything: CompiledParser<T>
 	get() =
-		updateCompiled { updateMemory { forgetEverything } }
+		updateCompiled { forgetEverything }
 
 val <T> CompiledParser<T>.decompile: Script
 	get() =
@@ -196,4 +194,4 @@ fun <T> CompiledParser<T>.begin(string: String) =
 
 val <T> CompiledParser<T>.end
 	get() =
-		parent?.end(compiled.resolveForEnd)
+		parent?.end(compiled.typedForEnd)

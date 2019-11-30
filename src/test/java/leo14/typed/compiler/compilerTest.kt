@@ -1,6 +1,7 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
+import leo13.index1
 import leo14.*
 import leo14.lambda.*
 import leo14.native.Native
@@ -179,9 +180,26 @@ class CompilerTest {
 						typed("foo"),
 						memory(
 							item(
-								definition(
-									Definition.Kind.VALUE,
-									type("zero") does (term(native(1)) of numberType)))))))
+								key(type("zero")),
+								value(memoryBinding(term(native(1)) of numberType, isAction = false)))),
+						localMemorySize = index1)))
+	}
+
+	@Test
+	fun compiledFieldRememberIsInvoke() {
+		compiler(compiled())
+			.parse(
+				script(
+					"my" lineTo script(
+						"remember" lineTo script(
+							"zero" lineTo script(),
+							"is" lineTo script(literal(0))),
+						"zero" lineTo script())))
+			.assertEqualTo(
+				compiler(
+					compiled(
+						fn(arg0<Native>()).invoke(term(native(0))) of type("my" lineTo numberType),
+						memory())))
 	}
 
 	@Test
@@ -190,9 +208,11 @@ class CompilerTest {
 			typed(),
 			memory(
 				item(
-					definition(
-						Definition.Kind.VALUE,
-						type("zero") does (term(native(1)) of numberType)))))
+					key(type("zero")),
+					value(
+						memoryBinding(
+							term(native(1)) of numberType,
+							isAction = false)))))
 
 		compiler(compiled)
 			.parse(script("zero"))
@@ -209,9 +229,11 @@ class CompilerTest {
 			typed(),
 			memory(
 				item(
-					definition(
-						Definition.Kind.VALUE,
-						type("zero") does (term(native(1)) of numberType)))))
+					key(type("zero")),
+					value(
+						memoryBinding(
+							term(native(1)) of numberType,
+							isAction = false)))))
 
 		evaluator(compiled)
 			.parse(script("zero"))
@@ -236,9 +258,74 @@ class CompilerTest {
 						typed("foo"),
 						memory(
 							item(
-								definition(
-									Definition.Kind.ACTION,
-									type("zero") does typed(fn(term(native(0))), numberType)))))))
+								key(type("zero")),
+								value(
+									memoryBinding(
+										term(native(0)) of numberType,
+										isAction = true)))),
+						localMemorySize = index1)))
+	}
+
+	@Test
+	fun compiledRememberDoesGiven() {
+		compiler(compiled(typed("foo")))
+			.parse(
+				script(
+					"remember" lineTo script(
+						"number" lineTo script(),
+						"does" lineTo script("given"))))
+			.assertEqualTo(
+				compiler(
+					compiled(
+						typed("foo"),
+						memory(
+							item(
+								key(numberType),
+								value(
+									memoryBinding(
+										typed(arg0(), type("given" lineTo numberType)),
+										isAction = true)))),
+						localMemorySize = index1)))
+	}
+
+	@Test
+	fun compiledRememberDoesGivenInvoke() {
+		val compiled =
+			compiled<Native>(
+				typed(),
+				memory(
+					item(
+						key(numberType),
+						value(
+							memoryBinding(
+								typed(arg0(), type("given" lineTo numberType)),
+								isAction = true)))))
+
+		compiler(compiled)
+			.parse(script(literal(123)))
+			.assertEqualTo(
+				compiler(
+					compiled.updateTyped {
+						arg0<Native>().invoke(term(native(123))) of type("given" lineTo numberType)
+					}))
+	}
+
+	@Test
+	fun compiledFieldRememberDoesGivenInvoke() {
+		compiler(compiled())
+			.parse(
+				script(
+					"my" lineTo script(
+						"remember" lineTo script(
+							"number" lineTo script(),
+							"does" lineTo script("given")),
+						line(literal(123)))))
+			.assertEqualTo(
+				compiler(
+					compiled(
+						fn(arg0<Native>()).invoke(term(native(123))) of
+							type("my" lineTo type("given" lineTo numberType))
+					)))
 	}
 
 	@Test
@@ -247,9 +334,11 @@ class CompilerTest {
 			typed(),
 			memory(
 				item(
-					definition(
-						Definition.Kind.ACTION,
-						type("zero") does (fn(term(native(0))) of numberType)))))
+					key(type("zero")),
+					value(
+						memoryBinding(
+							term(native(0)) of numberType,
+							isAction = true)))))
 
 		compiler(compiled)
 			.parse(script("zero"))
@@ -267,9 +356,11 @@ class CompilerTest {
 				typed(),
 				memory(
 					item(
-						definition(
-							Definition.Kind.ACTION,
-							type("zero") does (fn(term(native(0))) of numberType)))))
+						key(type("zero")),
+						value(
+							memoryBinding(
+								fn(term(native(0))) of numberType,
+								isAction = true)))))
 
 		evaluator(compiled)
 			.parse(script("zero"))
@@ -287,10 +378,11 @@ class CompilerTest {
 				typed(),
 				memory(
 					item(
-						MemoryItemState.REMEMBERED,
-						definition(
-							Definition.Kind.VALUE,
-							type("zero") does typed())))))
+						key(type("zero")),
+						value(
+							memoryBinding(
+								typed(),
+								isAction = false))))))
 			.parse(script("forget" lineTo script("zero")))
 			.assertEqualTo(
 				compiler(
@@ -298,10 +390,17 @@ class CompilerTest {
 						typed(),
 						memory(
 							item(
-								MemoryItemState.FORGOTTEN,
-								definition(
-									Definition.Kind.VALUE,
-									type("zero") does typed()))))))
+								key(type("zero")),
+								value(
+									memoryBinding(
+										typed(),
+										isAction = false))),
+							item(
+								key(type("zero")),
+								value(
+									memoryBinding(
+										arg0<Native>() of type("zero"),
+										isAction = true)))))))
 	}
 
 	@Test
@@ -311,10 +410,11 @@ class CompilerTest {
 				typed(),
 				memory(
 					item(
-						MemoryItemState.REMEMBERED,
-						definition(
-							Definition.Kind.VALUE,
-							type("zero") does typed())))))
+						key(type("zero")),
+						value(
+							memoryBinding(
+								typed(),
+								isAction = false))))))
 			.parse(script("forget" lineTo script("one")))
 			.assertEqualTo(
 				compiler(
@@ -322,10 +422,11 @@ class CompilerTest {
 						typed(),
 						memory(
 							item(
-								MemoryItemState.REMEMBERED,
-								definition(
-									Definition.Kind.VALUE,
-									type("zero") does typed()))))))
+								key(type("zero")),
+								value(
+									memoryBinding(
+										typed(),
+										isAction = false)))))))
 	}
 
 	@Test

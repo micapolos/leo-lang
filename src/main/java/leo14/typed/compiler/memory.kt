@@ -1,30 +1,58 @@
 package leo14.typed.compiler
 
-import leo.base.notNullIf
 import leo.base.orNullIf
 import leo13.*
-import leo14.lambda.Term
-import leo14.lambda.fn
-import leo14.lambda.invoke
+import leo14.lambda.*
 import leo14.typed.Type
 import leo14.typed.Typed
-import leo14.typed.compiler.MemoryItemState.FORGOTTEN
-import leo14.typed.compiler.MemoryItemState.REMEMBERED
+import leo14.typed.of
 
-enum class MemoryItemState { REMEMBERED, FORGOTTEN }
 data class Memory<T>(val itemStack: Stack<MemoryItem<T>>)
-data class MemoryItem<T>(val state: MemoryItemState, val definition: Definition<T>)
+
+data class MemoryItem<T>(val key: TypeKey, val value: MemoryValue<T>)
+
+data class TypeKey(val type: Type)
+sealed class MemoryValue<T>
+data class ArgumentMemoryValue<T>(val type: Type) : MemoryValue<T>()
+data class BindingMemoryValue<T>(val binding: MemoryBinding<T>) : MemoryValue<T>()
+
+data class MemoryBinding<T>(val typed: Typed<T>, val isAction: Boolean)
+
+fun <T> argumentMemoryValue(type: Type): MemoryValue<T> = ArgumentMemoryValue(type)
+fun <T> value(binding: MemoryBinding<T>): MemoryValue<T> = BindingMemoryValue(binding)
+
+fun <T> memoryBinding(typed: Typed<T>, isAction: Boolean) = MemoryBinding(typed, isAction)
+fun key(type: Type) = TypeKey(type)
+
+fun <T> MemoryValue<T>.resolve(index: Index, term: Term<T>): Typed<T>? =
+	arg<T>(index)
+		.let { indexTerm ->
+			when (this) {
+				is ArgumentMemoryValue -> indexTerm of type
+				is BindingMemoryValue -> term of binding.typed.type
+			}
+		}
+
+val <T> MemoryValue<T>.type
+	get() =
+		when (this) {
+			is ArgumentMemoryValue -> type
+			is BindingMemoryValue -> binding.typed.type
+		}
+
+fun <T> Term<T>.resolveForEnd(value: MemoryValue<T>): Term<T> =
+	when (value) {
+		is ArgumentMemoryValue -> this
+		is BindingMemoryValue -> fn(this).invoke(value.binding.typed.term)
+	}
 
 val <T> Stack<MemoryItem<T>>.memory get() = Memory(this)
 
 fun <T> memory(vararg items: MemoryItem<T>) =
 	stack(*items).memory
 
-fun <T> item(state: MemoryItemState, value: Definition<T>) =
-	MemoryItem(state, value)
-
-fun <T> item(value: Definition<T>) =
-	item(REMEMBERED, value)
+fun <T> item(key: TypeKey, value: MemoryValue<T>) =
+	MemoryItem(key, value)
 
 fun <T> Memory<T>.plus(item: MemoryItem<T>) =
 	Memory(itemStack.push(item))
@@ -42,42 +70,24 @@ fun <T> Memory<T>.resolve(typed: Typed<T>): Typed<T>? =
 		}
 
 fun <T> MemoryItem<T>.matches(type: Type): Boolean =
-	when (state) {
-		REMEMBERED -> definition.matches(type)
-		FORGOTTEN -> false
-	}
+	key.type == type
 
 fun <T> MemoryItem<T>.resolve(index: Index, term: Term<T>): Typed<T>? =
-	when (state) {
-		REMEMBERED -> definition.resolve(index, term)
-		FORGOTTEN -> null
-	}
+	value.resolve(index, term)
 
 fun <T> Memory<T>.resolveForEval(term: Term<T>): Term<T> =
-	term.fold(itemStack.reverse) { fn(this).invoke(it.definition.function.does.term) }
-
-fun <T> Memory<T>.ret(typed: Typed<T>, index: Index): Typed<T> =
-	typed.fold(itemStack.takeOrNull(index)!!.reverse) { ret(it) }
-
-fun <T> Typed<T>.ret(item: MemoryItem<T>): Typed<T> =
-	when (item.state) {
-		REMEMBERED -> ret(item.definition)
-		FORGOTTEN -> this
+	term.fold(itemStack.reverse) {
+		resolveForEnd(it.value)
 	}
 
-fun <T> Memory<T>.forget(type: Type): Memory<T> =
-	itemStack
-		.updateFirst { forgetOrNull(type) }
-		?.memory
-		?: this
+fun <T> Memory<T>.resolveForEnd(term: Term<T>, index: Index): Term<T> =
+	term.fold(itemStack.takeOrNull(index)!!.reverse) {
+		resolveForEnd(it.value)
+	}
 
-val <T> MemoryItem<T>.forget
-	get() =
-		copy(state = FORGOTTEN)
-
-fun <T> MemoryItem<T>.forgetOrNull(type: Type): MemoryItem<T>? =
-	notNullIf(definition.matches(type)) { forget }
+fun <T> Memory<T>.forget(key: TypeKey): Memory<T> =
+	plus(item(key, value(memoryBinding(arg0<T>() of key.type, isAction = true))))
 
 val <T> Memory<T>.forgetEverything
 	get() =
-		itemStack.map { forget }.memory
+		fold(itemStack.reverse) { forget(it.key) }

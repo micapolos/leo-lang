@@ -120,6 +120,6 @@ fun <T> TypeParserParent<T>.end(type: Type): Compiler<T>? =
 		is AsTypeParserParent ->
 			compiledParser.next { updateTyped { `as`(type) } }
 		is ForgetTypeParserParent ->
-			compiledParser.next { updateMemory { forget(type) } }
+			compiledParser.next { forget(key(type)) }
 	}
 

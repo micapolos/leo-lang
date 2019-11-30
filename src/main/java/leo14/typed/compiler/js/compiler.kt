@@ -22,8 +22,7 @@ val Script.compileTyped: Typed<Expr>
 			.compiledParser
 			.apply { if (parent != null) error("not top level") }
 			.compiled
-			.resolveForEnd
-			.typed
+			.typedForEnd
 
 val Typed<Expr>.expr: Expr
 	get() =

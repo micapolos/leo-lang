@@ -7,6 +7,7 @@ import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
 import leo14.typed.Line
+import leo14.typed.Typed
 import leo14.typed.lineTo
 
 data class MatchParser<T>(
@@ -31,7 +32,7 @@ fun <T> MatchParser<T>.parse(token: Token): Compiler<T> =
 			parentCompiledParser.next { updateTyped { match.end() } }
 	} ?: error("$this.parse($token)")
 
-fun <T> MatchParser<T>.plus(name: String, compiled: Compiled<T>): MatchParser<T> =
+fun <T> MatchParser<T>.plus(name: String, typed: Typed<T>): MatchParser<T> =
 	copy(
-		match = Case(match, compiled.typed).end(),
-		caseLineStack = caseLineStack.push(name lineTo compiled.typed.type))
+		match = Case(match, typed).end(),
+		caseLineStack = caseLineStack.push(name lineTo typed.type))

@@ -29,7 +29,7 @@ fun <T> line(typed: TypedChoice<T>): TypedLine<T> = typed.term of line(typed.cho
 fun <T> typed() = id<T>() of emptyType
 val <T> Typed<T>.isEmpty get() = this == typed<T>()
 
-fun <T> typed(line: TypedLine<T>, vararg lines: TypedLine<T>) =
+fun <T> typed(line: TypedLine<T>, vararg lines: TypedLine<T>): Typed<T> =
 	typed(line).fold(lines) { plus(it) }
 
 fun <T> typed(field: TypedField<T>, vararg fields: TypedField<T>) =
