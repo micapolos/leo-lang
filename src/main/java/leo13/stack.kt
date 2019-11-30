@@ -81,6 +81,9 @@ tailrec fun <T, R : Any> Stack<T>.mapFirst(fn: T.() -> R?): R? =
 		is LinkStack -> link.value.fn() ?: link.stack.mapFirst(fn)
 	}
 
+fun <T : Any> Stack<T>.first(fn: (T) -> Boolean): T? =
+	mapFirst { notNullIf(fn(this)) { this } }
+
 fun <T: Any> Stack<T>.updateFirst(fn: T.() -> T?): Stack<T>? =
 	when (this) {
 		is EmptyStack -> null

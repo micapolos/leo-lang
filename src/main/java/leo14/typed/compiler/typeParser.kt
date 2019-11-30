@@ -62,8 +62,8 @@ fun <T> TypeParser<T>.plus(line: Line): TypeParser<T> =
 fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Compiler<T>? =
 	when (this) {
 		is ArrowGivingTypeBeginner ->
-			when (begin.string) {
-				Keyword.GIVING stringIn language ->
+			when (begin.string keywordOrNullIn language) {
+				Keyword.GIVING ->
 					compiler(
 						TypeParser(
 							ArrowGivingTypeParserParent(typeParser, type),
@@ -74,8 +74,8 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 				else -> null
 			}
 		is FunctionGivesTypeBeginner ->
-			when (begin.string) {
-				Keyword.DOES stringIn language ->
+			when (begin.string keywordOrNullIn language) {
+				Keyword.DOES ->
 					compiler(
 						CompiledParser(
 							FunctionDoesParserParent(compiledParser, type),
@@ -85,15 +85,15 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 				else -> null
 			}
 		is RememberTypeBeginner ->
-			when (begin.string) {
-				Keyword.IS stringIn language ->
+			when (begin.string keywordOrNullIn language) {
+				Keyword.IS ->
 					compiler(
 						CompiledParser(
 							RememberIsParserParent(compiledParser, type),
 							compiledParser.context,
 							compiledParser.phase,
 							compiledParser.compiled.begin))
-				Keyword.DOES stringIn language ->
+				Keyword.DOES ->
 					compiler(
 						CompiledParser(
 							RememberDoesParserParent(compiledParser, type),
@@ -103,8 +103,8 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 				else -> null
 			}
 		is ForgetTypeBeginner ->
-			when (begin.string) {
-				Keyword.EVERYTHING stringIn language -> ForgetEverythingParserCompiler(ForgetEverythingParser(compiledParser))
+			when (begin.string keywordOrNullIn language) {
+				Keyword.EVERYTHING -> ForgetEverythingParserCompiler(ForgetEverythingParser(compiledParser))
 				else -> null
 			}
 	}

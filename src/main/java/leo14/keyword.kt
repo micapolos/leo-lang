@@ -1,5 +1,8 @@
 package leo14
 
+import leo13.Stack
+import leo13.stack
+
 enum class Keyword {
 	ARROW,
 	AS,
@@ -145,3 +148,5 @@ infix fun Keyword.stringIn(language: Language) =
 		Language.POLISH -> polishString
 		Language.GERMAN -> germanString
 	}
+
+val keywordStack: Stack<Keyword> = stack(*Keyword.values())

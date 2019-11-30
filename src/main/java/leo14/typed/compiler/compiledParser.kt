@@ -28,36 +28,36 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 		is LiteralToken ->
 			compiler(plus(token.literal))
 		is BeginToken ->
-			when (token.begin.string) {
-				Keyword.FUNCTION stringIn context.language ->
+			when (token.begin.string.keywordOrNullIn(context.language)) {
+				Keyword.FUNCTION ->
 					compiler(TypeParser(null, FunctionGivesTypeBeginner(this), context.language, context.typeContext, type()))
-				Keyword.AS stringIn context.language ->
+				Keyword.AS ->
 					compiler(TypeParser(AsTypeParserParent(this), null, context.language, context.typeContext, type()))
-				Keyword.DO stringIn context.language ->
+				Keyword.DO ->
 					compiled.typed.function.let { action ->
 						compiler(CompiledParser(FunctionGiveParserParent(this, action), context, phase, compiled.begin))
 					}
-				Keyword.GIVE stringIn context.language ->
+				Keyword.GIVE ->
 					compiler(CompiledParser(GiveCompiledParserParent(this), context, phase, compiled.begin))
-				Keyword.DELETE stringIn context.language ->
+				Keyword.DELETE ->
 					compiler(DeleteParser(this))
-				Keyword.NOTHING stringIn context.language ->
+				Keyword.NOTHING ->
 					compiler(NothingParser(this))
-				Keyword.MATCH stringIn context.language ->
+				Keyword.MATCH ->
 					compiler(MatchParser(this, stack(), compiled.typed.beginMatch()))
-				Keyword.MAKE stringIn context.language ->
+				Keyword.MAKE ->
 					compiler(ScriptParser(MakeScriptParserParent(this), script()))
-				Keyword.REMEMBER stringIn context.language ->
+				Keyword.REMEMBER ->
 					compiler(TypeParser(null, RememberTypeBeginner(this), context.language, context.typeContext, type()))
-				Keyword.FORGET stringIn context.language ->
+				Keyword.FORGET ->
 					compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.language, context.typeContext, type()))
-				Keyword.SCRIPT stringIn context.language ->
+				Keyword.SCRIPT ->
 					notNullIf(phase == Phase.EVALUATOR) {
 						compiler(ScriptParser(CompiledScriptParserParent(this), script()))
 					}
-				Keyword.LEONARDO stringIn context.language ->
+				Keyword.LEONARDO ->
 					compiler(LeonardoParser(this))
-				Keyword.USE stringIn context.language ->
+				Keyword.USE ->
 					compiler(use)
 				else ->
 					CompiledParserCompiler(
