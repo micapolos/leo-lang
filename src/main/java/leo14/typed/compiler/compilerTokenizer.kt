@@ -37,6 +37,11 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 	}
 
 fun <T> Processor<Syntax>.process(evaluator: Evaluator<T>): Processor<Syntax> =
+// TODO: Fuck, we lost printing evaluated values
+//	when (evaluator.compiler) {
+//		is CompiledParserCompiler -> syntaxProcess(evaluator.compiler.compiledParser.decompile)
+//		else -> process(evaluator.compiler)
+//	}
 	process(evaluator.compiler)
 
 fun <T> Processor<Syntax>.process(parser: FunctionParser<T>): Processor<Syntax> =
