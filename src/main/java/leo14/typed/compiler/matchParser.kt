@@ -22,10 +22,9 @@ fun <T> MatchParser<T>.parse(token: Token): Compiler<T> =
 		is BeginToken -> match.beginCase(token.begin.string)
 			.let { case ->
 				compiler(
-					CompiledParser(
-						MatchParserParent(copy(match = case.match), token.begin.string),
-						parentCompiledParser.context,
-						parentCompiledParser.compiled.beginGives(parentCompiledParser.compiled.typed.type)))
+					parentCompiledParser
+						.begin(MatchParserParent(copy(match = case.match), token.begin.string))
+						.updateCompiled { plusGiven(parentCompiledParser.compiled.typed.type) })
 			}
 		is EndToken ->
 			parentCompiledParser.next { updateTyped { match.end() } }

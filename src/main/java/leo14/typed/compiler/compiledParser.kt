@@ -6,9 +6,11 @@ import leo13.stack
 import leo14.*
 import leo14.typed.*
 import leo14.typed.Function
+import leo14.typed.evaluator.Evaluator
 
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
+	val sibling: CompiledParserSibling<T>?,
 	val context: Context<T>,
 	val compiled: Compiled<T>)
 
@@ -21,6 +23,8 @@ data class UseCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : C
 data class RememberDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class RememberIsParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class MatchParserParent<T>(val matchParser: MatchParser<T>, val name: String) : CompiledParserParent<T>()
+
+data class CompiledParserSibling<T>(val evaluator: Evaluator<T>)
 
 fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
@@ -113,10 +117,7 @@ val <T> CompiledParser<T>.decompile: Script
 
 val <T> CompiledParser<T>.use
 	get(): CompiledParser<T> =
-		CompiledParser(
-			UseCompiledParserParent(this),
-			context,
-			compiled.use)
+		begin(UseCompiledParserParent(this)).updateCompiled { plusUsed }
 
 val <T> CompiledParser<T>.beginFunction
 	get() =
@@ -129,12 +130,12 @@ val <T> CompiledParser<T>.beginAs
 val <T> CompiledParser<T>.beginDo
 	get() =
 		compiled.typed.function.let { action ->
-			compiler(CompiledParser(FunctionGiveParserParent(this, action), context, compiled.begin))
+			compiler(begin(FunctionGiveParserParent(this, action)))
 		}
 
 val <T> CompiledParser<T>.beginGive
 	get() =
-		compiler(CompiledParser(GiveCompiledParserParent(this), context, compiled.begin))
+		compiler(begin(GiveCompiledParserParent(this)))
 
 val <T> CompiledParser<T>.beginDelete
 	get() =
@@ -170,11 +171,15 @@ val <T> CompiledParser<T>.beginUse
 
 fun <T> CompiledParser<T>.begin(string: String) =
 	CompiledParserCompiler(
-		CompiledParser(
-			FieldCompiledParserParent(this, string),
-			context,
-			compiled.begin))
+		begin(FieldCompiledParserParent(this, string)))
 
 val <T> CompiledParser<T>.end
 	get() =
 		parent?.end(compiled.typedForEnd)
+
+fun <T> CompiledParser<T>.begin(parent: CompiledParserParent<T>): CompiledParser<T> =
+	CompiledParser(
+		parent,
+		null,
+		context,
+		compiled.begin)

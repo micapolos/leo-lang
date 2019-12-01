@@ -10,6 +10,6 @@ fun compiler(type: Type): Compiler<Native> =
 	compiler(TypeParser(null, null, defaultLanguage, nativeTypeContext, type))
 
 fun compiler(compiled: Compiled<Native>): Compiler<Native> =
-	compiler(CompiledParser(null, context, compiled))
+	compiler(CompiledParser(null, null, context, compiled))
 
 val emptyCompiler: Compiler<Native> = compiler(compiled(typed()))

@@ -77,26 +77,20 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 			when (begin.string keywordOrNullIn language) {
 				Keyword.DOES ->
 					compiler(
-						CompiledParser(
-							FunctionDoesParserParent(compiledParser, type),
-							compiledParser.context,
-							compiledParser.compiled.beginGives(type)))
+						compiledParser
+							.begin(FunctionDoesParserParent(compiledParser, type))
+							.updateCompiled { plusGiven(type) })
 				else -> null
 			}
 		is RememberTypeBeginner ->
 			when (begin.string keywordOrNullIn language) {
 				Keyword.IS ->
-					compiler(
-						CompiledParser(
-							RememberIsParserParent(compiledParser, type),
-							compiledParser.context,
-							compiledParser.compiled.begin))
+					compiler(compiledParser.begin(RememberIsParserParent(compiledParser, type)))
 				Keyword.DOES ->
 					compiler(
-						CompiledParser(
-							RememberDoesParserParent(compiledParser, type),
-							compiledParser.context,
-							compiledParser.compiled.beginGives(type)))
+						compiledParser
+							.begin(RememberDoesParserParent(compiledParser, type))
+							.updateCompiled { plusGiven(type) })
 				else -> null
 			}
 		is ForgetTypeBeginner ->
