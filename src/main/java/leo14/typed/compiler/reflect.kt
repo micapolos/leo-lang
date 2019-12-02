@@ -24,10 +24,6 @@ val <T> MemoryItem<T>.reflectScriptLine get() =
 		key.reflectScriptLine,
 		value.reflectScriptLine)
 
-val TypeKey.reflectScriptLine
-	get() =
-		"key" lineTo type.script
-
 val <T> MemoryValue<T>.reflectScriptLine
 	get() =
 		"value" lineTo script(
