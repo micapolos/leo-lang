@@ -4,15 +4,15 @@ import leo13.Stack
 import leo13.stack
 
 enum class Keyword {
+	APPLY,
 	ARROW,
 	AS,
 	BIT,
 	BYTE,
 	CHOICE,
 	COMMENT,
+	DEFINE,
 	DELETE,
-	DO,
-	DOES,
 	DOING,
 	EIGHT,
 	EVERYTHING,
@@ -23,6 +23,7 @@ enum class Keyword {
 	FOURTH,
 	FUNCTION,
 	GIVE,
+	GIVES,
 	GIVING,
 	IS,
 	IT,
@@ -35,7 +36,6 @@ enum class Keyword {
 	NUMBER,
 	ONE,
 	PREVIOUS,
-	REMEMBER,
 	SCRIPT,
 	SECOND,
 	SEVENTH,
@@ -56,15 +56,15 @@ val Keyword.englishString: String
 val Keyword.polishString: String
 	get() =
 		when (this) {
+			Keyword.APPLY -> "zastosuj"
 			Keyword.ARROW -> "strzałka"
 			Keyword.AS -> "jako"
 			Keyword.BIT -> "bit"
 			Keyword.BYTE -> "bajt"
 			Keyword.CHOICE -> "wybór"
 			Keyword.COMMENT -> "komentarz"
+			Keyword.DEFINE -> "zdefiniuj"
 			Keyword.DELETE -> "usuń"
-			Keyword.DO -> "zrób"
-			Keyword.DOES -> "robi"
 			Keyword.DOING -> "robiąca"
 			Keyword.EIGHT -> "osiem"
 			Keyword.EVERYTHING -> "wszystko"
@@ -75,6 +75,7 @@ val Keyword.polishString: String
 			Keyword.FOURTH -> "czwarty"
 			Keyword.FUNCTION -> "funkcja"
 			Keyword.GIVE -> "daj"
+			Keyword.GIVES -> "daje"
 			Keyword.GIVING -> "dająca"
 			Keyword.IS -> "jest"
 			Keyword.IT -> "to"
@@ -87,7 +88,6 @@ val Keyword.polishString: String
 			Keyword.NUMBER -> "liczba"
 			Keyword.ONE -> "jeden"
 			Keyword.PREVIOUS -> "poprzedni"
-			Keyword.REMEMBER -> "zapamiętaj"
 			Keyword.SCRIPT -> "skrypt"
 			Keyword.SECOND -> "drugi"
 			Keyword.SEVENTH -> "siódmy"
@@ -102,15 +102,15 @@ val Keyword.polishString: String
 val Keyword.germanString: String
 	get() =
 		when (this) {
+			Keyword.APPLY -> TODO()
 			Keyword.ARROW -> "pfeil"
 			Keyword.AS -> "wie"
 			Keyword.BIT -> "bit"
 			Keyword.BYTE -> "byte"
 			Keyword.CHOICE -> "wahl"
 			Keyword.COMMENT -> "komentar"
+			Keyword.DEFINE -> TODO()
 			Keyword.DELETE -> "lösche"
-			Keyword.DO -> "mach"
-			Keyword.DOES -> "macht"
 			Keyword.DOING -> "machen"
 			Keyword.EIGHT -> "acht"
 			Keyword.EVERYTHING -> "alles"
@@ -121,6 +121,7 @@ val Keyword.germanString: String
 			Keyword.FOURTH -> "vierte"
 			Keyword.FUNCTION -> "funktion"
 			Keyword.GIVE -> "gib"
+			Keyword.GIVES -> TODO()
 			Keyword.GIVING -> "geben"
 			Keyword.IS -> "ist"
 			Keyword.IT -> "das"
@@ -133,7 +134,6 @@ val Keyword.germanString: String
 			Keyword.NUMBER -> "nummer"
 			Keyword.ONE -> "eins"
 			Keyword.PREVIOUS -> "vorherig"
-			Keyword.REMEMBER -> "merke"
 			Keyword.SCRIPT -> "skript"
 			Keyword.SECOND -> "zweite"
 			Keyword.SEVENTH -> "siebte"

@@ -17,10 +17,10 @@ fun <T> TypedLine<T>.decompileLine(fn: DecompileLiteral<T>): ScriptLine =
 	fn()
 		?.let { line(it) }
 		?: when (line) {
-			is NativeLine -> "native" lineTo script() // TODO: Decompile literal
+			is NativeLine -> Keyword.NATIVE.string lineTo script() // TODO: Decompile literal
 			is FieldLine -> (term of line.field).decompileLine(fn)
 			is ChoiceLine -> (term of line.choice).decompileLine(fn)
-			is ArrowLine -> "action" lineTo script("doing" lineTo line.arrow.lhs.script)
+			is ArrowLine -> Keyword.FUNCTION.string lineTo line.arrow.lhs.script.plus(Keyword.GIVES.string lineTo line.arrow.rhs.script)
 			is AnyLine -> "anything" lineTo script()
 		} ?: error("$this.decompileLine")
 

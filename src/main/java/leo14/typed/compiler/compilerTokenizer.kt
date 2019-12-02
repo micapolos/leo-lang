@@ -38,7 +38,7 @@ fun <T> Processor<Syntax>.process(parser: FunctionParser<T>): Processor<Syntax> 
 		.process(parser.parentCompiledParser)
 		.process(token(begin(Keyword.FUNCTION stringIn parser.parentCompiledParser.context.language)) of typeKeywordKind)
 		.process(parser.function.takes, parser.parentCompiledParser.context.language)
-		.process(token(begin(Keyword.DOES stringIn parser.parentCompiledParser.context.language)) of typeKeywordKind)
+		.process(token(begin(Keyword.GIVES stringIn parser.parentCompiledParser.context.language)) of typeKeywordKind)
 		.process(parser.function.does.type, parser.parentCompiledParser.context.language)
 		.process(token(end) of typeKeywordKind)
 
@@ -139,11 +139,11 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 				.process(parent.compiledParser)
 				.process(token(begin(Keyword.FUNCTION stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 				.process(parent.type, parent.compiledParser.context.language)
-				.process(token(begin(Keyword.DOES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(token(begin(Keyword.GIVES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is FunctionGiveParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(Keyword.DO stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(token(begin(Keyword.APPLY stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is FieldCompiledParserParent ->
 			this
 				.process(parent.compiledParser)
@@ -151,15 +151,15 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 		is RememberIsParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(Keyword.REMEMBER stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(token(begin(Keyword.DEFINE stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 				.process(parent.type, parent.compiledParser.context.language)
 				.process(token(begin(Keyword.IS stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is RememberDoesParserParent ->
 			this
 				.process(parent.compiledParser)
-				.process(token(begin(Keyword.REMEMBER stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(token(begin(Keyword.DEFINE stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 				.process(parent.type, parent.compiledParser.context.language)
-				.process(token(begin(Keyword.DOES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(token(begin(Keyword.GIVES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is GiveCompiledParserParent ->
 			this
 				.process(parent.compiledParser)
@@ -216,14 +216,14 @@ fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> 
 		is RememberTypeBeginner ->
 			this
 				.process(beginner.compiledParser)
-				.process(token(begin(Keyword.REMEMBER stringIn beginner.compiledParser.context.language)) of valueKeywordKind)
+				.process(token(begin(Keyword.DEFINE stringIn beginner.compiledParser.context.language)) of valueKeywordKind)
 		is ForgetTypeBeginner -> this
 	}
 
 fun <T> Processor<Syntax>.process(parser: MemoryItemParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
-		.process(token(begin(Keyword.REMEMBER stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
+		.process(token(begin(Keyword.DEFINE stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 		.process(parser.memoryItem, parser.parentCompiledParser.context.language)
 
 fun <T> Processor<Syntax>.process(
@@ -231,6 +231,6 @@ fun <T> Processor<Syntax>.process(
 	language: Language): Processor<Syntax> =
 	this
 		.process(memoryItem.key.type, language)
-		.process(token(begin(Keyword.DOES stringIn language)) of valueKeywordKind)
+		.process(token(begin(Keyword.GIVES stringIn language)) of valueKeywordKind)
 		.process(memoryItem.value.type, language)
 		.process(token(end) of valueKeywordKind)

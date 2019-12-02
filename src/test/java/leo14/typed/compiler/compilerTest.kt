@@ -147,7 +147,7 @@ class CompilerTest {
 				script(
 					Keyword.FUNCTION.string lineTo script(
 						"zero" lineTo script(),
-						Keyword.DOES.string lineTo script(
+						Keyword.GIVES.string lineTo script(
 							"plus" lineTo script("one")))))
 			.assertEqualTo(
 				compiler(

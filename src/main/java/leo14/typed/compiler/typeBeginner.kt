@@ -29,7 +29,7 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 			}
 		is FunctionGivesTypeBeginner ->
 			when (begin.string keywordOrNullIn language) {
-				Keyword.DOES ->
+				Keyword.GIVES ->
 					compiler(
 						compiledParser
 							.begin(FunctionDoesParserParent(compiledParser, type), CompilerKind.COMPILER)
@@ -40,7 +40,7 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 			when (begin.string keywordOrNullIn language) {
 				Keyword.IS ->
 					compiler(compiledParser.begin(RememberIsParserParent(compiledParser, type)))
-				Keyword.DOES ->
+				Keyword.GIVES ->
 					compiler(
 						compiledParser
 							.begin(RememberDoesParserParent(compiledParser, type), CompilerKind.COMPILER)

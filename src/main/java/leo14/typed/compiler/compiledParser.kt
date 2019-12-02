@@ -5,7 +5,6 @@ import leo.base.notNullIf
 import leo13.stack
 import leo14.*
 import leo14.typed.*
-import leo14.typed.Function
 
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
@@ -21,13 +20,13 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 				when (it keywordOrNullIn context.language) {
 					Keyword.FUNCTION -> beginFunction
 					Keyword.AS -> beginAs
-					Keyword.DO -> beginDo
+					Keyword.APPLY -> beginDo
 					Keyword.GIVE -> beginGive
 					Keyword.DELETE -> beginDelete
 					Keyword.NOTHING -> beginNothing
 					Keyword.MATCH -> beginMatch
 					Keyword.MAKE -> beginMake
-					Keyword.REMEMBER -> beginRemember
+					Keyword.DEFINE -> beginRemember
 					Keyword.FORGET -> beginForget
 					Keyword.LEONARDO -> beginLeonardo
 					Keyword.USE -> beginUse

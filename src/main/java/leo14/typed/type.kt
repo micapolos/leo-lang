@@ -139,9 +139,8 @@ val Field.scriptLine
 
 val Arrow.scriptLine
 	get() =
-		"function" lineTo script(
-			"takes" fieldTo lhs.script,
-			"gives" fieldTo rhs.script)
+		Keyword.FUNCTION.string lineTo lhs.script.plus(
+			Keyword.GIVES.string fieldTo rhs.script)
 
 val Type.onlyLineOrNull
 	get() =
