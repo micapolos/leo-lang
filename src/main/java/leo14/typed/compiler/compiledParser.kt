@@ -30,6 +30,7 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.MATCH -> beginMatch
 					Keyword.NOTHING -> beginNothing
 					Keyword.LEONARDO -> beginLeonardo
+					Keyword.SCRIPT -> beginScript
 					Keyword.USE -> beginUse
 					else -> begin(it)
 				}
@@ -143,6 +144,10 @@ val <T> CompiledParser<T>.beginLeonardo
 val <T> CompiledParser<T>.beginUse
 	get() =
 		compiler(use)
+
+val <T> CompiledParser<T>.beginScript
+	get() =
+		compiler(ScriptParser(CompiledScriptParserParent(this), script()))
 
 val <T> CompiledParser<T>.beginExit get() =
 	compiler(begin(ExitParserParent(this)))
