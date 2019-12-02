@@ -6,11 +6,10 @@ import leo13.stack
 import leo14.*
 import leo14.typed.*
 import leo14.typed.Function
-import leo14.typed.evaluator.Evaluator
 
 data class CompiledParser<T>(
 	val parent: CompiledParserParent<T>?,
-	val sibling: CompiledParserSibling<T>?,
+	val kind: CompilerKind,
 	val context: Context<T>,
 	val compiled: Compiled<T>)
 
@@ -23,8 +22,6 @@ data class UseCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : C
 data class RememberDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class RememberIsParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class MatchParserParent<T>(val matchParser: MatchParser<T>, val name: String) : CompiledParserParent<T>()
-
-data class CompiledParserSibling<T>(val evaluator: Evaluator<T>)
 
 fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
@@ -71,14 +68,21 @@ fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 	}
 
 fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
-	compiler(updateCompiled(fn))
+	compiler(updateCompiled(fn).next)
 
-val <T> CompiledParser<T>.evaluate
+val <T> CompiledParser<T>.next: CompiledParser<T>
+	get() =
+		when (kind) {
+			CompilerKind.COMPILER -> this
+			CompilerKind.EVALUATOR -> evaluate
+		}
+
+val <T> CompiledParser<T>.evaluate: CompiledParser<T>
 	get() =
 		updateCompiled { eval(context.evaluator) }
 
 fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
-	copy(compiled = compiled.resolve(line, context))
+	copy(compiled = compiled.resolve(line, context)).next
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
@@ -178,8 +182,11 @@ val <T> CompiledParser<T>.end
 		parent?.end(compiled.typedForEnd)
 
 fun <T> CompiledParser<T>.begin(parent: CompiledParserParent<T>): CompiledParser<T> =
+	begin(parent, kind)
+
+fun <T> CompiledParser<T>.begin(parent: CompiledParserParent<T>, kind: CompilerKind): CompiledParser<T> =
 	CompiledParser(
 		parent,
-		null,
+		kind,
 		context,
 		compiled.begin)

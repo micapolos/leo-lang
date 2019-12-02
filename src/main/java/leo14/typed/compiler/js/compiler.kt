@@ -10,7 +10,7 @@ val emptyCompiler =
 	compiler(
 		CompiledParser(
 			null,
-			null,
+			CompilerKind.COMPILER,
 			emptyContext,
 			compiled()))
 

@@ -4,12 +4,18 @@ import leo14.defaultLanguage
 import leo14.native.Native
 import leo14.typed.Type
 import leo14.typed.compiler.*
-import leo14.typed.typed
 
 fun compiler(type: Type): Compiler<Native> =
 	compiler(TypeParser(null, null, defaultLanguage, nativeTypeContext, type))
 
-fun compiler(compiled: Compiled<Native>): Compiler<Native> =
-	compiler(CompiledParser(null, null, context, compiled))
+fun CompilerKind.compiler(compiled: Compiled<Native>): Compiler<Native> =
+	compiler(CompiledParser(null, this, context, compiled))
 
-val emptyCompiler: Compiler<Native> = compiler(compiled(typed()))
+fun compiler(compiled: Compiled<Native>): Compiler<Native> =
+	CompilerKind.COMPILER.compiler(compiled)
+
+fun evaluator(compiled: Compiled<Native>): Compiler<Native> =
+	CompilerKind.EVALUATOR.compiler(compiled)
+
+val emptyCompiler: Compiler<Native> = compiler(compiled())
+val emptyEvaluator: Compiler<Native> = evaluator(compiled())

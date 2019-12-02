@@ -78,7 +78,7 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 				Keyword.DOES ->
 					compiler(
 						compiledParser
-							.begin(FunctionDoesParserParent(compiledParser, type))
+							.begin(FunctionDoesParserParent(compiledParser, type), CompilerKind.COMPILER)
 							.updateCompiled { plusGiven(type) })
 				else -> null
 			}
@@ -89,7 +89,7 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 				Keyword.DOES ->
 					compiler(
 						compiledParser
-							.begin(RememberDoesParserParent(compiledParser, type))
+							.begin(RememberDoesParserParent(compiledParser, type), CompilerKind.COMPILER)
 							.updateCompiled { plusGiven(type) })
 				else -> null
 			}

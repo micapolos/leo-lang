@@ -4,22 +4,16 @@ import leo14.*
 import leo14.typed.compiler.Compiler
 import leo14.typed.compiler.parse
 import leo14.typed.compiler.reflectScriptLine
-import leo14.typed.evaluator.Evaluator
-import leo14.typed.evaluator.evaluate
-import leo14.typed.evaluator.reflectScriptLine
 
 sealed class TokenReader
 
-data class CompilerTokenReader(val compiler: Compiler<*>) : TokenReader()
-data class EvaluatorTokenReader(val evaluator: Evaluator<*>) : TokenReader()
+data class CompilerTokenReader<T>(val compiler: Compiler<T>) : TokenReader()
 
 val <T> Compiler<T>.tokenReader: TokenReader get() = CompilerTokenReader(this)
-val <T> Evaluator<T>.tokenReader: TokenReader get() = EvaluatorTokenReader(this)
 
 fun TokenReader.read(token: Token): TokenReader =
 	when (this) {
-		is CompilerTokenReader -> compiler.parse(token).tokenReader
-		is EvaluatorTokenReader -> evaluator.evaluate(token).tokenReader
+		is CompilerTokenReader<*> -> compiler.parse(token).tokenReader
 	}
 
 fun TokenReader.read(script: Script): TokenReader =
@@ -48,8 +42,7 @@ val TokenReader.reflectScriptLine: ScriptLine
 		"token" lineTo script(
 			"reader" lineTo script(
 				when (this) {
-					is CompilerTokenReader -> compiler.reflectScriptLine
-					is EvaluatorTokenReader -> evaluator.reflectScriptLine
+					is CompilerTokenReader<*> -> compiler.reflectScriptLine
 				}
 			)
 		)
