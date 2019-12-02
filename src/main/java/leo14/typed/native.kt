@@ -71,12 +71,12 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 						}
 					}
 				else ->
-					type.lineStack.linkOrNull?.let { link ->
-						link.value.fieldOrNull?.let { field ->
+					type.lineStack.linkOrNull?.let { link1 ->
+						link1.value.fieldOrNull?.let { field ->
 							ifOrNull(field.rhs.isEmpty) {
 								when (field.string) {
-									"open" -> decompile(TypedLine<Native>::decompileLiteral).open
-									"show" -> decompile(TypedLine<Native>::decompileLiteral).show
+									"open" -> link.tail.decompile(TypedLine<Native>::decompileLiteral).open
+									"show" -> link.tail.decompile(TypedLine<Native>::decompileLiteral).show
 									else -> null
 								}
 							}
