@@ -13,16 +13,6 @@ data class CompiledParser<T>(
 	val context: Context<T>,
 	val compiled: Compiled<T>)
 
-sealed class CompiledParserParent<T>
-data class FieldCompiledParserParent<T>(val compiledParser: CompiledParser<T>, val name: String) : CompiledParserParent<T>()
-data class FunctionDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
-data class FunctionGiveParserParent<T>(val compiledParser: CompiledParser<T>, val function: Function<T>) : CompiledParserParent<T>()
-data class GiveCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
-data class UseCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
-data class RememberDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
-data class RememberIsParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
-data class MatchParserParent<T>(val matchParser: MatchParser<T>, val name: String) : CompiledParserParent<T>()
-
 fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
 		is LiteralToken -> parse(token.literal)
@@ -47,25 +37,6 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 		is EndToken -> end
 	} ?: error("$this.parse($token)")
 
-fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
-	when (this) {
-		is FieldCompiledParserParent ->
-			compiler(compiledParser.resolve(line(name fieldTo typed)))
-		is FunctionDoesParserParent ->
-			compiler(FunctionParser(compiledParser, type does typed))
-		is FunctionGiveParserParent ->
-			compiledParser.next { updateTyped { function.give(typed) } }
-		is GiveCompiledParserParent ->
-			compiledParser.next { updateTyped { typed } }
-		is UseCompiledParserParent ->
-			compiledParser.next { updateTyped { typed } }
-		is RememberDoesParserParent ->
-			compiler(MemoryItemParser(compiledParser, item(key(type), value(memoryBinding(typed, isAction = true)))))
-		is RememberIsParserParent ->
-			compiler(MemoryItemParser(compiledParser, item(key(type), value(memoryBinding(typed, isAction = false)))))
-		is MatchParserParent ->
-			compiler(matchParser.plus(name, typed))
-	}
 
 fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
 	compiler(updateCompiled(fn).next)
