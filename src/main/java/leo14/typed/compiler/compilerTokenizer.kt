@@ -151,13 +151,11 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 		is DefineIsParserParent ->
 			this
 				.process(parent.defineParser)
-				//.process(token(begin(Keyword.DEFINE stringIn parent.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
 				.process(parent.type, parent.defineParser.parentCompiledParser.context.language)
 				.process(token(begin(Keyword.IS stringIn parent.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
 		is DefineGivesParserParent ->
 			this
 				.process(parent.defineParser)
-				//.process(token(begin(Keyword.DEFINE stringIn parent.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
 				.process(parent.type, parent.defineParser.parentCompiledParser.context.language)
 				.process(token(begin(Keyword.GIVES stringIn parent.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
 		is GiveCompiledParserParent ->
@@ -184,11 +182,11 @@ fun <T> Processor<Syntax>.process(parent: TypeParserParent<T>): Processor<Syntax
 			this
 				.process(parent.typeParser)
 				.process(token(begin(parent.name)) of typeKeywordKind)
-		is ArrowGivingTypeParserParent ->
+		is ArrowGivesTypeParserParent ->
 			this
 				.process(token(begin(Keyword.FUNCTION stringIn parent.typeParser.language)) of typeKeywordKind)
 				.process(parent.typeParser)
-				.process(token(begin(Keyword.GIVING stringIn parent.typeParser.language)) of typeKeywordKind)
+				.process(token(begin(Keyword.GIVES stringIn parent.typeParser.language)) of typeKeywordKind)
 		is AsTypeParserParent ->
 			this
 				.process(parent.compiledParser)
@@ -214,9 +212,7 @@ fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> 
 				.process(beginner.typeParser)
 				.process(token(begin(Keyword.GIVING stringIn beginner.typeParser.language)) of valueKeywordKind)
 		is DefineTypeBeginner ->
-			this
-				.process(beginner.defineParser)
-		//.process(token(begin(Keyword.DEFINE stringIn beginner.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
+			process(beginner.defineParser)
 		is ForgetTypeBeginner -> this
 	}
 
@@ -224,7 +220,6 @@ fun <T> Processor<Syntax>.process(parser: DefineParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(Keyword.DEFINE stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
-//.syntaxProcess(script(parser.memory.reflectScriptLine))
 
 fun <T> Processor<Syntax>.process(
 	memoryItem: MemoryItem<T>,

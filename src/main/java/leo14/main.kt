@@ -6,12 +6,12 @@ import leo.clear
 import leo.home
 import leo.java.lang.sttyPrivateMode
 import leo14.reader.*
-import leo14.typed.compiler.natives.emptyEvaluator
+import leo14.typed.compiler.js.emptyCompiler
 import java.io.InputStreamReader
 
 val errorTriggerCount = 7
 
-fun main() = run(emptyEvaluator.tokenReader.charReader)
+fun main() = run(emptyCompiler.tokenReader.charReader)
 
 fun run(reader: CharReader) {
 	sttyPrivateMode()

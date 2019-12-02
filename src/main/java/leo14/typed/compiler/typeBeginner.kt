@@ -21,7 +21,7 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 				Keyword.GIVING ->
 					compiler(
 						TypeParser(
-							ArrowGivingTypeParserParent(typeParser, type),
+							ArrowGivesTypeParserParent(typeParser, type),
 							null,
 							typeParser.language,
 							typeParser.typeContext,
