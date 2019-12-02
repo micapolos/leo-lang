@@ -33,8 +33,8 @@ fun run(reader: CharReader) {
 			printDebug = false
 		}
 		val char = reader.read()
-		if (char == -1) break
-		if (char == 127) {
+		if (char == -1 || char == 4) break
+		else if (char == 127) {
 			if (errorToPrint != null) errorToPrint = null
 			else undoableCharReaderVariable.update { undoIfPossible }
 		} else if (char == 27) {

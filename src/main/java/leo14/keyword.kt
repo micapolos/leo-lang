@@ -16,6 +16,7 @@ enum class Keyword {
 	DOING,
 	EIGHT,
 	EVERYTHING,
+	EXIT,
 	FIFTH,
 	FIRST,
 	FORGET,
@@ -67,6 +68,7 @@ val Keyword.polishString: String
 			Keyword.DOING -> "robiąca"
 			Keyword.EIGHT -> "osiem"
 			Keyword.EVERYTHING -> "wszystko"
+			Keyword.EXIT -> "wyjdź"
 			Keyword.FIFTH -> "piąty"
 			Keyword.FIRST -> "pierwszy"
 			Keyword.FORGET -> "zapomnij"
@@ -112,6 +114,7 @@ val Keyword.germanString: String
 			Keyword.DOING -> "machen"
 			Keyword.EIGHT -> "acht"
 			Keyword.EVERYTHING -> "alles"
+			Keyword.EXIT -> TODO()
 			Keyword.FIFTH -> "fünfte"
 			Keyword.FIRST -> "erste"
 			Keyword.FORGET -> "vergiss"

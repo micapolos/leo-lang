@@ -31,6 +31,7 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.FORGET -> beginForget
 					Keyword.LEONARDO -> beginLeonardo
 					Keyword.USE -> beginUse
+					Keyword.EXIT -> beginExit
 					else -> begin(it)
 				}
 			}
@@ -143,6 +144,9 @@ val <T> CompiledParser<T>.beginLeonardo
 val <T> CompiledParser<T>.beginUse
 	get() =
 		compiler(use)
+
+val <T> CompiledParser<T>.beginExit get() =
+	compiler(begin(ExitParserParent(this)))
 
 fun <T> CompiledParser<T>.begin(string: String) =
 	CompiledParserCompiler(

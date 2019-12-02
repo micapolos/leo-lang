@@ -61,6 +61,7 @@ val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 		is RememberDoesParserParent -> null
 		is RememberIsParserParent -> null
 		is MatchParserParent -> null
+		is ExitParserParent -> null
 	} ?: line(literal(toString()))
 
 val <T> TypeParser<T>.reflectScriptLine: ScriptLine get() =
