@@ -4,6 +4,10 @@ import leo.base.fold
 import leo.base.notNullIf
 import leo.base.orNull
 import leo13.*
+import leo14.line
+import leo14.lineTo
+import leo14.literal
+import leo14.script
 
 sealed class StringParser
 object BeginStringParser : StringParser()
@@ -47,3 +51,15 @@ val StringParser.coreString
 			is CharStackStringParser -> "\"" + StringBuilder().fold(charStack.reverse) { append(it) }.toString()
 			is EndStringParser -> "\"" + string + "\""
 		}
+
+val StringParser.reflectScriptLine
+	get() =
+		"string" lineTo script(
+			"parser" lineTo script(
+				when (this) {
+					BeginStringParser -> "empty".line
+					is CharStackStringParser -> "open" lineTo script(literal(StringBuilder().fold(charStack.reverse) { append(it) }.toString()))
+					is EndStringParser -> line(literal(string))
+				}
+			)
+		)

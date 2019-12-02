@@ -2,8 +2,8 @@ package leo14.parser
 
 import leo.base.fold
 import leo.base.notNullIf
+import leo14.*
 import leo14.Number
-import leo14.number
 import java.math.BigDecimal
 
 sealed class NumberParser
@@ -65,3 +65,15 @@ val NumberParser.coreString
 			is WholeDotNumberParser -> string
 			is FullNumberParser -> string
 		}
+
+val NumberParser.reflectScriptLine
+	get() =
+		"number" lineTo script(
+			"parser" lineTo script(
+				when (this) {
+					BeginNumberParser -> "empty".line
+					NegativeNumberParser -> "negative".line
+					is WholeNumberParser -> "whole" lineTo script(literal(string))
+					is WholeDotNumberParser -> "whole" lineTo script(literal(string))
+					is FullNumberParser -> "full" lineTo script(literal(string))
+				}))

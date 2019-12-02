@@ -4,7 +4,9 @@ import leo.base.fold
 import leo.base.ifOrNull
 import leo14.*
 
-sealed class SpacedTokenParser
+sealed class SpacedTokenParser {
+	override fun toString() = "$reflectScriptLine"
+}
 object NewSpacedTokenParser : SpacedTokenParser()
 data class TokenSpacedTokenParser(val token: Token) : SpacedTokenParser()
 data class LiteralSpacedTokenParser(val literalParser: LiteralParser) : SpacedTokenParser()
@@ -77,7 +79,11 @@ val SpacedTokenParser.coreString: String
 		}
 
 val SpacedTokenParser.reflectScriptLine get() =
-	"spaced" lineTo script(
-		"token" lineTo script(
-			"parser" lineTo script(
-				literal("TODO"))))
+	"token" lineTo script(
+		"parser" lineTo script(
+			when (this) {
+				NewSpacedTokenParser -> "empty" lineTo script()
+				is TokenSpacedTokenParser -> token.reflectScriptLine
+				is LiteralSpacedTokenParser -> literalParser.reflectScriptLine
+				is NameSpacedTokenParser -> nameParser.reflectScriptLine
+			}))

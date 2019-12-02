@@ -31,3 +31,7 @@ val Any.anyLiteral: Literal
 			is Double -> literal(this)
 			else -> error("")
 		}
+
+val Literal.reflectScriptLine
+	get() =
+		"literal" lineTo script(this)

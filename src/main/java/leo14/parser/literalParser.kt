@@ -1,8 +1,7 @@
 package leo14.parser
 
 import leo.base.fold
-import leo14.Literal
-import leo14.literal
+import leo14.*
 
 sealed class LiteralParser
 object BeginLiteralParser : LiteralParser()
@@ -53,3 +52,13 @@ val LiteralParser.spacedString: String
 val LiteralParser.canContinue
 	get() =
 		this is NumberLiteralParser
+
+val LiteralParser.reflectScriptLine
+	get() =
+		"literal" lineTo script(
+			"parser" lineTo script(
+				when (this) {
+					BeginLiteralParser -> "empty".line
+					is StringLiteralParser -> stringParser.reflectScriptLine
+					is NumberLiteralParser -> numberParser.reflectScriptLine
+				}))

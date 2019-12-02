@@ -5,3 +5,7 @@ object End {
 }
 
 val end = End
+
+val End.reflectScriptLine
+	get() =
+		"end".line

@@ -21,3 +21,12 @@ fun token(int: Int): Token = token(number(int))
 fun token(double: Double): Token = token(number(double))
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
+
+val Token.reflectScriptLine
+	get() =
+		"token" lineTo script(
+			when (this) {
+				is LiteralToken -> literal.reflectScriptLine
+				is BeginToken -> begin.reflectScriptLine
+				is EndToken -> end.reflectScriptLine
+			})

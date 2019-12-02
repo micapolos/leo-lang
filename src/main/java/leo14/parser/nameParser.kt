@@ -3,6 +3,9 @@ package leo14.parser
 import leo.base.fold
 import leo.base.notNullIf
 import leo13.*
+import leo14.lineTo
+import leo14.literal
+import leo14.script
 
 data class NameParser(val validCharStack: Stack<Char>)
 
@@ -33,3 +36,9 @@ val NameParser.coreString
 val NameParser.spacedString
 	get() =
 		nameOrNull ?: ""
+
+val NameParser.reflectScriptLine
+	get() =
+		"name" lineTo script(
+			"parser" lineTo script(
+				literal(StringBuilder().fold(validCharStack.reverse) { append(it) }.toString())))
