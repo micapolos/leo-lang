@@ -78,12 +78,12 @@ fun <T> MemoryItem<T>.resolve(index: Index, term: Term<T>): Typed<T>? =
 	value.resolve(index, term)
 
 fun <T> Memory<T>.resolveForEval(term: Term<T>): Term<T> =
-	term.fold(itemStack.reverse) {
+	term.fold(itemStack) {
 		resolveForEnd(it.value)
 	}
 
 fun <T> Memory<T>.resolveForEnd(term: Term<T>, index: Index): Term<T> =
-	term.fold(itemStack.takeOrNull(index)!!.reverse) {
+	term.fold(itemStack.takeOrNull(index)!!) {
 		resolveForEnd(it.value)
 	}
 

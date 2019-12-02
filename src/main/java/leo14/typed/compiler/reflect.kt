@@ -4,6 +4,7 @@ import leo.base.orIfNull
 import leo13.fold
 import leo13.int
 import leo13.isEmpty
+import leo13.reverse
 import leo14.*
 import leo14.parser.reflectScriptLine
 import leo14.reader.CharReader
@@ -12,16 +13,14 @@ import leo14.typed.reflectScriptLine
 import leo14.typed.script
 import leo14.typed.scriptLine
 
-val <T> Compiled<T>.reflectScriptLine get() =
+val <T> Compiled<T>.reflectScriptLine: ScriptLine get() =
 	"compiled" lineTo script(
 		memory.reflectScriptLine,
 		typed.reflectScriptLine,
 		"locals" lineTo script(literal(localMemorySize.int)))
 
 val <T> Memory<T>.reflectScriptLine get() =
-	"memory" lineTo
-		if (itemStack.isEmpty) script("empty")
-		else script().fold(itemStack) { plus(it.reflectScriptLine) }
+	itemStack.reflectOrEmptyScriptLine("memory", MemoryItem<T>::reflectScriptLine)
 
 val <T> MemoryItem<T>.reflectScriptLine get() =
 	"item" lineTo script(

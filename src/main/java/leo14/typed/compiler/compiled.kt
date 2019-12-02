@@ -24,10 +24,6 @@ val <T> Compiled<T>.begin: Compiled<T>
 	get() =
 		copy(typed = typed(), localMemorySize = index0)
 
-//fun <T> Compiled<T>.beginGives(type: Type): Compiled<T> =
-//	begin
-//		.plus(item(key(type("given")), argumentMemoryValue(type("given" lineTo type))))
-
 fun <T> Compiled<T>.plusGiven(type: Type): Compiled<T> =
 	plus(item(key(type("given")), argumentMemoryValue(type("given" lineTo type))))
 
