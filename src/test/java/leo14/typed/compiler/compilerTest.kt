@@ -146,24 +146,17 @@ class CompilerTest {
 			.parse(
 				script(
 					Keyword.FUNCTION.string lineTo script(
-						"zero" lineTo script(),
-						Keyword.GIVES.string lineTo script(
-							"plus" lineTo script("one")))))
-			.assertEqualTo(
-				compiler(
-					compiled(
-						typed<Native>()
-							.plus(type("zero") does typed(
-								"given" lineTo typed("zero"),
-								"plus" lineTo typed("one"))))))
+						Keyword.NUMBER.string lineTo script(),
+						Keyword.GIVES.string lineTo script(literal("foo")))))
+			.assertEqualTo(compiler(compiled(fn(term(native("foo"))) of type(line(numberType arrowTo textType)))))
 	}
 
 	@Test
 	fun compiledDo() {
-		val action = type("zero") does typed<Native>("one")
-		compiler(compiled(typed(action)))
-			.parse(script("do" lineTo script("zero")))
-			.assertEqualTo(compiler(compiled(action.resolve(typed("zero"))!!)))
+		val function = fn(term(native("foo"))) of type(line(numberType arrowTo textType))
+		compiler(compiled(function))
+			.parse(script(Keyword.APPLY.string lineTo script(literal(123))))
+			.assertEqualTo(compiler(compiled(function.term.invoke(term(native(123))) of textType)))
 	}
 
 	@Test
@@ -171,9 +164,9 @@ class CompilerTest {
 		compiler(compiled(typed("foo")))
 			.parse(
 				script(
-					"remember" lineTo script(
+					Keyword.DEFINE.string lineTo script(
 						"number" lineTo script(),
-						"is" lineTo script(literal("foo")))))
+						Keyword.IS.string lineTo script(literal("foo")))))
 			.assertEqualTo(
 				compiler(
 					compiled(
@@ -194,9 +187,9 @@ class CompilerTest {
 			.parse(
 				script(
 					"my" lineTo script(
-						"remember" lineTo script(
+						Keyword.DEFINE.string lineTo script(
 							"zero" lineTo script(),
-							"is" lineTo script(literal(0))),
+							Keyword.IS.string lineTo script(literal(0))),
 						"zero" lineTo script())))
 			.assertEqualTo(
 				compiler(
@@ -252,9 +245,9 @@ class CompilerTest {
 		compiler(compiled(typed("foo")))
 			.parse(
 				script(
-					"remember" lineTo script(
+					Keyword.DEFINE.string lineTo script(
 						"number" lineTo script(),
-						"does" lineTo script(literal("foo")))))
+						Keyword.GIVES.string lineTo script(literal("foo")))))
 			.assertEqualTo(
 				compiler(
 					compiled(
@@ -274,9 +267,9 @@ class CompilerTest {
 		compiler(compiled(typed("foo")))
 			.parse(
 				script(
-					"remember" lineTo script(
+					Keyword.DEFINE.string lineTo script(
 						"number" lineTo script(),
-						"does" lineTo script("given"))))
+						Keyword.GIVES.string lineTo script("given"))))
 			.assertEqualTo(
 				compiler(
 					compiled(
@@ -319,9 +312,9 @@ class CompilerTest {
 			.parse(
 				script(
 					"my" lineTo script(
-						"remember" lineTo script(
+						Keyword.DEFINE.string lineTo script(
 							"number" lineTo script(),
-							"does" lineTo script("given")),
+							Keyword.GIVES.string lineTo script("given")),
 						line(literal(123)))))
 			.assertEqualTo(
 				compiler(

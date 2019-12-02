@@ -105,7 +105,7 @@ val <T> CompiledParser<T>.beginAs
 val <T> CompiledParser<T>.beginDo
 	get() =
 		compiled.typed.function.let { action ->
-			compiler(begin(FunctionGiveParserParent(this, action)))
+			compiler(begin(FunctionApplyParserParent(this, action)))
 		}
 
 val <T> CompiledParser<T>.beginGive
@@ -130,7 +130,7 @@ val <T> CompiledParser<T>.beginMake
 
 val <T> CompiledParser<T>.beginRemember
 	get() =
-		compiler(TypeParser(null, RememberTypeBeginner(this), context.language, context.typeContext, type()))
+		compiler(TypeParser(null, DefineTypeBeginner(this), context.language, context.typeContext, type()))
 
 val <T> CompiledParser<T>.beginForget
 	get() =

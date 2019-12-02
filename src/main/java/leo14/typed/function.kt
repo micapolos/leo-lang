@@ -13,5 +13,5 @@ fun <T> Function<T>.resolve(typed: Typed<T>): Typed<T>? =
 		does.term.invoke(typed.term) of does.type
 	}
 
-fun <T> Function<T>.give(typed: Typed<T>): Typed<T> =
+fun <T> Function<T>.apply(typed: Typed<T>): Typed<T> =
 	resolve(typed).notNullOrError("$this.give($typed)")

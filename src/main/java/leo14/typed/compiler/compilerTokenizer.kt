@@ -140,7 +140,7 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 				.process(token(begin(Keyword.FUNCTION stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 				.process(parent.type, parent.compiledParser.context.language)
 				.process(token(begin(Keyword.GIVES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
-		is FunctionGiveParserParent ->
+		is FunctionApplyParserParent ->
 			this
 				.process(parent.compiledParser)
 				.process(token(begin(Keyword.APPLY stringIn parent.compiledParser.context.language)) of valueKeywordKind)
@@ -148,13 +148,13 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 			this
 				.process(parent.compiledParser)
 				.process(token(begin(parent.name)) of valueKind)
-		is RememberIsParserParent ->
+		is DefineIsParserParent ->
 			this
 				.process(parent.compiledParser)
 				.process(token(begin(Keyword.DEFINE stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 				.process(parent.type, parent.compiledParser.context.language)
 				.process(token(begin(Keyword.IS stringIn parent.compiledParser.context.language)) of valueKeywordKind)
-		is RememberDoesParserParent ->
+		is DefineGivesParserParent ->
 			this
 				.process(parent.compiledParser)
 				.process(token(begin(Keyword.DEFINE stringIn parent.compiledParser.context.language)) of valueKeywordKind)
@@ -213,7 +213,7 @@ fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> 
 			this
 				.process(beginner.typeParser)
 				.process(token(begin(Keyword.GIVING stringIn beginner.typeParser.language)) of valueKeywordKind)
-		is RememberTypeBeginner ->
+		is DefineTypeBeginner ->
 			this
 				.process(beginner.compiledParser)
 				.process(token(begin(Keyword.DEFINE stringIn beginner.compiledParser.context.language)) of valueKeywordKind)

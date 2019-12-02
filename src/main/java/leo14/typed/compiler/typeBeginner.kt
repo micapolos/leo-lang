@@ -10,7 +10,7 @@ sealed class TypeBeginner<T>
 
 data class FunctionGivesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ArrowGivingTypeBeginner<T>(val typeParser: TypeParser<T>) : TypeBeginner<T>()
-data class RememberTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
+data class DefineTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ForgetTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 
 fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Compiler<T>? =
@@ -36,14 +36,14 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 							.updateCompiled { plusGiven(type) })
 				else -> null
 			}
-		is RememberTypeBeginner ->
+		is DefineTypeBeginner ->
 			when (begin.string keywordOrNullIn language) {
 				Keyword.IS ->
-					compiler(compiledParser.begin(RememberIsParserParent(compiledParser, type)))
+					compiler(compiledParser.begin(DefineIsParserParent(compiledParser, type)))
 				Keyword.GIVES ->
 					compiler(
 						compiledParser
-							.begin(RememberDoesParserParent(compiledParser, type), CompilerKind.COMPILER)
+							.begin(DefineGivesParserParent(compiledParser, type), CompilerKind.COMPILER)
 							.updateCompiled { plusGiven(type) })
 				else -> null
 			}

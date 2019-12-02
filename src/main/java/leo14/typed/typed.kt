@@ -42,7 +42,7 @@ fun <T> Typed<T>.plus(typed: TypedLine<T>): Typed<T> =
 	plusTerm(typed) of type.plus(typed.line)
 
 fun <T> Typed<T>.plus(function: Function<T>): Typed<T> =
-	plus(fn(function.does.term) of line(function.takes arrowTo function.does.type))
+	plus(function.does.term of line(function.takes arrowTo function.does.type))
 
 fun <T> Typed<T>.plus(typed: TypedField<T>): Typed<T> =
 	plus(typed.term of line(typed.field))

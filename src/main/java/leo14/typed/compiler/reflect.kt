@@ -1,10 +1,7 @@
 package leo14.typed.compiler
 
 import leo.base.orIfNull
-import leo13.fold
 import leo13.int
-import leo13.isEmpty
-import leo13.reverse
 import leo14.*
 import leo14.parser.reflectScriptLine
 import leo14.reader.CharReader
@@ -55,14 +52,19 @@ val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 	when (this) {
 		is FieldCompiledParserParent -> "begin" lineTo script(compiledParser.reflectScriptLine)
 		is FunctionDoesParserParent -> null
-		is FunctionGiveParserParent -> null
+		is FunctionApplyParserParent -> null
 		is GiveCompiledParserParent -> null
 		is UseCompiledParserParent -> null
-		is RememberDoesParserParent -> null
-		is RememberIsParserParent -> null
+		is DefineGivesParserParent -> null
+		is DefineIsParserParent -> null
 		is MatchParserParent -> null
 		is ExitParserParent -> null
 	} ?: line(literal(toString()))
+
+val <T> FunctionParser<T>.reflectScriptLine: ScriptLine get() =
+	"parser" lineTo script(
+		parentCompiledParser.reflectScriptLine,
+		function.reflectScriptLine)
 
 val <T> TypeParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
@@ -84,7 +86,7 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 	"token" lineTo script(
 		"compiler" lineTo script(
 				when (this) {
-					is ActionParserCompiler -> null
+					is ActionParserCompiler -> functionParser.reflectScriptLine
 					is ArrowParserCompiler -> null
 					is ChoiceParserCompiler -> null
 					is CompiledParserCompiler -> compiledParser.reflectScriptLine
