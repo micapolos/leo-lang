@@ -11,10 +11,12 @@ enum class Keyword {
 	BYTE,
 	CHOICE,
 	COMMENT,
+	COMPILE,
 	DEFINE,
 	DELETE,
 	DOING,
 	EIGHT,
+	EVALUATE,
 	EVERYTHING,
 	EXIT,
 	FIFTH,
@@ -36,6 +38,7 @@ enum class Keyword {
 	NUMBER,
 	ONE,
 	PREVIOUS,
+	QUOTE,
 	SCRIPT,
 	SECOND,
 	SEVENTH,
@@ -43,6 +46,7 @@ enum class Keyword {
 	TEXT,
 	THIRD,
 	THIS,
+	UNQUOTE,
 	USE,
 	ZERO,
 }
@@ -63,10 +67,12 @@ val Keyword.polishString: String
 			Keyword.BYTE -> "bajt"
 			Keyword.CHOICE -> "wybór"
 			Keyword.COMMENT -> "komentarz"
+			Keyword.COMPILE -> "kompiluj"
 			Keyword.DEFINE -> "zdefiniuj"
 			Keyword.DELETE -> "usuń"
 			Keyword.DOING -> "robiąca"
 			Keyword.EIGHT -> "osiem"
+			Keyword.EVALUATE -> "oblicz"
 			Keyword.EVERYTHING -> "wszystko"
 			Keyword.EXIT -> "wyjdź"
 			Keyword.FIFTH -> "piąty"
@@ -88,6 +94,7 @@ val Keyword.polishString: String
 			Keyword.NUMBER -> "liczba"
 			Keyword.ONE -> "jeden"
 			Keyword.PREVIOUS -> "poprzedni"
+			Keyword.QUOTE -> "zacytuj"
 			Keyword.SCRIPT -> "skrypt"
 			Keyword.SECOND -> "drugi"
 			Keyword.SEVENTH -> "siódmy"
@@ -95,6 +102,7 @@ val Keyword.polishString: String
 			Keyword.TEXT -> "tekst"
 			Keyword.THIRD -> "trzeci"
 			Keyword.THIS -> "to"
+			Keyword.UNQUOTE -> "odcytuj"
 			Keyword.USE -> "użyj"
 			Keyword.ZERO -> "zero"
 		}
@@ -109,10 +117,12 @@ val Keyword.germanString: String
 			Keyword.BYTE -> "byte"
 			Keyword.CHOICE -> "wahl"
 			Keyword.COMMENT -> "komentar"
+			Keyword.COMPILE -> TODO()
 			Keyword.DEFINE -> TODO()
 			Keyword.DELETE -> "lösche"
 			Keyword.DOING -> "machen"
 			Keyword.EIGHT -> "acht"
+			Keyword.EVALUATE -> TODO()
 			Keyword.EVERYTHING -> "alles"
 			Keyword.EXIT -> TODO()
 			Keyword.FIFTH -> "fünfte"
@@ -134,6 +144,7 @@ val Keyword.germanString: String
 			Keyword.NUMBER -> "nummer"
 			Keyword.ONE -> "eins"
 			Keyword.PREVIOUS -> "vorherig"
+			Keyword.QUOTE -> TODO()
 			Keyword.SCRIPT -> "skript"
 			Keyword.SECOND -> "zweite"
 			Keyword.SEVENTH -> "siebte"
@@ -142,6 +153,7 @@ val Keyword.germanString: String
 			Keyword.THIRD -> "dritte"
 			Keyword.THIS -> "es"
 			Keyword.USE -> "benutze"
+			Keyword.UNQUOTE -> TODO()
 			Keyword.ZERO -> "null"
 		}
 

@@ -4,6 +4,7 @@ import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.stack
 import leo14.*
+import leo14.lambda.id
 import leo14.typed.*
 
 data class CompiledParser<T>(
@@ -30,7 +31,7 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.MATCH -> beginMatch
 					Keyword.NOTHING -> beginNothing
 					Keyword.LEONARDO -> beginLeonardo
-					Keyword.SCRIPT -> beginScript
+					Keyword.QUOTE -> beginQuote
 					Keyword.USE -> beginUse
 					else -> begin(it)
 				}
@@ -53,8 +54,13 @@ val <T> CompiledParser<T>.evaluate: CompiledParser<T>
 	get() =
 		updateCompiled { eval(context.evaluator) }
 
-fun <T> CompiledParser<T>.resolve(line: TypedLine<T>) =
-	copy(compiled = compiled.resolve(line, context)).next
+fun <T> CompiledParser<T>.resolveCompiler(line: TypedLine<T>): Compiler<T> =
+	staticResolveCompiler(line) ?: compiler(copy(compiled = compiled.resolve(line, context)).next)
+
+fun <T> CompiledParser<T>.staticResolveCompiler(line: TypedLine<T>): Compiler<T>? =
+	notNullIf(kind == CompilerKind.EVALUATOR && line == id<T>() of line(Keyword.EVALUATE.string fieldTo type())) {
+		compiler(this.updateCompiled { updateTyped { typed() } }).parse(decompile)
+	}
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
@@ -78,7 +84,7 @@ fun <T> CompiledParser<T>.make(script: Script): Compiler<T> =
 	} ?: error("$this.make($script)")
 
 fun <T> CompiledParser<T>.parse(literal: Literal) =
-	compiler(resolve(context.compileLine(literal)))
+	resolveCompiler(context.compileLine(literal))
 
 fun <T> CompiledParser<T>.plus(script: Script): CompiledParser<T> =
 	updateCompiled { updateTyped { plus(script, context.literalCompile) } }
@@ -127,7 +133,7 @@ val <T> CompiledParser<T>.beginMatch
 
 val <T> CompiledParser<T>.beginMake
 	get() =
-		compiler(ScriptParser(MakeScriptParserParent(this), script()))
+		compiler(QuoteParser(MakeQuoteParserParent(this), script()))
 
 val <T> CompiledParser<T>.beginDefine
 	get() =
@@ -145,9 +151,9 @@ val <T> CompiledParser<T>.beginUse
 	get() =
 		compiler(use)
 
-val <T> CompiledParser<T>.beginScript
+val <T> CompiledParser<T>.beginQuote
 	get() =
-		compiler(ScriptParser(CompiledScriptParserParent(this), script()))
+		compiler(QuoteParser(CompiledQuoteParserParent(this), script()))
 
 val <T> CompiledParser<T>.beginExit get() =
 	compiler(begin(ExitParserParent(this)))

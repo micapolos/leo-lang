@@ -19,7 +19,7 @@ data class ExitParserParent<T>(val compiledParser: CompiledParser<T>) : Compiled
 fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 	when (this) {
 		is FieldCompiledParserParent ->
-			compiler(compiledParser.resolve(line(name fieldTo typed)))
+			compiledParser.resolveCompiler(line(name fieldTo typed))
 		is FunctionDoesParserParent ->
 			compiler(FunctionParser(compiledParser, type does typed))
 		is FunctionApplyParserParent ->

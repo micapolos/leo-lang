@@ -27,7 +27,7 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is DefineParserCompiler -> process(compiler.defineParser)
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
-		is ScriptParserCompiler -> process(compiler.scriptParser)
+		is ScriptParserCompiler -> process(compiler.quoteParser)
 		is LeonardoParserCompiler -> process(compiler.leonardoParser)
 		is ForgetEverythingParserCompiler -> process(compiler.forgetEverythingParser)
 		is ForgetEverythingEndParserCompiler -> process(compiler.forgetEverythingEndParser)
@@ -87,7 +87,7 @@ fun <T> Processor<Syntax>.process(parser: NothingParser<T>): Processor<Syntax> =
 	process(parser.parentCompiledParser)
 		.process(token(begin(Keyword.NOTHING stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 
-fun <T> Processor<Syntax>.process(parser: ScriptParser<T>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: QuoteParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parent)
 		.syntaxProcess(parser.script)
@@ -110,18 +110,18 @@ fun <T> Processor<Syntax>.process(parser: ForgetEverythingEndParser<T>): Process
 		.process(token(begin(Keyword.EVERYTHING stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 		.process(token(end) of valueKeywordKind)
 
-fun <T> Processor<Syntax>.process(parent: ScriptParserParent<T>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parent: QuoteParserParent<T>): Processor<Syntax> =
 	when (parent) {
-		is FieldScriptParserParent -> this
-			.process(parent.scriptParser)
+		is FieldQuoteParserParent -> this
+			.process(parent.quoteParser)
 			.process(token(begin(parent.name)) of valueKind)
-		is MakeScriptParserParent -> this
+		is MakeQuoteParserParent -> this
 			.process(parent.compiledParser)
 			.process(token(begin(Keyword.MAKE stringIn parent.compiledParser.context.language)) of valueKind)
-		is CommentScriptParserParent -> this
+		is CommentQuoteParserParent -> this
 			.process(parent.compiler)
 			.process(token(begin(Keyword.COMMENT stringIn defaultLanguage)) of commentKind)
-		is CompiledScriptParserParent -> this
+		is CompiledQuoteParserParent -> this
 			.process(parent.compiledParser)
 			.process(token(begin(Keyword.SCRIPT stringIn defaultLanguage)) of commentKind)
 	}

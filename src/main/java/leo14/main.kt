@@ -28,6 +28,7 @@ fun run(reader: CharReader) {
 			println(undoableCharReaderVariable.current.lastDone.toString())
 		}
 		if (printDebug) {
+			println("[DEBUG]")
 			println(undoableCharReaderVariable.current.lastDone)
 			printDebug = false
 		}
