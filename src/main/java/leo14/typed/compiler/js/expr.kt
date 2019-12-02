@@ -36,29 +36,29 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			}
 
 val Typed<Expr>.resolveShow: Typed<Expr>? get() =
-	decompileLinkOrNull?.run {
-		notNullIf(head.typedField.field == "show" fieldTo type()) {
+	resolveLinkOrNull?.run {
+		notNullIf(head.resolveFieldOrNull?.field == "show" fieldTo type()) {
 			tail.term.expr.show.run { typed<Expr>() }
 		}
 	}
 
 val Typed<Expr>.resolveOpen: Typed<Expr>? get() =
-	decompileLinkOrNull?.run {
-		notNullIf(head.typedField.field == "open" fieldTo type()) {
+	resolveLinkOrNull?.run {
+		notNullIf(head.resolveFieldOrNull?.field == "open" fieldTo type()) {
 			tail.term.expr.open.run { typed<Expr>() }
 		}
 	}
 
 val Typed<Expr>.resolveInvoke: Typed<Expr>? get() =
-	decompileLinkOrNull?.run {
-		notNullIf(head.typedField.field.string == "invoke") {
+	resolveLinkOrNull?.run {
+		notNullIf(head.resolveFieldOrNull?.field?.string == "invoke") {
 			term(tail.term.expr.invoke(term.head.expr)) of expressionType
 		}
 	}
 
 val Typed<Expr>.resolveJavascript: Typed<Expr>? get() =
-	decompileLinkOrNull?.run {
-		notNullIf(head.typedField.field == "javascript" fieldTo type()) {
+	resolveLinkOrNull?.run {
+		notNullIf(head.resolveFieldOrNull?.field == "javascript" fieldTo type()) {
 			term(expr(id((term.native as StringExpr).string))) of expressionType
 		}
 	}
@@ -66,7 +66,7 @@ val Typed<Expr>.resolveJavascript: Typed<Expr>? get() =
 val Typed<Expr>.resolveNumberPlus: Typed<Expr>?
 	get() =
 		resolveLinkOrNull?.run {
-			notNullIf(tail.type == numberType && head.typedField.field == "plus" fieldTo numberType) {
+			notNullIf(tail.type == numberType && head.resolveFieldOrNull?.field == "plus" fieldTo numberType) {
 				term(expr(id("a=>b=>a+b")))
 					.invoke(tail.term)
 					.invoke(head.term) of numberType
@@ -76,7 +76,7 @@ val Typed<Expr>.resolveNumberPlus: Typed<Expr>?
 val Typed<Expr>.resolveTextPlus: Typed<Expr>?
 	get() =
 		resolveLinkOrNull?.run {
-			notNullIf(tail.type == textType && head.typedField.field == "plus" fieldTo textType) {
+			notNullIf(tail.type == textType && head.resolveFieldOrNull?.field == "plus" fieldTo textType) {
 				term(expr(id("a=>b=>a+b")))
 					.invoke(tail.term)
 					.invoke(head.term) of textType
@@ -86,7 +86,7 @@ val Typed<Expr>.resolveTextPlus: Typed<Expr>?
 val Typed<Expr>.resolveCircle: Typed<Expr>?
 	get() =
 		resolveLinkOrNull?.run {
-			notNullIf(tail.type == type() && head.typedField.field == "circle" fieldTo type()) {
+			notNullIf(tail.type == type() && head.resolveFieldOrNull?.field == "circle" fieldTo type()) {
 				term(expr(id(
 					"(function() {var div=document.createElement('div');" +
 						"div.style.width='100px';" +
