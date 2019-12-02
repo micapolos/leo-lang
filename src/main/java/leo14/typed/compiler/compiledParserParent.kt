@@ -9,7 +9,6 @@ sealed class CompiledParserParent<T>
 data class FieldCompiledParserParent<T>(val compiledParser: CompiledParser<T>, val name: String) : CompiledParserParent<T>()
 data class FunctionDoesParserParent<T>(val compiledParser: CompiledParser<T>, val type: Type) : CompiledParserParent<T>()
 data class FunctionApplyParserParent<T>(val compiledParser: CompiledParser<T>, val function: Function<T>) : CompiledParserParent<T>()
-data class GiveCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
 data class UseCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
 data class DefineGivesParserParent<T>(val defineParser: DefineParser<T>, val type: Type) : CompiledParserParent<T>()
 data class DefineIsParserParent<T>(val defineParser: DefineParser<T>, val type: Type) : CompiledParserParent<T>()
@@ -24,8 +23,6 @@ fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 			compiler(FunctionParser(compiledParser, type does typed))
 		is FunctionApplyParserParent ->
 			compiledParser.next { updateTyped { function.apply(typed) } }
-		is GiveCompiledParserParent ->
-			compiledParser.next { updateTyped { typed } }
 		is UseCompiledParserParent ->
 			compiledParser.next { updateTyped { typed } }
 		is DefineGivesParserParent ->

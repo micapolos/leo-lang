@@ -123,7 +123,7 @@ fun <T> Processor<Syntax>.process(parent: QuoteParserParent<T>): Processor<Synta
 			.process(token(begin(Keyword.COMMENT stringIn defaultLanguage)) of commentKind)
 		is CompiledQuoteParserParent -> this
 			.process(parent.compiledParser)
-			.process(token(begin(Keyword.SCRIPT stringIn defaultLanguage)) of commentKind)
+			.process(token(begin(Keyword.QUOTE stringIn defaultLanguage)) of commentKind)
 	}
 
 fun <T> Processor<Syntax>.process(matchParser: MatchParser<T>): Processor<Syntax> =
