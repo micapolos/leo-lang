@@ -18,19 +18,19 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 		is BeginToken ->
 			token.begin.string.let {
 				when (it keywordOrNullIn context.language) {
-					Keyword.FUNCTION -> beginFunction
 					Keyword.AS -> beginAs
-					Keyword.APPLY -> beginDo
-					Keyword.GIVE -> beginGive
+					Keyword.APPLY -> beginApply
+					Keyword.DEFINE -> beginDefine
 					Keyword.DELETE -> beginDelete
-					Keyword.NOTHING -> beginNothing
-					Keyword.MATCH -> beginMatch
-					Keyword.MAKE -> beginMake
-					Keyword.DEFINE -> beginRemember
+					Keyword.EXIT -> beginExit
 					Keyword.FORGET -> beginForget
+					Keyword.FUNCTION -> beginFunction
+					Keyword.GIVE -> beginGive
+					Keyword.MAKE -> beginMake
+					Keyword.MATCH -> beginMatch
+					Keyword.NOTHING -> beginNothing
 					Keyword.LEONARDO -> beginLeonardo
 					Keyword.USE -> beginUse
-					Keyword.EXIT -> beginExit
 					else -> begin(it)
 				}
 			}
@@ -102,7 +102,7 @@ val <T> CompiledParser<T>.beginAs
 	get() =
 		compiler(TypeParser(AsTypeParserParent(this), null, context.language, context.typeContext, type()))
 
-val <T> CompiledParser<T>.beginDo
+val <T> CompiledParser<T>.beginApply
 	get() =
 		compiled.typed.function.let { action ->
 			compiler(begin(FunctionApplyParserParent(this, action)))
@@ -128,9 +128,9 @@ val <T> CompiledParser<T>.beginMake
 	get() =
 		compiler(ScriptParser(MakeScriptParserParent(this), script()))
 
-val <T> CompiledParser<T>.beginRemember
+val <T> CompiledParser<T>.beginDefine
 	get() =
-		compiler(TypeParser(null, DefineTypeBeginner(this), context.language, context.typeContext, type()))
+		compiler(DefineParser(this, memory()))
 
 val <T> CompiledParser<T>.beginForget
 	get() =

@@ -5,12 +5,13 @@ import leo14.Keyword
 import leo14.Language
 import leo14.keywordOrNullIn
 import leo14.typed.Type
+import leo14.typed.type
 
 sealed class TypeBeginner<T>
 
 data class FunctionGivesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ArrowGivingTypeBeginner<T>(val typeParser: TypeParser<T>) : TypeBeginner<T>()
-data class DefineTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
+data class DefineTypeBeginner<T>(val defineParser: DefineParser<T>) : TypeBeginner<T>()
 data class ForgetTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 
 fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Compiler<T>? =
@@ -24,7 +25,7 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 							null,
 							typeParser.language,
 							typeParser.typeContext,
-							leo14.typed.type()))
+							type()))
 				else -> null
 			}
 		is FunctionGivesTypeBeginner ->
@@ -39,12 +40,9 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 		is DefineTypeBeginner ->
 			when (begin.string keywordOrNullIn language) {
 				Keyword.IS ->
-					compiler(compiledParser.begin(DefineIsParserParent(compiledParser, type)))
+					compiler(defineParser.beginIs(type))
 				Keyword.GIVES ->
-					compiler(
-						compiledParser
-							.begin(DefineGivesParserParent(compiledParser, type), CompilerKind.COMPILER)
-							.updateCompiled { plusGiven(type) })
+					compiler(defineParser.beginGives(type))
 				else -> null
 			}
 		is ForgetTypeBeginner ->

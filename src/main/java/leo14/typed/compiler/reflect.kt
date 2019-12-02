@@ -90,7 +90,7 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is CompiledParserCompiler -> compiledParser.reflectScriptLine
 					is DeleteParserCompiler -> null
 					is NothingParserCompiler -> null
-					is RememberParserCompiler -> memoryItemParser.reflectScriptLine
+					is DefineParserCompiler -> defineParser.reflectScriptLine
 					is TypeParserCompiler -> typeParser.reflectScriptLine
 					is MatchParserCompiler -> null
 					is ScriptParserCompiler -> null
@@ -106,8 +106,9 @@ val CharReader.reflectScriptLine
 			tokenReader.reflectScriptLine,
 			tokenParser.reflectScriptLine))
 
-val <T> MemoryItemParser<T>.reflectScriptLine
+val <T> DefineParser<T>.reflectScriptLine
 	get() =
-		"parser" lineTo script(
-			"parent" lineTo script(parentCompiledParser.reflectScriptLine),
-			memoryItem.reflectScriptLine)
+		"define" lineTo script(
+			"parser" lineTo script(
+				"parent" lineTo script(parentCompiledParser.reflectScriptLine),
+				memory.reflectScriptLine))

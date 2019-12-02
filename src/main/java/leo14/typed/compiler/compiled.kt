@@ -40,7 +40,7 @@ val <T> Compiled<T>.forgetEverything
 	get() =
 		updateMemory { forgetEverything }
 
-fun <T> Compiled<T>.plus(item: MemoryItem<T>) =
+fun <T> Compiled<T>.plus(item: MemoryItem<T>): Compiled<T> =
 	updateMemory { plus(item) }.updateLocalIndex { next }
 
 fun <T> Compiled<T>.resolve(line: TypedLine<T>, context: Context<T>): Compiled<T> =

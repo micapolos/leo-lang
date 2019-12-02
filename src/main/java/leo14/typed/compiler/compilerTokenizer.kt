@@ -24,7 +24,7 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is CompiledParserCompiler -> processWithTypes(compiler.compiledParser)
 		is DeleteParserCompiler -> process(compiler.deleteParser)
 		is NothingParserCompiler -> process(compiler.nothingParser)
-		is RememberParserCompiler -> process(compiler.memoryItemParser)
+		is DefineParserCompiler -> process(compiler.defineParser)
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
 		is ScriptParserCompiler -> process(compiler.scriptParser)
@@ -150,16 +150,16 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 				.process(token(begin(parent.name)) of valueKind)
 		is DefineIsParserParent ->
 			this
-				.process(parent.compiledParser)
-				.process(token(begin(Keyword.DEFINE stringIn parent.compiledParser.context.language)) of valueKeywordKind)
-				.process(parent.type, parent.compiledParser.context.language)
-				.process(token(begin(Keyword.IS stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(parent.defineParser)
+				//.process(token(begin(Keyword.DEFINE stringIn parent.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
+				.process(parent.type, parent.defineParser.parentCompiledParser.context.language)
+				.process(token(begin(Keyword.IS stringIn parent.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
 		is DefineGivesParserParent ->
 			this
-				.process(parent.compiledParser)
-				.process(token(begin(Keyword.DEFINE stringIn parent.compiledParser.context.language)) of valueKeywordKind)
-				.process(parent.type, parent.compiledParser.context.language)
-				.process(token(begin(Keyword.GIVES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
+				.process(parent.defineParser)
+				//.process(token(begin(Keyword.DEFINE stringIn parent.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
+				.process(parent.type, parent.defineParser.parentCompiledParser.context.language)
+				.process(token(begin(Keyword.GIVES stringIn parent.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
 		is GiveCompiledParserParent ->
 			this
 				.process(parent.compiledParser)
@@ -215,22 +215,18 @@ fun <T> Processor<Syntax>.process(beginner: TypeBeginner<T>): Processor<Syntax> 
 				.process(token(begin(Keyword.GIVING stringIn beginner.typeParser.language)) of valueKeywordKind)
 		is DefineTypeBeginner ->
 			this
-				.process(beginner.compiledParser)
-				.process(token(begin(Keyword.DEFINE stringIn beginner.compiledParser.context.language)) of valueKeywordKind)
+				.process(beginner.defineParser)
+		//.process(token(begin(Keyword.DEFINE stringIn beginner.defineParser.parentCompiledParser.context.language)) of valueKeywordKind)
 		is ForgetTypeBeginner -> this
 	}
 
-fun <T> Processor<Syntax>.process(parser: MemoryItemParser<T>): Processor<Syntax> =
+fun <T> Processor<Syntax>.process(parser: DefineParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parentCompiledParser)
 		.process(token(begin(Keyword.DEFINE stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
-		.process(parser.memoryItem, parser.parentCompiledParser.context.language)
+//.syntaxProcess(script(parser.memory.reflectScriptLine))
 
 fun <T> Processor<Syntax>.process(
 	memoryItem: MemoryItem<T>,
 	language: Language): Processor<Syntax> =
-	this
-		.process(memoryItem.key.type, language)
-		.process(token(begin(Keyword.GIVES stringIn language)) of valueKeywordKind)
-		.process(memoryItem.value.type, language)
-		.process(token(end) of valueKeywordKind)
+	syntaxProcess(script(memoryItem.reflectScriptLine))
