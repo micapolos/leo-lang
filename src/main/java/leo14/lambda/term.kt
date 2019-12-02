@@ -91,7 +91,7 @@ val <T> Term<T>.scriptLine
 
 val <T> Abstraction<Term<T>>.script
 	get() =
-		script("fn" lineTo body.script)
+		script("lambda" lineTo body.script)
 
 val <T> Application<Term<T>>.script
 	get() =
@@ -99,4 +99,4 @@ val <T> Application<Term<T>>.script
 
 val <T> Variable<T>.script
 	get() =
-		script("arg" lineTo script(literal(index.int)))
+		script("variable" lineTo script(literal(index.int)))

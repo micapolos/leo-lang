@@ -14,7 +14,9 @@ val <T> Compiled<T>.reflectScriptLine: ScriptLine get() =
 	"compiled" lineTo script(
 		memory.reflectScriptLine,
 		typed.reflectScriptLine,
-		"locals" lineTo script(literal(localMemorySize.int)))
+		"local" lineTo script(
+			"memory" lineTo script(
+				"size" lineTo script(literal(localMemorySize.int)))))
 
 val <T> Memory<T>.reflectScriptLine get() =
 	itemStack.reflectOrEmptyScriptLine("memory", MemoryItem<T>::reflectScriptLine)

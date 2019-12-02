@@ -5,7 +5,7 @@ import leo14.lineTo
 import leo14.script
 
 val <T> Typed<T>.reflectScriptLine get() =
-	"typed" lineTo script(term.scriptLine, type.scriptLine)
+	"value" lineTo script(term.scriptLine, type.scriptLine)
 
 val <T> Function<T>.reflectScriptLine
 	get() =

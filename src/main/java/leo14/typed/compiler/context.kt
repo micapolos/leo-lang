@@ -14,7 +14,8 @@ data class Context<T>(
 	val literalCompile: LiteralCompile<T>,
 	val evaluator: Evaluator<T>,
 	val typeContext: TypeContext,
-	val decompileLiteral: DecompileLiteral<T>) {
+	val decompileLiteral: DecompileLiteral<T>,
+	val targetScript: Script) {
 	override fun toString() = "$reflectScriptLine"
 }
 
@@ -26,4 +27,6 @@ fun <T> Context<T>.resolve(typed: Typed<T>): Typed<T>? =
 
 val <T> Context<T>.reflectScriptLine
 	get() =
-		"context" lineTo script(language.reflectScriptLine)
+		"context" lineTo script(
+			"target" lineTo targetScript,
+			language.reflectScriptLine)
