@@ -333,6 +333,15 @@ tailrec fun <V, R : Any> Index.plusMapFirstIndexed(stack: Stack<V>, fn: V.() -> 
 		}
 	}
 
+fun <V, R : Any> Stack<V>.indexedMapFirst(fn: (Index, V) -> R?): R? =
+	indexedMapFirst(index0, fn)
+
+tailrec fun <V, R : Any> Stack<V>.indexedMapFirst(index: Index, fn: (Index, V) -> R?): R? =
+	when (this) {
+		is EmptyStack -> null
+		is LinkStack -> fn(index, link.value) ?: link.stack.indexedMapFirst(index.next, fn)
+	}
+
 fun <V, R : Any> Stack<V>.mapFirstIndexed(fn: V.() -> R?): Pair<Index, R>? =
 	zero.index.plusMapFirstIndexed(this, fn)
 
