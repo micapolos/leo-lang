@@ -79,14 +79,14 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 						link1.value.fieldOrNull?.let { field ->
 							ifOrNull(field.rhs.isEmpty) {
 								when (field.string) {
-									"open" -> link.tail.decompile(TypedLine<Native>::decompileLiteral).open
-									"show" -> link.tail.decompile(TypedLine<Native>::decompileLiteral).show
+									"open" -> link.tail.decompile(TypedLine<Native>::decompileLiteral).open.run { typed<Native>() }
+									"show" -> link.tail.decompile(TypedLine<Native>::decompileLiteral).show.run { typed<Native>() }
 									"js" -> typed(native(link.tail.decompile(TypedLine<Native>::decompileLiteral).compileTyped.expr.code))
 									else -> null
 								}
 							}
 						}
-					}?.run { typed<Native>() }
+					}
 			}
 		}
 
