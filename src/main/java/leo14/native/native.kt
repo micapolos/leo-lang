@@ -15,13 +15,14 @@ data class SwitchNative(val falseTerm: Term<Native>, val trueTerm: Term<Native>)
 object NumberIsZeroNative : Native()
 object NumberDecNative : Native()
 object NumberIncNative : Native()
-object NumberPlusIntNative : Native()
-object NumberTimesIntNative : Native()
-object NumberPlusDoubleNative : Native()
+object NumberMinusNumberNative : Native()
+object NumberTimesNumberNative : Native()
+object NumberPlusNumberNative : Native()
 object StringEqualsStringNative : Native()
 object StringPlusStringNative : Native()
 data class EqualsStringNative(val string: String) : Native()
 data class PlusNumberNative(val number: Number) : Native()
+data class MinusNumberNative(val number: Number) : Native()
 data class PlusStringNative(val string: String) : Native()
 data class TimesDoubleNative(val number: Number) : Native()
 object LogNative : Native()
@@ -34,14 +35,16 @@ fun native(int: Int): Native = native(number(int))
 val numberIsZeroNative: Native = NumberIsZeroNative
 val numberDecNative: Native = NumberDecNative
 val numberIncNative: Native = NumberIncNative
-val numberTimesIntNative: Native = NumberTimesIntNative
-val numberPlusNumberNative: Native = NumberPlusDoubleNative
+val numberTimesNumberNative: Native = NumberTimesNumberNative
+val numberPlusNumberNative: Native = NumberPlusNumberNative
+val numberMinusNumberNative: Native = NumberMinusNumberNative
 val stringEqualsStringNative: Native = StringEqualsStringNative
 val stringPlusStringNative: Native = StringPlusStringNative
 fun switchNative(falseTerm: Term<Native>, trueTerm: Term<Native>): Native = SwitchNative(falseTerm, trueTerm)
 
-fun plusNative(int: Number): Native = PlusNumberNative(int)
-fun timesNative(int: Number): Native = TimesDoubleNative(int)
+fun plusNative(number: Number): Native = PlusNumberNative(number)
+fun minusNative(number: Number): Native = MinusNumberNative(number)
+fun timesNative(number: Number): Native = TimesDoubleNative(number)
 fun equalsNative(string: String): Native = EqualsStringNative(string)
 fun plusNative(string: String): Native = PlusStringNative(string)
 val logNative: Native = LogNative
@@ -66,15 +69,16 @@ fun Native.invoke(native: Native): Term<Native> =
 		is NumberIsZeroNative -> term(native(native.number.bigDecimal == BigDecimal.ZERO))
 		is NumberIncNative -> term(native(number(native.number.bigDecimal.inc())))
 		is NumberDecNative -> term(native(number(native.number.bigDecimal.dec())))
-		is NumberPlusIntNative -> term(plusNative(native.number))
-		is NumberTimesIntNative -> term(timesNative(native.number))
-		is NumberPlusDoubleNative -> term(plusNative(native.number))
+		is NumberPlusNumberNative -> term(plusNative(native.number))
+		is NumberMinusNumberNative -> term(minusNative(native.number))
+		is NumberTimesNumberNative -> term(timesNative(native.number))
 		is StringEqualsStringNative -> term(equalsNative(native.string))
 		is StringPlusStringNative -> term(plusNative(native.string))
 		is EqualsStringNative -> term(native(string == native.string))
 		is PlusNumberNative -> term(native(number(number.bigDecimal + native.number.bigDecimal)))
 		is TimesDoubleNative -> term(native(number(number.bigDecimal * native.number.bigDecimal)))
 		is PlusNumberNative -> term(native(number(number.bigDecimal + native.number.bigDecimal)))
+		is MinusNumberNative -> term(native(number(number.bigDecimal - native.number.bigDecimal)))
 		is PlusStringNative -> term(native(string + native.string))
 		is LogNative -> term(native.also { println(it) })
 	} ?: error("$this.invoke($native)")

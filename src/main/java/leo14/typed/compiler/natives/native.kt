@@ -1,6 +1,7 @@
 package leo14.typed.compiler.natives
 
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo.java.lang.sendMail
 import leo13.linkOrNull
 import leo14.*
@@ -42,20 +43,13 @@ val TypedLine<Native>.decompileLiteral: Literal?
 
 val Typed<Native>.nativeResolve: Typed<Native>?
 	get() =
-		resolveLinkOrNull?.let { link ->
+		null
+			?: resolveBinaryOp(numberLine, "plus", numberPlusNumberNative)
+			?: resolveBinaryOp(numberLine, "minus", numberMinusNumberNative)
+			?: resolveBinaryOp(numberLine, "times", numberTimesNumberNative)
+			?: resolveBinaryOp(textLine, "plus", stringPlusStringNative)
+			?: resolveLinkOrNull?.let { link ->
 			when (type) {
-				type(
-					numberLine,
-					"plus" lineTo numberType) ->
-					term(numberPlusNumberNative)
-						.invoke(link.tail.term)
-						.invoke(link.head.term) of numberType
-				type(
-					textLine,
-					"plus" lineTo textType) ->
-					term(stringPlusStringNative)
-						.invoke(link.tail.term)
-						.invoke(link.head.term) of textType
 				type(
 					"mail" lineTo type(
 						"to" lineTo textType,
@@ -89,6 +83,15 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 					}
 			}
 		}
+
+fun Typed<Native>.resolveBinaryOp(argLine: Line, name: String, opNative: Native): Typed<Native>? =
+	resolveLinkOrNull?.let { link ->
+		notNullIf(this.type == type(argLine, name lineTo type(argLine))) {
+			term(opNative)
+				.invoke(link.tail.term)
+				.invoke(link.head.term) of type(argLine)
+		}
+	}
 
 fun typedLine(native: Native): TypedLine<Native> =
 	when (native) {

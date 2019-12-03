@@ -92,7 +92,7 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is DefineParserCompiler -> defineParser.reflectScriptLine
 					is TypeParserCompiler -> typeParser.reflectScriptLine
 					is MatchParserCompiler -> null
-					is QuoteParserCompiler -> null
+					is QuoteParserCompiler -> quoteParser.reflectScriptLine
 					is LeonardoParserCompiler -> null
 					is ForgetEverythingParserCompiler -> null
 					is ForgetEverythingEndParserCompiler -> null
@@ -111,3 +111,24 @@ val <T> DefineParser<T>.reflectScriptLine
 			"parser" lineTo script(
 				"parent" lineTo script(parentCompiledParser.reflectScriptLine),
 				memory.reflectScriptLine))
+
+val <T> QuoteParser<T>.reflectScriptLine get() =
+	"quote" lineTo script(
+		"parser" lineTo script(
+			parent.reflectScriptLine,
+			"quoted" lineTo script))
+
+val <T> QuoteParserParent<T>.reflectScriptLine: ScriptLine get() =
+	"parent" lineTo
+		when (this) {
+			is FieldQuoteParserParent ->
+				script(
+					quoteParser.reflectScriptLine,
+					"name" lineTo script(name))
+			is MakeQuoteParserParent ->
+				script(compiledParser.reflectScriptLine)
+			is CommentQuoteParserParent ->
+				script(compiler.reflectScriptLine)
+			is CompiledQuoteParserParent ->
+				script(compiledParser.reflectScriptLine)
+		}
