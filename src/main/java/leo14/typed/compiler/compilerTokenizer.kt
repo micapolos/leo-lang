@@ -27,7 +27,7 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is DefineParserCompiler -> process(compiler.defineParser)
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
-		is ScriptParserCompiler -> process(compiler.quoteParser)
+		is QuoteParserCompiler -> process(compiler.quoteParser)
 		is LeonardoParserCompiler -> process(compiler.leonardoParser)
 		is ForgetEverythingParserCompiler -> process(compiler.forgetEverythingParser)
 		is ForgetEverythingEndParserCompiler -> process(compiler.forgetEverythingEndParser)

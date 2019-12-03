@@ -92,7 +92,7 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is DefineParserCompiler -> defineParser.reflectScriptLine
 					is TypeParserCompiler -> typeParser.reflectScriptLine
 					is MatchParserCompiler -> null
-					is ScriptParserCompiler -> null
+					is QuoteParserCompiler -> null
 					is LeonardoParserCompiler -> null
 					is ForgetEverythingParserCompiler -> null
 					is ForgetEverythingEndParserCompiler -> null

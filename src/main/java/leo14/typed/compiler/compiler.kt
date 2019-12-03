@@ -19,7 +19,7 @@ data class DefineParserCompiler<T>(val defineParser: DefineParser<T>) : Compiler
 }
 data class TypeParserCompiler<T>(val typeParser: TypeParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class MatchParserCompiler<T>(val matchParser: MatchParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
-data class ScriptParserCompiler<T>(val quoteParser: QuoteParser<T>) : Compiler<T>() {
+data class QuoteParserCompiler<T>(val quoteParser: QuoteParser<T>) : Compiler<T>() {
 	override fun toString() = super.toString()
 }
 data class LeonardoParserCompiler<T>(val leonardoParser: LeonardoParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
@@ -35,7 +35,7 @@ fun <T> compiler(deleteParser: DeleteParser<T>): Compiler<T> = DeleteParserCompi
 fun <T> compiler(nothingParser: NothingParser<T>): Compiler<T> = NothingParserCompiler(nothingParser)
 fun <T> compiler(defineParser: DefineParser<T>): Compiler<T> = DefineParserCompiler(defineParser)
 fun <T> compiler(matchParser: MatchParser<T>): Compiler<T> = MatchParserCompiler(matchParser)
-fun <T> compiler(quoteParser: QuoteParser<T>): Compiler<T> = ScriptParserCompiler(quoteParser)
+fun <T> compiler(quoteParser: QuoteParser<T>): Compiler<T> = QuoteParserCompiler(quoteParser)
 fun <T> compiler(leonardoParser: LeonardoParser<T>): Compiler<T> = LeonardoParserCompiler(leonardoParser)
 
 fun <T> Compiler<T>.parse(token: Token): Compiler<T> =
@@ -64,7 +64,7 @@ fun <T> Compiler<T>.parseDynamic(token: Token): Compiler<T> =
 		is NothingParserCompiler -> nothingParser.parse(token)
 		is DefineParserCompiler -> defineParser.parse(token)
 		is MatchParserCompiler -> matchParser.parse(token)
-		is ScriptParserCompiler -> quoteParser.parse(token)
+		is QuoteParserCompiler -> quoteParser.parse(token)
 		is LeonardoParserCompiler -> leonardoParser.parse(token)
 		is ForgetEverythingParserCompiler -> forgetEverythingParser.parse(token)
 		is ForgetEverythingEndParserCompiler -> forgetEverythingEndParser.parse(token)
