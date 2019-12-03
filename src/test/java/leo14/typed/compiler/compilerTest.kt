@@ -116,16 +116,6 @@ class CompilerTest {
 	}
 
 	@Test
-	fun compiledGive() {
-		compiler(compiled(typed("zero")))
-			.parse(
-				script(
-					Keyword.GIVE.stringIn(defaultLanguage) lineTo script(
-						"one" lineTo script())))
-			.assertEqualTo(compiler(compiled(typed("one"))))
-	}
-
-	@Test
 	fun compiledAs() {
 		compiler(compiled(typed()))
 			.parse(

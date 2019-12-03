@@ -51,7 +51,6 @@ val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 		is FieldCompiledParserParent -> "begin" lineTo script(compiledParser.reflectScriptLine)
 		is FunctionDoesParserParent -> null
 		is FunctionApplyParserParent -> null
-		is GiveCompiledParserParent -> null
 		is UseCompiledParserParent -> null
 		is DefineGivesParserParent -> null
 		is DefineIsParserParent -> null

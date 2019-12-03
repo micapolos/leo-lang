@@ -8,7 +8,7 @@ class StringTest {
 	fun eval() {
 		"".eval.assertEqualTo("")
 		"foo  ".eval.assertEqualTo("foo()")
-		"remember zero  is one    zero  ".eval.assertEqualTo("one()")
+		"define zero  is one    zero  ".eval.assertEqualTo("one()")
 		//"2plus(3)".eval.assertEqualTo("5")
 	}
 }

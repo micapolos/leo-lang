@@ -14,14 +14,6 @@ import kotlin.test.Test
 
 class CompiledTest {
 	@Test
-	fun resolve() {
-		val compiled = compiled(typed(native(0)))
-		compiled
-			.resolve("x" lineTo typed(), context)
-			.assertEqualTo(compiled.updateTyped { plus("x" lineTo typed()).resolve!! })
-	}
-
-	@Test
 	fun typedForEval() {
 		compiled(
 			arg0<Native>() of numberType,

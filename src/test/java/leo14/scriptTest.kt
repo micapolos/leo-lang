@@ -41,13 +41,13 @@ class ScriptTest {
 
 		script("zero", "one")
 			.indentString
-			.assertEqualTo("zero one")
+			.assertEqualTo(linesString("zero", "one"))
 
 		script(
 			"zero" lineTo script(),
 			"plus" lineTo script("one"))
 			.indentString
-			.assertEqualTo("zero plus: one")
+			.assertEqualTo(linesString("zero", "plus: one"))
 
 		script(
 			"zero" lineTo script(),
@@ -56,7 +56,8 @@ class ScriptTest {
 			.indentString
 			.assertEqualTo(
 				linesString(
-					"zero plus: one",
+					"zero",
+					"plus: one",
 					"plus: two"))
 
 		script(
@@ -95,13 +96,14 @@ class ScriptTest {
 					"    y: 15"))
 
 		script(
-			"remember" lineTo script(
+			"define" lineTo script(
 				"my" lineTo script(),
 				"favourite" lineTo script(),
 				"color" lineTo script(),
 				"is" lineTo script("red")))
 			.indentString
-			.assertEqualTo("remember: my favourite color is: red")
+			.assertEqualTo(linesString("define", "  my", "  favourite", "  color", "  is: red"))
+
 	}
 
 	@Test

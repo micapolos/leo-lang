@@ -26,15 +26,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun evalGive() {
-		script(
-			"zero" lineTo script(),
-			"give" lineTo script("one"))
-			.eval
-			.assertEqualTo(script("one"))
-	}
-
-	@Test
 	fun evalAs() {
 		script(
 			"zero" lineTo script(),
@@ -146,7 +137,7 @@ class EvalTest {
 	@Test
 	fun rememberItIsAndRemind() {
 		script(
-			"remember" lineTo script(
+			Keyword.DEFINE.string lineTo script(
 				"zero" lineTo script(),
 				"is" lineTo script("one")),
 			"zero" lineTo script())
@@ -169,22 +160,22 @@ class EvalTest {
 	@Test
 	fun simulateHasUsingRememberItIs() {
 		script(
-			"remember" lineTo script(
+			Keyword.DEFINE.string lineTo script(
 				"zero" lineTo script(),
-				"is" lineTo script(
+				Keyword.IS.string lineTo script(
 					"zero" lineTo script(),
-					"as" lineTo script(
-						"choice" lineTo script("zero", "one")))),
-			"remember" lineTo script(
+					Keyword.AS.string lineTo script(
+						Keyword.CHOICE.string lineTo script("zero", "one")))),
+			Keyword.DEFINE.string lineTo script(
 				"one" lineTo script(),
-				"is" lineTo script(
+				Keyword.IS.string lineTo script(
 					"one" lineTo script(),
-					"as" lineTo script(
-						"choice" lineTo script("zero", "one")))),
-			"remember" lineTo script(
-				"choice" lineTo script("zero", "one"),
+					Keyword.AS.string lineTo script(
+						Keyword.CHOICE.string lineTo script("zero", "one")))),
+			Keyword.DEFINE.string lineTo script(
+				Keyword.CHOICE.string lineTo script("zero", "one"),
 				"type" lineTo script(),
-				"is" lineTo script(
+				Keyword.IS.string lineTo script(
 					"bit" lineTo script())),
 			"zero" lineTo script(),
 			"type" lineTo script())

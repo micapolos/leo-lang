@@ -78,29 +78,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun recursionFactorial() {
-		val fact =
-			fn(
-				fn(
-					fn(
-						term(
-							switchNative(
-								fn(arg2()),
-								fn(arg3<Native>()
-									.invoke(arg3())
-									.invoke(term(numberTimesIntNative).invoke(arg2()).invoke(arg1()))
-									.invoke(term(numberDecNative).invoke(arg1())))))
-							.invoke(term(numberIsZeroNative).invoke(arg0()))
-							.invoke(id()))))
-		fn(arg0<Native>().invoke(arg0()))
-			.invoke(fact)
-			.invoke(term(native(1)))
-			.invoke(term(native(10)))
-				.nativeEval
-			.assertEqualTo(term(native(3628800)))
-	}
-
-	@Test
 	fun stackOverflow() {
 		assertFails {
 			val fn =
