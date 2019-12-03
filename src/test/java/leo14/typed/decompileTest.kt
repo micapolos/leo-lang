@@ -6,19 +6,20 @@ import leo14.lineTo
 import leo14.literal
 import leo14.native.native
 import leo14.script
+import leo14.typed.compiler.natives.decompile
 import kotlin.test.Test
 
 class DecompileTest {
 	@Test
 	fun string() {
-		typed(native("Hello, world!"))
+		leo14.typed.compiler.natives.typed(native("Hello, world!"))
 			.decompile
 			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test
 	fun field() {
-		typed("text" fieldTo typed(native("Hello, world!")))
+		typed("text" fieldTo leo14.typed.compiler.natives.typed(native("Hello, world!")))
 			.decompile
 			.assertEqualTo(script("text" fieldTo literal("Hello, world!")))
 	}
@@ -26,8 +27,8 @@ class DecompileTest {
 	@Test
 	fun struct() {
 		typed("vec" fieldTo typed(
-			"x" fieldTo typed(native(2.0)),
-			"y" fieldTo typed(native(3.0))))
+			"x" fieldTo leo14.typed.compiler.natives.typed(native(2.0)),
+			"y" fieldTo leo14.typed.compiler.natives.typed(native(3.0))))
 			.decompile
 			.assertEqualTo(
 				script(
@@ -38,7 +39,7 @@ class DecompileTest {
 
 	@Test
 	fun nativeInt() {
-		typed(native(123))
+		leo14.typed.compiler.natives.typed(native(123))
 			.decompile
 			.assertEqualTo(script(literal(123)))
 	}
@@ -46,8 +47,8 @@ class DecompileTest {
 	@Test
 	fun nativeFields() {
 		typed(
-			"x" lineTo typed(native(2)),
-			"y" lineTo typed(native(3)))
+			"x" lineTo leo14.typed.compiler.natives.typed(native(2)),
+			"y" lineTo leo14.typed.compiler.natives.typed(native(3)))
 			.decompile
 			.assertEqualTo(
 				script(

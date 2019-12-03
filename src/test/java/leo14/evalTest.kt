@@ -88,58 +88,53 @@ class EvalTest {
 			.assertEqualTo(script("y" lineTo script("one")))
 	}
 
-//	@Test
-//	fun evalWrap() {
-//		script(
-//			"vec" lineTo script(
-//				"x" lineTo script("zero"),
-//				"y" lineTo script("one")),
-//			"z" lineTo script())
-//			.eval
-//			.assertEqualTo(
-//				script(
-//					"z" lineTo script(
-//						"vec" lineTo script(
-//							"x" lineTo script("zero"),
-//							"y" lineTo script("one")))))
-//	}
+	@Test
+	fun evalMake() {
+		script(
+			"vec" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")),
+			Keyword.MAKE.string lineTo script("z"))
+			.eval
+			.assertEqualTo(
+				script(
+					"z" lineTo script(
+						"vec" lineTo script(
+							"x" lineTo script("zero"),
+							"y" lineTo script("one")))))
+	}
 
-//	@Test
-//	fun evalAction() {
-//		script(
-//			"action" lineTo script(
-//				"it" lineTo script("zero"),
-//				"does" lineTo script("plus" lineTo script("one"))))
-//			.eval
-//			.assertEqualTo(
-//				script(
-//					"action" lineTo script(
-//						"it" lineTo script("zero"),
-//						"gives" lineTo script(
-//							"zero" lineTo script(),
-//							"plus" lineTo script("one")))))
-//	}
-//
-//	@Test
-//	fun evalActionDo() {
-//		script(
-//			"action" lineTo script(
-//				"it" lineTo script("zero"),
-//				"does" lineTo script("plus" lineTo script("one"))),
-//			"do" lineTo script("zero"))
-//			.eval
-//			.assertEqualTo(
-//				script(
-//					"zero" lineTo script(),
-//					"plus" lineTo script("one")))
-//	}
+	@Test
+	fun evalFunction() {
+		script(
+			Keyword.FUNCTION.string lineTo script(
+				"zero" lineTo script(),
+				Keyword.GIVES.string lineTo script("one")))
+			.eval
+			.assertEqualTo(
+				script(
+					Keyword.FUNCTION.string lineTo script(
+						"zero" lineTo script(),
+						Keyword.GIVES.string lineTo script("one"))))
+	}
+
+	@Test
+	fun evalFunctionApply() {
+		script(
+			Keyword.FUNCTION.string lineTo script(
+				"zero" lineTo script(),
+				Keyword.GIVES.string lineTo script("one")),
+			Keyword.APPLY.string lineTo script("zero"))
+			.eval
+			.assertEqualTo(script("one"))
+	}
 
 	@Test
 	fun rememberItIsAndRemind() {
 		script(
 			Keyword.DEFINE.string lineTo script(
 				"zero" lineTo script(),
-				"is" lineTo script("one")),
+				Keyword.IS.string lineTo script("one")),
 			"zero" lineTo script())
 			.eval
 			.assertEqualTo(script("one"))
@@ -148,10 +143,10 @@ class EvalTest {
 	@Test
 	fun rememberAndForget() {
 		script(
-			"remember" lineTo script(
-				"it" lineTo script("zero"),
-				"is" lineTo script("one")),
-			"forget" lineTo script("zero"),
+			Keyword.DEFINE.string lineTo script(
+				"zero" lineTo script(),
+				Keyword.IS.string lineTo script("one")),
+			Keyword.FORGET.string lineTo script("zero"),
 			"zero" lineTo script())
 			.eval
 			.assertEqualTo(script("zero"))

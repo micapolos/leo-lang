@@ -60,15 +60,15 @@ class TypedTest {
 	fun resolve() {
 		typed(
 			"point" lineTo typed(
-				"x" lineTo typed(native(10)),
-				"y" lineTo typed(native(11))),
+				"x" lineTo leo14.typed.compiler.natives.typed(native(10)),
+				"y" lineTo leo14.typed.compiler.natives.typed(native(11))),
 			"x" lineTo typed())
 			.resolve
 			.assertEqualTo(
 				typed(
 					"point" lineTo typed(
-						"x" lineTo typed(native(10)),
-						"y" lineTo typed(native(11))))
+						"x" lineTo leo14.typed.compiler.natives.typed(native(10)),
+						"y" lineTo leo14.typed.compiler.natives.typed(native(11))))
 					.resolve("x" fieldTo typed()))
 	}
 
@@ -76,8 +76,8 @@ class TypedTest {
 	fun resolveField_access() {
 		val typed = typed(
 			"point" lineTo typed(
-				"x" lineTo typed(native(10)),
-				"y" lineTo typed(native(11))))
+				"x" lineTo leo14.typed.compiler.natives.typed(native(10)),
+				"y" lineTo leo14.typed.compiler.natives.typed(native(11))))
 
 		typed
 			.resolve("x" fieldTo typed())

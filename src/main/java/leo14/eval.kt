@@ -5,7 +5,7 @@ import leo14.typed.compiler.CompiledParserCompiler
 import leo14.typed.compiler.natives.emptyEvaluator
 import leo14.typed.compiler.natives.leoEval
 import leo14.typed.compiler.parse
-import leo14.typed.decompile
+import leo14.typed.compiler.natives.decompile
 
 val String.eval: String
 	get() = leoEval
