@@ -50,7 +50,7 @@ fun <T> Compiler<T>.parseDynamic(token: Token): Compiler<T> =
 		is TypeParserCompiler -> typeParser.parse(token)
 		is ChoiceParserCompiler -> choiceParser.parse(token)
 		is ArrowParserCompiler -> arrowParser.parse(token)
-		is CompiledParserCompiler -> compiledParser.parse(token)
+		is CompiledParserCompiler -> compiledParser.compile(token)
 		is ActionParserCompiler -> functionParser.parse(token)
 		is DefineParserCompiler -> defineParser.parse(token)
 		is MatchParserCompiler -> matchParser.parse(token)
