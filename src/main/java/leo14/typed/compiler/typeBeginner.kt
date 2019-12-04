@@ -1,9 +1,6 @@
 package leo14.typed.compiler
 
-import leo14.Begin
-import leo14.Keyword
-import leo14.Language
-import leo14.keywordOrNullIn
+import leo14.*
 import leo14.typed.Type
 import leo14.typed.type
 
@@ -33,7 +30,11 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 					compiler(
 						compiledParser
 							.begin(FunctionDoesParserParent(compiledParser, type), CompilerKind.COMPILER)
-							.updateCompiled { plusGiven(type) })
+							.updateCompiled {
+								plusGiven(
+									Keyword.GIVEN stringIn compiledParser.context.language,
+									type)
+							})
 				else -> null
 			}
 		is DefineTypeBeginner ->

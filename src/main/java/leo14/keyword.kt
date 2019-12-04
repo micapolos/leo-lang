@@ -25,6 +25,7 @@ enum class Keyword {
 	FOURTH,
 	FUNCTION,
 	GIVE,
+	GIVEN,
 	GIVES,
 	GIVING,
 	IS,
@@ -81,6 +82,7 @@ val Keyword.polishString: String
 			Keyword.FOURTH -> "czwarty"
 			Keyword.FUNCTION -> "funkcja"
 			Keyword.GIVE -> "daj"
+			Keyword.GIVEN -> "dany"
 			Keyword.GIVES -> "daje"
 			Keyword.GIVING -> "dająca"
 			Keyword.IS -> "jest"
@@ -131,6 +133,7 @@ val Keyword.germanString: String
 			Keyword.FOURTH -> "vierte"
 			Keyword.FUNCTION -> "funktion"
 			Keyword.GIVE -> "gib"
+			Keyword.GIVEN -> TODO()
 			Keyword.GIVES -> TODO()
 			Keyword.GIVING -> "geben"
 			Keyword.IS -> "ist"

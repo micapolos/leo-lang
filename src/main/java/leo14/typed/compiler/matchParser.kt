@@ -2,10 +2,7 @@ package leo14.typed.compiler
 
 import leo13.Stack
 import leo13.push
-import leo14.BeginToken
-import leo14.EndToken
-import leo14.LiteralToken
-import leo14.Token
+import leo14.*
 import leo14.typed.Line
 import leo14.typed.Typed
 import leo14.typed.lineTo
@@ -24,7 +21,11 @@ fun <T> MatchParser<T>.parse(token: Token): Compiler<T> =
 				compiler(
 					parentCompiledParser
 						.begin(MatchParserParent(copy(match = case.match), token.begin.string), CompilerKind.COMPILER)
-						.updateCompiled { plusGiven(parentCompiledParser.compiled.typed.type) })
+						.updateCompiled {
+							plusGiven(
+								Keyword.GIVEN stringIn parentCompiledParser.context.language,
+								parentCompiledParser.compiled.typed.type)
+						})
 			}
 		is EndToken ->
 			parentCompiledParser.nextCompiler { updateTyped { match.end() } }

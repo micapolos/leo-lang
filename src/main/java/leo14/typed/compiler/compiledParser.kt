@@ -18,14 +18,14 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 		is BeginToken ->
 			token.begin.string.let {
 				when (it keywordOrNullIn context.language) {
-					Keyword.AS -> beginAs
-					Keyword.DEFINE -> beginDefine
-					Keyword.FUNCTION -> beginFunction
-					Keyword.MAKE -> beginMake
-					Keyword.MATCH -> beginMatch
-					Keyword.QUOTE -> beginQuote
-					Keyword.USE -> beginUse
-					else -> begin(it)
+					Keyword.AS -> parseAs
+					Keyword.DEFINE -> parseDefine
+					Keyword.GIVE -> parseGive
+					Keyword.FUNCTION -> parseFunction
+					Keyword.MAKE -> parseMake
+					Keyword.MATCH -> parseMatch
+					Keyword.QUOTE -> parseQuote
+					else -> parse(it)
 				}
 			}
 		is EndToken -> end
@@ -74,7 +74,13 @@ fun <T> CompiledParser<T>.parse(keyword: Keyword, rhs: Typed<T>): CompiledParser
 		Keyword.APPLY -> parseApply(rhs)
 		Keyword.DELETE -> parseDelete(rhs)
 		Keyword.EVALUATE -> parseEvaluate(rhs)
+		Keyword.GIVE -> parseGive(rhs)
 		else -> null
+	}
+
+fun <T> CompiledParser<T>.parseApply(rhs: Typed<T>): CompiledParser<T>? =
+	compiled.typed.functionOrNull?.applyOrNull(rhs)?.let { applied ->
+		next { updateTyped { applied } }
 	}
 
 fun <T> CompiledParser<T>.parseDelete(rhs: Typed<T>): CompiledParser<T>? =
@@ -87,10 +93,8 @@ fun <T> CompiledParser<T>.parseEvaluate(rhs: Typed<T>): CompiledParser<T>? =
 		parseEvaluate
 	}
 
-fun <T> CompiledParser<T>.parseApply(rhs: Typed<T>): CompiledParser<T>? =
-	compiled.typed.functionOrNull?.applyOrNull(rhs)?.let { applied ->
-		next { updateTyped { applied } }
-	}
+fun <T> CompiledParser<T>.parseGive(rhs: Typed<T>): CompiledParser<T>? =
+	next { updateTyped { rhs } }
 
 val <T> CompiledParser<T>.parseDelete
 	get() =
@@ -123,47 +127,44 @@ fun <T> CompiledParser<T>.parse(literal: Literal) =
 fun <T> CompiledParser<T>.plus(script: Script): CompiledParser<T> =
 	updateCompiled { updateTyped { plus(script, context.literalCompile) } }
 
-val <T> CompiledParser<T>.forgetEverything: CompiledParser<T>
-	get() =
-		updateCompiled { forgetEverything }
-
 val <T> CompiledParser<T>.decompile: Script
 	get() =
 		compiled.typed.decompile(context.decompileLiteral)
 
-val <T> CompiledParser<T>.use
+val <T> CompiledParser<T>.beginGive
 	get(): CompiledParser<T> =
-		begin(UseCompiledParserParent(this)).updateCompiled { plusUsed }
+		begin(FieldCompiledParserParent(this, Keyword.GIVE stringIn context.language))
+			.updateCompiled { plusGiven(Keyword.GIVEN stringIn context.language, compiled.typed) }
 
-val <T> CompiledParser<T>.beginFunction
+val <T> CompiledParser<T>.parseFunction
 	get() =
 		compiler(TypeParser(null, FunctionGivesTypeBeginner(this), context.language, context.typeContext, type()))
 
-val <T> CompiledParser<T>.beginAs
+val <T> CompiledParser<T>.parseAs
 	get() =
 		compiler(TypeParser(AsTypeParserParent(this), null, context.language, context.typeContext, type()))
 
-val <T> CompiledParser<T>.beginMatch
+val <T> CompiledParser<T>.parseMatch
 	get() =
 		compiler(MatchParser(this, stack(), compiled.typed.beginMatch()))
 
-val <T> CompiledParser<T>.beginMake
+val <T> CompiledParser<T>.parseMake
 	get() =
 		compiler(QuoteParser(MakeQuoteParserParent(this), script()))
 
-val <T> CompiledParser<T>.beginDefine
+val <T> CompiledParser<T>.parseDefine
 	get() =
 		compiler(DefineParser(this, memory()))
 
-val <T> CompiledParser<T>.beginUse
+val <T> CompiledParser<T>.parseGive
 	get() =
-		compiler(use)
+		compiler(beginGive)
 
-val <T> CompiledParser<T>.beginQuote
+val <T> CompiledParser<T>.parseQuote
 	get() =
 		compiler(QuoteParser(CompiledQuoteParserParent(this), script()))
 
-fun <T> CompiledParser<T>.begin(string: String) =
+fun <T> CompiledParser<T>.parse(string: String) =
 	CompiledParserCompiler(
 		begin(FieldCompiledParserParent(this, string)))
 

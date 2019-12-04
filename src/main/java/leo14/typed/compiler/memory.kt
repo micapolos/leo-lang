@@ -2,10 +2,7 @@ package leo14.typed.compiler
 
 import leo13.*
 import leo14.lambda.Term
-import leo14.lambda.arg0
-import leo14.typed.TypeKey
 import leo14.typed.Typed
-import leo14.typed.of
 
 data class Memory<T>(val itemStack: Stack<MemoryItem<T>>)
 
@@ -31,10 +28,3 @@ fun <T> Memory<T>.resolveForEnd(term: Term<T>, index: Index): Term<T> =
 	term.fold(itemStack.takeOrNull(index)!!) {
 		resolveForEnd(it.value)
 	}
-
-fun <T> Memory<T>.forget(key: TypeKey): Memory<T> =
-	plus(item(key, value(memoryBinding(arg0<T>() of key.type, isAction = true))))
-
-val <T> Memory<T>.forgetEverything
-	get() =
-		fold(itemStack.reverse) { forget(it.key) }

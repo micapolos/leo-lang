@@ -2,10 +2,7 @@ package leo14.typed.compiler
 
 import leo13.fold
 import leo13.reverse
-import leo14.BeginToken
-import leo14.EndToken
-import leo14.LiteralToken
-import leo14.Token
+import leo14.*
 import leo14.typed.Type
 import leo14.typed.type
 
@@ -48,4 +45,4 @@ fun <T> DefineParser<T>.beginIs(type: Type) =
 fun <T> DefineParser<T>.beginGives(type: Type) =
 	parentCompiledParser
 		.begin(DefineGivesParserParent(this, type), CompilerKind.COMPILER)
-		.updateCompiled { plusGiven(type) }
+		.updateCompiled { plusGiven(Keyword.GIVEN stringIn parentCompiledParser.context.language, type) }

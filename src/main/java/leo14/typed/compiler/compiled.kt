@@ -24,21 +24,14 @@ val <T> Compiled<T>.begin: Compiled<T>
 	get() =
 		copy(typed = typed(), localMemorySize = index0)
 
-fun <T> Compiled<T>.plusGiven(type: Type): Compiled<T> =
-	plus(item(key(type("given")), argumentMemoryValue(type("given" lineTo type))))
+fun <T> Compiled<T>.plusGiven(givenString: String, type: Type): Compiled<T> =
+	plus(item(key(type(givenString)), argumentMemoryValue(type(givenString lineTo type))))
 
 fun <T> Compiled<T>.updateTyped(fn: Typed<T>.() -> Typed<T>): Compiled<T> =
 	copy(typed = typed.fn())
 
 fun <T> Compiled<T>.updateMemory(fn: Memory<T>.() -> Memory<T>): Compiled<T> =
 	copy(memory = memory.fn())
-
-fun <T> Compiled<T>.forget(key: TypeKey) =
-	updateMemory { forget(key) }
-
-val <T> Compiled<T>.forgetEverything
-	get() =
-		updateMemory { forgetEverything }
 
 fun <T> Compiled<T>.plus(item: MemoryItem<T>): Compiled<T> =
 	updateMemory { plus(item) }.updateLocalIndex { next }
@@ -62,15 +55,14 @@ val <T> Compiled<T>.typedForEval: Typed<T>
 fun <T> Compiled<T>.eval(evaluator: Evaluator<T>) =
 	updateTyped { typedForEval.term.eval(evaluator) of typed.type }
 
-val <T> Compiled<T>.plusUsed
-	get() =
-		plus(
-			item(
-				key(type("used")),
-				value(
-					memoryBinding(
-						typed("used" lineTo typedForEnd),
-						isAction = false))))
+fun <T> Compiled<T>.plusGiven(givenString: String, typed: Typed<T>) =
+	plus(
+		item(
+			key(type(givenString)),
+			value(
+				memoryBinding(
+					typed(givenString),
+					isAction = false))))
 
 fun <T> Compiled<T>.updateLocalIndex(fn: Index.() -> Index) =
 	copy(localMemorySize = localMemorySize.fn())
