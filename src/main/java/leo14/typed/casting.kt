@@ -31,8 +31,9 @@ infix fun <T> Typed<T>.castTermTo(toType: Type): Term<T>? =
 
 infix fun <T> Typed<T>.castTo(toType: Type): Cast<T>? =
 	resolveLinkOrNull
-		?.let { typedLink ->
-			toType.lineLinkOrNull?.let { typeLink ->
+		.let { typedLink ->
+			if (typedLink == null) notNullIf(toType.isEmpty) { cast<T>(empty) }
+			else toType.lineLinkOrNull?.let { typeLink ->
 				typedLink.tail.castTo(typeLink.tail)?.let { tailCast ->
 					typedLink.head.castTo(typeLink.head)?.let { headCast ->
 						when (tailCast) {
@@ -51,7 +52,6 @@ infix fun <T> Typed<T>.castTo(toType: Type): Cast<T>? =
 				}
 			}
 		}
-		?: notNullIf(toType.isEmpty) { cast<T>(empty) }
 
 infix fun <T> TypedLine<T>.castTo(toLine: Line): Cast<T>? =
 	when (line) {

@@ -6,6 +6,7 @@ import leo13.index0
 import leo13.index1
 import leo13.index2
 import leo14.lambda.choiceTerm
+import leo14.lambda.id
 import leo14.lambda.term
 import kotlin.test.Test
 
@@ -18,19 +19,41 @@ class CastingTest {
 	}
 
 	@Test
-	fun field() {
+	fun field_match() {
 		term("foo").of(type("field" lineTo type()))
-			.castTo(type())
+			.castTo(type("field" lineTo type()))
 			.assertEqualTo(cast<Any>(empty))
 	}
 
 	@Test
-	fun fields() {
-		term("foo").of(type(
-			"x" lineTo type(),
-			"y" lineTo type()))
-			.castTo(type())
+	fun field_mismatch() {
+		term("foo").of(type("field" lineTo type()))
+			.castTo(type("field2" lineTo type()))
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun fields_match() {
+		term("foo")
+			.of(type("x" lineTo type(), "y" lineTo type()))
+			.castTo(type("x" lineTo type(), "y" lineTo type()))
 			.assertEqualTo(cast<Any>(empty))
+	}
+
+	@Test
+	fun fields_mismatch() {
+		term("foo")
+			.of(type("x" lineTo type(), "y" lineTo type()))
+			.castTo(type("x" lineTo type(), "z" lineTo type()))
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun fields_suffix() {
+		id<Any>()
+			.of(type("x" lineTo type(), "y" lineTo type()))
+			.castTo(type("y" lineTo type()))
+			.assertEqualTo(null)
 	}
 
 	@Test
@@ -62,7 +85,7 @@ class CastingTest {
 		term("foo")
 			.of(type("foo" lineTo numberType))
 			.run {
-				castTermTo(type(choice("foo")))
+				castTermTo(type(choice("foo" optionTo numberType)))
 					.assertEqualTo(
 						previousTyped
 							.plus(
@@ -75,7 +98,7 @@ class CastingTest {
 	fun multipleChoice() {
 		term("foo").of(type("foo" lineTo numberType))
 			.run {
-				castTermTo(type(choice("foo", "bar")))
+				castTermTo(type(choice("foo" optionTo numberType, "bar" optionTo numberType)))
 					.assertEqualTo(
 						previousTyped
 							.plus(
@@ -85,7 +108,7 @@ class CastingTest {
 
 		term("bar").of(type("bar" lineTo numberType))
 			.run {
-				castTermTo(type(choice("foo", "bar")))
+				castTermTo(type(choice("foo" optionTo numberType, "bar" optionTo numberType)))
 					.assertEqualTo(
 						previousTyped
 							.plus(
