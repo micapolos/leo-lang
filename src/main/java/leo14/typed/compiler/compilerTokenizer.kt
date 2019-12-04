@@ -22,7 +22,6 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is ArrowParserCompiler -> process(compiler.arrowParser)
 		is ChoiceParserCompiler -> process(compiler.choiceParser)
 		is CompiledParserCompiler -> processWithTypes(compiler.compiledParser)
-		is NothingParserCompiler -> process(compiler.nothingParser)
 		is DefineParserCompiler -> process(compiler.defineParser)
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
@@ -75,10 +74,6 @@ fun <T> Processor<Syntax>.process(parser: TypeParser<T>): Processor<Syntax> =
 		.ifNotNull(parser.parent) { process(it) }
 		.ifNotNull(parser.beginner) { process(it) }
 		.process(parser.type, parser.language)
-
-fun <T> Processor<Syntax>.process(parser: NothingParser<T>): Processor<Syntax> =
-	process(parser.parentCompiledParser)
-		.process(token(begin(Keyword.NOTHING stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: QuoteParser<T>): Processor<Syntax> =
 	this

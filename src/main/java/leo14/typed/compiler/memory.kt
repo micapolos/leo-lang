@@ -14,9 +14,6 @@ val <T> Stack<MemoryItem<T>>.memory get() = Memory(this)
 fun <T> memory(vararg items: MemoryItem<T>) =
 	stack(*items).memory
 
-fun <T> item(key: TypeKey, value: MemoryValue<T>) =
-	MemoryItem(key, value)
-
 fun <T> Memory<T>.plus(item: MemoryItem<T>) =
 	Memory(itemStack.push(item))
 

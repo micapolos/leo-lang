@@ -26,7 +26,6 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.FUNCTION -> beginFunction
 					Keyword.MAKE -> beginMake
 					Keyword.MATCH -> beginMatch
-					Keyword.NOTHING -> beginNothing
 					Keyword.QUOTE -> beginQuote
 					Keyword.USE -> beginUse
 					else -> begin(it)
@@ -156,10 +155,6 @@ val <T> CompiledParser<T>.beginApply
 		compiled.typed.function.let { action ->
 			compiler(begin(FunctionApplyParserParent(this, action)))
 		}
-
-val <T> CompiledParser<T>.beginNothing
-	get() =
-		compiler(NothingParser(this))
 
 val <T> CompiledParser<T>.beginMatch
 	get() =

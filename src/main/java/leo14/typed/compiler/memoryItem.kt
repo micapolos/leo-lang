@@ -8,6 +8,9 @@ import leo14.typed.castTermTo
 
 data class MemoryItem<T>(val key: TypeKey, val value: MemoryValue<T>)
 
+fun <T> item(key: TypeKey, value: MemoryValue<T>) =
+	MemoryItem(key, value)
+
 fun <T> MemoryItem<T>.matches(type: Type): Boolean =
 	key.type == type
 
