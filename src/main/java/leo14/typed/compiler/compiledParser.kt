@@ -4,7 +4,6 @@ import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.stack
 import leo14.*
-import leo14.lambda.id
 import leo14.typed.*
 
 data class CompiledParser<T>(
@@ -54,12 +53,39 @@ val <T> CompiledParser<T>.evaluate: CompiledParser<T>
 		updateCompiled { eval(context.evaluator) }
 
 fun <T> CompiledParser<T>.resolveCompiler(line: TypedLine<T>): Compiler<T> =
-	staticResolveCompiler(line) ?: compiler(copy(compiled = compiled.resolve(line, context)).next)
+	compile(line) ?: compiler(copy(compiled = compiled.resolve(line, context)).next)
 
-fun <T> CompiledParser<T>.staticResolveCompiler(line: TypedLine<T>): Compiler<T>? =
-	notNullIf(kind == CompilerKind.EVALUATOR && line == id<T>() of line(Keyword.EVALUATE.string fieldTo type())) {
-		compiler(this.updateCompiled { updateTyped { typed() } }).parse(decompile)
+fun <T> CompiledParser<T>.compile(line: TypedLine<T>): Compiler<T>? =
+	parse(line)?.let { compiler(it) }
+
+fun <T> CompiledParser<T>.parse(typed: TypedLine<T>): CompiledParser<T>? =
+	when (typed.line) {
+		is NativeLine -> null
+		is FieldLine -> parse(typed.term of typed.line.field)
+		is ChoiceLine -> null
+		is ArrowLine -> null
+		AnyLine -> null
 	}
+
+fun <T> CompiledParser<T>.parse(typed: TypedField<T>): CompiledParser<T>? =
+	typed.field.string
+		.keywordOrNullIn(context.language)
+		?.let { parse(it, typed.rhs) }
+
+fun <T> CompiledParser<T>.parse(keyword: Keyword, rhs: Typed<T>): CompiledParser<T>? =
+	when (keyword) {
+		Keyword.EVALUATE -> parseEvaluate(rhs)
+		else -> null
+	}
+
+fun <T> CompiledParser<T>.parseEvaluate(rhs: Typed<T>): CompiledParser<T>? =
+	ifOrNull(kind == CompilerKind.EVALUATOR && rhs.type == type()) {
+		parseEvaluate
+	}
+
+val <T> CompiledParser<T>.parseEvaluate: CompiledParser<T>?
+	get() =
+		(compiler(this.updateCompiled { updateTyped { typed() } }).parse(decompile) as? CompiledParserCompiler)?.compiledParser
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
