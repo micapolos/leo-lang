@@ -141,18 +141,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun rememberAndForget() {
-		script(
-			Keyword.DEFINE.string lineTo script(
-				"zero" lineTo script(),
-				Keyword.IS.string lineTo script("one")),
-			Keyword.FORGET.string lineTo script("zero"),
-			"zero" lineTo script())
-			.eval
-			.assertEqualTo(script("zero"))
-	}
-
-	@Test
 	fun simulateHasUsingRememberItIs() {
 		script(
 			Keyword.DEFINE.string lineTo script(

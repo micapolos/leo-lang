@@ -12,7 +12,6 @@ sealed class TypeBeginner<T>
 data class FunctionGivesTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 data class ArrowGivingTypeBeginner<T>(val typeParser: TypeParser<T>) : TypeBeginner<T>()
 data class DefineTypeBeginner<T>(val defineParser: DefineParser<T>) : TypeBeginner<T>()
-data class ForgetTypeBeginner<T>(val compiledParser: CompiledParser<T>) : TypeBeginner<T>()
 
 fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Compiler<T>? =
 	when (this) {
@@ -43,11 +42,6 @@ fun <T> TypeBeginner<T>.begin(language: Language, type: Type, begin: Begin): Com
 					compiler(defineParser.beginIs(type))
 				Keyword.GIVES ->
 					compiler(defineParser.beginGives(type))
-				else -> null
-			}
-		is ForgetTypeBeginner ->
-			when (begin.string keywordOrNullIn language) {
-				Keyword.EVERYTHING -> ForgetEverythingParserCompiler(ForgetEverythingParser(compiledParser))
 				else -> null
 			}
 	}

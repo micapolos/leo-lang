@@ -20,8 +20,6 @@ data class MatchParserCompiler<T>(val matchParser: MatchParser<T>) : Compiler<T>
 data class QuoteParserCompiler<T>(val quoteParser: QuoteParser<T>) : Compiler<T>() {
 	override fun toString() = super.toString()
 }
-data class ForgetEverythingParserCompiler<T>(val forgetEverythingParser: ForgetEverythingParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
-data class ForgetEverythingEndParserCompiler<T>(val forgetEverythingEndParser: ForgetEverythingEndParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 
 fun <T> compiler(typeParser: TypeParser<T>): Compiler<T> = TypeParserCompiler(typeParser)
 fun <T> compiler(choiceParser: ChoiceParser<T>): Compiler<T> = ChoiceParserCompiler(choiceParser)
@@ -57,8 +55,6 @@ fun <T> Compiler<T>.parseDynamic(token: Token): Compiler<T> =
 		is DefineParserCompiler -> defineParser.parse(token)
 		is MatchParserCompiler -> matchParser.parse(token)
 		is QuoteParserCompiler -> quoteParser.parse(token)
-		is ForgetEverythingParserCompiler -> forgetEverythingParser.parse(token)
-		is ForgetEverythingEndParserCompiler -> forgetEverythingEndParser.parse(token)
 	}
 
 fun <T> Compiler<T>.parse(script: Script): Compiler<T> =

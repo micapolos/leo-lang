@@ -8,7 +8,6 @@ data class LineTypeParserParent<T>(val typeParser: TypeParser<T>, val name: Stri
 data class ArrowGivesTypeParserParent<T>(val typeParser: TypeParser<T>, val lhsType: Type) : TypeParserParent<T>()
 data class OptionTypeParserParent<T>(val choiceParser: ChoiceParser<T>, val name: String) : TypeParserParent<T>()
 data class AsTypeParserParent<T>(val compiledParser: CompiledParser<T>) : TypeParserParent<T>()
-data class ForgetTypeParserParent<T>(val compiledParser: CompiledParser<T>) : TypeParserParent<T>()
 
 fun <T> TypeParserParent<T>.end(type: Type): Compiler<T>? =
 	when (this) {
@@ -20,7 +19,5 @@ fun <T> TypeParserParent<T>.end(type: Type): Compiler<T>? =
 			compiler(choiceParser.plus(name optionTo type))
 		is AsTypeParserParent ->
 			compiledParser.nextCompiler { updateTyped { `as`(type) } }
-		is ForgetTypeParserParent ->
-			compiledParser.nextCompiler { forget(key(type)) }
 	}
 

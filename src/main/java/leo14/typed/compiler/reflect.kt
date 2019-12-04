@@ -75,7 +75,6 @@ val <T> TypeParserParent<T>.reflectScriptLine: ScriptLine get() =
 			is ArrowGivesTypeParserParent -> null
 			is OptionTypeParserParent -> null
 			is AsTypeParserParent -> null
-			is ForgetTypeParserParent -> null
 		} ?: line(literal(toString()))
 	)
 
@@ -91,8 +90,6 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is TypeParserCompiler -> typeParser.reflectScriptLine
 					is MatchParserCompiler -> null
 					is QuoteParserCompiler -> quoteParser.reflectScriptLine
-					is ForgetEverythingParserCompiler -> null
-					is ForgetEverythingEndParserCompiler -> null
 				} ?: line(literal(toString()))))
 
 val CharReader.reflectScriptLine

@@ -89,13 +89,6 @@ class CompilerTest {
 	}
 
 	@Test
-	fun compiledNothing() {
-		compiler(compiled(typed("zero")))
-			.parse(script("nothing"))
-			.assertEqualTo(compiler(compiled(typed("zero"))))
-	}
-
-	@Test
 	fun compiledResolve() {
 		val compiled = compiled(
 			typed(
@@ -357,57 +350,6 @@ class CompilerTest {
 					}))
 	}
 
-	@Test
-	fun compiledForget_match() {
-		compiler(
-			compiled(
-				typed(),
-				memory(
-					item(
-						key(type("zero")),
-						value(
-							memoryBinding(
-								typed(),
-								isAction = false))))))
-			.parse(script("forget" lineTo script("zero")))
-			.assertEqualTo(
-				compiler(
-					compiled(
-						typed(),
-						memory<Native>(
-							item(
-								key(type("zero")),
-								value(
-									memoryBinding(
-										typed(),
-										isAction = false)))).forget(key(type("zero"))))))
-	}
-
-	@Test
-	fun compiledForget_mismatch() {
-		compiler(
-			compiled(
-				typed(),
-				memory(
-					item(
-						key(type("zero")),
-						value(
-							memoryBinding(
-								typed(),
-								isAction = false))))))
-			.parse(script("forget" lineTo script("one")))
-			.assertEqualTo(
-				compiler(
-					compiled(
-						typed(),
-						memory<Native>(
-							item(
-								key(type("zero")),
-								value(
-									memoryBinding(
-										typed(),
-										isAction = false)))).forget(key(type("one"))))))
-	}
 
 	@Test
 	fun compiledComment() {

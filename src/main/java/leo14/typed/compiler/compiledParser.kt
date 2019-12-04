@@ -22,7 +22,6 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.APPLY -> beginApply
 					Keyword.DEFINE -> beginDefine
 					Keyword.EXIT -> beginExit
-					Keyword.FORGET -> beginForget
 					Keyword.FUNCTION -> beginFunction
 					Keyword.MAKE -> beginMake
 					Keyword.MATCH -> beginMatch
@@ -167,10 +166,6 @@ val <T> CompiledParser<T>.beginMake
 val <T> CompiledParser<T>.beginDefine
 	get() =
 		compiler(DefineParser(this, memory()))
-
-val <T> CompiledParser<T>.beginForget
-	get() =
-		compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.language, context.typeContext, type()))
 
 val <T> CompiledParser<T>.beginUse
 	get() =
