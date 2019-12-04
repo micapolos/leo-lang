@@ -32,7 +32,7 @@ fun <T> DefineParser<T>.parse(token: Token): Compiler<T> =
 					parentCompiledParser.context.typeContext,
 					type())).parse(token)
 		is EndToken ->
-			parentCompiledParser.next {
+			parentCompiledParser.nextCompiler {
 				fold(this@parse.memory.itemStack.reverse) {
 					plus(it)
 				}

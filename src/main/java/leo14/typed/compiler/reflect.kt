@@ -87,7 +87,6 @@ val <T> Compiler<T>.reflectScriptLine: ScriptLine get() =
 					is ArrowParserCompiler -> null
 					is ChoiceParserCompiler -> null
 					is CompiledParserCompiler -> compiledParser.reflectScriptLine
-					is DeleteParserCompiler -> null
 					is NothingParserCompiler -> null
 					is DefineParserCompiler -> defineParser.reflectScriptLine
 					is TypeParserCompiler -> typeParser.reflectScriptLine

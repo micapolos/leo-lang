@@ -19,8 +19,8 @@ fun <T> TypeParserParent<T>.end(type: Type): Compiler<T>? =
 		is OptionTypeParserParent ->
 			compiler(choiceParser.plus(name optionTo type))
 		is AsTypeParserParent ->
-			compiledParser.next { updateTyped { `as`(type) } }
+			compiledParser.nextCompiler { updateTyped { `as`(type) } }
 		is ForgetTypeParserParent ->
-			compiledParser.next { forget(key(type)) }
+			compiledParser.nextCompiler { forget(key(type)) }
 	}
 

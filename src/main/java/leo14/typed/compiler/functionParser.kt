@@ -11,7 +11,7 @@ data class FunctionParser<T>(
 
 fun <T> FunctionParser<T>.parse(token: Token): Compiler<T> =
 	if (token is EndToken)
-		parentCompiledParser.next {
+		parentCompiledParser.nextCompiler {
 			updateTyped {
 				plus(function)
 			}

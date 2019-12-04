@@ -27,7 +27,7 @@ fun <T> MatchParser<T>.parse(token: Token): Compiler<T> =
 						.updateCompiled { plusGiven(parentCompiledParser.compiled.typed.type) })
 			}
 		is EndToken ->
-			parentCompiledParser.next { updateTyped { match.end() } }
+			parentCompiledParser.nextCompiler { updateTyped { match.end() } }
 	} ?: error("$this.parse($token)")
 
 fun <T> MatchParser<T>.plus(name: String, typed: Typed<T>): MatchParser<T> =

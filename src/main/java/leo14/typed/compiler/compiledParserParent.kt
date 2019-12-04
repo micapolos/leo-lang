@@ -22,9 +22,9 @@ fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 		is FunctionDoesParserParent ->
 			compiler(FunctionParser(compiledParser, type does typed))
 		is FunctionApplyParserParent ->
-			compiledParser.next { updateTyped { function.apply(typed) } }
+			compiledParser.nextCompiler { updateTyped { function.apply(typed) } }
 		is UseCompiledParserParent ->
-			compiledParser.next { updateTyped { typed } }
+			compiledParser.nextCompiler { updateTyped { typed } }
 		is DefineGivesParserParent ->
 			compiler(defineParser.plus(item(key(type), value(memoryBinding(typed, isAction = true)))))
 		is DefineIsParserParent ->
@@ -32,5 +32,5 @@ fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 		is MatchParserParent ->
 			compiler(matchParser.plus(name, typed))
 		is ExitParserParent ->
-			compiledParser.next { updateTyped { typed() } }.also { println(); exitProcess(0) }
+			compiledParser.nextCompiler { updateTyped { typed() } }.also { println(); exitProcess(0) }
 	}

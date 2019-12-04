@@ -21,7 +21,6 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.AS -> beginAs
 					Keyword.APPLY -> beginApply
 					Keyword.DEFINE -> beginDefine
-					Keyword.DELETE -> beginDelete
 					Keyword.EXIT -> beginExit
 					Keyword.FORGET -> beginForget
 					Keyword.FUNCTION -> beginFunction
@@ -38,8 +37,11 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 	} ?: error("$this.parse($token)")
 
 
-fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
-	compiler(updateCompiled(fn).next)
+fun <T> CompiledParser<T>.nextCompiler(fn: Compiled<T>.() -> Compiled<T>): Compiler<T> =
+	compiler(next(fn))
+
+fun <T> CompiledParser<T>.next(fn: Compiled<T>.() -> Compiled<T>): CompiledParser<T> =
+	updateCompiled(fn).next
 
 val <T> CompiledParser<T>.next: CompiledParser<T>
 	get() =
@@ -75,7 +77,13 @@ fun <T> CompiledParser<T>.parse(typed: TypedField<T>): CompiledParser<T>? =
 fun <T> CompiledParser<T>.parse(keyword: Keyword, rhs: Typed<T>): CompiledParser<T>? =
 	when (keyword) {
 		Keyword.EVALUATE -> parseEvaluate(rhs)
+		Keyword.DELETE -> parseDelete(rhs)
 		else -> null
+	}
+
+fun <T> CompiledParser<T>.parseDelete(rhs: Typed<T>): CompiledParser<T>? =
+	notNullIf(rhs.type == type()) {
+		parseDelete
 	}
 
 fun <T> CompiledParser<T>.parseEvaluate(rhs: Typed<T>): CompiledParser<T>? =
@@ -83,16 +91,16 @@ fun <T> CompiledParser<T>.parseEvaluate(rhs: Typed<T>): CompiledParser<T>? =
 		parseEvaluate
 	}
 
+val <T> CompiledParser<T>.parseDelete
+	get() =
+		next { updateTyped { typed() } }
+
 val <T> CompiledParser<T>.parseEvaluate: CompiledParser<T>?
 	get() =
 		(compiler(this.updateCompiled { updateTyped { typed() } }).parse(decompile) as? CompiledParserCompiler)?.compiledParser
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
-
-val <T> CompiledParser<T>.delete
-	get() =
-		next { updateTyped { typed() } }
 
 fun <T> CompiledParser<T>.make(script: Script): Compiler<T> =
 	when (script) {
@@ -102,7 +110,7 @@ fun <T> CompiledParser<T>.make(script: Script): Compiler<T> =
 				is LiteralScriptLine -> null
 				is FieldScriptLine ->
 					notNullIf(script.link.line.field.rhs.isEmpty) {
-						next { updateTyped { resolveWrap(script.link.line.field.string) } }
+						nextCompiler { updateTyped { resolveWrap(script.link.line.field.string) } }
 					}
 			}
 		}
@@ -139,10 +147,6 @@ val <T> CompiledParser<T>.beginApply
 		compiled.typed.function.let { action ->
 			compiler(begin(FunctionApplyParserParent(this, action)))
 		}
-
-val <T> CompiledParser<T>.beginDelete
-	get() =
-		compiler(DeleteParser(this))
 
 val <T> CompiledParser<T>.beginNothing
 	get() =

@@ -12,7 +12,6 @@ data class ActionParserCompiler<T>(val functionParser: FunctionParser<T>) : Comp
 data class ArrowParserCompiler<T>(val arrowParser: ArrowParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class ChoiceParserCompiler<T>(val choiceParser: ChoiceParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class CompiledParserCompiler<T>(val compiledParser: CompiledParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
-data class DeleteParserCompiler<T>(val deleteParser: DeleteParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class NothingParserCompiler<T>(val nothingParser: NothingParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class DefineParserCompiler<T>(val defineParser: DefineParser<T>) : Compiler<T>() {
 	override fun toString() = super.toString()
@@ -31,7 +30,6 @@ fun <T> compiler(choiceParser: ChoiceParser<T>): Compiler<T> = ChoiceParserCompi
 fun <T> compiler(arrowParser: ArrowParser<T>): Compiler<T> = ArrowParserCompiler(arrowParser)
 fun <T> compiler(compiledParser: CompiledParser<T>): Compiler<T> = CompiledParserCompiler(compiledParser)
 fun <T> compiler(functionParser: FunctionParser<T>): Compiler<T> = ActionParserCompiler(functionParser)
-fun <T> compiler(deleteParser: DeleteParser<T>): Compiler<T> = DeleteParserCompiler(deleteParser)
 fun <T> compiler(nothingParser: NothingParser<T>): Compiler<T> = NothingParserCompiler(nothingParser)
 fun <T> compiler(defineParser: DefineParser<T>): Compiler<T> = DefineParserCompiler(defineParser)
 fun <T> compiler(matchParser: MatchParser<T>): Compiler<T> = MatchParserCompiler(matchParser)
@@ -60,7 +58,6 @@ fun <T> Compiler<T>.parseDynamic(token: Token): Compiler<T> =
 		is ArrowParserCompiler -> arrowParser.parse(token)
 		is CompiledParserCompiler -> compiledParser.parse(token)
 		is ActionParserCompiler -> functionParser.parse(token)
-		is DeleteParserCompiler -> deleteParser.parse(token)
 		is NothingParserCompiler -> nothingParser.parse(token)
 		is DefineParserCompiler -> defineParser.parse(token)
 		is MatchParserCompiler -> matchParser.parse(token)
