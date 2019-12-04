@@ -2,7 +2,6 @@ package leo14.typed.compiler
 
 import leo14.typed.*
 import leo14.typed.Function
-import kotlin.system.exitProcess
 
 sealed class CompiledParserParent<T>
 
@@ -13,7 +12,6 @@ data class UseCompiledParserParent<T>(val compiledParser: CompiledParser<T>) : C
 data class DefineGivesParserParent<T>(val defineParser: DefineParser<T>, val type: Type) : CompiledParserParent<T>()
 data class DefineIsParserParent<T>(val defineParser: DefineParser<T>, val type: Type) : CompiledParserParent<T>()
 data class MatchParserParent<T>(val matchParser: MatchParser<T>, val name: String) : CompiledParserParent<T>()
-data class ExitParserParent<T>(val compiledParser: CompiledParser<T>) : CompiledParserParent<T>()
 
 fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 	when (this) {
@@ -31,6 +29,4 @@ fun <T> CompiledParserParent<T>.end(typed: Typed<T>): Compiler<T> =
 			compiler(defineParser.plus(item(key(type), value(memoryBinding(typed, isAction = false)))))
 		is MatchParserParent ->
 			compiler(matchParser.plus(name, typed))
-		is ExitParserParent ->
-			compiledParser.nextCompiler { updateTyped { typed() } }.also { println(); exitProcess(0) }
 	}

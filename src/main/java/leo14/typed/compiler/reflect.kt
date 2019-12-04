@@ -55,7 +55,6 @@ val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 		is DefineGivesParserParent -> null
 		is DefineIsParserParent -> null
 		is MatchParserParent -> null
-		is ExitParserParent -> null
 	} ?: line(literal(toString()))
 
 val <T> FunctionParser<T>.reflectScriptLine: ScriptLine get() =

@@ -134,10 +134,6 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 			this
 				.process(parent.matchParser)
 				.process(token(begin(parent.name)) of valueKeywordKind)
-		is ExitParserParent ->
-			this
-				.process(parent.compiledParser)
-				.process(token(begin(Keyword.EXIT stringIn parent.compiledParser.context.language)) of valueKind)
 	}
 
 fun <T> Processor<Syntax>.process(parent: TypeParserParent<T>): Processor<Syntax> =

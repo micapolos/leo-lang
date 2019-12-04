@@ -21,7 +21,6 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.AS -> beginAs
 					Keyword.APPLY -> beginApply
 					Keyword.DEFINE -> beginDefine
-					Keyword.EXIT -> beginExit
 					Keyword.FUNCTION -> beginFunction
 					Keyword.MAKE -> beginMake
 					Keyword.MATCH -> beginMatch
@@ -164,9 +163,6 @@ val <T> CompiledParser<T>.beginUse
 val <T> CompiledParser<T>.beginQuote
 	get() =
 		compiler(QuoteParser(CompiledQuoteParserParent(this), script()))
-
-val <T> CompiledParser<T>.beginExit get() =
-	compiler(begin(ExitParserParent(this)))
 
 fun <T> CompiledParser<T>.begin(string: String) =
 	CompiledParserCompiler(
