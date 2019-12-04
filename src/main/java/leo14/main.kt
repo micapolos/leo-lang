@@ -7,6 +7,7 @@ import leo.home
 import leo.java.lang.sttyPrivateMode
 import leo14.reader.*
 import leo14.typed.compiler.compiled
+import leo14.typed.compiler.natives.context
 import leo14.typed.compiler.natives.evaluator
 import leo14.typed.compiler.preludeMemory
 import java.io.InputStreamReader
@@ -15,7 +16,7 @@ val errorTriggerCount = 7
 
 fun main() = run(
 	evaluator(
-		compiled(memory = defaultLanguage.preludeMemory()))
+		compiled(memory = context.preludeMemory()))
 		.tokenReader
 		.charReader)
 

@@ -1,32 +1,19 @@
 package leo14.typed
 
 import leo14.*
-import leo14.lambda.id
+import leo14.typed.compiler.LiteralCompile
 
-val Script.staticType: Type
-	get() =
+fun <T> Script.staticTyped(literalCompile: LiteralCompile<T>): Typed<T> =
 		when (this) {
-			is UnitScript -> type()
-			is LinkScript -> link.lhs.staticType.plus(link.line.staticTypeLine)
+			is UnitScript -> typed()
+			is LinkScript -> link.lhs.staticTyped(literalCompile).plus(link.line.staticTypedLine(literalCompile))
 		}
 
-val ScriptLine.staticTypeLine
-	get() =
+fun <T> ScriptLine.staticTypedLine(literalCompile: LiteralCompile<T>): TypedLine<T> =
 		when (this) {
-			is LiteralScriptLine -> literal.staticTypeLine
-			is FieldScriptLine -> line(field.staticTypeField)
+			is LiteralScriptLine -> literal.literalCompile()
+			is FieldScriptLine -> line(field.staticTypedField(literalCompile))
 		}
 
-val Literal.staticTypeLine
-	get() =
-		when (this) {
-			is StringLiteral -> textLine
-			is NumberLiteral -> numberLine
-		}
-
-val ScriptField.staticTypeField
-	get() =
-		string fieldTo rhs.staticType
-
-fun <T> Script.staticTyped() =
-	id<T>() of staticType
+fun <T> ScriptField.staticTypedField(literalCompile: LiteralCompile<T>): TypedField<T> =
+	string fieldTo rhs.staticTyped(literalCompile)
