@@ -113,13 +113,21 @@ val <T> Typed<T>.onlyLine
 	get() =
 		lineLink.run { failIfOr(!tail.isEmpty) { head } }
 
+val <T> Typed<T>.onlyLineOrNull
+	get() =
+		resolveLinkOrNull?.run { notNullIf(tail.isEmpty) { head } }
+
 val <T> TypedLine<T>.choice: TypedChoice<T>
 	get() =
 		resolveChoiceOrNull.notNullOrError("$line as choice")
 
 val <T> TypedLine<T>.arrow: TypedArrow<T>
 	get() =
-		(line as? ArrowLine)?.arrow?.let { term of it }.notNullOrError("$line as arrow")
+		arrowOrNull.notNullOrError("$line as arrow")
+
+val <T> TypedLine<T>.arrowOrNull: TypedArrow<T>?
+	get() =
+		(line as? ArrowLine)?.arrow?.let { term of it }
 
 val <T> TypedField<T>.rhs: Typed<T>
 	get() =
@@ -200,7 +208,11 @@ fun <T> Typed<T>.switchOf(type: Type, fnStack: Stack<Term<T>>): Typed<T> =
 
 val <T> Typed<T>.function: Function<T>
 	get() =
-		onlyLine.arrow.function
+		functionOrNull!!
+
+val <T> Typed<T>.functionOrNull: Function<T>?
+	get() =
+		onlyLineOrNull?.arrowOrNull?.function
 
 val <T> TypedArrow<T>.function: Function<T>
 	get() =

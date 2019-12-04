@@ -19,7 +19,6 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 			token.begin.string.let {
 				when (it keywordOrNullIn context.language) {
 					Keyword.AS -> beginAs
-					Keyword.APPLY -> beginApply
 					Keyword.DEFINE -> beginDefine
 					Keyword.FUNCTION -> beginFunction
 					Keyword.MAKE -> beginMake
@@ -72,6 +71,7 @@ fun <T> CompiledParser<T>.parse(typed: TypedField<T>): CompiledParser<T>? =
 
 fun <T> CompiledParser<T>.parse(keyword: Keyword, rhs: Typed<T>): CompiledParser<T>? =
 	when (keyword) {
+		Keyword.APPLY -> parseApply(rhs)
 		Keyword.DELETE -> parseDelete(rhs)
 		Keyword.EVALUATE -> parseEvaluate(rhs)
 		else -> null
@@ -85,6 +85,11 @@ fun <T> CompiledParser<T>.parseDelete(rhs: Typed<T>): CompiledParser<T>? =
 fun <T> CompiledParser<T>.parseEvaluate(rhs: Typed<T>): CompiledParser<T>? =
 	ifOrNull(kind == CompilerKind.EVALUATOR && rhs.type == type()) {
 		parseEvaluate
+	}
+
+fun <T> CompiledParser<T>.parseApply(rhs: Typed<T>): CompiledParser<T>? =
+	compiled.typed.functionOrNull?.applyOrNull(rhs)?.let { applied ->
+		next { updateTyped { applied } }
 	}
 
 val <T> CompiledParser<T>.parseDelete
@@ -137,12 +142,6 @@ val <T> CompiledParser<T>.beginFunction
 val <T> CompiledParser<T>.beginAs
 	get() =
 		compiler(TypeParser(AsTypeParserParent(this), null, context.language, context.typeContext, type()))
-
-val <T> CompiledParser<T>.beginApply
-	get() =
-		compiled.typed.function.let { action ->
-			compiler(begin(FunctionApplyParserParent(this, action)))
-		}
 
 val <T> CompiledParser<T>.beginMatch
 	get() =

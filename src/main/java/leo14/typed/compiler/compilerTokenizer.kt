@@ -108,10 +108,6 @@ fun <T> Processor<Syntax>.process(parent: CompiledParserParent<T>): Processor<Sy
 				.process(token(begin(Keyword.FUNCTION stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 				.process(parent.type, parent.compiledParser.context.language)
 				.process(token(begin(Keyword.GIVES stringIn parent.compiledParser.context.language)) of valueKeywordKind)
-		is FunctionApplyParserParent ->
-			this
-				.process(parent.compiledParser)
-				.process(token(begin(Keyword.APPLY stringIn parent.compiledParser.context.language)) of valueKeywordKind)
 		is FieldCompiledParserParent ->
 			this
 				.process(parent.compiledParser)
