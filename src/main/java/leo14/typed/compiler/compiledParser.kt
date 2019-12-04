@@ -27,7 +27,6 @@ fun <T> CompiledParser<T>.parse(token: Token): Compiler<T> =
 					Keyword.MAKE -> beginMake
 					Keyword.MATCH -> beginMatch
 					Keyword.NOTHING -> beginNothing
-					Keyword.LEONARDO -> beginLeonardo
 					Keyword.QUOTE -> beginQuote
 					Keyword.USE -> beginUse
 					else -> begin(it)
@@ -76,8 +75,9 @@ fun <T> CompiledParser<T>.parse(typed: TypedField<T>): CompiledParser<T>? =
 
 fun <T> CompiledParser<T>.parse(keyword: Keyword, rhs: Typed<T>): CompiledParser<T>? =
 	when (keyword) {
-		Keyword.EVALUATE -> parseEvaluate(rhs)
 		Keyword.DELETE -> parseDelete(rhs)
+		Keyword.EVALUATE -> parseEvaluate(rhs)
+		Keyword.LEONARDO -> parseLeonardo(rhs)
 		else -> null
 	}
 
@@ -91,6 +91,11 @@ fun <T> CompiledParser<T>.parseEvaluate(rhs: Typed<T>): CompiledParser<T>? =
 		parseEvaluate
 	}
 
+fun <T> CompiledParser<T>.parseLeonardo(rhs: Typed<T>): CompiledParser<T>? =
+	ifOrNull(compiled.typed.type.isEmpty && rhs.type.isEmpty) {
+		parseLeonardo
+	}
+
 val <T> CompiledParser<T>.parseDelete
 	get() =
 		next { updateTyped { typed() } }
@@ -98,6 +103,10 @@ val <T> CompiledParser<T>.parseDelete
 val <T> CompiledParser<T>.parseEvaluate: CompiledParser<T>?
 	get() =
 		(compiler(this.updateCompiled { updateTyped { typed() } }).parse(decompile) as? CompiledParserCompiler)?.compiledParser
+
+val <T> CompiledParser<T>.parseLeonardo
+	get() =
+		plus(leonardoScript)
 
 fun <T> CompiledParser<T>.updateCompiled(fn: Compiled<T>.() -> Compiled<T>) =
 	copy(compiled = compiled.fn())
@@ -167,10 +176,6 @@ val <T> CompiledParser<T>.beginDefine
 val <T> CompiledParser<T>.beginForget
 	get() =
 		compiler(TypeParser(ForgetTypeParserParent(this), ForgetTypeBeginner(this), context.language, context.typeContext, type()))
-
-val <T> CompiledParser<T>.beginLeonardo
-	get() =
-		compiler(LeonardoParser(this))
 
 val <T> CompiledParser<T>.beginUse
 	get() =

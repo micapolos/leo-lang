@@ -27,7 +27,6 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
 		is QuoteParserCompiler -> process(compiler.quoteParser)
-		is LeonardoParserCompiler -> process(compiler.leonardoParser)
 		is ForgetEverythingParserCompiler -> process(compiler.forgetEverythingParser)
 		is ForgetEverythingEndParserCompiler -> process(compiler.forgetEverythingEndParser)
 	}
@@ -85,11 +84,6 @@ fun <T> Processor<Syntax>.process(parser: QuoteParser<T>): Processor<Syntax> =
 	this
 		.process(parser.parent)
 		.syntaxProcess(parser.script)
-
-fun <T> Processor<Syntax>.process(parser: LeonardoParser<T>): Processor<Syntax> =
-	this
-		.process(parser.parentCompiledParser)
-		.process(token(begin(Keyword.LEONARDO stringIn parser.parentCompiledParser.context.language)) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: ForgetEverythingParser<T>): Processor<Syntax> =
 	this

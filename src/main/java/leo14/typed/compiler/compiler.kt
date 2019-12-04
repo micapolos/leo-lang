@@ -21,7 +21,6 @@ data class MatchParserCompiler<T>(val matchParser: MatchParser<T>) : Compiler<T>
 data class QuoteParserCompiler<T>(val quoteParser: QuoteParser<T>) : Compiler<T>() {
 	override fun toString() = super.toString()
 }
-data class LeonardoParserCompiler<T>(val leonardoParser: LeonardoParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class ForgetEverythingParserCompiler<T>(val forgetEverythingParser: ForgetEverythingParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 data class ForgetEverythingEndParserCompiler<T>(val forgetEverythingEndParser: ForgetEverythingEndParser<T>) : Compiler<T>() { override fun toString() = super.toString() }
 
@@ -34,7 +33,6 @@ fun <T> compiler(nothingParser: NothingParser<T>): Compiler<T> = NothingParserCo
 fun <T> compiler(defineParser: DefineParser<T>): Compiler<T> = DefineParserCompiler(defineParser)
 fun <T> compiler(matchParser: MatchParser<T>): Compiler<T> = MatchParserCompiler(matchParser)
 fun <T> compiler(quoteParser: QuoteParser<T>): Compiler<T> = QuoteParserCompiler(quoteParser)
-fun <T> compiler(leonardoParser: LeonardoParser<T>): Compiler<T> = LeonardoParserCompiler(leonardoParser)
 
 fun <T> Compiler<T>.parse(token: Token): Compiler<T> =
 	parseStatic(token) ?: parseDynamic(token)
@@ -62,7 +60,6 @@ fun <T> Compiler<T>.parseDynamic(token: Token): Compiler<T> =
 		is DefineParserCompiler -> defineParser.parse(token)
 		is MatchParserCompiler -> matchParser.parse(token)
 		is QuoteParserCompiler -> quoteParser.parse(token)
-		is LeonardoParserCompiler -> leonardoParser.parse(token)
 		is ForgetEverythingParserCompiler -> forgetEverythingParser.parse(token)
 		is ForgetEverythingEndParserCompiler -> forgetEverythingEndParser.parse(token)
 	}
