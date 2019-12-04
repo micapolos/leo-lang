@@ -6,8 +6,10 @@ import leo13.Stack
 import leo13.reverse
 import leo14.lambda.Term
 import leo14.lambda.arg0
-import leo14.lambda.fn
 import leo14.lambda.invoke
+import leo14.lambda.scriptLine
+import leo14.lineTo
+import leo14.script
 import leo14.typed.*
 
 data class Match<T>(
@@ -33,7 +35,7 @@ fun <T> Match<T>.beginCase(string: String): Case<T> =
 fun <T> Case<T>.end(): Match<T> {
 	if (match.typeOrNull != null && match.typeOrNull != typed.type)
 		error("case type mismatch, was: ${typed.type}, should be: ${match.typeOrNull}")
-	val plusTerm = match.term.invoke(fn(typed.term))
+	val plusTerm = match.term.invoke(typed.term)
 	val plusType = match.typeOrNull ?: typed.type
 	return Match(plusTerm, match.optionStack, plusType)
 }
@@ -52,3 +54,13 @@ fun <T> Typed<T>.beginMatch(): Match<T> =
 	type.onlyLine.choice.let { choice ->
 		Match(term, choice.optionStack.reverse, null)
 	}
+
+val <T> Match<T>.reflectScriptLine
+	get() =
+		"match" lineTo script(
+			term.scriptLine,
+			typeOrNull?.scriptLine ?: "type" lineTo script("null"))
+
+val <T> Case<T>.reflectScriptLine
+	get() =
+		"case" lineTo script(typed.reflectScriptLine)

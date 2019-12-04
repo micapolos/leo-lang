@@ -6,6 +6,7 @@ import leo14.*
 import leo14.typed.Line
 import leo14.typed.Typed
 import leo14.typed.lineTo
+import leo14.typed.scriptLine
 
 data class MatchParser<T>(
 	val parentCompiledParser: CompiledParser<T>,
@@ -24,7 +25,7 @@ fun <T> MatchParser<T>.parse(token: Token): Compiler<T> =
 						.updateCompiled {
 							plusGiven(
 								Keyword.GIVEN stringIn parentCompiledParser.context.language,
-								parentCompiledParser.compiled.typed.type)
+								case.typed.type)
 						})
 			}
 		is EndToken ->
@@ -35,3 +36,12 @@ fun <T> MatchParser<T>.plus(name: String, typed: Typed<T>): MatchParser<T> =
 	copy(
 		match = Case(match, typed).end(),
 		caseLineStack = caseLineStack.push(name lineTo typed.type))
+
+val <T> MatchParser<T>.reflectScriptLine
+	get() =
+		"match" lineTo script(
+			"parser" lineTo script(
+				"parent" lineTo script(parentCompiledParser.reflectScriptLine),
+				caseLineStack.reflectOrEmptyScriptLine("cases") { scriptLine },
+				match.reflectScriptLine)
+		)
