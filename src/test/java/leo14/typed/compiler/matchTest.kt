@@ -3,7 +3,6 @@ package leo14.typed.compiler
 import leo.base.assertEqualTo
 import leo13.stack
 import leo14.lambda.arg0
-import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.term
 import leo14.typed.choice
@@ -65,7 +64,7 @@ class MatchTest {
 			.end()
 			.assertEqualTo(
 				Match(
-					term("lhs").invoke(fn(term("case"))),
+					term("lhs").invoke(term("case")),
 					stack("one" optionTo type("zar")),
 					type(choice("zoo", "zar"))))
 	}
