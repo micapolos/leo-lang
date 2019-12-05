@@ -89,6 +89,17 @@ val <T> Typed<T>.resolveLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 				else (term.first of link.tail) linkTo (term.second of link.head)
 		}
 
+fun <T> Typed<T>.resolveLink(apply: (Link<Typed<T>, TypedLine<T>>) -> Typed<T>?): Typed<T>? =
+	arg0<T>()
+		.of(type)
+		.resolveLinkOrNull
+		?.let { link ->
+			apply(link)
+				?.let { applied ->
+					fn(applied.term).invoke(term).of(applied.type)
+				}
+		}
+
 val <T> Typed<T>.lineLink: Link<Typed<T>, TypedLine<T>>
 	get() =
 		resolveLinkOrNull.notNullOrError("$type as link")

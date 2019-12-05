@@ -6,10 +6,7 @@ import leo14.lambda.term
 import leo14.literal
 import leo14.native.native
 import leo14.native.numberPlusNumberNative
-import leo14.typed.compiler.natives.eval
-import leo14.typed.compiler.natives.nativeResolve
-import leo14.typed.compiler.natives.nativeTypedLine
-import leo14.typed.compiler.natives.typedLine
+import leo14.typed.compiler.natives.*
 import kotlin.test.Test
 
 class NativeTest {
@@ -30,16 +27,18 @@ class NativeTest {
 		typed
 			.nativeResolve
 			.assertEqualTo(
-				term(numberPlusNumberNative)
-					.invoke(typed.lineLink.tail.term)
-					.invoke(typed.lineLink.head.term) of numberType)
+				typed.resolveLink { link ->
+					term(numberPlusNumberNative)
+						.invoke(link.tail.term)
+						.invoke(link.head.term) of numberType
+				})
 	}
 
 	@Test
 	fun evalNativeFields() {
 		val typed = typed(
-			"x" lineTo leo14.typed.compiler.natives.typed(native(1)),
-			"y" lineTo leo14.typed.compiler.natives.typed(native(2)))
+			"x" lineTo typed(native(1)),
+			"y" lineTo typed(native(2)))
 		typed.eval.assertEqualTo(typed)
 	}
 }

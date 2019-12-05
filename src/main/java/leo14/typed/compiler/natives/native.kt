@@ -44,10 +44,10 @@ val TypedLine<Native>.decompileLiteral: Literal?
 val Typed<Native>.nativeResolve: Typed<Native>?
 	get() =
 		null
-			?: resolveBinaryOp(numberLine, "plus", numberPlusNumberNative)
-			?: resolveBinaryOp(numberLine, "minus", numberMinusNumberNative)
-			?: resolveBinaryOp(numberLine, "times", numberTimesNumberNative)
-			?: resolveBinaryOp(textLine, "plus", stringPlusStringNative)
+			?: resolveBinaryOpNew(numberLine, "plus", numberPlusNumberNative)
+			?: resolveBinaryOpNew(numberLine, "minus", numberMinusNumberNative)
+			?: resolveBinaryOpNew(numberLine, "times", numberTimesNumberNative)
+			?: resolveBinaryOpNew(textLine, "plus", stringPlusStringNative)
 			?: resolveLinkOrNull?.let { link ->
 			when (type) {
 				type(
@@ -84,14 +84,15 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 			}
 		}
 
-fun Typed<Native>.resolveBinaryOp(argLine: Line, name: String, opNative: Native): Typed<Native>? =
-	resolveLinkOrNull?.let { link ->
+fun Typed<Native>.resolveBinaryOpNew(argLine: Line, name: String, opNative: Native): Typed<Native>? =
+	resolveLink { link ->
 		notNullIf(this.type == type(argLine, name lineTo type(argLine))) {
 			term(opNative)
 				.invoke(link.tail.term)
 				.invoke(link.head.term) of type(argLine)
 		}
 	}
+
 
 fun typedLine(native: Native): TypedLine<Native> =
 	when (native) {

@@ -61,7 +61,7 @@ fun <T> Compiled<T>.plusGiven(givenString: String, typed: Typed<T>) =
 			key(type(givenString)),
 			value(
 				memoryBinding(
-					typed(givenString),
+					typed(givenString lineTo typed),
 					isAction = false))))
 
 fun <T> Compiled<T>.updateLocalIndex(fn: Index.() -> Index) =

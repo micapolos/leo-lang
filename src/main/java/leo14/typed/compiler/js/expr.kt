@@ -13,10 +13,10 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			?: resolveOpen
 			?: resolveInvoke
 			?: resolveJavascript
-			?: resolveBinaryOp(numberType, "plus", "+")
-			?: resolveBinaryOp(numberType, "minus", "-")
-			?: resolveBinaryOp(numberType, "times", "*")
-			?: resolveBinaryOp(textType, "plus", "+")
+			?: resolveBinaryOpNew(numberType, "plus", "+")
+			?: resolveBinaryOpNew(numberType, "minus", "-")
+			?: resolveBinaryOpNew(numberType, "times", "*")
+			?: resolveBinaryOpNew(textType, "plus", "+")
 			?: resolveCircle
 			?: when (type) {
 				type(
@@ -65,14 +65,14 @@ val Typed<Expr>.resolveJavascript: Typed<Expr>? get() =
 		}
 	}
 
-fun Typed<Expr>.resolveBinaryOp(type: Type, name: String, op: String): Typed<Expr>? =
-		resolveLinkOrNull?.run {
-			notNullIf(tail.type == type && head.resolveFieldOrNull?.field == name fieldTo type) {
-				term(expr(id("a=>b=>a${op}b")))
-					.invoke(tail.term)
-					.invoke(head.term) of type
-			}
+fun Typed<Expr>.resolveBinaryOpNew(type: Type, name: String, op: String): Typed<Expr>? =
+	resolveLink { link ->
+		notNullIf(link.tail.type == type && link.head.resolveFieldOrNull?.field == name fieldTo type) {
+			term(expr(id("a=>b=>a${op}b")))
+				.invoke(link.tail.term)
+				.invoke(link.head.term) of type
 		}
+	}
 
 val Typed<Expr>.resolveCircle: Typed<Expr>?
 	get() =
