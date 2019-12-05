@@ -5,6 +5,7 @@ import leo13.fold
 import leo13.reverse
 import leo14.*
 import leo14.reader.CompilerTokenReader
+import leo14.reader.FragmentTokenReader
 import leo14.reader.TokenReader
 import leo14.syntax.*
 import leo14.typed.process
@@ -14,6 +15,7 @@ val types = false
 fun Processor<Syntax>.process(tokenReader: TokenReader): Processor<Syntax> =
 	when (tokenReader) {
 		is CompilerTokenReader<*> -> process(tokenReader.compiler)
+		is FragmentTokenReader -> process(tokenReader.fragment)
 	}
 
 fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
@@ -27,6 +29,16 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is MatchParserCompiler -> process(compiler.matchParser)
 		is QuoteParserCompiler -> process(compiler.quoteParser)
 	}
+
+fun Processor<Syntax>.process(fragment: Fragment): Processor<Syntax> =
+	this
+		.ifNotNull(fragment.parent) { process(it) }
+		.syntaxProcess(fragment.script)
+
+fun Processor<Syntax>.process(fragmentParent: FragmentParent): Processor<Syntax> =
+	this
+		.process(fragmentParent.fragment)
+		.process(token(fragmentParent.begin) of valueKeywordKind)
 
 fun <T> Processor<Syntax>.process(parser: FunctionParser<T>): Processor<Syntax> =
 	this

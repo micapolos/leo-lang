@@ -31,3 +31,16 @@ fun Fragment.plusOrNull(token: Token): Fragment? =
 
 fun Fragment.plus(token: Token): Fragment =
 	plusOrNull(token).notNullOrError("$this.plus($token)")
+
+val Fragment.reflectScriptLine: ScriptLine
+	get() =
+		"fragment" lineTo script(
+			parent?.reflectScriptLine ?: "parent" lineTo script("null"),
+			"script" lineTo script)
+
+val FragmentParent.reflectScriptLine
+	get() =
+		"fragment" lineTo script(
+			fragment.reflectScriptLine,
+			begin.reflectScriptLine)
+

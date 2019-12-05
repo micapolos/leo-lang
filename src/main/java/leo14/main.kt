@@ -15,12 +15,9 @@ import java.io.InputStreamReader
 
 val errorTriggerCount = 7
 val prelude = false
+val compiled = compiled(memory = if (prelude) context.preludeMemory() else memory())
 
-fun main() = run(
-	evaluator(
-		compiled(memory = if (prelude) context.preludeMemory() else memory()))
-		.tokenReader
-		.charReader)
+fun main() = run(evaluator(compiled).tokenReader.charReader)
 
 fun run(reader: CharReader) {
 	sttyPrivateMode()

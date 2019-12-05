@@ -8,12 +8,15 @@ import leo14.typed.compiler.reflectScriptLine
 sealed class TokenReader
 
 data class CompilerTokenReader<T>(val compiler: Compiler<T>) : TokenReader()
+data class FragmentTokenReader(val fragment: Fragment) : TokenReader()
 
 val <T> Compiler<T>.tokenReader: TokenReader get() = CompilerTokenReader(this)
+val Fragment.tokenReader: TokenReader get() = FragmentTokenReader(this)
 
 fun TokenReader.read(token: Token): TokenReader =
 	when (this) {
 		is CompilerTokenReader<*> -> compiler.parse(token).tokenReader
+		is FragmentTokenReader -> fragment.plus(token).tokenReader
 	}
 
 fun TokenReader.read(script: Script): TokenReader =
@@ -43,6 +46,7 @@ val TokenReader.reflectScriptLine: ScriptLine
 			"reader" lineTo script(
 				when (this) {
 					is CompilerTokenReader<*> -> compiler.reflectScriptLine
+					is FragmentTokenReader -> fragment.reflectScriptLine
 				}
 			)
 		)
