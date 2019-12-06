@@ -70,6 +70,7 @@ val <T> TypeParserParent<T>.reflectScriptLine: ScriptLine get() =
 	"parent" lineTo script(
 		when (this) {
 			is LineTypeParserParent -> "begin" lineTo script(typeParser.reflectScriptLine)
+			is CompiledTypeParserParent -> "begin" lineTo script(compiledParser.reflectScriptLine)
 			is ArrowGivesTypeParserParent -> null
 			is OptionTypeParserParent -> null
 			is AsTypeParserParent -> null

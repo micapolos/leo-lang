@@ -181,3 +181,6 @@ fun <T> CompiledParser<T>.begin(parent: CompiledParserParent<T>, kind: CompilerK
 		kind,
 		context,
 		compiled.begin)
+
+fun <T> CompiledParser<T>.compile(field: Field): Compiler<T> =
+	resolveCompiler(field.scriptLine.staticTypedLine(context.literalCompile))

@@ -41,7 +41,7 @@ fun <T> TypeParser<T>.parse(token: Token): Compiler<T> =
 							type()))
 			}
 		is EndToken -> parent?.end(type)
-	} ?: error("$this.parse($token)")
+	} ?: error("$this.parse(token)")
 
 fun <T> TypeParser<T>.plus(line: Line): TypeParser<T> =
 	copy(type = type.plus(typeContext.resolve(line)))

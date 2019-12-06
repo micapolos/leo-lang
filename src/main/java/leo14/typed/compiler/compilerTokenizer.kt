@@ -150,6 +150,10 @@ fun <T> Processor<Syntax>.process(parent: TypeParserParent<T>): Processor<Syntax
 			this
 				.process(parent.typeParser)
 				.process(token(begin(parent.name)) of typeKeywordKind)
+		is CompiledTypeParserParent ->
+			this
+				.process(parent.compiledParser)
+				.process(token(begin(parent.name)) of typeKeywordKind)
 		is ArrowGivesTypeParserParent ->
 			this
 				.process(token(begin(Keyword.FUNCTION stringIn parent.typeParser.language)) of typeKeywordKind)
