@@ -15,11 +15,15 @@ data class LiteralExpr(val literal: Literal) : Expr()
 data class CodeExpr(val code: Code) : Expr()
 data class OpExpr(val op: Op) : Expr()
 data class GetExpr(val get: Get) : Expr()
+data class SetExpr(val set: Set) : Expr()
+data class InvokeExpr(val invoke: Invoke) : Expr()
 
 val Literal.expr: Expr get() = LiteralExpr(this)
 val Code.expr: Expr get() = CodeExpr(this)
 val Op.expr: Expr get() = OpExpr(this)
 val Get.expr: Expr get() = GetExpr(this)
+val Invoke.expr: Expr get() = InvokeExpr(this)
+val Set.expr: Expr get() = SetExpr(this)
 val Expr.term: Term<Expr> get() = term(this)
 
 fun Expr.astExpr(gen: Gen): leo14.js.ast.Expr =
@@ -28,6 +32,8 @@ fun Expr.astExpr(gen: Gen): leo14.js.ast.Expr =
 		is CodeExpr -> code.astExpr
 		is OpExpr -> op.astExpr(gen)
 		is GetExpr -> get.astExpr(gen)
+		is InvokeExpr -> invoke.astExpr(gen)
+		is SetExpr -> set.astExpr(gen)
 	}
 
 val Expr.astExpr: leo14.js.ast.Expr
@@ -45,4 +51,6 @@ val Expr.reflectScript: Script
 			is CodeExpr -> script(code.reflectScriptLine)
 			is OpExpr -> op.reflectScript
 			is GetExpr -> get.reflectScript
+			is InvokeExpr -> invoke.reflectScript
+			is SetExpr -> set.reflectScript
 		}

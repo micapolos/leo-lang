@@ -4,6 +4,7 @@ import leo.base.notNullIf
 import leo14.*
 import leo14.code.code
 import leo14.js.ast.open
+import leo14.js.ast.print
 import leo14.js.ast.show
 import leo14.lambda.NativeTerm
 import leo14.lambda.Term
@@ -18,8 +19,9 @@ import leo14.typed.compiler.updateTyped
 val Compiled<Expr>.resolve: Compiled<Expr>?
 	get() =
 		null
-			?: resolveShow
 			?: resolveOpen
+			?: resolvePrint
+			?: resolveShow
 			?: typed.resolve?.let { updateTyped { it } }
 
 val Typed<Expr>.resolve: Typed<Expr>?
@@ -31,7 +33,9 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			?: resolveOp(numberType, "minus", "-")
 			?: resolveOp(numberType, "times", "*")
 			?: resolveOp(textType, "plus", "+")
+			?: resolveInvoke
 			?: resolveGet
+			?: resolveSet
 			?: resolveText
 
 fun Typed<Expr>.resolveOp(type: Type, name: String, op: String): Typed<Expr>? =
@@ -40,6 +44,14 @@ fun Typed<Expr>.resolveOp(type: Type, name: String, op: String): Typed<Expr>? =
 			link.tail.term.op(op, link.head.term).expr.term of type
 		}
 	}
+
+val Typed<Expr>.resolveInvoke: Typed<Expr>?
+	get() =
+		decompileLinkOrNull?.let { link ->
+			notNullIf(link.tail.type == nativeType && link.head.resolveFieldOrNull?.field?.string == "invoke") {
+				link.tail.term.invoke(link.head.term).expr.term of nativeType
+			}
+		}
 
 val Typed<Expr>.resolveNative: Typed<Expr>?
 	get() =
@@ -53,19 +65,27 @@ val Typed<Expr>.resolveNative: Typed<Expr>?
 			else null
 		}
 
-val Compiled<Expr>.resolveShow: Compiled<Expr>?
-	get() =
-		typed.decompileLinkOrNull?.let { link ->
-			notNullIf(link.head.line.fieldOrNull == "show" fieldTo type()) {
-				updateTyped { link.tail }.apply { typedForEnd.term.astExpr.show }
-			}
-		}
-
 val Compiled<Expr>.resolveOpen: Compiled<Expr>?
 	get() =
 		typed.decompileLinkOrNull?.let { link ->
 			notNullIf(link.head.line.fieldOrNull == "open" fieldTo type()) {
 				updateTyped { link.tail }.apply { typedForEnd.term.astExpr.open }
+			}
+		}
+
+val Compiled<Expr>.resolvePrint: Compiled<Expr>?
+	get() =
+		typed.decompileLinkOrNull?.let { link ->
+			notNullIf(link.head.line.fieldOrNull == "print" fieldTo type()) {
+				updateTyped { link.tail }.apply { typedForEnd.term.astExpr.print }
+			}
+		}
+
+val Compiled<Expr>.resolveShow: Compiled<Expr>?
+	get() =
+		typed.decompileLinkOrNull?.let { link ->
+			notNullIf(link.head.line.fieldOrNull == "show" fieldTo type()) {
+				updateTyped { link.tail }.apply { typedForEnd.term.astExpr.show }
 			}
 		}
 
@@ -80,6 +100,14 @@ val Typed<Expr>.resolveGet: Typed<Expr>?
 			)
 				link.tail.term.get(link.head.term.native.literal.string).expr.term of nativeType
 			else null
+		}
+
+val Typed<Expr>.resolveSet: Typed<Expr>?
+	get() =
+		decompileLinkOrNull?.let { link ->
+			notNullIf(link.tail.type == nativeType && link.head.resolveFieldOrNull?.field?.string == "set") {
+				link.tail.term.set(link.head.term).expr.term of nativeType
+			}
 		}
 
 val Typed<Expr>.resolveNativeRhs: Typed<Expr>?
