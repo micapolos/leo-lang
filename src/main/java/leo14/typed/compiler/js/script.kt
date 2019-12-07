@@ -48,4 +48,52 @@ val stdScript: Script =
 				"location".line,
 				"native".line,
 				"get" lineTo script("href".literal),
-				"text".line)))
+				"text".line),
+
+			"text".line,
+			"element".line,
+			"gives" lineTo script(
+				"element" lineTo script(
+					"document.createElement".literal.line,
+					"native".line,
+					"invoke" lineTo script(
+						"given".line,
+						"text".line))),
+
+			"div".line,
+			"gives" lineTo script(
+				"div".literal.line,
+				"element".line),
+
+			"span".line,
+			"gives" lineTo script(
+				"span".literal.line,
+				"element".line),
+
+			"element" lineTo script("native".line),
+			"content" lineTo script("text".line),
+			"gives" lineTo script(
+				"element" lineTo script(
+					"given".line,
+					"element".line,
+					"native".line,
+					"set" lineTo script(
+						"textContent".literal.line,
+						"to" lineTo script(
+							"given".line,
+							"content".line,
+							"text".line)))),
+
+			"element" lineTo script("native".line),
+			"background" lineTo script("text".line),
+			"gives" lineTo script(
+				"element" lineTo script(
+					"given".line,
+					"element".line,
+					"native".line,
+					"set" lineTo script(
+						"style.background".literal.line,
+						"to" lineTo script(
+							"given".line,
+							"background".line,
+							"text".line))))))

@@ -1,5 +1,6 @@
 package leo14.typed.compiler.js
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo14.*
 import leo14.code.code
@@ -105,8 +106,19 @@ val Typed<Expr>.resolveGet: Typed<Expr>?
 val Typed<Expr>.resolveSet: Typed<Expr>?
 	get() =
 		decompileLinkOrNull?.let { link ->
-			notNullIf(link.tail.type == nativeType && link.head.resolveFieldOrNull?.field?.string == "set") {
-				link.tail.term.set(link.head.term).expr.term of nativeType
+			ifOrNull(link.tail.type == nativeType) {
+				link.head.resolveFieldOrNull?.let { fieldTyped ->
+					ifOrNull(fieldTyped.field.string == "set") {
+						fieldTyped.resolveRhs.decompileLinkOrNull?.let { setLink ->
+							if (setLink.tail.type == textType &&
+								setLink.tail.term is NativeTerm &&
+								setLink.tail.term.native is LiteralExpr &&
+								setLink.tail.term.native.literal is StringLiteral)
+								link.tail.term.set(setLink.tail.term.native.literal.string, setLink.head.term).expr.term of nativeType
+							else null
+						}
+					}
+				}
 			}
 		}
 

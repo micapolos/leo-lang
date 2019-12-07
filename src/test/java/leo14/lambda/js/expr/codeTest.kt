@@ -6,6 +6,7 @@ import leo14.lambda.arg0
 import leo14.lambda.arg1
 import leo14.lambda.fn
 import leo14.lambda.invoke
+import leo14.literal
 import kotlin.test.Test
 
 class CodeTest {
@@ -40,5 +41,13 @@ class CodeTest {
 			.op("+", "3".code.expr.term)
 			.expr.term
 			.code.string.assertEqualTo("(2)+(3)")
+	}
+
+	@Test
+	fun set() {
+		"document.body.style".code.expr.term
+			.set("background", "red".literal.expr.term)
+			.expr.term
+			.code.string.assertEqualTo("(function(x){x.background='red';return x;})(document.body.style)")
 	}
 }
