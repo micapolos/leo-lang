@@ -8,8 +8,10 @@ import leo14.lambda.invoke
 import leo14.lambda.term
 import leo14.native.Native
 import leo14.native.native
-import leo14.typed.*
-import leo14.typed.compiler.natives.context
+import leo14.typed.key
+import leo14.typed.numberType
+import leo14.typed.of
+import leo14.typed.type
 import kotlin.test.Test
 
 class CompiledTest {

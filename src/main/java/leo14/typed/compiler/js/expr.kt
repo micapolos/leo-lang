@@ -92,6 +92,6 @@ val Typed<Expr>.resolveCircle: Typed<Expr>?
 		}
 
 // No need for invoke, since we don't evaluate JS
-fun Expr.invoke(term: Value<Expr>): Value<Expr>? = null
+fun Expr.invoke(value: Value<Expr>): Value<Expr>? = null
 
 val exprEvaluator = evaluator(Expr::invoke)

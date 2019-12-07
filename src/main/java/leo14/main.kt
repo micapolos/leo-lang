@@ -6,18 +6,17 @@ import leo.clear
 import leo.home
 import leo.java.lang.sttyPrivateMode
 import leo14.reader.*
-import leo14.typed.compiler.compiled
+import leo14.typed.compiler.evaluator
 import leo14.typed.compiler.memory
-import leo14.typed.compiler.natives.context
-import leo14.typed.compiler.natives.evaluator
+import leo14.typed.compiler.natives.emptyContext
 import leo14.typed.compiler.preludeMemory
 import java.io.InputStreamReader
 
 val errorTriggerCount = 7
 val prelude = false
-val compiled = compiled(memory = if (prelude) context.preludeMemory() else memory())
+val memory = if (prelude) emptyContext.preludeMemory() else memory()
 
-fun main() = run(evaluator(compiled).tokenReader.charReader)
+fun main() = run(emptyContext.evaluator(memory).tokenReader.charReader)
 
 fun run(reader: CharReader) {
 	sttyPrivateMode()

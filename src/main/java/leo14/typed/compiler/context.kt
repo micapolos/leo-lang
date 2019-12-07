@@ -30,3 +30,9 @@ val <T> Context<T>.reflectScriptLine
 		"context" lineTo script(
 			"target" lineTo targetScript,
 			language.reflectScriptLine)
+
+fun <T> Context<T>.compile(script: Script): Script =
+	(compiler().parse(script) as CompiledParserCompiler<T>).compiledParser.decompile
+
+fun <T> Context<T>.evaluate(script: Script): Script =
+	(evaluator().parse(script) as CompiledParserCompiler<T>).compiledParser.decompile

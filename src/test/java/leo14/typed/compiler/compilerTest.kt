@@ -8,7 +8,7 @@ import leo14.native.Native
 import leo14.native.native
 import leo14.typed.*
 import leo14.typed.compiler.natives.compiler
-import leo14.typed.compiler.natives.context
+import leo14.typed.compiler.natives.emptyContext
 import leo14.typed.compiler.natives.evaluator
 import kotlin.test.Test
 
@@ -98,7 +98,7 @@ class CompilerTest {
 
 		compiler(compiled)
 			.parse(script("x"))
-			.assertEqualTo(compiler(compiled.resolve("x" lineTo typed(), context)))
+			.assertEqualTo(compiler(compiled.resolve("x" lineTo typed(), emptyContext)))
 	}
 
 	@Test
@@ -392,7 +392,7 @@ class CompilerTest {
 			.assertEqualTo(
 				compiler(
 					compiled(
-						context.resolve(leo14.typed.compiler.natives.typed(native(123)).plus("plus" lineTo leo14.typed.compiler.natives.typed(native(123))))!!)))
+						emptyContext.resolve(leo14.typed.compiler.natives.typed(native(123)).plus("plus" lineTo leo14.typed.compiler.natives.typed(native(123))))!!)))
 	}
 
 	@Test

@@ -154,7 +154,7 @@ val <T> CompiledParser<T>.compileMake
 
 val <T> CompiledParser<T>.compileDefine
 	get() =
-		compiler(DefineParser(this, memory()))
+		compiler(DefineParser(this, compiled.memory))
 
 val <T> CompiledParser<T>.compileGive
 	get() =

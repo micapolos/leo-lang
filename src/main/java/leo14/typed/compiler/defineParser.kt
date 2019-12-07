@@ -1,7 +1,5 @@
 package leo14.typed.compiler
 
-import leo13.fold
-import leo13.reverse
 import leo14.*
 import leo14.typed.Type
 import leo14.typed.type
@@ -30,9 +28,7 @@ fun <T> DefineParser<T>.parse(token: Token): Compiler<T> =
 					type())).parse(token)
 		is EndToken ->
 			parentCompiledParser.nextCompiler {
-				fold(this@parse.memory.itemStack.reverse) {
-					plus(it)
-				}
+				updateMemory { this@parse.memory }
 			}
 	}
 
@@ -44,5 +40,6 @@ fun <T> DefineParser<T>.beginIs(type: Type) =
 
 fun <T> DefineParser<T>.beginGives(type: Type) =
 	parentCompiledParser
+		.updateCompiled { updateMemory { this@beginGives.memory } }
 		.begin(DefineGivesParserParent(this, type), CompilerKind.COMPILER)
 		.updateCompiled { plusGiven(Keyword.GIVEN stringIn parentCompiledParser.context.language, type) }

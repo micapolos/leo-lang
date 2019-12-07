@@ -9,7 +9,7 @@ fun compiler(type: Type): Compiler<Native> =
 	compiler(TypeParser(null, null, defaultLanguage, nativeTypeContext, type))
 
 fun CompilerKind.compiler(compiled: Compiled<Native>): Compiler<Native> =
-	compiler(CompiledParser(null, this, context, compiled))
+	compiler(CompiledParser(null, this, emptyContext, compiled))
 
 fun compiler(compiled: Compiled<Native>): Compiler<Native> =
 	CompilerKind.COMPILER.compiler(compiled)

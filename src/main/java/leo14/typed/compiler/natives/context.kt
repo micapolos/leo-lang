@@ -5,10 +5,11 @@ import leo14.defaultLanguage
 import leo14.native.Native
 import leo14.native.nativeEvaluator
 import leo14.script
-import leo14.typed.*
+import leo14.typed.Typed
+import leo14.typed.TypedLine
 import leo14.typed.compiler.Context
 
-val context: Context<Native> =
+val emptyContext: Context<Native> =
 	Context(
 		defaultLanguage,
 		Typed<Native>::nativeResolve,

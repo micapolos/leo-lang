@@ -4,6 +4,7 @@ import leo13.get
 import leo14.*
 import leo14.lambda.abstraction
 import leo14.lambda.application
+import leo14.lambda.scriptLine
 import leo14.lambda.variable
 
 typealias DecompileLiteral<T> = TypedLine<T>.() -> Literal?
@@ -17,7 +18,7 @@ fun <T> TypedLine<T>.decompileLine(fn: DecompileLiteral<T>): ScriptLine =
 	fn()
 		?.let { line(it) }
 		?: when (line) {
-			is NativeLine -> Keyword.NATIVE.string lineTo script() // TODO: Decompile literal
+			is NativeLine -> Keyword.NATIVE.string lineTo script(term.scriptLine) // TODO: Decompile literal
 			is FieldLine -> (term of line.field).decompileLine(fn)
 			is ChoiceLine -> (term of line.choice).decompileLine(fn)
 			is ArrowLine -> Keyword.FUNCTION.string lineTo line.arrow.lhs.script.plus(Keyword.GIVES.string lineTo line.arrow.rhs.script)

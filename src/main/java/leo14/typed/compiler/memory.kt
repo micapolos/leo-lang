@@ -28,3 +28,7 @@ fun <T> Memory<T>.resolveForEnd(term: Term<T>, index: Index): Term<T> =
 	term.fold(itemStack.takeOrNull(index)!!) {
 		resolveForEnd(it.value)
 	}
+
+val <T> Memory<T>.sizeIndex: Index
+	get() =
+		itemStack.size.index

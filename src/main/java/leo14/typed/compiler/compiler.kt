@@ -1,6 +1,7 @@
 package leo14.typed.compiler
 
 import leo14.*
+import leo14.typed.Typed
 
 sealed class Compiler<T> {
 	override fun toString() = "$reflectScriptLine"
@@ -77,3 +78,27 @@ fun <T> Compiler<T>.parse(field: ScriptField): Compiler<T> =
 		.parse(token(begin(field.string)))
 		.parse(field.rhs)
 		.parse(token(end))
+
+fun <T> Context<T>.compiler(kind: CompilerKind, compiled: Compiled<T>): Compiler<T> =
+	compiler(CompiledParser(null, kind, this, compiled))
+
+fun <T> Context<T>.compiler(kind: CompilerKind, memory: Memory<T>): Compiler<T> =
+	compiler(kind, Compiled(memory, memory.sizeIndex, leo14.typed.typed()))
+
+fun <T> Context<T>.compiler(memory: Memory<T> = memory()): Compiler<T> =
+	compiler(CompilerKind.COMPILER, memory)
+
+fun <T> Context<T>.evaluator(memory: Memory<T> = memory()): Compiler<T> =
+	compiler(CompilerKind.EVALUATOR, memory)
+
+fun <T> Context<T>.compiler(compiled: Compiled<T>): Compiler<T> =
+	compiler(CompilerKind.COMPILER, compiled)
+
+fun <T> Context<T>.evaluator(compiled: Compiled<T>): Compiler<T> =
+	compiler(CompilerKind.EVALUATOR, compiled)
+
+fun <T> Context<T>.compiler(typed: Typed<T>): Compiler<T> =
+	compiler(CompilerKind.COMPILER, compiled(typed))
+
+fun <T> Context<T>.evaluator(typed: Typed<T>): Compiler<T> =
+	compiler(CompilerKind.EVALUATOR, compiled(typed))
