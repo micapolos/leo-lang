@@ -1,6 +1,7 @@
 package leo14.typed.compiler
 
 import leo.base.ifNotNull
+import leo.base.runIf
 import leo13.fold
 import leo13.reverse
 import leo14.*
@@ -8,6 +9,7 @@ import leo14.reader.CompilerTokenReader
 import leo14.reader.FragmentTokenReader
 import leo14.reader.TokenReader
 import leo14.syntax.*
+import leo14.typed.isStatic
 import leo14.typed.process
 
 val types = false
@@ -23,7 +25,7 @@ fun <T> Processor<Syntax>.process(compiler: Compiler<T>): Processor<Syntax> =
 		is ActionParserCompiler -> process(compiler.functionParser)
 		is ArrowParserCompiler -> process(compiler.arrowParser)
 		is ChoiceParserCompiler -> process(compiler.choiceParser)
-		is CompiledParserCompiler -> processWithTypes(compiler.compiledParser)
+		is CompiledParserCompiler -> process(compiler.compiledParser)
 		is DefineParserCompiler -> process(compiler.defineParser)
 		is TypeParserCompiler -> process(compiler.typeParser)
 		is MatchParserCompiler -> process(compiler.matchParser)
@@ -61,15 +63,16 @@ fun <T> Processor<Syntax>.process(parser: ChoiceParser<T>): Processor<Syntax> =
 		.process(token(begin(Keyword.CHOICE stringIn parser.language)) of typeKeywordKind)
 		.fold(parser.choice.optionStack.reverse) { process(it, parser.language) }
 
-fun <T> Processor<Syntax>.processWithTypes(compiledParser: CompiledParser<T>): Processor<Syntax> =
-	if (types)
-		this
-			.process(compiledParser.compiled.typed.type, compiledParser.context.language)
-			.process(token(begin("with")) of valueKeywordKind)
-			.process(compiledParser)
-	else process(compiledParser)
-
 fun <T> Processor<Syntax>.process(compiledParser: CompiledParser<T>): Processor<Syntax> =
+	processWithoutTypes(compiledParser)
+		.runIf(types && compiledParser.kind == CompilerKind.EVALUATOR && !compiledParser.compiled.typed.type.isStatic) {
+			this
+				.process(token(begin("of")) of valueKeywordKind)
+				.process(compiledParser.compiled.typed.type, compiledParser.context.language)
+				.process(token(end) of valueKeywordKind)
+		}
+
+fun <T> Processor<Syntax>.processWithoutTypes(compiledParser: CompiledParser<T>): Processor<Syntax> =
 	this
 		.ifNotNull(compiledParser.parent) { process(it) }
 		.run {
