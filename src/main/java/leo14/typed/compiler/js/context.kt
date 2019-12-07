@@ -3,6 +3,7 @@ package leo14.typed.compiler.js
 import leo14.Literal
 import leo14.defaultLanguage
 import leo14.js.ast.Expr
+import leo14.lambda.Term
 import leo14.script
 import leo14.typed.Typed
 import leo14.typed.TypedLine
@@ -16,5 +17,6 @@ val emptyContext: Context<Expr> =
 		exprEvaluator,
 		jsTypeContext,
 		TypedLine<Expr>::decompileLiteral,
+		Term<Expr>::termDecompile,
 		script("javascript"))
 

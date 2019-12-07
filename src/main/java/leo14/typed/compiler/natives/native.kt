@@ -7,10 +7,7 @@ import leo13.linkOrNull
 import leo14.*
 import leo14.Number
 import leo14.js.ast.code
-import leo14.lambda.invoke
-import leo14.lambda.native
-import leo14.lambda.pair
-import leo14.lambda.term
+import leo14.lambda.*
 import leo14.native.*
 import leo14.typed.*
 import leo14.typed.compiler.js.compileTyped
@@ -31,7 +28,7 @@ val Number.nativeTypedLine: TypedLine<Native>
 
 val Typed<Native>.decompile
 	get() =
-		decompile(TypedLine<Native>::decompileLiteral)
+		decompile(TypedLine<Native>::decompileLiteral, Term<Native>::termDecompile)
 
 val TypedLine<Native>.decompileLiteral: Literal?
 	get() =
@@ -73,9 +70,9 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 						link1.value.fieldOrNull?.let { field ->
 							ifOrNull(field.rhs.isEmpty) {
 								when (field.string) {
-									"open" -> link.tail.decompile(TypedLine<Native>::decompileLiteral).open.run { typed<Native>() }
-									"show" -> link.tail.decompile(TypedLine<Native>::decompileLiteral).show.run { typed<Native>() }
-									"js" -> typed(native(link.tail.decompile(TypedLine<Native>::decompileLiteral).compileTyped.expr.code))
+									"open" -> link.tail.decompile.open.run { typed<Native>() }
+									"show" -> link.tail.decompile.show.run { typed<Native>() }
+									"js" -> typed(native(link.tail.decompile.compileTyped.expr.code))
 									else -> null
 								}
 							}

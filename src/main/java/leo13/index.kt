@@ -46,6 +46,12 @@ tailrec operator fun Index.plus(int: Int): Index =
 	if (int == 0) this
 	else next.plus(int.dec())
 
+tailrec operator fun Index.plus(index: Index): Index =
+	when (index) {
+		is ZeroIndex -> this
+		is NextIndex -> next.plus(index.previous)
+	}
+
 fun index(int: Int): Index = int.index
 
 // TODO: Make it tail-recursive

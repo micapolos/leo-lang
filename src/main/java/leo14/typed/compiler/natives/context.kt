@@ -2,6 +2,7 @@ package leo14.typed.compiler.natives
 
 import leo14.Literal
 import leo14.defaultLanguage
+import leo14.lambda.Term
 import leo14.native.Native
 import leo14.native.nativeEvaluator
 import leo14.script
@@ -17,4 +18,5 @@ val emptyContext: Context<Native> =
 		nativeEvaluator,
 		nativeTypeContext,
 		TypedLine<Native>::decompileLiteral,
+		Term<Native>::termDecompile,
 		script("native"))

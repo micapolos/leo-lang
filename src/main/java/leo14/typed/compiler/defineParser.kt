@@ -1,12 +1,16 @@
 package leo14.typed.compiler
 
+import leo13.Index
+import leo13.next
+import leo13.plus
 import leo14.*
 import leo14.typed.Type
 import leo14.typed.type
 
 data class DefineParser<T>(
 	val parentCompiledParser: CompiledParser<T>,
-	val memory: Memory<T>)
+	val memory: Memory<T>,
+	val localSizeIndex: Index)
 
 fun <T> DefineParser<T>.parse(token: Token): Compiler<T> =
 	when (token) {
@@ -28,12 +32,12 @@ fun <T> DefineParser<T>.parse(token: Token): Compiler<T> =
 					type())).parse(token)
 		is EndToken ->
 			parentCompiledParser.nextCompiler {
-				updateMemory { this@parse.memory }
+				updateMemory { this@parse.memory }.updateLocalIndex { plus(this@parse.localSizeIndex) }
 			}
 	}
 
 fun <T> DefineParser<T>.plus(item: MemoryItem<T>): DefineParser<T> =
-	copy(memory = memory.plus(item))
+	copy(memory = memory.plus(item), localSizeIndex = localSizeIndex.next)
 
 fun <T> DefineParser<T>.beginIs(type: Type) =
 	parentCompiledParser.begin(DefineIsParserParent(this, type))

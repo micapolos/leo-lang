@@ -2,6 +2,7 @@ package leo14.typed.compiler
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
+import leo13.index0
 import leo13.stack
 import leo14.*
 import leo14.typed.*
@@ -129,7 +130,7 @@ fun <T> CompiledParser<T>.plus(script: Script): CompiledParser<T> =
 
 val <T> CompiledParser<T>.decompile: Script
 	get() =
-		compiled.typed.decompile(context.decompileLiteral)
+		compiled.typed.decompile(context.decompileLiteral, context.termDecompile)
 
 val <T> CompiledParser<T>.beginGive
 	get(): CompiledParser<T> =
@@ -154,7 +155,7 @@ val <T> CompiledParser<T>.compileMake
 
 val <T> CompiledParser<T>.compileDefine
 	get() =
-		compiler(DefineParser(this, compiled.memory))
+		compiler(DefineParser(this, compiled.memory, index0))
 
 val <T> CompiledParser<T>.compileGive
 	get() =

@@ -1,6 +1,8 @@
 package leo14.typed.compiler.js
 
 import leo.base.assertEqualTo
+import leo14.line
+import leo14.lineTo
 import leo14.literal
 import leo14.script
 import leo14.typed.compiler.evaluate
@@ -11,6 +13,36 @@ class EvaluateTest {
 	fun text() {
 		emptyContext
 			.evaluate(script(literal("123")))
-			.assertEqualTo(null)
+			.assertEqualTo(script("javascript" lineTo script(literal("'123'"))))
+	}
+
+	@Test
+	fun struct() {
+		emptyContext
+			.evaluate(
+				script(
+					"point" lineTo script(
+						"x" lineTo script(literal(10)),
+						"y" lineTo script(literal(20)))))
+			.assertEqualTo(
+				script(
+					"point" lineTo script(
+						"x" lineTo script(
+							"javascript" lineTo script(literal("10"))),
+						"y" lineTo script(
+							"javascript" lineTo script(literal("20"))))))
+	}
+
+	@Test
+	fun numberPlusNumber() {
+		emptyContext
+			.evaluate(
+				script(
+					line(literal(10)),
+					"plus" lineTo script(literal(20))))
+			.assertEqualTo(
+				script(
+					"javascript" lineTo script(
+						literal("(v0=>((a=>b=>a+b)((v0)(v1=>v2=>v1)))((v0)(v1=>v2=>v2)))(((v0=>v1=>v2=>((v2)(v0))(v1))(10))(20))"))))
 	}
 }

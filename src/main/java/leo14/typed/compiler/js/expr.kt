@@ -1,9 +1,14 @@
 package leo14.typed.compiler.js
 
 import leo.base.notNullIf
+import leo14.ScriptLine
 import leo14.js.ast.*
 import leo14.lambda.*
+import leo14.lambda.js.code
 import leo14.lambda.js.expr
+import leo14.lineTo
+import leo14.literal
+import leo14.script
 import leo14.typed.*
 
 val Typed<Expr>.resolve: Typed<Expr>?
@@ -95,3 +100,7 @@ val Typed<Expr>.resolveCircle: Typed<Expr>?
 fun Expr.invoke(value: Value<Expr>): Value<Expr>? = null
 
 val exprEvaluator = evaluator(Expr::invoke)
+
+val Term<Expr>.termDecompile: ScriptLine
+	get() =
+		"javascript" lineTo script(literal(code))
