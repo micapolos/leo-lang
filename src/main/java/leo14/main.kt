@@ -28,7 +28,7 @@ fun run(reader: CharReader) {
 	while (true) {
 		print(undoableCharReaderVariable.current.lastDone)
 		errorToPrint?.run {
-			println("ERROR")
+			println("[ERROR]")
 			printStackTrace()
 			println(undoableCharReaderVariable.current.lastDone.toString())
 		}

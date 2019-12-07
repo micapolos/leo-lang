@@ -12,11 +12,13 @@ enum class Keyword {
 	CHOICE,
 	COMMENT,
 	COMPILE,
+	COMPILER,
 	DEFINE,
 	DELETE,
 	DOING,
 	EIGHT,
 	EVALUATE,
+	EVALUATOR,
 	EVERYTHING,
 	EXIT,
 	FIFTH,
@@ -69,11 +71,13 @@ val Keyword.polishString: String
 			Keyword.CHOICE -> "wybór"
 			Keyword.COMMENT -> "komentarz"
 			Keyword.COMPILE -> "kompiluj"
+			Keyword.COMPILER -> "kompilator"
 			Keyword.DEFINE -> "zdefiniuj"
 			Keyword.DELETE -> "usuń"
 			Keyword.DOING -> "robiąca"
 			Keyword.EIGHT -> "osiem"
 			Keyword.EVALUATE -> "oblicz"
+			Keyword.EVALUATOR -> "ewaluator"
 			Keyword.EVERYTHING -> "wszystko"
 			Keyword.EXIT -> "wyjdź"
 			Keyword.FIFTH -> "piąty"
@@ -120,11 +124,13 @@ val Keyword.germanString: String
 			Keyword.CHOICE -> "wahl"
 			Keyword.COMMENT -> "komentar"
 			Keyword.COMPILE -> TODO()
+			Keyword.COMPILER -> TODO()
 			Keyword.DEFINE -> TODO()
 			Keyword.DELETE -> "lösche"
 			Keyword.DOING -> "machen"
 			Keyword.EIGHT -> "acht"
 			Keyword.EVALUATE -> TODO()
+			Keyword.EVALUATOR -> TODO()
 			Keyword.EVERYTHING -> "alles"
 			Keyword.EXIT -> TODO()
 			Keyword.FIFTH -> "fünfte"

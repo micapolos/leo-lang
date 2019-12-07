@@ -12,7 +12,7 @@ import leo14.syntax.*
 import leo14.typed.isStatic
 import leo14.typed.process
 
-val types = false
+val types = true
 
 fun Processor<Syntax>.process(tokenReader: TokenReader): Processor<Syntax> =
 	when (tokenReader) {

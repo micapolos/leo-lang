@@ -145,6 +145,14 @@ val <T> CompiledParser<T>.compileAs
 	get() =
 		compiler(TypeParser(AsTypeParserParent(this), null, context.language, context.typeContext, type()))
 
+val <T> CompiledParser<T>.compileCompiler
+	get() =
+		compiler(QuoteParser(CompiledQuoteParserParent(this), script()))
+
+val <T> CompiledParser<T>.compileEvaluator
+	get() =
+		compiler(QuoteParser(CompiledQuoteParserParent(this), script()))
+
 val <T> CompiledParser<T>.compileMatch
 	get() =
 		compiler(MatchParser(this, stack(), compiled.typed.beginMatch()))
