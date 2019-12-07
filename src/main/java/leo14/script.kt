@@ -51,9 +51,9 @@ fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
 
 fun Script.plus(script: Script): Script =
-	when (this) {
+	when (script) {
 		is UnitScript -> this
-		is LinkScript -> plus(link.lhs).plus(link.line)
+		is LinkScript -> plus(script.link.lhs).plus(script.link.line)
 	}
 
 infix fun String.fieldTo(rhs: Script) = ScriptField(this, rhs)
