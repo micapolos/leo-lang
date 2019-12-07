@@ -21,13 +21,13 @@ fun Term<Expr>.code(gen: Gen): Code =
 	}
 
 fun Abstraction<Term<Expr>>.code(gen: Gen): Code =
-	"${gen.depth.variableCode}=>${gen.inc { body.code(gen) }}".code
+	"${gen.depth.variableCode}=>${gen.inc { body.code(it) }}".code
 
 fun Application<Term<Expr>>.code(gen: Gen): Code =
 	"(${lhs.code(gen)})(${rhs.code(gen)})".code
 
 fun Variable<Expr>.code(gen: Gen): Code =
-	gen.depth.minus(index.int).variableCode
+	gen.depth.minus(index.int + 1).variableCode
 
 val Int.variableCode: Code
 	get() =
