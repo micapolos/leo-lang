@@ -22,10 +22,3 @@ fun Expr.astExpr(gen: Gen): leo14.js.ast.Expr =
 		is OpExpr -> op.astExpr(gen)
 		is GetExpr -> get.astExpr(gen)
 	}
-
-fun Expr.code(gen: Gen): Code =
-	when (this) {
-		is CodeExpr -> code
-		is OpExpr -> op.code(gen)
-		is GetExpr -> get.code(gen)
-	}
