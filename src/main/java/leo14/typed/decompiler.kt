@@ -14,23 +14,23 @@ fun <T> Typed<T>.decompile(fn: DecompileLiteral<T>): Script =
 		?.run { tail.decompile(fn).plus(head.decompileLine(fn)) }
 		?: script()
 
-fun <T> TypedLine<T>.decompileLine(fn: DecompileLiteral<T>): ScriptLine =
-	fn()
+fun <T> TypedLine<T>.decompileLine(decompileLiteralFn: DecompileLiteral<T>): ScriptLine =
+	decompileLiteralFn()
 		?.let { line(it) }
 		?: when (line) {
 			is NativeLine -> Keyword.NATIVE.string lineTo script(term.scriptLine) // TODO: Decompile literal
-			is FieldLine -> (term of line.field).decompileLine(fn)
-			is ChoiceLine -> (term of line.choice).decompileLine(fn)
+			is FieldLine -> (term of line.field).decompileLine(decompileLiteralFn)
+			is ChoiceLine -> (term of line.choice).decompileLine(decompileLiteralFn)
 			is ArrowLine -> Keyword.FUNCTION.string lineTo line.arrow.lhs.script.plus(Keyword.GIVES.string lineTo line.arrow.rhs.script)
 			is AnyLine -> "anything" lineTo script()
 		} ?: error("$this.decompileLine")
 
-fun <T> TypedChoice<T>.decompileLine(fn: DecompileLiteral<T>): ScriptLine =
+fun <T> TypedChoice<T>.decompileLine(decompileLiteralFn: DecompileLiteral<T>): ScriptLine =
 	term.abstraction(choice.countIndex) { body ->
 		body.application { argTerm, fnTerm ->
 			argTerm.variable { index ->
 				choice.optionStack.get(index)!!.let { option ->
-					(fnTerm of (option.string fieldTo option.rhs)).decompileLine(fn)
+					(fnTerm of (option.string fieldTo option.rhs)).decompileLine(decompileLiteralFn)
 				}
 			}
 		}
