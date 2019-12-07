@@ -1,4 +1,4 @@
-package leo14.typed.compiler.js.expr
+package leo14.typed.compiler.js
 
 import leo.base.notNullIf
 import leo14.*
@@ -11,7 +11,6 @@ import leo14.lambda.Value
 import leo14.lambda.evaluator
 import leo14.lambda.js.expr.*
 import leo14.typed.*
-import leo14.typed.compiler.js.objectType
 
 val Typed<Expr>.resolve: Typed<Expr>?
 	get() =
