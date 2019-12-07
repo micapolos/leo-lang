@@ -161,7 +161,7 @@ val <T> TypedField<T>.resolveRhs: Typed<T>
 		term of field.rhs
 
 fun <T> Typed<T>.resolveAccess(string: String): Typed<T>? =
-	resolveLinkOrNull?.head?.resolveFieldOrNull?.resolveRhs?.resolveGet(string)
+	onlyLineOrNull?.resolveFieldOrNull?.resolveRhs?.resolveGet(string)
 
 fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
 	resolveLinkOrNull?.let { link ->
