@@ -17,7 +17,7 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			?: resolveShow
 			?: resolveOpen
 			?: resolveInvoke
-			?: resolveJavascript
+			?: resolveEval
 			?: resolveBinaryOpNew(numberType, "plus", "+")
 			?: resolveBinaryOpNew(numberType, "minus", "-")
 			?: resolveBinaryOpNew(numberType, "times", "*")
@@ -63,9 +63,10 @@ val Typed<Expr>.resolveInvoke: Typed<Expr>? get() =
 		}
 	}
 
-val Typed<Expr>.resolveJavascript: Typed<Expr>? get() =
+val Typed<Expr>.resolveEval: Typed<Expr>?
+	get() =
 	resolveLinkOrNull?.run {
-		notNullIf(head.resolveFieldOrNull?.field == "javascript" fieldTo type()) {
+		notNullIf(head.resolveFieldOrNull?.field == "eval" fieldTo type()) {
 			term(expr(id((term.native as StringExpr).string))) of expressionType
 		}
 	}
