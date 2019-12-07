@@ -36,10 +36,13 @@ val Expr.astExpr: leo14.js.ast.Expr
 
 val Expr.reflectScriptLine: ScriptLine
 	get() =
-		"expr" lineTo script(
-			when (this) {
-				is LiteralExpr -> literal.reflectScriptLine
-				is CodeExpr -> code.reflectScriptLine
-				is OpExpr -> op.reflectScriptLine
-				is GetExpr -> get.reflectScriptLine
-			})
+		"expr" lineTo reflectScript
+
+val Expr.reflectScript: Script
+	get() =
+		when (this) {
+			is LiteralExpr -> script(literal.reflectScriptLine)
+			is CodeExpr -> script(code.reflectScriptLine)
+			is OpExpr -> op.reflectScript
+			is GetExpr -> get.reflectScript
+		}

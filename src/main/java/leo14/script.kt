@@ -50,6 +50,12 @@ fun script(string: String, vararg strings: String) = script(field(string)).fold(
 fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
 
+fun Script.plus(script: Script): Script =
+	when (this) {
+		is UnitScript -> this
+		is LinkScript -> plus(link.lhs).plus(link.line)
+	}
+
 infix fun String.fieldTo(rhs: Script) = ScriptField(this, rhs)
 infix fun String.fieldTo(line: ScriptLine) = fieldTo(script(line))
 infix fun String.fieldTo(literal: Literal) = fieldTo(script(literal))

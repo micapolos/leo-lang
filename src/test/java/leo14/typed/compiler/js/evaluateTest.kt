@@ -43,6 +43,6 @@ class EvaluateTest {
 			.assertEqualTo(
 				script(
 					"javascript" lineTo script(
-						literal("(v0=>((a=>b=>a+b)((v0)(v1=>v2=>v1)))((v0)(v1=>v2=>v2)))(((v0=>v1=>v2=>((v2)(v0))(v1))(10))(20))"))))
+						literal("(10)+(20)"))))
 	}
 }
