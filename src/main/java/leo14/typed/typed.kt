@@ -6,9 +6,11 @@ import leo.base.notNullIf
 import leo.base.notNullOrError
 import leo13.*
 import leo14.lambda.*
+import leo14.line
+import leo14.literal
 
 data class Typed<out T>(val term: Term<T>, val type: Type) {
-	override fun toString() = "$reflectScriptLine"
+	override fun toString() = reflectScriptLine { line(literal(toString())) }.toString()
 }
 data class TypedLine<T>(val term: Term<T>, val line: Line)
 data class TypedChoice<T>(val term: Term<T>, val choice: Choice)

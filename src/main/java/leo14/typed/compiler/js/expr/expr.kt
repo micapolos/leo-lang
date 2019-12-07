@@ -11,7 +11,7 @@ import leo14.lambda.Value
 import leo14.lambda.evaluator
 import leo14.lambda.js.expr.*
 import leo14.typed.*
-import leo14.typed.compiler.js.expressionType
+import leo14.typed.compiler.js.objectType
 
 val Typed<Expr>.resolve: Typed<Expr>?
 	get() =
@@ -23,9 +23,10 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			?: resolveOp(numberType, "minus", "-")
 			?: resolveOp(numberType, "times", "*")
 			?: resolveOp(textType, "plus", "+")
+			?: resolveGet
 
 fun Typed<Expr>.resolveOp(type: Type, name: String, op: String): Typed<Expr>? =
-	resolveLink { link ->
+	decompileLinkOrNull?.let { link ->
 		notNullIf(link.tail.type == type && link.head.resolveFieldOrNull?.field == name fieldTo type) {
 			link.tail.term.op(op, link.head.term).expr.term of type
 		}
@@ -33,19 +34,19 @@ fun Typed<Expr>.resolveOp(type: Type, name: String, op: String): Typed<Expr>? =
 
 val Typed<Expr>.resolveNative: Typed<Expr>?
 	get() =
-		resolveLink { link ->
+		decompileLinkOrNull?.let { link ->
 			if (link.tail.type == textType &&
 				term is NativeTerm &&
 				term.native is LiteralExpr &&
 				term.native.literal is StringLiteral &&
 				link.head.line.fieldOrNull == "native" fieldTo type())
-				term.native.literal.string.code.expr.term of expressionType
+				term.native.literal.string.code.expr.term of objectType
 			else null
 		}
 
 val Typed<Expr>.resolveShow: Typed<Expr>?
 	get() =
-		resolveLink { link ->
+		decompileLinkOrNull?.let { link ->
 			notNullIf(link.head.line.fieldOrNull == "show" fieldTo type()) {
 				link.tail.term.astExpr.show.run { typed<Expr>() }
 			}
@@ -53,10 +54,23 @@ val Typed<Expr>.resolveShow: Typed<Expr>?
 
 val Typed<Expr>.resolveOpen: Typed<Expr>?
 	get() =
-		resolveLink { link ->
+		decompileLinkOrNull?.let { link ->
 			notNullIf(link.head.line.fieldOrNull == "open" fieldTo type()) {
 				link.tail.term.astExpr.open.run { typed<Expr>() }
 			}
+		}
+
+val Typed<Expr>.resolveGet: Typed<Expr>?
+	get() =
+		decompileLinkOrNull?.let { link ->
+			if (link.tail.type == objectType &&
+				link.head.line.fieldOrNull == ("get" fieldTo textType) &&
+				link.head.term is NativeTerm &&
+				link.head.term.native is LiteralExpr &&
+				link.head.term.native.literal is StringLiteral
+			)
+				link.tail.term.get(link.head.term.native.literal.string).expr.term of objectType
+			else null
 		}
 
 // No need for invoke, since we don't evaluate JS

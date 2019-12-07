@@ -25,9 +25,9 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			?: resolveCircle
 			?: when (type) {
 				type(
-					expressionLine,
+					objectLine,
 					"set" lineTo textType,
-					"to" lineTo expressionType) ->
+					"to" lineTo objectType) ->
 					decompileLinkOrNull!!.let { firstLink ->
 						firstLink.tail.decompileLinkOrNull!!.let { secondLink ->
 							term(expr(fn(args("it"),
@@ -36,7 +36,7 @@ val Typed<Expr>.resolve: Typed<Expr>?
 										(secondLink.head.term.expr as StringExpr).string,
 										firstLink.head.term.expr),
 									stmt(ret(expr(id("it")))))))
-								.invoke(secondLink.tail.term.expr)) of expressionType
+								.invoke(secondLink.tail.term.expr)) of objectType
 						}
 					}
 				else -> null
@@ -59,7 +59,7 @@ val Typed<Expr>.resolveOpen: Typed<Expr>? get() =
 val Typed<Expr>.resolveInvoke: Typed<Expr>? get() =
 	resolveLinkOrNull?.run {
 		notNullIf(head.resolveFieldOrNull?.field?.string == "invoke") {
-			term(tail.term.expr.invoke(term.head.expr)) of expressionType
+			term(tail.term.expr.invoke(term.head.expr)) of objectType
 		}
 	}
 
@@ -67,7 +67,7 @@ val Typed<Expr>.resolveEval: Typed<Expr>?
 	get() =
 	resolveLinkOrNull?.run {
 		notNullIf(head.resolveFieldOrNull?.field == "eval" fieldTo type()) {
-			term(expr(id((term.native as StringExpr).string))) of expressionType
+			term(expr(id((term.native as StringExpr).string))) of objectType
 		}
 	}
 
@@ -93,7 +93,7 @@ val Typed<Expr>.resolveCircle: Typed<Expr>?
 						"div.style.borderRadius='50px';" +
 						"document.body.innerHTML='';" +
 						"document.body.appendChild(div);" +
-						"})()"))) of expressionType
+						"})()"))) of objectType
 			}
 		}
 

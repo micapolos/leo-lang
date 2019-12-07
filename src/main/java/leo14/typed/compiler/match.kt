@@ -4,6 +4,7 @@ import leo13.EmptyStack
 import leo13.LinkStack
 import leo13.Stack
 import leo13.reverse
+import leo14.ScriptLine
 import leo14.lambda.Term
 import leo14.lambda.arg0
 import leo14.lambda.invoke
@@ -55,12 +56,10 @@ fun <T> Typed<T>.beginMatch(): Match<T> =
 		Match(term, choice.optionStack.reverse, null)
 	}
 
-val <T> Match<T>.reflectScriptLine
-	get() =
+fun <T> Match<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine) =
 		"match" lineTo script(
-			term.scriptLine,
+			term.scriptLine(nativeFn),
 			typeOrNull?.scriptLine ?: "type" lineTo script("null"))
 
-val <T> Case<T>.reflectScriptLine
-	get() =
-		"case" lineTo script(typed.reflectScriptLine)
+fun <T> Case<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine) =
+	"case" lineTo script(typed.reflectScriptLine(nativeFn))

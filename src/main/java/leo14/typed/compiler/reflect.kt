@@ -10,42 +10,40 @@ import leo14.typed.reflectScriptLine
 import leo14.typed.script
 import leo14.typed.scriptLine
 
-val <T> Compiled<T>.reflectScriptLine: ScriptLine get() =
+fun <T> Compiled<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine): ScriptLine =
 	"compiled" lineTo script(
-		memory.reflectScriptLine,
-		typed.reflectScriptLine,
+		memory.reflectScriptLine(nativeFn),
+		typed.reflectScriptLine(nativeFn),
 		"local" lineTo script(
 			"memory" lineTo script(
 				"size" lineTo script(literal(localMemorySize.int)))))
 
-val <T> Memory<T>.reflectScriptLine get() =
-	itemStack.reflectOrEmptyScriptLine("memory", MemoryItem<T>::reflectScriptLine)
+fun <T> Memory<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine) =
+	itemStack.reflectOrEmptyScriptLine("memory") { reflectScriptLine(nativeFn) }
 
-val <T> MemoryItem<T>.reflectScriptLine get() =
+fun <T> MemoryItem<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine) =
 	"item" lineTo script(
 		key.reflectScriptLine,
-		value.reflectScriptLine)
+		value.reflectScriptLine(nativeFn))
 
-val <T> MemoryValue<T>.reflectScriptLine
-	get() =
+fun <T> MemoryValue<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine) =
 		"value" lineTo script(
 			when (this) {
 				is ArgumentMemoryValue -> "argument" lineTo type.script
-				is BindingMemoryValue -> binding.reflectScriptLine
+				is BindingMemoryValue -> binding.reflectScriptLine(nativeFn)
 			})
 
-val <T> MemoryBinding<T>.reflectScriptLine
-	get() =
+fun <T> MemoryBinding<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine) =
 		"binding" lineTo script(
 			"kind" lineTo script(if (isAction) "action" else "constant"),
-			typed.reflectScriptLine)
+			typed.reflectScriptLine(nativeFn))
 
 val <T> CompiledParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
 		parent?.reflectScriptLine.orIfNull { "parent" lineTo script("nothing") },
 		context.reflectScriptLine,
 		kind.reflectScriptLine,
-		compiled.reflectScriptLine)
+		compiled.reflectScriptLine(context.nativeScriptLine))
 
 val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 	when (this) {
@@ -60,7 +58,7 @@ val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
 val <T> FunctionParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
 		parentCompiledParser.reflectScriptLine,
-		function.reflectScriptLine)
+		function.reflectScriptLine(parentCompiledParser.context.nativeScriptLine))
 
 val <T> TypeParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
@@ -104,7 +102,7 @@ val <T> DefineParser<T>.reflectScriptLine
 		"define" lineTo script(
 			"parser" lineTo script(
 				"parent" lineTo script(parentCompiledParser.reflectScriptLine),
-				memory.reflectScriptLine))
+				memory.reflectScriptLine(parentCompiledParser.context.nativeScriptLine)))
 
 val <T> QuoteParser<T>.reflectScriptLine get() =
 	"quote" lineTo script(

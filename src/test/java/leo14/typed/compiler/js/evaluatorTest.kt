@@ -1,7 +1,6 @@
 package leo14.typed.compiler.js
 
 import leo.base.assertEqualTo
-import leo14.code.code
 import leo14.lambda.js.expr.expr
 import leo14.lambda.js.expr.term
 import leo14.lineTo
@@ -18,7 +17,7 @@ class EvaluatorTest {
 		emptyContext
 			.evaluator()
 			.parse(script(literal("foo")))
-			.assertEqualTo(emptyContext.evaluator("'foo'".code.expr.term of textType))
+			.assertEqualTo(emptyContext.evaluator(literal("foo").expr.term of textType))
 	}
 
 	@Test
@@ -33,7 +32,7 @@ class EvaluatorTest {
 			.assertEqualTo(
 				emptyContext
 					.evaluator(
-						"10".code.expr.term.plus("20".code.expr.term) of
+						literal(10).expr.term.plus(literal(20).expr.term) of
 							type("point" lineTo type("x" lineTo numberType, "y" lineTo numberType))))
 	}
 }

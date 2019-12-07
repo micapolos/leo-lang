@@ -5,13 +5,14 @@ import leo13.index0
 import leo13.next
 import leo14.lambda.Evaluator
 import leo14.lambda.eval
+import leo14.literal
 import leo14.typed.*
 
 data class Compiled<T>(
 	val memory: Memory<T>,
 	val localMemorySize: Index,
 	val typed: Typed<T>) {
-	override fun toString() = "$reflectScriptLine"
+	override fun toString() = "${reflectScriptLine { leo14.line(literal(toString())) }}"
 }
 
 fun <T> compiled(
@@ -52,7 +53,7 @@ val <T> Compiled<T>.typedForEval: Typed<T>
 	get() =
 		memory.resolveForEval(typed.term) of typed.type
 
-fun <T> Compiled<T>.eval(evaluator: Evaluator<T>) =
+fun <T> Compiled<T>.eval(evaluator: Evaluator<T>): Compiled<T> =
 	updateTyped { typedForEval.term.eval(evaluator) of typed.type }
 
 fun <T> Compiled<T>.plusGiven(givenString: String, typed: Typed<T>) =

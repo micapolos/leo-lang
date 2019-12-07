@@ -43,5 +43,5 @@ val <T> MatchParser<T>.reflectScriptLine
 			"parser" lineTo script(
 				"parent" lineTo script(parentCompiledParser.reflectScriptLine),
 				caseLineStack.reflectOrEmptyScriptLine("cases") { scriptLine },
-				match.reflectScriptLine)
+				match.reflectScriptLine(parentCompiledParser.context.nativeScriptLine))
 		)

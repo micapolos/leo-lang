@@ -1,7 +1,8 @@
 package leo14.lambda.js.expr
 
-import leo14.Literal
+import leo14.*
 import leo14.code.Code
+import leo14.code.reflectScriptLine
 import leo14.lambda.Term
 import leo14.lambda.code.Gen
 import leo14.lambda.code.gen
@@ -32,3 +33,13 @@ fun Expr.astExpr(gen: Gen): leo14.js.ast.Expr =
 val Expr.astExpr: leo14.js.ast.Expr
 	get() =
 		astExpr(gen)
+
+val Expr.reflectScriptLine: ScriptLine
+	get() =
+		"expr" lineTo script(
+			when (this) {
+				is LiteralExpr -> literal.reflectScriptLine
+				is CodeExpr -> code.reflectScriptLine
+				is OpExpr -> op.reflectScriptLine
+				is GetExpr -> get.reflectScriptLine
+			})

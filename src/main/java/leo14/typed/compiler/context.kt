@@ -18,6 +18,7 @@ data class Context<T>(
 	val typeContext: TypeContext,
 	val decompileLiteral: DecompileLiteral<T>,
 	val termDecompile: TermDecompile<T>,
+	val nativeScriptLine: T.() -> ScriptLine,
 	val targetScript: Script) {
 	override fun toString() = "$reflectScriptLine"
 }

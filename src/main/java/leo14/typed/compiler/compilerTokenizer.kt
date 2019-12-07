@@ -191,4 +191,4 @@ fun <T> Processor<Syntax>.process(parser: DefineParser<T>): Processor<Syntax> =
 fun <T> Processor<Syntax>.process(
 	memoryItem: MemoryItem<T>,
 	language: Language): Processor<Syntax> =
-	syntaxProcess(script(memoryItem.reflectScriptLine))
+	syntaxProcess(script(memoryItem.reflectScriptLine { line(literal(toString())) }))

@@ -7,7 +7,7 @@ import leo13.int
 import leo14.*
 
 sealed class Term<out T> {
-	override fun toString() = script.indentString
+	override fun toString() = script { line(literal(toString())) }.indentString
 }
 
 data class NativeTerm<T>(val native: T) : Term<T>() {
@@ -76,26 +76,22 @@ val <T> Term<T>.native: T
 
 // === script
 
-val <T> Term<T>.script: Script
-	get() =
+fun <T> Term<T>.script(nativeFn: T.() -> ScriptLine): Script =
 		when (this) {
-			is NativeTerm -> script("native" lineTo script(literal(native.toString())))
-			is AbstractionTerm -> abstraction.script
-			is ApplicationTerm -> application.script
+			is NativeTerm -> script("native" lineTo script(native.nativeFn()))
+			is AbstractionTerm -> abstraction.script(nativeFn)
+			is ApplicationTerm -> application.script(nativeFn)
 			is VariableTerm -> variable.script
 		}
 
-val <T> Term<T>.scriptLine
-	get() =
-		"term" lineTo script
+fun <T> Term<T>.scriptLine(nativeFn: T.() -> ScriptLine) =
+	"term" lineTo script(nativeFn)
 
-val <T> Abstraction<Term<T>>.script
-	get() =
-		script("lambda" lineTo body.script)
+fun <T> Abstraction<Term<T>>.script(nativeFn: T.() -> ScriptLine) =
+	script("lambda" lineTo body.script(nativeFn))
 
-val <T> Application<Term<T>>.script
-	get() =
-		lhs.script.plus("apply" lineTo rhs.script)
+fun <T> Application<Term<T>>.script(nativeFn: T.() -> ScriptLine) =
+	lhs.script(nativeFn).plus("apply" lineTo rhs.script(nativeFn))
 
 val <T> Variable<T>.script
 	get() =
