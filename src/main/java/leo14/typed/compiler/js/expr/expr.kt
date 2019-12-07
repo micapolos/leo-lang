@@ -17,6 +17,7 @@ val Typed<Expr>.resolve: Typed<Expr>?
 	get() =
 		null
 			?: resolveNative
+			?: resolveNativeRhs
 			?: resolveShow
 			?: resolveOpen
 			?: resolveOp(numberType, "plus", "+")
@@ -49,7 +50,7 @@ val Typed<Expr>.resolveShow: Typed<Expr>?
 	get() =
 		decompileLinkOrNull?.let { link ->
 			notNullIf(link.head.line.fieldOrNull == "show" fieldTo type()) {
-				link.tail.term.astExpr.show.run { typed<Expr>() }
+				link.tail.apply { term.astExpr.show }
 			}
 		}
 
@@ -57,7 +58,7 @@ val Typed<Expr>.resolveOpen: Typed<Expr>?
 	get() =
 		decompileLinkOrNull?.let { link ->
 			notNullIf(link.head.line.fieldOrNull == "open" fieldTo type()) {
-				link.tail.term.astExpr.open.run { typed<Expr>() }
+				link.tail.apply { term.astExpr.open }
 			}
 		}
 
@@ -71,6 +72,18 @@ val Typed<Expr>.resolveGet: Typed<Expr>?
 				link.head.term.native.literal is StringLiteral
 			)
 				link.tail.term.get(link.head.term.native.literal.string).expr.term of objectType
+			else null
+		}
+
+val Typed<Expr>.resolveNativeRhs: Typed<Expr>?
+	get() =
+		decompileLinkOrNull?.let { link ->
+			if (link.tail.type == type() &&
+				link.head.line.fieldOrNull == ("native" fieldTo textType) &&
+				link.head.term is NativeTerm &&
+				link.head.term.native is LiteralExpr &&
+				link.head.term.native.literal is StringLiteral)
+				link.head.term.native.literal.string.code.expr.term of objectType
 			else null
 		}
 
