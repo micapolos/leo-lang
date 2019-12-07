@@ -1,10 +1,12 @@
 package leo14.typed.compiler.js
 
-import leo14.Script
 import leo14.lambda.js.expr.Expr
 import leo14.lambda.native
 import leo14.typed.Typed
-import leo14.typed.compiler.*
+import leo14.typed.compiler.CompiledParser
+import leo14.typed.compiler.CompilerKind
+import leo14.typed.compiler.compiled
+import leo14.typed.compiler.compiler
 
 val emptyCompiler =
 	compiler(
@@ -13,16 +15,6 @@ val emptyCompiler =
 			CompilerKind.COMPILER,
 			emptyContext,
 			compiled()))
-
-val Script.compileTyped: Typed<Expr>
-	get() =
-		emptyCompiler
-			.parse(this)
-			.run { this as CompiledParserCompiler }
-			.compiledParser
-			.apply { if (parent != null) error("not top level") }
-			.compiled
-			.typedForEnd
 
 val Typed<Expr>.expr: Expr
 	get() =

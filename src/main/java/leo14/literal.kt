@@ -16,6 +16,10 @@ fun literal(int: Int): Literal = literal(number(int))
 fun literal(long: Long): Literal = literal(number(long))
 fun literal(double: Double): Literal = literal(number(double))
 
+val String.literal get() = literal(this)
+val Int.literal get() = literal(this)
+val Double.literal get() = literal(this)
+
 val Literal.any
 	get() =
 		when (this) {

@@ -50,6 +50,8 @@ fun script(string: String, vararg strings: String) = script(field(string)).fold(
 fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
 
+val Literal.line get() = line(this)
+
 fun Script.plus(script: Script): Script =
 	when (script) {
 		is UnitScript -> this

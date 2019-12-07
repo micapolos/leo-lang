@@ -5,25 +5,23 @@ import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
-import leo14.typed.compiler.evaluate
 import kotlin.test.Test
 
-class EvaluateTest {
+class ScriptEvaluateTest {
 	@Test
 	fun text() {
-		emptyContext
-			.evaluate(script(literal("123")))
+		script(literal("123"))
+			.evaluate
 			.assertEqualTo(script("javascript" lineTo script(literal("'123'"))))
 	}
 
 	@Test
 	fun struct() {
-		emptyContext
-			.evaluate(
-				script(
-					"point" lineTo script(
-						"x" lineTo script(literal(10)),
-						"y" lineTo script(literal(20)))))
+		script(
+			"point" lineTo script(
+				"x" lineTo script(literal(10)),
+				"y" lineTo script(literal(20))))
+			.evaluate
 			.assertEqualTo(
 				script(
 					"point" lineTo script(
@@ -35,14 +33,29 @@ class EvaluateTest {
 
 	@Test
 	fun numberPlusNumber() {
-		emptyContext
-			.evaluate(
-				script(
-					line(literal(10)),
-					"plus" lineTo script(literal(20))))
+		script(
+			line(literal(10)),
+			"plus" lineTo script(literal(20)))
+			.evaluate
 			.assertEqualTo(
 				script(
 					"javascript" lineTo script(
 						literal("(10)+(20)"))))
+	}
+
+	@Test
+	fun give() {
+		script(
+			2.literal.line,
+			"give" lineTo script(
+				"given".line,
+				"number".line,
+				"plus" lineTo script(
+					"given".line,
+					"number".line)))
+			.evaluate
+			.assertEqualTo(
+				script(
+					"javascript" lineTo script(literal("(2)+(2)"))))
 	}
 }
