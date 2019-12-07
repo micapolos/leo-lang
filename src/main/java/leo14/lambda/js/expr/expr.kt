@@ -16,6 +16,13 @@ val Op.expr: Expr get() = OpExpr(this)
 val Get.expr: Expr get() = GetExpr(this)
 val Expr.term: Term<Expr> get() = term(this)
 
+fun Expr.astExpr(gen: Gen): leo14.js.ast.Expr =
+	when (this) {
+		is CodeExpr -> code.astExpr
+		is OpExpr -> op.astExpr(gen)
+		is GetExpr -> get.astExpr(gen)
+	}
+
 fun Expr.code(gen: Gen): Code =
 	when (this) {
 		is CodeExpr -> code
