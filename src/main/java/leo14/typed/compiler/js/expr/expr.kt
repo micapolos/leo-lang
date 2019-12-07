@@ -24,6 +24,7 @@ val Typed<Expr>.resolve: Typed<Expr>?
 			?: resolveOp(numberType, "times", "*")
 			?: resolveOp(textType, "plus", "+")
 			?: resolveGet
+			?: resolveText
 
 fun Typed<Expr>.resolveOp(type: Type, name: String, op: String): Typed<Expr>? =
 	decompileLinkOrNull?.let { link ->
@@ -70,6 +71,15 @@ val Typed<Expr>.resolveGet: Typed<Expr>?
 				link.head.term.native.literal is StringLiteral
 			)
 				link.tail.term.get(link.head.term.native.literal.string).expr.term of objectType
+			else null
+		}
+
+val Typed<Expr>.resolveText: Typed<Expr>?
+	get() =
+		decompileLinkOrNull?.let { link ->
+			if (link.tail.type == objectType &&
+				link.head.line.fieldOrNull == ("text" fieldTo type()))
+				term of textType
 			else null
 		}
 
