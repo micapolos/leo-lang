@@ -19,7 +19,7 @@ data class Context<T>(
 	val decompileLiteral: DecompileLiteral<T>,
 	val termDecompile: TermDecompile<T>,
 	val targetScript: Script) {
-	override fun toString() = "$termDecompile"
+	override fun toString() = "$reflectScriptLine"
 }
 
 fun <T> Context<T>.compileLine(literal: Literal): TypedLine<T> =

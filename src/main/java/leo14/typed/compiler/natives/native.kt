@@ -8,6 +8,7 @@ import leo14.*
 import leo14.Number
 import leo14.js.ast.code
 import leo14.lambda.*
+import leo14.lambda.js.expr.astExpr
 import leo14.native.*
 import leo14.typed.*
 import leo14.typed.compiler.js.compileTyped
@@ -72,7 +73,7 @@ val Typed<Native>.nativeResolve: Typed<Native>?
 								when (field.string) {
 									"open" -> link.tail.decompile.open.run { typed<Native>() }
 									"show" -> link.tail.decompile.show.run { typed<Native>() }
-									"js" -> typed(native(link.tail.decompile.compileTyped.expr.code))
+									"js" -> typed(native(link.tail.decompile.compileTyped.expr.astExpr.code))
 									else -> null
 								}
 							}

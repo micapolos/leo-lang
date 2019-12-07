@@ -1,8 +1,8 @@
 package leo14.typed.compiler.js
 
 import leo14.Script
-import leo14.js.ast.Expr
-import leo14.lambda.js.expr
+import leo14.lambda.js.expr.Expr
+import leo14.lambda.native
 import leo14.typed.Typed
 import leo14.typed.compiler.*
 
@@ -26,4 +26,4 @@ val Script.compileTyped: Typed<Expr>
 
 val Typed<Expr>.expr: Expr
 	get() =
-		term.expr
+		term.native

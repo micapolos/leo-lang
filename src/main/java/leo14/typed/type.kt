@@ -194,3 +194,10 @@ val Language.textType get() = type(textLine)
 val Language.numberLineNative get() = native(Keyword.NUMBER stringIn this, isStatic = false)
 val Language.numberLine get() = line(numberLineNative)
 val Language.numberType get() = type(numberLine)
+
+val Literal.typeLine
+	get() =
+		when (this) {
+			is StringLiteral -> textLine
+			is NumberLiteral -> numberLine
+		}

@@ -1,8 +1,9 @@
 package leo14.typed.compiler.js
 
 import leo.base.assertEqualTo
-import leo14.js.ast.expr
-import leo14.lambda.term
+import leo14.code.code
+import leo14.lambda.js.expr.expr
+import leo14.lambda.js.expr.term
 import leo14.literal
 import leo14.typed.numberLine
 import leo14.typed.of
@@ -14,14 +15,14 @@ class LiteralTest {
 	fun literalTypedLine() {
 		literal("foo")
 			.typedLine
-			.assertEqualTo(term(expr("foo")) of textLine)
+			.assertEqualTo("'foo'".code.expr.term of textLine)
 
 		literal(10)
 			.typedLine
-			.assertEqualTo(term(expr(10)) of numberLine)
+			.assertEqualTo("10".code.expr.term of numberLine)
 
 		literal(10.2)
 			.typedLine
-			.assertEqualTo(term(expr(10.2)) of numberLine)
+			.assertEqualTo("10.2".code.expr.term of numberLine)
 	}
 }
