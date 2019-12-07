@@ -44,6 +44,7 @@ val <T> CompiledParser<T>.reflectScriptLine: ScriptLine get() =
 	"parser" lineTo script(
 		parent?.reflectScriptLine.orIfNull { "parent" lineTo script("nothing") },
 		context.reflectScriptLine,
+		kind.reflectScriptLine,
 		compiled.reflectScriptLine)
 
 val <T> CompiledParserParent<T>.reflectScriptLine: ScriptLine get() =
