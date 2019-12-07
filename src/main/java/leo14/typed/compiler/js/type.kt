@@ -8,6 +8,6 @@ fun javascriptLine(type: Type) = javascriptName lineTo type
 fun javascriptType(type: Type) = type(javascriptLine(type))
 fun javascriptType(line: Line) = javascriptType(type(line))
 
-val objectLine = line(objectLineNative)
-val objectType = type(objectLine)
+val nativeLine = line(nativeLineNative)
+val nativeType = type(nativeLine)
 

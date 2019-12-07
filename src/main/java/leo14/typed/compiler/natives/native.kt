@@ -11,10 +11,12 @@ import leo14.lambda.*
 import leo14.lambda.js.expr.astExpr
 import leo14.native.*
 import leo14.typed.*
+import leo14.typed.compiler.Compiled
 import leo14.typed.compiler.js.compileTyped
 import leo14.typed.compiler.js.expr
 import leo14.typed.compiler.js.open
 import leo14.typed.compiler.js.show
+import leo14.typed.compiler.updateTyped
 
 val Literal.nativeTypedLine: TypedLine<Native>
 	get() =
@@ -38,6 +40,10 @@ val TypedLine<Native>.decompileLiteral: Literal?
 			numberLine -> term.native.literal
 			else -> null
 		}
+
+val Compiled<Native>.nativeResolve: Compiled<Native>?
+	get() =
+		typed.nativeResolve?.let { updateTyped { it } }
 
 val Typed<Native>.nativeResolve: Typed<Native>?
 	get() =

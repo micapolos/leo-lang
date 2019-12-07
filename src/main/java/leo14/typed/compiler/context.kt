@@ -7,12 +7,13 @@ import leo14.typed.DecompileLiteral
 import leo14.typed.Typed
 import leo14.typed.TypedLine
 
+typealias CompiledResolve<T> = Compiled<T>.() -> Compiled<T>?
 typealias TypedResolve<T> = Typed<T>.() -> Typed<T>?
 typealias TermDecompile<T> = Term<T>.() -> ScriptLine
 
 data class Context<T>(
 	val language: Language,
-	val typedResolve: TypedResolve<T>,
+	val compiledResolve: CompiledResolve<T>,
 	val literalCompile: LiteralCompile<T>,
 	val evaluator: Evaluator<T>,
 	val typeContext: TypeContext,
@@ -26,8 +27,8 @@ data class Context<T>(
 fun <T> Context<T>.compileLine(literal: Literal): TypedLine<T> =
 	literal.literalCompile()
 
-fun <T> Context<T>.resolve(typed: Typed<T>): Typed<T>? =
-	typedResolve.invoke(typed)
+fun <T> Context<T>.resolve(compiled: Compiled<T>): Compiled<T>? =
+	compiledResolve.invoke(compiled)
 
 val <T> Context<T>.reflectScriptLine
 	get() =

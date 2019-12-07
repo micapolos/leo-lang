@@ -7,4 +7,4 @@ import leo14.typed.textLineNative
 val jsTypeContext = typeContext(
 	textLineNative,
 	numberLineNative,
-	objectLineNative)
+	nativeLineNative)

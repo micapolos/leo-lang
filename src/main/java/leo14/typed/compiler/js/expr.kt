@@ -11,14 +11,22 @@ import leo14.lambda.Value
 import leo14.lambda.evaluator
 import leo14.lambda.js.expr.*
 import leo14.typed.*
+import leo14.typed.compiler.Compiled
+import leo14.typed.compiler.typedForEnd
+import leo14.typed.compiler.updateTyped
+
+val Compiled<Expr>.resolve: Compiled<Expr>?
+	get() =
+		null
+			?: resolveShow
+			?: resolveOpen
+			?: typed.resolve?.let { updateTyped { it } }
 
 val Typed<Expr>.resolve: Typed<Expr>?
 	get() =
 		null
 			?: resolveNative
 			?: resolveNativeRhs
-			?: resolveShow
-			?: resolveOpen
 			?: resolveOp(numberType, "plus", "+")
 			?: resolveOp(numberType, "minus", "-")
 			?: resolveOp(numberType, "times", "*")
@@ -41,36 +49,36 @@ val Typed<Expr>.resolveNative: Typed<Expr>?
 				term.native is LiteralExpr &&
 				term.native.literal is StringLiteral &&
 				link.head.line.fieldOrNull == "native" fieldTo type())
-				term.native.literal.string.code.expr.term of objectType
+				term.native.literal.string.code.expr.term of nativeType
 			else null
 		}
 
-val Typed<Expr>.resolveShow: Typed<Expr>?
+val Compiled<Expr>.resolveShow: Compiled<Expr>?
 	get() =
-		decompileLinkOrNull?.let { link ->
+		typed.decompileLinkOrNull?.let { link ->
 			notNullIf(link.head.line.fieldOrNull == "show" fieldTo type()) {
-				link.tail.apply { term.astExpr.show }
+				updateTyped { link.tail }.apply { typedForEnd.term.astExpr.show }
 			}
 		}
 
-val Typed<Expr>.resolveOpen: Typed<Expr>?
+val Compiled<Expr>.resolveOpen: Compiled<Expr>?
 	get() =
-		decompileLinkOrNull?.let { link ->
+		typed.decompileLinkOrNull?.let { link ->
 			notNullIf(link.head.line.fieldOrNull == "open" fieldTo type()) {
-				link.tail.apply { term.astExpr.open }
+				updateTyped { link.tail }.apply { typedForEnd.term.astExpr.open }
 			}
 		}
 
 val Typed<Expr>.resolveGet: Typed<Expr>?
 	get() =
 		decompileLinkOrNull?.let { link ->
-			if (link.tail.type == objectType &&
+			if (link.tail.type == nativeType &&
 				link.head.line.fieldOrNull == ("get" fieldTo textType) &&
 				link.head.term is NativeTerm &&
 				link.head.term.native is LiteralExpr &&
 				link.head.term.native.literal is StringLiteral
 			)
-				link.tail.term.get(link.head.term.native.literal.string).expr.term of objectType
+				link.tail.term.get(link.head.term.native.literal.string).expr.term of nativeType
 			else null
 		}
 
@@ -82,14 +90,14 @@ val Typed<Expr>.resolveNativeRhs: Typed<Expr>?
 				link.head.term is NativeTerm &&
 				link.head.term.native is LiteralExpr &&
 				link.head.term.native.literal is StringLiteral)
-				link.head.term.native.literal.string.code.expr.term of objectType
+				link.head.term.native.literal.string.code.expr.term of nativeType
 			else null
 		}
 
 val Typed<Expr>.resolveText: Typed<Expr>?
 	get() =
 		decompileLinkOrNull?.let { link ->
-			if (link.tail.type == objectType &&
+			if (link.tail.type == nativeType &&
 				link.head.line.fieldOrNull == ("text" fieldTo type()))
 				term of textType
 			else null

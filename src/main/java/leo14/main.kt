@@ -7,8 +7,8 @@ import leo.home
 import leo.java.lang.sttyPrivateMode
 import leo14.reader.*
 import leo14.typed.compiler.evaluator
+import leo14.typed.compiler.js.emptyContext
 import leo14.typed.compiler.memory
-import leo14.typed.compiler.natives.emptyContext
 import leo14.typed.compiler.preludeMemory
 import java.io.InputStreamReader
 
@@ -28,7 +28,7 @@ fun run(reader: CharReader) {
 	while (true) {
 		print(undoableCharReaderVariable.current.lastDone)
 		errorToPrint?.run {
-			println("[ERROR]")
+			println("ERROR")
 			printStackTrace()
 			println(undoableCharReaderVariable.current.lastDone.toString())
 		}

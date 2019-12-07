@@ -38,12 +38,20 @@ fun <T> Compiled<T>.plus(item: MemoryItem<T>): Compiled<T> =
 	updateMemory { plus(item) }.updateLocalIndex { next }
 
 fun <T> Compiled<T>.resolve(line: TypedLine<T>, context: Context<T>): Compiled<T> =
-	updateTyped {
-		plus(line)
-			.run {
-				memory.resolve(this) ?: context.resolve(this) ?: resolve ?: this
-			}
+	updateTyped { plus(line) }.run {
+		resolveMemory ?: resolve(context) ?: resolveStatic ?: this
 	}
+
+val <T> Compiled<T>.resolveMemory: Compiled<T>?
+	get() =
+		memory.resolve(typed)?.let { updateTyped { it } }
+
+fun <T> Compiled<T>.resolve(context: Context<T>): Compiled<T>? =
+	context.resolve(this)
+
+val <T> Compiled<T>.resolveStatic: Compiled<T>?
+	get() =
+		typed.resolve?.let { updateTyped { it } }
 
 val <T> Compiled<T>.typedForEnd: Typed<T>
 	get() =

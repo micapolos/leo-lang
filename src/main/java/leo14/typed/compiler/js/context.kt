@@ -6,14 +6,14 @@ import leo14.lambda.Term
 import leo14.lambda.js.expr.Expr
 import leo14.lambda.js.expr.reflectScriptLine
 import leo14.script
-import leo14.typed.Typed
 import leo14.typed.TypedLine
+import leo14.typed.compiler.Compiled
 import leo14.typed.compiler.Context
 
 val emptyContext: Context<Expr> =
 	Context(
 		defaultLanguage,
-		Typed<Expr>::resolve,
+		Compiled<Expr>::resolve,
 		Literal::typedLine,
 		exprEvaluator,
 		jsTypeContext,

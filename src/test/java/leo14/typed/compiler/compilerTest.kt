@@ -10,6 +10,7 @@ import leo14.typed.*
 import leo14.typed.compiler.natives.compiler
 import leo14.typed.compiler.natives.emptyContext
 import leo14.typed.compiler.natives.evaluator
+import leo14.typed.compiler.natives.typed
 import kotlin.test.Test
 
 class CompilerTest {
@@ -93,8 +94,8 @@ class CompilerTest {
 		val compiled = compiled(
 			typed(
 				"point" lineTo typed(
-					"x" lineTo leo14.typed.compiler.natives.typed(native(10)),
-					"y" lineTo leo14.typed.compiler.natives.typed(native(11)))))
+					"x" lineTo typed(native(10)),
+					"y" lineTo typed(native(11)))))
 
 		compiler(compiled)
 			.parse(script("x"))
@@ -379,7 +380,7 @@ class CompilerTest {
 	fun compileLiteral() {
 		compiler(compiled(typed()))
 			.parse(script(literal(123)))
-			.assertEqualTo(compiler(compiled(leo14.typed.compiler.natives.typed(native(123)))))
+			.assertEqualTo(compiler(compiled(typed(native(123)))))
 	}
 
 	@Test
@@ -391,8 +392,7 @@ class CompilerTest {
 					"plus" lineTo script(literal(123))))
 			.assertEqualTo(
 				compiler(
-					compiled(
-						emptyContext.resolve(leo14.typed.compiler.natives.typed(native(123)).plus("plus" lineTo leo14.typed.compiler.natives.typed(native(123))))!!)))
+					emptyContext.resolve(compiled(typed(native(123)).plus("plus" lineTo typed(native(123)))))!!))
 	}
 
 	@Test
@@ -402,6 +402,6 @@ class CompilerTest {
 				script(
 					line(literal(2)),
 					"plus" lineTo script(literal(3))))
-			.assertEqualTo(evaluator(compiled(leo14.typed.compiler.natives.typed(native(5)))))
+			.assertEqualTo(evaluator(compiled(typed(native(5)))))
 	}
 }
