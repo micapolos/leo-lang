@@ -16,7 +16,7 @@ import leo14.typed.compiler.preludeMemory
 import java.io.InputStreamReader
 
 val errorTriggerCount = 7
-val prelude = false
+val prelude = true
 val memory = if (prelude) emptyContext.preludeMemory() else memory()
 
 fun main() = run(emptyContext.compiler(memory).runIf(prelude) { parse(stdScript) }.tokenReader.charReader)

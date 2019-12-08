@@ -25,31 +25,54 @@ val Script.evaluate: Script
 
 val stdScript: Script =
 	script(
-		"define" lineTo script(
-			"window".line,
-			"gives" lineTo script(
-				"window" lineTo script(
-					"window".literal.line,
-					"native".line)),
+		defineNativeScriptLine("window", "window"),
+		defineNativeGetter("window", "location", "location"),
+		defineNativeTextGetter("location", "href", "href"),
 
-			"window" lineTo script("native"),
-			"location".line,
-			"gives" lineTo script(
-				"location" lineTo script(
-					"given".line,
-					"window".line,
-					"native".line,
-					"get" lineTo script("location".literal))),
+		defineTextCreateElementScriptLine,
+		defineCreateElementScriptLine("div", "div"),
+		defineCreateElementScriptLine("span", "span"),
 
-			"location" lineTo script("native"),
-			"href".line,
-			"gives" lineTo script(
+		defineElementSetTextScriptLine("content", "textContent"),
+		defineElementSetTextScriptLine("width", "style.width"),
+		defineElementSetTextScriptLine("height", "style.height"),
+		defineElementSetTextScriptLine("background", "style.background"),
+		defineElementSetTextScriptLine("border", "style.border"),
+		defineElementSetTextScriptLine("padding", "style.padding"))
+
+fun defineNativeScriptLine(name: String, jsName: String): ScriptLine =
+	"define" lineTo script(
+		name.line,
+		"gives" lineTo script(
+			"window" lineTo script(
+				jsName.literal.line,
+				"native".line)))
+
+fun defineNativeGetter(lhs: String, name: String, jsName: String): ScriptLine =
+	"define" lineTo script(
+		lhs lineTo script("native"),
+		name.line,
+		"gives" lineTo script(
+			name lineTo script(
 				"given".line,
-				"location".line,
+				lhs.line,
 				"native".line,
-				"get" lineTo script("href".literal),
-				"text".line),
+				"get" lineTo script(jsName.literal))))
 
+fun defineNativeTextGetter(lhs: String, name: String, jsName: String): ScriptLine =
+	"define" lineTo script(
+		lhs lineTo script("native"),
+		name.line,
+		"gives" lineTo script(
+			"given".line,
+			lhs.line,
+			"native".line,
+			"get" lineTo script(jsName.literal),
+			"text".line))
+
+val defineTextCreateElementScriptLine
+	get() =
+		"define" lineTo script(
 			"text".line,
 			"element".line,
 			"gives" lineTo script(
@@ -58,42 +81,27 @@ val stdScript: Script =
 					"native".line,
 					"invoke" lineTo script(
 						"given".line,
-						"text".line))),
+						"text".line))))
 
-			"div".line,
-			"gives" lineTo script(
-				"div".literal.line,
-				"element".line),
+fun defineCreateElementScriptLine(name: String, jsName: String) =
+	"define" lineTo script(
+		name.line,
+		"gives" lineTo script(
+			jsName.literal.line,
+			"element".line))
 
-			"span".line,
-			"gives" lineTo script(
-				"span".literal.line,
-				"element".line),
-
-			"element" lineTo script("native".line),
-			"content" lineTo script("text".line),
-			"gives" lineTo script(
-				"element" lineTo script(
-					"given".line,
-					"element".line,
-					"native".line,
-					"set" lineTo script(
-						"textContent".literal.line,
-						"to" lineTo script(
-							"given".line,
-							"content".line,
-							"text".line)))),
-
-			"element" lineTo script("native".line),
-			"background" lineTo script("text".line),
-			"gives" lineTo script(
-				"element" lineTo script(
-					"given".line,
-					"element".line,
-					"native".line,
-					"set" lineTo script(
-						"style.background".literal.line,
-						"to" lineTo script(
-							"given".line,
-							"background".line,
-							"text".line))))))
+fun defineElementSetTextScriptLine(name: String, jsName: String): ScriptLine =
+	"define" lineTo script("element" lineTo script("native".line),
+		"set" lineTo script(name lineTo script("text".line)),
+		"gives" lineTo script(
+			"element" lineTo script(
+				"given".line,
+				"element".line,
+				"native".line,
+				"set" lineTo script(
+					jsName.literal.line,
+					"to" lineTo script(
+						"given".line,
+						"set".line,
+						name.line,
+						"text".line)))))
