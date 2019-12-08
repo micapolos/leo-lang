@@ -3,6 +3,7 @@ package leo14.typed
 import leo.base.assertEqualTo
 import leo14.lambda.*
 import leo14.native.native
+import leo14.typed.compiler.natives.typed
 import kotlin.test.Test
 
 class TypedTest {
@@ -60,15 +61,15 @@ class TypedTest {
 	fun resolve() {
 		typed(
 			"point" lineTo typed(
-				"x" lineTo leo14.typed.compiler.natives.typed(native(10)),
-				"y" lineTo leo14.typed.compiler.natives.typed(native(11))),
+				"x" lineTo typed(native(10)),
+				"y" lineTo typed(native(11))),
 			"x" lineTo typed())
 			.resolve
 			.assertEqualTo(
 				typed(
 					"point" lineTo typed(
-						"x" lineTo leo14.typed.compiler.natives.typed(native(10)),
-						"y" lineTo leo14.typed.compiler.natives.typed(native(11))))
+						"x" lineTo typed(native(10)),
+						"y" lineTo typed(native(11))))
 					.resolve("x" fieldTo typed()))
 	}
 
@@ -76,8 +77,8 @@ class TypedTest {
 	fun resolveField_access() {
 		val typed = typed(
 			"point" lineTo typed(
-				"x" lineTo leo14.typed.compiler.natives.typed(native(10)),
-				"y" lineTo leo14.typed.compiler.natives.typed(native(11))))
+				"x" lineTo typed(native(10)),
+				"y" lineTo typed(native(11))))
 
 		typed
 			.resolve("x" fieldTo typed())
@@ -94,4 +95,27 @@ class TypedTest {
 //			.resolve("point" fieldTo typed())
 //			.assertEqualTo(typed.resolveWrap("point"))
 //	}
+
+	@Test
+	fun rhsString() {
+		val point = typed(
+			"x" lineTo typed(native(10)),
+			"y" lineTo typed(native(20)))
+
+		point.rhs("x").assertEqualTo(typed("x" lineTo typed(native(10))))
+		point.rhs("y").assertEqualTo(typed("y" lineTo typed(native(20))))
+		point.rhs("z").assertEqualTo(null)
+	}
+
+	@Test
+	fun getString() {
+		val point = typed(
+			"point" lineTo typed(
+				"x" lineTo typed(native(10)),
+				"y" lineTo typed(native(20))))
+
+		point.get("x").assertEqualTo(typed("x" lineTo typed(native(10))))
+		point.get("y").assertEqualTo(typed("y" lineTo typed(native(20))))
+		point.get("z").assertEqualTo(null)
+	}
 }

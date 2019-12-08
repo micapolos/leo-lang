@@ -19,6 +19,8 @@ data class Invoke(val lhs: Term<Expr>, val argStack: Stack<Term<Expr>>)
 
 fun Term<Expr>.invoke(vararg args: Term<Expr>) = Invoke(this, stack(*args))
 
+fun Term<Expr>.invoke(argStack: Stack<Term<Expr>>) = Invoke(this, argStack)
+
 fun Invoke.astExpr(gen: Gen): AstExpr =
 	lhs.astExpr(gen).invoke(Params(argStack.map { astExpr(gen) }))
 

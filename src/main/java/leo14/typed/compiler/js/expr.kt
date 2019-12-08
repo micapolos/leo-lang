@@ -2,6 +2,7 @@ package leo14.typed.compiler.js
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
+import leo13.map
 import leo14.*
 import leo14.code.code
 import leo14.js.ast.open
@@ -41,7 +42,7 @@ val Typed<Expr>.resolve: Typed<Expr>?
 
 fun Typed<Expr>.resolveOp(type: Type, name: String, op: String): Typed<Expr>? =
 	decompileLinkOrNull?.let { link ->
-		notNullIf(link.tail.type == type && link.head.resolveFieldOrNull?.field == name fieldTo type) {
+		notNullIf(link.tail.type == type && link.head.fieldOrNull?.field == name fieldTo type) {
 			link.tail.term.op(op, link.head.term).expr.term of type
 		}
 	}
@@ -49,8 +50,12 @@ fun Typed<Expr>.resolveOp(type: Type, name: String, op: String): Typed<Expr>? =
 val Typed<Expr>.resolveInvoke: Typed<Expr>?
 	get() =
 		decompileLinkOrNull?.let { link ->
-			notNullIf(link.tail.type == nativeType && link.head.resolveFieldOrNull?.field?.string == "invoke") {
-				link.tail.term.invoke(link.head.term).expr.term of nativeType
+			ifOrNull(link.tail.type == nativeType) {
+				link.head.fieldOrNull?.let { fieldTyped ->
+					fieldTyped.resolveRhs.decompileLineStack?.let { argLineStack ->
+						link.tail.term.invoke(argLineStack.map { term }).expr.term of nativeType
+					}
+				}
 			}
 		}
 
@@ -107,7 +112,7 @@ val Typed<Expr>.resolveSet: Typed<Expr>?
 	get() =
 		decompileLinkOrNull?.let { link ->
 			ifOrNull(link.tail.type == nativeType) {
-				link.head.resolveFieldOrNull?.let { fieldTyped ->
+				link.head.fieldOrNull?.let { fieldTyped ->
 					ifOrNull(fieldTyped.field.string == "set") {
 						fieldTyped.resolveRhs.decompileLinkOrNull?.let { setLink ->
 							if (setLink.tail.type == textType &&

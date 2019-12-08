@@ -75,7 +75,7 @@ fun <T> Typed<T>.resolve(string: String): Typed<T>? =
 val <T> Typed<T>.resolve: Typed<T>?
 	get() =
 		resolveLinkOrNull?.run {
-			head.resolveFieldOrNull?.let { field ->
+			head.fieldOrNull?.let { field ->
 				tail.resolve(field)
 			}
 		}
@@ -118,7 +118,7 @@ val <T> Typed<T>.lastTypedLine: TypedLine<T>
 
 val <T> TypedLine<T>.typedField: TypedField<T>
 	get() =
-		resolveFieldOrNull.notNullOrError("$line not a field")
+		fieldOrNull.notNullOrError("$line not a field")
 
 val <T> Typed<T>.previousTyped: Typed<T>
 	get() =
@@ -134,7 +134,7 @@ val <T> Typed<T>.onlyLineOrNull
 
 val <T> TypedLine<T>.choice: TypedChoice<T>
 	get() =
-		resolveChoiceOrNull.notNullOrError("$line as choice")
+		choiceOrNull.notNullOrError("$line as choice")
 
 val <T> TypedLine<T>.arrow: TypedArrow<T>
 	get() =
@@ -148,11 +148,11 @@ val <T> TypedField<T>.rhs: Typed<T>
 	get() =
 		resolveRhs
 
-val <T> TypedLine<T>.resolveFieldOrNull: TypedField<T>?
+val <T> TypedLine<T>.fieldOrNull: TypedField<T>?
 	get() =
 		(line as? FieldLine)?.field?.let { term of it }
 
-val <T> TypedLine<T>.resolveChoiceOrNull: TypedChoice<T>?
+val <T> TypedLine<T>.choiceOrNull: TypedChoice<T>?
 	get() =
 		(line as? ChoiceLine)?.choice?.let { term of it }
 
@@ -161,23 +161,23 @@ val <T> TypedField<T>.resolveRhs: Typed<T>
 		term of field.rhs
 
 fun <T> Typed<T>.resolveAccess(string: String): Typed<T>? =
-	onlyLineOrNull?.resolveFieldOrNull?.resolveRhs?.resolveGet(string)
+	onlyLineOrNull?.fieldOrNull?.resolveRhs?.resolveGet(string)
 
 fun <T> Typed<T>.resolveGet(string: String): Typed<T>? =
 	resolveLinkOrNull?.let { link ->
-		link.head.resolveGet(string) ?: link.tail.resolveGet(string)
+		link.head.rhs(string) ?: link.tail.resolveGet(string)
 	}
 
-fun <T> TypedLine<T>.resolveGet(string: String): Typed<T>? =
+fun <T> TypedLine<T>.rhs(string: String): Typed<T>? =
 	when (line) {
 		is NativeLine -> notNullIf(string == line.native.name) { term of type(line) }
-		is FieldLine -> (term of line.field).resolveGet(string)
+		is FieldLine -> (term of line.field).rhs(string)
 		is ChoiceLine -> notNullIf(string == "choice") { term of type(line) }
 		is ArrowLine -> notNullIf(string == "function") { term of type(line) }
 		is AnyLine -> null
 	}
 
-fun <T> TypedField<T>.resolveGet(string: String): Typed<T>? =
+fun <T> TypedField<T>.rhs(string: String): Typed<T>? =
 	notNullIf(field.string == string) {
 		term of type(field)
 	}
@@ -215,6 +215,32 @@ val <T> Typed<T>.decompileLinkOrNull: Link<Typed<T>, TypedLine<T>>?
 				if (link.head.isStatic) (term of link.tail) linkTo (id<T>() of link.head)
 				else term.pair().run { (first of link.tail) linkTo (second of link.head) }
 		}
+
+fun <T> Stack<TypedLine<T>>.pushReverseDecompileLines(typed: Typed<T>): Stack<TypedLine<T>>? {
+	val linkOrNull = typed.decompileLinkOrNull
+	return if (linkOrNull == null) notNullIf(typed == typed<T>()) { this }
+	else push(linkOrNull.head).pushReverseDecompileLines(linkOrNull.tail)
+}
+
+val <T> Typed<T>.decompileLineStack: Stack<TypedLine<T>>?
+	get() =
+		stack<TypedLine<T>>().pushReverseDecompileLines(this)?.reverse
+
+val <T> Typed<T>.decompileOnlyLineOrNull: TypedLine<T>?
+	get() =
+		decompileLinkOrNull?.let { link ->
+			notNullIf(link.tail.isEmpty) {
+				link.head
+			}
+		}
+
+fun <T> Typed<T>.get(string: String): Typed<T>? =
+	decompileOnlyLineOrNull?.fieldOrNull?.rhs?.rhs(string)
+
+fun <T> Typed<T>.rhs(string: String): Typed<T>? =
+	decompileLinkOrNull?.let { link ->
+		link.head.rhs(string) ?: link.tail.rhs(string)
+	}
 
 // === switch
 
