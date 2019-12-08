@@ -1,6 +1,7 @@
 package leo14
 
 import leo.ansi
+import leo.base.runIf
 import leo.bellChar
 import leo.clear
 import leo.home
@@ -18,7 +19,7 @@ val errorTriggerCount = 7
 val prelude = false
 val memory = if (prelude) emptyContext.preludeMemory() else memory()
 
-fun main() = run(emptyContext.compiler(memory).parse(stdScript).tokenReader.charReader)
+fun main() = run(emptyContext.compiler(memory).runIf(prelude) { parse(stdScript) }.tokenReader.charReader)
 
 fun run(reader: CharReader) {
 	sttyPrivateMode()

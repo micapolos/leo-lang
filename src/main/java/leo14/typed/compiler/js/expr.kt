@@ -52,8 +52,10 @@ val Typed<Expr>.resolveInvoke: Typed<Expr>?
 		decompileLinkOrNull?.let { link ->
 			ifOrNull(link.tail.type == nativeType) {
 				link.head.fieldOrNull?.let { fieldTyped ->
-					fieldTyped.resolveRhs.decompileLineStack?.let { argLineStack ->
-						link.tail.term.invoke(argLineStack.map { term }).expr.term of nativeType
+					ifOrNull(fieldTyped.field.string == "invoke") {
+						fieldTyped.resolveRhs.decompileLineStack?.let { argLineStack ->
+							link.tail.term.invoke(argLineStack.map { term }).expr.term of nativeType
+						}
 					}
 				}
 			}
@@ -102,8 +104,7 @@ val Typed<Expr>.resolveGet: Typed<Expr>?
 				link.head.line.fieldOrNull == ("get" fieldTo textType) &&
 				link.head.term is NativeTerm &&
 				link.head.term.native is LiteralExpr &&
-				link.head.term.native.literal is StringLiteral
-			)
+				link.head.term.native.literal is StringLiteral)
 				link.tail.term.get(link.head.term.native.literal.string).expr.term of nativeType
 			else null
 		}
