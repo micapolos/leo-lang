@@ -1,8 +1,8 @@
 package leo14
 
 data class Dynamic<T>(private var _currentVar: T) {
-	val current get() = _currentVar
-	fun <R> set(new: T, fn: () -> R): R {
+	operator fun invoke() = _currentVar
+	fun <R> with(new: T, fn: () -> R): R {
 		val old = this._currentVar
 		this._currentVar = new
 		return try {

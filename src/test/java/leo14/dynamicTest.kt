@@ -8,17 +8,17 @@ class DynamicTest {
 
 	@Test
 	fun set() {
-		dynamicString.current.assertEqualTo("root")
-		dynamicString.set("level1") {
-			dynamicString.current.assertEqualTo("level1")
-			dynamicString.set("level2") {
-				dynamicString.current.assertEqualTo("level2")
+		dynamicString().assertEqualTo("root")
+		dynamicString.with("level1") {
+			dynamicString().assertEqualTo("level1")
+			dynamicString.with("level2") {
+				dynamicString().assertEqualTo("level2")
 			}
-			dynamicString.set("level3") {
-				dynamicString.current.assertEqualTo("level3")
+			dynamicString.with("level3") {
+				dynamicString().assertEqualTo("level3")
 			}
-			dynamicString.current.assertEqualTo("level1")
+			dynamicString().assertEqualTo("level1")
 		}
-		dynamicString.current.assertEqualTo("root")
+		dynamicString().assertEqualTo("root")
 	}
 }
