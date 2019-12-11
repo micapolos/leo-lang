@@ -7,9 +7,8 @@ import leo14.typed.type
 val bitTypeLine =
 	"bit" lineTo type(choice("zero", "one"))
 
-data class Bit(override val term: Term) : Obj() {
+class Bit(term: Term) : Obj(term) {
 	override val typeLine = bitTypeLine
-	override fun toString() = super.toString()
 }
 
 val bit0 = Bit(oneOf(1, 2, nil))

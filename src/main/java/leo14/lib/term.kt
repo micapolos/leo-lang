@@ -20,11 +20,11 @@ fun <V1 : Obj, V2 : Obj, R : Obj> Term.switch(
 		.nativeEval
 		.make()
 
-fun pair(v1: Obj, v2: Obj) =
+fun struct2(v1: Obj, v2: Obj) =
 	pair(v1.term, v2.term)
 
-fun <V1 : Obj> Obj.pairFirst(make: Term.() -> V1) =
+fun <V1 : Obj> Obj.struct2get1(make: Term.() -> V1) =
 	term.pair().first.make()
 
-fun <V2 : Obj> Obj.pairSecond(make: Term.() -> V2) =
+fun <V2 : Obj> Obj.struct2get2(make: Term.() -> V2) =
 	term.pair().second.make()

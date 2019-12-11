@@ -6,9 +6,8 @@ import leo14.lambda.term
 import leo14.native.*
 import leo14.typed.numberLine
 
-data class Number(override val term: Term) : Obj() {
+class Number(term: Term) : Obj(term) {
 	override val typeLine get() = numberLine
-	override fun toString() = super.toString()
 }
 
 val Term.number get() = Number(this)

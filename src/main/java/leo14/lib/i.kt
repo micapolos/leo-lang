@@ -34,64 +34,58 @@ val i64TypeLine =
 		"hi" lineTo type(i32TypeLine),
 		"lo" lineTo type(i32TypeLine))
 
-data class I2(override val term: Term) : Obj() {
+class I2(term: Term) : Obj(term) {
 	override val typeLine: Line get() = i2TypeLine
-	override fun toString() = super.toString()
 
-	constructor(hi: Bit, lo: Bit) : this(pair(hi, lo))
+	constructor(hi: Bit, lo: Bit) : this(struct2(hi, lo))
 
-	val hi get() = pairFirst(::Bit)
-	val lo get() = pairSecond(::Bit)
+	val hi get() = struct2get1(::Bit)
+	val lo get() = struct2get2(::Bit)
 }
 
-data class I4(override val term: Term) : Obj() {
+class I4(term: Term) : Obj(term) {
 	override val typeLine: Line get() = i4TypeLine
-	override fun toString() = super.toString()
 
-	constructor(hi: I2, lo: I2) : this(pair(hi, lo))
+	constructor(hi: I2, lo: I2) : this(struct2(hi, lo))
 
-	val hi get() = pairFirst(::I2)
-	val lo get() = pairSecond(::I2)
+	val hi get() = struct2get1(::I2)
+	val lo get() = struct2get2(::I2)
 }
 
-data class I8(override val term: Term) : Obj() {
+class I8(term: Term) : Obj(term) {
 	override val typeLine: Line get() = i8TypeLine
-	override fun toString() = super.toString()
 
-	constructor(hi: I4, lo: I4) : this(pair(hi, lo))
+	constructor(hi: I4, lo: I4) : this(struct2(hi, lo))
 
-	val hi get() = pairFirst(::I4)
-	val lo get() = pairSecond(::I4)
+	val hi get() = struct2get1(::I4)
+	val lo get() = struct2get2(::I4)
 }
 
-data class I16(override val term: Term) : Obj() {
+class I16(term: Term) : Obj(term) {
 	override val typeLine: Line get() = i16TypeLine
-	override fun toString() = super.toString()
 
-	constructor(hi: I8, lo: I8) : this(pair(hi, lo))
+	constructor(hi: I8, lo: I8) : this(struct2(hi, lo))
 
-	val hi get() = pairFirst(::I8)
-	val lo get() = pairSecond(::I8)
+	val hi get() = struct2get1(::I8)
+	val lo get() = struct2get2(::I8)
 }
 
-data class I32(override val term: Term) : Obj() {
+class I32(term: Term) : Obj(term) {
 	override val typeLine: Line get() = i32TypeLine
-	override fun toString() = super.toString()
 
-	constructor(hi: I16, lo: I16) : this(pair(hi, lo))
+	constructor(hi: I16, lo: I16) : this(struct2(hi, lo))
 
-	val hi get() = pairFirst(::I16)
-	val lo get() = pairSecond(::I16)
+	val hi get() = struct2get1(::I16)
+	val lo get() = struct2get2(::I16)
 }
 
-data class I64(override val term: Term) : Obj() {
+class I64(term: Term) : Obj(term) {
 	override val typeLine: Line get() = i64TypeLine
-	override fun toString() = super.toString()
 
-	constructor(hi: I32, lo: I32) : this(pair(hi, lo))
+	constructor(hi: I32, lo: I32) : this(struct2(hi, lo))
 
-	val hi get() = pairFirst(::I32)
-	val lo get() = pairSecond(::I32)
+	val hi get() = struct2get1(::I32)
+	val lo get() = struct2get2(::I32)
 }
 
 val Int.i2 get() = I2(ushr(1).bit, bit)

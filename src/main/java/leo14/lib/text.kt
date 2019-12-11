@@ -7,9 +7,8 @@ import leo14.native.native
 import leo14.native.stringPlusStringNative
 import leo14.typed.textLine
 
-data class Text(override val term: Term) : Obj() {
+class Text(term: Term) : Obj(term) {
 	override val typeLine get() = textLine
-	override fun toString() = super.toString()
 }
 
 val Term.text get() = Text(this)

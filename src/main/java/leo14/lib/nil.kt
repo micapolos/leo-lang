@@ -6,7 +6,7 @@ import leo14.typed.type
 
 val nilTypeLine = "nil" lineTo type()
 
-data class Nil(override val term: Term) : Obj() {
+class Nil(term: Term) : Obj(term) {
 	override val typeLine get() = nilTypeLine
 }
 
