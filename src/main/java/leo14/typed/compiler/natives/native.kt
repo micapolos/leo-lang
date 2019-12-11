@@ -33,6 +33,10 @@ val Typed<Native>.decompile
 	get() =
 		decompile(TypedLine<Native>::decompileLiteral, Term<Native>::termDecompile)
 
+val TypedLine<Native>.decompile
+	get() =
+		decompileLine(TypedLine<Native>::decompileLiteral, Term<Native>::termDecompile)
+
 val TypedLine<Native>.decompileLiteral: Literal?
 	get() =
 		when (line) {
