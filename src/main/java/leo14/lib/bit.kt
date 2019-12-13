@@ -11,13 +11,15 @@ class Bit(term: Term) : Obj(term) {
 	override val typeLine = bitTypeLine
 }
 
-val bit0 = Bit(oneOf(1, 2, nil))
-val bit1 = Bit(oneOf(2, 2, nil))
+val Zero.bit get() = Bit(oneOf(1, 2, this))
+val One.bit get() = Bit(oneOf(2, 2, this))
+val bit0 = zero.bit
+val bit1 = one.bit
 val Int.bit get() = if (and(1) == 0) bit0 else bit1
 val Bit.int get() = if (this == bit0) 0 else 1
 
-fun <R : Obj> Bit.switch(make: Term.() -> R, fn0: Nil.() -> R, fn1: Nil.() -> R): R =
-	term.switch(::Nil, ::Nil, make, fn0, fn1)
+fun <R : Obj> Bit.switch(make: Term.() -> R, fn0: Zero.() -> R, fn1: One.() -> R): R =
+	term.switch(::Zero, ::One, make, fn0, fn1)
 
 val Bit.negate
 	get() =
