@@ -29,3 +29,9 @@ val Number.expr: Expr
 val Number.any: Any
 	get() =
 		bigDecimal
+
+operator fun Number.plus(number: Number) =
+	number(bigDecimal + number.bigDecimal)
+
+operator fun Number.minus(number: Number) =
+	number(bigDecimal - number.bigDecimal)
