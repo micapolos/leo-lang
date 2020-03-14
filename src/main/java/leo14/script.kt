@@ -50,6 +50,8 @@ fun script(string: String, vararg strings: String) = script(field(string)).fold(
 fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
 
+fun link(line: ScriptLine, vararg lines: ScriptLine) = script(line).fold(lines) { plus(it) }
+
 val Literal.line get() = line(this)
 
 fun Script.plus(script: Script): Script =
@@ -250,3 +252,57 @@ val Script.lineCount
 val ScriptLink.lineCount
 	get() =
 		0.fold(lineSeqNode) { inc() }
+
+val Script.forget
+	get() =
+		script()
+
+fun Script.replaceWith(script: Script) =
+	script
+
+fun Script.make(string: String) =
+	script(string lineTo this)
+
+operator fun Script.get(string: String) =
+	when (this) {
+		is UnitScript -> null
+		is LinkScript -> link[string]
+	}
+
+operator fun ScriptLink.get(string: String) =
+	when (lhs) {
+		is UnitScript -> line[string]
+		is LinkScript -> null
+	}
+
+operator fun ScriptLine.get(string: String) =
+	when (this) {
+		is LiteralScriptLine -> null
+		is FieldScriptLine -> field.rhs.lineOrNull(string)?.let { line -> script(line) }
+	}
+
+fun Script.lineOrNull(string: String): ScriptLine? =
+	when (this) {
+		is UnitScript -> null
+		is LinkScript -> link.lineOrNull(string)
+	}
+
+fun ScriptLink.lineOrNull(string: String) =
+	line.ifNamed(string) ?: lhs.lineOrNull(string)
+
+fun ScriptLine.ifNamed(string: String) =
+	if (isNamed(string)) this
+	else null
+
+fun ScriptLine.isNamed(string: String) =
+	when (this) {
+		is LiteralScriptLine -> literal.name == string
+		is FieldScriptLine -> field.string == string
+	}
+
+val Literal.name
+	get() =
+		when (this) {
+			is NumberLiteral -> "number"
+			is StringLiteral -> "text"
+		}

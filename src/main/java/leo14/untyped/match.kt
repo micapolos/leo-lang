@@ -1,6 +1,7 @@
 package leo14.untyped
 
 import leo14.*
+import leo14.Number
 
 fun Script.matches(script: Script): Boolean =
 	when (this) {
@@ -36,3 +37,86 @@ fun ScriptField.matches(scriptLine: ScriptLine) =
 
 fun ScriptField.matches(scriptField: ScriptField) =
 	string == scriptField.string && rhs.matches(scriptField.rhs)
+
+fun <R> Script.match(string: String, fn: (Script, Script) -> R): R? =
+	when (this) {
+		is UnitScript -> null
+		is LinkScript -> link.match(string, fn)
+	}
+
+fun <R> Script.matchEmpty(fn: () -> R): R? =
+	when (this) {
+		is UnitScript -> fn()
+		is LinkScript -> null
+	}
+
+fun <R> Script.matchLink(fn: (ScriptLink) -> R): R? =
+	when (this) {
+		is UnitScript -> null
+		is LinkScript -> fn(link)
+	}
+
+fun <R> Script.matchLine(fn: (ScriptLine) -> R): R? =
+	matchLink { link ->
+		link.matchLine(fn)
+	}
+
+fun <R> Script.matchNumber(fn: (Number) -> R): R? =
+	matchLine { line ->
+		line.matchLiteral { literal ->
+			literal.matchNumber(fn)
+		}
+	}
+
+fun <R> Script.matchString(fn: (String) -> R): R? =
+	matchLine { line ->
+		line.matchLiteral { literal ->
+			literal.matchString(fn)
+		}
+	}
+
+fun <R> ScriptLink.matchLine(fn: (ScriptLine) -> R): R? =
+	when (lhs) {
+		is UnitScript -> fn(line)
+		is LinkScript -> null
+	}
+
+fun <R> ScriptLink.match(string: String, fn: (Script, Script) -> R): R? =
+	line.match(string) { rhs -> fn(lhs, rhs) }
+
+fun <R> ScriptLink.match(string1: String, string2: String, fn: (Script, Script) -> R): R? =
+	match(string2) { lhs2, rhs2 ->
+		lhs2.match(string1) { lhs1, rhs1 ->
+			rhs1.matchEmpty {
+				fn(lhs1, rhs2)
+			}
+		}
+	}
+
+fun <R> ScriptLine.match(string: String, fn: (Script) -> R): R? =
+	when (this) {
+		is LiteralScriptLine -> null
+		is FieldScriptLine -> field.match(string, fn)
+	}
+
+fun <R> ScriptLine.matchLiteral(fn: (Literal) -> R): R? =
+	when (this) {
+		is LiteralScriptLine -> fn(literal)
+		is FieldScriptLine -> null
+	}
+
+fun <R> Literal.matchNumber(fn: (Number) -> R): R? =
+	when (this) {
+		is StringLiteral -> null
+		is NumberLiteral -> fn(number)
+	}
+
+fun <R> Literal.matchString(fn: (String) -> R): R? =
+	when (this) {
+		is StringLiteral -> fn(string)
+		is NumberLiteral -> null
+	}
+
+fun <R> ScriptField.match(string: String, fn: (Script) -> R): R? =
+	if (this.string == string) fn(rhs)
+	else null
