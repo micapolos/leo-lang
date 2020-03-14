@@ -191,4 +191,40 @@ class EvalTest {
 					line(literal(-10)),
 					line(literal(-20))))
 	}
+
+	@Test
+	fun head() {
+		script(
+			"zero" lineTo script(),
+			"plus" lineTo script("one"),
+			"head" lineTo script())
+			.eval
+			.assertEqualTo(script("plus" lineTo script("one")))
+	}
+
+	@Test
+	fun tail() {
+		script(
+			"zero" lineTo script(),
+			"plus" lineTo script("one"),
+			"tail" lineTo script())
+			.eval
+			.assertEqualTo(script("zero" lineTo script()))
+	}
+
+	@Test
+	fun head_empty() {
+		script(
+			"head" lineTo script())
+			.eval
+			.assertEqualTo(script("head" lineTo script()))
+	}
+
+	@Test
+	fun tail_empty() {
+		script(
+			"tail" lineTo script())
+			.eval
+			.assertEqualTo(script("tail" lineTo script()))
+	}
 }
