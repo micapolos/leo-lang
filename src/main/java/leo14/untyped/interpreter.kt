@@ -1,13 +1,16 @@
 package leo14.untyped
 
-import leo14.LinkScript
-import leo14.Script
-import leo14.ScriptLine
-import leo14.ScriptLink
+import leo14.*
 
 data class Interpreter(
 	val context: Context,
 	val script: Script)
+
+fun Context.interpreter() =
+	Interpreter(this, script())
+
+fun interpreter() =
+	context().interpreter()
 
 fun Interpreter.interpret(scriptLine: ScriptLine): Interpreter {
 	val scriptLink = ScriptLink(script, scriptLine)
@@ -32,7 +35,7 @@ fun Interpreter.resolveDoes(scriptLink: ScriptLink): Interpreter? =
 fun Interpreter.resolveGives(scriptLink: ScriptLink): Interpreter? =
 	scriptLink.match("gives") { lhs, rhs ->
 		lhs.matchLink { lhs ->
-			copy(context = context.push(Rule(Pattern(lhs), Body(rhs, null))))
+			Interpreter(context.push(Rule(Pattern(lhs), Body(rhs, null))), script())
 		}
 	}
 
@@ -41,3 +44,7 @@ fun Interpreter.replace(scriptLink: ScriptLink): Interpreter =
 
 fun Interpreter.set(script: Script): Interpreter =
 	copy(script = script)
+
+val Interpreter.clear
+	get() =
+		set(script())

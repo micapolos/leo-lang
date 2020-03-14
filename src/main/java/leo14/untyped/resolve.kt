@@ -4,17 +4,69 @@ import leo14.*
 
 val ScriptLink.resolve: Script?
 	get() =
-		when (line) {
-			is LiteralScriptLine -> null
-			is FieldScriptLine ->
-				when (line.field.rhs) {
-					is UnitScript -> lhs.resolve(line.field.string)
-					is LinkScript -> null
-				}
+		null
+			?: resolveNumberAddNumber
+			?: resolveNumberSubtractNumber
+			?: resolveNumberMultiplyByNumber
+			?: resolveStringAppendString
+			?: resolveMake
+			?: resolveAccess
+
+val ScriptLink.resolveAccess
+	get() =
+		line.matchField { field ->
+			field.matchName { string ->
+				lhs.get(string)
+			}
 		}
 
-fun Script.resolve(name: String) =
-	resolveAccess(name)
+// TODO: Maybe support multiple names at once?
+val ScriptLink.resolveMake
+	get() =
+		line.matchField { field ->
+			field.match("make") { rhs ->
+				rhs.matchName { name ->
+					lhs.make(name)
+				}
+			}
+		}
 
-fun Script.resolveAccess(name: String) =
-	access(name)?.let { script(it) }
+val ScriptLink.resolveNumberAddNumber
+	get() =
+		match("add") { lhs, rhs ->
+			lhs.matchNumber { lhs ->
+				rhs.matchNumber { rhs ->
+					script(literal(lhs + rhs))
+				}
+			}
+		}
+
+val ScriptLink.resolveNumberSubtractNumber
+	get() =
+		match("subtract") { lhs, rhs ->
+			lhs.matchNumber { lhs ->
+				rhs.matchNumber { rhs ->
+					script(literal(lhs - rhs))
+				}
+			}
+		}
+
+val ScriptLink.resolveNumberMultiplyByNumber
+	get() =
+		match("multiply", "by") { lhs, rhs ->
+			lhs.matchNumber { lhs ->
+				rhs.matchNumber { rhs ->
+					script(literal(lhs * rhs))
+				}
+			}
+		}
+
+val ScriptLink.resolveStringAppendString
+	get() =
+		match("append") { lhs, rhs ->
+			lhs.matchString { lhs ->
+				rhs.matchString { rhs ->
+					script(literal(lhs + rhs))
+				}
+			}
+		}

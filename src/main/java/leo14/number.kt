@@ -35,3 +35,9 @@ operator fun Number.plus(number: Number) =
 
 operator fun Number.minus(number: Number) =
 	number(bigDecimal - number.bigDecimal)
+
+operator fun Number.times(number: Number) =
+	number(bigDecimal * number.bigDecimal)
+
+operator fun Number.unaryMinus() =
+	number(-bigDecimal)

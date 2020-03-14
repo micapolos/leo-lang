@@ -50,7 +50,8 @@ fun script(string: String, vararg strings: String) = script(field(string)).fold(
 fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
 
-fun link(line: ScriptLine, vararg lines: ScriptLine) = script(line).fold(lines) { plus(it) }
+fun link(line: ScriptLine, vararg lines: ScriptLine) =
+	ScriptLink(script(), line).fold(lines) { ScriptLink(script(this), it) }
 
 val Literal.line get() = line(this)
 

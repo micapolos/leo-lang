@@ -75,6 +75,13 @@ fun <R> Script.matchString(fn: (String) -> R): R? =
 		}
 	}
 
+fun <R> Script.matchName(fn: (String) -> R): R? =
+	matchLine { line ->
+		line.matchField { field ->
+			field.matchName(fn)
+		}
+	}
+
 fun <R> ScriptLink.matchLine(fn: (ScriptLine) -> R): R? =
 	when (lhs) {
 		is UnitScript -> fn(line)
@@ -99,6 +106,12 @@ fun <R> ScriptLine.match(string: String, fn: (Script) -> R): R? =
 		is FieldScriptLine -> field.match(string, fn)
 	}
 
+fun <R> ScriptLine.matchField(fn: (ScriptField) -> R): R? =
+	when (this) {
+		is LiteralScriptLine -> null
+		is FieldScriptLine -> fn(field)
+	}
+
 fun <R> ScriptLine.matchLiteral(fn: (Literal) -> R): R? =
 	when (this) {
 		is LiteralScriptLine -> fn(literal)
@@ -120,3 +133,9 @@ fun <R> Literal.matchString(fn: (String) -> R): R? =
 fun <R> ScriptField.match(string: String, fn: (Script) -> R): R? =
 	if (this.string == string) fn(rhs)
 	else null
+
+fun <R> ScriptField.matchName(fn: (String) -> R): R? =
+	when (rhs) {
+		is UnitScript -> fn(string)
+		is LinkScript -> null
+	}

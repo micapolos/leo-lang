@@ -8,6 +8,8 @@ sealed class Context
 object EmptyContext : Context()
 data class NonEmptyContext(val parentContext: Context, val lastRule: Rule) : Context()
 
+fun context() = EmptyContext as Context
+
 fun Context.push(rule: Rule): Context = NonEmptyContext(this, rule)
 
 fun Context.resolve(scriptLink: ScriptLink): Script? =
@@ -18,6 +20,3 @@ fun Context.resolve(scriptLink: ScriptLink): Script? =
 
 fun Context.apply(scriptLink: ScriptLink) =
 	resolve(scriptLink) ?: script(scriptLink)
-
-fun Context?.orNullApply(scriptLink: ScriptLink) =
-	this?.apply(scriptLink) ?: script(scriptLink)
