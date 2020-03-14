@@ -4,7 +4,8 @@ import leo14.*
 import leo14.Number
 
 fun Script.matches(script: Script): Boolean =
-	when (this) {
+	if (script == script("anything")) true
+	else when (this) {
 		is UnitScript -> script is UnitScript
 		is LinkScript -> link.matches(script)
 	}

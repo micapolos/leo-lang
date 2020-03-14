@@ -5,11 +5,12 @@ import leo14.*
 val ScriptLink.resolve: Script?
 	get() =
 		null
+			?: resolveAnythingAppendAnything
 			?: resolveMinusNumber
 			?: resolveNumberPlusNumber
 			?: resolveNumberMinusNumber
 			?: resolveNumberTimesNumber
-			?: resolveStringPlusString
+			?: resolveTextPlusText
 			?: resolveMake
 			?: resolveAccess
 
@@ -19,6 +20,12 @@ val ScriptLink.resolveAccess
 			field.matchName { string ->
 				lhs.get(string)
 			}
+		}
+
+val ScriptLink.resolveAnythingAppendAnything
+	get() =
+		match("append") { lhs, rhs ->
+			lhs.plus(rhs)
 		}
 
 // TODO: Maybe support multiple names at once?
@@ -72,7 +79,7 @@ val ScriptLink.resolveNumberTimesNumber
 			}
 		}
 
-val ScriptLink.resolveStringPlusString
+val ScriptLink.resolveTextPlusText
 	get() =
 		match("plus") { lhs, rhs ->
 			lhs.matchString { lhs ->

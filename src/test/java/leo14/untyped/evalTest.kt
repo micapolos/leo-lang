@@ -146,4 +146,49 @@ class EvalTest {
 			.eval
 			.assertEqualTo(script("given" lineTo script(literal(10))))
 	}
+
+	@Test
+	fun pattern() {
+		val rule = script(
+			"false" lineTo script(),
+			"or" lineTo script("true"),
+			"type" lineTo script(),
+			"gives" lineTo script("boolean"))
+
+		rule
+			.plus(
+				"false" lineTo script(),
+				"type" lineTo script())
+			.eval
+			.assertEqualTo(script("boolean"))
+
+		rule
+			.plus(
+				"true" lineTo script(),
+				"type" lineTo script())
+			.eval
+			.assertEqualTo(script("boolean"))
+
+		rule
+			.plus(
+				"maybe" lineTo script(),
+				"type" lineTo script())
+			.eval
+			.assertEqualTo(
+				script(
+					"maybe" lineTo script(),
+					"type" lineTo script()))
+	}
+
+	@Test
+	fun anythingAppendAnything() {
+		script(
+			"minus" lineTo script(literal(10)),
+			"append" lineTo script("minus" lineTo script(literal(20))))
+			.eval
+			.assertEqualTo(
+				script(
+					line(literal(-10)),
+					line(literal(-20))))
+	}
 }
