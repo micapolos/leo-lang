@@ -9,7 +9,7 @@ class RuleTest {
 	fun resolve_match_nullContext() {
 		Rule(
 			Pattern(link("number" lineTo script())),
-			Body(script("ok"), null))
+			body(script("ok")))
 			.resolve(link(line(literal(10))))
 			.assertEqualTo(script("ok"))
 	}
@@ -18,7 +18,7 @@ class RuleTest {
 	fun resolve_match_context() {
 		Rule(
 			Pattern(link("number" lineTo script())),
-			Body(script("given"), context()))
+			body(context().function(script("given"))))
 			.resolve(link(line(literal(10))))
 			.assertEqualTo(script("given" lineTo script(literal(10))))
 	}
@@ -27,7 +27,7 @@ class RuleTest {
 	fun resolve_mismatch() {
 		Rule(
 			Pattern(link("number" lineTo script())),
-			Body(script("ok"), null))
+			body(script("ok")))
 			.resolve(link(line(literal("foo"))))
 			.assertEqualTo(null)
 	}

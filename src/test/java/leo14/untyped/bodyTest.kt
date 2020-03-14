@@ -9,14 +9,14 @@ import kotlin.test.Test
 class BodyTest {
 	@Test
 	fun apply_nullContext() {
-		Body(script("foo"), null)
+		body(script("foo"))
 			.apply(link("arg" lineTo script()))
 			.assertEqualTo(script("foo"))
 	}
 
 	@Test
 	fun apply_nonNullContext() {
-		Body(script("given"), context())
+		body(context().function(script("given")))
 			.apply(link("foo" lineTo script()))
 			.assertEqualTo(script("given" lineTo script("foo")))
 	}

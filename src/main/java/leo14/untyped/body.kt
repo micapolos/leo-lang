@@ -1,14 +1,18 @@
 package leo14.untyped
 
-import leo14.*
+import leo14.Script
+import leo14.ScriptLink
+import leo14.script
 
-data class Body(val script: Script, val contextOrNull: Context?)
+sealed class Body
+data class ScriptBody(val script: Script) : Body()
+data class FunctionBody(val function: Function) : Body()
+
+fun body(script: Script): Body = ScriptBody(script)
+fun body(function: Function): Body = FunctionBody(function)
 
 fun Body.apply(scriptLink: ScriptLink) =
-	if (contextOrNull == null) script
-	else contextOrNull
-		.push(
-			Rule(
-				Pattern(link("given" lineTo script())),
-				Body(script("given" lineTo script(scriptLink)), null)))
-		.eval(script)
+	when (this) {
+		is ScriptBody -> script
+		is FunctionBody -> function.apply(script(scriptLink))
+	}
