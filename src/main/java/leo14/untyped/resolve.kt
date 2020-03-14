@@ -5,10 +5,11 @@ import leo14.*
 val ScriptLink.resolve: Script?
 	get() =
 		null
-			?: resolveNumberAddNumber
-			?: resolveNumberSubtractNumber
-			?: resolveNumberMultiplyByNumber
-			?: resolveStringAppendString
+			?: resolveMinusNumber
+			?: resolveNumberPlusNumber
+			?: resolveNumberMinusNumber
+			?: resolveNumberTimesNumber
+			?: resolveStringPlusString
 			?: resolveMake
 			?: resolveAccess
 
@@ -31,9 +32,9 @@ val ScriptLink.resolveMake
 			}
 		}
 
-val ScriptLink.resolveNumberAddNumber
+val ScriptLink.resolveNumberPlusNumber
 	get() =
-		match("add") { lhs, rhs ->
+		match("plus") { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
 					script(literal(lhs + rhs))
@@ -41,9 +42,19 @@ val ScriptLink.resolveNumberAddNumber
 			}
 		}
 
-val ScriptLink.resolveNumberSubtractNumber
+val ScriptLink.resolveMinusNumber
 	get() =
-		match("subtract") { lhs, rhs ->
+		match("minus") { lhs, rhs ->
+			lhs.matchEmpty {
+				rhs.matchNumber { rhs ->
+					script(literal(-rhs))
+				}
+			}
+		}
+
+val ScriptLink.resolveNumberMinusNumber
+	get() =
+		match("minus") { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
 					script(literal(lhs - rhs))
@@ -51,9 +62,9 @@ val ScriptLink.resolveNumberSubtractNumber
 			}
 		}
 
-val ScriptLink.resolveNumberMultiplyByNumber
+val ScriptLink.resolveNumberTimesNumber
 	get() =
-		match("multiply", "by") { lhs, rhs ->
+		match("times") { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
 					script(literal(lhs * rhs))
@@ -61,9 +72,9 @@ val ScriptLink.resolveNumberMultiplyByNumber
 			}
 		}
 
-val ScriptLink.resolveStringAppendString
+val ScriptLink.resolveStringPlusString
 	get() =
-		match("append") { lhs, rhs ->
+		match("plus") { lhs, rhs ->
 			lhs.matchString { lhs ->
 				rhs.matchString { rhs ->
 					script(literal(lhs + rhs))

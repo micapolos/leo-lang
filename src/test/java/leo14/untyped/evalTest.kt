@@ -20,38 +20,48 @@ class EvalTest {
 	}
 
 	@Test
-	fun numberAddNumber() {
+	fun numberPlusNumber() {
 		script(
 			line(literal(10)),
-			"add" lineTo script(literal(20)))
+			"plus" lineTo script(literal(20)))
 			.eval
 			.assertEqualTo(script(literal(30)))
 	}
 
 	@Test
-	fun numberSubtractNumber() {
+	fun numberMinusNumber() {
 		script(
 			line(literal(30)),
-			"subtract" lineTo script(literal(20)))
+			"minus" lineTo script(literal(20)))
 			.eval
 			.assertEqualTo(script(literal(10)))
 	}
 
 	@Test
-	fun numberMultiplyByNumber() {
+	fun numberTimesNumber() {
 		script(
 			line(literal(2)),
-			"multiply" lineTo script(),
-			"by" lineTo script(literal(3)))
+			"times" lineTo script(literal(3)))
 			.eval
 			.assertEqualTo(script(literal(6)))
 	}
 
 	@Test
-	fun textAppendText() {
+	fun deepMath() {
+		script(
+			line(literal(2)),
+			"plus" lineTo script(
+				line(literal(3)),
+				"times" lineTo script(literal(4))))
+			.eval
+			.assertEqualTo(script(literal(14)))
+	}
+
+	@Test
+	fun textPlusText() {
 		script(
 			line(literal("Hello, ")),
-			"append" lineTo script(literal("world!")))
+			"plus" lineTo script(literal("world!")))
 			.eval
 			.assertEqualTo(script(literal("Hello, world!")))
 	}
@@ -79,6 +89,24 @@ class EvalTest {
 			.plus("z" lineTo script())
 			.eval
 			.assertEqualTo(point.plus("z" lineTo script()))
+	}
+
+	@Test
+	fun accessNumber() {
+		script(
+			"x" lineTo script(literal(10)),
+			"number" lineTo script())
+			.eval
+			.assertEqualTo(script(literal(10)))
+	}
+
+	@Test
+	fun accessText() {
+		script(
+			"x" lineTo script(literal("foo")),
+			"text" lineTo script())
+			.eval
+			.assertEqualTo(script(literal("foo")))
 	}
 
 	@Test
