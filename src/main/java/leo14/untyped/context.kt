@@ -20,3 +20,6 @@ fun Context.resolve(scriptLink: ScriptLink): Script? =
 
 fun Context.apply(scriptLink: ScriptLink) =
 	resolve(scriptLink) ?: script(scriptLink)
+
+fun Context.eval(script: Script) =
+	interpreter().tokenizer().plus(script).interpreter.script

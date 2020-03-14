@@ -16,8 +16,8 @@ class BodyTest {
 
 	@Test
 	fun apply_nonNullContext() {
-		Body(script("foo"), context())
-			.apply(link("given" lineTo script()))
+		Body(script("given"), context())
+			.apply(link("foo" lineTo script()))
 			.assertEqualTo(script("given" lineTo script("foo")))
 	}
 }

@@ -9,6 +9,6 @@ fun Body.apply(scriptLink: ScriptLink) =
 	else contextOrNull
 		.push(
 			Rule(
-				Pattern(ScriptLink(script(), line("given" fieldTo script()))),
-				Body(script("given" lineTo script), null)))
-		.apply(scriptLink)
+				Pattern(link("given" lineTo script())),
+				Body(script("given" lineTo script(scriptLink)), null)))
+		.eval(script)

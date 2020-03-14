@@ -84,8 +84,8 @@ class EvalTest {
 	@Test
 	fun gives() {
 		script(
-			"x" lineTo script(),
-			"gives" lineTo script(literal(10)))
+			"number" lineTo script(),
+			"gives" lineTo script("number"))
 			.eval
 			.assertEqualTo(script())
 	}
@@ -93,11 +93,29 @@ class EvalTest {
 	@Test
 	fun givesAndAccess() {
 		script(
-			"x" lineTo script(),
-			"gives" lineTo script(literal(10)),
-			"x" lineTo script())
+			"number" lineTo script(),
+			"gives" lineTo script("number"),
+			line(literal(10)))
 			.eval
-			.assertEqualTo(script(literal(10)))
+			.assertEqualTo(script("number"))
 	}
 
+	@Test
+	fun does() {
+		script(
+			"number" lineTo script(),
+			"does" lineTo script("given" lineTo script()))
+			.eval
+			.assertEqualTo(script())
+	}
+
+	@Test
+	fun doesAndAccess() {
+		script(
+			"number" lineTo script(),
+			"does" lineTo script("given" lineTo script()),
+			line(literal(10)))
+			.eval
+			.assertEqualTo(script("given" lineTo script(literal(10))))
+	}
 }

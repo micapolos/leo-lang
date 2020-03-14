@@ -28,7 +28,7 @@ fun Interpreter.resolve(scriptLink: ScriptLink): Interpreter =
 fun Interpreter.resolveDoes(scriptLink: ScriptLink): Interpreter? =
 	scriptLink.match("does") { lhs, rhs ->
 		lhs.matchLink { lhs ->
-			copy(context = context.push(Rule(Pattern(lhs), Body(rhs, context))))
+			Interpreter(context.push(Rule(Pattern(lhs), Body(rhs, context))), script())
 		}
 	}
 
