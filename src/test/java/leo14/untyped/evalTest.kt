@@ -230,29 +230,19 @@ class EvalTest {
 		script(
 			"foo" lineTo script(),
 			"gives" lineTo script("bar"),
-			"function" lineTo script("given"))
-			.assertEvalsTo(
-				function(
-					context().push(pattern(program("foo")) ruleTo body(program("bar"))),
-					program("given"))
-					.scriptLine)
-	}
-
-	@Test
-	fun function_localContext() {
-		script(
 			"function" lineTo script(
-				"foo" lineTo script(),
-				"meta" lineTo script(
-					"gives" lineTo script("bar")),
-				"foo" lineTo script()))
+				"zoo" lineTo script(),
+				"meta" lineTo script("gives" lineTo script("zar")),
+				"append" lineTo script("foo")))
 			.assertEvalsTo(
 				"function" lineTo script(
-					"context" lineTo script(),
-					"body" lineTo script(
+					"context" lineTo script(
 						"foo" lineTo script(),
-						"gives" lineTo script("bar"),
-						"foo" lineTo script())))
+						"gives" lineTo script("bar")),
+					"body" lineTo script(
+						"zoo" lineTo script(),
+						"gives" lineTo script("zar"),
+						"bar" lineTo script())))
 	}
 
 	@Test
