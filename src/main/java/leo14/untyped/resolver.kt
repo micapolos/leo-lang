@@ -35,7 +35,7 @@ fun Context.resolveDefinitions(program: Program): Resolver? =
 
 fun Context.resolveCompile(program: Program) =
 	program.matchPostfix("compile") { lhs ->
-		resolver().tokenizer().append(lhs).resolver
+		resolver().tokenReader().append(lhs).resolver
 	}
 
 fun Resolver.set(program: Program): Resolver =

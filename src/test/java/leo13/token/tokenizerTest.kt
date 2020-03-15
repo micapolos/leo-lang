@@ -3,7 +3,7 @@ package leo13.token
 import leo.base.assertEqualTo
 import kotlin.test.Test
 
-class TokenizerTest {
+class TokenResolverTest {
 	@Test
 	fun writing_emptyChars() {
 		val tokenizer = tokenizer().tokenPush(token(opening("foo")))

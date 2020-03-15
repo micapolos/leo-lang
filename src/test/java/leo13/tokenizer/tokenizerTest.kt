@@ -18,7 +18,7 @@ import kotlin.test.assertFails
 fun test(string: String, tokenizer: Tokenizer) =
 	tokenizer().push(string).assertEqualTo(tokenizer)
 
-class TokenizerTest {
+class TokenResolverTest {
 	@Test
 	fun letter() {
 		tokenizer()

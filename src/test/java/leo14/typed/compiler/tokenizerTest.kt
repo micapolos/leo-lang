@@ -6,7 +6,7 @@ import leo14.syntax.Syntax
 import leo14.typed.compiler.natives.emptyCompiler
 import kotlin.test.Test
 
-class LeoTokenizerTest {
+class LeoTokenResolverTest {
 	@Test
 	fun tokenize() {
 		processorString {

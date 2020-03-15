@@ -52,4 +52,4 @@ fun Context.compileGives(program: Program): Context? =
 	}
 
 fun Context.eval(program: Program) =
-	resolver().tokenizer().append(program).resolver.program
+	resolver().tokenReader().append(program).resolver.program
