@@ -46,7 +46,7 @@ fun Program.matches(program: Program): Boolean =
 
 val Program.anythingMatches
 	get() =
-		match("anything") { lhs, rhs ->
+		matchInfix("anything") { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchEmpty {
 					true

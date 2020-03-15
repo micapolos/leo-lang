@@ -1,7 +1,12 @@
 package leo14.untyped
 
 import leo.base.fold
+import leo13.fold
+import leo13.push
+import leo13.stack
 import leo14.Literal
+import leo14.numberOrNull
+import leo14.stringOrNull
 
 sealed class Program
 
@@ -37,17 +42,50 @@ data class Field(val name: String, val rhs: Program) {
 
 fun program(): Program = EmptyProgram
 fun program(sequence: Sequence): Program = SequenceProgram(sequence)
-fun program(value: Value, vararg values: Value) = program(program() sequenceTo value).fold(values, Program::plus)
+fun program(value: Value, vararg values: Value) = program(program() sequenceTo value).fold(values) { plus(it) }
 fun program(name: String) = program(value(name))
 fun program(literal: Literal) = program(value(literal))
 operator fun Program.plus(value: Value) = program(this sequenceTo value)
+
+tailrec fun <R> R.foldValues(program: Program, fn: R.(Value) -> R): R =
+	when (program) {
+		EmptyProgram -> this
+		is SequenceProgram -> fn(program.sequence.head).foldValues(program.sequence.tail, fn)
+	}
+
+operator fun Program.plus(program: Program) = fold(stack<Value>().foldValues(program) { push(it) }, Program::plus)
 
 fun value(literal: Literal): Value = LiteralValue(literal)
 fun value(field: Field): Value = FieldValue(field)
 fun value(name: String): Value = value(name fieldTo program())
 fun value(function: Function): Value = FunctionValue(function)
 
+fun Sequence.plus(value: Value) = program(this) sequenceTo value
+fun sequence(value: Value, vararg values: Value) = program().sequenceTo(value).fold(values, Sequence::plus)
+fun sequence(name: String) = sequence(value(name))
 infix fun Program.sequenceTo(head: Value) = Sequence(this, head)
 infix fun String.fieldTo(program: Program) = Field(this, program)
 infix fun String.valueTo(program: Program) = value(this fieldTo program)
 
+val Program.isEmpty get() = this is EmptyProgram
+val Program.sequenceOrNull get() = (this as? SequenceProgram)?.sequence
+val Program.valueOrNull get() = sequenceOrNull?.onlyValueOrNull
+val Program.fieldOrNull get() = valueOrNull?.fieldOrNull
+val Program.bodyOrNull get() = fieldOrNull?.rhs
+val Program.numberOrNull get() = valueOrNull?.literalOrNull?.numberOrNull
+val Program.stringOrNull get() = valueOrNull?.literalOrNull?.stringOrNull
+val Program.functionOrNull get() = valueOrNull?.functionOrNull
+val Program.headOrNull get() = sequenceOrNull?.head?.let { program(it) }
+val Program.tailOrNull get() = sequenceOrNull?.tail
+val Program.onlyNameOrNull get() = valueOrNull?.onlyNameOrNull
+
+val Sequence.onlyValueOrNull get() = if (tail.isEmpty) head else null
+
+val Value.literalOrNull get() = (this as? LiteralValue)?.literal
+val Value.fieldOrNull get() = (this as? FieldValue)?.field
+val Value.functionOrNull get() = (this as? FunctionValue)?.function
+val Value.onlyNameOrNull get() = fieldOrNull?.onlyNameOrNull
+
+val Field.onlyNameOrNull get() = if (rhs.isEmpty) name else null
+
+fun Program.make(name: String) = program(name valueTo this)

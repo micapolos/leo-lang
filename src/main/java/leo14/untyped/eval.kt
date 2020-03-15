@@ -4,4 +4,4 @@ import leo14.Script
 
 val Script.eval
 	get() =
-		context().liner().tokenizer().append(this).liner.script
+		context().resolver().tokenizer().append(this).resolver.program.script

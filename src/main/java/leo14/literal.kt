@@ -10,6 +10,9 @@ data class NumberLiteral(val number: Number) : Literal() {
 	override fun toString() = "$number"
 }
 
+val Literal.stringOrNull get() = (this as? StringLiteral)?.string
+val Literal.numberOrNull get() = (this as? NumberLiteral)?.number
+
 fun literal(string: String): Literal = StringLiteral(string)
 fun literal(number: Number): Literal = NumberLiteral(number)
 fun literal(int: Int): Literal = literal(number(int))

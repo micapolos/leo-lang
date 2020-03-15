@@ -129,14 +129,39 @@ fun <R> Program.matchEmpty(fn: () -> R): R? =
 fun <R> Program.matchSequence(fn: (Sequence) -> R): R? =
 	(this as? SequenceProgram)?.sequence?.let(fn)
 
-fun <R> Program.match(name: String, fn: (Program, Program) -> R) =
+fun <R> Program.matchName(fn: (String) -> R): R? =
+	onlyNameOrNull?.let(fn)
+
+fun <R> Program.matchNumber(fn: (Number) -> R): R? =
+	numberOrNull?.let(fn)
+
+fun <R> Program.matchString(fn: (String) -> R): R? =
+	stringOrNull?.let(fn)
+
+fun <R> Program.matchFunction(fn: (Function) -> R): R? =
+	functionOrNull?.let(fn)
+
+fun <R> Program.matchBody(fn: (Program) -> R): R? =
 	matchSequence { sequence ->
-		sequence.match(name, fn)
+		sequence.tail.matchEmpty {
+			sequence.head.matchField { field ->
+				fn(field.rhs)
+			}
+		}
 	}
+
+fun <R> Program.matchInfix(name: String, fn: (Program, Program) -> R) =
+	sequenceOrNull?.matchInfix(name, fn)
+
+fun <R> Program.matchPrefix(name: String, fn: (Program) -> R) =
+	sequenceOrNull?.matchPrefix(name, fn)
+
+fun <R> Program.matchPostfix(name: String, fn: (Program) -> R) =
+	sequenceOrNull?.matchPostfix(name, fn)
 
 fun <R> Program.matchName(name: String, fn: () -> R) =
 	matchSequence { sequence ->
-		sequence.match(name) { lhs, rhs ->
+		sequence.matchInfix(name) { lhs, rhs ->
 			lhs.matchEmpty {
 				rhs.matchEmpty {
 					fn()
@@ -145,9 +170,23 @@ fun <R> Program.matchName(name: String, fn: () -> R) =
 		}
 	}
 
-fun <R> Sequence.match(name: String, fn: (Program, Program) -> R) =
+fun <R> Sequence.matchInfix(name: String, fn: (Program, Program) -> R) =
 	head.match(name) { rhs ->
 		fn(tail, rhs)
+	}
+
+fun <R> Sequence.matchPrefix(name: String, fn: (Program) -> R) =
+	matchInfix(name) { lhs, rhs ->
+		lhs.matchEmpty {
+			fn(rhs)
+		}
+	}
+
+fun <R> Sequence.matchPostfix(name: String, fn: (Program) -> R) =
+	matchInfix(name) { lhs, rhs ->
+		rhs.matchEmpty {
+			fn(lhs)
+		}
 	}
 
 fun <R> Value.matchField(fn: (Field) -> R): R? =
@@ -161,3 +200,13 @@ fun <R> Value.match(string: String, fn: (Program) -> R): R? =
 fun <R> Field.match(name: String, fn: (Program) -> R) =
 	if (this.name == name) fn(rhs)
 	else null
+
+fun <R> Field.matchName(fn: (String) -> R) =
+	rhs.matchEmpty {
+		fn(name)
+	}
+
+fun <R> Value.matchName(fn: (String) -> R) =
+	matchField { field ->
+		field.matchName(fn)
+	}

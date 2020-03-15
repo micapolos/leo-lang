@@ -1,16 +1,14 @@
 package leo14.untyped
 
 import leo.base.assertEqualTo
-import leo14.line
 import leo14.literal
-import leo14.script
 import kotlin.test.Test
 
 class TokenizerTest {
 	@Test
 	fun all() {
 		context()
-			.liner()
+			.resolver()
 			.tokenizer()
 			.append(literal(10))
 			.begin("plus")
@@ -18,8 +16,8 @@ class TokenizerTest {
 			.end()!!
 			.assertEqualTo(
 				context()
-					.liner()
-					.set(script(line(literal(30))))
+					.resolver()
+					.set(program(value(literal(30))))
 					.tokenizer())
 	}
 }

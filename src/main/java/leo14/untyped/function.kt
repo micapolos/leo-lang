@@ -1,12 +1,10 @@
 package leo14.untyped
 
-import leo14.Script
-
 data class Function(
 	val context: Context,
-	val script: Script)
+	val program: Program)
 
-fun Context.function(script: Script) = Function(this, script)
+fun Context.function(program: Program) = Function(this, program)
 
-fun Function.apply(param: Script) =
-	context.push(param.givenRule).eval(script)
+fun Function.apply(param: Program) =
+	context.push(param.givenRule).eval(program)

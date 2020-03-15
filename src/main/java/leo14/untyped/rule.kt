@@ -1,16 +1,13 @@
 package leo14.untyped
 
-import leo14.Script
-import leo14.ScriptLink
-import leo14.lineTo
-import leo14.script
-
 data class Rule(val pattern: Pattern, val body: Body)
 
-fun Rule.resolve(scriptLink: ScriptLink) =
-	if (pattern.matches(scriptLink)) body.apply(scriptLink)
+infix fun Pattern.ruleTo(body: Body) = Rule(this, body)
+
+fun Rule.apply(program: Program): Program? =
+	if (pattern.matches(program)) body.apply(program)
 	else null
 
-val Script.givenRule
+val Program.givenRule
 	get() =
-		Rule(givenPattern, body(script("given" lineTo this)))
+		givenPattern ruleTo body(make("given"))

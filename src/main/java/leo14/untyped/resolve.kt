@@ -2,7 +2,14 @@ package leo14.untyped
 
 import leo14.*
 
-val ScriptLink.resolve: Script?
+val Program.resolve
+	get() =
+		when (this) {
+			EmptyProgram -> null
+			is SequenceProgram -> sequence.resolve
+		}
+
+val Sequence.resolve: Program?
 	get() =
 		null
 			?: resolveAnythingAppendAnything
@@ -17,99 +24,84 @@ val ScriptLink.resolve: Script?
 			?: resolveMake
 			?: resolveAccess
 
-val ScriptLink.resolveAccess
+val Sequence.resolveAccess: Program?
 	get() =
-		line.matchField { field ->
-			field.matchName { string ->
-				lhs.get(string)
-			}
+		head.matchName { name ->
+			tail.get(name)
 		}
 
-val ScriptLink.resolveAnythingAppendAnything
+val Sequence.resolveAnythingAppendAnything
 	get() =
-		match("append") { lhs, rhs ->
+		matchInfix("append") { lhs, rhs ->
 			lhs.plus(rhs)
 		}
 
-// TODO: Maybe support multiple names at once?
-val ScriptLink.resolveMake
+val Sequence.resolveMake
 	get() =
-		line.matchField { field ->
-			field.match("make") { rhs ->
-				rhs.matchName { name ->
-					lhs.make(name)
-				}
+		matchInfix("make") { lhs, rhs ->
+			rhs.matchName { name ->
+				lhs.make(name)
 			}
 		}
 
-val ScriptLink.resolveNumberPlusNumber
+val Sequence.resolveNumberPlusNumber
 	get() =
-		match("plus") { lhs, rhs ->
+		matchInfix("plus") { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
-					script(literal(lhs + rhs))
+					program(literal(lhs + rhs))
 				}
 			}
 		}
 
-val ScriptLink.resolveMinusNumber
+val Sequence.resolveMinusNumber
 	get() =
-		match("minus") { lhs, rhs ->
+		matchInfix("minus") { lhs, rhs ->
 			lhs.matchEmpty {
 				rhs.matchNumber { rhs ->
-					script(literal(-rhs))
+					program(literal(-rhs))
 				}
 			}
 		}
 
-val ScriptLink.resolveNumberMinusNumber
+val Sequence.resolveNumberMinusNumber
 	get() =
-		match("minus") { lhs, rhs ->
+		matchInfix("minus") { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
-					script(literal(lhs - rhs))
+					program(literal(lhs - rhs))
 				}
 			}
 		}
 
-val ScriptLink.resolveNumberTimesNumber
+val Sequence.resolveNumberTimesNumber
 	get() =
-		match("times") { lhs, rhs ->
+		matchInfix("times") { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
-					script(literal(lhs * rhs))
+					program(literal(lhs * rhs))
 				}
 			}
 		}
 
-val ScriptLink.resolveTextPlusText
+val Sequence.resolveTextPlusText
 	get() =
-		match("plus") { lhs, rhs ->
+		matchInfix("plus") { lhs, rhs ->
 			lhs.matchString { lhs ->
 				rhs.matchString { rhs ->
-					script(literal(lhs + rhs))
+					program(literal(lhs + rhs))
 				}
 			}
 		}
 
-val ScriptLink.resolveHead
+val Sequence.resolveHead
 	get() =
-		matchSimple("head") { lhs ->
-			lhs.matchLink { link ->
-				script(link.line)
-			}
-		}
+		matchPostfix("head", Program::headOrNull)
 
-val ScriptLink.resolveTail
+val Sequence.resolveTail
 	get() =
-		matchSimple("tail") { lhs ->
-			lhs.matchLink { link ->
-				link.lhs
-			}
-		}
+		matchPostfix("tail", Program::tailOrNull)
 
-val ScriptLink.resolveBody
+val Sequence.resolveBody
 	get() =
-		matchSimple("body") { lhs ->
-			lhs.matchBody { it }
-		}
+		matchPostfix("body", Program::bodyOrNull)

@@ -46,11 +46,11 @@ val keywords = setOf("function")
 
 val Function.bodyScript
 	get() =
-		context.functionScript.plus(script)
+		context.functionScript.plus(program.script)
 
 val Function.scriptLine
 	get() =
-		"function" lineTo context.functionScript.plus(script)
+		"function" lineTo context.functionScript.plus(program.script)
 
 val Context.functionScript: Script
 	get() =
@@ -65,11 +65,11 @@ val Rule.contextScript
 
 val Pattern.ruleScript
 	get() =
-		script(scriptLink)
+		program.script
 
 val Body.ruleScriptLine
 	get() =
 		when (this) {
-			is ScriptBody -> "gives" lineTo script
+			is ProgramBody -> "gives" lineTo program.script
 			is FunctionBody -> "does" lineTo function.bodyScript
 		}

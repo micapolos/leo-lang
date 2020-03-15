@@ -5,18 +5,21 @@ import leo13.reverse
 import leo14.*
 
 data class Tokenizer(
-	val liner: Liner,
+	val resolver: Resolver,
 	val parentOrNull: TokenizerParent?)
 
 data class TokenizerParent(
 	val string: String,
 	val tokenizer: Tokenizer)
 
-fun Liner.tokenizer() =
+fun Resolver.tokenizer() =
 	Tokenizer(this, null)
 
 fun tokenizer() =
-	liner().tokenizer()
+	resolver().tokenizer()
+
+fun Tokenizer.append(program: Program) =
+	append(program.script)
 
 fun Tokenizer.append(script: Script) =
 	fold(script.tokenStack.reverse) { append(it)!! }
@@ -29,16 +32,16 @@ fun Tokenizer.append(token: Token): Tokenizer? =
 	}
 
 fun Tokenizer.append(literal: Literal) =
-	append(line(literal))
+	append(value(literal))
 
 fun Tokenizer.begin(string: String) =
-	Tokenizer(liner.clear, TokenizerParent(string, this))
+	Tokenizer(resolver.clear, TokenizerParent(string, this))
 
 fun Tokenizer.end() =
-	parentOrNull?.end(liner.script)
+	parentOrNull?.end(resolver.program)
 
-fun Tokenizer.append(scriptLine: ScriptLine): Tokenizer =
-	Tokenizer(liner.append(scriptLine), parentOrNull)
+fun Tokenizer.append(value: Value): Tokenizer =
+	Tokenizer(resolver.apply(value), parentOrNull)
 
-fun TokenizerParent.end(script: Script): Tokenizer =
-	tokenizer.append(string lineTo script)
+fun TokenizerParent.end(program: Program): Tokenizer =
+	tokenizer.append(string valueTo program)

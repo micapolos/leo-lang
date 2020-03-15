@@ -7,7 +7,7 @@ import leo13.token.opening
 import leo13.token.token
 import kotlin.test.Test
 
-class LinerTest {
+class ResolverTest {
 	@Test
 	fun process() {
 		errorConverter<ValueTyped, Token>()

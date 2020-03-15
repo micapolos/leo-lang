@@ -1,25 +1,49 @@
 package leo14.untyped
 
-import leo14.Script
-import leo14.ScriptLink
-import leo14.script
-
 sealed class Context
 object EmptyContext : Context()
 data class NonEmptyContext(val parentContext: Context, val lastRule: Rule) : Context()
 
 fun context() = EmptyContext as Context
 
-fun Context.push(rule: Rule): Context = NonEmptyContext(this, rule)
+fun Context.push(rule: Rule): Context =
+	NonEmptyContext(this, rule)
 
-fun Context.resolve(scriptLink: ScriptLink): Script? =
+fun Context.apply(program: Program): Program? =
+	null
+		?: applyRules(program)
+		?: applyStatic(program)
+		?: program.resolve
+
+fun Context.applyRules(program: Program): Program? =
 	when (this) {
-		EmptyContext -> scriptLink.resolve
-		is NonEmptyContext -> lastRule.resolve(scriptLink) ?: parentContext.resolve(scriptLink)
+		EmptyContext -> null
+		is NonEmptyContext -> lastRule.apply(program) ?: parentContext.apply(program)
 	}
 
-fun Context.apply(scriptLink: ScriptLink) =
-	resolve(scriptLink) ?: script(scriptLink)
+fun Context.applyStatic(program: Program): Program? =
+	null
+		?: applyEval(program)
 
-fun Context.eval(script: Script) =
-	liner().tokenizer().append(script).liner.script
+fun Context.applyEval(program: Program): Program? =
+	program.matchPostfix("eval") { lhs ->
+		eval(lhs)
+	}
+
+fun Context.compile(program: Program): Context? =
+	null
+		?: compileGives(program)
+		?: compileDoes(program)
+
+fun Context.compileDoes(program: Program): Context? =
+	program.matchInfix("does") { lhs, rhs ->
+		push(Rule(Pattern(lhs), body(function(rhs))))
+	}
+
+fun Context.compileGives(program: Program): Context? =
+	program.matchInfix("gives") { lhs, rhs ->
+		push(Rule(Pattern(lhs), body(rhs)))
+	}
+
+fun Context.eval(program: Program) =
+	resolver().tokenizer().append(program).resolver.program
