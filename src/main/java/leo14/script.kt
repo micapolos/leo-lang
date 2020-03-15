@@ -261,6 +261,46 @@ val Script.forget
 fun Script.replaceWith(script: Script) =
 	script
 
+val Script.headOrNull
+	get() =
+		when (this) {
+			is UnitScript -> null
+			is LinkScript -> script(link.line)
+		}
+
+val Script.tailOrNull
+	get() =
+		when (this) {
+			is UnitScript -> null
+			is LinkScript -> link.lhs
+		}
+
+val Script.bodyOrNull
+	get() =
+		when (this) {
+			is UnitScript -> null
+			is LinkScript -> link.line.bodyOrNull
+		}
+
+val ScriptLine.bodyOrNull
+	get() =
+		when (this) {
+			is LiteralScriptLine -> null
+			is FieldScriptLine -> field.rhs
+		}
+
+val Script.head
+	get() =
+		headOrNull ?: plus("head" lineTo script())
+
+val Script.tail
+	get() =
+		tailOrNull ?: plus("tail" lineTo script())
+
+val Script.body
+	get() =
+		bodyOrNull ?: plus("body" lineTo script())
+
 fun Script.make(string: String) =
 	script(string lineTo this)
 

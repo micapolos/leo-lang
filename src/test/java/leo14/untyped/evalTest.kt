@@ -1,6 +1,5 @@
 package leo14.untyped
 
-import leo.base.assertEqualTo
 import leo14.*
 import kotlin.test.Test
 
@@ -11,12 +10,7 @@ class EvalTest {
 			"zero" lineTo script(),
 			"plus" lineTo script(
 				"one" lineTo script()))
-			.eval
-			.assertEqualTo(
-				script(
-					"zero" lineTo script(),
-					"plus" lineTo script(
-						"one" lineTo script())))
+			.assertEvalsToThis
 	}
 
 	@Test
@@ -24,8 +18,7 @@ class EvalTest {
 		script(
 			line(literal(10)),
 			"plus" lineTo script(literal(20)))
-			.eval
-			.assertEqualTo(script(literal(30)))
+			.assertEvalsTo(line(literal(30)))
 	}
 
 	@Test
@@ -33,8 +26,7 @@ class EvalTest {
 		script(
 			line(literal(30)),
 			"minus" lineTo script(literal(20)))
-			.eval
-			.assertEqualTo(script(literal(10)))
+			.assertEvalsTo(line(literal(10)))
 	}
 
 	@Test
@@ -42,8 +34,7 @@ class EvalTest {
 		script(
 			line(literal(2)),
 			"times" lineTo script(literal(3)))
-			.eval
-			.assertEqualTo(script(literal(6)))
+			.assertEvalsTo(line(literal(6)))
 	}
 
 	@Test
@@ -53,8 +44,7 @@ class EvalTest {
 			"plus" lineTo script(
 				line(literal(3)),
 				"times" lineTo script(literal(4))))
-			.eval
-			.assertEqualTo(script(literal(14)))
+			.assertEvalsTo(line(literal(14)))
 	}
 
 	@Test
@@ -62,8 +52,7 @@ class EvalTest {
 		script(
 			line(literal("Hello, ")),
 			"plus" lineTo script(literal("world!")))
-			.eval
-			.assertEqualTo(script(literal("Hello, world!")))
+			.assertEvalsTo(line(literal("Hello, world!")))
 	}
 
 	@Test
@@ -75,20 +64,15 @@ class EvalTest {
 
 		point
 			.plus("x" lineTo script())
-			.eval
-			.assertEqualTo(
-				script("x" lineTo script(literal(10))))
+			.assertEvalsTo("x" lineTo script(literal(10)))
 
 		point
 			.plus("y" lineTo script())
-			.eval
-			.assertEqualTo(
-				script("y" lineTo script(literal(20))))
+			.assertEvalsTo("y" lineTo script(literal(20)))
 
 		point
 			.plus("z" lineTo script())
-			.eval
-			.assertEqualTo(point.plus("z" lineTo script()))
+			.assertEvalsToThis
 	}
 
 	@Test
@@ -96,8 +80,7 @@ class EvalTest {
 		script(
 			"x" lineTo script(literal(10)),
 			"number" lineTo script())
-			.eval
-			.assertEqualTo(script(literal(10)))
+			.assertEvalsTo(line(literal(10)))
 	}
 
 	@Test
@@ -105,8 +88,7 @@ class EvalTest {
 		script(
 			"x" lineTo script(literal("foo")),
 			"text" lineTo script())
-			.eval
-			.assertEqualTo(script(literal("foo")))
+			.assertEvalsTo(line(literal("foo")))
 	}
 
 	@Test
@@ -114,8 +96,7 @@ class EvalTest {
 		script(
 			"number" lineTo script(),
 			"gives" lineTo script("number"))
-			.eval
-			.assertEqualTo(script())
+			.assertEvalsTo()
 	}
 
 	@Test
@@ -124,8 +105,7 @@ class EvalTest {
 			"number" lineTo script(),
 			"gives" lineTo script("number"),
 			line(literal(10)))
-			.eval
-			.assertEqualTo(script("number"))
+			.assertEvalsTo(line("number"))
 	}
 
 	@Test
@@ -133,8 +113,7 @@ class EvalTest {
 		script(
 			"number" lineTo script(),
 			"does" lineTo script("given" lineTo script()))
-			.eval
-			.assertEqualTo(script())
+			.assertEvalsTo()
 	}
 
 	@Test
@@ -143,8 +122,7 @@ class EvalTest {
 			"number" lineTo script(),
 			"does" lineTo script("given" lineTo script()),
 			line(literal(10)))
-			.eval
-			.assertEqualTo(script("given" lineTo script(literal(10))))
+			.assertEvalsTo("given" lineTo script(literal(10)))
 	}
 
 	@Test
@@ -159,25 +137,21 @@ class EvalTest {
 			.plus(
 				"false" lineTo script(),
 				"type" lineTo script())
-			.eval
-			.assertEqualTo(script("boolean"))
+			.assertEvalsTo(line("boolean"))
 
 		rule
 			.plus(
 				"true" lineTo script(),
 				"type" lineTo script())
-			.eval
-			.assertEqualTo(script("boolean"))
+			.assertEvalsTo(line("boolean"))
 
 		rule
 			.plus(
 				"maybe" lineTo script(),
 				"type" lineTo script())
-			.eval
-			.assertEqualTo(
-				script(
-					"maybe" lineTo script(),
-					"type" lineTo script()))
+			.assertEvalsTo(
+				"maybe" lineTo script(),
+				"type" lineTo script())
 	}
 
 	@Test
@@ -185,11 +159,9 @@ class EvalTest {
 		script(
 			"minus" lineTo script(literal(10)),
 			"append" lineTo script("minus" lineTo script(literal(20))))
-			.eval
-			.assertEqualTo(
-				script(
-					line(literal(-10)),
-					line(literal(-20))))
+			.assertEvalsTo(
+				line(literal(-10)),
+				line(literal(-20)))
 	}
 
 	@Test
@@ -198,8 +170,15 @@ class EvalTest {
 			"zero" lineTo script(),
 			"plus" lineTo script("one"),
 			"head" lineTo script())
-			.eval
-			.assertEqualTo(script("plus" lineTo script("one")))
+			.assertEvalsTo(
+				"plus" lineTo script("one"))
+	}
+
+	@Test
+	fun head_empty() {
+		script(
+			"head" lineTo script())
+			.assertEvalsToThis
 	}
 
 	@Test
@@ -208,23 +187,41 @@ class EvalTest {
 			"zero" lineTo script(),
 			"plus" lineTo script("one"),
 			"tail" lineTo script())
-			.eval
-			.assertEqualTo(script("zero" lineTo script()))
-	}
-
-	@Test
-	fun head_empty() {
-		script(
-			"head" lineTo script())
-			.eval
-			.assertEqualTo(script("head" lineTo script()))
+			.assertEvalsTo("zero" lineTo script())
 	}
 
 	@Test
 	fun tail_empty() {
 		script(
 			"tail" lineTo script())
-			.eval
-			.assertEqualTo(script("tail" lineTo script()))
+			.assertEvalsToThis
+	}
+
+	@Test
+	fun body() {
+		script(
+			"point" lineTo script(
+				"x" lineTo script(literal(10)),
+				"y" lineTo script(literal(20))),
+			"body" lineTo script())
+			.assertEvalsTo(
+				"x" lineTo script(literal(10)),
+				"y" lineTo script(literal(20)))
+	}
+
+	@Test
+	fun body_empty() {
+		script(
+			"body" lineTo script())
+			.assertEvalsToThis
+	}
+
+	@Test
+	fun body_complex() {
+		script(
+			"x" lineTo script("foo"),
+			"y" lineTo script("bar"),
+			"body" lineTo script())
+			.assertEvalsToThis
 	}
 }

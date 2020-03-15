@@ -62,6 +62,13 @@ fun <R> Script.matchLine(fn: (ScriptLine) -> R): R? =
 		link.matchLine(fn)
 	}
 
+fun <R> Script.matchBody(fn: (Script) -> R): R? =
+	matchLine { line ->
+		line.matchField { field ->
+			fn(field.rhs)
+		}
+	}
+
 fun <R> Script.matchNumber(fn: (Number) -> R): R? =
 	matchLine { line ->
 		line.matchLiteral { literal ->
@@ -91,6 +98,13 @@ fun <R> ScriptLink.matchLine(fn: (ScriptLine) -> R): R? =
 
 fun <R> ScriptLink.match(string: String, fn: (Script, Script) -> R): R? =
 	line.match(string) { rhs -> fn(lhs, rhs) }
+
+fun <R> ScriptLink.matchSimple(string: String, fn: (Script) -> R): R? =
+	match(string) { lhs, rhs ->
+		rhs.matchEmpty {
+			fn(lhs)
+		}
+	}
 
 fun <R> ScriptLink.match(string1: String, string2: String, fn: (Script, Script) -> R): R? =
 	match(string2) { lhs2, rhs2 ->

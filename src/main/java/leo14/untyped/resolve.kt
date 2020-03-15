@@ -13,6 +13,7 @@ val ScriptLink.resolve: Script?
 			?: resolveTextPlusText
 			?: resolveHead
 			?: resolveTail
+			?: resolveBody
 			?: resolveMake
 			?: resolveAccess
 
@@ -93,20 +94,22 @@ val ScriptLink.resolveTextPlusText
 
 val ScriptLink.resolveHead
 	get() =
-		match("head") { lhs, rhs ->
-			rhs.matchEmpty {
-				lhs.matchLink { link ->
-					script(link.line)
-				}
+		matchSimple("head") { lhs ->
+			lhs.matchLink { link ->
+				script(link.line)
 			}
 		}
 
 val ScriptLink.resolveTail
 	get() =
-		match("tail") { lhs, rhs ->
-			rhs.matchEmpty {
-				lhs.matchLink { link ->
-					link.lhs
-				}
+		matchSimple("tail") { lhs ->
+			lhs.matchLink { link ->
+				link.lhs
 			}
+		}
+
+val ScriptLink.resolveBody
+	get() =
+		matchSimple("body") { lhs ->
+			lhs.matchBody { it }
 		}
