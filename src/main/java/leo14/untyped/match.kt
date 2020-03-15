@@ -3,41 +3,7 @@ package leo14.untyped
 import leo14.*
 import leo14.Number
 
-fun Script.matches(script: Script): Boolean =
-	if (script == script("anything")) true
-	else when (this) {
-		is UnitScript -> script is UnitScript
-		is LinkScript -> link.matches(script)
-	}
-
-fun ScriptLink.matches(script: Script) =
-	when (line) {
-		is LiteralScriptLine -> null
-		is FieldScriptLine ->
-			when (line.field.string) {
-				"or" -> line.field.rhs.matches(script) || lhs.matches(script)
-				else -> null
-			}
-	} ?: (script is LinkScript && matches(script.link))
-
-fun ScriptLink.matches(scriptLink: ScriptLink) =
-	line.matches(scriptLink.line) && lhs.matches(scriptLink.lhs)
-
-fun ScriptLine.matches(scriptLine: ScriptLine) =
-	when (this) {
-		is LiteralScriptLine -> scriptLine is LiteralScriptLine && literal == scriptLine.literal
-		is FieldScriptLine -> field.matches(scriptLine)
-	}
-
-fun ScriptField.matches(scriptLine: ScriptLine) =
-	when (string) {
-		"number" -> scriptLine is LiteralScriptLine && scriptLine.literal is NumberLiteral
-		"text" -> scriptLine is LiteralScriptLine && scriptLine.literal is StringLiteral
-		else -> scriptLine is FieldScriptLine && matches(scriptLine.field)
-	}
-
-fun ScriptField.matches(scriptField: ScriptField) =
-	string == scriptField.string && rhs.matches(scriptField.rhs)
+// ======================================
 
 fun <R> Script.match(string: String, fn: (Script, Script) -> R): R? =
 	when (this) {
@@ -154,3 +120,44 @@ fun <R> ScriptField.matchName(fn: (String) -> R): R? =
 		is UnitScript -> fn(string)
 		is LinkScript -> null
 	}
+
+// === program stuff ===
+
+fun <R> Program.matchEmpty(fn: () -> R): R? =
+	(this as? EmptyProgram)?.let { fn() }
+
+fun <R> Program.matchSequence(fn: (Sequence) -> R): R? =
+	(this as? SequenceProgram)?.sequence?.let(fn)
+
+fun <R> Program.match(name: String, fn: (Program, Program) -> R) =
+	matchSequence { sequence ->
+		sequence.match(name, fn)
+	}
+
+fun <R> Program.matchName(name: String, fn: () -> R) =
+	matchSequence { sequence ->
+		sequence.match(name) { lhs, rhs ->
+			lhs.matchEmpty {
+				rhs.matchEmpty {
+					fn()
+				}
+			}
+		}
+	}
+
+fun <R> Sequence.match(name: String, fn: (Program, Program) -> R) =
+	head.match(name) { rhs ->
+		fn(tail, rhs)
+	}
+
+fun <R> Value.matchField(fn: (Field) -> R): R? =
+	(this as? FieldValue)?.field?.let(fn)
+
+fun <R> Value.match(string: String, fn: (Program) -> R): R? =
+	(this as? FieldValue)?.field?.let { field ->
+		field.match(string, fn)
+	}
+
+fun <R> Field.match(name: String, fn: (Program) -> R) =
+	if (this.name == name) fn(rhs)
+	else null
