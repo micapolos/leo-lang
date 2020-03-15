@@ -24,6 +24,7 @@ val Sequence.resolve: Program?
 			?: resolveBody
 			?: resolveMake
 			?: resolveAccess
+			?: resolveLeonardo
 
 val Sequence.resolveFunctionApply: Program?
 	get() =
@@ -112,3 +113,9 @@ val Sequence.resolveTail
 val Sequence.resolveBody
 	get() =
 		matchPostfix("body", Program::bodyOrNull)
+
+val Sequence.resolveLeonardo
+	get() =
+		matchSimple("leonardo") {
+			leonardoScript.program
+		}

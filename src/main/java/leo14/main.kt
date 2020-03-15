@@ -13,13 +13,21 @@ import leo14.typed.compiler.js.stdScript
 import leo14.typed.compiler.memory
 import leo14.typed.compiler.parse
 import leo14.typed.compiler.preludeMemory
+import leo14.untyped.stringCharReducer
+import leo14.untyped.tokenReader
 import java.io.InputStreamReader
 
 val errorTriggerCount = 7
 val prelude = true
 val memory = if (prelude) emptyContext.preludeMemory() else memory()
+val untyped = true
 
-fun main() = run(emptyContext.compiler(memory).runIf(prelude) { parse(stdScript) }.tokenReader.charReader)
+fun main() {
+	if (untyped)
+		run(tokenReader().stringCharReducer)
+	else
+		run(emptyContext.compiler(memory).runIf(prelude) { parse(stdScript) }.tokenReader.charReader)
+}
 
 fun run(charReader: CharReader) {
 	run(charReader.reducer.mapState { indentColorString })

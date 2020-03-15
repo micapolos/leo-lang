@@ -4,6 +4,9 @@ import leo.base.orIfNull
 import leo13.fold
 import leo13.reverse
 import leo14.*
+import leo14.parser.coreString
+import leo14.reader.charReader
+import leo14.reader.reducer
 
 enum class TokenReaderMode { RESOLVE, META }
 
@@ -91,3 +94,14 @@ val TokenReaderParent.fragment
 	get() =
 		tokenReader.fragment.begin(name)
 
+val TokenReader.reducer: Reducer<TokenReader, Token>
+	get() =
+		reducer { token ->
+			append(token)!!.reducer
+		}
+
+val TokenReader.stringCharReducer: Reducer<String, Char>
+	get() =
+		reducer.charReader().reducer.mapState {
+			tokenReducer.state.fragment.indentString + tokenParser.coreString
+		}

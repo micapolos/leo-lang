@@ -68,6 +68,15 @@ fun <R> Sequence.matchPostfix(name: String, fn: (Program) -> R) =
 		}
 	}
 
+fun <R> Sequence.matchSimple(name: String, fn: () -> R) =
+	matchInfix(name) { lhs, rhs ->
+		rhs.matchEmpty {
+			lhs.matchEmpty {
+				fn()
+			}
+		}
+	}
+
 fun <R> Value.matchField(fn: (Field) -> R): R? =
 	(this as? FieldValue)?.field?.let(fn)
 

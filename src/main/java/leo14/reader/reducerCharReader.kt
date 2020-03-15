@@ -5,9 +5,10 @@ import leo14.Reducer
 import leo14.Token
 import leo14.parser.*
 import leo14.reduce
+import leo14.reducer
 
 data class ReducerCharReader<S>(
-	val reducer: Reducer<S, Token>,
+	val tokenReducer: Reducer<S, Token>,
 	val tokenParser: SpacedTokenParser)
 
 fun <S> Reducer<S, Token>.charReader() =
@@ -26,14 +27,20 @@ fun <S> ReducerCharReader<S>.putRaw(char: Char): ReducerCharReader<S> =
 			parsedTokenParser
 				.tokenOrNull
 				?.let { token ->
-					if (parsedTokenParser.canContinue) ReducerCharReader(reducer, parsedTokenParser)
-					else ReducerCharReader(reducer.reduce(token), newSpacedTokenParser)
+					if (parsedTokenParser.canContinue) ReducerCharReader(tokenReducer, parsedTokenParser)
+					else ReducerCharReader(tokenReducer.reduce(token), newSpacedTokenParser)
 				}
-				?: ReducerCharReader(reducer, parsedTokenParser)
+				?: ReducerCharReader(tokenReducer, parsedTokenParser)
 		}
 		.orIfNull {
 			tokenParser
 				.tokenOrNull
-				?.let { token -> ReducerCharReader(reducer.reduce(token), newSpacedTokenParser).put(char) }
+				?.let { token -> ReducerCharReader(tokenReducer.reduce(token), newSpacedTokenParser).put(char) }
 				?: error("$this.put($char)")
+		}
+
+val <S> ReducerCharReader<S>.reducer: Reducer<ReducerCharReader<S>, Char>
+	get() =
+		reducer { char ->
+			put(char).reducer
 		}
