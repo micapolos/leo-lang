@@ -23,6 +23,7 @@ val Value.scriptLine
 			is LiteralValue -> literal.scriptLine
 			is FieldValue -> field.scriptLine
 			is FunctionValue -> function.scriptLine
+			is AnyValue -> "native" lineTo script(any.toString())
 		}
 
 val Literal.scriptLine
@@ -42,7 +43,7 @@ val Field.rawScriptField
 	get() =
 		name fieldTo rhs.script
 
-val keywords = setOf("function")
+val keywords = setOf("function", "native")
 
 val Function.bodyScript
 	get() =

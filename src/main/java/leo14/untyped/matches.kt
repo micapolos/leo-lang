@@ -88,6 +88,7 @@ fun Value.rawMatches(value: Value) =
 		is LiteralValue -> value is LiteralValue && literal == value.literal
 		is FieldValue -> value is FieldValue && field.matches(value.field)
 		is FunctionValue -> value is FunctionValue && function == value.function
+		is AnyValue -> value is AnyValue && any == value.any
 	}
 
 fun Value.numberMatches(value: Value) =
