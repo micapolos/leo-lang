@@ -18,7 +18,7 @@ class RuleTest {
 	fun resolve_match_context() {
 		Rule(
 			Pattern(program("number" valueTo program())),
-			body(context().function(program("given"))))
+			body(function(context(), program("given"))))
 			.apply(program(value(literal(10))))
 			.assertEqualTo(program("given" valueTo program(literal(10))))
 	}

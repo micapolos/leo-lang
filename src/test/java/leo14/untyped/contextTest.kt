@@ -4,10 +4,10 @@ import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class ContextTest {
-	private val context = context()
-		.push(pattern(program("x")) ruleTo body(program("zero")))
-		.push(pattern(program("y")) ruleTo body(program("one")))
-		.push(pattern(program("x")) ruleTo body(program("two")))
+	private val context = context(
+		pattern(program("x")) ruleTo body(program("zero")),
+		pattern(program("y")) ruleTo body(program("one")),
+		pattern(program("x")) ruleTo body(program("two")))
 
 	@Test
 	fun apply_rules() {
@@ -28,7 +28,7 @@ class ContextTest {
 	fun apply_function() {
 		context
 			.apply(program("function" valueTo program("foo")))
-			.assertEqualTo(program(value(context.function(program("foo")))))
+			.assertEqualTo(program(value(function(context, program("foo")))))
 	}
 
 	@Test
@@ -49,7 +49,10 @@ class ContextTest {
 					"foo" valueTo program(),
 					"gives" valueTo program("bar")))
 			.assertEqualTo(
-				context.push(pattern(program("foo")) ruleTo body(program("bar"))))
+				context.push(
+					rule(
+						pattern(program("foo")),
+						body(program("bar")))))
 	}
 
 	@Test
@@ -61,7 +64,8 @@ class ContextTest {
 					"does" valueTo program("bar")))
 			.assertEqualTo(
 				context.push(
-					pattern(program("foo")) ruleTo
-						body(context.function(program("bar")))))
+					rule(
+						pattern(program("foo")),
+						body(function(context, program("bar"))))))
 	}
 }

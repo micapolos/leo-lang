@@ -13,7 +13,7 @@ class BodyTest {
 
 	@Test
 	fun apply_nonNullContext() {
-		body(context().function(program("given")))
+		body(function(context(), program("given")))
 			.apply(program("foo" valueTo program()))
 			.assertEqualTo(program("given" valueTo program("foo")))
 	}

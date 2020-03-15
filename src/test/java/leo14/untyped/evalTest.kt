@@ -232,9 +232,27 @@ class EvalTest {
 			"gives" lineTo script("bar"),
 			"function" lineTo script("given"))
 			.assertEvalsTo(
-				context().push(pattern(program("foo")) ruleTo body(program("bar")))
-					.function(program("given"))
+				function(
+					context().push(pattern(program("foo")) ruleTo body(program("bar"))),
+					program("given"))
 					.scriptLine)
+	}
+
+	@Test
+	fun function_localContext() {
+		script(
+			"function" lineTo script(
+				"foo" lineTo script(),
+				"meta" lineTo script(
+					"gives" lineTo script("bar")),
+				"foo" lineTo script()))
+			.assertEvalsTo(
+				"function" lineTo script(
+					"context" lineTo script(),
+					"body" lineTo script(
+						"foo" lineTo script(),
+						"gives" lineTo script("bar"),
+						"foo" lineTo script())))
 	}
 
 	@Test
@@ -255,6 +273,17 @@ class EvalTest {
 				script(
 					line(literal(10)),
 					"plus" lineTo script(literal(20))))
+	}
+
+	@Test
+	fun metaGives() {
+		script(
+			"foo" lineTo script(),
+			"meta" lineTo script(
+				"gives" lineTo script("bar")))
+			.assertEvalsTo(
+				"foo" lineTo script(),
+				"gives" lineTo script("bar"))
 	}
 
 	@Test

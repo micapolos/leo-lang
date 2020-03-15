@@ -1,10 +1,15 @@
 package leo14.untyped
 
+import leo.base.fold
+
 sealed class Context
 object EmptyContext : Context()
 data class NonEmptyContext(val parentContext: Context, val lastRule: Rule) : Context()
 
 fun context() = EmptyContext as Context
+
+fun context(rule: Rule, vararg rules: Rule) =
+	context().push(rule).fold(rules) { push(it) }
 
 fun Context.push(rule: Rule): Context =
 	NonEmptyContext(this, rule)
@@ -28,7 +33,7 @@ fun Context.applyStatic(program: Program): Program? =
 
 fun Context.applyFunction(program: Program): Program? =
 	program.matchPrefix("function") { body ->
-		program(value(this.function(body)))
+		program(value(function(this, body)))
 	}
 
 fun Context.applyEval(program: Program): Program? =
@@ -43,7 +48,7 @@ fun Context.compile(program: Program): Context? =
 
 fun Context.compileDoes(program: Program): Context? =
 	program.matchInfix("does") { lhs, rhs ->
-		push(Rule(Pattern(lhs), body(function(rhs))))
+		push(Rule(Pattern(lhs), body(function(this, rhs))))
 	}
 
 fun Context.compileGives(program: Program): Context? =
