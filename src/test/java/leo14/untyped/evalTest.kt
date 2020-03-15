@@ -244,4 +244,30 @@ class EvalTest {
 			"apply" lineTo script("foo"))
 			.assertEvalsTo(script("given" lineTo script("foo")))
 	}
+
+	@Test
+	fun meta() {
+		script(
+			line(literal(10)),
+			"meta" lineTo script(
+				"plus" lineTo script(literal(20))))
+			.assertEvalsTo(
+				script(
+					line(literal(10)),
+					"plus" lineTo script(literal(20))))
+	}
+
+	@Test
+	fun metaMeta() {
+		script(
+			line(literal(10)),
+			"meta" lineTo script(
+				"meta" lineTo script(
+					"plus" lineTo script(literal(20)))))
+			.assertEvalsTo(
+				script(
+					line(literal(10)),
+					"meta" lineTo script(
+						"plus" lineTo script(literal(20)))))
+	}
 }

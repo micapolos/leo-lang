@@ -13,8 +13,11 @@ fun resolver(program: Program = program()) =
 fun Resolver.apply(value: Value): Resolver =
 	context.resolve(this.program.plus(value))
 
-fun Resolver.applyMeta(value: Value): Resolver =
+fun Resolver.append(value: Value): Resolver =
 	set(this.program.plus(value))
+
+fun Resolver.append(program: Program): Resolver =
+	set(this.program.plus(program))
 
 fun Context.resolve(program: Program): Resolver =
 	null
