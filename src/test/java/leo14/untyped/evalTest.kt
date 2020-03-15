@@ -224,4 +224,24 @@ class EvalTest {
 			"body" lineTo script())
 			.assertEvalsToThis
 	}
+
+	@Test
+	fun function() {
+		script(
+			"foo" lineTo script(),
+			"gives" lineTo script("bar"),
+			"function" lineTo script("given"))
+			.assertEvalsTo(
+				context().push(pattern(program("foo")) ruleTo body(program("bar")))
+					.function(program("given"))
+					.scriptLine)
+	}
+
+	@Test
+	fun functionApply() {
+		script(
+			"function" lineTo script("given"),
+			"apply" lineTo script("foo"))
+			.assertEvalsTo(script("given" lineTo script("foo")))
+	}
 }

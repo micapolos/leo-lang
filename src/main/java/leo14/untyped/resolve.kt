@@ -12,6 +12,7 @@ val Program.resolve
 val Sequence.resolve: Program?
 	get() =
 		null
+			?: resolveFunctionApply
 			?: resolveAnythingAppendAnything
 			?: resolveMinusNumber
 			?: resolveNumberPlusNumber
@@ -23,6 +24,12 @@ val Sequence.resolve: Program?
 			?: resolveBody
 			?: resolveMake
 			?: resolveAccess
+
+val Sequence.resolveFunctionApply: Program?
+	get() =
+		matchInfix("apply") { lhs, rhs ->
+			lhs.functionOrNull?.apply(rhs)
+		}
 
 val Sequence.resolveAccess: Program?
 	get() =

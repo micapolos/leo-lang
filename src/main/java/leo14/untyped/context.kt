@@ -18,12 +18,18 @@ fun Context.apply(program: Program): Program? =
 fun Context.applyRules(program: Program): Program? =
 	when (this) {
 		EmptyContext -> null
-		is NonEmptyContext -> lastRule.apply(program) ?: parentContext.apply(program)
+		is NonEmptyContext -> lastRule.apply(program) ?: parentContext.applyRules(program)
 	}
 
 fun Context.applyStatic(program: Program): Program? =
 	null
+		?: applyFunction(program)
 		?: applyEval(program)
+
+fun Context.applyFunction(program: Program): Program? =
+	program.matchPrefix("function") { body ->
+		program(value(this.function(body)))
+	}
 
 fun Context.applyEval(program: Program): Program? =
 	program.matchPostfix("eval") { lhs ->

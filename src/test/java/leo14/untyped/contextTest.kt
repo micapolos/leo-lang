@@ -25,6 +25,13 @@ class ContextTest {
 	}
 
 	@Test
+	fun apply_function() {
+		context
+			.apply(program("function" valueTo program("foo")))
+			.assertEqualTo(program(value(context.function(program("foo")))))
+	}
+
+	@Test
 	fun apply_eval() {
 		context
 			.apply(
