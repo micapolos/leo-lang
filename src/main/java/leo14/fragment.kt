@@ -1,11 +1,16 @@
 
 package leo14
 
+import leo.base.ifNotNull
 import leo.base.notNullOrError
+import leo13.fold
+import leo13.reverse
 
 data class Fragment(
 	val parent: FragmentParent?,
-	val script: Script)
+	val script: Script) {
+	override fun toString() = indentString
+}
 
 data class FragmentParent(
 	val fragment: Fragment,
@@ -44,3 +49,13 @@ val FragmentParent.reflectScriptLine
 			fragment.reflectScriptLine,
 			begin.reflectScriptLine)
 
+fun Fragment.plus(script: Script): Fragment =
+	fold(script.tokenStack.reverse) { plus(it) }
+
+fun Fragment.plus(fragment: Fragment): Fragment =
+	this
+		.ifNotNull(fragment.parent, Fragment::plus)
+		.plus(fragment.script)
+
+fun Fragment.plus(fragmentParent: FragmentParent): Fragment =
+	plus(fragmentParent.fragment).plus(fragmentParent.begin)

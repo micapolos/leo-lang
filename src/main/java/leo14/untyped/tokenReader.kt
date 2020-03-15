@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo.base.orIfNull
 import leo13.fold
 import leo13.reverse
 import leo14.*
@@ -12,7 +13,7 @@ data class TokenReader(
 	val mode: TokenReaderMode)
 
 data class TokenReaderParent(
-	val string: String,
+	val name: String,
 	val tokenReader: TokenReader)
 
 fun Resolver.tokenReader() =
@@ -78,6 +79,15 @@ fun TokenReaderMode.append(resolver: Resolver, value: Value) =
 
 fun TokenReaderParent.end(program: Program, fromMode: TokenReaderMode): TokenReader =
 	when (fromMode) {
-		TokenReaderMode.RESOLVE -> tokenReader.append(string valueTo program)
+		TokenReaderMode.RESOLVE -> tokenReader.append(name valueTo program)
 		TokenReaderMode.META -> tokenReader.updateResolver { append(program) }
 	}
+
+val TokenReader.fragment: Fragment
+	get() =
+		parentOrNull?.fragment.orIfNull { emptyFragment }.plus(resolver.program.script)
+
+val TokenReaderParent.fragment
+	get() =
+		tokenReader.fragment.begin(name)
+
