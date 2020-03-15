@@ -75,3 +75,8 @@ val CharReader.indentColorString: String
 				process(tokenReader)
 			}.indentString + tokenParser.coreString
 
+val CharReader.reducer: Reducer<CharReader, Char>
+	get() =
+		reducer { char ->
+			put(char).reducer
+		}

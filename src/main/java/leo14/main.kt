@@ -21,39 +21,43 @@ val memory = if (prelude) emptyContext.preludeMemory() else memory()
 
 fun main() = run(emptyContext.compiler(memory).runIf(prelude) { parse(stdScript) }.tokenReader.charReader)
 
-fun run(reader: CharReader) {
+fun run(charReader: CharReader) {
+	run(charReader.reducer.mapState { indentColorString })
+}
+
+fun run(reducer: Reducer<String, Char>) {
 	sttyPrivateMode()
-	val undoableCharReaderVariable = variable(undoable(reader))
+	val undoableReducerVariable = variable(undoable(reducer))
 	var errorToPrint: Throwable? = null
 	var errorCount = 0
 	val reader = InputStreamReader(System.`in`)
 	var printDebug = false
 	while (true) {
-		print(undoableCharReaderVariable.current.lastDone)
+		print(undoableReducerVariable.current.lastDone)
 		errorToPrint?.run {
 			println("ERROR")
 			printStackTrace()
-			println(undoableCharReaderVariable.current.lastDone.toString())
+			println(undoableReducerVariable.current.lastDone.toString())
 		}
 		if (printDebug) {
 			println("[DEBUG]")
-			println(undoableCharReaderVariable.current.lastDone)
+			println(undoableReducerVariable.current.lastDone)
 			printDebug = false
 		}
 		val char = reader.read()
 		if (char == -1 || char == 4) break
 		else if (char == 127) {
 			if (errorToPrint != null) errorToPrint = null
-			else undoableCharReaderVariable.update { undoIfPossible }
+			else undoableReducerVariable.update { undoIfPossible }
 		} else if (char == 27) {
 			printDebug = true
 		} else if (errorToPrint == null) try {
-			undoableCharReaderVariable.update {
+			undoableReducerVariable.update {
 				doIt {
-					put(char.toChar()).apply {
+					reduce(char.toChar()).apply {
 						// Pre-fetch string for error detection
 						// TODO: This solution sucks, do it properly.
-						indentColorString
+						state
 					}
 				}
 			}
@@ -65,7 +69,7 @@ fun run(reader: CharReader) {
 	}
 }
 
-fun print(charReader: CharReader) {
+fun print(reducer: Reducer<String, Char>) {
 	print("${ansi.clear}${ansi.home}")
-	print("${charReader.indentColorString}")
+	print(reducer.state)
 }
