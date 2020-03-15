@@ -13,6 +13,9 @@ fun resolver(program: Program = program()) =
 fun Resolver.apply(value: Value): Resolver =
 	context.resolve(this.program.plus(value))
 
+fun Resolver.applyMeta(value: Value): Resolver =
+	set(this.program.plus(value))
+
 fun Context.resolve(program: Program): Resolver =
 	null
 		?: resolveContext(program)
