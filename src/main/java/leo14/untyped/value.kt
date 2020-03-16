@@ -55,7 +55,7 @@ tailrec fun <R> R.foldValues(program: Program, fn: R.(Value) -> R): R =
 		is SequenceProgram -> fn(program.sequence.head).foldValues(program.sequence.tail, fn)
 	}
 
-operator fun Program.plus(program: Program) = fold(stack<Value>().foldValues(program) { push(it) }, Program::plus)
+operator fun Program.plus(program: Program) = fold(stack<Value>().foldValues(program) { push(it) }) { plus(it) }
 
 fun value(literal: Literal): Value = LiteralValue(literal)
 fun value(field: Field): Value = FieldValue(field)
