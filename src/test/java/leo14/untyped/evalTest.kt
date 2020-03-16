@@ -198,30 +198,30 @@ class EvalTest {
 	}
 
 	@Test
-	fun body() {
+	fun contents() {
 		script(
 			"point" lineTo script(
 				"x" lineTo script(literal(10)),
 				"y" lineTo script(literal(20))),
-			"body" lineTo script())
+			"contents" lineTo script())
 			.assertEvalsTo(
 				"x" lineTo script(literal(10)),
 				"y" lineTo script(literal(20)))
 	}
 
 	@Test
-	fun body_empty() {
+	fun contents_empty() {
 		script(
-			"body" lineTo script())
+			"contents" lineTo script())
 			.assertEvalsToThis
 	}
 
 	@Test
-	fun body_complex() {
+	fun contents_complex() {
 		script(
 			"x" lineTo script("foo"),
 			"y" lineTo script("bar"),
-			"body" lineTo script())
+			"contents" lineTo script())
 			.assertEvalsToThis
 	}
 
