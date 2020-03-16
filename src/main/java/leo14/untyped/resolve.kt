@@ -104,8 +104,8 @@ val Sequence.resolveNumberTimesNumber
 val Sequence.resolveTextPlusText
 	get() =
 		matchInfix("plus") { lhs, rhs ->
-			lhs.matchString { lhs ->
-				rhs.matchString { rhs ->
+			lhs.matchText { lhs ->
+				rhs.matchText { rhs ->
 					program(literal(lhs + rhs))
 				}
 			}

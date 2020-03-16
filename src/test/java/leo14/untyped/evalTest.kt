@@ -346,4 +346,63 @@ class EvalTest {
 			"else" lineTo script("booo"))
 			.assertEvalsToThis
 	}
+
+	@Test
+	fun switch_number() {
+		script(
+			line(literal(1)),
+			"switch" lineTo script(
+				"number" lineTo script(
+					"plus" lineTo script(literal(2))),
+				"text" lineTo script(
+					"plus" lineTo script(literal("world!")))))
+			.assertEvalsTo(script(literal(3)))
+	}
+
+	@Test
+	fun switch_text() {
+		script(
+			line(literal("Hello, ")),
+			"switch" lineTo script(
+				"number" lineTo script(
+					"plus" lineTo script(literal(2))),
+				"text" lineTo script(
+					"plus" lineTo script(literal("world!")))))
+			.assertEvalsTo(script(literal("Hello, world!")))
+	}
+
+	@Test
+	fun switch_name() {
+		script(
+			"foo" lineTo script(),
+			"switch" lineTo script(
+				"number" lineTo script(
+					"plus" lineTo script(literal(2))),
+				"foo" lineTo script("bar")))
+			.assertEvalsTo(
+				"foo" lineTo script(),
+				"bar" lineTo script())
+	}
+
+	@Test
+	fun switch_nothing() {
+		script(
+			"switch" lineTo script(
+				"number" lineTo script(
+					"plus" lineTo script(literal(2))),
+				"nothing" lineTo script("bar")))
+			.assertEvalsTo("bar" lineTo script())
+	}
+
+	@Test
+	fun switch_mismatch() {
+		script(
+			"foo" lineTo script(),
+			"switch" lineTo script(
+				"number" lineTo script(
+					"plus" lineTo script(literal(2))),
+				"text" lineTo script(
+					"plus" lineTo script(literal("world!")))))
+			.assertEvalsToThis
+	}
 }

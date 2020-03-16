@@ -105,3 +105,35 @@ fun Value.functionMatches(value: Value) =
 
 fun Field.matches(field: Field) =
 	name == field.name && rhs.matches(field.rhs)
+
+// === name matching ===
+
+fun Program.matches(name: String) =
+	when (this) {
+		EmptyProgram -> name == "nothing"
+		is SequenceProgram -> sequence.matches(name)
+	}
+
+fun Sequence.matches(name: String) =
+	head.matches(name)
+
+fun Value.matches(name: String) =
+	when (this) {
+		is LiteralValue -> literal.matches(name)
+		is FieldValue -> field.matches(name)
+		is FunctionValue -> function.matches(name)
+		is AnyValue -> false
+	}
+
+fun Field.matches(name: String) =
+	this.name == name
+
+fun Literal.matches(name: String) =
+	when (this) {
+		is StringLiteral -> name == "text"
+		is NumberLiteral -> name == "number"
+	}
+
+@Suppress("unused")
+fun Function.matches(name: String) =
+	name == "function"

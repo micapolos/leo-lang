@@ -10,6 +10,9 @@ fun Context.resolver(program: Program = program()) =
 fun resolver(program: Program = program()) =
 	context().resolver(program)
 
+fun Resolver.eval(program: Program) =
+	tokenReader().append(program).resolver
+
 fun Resolver.apply(value: Value): Resolver =
 	context.resolve(this.program.plus(value))
 
@@ -23,6 +26,7 @@ fun Context.resolve(program: Program): Resolver =
 	null
 		?: resolveContext(program)
 		?: resolveDefinitions(program)
+		?: resolveSwitch(program)
 		?: resolveStatic(program)
 
 fun Context.resolveStatic(program: Program): Resolver =
@@ -35,6 +39,11 @@ fun Context.resolveContext(program: Program): Resolver? =
 
 fun Context.resolveDefinitions(program: Program): Resolver? =
 	compile(program)?.resolver()
+
+fun Context.resolveSwitch(program: Program): Resolver? =
+	program.resolveSwitchMatch?.let { switchMatch ->
+		resolver(switchMatch.param).eval(switchMatch.body)
+	}
 
 fun Context.resolveCompile(program: Program) =
 	program.matchPostfix("compile") { lhs ->

@@ -14,8 +14,8 @@ fun <R> Program.matchName(fn: (String) -> R): R? =
 fun <R> Program.matchNumber(fn: (Number) -> R): R? =
 	numberOrNull?.let(fn)
 
-fun <R> Program.matchString(fn: (String) -> R): R? =
-	stringOrNull?.let(fn)
+fun <R> Program.matchText(fn: (String) -> R): R? =
+	textOrNull?.let(fn)
 
 fun <R> Program.matchFunction(fn: (Function) -> R): R? =
 	functionOrNull?.let(fn)
