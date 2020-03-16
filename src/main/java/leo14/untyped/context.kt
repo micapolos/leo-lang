@@ -44,11 +44,11 @@ fun Context.applyEval(program: Program): Program? =
 fun Context.compile(program: Program): Context? =
 	null
 		?: compileIs(program)
-		?: compileGives(program)
+		?: compileDoes(program)
 		?: compileAs(program)
 
-fun Context.compileGives(program: Program): Context? =
-	program.matchInfix("gives") { lhs, rhs ->
+fun Context.compileDoes(program: Program): Context? =
+	program.matchInfix("does") { lhs, rhs ->
 		push(Rule(Pattern(lhs), body(function(this, rhs))))
 	}
 

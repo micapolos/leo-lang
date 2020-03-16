@@ -129,7 +129,7 @@ class EvalTest {
 	fun thisGivesThat() {
 		script(
 			"number" lineTo script(),
-			"gives" lineTo script("given" lineTo script()))
+			"does" lineTo script("given" lineTo script()))
 			.assertEvalsTo()
 	}
 
@@ -137,7 +137,7 @@ class EvalTest {
 	fun thisGivesThatAndAccess() {
 		script(
 			"number" lineTo script(),
-			"gives" lineTo script("given" lineTo script()),
+			"does" lineTo script("given" lineTo script()),
 			line(literal(10)))
 			.assertEvalsTo("given" lineTo script(literal(10)))
 	}
@@ -148,7 +148,7 @@ class EvalTest {
 			"false" lineTo script(),
 			"or" lineTo script("true"),
 			"type" lineTo script(),
-			"gives" lineTo script("boolean"))
+			"does" lineTo script("boolean"))
 
 		rule
 			.plus(
