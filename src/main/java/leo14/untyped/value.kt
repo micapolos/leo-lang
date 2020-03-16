@@ -71,15 +71,15 @@ infix fun String.valueTo(program: Program) = value(this fieldTo program)
 
 val Program.isEmpty get() = this is EmptyProgram
 val Program.sequenceOrNull get() = (this as? SequenceProgram)?.sequence
-val Program.valueOrNull get() = sequenceOrNull?.onlyValueOrNull
-val Program.fieldOrNull get() = valueOrNull?.fieldOrNull
-val Program.bodyOrNull get() = fieldOrNull?.rhs
-val Program.numberOrNull get() = valueOrNull?.literalOrNull?.numberOrNull
-val Program.stringOrNull get() = valueOrNull?.literalOrNull?.stringOrNull
-val Program.functionOrNull get() = valueOrNull?.functionOrNull
+val Program.onlyValueOrNull get() = sequenceOrNull?.onlyValueOrNull
+val Program.onlyFieldOrNull get() = onlyValueOrNull?.fieldOrNull
+val Program.contentsOrNull get() = onlyFieldOrNull?.rhs
+val Program.numberOrNull get() = onlyValueOrNull?.literalOrNull?.numberOrNull
+val Program.stringOrNull get() = onlyValueOrNull?.literalOrNull?.stringOrNull
+val Program.functionOrNull get() = onlyValueOrNull?.functionOrNull
 val Program.headOrNull get() = sequenceOrNull?.head?.let { program(it) }
 val Program.tailOrNull get() = sequenceOrNull?.tail
-val Program.onlyNameOrNull get() = valueOrNull?.onlyNameOrNull
+val Program.onlyNameOrNull get() = onlyValueOrNull?.onlyNameOrNull
 
 val Sequence.onlyValueOrNull get() = if (tail.isEmpty) head else null
 

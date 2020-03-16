@@ -36,14 +36,7 @@ val Field.scriptLine
 
 val Field.scriptField
 	get() =
-		if (name in keywords) "meta" fieldTo script(rawScriptField)
-		else rawScriptField
-
-val Field.rawScriptField
-	get() =
 		name fieldTo rhs.script
-
-val keywords = setOf("function", "native")
 
 val Function.bodyScript
 	get() =

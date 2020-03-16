@@ -12,7 +12,8 @@ val Program.resolve
 val Sequence.resolve: Program?
 	get() =
 		null
-			?: resolveFunctionApply
+			?: resolveFunctionApplyAnything
+			?: resolveAnythingDoFunction
 			?: resolveAnythingAppendAnything
 			?: resolveMinusNumber
 			?: resolveNumberPlusNumber
@@ -21,15 +22,21 @@ val Sequence.resolve: Program?
 			?: resolveTextPlusText
 			?: resolveHead
 			?: resolveTail
-			?: resolveBody
+			?: resolveContents
 			?: resolveMake
 			?: resolveAccess
 			?: resolveLeonardo
 
-val Sequence.resolveFunctionApply: Program?
+val Sequence.resolveFunctionApplyAnything: Program?
 	get() =
 		matchInfix("apply") { lhs, rhs ->
 			lhs.functionOrNull?.apply(rhs)
+		}
+
+val Sequence.resolveAnythingDoFunction: Program?
+	get() =
+		matchInfix("do") { lhs, rhs ->
+			rhs.functionOrNull?.apply(lhs)
 		}
 
 val Sequence.resolveAccess: Program?
@@ -110,9 +117,9 @@ val Sequence.resolveTail
 	get() =
 		matchPostfix("tail", Program::tailOrNull)
 
-val Sequence.resolveBody
+val Sequence.resolveContents
 	get() =
-		matchPostfix("body", Program::bodyOrNull)
+		matchPostfix("contents", Program::contentsOrNull)
 
 val Sequence.resolveLeonardo
 	get() =
