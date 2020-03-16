@@ -43,17 +43,23 @@ fun Context.applyEval(program: Program): Program? =
 
 fun Context.compile(program: Program): Context? =
 	null
+		?: compileIs(program)
 		?: compileGives(program)
-		?: compileDoes(program)
-
-fun Context.compileDoes(program: Program): Context? =
-	program.matchInfix("does") { lhs, rhs ->
-		push(Rule(Pattern(lhs), body(function(this, rhs))))
-	}
+		?: compileAs(program)
 
 fun Context.compileGives(program: Program): Context? =
 	program.matchInfix("gives") { lhs, rhs ->
+		push(Rule(Pattern(lhs), body(function(this, rhs))))
+	}
+
+fun Context.compileIs(program: Program): Context? =
+	program.matchInfix("is") { lhs, rhs ->
 		push(Rule(Pattern(lhs), body(rhs)))
+	}
+
+fun Context.compileAs(program: Program): Context? =
+	program.matchInfix("as") { lhs, rhs ->
+		push(Rule(Pattern(rhs), body(lhs)))
 	}
 
 fun Context.eval(program: Program) =

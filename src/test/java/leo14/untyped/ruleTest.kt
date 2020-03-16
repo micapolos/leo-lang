@@ -6,16 +6,16 @@ import kotlin.test.Test
 
 class RuleTest {
 	@Test
-	fun resolve_match_nullContext() {
+	fun resolve_matchProgram() {
 		Rule(
 			Pattern(program("number" valueTo program())),
 			body(program("ok")))
-			.apply(program(value(literal(10))))
+			.apply(program("number"))
 			.assertEqualTo(program("ok"))
 	}
 
 	@Test
-	fun resolve_match_context() {
+	fun resolve_matchFunction() {
 		Rule(
 			Pattern(program("number" valueTo program())),
 			body(function(context(), program("given"))))

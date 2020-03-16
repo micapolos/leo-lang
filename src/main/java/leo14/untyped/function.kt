@@ -7,4 +7,7 @@ data class Function(
 fun function(context: Context, program: Program) = Function(context, program)
 
 fun Function.apply(param: Program) =
-	context.push(param.givenRule).eval(program)
+	context
+		.push(param.givenRule)
+		.push(program(value(this)).thisRule)
+		.eval(program)

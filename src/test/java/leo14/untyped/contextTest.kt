@@ -42,12 +42,12 @@ class ContextTest {
 	}
 
 	@Test
-	fun compile_gives() {
+	fun compile_is() {
 		context
 			.compile(
 				program(
 					"foo" valueTo program(),
-					"gives" valueTo program("bar")))
+					"is" valueTo program("bar")))
 			.assertEqualTo(
 				context.push(
 					rule(
@@ -56,12 +56,12 @@ class ContextTest {
 	}
 
 	@Test
-	fun compile_does() {
+	fun compile_gives() {
 		context
 			.compile(
 				program(
 					"foo" valueTo program(),
-					"does" valueTo program("bar")))
+					"gives" valueTo program("bar")))
 			.assertEqualTo(
 				context.push(
 					rule(

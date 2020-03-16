@@ -92,35 +92,52 @@ class EvalTest {
 	}
 
 	@Test
-	fun gives() {
+	fun thisIsThat() {
 		script(
-			"number" lineTo script(),
-			"gives" lineTo script("number"))
+			"x" lineTo script(),
+			"is" lineTo script(literal(10)))
 			.assertEvalsTo()
 	}
 
 	@Test
-	fun givesAndAccess() {
+	fun thisIsThatAndAccess() {
 		script(
-			"number" lineTo script(),
-			"gives" lineTo script("number"),
-			line(literal(10)))
-			.assertEvalsTo(line("number"))
+			"x" lineTo script(),
+			"is" lineTo script(literal(10)),
+			"x" lineTo script())
+			.assertEvalsTo(line(literal(10)))
 	}
 
 	@Test
-	fun does() {
+	fun thisAsThat() {
 		script(
-			"number" lineTo script(),
-			"does" lineTo script("given" lineTo script()))
+			line(literal(10)),
+			"as" lineTo script("foo"))
 			.assertEvalsTo()
 	}
 
 	@Test
-	fun doesAndAccess() {
+	fun thisAsThatAndAccess() {
+		script(
+			line(literal(10)),
+			"as" lineTo script("foo"),
+			"foo" lineTo script())
+			.assertEvalsTo(line(literal(10)))
+	}
+
+	@Test
+	fun thisGivesThat() {
 		script(
 			"number" lineTo script(),
-			"does" lineTo script("given" lineTo script()),
+			"gives" lineTo script("given" lineTo script()))
+			.assertEvalsTo()
+	}
+
+	@Test
+	fun thisGivesThatAndAccess() {
+		script(
+			"number" lineTo script(),
+			"gives" lineTo script("given" lineTo script()),
 			line(literal(10)))
 			.assertEvalsTo("given" lineTo script(literal(10)))
 	}
@@ -229,19 +246,19 @@ class EvalTest {
 	fun function() {
 		script(
 			"foo" lineTo script(),
-			"gives" lineTo script("bar"),
+			"is" lineTo script("bar"),
 			"function" lineTo script(
 				"zoo" lineTo script(),
-				"meta" lineTo script("gives" lineTo script("zar")),
+				"meta" lineTo script("is" lineTo script("zar")),
 				"append" lineTo script("foo")))
 			.assertEvalsTo(
 				"function" lineTo script(
 					"context" lineTo script(
 						"foo" lineTo script(),
-						"gives" lineTo script("bar")),
+						"is" lineTo script("bar")),
 					"body" lineTo script(
 						"zoo" lineTo script(),
-						"gives" lineTo script("zar"),
+						"is" lineTo script("zar"),
 						"bar" lineTo script())))
 	}
 
@@ -288,5 +305,45 @@ class EvalTest {
 					line(literal(10)),
 					"meta" lineTo script(
 						"plus" lineTo script(literal(20)))))
+	}
+
+	@Test
+	fun equals() {
+		script(
+			"foo" lineTo script(),
+			"equals" lineTo script("foo"))
+			.assertEvalsTo(script("yes"))
+
+		script(
+			"foo" lineTo script(),
+			"equals" lineTo script("bar"))
+			.assertEvalsTo(script("no"))
+	}
+
+	@Test
+	fun ifThenElse_yes() {
+		script(
+			"if" lineTo script("yes"),
+			"then" lineTo script("hurray"),
+			"else" lineTo script("booo"))
+			.assertEvalsTo(script("hurray"))
+	}
+
+	@Test
+	fun ifThenElse_no() {
+		script(
+			"if" lineTo script("no"),
+			"then" lineTo script("hurray"),
+			"else" lineTo script("booo"))
+			.assertEvalsTo(script("booo"))
+	}
+
+	@Test
+	fun ifThenElse_other() {
+		script(
+			"if" lineTo script("other"),
+			"then" lineTo script("hurray"),
+			"else" lineTo script("booo"))
+			.assertEvalsToThis
 	}
 }

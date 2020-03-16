@@ -22,7 +22,7 @@ class ResolverTest {
 			.resolver(program("zoo"))
 
 		resolver
-			.apply("gives" valueTo program("zar"))
+			.apply("is" valueTo program("zar"))
 			.assertEqualTo(resolver.context.push(pattern(program("zoo")) ruleTo body(program("zar"))).resolver())
 	}
 

@@ -26,6 +26,8 @@ val Sequence.resolve: Program?
 			?: resolveMake
 			?: resolveAccess
 			?: resolveLeonardo
+			?: resolveAnythingEqualsAnything
+			?: resolveIfThenElse
 
 val Sequence.resolveFunctionApplyAnything: Program?
 	get() =
@@ -125,4 +127,26 @@ val Sequence.resolveLeonardo
 	get() =
 		matchSimple("leonardo") {
 			leonardoScript.program
+		}
+
+val Sequence.resolveAnythingEqualsAnything
+	get() =
+		matchInfix("equals") { lhs, rhs ->
+			program(if (lhs == rhs) "yes" else "no")
+		}
+
+val Sequence.resolveIfThenElse
+	get() =
+		matchInfix("else") { lhs, alternate ->
+			lhs.matchInfix("then") { lhs, consequent ->
+				lhs.matchPrefix("if") { condition ->
+					condition.matchName { name ->
+						when (name) {
+							"yes" -> consequent
+							"no" -> alternate
+							else -> null
+						}
+					}
+				}
+			}
 		}
