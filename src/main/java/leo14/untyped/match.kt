@@ -58,8 +58,8 @@ fun <R> Sequence.matchInfix(name: String, fn: (Program, Program) -> R) =
 	}
 
 fun <R> Sequence.matchInfix(name1: String, name2: String, fn: (Program, Program) -> R) =
-	matchInfix(name2) { lhs, rhs ->
-		lhs.matchPostfix(name1) { lhs ->
+	matchInfix(name1) { lhs, rhs ->
+		rhs.matchPrefix(name2) { rhs ->
 			fn(lhs, rhs)
 		}
 	}

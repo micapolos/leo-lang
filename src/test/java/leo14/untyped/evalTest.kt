@@ -112,8 +112,8 @@ class EvalTest {
 	fun saveAsThat() {
 		script(
 			line(literal(10)),
-			"save" lineTo script(),
-			"as" lineTo script("foo"))
+			"save" lineTo script(
+				"as" lineTo script("foo")))
 			.assertEvalsTo()
 	}
 
@@ -121,27 +121,29 @@ class EvalTest {
 	fun saveAsThatAndAccess() {
 		script(
 			line(literal(10)),
-			"save" lineTo script(),
-			"as" lineTo script("foo"),
+			"save" lineTo script(
+				"as" lineTo script("foo")),
 			"foo" lineTo script())
 			.assertEvalsTo(line(literal(10)))
 	}
 
 	@Test
-	fun thisGivesThat() {
+	fun thisDoesThat() {
 		script(
 			"number" lineTo script(),
-			"does" lineTo script("given" lineTo script()))
+			"does" lineTo script(
+				"plus" lineTo script(literal(1))))
 			.assertEvalsTo()
 	}
 
 	@Test
-	fun thisGivesThatAndAccess() {
+	fun thisDoesThatAndAccess() {
 		script(
 			"number" lineTo script(),
-			"does" lineTo script("given" lineTo script()),
+			"does" lineTo script(
+				"plus" lineTo script(literal(1))),
 			line(literal(10)))
-			.assertEvalsTo("given" lineTo script(literal(10)))
+			.assertEvalsTo(script(literal(11)))
 	}
 
 	@Test
@@ -152,8 +154,8 @@ class EvalTest {
 			"type" lineTo script(),
 			"does" lineTo script(
 				"meta" lineTo script(
-					"change" lineTo script(),
-					"to" lineTo script("boolean"))))
+					"change" lineTo script(
+						"to" lineTo script("boolean")))))
 
 		rule
 			.plus(
@@ -190,8 +192,8 @@ class EvalTest {
 	fun anythingChangeToAnything() {
 		script(
 			"foo" lineTo script(),
-			"change" lineTo script(),
-			"to" lineTo script("bar"))
+			"change" lineTo script(
+				"to" lineTo script("bar")))
 			.assertEvalsTo(script("bar"))
 	}
 

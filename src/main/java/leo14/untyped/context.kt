@@ -58,10 +58,8 @@ fun Context.compileIs(program: Program): Context? =
 	}
 
 fun Context.compileSaveAs(program: Program): Context? =
-	program.matchInfix("as") { lhs, rhs ->
-		lhs.matchPostfix("save") { lhs ->
-			push(Rule(Pattern(rhs), body(lhs)))
-		}
+	program.matchInfix("save", "as") { lhs, rhs ->
+		push(Rule(Pattern(rhs), body(lhs)))
 	}
 
 fun Context.eval(program: Program) =
