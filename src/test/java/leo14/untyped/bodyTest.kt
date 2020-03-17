@@ -1,6 +1,7 @@
 package leo14.untyped
 
 import leo.base.assertEqualTo
+import leo14.literal
 import kotlin.test.Test
 
 class BodyTest {
@@ -13,8 +14,8 @@ class BodyTest {
 
 	@Test
 	fun apply_nonNullContext() {
-		body(function(context(), program("given")))
-			.apply(program("foo" valueTo program()))
-			.assertEqualTo(program("given" valueTo program("foo")))
+		body(function(context(), program("minus" valueTo program(literal(3)))))
+			.apply(program(literal(5)))
+			.assertEqualTo(program(literal(2)))
 	}
 }

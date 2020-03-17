@@ -15,6 +15,8 @@ val Sequence.resolve: Program?
 			?: resolveFunctionApplyAnything
 			?: resolveAnythingDoFunction
 			?: resolveAnythingAppendAnything
+			?: resolveAnythingChangeToAnything
+			?: resolveAnythingDelete
 			?: resolveMinusNumber
 			?: resolveNumberPlusNumber
 			?: resolveNumberMinusNumber
@@ -52,6 +54,16 @@ val Sequence.resolveAnythingAppendAnything
 		matchInfix("append") { lhs, rhs ->
 			lhs.plus(rhs)
 		}
+
+val Sequence.resolveAnythingChangeToAnything
+	get() =
+		matchInfix("change", "to") { _, rhs ->
+			rhs
+		}
+
+val Sequence.resolveAnythingDelete
+	get() =
+		matchPostfix("delete") { program() }
 
 val Sequence.resolveMake
 	get() =

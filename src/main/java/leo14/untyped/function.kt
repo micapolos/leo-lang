@@ -6,8 +6,11 @@ data class Function(
 
 fun function(context: Context, program: Program) = Function(context, program)
 
-fun Function.apply(param: Program) =
+fun function(program: Program) = function(context(), program)
+
+fun Function.apply(param: Program): Program =
 	context
-		.push(param.givenRule)
 		.push(program(value(this)).thisRule)
+		.resolver(param)
 		.eval(program)
+		.program

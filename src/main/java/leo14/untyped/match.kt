@@ -32,6 +32,9 @@ fun <R> Program.matchBody(fn: (Program) -> R): R? =
 fun <R> Program.matchInfix(name: String, fn: (Program, Program) -> R) =
 	sequenceOrNull?.matchInfix(name, fn)
 
+fun <R> Program.matchInfix(name1: String, name2: String, fn: (Program, Program) -> R) =
+	sequenceOrNull?.matchInfix(name1, name2, fn)
+
 fun <R> Program.matchPrefix(name: String, fn: (Program) -> R) =
 	sequenceOrNull?.matchPrefix(name, fn)
 
@@ -52,6 +55,13 @@ fun <R> Program.matchName(name: String, fn: () -> R) =
 fun <R> Sequence.matchInfix(name: String, fn: (Program, Program) -> R) =
 	head.match(name) { rhs ->
 		fn(tail, rhs)
+	}
+
+fun <R> Sequence.matchInfix(name1: String, name2: String, fn: (Program, Program) -> R) =
+	matchInfix(name2) { lhs, rhs ->
+		lhs.matchPostfix(name1) { lhs ->
+			fn(lhs, rhs)
+		}
 	}
 
 fun <R> Sequence.matchPrefix(name: String, fn: (Program) -> R) =

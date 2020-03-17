@@ -150,7 +150,10 @@ class EvalTest {
 			"false" lineTo script(),
 			"or" lineTo script("true"),
 			"type" lineTo script(),
-			"does" lineTo script("boolean"))
+			"does" lineTo script(
+				"meta" lineTo script(
+					"change" lineTo script(),
+					"to" lineTo script("boolean"))))
 
 		rule
 			.plus(
@@ -181,6 +184,23 @@ class EvalTest {
 			.assertEvalsTo(
 				line(literal(-10)),
 				line(literal(-20)))
+	}
+
+	@Test
+	fun anythingChangeToAnything() {
+		script(
+			"foo" lineTo script(),
+			"change" lineTo script(),
+			"to" lineTo script("bar"))
+			.assertEvalsTo(script("bar"))
+	}
+
+	@Test
+	fun anythingDelete() {
+		script(
+			"minus" lineTo script(),
+			"delete" lineTo script())
+			.assertEvalsTo()
 	}
 
 	@Test
@@ -267,9 +287,12 @@ class EvalTest {
 	@Test
 	fun functionApply() {
 		script(
-			"function" lineTo script("given"),
+			"function" lineTo script("bar"),
 			"apply" lineTo script("foo"))
-			.assertEvalsTo(script("given" lineTo script("foo")))
+			.assertEvalsTo(
+				script(
+					"foo" lineTo script(),
+					"bar" lineTo script()))
 	}
 
 	@Test
