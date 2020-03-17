@@ -45,7 +45,7 @@ fun Context.compile(program: Program): Context? =
 	null
 		?: compileIs(program)
 		?: compileDoes(program)
-		?: compileAs(program)
+		?: compileSaveAs(program)
 
 fun Context.compileDoes(program: Program): Context? =
 	program.matchInfix("does") { lhs, rhs ->
@@ -57,9 +57,11 @@ fun Context.compileIs(program: Program): Context? =
 		push(Rule(Pattern(lhs), body(rhs)))
 	}
 
-fun Context.compileAs(program: Program): Context? =
+fun Context.compileSaveAs(program: Program): Context? =
 	program.matchInfix("as") { lhs, rhs ->
-		push(Rule(Pattern(rhs), body(lhs)))
+		lhs.matchPostfix("save") { lhs ->
+			push(Rule(Pattern(rhs), body(lhs)))
+		}
 	}
 
 fun Context.eval(program: Program) =

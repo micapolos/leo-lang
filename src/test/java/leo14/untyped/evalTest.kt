@@ -109,17 +109,19 @@ class EvalTest {
 	}
 
 	@Test
-	fun thisAsThat() {
+	fun saveAsThat() {
 		script(
 			line(literal(10)),
+			"save" lineTo script(),
 			"as" lineTo script("foo"))
 			.assertEvalsTo()
 	}
 
 	@Test
-	fun thisAsThatAndAccess() {
+	fun saveAsThatAndAccess() {
 		script(
 			line(literal(10)),
+			"save" lineTo script(),
 			"as" lineTo script("foo"),
 			"foo" lineTo script())
 			.assertEvalsTo(line(literal(10)))
@@ -350,59 +352,56 @@ class EvalTest {
 	@Test
 	fun switch_number() {
 		script(
-			line(literal(1)),
+			"a" lineTo script(literal(1)),
 			"switch" lineTo script(
 				"number" lineTo script(
 					"plus" lineTo script(literal(2))),
 				"text" lineTo script(
 					"plus" lineTo script(literal("world!")))))
-			.assertEvalsTo(script(literal(3)))
+			.assertEvalsTo(line(literal(3)))
 	}
 
 	@Test
 	fun switch_text() {
 		script(
-			line(literal("Hello, ")),
+			"a" lineTo script(literal("Hello, ")),
 			"switch" lineTo script(
 				"number" lineTo script(
 					"plus" lineTo script(literal(2))),
 				"text" lineTo script(
 					"plus" lineTo script(literal("world!")))))
-			.assertEvalsTo(script(literal("Hello, world!")))
+			.assertEvalsTo(line(literal("Hello, world!")))
 	}
 
 	@Test
 	fun switch_name() {
 		script(
-			"foo" lineTo script(),
+			"a" lineTo script("foo"),
 			"switch" lineTo script(
-				"number" lineTo script(
-					"plus" lineTo script(literal(2))),
-				"foo" lineTo script("bar")))
+				"foo" lineTo script("first"),
+				"bar" lineTo script("second")))
 			.assertEvalsTo(
 				"foo" lineTo script(),
-				"bar" lineTo script())
+				"first" lineTo script())
 	}
 
 	@Test
 	fun switch_nothing() {
 		script(
+			"a" lineTo script(),
 			"switch" lineTo script(
-				"number" lineTo script(
-					"plus" lineTo script(literal(2))),
-				"nothing" lineTo script("bar")))
-			.assertEvalsTo("bar" lineTo script())
+				"nothing" lineTo script("first"),
+				"bar" lineTo script("second")))
+			.assertEvalsTo("first" lineTo script())
 	}
 
 	@Test
 	fun switch_mismatch() {
 		script(
-			"foo" lineTo script(),
+			"a" lineTo script("goo"),
 			"switch" lineTo script(
-				"number" lineTo script(
-					"plus" lineTo script(literal(2))),
-				"text" lineTo script(
-					"plus" lineTo script(literal("world!")))))
+				"foo" lineTo script("first"),
+				"bar" lineTo script("second")))
 			.assertEvalsToThis
 	}
 }
