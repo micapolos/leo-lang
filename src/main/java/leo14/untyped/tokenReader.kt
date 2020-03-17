@@ -4,6 +4,7 @@ import leo.base.orIfNull
 import leo13.fold
 import leo13.reverse
 import leo14.*
+import leo14.Fragment
 import leo14.parser.coreString
 import leo14.reader.charReader
 import leo14.reader.reducer
