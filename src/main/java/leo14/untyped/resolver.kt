@@ -56,3 +56,6 @@ fun Resolver.set(program: Program): Resolver =
 val Resolver.clear
 	get() =
 		set(program())
+
+fun Context.resolver(sequence: Sequence): Resolver =
+	resolve(sequence.tail).apply(sequence.head)
