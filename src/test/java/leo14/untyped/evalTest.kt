@@ -414,4 +414,17 @@ class EvalTest {
 					"plus" lineTo script(literal(2)))))
 			.assertEvalsTo(line(literal(3)))
 	}
+
+	@Test
+	fun compile() {
+		script(
+			"x" lineTo script(),
+			"is" lineTo script(literal(1)),
+			"quote" lineTo script(
+				"x" lineTo script(),
+				"is" lineTo script(literal(2))),
+			"compile" lineTo script(),
+			"x" lineTo script())
+			.assertEvalsTo(line(literal(1)))
+	}
 }

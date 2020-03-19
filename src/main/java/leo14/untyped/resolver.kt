@@ -56,10 +56,9 @@ fun Context.resolveSwitch(program: Program): Resolver? =
 	}
 
 fun Context.resolveCompile(program: Program): Resolver? =
-	null
-//	program.matchPostfix("compile") { lhs ->
-//		resolver().tokenReader().append(lhs).resolver
-//	}
+	program.matchPostfix("compile") { lhs ->
+		resolver(lhs.eval)
+	}
 
 fun Resolver.set(program: Program): Resolver =
 	copy(program = program)

@@ -12,3 +12,10 @@ val Script.eval
 			.evaluator
 			.program
 			.script
+
+val Program.eval
+	get() =
+		emptyTokenizer
+			.fold(script.tokenStack.reverse) { write(it)!! }
+			.evaluator
+			.program
