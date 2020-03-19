@@ -23,7 +23,6 @@ val Value.scriptLine
 			is LiteralValue -> literal.scriptLine
 			is FieldValue -> field.scriptLine
 			is FunctionValue -> function.scriptLine
-			is AnyValue -> "native" lineTo script(any.toString())
 		}
 
 val Literal.scriptLine

@@ -19,6 +19,7 @@ data class FragmentParent(
 val emptyFragment = Fragment(null, script())
 fun Fragment.parent(begin: Begin) = FragmentParent(this, begin)
 val FragmentParent.childFragment get() = Fragment(this, script())
+fun FragmentParent?.fragment(script: Script) = Fragment(this, script)
 fun Fragment.updateScript(fn: Script.() -> Script) = copy(script = script.fn())
 
 fun Fragment.plus(literal: Literal) = updateScript { plus(line(literal)) }

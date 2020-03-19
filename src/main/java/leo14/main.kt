@@ -13,8 +13,8 @@ import leo14.typed.compiler.js.stdScript
 import leo14.typed.compiler.memory
 import leo14.typed.compiler.parse
 import leo14.typed.compiler.preludeMemory
+import leo14.untyped.emptyTokenizer
 import leo14.untyped.stringCharReducer
-import leo14.untyped.tokenReader
 import java.io.InputStreamReader
 
 val errorTriggerCount = 7
@@ -24,7 +24,7 @@ val untyped = true
 
 fun main() {
 	if (untyped)
-		run(tokenReader().stringCharReducer)
+		run(emptyTokenizer.stringCharReducer)
 	else
 		run(emptyContext.compiler(memory).runIf(prelude) { parse(stdScript) }.tokenReader.charReader)
 }

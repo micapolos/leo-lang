@@ -36,11 +36,13 @@ data class FunctionValue(val function: Function) : Value() {
 	override fun toString() = scriptLine.toString()
 }
 
-data class AnyValue(val any: Any) : Value()
-
 data class Field(val name: String, val rhs: Program) {
 	override fun toString() = scriptField.toString()
 }
+
+sealed class Atom
+data class LiteralAtom(val literal: Literal) : Atom()
+data class FunctionAtom(val function: Function) : Atom()
 
 fun program(): Program = EmptyProgram
 fun program(sequence: Sequence): Program = SequenceProgram(sequence)

@@ -153,7 +153,7 @@ class EvalTest {
 			"or" lineTo script("true"),
 			"type" lineTo script(),
 			"does" lineTo script(
-				"meta" lineTo script(
+				"quote" lineTo script(
 					"change" lineTo script(
 						"to" lineTo script("boolean")))))
 
@@ -272,8 +272,9 @@ class EvalTest {
 			"foo" lineTo script(),
 			"is" lineTo script("bar"),
 			"function" lineTo script(
-				"zoo" lineTo script(),
-				"meta" lineTo script("is" lineTo script("zar")),
+				"quote" lineTo script(
+					"zoo" lineTo script(),
+					"is" lineTo script("zar")),
 				"append" lineTo script("foo")))
 			.assertEvalsTo(
 				"function" lineTo script(
@@ -295,43 +296,6 @@ class EvalTest {
 				script(
 					"foo" lineTo script(),
 					"bar" lineTo script()))
-	}
-
-	@Test
-	fun meta() {
-		script(
-			line(literal(10)),
-			"meta" lineTo script(
-				"plus" lineTo script(literal(20))))
-			.assertEvalsTo(
-				script(
-					line(literal(10)),
-					"plus" lineTo script(literal(20))))
-	}
-
-	@Test
-	fun metaGives() {
-		script(
-			"foo" lineTo script(),
-			"meta" lineTo script(
-				"gives" lineTo script("bar")))
-			.assertEvalsTo(
-				"foo" lineTo script(),
-				"gives" lineTo script("bar"))
-	}
-
-	@Test
-	fun metaMeta() {
-		script(
-			line(literal(10)),
-			"meta" lineTo script(
-				"meta" lineTo script(
-					"plus" lineTo script(literal(20)))))
-			.assertEvalsTo(
-				script(
-					line(literal(10)),
-					"meta" lineTo script(
-						"plus" lineTo script(literal(20)))))
 	}
 
 	@Test
@@ -428,5 +392,26 @@ class EvalTest {
 				"foo" lineTo script("first"),
 				"bar" lineTo script("second")))
 			.assertEvalsToThis
+	}
+
+	@Test
+	fun quote() {
+		script(
+			"quote" lineTo script(
+				line(literal(1)),
+				"plus" lineTo script(literal(2))))
+			.assertEvalsTo(
+				line(literal(1)),
+				"plus" lineTo script(literal(2)))
+	}
+
+	@Test
+	fun quoteUnquote() {
+		script(
+			"quote" lineTo script(
+				"unquote" lineTo script(
+					line(literal(1)),
+					"plus" lineTo script(literal(2)))))
+			.assertEvalsTo(line(literal(3)))
 	}
 }

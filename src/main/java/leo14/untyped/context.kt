@@ -1,6 +1,9 @@
 package leo14.untyped
 
 import leo.base.fold
+import leo13.fold
+import leo13.reverse
+import leo14.tokenStack
 
 sealed class Context
 object EmptyContext : Context()
@@ -62,5 +65,9 @@ fun Context.compileSaveAs(program: Program): Context? =
 		push(Rule(Pattern(rhs), body(lhs)))
 	}
 
-fun Context.eval(program: Program) =
-	resolver().tokenReader().append(program).resolver.program
+fun Context.eval(program: Program): Program =
+	(null as TokenizerParent?)
+		.tokenizer(environment.evaluator(program()))
+		.fold(program.script.tokenStack.reverse) { write(it)!! }
+		.evaluator
+		.program
