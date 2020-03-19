@@ -1,6 +1,7 @@
 package leo14.untyped
 
 import leo.base.assertEqualTo
+import leo14.script
 import kotlin.test.Test
 
 class ContextTest {
@@ -28,7 +29,7 @@ class ContextTest {
 	fun apply_function() {
 		context
 			.apply(program("function" valueTo program("foo")))
-			.assertEqualTo(program(value(function(context, program("foo")))))
+			.assertEqualTo(program(value(function(context, script("foo")))))
 	}
 
 	@Test
@@ -66,6 +67,6 @@ class ContextTest {
 				context.push(
 					rule(
 						pattern(program("foo")),
-						body(function(context, program("bar"))))))
+						body(function(context, script("bar"))))))
 	}
 }

@@ -1,7 +1,9 @@
 package leo14.untyped
 
 import leo.base.assertEqualTo
+import leo14.lineTo
 import leo14.literal
+import leo14.script
 import kotlin.test.Test
 
 class RuleTest {
@@ -18,7 +20,7 @@ class RuleTest {
 	fun resolve_matchFunction() {
 		rule(
 			pattern(program("number" valueTo program())),
-			body(function(program("plus" valueTo program(literal(1))))))
+			body(function(script("plus" lineTo script(literal(1))))))
 			.apply(program(value(literal(10))))
 			.assertEqualTo(program(literal(11)))
 	}

@@ -1,6 +1,8 @@
 package leo14.untyped
 
 import leo.base.assertEqualTo
+import leo14.lineTo
+import leo14.script
 import kotlin.test.Test
 
 class FunctionTest {
@@ -8,7 +10,7 @@ class FunctionTest {
 	fun applyAppends() {
 		function(
 			context(),
-			program("bar" valueTo program()))
+			script("bar" lineTo script()))
 			.apply(program("foo" valueTo program()))
 			.assertEqualTo(
 				program(
@@ -28,7 +30,7 @@ class FunctionTest {
 					body(
 						program(
 							"zoo" valueTo program())))),
-			program("bar" valueTo program()))
+			script("bar" lineTo script()))
 			.apply(program("foo" valueTo program()))
 			.assertEqualTo(program("zoo"))
 	}

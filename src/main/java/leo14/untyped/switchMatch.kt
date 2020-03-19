@@ -1,12 +1,13 @@
 package leo14.untyped
 
-import leo.base.notNullIf
+import leo.base.ifOrNull
+import leo14.Script
 
 data class SwitchMatch(
 	val param: Program,
-	val body: Program)
+	val body: Script)
 
-fun switchMatch(param: Program, body: Program) =
+fun switchMatch(param: Program, body: Script) =
 	SwitchMatch(param, body)
 
 val Program.resolveSwitchMatch
@@ -19,15 +20,15 @@ val Program.resolveSwitchMatch
 			}
 		}
 
-tailrec fun Program.casesSwitchBody(cases: Program): Program? =
+tailrec fun Program.casesSwitchBody(cases: Program): Script? =
 	when (cases) {
 		EmptyProgram -> null
 		is SequenceProgram -> caseSwitchBody(cases.sequence.head) ?: casesSwitchBody(cases.sequence.tail)
 	}
 
-fun Program.caseSwitchBody(value: Value) =
+fun Program.caseSwitchBody(value: Value): Script? =
 	value.fieldOrNull?.let { field ->
-		notNullIf(matches(field.name)) {
-			field.rhs
+		ifOrNull(matches(field.name)) {
+			field.rhs.scriptOrNull
 		}
 	}

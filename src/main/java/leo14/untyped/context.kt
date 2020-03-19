@@ -36,7 +36,9 @@ fun Context.applyStatic(program: Program): Program? =
 
 fun Context.applyFunction(program: Program): Program? =
 	program.matchPrefix("function") { body ->
-		program(value(function(this, body)))
+		body.scriptOrNull?.let { body ->
+			program(value(function(this, body)))
+		}
 	}
 
 fun Context.applyEval(program: Program): Program? =
@@ -52,7 +54,9 @@ fun Context.compile(program: Program): Context? =
 
 fun Context.compileDoes(program: Program): Context? =
 	program.matchInfix("does") { lhs, rhs ->
-		push(Rule(Pattern(lhs), body(function(this, rhs))))
+		rhs.scriptOrNull?.let { rhs ->
+			push(Rule(Pattern(lhs), body(function(this, rhs))))
+		}
 	}
 
 fun Context.compileIs(program: Program): Context? =

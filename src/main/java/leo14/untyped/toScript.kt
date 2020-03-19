@@ -39,13 +39,13 @@ val Field.scriptField
 
 val Function.bodyScript
 	get() =
-		context.functionScript.plus(program.script)
+		context.functionScript.plus(script)
 
 val Function.scriptLine
 	get() =
 		"function" lineTo script(
 			"context" lineTo context.functionScript,
-			"body" lineTo program.script)
+			"body" lineTo script)
 
 val Context.functionScript: Script
 	get() =

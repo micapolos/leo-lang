@@ -7,11 +7,14 @@ import leo14.tokenStack
 
 val Script.eval
 	get() =
+		evalProgram.script
+
+val Script.evalProgram
+	get() =
 		emptyTokenizer
 			.fold(tokenStack.reverse) { write(it)!! }
 			.evaluator
 			.program
-			.script
 
 val Program.eval
 	get() =
