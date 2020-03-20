@@ -168,6 +168,30 @@ class EvalTest {
 	}
 
 	@Test
+	fun thisGivesThatRecursiveAndAccess() {
+		script(
+			"number" lineTo script(),
+			"factorial" lineTo script(),
+			"gives" lineTo script(
+				"if" lineTo script(
+					"given" lineTo script(),
+					"number" lineTo script(),
+					"equals" lineTo script(literal(1))),
+				"then" lineTo script(literal(1)),
+				"else" lineTo script(
+					"given" lineTo script(),
+					"number" lineTo script(),
+					"times" lineTo script(
+						"given" lineTo script(),
+						"number" lineTo script(),
+						"minus" lineTo script(literal(1)),
+						"do" lineTo script("this")))),
+			line(literal(6)),
+			"factorial" lineTo script())
+			.assertEvalsTo(script(literal(720)))
+	}
+
+	@Test
 	fun pattern() {
 		val rule = script(
 			"false" lineTo script(),
