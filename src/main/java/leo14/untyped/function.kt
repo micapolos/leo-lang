@@ -13,14 +13,18 @@ fun function(context: Context, script: Script) = Function(context, script)
 
 fun function(script: Script) = function(context(), script)
 
-fun Function.apply(param: Program): Program =
-	context
-		.push(program(value(this)).thisRule)
-		.push(rule(pattern(program("given")), body(program("given" valueTo param))))
-		.resolver()
-		.reader
-		.fold(script.tokenStack.reverse) { write(it)!! }
-		.run { this as UnquotedReader }
-		.unquoted
-		.resolver
-		.program
+fun Function.apply(given: Program): Program =
+	try {
+		context
+			.push(thisRule)
+			.push(given.givenRule)
+			.resolver()
+			.reader
+			.fold(script.tokenStack.reverse) { write(it)!! }
+			.run { this as UnquotedReader }
+			.unquoted
+			.resolver
+			.program
+	} catch (stackOverflowError: StackOverflowError) {
+		stackOverflowErrorProgram
+	}

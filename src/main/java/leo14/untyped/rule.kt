@@ -15,7 +15,12 @@ fun Rule.apply(program: Program): Program? =
 			else null
 	}
 
-
-val Program.thisRule
+val Function.thisRule
 	get() =
-		thisPattern ruleTo body(this)
+		thisPattern ruleTo body(program(value(this)))
+
+val Program.givenRule
+	get() =
+		rule(
+			pattern(program("given")),
+			body(program("given" valueTo this)))
