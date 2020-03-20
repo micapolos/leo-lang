@@ -339,61 +339,61 @@ class EvalTest {
 			.assertEvalsToThis
 	}
 
-	@Test
-	fun switch_number() {
-		script(
-			"a" lineTo script(literal(1)),
-			"switch" lineTo script(
-				"number" lineTo script(
-					"plus" lineTo script(literal(2))),
-				"text" lineTo script(
-					"plus" lineTo script(literal("world!")))))
-			.assertEvalsTo(line(literal(3)))
-	}
-
-	@Test
-	fun switch_text() {
-		script(
-			"a" lineTo script(literal("Hello, ")),
-			"switch" lineTo script(
-				"number" lineTo script(
-					"plus" lineTo script(literal(2))),
-				"text" lineTo script(
-					"plus" lineTo script(literal("world!")))))
-			.assertEvalsTo(line(literal("Hello, world!")))
-	}
-
-	@Test
-	fun switch_name() {
-		script(
-			"a" lineTo script("foo"),
-			"switch" lineTo script(
-				"foo" lineTo script("first"),
-				"bar" lineTo script("second")))
-			.assertEvalsTo(
-				"foo" lineTo script(),
-				"first" lineTo script())
-	}
-
-	@Test
-	fun switch_nothing() {
-		script(
-			"a" lineTo script(),
-			"switch" lineTo script(
-				"nothing" lineTo script("first"),
-				"bar" lineTo script("second")))
-			.assertEvalsTo("first" lineTo script())
-	}
-
-	@Test
-	fun switch_mismatch() {
-		script(
-			"a" lineTo script("goo"),
-			"switch" lineTo script(
-				"foo" lineTo script("first"),
-				"bar" lineTo script("second")))
-			.assertEvalsToThis
-	}
+//	@Test
+//	fun switch_number() {
+//		script(
+//			"a" lineTo script(literal(1)),
+//			"switch" lineTo script(
+//				"number" lineTo script(
+//					"plus" lineTo script(literal(2))),
+//				"text" lineTo script(
+//					"plus" lineTo script(literal("world!")))))
+//			.assertEvalsTo(line(literal(3)))
+//	}
+//
+//	@Test
+//	fun switch_text() {
+//		script(
+//			"a" lineTo script(literal("Hello, ")),
+//			"switch" lineTo script(
+//				"number" lineTo script(
+//					"plus" lineTo script(literal(2))),
+//				"text" lineTo script(
+//					"plus" lineTo script(literal("world!")))))
+//			.assertEvalsTo(line(literal("Hello, world!")))
+//	}
+//
+//	@Test
+//	fun switch_name() {
+//		script(
+//			"a" lineTo script("foo"),
+//			"switch" lineTo script(
+//				"foo" lineTo script("first"),
+//				"bar" lineTo script("second")))
+//			.assertEvalsTo(
+//				"foo" lineTo script(),
+//				"first" lineTo script())
+//	}
+//
+//	@Test
+//	fun switch_nothing() {
+//		script(
+//			"a" lineTo script(),
+//			"switch" lineTo script(
+//				"nothing" lineTo script("first"),
+//				"bar" lineTo script("second")))
+//			.assertEvalsTo("first" lineTo script())
+//	}
+//
+//	@Test
+//	fun switch_mismatch() {
+//		script(
+//			"a" lineTo script("goo"),
+//			"switch" lineTo script(
+//				"foo" lineTo script("first"),
+//				"bar" lineTo script("second")))
+//			.assertEvalsToThis
+//	}
 
 	@Test
 	fun quote() {

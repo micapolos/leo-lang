@@ -33,16 +33,6 @@ class ContextTest {
 	}
 
 	@Test
-	fun apply_eval() {
-		context
-			.apply(
-				program(
-					"x" valueTo program(),
-					"eval" valueTo program()))
-			.assertEqualTo(context.eval(program("x")))
-	}
-
-	@Test
 	fun compile_is() {
 		context
 			.compile(

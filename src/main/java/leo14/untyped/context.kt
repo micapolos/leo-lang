@@ -1,9 +1,6 @@
 package leo14.untyped
 
 import leo.base.fold
-import leo13.fold
-import leo13.reverse
-import leo14.tokenStack
 
 sealed class Context
 object EmptyContext : Context()
@@ -32,18 +29,12 @@ fun Context.applyRules(program: Program): Program? =
 fun Context.applyStatic(program: Program): Program? =
 	null
 		?: applyFunction(program)
-		?: applyEval(program)
 
 fun Context.applyFunction(program: Program): Program? =
 	program.matchPrefix("function") { body ->
 		body.scriptOrNull?.let { body ->
 			program(value(function(this, body)))
 		}
-	}
-
-fun Context.applyEval(program: Program): Program? =
-	program.matchPostfix("eval") { lhs ->
-		eval(lhs)
 	}
 
 fun Context.compile(program: Program): Context? =
@@ -68,10 +59,3 @@ fun Context.compileSaveAs(program: Program): Context? =
 	program.matchInfix("save", "as") { lhs, rhs ->
 		push(Rule(Pattern(rhs), body(lhs)))
 	}
-
-fun Context.eval(program: Program): Program =
-	(null as TokenizerParent?)
-		.tokenizer(environment.evaluator(program()))
-		.fold(program.script.tokenStack.reverse) { write(it)!! }
-		.evaluator
-		.program

@@ -1,10 +1,6 @@
 package leo14.untyped
 
-import leo.base.nullOf
-import leo13.fold
-import leo13.reverse
 import leo14.Script
-import leo14.tokenStack
 
 data class Resolver(
 	val context: Context,
@@ -15,14 +11,6 @@ fun Context.resolver(program: Program = program()) =
 
 fun resolver(program: Program = program()) =
 	context().resolver(program)
-
-fun Resolver.eval(script: Script) =
-	context.resolver(
-		nullOf<TokenizerParent>()
-			.tokenizer(evaluator)
-			.fold(script.tokenStack.reverse) { write(it)!! }
-			.evaluator
-			.program)
 
 fun Resolver.apply(value: Value): Resolver =
 	context.resolve(this.program.plus(value))
@@ -52,9 +40,10 @@ fun Context.resolveDefinitions(program: Program): Resolver? =
 	compile(program)?.resolver()
 
 fun Context.resolveSwitch(program: Program): Resolver? =
-	program.resolveSwitchMatch?.let { switchMatch ->
-		resolver(switchMatch.param).eval(switchMatch.body)
-	}
+	null
+//	program.resolveSwitchMatch?.let { switchMatch ->
+//		resolver(switchMatch.param).eval(switchMatch.body)
+//	}
 
 fun Context.resolveCompile(program: Program): Resolver? =
 	program.matchPostfix("compile") { lhs ->

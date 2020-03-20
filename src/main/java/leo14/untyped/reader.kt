@@ -36,6 +36,10 @@ val emptyReader: Reader
 	get() =
 		UnquotedReader(Unquoted(null, resolver(program())))
 
+val Resolver.reader: Reader
+	get() =
+		UnquotedReader(Unquoted(null, this))
+
 fun Reader.write(token: Token): Reader? =
 	when (this) {
 		is QuotedReader -> quoted.write(token)
