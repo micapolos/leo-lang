@@ -70,3 +70,11 @@ val Resolver.clear
 
 fun Context.resolver(sequence: Sequence): Resolver =
 	resolver(sequence.tail).apply(sequence.head)
+
+fun Resolver.function(script: Script): Resolver =
+	apply(value(function(context, script)))
+
+fun Resolver.does(script: Script): Resolver =
+	context
+		.push(rule(pattern(program), body(function(context, script))))
+		.resolver(program())

@@ -5,20 +5,19 @@ import leo13.reverse
 import leo14.Script
 import leo14.tokenStack
 
-val Script.eval
+val Script.eval: Script
 	get() =
 		evalProgram.script
 
-val Script.evalProgram
+val Script.evalProgram: Program
 	get() =
-		emptyTokenizer
+		emptyReader
 			.fold(tokenStack.reverse) { write(it)!! }
-			.evaluator
+			.run { this as UnquotedReader }
+			.unquoted
+			.resolver
 			.program
 
-val Program.eval
+val Program.eval: Program
 	get() =
-		emptyTokenizer
-			.fold(script.tokenStack.reverse) { write(it)!! }
-			.evaluator
-			.program
+		script.evalProgram

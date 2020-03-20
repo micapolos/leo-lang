@@ -29,13 +29,18 @@ data class Code(val opOrNull: CodeOp?, val script: Script)
 
 sealed class CodeOp
 data class CodeAppendCodeOp(val code: Code, val begin: Begin) : CodeOp()
-data class UnquotedApplyCodeOp(val unquoted: Unquoted, val begin: Begin) : CodeOp()
+data class UnquotedFunctionCodeOp(val unquoted: Unquoted) : CodeOp()
+data class UnquotedDoesCodeOp(val unquoted: Unquoted) : CodeOp()
+
+val emptyReader: Reader
+	get() =
+		UnquotedReader(Unquoted(null, resolver(program())))
 
 fun Reader.write(token: Token): Reader? =
 	when (this) {
-		is QuotedReader -> write(token)
-		is UnquotedReader -> write(token)
-		is CodeReader -> write(token)
+		is QuotedReader -> quoted.write(token)
+		is UnquotedReader -> unquoted.write(token)
+		is CodeReader -> code.write(token)
 	}
 
 fun Quoted.write(token: Token): Reader? =
@@ -100,16 +105,21 @@ fun Unquoted.write(begin: Begin): Reader =
 					resolver.context,
 					1,
 					program()))
-		"function", "does" ->
+		"function" ->
 			CodeReader(
 				Code(
-					UnquotedApplyCodeOp(this, begin),
+					UnquotedFunctionCodeOp(this),
+					script()))
+		"does" ->
+			CodeReader(
+				Code(
+					UnquotedDoesCodeOp(this),
 					script()))
 		else ->
 			UnquotedReader(
 				Unquoted(
 					UnquotedResolveUnquotedOp(this, begin),
-					resolver))
+					resolver.context.resolver(program())))
 	}
 
 fun Code.write(begin: Begin): Reader =
@@ -126,7 +136,7 @@ fun QuotedOp.write(program: Program): Reader? =
 		is QuotedAppendQuotedOp ->
 			QuotedReader(
 				quoted.copy(
-					program = program.plus(begin.string valueTo program)))
+					program = quoted.program.plus(begin.string valueTo program)))
 		is UnquotedPlusQuotedOp ->
 			UnquotedReader(
 				unquoted.copy(
@@ -157,10 +167,14 @@ fun CodeOp.write(script: Script): Reader? =
 			CodeReader(
 				code.copy(
 					script = code.script.plus(begin.string lineTo script)))
-		is UnquotedApplyCodeOp ->
+		is UnquotedFunctionCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.apply(begin.string valueTo script.program)))
+					resolver = unquoted.resolver.function(script)))
+		is UnquotedDoesCodeOp ->
+			UnquotedReader(
+				unquoted.copy(
+					resolver = unquoted.resolver.does(script)))
 	}
 
 fun Quoted.write(literal: Literal): Reader? =

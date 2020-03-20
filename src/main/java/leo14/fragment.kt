@@ -21,6 +21,7 @@ fun Fragment.parent(begin: Begin) = FragmentParent(this, begin)
 val FragmentParent.childFragment get() = Fragment(this, script())
 fun FragmentParent?.fragment(script: Script) = Fragment(this, script)
 fun Fragment.updateScript(fn: Script.() -> Script) = copy(script = script.fn())
+val Script.fragment get() = Fragment(null, this)
 
 fun Fragment.plus(literal: Literal) = updateScript { plus(line(literal)) }
 fun Fragment.plus(begin: Begin) = parent(begin).childFragment

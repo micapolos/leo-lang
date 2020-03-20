@@ -1,6 +1,7 @@
 package leo14.untyped
 
 import leo14.*
+import java.io.OutputStream
 import kotlin.test.Test
 
 class EvalTest {
@@ -153,9 +154,8 @@ class EvalTest {
 			"or" lineTo script("true"),
 			"type" lineTo script(),
 			"does" lineTo script(
-				"quote" lineTo script(
-					"change" lineTo script(
-						"to" lineTo script("boolean")))))
+				"change" lineTo script(
+					"to" lineTo script("boolean"))))
 
 		rule
 			.plus(
@@ -272,10 +272,10 @@ class EvalTest {
 			"foo" lineTo script(),
 			"is" lineTo script("bar"),
 			"function" lineTo script(
-				"quote" lineTo script(
-					"zoo" lineTo script(),
-					"is" lineTo script("zar")),
-				"append" lineTo script("foo")))
+				"zoo" lineTo script(),
+				"is" lineTo script("zar"),
+				"append" lineTo script("foo"),
+				"append" lineTo script("zoo")))
 			.assertEvalsTo(
 				"function" lineTo script(
 					"context" lineTo script(
@@ -284,7 +284,8 @@ class EvalTest {
 					"body" lineTo script(
 						"zoo" lineTo script(),
 						"is" lineTo script("zar"),
-						"bar" lineTo script())))
+						"append" lineTo script("foo"),
+						"append" lineTo script("zoo"))))
 	}
 
 	@Test
@@ -426,5 +427,22 @@ class EvalTest {
 			"compile" lineTo script(),
 			"x" lineTo script())
 			.assertEvalsTo(line(literal(1)))
+	}
+
+	@Test
+	fun javaClass() {
+		script(
+			line(literal("java.io.OutputStream")),
+			"java" lineTo script("class"))
+			.assertEvalsTo("java" lineTo script(literal(OutputStream::class.java.toString())))
+	}
+
+	@Test
+	fun anyInvoke() {
+		script(
+			line(literal("java.lang.StringBuilder")),
+			"java" lineTo script("class"),
+			"invoke" lineTo script(literal("newInstance")))
+			.assertEvalsTo("java" lineTo script(literal(StringBuilder().toString())))
 	}
 }

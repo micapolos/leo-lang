@@ -16,3 +16,16 @@ val Tokenizer.stringCharReducer: Reducer<String, Char>
 		reducer.charReader().reducer.mapState {
 			tokenReducer.state.fragment.indentString + tokenParser.coreString
 		}
+
+val Reader.reducer: Reducer<Reader, Token>
+	get() =
+		reducer { token ->
+			write(token)!!.reducer
+		}
+
+val Reader.stringCharReducer: Reducer<String, Char>
+	get() =
+		reducer.charReader().reducer.mapState {
+			tokenReducer.state.fragment.indentString + tokenParser.coreString
+		}
+

@@ -23,6 +23,7 @@ val Value.scriptLine
 			is LiteralValue -> literal.scriptLine
 			is FieldValue -> field.scriptLine
 			is FunctionValue -> function.scriptLine
+			is AnyValue -> "java" lineTo script(literal(any.toString()))
 		}
 
 val Literal.scriptLine
@@ -92,6 +93,7 @@ val Value.scriptLineOrNull: ScriptLine?
 			is LiteralValue -> line(literal)
 			is FieldValue -> field.scriptFieldOrNull?.let { line(it) }
 			is FunctionValue -> null
+			is AnyValue -> null
 		}
 
 val Field.scriptFieldOrNull: ScriptField?
