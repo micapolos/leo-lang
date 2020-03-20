@@ -1,7 +1,5 @@
 package leo14.untyped
 
-import leo13.thisName
-
 data class Rule(val pattern: Pattern, val body: Body)
 
 infix fun Pattern.ruleTo(body: Body) = Rule(this, body)
@@ -20,4 +18,4 @@ fun Rule.apply(program: Program): Program? =
 
 val Program.thisRule
 	get() =
-		thisPattern ruleTo body(make(thisName))
+		thisPattern ruleTo body(this)
