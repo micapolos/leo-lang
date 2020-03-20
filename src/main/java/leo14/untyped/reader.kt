@@ -30,7 +30,7 @@ data class Code(val opOrNull: CodeOp?, val script: Script)
 sealed class CodeOp
 data class CodeAppendCodeOp(val code: Code, val begin: Begin) : CodeOp()
 data class UnquotedFunctionCodeOp(val unquoted: Unquoted) : CodeOp()
-data class UnquotedDoesCodeOp(val unquoted: Unquoted) : CodeOp()
+data class UnquotedGivesCodeOp(val unquoted: Unquoted) : CodeOp()
 
 val emptyReader: Reader
 	get() =
@@ -114,10 +114,10 @@ fun Unquoted.write(begin: Begin): Reader =
 				Code(
 					UnquotedFunctionCodeOp(this),
 					script()))
-		"does" ->
+		givesName ->
 			CodeReader(
 				Code(
-					UnquotedDoesCodeOp(this),
+					UnquotedGivesCodeOp(this),
 					script()))
 		else ->
 			UnquotedReader(
@@ -175,7 +175,7 @@ fun CodeOp.write(script: Script): Reader? =
 			UnquotedReader(
 				unquoted.copy(
 					resolver = unquoted.resolver.function(script)))
-		is UnquotedDoesCodeOp ->
+		is UnquotedGivesCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
 					resolver = unquoted.resolver.does(script)))

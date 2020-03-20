@@ -11,7 +11,7 @@ fun Script.assertEvalsTo(script: Script) =
 fun Script.assertEvalsTo(vararg lines: ScriptLine) =
 	assertEvalsTo(script(*lines))
 
-fun Script.assertEvalsDoes(fn: Script.() -> Script) =
+fun Script.assertEvalsGives(fn: Script.() -> Script) =
 	eval.assertEqualTo(fn())
 
 val Script.assertEvalsToThis

@@ -77,6 +77,26 @@ class EvalTest {
 	}
 
 	@Test
+	fun get() {
+		val point = script(
+			"point" lineTo script(
+				"x" lineTo script(literal(10)),
+				"y" lineTo script(literal(20))))
+
+		point
+			.plus("get" lineTo script("x" lineTo script()))
+			.assertEvalsTo("x" lineTo script(literal(10)))
+
+		point
+			.plus("get" lineTo script("y" lineTo script()))
+			.assertEvalsTo("y" lineTo script(literal(20)))
+
+		point
+			.plus("get" lineTo script("z" lineTo script()))
+			.assertEvalsToThis
+	}
+
+	@Test
 	fun accessNumber() {
 		script(
 			"x" lineTo script(literal(10)),
@@ -129,19 +149,19 @@ class EvalTest {
 	}
 
 	@Test
-	fun thisDoesThat() {
+	fun thisGivesThat() {
 		script(
 			"number" lineTo script(),
-			"does" lineTo script(
+			"gives" lineTo script(
 				"plus" lineTo script(literal(1))))
 			.assertEvalsTo()
 	}
 
 	@Test
-	fun thisDoesThatAndAccess() {
+	fun thisGivesThatAndAccess() {
 		script(
 			"number" lineTo script(),
-			"does" lineTo script(
+			"gives" lineTo script(
 				"given" lineTo script()),
 			line(literal(10)))
 			.assertEvalsTo(script("given" lineTo script(literal(10))))
@@ -153,7 +173,7 @@ class EvalTest {
 			"false" lineTo script(),
 			"or" lineTo script("true"),
 			"type" lineTo script(),
-			"does" lineTo script(
+			"gives" lineTo script(
 				"change" lineTo script(
 					"to" lineTo script("boolean"))))
 

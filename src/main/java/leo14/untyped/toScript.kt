@@ -66,8 +66,8 @@ val Pattern.ruleScript
 val Body.ruleScriptLine
 	get() =
 		when (this) {
-			is ProgramBody -> "is" lineTo program.script
-			is FunctionBody -> "does" lineTo function.bodyScript
+			is ProgramBody -> isName lineTo program.script
+			is FunctionBody -> givesName lineTo function.bodyScript
 		}
 
 // === scriptOrNull

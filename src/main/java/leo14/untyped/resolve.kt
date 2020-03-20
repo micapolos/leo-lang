@@ -28,6 +28,7 @@ val Sequence.resolve: Program?
 			?: resolveContents
 			?: resolveMake
 			?: resolveAccess
+			?: resolveGet
 			?: resolveLeonardo
 			?: resolveAnythingEqualsAnything
 			?: resolveIfThenElse
@@ -50,6 +51,14 @@ val Sequence.resolveAccess: Program?
 	get() =
 		head.matchName { name ->
 			tail.get(name)
+		}
+
+val Sequence.resolveGet: Program?
+	get() =
+		matchInfix("get") { lhs, rhs ->
+			rhs.matchName { name ->
+				lhs.get(name)
+			}
 		}
 
 val Sequence.resolveAnythingAppendAnything
