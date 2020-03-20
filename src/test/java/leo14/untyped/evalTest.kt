@@ -420,13 +420,18 @@ class EvalTest {
 	fun compile() {
 		script(
 			"x" lineTo script(),
-			"is" lineTo script(literal(1)),
-			"quote" lineTo script(
-				"x" lineTo script(),
-				"is" lineTo script(literal(2))),
-			"compile" lineTo script(),
-			"x" lineTo script())
-			.assertEvalsTo(line(literal(1)))
+			"is" lineTo script(literal(5)),
+			"compile" lineTo script(
+				"quote" lineTo script(
+					"y" lineTo script(),
+					"is" lineTo script(
+						"x" lineTo script(),
+						"minus" lineTo script(literal(3))))),
+			"x" lineTo script("x"),
+			"y" lineTo script("y"))
+			.assertEvalsTo(
+				"x" lineTo script(literal(5)),
+				"y" lineTo script(literal(2)))
 	}
 
 	@Test

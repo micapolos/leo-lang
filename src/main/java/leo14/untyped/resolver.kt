@@ -1,6 +1,9 @@
 package leo14.untyped
 
+import leo13.fold
+import leo13.reverse
 import leo14.Script
+import leo14.tokenStack
 
 data class Resolver(
 	val context: Context,
@@ -46,8 +49,10 @@ fun Context.resolveSwitch(program: Program): Resolver? =
 //	}
 
 fun Context.resolveCompile(program: Program): Resolver? =
-	program.matchPostfix("compile") { lhs ->
-		resolver(lhs.eval)
+	program.matchInfix("compile") { lhs, rhs ->
+		rhs.scriptOrNull?.let { code ->
+			resolver(lhs).compile(code)
+		}
 	}
 
 fun Resolver.set(program: Program): Resolver =
@@ -67,3 +72,10 @@ fun Resolver.does(script: Script): Resolver =
 	context
 		.push(rule(pattern(program), body(function(context, script))))
 		.resolver(program())
+
+fun Resolver.compile(script: Script): Resolver =
+	reader
+		.fold(script.tokenStack.reverse) { write(it)!! }
+		.run { this as UnquotedReader }
+		.unquoted
+		.resolver
