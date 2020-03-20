@@ -142,9 +142,9 @@ class EvalTest {
 		script(
 			"number" lineTo script(),
 			"does" lineTo script(
-				"plus" lineTo script(literal(1))),
+				"given" lineTo script()),
 			line(literal(10)))
-			.assertEvalsTo(script(literal(11)))
+			.assertEvalsTo(script("given" lineTo script(literal(10))))
 	}
 
 	@Test
@@ -291,12 +291,12 @@ class EvalTest {
 	@Test
 	fun functionApply() {
 		script(
-			"function" lineTo script("bar"),
+			"function" lineTo script("given"),
 			"apply" lineTo script("foo"))
 			.assertEvalsTo(
 				script(
-					"foo" lineTo script(),
-					"bar" lineTo script()))
+					"given" lineTo script(
+						"foo" lineTo script())))
 	}
 
 	@Test

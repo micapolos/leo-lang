@@ -20,9 +20,9 @@ class RuleTest {
 	fun resolve_matchFunction() {
 		rule(
 			pattern(program("number" valueTo program())),
-			body(function(script("plus" lineTo script(literal(1))))))
+			body(function(script("given" lineTo script()))))
 			.apply(program(value(literal(10))))
-			.assertEqualTo(program(literal(11)))
+			.assertEqualTo(program("given" valueTo program(literal(10))))
 	}
 
 	@Test

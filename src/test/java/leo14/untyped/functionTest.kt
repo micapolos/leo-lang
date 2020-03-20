@@ -10,12 +10,12 @@ class FunctionTest {
 	fun applyAppends() {
 		function(
 			context(),
-			script("bar" lineTo script()))
+			script("given" lineTo script()))
 			.apply(program("foo" valueTo program()))
 			.assertEqualTo(
 				program(
-					"foo" valueTo program(),
-					"bar" valueTo program()))
+					"given" valueTo program(
+						"foo" valueTo program())))
 	}
 
 	@Test
@@ -25,13 +25,12 @@ class FunctionTest {
 				rule(
 					pattern(
 						program(
-							"foo" valueTo program(),
-							"bar" valueTo program())),
+							"foo" valueTo program())),
 					body(
 						program(
-							"zoo" valueTo program())))),
-			script("bar" lineTo script()))
-			.apply(program("foo" valueTo program()))
-			.assertEqualTo(program("zoo"))
+							"bar" valueTo program())))),
+			script("foo" lineTo script()))
+			.apply(program("goo" valueTo program()))
+			.assertEqualTo(program("bar"))
 	}
 }

@@ -16,8 +16,11 @@ class BodyTest {
 
 	@Test
 	fun apply_nonNullContext() {
-		body(function(context(), script("minus" lineTo script(literal(3)))))
+		body(
+			function(
+				context(),
+				script("given" lineTo script())))
 			.apply(program(literal(5)))
-			.assertEqualTo(program(literal(2)))
+			.assertEqualTo(program("given" valueTo program(literal(5))))
 	}
 }

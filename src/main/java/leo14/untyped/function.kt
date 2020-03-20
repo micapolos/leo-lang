@@ -16,7 +16,8 @@ fun function(script: Script) = function(context(), script)
 fun Function.apply(param: Program): Program =
 	context
 		.push(program(value(this)).thisRule)
-		.resolver(param)
+		.push(rule(pattern(program("given")), body(program("given" valueTo param))))
+		.resolver()
 		.reader
 		.fold(script.tokenStack.reverse) { write(it)!! }
 		.run { this as UnquotedReader }
