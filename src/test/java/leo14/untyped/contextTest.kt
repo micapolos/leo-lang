@@ -6,9 +6,9 @@ import kotlin.test.Test
 
 class ContextTest {
 	private val context = context(
-		pattern(program("x")) ruleTo body(program("zero")),
-		pattern(program("y")) ruleTo body(program("one")),
-		pattern(program("x")) ruleTo body(program("two")))
+		rule(pattern(program("x")), body(program("zero"))),
+		rule(pattern(program("y")), body(program("one"))),
+		rule(pattern(program("x")), body(program("two"))))
 
 	@Test
 	fun apply_rules() {
