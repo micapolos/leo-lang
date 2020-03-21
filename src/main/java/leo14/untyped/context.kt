@@ -1,18 +1,25 @@
 package leo14.untyped
 
+import leo.base.Empty
+import leo.base.empty
 import leo.base.fold
 
 sealed class Context
-object EmptyContext : Context()
-data class NonEmptyContext(val parentContext: Context, val lastRule: Rule) : Context()
+data class EmptyContext(val empty: Empty) : Context()
+data class LinkContext(val link: ContextLink) : Context()
 
-fun context() = EmptyContext as Context
+data class ContextLink(val context: Context, val rule: Rule)
+
+infix fun Context.linkTo(rule: Rule) = ContextLink(this, rule)
+
+fun context() = EmptyContext(empty) as Context
+fun context(link: ContextLink): Context = LinkContext(link)
 
 fun context(rule: Rule, vararg rules: Rule) =
 	context().push(rule).fold(rules) { push(it) }
 
 fun Context.push(rule: Rule): Context =
-	NonEmptyContext(this, rule)
+	context(this linkTo rule)
 
 fun Context.apply(program: Program): Program? =
 	null
@@ -22,9 +29,12 @@ fun Context.apply(program: Program): Program? =
 
 fun Context.applyRules(program: Program): Program? =
 	when (this) {
-		EmptyContext -> null
-		is NonEmptyContext -> lastRule.apply(parentContext, program) ?: parentContext.applyRules(program)
+		is EmptyContext -> null
+		is LinkContext -> link.applyRules(program)
 	}
+
+fun ContextLink.applyRules(program: Program): Program? =
+	rule.apply(context, program) ?: context.applyRules(program)
 
 fun Context.applyStatic(program: Program): Program? =
 	null

@@ -51,9 +51,13 @@ val Function.scriptLine
 val Context.functionScript: Script
 	get() =
 		when (this) {
-			EmptyContext -> script()
-			is NonEmptyContext -> parentContext.functionScript.plus(lastRule.contextScript)
+			is EmptyContext -> script()
+			is LinkContext -> link.functionScript
 		}
+
+val ContextLink.functionScript: Script
+	get() =
+		context.functionScript.plus(rule.contextScript)
 
 val Rule.contextScript
 	get() =
