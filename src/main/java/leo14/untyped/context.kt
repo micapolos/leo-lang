@@ -23,7 +23,7 @@ fun Context.apply(program: Program): Program? =
 fun Context.applyRules(program: Program): Program? =
 	when (this) {
 		EmptyContext -> null
-		is NonEmptyContext -> lastRule.apply(program) ?: parentContext.applyRules(program)
+		is NonEmptyContext -> lastRule.apply(parentContext, program) ?: parentContext.applyRules(program)
 	}
 
 fun Context.applyStatic(program: Program): Program? =
@@ -45,17 +45,17 @@ fun Context.compile(program: Program): Context? =
 
 fun Context.compileGives(program: Program): Context? =
 	program.matchInfix(givesName) { lhs, rhs ->
-		rhs.scriptOrNull?.let { rhs ->
-			push(Rule(Pattern(lhs), body(function(this, rhs))))
+		rhs.scriptOrNull?.let { script ->
+			push(Rule(Pattern(lhs), body(script)))
 		}
 	}
 
 fun Context.compileIs(program: Program): Context? =
 	program.matchInfix(isName) { lhs, rhs ->
-		push(Rule(Pattern(lhs), rhs.constant.body))
+		push(Rule(Pattern(lhs), body(rhs)))
 	}
 
 fun Context.compileSaveAs(program: Program): Context? =
 	program.matchInfix("save", "as") { lhs, rhs ->
-		push(Rule(Pattern(rhs), body(constant(lhs))))
+		push(Rule(Pattern(rhs), body(lhs)))
 	}

@@ -1,16 +1,16 @@
 package leo14.untyped
 
+import leo14.Script
+
 sealed class Body
-data class ConstantBody(val constant: Constant) : Body()
-data class FunctionBody(val function: Function) : Body()
+data class ProgramBody(val program: Program) : Body()
+data class ScriptBody(val script: Script) : Body()
 
-fun body(constant: Constant): Body = ConstantBody(constant)
-fun body(function: Function): Body = FunctionBody(function)
+fun body(program: Program): Body = ProgramBody(program)
+fun body(script: Script): Body = ScriptBody(script)
 
-val Constant.body: Body get() = ConstantBody(this)
-
-fun Body.apply(program: Program) =
+fun Body.apply(context: Context, given: Program) =
 	when (this) {
-		is ConstantBody -> constant.program
-		is FunctionBody -> function.apply(program)
+		is ProgramBody -> program
+		is ScriptBody -> function(context, script).apply(given)
 	}

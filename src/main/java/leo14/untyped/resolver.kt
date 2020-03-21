@@ -70,7 +70,7 @@ fun Resolver.function(script: Script): Resolver =
 
 fun Resolver.does(script: Script): Resolver =
 	context
-		.push(rule(pattern(program), body(function(context, script))))
+		.push(rule(pattern(program), body(script)))
 		.resolver(program())
 
 fun Resolver.compile(script: Script): Resolver =

@@ -11,8 +11,8 @@ class RuleTest {
 	fun resolve_matchProgram() {
 		Rule(
 			Pattern(program("foo" valueTo program())),
-			body(constant(program("bar"))))
-			.apply(program("foo"))
+			body(program("bar")))
+			.apply(context(), program("foo"))
 			.assertEqualTo(program("bar"))
 	}
 
@@ -20,8 +20,8 @@ class RuleTest {
 	fun resolve_matchFunction() {
 		rule(
 			pattern(program("number" valueTo program())),
-			body(function(script("given" lineTo script()))))
-			.apply(program(value(literal(10))))
+			body(script("given" lineTo script())))
+			.apply(context(), program(value(literal(10))))
 			.assertEqualTo(program("given" valueTo program(literal(10))))
 	}
 
@@ -29,8 +29,8 @@ class RuleTest {
 	fun resolve_mismatch() {
 		Rule(
 			Pattern(program("number" valueTo program())),
-			body(constant(program("ok"))))
-			.apply(program(value(literal("foo"))))
+			body(program("ok")))
+			.apply(context(), program(value(literal("foo"))))
 			.assertEqualTo(null)
 	}
 }

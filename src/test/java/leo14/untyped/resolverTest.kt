@@ -10,7 +10,7 @@ class ResolverTest {
 			.push(
 				rule(
 					pattern(program("foo" valueTo program(), "bar" valueTo program())),
-					body(constant(program("zoo")))))
+					body(program("zoo"))))
 			.resolver(program("foo"))
 
 		resolver
@@ -21,7 +21,7 @@ class ResolverTest {
 	@Test
 	fun apply_definitions() {
 		val resolver = context()
-			.push(rule(pattern(program("foo")), body(constant(program("bar")))))
+			.push(rule(pattern(program("foo")), body(program("bar"))))
 			.resolver(program("zoo"))
 
 		resolver
@@ -30,13 +30,13 @@ class ResolverTest {
 				resolver.context.push(
 					rule(
 						pattern(program("zoo")),
-						body(constant(program("zar"))))).resolver())
+						body(program("zar")))).resolver())
 	}
 
 	@Test
 	fun apply_raw() {
 		val resolver = context()
-			.push(rule(pattern(program("foo")), body(constant(program("bar")))))
+			.push(rule(pattern(program("foo")), body(program("bar"))))
 			.resolver(program("zoo"))
 
 		resolver
