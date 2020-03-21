@@ -1,5 +1,5 @@
 package leo14.untyped
 
-data class Recursive(val function: Function)
+data class Recursive(val context: Context)
 
-val Function.recursive get() = Recursive(this)
+fun recursive(context: Context) = Recursive(context)
