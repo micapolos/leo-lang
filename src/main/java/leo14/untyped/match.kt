@@ -5,6 +5,9 @@ import leo14.Number
 fun <R> Program.matchEmpty(fn: () -> R): R? =
 	(this as? EmptyProgram)?.let { fn() }
 
+fun <R> Program.matchNotEmpty(fn: () -> R): R? =
+	if (isEmpty) null else fn()
+
 fun <R> Program.matchSequence(fn: (Sequence) -> R): R? =
 	(this as? SequenceProgram)?.sequence?.let(fn)
 

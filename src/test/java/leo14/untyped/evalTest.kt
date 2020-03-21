@@ -70,10 +70,21 @@ class EvalTest {
 		point
 			.plus("y" lineTo script())
 			.assertEvalsTo("y" lineTo script(literal(20)))
+	}
 
-		point
-			.plus("z" lineTo script())
-			.assertEvalsToThis
+	@Test
+	fun autoMake() {
+		script(
+			"x" lineTo script(literal(10)),
+			"y" lineTo script(literal(20)),
+			"point" lineTo script())
+			.run {
+				if (!autoMake) assertEvalsToThis
+				else assertEvalsTo(
+					"point" lineTo script(
+						"x" lineTo script(literal(10)),
+						"y" lineTo script(literal(20))))
+			}
 	}
 
 	@Test

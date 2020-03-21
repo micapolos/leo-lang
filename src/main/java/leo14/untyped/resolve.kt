@@ -1,7 +1,10 @@
 package leo14.untyped
 
+import leo.base.ifOrNull
 import leo13.thisName
 import leo14.*
+
+val autoMake = false
 
 val Program.resolve
 	get() =
@@ -36,6 +39,7 @@ val Sequence.resolve: Program?
 			?: resolveIfThenElse
 			?: resolveTextJavaClass
 			?: resolveAnyInvoke
+			?: resolveAutoMake
 
 val Sequence.resolveFunctionApplyAnything: Program?
 	get() =
@@ -213,6 +217,16 @@ val Sequence.resolveAnyInvoke
 					} catch (x: RuntimeException) {
 						null
 					}
+				}
+			}
+		}
+
+val Sequence.resolveAutoMake: Program?
+	get() =
+		ifOrNull(autoMake) {
+			head.matchName { name ->
+				tail.matchNotEmpty {
+					tail.make(name)
 				}
 			}
 		}
