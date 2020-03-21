@@ -16,7 +16,7 @@ fun function(script: Script) = function(context(), script)
 fun Function.apply(given: Program): Program =
 	try {
 		context
-			.push(thisRule)
+			.push(recurseRule)
 			.push(given.givenRule)
 			.resolver()
 			.reader

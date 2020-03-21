@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo13.thisName
 import leo14.*
 
 val Program.resolve
@@ -27,6 +28,7 @@ val Sequence.resolve: Program?
 			?: resolveTail
 			?: resolveContents
 			?: resolveMake
+			?: resolveThis
 			?: resolveAccess
 			?: resolveGet
 			?: resolveLeonardo
@@ -89,6 +91,12 @@ val Sequence.resolveMake
 			rhs.matchName { name ->
 				lhs.make(name)
 			}
+		}
+
+val Sequence.resolveThis
+	get() =
+		matchPostfix(thisName) { lhs ->
+			lhs._this
 		}
 
 val Sequence.resolveNumberPlusNumber

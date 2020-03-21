@@ -185,7 +185,7 @@ class EvalTest {
 						"given" lineTo script(),
 						"number" lineTo script(),
 						"minus" lineTo script(literal(1)),
-						"do" lineTo script("this")))),
+						"do" lineTo script("recurse")))),
 			line(literal(6)),
 			"factorial" lineTo script())
 			.assertEvalsTo(script(literal(720)))
@@ -493,5 +493,13 @@ class EvalTest {
 			"java" lineTo script("class"),
 			"invoke" lineTo script(literal("newInstance")))
 			.assertEvalsTo("java" lineTo script(literal(StringBuilder().toString())))
+	}
+
+	@Test
+	fun _this() {
+		script(
+			line(literal(1)),
+			"this" lineTo script())
+			.assertEvalsTo("this" lineTo script(literal(1)))
 	}
 }

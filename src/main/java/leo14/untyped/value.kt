@@ -4,6 +4,7 @@ import leo.base.fold
 import leo13.fold
 import leo13.push
 import leo13.stack
+import leo13.thisName
 import leo14.Literal
 import leo14.numberOrNull
 import leo14.stringOrNull
@@ -100,3 +101,4 @@ val Value.onlyNameOrNull get() = fieldOrNull?.onlyNameOrNull
 val Field.onlyNameOrNull get() = if (rhs.isEmpty) name else null
 
 fun Program.make(name: String) = program(name valueTo this)
+val Program._this get() = make(thisName)

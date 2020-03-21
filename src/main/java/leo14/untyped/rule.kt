@@ -15,9 +15,9 @@ fun Rule.apply(program: Program): Program? =
 			else null
 	}
 
-val Function.thisRule
+val Function.recurseRule
 	get() =
-		thisPattern ruleTo body(program(value(this)))
+		recursePattern ruleTo body(program(value(this)))
 
 val Program.givenRule
 	get() =
