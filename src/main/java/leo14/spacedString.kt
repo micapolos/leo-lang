@@ -12,7 +12,7 @@ val Literal.spacedString get() = toString()
 val Begin.spacedString get() = "$string "
 val End.spacedString get() = " "
 
-val Script.spacedString
+val Script.spacedString: String
 	get() =
 		let { script ->
 			processorString {
