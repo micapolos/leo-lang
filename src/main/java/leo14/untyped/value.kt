@@ -88,6 +88,8 @@ val Program.anyOrNull get() = onlyValueOrNull?.anyOrNull
 val Program.functionOrNull get() = onlyValueOrNull?.functionOrNull
 val Program.headOrNull get() = sequenceOrNull?.head?.let { program(it) }
 val Program.tailOrNull get() = sequenceOrNull?.tail
+val Program.lastOrNull get() = contentsOrNull?.headOrNull?.make("last")
+val Program.previousOrNull get() = onlyFieldOrNull?.let { field -> field.rhs.tailOrNull?.let { tail -> program(field.name valueTo tail) } }
 val Program.onlyNameOrNull get() = onlyValueOrNull?.onlyNameOrNull
 
 val Sequence.onlyValueOrNull get() = if (tail.isEmpty) head else null
@@ -99,6 +101,8 @@ val Value.anyOrNull get() = (this as? AnyValue)?.any
 val Value.onlyNameOrNull get() = fieldOrNull?.onlyNameOrNull
 
 val Field.onlyNameOrNull get() = if (rhs.isEmpty) name else null
+val Field.rhsHeadOrNull get() = rhs.headOrNull?.let { head -> program(name valueTo head) }
+val Field.rhsTailOrNull get() = rhs.tailOrNull?.let { tail -> program(name valueTo tail) }
 
 fun Program.make(name: String) = program(name valueTo this)
 val Program._this get() = make(thisName)

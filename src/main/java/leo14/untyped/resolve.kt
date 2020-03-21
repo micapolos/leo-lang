@@ -29,6 +29,8 @@ val Sequence.resolve: Program?
 			?: resolveTextPlusText
 			?: resolveHead
 			?: resolveTail
+			?: resolveLast
+			?: resolvePrevious
 			?: resolveContents
 			?: resolveMake
 			?: resolveThis
@@ -160,6 +162,14 @@ val Sequence.resolveHead
 val Sequence.resolveTail
 	get() =
 		matchPostfix("tail", Program::tailOrNull)
+
+val Sequence.resolveLast
+	get() =
+		matchPostfix("last", Program::lastOrNull)
+
+val Sequence.resolvePrevious
+	get() =
+		matchPostfix("previous", Program::previousOrNull)
 
 val Sequence.resolveContents
 	get() =

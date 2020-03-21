@@ -52,10 +52,10 @@ fun Context.compileGives(program: Program): Context? =
 
 fun Context.compileIs(program: Program): Context? =
 	program.matchInfix(isName) { lhs, rhs ->
-		push(Rule(Pattern(lhs), body(rhs)))
+		push(Rule(Pattern(lhs), rhs.constant.body))
 	}
 
 fun Context.compileSaveAs(program: Program): Context? =
 	program.matchInfix("save", "as") { lhs, rhs ->
-		push(Rule(Pattern(rhs), body(lhs)))
+		push(Rule(Pattern(rhs), body(constant(lhs))))
 	}

@@ -27,8 +27,9 @@ class FunctionTest {
 						program(
 							"foo" valueTo program())),
 					body(
-						program(
-							"bar" valueTo program())))),
+						constant(
+							program(
+								"bar" valueTo program()))))),
 			script("foo" lineTo script()))
 			.apply(program("goo" valueTo program()))
 			.assertEqualTo(program("bar"))
