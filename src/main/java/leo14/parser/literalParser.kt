@@ -4,17 +4,17 @@ import leo.base.fold
 import leo14.*
 
 sealed class LiteralParser
-object BeginLiteralParser : LiteralParser()
+object EmptyLiteralParser : LiteralParser()
 data class StringLiteralParser(val stringParser: StringParser) : LiteralParser()
 data class NumberLiteralParser(val numberParser: NumberParser) : LiteralParser()
 
-val newLiteralParser: LiteralParser = BeginLiteralParser
+val newLiteralParser: LiteralParser = EmptyLiteralParser
 fun literalParser(stringParser: StringParser): LiteralParser = StringLiteralParser(stringParser)
 fun literalParser(numberParser: NumberParser): LiteralParser = NumberLiteralParser(numberParser)
 
 fun LiteralParser.parse(char: Char): LiteralParser? =
 	when (this) {
-		is BeginLiteralParser ->
+		is EmptyLiteralParser ->
 			null
 				?: emptyStringParser.parse(char)?.let(::literalParser)
 				?: emptyNumberParser.parse(char)?.let(::literalParser)
@@ -27,7 +27,7 @@ fun LiteralParser.parse(char: Char): LiteralParser? =
 val LiteralParser.literalOrNull: Literal?
 	get() =
 		when (this) {
-			is BeginLiteralParser -> null
+			is EmptyLiteralParser -> null
 			is StringLiteralParser -> stringParser.stringOrNull?.let { literal(it) }
 			is NumberLiteralParser -> numberParser.numberOrNull?.let { literal(it) }
 		}
@@ -40,7 +40,7 @@ fun parseLiteral(string: String) =
 val LiteralParser.coreString: String
 	get() =
 		when (this) {
-			is BeginLiteralParser -> ""
+			is EmptyLiteralParser -> ""
 			is StringLiteralParser -> stringParser.coreString
 			is NumberLiteralParser -> numberParser.coreString
 		}
@@ -58,7 +58,7 @@ val LiteralParser.reflectScriptLine
 		"literal" lineTo script(
 			"parser" lineTo script(
 				when (this) {
-					BeginLiteralParser -> "empty".line
+					EmptyLiteralParser -> "empty".line
 					is StringLiteralParser -> stringParser.reflectScriptLine
 					is NumberLiteralParser -> numberParser.reflectScriptLine
 				}))
