@@ -4,12 +4,13 @@ import leo14.Begin
 
 sealed class Environment
 
-data class ContextEnvironment(val context: Context) : Environment()
+data class ContextEnvironment(val compiler: Compiler) : Environment()
 data class QuotedEnvironment(val unquote: Environment) : Environment()
 
-val Context.environment: Environment get() = ContextEnvironment(this)
+val Compiler.environment: Environment get() = ContextEnvironment(this)
+val Context.environment: Environment get() = compiler(this).environment
 val Environment.quote: Environment get() = QuotedEnvironment(this)
-val emptyEnvironment get() = context().environment
+val emptyEnvironment get() = compiler(context()).environment
 
 val Environment.unquoteOrNull: Environment?
 	get() =
@@ -18,7 +19,7 @@ val Environment.unquoteOrNull: Environment?
 fun Environment.writeEvaluator(sequence: Sequence) =
 	when (this) {
 		is ContextEnvironment ->
-			context.resolver(sequence).evaluator
+			compiler.applyContext.resolver(sequence).evaluator
 		is QuotedEnvironment ->
 			evaluator(program(sequence))
 	}

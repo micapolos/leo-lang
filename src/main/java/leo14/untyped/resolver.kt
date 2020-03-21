@@ -6,17 +6,20 @@ import leo14.Script
 import leo14.tokenStack
 
 data class Resolver(
-	val context: Context,
+	val compiler: Compiler,
 	val program: Program)
 
-fun Context.resolver(program: Program = program()) =
+fun Compiler.resolver(program: Program = program()) =
 	Resolver(this, program)
+
+fun Context.resolver(program: Program = program()) =
+	compiler(this).resolver(program)
 
 fun resolver(program: Program = program()) =
 	context().resolver(program)
 
 fun Resolver.apply(value: Value): Resolver =
-	context.resolve(this.program.plus(value))
+	compiler.applyContext.resolve(this.program.plus(value))
 
 fun Resolver.append(value: Value): Resolver =
 	set(this.program.plus(value))
@@ -66,11 +69,11 @@ fun Context.resolver(sequence: Sequence): Resolver =
 	resolver(sequence.tail).apply(sequence.head)
 
 fun Resolver.function(script: Script): Resolver =
-	apply(value(function(context, script)))
+	apply(value(function(compiler.applyContext, script)))
 
 fun Resolver.does(script: Script): Resolver =
-	context
-		.push(rule(pattern(program), body(script)))
+	compiler
+		.push(definition(rule(pattern(program), body(script))))
 		.resolver(program())
 
 fun Resolver.compile(script: Script): Resolver =

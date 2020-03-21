@@ -57,11 +57,22 @@ val Context.functionScript: Script
 
 val ContextLink.functionScript: Script
 	get() =
-		context.functionScript.plus(rule.contextScript)
+		context.functionScript.plus(definition.contextScript)
 
 val Rule.contextScript
 	get() =
 		pattern.ruleScript.plus(body.ruleScriptLine)
+
+val Definition.contextScript
+	get() =
+		when (this) {
+			is RuleDefinition -> rule.contextScript
+			is RecursiveDefinition -> recursive.script
+		}
+
+val Recursive.script
+	get() =
+		script("recursive" lineTo context.functionScript)
 
 val Pattern.ruleScript
 	get() =

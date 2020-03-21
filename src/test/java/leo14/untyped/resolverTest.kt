@@ -27,10 +27,11 @@ class ResolverTest {
 		resolver
 			.apply("is" valueTo program("zar"))
 			.assertEqualTo(
-				resolver.context.push(
-					rule(
-						pattern(program("zoo")),
-						body(program("zar")))).resolver())
+				resolver.compiler.push(
+					definition(
+						rule(
+							pattern(program("zoo")),
+							body(program("zar"))))).resolver())
 	}
 
 	@Test

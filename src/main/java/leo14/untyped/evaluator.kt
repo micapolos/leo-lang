@@ -15,7 +15,7 @@ fun Environment.evaluator(program: Program) =
 
 val Resolver.evaluator
 	get() =
-		context.environment.evaluator(program)
+		compiler.environment.evaluator(program)
 
 fun Evaluator.write(value: Value): Evaluator =
 	environment.writeEvaluator(program sequenceTo value)

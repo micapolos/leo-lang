@@ -9,7 +9,7 @@ data class CodeReader(val code: Code) : Reader()
 
 data class Quoted(
 	val opOrNull: QuotedOp?,
-	val context: Context,
+	val compiler: Compiler,
 	val depth: Int,
 	val program: Program)
 
@@ -75,7 +75,7 @@ fun Quoted.write(begin: Begin): Reader =
 			QuotedReader(
 				Quoted(
 					QuotedAppendQuotedOp(this, begin),
-					context,
+					compiler,
 					depth.inc(),
 					program()))
 		begin.string == "unquote" && depth > 0 ->
@@ -84,11 +84,11 @@ fun Quoted.write(begin: Begin): Reader =
 					UnquotedReader(
 						Unquoted(
 							QuotedPlusUnquotedOp(this),
-							context.resolver(program())))
+							compiler.resolver(program())))
 				else -> QuotedReader(
 					Quoted(
 						QuotedAppendQuotedOp(this, begin),
-						context,
+						compiler,
 						depth.dec(),
 						program()))
 			}
@@ -96,7 +96,7 @@ fun Quoted.write(begin: Begin): Reader =
 			QuotedReader(
 				Quoted(
 					QuotedAppendQuotedOp(this, begin),
-					context,
+					compiler,
 					depth,
 					program()))
 	}
@@ -107,7 +107,7 @@ fun Unquoted.write(begin: Begin): Reader =
 			QuotedReader(
 				Quoted(
 					UnquotedPlusQuotedOp(this),
-					resolver.context,
+					resolver.compiler,
 					1,
 					program()))
 		"function" ->
@@ -129,7 +129,7 @@ fun Unquoted.write(begin: Begin): Reader =
 			UnquotedReader(
 				Unquoted(
 					UnquotedResolveUnquotedOp(this, begin),
-					resolver.context.resolver(program())))
+					resolver.compiler.resolver(program())))
 	}
 
 fun Code.write(begin: Begin): Reader =

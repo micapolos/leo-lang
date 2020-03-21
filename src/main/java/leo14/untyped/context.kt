@@ -8,15 +8,19 @@ sealed class Context
 data class EmptyContext(val empty: Empty) : Context()
 data class LinkContext(val link: ContextLink) : Context()
 
-data class ContextLink(val context: Context, val rule: Rule)
+data class ContextLink(val context: Context, val definition: Definition)
 
-infix fun Context.linkTo(rule: Rule) = ContextLink(this, rule)
+infix fun Context.linkTo(definition: Definition) = ContextLink(this, definition)
+infix fun Context.linkTo(rule: Rule) = linkTo(definition(rule))
 
 fun context() = EmptyContext(empty) as Context
 fun context(link: ContextLink): Context = LinkContext(link)
 
 fun context(rule: Rule, vararg rules: Rule) =
 	context().push(rule).fold(rules) { push(it) }
+
+fun Context.push(definition: Definition): Context =
+	context(this linkTo definition)
 
 fun Context.push(rule: Rule): Context =
 	context(this linkTo rule)
@@ -34,7 +38,7 @@ fun Context.applyRules(program: Program): Program? =
 	}
 
 fun ContextLink.applyRules(program: Program): Program? =
-	rule.apply(context, program) ?: context.applyRules(program)
+	definition.apply(context, program) ?: context.applyRules(program)
 
 fun Context.applyStatic(program: Program): Program? =
 	null
