@@ -16,7 +16,8 @@ fun <S> Reducer<S, Token>.charReader() =
 
 fun <S> ReducerCharReader<S>.put(char: Char): ReducerCharReader<S> =
 	if (char == '\n')
-		if (tokenParser is NewSpacedTokenParser || tokenParser.parse(' ')?.tokenOrNull != null) putRaw(' ')
+		if (tokenParser is NameSpacedTokenParser) putRaw(' ').putRaw(' ')
+		else if (tokenParser is NewSpacedTokenParser || tokenParser.parse(' ')?.tokenOrNull != null) putRaw(' ')
 		else putRaw(' ').putRaw(' ')
 	else putRaw(char)
 
