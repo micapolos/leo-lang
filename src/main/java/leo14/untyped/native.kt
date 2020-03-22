@@ -151,11 +151,11 @@ val Sequence.resolveNativeNumber
 val Class<*>.forInvoke: Class<*>
 	get() =
 		when {
-			this == java.lang.Byte::javaClass -> java.lang.Byte.TYPE
-			this == java.lang.Short::javaClass -> java.lang.Short.TYPE
-			this == java.lang.Integer::javaClass -> Integer.TYPE
-			this == java.lang.Long::javaClass -> java.lang.Long.TYPE
-			this == java.lang.Float::javaClass -> java.lang.Float.TYPE
-			this == java.lang.Double::javaClass -> java.lang.Double.TYPE
+			this == java.lang.Byte::class.java -> java.lang.Byte.TYPE
+			this == java.lang.Short::class.java -> java.lang.Short.TYPE
+			this == java.lang.Integer::class.java -> Integer.TYPE
+			this == java.lang.Long::class.java -> java.lang.Long.TYPE
+			this == java.lang.Float::class.java -> java.lang.Float.TYPE
+			this == java.lang.Double::class.java -> java.lang.Double.TYPE
 			else -> this
 		}
