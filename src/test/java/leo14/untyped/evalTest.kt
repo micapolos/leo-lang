@@ -141,18 +141,18 @@ class EvalTest {
 	}
 
 	@Test
-	fun thisIsThat() {
+	fun thisAsThat() {
 		script(
 			line(literal(10)),
-			"is" lineTo script("foo"))
+			"as" lineTo script("foo"))
 			.assertEvalsTo()
 	}
 
 	@Test
-	fun thisIsThatAndAccess() {
+	fun thisAsThatAndAccess() {
 		script(
 			line(literal(10)),
-			"is" lineTo script("foo"),
+			"as" lineTo script("foo"),
 			"foo" lineTo script())
 			.assertEvalsTo(line(literal(10)))
 	}
