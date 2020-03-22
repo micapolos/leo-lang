@@ -6,7 +6,7 @@ fun main() {
 	_run {
 		text("javax.swing.JFrame")
 		native { new }
-		_as { my.frame }
+		as_ { my.frame }
 
 		my.frame
 		invoke { text("show") }

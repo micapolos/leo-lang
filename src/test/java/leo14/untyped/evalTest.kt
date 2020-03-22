@@ -123,6 +123,16 @@ class EvalTest {
 	}
 
 	@Test
+	fun accessNative() {
+		script(
+			"hello" lineTo script(
+				line(literal(123)),
+				"native" lineTo script("int")),
+			"native" lineTo script())
+			.assertEvalsTo("native" lineTo script(literal(123.toString())))
+	}
+
+	@Test
 	fun thisGivesThat() {
 		script(
 			"x" lineTo script(),

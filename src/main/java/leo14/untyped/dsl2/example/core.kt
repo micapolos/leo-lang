@@ -27,12 +27,12 @@ fun main() {
 		print
 
 		number(2)
-		_equals { number(2) }
+		equals_ { number(2) }
 		print
 
-		_if { number(2)._equals { number(2) } }
-		_then { text("OK!") }
-		_else { text("Oooops...") }
+		if_ { number(2).equals_ { number(2) } }
+		then_ { text("OK!") }
+		else_ { text("Oooops...") }
 		print
 	}
 }

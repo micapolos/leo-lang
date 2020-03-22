@@ -23,5 +23,6 @@ fun Value.selects(name: String) =
 		"number" -> this is LiteralValue && literal is NumberLiteral
 		"text" -> this is LiteralValue && literal is StringLiteral
 		"function" -> this is FunctionValue
+		"native" -> this is NativeValue
 		else -> this is FieldValue && name == field.name
 	}
