@@ -40,13 +40,19 @@ fun main() {
 		}
 
 		vector {
-			x { number(10) }
-			y { number(20) }
+			x { number(10).increment }
+			y { number(20).decrement }
 		}
 		plus {
 			vector {
-				x { number(30) }
-				y { number(40) }
+				x {
+					number(30)
+					plus { number(40) }
+				}
+				y {
+					number(40)
+					times { number(2) }
+				}
 			}
 		}
 	}
