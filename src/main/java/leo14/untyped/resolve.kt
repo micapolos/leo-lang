@@ -238,10 +238,12 @@ val Sequence.resolveFold: Program?
 				lhs.matchInfix("fold") { folded, items ->
 					items.contentsOrNull?.let { contents ->
 						folded.fold(contents.valueStack.reverse) { value ->
-							function.apply(
-								program(
-									"folded" valueTo this,
-									"next" valueTo program(value)))
+							function
+								.copy(context = function.context.push(
+									rule(
+										pattern(program("folded")),
+										body(program("folded" valueTo program(value))))))
+								.apply(this)
 						}
 					}
 				}

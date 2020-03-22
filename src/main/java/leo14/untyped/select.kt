@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 
@@ -26,3 +27,22 @@ fun Value.selects(name: String) =
 		"native" -> this is NativeValue
 		else -> this is FieldValue && name == field.name
 	}
+
+val Value.selectName
+	get() =
+		when (this) {
+			is LiteralValue -> literal.selectName
+			is FieldValue -> field.name
+			is FunctionValue -> function.selectName
+			is NativeValue -> native.selectName
+		}
+
+val Literal.selectName
+	get() =
+		when (this) {
+			is StringLiteral -> "text"
+			is NumberLiteral -> "number"
+		}
+
+val Function.selectName get() = "function"
+val Native.selectName get() = "native"
