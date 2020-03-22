@@ -41,7 +41,7 @@ val Sequence.resolve: Program?
 			?: resolveLeonardo
 			?: resolveAnythingEqualsAnything
 			?: resolveIfThenElse
-			?: resolveJava
+			?: resolveNative
 			?: resolveAutoMake
 
 val Sequence.resolveFunctionApplyAnything: Program?

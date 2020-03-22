@@ -34,8 +34,8 @@ data class FunctionValue(val function: Function) : Value() {
 	override fun toString() = scriptLine.toString()
 }
 
-data class AnyValue(val any: Any) : Value() {
-	override fun toString() = any.toString()
+data class NativeValue(val native: Any) : Value() {
+	override fun toString() = native.toString()
 }
 
 data class Field(val name: String, val rhs: Program) {
@@ -68,7 +68,7 @@ fun value(literal: Literal): Value = LiteralValue(literal)
 fun value(field: Field): Value = FieldValue(field)
 fun value(name: String): Value = value(name fieldTo program())
 fun value(function: Function): Value = FunctionValue(function)
-fun anyValue(any: Any): Value = AnyValue(any)
+fun anyValue(any: Any): Value = NativeValue(any)
 
 fun Sequence.plus(value: Value) = program(this) sequenceTo value
 fun sequence(value: Value, vararg values: Value) = program().sequenceTo(value).fold(values, Sequence::plus)
@@ -97,7 +97,7 @@ val Sequence.onlyValueOrNull get() = if (tail.isEmpty) head else null
 val Value.literalOrNull get() = (this as? LiteralValue)?.literal
 val Value.fieldOrNull get() = (this as? FieldValue)?.field
 val Value.functionOrNull get() = (this as? FunctionValue)?.function
-val Value.anyOrNull get() = (this as? AnyValue)?.any
+val Value.anyOrNull get() = (this as? NativeValue)?.native
 val Value.onlyNameOrNull get() = fieldOrNull?.onlyNameOrNull
 
 val Field.onlyNameOrNull get() = if (rhs.isEmpty) name else null

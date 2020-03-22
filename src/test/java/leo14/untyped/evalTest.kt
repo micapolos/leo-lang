@@ -1,7 +1,6 @@
 package leo14.untyped
 
 import leo14.*
-import java.io.OutputStream
 import kotlin.test.Test
 
 class EvalTest {
@@ -488,20 +487,36 @@ class EvalTest {
 	}
 
 	@Test
-	fun javaClass() {
+	fun nativeClass() {
 		script(
-			line(literal("java.io.OutputStream")),
-			"java" lineTo script("class"))
-			.assertEvalsTo("java" lineTo script(literal(OutputStream::class.java.toString())))
+			line(literal("java.lang.StringBuilder")),
+			"native" lineTo script("class"))
+			.assertEvalsTo("native" lineTo script(literal(java.lang.StringBuilder::class.java.toString())))
+	}
+
+	@Test
+	fun javaInvoke() {
+		script(
+			line(literal("java.lang.StringBuilder")),
+			"native" lineTo script("class"),
+			"invoke" lineTo script(literal("newInstance")),
+			"invoke" lineTo script(
+				line(literal("append")),
+				"it" lineTo script(
+					line(literal("Hello, world!")),
+					"native" lineTo script("string"))))
+			.assertEvalsTo(
+				"native" lineTo script(
+					literal(StringBuilder().append("Hello, world!").toString())))
 	}
 
 	@Test
 	fun anyInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"java" lineTo script("class"),
+			"native" lineTo script("class"),
 			"invoke" lineTo script(literal("newInstance")))
-			.assertEvalsTo("java" lineTo script(literal(StringBuilder().toString())))
+			.assertEvalsTo("native" lineTo script(literal(StringBuilder().toString())))
 	}
 
 	@Test
