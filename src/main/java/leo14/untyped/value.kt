@@ -1,10 +1,7 @@
 package leo14.untyped
 
 import leo.base.fold
-import leo13.fold
-import leo13.push
-import leo13.stack
-import leo13.thisName
+import leo13.*
 import leo14.Literal
 import leo14.numberOrNull
 import leo14.stringOrNull
@@ -61,8 +58,11 @@ tailrec fun <R> R.foldValues(program: Program, fn: R.(Value) -> R): R =
 		EmptyProgram -> this
 		is SequenceProgram -> fn(program.sequence.head).foldValues(program.sequence.tail, fn)
 	}
+val Program.valueStack: Stack<Value>
+	get() =
+		stack<Value>().foldValues(this) { push(it) }
 
-operator fun Program.plus(program: Program) = fold(stack<Value>().foldValues(program) { push(it) }) { plus(it) }
+operator fun Program.plus(program: Program) = fold(program.valueStack) { plus(it) }
 
 fun value(literal: Literal): Value = LiteralValue(literal)
 fun value(field: Field): Value = FieldValue(field)

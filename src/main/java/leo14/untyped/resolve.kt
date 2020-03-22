@@ -40,8 +40,7 @@ val Sequence.resolve: Program?
 			?: resolveLeonardo
 			?: resolveAnythingEqualsAnything
 			?: resolveIfThenElse
-			?: resolveTextJavaClass
-			?: resolveAnyInvoke
+			?: resolveJava
 			?: resolveAutoMake
 
 val Sequence.resolveFunctionApplyAnything: Program?
@@ -199,34 +198,6 @@ val Sequence.resolveIfThenElse
 							"no" -> alternate
 							else -> null
 						}
-					}
-				}
-			}
-		}
-
-val Sequence.resolveTextJavaClass
-	get() =
-		matchInfix("java", "class") { lhs, rhs ->
-			rhs.matchEmpty {
-				lhs.matchText { text ->
-					try {
-						program(anyValue(javaClass.classLoader.loadClass(text)))
-					} catch (x: ClassNotFoundException) {
-						null
-					}
-				}
-			}
-		}
-
-val Sequence.resolveAnyInvoke
-	get() =
-		matchInfix("invoke") { lhs, rhs ->
-			lhs.matchAny { any ->
-				rhs.matchText { text ->
-					try {
-						program(anyValue(any.javaClass.getMethod(text).invoke(any)))
-					} catch (x: RuntimeException) {
-						null
 					}
 				}
 			}
