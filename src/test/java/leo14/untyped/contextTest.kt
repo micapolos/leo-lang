@@ -26,13 +26,6 @@ class ContextTest {
 	}
 
 	@Test
-	fun apply_function() {
-		context
-			.apply(program("function" valueTo program("foo")))
-			.assertEqualTo(program(value(function(context, script("foo")))))
-	}
-
-	@Test
 	fun compile_is() {
 		context
 			.compile(

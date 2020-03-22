@@ -578,4 +578,27 @@ class EvalTest {
 				"y" lineTo script()))
 			.assertEvalsToThis
 	}
+
+	@Test
+	fun fold() {
+		script(
+			line(literal(1)),
+			"fold" lineTo script(
+				"items" lineTo script(
+					line(literal(2)),
+					line(literal(3)),
+					line(literal(4)),
+					line(literal(5)))),
+			"doing" lineTo script(
+				"function" lineTo script(
+					"given" lineTo script(),
+					"folded" lineTo script(),
+					"number" lineTo script(),
+					"plus" lineTo script(
+						"given" lineTo script(),
+						"next" lineTo script(),
+						"number" lineTo script()))))
+			.assertEvalsTo(line(literal(15))
+			)
+	}
 }

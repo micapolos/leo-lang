@@ -1,6 +1,8 @@
 package leo14.untyped
 
 import leo.base.ifOrNull
+import leo13.fold
+import leo13.reverse
 import leo13.thisName
 import leo14.*
 
@@ -43,6 +45,7 @@ val Sequence.resolve: Program?
 			?: resolveIfThenElse
 			?: resolveNative
 			?: resolveAutoMake
+			?: resolveFold
 
 val Sequence.resolveFunctionApplyAnything: Program?
 	get() =
@@ -226,4 +229,21 @@ val Sequence.resolvePrint: Program?
 	get() =
 		matchPostfix("print") { lhs ->
 			program().also { println(lhs) }
+		}
+
+val Sequence.resolveFold: Program?
+	get() =
+		matchInfix("doing") { lhs, rhs ->
+			rhs.functionOrNull?.let { function ->
+				lhs.matchInfix("fold") { folded, items ->
+					items.contentsOrNull?.let { contents ->
+						folded.fold(contents.valueStack.reverse) { value ->
+							function.apply(
+								program(
+									"folded" valueTo this,
+									"next" valueTo program(value)))
+						}
+					}
+				}
+			}
 		}

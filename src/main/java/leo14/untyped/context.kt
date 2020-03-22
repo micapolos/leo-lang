@@ -28,7 +28,6 @@ fun Context.push(rule: Rule): Context =
 fun Context.apply(program: Program): Program? =
 	null
 		?: applyRules(program)
-		?: applyStatic(program)
 		?: program.resolve
 
 fun Context.applyRules(program: Program): Program? =
@@ -39,17 +38,6 @@ fun Context.applyRules(program: Program): Program? =
 
 fun ContextLink.applyRules(program: Program): Program? =
 	definition.apply(context, program) ?: context.applyRules(program)
-
-fun Context.applyStatic(program: Program): Program? =
-	null
-		?: applyFunction(program)
-
-fun Context.applyFunction(program: Program): Program? =
-	program.matchPrefix("function") { body ->
-		body.scriptOrNull?.let { body ->
-			program(value(function(this, body)))
-		}
-	}
 
 fun Context.compile(program: Program): Context? =
 	null
