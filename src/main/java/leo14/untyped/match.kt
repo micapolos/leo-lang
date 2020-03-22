@@ -101,6 +101,13 @@ fun <R> Value.match(string: String, fn: (Program) -> R): R? =
 		field.match(string, fn)
 	}
 
+fun <R> Value.match(string1: String, string2: String, fn: (Program) -> R): R? =
+	match(string1) { rhs ->
+		rhs.matchPrefix(string2) { rhs ->
+			fn(rhs)
+		}
+	}
+
 fun <R> Field.match(name: String, fn: (Program) -> R) =
 	if (this.name == name) fn(rhs)
 	else null
