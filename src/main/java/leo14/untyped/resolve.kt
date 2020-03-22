@@ -36,6 +36,7 @@ val Sequence.resolve: Program?
 			?: resolveThis
 			?: resolveAccess
 			?: resolveGet
+			?: resolvePrint
 			?: resolveLeonardo
 			?: resolveAnythingEqualsAnything
 			?: resolveIfThenElse
@@ -239,4 +240,10 @@ val Sequence.resolveAutoMake: Program?
 					tail.make(name)
 				}
 			}
+		}
+
+val Sequence.resolvePrint: Program?
+	get() =
+		matchPostfix("print") { lhs ->
+			program().also { print(lhs) }
 		}

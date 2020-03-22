@@ -3,7 +3,7 @@ package leo14.untyped.dsl2.example
 import leo14.untyped.dsl2.*
 
 fun main() {
-	_print {
+	_run {
 		number.increment
 		does {
 			given.number
@@ -49,5 +49,6 @@ fun main() {
 				y { number(40) }
 			}
 		}
+		print
 	}
 }

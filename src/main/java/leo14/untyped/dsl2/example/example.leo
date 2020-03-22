@@ -29,3 +29,4 @@ vector
 plus: vector
 	x: 30
 	y: 40
+print
