@@ -16,20 +16,38 @@ fun main() {
 			minus { number(1) }
 		}
 
-		my.point
+		vector
 		gives {
-			point {
+			vector {
+				x { number }
+				y { number }
+			}
+		}
+
+		vector
+		plus { vector }
+		does {
+			vector {
 				x {
-					number(10)
-					plus { number(20).increment }
+					given.vector.x.number
+					plus { given.plus.vector.x.number }
 				}
 				y {
-					number(20).decrement
-					times { number(14) }
+					given.vector.y.number
+					plus { given.plus.vector.y.number }
 				}
 			}
 		}
 
-		my.point
+		vector {
+			x { number(10) }
+			y { number(20) }
+		}
+		plus {
+			vector {
+				x { number(30) }
+				y { number(40) }
+			}
+		}
 	}
 }
