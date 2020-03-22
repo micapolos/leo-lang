@@ -76,7 +76,11 @@ val Sequence.resolveGet: Program?
 val Sequence.resolveAnythingAppendAnything
 	get() =
 		matchInfix("append") { lhs, rhs ->
-			lhs.plus(rhs)
+			lhs.onlyFieldOrNull?.let { field ->
+				rhs.onlyValueOrNull?.let { value ->
+					program(field.name valueTo field.rhs.plus(value))
+				}
+			}
 		}
 
 val Sequence.resolveAnythingItAnything

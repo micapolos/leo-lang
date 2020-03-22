@@ -251,13 +251,18 @@ class EvalTest {
 	}
 
 	@Test
-	fun anythingAppendAnything() {
+	fun fieldAppendValue() {
 		script(
-			"minus" lineTo script(literal(10)),
-			"append" lineTo script("minus" lineTo script(literal(20))))
+			"point" lineTo script(
+				"x" lineTo script(literal(10)),
+				"y" lineTo script(literal(20))),
+			"append" lineTo script(
+				"z" lineTo script(literal(30))))
 			.assertEvalsTo(
-				line(literal(-10)),
-				line(literal(-20)))
+				"point" lineTo script(
+					"x" lineTo script(literal(10)),
+					"y" lineTo script(literal(20)),
+					"z" lineTo script(literal(30))))
 	}
 
 	@Test
@@ -598,5 +603,31 @@ class EvalTest {
 						"folded" lineTo script(),
 						"number" lineTo script()))))
 			.assertEvalsTo(line(literal(115)))
+	}
+
+	@Test
+	fun last() {
+		script(
+			"numbers" lineTo script(
+				line(literal(1)),
+				line(literal(2)),
+				line(literal(3))),
+			"last" lineTo script())
+			.assertEvalsTo("last" lineTo script(literal(3)))
+	}
+
+	@Test
+	fun previous() {
+		script(
+			"numbers" lineTo script(
+				line(literal(1)),
+				line(literal(2)),
+				line(literal(3))),
+			"previous" lineTo script())
+			.assertEvalsTo(
+				"previous" lineTo script(
+					"numbers" lineTo script(
+						line(literal(1)),
+						line(literal(2)))))
 	}
 }
