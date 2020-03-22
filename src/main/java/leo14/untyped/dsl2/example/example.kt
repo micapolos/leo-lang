@@ -45,14 +45,8 @@ fun main() {
 		}
 		plus {
 			vector {
-				x {
-					number(30)
-					plus { number(40) }
-				}
-				y {
-					number(40)
-					times { number(2) }
-				}
+				x { number(30) }
+				y { number(40) }
 			}
 		}
 	}
