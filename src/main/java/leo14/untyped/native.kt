@@ -6,7 +6,9 @@ import leo13.toList
 import leo14.literal
 import leo14.stringOrNull
 
-data class Native(val obj: Any?)
+data class Native(val obj: Any?) {
+	override fun toString() = obj.toString()
+}
 
 fun native(obj: Any?) = Native(obj)
 
@@ -28,7 +30,7 @@ val Sequence.resolveJavaString: Program?
 		matchInfix("native", "string") { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchText { text ->
-					program(anyValue(text))
+					program(value(native(text)))
 				}
 			}
 		}
@@ -39,7 +41,7 @@ val Sequence.resolveNativeInt: Program?
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
 					try {
-						program(anyValue(number.bigDecimal.intValueExact()))
+						program(value(native(number.bigDecimal.intValueExact())))
 					} catch (e: ArithmeticException) {
 						null
 					}
@@ -52,7 +54,7 @@ val Sequence.resolveNativeFloat: Program?
 		matchInfix("native", "float") { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
-					program(anyValue(number.bigDecimal.toFloat()))
+					program(value(native(number.bigDecimal.toFloat())))
 				}
 			}
 		}
@@ -62,7 +64,7 @@ val Sequence.resolveNativeDouble: Program?
 		matchInfix("native", "double") { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
-					program(anyValue(number.bigDecimal.toDouble()))
+					program(value(native(number.bigDecimal.toDouble())))
 				}
 			}
 		}
@@ -73,7 +75,7 @@ val Sequence.resolveNativeClass: Program?
 			rhs.matchEmpty {
 				lhs.matchText { text ->
 					try {
-						program(anyValue(javaClass.classLoader.loadClass(text)))
+						program(value(native(javaClass.classLoader.loadClass(text))))
 					} catch (x: ClassNotFoundException) {
 						null
 					}
@@ -84,55 +86,49 @@ val Sequence.resolveNativeClass: Program?
 
 val Sequence.resolveNativeInvoke
 	get() =
-		try {
-			matchInfix("invoke") { lhs, rhs ->
-				lhs.matchNative { any ->
-					rhs.valueStack.splitOrNull?.let { (args, name) ->
-						name.literalOrNull?.stringOrNull?.let { name ->
-							args.map { anyOrNull!! }.toList().toTypedArray().let { args ->
-								args.map { it.javaClass }.toTypedArray().let { types ->
-									program(
-										anyValue(
-											any.javaClass
+		matchInfix("invoke") { lhs, rhs ->
+			lhs.matchNative { native ->
+				rhs.valueStack.splitOrNull?.let { (args, name) ->
+					name.literalOrNull?.stringOrNull?.let { name ->
+						args.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+							args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
+								program(
+									value(
+										native(
+											native.obj!!.javaClass
 												.getMethod(name, *types)
-												.invoke(any, *args)))
-								}
+												.invoke(native.obj, *args))))
 							}
 						}
 					}
 				}
 			}
-		} catch (t: Throwable) {
-			null
 		}
 
 val Sequence.resolveNativeNew
 	get() =
-		try {
-			matchInfix("native", "new") { lhs, rhs ->
-				lhs.matchText { name ->
-					rhs.valueStack.map { anyOrNull!! }.toList().toTypedArray().let { args ->
-						args.map { it.javaClass }.toTypedArray().let { types ->
-							program(
-								anyValue(
+		matchInfix("native", "new") { lhs, rhs ->
+			lhs.matchText { name ->
+				rhs.valueStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+					args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
+						program(
+							value(
+								native(
 									javaClass
 										.classLoader
 										.loadClass(name)
 										.getConstructor(*types)
-										.newInstance(*args)))
-						}
+										.newInstance(*args))))
 					}
 				}
 			}
-		} catch (t: Throwable) {
-			null
 		}
 
 val Sequence.resolveNativeText
 	get() =
 		matchPostfix("text") { lhs ->
 			lhs.matchNative { native ->
-				(native as? String)?.let { string ->
+				(native.obj as? String)?.let { string ->
 					program(literal(string))
 				}
 			}
@@ -141,14 +137,25 @@ val Sequence.resolveNativeText
 val Sequence.resolveNativeNumber
 	get() =
 		matchPostfix("number") { lhs ->
-			lhs.matchNative { any ->
+			lhs.matchNative { native ->
 				null
-					?: (any as? Byte)?.let { program(literal(it.toInt())) }
-					?: (any as? Short)?.let { program(literal(it.toInt())) }
-					?: (any as? Int)?.let { program(literal(it)) }
-					?: (any as? Long)?.let { program(literal(it)) }
-					?: (any as? Float)?.let { program(literal(it.toDouble())) }
-					?: (any as? Double)?.let { program(literal(it)) }
+					?: (native.obj as? Byte)?.let { program(literal(it.toInt())) }
+					?: (native.obj as? Short)?.let { program(literal(it.toInt())) }
+					?: (native.obj as? Int)?.let { program(literal(it)) }
+					?: (native.obj as? Long)?.let { program(literal(it)) }
+					?: (native.obj as? Float)?.let { program(literal(it.toDouble())) }
+					?: (native.obj as? Double)?.let { program(literal(it)) }
 			}
 		}
 
+val Class<*>.forInvoke: Class<*>
+	get() =
+		when {
+			this == java.lang.Byte::javaClass -> java.lang.Byte.TYPE
+			this == java.lang.Short::javaClass -> java.lang.Short.TYPE
+			this == java.lang.Integer::javaClass -> Integer.TYPE
+			this == java.lang.Long::javaClass -> java.lang.Long.TYPE
+			this == java.lang.Float::javaClass -> java.lang.Float.TYPE
+			this == java.lang.Double::javaClass -> java.lang.Double.TYPE
+			else -> this
+		}

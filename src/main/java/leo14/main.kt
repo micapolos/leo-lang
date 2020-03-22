@@ -70,7 +70,7 @@ fun run(reducer: Reducer<String, Char>) {
 				}
 			}
 			errorCount = errorTriggerCount
-		} catch (e: RuntimeException) {
+		} catch (e: Throwable) {
 			print(bellChar)
 			if (errorCount-- < 0) errorToPrint = e
 		}
