@@ -4,25 +4,28 @@ import leo14.untyped.dsl2.*
 
 fun main() {
 	_print {
-		number.increment.does {
+		number.increment
+		does {
 			given.number
 			plus { number(1) }
 		}
 
-		number.decrement.does {
+		number.decrement
+		does {
 			given.number
 			minus { number(1) }
 		}
 
-		my.point.gives {
+		my.point
+		gives {
 			point {
 				x {
 					number(10)
 					plus { number(20).increment }
 				}
 				y {
-					number(20).increment
-					plus { number(14) }
+					number(20).decrement
+					times { number(14) }
 				}
 			}
 		}
