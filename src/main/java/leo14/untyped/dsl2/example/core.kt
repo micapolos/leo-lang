@@ -25,5 +25,14 @@ fun main() {
 
 		minus { number(2) }
 		print
+
+		number(2)
+		_equals { number(2) }
+		print
+
+		_if { number(2)._equals { number(2) } }
+		_then { text("OK!") }
+		_else { text("Oooops...") }
+		print
 	}
 }
