@@ -49,9 +49,9 @@ sealed class Atom
 data class LiteralAtom(val literal: Literal) : Atom()
 data class FunctionAtom(val function: Function) : Atom()
 
-fun program(): Program = EmptyProgram
+val emptyProgram: Program get() = EmptyProgram
 fun program(sequence: Sequence): Program = SequenceProgram(sequence)
-fun program(value: Value, vararg values: Value) = program(program() sequenceTo value).fold(values) { plus(it) }
+fun program(vararg values: Value) = emptyProgram.fold(values) { plus(it) }
 fun program(name: String) = program(value(name))
 fun program(literal: Literal) = program(value(literal))
 operator fun Program.plus(value: Value) = program(this sequenceTo value)
