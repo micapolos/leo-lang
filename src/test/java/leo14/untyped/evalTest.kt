@@ -123,6 +123,18 @@ class EvalTest {
 	}
 
 	@Test
+	fun accessFunction() {
+		script(
+			"my" lineTo script(
+				"function" lineTo script("given")),
+			"function" lineTo script())
+			.assertEvalsTo(
+				"function" lineTo script(
+					"context" lineTo script(),
+					"body" lineTo script("given")))
+	}
+
+	@Test
 	fun accessNative() {
 		script(
 			"hello" lineTo script(

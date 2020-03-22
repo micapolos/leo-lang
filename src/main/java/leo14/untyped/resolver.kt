@@ -2,7 +2,9 @@ package leo14.untyped
 
 import leo13.fold
 import leo13.reverse
+import leo14.LinkScript
 import leo14.Script
+import leo14.UnitScript
 import leo14.tokenStack
 
 data class Resolver(
@@ -69,7 +71,10 @@ fun Context.resolver(sequence: Sequence): Resolver =
 	resolver(sequence.tail).apply(sequence.head)
 
 fun Resolver.function(script: Script): Resolver =
-	apply(value(function(compiler.applyContext, script)))
+	when (script) {
+		is UnitScript -> apply("function" valueTo program())
+		is LinkScript -> apply(value(function(compiler.applyContext, script)))
+	}
 
 fun Resolver.does(script: Script): Resolver =
 	compiler
