@@ -96,11 +96,11 @@ class EvalTest {
 			check(number(5)),
 
 			number(10),
-			save(_as(x())),
+			_is(x()),
 			check(),
 
 			number(10),
-			save(_as(x())),
+			_is(x()),
 			x(),
 			check(number(10)),
 

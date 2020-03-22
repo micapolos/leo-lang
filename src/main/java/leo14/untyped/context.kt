@@ -53,23 +53,23 @@ fun Context.applyFunction(program: Program): Program? =
 
 fun Context.compile(program: Program): Context? =
 	null
-		?: compileIs(program)
+		?: compileDoes(program)
 		?: compileGives(program)
-		?: compileSaveAs(program)
+		?: compileIs(program)
 
-fun Context.compileGives(program: Program): Context? =
+fun Context.compileDoes(program: Program): Context? =
 	program.matchInfix(doesName) { lhs, rhs ->
 		rhs.scriptOrNull?.let { script ->
 			push(Rule(Pattern(lhs), body(script)))
 		}
 	}
 
-fun Context.compileIs(program: Program): Context? =
+fun Context.compileGives(program: Program): Context? =
 	program.matchInfix(givesName) { lhs, rhs ->
 		push(Rule(Pattern(lhs), body(rhs)))
 	}
 
-fun Context.compileSaveAs(program: Program): Context? =
-	program.matchInfix("save", "as") { lhs, rhs ->
+fun Context.compileIs(program: Program): Context? =
+	program.matchInfix(isName) { lhs, rhs ->
 		push(Rule(Pattern(rhs), body(lhs)))
 	}

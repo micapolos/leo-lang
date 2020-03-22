@@ -124,7 +124,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun thisIsThat() {
+	fun thisGivesThat() {
 		script(
 			"x" lineTo script(),
 			"gives" lineTo script(literal(10)))
@@ -132,7 +132,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun thisIsThatAndAccess() {
+	fun thisGivesThatAndAccess() {
 		script(
 			"x" lineTo script(),
 			"gives" lineTo script(literal(10)),
@@ -141,26 +141,24 @@ class EvalTest {
 	}
 
 	@Test
-	fun saveAsThat() {
+	fun thisIsThat() {
 		script(
 			line(literal(10)),
-			"save" lineTo script(
-				"as" lineTo script("foo")))
+			"is" lineTo script("foo"))
 			.assertEvalsTo()
 	}
 
 	@Test
-	fun saveAsThatAndAccess() {
+	fun thisIsThatAndAccess() {
 		script(
 			line(literal(10)),
-			"save" lineTo script(
-				"as" lineTo script("foo")),
+			"is" lineTo script("foo"),
 			"foo" lineTo script())
 			.assertEvalsTo(line(literal(10)))
 	}
 
 	@Test
-	fun thisGivesThat() {
+	fun thisDoesThat() {
 		script(
 			"number" lineTo script(),
 			"does" lineTo script(
@@ -169,7 +167,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun thisGivesThatAndAccess() {
+	fun thisDoesThatAndAccess() {
 		script(
 			"number" lineTo script(),
 			"does" lineTo script(
