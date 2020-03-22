@@ -245,5 +245,5 @@ val Sequence.resolveAutoMake: Program?
 val Sequence.resolvePrint: Program?
 	get() =
 		matchPostfix("print") { lhs ->
-			program().also { print(lhs) }
+			program().also { println(lhs) }
 		}
