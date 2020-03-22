@@ -38,7 +38,7 @@ class ContextTest {
 			.compile(
 				program(
 					"foo" valueTo program(),
-					isName valueTo program("bar")))
+					givesName valueTo program("bar")))
 			.assertEqualTo(
 				context.push(
 					rule(
@@ -52,7 +52,7 @@ class ContextTest {
 			.compile(
 				program(
 					"foo" valueTo program(),
-					givesName valueTo program("bar")))
+					doesName valueTo program("bar")))
 			.assertEqualTo(
 				context.push(
 					rule(

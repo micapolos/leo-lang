@@ -80,16 +80,16 @@ class EvalTest {
 				text()),
 
 			x(),
-			_is(number(10)),
+			gives(number(10)),
 			check(),
 
 			x(),
-			_is(number(10)),
+			gives(number(10)),
 			x(),
 			check(number(10)),
 
 			x(),
-			_is(
+			gives(
 				number(2),
 				plus(number(3))),
 			x(),
@@ -106,7 +106,7 @@ class EvalTest {
 
 			number(),
 			increment(),
-			gives(
+			does(
 				given(),
 				number(),
 				plus(number(1))),
@@ -114,7 +114,7 @@ class EvalTest {
 
 			number(),
 			increment(),
-			gives(
+			does(
 				given(),
 				number(),
 				plus(number(1))),

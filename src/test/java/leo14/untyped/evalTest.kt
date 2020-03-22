@@ -127,7 +127,7 @@ class EvalTest {
 	fun thisIsThat() {
 		script(
 			"x" lineTo script(),
-			"is" lineTo script(literal(10)))
+			"gives" lineTo script(literal(10)))
 			.assertEvalsTo()
 	}
 
@@ -135,7 +135,7 @@ class EvalTest {
 	fun thisIsThatAndAccess() {
 		script(
 			"x" lineTo script(),
-			"is" lineTo script(literal(10)),
+			"gives" lineTo script(literal(10)),
 			"x" lineTo script())
 			.assertEvalsTo(line(literal(10)))
 	}
@@ -163,7 +163,7 @@ class EvalTest {
 	fun thisGivesThat() {
 		script(
 			"number" lineTo script(),
-			"gives" lineTo script(
+			"does" lineTo script(
 				"plus" lineTo script(literal(1))))
 			.assertEvalsTo()
 	}
@@ -172,7 +172,7 @@ class EvalTest {
 	fun thisGivesThatAndAccess() {
 		script(
 			"number" lineTo script(),
-			"gives" lineTo script(
+			"does" lineTo script(
 				"given" lineTo script()),
 			line(literal(10)))
 			.assertEvalsTo(script("given" lineTo script(literal(10))))
@@ -183,7 +183,7 @@ class EvalTest {
 		script(
 			"number" lineTo script(),
 			"factorial" lineTo script(),
-			"gives" lineTo script(
+			"does" lineTo script(
 				"if" lineTo script(
 					"given" lineTo script(),
 					"number" lineTo script(),
@@ -208,7 +208,7 @@ class EvalTest {
 			"false" lineTo script(),
 			"or" lineTo script("true"),
 			"type" lineTo script(),
-			"gives" lineTo script(
+			"does" lineTo script(
 				"change" lineTo script(
 					"to" lineTo script("boolean"))))
 
@@ -325,20 +325,20 @@ class EvalTest {
 	fun function() {
 		script(
 			"foo" lineTo script(),
-			"is" lineTo script("bar"),
+			"gives" lineTo script("bar"),
 			"function" lineTo script(
 				"zoo" lineTo script(),
-				"is" lineTo script("zar"),
+				"gives" lineTo script("zar"),
 				"append" lineTo script("foo"),
 				"append" lineTo script("zoo")))
 			.assertEvalsTo(
 				"function" lineTo script(
 					"context" lineTo script(
 						"foo" lineTo script(),
-						"is" lineTo script("bar")),
+						"gives" lineTo script("bar")),
 					"body" lineTo script(
 						"zoo" lineTo script(),
-						"is" lineTo script("zar"),
+						"gives" lineTo script("zar"),
 						"append" lineTo script("foo"),
 						"append" lineTo script("zoo"))))
 	}
@@ -475,11 +475,11 @@ class EvalTest {
 	fun compile() {
 		script(
 			"x" lineTo script(),
-			"is" lineTo script(literal(5)),
+			"gives" lineTo script(literal(5)),
 			"compile" lineTo script(
 				"quote" lineTo script(
 					"y" lineTo script(),
-					"is" lineTo script(
+					"gives" lineTo script(
 						"x" lineTo script(),
 						"minus" lineTo script(literal(3))))),
 			"x" lineTo script("x"),

@@ -115,7 +115,7 @@ fun Unquoted.write(begin: Begin): Reader =
 				Code(
 					UnquotedFunctionCodeOp(this),
 					script()))
-		givesName ->
+		doesName ->
 			CodeReader(
 				Code(
 					UnquotedGivesCodeOp(this),

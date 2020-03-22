@@ -25,7 +25,7 @@ class ResolverTest {
 			.resolver(program("zoo"))
 
 		resolver
-			.apply("is" valueTo program("zar"))
+			.apply(givesName valueTo program("zar"))
 			.assertEqualTo(
 				resolver.compiler.push(
 					definition(

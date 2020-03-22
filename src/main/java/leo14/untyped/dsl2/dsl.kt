@@ -1,6 +1,9 @@
 package leo14.untyped.dsl2
 
+// TODO: Auto-generate this file
+
 fun X.decrement(v: V) = x("decrement", v)
+fun X.does(v: V) = x("does", v)
 fun X.given(v: V) = x("given", v)
 fun X.gives(v: V) = x("gives", v)
 fun X.increment(v: V) = x("increment", v)
@@ -15,6 +18,7 @@ fun X.y(v: V) = x("y", v)
 fun X.z(v: V) = x("z", v)
 
 val X.decrement get() = decrement { this }
+val X.does get() = does { this }
 val X.given get() = given { this }
 val X.gives get() = gives { this }
 val X.increment get() = increment { this }

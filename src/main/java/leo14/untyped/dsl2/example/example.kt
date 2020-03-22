@@ -4,17 +4,17 @@ import leo14.untyped.dsl2.*
 
 fun main() {
 	_print {
-		number.increment.gives {
+		number.increment.does {
 			given.number
 			plus { number(1) }
 		}
 
-		number.decrement.gives {
+		number.decrement.does {
 			given.number
 			minus { number(1) }
 		}
 
-		my.point._is {
+		my.point.gives {
 			point {
 				x {
 					number(10)

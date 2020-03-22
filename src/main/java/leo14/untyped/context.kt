@@ -58,14 +58,14 @@ fun Context.compile(program: Program): Context? =
 		?: compileSaveAs(program)
 
 fun Context.compileGives(program: Program): Context? =
-	program.matchInfix(givesName) { lhs, rhs ->
+	program.matchInfix(doesName) { lhs, rhs ->
 		rhs.scriptOrNull?.let { script ->
 			push(Rule(Pattern(lhs), body(script)))
 		}
 	}
 
 fun Context.compileIs(program: Program): Context? =
-	program.matchInfix(isName) { lhs, rhs ->
+	program.matchInfix(givesName) { lhs, rhs ->
 		push(Rule(Pattern(lhs), body(rhs)))
 	}
 
