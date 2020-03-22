@@ -14,6 +14,7 @@ val Sequence.resolveNative: Program?
 	get() =
 		null
 			?: resolveNativeClass
+			?: resolveNativeNew
 			?: resolveJavaString
 			?: resolveNativeInt
 			?: resolveNativeFloat
@@ -97,6 +98,28 @@ val Sequence.resolveNativeInvoke
 												.invoke(any, *args)))
 								}
 							}
+						}
+					}
+				}
+			}
+		} catch (t: Throwable) {
+			null
+		}
+
+val Sequence.resolveNativeNew
+	get() =
+		try {
+			matchInfix("native", "new") { lhs, rhs ->
+				lhs.matchText { name ->
+					rhs.valueStack.map { anyOrNull!! }.toList().toTypedArray().let { args ->
+						args.map { it.javaClass }.toTypedArray().let { types ->
+							program(
+								anyValue(
+									javaClass
+										.classLoader
+										.loadClass(name)
+										.getConstructor(*types)
+										.newInstance(*args)))
 						}
 					}
 				}

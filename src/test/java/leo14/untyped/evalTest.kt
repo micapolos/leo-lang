@@ -495,6 +495,14 @@ class EvalTest {
 	}
 
 	@Test
+	fun textNativeNew() {
+		script(
+			line(literal("java.lang.StringBuilder")),
+			"native" lineTo script("new"))
+			.assertEvalsTo("native" lineTo script(literal(java.lang.StringBuilder().toString())))
+	}
+
+	@Test
 	fun javaInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
