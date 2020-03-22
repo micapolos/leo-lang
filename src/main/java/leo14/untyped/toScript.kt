@@ -44,9 +44,7 @@ val Function.bodyScript
 
 val Function.scriptLine
 	get() =
-		"function" lineTo script(
-			"context" lineTo context.functionScript,
-			"body" lineTo script)
+		"function" lineTo script
 
 val Context.functionScript: Script
 	get() =

@@ -129,9 +129,7 @@ class EvalTest {
 				"function" lineTo script("given")),
 			"function" lineTo script())
 			.assertEvalsTo(
-				"function" lineTo script(
-					"context" lineTo script(),
-					"body" lineTo script("given")))
+				"function" lineTo script("given"))
 	}
 
 	@Test
@@ -352,14 +350,10 @@ class EvalTest {
 				"append" lineTo script("zoo")))
 			.assertEvalsTo(
 				"function" lineTo script(
-					"context" lineTo script(
-						"foo" lineTo script(),
-						"gives" lineTo script("bar")),
-					"body" lineTo script(
-						"zoo" lineTo script(),
-						"gives" lineTo script("zar"),
-						"append" lineTo script("foo"),
-						"append" lineTo script("zoo"))))
+					"zoo" lineTo script(),
+					"gives" lineTo script("zar"),
+					"append" lineTo script("foo"),
+					"append" lineTo script("zoo")))
 	}
 
 	@Test
