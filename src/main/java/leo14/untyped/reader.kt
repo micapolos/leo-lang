@@ -199,3 +199,7 @@ fun Unquoted.write(literal: Literal): Reader? =
 
 fun Code.write(literal: Literal): Reader? =
 	CodeReader(copy(script = script.plus(line(literal))))
+
+val Reader.program
+	get() =
+		(this as UnquotedReader).unquoted.resolver.program
