@@ -511,4 +511,32 @@ class EvalTest {
 			"this" lineTo script())
 			.assertEvalsTo("this" lineTo script(literal(1)))
 	}
+
+	@Test
+	fun it_empty() {
+		script(
+			"foo" lineTo script(),
+			"it" lineTo script())
+			.assertEvalsToThis
+	}
+
+	@Test
+	fun it_value() {
+		script(
+			"foo" lineTo script(),
+			"it" lineTo script(literal(123)))
+			.assertEvalsTo(
+				"foo" lineTo script(),
+				line(literal(123)))
+	}
+
+	@Test
+	fun it_complex() {
+		script(
+			"foo" lineTo script(),
+			"it" lineTo script(
+				"x" lineTo script(),
+				"y" lineTo script()))
+			.assertEvalsToThis
+	}
 }
