@@ -11,7 +11,7 @@ class RuleTest {
 	fun resolve_matchProgram() {
 		Rule(
 			Pattern(program("foo" valueTo program())),
-			body(program("bar")))
+			body(thunk(program("bar"))))
 			.apply(context(), program("foo"))
 			.assertEqualTo(thunk(program("bar")))
 	}
@@ -29,7 +29,7 @@ class RuleTest {
 	fun resolve_mismatch() {
 		Rule(
 			Pattern(program(numberName valueTo program())),
-			body(program("ok")))
+			body(thunk(program("ok"))))
 			.apply(context(), program(value(literal("foo"))))
 			.assertEqualTo(null)
 	}

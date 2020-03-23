@@ -13,10 +13,10 @@ fun Rule.apply(context: Context, program: Program): Thunk? =
 
 val Function.recurseRule
 	get() =
-		rule(recursePattern, body(program(value(this))))
+		rule(recursePattern, body(thunk(program(value(this)))))
 
 val Program.givenRule
 	get() =
 		rule(
 			pattern(program(givenName)),
-			body(program(givenName valueTo this)))
+			body(thunk(program(givenName valueTo this))))

@@ -90,7 +90,7 @@ val Pattern.ruleScript
 val Body.ruleScriptLine
 	get() =
 		when (this) {
-			is ProgramBody -> givesName lineTo program.script
+			is ThunkBody -> givesName lineTo thunk.script
 			is ScriptBody -> doesName lineTo script
 		}
 

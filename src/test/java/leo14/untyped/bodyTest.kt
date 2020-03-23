@@ -9,7 +9,7 @@ import kotlin.test.Test
 class BodyTest {
 	@Test
 	fun apply_nullContext() {
-		body(program("foo"))
+		body(thunk(program("foo")))
 			.apply(context(), program("arg" valueTo program()))
 			.assertEqualTo(thunk(program("foo")))
 	}

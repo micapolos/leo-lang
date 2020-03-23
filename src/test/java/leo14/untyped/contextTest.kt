@@ -6,9 +6,9 @@ import kotlin.test.Test
 
 class ContextTest {
 	private val context = context(
-		rule(pattern(program("x")), body(program("zero"))),
-		rule(pattern(program("y")), body(program("one"))),
-		rule(pattern(program("x")), body(program("two"))))
+		rule(pattern(program("x")), body(thunk(program("zero")))),
+		rule(pattern(program("y")), body(thunk(program("one")))),
+		rule(pattern(program("x")), body(thunk(program("two")))))
 
 	@Test
 	fun apply_rules() {
@@ -36,7 +36,7 @@ class ContextTest {
 				context.push(
 					rule(
 						pattern(program("foo")),
-						body(program("bar")))))
+						body(thunk(program("bar"))))))
 	}
 
 	@Test

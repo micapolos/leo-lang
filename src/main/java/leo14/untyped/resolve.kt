@@ -264,7 +264,7 @@ val Sequence.resolveFold: Program?
 								.copy(context = function.context.push(
 									rule(
 										pattern(program(foldedName)),
-										body(program(foldedName valueTo program(value))))))
+										body(thunk(program(foldedName valueTo program(value)))))))
 								.apply(this)
 								.program
 						}

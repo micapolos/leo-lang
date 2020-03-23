@@ -28,8 +28,9 @@ class FunctionTest {
 						program(
 							"foo" valueTo program())),
 					body(
-						program(
-							"bar" valueTo program())))),
+						thunk(
+							program(
+								"bar" valueTo program()))))),
 			script("foo" lineTo script()))
 			.apply(program("goo" valueTo program()))
 			.assertEqualTo(thunk(program("bar")))
