@@ -665,4 +665,15 @@ class EvalTest {
 			"assert" lineTo script("foo"))
 			.assertEvalsToThis
 	}
+
+	@Test
+	fun anythingMatch() {
+		script(
+			"anything" lineTo script(),
+			"increment" lineTo script(),
+			"gives" lineTo script("match"),
+			"foo" lineTo script(),
+			"increment" lineTo script())
+			.assertEvalsTo(script("match"))
+	}
 }
