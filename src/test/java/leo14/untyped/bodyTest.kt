@@ -11,13 +11,13 @@ class BodyTest {
 	fun apply_nullContext() {
 		body(program("foo"))
 			.apply(context(), program("arg" valueTo program()))
-			.assertEqualTo(program("foo"))
+			.assertEqualTo(thunk(program("foo")))
 	}
 
 	@Test
 	fun apply_nonNullContext() {
 		body(script(givenName lineTo script()))
 			.apply(context(), program(literal(5)))
-			.assertEqualTo(program(givenName valueTo program(literal(5))))
+			.assertEqualTo(thunk(program(givenName valueTo program(literal(5)))))
 	}
 }

@@ -16,7 +16,7 @@ fun function(context: Context, script: Script, recursive: Boolean = false) =
 
 fun function(script: Script, recursive: Boolean = false) = function(context(), script, recursive)
 
-fun Function.apply(given: Program): Program =
+fun Function.apply(given: Program): Thunk =
 	try {
 		context
 			.runIf(recursive) { push(recurseRule) }
@@ -27,7 +27,7 @@ fun Function.apply(given: Program): Program =
 			.run { this as UnquotedReader }
 			.unquoted
 			.resolver
-			.program
+			.thunk
 	} catch (stackOverflowError: StackOverflowError) {
-		stackOverflowErrorProgram
+		thunk(stackOverflowErrorProgram)
 	}

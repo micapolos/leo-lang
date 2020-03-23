@@ -52,13 +52,13 @@ val Sequence.resolve: Program?
 val Sequence.resolveFunctionApplyAnything: Program?
 	get() =
 		matchInfix(applyName) { lhs, rhs ->
-			lhs.functionOrNull?.apply(rhs)
+			lhs.functionOrNull?.apply(rhs)?.program
 		}
 
 val Sequence.resolveAnythingDoFunction: Program?
 	get() =
 		matchInfix(doName) { lhs, rhs ->
-			rhs.functionOrNull?.apply(lhs)
+			rhs.functionOrNull?.apply(lhs)?.program
 		}
 
 val Sequence.resolveAccess: Program?
@@ -266,6 +266,7 @@ val Sequence.resolveFold: Program?
 										pattern(program(foldedName)),
 										body(program(foldedName valueTo program(value))))))
 								.apply(this)
+								.program
 						}
 					}
 				}

@@ -25,18 +25,18 @@ fun Context.push(definition: Definition): Context =
 fun Context.push(rule: Rule): Context =
 	context(this linkTo rule)
 
-fun Context.apply(program: Program): Program? =
+fun Context.apply(program: Program): Thunk? =
 	null
 		?: applyRules(program)
-		?: program.resolve
+		?: program.resolve?.let(::thunk)
 
-fun Context.applyRules(program: Program): Program? =
+fun Context.applyRules(program: Program): Thunk? =
 	when (this) {
 		is EmptyContext -> null
 		is LinkContext -> link.applyRules(program)
 	}
 
-fun ContextLink.applyRules(program: Program): Program? =
+fun ContextLink.applyRules(program: Program): Thunk? =
 	definition.apply(context, program) ?: context.applyRules(program)
 
 fun Context.compile(program: Program): Context? =

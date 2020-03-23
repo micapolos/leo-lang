@@ -14,11 +14,11 @@ class ContextTest {
 	fun apply_rules() {
 		context
 			.apply(program("x"))
-			.assertEqualTo(program("two"))
+			.assertEqualTo(thunk(program("two")))
 
 		context
 			.apply(program("y"))
-			.assertEqualTo(program("one"))
+			.assertEqualTo(thunk(program("one")))
 
 		context
 			.apply(program("z"))

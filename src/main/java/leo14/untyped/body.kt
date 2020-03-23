@@ -9,8 +9,8 @@ data class ScriptBody(val script: Script) : Body()
 fun body(program: Program): Body = ProgramBody(program)
 fun body(script: Script): Body = ScriptBody(script)
 
-fun Body.apply(context: Context, given: Program) =
+fun Body.apply(context: Context, given: Program): Thunk =
 	when (this) {
-		is ProgramBody -> program
+		is ProgramBody -> thunk(program)
 		is ScriptBody -> function(context, script).apply(given)
 	}

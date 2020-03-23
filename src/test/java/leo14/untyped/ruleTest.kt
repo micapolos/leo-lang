@@ -13,7 +13,7 @@ class RuleTest {
 			Pattern(program("foo" valueTo program())),
 			body(program("bar")))
 			.apply(context(), program("foo"))
-			.assertEqualTo(program("bar"))
+			.assertEqualTo(thunk(program("bar")))
 	}
 
 	@Test
@@ -22,7 +22,7 @@ class RuleTest {
 			pattern(program(numberName valueTo program())),
 			body(script(givenName lineTo script())))
 			.apply(context(), program(value(literal(10))))
-			.assertEqualTo(program(givenName valueTo program(literal(10))))
+			.assertEqualTo(thunk(program(givenName valueTo program(literal(10)))))
 	}
 
 	@Test
