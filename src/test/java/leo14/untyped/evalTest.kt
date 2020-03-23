@@ -628,4 +628,20 @@ class EvalTest {
 						line(literal(1)),
 						line(literal(2)))))
 	}
+
+	@Test
+	fun assert() {
+		script(
+			"assert" lineTo script(
+				line(literal(2)),
+				"plus" lineTo script(literal(2)),
+				"gives" lineTo script(literal(5))))
+			.assertEvalFails(
+				script(
+					"error" lineTo script(
+						line(literal(2)),
+						"plus" lineTo script(literal(2)),
+						"gives" lineTo script(literal(4)),
+						"expected" lineTo script(literal(5)))))
+	}
 }

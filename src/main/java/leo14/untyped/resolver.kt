@@ -76,6 +76,25 @@ fun Resolver.function(script: Script): Resolver =
 		is LinkScript -> apply(value(function(compiler.applyContext, script)))
 	}
 
+fun Resolver.assert(script: Script): Resolver =
+	script.program
+		.matchInfix("gives") { lhs, rhs ->
+			lhs.eval.let { lhsEvaled ->
+				rhs.eval.let { rhsEvaled ->
+					if (lhsEvaled != rhsEvaled) error(
+						"error" valueTo
+							lhs.plus(
+								program(
+									"gives" valueTo lhsEvaled,
+									"expected" valueTo rhsEvaled)))
+					else clear
+				}
+			}
+		}
+		?: error("error" valueTo program(
+			"syntax" valueTo program(
+				"assert" valueTo script.program)))
+
 fun Resolver.does(script: Script): Resolver =
 	compiler
 		.push(definition(rule(pattern(program), body(script))))

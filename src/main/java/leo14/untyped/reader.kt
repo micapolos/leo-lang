@@ -29,6 +29,7 @@ data class Code(val opOrNull: CodeOp?, val script: Script)
 
 sealed class CodeOp
 data class CodeAppendCodeOp(val code: Code, val begin: Begin) : CodeOp()
+data class UnquotedAssertCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedFunctionCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedGivesCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedGetCodeOp(val unquoted: Unquoted) : CodeOp()
@@ -103,6 +104,11 @@ fun Quoted.write(begin: Begin): Reader =
 
 fun Unquoted.write(begin: Begin): Reader =
 	when (begin.string) {
+		assertName ->
+			CodeReader(
+				Code(
+					UnquotedAssertCodeOp(this),
+					script()))
 		quoteName ->
 			QuotedReader(
 				Quoted(
@@ -177,6 +183,10 @@ fun CodeOp.write(script: Script): Reader? =
 			CodeReader(
 				code.copy(
 					script = code.script.plus(begin.string lineTo script)))
+		is UnquotedAssertCodeOp ->
+			UnquotedReader(
+				unquoted.copy(
+					resolver = unquoted.resolver.assert(script)))
 		is UnquotedFunctionCodeOp ->
 			UnquotedReader(
 				unquoted.copy(

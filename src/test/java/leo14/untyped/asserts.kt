@@ -17,3 +17,9 @@ fun Script.assertEvalsGives(fn: Script.() -> Script) =
 val Script.assertEvalsToThis
 	get() =
 		assertEvalsTo(this)
+
+fun Script.assertEvalFails(script: Script) =
+	kotlin.test.assertFails { eval }
+		.message
+		.assertEqualTo(script.toString())
+
