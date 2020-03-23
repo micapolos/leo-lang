@@ -6,6 +6,16 @@ import leo14.Literal
 import leo14.numberOrNull
 import leo14.stringOrNull
 
+sealed class Thunk
+
+data class ProgramThunk(val program: Program) : Thunk() {
+	override fun toString() = program.toString()
+}
+
+data class BlockThunk(val block: Block) : Thunk() {
+	override fun toString() = block.toString()
+}
+
 sealed class Program
 
 object EmptyProgram : Program() {
@@ -45,6 +55,9 @@ data class Field(val name: String, val rhs: Program) {
 sealed class Atom
 data class LiteralAtom(val literal: Literal) : Atom()
 data class FunctionAtom(val function: Function) : Atom()
+
+fun thunk(program: Program): Thunk = ProgramThunk(program)
+fun thunk(block: Block): Thunk = BlockThunk(block)
 
 val emptyProgram: Program get() = EmptyProgram
 fun program(sequence: Sequence): Program = SequenceProgram(sequence)
