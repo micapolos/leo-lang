@@ -16,7 +16,7 @@ fun function(context: Context, script: Script, recursive: Boolean = false) =
 
 fun function(script: Script, recursive: Boolean = false) = function(context(), script, recursive)
 
-fun Function.apply(given: Program): Thunk =
+fun Function.apply(given: Thunk): Thunk =
 	try {
 		context
 			.runIf(recursive) { push(recurseRule) }

@@ -9,7 +9,7 @@ data class ScriptBody(val script: Script) : Body()
 fun body(thunk: Thunk): Body = ThunkBody(thunk)
 fun body(script: Script): Body = ScriptBody(script)
 
-fun Body.apply(context: Context, given: Program): Thunk =
+fun Body.apply(context: Context, given: Thunk): Thunk =
 	when (this) {
 		is ThunkBody -> thunk
 		is ScriptBody -> function(context, script).apply(given)

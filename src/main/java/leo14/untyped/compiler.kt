@@ -12,17 +12,17 @@ fun compiler(context: Context): Compiler = ContextCompiler(context)
 fun compiler(link: CompilerLink): Compiler = LinkCompiler(link)
 infix fun Compiler.linkTo(recursive: Recursive) = CompilerLink(this, recursive)
 
-fun Compiler.compile(program: Program): Compiler? =
+fun Compiler.compile(thunk: Thunk): Compiler? =
 	when (this) {
-		is ContextCompiler -> context.compile(program)?.let(::compiler)
-		is LinkCompiler -> link.compile(program)?.let(::compiler)
+		is ContextCompiler -> context.compile(thunk)?.let(::compiler)
+		is LinkCompiler -> link.compile(thunk)?.let(::compiler)
 	}
 
-fun CompilerLink.compile(program: Program): CompilerLink? =
-	recursive.compile(program)?.let { compiler linkTo it }
+fun CompilerLink.compile(thunk: Thunk): CompilerLink? =
+	recursive.compile(thunk)?.let { compiler linkTo it }
 
-fun Recursive.compile(program: Program): Recursive? =
-	context.compile(program)?.let(::recursive)
+fun Recursive.compile(thunk: Thunk): Recursive? =
+	context.compile(thunk)?.let(::recursive)
 
 val Compiler.applyContext: Context
 	get() =

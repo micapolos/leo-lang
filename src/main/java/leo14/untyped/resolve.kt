@@ -51,14 +51,14 @@ val Sequence.resolve: Program?
 
 val Sequence.resolveFunctionApplyAnything: Program?
 	get() =
-		matchInfix(applyName) { lhs, rhs ->
-			lhs.functionOrNull?.apply(rhs)?.program
+		matchInfixThunk(applyName) { lhs, rhs ->
+			lhs.program.functionOrNull?.apply(rhs)?.program
 		}
 
 val Sequence.resolveAnythingDoFunction: Program?
 	get() =
-		matchInfix(doName) { lhs, rhs ->
-			rhs.functionOrNull?.apply(lhs)?.program
+		matchInfixThunk(doName) { lhs, rhs ->
+			rhs.program.functionOrNull?.apply(lhs)?.program
 		}
 
 val Sequence.resolveAccess: Program?
@@ -257,8 +257,8 @@ val Sequence.resolveFold: Program?
 	get() =
 		matchInfix(doingName) { lhs, rhs ->
 			rhs.functionOrNull?.let { function ->
-				lhs.matchInfix(foldName) { folded, items ->
-					items.contentsOrNull?.let { contents ->
+				lhs.matchInfixThunk(foldName) { folded, items ->
+					items.program.contentsOrNull?.let { contents ->
 						folded.fold(contents.valueStack) { value ->
 							function
 								.copy(context = function.context.push(
@@ -266,8 +266,7 @@ val Sequence.resolveFold: Program?
 										pattern(program(foldedName)),
 										body(thunk(program(foldedName valueTo program(value)))))))
 								.apply(this)
-								.program
-						}
+						}.program // TODO: To thunk
 					}
 				}
 			}

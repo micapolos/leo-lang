@@ -25,39 +25,39 @@ fun Context.push(definition: Definition): Context =
 fun Context.push(rule: Rule): Context =
 	context(this linkTo rule)
 
-fun Context.apply(program: Program): Thunk? =
+fun Context.apply(thunk: Thunk): Thunk? =
 	null
-		?: applyRules(program)
-		?: program.resolve?.let(::thunk)
+		?: applyRules(thunk)
+		?: thunk.program.resolve?.let { thunk(it) } // TODO
 
-fun Context.applyRules(program: Program): Thunk? =
+fun Context.applyRules(thunk: Thunk): Thunk? =
 	when (this) {
 		is EmptyContext -> null
-		is LinkContext -> link.applyRules(program)
+		is LinkContext -> link.applyRules(thunk)
 	}
 
-fun ContextLink.applyRules(program: Program): Thunk? =
-	definition.apply(context, program) ?: context.applyRules(program)
+fun ContextLink.applyRules(thunk: Thunk): Thunk? =
+	definition.apply(context, thunk) ?: context.applyRules(thunk)
 
-fun Context.compile(program: Program): Context? =
+fun Context.compile(thunk: Thunk): Context? =
 	null
-		?: compileDoes(program)
-		?: compileGives(program)
-		?: compileAs(program)
+		?: compileDoes(thunk)
+		?: compileGives(thunk)
+		?: compileAs(thunk)
 
-fun Context.compileDoes(program: Program): Context? =
-	program.matchInfix(doesName) { lhs, rhs ->
+fun Context.compileDoes(thunk: Thunk): Context? =
+	thunk.program.matchInfix(doesName) { lhs, rhs ->
 		rhs.scriptOrNull?.let { script ->
 			push(Rule(Pattern(lhs), body(script)))
 		}
 	}
 
-fun Context.compileGives(program: Program): Context? =
-	program.matchInfix(givesName) { lhs, rhs ->
+fun Context.compileGives(thunk: Thunk): Context? =
+	thunk.program.matchInfix(givesName) { lhs, rhs ->
 		push(Rule(Pattern(lhs), body(thunk(rhs))))
 	}
 
-fun Context.compileAs(program: Program): Context? =
-	program.matchInfix(asName) { lhs, rhs ->
+fun Context.compileAs(thunk: Thunk): Context? =
+	thunk.program.matchInfix(asName) { lhs, rhs ->
 		push(Rule(Pattern(rhs), body(thunk(lhs))))
 	}

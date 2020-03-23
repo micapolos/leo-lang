@@ -29,7 +29,7 @@ fun resolver(program: Program = program()) =
 	context().resolver(program)
 
 fun Resolver.apply(value: Value): Resolver =
-	compiler.applyContext.resolve(this.program.plus(value))
+	compiler.applyContext.resolve(thunk(this.program.plus(value)))
 
 fun Resolver.lazy(script: Script): Resolver =
 	compiler.resolver(thunk(lazy(compiler.applyContext, script)))
@@ -45,35 +45,35 @@ val Resolver.printScript
 fun Resolver.append(value: Value): Resolver =
 	set(this.program.plus(value))
 
-fun Resolver.append(program: Program): Resolver =
-	set(this.program.plus(program))
+fun Resolver.append(thunk: Thunk): Resolver =
+	set(this.program.plus(thunk.program))
 
-fun Context.resolve(program: Program): Resolver =
+fun Context.resolve(thunk: Thunk): Resolver =
 	null
-		?: resolveContext(program)
-		?: resolveDefinitions(program)
-		?: resolveSwitch(program)
-		?: resolveStatic(program)
+		?: resolveContext(thunk)
+		?: resolveDefinitions(thunk)
+		?: resolveSwitch(thunk)
+		?: resolveStatic(thunk)
 
-fun Context.resolveStatic(program: Program): Resolver =
+fun Context.resolveStatic(thunk: Thunk): Resolver =
 	null
-		?: resolveCompile(program)
-		?: resolver(program)
+		?: resolveCompile(thunk)
+		?: resolver(thunk)
 
-fun Context.resolveContext(program: Program): Resolver? =
-	apply(program)?.let { resolver(it) }
+fun Context.resolveContext(thunk: Thunk): Resolver? =
+	apply(thunk)?.let { resolver(it) }
 
-fun Context.resolveDefinitions(program: Program): Resolver? =
-	compile(program)?.resolver()
+fun Context.resolveDefinitions(thunk: Thunk): Resolver? =
+	compile(thunk)?.resolver()
 
-fun Context.resolveSwitch(program: Program): Resolver? =
+fun Context.resolveSwitch(thunk: Thunk): Resolver? =
 	null
 //	program.resolveSwitchMatch?.let { switchMatch ->
 //		resolver(switchMatch.param).eval(switchMatch.body)
 //	}
 
-fun Context.resolveCompile(program: Program): Resolver? =
-	program.matchInfix(compileName) { lhs, rhs ->
+fun Context.resolveCompile(thunk: Thunk): Resolver? =
+	thunk.program.matchInfix(compileName) { lhs, rhs ->
 		rhs.scriptOrNull?.let { code ->
 			resolver(lhs).compile(code)
 		}

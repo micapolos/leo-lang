@@ -11,7 +11,7 @@ class FunctionTest {
 		function(
 			context(),
 			script(givenName lineTo script()))
-			.apply(program("foo" valueTo program()))
+			.apply(thunk(program("foo" valueTo program())))
 			.assertEqualTo(
 				thunk(
 					program(
@@ -32,7 +32,7 @@ class FunctionTest {
 							program(
 								"bar" valueTo program()))))),
 			script("foo" lineTo script()))
-			.apply(program("goo" valueTo program()))
+			.apply(thunk(program("goo" valueTo program())))
 			.assertEqualTo(thunk(program("bar")))
 	}
 }

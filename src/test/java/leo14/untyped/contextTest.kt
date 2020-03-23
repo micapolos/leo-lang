@@ -13,15 +13,15 @@ class ContextTest {
 	@Test
 	fun apply_rules() {
 		context
-			.apply(program("x"))
+			.apply(thunk(program("x")))
 			.assertEqualTo(thunk(program("two")))
 
 		context
-			.apply(program("y"))
+			.apply(thunk(program("y")))
 			.assertEqualTo(thunk(program("one")))
 
 		context
-			.apply(program("z"))
+			.apply(thunk(program("z")))
 			.assertEqualTo(null)
 	}
 
@@ -29,9 +29,10 @@ class ContextTest {
 	fun compile_is() {
 		context
 			.compile(
-				program(
-					"foo" valueTo program(),
-					givesName valueTo program("bar")))
+				thunk(
+					program(
+						"foo" valueTo program(),
+						givesName valueTo program("bar"))))
 			.assertEqualTo(
 				context.push(
 					rule(
@@ -43,9 +44,10 @@ class ContextTest {
 	fun compile_does() {
 		context
 			.compile(
-				program(
-					"foo" valueTo program(),
-					doesName valueTo program("bar")))
+				thunk(
+					program(
+						"foo" valueTo program(),
+						doesName valueTo program("bar"))))
 			.assertEqualTo(
 				context.push(
 					rule(

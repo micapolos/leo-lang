@@ -16,7 +16,7 @@ val Unquoted.fragment: Fragment
 
 val Quoted.fragment: Fragment
 	get() =
-		opOrNull?.fragmentParent.fragment(program.script)
+		opOrNull?.fragmentParent.fragment(thunk.script)
 
 val Code.fragment: Fragment
 	get() =

@@ -11,7 +11,7 @@ data class Quoted(
 	val opOrNull: QuotedOp?,
 	val compiler: Compiler,
 	val depth: Int,
-	val program: Program)
+	val thunk: Thunk)
 
 sealed class QuotedOp
 data class QuotedAppendQuotedOp(val quoted: Quoted, val begin: Begin) : QuotedOp()
@@ -79,7 +79,7 @@ fun Quoted.write(begin: Begin): Reader =
 					QuotedAppendQuotedOp(this, begin),
 					compiler,
 					depth.inc(),
-					program()))
+					thunk(program())))
 		begin.string == unquoteName && depth > 0 ->
 			when (depth) {
 				1 ->
@@ -92,7 +92,7 @@ fun Quoted.write(begin: Begin): Reader =
 						QuotedAppendQuotedOp(this, begin),
 						compiler,
 						depth.dec(),
-						program()))
+						thunk(program())))
 			}
 		else ->
 			QuotedReader(
@@ -100,7 +100,7 @@ fun Quoted.write(begin: Begin): Reader =
 					QuotedAppendQuotedOp(this, begin),
 					compiler,
 					depth,
-					program()))
+					thunk(program())))
 	}
 
 fun Unquoted.write(begin: Begin): Reader =
@@ -116,7 +116,7 @@ fun Unquoted.write(begin: Begin): Reader =
 					UnquotedPlusQuotedOp(this),
 					resolver.compiler,
 					1,
-					program()))
+					thunk(program())))
 		functionName ->
 			CodeReader(
 				Code(
@@ -157,33 +157,34 @@ fun Code.write(begin: Begin): Reader =
 			script()))
 
 fun Quoted.write(end: End): Reader? =
-	opOrNull?.write(program)
+	opOrNull?.write(thunk)
 
-fun QuotedOp.write(program: Program): Reader? =
+fun QuotedOp.write(thunk: Thunk): Reader? =
 	when (this) {
 		is QuotedAppendQuotedOp ->
 			QuotedReader(
 				quoted.copy(
-					program = quoted.program.plus(begin.string valueTo program)))
+					thunk = quoted.thunk.plus(begin.string valueTo thunk)))
 		is UnquotedPlusQuotedOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.append(program)))
+					resolver = unquoted.resolver.append(thunk)))
 	}
 
 fun Unquoted.write(end: End): Reader? =
-	opOrNull?.write(resolver.program)
+	opOrNull?.write(resolver.thunk)
 
-fun UnquotedOp.write(program: Program): Reader? =
+fun UnquotedOp.write(thunk: Thunk): Reader? =
 	when (this) {
 		is UnquotedResolveUnquotedOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.apply(begin.string valueTo program)))
+					resolver = unquoted.resolver.apply(begin.string valueTo thunk)))
 		is QuotedPlusUnquotedOp ->
 			QuotedReader(
 				quoted.copy(
-					program = quoted.program.plus(program)))
+					// TODO: IS it correct?
+					thunk = thunk(quoted.thunk.program.plus(thunk.program))))
 	}
 
 fun Code.write(end: End): Reader? =
@@ -218,7 +219,7 @@ fun CodeOp.write(script: Script): Reader? =
 	}
 
 fun Quoted.write(literal: Literal): Reader? =
-	QuotedReader(copy(program = program.plus(value(literal))))
+	QuotedReader(copy(thunk = thunk.plus(value(literal))))
 
 fun Unquoted.write(literal: Literal): Reader? =
 	UnquotedReader(copy(resolver = resolver.apply(value(literal))))

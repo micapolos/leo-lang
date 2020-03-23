@@ -40,6 +40,9 @@ fun <R> Program.matchBody(fn: (Program) -> R): R? =
 fun <R> Program.matchInfix(name: String, fn: (Program, Program) -> R) =
 	sequenceOrNull?.matchInfix(name, fn)
 
+fun <R> Program.matchInfixThunk(name: String, fn: (Thunk, Thunk) -> R) =
+	sequenceOrNull?.matchInfixThunk(name, fn)
+
 fun <R> Program.matchInfix(name1: String, name2: String, fn: (Program, Program) -> R) =
 	sequenceOrNull?.matchInfix(name1, name2, fn)
 
