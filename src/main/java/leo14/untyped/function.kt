@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo.base.runIf
 import leo13.fold
 import leo13.reverse
 import leo14.Script
@@ -13,10 +14,10 @@ fun function(context: Context, script: Script) = Function(context, script)
 
 fun function(script: Script) = function(context(), script)
 
-fun Function.apply(given: Program): Program =
+fun Function.apply(given: Program, recursive: Boolean = false): Program =
 	try {
 		context
-			.push(recurseRule)
+			.runIf(recursive) { push(recurseRule) }
 			.push(given.givenRule)
 			.resolver()
 			.reader

@@ -6,10 +6,10 @@ val html = library_ {
 	render
 	gives {
 		function {
-			render
-			gives { text("") }
+			anything.render
+			does { text("") }
 
-			html.render
+			quote { html { anything }.render }
 			does {
 				text("<html>")
 				plus {
@@ -19,16 +19,28 @@ val html = library_ {
 				plus { text("</html>") }
 			}
 
+			quote { div { anything }.render }
+			does {
+				text("<div>")
+				plus {
+					given.div.content
+					do_ { recurse }
+				}
+				plus { text("</div>") }
+			}
+
 			given.content.render
 		}
 	}
 
 	anything.render
 	does {
-		given.content.do_ { render }
+		given.previous.given.content.do_ { render }
 	}
 
-	html.render.print
+	html {
+		div
+	}.render.print
 }
 
 fun main() {
