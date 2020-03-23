@@ -6,30 +6,32 @@ val html = library_ {
 	render
 	gives {
 		function {
-			anything.render
-			does { text("") }
+			recursive {
+				anything.render
+				does { text("") }
 
-			quote { html { anything }.render }
-			does {
-				text("<html>")
-				plus {
-					given.html.content
-					do_ { recurse }
+				quote { html { anything }.render }
+				does {
+					text("<html>")
+					plus {
+						given.html.content
+						do_ { recurse }
+					}
+					plus { text("</html>") }
 				}
-				plus { text("</html>") }
-			}
 
-			quote { div { anything }.render }
-			does {
-				text("<div>")
-				plus {
-					given.div.content
-					do_ { recurse }
+				quote { div { anything }.render }
+				does {
+					text("<div>")
+					plus {
+						given.div.content
+						do_ { recurse }
+					}
+					plus { text("</div>") }
 				}
-				plus { text("</div>") }
-			}
 
-			given.content.render
+				given.content.render
+			}
 		}
 	}
 

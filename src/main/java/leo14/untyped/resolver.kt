@@ -2,11 +2,9 @@ package leo14.untyped
 
 import leo13.expectedName
 import leo13.fold
+import leo13.recursiveName
 import leo13.reverse
-import leo14.LinkScript
-import leo14.Script
-import leo14.UnitScript
-import leo14.tokenStack
+import leo14.*
 
 data class Resolver(
 	val compiler: Compiler,
@@ -74,8 +72,22 @@ fun Context.resolver(sequence: Sequence): Resolver =
 fun Resolver.function(script: Script): Resolver =
 	when (script) {
 		is UnitScript -> apply(functionName valueTo program())
-		is LinkScript -> apply(value(function(compiler.applyContext, script, recursive = true)))
+		is LinkScript -> script.resolveRecursive
+			?.let { recursiveScript ->
+				apply(value(function(compiler.applyContext, recursiveScript, recursive = true)))
+			}
+			?: apply(value(function(compiler.applyContext, script, recursive = false)))
 	}
+
+val Script.resolveRecursive: Script?
+	get() =
+		(this as? LinkScript)?.link?.let { link ->
+			if (!link.lhs.isEmpty) null
+			else (link.line as? FieldScriptLine)?.field?.let { field ->
+				if (field.string == recursiveName) field.rhs
+				else null
+			}
+		}
 
 fun Resolver.assert(script: Script): Resolver =
 	script.program

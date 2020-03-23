@@ -1,6 +1,7 @@
 package leo14.untyped
 
 import leo13.recurseName
+import leo13.recursiveName
 import leo14.*
 
 val Program.script: Script
@@ -45,7 +46,9 @@ val Function.bodyScript
 
 val Function.scriptLine
 	get() =
-		functionName lineTo script
+		functionName lineTo
+			if (recursive) script(recursiveName lineTo script)
+			else script
 
 val Context.functionScript: Script
 	get() =
