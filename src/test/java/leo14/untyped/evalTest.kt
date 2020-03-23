@@ -630,7 +630,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun assert() {
+	fun assert_error() {
 		script(
 			"assert" lineTo script(
 				line(literal(2)),
@@ -643,5 +643,18 @@ class EvalTest {
 						"plus" lineTo script(literal(2)),
 						"gives" lineTo script(literal(4)),
 						"expected" lineTo script(literal(5)))))
+	}
+
+	@Test
+	fun assert_success() {
+		script(
+			line(literal("Hello, ")),
+			"assert" lineTo script(
+				line(literal(2)),
+				"plus" lineTo script(literal(2)),
+				"gives" lineTo script(literal(4))),
+			"plus" lineTo script(literal("world!")))
+			.assertEvalsTo(
+				script(literal("Hello, world!")))
 	}
 }

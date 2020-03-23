@@ -87,7 +87,7 @@ fun Resolver.assert(script: Script): Resolver =
 								program(
 									"gives" valueTo lhsEvaled,
 									"expected" valueTo rhsEvaled)))
-					else clear
+					else this
 				}
 			}
 		}
