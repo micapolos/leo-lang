@@ -194,9 +194,11 @@ val Sequence.resolveContent
 
 val Sequence.resolveName
 	get() =
-		matchPostfix(nameName) { lhs ->
-			lhs.nameOrNull?.let { name ->
-				program(literal(name))
+		matchPostfix(textName) { lhs ->
+			lhs.matchPostfix(nameName) { lhs ->
+				lhs.nameOrNull?.let { name ->
+					program(literal(name))
+				}
 			}
 		}
 

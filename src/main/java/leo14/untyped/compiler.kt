@@ -1,5 +1,7 @@
 package leo14.untyped
 
+import leo14.Script
+
 sealed class Compiler
 
 data class ContextCompiler(val context: Context) : Compiler()
@@ -44,3 +46,6 @@ fun CompilerLink.push(definition: Definition) =
 
 fun Recursive.push(definition: Definition): Recursive =
 	recursive(context.push(definition))
+
+fun Compiler.eval(script: Script): Program =
+	resolver().compile(script).program

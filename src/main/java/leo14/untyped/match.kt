@@ -1,5 +1,7 @@
 package leo14.untyped
 
+import leo.base.notNullIf
+import leo14.*
 import leo14.Number
 
 fun <R> Program.matchEmpty(fn: () -> R): R? =
@@ -120,4 +122,24 @@ fun <R> Field.matchName(fn: (String) -> R) =
 fun <R> Value.matchName(fn: (String) -> R) =
 	matchField { field ->
 		field.matchName(fn)
+	}
+
+fun <R : Any> Script.matchInfix(name: String, fn: (Script, Script) -> R): R? =
+	when (this) {
+		is UnitScript -> null
+		is LinkScript -> link.matchInfix(name, fn)
+	}
+
+fun <R : Any> ScriptLink.matchInfix(name: String, fn: (Script, Script) -> R): R? =
+	line.match(name) { rhs -> fn(lhs, rhs) }
+
+fun <R : Any> ScriptLine.match(name: String, fn: (Script) -> R): R? =
+	when (this) {
+		is LiteralScriptLine -> null
+		is FieldScriptLine -> field.match(name, fn)
+	}
+
+fun <R : Any> ScriptField.match(name: String, fn: (Script) -> R): R? =
+	notNullIf(this.string == name) {
+		fn(rhs)
 	}
