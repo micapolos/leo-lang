@@ -657,4 +657,12 @@ class EvalTest {
 			.assertEvalsTo(
 				script(literal("Hello, world!")))
 	}
+
+	@Test
+	fun assert_invalidSyntax() {
+		script(
+			line(literal("Hello, ")),
+			"assert" lineTo script("foo"))
+			.assertEvalsToThis
+	}
 }

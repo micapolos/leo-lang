@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo13.expectedName
 import leo13.fold
 import leo13.reverse
 import leo14.LinkScript
@@ -78,22 +79,20 @@ fun Resolver.function(script: Script): Resolver =
 
 fun Resolver.assert(script: Script): Resolver =
 	script.program
-		.matchInfix("gives") { lhs, rhs ->
+		.matchInfix(givesName) { lhs, rhs ->
 			lhs.eval.let { lhsEvaled ->
 				rhs.eval.let { rhsEvaled ->
 					if (lhsEvaled != rhsEvaled) error(
-						"error" valueTo
+						errorName valueTo
 							lhs.plus(
 								program(
-									"gives" valueTo lhsEvaled,
-									"expected" valueTo rhsEvaled)))
+									givesName valueTo lhsEvaled,
+									expectedName valueTo rhsEvaled)))
 					else this
 				}
 			}
 		}
-		?: error("error" valueTo program(
-			"syntax" valueTo program(
-				"assert" valueTo script.program)))
+		?: append(assertName valueTo script.program)
 
 fun Resolver.does(script: Script): Resolver =
 	compiler
