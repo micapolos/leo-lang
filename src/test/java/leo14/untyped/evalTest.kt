@@ -195,29 +195,29 @@ class EvalTest {
 			.assertEvalsTo(script("given" lineTo script(literal(10))))
 	}
 
-	@Test
-	fun thisGivesThatRecursiveAndAccess() {
-		script(
-			"number" lineTo script(),
-			"factorial" lineTo script(),
-			"does" lineTo script(
-				"if" lineTo script(
-					"given" lineTo script(),
-					"number" lineTo script(),
-					"equals" lineTo script(literal(1))),
-				"then" lineTo script(literal(1)),
-				"else" lineTo script(
-					"given" lineTo script(),
-					"number" lineTo script(),
-					"times" lineTo script(
-						"given" lineTo script(),
-						"number" lineTo script(),
-						"minus" lineTo script(literal(1)),
-						"do" lineTo script("recurse")))),
-			line(literal(6)),
-			"factorial" lineTo script())
-			.assertEvalsTo(script(literal(720)))
-	}
+//	@Test
+//	fun thisGivesThatRecursiveAndAccess() {
+//		script(
+//			"number" lineTo script(),
+//			"factorial" lineTo script(),
+//			"does" lineTo script(
+//				"if" lineTo script(
+//					"given" lineTo script(),
+//					"number" lineTo script(),
+//					"equals" lineTo script(literal(1))),
+//				"then" lineTo script(literal(1)),
+//				"else" lineTo script(
+//					"given" lineTo script(),
+//					"number" lineTo script(),
+//					"times" lineTo script(
+//						"given" lineTo script(),
+//						"number" lineTo script(),
+//						"minus" lineTo script(literal(1)),
+//						"do" lineTo script("recurse")))),
+//			line(literal(6)),
+//			"factorial" lineTo script())
+//			.assertEvalsTo(script(literal(720)))
+//	}
 
 	@Test
 	fun pattern() {

@@ -8,13 +8,15 @@ import leo14.tokenStack
 
 data class Function(
 	val context: Context,
-	val script: Script)
+	val script: Script,
+	val recursive: Boolean)
 
-fun function(context: Context, script: Script) = Function(context, script)
+fun function(context: Context, script: Script, recursive: Boolean = false) =
+	Function(context, script, recursive)
 
-fun function(script: Script) = function(context(), script)
+fun function(script: Script, recursive: Boolean = false) = function(context(), script, recursive)
 
-fun Function.apply(given: Program, recursive: Boolean = false): Program =
+fun Function.apply(given: Program): Program =
 	try {
 		context
 			.runIf(recursive) { push(recurseRule) }

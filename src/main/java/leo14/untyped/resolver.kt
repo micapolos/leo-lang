@@ -74,7 +74,7 @@ fun Context.resolver(sequence: Sequence): Resolver =
 fun Resolver.function(script: Script): Resolver =
 	when (script) {
 		is UnitScript -> apply(functionName valueTo program())
-		is LinkScript -> apply(value(function(compiler.applyContext, script)))
+		is LinkScript -> apply(value(function(compiler.applyContext, script, recursive = true)))
 	}
 
 fun Resolver.assert(script: Script): Resolver =
