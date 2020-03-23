@@ -16,7 +16,7 @@ data class SequenceProgram(val sequence: Sequence) : Program() {
 	override fun toString() = script.toString()
 }
 
-data class Sequence(val tail: Program, val head: Value) {
+data class Sequence(val tail: Thunk, val head: Value) {
 	override fun toString() = script.toString()
 }
 
@@ -56,7 +56,7 @@ operator fun Program.plus(value: Value) = program(this sequenceTo value)
 tailrec fun <R> R.foldValues(program: Program, fn: R.(Value) -> R): R =
 	when (program) {
 		EmptyProgram -> this
-		is SequenceProgram -> fn(program.sequence.head).foldValues(program.sequence.tail, fn)
+		is SequenceProgram -> fn(program.sequence.head).foldValues(program.sequence.tail.program, fn)
 	}
 val Program.valueStack: Stack<Value>
 	get() =
@@ -73,7 +73,8 @@ fun value(native: Native): Value = NativeValue(native)
 fun Sequence.plus(value: Value) = program(this) sequenceTo value
 fun sequence(value: Value, vararg values: Value) = program().sequenceTo(value).fold(values, Sequence::plus)
 fun sequence(name: String) = sequence(value(name))
-infix fun Program.sequenceTo(head: Value) = Sequence(this, head)
+infix fun Thunk.sequenceTo(head: Value) = Sequence(this, head)
+infix fun Program.sequenceTo(head: Value) = thunk(this) sequenceTo head
 infix fun String.fieldTo(thunk: Thunk) = Field(this, thunk)
 infix fun String.fieldTo(program: Program) = this fieldTo thunk(program)
 infix fun String.valueTo(thunk: Thunk) = value(this fieldTo thunk)
@@ -90,7 +91,7 @@ val Program.textOrNull get() = onlyValueOrNull?.literalOrNull?.stringOrNull
 val Program.nativeOrNull get() = onlyValueOrNull?.nativeOrNull
 val Program.functionOrNull get() = onlyValueOrNull?.functionOrNull
 val Program.headOrNull get() = sequenceOrNull?.head?.let { program(it) }
-val Program.tailOrNull get() = sequenceOrNull?.tail
+val Program.tailOrNull get() = sequenceOrNull?.tail?.program
 val Program.lastOrNull get() = contentsOrNull?.headOrNull?.make(lastName)
 val Program.previousOrNull
 	get() =
@@ -103,7 +104,7 @@ val Program.previousOrNull
 		}
 val Program.onlyNameOrNull get() = onlyValueOrNull?.onlyNameOrNull
 
-val Sequence.onlyValueOrNull get() = if (tail.isEmpty) head else null
+val Sequence.onlyValueOrNull get() = if (tail.program.isEmpty) head else null
 
 val Value.literalOrNull get() = (this as? LiteralValue)?.literal
 val Value.fieldOrNull get() = (this as? FieldValue)?.field

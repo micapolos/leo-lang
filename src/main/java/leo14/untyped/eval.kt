@@ -7,16 +7,20 @@ import leo14.tokenStack
 
 val Script.eval: Script
 	get() =
-		evalProgram.script
+		evalThunk.script
 
-val Script.evalProgram: Program
+val Script.evalThunk: Thunk
 	get() =
 		emptyReader
 			.fold(tokenStack.reverse) { write(it)!! }
 			.run { this as UnquotedReader }
 			.unquoted
 			.resolver
-			.program
+			.thunk
+
+val Script.evalProgram: Program
+	get() =
+		evalThunk.program
 
 val Program.eval: Program
 	get() =

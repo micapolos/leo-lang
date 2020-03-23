@@ -30,7 +30,7 @@ fun <R> Program.matchFunction(fn: (Function) -> R): R? =
 
 fun <R> Program.matchBody(fn: (Program) -> R): R? =
 	matchSequence { sequence ->
-		sequence.tail.matchEmpty {
+		sequence.tail.program.matchEmpty {
 			sequence.head.matchField { field ->
 				fn(field.rhs)
 			}
@@ -62,6 +62,11 @@ fun <R> Program.matchName(name: String, fn: () -> R) =
 
 fun <R> Sequence.matchInfix(name: String, fn: (Program, Program) -> R) =
 	head.match(name) { rhs ->
+		fn(tail.program, rhs)
+	}
+
+fun <R> Sequence.matchInfixThunk(name: String, fn: (Thunk, Thunk) -> R) =
+	head.matchThunk(name) { rhs ->
 		fn(tail, rhs)
 	}
 
@@ -103,6 +108,11 @@ fun <R> Value.match(string: String, fn: (Program) -> R): R? =
 		field.match(string, fn)
 	}
 
+fun <R> Value.matchThunk(string: String, fn: (Thunk) -> R): R? =
+	(this as? FieldValue)?.field?.let { field ->
+		field.matchThunk(string, fn)
+	}
+
 fun <R> Value.match(string1: String, string2: String, fn: (Program) -> R): R? =
 	match(string1) { rhs ->
 		rhs.matchPrefix(string2) { rhs ->
@@ -112,6 +122,10 @@ fun <R> Value.match(string1: String, string2: String, fn: (Program) -> R): R? =
 
 fun <R> Field.match(name: String, fn: (Program) -> R) =
 	if (this.name == name) fn(rhs)
+	else null
+
+fun <R> Field.matchThunk(name: String, fn: (Thunk) -> R) =
+	if (this.name == name) fn(thunk)
 	else null
 
 fun <R> Field.matchName(fn: (String) -> R) =

@@ -214,7 +214,7 @@ fun CodeOp.write(script: Script): Reader? =
 		is UnquotedLazyCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.apply(getName valueTo script.program)))
+					resolver = unquoted.resolver.lazy(script)))
 	}
 
 fun Quoted.write(literal: Literal): Reader? =

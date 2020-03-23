@@ -10,6 +10,9 @@ fun Program.select(name: String): Value? =
 		is SequenceProgram -> sequence.select(name)
 	}
 
+fun Thunk.select(name: String): Value? =
+	program.select(name)
+
 fun Sequence.select(name: String) =
 	null
 		?: head.select(name)

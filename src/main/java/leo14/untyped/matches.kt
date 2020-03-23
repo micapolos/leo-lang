@@ -38,6 +38,11 @@ fun ScriptField.matches(scriptLine: ScriptLine) =
 fun ScriptField.matches(scriptField: ScriptField) =
 	string == scriptField.string && rhs.matches(scriptField.rhs)
 
+fun Program.matches(thunk: Thunk): Boolean =
+	null
+		?: anythingMatches
+		?: rawMatches(thunk.program)
+
 fun Program.matches(program: Program): Boolean =
 	null
 		?: anythingMatches
@@ -66,14 +71,14 @@ fun Sequence.match(program: Program) =
 
 fun Sequence.orMatches(program: Program) =
 	head.match(orName) { rhs ->
-		rhs.matches(program) || tail.matches(program)
+		rhs.matches(program) || tail.program.matches(program)
 	}
 
 fun Sequence.rawMatches(program: Program) =
 	program is SequenceProgram && matches(program.sequence)
 
 fun Sequence.matches(sequence: Sequence) =
-	head.matches(sequence.head) && tail.matches(sequence.tail)
+	head.matches(sequence.head) && tail.program.matches(sequence.tail)
 
 fun Value.matches(value: Value) =
 	null

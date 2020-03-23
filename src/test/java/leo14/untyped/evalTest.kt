@@ -706,4 +706,29 @@ class EvalTest {
 			"increment" lineTo script())
 			.assertEvalsTo(script("match"))
 	}
+
+	@Test
+	fun lazy() {
+		script(
+			"lazy" lineTo script(
+				"minus" lineTo script(literal(1))))
+			.assertEvalsToThis
+	}
+
+	@Test
+	fun force_lazy() {
+		script(
+			"lazy" lineTo script(
+				"minus" lineTo script(literal(1))),
+			"force" lineTo script())
+			.assertEvalsTo(script(literal(-1)))
+	}
+
+	@Test
+	fun force_strict() {
+		script(
+			"minus" lineTo script(literal(1)),
+			"force" lineTo script())
+			.assertEvalsTo(script(literal(-1)))
+	}
 }

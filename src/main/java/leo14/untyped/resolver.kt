@@ -38,6 +38,10 @@ val Resolver.program
 	get() =
 		thunk.program
 
+val Resolver.printScript
+	get() =
+		thunk.script
+
 fun Resolver.append(value: Value): Resolver =
 	set(this.program.plus(value))
 

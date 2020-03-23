@@ -23,7 +23,7 @@ val Program.resolveSwitchMatch
 tailrec fun Program.casesSwitchBody(cases: Program): Script? =
 	when (cases) {
 		EmptyProgram -> null
-		is SequenceProgram -> caseSwitchBody(cases.sequence.head) ?: casesSwitchBody(cases.sequence.tail)
+		is SequenceProgram -> caseSwitchBody(cases.sequence.head) ?: casesSwitchBody(cases.sequence.tail.program)
 	}
 
 fun Program.caseSwitchBody(value: Value): Script? =

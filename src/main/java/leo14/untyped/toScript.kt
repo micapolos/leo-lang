@@ -44,7 +44,7 @@ val Thunk.script
 	get() =
 		when (this) {
 			is ProgramThunk -> program.script
-			is LazyThunk -> lazy.script
+			is LazyThunk -> lazy.printScript
 		}
 
 val Function.bodyScript
@@ -105,7 +105,7 @@ val Program.scriptOrNull: Script?
 
 val Sequence.scriptLinkOrNull: ScriptLink?
 	get() =
-		tail.scriptOrNull?.let { script ->
+		tail.program.scriptOrNull?.let { script ->
 			head.scriptLineOrNull?.let { line ->
 				script linkTo line
 			}
