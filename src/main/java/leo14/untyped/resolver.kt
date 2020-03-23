@@ -8,12 +8,21 @@ import leo14.*
 
 data class Resolver(
 	val compiler: Compiler,
-	val program: Program)
+	val thunk: Thunk)
 
-fun Compiler.resolver(program: Program = program()) =
-	Resolver(this, program)
+fun Context.eval(script: Script): Thunk =
+	resolver().compile(script).thunk
 
-fun Context.resolver(program: Program = program()) =
+fun Compiler.resolver(thunk: Thunk = thunk(program())) =
+	Resolver(this, thunk)
+
+fun Compiler.resolver(program: Program) =
+	resolver(thunk(program))
+
+fun Context.resolver(thunk: Thunk = thunk(program())) =
+	compiler(this).resolver(thunk)
+
+fun Context.resolver(program: Program) =
 	compiler(this).resolver(program)
 
 fun resolver(program: Program = program()) =
@@ -21,6 +30,13 @@ fun resolver(program: Program = program()) =
 
 fun Resolver.apply(value: Value): Resolver =
 	compiler.applyContext.resolve(this.program.plus(value))
+
+fun Resolver.lazy(script: Script): Resolver =
+	compiler.resolver(thunk(lazy(compiler.applyContext, script)))
+
+val Resolver.program
+	get() =
+		thunk.program
 
 fun Resolver.append(value: Value): Resolver =
 	set(this.program.plus(value))
@@ -60,7 +76,7 @@ fun Context.resolveCompile(program: Program): Resolver? =
 	}
 
 fun Resolver.set(program: Program): Resolver =
-	copy(program = program)
+	copy(thunk = thunk(program))
 
 val Resolver.clear
 	get() =

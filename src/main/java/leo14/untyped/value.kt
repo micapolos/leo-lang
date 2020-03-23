@@ -6,16 +6,6 @@ import leo14.Literal
 import leo14.numberOrNull
 import leo14.stringOrNull
 
-sealed class Thunk
-
-data class ProgramThunk(val program: Program) : Thunk() {
-	override fun toString() = program.toString()
-}
-
-data class BlockThunk(val block: Block) : Thunk() {
-	override fun toString() = block.toString()
-}
-
 sealed class Program
 
 object EmptyProgram : Program() {
@@ -48,16 +38,13 @@ data class NativeValue(val native: Native) : Value() {
 	override fun toString() = native.toString()
 }
 
-data class Field(val name: String, val rhs: Program) {
+data class Field(val name: String, val thunk: Thunk) {
 	override fun toString() = scriptField.toString()
 }
 
 sealed class Atom
 data class LiteralAtom(val literal: Literal) : Atom()
 data class FunctionAtom(val function: Function) : Atom()
-
-fun thunk(program: Program): Thunk = ProgramThunk(program)
-fun thunk(block: Block): Thunk = BlockThunk(block)
 
 val emptyProgram: Program get() = EmptyProgram
 fun program(sequence: Sequence): Program = SequenceProgram(sequence)
@@ -87,8 +74,10 @@ fun Sequence.plus(value: Value) = program(this) sequenceTo value
 fun sequence(value: Value, vararg values: Value) = program().sequenceTo(value).fold(values, Sequence::plus)
 fun sequence(name: String) = sequence(value(name))
 infix fun Program.sequenceTo(head: Value) = Sequence(this, head)
-infix fun String.fieldTo(program: Program) = Field(this, program)
-infix fun String.valueTo(program: Program) = value(this fieldTo program)
+infix fun String.fieldTo(thunk: Thunk) = Field(this, thunk)
+infix fun String.fieldTo(program: Program) = this fieldTo thunk(program)
+infix fun String.valueTo(thunk: Thunk) = value(this fieldTo thunk)
+infix fun String.valueTo(program: Program) = this valueTo thunk(program)
 
 val Program.isEmpty get() = this is EmptyProgram
 val Program.sequenceOrNull get() = (this as? SequenceProgram)?.sequence
@@ -122,6 +111,7 @@ val Value.functionOrNull get() = (this as? FunctionValue)?.function
 val Value.nativeOrNull get() = (this as? NativeValue)?.native
 val Value.onlyNameOrNull get() = fieldOrNull?.onlyNameOrNull
 
+val Field.rhs get() = thunk.program
 val Field.onlyNameOrNull get() = if (rhs.isEmpty) name else null
 val Field.rhsHeadOrNull get() = rhs.headOrNull?.let { head -> program(name valueTo head) }
 val Field.rhsTailOrNull get() = rhs.tailOrNull?.let { tail -> program(name valueTo tail) }

@@ -38,7 +38,14 @@ val Field.scriptLine
 
 val Field.scriptField
 	get() =
-		name fieldTo rhs.script
+		name fieldTo thunk.script
+
+val Thunk.script
+	get() =
+		when (this) {
+			is ProgramThunk -> program.script
+			is LazyThunk -> lazy.script
+		}
 
 val Function.bodyScript
 	get() =

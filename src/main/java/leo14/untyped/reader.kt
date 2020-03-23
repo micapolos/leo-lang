@@ -33,6 +33,7 @@ data class UnquotedAssertCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedFunctionCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedGivesCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedGetCodeOp(val unquoted: Unquoted) : CodeOp()
+data class UnquotedLazyCodeOp(val unquoted: Unquoted) : CodeOp()
 
 val emptyReader: Reader
 	get() =
@@ -131,6 +132,17 @@ fun Unquoted.write(begin: Begin): Reader =
 				Code(
 					UnquotedGetCodeOp(this),
 					script()))
+		lazyName ->
+			if (resolver.program.isEmpty)
+				CodeReader(
+					Code(
+						UnquotedLazyCodeOp(this),
+						script()))
+			else
+				UnquotedReader(
+					Unquoted(
+						UnquotedResolveUnquotedOp(this, begin),
+						resolver.compiler.resolver(program())))
 		else ->
 			UnquotedReader(
 				Unquoted(
@@ -196,6 +208,10 @@ fun CodeOp.write(script: Script): Reader? =
 				unquoted.copy(
 					resolver = unquoted.resolver.does(script)))
 		is UnquotedGetCodeOp ->
+			UnquotedReader(
+				unquoted.copy(
+					resolver = unquoted.resolver.apply(getName valueTo script.program)))
+		is UnquotedLazyCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
 					resolver = unquoted.resolver.apply(getName valueTo script.program)))
