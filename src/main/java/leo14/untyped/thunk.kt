@@ -2,7 +2,7 @@ package leo14.untyped
 
 import leo.bellChar
 
-val thunkBellOnEval = true
+val thunkBellOnEval = false
 
 sealed class Thunk
 

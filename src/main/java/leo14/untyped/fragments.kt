@@ -12,7 +12,7 @@ val Reader.fragment: Fragment
 
 val Unquoted.fragment: Fragment
 	get() =
-		opOrNull?.fragmentParent.fragment(resolver.program.script)
+		opOrNull?.fragmentParent.fragment(resolver.printScript)
 
 val Quoted.fragment: Fragment
 	get() =
