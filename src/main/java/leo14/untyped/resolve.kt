@@ -2,7 +2,6 @@ package leo14.untyped
 
 import leo.base.ifOrNull
 import leo13.fold
-import leo13.reverse
 import leo13.thisName
 import leo14.*
 
@@ -35,11 +34,13 @@ val Sequence.resolve: Program?
 			?: resolveLast
 			?: resolvePrevious
 			?: resolveContent
+			?: resolveName
 			?: resolveMake
 			?: resolveThis
 			?: resolveAccess
 			?: resolveGet
 			?: resolvePrint
+			?: resolvePrinted
 			?: resolveLeonardo
 			?: resolveAnythingEqualsAnything
 			?: resolveIfThenElse
@@ -191,6 +192,14 @@ val Sequence.resolveContent
 	get() =
 		matchPostfix(contentName, Program::contentsOrNull)
 
+val Sequence.resolveName
+	get() =
+		matchPostfix(nameName) { lhs ->
+			lhs.nameOrNull?.let { name ->
+				program(literal(name))
+			}
+		}
+
 val Sequence.resolveLeonardo
 	get() =
 		matchSimple("leonardo") {
@@ -235,13 +244,19 @@ val Sequence.resolvePrint: Program?
 			program().also { println(lhs) }
 		}
 
+val Sequence.resolvePrinted: Program?
+	get() =
+		matchPostfix(printedName) { lhs ->
+			lhs.also { println(lhs) }
+		}
+
 val Sequence.resolveFold: Program?
 	get() =
 		matchInfix(doingName) { lhs, rhs ->
 			rhs.functionOrNull?.let { function ->
 				lhs.matchInfix(foldName) { folded, items ->
 					items.contentsOrNull?.let { contents ->
-						folded.fold(contents.valueStack.reverse) { value ->
+						folded.fold(contents.valueStack) { value ->
 							function
 								.copy(context = function.context.push(
 									rule(

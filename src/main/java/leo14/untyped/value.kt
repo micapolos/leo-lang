@@ -82,6 +82,7 @@ val Program.sequenceOrNull get() = (this as? SequenceProgram)?.sequence
 val Program.onlyValueOrNull get() = sequenceOrNull?.onlyValueOrNull
 val Program.onlyFieldOrNull get() = onlyValueOrNull?.fieldOrNull
 val Program.contentsOrNull get() = onlyFieldOrNull?.rhs
+val Program.nameOrNull get() = onlyFieldOrNull?.name
 val Program.numberOrNull get() = onlyValueOrNull?.literalOrNull?.numberOrNull
 val Program.textOrNull get() = onlyValueOrNull?.literalOrNull?.stringOrNull
 val Program.nativeOrNull get() = onlyValueOrNull?.nativeOrNull

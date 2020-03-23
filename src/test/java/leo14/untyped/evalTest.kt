@@ -342,6 +342,16 @@ class EvalTest {
 	}
 
 	@Test
+	fun name() {
+		script(
+			"point" lineTo script(
+				"x" lineTo script(literal(10)),
+				"y" lineTo script(literal(20))),
+			"name" lineTo script())
+			.assertEvalsTo(script(literal("point")))
+	}
+
+	@Test
 	fun function() {
 		script(
 			"foo" lineTo script(),
