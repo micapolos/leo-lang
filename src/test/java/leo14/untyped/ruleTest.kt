@@ -19,16 +19,16 @@ class RuleTest {
 	@Test
 	fun resolve_matchFunction() {
 		rule(
-			pattern(program("number" valueTo program())),
-			body(script("given" lineTo script())))
+			pattern(program(numberName valueTo program())),
+			body(script(givenName lineTo script())))
 			.apply(context(), program(value(literal(10))))
-			.assertEqualTo(program("given" valueTo program(literal(10))))
+			.assertEqualTo(program(givenName valueTo program(literal(10))))
 	}
 
 	@Test
 	fun resolve_mismatch() {
 		Rule(
-			Pattern(program("number" valueTo program())),
+			Pattern(program(numberName valueTo program())),
 			body(program("ok")))
 			.apply(context(), program(value(literal("foo"))))
 			.assertEqualTo(null)

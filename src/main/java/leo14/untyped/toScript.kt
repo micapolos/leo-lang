@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo13.recurseName
 import leo14.*
 
 val Program.script: Script
@@ -23,7 +24,7 @@ val Value.scriptLine
 			is LiteralValue -> literal.scriptLine
 			is FieldValue -> field.scriptLine
 			is FunctionValue -> function.scriptLine
-			is NativeValue -> "native" lineTo script(literal(native.toString()))
+			is NativeValue -> nativeName lineTo script(literal(native.toString()))
 		}
 
 val Literal.scriptLine
@@ -44,7 +45,7 @@ val Function.bodyScript
 
 val Function.scriptLine
 	get() =
-		"function" lineTo script
+		functionName lineTo script
 
 val Context.functionScript: Script
 	get() =
@@ -70,7 +71,7 @@ val Definition.contextScript
 
 val Recursive.script
 	get() =
-		script("recursive" lineTo context.functionScript)
+		script(recurseName lineTo context.functionScript)
 
 val Pattern.ruleScript
 	get() =

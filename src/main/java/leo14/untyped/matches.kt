@@ -2,9 +2,8 @@ package leo14.untyped
 
 import leo14.*
 
-
 fun Script.matches(script: Script): Boolean =
-	if (script == script("anything")) true
+	if (script == script(anythingName)) true
 	else when (this) {
 		is UnitScript -> script is UnitScript
 		is LinkScript -> link.matches(script)
@@ -15,7 +14,7 @@ fun ScriptLink.matches(script: Script) =
 		is LiteralScriptLine -> null
 		is FieldScriptLine ->
 			when (line.field.string) {
-				"or" -> line.field.rhs.matches(script) || lhs.matches(script)
+				orName -> line.field.rhs.matches(script) || lhs.matches(script)
 				else -> null
 			}
 	} ?: (script is LinkScript && matches(script.link))
@@ -31,8 +30,8 @@ fun ScriptLine.matches(scriptLine: ScriptLine) =
 
 fun ScriptField.matches(scriptLine: ScriptLine) =
 	when (string) {
-		"number" -> scriptLine is LiteralScriptLine && scriptLine.literal is NumberLiteral
-		"text" -> scriptLine is LiteralScriptLine && scriptLine.literal is StringLiteral
+		numberName -> scriptLine is LiteralScriptLine && scriptLine.literal is NumberLiteral
+		textName -> scriptLine is LiteralScriptLine && scriptLine.literal is StringLiteral
 		else -> scriptLine is FieldScriptLine && matches(scriptLine.field)
 	}
 
@@ -46,7 +45,7 @@ fun Program.matches(program: Program): Boolean =
 
 val Program.anythingMatches
 	get() =
-		matchInfix("anything") { lhs, rhs ->
+		matchInfix(anythingName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchEmpty {
 					true
@@ -66,7 +65,7 @@ fun Sequence.match(program: Program) =
 		?: rawMatches(program)
 
 fun Sequence.orMatches(program: Program) =
-	head.match("or") { rhs ->
+	head.match(orName) { rhs ->
 		rhs.matches(program) || tail.matches(program)
 	}
 
@@ -92,15 +91,15 @@ fun Value.rawMatches(value: Value) =
 	}
 
 fun Value.numberMatches(value: Value) =
-	if (this == value("number")) value is LiteralValue && value.literal is NumberLiteral
+	if (this == value(numberName)) value is LiteralValue && value.literal is NumberLiteral
 	else null
 
 fun Value.textMatches(value: Value) =
-	if (this == value("text")) value is LiteralValue && value.literal is StringLiteral
+	if (this == value(textName)) value is LiteralValue && value.literal is StringLiteral
 	else null
 
 fun Value.functionMatches(value: Value) =
-	if (this == value("function")) value is FunctionValue
+	if (this == value(functionName)) value is FunctionValue
 	else null
 
 fun Field.matches(field: Field) =
@@ -110,7 +109,7 @@ fun Field.matches(field: Field) =
 
 fun Program.matches(name: String) =
 	when (this) {
-		EmptyProgram -> name == "nothing"
+		EmptyProgram -> name == nothingName
 		is SequenceProgram -> sequence.matches(name)
 	}
 
@@ -121,7 +120,7 @@ fun Value.matches(name: String) =
 	when (this) {
 		is LiteralValue -> literal.matches(name)
 		is FieldValue -> field.matches(name)
-		is FunctionValue -> function.matches(name)
+		is FunctionValue -> name == functionName
 		is NativeValue -> false
 	}
 
@@ -130,10 +129,6 @@ fun Field.matches(name: String) =
 
 fun Literal.matches(name: String) =
 	when (this) {
-		is StringLiteral -> name == "text"
-		is NumberLiteral -> name == "number"
+		is StringLiteral -> name == textName
+		is NumberLiteral -> name == numberName
 	}
-
-@Suppress("unused")
-fun Function.matches(name: String) =
-	name == "function"

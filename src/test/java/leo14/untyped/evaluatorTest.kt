@@ -19,7 +19,7 @@ class EvaluatorTest {
 		context()
 			.environment
 			.evaluator(program(value(literal(5))))
-			.write("minus" valueTo program(value(literal(3))))
+			.write(minusName valueTo program(value(literal(3))))
 			.assertEqualTo(
 				context()
 					.environment
@@ -33,7 +33,7 @@ class EvaluatorTest {
 			.environment
 			.quote
 			.evaluator(program(value(literal(5))))
-			.write("minus" valueTo program(value(literal(3))))
+			.write(minusName valueTo program(value(literal(3))))
 			.assertEqualTo(
 				context()
 					.environment
@@ -41,6 +41,6 @@ class EvaluatorTest {
 					.evaluator(
 						program(
 							value(literal(5)),
-							"minus" valueTo program(value(literal(3))))))
+							minusName valueTo program(value(literal(3))))))
 	}
 }

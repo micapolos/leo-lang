@@ -41,7 +41,7 @@ class ResolverTest {
 			.resolver(program("zoo"))
 
 		resolver
-			.apply("plus" valueTo program("zar"))
-			.assertEqualTo(resolver.set(program("zoo" valueTo program(), "plus" valueTo program("zar"))))
+			.apply(plusName valueTo program("zar"))
+			.assertEqualTo(resolver.set(program("zoo" valueTo program(), plusName valueTo program("zar"))))
 	}
 }

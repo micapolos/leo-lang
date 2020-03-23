@@ -9,10 +9,10 @@ class ValueTest {
 	fun all() {
 		program(
 			value(literal(10)),
-			"plus" valueTo program(literal(10)))
+			plusName valueTo program(literal(10)))
 			.assertEqualTo(
 				program(
 					value(literal(10)),
-					"plus" valueTo program(literal(10))))
+					plusName valueTo program(literal(10))))
 	}
 }

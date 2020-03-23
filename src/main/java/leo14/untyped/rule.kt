@@ -18,5 +18,5 @@ val Function.recurseRule
 val Program.givenRule
 	get() =
 		rule(
-			pattern(program("given")),
-			body(program("given" valueTo this)))
+			pattern(program(givenName)),
+			body(program(givenName valueTo this)))

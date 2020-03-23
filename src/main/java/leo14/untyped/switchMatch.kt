@@ -12,7 +12,7 @@ fun switchMatch(param: Program, body: Script) =
 
 val Program.resolveSwitchMatch
 	get() =
-		matchInfix("switch") { lhs, rhs ->
+		matchInfix(switchName) { lhs, rhs ->
 			lhs.matchBody { param ->
 				param.casesSwitchBody(rhs)?.let { body ->
 					switchMatch(param, body)

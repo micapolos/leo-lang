@@ -26,21 +26,21 @@ val UnquotedOp.fragmentParent: FragmentParent
 	get() =
 		when (this) {
 			is UnquotedResolveUnquotedOp -> unquoted.fragment.parent(begin)
-			is QuotedPlusUnquotedOp -> quoted.fragment.parent(begin("unquote"))
+			is QuotedPlusUnquotedOp -> quoted.fragment.parent(begin(unquoteName))
 		}
 
 val QuotedOp.fragmentParent: FragmentParent
 	get() =
 		when (this) {
 			is QuotedAppendQuotedOp -> quoted.fragment.parent(begin)
-			is UnquotedPlusQuotedOp -> unquoted.fragment.parent(begin("quote"))
+			is UnquotedPlusQuotedOp -> unquoted.fragment.parent(begin(quoteName))
 		}
 
 val CodeOp.fragmentParent: FragmentParent
 	get() =
 		when (this) {
 			is CodeAppendCodeOp -> code.fragment.parent(begin)
-			is UnquotedFunctionCodeOp -> unquoted.fragment.parent(begin("function"))
+			is UnquotedFunctionCodeOp -> unquoted.fragment.parent(begin(functionName))
 			is UnquotedGivesCodeOp -> unquoted.fragment.parent(begin(doesName))
-			is UnquotedGetCodeOp -> unquoted.fragment.parent(begin("get"))
+			is UnquotedGetCodeOp -> unquoted.fragment.parent(begin(getName))
 		}

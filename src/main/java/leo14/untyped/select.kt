@@ -21,10 +21,10 @@ fun Value.select(name: String) =
 
 fun Value.selects(name: String) =
 	when (name) {
-		"number" -> this is LiteralValue && literal is NumberLiteral
-		"text" -> this is LiteralValue && literal is StringLiteral
-		"function" -> this is FunctionValue
-		"native" -> this is NativeValue
+		numberName -> this is LiteralValue && literal is NumberLiteral
+		textName -> this is LiteralValue && literal is StringLiteral
+		functionName -> this is FunctionValue
+		nativeName -> this is NativeValue
 		else -> this is FieldValue && name == field.name
 	}
 
@@ -40,9 +40,9 @@ val Value.selectName
 val Literal.selectName
 	get() =
 		when (this) {
-			is StringLiteral -> "text"
-			is NumberLiteral -> "number"
+			is StringLiteral -> textName
+			is NumberLiteral -> numberName
 		}
 
-val Function.selectName get() = "function"
-val Native.selectName get() = "native"
+val Function.selectName get() = functionName
+val Native.selectName get() = nativeName

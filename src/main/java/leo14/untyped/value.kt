@@ -88,13 +88,13 @@ val Program.nativeOrNull get() = onlyValueOrNull?.nativeOrNull
 val Program.functionOrNull get() = onlyValueOrNull?.functionOrNull
 val Program.headOrNull get() = sequenceOrNull?.head?.let { program(it) }
 val Program.tailOrNull get() = sequenceOrNull?.tail
-val Program.lastOrNull get() = contentsOrNull?.headOrNull?.make("last")
+val Program.lastOrNull get() = contentsOrNull?.headOrNull?.make(lastName)
 val Program.previousOrNull
 	get() =
 		onlyFieldOrNull?.let { field ->
 			field.rhs.tailOrNull?.let { tail ->
 				program(
-					"previous" valueTo program(
+					previousName valueTo program(
 						field.name valueTo tail))
 			}
 		}

@@ -226,8 +226,7 @@ class EvalTest {
 			"or" lineTo script("true"),
 			"type" lineTo script(),
 			"does" lineTo script(
-				"change" lineTo script(
-					"to" lineTo script("boolean"))))
+				"replace" lineTo script("boolean")))
 
 		rule
 			.plus(
@@ -269,8 +268,7 @@ class EvalTest {
 	fun anythingChangeToAnything() {
 		script(
 			"foo" lineTo script(),
-			"change" lineTo script(
-				"to" lineTo script("bar")))
+			"replace" lineTo script("bar"))
 			.assertEvalsTo(script("bar"))
 	}
 
@@ -316,12 +314,12 @@ class EvalTest {
 	}
 
 	@Test
-	fun contents() {
+	fun content() {
 		script(
 			"point" lineTo script(
 				"x" lineTo script(literal(10)),
 				"y" lineTo script(literal(20))),
-			"contents" lineTo script())
+			"content" lineTo script())
 			.assertEvalsTo(
 				"x" lineTo script(literal(10)),
 				"y" lineTo script(literal(20)))

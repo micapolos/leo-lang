@@ -54,7 +54,7 @@ fun Context.resolveSwitch(program: Program): Resolver? =
 //	}
 
 fun Context.resolveCompile(program: Program): Resolver? =
-	program.matchInfix("compile") { lhs, rhs ->
+	program.matchInfix(compileName) { lhs, rhs ->
 		rhs.scriptOrNull?.let { code ->
 			resolver(lhs).compile(code)
 		}
@@ -72,7 +72,7 @@ fun Context.resolver(sequence: Sequence): Resolver =
 
 fun Resolver.function(script: Script): Resolver =
 	when (script) {
-		is UnitScript -> apply("function" valueTo program())
+		is UnitScript -> apply(functionName valueTo program())
 		is LinkScript -> apply(value(function(compiler.applyContext, script)))
 	}
 

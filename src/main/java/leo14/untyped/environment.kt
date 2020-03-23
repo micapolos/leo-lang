@@ -26,7 +26,7 @@ fun Environment.writeEvaluator(sequence: Sequence) =
 
 fun Environment.write(begin: Begin): Environment? =
 	when (begin.string) {
-		"quote" -> quote
-		"unquote" -> unquoteOrNull
+		quoteName -> quote
+		unquoteName -> unquoteOrNull
 		else -> this
 	}

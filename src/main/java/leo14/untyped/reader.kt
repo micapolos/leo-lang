@@ -71,14 +71,14 @@ fun Code.write(token: Token): Reader? =
 
 fun Quoted.write(begin: Begin): Reader =
 	when {
-		begin.string == "quote" ->
+		begin.string == quoteName ->
 			QuotedReader(
 				Quoted(
 					QuotedAppendQuotedOp(this, begin),
 					compiler,
 					depth.inc(),
 					program()))
-		begin.string == "unquote" && depth > 0 ->
+		begin.string == unquoteName && depth > 0 ->
 			when (depth) {
 				1 ->
 					UnquotedReader(
@@ -103,14 +103,14 @@ fun Quoted.write(begin: Begin): Reader =
 
 fun Unquoted.write(begin: Begin): Reader =
 	when (begin.string) {
-		"quote" ->
+		quoteName ->
 			QuotedReader(
 				Quoted(
 					UnquotedPlusQuotedOp(this),
 					resolver.compiler,
 					1,
 					program()))
-		"function" ->
+		functionName ->
 			CodeReader(
 				Code(
 					UnquotedFunctionCodeOp(this),
@@ -120,7 +120,7 @@ fun Unquoted.write(begin: Begin): Reader =
 				Code(
 					UnquotedGivesCodeOp(this),
 					script()))
-		"get" ->
+		getName ->
 			CodeReader(
 				Code(
 					UnquotedGetCodeOp(this),
@@ -188,7 +188,7 @@ fun CodeOp.write(script: Script): Reader? =
 		is UnquotedGetCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.apply("get" valueTo script.program)))
+					resolver = unquoted.resolver.apply(getName valueTo script.program)))
 	}
 
 fun Quoted.write(literal: Literal): Reader? =

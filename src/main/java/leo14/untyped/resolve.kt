@@ -22,8 +22,8 @@ val Sequence.resolve: Program?
 			?: resolveAnythingDoFunction
 			?: resolveAnythingAppendAnything
 			?: resolveAnythingItAnything
-			?: resolveAnythingQuotedAnything
-			?: resolveAnythingChangeToAnything
+			?: resolveAnythingQuoteAnything
+			?: resolveAnythingReplaceAnything
 			?: resolveAnythingDelete
 			?: resolveMinusNumber
 			?: resolveNumberPlusNumber
@@ -34,7 +34,7 @@ val Sequence.resolve: Program?
 			?: resolveTail
 			?: resolveLast
 			?: resolvePrevious
-			?: resolveContents
+			?: resolveContent
 			?: resolveMake
 			?: resolveThis
 			?: resolveAccess
@@ -49,13 +49,13 @@ val Sequence.resolve: Program?
 
 val Sequence.resolveFunctionApplyAnything: Program?
 	get() =
-		matchInfix("apply") { lhs, rhs ->
+		matchInfix(applyName) { lhs, rhs ->
 			lhs.functionOrNull?.apply(rhs)
 		}
 
 val Sequence.resolveAnythingDoFunction: Program?
 	get() =
-		matchInfix("do") { lhs, rhs ->
+		matchInfix(doName) { lhs, rhs ->
 			rhs.functionOrNull?.apply(lhs)
 		}
 
@@ -67,7 +67,7 @@ val Sequence.resolveAccess: Program?
 
 val Sequence.resolveGet: Program?
 	get() =
-		matchInfix("get") { lhs, rhs ->
+		matchInfix(getName) { lhs, rhs ->
 			rhs.matchName { name ->
 				lhs.get(name)
 			}
@@ -75,7 +75,7 @@ val Sequence.resolveGet: Program?
 
 val Sequence.resolveAnythingAppendAnything
 	get() =
-		matchInfix("append") { lhs, rhs ->
+		matchInfix(appendName) { lhs, rhs ->
 			lhs.onlyFieldOrNull?.let { field ->
 				rhs.onlyValueOrNull?.let { value ->
 					program(field.name valueTo field.rhs.plus(value))
@@ -85,31 +85,31 @@ val Sequence.resolveAnythingAppendAnything
 
 val Sequence.resolveAnythingItAnything
 	get() =
-		matchInfix("it") { lhs, rhs ->
+		matchInfix(itName) { lhs, rhs ->
 			rhs.onlyValueOrNull?.let { rhs ->
 				lhs.plus(rhs)
 			}
 		}
 
-val Sequence.resolveAnythingQuotedAnything
+val Sequence.resolveAnythingQuoteAnything
 	get() =
-		matchInfix("quoted") { lhs, rhs ->
+		matchInfix(quoteName) { lhs, rhs ->
 			lhs.plus(rhs)
 		}
 
-val Sequence.resolveAnythingChangeToAnything
+val Sequence.resolveAnythingReplaceAnything
 	get() =
-		matchInfix("change", "to") { _, rhs ->
+		matchInfix(replaceName) { _, rhs ->
 			rhs
 		}
 
 val Sequence.resolveAnythingDelete
 	get() =
-		matchPostfix("delete") { program() }
+		matchPostfix(deleteName) { program() }
 
 val Sequence.resolveMake
 	get() =
-		matchInfix("make") { lhs, rhs ->
+		matchInfix(makeName) { lhs, rhs ->
 			rhs.matchName { name ->
 				lhs.make(name)
 			}
@@ -123,7 +123,7 @@ val Sequence.resolveThis
 
 val Sequence.resolveNumberPlusNumber
 	get() =
-		matchInfix("plus") { lhs, rhs ->
+		matchInfix(plusName) { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
 					program(literal(lhs + rhs))
@@ -133,7 +133,7 @@ val Sequence.resolveNumberPlusNumber
 
 val Sequence.resolveMinusNumber
 	get() =
-		matchInfix("minus") { lhs, rhs ->
+		matchInfix(minusName) { lhs, rhs ->
 			lhs.matchEmpty {
 				rhs.matchNumber { rhs ->
 					program(literal(-rhs))
@@ -143,7 +143,7 @@ val Sequence.resolveMinusNumber
 
 val Sequence.resolveNumberMinusNumber
 	get() =
-		matchInfix("minus") { lhs, rhs ->
+		matchInfix(minusName) { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
 					program(literal(lhs - rhs))
@@ -153,7 +153,7 @@ val Sequence.resolveNumberMinusNumber
 
 val Sequence.resolveNumberTimesNumber
 	get() =
-		matchInfix("times") { lhs, rhs ->
+		matchInfix(timesName) { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
 					program(literal(lhs * rhs))
@@ -163,7 +163,7 @@ val Sequence.resolveNumberTimesNumber
 
 val Sequence.resolveTextPlusText
 	get() =
-		matchInfix("plus") { lhs, rhs ->
+		matchInfix(plusName) { lhs, rhs ->
 			lhs.matchText { lhs ->
 				rhs.matchText { rhs ->
 					program(literal(lhs + rhs))
@@ -181,15 +181,15 @@ val Sequence.resolveTail
 
 val Sequence.resolveLast
 	get() =
-		matchPostfix("last", Program::lastOrNull)
+		matchPostfix(lastName, Program::lastOrNull)
 
 val Sequence.resolvePrevious
 	get() =
-		matchPostfix("previous", Program::previousOrNull)
+		matchPostfix(previousName, Program::previousOrNull)
 
-val Sequence.resolveContents
+val Sequence.resolveContent
 	get() =
-		matchPostfix("contents", Program::contentsOrNull)
+		matchPostfix(contentName, Program::contentsOrNull)
 
 val Sequence.resolveLeonardo
 	get() =
@@ -199,15 +199,15 @@ val Sequence.resolveLeonardo
 
 val Sequence.resolveAnythingEqualsAnything
 	get() =
-		matchInfix("equals") { lhs, rhs ->
+		matchInfix(equalsName) { lhs, rhs ->
 			program(if (lhs == rhs) "yes" else "no")
 		}
 
 val Sequence.resolveIfThenElse
 	get() =
-		matchInfix("else") { lhs, alternate ->
-			lhs.matchInfix("then") { lhs, consequent ->
-				lhs.matchPrefix("if") { condition ->
+		matchInfix(elseName) { lhs, alternate ->
+			lhs.matchInfix(thenName) { lhs, consequent ->
+				lhs.matchPrefix(ifName) { condition ->
 					condition.matchName { name ->
 						when (name) {
 							"yes" -> consequent
@@ -231,22 +231,22 @@ val Sequence.resolveAutoMake: Program?
 
 val Sequence.resolvePrint: Program?
 	get() =
-		matchPostfix("print") { lhs ->
+		matchPostfix(printName) { lhs ->
 			program().also { println(lhs) }
 		}
 
 val Sequence.resolveFold: Program?
 	get() =
-		matchInfix("doing") { lhs, rhs ->
+		matchInfix(doingName) { lhs, rhs ->
 			rhs.functionOrNull?.let { function ->
-				lhs.matchInfix("fold") { folded, items ->
+				lhs.matchInfix(foldName) { folded, items ->
 					items.contentsOrNull?.let { contents ->
 						folded.fold(contents.valueStack.reverse) { value ->
 							function
 								.copy(context = function.context.push(
 									rule(
-										pattern(program("folded")),
-										body(program("folded" valueTo program(value))))))
+										pattern(program(foldedName)),
+										body(program(foldedName valueTo program(value))))))
 								.apply(this)
 						}
 					}

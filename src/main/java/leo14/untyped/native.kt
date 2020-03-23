@@ -27,7 +27,7 @@ val Sequence.resolveNative: Program?
 
 val Sequence.resolveJavaString: Program?
 	get() =
-		matchInfix("native", "string") { lhs, rhs ->
+		matchInfix(nativeName, stringName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchText { text ->
 					program(value(native(text)))
@@ -37,7 +37,7 @@ val Sequence.resolveJavaString: Program?
 
 val Sequence.resolveNativeInt: Program?
 	get() =
-		matchInfix("native", "int") { lhs, rhs ->
+		matchInfix(nativeName, intName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
 					try {
@@ -51,7 +51,7 @@ val Sequence.resolveNativeInt: Program?
 
 val Sequence.resolveNativeFloat: Program?
 	get() =
-		matchInfix("native", "float") { lhs, rhs ->
+		matchInfix(nativeName, floatName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
 					program(value(native(number.bigDecimal.toFloat())))
@@ -61,7 +61,7 @@ val Sequence.resolveNativeFloat: Program?
 
 val Sequence.resolveNativeDouble: Program?
 	get() =
-		matchInfix("native", "double") { lhs, rhs ->
+		matchInfix(nativeName, doubleName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
 					program(value(native(number.bigDecimal.toDouble())))
@@ -71,7 +71,7 @@ val Sequence.resolveNativeDouble: Program?
 
 val Sequence.resolveNativeClass: Program?
 	get() =
-		matchInfix("native", "class") { lhs, rhs ->
+		matchInfix(nativeName, className) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchText { text ->
 					try {
@@ -86,7 +86,7 @@ val Sequence.resolveNativeClass: Program?
 
 val Sequence.resolveNativeInvoke
 	get() =
-		matchInfix("invoke") { lhs, rhs ->
+		matchInfix(invokeName) { lhs, rhs ->
 			lhs.matchNative { native ->
 				rhs.valueStack.splitOrNull?.let { (args, name) ->
 					name.literalOrNull?.stringOrNull?.let { name ->
@@ -107,7 +107,7 @@ val Sequence.resolveNativeInvoke
 
 val Sequence.resolveNativeNew
 	get() =
-		matchInfix("native", "new") { lhs, rhs ->
+		matchInfix(nativeName, newName) { lhs, rhs ->
 			lhs.matchText { name ->
 				rhs.valueStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 					args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
@@ -126,7 +126,7 @@ val Sequence.resolveNativeNew
 
 val Sequence.resolveNativeText
 	get() =
-		matchPostfix("text") { lhs ->
+		matchPostfix(textName) { lhs ->
 			lhs.matchNative { native ->
 				(native.obj as? String)?.let { string ->
 					program(literal(string))
@@ -136,7 +136,7 @@ val Sequence.resolveNativeText
 
 val Sequence.resolveNativeNumber
 	get() =
-		matchPostfix("number") { lhs ->
+		matchPostfix(numberName) { lhs ->
 			lhs.matchNative { native ->
 				null
 					?: (native.obj as? Byte)?.let { program(literal(it.toInt())) }

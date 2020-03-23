@@ -8,11 +8,11 @@ import kotlin.test.Test
 class PatternTest {
 	@Test
 	fun number() {
-		Pattern(program("number" valueTo program()))
+		Pattern(program(numberName valueTo program()))
 			.matches(program(value(literal(10))))
 			.assert
 
-		Pattern(program("number" valueTo program()))
+		Pattern(program(numberName valueTo program()))
 			.matches(program(value(literal("foo"))))
 			.negate
 			.assert
@@ -20,11 +20,11 @@ class PatternTest {
 
 	@Test
 	fun text() {
-		Pattern(program("text" valueTo program()))
+		Pattern(program(textName valueTo program()))
 			.matches(program(value(literal("foo"))))
 			.assert
 
-		Pattern(program("text" valueTo program()))
+		Pattern(program(textName valueTo program()))
 			.matches(program(value(literal(10))))
 			.negate
 			.assert

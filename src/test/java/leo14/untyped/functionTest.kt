@@ -10,11 +10,11 @@ class FunctionTest {
 	fun applyAppends() {
 		function(
 			context(),
-			script("given" lineTo script()))
+			script(givenName lineTo script()))
 			.apply(program("foo" valueTo program()))
 			.assertEqualTo(
 				program(
-					"given" valueTo program(
+					givenName valueTo program(
 						"foo" valueTo program())))
 	}
 
