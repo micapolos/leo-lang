@@ -4,8 +4,8 @@ import kotlin.test.Test
 
 class ItTest {
 	@Test
-	fun _test() {
-		_run {
+	fun test_() {
+		run_ {
 			assert {
 				zero.it
 				gives { zero.it }

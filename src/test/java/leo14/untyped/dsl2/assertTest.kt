@@ -5,15 +5,15 @@ import kotlin.test.assertFails
 
 class AssertTest {
 	@Test
-	fun _test() {
-		_run {
+	fun test_() {
+		run_ {
 			assert {
 				zero.gives { zero }
 			}
 		}
 
 		assertFails {
-			_run {
+			run_ {
 				assert {
 					zero.gives { one }
 				}

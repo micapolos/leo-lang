@@ -3,7 +3,7 @@ package leo14.untyped.dsl
 import leo.base.fold
 import leo14.untyped.*
 
-fun _test(vararg v: V) =
+fun test_(vararg v: V) =
 	emptyProgram
 		.fold(v) { value ->
 			value

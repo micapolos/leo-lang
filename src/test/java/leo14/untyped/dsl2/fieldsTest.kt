@@ -4,8 +4,8 @@ import kotlin.test.Test
 
 class FieldsTest {
 	@Test
-	fun _test() {
-		_run {
+	fun test_() {
+		run_ {
 			assert {
 				point {
 					x { number(10) }

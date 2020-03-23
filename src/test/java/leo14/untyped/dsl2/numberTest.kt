@@ -4,8 +4,8 @@ import kotlin.test.Test
 
 class NumberTest {
 	@Test
-	fun _test() {
-		_run {
+	fun test_() {
+		run_ {
 			assert {
 				number(2)
 				plus { number(3) }

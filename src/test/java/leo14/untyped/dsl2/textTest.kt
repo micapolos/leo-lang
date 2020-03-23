@@ -4,8 +4,8 @@ import kotlin.test.Test
 
 class TextTest {
 	@Test
-	fun _test() {
-		_run {
+	fun test_() {
+		run_ {
 			assert {
 				text("Hello, ")
 				plus { text("world!") }

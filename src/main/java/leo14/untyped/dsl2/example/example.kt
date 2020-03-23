@@ -3,7 +3,7 @@ package leo14.untyped.dsl2.example
 import leo14.untyped.dsl2.*
 
 fun main() {
-	_run {
+	run_ {
 		number.increment
 		does {
 			given.number

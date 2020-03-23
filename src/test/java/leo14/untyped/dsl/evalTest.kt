@@ -5,7 +5,7 @@ import org.junit.Test
 class EvalTest {
 	@Test
 	fun main() {
-		_test(
+		test_(
 			zero(),
 			plus(one()),
 			check(
