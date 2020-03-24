@@ -1,7 +1,6 @@
 package leo14.untyped
 
 import leo.base.ifOrNull
-import leo.base.string
 import leo.java.lang.exec
 import leo13.fold
 import leo13.thisName
@@ -292,9 +291,7 @@ val Sequence.resolveScript: Thunk?
 val Sequence.resolveSay: Thunk?
 	get() =
 		matchPostfixThunk("say") { lhs ->
-			lhs.matchText { text ->
-				thunk(value()).also {
-					exec("say", literal(text).string)
-				}
+			thunk(value()).also {
+				exec("say", "\"${lhs.script.sayString}\"")
 			}
 		}

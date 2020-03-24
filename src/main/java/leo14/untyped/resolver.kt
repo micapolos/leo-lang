@@ -58,22 +58,25 @@ fun Resolver.recursively(script: Script): Resolver =
 		.resolver(thunk)
 		.compile(script)
 
-fun Resolver.switch(script: Script): Resolver =
+fun Resolver.match(script: Script): Resolver =
 	thunk.matchField { structField ->
 		structField.thunk.value.sequenceOrNull?.let { sequence ->
 			script
 				.rhsOrNull(sequence.head.selectName)
 				?.let { body ->
 					set(
-						function(
-							compiler.applyContext,
-							body,
-							recursive = false)
-							.apply(thunk(value(sequence))))
+						compiler
+							.applyContext
+							.push(
+								rule(
+									pattern(thunk(value(matchingName))),
+									body(thunk(value(matchingName lineTo value(sequence))))))
+							.asLazy(body)
+							.eval)
 				}
 			// TODO: any: case
 		}
-	} ?: append(switchName lineTo script.value)
+	} ?: append(matchName lineTo script.value)
 
 val Resolver.value
 	get() =

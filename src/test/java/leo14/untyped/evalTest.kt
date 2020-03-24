@@ -677,34 +677,34 @@ class EvalTest {
 	fun switch_number() {
 		script(
 			"x" lineTo script(literal(10)),
-			"switch" lineTo script(
-				"number" lineTo script("given")))
-			.assertEvalsTo("given" lineTo script(literal(10)))
+			"match" lineTo script(
+				"number" lineTo script("matching")))
+			.assertEvalsTo("matching" lineTo script(literal(10)))
 	}
 
 	@Test
 	fun switch_text() {
 		script(
 			"x" lineTo script(literal("Hello")),
-			"switch" lineTo script(
-				"text" lineTo script("given")))
-			.assertEvalsTo("given" lineTo script(literal("Hello")))
+			"match" lineTo script(
+				"text" lineTo script("matching")))
+			.assertEvalsTo("matching" lineTo script(literal("Hello")))
 	}
 
 	@Test
 	fun switch_name() {
 		script(
 			"x" lineTo script("circle"),
-			"switch" lineTo script(
-				"circle" lineTo script("given")))
-			.assertEvalsTo("given" lineTo script("circle"))
+			"match" lineTo script(
+				"circle" lineTo script("matching")))
+			.assertEvalsTo("matching" lineTo script("circle"))
 	}
 
 	@Test
 	fun switch_ordering() {
 		script(
 			"x" lineTo script("circle"),
-			"switch" lineTo script(
+			"match" lineTo script(
 				"circle" lineTo script("first"),
 				"circle" lineTo script("second")))
 			.assertEvalsTo(script("second"))
@@ -714,7 +714,7 @@ class EvalTest {
 	fun switch_mismatch() {
 		script(
 			"x" lineTo script("circle"),
-			"switch" lineTo script("square" lineTo script()))
+			"match" lineTo script("square" lineTo script()))
 			.assertEvalsToThis
 	}
 }

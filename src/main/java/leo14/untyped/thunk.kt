@@ -43,4 +43,4 @@ fun Thunk.plus(value: Value): Thunk =
 
 val Boolean.thunk
 	get() =
-		thunk(value("boolean" lineTo value(toString())))
+		thunk(value(booleanName lineTo value(if (this) trueName else falseName)))
