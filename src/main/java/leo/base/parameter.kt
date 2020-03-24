@@ -8,7 +8,7 @@ fun <T> Parameter<T>.update(fn: (T) -> T) {
 	value = fn(value)
 }
 
-fun <T, R> Parameter<T>.run(newValue: T, fn: () -> R): R =
+fun <T, R> Parameter<T>.runWith(newValue: T, fn: () -> R): R =
 	newValue.let { oldValue ->
 		try {
 			value = newValue

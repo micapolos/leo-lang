@@ -42,7 +42,7 @@ class FunctionTest {
 	fun lazyRecursion() {
 		val function = function(
 			context(),
-			script("lazy"("do"("recurse"()))),
+			script("lazy"("call"("recurse"()))),
 			recursive = true)
 		val param = thunk(value())
 
@@ -53,7 +53,7 @@ class FunctionTest {
 					context(
 						function.recurseRule,
 						param.givenRule),
-					script("do"("recurse"())))))
+					script("call"("recurse"())))))
 
 		function
 			.apply(param)
@@ -63,6 +63,6 @@ class FunctionTest {
 					context(
 						function.recurseRule,
 						param.givenRule),
-					script("do"("recurse"())))))
+					script("call"("recurse"())))))
 	}
 }

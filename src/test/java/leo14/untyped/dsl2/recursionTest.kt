@@ -6,7 +6,7 @@ class RecursionTest {
 	@Test
 	fun test_() {
 		run_ {
-			function { recursive { lazy_ { do_ { recurse } } } }
+			function { recursive { zero { lazy_ { do_ { recurse } } } } }
 			apply
 			print
 		}

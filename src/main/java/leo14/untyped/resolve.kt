@@ -22,7 +22,7 @@ val Sequence.resolve: Thunk?
 	get() =
 		null
 			?: resolveFunctionApplyAnything
-			?: resolveAnythingDoFunction
+			?: resolveAnythingCallFunction
 			?: resolveAnythingAppendAnything
 			?: resolveAnythingItAnything
 			?: resolveAnythingQuoteAnything
@@ -62,9 +62,9 @@ val Sequence.resolveFunctionApplyAnything: Thunk?
 			}
 		}
 
-val Sequence.resolveAnythingDoFunction: Thunk?
+val Sequence.resolveAnythingCallFunction: Thunk?
 	get() =
-		matchInfixThunk(doName) { lhs, rhs ->
+		matchInfixThunk(callName) { lhs, rhs ->
 			rhs.matchFunction { function ->
 				function.apply(lhs)
 			}
