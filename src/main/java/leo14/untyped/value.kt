@@ -119,4 +119,5 @@ val Field.rhsHeadOrNull get() = rhs.headOrNull?.let { head -> value(name lineTo 
 val Field.rhsTailOrNull get() = rhs.tailOrNull?.let { tail -> value(name lineTo tail) }
 
 fun Value.make(name: String) = value(name lineTo this)
-val Value._this get() = make(thisName)
+fun Thunk.make(name: String) = thunk(value(name lineTo this))
+val Thunk.this_ get() = make(thisName)

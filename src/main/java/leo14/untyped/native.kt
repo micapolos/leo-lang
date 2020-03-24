@@ -12,7 +12,7 @@ data class Native(val obj: Any?) {
 
 fun native(obj: Any?) = Native(obj)
 
-val Sequence.resolveNative: Value?
+val Sequence.resolveNative: Thunk?
 	get() =
 		null
 			?: resolveNativeClass
@@ -25,79 +25,90 @@ val Sequence.resolveNative: Value?
 			?: resolveNativeText
 			?: resolveNativeNumber
 
-val Sequence.resolveJavaString: Value?
+val Sequence.resolveJavaString: Thunk?
 	get() =
-		matchInfix(nativeName, stringName) { lhs, rhs ->
-			rhs.matchEmpty {
-				lhs.matchText { text ->
-					value(line(native(text)))
-				}
-			}
-		}
-
-val Sequence.resolveNativeInt: Value?
-	get() =
-		matchInfix(nativeName, intName) { lhs, rhs ->
-			rhs.matchEmpty {
-				lhs.matchNumber { number ->
-					try {
-						value(line(native(number.bigDecimal.intValueExact())))
-					} catch (e: ArithmeticException) {
-						null
+		matchInfixThunk(nativeName) { lhs, rhs ->
+			rhs.matchPrefix(stringName) { rhs ->
+				rhs.matchEmpty {
+					lhs.matchText { text ->
+						thunk(value(line(native(text))))
 					}
 				}
 			}
 		}
 
-val Sequence.resolveNativeFloat: Value?
+val Sequence.resolveNativeInt: Thunk?
 	get() =
-		matchInfix(nativeName, floatName) { lhs, rhs ->
-			rhs.matchEmpty {
-				lhs.matchNumber { number ->
-					value(line(native(number.bigDecimal.toFloat())))
+		matchInfixThunk(nativeName) { lhs, rhs ->
+			rhs.matchPrefix(intName) { rhs ->
+				rhs.matchEmpty {
+					lhs.matchNumber { number ->
+						try {
+							thunk(value(line(native(number.bigDecimal.intValueExact()))))
+						} catch (e: ArithmeticException) {
+							null
+						}
+					}
 				}
 			}
 		}
 
-val Sequence.resolveNativeDouble: Value?
+val Sequence.resolveNativeFloat: Thunk?
 	get() =
-		matchInfix(nativeName, doubleName) { lhs, rhs ->
-			rhs.matchEmpty {
-				lhs.matchNumber { number ->
-					value(line(native(number.bigDecimal.toDouble())))
+		matchInfixThunk(nativeName) { lhs, rhs ->
+			rhs.matchPrefix(floatName) { rhs ->
+				rhs.matchEmpty {
+					lhs.matchNumber { number ->
+						thunk(value(line(native(number.bigDecimal.toFloat()))))
+					}
 				}
 			}
 		}
 
-val Sequence.resolveNativeClass: Value?
+val Sequence.resolveNativeDouble: Thunk?
 	get() =
-		matchInfix(nativeName, className) { lhs, rhs ->
-			rhs.matchEmpty {
-				lhs.matchText { text ->
-					try {
-						value(line(native(javaClass.classLoader.loadClass(text))))
-					} catch (x: ClassNotFoundException) {
-						null
+		matchInfixThunk(nativeName) { lhs, rhs ->
+			rhs.matchPrefix(doubleName) { rhs ->
+				rhs.matchEmpty {
+					lhs.matchNumber { number ->
+						thunk(value(line(native(number.bigDecimal.toDouble()))))
+					}
+				}
+			}
+		}
+
+val Sequence.resolveNativeClass: Thunk?
+	get() =
+		matchInfixThunk(nativeName) { lhs, rhs ->
+			rhs.matchPrefix(className) { rhs ->
+				rhs.matchEmpty {
+					lhs.matchText { text ->
+						try {
+							thunk(value(line(native(javaClass.classLoader.loadClass(text)))))
+						} catch (x: ClassNotFoundException) {
+							null
+						}
 					}
 				}
 			}
 		}
 
 
-val Sequence.resolveNativeInvoke
+val Sequence.resolveNativeInvoke: Thunk?
 	get() =
-		matchInfix(invokeName) { lhs, rhs ->
+		matchInfixThunk(invokeName) { lhs, rhs ->
 			lhs.matchNative { native ->
-				rhs.lineStack.splitOrNull?.let { (args, name) ->
+				rhs.value.lineStack.splitOrNull?.let { (args, name) ->
 					name.literalOrNull?.stringOrNull?.let { name ->
 						args.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 							args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
-								value(
-									line(
-										native(
-											native.obj!!.javaClass
-												.getMethod(name, *types)
-												.invoke(native.obj, *args))))
+								thunk(
+									value(
+										line(
+											native(
+												native.obj!!.javaClass
+													.getMethod(name, *types)
+													.invoke(native.obj, *args)))))
 							}
 						}
 					}
@@ -105,46 +116,48 @@ val Sequence.resolveNativeInvoke
 			}
 		}
 
-val Sequence.resolveNativeNew
+val Sequence.resolveNativeNew: Thunk?
 	get() =
-		matchInfix(nativeName, newName) { lhs, rhs ->
-			lhs.matchText { name ->
-				rhs.lineStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
-					args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
-						value(
-							line(
-								native(
-									javaClass
-										.classLoader
-										.loadClass(name)
-										.getConstructor(*types)
-										.newInstance(*args))))
+		matchInfixThunk(nativeName) { lhs, rhs ->
+			rhs.matchPrefix(newName) { rhs ->
+				lhs.matchText { name ->
+					rhs.value.lineStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+						args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
+							thunk(value(
+								line(
+									native(
+										javaClass
+											.classLoader
+											.loadClass(name)
+											.getConstructor(*types)
+											.newInstance(*args)))))
+						}
 					}
 				}
 			}
 		}
 
-val Sequence.resolveNativeText
+val Sequence.resolveNativeText: Thunk?
 	get() =
-		matchPostfix(textName) { lhs ->
+		matchPostfixThunk(textName) { lhs ->
 			lhs.matchNative { native ->
 				(native.obj as? String)?.let { string ->
-					value(literal(string))
+					thunk(value(literal(string)))
 				}
 			}
 		}
 
-val Sequence.resolveNativeNumber
+val Sequence.resolveNativeNumber: Thunk?
 	get() =
-		matchPostfix(numberName) { lhs ->
+		matchPostfixThunk(numberName) { lhs ->
 			lhs.matchNative { native ->
 				null
-					?: (native.obj as? Byte)?.let { value(literal(it.toInt())) }
-					?: (native.obj as? Short)?.let { value(literal(it.toInt())) }
-					?: (native.obj as? Int)?.let { value(literal(it)) }
-					?: (native.obj as? Long)?.let { value(literal(it)) }
-					?: (native.obj as? Float)?.let { value(literal(it.toDouble())) }
-					?: (native.obj as? Double)?.let { value(literal(it)) }
+					?: (native.obj as? Byte)?.let { thunk(value(literal(it.toInt()))) }
+					?: (native.obj as? Short)?.let { thunk(value(literal(it.toInt()))) }
+					?: (native.obj as? Int)?.let { thunk(value(literal(it))) }
+					?: (native.obj as? Long)?.let { thunk(value(literal(it))) }
+					?: (native.obj as? Float)?.let { thunk(value(literal(it.toDouble()))) }
+					?: (native.obj as? Double)?.let { thunk(value(literal(it))) }
 			}
 		}
 

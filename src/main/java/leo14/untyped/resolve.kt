@@ -7,14 +7,18 @@ import leo14.*
 
 val autoMake = false
 
-val Value.resolve
+val Value.resolve: Thunk?
 	get() =
 		when (this) {
 			EmptyValue -> null
 			is SequenceValue -> sequence.resolve
 		}
 
-val Sequence.resolve: Value?
+val Thunk.resolve: Thunk?
+	get() =
+		value.resolve
+
+val Sequence.resolve: Thunk?
 	get() =
 		null
 			?: resolveFunctionApplyAnything
@@ -49,175 +53,185 @@ val Sequence.resolve: Value?
 			?: resolveFold
 			?: resolveForce
 
-val Sequence.resolveFunctionApplyAnything: Value?
+val Sequence.resolveFunctionApplyAnything: Thunk?
 	get() =
 		matchInfixThunk(applyName) { lhs, rhs ->
-			lhs.value.functionOrNull?.apply(rhs)?.value
+			lhs.value.functionOrNull?.apply(rhs)
 		}
 
-val Sequence.resolveAnythingDoFunction: Value?
+val Sequence.resolveAnythingDoFunction: Thunk?
 	get() =
 		matchInfixThunk(doName) { lhs, rhs ->
-			rhs.value.functionOrNull?.apply(lhs)?.value
+			rhs.value.functionOrNull?.apply(lhs)
 		}
 
-val Sequence.resolveAccess: Value?
+val Sequence.resolveAccess: Thunk?
 	get() =
 		head.matchName { name ->
 			tail.value.get(name)
 		}
 
-val Sequence.resolveGet: Value?
+val Sequence.resolveGet: Thunk?
 	get() =
-		matchInfix(getName) { lhs, rhs ->
+		matchInfixThunk(getName) { lhs, rhs ->
 			rhs.matchName { name ->
 				lhs.get(name)
 			}
 		}
 
-val Sequence.resolveAnythingAppendAnything: Value?
+val Sequence.resolveAnythingAppendAnything: Thunk?
 	get() =
-		matchInfix(appendName) { lhs, rhs ->
-			lhs.onlyFieldOrNull?.let { field ->
-				rhs.onlyLineOrNull?.let { line ->
-					value(field.name lineTo field.rhs.plus(line))
+		matchInfixThunk(appendName) { lhs, rhs ->
+			lhs.value.onlyFieldOrNull?.let { field ->
+				rhs.value.onlyLineOrNull?.let { line ->
+					thunk(value(field.name lineTo field.rhs.plus(line)))
 				}
 			}
 		}
 
-val Sequence.resolveAnythingItAnything: Value?
+val Sequence.resolveAnythingItAnything: Thunk?
 	get() =
-		matchInfix(itName) { lhs, rhs ->
-			rhs.onlyLineOrNull?.let { rhs ->
+		matchInfixThunk(itName) { lhs, rhs ->
+			rhs.value.onlyLineOrNull?.let { rhs ->
 				lhs.plus(rhs)
 			}
 		}
 
-val Sequence.resolveAnythingQuoteAnything: Value?
+val Sequence.resolveAnythingQuoteAnything: Thunk?
 	get() =
-		matchInfix(quoteName) { lhs, rhs ->
+		matchInfixThunk(quoteName) { lhs, rhs ->
 			lhs.plus(rhs)
 		}
 
-val Sequence.resolveAnythingReplaceAnything: Value?
+val Sequence.resolveAnythingReplaceAnything: Thunk?
 	get() =
-		matchInfix(replaceName) { _, rhs ->
+		matchInfixThunk(replaceName) { _, rhs ->
 			rhs
 		}
 
-val Sequence.resolveAnythingDelete: Value?
+val Sequence.resolveAnythingDelete: Thunk?
 	get() =
-		matchPostfix(deleteName) { value() }
+		matchPostfixThunk(deleteName) { thunk(value()) }
 
-val Sequence.resolveMake
+val Sequence.resolveMake: Thunk?
 	get() =
-		matchInfix(makeName) { lhs, rhs ->
+		matchInfixThunk(makeName) { lhs, rhs ->
 			rhs.matchName { name ->
 				lhs.make(name)
 			}
 		}
 
-val Sequence.resolveThis: Value?
+val Sequence.resolveThis: Thunk?
 	get() =
-		matchPostfix(thisName) { lhs ->
-			lhs._this
+		matchPostfixThunk(thisName) { lhs ->
+			lhs.this_
 		}
 
-val Sequence.resolveNumberPlusNumber: Value?
+val Sequence.resolveNumberPlusNumber: Thunk?
 	get() =
-		matchInfix(plusName) { lhs, rhs ->
+		matchInfixThunk(plusName) { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
-					value(literal(lhs + rhs))
+					thunk(value(literal(lhs + rhs)))
 				}
 			}
 		}
 
-val Sequence.resolveMinusNumber: Value?
+val Sequence.resolveMinusNumber: Thunk?
 	get() =
-		matchInfix(minusName) { lhs, rhs ->
+		matchInfixThunk(minusName) { lhs, rhs ->
 			lhs.matchEmpty {
 				rhs.matchNumber { rhs ->
-					value(literal(-rhs))
+					thunk(value(literal(-rhs)))
 				}
 			}
 		}
 
-val Sequence.resolveNumberMinusNumber: Value?
+val Sequence.resolveNumberMinusNumber: Thunk?
 	get() =
-		matchInfix(minusName) { lhs, rhs ->
+		matchInfixThunk(minusName) { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
-					value(literal(lhs - rhs))
+					thunk(value(literal(lhs - rhs)))
 				}
 			}
 		}
 
-val Sequence.resolveNumberTimesNumber: Value?
+val Sequence.resolveNumberTimesNumber: Thunk?
 	get() =
-		matchInfix(timesName) { lhs, rhs ->
+		matchInfixThunk(timesName) { lhs, rhs ->
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
-					value(literal(lhs * rhs))
+					thunk(value(literal(lhs * rhs)))
 				}
 			}
 		}
 
-val Sequence.resolveTextPlusText: Value?
+val Sequence.resolveTextPlusText: Thunk?
 	get() =
-		matchInfix(plusName) { lhs, rhs ->
+		matchInfixThunk(plusName) { lhs, rhs ->
 			lhs.matchText { lhs ->
 				rhs.matchText { rhs ->
-					value(literal(lhs + rhs))
+					thunk(value(literal(lhs + rhs)))
 				}
 			}
 		}
 
-val Sequence.resolveHead: Value?
+val Sequence.resolveHead: Thunk?
 	get() =
-		matchPostfix("head", Value::headOrNull)
+		matchPostfixThunk("head") { lhs ->
+			lhs.value.headOrNull?.let { thunk(it) } // TODO
+		}
 
-val Sequence.resolveTail: Value?
+val Sequence.resolveTail: Thunk?
 	get() =
-		matchPostfix("tail", Value::tailOrNull)
+		matchPostfixThunk("tail") { lhs ->
+			lhs.value.tailOrNull?.let { thunk(it) } // TODO
+		}
 
-val Sequence.resolveLast: Value?
+val Sequence.resolveLast: Thunk?
 	get() =
-		matchPostfix(lastName, Value::lastOrNull)
+		matchPostfixThunk(lastName) { lhs ->
+			lhs.value.lastOrNull?.let { thunk(it) } // TODO
+		}
 
-val Sequence.resolvePrevious: Value?
+val Sequence.resolvePrevious: Thunk?
 	get() =
-		matchPostfix(previousName, Value::previousOrNull)
+		matchPostfixThunk(previousName) { lhs ->
+			lhs.value.previousOrNull?.let { thunk(it) } // TODO
+		}
 
-val Sequence.resolveContent: Value?
+val Sequence.resolveContent: Thunk?
 	get() =
-		matchPostfix(contentName, Value::contentsOrNull)
+		matchPostfixThunk(contentName) { lhs ->
+			lhs.value.contentsOrNull?.let { thunk(it) } // TODO
+		}
 
-val Sequence.resolveName: Value?
+val Sequence.resolveName: Thunk?
 	get() =
-		matchPostfix(textName) { lhs ->
+		matchPostfixThunk(textName) { lhs ->
 			lhs.matchPostfix(nameName) { lhs ->
-				lhs.nameOrNull?.let { name ->
-					value(literal(name))
+				lhs.matchField { field ->
+					thunk(value(literal(field.name)))
 				}
 			}
 		}
 
-val Sequence.resolveLeonardo: Value?
+val Sequence.resolveLeonardo: Thunk?
 	get() =
 		matchSimple("leonardo") {
-			leonardoScript.value
+			thunk(leonardoScript.value)
 		}
 
-val Sequence.resolveAnythingEqualsAnything: Value?
+val Sequence.resolveAnythingEqualsAnything: Thunk?
 	get() =
-		matchInfix(equalsName) { lhs, rhs ->
-			value(if (lhs == rhs) "yes" else "no")
+		matchInfixThunk(equalsName) { lhs, rhs ->
+			thunk(value(if (lhs == rhs) "yes" else "no"))
 		}
 
-val Sequence.resolveIfThenElse: Value?
+val Sequence.resolveIfThenElse: Thunk?
 	get() =
-		matchInfix(elseName) { lhs, alternate ->
+		matchInfixThunk(elseName) { lhs, alternate ->
 			lhs.matchInfix(thenName) { lhs, consequent ->
 				lhs.matchPrefix(ifName) { condition ->
 					condition.matchName { name ->
@@ -231,33 +245,33 @@ val Sequence.resolveIfThenElse: Value?
 			}
 		}
 
-val Sequence.resolveAutoMake: Value?
+val Sequence.resolveAutoMake: Thunk?
 	get() =
 		ifOrNull(autoMake) {
 			head.matchName { name ->
-				tail.value.matchNotEmpty {
-					tail.value.make(name)
+				tail.matchNotEmpty {
+					tail.make(name)
 				}
 			}
 		}
 
-val Sequence.resolvePrint: Value?
+val Sequence.resolvePrint: Thunk?
 	get() =
-		matchPostfix(printName) { lhs ->
-			value().also { println(lhs) }
+		matchPostfixThunk(printName) { lhs ->
+			thunk(value()).also { println(lhs) }
 		}
 
-val Sequence.resolvePrinted: Value?
+val Sequence.resolvePrinted: Thunk?
 	get() =
-		matchPostfix(printedName) { lhs ->
+		matchPostfixThunk(printedName) { lhs ->
 			lhs.also { println(lhs) }
 		}
 
-val Sequence.resolveFold: Value?
+val Sequence.resolveFold: Thunk?
 	get() =
-		matchInfix(doingName) { lhs, rhs ->
-			rhs.functionOrNull?.let { function ->
-				lhs.matchInfixThunk(foldName) { folded, items ->
+		matchInfixThunk(doingName) { lhs, rhs ->
+			rhs.matchFunction { function ->
+				lhs.value.sequenceOrNull?.matchInfixThunk(foldName) { folded, items ->
 					items.value.contentsOrNull?.let { contents ->
 						folded.fold(contents.lineStack) { line ->
 							function
@@ -266,16 +280,14 @@ val Sequence.resolveFold: Value?
 										pattern(value(foldedName)),
 										body(thunk(value(foldedName lineTo value(line)))))))
 								.apply(this)
-						}.value // TODO: To thunk
+						}
 					}
 				}
 			}
 		}
 
-val Sequence.resolveForce: Value?
+val Sequence.resolveForce: Thunk?
 	get() =
-		matchInfixThunk(forceName) { lhs, rhs ->
-			rhs.value.matchEmpty {
-				lhs.value
-			}
+		matchPostfixThunk(forceName) { lhs ->
+			lhs.force
 		}

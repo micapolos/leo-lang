@@ -1,6 +1,7 @@
 package leo14.untyped
 
 import leo.bellChar
+import leo13.fold
 
 val thunkBellOnEval = false
 
@@ -33,3 +34,9 @@ val Thunk.value
 
 fun Thunk.plus(line: Line): Thunk =
 	thunk(value(this sequenceTo line))
+
+fun Thunk.plus(thunk: Thunk): Thunk =
+	plus(thunk.value)
+
+fun Thunk.plus(value: Value): Thunk =
+	fold(value.lineStack) { plus(it) }

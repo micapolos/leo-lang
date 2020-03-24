@@ -7,8 +7,14 @@ import leo14.Number
 fun <R> Value.matchEmpty(fn: () -> R): R? =
 	(this as? EmptyValue)?.let { fn() }
 
+fun <R> Thunk.matchEmpty(fn: () -> R): R? =
+	value.matchEmpty(fn)
+
 fun <R> Value.matchNotEmpty(fn: () -> R): R? =
 	if (isEmpty) null else fn()
+
+fun <R> Thunk.matchNotEmpty(fn: () -> R): R? =
+	value.matchNotEmpty(fn)
 
 fun <R> Value.matchSequence(fn: (Sequence) -> R): R? =
 	(this as? SequenceValue)?.sequence?.let(fn)
@@ -16,14 +22,32 @@ fun <R> Value.matchSequence(fn: (Sequence) -> R): R? =
 fun <R> Value.matchName(fn: (String) -> R): R? =
 	onlyNameOrNull?.let(fn)
 
+fun <R> Thunk.matchName(fn: (String) -> R): R? =
+	value.matchName(fn)
+
+fun <R> Thunk.matchField(fn: (Field) -> R): R? =
+	value.onlyFieldOrNull?.let(fn)
+
 fun <R> Value.matchNumber(fn: (Number) -> R): R? =
 	numberOrNull?.let(fn)
+
+fun <R> Thunk.matchNumber(fn: (Number) -> R): R? =
+	value.matchNumber(fn)
+
+fun <R> Thunk.matchFunction(fn: (Function) -> R): R? =
+	value.functionOrNull?.let(fn)
 
 fun <R> Value.matchText(fn: (String) -> R): R? =
 	textOrNull?.let(fn)
 
+fun <R> Thunk.matchText(fn: (String) -> R): R? =
+	value.matchText(fn)
+
 fun <R> Value.matchNative(fn: (Native) -> R): R? =
 	nativeOrNull?.let(fn)
+
+fun <R> Thunk.matchNative(fn: (Native) -> R): R? =
+	value.matchNative(fn)
 
 fun <R> Value.matchFunction(fn: (Function) -> R): R? =
 	functionOrNull?.let(fn)
@@ -63,6 +87,23 @@ fun <R> Value.matchName(name: String, fn: () -> R) =
 		}
 	}
 
+fun <R> Thunk.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
+	value.sequenceOrNull?.matchInfixThunk(name, fn)
+
+fun <R> Thunk.matchPrefix(name: String, fn: (Thunk) -> R) =
+	matchInfix(name) { lhs, rhs ->
+		lhs.matchEmpty {
+			fn(rhs)
+		}
+	}
+
+fun <R> Thunk.matchPostfix(name: String, fn: (Thunk) -> R) =
+	matchInfix(name) { lhs, rhs ->
+		rhs.matchEmpty {
+			fn(lhs)
+		}
+	}
+
 fun <R> Sequence.matchInfix(name: String, fn: (Value, Value) -> R) =
 	head.match(name) { rhs ->
 		fn(tail.value, rhs)
@@ -89,6 +130,13 @@ fun <R> Sequence.matchPrefix(name: String, fn: (Value) -> R) =
 
 fun <R> Sequence.matchPostfix(name: String, fn: (Value) -> R) =
 	matchInfix(name) { lhs, rhs ->
+		rhs.matchEmpty {
+			fn(lhs)
+		}
+	}
+
+fun <R> Sequence.matchPostfixThunk(name: String, fn: (Thunk) -> R) =
+	matchInfixThunk(name) { lhs, rhs ->
 		rhs.matchEmpty {
 			fn(lhs)
 		}

@@ -28,7 +28,7 @@ fun Context.push(rule: Rule): Context =
 fun Context.apply(thunk: Thunk): Thunk? =
 	null
 		?: applyRules(thunk)
-		?: thunk.value.resolve?.let { thunk(it) } // TODO
+		?: thunk.resolve
 
 fun Context.applyRules(thunk: Thunk): Thunk? =
 	when (this) {
