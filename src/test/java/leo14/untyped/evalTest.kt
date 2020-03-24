@@ -735,4 +735,15 @@ class EvalTest {
 			"force" lineTo script())
 			.assertEvalsTo(script(literal(-1)))
 	}
+
+	@Test
+	fun do_() {
+		script(
+			line(literal(10)),
+			"do" lineTo script(
+				"minus" lineTo script(
+					"given" lineTo script(),
+					"number" lineTo script())))
+			.assertEvalsTo(script(literal(-10)))
+	}
 }

@@ -34,6 +34,14 @@ fun Resolver.apply(line: Line): Resolver =
 fun Resolver.lazy(script: Script): Resolver =
 	compiler.resolver(thunk(lazy(compiler.applyContext, script)))
 
+fun Resolver.do_(script: Script): Resolver =
+	compiler.resolver(
+		function(
+			compiler.applyContext,
+			script,
+			recursive = false)
+			.apply(thunk))
+
 val Resolver.value
 	get() =
 		thunk.value

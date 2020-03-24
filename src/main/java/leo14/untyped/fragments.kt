@@ -45,4 +45,5 @@ val CodeOp.fragmentParent: FragmentParent
 			is UnquotedGetCodeOp -> unquoted.fragment.parent(begin(getName))
 			is UnquotedAssertCodeOp -> unquoted.fragment.parent(begin(assertName))
 			is UnquotedLazyCodeOp -> unquoted.fragment.parent(begin(lazyName))
+			is UnquotedDoCodeOp -> unquoted.fragment.parent(begin(doName))
 		}
