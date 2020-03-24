@@ -6,23 +6,23 @@ val thunkBellOnEval = false
 
 sealed class Thunk
 
-data class ProgramThunk(val program: Program) : Thunk() {
-	override fun toString() = program.toString()
+data class ProgramThunk(val value: Value) : Thunk() {
+	override fun toString() = value.toString()
 }
 
 data class LazyThunk(val lazy: Lazy) : Thunk() {
 	override fun toString() = lazy.toString()
 }
 
-fun thunk(program: Program): Thunk = ProgramThunk(program)
+fun thunk(value: Value): Thunk = ProgramThunk(value)
 fun thunk(lazy: Lazy): Thunk = LazyThunk(lazy)
 
-val Thunk.program
+val Thunk.value
 	get() =
 		when (this) {
-			is ProgramThunk -> program
-			is LazyThunk -> lazy.program.also { if (thunkBellOnEval) print(bellChar) }
+			is ProgramThunk -> value
+			is LazyThunk -> lazy.value.also { if (thunkBellOnEval) print(bellChar) }
 		}
 
 fun Thunk.plus(line: Line): Thunk =
-	thunk(program(this sequenceTo line))
+	thunk(value(this sequenceTo line))

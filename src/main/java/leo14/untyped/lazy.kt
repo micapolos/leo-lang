@@ -13,9 +13,9 @@ fun lazy(context: Context, script: Script) = Lazy(context, script)
 operator fun Lazy.plus(definition: Definition): Lazy =
 	lazy(context.push(definition), script)
 
-val Lazy.program: Program
+val Lazy.value: Value
 	get() =
-		context.eval(script).program
+		context.eval(script).value
 
 val Lazy.printScript
 	get() =

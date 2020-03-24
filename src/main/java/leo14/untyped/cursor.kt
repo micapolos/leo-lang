@@ -6,31 +6,31 @@ import leo14.begin
 
 data class Cursor(
 	val parentOrNull: CursorParent?,
-	val program: Program)
+	val value: Value)
 
 data class CursorParent(
 	val cursor: Cursor,
 	val name: String)
 
 fun Cursor.begin(name: String): Cursor =
-	Cursor(CursorParent(this, name), program())
+	Cursor(CursorParent(this, name), value())
 
 fun Cursor.append(line: Line): Cursor =
-	Cursor(parentOrNull, program.plus(line))
+	Cursor(parentOrNull, value.plus(line))
 
 fun Cursor.end(): Cursor? =
 	parentOrNull?.let { parent ->
 		Cursor(
 			parent.cursor.parentOrNull,
-			parent.cursor.program.plus(parent.name lineTo program))
+			parent.cursor.value.plus(parent.name lineTo value))
 	}
 
-fun Cursor.updateProgram(fn: Program.() -> Program) =
-	copy(program = program.fn())
+fun Cursor.updateProgram(fn: Value.() -> Value) =
+	copy(value = value.fn())
 
 val Cursor.fragment: Fragment
 	get() =
-		Fragment(parentOrNull?.fragmentParent, program.script)
+		Fragment(parentOrNull?.fragmentParent, value.script)
 
 val CursorParent.fragmentParent
 	get() =

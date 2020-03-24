@@ -8,9 +8,9 @@ import kotlin.test.Test
 
 class LazyTest {
 	@Test
-	fun program() {
+	fun value() {
 		lazy(context(), script("minus" lineTo script(literal(1))))
-			.program
-			.assertEqualTo(program(literal(-1)))
+			.value
+			.assertEqualTo(value(literal(-1)))
 	}
 }

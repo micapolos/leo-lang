@@ -7,12 +7,12 @@ import org.junit.Test
 class LineTest {
 	@Test
 	fun all() {
-		program(
+		value(
 			line(literal(10)),
-			plusName lineTo program(literal(10)))
+			plusName lineTo value(literal(10)))
 			.assertEqualTo(
-				program(
+				value(
 					line(literal(10)),
-					plusName lineTo program(literal(10))))
+					plusName lineTo value(literal(10))))
 	}
 }

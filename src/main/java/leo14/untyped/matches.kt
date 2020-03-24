@@ -38,17 +38,17 @@ fun ScriptField.matches(scriptLine: ScriptLine) =
 fun ScriptField.matches(scriptField: ScriptField) =
 	string == scriptField.string && rhs.matches(scriptField.rhs)
 
-fun Program.matches(thunk: Thunk): Boolean =
+fun Value.matches(thunk: Thunk): Boolean =
 	null
 		?: anythingMatches
-		?: rawMatches(thunk.program)
+		?: rawMatches(thunk.value)
 
-fun Program.matches(program: Program): Boolean =
+fun Value.matches(value: Value): Boolean =
 	null
 		?: anythingMatches
-		?: rawMatches(program)
+		?: rawMatches(value)
 
-val Program.anythingMatches
+val Value.anythingMatches
 	get() =
 		matchInfix(anythingName) { lhs, rhs ->
 			rhs.matchEmpty {
@@ -58,27 +58,27 @@ val Program.anythingMatches
 			}
 		}
 
-fun Program.rawMatches(program: Program) =
+fun Value.rawMatches(value: Value) =
 	when (this) {
-		EmptyProgram -> program is EmptyProgram
-		is SequenceProgram -> program is SequenceProgram && sequence.match(program)
+		EmptyValue -> value is EmptyValue
+		is SequenceValue -> value is SequenceValue && sequence.match(value)
 	}
 
-fun Sequence.match(program: Program) =
+fun Sequence.match(value: Value) =
 	null
-		?: orMatches(program)
-		?: rawMatches(program)
+		?: orMatches(value)
+		?: rawMatches(value)
 
-fun Sequence.orMatches(program: Program) =
+fun Sequence.orMatches(value: Value) =
 	head.match(orName) { rhs ->
-		rhs.matches(program) || tail.program.matches(program)
+		rhs.matches(value) || tail.value.matches(value)
 	}
 
-fun Sequence.rawMatches(program: Program) =
-	program is SequenceProgram && matches(program.sequence)
+fun Sequence.rawMatches(value: Value) =
+	value is SequenceValue && matches(value.sequence)
 
 fun Sequence.matches(sequence: Sequence) =
-	head.matches(sequence.head) && tail.program.matches(sequence.tail)
+	head.matches(sequence.head) && tail.value.matches(sequence.tail)
 
 fun Line.matches(line: Line) =
 	null
@@ -112,10 +112,10 @@ fun Field.matches(field: Field) =
 
 // === name matching ===
 
-fun Program.matches(name: String) =
+fun Value.matches(name: String) =
 	when (this) {
-		EmptyProgram -> name == nothingName
-		is SequenceProgram -> sequence.matches(name)
+		EmptyValue -> name == nothingName
+		is SequenceValue -> sequence.matches(name)
 	}
 
 fun Sequence.matches(name: String) =

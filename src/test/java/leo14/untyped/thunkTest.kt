@@ -8,20 +8,20 @@ import kotlin.test.Test
 
 class ThunkTest {
 	@Test
-	fun program() {
+	fun value() {
 		thunk(
-			program("minus" lineTo program(literal(1))))
-			.program
-			.assertEqualTo(program("minus" lineTo program(literal(1))))
+			value("minus" lineTo value(literal(1))))
+			.value
+			.assertEqualTo(value("minus" lineTo value(literal(1))))
 	}
 
 	@Test
-	fun lazyProgram() {
+	fun lazyValue() {
 		thunk(
 			lazy(
 				context(),
 				script("minus" lineTo script(literal(1)))))
-			.program
-			.assertEqualTo(program(literal(-1)))
+			.value
+			.assertEqualTo(value(literal(-1)))
 	}
 }

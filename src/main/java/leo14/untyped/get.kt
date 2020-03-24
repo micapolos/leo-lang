@@ -1,4 +1,4 @@
 package leo14.untyped
 
-fun Program.get(name: String): Program? =
-	contentsOrNull?.select(name)?.let { program(it) }
+fun Value.get(name: String): Value? =
+	contentsOrNull?.select(name)?.let { value(it) }

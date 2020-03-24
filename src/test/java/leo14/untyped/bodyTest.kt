@@ -9,15 +9,15 @@ import kotlin.test.Test
 class BodyTest {
 	@Test
 	fun apply_nullContext() {
-		body(thunk(program("foo")))
-			.apply(context(), thunk(program("arg" lineTo program())))
-			.assertEqualTo(thunk(program("foo")))
+		body(thunk(value("foo")))
+			.apply(context(), thunk(value("arg" lineTo value())))
+			.assertEqualTo(thunk(value("foo")))
 	}
 
 	@Test
 	fun apply_nonNullContext() {
 		body(script(givenName lineTo script()))
-			.apply(context(), thunk(program(literal(5))))
-			.assertEqualTo(thunk(program(givenName lineTo program(literal(5)))))
+			.apply(context(), thunk(value(literal(5))))
+			.assertEqualTo(thunk(value(givenName lineTo value(literal(5)))))
 	}
 }

@@ -4,13 +4,13 @@ import leo.base.ifOrNull
 import leo14.Script
 
 data class SwitchMatch(
-	val param: Program,
+	val param: Value,
 	val body: Script)
 
-fun switchMatch(param: Program, body: Script) =
+fun switchMatch(param: Value, body: Script) =
 	SwitchMatch(param, body)
 
-val Program.resolveSwitchMatch
+val Value.resolveSwitchMatch
 	get() =
 		matchInfix(switchName) { lhs, rhs ->
 			lhs.matchBody { param ->
@@ -20,13 +20,13 @@ val Program.resolveSwitchMatch
 			}
 		}
 
-tailrec fun Program.casesSwitchBody(cases: Program): Script? =
+tailrec fun Value.casesSwitchBody(cases: Value): Script? =
 	when (cases) {
-		EmptyProgram -> null
-		is SequenceProgram -> caseSwitchBody(cases.sequence.head) ?: casesSwitchBody(cases.sequence.tail.program)
+		EmptyValue -> null
+		is SequenceValue -> caseSwitchBody(cases.sequence.head) ?: casesSwitchBody(cases.sequence.tail.value)
 	}
 
-fun Program.caseSwitchBody(line: Line): Script? =
+fun Value.caseSwitchBody(line: Line): Script? =
 	line.fieldOrNull?.let { field ->
 		ifOrNull(matches(field.name)) {
 			field.rhs.scriptOrNull

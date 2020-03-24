@@ -4,14 +4,14 @@ import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 
-fun Program.select(name: String): Line? =
+fun Value.select(name: String): Line? =
 	when (this) {
-		EmptyProgram -> null
-		is SequenceProgram -> sequence.select(name)
+		EmptyValue -> null
+		is SequenceValue -> sequence.select(name)
 	}
 
 fun Thunk.select(name: String): Line? =
-	program.select(name)
+	value.select(name)
 
 fun Sequence.select(name: String) =
 	null

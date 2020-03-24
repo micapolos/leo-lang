@@ -2,8 +2,8 @@ package leo14.untyped.dsl.example
 
 import leo14.untyped.dsl.*
 
-val program =
-	_program(
+val value =
+	value_(
 		number(), decrement(),
 		gives(number(), minus(number(1))),
 

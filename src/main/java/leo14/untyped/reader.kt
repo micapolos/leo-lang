@@ -37,7 +37,7 @@ data class UnquotedLazyCodeOp(val unquoted: Unquoted) : CodeOp()
 
 val emptyReader: Reader
 	get() =
-		UnquotedReader(Unquoted(null, resolver(program())))
+		UnquotedReader(Unquoted(null, resolver(value())))
 
 val Resolver.reader: Reader
 	get() =
@@ -79,20 +79,20 @@ fun Quoted.write(begin: Begin): Reader =
 					QuotedAppendQuotedOp(this, begin),
 					compiler,
 					depth.inc(),
-					thunk(program())))
+					thunk(value())))
 		begin.string == unquoteName && depth > 0 ->
 			when (depth) {
 				1 ->
 					UnquotedReader(
 						Unquoted(
 							QuotedPlusUnquotedOp(this),
-							compiler.resolver(program())))
+							compiler.resolver(value())))
 				else -> QuotedReader(
 					Quoted(
 						QuotedAppendQuotedOp(this, begin),
 						compiler,
 						depth.dec(),
-						thunk(program())))
+						thunk(value())))
 			}
 		else ->
 			QuotedReader(
@@ -100,7 +100,7 @@ fun Quoted.write(begin: Begin): Reader =
 					QuotedAppendQuotedOp(this, begin),
 					compiler,
 					depth,
-					thunk(program())))
+					thunk(value())))
 	}
 
 fun Unquoted.write(begin: Begin): Reader =
@@ -116,7 +116,7 @@ fun Unquoted.write(begin: Begin): Reader =
 					UnquotedPlusQuotedOp(this),
 					resolver.compiler,
 					1,
-					thunk(program())))
+					thunk(value())))
 		functionName ->
 			CodeReader(
 				Code(
@@ -133,7 +133,7 @@ fun Unquoted.write(begin: Begin): Reader =
 					UnquotedGetCodeOp(this),
 					script()))
 		lazyName ->
-			if (resolver.program.isEmpty)
+			if (resolver.value.isEmpty)
 				CodeReader(
 					Code(
 						UnquotedLazyCodeOp(this),
@@ -142,12 +142,12 @@ fun Unquoted.write(begin: Begin): Reader =
 				UnquotedReader(
 					Unquoted(
 						UnquotedResolveUnquotedOp(this, begin),
-						resolver.compiler.resolver(program())))
+						resolver.compiler.resolver(value())))
 		else ->
 			UnquotedReader(
 				Unquoted(
 					UnquotedResolveUnquotedOp(this, begin),
-					resolver.compiler.resolver(program())))
+					resolver.compiler.resolver(value())))
 	}
 
 fun Code.write(begin: Begin): Reader =
@@ -184,7 +184,7 @@ fun UnquotedOp.write(thunk: Thunk): Reader? =
 			QuotedReader(
 				quoted.copy(
 					// TODO: IS it correct?
-					thunk = thunk(quoted.thunk.program.plus(thunk.program))))
+					thunk = thunk(quoted.thunk.value.plus(thunk.value))))
 	}
 
 fun Code.write(end: End): Reader? =
@@ -211,7 +211,7 @@ fun CodeOp.write(script: Script): Reader? =
 		is UnquotedGetCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.apply(getName lineTo script.program)))
+					resolver = unquoted.resolver.apply(getName lineTo script.value)))
 		is UnquotedLazyCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
@@ -225,8 +225,8 @@ fun Unquoted.write(literal: Literal): Reader? =
 	UnquotedReader(copy(resolver = resolver.apply(line(literal))))
 
 fun Code.write(literal: Literal): Reader? =
-	CodeReader(copy(script = script.plus(leo14.line(literal))))
+	CodeReader(copy(script = script.plus(scriptLine(literal))))
 
-val Reader.program
+val Reader.value
 	get() =
-		(this as UnquotedReader).unquoted.resolver.program
+		(this as UnquotedReader).unquoted.resolver.value

@@ -13,6 +13,6 @@ class ReaderTest {
 			.write(token(begin("foo")))!!
 			.write(token(end))!!
 			.assertEqualTo(
-				UnquotedReader(Unquoted(null, context().resolver(program("foo" lineTo program())))))
+				UnquotedReader(Unquoted(null, context().resolver(value("foo" lineTo value())))))
 	}
 }

@@ -6,22 +6,22 @@ import kotlin.test.Test
 
 class ContextTest {
 	private val context = context(
-		rule(pattern(program("x")), body(thunk(program("zero")))),
-		rule(pattern(program("y")), body(thunk(program("one")))),
-		rule(pattern(program("x")), body(thunk(program("two")))))
+		rule(pattern(value("x")), body(thunk(value("zero")))),
+		rule(pattern(value("y")), body(thunk(value("one")))),
+		rule(pattern(value("x")), body(thunk(value("two")))))
 
 	@Test
 	fun apply_rules() {
 		context
-			.apply(thunk(program("x")))
-			.assertEqualTo(thunk(program("two")))
+			.apply(thunk(value("x")))
+			.assertEqualTo(thunk(value("two")))
 
 		context
-			.apply(thunk(program("y")))
-			.assertEqualTo(thunk(program("one")))
+			.apply(thunk(value("y")))
+			.assertEqualTo(thunk(value("one")))
 
 		context
-			.apply(thunk(program("z")))
+			.apply(thunk(value("z")))
 			.assertEqualTo(null)
 	}
 
@@ -30,14 +30,14 @@ class ContextTest {
 		context
 			.compile(
 				thunk(
-					program(
-						"foo" lineTo program(),
-						givesName lineTo program("bar"))))
+					value(
+						"foo" lineTo value(),
+						givesName lineTo value("bar"))))
 			.assertEqualTo(
 				context.push(
 					rule(
-						pattern(program("foo")),
-						body(thunk(program("bar"))))))
+						pattern(value("foo")),
+						body(thunk(value("bar"))))))
 	}
 
 	@Test
@@ -45,13 +45,13 @@ class ContextTest {
 		context
 			.compile(
 				thunk(
-					program(
-						"foo" lineTo program(),
-						doesName lineTo program("bar"))))
+					value(
+						"foo" lineTo value(),
+						doesName lineTo value("bar"))))
 			.assertEqualTo(
 				context.push(
 					rule(
-						pattern(program("foo")),
+						pattern(value("foo")),
 						body(script("bar")))))
 	}
 }

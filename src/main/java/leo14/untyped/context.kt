@@ -28,7 +28,7 @@ fun Context.push(rule: Rule): Context =
 fun Context.apply(thunk: Thunk): Thunk? =
 	null
 		?: applyRules(thunk)
-		?: thunk.program.resolve?.let { thunk(it) } // TODO
+		?: thunk.value.resolve?.let { thunk(it) } // TODO
 
 fun Context.applyRules(thunk: Thunk): Thunk? =
 	when (this) {
@@ -46,18 +46,18 @@ fun Context.compile(thunk: Thunk): Context? =
 		?: compileAs(thunk)
 
 fun Context.compileDoes(thunk: Thunk): Context? =
-	thunk.program.matchInfix(doesName) { lhs, rhs ->
+	thunk.value.matchInfix(doesName) { lhs, rhs ->
 		rhs.scriptOrNull?.let { script ->
 			push(Rule(Pattern(lhs), body(script)))
 		}
 	}
 
 fun Context.compileGives(thunk: Thunk): Context? =
-	thunk.program.matchInfix(givesName) { lhs, rhs ->
+	thunk.value.matchInfix(givesName) { lhs, rhs ->
 		push(Rule(Pattern(lhs), body(thunk(rhs))))
 	}
 
 fun Context.compileAs(thunk: Thunk): Context? =
-	thunk.program.matchInfix(asName) { lhs, rhs ->
+	thunk.value.matchInfix(asName) { lhs, rhs ->
 		push(Rule(Pattern(rhs), body(thunk(lhs))))
 	}

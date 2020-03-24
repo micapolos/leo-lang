@@ -4,11 +4,11 @@ import leo13.recurseName
 import leo13.recursiveName
 import leo14.*
 
-val Program.script: Script
+val Value.script: Script
 	get() =
 		when (this) {
-			EmptyProgram -> script()
-			is SequenceProgram -> sequence.script
+			EmptyValue -> script()
+			is SequenceValue -> sequence.script
 		}
 
 val Sequence.script
@@ -30,7 +30,7 @@ val Line.scriptLine: ScriptLine
 
 val Literal.scriptLine: ScriptLine
 	get() =
-		leo14.line(this)
+		scriptLine(this)
 
 val Field.scriptLine
 	get() =
@@ -43,7 +43,7 @@ val Field.scriptField
 val Thunk.script
 	get() =
 		when (this) {
-			is ProgramThunk -> program.script
+			is ProgramThunk -> value.script
 			is LazyThunk -> lazy.printScript
 		}
 
@@ -85,7 +85,7 @@ val Recursive.script
 
 val Pattern.ruleScript
 	get() =
-		program.script
+		value.script
 
 val Body.ruleScriptLine
 	get() =
@@ -96,16 +96,16 @@ val Body.ruleScriptLine
 
 // === scriptOrNull
 
-val Program.scriptOrNull: Script?
+val Value.scriptOrNull: Script?
 	get() =
 		when (this) {
-			EmptyProgram -> script()
-			is SequenceProgram -> sequence.scriptLinkOrNull?.let { script(it) }
+			EmptyValue -> script()
+			is SequenceValue -> sequence.scriptLinkOrNull?.let { script(it) }
 		}
 
 val Sequence.scriptLinkOrNull: ScriptLink?
 	get() =
-		tail.program.scriptOrNull?.let { script ->
+		tail.value.scriptOrNull?.let { script ->
 			head.scriptLineOrNull?.let { line ->
 				script linkTo line
 			}
@@ -114,7 +114,7 @@ val Sequence.scriptLinkOrNull: ScriptLink?
 val Line.scriptLineOrNull: ScriptLine?
 	get() =
 		when (this) {
-			is LiteralLine -> leo14.line(literal)
+			is LiteralLine -> literal.scriptLine
 			is FieldLine -> field.scriptFieldOrNull?.let { line(it) }
 			is FunctionLine -> null
 			is NativeLine -> null

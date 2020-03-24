@@ -18,10 +18,10 @@ val Script.evalThunk: Thunk
 			.resolver
 			.thunk
 
-val Script.evalProgram: Program
+val Script.evalValue: Value
 	get() =
-		evalThunk.program
+		evalThunk.value
 
-val Program.eval: Program
+val Value.eval: Value
 	get() =
-		script.evalProgram
+		script.evalValue

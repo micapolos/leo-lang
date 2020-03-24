@@ -8,24 +8,24 @@ import kotlin.test.Test
 class PatternTest {
 	@Test
 	fun number() {
-		Pattern(program(numberName lineTo program()))
-			.matches(program(line(literal(10))))
+		Pattern(value(numberName lineTo value()))
+			.matches(value(line(literal(10))))
 			.assert
 
-		Pattern(program(numberName lineTo program()))
-			.matches(program(line(literal("foo"))))
+		Pattern(value(numberName lineTo value()))
+			.matches(value(line(literal("foo"))))
 			.negate
 			.assert
 	}
 
 	@Test
 	fun text() {
-		Pattern(program(textName lineTo program()))
-			.matches(program(line(literal("foo"))))
+		Pattern(value(textName lineTo value()))
+			.matches(value(line(literal("foo"))))
 			.assert
 
-		Pattern(program(textName lineTo program()))
-			.matches(program(line(literal(10))))
+		Pattern(value(textName lineTo value()))
+			.matches(value(line(literal(10))))
 			.negate
 			.assert
 	}

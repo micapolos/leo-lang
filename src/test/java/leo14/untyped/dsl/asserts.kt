@@ -4,7 +4,7 @@ import leo.base.fold
 import leo14.untyped.*
 
 fun test_(vararg v: V) =
-	emptyProgram
+	emptyValue
 		.fold(v) { line ->
 			line
 				.match("check") { rhs ->
@@ -13,10 +13,10 @@ fun test_(vararg v: V) =
 							if (evaled != rhsEvaled) error(
 								"error" lineTo
 									this.plus(
-										program(
+										value(
 											"gives" lineTo evaled,
 											"expected" lineTo rhsEvaled)))
-							else emptyProgram
+							else emptyValue
 						}
 					}
 				}
@@ -24,6 +24,6 @@ fun test_(vararg v: V) =
 		}
 		.run {
 			if (!isEmpty) error(
-				"error" lineTo program(
+				"error" lineTo value(
 					"unchecked" lineTo this))
 		}

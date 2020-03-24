@@ -1,6 +1,6 @@
 package leo14.untyped
 
-data class Constant(val program: Program)
+data class Constant(val value: Value)
 
-fun constant(program: Program) = Constant(program)
-val Program.constant get() = Constant(this)
+fun constant(value: Value) = Constant(value)
+val Value.constant get() = Constant(this)

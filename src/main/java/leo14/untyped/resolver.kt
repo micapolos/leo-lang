@@ -13,40 +13,40 @@ data class Resolver(
 fun Context.eval(script: Script): Thunk =
 	resolver().compile(script).thunk
 
-fun Compiler.resolver(thunk: Thunk = thunk(program())) =
+fun Compiler.resolver(thunk: Thunk = thunk(value())) =
 	Resolver(this, thunk)
 
-fun Compiler.resolver(program: Program) =
-	resolver(thunk(program))
+fun Compiler.resolver(value: Value) =
+	resolver(thunk(value))
 
-fun Context.resolver(thunk: Thunk = thunk(program())) =
+fun Context.resolver(thunk: Thunk = thunk(value())) =
 	compiler(this).resolver(thunk)
 
-fun Context.resolver(program: Program) =
-	compiler(this).resolver(program)
+fun Context.resolver(value: Value) =
+	compiler(this).resolver(value)
 
-fun resolver(program: Program = program()) =
-	context().resolver(program)
+fun resolver(value: Value = value()) =
+	context().resolver(value)
 
 fun Resolver.apply(line: Line): Resolver =
-	compiler.applyContext.resolve(thunk(this.program.plus(line)))
+	compiler.applyContext.resolve(thunk(this.value.plus(line)))
 
 fun Resolver.lazy(script: Script): Resolver =
 	compiler.resolver(thunk(lazy(compiler.applyContext, script)))
 
-val Resolver.program
+val Resolver.value
 	get() =
-		thunk.program
+		thunk.value
 
 val Resolver.printScript
 	get() =
 		thunk.script
 
 fun Resolver.append(line: Line): Resolver =
-	set(this.program.plus(line))
+	set(this.value.plus(line))
 
 fun Resolver.append(thunk: Thunk): Resolver =
-	set(this.program.plus(thunk.program))
+	set(this.value.plus(thunk.value))
 
 fun Context.resolve(thunk: Thunk): Resolver =
 	null
@@ -68,30 +68,30 @@ fun Context.resolveDefinitions(thunk: Thunk): Resolver? =
 
 fun Context.resolveSwitch(thunk: Thunk): Resolver? =
 	null
-//	program.resolveSwitchMatch?.let { switchMatch ->
+//	thunk.value.resolveSwitchMatch?.let { switchMatch ->
 //		resolver(switchMatch.param).eval(switchMatch.body)
 //	}
 
 fun Context.resolveCompile(thunk: Thunk): Resolver? =
-	thunk.program.matchInfix(compileName) { lhs, rhs ->
+	thunk.value.matchInfix(compileName) { lhs, rhs ->
 		rhs.scriptOrNull?.let { code ->
 			resolver(lhs).compile(code)
 		}
 	}
 
-fun Resolver.set(program: Program): Resolver =
-	copy(thunk = thunk(program))
+fun Resolver.set(value: Value): Resolver =
+	copy(thunk = thunk(value))
 
 val Resolver.clear
 	get() =
-		set(program())
+		set(value())
 
 fun Context.resolver(sequence: Sequence): Resolver =
 	resolver(sequence.tail).apply(sequence.head)
 
 fun Resolver.function(script: Script): Resolver =
 	when (script) {
-		is UnitScript -> apply(functionName lineTo program())
+		is UnitScript -> apply(functionName lineTo value())
 		is LinkScript -> script.resolveRecursive
 			?.let { recursiveScript ->
 				apply(line(function(compiler.applyContext, recursiveScript, recursive = true)))
@@ -116,20 +116,20 @@ fun Resolver.assert(script: Script): Resolver =
 				compiler.eval(rhs).let { rhsEvaled ->
 					if (lhsEvaled != rhsEvaled) error(
 						errorName lineTo
-							lhs.program.plus(
-								program(
+							lhs.value.plus(
+								value(
 									givesName lineTo lhsEvaled,
 									expectedName lineTo rhsEvaled)))
 					else this
 				}
 			}
 		}
-		?: append(assertName lineTo script.program)
+		?: append(assertName lineTo script.value)
 
 fun Resolver.does(script: Script): Resolver =
 	compiler
-		.push(definition(rule(pattern(program), body(script))))
-		.resolver(program())
+		.push(definition(rule(pattern(value), body(script))))
+		.resolver(value())
 
 fun Resolver.compile(script: Script): Resolver =
 	reader

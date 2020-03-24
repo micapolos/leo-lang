@@ -12,7 +12,7 @@ data class Native(val obj: Any?) {
 
 fun native(obj: Any?) = Native(obj)
 
-val Sequence.resolveNative: Program?
+val Sequence.resolveNative: Value?
 	get() =
 		null
 			?: resolveNativeClass
@@ -25,23 +25,23 @@ val Sequence.resolveNative: Program?
 			?: resolveNativeText
 			?: resolveNativeNumber
 
-val Sequence.resolveJavaString: Program?
+val Sequence.resolveJavaString: Value?
 	get() =
 		matchInfix(nativeName, stringName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchText { text ->
-					program(line(native(text)))
+					value(line(native(text)))
 				}
 			}
 		}
 
-val Sequence.resolveNativeInt: Program?
+val Sequence.resolveNativeInt: Value?
 	get() =
 		matchInfix(nativeName, intName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
 					try {
-						program(line(native(number.bigDecimal.intValueExact())))
+						value(line(native(number.bigDecimal.intValueExact())))
 					} catch (e: ArithmeticException) {
 						null
 					}
@@ -49,33 +49,33 @@ val Sequence.resolveNativeInt: Program?
 			}
 		}
 
-val Sequence.resolveNativeFloat: Program?
+val Sequence.resolveNativeFloat: Value?
 	get() =
 		matchInfix(nativeName, floatName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
-					program(line(native(number.bigDecimal.toFloat())))
+					value(line(native(number.bigDecimal.toFloat())))
 				}
 			}
 		}
 
-val Sequence.resolveNativeDouble: Program?
+val Sequence.resolveNativeDouble: Value?
 	get() =
 		matchInfix(nativeName, doubleName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
-					program(line(native(number.bigDecimal.toDouble())))
+					value(line(native(number.bigDecimal.toDouble())))
 				}
 			}
 		}
 
-val Sequence.resolveNativeClass: Program?
+val Sequence.resolveNativeClass: Value?
 	get() =
 		matchInfix(nativeName, className) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchText { text ->
 					try {
-						program(line(native(javaClass.classLoader.loadClass(text))))
+						value(line(native(javaClass.classLoader.loadClass(text))))
 					} catch (x: ClassNotFoundException) {
 						null
 					}
@@ -92,7 +92,7 @@ val Sequence.resolveNativeInvoke
 					name.literalOrNull?.stringOrNull?.let { name ->
 						args.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 							args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
-								program(
+								value(
 									line(
 										native(
 											native.obj!!.javaClass
@@ -111,7 +111,7 @@ val Sequence.resolveNativeNew
 			lhs.matchText { name ->
 				rhs.lineStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 					args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
-						program(
+						value(
 							line(
 								native(
 									javaClass
@@ -129,7 +129,7 @@ val Sequence.resolveNativeText
 		matchPostfix(textName) { lhs ->
 			lhs.matchNative { native ->
 				(native.obj as? String)?.let { string ->
-					program(literal(string))
+					value(literal(string))
 				}
 			}
 		}
@@ -139,12 +139,12 @@ val Sequence.resolveNativeNumber
 		matchPostfix(numberName) { lhs ->
 			lhs.matchNative { native ->
 				null
-					?: (native.obj as? Byte)?.let { program(literal(it.toInt())) }
-					?: (native.obj as? Short)?.let { program(literal(it.toInt())) }
-					?: (native.obj as? Int)?.let { program(literal(it)) }
-					?: (native.obj as? Long)?.let { program(literal(it)) }
-					?: (native.obj as? Float)?.let { program(literal(it.toDouble())) }
-					?: (native.obj as? Double)?.let { program(literal(it)) }
+					?: (native.obj as? Byte)?.let { value(literal(it.toInt())) }
+					?: (native.obj as? Short)?.let { value(literal(it.toInt())) }
+					?: (native.obj as? Int)?.let { value(literal(it)) }
+					?: (native.obj as? Long)?.let { value(literal(it)) }
+					?: (native.obj as? Float)?.let { value(literal(it.toDouble())) }
+					?: (native.obj as? Double)?.let { value(literal(it)) }
 			}
 		}
 

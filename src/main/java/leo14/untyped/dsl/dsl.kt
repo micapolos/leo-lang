@@ -8,12 +8,12 @@ import leo14.untyped.lineTo
 // Core
 typealias V = Line
 
-fun v(name: String, vararg v: V): Line = name lineTo _program(*v)
+fun v(name: String, vararg v: V): Line = name lineTo value_(*v)
 
 // Primitives
 fun number(int: Int): Line = line(literal(int))
 fun text(string: String): Line = line(literal(string))
-fun _program(vararg v: V) = leo14.untyped.program(*v)
+fun value_(vararg v: V) = leo14.untyped.value(*v)
 
 // DSL
 fun _as(vararg v: V) = v("as", *v)
