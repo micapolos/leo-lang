@@ -22,6 +22,7 @@ val Thunk.resolve: Thunk?
 val Sequence.resolve: Thunk?
 	get() =
 		null
+			?: resolveAccess
 			?: resolveFunctionApplyAnything
 			?: resolveAnythingCallFunction
 			?: resolveAnythingAppendAnything
@@ -42,7 +43,6 @@ val Sequence.resolve: Thunk?
 			?: resolveName
 			?: resolveMake
 			?: resolveThis
-			?: resolveAccess
 			?: resolveGet
 			?: resolvePrint
 			?: resolvePrinted

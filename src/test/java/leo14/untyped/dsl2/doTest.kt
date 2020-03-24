@@ -7,15 +7,14 @@ class DoTest {
 	fun test_() {
 		run_ {
 			assert {
-				number(10)
-				do_ { text("hello") }
-				gives { text("hello") }
-			}
-
-			assert {
-				number(10)
-				do_ { given.number.plus { number(1) } }
-				gives { number(11) }
+				first { name { text("John") } }
+				last { name { text("Wayne") } }
+				do_ {
+					given.first.name.text
+					plus { text(" ") }
+					plus { given.last.name.text }
+				}
+				gives { text("John Wayne") }
 			}
 		}
 	}
