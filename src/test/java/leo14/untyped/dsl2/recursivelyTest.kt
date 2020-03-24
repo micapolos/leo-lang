@@ -33,27 +33,23 @@ class RecursivelyTest {
 			}
 
 			assert {
-				text("")
-				dot { number(10) }
+				number(6)
 				recursively {
 					do_ {
-						given.dot.number
-						equals_ { number(0) }
+						given.number
+						equals_ { number(1) }
 						match {
-							true_ { given.text }
+							true_ { given.number }
 							false_ {
-								given.text
-								plus { text(".") }
-								dot {
-									given.dot.number
-									minus { number(1) }
-								}
+								given.number
+								minus { number(1) }
 								recurse
+								times { given.number }
 							}
 						}
 					}
 				}
-				gives { text("..........") }
+				gives { number(720) }
 			}
 		}
 	}
