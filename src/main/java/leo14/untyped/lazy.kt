@@ -15,6 +15,10 @@ val Lazy.value: Value
 	get() =
 		context.eval(script).value
 
+val Lazy.force: Thunk
+	get() =
+		context.eval(script)
+
 val Lazy.printScript
 	get() =
 		script("lazy" lineTo script)

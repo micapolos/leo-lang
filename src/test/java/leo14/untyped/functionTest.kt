@@ -53,6 +53,16 @@ class FunctionTest {
 					context(
 						function.recurseRule,
 						param.givenRule),
-					script("lazy"("do"("recurse"()))))))
+					script("do"("recurse"())))))
+
+		function
+			.apply(param)
+			.force
+			.assertEqualTo(
+				thunk(lazy(
+					context(
+						function.recurseRule,
+						param.givenRule),
+					script("do"("recurse"())))))
 	}
 }
