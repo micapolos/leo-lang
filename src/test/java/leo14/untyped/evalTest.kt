@@ -717,4 +717,37 @@ class EvalTest {
 			"match" lineTo script("square" lineTo script()))
 			.assertEvalsToThis
 	}
+
+	@Test
+	fun either_matching1() {
+		script(
+			"either" lineTo script(
+				"age" lineTo script("number"),
+				"name" lineTo script("text")),
+			"gives" lineTo script("ok"),
+			"age" lineTo script(literal(10)))
+			.assertEvalsTo(script("ok"))
+	}
+
+	@Test
+	fun either_matching2() {
+		script(
+			"either" lineTo script(
+				"age" lineTo script("number"),
+				"name" lineTo script("text")),
+			"gives" lineTo script("ok"),
+			"name" lineTo script(literal("Miko")))
+			.assertEvalsTo(script("ok"))
+	}
+
+	@Test
+	fun either_mismatch() {
+		script(
+			"either" lineTo script(
+				"age" lineTo script("number"),
+				"name" lineTo script("text")),
+			"gives" lineTo script("ok"),
+			"height" lineTo script(literal(180)))
+			.assertEvalsTo(script("height" lineTo script(literal(180))))
+	}
 }

@@ -42,6 +42,7 @@ fun Thunk.matches(thunk: Thunk): Boolean =
 	null
 		?: anythingMatches
 		?: orMatches(thunk)
+		?: eitherMatches(thunk)
 		?: rawMatches(thunk)
 
 val Thunk.anythingMatches
@@ -58,6 +59,20 @@ fun Thunk.orMatches(thunk: Thunk): Boolean? =
 	matchInfix(orName) { lhs, rhs ->
 		rhs.matches(thunk) || lhs.matches(thunk)
 	}
+
+fun Thunk.eitherMatches(thunk: Thunk): Boolean? =
+	matchPrefix(eitherName) { rhs ->
+		rhs.casesMatch(thunk)
+	}
+
+fun Thunk.casesMatch(thunk: Thunk): Boolean =
+	value.sequenceOrNull.let { sequenceOrNull ->
+		if (sequenceOrNull == null) false
+		else sequenceOrNull.head.caseMatches(thunk) || sequenceOrNull.tail.casesMatch(thunk)
+	}
+
+fun Line.caseMatches(thunk: Thunk): Boolean =
+	thunk.value.onlyLineOrNull?.let { matches(it) } ?: false
 
 fun Thunk.rawMatches(thunk: Thunk) =
 	value.matches(thunk.value)
@@ -78,7 +93,7 @@ fun Sequence.rawMatches(value: Value) =
 fun Sequence.matches(sequence: Sequence) =
 	head.matches(sequence.head) && tail.matches(sequence.tail)
 
-fun Line.matches(line: Line) =
+fun Line.matches(line: Line): Boolean =
 	null
 		?: numberMatches(line)
 		?: textMatches(line)
