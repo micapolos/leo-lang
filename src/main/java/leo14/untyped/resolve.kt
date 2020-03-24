@@ -204,7 +204,7 @@ val Sequence.resolvePrevious: Thunk?
 val Sequence.resolveContent: Thunk?
 	get() =
 		matchPostfixThunk(contentName) { lhs ->
-			lhs.value.contentsOrNull?.let { thunk(it) } // TODO
+			lhs.value.contentsOrNull
 		}
 
 val Sequence.resolveName: Thunk?
@@ -272,7 +272,7 @@ val Sequence.resolveFold: Thunk?
 		matchInfixThunk(doingName) { lhs, rhs ->
 			rhs.matchFunction { function ->
 				lhs.value.sequenceOrNull?.matchInfixThunk(foldName) { folded, items ->
-					items.value.contentsOrNull?.let { contents ->
+					items.value.contentsOrNull?.value?.let { contents ->
 						folded.fold(contents.lineStack) { line ->
 							function
 								.copy(context = function.context.push(

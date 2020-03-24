@@ -85,7 +85,7 @@ val Value.isEmpty get() = this is EmptyValue
 val Value.sequenceOrNull get() = (this as? SequenceValue)?.sequence
 val Value.onlyLineOrNull get() = sequenceOrNull?.onlyValueOrNull
 val Value.onlyFieldOrNull get() = onlyLineOrNull?.fieldOrNull
-val Value.contentsOrNull get() = onlyFieldOrNull?.rhs
+val Value.contentsOrNull get() = onlyFieldOrNull?.thunk
 val Value.nameOrNull get() = onlyFieldOrNull?.name
 val Value.numberOrNull get() = onlyLineOrNull?.literalOrNull?.numberOrNull
 val Value.textOrNull get() = onlyLineOrNull?.literalOrNull?.stringOrNull
@@ -93,7 +93,7 @@ val Value.nativeOrNull get() = onlyLineOrNull?.nativeOrNull
 val Value.functionOrNull get() = onlyLineOrNull?.functionOrNull
 val Value.headOrNull get() = sequenceOrNull?.head?.let { value(it) }
 val Value.tailOrNull get() = sequenceOrNull?.tail?.value
-val Value.lastOrNull get() = contentsOrNull?.headOrNull?.make(lastName)
+val Value.lastOrNull get() = contentsOrNull?.value?.headOrNull?.make(lastName)
 val Value.previousOrNull
 	get() =
 		onlyFieldOrNull?.let { field ->
