@@ -1,5 +1,3 @@
-@file:JvmName("ThunkKt")
-
 package leo14.untyped
 
 import leo.base.fold

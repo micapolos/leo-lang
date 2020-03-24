@@ -225,7 +225,7 @@ fun Unquoted.write(literal: Literal): Reader? =
 	UnquotedReader(copy(resolver = resolver.apply(line(literal))))
 
 fun Code.write(literal: Literal): Reader? =
-	CodeReader(copy(script = script.plus(line(literal))))
+	CodeReader(copy(script = script.plus(leo14.line(literal))))
 
 val Reader.program
 	get() =

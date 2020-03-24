@@ -1,6 +1,10 @@
 package leo14.untyped
 
-import leo14.*
+import leo14.line
+import leo14.lineTo
+import leo14.literal
+import leo14.plus
+import leo14.script
 import kotlin.test.Test
 
 class EvalTest {
