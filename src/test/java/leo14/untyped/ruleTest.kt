@@ -10,7 +10,7 @@ class RuleTest {
 	@Test
 	fun resolve_matchProgram() {
 		Rule(
-			Pattern(program("foo" valueTo program())),
+			Pattern(program("foo" lineTo program())),
 			body(thunk(program("bar"))))
 			.apply(context(), thunk(program("foo")))
 			.assertEqualTo(thunk(program("bar")))
@@ -19,18 +19,18 @@ class RuleTest {
 	@Test
 	fun resolve_matchFunction() {
 		rule(
-			pattern(program(numberName valueTo program())),
+			pattern(program(numberName lineTo program())),
 			body(script(givenName lineTo script())))
-			.apply(context(), thunk(program(value(literal(10)))))
-			.assertEqualTo(thunk(program(givenName valueTo program(literal(10)))))
+			.apply(context(), thunk(program(line(literal(10)))))
+			.assertEqualTo(thunk(program(givenName lineTo program(literal(10)))))
 	}
 
 	@Test
 	fun resolve_mismatch() {
 		Rule(
-			Pattern(program(numberName valueTo program())),
+			Pattern(program(numberName lineTo program())),
 			body(thunk(program("ok"))))
-			.apply(context(), thunk(program(value(literal("foo")))))
+			.apply(context(), thunk(program(line(literal("foo")))))
 			.assertEqualTo(null)
 	}
 }

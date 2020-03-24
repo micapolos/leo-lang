@@ -4,15 +4,15 @@ import leo.base.assertEqualTo
 import leo14.literal
 import org.junit.Test
 
-class ValueTest {
+class LineTest {
 	@Test
 	fun all() {
 		program(
-			value(literal(10)),
-			plusName valueTo program(literal(10)))
+			line(literal(10)),
+			plusName lineTo program(literal(10)))
 			.assertEqualTo(
 				program(
-					value(literal(10)),
-					plusName valueTo program(literal(10))))
+					line(literal(10)),
+					plusName lineTo program(literal(10))))
 	}
 }

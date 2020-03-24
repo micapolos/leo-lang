@@ -30,7 +30,7 @@ val Sequence.resolveJavaString: Program?
 		matchInfix(nativeName, stringName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchText { text ->
-					program(value(native(text)))
+					program(line(native(text)))
 				}
 			}
 		}
@@ -41,7 +41,7 @@ val Sequence.resolveNativeInt: Program?
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
 					try {
-						program(value(native(number.bigDecimal.intValueExact())))
+						program(line(native(number.bigDecimal.intValueExact())))
 					} catch (e: ArithmeticException) {
 						null
 					}
@@ -54,7 +54,7 @@ val Sequence.resolveNativeFloat: Program?
 		matchInfix(nativeName, floatName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
-					program(value(native(number.bigDecimal.toFloat())))
+					program(line(native(number.bigDecimal.toFloat())))
 				}
 			}
 		}
@@ -64,7 +64,7 @@ val Sequence.resolveNativeDouble: Program?
 		matchInfix(nativeName, doubleName) { lhs, rhs ->
 			rhs.matchEmpty {
 				lhs.matchNumber { number ->
-					program(value(native(number.bigDecimal.toDouble())))
+					program(line(native(number.bigDecimal.toDouble())))
 				}
 			}
 		}
@@ -75,7 +75,7 @@ val Sequence.resolveNativeClass: Program?
 			rhs.matchEmpty {
 				lhs.matchText { text ->
 					try {
-						program(value(native(javaClass.classLoader.loadClass(text))))
+						program(line(native(javaClass.classLoader.loadClass(text))))
 					} catch (x: ClassNotFoundException) {
 						null
 					}
@@ -88,12 +88,12 @@ val Sequence.resolveNativeInvoke
 	get() =
 		matchInfix(invokeName) { lhs, rhs ->
 			lhs.matchNative { native ->
-				rhs.valueStack.splitOrNull?.let { (args, name) ->
+				rhs.lineStack.splitOrNull?.let { (args, name) ->
 					name.literalOrNull?.stringOrNull?.let { name ->
 						args.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 							args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
 								program(
-									value(
+									line(
 										native(
 											native.obj!!.javaClass
 												.getMethod(name, *types)
@@ -109,10 +109,10 @@ val Sequence.resolveNativeNew
 	get() =
 		matchInfix(nativeName, newName) { lhs, rhs ->
 			lhs.matchText { name ->
-				rhs.valueStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+				rhs.lineStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 					args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
 						program(
-							value(
+							line(
 								native(
 									javaClass
 										.classLoader

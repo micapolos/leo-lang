@@ -10,7 +10,7 @@ class BodyTest {
 	@Test
 	fun apply_nullContext() {
 		body(thunk(program("foo")))
-			.apply(context(), thunk(program("arg" valueTo program())))
+			.apply(context(), thunk(program("arg" lineTo program())))
 			.assertEqualTo(thunk(program("foo")))
 	}
 
@@ -18,6 +18,6 @@ class BodyTest {
 	fun apply_nonNullContext() {
 		body(script(givenName lineTo script()))
 			.apply(context(), thunk(program(literal(5))))
-			.assertEqualTo(thunk(program(givenName valueTo program(literal(5)))))
+			.assertEqualTo(thunk(program(givenName lineTo program(literal(5)))))
 	}
 }

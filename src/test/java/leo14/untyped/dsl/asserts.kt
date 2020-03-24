@@ -5,25 +5,25 @@ import leo14.untyped.*
 
 fun test_(vararg v: V) =
 	emptyProgram
-		.fold(v) { value ->
-			value
+		.fold(v) { line ->
+			line
 				.match("check") { rhs ->
 					eval.let { evaled ->
 						rhs.eval.let { rhsEvaled ->
 							if (evaled != rhsEvaled) error(
-								"error" valueTo
+								"error" lineTo
 									this.plus(
 										program(
-											"gives" valueTo evaled,
-											"expected" valueTo rhsEvaled)))
+											"gives" lineTo evaled,
+											"expected" lineTo rhsEvaled)))
 							else emptyProgram
 						}
 					}
 				}
-				?: plus(value)
+				?: plus(line)
 		}
 		.run {
 			if (!isEmpty) error(
-				"error" valueTo program(
-					"unchecked" valueTo this))
+				"error" lineTo program(
+					"unchecked" lineTo this))
 		}

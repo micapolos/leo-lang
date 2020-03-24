@@ -4,13 +4,13 @@ import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 
-fun Program.select(name: String): Value? =
+fun Program.select(name: String): Line? =
 	when (this) {
 		EmptyProgram -> null
 		is SequenceProgram -> sequence.select(name)
 	}
 
-fun Thunk.select(name: String): Value? =
+fun Thunk.select(name: String): Line? =
 	program.select(name)
 
 fun Sequence.select(name: String) =
@@ -18,26 +18,26 @@ fun Sequence.select(name: String) =
 		?: head.select(name)
 		?: tail.select(name)
 
-fun Value.select(name: String) =
+fun Line.select(name: String) =
 	if (selects(name)) this
 	else null
 
-fun Value.selects(name: String) =
+fun Line.selects(name: String) =
 	when (name) {
-		numberName -> this is LiteralValue && literal is NumberLiteral
-		textName -> this is LiteralValue && literal is StringLiteral
-		functionName -> this is FunctionValue
-		nativeName -> this is NativeValue
-		else -> this is FieldValue && name == field.name
+		numberName -> this is LiteralLine && literal is NumberLiteral
+		textName -> this is LiteralLine && literal is StringLiteral
+		functionName -> this is FunctionLine
+		nativeName -> this is NativeLine
+		else -> this is FieldLine && name == field.name
 	}
 
-val Value.selectName
+val Line.selectName
 	get() =
 		when (this) {
-			is LiteralValue -> literal.selectName
-			is FieldValue -> field.name
-			is FunctionValue -> function.selectName
-			is NativeValue -> native.selectName
+			is LiteralLine -> literal.selectName
+			is FieldLine -> field.name
+			is FunctionLine -> function.selectName
+			is NativeLine -> native.selectName
 		}
 
 val Literal.selectName

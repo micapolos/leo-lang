@@ -31,8 +31,8 @@ class ContextTest {
 			.compile(
 				thunk(
 					program(
-						"foo" valueTo program(),
-						givesName valueTo program("bar"))))
+						"foo" lineTo program(),
+						givesName lineTo program("bar"))))
 			.assertEqualTo(
 				context.push(
 					rule(
@@ -46,8 +46,8 @@ class ContextTest {
 			.compile(
 				thunk(
 					program(
-						"foo" valueTo program(),
-						doesName valueTo program("bar"))))
+						"foo" lineTo program(),
+						doesName lineTo program("bar"))))
 			.assertEqualTo(
 				context.push(
 					rule(

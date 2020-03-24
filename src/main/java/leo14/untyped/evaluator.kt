@@ -17,8 +17,8 @@ val Resolver.evaluator
 	get() =
 		compiler.environment.evaluator(program)
 
-fun Evaluator.write(value: Value): Evaluator =
-	environment.writeEvaluator(program sequenceTo value)
+fun Evaluator.write(line: Line): Evaluator =
+	environment.writeEvaluator(program sequenceTo line)
 
 fun Evaluator.write(begin: Begin): Evaluator? =
 	environment.write(begin)?.evaluator(program())
@@ -28,13 +28,13 @@ fun Evaluator.write(field: Field): Evaluator? =
 		is ContextEnvironment ->
 			when (field.name) {
 				quoteName -> environment.evaluator(program.plus(field.rhs))
-				else -> write(value(field))
+				else -> write(line(field))
 			}
 		is QuotedEnvironment ->
 			when (field.name) {
 				unquoteName ->
 					if (environment.unquote is ContextEnvironment) environment.evaluator(program.plus(field.rhs))
-					else write(value(field))
-				else -> write(value(field))
+					else write(line(field))
+				else -> write(line(field))
 			}
 	}

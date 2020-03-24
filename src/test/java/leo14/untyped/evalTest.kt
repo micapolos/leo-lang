@@ -593,7 +593,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun it_value() {
+	fun it_line() {
 		script(
 			"foo" lineTo script(),
 			"it" lineTo script(literal(123)))

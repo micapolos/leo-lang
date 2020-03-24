@@ -15,14 +15,14 @@ data class CursorParent(
 fun Cursor.begin(name: String): Cursor =
 	Cursor(CursorParent(this, name), program())
 
-fun Cursor.append(value: Value): Cursor =
-	Cursor(parentOrNull, program.plus(value))
+fun Cursor.append(line: Line): Cursor =
+	Cursor(parentOrNull, program.plus(line))
 
 fun Cursor.end(): Cursor? =
 	parentOrNull?.let { parent ->
 		Cursor(
 			parent.cursor.parentOrNull,
-			parent.cursor.program.plus(parent.name valueTo program))
+			parent.cursor.program.plus(parent.name lineTo program))
 	}
 
 fun Cursor.updateProgram(fn: Program.() -> Program) =

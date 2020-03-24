@@ -80,31 +80,31 @@ fun Sequence.rawMatches(program: Program) =
 fun Sequence.matches(sequence: Sequence) =
 	head.matches(sequence.head) && tail.program.matches(sequence.tail)
 
-fun Value.matches(value: Value) =
+fun Line.matches(line: Line) =
 	null
-		?: numberMatches(value)
-		?: textMatches(value)
-		?: functionMatches(value)
-		?: rawMatches(value)
+		?: numberMatches(line)
+		?: textMatches(line)
+		?: functionMatches(line)
+		?: rawMatches(line)
 
-fun Value.rawMatches(value: Value) =
+fun Line.rawMatches(line: Line) =
 	when (this) {
-		is LiteralValue -> value is LiteralValue && literal == value.literal
-		is FieldValue -> value is FieldValue && field.matches(value.field)
-		is FunctionValue -> value is FunctionValue && function == value.function
-		is NativeValue -> value is NativeValue && native == value.native
+		is LiteralLine -> line is LiteralLine && literal == line.literal
+		is FieldLine -> line is FieldLine && field.matches(line.field)
+		is FunctionLine -> line is FunctionLine && function == line.function
+		is NativeLine -> line is NativeLine && native == line.native
 	}
 
-fun Value.numberMatches(value: Value) =
-	if (this == value(numberName)) value is LiteralValue && value.literal is NumberLiteral
+fun Line.numberMatches(line: Line) =
+	if (this == line(numberName)) line is LiteralLine && line.literal is NumberLiteral
 	else null
 
-fun Value.textMatches(value: Value) =
-	if (this == value(textName)) value is LiteralValue && value.literal is StringLiteral
+fun Line.textMatches(line: Line) =
+	if (this == line(textName)) line is LiteralLine && line.literal is StringLiteral
 	else null
 
-fun Value.functionMatches(value: Value) =
-	if (this == value(functionName)) value is FunctionValue
+fun Line.functionMatches(line: Line) =
+	if (this == line(functionName)) line is FunctionLine
 	else null
 
 fun Field.matches(field: Field) =
@@ -121,12 +121,12 @@ fun Program.matches(name: String) =
 fun Sequence.matches(name: String) =
 	head.matches(name)
 
-fun Value.matches(name: String) =
+fun Line.matches(name: String) =
 	when (this) {
-		is LiteralValue -> literal.matches(name)
-		is FieldValue -> field.matches(name)
-		is FunctionValue -> name == functionName
-		is NativeValue -> false
+		is LiteralLine -> literal.matches(name)
+		is FieldLine -> field.matches(name)
+		is FunctionLine -> name == functionName
+		is NativeLine -> false
 	}
 
 fun Field.matches(name: String) =

@@ -164,7 +164,7 @@ fun QuotedOp.write(thunk: Thunk): Reader? =
 		is QuotedAppendQuotedOp ->
 			QuotedReader(
 				quoted.copy(
-					thunk = quoted.thunk.plus(begin.string valueTo thunk)))
+					thunk = quoted.thunk.plus(begin.string lineTo thunk)))
 		is UnquotedPlusQuotedOp ->
 			UnquotedReader(
 				unquoted.copy(
@@ -179,7 +179,7 @@ fun UnquotedOp.write(thunk: Thunk): Reader? =
 		is UnquotedResolveUnquotedOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.apply(begin.string valueTo thunk)))
+					resolver = unquoted.resolver.apply(begin.string lineTo thunk)))
 		is QuotedPlusUnquotedOp ->
 			QuotedReader(
 				quoted.copy(
@@ -211,7 +211,7 @@ fun CodeOp.write(script: Script): Reader? =
 		is UnquotedGetCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.apply(getName valueTo script.program)))
+					resolver = unquoted.resolver.apply(getName lineTo script.program)))
 		is UnquotedLazyCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
@@ -219,10 +219,10 @@ fun CodeOp.write(script: Script): Reader? =
 	}
 
 fun Quoted.write(literal: Literal): Reader? =
-	QuotedReader(copy(thunk = thunk.plus(value(literal))))
+	QuotedReader(copy(thunk = thunk.plus(line(literal))))
 
 fun Unquoted.write(literal: Literal): Reader? =
-	UnquotedReader(copy(resolver = resolver.apply(value(literal))))
+	UnquotedReader(copy(resolver = resolver.apply(line(literal))))
 
 fun Code.write(literal: Literal): Reader? =
 	CodeReader(copy(script = script.plus(line(literal))))

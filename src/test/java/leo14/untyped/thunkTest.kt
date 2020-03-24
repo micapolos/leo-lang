@@ -10,9 +10,9 @@ class ThunkTest {
 	@Test
 	fun program() {
 		thunk(
-			program("minus" valueTo program(literal(1))))
+			program("minus" lineTo program(literal(1))))
 			.program
-			.assertEqualTo(program("minus" valueTo program(literal(1))))
+			.assertEqualTo(program("minus" lineTo program(literal(1))))
 	}
 
 	@Test

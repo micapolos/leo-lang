@@ -26,8 +26,8 @@ tailrec fun Program.casesSwitchBody(cases: Program): Script? =
 		is SequenceProgram -> caseSwitchBody(cases.sequence.head) ?: casesSwitchBody(cases.sequence.tail.program)
 	}
 
-fun Program.caseSwitchBody(value: Value): Script? =
-	value.fieldOrNull?.let { field ->
+fun Program.caseSwitchBody(line: Line): Script? =
+	line.fieldOrNull?.let { field ->
 		ifOrNull(matches(field.name)) {
 			field.rhs.scriptOrNull
 		}

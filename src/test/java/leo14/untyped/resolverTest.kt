@@ -9,12 +9,12 @@ class ResolverTest {
 		val resolver = context()
 			.push(
 				rule(
-					pattern(program("foo" valueTo program(), "bar" valueTo program())),
+					pattern(program("foo" lineTo program(), "bar" lineTo program())),
 					body(thunk(program("zoo")))))
 			.resolver(program("foo"))
 
 		resolver
-			.apply(value("bar"))
+			.apply(line("bar"))
 			.assertEqualTo(resolver.set(program("zoo")))
 	}
 
@@ -25,7 +25,7 @@ class ResolverTest {
 			.resolver(program("zoo"))
 
 		resolver
-			.apply(givesName valueTo program("zar"))
+			.apply(givesName lineTo program("zar"))
 			.assertEqualTo(
 				resolver.compiler.push(
 					definition(
@@ -41,7 +41,7 @@ class ResolverTest {
 			.resolver(program("zoo"))
 
 		resolver
-			.apply(plusName valueTo program("zar"))
-			.assertEqualTo(resolver.set(program("zoo" valueTo program(), plusName valueTo program("zar"))))
+			.apply(plusName lineTo program("zar"))
+			.assertEqualTo(resolver.set(program("zoo" lineTo program(), plusName lineTo program("zar"))))
 	}
 }

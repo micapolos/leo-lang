@@ -79,8 +79,8 @@ val Sequence.resolveAnythingAppendAnything: Program?
 	get() =
 		matchInfix(appendName) { lhs, rhs ->
 			lhs.onlyFieldOrNull?.let { field ->
-				rhs.onlyValueOrNull?.let { value ->
-					program(field.name valueTo field.rhs.plus(value))
+				rhs.onlyLineOrNull?.let { line ->
+					program(field.name lineTo field.rhs.plus(line))
 				}
 			}
 		}
@@ -88,7 +88,7 @@ val Sequence.resolveAnythingAppendAnything: Program?
 val Sequence.resolveAnythingItAnything: Program?
 	get() =
 		matchInfix(itName) { lhs, rhs ->
-			rhs.onlyValueOrNull?.let { rhs ->
+			rhs.onlyLineOrNull?.let { rhs ->
 				lhs.plus(rhs)
 			}
 		}
@@ -259,12 +259,12 @@ val Sequence.resolveFold: Program?
 			rhs.functionOrNull?.let { function ->
 				lhs.matchInfixThunk(foldName) { folded, items ->
 					items.program.contentsOrNull?.let { contents ->
-						folded.fold(contents.valueStack) { value ->
+						folded.fold(contents.lineStack) { line ->
 							function
 								.copy(context = function.context.push(
 									rule(
 										pattern(program(foldedName)),
-										body(thunk(program(foldedName valueTo program(value)))))))
+										body(thunk(program(foldedName lineTo program(line)))))))
 								.apply(this)
 						}.program // TODO: To thunk
 					}

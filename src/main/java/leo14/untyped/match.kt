@@ -103,20 +103,20 @@ fun <R> Sequence.matchSimple(name: String, fn: () -> R) =
 		}
 	}
 
-fun <R> Value.matchField(fn: (Field) -> R): R? =
-	(this as? FieldValue)?.field?.let(fn)
+fun <R> Line.matchField(fn: (Field) -> R): R? =
+	(this as? FieldLine)?.field?.let(fn)
 
-fun <R> Value.match(string: String, fn: (Program) -> R): R? =
-	(this as? FieldValue)?.field?.let { field ->
+fun <R> Line.match(string: String, fn: (Program) -> R): R? =
+	(this as? FieldLine)?.field?.let { field ->
 		field.match(string, fn)
 	}
 
-fun <R> Value.matchThunk(string: String, fn: (Thunk) -> R): R? =
-	(this as? FieldValue)?.field?.let { field ->
+fun <R> Line.matchThunk(string: String, fn: (Thunk) -> R): R? =
+	(this as? FieldLine)?.field?.let { field ->
 		field.matchThunk(string, fn)
 	}
 
-fun <R> Value.match(string1: String, string2: String, fn: (Program) -> R): R? =
+fun <R> Line.match(string1: String, string2: String, fn: (Program) -> R): R? =
 	match(string1) { rhs ->
 		rhs.matchPrefix(string2) { rhs ->
 			fn(rhs)
@@ -136,7 +136,7 @@ fun <R> Field.matchName(fn: (String) -> R) =
 		fn(name)
 	}
 
-fun <R> Value.matchName(fn: (String) -> R) =
+fun <R> Line.matchName(fn: (String) -> R) =
 	matchField { field ->
 		field.matchName(fn)
 	}

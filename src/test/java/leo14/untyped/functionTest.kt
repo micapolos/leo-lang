@@ -11,12 +11,12 @@ class FunctionTest {
 		function(
 			context(),
 			script(givenName lineTo script()))
-			.apply(thunk(program("foo" valueTo program())))
+			.apply(thunk(program("foo" lineTo program())))
 			.assertEqualTo(
 				thunk(
 					program(
-						givenName valueTo program(
-							"foo" valueTo program()))))
+						givenName lineTo program(
+							"foo" lineTo program()))))
 	}
 
 	@Test
@@ -26,13 +26,13 @@ class FunctionTest {
 				rule(
 					pattern(
 						program(
-							"foo" valueTo program())),
+							"foo" lineTo program())),
 					body(
 						thunk(
 							program(
-								"bar" valueTo program()))))),
+								"bar" lineTo program()))))),
 			script("foo" lineTo script()))
-			.apply(thunk(program("goo" valueTo program())))
+			.apply(thunk(program("goo" lineTo program())))
 			.assertEqualTo(thunk(program("bar")))
 	}
 }

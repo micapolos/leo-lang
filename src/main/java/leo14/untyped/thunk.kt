@@ -24,5 +24,5 @@ val Thunk.program
 			is LazyThunk -> lazy.program.also { if (thunkBellOnEval) print(bellChar) }
 		}
 
-fun Thunk.plus(value: Value): Thunk =
-	thunk(program(this sequenceTo value))
+fun Thunk.plus(line: Line): Thunk =
+	thunk(program(this sequenceTo line))

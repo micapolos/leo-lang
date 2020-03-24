@@ -1,18 +1,18 @@
 package leo14.untyped.dsl
 
 import leo14.literal
-import leo14.untyped.Value
-import leo14.untyped.value
-import leo14.untyped.valueTo
+import leo14.untyped.Line
+import leo14.untyped.line
+import leo14.untyped.lineTo
 
 // Core
-typealias V = Value
+typealias V = Line
 
-fun v(name: String, vararg v: V): Value = name valueTo _program(*v)
+fun v(name: String, vararg v: V): Line = name lineTo _program(*v)
 
 // Primitives
-fun number(int: Int): Value = value(literal(int))
-fun text(string: String): Value = value(literal(string))
+fun number(int: Int): Line = line(literal(int))
+fun text(string: String): Line = line(literal(string))
 fun _program(vararg v: V) = leo14.untyped.program(*v)
 
 // DSL

@@ -19,13 +19,13 @@ val Sequence.scriptLink
 	get() =
 		tail.script linkTo head.scriptLine
 
-val Value.scriptLine
+val Line.scriptLine
 	get() =
 		when (this) {
-			is LiteralValue -> literal.scriptLine
-			is FieldValue -> field.scriptLine
-			is FunctionValue -> function.scriptLine
-			is NativeValue -> nativeName lineTo script(literal(native.toString()))
+			is LiteralLine -> literal.scriptLine
+			is FieldLine -> field.scriptLine
+			is FunctionLine -> function.scriptLine
+			is NativeLine -> nativeName lineTo script(literal(native.toString()))
 		}
 
 val Literal.scriptLine
@@ -111,13 +111,13 @@ val Sequence.scriptLinkOrNull: ScriptLink?
 			}
 		}
 
-val Value.scriptLineOrNull: ScriptLine?
+val Line.scriptLineOrNull: ScriptLine?
 	get() =
 		when (this) {
-			is LiteralValue -> line(literal)
-			is FieldValue -> field.scriptFieldOrNull?.let { line(it) }
-			is FunctionValue -> null
-			is NativeValue -> null
+			is LiteralLine -> line(literal)
+			is FieldLine -> field.scriptFieldOrNull?.let { line(it) }
+			is FunctionLine -> null
+			is NativeLine -> null
 		}
 
 val Field.scriptFieldOrNull: ScriptField?

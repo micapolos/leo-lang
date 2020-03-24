@@ -11,15 +11,15 @@ val Script.program: Program
 
 val ScriptLink.sequence
 	get() =
-		lhs.program sequenceTo line.value
+		lhs.program sequenceTo line.programLine
 
-val ScriptLine.value
+val ScriptLine.programLine
 	get() =
 		when (this) {
-			is LiteralScriptLine -> value(literal)
-			is FieldScriptLine -> value(field.valueField)
+			is LiteralScriptLine -> line(literal)
+			is FieldScriptLine -> line(field.programField)
 		}
 
-val ScriptField.valueField
+val ScriptField.programField
 	get() =
 		string fieldTo rhs.program

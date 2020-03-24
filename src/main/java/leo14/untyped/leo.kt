@@ -25,18 +25,18 @@ fun Leo.write(begin: Begin): Leo? =
 	}
 
 fun Leo.write(literal: Literal): Leo =
-	copy(evaluator = evaluator.write(value(literal)))
+	copy(evaluator = evaluator.write(line(literal)))
 
 fun Leo.write(end: End): Leo? =
 	parentOrNull?.let { parent ->
 		when (parent.begin.string) {
 			quoteName ->
 				when (parent.leo.evaluator.environment) {
-					is ContextEnvironment -> parent.leo.update { write(appendName valueTo evaluator.program) }
-					is QuotedEnvironment -> parent.leo.update { write(quoteName valueTo evaluator.program) }
+					is ContextEnvironment -> parent.leo.update { write(appendName lineTo evaluator.program) }
+					is QuotedEnvironment -> parent.leo.update { write(quoteName lineTo evaluator.program) }
 				}
-			unquoteName -> parent.leo.update { write(unquoteName valueTo evaluator.program) }
-			else -> parent.leo.update { write(parent.begin.string valueTo evaluator.program) }
+			unquoteName -> parent.leo.update { write(unquoteName lineTo evaluator.program) }
+			else -> parent.leo.update { write(parent.begin.string lineTo evaluator.program) }
 		}
 	}
 

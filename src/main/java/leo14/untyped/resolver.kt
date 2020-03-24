@@ -28,8 +28,8 @@ fun Context.resolver(program: Program) =
 fun resolver(program: Program = program()) =
 	context().resolver(program)
 
-fun Resolver.apply(value: Value): Resolver =
-	compiler.applyContext.resolve(thunk(this.program.plus(value)))
+fun Resolver.apply(line: Line): Resolver =
+	compiler.applyContext.resolve(thunk(this.program.plus(line)))
 
 fun Resolver.lazy(script: Script): Resolver =
 	compiler.resolver(thunk(lazy(compiler.applyContext, script)))
@@ -42,8 +42,8 @@ val Resolver.printScript
 	get() =
 		thunk.script
 
-fun Resolver.append(value: Value): Resolver =
-	set(this.program.plus(value))
+fun Resolver.append(line: Line): Resolver =
+	set(this.program.plus(line))
 
 fun Resolver.append(thunk: Thunk): Resolver =
 	set(this.program.plus(thunk.program))
@@ -91,12 +91,12 @@ fun Context.resolver(sequence: Sequence): Resolver =
 
 fun Resolver.function(script: Script): Resolver =
 	when (script) {
-		is UnitScript -> apply(functionName valueTo program())
+		is UnitScript -> apply(functionName lineTo program())
 		is LinkScript -> script.resolveRecursive
 			?.let { recursiveScript ->
-				apply(value(function(compiler.applyContext, recursiveScript, recursive = true)))
+				apply(line(function(compiler.applyContext, recursiveScript, recursive = true)))
 			}
-			?: apply(value(function(compiler.applyContext, script, recursive = false)))
+			?: apply(line(function(compiler.applyContext, script, recursive = false)))
 	}
 
 val Script.resolveRecursive: Script?
@@ -115,16 +115,16 @@ fun Resolver.assert(script: Script): Resolver =
 			compiler.eval(lhs).let { lhsEvaled ->
 				compiler.eval(rhs).let { rhsEvaled ->
 					if (lhsEvaled != rhsEvaled) error(
-						errorName valueTo
+						errorName lineTo
 							lhs.program.plus(
 								program(
-									givesName valueTo lhsEvaled,
-									expectedName valueTo rhsEvaled)))
+									givesName lineTo lhsEvaled,
+									expectedName lineTo rhsEvaled)))
 					else this
 				}
 			}
 		}
-		?: append(assertName valueTo script.program)
+		?: append(assertName lineTo script.program)
 
 fun Resolver.does(script: Script): Resolver =
 	compiler
