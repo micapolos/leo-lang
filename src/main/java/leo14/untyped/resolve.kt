@@ -49,7 +49,6 @@ val Sequence.resolve: Thunk?
 			?: resolvePrinted
 			?: resolveLeonardo
 			?: resolveAnythingEqualsAnything
-			?: resolveIfThenElse
 			?: resolveNative
 			?: resolveAutoMake
 			?: resolveFold
@@ -235,22 +234,6 @@ val Sequence.resolveAnythingEqualsAnything: Thunk?
 	get() =
 		matchInfixThunk(equalsName) { lhs, rhs ->
 			thunk(value(if (lhs == rhs) "yes" else "no"))
-		}
-
-val Sequence.resolveIfThenElse: Thunk?
-	get() =
-		matchInfixThunk(elseName) { lhs, alternate ->
-			lhs.matchInfix(thenName) { lhs, consequent ->
-				lhs.matchPrefix(ifName) { condition ->
-					condition.matchName { name ->
-						when (name) {
-							"yes" -> consequent
-							"no" -> alternate
-							else -> null
-						}
-					}
-				}
-			}
 		}
 
 val Sequence.resolveAutoMake: Thunk?
