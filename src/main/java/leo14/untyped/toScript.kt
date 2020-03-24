@@ -96,6 +96,7 @@ val Body.ruleScriptLine
 		when (this) {
 			is ThunkBody -> givesName lineTo thunk.script
 			is ScriptBody -> doesName lineTo script
+			is RecurseBody -> recurseName lineTo script
 		}
 
 // === scriptOrNull

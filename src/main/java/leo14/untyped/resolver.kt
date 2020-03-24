@@ -48,13 +48,7 @@ fun Resolver.recursively(script: Script): Resolver =
 		.push(
 			rule(
 				pattern(thunk(value(anythingName lineTo value(), recurseName lineTo value()))),
-				body(
-					script(
-						"given" lineTo script(),
-						"previous" lineTo script(),
-						"given" lineTo script(),
-						"content" lineTo script(),
-						"recursively" lineTo script))))
+				recurseBody(script(recursivelyName lineTo script))))
 		.resolver(thunk)
 		.compile(script)
 
@@ -150,12 +144,6 @@ val Script.resolveRecursive: Script?
 				else null
 			}
 		}
-
-fun <R> Script.matchRecursive(fn: (Script, Boolean) -> R): R =
-	resolveRecursive.let { recursiveScriptOrNull ->
-		if (recursiveScriptOrNull == null) fn(this, false)
-		else fn(recursiveScriptOrNull, true)
-	}
 
 fun Resolver.assert(script: Script): Resolver =
 	script
