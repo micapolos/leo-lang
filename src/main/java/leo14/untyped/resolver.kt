@@ -73,10 +73,8 @@ fun Context.resolveSwitch(thunk: Thunk): Resolver? =
 //	}
 
 fun Context.resolveCompile(thunk: Thunk): Resolver? =
-	thunk.value.matchInfix(compileName) { lhs, rhs ->
-		rhs.scriptOrNull?.let { code ->
-			resolver(lhs).compile(code)
-		}
+	thunk.matchInfix(compileName) { lhs, rhs ->
+		resolver(lhs).compile(rhs.script)
 	}
 
 fun Resolver.set(thunk: Thunk): Resolver =
