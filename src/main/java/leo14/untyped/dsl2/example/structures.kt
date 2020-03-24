@@ -4,26 +4,30 @@ import leo14.untyped.dsl2.*
 
 fun main() {
 	run_ {
-		circle.gives {
+		circle
+		gives {
 			circle {
 				radius { number }
 			}
 		}
 
-		square.gives {
+		square
+		gives {
 			square {
 				side { number }
 			}
 		}
 
-		triangle.gives {
+		triangle
+		gives {
 			triangle {
 				base { number }
 				height { number }
 			}
 		}
 
-		shape.gives {
+		shape
+		gives {
 			shape {
 				either {
 					it { circle }
@@ -33,7 +37,8 @@ fun main() {
 			}
 		}
 
-		circle.area.does {
+		circle.area
+		does {
 			area {
 				number(3.14159)
 				times { given.circle.radius.number }
@@ -41,14 +46,16 @@ fun main() {
 			}
 		}
 
-		square.area.does {
+		square.area
+		does {
 			area {
 				given.square.side.number
 				times { given.square.side.number }
 			}
 		}
 
-		triangle.area.does {
+		triangle.area
+		does {
 			area {
 				given.triangle.base.number
 				times { given.triangle.height.number }
@@ -56,8 +63,10 @@ fun main() {
 			}
 		}
 
-		shape.area.does {
-			given.shape.match {
+		shape.area
+		does {
+			given.shape
+			match {
 				circle { matching.circle.area }
 				square { matching.square.area }
 				triangle { matching.triangle.area }
