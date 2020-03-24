@@ -29,7 +29,7 @@ fun resolver(value: Value = value()) =
 	context().resolver(value)
 
 fun Resolver.apply(line: Line): Resolver =
-	compiler.applyContext.resolve(thunk(this.value.plus(line)))
+	compiler.applyContext.resolve(this.thunk.plus(line))
 
 fun Resolver.lazy(script: Script): Resolver =
 	compiler.resolver(thunk(lazy(compiler.applyContext, script)))
@@ -43,10 +43,10 @@ val Resolver.printScript
 		thunk.script
 
 fun Resolver.append(line: Line): Resolver =
-	set(this.value.plus(line))
+	set(this.thunk.plus(line))
 
 fun Resolver.append(thunk: Thunk): Resolver =
-	set(this.value.plus(thunk.value))
+	set(this.thunk.plus(thunk))
 
 fun Context.resolve(thunk: Thunk): Resolver =
 	null
@@ -79,12 +79,12 @@ fun Context.resolveCompile(thunk: Thunk): Resolver? =
 		}
 	}
 
-fun Resolver.set(value: Value): Resolver =
-	copy(thunk = thunk(value))
+fun Resolver.set(thunk: Thunk): Resolver =
+	copy(thunk = thunk)
 
 val Resolver.clear
 	get() =
-		set(value())
+		set(thunk(value()))
 
 fun Context.resolver(sequence: Sequence): Resolver =
 	resolver(sequence.tail).apply(sequence.head)

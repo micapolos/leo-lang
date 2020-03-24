@@ -36,6 +36,23 @@ class LazyTest {
 					number(1)
 					plus { number(2) }
 				}
+				script
+				force
+				gives {
+					quote {
+						lazy_ {
+							number(1)
+							plus { number(2) }
+						}
+					}
+				}
+			}
+
+			assert {
+				lazy_ {
+					number(1)
+					plus { number(2) }
+				}
 				plus { number(3) }
 				gives { number(6) }
 			}

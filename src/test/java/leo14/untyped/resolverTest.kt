@@ -15,7 +15,7 @@ class ResolverTest {
 
 		resolver
 			.apply(line("bar"))
-			.assertEqualTo(resolver.set(value("zoo")))
+			.assertEqualTo(resolver.set(thunk(value("zoo"))))
 	}
 
 	@Test
@@ -42,6 +42,6 @@ class ResolverTest {
 
 		resolver
 			.apply(plusName lineTo value("zar"))
-			.assertEqualTo(resolver.set(value("zoo" lineTo value(), plusName lineTo value("zar"))))
+			.assertEqualTo(resolver.set(thunk(value("zoo" lineTo value(), plusName lineTo value("zar")))))
 	}
 }
