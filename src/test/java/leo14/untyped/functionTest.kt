@@ -25,8 +25,9 @@ class FunctionTest {
 			context(
 				rule(
 					pattern(
-						value(
-							"foo" lineTo value())),
+						thunk(
+							value(
+								"foo" lineTo value()))),
 					body(
 						thunk(
 							value(

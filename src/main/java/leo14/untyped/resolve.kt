@@ -278,7 +278,7 @@ val Sequence.resolveFold: Thunk?
 							function
 								.copy(context = function.context.push(
 									rule(
-										pattern(value(foldedName)),
+										pattern(thunk(value(foldedName))),
 										body(thunk(value(foldedName lineTo value(line)))))))
 								.apply(this)
 						}

@@ -18,5 +18,5 @@ val Function.recurseRule
 val Thunk.givenRule
 	get() =
 		rule(
-			pattern(value(givenName)),
+			pattern(thunk(value(givenName))),
 			body(thunk(value(givenName lineTo this))))

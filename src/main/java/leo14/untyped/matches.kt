@@ -38,17 +38,13 @@ fun ScriptField.matches(scriptLine: ScriptLine) =
 fun ScriptField.matches(scriptField: ScriptField) =
 	string == scriptField.string && rhs.matches(scriptField.rhs)
 
-fun Value.matches(thunk: Thunk): Boolean =
+fun Thunk.matches(thunk: Thunk): Boolean =
 	null
 		?: anythingMatches
-		?: rawMatches(thunk.value)
+		?: orMatches(thunk)
+		?: rawMatches(thunk)
 
-fun Value.matches(value: Value): Boolean =
-	null
-		?: anythingMatches
-		?: rawMatches(value)
-
-val Value.anythingMatches
+val Thunk.anythingMatches
 	get() =
 		matchInfix(anythingName) { lhs, rhs ->
 			rhs.matchEmpty {
@@ -58,27 +54,29 @@ val Value.anythingMatches
 			}
 		}
 
-fun Value.rawMatches(value: Value) =
+fun Thunk.orMatches(thunk: Thunk): Boolean? =
+	matchInfix(orName) { lhs, rhs ->
+		rhs.matches(thunk) || lhs.matches(thunk)
+	}
+
+fun Thunk.rawMatches(thunk: Thunk) =
+	value.matches(thunk.value)
+
+fun Value.matches(value: Value): Boolean =
 	when (this) {
 		EmptyValue -> value is EmptyValue
-		is SequenceValue -> value is SequenceValue && sequence.match(value)
+		is SequenceValue -> value is SequenceValue && sequence.matches(value)
 	}
 
-fun Sequence.match(value: Value) =
+fun Sequence.matches(value: Value) =
 	null
-		?: orMatches(value)
 		?: rawMatches(value)
-
-fun Sequence.orMatches(value: Value) =
-	head.match(orName) { rhs ->
-		rhs.matches(value) || tail.value.matches(value)
-	}
 
 fun Sequence.rawMatches(value: Value) =
 	value is SequenceValue && matches(value.sequence)
 
 fun Sequence.matches(sequence: Sequence) =
-	head.matches(sequence.head) && tail.value.matches(sequence.tail)
+	head.matches(sequence.head) && tail.matches(sequence.tail)
 
 fun Line.matches(line: Line) =
 	null
@@ -91,8 +89,8 @@ fun Line.rawMatches(line: Line) =
 	when (this) {
 		is LiteralLine -> line is LiteralLine && literal == line.literal
 		is FieldLine -> line is FieldLine && field.matches(line.field)
-		is FunctionLine -> line is FunctionLine && function == line.function
-		is NativeLine -> line is NativeLine && native == line.native
+		is FunctionLine -> false
+		is NativeLine -> false
 	}
 
 fun Line.numberMatches(line: Line) =

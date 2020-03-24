@@ -128,7 +128,7 @@ fun Resolver.assert(script: Script): Resolver =
 
 fun Resolver.does(script: Script): Resolver =
 	compiler
-		.push(definition(rule(pattern(value), body(script))))
+		.push(definition(rule(pattern(thunk), body(script))))
 		.resolver(value())
 
 fun Resolver.compile(script: Script): Resolver =

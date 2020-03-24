@@ -9,7 +9,7 @@ class ResolverTest {
 		val resolver = context()
 			.push(
 				rule(
-					pattern(value("foo" lineTo value(), "bar" lineTo value())),
+					pattern(thunk(value("foo" lineTo value(), "bar" lineTo value()))),
 					body(thunk(value("zoo")))))
 			.resolver(value("foo"))
 
@@ -21,7 +21,7 @@ class ResolverTest {
 	@Test
 	fun apply_definitions() {
 		val resolver = context()
-			.push(rule(pattern(value("foo")), body(thunk(value("bar")))))
+			.push(rule(pattern(thunk(value("foo"))), body(thunk(value("bar")))))
 			.resolver(value("zoo"))
 
 		resolver
@@ -30,14 +30,14 @@ class ResolverTest {
 				resolver.compiler.push(
 					definition(
 						rule(
-							pattern(value("zoo")),
+							pattern(thunk(value("zoo"))),
 							body(thunk(value("zar")))))).resolver())
 	}
 
 	@Test
 	fun apply_raw() {
 		val resolver = context()
-			.push(rule(pattern(value("foo")), body(thunk(value("bar")))))
+			.push(rule(pattern(thunk(value("foo"))), body(thunk(value("bar")))))
 			.resolver(value("zoo"))
 
 		resolver

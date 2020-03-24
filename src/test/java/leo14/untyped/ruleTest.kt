@@ -9,8 +9,8 @@ import kotlin.test.Test
 class RuleTest {
 	@Test
 	fun resolve_matchProgram() {
-		Rule(
-			Pattern(value("foo" lineTo value())),
+		rule(
+			pattern(thunk(value("foo" lineTo value()))),
 			body(thunk(value("bar"))))
 			.apply(context(), thunk(value("foo")))
 			.assertEqualTo(thunk(value("bar")))
@@ -19,7 +19,7 @@ class RuleTest {
 	@Test
 	fun resolve_matchFunction() {
 		rule(
-			pattern(value(numberName lineTo value())),
+			pattern(thunk(value(numberName lineTo value()))),
 			body(script(givenName lineTo script())))
 			.apply(context(), thunk(value(line(literal(10)))))
 			.assertEqualTo(thunk(value(givenName lineTo value(literal(10)))))
@@ -27,8 +27,8 @@ class RuleTest {
 
 	@Test
 	fun resolve_mismatch() {
-		Rule(
-			Pattern(value(numberName lineTo value())),
+		rule(
+			pattern(thunk(value(numberName lineTo value()))),
 			body(thunk(value("ok"))))
 			.apply(context(), thunk(value(line(literal("foo")))))
 			.assertEqualTo(null)

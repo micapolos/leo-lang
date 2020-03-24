@@ -46,18 +46,18 @@ fun Context.compile(thunk: Thunk): Context? =
 		?: compileAs(thunk)
 
 fun Context.compileDoes(thunk: Thunk): Context? =
-	thunk.value.matchInfix(doesName) { lhs, rhs ->
-		rhs.scriptOrNull?.let { script ->
-			push(Rule(Pattern(lhs), body(script)))
+	thunk.matchInfix(doesName) { lhs, rhs ->
+		rhs.value.scriptOrNull?.let { script ->
+			push(rule(pattern(lhs), body(script)))
 		}
 	}
 
 fun Context.compileGives(thunk: Thunk): Context? =
-	thunk.value.matchInfix(givesName) { lhs, rhs ->
-		push(Rule(Pattern(lhs), body(thunk(rhs))))
+	thunk.matchInfix(givesName) { lhs, rhs ->
+		push(rule(pattern(lhs), body(rhs)))
 	}
 
 fun Context.compileAs(thunk: Thunk): Context? =
-	thunk.value.matchInfix(asName) { lhs, rhs ->
-		push(Rule(Pattern(rhs), body(thunk(lhs))))
+	thunk.matchInfix(asName) { lhs, rhs ->
+		push(rule(pattern(rhs), body(lhs)))
 	}

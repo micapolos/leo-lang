@@ -1,14 +1,11 @@
 package leo14.untyped
 
-data class Pattern(val value: Value)
+data class Pattern(val thunk: Thunk)
 
-fun pattern(value: Value) = Pattern(value)
+fun pattern(thunk: Thunk) = Pattern(thunk)
 
 fun Pattern.matches(thunk: Thunk) =
-	this.value.matches(thunk)
-
-fun Pattern.matches(value: Value) =
-	this.value.matches(value)
+	this.thunk.matches(thunk)
 
 val recursePattern =
-	pattern(value(recurseName))
+	pattern(thunk(value(recurseName)))

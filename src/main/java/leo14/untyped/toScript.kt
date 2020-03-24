@@ -85,7 +85,7 @@ val Recursive.script
 
 val Pattern.ruleScript
 	get() =
-		value.script
+		thunk.script
 
 val Body.ruleScriptLine
 	get() =

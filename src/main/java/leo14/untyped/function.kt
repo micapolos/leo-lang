@@ -17,17 +17,17 @@ fun function(context: Context, script: Script, recursive: Boolean = false) =
 fun function(script: Script, recursive: Boolean = false) = function(context(), script, recursive)
 
 fun Function.apply(given: Thunk): Thunk =
-	try {
-		context
-			.runIf(recursive) { push(recurseRule) }
-			.push(given.givenRule)
-			.resolver()
-			.reader
-			.fold(script.tokenStack.reverse) { write(it)!! }
-			.run { this as UnquotedReader }
-			.unquoted
-			.resolver
-			.thunk
-	} catch (stackOverflowError: StackOverflowError) {
-		thunk(stackOverflowErrorProgram)
-	}
+	//try {
+	context
+		.runIf(recursive) { push(recurseRule) }
+		.push(given.givenRule)
+		.resolver()
+		.reader
+		.fold(script.tokenStack.reverse) { write(it)!! }
+		.run { this as UnquotedReader }
+		.unquoted
+		.resolver
+		.thunk
+//	} catch (stackOverflowError: StackOverflowError) {
+//		thunk(stackOverflowErrorProgram)
+//	}

@@ -6,9 +6,9 @@ import kotlin.test.Test
 
 class ContextTest {
 	private val context = context(
-		rule(pattern(value("x")), body(thunk(value("zero")))),
-		rule(pattern(value("y")), body(thunk(value("one")))),
-		rule(pattern(value("x")), body(thunk(value("two")))))
+		rule(pattern(thunk(value("x"))), body(thunk(value("zero")))),
+		rule(pattern(thunk(value("y"))), body(thunk(value("one")))),
+		rule(pattern(thunk(value("x"))), body(thunk(value("two")))))
 
 	@Test
 	fun apply_rules() {
@@ -36,7 +36,7 @@ class ContextTest {
 			.assertEqualTo(
 				context.push(
 					rule(
-						pattern(value("foo")),
+						pattern(thunk(value("foo"))),
 						body(thunk(value("bar"))))))
 	}
 
@@ -51,7 +51,7 @@ class ContextTest {
 			.assertEqualTo(
 				context.push(
 					rule(
-						pattern(value("foo")),
+						pattern(thunk(value("foo"))),
 						body(script("bar")))))
 	}
 }

@@ -3,6 +3,22 @@ package leo14.untyped.dsl2.library
 import leo14.untyped.dsl2.*
 
 val html = library_ {
+	element
+	gives {
+		do_ {
+			function {
+				recursive {
+					element
+					gives { lazy_ { do_ { recurse } } }
+
+					html { element }
+					or { div { element } }
+					or { span { element } }
+				}
+			}
+		}
+	}
+
 	text
 	plus { attribute { name { text } } }
 	does {
