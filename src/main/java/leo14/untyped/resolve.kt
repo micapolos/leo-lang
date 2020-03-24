@@ -1,6 +1,8 @@
 package leo14.untyped
 
 import leo.base.ifOrNull
+import leo.base.string
+import leo.java.lang.exec
 import leo13.fold
 import leo13.thisName
 import leo14.*
@@ -53,6 +55,7 @@ val Sequence.resolve: Thunk?
 			?: resolveFold
 			?: resolveForce
 			?: resolveScript
+			?: resolveSay
 
 val Sequence.resolveFunctionApplyAnything: Thunk?
 	get() =
@@ -301,4 +304,14 @@ val Sequence.resolveScript: Thunk?
 	get() =
 		matchPostfixThunk(scriptName) { lhs ->
 			thunk(lhs.script.value)
+		}
+
+val Sequence.resolveSay: Thunk?
+	get() =
+		matchPostfixThunk("say") { lhs ->
+			lhs.matchText { text ->
+				thunk(value()).also {
+					exec("say", literal(text).string)
+				}
+			}
 		}
