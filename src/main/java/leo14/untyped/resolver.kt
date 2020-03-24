@@ -42,6 +42,22 @@ fun Resolver.do_(script: Script): Resolver =
 			.asLazy(script)
 			.eval)
 
+fun Resolver.recursively(script: Script): Resolver =
+	compiler
+		.applyContext
+		.push(
+			rule(
+				pattern(thunk(value(anythingName lineTo value(), recurseName lineTo value()))),
+				body(
+					script(
+						"given" lineTo script(),
+						"previous" lineTo script(),
+						"given" lineTo script(),
+						"content" lineTo script(),
+						"recursively" lineTo script))))
+		.resolver(thunk)
+		.compile(script)
+
 val Resolver.value
 	get() =
 		thunk.value
