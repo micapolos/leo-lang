@@ -49,3 +49,6 @@ fun Recursive.push(definition: Definition): Recursive =
 
 fun Compiler.eval(script: Script): Value =
 	resolver().compile(script).value
+
+fun Compiler.evalThunk(script: Script): Thunk =
+	resolver().compile(script).thunk

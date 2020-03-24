@@ -112,8 +112,8 @@ val Script.resolveRecursive: Script?
 fun Resolver.assert(script: Script): Resolver =
 	script
 		.matchInfix(givesName) { lhs, rhs ->
-			compiler.eval(lhs).let { lhsEvaled ->
-				compiler.eval(rhs).let { rhsEvaled ->
+			compiler.evalThunk(lhs).let { lhsEvaled ->
+				compiler.evalThunk(rhs).let { rhsEvaled ->
 					if (lhsEvaled != rhsEvaled) error(
 						errorName lineTo
 							lhs.value.plus(
