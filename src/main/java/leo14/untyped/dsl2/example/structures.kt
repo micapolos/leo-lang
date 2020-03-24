@@ -25,9 +25,11 @@ fun main() {
 
 		shape.gives {
 			shape {
-				circle
-				or { square }
-				or { triangle }
+				either {
+					it { circle }
+					it { square }
+					it { triangle }
+				}
 			}
 		}
 
