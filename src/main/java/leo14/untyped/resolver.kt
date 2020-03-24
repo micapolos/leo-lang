@@ -128,11 +128,7 @@ fun Context.resolver(sequence: Sequence): Resolver =
 fun Resolver.function(script: Script): Resolver =
 	when (script) {
 		is UnitScript -> apply(functionName lineTo value())
-		is LinkScript -> script.resolveRecursive
-			?.let { recursiveScript ->
-				apply(line(function(compiler.applyContext, recursiveScript, recursive = true)))
-			}
-			?: apply(line(function(compiler.applyContext, script, recursive = false)))
+		is LinkScript -> apply(line(function(compiler.applyContext, script)))
 	}
 
 val Script.resolveRecursive: Script?

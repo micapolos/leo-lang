@@ -394,17 +394,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun functionApply_recursive() {
-		script(
-			"function" lineTo script(
-				"recursive" lineTo script("recurse")),
-			"apply" lineTo script())
-			.assertEvalsTo(
-				"function" lineTo script(
-					"recursive" lineTo script("recurse")))
-	}
-
-	@Test
 	fun equals() {
 		script(
 			"foo" lineTo script(),

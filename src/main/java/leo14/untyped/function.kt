@@ -1,6 +1,5 @@
 package leo14.untyped
 
-import leo.base.runIf
 import leo13.fold
 import leo13.reverse
 import leo14.Script
@@ -8,17 +7,15 @@ import leo14.tokenStack
 
 data class Function(
 	val context: Context,
-	val script: Script,
-	val recursive: Boolean)
+	val script: Script)
 
-fun function(context: Context, script: Script, recursive: Boolean = false) =
-	Function(context, script, recursive)
+fun function(context: Context, script: Script) =
+	Function(context, script)
 
-fun function(script: Script, recursive: Boolean = false) = function(context(), script, recursive)
+fun function(script: Script) = function(context(), script)
 
 fun Function.apply(given: Thunk): Thunk =
 	context
-		.runIf(recursive) { push(recurseRule) }
 		.push(given.givenRule)
 		.resolver()
 		.reader
