@@ -8,6 +8,8 @@ data class Lazy(val context: Context, val script: Script) {
 
 fun lazy(context: Context, script: Script) = Lazy(context, script)
 
+fun Context.asLazy(script: Script) = lazy(this, script)
+
 operator fun Lazy.plus(definition: Definition): Lazy =
 	lazy(context.push(definition), script)
 
@@ -15,7 +17,7 @@ val Lazy.value: Value
 	get() =
 		context.eval(script).value
 
-val Lazy.force: Thunk
+val Lazy.eval: Thunk
 	get() =
 		context.eval(script)
 
@@ -28,3 +30,13 @@ val Lazy.reflectScriptLine
 		"lazy"(
 			context.reflectScriptLine,
 			script.reflectScriptLine)
+
+val Lazy.recurseRule
+	get() =
+		rule(
+			pattern(
+				thunk(
+					value(
+						"anything" lineTo value(),
+						"recurse" lineTo value()))),
+			body(thunk(this)))

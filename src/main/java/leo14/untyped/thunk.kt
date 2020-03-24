@@ -22,7 +22,7 @@ val Thunk.force: Thunk
 	get() =
 		when (this) {
 			is ValueThunk -> this
-			is LazyThunk -> lazy.force
+			is LazyThunk -> lazy.eval
 		}
 
 val Thunk.value

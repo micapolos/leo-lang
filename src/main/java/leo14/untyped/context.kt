@@ -25,6 +25,9 @@ fun Context.push(definition: Definition): Context =
 fun Context.push(rule: Rule): Context =
 	context(this linkTo rule)
 
+fun Context.withGiven(thunk: Thunk): Context =
+	push(thunk.givenRule)
+
 fun Context.apply(thunk: Thunk): Thunk? =
 	null
 		?: applyRules(thunk)

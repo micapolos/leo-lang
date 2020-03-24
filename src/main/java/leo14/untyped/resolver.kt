@@ -35,12 +35,12 @@ fun Resolver.lazy(script: Script): Resolver =
 	compiler.resolver(thunk(lazy(compiler.applyContext, script)))
 
 fun Resolver.do_(script: Script): Resolver =
-	compiler.resolver(
-		function(
-			compiler.applyContext,
-			script,
-			recursive = false)
-			.apply(thunk))
+	set(
+		compiler
+			.applyContext
+			.withGiven(thunk)
+			.asLazy(script)
+			.eval)
 
 val Resolver.value
 	get() =
@@ -114,6 +114,12 @@ val Script.resolveRecursive: Script?
 				else null
 			}
 		}
+
+fun <R> Script.matchRecursive(fn: (Script, Boolean) -> R): R =
+	resolveRecursive.let { recursiveScriptOrNull ->
+		if (recursiveScriptOrNull == null) fn(this, false)
+		else fn(recursiveScriptOrNull, true)
+	}
 
 fun Resolver.assert(script: Script): Resolver =
 	script
