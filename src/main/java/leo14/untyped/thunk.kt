@@ -17,6 +17,13 @@ data class LazyThunk(val lazy: Lazy) : Thunk() {
 fun thunk(value: Value): Thunk = ProgramThunk(value)
 fun thunk(lazy: Lazy): Thunk = LazyThunk(lazy)
 
+val Thunk.force: Thunk
+	get() =
+		when (this) {
+			is ProgramThunk -> this
+			is LazyThunk -> thunk(value)
+		}
+
 val Thunk.value
 	get() =
 		when (this) {
