@@ -40,3 +40,7 @@ fun Thunk.plus(thunk: Thunk): Thunk =
 
 fun Thunk.plus(value: Value): Thunk =
 	fold(value.lineStack) { plus(it) }
+
+val Boolean.thunk
+	get() =
+		thunk(value("boolean" lineTo value(toString())))

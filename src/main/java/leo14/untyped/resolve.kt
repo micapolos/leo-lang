@@ -233,7 +233,7 @@ val Sequence.resolveLeonardo: Thunk?
 val Sequence.resolveAnythingEqualsAnything: Thunk?
 	get() =
 		matchInfixThunk(equalsName) { lhs, rhs ->
-			thunk(value(if (lhs == rhs) "yes" else "no"))
+			lhs.equals(rhs).thunk
 		}
 
 val Sequence.resolveAutoMake: Thunk?

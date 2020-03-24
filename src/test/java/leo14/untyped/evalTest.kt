@@ -409,12 +409,12 @@ class EvalTest {
 		script(
 			"foo" lineTo script(),
 			"equals" lineTo script("foo"))
-			.assertEvalsTo(script("yes"))
+			.assertEvalsTo(script("boolean" lineTo script("true")))
 
 		script(
 			"foo" lineTo script(),
 			"equals" lineTo script("bar"))
-			.assertEvalsTo(script("no"))
+			.assertEvalsTo(script("boolean" lineTo script("false")))
 	}
 
 	@Test
