@@ -18,13 +18,12 @@ class EvaluatorTest {
 	fun write_context() {
 		context()
 			.environment
-			.evaluator(value(line(literal(5))))
+			.evaluator(thunk(value(line(literal(5)))))
 			.write(minusName lineTo value(line(literal(3))))
 			.assertEqualTo(
 				context()
 					.environment
-					.evaluator(
-						value(line(literal(2)))))
+					.evaluator(thunk(value(line(literal(2))))))
 	}
 
 	@Test
@@ -32,15 +31,16 @@ class EvaluatorTest {
 		context()
 			.environment
 			.quote
-			.evaluator(value(line(literal(5))))
+			.evaluator(thunk(value(line(literal(5)))))
 			.write(minusName lineTo value(line(literal(3))))
 			.assertEqualTo(
 				context()
 					.environment
 					.quote
 					.evaluator(
-						value(
-							line(literal(5)),
-							minusName lineTo value(line(literal(3))))))
+						thunk(
+							value(
+								line(literal(5)),
+								minusName lineTo value(line(literal(3)))))))
 	}
 }

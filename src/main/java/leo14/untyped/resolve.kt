@@ -57,13 +57,17 @@ val Sequence.resolve: Thunk?
 val Sequence.resolveFunctionApplyAnything: Thunk?
 	get() =
 		matchInfixThunk(applyName) { lhs, rhs ->
-			lhs.value.functionOrNull?.apply(rhs)
+			lhs.matchFunction { function ->
+				function.apply(rhs)
+			}
 		}
 
 val Sequence.resolveAnythingDoFunction: Thunk?
 	get() =
 		matchInfixThunk(doName) { lhs, rhs ->
-			rhs.value.functionOrNull?.apply(lhs)
+			rhs.matchFunction { function ->
+				function.apply(lhs)
+			}
 		}
 
 val Sequence.resolveAccess: Thunk?

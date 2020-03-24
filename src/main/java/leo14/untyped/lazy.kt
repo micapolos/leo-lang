@@ -1,11 +1,9 @@
 package leo14.untyped
 
-import leo14.Script
-import leo14.lineTo
-import leo14.script
+import leo14.*
 
 data class Lazy(val context: Context, val script: Script) {
-	override fun toString() = printScript.toString()
+	override fun toString() = reflectScriptLine.toString()
 }
 
 fun lazy(context: Context, script: Script) = Lazy(context, script)
@@ -20,3 +18,9 @@ val Lazy.value: Value
 val Lazy.printScript
 	get() =
 		script("lazy" lineTo script)
+
+val Lazy.reflectScriptLine
+	get() =
+		"lazy"(
+			context.reflectScriptLine,
+			script.reflectScriptLine)

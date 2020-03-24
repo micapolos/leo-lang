@@ -43,7 +43,7 @@ val Field.scriptField
 val Thunk.script
 	get() =
 		when (this) {
-			is ProgramThunk -> value.script
+			is ValueThunk -> value.script
 			is LazyThunk -> lazy.printScript
 		}
 
@@ -56,6 +56,10 @@ val Function.scriptLine
 		functionName lineTo
 			if (recursive) script(recursiveName lineTo script)
 			else script
+
+val Context.reflectScriptLine: ScriptLine
+	get() =
+		"context" lineTo functionScript
 
 val Context.functionScript: Script
 	get() =

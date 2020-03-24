@@ -7,7 +7,7 @@ val thunkBellOnEval = false
 
 sealed class Thunk
 
-data class ProgramThunk(val value: Value) : Thunk() {
+data class ValueThunk(val value: Value) : Thunk() {
 	override fun toString() = value.toString()
 }
 
@@ -15,20 +15,20 @@ data class LazyThunk(val lazy: Lazy) : Thunk() {
 	override fun toString() = lazy.toString()
 }
 
-fun thunk(value: Value): Thunk = ProgramThunk(value)
+fun thunk(value: Value): Thunk = ValueThunk(value)
 fun thunk(lazy: Lazy): Thunk = LazyThunk(lazy)
 
 val Thunk.force: Thunk
 	get() =
 		when (this) {
-			is ProgramThunk -> this
+			is ValueThunk -> this
 			is LazyThunk -> thunk(value)
 		}
 
 val Thunk.value
 	get() =
 		when (this) {
-			is ProgramThunk -> value
+			is ValueThunk -> value
 			is LazyThunk -> lazy.value.also { if (thunkBellOnEval) print(bellChar) }
 		}
 

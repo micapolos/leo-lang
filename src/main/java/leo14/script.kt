@@ -347,3 +347,10 @@ val Literal.name
 			is NumberLiteral -> "number"
 			is StringLiteral -> "text"
 		}
+
+operator fun String.invoke(vararg lines: ScriptLine): ScriptLine =
+	this lineTo script(*lines)
+
+val Script.reflectScriptLine
+	get() =
+		"script" lineTo this

@@ -21,7 +21,7 @@ fun Environment.writeEvaluator(sequence: Sequence) =
 		is ContextEnvironment ->
 			compiler.applyContext.resolver(sequence).evaluator
 		is QuotedEnvironment ->
-			evaluator(value(sequence))
+			evaluator(thunk(value(sequence)))
 	}
 
 fun Environment.write(begin: Begin): Environment? =

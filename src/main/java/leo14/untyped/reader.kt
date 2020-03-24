@@ -133,7 +133,7 @@ fun Unquoted.write(begin: Begin): Reader =
 					UnquotedGetCodeOp(this),
 					script()))
 		lazyName ->
-			if (resolver.value.isEmpty)
+			if (resolver.thunk is ValueThunk && resolver.thunk.value.isEmpty)
 				CodeReader(
 					Code(
 						UnquotedLazyCodeOp(this),
@@ -183,8 +183,7 @@ fun UnquotedOp.write(thunk: Thunk): Reader? =
 		is QuotedPlusUnquotedOp ->
 			QuotedReader(
 				quoted.copy(
-					// TODO: IS it correct?
-					thunk = thunk(quoted.thunk.value.plus(thunk.value))))
+					thunk = quoted.thunk.plus(thunk)))
 	}
 
 fun Code.write(end: End): Reader? =
@@ -226,7 +225,3 @@ fun Unquoted.write(literal: Literal): Reader? =
 
 fun Code.write(literal: Literal): Reader? =
 	CodeReader(copy(script = script.plus(scriptLine(literal))))
-
-val Reader.value
-	get() =
-		(this as UnquotedReader).unquoted.resolver.value
