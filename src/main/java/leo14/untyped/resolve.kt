@@ -52,6 +52,7 @@ val Sequence.resolve: Thunk?
 			?: resolveAutoMake
 			?: resolveFold
 			?: resolveForce
+			?: resolveScript
 
 val Sequence.resolveFunctionApplyAnything: Thunk?
 	get() =
@@ -290,4 +291,10 @@ val Sequence.resolveForce: Thunk?
 	get() =
 		matchPostfixThunk(forceName) { lhs ->
 			lhs.force
+		}
+
+val Sequence.resolveScript: Thunk?
+	get() =
+		matchPostfixThunk(scriptName) { lhs ->
+			thunk(lhs.script.value)
 		}

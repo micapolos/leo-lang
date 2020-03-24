@@ -11,10 +11,13 @@ class LazyTest {
 					number(1)
 					plus { number(2) }
 				}
+				script
 				gives {
-					lazy_ {
-						number(1)
-						plus { number(2) }
+					quote {
+						lazy_ {
+							number(1)
+							plus { number(2) }
+						}
 					}
 				}
 			}
