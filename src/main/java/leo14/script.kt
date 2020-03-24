@@ -322,6 +322,25 @@ operator fun ScriptLine.get(string: String) =
 		is FieldScriptLine -> field.rhs.lineOrNull(string)?.let { line -> script(line) }
 	}
 
+fun Script.rhsOrNull(string: String): Script? =
+	when (this) {
+		is UnitScript -> null
+		is LinkScript -> link.rhsOrNull(string)
+	}
+
+fun ScriptLink.rhsOrNull(string: String) =
+	line.rhsOrNull(string) ?: lhs.rhsOrNull(string)
+
+fun ScriptLine.rhsOrNull(string: String) =
+	when (this) {
+		is LiteralScriptLine -> null
+		is FieldScriptLine -> field.rhsOrNull(string)
+	}
+
+fun ScriptField.rhsOrNull(string: String) =
+	if (this.string == string) rhs
+	else null
+
 fun Script.lineOrNull(string: String): ScriptLine? =
 	when (this) {
 		is UnitScript -> null

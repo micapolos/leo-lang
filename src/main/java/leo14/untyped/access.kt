@@ -5,7 +5,7 @@ import leo14.*
 fun Script.access(string: String): ScriptLine? =
 	when (this) {
 		is UnitScript -> null
-		is LinkScript -> TODO()
+		is LinkScript -> link.access(string)
 	}
 
 fun ScriptLink.access(string: String) =

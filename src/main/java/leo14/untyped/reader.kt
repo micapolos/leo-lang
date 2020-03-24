@@ -36,6 +36,7 @@ data class UnquotedGetCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedLazyCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedDoCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedRecursivelyCodeOp(val unquoted: Unquoted) : CodeOp()
+data class UnquotedSwitchCodeOp(val unquoted: Unquoted) : CodeOp()
 
 val emptyReader: Reader
 	get() =
@@ -155,6 +156,11 @@ fun Unquoted.write(begin: Begin): Reader =
 				Code(
 					UnquotedRecursivelyCodeOp(this),
 					script()))
+		switchName ->
+			CodeReader(
+				Code(
+					UnquotedSwitchCodeOp(this),
+					script()))
 		else ->
 			UnquotedReader(
 				Unquoted(
@@ -235,6 +241,11 @@ fun CodeOp.write(script: Script): Reader? =
 			UnquotedReader(
 				unquoted.copy(
 					resolver = unquoted.resolver.recursively(script)))
+		is UnquotedSwitchCodeOp ->
+			UnquotedReader(
+				unquoted.copy(
+					resolver = unquoted.resolver.switch(script)))
+
 	}
 
 fun Quoted.write(literal: Literal): Reader? =
