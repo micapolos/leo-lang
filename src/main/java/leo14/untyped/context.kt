@@ -47,9 +47,7 @@ fun Context.compile(thunk: Thunk): Context? =
 
 fun Context.compileDoes(thunk: Thunk): Context? =
 	thunk.matchInfix(doesName) { lhs, rhs ->
-		rhs.value.scriptOrNull?.let { script ->
-			push(rule(pattern(lhs), body(script)))
-		}
+		push(rule(pattern(lhs), body(rhs.script)))
 	}
 
 fun Context.compileGives(thunk: Thunk): Context? =

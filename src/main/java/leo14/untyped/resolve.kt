@@ -89,7 +89,7 @@ val Sequence.resolveAnythingAppendAnything: Thunk?
 		matchInfixThunk(appendName) { lhs, rhs ->
 			lhs.value.onlyFieldOrNull?.let { field ->
 				rhs.value.onlyLineOrNull?.let { line ->
-					thunk(value(field.name lineTo field.rhs.plus(line)))
+					thunk(value(field.name lineTo field.thunk.plus(line)))
 				}
 			}
 		}

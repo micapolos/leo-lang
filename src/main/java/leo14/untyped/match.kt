@@ -49,21 +49,6 @@ fun <R> Value.matchNative(fn: (Native) -> R): R? =
 fun <R> Thunk.matchNative(fn: (Native) -> R): R? =
 	value.matchNative(fn)
 
-fun <R> Value.matchFunction(fn: (Function) -> R): R? =
-	functionOrNull?.let(fn)
-
-fun <R> Value.matchBody(fn: (Value) -> R): R? =
-	matchSequence { sequence ->
-		sequence.tail.value.matchEmpty {
-			sequence.head.matchField { field ->
-				fn(field.rhs)
-			}
-		}
-	}
-
-fun <R> Value.matchInfix(name: String, fn: (Value, Value) -> R) =
-	sequenceOrNull?.matchInfix(name, fn)
-
 fun <R> Thunk.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
 	value.sequenceOrNull?.matchInfixThunk(name, fn)
 
@@ -81,21 +66,9 @@ fun <R> Thunk.matchPostfix(name: String, fn: (Thunk) -> R) =
 		}
 	}
 
-fun <R> Sequence.matchInfix(name: String, fn: (Value, Value) -> R) =
-	head.match(name) { rhs ->
-		fn(tail.value, rhs)
-	}
-
 fun <R> Sequence.matchInfixThunk(name: String, fn: (Thunk, Thunk) -> R) =
 	head.matchThunk(name) { rhs ->
 		fn(tail, rhs)
-	}
-
-fun <R> Sequence.matchPrefix(name: String, fn: (Value) -> R) =
-	matchInfix(name) { lhs, rhs ->
-		lhs.matchEmpty {
-			fn(rhs)
-		}
 	}
 
 fun <R> Sequence.matchPostfixThunk(name: String, fn: (Thunk) -> R) =
@@ -106,7 +79,7 @@ fun <R> Sequence.matchPostfixThunk(name: String, fn: (Thunk) -> R) =
 	}
 
 fun <R> Sequence.matchSimple(name: String, fn: () -> R) =
-	matchInfix(name) { lhs, rhs ->
+	matchInfixThunk(name) { lhs, rhs ->
 		rhs.matchEmpty {
 			lhs.matchEmpty {
 				fn()
@@ -117,26 +90,17 @@ fun <R> Sequence.matchSimple(name: String, fn: () -> R) =
 fun <R> Line.matchField(fn: (Field) -> R): R? =
 	(this as? FieldLine)?.field?.let(fn)
 
-fun <R> Line.match(string: String, fn: (Value) -> R): R? =
-	(this as? FieldLine)?.field?.let { field ->
-		field.match(string, fn)
-	}
-
 fun <R> Line.matchThunk(string: String, fn: (Thunk) -> R): R? =
 	(this as? FieldLine)?.field?.let { field ->
 		field.matchThunk(string, fn)
 	}
-
-fun <R> Field.match(name: String, fn: (Value) -> R) =
-	if (this.name == name) fn(rhs)
-	else null
 
 fun <R> Field.matchThunk(name: String, fn: (Thunk) -> R) =
 	if (this.name == name) fn(thunk)
 	else null
 
 fun <R> Field.matchName(fn: (String) -> R) =
-	rhs.matchEmpty {
+	thunk.matchEmpty {
 		fn(name)
 	}
 

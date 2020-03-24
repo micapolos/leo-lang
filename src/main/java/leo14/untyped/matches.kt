@@ -106,7 +106,7 @@ fun Line.functionMatches(line: Line) =
 	else null
 
 fun Field.matches(field: Field) =
-	name == field.name && rhs.matches(field.rhs)
+	name == field.name && thunk.matches(field.thunk)
 
 // === name matching ===
 

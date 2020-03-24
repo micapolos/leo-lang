@@ -126,4 +126,4 @@ val Line.scriptLineOrNull: ScriptLine?
 
 val Field.scriptFieldOrNull: ScriptField?
 	get() =
-		rhs.scriptOrNull?.let { rhs -> name fieldTo rhs }
+		name fieldTo thunk.script

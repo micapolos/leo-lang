@@ -27,13 +27,13 @@ fun Evaluator.write(field: Field): Evaluator? =
 	when (environment) {
 		is ContextEnvironment ->
 			when (field.name) {
-				quoteName -> environment.evaluator(thunk.plus(field.rhs))
+				quoteName -> environment.evaluator(thunk.plus(field.thunk))
 				else -> write(line(field))
 			}
 		is QuotedEnvironment ->
 			when (field.name) {
 				unquoteName ->
-					if (environment.unquote is ContextEnvironment) environment.evaluator(thunk.plus(field.rhs))
+					if (environment.unquote is ContextEnvironment) environment.evaluator(thunk.plus(field.thunk))
 					else write(line(field))
 				else -> write(line(field))
 			}
