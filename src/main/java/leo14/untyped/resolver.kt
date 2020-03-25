@@ -100,6 +100,12 @@ fun Context.resolveStatic(thunk: Thunk): Resolver =
 fun Context.resolveContext(thunk: Thunk): Resolver? =
 	apply(thunk)?.let { resolver(it) }
 
+fun Context.resolver(applied: Applied): Resolver =
+	when (applied) {
+		is ThunkApplied -> resolver(applied.thunk)
+		is ScriptApplied -> resolver().compile(applied.script)
+	}
+
 fun Context.resolveDefinitions(thunk: Thunk): Resolver? =
 	compile(thunk)?.resolver()
 

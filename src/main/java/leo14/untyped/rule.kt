@@ -6,7 +6,7 @@ data class Rule(val pattern: Pattern, val body: Body)
 
 fun rule(pattern: Pattern, body: Body) = Rule(pattern, body)
 
-fun Rule.apply(context: Context, given: Thunk): Thunk? =
+fun Rule.apply(context: Context, given: Thunk): Applied? =
 	notNullIf(pattern.matches(given)) {
 		body.apply(context, given)
 	}

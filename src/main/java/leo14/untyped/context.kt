@@ -28,18 +28,18 @@ fun Context.push(rule: Rule): Context =
 fun Context.withGiven(thunk: Thunk): Context =
 	push(thunk.givenRule)
 
-fun Context.apply(thunk: Thunk): Thunk? =
+fun Context.apply(thunk: Thunk): Applied? =
 	null
 		?: applyRules(thunk)
-		?: thunk.resolve
+		?: thunk.resolve?.let { applied(it) }
 
-fun Context.applyRules(thunk: Thunk): Thunk? =
+fun Context.applyRules(thunk: Thunk): Applied? =
 	when (this) {
 		is EmptyContext -> null
 		is LinkContext -> link.applyRules(thunk)
 	}
 
-fun ContextLink.applyRules(thunk: Thunk): Thunk? =
+fun ContextLink.applyRules(thunk: Thunk): Applied? =
 	definition.apply(context, thunk) ?: context.applyRules(thunk)
 
 fun Context.compile(thunk: Thunk): Context? =
@@ -47,7 +47,6 @@ fun Context.compile(thunk: Thunk): Context? =
 		?: compileDoes(thunk)
 		?: compileGives(thunk)
 		?: compileAs(thunk)
-//?: compileWrites(thunk)
 
 fun Context.compileDoes(thunk: Thunk): Context? =
 	thunk.matchInfix(doesName) { lhs, rhs ->
@@ -63,8 +62,3 @@ fun Context.compileAs(thunk: Thunk): Context? =
 	thunk.matchInfix(asName) { lhs, rhs ->
 		push(rule(pattern(rhs), body(lhs)))
 	}
-
-//fun Context.compileWrites(thunk: Thunk): Context? =
-//	thunk.matchInfix(writesName) { lhs, rhs ->
-//		push(rule(pattern(lhs), recurseBody(rhs.script)))
-//	}

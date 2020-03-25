@@ -94,6 +94,7 @@ val Body.ruleScriptLine
 			is ThunkBody -> givesName lineTo thunk.script
 			is EvalBody -> doesName lineTo script
 			is RecurseBody -> recurseName lineTo script
+			is CompileBody -> writeName lineTo script
 		}
 
 // === scriptOrNull

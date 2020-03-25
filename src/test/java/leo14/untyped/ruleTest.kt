@@ -13,7 +13,7 @@ class RuleTest {
 			pattern(thunk(value("foo" lineTo value()))),
 			body(thunk(value("bar"))))
 			.apply(context(), thunk(value("foo")))
-			.assertEqualTo(thunk(value("bar")))
+			.assertEqualTo(applied(thunk(value("bar"))))
 	}
 
 	@Test
@@ -22,7 +22,7 @@ class RuleTest {
 			pattern(thunk(value(numberName lineTo value()))),
 			evalBody(script(givenName lineTo script())))
 			.apply(context(), thunk(value(line(literal(10)))))
-			.assertEqualTo(thunk(value(givenName lineTo value(literal(10)))))
+			.assertEqualTo(applied(thunk(value(givenName lineTo value(literal(10))))))
 	}
 
 	@Test

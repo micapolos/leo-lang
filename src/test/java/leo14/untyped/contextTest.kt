@@ -14,11 +14,11 @@ class ContextTest {
 	fun apply_rules() {
 		context
 			.apply(thunk(value("x")))
-			.assertEqualTo(thunk(value("two")))
+			.assertEqualTo(applied(thunk(value("two"))))
 
 		context
 			.apply(thunk(value("y")))
-			.assertEqualTo(thunk(value("one")))
+			.assertEqualTo(applied(thunk(value("one"))))
 
 		context
 			.apply(thunk(value("z")))

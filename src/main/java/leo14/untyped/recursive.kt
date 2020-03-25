@@ -4,5 +4,5 @@ data class Recursive(val context: Context)
 
 fun recursive(context: Context) = Recursive(context)
 
-fun Recursive.apply(context: Context, thunk: Thunk): Thunk? =
+fun Recursive.apply(context: Context, thunk: Thunk): Applied? =
 	TODO()

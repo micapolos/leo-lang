@@ -739,4 +739,16 @@ class EvalTest {
 			"height" lineTo script(literal(180)))
 			.assertEvalsTo(script("height" lineTo script(literal(180))))
 	}
+
+	@Test
+	fun write() {
+		script(
+			"foo" lineTo script(),
+			"write" lineTo script(
+				"bar" lineTo script(),
+				"gives" lineTo script("foobar")),
+			"foo" lineTo script(),
+			"bar" lineTo script())
+			.assertEvalsTo(script("foobar" lineTo script()))
+	}
 }
