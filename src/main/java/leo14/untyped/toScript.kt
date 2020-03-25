@@ -92,7 +92,7 @@ val Body.ruleScriptLine
 	get() =
 		when (this) {
 			is ThunkBody -> givesName lineTo thunk.script
-			is ScriptBody -> doesName lineTo script
+			is EvalBody -> doesName lineTo script
 			is RecurseBody -> recurseName lineTo script
 		}
 

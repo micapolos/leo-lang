@@ -52,6 +52,6 @@ class ContextTest {
 				context.push(
 					rule(
 						pattern(thunk(value("foo"))),
-						body(script("bar")))))
+						evalBody(script("bar")))))
 	}
 }

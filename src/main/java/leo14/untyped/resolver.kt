@@ -90,7 +90,6 @@ fun Context.resolve(thunk: Thunk): Resolver =
 	null
 		?: resolveContext(thunk)
 		?: resolveDefinitions(thunk)
-		?: resolveSwitch(thunk)
 		?: resolveStatic(thunk)
 
 fun Context.resolveStatic(thunk: Thunk): Resolver =
@@ -103,12 +102,6 @@ fun Context.resolveContext(thunk: Thunk): Resolver? =
 
 fun Context.resolveDefinitions(thunk: Thunk): Resolver? =
 	compile(thunk)?.resolver()
-
-fun Context.resolveSwitch(thunk: Thunk): Resolver? =
-	null
-//	thunk.value.resolveSwitchMatch?.let { switchMatch ->
-//		resolver(switchMatch.param).eval(switchMatch.body)
-//	}
 
 fun Context.resolveCompile(thunk: Thunk): Resolver? =
 	thunk.matchInfix(compileName) { lhs, rhs ->
@@ -160,7 +153,7 @@ fun Resolver.assert(script: Script): Resolver =
 
 fun Resolver.does(script: Script): Resolver =
 	compiler
-		.push(definition(rule(pattern(thunk), body(script))))
+		.push(definition(rule(pattern(thunk), evalBody(script))))
 		.resolver(value())
 
 fun Resolver.compile(script: Script): Resolver =

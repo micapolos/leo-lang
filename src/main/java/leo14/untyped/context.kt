@@ -47,10 +47,11 @@ fun Context.compile(thunk: Thunk): Context? =
 		?: compileDoes(thunk)
 		?: compileGives(thunk)
 		?: compileAs(thunk)
+//?: compileWrites(thunk)
 
 fun Context.compileDoes(thunk: Thunk): Context? =
 	thunk.matchInfix(doesName) { lhs, rhs ->
-		push(rule(pattern(lhs), body(rhs.script)))
+		push(rule(pattern(lhs), evalBody(rhs.script)))
 	}
 
 fun Context.compileGives(thunk: Thunk): Context? =
@@ -62,3 +63,8 @@ fun Context.compileAs(thunk: Thunk): Context? =
 	thunk.matchInfix(asName) { lhs, rhs ->
 		push(rule(pattern(rhs), body(lhs)))
 	}
+
+//fun Context.compileWrites(thunk: Thunk): Context? =
+//	thunk.matchInfix(writesName) { lhs, rhs ->
+//		push(rule(pattern(lhs), recurseBody(rhs.script)))
+//	}
