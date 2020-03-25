@@ -10,7 +10,6 @@ data class RecurseBody(val script: Script) : Body()
 fun body(thunk: Thunk): Body = ThunkBody(thunk)
 fun evalBody(script: Script): Body = EvalBody(script)
 fun recurseBody(script: Script): Body = RecurseBody(script)
-fun writeBody(script: Script): Body = RecurseBody(script)
 
 fun Body.apply(context: Context, given: Thunk): Thunk =
 	when (this) {

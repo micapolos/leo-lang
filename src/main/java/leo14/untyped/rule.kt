@@ -11,10 +11,6 @@ fun Rule.apply(context: Context, given: Thunk): Thunk? =
 		body.apply(context, given)
 	}
 
-val Function.recurseRule
-	get() =
-		rule(recursePattern, body(thunk(value(line(this)))))
-
 val Thunk.givenRule
 	get() =
 		rule(
