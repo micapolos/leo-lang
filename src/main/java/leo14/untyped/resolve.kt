@@ -290,7 +290,7 @@ val Sequence.resolveScript: Thunk?
 
 val Sequence.resolveSay: Thunk?
 	get() =
-		matchPostfixThunk("say") { lhs ->
+		matchPostfixThunk(sayName) { lhs ->
 			thunk(value()).also {
 				exec("say", "\"${lhs.script.sayString}\"")
 			}

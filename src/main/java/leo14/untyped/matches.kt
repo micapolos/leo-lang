@@ -1,47 +1,12 @@
 package leo14.untyped
 
-import leo14.*
-
-fun Script.matches(script: Script): Boolean =
-	if (script == script(anythingName)) true
-	else when (this) {
-		is UnitScript -> script is UnitScript
-		is LinkScript -> link.matches(script)
-	}
-
-fun ScriptLink.matches(script: Script) =
-	when (line) {
-		is LiteralScriptLine -> null
-		is FieldScriptLine ->
-			when (line.field.string) {
-				orName -> line.field.rhs.matches(script) || lhs.matches(script)
-				else -> null
-			}
-	} ?: (script is LinkScript && matches(script.link))
-
-fun ScriptLink.matches(scriptLink: ScriptLink) =
-	line.matches(scriptLink.line) && lhs.matches(scriptLink.lhs)
-
-fun ScriptLine.matches(scriptLine: ScriptLine) =
-	when (this) {
-		is LiteralScriptLine -> scriptLine is LiteralScriptLine && literal == scriptLine.literal
-		is FieldScriptLine -> field.matches(scriptLine)
-	}
-
-fun ScriptField.matches(scriptLine: ScriptLine) =
-	when (string) {
-		numberName -> scriptLine is LiteralScriptLine && scriptLine.literal is NumberLiteral
-		textName -> scriptLine is LiteralScriptLine && scriptLine.literal is StringLiteral
-		else -> scriptLine is FieldScriptLine && matches(scriptLine.field)
-	}
-
-fun ScriptField.matches(scriptField: ScriptField) =
-	string == scriptField.string && rhs.matches(scriptField.rhs)
+import leo14.Literal
+import leo14.NumberLiteral
+import leo14.StringLiteral
 
 fun Thunk.matches(thunk: Thunk): Boolean =
 	null
 		?: anythingMatches
-		?: orMatches(thunk)
 		?: eitherMatches(thunk)
 		?: rawMatches(thunk)
 
@@ -54,11 +19,6 @@ val Thunk.anythingMatches
 				}
 			}
 		}
-
-fun Thunk.orMatches(thunk: Thunk): Boolean? =
-	matchInfix(orName) { lhs, rhs ->
-		rhs.matches(thunk) || lhs.matches(thunk)
-	}
 
 fun Thunk.eitherMatches(thunk: Thunk): Boolean? =
 	matchPrefix(eitherName) { rhs ->
