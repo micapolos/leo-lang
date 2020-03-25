@@ -139,7 +139,7 @@ fun Resolver.assert(script: Script): Resolver =
 		.matchInfix(givesName) { lhs, rhs ->
 			compiler.evalThunk(lhs).let { lhsEvaled ->
 				compiler.evalThunk(rhs).let { rhsEvaled ->
-					if (lhsEvaled != rhsEvaled) error(
+					if (lhsEvaled != rhsEvaled) throw AssertionError(
 						errorName lineTo
 							lhs.value.plus(
 								value(
