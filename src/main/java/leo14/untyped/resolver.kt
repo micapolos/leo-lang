@@ -162,6 +162,11 @@ fun Resolver.does(script: Script): Resolver =
 		.push(definition(rule(pattern(thunk), evalBody(script))))
 		.resolver(value())
 
+fun Resolver.writes(script: Script): Resolver =
+	compiler
+		.push(definition(rule(pattern(thunk), compileBody(script))))
+		.resolver(value())
+
 fun Resolver.compile(script: Script): Resolver =
 	reader
 		.fold(script.tokenStack.reverse) { write(it)!! }

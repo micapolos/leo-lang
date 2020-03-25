@@ -1,6 +1,9 @@
 package leo14.untyped
 
 import leo.base.assertEqualTo
+import leo14.lineTo
+import leo14.literal
+import leo14.script
 import kotlin.test.Test
 
 class ResolverTest {
@@ -43,5 +46,24 @@ class ResolverTest {
 		resolver
 			.apply(plusName lineTo value("zar"))
 			.assertEqualTo(resolver.set(thunk(value("zoo" lineTo value(), plusName lineTo value("zar")))))
+	}
+
+	@Test
+	fun writes() {
+		context()
+			.resolver(thunk(value("defx")))
+			.writes(
+				script(
+					"x" lineTo script(),
+					"gives" lineTo script(literal(1))))
+			.assertEqualTo(
+				context(
+					rule(
+						pattern(thunk(value("defx"))),
+						compileBody(
+							script(
+								"x" lineTo script(),
+								"gives" lineTo script(literal(1))))))
+					.resolver())
 	}
 }

@@ -1,6 +1,8 @@
 package leo14.untyped
 
 import leo.base.assertEqualTo
+import leo14.lineTo
+import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
@@ -53,5 +55,25 @@ class ContextTest {
 					rule(
 						pattern(thunk(value("foo"))),
 						evalBody(script("bar")))))
+	}
+
+	@Test
+	fun applyCompile() {
+		val context = context(
+			rule(
+				pattern(thunk(value("defx"))),
+				compileBody(
+					script(
+						"quote" lineTo script(
+							"x" lineTo script(),
+							"gives" lineTo script(literal(1)))))))
+
+		context
+			.apply(thunk(value("defx")))
+			.assertEqualTo(
+				applied(
+					script(
+						"x" lineTo script(),
+						"gives" lineTo script(literal(1)))))
 	}
 }

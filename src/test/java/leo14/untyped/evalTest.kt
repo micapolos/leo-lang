@@ -751,4 +751,40 @@ class EvalTest {
 			"bar" lineTo script())
 			.assertEvalsTo(script("foobar" lineTo script()))
 	}
+
+	@Test
+	fun writes() {
+		script(
+			"defx" lineTo script(),
+			"writes" lineTo script(
+				"quote" lineTo script(
+					"x" lineTo script(),
+					"gives" lineTo script(literal(1)))))
+			.assertEvalsTo()
+	}
+
+	@Test
+	fun writes_apply() {
+		script(
+			"defx" lineTo script(),
+			"writes" lineTo script(
+				"quote" lineTo script(
+					"x" lineTo script(),
+					"gives" lineTo script(literal(1)))),
+			"defx" lineTo script())
+			.assertEvalsTo()
+	}
+
+	@Test
+	fun writes_apply_get() {
+		script(
+			"defx" lineTo script(),
+			"writes" lineTo script(
+				"quote" lineTo script(
+					"x" lineTo script(),
+					"gives" lineTo script(literal(1)))),
+			"defx" lineTo script(),
+			"x" lineTo script())
+			.assertEvalsTo(script(literal(1)))
+	}
 }
