@@ -87,7 +87,7 @@ fun Field.matches(field: Field) =
 
 fun Value.matches(name: String) =
 	when (this) {
-		EmptyValue -> name == nothingName
+		EmptyValue -> false
 		is SequenceValue -> sequence.matches(name)
 	}
 
