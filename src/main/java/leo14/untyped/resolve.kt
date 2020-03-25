@@ -2,7 +2,6 @@ package leo14.untyped
 
 import leo.base.ifOrNull
 import leo.java.lang.exec
-import leo13.fold
 import leo13.thisName
 import leo14.*
 
@@ -50,7 +49,6 @@ val Sequence.resolve: Thunk?
 			?: resolveAnythingEqualsAnything
 			?: resolveNative
 			?: resolveAutoMake
-			?: resolveFold
 			?: resolveForce
 			?: resolveScript
 			?: resolveSay
@@ -255,25 +253,6 @@ val Sequence.resolvePrinted: Thunk?
 	get() =
 		matchPostfixThunk(printedName) { lhs ->
 			lhs.also { println(lhs) }
-		}
-
-val Sequence.resolveFold: Thunk?
-	get() =
-		matchInfixThunk(doingName) { lhs, rhs ->
-			rhs.matchFunction { function ->
-				lhs.value.sequenceOrNull?.matchInfixThunk(foldName) { folded, items ->
-					items.value.contentsOrNull?.value?.let { contents ->
-						folded.fold(contents.lineStack) { line ->
-							function
-								.copy(context = function.context.push(
-									rule(
-										pattern(thunk(value(foldedName))),
-										body(thunk(value(foldedName lineTo value(line)))))))
-								.apply(this)
-						}
-					}
-				}
-			}
 		}
 
 val Sequence.resolveForce: Thunk?
