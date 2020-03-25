@@ -6,12 +6,12 @@ sealed class Body
 data class ThunkBody(val thunk: Thunk) : Body()
 data class EvalBody(val script: Script) : Body()
 data class RecurseBody(val script: Script) : Body()
-data class CompileBody(val script: Script) : Body()
+data class MacroBody(val script: Script) : Body()
 
 fun body(thunk: Thunk): Body = ThunkBody(thunk)
 fun evalBody(script: Script): Body = EvalBody(script)
 fun recurseBody(script: Script): Body = RecurseBody(script)
-fun compileBody(script: Script): Body = CompileBody(script)
+fun compileBody(script: Script): Body = MacroBody(script)
 
 fun Body.apply(context: Context, given: Thunk): Applied =
 	when (this) {
@@ -21,5 +21,5 @@ fun Body.apply(context: Context, given: Thunk): Applied =
 			.resolver(given.value.sequenceOrNull!!.tail)
 			.compile(script)
 			.thunk)
-		is CompileBody -> applied(function(context, script).apply(given).value.script)
+		is MacroBody -> applied(function(context, script).apply(given).value.script)
 	}

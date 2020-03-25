@@ -48,6 +48,5 @@ val CodeOp.fragmentParent: FragmentParent
 			is UnquotedDoCodeOp -> unquoted.fragment.parent(begin(doName))
 			is UnquotedRecursivelyCodeOp -> unquoted.fragment.parent(begin(recursivelyName))
 			is UnquotedMatchCodeOp -> unquoted.fragment.parent(begin(matchName))
-			is UnquotedWriteCodeOp -> unquoted.fragment.parent(begin(writeName))
-			is UnquotedWritesCodeOp -> unquoted.fragment.parent(begin(writesName))
+			is UnquotedExpandsCodeOp -> unquoted.fragment.parent(begin(expandsName))
 		}

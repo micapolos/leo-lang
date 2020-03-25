@@ -9,7 +9,7 @@ class WritesTest {
 			assert {
 				anything
 				def { anything }
-				writes {
+				expands {
 					given.previous.given.content
 					quote {
 						gives {

@@ -741,22 +741,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun write() {
-		script(
-			"foo" lineTo script(),
-			"write" lineTo script(
-				"bar" lineTo script(),
-				"gives" lineTo script("foobar")),
-			"foo" lineTo script(),
-			"bar" lineTo script())
-			.assertEvalsTo(script("foobar" lineTo script()))
-	}
-
-	@Test
-	fun writes() {
+	fun expands() {
 		script(
 			"defx" lineTo script(),
-			"writes" lineTo script(
+			"expands" lineTo script(
 				"quote" lineTo script(
 					"x" lineTo script(),
 					"gives" lineTo script(literal(1)))))
@@ -764,10 +752,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun writes_apply() {
+	fun expands_apply() {
 		script(
 			"defx" lineTo script(),
-			"writes" lineTo script(
+			"expands" lineTo script(
 				"quote" lineTo script(
 					"x" lineTo script(),
 					"gives" lineTo script(literal(1)))),
@@ -776,10 +764,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun writes_apply_get() {
+	fun expands_apply_get() {
 		script(
 			"defx" lineTo script(),
-			"writes" lineTo script(
+			"expands" lineTo script(
 				"quote" lineTo script(
 					"x" lineTo script(),
 					"gives" lineTo script(literal(1)))),
