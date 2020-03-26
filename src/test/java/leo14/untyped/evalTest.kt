@@ -731,4 +731,23 @@ class EvalTest {
 			"x" lineTo script())
 			.assertEvalsTo(script(literal(1)))
 	}
+
+	@Test
+	fun context() {
+		script(
+			"x" lineTo script(),
+			"gives" lineTo script(literal(1)),
+			"y" lineTo script(),
+			"does" lineTo script(literal(1)),
+			"z" lineTo script(),
+			"expands" lineTo script(literal(1)),
+			"context" lineTo script())
+			.assertEvalsTo(
+				"x" lineTo script(),
+				"gives" lineTo script(literal(1)),
+				"y" lineTo script(),
+				"does" lineTo script(literal(1)),
+				"z" lineTo script(),
+				"expands" lineTo script(literal(1)))
+	}
 }

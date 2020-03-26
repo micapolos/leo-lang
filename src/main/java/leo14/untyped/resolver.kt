@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo13.contextName
 import leo13.expectedName
 import leo13.fold
 import leo13.recursiveName
@@ -95,6 +96,7 @@ fun Context.resolve(thunk: Thunk): Resolver =
 fun Context.resolveStatic(thunk: Thunk): Resolver =
 	null
 		?: resolveCompile(thunk)
+		?: resolveCompiled(thunk)
 		?: resolver(thunk)
 
 fun Context.resolveContext(thunk: Thunk): Resolver? =
@@ -112,6 +114,15 @@ fun Context.resolveDefinitions(thunk: Thunk): Resolver? =
 fun Context.resolveCompile(thunk: Thunk): Resolver? =
 	thunk.matchInfix(compileName) { lhs, rhs ->
 		resolver(lhs).compile(rhs.script)
+	}
+
+fun Context.resolveCompiled(thunk: Thunk): Resolver? =
+	thunk.matchInfix(contextName) { lhs, rhs ->
+		lhs.matchEmpty {
+			rhs.matchEmpty {
+				resolver(thunk(functionScript.value))
+			}
+		}
 	}
 
 fun Resolver.set(thunk: Thunk): Resolver =
