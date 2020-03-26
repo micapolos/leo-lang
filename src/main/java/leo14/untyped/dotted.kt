@@ -32,7 +32,7 @@ fun Appendable.appendDotted(link: ScriptLink, indent: Int): Appendable =
 	this
 		.appendDotted(link.lhs, indent)
 		.runIf(!link.lhs.isEmpty) {
-			if (link.lhs.isSimpleLhs && link.line.isName) append(".")
+			if (link.lhs.isDottedLhs && link.line.isDottedRhs) append(".")
 			else append("\n").appendIndent(indent)
 		}
 		.appendDotted(link.line, indent)
@@ -65,16 +65,16 @@ val ScriptLink.isSimpleRhs: Boolean
 	get() =
 		isDotted || lhs.isEmpty
 
-val Script.isSimpleLhs: Boolean
+val Script.isDottedLhs: Boolean
 	get() =
 		when (this) {
 			is UnitScript -> false
-			is LinkScript -> link.isSimpleLhs
+			is LinkScript -> link.isDottedLhs
 		}
 
-val ScriptLink.isSimpleLhs: Boolean
+val ScriptLink.isDottedLhs: Boolean
 	get() =
-		line.isSimple
+		line.isName
 
 val Script.isDotted: Boolean
 	get() =
@@ -85,7 +85,11 @@ val Script.isDotted: Boolean
 
 val ScriptLink.isDotted: Boolean
 	get() =
-		lhs.isDotted && line.isName
+		lhs.isDotted && line.isDottedRhs
+
+val ScriptLine.isDottedRhs: Boolean
+	get() =
+		isName
 
 val ScriptLine.isName: Boolean
 	get() =

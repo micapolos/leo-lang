@@ -39,7 +39,9 @@ class DottedTest {
 					"  30",
 					"names foo.bar.zoo",
 					"mixed",
-					"  10.foo.bar",
-					"  20.bar"))
+					"  10",
+					"  foo.bar",
+					"  20",
+					"  bar"))
 	}
 }
