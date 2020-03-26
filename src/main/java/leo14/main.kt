@@ -10,20 +10,22 @@ import leo14.typed.compiler.js.stdScript
 import leo14.typed.compiler.memory
 import leo14.typed.compiler.parse
 import leo14.typed.compiler.preludeMemory
+import leo14.untyped.dsl2.library.prelude
+import leo14.untyped.dsl2.read
 import leo14.untyped.emptyReader
 import leo14.untyped.stringCharReducer
 import java.io.InputStreamReader
 
 val errorTriggerCount = 7
-val prelude = true
-val memory = if (prelude) emptyContext.preludeMemory() else memory()
+val importPrelude = true
+val memory = if (importPrelude) emptyContext.preludeMemory() else memory()
 val untyped = true
 
 fun main() {
 	if (untyped)
-		run(emptyReader.stringCharReducer)
+		run(emptyReader.runIf(importPrelude) { read(prelude) }.stringCharReducer)
 	else
-		run(emptyContext.compiler(memory).runIf(prelude) { parse(stdScript) }.tokenReader.charReader)
+		run(emptyContext.compiler(memory).runIf(importPrelude) { parse(stdScript) }.tokenReader.charReader)
 }
 
 fun run(charReader: CharReader) {

@@ -54,7 +54,6 @@ val Sequence.resolve: Thunk?
 			?: resolveAutoMake
 			?: resolveForce
 			?: resolveScript
-			?: resolveSay
 			?: resolveExec
 
 val Sequence.resolveFunctionApplyAnything: Thunk?
@@ -269,14 +268,6 @@ val Sequence.resolveScript: Thunk?
 	get() =
 		matchPostfixThunk(scriptName) { lhs ->
 			thunk(lhs.script.value)
-		}
-
-val Sequence.resolveSay: Thunk?
-	get() =
-		matchPostfixThunk(sayName) { lhs ->
-			thunk(value()).also {
-				exec("say", "\"${lhs.script.sayString}\"")
-			}
 		}
 
 val Sequence.resolveExec: Thunk?

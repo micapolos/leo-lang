@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo.base.ifNull
 import leo14.*
 
 sealed class Reader
@@ -265,3 +266,12 @@ fun Unquoted.write(literal: Literal): Reader? =
 
 fun Code.write(literal: Literal): Reader? =
 	CodeReader(copy(script = script.plus(scriptLine(literal))))
+
+val Reader.rootResolverOrNull: Resolver?
+	get() =
+		this
+			.run { this as? UnquotedReader }
+			?.unquoted
+			?.run {
+				opOrNull.ifNull { resolver }
+			}
