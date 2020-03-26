@@ -13,6 +13,6 @@ val system = library_ {
 				plus { text("\"") }
 			}
 		}
-		delete
+		clear
 	}
 }
