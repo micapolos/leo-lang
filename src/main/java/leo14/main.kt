@@ -1,10 +1,7 @@
 package leo14
 
-import leo.ansi
+import leo.*
 import leo.base.runIf
-import leo.bellChar
-import leo.clear
-import leo.home
 import leo.java.lang.sttyPrivateMode
 import leo14.reader.*
 import leo14.typed.compiler.compiler
@@ -37,11 +34,18 @@ fun run(reducer: Reducer<String, Char>) {
 	sttyPrivateMode()
 	val undoableReducerVariable = variable(undoable(reducer))
 	var errorToPrint: Throwable? = null
+	var assertionError: AssertionError? = null
 	var errorCount = 0
 	val reader = InputStreamReader(System.`in`)
 	var printDebug = false
 	while (true) {
 		print(undoableReducerVariable.current.lastDone)
+		assertionError?.run {
+			print("${ansi.clear}${ansi.home}")
+			print(ansi.red)
+			println(message)
+			print(ansi.reset)
+		}
 		errorToPrint?.run {
 			println("ERROR")
 			printStackTrace()
@@ -55,11 +59,13 @@ fun run(reducer: Reducer<String, Char>) {
 		val char = reader.read()
 		if (char == -1 || char == 4) break
 		else if (char == 127) {
-			if (errorToPrint != null) errorToPrint = null
-			else undoableReducerVariable.update { undoIfPossible }
+			if (errorToPrint != null || assertionError != null) {
+				errorToPrint = null
+				assertionError = null
+			} else undoableReducerVariable.update { undoIfPossible }
 		} else if (char == 27) {
 			printDebug = true
-		} else if (errorToPrint == null) try {
+		} else if (errorToPrint == null && assertionError == null) try {
 			undoableReducerVariable.update {
 				doIt {
 					reduce(char.toChar()).apply {
@@ -70,6 +76,9 @@ fun run(reducer: Reducer<String, Char>) {
 				}
 			}
 			errorCount = errorTriggerCount
+		} catch (e: AssertionError) {
+			print(bellChar)
+			assertionError = e
 		} catch (e: Throwable) {
 			print(bellChar)
 			if (errorCount-- < 0) errorToPrint = e
