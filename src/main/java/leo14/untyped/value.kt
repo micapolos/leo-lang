@@ -53,15 +53,15 @@ fun value(name: String) = value(line(name))
 fun value(literal: Literal) = value(line(literal))
 operator fun Value.plus(line: Line) = value(this sequenceTo line)
 
-tailrec fun <R> R.foldValues(value: Value, fn: R.(Line) -> R): R =
+tailrec fun <R> R.foldLines(value: Value, fn: R.(Line) -> R): R =
 	when (value) {
 		EmptyValue -> this
-		is SequenceValue -> fn(value.sequence.head).foldValues(value.sequence.tail.value, fn)
+		is SequenceValue -> fn(value.sequence.head).foldLines(value.sequence.tail.value, fn)
 	}
 
 val Value.lineStack: Stack<Line>
 	get() =
-		stack<Line>().foldValues(this) { push(it) }
+		stack<Line>().foldLines(this) { push(it) }
 
 operator fun Value.plus(value: Value) = fold(value.lineStack) { plus(it) }
 

@@ -2,6 +2,9 @@ package leo14.untyped
 
 import leo.base.ifOrNull
 import leo.java.lang.exec
+import leo13.array
+import leo13.mapOrNull
+import leo13.reverse
 import leo13.thisName
 import leo14.*
 
@@ -52,6 +55,7 @@ val Sequence.resolve: Thunk?
 			?: resolveForce
 			?: resolveScript
 			?: resolveSay
+			?: resolveExec
 
 val Sequence.resolveFunctionApplyAnything: Thunk?
 	get() =
@@ -272,5 +276,20 @@ val Sequence.resolveSay: Thunk?
 		matchPostfixThunk(sayName) { lhs ->
 			thunk(value()).also {
 				exec("say", "\"${lhs.script.sayString}\"")
+			}
+		}
+
+val Sequence.resolveExec: Thunk?
+	get() =
+		matchInfixThunk(execName) { lhs, rhs ->
+			lhs.matchEmpty {
+				rhs
+					.value
+					.lineStack
+					.reverse
+					.mapOrNull { literalOrNull?.stringOrNull }
+					?.let { args ->
+						thunk(value(literal(exec(*args.array))))
+					}
 			}
 		}

@@ -5,7 +5,7 @@ fun exec(vararg command: String): String {
 	val process = runtime.exec(command)
 	val string = process.inputStream.reader().readText()
 	val exitCode = process.waitFor()
-	if (exitCode != 0) error("exec($command) = $exitCode")
+	if (exitCode != 0) error("exec(${command.contentToString()}) = $exitCode")
 	else return string
 }
 
