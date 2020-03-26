@@ -367,8 +367,18 @@ val Literal.name
 			is StringLiteral -> "text"
 		}
 
-operator fun String.invoke(vararg lines: ScriptLine): ScriptLine =
-	this lineTo script(*lines)
+operator fun String.invoke(vararg lines: Any): ScriptLine =
+	this lineTo script(*lines.map { it.anyLine }.toTypedArray())
+
+val Any.anyLine: ScriptLine
+	get() =
+		when (this) {
+			is Int -> line(literal(this))
+			is Double -> line(literal(this))
+			is String -> line(literal(this))
+			is ScriptLine -> this
+			else -> error("$this.anyLine")
+		}
 
 val Script.reflectScriptLine
 	get() =
