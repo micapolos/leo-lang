@@ -9,6 +9,7 @@ import leo14.untyped.rootResolverOrNull
 fun X.number(int: Int) = x(leo14.token(leo14.literal(int)))
 fun X.number(double: Double) = x(leo14.token(leo14.literal(double)))
 fun X.text(string: String) = x(leo14.token(leo14.literal(string)))
+val nothing_ = X
 
 fun run_(f: F): Unit = readerParameter.runWith(emptyReader) { X.f() }
 fun resolver_(f: F): Resolver = run_(f).run { readerParameter.value.rootResolverOrNull!! }
