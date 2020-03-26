@@ -206,8 +206,7 @@ class EvalTest {
 				"false" lineTo script(),
 				"true" lineTo script()),
 			"type" lineTo script(),
-			"does" lineTo script(
-				"replace" lineTo script("boolean")))
+			"does" lineTo script("boolean"))
 
 		rule
 			.plus(
@@ -243,22 +242,6 @@ class EvalTest {
 					"x" lineTo script(literal(10)),
 					"y" lineTo script(literal(20)),
 					"z" lineTo script(literal(30))))
-	}
-
-	@Test
-	fun anythingChangeToAnything() {
-		script(
-			"foo" lineTo script(),
-			"replace" lineTo script("bar"))
-			.assertEvalsTo(script("bar"))
-	}
-
-	@Test
-	fun anythingDelete() {
-		script(
-			"minus" lineTo script(),
-			"delete" lineTo script())
-			.assertEvalsTo()
 	}
 
 	@Test

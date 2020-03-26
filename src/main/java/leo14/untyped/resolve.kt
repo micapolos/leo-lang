@@ -30,8 +30,6 @@ val Sequence.resolve: Thunk?
 			?: resolveAnythingAppendAnything
 			?: resolveAnythingItAnything
 			?: resolveAnythingQuoteAnything
-			?: resolveAnythingReplaceAnything
-			?: resolveAnythingDelete
 			?: resolveMinusNumber
 			?: resolveNumberPlusNumber
 			?: resolveNumberMinusNumber
@@ -109,16 +107,6 @@ val Sequence.resolveAnythingQuoteAnything: Thunk?
 		matchInfixThunk(quoteName) { lhs, rhs ->
 			lhs.plus(rhs)
 		}
-
-val Sequence.resolveAnythingReplaceAnything: Thunk?
-	get() =
-		matchInfixThunk(replaceName) { _, rhs ->
-			rhs
-		}
-
-val Sequence.resolveAnythingDelete: Thunk?
-	get() =
-		matchPostfixThunk(deleteName) { thunk(value()) }
 
 val Sequence.resolveMake: Thunk?
 	get() =
