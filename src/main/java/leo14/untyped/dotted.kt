@@ -74,7 +74,7 @@ val Script.isDottedLhs: Boolean
 
 val ScriptLink.isDottedLhs: Boolean
 	get() =
-		line.isName
+		line.isSimple
 
 val Script.isDotted: Boolean
 	get() =
