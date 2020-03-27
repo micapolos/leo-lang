@@ -5,20 +5,16 @@ import leo14.untyped.dsl2.*
 val text = library_ {
 	text.lines
 	does {
-		given.text
-		native { string }
+		given.text.native.string
 		invoke {
 			text("split")
-			it {
-				text("\n")
-				native { string }
-			}
+			it { text("\n").native.string }
 		}
 		list
 		reverse
 		recursively {
 			do_ {
-				given.list.content
+				given.list.object_
 				equals_ { nothing_ }
 				match {
 					true_ { given.reverse }
@@ -37,7 +33,7 @@ val text = library_ {
 		lines
 		recursively {
 			do_ {
-				given.reverse.content
+				given.reverse.object_
 				equals_ { nothing_ }
 				match {
 					true_ { given.lines }
@@ -54,4 +50,16 @@ val text = library_ {
 			}
 		}
 	}
+
+	assert {
+		text("foo\nbar").lines
+		gives {
+			lines {
+				text("foo")
+				text("bar")
+			}
+		}
+	}
 }
+
+fun main() = run_(text)
