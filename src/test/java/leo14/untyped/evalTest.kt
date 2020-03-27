@@ -140,9 +140,7 @@ class EvalTest {
 	@Test
 	fun accessNative() {
 		script(
-			"hello" lineTo script(
-				line(literal(123)),
-				"native" lineTo script("int")),
+			"hello" lineTo script(line(literal(123)), "native"(), "int"()),
 			"native" lineTo script())
 			.assertEvalsTo("native" lineTo script(literal(123.toString())))
 	}
@@ -407,7 +405,7 @@ class EvalTest {
 	fun nativeClass() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native" lineTo script("class"))
+			"native"(), "class"())
 			.assertEvalsTo("native" lineTo script(literal(java.lang.StringBuilder::class.java.toString())))
 	}
 
@@ -415,7 +413,7 @@ class EvalTest {
 	fun textNativeNew() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native" lineTo script("new"))
+			"native"(), "class"(), "new"())
 			.assertEvalsTo("native" lineTo script(literal(java.lang.StringBuilder().toString())))
 	}
 
@@ -423,13 +421,11 @@ class EvalTest {
 	fun javaInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native" lineTo script("class"),
+			"native"(), "class"(),
 			"invoke" lineTo script(literal("newInstance")),
 			"invoke" lineTo script(
 				line(literal("append")),
-				"it" lineTo script(
-					line(literal("Hello, world!")),
-					"native" lineTo script("string"))))
+				"it" lineTo script(line(literal("Hello, world!")), "native"(), "string"())))
 			.assertEvalsTo(
 				"native" lineTo script(
 					literal(StringBuilder().append("Hello, world!").toString())))
@@ -439,7 +435,7 @@ class EvalTest {
 	fun anyInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native" lineTo script("class"),
+			"native"(), "class"(),
 			"invoke" lineTo script(literal("newInstance")))
 			.assertEvalsTo("native" lineTo script(literal(StringBuilder().toString())))
 	}

@@ -28,27 +28,23 @@ val Sequence.resolveNative: Thunk?
 
 val Sequence.resolveJavaString: Thunk?
 	get() =
-		matchInfix(nativeName) { lhs, rhs ->
-			rhs.matchPrefix(stringName) { rhs ->
-				rhs.matchEmpty {
-					lhs.matchText { text ->
-						thunk(value(line(native(text))))
-					}
+		matchPostfix(stringName) { lhs ->
+			lhs.matchPostfix(nativeName) { lhs ->
+				lhs.matchText { text ->
+					thunk(value(line(native(text))))
 				}
 			}
 		}
 
 val Sequence.resolveNativeInt: Thunk?
 	get() =
-		matchInfix(nativeName) { lhs, rhs ->
-			rhs.matchPrefix(intName) { rhs ->
-				rhs.matchEmpty {
-					lhs.matchNumber { number ->
-						try {
-							thunk(value(line(native(number.bigDecimal.intValueExact()))))
-						} catch (e: ArithmeticException) {
-							null
-						}
+		matchPostfix(intName) { lhs ->
+			lhs.matchPostfix(nativeName) { lhs ->
+				lhs.matchNumber { number ->
+					try {
+						thunk(value(line(native(number.bigDecimal.intValueExact()))))
+					} catch (e: ArithmeticException) {
+						null
 					}
 				}
 			}
@@ -56,39 +52,33 @@ val Sequence.resolveNativeInt: Thunk?
 
 val Sequence.resolveNativeFloat: Thunk?
 	get() =
-		matchInfix(nativeName) { lhs, rhs ->
-			rhs.matchPrefix(floatName) { rhs ->
-				rhs.matchEmpty {
-					lhs.matchNumber { number ->
-						thunk(value(line(native(number.bigDecimal.toFloat()))))
-					}
+		matchPostfix(floatName) { lhs ->
+			lhs.matchPostfix(nativeName) { lhs ->
+				lhs.matchNumber { number ->
+					thunk(value(line(native(number.bigDecimal.toFloat()))))
 				}
 			}
 		}
 
 val Sequence.resolveNativeDouble: Thunk?
 	get() =
-		matchInfix(nativeName) { lhs, rhs ->
-			rhs.matchPrefix(doubleName) { rhs ->
-				rhs.matchEmpty {
-					lhs.matchNumber { number ->
-						thunk(value(line(native(number.bigDecimal.toDouble()))))
-					}
+		matchPostfix(doubleName) { lhs ->
+			lhs.matchPostfix(nativeName) { lhs ->
+				lhs.matchNumber { number ->
+					thunk(value(line(native(number.bigDecimal.toDouble()))))
 				}
 			}
 		}
 
 val Sequence.resolveNativeClass: Thunk?
 	get() =
-		matchInfix(nativeName) { lhs, rhs ->
-			rhs.matchPrefix(className) { rhs ->
-				rhs.matchEmpty {
-					lhs.matchText { text ->
-						try {
-							thunk(value(line(native(javaClass.classLoader.loadClass(text)))))
-						} catch (x: ClassNotFoundException) {
-							null
-						}
+		matchPostfix(className) { lhs ->
+			lhs.matchPostfix(nativeName) { lhs ->
+				lhs.matchText { text ->
+					try {
+						thunk(value(line(native(javaClass.classLoader.loadClass(text)))))
+					} catch (x: ClassNotFoundException) {
+						null
 					}
 				}
 			}
@@ -119,19 +109,15 @@ val Sequence.resolveNativeInvoke: Thunk?
 
 val Sequence.resolveNativeNew: Thunk?
 	get() =
-		matchInfix(nativeName) { lhs, rhs ->
-			rhs.matchPrefix(newName) { rhs ->
-				lhs.matchText { name ->
+		matchInfix(newName) { lhs, rhs ->
+			lhs.matchNative { native ->
+				(native.obj as? Class<*>)?.let { class_ ->
 					rhs.value.lineStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 						args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
 							thunk(value(
 								line(
 									native(
-										javaClass
-											.classLoader
-											.loadClass(name)
-											.getConstructor(*types)
-											.newInstance(*args)))))
+										class_.getConstructor(*types).newInstance(*args)))))
 						}
 					}
 				}
