@@ -50,7 +50,7 @@ fun <R> Thunk.matchNative(fn: (Native) -> R): R? =
 	value.matchNative(fn)
 
 fun <R> Thunk.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
-	value.sequenceOrNull?.matchInfixThunk(name, fn)
+	value.sequenceOrNull?.matchInfix(name, fn)
 
 fun <R> Thunk.matchPrefix(name: String, fn: (Thunk) -> R) =
 	matchInfix(name) { lhs, rhs ->
@@ -66,20 +66,20 @@ fun <R> Thunk.matchPostfix(name: String, fn: (Thunk) -> R) =
 		}
 	}
 
-fun <R> Sequence.matchInfixThunk(name: String, fn: (Thunk, Thunk) -> R) =
-	head.matchThunk(name) { rhs ->
+fun <R> Sequence.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
+	head.match(name) { rhs ->
 		fn(tail, rhs)
 	}
 
-fun <R> Sequence.matchPostfixThunk(name: String, fn: (Thunk) -> R) =
-	matchInfixThunk(name) { lhs, rhs ->
+fun <R> Sequence.matchPostfix(name: String, fn: (Thunk) -> R) =
+	matchInfix(name) { lhs, rhs ->
 		rhs.matchEmpty {
 			fn(lhs)
 		}
 	}
 
 fun <R> Sequence.matchSimple(name: String, fn: () -> R) =
-	matchInfixThunk(name) { lhs, rhs ->
+	matchInfix(name) { lhs, rhs ->
 		rhs.matchEmpty {
 			lhs.matchEmpty {
 				fn()
@@ -90,12 +90,12 @@ fun <R> Sequence.matchSimple(name: String, fn: () -> R) =
 fun <R> Line.matchField(fn: (Field) -> R): R? =
 	(this as? FieldLine)?.field?.let(fn)
 
-fun <R> Line.matchThunk(string: String, fn: (Thunk) -> R): R? =
+fun <R> Line.match(string: String, fn: (Thunk) -> R): R? =
 	(this as? FieldLine)?.field?.let { field ->
-		field.matchThunk(string, fn)
+		field.match(string, fn)
 	}
 
-fun <R> Field.matchThunk(name: String, fn: (Thunk) -> R) =
+fun <R> Field.match(name: String, fn: (Thunk) -> R) =
 	if (this.name == name) fn(thunk)
 	else null
 

@@ -28,7 +28,7 @@ val Sequence.resolveNative: Thunk?
 
 val Sequence.resolveJavaString: Thunk?
 	get() =
-		matchInfixThunk(nativeName) { lhs, rhs ->
+		matchInfix(nativeName) { lhs, rhs ->
 			rhs.matchPrefix(stringName) { rhs ->
 				rhs.matchEmpty {
 					lhs.matchText { text ->
@@ -40,7 +40,7 @@ val Sequence.resolveJavaString: Thunk?
 
 val Sequence.resolveNativeInt: Thunk?
 	get() =
-		matchInfixThunk(nativeName) { lhs, rhs ->
+		matchInfix(nativeName) { lhs, rhs ->
 			rhs.matchPrefix(intName) { rhs ->
 				rhs.matchEmpty {
 					lhs.matchNumber { number ->
@@ -56,7 +56,7 @@ val Sequence.resolveNativeInt: Thunk?
 
 val Sequence.resolveNativeFloat: Thunk?
 	get() =
-		matchInfixThunk(nativeName) { lhs, rhs ->
+		matchInfix(nativeName) { lhs, rhs ->
 			rhs.matchPrefix(floatName) { rhs ->
 				rhs.matchEmpty {
 					lhs.matchNumber { number ->
@@ -68,7 +68,7 @@ val Sequence.resolveNativeFloat: Thunk?
 
 val Sequence.resolveNativeDouble: Thunk?
 	get() =
-		matchInfixThunk(nativeName) { lhs, rhs ->
+		matchInfix(nativeName) { lhs, rhs ->
 			rhs.matchPrefix(doubleName) { rhs ->
 				rhs.matchEmpty {
 					lhs.matchNumber { number ->
@@ -80,7 +80,7 @@ val Sequence.resolveNativeDouble: Thunk?
 
 val Sequence.resolveNativeClass: Thunk?
 	get() =
-		matchInfixThunk(nativeName) { lhs, rhs ->
+		matchInfix(nativeName) { lhs, rhs ->
 			rhs.matchPrefix(className) { rhs ->
 				rhs.matchEmpty {
 					lhs.matchText { text ->
@@ -97,7 +97,7 @@ val Sequence.resolveNativeClass: Thunk?
 
 val Sequence.resolveNativeInvoke: Thunk?
 	get() =
-		matchInfixThunk(invokeName) { lhs, rhs ->
+		matchInfix(invokeName) { lhs, rhs ->
 			lhs.matchNative { native ->
 				rhs.value.lineStack.splitOrNull?.let { (args, name) ->
 					name.literalOrNull?.stringOrNull?.let { name ->
@@ -119,7 +119,7 @@ val Sequence.resolveNativeInvoke: Thunk?
 
 val Sequence.resolveNativeNew: Thunk?
 	get() =
-		matchInfixThunk(nativeName) { lhs, rhs ->
+		matchInfix(nativeName) { lhs, rhs ->
 			rhs.matchPrefix(newName) { rhs ->
 				lhs.matchText { name ->
 					rhs.value.lineStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
@@ -140,7 +140,7 @@ val Sequence.resolveNativeNew: Thunk?
 
 val Sequence.resolveNativeText: Thunk?
 	get() =
-		matchPostfixThunk(textName) { lhs ->
+		matchPostfix(textName) { lhs ->
 			lhs.matchNative { native ->
 				(native.obj as? String)?.let { string ->
 					thunk(value(literal(string)))
@@ -150,7 +150,7 @@ val Sequence.resolveNativeText: Thunk?
 
 val Sequence.resolveNativeNumber: Thunk?
 	get() =
-		matchPostfixThunk(numberName) { lhs ->
+		matchPostfix(numberName) { lhs ->
 			lhs.matchNative { native ->
 				null
 					?: (native.obj as? Byte)?.let { thunk(value(literal(it.toInt()))) }
@@ -164,7 +164,7 @@ val Sequence.resolveNativeNumber: Thunk?
 
 val Sequence.resolveNativeList: Thunk?
 	get() =
-		matchPostfixThunk(listName) { lhs ->
+		matchPostfix(listName) { lhs ->
 			lhs.matchNative { native ->
 				(native.obj as? Array<Any>)?.let { array ->
 					thunk(
