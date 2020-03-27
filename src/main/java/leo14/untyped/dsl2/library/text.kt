@@ -3,6 +3,30 @@ package leo14.untyped.dsl2.library
 import leo14.untyped.dsl2.*
 
 val text = library_ {
+	text.length
+	does {
+		given.text.native.string
+		invoke { text("length") }
+		number
+	}
+	assert { text("foo").length.gives { number(3) } }
+
+	text.lower.case
+	does {
+		given.text.native.string
+		invoke { text("toLowerCase") }
+		text
+	}
+	assert { text("FoO").lower.case.gives { text("foo") } }
+
+	text.upper.case
+	does {
+		given.text.native.string
+		invoke { text("toUpperCase") }
+		text
+	}
+	assert { text("FoO").upper.case.gives { text("FOO") } }
+
 	text.lines
 	does {
 		given.text.native.string
