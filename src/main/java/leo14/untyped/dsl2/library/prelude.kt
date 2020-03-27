@@ -4,5 +4,6 @@ import leo14.untyped.dsl2.library_
 
 val prelude = library_ {
 	core()
+	text()
 	system()
 }

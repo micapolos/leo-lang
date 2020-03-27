@@ -24,6 +24,7 @@ val Sequence.resolveNative: Thunk?
 			?: resolveNativeInvoke
 			?: resolveNativeText
 			?: resolveNativeNumber
+			?: resolveNativeList
 
 val Sequence.resolveJavaString: Thunk?
 	get() =
@@ -158,6 +159,22 @@ val Sequence.resolveNativeNumber: Thunk?
 					?: (native.obj as? Long)?.let { thunk(value(literal(it))) }
 					?: (native.obj as? Float)?.let { thunk(value(literal(it.toDouble()))) }
 					?: (native.obj as? Double)?.let { thunk(value(literal(it))) }
+			}
+		}
+
+val Sequence.resolveNativeList: Thunk?
+	get() =
+		matchPostfixThunk(listName) { lhs ->
+			lhs.matchNative { native ->
+				(native.obj as? Array<Any>)?.let { array ->
+					thunk(
+						value(
+							"list" lineTo thunk(
+								value(
+									*array
+										.map { line(native(it)) }
+										.toTypedArray()))))
+				}
 			}
 		}
 

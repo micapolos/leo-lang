@@ -3,7 +3,7 @@ package leo14
 sealed class Literal
 
 data class StringLiteral(val string: String) : Literal() {
-	override fun toString() = "\"$string\""
+	override fun toString() = string.literalString
 }
 
 data class NumberLiteral(val number: Number) : Literal() {
@@ -42,3 +42,7 @@ val Any.anyLiteral: Literal
 val Literal.reflectScriptLine
 	get() =
 		"literal" lineTo script(this)
+
+val String.literalString
+	get() =
+		"\"" + replace("\n", "\\n").replace("\t", "\\t").replace("\"", "\\") + "\""

@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo14.invoke
 import leo14.line
 import leo14.lineTo
 import leo14.literal
@@ -732,5 +733,30 @@ class EvalTest {
 				"does" lineTo script(literal(1)),
 				"z" lineTo script(),
 				"expands" lineTo script(literal(1)))
+	}
+
+	@Test
+	fun op_field() {
+		script("x"(10), "op"()).assertEvalsTo(script("x"()))
+	}
+
+	@Test
+	fun op_number() {
+		script(line(literal(10)), "op"()).assertEvalsTo(script("number"()))
+	}
+
+	@Test
+	fun op_string() {
+		script(line(literal("foo")), "op"()).assertEvalsTo(script("text"()))
+	}
+
+	@Test
+	fun op_empty() {
+		script("op"()).assertEvalsToThis
+	}
+
+	@Test
+	fun op_complex() {
+		script("x"(10), "y"(20), "op"()).assertEvalsToThis
 	}
 }

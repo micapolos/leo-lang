@@ -35,10 +35,12 @@ val Sequence.resolve: Thunk?
 			?: resolveNumberMinusNumber
 			?: resolveNumberTimesNumber
 			?: resolveTextPlusText
+			?: resolveNewlineText
 			?: resolveHead
 			?: resolveTail
 			?: resolveLast
 			?: resolvePrevious
+			?: resolveOp
 			?: resolveContent
 			?: resolveName
 			?: resolveMake
@@ -172,6 +174,16 @@ val Sequence.resolveTextPlusText: Thunk?
 			}
 		}
 
+val Sequence.resolveNewlineText: Thunk?
+	get() =
+		matchPostfixThunk(textName) { lhs ->
+			lhs.matchPostfix("newline") { lhs ->
+				lhs.matchEmpty {
+					thunk(value(literal("\n")))
+				}
+			}
+		}
+
 val Sequence.resolveHead: Thunk?
 	get() =
 		matchPostfixThunk("head") { lhs ->
@@ -194,6 +206,14 @@ val Sequence.resolvePrevious: Thunk?
 	get() =
 		matchPostfixThunk(previousName) { lhs ->
 			lhs.value.previousOrNull?.let { thunk(it) } // TODO
+		}
+
+val Sequence.resolveOp: Thunk?
+	get() =
+		matchPostfixThunk(opName) { lhs ->
+			lhs.value.onlyLineOrNull?.selectName?.let { name ->
+				thunk(value(name))
+			}
 		}
 
 val Sequence.resolveContent: Thunk?
