@@ -6,6 +6,9 @@ fun appendableString(fn: (Appendable) -> Unit): String {
 	return stringBuilder.toString()
 }
 
+fun appendableIndentedString(fn: (AppendableIndented) -> Unit): String =
+	appendableString { fn(it.indented) }
+
 fun <V> V.string(fn: Appendable.(V) -> Unit): String {
 	val stringBuilder = StringBuilder()
 	stringBuilder.fn(this)
@@ -80,3 +83,10 @@ val Seq<Char>.charString
 		appendableString { fold(it, Appendable::append) }
 
 val String.parenthesized get() = "($this)"
+
+fun String.indentNewlines(indent: Int) =
+	replace("\n", "\n" + indent.indentString)
+
+val Int.indentString: String
+	get() =
+		"  ".repeat(this)

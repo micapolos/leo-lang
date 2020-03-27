@@ -1,54 +1,51 @@
 package leo14.untyped
 
-import leo.base.appendableString
-import leo.base.iterate
-import leo.base.runIf
-import leo.base.string
+import leo.base.*
 import leo14.*
 
 val Script.dottedString
 	get() =
-		appendableString { it.appendDotted(this, 0) }
+		appendableIndentedString { it.appendDotted(this) }
 
 val ScriptLink.dottedString
 	get() =
-		appendableString { it.appendDotted(this, 0) }
+		appendableIndentedString { it.appendDotted(this) }
 
 val ScriptLine.dottedString
 	get() =
-		appendableString { it.appendDotted(this, 0) }
+		appendableIndentedString { it.appendDotted(this) }
 
 val ScriptField.dottedString
 	get() =
-		appendableString { it.appendDotted(this, 0) }
+		appendableIndentedString { it.appendDotted(this) }
 
-fun Appendable.appendDotted(script: Script, indent: Int): Appendable =
+fun AppendableIndented.appendDotted(script: Script): AppendableIndented =
 	when (script) {
 		is UnitScript -> this
-		is LinkScript -> appendDotted(script.link, indent)
+		is LinkScript -> appendDotted(script.link)
 	}
 
-fun Appendable.appendDotted(link: ScriptLink, indent: Int): Appendable =
+fun AppendableIndented.appendDotted(link: ScriptLink): AppendableIndented =
 	this
-		.appendDotted(link.lhs, indent)
+		.appendDotted(link.lhs)
 		.runIf(!link.lhs.isEmpty) {
 			if (link.lhs.isDottedLhs && link.line.isDottedRhs) append(".")
-			else append("\n").appendIndent(indent)
+			else append("\n")
 		}
-		.appendDotted(link.line, indent)
+		.appendDotted(link.line)
 
-fun Appendable.appendDotted(line: ScriptLine, indent: Int): Appendable =
+fun AppendableIndented.appendDotted(line: ScriptLine): AppendableIndented =
 	when (line) {
 		is LiteralScriptLine -> appendDotted(line.literal)
-		is FieldScriptLine -> appendDotted(line.field, indent)
+		is FieldScriptLine -> appendDotted(line.field)
 	}
 
-fun Appendable.appendDotted(field: ScriptField, indent: Int): Appendable =
+fun AppendableIndented.appendDotted(field: ScriptField): AppendableIndented =
 	if (field.rhs.isEmpty) append(field.string)
-	else if (field.rhs.isSimpleRhs) append(field.string).append(" ").appendDotted(field.rhs, indent)
-	else append(field.string).append("\n").appendIndent(indent + 1).appendDotted(field.rhs, indent + 1)
+	else if (field.rhs.isSimpleRhs) append(field.string).append(" ").appendDotted(field.rhs)
+	else append(field.string).indented { append("\n").appendDotted(field.rhs) }
 
-fun Appendable.appendDotted(literal: Literal): Appendable =
+fun AppendableIndented.appendDotted(literal: Literal): AppendableIndented =
 	append(literal.string)
 
 fun Appendable.appendIndent(indent: Int): Appendable =

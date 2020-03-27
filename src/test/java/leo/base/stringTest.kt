@@ -33,4 +33,9 @@ class StringTest {
 		"bąk".codePointSeq.codePointString.assertEqualTo("bąk")
 		"\uD800\uDC00".codePointSeq.codePointString.assertEqualTo("\uD800\uDC00")
 	}
+
+	@Test
+	fun indentNewlines() {
+		"foo\nbar\nzoo".indentNewlines(1).assertEqualTo("foo\n  bar\n  zoo")
+	}
 }
