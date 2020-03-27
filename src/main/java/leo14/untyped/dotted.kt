@@ -19,6 +19,14 @@ val ScriptField.dottedString
 	get() =
 		appendableIndentedString { it.appendDotted(this) }
 
+val Fragment.dottedString
+	get() =
+		appendableIndentedString { it.appendDotted(this) }
+
+val FragmentParent.dottedString
+	get() =
+		appendableIndentedString { it.appendDotted(this) }
+
 fun AppendableIndented.appendDotted(script: Script): AppendableIndented =
 	when (script) {
 		is UnitScript -> this
@@ -48,8 +56,40 @@ fun AppendableIndented.appendDotted(field: ScriptField): AppendableIndented =
 fun AppendableIndented.appendDotted(literal: Literal): AppendableIndented =
 	append(literal.string)
 
-fun Appendable.appendIndent(indent: Int): Appendable =
-	iterate(indent) { append("  ") }
+fun AppendableIndented.appendDotted(fragment: Fragment): AppendableIndented =
+	this
+		.run {
+			if (fragment.parent == null) this
+			else {
+				this
+					.appendDotted(fragment.parent)
+					.run {
+						if (fragment.script.isEmpty) this//append(" ")
+						else indented.append("\n")
+					}
+			}
+		}
+		.appendDotted(fragment.script)
+		.run {
+			if (fragment.parent == null)
+				if (fragment.script.isEmpty) this
+				else append("\n")
+			else {
+				if (fragment.script.isEmpty) append(" ")
+				else append("\n")
+			}
+		}
+
+fun AppendableIndented.appendDotted(parent: FragmentParent): AppendableIndented =
+	this
+		.appendDotted(parent.fragment)
+		.run {
+			if (parent.fragment.script.isEmpty) this
+			else if (parent.fragment.script.isDottedLhs) this
+			else this//append("\n?")
+		}
+		.append(parent.begin.string)
+
 
 val Script.isSimpleRhs: Boolean
 	get() =
