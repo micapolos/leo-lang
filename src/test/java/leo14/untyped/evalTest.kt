@@ -279,18 +279,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun content() {
-		script(
-			"point" lineTo script(
-				"x" lineTo script(literal(10)),
-				"y" lineTo script(literal(20))),
-			"content" lineTo script())
-			.assertEvalsTo(
-				"x" lineTo script(literal(10)),
-				"y" lineTo script(literal(20)))
-	}
-
-	@Test
 	fun contents_empty() {
 		script(
 			"contents" lineTo script())
@@ -736,27 +724,29 @@ class EvalTest {
 	}
 
 	@Test
-	fun op_field() {
-		script("x"(10), "op"()).assertEvalsTo(script("x"()))
+	fun object_() {
+		script(
+			"zero"(),
+			"plus"("one"()),
+			"object"())
+			.assertEvalsTo("one"())
 	}
 
 	@Test
-	fun op_number() {
-		script(line(literal(10)), "op"()).assertEvalsTo(script("number"()))
+	fun link() {
+		script(
+			"zero"(),
+			"plus"("one"()),
+			"link"())
+			.assertEvalsTo("plus"())
 	}
 
 	@Test
-	fun op_string() {
-		script(line(literal("foo")), "op"()).assertEvalsTo(script("text"()))
-	}
-
-	@Test
-	fun op_empty() {
-		script("op"()).assertEvalsToThis
-	}
-
-	@Test
-	fun op_complex() {
-		script("x"(10), "y"(20), "op"()).assertEvalsToThis
+	fun subject() {
+		script(
+			"zero"(),
+			"plus"("one"()),
+			"subject"())
+			.assertEvalsTo("zero"())
 	}
 }

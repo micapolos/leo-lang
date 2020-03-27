@@ -16,7 +16,7 @@ data class SequenceValue(val sequence: Sequence) : Value() {
 	override fun toString() = script.toString()
 }
 
-data class Sequence(val tail: Thunk, val head: Line) {
+data class Sequence(val previousThunk: Thunk, val lastValue: Line) {
 	override fun toString() = script.toString()
 }
 
@@ -42,10 +42,6 @@ data class Field(val name: String, val thunk: Thunk) {
 	override fun toString() = scriptField.toString()
 }
 
-sealed class Atom
-data class LiteralAtom(val literal: Literal) : Atom()
-data class FunctionAtom(val function: Function) : Atom()
-
 val emptyValue: Value get() = EmptyValue
 fun value(sequence: Sequence): Value = SequenceValue(sequence)
 fun value(vararg lines: Line) = emptyValue.fold(lines) { plus(it) }
@@ -56,7 +52,7 @@ operator fun Value.plus(line: Line) = value(this sequenceTo line)
 tailrec fun <R> R.foldLines(value: Value, fn: R.(Line) -> R): R =
 	when (value) {
 		EmptyValue -> this
-		is SequenceValue -> fn(value.sequence.head).foldLines(value.sequence.tail.value, fn)
+		is SequenceValue -> fn(value.sequence.lastValue).foldLines(value.sequence.previousThunk.value, fn)
 	}
 
 val Value.lineStack: Stack<Line>
@@ -91,8 +87,8 @@ val Value.numberOrNull get() = onlyLineOrNull?.literalOrNull?.numberOrNull
 val Value.textOrNull get() = onlyLineOrNull?.literalOrNull?.stringOrNull
 val Value.nativeOrNull get() = onlyLineOrNull?.nativeOrNull
 val Value.functionOrNull get() = onlyLineOrNull?.functionOrNull
-val Value.headOrNull get() = sequenceOrNull?.head?.let { value(it) }
-val Value.tailOrNull get() = sequenceOrNull?.tail?.value
+val Value.headOrNull get() = sequenceOrNull?.lastValue?.let { value(it) }
+val Value.tailOrNull get() = sequenceOrNull?.previousThunk?.value
 val Value.lastOrNull get() = contentsOrNull?.value?.headOrNull?.make(lastName)
 val Value.previousOrNull
 	get() =
@@ -105,7 +101,7 @@ val Value.previousOrNull
 		}
 val Value.onlyNameOrNull get() = onlyLineOrNull?.onlyNameOrNull
 
-val Sequence.onlyValueOrNull get() = if (tail.value.isEmpty) head else null
+val Sequence.onlyValueOrNull get() = if (previousThunk.value.isEmpty) lastValue else null
 
 val Line.literalOrNull get() = (this as? LiteralLine)?.literal
 val Line.fieldOrNull get() = (this as? FieldLine)?.field

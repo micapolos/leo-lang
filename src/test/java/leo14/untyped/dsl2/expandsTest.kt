@@ -10,10 +10,10 @@ class WritesTest {
 				anything
 				def { anything }
 				expands {
-					given.previous.given.content
+					given.previous.given.object_
 					quote {
 						gives {
-							unquote { given.def.content }
+							unquote { given.def.object_ }
 						}
 					}
 				}

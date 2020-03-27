@@ -10,16 +10,16 @@ import leo14.*
 
 val autoMake = false
 
+val Thunk.resolve: Thunk?
+	get() =
+		value.resolve
+
 val Value.resolve: Thunk?
 	get() =
 		when (this) {
 			EmptyValue -> null
 			is SequenceValue -> sequence.resolve
 		}
-
-val Thunk.resolve: Thunk?
-	get() =
-		value.resolve
 
 val Sequence.resolve: Thunk?
 	get() =
@@ -40,8 +40,6 @@ val Sequence.resolve: Thunk?
 			?: resolveTail
 			?: resolveLast
 			?: resolvePrevious
-			?: resolveOp
-			?: resolveContent
 			?: resolveName
 			?: resolveMake
 			?: resolveThis
@@ -55,6 +53,9 @@ val Sequence.resolve: Thunk?
 			?: resolveForce
 			?: resolveScript
 			?: resolveExec
+			?: resolveSubject
+			?: resolveObject
+			?: resolveLink
 
 val Sequence.resolveFunctionApplyAnything: Thunk?
 	get() =
@@ -74,8 +75,8 @@ val Sequence.resolveAnythingCallFunction: Thunk?
 
 val Sequence.resolveAccess: Thunk?
 	get() =
-		head.matchName { name ->
-			tail.value.get(name)
+		lastValue.matchName { name ->
+			previousThunk.value.get(name)
 		}
 
 val Sequence.resolveGet: Thunk?
@@ -208,20 +209,6 @@ val Sequence.resolvePrevious: Thunk?
 			lhs.value.previousOrNull?.let { thunk(it) } // TODO
 		}
 
-val Sequence.resolveOp: Thunk?
-	get() =
-		matchPostfix(opName) { lhs ->
-			lhs.value.onlyLineOrNull?.selectName?.let { name ->
-				thunk(value(name))
-			}
-		}
-
-val Sequence.resolveContent: Thunk?
-	get() =
-		matchPostfix(contentName) { lhs ->
-			lhs.value.contentsOrNull
-		}
-
 val Sequence.resolveName: Thunk?
 	get() =
 		matchPostfix(textName) { lhs ->
@@ -247,9 +234,9 @@ val Sequence.resolveAnythingEqualsAnything: Thunk?
 val Sequence.resolveAutoMake: Thunk?
 	get() =
 		ifOrNull(autoMake) {
-			head.matchName { name ->
-				tail.matchNotEmpty {
-					tail.make(name)
+			lastValue.matchName { name ->
+				previousThunk.matchNotEmpty {
+					previousThunk.make(name)
 				}
 			}
 		}
@@ -290,5 +277,31 @@ val Sequence.resolveExec: Thunk?
 					?.let { args ->
 						thunk(value(literal(exec(*args.array))))
 					}
+			}
+		}
+
+val Sequence.resolveLink: Thunk?
+	get() =
+		matchPostfix(linkName) { lhs ->
+			lhs.matchSequence { sequence ->
+				thunk(value(sequence.lastValue.selectName))
+			}
+		}
+
+val Sequence.resolveSubject: Thunk?
+	get() =
+		matchPostfix(subjectName) { lhs ->
+			lhs.matchSequence { sequence ->
+				sequence.previousThunk
+			}
+		}
+
+val Sequence.resolveObject: Thunk?
+	get() =
+		matchPostfix(objectName) { lhs ->
+			lhs.matchSequence { sequence ->
+				sequence.lastValue.fieldOrNull?.let { field ->
+					field.thunk
+				}
 			}
 		}

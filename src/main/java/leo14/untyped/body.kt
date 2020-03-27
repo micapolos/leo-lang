@@ -18,7 +18,7 @@ fun Body.apply(context: Context, given: Thunk): Applied =
 		is ThunkBody -> applied(thunk)
 		is EvalBody -> applied(function(context, script).apply(given))
 		is RecurseBody -> applied(context
-			.resolver(given.value.sequenceOrNull!!.tail)
+			.resolver(given.value.sequenceOrNull!!.previousThunk)
 			.compile(script)
 			.thunk)
 		is MacroBody -> applied(function(context, script).apply(given).value.script)

@@ -15,8 +15,8 @@ fun Thunk.select(name: String): Line? =
 
 fun Sequence.select(name: String) =
 	null
-		?: head.select(name)
-		?: tail.select(name)
+		?: lastValue.select(name)
+		?: previousThunk.select(name)
 
 fun Line.select(name: String) =
 	if (selects(name)) this

@@ -16,7 +16,7 @@ val Sequence.script
 
 val Sequence.scriptLink
 	get() =
-		tail.script linkTo head.scriptLine
+		previousThunk.script linkTo lastValue.scriptLine
 
 val Line.scriptLine: ScriptLine
 	get() =
@@ -108,8 +108,8 @@ val Value.scriptOrNull: Script?
 
 val Sequence.scriptLinkOrNull: ScriptLink?
 	get() =
-		tail.value.scriptOrNull?.let { script ->
-			head.scriptLineOrNull?.let { line ->
+		previousThunk.value.scriptOrNull?.let { script ->
+			lastValue.scriptLineOrNull?.let { line ->
 				script linkTo line
 			}
 		}

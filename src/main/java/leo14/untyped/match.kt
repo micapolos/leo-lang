@@ -19,6 +19,9 @@ fun <R> Thunk.matchNotEmpty(fn: () -> R): R? =
 fun <R> Value.matchSequence(fn: (Sequence) -> R): R? =
 	(this as? SequenceValue)?.sequence?.let(fn)
 
+fun <R> Thunk.matchSequence(fn: (Sequence) -> R): R? =
+	value.matchSequence(fn)
+
 fun <R> Value.matchName(fn: (String) -> R): R? =
 	onlyNameOrNull?.let(fn)
 
@@ -67,8 +70,8 @@ fun <R> Thunk.matchPostfix(name: String, fn: (Thunk) -> R) =
 	}
 
 fun <R> Sequence.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
-	head.match(name) { rhs ->
-		fn(tail, rhs)
+	lastValue.match(name) { rhs ->
+		fn(previousThunk, rhs)
 	}
 
 fun <R> Sequence.matchPostfix(name: String, fn: (Thunk) -> R) =
