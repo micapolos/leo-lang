@@ -43,6 +43,7 @@ val Literal.reflectScriptLine
 	get() =
 		"literal" lineTo script(this)
 
+// TODO: Implement proper escaping.
 val String.literalString
 	get() =
-		"\"" + replace("\n", "\\n").replace("\t", "\\t").replace("\"", "\\") + "\""
+		"\"" + replace("\n", "\\n").replace("\t", "\\t").replace("\"", "\\\"") + "\""
