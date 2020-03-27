@@ -97,6 +97,7 @@ fun Context.resolveStatic(thunk: Thunk): Resolver =
 	null
 		?: resolveCompile(thunk)
 		?: resolveCompiled(thunk)
+		?: resolveEvaluate(thunk)
 		?: resolver(thunk)
 
 fun Context.resolveContext(thunk: Thunk): Resolver? =
@@ -123,6 +124,11 @@ fun Context.resolveCompiled(thunk: Thunk): Resolver? =
 				resolver(thunk(functionScript.value))
 			}
 		}
+	}
+
+fun Context.resolveEvaluate(thunk: Thunk): Resolver? =
+	thunk.matchPostfix(evaluateName) { lhs ->
+		resolver().compile(lhs.value.script)
 	}
 
 fun Resolver.set(thunk: Thunk): Resolver =
