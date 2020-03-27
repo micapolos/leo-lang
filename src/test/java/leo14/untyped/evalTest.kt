@@ -745,4 +745,13 @@ class EvalTest {
 			"subject"())
 			.assertEvalsTo("zero"())
 	}
+
+	@Test
+	fun leoText() {
+		script(
+			"zero"(),
+			"plus"("one"()),
+			"leo"(), "text"())
+			.assertEvalsTo(line(literal("zero\nplus one")))
+	}
 }

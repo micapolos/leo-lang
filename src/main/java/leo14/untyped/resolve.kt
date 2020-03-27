@@ -56,6 +56,7 @@ val Sequence.resolve: Thunk?
 			?: resolveSubject
 			?: resolveObject
 			?: resolveLink
+			?: resolveScriptText
 
 val Sequence.resolveFunctionApplyAnything: Thunk?
 	get() =
@@ -303,5 +304,13 @@ val Sequence.resolveObject: Thunk?
 				sequence.lastValue.fieldOrNull?.let { field ->
 					field.thunk
 				}
+			}
+		}
+
+val Sequence.resolveScriptText: Thunk?
+	get() =
+		matchPostfix(textName) { lhs ->
+			lhs.matchPostfix(leoName) { lhs ->
+				thunk(value(literal(lhs.script.dottedString)))
 			}
 		}
