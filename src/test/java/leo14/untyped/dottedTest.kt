@@ -47,7 +47,10 @@ class DottedTest {
 		emptyFragment
 			.begin("circle")
 			.dottedString
-			.assertEqualTo("circle ")
+			.assertEqualTo(
+				linesString(
+					"circle",
+					"  "))
 	}
 
 	@Test
@@ -56,7 +59,11 @@ class DottedTest {
 			.begin("circle")
 			.begin("radius")
 			.dottedString
-			.assertEqualTo("circle radius ")
+			.assertEqualTo(
+				linesString(
+					"circle",
+					"  radius",
+					"    "))
 	}
 
 	@Test

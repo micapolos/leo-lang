@@ -58,38 +58,15 @@ fun AppendableIndented.appendDotted(literal: Literal): AppendableIndented =
 
 fun AppendableIndented.appendDotted(fragment: Fragment): AppendableIndented =
 	this
-		.run {
-			if (fragment.parent == null) this
-			else {
-				this
-					.appendDotted(fragment.parent)
-					.run {
-						if (fragment.script.isEmpty) this//append(" ")
-						else indented.append("\n")
-					}
-			}
-		}
+		.ifNotNull(fragment.parent) { appendDotted(it) }
 		.appendDotted(fragment.script)
-		.run {
-			if (fragment.parent == null)
-				if (fragment.script.isEmpty) this
-				else append("\n")
-			else {
-				if (fragment.script.isEmpty) append(" ")
-				else append("\n")
-			}
-		}
+		.runIf(!fragment.script.isEmpty) { append("\n") }
 
 fun AppendableIndented.appendDotted(parent: FragmentParent): AppendableIndented =
 	this
 		.appendDotted(parent.fragment)
-		.run {
-			if (parent.fragment.script.isEmpty) this
-			else if (parent.fragment.script.isDottedLhs) this
-			else this//append("\n?")
-		}
 		.append(parent.begin.string)
-
+		.indented.append("\n")
 
 val Script.isSimpleRhs: Boolean
 	get() =
