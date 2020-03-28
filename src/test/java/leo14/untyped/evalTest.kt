@@ -385,19 +385,12 @@ class EvalTest {
 	@Test
 	fun compile() {
 		script(
-			"quote" lineTo script(
-				"x" lineTo script(),
-				"gives" lineTo script(literal(5)),
-				"y" lineTo script(),
-				"gives" lineTo script(
-					"x" lineTo script(),
-					"minus" lineTo script(literal(3)))),
-			"compile" lineTo script(),
-			"x" lineTo script("x"),
-			"y" lineTo script("y"))
-			.assertEvalsTo(
-				"x" lineTo script(literal(5)),
-				"y" lineTo script(literal(2)))
+			"x"(), "gives"(5),
+			"quote"("y"(), "gives"("x"(), "minus"(3))),
+			"compile"(),
+			"x"("x"()),
+			"y"("y"()))
+			.assertEvalsTo("x"(5), "y"(2))
 	}
 
 	@Test
@@ -788,9 +781,10 @@ class EvalTest {
 	@Test
 	fun evaluate() {
 		script(
-			"quote"(1, "plus"(2)),
+			"x"(), "gives"(2),
+			"quote"("x"(), "plus"("x"())),
 			"evaluate"())
-			.assertEvalsTo(script(literal(3)))
+			.assertEvalsTo(script(literal(4)))
 	}
 
 	@Test
