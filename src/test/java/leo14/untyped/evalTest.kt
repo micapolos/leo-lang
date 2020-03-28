@@ -3,6 +3,7 @@ package leo14.untyped
 import leo14.*
 import leo14.line
 import leo14.lineTo
+import java.awt.Point
 import kotlin.math.PI
 import kotlin.test.Test
 
@@ -410,9 +411,11 @@ class EvalTest {
 	@Test
 	fun textNativeNew() {
 		script(
-			line(literal("java.lang.StringBuilder")),
-			"native"(), "class"(), "new"())
-			.assertEvalsTo("native" lineTo script(literal(java.lang.StringBuilder().toString())))
+			line(literal("java.awt.Point")),
+			"native"(), "class"(), "new"(
+			"it"(1, "native"(), "int"()),
+			"it"(2, "native"(), "int"())))
+			.assertEvalsTo("native"(Point(1, 2).toString()))
 	}
 
 	@Test

@@ -1,6 +1,7 @@
 package leo14.untyped
 
 import leo13.map
+import leo13.reverse
 import leo13.splitOrNull
 import leo13.toList
 import leo14.literal
@@ -94,7 +95,7 @@ val Sequence.resolveNativeInvoke: Thunk?
 			lhs.matchNative { native ->
 				rhs.value.lineStack.splitOrNull?.let { (args, name) ->
 					name.literalOrNull?.stringOrNull?.let { name ->
-						args.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+						args.reverse.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 							args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
 								thunk(
 									value(
@@ -117,7 +118,7 @@ val Sequence.resolveNativeStaticInvoke: Thunk?
 				lhs.matchNative { native ->
 					rhs.value.lineStack.splitOrNull?.let { (args, name) ->
 						name.literalOrNull?.stringOrNull?.let { name ->
-							args.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+							args.reverse.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 								args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
 									thunk(
 										value(
@@ -139,7 +140,7 @@ val Sequence.resolveNativeNew: Thunk?
 		matchInfix(newName) { lhs, rhs ->
 			lhs.matchNative { native ->
 				(native.obj as? Class<*>)?.let { class_ ->
-					rhs.value.lineStack.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+					rhs.value.lineStack.reverse.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
 						args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
 							thunk(value(
 								line(
