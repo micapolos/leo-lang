@@ -23,6 +23,10 @@ val Fragment.leoString
 	get() =
 		appendableIndentedString { it.leoAppend(this) }
 
+val Fragment.leoStringNonTail
+	get() =
+		appendableIndentedString { it.leoAppendNonTail(this) }
+
 val FragmentParent.leoString
 	get() =
 		appendableIndentedString { it.leoAppend(this) }
@@ -34,6 +38,7 @@ fun AppendableIndented.leoAppend(script: Script): AppendableIndented =
 	}
 
 fun AppendableIndented.leoAppend(link: ScriptLink): AppendableIndented =
+	//leoAppendGivenOrNull(link) ?:
 	this
 		.leoAppendNonTail(link.lhs)
 		.runIf(!link.lhs.isEmpty) {
@@ -42,6 +47,11 @@ fun AppendableIndented.leoAppend(link: ScriptLink): AppendableIndented =
 		}
 		.leoAppend(link.line)
 
+fun AppendableIndented.leoAppendGivenOrNull(link: ScriptLink): AppendableIndented? =
+	if (link.lhs == script(givenName)) append(".").leoAppend(link.line)
+	else if (link == script() linkTo line(givenName fieldTo script())) append(".")
+	else null
+
 fun AppendableIndented.leoAppendNonTail(script: Script): AppendableIndented =
 	when (script) {
 		is UnitScript -> this
@@ -49,6 +59,7 @@ fun AppendableIndented.leoAppendNonTail(script: Script): AppendableIndented =
 	}
 
 fun AppendableIndented.leoAppendNonTail(link: ScriptLink): AppendableIndented =
+	//leoAppendGivenOrNull(link) ?:
 	this
 		.leoAppendNonTail(link.lhs)
 		.runIf(!link.lhs.isEmpty) {

@@ -57,6 +57,7 @@ val Sequence.resolve: Thunk?
 			?: resolveObject
 			?: resolveLink
 			?: resolveScriptText
+			?: resolveGiven
 
 val Sequence.resolveFunctionApplyAnything: Thunk?
 	get() =
@@ -313,4 +314,10 @@ val Sequence.resolveScriptText: Thunk?
 			lhs.matchPostfix(leoName) { lhs ->
 				thunk(value(literal(lhs.script.leoString)))
 			}
+		}
+
+val Sequence.resolveGiven: Thunk?
+	get() =
+		matchSimple(givenName) {
+			thunk(value())
 		}

@@ -762,4 +762,19 @@ class EvalTest {
 			"evaluate"())
 			.assertEvalsTo(script(literal(3)))
 	}
+
+	@Test
+	fun given() {
+		script("given"()).assertEvalsTo()
+	}
+
+	@Test
+	fun given_postfix() {
+		script("foo"(), "given"()).assertEvalsToThis
+	}
+
+	@Test
+	fun given_prefix() {
+		script("given"("foo"())).assertEvalsToThis
+	}
 }

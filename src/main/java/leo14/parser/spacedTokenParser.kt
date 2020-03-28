@@ -7,12 +7,15 @@ import leo14.*
 sealed class SpacedTokenParser {
 	override fun toString() = "$reflectScriptLine"
 }
+
 object NewSpacedTokenParser : SpacedTokenParser()
 data class TokenSpacedTokenParser(val token: Token) : SpacedTokenParser()
 data class LiteralSpacedTokenParser(val literalParser: LiteralParser) : SpacedTokenParser()
 data class NameSpacedTokenParser(val nameParser: NameParser) : SpacedTokenParser()
 
 val newSpacedTokenParser: SpacedTokenParser = NewSpacedTokenParser
+
+val SpacedTokenParser.isNew get() = (this is NewSpacedTokenParser)
 
 fun SpacedTokenParser.parse(char: Char): SpacedTokenParser? =
 	when (this) {
