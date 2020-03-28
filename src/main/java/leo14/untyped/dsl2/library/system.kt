@@ -16,7 +16,9 @@ val system = library_ {
 		clear
 	}
 
-	text.open { html }.does {
+	text
+	open { html }
+	does {
 		text("leo14.js.compiler.MainKt")
 		native { class_ }
 		invoke {
