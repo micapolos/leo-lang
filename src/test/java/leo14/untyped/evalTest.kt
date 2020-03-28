@@ -416,6 +416,24 @@ class EvalTest {
 	}
 
 	@Test
+	fun textNativeGet() {
+		script(
+			line(literal("java.awt.Point")),
+			"native"(), "class"(), "new"(),
+			"get"("x"))
+			.assertEvalsTo("native" lineTo script(literal("0")))
+	}
+
+	@Test
+	fun textNativeStaticGet() {
+		script(
+			line(literal("java.lang.Integer")),
+			"native"(), "class"(),
+			"static"(), "get"("MAX_VALUE"))
+			.assertEvalsTo("native" lineTo script(literal(Integer.MAX_VALUE.toString())))
+	}
+
+	@Test
 	fun javaInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
