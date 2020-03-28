@@ -38,6 +38,21 @@ val core = library_ {
 		else_ { text("not ok") }
 		gives { text("not ok") }
 	}
+
+	anything
+	comment { anything }
+	does { given.object_.subject }
+
+	assert {
+		number(2)
+		comment { text("this is subject") }
+		plus {
+			number(3)
+			comment { text("this is object") }
+		}
+		comment { text("this is result") }
+		gives { number(5) }
+	}
 }
 
 fun main() = run_(core)
