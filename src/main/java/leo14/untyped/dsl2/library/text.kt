@@ -39,7 +39,7 @@ val text = library_ {
 		recursively {
 			do_ {
 				given.list.object_
-				equals_ { nothing_ }
+				equals_ { nothing }
 				match {
 					true_ { given.reverse }
 					false_ {
@@ -58,7 +58,7 @@ val text = library_ {
 		recursively {
 			do_ {
 				given.reverse.object_
-				equals_ { nothing_ }
+				equals_ { nothing }
 				match {
 					true_ { given.lines }
 					false_ {

@@ -3,6 +3,8 @@ package leo14.untyped
 import leo.base.*
 import leo14.*
 
+val givenDot = true
+
 val Script.leoString
 	get() =
 		appendableIndentedString { it.leoAppend(this) }
@@ -38,8 +40,7 @@ fun AppendableIndented.leoAppend(script: Script): AppendableIndented =
 	}
 
 fun AppendableIndented.leoAppend(link: ScriptLink): AppendableIndented =
-	//leoAppendGivenOrNull(link) ?:
-	this
+	leoAppendGivenOrNull(link) ?: this
 		.leoAppendNonTail(link.lhs)
 		.runIf(!link.lhs.isEmpty) {
 			if (link.isDottable) append(".")
@@ -48,9 +49,11 @@ fun AppendableIndented.leoAppend(link: ScriptLink): AppendableIndented =
 		.leoAppend(link.line)
 
 fun AppendableIndented.leoAppendGivenOrNull(link: ScriptLink): AppendableIndented? =
-	if (link.lhs == script(givenName)) append(".").leoAppend(link.line)
-	else if (link == script() linkTo line(givenName fieldTo script())) append(".")
-	else null
+	ifOrNull(givenDot) {
+		if (link.lhs == script(givenName)) append(".").leoAppend(link.line)
+		else if (link == script() linkTo line(givenName fieldTo script())) append(".")
+		else null
+	}
 
 fun AppendableIndented.leoAppendNonTail(script: Script): AppendableIndented =
 	when (script) {
@@ -59,8 +62,7 @@ fun AppendableIndented.leoAppendNonTail(script: Script): AppendableIndented =
 	}
 
 fun AppendableIndented.leoAppendNonTail(link: ScriptLink): AppendableIndented =
-	//leoAppendGivenOrNull(link) ?:
-	this
+	leoAppendGivenOrNull(link) ?: this
 		.leoAppendNonTail(link.lhs)
 		.runIf(!link.lhs.isEmpty) {
 			if (link.isDottableNonTail) append(".")

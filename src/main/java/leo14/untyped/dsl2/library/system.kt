@@ -9,7 +9,7 @@ val system = library_ {
 			it { text("say") }
 			it {
 				text("\"")
-				plus { given.text.leo.text }
+				plus { given.text }
 				plus { text("\"") }
 			}
 		}

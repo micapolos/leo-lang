@@ -7,7 +7,7 @@ val core = library_ {
 	assert { nothing.gives { nothing_ } }
 
 	anything.clear.gives { nothing }
-	assert { zero.clear.gives { nothing } }
+	assert { zero.clear.gives { nothing_ } }
 
 	anything
 	replace { anything }
