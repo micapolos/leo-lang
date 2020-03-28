@@ -1,5 +1,6 @@
 package leo14.js.compiler
 
+import leo.base.bomString
 import leo14.begin
 import leo14.end
 import leo14.lambda.js.code
@@ -9,7 +10,7 @@ import java.io.File
 
 fun String.htmlOpen() {
 	val file = File.createTempFile("index", ".html")
-	file.writeText(this)
+	file.writeText(bomString + this)
 	val uri = file.toURI()
 	file.deleteOnExit()
 	Desktop.getDesktop().browse(uri)

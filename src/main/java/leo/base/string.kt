@@ -90,3 +90,5 @@ fun String.indentNewlines(indent: Int) =
 val Int.indentString: String
 	get() =
 		"  ".repeat(this)
+
+val bomString = "\uFEFF"
