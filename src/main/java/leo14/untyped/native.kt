@@ -22,6 +22,7 @@ val Sequence.resolveNative: Thunk?
 			?: resolveNativeFloat
 			?: resolveNativeDouble
 			?: resolveNativeInvoke
+			?: resolveNativeStaticInvoke
 			?: resolveNativeText
 			?: resolveNativeNumber
 			?: resolveNativeList
@@ -100,6 +101,30 @@ val Sequence.resolveNativeInvoke: Thunk?
 												native.obj!!.javaClass
 													.getMethod(name, *types)
 													.invoke(native.obj, *args)))))
+							}
+						}
+					}
+				}
+			}
+		}
+
+val Sequence.resolveNativeStaticInvoke: Thunk?
+	get() =
+		matchInfix(invokeName) { lhs, rhs ->
+			lhs.matchPostfix(staticName) { lhs ->
+				lhs.matchNative { native ->
+					rhs.value.lineStack.splitOrNull?.let { (args, name) ->
+						name.literalOrNull?.stringOrNull?.let { name ->
+							args.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+								args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
+									thunk(
+										value(
+											line(
+												native(
+													(native.obj as? Class<*>)
+														?.getMethod(name, *types)
+														?.invoke(null, *args)))))
+								}
 							}
 						}
 					}

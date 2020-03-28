@@ -368,8 +368,11 @@ val Literal.name
 			is StringLiteral -> "text"
 		}
 
+fun leo(vararg lines: Any): Script =
+	script(*lines.map { it.anyLine }.toTypedArray())
+
 operator fun String.invoke(vararg lines: Any): ScriptLine =
-	this lineTo script(*lines.map { it.anyLine }.toTypedArray())
+	this lineTo leo(*lines)
 
 val Any.anyLine: ScriptLine
 	get() =

@@ -1,11 +1,9 @@
 package leo14.untyped
 
-import leo14.invoke
+import leo14.*
 import leo14.line
 import leo14.lineTo
-import leo14.literal
-import leo14.plus
-import leo14.script
+import kotlin.math.PI
 import kotlin.test.Test
 
 class EvalTest {
@@ -429,6 +427,17 @@ class EvalTest {
 			.assertEvalsTo(
 				"native" lineTo script(
 					literal(StringBuilder().append("Hello, world!").toString())))
+	}
+
+	@Test
+	fun nativeStaticInvoke() {
+		leo(
+			"java.lang.String",
+			"native"(), "class"(), "static"(),
+			"invoke"(
+				"it"("valueOf"),
+				"it"(PI, "native"(), "double"())))
+			.assertEvalsTo("native"(java.lang.String.valueOf(PI).toString()))
 	}
 
 	@Test
