@@ -24,7 +24,7 @@ val system = library_ {
 		invoke {
 			static {
 				it { text("htmlOpen") }
-				it { given.text.native.string }
+				it { given.text.native { string } }
 			}
 		}.clear
 	}
