@@ -96,7 +96,7 @@ fun Context.resolve(thunk: Thunk): Resolver =
 fun Context.resolveStatic(thunk: Thunk): Resolver =
 	null
 		?: resolveCompile(thunk)
-		?: resolveCompiled(thunk)
+		?: resolveContextName(thunk)
 		?: resolveEvaluate(thunk)
 		?: resolver(thunk)
 
@@ -113,11 +113,11 @@ fun Context.resolveDefinitions(thunk: Thunk): Resolver? =
 	compile(thunk)?.resolver()
 
 fun Context.resolveCompile(thunk: Thunk): Resolver? =
-	thunk.matchInfix(compileName) { lhs, rhs ->
-		resolver(lhs).compile(rhs.script)
+	thunk.matchPostfix(compileName) { lhs ->
+		resolver(lhs).compile
 	}
 
-fun Context.resolveCompiled(thunk: Thunk): Resolver? =
+fun Context.resolveContextName(thunk: Thunk): Resolver? =
 	thunk.matchInfix(contextName) { lhs, rhs ->
 		lhs.matchEmpty {
 			rhs.matchEmpty {
@@ -128,7 +128,7 @@ fun Context.resolveCompiled(thunk: Thunk): Resolver? =
 
 fun Context.resolveEvaluate(thunk: Thunk): Resolver? =
 	thunk.matchPostfix(evaluateName) { lhs ->
-		resolver().compile(lhs.value.script)
+		resolver(resolver().compile(lhs.value.script).thunk)
 	}
 
 fun Resolver.set(thunk: Thunk): Resolver =
@@ -183,6 +183,10 @@ fun Resolver.writes(script: Script): Resolver =
 	compiler
 		.push(definition(rule(pattern(thunk), compileBody(script))))
 		.resolver(value())
+
+val Resolver.compile: Resolver
+	get() =
+		resolver().compile(compiler.applyContext.reflect(thunk))
 
 fun Resolver.compile(script: Script): Resolver =
 	reader

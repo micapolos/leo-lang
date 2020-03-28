@@ -385,14 +385,14 @@ class EvalTest {
 	@Test
 	fun compile() {
 		script(
-			"x" lineTo script(),
-			"gives" lineTo script(literal(5)),
-			"compile" lineTo script(
-				"quote" lineTo script(
-					"y" lineTo script(),
-					"gives" lineTo script(
-						"x" lineTo script(),
-						"minus" lineTo script(literal(3))))),
+			"quote" lineTo script(
+				"x" lineTo script(),
+				"gives" lineTo script(literal(5)),
+				"y" lineTo script(),
+				"gives" lineTo script(
+					"x" lineTo script(),
+					"minus" lineTo script(literal(3)))),
+			"compile" lineTo script(),
 			"x" lineTo script("x"),
 			"y" lineTo script("y"))
 			.assertEvalsTo(
@@ -791,6 +791,15 @@ class EvalTest {
 			"quote"(1, "plus"(2)),
 			"evaluate"())
 			.assertEvalsTo(script(literal(3)))
+	}
+
+	@Test
+	fun evaluate_doesNotCompile() {
+		script(
+			"quote"("x"(), "gives"(1)),
+			"evaluate"(),
+			"x"())
+			.assertEvalsTo("x"())
 	}
 
 	@Test
