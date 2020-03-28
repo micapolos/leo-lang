@@ -808,7 +808,7 @@ class EvalTest {
 	@Test
 	fun reflect() {
 		leo(
-			"foo"(), "reflect"(), "gives"("reflected"(123)),
+			"foo"(), "reflect"(), "gives"(123),
 			"foo"())
 			.assertEvalsTo(leo(123))
 	}

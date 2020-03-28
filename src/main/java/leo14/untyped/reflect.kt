@@ -6,8 +6,10 @@ fun Context.reflect(thunk: Thunk): Script =
 	resolver(thunk)
 		.apply(reflectName lineTo emptyThunk)
 		.thunk
-		.matchPrefix(reflectedName) { reflectRaw(it) }
-		?: reflectRaw(thunk)
+		.let { applied ->
+			if (applied == thunk.plus(reflectName lineTo emptyThunk)) reflectRaw(thunk)
+			else reflectRaw(applied)
+		}
 
 fun Context.reflectRaw(thunk: Thunk): Script =
 	when (thunk) {
