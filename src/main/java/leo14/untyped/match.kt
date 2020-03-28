@@ -81,6 +81,20 @@ fun <R> Sequence.matchPostfix(name: String, fn: (Thunk) -> R) =
 		}
 	}
 
+fun <R> Sequence.matchInfix(name: String, name2: String, fn: (Thunk, Thunk) -> R) =
+	matchInfix(name) { lhs, rhs ->
+		rhs.matchPrefix(name2) { rhs ->
+			fn(lhs, rhs)
+		}
+	}
+
+fun <R> Sequence.matchPostfix(name: String, name2: String, fn: (Thunk) -> R) =
+	matchInfix(name, name2) { lhs, rhs ->
+		rhs.matchEmpty {
+			fn(lhs)
+		}
+	}
+
 fun <R> Sequence.matchSimple(name: String, fn: () -> R) =
 	matchInfix(name) { lhs, rhs ->
 		rhs.matchEmpty {

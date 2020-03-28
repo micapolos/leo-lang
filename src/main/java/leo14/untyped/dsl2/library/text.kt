@@ -5,7 +5,7 @@ import leo14.untyped.dsl2.*
 val text = library_ {
 	text.length
 	does {
-		given.text.native.string
+		given.text.native { string }
 		invoke { text("length") }
 		number
 	}
@@ -13,7 +13,7 @@ val text = library_ {
 
 	text.lower.case
 	does {
-		given.text.native.string
+		given.text.native { string }
 		invoke { text("toLowerCase") }
 		text
 	}
@@ -21,7 +21,7 @@ val text = library_ {
 
 	text.upper.case
 	does {
-		given.text.native.string
+		given.text.native { string }
 		invoke { text("toUpperCase") }
 		text
 	}
@@ -29,10 +29,10 @@ val text = library_ {
 
 	text.lines
 	does {
-		given.text.native.string
+		given.text.native { string }
 		invoke {
 			it { text("split") }
-			it { text("\n").native.string }
+			it { text("\n").native { string } }
 		}
 		list
 		reverse

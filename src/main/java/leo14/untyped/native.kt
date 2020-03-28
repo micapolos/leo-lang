@@ -32,58 +32,48 @@ val Sequence.resolveNative: Thunk?
 
 val Sequence.resolveJavaString: Thunk?
 	get() =
-		matchPostfix(stringName) { lhs ->
-			lhs.matchPostfix(nativeName) { lhs ->
-				lhs.matchText { text ->
-					thunk(value(line(native(text))))
-				}
+		matchPostfix(nativeName, stringName) { lhs ->
+			lhs.matchText { text ->
+				thunk(value(line(native(text))))
 			}
 		}
 
 val Sequence.resolveNativeInt: Thunk?
 	get() =
-		matchPostfix(intName) { lhs ->
-			lhs.matchPostfix(nativeName) { lhs ->
-				lhs.matchNumber { number ->
-					try {
-						thunk(value(line(native(number.bigDecimal.intValueExact()))))
-					} catch (e: ArithmeticException) {
-						null
-					}
+		matchPostfix(nativeName, intName) { lhs ->
+			lhs.matchNumber { number ->
+				try {
+					thunk(value(line(native(number.bigDecimal.intValueExact()))))
+				} catch (e: ArithmeticException) {
+					null
 				}
 			}
 		}
 
 val Sequence.resolveNativeFloat: Thunk?
 	get() =
-		matchPostfix(floatName) { lhs ->
-			lhs.matchPostfix(nativeName) { lhs ->
-				lhs.matchNumber { number ->
-					thunk(value(line(native(number.bigDecimal.toFloat()))))
-				}
+		matchPostfix(nativeName, floatName) { lhs ->
+			lhs.matchNumber { number ->
+				thunk(value(line(native(number.bigDecimal.toFloat()))))
 			}
 		}
 
 val Sequence.resolveNativeDouble: Thunk?
 	get() =
-		matchPostfix(doubleName) { lhs ->
-			lhs.matchPostfix(nativeName) { lhs ->
-				lhs.matchNumber { number ->
-					thunk(value(line(native(number.bigDecimal.toDouble()))))
-				}
+		matchPostfix(nativeName, doubleName) { lhs ->
+			lhs.matchNumber { number ->
+				thunk(value(line(native(number.bigDecimal.toDouble()))))
 			}
 		}
 
 val Sequence.resolveNativeClass: Thunk?
 	get() =
-		matchPostfix(className) { lhs ->
-			lhs.matchPostfix(nativeName) { lhs ->
-				lhs.matchText { text ->
-					try {
-						thunk(value(line(native(javaClass.classLoader.loadClass(text)))))
-					} catch (x: ClassNotFoundException) {
-						null
-					}
+		matchPostfix(nativeName, className) { lhs ->
+			lhs.matchText { text ->
+				try {
+					thunk(value(line(native(javaClass.classLoader.loadClass(text)))))
+				} catch (x: ClassNotFoundException) {
+					null
 				}
 			}
 		}
@@ -113,21 +103,19 @@ val Sequence.resolveNativeInvoke: Thunk?
 
 val Sequence.resolveNativeStaticInvoke: Thunk?
 	get() =
-		matchInfix(invokeName) { lhs, rhs ->
-			lhs.matchPostfix(staticName) { lhs ->
-				lhs.matchNative { native ->
-					rhs.value.lineStack.splitOrNull?.let { (args, name) ->
-						name.literalOrNull?.stringOrNull?.let { name ->
-							args.reverse.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
-								args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
-									thunk(
-										value(
-											line(
-												native(
-													(native.obj as? Class<*>)
-														?.getMethod(name, *types)
-														?.invoke(null, *args)))))
-								}
+		matchInfix(invokeName, staticName) { lhs, rhs ->
+			lhs.matchNative { native ->
+				rhs.value.lineStack.splitOrNull?.let { (args, name) ->
+					name.literalOrNull?.stringOrNull?.let { name ->
+						args.reverse.map { nativeOrNull!!.obj!! }.toList().toTypedArray().let { args ->
+							args.map { it.javaClass.forInvoke }.toTypedArray().let { types ->
+								thunk(
+									value(
+										line(
+											native(
+												(native.obj as? Class<*>)
+													?.getMethod(name, *types)
+													?.invoke(null, *args)))))
 							}
 						}
 					}
@@ -206,13 +194,11 @@ val Sequence.resolveNativeGet: Thunk?
 
 val Sequence.resolveNativeStaticGet: Thunk?
 	get() =
-		matchInfix(getName) { lhs, rhs ->
-			lhs.matchPostfix(staticName) { lhs ->
-				lhs.matchNative { native ->
-					rhs.matchText { name ->
-						(native.obj as? Class<*>)?.let { class_ ->
-							thunk(value(line(native(class_.getField(name).get(null)))))
-						}
+		matchInfix(getName, staticName) { lhs, rhs ->
+			lhs.matchNative { native ->
+				rhs.matchText { name ->
+					(native.obj as? Class<*>)?.let { class_ ->
+						thunk(value(line(native(class_.getField(name).get(null)))))
 					}
 				}
 			}

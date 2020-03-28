@@ -139,7 +139,7 @@ class EvalTest {
 	@Test
 	fun accessNative() {
 		script(
-			"hello" lineTo script(line(literal(123)), "native"(), "int"()),
+			"hello" lineTo script(line(literal(123)), "native"("int"())),
 			"native" lineTo script())
 			.assertEvalsTo("native" lineTo script(literal(123.toString())))
 	}
@@ -397,7 +397,7 @@ class EvalTest {
 	fun nativeClass() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native"(), "class"())
+			"native"("class"()))
 			.assertEvalsTo("native" lineTo script(literal(java.lang.StringBuilder::class.java.toString())))
 	}
 
@@ -405,9 +405,10 @@ class EvalTest {
 	fun textNativeNew() {
 		script(
 			line(literal("java.awt.Point")),
-			"native"(), "class"(), "new"(
-			"it"(1, "native"(), "int"()),
-			"it"(2, "native"(), "int"())))
+			"native"("class"()),
+			"new"(
+				"it"(1, "native"("int"())),
+				"it"(2, "native"("int"()))))
 			.assertEvalsTo("native"(Point(1, 2).toString()))
 	}
 
@@ -415,7 +416,8 @@ class EvalTest {
 	fun textNativeGet() {
 		script(
 			line(literal("java.awt.Point")),
-			"native"(), "class"(), "new"(),
+			"native"("class"()),
+			"new"(),
 			"get"("x"))
 			.assertEvalsTo("native" lineTo script(literal("0")))
 	}
@@ -424,8 +426,8 @@ class EvalTest {
 	fun textNativeStaticGet() {
 		script(
 			line(literal("java.lang.Integer")),
-			"native"(), "class"(),
-			"static"(), "get"("MAX_VALUE"))
+			"native"("class"()),
+			"get"("static"("MAX_VALUE")))
 			.assertEvalsTo("native" lineTo script(literal(Integer.MAX_VALUE.toString())))
 	}
 
@@ -433,11 +435,11 @@ class EvalTest {
 	fun javaInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native"(), "class"(),
-			"invoke" lineTo script(literal("newInstance")),
+			"native"("class"()),
+			"new"(),
 			"invoke" lineTo script(
 				line(literal("append")),
-				"it" lineTo script(line(literal("Hello, world!")), "native"(), "string"())))
+				"it" lineTo script(line(literal("Hello, world!")), "native"("string"()))))
 			.assertEvalsTo(
 				"native" lineTo script(
 					literal(StringBuilder().append("Hello, world!").toString())))
@@ -447,10 +449,10 @@ class EvalTest {
 	fun nativeStaticInvoke() {
 		leo(
 			"java.lang.String",
-			"native"(), "class"(), "static"(),
-			"invoke"(
+			"native"("class"()),
+			"invoke"("static"(
 				"it"("valueOf"),
-				"it"(PI, "native"(), "double"())))
+				"it"(PI, "native"("double"())))))
 			.assertEvalsTo("native"(java.lang.String.valueOf(PI).toString()))
 	}
 
@@ -458,7 +460,7 @@ class EvalTest {
 	fun anyInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native"(), "class"(),
+			"native"("class"()),
 			"invoke" lineTo script(literal("newInstance")))
 			.assertEvalsTo("native" lineTo script(literal(StringBuilder().toString())))
 	}
