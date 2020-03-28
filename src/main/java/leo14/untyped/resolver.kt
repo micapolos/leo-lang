@@ -57,7 +57,7 @@ fun Resolver.match(script: Script): Resolver =
 	thunk.matchField { structField ->
 		structField.thunk.value.sequenceOrNull?.let { sequence ->
 			script
-				.rhsOrNull(sequence.lastValue.selectName)
+				.rhsOrNull(sequence.lastLine.selectName)
 				?.let { body ->
 					set(
 						compiler
@@ -79,7 +79,7 @@ val Resolver.value
 
 val Resolver.printScript
 	get() =
-		thunk.script
+		compiler.applyContext.reflect(thunk)
 
 fun Resolver.append(line: Line): Resolver =
 	set(this.thunk.plus(line))
@@ -139,7 +139,7 @@ val Resolver.clear
 		set(thunk(value()))
 
 fun Context.resolver(sequence: Sequence): Resolver =
-	resolver(sequence.previousThunk).apply(sequence.lastValue)
+	resolver(sequence.previousThunk).apply(sequence.lastLine)
 
 fun Resolver.function(script: Script): Resolver =
 	when (script) {

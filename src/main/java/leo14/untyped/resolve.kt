@@ -77,7 +77,7 @@ val Sequence.resolveAnythingCallFunction: Thunk?
 
 val Sequence.resolveAccess: Thunk?
 	get() =
-		lastValue.matchName { name ->
+		lastLine.matchName { name ->
 			previousThunk.value.get(name)
 		}
 
@@ -236,7 +236,7 @@ val Sequence.resolveAnythingEqualsAnything: Thunk?
 val Sequence.resolveAutoMake: Thunk?
 	get() =
 		ifOrNull(autoMake) {
-			lastValue.matchName { name ->
+			lastLine.matchName { name ->
 				previousThunk.matchNotEmpty {
 					previousThunk.make(name)
 				}
@@ -286,7 +286,7 @@ val Sequence.resolveLink: Thunk?
 	get() =
 		matchPostfix(linkName) { lhs ->
 			lhs.matchSequence { sequence ->
-				thunk(value(sequence.lastValue.selectName))
+				thunk(value(sequence.lastLine.selectName))
 			}
 		}
 
@@ -302,7 +302,7 @@ val Sequence.resolveObject: Thunk?
 	get() =
 		matchPostfix(objectName) { lhs ->
 			lhs.matchSequence { sequence ->
-				sequence.lastValue.fieldOrNull?.let { field ->
+				sequence.lastLine.fieldOrNull?.let { field ->
 					field.thunk
 				}
 			}

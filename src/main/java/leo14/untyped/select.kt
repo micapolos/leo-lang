@@ -15,7 +15,7 @@ fun Thunk.select(name: String): Line? =
 
 fun Sequence.select(name: String) =
 	null
-		?: lastValue.select(name)
+		?: lastLine.select(name)
 		?: previousThunk.select(name)
 
 fun Line.select(name: String) =
@@ -30,6 +30,15 @@ fun Line.selects(name: String) =
 		nativeName -> this is NativeLine
 		else -> this is FieldLine && name == field.name
 	}
+
+val Line.patternNameOrNull: String?
+	get() =
+		when (this) {
+			is LiteralLine -> literal.selectName
+			is FieldLine -> null
+			is FunctionLine -> function.selectName
+			is NativeLine -> native.selectName
+		}
 
 val Line.selectName
 	get() =

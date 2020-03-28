@@ -28,7 +28,7 @@ fun Thunk.eitherMatches(thunk: Thunk): Boolean? =
 fun Thunk.casesMatch(thunk: Thunk): Boolean =
 	value.sequenceOrNull.let { sequenceOrNull ->
 		if (sequenceOrNull == null) false
-		else sequenceOrNull.lastValue.caseMatches(thunk) || sequenceOrNull.previousThunk.casesMatch(thunk)
+		else sequenceOrNull.lastLine.caseMatches(thunk) || sequenceOrNull.previousThunk.casesMatch(thunk)
 	}
 
 fun Line.caseMatches(thunk: Thunk): Boolean =
@@ -51,12 +51,13 @@ fun Sequence.rawMatches(value: Value) =
 	value is SequenceValue && matches(value.sequence)
 
 fun Sequence.matches(sequence: Sequence) =
-	lastValue.matches(sequence.lastValue) && previousThunk.matches(sequence.previousThunk)
+	lastLine.matches(sequence.lastLine) && previousThunk.matches(sequence.previousThunk)
 
 fun Line.matches(line: Line): Boolean =
 	null
 		?: numberMatches(line)
 		?: textMatches(line)
+		?: nativeMatches(line)
 		?: functionMatches(line)
 		?: rawMatches(line)
 
@@ -76,6 +77,10 @@ fun Line.textMatches(line: Line) =
 	if (this == line(textName)) line is LiteralLine && line.literal is StringLiteral
 	else null
 
+fun Line.nativeMatches(line: Line) =
+	if (this == line(nativeName)) line is NativeLine
+	else null
+
 fun Line.functionMatches(line: Line) =
 	if (this == line(functionName)) line is FunctionLine
 	else null
@@ -92,7 +97,7 @@ fun Value.matches(name: String) =
 	}
 
 fun Sequence.matches(name: String) =
-	lastValue.matches(name)
+	lastLine.matches(name)
 
 fun Line.matches(name: String) =
 	when (this) {

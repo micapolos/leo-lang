@@ -15,7 +15,9 @@ data class LazyThunk(val lazy: Lazy) : Thunk() {
 	override fun toString() = lazy.toString()
 }
 
-fun thunk(value: Value): Thunk = ValueThunk(value)
+val emptyThunk get() = thunk(value())
+
+fun thunk(value: Value = value()): Thunk = ValueThunk(value)
 fun thunk(lazy: Lazy): Thunk = LazyThunk(lazy)
 
 val Thunk.force: Thunk

@@ -70,7 +70,7 @@ fun <R> Thunk.matchPostfix(name: String, fn: (Thunk) -> R) =
 	}
 
 fun <R> Sequence.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
-	lastValue.match(name) { rhs ->
+	lastLine.match(name) { rhs ->
 		fn(previousThunk, rhs)
 	}
 

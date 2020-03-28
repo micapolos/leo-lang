@@ -16,7 +16,7 @@ data class SequenceValue(val sequence: Sequence) : Value() {
 	override fun toString() = script.toString()
 }
 
-data class Sequence(val previousThunk: Thunk, val lastValue: Line) {
+data class Sequence(val previousThunk: Thunk, val lastLine: Line) {
 	override fun toString() = script.toString()
 }
 
@@ -52,7 +52,7 @@ operator fun Value.plus(line: Line) = value(this sequenceTo line)
 tailrec fun <R> R.foldLines(value: Value, fn: R.(Line) -> R): R =
 	when (value) {
 		EmptyValue -> this
-		is SequenceValue -> fn(value.sequence.lastValue).foldLines(value.sequence.previousThunk.value, fn)
+		is SequenceValue -> fn(value.sequence.lastLine).foldLines(value.sequence.previousThunk.value, fn)
 	}
 
 val Value.lineStack: Stack<Line>
@@ -87,7 +87,7 @@ val Value.numberOrNull get() = onlyLineOrNull?.literalOrNull?.numberOrNull
 val Value.textOrNull get() = onlyLineOrNull?.literalOrNull?.stringOrNull
 val Value.nativeOrNull get() = onlyLineOrNull?.nativeOrNull
 val Value.functionOrNull get() = onlyLineOrNull?.functionOrNull
-val Value.headOrNull get() = sequenceOrNull?.lastValue?.let { value(it) }
+val Value.headOrNull get() = sequenceOrNull?.lastLine?.let { value(it) }
 val Value.tailOrNull get() = sequenceOrNull?.previousThunk?.value
 val Value.lastOrNull get() = contentsOrNull?.value?.headOrNull?.make(lastName)
 val Value.previousOrNull
@@ -101,7 +101,7 @@ val Value.previousOrNull
 		}
 val Value.onlyNameOrNull get() = onlyLineOrNull?.onlyNameOrNull
 
-val Sequence.onlyValueOrNull get() = if (previousThunk.value.isEmpty) lastValue else null
+val Sequence.onlyValueOrNull get() = if (previousThunk.value.isEmpty) lastLine else null
 
 val Line.literalOrNull get() = (this as? LiteralLine)?.literal
 val Line.fieldOrNull get() = (this as? FieldLine)?.field

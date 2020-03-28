@@ -804,4 +804,12 @@ class EvalTest {
 	fun given_prefix() {
 		script("given"("foo"())).assertEvalsToThis
 	}
+
+	@Test
+	fun reflect() {
+		leo(
+			"foo"(), "reflect"(), "gives"("reflected"(123)),
+			"foo"())
+			.assertEvalsTo(leo(123))
+	}
 }
