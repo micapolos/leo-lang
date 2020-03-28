@@ -6,7 +6,7 @@ val system = library_ {
 	text.say
 	does {
 		exec {
-			text("say")
+			it { text("say") }
 			it {
 				text("\"")
 				plus { given.text }

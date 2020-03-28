@@ -19,8 +19,16 @@ class DottedTest {
 			"plus"(30, "times"(40)),
 			"numbers"(10, 20, 30),
 			"names"("foo"(), "bar"(), "zoo"()),
-			"mixed"(10, "foo"(), "bar"(), 20, "bar"()))
-			.dottedString
+			"mixed"(10, "foo"(), "bar"(), 20, "bar"()),
+			"it"(123, "native"(), "string"()),
+			"sequence"(
+				1,
+				"plus"(2),
+				"plus"(3)),
+			"a"(), "b"(),
+			"plus"("c"()),
+			"plus"("d"()))
+			.leoString
 			.assertEqualTo(
 				linesString(
 					"circle",
@@ -29,9 +37,7 @@ class DottedTest {
 					"    x 20",
 					"    y 20",
 					"center.point.x.number",
-					"plus",
-					"  30",
-					"  times 40",
+					"plus 30.times 40",
 					"numbers",
 					"  10",
 					"  20",
@@ -39,14 +45,22 @@ class DottedTest {
 					"names foo.bar.zoo",
 					"mixed",
 					"  10.foo.bar",
-					"  20.bar"))
+					"  20.bar",
+					"it 123.native.string",
+					"sequence",
+					"  1",
+					"  plus 2",
+					"  plus 3",
+					"a.b",
+					"plus c",
+					"plus d"))
 	}
 
 	@Test
 	fun fragment() {
 		emptyFragment
 			.begin("circle")
-			.dottedString
+			.leoString
 			.assertEqualTo(
 				linesString(
 					"circle",
@@ -58,7 +72,7 @@ class DottedTest {
 		emptyFragment
 			.begin("circle")
 			.begin("radius")
-			.dottedString
+			.leoString
 			.assertEqualTo(
 				linesString(
 					"circle",
@@ -72,7 +86,7 @@ class DottedTest {
 			.begin("circle")
 			.begin("radius")
 			.end
-			.dottedString
+			.leoString
 			.assertEqualTo(
 				linesString(
 					"circle",
@@ -86,7 +100,7 @@ class DottedTest {
 			.plus(literal(10))
 			.begin("inc")
 			.end
-			.dottedString
+			.leoString
 			.assertEqualTo(
 				linesString(
 					"10.inc",

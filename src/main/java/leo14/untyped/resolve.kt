@@ -311,6 +311,6 @@ val Sequence.resolveScriptText: Thunk?
 	get() =
 		matchPostfix(textName) { lhs ->
 			lhs.matchPostfix(leoName) { lhs ->
-				thunk(value(literal(lhs.script.dottedString)))
+				thunk(value(literal(lhs.script.leoString)))
 			}
 		}

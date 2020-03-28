@@ -3,111 +3,140 @@ package leo14.untyped
 import leo.base.*
 import leo14.*
 
-val Script.dottedString
+val Script.leoString
 	get() =
-		appendableIndentedString { it.appendDotted(this) }
+		appendableIndentedString { it.leoAppend(this) }
 
-val ScriptLink.dottedString
+val ScriptLink.leoString
 	get() =
-		appendableIndentedString { it.appendDotted(this) }
+		appendableIndentedString { it.leoAppend(this) }
 
-val ScriptLine.dottedString
+val ScriptLine.leoString
 	get() =
-		appendableIndentedString { it.appendDotted(this) }
+		appendableIndentedString { it.leoAppend(this) }
 
-val ScriptField.dottedString
+val ScriptField.leoString
 	get() =
-		appendableIndentedString { it.appendDotted(this) }
+		appendableIndentedString { it.leoAppend(this) }
 
-val Fragment.dottedString
+val Fragment.leoString
 	get() =
-		appendableIndentedString { it.appendDotted(this) }
+		appendableIndentedString { it.leoAppend(this) }
 
-val FragmentParent.dottedString
+val FragmentParent.leoString
 	get() =
-		appendableIndentedString { it.appendDotted(this) }
+		appendableIndentedString { it.leoAppend(this) }
 
-fun AppendableIndented.appendDotted(script: Script): AppendableIndented =
+fun AppendableIndented.leoAppend(script: Script): AppendableIndented =
 	when (script) {
 		is UnitScript -> this
-		is LinkScript -> appendDotted(script.link)
+		is LinkScript -> leoAppend(script.link)
 	}
 
-fun AppendableIndented.appendDotted(link: ScriptLink): AppendableIndented =
+fun AppendableIndented.leoAppend(link: ScriptLink): AppendableIndented =
 	this
-		.appendDotted(link.lhs)
+		.leoAppendNonTail(link.lhs)
 		.runIf(!link.lhs.isEmpty) {
-			if (link.lhs.isDottedLhs && link.line.isDottedRhs) append(".")
+			if (link.isDottable) append(".")
 			else append("\n")
 		}
-		.appendDotted(link.line)
+		.leoAppend(link.line)
 
-fun AppendableIndented.appendDotted(line: ScriptLine): AppendableIndented =
-	when (line) {
-		is LiteralScriptLine -> appendDotted(line.literal)
-		is FieldScriptLine -> appendDotted(line.field)
+fun AppendableIndented.leoAppendNonTail(script: Script): AppendableIndented =
+	when (script) {
+		is UnitScript -> this
+		is LinkScript -> leoAppendNonTail(script.link)
 	}
 
-fun AppendableIndented.appendDotted(field: ScriptField): AppendableIndented =
-	if (field.rhs.isEmpty) append(field.string)
-	else if (field.rhs.isSimpleRhs) append(field.string).append(" ").appendDotted(field.rhs)
-	else append(field.string).indented { append("\n").appendDotted(field.rhs) }
+fun AppendableIndented.leoAppendNonTail(link: ScriptLink): AppendableIndented =
+	this
+		.leoAppendNonTail(link.lhs)
+		.runIf(!link.lhs.isEmpty) {
+			if (link.isDottableNonTail) append(".")
+			else append("\n")
+		}
+		.leoAppend(link.line)
 
-fun AppendableIndented.appendDotted(literal: Literal): AppendableIndented =
+fun AppendableIndented.leoAppend(line: ScriptLine): AppendableIndented =
+	when (line) {
+		is LiteralScriptLine -> leoAppend(line.literal)
+		is FieldScriptLine -> leoAppend(line.field)
+	}
+
+fun AppendableIndented.leoAppend(field: ScriptField): AppendableIndented =
+	if (field.rhs.isEmpty) append(field.string)
+	else if (field.isSpaceable) append(field.string).append(" ").leoAppend(field.rhs)
+	else append(field.string).indented { append("\n").leoAppend(field.rhs) }
+
+fun AppendableIndented.leoAppend(literal: Literal): AppendableIndented =
 	append(literal.string)
 
-fun AppendableIndented.appendDotted(fragment: Fragment): AppendableIndented =
+fun AppendableIndented.leoAppend(fragment: Fragment): AppendableIndented =
 	this
-		.ifNotNull(fragment.parent) { appendDotted(it) }
-		.appendDotted(fragment.script)
+		.ifNotNull(fragment.parent) { leoAppend(it) }
+		.leoAppend(fragment.script)
 		.runIf(!fragment.script.isEmpty) { append("\n") }
 
-fun AppendableIndented.appendDotted(parent: FragmentParent): AppendableIndented =
+fun AppendableIndented.leoAppendNonTail(fragment: Fragment): AppendableIndented =
 	this
-		.appendDotted(parent.fragment)
+		.ifNotNull(fragment.parent) { leoAppend(it) }
+		.leoAppendNonTail(fragment.script)
+		.runIf(!fragment.script.isEmpty) { append("\n") }
+
+fun AppendableIndented.leoAppend(parent: FragmentParent): AppendableIndented =
+	this
+		.leoAppendNonTail(parent.fragment)
 		.append(parent.begin.string)
 		.indented.append("\n")
 
-val Script.isSimpleRhs: Boolean
+val ScriptField.isSpaceable: Boolean
+	get() =
+		rhs.isSpaceableRhs
+
+val Script.isSpaceableRhs: Boolean
 	get() =
 		when (this) {
 			is UnitScript -> false
-			is LinkScript -> link.isSimpleRhs
+			is LinkScript -> link.isSpaceableRhs
 		}
 
-val ScriptLink.isSimpleRhs: Boolean
+val ScriptLink.isSpaceableRhs: Boolean
 	get() =
-		isDotted || lhs.isEmpty
+		lhs.isEmpty || lhs.isSpaceableRhs && isDottable
 
-val Script.isDottedLhs: Boolean
+val ScriptLink.isDottable: Boolean
+	get() =
+		lhs.isDottableLhs && line.isDottableRhs
+
+val ScriptLink.isDottableNonTail: Boolean
+	get() =
+		isDottable && line.isWord
+
+val Script.isDottableLhs: Boolean
 	get() =
 		when (this) {
 			is UnitScript -> false
-			is LinkScript -> link.isDottedLhs
+			is LinkScript -> link.isDottableLhs
 		}
 
-val ScriptLink.isDottedLhs: Boolean
+val ScriptLink.isDottableLhs: Boolean
 	get() =
 		line.isSimple
+
+val ScriptLine.isDottableRhs: Boolean
+	get() =
+		when (this) {
+			is LiteralScriptLine -> false
+			is FieldScriptLine -> true
+		}
 
 val Script.isDotted: Boolean
 	get() =
 		when (this) {
-			is UnitScript -> true
+			is UnitScript -> false
 			is LinkScript -> link.isDotted
 		}
 
 val ScriptLink.isDotted: Boolean
 	get() =
-		lhs.isDotted && line.isDottedRhs
-
-val ScriptLine.isDottedRhs: Boolean
-	get() =
-		isName
-
-val ScriptLine.isName: Boolean
-	get() =
-		when (this) {
-			is LiteralScriptLine -> false
-			is FieldScriptLine -> field.isSimple
-		}
+		lhs.isDotted && line.isDottableRhs

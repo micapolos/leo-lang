@@ -70,6 +70,7 @@ infix fun String.lineTo(script: Script) = line(fieldTo(script))
 val String.line: ScriptLine get() = this lineTo script()
 
 val Script.isEmpty get() = (this is UnitScript)
+val Script.linkOrNull get() = (this as? LinkScript)?.link
 
 val Script.isWord
 	get() =

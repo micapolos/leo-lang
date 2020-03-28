@@ -31,7 +31,7 @@ val text = library_ {
 	does {
 		given.text.native.string
 		invoke {
-			text("split")
+			it { text("split") }
 			it { text("\n").native.string }
 		}
 		list

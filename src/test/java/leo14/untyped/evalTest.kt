@@ -752,7 +752,7 @@ class EvalTest {
 			"zero"(),
 			"plus"("one"()),
 			"leo"(), "text"())
-			.assertEvalsTo(line(literal("zero\nplus one")))
+			.assertEvalsTo(line(literal("zero.plus one")))
 	}
 
 	@Test
