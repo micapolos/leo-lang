@@ -15,4 +15,11 @@ val system = library_ {
 		}
 		clear
 	}
+
+	text.html.open.does {
+		text("leo14.js.compiler.MainKt").native.class_.static.invoke {
+			text("htmlOpen")
+			it { given.text.native.string }
+		}.clear
+	}
 }
