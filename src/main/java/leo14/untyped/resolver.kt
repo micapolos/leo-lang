@@ -186,7 +186,7 @@ fun Resolver.writes(script: Script): Resolver =
 
 val Resolver.compile: Resolver
 	get() =
-		resolver().compile(compiler.applyContext.reflect(thunk))
+		clear.compile(compiler.applyContext.reflect(thunk))
 
 fun Resolver.compile(script: Script): Resolver =
 	reader
