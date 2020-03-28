@@ -3,7 +3,7 @@ package leo14.untyped
 import leo.base.*
 import leo14.*
 
-val givenDot = true
+val givenDot = false
 
 val Script.leoString
 	get() =
