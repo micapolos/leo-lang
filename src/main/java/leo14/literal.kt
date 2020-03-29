@@ -1,5 +1,9 @@
 package leo14
 
+import leo.base.appendableString
+import leo.base.fold
+import leo14.parser.escapedString
+
 sealed class Literal
 
 data class StringLiteral(val string: String) : Literal() {
@@ -46,4 +50,9 @@ val Literal.reflectScriptLine
 // TODO: Implement proper escaping.
 val String.literalString
 	get() =
-		"\"" + replace("\n", "\\n").replace("\t", "\\t").replace("\"", "\\\"") + "\""
+		appendableString { appendable ->
+			appendable
+				.append("\"")
+				.fold(this) { char -> append(char.escapedString) }
+				.append("\"")
+		}

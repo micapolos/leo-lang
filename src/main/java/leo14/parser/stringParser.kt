@@ -4,14 +4,17 @@ import leo.base.fold
 import leo.base.notNullIf
 import leo.base.orNull
 import leo13.*
-import leo14.line
-import leo14.lineTo
-import leo14.literal
-import leo14.script
+import leo14.*
+
+val escapeChar: Char = '\\'
 
 sealed class StringParser
 object BeginStringParser : StringParser()
 data class CharStackStringParser(val charStack: Stack<Char>) : StringParser()
+data class EscapeCharStringParser(
+	val parent: CharStackStringParser,
+	val escapeCharParser: EscapeCharParser) : StringParser()
+
 data class EndStringParser(val string: String) : StringParser()
 
 val emptyStringParser: StringParser = BeginStringParser
@@ -26,8 +29,15 @@ fun StringParser.parse(char: Char): StringParser? =
 			}
 		is CharStackStringParser ->
 			when (char) {
+				escapeChar -> EscapeCharStringParser(this, EmptyEscapeCharParser(leo.base.empty))
 				'"' -> stringParser(StringBuilder().fold(charStack.reverse) { append(it) }.toString())
 				else -> stringParser(charStack.push(char))
+			}
+		is EscapeCharStringParser ->
+			escapeCharParser.parse(char)?.let { parsedEscapeCharParser ->
+				parsedEscapeCharParser.charOrNull?.let { escapedChar ->
+					stringParser(parent.charStack.push(escapedChar))
+				}
 			}
 		is EndStringParser -> null
 	}
@@ -44,15 +54,16 @@ fun parseString(string: String): String =
 		.parse(string)!!
 		.string
 
-val StringParser.coreString
+val StringParser.coreString: String
 	get() =
 		when (this) {
 			is BeginStringParser -> ""
-			is CharStackStringParser -> "\"" + StringBuilder().fold(charStack.reverse) { append(it) }.toString()
-			is EndStringParser -> "\"" + string + "\""
+			is CharStackStringParser -> "\"" + StringBuilder().fold(charStack.reverse) { append(it.escapedString) }.toString()
+			is EndStringParser -> string.literalString
+			is EscapeCharStringParser -> parent.coreString + "$escapeChar"
 		}
 
-val StringParser.reflectScriptLine
+val StringParser.reflectScriptLine: ScriptLine
 	get() =
 		"string" lineTo script(
 			"parser" lineTo script(
@@ -60,6 +71,7 @@ val StringParser.reflectScriptLine
 					BeginStringParser -> "empty".line
 					is CharStackStringParser -> "open" lineTo script(literal(StringBuilder().fold(charStack.reverse) { append(it) }.toString()))
 					is EndStringParser -> line(literal(string))
+					is EscapeCharStringParser -> "escape" lineTo script(parent.reflectScriptLine)
 				}
 			)
 		)
