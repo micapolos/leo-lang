@@ -7,44 +7,30 @@ import leo13.reverse
 import leo14.*
 
 data class Resolver(
-	val compiler: Compiler,
+	val context: Context,
 	val thunk: Thunk)
 
 fun Context.eval(script: Script): Thunk =
 	resolver().compile(script).thunk
 
-fun Compiler.resolver(thunk: Thunk = thunk(value())) =
+fun Context.resolver(thunk: Thunk = thunk(value())) =
 	Resolver(this, thunk)
 
-fun Compiler.resolver(value: Value) =
-	resolver(thunk(value))
-
-fun Context.resolver(thunk: Thunk = thunk(value())) =
-	compiler(this).resolver(thunk)
-
-fun Context.resolver(value: Value) =
-	compiler(this).resolver(value)
-
-fun resolver(value: Value = value()) =
-	context().resolver(value)
-
 fun Resolver.apply(line: Line): Resolver =
-	compiler.applyContext.resolve(this.thunk.plus(line))
+	context.resolve(this.thunk.plus(line))
 
 fun Resolver.lazy(script: Script): Resolver =
-	compiler.resolver(thunk(lazy(compiler.applyContext, script)))
+	context.resolver(thunk(lazy(context, script)))
 
 fun Resolver.do_(script: Script): Resolver =
 	set(
-		compiler
-			.applyContext
+		context
 			.withGiven(thunk)
 			.asLazy(script)
 			.eval)
 
 fun Resolver.recursively(script: Script): Resolver =
-	compiler
-		.applyContext
+	context
 		.push(
 			rule(
 				pattern(thunk(value(anythingName lineTo value(), recurseName lineTo value()))),
@@ -59,8 +45,7 @@ fun Resolver.match(script: Script): Resolver =
 				.rhsOrNull(sequence.lastLine.selectName)
 				?.let { body ->
 					set(
-						compiler
-							.applyContext
+						context
 							.push(
 								rule(
 									pattern(thunk(value(matchingName))),
@@ -78,7 +63,7 @@ val Resolver.value
 
 val Resolver.printScript
 	get() =
-		compiler.applyContext.reflect(thunk)
+		context.reflect(thunk)
 
 fun Resolver.append(line: Line): Resolver =
 	set(this.thunk.plus(line))
@@ -143,14 +128,14 @@ fun Context.resolver(sequence: Sequence): Resolver =
 fun Resolver.function(script: Script): Resolver =
 	when (script) {
 		is UnitScript -> apply(functionName lineTo value())
-		is LinkScript -> apply(line(function(compiler.applyContext, script)))
+		is LinkScript -> apply(line(function(context, script)))
 	}
 
 fun Resolver.assert(script: Script): Resolver =
 	script
 		.matchInfix(givesName) { lhs, rhs ->
-			compiler.evalThunk(lhs).let { lhsEvaled ->
-				compiler.evalThunk(rhs).let { rhsEvaled ->
+			context.evaluate(lhs).let { lhsEvaled ->
+				context.evaluate(rhs).let { rhsEvaled ->
 					if (lhsEvaled != rhsEvaled) throw AssertionError(
 						errorName lineTo
 							lhs.value.plus(
@@ -164,18 +149,18 @@ fun Resolver.assert(script: Script): Resolver =
 		?: append(assertName lineTo script.value)
 
 fun Resolver.does(script: Script): Resolver =
-	compiler
+	context
 		.push(definition(rule(pattern(thunk), evalBody(script))))
-		.resolver(value())
+		.resolver(emptyThunk)
 
 fun Resolver.writes(script: Script): Resolver =
-	compiler
+	context
 		.push(definition(rule(pattern(thunk), compileBody(script))))
-		.resolver(value())
+		.resolver(emptyThunk)
 
 val Resolver.compile: Resolver
 	get() =
-		clear.compile(compiler.applyContext.reflect(thunk))
+		clear.compile(context.reflect(thunk))
 
 fun Resolver.compile(script: Script): Resolver =
 	reader
@@ -185,7 +170,7 @@ fun Resolver.compile(script: Script): Resolver =
 		.resolver
 
 fun Resolver.evaluate(script: Script): Resolver =
-	compiler.applyContext.resolver(
+	context.resolver(
 		reader
 			.fold(script.tokenStack.reverse) { write(it)!! }
 			.run { this as UnquotedReader }

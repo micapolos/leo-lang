@@ -3,6 +3,7 @@ package leo14.untyped
 import leo.base.Empty
 import leo.base.empty
 import leo.base.fold
+import leo14.Script
 
 sealed class Context
 data class EmptyContext(val empty: Empty) : Context()
@@ -62,3 +63,6 @@ fun Context.compileAs(thunk: Thunk): Context? =
 	thunk.matchInfix(asName) { lhs, rhs ->
 		push(rule(pattern(rhs), body(lhs)))
 	}
+
+fun Context.evaluate(script: Script): Thunk =
+	resolver(emptyThunk).evaluate(script).thunk

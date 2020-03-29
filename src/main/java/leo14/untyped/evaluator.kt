@@ -15,7 +15,7 @@ fun Environment.evaluator(thunk: Thunk) =
 
 val Resolver.evaluator
 	get() =
-		compiler.environment.evaluator(thunk)
+		context.environment.evaluator(thunk)
 
 fun Evaluator.write(line: Line): Evaluator =
 	environment.writeEvaluator(thunk sequenceTo line)
