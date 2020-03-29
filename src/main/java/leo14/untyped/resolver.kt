@@ -3,7 +3,6 @@ package leo14.untyped
 import leo13.contextName
 import leo13.expectedName
 import leo13.fold
-import leo13.recursiveName
 import leo13.reverse
 import leo14.*
 
@@ -128,7 +127,7 @@ fun Context.resolveContextName(thunk: Thunk): Resolver? =
 
 fun Context.resolveEvaluate(thunk: Thunk): Resolver? =
 	thunk.matchPostfix(evaluateName) { lhs ->
-		resolver(resolver().compile(lhs.value.script).thunk)
+		resolver(thunk(value())).evaluate(lhs.value.script)
 	}
 
 fun Resolver.set(thunk: Thunk): Resolver =
@@ -146,16 +145,6 @@ fun Resolver.function(script: Script): Resolver =
 		is UnitScript -> apply(functionName lineTo value())
 		is LinkScript -> apply(line(function(compiler.applyContext, script)))
 	}
-
-val Script.resolveRecursive: Script?
-	get() =
-		(this as? LinkScript)?.link?.let { link ->
-			if (!link.lhs.isEmpty) null
-			else (link.line as? FieldScriptLine)?.field?.let { field ->
-				if (field.string == recursiveName) field.rhs
-				else null
-			}
-		}
 
 fun Resolver.assert(script: Script): Resolver =
 	script
@@ -194,3 +183,15 @@ fun Resolver.compile(script: Script): Resolver =
 		.run { this as UnquotedReader }
 		.unquoted
 		.resolver
+
+fun Resolver.evaluate(script: Script): Resolver =
+	compiler.applyContext.resolver(
+		reader
+			.fold(script.tokenStack.reverse) { write(it)!! }
+			.run { this as UnquotedReader }
+			.unquoted
+			.resolver
+			.thunk)
+
+tailrec fun Resolver.loop(script: Script): Resolver =
+	evaluate(script).loop(script)

@@ -820,4 +820,10 @@ class EvalTest {
 			"foo"())
 			.assertEvalsTo(leo(123))
 	}
+
+	@Test
+	fun loop() {
+		// Test that it loops forever, and does not stack-overflow. But how?
+		//leo("loop"()).eval
+	}
 }
