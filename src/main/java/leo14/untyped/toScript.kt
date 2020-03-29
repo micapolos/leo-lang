@@ -77,12 +77,7 @@ val Definition.contextScript
 	get() =
 		when (this) {
 			is RuleDefinition -> rule.contextScript
-			is RecursiveDefinition -> recursive.script
 		}
-
-val Recursive.script
-	get() =
-		script(recurseName lineTo context.functionScript)
 
 val Pattern.ruleScript
 	get() =
