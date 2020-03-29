@@ -34,9 +34,9 @@ val EscapeCharParser.charOrNull
 val Char.escapedString
 	get() =
 		when (this) {
-			newlineEscapeChar -> "$escapeChar$newlineEscapeChar"
-			backslashEscapeChar -> "$escapeChar$backslashEscapeChar"
-			tabEscapeChar -> "$escapeChar$tabEscapeChar"
-			doubleQuoteEscapeChar -> "$escapeChar$doubleQuoteEscapeChar"
+			'\n' -> "$escapeChar$newlineEscapeChar"
+			'\\' -> "$escapeChar$backslashEscapeChar"
+			'\t' -> "$escapeChar$tabEscapeChar"
+			'"' -> "$escapeChar$doubleQuoteEscapeChar"
 			else -> toString()
 		}
