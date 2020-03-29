@@ -3,11 +3,33 @@ package leo14.untyped.dsl2.library
 import leo14.untyped.dsl2.*
 
 val draw = library_ {
-	point
-	gives {
+	point.does {
 		point {
 			x { number }
 			y { number }
+		}
+	}
+
+	center.does { center { point } }
+	radius.does { radius { number } }
+	winding.does {
+		either {
+			it { clockwise }
+			it { anticlockwise }
+		}
+	}
+
+	circle.does {
+		circle {
+			it { center }
+			it { radius }
+		}
+	}
+
+	line.does {
+		line {
+			from { point }
+			to { point }
 		}
 	}
 
@@ -105,6 +127,33 @@ val draw = library_ {
 		}
 		code
 		gives { text("ctx.arc(10, 20, 30, 40*p, 50*p, true)") }
+	}
+
+	circle.does {
+		move {
+			to {
+				point {
+					x {
+						given.circle.center.point.x.number
+						plus { given.circle.radius.number }
+					}
+					y {
+						given.circle.center.point.y.number
+					}
+				}
+			}
+		}
+		plus { text("\n") }
+		plus {
+			arc {
+				given.circle.object_
+				angle {
+					start { degrees { number(0) } }
+					end { degrees { number(360) } }
+				}
+				winding { clockwise }
+			}
+		}
 	}
 
 	path { anything }
