@@ -170,13 +170,7 @@ fun Resolver.compile(script: Script): Resolver =
 		.resolver
 
 fun Resolver.evaluate(script: Script): Resolver =
-	context.resolver(
-		reader
-			.fold(script.tokenStack.reverse) { write(it)!! }
-			.run { this as UnquotedReader }
-			.unquoted
-			.resolver
-			.thunk)
+	context.resolver(compile(script).thunk)
 
 tailrec fun Resolver.loop(script: Script): Resolver =
 	evaluate(script).loop(script)
