@@ -170,7 +170,7 @@ fun Resolver.compile(script: Script): Resolver =
 		.resolver
 
 fun Resolver.evaluate(script: Script): Resolver =
-	context.resolver(compile(script).thunk)
+	compile(script).thunk.let { context.resolver(it) }
 
 tailrec fun Resolver.loop(script: Script): Resolver =
 	evaluate(script).loop(script)
