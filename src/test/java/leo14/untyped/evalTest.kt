@@ -822,7 +822,17 @@ class EvalTest {
 	}
 
 	@Test
-	fun repeat_stop() {
+	fun repeating_empty() {
+		leo("repeating"()).assertEvalsTo()
+	}
+
+	@Test
+	fun repeating_noRepeat() {
+		leo("repeating"(1, "plus"(2))).assertEvalsTo(leo(3))
+	}
+
+	@Test
+	fun repeating_stop() {
 		leo(
 			1,
 			"times"(6, "factorial"()),
@@ -837,5 +847,10 @@ class EvalTest {
 							"times"("given"(), "times"(), "number"(), "minus"(1), "factorial"()),
 							"repeat"())))))
 			.assertEvalsTo(leo(720))
+	}
+
+	@Test
+	fun repeating_localScope() {
+		leo("repeating"("x"(), "gives"(2)), "x"()).assertEvalsTo(leo("x"()))
 	}
 }
