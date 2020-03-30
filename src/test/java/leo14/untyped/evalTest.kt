@@ -826,16 +826,16 @@ class EvalTest {
 		leo(
 			1,
 			"times"(6, "factorial"()),
-			"repeat"(
+			"repeating"(
 				"do"(
 					"given"(), "times"(), "number"(), "equals"(1),
 					"match"(
-						"true"("given"(), "number"(), "stop"()),
+						"true"("given"(), "number"()),
 						"false"(
 							"given"(), "number"(),
 							"times"("given"(), "times"(), "number"()),
-							"times"(
-								"given"(), "times"(), "number"(), "minus"(1), "factorial"()))))))
+							"times"("given"(), "times"(), "number"(), "minus"(1), "factorial"()),
+							"repeat"())))))
 			.assertEvalsTo(leo(720))
 	}
 }
