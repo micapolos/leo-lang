@@ -853,4 +853,21 @@ class EvalTest {
 	fun repeating_localScope() {
 		leo("repeating"("x"(), "gives"(2)), "x"()).assertEvalsTo(leo("x"()))
 	}
+
+	@Test
+	fun numberText() {
+		leo(0, "text"()).assertEvalsTo(leo("0"))
+		leo(123, "text"()).assertEvalsTo(leo("123"))
+		leo(3.14, "text"()).assertEvalsTo(leo("3.14"))
+		leo(-3.14, "text"()).assertEvalsTo(leo("-3.14"))
+	}
+
+	@Test
+	fun textNumber() {
+		leo("0", "number"()).assertEvalsTo(leo(0))
+		leo("123", "number"()).assertEvalsTo(leo(123))
+		leo("3.14", "number"()).assertEvalsTo(leo(3.14))
+		leo("-3.14", "number"()).assertEvalsTo(leo(-3.14))
+		leo("foo", "number"()).assertEvalsToThis
+	}
 }

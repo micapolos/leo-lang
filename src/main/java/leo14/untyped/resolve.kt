@@ -1,12 +1,14 @@
 package leo14.untyped
 
 import leo.base.ifOrNull
+import leo.base.string
 import leo.java.lang.exec
 import leo13.array
 import leo13.mapOrNull
 import leo13.reverse
 import leo13.thisName
 import leo14.*
+import java.math.BigDecimal
 
 val autoMake = false
 
@@ -34,7 +36,9 @@ val Sequence.resolve: Thunk?
 			?: resolveNumberPlusNumber
 			?: resolveNumberMinusNumber
 			?: resolveNumberTimesNumber
+			?: resolveNumberText
 			?: resolveTextPlusText
+			?: resolveTextNumber
 			?: resolveNewlineText
 			?: resolveHead
 			?: resolveTail
@@ -127,6 +131,14 @@ val Sequence.resolveThis: Thunk?
 			lhs.this_
 		}
 
+val Sequence.resolveNumberText: Thunk?
+	get() =
+		matchPostfix(textName) { lhs ->
+			lhs.matchNumber { lhs ->
+				thunk(value(literal(lhs.string)))
+			}
+		}
+
 val Sequence.resolveNumberPlusNumber: Thunk?
 	get() =
 		matchInfix(plusName) { lhs, rhs ->
@@ -163,6 +175,18 @@ val Sequence.resolveNumberTimesNumber: Thunk?
 			lhs.matchNumber { lhs ->
 				rhs.matchNumber { rhs ->
 					thunk(value(literal(lhs * rhs)))
+				}
+			}
+		}
+
+val Sequence.resolveTextNumber: Thunk?
+	get() =
+		matchPostfix(numberName) { lhs ->
+			lhs.matchText { lhs ->
+				try {
+					thunk(value(literal(number(BigDecimal(lhs)))))
+				} catch (e: NumberFormatException) {
+					null
 				}
 			}
 		}
