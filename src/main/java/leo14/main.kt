@@ -89,6 +89,10 @@ fun run(reducer: Reducer<String, Char>) {
 }
 
 fun print(reducer: Reducer<String, Char>) {
+	printLeo(reducer.state)
+}
+
+fun printLeo(string: String) {
 	print("${ansi.clear}${ansi.home}")
-	print(reducer.state)
+	print(string)
 }

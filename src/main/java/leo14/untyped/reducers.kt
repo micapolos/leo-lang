@@ -17,6 +17,6 @@ val Reader.reducer: Reducer<Reader, Token>
 val Reader.stringCharReducer: Reducer<String, Char>
 	get() =
 		reducer.charReader().reducer.mapState {
-			tokenReducer.state.fragment.leoStringNonTail + tokenParser.coreString
+			tokenReducer.state.fragment.leoStringNonTail.plus(tokenParser.coreString)
 		}
 
