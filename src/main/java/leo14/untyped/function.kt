@@ -1,9 +1,6 @@
 package leo14.untyped
 
-import leo13.fold
-import leo13.reverse
 import leo14.Script
-import leo14.tokenStack
 
 data class Function(
 	val scope: Scope,
@@ -14,13 +11,14 @@ fun function(scope: Scope, script: Script) =
 
 fun function(script: Script) = function(scope(), script)
 
-fun Function.apply(given: Thunk): Thunk =
-	scope
+tailrec fun Function.apply(given: Thunk): Thunk {
+	// TODO: This code is repeated with Resolver.do_(). Extract it.
+	val done = scope
 		.push(given.givenRule)
 		.resolver()
-		.reader
-		.fold(script.tokenStack.reverse) { write(it)!! }
-		.run { this as UnquotedReader }
-		.unquoted
-		.resolver
+		.evaluate(script)
 		.thunk
+	val repeatOrNull = done.matchPostfix(repeatName) { it }
+	return if (repeatOrNull == null) done
+	else apply(repeatOrNull)
+}

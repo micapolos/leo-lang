@@ -839,6 +839,24 @@ class EvalTest {
 	}
 
 	@Test
+	fun does_repeat() {
+		leo(
+			"number"(),
+			"times"("number"(), "factorial"()),
+			"does"(
+				"given"(), "times"(), "number"(), "equals"(1),
+				"match"(
+					"true"("given"(), "number"()),
+					"false"(
+						"given"(), "number"(),
+						"times"("given"(), "times"(), "number"()),
+						"times"("given"(), "times"(), "number"(), "minus"(1), "factorial"()),
+						"repeat"()))),
+			1, "times"(6, "factorial"()))
+			.assertEvalsTo(leo(720))
+	}
+
+	@Test
 	fun numberText() {
 		leo(0, "text"()).assertEvalsTo(leo("0"))
 		leo(123, "text"()).assertEvalsTo(leo("123"))
