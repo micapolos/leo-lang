@@ -39,7 +39,6 @@ data class UnquotedDoCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedRecursivelyCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedMatchCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedExpandsCodeOp(val unquoted: Unquoted) : CodeOp()
-data class UnquotedRepeatingCodeOp(val unquoted: Unquoted) : CodeOp()
 
 val emptyReader: Reader
 	get() =
@@ -169,11 +168,6 @@ fun Unquoted.write(begin: Begin): Reader =
 				Code(
 					UnquotedExpandsCodeOp(this),
 					script()))
-		repeatingName ->
-			CodeReader(
-				Code(
-					UnquotedRepeatingCodeOp(this),
-					script()))
 		else ->
 			UnquotedReader(
 				Unquoted(
@@ -262,11 +256,6 @@ fun CodeOp.write(script: Script): Reader? =
 			UnquotedReader(
 				unquoted.copy(
 					resolver = unquoted.resolver.writes(script)))
-		is UnquotedRepeatingCodeOp ->
-			UnquotedReader(
-				unquoted.copy(
-					resolver = unquoted.resolver.repeating(script)))
-
 	}
 
 fun Quoted.write(literal: Literal): Reader? =

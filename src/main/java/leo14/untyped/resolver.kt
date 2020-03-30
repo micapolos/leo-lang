@@ -21,12 +21,12 @@ fun Resolver.apply(line: Line): Resolver =
 fun Resolver.lazy(script: Script): Resolver =
 	scope.resolver(thunk(lazy(scope, script)))
 
-fun Resolver.do_(script: Script): Resolver =
-	set(
-		scope
-			.withGiven(thunk)
-			.asLazy(script)
-			.eval)
+tailrec fun Resolver.do_(script: Script): Resolver {
+	val done = scope.withGiven(thunk).evaluate(script)
+	val repeatOrNull = done.matchPostfix(repeatName) { it }
+	return if (repeatOrNull == null) set(done)
+	else set(repeatOrNull).do_(script)
+}
 
 fun Resolver.recursively(script: Script): Resolver =
 	scope
@@ -170,10 +170,3 @@ fun Resolver.compile(script: Script): Resolver =
 
 fun Resolver.evaluate(script: Script): Resolver =
 	compile(script).thunk.let { scope.resolver(it) }
-
-tailrec fun Resolver.repeating(script: Script): Resolver {
-	val result = evaluate(script).thunk
-	val repeatOrNull = result.matchPostfix(repeatName) { it }
-	return if (repeatOrNull == null) set(result)
-	else set(repeatOrNull).repeating(script)
-}
