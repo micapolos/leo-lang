@@ -172,5 +172,9 @@ fun Resolver.compile(script: Script): Resolver =
 fun Resolver.evaluate(script: Script): Resolver =
 	compile(script).thunk.let { context.resolver(it) }
 
-tailrec fun Resolver.loop(script: Script): Resolver =
-	evaluate(script).loop(script)
+tailrec fun Resolver.repeat(script: Script): Resolver {
+	val result = evaluate(script)
+	val brokenOrNull = result.thunk.matchPostfix(stopName) { it }
+	return if (brokenOrNull != null) result.set(brokenOrNull)
+	else result.repeat(script)
+}

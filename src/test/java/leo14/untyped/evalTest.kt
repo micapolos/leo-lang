@@ -822,8 +822,20 @@ class EvalTest {
 	}
 
 	@Test
-	fun loop() {
-		// Test that it loops forever, and does not stack-overflow. But how?
-		//leo("loop"()).eval
+	fun repeat_stop() {
+		leo(
+			1,
+			"times"(6, "factorial"()),
+			"repeat"(
+				"do"(
+					"given"(), "times"(), "number"(), "equals"(1),
+					"match"(
+						"true"("given"(), "number"(), "stop"()),
+						"false"(
+							"given"(), "number"(),
+							"times"("given"(), "times"(), "number"()),
+							"times"(
+								"given"(), "times"(), "number"(), "minus"(1), "factorial"()))))))
+			.assertEvalsTo(leo(720))
 	}
 }
