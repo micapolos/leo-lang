@@ -1,36 +1,35 @@
 package leo14.untyped
 
-import leo13.contextName
 import leo13.expectedName
 import leo13.fold
 import leo13.reverse
 import leo14.*
 
 data class Resolver(
-	val context: Context,
+	val scope: Scope,
 	val thunk: Thunk)
 
-fun Context.eval(script: Script): Thunk =
+fun Scope.eval(script: Script): Thunk =
 	resolver().compile(script).thunk
 
-fun Context.resolver(thunk: Thunk = thunk(value())) =
+fun Scope.resolver(thunk: Thunk = thunk(value())) =
 	Resolver(this, thunk)
 
 fun Resolver.apply(line: Line): Resolver =
-	context.resolve(this.thunk.plus(line))
+	scope.resolve(this.thunk.plus(line))
 
 fun Resolver.lazy(script: Script): Resolver =
-	context.resolver(thunk(lazy(context, script)))
+	scope.resolver(thunk(lazy(scope, script)))
 
 fun Resolver.do_(script: Script): Resolver =
 	set(
-		context
+		scope
 			.withGiven(thunk)
 			.asLazy(script)
 			.eval)
 
 fun Resolver.recursively(script: Script): Resolver =
-	context
+	scope
 		.push(
 			rule(
 				pattern(thunk(value(anythingName lineTo value(), recurseName lineTo value()))),
@@ -45,7 +44,7 @@ fun Resolver.match(script: Script): Resolver =
 				.rhsOrNull(sequence.lastLine.selectName)
 				?.let { body ->
 					set(
-						context
+						scope
 							.push(
 								rule(
 									pattern(thunk(value(matchingName))),
@@ -63,7 +62,7 @@ val Resolver.value
 
 val Resolver.printScript
 	get() =
-		context.reflect(thunk)
+		scope.reflect(thunk)
 
 fun Resolver.append(line: Line): Resolver =
 	set(this.thunk.plus(line))
@@ -71,38 +70,38 @@ fun Resolver.append(line: Line): Resolver =
 fun Resolver.append(thunk: Thunk): Resolver =
 	set(this.thunk.plus(thunk))
 
-fun Context.resolve(thunk: Thunk): Resolver =
+fun Scope.resolve(thunk: Thunk): Resolver =
 	null
 		?: resolveContext(thunk)
 		?: resolveDefinitions(thunk)
 		?: resolveStatic(thunk)
 
-fun Context.resolveStatic(thunk: Thunk): Resolver =
+fun Scope.resolveStatic(thunk: Thunk): Resolver =
 	null
 		?: resolveCompile(thunk)
-		?: resolveContextName(thunk)
+		?: resolveScope(thunk)
 		?: resolveEvaluate(thunk)
 		?: resolver(thunk)
 
-fun Context.resolveContext(thunk: Thunk): Resolver? =
+fun Scope.resolveContext(thunk: Thunk): Resolver? =
 	apply(thunk)?.let { resolver(it) }
 
-fun Context.resolver(applied: Applied): Resolver =
+fun Scope.resolver(applied: Applied): Resolver =
 	when (applied) {
 		is ThunkApplied -> resolver(applied.thunk)
 		is ScriptApplied -> resolver().compile(applied.script)
 	}
 
-fun Context.resolveDefinitions(thunk: Thunk): Resolver? =
+fun Scope.resolveDefinitions(thunk: Thunk): Resolver? =
 	compile(thunk)?.resolver()
 
-fun Context.resolveCompile(thunk: Thunk): Resolver? =
+fun Scope.resolveCompile(thunk: Thunk): Resolver? =
 	thunk.matchPostfix(compileName) { lhs ->
 		resolver(lhs).compile
 	}
 
-fun Context.resolveContextName(thunk: Thunk): Resolver? =
-	thunk.matchInfix(contextName) { lhs, rhs ->
+fun Scope.resolveScope(thunk: Thunk): Resolver? =
+	thunk.matchInfix(scopeName) { lhs, rhs ->
 		lhs.matchEmpty {
 			rhs.matchEmpty {
 				resolver(thunk(functionScript.value))
@@ -110,7 +109,7 @@ fun Context.resolveContextName(thunk: Thunk): Resolver? =
 		}
 	}
 
-fun Context.resolveEvaluate(thunk: Thunk): Resolver? =
+fun Scope.resolveEvaluate(thunk: Thunk): Resolver? =
 	thunk.matchPostfix(evaluateName) { lhs ->
 		resolver(thunk(value())).evaluate(lhs.value.script)
 	}
@@ -122,20 +121,20 @@ val Resolver.clear
 	get() =
 		set(thunk(value()))
 
-fun Context.resolver(sequence: Sequence): Resolver =
+fun Scope.resolver(sequence: Sequence): Resolver =
 	resolver(sequence.previousThunk).apply(sequence.lastLine)
 
 fun Resolver.function(script: Script): Resolver =
 	when (script) {
 		is UnitScript -> apply(functionName lineTo value())
-		is LinkScript -> apply(line(function(context, script)))
+		is LinkScript -> apply(line(function(scope, script)))
 	}
 
 fun Resolver.assert(script: Script): Resolver =
 	script
 		.matchInfix(givesName) { lhs, rhs ->
-			context.evaluate(lhs).let { lhsEvaled ->
-				context.evaluate(rhs).let { rhsEvaled ->
+			scope.evaluate(lhs).let { lhsEvaled ->
+				scope.evaluate(rhs).let { rhsEvaled ->
 					if (lhsEvaled != rhsEvaled) throw AssertionError(
 						errorName lineTo
 							lhs.value.plus(
@@ -149,18 +148,18 @@ fun Resolver.assert(script: Script): Resolver =
 		?: append(assertName lineTo script.value)
 
 fun Resolver.does(script: Script): Resolver =
-	context
+	scope
 		.push(definition(rule(pattern(thunk), evalBody(script))))
 		.resolver(emptyThunk)
 
 fun Resolver.writes(script: Script): Resolver =
-	context
+	scope
 		.push(definition(rule(pattern(thunk), compileBody(script))))
 		.resolver(emptyThunk)
 
 val Resolver.compile: Resolver
 	get() =
-		clear.compile(context.reflect(thunk))
+		clear.compile(scope.reflect(thunk))
 
 fun Resolver.compile(script: Script): Resolver =
 	reader
@@ -170,7 +169,7 @@ fun Resolver.compile(script: Script): Resolver =
 		.resolver
 
 fun Resolver.evaluate(script: Script): Resolver =
-	compile(script).thunk.let { context.resolver(it) }
+	compile(script).thunk.let { scope.resolver(it) }
 
 tailrec fun Resolver.repeating(script: Script): Resolver {
 	val result = evaluate(script).thunk

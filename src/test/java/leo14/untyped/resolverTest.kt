@@ -8,8 +8,8 @@ import kotlin.test.Test
 
 class ResolverTest {
 	@Test
-	fun apply_context() {
-		val resolver = context()
+	fun apply_scope() {
+		val resolver = scope()
 			.push(
 				rule(
 					pattern(thunk(value("foo" lineTo value(), "bar" lineTo value()))),
@@ -23,14 +23,14 @@ class ResolverTest {
 
 	@Test
 	fun apply_definitions() {
-		val resolver = context()
+		val resolver = scope()
 			.push(rule(pattern(thunk(value("foo"))), body(thunk(value("bar")))))
 			.resolver(thunk(value("zoo")))
 
 		resolver
 			.apply(givesName lineTo value("zar"))
 			.assertEqualTo(
-				resolver.context.push(
+				resolver.scope.push(
 					definition(
 						rule(
 							pattern(thunk(value("zoo"))),
@@ -39,7 +39,7 @@ class ResolverTest {
 
 	@Test
 	fun apply_raw() {
-		val resolver = context()
+		val resolver = scope()
 			.push(rule(pattern(thunk(value("foo"))), body(thunk(value("bar")))))
 			.resolver(thunk(value("zoo")))
 
@@ -50,14 +50,14 @@ class ResolverTest {
 
 	@Test
 	fun writes() {
-		context()
+		scope()
 			.resolver(thunk(value("defx")))
 			.writes(
 				script(
 					"x" lineTo script(),
 					"gives" lineTo script(literal(1))))
 			.assertEqualTo(
-				context(
+				scope(
 					rule(
 						pattern(thunk(value("defx"))),
 						compileBody(

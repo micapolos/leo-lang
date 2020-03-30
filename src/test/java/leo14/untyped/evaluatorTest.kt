@@ -7,34 +7,34 @@ import org.junit.Test
 class EvaluatorTest {
 	@Test
 	fun quoteUnquote() {
-		context()
+		scope()
 			.environment
 			.quote
 			.unquoteOrNull!!
-			.assertEqualTo(context().environment)
+			.assertEqualTo(scope().environment)
 	}
 
 	@Test
-	fun write_context() {
-		context()
+	fun write_scope() {
+		scope()
 			.environment
 			.evaluator(thunk(value(line(literal(5)))))
 			.write(minusName lineTo value(line(literal(3))))
 			.assertEqualTo(
-				context()
+				scope()
 					.environment
 					.evaluator(thunk(value(line(literal(2))))))
 	}
 
 	@Test
 	fun write_quoted() {
-		context()
+		scope()
 			.environment
 			.quote
 			.evaluator(thunk(value(line(literal(5)))))
 			.write(minusName lineTo value(line(literal(3))))
 			.assertEqualTo(
-				context()
+				scope()
 					.environment
 					.quote
 					.evaluator(

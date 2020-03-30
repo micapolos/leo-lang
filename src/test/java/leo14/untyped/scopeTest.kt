@@ -6,37 +6,37 @@ import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
-class ContextTest {
-	private val context = context(
+class ScopeTest {
+	private val scope = scope(
 		rule(pattern(thunk(value("x"))), body(thunk(value("zero")))),
 		rule(pattern(thunk(value("y"))), body(thunk(value("one")))),
 		rule(pattern(thunk(value("x"))), body(thunk(value("two")))))
 
 	@Test
 	fun apply_rules() {
-		context
+		scope
 			.apply(thunk(value("x")))
 			.assertEqualTo(applied(thunk(value("two"))))
 
-		context
+		scope
 			.apply(thunk(value("y")))
 			.assertEqualTo(applied(thunk(value("one"))))
 
-		context
+		scope
 			.apply(thunk(value("z")))
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun compile_is() {
-		context
+		scope
 			.compile(
 				thunk(
 					value(
 						"foo" lineTo value(),
 						givesName lineTo value("bar"))))
 			.assertEqualTo(
-				context.push(
+				scope.push(
 					rule(
 						pattern(thunk(value("foo"))),
 						body(thunk(value("bar"))))))
@@ -44,14 +44,14 @@ class ContextTest {
 
 	@Test
 	fun compile_does() {
-		context
+		scope
 			.compile(
 				thunk(
 					value(
 						"foo" lineTo value(),
 						doesName lineTo value("bar"))))
 			.assertEqualTo(
-				context.push(
+				scope.push(
 					rule(
 						pattern(thunk(value("foo"))),
 						evalBody(script("bar")))))
@@ -59,7 +59,7 @@ class ContextTest {
 
 	@Test
 	fun applyCompile() {
-		val context = context(
+		val scope = scope(
 			rule(
 				pattern(thunk(value("defx"))),
 				compileBody(
@@ -68,7 +68,7 @@ class ContextTest {
 							"x" lineTo script(),
 							"gives" lineTo script(literal(1)))))))
 
-		context
+		scope
 			.apply(thunk(value("defx")))
 			.assertEqualTo(
 				applied(

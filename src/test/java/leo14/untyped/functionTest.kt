@@ -9,7 +9,7 @@ class FunctionTest {
 	@Test
 	fun applyAppends() {
 		function(
-			context(),
+			scope(),
 			script(givenName lineTo script()))
 			.apply(thunk(value("foo" lineTo value())))
 			.assertEqualTo(
@@ -22,7 +22,7 @@ class FunctionTest {
 	@Test
 	fun applyResolvesContext() {
 		function(
-			context(
+			scope(
 				rule(
 					pattern(
 						thunk(

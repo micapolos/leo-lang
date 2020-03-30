@@ -2,24 +2,24 @@ package leo14.untyped
 
 import leo14.*
 
-data class Lazy(val context: Context, val script: Script) {
+data class Lazy(val scope: Scope, val script: Script) {
 	override fun toString() = reflectScriptLine.toString()
 }
 
-fun lazy(context: Context, script: Script) = Lazy(context, script)
+fun lazy(scope: Scope, script: Script) = Lazy(scope, script)
 
-fun Context.asLazy(script: Script) = lazy(this, script)
+fun Scope.asLazy(script: Script) = lazy(this, script)
 
 operator fun Lazy.plus(definition: Definition): Lazy =
-	lazy(context.push(definition), script)
+	lazy(scope.push(definition), script)
 
 val Lazy.value: Value
 	get() =
-		context.eval(script).value
+		scope.eval(script).value
 
 val Lazy.eval: Thunk
 	get() =
-		context.eval(script)
+		scope.eval(script)
 
 val Lazy.printScript
 	get() =
@@ -28,7 +28,7 @@ val Lazy.printScript
 val Lazy.reflectScriptLine
 	get() =
 		"lazy"(
-			context.reflectScriptLine,
+			scope.reflectScriptLine,
 			script.reflectScriptLine)
 
 val Lazy.recurseRule

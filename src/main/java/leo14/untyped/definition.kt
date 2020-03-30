@@ -6,7 +6,7 @@ data class RuleDefinition(val rule: Rule) : Definition()
 
 fun definition(rule: Rule): Definition = RuleDefinition(rule)
 
-fun Definition.apply(context: Context, thunk: Thunk): Applied? =
+fun Definition.apply(scope: Scope, thunk: Thunk): Applied? =
 	when (this) {
-		is RuleDefinition -> rule.apply(context, thunk)
+		is RuleDefinition -> rule.apply(scope, thunk)
 	}

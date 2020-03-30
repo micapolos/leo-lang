@@ -12,7 +12,7 @@ class RuleTest {
 		rule(
 			pattern(thunk(value("foo" lineTo value()))),
 			body(thunk(value("bar"))))
-			.apply(context(), thunk(value("foo")))
+			.apply(scope(), thunk(value("foo")))
 			.assertEqualTo(applied(thunk(value("bar"))))
 	}
 
@@ -21,7 +21,7 @@ class RuleTest {
 		rule(
 			pattern(thunk(value(numberName lineTo value()))),
 			evalBody(script(givenName lineTo script())))
-			.apply(context(), thunk(value(line(literal(10)))))
+			.apply(scope(), thunk(value(line(literal(10)))))
 			.assertEqualTo(applied(thunk(value(givenName lineTo value(literal(10))))))
 	}
 
@@ -30,7 +30,7 @@ class RuleTest {
 		rule(
 			pattern(thunk(value(numberName lineTo value()))),
 			body(thunk(value("ok"))))
-			.apply(context(), thunk(value(line(literal("foo")))))
+			.apply(scope(), thunk(value(line(literal("foo")))))
 			.assertEqualTo(null)
 	}
 }

@@ -48,35 +48,35 @@ val Thunk.script
 
 val Function.bodyScript
 	get() =
-		context.functionScript.plus(script)
+		scope.functionScript.plus(script)
 
 val Function.scriptLine
 	get() =
 		functionName lineTo script
 
-val Context.reflectScriptLine: ScriptLine
+val Scope.reflectScriptLine: ScriptLine
 	get() =
-		"context" lineTo functionScript
+		scopeName lineTo functionScript
 
-val Context.functionScript: Script
+val Scope.functionScript: Script
 	get() =
 		when (this) {
-			is EmptyContext -> script()
-			is LinkContext -> link.functionScript
+			is EmptyScope -> script()
+			is LinkScope -> link.functionScript
 		}
 
-val ContextLink.functionScript: Script
+val ScopeLink.functionScript: Script
 	get() =
-		context.functionScript.plus(definition.contextScript)
+		scope.functionScript.plus(definition.scopeScript)
 
-val Rule.contextScript
+val Rule.scopeScript
 	get() =
 		pattern.ruleScript.plus(body.ruleScriptLine)
 
-val Definition.contextScript
+val Definition.scopeScript
 	get() =
 		when (this) {
-			is RuleDefinition -> rule.contextScript
+			is RuleDefinition -> rule.scopeScript
 		}
 
 val Pattern.ruleScript

@@ -9,7 +9,7 @@ import kotlin.test.Test
 class LazyTest {
 	@Test
 	fun value() {
-		lazy(context(), script("minus" lineTo script(literal(1))))
+		lazy(scope(), script("minus" lineTo script(literal(1))))
 			.value
 			.assertEqualTo(value(literal(-1)))
 	}

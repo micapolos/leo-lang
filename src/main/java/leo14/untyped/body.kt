@@ -13,13 +13,13 @@ fun evalBody(script: Script): Body = EvalBody(script)
 fun recurseBody(script: Script): Body = RecurseBody(script)
 fun compileBody(script: Script): Body = MacroBody(script)
 
-fun Body.apply(context: Context, given: Thunk): Applied =
+fun Body.apply(scope: Scope, given: Thunk): Applied =
 	when (this) {
 		is ThunkBody -> applied(thunk)
-		is EvalBody -> applied(function(context, script).apply(given))
-		is RecurseBody -> applied(context
+		is EvalBody -> applied(function(scope, script).apply(given))
+		is RecurseBody -> applied(scope
 			.resolver(given.value.sequenceOrNull!!.previousThunk)
 			.compile(script)
 			.thunk)
-		is MacroBody -> applied(function(context, script).apply(given).value.script)
+		is MacroBody -> applied(function(scope, script).apply(given).value.script)
 	}

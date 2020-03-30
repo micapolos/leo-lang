@@ -19,7 +19,7 @@ class ThunkTest {
 	fun lazyValue() {
 		thunk(
 			lazy(
-				context(),
+				scope(),
 				script("minus" lineTo script(literal(1)))))
 			.value
 			.assertEqualTo(value(literal(-1)))

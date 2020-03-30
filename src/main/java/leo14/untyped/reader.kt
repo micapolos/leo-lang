@@ -10,7 +10,7 @@ data class CodeReader(val code: Code) : Reader()
 
 data class Quoted(
 	val opOrNull: QuotedOp?,
-	val context: Context,
+	val scope: Scope,
 	val depth: Int,
 	val thunk: Thunk)
 
@@ -43,7 +43,7 @@ data class UnquotedRepeatingCodeOp(val unquoted: Unquoted) : CodeOp()
 
 val emptyReader: Reader
 	get() =
-		UnquotedReader(Unquoted(null, context().resolver(emptyThunk)))
+		UnquotedReader(Unquoted(null, scope().resolver(emptyThunk)))
 
 val Resolver.reader: Reader
 	get() =
@@ -83,7 +83,7 @@ fun Quoted.write(begin: Begin): Reader =
 			QuotedReader(
 				Quoted(
 					QuotedAppendQuotedOp(this, begin),
-					context,
+					scope,
 					depth.inc(),
 					thunk(value())))
 		begin.string == unquoteName && depth > 0 ->
@@ -92,11 +92,11 @@ fun Quoted.write(begin: Begin): Reader =
 					UnquotedReader(
 						Unquoted(
 							QuotedPlusUnquotedOp(this),
-							context.resolver(emptyThunk)))
+							scope.resolver(emptyThunk)))
 				else -> QuotedReader(
 					Quoted(
 						QuotedAppendQuotedOp(this, begin),
-						context,
+						scope,
 						depth.dec(),
 						thunk(value())))
 			}
@@ -104,7 +104,7 @@ fun Quoted.write(begin: Begin): Reader =
 			QuotedReader(
 				Quoted(
 					QuotedAppendQuotedOp(this, begin),
-					context,
+					scope,
 					depth,
 					thunk(value())))
 	}
@@ -120,7 +120,7 @@ fun Unquoted.write(begin: Begin): Reader =
 			QuotedReader(
 				Quoted(
 					UnquotedPlusQuotedOp(this),
-					resolver.context,
+					resolver.scope,
 					1,
 					thunk(value())))
 		functionName ->
@@ -148,7 +148,7 @@ fun Unquoted.write(begin: Begin): Reader =
 				UnquotedReader(
 					Unquoted(
 						UnquotedResolveUnquotedOp(this, begin),
-						resolver.context.resolver(emptyThunk)))
+						resolver.scope.resolver(emptyThunk)))
 		doName ->
 			CodeReader(
 				Code(
@@ -178,7 +178,7 @@ fun Unquoted.write(begin: Begin): Reader =
 			UnquotedReader(
 				Unquoted(
 					UnquotedResolveUnquotedOp(this, begin),
-					resolver.context.resolver(emptyThunk)))
+					resolver.scope.resolver(emptyThunk)))
 	}
 
 fun Code.write(begin: Begin): Reader =
