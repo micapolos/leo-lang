@@ -902,4 +902,10 @@ class EvalTest {
 	fun wordText() {
 		leo("foo"(), "word"(), "text"()).assertEvalsTo(leo("foo"))
 	}
+
+	@Test
+	fun scriptText() {
+		leo(1, "plus"("2"), "script"(), "text"())
+			.assertEvalsTo(leo("1.plus \"2\""))
+	}
 }

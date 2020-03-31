@@ -48,7 +48,6 @@ val Sequence.resolve: Thunk?
 			?: resolveAnythingEqualsAnything
 			?: resolveNative
 			?: resolveForce
-			?: resolveScript
 			?: resolveExec
 			?: resolveSubject
 			?: resolveObject
@@ -248,12 +247,6 @@ val Sequence.resolveForce: Thunk?
 	get() =
 		matchPrefix(forceName) { rhs ->
 			rhs.force
-		}
-
-val Sequence.resolveScript: Thunk?
-	get() =
-		matchPrefix(scriptName) { rhs ->
-			thunk(rhs.script.value)
 		}
 
 val Sequence.resolveExec: Thunk?
