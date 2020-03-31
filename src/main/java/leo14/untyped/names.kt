@@ -2,7 +2,6 @@ package leo14.untyped
 
 val anythingName = "anything"
 val appendName = "append"
-val applyName = "apply"
 val asName = "as"
 val assertName = "assert"
 val booleanName = "boolean"

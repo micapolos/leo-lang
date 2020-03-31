@@ -310,17 +310,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun functionApply() {
-		script(
-			"function" lineTo script("given"),
-			"apply" lineTo script("foo"))
-			.assertEvalsTo(
-				script(
-					"given" lineTo script(
-						"foo" lineTo script())))
-	}
-
-	@Test
 	fun useFunction() {
 		leo(
 			1,
@@ -330,14 +319,6 @@ class EvalTest {
 					"number"(),
 					"plus"("and"(), "number"()))))
 			.assertEvalsTo(leo(3))
-	}
-
-	@Test
-	fun functionApply_nonRecursive() {
-		leo(
-			"function"("recurse"()),
-			"apply"("something"()))
-			.assertEvalsTo(leo("recurse"()))
 	}
 
 	@Test
