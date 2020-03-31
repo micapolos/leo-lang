@@ -54,7 +54,7 @@ class ScopeTest {
 				scope.push(
 					rule(
 						pattern(thunk(value("foo"))),
-						evalBody(script("bar")))))
+						givesBody(script("bar")))))
 	}
 
 	@Test

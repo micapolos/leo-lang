@@ -16,7 +16,7 @@ class BodyTest {
 
 	@Test
 	fun apply_nonNullContext() {
-		evalBody(script(givenName lineTo script()))
+		givesBody(script(givenName lineTo script()))
 			.apply(scope(), thunk(value(literal(5))))
 			.assertEqualTo(applied(thunk(value(givenName lineTo value(literal(5))))))
 	}

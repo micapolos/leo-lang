@@ -20,7 +20,7 @@ class RuleTest {
 	fun resolve_matchFunction() {
 		rule(
 			pattern(thunk(value(numberName lineTo value()))),
-			evalBody(script(givenName lineTo script())))
+			givesBody(script(givenName lineTo script())))
 			.apply(scope(), thunk(value(line(literal(10)))))
 			.assertEqualTo(applied(thunk(value(givenName lineTo value(literal(10))))))
 	}

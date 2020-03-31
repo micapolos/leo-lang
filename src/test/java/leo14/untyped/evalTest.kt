@@ -606,7 +606,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun do_() {
+	fun give() {
 		script(
 			line(literal(10)),
 			"give" lineTo script(
@@ -910,7 +910,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun do_bindings() {
+	fun do_() {
 		leo(
 			"Hello, ",
 			"and"("world!"),
@@ -919,6 +919,20 @@ class EvalTest {
 				"plus"(
 					"and"(),
 					"text"())))
+			.assertEvalsTo(leo("Hello, world!"))
+	}
+
+	@Test
+	fun does() {
+		leo(
+			"text"(),
+			"join"("text"()),
+			"does"(
+				"text"(),
+				"plus"(
+					"join"(),
+					"text"())),
+			"Hello, ", "join"("world!"))
 			.assertEvalsTo(leo("Hello, world!"))
 	}
 }

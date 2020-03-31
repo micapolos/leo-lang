@@ -153,9 +153,14 @@ fun Resolver.assert(script: Script): Resolver =
 		}
 		?: append(assertName lineTo script.value)
 
+fun Resolver.gives(script: Script): Resolver =
+	scope
+		.push(definition(rule(pattern(thunk), givesBody(script))))
+		.resolver(emptyThunk)
+
 fun Resolver.does(script: Script): Resolver =
 	scope
-		.push(definition(rule(pattern(thunk), evalBody(script))))
+		.push(definition(rule(pattern(thunk), doesBody(script))))
 		.resolver(emptyThunk)
 
 fun Resolver.writes(script: Script): Resolver =

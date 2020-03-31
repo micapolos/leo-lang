@@ -49,4 +49,5 @@ val CodeOp.fragmentParent: FragmentParent
 			is UnquotedMatchCodeOp -> unquoted.fragment.parent(begin(matchName))
 			is UnquotedExpandsCodeOp -> unquoted.fragment.parent(begin(expandsName))
 			is UnquotedDoCodeOp -> unquoted.fragment.parent(begin(doName))
+			is UnquotedDoesCodeOp -> unquoted.fragment.parent(begin(doesName))
 		}

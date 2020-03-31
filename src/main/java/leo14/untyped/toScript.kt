@@ -87,7 +87,8 @@ val Body.ruleScriptLine
 	get() =
 		when (this) {
 			is ThunkBody -> isName lineTo thunk.script
-			is EvalBody -> givesName lineTo script
+			is GivesBody -> givesName lineTo script
+			is DoesBody -> doesName lineTo script
 			is RecurseBody -> recurseName lineTo script
 			is MacroBody -> expandsName lineTo script
 		}
