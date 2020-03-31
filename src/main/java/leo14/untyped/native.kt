@@ -13,6 +13,15 @@ data class Native(val obj: Any?) {
 
 fun native(obj: Any?) = Native(obj)
 
+fun safeNative(fn: () -> Any?): Native =
+	try {
+		native(fn())
+	} catch (e: RuntimeException) {
+		native(e)
+	} catch (e: Exception) {
+		native(e)
+	}
+
 val Sequence.resolveNative: Thunk?
 	get() =
 		null
@@ -104,10 +113,11 @@ val Sequence.resolveNativeInvoke: Thunk?
 									thunk(
 										value(
 											line(
-												native(
+												safeNative {
 													class_
 														.getMethod(name, *types)
-														.invoke(native.obj, *args)))))
+														.invoke(native.obj, *args)
+												})))
 								}
 							}
 						}
@@ -183,7 +193,7 @@ val Sequence.resolveNativeList: Thunk?
 	get() =
 		matchPrefix(listName) { rhs ->
 			rhs.matchNative { native ->
-				(native.obj as? Array<Any>)?.let { array ->
+				(native.obj as? Array<*>)?.let { array ->
 					thunk(
 						value(
 							"list" lineTo thunk(
@@ -230,3 +240,4 @@ val Class<*>.forInvoke: Class<*>
 			this == java.lang.Double::class.java -> java.lang.Double.TYPE
 			else -> this
 		}
+
