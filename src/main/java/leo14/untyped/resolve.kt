@@ -75,7 +75,7 @@ val Sequence.resolveAnythingUseFunction: Thunk?
 	get() =
 		matchInfix(useName) { lhs, rhs ->
 			rhs.matchFunction { function ->
-				function.apply(lhs)
+				function.doWith(lhs)
 			}
 		}
 

@@ -27,8 +27,8 @@ val list = library_ {
 		fold { list }
 		using {
 			function {
-				given.folded
-				append { given.last.number }
+				folded
+				append { last.number }
 			}
 		}
 		gives { folded }
@@ -45,8 +45,8 @@ val list = library_ {
 		}
 		using {
 			function {
-				given.folded
-				append { given.last.number }
+				folded
+				append { last.number }
 			}
 		}
 		gives {
@@ -65,8 +65,8 @@ val list = library_ {
 		fold { reverse.list }
 		using {
 			function {
-				given.folded
-				append { given.last.object_ }
+				folded
+				append { last.object_ }
 			}
 		}
 		object_.list
@@ -102,9 +102,9 @@ val list = library_ {
 		fold { list }
 		using {
 			function {
-				given.folded
+				folded
 				append {
-					given.last.object_
+					last.object_
 					use { f }
 				}
 			}
@@ -121,7 +121,7 @@ val list = library_ {
 		map {
 			using {
 				function {
-					given.number.text
+					number.text
 				}
 			}
 		}

@@ -331,6 +331,18 @@ class EvalTest {
 	}
 
 	@Test
+	fun useFunction() {
+		leo(
+			1,
+			"and"(2),
+			"use"(
+				"function"(
+					"number"(),
+					"plus"("and"(), "number"()))))
+			.assertEvalsTo(leo(3))
+	}
+
+	@Test
 	fun functionApply_nonRecursive() {
 		leo(
 			"function"("recurse"()),
