@@ -119,3 +119,7 @@ val Field.rhsTailOrNull get() = rhs.tailOrNull?.let { tail -> value(name lineTo 
 
 fun Value.make(name: String) = value(name lineTo this)
 fun Thunk.make(name: String) = thunk(value(name lineTo this))
+
+val String.isWord: Boolean
+	get() =
+		all { it.isLetter() }

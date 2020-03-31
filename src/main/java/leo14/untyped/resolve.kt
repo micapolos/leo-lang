@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo.base.notNullIf
 import leo.base.string
 import leo.java.lang.exec
 import leo13.array
@@ -54,6 +55,8 @@ val Sequence.resolve: Thunk?
 			?: resolveLink
 			?: resolveLeoText
 			?: resolveGiven
+			?: resolveTextWord
+			?: resolveWordText
 
 val Sequence.resolveNothing: Thunk?
 	get() =
@@ -304,6 +307,26 @@ val Sequence.resolveGiven: Thunk?
 	get() =
 		matchSimple(givenName) {
 			thunk(value())
+		}
+
+val Sequence.resolveTextWord: Thunk?
+	get() =
+		matchPrefix(wordName) { rhs ->
+			rhs.matchText { text ->
+				notNullIf(text.isWord) {
+					thunk(value(text))
+				}
+			}
+		}
+
+val Sequence.resolveWordText: Thunk?
+	get() =
+		matchPrefix(textName) { rhs ->
+			rhs.matchPrefix(wordName) { rhs ->
+				rhs.matchName { word ->
+					thunk(value(literal(word)))
+				}
+			}
 		}
 
 val Sequence.resolveNormalize: Sequence?

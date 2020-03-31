@@ -887,4 +887,19 @@ class EvalTest {
 	fun intNative() {
 		leo(123, "int"(), "native"()).assertEvalsTo(leo("native"("123")))
 	}
+
+	@Test
+	fun textWord() {
+		leo("foo", "word"()).assertEvalsTo(leo("foo"()))
+	}
+
+	@Test
+	fun textWord_invalid() {
+		leo("not-a-word", "word"()).assertEvalsTo(leo("word"("not-a-word")))
+	}
+
+	@Test
+	fun wordText() {
+		leo("foo"(), "word"(), "text"()).assertEvalsTo(leo("foo"))
+	}
 }
