@@ -19,7 +19,7 @@ fun Body.apply(scope: Scope, given: Thunk): Applied =
 	when (this) {
 		is ThunkBody -> applied(thunk)
 		is GivesBody -> applied(function(scope, script).apply(given))
-		is DoesBody -> applied(scope.bind(given).evaluate(script))
+		is DoesBody -> applied(function(scope, script).doWith(given))
 		is RecurseBody -> applied(scope
 			.resolver(given.value.sequenceOrNull!!.previousThunk)
 			.compile(script)

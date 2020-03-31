@@ -4,12 +4,12 @@ import leo14.untyped.dsl2.*
 
 val system = library_ {
 	text.say
-	gives {
+	does {
 		exec {
 			it { text("say") }
 			it {
 				text("\"")
-				plus { given.text }
+				plus { text }
 				plus { text("\"") }
 			}
 		}
@@ -21,7 +21,7 @@ val system = library_ {
 	gives {
 		text("leo14.js.compiler.MainKt").class_.native.static.invoke {
 			it { text("htmlOpen") }
-			it { given.text.native { string } }
+			it { text.native { string } }
 		}.clear
 	}
 
@@ -29,7 +29,7 @@ val system = library_ {
 	gives {
 		text("java.lang.Thread").class_.native.static.invoke {
 			it { text("sleep") }
-			it { given.sleep.millis.number.long.native }
+			it { sleep.millis.number.long.native }
 		}
 		clear
 	}

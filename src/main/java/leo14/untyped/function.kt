@@ -22,3 +22,15 @@ tailrec fun Function.apply(given: Thunk): Thunk {
 	return if (repeatOrNull == null) done
 	else apply(repeatOrNull)
 }
+
+tailrec fun Function.doWith(given: Thunk): Thunk {
+	// TODO: This code is repeated with Resolver.do_(). Extract it.
+	val done = scope
+		.bind(given)
+		.resolver()
+		.evaluate(script)
+		.thunk
+	val repeatOrNull = done.matchPrefix(repeatName) { it }
+	return if (repeatOrNull == null) done
+	else doWith(repeatOrNull)
+}

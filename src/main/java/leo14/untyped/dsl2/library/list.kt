@@ -6,17 +6,17 @@ val list = library_ {
 	folded { anything }
 	fold { list { anything } }
 	using { function }
-	gives {
-		given.fold.list
+	does {
+		fold.list
 		equals_ { list }
 		match {
-			true_ { given.folded }
+			true_ { folded }
 			false_ {
-				given.folded
-				it { given.fold.list.last }
-				use { given.using.function }
-				fold { given.fold.list.previous.list }
-				using { given.using.function }
+				folded
+				it { fold.list.last }
+				use { using.function }
+				fold { fold.list.previous.list }
+				using { using.function }
 				repeat
 			}
 		}
@@ -60,9 +60,9 @@ val list = library_ {
 
 	list { anything }
 	reverse
-	gives {
+	does {
 		folded
-		fold { given.reverse.list }
+		fold { reverse.list }
 		using {
 			function {
 				given.folded
@@ -96,10 +96,10 @@ val list = library_ {
 
 	list { anything }
 	map { using { function } }
-	gives {
-		given.map.using.function.as_ { f }
+	does {
+		map.using.function.as_ { f }
 		folded
-		fold { given.list }
+		fold { list }
 		using {
 			function {
 				given.folded
