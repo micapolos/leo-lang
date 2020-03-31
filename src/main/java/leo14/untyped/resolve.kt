@@ -22,7 +22,6 @@ val Value.resolve: Thunk?
 val Sequence.resolve: Thunk?
 	get() =
 		null
-		//?: resolveAccess
 			?: resolveNothing
 			?: resolveFunctionApplyAnything
 			?: resolveAnythingCallFunction
