@@ -34,7 +34,7 @@ class ScopeTest {
 				thunk(
 					value(
 						"foo" lineTo value(),
-						givesName lineTo value("bar"))))
+						isName lineTo value("bar"))))
 			.assertEqualTo(
 				scope.push(
 					rule(
@@ -49,7 +49,7 @@ class ScopeTest {
 				thunk(
 					value(
 						"foo" lineTo value(),
-						doesName lineTo value("bar"))))
+						givesName lineTo value("bar"))))
 			.assertEqualTo(
 				scope.push(
 					rule(

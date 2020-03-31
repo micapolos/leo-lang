@@ -86,8 +86,8 @@ val Pattern.ruleScript
 val Body.ruleScriptLine
 	get() =
 		when (this) {
-			is ThunkBody -> givesName lineTo thunk.script
-			is EvalBody -> doesName lineTo script
+			is ThunkBody -> isName lineTo thunk.script
+			is EvalBody -> givesName lineTo script
 			is RecurseBody -> recurseName lineTo script
 			is MacroBody -> expandsName lineTo script
 		}

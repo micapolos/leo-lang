@@ -54,12 +54,12 @@ fun Scope.compile(thunk: Thunk): Scope? =
 		?: compileAs(thunk)
 
 fun Scope.compileDoes(thunk: Thunk): Scope? =
-	thunk.value.sequenceOrNull?.matchInfixOrPrefix(doesName) { lhs, rhs ->
+	thunk.value.sequenceOrNull?.matchInfixOrPrefix(givesName) { lhs, rhs ->
 		push(rule(pattern(lhs), evalBody(rhs.script)))
 	}
 
 fun Scope.compileGives(thunk: Thunk): Scope? =
-	thunk.value.sequenceOrNull?.matchInfixOrPrefix(givesName) { lhs, rhs ->
+	thunk.value.sequenceOrNull?.matchInfixOrPrefix(isName) { lhs, rhs ->
 		push(rule(pattern(lhs), body(rhs)))
 	}
 

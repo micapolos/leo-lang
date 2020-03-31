@@ -126,7 +126,7 @@ fun Unquoted.write(begin: Begin): Reader =
 				Code(
 					UnquotedFunctionCodeOp(this),
 					script()))
-		doesName ->
+		givesName ->
 			CodeReader(
 				Code(
 					UnquotedGivesCodeOp(this),
@@ -147,7 +147,7 @@ fun Unquoted.write(begin: Begin): Reader =
 					Unquoted(
 						UnquotedResolveUnquotedOp(this, begin),
 						resolver.scope.resolver(emptyThunk)))
-		doName ->
+		giveName ->
 			CodeReader(
 				Code(
 					UnquotedDoCodeOp(this),

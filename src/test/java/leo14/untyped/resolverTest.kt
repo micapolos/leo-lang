@@ -28,7 +28,7 @@ class ResolverTest {
 			.resolver(thunk(value("zoo")))
 
 		resolver
-			.apply(givesName lineTo value("zar"))
+			.apply(isName lineTo value("zar"))
 			.assertEqualTo(
 				resolver.scope.push(
 					definition(

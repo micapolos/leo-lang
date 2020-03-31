@@ -4,7 +4,7 @@ import leo14.untyped.dsl2.*
 
 val system = library_ {
 	text.say
-	does {
+	gives {
 		exec {
 			it { text("say") }
 			it {
@@ -18,7 +18,7 @@ val system = library_ {
 
 	text
 	open { html }
-	does {
+	gives {
 		text("leo14.js.compiler.MainKt").class_.native.static.invoke {
 			it { text("htmlOpen") }
 			it { given.text.native { string } }
@@ -26,7 +26,7 @@ val system = library_ {
 	}
 
 	number.millis.sleep
-	does {
+	gives {
 		text("java.lang.Thread").class_.native.static.invoke {
 			it { text("sleep") }
 			it { given.sleep.millis.number.long.native }

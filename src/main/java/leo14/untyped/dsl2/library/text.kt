@@ -4,7 +4,7 @@ import leo14.untyped.dsl2.*
 
 val text = library_ {
 	text.length
-	does {
+	gives {
 		given.length.text.string.native
 		invoke { text("length") }
 		number
@@ -12,7 +12,7 @@ val text = library_ {
 	assert { text("foo").length.gives { number(3) } }
 
 	text.lower.case
-	does {
+	gives {
 		given.case.lower.text.string.native
 		invoke { text("toLowerCase") }
 		text
@@ -20,7 +20,7 @@ val text = library_ {
 	assert { text("FoO").lower.case.gives { text("foo") } }
 
 	text.upper.case
-	does {
+	gives {
 		given.case.upper.text.string.native
 		invoke { text("toUpperCase") }
 		text
@@ -28,7 +28,7 @@ val text = library_ {
 	assert { text("FoO").upper.case.gives { text("FOO") } }
 
 	text.lines
-	does {
+	gives {
 		given.lines.text.string.native
 		invoke {
 			it { text("split") }
@@ -36,7 +36,7 @@ val text = library_ {
 		}
 		list
 		reverse { list }
-		do_ {
+		give {
 			given.list
 			equals_ { list }
 			match {
@@ -53,7 +53,7 @@ val text = library_ {
 			}
 		}
 		reverse { lines }
-		do_ {
+		give {
 			given.list
 			equals_ { list }
 			match {

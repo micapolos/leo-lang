@@ -147,7 +147,7 @@ class EvalTest {
 	fun thisGivesThat() {
 		script(
 			"x" lineTo script(),
-			"gives" lineTo script(literal(10)))
+			"is" lineTo script(literal(10)))
 			.assertEvalsTo()
 	}
 
@@ -155,7 +155,7 @@ class EvalTest {
 	fun thisGivesThatAndAccess() {
 		script(
 			"x" lineTo script(),
-			"gives" lineTo script(literal(10)),
+			"is" lineTo script(literal(10)),
 			"x" lineTo script())
 			.assertEvalsTo(line(literal(10)))
 	}
@@ -181,7 +181,7 @@ class EvalTest {
 	fun thisDoesThat() {
 		script(
 			"number" lineTo script(),
-			"does" lineTo script(
+			"gives" lineTo script(
 				"plus" lineTo script(literal(1))))
 			.assertEvalsTo()
 	}
@@ -190,7 +190,7 @@ class EvalTest {
 	fun thisDoesThatAndAccess() {
 		script(
 			"number" lineTo script(),
-			"does" lineTo script(
+			"gives" lineTo script(
 				"given" lineTo script()),
 			line(literal(10)))
 			.assertEvalsTo(script("given" lineTo script(literal(10))))
@@ -204,7 +204,7 @@ class EvalTest {
 					"false" lineTo script(),
 					"true" lineTo script())),
 			"type" lineTo script(),
-			"does" lineTo script("boolean"))
+			"gives" lineTo script("boolean"))
 
 		rule
 			.plus(
@@ -305,16 +305,16 @@ class EvalTest {
 	fun function() {
 		script(
 			"foo" lineTo script(),
-			"gives" lineTo script("bar"),
+			"is" lineTo script("bar"),
 			"function" lineTo script(
 				"zoo" lineTo script(),
-				"gives" lineTo script("zar"),
+				"is" lineTo script("zar"),
 				"append" lineTo script("foo"),
 				"append" lineTo script("zoo")))
 			.assertEvalsTo(
 				"function" lineTo script(
 					"zoo" lineTo script(),
-					"gives" lineTo script("zar"),
+					"is" lineTo script("zar"),
 					"append" lineTo script("foo"),
 					"append" lineTo script("zoo")))
 	}
@@ -384,8 +384,8 @@ class EvalTest {
 	@Test
 	fun compile() {
 		script(
-			"x"(), "gives"(5),
-			"quote"("y"(), "gives"("x"(), "minus"(3))),
+			"x"(), "is"(5),
+			"quote"("y"(), "is"("x"(), "minus"(3))),
 			"compile"(),
 			"x"("x"()),
 			"y"("y"()))
@@ -574,7 +574,7 @@ class EvalTest {
 		script(
 			"anything" lineTo script(),
 			"increment" lineTo script(),
-			"gives" lineTo script("match"),
+			"is" lineTo script("match"),
 			"foo" lineTo script(),
 			"increment" lineTo script())
 			.assertEvalsTo(script("match"))
@@ -609,7 +609,7 @@ class EvalTest {
 	fun do_() {
 		script(
 			line(literal(10)),
-			"do" lineTo script(
+			"give" lineTo script(
 				"minus" lineTo script(
 					"given" lineTo script(),
 					"number" lineTo script())))
@@ -667,7 +667,7 @@ class EvalTest {
 			"either" lineTo script(
 				"age" lineTo script("number"),
 				"name" lineTo script("text")),
-			"gives" lineTo script("ok"),
+			"is" lineTo script("ok"),
 			"age" lineTo script(literal(10)))
 			.assertEvalsTo(script("ok"))
 	}
@@ -678,7 +678,7 @@ class EvalTest {
 			"either" lineTo script(
 				"age" lineTo script("number"),
 				"name" lineTo script("text")),
-			"gives" lineTo script("ok"),
+			"is" lineTo script("ok"),
 			"name" lineTo script(literal("Miko")))
 			.assertEvalsTo(script("ok"))
 	}
@@ -689,7 +689,7 @@ class EvalTest {
 			"either" lineTo script(
 				"age" lineTo script("number"),
 				"name" lineTo script("text")),
-			"gives" lineTo script("ok"),
+			"is" lineTo script("ok"),
 			"height" lineTo script(literal(180)))
 			.assertEvalsTo(script("height" lineTo script(literal(180))))
 	}
@@ -701,7 +701,7 @@ class EvalTest {
 			"expands" lineTo script(
 				"quote" lineTo script(
 					"x" lineTo script(),
-					"gives" lineTo script(literal(1)))))
+					"is" lineTo script(literal(1)))))
 			.assertEvalsTo()
 	}
 
@@ -712,7 +712,7 @@ class EvalTest {
 			"expands" lineTo script(
 				"quote" lineTo script(
 					"x" lineTo script(),
-					"gives" lineTo script(literal(1)))),
+					"is" lineTo script(literal(1)))),
 			"defx" lineTo script())
 			.assertEvalsTo()
 	}
@@ -724,7 +724,7 @@ class EvalTest {
 			"expands" lineTo script(
 				"quote" lineTo script(
 					"x" lineTo script(),
-					"gives" lineTo script(literal(1)))),
+					"is" lineTo script(literal(1)))),
 			"defx" lineTo script(),
 			"x" lineTo script())
 			.assertEvalsTo(script(literal(1)))
@@ -734,17 +734,17 @@ class EvalTest {
 	fun scope() {
 		script(
 			"x" lineTo script(),
-			"gives" lineTo script(literal(1)),
+			"is" lineTo script(literal(1)),
 			"y" lineTo script(),
-			"does" lineTo script(literal(1)),
+			"gives" lineTo script(literal(1)),
 			"z" lineTo script(),
 			"expands" lineTo script(literal(1)),
 			"scope" lineTo script())
 			.assertEvalsTo(
 				"x" lineTo script(),
-				"gives" lineTo script(literal(1)),
+				"is" lineTo script(literal(1)),
 				"y" lineTo script(),
-				"does" lineTo script(literal(1)),
+				"gives" lineTo script(literal(1)),
 				"z" lineTo script(),
 				"expands" lineTo script(literal(1)))
 	}
@@ -788,7 +788,7 @@ class EvalTest {
 	@Test
 	fun evaluate() {
 		script(
-			"x"(), "gives"(2),
+			"x"(), "is"(2),
 			"quote"("x"(), "plus"("x"())),
 			"evaluate"())
 			.assertEvalsTo(script(literal(4)))
@@ -797,7 +797,7 @@ class EvalTest {
 	@Test
 	fun evaluate_doesNotCompile() {
 		script(
-			"quote"("x"(), "gives"(1)),
+			"quote"("x"(), "is"(1)),
 			"evaluate"(),
 			"x"())
 			.assertEvalsTo("x"())
@@ -821,7 +821,7 @@ class EvalTest {
 	@Test
 	fun reflect() {
 		leo(
-			"foo"(), "reflect"(), "gives"(123),
+			"foo"(), "reflect"(), "is"(123),
 			"foo"())
 			.assertEvalsTo(leo(123))
 	}
@@ -831,7 +831,7 @@ class EvalTest {
 		leo(
 			1,
 			"times"(6, "factorial"()),
-			"do"(
+			"give"(
 				"given"(), "times"(), "factorial"(), "number"(), "equals"(1),
 				"match"(
 					"true"("given"(), "number"()),
@@ -848,7 +848,7 @@ class EvalTest {
 		leo(
 			"number"(),
 			"times"("number"(), "factorial"()),
-			"does"(
+			"gives"(
 				"given"(), "times"(), "factorial"(), "number"(), "equals"(1),
 				"match"(
 					"true"("given"(), "number"()),

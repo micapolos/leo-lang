@@ -8,7 +8,7 @@ val core = library_ {
 
 	anything
 	replace { anything }
-	does { given.replace.object_ }
+	gives { given.replace.object_ }
 	assert { zero.replace { one }.gives { one } }
 
 	if_ { anything }
@@ -38,7 +38,7 @@ val core = library_ {
 
 	anything
 	comment { anything }
-	does { given.object_.subject }
+	gives { given.object_.subject }
 
 	assert {
 		number(2)

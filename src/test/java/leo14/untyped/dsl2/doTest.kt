@@ -9,7 +9,7 @@ class DoTest {
 			assert {
 				first { name { text("John") } }
 				last { name { text("Wayne") } }
-				do_ {
+				give {
 					given.first.name.text
 					plus { text(" ") }
 					plus { given.last.name.text }

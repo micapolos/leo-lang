@@ -8,7 +8,7 @@ class DoesTest {
 		run_ {
 			text
 			plus { attribute { text } }
-			does {
+			gives {
 				given.text
 				plus { given.plus.attribute.text }
 			}
