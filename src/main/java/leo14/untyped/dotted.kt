@@ -33,6 +33,10 @@ val FragmentParent.leoString
 	get() =
 		appendableIndentedString { it.leoAppend(this) }
 
+val Tokenizer.leoStringNonTail
+	get() =
+		appendableIndentedString { it.leoAppendNonTail(this) }
+
 fun AppendableIndented.leoAppend(script: Script): AppendableIndented =
 	when (script) {
 		is UnitScript -> this
@@ -101,6 +105,33 @@ fun AppendableIndented.leoAppend(parent: FragmentParent): AppendableIndented =
 		.leoAppendNonTail(parent.fragment)
 		.append(parent.begin.string)
 		.indented.append("\n")
+
+fun AppendableIndented.leoAppend(tokenizer: Tokenizer): AppendableIndented =
+	this
+		.ifNotNull(tokenizer.parentOrNull) { leoAppend(it) }
+		.leoAppend(tokenizer.script)
+		.runIf(!tokenizer.script.isEmpty) {
+			if (tokenizer.dotted) append(".")
+			else append("\n")
+		}
+
+fun AppendableIndented.leoAppendNonTail(tokenizer: Tokenizer): AppendableIndented =
+	this
+		.ifNotNull(tokenizer.parentOrNull) { leoAppend(it) }
+		.leoAppendNonTail(tokenizer.script)
+		.runIf(!tokenizer.script.isEmpty) {
+			if (tokenizer.dotted) append(".")
+			else append("\n")
+		}
+
+fun AppendableIndented.leoAppend(parent: TokenizerParent): AppendableIndented =
+	this
+		.leoAppendNonTail(parent.tokenizer)
+		.append(parent.name)
+		.run {
+			if (parent.newline) indented.append("\n")
+			else append(".")
+		}
 
 val ScriptField.isSpaceable: Boolean
 	get() =
