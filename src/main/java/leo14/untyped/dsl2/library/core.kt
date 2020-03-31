@@ -3,13 +3,8 @@ package leo14.untyped.dsl2.library
 import leo14.untyped.dsl2.*
 
 val core = library_ {
-	anything.clear.gives { nothing }
+	anything.clear.expands { nothing }
 	assert { zero.clear.gives { nothing_ } }
-
-	anything
-	replace { anything }
-	gives { given.replace.object_ }
-	assert { zero.replace { one }.gives { one } }
 
 	if_ { anything }
 	then_ { anything }
@@ -38,7 +33,7 @@ val core = library_ {
 
 	anything
 	comment { anything }
-	gives { given.object_.subject }
+	expands { given.object_.subject }
 
 	assert {
 		number(2)

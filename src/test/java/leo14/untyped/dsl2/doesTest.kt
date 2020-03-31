@@ -8,15 +8,15 @@ class DoesTest {
 		run_ {
 			text
 			plus { attribute { text } }
-			gives {
-				given.text
-				plus { given.plus.attribute.text }
+			does {
+				text
+				plus { plus.attribute.text }
 			}
 
 			assert {
 				text("<")
 				plus { attribute { text("href") } }
-				gives { text("<href") }
+				does { text("<href") }
 			}
 		}
 	}

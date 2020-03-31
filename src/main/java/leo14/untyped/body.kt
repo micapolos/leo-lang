@@ -11,7 +11,7 @@ data class MacroBody(val script: Script) : Body()
 fun givesBody(script: Script): Body = GivesBody(script)
 fun doesBody(script: Script): Body = DoesBody(script)
 fun recurseBody(script: Script): Body = RecurseBody(script)
-fun compileBody(script: Script): Body = MacroBody(script)
+fun expandsBody(script: Script): Body = MacroBody(script)
 
 fun Body.apply(scope: Scope, given: Thunk): Applied =
 	when (this) {

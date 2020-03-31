@@ -53,7 +53,7 @@ class ResolverTest {
 	fun writes() {
 		scope()
 			.resolver(thunk(value("defx")))
-			.writes(
+			.expands(
 				script(
 					"x" lineTo script(),
 					"gives" lineTo script(literal(1))))
@@ -61,7 +61,7 @@ class ResolverTest {
 				scope(
 					rule(
 						pattern(thunk(value("defx"))),
-						compileBody(
+						expandsBody(
 							script(
 								"x" lineTo script(),
 								"gives" lineTo script(literal(1))))))

@@ -187,16 +187,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun thisDoesThatAndAccess() {
-		script(
-			"number" lineTo script(),
-			"gives" lineTo script(
-				"given" lineTo script()),
-			line(literal(10)))
-			.assertEvalsTo(script("given" lineTo script(literal(10))))
-	}
-
-	@Test
 	fun pattern() {
 		val rule = script(
 			"either" lineTo script(
@@ -849,14 +839,14 @@ class EvalTest {
 		leo(
 			"number"(),
 			"times"("number"(), "factorial"()),
-			"gives"(
-				"given"(), "times"(), "factorial"(), "number"(), "equals"(1),
+			"does"(
+				"times"(), "factorial"(), "number"(), "equals"(1),
 				"match"(
-					"true"("given"(), "number"()),
+					"true"("number"()),
 					"false"(
-						"given"(), "number"(),
-						"times"("given"(), "times"(), "factorial"(), "number"()),
-						"times"("given"(), "times"(), "factorial"(), "number"(), "minus"(1), "factorial"()),
+						"number"(),
+						"times"("times"(), "factorial"(), "number"()),
+						"times"("times"(), "factorial"(), "number"(), "minus"(1), "factorial"()),
 						"repeat"()))),
 			1, "times"(6, "factorial"()))
 			.assertEvalsTo(leo(720))

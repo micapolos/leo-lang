@@ -63,7 +63,7 @@ class ScopeTest {
 		val scope = scope(
 			rule(
 				pattern(thunk(value("defx"))),
-				compileBody(
+				expandsBody(
 					script(
 						"quote" lineTo script(
 							"x" lineTo script(),
