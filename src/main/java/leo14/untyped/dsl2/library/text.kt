@@ -27,54 +27,27 @@ val text = library_ {
 	}
 	assert { text("FoO").upper.case.gives { text("FOO") } }
 
-	text.lines
+	text.lines.list
 	gives {
-		given.lines.text.string.native
+		given.list.lines.text.string.native
 		invoke {
 			it { text("split") }
 			it { text("\n").string.native }
 		}
 		list
-		reverse { list }
-		give {
-			given.list
-			equals_ { list }
-			match {
-				true_ { given.reverse.list }
-				false_ {
-					given.list.previous.list
-					reverse {
-						given.reverse.list.append {
-							given.list.last.native
-						}
-					}
-					repeat
-				}
-			}
-		}
-		reverse { lines }
-		give {
-			given.list
-			equals_ { list }
-			match {
-				true_ { given.reverse.lines }
-				false_ {
-					given.list.previous.list
-					reverse {
-						given.reverse.lines.append {
-							given.list.last.native.text
-						}
-					}
-					repeat
+		map {
+			doing {
+				function {
+					given.native.text
 				}
 			}
 		}
 	}
 
 	assert {
-		text("foo\nbar").lines
+		text("foo\nbar").lines.list
 		gives {
-			lines {
+			list {
 				text("foo")
 				text("bar")
 			}
@@ -82,4 +55,4 @@ val text = library_ {
 	}
 }
 
-fun main() = run_(text)
+fun main() = run_ { fold(); list(); text() }
