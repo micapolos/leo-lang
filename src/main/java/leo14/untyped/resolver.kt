@@ -21,13 +21,6 @@ fun Resolver.apply(line: Line): Resolver =
 fun Resolver.lazy(script: Script): Resolver =
 	scope.resolver(thunk(lazy(scope, script)))
 
-tailrec fun Resolver.give(script: Script): Resolver {
-	val done = scope.withGiven(thunk).evaluate(script)
-	val repeatOrNull = done.matchPrefix(repeatName) { it }
-	return if (repeatOrNull == null) set(done)
-	else set(repeatOrNull).give(script)
-}
-
 tailrec fun Resolver.do_(script: Script): Resolver {
 	val done = scope.bind(thunk).evaluate(script)
 	val repeatOrNull = done.matchPrefix(repeatName) { it }

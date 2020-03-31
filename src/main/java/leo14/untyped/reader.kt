@@ -35,7 +35,6 @@ data class UnquotedFunctionCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedGivesCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedGetCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedLazyCodeOp(val unquoted: Unquoted) : CodeOp()
-data class UnquotedGiveCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedMatchCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedExpandsCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedDoCodeOp(val unquoted: Unquoted) : CodeOp()
@@ -149,11 +148,6 @@ fun Unquoted.write(begin: Begin): Reader =
 					Unquoted(
 						UnquotedResolveUnquotedOp(this, begin),
 						resolver.scope.resolver(emptyThunk)))
-		giveName ->
-			CodeReader(
-				Code(
-					UnquotedGiveCodeOp(this),
-					script()))
 		matchName ->
 			CodeReader(
 				Code(
@@ -246,10 +240,6 @@ fun CodeOp.write(script: Script): Reader? =
 			UnquotedReader(
 				unquoted.copy(
 					resolver = unquoted.resolver.lazy(script)))
-		is UnquotedGiveCodeOp ->
-			UnquotedReader(
-				unquoted.copy(
-					resolver = unquoted.resolver.give(script)))
 		is UnquotedMatchCodeOp ->
 			UnquotedReader(
 				unquoted.copy(

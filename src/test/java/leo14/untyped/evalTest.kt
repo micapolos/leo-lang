@@ -618,17 +618,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun give() {
-		script(
-			line(literal(10)),
-			"give" lineTo script(
-				"minus" lineTo script(
-					"given" lineTo script(),
-					"number" lineTo script())))
-			.assertEvalsTo(script(literal(-10)))
-	}
-
-	@Test
 	fun switch_number() {
 		script(
 			"x" lineTo script(literal(10)),
@@ -843,14 +832,14 @@ class EvalTest {
 		leo(
 			1,
 			"times"(6, "factorial"()),
-			"give"(
-				"given"(), "times"(), "factorial"(), "number"(), "equals"(1),
+			"do"(
+				"times"(), "factorial"(), "number"(), "equals"(1),
 				"match"(
 					"true"("given"(), "number"()),
 					"false"(
-						"given"(), "number"(),
-						"times"("given"(), "times"(), "factorial"(), "number"()),
-						"times"("given"(), "times"(), "factorial"(), "number"(), "minus"(1), "factorial"()),
+						"number"(),
+						"times"("times"(), "factorial"(), "number"()),
+						"times"("times"(), "factorial"(), "number"(), "minus"(1), "factorial"()),
 						"repeat"()))))
 			.assertEvalsTo(leo(720))
 	}
