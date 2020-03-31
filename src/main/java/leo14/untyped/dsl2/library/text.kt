@@ -55,4 +55,4 @@ val text = library_ {
 	}
 }
 
-fun main() = run_ { fold(); list(); text() }
+fun main() = run_ { list(); text() }

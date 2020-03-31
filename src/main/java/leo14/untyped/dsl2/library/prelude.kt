@@ -6,7 +6,6 @@ import leo14.untyped.dsl2.run_
 val prelude = library_ {
 	core()
 	native()
-	fold()
 	list()
 	text()
 	system()
