@@ -18,7 +18,7 @@ val system = library_ {
 
 	text
 	open { html }
-	gives {
+	does {
 		text("leo14.js.compiler.MainKt").class_.native.static.invoke {
 			it { text("htmlOpen") }
 			it { text.native { string } }
@@ -26,7 +26,7 @@ val system = library_ {
 	}
 
 	number.millis.sleep
-	gives {
+	does {
 		text("java.lang.Thread").class_.native.static.invoke {
 			it { text("sleep") }
 			it { sleep.millis.number.long.native }
