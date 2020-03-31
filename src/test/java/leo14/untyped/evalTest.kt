@@ -82,8 +82,7 @@ class EvalTest {
 			"y" lineTo script(literal(20)),
 			"point" lineTo script())
 			.run {
-				if (!autoMake) assertEvalsToThis
-				else assertEvalsTo(
+				assertEvalsTo(
 					"point" lineTo script(
 						"x" lineTo script(literal(10)),
 						"y" lineTo script(literal(20))))
@@ -139,7 +138,7 @@ class EvalTest {
 	@Test
 	fun accessNative() {
 		script(
-			"hello" lineTo script(line(literal(123)), "native"("int"())),
+			"hello" lineTo script(line(literal(123)), "int"(), "native"()),
 			"native" lineTo script())
 			.assertEvalsTo("native" lineTo script(literal(123.toString())))
 	}
@@ -201,8 +200,9 @@ class EvalTest {
 	fun pattern() {
 		val rule = script(
 			"either" lineTo script(
-				"false" lineTo script(),
-				"true" lineTo script()),
+				"quote" lineTo script(
+					"false" lineTo script(),
+					"true" lineTo script())),
 			"type" lineTo script(),
 			"does" lineTo script("boolean"))
 
@@ -223,8 +223,7 @@ class EvalTest {
 				"maybe" lineTo script(),
 				"type" lineTo script())
 			.assertEvalsTo(
-				"maybe" lineTo script(),
-				"type" lineTo script())
+				"type" lineTo script("maybe" lineTo script()))
 	}
 
 	@Test
@@ -284,11 +283,11 @@ class EvalTest {
 
 	@Test
 	fun contents_complex() {
-		script(
-			"x" lineTo script("foo"),
-			"y" lineTo script("bar"),
-			"contents" lineTo script())
-			.assertEvalsToThis
+		leo(
+			"x"("foo"),
+			"y"("bar"),
+			"contents"())
+			.assertEvalsTo(leo("contents"("x"("foo"), "y"("bar"))))
 	}
 
 	@Test
@@ -333,10 +332,10 @@ class EvalTest {
 
 	@Test
 	fun functionApply_nonRecursive() {
-		script(
-			"function" lineTo script("recurse"),
-			"apply" lineTo script())
-			.assertEvalsTo(script("recurse"))
+		leo(
+			"function"("recurse"()),
+			"apply"("something"()))
+			.assertEvalsTo(leo("recurse"()))
 	}
 
 	@Test
@@ -397,7 +396,8 @@ class EvalTest {
 	fun nativeClass() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native"("class"()))
+			"class"(),
+			"native"())
 			.assertEvalsTo("native" lineTo script(literal(java.lang.StringBuilder::class.java.toString())))
 	}
 
@@ -405,10 +405,11 @@ class EvalTest {
 	fun textNativeNew() {
 		script(
 			line(literal("java.awt.Point")),
-			"native"("class"()),
+			"class"(),
+			"native"(),
 			"new"(
-				"it"(1, "native"("int"())),
-				"it"(2, "native"("int"()))))
+				"it"(1, "int"(), "native"()),
+				"it"(2, "int"(), "native"())))
 			.assertEvalsTo("native"(Point(1, 2).toString()))
 	}
 
@@ -416,7 +417,8 @@ class EvalTest {
 	fun textNativeGet() {
 		script(
 			line(literal("java.awt.Point")),
-			"native"("class"()),
+			"class"(),
+			"native"(),
 			"new"(),
 			"get"("x"))
 			.assertEvalsTo("native" lineTo script(literal("0")))
@@ -426,8 +428,10 @@ class EvalTest {
 	fun textNativeStaticGet() {
 		script(
 			line(literal("java.lang.Integer")),
-			"native"("class"()),
-			"get"("static"("MAX_VALUE")))
+			"class"(),
+			"native"(),
+			"static"(),
+			"get"("MAX_VALUE"))
 			.assertEvalsTo("native" lineTo script(literal(Integer.MAX_VALUE.toString())))
 	}
 
@@ -435,11 +439,12 @@ class EvalTest {
 	fun javaInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native"("class"()),
+			"class"(),
+			"native"(),
 			"new"(),
 			"invoke" lineTo script(
 				line(literal("append")),
-				"it" lineTo script(line(literal("Hello, world!")), "native"("string"()))))
+				"it" lineTo script(line(literal("Hello, world!")), "string"(), "native"())))
 			.assertEvalsTo(
 				"native" lineTo script(
 					literal(StringBuilder().append("Hello, world!").toString())))
@@ -449,10 +454,12 @@ class EvalTest {
 	fun nativeStaticInvoke() {
 		leo(
 			"java.lang.String",
-			"native"("class"()),
-			"invoke"("static"(
+			"class"(),
+			"native"(),
+			"static"(),
+			"invoke"(
 				"it"("valueOf"),
-				"it"(PI, "native"("double"())))))
+				"it"(PI, "double"(), "native"())))
 			.assertEvalsTo("native"(java.lang.String.valueOf(PI).toString()))
 	}
 
@@ -460,7 +467,8 @@ class EvalTest {
 	fun anyInvoke() {
 		script(
 			line(literal("java.lang.StringBuilder")),
-			"native"("class"()),
+			"class"(),
+			"native"(),
 			"invoke" lineTo script(literal("newInstance")))
 			.assertEvalsTo("native" lineTo script(literal(StringBuilder().toString())))
 	}
@@ -475,10 +483,7 @@ class EvalTest {
 
 	@Test
 	fun it_empty() {
-		script(
-			"foo" lineTo script(),
-			"it" lineTo script())
-			.assertEvalsToThis
+		leo("foo"(), "it"()).assertEvalsTo(leo("foo"()))
 	}
 
 	@Test
@@ -497,7 +502,7 @@ class EvalTest {
 			"foo" lineTo script(),
 			"it" lineTo script(
 				"x" lineTo script(),
-				"y" lineTo script()))
+				"plus" lineTo script("y")))
 			.assertEvalsToThis
 	}
 
@@ -805,7 +810,7 @@ class EvalTest {
 
 	@Test
 	fun given_postfix() {
-		script("foo"(), "given"()).assertEvalsToThis
+		leo("foo"(), "given"()).assertEvalsTo(leo("given"("foo"())))
 	}
 
 	@Test
@@ -827,13 +832,13 @@ class EvalTest {
 			1,
 			"times"(6, "factorial"()),
 			"do"(
-				"given"(), "times"(), "number"(), "equals"(1),
+				"given"(), "times"(), "factorial"(), "number"(), "equals"(1),
 				"match"(
 					"true"("given"(), "number"()),
 					"false"(
 						"given"(), "number"(),
-						"times"("given"(), "times"(), "number"()),
-						"times"("given"(), "times"(), "number"(), "minus"(1), "factorial"()),
+						"times"("given"(), "times"(), "factorial"(), "number"()),
+						"times"("given"(), "times"(), "factorial"(), "number"(), "minus"(1), "factorial"()),
 						"repeat"()))))
 			.assertEvalsTo(leo(720))
 	}
@@ -844,13 +849,13 @@ class EvalTest {
 			"number"(),
 			"times"("number"(), "factorial"()),
 			"does"(
-				"given"(), "times"(), "number"(), "equals"(1),
+				"given"(), "times"(), "factorial"(), "number"(), "equals"(1),
 				"match"(
 					"true"("given"(), "number"()),
 					"false"(
 						"given"(), "number"(),
-						"times"("given"(), "times"(), "number"()),
-						"times"("given"(), "times"(), "number"(), "minus"(1), "factorial"()),
+						"times"("given"(), "times"(), "factorial"(), "number"()),
+						"times"("given"(), "times"(), "factorial"(), "number"(), "minus"(1), "factorial"()),
 						"repeat"()))),
 			1, "times"(6, "factorial"()))
 			.assertEvalsTo(leo(720))
@@ -870,6 +875,16 @@ class EvalTest {
 		leo("123", "number"()).assertEvalsTo(leo(123))
 		leo("3.14", "number"()).assertEvalsTo(leo(3.14))
 		leo("-3.14", "number"()).assertEvalsTo(leo(-3.14))
-		leo("foo", "number"()).assertEvalsToThis
+		leo("foo", "number"()).assertEvalsTo(leo("number"("foo")))
+	}
+
+	@Test
+	fun nothing() {
+		leo("nothing"()).assertEvalsTo(leo())
+	}
+
+	@Test
+	fun intNative() {
+		leo(123, "int"(), "native"()).assertEvalsTo(leo("native"("123")))
 	}
 }

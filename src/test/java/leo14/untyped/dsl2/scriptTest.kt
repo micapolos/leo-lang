@@ -9,11 +9,11 @@ class ScriptTest {
 			assert {
 				function { x }
 				script
-				apply
+				apply { zero }
 				gives {
 					quote {
 						function { x }
-						apply
+						apply { zero }
 					}
 				}
 			}

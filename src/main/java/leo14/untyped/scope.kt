@@ -29,6 +29,10 @@ fun Scope.push(rule: Rule): Scope =
 fun Scope.withGiven(thunk: Thunk): Scope =
 	push(thunk.givenRule)
 
+fun Scope.apply(sequence: Sequence): Resolver =
+	sequence.resolveAccess?.let { resolver(it) }
+		?: resolve(thunk(value(sequence.normalize)))
+
 fun Scope.apply(thunk: Thunk): Applied? =
 	null
 		?: applyRules(thunk)
@@ -50,12 +54,12 @@ fun Scope.compile(thunk: Thunk): Scope? =
 		?: compileAs(thunk)
 
 fun Scope.compileDoes(thunk: Thunk): Scope? =
-	thunk.matchInfix(doesName) { lhs, rhs ->
+	thunk.value.sequenceOrNull?.matchInfixOrPrefix(doesName) { lhs, rhs ->
 		push(rule(pattern(lhs), evalBody(rhs.script)))
 	}
 
 fun Scope.compileGives(thunk: Thunk): Scope? =
-	thunk.matchInfix(givesName) { lhs, rhs ->
+	thunk.value.sequenceOrNull?.matchInfixOrPrefix(givesName) { lhs, rhs ->
 		push(rule(pattern(lhs), body(rhs)))
 	}
 

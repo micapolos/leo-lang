@@ -19,30 +19,17 @@ val system = library_ {
 	text
 	open { html }
 	does {
-		text("leo14.js.compiler.MainKt")
-		native { class_ }
-		invoke {
-			static {
-				it { text("htmlOpen") }
-				it { given.text.native { string } }
-			}
+		text("leo14.js.compiler.MainKt").class_.native.static.invoke {
+			it { text("htmlOpen") }
+			it { given.text.native { string } }
 		}.clear
 	}
 
-	// TODO: Consider auto-making everything outside of "define".
-	number.millis.does { given.object_.subject.make { millis } }
-	assert { number(10).millis.gives { millis { number(10) } } }
-
-	millis { number }
-	sleep
+	number.millis.sleep
 	does {
-		text("java.lang.Thread")
-		native { class_ }
-		invoke {
-			static {
-				it { text("sleep") }
-				it { given.millis.number.native { long } }
-			}
+		text("java.lang.Thread").class_.native.static.invoke {
+			it { text("sleep") }
+			it { given.sleep.millis.number.long.native }
 		}
 		clear
 	}

@@ -16,26 +16,17 @@ fun Scope.resolver(thunk: Thunk = thunk(value())) =
 	Resolver(this, thunk)
 
 fun Resolver.apply(line: Line): Resolver =
-	scope.resolve(thunk.plus(line))
+	scope.apply(thunk.sequenceTo(line))
 
 fun Resolver.lazy(script: Script): Resolver =
 	scope.resolver(thunk(lazy(scope, script)))
 
 tailrec fun Resolver.do_(script: Script): Resolver {
 	val done = scope.withGiven(thunk).evaluate(script)
-	val repeatOrNull = done.matchPostfix(repeatName) { it }
+	val repeatOrNull = done.matchPrefix(repeatName) { it }
 	return if (repeatOrNull == null) set(done)
 	else set(repeatOrNull).do_(script)
 }
-
-fun Resolver.recursively(script: Script): Resolver =
-	scope
-		.push(
-			rule(
-				pattern(thunk(value(anythingName lineTo value(), recurseName lineTo value()))),
-				recurseBody(script(recursivelyName lineTo script))))
-		.resolver(thunk)
-		.compile(script)
 
 fun Resolver.match(script: Script): Resolver =
 	thunk.matchField { structField ->
@@ -96,7 +87,7 @@ fun Scope.resolveDefinitions(thunk: Thunk): Resolver? =
 	compile(thunk)?.resolver()
 
 fun Scope.resolveCompile(thunk: Thunk): Resolver? =
-	thunk.matchPostfix(compileName) { lhs ->
+	thunk.matchPrefix(compileName) { lhs ->
 		resolver(lhs).compile
 	}
 
@@ -110,8 +101,8 @@ fun Scope.resolveScope(thunk: Thunk): Resolver? =
 	}
 
 fun Scope.resolveEvaluate(thunk: Thunk): Resolver? =
-	thunk.matchPostfix(evaluateName) { lhs ->
-		resolver(thunk(value())).evaluate(lhs.value.script)
+	thunk.matchPrefix(evaluateName) { rhs ->
+		resolver(thunk(value())).evaluate(rhs.value.script)
 	}
 
 fun Resolver.set(thunk: Thunk): Resolver =

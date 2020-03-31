@@ -7,7 +7,7 @@ fun Scope.reflect(thunk: Thunk): Script =
 		.apply(reflectName lineTo emptyThunk)
 		.thunk
 		.let { applied ->
-			if (applied == thunk.plus(reflectName lineTo emptyThunk)) reflectRaw(thunk)
+			if (applied == thunk(value(reflectName lineTo thunk))) reflectRaw(thunk)
 			else reflectRaw(applied)
 		}
 

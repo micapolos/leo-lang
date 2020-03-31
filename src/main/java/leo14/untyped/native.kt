@@ -18,7 +18,7 @@ val Sequence.resolveNative: Thunk?
 		null
 			?: resolveNativeClass
 			?: resolveNativeNew
-			?: resolveJavaString
+			?: resolveNativeString
 			?: resolveNativeInt
 			?: resolveNativeLong
 			?: resolveNativeFloat
@@ -31,9 +31,9 @@ val Sequence.resolveNative: Thunk?
 			?: resolveNativeStaticGet
 			?: resolveNativeList
 
-val Sequence.resolveJavaString: Thunk?
+val Sequence.resolveNativeString: Thunk?
 	get() =
-		matchPostfix(nativeName, stringName) { lhs ->
+		matchPrefix(nativeName, stringName) { lhs ->
 			lhs.matchText { text ->
 				thunk(value(line(native(text))))
 			}
@@ -41,8 +41,8 @@ val Sequence.resolveJavaString: Thunk?
 
 val Sequence.resolveNativeInt: Thunk?
 	get() =
-		matchPostfix(nativeName, intName) { lhs ->
-			lhs.matchNumber { number ->
+		matchPrefix(nativeName, intName) { rhs ->
+			rhs.matchNumber { number ->
 				try {
 					thunk(value(line(native(number.bigDecimal.intValueExact()))))
 				} catch (e: ArithmeticException) {
@@ -53,8 +53,8 @@ val Sequence.resolveNativeInt: Thunk?
 
 val Sequence.resolveNativeLong: Thunk?
 	get() =
-		matchPostfix(nativeName, longName) { lhs ->
-			lhs.matchNumber { number ->
+		matchPrefix(nativeName, longName) { rhs ->
+			rhs.matchNumber { number ->
 				try {
 					thunk(value(line(native(number.bigDecimal.longValueExact()))))
 				} catch (e: ArithmeticException) {
@@ -65,24 +65,24 @@ val Sequence.resolveNativeLong: Thunk?
 
 val Sequence.resolveNativeFloat: Thunk?
 	get() =
-		matchPostfix(nativeName, floatName) { lhs ->
-			lhs.matchNumber { number ->
+		matchPrefix(nativeName, floatName) { rhs ->
+			rhs.matchNumber { number ->
 				thunk(value(line(native(number.bigDecimal.toFloat()))))
 			}
 		}
 
 val Sequence.resolveNativeDouble: Thunk?
 	get() =
-		matchPostfix(nativeName, doubleName) { lhs ->
-			lhs.matchNumber { number ->
+		matchPrefix(nativeName, doubleName) { rhs ->
+			rhs.matchNumber { number ->
 				thunk(value(line(native(number.bigDecimal.toDouble()))))
 			}
 		}
 
 val Sequence.resolveNativeClass: Thunk?
 	get() =
-		matchPostfix(nativeName, className) { lhs ->
-			lhs.matchText { text ->
+		matchPrefix(nativeName, className) { rhs ->
+			rhs.matchText { text ->
 				try {
 					thunk(value(line(native(javaClass.classLoader.loadClass(text)))))
 				} catch (x: ClassNotFoundException) {
@@ -118,7 +118,7 @@ val Sequence.resolveNativeInvoke: Thunk?
 
 val Sequence.resolveNativeStaticInvoke: Thunk?
 	get() =
-		matchInfix(invokeName, staticName) { lhs, rhs ->
+		matchInfix(staticName, invokeName) { lhs, rhs ->
 			lhs.matchNative { native ->
 				rhs.value.lineStack.splitOrNull?.let { (args, name) ->
 					name.literalOrNull?.stringOrNull?.let { name ->
@@ -140,7 +140,7 @@ val Sequence.resolveNativeStaticInvoke: Thunk?
 
 val Sequence.resolveNativeNew: Thunk?
 	get() =
-		matchInfix(newName) { lhs, rhs ->
+		matchInfixOrPrefix(newName) { lhs, rhs ->
 			lhs.matchNative { native ->
 				(native.obj as? Class<*>)?.let { class_ ->
 					rhs.value.lineStack.reverse.mapOrNull { nativeOrNull?.obj }?.toList()?.toTypedArray()?.let { args ->
@@ -157,8 +157,8 @@ val Sequence.resolveNativeNew: Thunk?
 
 val Sequence.resolveNativeText: Thunk?
 	get() =
-		matchPostfix(textName) { lhs ->
-			lhs.matchNative { native ->
+		matchPrefix(textName) { rhs ->
+			rhs.matchNative { native ->
 				(native.obj as? String)?.let { string ->
 					thunk(value(literal(string)))
 				}
@@ -167,8 +167,8 @@ val Sequence.resolveNativeText: Thunk?
 
 val Sequence.resolveNativeNumber: Thunk?
 	get() =
-		matchPostfix(numberName) { lhs ->
-			lhs.matchNative { native ->
+		matchPrefix(numberName) { rhs ->
+			rhs.matchNative { native ->
 				null
 					?: (native.obj as? Byte)?.let { thunk(value(literal(it.toInt()))) }
 					?: (native.obj as? Short)?.let { thunk(value(literal(it.toInt()))) }
@@ -181,8 +181,8 @@ val Sequence.resolveNativeNumber: Thunk?
 
 val Sequence.resolveNativeList: Thunk?
 	get() =
-		matchPostfix(listName) { lhs ->
-			lhs.matchNative { native ->
+		matchPrefix(listName) { rhs ->
+			rhs.matchNative { native ->
 				(native.obj as? Array<Any>)?.let { array ->
 					thunk(
 						value(
@@ -209,7 +209,7 @@ val Sequence.resolveNativeGet: Thunk?
 
 val Sequence.resolveNativeStaticGet: Thunk?
 	get() =
-		matchInfix(getName, staticName) { lhs, rhs ->
+		matchInfix(staticName, getName) { lhs, rhs ->
 			lhs.matchNative { native ->
 				rhs.matchText { name ->
 					(native.obj as? Class<*>)?.let { class_ ->

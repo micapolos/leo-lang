@@ -3,9 +3,6 @@ package leo14.untyped.dsl2.library
 import leo14.untyped.dsl2.*
 
 val core = library_ {
-	nothing.gives { nothing_ }
-	assert { nothing.gives { nothing_ } }
-
 	anything.clear.gives { nothing }
 	assert { zero.clear.gives { nothing_ } }
 

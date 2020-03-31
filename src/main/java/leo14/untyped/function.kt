@@ -18,7 +18,7 @@ tailrec fun Function.apply(given: Thunk): Thunk {
 		.resolver()
 		.evaluate(script)
 		.thunk
-	val repeatOrNull = done.matchPostfix(repeatName) { it }
+	val repeatOrNull = done.matchPrefix(repeatName) { it }
 	return if (repeatOrNull == null) done
 	else apply(repeatOrNull)
 }

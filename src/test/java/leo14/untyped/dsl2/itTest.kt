@@ -15,8 +15,10 @@ class ItTest {
 				zero
 				it { one }
 				gives {
-					zero
-					one
+					quote {
+						zero
+						one
+					}
 				}
 			}
 

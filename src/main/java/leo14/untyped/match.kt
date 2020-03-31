@@ -74,6 +74,13 @@ fun <R> Sequence.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
 		fn(previousThunk, rhs)
 	}
 
+fun <R> Sequence.matchInfixOrPrefix(name: String, fn: (Thunk, Thunk) -> R) =
+	matchInfix(name) { lhs, rhs ->
+		lhs
+			.matchEmpty { fn(rhs, lhs) }
+			?: fn(lhs, rhs)
+	}
+
 fun <R> Sequence.matchPostfix(name: String, fn: (Thunk) -> R) =
 	matchInfix(name) { lhs, rhs ->
 		rhs.matchEmpty {
@@ -81,18 +88,32 @@ fun <R> Sequence.matchPostfix(name: String, fn: (Thunk) -> R) =
 		}
 	}
 
-fun <R> Sequence.matchInfix(name: String, name2: String, fn: (Thunk, Thunk) -> R) =
+fun <R> Sequence.matchPrefix(name: String, fn: (Thunk) -> R) =
 	matchInfix(name) { lhs, rhs ->
-		rhs.matchPrefix(name2) { rhs ->
+		lhs.matchEmpty {
+			fn(rhs)
+		}
+	}
+
+fun <R> Sequence.matchName(name: String, fn: () -> R) =
+	matchInfix(name) { lhs, rhs ->
+		lhs.matchEmpty {
+			rhs.matchEmpty {
+				fn()
+			}
+		}
+	}
+
+fun <R> Sequence.matchInfix(name: String, name2: String, fn: (Thunk, Thunk) -> R) =
+	matchInfix(name2) { lhs, rhs ->
+		lhs.matchPrefix(name) { lhs ->
 			fn(lhs, rhs)
 		}
 	}
 
-fun <R> Sequence.matchPostfix(name: String, name2: String, fn: (Thunk) -> R) =
-	matchInfix(name, name2) { lhs, rhs ->
-		rhs.matchEmpty {
-			fn(lhs)
-		}
+fun <R> Sequence.matchPrefix(name: String, name2: String, fn: (Thunk) -> R) =
+	matchPrefix(name) { rhs ->
+		rhs.matchPrefix(name2, fn)
 	}
 
 fun <R> Sequence.matchSimple(name: String, fn: () -> R) =

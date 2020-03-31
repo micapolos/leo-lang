@@ -12,7 +12,7 @@ class ResolverTest {
 		val resolver = scope()
 			.push(
 				rule(
-					pattern(thunk(value("foo" lineTo value(), "bar" lineTo value()))),
+					pattern(thunk(value("bar" lineTo value("foo" lineTo value())))),
 					body(thunk(value("zoo")))))
 			.resolver(thunk(value("foo")))
 

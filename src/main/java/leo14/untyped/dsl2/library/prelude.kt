@@ -8,7 +8,6 @@ val prelude = library_ {
 	native()
 	text()
 	system()
-	draw()
 }
 
 fun main() = run_(prelude)
