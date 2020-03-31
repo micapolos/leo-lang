@@ -3,6 +3,7 @@ package leo14.untyped
 import leo.base.Empty
 import leo.base.empty
 import leo.base.fold
+import leo13.fold
 import leo14.Script
 
 sealed class Scope
@@ -28,6 +29,15 @@ fun Scope.push(rule: Rule): Scope =
 
 fun Scope.withGiven(thunk: Thunk): Scope =
 	push(thunk.givenRule)
+
+fun Scope.bind(thunk: Thunk): Scope =
+	fold(thunk.value.lineStack) { line ->
+		push(
+			definition(
+				rule(
+					pattern(thunk(value(line.selectName))),
+					body(thunk(value(line))))))
+	}
 
 fun Scope.apply(sequence: Sequence): Resolver =
 	sequence.resolveAccess?.let { resolver(it) }

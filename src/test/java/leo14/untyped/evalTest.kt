@@ -574,7 +574,7 @@ class EvalTest {
 		script(
 			"anything" lineTo script(),
 			"increment" lineTo script(),
-			"is" lineTo script("match"),
+			"gives" lineTo script("match"),
 			"foo" lineTo script(),
 			"increment" lineTo script())
 			.assertEvalsTo(script("match"))
@@ -667,7 +667,7 @@ class EvalTest {
 			"either" lineTo script(
 				"age" lineTo script("number"),
 				"name" lineTo script("text")),
-			"is" lineTo script("ok"),
+			"gives" lineTo script("ok"),
 			"age" lineTo script(literal(10)))
 			.assertEvalsTo(script("ok"))
 	}
@@ -678,7 +678,7 @@ class EvalTest {
 			"either" lineTo script(
 				"age" lineTo script("number"),
 				"name" lineTo script("text")),
-			"is" lineTo script("ok"),
+			"gives" lineTo script("ok"),
 			"name" lineTo script(literal("Miko")))
 			.assertEvalsTo(script("ok"))
 	}
@@ -907,5 +907,18 @@ class EvalTest {
 	fun scriptText() {
 		leo(1, "plus"("2"), "script"(), "text"())
 			.assertEvalsTo(leo("1.plus \"2\""))
+	}
+
+	@Test
+	fun do_bindings() {
+		leo(
+			"Hello, ",
+			"and"("world!"),
+			"do"(
+				"text"(),
+				"plus"(
+					"and"(),
+					"text"())))
+			.assertEvalsTo(leo("Hello, world!"))
 	}
 }

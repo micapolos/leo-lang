@@ -49,7 +49,7 @@ fun run(reducer: Reducer<String, Char>) {
 			print(ansi.reset)
 		}
 		errorToPrint?.run {
-			println("ERROR")
+			println("[ERROR]")
 			printStackTrace()
 			println(undoableReducerVariable.current.lastDone.toString())
 		}
