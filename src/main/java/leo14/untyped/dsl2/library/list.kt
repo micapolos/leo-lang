@@ -3,27 +3,27 @@ package leo14.untyped.dsl2.library
 import leo14.untyped.dsl2.*
 
 val list = library_ {
-	folded { anything }
+	anything
 	fold { list { anything } }
 	join { function }
-	does {
-		fold.list
+	expands {
+		given.fold.list
 		equals_ { list }
 		match {
-			true_ { folded }
+			true_ { given.object_.subject.subject }
 			false_ {
-				folded
-				join { fold.list.last.object_ }
-				use { join.function }
-				fold { fold.list.previous.list }
-				join { join.function }
+				given.object_.subject.subject
+				join { given.fold.list.last.object_ }
+				use { given.join.function }
+				fold { given.fold.list.previous.list }
+				join { given.join.function }
 				repeat
 			}
 		}
 	}
 
 	assert {
-		folded
+		list
 		fold { list }
 		join {
 			function {
@@ -31,11 +31,11 @@ val list = library_ {
 				append { join.number }
 			}
 		}
-		gives { folded }
+		gives { list }
 	}
 
 	assert {
-		folded
+		list
 		fold {
 			list {
 				number(0)
@@ -45,12 +45,12 @@ val list = library_ {
 		}
 		join {
 			function {
-				folded
+				list
 				append { join.number }
 			}
 		}
 		gives {
-			folded {
+			list {
 				number(2)
 				number(1)
 				number(0)
@@ -61,15 +61,14 @@ val list = library_ {
 	list { anything }
 	reverse
 	does {
-		folded
+		list
 		fold { reverse.list }
 		join {
 			function {
-				folded
+				list
 				append { join.object_ }
 			}
 		}
-		object_.list
 	}
 
 	assert {
@@ -97,19 +96,18 @@ val list = library_ {
 	list { anything }
 	map { function }
 	does {
-		map.function.as_ { f }
-		folded
+		quote { list }
 		fold { list }
 		join {
 			function {
-				folded
+				list
 				append {
 					join.object_
-					use { f }
+					use { map.function }
 				}
 			}
 		}
-		object_.list.reverse
+		reverse
 	}
 
 	assert {
