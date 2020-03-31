@@ -26,7 +26,7 @@ fun Line.selects(name: String) =
 	when (name) {
 		numberName -> this is LiteralLine && literal is NumberLiteral
 		textName -> this is LiteralLine && literal is StringLiteral
-		functionName -> this is FunctionLine
+		doingName -> this is DoingLine
 		nativeName -> this is NativeLine
 		else -> this is FieldLine && name == field.name
 	}
@@ -36,7 +36,7 @@ val Line.patternNameOrNull: String?
 		when (this) {
 			is LiteralLine -> literal.selectName
 			is FieldLine -> null
-			is FunctionLine -> function.selectName
+			is DoingLine -> doing.selectName
 			is NativeLine -> native.selectName
 		}
 
@@ -45,7 +45,7 @@ val Line.selectName
 		when (this) {
 			is LiteralLine -> literal.selectName
 			is FieldLine -> field.name
-			is FunctionLine -> function.selectName
+			is DoingLine -> doing.selectName
 			is NativeLine -> native.selectName
 		}
 
@@ -56,5 +56,5 @@ val Literal.selectName
 			is NumberLiteral -> numberName
 		}
 
-val Function.selectName get() = functionName
+val Doing.selectName get() = doingName
 val Native.selectName get() = nativeName

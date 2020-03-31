@@ -129,10 +129,10 @@ class EvalTest {
 	fun accessFunction() {
 		script(
 			"my" lineTo script(
-				"function" lineTo script("given")),
-			"function" lineTo script())
+				"doing" lineTo script("given")),
+			"doing" lineTo script())
 			.assertEvalsTo(
-				"function" lineTo script("given"))
+				"doing" lineTo script("given"))
 	}
 
 	@Test
@@ -292,17 +292,17 @@ class EvalTest {
 	}
 
 	@Test
-	fun function() {
+	fun doing() {
 		script(
 			"foo" lineTo script(),
 			"is" lineTo script("bar"),
-			"function" lineTo script(
+			"doing" lineTo script(
 				"zoo" lineTo script(),
 				"is" lineTo script("zar"),
 				"append" lineTo script("foo"),
 				"append" lineTo script("zoo")))
 			.assertEvalsTo(
-				"function" lineTo script(
+				"doing" lineTo script(
 					"zoo" lineTo script(),
 					"is" lineTo script("zar"),
 					"append" lineTo script("foo"),
@@ -315,7 +315,7 @@ class EvalTest {
 			1,
 			"and"(2),
 			"use"(
-				"function"(
+				"doing"(
 					"number"(),
 					"plus"("and"(), "number"()))))
 			.assertEvalsTo(leo(3))

@@ -33,7 +33,7 @@ data class FieldLine(val field: Field) : Line() {
 	override fun toString() = scriptLine.toString()
 }
 
-data class FunctionLine(val function: Function) : Line() {
+data class DoingLine(val doing: Doing) : Line() {
 	override fun toString() = scriptLine.toString()
 }
 
@@ -67,7 +67,7 @@ operator fun Value.plus(value: Value) = fold(value.lineStack) { plus(it) }
 fun line(literal: Literal): Line = LiteralLine(literal)
 fun line(field: Field): Line = FieldLine(field)
 fun line(name: String): Line = line(name fieldTo value())
-fun line(function: Function): Line = FunctionLine(function)
+fun line(doing: Doing): Line = DoingLine(doing)
 fun line(native: Native): Line = NativeLine(native)
 
 fun Sequence.plus(line: Line) = value(this) sequenceTo line
@@ -89,7 +89,7 @@ val Value.nameOrNull get() = onlyFieldOrNull?.name
 val Value.numberOrNull get() = onlyLineOrNull?.literalOrNull?.numberOrNull
 val Value.textOrNull get() = onlyLineOrNull?.literalOrNull?.stringOrNull
 val Value.nativeOrNull get() = onlyLineOrNull?.nativeOrNull
-val Value.functionOrNull get() = onlyLineOrNull?.functionOrNull
+val Value.doingOrNull get() = onlyLineOrNull?.doingOrNull
 val Value.headOrNull get() = sequenceOrNull?.lastLine?.let { value(it) }
 val Value.tailOrNull get() = sequenceOrNull?.previousThunk?.value
 val Value.lastOrNull get() = contentsOrNull?.value?.headOrNull?.make(lastName)
@@ -108,7 +108,7 @@ val Sequence.onlyValueOrNull get() = if (previousThunk.value.isEmpty) lastLine e
 
 val Line.literalOrNull get() = (this as? LiteralLine)?.literal
 val Line.fieldOrNull get() = (this as? FieldLine)?.field
-val Line.functionOrNull get() = (this as? FunctionLine)?.function
+val Line.doingOrNull get() = (this as? DoingLine)?.doing
 val Line.nativeOrNull get() = (this as? NativeLine)?.native
 val Line.onlyNameOrNull get() = fieldOrNull?.onlyNameOrNull
 

@@ -36,7 +36,7 @@ val text = library_ {
 		}
 		list
 		map {
-			function {
+			doing {
 				given.native.text
 			}
 		}

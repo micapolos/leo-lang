@@ -40,7 +40,7 @@ val CodeOp.fragmentParent: FragmentParent
 	get() =
 		when (this) {
 			is CodeAppendCodeOp -> code.fragment.parent(begin)
-			is UnquotedFunctionCodeOp -> unquoted.fragment.parent(begin(functionName))
+			is UnquotedDoingCodeOp -> unquoted.fragment.parent(begin(doingName))
 			is UnquotedGetCodeOp -> unquoted.fragment.parent(begin(getName))
 			is UnquotedAssertCodeOp -> unquoted.fragment.parent(begin(assertName))
 			is UnquotedLazyCodeOp -> unquoted.fragment.parent(begin(lazyName))

@@ -31,7 +31,7 @@ data class Code(val opOrNull: CodeOp?, val script: Script)
 sealed class CodeOp
 data class CodeAppendCodeOp(val code: Code, val begin: Begin) : CodeOp()
 data class UnquotedAssertCodeOp(val unquoted: Unquoted) : CodeOp()
-data class UnquotedFunctionCodeOp(val unquoted: Unquoted) : CodeOp()
+data class UnquotedDoingCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedGetCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedLazyCodeOp(val unquoted: Unquoted) : CodeOp()
 data class UnquotedMatchCodeOp(val unquoted: Unquoted) : CodeOp()
@@ -121,10 +121,10 @@ fun Unquoted.write(begin: Begin): Reader =
 					resolver.scope,
 					1,
 					thunk(value())))
-		functionName ->
+		doingName ->
 			CodeReader(
 				Code(
-					UnquotedFunctionCodeOp(this),
+					UnquotedDoingCodeOp(this),
 					script()))
 		getName ->
 			CodeReader(
@@ -218,10 +218,10 @@ fun CodeOp.write(script: Script): Reader? =
 			UnquotedReader(
 				unquoted.copy(
 					resolver = unquoted.resolver.assert(script)))
-		is UnquotedFunctionCodeOp ->
+		is UnquotedDoingCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.function(script)))
+					resolver = unquoted.resolver.doing(script)))
 		is UnquotedGetCodeOp ->
 			UnquotedReader(
 				unquoted.copy(

@@ -23,7 +23,7 @@ val Line.scriptLine: ScriptLine
 		when (this) {
 			is LiteralLine -> literal.scriptLine
 			is FieldLine -> field.scriptLine
-			is FunctionLine -> function.scriptLine
+			is DoingLine -> doing.scriptLine
 			is NativeLine -> nativeName lineTo script(literal(native.toString()))
 		}
 
@@ -46,28 +46,28 @@ val Thunk.script
 			is LazyThunk -> lazy.printScript
 		}
 
-val Function.bodyScript
+val Doing.bodyScript
 	get() =
-		scope.functionScript.plus(script)
+		scope.doingScript.plus(script)
 
-val Function.scriptLine
+val Doing.scriptLine
 	get() =
-		functionName lineTo script
+		doingName lineTo script
 
 val Scope.reflectScriptLine: ScriptLine
 	get() =
-		scopeName lineTo functionScript
+		scopeName lineTo doingScript
 
-val Scope.functionScript: Script
+val Scope.doingScript: Script
 	get() =
 		when (this) {
 			is EmptyScope -> script()
-			is LinkScope -> link.functionScript
+			is LinkScope -> link.doingScript
 		}
 
-val ScopeLink.functionScript: Script
+val ScopeLink.doingScript: Script
 	get() =
-		scope.functionScript.plus(definition.scopeScript)
+		scope.doingScript.plus(definition.scopeScript)
 
 val Rule.scopeScript
 	get() =
@@ -119,7 +119,7 @@ val Line.scriptLineOrNull: ScriptLine?
 		when (this) {
 			is LiteralLine -> literal.scriptLine
 			is FieldLine -> field.scriptFieldOrNull?.let { line(it) }
-			is FunctionLine -> null
+			is DoingLine -> null
 			is NativeLine -> null
 		}
 

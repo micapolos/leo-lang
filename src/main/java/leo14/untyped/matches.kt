@@ -58,14 +58,14 @@ fun Line.matches(line: Line): Boolean =
 		?: numberMatches(line)
 		?: textMatches(line)
 		?: nativeMatches(line)
-		?: functionMatches(line)
+		?: doingMatches(line)
 		?: rawMatches(line)
 
 fun Line.rawMatches(line: Line) =
 	when (this) {
 		is LiteralLine -> line is LiteralLine && literal == line.literal
 		is FieldLine -> line is FieldLine && field.matches(line.field)
-		is FunctionLine -> false
+		is DoingLine -> false
 		is NativeLine -> false
 	}
 
@@ -81,8 +81,8 @@ fun Line.nativeMatches(line: Line) =
 	if (this == line(nativeName)) line is NativeLine
 	else null
 
-fun Line.functionMatches(line: Line) =
-	if (this == line(functionName)) line is FunctionLine
+fun Line.doingMatches(line: Line) =
+	if (this == line(doingName)) line is DoingLine
 	else null
 
 fun Field.matches(field: Field) =
@@ -103,7 +103,7 @@ fun Line.matches(name: String) =
 	when (this) {
 		is LiteralLine -> literal.matches(name)
 		is FieldLine -> field.matches(name)
-		is FunctionLine -> name == functionName
+		is DoingLine -> name == doingName
 		is NativeLine -> false
 	}
 

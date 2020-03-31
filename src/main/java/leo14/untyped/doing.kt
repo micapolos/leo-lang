@@ -2,16 +2,16 @@ package leo14.untyped
 
 import leo14.Script
 
-data class Function(
+data class Doing(
 	val scope: Scope,
 	val script: Script)
 
-fun function(scope: Scope, script: Script) =
-	Function(scope, script)
+fun doing(scope: Scope, script: Script) =
+	Doing(scope, script)
 
-fun function(script: Script) = function(scope(), script)
+fun doing(script: Script) = doing(scope(), script)
 
-tailrec fun Function.apply(given: Thunk): Thunk {
+tailrec fun Doing.apply(given: Thunk): Thunk {
 	// TODO: This code is repeated with Resolver.do_(). Extract it.
 	val done = scope
 		.push(given.givenDefinition)
@@ -23,7 +23,7 @@ tailrec fun Function.apply(given: Thunk): Thunk {
 	else apply(repeatOrNull)
 }
 
-tailrec fun Function.doWith(given: Thunk): Thunk {
+tailrec fun Doing.with(given: Thunk): Thunk {
 	// TODO: This code is repeated with Resolver.do_(). Extract it.
 	val done = scope
 		.bind(given)
@@ -32,5 +32,5 @@ tailrec fun Function.doWith(given: Thunk): Thunk {
 		.thunk
 	val repeatOrNull = done.matchPrefix(repeatName) { it }
 	return if (repeatOrNull == null) done
-	else doWith(repeatOrNull)
+	else with(repeatOrNull)
 }

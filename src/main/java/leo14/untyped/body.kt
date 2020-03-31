@@ -15,11 +15,11 @@ fun expandsBody(script: Script): Body = MacroBody(script)
 
 fun Body.apply(scope: Scope, given: Thunk): Applied =
 	when (this) {
-		is GivesBody -> applied(function(scope, script).apply(given))
-		is DoesBody -> applied(function(scope, script).doWith(given))
+		is GivesBody -> applied(doing(scope, script).apply(given))
+		is DoesBody -> applied(doing(scope, script).with(given))
 		is RecurseBody -> applied(scope
 			.resolver(given.value.sequenceOrNull!!.previousThunk)
 			.compile(script)
 			.thunk)
-		is MacroBody -> applied(function(scope, script).apply(given).value.script)
+		is MacroBody -> applied(doing(scope, script).apply(given).value.script)
 	}

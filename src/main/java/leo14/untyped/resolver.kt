@@ -96,7 +96,7 @@ fun Scope.resolveScope(thunk: Thunk): Resolver? =
 	thunk.matchInfix(scopeName) { lhs, rhs ->
 		lhs.matchEmpty {
 			rhs.matchEmpty {
-				resolver(thunk(functionScript.value))
+				resolver(thunk(doingScript.value))
 			}
 		}
 	}
@@ -123,10 +123,10 @@ val Resolver.clear
 fun Scope.resolver(sequence: Sequence): Resolver =
 	resolver(sequence.previousThunk).apply(sequence.lastLine)
 
-fun Resolver.function(script: Script): Resolver =
+fun Resolver.doing(script: Script): Resolver =
 	when (script) {
-		is UnitScript -> apply(functionName lineTo value())
-		is LinkScript -> apply(line(function(scope, script)))
+		is UnitScript -> apply(doingName lineTo value())
+		is LinkScript -> apply(line(doing(scope, script)))
 	}
 
 fun Resolver.assert(script: Script): Resolver =
