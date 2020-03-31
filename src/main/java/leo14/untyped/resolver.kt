@@ -16,7 +16,7 @@ fun Scope.resolver(thunk: Thunk = thunk(value())) =
 	Resolver(this, thunk)
 
 fun Resolver.apply(line: Line): Resolver =
-	scope.resolve(this.thunk.plus(line))
+	scope.resolve(thunk.plus(line))
 
 fun Resolver.lazy(script: Script): Resolver =
 	scope.resolver(thunk(lazy(scope, script)))

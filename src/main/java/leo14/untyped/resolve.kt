@@ -345,3 +345,16 @@ val Sequence.resolveGiven: Thunk?
 		matchSimple(givenName) {
 			thunk(value())
 		}
+
+val Sequence.resolveNormalize: Thunk?
+	get() =
+		lastLine.matchName { name ->
+			thunk(value(this)).make(name)
+		}
+
+val Thunk.normalize: Thunk
+	get() =
+		value
+			.sequenceOrNull
+			?.resolveNormalize
+			?: this
