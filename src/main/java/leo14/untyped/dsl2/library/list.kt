@@ -8,7 +8,7 @@ val list = library_ {
 	gives {
 		folded
 		it { fold { given.reverse.list.object_ } }
-		doing {
+		using {
 			function {
 				given.folded
 				append { given.last.object_ }
@@ -40,17 +40,17 @@ val list = library_ {
 	}
 
 	list { anything }
-	map { doing { function } }
+	map { using { function } }
 	gives {
-		given.map.doing.function.as_ { f }
+		given.map.using.function.as_ { f }
 		folded
 		it { given.list.object_.fold }
-		doing {
+		using {
 			function {
 				given.folded
 				append {
 					given.last.object_
-					call { f }
+					use { f }
 				}
 			}
 		}
@@ -64,7 +64,7 @@ val list = library_ {
 			number(3)
 		}
 		map {
-			doing {
+			using {
 				function {
 					given.number.text
 				}

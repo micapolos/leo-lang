@@ -5,16 +5,16 @@ import leo14.untyped.dsl2.*
 val fold = library_ {
 	folded { anything }
 	fold { anything }
-	doing { function }
+	using { function }
 	gives {
 		given.fold.equals_ { fold }.match {
 			true_ { given.folded }
 			false_ {
 				given.folded
 				it { given.fold.last }
-				call { given.doing.function }
+				use { given.using.function }
 				it { given.fold.previous.fold }
-				doing { given.doing.function }
+				using { given.using.function }
 				repeat
 			}
 		}
@@ -27,7 +27,7 @@ val fold = library_ {
 			number(1)
 			number(2)
 		}
-		doing {
+		using {
 			function {
 				given.folded
 				append { given.last.number }
