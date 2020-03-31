@@ -11,9 +11,10 @@ class ResolverTest {
 	fun apply_scope() {
 		val resolver = scope()
 			.push(
-				rule(
-					pattern(thunk(value("bar" lineTo value("foo" lineTo value())))),
-					body(thunk(value("zoo")))))
+				definition(
+					binding(
+						thunk(value("bar" lineTo value("foo" lineTo value()))),
+						thunk(value("zoo")))))
 			.resolver(thunk(value("foo")))
 
 		resolver
@@ -24,7 +25,7 @@ class ResolverTest {
 	@Test
 	fun apply_definitions() {
 		val resolver = scope()
-			.push(rule(pattern(thunk(value("foo"))), body(thunk(value("bar")))))
+			.push(definition(binding(thunk(value("foo")), thunk(value("bar")))))
 			.resolver(thunk(value("zoo")))
 
 		resolver
@@ -32,15 +33,15 @@ class ResolverTest {
 			.assertEqualTo(
 				resolver.scope.push(
 					definition(
-						rule(
-							pattern(thunk(value("zoo"))),
-							body(thunk(value("zar")))))).resolver())
+						binding(
+							thunk(value("zoo")),
+							thunk(value("zar"))))).resolver())
 	}
 
 	@Test
 	fun apply_raw() {
 		val resolver = scope()
-			.push(rule(pattern(thunk(value("foo"))), body(thunk(value("bar")))))
+			.push(definition(binding(thunk(value("foo")), thunk(value("bar")))))
 			.resolver(thunk(value("zoo")))
 
 		resolver

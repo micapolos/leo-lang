@@ -37,9 +37,9 @@ fun Resolver.match(script: Script): Resolver =
 					set(
 						scope
 							.push(
-								rule(
-									pattern(thunk(value(matchingName))),
-									body(thunk(value(matchingName lineTo value(sequence))))))
+								definition(
+									thunk(value(matchingName))
+										.bindingTo(thunk(value(matchingName lineTo value(sequence))))))
 							.asLazy(body)
 							.eval)
 				}

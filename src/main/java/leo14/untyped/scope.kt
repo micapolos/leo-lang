@@ -21,6 +21,9 @@ fun scope(link: ScopeLink): Scope = LinkScope(link)
 fun scope(rule: Rule, vararg rules: Rule) =
 	scope().push(rule).fold(rules) { push(it) }
 
+fun scope(definition: Definition, vararg definitions: Definition) =
+	scope().push(definition).fold(definitions) { push(it) }
+
 fun Scope.push(definition: Definition): Scope =
 	scope(this linkTo definition)
 
@@ -28,15 +31,13 @@ fun Scope.push(rule: Rule): Scope =
 	scope(this linkTo rule)
 
 fun Scope.withGiven(thunk: Thunk): Scope =
-	push(thunk.givenRule)
+	push(thunk.givenDefinition)
 
 fun Scope.bind(thunk: Thunk): Scope =
 	fold(thunk.value.lineStack) { line ->
 		push(
 			definition(
-				rule(
-					pattern(thunk(value(line.selectName))),
-					body(thunk(value(line))))))
+				thunk(value(line.selectName)).bindingTo(thunk(value(line)))))
 	}
 
 fun Scope.apply(sequence: Sequence): Resolver =
@@ -70,12 +71,12 @@ fun Scope.compileDoes(thunk: Thunk): Scope? =
 
 fun Scope.compileGives(thunk: Thunk): Scope? =
 	thunk.value.sequenceOrNull?.matchInfixOrPrefix(isName) { lhs, rhs ->
-		push(rule(pattern(lhs), body(rhs)))
+		push(definition(lhs.bindingTo(rhs)))
 	}
 
 fun Scope.compileAs(thunk: Thunk): Scope? =
 	thunk.matchInfix(asName) { lhs, rhs ->
-		push(rule(pattern(rhs), body(lhs)))
+		push(definition(rhs.bindingTo(lhs)))
 	}
 
 fun Scope.evaluate(script: Script): Thunk =

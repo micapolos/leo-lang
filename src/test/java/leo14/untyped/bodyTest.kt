@@ -8,13 +8,6 @@ import kotlin.test.Test
 
 class BodyTest {
 	@Test
-	fun apply_nullContext() {
-		body(thunk(value("foo")))
-			.apply(scope(), thunk(value("arg" lineTo value())))
-			.assertEqualTo(applied(thunk(value("foo"))))
-	}
-
-	@Test
 	fun apply_nonNullContext() {
 		givesBody(script(givenName lineTo script()))
 			.apply(scope(), thunk(value(literal(5))))

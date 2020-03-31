@@ -30,13 +30,3 @@ val Lazy.reflectScriptLine
 		"lazy"(
 			scope.reflectScriptLine,
 			script.reflectScriptLine)
-
-val Lazy.recurseRule
-	get() =
-		rule(
-			pattern(
-				thunk(
-					value(
-						"anything" lineTo value(),
-						"recurse" lineTo value()))),
-			body(thunk(this)))

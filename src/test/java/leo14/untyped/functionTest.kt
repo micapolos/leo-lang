@@ -23,13 +23,11 @@ class FunctionTest {
 	fun applyResolvesContext() {
 		function(
 			scope(
-				rule(
-					pattern(
-						thunk(
-							value(
-								"foo" lineTo value()))),
-					body(
-						thunk(
+				definition(
+					thunk(
+						value(
+							"foo" lineTo value()))
+						.bindingTo(thunk(
 							value(
 								"bar" lineTo value()))))),
 			script("foo" lineTo script()))

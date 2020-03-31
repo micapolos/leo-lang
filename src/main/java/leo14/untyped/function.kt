@@ -14,7 +14,7 @@ fun function(script: Script) = function(scope(), script)
 tailrec fun Function.apply(given: Thunk): Thunk {
 	// TODO: This code is repeated with Resolver.do_(). Extract it.
 	val done = scope
-		.push(given.givenRule)
+		.push(given.givenDefinition)
 		.resolver()
 		.evaluate(script)
 		.thunk

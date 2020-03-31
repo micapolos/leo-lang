@@ -73,10 +73,15 @@ val Rule.scopeScript
 	get() =
 		pattern.ruleScript.plus(body.ruleScriptLine)
 
+val Binding.scopeScript
+	get() =
+		key.script.plus(isName lineTo value.script)
+
 val Definition.scopeScript
 	get() =
 		when (this) {
 			is RuleDefinition -> rule.scopeScript
+			is BindingDefinition -> binding.scopeScript
 		}
 
 val Pattern.ruleScript
@@ -86,7 +91,6 @@ val Pattern.ruleScript
 val Body.ruleScriptLine
 	get() =
 		when (this) {
-			is ThunkBody -> isName lineTo thunk.script
 			is GivesBody -> givesName lineTo script
 			is DoesBody -> doesName lineTo script
 			is RecurseBody -> recurseName lineTo script

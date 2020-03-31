@@ -8,9 +8,9 @@ import kotlin.test.Test
 
 class ScopeTest {
 	private val scope = scope(
-		rule(pattern(thunk(value("x"))), body(thunk(value("zero")))),
-		rule(pattern(thunk(value("y"))), body(thunk(value("one")))),
-		rule(pattern(thunk(value("x"))), body(thunk(value("two")))))
+		definition(binding(thunk(value("x")), thunk(value("zero")))),
+		definition(binding(thunk(value("y")), thunk(value("one")))),
+		definition(binding(thunk(value("x")), thunk(value("two")))))
 
 	@Test
 	fun apply_rules() {
@@ -37,9 +37,10 @@ class ScopeTest {
 						isName lineTo value("bar"))))
 			.assertEqualTo(
 				scope.push(
-					rule(
-						pattern(thunk(value("foo"))),
-						body(thunk(value("bar"))))))
+					definition(
+						binding(
+							thunk(value("foo")),
+							thunk(value("bar"))))))
 	}
 
 	@Test
