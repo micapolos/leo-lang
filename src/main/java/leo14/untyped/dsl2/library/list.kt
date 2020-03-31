@@ -5,7 +5,7 @@ import leo14.untyped.dsl2.*
 val list = library_ {
 	folded { anything }
 	fold { list { anything } }
-	step { function }
+	join { function }
 	does {
 		fold.list
 		equals_ { list }
@@ -13,10 +13,10 @@ val list = library_ {
 			true_ { folded }
 			false_ {
 				folded
-				it { fold.list.last }
-				use { step.function }
+				join { fold.list.last.object_ }
+				use { join.function }
 				fold { fold.list.previous.list }
-				step { step.function }
+				join { join.function }
 				repeat
 			}
 		}
@@ -25,10 +25,10 @@ val list = library_ {
 	assert {
 		folded
 		fold { list }
-		step {
+		join {
 			function {
 				folded
-				append { last.number }
+				append { join.number }
 			}
 		}
 		gives { folded }
@@ -43,10 +43,10 @@ val list = library_ {
 				number(2)
 			}
 		}
-		step {
+		join {
 			function {
 				folded
-				append { last.number }
+				append { join.number }
 			}
 		}
 		gives {
@@ -63,10 +63,10 @@ val list = library_ {
 	does {
 		folded
 		fold { reverse.list }
-		step {
+		join {
 			function {
 				folded
-				append { last.object_ }
+				append { join.object_ }
 			}
 		}
 		object_.list
@@ -100,11 +100,11 @@ val list = library_ {
 		map.function.as_ { f }
 		folded
 		fold { list }
-		step {
+		join {
 			function {
 				folded
 				append {
-					last.object_
+					join.object_
 					use { f }
 				}
 			}
