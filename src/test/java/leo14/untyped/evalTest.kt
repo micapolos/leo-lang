@@ -934,4 +934,18 @@ class EvalTest {
 			"leo"(), "word"())
 			.assertEvalsTo(leo("and"()))
 	}
+
+	@Test
+	fun leoScript() {
+		leo(
+			"zero",
+			"and"(1),
+			"leo"(), "script"())
+			.assertEvalsTo(
+				leo("script"("line"("list"(
+					"zero",
+					"field"(
+						"name"("and"),
+						"script"("line"("list"(1)))))))))
+	}
 }

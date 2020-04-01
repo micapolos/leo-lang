@@ -73,6 +73,7 @@ fun Scope.resolveStatic(thunk: Thunk): Resolver =
 		?: resolveScope(thunk)
 		?: resolveEvaluate(thunk)
 		?: resolveScriptText(thunk)
+		?: resolveLeoScript(thunk)
 		?: resolver(thunk)
 
 fun Scope.resolveContext(thunk: Thunk): Resolver? =
@@ -110,6 +111,13 @@ fun Scope.resolveScriptText(thunk: Thunk): Resolver? =
 	thunk.matchPrefix(textName) { rhs ->
 		rhs.matchPrefix(scriptName) { rhs ->
 			resolver(thunk(value(literal(reflect(rhs).leoString))))
+		}
+	}
+
+fun Scope.resolveLeoScript(thunk: Thunk): Resolver? =
+	thunk.matchPrefix(scriptName) { rhs ->
+		rhs.matchPrefix(leoName) { rhs ->
+			resolver(thunk(value(reflect(rhs).reflectLine.valueLine)))
 		}
 	}
 
