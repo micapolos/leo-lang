@@ -21,12 +21,8 @@ fun Resolver.apply(line: Line): Resolver =
 fun Resolver.lazy(script: Script): Resolver =
 	scope.resolver(thunk(lazy(scope, script)))
 
-tailrec fun Resolver.do_(script: Script): Resolver {
-	val done = scope.bind(thunk).evaluate(script)
-	val repeatOrNull = done.matchPrefix(repeatName) { it }
-	return if (repeatOrNull == null) set(done)
-	else set(repeatOrNull).do_(script)
-}
+fun Resolver.do_(script: Script): Resolver =
+	set(action(scope, script).fix(thunk) { bind(it) })
 
 fun Resolver.match(script: Script): Resolver =
 	thunk.matchField { structField ->
