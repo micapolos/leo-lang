@@ -593,8 +593,8 @@ class EvalTest {
 		script(
 			"x" lineTo script(literal(10)),
 			"match" lineTo script(
-				"number" lineTo script("matching")))
-			.assertEvalsTo("matching" lineTo script(literal(10)))
+				"number" lineTo script("number")))
+			.assertEvalsTo(script(literal(10)))
 	}
 
 	@Test
@@ -602,17 +602,22 @@ class EvalTest {
 		script(
 			"x" lineTo script(literal("Hello")),
 			"match" lineTo script(
-				"text" lineTo script("matching")))
-			.assertEvalsTo("matching" lineTo script(literal("Hello")))
+				"text" lineTo script("text")))
+			.assertEvalsTo(script(literal("Hello")))
 	}
 
 	@Test
 	fun switch_name() {
 		script(
-			"x" lineTo script("circle"),
+			"shape" lineTo script(
+				"circle" lineTo script(
+					"radius" lineTo script(literal(10)))),
 			"match" lineTo script(
-				"circle" lineTo script("matching")))
-			.assertEvalsTo("matching" lineTo script("circle"))
+				"circle" lineTo script(
+					"circle" lineTo script(),
+					"radius" lineTo script(),
+					"number" lineTo script())))
+			.assertEvalsTo(script(literal(10)))
 	}
 
 	@Test

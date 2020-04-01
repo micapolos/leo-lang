@@ -36,10 +36,11 @@ fun Resolver.match(script: Script): Resolver =
 				?.let { body ->
 					set(
 						scope
-							.push(
-								definition(
-									thunk(value(matchingName))
-										.bindingTo(thunk(value(matchingName lineTo value(sequence))))))
+							.bind(thunk(value(sequence)))
+//							.push(
+//								definition(
+//									thunk(value(matchingName))
+//										.bindingTo(thunk(value(matchingName lineTo value(sequence))))))
 							.asLazy(body)
 							.eval)
 				}
