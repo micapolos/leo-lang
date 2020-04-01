@@ -51,7 +51,6 @@ val Sequence.resolve: Thunk?
 			?: resolveSubject
 			?: resolveObject
 			?: resolveLink
-			?: resolveLeoText
 			?: resolveGiven
 			?: resolveTextWord
 			?: resolveWordText
@@ -276,14 +275,6 @@ val Sequence.resolveObject: Thunk?
 				sequence.lastLine.fieldOrNull?.let { field ->
 					field.thunk
 				}
-			}
-		}
-
-val Sequence.resolveLeoText: Thunk?
-	get() =
-		matchPrefix(textName) { rhs ->
-			rhs.matchPrefix(leoName) { rhs ->
-				thunk(value(literal(rhs.script.leoString)))
 			}
 		}
 
