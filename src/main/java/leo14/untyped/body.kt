@@ -12,5 +12,5 @@ fun expandsBody(script: Script): Body = MacroBody(script)
 fun Body.apply(scope: Scope, given: Thunk): Applied =
 	when (this) {
 		is DoesBody -> applied(doing(scope, script).with(given))
-		is MacroBody -> applied(doing(scope, script).applyGiven(given).value.script)
+		is MacroBody -> applied(doing(scope, script).applyScript(given).value.script)
 	}

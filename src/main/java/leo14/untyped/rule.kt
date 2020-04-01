@@ -11,10 +11,10 @@ fun Rule.apply(scope: Scope, given: Thunk): Applied? =
 		body.apply(scope, given)
 	}
 
-val Thunk.givenBinding
+val Thunk.scriptBinding
 	get() =
-		thunk(value(givenName)).bindingTo(thunk(value(givenName lineTo this)))
+		thunk(value(scriptName)).bindingTo(thunk(value(scriptName lineTo this)))
 
-val Thunk.givenDefinition
+val Thunk.scriptDefinition
 	get() =
-		definition(givenBinding)
+		definition(scriptBinding)

@@ -10,10 +10,10 @@ val core = library_ {
 	then_ { anything }
 	else_ { anything }
 	expands {
-		given.if_.object_
+		script.if_.object_
 		match {
-			true_ { given.then_.object_ }
-			false_ { given.else_.object_ }
+			true_ { script.then_.object_ }
+			false_ { script.else_.object_ }
 		}
 	}
 
@@ -33,7 +33,7 @@ val core = library_ {
 
 	anything
 	comment { anything }
-	expands { given.object_.subject }
+	expands { script.object_.subject }
 
 	assert {
 		number(2)

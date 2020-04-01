@@ -10,12 +10,12 @@ class DoingTest {
 	fun applyAppends() {
 		doing(
 			scope(),
-			script(givenName lineTo script()))
-			.applyGiven(thunk(value("foo" lineTo value())))
+			script(scriptName lineTo script()))
+			.applyScript(thunk(value("foo" lineTo value())))
 			.assertEqualTo(
 				thunk(
 					value(
-						givenName lineTo value(
+						scriptName lineTo value(
 							"foo" lineTo value()))))
 	}
 
@@ -31,7 +31,7 @@ class DoingTest {
 							value(
 								"bar" lineTo value()))))),
 			script("foo" lineTo script()))
-			.applyGiven(thunk(value("goo" lineTo value())))
+			.applyScript(thunk(value("goo" lineTo value())))
 			.assertEqualTo(thunk(value("bar")))
 	}
 }

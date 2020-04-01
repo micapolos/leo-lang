@@ -7,16 +7,16 @@ val list = library_ {
 	fold { list { anything } }
 	join { doing }
 	expands {
-		given.fold.list
+		script.fold.list
 		equals_ { list }
 		match {
-			true_ { given.object_.subject.subject }
+			true_ { script.object_.subject.subject }
 			false_ {
-				given.object_.subject.subject
-				join { given.fold.list.last.object_ }
-				use { given.join.doing }
-				fold { given.fold.list.previous.list }
-				join { given.join.doing }
+				script.object_.subject.subject
+				join { script.fold.list.last.object_ }
+				use { script.join.doing }
+				fold { script.fold.list.previous.list }
+				join { script.join.doing }
 				repeat
 			}
 		}

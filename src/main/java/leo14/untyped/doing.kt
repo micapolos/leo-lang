@@ -11,16 +11,16 @@ fun doing(scope: Scope, script: Script) =
 
 fun doing(script: Script) = doing(scope(), script)
 
-tailrec fun Doing.applyGiven(given: Thunk): Thunk {
+tailrec fun Doing.applyScript(given: Thunk): Thunk {
 	// TODO: This code is repeated with Resolver.do_(). Extract it.
 	val done = scope
-		.push(given.givenDefinition)
+		.push(given.scriptDefinition)
 		.resolver()
 		.evaluate(script)
 		.thunk
 	val repeatOrNull = done.matchPrefix(repeatName) { it }
 	return if (repeatOrNull == null) done
-	else applyGiven(repeatOrNull)
+	else applyScript(repeatOrNull)
 }
 
 tailrec fun Doing.with(given: Thunk): Thunk {
