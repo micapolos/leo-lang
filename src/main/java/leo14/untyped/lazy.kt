@@ -2,6 +2,8 @@ package leo14.untyped
 
 import leo14.*
 
+val lazyErrorOnEval = false
+
 data class Lazy(val scope: Scope, val script: Script) {
 	override fun toString() = reflectScriptLine.toString()
 }
@@ -15,11 +17,12 @@ operator fun Lazy.plus(definition: Definition): Lazy =
 
 val Lazy.value: Value
 	get() =
-		scope.eval(script).value
+		eval.value
 
 val Lazy.eval: Thunk
 	get() =
-		scope.eval(script)
+		if (lazyErrorOnEval) error("eval")
+		else scope.eval(script)
 
 val Lazy.printScript
 	get() =

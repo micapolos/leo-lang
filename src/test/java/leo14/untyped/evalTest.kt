@@ -994,4 +994,10 @@ class EvalTest {
 				.eval
 		}
 	}
+
+	@Test
+	fun recurse_lazy() {
+		leo("do"("lazy"("foo"("recurse"()))))
+			.assertEvalsTo(leo("lazy"("foo"("recurse"()))))
+	}
 }

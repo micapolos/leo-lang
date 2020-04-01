@@ -1,9 +1,6 @@
 package leo14.untyped
 
-import leo.bellChar
 import leo13.fold
-
-val thunkBellOnEval = false
 
 sealed class Thunk
 
@@ -31,7 +28,7 @@ val Thunk.value
 	get() =
 		when (this) {
 			is ValueThunk -> value
-			is LazyThunk -> lazy.value.also { if (thunkBellOnEval) print(bellChar) }
+			is LazyThunk -> lazy.value
 		}
 
 fun Thunk.plus(line: Line): Thunk =

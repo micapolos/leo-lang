@@ -8,52 +8,52 @@ fun <R> Value.matchEmpty(fn: () -> R): R? =
 	(this as? EmptyValue)?.let { fn() }
 
 fun <R> Thunk.matchEmpty(fn: () -> R): R? =
-	value.matchEmpty(fn)
+	strictValueOrNull?.matchEmpty(fn)
 
 fun <R> Value.matchNotEmpty(fn: () -> R): R? =
 	if (isEmpty) null else fn()
 
 fun <R> Thunk.matchNotEmpty(fn: () -> R): R? =
-	value.matchNotEmpty(fn)
+	strictValueOrNull?.matchNotEmpty(fn)
 
 fun <R> Value.matchSequence(fn: (Sequence) -> R): R? =
 	(this as? SequenceValue)?.sequence?.let(fn)
 
 fun <R> Thunk.matchSequence(fn: (Sequence) -> R): R? =
-	value.matchSequence(fn)
+	strictValueOrNull?.matchSequence(fn)
 
 fun <R> Value.matchName(fn: (String) -> R): R? =
 	onlyNameOrNull?.let(fn)
 
 fun <R> Thunk.matchName(fn: (String) -> R): R? =
-	value.matchName(fn)
+	strictValueOrNull?.matchName(fn)
 
 fun <R> Thunk.matchField(fn: (Field) -> R): R? =
-	value.onlyFieldOrNull?.let(fn)
+	strictValueOrNull?.onlyFieldOrNull?.let(fn)
 
 fun <R> Value.matchNumber(fn: (Number) -> R): R? =
 	numberOrNull?.let(fn)
 
 fun <R> Thunk.matchNumber(fn: (Number) -> R): R? =
-	value.matchNumber(fn)
+	strictValueOrNull?.matchNumber(fn)
 
 fun <R> Thunk.matchDoing(fn: (Action) -> R): R? =
-	value.doingOrNull?.let(fn)
+	strictValueOrNull?.doingOrNull?.let(fn)
 
 fun <R> Value.matchText(fn: (String) -> R): R? =
 	textOrNull?.let(fn)
 
 fun <R> Thunk.matchText(fn: (String) -> R): R? =
-	value.matchText(fn)
+	strictValueOrNull?.matchText(fn)
 
 fun <R> Value.matchNative(fn: (Native) -> R): R? =
 	nativeOrNull?.let(fn)
 
 fun <R> Thunk.matchNative(fn: (Native) -> R): R? =
-	value.matchNative(fn)
+	strictValueOrNull?.matchNative(fn)
 
 fun <R> Thunk.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
-	value.sequenceOrNull?.matchInfix(name, fn)
+	strictValueOrNull?.sequenceOrNull?.matchInfix(name, fn)
 
 fun <R> Thunk.matchPrefix(name: String, fn: (Thunk) -> R) =
 	matchInfix(name) { lhs, rhs ->

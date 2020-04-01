@@ -1,6 +1,7 @@
 package leo14.untyped
 
 import leo.base.fold
+import leo.base.notNullIf
 import leo13.Stack
 import leo13.fold
 import leo13.push
@@ -123,3 +124,22 @@ fun Thunk.make(name: String) = thunk(value(name lineTo this))
 val String.isWord: Boolean
 	get() =
 		all { it.isLetter() }
+
+val Thunk.isLazy get() = (this is LazyThunk)
+
+val Value.onlyStrictLineOrNull
+	get() =
+		sequenceOrNull?.let { sequence ->
+			sequence.previousThunk.strictValueOrNull?.let { previousValue ->
+				notNullIf(previousValue.isEmpty) {
+					sequence.lastLine
+				}
+			}
+		}
+
+val Thunk.strictValueOrNull: Value?
+	get() =
+		when (this) {
+			is ValueThunk -> value
+			is LazyThunk -> null
+		}

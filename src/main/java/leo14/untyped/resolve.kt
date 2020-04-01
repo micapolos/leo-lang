@@ -75,7 +75,7 @@ val Sequence.resolveAnythingUseFunction: Thunk?
 val Sequence.resolveAccess: Thunk?
 	get() =
 		lastLine.matchName { name ->
-			previousThunk.value.get(name)
+			previousThunk.strictValueOrNull?.get(name)
 		}
 
 val Sequence.resolveGet: Thunk?
@@ -89,8 +89,8 @@ val Sequence.resolveGet: Thunk?
 val Sequence.resolveAnythingAppendAnything: Thunk?
 	get() =
 		matchInfix(appendName) { lhs, rhs ->
-			lhs.value.onlyFieldOrNull?.let { field ->
-				rhs.value.onlyLineOrNull?.let { line ->
+			lhs.strictValueOrNull?.onlyFieldOrNull?.let { field ->
+				rhs.strictValueOrNull?.onlyLineOrNull?.let { line ->
 					thunk(value(field.name lineTo field.thunk.plus(line)))
 				}
 			}
@@ -99,7 +99,7 @@ val Sequence.resolveAnythingAppendAnything: Thunk?
 val Sequence.resolveAnythingItAnything: Thunk?
 	get() =
 		matchInfixOrPrefix(itName) { lhs, rhs ->
-			rhs.value.onlyLineOrNull?.let { rhs ->
+			rhs.strictValueOrNull?.onlyLineOrNull?.let { rhs ->
 				lhs.plus(rhs)
 			}
 		}

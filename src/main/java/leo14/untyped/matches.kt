@@ -7,8 +7,7 @@ import leo14.StringLiteral
 fun Thunk.matches(thunk: Thunk): Boolean =
 	null
 		?: anythingMatches
-		?: eitherMatches(thunk)
-		?: rawMatches(thunk)
+		?: nonAnythingMatches(thunk)
 
 val Thunk.anythingMatches
 	get() =
@@ -20,22 +19,33 @@ val Thunk.anythingMatches
 			}
 		}
 
-fun Thunk.eitherMatches(thunk: Thunk): Boolean? =
+fun Thunk.nonAnythingMatches(thunk: Thunk): Boolean =
+	thunk.strictValueOrNull
+		?.let { matches(it) }
+		?: false
+
+fun Thunk.matches(value: Value): Boolean =
+	null
+		?: eitherMatches(value)
+		?: rawMatches(value)
+
+
+fun Thunk.eitherMatches(value: Value): Boolean? =
 	matchPrefix(eitherName) { rhs ->
-		rhs.casesMatch(thunk)
+		rhs.casesMatch(value)
 	}
 
-fun Thunk.casesMatch(thunk: Thunk): Boolean =
-	value.sequenceOrNull.let { sequenceOrNull ->
+fun Thunk.casesMatch(rhsValue: Value): Boolean =
+	this.value.sequenceOrNull.let { sequenceOrNull ->
 		if (sequenceOrNull == null) false
-		else sequenceOrNull.lastLine.caseMatches(thunk) || sequenceOrNull.previousThunk.casesMatch(thunk)
+		else sequenceOrNull.lastLine.caseMatches(rhsValue) || sequenceOrNull.previousThunk.casesMatch(rhsValue)
 	}
 
-fun Line.caseMatches(thunk: Thunk): Boolean =
-	thunk.value.onlyLineOrNull?.let { matches(it) } ?: false
+fun Line.caseMatches(value: Value): Boolean =
+	value.onlyStrictLineOrNull?.let { matches(it) } ?: false
 
-fun Thunk.rawMatches(thunk: Thunk) =
-	value.matches(thunk.value)
+fun Thunk.rawMatches(value: Value) =
+	this.value.matches(value)
 
 fun Value.matches(value: Value): Boolean =
 	when (this) {
