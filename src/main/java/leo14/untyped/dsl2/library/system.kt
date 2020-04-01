@@ -35,7 +35,7 @@ val system = library_ {
 	}
 
 	assert {
-		number(1).millis.sleep.gives { nothing_ }
+		number(1).millis.sleep.equals_ { nothing_ }
 	}
 }
 

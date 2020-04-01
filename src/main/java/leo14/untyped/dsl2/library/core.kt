@@ -4,7 +4,7 @@ import leo14.untyped.dsl2.*
 
 val core = library_ {
 	anything.clear.expands { nothing }
-	assert { zero.clear.gives { nothing_ } }
+	assert { zero.clear.equals_ { nothing_ } }
 
 	if_ { anything }
 	then_ { anything }
@@ -21,14 +21,14 @@ val core = library_ {
 		if_ { number(1).equals_ { number(1) } }
 		then_ { text("ok") }
 		else_ { text("not ok") }
-		gives { text("ok") }
+		equals_ { text("ok") }
 	}
 
 	assert {
 		if_ { number(1).equals_ { number(2) } }
 		then_ { text("ok") }
 		else_ { text("not ok") }
-		gives { text("not ok") }
+		equals_ { text("not ok") }
 	}
 
 	anything
@@ -43,7 +43,7 @@ val core = library_ {
 			comment { text("this is object") }
 		}
 		comment { text("this is result") }
-		gives { number(5) }
+		equals_ { number(5) }
 	}
 }
 

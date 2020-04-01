@@ -141,14 +141,14 @@ fun Resolver.doing(script: Script): Resolver =
 
 fun Resolver.assert(script: Script): Resolver =
 	script
-		.matchInfix(givesName) { lhs, rhs ->
+		.matchInfix(equalsName) { lhs, rhs ->
 			scope.evaluate(lhs).let { lhsEvaled ->
 				scope.evaluate(rhs).let { rhsEvaled ->
 					if (lhsEvaled != rhsEvaled) throw AssertionError(
 						errorName lineTo
 							lhs.value.plus(
 								value(
-									givesName lineTo lhsEvaled,
+									equalsName lineTo lhsEvaled,
 									expectedName lineTo rhsEvaled)))
 					else this
 				}

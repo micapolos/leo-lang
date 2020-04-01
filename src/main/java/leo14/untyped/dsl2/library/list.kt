@@ -31,7 +31,7 @@ val list = library_ {
 				append { join.number }
 			}
 		}
-		gives { list }
+		equals_ { list }
 	}
 
 	assert {
@@ -49,7 +49,7 @@ val list = library_ {
 				append { join.number }
 			}
 		}
-		gives {
+		equals_ {
 			list {
 				number(2)
 				number(1)
@@ -74,7 +74,7 @@ val list = library_ {
 	assert {
 		list
 		reverse
-		gives { list }
+		equals_ { list }
 	}
 
 	assert {
@@ -84,7 +84,7 @@ val list = library_ {
 			number(2)
 		}
 		reverse
-		gives {
+		equals_ {
 			list {
 				number(2)
 				number(1)
@@ -121,7 +121,7 @@ val list = library_ {
 				number.text
 			}
 		}
-		gives {
+		equals_ {
 			list {
 				text("1")
 				text("2")

@@ -8,14 +8,14 @@ class AssertTest {
 	fun test_() {
 		run_ {
 			assert {
-				zero.gives { zero }
+				zero.equals_ { zero }
 			}
 		}
 
 		assertFails {
 			run_ {
 				assert {
-					zero.gives { one }
+					zero.equals_ { one }
 				}
 			}
 		}

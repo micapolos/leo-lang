@@ -9,7 +9,7 @@ val text = library_ {
 		invoke { text("length") }
 		number
 	}
-	assert { text("foo").length.gives { number(3) } }
+	assert { text("foo").length.equals_ { number(3) } }
 
 	text.lower.case
 	does {
@@ -17,7 +17,7 @@ val text = library_ {
 		invoke { text("toLowerCase") }
 		text
 	}
-	assert { text("FoO").lower.case.gives { text("foo") } }
+	assert { text("FoO").lower.case.equals_ { text("foo") } }
 
 	text.upper.case
 	does {
@@ -25,7 +25,7 @@ val text = library_ {
 		invoke { text("toUpperCase") }
 		text
 	}
-	assert { text("FoO").upper.case.gives { text("FOO") } }
+	assert { text("FoO").upper.case.equals_ { text("FOO") } }
 
 	text.lines.list
 	does {
@@ -44,7 +44,7 @@ val text = library_ {
 
 	assert {
 		text("foo\nbar").lines.list
-		gives {
+		equals_ {
 			list {
 				text("foo")
 				text("bar")
