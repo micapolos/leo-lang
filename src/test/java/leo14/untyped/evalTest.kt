@@ -754,12 +754,11 @@ class EvalTest {
 	}
 
 	@Test
-	fun evaluate() {
+	fun resolve() {
 		script(
-			"x"(), "is"(2),
-			"quote"("x"(), "plus"("x"())),
-			"evaluate"())
-			.assertEvalsTo(script(literal(4)))
+			"quote"(1, "plus"(2, "times"(3))),
+			"resolve"())
+			.assertEvalsTo(script(literal(7)))
 	}
 
 	@Test
@@ -955,14 +954,14 @@ class EvalTest {
 	}
 
 	@Test
-	fun resolve() {
-		leo("quote"(1, "plus"(2)), "resolve"())
+	fun apply() {
+		leo("quote"(1, "plus"(2)), "apply"())
 			.assertEvalsTo(leo(3))
 	}
 
 	@Test
-	fun resolve_notDeep() {
-		leo("quote"(1, "plus"(2, "plus"(3))), "resolve"())
+	fun apply_notDeep() {
+		leo("quote"(1, "plus"(2, "plus"(3))), "apply"())
 			.assertEvalsTo(leo(1, "plus"(2, "plus"(3))))
 	}
 }
