@@ -24,15 +24,15 @@ fun Thunk.nonAnythingMatches(thunk: Thunk): Boolean =
 		?.let { matches(it) }
 		?: false
 
-fun Thunk.matches(value: Value): Boolean =
+fun Thunk.matches(rhsValue: Value): Boolean =
 	null
-		?: eitherMatches(value)
-		?: rawMatches(value)
+		?: eitherMatches(rhsValue)
+		?: rawMatches(rhsValue)
 
 
-fun Thunk.eitherMatches(value: Value): Boolean? =
-	matchPrefix(eitherName) { rhs ->
-		rhs.casesMatch(value)
+fun Thunk.eitherMatches(rhsValue: Value): Boolean? =
+	value.sequenceOrNull?.matchPrefix(eitherName) { rhs ->
+		rhs.casesMatch(rhsValue)
 	}
 
 fun Thunk.casesMatch(rhsValue: Value): Boolean =
@@ -41,8 +41,8 @@ fun Thunk.casesMatch(rhsValue: Value): Boolean =
 		else sequenceOrNull.lastLine.caseMatches(rhsValue) || sequenceOrNull.previousThunk.casesMatch(rhsValue)
 	}
 
-fun Line.caseMatches(value: Value): Boolean =
-	value.onlyStrictLineOrNull?.let { matches(it) } ?: false
+fun Line.caseMatches(rhsValue: Value): Boolean =
+	rhsValue.onlyStrictLineOrNull?.let { matches(it) } ?: false
 
 fun Thunk.rawMatches(value: Value) =
 	this.value.matches(value)

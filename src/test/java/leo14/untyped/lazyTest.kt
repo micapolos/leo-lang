@@ -8,9 +8,25 @@ import kotlin.test.Test
 
 class LazyTest {
 	@Test
-	fun value() {
+	fun value_() {
 		lazy(scope(), script("minus" lineTo script(literal(1))))
 			.value
 			.assertEqualTo(value(literal(-1)))
+	}
+
+	@Test
+	fun either() {
+		lazy(
+			scope(),
+			script(
+				"either" lineTo script(
+					"stop" lineTo script(),
+					"foo" lineTo script("recurse"))))
+			.value
+			.assertEqualTo(
+				value(
+					"either" lineTo value(
+						"stop" lineTo value(),
+						"foo" lineTo value("recurse"))))
 	}
 }
