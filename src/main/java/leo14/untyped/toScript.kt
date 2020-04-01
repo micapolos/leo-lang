@@ -90,7 +90,6 @@ val Pattern.ruleScript
 val Body.ruleScriptLine
 	get() =
 		when (this) {
-			is GivesBody -> givesName lineTo script
 			is DoesBody -> doesName lineTo script
 			is MacroBody -> expandsName lineTo script
 		}
