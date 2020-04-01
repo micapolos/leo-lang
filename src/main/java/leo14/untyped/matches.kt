@@ -1,5 +1,7 @@
 package leo14.untyped
 
+import leo.base.notNullIf
+import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 
@@ -18,8 +20,8 @@ val Thunk.anythingMatches
 			}
 		}
 
-fun Thunk.nonAnythingMatches(thunk: Thunk): Boolean =
-	thunk.strictValueOrNull
+fun Thunk.nonAnythingMatches(rhsThunk: Thunk): Boolean =
+	rhsThunk.strictValueOrNull
 		?.let { matches(it) }
 		?: false
 
@@ -30,12 +32,14 @@ fun Thunk.matches(rhsValue: Value): Boolean =
 
 
 fun Thunk.eitherMatches(rhsValue: Value): Boolean? =
-	value.sequenceOrNull?.matchPrefix(eitherName) { rhs ->
-		rhs.casesMatch(rhsValue)
+	value.sequenceOrNull?.onlyValueOrNull?.fieldOrNull?.let { field ->
+		notNullIf(field.name == eitherName) {
+			field.thunk.casesMatch(rhsValue)
+		}
 	}
 
 fun Thunk.casesMatch(rhsValue: Value): Boolean =
-	this.value.sequenceOrNull.let { sequenceOrNull ->
+	value.sequenceOrNull.let { sequenceOrNull ->
 		if (sequenceOrNull == null) false
 		else sequenceOrNull.lastLine.caseMatches(rhsValue) || sequenceOrNull.previousThunk.casesMatch(rhsValue)
 	}
@@ -96,3 +100,31 @@ fun Line.doingMatches(line: Line) =
 
 fun Field.matches(field: Field) =
 	name == field.name && thunk.matches(field.thunk)
+
+// === name matching ===
+
+fun Value.matches(name: String) =
+	when (this) {
+		EmptyValue -> false
+		is SequenceValue -> sequence.matches(name)
+	}
+
+fun Sequence.matches(name: String) =
+	lastLine.matches(name)
+
+fun Line.matches(name: String) =
+	when (this) {
+		is LiteralLine -> literal.matches(name)
+		is FieldLine -> field.matches(name)
+		is DoingLine -> name == doingName
+		is NativeLine -> false
+	}
+
+fun Field.matches(name: String) =
+	this.name == name
+
+fun Literal.matches(name: String) =
+	when (this) {
+		is StringLiteral -> name == textName
+		is NumberLiteral -> name == numberName
+	}
