@@ -6,6 +6,7 @@ import leo14.lineTo
 import java.awt.Point
 import kotlin.math.PI
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 class EvalTest {
 	@Test
@@ -958,5 +959,39 @@ class EvalTest {
 	fun apply_notDeep() {
 		leo("quote"(1, "plus"(2, "plus"(3))), "apply"())
 			.assertEvalsTo(leo(1, "plus"(2, "plus"(3))))
+	}
+
+	@Test
+	fun recurse() {
+		leo(
+			5,
+			"do"(
+				"number"(),
+				"equals"(0),
+				"match"(
+					"true"(0),
+					"false"(
+						"number"(),
+						"minus"(1),
+						"recurse"()))))
+			.assertEvalsTo(leo(0))
+	}
+
+	@Test
+	fun recurse_stackOverflow() {
+		assertFailsWith(StackOverflowError::class) {
+			leo(
+				1000000,
+				"do"(
+					"number"(),
+					"equals"(0),
+					"match"(
+						"true"(0),
+						"false"(
+							"number"(),
+							"minus"(1),
+							"recurse"()))))
+				.eval
+		}
 	}
 }

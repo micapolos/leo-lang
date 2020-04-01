@@ -11,7 +11,7 @@ class ActionTest {
 		action(
 			scope(),
 			script(scriptName lineTo script()))
-			.applyScript(thunk(value("foo" lineTo value())))
+			.pushScriptAndApply(thunk(value("foo" lineTo value())))
 			.assertEqualTo(
 				thunk(
 					value(
@@ -31,7 +31,7 @@ class ActionTest {
 							value(
 								"bar" lineTo value()))))),
 			script("foo" lineTo script()))
-			.applyScript(thunk(value("goo" lineTo value())))
+			.pushScriptAndApply(thunk(value("goo" lineTo value())))
 			.assertEqualTo(thunk(value("bar")))
 	}
 }

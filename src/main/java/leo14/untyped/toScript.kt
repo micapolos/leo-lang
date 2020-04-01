@@ -81,6 +81,7 @@ val Definition.scopeScript
 		when (this) {
 			is RuleDefinition -> rule.scopeScript
 			is BindingDefinition -> binding.scopeScript
+			is RecurseDefinition -> recurse.scopeScript
 		}
 
 val Pattern.ruleScript

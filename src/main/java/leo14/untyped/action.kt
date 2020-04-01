@@ -11,14 +11,15 @@ fun action(scope: Scope, script: Script) =
 
 fun action(script: Script) = action(scope(), script)
 
-fun Action.applyScript(given: Thunk): Thunk =
+fun Action.pushScriptAndApply(given: Thunk): Thunk =
 	fix(given) { push(it.scriptDefinition) }
 
-fun Action.with(given: Thunk): Thunk =
+fun Action.bindAndApply(given: Thunk): Thunk =
 	fix(given) { bind(it) }
 
 tailrec fun Action.fix(given: Thunk, bind: Scope.(Thunk) -> Scope): Thunk {
 	val done = scope
+		.push(definition(recurse(this)))
 		.bind(given)
 		.resolver()
 		.evaluate(script)
@@ -27,4 +28,3 @@ tailrec fun Action.fix(given: Thunk, bind: Scope.(Thunk) -> Scope): Thunk {
 	return if (repeatOrNull == null) done
 	else fix(repeatOrNull, bind)
 }
-
