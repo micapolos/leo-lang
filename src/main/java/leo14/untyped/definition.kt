@@ -16,3 +16,7 @@ fun Definition.apply(scope: Scope, thunk: Thunk): Applied? =
 		is BindingDefinition -> binding.apply(thunk)?.let(::applied)
 		is RecurseDefinition -> recurse.apply(thunk)?.let(::applied)
 	}
+
+val Thunk.parseDefinition: Definition?
+	get() =
+		parseBinding?.let(::definition)

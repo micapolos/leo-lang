@@ -1,10 +1,14 @@
 package leo14.untyped
 
-data class Local(val scope: Scope)
-data class Public(val scope: Scope)
-data class Module(val local: Local, val public: Public)
+data class Module(val localScope: Scope, val publicScope: Scope)
 
-fun local(scope: Scope) = Local(scope)
-fun public(scope: Scope) = Public(scope)
-fun module(local: Local, public: Public) = Module(local, public)
-val Scope.emptyModule get() = module(local(this), public(scope()))
+val Scope.emptyModule get() = Module(this, scope())
+
+fun Module.push(definition: Definition): Module =
+	Module(localScope.push(definition), publicScope.push(definition))
+
+fun Module.import(definition: Definition): Module =
+	Module(localScope.push(definition), publicScope)
+
+fun Module.resolve(thunk: Thunk): Module? =
+	thunk.parseDefinition?.let(::push)
