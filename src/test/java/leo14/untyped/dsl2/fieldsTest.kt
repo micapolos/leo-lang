@@ -11,7 +11,7 @@ class FieldsTest {
 					x { number(10) }
 					y { number(20) }
 				}.x
-				gives { x { number(10) } }
+				equals_ { x { number(10) } }
 			}
 
 			assert {
@@ -19,7 +19,7 @@ class FieldsTest {
 					x { number(10) }
 					y { number(20) }
 				}.y
-				gives { y { number(20) } }
+				equals_ { y { number(20) } }
 			}
 
 			assert {
@@ -27,7 +27,7 @@ class FieldsTest {
 					x { number(10) }
 					y { number(20) }
 				}.z
-				gives {
+				equals_ {
 					point {
 						x { number(10) }
 						y { number(20) }
@@ -41,7 +41,7 @@ class FieldsTest {
 					x { number(10) }
 					y { number(20) }
 				}.x
-				gives {
+				equals_ {
 					my
 					point {
 						x { number(10) }

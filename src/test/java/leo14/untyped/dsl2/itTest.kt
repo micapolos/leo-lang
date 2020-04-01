@@ -8,13 +8,13 @@ class ItTest {
 		run_ {
 			assert {
 				zero.it
-				gives { zero.it }
+				equals_ { zero.it }
 			}
 
 			assert {
 				zero
 				it { one }
-				gives {
+				equals_ {
 					quote {
 						zero
 						one
@@ -28,7 +28,7 @@ class ItTest {
 					x
 					y
 				}
-				gives {
+				equals_ {
 					zero
 					it {
 						x
@@ -43,7 +43,7 @@ class ItTest {
 					number(2)
 					plus { number(3) }
 				}
-				gives {
+				equals_ {
 					zero
 					number(5)
 				}

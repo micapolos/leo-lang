@@ -9,13 +9,13 @@ class AsTest {
 			number(10).as_ { x }
 			assert {
 				x.is_ { number(10) }
-				y.gives { y }
+				y.equals_ { y }
 			}
 
 			number(20).as_ { y }
 			assert {
 				x.is_ { number(10) }
-				y.gives { number(20) }
+				y.equals_ { number(20) }
 			}
 
 			x
@@ -23,7 +23,7 @@ class AsTest {
 			as_ { x }
 			assert {
 				x.is_ { number(40) }
-				y.gives { number(20) }
+				y.equals_ { number(20) }
 			}
 		}
 	}

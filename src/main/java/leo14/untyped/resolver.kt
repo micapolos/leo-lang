@@ -154,7 +154,7 @@ fun Resolver.assert(script: Script): Resolver =
 				}
 			}
 		}
-		?: append(assertName lineTo script.value)
+		?: throw AssertionError(assertName lineTo script.value)
 
 fun Resolver.does(script: Script): Resolver =
 	scope

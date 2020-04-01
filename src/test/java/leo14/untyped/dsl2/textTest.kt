@@ -9,7 +9,7 @@ class TextTest {
 			assert {
 				text("Hello, ")
 				plus { text("world!") }
-				gives { text("Hello, world!") }
+				equals_ { text("Hello, world!") }
 			}
 		}
 	}

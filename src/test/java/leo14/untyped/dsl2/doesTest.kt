@@ -16,7 +16,7 @@ class DoesTest {
 			assert {
 				text("<")
 				plus { attribute { text("href") } }
-				does { text("<href") }
+				equals_ { text("<href") }
 			}
 		}
 	}

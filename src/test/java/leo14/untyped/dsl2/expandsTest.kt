@@ -18,7 +18,7 @@ class WritesTest {
 					}
 				}
 				x.def { number(0) }
-				x.gives { number(0) }
+				x.equals_ { number(0) }
 			}
 		}
 	}

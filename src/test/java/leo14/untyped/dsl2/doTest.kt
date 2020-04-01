@@ -14,7 +14,7 @@ class DoTest {
 					plus { text(" ") }
 					plus { last.name.text }
 				}
-				gives { text("John Wayne") }
+				equals_ { text("John Wayne") }
 			}
 		}
 	}

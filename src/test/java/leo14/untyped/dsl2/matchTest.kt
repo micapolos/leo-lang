@@ -12,7 +12,7 @@ class MatchTest {
 					circle { text("circle") }
 					square { text("square") }
 				}
-				gives { text("circle") }
+				equals_ { text("circle") }
 			}
 
 			assert {
@@ -21,7 +21,7 @@ class MatchTest {
 					circle { text("circle") }
 					square { text("square") }
 				}
-				gives { text("square") }
+				equals_ { text("square") }
 			}
 
 			assert {
@@ -31,7 +31,7 @@ class MatchTest {
 					square { text("square") }
 					circle { text("circle 2") }
 				}
-				gives { text("circle 2") }
+				equals_ { text("circle 2") }
 			}
 
 			assert {
@@ -40,7 +40,7 @@ class MatchTest {
 					circle { text("circle") }
 					square { text("square") }
 				}
-				gives {
+				equals_ {
 					quote {
 						shape { triangle }
 						match {

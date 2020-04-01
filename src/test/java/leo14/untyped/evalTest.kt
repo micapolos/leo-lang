@@ -549,7 +549,7 @@ class EvalTest {
 		script(
 			line(literal("Hello, ")),
 			"assert" lineTo script("foo"))
-			.assertEvalsToThis
+			.assertEvalFails(leo("assert"("foo"())))
 	}
 
 	@Test
