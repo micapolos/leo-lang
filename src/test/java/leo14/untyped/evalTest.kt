@@ -181,7 +181,7 @@ class EvalTest {
 	fun thisDoesThat() {
 		script(
 			"number" lineTo script(),
-			"gives" lineTo script(
+			"does" lineTo script(
 				"plus" lineTo script(literal(1))))
 			.assertEvalsTo()
 	}
@@ -194,7 +194,7 @@ class EvalTest {
 					"false" lineTo script(),
 					"true" lineTo script())),
 			"type" lineTo script(),
-			"gives" lineTo script("boolean"))
+			"does" lineTo script("boolean"))
 
 		rule
 			.plus(
@@ -557,7 +557,7 @@ class EvalTest {
 		script(
 			"anything" lineTo script(),
 			"increment" lineTo script(),
-			"gives" lineTo script("match"),
+			"does" lineTo script("match"),
 			"foo" lineTo script(),
 			"increment" lineTo script())
 			.assertEvalsTo(script("match"))
@@ -644,7 +644,7 @@ class EvalTest {
 			"either" lineTo script(
 				"age" lineTo script("number"),
 				"name" lineTo script("text")),
-			"gives" lineTo script("ok"),
+			"does" lineTo script("ok"),
 			"age" lineTo script(literal(10)))
 			.assertEvalsTo(script("ok"))
 	}
@@ -655,7 +655,7 @@ class EvalTest {
 			"either" lineTo script(
 				"age" lineTo script("number"),
 				"name" lineTo script("text")),
-			"gives" lineTo script("ok"),
+			"does" lineTo script("ok"),
 			"name" lineTo script(literal("Miko")))
 			.assertEvalsTo(script("ok"))
 	}
@@ -713,7 +713,7 @@ class EvalTest {
 			"x" lineTo script(),
 			"is" lineTo script(literal(1)),
 			"y" lineTo script(),
-			"gives" lineTo script(literal(1)),
+			"does" lineTo script(literal(1)),
 			"z" lineTo script(),
 			"expands" lineTo script(literal(1)),
 			"scope" lineTo script())
@@ -721,7 +721,7 @@ class EvalTest {
 				"x" lineTo script(),
 				"is" lineTo script(literal(1)),
 				"y" lineTo script(),
-				"gives" lineTo script(literal(1)),
+				"does" lineTo script(literal(1)),
 				"z" lineTo script(),
 				"expands" lineTo script(literal(1)))
 	}

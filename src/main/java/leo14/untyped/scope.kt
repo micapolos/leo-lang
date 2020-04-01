@@ -70,16 +70,10 @@ fun ScopeLink.applyRules(thunk: Thunk): Applied? =
 
 fun Scope.compile(thunk: Thunk): Scope? =
 	null
-		?: compileDoes(thunk)
-		?: compileGives(thunk)
+		?: compileIs(thunk)
 		?: compileAs(thunk)
 
-fun Scope.compileDoes(thunk: Thunk): Scope? =
-	thunk.value.sequenceOrNull?.matchInfixOrPrefix(givesName) { lhs, rhs ->
-		push(rule(pattern(lhs), givesBody(rhs.script)))
-	}
-
-fun Scope.compileGives(thunk: Thunk): Scope? =
+fun Scope.compileIs(thunk: Thunk): Scope? =
 	thunk.value.sequenceOrNull?.matchInfixOrPrefix(isName) { lhs, rhs ->
 		push(definition(lhs.bindingTo(rhs)))
 	}

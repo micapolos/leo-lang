@@ -3,7 +3,10 @@ package leo14.reader
 import leo.base.orIfNull
 import leo14.*
 import leo14.parser.*
-import leo14.untyped.*
+import leo14.untyped.itName
+import leo14.untyped.minusName
+import leo14.untyped.plusName
+import leo14.untyped.timesName
 
 data class ReducerCharReader<S>(
 	val tokenReducer: Reducer<S, Token>,
@@ -27,10 +30,6 @@ fun <S> ReducerCharReader<S>.putNonOperator(char: Char): ReducerCharReader<S> =
 fun <S> ReducerCharReader<S>.putOperatorOrNull(char: Char): ReducerCharReader<S>? =
 	if (tokenParser.isNew)
 		when (char) {
-			'.' ->
-				ReducerCharReader(
-					tokenReducer.reduce(token(begin(givenName))).reduce(token(end)),
-					NewSpacedTokenParser)
 			'+' ->
 				ReducerCharReader(
 					tokenReducer.reduce(token(begin(plusName))),

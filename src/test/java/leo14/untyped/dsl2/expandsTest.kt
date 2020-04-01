@@ -12,7 +12,7 @@ class WritesTest {
 				expands {
 					given.previous.given.object_
 					quote {
-						gives {
+						does {
 							unquote { given.def.object_ }
 						}
 					}

@@ -8,13 +8,13 @@ class AsTest {
 		run_ {
 			number(10).as_ { x }
 			assert {
-				x.gives { number(10) }
+				x.is_ { number(10) }
 				y.gives { y }
 			}
 
 			number(20).as_ { y }
 			assert {
-				x.gives { number(10) }
+				x.is_ { number(10) }
 				y.gives { number(20) }
 			}
 
@@ -22,7 +22,7 @@ class AsTest {
 			plus { number(30) }
 			as_ { x }
 			assert {
-				x.gives { number(40) }
+				x.is_ { number(40) }
 				y.gives { number(20) }
 			}
 		}

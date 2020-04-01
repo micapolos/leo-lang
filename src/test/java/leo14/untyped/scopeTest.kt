@@ -44,21 +44,6 @@ class ScopeTest {
 	}
 
 	@Test
-	fun compile_does() {
-		scope
-			.compile(
-				thunk(
-					value(
-						"foo" lineTo value(),
-						givesName lineTo value("bar"))))
-			.assertEqualTo(
-				scope.push(
-					rule(
-						pattern(thunk(value("foo"))),
-						givesBody(script("bar")))))
-	}
-
-	@Test
 	fun applyCompile() {
 		val scope = scope(
 			rule(
