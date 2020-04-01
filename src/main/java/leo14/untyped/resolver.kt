@@ -22,7 +22,9 @@ fun Resolver.lazy(script: Script): Resolver =
 	scope.resolver(thunk(lazy(scope, script)))
 
 fun Resolver.do_(script: Script): Resolver =
-	set(action(scope, script).fix(thunk) { bind(it) })
+	action(scope, script)
+		.fix(thunk) { bind(it) }
+		.let { set(it) }
 
 fun Resolver.match(script: Script): Resolver =
 	thunk.matchField { structField ->
