@@ -47,7 +47,6 @@ val Sequence.resolve: Thunk?
 			?: resolveForce
 			?: resolveExec
 			?: resolveLink
-			?: resolveGiven
 			?: resolveTextWord
 			?: resolveWordText
 			?: resolveLeoSubject
@@ -280,12 +279,6 @@ val Sequence.resolveObject: Thunk?
 					field.thunk
 				}
 			}
-		}
-
-val Sequence.resolveGiven: Thunk?
-	get() =
-		matchSimple(givenName) {
-			thunk(value())
 		}
 
 val Sequence.resolveTextWord: Thunk?

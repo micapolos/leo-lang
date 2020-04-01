@@ -771,11 +771,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun given() {
-		script("given"()).assertEvalsTo()
-	}
-
-	@Test
 	fun given_postfix() {
 		leo("foo"(), "given"()).assertEvalsTo(leo("given"("foo"())))
 	}
@@ -801,7 +796,7 @@ class EvalTest {
 			"do"(
 				"times"(), "factorial"(), "number"(), "equals"(1),
 				"match"(
-					"true"("given"(), "number"()),
+					"true"("number"()),
 					"false"(
 						"number"(),
 						"times"("times"(), "factorial"(), "number"()),

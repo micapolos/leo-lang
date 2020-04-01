@@ -44,20 +44,12 @@ fun AppendableIndented.leoAppend(script: Script): AppendableIndented =
 	}
 
 fun AppendableIndented.leoAppend(link: ScriptLink): AppendableIndented =
-	leoAppendGivenOrNull(link) ?: this
-		.leoAppendNonTail(link.lhs)
+	leoAppendNonTail(link.lhs)
 		.runIf(!link.lhs.isEmpty) {
 			if (link.isDottable) append(".")
 			else append("\n")
 		}
 		.leoAppend(link.line)
-
-fun AppendableIndented.leoAppendGivenOrNull(link: ScriptLink): AppendableIndented? =
-	ifOrNull(givenDot) {
-		if (link.lhs == script(givenName)) append(".").leoAppend(link.line)
-		else if (link == script() linkTo line(givenName fieldTo script())) append(".")
-		else null
-	}
 
 fun AppendableIndented.leoAppendNonTail(script: Script): AppendableIndented =
 	when (script) {
@@ -66,8 +58,7 @@ fun AppendableIndented.leoAppendNonTail(script: Script): AppendableIndented =
 	}
 
 fun AppendableIndented.leoAppendNonTail(link: ScriptLink): AppendableIndented =
-	leoAppendGivenOrNull(link) ?: this
-		.leoAppendNonTail(link.lhs)
+	leoAppendNonTail(link.lhs)
 		.runIf(!link.lhs.isEmpty) {
 			if (link.isDottableNonTail) append(".")
 			else append("\n")
