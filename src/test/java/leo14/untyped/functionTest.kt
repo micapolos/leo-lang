@@ -11,7 +11,7 @@ class DoingTest {
 		doing(
 			scope(),
 			script(givenName lineTo script()))
-			.apply(thunk(value("foo" lineTo value())))
+			.applyGiven(thunk(value("foo" lineTo value())))
 			.assertEqualTo(
 				thunk(
 					value(
@@ -31,7 +31,7 @@ class DoingTest {
 							value(
 								"bar" lineTo value()))))),
 			script("foo" lineTo script()))
-			.apply(thunk(value("goo" lineTo value())))
+			.applyGiven(thunk(value("goo" lineTo value())))
 			.assertEqualTo(thunk(value("bar")))
 	}
 }

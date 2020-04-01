@@ -6,6 +6,3 @@ fun pattern(thunk: Thunk) = Pattern(thunk)
 
 fun Pattern.matches(thunk: Thunk) =
 	this.thunk.matches(thunk)
-
-val recursePattern =
-	pattern(thunk(value(recurseName)))

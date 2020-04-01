@@ -30,9 +30,6 @@ fun Scope.push(definition: Definition): Scope =
 fun Scope.push(rule: Rule): Scope =
 	scope(this linkTo rule)
 
-fun Scope.withGiven(thunk: Thunk): Scope =
-	push(thunk.givenDefinition)
-
 fun Scope.bind(thunk: Thunk): Scope =
 	fold(thunk.value.lineStack) { line ->
 		push(

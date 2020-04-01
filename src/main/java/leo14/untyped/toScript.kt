@@ -1,6 +1,5 @@
 package leo14.untyped
 
-import leo13.recurseName
 import leo14.*
 
 val Value.script: Script
@@ -93,7 +92,6 @@ val Body.ruleScriptLine
 		when (this) {
 			is GivesBody -> givesName lineTo script
 			is DoesBody -> doesName lineTo script
-			is RecurseBody -> recurseName lineTo script
 			is MacroBody -> expandsName lineTo script
 		}
 
