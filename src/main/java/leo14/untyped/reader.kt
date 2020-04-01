@@ -221,7 +221,7 @@ fun CodeOp.write(script: Script): Reader? =
 		is UnquotedDoingCodeOp ->
 			UnquotedReader(
 				unquoted.copy(
-					resolver = unquoted.resolver.doing(script)))
+					resolver = unquoted.resolver.action(script)))
 		is UnquotedGetCodeOp ->
 			UnquotedReader(
 				unquoted.copy(

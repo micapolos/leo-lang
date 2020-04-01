@@ -5,10 +5,10 @@ import leo14.lineTo
 import leo14.script
 import kotlin.test.Test
 
-class DoingTest {
+class ActionTest {
 	@Test
 	fun applyAppends() {
-		doing(
+		action(
 			scope(),
 			script(scriptName lineTo script()))
 			.applyScript(thunk(value("foo" lineTo value())))
@@ -21,7 +21,7 @@ class DoingTest {
 
 	@Test
 	fun applyResolvesContext() {
-		doing(
+		action(
 			scope(
 				definition(
 					thunk(

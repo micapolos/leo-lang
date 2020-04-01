@@ -33,7 +33,7 @@ fun Scope.reflect(line: Line): ScriptLine =
 	when (line) {
 		is LiteralLine -> reflectLine(line.literal)
 		is FieldLine -> reflectLine(line.field)
-		is DoingLine -> reflectLine(line.doing)
+		is DoingLine -> reflectLine(line.action)
 		is NativeLine -> reflectLine(line.native)
 	}
 
@@ -43,8 +43,8 @@ fun Scope.reflectLine(literal: Literal): ScriptLine =
 fun Scope.reflectLine(field: Field): ScriptLine =
 	field.name lineTo reflect(field.thunk)
 
-fun Scope.reflectLine(doing: Doing): ScriptLine =
-	doingName lineTo doing.script
+fun Scope.reflectLine(action: Action): ScriptLine =
+	doingName lineTo action.script
 
 fun Scope.reflectLine(native: Native): ScriptLine =
 	nativeName lineTo script(literal(native.toString()))

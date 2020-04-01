@@ -22,7 +22,7 @@ val Line.scriptLine: ScriptLine
 		when (this) {
 			is LiteralLine -> literal.scriptLine
 			is FieldLine -> field.scriptLine
-			is DoingLine -> doing.scriptLine
+			is DoingLine -> action.scriptLine
 			is NativeLine -> nativeName lineTo script(literal(native.toString()))
 		}
 
@@ -45,11 +45,11 @@ val Thunk.script
 			is LazyThunk -> lazy.printScript
 		}
 
-val Doing.bodyScript
+val Action.bodyScript
 	get() =
 		scope.doingScript.plus(script)
 
-val Doing.scriptLine
+val Action.scriptLine
 	get() =
 		doingName lineTo script
 

@@ -37,7 +37,7 @@ fun <R> Value.matchNumber(fn: (Number) -> R): R? =
 fun <R> Thunk.matchNumber(fn: (Number) -> R): R? =
 	value.matchNumber(fn)
 
-fun <R> Thunk.matchDoing(fn: (Doing) -> R): R? =
+fun <R> Thunk.matchDoing(fn: (Action) -> R): R? =
 	value.doingOrNull?.let(fn)
 
 fun <R> Value.matchText(fn: (String) -> R): R? =

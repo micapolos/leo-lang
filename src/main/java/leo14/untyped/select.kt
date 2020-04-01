@@ -36,7 +36,7 @@ val Line.patternNameOrNull: String?
 		when (this) {
 			is LiteralLine -> literal.selectName
 			is FieldLine -> null
-			is DoingLine -> doing.selectName
+			is DoingLine -> action.selectName
 			is NativeLine -> native.selectName
 		}
 
@@ -45,7 +45,7 @@ val Line.selectName
 		when (this) {
 			is LiteralLine -> literal.selectName
 			is FieldLine -> field.name
-			is DoingLine -> doing.selectName
+			is DoingLine -> action.selectName
 			is NativeLine -> native.selectName
 		}
 
@@ -56,5 +56,5 @@ val Literal.selectName
 			is NumberLiteral -> numberName
 		}
 
-val Doing.selectName get() = doingName
+val Action.selectName get() = doingName
 val Native.selectName get() = nativeName

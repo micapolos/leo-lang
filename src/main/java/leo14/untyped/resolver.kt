@@ -133,10 +133,10 @@ val Resolver.clear
 fun Scope.resolver(sequence: Sequence): Resolver =
 	resolver(sequence.previousThunk).apply(sequence.lastLine)
 
-fun Resolver.doing(script: Script): Resolver =
+fun Resolver.action(script: Script): Resolver =
 	when (script) {
 		is UnitScript -> apply(doingName lineTo value())
-		is LinkScript -> apply(line(doing(scope, script)))
+		is LinkScript -> apply(line(action(scope, script)))
 	}
 
 fun Resolver.assert(script: Script): Resolver =
