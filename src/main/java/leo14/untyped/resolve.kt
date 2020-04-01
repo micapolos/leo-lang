@@ -35,8 +35,6 @@ val Sequence.resolve: Thunk?
 			?: resolveNumberText
 			?: resolveTextPlusText
 			?: resolveTextNumber
-			?: resolveHead
-			?: resolveTail
 			?: resolveLast
 			?: resolvePrevious
 			?: resolveName
@@ -48,12 +46,18 @@ val Sequence.resolve: Thunk?
 			?: resolveNative
 			?: resolveForce
 			?: resolveExec
-			?: resolveSubject
-			?: resolveObject
 			?: resolveLink
 			?: resolveGiven
 			?: resolveTextWord
 			?: resolveWordText
+			?: resolveLeoSubject
+			?: resolveLeoHead
+			?: resolveLeoObject
+			?: resolveLeoWord
+			?: resolveSubject // TODO: remove?
+			?: resolveObject // TODO: remove?
+			?: resolveHead // TODO: remove?
+			?: resolveTail // TODO: remove?
 
 val Sequence.resolveNothing: Thunk?
 	get() =
@@ -313,3 +317,37 @@ val Sequence.resolveNormalize: Sequence?
 val Sequence.normalize: Sequence
 	get() =
 		resolveNormalize ?: this
+
+val Sequence.resolveLeoSubject: Thunk?
+	get() =
+		matchPrefix(subjectName) { rhs ->
+			rhs.matchPrefix(leoName) { rhs ->
+				rhs.value.sequenceOrNull?.previousThunk
+			}
+		}
+
+val Sequence.resolveLeoHead: Thunk?
+	get() =
+		matchPrefix(headName) { rhs ->
+			rhs.matchPrefix(leoName) { rhs ->
+				rhs.value.sequenceOrNull?.lastLine?.let { thunk(value(it)) }
+			}
+		}
+
+val Sequence.resolveLeoObject: Thunk?
+	get() =
+		matchPrefix(objectName) { rhs ->
+			rhs.matchPrefix(leoName) { rhs ->
+				rhs.value.sequenceOrNull?.lastLine?.fieldOrNull?.thunk
+			}
+		}
+
+val Sequence.resolveLeoWord: Thunk?
+	get() =
+		matchPrefix(wordName) { rhs ->
+			rhs.matchPrefix(leoName) { rhs ->
+				rhs.value.sequenceOrNull?.lastLine?.fieldOrNull?.name?.let { name ->
+					thunk(value(name))
+				}
+			}
+		}

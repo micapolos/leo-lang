@@ -48,3 +48,20 @@ fun Scope.reflectLine(doing: Doing): ScriptLine =
 
 fun Scope.reflectLine(native: Native): ScriptLine =
 	nativeName lineTo script(literal(native.toString()))
+
+val Thunk.unlink: Line
+	get() =
+		value.unlink
+
+val Value.unlink: Line
+	get() =
+		"value" lineTo when (this) {
+			EmptyValue -> thunk(value("empty"))
+			is SequenceValue -> thunk(value(sequence.unlink))
+		}
+
+val Sequence.unlink
+	get() =
+		"sequence" lineTo thunk(value(
+			"previous" lineTo previousThunk,
+			"last" lineTo thunk(value(lastLine))))

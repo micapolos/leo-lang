@@ -898,4 +898,40 @@ class EvalTest {
 			"Hello, ", "join"("world!"))
 			.assertEvalsTo(leo("Hello, world!"))
 	}
+
+	@Test
+	fun leoSubject() {
+		leo(
+			"zero",
+			"and"("one"),
+			"leo"(), "subject"())
+			.assertEvalsTo(leo("zero"))
+	}
+
+	@Test
+	fun leoObject() {
+		leo(
+			"zero",
+			"and"("one"),
+			"leo"(), "object"())
+			.assertEvalsTo(leo("one"))
+	}
+
+	@Test
+	fun leoHead() {
+		leo(
+			"zero",
+			"and"("one"),
+			"leo"(), "head"())
+			.assertEvalsTo(leo("and"("one")))
+	}
+
+	@Test
+	fun leoWord() {
+		leo(
+			"zero",
+			"and"("one"),
+			"leo"(), "word"())
+			.assertEvalsTo(leo("and"()))
+	}
 }
