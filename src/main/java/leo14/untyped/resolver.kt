@@ -16,7 +16,7 @@ fun Scope.resolver(thunk: Thunk = thunk(value())) =
 	Resolver(this, thunk)
 
 fun Resolver.apply(line: Line): Resolver =
-	scope.apply(thunk.sequenceTo(line))
+	scope.resolve(thunk.sequenceTo(line))
 
 fun Resolver.lazy(script: Script): Resolver =
 	scope.resolver(thunk(lazy(scope, script)))
@@ -37,14 +37,9 @@ fun Resolver.match(script: Script): Resolver =
 					set(
 						scope
 							.bind(thunk(value(sequence)))
-//							.push(
-//								definition(
-//									thunk(value(matchingName))
-//										.bindingTo(thunk(value(matchingName lineTo value(sequence))))))
 							.asLazy(body)
 							.eval)
 				}
-			// TODO: any: case
 		}
 	} ?: append(matchName lineTo script.value)
 
@@ -73,6 +68,7 @@ fun Scope.resolveStatic(thunk: Thunk): Resolver =
 		?: resolveCompile(thunk)
 		?: resolveScope(thunk)
 		?: resolveEvaluate(thunk)
+		?: resolveResolve(thunk)
 		?: resolveScriptText(thunk)
 		?: resolveLeoScript(thunk)
 		?: resolver(thunk)
@@ -106,6 +102,11 @@ fun Scope.resolveScope(thunk: Thunk): Resolver? =
 fun Scope.resolveEvaluate(thunk: Thunk): Resolver? =
 	thunk.matchPrefix(evaluateName) { rhs ->
 		resolver(thunk(value())).evaluate(rhs.value.script)
+	}
+
+fun Scope.resolveResolve(thunk: Thunk): Resolver? =
+	thunk.matchPrefix(resolveName) { rhs ->
+		resolveSequence(rhs)
 	}
 
 fun Scope.resolveScriptText(thunk: Thunk): Resolver? =

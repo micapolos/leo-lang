@@ -40,7 +40,17 @@ fun Scope.bind(thunk: Thunk): Scope =
 				thunk(value(line.selectName)).bindingTo(thunk(value(line)))))
 	}
 
-fun Scope.apply(sequence: Sequence): Resolver =
+// TODO: The use of "apply", "resolve" naming is a mess. Fix it.
+fun Scope.resolveSequence(thunk: Thunk): Resolver =
+	resolveSequence(thunk.value)
+
+fun Scope.resolveSequence(value: Value): Resolver =
+	when (value) {
+		EmptyValue -> resolver(thunk(value))
+		is SequenceValue -> resolve(value.sequence)
+	}
+
+fun Scope.resolve(sequence: Sequence): Resolver =
 	sequence.resolveAccess?.let { resolver(it) }
 		?: resolve(thunk(value(sequence.normalize)))
 

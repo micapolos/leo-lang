@@ -953,4 +953,16 @@ class EvalTest {
 						"name"("and"),
 						"script"("line"("list"(1)))))))))
 	}
+
+	@Test
+	fun resolve() {
+		leo("quote"(1, "plus"(2)), "resolve"())
+			.assertEvalsTo(leo(3))
+	}
+
+	@Test
+	fun resolve_notDeep() {
+		leo("quote"(1, "plus"(2, "plus"(3))), "resolve"())
+			.assertEvalsTo(leo(1, "plus"(2, "plus"(3))))
+	}
 }
