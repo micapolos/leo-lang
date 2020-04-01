@@ -22,6 +22,11 @@ val memory = if (importPrelude) emptyContext.preludeMemory() else memory()
 val untyped = true
 
 fun main() {
+//	readerHook = { reader ->
+//		printLeo(reader.fragment.leoString)
+//		Thread.sleep(1)
+//	}
+
 	if (untyped)
 		run(emptyReader.runIf(importPrelude) { read(prelude) }.stringCharReducer)
 	else

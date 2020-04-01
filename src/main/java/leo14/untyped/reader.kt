@@ -3,6 +3,8 @@ package leo14.untyped
 import leo.base.ifNull
 import leo14.*
 
+var readerHook: (Reader) -> Unit = {}
+
 sealed class Reader
 data class QuotedReader(val quoted: Quoted) : Reader()
 data class UnquotedReader(val unquoted: Unquoted) : Reader()
@@ -52,7 +54,7 @@ fun Reader.write(token: Token): Reader? =
 		is QuotedReader -> quoted.write(token)
 		is UnquotedReader -> unquoted.write(token)
 		is CodeReader -> code.write(token)
-	}
+	}.also { readerHook(this) }
 
 fun Quoted.write(token: Token): Reader? =
 	when (token) {
