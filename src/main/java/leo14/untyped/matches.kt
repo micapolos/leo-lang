@@ -1,6 +1,5 @@
 package leo14.untyped
 
-import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 
@@ -97,31 +96,3 @@ fun Line.doingMatches(line: Line) =
 
 fun Field.matches(field: Field) =
 	name == field.name && thunk.matches(field.thunk)
-
-// === name matching ===
-
-fun Value.matches(name: String) =
-	when (this) {
-		EmptyValue -> false
-		is SequenceValue -> sequence.matches(name)
-	}
-
-fun Sequence.matches(name: String) =
-	lastLine.matches(name)
-
-fun Line.matches(name: String) =
-	when (this) {
-		is LiteralLine -> literal.matches(name)
-		is FieldLine -> field.matches(name)
-		is DoingLine -> name == doingName
-		is NativeLine -> false
-	}
-
-fun Field.matches(name: String) =
-	this.name == name
-
-fun Literal.matches(name: String) =
-	when (this) {
-		is StringLiteral -> name == textName
-		is NumberLiteral -> name == numberName
-	}
