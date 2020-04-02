@@ -87,7 +87,16 @@ class StakTest {
 		s.top(size).assertNull
 	}
 
-	@Test
+//	@Test
+//	fun size() {
+//		stakOf<Unit>().size.assertEqualTo(0)
+//		stakOf(Unit).size.assertEqualTo(1)
+//		stakOf(Unit, Unit).size.assertEqualTo(2)
+//		stakOf(Unit, Unit, Unit).size.assertEqualTo(3)
+//		stakOf(Unit, Unit, Unit, Unit).size.assertEqualTo(4)
+//	}
+
+	//@Test
 	fun performance() {
 		val size = 1000000
 		val access = 100

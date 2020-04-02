@@ -98,8 +98,20 @@ fun <T : Any> Node<T>?.push(value: T): Node<T> =
 tailrec fun <R, T : Any> R.fold(node: Node<T>, fn: R.(T) -> R): R {
 	val folded = fn(node.value)
 	return if (node.linkOrNull == null) folded
-	else fold(node.linkOrNull.node, fn)
+	else folded.fold(node.linkOrNull.node, fn)
 }
+
+//val <T: Any> Stak<T>.size: Int get() =
+//	if (nodeOrNull == null) 0
+//	else 1.plusSize(nodeOrNull)
+//
+//fun <T: Any> Int.plusSize(node: Node<T>): Int =
+//	if (node.linkOrNull == null) this
+//	else plusSize(node.linkOrNull, 1).plusSize(node.linkO)
+//
+//tailrec fun <T: Any> Int.plusSize(link: Link<T>, depth: Int): Int =
+//	if (link.linkOrNull == null) this
+//  else plus(depth).plusSize(link.linkOrNull, depth.shl(1))
 
 fun <T : Any> Stak<T>.scriptLine(fn: T.() -> Script): ScriptLine =
 	"stak" lineTo script(
