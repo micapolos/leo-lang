@@ -1,8 +1,6 @@
 package leo14.typed.compiler
 
 import leo13.Index
-import leo13.next
-import leo13.plus
 import leo14.*
 import leo14.typed.Type
 import leo14.typed.type
@@ -37,7 +35,7 @@ fun <T> DefineParser<T>.parse(token: Token): Compiler<T> =
 	}
 
 fun <T> DefineParser<T>.plus(item: MemoryItem<T>): DefineParser<T> =
-	copy(memory = memory.plus(item), localSizeIndex = localSizeIndex.next)
+	copy(memory = memory.plus(item), localSizeIndex = localSizeIndex.inc())
 
 fun <T> DefineParser<T>.beginIs(type: Type) =
 	parentCompiledParser.begin(DefineIsParserParent(this, type))

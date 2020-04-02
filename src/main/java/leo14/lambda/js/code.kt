@@ -1,6 +1,5 @@
 package leo14.lambda.js
 
-import leo13.int
 import leo14.js.ast.Expr
 import leo14.js.ast.code
 import leo14.lambda.Variable
@@ -19,4 +18,4 @@ fun paramCode(gen: Gen) =
 	gen.depth.varCode
 
 fun Variable<Expr>.index(gen: Gen) =
-	gen.depth - index.int - 1
+	gen.depth - index - 1

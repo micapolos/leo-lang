@@ -1,9 +1,6 @@
 package leo14.lambda
 
 import leo13.Index
-import leo13.NextIndex
-import leo13.ZeroIndex
-import leo13.int
 import leo14.*
 
 sealed class Term<out T> {
@@ -59,11 +56,9 @@ fun <T, R> Term<T>.native(fn: (T) -> R): R =
 	}
 
 fun <T, R> Term<T>.abstraction(index: Index, fn: (Term<T>) -> R): R =
-	when (index) {
-		is ZeroIndex -> fn(this)
-		is NextIndex -> abstraction { body ->
-			body.abstraction(index.previous, fn)
-		}
+	if (index == 0) fn(this)
+	else abstraction { body ->
+		body.abstraction(index.dec(), fn)
 	}
 
 val <T : Any> Term<T>.nativeOrNull: T?
@@ -95,4 +90,4 @@ fun <T> Application<Term<T>>.script(nativeFn: T.() -> ScriptLine) =
 
 val <T> Variable<T>.script
 	get() =
-		script("variable" lineTo script(literal(index.int)))
+		script("variable" lineTo script(literal(index)))

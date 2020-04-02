@@ -1,7 +1,6 @@
 package leo14.lambda.java
 
 import leo13.base.linesString
-import leo13.int
 import leo14.lambda.*
 import leo14.lambda.code.Gen
 import leo14.lambda.code.gen
@@ -49,4 +48,4 @@ fun paramCode(gen: Gen) =
 	gen.depth.varCode
 
 fun Variable<Native>.index(gen: Gen) =
-	gen.depth - index.int - 1
+	gen.depth - index - 1

@@ -1,9 +1,6 @@
 package leo14.lambda.eval
 
 import leo.base.assertEqualTo
-import leo13.index0
-import leo13.index1
-import leo13.index2
 import leo13.stack
 import leo14.dsl.it
 import leo14.dsl.native
@@ -48,12 +45,12 @@ class EvalTest {
 
 	@Test
 	fun choiceMatch() {
-		choiceTerm(index0, index2, term("foo"))
+		choiceTerm(0, 2, term("foo"))
 			.matchTerm(fn(fn(term("case1"))), fn(fn(term("case0"))))
 			.eval
 			.assertEqualTo(function(stack("foo"), term("case0")))
 
-		choiceTerm(index1, index2, term("foo"))
+		choiceTerm(1, 2, term("foo"))
 			.matchTerm(fn(fn(term("case1"))), fn(fn(term("case0"))))
 			.eval
 			.assertEqualTo(function(stack("foo"), term("case1")))

@@ -5,9 +5,6 @@ import leo.base.clampedByte
 import leo.base.clampedShort
 import leo.binary.bit0
 import leo.binary.bit1
-import leo13.index0
-import leo13.index1
-import leo13.index2
 import leo13.stack
 import leo14.clampedInt2
 import leo14.clampedInt4
@@ -76,12 +73,12 @@ class UtilTest {
 
 	@Test
 	fun choice() {
-		choiceTerm(index0, index1, term("0 of 1"))
+		choiceTerm(0, 1, term("0 of 1"))
 			.assertEqualTo(fn(arg0<Any>().invoke(term("0 of 1"))))
 
-		choiceTerm(index0, index2, term("0 of 2"))
+		choiceTerm(0, 2, term("0 of 2"))
 			.assertEqualTo(fn(fn(arg0<Any>().invoke(term("0 of 2")))))
-		choiceTerm(index1, index2, term("1 of 2"))
+		choiceTerm(1, 2, term("1 of 2"))
 			.assertEqualTo(fn(fn(arg1<Any>().invoke(term("1 of 2")))))
 	}
 

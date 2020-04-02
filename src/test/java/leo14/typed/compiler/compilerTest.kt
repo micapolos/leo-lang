@@ -1,7 +1,6 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
-import leo13.index1
 import leo14.*
 import leo14.lambda.*
 import leo14.native.Native
@@ -162,7 +161,7 @@ class CompilerTest {
 									memoryBinding(
 										term(native("foo")) of textType,
 										isAction = false)))),
-						localMemorySize = index1)))
+						localMemorySize = 1)))
 	}
 
 	@Test
@@ -243,7 +242,7 @@ class CompilerTest {
 									memoryBinding(
 										fn(term(native("foo"))) of textType,
 										isAction = true)))),
-						localMemorySize = index1)))
+						localMemorySize = 1)))
 	}
 
 	@Test
@@ -265,7 +264,7 @@ class CompilerTest {
 									memoryBinding(
 										fn(arg0<Native>()) of type("given" lineTo numberType),
 										isAction = true)))),
-						localMemorySize = index1)))
+						localMemorySize = 1)))
 	}
 
 	@Test

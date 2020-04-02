@@ -2,7 +2,6 @@ package leo14.typed.compiler
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo13.index0
 import leo13.stack
 import leo14.*
 import leo14.typed.*
@@ -163,7 +162,7 @@ val <T> CompiledParser<T>.compileMake
 
 val <T> CompiledParser<T>.compileDefine
 	get() =
-		compiler(DefineParser(this, compiled.memory, index0))
+		compiler(DefineParser(this, compiled.memory, 0))
 
 val <T> CompiledParser<T>.compileGive
 	get() =

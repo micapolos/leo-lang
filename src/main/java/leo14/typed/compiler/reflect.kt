@@ -1,7 +1,6 @@
 package leo14.typed.compiler
 
 import leo.base.orIfNull
-import leo13.int
 import leo14.*
 import leo14.parser.reflectScriptLine
 import leo14.reader.CharReader
@@ -16,7 +15,7 @@ fun <T> Compiled<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine): ScriptLine 
 		typed.reflectScriptLine(nativeFn),
 		"local" lineTo script(
 			"memory" lineTo script(
-				"size" lineTo script(literal(localMemorySize.int)))))
+				"size" lineTo script(literal(localMemorySize)))))
 
 fun <T> Memory<T>.reflectScriptLine(nativeFn: T.() -> ScriptLine) =
 	itemStack.reflectOrEmptyScriptLine("memory") { reflectScriptLine(nativeFn) }

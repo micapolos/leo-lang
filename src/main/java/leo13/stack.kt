@@ -1,7 +1,6 @@
 package leo13
 
 import leo.base.*
-import leo.binary.zero
 
 sealed class Stack<out T>
 
@@ -136,16 +135,6 @@ tailrec fun <T : Any> Stack<T>.get(nat: Nat): T? =
 			if (nat is ZeroNat) link.value
 			else if (nat is SuccNat) link.stack.get(nat.succ.nat)
 			else null
-	}
-
-tailrec fun <T : Any> Stack<T>.get(index: Index): T? =
-	when (this) {
-		is EmptyStack -> null
-		is LinkStack ->
-			when (index) {
-				is ZeroIndex -> link.value
-				is NextIndex -> link.stack.get(index.previous)
-			}
 	}
 
 tailrec fun <T> Stack<T>.drop(stack: Stack<*>): Stack<T>? =
@@ -329,32 +318,32 @@ tailrec fun <V, R : Any> Index.plusMapFirstIndexed(stack: Stack<V>, fn: V.() -> 
 		is LinkStack -> {
 			val mapped = stack.link.value.fn()
 			if (mapped != null) this to mapped
-			else next.plusMapFirstIndexed(stack.link.stack, fn)
+			else inc().plusMapFirstIndexed(stack.link.stack, fn)
 		}
 	}
 
 fun <V, R : Any> Stack<V>.indexedMapFirst(fn: (Index, V) -> R?): R? =
-	indexedMapFirst(index0, fn)
+	indexedMapFirst(0, fn)
 
 tailrec fun <V, R : Any> Stack<V>.indexedMapFirst(index: Index, fn: (Index, V) -> R?): R? =
 	when (this) {
 		is EmptyStack -> null
-		is LinkStack -> fn(index, link.value) ?: link.stack.indexedMapFirst(index.next, fn)
+		is LinkStack -> fn(index, link.value) ?: link.stack.indexedMapFirst(index.inc(), fn)
 	}
 
 fun <V, R : Any> Stack<V>.mapFirstIndexed(fn: V.() -> R?): Pair<Index, R>? =
-	zero.index.plusMapFirstIndexed(this, fn)
+	0.plusMapFirstIndexed(this, fn)
 
 tailrec fun <V> Index.plusFirst(stack: Stack<V>, fn: V.() -> Boolean): Index? =
 	when (stack) {
 		is EmptyStack -> null
 		is LinkStack ->
 			if (stack.link.value.fn()) this
-			else next.plusFirst(stack.link.stack, fn)
+			else inc().plusFirst(stack.link.stack, fn)
 	}
 
 fun <V> Stack<V>.firstIndex(fn: V.() -> Boolean): Index? =
-	zero.index.plusFirst(this, fn)
+	0.plusFirst(this, fn)
 
 operator fun <V> StackLink<V>.component1() = stack
 operator fun <V> StackLink<V>.component2() = value
@@ -363,13 +352,10 @@ fun <V, R> Stack<V>.split(fn: (Stack<V>, V) -> R): R? =
 	linkOrNull?.run { fn(stack, value) }
 
 tailrec fun <V> Stack<V>.reversePushOrNull(stack: Stack<V>, count: Index): Stack<V>? =
-	when (count) {
-		is ZeroIndex -> this
-		is NextIndex ->
-			when (stack) {
-				is EmptyStack -> null
-				is LinkStack -> push(stack.link.value).reversePushOrNull(stack.link.stack, count.previous)
-			}
+	if (count == 0) this
+	else when (stack) {
+		is EmptyStack -> null
+		is LinkStack -> push(stack.link.value).reversePushOrNull(stack.link.stack, count.dec())
 	}
 
 fun <V> Stack<V>.takeOrNull(count: Index): Stack<V>? =

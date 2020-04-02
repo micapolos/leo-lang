@@ -1,6 +1,5 @@
 package leo14.lambda.scheme
 
-import leo13.int
 import leo14.lambda.Variable
 import leo14.lambda.code.Gen
 
@@ -13,4 +12,4 @@ fun paramCode(gen: Gen): Code =
 	gen.depth.varCode
 
 fun Variable<Code>.index(gen: Gen) =
-	gen.depth - index.int - 1
+	gen.depth - index - 1

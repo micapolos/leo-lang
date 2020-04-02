@@ -1,12 +1,11 @@
 package leo14.lib
 
-import leo13.index
 import leo14.lambda.*
 import leo14.native.Native
 
 typealias Term = leo14.lambda.Term<Native>
 
-fun oneOf(n: Int, m: Int, obj: Obj) = choiceTerm(m.minus(n).index, m.index, obj.term)
+fun oneOf(n: Int, m: Int, obj: Obj) = choiceTerm(m.minus(n), m, obj.term)
 
 fun <V1 : Obj, V2 : Obj, R : Obj> Term.switch(
 	make1: Term.() -> V1,

@@ -1,8 +1,6 @@
 package leo14.lambda
 
 import leo13.Index
-import leo13.index0
-import leo13.next
 import leo14.*
 import leo14.js.compiler.choice
 import leo14.js.compiler.fallback
@@ -33,13 +31,13 @@ fun <T> termCompiler(fallbackCompile: Compile<Term<T>>, nativeCompile: Compile<T
 	}
 
 fun indexCompiler(ret: (Index) -> Compiler): Compiler =
-	index0.plusCompiler(ret)
+	0.plusCompiler(ret)
 
 fun Index.plusCompiler(ret: (Index) -> Compiler): Compiler =
 	compiler { token ->
 		when (token) {
 			is EndToken -> ret(this)
-			is BeginToken -> next.plusCompiler { index ->
+			is BeginToken -> inc().plusCompiler { index ->
 				endCompiler {
 					ret(index)
 				}

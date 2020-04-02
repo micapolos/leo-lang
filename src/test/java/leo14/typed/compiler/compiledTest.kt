@@ -1,7 +1,6 @@
 package leo14.typed.compiler
 
 import leo.base.assertEqualTo
-import leo13.index1
 import leo14.lambda.arg0
 import leo14.lambda.fn
 import leo14.lambda.invoke
@@ -35,7 +34,7 @@ class CompiledTest {
 				item(
 					key(type("zero")),
 					value(memoryBinding(term(native(1)) of numberType, isAction = false)))),
-			index1)
+			1)
 			.typedForEnd
 			.assertEqualTo(fn(arg0<Native>()).invoke(term(native(1))) of numberType)
 	}

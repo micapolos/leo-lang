@@ -1,9 +1,6 @@
 package leo.base
 
 import leo.java.lang.useResourceBitStreamOrNull
-import leo13.Index
-import leo13.NextIndex
-import leo13.ZeroIndex
 
 fun <V : Any> nullOf(): V? = null
 
@@ -95,13 +92,7 @@ fun <V : Any, R : Any> V?.matchNull(fn: () -> R?): R? =
 
 tailrec fun <V> V.iterate(count: Int, fn: V.() -> V): V =
 	if (count == 0) this
-	else fn().iterate(count - 1, fn)
-
-tailrec fun <V> V.iterate(count: Index, fn: V.() -> V): V =
-	when (count) {
-		is ZeroIndex -> this
-		is NextIndex -> fn().iterate(count.previous, fn)
-	}
+	else fn().iterate(count.dec(), fn)
 
 fun <V> V.runIf(boolean: Boolean, fn: V.() -> V): V =
 	if (boolean) fn()

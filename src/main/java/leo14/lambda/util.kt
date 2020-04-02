@@ -15,10 +15,10 @@ fun <T> fn3(body: Term<T>) = fn(fn2(body))
 operator fun <T> Term<T>.invoke(term: Term<T>) = term(application(this, term))
 
 fun <T> arg(index: Index): Term<T> = term(variable(index))
-fun <T> arg0(): Term<T> = arg(index(0))
-fun <T> arg1(): Term<T> = arg(index(1))
-fun <T> arg2(): Term<T> = arg(index(2))
-fun <T> arg3(): Term<T> = arg(index(3))
+fun <T> arg0(): Term<T> = arg(0)
+fun <T> arg1(): Term<T> = arg(1)
+fun <T> arg2(): Term<T> = arg(2)
+fun <T> arg3(): Term<T> = arg(3)
 
 fun <T> id(): Term<T> = fn(arg0())
 
@@ -102,24 +102,20 @@ fun <T> Term<T>.string() =
 // === tuples
 
 fun <T> tupleTerm(vararg terms: Term<T>): Term<T> =
-	terms.size.index.let { index ->
-		arg0<T>().invokeArgs(index).fn(index.next).invoke(*terms)
+	terms.size.let { index ->
+		arg0<T>().invokeArgs(index).fn(index.inc()).invoke(*terms)
 	}
 
 fun <T> Term<T>.invoke(vararg terms: Term<T>): Term<T> =
 	fold(terms) { invoke(it) }
 
 tailrec fun <T> Term<T>.invokeArgs(index: Index): Term<T> =
-	when (index) {
-		is ZeroIndex -> this
-		is NextIndex -> invoke(arg(index)).invokeArgs(index.previous)
-	}
+	if (index == 0) this
+	else invoke(arg(index)).invokeArgs(index.dec())
 
 tailrec fun <T> Term<T>.fn(index: Index): Term<T> =
-	when (index) {
-		is ZeroIndex -> this
-		is NextIndex -> fn(this).fn(index.previous)
-	}
+	if (index == 0) this
+	else fn(this).fn(index.dec())
 
 // === one of
 

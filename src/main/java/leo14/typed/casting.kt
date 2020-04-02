@@ -2,8 +2,6 @@ package leo14.typed
 
 import leo.base.*
 import leo13.Index
-import leo13.index0
-import leo13.next
 import leo14.lambda.Term
 import leo14.lambda.arg
 import leo14.lambda.fn
@@ -72,7 +70,7 @@ infix fun <T> TypedField<T>.castTo(toLine: Line): Cast<T>? =
 	}
 
 infix fun <T> TypedField<T>.castTo(choice: Choice): Cast<T>? =
-	castBody(choice, index0)?.bodyCast(choice)?.let { cast(it) }
+	castBody(choice, 0)?.bodyCast(choice)?.let { cast(it) }
 
 fun <T> Term<T>.bodyCast(choice: Choice): Term<T> =
 	choice.split { tailChoice, _ ->
@@ -81,7 +79,7 @@ fun <T> Term<T>.bodyCast(choice: Choice): Term<T> =
 
 fun <T> TypedField<T>.castBody(choice: Choice, index: Index): Term<T>? =
 	choice.split { tailChoice, option ->
-		castBody(option, index) ?: castBody(tailChoice, index.next)
+		castBody(option, index) ?: castBody(tailChoice, index.inc())
 	}
 
 fun <T> TypedField<T>.castBody(option: Option, index: Index): Term<T>? =

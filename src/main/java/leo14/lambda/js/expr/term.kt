@@ -1,6 +1,5 @@
 package leo14.lambda.js.expr
 
-import leo13.int
 import leo14.code.Code
 import leo14.code.code
 import leo14.js.ast.*
@@ -35,7 +34,7 @@ fun Application<Term<Expr>>.astExpr(gen: Gen): AstExpr =
 	lhs.astExpr(gen).invoke(rhs.astExpr(gen))
 
 fun Variable<Expr>.astExpr(gen: Gen): AstExpr =
-	gen.depth.minus(index.int + 1).variableAstExpr
+	gen.depth.minus(index.inc()).variableAstExpr
 
 val Int.variableAstExpr
 	get() =

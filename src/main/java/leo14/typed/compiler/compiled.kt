@@ -1,8 +1,6 @@
 package leo14.typed.compiler
 
 import leo13.Index
-import leo13.index0
-import leo13.next
 import leo14.lambda.Evaluator
 import leo14.lambda.eval
 import leo14.literal
@@ -18,12 +16,12 @@ data class Compiled<T>(
 fun <T> compiled(
 	typed: Typed<T> = typed(),
 	memory: Memory<T> = memory(),
-	localMemorySize: Index = index0) =
+	localMemorySize: Index = 0) =
 	Compiled(memory, localMemorySize, typed)
 
 val <T> Compiled<T>.begin: Compiled<T>
 	get() =
-		copy(typed = typed(), localMemorySize = index0)
+		copy(typed = typed(), localMemorySize = 0)
 
 fun <T> Compiled<T>.plusGiven(givenString: String, type: Type): Compiled<T> =
 	plus(item(key(type(givenString)), argumentMemoryValue(type(givenString lineTo type))))
@@ -35,7 +33,7 @@ fun <T> Compiled<T>.updateMemory(fn: Memory<T>.() -> Memory<T>): Compiled<T> =
 	copy(memory = memory.fn())
 
 fun <T> Compiled<T>.plus(item: MemoryItem<T>): Compiled<T> =
-	updateMemory { plus(item) }.updateLocalIndex { next }
+	updateMemory { plus(item) }.updateLocalIndex { inc() }
 
 fun <T> Compiled<T>.resolve(line: TypedLine<T>, context: Context<T>): Compiled<T> =
 	updateTyped { plus(line) }.run {

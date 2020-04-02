@@ -2,9 +2,6 @@ package leo14.typed
 
 import leo.base.assertEqualTo
 import leo.base.empty
-import leo13.index0
-import leo13.index1
-import leo13.index2
 import leo14.lambda.choiceTerm
 import leo14.lambda.id
 import leo14.lambda.term
@@ -89,7 +86,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								choiceTerm(index0, index1, lastTypedLine.typedField.rhs.term)
+								choiceTerm(0, 1, lastTypedLine.typedField.rhs.term)
 									.of("foo" lineTo numberType)).term)
 			}
 	}
@@ -102,7 +99,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								choiceTerm(index1, index2, lastTypedLine.typedField.rhs.term)
+								choiceTerm(1, 2, lastTypedLine.typedField.rhs.term)
 									.of("foo" lineTo numberType)).term)
 			}
 
@@ -112,7 +109,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								choiceTerm(index0, index2, lastTypedLine.typedField.rhs.term)
+								choiceTerm(0, 2, lastTypedLine.typedField.rhs.term)
 									.of(line(choice("foo", "bar")))).term)
 			}
 	}
@@ -126,7 +123,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								choiceTerm(index0, index1, lastTypedLine.typedField.rhs.term)
+								choiceTerm(0, 1, lastTypedLine.typedField.rhs.term)
 									.of(line(choice("foo"))))
 							.term)
 			}
@@ -141,7 +138,7 @@ class CastingTest {
 					.assertEqualTo(
 						previousTyped
 							.plus(
-								choiceTerm(index0, index1, lastTypedLine.typedField.rhs.term)
+								choiceTerm(0, 1, lastTypedLine.typedField.rhs.term)
 									.of(line(choice("foo"))))
 							.term)
 			}

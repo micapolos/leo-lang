@@ -31,4 +31,4 @@ fun <T> Memory<T>.resolveForEnd(term: Term<T>, index: Index): Term<T> =
 
 val <T> Memory<T>.sizeIndex: Index
 	get() =
-		itemStack.size.index
+		itemStack.size

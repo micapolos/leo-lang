@@ -171,7 +171,7 @@ fun Type.checkIs(other: Type): Type =
 
 val Choice.countIndex: Index
 	get() =
-		index0.fold(optionStack) { next }
+		0.fold(optionStack) { inc() }
 
 val Type.coreString: String
 	get() =
