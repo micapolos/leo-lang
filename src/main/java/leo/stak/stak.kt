@@ -10,6 +10,8 @@ import leo14.script
 // pop = O(1)
 // pop(n) = O(log(n))
 // top = O(1)
+// size = O(log(n))
+// get(index) = O(log(n))
 data class Stak<out T : Any>(
 	val nodeOrNull: Node<T>?) {
 	override fun toString() = scriptLine { script(toString()) }.toString()
@@ -51,6 +53,13 @@ fun <T : Any> Stak<T>.pop(count: Int): Stak<T>? =
 
 fun <T : Any> Stak<T>.push(value: T): Stak<T> =
 	stak(nodeOrNull.push(value))
+
+val <T : Any> Stak<T>.size: Int
+	get() =
+		nodeOrNull?.size ?: 0
+
+operator fun <T : Any> Stak<T>.get(index: Int): T? =
+	top(size - index - 1)
 
 fun <R, T : Any> R.fold(stak: Stak<T>, fn: R.(T) -> R): R =
 	if (stak.nodeOrNull == null) this
@@ -101,17 +110,32 @@ tailrec fun <R, T : Any> R.fold(node: Node<T>, fn: R.(T) -> R): R {
 	else folded.fold(node.linkOrNull.node, fn)
 }
 
-//val <T: Any> Stak<T>.size: Int get() =
-//	if (nodeOrNull == null) 0
-//	else 1.plusSize(nodeOrNull)
-//
-//fun <T: Any> Int.plusSize(node: Node<T>): Int =
-//	if (node.linkOrNull == null) this
-//	else plusSize(node.linkOrNull, 1).plusSize(node.linkO)
-//
-//tailrec fun <T: Any> Int.plusSize(link: Link<T>, depth: Int): Int =
-//	if (link.linkOrNull == null) this
-//  else plus(depth).plusSize(link.linkOrNull, depth.shl(1))
+val <T : Any> Node<T>.size: Int
+	get() =
+		linkOrNull?.size ?: 1
+
+val <T : Any> Link<T>.size: Int
+	get() {
+		var size = 1
+		var depth = 1
+		var link = this
+		while (true) {
+			val nextLink = link.linkOrNull
+			if (nextLink != null) {
+				depth = depth.shl(1)
+				link = nextLink
+			} else {
+				size += depth
+				val nextNodeLink = link.node.linkOrNull
+				if (nextNodeLink == null) break
+				else {
+					depth = 1
+					link = nextNodeLink
+				}
+			}
+		}
+		return size
+	}
 
 fun <T : Any> Stak<T>.scriptLine(fn: T.() -> Script): ScriptLine =
 	"stak" lineTo script(

@@ -87,14 +87,25 @@ class StakTest {
 		s.top(size).assertNull
 	}
 
-//	@Test
-//	fun size() {
-//		stakOf<Unit>().size.assertEqualTo(0)
-//		stakOf(Unit).size.assertEqualTo(1)
-//		stakOf(Unit, Unit).size.assertEqualTo(2)
-//		stakOf(Unit, Unit, Unit).size.assertEqualTo(3)
-//		stakOf(Unit, Unit, Unit, Unit).size.assertEqualTo(4)
-//	}
+	@Test
+	fun size() {
+		stakOf<Unit>().size.assertEqualTo(0)
+		stakOf(10).size.assertEqualTo(1)
+		stakOf(10, 20).size.assertEqualTo(2)
+		stakOf(10, 20, 30).size.assertEqualTo(3)
+		stakOf(10, 20, 30, 40).size.assertEqualTo(4)
+	}
+
+	@Test
+	fun get() {
+		stakOf(10, 20, 30, 40).run {
+			get(0).assertEqualTo(10)
+			get(1).assertEqualTo(20)
+			get(2).assertEqualTo(30)
+			get(3).assertEqualTo(40)
+			get(4).assertNull
+		}
+	}
 
 	//@Test
 	fun performance() {
