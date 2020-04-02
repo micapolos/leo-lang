@@ -107,42 +107,73 @@ class StakTest {
 		}
 	}
 
-	//@Test
+	@Test
 	fun performance() {
 		val size = 1000000
 		val access = 100
 
-		repeat(10) {
+		repeat(5) {
 			println("======")
 
 			var stak0: Stak<Int>? = null
 			var stack0: Stack<Int>? = null
-
-			print("Create Stak: ")
-			printTime {
-				stak0 = emptyStak<Int>().iterate(size) { push(Random.nextInt()) }
-			}
+			var list0: List<Int>? = null
 
 			print("Create Stack: ")
 			printTime {
 				stack0 = stack<Int>().iterate(size) { push(0) }
 			}
 
-			val stak = stak0!!
-			print("Random access Stak: ")
+			print("Create Stak: ")
+			printTime {
+				stak0 = emptyStak<Int>().iterate(size) { push(Random.nextInt()) }
+			}
+
+			print("Create List: ")
+			printTime {
+				list0 = mutableListOf<Int>().iterate(size) { also { add(Random.nextInt()) } }.toList()
+			}
+
+			var sum = 0
+			val stack = stack0!!
+			print("Random access Stack ($access): ")
 			printTime {
 				repeat(access) {
-					stak.top(Random.nextInt(size * 20))
+					sum += stack.get(Random.nextInt(size))!!
 				}
 			}
 
-			val stack = stack0!!
-			print("Random access Stack: ")
+			val stak = stak0!!
+			print("Random access Stak ($access): ")
 			printTime {
 				repeat(access) {
-					stack.get(Random.nextInt(size * 20))
+					sum += stak.top(Random.nextInt(size))!!
 				}
 			}
+
+			val list = list0!!
+			print("Random access List ($access): ")
+			printTime {
+				repeat(access) {
+					sum += list.get(Random.nextInt(size))
+				}
+			}
+
+			print("Random access Stak ($size): ")
+			printTime {
+				repeat(size) {
+					sum += stak.top(Random.nextInt(size))!!
+				}
+			}
+
+			print("Random access List ($size): ")
+			printTime {
+				repeat(size) {
+					sum += list.get(Random.nextInt(size))
+				}
+			}
+
+			println("Result: $sum")
 		}
 	}
 }

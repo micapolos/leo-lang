@@ -65,19 +65,50 @@ val <T : Any> Node<T>.pop: Node<T>?
 	get() =
 		linkOrNull?.node
 
+//fun <T : Any> Node<T>.pop(count: Int): Node<T>? =
+//	if (count == 0) this
+//	else linkOrNull?.pop(count, 1)
+//
+//fun <T : Any> Link<T>.pop(count: Int, depth: Int): Node<T>? {
+//	val newCount = count - depth
+//	return if (newCount > 0)
+//		if (linkOrNull == null) node.pop(newCount)
+//		else if (count - depth.shl(1) >= 0) linkOrNull.pop(count, depth.shl(1))
+//		else node.pop(newCount)
+//	else
+//		if (newCount == 0) node
+//		else null
+//}
+
 fun <T : Any> Node<T>.pop(count: Int): Node<T>? =
 	if (count == 0) this
-	else linkOrNull?.pop(count, 1)
+	else linkOrNull?.pop(count)
 
-fun <T : Any> Link<T>.pop(count: Int, depth: Int): Node<T>? {
-	val newCount = count - depth
-	return if (newCount > 0)
-		if (linkOrNull == null) node.pop(newCount)
-		else if (count - depth.shl(1) >= 0) linkOrNull.pop(count, depth.shl(1))
-		else node.pop(newCount)
-	else
-		if (newCount == 0) node
-		else null
+
+fun <T : Any> Link<T>.pop(count: Int): Node<T>? {
+	var count = count
+	var depth = 1
+	var link: Link<T>? = this
+	while (true) {
+		if (link == null) return null
+		if (count == depth) return link.node
+		val nextLink = link.linkOrNull
+		if (nextLink == null) {
+			count -= depth
+			depth = 1
+			link = link.node.linkOrNull
+		} else {
+			val nextDepth = depth.shl(1)
+			if (count <= nextDepth) {
+				count -= depth
+				depth = 1
+				link = link.node.linkOrNull
+			} else {
+				depth = nextDepth
+				link = link.linkOrNull
+			}
+		}
+	}
 }
 
 tailrec fun <T : Any> Link<T>.leafNode(depth: Int): Node<T>? =
