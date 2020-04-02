@@ -290,8 +290,11 @@ fun <V, R : Any> Stack<V>.map8OrNull(fn: (V, V, V, V, V, V, V, V) -> R): R? =
 		}
 	}
 
+fun <V> Stack<V>.toReverseList(): List<V> =
+	mutableListOf<V>().fold(this) { item -> also { it.add(item) } }.toList()
+
 fun <V> Stack<V>.toList(): List<V> =
-	mutableListOf<V>().fold(reverse) { item -> also { it.add(item) } }.toList()
+	reverse.toReverseList()
 
 inline val <reified V> Stack<V>.array: Array<V>
 	get() =

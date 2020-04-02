@@ -1,9 +1,6 @@
 package leo.stak
 
 import leo.base.fold
-import leo14.Script
-import leo14.ScriptLine
-import leo14.lineTo
 import leo14.script
 
 // push = O(log(n))
@@ -60,10 +57,6 @@ val <T : Any> Stak<T>.size: Int
 
 operator fun <T : Any> Stak<T>.get(index: Int): T? =
 	top(size - index - 1)
-
-fun <R, T : Any> R.fold(stak: Stak<T>, fn: R.(T) -> R): R =
-	if (stak.nodeOrNull == null) this
-	else fold(stak.nodeOrNull, fn)
 
 fun <T : Any> Node<T>.top(index: Int): T? =
 	pop(index)?.value
@@ -136,17 +129,3 @@ val <T : Any> Link<T>.size: Int
 		}
 		return size
 	}
-
-fun <T : Any> Stak<T>.scriptLine(fn: T.() -> Script): ScriptLine =
-	"stak" lineTo script(
-		nodeOrNull?.scriptLine(fn) ?: "node" lineTo script("null"))
-
-fun <T : Any> Node<T>.scriptLine(fn: T.() -> Script): ScriptLine =
-	"node" lineTo script(
-		"value" lineTo value.fn(),
-		linkOrNull?.scriptLine(fn) ?: "link" lineTo script("null"))
-
-fun <T : Any> Link<T>.scriptLine(fn: T.() -> Script): ScriptLine =
-	"link" lineTo script(
-		node.scriptLine(fn),
-		linkOrNull?.scriptLine(fn) ?: "link" lineTo script("null"))
