@@ -8,21 +8,21 @@ import leo13.stack
 import kotlin.random.Random
 import kotlin.test.Test
 
+val s0 = node("zero", null)
+val s1 = node("one", link(s0, null))
+val s2 = node("two", link(s1, link(s0, null)))
+val s3 = node("three", link(s2, null))
+val s4 = node("four", link(s3, link(s2, link(s0, null))))
+val s5 = node("five", link(s4, null))
+val s6 = node("six", link(s5, link(s4, null)))
+val s7 = node("seven", link(s6, null))
+val s8 = node("eight", link(s7, link(s6, link(s4, link(s0, null)))))
+val s9 = node("nine", link(s8, null))
+val s10 = node("ten", link(s9, link(s8, null)))
+
 class StakTest {
 	@Test
 	fun staks() {
-		val s0 = node("zero", null)
-		val s1 = node("one", link(s0, null))
-		val s2 = node("two", link(s1, link(s0, null)))
-		val s3 = node("three", link(s2, null))
-		val s4 = node("four", link(s3, link(s2, link(s0, null))))
-		val s5 = node("five", link(s4, null))
-		val s6 = node("six", link(s5, link(s4, null)))
-		val s7 = node("seven", link(s6, null))
-		val s8 = node("eight", link(s7, link(s6, link(s4, link(s0, null)))))
-		val s9 = node("nine", link(s8, null))
-		val s10 = node("ten", link(s9, link(s8, null)))
-
 		val x = nullOf<Node<String>>()
 		val x0 = x.push("zero")
 		val x1 = x0.push("one")

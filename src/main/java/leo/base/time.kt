@@ -10,3 +10,7 @@ fun timeMillis(fn: () -> Unit): Long {
 fun printTime(fn: () -> Unit) {
 	println("${timeMillis(fn)}ms")
 }
+
+fun printTime(label: String, fn: () -> Unit) {
+	println("$label: ${timeMillis(fn)}ms")
+}

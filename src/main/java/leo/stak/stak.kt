@@ -3,6 +3,7 @@ package leo.stak
 import leo.base.fold
 import leo14.script
 
+// Stack with binary-replicated links.
 // push = O(log(n))
 // pop = O(1)
 // pop(n) = O(log(n))
