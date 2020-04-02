@@ -11,19 +11,19 @@ import kotlin.test.Test
 class StakTest {
 	@Test
 	fun staks() {
-		val s0 = stak("zero", null)
-		val s1 = stak("one", link(s0, null))
-		val s2 = stak("two", link(s1, link(s0, null)))
-		val s3 = stak("three", link(s2, null))
-		val s4 = stak("four", link(s3, link(s2, link(s0, null))))
-		val s5 = stak("five", link(s4, null))
-		val s6 = stak("six", link(s5, link(s4, null)))
-		val s7 = stak("seven", link(s6, null))
-		val s8 = stak("eight", link(s7, link(s6, link(s4, link(s0, null)))))
-		val s9 = stak("nine", link(s8, null))
-		val s10 = stak("ten", link(s9, link(s8, null)))
+		val s0 = node("zero", null)
+		val s1 = node("one", link(s0, null))
+		val s2 = node("two", link(s1, link(s0, null)))
+		val s3 = node("three", link(s2, null))
+		val s4 = node("four", link(s3, link(s2, link(s0, null))))
+		val s5 = node("five", link(s4, null))
+		val s6 = node("six", link(s5, link(s4, null)))
+		val s7 = node("seven", link(s6, null))
+		val s8 = node("eight", link(s7, link(s6, link(s4, link(s0, null)))))
+		val s9 = node("nine", link(s8, null))
+		val s10 = node("ten", link(s9, link(s8, null)))
 
-		val x = nullOf<Stak<String>>()
+		val x = nullOf<Node<String>>()
 		val x0 = x.push("zero")
 		val x1 = x0.push("one")
 		val x2 = x1.push("two")
@@ -75,11 +75,16 @@ class StakTest {
 	}
 
 	@Test
+	fun fold() {
+		"".fold(stakOf(1, 2, 3)) { plus(it.toString()) }.assertEqualTo("321")
+	}
+
+	@Test
 	fun large() {
 		val size = 1000000
-		val s = nullOf<Stak<Int>>().iterate(size) { push(123) }
-		s?.get(size - 1).assertEqualTo(123)
-		s?.get(size).assertNull
+		val s = emptyStak<Int>().iterate(size) { push(123) }
+		s.top(size - 1).assertEqualTo(123)
+		s.top(size).assertNull
 	}
 
 	@Test
@@ -95,7 +100,7 @@ class StakTest {
 
 			print("Create Stak: ")
 			printTime {
-				stak0 = nullOf<Stak<Int>>().iterate(size) { push(Random.nextInt()) }
+				stak0 = emptyStak<Int>().iterate(size) { push(Random.nextInt()) }
 			}
 
 			print("Create Stack: ")
@@ -107,7 +112,7 @@ class StakTest {
 			print("Random access Stak: ")
 			printTime {
 				repeat(access) {
-					stak.get(Random.nextInt(size * 20))
+					stak.top(Random.nextInt(size * 20))
 				}
 			}
 
