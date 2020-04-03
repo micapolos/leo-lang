@@ -7,11 +7,11 @@ import kotlin.test.assertFails
 class LibTest {
 	@Test
 	fun ints() {
-		intNegate(typed(123)).untyped.assertEqualTo(-123)
-		intPlusInt(typed(2))(typed(3)).untyped.assertEqualTo(5)
-		intMinusInt(typed(5))(typed(3)).untyped.assertEqualTo(2)
-		intTimesInt(typed(2))(typed(3)).untyped.assertEqualTo(6)
-		intString(typed(123)).untyped.assertEqualTo("123")
+		intNegate(typed(123)).value.assertEqualTo(-123)
+		intPlusInt(typed(2))(typed(3)).value.assertEqualTo(5)
+		intMinusInt(typed(5))(typed(3)).value.assertEqualTo(2)
+		intTimesInt(typed(2))(typed(3)).value.assertEqualTo(6)
+		intString(typed(123)).value.assertEqualTo("123")
 
 		assertFails { intNegate(typed("123")) }
 		assertFails { intPlusInt(typed("123")) }
@@ -25,7 +25,7 @@ class LibTest {
 
 	@Test
 	fun strings() {
-		stringPlusString(typed("Hello, "))(typed("world!")).untyped.assertEqualTo("Hello, world!")
+		stringPlusString(typed("Hello, "))(typed("world!")).value.assertEqualTo("Hello, world!")
 		assertFails { stringPlusString(typed(123)) }
 		assertFails { stringPlusString(typed("123"))(typed(123)) }
 	}
@@ -37,13 +37,13 @@ class LibTest {
 		assertFails { listMap(int, string)(typedList(string)) }
 		assertFails { listMap(int, string)(typedList(int))(intNegate) }
 
-		typedList(int).untyped
+		typedList(int).value
 			.assertEqualTo(listOf<Int>())
 
-		typedList(int, typed(1), typed(2), typed(3)).untyped
+		typedList(int, typed(1), typed(2), typed(3)).value
 			.assertEqualTo(listOf(1, 2, 3))
 
-		listMap(int, string)(typedList(int, typed(1), typed(2), typed(3)))(intString).untyped
+		listMap(int, string)(typedList(int, typed(1), typed(2), typed(3)))(intString).value
 			.assertEqualTo(listOf("1", "2", "3"))
 	}
 }
