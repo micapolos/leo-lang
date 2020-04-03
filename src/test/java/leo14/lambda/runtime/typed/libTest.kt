@@ -6,6 +6,13 @@ import kotlin.test.assertFails
 
 class LibTest {
 	@Test
+	fun fn_() {
+		fn(int) { typed("ok") }.type.assertEqualTo(int to string)
+		assertFails { fn(int) { typed("ok") }(typed("123")) }
+		fn(int) { typed("ok") }(typed(123)).value.assertEqualTo("ok")
+	}
+
+	@Test
 	fun id_() {
 		id(int)(typed(123)).value.assertEqualTo(123)
 		assertFails { id(int)(typed("123")) }

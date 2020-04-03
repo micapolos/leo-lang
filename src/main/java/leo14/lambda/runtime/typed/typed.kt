@@ -17,14 +17,9 @@ data class Typed(val type: Type, val erase: Erase) {
 	override fun toString() = "$value.of($type)"
 }
 
-data class Or(val lhs: Value, val rhs: Value) {
-	override fun toString() = "$lhs.or($rhs)"
-}
-
 val Typed.value: Value get() = erase()
 fun typed(type: Type, erase: Erase) = Typed(type, erase)
 infix fun Value.to(to: Value) = Arrow(this, to)
-infix fun Value.or(value: Value) = Or(this, value)
 
 fun Typed.check(type: Type): Value {
 	if (this.type != type) error("${this.type} not $type")
@@ -39,10 +34,12 @@ fun Typed.checkFrom(from: Type, fn: Fn): Typed {
 	}
 }
 
-fun fn(arrow: Arrow, fn: Fn): Typed =
-	typed(arrow) { fn }
-
 operator fun Typed.invoke(typed: Typed): Typed =
 	checkFrom(typed.type) { input ->
 		input.untypedInvoke(typed.value)
+	}
+
+fun fn(from: Type, fn: (Typed) -> Typed): Typed =
+	typed(from to fn(typed(from) { null }).type) {
+		{ value: Value -> fn(typed(from) { value }).value }
 	}
