@@ -19,6 +19,24 @@ class LibTest {
 	}
 
 	@Test
+	fun firstSecond() {
+		first(int, string).type.assertEqualTo(int to (string to int))
+		first(int, string)(typed(123)).type.assertEqualTo(string to int)
+		first(int, string)(typed(123))(typed("foo")).type.assertEqualTo(int)
+		assertFails { first(int, string)(typed("foo")) }
+		assertFails { first(int, string)(typed(123))(typed(123)) }
+
+		second(int, string).type.assertEqualTo(int to (string to string))
+		second(int, string)(typed(123)).type.assertEqualTo(string to string)
+		second(int, string)(typed(123))(typed("foo")).type.assertEqualTo(string)
+		assertFails { second(int, string)(typed("foo")) }
+		assertFails { second(int, string)(typed(123))(typed(123)) }
+
+		first(int, string)(typed(123))(typed("foo")).value.assertEqualTo(123)
+		second(int, string)(typed(123))(typed("foo")).value.assertEqualTo("foo")
+	}
+
+	@Test
 	fun ints() {
 		intNegate(typed(123)).value.assertEqualTo(-123)
 		intPlusInt(typed(2))(typed(3)).value.assertEqualTo(5)
