@@ -27,3 +27,6 @@ val stringLength = fn { string -> string.asString.length }
 val stringPlusString = fn { s1 -> fn { s2 -> s1.asString + s2.asString } }
 
 val listMap = fn { list -> fn { f -> list.asList.map(f.asF) } }
+
+fun Value.dot(fn: Value): Value = fn(this)
+fun Value.apply(fn: Value, value: Value): Value = dot(fn)(value)

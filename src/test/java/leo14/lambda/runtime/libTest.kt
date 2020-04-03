@@ -46,4 +46,10 @@ class LibTest {
 	fun lists() {
 		listMap(listOf(1, 2, 3))(intString).assertEqualTo(listOf("1", "2", "3"))
 	}
+
+	@Test
+	fun dot_() {
+		5.dot(intMinusInt)(3).assertEqualTo(2)
+		5.apply(intMinusInt, 3).assertEqualTo(2)
+	}
 }
