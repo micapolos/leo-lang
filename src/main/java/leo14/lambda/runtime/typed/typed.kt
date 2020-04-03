@@ -7,10 +7,12 @@ import leo14.lambda.runtime.Value
 import leo14.lambda.runtime.invoke
 
 typealias Erase = () -> Value
-typealias Arrow = Pair<Value, Value>
 typealias Type = Any?
 
+data class Arrow(val from: Value, val to: Value)
 data class Typed(val type: Type, val erase: Erase)
+
+infix fun Value.to(to: Value) = Arrow(this, to)
 
 val Typed.value: Value get() = erase()
 
@@ -23,8 +25,8 @@ fun Typed.check(type: Type): Value {
 
 fun Typed.checkFrom(from: Type, fn: Fn): Typed {
 	if (type !is Arrow) error("$this not a function")
-	if (type.first != from) error("$this not of $from")
-	return typed(type.second) {
+	if (type.from != from) error("$this not of $from")
+	return typed(type.to) {
 		fn(value)
 	}
 }
