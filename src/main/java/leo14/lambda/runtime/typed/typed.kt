@@ -10,16 +10,21 @@ typealias Erase = () -> Value
 typealias Type = Any?
 
 data class Arrow(val from: Value, val to: Value) {
-	override fun toString() = "$from -> ($to)"
+	override fun toString() = "$from.to($to)"
 }
 
 data class Typed(val type: Type, val erase: Erase) {
-	override fun toString() = "$value: $type"
+	override fun toString() = "$value.of($type)"
+}
+
+data class Or(val lhs: Value, val rhs: Value) {
+	override fun toString() = "$lhs.or($rhs)"
 }
 
 val Typed.value: Value get() = erase()
 fun typed(type: Type, erase: Erase) = Typed(type, erase)
 infix fun Value.to(to: Value) = Arrow(this, to)
+infix fun Value.or(value: Value) = Or(this, value)
 
 fun Typed.check(type: Type): Value {
 	if (this.type != type) error("${this.type} not $type")

@@ -5,6 +5,10 @@ val id = fn { it }
 val first = fn { at0 -> fn { at0 } }
 val second = fn { fn { at1 -> at1 } }
 
+val yes = first
+val no = second
+val ifThenElse = fn { bool -> fn { then_ -> fn { else_ -> bool(then_)(else_)(id) } } }
+
 val pair = fn { first -> fn { second -> fn { which -> which(first)(second) } } }
 val firstOfTwo = fn { firstOfTwo -> fn { forFirst -> fn { forFirst(firstOfTwo) } } }
 val secondOfTwo = fn { secondOfTwo -> fn { fn { forSecond -> forSecond(secondOfTwo) } } }
@@ -27,5 +31,7 @@ val stringLength = fn { string -> string.asString.length }
 val stringPlusString = fn { s1 -> fn { s2 -> s1.asString + s2.asString } }
 
 val listMap = fn { list -> fn { f -> list.asList.map(f.asF) } }
+
+val eq = fn { a -> fn { b -> if (a == b) yes else no } }
 
 fun Value.dot(fn: Value): Value = fn(this)

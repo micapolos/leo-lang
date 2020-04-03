@@ -48,6 +48,20 @@ class LibTest {
 	}
 
 	@Test
+	fun eq_() {
+		eq(1)(1).assertEqualTo(first)
+		eq(1)(2).assertEqualTo(second)
+		eq(first)(first).assertEqualTo(first)
+		eq(first)(second).assertEqualTo(second)
+	}
+
+	@Test
+	fun ifThenElse_() {
+		ifThenElse(eq(1)(1))(fn { true })(fn { false }).assertEqualTo(true)
+		ifThenElse(eq(1)(2))(fn { true })(fn { false }).assertEqualTo(false)
+	}
+
+	@Test
 	fun dot_() {
 		5.dot(intMinusInt)(3).assertEqualTo(2)
 	}
