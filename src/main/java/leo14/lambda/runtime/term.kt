@@ -1,7 +1,9 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package leo14.lambda.runtime
 
-import leo14.lambda.runtime.internal._invoke
+typealias X = Any?
+typealias F = (Any?) -> Any?
 
-inline fun fn(noinline fn: (Any?) -> Any?): Any? = fn
-inline operator fun Any?.invoke(any: Any?): Any? =
-	(this as (Any?) -> Any)._invoke(any)
+fun fn(f: F): X = f
+operator fun X.invoke(x: X): X = (this as F)(x)
