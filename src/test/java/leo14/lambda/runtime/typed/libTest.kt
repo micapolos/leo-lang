@@ -35,18 +35,18 @@ class LibTest {
 
 	@Test
 	fun lists() {
-		assertFails { typedList(I32, typed("1")) }
-		assertFails { typedList(I32, typed(1), typed("2")) }
-		assertFails { listMap(I32, Text)(typedList(Text)) }
-		assertFails { listMap(I32, Text)(typedList(I32))(intNegate) }
+		assertFails { typedList(int, typed("1")) }
+		assertFails { typedList(int, typed(1), typed("2")) }
+		assertFails { listMap(int, string)(typedList(string)) }
+		assertFails { listMap(int, string)(typedList(int))(intNegate) }
 
-		typedList(I32).value
+		typedList(int).value
 			.assertEqualTo(listOf<Int>())
 
-		typedList(I32, typed(1), typed(2), typed(3)).value
+		typedList(int, typed(1), typed(2), typed(3)).value
 			.assertEqualTo(listOf(1, 2, 3))
 
-		listMap(I32, Text)(typedList(I32, typed(1), typed(2), typed(3)))(intString).value
+		listMap(int, string)(typedList(int, typed(1), typed(2), typed(3)))(intString).value
 			.assertEqualTo(listOf("1", "2", "3"))
 	}
 

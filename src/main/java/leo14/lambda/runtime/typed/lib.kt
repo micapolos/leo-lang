@@ -3,37 +3,32 @@ package leo14.lambda.runtime.typed
 import leo.base.println
 import leo14.lambda.runtime.Value
 
-object Text {
-	override fun toString() = "Text"
-}
+val int = "int"
+val string = "string"
 
-object I32 {
-	override fun toString() = "I32"
-}
-
-data class ListOf(val type: Type) {
+data class ListT(val type: Type) {
 	override fun toString() = "list($type)"
 }
 
-fun typed(i: Int) = typed(I32) { i }
-fun typed(s: String) = typed(Text) { s }
+fun typed(i: Int) = typed(int) { i }
+fun typed(s: String) = typed(string) { s }
 fun typedList(type: Value, vararg items: Typed) = listOf(*items).map { it.check(type) }.let { list ->
-	typed(ListOf(type)) { list }
+	typed(ListT(type)) { list }
 }
 
-fun intOp(value: Value) = typed(I32 to I32) { value }
-fun intOp2(value: Value) = typed(I32 to (I32 to I32)) { value }
+fun intOp(value: Value) = typed(int to int) { value }
+fun intOp2(value: Value) = typed(int to (int to int)) { value }
 
 val intNegate = intOp(leo14.lambda.runtime.intNegate)
 val intPlusInt = intOp2(leo14.lambda.runtime.intPlusInt)
 val intMinusInt = intOp2(leo14.lambda.runtime.intMinusInt)
 val intTimesInt = intOp2(leo14.lambda.runtime.intTimesInt)
-val intString = typed(I32 to Text) { leo14.lambda.runtime.intString }
+val intString = typed(int to string) { leo14.lambda.runtime.intString }
 
-val stringLength = typed(Text to I32) { leo14.lambda.runtime.stringLength }
-val stringPlusString = typed(Text to (Text to Text)) { leo14.lambda.runtime.stringPlusString }
+val stringLength = typed(string to int) { leo14.lambda.runtime.stringLength }
+val stringPlusString = typed(string to (string to string)) { leo14.lambda.runtime.stringPlusString }
 
-fun listMap(from: Value, to: Value) = typed(ListOf(from) to ((from to to) to ListOf(to))) { leo14.lambda.runtime.listMap }
+fun listMap(from: Value, to: Value) = typed(ListT(from) to ((from to to) to ListT(to))) { leo14.lambda.runtime.listMap }
 
 fun Typed.dot(fn: Typed): Typed = fn(this)
 
