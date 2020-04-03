@@ -5,34 +5,31 @@ package leo14.lambda.runtime.typed
 import leo14.lambda.runtime.X
 import leo14.lambda.runtime.invoke
 
-typealias Eval = () -> X
-typealias Arrow = Pair<X, X>
+typealias Untyped = X
+typealias Erase = () -> Untyped
+typealias Arrow = Pair<Untyped, Untyped>
+typealias Type = Any?
 
-data class Typed(val type: X, val eval: Eval)
+data class Typed(val type: Type, val erase: Erase)
 
-operator fun Typed.invoke(): X = eval()
+val Typed.untyped: Untyped get() = erase()
 
-fun typed(type: X, eval: () -> X) = Typed(type, eval)
+fun typed(type: Type, eval: () -> X) = Typed(type, eval)
 
-fun Typed.check(type: X): X {
+fun Typed.check(type: Type): X {
 	if (this.type != type) error("${this.type} not $type")
-	return eval()
+	return erase()
 }
 
-fun Typed.check(type: X, fn: (X) -> Typed): Typed {
-	if (this.type != type) error("${this.type} not $type")
-	return fn(invoke())
-}
-
-fun Typed.checkFrom(from: X, fn: (X) -> X): Typed {
+fun Typed.checkFrom(from: Type, fn: (X) -> X): Typed {
 	if (type !is Arrow) error("$this not a function")
 	if (type.first != from) error("$this not of $from")
 	return typed(type.second) {
-		fn(invoke())
+		fn(untyped)
 	}
 }
 
 operator fun Typed.invoke(typed: Typed): Typed =
 	checkFrom(typed.type) { input ->
-		input.invoke(typed())
+		input.invoke(typed.untyped)
 	}

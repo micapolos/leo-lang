@@ -12,6 +12,7 @@ val secondOfTwo = fn { secondOfTwo -> fn { fn { forSecond -> forSecond(secondOfT
 val X.asString get() = (this as String)
 val X.asInt get() = (this as Int)
 val X.asList get() = (this as List<X>)
+val X.asClass get() = (this as Class<*>)
 val X.asF get() = (this as F)
 
 fun intOp(fn: Int.() -> Int) = fn { int -> int.asInt.fn() }
