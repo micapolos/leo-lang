@@ -29,4 +29,21 @@ class LibTest {
 		assertFails { stringPlusString(typed(123)) }
 		assertFails { stringPlusString(typed("123"))(typed(123)) }
 	}
+
+	@Test
+	fun lists() {
+		assertFails { typedList(int, typed("1")) }
+		assertFails { typedList(int, typed(1), typed("2")) }
+		assertFails { listMap(int, string)(typedList(string)) }
+		assertFails { listMap(int, string)(typedList(int))(intNegate) }
+
+		typedList(int)()
+			.assertEqualTo(listOf<Int>())
+
+		typedList(int, typed(1), typed(2), typed(3))()
+			.assertEqualTo(listOf(1, 2, 3))
+
+		listMap(int, string)(typedList(int, typed(1), typed(2), typed(3)))(intString)()
+			.assertEqualTo(listOf("1", "2", "3"))
+	}
 }

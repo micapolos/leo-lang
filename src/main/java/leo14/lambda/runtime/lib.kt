@@ -11,6 +11,8 @@ val secondOfTwo = fn { secondOfTwo -> fn { fn { forSecond -> forSecond(secondOfT
 
 val X.asString get() = (this as String)
 val X.asInt get() = (this as Int)
+val X.asList get() = (this as List<X>)
+val X.asF get() = (this as F)
 
 fun intOp(fn: Int.() -> Int) = fn { int -> int.asInt.fn() }
 fun intOp2(fn: Int.(Int) -> Int) = fn { i1 -> fn { i2 -> i1.asInt.fn(i2.asInt) } }
@@ -22,3 +24,5 @@ val intString = fn { int -> int.toString() }
 
 val stringLength = fn { string -> string.asString.length }
 val stringPlusString = fn { s1 -> fn { s2 -> s1.asString + s2.asString } }
+
+val listMap = fn { list -> fn { f -> list.asList.map(f.asF) } }

@@ -41,4 +41,9 @@ class LibTest {
 		intTimesInt(2)(3).assertEqualTo(6)
 		intString(2).assertEqualTo("2")
 	}
+
+	@Test
+	fun lists() {
+		listMap(listOf(1, 2, 3))(intString).assertEqualTo(listOf("1", "2", "3"))
+	}
 }
