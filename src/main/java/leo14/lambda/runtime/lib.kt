@@ -9,12 +9,12 @@ val pair = fn { first -> fn { second -> fn { which -> which(first)(second) } } }
 val firstOfTwo = fn { firstOfTwo -> fn { forFirst -> fn { forFirst(firstOfTwo) } } }
 val secondOfTwo = fn { secondOfTwo -> fn { fn { forSecond -> forSecond(secondOfTwo) } } }
 
-val Any?.asString get() = (this as String)
-val Any?.asInt get() = (this as Int)
+val X.asString get() = (this as String)
+val X.asInt get() = (this as Int)
 
 fun intOp(fn: Int.() -> Int) = fn { int -> int.asInt.fn() }
 fun intOp2(fn: Int.(Int) -> Int) = fn { i1 -> fn { i2 -> i1.asInt.fn(i2.asInt) } }
-val intNeg = intOp(Int::unaryMinus)
+val intNegate = intOp(Int::unaryMinus)
 val intPlusInt = intOp2(Int::plus)
 val intMinusInt = intOp2(Int::minus)
 val intTimesInt = intOp2(Int::times)

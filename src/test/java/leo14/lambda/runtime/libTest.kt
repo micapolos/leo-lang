@@ -35,7 +35,7 @@ class LibTest {
 
 	@Test
 	fun ints() {
-		intNeg(1).assertEqualTo(-1)
+		intNegate(1).assertEqualTo(-1)
 		intPlusInt(2)(3).assertEqualTo(5)
 		intMinusInt(5)(3).assertEqualTo(2)
 		intTimesInt(2)(3).assertEqualTo(6)
