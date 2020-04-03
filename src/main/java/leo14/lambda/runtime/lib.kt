@@ -1,5 +1,7 @@
 package leo14.lambda.runtime
 
+val eq = fn { a -> fn { b -> if (a == b) yes else no } }
+
 val id = fn { it }
 
 val first = fn { at0 -> fn { at0 } }
@@ -16,7 +18,6 @@ val secondOfTwo = fn { secondOfTwo -> fn { fn { forSecond -> forSecond(secondOfT
 val Value.asString get() = (this as String)
 val Value.asInt get() = (this as Int)
 val Value.asList get() = (this as List<Value>)
-val Value.asClass get() = (this as Class<*>)
 val Value.asF get() = (this as Fn)
 
 fun intOp(fn: Int.() -> Int) = fn { int -> int.asInt.fn() }
@@ -31,7 +32,5 @@ val stringLength = fn { string -> string.asString.length }
 val stringPlusString = fn { s1 -> fn { s2 -> s1.asString + s2.asString } }
 
 val listMap = fn { list -> fn { f -> list.asList.map(f.asF) } }
-
-val eq = fn { a -> fn { b -> if (a == b) yes else no } }
 
 fun Value.dot(fn: Value): Value = fn(this)
