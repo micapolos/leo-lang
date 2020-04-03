@@ -53,12 +53,12 @@ class LibTest {
 	@Test
 	fun longerProgram() {
 		typed("Magic number: ")
-			.apply(stringPlusString)(
+			.dot(stringPlusString)(
 			typed("Hello, ")
-				.apply(stringPlusString)(typed("world!"))
-				.apply(stringLength)
-				.apply(intPlusInt)(typed(10000))
-				.apply(intString))
+				.dot(stringPlusString)(typed("world!"))
+				.dot(stringLength)
+				.dot(intPlusInt)(typed(10000))
+				.dot(intString))
 			.value
 			.assertEqualTo("Magic number: 10013")
 	}

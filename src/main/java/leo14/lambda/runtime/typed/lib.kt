@@ -35,17 +35,15 @@ val stringPlusString = typed(Text to (Text to Text)) { leo14.lambda.runtime.stri
 
 fun listMap(from: Value, to: Value) = typed(ListOf(from) to ((from to to) to ListOf(to))) { leo14.lambda.runtime.listMap }
 
-fun Typed.apply(fn: Typed): Typed = fn(this)
-fun Typed.apply(fn: Typed, typed: Typed): Typed = apply(fn)(typed)
+fun Typed.dot(fn: Typed): Typed = fn(this)
 
 fun main() =
 	typed("Magic number: ")
-		.apply(
-			stringPlusString,
-			typed("Hello, ")
-				.apply(stringPlusString, typed("world!"))
-				.apply(stringLength)
-				.apply(intTimesInt, typed(10000))
-				.apply(intString))
+		.dot(stringPlusString)(
+		typed("Hello, ")
+			.dot(stringPlusString)(typed("world!"))
+			.dot(stringLength)
+			.dot(intTimesInt)(typed(10000))
+			.dot(intString))
 		.value
 		.println
