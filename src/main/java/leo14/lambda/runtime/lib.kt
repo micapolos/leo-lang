@@ -13,7 +13,7 @@ val Value.asString get() = (this as String)
 val Value.asInt get() = (this as Int)
 val Value.asList get() = (this as List<Value>)
 val Value.asClass get() = (this as Class<*>)
-val Value.asF get() = (this as Function)
+val Value.asF get() = (this as Fn)
 
 fun intOp(fn: Int.() -> Int) = fn { int -> int.asInt.fn() }
 fun intOp2(fn: Int.(Int) -> Int) = fn { i1 -> fn { i2 -> i1.asInt.fn(i2.asInt) } }

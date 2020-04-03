@@ -3,7 +3,7 @@
 package leo14.lambda.runtime
 
 typealias Value = Any?
-typealias Function = (Value) -> Value
+typealias Fn = (Value) -> Value
 
-fun fn(function: Function): Value = function
-operator fun Value.invoke(value: Value): Value = (this as Function)(value)
+fun fn(fn: Fn): Value = fn
+operator fun Value.invoke(value: Value): Value = (this as Fn)(value)
