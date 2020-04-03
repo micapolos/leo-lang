@@ -39,6 +39,9 @@ fun Typed.checkFrom(from: Type, fn: Fn): Typed {
 	}
 }
 
+fun fn(arrow: Arrow, fn: Fn): Typed =
+	typed(arrow) { fn }
+
 operator fun Typed.invoke(typed: Typed): Typed =
 	checkFrom(typed.type) { input ->
 		input.untypedInvoke(typed.value)

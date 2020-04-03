@@ -16,6 +16,8 @@ fun typedList(type: Value, vararg items: Typed) = listOf(*items).map { it.check(
 	typed(ListT(type)) { list }
 }
 
+fun id(type: Type) = fn(type to type) { it }
+
 fun intOp(value: Value) = typed(int to int) { value }
 fun intOp2(value: Value) = typed(int to (int to int)) { value }
 
