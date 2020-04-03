@@ -25,25 +25,28 @@ class LibTest {
 
 	@Test
 	fun strings() {
-		stringPlusString(typed("Hello, "))(typed("world!")).value.assertEqualTo("Hello, world!")
+		assertFails { stringLength(typed(123)) }
 		assertFails { stringPlusString(typed(123)) }
 		assertFails { stringPlusString(typed("123"))(typed(123)) }
+
+		stringLength(typed("Hello")).value.assertEqualTo(5)
+		stringPlusString(typed("Hello, "))(typed("world!")).value.assertEqualTo("Hello, world!")
 	}
 
 	@Test
 	fun lists() {
-		assertFails { typedList(int, typed("1")) }
-		assertFails { typedList(int, typed(1), typed("2")) }
-		assertFails { listMap(int, string)(typedList(string)) }
-		assertFails { listMap(int, string)(typedList(int))(intNegate) }
+		assertFails { typedList(I32, typed("1")) }
+		assertFails { typedList(I32, typed(1), typed("2")) }
+		assertFails { listMap(I32, Text)(typedList(Text)) }
+		assertFails { listMap(I32, Text)(typedList(I32))(intNegate) }
 
-		typedList(int).value
+		typedList(I32).value
 			.assertEqualTo(listOf<Int>())
 
-		typedList(int, typed(1), typed(2), typed(3)).value
+		typedList(I32, typed(1), typed(2), typed(3)).value
 			.assertEqualTo(listOf(1, 2, 3))
 
-		listMap(int, string)(typedList(int, typed(1), typed(2), typed(3)))(intString).value
+		listMap(I32, Text)(typedList(I32, typed(1), typed(2), typed(3)))(intString).value
 			.assertEqualTo(listOf("1", "2", "3"))
 	}
 }

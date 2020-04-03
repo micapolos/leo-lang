@@ -12,11 +12,9 @@ typealias Type = Any?
 data class Arrow(val from: Value, val to: Value)
 data class Typed(val type: Type, val erase: Erase)
 
-infix fun Value.to(to: Value) = Arrow(this, to)
-
 val Typed.value: Value get() = erase()
-
 fun typed(type: Type, erase: Erase) = Typed(type, erase)
+infix fun Value.to(to: Value) = Arrow(this, to)
 
 fun Typed.check(type: Type): Value {
 	if (this.type != type) error("${this.type} not $type")
