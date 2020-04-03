@@ -4,13 +4,18 @@ package leo14.lambda.runtime.typed
 
 import leo14.lambda.runtime.Fn
 import leo14.lambda.runtime.Value
-import leo14.lambda.runtime.invoke
+import leo14.lambda.runtime.invoke as untypedInvoke
 
 typealias Erase = () -> Value
 typealias Type = Any?
 
-data class Arrow(val from: Value, val to: Value)
-data class Typed(val type: Type, val erase: Erase)
+data class Arrow(val from: Value, val to: Value) {
+	override fun toString() = "$from -> ($to)"
+}
+
+data class Typed(val type: Type, val erase: Erase) {
+	override fun toString() = "$value: $type"
+}
 
 val Typed.value: Value get() = erase()
 fun typed(type: Type, erase: Erase) = Typed(type, erase)
@@ -22,8 +27,8 @@ fun Typed.check(type: Type): Value {
 }
 
 fun Typed.checkFrom(from: Type, fn: Fn): Typed {
-	if (type !is Arrow) error("$this not a function")
-	if (type.from != from) error("$this not of $from")
+	if (type !is Arrow) error("not a function: $this")
+	if (type.from != from) error("expected: ${type.from}, got: $from")
 	return typed(type.to) {
 		fn(value)
 	}
@@ -31,5 +36,5 @@ fun Typed.checkFrom(from: Type, fn: Fn): Typed {
 
 operator fun Typed.invoke(typed: Typed): Typed =
 	checkFrom(typed.type) { input ->
-		input.invoke(typed.value)
+		input.untypedInvoke(typed.value)
 	}

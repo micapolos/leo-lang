@@ -113,3 +113,6 @@ fun <V : Any> V?.nullableMerge(valueOrNull: V?, union: V.(V) -> V?): The<V?>? =
 
 fun <V : Any> V?.notNullOrError(message: String): V =
 	this ?: error(message)
+
+val Any?.print get() = print(this)
+val Any?.println get() = println(this)

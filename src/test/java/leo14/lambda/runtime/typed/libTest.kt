@@ -49,4 +49,18 @@ class LibTest {
 		listMap(I32, Text)(typedList(I32, typed(1), typed(2), typed(3)))(intString).value
 			.assertEqualTo(listOf("1", "2", "3"))
 	}
+
+	@Test
+	fun longerProgram() {
+		typed("Magic number: ")
+			.apply(
+				stringPlusString,
+				typed("Hello, ")
+					.apply(stringPlusString, typed("world!"))
+					.apply(stringLength)
+					.apply(intPlusInt, typed(10000))
+					.apply(intString))
+			.value
+			.assertEqualTo("Magic number: 10013")
+	}
 }

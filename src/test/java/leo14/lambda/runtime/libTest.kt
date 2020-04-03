@@ -49,7 +49,6 @@ class LibTest {
 
 	@Test
 	fun dot_() {
-		5.dot(intMinusInt)(3).assertEqualTo(2)
 		5.apply(intMinusInt, 3).assertEqualTo(2)
 	}
 }
