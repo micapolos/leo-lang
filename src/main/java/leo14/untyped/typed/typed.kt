@@ -3,6 +3,8 @@ package leo14.untyped.typed
 import leo14.*
 import leo14.Number
 import leo14.lambda.runtime.asString
+import leo14.lambda.runtime.pair
+import leo14.lambda.runtime.valueInvoke
 import leo14.untyped.*
 
 data class Typed(val type: Thunk, val value: Any?)
@@ -40,3 +42,16 @@ val Literal.typed
 			is StringLiteral -> typed(thunk(value(textName))) { string }
 			is NumberLiteral -> typed(thunk(value(numberName))) { number }
 		}
+
+fun Typed.plus(begin: Begin, rhs: Typed) =
+	typed(
+		type.plus(begin.string lineTo rhs.type),
+		if (rhs.value == null) value
+		else if (value == null) rhs.value
+		else pair.valueInvoke(value).valueInvoke(rhs))
+
+fun Typed.plus(literal: Literal) =
+	typed(
+		type.plus(thunk(value(literal.selectName))),
+		if (value == null) literal.typed
+		else pair.valueInvoke(value).valueInvoke(literal.typed))

@@ -34,4 +34,18 @@ class LeoTest {
 			.eval
 			.assertEqualTo(leo(5))
 	}
+
+	@Test
+	fun numberMinusNumber() {
+		leo(5, "minus"(3))
+			.eval
+			.assertEqualTo(leo(2))
+	}
+
+	@Test
+	fun numberTimesNumber() {
+		leo(2, "times"(3))
+			.eval
+			.assertEqualTo(leo(6))
+	}
 }

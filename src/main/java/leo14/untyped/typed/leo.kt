@@ -20,7 +20,7 @@ val LeoParent?.beginLeo: Leo
 			this,
 			Resolver(
 				emptyTyped,
-				{ begin -> TODO() },
+				{ begin -> writeFallback(begin) },
 				{ literal -> leo(literal) }))
 
 fun LeoParent?.leo(literal: Literal): Leo =
@@ -38,18 +38,19 @@ fun LeoParent?.leo(string: String): Leo =
 				when (begin.string) {
 					plusName ->
 						parent(begin) { rhsLeo ->
-							rhsLeo.resolver.typed.let { rhsTyped ->
-								when (rhsTyped.type) {
-									thunk(value(textName)) ->
-										copy(resolver = resolver.copy(typed = string.plus(rhsTyped.value.asString).typed))
-									else -> null
+							rhsLeo.resolver.typed
+								.let { rhsTyped ->
+									when (rhsTyped.type) {
+										thunk(value(textName)) ->
+											copy(resolver = resolver.copy(typed = string.plus(rhsTyped.value.asString).typed))
+										else -> writeFallback(begin)
+									}
 								}
-							} ?: TODO()
 						}.beginLeo
-					else -> TODO()
+					else -> writeFallback(begin)
 				}
 			},
-			{ literal -> TODO() }))
+			{ literal -> writeFallback(literal) }))
 
 fun LeoParent?.leo(number: Number): Leo =
 	Leo(
@@ -63,15 +64,41 @@ fun LeoParent?.leo(number: Number): Leo =
 							rhsLeo.resolver.typed.let { rhsTyped ->
 								when (rhsTyped.type) {
 									thunk(value(numberName)) ->
-										copy(resolver = resolver.copy(typed = number.plus(rhsTyped.value.asNumber).typed))
-									else -> null
+										copy(
+											resolver = resolver.copy(
+												typed = number.plus(rhsTyped.value.asNumber).typed))
+									else -> writeFallback(begin)
 								}
-							} ?: TODO()
+							}
+						}.beginLeo
+					minusName ->
+						parent(begin) { rhsLeo ->
+							rhsLeo.resolver.typed.let { rhsTyped ->
+								when (rhsTyped.type) {
+									thunk(value(numberName)) ->
+										copy(
+											resolver = resolver.copy(
+												typed = number.minus(rhsTyped.value.asNumber).typed))
+									else -> writeFallback(begin)
+								}
+							}
+						}.beginLeo
+					timesName ->
+						parent(begin) { rhsLeo ->
+							rhsLeo.resolver.typed.let { rhsTyped ->
+								when (rhsTyped.type) {
+									thunk(value(numberName)) ->
+										copy(
+											resolver = resolver.copy(
+												typed = number.times(rhsTyped.value.asNumber).typed))
+									else -> writeFallback(begin)
+								}
+							}
 						}.beginLeo
 					else -> TODO()
 				}
 			},
-			{ literal -> TODO() }))
+			{ literal -> writeFallback(literal) }))
 
 val emptyLeo =
 	null.beginLeo
@@ -85,3 +112,29 @@ fun Leo.write(token: Token): Leo =
 
 fun Leo.parent(begin: Begin, endFn: (Leo) -> Leo): LeoParent =
 	LeoParent(this, begin, endFn)
+
+fun Leo.writeFallback(begin: Begin): Leo =
+	Leo(
+		LeoParent(this, begin) { rhsLeo ->
+			writeFallback(begin, rhsLeo.resolver.typed)
+		},
+		Resolver(
+			emptyTyped,
+			{ begin -> writeFallback(begin) },
+			{ literal -> writeFallback(literal) }))
+
+fun Leo.writeFallback(begin: Begin, rhs: Typed): Leo =
+	Leo(
+		parentOrNull,
+		Resolver(
+			resolver.typed.plus(begin, rhs),
+			{ begin -> writeFallback(begin) },
+			{ literal -> writeFallback(literal) }))
+
+fun Leo.writeFallback(literal: Literal): Leo =
+	Leo(
+		parentOrNull,
+		Resolver(
+			resolver.typed.plus(literal),
+			{ begin -> writeFallback(begin) },
+			{ literal -> writeFallback(literal) }))
