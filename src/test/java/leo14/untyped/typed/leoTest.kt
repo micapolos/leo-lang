@@ -7,16 +7,31 @@ import kotlin.test.Test
 
 class LeoTest {
 	@Test
+	fun empty() {
+		leo().eval.assertEqualTo(leo())
+	}
+
+	@Test
 	fun text() {
-		leo("Hello, world!")
+		leo("Hello, world!").eval.assertEqualTo(leo("Hello, world!"))
+	}
+
+	@Test
+	fun number() {
+		leo(10).eval.assertEqualTo(leo(10))
+	}
+
+	@Test
+	fun textPlusText() {
+		leo("Hello, ", "plus"("world!"))
 			.eval
 			.assertEqualTo(leo("Hello, world!"))
 	}
 
 	@Test
-	fun textPlus() {
-		leo("Hello, ", "plus"("world!"))
+	fun numberPlusNumber() {
+		leo(2, "plus"(3))
 			.eval
-			.assertEqualTo(leo("Hello, world!"))
+			.assertEqualTo(leo(5))
 	}
 }

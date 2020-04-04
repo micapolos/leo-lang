@@ -3,10 +3,7 @@ package leo14.untyped.typed
 import leo14.*
 import leo14.Number
 import leo14.lambda.runtime.asString
-import leo14.untyped.plusName
-import leo14.untyped.textName
-import leo14.untyped.thunk
-import leo14.untyped.value
+import leo14.untyped.*
 
 data class Leo(
 	val parentOrNull: LeoParent?,
@@ -59,7 +56,21 @@ fun LeoParent?.leo(number: Number): Leo =
 		this,
 		Resolver(
 			number.typed,
-			{ begin -> TODO() },
+			{ begin ->
+				when (begin.string) {
+					plusName ->
+						parent(begin) { rhsLeo ->
+							rhsLeo.resolver.typed.let { rhsTyped ->
+								when (rhsTyped.type) {
+									thunk(value(numberName)) ->
+										copy(resolver = resolver.copy(typed = number.plus(rhsTyped.value.asNumber).typed))
+									else -> null
+								}
+							} ?: TODO()
+						}.beginLeo
+					else -> TODO()
+				}
+			},
 			{ literal -> TODO() }))
 
 val emptyLeo =
