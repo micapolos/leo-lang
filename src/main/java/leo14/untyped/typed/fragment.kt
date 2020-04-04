@@ -1,6 +1,9 @@
-package leo14.dispatching
+package leo14.untyped.typed
 
-import leo14.*
+import leo14.Fragment
+import leo14.FragmentParent
+import leo14.fragment
+import leo14.parent
 
 val Leo.fragment: Fragment
 	get() =
@@ -8,4 +11,4 @@ val Leo.fragment: Fragment
 
 val LeoParent.fragmentParent: FragmentParent
 	get() =
-		leo.fragment.parent(begin(name))
+		leo.fragment.parent(begin)

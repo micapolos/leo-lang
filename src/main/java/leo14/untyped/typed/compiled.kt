@@ -1,4 +1,4 @@
-package leo14.dispatching
+package leo14.untyped.typed
 
 import leo14.untyped.Thunk
 
