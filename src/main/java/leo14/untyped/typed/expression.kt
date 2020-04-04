@@ -1,5 +1,6 @@
 package leo14.untyped.typed
 
+import leo13.*
 import leo13.base.negate
 import leo14.lambda.runtime.*
 import java.lang.reflect.Constructor
@@ -23,7 +24,7 @@ val Expression.class_ get() = value as Class<*>
 val Expression.method get() = value as Method
 val Expression.constructor get() = value as Constructor<*>
 val Expression.field get() = value as Field
-val Expression.pair get() = value as Pair<*, *>
+val Expression.stack get() = value as Stack<Expression>
 
 fun Expression.eq(rhs: Expression) = expression { value == rhs.value }
 
@@ -43,12 +44,26 @@ val Expression.stringLength get() = expression { string.length }
 
 fun Expression.functionInvokeValue(rhs: Expression) = expression { function(rhs.value) }
 
-// Reflection
+// === Reflection ===
 
-val Expression.stringClass get() = expression { Expression::class.java.classLoader.loadClass(string) }
-fun Expression.classConstructor(rhs: Expression) = expression { class_.getConstructor(TODO()) }
-fun Expression.classMethod(rhs: Expression) = expression { class_.getMethod("fds", TODO()) }
-fun Expression.classField(rhs: Expression) = expression { class_.getField(rhs.string) }
-fun Expression.constructorInvoke(rhs: Expression) = expression { constructor.newInstance(*rhs.array) }
-fun Expression.methodInvoke(rhs: Expression) = expression { method.invoke(rhs.value, *rhs.array) }
-fun Expression.fieldGet(rhs: Expression) = expression { field.get(rhs.value) }
+val Expression.stringClass
+	get() =
+		expression { Expression::class.java.classLoader.loadClass(string) }
+
+fun Expression.classConstructor(rhs: Expression) =
+	expression { class_.getConstructor(*rhs.stack.map { class_ }.array) }
+
+fun Expression.classMethod(rhs: Expression) =
+	expression { class_.getMethod(rhs.stack.link.stack.top.string, *rhs.stack.top.stack.map { class_ }.array) }
+
+fun Expression.classField(rhs: Expression) =
+	expression { class_.getField(rhs.string) }
+
+fun Expression.constructorInvoke(rhs: Expression) =
+	expression { constructor.newInstance(*rhs.stack.map { value }.array) }
+
+fun Expression.methodInvoke(rhs: Expression) =
+	expression { method.invoke(rhs.stack.link.stack.top.value, *rhs.stack.top.stack.map { value }.array) }
+
+fun Expression.fieldGet(rhs: Expression) =
+	expression { field.get(rhs.value) }
