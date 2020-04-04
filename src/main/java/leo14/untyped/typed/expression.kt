@@ -9,7 +9,10 @@ import java.lang.reflect.Method
 
 typealias ValueFn = () -> Value
 
-data class Expression(val valueFn: ValueFn)
+data class Expression(val valueFn: ValueFn) {
+	override fun equals(other: Any?): Boolean =
+		this === other || other is Expression && value == other.value
+}
 
 fun expression(valueFn: ValueFn) = Expression(valueFn)
 
@@ -43,6 +46,19 @@ fun Expression.stringPlusString(rhs: Expression) = expression { string + rhs.str
 val Expression.stringLength get() = expression { string.length }
 
 fun Expression.functionInvokeValue(rhs: Expression) = expression { function(rhs.value) }
+
+// === Arrays ===
+
+val Expression.valueArray
+	get() =
+		expression { stack.map { value }.array }
+
+fun Expression.arrayAt(rhs: Expression) =
+	expression { array[rhs.int] }
+
+val Expression.arrayValue
+	get() =
+		expression { stack(*array).map { expression { this } } }
 
 // === Reflection ===
 

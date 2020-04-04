@@ -7,6 +7,34 @@ import kotlin.test.Test
 
 class ExpressionTest {
 	@Test
+	fun valueArray() {
+		expression { stack(expression { "foo" }, expression { 10 }) }
+			.valueArray
+			.value
+			.run { this as Array<*> }
+			.toList()
+			.assertEqualTo(listOf("foo", 10))
+	}
+
+	@Test
+	fun arrayAt() {
+		expression { arrayOf("foo", 10) }
+			.arrayAt(expression { 0 })
+			.value
+			.assertEqualTo("foo")
+	}
+
+	@Test
+	fun arrayValue() {
+		expression { arrayOf("foo", 10) }
+			.arrayValue
+			.value
+			.assertEqualTo(stack(expression { "foo" }, expression { 10 }))
+	}
+
+	// === Reflection ===
+
+	@Test
 	fun stringClass() {
 		expression { "java.lang.String" }
 			.stringClass
