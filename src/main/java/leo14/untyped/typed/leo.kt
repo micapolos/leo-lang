@@ -41,7 +41,7 @@ fun LeoParent?.leo(string: String): Leo =
 							rhsLeo.resolver.typed
 								.let { rhsTyped ->
 									when (rhsTyped.type) {
-										thunk(value(textName)) ->
+										textType ->
 											copy(resolver = resolver.copy(typed = string.plus(rhsTyped.value.asString).typed))
 										else -> writeFallback(begin)
 									}
@@ -63,7 +63,7 @@ fun LeoParent?.leo(number: Number): Leo =
 						parent(begin) { rhsLeo ->
 							rhsLeo.resolver.typed.let { rhsTyped ->
 								when (rhsTyped.type) {
-									thunk(value(numberName)) ->
+									numberType ->
 										copy(
 											resolver = resolver.copy(
 												typed = number.plus(rhsTyped.value.asNumber).typed))
@@ -75,7 +75,7 @@ fun LeoParent?.leo(number: Number): Leo =
 						parent(begin) { rhsLeo ->
 							rhsLeo.resolver.typed.let { rhsTyped ->
 								when (rhsTyped.type) {
-									thunk(value(numberName)) ->
+									numberType ->
 										copy(
 											resolver = resolver.copy(
 												typed = number.minus(rhsTyped.value.asNumber).typed))
@@ -87,7 +87,7 @@ fun LeoParent?.leo(number: Number): Leo =
 						parent(begin) { rhsLeo ->
 							rhsLeo.resolver.typed.let { rhsTyped ->
 								when (rhsTyped.type) {
-									thunk(value(numberName)) ->
+									numberType ->
 										copy(
 											resolver = resolver.copy(
 												typed = number.times(rhsTyped.value.asNumber).typed))
@@ -138,3 +138,6 @@ fun Leo.writeFallback(literal: Literal): Leo =
 			resolver.typed.plus(literal),
 			{ begin -> writeFallback(begin) },
 			{ literal -> writeFallback(literal) }))
+
+fun Leo.resolveIf(type: Thunk, fn: Value.(Value) -> Typed): Leo =
+	TODO()

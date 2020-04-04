@@ -48,4 +48,11 @@ class LeoTest {
 			.eval
 			.assertEqualTo(leo(6))
 	}
+
+	@Test
+	fun deepNumbers() {
+		leo(2, "plus"(3, "times"(4)))
+			.eval
+			.assertEqualTo(leo(14))
+	}
 }
