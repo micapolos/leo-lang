@@ -28,6 +28,8 @@ val intMinusInt = intOp2(Int::minus)
 val intTimesInt = intOp2(Int::times)
 val intString = fn { int -> int.toString() }
 
+val doubleString = fn { double -> double.toString() }
+
 val stringLength = fn { string -> string.asString.length }
 val stringPlusString = fn { s1 -> fn { s2 -> s1.asString + s2.asString } }
 
