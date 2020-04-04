@@ -15,3 +15,5 @@ val compiledType = type(thunk(value(compiledName)))
 
 fun Type.append(begin: Begin, type: Type) =
 	type(thunk.plus(begin.string lineTo type.thunk))
+
+val Type.isText get() = this == textType

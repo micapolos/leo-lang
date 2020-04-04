@@ -39,7 +39,7 @@ val Typed.script: Script
 				script(literal(value.asString))
 			}
 			?: type.thunk.match(compiledName) {
-				value.asCompiled.type.script
+				value.asCompiled.type.thunk.script
 			}
 			?: error("unknown type")
 

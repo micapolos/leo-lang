@@ -18,6 +18,7 @@ val secondOfTwo = fn { secondOfTwo -> fn { fn { forSecond -> forSecond(secondOfT
 val Value.asBoolean get() = (this as Boolean)
 val Value.asString get() = (this as String)
 val Value.asInt get() = (this as Int)
+val Value.asDouble get() = (this as Double)
 val Value.asList get() = (this as List<Value>)
 val Value.asF get() = (this as Fn)
 
