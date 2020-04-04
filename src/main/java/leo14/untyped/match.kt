@@ -69,6 +69,15 @@ fun <R> Thunk.matchPostfix(name: String, fn: (Thunk) -> R) =
 		}
 	}
 
+fun <R> Thunk.match(name: String, fn: () -> R): R? =
+	matchInfix(name) { lhs, rhs ->
+		lhs.matchEmpty {
+			rhs.matchEmpty {
+				fn()
+			}
+		}
+	}
+
 fun <R> Sequence.matchInfix(name: String, fn: (Thunk, Thunk) -> R) =
 	lastLine.match(name) { rhs ->
 		fn(previousThunk, rhs)

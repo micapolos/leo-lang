@@ -869,7 +869,9 @@ class EvalTest {
 	@Test
 	fun scriptText() {
 		leo(1, "plus"("2"), "script"(), "text"())
-			.assertEvalsTo(leo("1.plus \"2\""))
+			.assertEvalsTo(
+				if (useDots) leo("1.plus \"2\"")
+				else leo("1\nplus \"2\""))
 	}
 
 	@Test

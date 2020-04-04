@@ -30,30 +30,69 @@ class DottedTest {
 			"plus"("d"()))
 			.leoString
 			.assertEqualTo(
-				linesString(
-					"circle",
-					"  radius 10",
-					"  center point",
-					"    x 20",
-					"    y 20",
-					"center.point.x.number",
-					"plus 30.times 40",
-					"numbers",
-					"  10",
-					"  20",
-					"  30",
-					"names foo.bar.zoo",
-					"mixed",
-					"  10.foo.bar",
-					"  20.bar",
-					"it 123.native.string",
-					"sequence",
-					"  1",
-					"  plus 2",
-					"  plus 3",
-					"a.b",
-					"plus c",
-					"plus d"))
+				if (useDots)
+					linesString(
+						"circle",
+						"  radius 10",
+						"  center point",
+						"    x 20",
+						"    y 20",
+						"center.point.x.number",
+						"plus 30.times 40",
+						"numbers",
+						"  10",
+						"  20",
+						"  30",
+						"names foo.bar.zoo",
+						"mixed",
+						"  10.foo.bar",
+						"  20.bar",
+						"it 123.native.string",
+						"sequence",
+						"  1",
+						"  plus 2",
+						"  plus 3",
+						"a.b",
+						"plus c",
+						"plus d")
+				else "circle\n" +
+					"  radius 10\n" +
+					"  center point\n" +
+					"    x 20\n" +
+					"    y 20\n" +
+					"center\n" +
+					"point\n" +
+					"x\n" +
+					"number\n" +
+					"plus\n" +
+					"  30\n" +
+					"  times 40\n" +
+					"numbers\n" +
+					"  10\n" +
+					"  20\n" +
+					"  30\n" +
+					"names\n" +
+					"  foo\n" +
+					"  bar\n" +
+					"  zoo\n" +
+					"mixed\n" +
+					"  10\n" +
+					"  foo\n" +
+					"  bar\n" +
+					"  20\n" +
+					"  bar\n" +
+					"it\n" +
+					"  123\n" +
+					"  native\n" +
+					"  string\n" +
+					"sequence\n" +
+					"  1\n" +
+					"  plus 2\n" +
+					"  plus 3\n" +
+					"a\n" +
+					"b\n" +
+					"plus c\n" +
+					"plus d")
 	}
 
 	@Test
@@ -102,8 +141,7 @@ class DottedTest {
 			.end
 			.leoString
 			.assertEqualTo(
-				linesString(
-					"10.inc",
-					""))
+				if (useDots) linesString("10.inc", "")
+				else linesString("10", "inc", ""))
 	}
 }

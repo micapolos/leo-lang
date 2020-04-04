@@ -3,6 +3,7 @@ package leo14.lambda.runtime.typed
 import leo.base.println
 import leo14.lambda.runtime.*
 
+val nil = "nil"
 val int = "int"
 val double = "double"
 val string = "string"
@@ -19,6 +20,7 @@ class TypeId(val string: String) {
 	override fun toString() = string
 }
 
+val typedNil = typed(nil) { null }
 fun typed(i: Int) = typed(int) { i }
 fun typed(d: Double) = typed(double) { d }
 fun typed(s: String) = typed(string) { s }

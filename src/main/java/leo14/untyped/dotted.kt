@@ -3,7 +3,7 @@ package leo14.untyped
 import leo.base.*
 import leo14.*
 
-val givenDot = false
+val useDots = false
 
 val Script.leoString
 	get() =
@@ -149,14 +149,14 @@ val ScriptLink.isDottableNonTail: Boolean
 
 val Script.isDottableLhs: Boolean
 	get() =
-		when (this) {
+		useDots && when (this) {
 			is UnitScript -> false
 			is LinkScript -> link.isDottableLhs
 		}
 
 val ScriptLink.isDottableLhs: Boolean
 	get() =
-		line.isSimple
+		useDots && line.isSimple
 
 val ScriptLine.isDottableRhs: Boolean
 	get() =
