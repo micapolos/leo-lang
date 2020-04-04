@@ -20,7 +20,7 @@ class LibTest {
 
 	@Test
 	fun pair_() {
-		val pair = pair(string, int)
+		val pair = pair("person", string, int)
 		val person_t = pair.type
 		val person = pair.make
 		val personName = pair.first
@@ -150,5 +150,18 @@ class LibTest {
 				.dot(intString))
 			.value
 			.assertEqualTo("Magic number: 10013")
+	}
+
+	@Test
+	fun alias() {
+		val radius = alias("radius", double)
+		radius.make.type.assertEqualTo(double to radius.type)
+		radius.get.type.assertEqualTo(radius.type to double)
+		typed(123.0).dot(radius.make).type.assertEqualTo(radius.type)
+		typed(123.0).dot(radius.make).dot(radius.get).type.assertEqualTo(double)
+		assertFails { typed(123).dot(radius.make) }
+		assertFails { typed(123).dot(radius.get) }
+		typed(123.0).dot(radius.make).value.assertEqualTo(123.0)
+		typed(123.0).dot(radius.make).dot(radius.get).value.assertEqualTo(123.0)
 	}
 }

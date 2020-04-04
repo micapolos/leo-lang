@@ -13,9 +13,10 @@ data class ListT(val type: Type) {
 
 data class Pair(val type: Type, val make: Typed, val first: Typed, val second: Typed)
 data class Either(val type: Type, val makeFirst: Typed, val makeSecond: Typed, val switch: (Type) -> Typed)
+data class Alias(val type: Type, val make: Typed, val get: Typed)
 
-class Id(val name: String) {
-	override fun toString() = name
+class TypeId(val string: String) {
+	override fun toString() = string
 }
 
 fun typed(i: Int) = typed(int) { i }
@@ -30,8 +31,8 @@ fun id(type: Type) = fn(type) { it }
 fun first(t1: Type, t2: Type) = fn(t1) { v1 -> fn(t2) { v2 -> v1 } }
 fun second(t1: Type, t2: Type) = fn(t1) { v1 -> fn(t2) { v2 -> v2 } }
 
-fun pair(t1: Type, t2: Type) =
-	Object().let { type ->
+fun pair(name: String, t1: Type, t2: Type) =
+	TypeId(name).let { type ->
 		Pair(
 			type = type,
 			make = typed(t1 to (t2 to type)) { pair },
@@ -48,7 +49,7 @@ fun pair(t1: Type, t2: Type) =
 	}
 
 fun either(name: String, t1: Type, t2: Type) =
-	Id(name).let { type ->
+	TypeId(name).let { type ->
 		Either(
 			type = type,
 			makeFirst = typed(t1 to type) { firstOfTwo },
@@ -57,6 +58,14 @@ fun either(name: String, t1: Type, t2: Type) =
 				typed(type to ((t1 to result) to ((t2 to result) to result))) { id }
 			}
 		)
+	}
+
+fun alias(name: String, aliased: Type) =
+	TypeId(name).let { type ->
+		Alias(
+			type,
+			typed(aliased to type) { id },
+			typed(type to aliased) { id })
 	}
 
 fun intOp(value: Value) = typed(int to int) { value }
@@ -73,7 +82,7 @@ val doubleString = typed(double to string) { leo14.lambda.runtime.doubleString }
 val stringLength = typed(string to int) { leo14.lambda.runtime.stringLength }
 val stringPlusString = typed(string to (string to string)) { leo14.lambda.runtime.stringPlusString }
 
-fun listMap(from: Value, to: Value) = typed(ListT(from) to ((from to to) to ListT(to))) { leo14.lambda.runtime.listMap }
+fun listMap(from: Value, to: Value) = typed(ListT(from) to ((from to to) to ListT(to))) { listMap }
 
 fun Typed.dot(fn: Typed): Typed = fn(this)
 

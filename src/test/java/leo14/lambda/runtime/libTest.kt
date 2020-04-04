@@ -10,6 +10,11 @@ class LibTest {
 	}
 
 	@Test
+	fun const() {
+		const(123)("foo").assertEqualTo(123)
+	}
+
+	@Test
 	fun which() {
 		first(1)(2).assertEqualTo(1)
 		second(1)(2).assertEqualTo(2)
@@ -64,5 +69,20 @@ class LibTest {
 	@Test
 	fun dot_() {
 		5.dot(intMinusInt)(3).assertEqualTo(2)
+	}
+
+	@Test
+	fun append() {
+		nil
+			.dot(append, 1)
+			.dot(append, 2)
+			.dot(append, 3)
+			.dot(cdr)
+			.dot(cdr)
+			.dot(car)
+			.assertEqualTo(1)
+
+		nil.dot(ifNilElse, const("nil"), intString).assertEqualTo("nil")
+		123.dot(ifNilElse, const("nil"), intString).assertEqualTo("123")
 	}
 }

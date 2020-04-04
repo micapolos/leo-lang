@@ -15,6 +15,7 @@ val pair = fn { first -> fn { second -> fn { which -> which(first)(second) } } }
 val firstOfTwo = fn { firstOfTwo -> fn { forFirst -> fn { forFirst(firstOfTwo) } } }
 val secondOfTwo = fn { secondOfTwo -> fn { fn { forSecond -> forSecond(secondOfTwo) } } }
 
+val Value.asBoolean get() = (this as Boolean)
 val Value.asString get() = (this as String)
 val Value.asInt get() = (this as Int)
 val Value.asList get() = (this as List<Value>)
@@ -35,4 +36,14 @@ val stringPlusString = fn { s1 -> fn { s2 -> s1.asString + s2.asString } }
 
 val listMap = fn { list -> fn { f -> list.asList.map(f.asF) } }
 
+val append = pair
+val nil: Value = null
+val car = fn { it(second) }
+val cdr = fn { it(first) }
+val ifNilElse = fn { list -> fn { forNil -> fn { forLink -> (if (list == null) forNil else forLink)(list) } } }
+
 fun Value.dot(fn: Value): Value = fn(this)
+fun Value.dot(fn: Value, value: Value): Value = dot(fn)(value)
+fun Value.dot(fn: Value, value: Value, value2: Value): Value = dot(fn, value)(value2)
+
+val const = fn { value -> fn { value } }
