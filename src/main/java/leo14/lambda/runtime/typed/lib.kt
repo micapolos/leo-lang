@@ -54,15 +54,7 @@ fun either(name: String, t1: Type, t2: Type) =
 			makeFirst = typed(t1 to type) { firstOfTwo },
 			makeSecond = typed(t2 to type) { secondOfTwo },
 			switch = { result ->
-				typed(type to ((t1 to type) to ((t2 to type) to result))) {
-					valueFn { either ->
-						valueFn { f1 ->
-							valueFn { f2 ->
-								either(f1)(f2)(id)
-							}
-						}
-					}
-				}
+				typed(type to ((t1 to result) to ((t2 to result) to result))) { id }
 			}
 		)
 	}

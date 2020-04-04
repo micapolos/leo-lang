@@ -40,15 +40,40 @@ class LibTest {
 	@Test
 	fun either_() {
 		val either = either("number", int, double)
-		either.makeFirst.type.assertEqualTo(int to either.type)
-		either.makeSecond.type.assertEqualTo(double to either.type)
-		either.makeFirst(typed(123)).type.assertEqualTo(either.type)
-		either.makeSecond(typed(123.0)).type.assertEqualTo(either.type)
-		assertFails { either.makeFirst(typed(123.0)) }
-		assertFails { either.makeSecond(typed(123)) }
-//		either.makeFirst(typed(123))
-//			.dot(either.switch(string))
-//		(typed(234)).type.assertEqualTo(string)
+		val number = either.type
+		val intNumber = either.makeFirst
+		val doubleNumber = either.makeSecond
+		val numberSwitch = either.switch
+		intNumber.type.assertEqualTo(int to number)
+		doubleNumber.type.assertEqualTo(double to number)
+		intNumber(typed(123)).type.assertEqualTo(number)
+		doubleNumber(typed(123.3)).type.assertEqualTo(number)
+		assertFails { intNumber(typed(123.3)) }
+		assertFails { doubleNumber(typed(123)) }
+		numberSwitch(string)
+			.invoke(intNumber(typed(123)))
+			.invoke(intString)
+			.invoke(doubleString)
+			.type
+			.assertEqualTo(string)
+		numberSwitch(string)
+			.invoke(intNumber(typed(123)))
+			.invoke(intString)
+			.invoke(doubleString)
+			.value
+			.assertEqualTo("123")
+		numberSwitch(string)
+			.invoke(doubleNumber(typed(123.3)))
+			.invoke(intString)
+			.invoke(doubleString)
+			.value
+			.assertEqualTo("123.3")
+		doubleNumber(typed(123.3))
+			.dot(numberSwitch(string))
+			.invoke(intString)
+			.invoke(doubleString)
+			.value
+			.assertEqualTo("123.3")
 	}
 
 	@Test
