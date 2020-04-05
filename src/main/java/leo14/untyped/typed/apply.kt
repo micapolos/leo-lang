@@ -3,10 +3,13 @@ package leo14.untyped.typed
 import leo14.*
 import leo14.Number
 import leo14.lambda.runtime.Value
+import leo14.lambda.runtime.invoke
 import leo14.untyped.minusName
 import leo14.untyped.plusName
 import leo14.untyped.timesName
 import leo14.untyped.typedName
+
+typealias Fn = (Value) -> Value
 
 fun Value.valueApply(value: Value): Value =
 	when (value) {
@@ -94,6 +97,7 @@ fun Value.valueApplyNormalized(value: Value): Value =
 					}
 				else -> valueAppend(value)
 			}
+		is Function<*> -> invoke(value)
 		is Typed -> apply(value.valueTyped)
 		else -> valueAppend(value)
 	}

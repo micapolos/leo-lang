@@ -7,6 +7,12 @@ import kotlin.test.Test
 
 class TypedTest {
 	@Test
+	fun selfTyped() {
+		1.valueSelfTyped.typedAssertEqualTo(typed(selfType) { 1 })
+		"foo".valueSelfTyped.typedAssertEqualTo(typed(selfType) { "foo" })
+	}
+
+	@Test
 	fun typed() {
 		"foo"(2.typed).typed.run {
 			type.assertEqualTo("foo"(intName))

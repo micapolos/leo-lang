@@ -5,19 +5,23 @@ import leo14.Number
 import leo14.lambda.runtime.Value
 import leo14.untyped.*
 
-data class Typed(val type: Value, val valueFn: () -> Value)
+typealias ValueFn = () -> Value
+
+fun valueFn(fn: ValueFn) = fn
+
+data class Typed(val type: Value, val valueFn: ValueFn)
 
 fun typed(type: Value, valueFn: () -> Value) = Typed(type, valueFn)
 val Typed.value get() = valueFn()
 val Value.typedValue get() = (this as Typed).value
 
-val Value.valueSelfTyped get() = typed(this) { this }
+val Value.valueSelfTyped get() = typed(selfType) { this }
 val nullTyped = null.valueSelfTyped
-val String.typed get() = typed(textName) { this }
-val Boolean.typed get() = typed(booleanName) { this }
-val Int.typed get() = typed(intName) { this }
-val Number.typed get() = typed(numberName) { this }
-val Value.nativeTyped get() = typed(nativeName) { this }
+val String.typed get() = typed(textType) { this }
+val Boolean.typed get() = typed(booleanType) { this }
+val Int.typed get() = typed(intType) { this }
+val Number.typed get() = typed(numberType) { this }
+val Value.nativeTyped get() = typed(nativeType) { this }
 
 val Field.typed
 	get() =
@@ -133,7 +137,7 @@ fun Typed.apply(rhs: Typed): Typed =
 	}
 
 fun Typed.append(rhs: Typed): Typed =
-	typed(type.valueAppend(rhs.type)) { value.valueAppend(value) }
+	typed(type.valueAppend(rhs.type)) { value.valueAppend(rhs.value) }
 
 fun Value.valueTypedFunction(fn: (Value) -> Value): Typed {
 	var binding: Value = nullValue
