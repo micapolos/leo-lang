@@ -372,7 +372,8 @@ fun leo(vararg lines: Any): Script =
 	script(*lines.map { it.anyLine }.toTypedArray())
 
 operator fun String.invoke(vararg lines: Any): ScriptLine =
-	this lineTo leo(*lines)
+	if (lines.size == 1 && lines[0] is Script) this lineTo (lines[0] as Script)
+	else this lineTo leo(*lines)
 
 val Any.anyLine: ScriptLine
 	get() =
