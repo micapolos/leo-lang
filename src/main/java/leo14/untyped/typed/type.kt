@@ -17,7 +17,8 @@ fun Typed.cast(targetType: Value): Typed? =
 	else castValueFn(targetType)?.let { typed(targetType, it) }
 
 fun Typed.castValueFn(targetType: Value): ValueFn? =
-	when (targetType) {
+	if (type == targetType) valueFn
+	else when (targetType) {
 		intType ->
 			when (type) {
 				selfType ->
