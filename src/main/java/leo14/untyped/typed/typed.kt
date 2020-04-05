@@ -15,7 +15,7 @@ fun typed(type: Value, valueFn: () -> Value) = Typed(type, valueFn)
 val Typed.value get() = valueFn()
 val Value.typedValue get() = (this as Typed).value
 
-val Value.valueSelfTyped get() = typed(selfType) { this }
+val Value.valueSelfTyped get() = typed(self(this)) { this }
 val nullTyped = null.valueSelfTyped
 val String.typed get() = typed(textType) { this }
 val Boolean.typed get() = typed(booleanType) { this }

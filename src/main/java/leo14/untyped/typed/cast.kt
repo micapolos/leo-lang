@@ -5,7 +5,6 @@ import leo14.lambda.runtime.Value
 import leo14.number
 import leo14.untyped.*
 
-val selfType: Value = selfName
 val textType: Value = textName
 val intType: Value = intName
 val booleanType: Value = booleanName
@@ -21,8 +20,8 @@ fun Typed.castValueFn(targetType: Value): ValueFn? =
 	else when (targetType) {
 		intType ->
 			when (type) {
-				selfType ->
-					when (value) {
+				is Self ->
+					when (type.value) {
 						is Int -> valueFn
 						else -> null
 					}
@@ -30,8 +29,8 @@ fun Typed.castValueFn(targetType: Value): ValueFn? =
 			}
 		textType ->
 			when (type) {
-				selfType ->
-					when (value) {
+				is Self ->
+					when (type.value) {
 						is String -> valueFn
 						else -> null
 					}
@@ -39,9 +38,8 @@ fun Typed.castValueFn(targetType: Value): ValueFn? =
 			}
 		numberType ->
 			when (type) {
-				selfType ->
-					// TODO: Do we want this flexibility?
-					value.let { value ->
+				is Self ->
+					type.value.let { value ->
 						when (value) {
 							is Int -> number(value).let { valueFn { it } }
 							is Number -> valueFn
@@ -52,8 +50,8 @@ fun Typed.castValueFn(targetType: Value): ValueFn? =
 			}
 		booleanType ->
 			when (type) {
-				selfType ->
-					when (value) {
+				is Self ->
+					when (type.value) {
 						is Boolean -> valueFn
 						else -> null
 					}

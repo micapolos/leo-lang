@@ -8,8 +8,8 @@ import kotlin.test.Test
 class TypedTest {
 	@Test
 	fun selfTyped() {
-		1.valueSelfTyped.typedAssertEqualTo(typed(selfType) { 1 })
-		"foo".valueSelfTyped.typedAssertEqualTo(typed(selfType) { "foo" })
+		1.valueSelfTyped.typedAssertEqualTo(typed(self(1)) { 1 })
+		"foo".valueSelfTyped.typedAssertEqualTo(typed(self("foo")) { "foo" })
 	}
 
 	@Test
