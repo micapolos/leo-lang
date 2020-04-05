@@ -8,6 +8,8 @@ import leo14.untyped.script
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 
+val nullValue: Value = null
+
 val Value.valueScript: Script
 	get() =
 		when (this) {
@@ -18,7 +20,7 @@ val Value.valueScript: Script
 			is Method -> leo("method"(nativeScript))
 			is Constructor<*> -> leo("constructor"(nativeScript))
 			is Class<*> -> leo("class"(nativeScript))
-			is Thunk -> script
+			is Thunk -> script // TODO: NativeValue should fall back to this method.
 			else -> nativeScript
 		}
 
