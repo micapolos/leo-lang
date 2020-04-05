@@ -1,8 +1,9 @@
 package leo14.untyped.typed
 
-import leo.base.ifOrNull
-import leo14.lambda.runtime.Value
+sealed class Definition
 
-data class Definition(val type: Value, val value: Value)
+data class BindingDefinition(val binding: Binding) : Definition()
+data class RuleDefinition(val rule: Rule) : Definition()
 
-fun Definition.atType(t: Value): Value = ifOrNull(type == t) { value }
+fun definition(binding: Binding): Definition = BindingDefinition(binding)
+fun definition(rule: Rule): Definition = RuleDefinition(rule)

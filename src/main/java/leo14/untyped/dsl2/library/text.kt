@@ -51,6 +51,20 @@ val text = library_ {
 			}
 		}
 	}
+
+	text
+	slice {
+		from { number }
+		to { number }
+	}
+	does {
+		text.string.native
+		invoke {
+			text("substring")
+			it { slice.from.number.int.native }
+			it { slice.to.number.int.native }
+		}.text
+	}
 }
 
 fun main() = run_ { list(); text() }

@@ -22,23 +22,34 @@ fun safeNative(fn: () -> Any?): Native =
 		native(e)
 	}
 
+fun safeResolve(fn: () -> Thunk?): Thunk? =
+	try {
+		fn()
+	} catch (e: RuntimeException) {
+		thunk(value(line(native(e))))
+	} catch (e: Exception) {
+		thunk(value(line(native(e))))
+	}
+
 val Sequence.resolveNative: Thunk?
 	get() =
-		null
-			?: resolveNativeClass
-			?: resolveNativeNew
-			?: resolveNativeString
-			?: resolveNativeInt
-			?: resolveNativeLong
-			?: resolveNativeFloat
-			?: resolveNativeDouble
-			?: resolveNativeInvoke
-			?: resolveNativeStaticInvoke
-			?: resolveNativeText
-			?: resolveNativeNumber
-			?: resolveNativeGet
-			?: resolveNativeStaticGet
-			?: resolveNativeList
+		safeResolve {
+			null
+				?: resolveNativeClass
+				?: resolveNativeNew
+				?: resolveNativeString
+				?: resolveNativeInt
+				?: resolveNativeLong
+				?: resolveNativeFloat
+				?: resolveNativeDouble
+				?: resolveNativeInvoke
+				?: resolveNativeStaticInvoke
+				?: resolveNativeText
+				?: resolveNativeNumber
+				?: resolveNativeGet
+				?: resolveNativeStaticGet
+				?: resolveNativeList
+		}
 
 val Sequence.resolveNativeString: Thunk?
 	get() =
@@ -92,11 +103,7 @@ val Sequence.resolveNativeClass: Thunk?
 	get() =
 		matchPrefix(nativeName, className) { rhs ->
 			rhs.matchText { text ->
-				try {
-					thunk(value(line(native(javaClass.classLoader.loadClass(text)))))
-				} catch (x: ClassNotFoundException) {
-					null
-				}
+				thunk(value(line(safeNative { javaClass.classLoader.loadClass(text) })))
 			}
 		}
 

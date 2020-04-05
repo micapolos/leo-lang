@@ -9,6 +9,7 @@ val prelude = library_ {
 	list()
 	text()
 	system()
+	url()
 }
 
 fun main() = run_(prelude)
