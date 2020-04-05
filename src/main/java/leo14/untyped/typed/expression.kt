@@ -1,85 +1,69 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package leo14.untyped.typed
 
 import leo13.*
 import leo13.base.negate
-import leo14.lambda.runtime.*
+import leo14.lambda.runtime.Value
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
-typealias ValueFn = () -> Value
+object Expression
 
-data class Expression(val valueFn: ValueFn) {
-	override fun equals(other: Any?): Boolean =
-		this === other || other is Expression && value == other.value
-}
+val classLoader = Expression::class.java.classLoader
 
-fun expression(valueFn: ValueFn) = Expression(valueFn)
+val Value.booleanNegate get() = (this as Boolean).negate
+fun Value.booleanAndBoolean(rhs: Value) = (this as Boolean) and (rhs as Boolean)
+fun Value.booleanOrBoolean(rhs: Value) = (this as Boolean) or (rhs as Boolean)
+fun Value.booleanXorBoolean(rhs: Value) = (this as Boolean) xor (rhs as Boolean)
 
-val Expression.value get() = valueFn()
-val Expression.boolean get() = value.asBoolean
-val Expression.string get() = value.asString
-val Expression.int get() = value.asInt
-val Expression.number get() = value.asNumber
-val Expression.array get() = value as Array<*>
-val Expression.function get() = value.asF
-val Expression.class_ get() = value as Class<*>
-val Expression.method get() = value as Method
-val Expression.constructor get() = value as Constructor<*>
-val Expression.field get() = value as Field
-val Expression.stack get() = value as Stack<Expression>
+val Value.intUnaryMinus get() = -(this as Int)
+fun Value.intPlusInt(rhs: Value) = (this as Int) + (rhs as Int)
+fun Value.intMinusInt(rhs: Value) = (this as Int) - (rhs as Int)
+fun Value.intTimesInt(rhs: Value) = (this as Int) * (rhs as Int)
+val Value.intString get() = (this as Int).toString()
 
-fun Expression.eq(rhs: Expression) = expression { value == rhs.value }
+fun Value.stringPlusString(rhs: Value) = (this as String) + (rhs as String)
+val Value.stringLength get() = (this as String).length
 
-val Expression.booleanNegate get() = expression { boolean.negate }
-fun Expression.booleanAndBoolean(rhs: Expression) = expression { boolean and rhs.boolean }
-fun Expression.booleanOrBoolean(rhs: Expression) = expression { boolean or rhs.boolean }
-fun Expression.booleanXorBoolean(rhs: Expression) = expression { boolean xor rhs.boolean }
-
-val Expression.intUnaryMinus get() = expression { int.unaryMinus() }
-fun Expression.intPlusInt(rhs: Expression) = expression { int + rhs.int }
-fun Expression.intMinusInt(rhs: Expression) = expression { int - rhs.int }
-fun Expression.intTimesInt(rhs: Expression) = expression { int * rhs.int }
-val Expression.intString get() = expression { int.toString() }
-
-fun Expression.stringPlusString(rhs: Expression) = expression { string + rhs.string }
-val Expression.stringLength get() = expression { string.length }
-
-fun Expression.functionInvokeValue(rhs: Expression) = expression { function(rhs.value) }
+fun Value.functionInvoke(rhs: Value) = (this as (Value) -> Value)(rhs)
 
 // === Arrays ===
 
-val Expression.valueArray
+val Value.valueArray
 	get() =
-		expression { stack.map { value }.array }
+		(this as Stack<Value>).array
 
-fun Expression.arrayAt(rhs: Expression) =
-	expression { array[rhs.int] }
+fun Value.arrayAt(rhs: Value) =
+	(this as Array<*>)[rhs as Int]
 
-val Expression.arrayValue
+val Value.arrayValue
 	get() =
-		expression { stack(*array).map { expression { this } } }
+		stack(*(this as Array<*>))
 
 // === Reflection ===
 
-val Expression.stringClass
+val Value.stringClass
 	get() =
-		expression { Expression::class.java.classLoader.loadClass(string) }
+		classLoader.loadClass(this as String)
 
-fun Expression.classConstructor(rhs: Expression) =
-	expression { class_.getConstructor(*rhs.stack.map { class_ }.array) }
+fun Value.classConstructor(rhs: Value) =
+	(this as Class<*>).getConstructor(*(rhs as Stack<Value>).map { this as Class<*> }.array)
 
-fun Expression.classMethod(rhs: Expression) =
-	expression { class_.getMethod(rhs.stack.link.stack.top.string, *rhs.stack.top.stack.map { class_ }.array) }
+fun Value.classMethod(rhs: Value) =
+	(this as Class<*>).getMethod(
+		(rhs as Stack<Value>).link.stack.top as String,
+		*(rhs.top as Stack<Value>).map { this as Class<*> }.array)
 
-fun Expression.classField(rhs: Expression) =
-	expression { class_.getField(rhs.string) }
+fun Value.classField(rhs: Value) =
+	(this as Class<*>).getField(rhs as String)
 
-fun Expression.constructorInvoke(rhs: Expression) =
-	expression { constructor.newInstance(*rhs.stack.map { value }.array) }
+fun Value.constructorInvoke(rhs: Value) =
+	(this as Constructor<Value>).newInstance(*(rhs as Stack<Value>).array)
 
-fun Expression.methodInvoke(rhs: Expression) =
-	expression { method.invoke(rhs.stack.link.stack.top.value, *rhs.stack.top.stack.map { value }.array) }
+fun Value.methodInvoke(rhs: Value) =
+	(this as Method).invoke((rhs as Stack<Value>).link.stack.top, *(rhs.top as Stack<Value>).array)
 
-fun Expression.fieldGet(rhs: Expression) =
-	expression { field.get(rhs.value) }
+fun Value.fieldGet(rhs: Value) =
+	(this as Field).get(rhs)

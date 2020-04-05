@@ -12,12 +12,10 @@ data class Typed(val type: Type, val value: Any?)
 fun typed(type: Type, value: Any?) = Typed(type, value)
 
 val Any?.asNumber get() = this as Number
-val Any?.asCompiled get() = this as Compiled
 
 val emptyTyped = typed(emptyType, null)
 val String.typed get() = typed(textType, this)
 val Number.typed get() = typed(numberType, this)
-val Compiled.typed get() = typed(compiledType, this)
 
 val Literal.typed
 	get() =
@@ -37,9 +35,6 @@ val Typed.script: Script
 			}
 			?: type.thunk.match(textName) {
 				script(literal(value.asString))
-			}
-			?: type.thunk.match(compiledName) {
-				value.asCompiled.type.thunk.script
 			}
 			?: error("unknown type")
 
