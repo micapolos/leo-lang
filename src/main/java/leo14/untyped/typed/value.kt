@@ -2,6 +2,7 @@ package leo14.untyped.typed
 
 import leo14.*
 import leo14.Number
+import leo14.invoke
 import leo14.lambda.runtime.Value
 import leo14.untyped.Thunk
 import leo14.untyped.script
@@ -20,7 +21,8 @@ val Value.valueScript: Script
 			is Method -> leo("method"(nativeScript))
 			is Constructor<*> -> leo("constructor"(nativeScript))
 			is Class<*> -> leo("class"(nativeScript))
-			is Thunk -> script // TODO: NativeValue should fall back to this method.
+			is Field -> leo(name(rhs.valueScript))
+			is Thunk -> script
 			else -> nativeScript
 		}
 

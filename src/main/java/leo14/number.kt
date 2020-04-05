@@ -15,6 +15,14 @@ fun number(int: Int): Number = Number(BigDecimal.valueOf(int.toLong()))
 fun number(long: Long): Number = Number(BigDecimal.valueOf(long))
 fun number(double: Double): Number = Number(BigDecimal.valueOf(double))
 
+val String.numberOrNull: Number?
+	get() =
+		try {
+			number(BigDecimal(this))
+		} catch (e: NumberFormatException) {
+			null
+		}
+
 val Number.code
 	get() =
 		toString()

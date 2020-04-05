@@ -1,9 +1,12 @@
 package leo14.untyped.typed
 
+import leo14.*
+import leo14.Number
 import leo14.lambda.runtime.Value
 import leo14.untyped.minusName
 import leo14.untyped.plusName
 import leo14.untyped.timesName
+import leo14.untyped.typedName
 
 fun Value.valueApply(value: Value): Value =
 	when (value) {
@@ -23,9 +26,11 @@ fun Value.valueApplyNormalized(value: Value): Value =
 					when (value.name) {
 						minusName ->
 							when (value.rhs) {
-								is Int -> value.rhs.intUnaryMinus
+								is Int -> -value.rhs
+								is Number -> -value.rhs
 								else -> valueAppend(value)
 							}
+						typedName -> value.rhs.valueTyped
 						else -> valueAppend(value)
 					}
 				else -> valueAppend(value)
@@ -36,7 +41,7 @@ fun Value.valueApplyNormalized(value: Value): Value =
 					when (value.name) {
 						plusName ->
 							when (value.rhs) {
-								is String -> stringPlusString(value.rhs)
+								is String -> this + value.rhs
 								else -> valueAppend(value)
 							}
 						else -> valueAppend(value)
@@ -49,23 +54,47 @@ fun Value.valueApplyNormalized(value: Value): Value =
 					when (value.name) {
 						plusName ->
 							when (value.rhs) {
-								is Int -> intPlusInt(value.rhs)
+								is Int -> this + value.rhs
 								else -> valueAppend(value)
 							}
 						minusName ->
 							when (value.rhs) {
-								is Int -> intMinusInt(value.rhs)
+								is Int -> this - value.rhs
 								else -> valueAppend(value)
 							}
 						timesName ->
 							when (value.rhs) {
-								is Int -> intTimesInt(value.rhs)
+								is Int -> this * value.rhs
 								else -> valueAppend(value)
 							}
 						else -> valueAppend(value)
 					}
 				else -> valueAppend(value)
 			}
+		is Number ->
+			when (value) {
+				is Field ->
+					when (value.name) {
+						plusName ->
+							when (value.rhs) {
+								is Number -> this + value.rhs
+								else -> valueAppend(value)
+							}
+						minusName ->
+							when (value.rhs) {
+								is Number -> this - value.rhs
+								else -> valueAppend(value)
+							}
+						timesName ->
+							when (value.rhs) {
+								is Number -> this * value.rhs
+								else -> valueAppend(value)
+							}
+						else -> valueAppend(value)
+					}
+				else -> valueAppend(value)
+			}
+		is Typed -> apply(value.valueTyped)
 		else -> valueAppend(value)
 	}
 
