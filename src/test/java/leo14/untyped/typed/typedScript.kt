@@ -31,4 +31,19 @@ class TypedScriptTest {
 			.script(type, 2 indexed Point(10, 20))
 			.assertEqualTo(leo("point"("native"(Point(10, 20).toString()))))
 	}
+
+	@Test
+	fun structures() {
+		val type = emptyType
+			.plus("circle" fieldTo emptyType
+				.plus("radius" fieldTo emptyType.plus(numberTypeLine.choice))
+				.plus("center" fieldTo emptyType
+					.plus("point" fieldTo emptyType
+						.plus("x" fieldTo emptyType.plus(numberTypeLine.choice))
+						.plus("y" fieldTo emptyType.plus(numberTypeLine.choice)))))
+
+		empty.scope
+			.script(type, number(10) to (number(20) to number(30)))
+			.assertEqualTo(leo("circle"("radius"(10), "center"("point"("x"(20), "y"(30))))))
+	}
 }
