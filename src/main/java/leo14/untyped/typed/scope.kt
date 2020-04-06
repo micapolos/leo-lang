@@ -19,3 +19,6 @@ tailrec fun Scope.apply(typed: Typed): Typed? =
 
 fun Scope.applyValue(value: Value): Value? =
 	apply(value.valueSelfTyped)?.value?.the
+
+fun Scope.bindValue(value: Value): Scope =
+	TODO()
