@@ -1,13 +1,14 @@
 package leo14.untyped.typed
 
 import leo14.*
+import leo14.Number
 import leo14.lambda.runtime.Value
 import leo14.untyped.nativeName
 import leo14.fieldTo as scriptFieldTo
 
 fun Scope.script(type: Type, value: Value): Script =
 	when (type) {
-		is EmptyType -> script()
+		EmptyType -> script()
 		is LinkType -> script(scriptLink(type.link, value))
 	}
 
@@ -21,7 +22,7 @@ fun Scope.scriptLink(typeLink: TypeLink, value: Value): ScriptLink =
 
 fun Scope.scriptLine(choice: Choice, value: Value): ScriptLine =
 	when (choice) {
-		is EmptyChoice -> error("impossible")
+		EmptyChoice -> error("impossible")
 		is LinkChoice -> scriptLine(choice.link, value)
 	}
 
@@ -38,15 +39,23 @@ fun Scope.scriptLine(choiceLink: ChoiceLink, index: Int, value: Value): ScriptLi
 fun Scope.scriptLine(line: TypeLine, value: Value): ScriptLine =
 	when (line) {
 		is LiteralTypeLine -> scriptLine(line.literal, value)
-		is NativeTypeLine -> scriptLine(line.native, value)
 		is FieldTypeLine -> line(scriptField(line.field, value))
+		NativeTypeLine -> nativeScriptLine(value)
+		NumberTypeLine -> numberScriptLine(value)
+		TextTypeLine -> textScriptLine(value)
 	}
 
 fun Scope.scriptLine(literal: Literal, value: Value): ScriptLine =
 	line(literal)
 
-fun Scope.scriptLine(native: Native, value: Value): ScriptLine =
+fun Scope.nativeScriptLine(value: Value): ScriptLine =
 	nativeName lineTo script(literal(value.toString()))
+
+fun Scope.numberScriptLine(value: Value): ScriptLine =
+	line(literal(value as Number))
+
+fun Scope.textScriptLine(value: Value): ScriptLine =
+	line(literal(value as String))
 
 fun Scope.scriptField(field: TypeField, value: Value): ScriptField =
 	field.name scriptFieldTo script(field.rhs, value)

@@ -26,8 +26,10 @@ val TypeLine.isStatic: Boolean
 	get() =
 		when (this) {
 			is LiteralTypeLine -> true
-			is NativeTypeLine -> false
 			is FieldTypeLine -> field.isStatic
+			NumberTypeLine -> false
+			TextTypeLine -> false
+			NativeTypeLine -> false
 		}
 
 val TypeField.isStatic: Boolean
