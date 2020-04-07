@@ -1,17 +1,18 @@
 package leo14.untyped.typed
 
 import leo.base.assertEqualTo
-import leo14.invoke
-import leo14.leo
-import leo14.number
+import leo14.*
+import leo14.Number
 import kotlin.test.Test
 
 class ScopeTest {
 	@Test
 	fun apply() {
-		emptyScope.plus(definition(rule(intType, intType) { (it as Int).inc() }))
-			.apply(1.valueSelfTyped)
-			.typedAssertEqualTo(2.typed)
+		emptyScope
+			.plus(definition(rule(numberType2, numberType2) { (it as Number).plus(number(1)) }))
+			.apply(numberType2.compiled { number(10) })!!
+			.typed
+			.assertEqualTo(numberType2.with(number(11)))
 	}
 
 	@Test

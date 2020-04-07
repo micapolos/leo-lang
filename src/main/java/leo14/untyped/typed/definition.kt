@@ -11,7 +11,7 @@ data class RuleDefinition(val rule: Rule) : Definition()
 fun definition(binding: Binding): Definition = BindingDefinition(binding)
 fun definition(rule: Rule): Definition = RuleDefinition(rule)
 
-fun Definition.apply(typed: Typed): Typed? =
+fun Definition.apply(typed: Compiled): Compiled? =
 	when (this) {
 		is BindingDefinition -> binding.apply(typed)
 		is RuleDefinition -> rule.apply(typed)

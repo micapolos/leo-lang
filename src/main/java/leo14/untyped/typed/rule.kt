@@ -2,13 +2,13 @@ package leo14.untyped.typed
 
 import leo14.lambda.runtime.Value
 
-data class Rule(val fromType: Value, val toType: Value, val valueFn: Fn)
+data class Rule(val fromType: Type, val toType: Type, val valueFn: (Value) -> Value)
 
-fun rule(fromType: Value, toType: Value, fn: Fn) = Rule(fromType, toType, fn)
+fun rule(fromType: Type, toType: Type, fn: (Value) -> Value) = Rule(fromType, toType, fn)
 
-fun Rule.apply(typed: Typed): Typed? =
-	typed.castValueFn(fromType)?.let { castValueFn ->
-		typed(toType) {
-			valueFn(castValueFn.invoke())
+fun Rule.apply(typed: Compiled): Compiled? =
+	typed.as_(fromType)?.let { compiled ->
+		toType.compiled {
+			valueFn(compiled.value)
 		}
 	}

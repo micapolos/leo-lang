@@ -1,10 +1,8 @@
 package leo14.untyped.typed
 
 import leo.base.reverseStack
-import leo.base.the
 import leo13.fold
 import leo14.*
-import leo14.lambda.runtime.Value
 
 sealed class Scope
 object EmptyScope : Scope()
@@ -16,18 +14,11 @@ val ScopeLink.scope: Scope get() = LinkScope(this)
 infix fun Scope.linkTo(definition: Definition) = ScopeLink(this, definition)
 fun Scope.plus(definition: Definition): Scope = linkTo(definition).scope
 
-tailrec fun Scope.apply(typed: Typed): Typed? =
+tailrec fun Scope.apply(typed: Compiled): Compiled? =
 	when (this) {
 		is EmptyScope -> null
 		is LinkScope -> link.definition.apply(typed) ?: link.lhs.apply(typed)
 	}
-
-fun Scope.applyValue(value: Value): Value? =
-	apply(value.valueSelfTyped)?.value?.the
-
-fun Scope.bindValue(value: Value): Scope =
-	TODO()
-
 
 fun Scope.apply(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled =
 	if (rhs.isEmpty) applyNormalized(rhs, begin, lhs)
