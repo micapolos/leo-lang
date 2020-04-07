@@ -17,6 +17,17 @@ val TypeField.isStatic: Boolean
 	get() =
 		rhs.isStatic
 
+val Choice.alternativesAreStatic: Boolean
+	get() =
+		when (this) {
+			EmptyChoice -> true
+			is LinkChoice -> link.alternativesAreStatic
+		}
+
+val ChoiceLink.alternativesAreStatic: Boolean
+	get() =
+		lhs.alternativesAreStatic && line.isStatic
+
 // === script based ===
 
 val Script.typeStaticScriptOrNull: Script?

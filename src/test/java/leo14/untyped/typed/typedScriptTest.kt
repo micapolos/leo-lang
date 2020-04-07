@@ -28,12 +28,12 @@ class TypedScriptTest {
 	}
 
 	@Test
-	fun enum() {
+	fun choiceWithStaticAlternatives() {
 		val type = emptyType
 			.plus(
-				emptyEnum
-					.plus("true"())
-					.plus("false"())
+				emptyChoice
+					.plus("true" lineTo emptyType)
+					.plus("false" lineTo emptyType)
 					.line)
 
 		emptyScope

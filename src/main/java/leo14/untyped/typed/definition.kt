@@ -12,10 +12,11 @@ fun definition(binding: Binding): Definition = BindingDefinition(binding)
 fun definition(rule: Rule): Definition = RuleDefinition(rule)
 
 fun Definition.apply(typed: Compiled): Compiled? =
-	when (this) {
-		is BindingDefinition -> binding.apply(typed)
-		is RuleDefinition -> rule.apply(typed)
-	}
+	TODO()
+//	when (this) {
+//		is BindingDefinition -> binding.apply(typed)
+//		is RuleDefinition -> rule.apply(typed)
+//	}
 
 fun Definition.applyValue(value: Value): The<Value>? =
 	when (this) {

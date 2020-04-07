@@ -34,7 +34,6 @@ fun Scope.scriptLine(line: TypeLine, value: Value, recursiveOrNull: TypeRecursiv
 	when (line) {
 		is LiteralTypeLine -> line(line.literal)
 		is FieldTypeLine -> scriptLine(line.field, value, recursiveOrNull)
-		is EnumTypeLine -> scriptLine(line.enum, value, recursiveOrNull)
 		is ChoiceTypeLine -> scriptLine(line.choice, value, recursiveOrNull)
 		NativeTypeLine -> nativeScriptLine(value)
 		NumberTypeLine -> numberScriptLine(value)
@@ -62,7 +61,9 @@ fun Scope.scriptField(field: TypeField, value: Value, recursiveOrNull: TypeRecur
 	field.name scriptFieldTo script(field.rhs, value, recursiveOrNull)
 
 fun Scope.scriptLine(choice: Choice, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
-	(value as IndexedValue<*>).let { (index, value) ->
+	if (choice.alternativesAreStatic)
+		scriptLine(choice, value as Int, null, recursiveOrNull)
+	else (value as IndexedValue<*>).let { (index, value) ->
 		scriptLine(choice, index, value, recursiveOrNull)
 	}
 
@@ -75,17 +76,3 @@ fun Scope.scriptLine(choice: Choice, index: Int, value: Value, recursiveOrNull: 
 fun Scope.scriptLine(choiceLink: ChoiceLink, index: Int, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
 	if (index == 0) scriptLine(choiceLink.line, value, recursiveOrNull)
 	else scriptLine(choiceLink.lhs, index.dec(), value, recursiveOrNull)
-
-fun Scope.scriptLine(enum: Enum, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
-	scriptLine(enum, value as Int, recursiveOrNull)
-
-fun Scope.scriptLine(enum: Enum, index: Int, recursiveOrNull: TypeRecursive?): ScriptLine =
-	when (enum) {
-		EmptyEnum -> null!!
-		is LinkEnum -> scriptLine(enum.link, index, recursiveOrNull)
-	}
-
-fun Scope.scriptLine(enumLink: EnumLink, index: Int, recursiveOrNull: TypeRecursive?): ScriptLine =
-	if (index == 0) enumLink.scriptLine
-	else scriptLine(enumLink.lhs, index.dec(), recursiveOrNull)
-

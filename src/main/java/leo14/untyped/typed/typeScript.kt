@@ -64,24 +64,8 @@ val TypeLine.scriptLine: ScriptLine
 			NativeTypeLine -> line(nativeName)
 			NumberTypeLine -> line(numberName)
 			TextTypeLine -> line(textName)
-			is EnumTypeLine -> enum.scriptLine
 		}
 
 val TypeField.scriptField: ScriptField
 	get() =
 		name scriptFieldTo rhs.script
-
-val Enum.scriptLine: ScriptLine
-	get() =
-		eitherName scriptLineTo script
-
-val Enum.script: Script
-	get() =
-		when (this) {
-			EmptyEnum -> script()
-			is LinkEnum -> script(link.scriptLink)
-		}
-
-val EnumLink.scriptLink: ScriptLink
-	get() =
-		lhs.script scriptLinkTo scriptLine

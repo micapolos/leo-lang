@@ -25,24 +25,6 @@ class TypeScriptTest {
 	}
 
 	@Test
-	fun enums() {
-		emptyType
-			.plus(emptyEnum.line)
-			.script
-			.assertEqualTo(leo("either"()))
-
-		emptyType
-			.plus(emptyEnum.plus("true"()).line)
-			.script
-			.assertEqualTo(leo("either"("true"())))
-
-		emptyType
-			.plus(emptyEnum.plus("true"()).plus("false"()).line)
-			.script
-			.assertEqualTo(leo("either"("true"(), "false"())))
-	}
-
-	@Test
 	fun choices() {
 		emptyType
 			.plus(emptyChoice.line)
