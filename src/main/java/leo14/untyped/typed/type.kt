@@ -4,12 +4,15 @@ import leo14.Script
 import leo14.ScriptLine
 import leo14.script
 
+data class TypeFunction(val from: Type, val to: Type)
+
 data class ScriptStatic(val script: Script)
 data class TypeRecursive(val type: Type)
 
 sealed class Type
 data class StaticType(val static: ScriptStatic) : Type()
 data class LinkType(val link: TypeLink) : Type()
+data class FunctionType(val function: TypeFunction) : Type()
 data class RecursiveType(val recursive: TypeRecursive) : Type()
 object RecurseType : Type()
 
@@ -38,11 +41,13 @@ data class TypeField(val name: String, val rhs: Type)
 
 // === constructors ===
 
+infix fun Type.functionTo(type: Type) = TypeFunction(this, type)
 val Script.static get() = ScriptStatic(this)
 val Type.recursive get() = TypeRecursive(this)
 val emptyType: Type = script().static.type
 val recurseType: Type = RecurseType
 val ScriptStatic.type: Type get() = StaticType(this)
+val TypeFunction.type: Type get() = FunctionType(this)
 val TypeRecursive.toType: Type get() = RecursiveType(this)
 val TypeLink.type: Type get() = LinkType(this)
 infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)

@@ -69,4 +69,13 @@ class TypeScriptTest {
 	fun recurse() {
 		recurseType.script.assertEqualTo(leo("recurse"()))
 	}
+
+	@Test
+	fun function() {
+		emptyType.plus(numberTypeLine)
+			.functionTo(emptyType.plus(textTypeLine))
+			.type
+			.script
+			.assertEqualTo(leo("function"("number"(), "doing"("text"()))))
+	}
 }

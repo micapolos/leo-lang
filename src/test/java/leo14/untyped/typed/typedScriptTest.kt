@@ -4,6 +4,7 @@ import leo.base.assertEqualTo
 import leo.base.empty
 import leo.base.indexed
 import leo14.invoke
+import leo14.lambda.runtime.fn
 import leo14.leo
 import leo14.number
 import java.awt.Point
@@ -120,5 +121,16 @@ class TypedScriptTest {
 					.script(natType, 0 indexed (0 indexed (1 indexed null)), null)
 					.assertEqualTo(leo("succ"("succ"("zero"()))))
 			}
+	}
+
+	@Test
+	fun function() {
+		empty.scope.script(
+			emptyType.plus(numberTypeLine)
+				.functionTo(emptyType.plus(textTypeLine))
+				.type,
+			fn { it.toString() },
+			null)
+			.assertEqualTo(leo("function"("number"(), "doing"("text"()))))
 	}
 }

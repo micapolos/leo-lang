@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package leo14.untyped.typed
 
 import leo14.*
@@ -10,6 +12,7 @@ fun Scope.script(type: Type, value: Value, recursiveOrNull: TypeRecursive?): Scr
 	when (type) {
 		is StaticType -> type.static.script
 		is LinkType -> script(type.link, value, recursiveOrNull)
+		is FunctionType -> script(type.function, value)
 		is RecursiveType -> script(type.recursive.type, value, type.recursive)
 		RecurseType -> script(recursiveOrNull!!.type, value, recursiveOrNull)
 	}
@@ -32,6 +35,11 @@ fun Scope.scriptLine(line: TypeLine, value: Value, recursiveOrNull: TypeRecursiv
 		NativeTypeLine -> nativeScriptLine(value)
 		NumberTypeLine -> numberScriptLine(value)
 		TextTypeLine -> textScriptLine(value)
+	}
+
+fun script(function: TypeFunction, value: Value): Script =
+	(value as (Value) -> Value).let {
+		function.script
 	}
 
 fun nativeScriptLine(value: Value): ScriptLine =
