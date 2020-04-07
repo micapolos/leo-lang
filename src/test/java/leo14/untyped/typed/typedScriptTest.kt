@@ -82,7 +82,7 @@ class TypedScriptTest {
 
 		emptyType
 			.plus("zero" lineTo emptyType)
-			.or(emptyType.plus("succ" lineTo recurseType))
+			.or(emptyType.plus("next" lineTo recurseType))
 			.recursive
 			.toType
 			.let { natType ->
@@ -92,11 +92,11 @@ class TypedScriptTest {
 
 				emptyScope
 					.script(natType, true rhsSelected (false rhsSelected null), null)
-					.assertEqualTo(leo("succ"("zero"())))
+					.assertEqualTo(leo("next"("zero"())))
 
 				emptyScope
 					.script(natType, true rhsSelected (true rhsSelected (false rhsSelected null)), null)
-					.assertEqualTo(leo("succ"("succ"("zero"()))))
+					.assertEqualTo(leo("next"("next"("zero"()))))
 			}
 	}
 
