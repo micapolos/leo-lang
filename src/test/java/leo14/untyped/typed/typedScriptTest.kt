@@ -1,7 +1,6 @@
 package leo14.untyped.typed
 
 import leo.base.assertEqualTo
-import leo.base.empty
 import leo.base.indexed
 import leo14.invoke
 import leo14.lambda.runtime.fn
@@ -15,15 +14,15 @@ import kotlin.test.assertFails
 class TypedScriptTest {
 	@Test
 	fun primitives() {
-		empty.scope
+		emptyScope
 			.script(emptyType.plus(textTypeLine), "foo", null)
 			.assertEqualTo(leo("foo"))
 
-		empty.scope
+		emptyScope
 			.script(emptyType.plus(nativeTypeLine), Point(10, 20), null)
 			.assertEqualTo(leo("native"(Point(10, 20).toString())))
 
-		empty.scope
+		emptyScope
 			.script(emptyType.plus(numberTypeLine), number(10), null)
 			.assertEqualTo(leo(10))
 	}
@@ -37,16 +36,16 @@ class TypedScriptTest {
 					.plus("false"())
 					.line)
 
-		empty.scope
+		emptyScope
 			.script(type, 0, null)
 			.assertEqualTo(leo("false"()))
 
-		empty.scope
+		emptyScope
 			.script(type, 1, null)
 			.assertEqualTo(leo("true"()))
 
 		assertFails {
-			empty.scope.script(type, 2, null)
+			emptyScope.script(type, 2, null)
 		}
 	}
 
@@ -60,20 +59,20 @@ class TypedScriptTest {
 					.plus("name".fieldTo(emptyType.plus(textTypeLine)).line)
 					.line)
 
-		empty.scope
+		emptyScope
 			.script(type, 0 indexed "foo", null)
 			.assertEqualTo(leo("name"("foo")))
 
-		empty.scope
+		emptyScope
 			.script(type, 1 indexed number(123), null)
 			.assertEqualTo(leo("age"(123)))
 
-		empty.scope
+		emptyScope
 			.script(type, 2 indexed Point(10, 20), null)
 			.assertEqualTo(leo("point"("native"(Point(10, 20).toString()))))
 
 		assertFails {
-			empty.scope.script(type, 3 indexed Point(10, 20), null)
+			emptyScope.script(type, 3 indexed Point(10, 20), null)
 		}
 	}
 
@@ -87,18 +86,18 @@ class TypedScriptTest {
 						.plus("x" fieldTo emptyType.plus(numberTypeLine))
 						.plus("y" fieldTo emptyType.plus(numberTypeLine)))))
 
-		empty.scope
+		emptyScope
 			.script(type, number(10) to (number(20) to number(30)), null)
 			.assertEqualTo(leo("circle"("radius"(10), "center"("point"("x"(20), "y"(30))))))
 	}
 
 	@Test
 	fun recursive() {
-		empty.scope
+		emptyScope
 			.script(emptyType.recursive.toType, null, null)
 			.assertEqualTo(leo())
 
-		empty.scope
+		emptyScope
 			.script(emptyType.plus(textTypeLine).recursive.toType, "foo", null)
 			.assertEqualTo(leo("foo"))
 
@@ -110,15 +109,15 @@ class TypedScriptTest {
 			.recursive
 			.toType
 			.let { natType ->
-				empty.scope
+				emptyScope
 					.script(natType, 1 indexed null, null)
 					.assertEqualTo(leo("zero"()))
 
-				empty.scope
+				emptyScope
 					.script(natType, 0 indexed (1 indexed null), null)
 					.assertEqualTo(leo("succ"("zero"())))
 
-				empty.scope
+				emptyScope
 					.script(natType, 0 indexed (0 indexed (1 indexed null)), null)
 					.assertEqualTo(leo("succ"("succ"("zero"()))))
 			}
@@ -126,7 +125,7 @@ class TypedScriptTest {
 
 	@Test
 	fun function() {
-		empty.scope.script(
+		emptyScope.script(
 			emptyType.plus(numberTypeLine)
 				.functionTo(emptyType.plus(textTypeLine))
 				.type,
@@ -137,13 +136,13 @@ class TypedScriptTest {
 
 	@Test
 	fun literals() {
-		empty.scope.script(
+		emptyScope.script(
 			emptyType.plus(literal(123).staticTypeLine),
 			null,
 			null)
 			.assertEqualTo(leo(123))
 
-		empty.scope.script(
+		emptyScope.script(
 			emptyType.plus(literal("foo").staticTypeLine),
 			null,
 			null)
