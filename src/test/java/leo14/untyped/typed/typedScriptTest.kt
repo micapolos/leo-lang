@@ -47,11 +47,11 @@ class TypedScriptTest {
 			.or(emptyType.plus(numberTypeLine))
 
 		emptyScope
-			.script(type, false selectsLhs number(123), null)
+			.script(type, false lhsSelected number(123), null)
 			.assertEqualTo(leo(123))
 
 		emptyScope
-			.script(type, true selectsLhs "foo", null)
+			.script(type, true lhsSelected "foo", null)
 			.assertEqualTo(leo("foo"))
 	}
 
@@ -87,15 +87,15 @@ class TypedScriptTest {
 			.toType
 			.let { natType ->
 				emptyScope
-					.script(natType, true selectsLhs null, null)
+					.script(natType, true lhsSelected null, null)
 					.assertEqualTo(leo("zero"()))
 
 				emptyScope
-					.script(natType, false selectsLhs (true selectsLhs null), null)
+					.script(natType, false lhsSelected (true lhsSelected null), null)
 					.assertEqualTo(leo("succ"("zero"())))
 
 				emptyScope
-					.script(natType, false selectsLhs (false selectsLhs (true selectsLhs null)), null)
+					.script(natType, false lhsSelected (false lhsSelected (true lhsSelected null)), null)
 					.assertEqualTo(leo("succ"("succ"("zero"()))))
 			}
 	}

@@ -46,9 +46,9 @@ fun Scope.script(alternative: TypeAlternative, value: Value, recursiveOrNull: Ty
 			if (value as Boolean) alternative.lhs else alternative.rhs,
 			null,
 			recursiveOrNull)
-	else (value as Selector).let { selector ->
+	else (value as Selected).let { selector ->
 		script(
-			if (selector.selectsLhs) alternative.lhs else alternative.rhs,
+			if (selector.isLhs) alternative.lhs else alternative.rhs,
 			selector.value,
 			recursiveOrNull)
 	}
