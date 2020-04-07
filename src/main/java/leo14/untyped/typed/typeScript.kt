@@ -58,6 +58,7 @@ val ChoiceLink.scriptLink: ScriptLink
 val TypeLine.scriptLine: ScriptLine
 	get() =
 		when (this) {
+			is LiteralTypeLine -> line(literal)
 			is FieldTypeLine -> line(field.scriptField)
 			is ChoiceTypeLine -> eitherName scriptLineTo choice.script
 			NativeTypeLine -> line(nativeName)

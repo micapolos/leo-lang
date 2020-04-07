@@ -6,6 +6,7 @@ import leo.base.indexed
 import leo14.invoke
 import leo14.lambda.runtime.fn
 import leo14.leo
+import leo14.literal
 import leo14.number
 import java.awt.Point
 import kotlin.test.Test
@@ -132,5 +133,20 @@ class TypedScriptTest {
 			fn { it.toString() },
 			null)
 			.assertEqualTo(leo("function"("number"(), "doing"("text"()))))
+	}
+
+	@Test
+	fun literals() {
+		empty.scope.script(
+			emptyType.plus(literal(123).typeLine),
+			null,
+			null)
+			.assertEqualTo(leo(123))
+
+		empty.scope.script(
+			emptyType.plus(literal("foo").typeLine),
+			null,
+			null)
+			.assertEqualTo(leo("foo"))
 	}
 }

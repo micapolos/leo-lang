@@ -1,8 +1,6 @@
 package leo14.untyped.typed
 
-import leo14.Script
-import leo14.ScriptLine
-import leo14.script
+import leo14.*
 
 data class TypeFunction(val from: Type, val to: Type)
 
@@ -30,6 +28,7 @@ data class LinkChoice(val link: ChoiceLink) : Choice()
 data class ChoiceLink(val lhs: Choice, val line: TypeLine)
 
 sealed class TypeLine
+data class LiteralTypeLine(val literal: Literal) : TypeLine()
 data class FieldTypeLine(val field: TypeField) : TypeLine()
 data class EnumTypeLine(val enum: Enum) : TypeLine()
 data class ChoiceTypeLine(val choice: Choice) : TypeLine()
@@ -63,6 +62,7 @@ val ChoiceLink.choice: Choice get() = LinkChoice(this)
 infix fun Choice.linkTo(line: TypeLine) = ChoiceLink(this, line)
 fun Choice.plus(line: TypeLine) = linkTo(line).choice
 val TypeLine.choice get() = emptyChoice.plus(this)
+val Literal.typeLine: TypeLine get() = LiteralTypeLine(this)
 val TypeField.line: TypeLine get() = FieldTypeLine(this)
 val Choice.line: TypeLine get() = ChoiceTypeLine(this)
 val Enum.line: TypeLine get() = EnumTypeLine(this)
@@ -71,3 +71,8 @@ val numberTypeLine: TypeLine = NumberTypeLine
 val textTypeLine: TypeLine = TextTypeLine
 infix fun String.fieldTo(type: Type) = TypeField(this, type)
 infix fun String.lineTo(type: Type) = fieldTo(type).line
+val Type.isEmpty: Boolean get() = (this is StaticType) && static.script.isEmpty
+
+val textType2 = emptyType.plus(textTypeLine)
+val numberType2 = emptyType.plus(numberTypeLine)
+val nativeType2 = emptyType.plus(nativeTypeLine)

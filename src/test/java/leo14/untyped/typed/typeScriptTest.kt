@@ -3,6 +3,7 @@ package leo14.untyped.typed
 import leo.base.assertEqualTo
 import leo14.invoke
 import leo14.leo
+import leo14.literal
 import kotlin.test.Test
 
 class TypeScriptTest {
@@ -77,5 +78,11 @@ class TypeScriptTest {
 			.type
 			.script
 			.assertEqualTo(leo("function"("number"(), "doing"("text"()))))
+	}
+
+	@Test
+	fun literals() {
+		emptyType.plus(literal(123).typeLine).script.assertEqualTo(leo(123))
+		emptyType.plus(literal("foo").typeLine).script.assertEqualTo(leo("foo"))
 	}
 }

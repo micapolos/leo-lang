@@ -29,6 +29,7 @@ fun Scope.scriptLink(typeLink: TypeLink, value: Value, recursiveOrNull: TypeRecu
 
 fun Scope.scriptLine(line: TypeLine, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
 	when (line) {
+		is LiteralTypeLine -> line(line.literal)
 		is FieldTypeLine -> scriptLine(line.field, value, recursiveOrNull)
 		is EnumTypeLine -> scriptLine(line.enum, value, recursiveOrNull)
 		is ChoiceTypeLine -> scriptLine(line.choice, value, recursiveOrNull)
