@@ -12,10 +12,17 @@ class TypeScriptTest {
 		emptyType.script.assertEqualTo(leo())
 		emptyType.plus(literal("foo").staticTypeLine).script.assertEqualTo(leo("foo"))
 		emptyType.plus(literal(123).staticTypeLine).script.assertEqualTo(leo(123))
-		emptyType.plus("text" lineTo emptyType).script.assertEqualTo(leo("static"("text"())))
-		emptyType.plus("number" lineTo emptyType).script.assertEqualTo(leo("static"("number"())))
-		emptyType.plus("native" lineTo emptyType).script.assertEqualTo(leo("static"("native"())))
-		emptyType.plus("or" lineTo emptyType).script.assertEqualTo(leo("static"("or"())))
+	}
+
+	@Test
+	fun exact() {
+		emptyType.plus("text" lineTo emptyType).script.assertEqualTo(leo("exact"("text"())))
+		emptyType.plus("number" lineTo emptyType).script.assertEqualTo(leo("exact"("number"())))
+		emptyType.plus("native" lineTo emptyType).script.assertEqualTo(leo("exact"("native"())))
+		emptyType.plus("or" lineTo emptyType).script.assertEqualTo(leo("exact"("or"())))
+		emptyType.plus("recursive" lineTo emptyType).script.assertEqualTo(leo("exact"("recursive"())))
+		emptyType.plus("recurse" lineTo emptyType).script.assertEqualTo(leo("exact"("recurse"())))
+		emptyType.plus("exact" lineTo emptyType).script.assertEqualTo(leo("exact"("exact"())))
 	}
 
 	@Test

@@ -46,19 +46,22 @@ val TypeAlternative.script: Script
 
 val TypeField.scriptField: ScriptField
 	get() =
-		if (name.typeFieldNameIsDynamic) staticName scriptFieldTo script(staticScriptField)
-		else staticScriptField
+		if (name.isTypeKeyword) exactName scriptFieldTo script(exactScriptField)
+		else exactScriptField
 
-val TypeField.staticScriptField: ScriptField
+val TypeField.exactScriptField: ScriptField
 	get() =
 		name scriptFieldTo rhs.script
 
-val String.typeFieldNameIsDynamic: Boolean
+val String.isTypeKeyword: Boolean
 	get() =
 		when (this) {
 			textName -> true
 			numberName -> true
 			nativeName -> true
 			orName -> true
+			recursiveName -> true
+			recurseName -> true
+			exactName -> true
 			else -> false
 		}
