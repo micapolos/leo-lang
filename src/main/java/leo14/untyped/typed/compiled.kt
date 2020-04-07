@@ -1,7 +1,5 @@
 package leo14.untyped.typed
 
-import leo.base.reverseStack
-import leo13.fold
 import leo14.*
 import leo14.Number
 import leo14.untyped.minusName
@@ -15,27 +13,6 @@ val emptyCompiled = Compiled(emptyType) { null }
 val Compiled.isEmpty get() = type.isEmpty
 infix fun Type.compiled(valueFn: ValueFn) = Compiled(this, valueFn)
 val Compiled.value get() = valueFn()
-
-fun Scope.apply(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled =
-	if (rhs.isEmpty) applyNormalized(rhs, begin, lhs)
-	else applyNormalized(lhs, begin, rhs)
-
-fun Scope.applyNormalized(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled =
-	applyRules(lhs, begin, rhs) ?: lhs.apply(begin, rhs)
-
-fun Scope.applyRules(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled? =
-	null
-
-fun Scope.compiled(script: Script): Compiled =
-	emptyCompiled.fold(script.lineSeq.reverseStack) { line ->
-		compiled(this, line)
-	}
-
-fun Scope.compiled(lhs: Compiled, line: ScriptLine): Compiled =
-	when (line) {
-		is LiteralScriptLine -> lhs.apply(line.literal)
-		is FieldScriptLine -> apply(lhs, begin(line.field.string), compiled(line.field.rhs))
-	}
 
 fun Compiled.apply(literal: Literal): Compiled =
 	if (isEmpty) emptyType.plus(literal.typeLine).compiled { literal.value }
