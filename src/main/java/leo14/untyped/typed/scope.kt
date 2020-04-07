@@ -31,6 +31,9 @@ fun Scope.applyNormalized(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled 
 fun Scope.applyRules(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled? =
 	null
 
+fun Scope.applyDefinition(lhs: Compiled, begin: Begin, rhs: Compiled): Scope? =
+	TODO()
+
 fun Scope.compiled(script: Script): Compiled =
 	emptyCompiled.fold(script.lineSeq.reverseStack) { line ->
 		compiled(this, line)

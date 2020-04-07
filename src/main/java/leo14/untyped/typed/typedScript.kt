@@ -8,6 +8,9 @@ import leo14.lambda.runtime.Value
 import leo14.untyped.nativeName
 import leo14.fieldTo as scriptFieldTo
 
+fun Scope.script(typed: Typed): Script =
+	script(typed.type, typed.value, null)
+
 fun Scope.script(type: Type, value: Value, recursiveOrNull: TypeRecursive?): Script =
 	when (type) {
 		is StaticType -> type.static.script
