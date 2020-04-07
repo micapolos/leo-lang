@@ -101,8 +101,12 @@ class TypedScriptTest {
 			.assertEqualTo(leo("foo"))
 
 		emptyType
-			.plus(emptyChoice.plus("zero" lineTo emptyType).plus("succ" lineTo recurseType).line)
-			.recursive.toType
+			.plus(emptyChoice
+				.plus("zero" lineTo emptyType)
+				.plus("succ" lineTo recurseType)
+				.line)
+			.recursive
+			.toType
 			.let { natType ->
 				empty.scope
 					.script(natType, 1 indexed null, null)
@@ -111,6 +115,10 @@ class TypedScriptTest {
 				empty.scope
 					.script(natType, 0 indexed (1 indexed null), null)
 					.assertEqualTo(leo("succ"("zero"())))
+
+				empty.scope
+					.script(natType, 0 indexed (0 indexed (1 indexed null)), null)
+					.assertEqualTo(leo("succ"("succ"("zero"()))))
 			}
 	}
 }
