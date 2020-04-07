@@ -41,9 +41,9 @@ data class TypeField(val name: String, val rhs: Type)
 val Script.static get() = ScriptStatic(this)
 val Type.recursive get() = TypeRecursive(this)
 val emptyType: Type = script().static.type
-val resurseType: Type = RecurseType
+val recurseType: Type = RecurseType
 val ScriptStatic.type: Type get() = StaticType(this)
-val TypeRecursive.type: Type get() = RecursiveType(this)
+val TypeRecursive.toType: Type get() = RecursiveType(this)
 val TypeLink.type: Type get() = LinkType(this)
 infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
 fun Type.plus(line: TypeLine) = linkTo(line).type
@@ -65,3 +65,4 @@ val nativeTypeLine: TypeLine = NativeTypeLine
 val numberTypeLine: TypeLine = NumberTypeLine
 val textTypeLine: TypeLine = TextTypeLine
 infix fun String.fieldTo(type: Type) = TypeField(this, type)
+infix fun String.lineTo(type: Type) = fieldTo(type).line

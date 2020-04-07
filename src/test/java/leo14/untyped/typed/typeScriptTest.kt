@@ -58,4 +58,15 @@ class TypeScriptTest {
 			.script
 			.assertEqualTo(leo("either"("text"(), "number"())))
 	}
+
+	@Test
+	fun recursive() {
+		emptyType.recursive.toType.script.assertEqualTo(leo("recursive"()))
+		emptyType.plus(textTypeLine).recursive.toType.script.assertEqualTo(leo("recursive"("text"())))
+	}
+
+	@Test
+	fun recurse() {
+		recurseType.script.assertEqualTo(leo("recurse"()))
+	}
 }

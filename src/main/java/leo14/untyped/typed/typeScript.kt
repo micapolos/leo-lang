@@ -12,7 +12,7 @@ val Type.script: Script
 		when (this) {
 			is StaticType -> static.typeScript
 			is LinkType -> script(link.scriptLink)
-			is RecursiveType -> recursive.script
+			is RecursiveType -> recursive.typeScript
 			RecurseType -> script(recurseName)
 		}
 
@@ -23,7 +23,7 @@ val ScriptStatic.typeScript: Script
 			is LinkScript -> script(staticName scriptLineTo script)
 		}
 
-val TypeRecursive.script: Script
+val TypeRecursive.typeScript: Script
 	get() =
 		script(recursiveName scriptLineTo type.script)
 

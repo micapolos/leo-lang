@@ -89,4 +89,28 @@ class TypedScriptTest {
 			.script(type, number(10) to (number(20) to number(30)), null)
 			.assertEqualTo(leo("circle"("radius"(10), "center"("point"("x"(20), "y"(30))))))
 	}
+
+	@Test
+	fun recursive() {
+		empty.scope
+			.script(emptyType.recursive.toType, null, null)
+			.assertEqualTo(leo())
+
+		empty.scope
+			.script(emptyType.plus(textTypeLine).recursive.toType, "foo", null)
+			.assertEqualTo(leo("foo"))
+
+		emptyType
+			.plus(emptyChoice.plus("zero" lineTo emptyType).plus("succ" lineTo recurseType).line)
+			.recursive.toType
+			.let { natType ->
+				empty.scope
+					.script(natType, 1 indexed null, null)
+					.assertEqualTo(leo("zero"()))
+
+				empty.scope
+					.script(natType, 0 indexed (1 indexed null), null)
+					.assertEqualTo(leo("succ"("zero"())))
+			}
+	}
 }
