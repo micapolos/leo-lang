@@ -7,26 +7,32 @@ import leo14.untyped.*
 
 val Type.isStatic: Boolean
 	get() =
-		this is StaticType
+		when (this) {
+			EmptyType -> true
+			is LinkType -> link.isStatic
+			is AlternativeType -> false
+			is FunctionType -> false
+			is RecursiveType -> false
+			RecurseType -> false
+		}
+
+val TypeLink.isStatic: Boolean
+	get() =
+		lhs.isStatic && line.isStatic
 
 val TypeLine.isStatic: Boolean
 	get() =
-		(this is FieldTypeLine) && field.isStatic
+		when (this) {
+			is LiteralTypeLine -> true
+			is FieldTypeLine -> field.isStatic
+			NativeTypeLine -> false
+			NumberTypeLine -> false
+			TextTypeLine -> false
+		}
 
 val TypeField.isStatic: Boolean
 	get() =
 		rhs.isStatic
-
-val Choice.alternativesAreStatic: Boolean
-	get() =
-		when (this) {
-			EmptyChoice -> true
-			is LinkChoice -> link.alternativesAreStatic
-		}
-
-val ChoiceLink.alternativesAreStatic: Boolean
-	get() =
-		lhs.alternativesAreStatic && line.isStatic
 
 // === script based ===
 

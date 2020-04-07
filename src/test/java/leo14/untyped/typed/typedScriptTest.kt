@@ -1,7 +1,6 @@
 package leo14.untyped.typed
 
 import leo.base.assertEqualTo
-import leo.base.indexed
 import leo14.invoke
 import leo14.lambda.runtime.fn
 import leo14.leo
@@ -9,7 +8,6 @@ import leo14.literal
 import leo14.number
 import java.awt.Point
 import kotlin.test.Test
-import kotlin.test.assertFails
 
 class TypedScriptTest {
 	@Test
@@ -30,50 +28,31 @@ class TypedScriptTest {
 	@Test
 	fun choiceWithStaticAlternatives() {
 		val type = emptyType
-			.plus(
-				emptyChoice
-					.plus("true" lineTo emptyType)
-					.plus("false" lineTo emptyType)
-					.line)
+			.plus("true" lineTo emptyType)
+			.or(emptyType.plus("false" lineTo emptyType))
 
 		emptyScope
-			.script(type, 0, null)
+			.script(type, false, null)
 			.assertEqualTo(leo("false"()))
 
 		emptyScope
-			.script(type, 1, null)
+			.script(type, true, null)
 			.assertEqualTo(leo("true"()))
-
-		assertFails {
-			emptyScope.script(type, 2, null)
-		}
 	}
 
 	@Test
 	fun choice() {
 		val type = emptyType
-			.plus(
-				emptyChoice
-					.plus("point".fieldTo(emptyType.plus(nativeTypeLine)).line)
-					.plus("age".fieldTo(emptyType.plus(numberTypeLine)).line)
-					.plus("name".fieldTo(emptyType.plus(textTypeLine)).line)
-					.line)
+			.plus(textTypeLine)
+			.or(emptyType.plus(numberTypeLine))
 
 		emptyScope
-			.script(type, 0 indexed "foo", null)
-			.assertEqualTo(leo("name"("foo")))
+			.script(type, false selectsLhs number(123), null)
+			.assertEqualTo(leo(123))
 
 		emptyScope
-			.script(type, 1 indexed number(123), null)
-			.assertEqualTo(leo("age"(123)))
-
-		emptyScope
-			.script(type, 2 indexed Point(10, 20), null)
-			.assertEqualTo(leo("point"("native"(Point(10, 20).toString()))))
-
-		assertFails {
-			emptyScope.script(type, 3 indexed Point(10, 20), null)
-		}
+			.script(type, true selectsLhs "foo", null)
+			.assertEqualTo(leo("foo"))
 	}
 
 	@Test
@@ -102,23 +81,21 @@ class TypedScriptTest {
 			.assertEqualTo(leo("foo"))
 
 		emptyType
-			.plus(emptyChoice
-				.plus("zero" lineTo emptyType)
-				.plus("succ" lineTo recurseType)
-				.line)
+			.plus("zero" lineTo emptyType)
+			.or(emptyType.plus("succ" lineTo recurseType))
 			.recursive
 			.toType
 			.let { natType ->
 				emptyScope
-					.script(natType, 1 indexed null, null)
+					.script(natType, true selectsLhs null, null)
 					.assertEqualTo(leo("zero"()))
 
 				emptyScope
-					.script(natType, 0 indexed (1 indexed null), null)
+					.script(natType, false selectsLhs (true selectsLhs null), null)
 					.assertEqualTo(leo("succ"("zero"())))
 
 				emptyScope
-					.script(natType, 0 indexed (0 indexed (1 indexed null)), null)
+					.script(natType, false selectsLhs (false selectsLhs (true selectsLhs null)), null)
 					.assertEqualTo(leo("succ"("succ"("zero"()))))
 			}
 	}

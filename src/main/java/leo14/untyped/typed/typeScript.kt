@@ -10,18 +10,12 @@ import leo14.linkTo as scriptLinkTo
 val Type.script: Script
 	get() =
 		when (this) {
-			is StaticType -> static.typeScript
+			is EmptyType -> script()
 			is LinkType -> script(link.scriptLink)
+			is AlternativeType -> alternative.script
 			is FunctionType -> function.script
 			is RecursiveType -> recursive.typeScript
 			RecurseType -> script(recurseName)
-		}
-
-val ScriptStatic.typeScript: Script
-	get() =
-		when (script) {
-			is UnitScript -> script
-			is LinkScript -> script(staticName scriptLineTo script)
 		}
 
 val TypeFunction.script: Script
@@ -36,36 +30,35 @@ val TypeLink.scriptLink: ScriptLink
 	get() =
 		lhs.script scriptLinkTo line.scriptLine
 
-val Choice.scriptLine: ScriptLine
-	get() =
-		eitherName scriptLineTo script
-
-val Choice.script: Script
-	get() =
-		when (this) {
-			EmptyChoice -> script()
-			is LinkChoice -> link.script
-		}
-
-val ChoiceLink.script: Script
-	get() =
-		script(scriptLink)
-
-val ChoiceLink.scriptLink: ScriptLink
-	get() =
-		lhs.script scriptLinkTo line.scriptLine
-
 val TypeLine.scriptLine: ScriptLine
 	get() =
 		when (this) {
 			is LiteralTypeLine -> line(literal)
 			is FieldTypeLine -> line(field.scriptField)
-			is ChoiceTypeLine -> eitherName scriptLineTo choice.script
 			NativeTypeLine -> line(nativeName)
 			NumberTypeLine -> line(numberName)
 			TextTypeLine -> line(textName)
 		}
 
+val TypeAlternative.script: Script
+	get() =
+		lhs.script.plus(orName scriptLineTo rhs.script)
+
 val TypeField.scriptField: ScriptField
 	get() =
+		if (name.typeFieldNameIsDynamic) staticName scriptFieldTo script(staticScriptField)
+		else staticScriptField
+
+val TypeField.staticScriptField: ScriptField
+	get() =
 		name scriptFieldTo rhs.script
+
+val String.typeFieldNameIsDynamic: Boolean
+	get() =
+		when (this) {
+			textName -> true
+			numberName -> true
+			nativeName -> true
+			orName -> true
+			else -> false
+		}

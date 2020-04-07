@@ -9,12 +9,13 @@ import kotlin.test.Test
 class TypeScriptTest {
 	@Test
 	fun static() {
-		leo().static.type.script.assertEqualTo(leo())
-		leo("text"()).static.type.script.assertEqualTo(leo("static"("text"())))
-		leo("number"()).static.type.script.assertEqualTo(leo("static"("number"())))
-		leo("native"()).static.type.script.assertEqualTo(leo("static"("native"())))
-		leo("foo").static.type.script.assertEqualTo(leo("static"("foo")))
-		leo(123).static.type.script.assertEqualTo(leo("static"(123)))
+		emptyType.script.assertEqualTo(leo())
+		emptyType.plus(literal("foo").staticTypeLine).script.assertEqualTo(leo("foo"))
+		emptyType.plus(literal(123).staticTypeLine).script.assertEqualTo(leo(123))
+		emptyType.plus("text" lineTo emptyType).script.assertEqualTo(leo("static"("text"())))
+		emptyType.plus("number" lineTo emptyType).script.assertEqualTo(leo("static"("number"())))
+		emptyType.plus("native" lineTo emptyType).script.assertEqualTo(leo("static"("native"())))
+		emptyType.plus("or" lineTo emptyType).script.assertEqualTo(leo("static"("or"())))
 	}
 
 	@Test
@@ -25,21 +26,12 @@ class TypeScriptTest {
 	}
 
 	@Test
-	fun choices() {
+	fun alternatives() {
 		emptyType
-			.plus(emptyChoice.line)
+			.plus("true" lineTo emptyType)
+			.or(emptyType.plus("false" lineTo emptyType))
 			.script
-			.assertEqualTo(leo("either"()))
-
-		emptyType
-			.plus(emptyChoice.plus(textTypeLine).line)
-			.script
-			.assertEqualTo(leo("either"("text"())))
-
-		emptyType
-			.plus(emptyChoice.plus(textTypeLine).plus(numberTypeLine).line)
-			.script
-			.assertEqualTo(leo("either"("text"(), "number"())))
+			.assertEqualTo(leo("true"(), "or"("false"())))
 	}
 
 	@Test
