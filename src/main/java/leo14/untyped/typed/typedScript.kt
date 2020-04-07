@@ -43,12 +43,12 @@ fun Scope.scriptLine(line: TypeLine, value: Value, recursiveOrNull: TypeRecursiv
 fun Scope.script(alternative: TypeAlternative, value: Value, recursiveOrNull: TypeRecursive?): Script =
 	if (alternative.lhs.isStatic && alternative.rhs.isStatic)
 		script(
-			if (value as Boolean) alternative.lhs else alternative.rhs,
+			if (value as Boolean) alternative.rhs else alternative.lhs,
 			null,
 			recursiveOrNull)
 	else (value as Selected).let { selector ->
 		script(
-			if (selector.isLhs) alternative.lhs else alternative.rhs,
+			if (selector.isRhs) alternative.rhs else alternative.lhs,
 			selector.value,
 			recursiveOrNull)
 	}

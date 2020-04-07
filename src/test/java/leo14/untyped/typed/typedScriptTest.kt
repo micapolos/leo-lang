@@ -28,16 +28,16 @@ class TypedScriptTest {
 	@Test
 	fun choiceWithStaticAlternatives() {
 		val type = emptyType
-			.plus("true" lineTo emptyType)
-			.or(emptyType.plus("false" lineTo emptyType))
-
-		emptyScope
-			.script(type, false, null)
-			.assertEqualTo(leo("false"()))
+			.plus("false" lineTo emptyType)
+			.or(emptyType.plus("true" lineTo emptyType))
 
 		emptyScope
 			.script(type, true, null)
 			.assertEqualTo(leo("true"()))
+
+		emptyScope
+			.script(type, false, null)
+			.assertEqualTo(leo("false"()))
 	}
 
 	@Test
@@ -47,11 +47,11 @@ class TypedScriptTest {
 			.or(emptyType.plus(numberTypeLine))
 
 		emptyScope
-			.script(type, false lhsSelected number(123), null)
+			.script(type, true rhsSelected number(123), null)
 			.assertEqualTo(leo(123))
 
 		emptyScope
-			.script(type, true lhsSelected "foo", null)
+			.script(type, false rhsSelected "foo", null)
 			.assertEqualTo(leo("foo"))
 	}
 
@@ -87,15 +87,15 @@ class TypedScriptTest {
 			.toType
 			.let { natType ->
 				emptyScope
-					.script(natType, true lhsSelected null, null)
+					.script(natType, false rhsSelected null, null)
 					.assertEqualTo(leo("zero"()))
 
 				emptyScope
-					.script(natType, false lhsSelected (true lhsSelected null), null)
+					.script(natType, true rhsSelected (false rhsSelected null), null)
 					.assertEqualTo(leo("succ"("zero"())))
 
 				emptyScope
-					.script(natType, false lhsSelected (false lhsSelected (true lhsSelected null)), null)
+					.script(natType, true rhsSelected (true rhsSelected (false rhsSelected null)), null)
 					.assertEqualTo(leo("succ"("succ"("zero"()))))
 			}
 	}
