@@ -1,5 +1,7 @@
 package leo14.untyped.typed
 
+import leo.base.reverseStack
+import leo13.fold
 import leo14.*
 import leo14.Number
 import leo14.untyped.minusName
@@ -24,8 +26,20 @@ fun Scope.applyNormalized(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled 
 fun Scope.applyRules(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled? =
 	null
 
+fun Scope.compiled(script: Script): Compiled =
+	emptyCompiled.fold(script.lineSeq.reverseStack) { line ->
+		compiled(this, line)
+	}
+
+fun Scope.compiled(lhs: Compiled, line: ScriptLine): Compiled =
+	when (line) {
+		is LiteralScriptLine -> lhs.apply(line.literal)
+		is FieldScriptLine -> apply(lhs, begin(line.field.string), compiled(line.field.rhs))
+	}
+
 fun Compiled.apply(literal: Literal): Compiled =
-	append(literal)
+	if (isEmpty) emptyType.plus(literal.typeLine).compiled { literal.value }
+	else type.plus(literal.typeLine).compiled { value to literal.value }
 
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 	when (type) {
@@ -78,5 +92,3 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 fun Compiled.append(begin: Begin, rhs: Compiled): Compiled =
 	type.plus(begin.string lineTo rhs.type).compiled { value to rhs.value }
 
-fun Compiled.append(literal: Literal): Compiled =
-	type.plus(literal.typeLine).compiled(valueFn)

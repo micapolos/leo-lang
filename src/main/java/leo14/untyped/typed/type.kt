@@ -62,7 +62,7 @@ val ChoiceLink.choice: Choice get() = LinkChoice(this)
 infix fun Choice.linkTo(line: TypeLine) = ChoiceLink(this, line)
 fun Choice.plus(line: TypeLine) = linkTo(line).choice
 val TypeLine.choice get() = emptyChoice.plus(this)
-val Literal.typeLine: TypeLine get() = LiteralTypeLine(this)
+val Literal.staticTypeLine: TypeLine get() = LiteralTypeLine(this)
 val TypeField.line: TypeLine get() = FieldTypeLine(this)
 val Choice.line: TypeLine get() = ChoiceTypeLine(this)
 val Enum.line: TypeLine get() = EnumTypeLine(this)
@@ -76,3 +76,10 @@ val Type.isEmpty: Boolean get() = (this is StaticType) && static.script.isEmpty
 val textType2 = emptyType.plus(textTypeLine)
 val numberType2 = emptyType.plus(numberTypeLine)
 val nativeType2 = emptyType.plus(nativeTypeLine)
+
+val Literal.typeLine: TypeLine
+	get() =
+		when (this) {
+			is StringLiteral -> textTypeLine
+			is NumberLiteral -> numberTypeLine
+		}

@@ -4,6 +4,7 @@ package leo.base
 
 import leo13.Stack
 import leo13.push
+import leo13.stack
 
 data class SeqNode<T>(
 	val first: T,
@@ -13,7 +14,7 @@ data class SeqNode<T>(
 
 data class Seq<T>(
 	val nodeOrNullFn: () -> SeqNode<T>?) : Iterable<T> {
-	private val stack: Stack<T> get() = leo13.stack<T>().fold(this) { push(it) }
+	private val stack: Stack<T> get() = stack<T>().fold(this) { push(it) }
 	override fun hashCode() = stack.hashCode()
 	override fun equals(other: Any?) = (other is Seq<*>) && stack == other.stack
 	override fun iterator() = object : Iterator<T> {
@@ -231,3 +232,7 @@ fun <V> Seq<V>.mapFirst(fn: V.() -> V): Seq<V> =
 			node.first.fn() then node.remaining
 		}
 	}
+
+val <V> Seq<V>.reverseStack: Stack<V>
+	get() =
+		stack<V>().fold(this) { push(it) }

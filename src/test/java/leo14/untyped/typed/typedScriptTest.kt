@@ -138,13 +138,13 @@ class TypedScriptTest {
 	@Test
 	fun literals() {
 		empty.scope.script(
-			emptyType.plus(literal(123).typeLine),
+			emptyType.plus(literal(123).staticTypeLine),
 			null,
 			null)
 			.assertEqualTo(leo(123))
 
 		empty.scope.script(
-			emptyType.plus(literal("foo").typeLine),
+			emptyType.plus(literal("foo").staticTypeLine),
 			null,
 			null)
 			.assertEqualTo(leo("foo"))

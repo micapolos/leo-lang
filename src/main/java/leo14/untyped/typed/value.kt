@@ -29,3 +29,10 @@ val Value.valueScript: Script
 val Value.nativeScript: Script
 	get() =
 		leo("native"(toString()))
+
+val Literal.value: Value
+	get() =
+		when (this) {
+			is StringLiteral -> string
+			is NumberLiteral -> number
+		}
