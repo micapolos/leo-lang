@@ -17,5 +17,6 @@ class ScopeTest {
 	@Test
 	fun compiled() {
 		emptyScope.compiled(leo(2, "plus"(3))).value.assertEqualTo(number(5))
+		emptyScope.compiled(leo("Hello, ", "plus"("world!"))).value.assertEqualTo("Hello, world!")
 	}
 }
