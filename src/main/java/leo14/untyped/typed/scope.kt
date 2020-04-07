@@ -1,8 +1,9 @@
 package leo14.untyped.typed
 
-import leo.base.reverseStack
+import leo.base.*
 import leo13.fold
 import leo14.*
+import leo14.Begin
 
 sealed class Scope
 object EmptyScope : Scope()
@@ -41,3 +42,9 @@ fun Scope.compiled(lhs: Compiled, line: ScriptLine): Compiled =
 		is FieldScriptLine -> apply(lhs, begin(line.field.string), compiled(line.field.rhs))
 	}
 
+val Scope.definitionSeq: Seq<Definition>
+	get() =
+		when (this) {
+			EmptyScope -> emptySeq()
+			is LinkScope -> seq { link.definition.then(link.lhs.definitionSeq) }
+		}

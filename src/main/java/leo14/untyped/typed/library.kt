@@ -1,5 +1,8 @@
 package leo14.untyped.typed
 
+import leo.base.reverseStack
+import leo13.fold
+
 data class Exported(val scope: Scope)
 data class Library(val scope: Scope, val exported: Exported)
 
@@ -17,3 +20,6 @@ fun Library.plus(definition: Definition) =
 
 fun Library.import(definition: Definition) =
 	scope.plus(definition).library(exported)
+
+fun Library.import(library: Library): Library =
+	fold(library.exported.scope.definitionSeq.reverseStack) { import(it) }
