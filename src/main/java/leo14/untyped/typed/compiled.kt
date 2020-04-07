@@ -24,6 +24,9 @@ fun Scope.applyNormalized(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled 
 fun Scope.applyRules(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled? =
 	null
 
+fun Compiled.apply(literal: Literal): Compiled =
+	append(literal)
+
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 	when (type) {
 		emptyType ->
@@ -74,3 +77,6 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 
 fun Compiled.append(begin: Begin, rhs: Compiled): Compiled =
 	type.plus(begin.string lineTo rhs.type).compiled { value to rhs.value }
+
+fun Compiled.append(literal: Literal): Compiled =
+	type.plus(literal.typeLine).compiled(valueFn)
