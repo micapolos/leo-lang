@@ -73,9 +73,9 @@ infix fun String.fieldTo(type: Type) = TypeField(this, type)
 infix fun String.lineTo(type: Type) = fieldTo(type).line
 val Type.isEmpty: Boolean get() = (this is StaticType) && static.script.isEmpty
 
-val textType2 = emptyType.plus(textTypeLine)
-val numberType2 = emptyType.plus(numberTypeLine)
-val nativeType2 = emptyType.plus(nativeTypeLine)
+val textType = emptyType.plus(textTypeLine)
+val numberType = emptyType.plus(numberTypeLine)
+val nativeType = emptyType.plus(nativeTypeLine)
 
 val Literal.typeLine: TypeLine
 	get() =

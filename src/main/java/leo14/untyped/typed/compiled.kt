@@ -28,40 +28,40 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 			when (begin.string) {
 				minusName ->
 					when (rhs.type) {
-						numberType2 -> numberType2.compiled { (value as Number).unaryMinus() }
+						numberType -> numberType.compiled { (value as Number).unaryMinus() }
 						else -> null
 					}
 				textName ->
 					when (rhs.type) {
-						numberType2 -> numberType2.compiled { (value as Number).toString() }
+						numberType -> numberType.compiled { (value as Number).toString() }
 						else -> null
 					}
 				else -> null
 			}
-		textType2 ->
+		textType ->
 			when (begin.string) {
 				plusName ->
 					when (rhs.type) {
-						textType2 -> textType2.compiled { (value as String).plus(rhs.value as String) }
+						textType -> textType.compiled { (value as String).plus(rhs.value as String) }
 						else -> null
 					}
 				else -> null
 			}
-		numberType2 ->
+		numberType ->
 			when (begin.string) {
 				plusName ->
 					when (rhs.type) {
-						numberType2 -> textType2.compiled { (value as Number).plus(rhs.value as Number) }
+						numberType -> textType.compiled { (value as Number).plus(rhs.value as Number) }
 						else -> null
 					}
 				minusName ->
 					when (rhs.type) {
-						numberType2 -> textType2.compiled { (value as Number).minus(rhs.value as Number) }
+						numberType -> textType.compiled { (value as Number).minus(rhs.value as Number) }
 						else -> null
 					}
 				timesName ->
 					when (rhs.type) {
-						numberType2 -> textType2.compiled { (value as Number).times(rhs.value as Number) }
+						numberType -> textType.compiled { (value as Number).times(rhs.value as Number) }
 						else -> null
 					}
 				else -> null

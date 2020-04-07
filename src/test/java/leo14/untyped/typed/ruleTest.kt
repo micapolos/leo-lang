@@ -9,9 +9,9 @@ import kotlin.test.Test
 class RuleTest {
 	@Test
 	fun applyCompiled() {
-		rule(numberType2, numberType2) { (it as Number).plus(number(1)) }
-			.apply(numberType2.compiled { number(10) })!!
+		rule(numberType, numberType) { (it as Number).plus(number(1)) }
+			.apply(numberType.compiled { number(10) })!!
 			.typed
-			.assertEqualTo(numberType2.with(number(11)))
+			.assertEqualTo(numberType.with(number(11)))
 	}
 }
