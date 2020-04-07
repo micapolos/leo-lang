@@ -388,3 +388,11 @@ val Any.anyLine: ScriptLine
 val Script.reflectScriptLine
 	get() =
 		"script" lineTo this
+
+val ScriptLine.fieldOrNull: ScriptField?
+	get() =
+		(this as? FieldScriptLine)?.field
+
+val ScriptLink.onlyLineOrNull: ScriptLine?
+	get() =
+		notNullIf(lhs.isEmpty) { line }

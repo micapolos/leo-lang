@@ -6,56 +6,74 @@ import leo14.lambda.runtime.Value
 import leo14.untyped.nativeName
 import leo14.fieldTo as scriptFieldTo
 
-fun Scope.script(type: Type, value: Value): Script =
+fun Scope.script(type: Type, value: Value, recursiveOrNull: TypeRecursive?): Script =
 	when (type) {
-		EmptyType -> script()
-		is LinkType -> script(scriptLink(type.link, value))
+		is StaticType -> type.static.script
+		is LinkType -> script(type.link, value, recursiveOrNull)
+		is RecursiveType -> script(type.recursive.type, value, type.recursive)
+		RecurseType -> script(recursiveOrNull!!.type, value, recursiveOrNull)
 	}
 
-fun Scope.scriptLink(typeLink: TypeLink, value: Value): ScriptLink =
-	if (!typeLink.lhs.isStatic && !typeLink.choice.isStatic)
-		(value as Pair<*, *>).let { (first, second) ->
-			script(typeLink.lhs, first) linkTo scriptLine(typeLink.choice, second)
-		}
-	else
-		script(typeLink.lhs, value) linkTo scriptLine(typeLink.choice, value)
+fun Scope.script(typeLink: TypeLink, value: Value, recursiveOrNull: TypeRecursive?): Script =
+	script(scriptLink(typeLink, value, recursiveOrNull))
 
-fun Scope.scriptLine(choice: Choice, value: Value): ScriptLine =
-	when (choice) {
-		EmptyChoice -> error("impossible")
-		is LinkChoice -> scriptLine(choice.link, value)
+fun Scope.scriptLink(typeLink: TypeLink, value: Value, recursiveOrNull: TypeRecursive?): ScriptLink =
+	if (typeLink.lhs.isStatic || typeLink.line.isStatic)
+		script(typeLink.lhs, value, recursiveOrNull) linkTo scriptLine(typeLink.line, value, recursiveOrNull)
+	else (value as Pair<*, *>).let { (first, second) ->
+		script(typeLink.lhs, first, recursiveOrNull) linkTo scriptLine(typeLink.line, second, recursiveOrNull)
 	}
 
-fun Scope.scriptLine(choiceLink: ChoiceLink, value: Value): ScriptLine =
-	if (choiceLink.lhs is EmptyChoice) scriptLine(choiceLink.line, value)
-	else (value as IndexedValue<*>).let { indexedValue ->
-		scriptLine(choiceLink, indexedValue.index, indexedValue.value)
-	}
-
-fun Scope.scriptLine(choiceLink: ChoiceLink, index: Int, value: Value): ScriptLine =
-	if (index == 0) scriptLine(choiceLink.line, value)
-	else scriptLine((choiceLink.lhs as LinkChoice).link, index.dec(), value)
-
-fun Scope.scriptLine(line: TypeLine, value: Value): ScriptLine =
+fun Scope.scriptLine(line: TypeLine, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
 	when (line) {
-		is LiteralTypeLine -> scriptLine(line.literal, value)
-		is FieldTypeLine -> line(scriptField(line.field, value))
+		is FieldTypeLine -> scriptLine(line.field, value, recursiveOrNull)
+		is EnumTypeLine -> scriptLine(line.enum, value, recursiveOrNull)
+		is ChoiceTypeLine -> scriptLine(line.choice, value, recursiveOrNull)
 		NativeTypeLine -> nativeScriptLine(value)
 		NumberTypeLine -> numberScriptLine(value)
 		TextTypeLine -> textScriptLine(value)
 	}
 
-fun Scope.scriptLine(literal: Literal, value: Value): ScriptLine =
-	line(literal)
-
-fun Scope.nativeScriptLine(value: Value): ScriptLine =
+fun nativeScriptLine(value: Value): ScriptLine =
 	nativeName lineTo script(literal(value.toString()))
 
-fun Scope.numberScriptLine(value: Value): ScriptLine =
+fun numberScriptLine(value: Value): ScriptLine =
 	line(literal(value as Number))
 
-fun Scope.textScriptLine(value: Value): ScriptLine =
+fun textScriptLine(value: Value): ScriptLine =
 	line(literal(value as String))
 
-fun Scope.scriptField(field: TypeField, value: Value): ScriptField =
-	field.name scriptFieldTo script(field.rhs, value)
+fun Scope.scriptLine(field: TypeField, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
+	line(scriptField(field, value, recursiveOrNull))
+
+fun Scope.scriptField(field: TypeField, value: Value, recursiveOrNull: TypeRecursive?): ScriptField =
+	field.name scriptFieldTo script(field.rhs, value, recursiveOrNull)
+
+fun Scope.scriptLine(choice: Choice, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
+	(value as IndexedValue<*>).let { (index, value) ->
+		scriptLine(choice, index, value, recursiveOrNull)
+	}
+
+fun Scope.scriptLine(choice: Choice, index: Int, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
+	when (choice) {
+		EmptyChoice -> null!!
+		is LinkChoice -> scriptLine(choice.link, index, value, recursiveOrNull)
+	}
+
+fun Scope.scriptLine(choiceLink: ChoiceLink, index: Int, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
+	if (index == 0) scriptLine(choiceLink.line, value, recursiveOrNull)
+	else scriptLine(choiceLink.lhs, index.dec(), value, recursiveOrNull)
+
+fun Scope.scriptLine(enum: Enum, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
+	scriptLine(enum, value as Int, recursiveOrNull)
+
+fun Scope.scriptLine(enum: Enum, index: Int, recursiveOrNull: TypeRecursive?): ScriptLine =
+	when (enum) {
+		EmptyEnum -> null!!
+		is LinkEnum -> scriptLine(enum.link, index, recursiveOrNull)
+	}
+
+fun Scope.scriptLine(enumLink: EnumLink, index: Int, recursiveOrNull: TypeRecursive?): ScriptLine =
+	if (index == 0) enumLink.scriptLine
+	else scriptLine(enumLink.lhs, index.dec(), recursiveOrNull)
+

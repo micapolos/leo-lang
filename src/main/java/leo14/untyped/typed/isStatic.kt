@@ -1,45 +1,35 @@
 package leo14.untyped.typed
 
+import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo14.*
 import leo14.untyped.*
 
 val Type.isStatic: Boolean
 	get() =
-		when (this) {
-			is EmptyType -> true
-			is LinkType -> link.isStatic
-		}
-
-val TypeLink.isStatic: Boolean
-	get() =
-		choice.isStatic && lhs.isStatic
-
-val Choice.isStatic: Boolean
-	get() =
-		when (this) {
-			is EmptyChoice -> true
-			is LinkChoice -> link.isStatic
-		}
-
-val ChoiceLink.isStatic: Boolean
-	get() =
-		line.isStatic && lhs is EmptyChoice
+		this is StaticType
 
 val TypeLine.isStatic: Boolean
 	get() =
-		when (this) {
-			is LiteralTypeLine -> true
-			is FieldTypeLine -> field.isStatic
-			NumberTypeLine -> false
-			TextTypeLine -> false
-			NativeTypeLine -> false
-		}
+		(this is FieldTypeLine) && field.isStatic
 
 val TypeField.isStatic: Boolean
 	get() =
 		rhs.isStatic
 
 // === script based ===
+
+val Script.typeStaticScriptOrNull: Script?
+	get() =
+		linkOrNull?.typeStaticScriptOrNull
+
+val ScriptLink.typeStaticScriptOrNull: Script?
+	get() =
+		ifOrNull(lhs.isEmpty) { line.fieldOrNull?.typeStaticScriptOrNull }
+
+val ScriptField.typeStaticScriptOrNull: Script?
+	get() =
+		notNullIf(string == staticName) { rhs }
 
 val Script.typeIsStatic: Boolean
 	get() =
