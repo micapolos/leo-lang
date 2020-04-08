@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package leo14.untyped.typed
 
 import leo.base.ifOrNull
@@ -10,6 +12,7 @@ import leo14.untyped.textName
 import leo14.untyped.timesName
 
 typealias Erase = () -> Value
+typealias EraseOf<T> = () -> T
 
 data class Compiled(val type: Type, val erase: Erase)
 data class CompiledLink(val link: TypeLink, val erase: Erase)
@@ -20,6 +23,13 @@ infix fun Type.compiled(erase: Erase) = Compiled(this, erase)
 infix fun TypeLink.compiled(erase: Erase) = CompiledLink(this, erase)
 infix fun TypeFunction.compiled(erase: Erase) = CompiledFunction(this, erase)
 fun anythingCompiled(erase: Erase) = CompiledAnything(erase)
+
+inline fun <L, R> Compiled.apply(rhs: Compiled, type: Type, crossinline fn: L.(R) -> Value): Compiled =
+	erase.let { lhsErase ->
+		rhs.erase.let { rhsErase ->
+			type.compiled { fn(lhsErase() as L, rhsErase() as R) }
+		}
+	}
 
 val emptyCompiled = emptyType.compiled { null }
 val nothingCompiled = nothingType.compiled { null!! }
@@ -92,16 +102,16 @@ fun Compiled.matchAnything(fn: (Erase) -> Compiled?): Compiled? =
 fun Compiled.matchFunction(fn: (TypeFunction, Erase) -> Compiled?): Compiled? =
 	(type as? FunctionType)?.function?.let { function -> fn(function, erase) }
 
-fun Compiled.matchInfix(name: String, fn: (Type, Erase, Type, Erase) -> Compiled?): Compiled? =
+fun Compiled.matchInfix(name: String, fn: (Compiled, Compiled) -> Compiled?): Compiled? =
 	(type as? LinkType)?.link?.let { link ->
 		(link.line as? FieldTypeLine)?.field?.let { field ->
 			ifOrNull(field.name == name) {
 				if (link.lhs.isStatic || field.rhs.isStatic)
-					fn(link.lhs, erase, field.rhs, erase)
+					fn(link.lhs.compiled(erase), field.rhs.compiled(erase))
 				else
 					fn(
-						link.lhs, { (value as Pair<*, *>).first },
-						field.rhs, { (value as Pair<*, *>).second })
+						link.lhs.compiled { (value as Pair<*, *>).first },
+						field.rhs.compiled { (value as Pair<*, *>).second })
 			}
 		}
 	}
