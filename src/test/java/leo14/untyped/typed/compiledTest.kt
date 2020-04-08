@@ -7,9 +7,21 @@ import leo14.lambda.runtime.Fn
 import leo14.lambda.runtime.fn
 import leo14.lib.number
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 @Suppress("UNCHECKED_CAST")
 class CompiledTest {
+	@Test
+	fun erasedOnce() {
+		textType
+			.compiled { "foo" }
+			.erasedOnce
+			.run {
+				value.assertEqualTo("foo")
+				assertFails { value }
+			}
+	}
+
 	@Test
 	fun select() {
 		emptyType
