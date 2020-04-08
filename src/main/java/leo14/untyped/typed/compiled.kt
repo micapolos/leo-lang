@@ -3,13 +3,11 @@
 package leo14.untyped.typed
 
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo14.*
 import leo14.Number
 import leo14.lambda.runtime.Value
-import leo14.untyped.minusName
-import leo14.untyped.plusName
-import leo14.untyped.textName
-import leo14.untyped.timesName
+import leo14.untyped.*
 
 typealias Erase = () -> Value
 typealias EraseOf<T> = () -> T
@@ -18,7 +16,7 @@ data class Compiled(val type: Type, val erase: Erase)
 data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
 data class CompiledFunction(val function: TypeFunction, val erase: Erase)
 data class CompiledAnything(val erase: Erase)
-data class CompiledLine(val line: TypeLine, val erase: Erase)
+data class CompiledLine(val typeLine: TypeLine, val erase: Erase)
 data class CompiledField(val name: String, val rhs: Compiled)
 
 infix fun Type.compiled(erase: Erase) = Compiled(this, erase)
@@ -118,7 +116,7 @@ val Compiled.linkOrNull: CompiledLink?
 
 val CompiledLine.fieldOrNull: CompiledField?
 	get() =
-		(line as? FieldTypeLine)?.field?.let { field ->
+		(typeLine as? FieldTypeLine)?.field?.let { field ->
 			field.name fieldTo field.rhs.compiled(erase)
 		}
 
@@ -130,3 +128,40 @@ fun Compiled.matchInfix(name: String, fn: Compiled.(Compiled) -> Compiled?): Com
 			}
 		}
 	}
+
+fun Compiled.get(name: String): Compiled? =
+	linkOrNull?.let { link ->
+		link.lhs.matchEmpty {
+			link.line.fieldOrNull?.rhs?.select(name)
+		}
+	}
+
+fun Compiled.select(name: String): Compiled? =
+	linkOrNull?.select(name)
+
+fun CompiledLink.select(name: String): Compiled? =
+	line.select(name) ?: lhs.select(name)
+
+fun CompiledLine.select(name: String): Compiled? =
+	when (name) {
+		textName ->
+			notNullIf(typeLine == textTypeLine) {
+				textType.compiled(erase)
+			}
+		numberName ->
+			notNullIf(typeLine == numberTypeLine) {
+				numberType.compiled(erase)
+			}
+		nativeName ->
+			notNullIf(typeLine == nativeTypeLine) {
+				nativeType.compiled(erase)
+			}
+		functionName -> TODO()
+		else -> fieldOrNull?.select(name)
+	}
+
+fun CompiledField.select(name: String): Compiled? =
+	notNullIf(this.name == name) {
+		emptyType.plus(name lineTo rhs.type).compiled(rhs.erase)
+	}
+

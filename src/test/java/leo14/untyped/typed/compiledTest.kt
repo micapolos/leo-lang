@@ -11,6 +11,33 @@ import kotlin.test.Test
 @Suppress("UNCHECKED_CAST")
 class CompiledTest {
 	@Test
+	fun select() {
+		emptyType
+			.plus("x" lineTo numberType)
+			.plus("y" lineTo numberType)
+			.compiled { 10.number to 20.number }
+			.run {
+				select("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo numberType) typed 10.number)
+				select("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo numberType) typed 20.number)
+				select("z").assertNull
+			}
+	}
+
+	@Test
+	fun get() {
+		emptyType
+			.plus("point" lineTo emptyType
+				.plus("x" lineTo numberType)
+				.plus("y" lineTo numberType))
+			.compiled { 10.number to 20.number }
+			.run {
+				get("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo numberType) typed 10.number)
+				get("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo numberType) typed 20.number)
+				get("z").assertNull
+			}
+	}
+
+	@Test
 	fun matchInfix() {
 		textType
 			.plus("and" lineTo textType)
