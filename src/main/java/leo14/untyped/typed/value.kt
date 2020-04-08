@@ -11,3 +11,5 @@ val Literal.value: Value
 			is StringLiteral -> string
 			is NumberLiteral -> number
 		}
+
+val Value.valuePair: Pair<*, *> get() = this as Pair<*, *>
