@@ -102,14 +102,14 @@ fun Compiled.matchAnything(fn: (Erase) -> Compiled?): Compiled? =
 fun Compiled.matchFunction(fn: (TypeFunction, Erase) -> Compiled?): Compiled? =
 	(type as? FunctionType)?.function?.let { function -> fn(function, erase) }
 
-fun Compiled.matchInfix(name: String, fn: (Compiled, Compiled) -> Compiled?): Compiled? =
+fun Compiled.matchInfix(name: String, fn: Compiled.(Compiled) -> Compiled?): Compiled? =
 	(type as? LinkType)?.link?.let { link ->
 		(link.line as? FieldTypeLine)?.field?.let { field ->
 			ifOrNull(field.name == name) {
 				if (link.lhs.isStatic || field.rhs.isStatic)
-					fn(link.lhs.compiled(erase), field.rhs.compiled(erase))
+					fn.invoke(link.lhs.compiled(erase), field.rhs.compiled(erase))
 				else
-					fn(
+					fn.invoke(
 						link.lhs.compiled { (value as Pair<*, *>).first },
 						field.rhs.compiled { (value as Pair<*, *>).second })
 			}

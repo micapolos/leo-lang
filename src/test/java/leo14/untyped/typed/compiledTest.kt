@@ -15,10 +15,8 @@ class CompiledTest {
 		textType
 			.plus("and" lineTo textType)
 			.compiled { "Hello, " to "world!" }
-			.matchInfix("and") { lhs, rhs ->
-				lhs.apply<String, String>(rhs, textType) { rhs ->
-					this + rhs
-				}
+			.matchInfix("and") { rhs ->
+				apply<String, String>(rhs, textType) { plus(it) }
 			}!!
 			.typed
 			.assertEqualTo(textType.typed("Hello, world!"))
@@ -29,7 +27,7 @@ class CompiledTest {
 		textType
 			.plus("and" lineTo textType)
 			.compiled { null!! }
-			.matchInfix("or") { _, _ -> null!! }
+			.matchInfix("or") { null!! }
 			.assertNull
 	}
 
