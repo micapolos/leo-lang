@@ -2,14 +2,14 @@ package leo.base
 
 import kotlin.test.Test
 
-fun fibf(i: Int): Int =
+fun funFib(i: Int): Int =
 	when (i) {
 		1 -> 1
 		2 -> 1
-		else -> fibf(i.dec()) + fibf(i.dec().dec())
+		else -> funFib(i.dec()) + funFib(i.dec().dec())
 	}
 
-val fib = fix { i: Int ->
+val fixFib = fix { i: Int ->
 	when (i) {
 		1 -> 1
 		2 -> 1
@@ -20,15 +20,15 @@ val fib = fix { i: Int ->
 class FixTest {
 	@Test
 	fun fibo() {
-		fib(10).assertEqualTo(55)
+		fixFib(10).assertEqualTo(55)
 	}
 
 	@Test
 	fun performance() {
 		repeat(10) {
 			println("======")
-			printTime("fun: ") { fibf(36) }
-			printTime("fix: ") { fib(36) }
+			printTime("funFib: ") { funFib(36).assertEqualTo(14930352) }
+			printTime("fixFib: ") { fixFib(36).assertEqualTo(14930352) }
 		}
 	}
 }
