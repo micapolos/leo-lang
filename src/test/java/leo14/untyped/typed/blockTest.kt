@@ -5,7 +5,7 @@ import kotlin.test.Test
 
 class BlockTest {
 	@Test
-	fun apply() {
+	fun doApply1() {
 		constant(10).block
 			.doApply { inc() }
 			.assertEqualTo(constant(11).block)
@@ -17,7 +17,7 @@ class BlockTest {
 	}
 
 	@Test
-	fun apply2() {
+	fun doApply2() {
 		constant(10).block
 			.doApply(constant(20).block) { this + it }
 			.assertEqualTo(constant(30).block)
