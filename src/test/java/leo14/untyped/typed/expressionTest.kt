@@ -1,81 +1,40 @@
 package leo14.untyped.typed
 
 import leo.base.assertEqualTo
-import leo13.stack
-import java.awt.Point
 import kotlin.test.Test
 
 class ExpressionTest {
 	@Test
-	fun valueArray() {
-		stack("foo", 10)
-			.valueArray
-			.toList()
-			.assertEqualTo(listOf("foo", 10))
+	fun doApply1() {
+		constant(10).expression
+			.doApply { inc() }
+			.assertEqualTo(constant(11).expression)
+
+		dynamic { 10 }.assertEvaluatesOnce.expression
+			.doApply { inc() }
+			.value
+			.assertEqualTo(11)
 	}
 
 	@Test
-	fun arrayAt() {
-		arrayOf("foo", 10)
-			.arrayAt(0)
-			.assertEqualTo("foo")
-	}
+	fun doApply2() {
+		constant(10).expression
+			.doApply(constant(20).expression) { this + it }
+			.assertEqualTo(constant(30).expression)
 
-	@Test
-	fun arrayValue() {
-		arrayOf("foo", 10)
-			.arrayValue
-			.assertEqualTo(stack("foo", 10))
-	}
+		constant(10).expression
+			.doApply(dynamic { 20 }.assertEvaluatesOnce.expression) { this + it }
+			.value
+			.assertEqualTo(30)
 
-	// === Reflection ===
+		dynamic { 10 }.assertEvaluatesOnce.expression
+			.doApply(constant(20).expression) { this + it }
+			.value
+			.assertEqualTo(30)
 
-	@Test
-	fun stringClass() {
-		"java.lang.String"
-			.stringClass
-			.assertEqualTo(java.lang.String::class.java)
-	}
-
-	@Test
-	fun classField() {
-		Integer::class.java
-			.classField("MAX_VALUE")
-			.assertEqualTo(Integer::class.java.getField("MAX_VALUE"))
-	}
-
-	@Test
-	fun classConstructor() {
-		Point::class.java
-			.classConstructor(stack(Integer.TYPE, Integer.TYPE))
-			.assertEqualTo(Point::class.java.getConstructor(Integer.TYPE, Integer.TYPE))
-	}
-
-	@Test
-	fun classMethod() {
-		Point::class.java
-			.classMethod(stack("move", stack(Integer.TYPE, Integer.TYPE)))
-			.assertEqualTo(Point::class.java.getMethod("move", Integer.TYPE, Integer.TYPE))
-	}
-
-	@Test
-	fun fieldGet() {
-		Point::class.java.getField("x")
-			.fieldGet(Point(10, 20))
-			.assertEqualTo(10)
-	}
-
-	@Test
-	fun constructorInvoke() {
-		Point::class.java.getConstructor(Integer.TYPE, Integer.TYPE)
-			.constructorInvoke(stack(10, 20))
-			.assertEqualTo(Point(10, 20))
-	}
-
-	@Test
-	fun methodInvoke() {
-		java.lang.String::class.java.getMethod("substring", Integer.TYPE, Integer.TYPE)
-			.methodInvoke(stack("Hello, world!", stack(7, 12)))
-			.assertEqualTo("world")
+		dynamic { 10 }.assertEvaluatesOnce.expression
+			.doApply(dynamic { 20 }.assertEvaluatesOnce.expression) { this + it }
+			.value
+			.assertEqualTo(30)
 	}
 }

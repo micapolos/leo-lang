@@ -11,29 +11,29 @@ import leo14.untyped.*
 
 typealias Erase = () -> Value
 
-data class Compiled<out T>(val type: Type, val block: Block<T>)
+data class Compiled<out T>(val type: Type, val expression: Expression<T>)
 data class CompiledLink<out L, out R>(val lhs: Compiled<L>, val line: CompiledLine<R>)
-data class CompiledFunction<out T>(val function: TypeFunction, val block: Block<T>)
-data class CompiledAnything(val block: Block<*>)
-data class CompiledLine<out T>(val typeLine: TypeLine, val block: Block<T>)
+data class CompiledFunction<out T>(val function: TypeFunction, val expression: Expression<T>)
+data class CompiledAnything(val expression: Expression<*>)
+data class CompiledLine<out T>(val typeLine: TypeLine, val expression: Expression<T>)
 data class CompiledField<out T>(val name: String, val rhs: Compiled<T>)
 
-infix fun <T> Type.compiled(block: Block<T>) = Compiled(this, block)
-infix fun <T> Type.compiled(value: T) = Compiled(this, constant(value).block)
-infix fun <T> Type.compiled(evaluate: () -> T) = Compiled(this, dynamic(evaluate).block)
+infix fun <T> Type.compiled(expression: Expression<T>) = Compiled(this, expression)
+infix fun <T> Type.compiled(value: T) = Compiled(this, constant(value).expression)
+infix fun <T> Type.compiled(evaluate: () -> T) = Compiled(this, dynamic(evaluate).expression)
 infix fun <L, R> Compiled<L>.linkTo(line: CompiledLine<R>) = CompiledLink(this, line)
-infix fun <T> TypeFunction.compiled(block: Block<T>) = CompiledFunction(this, block)
-infix fun <T> TypeLine.compiled(block: Block<T>) = CompiledLine(this, block)
+infix fun <T> TypeFunction.compiled(expression: Expression<T>) = CompiledFunction(this, expression)
+infix fun <T> TypeLine.compiled(expression: Expression<T>) = CompiledLine(this, expression)
 infix fun <T> String.fieldTo(rhs: Compiled<T>) = CompiledField(this, rhs)
-fun <T> anythingCompiled(block: Block<T>) = CompiledAnything(block)
+fun <T> anythingCompiled(expression: Expression<T>) = CompiledAnything(expression)
 
 inline fun <L, R, O> Compiled<L>.apply(rhs: Compiled<R>, type: Type, crossinline fn: L.(R) -> O): Compiled<O> =
-	type.compiled(block.doApply(rhs.block, fn))
+	type.compiled(expression.doApply(rhs.expression, fn))
 
 val emptyCompiled: Compiled<*> = emptyType.compiled { null }
 val nothingCompiled = nothingType.compiled { null!! }
 val Compiled<*>.isEmpty get() = type.isEmpty
-val <T> Compiled<T>.value: T get() = block.value
+val <T> Compiled<T>.value: T get() = expression.value
 
 val <T> Compiled<T>.typed: Typed get() = type typed value
 
@@ -95,16 +95,16 @@ fun Compiled<*>.append(begin: Begin, rhs: Compiled<*>): Compiled<*> =
 fun Compiled<*>.matchEmpty(fn: () -> Compiled<*>?): Compiled<*>? =
 	ifOrNull(type is EmptyType) { fn() }
 
-fun Compiled<*>.matchFunction(fn: (TypeFunction, Block<*>) -> Compiled<*>?): Compiled<*>? =
-	(type as? FunctionType)?.function?.let { function -> fn(function, block) }
+fun Compiled<*>.matchFunction(fn: (TypeFunction, Expression<*>) -> Compiled<*>?): Compiled<*>? =
+	(type as? FunctionType)?.function?.let { function -> fn(function, expression) }
 
 fun <L, R, O> Compiled<*>.linkApply(targetType: Type, fn: L.(R) -> O): Compiled<O>? =
 	type.linkOrNull?.let { link ->
 		if (link.lhs.isStatic || link.line.isStatic)
-			targetType.compiled(block.doApply { (this as L).fn(this as R) })
+			targetType.compiled(expression.doApply { (this as L).fn(this as R) })
 		else
 			targetType.compiled(
-				block.doApply {
+				expression.doApply {
 					(this as Pair<*, *>)
 					(first as L).fn(second as R)
 				})
@@ -114,16 +114,16 @@ val Compiled<*>.linkOrNull: CompiledLink<*, *>?
 	get() =
 		(type as? LinkType)?.link?.let { link ->
 			if (link.lhs.isStatic || link.line.isStatic)
-				link.lhs.compiled(block) linkTo link.line.compiled(block)
+				link.lhs.compiled(expression) linkTo link.line.compiled(expression)
 			else
-				link.lhs.compiled(block.doApply { (this as Pair<*, *>).first }) linkTo
-					link.line.compiled(block.doApply { (this as Pair<*, *>).second })
+				link.lhs.compiled(expression.doApply { (this as Pair<*, *>).first }) linkTo
+					link.line.compiled(expression.doApply { (this as Pair<*, *>).second })
 		}
 
 val CompiledLine<*>.fieldOrNull: CompiledField<*>?
 	get() =
 		(typeLine as? FieldTypeLine)?.field?.let { field ->
-			field.name fieldTo field.rhs.compiled(block)
+			field.name fieldTo field.rhs.compiled(expression)
 		}
 
 fun Compiled<*>.matchInfix(name: String, fn: Compiled<*>.(Compiled<*>) -> Compiled<*>?): Compiled<*>? =
@@ -152,15 +152,15 @@ fun CompiledLine<*>.select(name: String): Compiled<*>? =
 	when (name) {
 		textName ->
 			notNullIf(typeLine == textTypeLine) {
-				textType.compiled(block)
+				textType.compiled(expression)
 			}
 		numberName ->
 			notNullIf(typeLine == numberTypeLine) {
-				numberType.compiled(block)
+				numberType.compiled(expression)
 			}
 		nativeName ->
 			notNullIf(typeLine == nativeTypeLine) {
-				nativeType.compiled(block)
+				nativeType.compiled(expression)
 			}
 		functionName -> TODO()
 		else -> fieldOrNull?.select(name)
@@ -168,6 +168,6 @@ fun CompiledLine<*>.select(name: String): Compiled<*>? =
 
 fun CompiledField<*>.select(name: String): Compiled<*>? =
 	notNullIf(this.name == name) {
-		emptyType.plus(name lineTo rhs.type).compiled(rhs.block)
+		emptyType.plus(name lineTo rhs.type).compiled(rhs.expression)
 	}
 

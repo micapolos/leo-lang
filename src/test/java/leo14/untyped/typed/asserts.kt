@@ -3,7 +3,7 @@ package leo14.untyped.typed
 import leo.base.assertEqualTo
 
 val <T> Compiled<T>.assertEvaluatedOnce: Compiled<T>
-	get() = type.compiled(block.assertEvaluatedOnce)
+	get() = type.compiled(expression.assertEvaluatedOnce)
 
 val <T> Dynamic<T>.assertEvaluatesOnce: Dynamic<T>
 	get() {
@@ -15,9 +15,9 @@ val <T> Dynamic<T>.assertEvaluatesOnce: Dynamic<T>
 		}
 	}
 
-val <T> Block<T>.assertEvaluatedOnce: Block<T>
+val <T> Expression<T>.assertEvaluatedOnce: Expression<T>
 	get() =
 		when (this) {
-			is ConstantBlock -> this
-			is DynamicBlock -> dynamic.assertEvaluatesOnce.block
+			is ConstantExpression -> this
+			is DynamicExpression -> dynamic.assertEvaluatesOnce.expression
 		}
