@@ -1,6 +1,6 @@
 package leo14.untyped.typed
 
-import leo14.lambda.runtime.Value
+import leo14.lambda.runtime.Fn
 
 data class Matching(val compiled: Compiled)
 data class Remaining(val remaining: Compiled)
@@ -39,7 +39,7 @@ fun TypeLink.match(compiled: Compiled, recursiveOrNull: TypeRecursive?): Match =
 	if (compiled.type !is LinkType) nothingCompiled.matching and compiled.remaining
 	else match(compiled.type.link, compiled.valueFn, recursiveOrNull)
 
-fun TypeLink.match(compiledTypeLink: TypeLink, valueFn: () -> Value, recursiveOrNull: TypeRecursive?): Match =
+fun TypeLink.match(compiledTypeLink: TypeLink, valueFn: Fn, recursiveOrNull: TypeRecursive?): Match =
 	if (compiledTypeLink.lhs.isStatic || compiledTypeLink.line.isStatic) TODO()
 	else TODO()
 
@@ -50,7 +50,7 @@ fun TypeFunction.match(compiled: Compiled, recursiveOrNull: TypeRecursive?): Mat
 	if (compiled.type !is FunctionType) compiled.mismatch
 	else match(compiled.type.function, compiled.valueFn, recursiveOrNull)
 
-fun TypeFunction.match(compiledFunction: TypeFunction, valueFn: () -> Value, recursiveOrNull: TypeRecursive?): Match =
+fun TypeFunction.match(compiledFunction: TypeFunction, valueFn: Fn, recursiveOrNull: TypeRecursive?): Match =
 	if (from == compiledFunction.from && to == compiledFunction.to) TODO()
 	else compiledFunction.type.compiled(valueFn).mismatch
 

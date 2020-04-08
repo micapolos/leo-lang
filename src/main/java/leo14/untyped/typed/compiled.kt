@@ -3,19 +3,19 @@ package leo14.untyped.typed
 import leo.base.ifOrNull
 import leo14.*
 import leo14.Number
-import leo14.lambda.runtime.Value
+import leo14.lambda.runtime.Fn
 import leo14.untyped.minusName
 import leo14.untyped.plusName
 import leo14.untyped.textName
 import leo14.untyped.timesName
 
-data class Compiled(val type: Type, val valueFn: () -> Value)
+data class Compiled(val type: Type, val valueFn: Fn)
 
-infix fun Type.compiled(valueFn: () -> Value) = Compiled(this, valueFn)
+infix fun Type.compiled(valueFn: Fn) = Compiled(this, valueFn)
 val emptyCompiled = emptyType.compiled { null }
 val nothingCompiled = nothingType.compiled { null!! }
 val Compiled.isEmpty get() = type.isEmpty
-val Compiled.value get() = valueFn()
+val Compiled.value get() = valueFn(null)
 
 val Compiled.typed: Typed get() = type.typed(value)
 
