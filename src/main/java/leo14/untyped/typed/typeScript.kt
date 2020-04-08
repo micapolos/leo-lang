@@ -10,12 +10,13 @@ import leo14.linkTo as scriptLinkTo
 val Type.script: Script
 	get() =
 		when (this) {
-			is EmptyType -> script()
+			EmptyType -> script()
 			is LinkType -> script(link.scriptLink)
 			is AlternativeType -> alternative.script
 			is FunctionType -> function.script
 			is RecursiveType -> recursive.typeScript
 			RecurseType -> script(recurseName)
+			AnythingType -> script(anythingName)
 		}
 
 val TypeFunction.script: Script
@@ -63,5 +64,6 @@ val String.isTypeKeyword: Boolean
 			recursiveName -> true
 			recurseName -> true
 			exactName -> true
+			anythingName -> true
 			else -> false
 		}

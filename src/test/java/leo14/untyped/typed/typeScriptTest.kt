@@ -23,6 +23,7 @@ class TypeScriptTest {
 		emptyType.plus("recursive" lineTo emptyType).script.assertEqualTo(leo("exact"("recursive"())))
 		emptyType.plus("recurse" lineTo emptyType).script.assertEqualTo(leo("exact"("recurse"())))
 		emptyType.plus("exact" lineTo emptyType).script.assertEqualTo(leo("exact"("exact"())))
+		emptyType.plus("anything" lineTo emptyType).script.assertEqualTo(leo("exact"("anything"())))
 	}
 
 	@Test

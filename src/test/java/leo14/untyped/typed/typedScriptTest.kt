@@ -13,15 +13,15 @@ class TypedScriptTest {
 	@Test
 	fun primitives() {
 		emptyScope
-			.script(emptyType.plus(textTypeLine), "foo", null)
+			.script(emptyType.plus(textTypeLine).typed("foo"))
 			.assertEqualTo(leo("foo"))
 
 		emptyScope
-			.script(emptyType.plus(nativeTypeLine), Point(10, 20), null)
+			.script(emptyType.plus(nativeTypeLine).typed(Point(10, 20)))
 			.assertEqualTo(leo("native"(Point(10, 20).toString())))
 
 		emptyScope
-			.script(emptyType.plus(numberTypeLine), number(10), null)
+			.script(emptyType.plus(numberTypeLine).typed(number(10)))
 			.assertEqualTo(leo(10))
 	}
 
@@ -32,11 +32,11 @@ class TypedScriptTest {
 			.or(emptyType.plus("true" lineTo emptyType))
 
 		emptyScope
-			.script(type, true, null)
+			.script(type.typed(true))
 			.assertEqualTo(leo("true"()))
 
 		emptyScope
-			.script(type, false, null)
+			.script(type.typed(false))
 			.assertEqualTo(leo("false"()))
 	}
 
@@ -47,11 +47,11 @@ class TypedScriptTest {
 			.or(emptyType.plus(numberTypeLine))
 
 		emptyScope
-			.script(type, true rhsSelected number(123), null)
+			.script(type.typed(true rhsSelected number(123)))
 			.assertEqualTo(leo(123))
 
 		emptyScope
-			.script(type, false rhsSelected "foo", null)
+			.script(type.typed(false rhsSelected "foo"))
 			.assertEqualTo(leo("foo"))
 	}
 
@@ -66,18 +66,18 @@ class TypedScriptTest {
 						.plus("y" fieldTo emptyType.plus(numberTypeLine)))))
 
 		emptyScope
-			.script(type, number(10) to (number(20) to number(30)), null)
+			.script(type.typed(number(10) to (number(20) to number(30))))
 			.assertEqualTo(leo("circle"("radius"(10), "center"("point"("x"(20), "y"(30))))))
 	}
 
 	@Test
 	fun recursive() {
 		emptyScope
-			.script(emptyType.recursive.toType, null, null)
+			.script(emptyType.recursive.toType.staticTyped)
 			.assertEqualTo(leo())
 
 		emptyScope
-			.script(emptyType.plus(textTypeLine).recursive.toType, "foo", null)
+			.script(emptyType.plus(textTypeLine).recursive.toType.typed("foo"))
 			.assertEqualTo(leo("foo"))
 
 		emptyType
@@ -87,15 +87,15 @@ class TypedScriptTest {
 			.toType
 			.let { natType ->
 				emptyScope
-					.script(natType, false rhsSelected null, null)
+					.script(natType.typed(false rhsSelected null))
 					.assertEqualTo(leo("zero"()))
 
 				emptyScope
-					.script(natType, true rhsSelected (false rhsSelected null), null)
+					.script(natType.typed(true rhsSelected (false rhsSelected null)))
 					.assertEqualTo(leo("next"("zero"())))
 
 				emptyScope
-					.script(natType, true rhsSelected (true rhsSelected (false rhsSelected null)), null)
+					.script(natType.typed(true rhsSelected (true rhsSelected (false rhsSelected null))))
 					.assertEqualTo(leo("next"("next"("zero"()))))
 			}
 	}
@@ -105,24 +105,26 @@ class TypedScriptTest {
 		emptyScope.script(
 			emptyType.plus(numberTypeLine)
 				.functionTo(emptyType.plus(textTypeLine))
-				.type,
-			fn { it.toString() },
-			null)
+				.type
+				.typed(fn { it.toString() }))
 			.assertEqualTo(leo("function"("number"(), "doing"("text"()))))
 	}
 
 	@Test
 	fun literals() {
 		emptyScope.script(
-			emptyType.plus(literal(123).staticTypeLine),
-			null,
-			null)
+			emptyType.plus(literal(123).staticTypeLine).staticTyped)
 			.assertEqualTo(leo(123))
 
 		emptyScope.script(
-			emptyType.plus(literal("foo").staticTypeLine),
-			null,
-			null)
+			emptyType.plus(literal("foo").staticTypeLine).staticTyped)
+			.assertEqualTo(leo("foo"))
+	}
+
+	@Test
+	fun anything() {
+		emptyScope
+			.script(anythingType.typed(textType.typed("foo")))
 			.assertEqualTo(leo("foo"))
 	}
 }

@@ -16,7 +16,7 @@ val Compiled.isEmpty get() = type.isEmpty
 infix fun Type.compiled(valueFn: () -> Value) = Compiled(this, valueFn)
 val Compiled.value get() = valueFn()
 
-val Compiled.typed: Typed get() = type.with(value)
+val Compiled.typed: Typed get() = type.typed(value)
 
 fun Compiled.apply(literal: Literal): Compiled =
 	if (isEmpty) emptyType.plus(literal.typeLine).compiled { literal.value }

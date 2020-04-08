@@ -13,12 +13,13 @@ fun Scope.script(typed: Typed): Script =
 
 fun Scope.script(type: Type, value: Value, recursiveOrNull: TypeRecursive?): Script =
 	when (type) {
-		is EmptyType -> script()
+		EmptyType -> script()
 		is LinkType -> script(type.link, value, recursiveOrNull)
 		is AlternativeType -> script(type.alternative, value, recursiveOrNull)
 		is FunctionType -> script(type.function, value)
 		is RecursiveType -> script(type.recursive.type, value, type.recursive)
 		RecurseType -> script(recursiveOrNull!!.type, value, recursiveOrNull)
+		AnythingType -> script(value as Typed)
 	}
 
 fun Scope.script(typeLink: TypeLink, value: Value, recursiveOrNull: TypeRecursive?): Script =
