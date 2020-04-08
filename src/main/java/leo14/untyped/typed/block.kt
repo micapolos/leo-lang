@@ -58,3 +58,9 @@ val <T> Block<T>.value: T
 			is ConstantBlock -> constant.value
 			is DynamicBlock -> dynamic.value
 		}
+
+operator fun <I, O> Block<I.() -> O>.invoke(rhs: Block<I>): Block<O> =
+	doApply(rhs) { invoke(it) }
+
+fun <T> block(value: T): Block<T> = constant(value).block
+fun <T> block(fn: () -> T): Block<T> = dynamic(fn).block

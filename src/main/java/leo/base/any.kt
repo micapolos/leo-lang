@@ -39,7 +39,7 @@ fun <V : Any, R> V?.ifNotNull(fn: (V) -> R?): R? =
 fun <V : Any> V?.notNullAnd(fn: (V) -> Boolean): Boolean =
 	if (this != null) fn(this) else false
 
-fun <V: Any> notNullIf(condition: Boolean, fn: () -> V): V? =
+inline fun <V : Any> notNullIf(condition: Boolean, fn: () -> V): V? =
 	if (condition) fn() else null
 
 fun <V: Any> ifOrNull(condition: Boolean, fn: () -> V?): V? =
@@ -116,3 +116,12 @@ fun <V : Any> V?.notNullOrError(message: String): V =
 
 val Any?.print get() = print(this)
 val Any?.println get() = println(this)
+
+inline fun <R : Any> R.whileNotNull(fn: R.() -> R?): R {
+	var value: R = this
+	do {
+		val newValue = value.fn() ?: return value
+		value = newValue
+	} while (true)
+}
+
