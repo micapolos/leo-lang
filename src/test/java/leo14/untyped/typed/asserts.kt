@@ -2,7 +2,7 @@ package leo14.untyped.typed
 
 import leo.base.assertEqualTo
 
-val Compiled.erasedOnce: Compiled
+val <T> Compiled<T>.erasedOnce: Compiled<T>
 	get() {
 		var erased = false
 		return type.compiled {

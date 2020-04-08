@@ -12,39 +12,39 @@ import leo14.untyped.*
 typealias Erase = () -> Value
 typealias EraseOf<T> = () -> T
 
-data class Compiled(val type: Type, val erase: Erase)
-data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
-data class CompiledFunction(val function: TypeFunction, val erase: Erase)
+data class Compiled<out T>(val type: Type, val erase: EraseOf<T>)
+data class CompiledLink<out L, out R>(val lhs: Compiled<L>, val line: CompiledLine<R>)
+data class CompiledFunction<out T>(val function: TypeFunction, val erase: EraseOf<T>)
 data class CompiledAnything(val erase: Erase)
-data class CompiledLine(val typeLine: TypeLine, val erase: Erase)
-data class CompiledField(val name: String, val rhs: Compiled)
+data class CompiledLine<out T>(val typeLine: TypeLine, val erase: EraseOf<T>)
+data class CompiledField<out T>(val name: String, val rhs: Compiled<T>)
 
-infix fun Type.compiled(erase: Erase) = Compiled(this, erase)
-infix fun Compiled.linkTo(line: CompiledLine) = CompiledLink(this, line)
-infix fun TypeFunction.compiled(erase: Erase) = CompiledFunction(this, erase)
-infix fun TypeLine.compiled(erase: Erase) = CompiledLine(this, erase)
-infix fun String.fieldTo(rhs: Compiled) = CompiledField(this, rhs)
-fun anythingCompiled(erase: Erase) = CompiledAnything(erase)
+infix fun <T> Type.compiled(erase: EraseOf<T>) = Compiled(this, erase)
+infix fun <T> Compiled<T>.linkTo(line: CompiledLine<T>) = CompiledLink(this, line)
+infix fun <T> TypeFunction.compiled(erase: EraseOf<T>) = CompiledFunction(this, erase)
+infix fun <T> TypeLine.compiled(erase: EraseOf<T>) = CompiledLine(this, erase)
+infix fun <T> String.fieldTo(rhs: Compiled<T>) = CompiledField(this, rhs)
+fun <T> anythingCompiled(erase: EraseOf<T>) = CompiledAnything(erase)
 
-inline fun <L, R> Compiled.apply(rhs: Compiled, type: Type, crossinline fn: L.(R) -> Value): Compiled =
+inline fun <L, R, O> Compiled<L>.apply(rhs: Compiled<R>, type: Type, crossinline fn: L.(R) -> O): Compiled<O> =
 	erase.let { lhsErase ->
 		rhs.erase.let { rhsErase ->
-			type.compiled { fn(lhsErase() as L, rhsErase() as R) }
+			type.compiled { fn(lhsErase(), rhsErase()) }
 		}
 	}
 
-val emptyCompiled = emptyType.compiled { null }
+val emptyCompiled: Compiled<*> = emptyType.compiled { null }
 val nothingCompiled = nothingType.compiled { null!! }
-val Compiled.isEmpty get() = type.isEmpty
-val Compiled.value get() = erase()
+val Compiled<*>.isEmpty get() = type.isEmpty
+val <T> Compiled<T>.value: T get() = erase()
 
-val Compiled.typed: Typed get() = type typed value
+val <T> Compiled<T>.typed: Typed get() = type typed value
 
-fun Compiled.apply(literal: Literal): Compiled =
+fun Compiled<*>.apply(literal: Literal): Compiled<*> =
 	if (isEmpty) emptyType.plus(literal.typeLine).compiled { literal.value }
 	else type.plus(literal.typeLine).compiled { value to literal.value }
 
-fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
+fun Compiled<*>.apply(begin: Begin, rhs: Compiled<*>): Compiled<*> =
 	when (type) {
 		emptyType ->
 			when (begin.string) {
@@ -92,19 +92,19 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 		else -> null
 	} ?: append(begin, rhs)
 
-fun Compiled.append(begin: Begin, rhs: Compiled): Compiled =
+fun Compiled<*>.append(begin: Begin, rhs: Compiled<*>): Compiled<*> =
 	type.plus(begin.string lineTo rhs.type).compiled { value to rhs.value }
 
-fun Compiled.matchEmpty(fn: () -> Compiled?): Compiled? =
+fun Compiled<*>.matchEmpty(fn: () -> Compiled<*>?): Compiled<*>? =
 	ifOrNull(type is EmptyType) { fn() }
 
-fun Compiled.matchAnything(fn: (Erase) -> Compiled?): Compiled? =
+fun Compiled<*>.matchAnything(fn: (Erase) -> Compiled<*>?): Compiled<*>? =
 	ifOrNull(type is AnythingType) { fn(erase) }
 
-fun Compiled.matchFunction(fn: (TypeFunction, Erase) -> Compiled?): Compiled? =
+fun Compiled<*>.matchFunction(fn: (TypeFunction, Erase) -> Compiled<*>?): Compiled<*>? =
 	(type as? FunctionType)?.function?.let { function -> fn(function, erase) }
 
-fun <L, R> Compiled.linkApply(targetType: Type, fn: L.(R) -> Value): Compiled? =
+fun <L, R, O> Compiled<*>.linkApply(targetType: Type, fn: L.(R) -> O): Compiled<O>? =
 	type.linkOrNull?.let { link ->
 		if (link.lhs.isStatic || link.line.isStatic)
 			targetType.compiled {
@@ -121,7 +121,7 @@ fun <L, R> Compiled.linkApply(targetType: Type, fn: L.(R) -> Value): Compiled? =
 			}
 	}
 
-val Compiled.linkOrNull: CompiledLink?
+val Compiled<*>.linkOrNull: CompiledLink<*, *>?
 	get() =
 		(type as? LinkType)?.link?.let { link ->
 			if (link.lhs.isStatic || link.line.isStatic)
@@ -131,13 +131,13 @@ val Compiled.linkOrNull: CompiledLink?
 					link.line.compiled { (erase() as Pair<*, *>).second }
 		}
 
-val CompiledLine.fieldOrNull: CompiledField?
+val CompiledLine<*>.fieldOrNull: CompiledField<*>?
 	get() =
 		(typeLine as? FieldTypeLine)?.field?.let { field ->
 			field.name fieldTo field.rhs.compiled(erase)
 		}
 
-fun Compiled.matchInfix(name: String, fn: Compiled.(Compiled) -> Compiled?): Compiled? =
+fun Compiled<*>.matchInfix(name: String, fn: Compiled<*>.(Compiled<*>) -> Compiled<*>?): Compiled<*>? =
 	linkOrNull?.let { link ->
 		link.line.fieldOrNull?.let { field ->
 			ifOrNull(field.name == name) {
@@ -146,20 +146,20 @@ fun Compiled.matchInfix(name: String, fn: Compiled.(Compiled) -> Compiled?): Com
 		}
 	}
 
-fun Compiled.get(name: String): Compiled? =
+fun Compiled<*>.get(name: String): Compiled<*>? =
 	linkOrNull?.let { link ->
 		link.lhs.matchEmpty {
 			link.line.fieldOrNull?.rhs?.select(name)
 		}
 	}
 
-fun Compiled.select(name: String): Compiled? =
+fun Compiled<*>.select(name: String): Compiled<*>? =
 	linkOrNull?.select(name)
 
-fun CompiledLink.select(name: String): Compiled? =
+fun CompiledLink<*, *>.select(name: String): Compiled<*>? =
 	line.select(name) ?: lhs.select(name)
 
-fun CompiledLine.select(name: String): Compiled? =
+fun CompiledLine<*>.select(name: String): Compiled<*>? =
 	when (name) {
 		textName ->
 			notNullIf(typeLine == textTypeLine) {
@@ -177,7 +177,7 @@ fun CompiledLine.select(name: String): Compiled? =
 		else -> fieldOrNull?.select(name)
 	}
 
-fun CompiledField.select(name: String): Compiled? =
+fun CompiledField<*>.select(name: String): Compiled<*>? =
 	notNullIf(this.name == name) {
 		emptyType.plus(name lineTo rhs.type).compiled(rhs.erase)
 	}

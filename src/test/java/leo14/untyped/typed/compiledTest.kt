@@ -30,7 +30,7 @@ class CompiledTest {
 			.plus(numberTypeLine)
 			.compiled { "number: " to 10.number }
 			.erasedOnce
-			.linkApply<String, Number>(textType) { number ->
+			.linkApply<String, Number, String>(textType) { number ->
 				this + number.toString()
 			}!!
 			.typed
@@ -69,9 +69,8 @@ class CompiledTest {
 		textType
 			.plus("and" lineTo textType)
 			.compiled { "Hello, " to "world!" }
-			.erasedOnce
 			.matchInfix("and") { rhs ->
-				apply<String, String>(rhs, textType) { plus(it) }
+				apply(rhs, textType) { (this as String) + (it as String) }
 			}!!
 			.typed
 			.assertEqualTo(textType.typed("Hello, world!"))
