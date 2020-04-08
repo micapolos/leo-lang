@@ -25,6 +25,10 @@ val <T> Expression<T>.value: T
 			is DynamicExpression -> dynamic.value
 		}
 
+val <T> Expression<T>.evaluate: Expression<T>
+	get() =
+		expression(value)
+
 inline fun <L, O> Expression<L>.doApply(crossinline fn: L.() -> O): Expression<O> =
 	when (this) {
 		is ConstantExpression -> expression(constant.value.fn())
