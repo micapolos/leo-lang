@@ -5,7 +5,7 @@ import leo.base.assertEqualTo
 val <T> Compiled<T>.assertEvaluatedOnce: Compiled<T>
 	get() = type.compiled(block.assertEvaluatedOnce)
 
-val <T> Dynamic<T>.assertEvaluatedOnce: Dynamic<T>
+val <T> Dynamic<T>.assertEvaluatesOnce: Dynamic<T>
 	get() {
 		var evaluated = false
 		return dynamic {
@@ -19,5 +19,5 @@ val <T> Block<T>.assertEvaluatedOnce: Block<T>
 	get() =
 		when (this) {
 			is ConstantBlock -> this
-			is DynamicBlock -> dynamic.assertEvaluatedOnce.block
+			is DynamicBlock -> dynamic.assertEvaluatesOnce.block
 		}
