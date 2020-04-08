@@ -35,9 +35,9 @@ fun nothingMatch(compiled: Compiled<*>): Match =
 
 fun TypeLink.match(compiled: Compiled<*>, recursiveOrNull: TypeRecursive?): Match =
 	if (compiled.type !is LinkType) nothingCompiled.matching and compiled.remaining
-	else match(compiled.type.link, compiled.erase, recursiveOrNull)
+	else match(compiled.type.link, compiled.block, recursiveOrNull)
 
-fun TypeLink.match(compiledTypeLink: TypeLink, erase: Erase, recursiveOrNull: TypeRecursive?): Match =
+fun TypeLink.match(compiledTypeLink: TypeLink, block: Block<*>, recursiveOrNull: TypeRecursive?): Match =
 	if (compiledTypeLink.lhs.isStatic || compiledTypeLink.line.isStatic) TODO()
 	else TODO()
 
@@ -46,11 +46,11 @@ fun TypeAlternative.match(compiled: Compiled<*>, recursiveOrNull: TypeRecursive?
 
 fun TypeFunction.match(compiled: Compiled<*>, recursiveOrNull: TypeRecursive?): Match =
 	if (compiled.type !is FunctionType) compiled.mismatch
-	else match(compiled.type.function, compiled.erase, recursiveOrNull)
+	else match(compiled.type.function, compiled.block, recursiveOrNull)
 
-fun TypeFunction.match(compiledFunction: TypeFunction, erase: Erase, recursiveOrNull: TypeRecursive?): Match =
+fun TypeFunction.match(compiledFunction: TypeFunction, block: Block<*>, recursiveOrNull: TypeRecursive?): Match =
 	if (from == compiledFunction.from && to == compiledFunction.to) TODO()
-	else compiledFunction.type.compiled(erase).mismatch
+	else compiledFunction.type.compiled(block).mismatch
 
 fun TypeRecursive.match(compiled: Compiled<*>, recursiveOrNull: TypeRecursive?): Match =
 	type.match(compiled, this)

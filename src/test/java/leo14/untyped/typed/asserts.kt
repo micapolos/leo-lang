@@ -2,15 +2,8 @@ package leo14.untyped.typed
 
 import leo.base.assertEqualTo
 
-val <T> Compiled<T>.erasedOnce: Compiled<T>
-	get() {
-		var erased = false
-		return type.compiled {
-			erased.assertEqualTo(false, "Erased twice")
-			erased = true
-			erase()
-		}
-	}
+val <T> Compiled<T>.assertEvaluatedOnce: Compiled<T>
+	get() = type.compiled(block.assertEvaluatedOnce)
 
 val <T> Dynamic<T>.assertEvaluatedOnce: Dynamic<T>
 	get() {
@@ -21,3 +14,10 @@ val <T> Dynamic<T>.assertEvaluatedOnce: Dynamic<T>
 			value
 		}
 	}
+
+val <T> Block<T>.assertEvaluatedOnce: Block<T>
+	get() =
+		when (this) {
+			is ConstantBlock -> this
+			is DynamicBlock -> dynamic.assertEvaluatedOnce.block
+		}

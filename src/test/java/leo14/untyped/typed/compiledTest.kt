@@ -16,7 +16,7 @@ class CompiledTest {
 	fun erasedOnce() {
 		textType
 			.compiled { "foo" }
-			.erasedOnce
+			.assertEvaluatedOnce
 			.run {
 				value.assertEqualTo("foo")
 				assertFails { value }
@@ -29,7 +29,7 @@ class CompiledTest {
 			.plus(textTypeLine)
 			.plus(numberTypeLine)
 			.compiled { "number: " to 10.number }
-			.erasedOnce
+			.assertEvaluatedOnce
 			.linkApply<String, Number, String>(textType) { number ->
 				this + number.toString()
 			}!!
@@ -44,9 +44,9 @@ class CompiledTest {
 			.plus("y" lineTo numberType)
 			.compiled { 10.number to 20.number }
 			.run {
-				erasedOnce.select("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo numberType) typed 10.number)
-				erasedOnce.select("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo numberType) typed 20.number)
-				erasedOnce.select("z").assertNull
+				assertEvaluatedOnce.select("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo numberType) typed 10.number)
+				assertEvaluatedOnce.select("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo numberType) typed 20.number)
+				assertEvaluatedOnce.select("z").assertNull
 			}
 	}
 
@@ -58,9 +58,9 @@ class CompiledTest {
 				.plus("y" lineTo numberType))
 			.compiled { 10.number to 20.number }
 			.run {
-				erasedOnce.get("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo numberType) typed 10.number)
-				erasedOnce.get("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo numberType) typed 20.number)
-				erasedOnce.get("z").assertNull
+				assertEvaluatedOnce.get("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo numberType) typed 10.number)
+				assertEvaluatedOnce.get("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo numberType) typed 20.number)
+				assertEvaluatedOnce.get("z").assertNull
 			}
 	}
 
@@ -69,6 +69,8 @@ class CompiledTest {
 		textType
 			.plus("and" lineTo textType)
 			.compiled { "Hello, " to "world!" }
+			// TODO: Fixit!!!
+			//.assertEvaluatedOnce
 			.matchInfix("and") { rhs ->
 				apply(rhs, textType) { (this as String) + (it as String) }
 			}!!
@@ -81,7 +83,7 @@ class CompiledTest {
 		textType
 			.plus("and" lineTo textType)
 			.compiled { null!! }
-			.erasedOnce
+			.assertEvaluatedOnce
 			.matchInfix("or") { null!! }
 			.assertNull
 	}
@@ -92,10 +94,10 @@ class CompiledTest {
 			.functionTo(numberType)
 			.type
 			.compiled { fn { (it as String).length.number } }
-			.erasedOnce
-			.matchFunction { function, fn ->
+			.assertEvaluatedOnce
+			.matchFunction { function, block ->
 				ifOrNull(function.from == textType) {
-					function.to.compiled { (fn() as Fn)("Hello, world!") }
+					function.to.compiled { (block.value as Fn)("Hello, world!") }
 				}
 			}!!
 			.typed
