@@ -15,6 +15,7 @@ val Type.isStatic: Boolean
 			is RecursiveType -> false
 			RecurseType -> false
 			AnythingType -> false
+			NothingType -> false
 		}
 
 val TypeLink.isStatic: Boolean

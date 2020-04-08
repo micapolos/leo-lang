@@ -13,6 +13,7 @@ data class TypeOr(val type: Type)
 sealed class Type
 object EmptyType : Type()
 object AnythingType : Type()
+object NothingType : Type()
 data class LinkType(val link: TypeLink) : Type()
 data class AlternativeType(val alternative: TypeAlternative) : Type()
 data class FunctionType(val function: TypeFunction) : Type()
@@ -37,6 +38,7 @@ val Type.or get() = TypeOr(this)
 val Type.recursive get() = TypeRecursive(this)
 val emptyType: Type = EmptyType
 val anythingType: Type = AnythingType
+val nothingType: Type = NothingType
 val recurseType: Type = RecurseType
 val TypeAlternative.type: Type get() = AlternativeType(this)
 val TypeFunction.type: Type get() = FunctionType(this)

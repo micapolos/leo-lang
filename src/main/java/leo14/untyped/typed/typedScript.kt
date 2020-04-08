@@ -20,6 +20,7 @@ fun Scope.script(type: Type, value: Value, recursiveOrNull: TypeRecursive?): Scr
 		is RecursiveType -> script(type.recursive.type, value, type.recursive)
 		RecurseType -> script(recursiveOrNull!!.type, value, recursiveOrNull)
 		AnythingType -> script(value as Typed)
+		NothingType -> null!!
 	}
 
 fun Scope.script(typeLink: TypeLink, value: Value, recursiveOrNull: TypeRecursive?): Script =

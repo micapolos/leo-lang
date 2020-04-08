@@ -17,6 +17,7 @@ val Type.script: Script
 			is RecursiveType -> recursive.typeScript
 			RecurseType -> script(recurseName)
 			AnythingType -> script(anythingName)
+			NothingType -> script(nothingName)
 		}
 
 val TypeFunction.script: Script
@@ -65,5 +66,6 @@ val String.isTypeKeyword: Boolean
 			recurseName -> true
 			exactName -> true
 			anythingName -> true
+			nothingName -> true
 			else -> false
 		}

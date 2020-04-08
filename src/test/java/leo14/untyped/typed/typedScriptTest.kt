@@ -6,6 +6,7 @@ import leo14.lambda.runtime.fn
 import leo14.leo
 import leo14.literal
 import leo14.number
+import leo14.untyped.*
 import java.awt.Point
 import kotlin.test.Test
 
@@ -18,7 +19,7 @@ class TypedScriptTest {
 
 		emptyScope
 			.script(emptyType.plus(nativeTypeLine).typed(Point(10, 20)))
-			.assertEqualTo(leo("native"(Point(10, 20).toString())))
+			.assertEqualTo(leo(nativeName(Point(10, 20).toString())))
 
 		emptyScope
 			.script(emptyType.plus(numberTypeLine).typed(number(10)))
@@ -107,7 +108,7 @@ class TypedScriptTest {
 				.functionTo(emptyType.plus(textTypeLine))
 				.type
 				.typed(fn { it.toString() }))
-			.assertEqualTo(leo("function"("number"(), "doing"("text"()))))
+			.assertEqualTo(leo(functionName(numberName(), doingName(textName()))))
 	}
 
 	@Test
