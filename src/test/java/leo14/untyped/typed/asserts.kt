@@ -11,3 +11,13 @@ val Compiled.erasedOnce: Compiled
 			erase()
 		}
 	}
+
+val <T> Dynamic<T>.assertEvaluatedOnce: Dynamic<T>
+	get() {
+		var evaluated = false
+		return dynamic {
+			evaluated.assertEqualTo(false, "Evaluated twice")
+			evaluated = true
+			value
+		}
+	}
