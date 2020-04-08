@@ -59,6 +59,10 @@ val Type.isEmpty: Boolean get() = this is EmptyType
 infix fun Type.alternativeTo(rhs: Type) = TypeAlternative(this, rhs)
 fun Type.or(rhs: Type): Type = alternativeTo(rhs).type
 
+val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
+val Type.functionOrNull: TypeFunction? get() = (this as? FunctionType)?.function
+val TypeLine.fieldOrNull: TypeField? get() = (this as? FieldTypeLine)?.field
+
 val textType = emptyType.plus(textTypeLine)
 val numberType = emptyType.plus(numberTypeLine)
 val nativeType = emptyType.plus(nativeTypeLine)

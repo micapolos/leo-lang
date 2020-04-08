@@ -38,7 +38,7 @@ val nothingCompiled = nothingType.compiled { null!! }
 val Compiled.isEmpty get() = type.isEmpty
 val Compiled.value get() = erase()
 
-val Compiled.typed: Typed get() = type.typed(value)
+val Compiled.typed: Typed get() = type typed value
 
 fun Compiled.apply(literal: Literal): Compiled =
 	if (isEmpty) emptyType.plus(literal.typeLine).compiled { literal.value }
@@ -103,6 +103,23 @@ fun Compiled.matchAnything(fn: (Erase) -> Compiled?): Compiled? =
 
 fun Compiled.matchFunction(fn: (TypeFunction, Erase) -> Compiled?): Compiled? =
 	(type as? FunctionType)?.function?.let { function -> fn(function, erase) }
+
+fun <L, R> Compiled.linkApply(targetType: Type, fn: L.(R) -> Value): Compiled? =
+	type.linkOrNull?.let { link ->
+		if (link.lhs.isStatic || link.line.isStatic)
+			targetType.compiled {
+				erase().let {
+					(it as L).fn(it as R)
+				}
+			}
+		else
+			targetType.compiled {
+				erase().let {
+					(it as Pair<*, *>)
+					(it.first as L).fn(it.second as R)
+				}
+			}
+	}
 
 val Compiled.linkOrNull: CompiledLink?
 	get() =
