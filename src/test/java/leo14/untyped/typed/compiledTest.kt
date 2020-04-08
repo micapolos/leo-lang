@@ -7,6 +7,8 @@ import leo14.lambda.runtime.Fn
 import leo14.lambda.runtime.fn
 import leo14.lib.Number
 import leo14.lib.number
+import leo14.untyped.className
+import leo14.untyped.nativeName
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -102,5 +104,19 @@ class CompiledTest {
 			}!!
 			.typed
 			.assertEqualTo(numberType.typed(13.number))
+	}
+
+	@Test
+	fun applyNativeClass() {
+		emptyType
+			.plus(className lineTo emptyType
+				.plus(nativeName lineTo textType))
+			.compiled("java.lang.String")
+			.applyNativeClass!!
+			.evaluate
+			.assertEqualTo(
+				emptyType
+					.plus(className lineTo nativeType)
+					.compiled(java.lang.String::class.java))
 	}
 }

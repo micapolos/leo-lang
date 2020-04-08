@@ -35,6 +35,7 @@ val nothingCompiled = nothingType.compiled { null!! }
 val Compiled<*>.isEmpty get() = type.isEmpty
 val <T> Compiled<T>.value: T get() = expression.value
 
+val <T> Compiled<T>.evaluate: Compiled<T> get() = type.compiled(expression.evaluate)
 val <T> Compiled<T>.typed: Typed get() = type typed value
 
 fun Compiled<*>.apply(literal: Literal): Compiled<*> =
@@ -135,6 +136,23 @@ fun Compiled<*>.matchInfix(name: String, fn: Compiled<*>.(Compiled<*>) -> Compil
 		}
 	}
 
+fun Compiled<*>.matchPrefix(name: String, fn: (Compiled<*>) -> Compiled<*>?): Compiled<*>? =
+	matchInfix(name) { rhs ->
+		matchEmpty {
+			fn(rhs)
+		}
+	}
+
+fun <R> Compiled<*>.matchText(fn: Compiled<String>.() -> Compiled<R>?): Compiled<R>? =
+	ifOrNull(type == textType) {
+		(this as Compiled<String>).fn()
+	}
+
+fun <R> Compiled<*>.matchNative(fn: Compiled<*>.() -> Compiled<R>?): Compiled<R>? =
+	ifOrNull(type == nativeType) {
+		fn()
+	}
+
 fun Compiled<*>.get(name: String): Compiled<*>? =
 	linkOrNull?.let { link ->
 		link.lhs.matchEmpty {
@@ -170,4 +188,3 @@ fun CompiledField<*>.select(name: String): Compiled<*>? =
 	notNullIf(this.name == name) {
 		emptyType.plus(name lineTo rhs.type).compiled(rhs.expression)
 	}
-
