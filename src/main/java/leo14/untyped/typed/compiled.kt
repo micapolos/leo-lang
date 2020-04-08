@@ -19,8 +19,8 @@ data class CompiledLine<out T>(val typeLine: TypeLine, val expression: Expressio
 data class CompiledField<out T>(val name: String, val rhs: Compiled<T>)
 
 infix fun <T> Type.compiled(expression: Expression<T>) = Compiled(this, expression)
-infix fun <T> Type.compiled(value: T) = Compiled(this, constant(value).expression)
-infix fun <T> Type.compiled(evaluate: () -> T) = Compiled(this, dynamic(evaluate).expression)
+infix fun <T> Type.compiled(value: T) = Compiled(this, expression(value))
+infix fun <T> Type.compiled(evaluate: () -> T) = Compiled(this, expression(evaluate))
 infix fun <L, R> Compiled<L>.linkTo(line: CompiledLine<R>) = CompiledLink(this, line)
 infix fun <T> TypeFunction.compiled(expression: Expression<T>) = CompiledFunction(this, expression)
 infix fun <T> TypeLine.compiled(expression: Expression<T>) = CompiledLine(this, expression)

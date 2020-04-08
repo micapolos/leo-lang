@@ -11,12 +11,25 @@ fun <T> constant(value: T) = Constant(value)
 fun <T> dynamic(evaluate: () -> T) = Dynamic(evaluate)
 val <T> Constant<T>.expression: Expression<T> get() = ConstantExpression(this)
 val <T> Dynamic<T>.expression: Expression<T> get() = DynamicExpression(this)
+fun <T> expression(value: T): Expression<T> = constant(value).expression
+fun <T> expression(fn: () -> T): Expression<T> = dynamic(fn).expression
+
+val <T> Dynamic<T>.value: T
+	get() =
+		evaluate()
+
+val <T> Expression<T>.value: T
+	get() =
+		when (this) {
+			is ConstantExpression -> constant.value
+			is DynamicExpression -> dynamic.value
+		}
 
 inline fun <L, O> Expression<L>.doApply(crossinline fn: L.() -> O): Expression<O> =
 	when (this) {
-		is ConstantExpression -> constant(constant.value.fn()).expression
+		is ConstantExpression -> expression(constant.value.fn())
 		is DynamicExpression -> dynamic.evaluate.let { evaluate ->
-			dynamic { evaluate().fn() }.expression
+			expression { evaluate().fn() }
 		}
 	}
 
@@ -27,11 +40,11 @@ inline fun <L, R, O> Expression<L>.doApply(rhs: Expression<R>, crossinline fn: L
 			when (rhs) {
 				is ConstantExpression -> {
 					val rhsValue = rhs.constant.value
-					constant(lhsValue.fn(rhsValue)).expression
+					expression(lhsValue.fn(rhsValue))
 				}
 				is DynamicExpression -> {
 					val rhsEvaluate = rhs.dynamic.evaluate
-					dynamic { lhsValue.fn(rhsEvaluate()) }.expression
+					expression { lhsValue.fn(rhsEvaluate()) }
 				}
 			}
 		}
@@ -40,27 +53,16 @@ inline fun <L, R, O> Expression<L>.doApply(rhs: Expression<R>, crossinline fn: L
 			when (rhs) {
 				is ConstantExpression -> {
 					val rhsValue = rhs.constant.value
-					dynamic { lhsEvaluate().fn(rhsValue) }.expression
+					expression { lhsEvaluate().fn(rhsValue) }
 				}
 				is DynamicExpression -> {
 					val rhsEvaluate = rhs.dynamic.evaluate
-					dynamic { lhsEvaluate().fn(rhsEvaluate()) }.expression
+					expression { lhsEvaluate().fn(rhsEvaluate()) }
 				}
 			}
 		}
 	}
 
-val <T> Dynamic<T>.value: T get() = evaluate()
-
-val <T> Expression<T>.value: T
-	get() =
-		when (this) {
-			is ConstantExpression -> constant.value
-			is DynamicExpression -> dynamic.value
-		}
-
 operator fun <I, O> Expression<I.() -> O>.invoke(rhs: Expression<I>): Expression<O> =
 	doApply(rhs) { invoke(it) }
 
-fun <T> expression(value: T): Expression<T> = constant(value).expression
-fun <T> expression(fn: () -> T): Expression<T> = dynamic(fn).expression

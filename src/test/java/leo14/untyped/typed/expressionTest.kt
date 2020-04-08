@@ -6,11 +6,11 @@ import kotlin.test.Test
 class ExpressionTest {
 	@Test
 	fun doApply1() {
-		constant(10).expression
+		expression(10)
 			.doApply { inc() }
-			.assertEqualTo(constant(11).expression)
+			.assertEqualTo(expression(11))
 
-		dynamic { 10 }.assertEvaluatesOnce.expression
+		expression { 10 }.assertEvaluatesOnce
 			.doApply { inc() }
 			.value
 			.assertEqualTo(11)
@@ -18,22 +18,22 @@ class ExpressionTest {
 
 	@Test
 	fun doApply2() {
-		constant(10).expression
-			.doApply(constant(20).expression) { this + it }
-			.assertEqualTo(constant(30).expression)
+		expression(10)
+			.doApply(expression(20)) { this + it }
+			.assertEqualTo(expression(30))
 
-		constant(10).expression
-			.doApply(dynamic { 20 }.assertEvaluatesOnce.expression) { this + it }
+		expression(10)
+			.doApply(expression { 20 }.assertEvaluatesOnce) { this + it }
 			.value
 			.assertEqualTo(30)
 
-		dynamic { 10 }.assertEvaluatesOnce.expression
-			.doApply(constant(20).expression) { this + it }
+		expression { 10 }.assertEvaluatesOnce
+			.doApply(expression(20)) { this + it }
 			.value
 			.assertEqualTo(30)
 
-		dynamic { 10 }.assertEvaluatesOnce.expression
-			.doApply(dynamic { 20 }.assertEvaluatesOnce.expression) { this + it }
+		expression { 10 }.assertEvaluatesOnce
+			.doApply(expression { 20 }.assertEvaluatesOnce) { this + it }
 			.value
 			.assertEqualTo(30)
 	}
