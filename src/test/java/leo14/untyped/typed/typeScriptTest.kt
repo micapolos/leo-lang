@@ -21,6 +21,7 @@ class TypeScriptTest {
 		emptyType.plus(numberName lineTo emptyType).script.assertEqualTo(leo(exactName(numberName())))
 		emptyType.plus(nativeName lineTo emptyType).script.assertEqualTo(leo(exactName(nativeName())))
 		emptyType.plus(orName lineTo emptyType).script.assertEqualTo(leo(exactName(orName())))
+		emptyType.plus(repeatingName lineTo emptyType).script.assertEqualTo(leo(exactName(repeatingName())))
 		emptyType.plus(recursiveName lineTo emptyType).script.assertEqualTo(leo(exactName(recursiveName())))
 		emptyType.plus(recurseName lineTo emptyType).script.assertEqualTo(leo(exactName(recurseName())))
 		emptyType.plus(exactName lineTo emptyType).script.assertEqualTo(leo(exactName(exactName())))
@@ -68,5 +69,10 @@ class TypeScriptTest {
 	fun literals() {
 		emptyType.plus(literal(123).staticTypeLine).script.assertEqualTo(leo(123))
 		emptyType.plus(literal("foo").staticTypeLine).script.assertEqualTo(leo("foo"))
+	}
+
+	@Test
+	fun repeating() {
+		textType.repeating.toType.script.assertEqualTo(leo(repeatingName(textName())))
 	}
 }

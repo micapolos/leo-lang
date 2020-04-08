@@ -14,7 +14,8 @@ val Type.script: Script
 			is LinkType -> script(link.scriptLink)
 			is AlternativeType -> alternative.script
 			is FunctionType -> function.script
-			is RecursiveType -> recursive.typeScript
+			is RepeatingType -> repeating.script
+			is RecursiveType -> recursive.script
 			RecurseType -> script(recurseName)
 			AnythingType -> script(anythingName)
 			NothingType -> script(nothingName)
@@ -24,9 +25,13 @@ val TypeFunction.script: Script
 	get() =
 		script(functionName scriptLineTo from.script.plus(doingName scriptLineTo to.script))
 
-val TypeRecursive.typeScript: Script
+val TypeRecursive.script: Script
 	get() =
 		script(recursiveName scriptLineTo type.script)
+
+val TypeRepeating.script: Script
+	get() =
+		script(repeatingName scriptLineTo type.script)
 
 val TypeLink.scriptLink: ScriptLink
 	get() =
@@ -67,5 +72,6 @@ val String.isTypeKeyword: Boolean
 			exactName -> true
 			anythingName -> true
 			nothingName -> true
+			repeatingName -> true
 			else -> false
 		}

@@ -128,4 +128,25 @@ class TypedScriptTest {
 			.script(anythingType.typed(textType.typed("foo")))
 			.assertEqualTo(leo("foo"))
 	}
+
+	@Test
+	fun repeating_empty() {
+		emptyScope
+			.script(textType.repeating.toType.typed(null))
+			.assertEqualTo(leo())
+	}
+
+	@Test
+	fun repeating_single() {
+		emptyScope
+			.script(textType.repeating.toType.typed(null to "foo"))
+			.assertEqualTo(leo("foo"))
+	}
+
+	@Test
+	fun repeating_many() {
+		emptyScope
+			.script(textType.repeating.toType.typed((null to "bar") to "foo"))
+			.assertEqualTo(leo("bar", "foo"))
+	}
 }

@@ -17,6 +17,7 @@ fun Type.match(compiled: Compiled<*>, recursiveOrNull: TypeRecursive?): Match =
 		is LinkType -> link.match(compiled, recursiveOrNull)
 		is AlternativeType -> alternative.match(compiled, recursiveOrNull)
 		is FunctionType -> function.match(compiled, recursiveOrNull)
+		is RepeatingType -> TODO()
 		is RecursiveType -> recursive.match(compiled, recursiveOrNull)
 		RecurseType -> recurseMatch(compiled, recursiveOrNull)
 	}

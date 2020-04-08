@@ -12,6 +12,7 @@ val Type.isStatic: Boolean
 			is LinkType -> link.isStatic
 			is AlternativeType -> false
 			is FunctionType -> false
+			is RepeatingType -> false
 			is RecursiveType -> false
 			RecurseType -> false
 			AnythingType -> false

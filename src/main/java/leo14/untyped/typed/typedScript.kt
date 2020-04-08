@@ -17,6 +17,7 @@ fun Scope.script(type: Type, value: Value, recursiveOrNull: TypeRecursive?): Scr
 		is LinkType -> script(type.link, value, recursiveOrNull)
 		is AlternativeType -> script(type.alternative, value, recursiveOrNull)
 		is FunctionType -> script(type.function, value)
+		is RepeatingType -> script(type.repeating, value, recursiveOrNull)
 		is RecursiveType -> script(type.recursive.type, value, type.recursive)
 		RecurseType -> script(recursiveOrNull!!.type, value, recursiveOrNull)
 		AnythingType -> script(value as Typed)
@@ -58,6 +59,13 @@ fun Scope.script(alternative: TypeAlternative, value: Value, recursiveOrNull: Ty
 fun script(function: TypeFunction, value: Value): Script =
 	(value as (Value) -> Value).let {
 		function.script
+	}
+
+fun Scope.script(repeating: TypeRepeating, value: Value, recursiveOrNull: TypeRecursive?): Script =
+	if (value == null) script()
+	else (value as Pair<*, *>).let { pair ->
+		script(repeating, pair.first, recursiveOrNull)
+			.plus(script(repeating.type, pair.second, recursiveOrNull))
 	}
 
 fun nativeScriptLine(value: Value): ScriptLine =
