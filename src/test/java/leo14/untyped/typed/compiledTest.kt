@@ -15,8 +15,8 @@ class CompiledTest {
 		textType
 			.plus("and" lineTo textType)
 			.compiled { "Hello, " to "world!" }
-			.matchInfix("and") { lhs, rhs ->
-				textType.compiled { (lhs.value as String) + (rhs.value as String) }
+			.matchInfix("and") { lhsType, lhsFn, rhsType, rhsFn ->
+				textType.compiled { (lhsFn() as String) + (rhsFn() as String) }
 			}!!
 			.typed
 			.assertEqualTo(textType.typed("Hello, world!"))
@@ -27,7 +27,7 @@ class CompiledTest {
 		textType
 			.plus("and" lineTo textType)
 			.compiled { null!! }
-			.matchInfix("or") { _, _ -> null!! }
+			.matchInfix("or") { _, _, _, _ -> null!! }
 			.assertNull
 	}
 
@@ -37,9 +37,9 @@ class CompiledTest {
 			.functionTo(numberType)
 			.type
 			.compiled { fn { (it as String).length.number } }
-			.matchFunction { function, erase ->
+			.matchFunction { function, fn ->
 				ifOrNull(function.from == textType) {
-					function.to.compiled { (erase() as Fn)("Hello, world!") }
+					function.to.compiled { (fn() as Fn)("Hello, world!") }
 				}
 			}!!
 			.typed

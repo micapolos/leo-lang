@@ -12,8 +12,15 @@ import leo14.untyped.timesName
 typealias Erase = () -> Value
 
 data class Compiled(val type: Type, val erase: Erase)
+data class CompiledLink(val link: TypeLink, val erase: Erase)
+data class CompiledFunction(val function: TypeFunction, val erase: Erase)
+data class CompiledAnything(val erase: Erase)
 
 infix fun Type.compiled(erase: Erase) = Compiled(this, erase)
+infix fun TypeLink.compiled(erase: Erase) = CompiledLink(this, erase)
+infix fun TypeFunction.compiled(erase: Erase) = CompiledFunction(this, erase)
+fun anythingCompiled(erase: Erase) = CompiledAnything(erase)
+
 val emptyCompiled = emptyType.compiled { null }
 val nothingCompiled = nothingType.compiled { null!! }
 val Compiled.isEmpty get() = type.isEmpty
@@ -79,24 +86,22 @@ fun Compiled.append(begin: Begin, rhs: Compiled): Compiled =
 fun Compiled.matchEmpty(fn: () -> Compiled?): Compiled? =
 	ifOrNull(type is EmptyType) { fn() }
 
-fun Compiled.matchAnything(fn: (Compiled) -> Compiled?): Compiled? =
-	ifOrNull(type is AnythingType) { fn(this) }
+fun Compiled.matchAnything(fn: (Erase) -> Compiled?): Compiled? =
+	ifOrNull(type is AnythingType) { fn(erase) }
 
 fun Compiled.matchFunction(fn: (TypeFunction, Erase) -> Compiled?): Compiled? =
 	(type as? FunctionType)?.function?.let { function -> fn(function, erase) }
 
-fun Compiled.matchInfix(name: String, fn: (Compiled, Compiled) -> Compiled?): Compiled? =
+fun Compiled.matchInfix(name: String, fn: (Type, Erase, Type, Erase) -> Compiled?): Compiled? =
 	(type as? LinkType)?.link?.let { link ->
 		(link.line as? FieldTypeLine)?.field?.let { field ->
 			ifOrNull(field.name == name) {
 				if (link.lhs.isStatic || field.rhs.isStatic)
-					fn(
-						link.lhs.compiled(erase),
-						field.rhs.compiled(erase))
+					fn(link.lhs, erase, field.rhs, erase)
 				else
 					fn(
-						link.lhs.compiled { (value as Pair<*, *>).first },
-						field.rhs.compiled { (value as Pair<*, *>).second })
+						link.lhs, { (value as Pair<*, *>).first },
+						field.rhs, { (value as Pair<*, *>).second })
 			}
 		}
 	}
