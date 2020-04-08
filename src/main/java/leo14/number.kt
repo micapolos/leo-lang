@@ -15,6 +15,9 @@ fun number(int: Int): Number = Number(BigDecimal.valueOf(int.toLong()))
 fun number(long: Long): Number = Number(BigDecimal.valueOf(long))
 fun number(double: Double): Number = Number(BigDecimal.valueOf(double))
 
+val Int.number: Number get() = number(this)
+val Double.number: Number get() = number(this)
+
 val String.numberOrNull: Number?
 	get() =
 		try {

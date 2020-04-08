@@ -146,7 +146,18 @@ class TypedScriptTest {
 	@Test
 	fun repeating_many() {
 		emptyScope
-			.script(textType.repeating.toType.typed((null to "bar") to "foo"))
+			.script(textType.repeating.toType.typed(null to "bar" to "foo"))
 			.assertEqualTo(leo("bar", "foo"))
+	}
+
+	@Test
+	fun repeating_withTail() {
+		emptyScope
+			.script(
+				textType
+					.repeating.toType
+					.plus(numberTypeLine)
+					.typed(null to "bar" to "foo" to 123.number))
+			.assertEqualTo(leo("bar", "foo", 123))
 	}
 }
