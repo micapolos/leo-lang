@@ -5,7 +5,7 @@ import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo14.lambda.runtime.Value
 
-val Literal.value: Value
+val Literal.value: Any?
 	get() =
 		when (this) {
 			is StringLiteral -> string

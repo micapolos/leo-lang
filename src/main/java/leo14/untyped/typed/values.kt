@@ -3,33 +3,14 @@
 package leo14.untyped.typed
 
 import leo13.*
-import leo13.base.negate
 import leo14.lambda.runtime.Value
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
-object Expression
+object ClassLoaderSource
 
-val classLoader = Expression::class.java.classLoader
-
-val Value.booleanNegate get() = (this as Boolean).negate
-fun Value.booleanAndBoolean(rhs: Value) = (this as Boolean) and (rhs as Boolean)
-fun Value.booleanOrBoolean(rhs: Value) = (this as Boolean) or (rhs as Boolean)
-fun Value.booleanXorBoolean(rhs: Value) = (this as Boolean) xor (rhs as Boolean)
-
-val Value.intUnaryMinus get() = -(this as Int)
-fun Value.intPlusInt(rhs: Value) = (this as Int) + (rhs as Int)
-fun Value.intMinusInt(rhs: Value) = (this as Int) - (rhs as Int)
-fun Value.intTimesInt(rhs: Value) = (this as Int) * (rhs as Int)
-val Value.intString get() = (this as Int).toString()
-
-fun Value.stringPlusString(rhs: Value) = (this as String) + (rhs as String)
-val Value.stringLength get() = (this as String).length
-
-fun Value.functionInvoke(rhs: Value) = (this as (Value) -> Value)(rhs)
-
-// === Arrays ===
+val classLoader = ClassLoaderSource::class.java.classLoader
 
 val Value.valueArray
 	get() =

@@ -1,3 +1,5 @@
+@file:JvmName("ValuesKt")
+
 package leo14.untyped.typed
 
 data class Constant<out T>(val value: T)
