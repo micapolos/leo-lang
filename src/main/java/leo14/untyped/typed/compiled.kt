@@ -74,6 +74,15 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 fun Compiled.append(begin: Begin, rhs: Compiled): Compiled =
 	type.plus(begin.string lineTo rhs.type).compiled { value to rhs.value }
 
+fun Compiled.matchEmpty(fn: () -> Compiled?): Compiled? =
+	ifOrNull(type is EmptyType) { fn() }
+
+fun Compiled.matchAnything(fn: (Compiled) -> Compiled?): Compiled? =
+	ifOrNull(type is AnythingType) { fn(this) }
+
+fun Compiled.matchFunction(fn: (TypeFunction, Fn) -> Compiled?): Compiled? =
+	(type as? FunctionType)?.function?.let { function -> fn(function, valueFn) }
+
 fun Compiled.matchInfix(name: String, fn: (Compiled, Compiled) -> Compiled?): Compiled? =
 	(type as? LinkType)?.link?.let { link ->
 		(link.line as? FieldTypeLine)?.field?.let { field ->
