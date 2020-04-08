@@ -37,9 +37,9 @@ class CompiledTest {
 			.functionTo(numberType)
 			.type
 			.compiled { fn { (it as String).length.number } }
-			.matchFunction { function, valueFn ->
+			.matchFunction { function, erase ->
 				ifOrNull(function.from == textType) {
-					function.to.compiled { (valueFn(null) as Fn)("Hello, world!") }
+					function.to.compiled { (erase() as Fn)("Hello, world!") }
 				}
 			}!!
 			.typed

@@ -3,19 +3,21 @@ package leo14.untyped.typed
 import leo.base.ifOrNull
 import leo14.*
 import leo14.Number
-import leo14.lambda.runtime.Fn
+import leo14.lambda.runtime.Value
 import leo14.untyped.minusName
 import leo14.untyped.plusName
 import leo14.untyped.textName
 import leo14.untyped.timesName
 
-data class Compiled(val type: Type, val valueFn: Fn)
+typealias Erase = () -> Value
 
-infix fun Type.compiled(valueFn: Fn) = Compiled(this, valueFn)
+data class Compiled(val type: Type, val erase: Erase)
+
+infix fun Type.compiled(erase: Erase) = Compiled(this, erase)
 val emptyCompiled = emptyType.compiled { null }
 val nothingCompiled = nothingType.compiled { null!! }
 val Compiled.isEmpty get() = type.isEmpty
-val Compiled.value get() = valueFn(null)
+val Compiled.value get() = erase()
 
 val Compiled.typed: Typed get() = type.typed(value)
 
@@ -80,8 +82,8 @@ fun Compiled.matchEmpty(fn: () -> Compiled?): Compiled? =
 fun Compiled.matchAnything(fn: (Compiled) -> Compiled?): Compiled? =
 	ifOrNull(type is AnythingType) { fn(this) }
 
-fun Compiled.matchFunction(fn: (TypeFunction, Fn) -> Compiled?): Compiled? =
-	(type as? FunctionType)?.function?.let { function -> fn(function, valueFn) }
+fun Compiled.matchFunction(fn: (TypeFunction, Erase) -> Compiled?): Compiled? =
+	(type as? FunctionType)?.function?.let { function -> fn(function, erase) }
 
 fun Compiled.matchInfix(name: String, fn: (Compiled, Compiled) -> Compiled?): Compiled? =
 	(type as? LinkType)?.link?.let { link ->
@@ -89,8 +91,8 @@ fun Compiled.matchInfix(name: String, fn: (Compiled, Compiled) -> Compiled?): Co
 			ifOrNull(field.name == name) {
 				if (link.lhs.isStatic || field.rhs.isStatic)
 					fn(
-						link.lhs.compiled(valueFn),
-						field.rhs.compiled(valueFn))
+						link.lhs.compiled(erase),
+						field.rhs.compiled(erase))
 				else
 					fn(
 						link.lhs.compiled { (value as Pair<*, *>).first },
