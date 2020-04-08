@@ -12,7 +12,7 @@ fun <T> dynamic(evaluate: () -> T) = Dynamic(evaluate)
 val <T> Constant<T>.block: Block<T> get() = ConstantBlock(this)
 val <T> Dynamic<T>.block: Block<T> get() = DynamicBlock(this)
 
-inline fun <L, O> Block<L>.apply(crossinline fn: L.() -> O): Block<O> =
+inline fun <L, O> Block<L>.doApply(crossinline fn: L.() -> O): Block<O> =
 	when (this) {
 		is ConstantBlock -> constant(constant.value.fn()).block
 		is DynamicBlock -> dynamic.evaluate.let { evaluate ->
@@ -20,7 +20,7 @@ inline fun <L, O> Block<L>.apply(crossinline fn: L.() -> O): Block<O> =
 		}
 	}
 
-inline fun <L, R, O> Block<L>.apply(rhs: Block<R>, crossinline fn: L.(R) -> O): Block<O> =
+inline fun <L, R, O> Block<L>.doApply(rhs: Block<R>, crossinline fn: L.(R) -> O): Block<O> =
 	when (this) {
 		is ConstantBlock -> {
 			val lhsValue = constant.value

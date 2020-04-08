@@ -28,7 +28,7 @@ infix fun <T> String.fieldTo(rhs: Compiled<T>) = CompiledField(this, rhs)
 fun <T> anythingCompiled(block: Block<T>) = CompiledAnything(block)
 
 inline fun <L, R, O> Compiled<L>.apply(rhs: Compiled<R>, type: Type, crossinline fn: L.(R) -> O): Compiled<O> =
-	type.compiled(block.apply(rhs.block, fn))
+	type.compiled(block.doApply(rhs.block, fn))
 
 val emptyCompiled: Compiled<*> = emptyType.compiled { null }
 val nothingCompiled = nothingType.compiled { null!! }
@@ -101,10 +101,10 @@ fun Compiled<*>.matchFunction(fn: (TypeFunction, Block<*>) -> Compiled<*>?): Com
 fun <L, R, O> Compiled<*>.linkApply(targetType: Type, fn: L.(R) -> O): Compiled<O>? =
 	type.linkOrNull?.let { link ->
 		if (link.lhs.isStatic || link.line.isStatic)
-			targetType.compiled(block.apply { (this as L).fn(this as R) })
+			targetType.compiled(block.doApply { (this as L).fn(this as R) })
 		else
 			targetType.compiled(
-				block.apply {
+				block.doApply {
 					(this as Pair<*, *>)
 					(first as L).fn(second as R)
 				})
@@ -116,8 +116,8 @@ val Compiled<*>.linkOrNull: CompiledLink<*, *>?
 			if (link.lhs.isStatic || link.line.isStatic)
 				link.lhs.compiled(block) linkTo link.line.compiled(block)
 			else
-				link.lhs.compiled(block.apply { (this as Pair<*, *>).first }) linkTo
-					link.line.compiled(block.apply { (this as Pair<*, *>).second })
+				link.lhs.compiled(block.doApply { (this as Pair<*, *>).first }) linkTo
+					link.line.compiled(block.doApply { (this as Pair<*, *>).second })
 		}
 
 val CompiledLine<*>.fieldOrNull: CompiledField<*>?
