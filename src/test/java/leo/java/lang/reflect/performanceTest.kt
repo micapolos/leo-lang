@@ -10,9 +10,9 @@ class PerformanceTest {
 	fun test() {
 		val class_ = java.lang.String::class.java
 		val method = class_.getMethod("toUpperCase")
-		val times = 100000000
+		val times = 10000000
 
-		repeat(10) {
+		repeat(3) {
 			printTime("Native: ") {
 				"Hello".iterate(times) { toUpperCase() }
 					.assertEqualTo("HELLO")

@@ -65,4 +65,3 @@ inline fun <L, R, O> Expression<L>.doApply(rhs: Expression<R>, crossinline fn: L
 
 operator fun <I, O> Expression<I.() -> O>.invoke(rhs: Expression<I>): Expression<O> =
 	doApply(rhs) { invoke(it) }
-
