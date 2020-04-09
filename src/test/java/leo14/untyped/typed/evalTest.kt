@@ -50,6 +50,21 @@ class EvalTest {
 			.assertEvalsTo(leo(listName(123, 124, 125)))
 	}
 
+	@Test
+	fun listPlusTypeMismatch() {
+		leo(
+			listName(ofName(numberName())),
+			plusName("foo"))
+			.assertEvalsTo(leo(listName(), plusName("foo")))
+
+		leo(
+			listName(ofName(numberName())),
+			plusName(10),
+			plusName(20),
+			plusName("foo"))
+			.assertEvalsTo(leo(listName(10, 20), plusName("foo")))
+	}
+
 	// TODO: fixit!!!
 //	@Test
 //	fun listPlusStatic() {
