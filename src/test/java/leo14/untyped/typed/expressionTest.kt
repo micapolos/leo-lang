@@ -7,11 +7,11 @@ class ExpressionTest {
 	@Test
 	fun doApply1() {
 		expression(10)
-			.doApply { inc() }
+			.doApply { (this as Int).inc() }
 			.assertEqualTo(expression(11))
 
 		expression { 10 }.assertEvaluatesOnce
-			.doApply { inc() }
+			.doApply { (this as Int).inc() }
 			.value
 			.assertEqualTo(11)
 	}
@@ -19,21 +19,21 @@ class ExpressionTest {
 	@Test
 	fun doApply2() {
 		expression(10)
-			.doApply(expression(20)) { this + it }
+			.doApply(expression(20)) { (this as Int) + (it as Int) }
 			.assertEqualTo(expression(30))
 
 		expression(10)
-			.doApply(expression { 20 }.assertEvaluatesOnce) { this + it }
+			.doApply(expression { 20 }.assertEvaluatesOnce) { (this as Int) + (it as Int) }
 			.value
 			.assertEqualTo(30)
 
 		expression { 10 }.assertEvaluatesOnce
-			.doApply(expression(20)) { this + it }
+			.doApply(expression(20)) { (this as Int) + (it as Int) }
 			.value
 			.assertEqualTo(30)
 
 		expression { 10 }.assertEvaluatesOnce
-			.doApply(expression { 20 }.assertEvaluatesOnce) { this + it }
+			.doApply(expression { 20 }.assertEvaluatesOnce) { (this as Int) + (it as Int) }
 			.value
 			.assertEqualTo(30)
 	}

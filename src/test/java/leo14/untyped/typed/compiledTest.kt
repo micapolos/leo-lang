@@ -3,10 +3,10 @@ package leo14.untyped.typed
 import leo.base.assertEqualTo
 import leo.base.assertNull
 import leo.base.ifOrNull
+import leo14.Number
 import leo14.lambda.runtime.Fn
 import leo14.lambda.runtime.fn
-import leo14.lib.Number
-import leo14.lib.number
+import leo14.number
 import leo14.untyped.className
 import leo14.untyped.nativeName
 import kotlin.test.Test
@@ -32,8 +32,8 @@ class CompiledTest {
 			.plus(numberTypeLine)
 			.compiled { "number: " to 10.number }
 			.assertEvaluatedOnce
-			.linkApply<String, Number, String>(textType) { number ->
-				this + number.toString()
+			.linkApply(textType) { number ->
+				(this as String) + (number as Number).toString()
 			}!!
 			.typed
 			.assertEqualTo(textType typed "number: 10")

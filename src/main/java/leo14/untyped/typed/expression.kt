@@ -1,35 +1,40 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package leo14.untyped.typed
 
-data class Constant<out T>(val value: T)
-data class Dynamic<out T>(val evaluate: () -> T)
+typealias V = Any?
+typealias Fn = () -> V
 
-sealed class Expression<out T>
-data class ConstantExpression<T>(val constant: Constant<T>) : Expression<T>()
-data class DynamicExpression<T>(val dynamic: Dynamic<T>) : Expression<T>()
+data class Constant(val value: V)
+data class Dynamic(val evaluate: Fn)
 
-fun <T> constant(value: T) = Constant(value)
-fun <T> dynamic(evaluate: () -> T) = Dynamic(evaluate)
-val <T> Constant<T>.expression: Expression<T> get() = ConstantExpression(this)
-val <T> Dynamic<T>.expression: Expression<T> get() = DynamicExpression(this)
-fun <T> expression(value: T): Expression<T> = constant(value).expression
-fun <T> expression(fn: () -> T): Expression<T> = dynamic(fn).expression
+sealed class Expression
+data class ConstantExpression(val constant: Constant) : Expression()
+data class DynamicExpression(val dynamic: Dynamic) : Expression()
 
-val <T> Dynamic<T>.value: T
+fun constant(value: V) = Constant(value)
+fun dynamic(evaluate: Fn) = Dynamic(evaluate)
+val Constant.expression: Expression get() = ConstantExpression(this)
+val Dynamic.expression: Expression get() = DynamicExpression(this)
+fun expression(value: V): Expression = constant(value).expression
+fun expression(fn: Fn): Expression = dynamic(fn).expression
+
+val Dynamic.value: V
 	get() =
 		evaluate()
 
-val <T> Expression<T>.value: T
+val Expression.value: V
 	get() =
 		when (this) {
 			is ConstantExpression -> constant.value
 			is DynamicExpression -> dynamic.value
 		}
 
-val <T> Expression<T>.evaluate: Expression<T>
+val Expression.evaluate: Expression
 	get() =
 		expression(value)
 
-inline fun <L, O> Expression<L>.doApply(crossinline fn: L.() -> O): Expression<O> =
+inline fun Expression.doApply(crossinline fn: V.() -> V): Expression =
 	when (this) {
 		is ConstantExpression -> expression(constant.value.fn())
 		is DynamicExpression -> dynamic.evaluate.let { evaluate ->
@@ -37,7 +42,7 @@ inline fun <L, O> Expression<L>.doApply(crossinline fn: L.() -> O): Expression<O
 		}
 	}
 
-inline fun <L, R, O> Expression<L>.doApply(rhs: Expression<R>, crossinline fn: L.(R) -> O): Expression<O> =
+inline fun Expression.doApply(rhs: Expression, crossinline fn: V.(V) -> V): Expression =
 	when (this) {
 		is ConstantExpression -> {
 			val lhsValue = constant.value
@@ -67,5 +72,5 @@ inline fun <L, R, O> Expression<L>.doApply(rhs: Expression<R>, crossinline fn: L
 		}
 	}
 
-operator fun <I, O> Expression<I.() -> O>.invoke(rhs: Expression<I>): Expression<O> =
-	doApply(rhs) { invoke(it) }
+operator fun Expression.invoke(rhs: Expression): Expression =
+	doApply(rhs) { (this as (V.() -> V)).invoke(it) }

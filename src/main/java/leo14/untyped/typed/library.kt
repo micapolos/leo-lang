@@ -25,5 +25,5 @@ fun Library.import(definition: Definition) =
 fun Library.import(library: Library): Library =
 	fold(library.exported.scope.definitionSeq.reverseStack) { import(it) }
 
-fun Library.apply(lhs: Compiled<*>, begin: Begin, rhs: Compiled<*>): Library =
+fun Library.apply(lhs: Compiled, begin: Begin, rhs: Compiled): Library =
 	TODO()

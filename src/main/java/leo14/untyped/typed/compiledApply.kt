@@ -5,7 +5,7 @@ import leo14.untyped.className
 import leo14.untyped.constructorName
 import leo14.untyped.nativeName
 
-val Compiled<*>.applyNativeClass: Compiled<*>?
+val Compiled.applyNativeClass: Compiled?
 	get() =
 		matchPrefix(className) { rhs ->
 			rhs.matchPrefix(nativeName) { rhs ->
@@ -17,7 +17,7 @@ val Compiled<*>.applyNativeClass: Compiled<*>?
 			}
 		}
 
-val Compiled<*>.applyClassConstructor: Compiled<*>?
+val Compiled.applyClassConstructor: Compiled?
 	get() =
 		matchPrefix(constructorName) { rhs ->
 			rhs.matchPrefix(className) { rhs ->

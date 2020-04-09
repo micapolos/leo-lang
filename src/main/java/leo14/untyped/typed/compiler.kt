@@ -6,9 +6,9 @@ import leo13.quoteName
 import leo13.unquoteName
 import leo14.*
 
-data class Compiler(val library: Library, val quoteDepth: Int, val compiled: Compiled<*>)
+data class Compiler(val library: Library, val quoteDepth: Int, val compiled: Compiled)
 
-fun Library.compiler(compiled: Compiled<*>) = Compiler(this, 0, compiled)
+fun Library.compiler(compiled: Compiled) = Compiler(this, 0, compiled)
 val emptyCompiler = emptyScope.emptyLibrary.compiler(emptyCompiled)
 
 val Compiler.clear: Compiler
@@ -62,8 +62,8 @@ fun Compiler.plusNormalized(field: ScriptField): Compiler =
 		else -> apply(field.string, library.compiler(emptyCompiled).plus(field.rhs).compiled)
 	}
 
-fun Compiler.apply(name: String, rhs: Compiled<*>): Compiler =
+fun Compiler.apply(name: String, rhs: Compiled): Compiler =
 	TODO()
 
-fun Compiler.append(compiled: Compiled<*>): Compiler =
+fun Compiler.append(compiled: Compiled): Compiler =
 	TODO()

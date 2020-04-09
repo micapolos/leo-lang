@@ -2,10 +2,10 @@ package leo14.untyped.typed
 
 import leo.base.assertEqualTo
 
-val <T> Compiled<T>.assertEvaluatedOnce: Compiled<T>
+val Compiled.assertEvaluatedOnce: Compiled
 	get() = type.compiled(expression.assertEvaluatesOnce)
 
-val <T> Dynamic<T>.assertEvaluatesOnce: Dynamic<T>
+val Dynamic.assertEvaluatesOnce: Dynamic
 	get() {
 		var evaluated = false
 		return dynamic {
@@ -15,7 +15,7 @@ val <T> Dynamic<T>.assertEvaluatesOnce: Dynamic<T>
 		}
 	}
 
-val <T> Expression<T>.assertEvaluatesOnce: Expression<T>
+val Expression.assertEvaluatesOnce: Expression
 	get() =
 		when (this) {
 			is ConstantExpression -> this
