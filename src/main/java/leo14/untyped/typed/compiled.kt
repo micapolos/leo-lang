@@ -4,8 +4,8 @@ package leo14.untyped.typed
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo14.*
-import leo14.Number
+import leo14.Begin
+import leo14.Literal
 import leo14.lambda.runtime.Value
 import leo14.untyped.*
 
@@ -48,12 +48,12 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 			when (begin.string) {
 				minusName ->
 					when (rhs.type) {
-						numberType -> numberType.compiled { (value as Number).unaryMinus() }
+						numberType -> numberType.compiled(expression.numberUnaryMinus)
 						else -> null
 					}
 				textName ->
 					when (rhs.type) {
-						numberType -> numberType.compiled { (value as Number).toString() }
+						numberType -> numberType.compiled(expression.numberString)
 						else -> null
 					}
 				else -> null
@@ -62,7 +62,7 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 			when (begin.string) {
 				plusName ->
 					when (rhs.type) {
-						textType -> textType.compiled { (value as String).plus(rhs.value as String) }
+						textType -> textType.compiled(expression.stringPlusString(rhs.expression))
 						else -> null
 					}
 				else -> null
@@ -71,17 +71,17 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 			when (begin.string) {
 				plusName ->
 					when (rhs.type) {
-						numberType -> textType.compiled { (value as Number).plus(rhs.value as Number) }
+						numberType -> textType.compiled(expression.numberPlusNumber(rhs.expression))
 						else -> null
 					}
 				minusName ->
 					when (rhs.type) {
-						numberType -> textType.compiled { (value as Number).minus(rhs.value as Number) }
+						numberType -> textType.compiled(expression.numberMinusNumber(rhs.expression))
 						else -> null
 					}
 				timesName ->
 					when (rhs.type) {
-						numberType -> textType.compiled { (value as Number).times(rhs.value as Number) }
+						numberType -> textType.compiled(expression.numberTimesNumber(rhs.expression))
 						else -> null
 					}
 				else -> null

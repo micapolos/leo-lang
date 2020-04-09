@@ -2,6 +2,11 @@
 
 package leo14.untyped.typed
 
+import leo14.minus
+import leo14.plus
+import leo14.times
+import leo14.unaryMinus
+
 data class Constant(val value: Value)
 data class Dynamic(val evaluate: Evaluate)
 
@@ -70,4 +75,24 @@ inline fun Expression.doApply(rhs: Expression, crossinline fn: Value.(Value) -> 
 	}
 
 operator fun Expression.invoke(rhs: Expression): Expression =
-	doApply(rhs) { (this as (Value.() -> Value)).invoke(it) }
+	doApply(rhs) { asFn.invoke(it) }
+
+fun Expression.stringPlusString(rhs: Expression): Expression =
+	doApply(rhs) { asString + it.asString }
+
+val Expression.numberUnaryMinus: Expression
+	get() =
+		doApply { -asNumber }
+
+fun Expression.numberPlusNumber(rhs: Expression): Expression =
+	doApply(rhs) { asNumber + it.asNumber }
+
+fun Expression.numberMinusNumber(rhs: Expression): Expression =
+	doApply(rhs) { asNumber - asNumber }
+
+fun Expression.numberTimesNumber(rhs: Expression): Expression =
+	doApply(rhs) { asNumber * it.asNumber }
+
+val Expression.numberString: Expression
+	get() =
+		doApply { asNumber.toString() }
