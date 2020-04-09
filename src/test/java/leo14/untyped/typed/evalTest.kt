@@ -181,4 +181,10 @@ class EvalTest {
 						.get(null)
 						.nativeString)))
 	}
+
+	@Test
+	fun nativeConstructorInvoke() {
+		leo("java.lang.StringBuilder", javaName(), className(), constructorName(), invokeName())
+			.assertEvalsTo(leo(nativeName(StringBuilder().nativeString)))
+	}
 }

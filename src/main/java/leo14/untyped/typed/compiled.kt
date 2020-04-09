@@ -7,6 +7,7 @@ import leo.base.notNullIf
 import leo14.*
 import leo14.lambda.runtime.Value
 import leo14.untyped.*
+import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 
 data class Compiled(val type: Type, val expression: Expression)
@@ -63,6 +64,7 @@ val Compiled.apply: Compiled
 			?: applyClassNativeConstructorParameterList
 			?: applyClassNativeMethod
 			?: applyFieldNativeGet
+			?: applyNativeConstructorInvoke
 			?: this
 
 val Compiled.applyListOf: Compiled?
@@ -156,6 +158,16 @@ val Compiled.applyArrayJavaList: Compiled?
 							type(arrayName lineTo nativeType).compiled(expression.array)
 						}
 					}
+				}
+			}
+		}
+
+val Compiled.applyNativeConstructorInvoke: Compiled?
+	get() =
+		type.matchPrefix(invokeName) {
+			matchPrefix(constructorName) {
+				matchNative {
+					nativeType.compiled(expression.doApply { (this as Constructor<*>).newInstance() })
 				}
 			}
 		}
