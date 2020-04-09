@@ -95,11 +95,8 @@ class EvalTest {
 	}
 
 	@Test
-	fun nativeClassConstructor_zeroArgs() {
-		leo(
-			"java.lang.StringBuilder", javaName(), className(),
-			constructorName(parameterName(
-				listName(ofName(nativeName(), className())))))
+	fun nativeClassConstructor() {
+		leo("java.lang.StringBuilder", javaName(), className(), constructorName())
 			.assertEvalsTo(leo(
 				constructorName(
 					nativeName(
@@ -107,7 +104,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun nativeClassConstructor_someArgs() {
+	fun nativeClassConstructorParameterList() {
 		leo(
 			"java.lang.StringBuilder", javaName(), className(),
 			constructorName(parameterName(
@@ -117,5 +114,16 @@ class EvalTest {
 				constructorName(
 					nativeName(
 						java.lang.StringBuilder::class.java.getConstructor(String::class.java).nativeString))))
+	}
+
+	@Test
+	fun nativeClassField() {
+		leo(
+			"java.lang.Integer", javaName(), className(),
+			fieldName(nameName("MAX_VALUE")))
+			.assertEvalsTo(leo(
+				fieldName(
+					nativeName(
+						java.lang.Integer::class.java.getField("MAX_VALUE").nativeString))))
 	}
 }

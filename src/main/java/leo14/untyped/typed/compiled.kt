@@ -57,6 +57,8 @@ val Compiled.apply: Compiled
 			?: applyArrayJavaList
 			?: applyClassJavaText
 			?: applyClassNativeConstructor
+			?: applyClassNativeConstructorParameterList
+			?: applyClassNativeField
 			?: this
 
 val Compiled.applyListOf: Compiled?
@@ -159,7 +161,7 @@ val Compiled.applyClassJavaText: Compiled?
 			}
 		}
 
-val Compiled.applyClassNativeConstructor: Compiled?
+val Compiled.applyClassNativeConstructorParameterList: Compiled?
 	get() =
 		type.matchInfix(constructorName) { rhs ->
 			matchPrefix(className) {
@@ -174,6 +176,33 @@ val Compiled.applyClassNativeConstructor: Compiled?
 										}
 									}
 								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+val Compiled.applyClassNativeConstructor: Compiled?
+	get() =
+		type.matchPrefix(constructorName) {
+			matchPrefix(className) {
+				matchNative {
+					type(constructorName lineTo nativeType)
+						.compiled(expression.doApply { (this as Class<*>).getConstructor() })
+				}
+			}
+		}
+
+val Compiled.applyClassNativeField: Compiled?
+	get() =
+		type.matchInfix(fieldName) { rhs ->
+			matchPrefix(className) {
+				matchNative {
+					rhs.matchPrefix(nameName) {
+						matchText {
+							linkApply(type(fieldName lineTo nativeType)) { name ->
+								(this as Class<*>).getField(name as String)
 							}
 						}
 					}
