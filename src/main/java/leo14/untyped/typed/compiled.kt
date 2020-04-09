@@ -53,6 +53,7 @@ val Compiled.apply: Compiled
 			?: applyNumberMinusNumber
 			?: applyNumberTimesNumber
 			?: applyClassJavaText
+			?: applyArrayJavaList
 			?: this
 
 val Compiled.applyMinusNumber: Compiled?
@@ -111,6 +112,20 @@ val Compiled.applyClassJavaText: Compiled?
 						.compiled(expression.doApply {
 							asString.loadClass
 						})
+				}
+			}
+		}
+
+val Compiled.applyArrayJavaList: Compiled?
+	get() =
+		type.matchPrefix(arrayName) {
+			matchPrefix(javaName) {
+				matchPrefix(listName) {
+					matchRepeating {
+						matchLine {
+							type(arrayName lineTo nativeType).compiled("This should be an array")
+						}
+					}
 				}
 			}
 		}

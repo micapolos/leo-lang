@@ -30,13 +30,14 @@ class EvalTest {
 	}
 
 	@Test
-	fun javaClass() {
+	fun stringJavaClass() {
 		leo("java.lang.String", javaName(), className())
 			.assertEvalsTo(leo(className(nativeName(java.lang.String::class.java.toString()))))
 	}
 
 	@Test
-	fun methodClassNative() {
-
+	fun listJavaArray() {
+		leo(listName(), javaName(), arrayName())
+			.assertEvalsTo(leo())
 	}
 }

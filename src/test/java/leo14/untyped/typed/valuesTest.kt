@@ -93,4 +93,15 @@ class ValuesTest {
 			.methodInvoke(stack("Hello, world!", stack(7, 12)))
 			.assertEqualTo("world")
 	}
+
+	@Test
+	fun arrays() {
+		nullValue.arraySize.assertEqualTo(0)
+		null.to("foo").arraySize.assertEqualTo(1)
+		null.to("foo").to("bar").arraySize.assertEqualTo(2)
+
+		nullValue.asArray.toList().assertEqualTo(listOf())
+		null.to("foo").asArray.toList().assertEqualTo(listOf("foo"))
+		null.to("foo").to("bar").asArray.toList().assertEqualTo(listOf("foo", "bar"))
+	}
 }

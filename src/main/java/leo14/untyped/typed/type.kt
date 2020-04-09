@@ -2,6 +2,7 @@ package leo14.untyped.typed
 
 import leo.base.fold
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
@@ -69,7 +70,9 @@ fun type(vararg lines: TypeLine): Type = emptyType.fold(lines) { plus(it) }
 
 val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
 val Type.functionOrNull: TypeFunction? get() = (this as? FunctionType)?.function
+val Type.repeatingOrNull: TypeRepeating? get() = (this as? RepeatingType)?.repeating
 val TypeLine.fieldOrNull: TypeField? get() = (this as? FieldTypeLine)?.field
+val TypeLink.onlyLineOrNull: TypeLine? get() = notNullIf(lhs.isEmpty) { line }
 
 val textType = emptyType.plus(textTypeLine)
 val numberType = emptyType.plus(numberTypeLine)
@@ -109,3 +112,10 @@ fun <R : Any> Type.matchText(fn: () -> R?): R? =
 
 fun <R : Any> Type.matchFunction(fn: (TypeFunction) -> R?): R? =
 	functionOrNull?.let(fn)
+
+fun <R : Any> Type.matchRepeating(fn: Type.() -> R?): R? =
+	repeatingOrNull?.let { fn(it.type) }
+
+fun <R : Any> Type.matchLine(fn: TypeLine.() -> R?): R? =
+	linkOrNull?.onlyLineOrNull?.let(fn)
+
