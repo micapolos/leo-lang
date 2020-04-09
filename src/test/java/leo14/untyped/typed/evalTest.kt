@@ -95,6 +95,17 @@ class EvalTest {
 	}
 
 	@Test
+	fun nativeClassField() {
+		leo(
+			"java.lang.Integer", javaName(), className(),
+			fieldName(nameName("MAX_VALUE")))
+			.assertEvalsTo(leo(
+				fieldName(
+					nativeName(
+						java.lang.Integer::class.java.getField("MAX_VALUE").nativeString))))
+	}
+
+	@Test
 	fun nativeClassConstructor() {
 		leo("java.lang.StringBuilder", javaName(), className(), constructorName())
 			.assertEvalsTo(leo(
@@ -117,13 +128,12 @@ class EvalTest {
 	}
 
 	@Test
-	fun nativeClassField() {
-		leo(
-			"java.lang.Integer", javaName(), className(),
-			fieldName(nameName("MAX_VALUE")))
+	fun nativeClassMethod() {
+		leo("java.lang.String", javaName(), className(),
+			methodName(nameName("length")))
 			.assertEvalsTo(leo(
-				fieldName(
+				methodName(
 					nativeName(
-						java.lang.Integer::class.java.getField("MAX_VALUE").nativeString))))
+						java.lang.String::class.java.getMethod("length").nativeString))))
 	}
 }

@@ -56,9 +56,10 @@ val Compiled.apply: Compiled
 			?: applyNumberTimesNumber
 			?: applyArrayJavaList
 			?: applyClassJavaText
+			?: applyClassNativeField
 			?: applyClassNativeConstructor
 			?: applyClassNativeConstructorParameterList
-			?: applyClassNativeField
+			?: applyClassNativeMethod
 			?: this
 
 val Compiled.applyListOf: Compiled?
@@ -161,6 +162,33 @@ val Compiled.applyClassJavaText: Compiled?
 			}
 		}
 
+val Compiled.applyClassNativeField: Compiled?
+	get() =
+		type.matchInfix(fieldName) { rhs ->
+			matchPrefix(className) {
+				matchNative {
+					rhs.matchPrefix(nameName) {
+						matchText {
+							linkApply(type(fieldName lineTo nativeType)) { name ->
+								(this as Class<*>).getField(name as String)
+							}
+						}
+					}
+				}
+			}
+		}
+
+val Compiled.applyClassNativeConstructor: Compiled?
+	get() =
+		type.matchPrefix(constructorName) {
+			matchPrefix(className) {
+				matchNative {
+					type(constructorName lineTo nativeType)
+						.compiled(expression.doApply { (this as Class<*>).getConstructor() })
+				}
+			}
+		}
+
 val Compiled.applyClassNativeConstructorParameterList: Compiled?
 	get() =
 		type.matchInfix(constructorName) { rhs ->
@@ -183,26 +211,15 @@ val Compiled.applyClassNativeConstructorParameterList: Compiled?
 			}
 		}
 
-val Compiled.applyClassNativeConstructor: Compiled?
+val Compiled.applyClassNativeMethod: Compiled?
 	get() =
-		type.matchPrefix(constructorName) {
-			matchPrefix(className) {
-				matchNative {
-					type(constructorName lineTo nativeType)
-						.compiled(expression.doApply { (this as Class<*>).getConstructor() })
-				}
-			}
-		}
-
-val Compiled.applyClassNativeField: Compiled?
-	get() =
-		type.matchInfix(fieldName) { rhs ->
+		type.matchInfix(methodName) { rhs ->
 			matchPrefix(className) {
 				matchNative {
 					rhs.matchPrefix(nameName) {
 						matchText {
-							linkApply(type(fieldName lineTo nativeType)) { name ->
-								(this as Class<*>).getField(name as String)
+							linkApply(type(methodName lineTo nativeType)) { name ->
+								(this as Class<*>).getMethod(name as String)
 							}
 						}
 					}
