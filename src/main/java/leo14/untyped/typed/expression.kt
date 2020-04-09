@@ -95,3 +95,7 @@ fun Expression.numberTimesNumber(rhs: Expression): Expression =
 val Expression.numberString: Expression
 	get() =
 		doApply { asNumber.toString() }
+
+val Expression.array: Expression
+	get() =
+		doApply { listAsArray } // TODO: This works only for constant arrays

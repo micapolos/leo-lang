@@ -24,26 +24,27 @@ inline val Value.asString get() = this as String
 inline val Value.asNumber get() = this as Number
 inline val Value.asInt get() = this as Int
 inline val Value.asFn get() = this as Fn
+inline val Value.asArray get() = this as Array<Value>
 
-tailrec fun Int.plusValueArrayLength(value: Value): Int =
+tailrec fun Int.plusListLength(value: Value): Int =
 	if (value == null) this
-	else inc().plusValueArrayLength(value.asPair.first)
+	else inc().plusListLength(value.asPair.first)
 
-tailrec fun Value.valueReverseFill(array: Array<Value>, index: Int) {
+tailrec fun Value.listReverseFill(array: Array<Value>, index: Int) {
 	if (this != null) {
 		this as Pair<*, *>
 		val decIndex = index.dec()
 		array[decIndex] = second
-		first.valueReverseFill(array, decIndex)
+		first.listReverseFill(array, decIndex)
 	}
 }
 
-val Value.arraySize: Int get() = 0.plusValueArrayLength(this)
+val Value.listSize: Int get() = 0.plusListLength(this)
 
-val Value.asArray: Array<Value>
+val Value.listAsArray: Array<Value>
 	get() {
-		val size = arraySize
+		val size = listSize
 		val array = arrayOfNulls<Value>(size)
-		valueReverseFill(array, size)
+		listReverseFill(array, size)
 		return array
 	}

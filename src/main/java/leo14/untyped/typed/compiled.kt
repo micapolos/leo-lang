@@ -36,8 +36,8 @@ val Compiled.evaluate: Compiled get() = type.compiled(expression.evaluate)
 val Compiled.typed: Typed get() = type typed value
 
 fun Compiled.apply(literal: Literal): Compiled =
-	if (isEmpty) emptyType.plus(literal.typeLine).compiled { literal.value }
-	else type.plus(literal.typeLine).compiled { value to literal.value }
+	if (isEmpty) emptyType.plus(literal.valueTypeLine).compiled { literal.value }
+	else type.plus(literal.valueTypeLine).compiled { value to literal.value }
 
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 	null
@@ -123,7 +123,7 @@ val Compiled.applyArrayJavaList: Compiled?
 				matchPrefix(listName) {
 					matchRepeating {
 						matchLine {
-							type(arrayName lineTo nativeType).compiled("This should be an array")
+							type(arrayName lineTo nativeType).compiled(expression.array)
 						}
 					}
 				}
@@ -155,7 +155,7 @@ fun Compiled.applyFunctionApply(rhs: Compiled): Compiled? =
 	}
 
 fun Compiled.append(literal: Literal): Compiled =
-	type.plus(literal.typeLine).let { newType ->
+	type.plus(literal.valueTypeLine).let { newType ->
 		if (type.isEmpty) newType.compiled(literal.value)
 		else newType.compiled(expression.doApply(literal.expression) { this to it })
 	}

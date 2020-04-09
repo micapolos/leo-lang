@@ -114,11 +114,11 @@ class TypedScriptTest {
 	@Test
 	fun literals() {
 		emptyScope.script(
-			emptyType.plus(literal(123).staticTypeLine).staticTyped)
+			emptyType.plus(literal(123).typeLine).staticTyped)
 			.assertEqualTo(leo(123))
 
 		emptyScope.script(
-			emptyType.plus(literal("foo").staticTypeLine).staticTyped)
+			emptyType.plus(literal("foo").typeLine).staticTyped)
 			.assertEqualTo(leo("foo"))
 	}
 

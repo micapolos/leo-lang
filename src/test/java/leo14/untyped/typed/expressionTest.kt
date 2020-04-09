@@ -37,4 +37,17 @@ class ExpressionTest {
 			.value
 			.assertEqualTo(30)
 	}
+
+	@Test
+	fun arrays() {
+		expression(null)
+			.array
+			.doApply { asArray.toList() }
+			.assertEqualTo(expression(listOf<Value>()))
+
+		expression(null to "foo" to "bar")
+			.array
+			.doApply { asArray.toList() }
+			.assertEqualTo(expression(listOf("foo", "bar")))
+	}
 }

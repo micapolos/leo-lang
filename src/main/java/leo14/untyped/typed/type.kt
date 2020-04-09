@@ -55,7 +55,7 @@ infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
 fun Type.plus(line: TypeLine) = linkTo(line).type
 fun Type.plus(field: TypeField) = plus(field.line)
 fun Type.plus(name: String) = plus(name fieldTo emptyType)
-val Literal.staticTypeLine: TypeLine get() = LiteralTypeLine(this)
+val Literal.typeLine: TypeLine get() = LiteralTypeLine(this)
 val TypeField.line: TypeLine get() = FieldTypeLine(this)
 val nativeTypeLine: TypeLine = NativeTypeLine
 val numberTypeLine: TypeLine = NumberTypeLine
@@ -78,7 +78,7 @@ val textType = emptyType.plus(textTypeLine)
 val numberType = emptyType.plus(numberTypeLine)
 val nativeType = emptyType.plus(nativeTypeLine)
 
-val Literal.typeLine: TypeLine
+val Literal.valueTypeLine: TypeLine
 	get() =
 		when (this) {
 			is StringLiteral -> textTypeLine

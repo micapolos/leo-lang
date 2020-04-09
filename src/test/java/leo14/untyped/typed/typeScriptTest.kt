@@ -11,8 +11,8 @@ class TypeScriptTest {
 	@Test
 	fun static() {
 		emptyType.script.assertEqualTo(leo())
-		emptyType.plus(literal("foo").staticTypeLine).script.assertEqualTo(leo("foo"))
-		emptyType.plus(literal(123).staticTypeLine).script.assertEqualTo(leo(123))
+		emptyType.plus(literal("foo").typeLine).script.assertEqualTo(leo("foo"))
+		emptyType.plus(literal(123).typeLine).script.assertEqualTo(leo(123))
 	}
 
 	@Test
@@ -67,8 +67,8 @@ class TypeScriptTest {
 
 	@Test
 	fun literals() {
-		emptyType.plus(literal(123).staticTypeLine).script.assertEqualTo(leo(123))
-		emptyType.plus(literal("foo").staticTypeLine).script.assertEqualTo(leo("foo"))
+		emptyType.plus(literal(123).typeLine).script.assertEqualTo(leo(123))
+		emptyType.plus(literal("foo").typeLine).script.assertEqualTo(leo("foo"))
 	}
 
 	@Test
