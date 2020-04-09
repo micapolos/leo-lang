@@ -73,6 +73,12 @@ class EvalTest {
 //	}
 
 	@Test
+	fun javaNull() {
+		leo(javaName(nullName()))
+			.assertEvalsTo(leo(nativeName(nullValue.nativeString)))
+	}
+
+	@Test
 	fun listJavaArray() {
 		leo(
 			listName(ofName(numberName())),
@@ -128,6 +134,31 @@ class EvalTest {
 	}
 
 	@Test
+	fun nativeClassConstructorParameterListPrimitiveTypes() {
+		leo("java.awt.Point", javaName(), className(),
+			constructorName(
+				parameterName(
+					listName(ofName(className(nativeName()))),
+					plusName(
+						"java.lang.Integer", javaName(), className(),
+						fieldName(nameName("TYPE")),
+						getName(javaName(nullName())),
+						className()),
+					plusName(
+						"java.lang.Integer", javaName(), className(),
+						fieldName(nameName("TYPE")),
+						getName(javaName(nullName())),
+						className()))))
+			.assertEvalsTo(leo(
+				constructorName(
+					nativeName(
+						java.awt.Point::class
+							.java
+							.getConstructor(Integer.TYPE, Integer.TYPE)
+							.nativeString))))
+	}
+
+	@Test
 	fun nativeClassMethod() {
 		leo("java.lang.String", javaName(), className(),
 			methodName(nameName("length")))
@@ -135,5 +166,19 @@ class EvalTest {
 				methodName(
 					nativeName(
 						java.lang.String::class.java.getMethod("length").nativeString))))
+	}
+
+	@Test
+	fun nativeFieldGetStatic() {
+		leo("java.lang.Integer", javaName(), className(),
+			fieldName(nameName("MAX_VALUE")),
+			getName(javaName(nullName())))
+			.assertEvalsTo(leo(
+				nativeName(
+					java.lang.Integer::class
+						.java
+						.getField("MAX_VALUE")
+						.get(null)
+						.nativeString)))
 	}
 }

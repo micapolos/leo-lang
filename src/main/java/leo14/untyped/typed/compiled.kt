@@ -7,6 +7,7 @@ import leo.base.notNullIf
 import leo14.*
 import leo14.lambda.runtime.Value
 import leo14.untyped.*
+import java.lang.reflect.Field
 
 data class Compiled(val type: Type, val expression: Expression)
 data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
@@ -54,12 +55,14 @@ val Compiled.apply: Compiled
 			?: applyNumberPlusNumber
 			?: applyNumberMinusNumber
 			?: applyNumberTimesNumber
+			?: applyNullJava
 			?: applyArrayJavaList
 			?: applyClassJavaText
 			?: applyClassNativeField
 			?: applyClassNativeConstructor
 			?: applyClassNativeConstructorParameterList
 			?: applyClassNativeMethod
+			?: applyFieldNativeGet
 			?: this
 
 val Compiled.applyListOf: Compiled?
@@ -132,6 +135,14 @@ val Compiled.applyNumberTimesNumber: Compiled?
 						first.asNumber * second.asNumber
 					})
 				}
+			}
+		}
+
+val Compiled.applyNullJava: Compiled?
+	get() =
+		type.matchPrefix(javaName) {
+			match(nullName) {
+				nativeType.compiled(null)
 			}
 		}
 
@@ -226,6 +237,21 @@ val Compiled.applyClassNativeMethod: Compiled?
 				}
 			}
 		}
+
+val Compiled.applyFieldNativeGet: Compiled?
+	get() =
+		type.matchInfix(getName) { rhs ->
+			matchPrefix(fieldName) {
+				matchNative {
+					rhs.matchNative {
+						linkApply(nativeType) { rhs ->
+							(this as Field).get(rhs)
+						}
+					}
+				}
+			}
+		}
+
 
 fun Compiled.applyPrimitives(begin: Begin, rhs: Compiled): Compiled? =
 	when (type.plus(begin.string(rhs.type))) {

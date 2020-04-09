@@ -105,6 +105,13 @@ fun <R : Any> Type.matchPrefix(name: String, fn: Type.() -> R?): R? =
 		}
 	}
 
+fun <R : Any> Type.match(name: String, fn: () -> R?): R? =
+	matchInfix(name) { rhs ->
+		matchEmpty {
+			rhs.matchEmpty(fn)
+		}
+	}
+
 fun <R : Any> Type.matchNumber(fn: () -> R?): R? =
 	ifOrNull(this == numberType) { fn() }
 
