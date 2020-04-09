@@ -54,8 +54,9 @@ val Compiled.apply: Compiled
 			?: applyNumberPlusNumber
 			?: applyNumberMinusNumber
 			?: applyNumberTimesNumber
-			?: applyClassJavaText
 			?: applyArrayJavaList
+			?: applyClassJavaText
+			?: applyClassNativeConstructor
 			?: this
 
 val Compiled.applyListOf: Compiled?
@@ -131,6 +132,20 @@ val Compiled.applyNumberTimesNumber: Compiled?
 			}
 		}
 
+val Compiled.applyArrayJavaList: Compiled?
+	get() =
+		type.matchPrefix(arrayName) {
+			matchPrefix(javaName) {
+				matchPrefix(listName) {
+					matchRepeating {
+						matchLine {
+							type(arrayName lineTo nativeType).compiled(expression.array)
+						}
+					}
+				}
+			}
+		}
+
 val Compiled.applyClassJavaText: Compiled?
 	get() =
 		type.matchPrefix(className) {
@@ -144,14 +159,22 @@ val Compiled.applyClassJavaText: Compiled?
 			}
 		}
 
-val Compiled.applyArrayJavaList: Compiled?
+val Compiled.applyClassNativeConstructor: Compiled?
 	get() =
-		type.matchPrefix(arrayName) {
-			matchPrefix(javaName) {
-				matchPrefix(listName) {
-					matchRepeating {
-						matchLine {
-							type(arrayName lineTo nativeType).compiled(expression.array)
+		type.matchInfix(constructorName) { rhs ->
+			matchPrefix(className) {
+				matchNative {
+					rhs.matchPrefix(parameterName) {
+						matchList {
+							matchPrefix(className) {
+								matchNative {
+									linkApply(type(constructorName lineTo nativeType)) { rhs ->
+										rhs.listAsArray.let { array ->
+											(this as Class<*>).getConstructor(*((array.toList() as List<Class<*>>).toTypedArray()))
+										}
+									}
+								}
+							}
 						}
 					}
 				}

@@ -6,6 +6,7 @@ import leo.base.notNullIf
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
+import leo14.untyped.listName
 
 data class TypeFunction(val from: Type, val to: Type)
 data class TypeAlternative(val lhs: Type, val rhs: Type)
@@ -110,6 +111,9 @@ fun <R : Any> Type.matchNumber(fn: () -> R?): R? =
 fun <R : Any> Type.matchText(fn: () -> R?): R? =
 	ifOrNull(this == textType) { fn() }
 
+fun <R : Any> Type.matchNative(fn: () -> R?): R? =
+	ifOrNull(this == nativeType) { fn() }
+
 fun <R : Any> Type.matchFunction(fn: (TypeFunction) -> R?): R? =
 	functionOrNull?.let(fn)
 
@@ -121,6 +125,13 @@ fun <R : Any> Type.matchLine(fn: TypeLine.() -> R?): R? =
 
 fun <R : Any> Type.matchStatic(fn: Type.() -> R?): R? =
 	staticOrNull?.let(fn)
+
+fun <R : Any> Type.matchList(fn: Type.() -> R?): R? =
+	matchPrefix(listName) {
+		matchRepeating {
+			fn()
+		}
+	}
 
 val Type.staticOrNull: Type?
 	get() =

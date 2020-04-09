@@ -73,12 +73,6 @@ class EvalTest {
 //	}
 
 	@Test
-	fun stringJavaClass() {
-		leo("java.lang.String", javaName(), className())
-			.assertEvalsTo(leo(className(nativeName(java.lang.String::class.java.toString()))))
-	}
-
-	@Test
 	fun listJavaArray() {
 		leo(
 			listName(ofName(numberName())),
@@ -92,5 +86,36 @@ class EvalTest {
 			plusName(3),
 			javaName(), arrayName())
 			.assertEvalsTo(leo(arrayName(nativeName(arrayOf(1, 2, 3).nativeString))))
+	}
+
+	@Test
+	fun stringJavaClass() {
+		leo("java.lang.String", javaName(), className())
+			.assertEvalsTo(leo(className(nativeName(java.lang.String::class.java.toString()))))
+	}
+
+	@Test
+	fun nativeClassConstructor_zeroArgs() {
+		leo(
+			"java.lang.StringBuilder", javaName(), className(),
+			constructorName(parameterName(
+				listName(ofName(nativeName(), className())))))
+			.assertEvalsTo(leo(
+				constructorName(
+					nativeName(
+						java.lang.StringBuilder::class.java.getConstructor().nativeString))))
+	}
+
+	@Test
+	fun nativeClassConstructor_someArgs() {
+		leo(
+			"java.lang.StringBuilder", javaName(), className(),
+			constructorName(parameterName(
+				listName(ofName(nativeName(), className())),
+				plusName("java.lang.String", javaName(), className()))))
+			.assertEvalsTo(leo(
+				constructorName(
+					nativeName(
+						java.lang.StringBuilder::class.java.getConstructor(String::class.java).nativeString))))
 	}
 }
