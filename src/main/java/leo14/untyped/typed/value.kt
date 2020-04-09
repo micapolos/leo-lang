@@ -48,3 +48,10 @@ val Value.listAsArray: Array<Value>
 		listReverseFill(array, size)
 		return array
 	}
+
+val Value.nativeString: String
+	get() =
+		when (this) {
+			is Array<*> -> this.contentDeepToString()
+			else -> toString()
+		}

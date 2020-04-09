@@ -77,4 +77,20 @@ class EvalTest {
 		leo("java.lang.String", javaName(), className())
 			.assertEvalsTo(leo(className(nativeName(java.lang.String::class.java.toString()))))
 	}
+
+	@Test
+	fun listJavaArray() {
+		leo(
+			listName(ofName(numberName())),
+			javaName(), arrayName())
+			.assertEvalsTo(leo(arrayName(nativeName(arrayOf<Value>().nativeString))))
+
+		leo(
+			listName(ofName(numberName())),
+			plusName(1),
+			plusName(2),
+			plusName(3),
+			javaName(), arrayName())
+			.assertEvalsTo(leo(arrayName(nativeName(arrayOf(1, 2, 3).nativeString))))
+	}
 }
