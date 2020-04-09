@@ -49,6 +49,7 @@ val Compiled.apply: Compiled
 	get() =
 		null
 			?: applyListOf
+			?: applyListPlus
 			?: applyMinusNumber
 			?: applyNumberPlusNumber
 			?: applyNumberMinusNumber
@@ -62,7 +63,23 @@ val Compiled.applyListOf: Compiled?
 		type.matchPrefix(listName) {
 			matchPrefix(ofName) {
 				matchStatic {
+					// TODO: Represent array of static type as Int = array size.
 					type(listName lineTo repeating.toType).compiled(null)
+				}
+			}
+		}
+
+val Compiled.applyListPlus: Compiled?
+	get() =
+		type.matchInfix(plusName) { rhs ->
+			let { listType ->
+				matchPrefix(listName) {
+					matchRepeating {
+						ifOrNull(this == rhs) {
+							// TODO: Represent list with static items as Int = array size
+							this@applyListPlus.linkApply(listType) { this to it }
+						}
+					}
 				}
 			}
 		}

@@ -30,14 +30,36 @@ class EvalTest {
 	}
 
 	@Test
+	fun listOf() {
+		leo(listName(ofName(numberName())))
+			.assertEvalsTo(leo(listName()))
+	}
+
+	@Test
+	fun listPlusDynamic() {
+		leo(
+			listName(ofName(numberName())),
+			plusName(123))
+			.assertEvalsTo(leo(listName(123)))
+
+		leo(
+			listName(ofName(numberName())),
+			plusName(123),
+			plusName(124),
+			plusName(125))
+			.assertEvalsTo(leo(listName(123, 124, 125)))
+	}
+
+	// TODO: fixit!!!
+//	@Test
+//	fun listPlusStatic() {
+//		leo(listName(ofName("foo"())), plusName("foo"()))
+//			.assertEvalsTo(leo(listName("foo"())))
+//	}
+
+	@Test
 	fun stringJavaClass() {
 		leo("java.lang.String", javaName(), className())
 			.assertEvalsTo(leo(className(nativeName(java.lang.String::class.java.toString()))))
 	}
-
-//	@Test
-//	fun listJavaArray() {
-//		leo(listName(), javaName(), arrayName())
-//			.assertEvalsTo(leo())
-//	}
 }
