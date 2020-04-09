@@ -5,10 +5,12 @@ package leo14.untyped.typed
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo14.*
+import leo14.Number
 import leo14.lambda.runtime.Value
 import leo14.untyped.*
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
+import java.lang.reflect.Method
 
 data class Compiled(val type: Type, val expression: Expression)
 data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
@@ -56,6 +58,8 @@ val Compiled.apply: Compiled
 			?: applyNumberPlusNumber
 			?: applyNumberMinusNumber
 			?: applyNumberTimesNumber
+			?: applyTextStringJava
+			?: applyNumberIntJava
 			?: applyNullJava
 			?: applyArrayJavaList
 			?: applyClassJavaText
@@ -65,6 +69,8 @@ val Compiled.apply: Compiled
 			?: applyClassNativeMethod
 			?: applyFieldNativeGet
 			?: applyNativeConstructorInvoke
+			?: applyNativeConstructorInvokeParameterList
+			?: applyNativeMethodInvoke
 			?: this
 
 val Compiled.applyListOf: Compiled?
@@ -140,6 +146,26 @@ val Compiled.applyNumberTimesNumber: Compiled?
 			}
 		}
 
+val Compiled.applyTextStringJava: Compiled?
+	get() =
+		type.matchPrefix(javaName) {
+			matchPrefix(stringName) {
+				matchText {
+					nativeType.compiled(expression)
+				}
+			}
+		}
+
+val Compiled.applyNumberIntJava: Compiled?
+	get() =
+		type.matchPrefix(javaName) {
+			matchPrefix(intName) {
+				matchNumber {
+					nativeType.compiled(expression.doApply { (this as Number).bigDecimal.intValueExact() })
+				}
+			}
+		}
+
 val Compiled.applyNullJava: Compiled?
 	get() =
 		type.matchPrefix(javaName) {
@@ -171,6 +197,41 @@ val Compiled.applyNativeConstructorInvoke: Compiled?
 				}
 			}
 		}
+
+val Compiled.applyNativeConstructorInvokeParameterList: Compiled?
+	get() =
+		type.matchInfix(invokeName) { rhs ->
+			matchPrefix(constructorName) {
+				matchNative {
+					rhs.matchPrefix(parameterName) {
+						matchPrefix(listName) {
+							matchRepeating {
+								matchNative {
+									linkApply(nativeType) { rhs ->
+										rhs.listAsArray.let { array ->
+											(this as Constructor<*>).newInstance(*array)
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+val Compiled.applyNativeMethodInvoke: Compiled?
+	get() =
+		type.matchInfix(invokeName) { rhs ->
+			matchPrefix(methodName) {
+				matchNative {
+					rhs.matchNative {
+						linkApply(nativeType) { (this as Method).invoke(it) }
+					}
+				}
+			}
+		}
+
 
 val Compiled.applyClassJavaText: Compiled?
 	get() =

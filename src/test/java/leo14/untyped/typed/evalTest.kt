@@ -3,6 +3,7 @@ package leo14.untyped.typed
 import leo14.invoke
 import leo14.leo
 import leo14.untyped.*
+import java.awt.Point
 import kotlin.test.Test
 
 class EvalTest {
@@ -92,6 +93,18 @@ class EvalTest {
 			plusName(3),
 			javaName(), arrayName())
 			.assertEvalsTo(leo(arrayName(nativeName(arrayOf(1, 2, 3).nativeString))))
+	}
+
+	@Test
+	fun textStringJava() {
+		leo("foo", stringName(), javaName())
+			.assertEvalsTo(leo(nativeName("foo".nativeString)))
+	}
+
+	@Test
+	fun numberIntJava() {
+		leo(123, intName(), javaName())
+			.assertEvalsTo(leo(nativeName(123.nativeString)))
 	}
 
 	@Test
@@ -186,5 +199,35 @@ class EvalTest {
 	fun nativeConstructorInvoke() {
 		leo("java.lang.StringBuilder", javaName(), className(), constructorName(), invokeName())
 			.assertEvalsTo(leo(nativeName(StringBuilder().nativeString)))
+	}
+
+	@Test
+	fun nativeConstructorInvokeParameterList() {
+		leo("java.awt.Point", javaName(), className(),
+			constructorName(parameterName(
+				listName(ofName(className(nativeName()))),
+				plusName(
+					"java.lang.Integer", javaName(), className(),
+					fieldName(nameName("TYPE")),
+					getName(nullName(), javaName()),
+					className()),
+				plusName(
+					"java.lang.Integer", javaName(), className(),
+					fieldName(nameName("TYPE")),
+					getName(nullName(), javaName()),
+					className()))),
+			invokeName(parameterName(
+				listName(ofName(nativeName())),
+				plusName(10, intName(), javaName()),
+				plusName(20, intName(), javaName()))))
+			.assertEvalsTo(leo(nativeName(Point(10, 20).nativeString)))
+	}
+
+	@Test
+	fun nativeMethodInvoke() {
+		leo("java.lang.String", javaName(), className(),
+			methodName(nameName("length")),
+			invokeName("Hello, world!", stringName(), javaName()))
+			.assertEvalsTo(leo(nativeName(13.nativeString)))
 	}
 }
