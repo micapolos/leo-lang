@@ -9,8 +9,6 @@ import leo14.Literal
 import leo14.lambda.runtime.Value
 import leo14.untyped.*
 
-typealias Erase = () -> Value
-
 data class Compiled(val type: Type, val expression: Expression)
 data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
 data class CompiledFunction(val function: TypeFunction, val expression: Expression)
