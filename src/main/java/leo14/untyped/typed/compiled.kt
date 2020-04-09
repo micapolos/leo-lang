@@ -43,49 +43,19 @@ fun Compiled.apply(literal: Literal): Compiled =
 	else type.plus(literal.typeLine).compiled { value to literal.value }
 
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
-	when (type) {
-		emptyType ->
-			when (begin.string) {
-				minusName ->
-					when (rhs.type) {
-						numberType -> numberType.compiled(expression.numberUnaryMinus)
-						else -> null
-					}
-				textName ->
-					when (rhs.type) {
-						numberType -> numberType.compiled(expression.numberString)
-						else -> null
-					}
-				else -> null
-			}
-		textType ->
-			when (begin.string) {
-				plusName ->
-					when (rhs.type) {
-						textType -> textType.compiled(expression.stringPlusString(rhs.expression))
-						else -> null
-					}
-				else -> null
-			}
-		numberType ->
-			when (begin.string) {
-				plusName ->
-					when (rhs.type) {
-						numberType -> textType.compiled(expression.numberPlusNumber(rhs.expression))
-						else -> null
-					}
-				minusName ->
-					when (rhs.type) {
-						numberType -> textType.compiled(expression.numberMinusNumber(rhs.expression))
-						else -> null
-					}
-				timesName ->
-					when (rhs.type) {
-						numberType -> textType.compiled(expression.numberTimesNumber(rhs.expression))
-						else -> null
-					}
-				else -> null
-			}
+	when (type.plus(begin.string(rhs.type))) {
+		type(minusName(numberType)) ->
+			numberType.compiled(expression.numberUnaryMinus)
+		type(textName(numberType)) ->
+			numberType.compiled(expression.numberString)
+		type(textTypeLine, plusName(textType)) ->
+			textType.compiled(expression.stringPlusString(rhs.expression))
+		type(numberTypeLine, plusName(numberType)) ->
+			numberType.compiled(expression.numberPlusNumber(rhs.expression))
+		type(numberTypeLine, minusName(numberType)) ->
+			numberType.compiled(expression.numberMinusNumber(rhs.expression))
+		type(numberTypeLine, timesName(numberType)) ->
+			numberType.compiled(expression.numberTimesNumber(rhs.expression))
 		is FunctionType -> TODO()
 		else -> null
 	} ?: append(begin, rhs)

@@ -1,5 +1,6 @@
 package leo14.untyped.typed
 
+import leo.base.fold
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
@@ -59,9 +60,11 @@ val numberTypeLine: TypeLine = NumberTypeLine
 val textTypeLine: TypeLine = TextTypeLine
 infix fun String.fieldTo(type: Type) = TypeField(this, type)
 infix fun String.lineTo(type: Type) = fieldTo(type).line
+operator fun String.invoke(type: Type) = lineTo(type)
 val Type.isEmpty: Boolean get() = this is EmptyType
 infix fun Type.alternativeTo(rhs: Type) = TypeAlternative(this, rhs)
 fun Type.or(rhs: Type): Type = alternativeTo(rhs).type
+fun type(vararg lines: TypeLine): Type = emptyType.fold(lines) { plus(it) }
 
 val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
 val Type.functionOrNull: TypeFunction? get() = (this as? FunctionType)?.function

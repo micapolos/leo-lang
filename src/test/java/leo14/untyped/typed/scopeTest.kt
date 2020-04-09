@@ -10,10 +10,10 @@ class ScopeTest {
 //	@Test
 //	fun apply() {
 //		emptyScope
-//			.plus(definition(rule(numberType, numberType) { (it as Number).plus(number(1)) }))
-//			.apply(numberType.compiled { number(10) })!!
+//			.plus(definition(rule(numberType, numberType) { asNumber + 1.number }))
+//			.apply(numberType.compiled { 10.number })!!
 //			.typed
-//			.assertEqualTo(numberType.with(number(11)))
+//			.assertEqualTo(numberType.typed(11.number))
 //	}
 
 	@Test
