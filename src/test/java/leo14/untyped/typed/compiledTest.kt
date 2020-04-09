@@ -3,8 +3,6 @@ package leo14.untyped.typed
 import leo.base.assertEqualTo
 import leo.base.assertNull
 import leo.base.ifOrNull
-import leo14.Number
-import leo14.lambda.runtime.Fn
 import leo14.lambda.runtime.fn
 import leo14.number
 import leo14.untyped.className
@@ -32,8 +30,8 @@ class CompiledTest {
 			.plus(numberTypeLine)
 			.compiled { "number: " to 10.number }
 			.assertEvaluatedOnce
-			.linkApply(textType) { number ->
-				(this as String) + (number as Number).toString()
+			.linkApply(textType) { rhs ->
+				asString + rhs.asNumber.toString()
 			}!!
 			.typed
 			.assertEqualTo(textType typed "number: 10")
@@ -74,7 +72,7 @@ class CompiledTest {
 			// TODO: Fixit!!!
 			//.assertEvaluatedOnce
 			.matchInfix("and") { rhs ->
-				apply(rhs, textType) { (this as String) + (it as String) }
+				apply(rhs, textType) { asString + it.asString }
 			}!!
 			.typed
 			.assertEqualTo(textType.typed("Hello, world!"))
@@ -95,11 +93,11 @@ class CompiledTest {
 		textType
 			.functionTo(numberType)
 			.type
-			.compiled { fn { (it as String).length.number } }
+			.compiled { fn { it.asString.length.number } }
 			.assertEvaluatedOnce
 			.matchFunction { function, block ->
 				ifOrNull(function.from == textType) {
-					function.to.compiled { (block.value as Fn)("Hello, world!") }
+					function.to.compiled { block.value.asFn("Hello, world!") }
 				}
 			}!!
 			.typed

@@ -2,28 +2,25 @@
 
 package leo14.untyped.typed
 
-typealias V = Any?
-typealias Fn = () -> V
-
-data class Constant(val value: V)
-data class Dynamic(val evaluate: Fn)
+data class Constant(val value: Value)
+data class Dynamic(val evaluate: Evaluate)
 
 sealed class Expression
 data class ConstantExpression(val constant: Constant) : Expression()
 data class DynamicExpression(val dynamic: Dynamic) : Expression()
 
-fun constant(value: V) = Constant(value)
-fun dynamic(evaluate: Fn) = Dynamic(evaluate)
+fun constant(value: Value) = Constant(value)
+fun dynamic(evaluate: Evaluate) = Dynamic(evaluate)
 val Constant.expression: Expression get() = ConstantExpression(this)
 val Dynamic.expression: Expression get() = DynamicExpression(this)
-fun expression(value: V): Expression = constant(value).expression
-fun expression(fn: Fn): Expression = dynamic(fn).expression
+fun expression(value: Value): Expression = constant(value).expression
+fun expression(evaluate: Evaluate): Expression = dynamic(evaluate).expression
 
-val Dynamic.value: V
+val Dynamic.value: Value
 	get() =
 		evaluate()
 
-val Expression.value: V
+val Expression.value: Value
 	get() =
 		when (this) {
 			is ConstantExpression -> constant.value
@@ -34,7 +31,7 @@ val Expression.evaluate: Expression
 	get() =
 		expression(value)
 
-inline fun Expression.doApply(crossinline fn: V.() -> V): Expression =
+inline fun Expression.doApply(crossinline fn: Value.() -> Value): Expression =
 	when (this) {
 		is ConstantExpression -> expression(constant.value.fn())
 		is DynamicExpression -> dynamic.evaluate.let { evaluate ->
@@ -42,7 +39,7 @@ inline fun Expression.doApply(crossinline fn: V.() -> V): Expression =
 		}
 	}
 
-inline fun Expression.doApply(rhs: Expression, crossinline fn: V.(V) -> V): Expression =
+inline fun Expression.doApply(rhs: Expression, crossinline fn: Value.(Value) -> Value): Expression =
 	when (this) {
 		is ConstantExpression -> {
 			val lhsValue = constant.value
@@ -73,4 +70,4 @@ inline fun Expression.doApply(rhs: Expression, crossinline fn: V.(V) -> V): Expr
 	}
 
 operator fun Expression.invoke(rhs: Expression): Expression =
-	doApply(rhs) { (this as (V.() -> V)).invoke(it) }
+	doApply(rhs) { (this as (Value.() -> Value)).invoke(it) }

@@ -19,21 +19,21 @@ data class CompiledLine(val typeLine: TypeLine, val expression: Expression)
 data class CompiledField(val name: String, val rhs: Compiled)
 
 infix fun Type.compiled(expression: Expression) = Compiled(this, expression)
-infix fun Type.compiled(value: V) = Compiled(this, expression(value))
-infix fun Type.compiled(evaluate: Fn) = Compiled(this, expression(evaluate))
+infix fun Type.compiled(value: Value) = Compiled(this, expression(value))
+infix fun Type.compiled(evaluate: Evaluate) = Compiled(this, expression(evaluate))
 infix fun Compiled.linkTo(line: CompiledLine) = CompiledLink(this, line)
 infix fun TypeFunction.compiled(expression: Expression) = CompiledFunction(this, expression)
 infix fun TypeLine.compiled(expression: Expression) = CompiledLine(this, expression)
 infix fun String.fieldTo(rhs: Compiled) = CompiledField(this, rhs)
 fun anythingCompiled(expression: Expression) = CompiledAnything(expression)
 
-inline fun Compiled.apply(rhs: Compiled, type: Type, crossinline fn: V.(V) -> V): Compiled =
+inline fun Compiled.apply(rhs: Compiled, type: Type, crossinline fn: Value.(Value) -> Value): Compiled =
 	type.compiled(expression.doApply(rhs.expression, fn))
 
 val emptyCompiled: Compiled = emptyType.compiled { null }
 val nothingCompiled = nothingType.compiled { null!! }
 val Compiled.isEmpty get() = type.isEmpty
-val Compiled.value: V get() = expression.value
+val Compiled.value: Value get() = expression.value
 
 val Compiled.evaluate: Compiled get() = type.compiled(expression.evaluate)
 val Compiled.typed: Typed get() = type typed value
@@ -99,7 +99,7 @@ fun Compiled.matchEmpty(fn: () -> Compiled?): Compiled? =
 fun Compiled.matchFunction(fn: (TypeFunction, Expression) -> Compiled?): Compiled? =
 	(type as? FunctionType)?.function?.let { function -> fn(function, expression) }
 
-fun Compiled.linkApply(targetType: Type, fn: V.(V) -> V): Compiled? =
+fun Compiled.linkApply(targetType: Type, fn: Value.(Value) -> Value): Compiled? =
 	type.linkOrNull?.let { link ->
 		if (link.lhs.isStatic || link.line.isStatic)
 			targetType.compiled(expression.doApply { fn(this) })
