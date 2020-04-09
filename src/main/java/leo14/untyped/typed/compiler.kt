@@ -1,6 +1,7 @@
 package leo14.untyped.typed
 
 import leo.base.reverseStack
+import leo.base.runIf
 import leo13.fold
 import leo13.quoteName
 import leo13.unquoteName
@@ -21,9 +22,15 @@ val Compiler.incQuoteDepth
 
 val Compiler.decQuoteDepth
 	get() =
-		quoteDepth.dec()
-			.also { if (it < 0) error("unquote0") }
-			.let { copy(quoteDepth = it) }
+		copy(quoteDepth = quoteDepth.dec())
+
+val Compiler.evaluate
+	get() =
+		copy(compiled = compiled.evaluate)
+
+val Compiler.evaluatedScript
+	get() =
+		library.scope.script(compiled.evaluate.typed)
 
 fun Compiler.compile(script: Script): Compiled =
 	plus(script).compiled
@@ -37,36 +44,32 @@ fun Compiler.plus(line: ScriptLine): Compiler =
 		is FieldScriptLine -> plus(line.field)
 	}
 
-fun Compiler.plus(literal: Literal): Compiler =
-	TODO()
-
 fun Compiler.plus(field: ScriptField): Compiler =
-	when (field.string) {
-		quoteName ->
-			clear.incQuoteDepth.compile(field.rhs).let { compiled ->
-				if (quoteDepth == 0) append(compiled)
-				else append(emptyType.plus(quoteName lineTo compiled.type).compiled(compiled.expression))
-			}
-		unquoteName ->
-			// TODO: This is wrong
-			clear.decQuoteDepth.compile(field.rhs).let { compiled ->
-				if (quoteDepth == 1) append(compiled)
-				else append(emptyType.plus(quoteName lineTo compiled.type).compiled(compiled.expression))
-			}
-		else -> plusUnquoted(field)
-	}
-
-fun Compiler.plusUnquoted(field: ScriptField): Compiler =
-	if (field.isSimple) clear.apply(begin(field.string), compiled)
+	if (field.isSimple) clear.plus(begin(field.string), compiled)
 	else plusNormalized(field)
 
 fun Compiler.plusNormalized(field: ScriptField): Compiler =
 	when (field.string) {
-		else -> apply(begin(field.string), library.compiler(emptyCompiled).compile(field.rhs))
+		quoteName ->
+			if (quoteDepth == 0) incQuoteDepth.plus(field.rhs).decQuoteDepth
+			else plus(begin(field.string), clear.incQuoteDepth.compile(field.rhs))
+		unquoteName ->
+			if (quoteDepth == 1) decQuoteDepth.plus(field.rhs).incQuoteDepth
+			else plus(begin(field.string), clear.decQuoteDepth.compile(field.rhs))
+		else ->
+			plus(begin(field.string), clear.compile(field.rhs))
 	}
 
-fun Compiler.apply(begin: Begin, rhs: Compiled): Compiler =
-	copy(compiled = library.apply(compiled, begin, rhs))
+fun Compiler.plus(literal: Literal): Compiler =
+	copy(compiled = compiled.append(literal)).update
 
-fun Compiler.append(compiled: Compiled): Compiler =
-	TODO()
+fun Compiler.plus(begin: Begin, rhs: Compiled): Compiler =
+	copy(compiled = compiled.append(begin, rhs)).update
+
+val Compiler.update: Compiler
+	get() =
+		runIf(quoteDepth <= 0) { apply }
+
+val Compiler.apply: Compiler
+	get() =
+		copy(compiled = compiled.apply)

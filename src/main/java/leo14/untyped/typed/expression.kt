@@ -2,10 +2,7 @@
 
 package leo14.untyped.typed
 
-import leo14.minus
-import leo14.plus
-import leo14.times
-import leo14.unaryMinus
+import leo14.*
 
 data class Constant(val value: Value)
 data class Dynamic(val evaluate: Evaluate)
@@ -20,6 +17,8 @@ val Constant.expression: Expression get() = ConstantExpression(this)
 val Dynamic.expression: Expression get() = DynamicExpression(this)
 fun expression(value: Value): Expression = constant(value).expression
 fun expression(evaluate: Evaluate): Expression = dynamic(evaluate).expression
+
+val Literal.expression: Expression get() = expression(value)
 
 val Dynamic.value: Value
 	get() =

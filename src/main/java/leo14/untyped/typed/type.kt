@@ -1,6 +1,7 @@
 package leo14.untyped.typed
 
 import leo.base.fold
+import leo.base.ifOrNull
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
@@ -80,3 +81,31 @@ val Literal.typeLine: TypeLine
 			is StringLiteral -> textTypeLine
 			is NumberLiteral -> numberTypeLine
 		}
+
+fun <R : Any> Type.matchEmpty(fn: () -> R?): R? =
+	ifOrNull(isEmpty) { fn() }
+
+fun <R : Any> Type.matchInfix(name: String, fn: Type.(Type) -> R?): R? =
+	linkOrNull?.let { link ->
+		link.line.fieldOrNull?.let { field ->
+			ifOrNull(field.name == name) {
+				link.lhs.fn(field.rhs)
+			}
+		}
+	}
+
+fun <R : Any> Type.matchPrefix(name: String, fn: Type.() -> R?): R? =
+	matchInfix(name) { rhs ->
+		matchEmpty {
+			rhs.fn()
+		}
+	}
+
+fun <R : Any> Type.matchNumber(fn: () -> R?): R? =
+	ifOrNull(this == numberType) { fn() }
+
+fun <R : Any> Type.matchText(fn: () -> R?): R? =
+	ifOrNull(this == numberType) { fn() }
+
+fun <R : Any> Type.matchFunction(fn: (TypeFunction) -> R?): R? =
+	functionOrNull?.let(fn)

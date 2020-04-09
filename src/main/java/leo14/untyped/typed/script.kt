@@ -4,4 +4,4 @@ import leo14.Script
 
 val Script.eval: Script
 	get() =
-		TODO()
+		emptyCompiler.plus(this).evaluatedScript

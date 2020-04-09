@@ -1,6 +1,7 @@
 package leo14.untyped.typed
 
 import leo.base.assertEqualTo
+import leo14.Script
 
 val Compiled.assertEvaluatedOnce: Compiled
 	get() = type.compiled(expression.assertEvaluatesOnce)
@@ -21,3 +22,6 @@ val Expression.assertEvaluatesOnce: Expression
 			is ConstantExpression -> this
 			is DynamicExpression -> dynamic.assertEvaluatesOnce.expression
 		}
+
+fun Script.assertEvalsTo(script: Script) =
+	eval.assertEqualTo(script)

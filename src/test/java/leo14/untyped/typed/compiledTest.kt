@@ -3,7 +3,9 @@ package leo14.untyped.typed
 import leo.base.assertEqualTo
 import leo.base.assertNull
 import leo.base.ifOrNull
+import leo14.begin
 import leo14.lambda.runtime.fn
+import leo14.literal
 import leo14.number
 import leo14.untyped.className
 import leo14.untyped.nativeName
@@ -12,6 +14,22 @@ import kotlin.test.assertFails
 
 @Suppress("UNCHECKED_CAST")
 class CompiledTest {
+	@Test
+	fun plusLiteral() {
+		emptyCompiled
+			.append(literal(2))
+			.evaluate
+			.assertEqualTo(numberType.compiled(2.number))
+	}
+
+	@Test
+	fun plusField() {
+		emptyCompiled
+			.append(begin("foo"), emptyCompiled)
+			.evaluate
+			.assertEqualTo(type("foo" lineTo emptyType).compiled(null))
+	}
+
 	@Test
 	fun erasedOnce() {
 		textType

@@ -4,13 +4,9 @@ package leo14.untyped.typed
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo14.Begin
-import leo14.Literal
+import leo14.*
 import leo14.lambda.runtime.Value
-import leo14.untyped.functionName
-import leo14.untyped.nativeName
-import leo14.untyped.numberName
-import leo14.untyped.textName
+import leo14.untyped.*
 
 data class Compiled(val type: Type, val expression: Expression)
 data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
@@ -49,6 +45,62 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 		?: applyFunctionApply(rhs)
 		?: append(begin, rhs)
 
+val Compiled.apply: Compiled
+	get() =
+		null
+			?: applyMinusNumber
+			?: applyNumberPlusNumber
+			?: applyNumberMinusNumber
+			?: applyNumberTimesNumber
+			?: this
+
+val Compiled.applyMinusNumber: Compiled?
+	get() =
+		type.matchPrefix(minusName) {
+			matchNumber {
+				numberType.compiled(expression.doApply { -asNumber })
+			}
+		}
+
+val Compiled.applyNumberPlusNumber: Compiled?
+	get() =
+		type.matchInfix(plusName) { rhs ->
+			matchNumber {
+				rhs.matchNumber {
+					numberType.compiled(expression.doApply {
+						this as Pair<*, *>
+						first.asNumber + second.asNumber
+					})
+				}
+			}
+		}
+
+val Compiled.applyNumberMinusNumber: Compiled?
+	get() =
+		type.matchInfix(minusName) { rhs ->
+			matchNumber {
+				rhs.matchNumber {
+					numberType.compiled(expression.doApply {
+						this as Pair<*, *>
+						first.asNumber - second.asNumber
+					})
+				}
+			}
+		}
+
+val Compiled.applyNumberTimesNumber: Compiled?
+	get() =
+		type.matchInfix(timesName) { rhs ->
+			matchNumber {
+				rhs.matchNumber {
+					numberType.compiled(expression.doApply {
+						this as Pair<*, *>
+						first.asNumber * second.asNumber
+					})
+				}
+			}
+		}
+
 fun Compiled.applyPrimitives(begin: Begin, rhs: Compiled): Compiled? =
 	when (type.plus(begin.string(rhs.type))) {
 		minusNumberType ->
@@ -73,8 +125,17 @@ fun Compiled.applyFunctionApply(rhs: Compiled): Compiled? =
 		}
 	}
 
+fun Compiled.append(literal: Literal): Compiled =
+	type.plus(literal.typeLine).let { newType ->
+		if (type.isEmpty) newType.compiled(literal.value)
+		else newType.compiled(expression.doApply(literal.expression) { this to it })
+	}
+
 fun Compiled.append(begin: Begin, rhs: Compiled): Compiled =
-	type.plus(begin.string lineTo rhs.type).compiled { value to rhs.value }
+	type.plus(begin.string lineTo rhs.type).let { newType ->
+		if (type.isEmpty) newType.compiled(rhs.expression)
+		else newType.compiled(expression.doApply(rhs.expression) { this to it })
+	}
 
 fun Compiled.matchEmpty(fn: () -> Compiled?): Compiled? =
 	ifOrNull(type is EmptyType) { fn() }
