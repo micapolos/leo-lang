@@ -56,6 +56,10 @@ val Value.applyNumberTimesNumber: Value
 
 // === Reflection ===
 
+val String.loadClass
+	get() =
+		classLoader.loadClass(this)
+
 val Value.stringClass
 	get() =
 		classLoader.loadClass(this as String)

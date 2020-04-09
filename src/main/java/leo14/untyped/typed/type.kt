@@ -105,7 +105,7 @@ fun <R : Any> Type.matchNumber(fn: () -> R?): R? =
 	ifOrNull(this == numberType) { fn() }
 
 fun <R : Any> Type.matchText(fn: () -> R?): R? =
-	ifOrNull(this == numberType) { fn() }
+	ifOrNull(this == textType) { fn() }
 
 fun <R : Any> Type.matchFunction(fn: (TypeFunction) -> R?): R? =
 	functionOrNull?.let(fn)

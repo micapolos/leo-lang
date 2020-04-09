@@ -52,6 +52,7 @@ val Compiled.apply: Compiled
 			?: applyNumberPlusNumber
 			?: applyNumberMinusNumber
 			?: applyNumberTimesNumber
+			?: applyClassJavaText
 			?: this
 
 val Compiled.applyMinusNumber: Compiled?
@@ -97,6 +98,19 @@ val Compiled.applyNumberTimesNumber: Compiled?
 						this as Pair<*, *>
 						first.asNumber * second.asNumber
 					})
+				}
+			}
+		}
+
+val Compiled.applyClassJavaText: Compiled?
+	get() =
+		type.matchPrefix(className) {
+			matchPrefix(javaName) {
+				matchText {
+					type(className lineTo nativeType)
+						.compiled(expression.doApply {
+							asString.loadClass
+						})
 				}
 			}
 		}
