@@ -119,3 +119,11 @@ fun <R : Any> Type.matchRepeating(fn: Type.() -> R?): R? =
 fun <R : Any> Type.matchLine(fn: TypeLine.() -> R?): R? =
 	linkOrNull?.onlyLineOrNull?.let(fn)
 
+fun <R : Any> Type.matchStatic(fn: Type.() -> R?): R? =
+	staticOrNull?.let(fn)
+
+val Type.staticOrNull: Type?
+	get() =
+		// TODO: Could it be made simpler, without involving scope?
+		emptyScope.script(typed(null)).type
+

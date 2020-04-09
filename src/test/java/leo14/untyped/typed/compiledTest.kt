@@ -7,8 +7,7 @@ import leo14.begin
 import leo14.lambda.runtime.fn
 import leo14.literal
 import leo14.number
-import leo14.untyped.className
-import leo14.untyped.nativeName
+import leo14.untyped.*
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -134,5 +133,16 @@ class CompiledTest {
 				emptyType
 					.plus(className lineTo nativeType)
 					.compiled(java.lang.String::class.java))
+	}
+
+	@Test
+	fun applyListOf() {
+		type(
+			listName lineTo type(
+				ofName lineTo type(
+					numberName lineTo emptyType)))
+			.compiled(null)
+			.applyListOf!!
+			.assertEqualTo(type(listName lineTo numberType.repeating.toType).compiled(null))
 	}
 }

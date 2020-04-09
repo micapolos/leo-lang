@@ -35,9 +35,9 @@ class EvalTest {
 			.assertEvalsTo(leo(className(nativeName(java.lang.String::class.java.toString()))))
 	}
 
-	@Test
-	fun listJavaArray() {
-		leo(listName(), javaName(), arrayName())
-			.assertEvalsTo(leo())
-	}
+//	@Test
+//	fun listJavaArray() {
+//		leo(listName(), javaName(), arrayName())
+//			.assertEvalsTo(leo())
+//	}
 }

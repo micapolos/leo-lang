@@ -48,6 +48,7 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 val Compiled.apply: Compiled
 	get() =
 		null
+			?: applyListOf
 			?: applyMinusNumber
 			?: applyNumberPlusNumber
 			?: applyNumberMinusNumber
@@ -55,6 +56,16 @@ val Compiled.apply: Compiled
 			?: applyClassJavaText
 			?: applyArrayJavaList
 			?: this
+
+val Compiled.applyListOf: Compiled?
+	get() =
+		type.matchPrefix(listName) {
+			matchPrefix(ofName) {
+				matchStatic {
+					type(listName lineTo repeating.toType).compiled(null)
+				}
+			}
+		}
 
 val Compiled.applyMinusNumber: Compiled?
 	get() =
