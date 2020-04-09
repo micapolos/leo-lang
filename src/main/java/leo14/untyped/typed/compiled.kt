@@ -67,10 +67,12 @@ val Compiled.apply: Compiled
 			?: applyClassNativeConstructor
 			?: applyClassNativeConstructorParameterList
 			?: applyClassNativeMethod
+			?: applyClassNativeMethodParameterList
 			?: applyFieldNativeGet
 			?: applyNativeConstructorInvoke
 			?: applyNativeConstructorInvokeParameterList
 			?: applyNativeMethodInvoke
+			?: applyNativeMethodInvokeParameterList
 			?: this
 
 val Compiled.applyListOf: Compiled?
@@ -232,6 +234,32 @@ val Compiled.applyNativeMethodInvoke: Compiled?
 			}
 		}
 
+val Compiled.applyNativeMethodInvokeParameterList: Compiled?
+	get() =
+		type.matchInfix(invokeName) { rhs ->
+			matchPrefix(methodName) {
+				matchNative {
+					rhs.matchInfix(parameterName) { parameter ->
+						matchPrefix(objectName) {
+							matchNative {
+								parameter.matchList {
+									matchNative {
+										nativeType.compiled(expression.doApply {
+											this as Pair<*, *>
+											val method = first as Method
+											val rhs = second as Pair<*, *>
+											val object_ = rhs.first
+											val args = rhs.second.listAsArray
+											method.invoke(object_, *args)
+										})
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 val Compiled.applyClassJavaText: Compiled?
 	get() =
@@ -304,6 +332,35 @@ val Compiled.applyClassNativeMethod: Compiled?
 						matchText {
 							linkApply(type(methodName lineTo nativeType)) { name ->
 								(this as Class<*>).getMethod(name as String)
+							}
+						}
+					}
+				}
+			}
+		}
+
+val Compiled.applyClassNativeMethodParameterList: Compiled?
+	get() =
+		type.matchInfix(methodName) { rhs ->
+			matchPrefix(className) {
+				matchNative {
+					rhs.matchInfix(parameterName) { parameter ->
+						matchPrefix(nameName) {
+							matchText {
+								parameter.matchList {
+									matchPrefix(className) {
+										matchNative {
+											type(methodName lineTo nativeType).compiled(expression.doApply {
+												this as Pair<*, *>
+												val class_ = first as Class<*>
+												val rhs = second as Pair<*, *>
+												val name = rhs.first as String
+												val types = (rhs.second.listAsArray.asArray.toList() as List<Class<*>>).toTypedArray()
+												class_.getMethod(name, *types)
+											})
+										}
+									}
+								}
 							}
 						}
 					}

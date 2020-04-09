@@ -182,6 +182,32 @@ class EvalTest {
 	}
 
 	@Test
+	fun nativeClassMethodNameParameterList() {
+		leo("java.lang.String", javaName(), className(),
+			methodName(
+				nameName("substring"),
+				parameterName(
+					listName(ofName(className(nativeName()))),
+					plusName(
+						"java.lang.Integer", javaName(), className(),
+						fieldName(nameName("TYPE")),
+						getName(nullName(), javaName()),
+						className()),
+					plusName(
+						"java.lang.Integer", javaName(), className(),
+						fieldName(nameName("TYPE")),
+						getName(nullName(), javaName()),
+						className()))))
+			.assertEvalsTo(
+				leo(
+					methodName(
+						nativeName(java.lang.String::class
+							.java
+							.getMethod("substring", Integer.TYPE, Integer.TYPE)
+							.nativeString))))
+	}
+
+	@Test
 	fun nativeFieldGetStatic() {
 		leo("java.lang.Integer", javaName(), className(),
 			fieldName(nameName("MAX_VALUE")),
@@ -229,5 +255,32 @@ class EvalTest {
 			methodName(nameName("length")),
 			invokeName("Hello, world!", stringName(), javaName()))
 			.assertEvalsTo(leo(nativeName(13.nativeString)))
+	}
+
+	@Test
+	fun nativeMethodInvokeParameterList() {
+		leo(
+			"java.lang.String", javaName(), className(),
+			methodName(
+				nameName("substring"),
+				parameterName(
+					listName(ofName(className(nativeName()))),
+					plusName(
+						"java.lang.Integer", javaName(), className(),
+						fieldName(nameName("TYPE")),
+						getName(nullName(), javaName()),
+						className()),
+					plusName(
+						"java.lang.Integer", javaName(), className(),
+						fieldName(nameName("TYPE")),
+						getName(nullName(), javaName()),
+						className()))),
+			invokeName(
+				objectName("Hello, world!", stringName(), javaName()),
+				parameterName(
+					listName(ofName(nativeName())),
+					plusName(7, intName(), javaName()),
+					plusName(12, intName(), javaName()))))
+			.assertEvalsTo(leo(nativeName("world".nativeString)))
 	}
 }
