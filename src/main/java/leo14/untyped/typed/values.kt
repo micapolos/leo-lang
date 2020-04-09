@@ -3,6 +3,7 @@
 package leo14.untyped.typed
 
 import leo13.*
+import leo14.*
 import leo14.lambda.runtime.Value
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
@@ -22,6 +23,36 @@ fun Value.arrayAt(rhs: Value) =
 val Value.arrayValue
 	get() =
 		stack(*(this as Array<*>))
+
+// === Primitives ===
+
+val Value.applyTextPlusText: Value
+	get() =
+		asPair.first.asString + asPair.second.asString
+
+val Value.applyTextNumber: Value
+	get() =
+		asNumber.toString()
+
+val Value.applyNumberLengthText: Value
+	get() =
+		asString.length.number
+
+val Value.applyMinusNumber: Value
+	get() =
+		-asNumber
+
+val Value.applyNumberPlusNumber: Value
+	get() =
+		asPair.first.asNumber + asPair.second.asNumber
+
+val Value.applyNumberMinusNumber: Value
+	get() =
+		asPair.first.asNumber - asPair.second.asNumber
+
+val Value.applyNumberTimesNumber: Value
+	get() =
+		asPair.first.asNumber * asPair.second.asNumber
 
 // === Reflection ===
 

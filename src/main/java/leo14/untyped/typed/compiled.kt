@@ -7,7 +7,10 @@ import leo.base.notNullIf
 import leo14.Begin
 import leo14.Literal
 import leo14.lambda.runtime.Value
-import leo14.untyped.*
+import leo14.untyped.functionName
+import leo14.untyped.nativeName
+import leo14.untyped.numberName
+import leo14.untyped.textName
 
 data class Compiled(val type: Type, val expression: Expression)
 data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
@@ -41,22 +44,34 @@ fun Compiled.apply(literal: Literal): Compiled =
 	else type.plus(literal.typeLine).compiled { value to literal.value }
 
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
+	null
+		?: applyPrimitives(begin, rhs)
+		?: applyFunctionApply(rhs)
+		?: append(begin, rhs)
+
+fun Compiled.applyPrimitives(begin: Begin, rhs: Compiled): Compiled? =
 	when (type.plus(begin.string(rhs.type))) {
-		type(minusName(numberType)) ->
+		minusNumberType ->
 			numberType.compiled(expression.numberUnaryMinus)
-		type(textName(numberType)) ->
+		textNumberType ->
 			numberType.compiled(expression.numberString)
-		type(textTypeLine, plusName(textType)) ->
+		textPlusTextType ->
 			textType.compiled(expression.stringPlusString(rhs.expression))
-		type(numberTypeLine, plusName(numberType)) ->
+		numberPlusNumberType ->
 			numberType.compiled(expression.numberPlusNumber(rhs.expression))
-		type(numberTypeLine, minusName(numberType)) ->
+		numberMinusNumberType ->
 			numberType.compiled(expression.numberMinusNumber(rhs.expression))
-		type(numberTypeLine, timesName(numberType)) ->
+		numberTimesNumberType ->
 			numberType.compiled(expression.numberTimesNumber(rhs.expression))
-		is FunctionType -> TODO()
 		else -> null
-	} ?: append(begin, rhs)
+	}
+
+fun Compiled.applyFunctionApply(rhs: Compiled): Compiled? =
+	type.functionOrNull?.let { function ->
+		notNullIf(function.from == rhs.type) {
+			function.to.compiled(expression.invoke(rhs.expression))
+		}
+	}
 
 fun Compiled.append(begin: Begin, rhs: Compiled): Compiled =
 	type.plus(begin.string lineTo rhs.type).compiled { value to rhs.value }

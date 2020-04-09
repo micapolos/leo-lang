@@ -2,10 +2,25 @@ package leo14.untyped.typed
 
 import leo.base.assertEqualTo
 import leo13.stack
+import leo14.number
 import java.awt.Point
 import kotlin.test.Test
 
+@Suppress("ReplaceToWithInfixForm")
 class ValuesTest {
+	@Test
+	fun primitives() {
+		2.number.applyMinusNumber.assertEqualTo((-2).number)
+		2.number.to(3.number).applyNumberPlusNumber.assertEqualTo(5.number)
+		5.number.to(3.number).applyNumberMinusNumber.assertEqualTo(2.number)
+		2.number.to(3.number).applyNumberTimesNumber.assertEqualTo(6.number)
+		2.number.applyTextNumber.assertEqualTo("2")
+
+		"Hello, ".to("world!").applyTextPlusText.assertEqualTo("Hello, world!")
+		"Hello, world!".applyNumberLengthText.assertEqualTo(13.number)
+	}
+
+
 	@Test
 	fun valueArray() {
 		stack("foo", 10)

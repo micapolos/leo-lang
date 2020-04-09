@@ -15,15 +15,18 @@ val Compiler.clear: Compiler
 	get() =
 		library.compiler(emptyCompiled)
 
-val Compiler.quote
+val Compiler.incQuoteDepth
 	get() =
 		copy(quoteDepth = quoteDepth.inc())
 
-val Compiler.unquote
+val Compiler.decQuoteDepth
 	get() =
 		quoteDepth.dec()
 			.also { if (it < 0) error("unquote0") }
 			.let { copy(quoteDepth = it) }
+
+fun Compiler.compile(script: Script): Compiled =
+	plus(script).compiled
 
 fun Compiler.plus(script: Script): Compiler =
 	fold(script.lineSeq.reverseStack) { plus(it) }
@@ -40,13 +43,13 @@ fun Compiler.plus(literal: Literal): Compiler =
 fun Compiler.plus(field: ScriptField): Compiler =
 	when (field.string) {
 		quoteName ->
-			clear.quote.plus(field.rhs).compiled.let { compiled ->
+			clear.incQuoteDepth.compile(field.rhs).let { compiled ->
 				if (quoteDepth == 0) append(compiled)
 				else append(emptyType.plus(quoteName lineTo compiled.type).compiled(compiled.expression))
 			}
 		unquoteName ->
 			// TODO: This is wrong
-			clear.unquote.plus(field.rhs).compiled.let { compiled ->
+			clear.decQuoteDepth.compile(field.rhs).let { compiled ->
 				if (quoteDepth == 1) append(compiled)
 				else append(emptyType.plus(quoteName lineTo compiled.type).compiled(compiled.expression))
 			}
@@ -59,7 +62,7 @@ fun Compiler.plusUnquoted(field: ScriptField): Compiler =
 
 fun Compiler.plusNormalized(field: ScriptField): Compiler =
 	when (field.string) {
-		else -> apply(begin(field.string), library.compiler(emptyCompiled).plus(field.rhs).compiled)
+		else -> apply(begin(field.string), library.compiler(emptyCompiled).compile(field.rhs))
 	}
 
 fun Compiler.apply(begin: Begin, rhs: Compiled): Compiler =
