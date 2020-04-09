@@ -1,5 +1,6 @@
 package leo14.untyped.typed
 
+import leo.base.Begin
 import leo.base.reverseStack
 import leo13.fold
 
@@ -23,3 +24,6 @@ fun Library.import(definition: Definition) =
 
 fun Library.import(library: Library): Library =
 	fold(library.exported.scope.definitionSeq.reverseStack) { import(it) }
+
+fun Library.apply(lhs: Compiled<*>, begin: Begin, rhs: Compiled<*>): Library =
+	TODO()
