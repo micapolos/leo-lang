@@ -45,7 +45,7 @@ class EvalTest {
 	@Test
 	fun nativeAccess() {
 		leo(nativeName(className(nameName("java.lang.String"))), nativeName())
-			.assertEvalsTo(leo(nativeName(java.lang.String::class.java.nativeString)))
+			.assertEvalsTo(leo(java.lang.String::class.java.nativeScriptLine))
 	}
 
 	@Test
@@ -99,7 +99,7 @@ class EvalTest {
 	@Test
 	fun javaNull() {
 		leo(nativeName(nullName()))
-			.assertEvalsTo(leo(nativeName(nullValue.nativeString)))
+			.assertEvalsTo(leo(nullValue.nativeScriptLine))
 	}
 
 //	@Test
@@ -121,19 +121,19 @@ class EvalTest {
 	@Test
 	fun nativeClassPrimitive() {
 		leo(nativeName(className("boolean"())))
-			.assertEvalsTo(leo(className(nativeName(java.lang.Boolean.TYPE.nativeString))))
+			.assertEvalsTo(leo(className(java.lang.Boolean.TYPE.nativeScriptLine)))
 		leo(nativeName(className("byte"())))
-			.assertEvalsTo(leo(className(nativeName(java.lang.Byte.TYPE.nativeString))))
+			.assertEvalsTo(leo(className(java.lang.Byte.TYPE.nativeScriptLine)))
 		leo(nativeName(className("short"())))
-			.assertEvalsTo(leo(className(nativeName(java.lang.Short.TYPE.nativeString))))
+			.assertEvalsTo(leo(className(java.lang.Short.TYPE.nativeScriptLine)))
 		leo(nativeName(className("int"())))
-			.assertEvalsTo(leo(className(nativeName(Integer.TYPE.nativeString))))
+			.assertEvalsTo(leo(className(Integer.TYPE.nativeScriptLine)))
 		leo(nativeName(className("long"())))
-			.assertEvalsTo(leo(className(nativeName(java.lang.Long.TYPE.nativeString))))
+			.assertEvalsTo(leo(className(java.lang.Long.TYPE.nativeScriptLine)))
 		leo(nativeName(className("float"())))
-			.assertEvalsTo(leo(className(nativeName(java.lang.Float.TYPE.nativeString))))
+			.assertEvalsTo(leo(className(java.lang.Float.TYPE.nativeScriptLine)))
 		leo(nativeName(className("double"())))
-			.assertEvalsTo(leo(className(nativeName(java.lang.Double.TYPE.nativeString))))
+			.assertEvalsTo(leo(className(java.lang.Double.TYPE.nativeScriptLine)))
 	}
 
 	@Test
@@ -141,8 +141,7 @@ class EvalTest {
 		leo(nativeName(className(nameName("java.lang.Integer"))))
 			.assertEvalsTo(leo(
 				className(
-					nativeName(
-						java.lang.Integer::class.java.nativeString))))
+					java.lang.Integer::class.java.nativeScriptLine)))
 	}
 
 	@Test
@@ -152,8 +151,7 @@ class EvalTest {
 			fieldName(nameName("MAX_VALUE")))
 			.assertEvalsTo(leo(
 				fieldName(
-					nativeName(
-						java.lang.Integer::class.java.getField("MAX_VALUE").nativeString))))
+					java.lang.Integer::class.java.getField("MAX_VALUE").nativeScriptLine)))
 	}
 
 	@Test
@@ -163,8 +161,7 @@ class EvalTest {
 			constructorName())
 			.assertEvalsTo(leo(
 				constructorName(
-					nativeName(
-						java.lang.StringBuilder::class.java.getConstructor().nativeString))))
+					java.lang.StringBuilder::class.java.getConstructor().nativeScriptLine)))
 	}
 
 	@Test
@@ -176,8 +173,7 @@ class EvalTest {
 				plusName(nativeName(className(nameName("java.lang.String")))))))
 			.assertEvalsTo(leo(
 				constructorName(
-					nativeName(
-						java.lang.StringBuilder::class.java.getConstructor(String::class.java).nativeString))))
+					java.lang.StringBuilder::class.java.getConstructor(String::class.java).nativeScriptLine)))
 	}
 
 	@Test
@@ -191,11 +187,10 @@ class EvalTest {
 					plusName(nativeName(className("int"()))))))
 			.assertEvalsTo(leo(
 				constructorName(
-					nativeName(
-						java.awt.Point::class
-							.java
-							.getConstructor(Integer.TYPE, Integer.TYPE)
-							.nativeString))))
+					java.awt.Point::class
+						.java
+						.getConstructor(Integer.TYPE, Integer.TYPE)
+						.nativeScriptLine)))
 	}
 
 	@Test
@@ -205,8 +200,7 @@ class EvalTest {
 			methodName(nameName("length")))
 			.assertEvalsTo(leo(
 				methodName(
-					nativeName(
-						java.lang.String::class.java.getMethod("length").nativeString))))
+					java.lang.String::class.java.getMethod("length").nativeScriptLine)))
 	}
 
 	@Test
@@ -222,10 +216,10 @@ class EvalTest {
 			.assertEvalsTo(
 				leo(
 					methodName(
-						nativeName(java.lang.String::class
+						java.lang.String::class
 							.java
 							.getMethod("substring", Integer.TYPE, Integer.TYPE)
-							.nativeString))))
+							.nativeScriptLine)))
 	}
 
 	@Test
@@ -235,12 +229,11 @@ class EvalTest {
 			fieldName(nameName("MAX_VALUE")),
 			getName(nativeName(nullName())))
 			.assertEvalsTo(leo(
-				nativeName(
-					java.lang.Integer::class
-						.java
-						.getField("MAX_VALUE")
-						.get(null)
-						.nativeString)))
+				java.lang.Integer::class
+					.java
+					.getField("MAX_VALUE")
+					.get(null)
+					.nativeScriptLine))
 	}
 
 	@Test
@@ -249,7 +242,7 @@ class EvalTest {
 			nativeName(className(nameName("java.lang.StringBuilder"))),
 			constructorName(),
 			invokeName())
-			.assertEvalsTo(leo(nativeName(StringBuilder().nativeString)))
+			.assertEvalsTo(leo(StringBuilder().nativeScriptLine))
 	}
 
 	@Test
@@ -266,7 +259,7 @@ class EvalTest {
 				plusName(nativeName("http")),
 				plusName(nativeName("www.google.com")),
 				plusName(nativeName("/search")))))
-			.assertEvalsTo(leo(nativeName(URL("http", "www.google.com", "/search").nativeString)))
+			.assertEvalsTo(leo(URL("http", "www.google.com", "/search").nativeScriptLine))
 	}
 
 	@Test
@@ -275,7 +268,7 @@ class EvalTest {
 			nativeName(className(nameName("java.lang.String"))),
 			methodName(nameName("length")),
 			invokeName(nativeName("Hello, world!")))
-			.assertEvalsTo(leo(nativeName(13.nativeString)))
+			.assertEvalsTo(leo(13.nativeScriptLine))
 	}
 
 	@Test

@@ -76,7 +76,7 @@ fun Scope.script(repeating: TypeRepeating, value: Value, recursiveOrNull: TypeRe
 	}
 
 fun nativeScriptLine(value: Value): ScriptLine =
-	nativeName lineTo script(literal(value.nativeString))
+	value.nativeScriptLine
 
 fun numberScriptLine(value: Value): ScriptLine =
 	line(literal(value as Number))

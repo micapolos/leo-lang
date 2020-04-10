@@ -2,10 +2,8 @@
 
 package leo14.untyped.typed
 
-import leo14.Literal
+import leo14.*
 import leo14.Number
-import leo14.NumberLiteral
-import leo14.StringLiteral
 
 typealias Value = Any?
 typealias Evaluate = () -> Value
@@ -62,3 +60,7 @@ val Value.nativeString: String
 			is Array<*> -> this.contentDeepToString()
 			else -> toString()
 		}
+
+val Value.nativeScriptLine: ScriptLine
+	get() =
+		line("#<$nativeString>")
