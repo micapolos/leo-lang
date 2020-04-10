@@ -14,7 +14,7 @@ class MethodHandlesTest {
 				Integer::class.java,
 				"sum",
 				MethodType.methodType(Int::class.javaPrimitiveType, Int::class.javaPrimitiveType, Int::class.javaPrimitiveType))
-		val i = m.invokeExact(Integer.valueOf(1), Integer.valueOf(2)) as Integer
-		i.assertEqualTo(null)
+		val i = m.invokeWithArguments(1, 2) as Integer
+		i.assertEqualTo(3)
 	}
 }
