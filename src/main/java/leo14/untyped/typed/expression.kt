@@ -17,6 +17,7 @@ val Constant.expression: Expression get() = ConstantExpression(this)
 val Dynamic.expression: Expression get() = DynamicExpression(this)
 fun expression(value: Value): Expression = constant(value).expression
 fun expression(evaluate: Evaluate): Expression = dynamic(evaluate).expression
+val Expression.constantOrNull: Constant? get() = (this as? ConstantExpression)?.constant
 
 val Literal.expression: Expression get() = expression(nativeValue)
 

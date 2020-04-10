@@ -4,6 +4,7 @@ package leo14.untyped.typed
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
+import leo.java.lang.typeClassOrNull
 import leo14.Begin
 import leo14.Literal
 import leo14.bigDecimal
@@ -62,6 +63,7 @@ val Compiled.apply: Compiled
 			?: applyNativeNull
 			?: applyArrayJavaList
 			?: applyNativeClassNameText
+			?: applyNativeClassTypeNameText
 			?: applyNativeClassField
 			?: applyClassNativeConstructor
 			?: applyClassNativeConstructorParameterList
@@ -221,6 +223,22 @@ val Compiled.applyNativeClassNameText: Compiled?
 						type(className lineTo nativeType).compiled(expression.doApply {
 							asString.loadClass
 						})
+					}
+				}
+			}
+		}
+
+val Compiled.applyNativeClassTypeNameText: Compiled?
+	get() =
+		type.matchPrefix(nativeName) {
+			matchPrefix(className) {
+				matchPrefix(typeName) {
+					matchPrefix(nameName) {
+						matchText {
+							expression.constantOrNull?.value?.asString?.typeClassOrNull?.let { class_ ->
+								type(className lineTo nativeType).compiled(expression(class_))
+							}
+						}
 					}
 				}
 			}

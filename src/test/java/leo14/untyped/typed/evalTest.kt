@@ -119,6 +119,12 @@ class EvalTest {
 //	}
 
 	@Test
+	fun nativeClassTypeNameText() {
+		leo(nativeName(className(typeName(nameName("int")))))
+			.assertEvalsTo(leo(className(nativeName(Integer.TYPE.nativeString))))
+	}
+
+	@Test
 	fun nativeClassNameText() {
 		leo(nativeName(className(nameName("java.lang.Integer"))))
 			.assertEvalsTo(leo(
