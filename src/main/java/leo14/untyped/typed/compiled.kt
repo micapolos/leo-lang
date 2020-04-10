@@ -6,6 +6,7 @@ import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo14.Begin
 import leo14.Literal
+import leo14.bigDecimal
 import leo14.lambda.runtime.Value
 import leo14.untyped.*
 import java.lang.reflect.Constructor
@@ -35,6 +36,9 @@ val emptyCompiled: Compiled = emptyType.compiled(null)
 val nothingCompiled = nothingType.compiled { null!! }
 val Compiled.isEmpty get() = type.isEmpty
 val Compiled.value: Value get() = expression.value
+
+val String.compiled get() = textType.compiled(this)
+val Int.compiled get() = numberType.compiled(bigDecimal)
 
 val Compiled.evaluate: Compiled get() = type.compiled(expression.evaluate)
 val Compiled.typed: Typed get() = type typed value

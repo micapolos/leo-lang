@@ -2,7 +2,6 @@ package leo14.untyped.typed
 
 import leo.base.assertEqualTo
 import leo14.begin
-import leo14.bigDecimal
 import leo14.literal
 import leo14.untyped.isName
 import leo14.untyped.plusName
@@ -13,11 +12,11 @@ class CompilerTest {
 	fun literal() {
 		emptyCompiler
 			.plus(literal("foo"))
-			.assertEqualTo(emptyCompiler.set(textType.compiled("foo")))
+			.assertEqualTo(emptyCompiler.set("foo".compiled))
 
 		emptyCompiler
 			.plus(literal(123))
-			.assertEqualTo(emptyCompiler.set(numberType.compiled(123.bigDecimal)))
+			.assertEqualTo(emptyCompiler.set(123.compiled))
 	}
 
 	@Test
@@ -37,8 +36,8 @@ class CompilerTest {
 	@Test
 	fun appendField() {
 		emptyCompiler
-			.set(textType.compiled("Hello, "))
-			.plus(begin(plusName), textType.compiled("world!"))
+			.set("Hello, ".compiled)
+			.plus(begin(plusName), "world!".compiled)
 			.assertEqualTo(
 				emptyCompiler
 					.set(
@@ -50,9 +49,9 @@ class CompilerTest {
 	fun is_() {
 		emptyCompiler
 			.set(type("x").compiled(null))
-			.plus(begin(isName), textType.compiled("foo"))
+			.plus(begin(isName), "foo".compiled)
 			.assertEqualTo(
 				emptyCompiler
-					.plus(definition(binding(type("x"), textType.compiled("foo")))))
+					.plus(definition(binding(type("x"), "foo".compiled))))
 	}
 }

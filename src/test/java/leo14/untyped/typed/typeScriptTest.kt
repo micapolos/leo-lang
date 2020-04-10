@@ -17,8 +17,6 @@ class TypeScriptTest {
 
 	@Test
 	fun exact() {
-		emptyType.plus(textName lineTo emptyType).script.assertEqualTo(leo(exactName(textName())))
-		emptyType.plus(numberName lineTo emptyType).script.assertEqualTo(leo(exactName(numberName())))
 		emptyType.plus(nativeName lineTo emptyType).script.assertEqualTo(leo(exactName(nativeName())))
 		emptyType.plus(orName lineTo emptyType).script.assertEqualTo(leo(exactName(orName())))
 		emptyType.plus(repeatingName lineTo emptyType).script.assertEqualTo(leo(exactName(repeatingName())))
