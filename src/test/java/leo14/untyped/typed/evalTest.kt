@@ -187,16 +187,8 @@ class EvalTest {
 			constructorName(
 				parameterName(
 					listName(ofName(className(nativeName()))),
-					plusName(
-						nativeName(className(nameName("java.lang.Integer"))),
-						fieldName(nameName("TYPE")),
-						getName(nativeName(nullName())),
-						className()),
-					plusName(
-						nativeName(className(nameName("java.lang.Integer"))),
-						fieldName(nameName("TYPE")),
-						getName(nativeName(nullName())),
-						className()))))
+					plusName(nativeName(className("int"()))),
+					plusName(nativeName(className("int"()))))))
 			.assertEvalsTo(leo(
 				constructorName(
 					nativeName(
@@ -225,14 +217,8 @@ class EvalTest {
 				nameName("substring"),
 				parameterName(
 					listName(ofName(className(nativeName()))),
-					plusName(className(
-						nativeName(className(nameName("java.lang.Integer"))),
-						fieldName(nameName("TYPE")),
-						getName(nativeName(nullName())))),
-					plusName(className(
-						nativeName(className(nameName("java.lang.Integer"))),
-						fieldName(nameName("TYPE")),
-						getName(nativeName(nullName())))))))
+					plusName(nativeName(className("int"()))),
+					plusName(nativeName(className("int"()))))))
 			.assertEvalsTo(
 				leo(
 					methodName(
