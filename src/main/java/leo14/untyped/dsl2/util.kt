@@ -1,6 +1,7 @@
 package leo14.untyped.dsl2
 
 import leo.base.runWith
+import leo14.*
 import leo14.untyped.Reader
 import leo14.untyped.Resolver
 import leo14.untyped.emptyReader
@@ -15,3 +16,18 @@ fun run_(f: F): Unit = readerParameter.runWith(emptyReader) { X.f() }
 fun resolver_(f: F): Resolver = run_(f).run { readerParameter.value.rootResolverOrNull!! }
 fun library_(f: F) = f
 fun Reader.read(f: F): Reader = readerParameter.runWith(this) { X.f(); readerParameter.value }
+
+fun <T> Reducer<T, Token>.read(f: F): Reducer<T, Token> =
+	tokenReducerParameter
+		.runWith(this) {
+			X.f()
+			@Suppress("UNCHECKED_CAST")
+			tokenReducerParameter.value as Reducer<T, Token>
+		}
+
+fun script_(f: F): Script =
+	emptyFragment.tokenReducer.read(f).state.script
+
+val Fragment.tokenReducer: Reducer<Fragment, Token>
+	get() =
+		reducer { plus(it).tokenReducer }

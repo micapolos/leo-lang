@@ -14,3 +14,5 @@ fun <S1, S2, T> Reducer<S1, T>.mapState(fn: S1.() -> S2): Reducer<S2, T> =
 	state.fn().reducer { token ->
 		reduce(token).mapState(fn)
 	}
+
+fun <T> unitReducer(): Reducer<Unit, T> = Unit.reducer { unitReducer() }
