@@ -29,7 +29,7 @@ fun Library.apply(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled =
 	scope.apply(lhs, begin, rhs)
 
 fun Library.applyDefinition(compiled: Compiled): Library? =
-	compiled.definitionOrNull?.let { plus(it) }
+	compiled.definitionOrNull(scope)?.let { plus(it) }
 
 fun Library.applyCompiled(compiled: Compiled): Compiled? =
 	scope.apply(compiled)

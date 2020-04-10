@@ -56,8 +56,6 @@ fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 val Compiled.apply: Compiled
 	get() =
 		null
-			?: applyText
-			?: applyNumber
 			?: applyListOf
 			?: applyListPlus
 			?: applyNativeNull
@@ -83,18 +81,6 @@ val Compiled.applyGet: Compiled?
 			field.rhs.linkOrNull?.onlyLineOrNull?.fieldOrNull?.rhs?.let { rhs ->
 				rhs.compiled(expression).select(field.name)
 			}
-		}
-
-val Compiled.applyText: Compiled?
-	get() =
-		type.match(textName) {
-			type(textName lineTo type(nativeName lineTo emptyType)).compiled(null)
-		}
-
-val Compiled.applyNumber: Compiled?
-	get() =
-		type.match(numberName) {
-			type(numberName lineTo type(nativeName lineTo emptyType)).compiled(null)
 		}
 
 val Compiled.applyListOf: Compiled?
