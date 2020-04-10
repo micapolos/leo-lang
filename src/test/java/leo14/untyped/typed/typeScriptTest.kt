@@ -31,8 +31,6 @@ class TypeScriptTest {
 
 	@Test
 	fun primitives() {
-		emptyType.plus(textTypeLine).script.assertEqualTo(leo(textName()))
-		emptyType.plus(numberTypeLine).script.assertEqualTo(leo(numberName()))
 		emptyType.plus(nativeTypeLine).script.assertEqualTo(leo(nativeName()))
 	}
 
@@ -48,7 +46,7 @@ class TypeScriptTest {
 	@Test
 	fun recursive() {
 		emptyType.recursive.toType.script.assertEqualTo(leo(recursiveName()))
-		emptyType.plus(textTypeLine).recursive.toType.script.assertEqualTo(leo(recursiveName(textName())))
+		emptyType.plus(nativeTypeLine).recursive.toType.script.assertEqualTo(leo(recursiveName(nativeName())))
 	}
 
 	@Test
@@ -58,11 +56,11 @@ class TypeScriptTest {
 
 	@Test
 	fun function() {
-		emptyType.plus(numberTypeLine)
-			.functionTo(emptyType.plus(textTypeLine))
+		emptyType.plus(nativeTypeLine)
+			.functionTo(emptyType.plus(nativeTypeLine))
 			.type
 			.script
-			.assertEqualTo(leo(functionName(numberName(), doingName(textName()))))
+			.assertEqualTo(leo(functionName(nativeName(), doingName(nativeName()))))
 	}
 
 	@Test
@@ -73,6 +71,6 @@ class TypeScriptTest {
 
 	@Test
 	fun repeating() {
-		textType.repeating.toType.script.assertEqualTo(leo(repeatingName(textName())))
+		nativeType.repeating.toType.script.assertEqualTo(leo(repeatingName(nativeName())))
 	}
 }

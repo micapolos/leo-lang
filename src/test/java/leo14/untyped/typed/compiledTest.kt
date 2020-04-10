@@ -7,9 +7,8 @@ import leo14.begin
 import leo14.bigDecimal
 import leo14.lambda.runtime.fn
 import leo14.literal
-import leo14.number
 import leo14.untyped.listName
-import leo14.untyped.numberName
+import leo14.untyped.nativeName
 import leo14.untyped.ofName
 import kotlin.test.Test
 import kotlin.test.assertFails
@@ -39,7 +38,7 @@ class CompiledTest {
 
 	@Test
 	fun erasedOnce() {
-		textType
+		nativeType
 			.compiled { "foo" }
 			.assertEvaluatedOnce
 			.run {
@@ -51,26 +50,26 @@ class CompiledTest {
 	@Test
 	fun linkApply() {
 		emptyType
-			.plus(textTypeLine)
-			.plus(numberTypeLine)
-			.compiled { "number: " to 10.number }
+			.plus(nativeTypeLine)
+			.plus(nativeTypeLine)
+			.compiled { "number: " to 10 }
 			.assertEvaluatedOnce
-			.linkApply(textType) { rhs ->
-				asString + rhs.asNumber.toString()
+			.linkApply(nativeType) { rhs ->
+				asString + rhs.asInt.toString()
 			}!!
 			.typed
-			.assertEqualTo(textType typed "number: 10")
+			.assertEqualTo(nativeType typed "number: 10")
 	}
 
 	@Test
 	fun select() {
 		emptyType
-			.plus("x" lineTo numberType)
-			.plus("y" lineTo numberType)
-			.compiled { 10.number to 20.number }
+			.plus("x" lineTo nativeType)
+			.plus("y" lineTo nativeType)
+			.compiled { 10 to 20 }
 			.run {
-				assertEvaluatedOnce.select("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo numberType) typed 10.number)
-				assertEvaluatedOnce.select("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo numberType) typed 20.number)
+				assertEvaluatedOnce.select("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo nativeType) typed 10)
+				assertEvaluatedOnce.select("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo nativeType) typed 20)
 				assertEvaluatedOnce.select("z").assertNull
 			}
 	}
@@ -79,34 +78,34 @@ class CompiledTest {
 	fun get() {
 		emptyType
 			.plus("point" lineTo emptyType
-				.plus("x" lineTo numberType)
-				.plus("y" lineTo numberType))
-			.compiled { 10.number to 20.number }
+				.plus("x" lineTo nativeType)
+				.plus("y" lineTo nativeType))
+			.compiled { 10 to 20 }
 			.run {
-				assertEvaluatedOnce.get("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo numberType) typed 10.number)
-				assertEvaluatedOnce.get("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo numberType) typed 20.number)
+				assertEvaluatedOnce.get("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo nativeType) typed 10)
+				assertEvaluatedOnce.get("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo nativeType) typed 20)
 				assertEvaluatedOnce.get("z").assertNull
 			}
 	}
 
 	@Test
 	fun matchInfix() {
-		textType
-			.plus("and" lineTo textType)
+		nativeType
+			.plus("and" lineTo nativeType)
 			.compiled { "Hello, " to "world!" }
 			// TODO: Fixit!!!
 			//.assertEvaluatedOnce
 			.matchInfix("and") { rhs ->
-				apply(rhs, textType) { asString + it.asString }
+				apply(rhs, nativeType) { asString + it.asString }
 			}!!
 			.typed
-			.assertEqualTo(textType.typed("Hello, world!"))
+			.assertEqualTo(nativeType.typed("Hello, world!"))
 	}
 
 	@Test
 	fun matchInfix_nameMismatch() {
-		textType
-			.plus("and" lineTo textType)
+		nativeType
+			.plus("and" lineTo nativeType)
 			.compiled { null!! }
 			.assertEvaluatedOnce
 			.matchInfix("or") { null!! }
@@ -115,18 +114,18 @@ class CompiledTest {
 
 	@Test
 	fun matchFunction() {
-		textType
-			.functionTo(numberType)
+		nativeType
+			.functionTo(nativeType)
 			.type
-			.compiled { fn { it.asString.length.number } }
+			.compiled { fn { it.asString.length } }
 			.assertEvaluatedOnce
 			.matchFunction { function, block ->
-				ifOrNull(function.from == textType) {
+				ifOrNull(function.from == nativeType) {
 					function.to.compiled { block.value.asFn("Hello, world!") }
 				}
 			}!!
 			.typed
-			.assertEqualTo(numberType.typed(13.number))
+			.assertEqualTo(nativeType.typed(13))
 	}
 
 	@Test
@@ -134,9 +133,9 @@ class CompiledTest {
 		type(
 			listName lineTo type(
 				ofName lineTo type(
-					numberName lineTo emptyType)))
+					nativeName lineTo emptyType)))
 			.compiled(null)
 			.applyListOf!!
-			.assertEqualTo(type(listName lineTo numberType.repeating.toType).compiled(null))
+			.assertEqualTo(type(listName lineTo nativeType.repeating.toType).compiled(null))
 	}
 }

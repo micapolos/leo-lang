@@ -43,8 +43,6 @@ val TypeLine.scriptLine: ScriptLine
 			is LiteralTypeLine -> line(literal)
 			is FieldTypeLine -> line(field.scriptField)
 			NativeTypeLine -> line(nativeName)
-			NumberTypeLine -> line(numberName)
-			TextTypeLine -> line(textName)
 		}
 
 val TypeAlternative.script: Script
@@ -63,8 +61,6 @@ val TypeField.exactScriptField: ScriptField
 val String.isTypeKeyword: Boolean
 	get() =
 		when (this) {
-			textName -> true
-			numberName -> true
 			nativeName -> true
 			orName -> true
 			recursiveName -> true

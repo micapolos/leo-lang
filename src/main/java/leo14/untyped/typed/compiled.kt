@@ -40,8 +40,8 @@ val Compiled.evaluate: Compiled get() = type.compiled(expression.evaluate)
 val Compiled.typed: Typed get() = type typed value
 
 fun Compiled.apply(literal: Literal): Compiled =
-	if (isEmpty) emptyType.plus(literal.valueTypeLine).compiled { literal.value }
-	else type.plus(literal.valueTypeLine).compiled { value to literal.value }
+	if (isEmpty) emptyType.plus(literal.valueTypeLine2).compiled { literal.value }
+	else type.plus(literal.valueTypeLine2).compiled { value to literal.value }
 
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 	null
@@ -400,9 +400,6 @@ fun Compiled.matchPrefix(name: String, fn: (Compiled) -> Compiled?): Compiled? =
 		}
 	}
 
-fun Compiled.matchText(fn: Compiled.() -> Compiled?): Compiled? =
-	ifOrNull(type == textType) { fn() }
-
 fun Compiled.matchNative(fn: Compiled.() -> Compiled?): Compiled? =
 	ifOrNull(type == nativeType) {
 		fn()
@@ -423,14 +420,6 @@ fun CompiledLink.select(name: String): Compiled? =
 
 fun CompiledLine.select(name: String): Compiled? =
 	when (name) {
-		textName ->
-			notNullIf(typeLine == textTypeLine) {
-				textType.compiled(expression)
-			}
-		numberName ->
-			notNullIf(typeLine == numberTypeLine) {
-				numberType.compiled(expression)
-			}
 		nativeName ->
 			notNullIf(typeLine == nativeTypeLine) {
 				nativeType.compiled(expression)

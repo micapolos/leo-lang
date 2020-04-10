@@ -29,8 +29,6 @@ val TypeLine.isStatic: Boolean
 			is LiteralTypeLine -> true
 			is FieldTypeLine -> field.isStatic
 			NativeTypeLine -> false
-			NumberTypeLine -> false
-			TextTypeLine -> false
 		}
 
 val TypeField.isStatic: Boolean

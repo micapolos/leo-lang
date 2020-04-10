@@ -34,8 +34,6 @@ sealed class TypeLine
 data class LiteralTypeLine(val literal: Literal) : TypeLine()
 data class FieldTypeLine(val field: TypeField) : TypeLine()
 object NativeTypeLine : TypeLine()
-object NumberTypeLine : TypeLine()
-object TextTypeLine : TypeLine()
 
 data class TypeField(val name: String, val rhs: Type)
 
@@ -61,8 +59,6 @@ fun Type.plus(name: String) = plus(name fieldTo emptyType)
 val Literal.typeLine: TypeLine get() = LiteralTypeLine(this)
 val TypeField.line: TypeLine get() = FieldTypeLine(this)
 val nativeTypeLine: TypeLine = NativeTypeLine
-val numberTypeLine: TypeLine = NumberTypeLine
-val textTypeLine: TypeLine = TextTypeLine
 infix fun String.fieldTo(type: Type) = TypeField(this, type)
 infix fun String.lineTo(type: Type) = fieldTo(type).line
 operator fun String.invoke(type: Type) = lineTo(type)
@@ -70,6 +66,7 @@ val Type.isEmpty: Boolean get() = this is EmptyType
 infix fun Type.alternativeTo(rhs: Type) = TypeAlternative(this, rhs)
 fun Type.or(rhs: Type): Type = alternativeTo(rhs).type
 fun type(vararg lines: TypeLine): Type = emptyType.fold(lines) { plus(it) }
+fun type(name: String): Type = type(name lineTo emptyType)
 
 val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
 val Type.functionOrNull: TypeFunction? get() = (this as? FunctionType)?.function
@@ -77,21 +74,11 @@ val Type.repeatingOrNull: TypeRepeating? get() = (this as? RepeatingType)?.repea
 val TypeLine.fieldOrNull: TypeField? get() = (this as? FieldTypeLine)?.field
 val TypeLink.onlyLineOrNull: TypeLine? get() = notNullIf(lhs.isEmpty) { line }
 
-val textType = emptyType.plus(textTypeLine)
-val numberType = emptyType.plus(numberTypeLine)
 val nativeType = emptyType.plus(nativeTypeLine)
-
 val textTypeLine2 get() = textName lineTo nativeType
 val numberTypeLine2 get() = numberName lineTo nativeType
 val textType2 = type(textTypeLine2)
 val numberType2 = type(numberTypeLine2)
-
-val Literal.valueTypeLine: TypeLine
-	get() =
-		when (this) {
-			is StringLiteral -> textTypeLine
-			is NumberLiteral -> numberTypeLine
-		}
 
 val Literal.valueTypeLine2: TypeLine
 	get() =
