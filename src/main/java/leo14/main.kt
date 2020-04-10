@@ -20,7 +20,7 @@ val errorTriggerCount = 7
 val importPrelude = true
 val memory = if (importPrelude) emptyContext.preludeMemory() else memory()
 val untyped = true
-val untypedTyped = false
+val untypedTyped = true
 
 fun main() {
 	if (untyped)

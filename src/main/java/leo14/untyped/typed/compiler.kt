@@ -68,6 +68,10 @@ fun Compiler.plus(begin: Begin, rhs: Compiler): Compiler =
 	plus(begin, rhs.compiled)
 
 fun Compiler.plus(begin: Begin, rhs: Compiled): Compiler =
+	if (rhs.isEmpty) clear.plusNormalized(begin, compiled)
+	else plusNormalized(begin, rhs)
+
+fun Compiler.plusNormalized(begin: Begin, rhs: Compiled): Compiler =
 	copy(compiled = compiled.append(begin, rhs)).compile
 
 val Compiler.compile: Compiler
@@ -101,7 +105,8 @@ fun Compiler.plus(definition: Definition): Compiler =
 
 val Compiler.script: Script
 	get() =
+//		compiled.type.script
 		when (compiled.expression) {
-			is ConstantExpression -> library.scope.script(compiled.typed)
+			is ConstantExpression -> evaluatedScript
 			is DynamicExpression -> compiled.type.script
 		}
