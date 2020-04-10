@@ -63,7 +63,7 @@ val Compiled.apply: Compiled
 			?: applyNativeNull
 			?: applyArrayJavaList
 			?: applyNativeClassNameText
-			?: applyNativeClassTypeNameText
+			?: applyNativeClassPrimitive
 			?: applyNativeClassField
 			?: applyClassNativeConstructor
 			?: applyClassNativeConstructorParameterList
@@ -228,17 +228,13 @@ val Compiled.applyNativeClassNameText: Compiled?
 			}
 		}
 
-val Compiled.applyNativeClassTypeNameText: Compiled?
+val Compiled.applyNativeClassPrimitive: Compiled?
 	get() =
 		type.matchPrefix(nativeName) {
 			matchPrefix(className) {
-				matchPrefix(typeName) {
-					matchPrefix(nameName) {
-						matchText {
-							expression.constantOrNull?.value?.asString?.typeClassOrNull?.let { class_ ->
-								type(className lineTo nativeType).compiled(expression(class_))
-							}
-						}
+				matchName {
+					typeClassOrNull?.let { class_ ->
+						type(className lineTo nativeType).compiled(expression(class_))
 					}
 				}
 			}

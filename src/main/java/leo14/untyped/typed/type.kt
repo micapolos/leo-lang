@@ -113,6 +113,15 @@ fun <R : Any> Type.match(name: String, fn: () -> R?): R? =
 		}
 	}
 
+fun <R : Any> Type.matchName(fn: String.() -> R?): R? =
+	linkOrNull?.let { link ->
+		link.line.fieldOrNull?.let { field ->
+			ifOrNull(field.rhs.isEmpty) {
+				field.name.fn()
+			}
+		}
+	}
+
 fun <R : Any> Type.matchNumber(fn: () -> R?): R? =
 	ifOrNull(this == numberType) { fn() }
 

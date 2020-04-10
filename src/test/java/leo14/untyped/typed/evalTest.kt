@@ -119,9 +119,21 @@ class EvalTest {
 //	}
 
 	@Test
-	fun nativeClassTypeNameText() {
-		leo(nativeName(className(typeName(nameName("int")))))
+	fun nativeClassPrimitive() {
+		leo(nativeName(className("boolean"())))
+			.assertEvalsTo(leo(className(nativeName(java.lang.Boolean.TYPE.nativeString))))
+		leo(nativeName(className("byte"())))
+			.assertEvalsTo(leo(className(nativeName(java.lang.Byte.TYPE.nativeString))))
+		leo(nativeName(className("short"())))
+			.assertEvalsTo(leo(className(nativeName(java.lang.Short.TYPE.nativeString))))
+		leo(nativeName(className("int"())))
 			.assertEvalsTo(leo(className(nativeName(Integer.TYPE.nativeString))))
+		leo(nativeName(className("long"())))
+			.assertEvalsTo(leo(className(nativeName(java.lang.Long.TYPE.nativeString))))
+		leo(nativeName(className("float"())))
+			.assertEvalsTo(leo(className(nativeName(java.lang.Float.TYPE.nativeString))))
+		leo(nativeName(className("double"())))
+			.assertEvalsTo(leo(className(nativeName(java.lang.Double.TYPE.nativeString))))
 	}
 
 	@Test
