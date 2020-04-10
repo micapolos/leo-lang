@@ -15,10 +15,10 @@ val ScopeLink.scope: Scope get() = LinkScope(this)
 infix fun Scope.linkTo(definition: Definition) = ScopeLink(this, definition)
 fun Scope.plus(definition: Definition): Scope = linkTo(definition).scope
 
-tailrec fun Scope.apply(typed: Compiled): Compiled? =
+tailrec fun Scope.apply(compiled: Compiled): Compiled? =
 	when (this) {
 		is EmptyScope -> null
-		is LinkScope -> link.definition.apply(typed) ?: link.lhs.apply(typed)
+		is LinkScope -> link.definition.apply(compiled) ?: link.lhs.apply(compiled)
 	}
 
 fun Scope.apply(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled =

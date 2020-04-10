@@ -443,3 +443,6 @@ fun CompiledField.select(name: String): Compiled? =
 	notNullIf(this.name == name) {
 		emptyType.plus(name lineTo rhs.type).compiled(rhs.expression)
 	}
+
+fun Compiler.append(literal: Literal): Compiler =
+	copy(compiled = compiled.append(literal))

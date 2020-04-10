@@ -61,15 +61,30 @@ fun Compiler.plusNormalized(field: ScriptField): Compiler =
 	}
 
 fun Compiler.plus(literal: Literal): Compiler =
-	copy(compiled = compiled.append(literal)).update
+	copy(compiled = compiled.append(literal)).compile
 
 fun Compiler.plus(begin: Begin, rhs: Compiled): Compiler =
-	copy(compiled = compiled.append(begin, rhs)).update
+	copy(compiled = compiled.append(begin, rhs)).compile
 
-val Compiler.update: Compiler
+val Compiler.compile: Compiler
 	get() =
 		runIf(quoteDepth <= 0) { apply }
 
 val Compiler.apply: Compiler
+	get() =
+		null
+			?: applyLibrary
+			?: applyScope
+			?: applyStatic
+
+val Compiler.applyLibrary: Compiler?
+	get() =
+		library.apply(compiled)?.let { copy(library = it, compiled = emptyCompiled) }
+
+val Compiler.applyScope: Compiler?
+	get() =
+		library.applyCompiled(compiled)?.let { copy(compiled = it) }
+
+val Compiler.applyStatic: Compiler
 	get() =
 		copy(compiled = compiled.apply)

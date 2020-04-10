@@ -28,6 +28,16 @@ class EvalTest {
 	}
 
 	@Test
+	fun is_() {
+		leo("x"(), isName(123)).assertEvalsTo(leo())
+	}
+
+	@Test
+	fun is_get() {
+		leo("x"(), isName(123), "x"()).assertEvalsTo(leo(123))
+	}
+
+	@Test
 	fun number() {
 		leo(numberName()).assertEvalsTo(leo(numberName()))
 	}
