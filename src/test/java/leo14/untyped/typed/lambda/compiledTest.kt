@@ -8,17 +8,17 @@ import kotlin.test.Test
 class CompiledTest {
 	@Test
 	fun plus_static_static() {
-		type("foo").compiled(nullTerm)
-			.plus("plus".lineTo(type("bar")).compiled(nullTerm))
+		type("foo").compiled(nil)
+			.plus("plus".lineTo(type("bar")).compiled(nil))
 			.assertEqualTo(
 				type("foo")
 					.plus("plus" lineTo type("bar"))
-					.compiled(nullTerm))
+					.compiled(nil))
 	}
 
 	@Test
 	fun plus_static_dynamic() {
-		type("foo").compiled(nullTerm)
+		type("foo").compiled(nil)
 			.plus(textTypeLine.compiled(value("world!")))
 			.assertEqualTo(
 				type("foo")
@@ -29,7 +29,7 @@ class CompiledTest {
 	@Test
 	fun plus_dynamic_static() {
 		textType.compiled(value("Hello, "))
-			.plus("plus".lineTo(type("bar")).compiled(nullTerm))
+			.plus("plus".lineTo(type("bar")).compiled(nil))
 			.assertEqualTo(
 				textType
 					.plus("plus" lineTo type("bar"))
@@ -50,7 +50,7 @@ class CompiledTest {
 	fun matchLink_static_static() {
 		type("foo")
 			.plus("plus" lineTo type("bar"))
-			.compiled(nullTerm)
+			.compiled(nil)
 			.matchLink { line ->
 				textType.compiled(value("OK"))
 			}

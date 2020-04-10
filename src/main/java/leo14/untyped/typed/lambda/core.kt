@@ -1,6 +1,10 @@
-package leo14.untyped.typed
+package leo14.untyped.typed.lambda
 
 import leo14.Literal
+import leo14.untyped.typed.Compiled
+import leo14.untyped.typed.apply
+import leo14.untyped.typed.nativeValue
+import leo14.untyped.typed.valueLiteralOrNull
 
 class Core(
 	val literalTermFn: (Literal) -> Any?,

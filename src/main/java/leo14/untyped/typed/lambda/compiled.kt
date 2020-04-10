@@ -19,7 +19,7 @@ fun Compiled.plus(line: CompiledLine): Compiled =
 
 fun add(lhs: Term, lhsIsStatic: Boolean, rhs: Term, rhsIsStatic: Boolean): Term =
 	if (lhsIsStatic)
-		if (rhsIsStatic) nullTerm
+		if (rhsIsStatic) lhs
 		else rhs
 	else
 		if (rhsIsStatic) lhs

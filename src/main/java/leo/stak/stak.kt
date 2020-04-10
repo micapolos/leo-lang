@@ -2,6 +2,7 @@ package leo.stak
 
 import leo.base.appendableString
 import leo.base.fold
+import leo.base.indexed
 import leo14.script
 
 // Stack with binary-replicated links.
@@ -42,6 +43,12 @@ val Stak<*>.isEmpty: Boolean get() = nodeOrNull == null
 val <T : Any> Stak<T>.top: T?
 	get() =
 		nodeOrNull?.value
+
+val <T : Any> Stak<T>.unlink: Pair<Stak<T>, T>?
+	get() =
+		nodeOrNull?.let { node ->
+			stak(node.linkOrNull?.node) to node.value
+		}
 
 fun <T : Any> Stak<T>.top(index: Int): T? =
 	nodeOrNull?.top(index)
@@ -168,3 +175,15 @@ val <T : Any> Link<T>.size: Int
 
 fun <T : Any> Appendable.append(stak: Stak<T>): Appendable =
 	append("stak").fold(stak.reverse) { append(".push(").append(it.toString()).append(")") }
+
+fun <T : Any> Stak<T>.topIndexedValue(fn: (T) -> Boolean): IndexedValue<T>? {
+	var index = 0
+	var stak = this
+	while (true) {
+		val pair = stak.unlink ?: break
+		if (fn(pair.second)) return index indexed pair.second
+		index++
+		stak = pair.first
+	}
+	return null
+}
