@@ -13,6 +13,7 @@ fun Type.compiled(term: Term) = Compiled(this, term)
 infix fun Compiled.linkTo(line: CompiledLine) = CompiledLink(this, line)
 infix fun TypeLine.compiled(term: Term) = CompiledLine(this, term)
 infix fun TypeField.compiled(term: Term) = CompiledField(this, term)
+val emptyCompiled = emptyType.compiled(nil)
 
 fun Compiled.plus(line: CompiledLine): Compiled =
 	type.plus(line.typeLine).compiled(add(term, type.isStatic, line.term, line.typeLine.isStatic))
@@ -97,3 +98,6 @@ fun Compiled.matchText(fn: Term.() -> Compiled?): Compiled? =
 val Compiled.eval: Compiled
 	get() =
 		type.compiled(term.eval)
+
+fun Compiled.updateTerm(fn: Term.() -> Term): Compiled =
+	copy(term = term.fn())
