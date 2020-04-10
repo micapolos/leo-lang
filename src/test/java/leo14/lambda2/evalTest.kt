@@ -7,8 +7,15 @@ import kotlin.test.assertFails
 
 class EvalTest {
 	@Test
+	fun evaluatesOnce() {
+		val term = value(123).assertEvaluatesOnce
+		term.eval.assertEqualTo(value(123))
+		assertFails { term.eval }
+	}
+
+	@Test
 	fun constant() {
-		term(0).eval.assertEqualTo(term(0))
+		value(0).eval.assertEqualTo(value(0))
 	}
 
 	@Test
@@ -18,26 +25,26 @@ class EvalTest {
 
 	@Test
 	fun get() {
-		fn(at(0)).invoke(term(123)).eval.assertEqualTo(term(123))
-		fn(fn(at(0))).invoke(term(123)).invoke(term(124)).eval.assertEqualTo(term(124))
-		fn(fn(at(1))).invoke(term(123)).invoke(term(124)).eval.assertEqualTo(term(123))
+		fn(at(0)).invoke(value(123)).eval.assertEqualTo(value(123))
+		fn(fn(at(0))).invoke(value(123)).invoke(value(124)).eval.assertEqualTo(value(124))
+		fn(fn(at(1))).invoke(value(123)).invoke(value(124)).eval.assertEqualTo(value(123))
 	}
 
 	@Test
 	fun func() {
 		fn { it }
-			.invoke(term(2))
+			.invoke(value(2))
 			.eval
-			.assertEqualTo(term(2))
+			.assertEqualTo(value(2))
 
 		fn { lhs ->
 			fn { rhs ->
-				term(lhs.value.asInt - rhs.value.asInt)
+				value(lhs.value.asInt - rhs.value.asInt)
 			}
 		}
-			.invoke(term(5))
-			.invoke(term(3))
+			.invoke(value(5))
+			.invoke(value(3))
 			.eval
-			.assertEqualTo(term(2))
+			.assertEqualTo(value(2))
 	}
 }

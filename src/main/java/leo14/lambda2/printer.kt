@@ -7,17 +7,17 @@ val Term.printer get() = printer(0)
 val Term.print: String get() = printer.print
 
 data class Fn(val name: String, val body: Term) {
-	override fun toString() = "fn { $name -> ${body.print} }"
+	override fun toString() = "{ $name -> ${body.print} }"
 }
 
-fun fn(name: String, body: Term) = term(Fn(name, body))
+fun fn(name: String, body: Term) = value(Fn(name, body))
 
 val Printer.print: String
 	get() =
 		when (term) {
 			is ValueTerm -> "${term.value}"
 			is AbstractionTerm ->
-				"fn { v$depth -> ${term.body.printer(depth.inc()).print} }"
+				"{ v$depth -> ${term.body.printer(depth.inc()).print} }"
 			is ApplicationTerm ->
 				term.lhs.printer(depth).print + "(" + term.rhs.printer(depth).print + ")"
 			is IndexTerm -> "v${depth - term.index - 1}"

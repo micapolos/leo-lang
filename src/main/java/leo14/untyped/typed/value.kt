@@ -4,23 +4,25 @@ package leo14.untyped.typed
 
 import leo14.*
 import leo14.Number
+import java.math.BigDecimal
 
 typealias Value = Any?
 typealias Evaluate = () -> Value
 typealias Fn = (Value) -> Value
-
-val Literal.value: Value
-	get() =
-		when (this) {
-			is StringLiteral -> string
-			is NumberLiteral -> number
-		}
 
 val Literal.nativeValue: Value
 	get() =
 		when (this) {
 			is StringLiteral -> string
 			is NumberLiteral -> number.bigDecimal
+		}
+
+val Value.valueLiteralOrNull: Literal?
+	get() =
+		when (this) {
+			is String -> literal(this)
+			is BigDecimal -> literal(number(this))
+			else -> null
 		}
 
 val nullValue: Value = null
