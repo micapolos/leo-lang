@@ -16,7 +16,9 @@ val Printer.print: String
 	get() =
 		when (term) {
 			is ValueTerm -> "${term.value}"
-			is AbstractionTerm -> "fn { v$depth -> ${term.body.printer(depth.inc()).print} }"
-			is ApplicationTerm -> term.lhs.printer(depth).print + "(" + term.rhs.printer(depth).print + ")"
+			is AbstractionTerm ->
+				"fn { v$depth -> ${term.body.printer(depth.inc()).print} }"
+			is ApplicationTerm ->
+				term.lhs.printer(depth).print + "(" + term.rhs.printer(depth).print + ")"
 			is IndexTerm -> "v${depth - term.index - 1}"
 		}
