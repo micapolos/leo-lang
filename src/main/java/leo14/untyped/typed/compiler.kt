@@ -105,7 +105,6 @@ fun Compiler.plus(definition: Definition): Compiler =
 
 val Compiler.script: Script
 	get() =
-//		compiled.type.script
 		when (compiled.expression) {
 			is ConstantExpression -> evaluatedScript
 			is DynamicExpression -> compiled.type.script
