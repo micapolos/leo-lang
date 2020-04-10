@@ -88,3 +88,12 @@ fun Compiled.matchNative(fn: Term.() -> Compiled?): Compiled? =
 			}
 		}
 	}
+
+fun Compiled.matchText(fn: Term.() -> Compiled?): Compiled? =
+	ifOrNull(type == textType) {
+		term.fn()
+	}
+
+val Compiled.eval: Compiled
+	get() =
+		type.compiled(term.eval)
