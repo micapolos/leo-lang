@@ -20,7 +20,7 @@ data class IndexTerm(val index: Int) : Term() {
 	override fun toString() = super.toString()
 }
 
-val Any?.term: Term get() = ValueTerm(this)
+val Any?.valueTerm: Term get() = ValueTerm(this)
 fun value(value: Any?): Term = ValueTerm(value)
 fun fn(fn: (Term) -> Term): Term = value(fn)
 fun fn(body: Term): Term = AbstractionTerm(body)

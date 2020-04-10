@@ -1,4 +1,4 @@
-package leo14.untyped.typed.lambda
+package leo14.untyped.typed.lambda.core
 
 import leo14.Literal
 import leo14.untyped.typed.Compiled

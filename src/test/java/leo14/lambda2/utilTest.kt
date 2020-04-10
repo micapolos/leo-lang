@@ -7,9 +7,9 @@ class UtilTest {
 	@Test
 	fun pairUnpair() {
 		pair
-			.invoke("Hello, ".term)
-			.invoke("world!".term)
+			.invoke("Hello, ".valueTerm)
+			.invoke("world!".valueTerm)
 			.unsafeUnpair
-			.assertEqualTo("Hello, ".term to "world!".term)
+			.assertEqualTo("Hello, ".valueTerm to "world!".valueTerm)
 	}
 }

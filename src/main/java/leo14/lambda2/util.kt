@@ -8,7 +8,7 @@ val second = fn(fn(at(0)))
 val pair = fn(fn(fn(at(0)(at(2))(at(1)))))
 
 fun Term.valueApply(valueFn: Any?.() -> Any?): Term =
-	if (this is ValueTerm) value(valueFn(value))
+	if (this is ValueTerm) value.valueFn().valueTerm
 	else fn { value(it.value.valueFn()) }(this)
 
 fun Term.valueApply(rhs: Term, f: Any?.(Any?) -> Any?): Term =
