@@ -15,6 +15,10 @@ val Bit.script: Script
 	get() =
 		leo("bit"(if (isZero) "zero"() else "one"()))
 
+val Boolean.script: Script
+	get() =
+		leo("boolean"(if (this) "true"() else "false"()))
+
 val Byte.script: Script
 	get() =
 		leo("byte"("bit" lineTo bitSeq.map { script }.script))
