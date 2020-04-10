@@ -1,17 +1,14 @@
-package leo14.untyped
+package leo14.untyped.typed
 
 import leo14.Reducer
 import leo14.Token
 import leo14.reducer
 import leo14.stringCharReducer
 
-val Reader.reducer: Reducer<Reader, Token>
+val Reader.tokenReducer: Reducer<Reader, Token>
 	get() =
-		reducer { token ->
-			write(token)!!.reducer
-		}
+		reducer { plus(it).tokenReducer }
 
 val Reader.stringCharReducer: Reducer<String, Char>
 	get() =
-		reducer.stringCharReducer { fragment }
-
+		tokenReducer.stringCharReducer { fragment }

@@ -63,6 +63,10 @@ fun Compiler.plusNormalized(field: ScriptField): Compiler =
 fun Compiler.plus(literal: Literal): Compiler =
 	copy(compiled = compiled.append(literal)).compile
 
+fun Compiler.plus(begin: Begin, rhs: Compiler): Compiler =
+	// TODO: Support importing library
+	plus(begin, rhs.compiled)
+
 fun Compiler.plus(begin: Begin, rhs: Compiled): Compiler =
 	copy(compiled = compiled.append(begin, rhs)).compile
 
@@ -94,3 +98,10 @@ fun Compiler.set(compiled: Compiled): Compiler =
 
 fun Compiler.plus(definition: Definition): Compiler =
 	copy(library = library.plus(definition))
+
+val Compiler.script: Script
+	get() =
+		when (compiled.expression) {
+			is ConstantExpression -> library.scope.script(compiled.typed)
+			is DynamicExpression -> compiled.type.script
+		}

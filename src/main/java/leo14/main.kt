@@ -12,23 +12,23 @@ import leo14.typed.compiler.parse
 import leo14.typed.compiler.preludeMemory
 import leo14.untyped.dsl2.library.prelude
 import leo14.untyped.dsl2.read
-import leo14.untyped.emptyReader
 import leo14.untyped.stringCharReducer
+import leo14.untyped.typed.stringCharReducer
 import java.io.InputStreamReader
 
 val errorTriggerCount = 7
 val importPrelude = true
 val memory = if (importPrelude) emptyContext.preludeMemory() else memory()
 val untyped = true
+val untypedTyped = false
 
 fun main() {
-//	readerHook = { reader ->
-//		printLeo(reader.fragment.leoString)
-//		Thread.sleep(1)
-//	}
-
 	if (untyped)
-		run(emptyReader.runIf(importPrelude) { read(prelude) }.stringCharReducer)
+		if (untypedTyped) {
+			run(leo14.untyped.typed.emptyReader.stringCharReducer)
+		} else {
+			run(leo14.untyped.emptyReader.runIf(importPrelude) { read(prelude) }.stringCharReducer)
+		}
 	else
 		run(emptyContext.compiler(memory).runIf(importPrelude) { parse(stdScript) }.tokenReader.charReader)
 }
