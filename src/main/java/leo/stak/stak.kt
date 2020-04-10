@@ -1,5 +1,6 @@
 package leo.stak
 
+import leo.base.appendableString
 import leo.base.fold
 import leo14.script
 
@@ -12,7 +13,8 @@ import leo14.script
 // get(index) = O(log(n))
 data class Stak<out T : Any>(
 	val nodeOrNull: Node<T>?) {
-	override fun toString() = scriptLine { script(toString()) }.toString()
+	//	override fun toString() = scriptLine { script(toString()) }.toString()
+	override fun toString() = appendableString { it.append(this) }
 }
 
 data class Node<out T : Any>(
@@ -34,6 +36,8 @@ fun <T : Any> node(value: T, linkOrNull: Link<T>?) = Node(value, linkOrNull)
 fun <T : Any> emptyStak(): Stak<T> = stak(null)
 fun <T : Any> stakOf(vararg values: T): Stak<T> =
 	emptyStak<T>().fold(values) { push(it) }
+
+val Stak<*>.isEmpty: Boolean get() = nodeOrNull == null
 
 val <T : Any> Stak<T>.top: T?
 	get() =
@@ -161,3 +165,6 @@ val <T : Any> Link<T>.size: Int
 		}
 		return size
 	}
+
+fun <T : Any> Appendable.append(stak: Stak<T>): Appendable =
+	append("stak").fold(stak.reverse) { append(".push(").append(it.toString()).append(")") }
