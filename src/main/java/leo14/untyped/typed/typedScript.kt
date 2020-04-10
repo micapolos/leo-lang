@@ -2,10 +2,14 @@
 
 package leo14.untyped.typed
 
+import leo.base.notNullIf
 import leo14.*
 import leo14.Number
 import leo14.lambda.runtime.Value
 import leo14.untyped.nativeName
+import leo14.untyped.numberName
+import leo14.untyped.textName
+import java.math.BigDecimal
 import leo14.fieldTo as scriptFieldTo
 
 fun Scope.script(typed: Typed): Script =
@@ -35,13 +39,18 @@ fun Scope.scriptLink(typeLink: TypeLink, value: Value, recursiveOrNull: TypeRecu
 	}
 
 fun Scope.scriptLine(line: TypeLine, value: Value, recursiveOrNull: TypeRecursive?): ScriptLine =
-	when (line) {
-		is LiteralTypeLine -> line(line.literal)
-		is FieldTypeLine -> scriptLine(line.field, value, recursiveOrNull)
-		NativeTypeLine -> nativeScriptLine(value)
-		NumberTypeLine -> numberScriptLine(value)
-		TextTypeLine -> textScriptLine(value)
-	}
+	null
+		?: line.textScriptLineOrNull(value)
+		?: line.nativeTextScriptLineOrNull
+		?: line.numberScriptLineOrNull(value)
+		?: line.nativeNumberScriptLineOrNull
+		?: when (line) {
+			is LiteralTypeLine -> line(line.literal)
+			is FieldTypeLine -> scriptLine(line.field, value, recursiveOrNull)
+			NativeTypeLine -> nativeScriptLine(value)
+			NumberTypeLine -> numberScriptLine(value)
+			TextTypeLine -> textScriptLine(value)
+		}
 
 fun Scope.script(alternative: TypeAlternative, value: Value, recursiveOrNull: TypeRecursive?): Script =
 	if (alternative.lhs.isStatic && alternative.rhs.isStatic)
@@ -82,3 +91,25 @@ fun Scope.scriptLine(field: TypeField, value: Value, recursiveOrNull: TypeRecurs
 
 fun Scope.scriptField(field: TypeField, value: Value, recursiveOrNull: TypeRecursive?): ScriptField =
 	field.name scriptFieldTo script(field.rhs, value, recursiveOrNull)
+
+fun TypeLine.textScriptLineOrNull(value: Value): ScriptLine? =
+	notNullIf(this == textTypeLine2) {
+		line(literal(value as String))
+	}
+
+val TypeLine.nativeTextScriptLineOrNull: ScriptLine?
+	get() =
+		notNullIf(this == textName lineTo type(nativeName lineTo emptyType)) {
+			line(textName)
+		}
+
+fun TypeLine.numberScriptLineOrNull(value: Value): ScriptLine? =
+	notNullIf(this == numberTypeLine2) {
+		line(literal(number(value as BigDecimal)))
+	}
+
+val TypeLine.nativeNumberScriptLineOrNull: ScriptLine?
+	get() =
+		notNullIf(this == numberName lineTo type(nativeName lineTo emptyType)) {
+			line(numberName)
+		}

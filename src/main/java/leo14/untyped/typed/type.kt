@@ -7,6 +7,8 @@ import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo14.untyped.listName
+import leo14.untyped.numberName
+import leo14.untyped.textName
 
 data class TypeFunction(val from: Type, val to: Type)
 data class TypeAlternative(val lhs: Type, val rhs: Type)
@@ -79,11 +81,23 @@ val textType = emptyType.plus(textTypeLine)
 val numberType = emptyType.plus(numberTypeLine)
 val nativeType = emptyType.plus(nativeTypeLine)
 
+val textTypeLine2 get() = textName lineTo nativeType
+val numberTypeLine2 get() = numberName lineTo nativeType
+val textType2 = type(textTypeLine2)
+val numberType2 = type(numberTypeLine2)
+
 val Literal.valueTypeLine: TypeLine
 	get() =
 		when (this) {
 			is StringLiteral -> textTypeLine
 			is NumberLiteral -> numberTypeLine
+		}
+
+val Literal.valueTypeLine2: TypeLine
+	get() =
+		when (this) {
+			is StringLiteral -> textTypeLine2
+			is NumberLiteral -> numberTypeLine2
 		}
 
 fun <R : Any> Type.matchEmpty(fn: () -> R?): R? =
@@ -113,10 +127,10 @@ fun <R : Any> Type.match(name: String, fn: () -> R?): R? =
 	}
 
 fun <R : Any> Type.matchNumber(fn: () -> R?): R? =
-	ifOrNull(this == numberType) { fn() }
+	ifOrNull(this == numberType2) { fn() }
 
 fun <R : Any> Type.matchText(fn: () -> R?): R? =
-	ifOrNull(this == textType) { fn() }
+	ifOrNull(this == textType2) { fn() }
 
 fun <R : Any> Type.matchNative(fn: () -> R?): R? =
 	ifOrNull(this == nativeType) { fn() }
@@ -144,4 +158,3 @@ val Type.staticOrNull: Type?
 	get() =
 		// TODO: Could it be made simpler, without involving scope?
 		emptyScope.script(typed(null)).type
-

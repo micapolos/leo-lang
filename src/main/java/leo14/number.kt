@@ -18,6 +18,9 @@ fun number(double: Double): Number = Number(BigDecimal.valueOf(double))
 val Int.number: Number get() = number(this)
 val Double.number: Number get() = number(this)
 
+val Int.bigDecimal get() = BigDecimal.valueOf(toLong())
+val Double.bigDecimal get() = BigDecimal.valueOf(this)
+
 val String.numberOrNull: Number?
 	get() =
 		try {

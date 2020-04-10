@@ -4,10 +4,13 @@ import leo.base.assertEqualTo
 import leo.base.assertNull
 import leo.base.ifOrNull
 import leo14.begin
+import leo14.bigDecimal
 import leo14.lambda.runtime.fn
 import leo14.literal
 import leo14.number
-import leo14.untyped.*
+import leo14.untyped.listName
+import leo14.untyped.numberName
+import leo14.untyped.ofName
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -16,9 +19,14 @@ class CompiledTest {
 	@Test
 	fun plusLiteral() {
 		emptyCompiled
+			.append(literal("foo"))
+			.evaluate
+			.assertEqualTo(textType2.compiled("foo"))
+
+		emptyCompiled
 			.append(literal(2))
 			.evaluate
-			.assertEqualTo(numberType.compiled(2.number))
+			.assertEqualTo(numberType2.compiled(2.bigDecimal))
 	}
 
 	@Test
@@ -119,20 +127,6 @@ class CompiledTest {
 			}!!
 			.typed
 			.assertEqualTo(numberType.typed(13.number))
-	}
-
-	@Test
-	fun applyNativeClass() {
-		emptyType
-			.plus(className lineTo emptyType
-				.plus(nativeName lineTo textType))
-			.compiled("java.lang.String")
-			.applyNativeClass!!
-			.evaluate
-			.assertEqualTo(
-				emptyType
-					.plus(className lineTo nativeType)
-					.compiled(java.lang.String::class.java))
 	}
 
 	@Test

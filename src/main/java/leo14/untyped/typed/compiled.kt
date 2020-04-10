@@ -4,8 +4,8 @@ package leo14.untyped.typed
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo14.*
-import leo14.Number
+import leo14.Begin
+import leo14.Literal
 import leo14.lambda.runtime.Value
 import leo14.untyped.*
 import java.lang.reflect.Constructor
@@ -45,25 +45,20 @@ fun Compiled.apply(literal: Literal): Compiled =
 
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 	null
-		?: applyPrimitives(begin, rhs)
 		?: applyFunctionApply(rhs)
 		?: append(begin, rhs)
 
 val Compiled.apply: Compiled
 	get() =
 		null
+			?: applyText
+			?: applyNumber
 			?: applyListOf
 			?: applyListPlus
-			?: applyMinusNumber
-			?: applyNumberPlusNumber
-			?: applyNumberMinusNumber
-			?: applyNumberTimesNumber
-			?: applyTextStringJava
-			?: applyNumberIntJava
-			?: applyNullJava
+			?: applyNativeNull
 			?: applyArrayJavaList
-			?: applyClassJavaText
-			?: applyClassNativeField
+			?: applyNativeClassNameText
+			?: applyNativeClassField
 			?: applyClassNativeConstructor
 			?: applyClassNativeConstructorParameterList
 			?: applyClassNativeMethod
@@ -73,7 +68,28 @@ val Compiled.apply: Compiled
 			?: applyNativeConstructorInvokeParameterList
 			?: applyNativeMethodInvoke
 			?: applyNativeMethodInvokeParameterList
+			?: applyGet
 			?: this
+
+val Compiled.applyGet: Compiled?
+	get() =
+		type.linkOrNull?.onlyLineOrNull?.fieldOrNull?.let { field ->
+			field.rhs.linkOrNull?.onlyLineOrNull?.fieldOrNull?.rhs?.let { rhs ->
+				rhs.compiled(expression).select(field.name)
+			}
+		}
+
+val Compiled.applyText: Compiled?
+	get() =
+		type.match(textName) {
+			type(textName lineTo type(nativeName lineTo emptyType)).compiled(null)
+		}
+
+val Compiled.applyNumber: Compiled?
+	get() =
+		type.match(numberName) {
+			type(numberName lineTo type(nativeName lineTo emptyType)).compiled(null)
+		}
 
 val Compiled.applyListOf: Compiled?
 	get() =
@@ -90,87 +106,18 @@ val Compiled.applyListPlus: Compiled?
 	get() =
 		type.matchInfix(plusName) { rhs ->
 			let { listType ->
-				matchPrefix(listName) {
-					matchRepeating {
-						ifOrNull(this == rhs) {
-							// TODO: Represent list with static items as Int = array size
-							this@applyListPlus.linkApply(listType) { this to it }
-						}
+				matchList {
+					ifOrNull(this == rhs) {
+						// TODO: Represent list with static items as Int = array size
+						this@applyListPlus.linkApply(listType) { this to it }
 					}
 				}
 			}
 		}
 
-val Compiled.applyMinusNumber: Compiled?
+val Compiled.applyNativeNull: Compiled?
 	get() =
-		type.matchPrefix(minusName) {
-			matchNumber {
-				numberType.compiled(expression.doApply { -asNumber })
-			}
-		}
-
-val Compiled.applyNumberPlusNumber: Compiled?
-	get() =
-		type.matchInfix(plusName) { rhs ->
-			matchNumber {
-				rhs.matchNumber {
-					numberType.compiled(expression.doApply {
-						this as Pair<*, *>
-						first.asNumber + second.asNumber
-					})
-				}
-			}
-		}
-
-val Compiled.applyNumberMinusNumber: Compiled?
-	get() =
-		type.matchInfix(minusName) { rhs ->
-			matchNumber {
-				rhs.matchNumber {
-					numberType.compiled(expression.doApply {
-						this as Pair<*, *>
-						first.asNumber - second.asNumber
-					})
-				}
-			}
-		}
-
-val Compiled.applyNumberTimesNumber: Compiled?
-	get() =
-		type.matchInfix(timesName) { rhs ->
-			matchNumber {
-				rhs.matchNumber {
-					numberType.compiled(expression.doApply {
-						this as Pair<*, *>
-						first.asNumber * second.asNumber
-					})
-				}
-			}
-		}
-
-val Compiled.applyTextStringJava: Compiled?
-	get() =
-		type.matchPrefix(javaName) {
-			matchPrefix(stringName) {
-				matchText {
-					nativeType.compiled(expression)
-				}
-			}
-		}
-
-val Compiled.applyNumberIntJava: Compiled?
-	get() =
-		type.matchPrefix(javaName) {
-			matchPrefix(intName) {
-				matchNumber {
-					nativeType.compiled(expression.doApply { (this as Number).bigDecimal.intValueExact() })
-				}
-			}
-		}
-
-val Compiled.applyNullJava: Compiled?
-	get() =
-		type.matchPrefix(javaName) {
+		type.matchPrefix(nativeName) {
 			match(nullName) {
 				nativeType.compiled(null)
 			}
@@ -261,25 +208,26 @@ val Compiled.applyNativeMethodInvokeParameterList: Compiled?
 			}
 		}
 
-val Compiled.applyClassJavaText: Compiled?
+val Compiled.applyNativeClassNameText: Compiled?
 	get() =
-		type.matchPrefix(className) {
-			matchPrefix(javaName) {
-				matchText {
-					type(className lineTo nativeType)
-						.compiled(expression.doApply {
+		type.matchPrefix(nativeName) {
+			matchPrefix(className) {
+				matchPrefix(nameName) {
+					matchText {
+						type(className lineTo nativeType).compiled(expression.doApply {
 							asString.loadClass
 						})
+					}
 				}
 			}
 		}
 
-val Compiled.applyClassNativeField: Compiled?
+val Compiled.applyNativeClassField: Compiled?
 	get() =
-		type.matchInfix(fieldName) { rhs ->
+		type.matchInfix(fieldName) { field ->
 			matchPrefix(className) {
 				matchNative {
-					rhs.matchPrefix(nameName) {
+					field.matchPrefix(nameName) {
 						matchText {
 							linkApply(type(fieldName lineTo nativeType)) { name ->
 								(this as Class<*>).getField(name as String)
@@ -383,23 +331,6 @@ val Compiled.applyFieldNativeGet: Compiled?
 		}
 
 
-fun Compiled.applyPrimitives(begin: Begin, rhs: Compiled): Compiled? =
-	when (type.plus(begin.string(rhs.type))) {
-		minusNumberType ->
-			numberType.compiled(expression.numberUnaryMinus)
-		textNumberType ->
-			numberType.compiled(expression.numberString)
-		textPlusTextType ->
-			textType.compiled(expression.stringPlusString(rhs.expression))
-		numberPlusNumberType ->
-			numberType.compiled(expression.numberPlusNumber(rhs.expression))
-		numberMinusNumberType ->
-			numberType.compiled(expression.numberMinusNumber(rhs.expression))
-		numberTimesNumberType ->
-			numberType.compiled(expression.numberTimesNumber(rhs.expression))
-		else -> null
-	}
-
 fun Compiled.applyFunctionApply(rhs: Compiled): Compiled? =
 	type.functionOrNull?.let { function ->
 		notNullIf(function.from == rhs.type) {
@@ -408,8 +339,8 @@ fun Compiled.applyFunctionApply(rhs: Compiled): Compiled? =
 	}
 
 fun Compiled.append(literal: Literal): Compiled =
-	type.plus(literal.valueTypeLine).let { newType ->
-		if (type.isEmpty) newType.compiled(literal.value)
+	type.plus(literal.valueTypeLine2).let { newType ->
+		if (type.isEmpty) newType.compiled(literal.nativeValue)
 		else newType.compiled(expression.doApply(literal.expression) { this to it })
 	}
 

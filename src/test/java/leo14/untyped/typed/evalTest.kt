@@ -3,7 +3,7 @@ package leo14.untyped.typed
 import leo14.invoke
 import leo14.leo
 import leo14.untyped.*
-import java.awt.Point
+import java.net.URL
 import kotlin.test.Test
 
 class EvalTest {
@@ -21,13 +21,26 @@ class EvalTest {
 	}
 
 	@Test
-	fun primitives() {
-		// TODO: These should be defined in a library, using reflection
-		leo(minusName(2)).assertEvalsTo(leo(-2))
-		leo(2, minusName()).assertEvalsTo(leo(-2))
-		leo(2, plusName(3)).assertEvalsTo(leo(5))
-		leo(5, minusName(3)).assertEvalsTo(leo(2))
-		leo(2, timesName(3)).assertEvalsTo(leo(6))
+	fun get() {
+		leo("point"("x"(10), "y"(20)), "x"()).assertEvalsTo(leo("x"(10)))
+		leo("point"("x"(10), "y"(20)), "y"()).assertEvalsTo(leo("y"(20)))
+		leo("point"("x"(10), "y"(20)), "z"()).assertEvalsTo(leo("z"("point"("x"(10), "y"(20)))))
+	}
+
+	@Test
+	fun number() {
+		leo(numberName()).assertEvalsTo(leo(numberName()))
+	}
+
+	@Test
+	fun nativeAccess() {
+		leo(nativeName(className(nameName("java.lang.String"))), nativeName())
+			.assertEvalsTo(leo(nativeName(java.lang.String::class.java.nativeString)))
+	}
+
+	@Test
+	fun text() {
+		leo(textName()).assertEvalsTo(leo(textName()))
 	}
 
 	@Test
@@ -36,35 +49,35 @@ class EvalTest {
 			.assertEvalsTo(leo(listName()))
 	}
 
-	@Test
-	fun listPlusDynamic() {
-		leo(
-			listName(ofName(numberName())),
-			plusName(123))
-			.assertEvalsTo(leo(listName(123)))
-
-		leo(
-			listName(ofName(numberName())),
-			plusName(123),
-			plusName(124),
-			plusName(125))
-			.assertEvalsTo(leo(listName(123, 124, 125)))
-	}
-
-	@Test
-	fun listPlusTypeMismatch() {
-		leo(
-			listName(ofName(numberName())),
-			plusName("foo"))
-			.assertEvalsTo(leo(listName(), plusName("foo")))
-
-		leo(
-			listName(ofName(numberName())),
-			plusName(10),
-			plusName(20),
-			plusName("foo"))
-			.assertEvalsTo(leo(listName(10, 20), plusName("foo")))
-	}
+//	@Test
+//	fun listPlusDynamic() {
+//		leo(
+//			listName(ofName(numberName())),
+//			plusName(123))
+//			.assertEvalsTo(leo(listName(123)))
+//
+//		leo(
+//			listName(ofName(numberName())),
+//			plusName(123),
+//			plusName(124),
+//			plusName(125))
+//			.assertEvalsTo(leo(listName(123, 124, 125)))
+//	}
+//
+//	@Test
+//	fun listPlusTypeMismatch() {
+//		leo(
+//			listName(ofName(numberName())),
+//			plusName("foo"))
+//			.assertEvalsTo(leo(listName(), plusName("foo")))
+//
+//		leo(
+//			listName(ofName(numberName())),
+//			plusName(10),
+//			plusName(20),
+//			plusName("foo"))
+//			.assertEvalsTo(leo(listName(10, 20), plusName("foo")))
+//	}
 
 	// TODO: fixit!!!
 //	@Test
@@ -75,48 +88,39 @@ class EvalTest {
 
 	@Test
 	fun javaNull() {
-		leo(javaName(nullName()))
+		leo(nativeName(nullName()))
 			.assertEvalsTo(leo(nativeName(nullValue.nativeString)))
 	}
 
-	@Test
-	fun listJavaArray() {
-		leo(
-			listName(ofName(numberName())),
-			javaName(), arrayName())
-			.assertEvalsTo(leo(arrayName(nativeName(arrayOf<Value>().nativeString))))
-
-		leo(
-			listName(ofName(numberName())),
-			plusName(1),
-			plusName(2),
-			plusName(3),
-			javaName(), arrayName())
-			.assertEvalsTo(leo(arrayName(nativeName(arrayOf(1, 2, 3).nativeString))))
-	}
-
-	@Test
-	fun textStringJava() {
-		leo("foo", stringName(), javaName())
-			.assertEvalsTo(leo(nativeName("foo".nativeString)))
-	}
+//	@Test
+//	fun listJavaArray() {
+//		leo(
+//			listName(ofName(numberName())),
+//			javaName(), arrayName())
+//			.assertEvalsTo(leo(arrayName(nativeName(arrayOf<Value>().nativeString))))
+//
+//		leo(
+//			listName(ofName(numberName())),
+//			plusName(1),
+//			plusName(2),
+//			plusName(3),
+//			javaName(), arrayName())
+//			.assertEvalsTo(leo(arrayName(nativeName(arrayOf(1, 2, 3).nativeString))))
+//	}
 
 	@Test
-	fun numberIntJava() {
-		leo(123, intName(), javaName())
-			.assertEvalsTo(leo(nativeName(123.nativeString)))
-	}
-
-	@Test
-	fun stringJavaClass() {
-		leo("java.lang.String", javaName(), className())
-			.assertEvalsTo(leo(className(nativeName(java.lang.String::class.java.toString()))))
+	fun nativeClassNameText() {
+		leo(nativeName(className(nameName("java.lang.Integer"))))
+			.assertEvalsTo(leo(
+				className(
+					nativeName(
+						java.lang.Integer::class.java.nativeString))))
 	}
 
 	@Test
 	fun nativeClassField() {
 		leo(
-			"java.lang.Integer", javaName(), className(),
+			nativeName(className(nameName("java.lang.Integer"))),
 			fieldName(nameName("MAX_VALUE")))
 			.assertEvalsTo(leo(
 				fieldName(
@@ -126,7 +130,9 @@ class EvalTest {
 
 	@Test
 	fun nativeClassConstructor() {
-		leo("java.lang.StringBuilder", javaName(), className(), constructorName())
+		leo(
+			nativeName(className(nameName("java.lang.StringBuilder"))),
+			constructorName())
 			.assertEvalsTo(leo(
 				constructorName(
 					nativeName(
@@ -136,10 +142,10 @@ class EvalTest {
 	@Test
 	fun nativeClassConstructorParameterList() {
 		leo(
-			"java.lang.StringBuilder", javaName(), className(),
+			nativeName(className(nameName("java.lang.StringBuilder"))),
 			constructorName(parameterName(
-				listName(ofName(nativeName(), className())),
-				plusName("java.lang.String", javaName(), className()))))
+				listName(ofName(className(nativeName()))),
+				plusName(nativeName(className(nameName("java.lang.String")))))))
 			.assertEvalsTo(leo(
 				constructorName(
 					nativeName(
@@ -148,19 +154,20 @@ class EvalTest {
 
 	@Test
 	fun nativeClassConstructorParameterListPrimitiveTypes() {
-		leo("java.awt.Point", javaName(), className(),
+		leo(
+			nativeName(className(nameName("java.awt.Point"))),
 			constructorName(
 				parameterName(
 					listName(ofName(className(nativeName()))),
 					plusName(
-						"java.lang.Integer", javaName(), className(),
+						nativeName(className(nameName("java.lang.Integer"))),
 						fieldName(nameName("TYPE")),
-						getName(javaName(nullName())),
+						getName(nativeName(nullName())),
 						className()),
 					plusName(
-						"java.lang.Integer", javaName(), className(),
+						nativeName(className(nameName("java.lang.Integer"))),
 						fieldName(nameName("TYPE")),
-						getName(javaName(nullName())),
+						getName(nativeName(nullName())),
 						className()))))
 			.assertEvalsTo(leo(
 				constructorName(
@@ -173,7 +180,8 @@ class EvalTest {
 
 	@Test
 	fun nativeClassMethod() {
-		leo("java.lang.String", javaName(), className(),
+		leo(
+			nativeName(className(nameName("java.lang.String"))),
 			methodName(nameName("length")))
 			.assertEvalsTo(leo(
 				methodName(
@@ -183,21 +191,20 @@ class EvalTest {
 
 	@Test
 	fun nativeClassMethodNameParameterList() {
-		leo("java.lang.String", javaName(), className(),
+		leo(
+			nativeName(className(nameName("java.lang.String"))),
 			methodName(
 				nameName("substring"),
 				parameterName(
 					listName(ofName(className(nativeName()))),
-					plusName(
-						"java.lang.Integer", javaName(), className(),
+					plusName(className(
+						nativeName(className(nameName("java.lang.Integer"))),
 						fieldName(nameName("TYPE")),
-						getName(nullName(), javaName()),
-						className()),
-					plusName(
-						"java.lang.Integer", javaName(), className(),
+						getName(nativeName(nullName())))),
+					plusName(className(
+						nativeName(className(nameName("java.lang.Integer"))),
 						fieldName(nameName("TYPE")),
-						getName(nullName(), javaName()),
-						className()))))
+						getName(nativeName(nullName())))))))
 			.assertEvalsTo(
 				leo(
 					methodName(
@@ -209,9 +216,10 @@ class EvalTest {
 
 	@Test
 	fun nativeFieldGetStatic() {
-		leo("java.lang.Integer", javaName(), className(),
+		leo(
+			nativeName(className(nameName("java.lang.Integer"))),
 			fieldName(nameName("MAX_VALUE")),
-			getName(javaName(nullName())))
+			getName(nativeName(nullName())))
 			.assertEvalsTo(leo(
 				nativeName(
 					java.lang.Integer::class
@@ -223,64 +231,56 @@ class EvalTest {
 
 	@Test
 	fun nativeConstructorInvoke() {
-		leo("java.lang.StringBuilder", javaName(), className(), constructorName(), invokeName())
+		leo(
+			nativeName(className(nameName("java.lang.StringBuilder"))),
+			constructorName(),
+			invokeName())
 			.assertEvalsTo(leo(nativeName(StringBuilder().nativeString)))
 	}
 
 	@Test
 	fun nativeConstructorInvokeParameterList() {
-		leo("java.awt.Point", javaName(), className(),
+		leo(
+			nativeName(className(nameName("java.net.URL"))),
 			constructorName(parameterName(
 				listName(ofName(className(nativeName()))),
-				plusName(
-					"java.lang.Integer", javaName(), className(),
-					fieldName(nameName("TYPE")),
-					getName(nullName(), javaName()),
-					className()),
-				plusName(
-					"java.lang.Integer", javaName(), className(),
-					fieldName(nameName("TYPE")),
-					getName(nullName(), javaName()),
-					className()))),
+				plusName(nativeName(className(nameName("java.lang.String")))),
+				plusName(nativeName(className(nameName("java.lang.String")))),
+				plusName(nativeName(className(nameName("java.lang.String")))))),
 			invokeName(parameterName(
 				listName(ofName(nativeName())),
-				plusName(10, intName(), javaName()),
-				plusName(20, intName(), javaName()))))
-			.assertEvalsTo(leo(nativeName(Point(10, 20).nativeString)))
+				plusName(nativeName("http")),
+				plusName(nativeName("www.google.com")),
+				plusName(nativeName("/search")))))
+			.assertEvalsTo(leo(nativeName(URL("http", "www.google.com", "/search").nativeString)))
 	}
 
 	@Test
 	fun nativeMethodInvoke() {
-		leo("java.lang.String", javaName(), className(),
+		leo(
+			nativeName(className(nameName("java.lang.String"))),
 			methodName(nameName("length")),
-			invokeName("Hello, world!", stringName(), javaName()))
+			invokeName(nativeName("Hello, world!")))
 			.assertEvalsTo(leo(nativeName(13.nativeString)))
 	}
 
 	@Test
 	fun nativeMethodInvokeParameterList() {
 		leo(
-			"java.lang.String", javaName(), className(),
+			nativeName(className(nameName("java.lang.String"))),
 			methodName(
-				nameName("substring"),
+				nameName("replaceAll"),
 				parameterName(
 					listName(ofName(className(nativeName()))),
-					plusName(
-						"java.lang.Integer", javaName(), className(),
-						fieldName(nameName("TYPE")),
-						getName(nullName(), javaName()),
-						className()),
-					plusName(
-						"java.lang.Integer", javaName(), className(),
-						fieldName(nameName("TYPE")),
-						getName(nullName(), javaName()),
-						className()))),
+					plusName(nativeName(className(nameName("java.lang.String")))),
+					plusName(nativeName(className(nameName("java.lang.String")))))),
 			invokeName(
-				objectName("Hello, world!", stringName(), javaName()),
+				objectName(nativeName("Hello, world!")),
 				parameterName(
 					listName(ofName(nativeName())),
-					plusName(7, intName(), javaName()),
-					plusName(12, intName(), javaName()))))
-			.assertEvalsTo(leo(nativeName("world".nativeString)))
+					plusName(nativeName("world")),
+					plusName(nativeName("universe")))),
+			textName())
+			.assertEvalsTo(leo("Hello, universe!"))
 	}
 }

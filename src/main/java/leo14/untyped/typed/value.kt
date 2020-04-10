@@ -18,6 +18,13 @@ val Literal.value: Value
 			is NumberLiteral -> number
 		}
 
+val Literal.nativeValue: Value
+	get() =
+		when (this) {
+			is StringLiteral -> string
+			is NumberLiteral -> number.bigDecimal
+		}
+
 val nullValue: Value = null
 inline val Value.asPair: Pair<*, *> get() = this as Pair<*, *>
 inline val Value.asString get() = this as String
