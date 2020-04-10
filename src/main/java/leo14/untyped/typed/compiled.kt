@@ -40,8 +40,8 @@ val Compiled.evaluate: Compiled get() = type.compiled(expression.evaluate)
 val Compiled.typed: Typed get() = type typed value
 
 fun Compiled.apply(literal: Literal): Compiled =
-	if (isEmpty) emptyType.plus(literal.valueTypeLine2).compiled { literal.value }
-	else type.plus(literal.valueTypeLine2).compiled { value to literal.value }
+	if (isEmpty) emptyType.plus(literal.valueTypeLine).compiled { literal.value }
+	else type.plus(literal.valueTypeLine).compiled { value to literal.value }
 
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 	null
@@ -339,7 +339,7 @@ fun Compiled.applyFunctionApply(rhs: Compiled): Compiled? =
 	}
 
 fun Compiled.append(literal: Literal): Compiled =
-	type.plus(literal.valueTypeLine2).let { newType ->
+	type.plus(literal.valueTypeLine).let { newType ->
 		if (type.isEmpty) newType.compiled(literal.nativeValue)
 		else newType.compiled(expression.doApply(literal.expression) { this to it })
 	}

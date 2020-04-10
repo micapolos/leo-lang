@@ -14,7 +14,7 @@ class TypedScriptTest {
 	@Test
 	fun primitives() {
 		emptyScope
-			.script(emptyType.plus(textTypeLine2).typed("foo"))
+			.script(emptyType.plus(textTypeLine).typed("foo"))
 			.assertEqualTo(leo("foo"))
 
 		emptyScope
@@ -22,7 +22,7 @@ class TypedScriptTest {
 			.assertEqualTo(leo(nativeName(Point(10, 20).toString())))
 
 		emptyScope
-			.script(emptyType.plus(numberTypeLine2).typed(10.bigDecimal))
+			.script(emptyType.plus(numberTypeLine).typed(10.bigDecimal))
 			.assertEqualTo(leo(10))
 	}
 
@@ -44,8 +44,8 @@ class TypedScriptTest {
 	@Test
 	fun choice() {
 		val type = emptyType
-			.plus(textTypeLine2)
-			.or(emptyType.plus(numberTypeLine2))
+			.plus(textTypeLine)
+			.or(emptyType.plus(numberTypeLine))
 
 		emptyScope
 			.script(type.typed(true rhsSelected 123.bigDecimal))
@@ -60,11 +60,11 @@ class TypedScriptTest {
 	fun structures() {
 		val type = emptyType
 			.plus("circle" fieldTo emptyType
-				.plus("radius" fieldTo emptyType.plus(numberTypeLine2))
+				.plus("radius" fieldTo emptyType.plus(numberTypeLine))
 				.plus("center" fieldTo emptyType
 					.plus("point" fieldTo emptyType
-						.plus("x" fieldTo emptyType.plus(numberTypeLine2))
-						.plus("y" fieldTo emptyType.plus(numberTypeLine2)))))
+						.plus("x" fieldTo emptyType.plus(numberTypeLine))
+						.plus("y" fieldTo emptyType.plus(numberTypeLine)))))
 
 		emptyScope
 			.script(type.typed(10.bigDecimal to (20.bigDecimal to 30.bigDecimal)))
@@ -78,7 +78,7 @@ class TypedScriptTest {
 			.assertEqualTo(leo())
 
 		emptyScope
-			.script(emptyType.plus(textTypeLine2).recursive.toType.typed("foo"))
+			.script(emptyType.plus(textTypeLine).recursive.toType.typed("foo"))
 			.assertEqualTo(leo("foo"))
 
 		emptyType
@@ -104,8 +104,8 @@ class TypedScriptTest {
 	@Test
 	fun function() {
 		emptyScope.script(
-			emptyType.plus(numberTypeLine2)
-				.functionTo(emptyType.plus(textTypeLine2))
+			emptyType.plus(numberTypeLine)
+				.functionTo(emptyType.plus(textTypeLine))
 				.type
 				.typed(fn { it.toString() }))
 			.assertEqualTo(leo(functionName(numberName(nativeName()), doingName(textName(nativeName())))))
@@ -125,28 +125,28 @@ class TypedScriptTest {
 	@Test
 	fun anything() {
 		emptyScope
-			.script(anythingType.typed(textType2.typed("foo")))
+			.script(anythingType.typed(textType.typed("foo")))
 			.assertEqualTo(leo("foo"))
 	}
 
 	@Test
 	fun repeating_empty() {
 		emptyScope
-			.script(textType2.repeating.toType.typed(null))
+			.script(textType.repeating.toType.typed(null))
 			.assertEqualTo(leo())
 	}
 
 	@Test
 	fun repeating_single() {
 		emptyScope
-			.script(textType2.repeating.toType.typed(null to "foo"))
+			.script(textType.repeating.toType.typed(null to "foo"))
 			.assertEqualTo(leo("foo"))
 	}
 
 	@Test
 	fun repeating_many() {
 		emptyScope
-			.script(textType2.repeating.toType.typed(null to "bar" to "foo"))
+			.script(textType.repeating.toType.typed(null to "bar" to "foo"))
 			.assertEqualTo(leo("bar", "foo"))
 	}
 
@@ -154,9 +154,9 @@ class TypedScriptTest {
 	fun repeating_withTail() {
 		emptyScope
 			.script(
-				textType2
+				textType
 					.repeating.toType
-					.plus(numberTypeLine2)
+					.plus(numberTypeLine)
 					.typed(null to "bar" to "foo" to 123.bigDecimal))
 			.assertEqualTo(leo("bar", "foo", 123))
 	}

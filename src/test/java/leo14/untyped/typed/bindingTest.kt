@@ -20,12 +20,12 @@ class BindingTest {
 	fun compiled_bindingOrNull() {
 		type(
 			"x" lineTo emptyType,
-			isName lineTo numberType2)
+			isName lineTo numberType)
 			.compiled(123)
 			.bindingOrNull!!
 			.run {
 				keyType.assertEqualTo(type("x" lineTo emptyType))
-				valueCompiled.assertEqualTo(numberType2.compiled(123))
+				valueCompiled.assertEqualTo(numberType.compiled(123))
 			}
 	}
 }

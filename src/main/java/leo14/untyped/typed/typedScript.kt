@@ -91,7 +91,7 @@ fun Scope.scriptField(field: TypeField, value: Value, recursiveOrNull: TypeRecur
 	field.name scriptFieldTo script(field.rhs, value, recursiveOrNull)
 
 fun TypeLine.textScriptLineOrNull(value: Value): ScriptLine? =
-	notNullIf(this == textTypeLine2) {
+	notNullIf(this == textTypeLine) {
 		line(literal(value as String))
 	}
 
@@ -102,7 +102,7 @@ val TypeLine.nativeTextScriptLineOrNull: ScriptLine?
 		}
 
 fun TypeLine.numberScriptLineOrNull(value: Value): ScriptLine? =
-	notNullIf(this == numberTypeLine2) {
+	notNullIf(this == numberTypeLine) {
 		line(literal(number(value as BigDecimal)))
 	}
 

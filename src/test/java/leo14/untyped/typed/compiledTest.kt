@@ -20,12 +20,12 @@ class CompiledTest {
 		emptyCompiled
 			.append(literal("foo"))
 			.evaluate
-			.assertEqualTo(textType2.compiled("foo"))
+			.assertEqualTo(textType.compiled("foo"))
 
 		emptyCompiled
 			.append(literal(2))
 			.evaluate
-			.assertEqualTo(numberType2.compiled(2.bigDecimal))
+			.assertEqualTo(numberType.compiled(2.bigDecimal))
 	}
 
 	@Test

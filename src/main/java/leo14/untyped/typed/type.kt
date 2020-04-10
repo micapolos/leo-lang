@@ -75,16 +75,16 @@ val TypeLine.fieldOrNull: TypeField? get() = (this as? FieldTypeLine)?.field
 val TypeLink.onlyLineOrNull: TypeLine? get() = notNullIf(lhs.isEmpty) { line }
 
 val nativeType = emptyType.plus(nativeTypeLine)
-val textTypeLine2 get() = textName lineTo nativeType
-val numberTypeLine2 get() = numberName lineTo nativeType
-val textType2 = type(textTypeLine2)
-val numberType2 = type(numberTypeLine2)
+val textTypeLine get() = textName lineTo nativeType
+val numberTypeLine get() = numberName lineTo nativeType
+val textType = type(textTypeLine)
+val numberType = type(numberTypeLine)
 
-val Literal.valueTypeLine2: TypeLine
+val Literal.valueTypeLine: TypeLine
 	get() =
 		when (this) {
-			is StringLiteral -> textTypeLine2
-			is NumberLiteral -> numberTypeLine2
+			is StringLiteral -> textTypeLine
+			is NumberLiteral -> numberTypeLine
 		}
 
 fun <R : Any> Type.matchEmpty(fn: () -> R?): R? =
@@ -114,10 +114,10 @@ fun <R : Any> Type.match(name: String, fn: () -> R?): R? =
 	}
 
 fun <R : Any> Type.matchNumber(fn: () -> R?): R? =
-	ifOrNull(this == numberType2) { fn() }
+	ifOrNull(this == numberType) { fn() }
 
 fun <R : Any> Type.matchText(fn: () -> R?): R? =
-	ifOrNull(this == textType2) { fn() }
+	ifOrNull(this == textType) { fn() }
 
 fun <R : Any> Type.matchNative(fn: () -> R?): R? =
 	ifOrNull(this == nativeType) { fn() }
