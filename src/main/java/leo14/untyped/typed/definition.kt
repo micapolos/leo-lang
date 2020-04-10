@@ -13,3 +13,9 @@ fun Definition.apply(compiled: Compiled): Compiled? =
 		is BindingDefinition -> binding.apply(compiled)
 		is RuleDefinition -> rule.apply(compiled)
 	}
+
+val Compiled.definitionOrNull: Definition?
+	get() =
+		null
+			?: bindingOrNull?.let { definition(it) }
+// TODO: Rule

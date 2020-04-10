@@ -79,7 +79,7 @@ val Compiler.apply: Compiler
 
 val Compiler.applyLibrary: Compiler?
 	get() =
-		library.apply(compiled)?.let { copy(library = it, compiled = emptyCompiled) }
+		library.applyDefinition(compiled)?.let { copy(library = it, compiled = emptyCompiled) }
 
 val Compiler.applyScope: Compiler?
 	get() =
@@ -88,3 +88,9 @@ val Compiler.applyScope: Compiler?
 val Compiler.applyStatic: Compiler
 	get() =
 		copy(compiled = compiled.apply)
+
+fun Compiler.set(compiled: Compiled): Compiler =
+	copy(compiled = compiled)
+
+fun Compiler.plus(definition: Definition): Compiler =
+	copy(library = library.plus(definition))

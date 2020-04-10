@@ -34,7 +34,7 @@ class EvalTest {
 
 	@Test
 	fun is_get() {
-		//leo("x"(), isName(123), "x"()).assertEvalsTo(leo(123))
+		leo("x"(), isName(123), "x"()).assertEvalsTo(leo(123))
 	}
 
 	@Test

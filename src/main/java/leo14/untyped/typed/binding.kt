@@ -14,8 +14,10 @@ fun Binding.apply(compiled: Compiled): Compiled? =
 
 val Compiled.bindingOrNull: Binding?
 	get() =
-		type.matchInfix(isName) { rhs ->
+		type.matchInfix(isName) {
 			matchStatic {
-				binding(this, rhs.compiled(expression))
+				this@bindingOrNull.linkOrNull?.line?.rhsOrNull?.let { rhs ->
+					binding(this, rhs)
+				}
 			}
 		}

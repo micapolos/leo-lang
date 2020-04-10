@@ -31,7 +31,7 @@ fun anythingCompiled(expression: Expression) = CompiledAnything(expression)
 inline fun Compiled.apply(rhs: Compiled, type: Type, crossinline fn: Value.(Value) -> Value): Compiled =
 	type.compiled(expression.doApply(rhs.expression, fn))
 
-val emptyCompiled: Compiled = emptyType.compiled { null }
+val emptyCompiled: Compiled = emptyType.compiled(null)
 val nothingCompiled = nothingType.compiled { null!! }
 val Compiled.isEmpty get() = type.isEmpty
 val Compiled.value: Value get() = expression.value
@@ -346,7 +346,7 @@ fun Compiled.append(literal: Literal): Compiled =
 
 fun Compiled.append(begin: Begin, rhs: Compiled): Compiled =
 	type.plus(begin.string lineTo rhs.type).let { newType ->
-		if (type.isEmpty) newType.compiled(rhs.expression)
+		if (type.isStatic) newType.compiled(rhs.expression)
 		else newType.compiled(expression.doApply(rhs.expression) { this to it })
 	}
 
@@ -435,3 +435,9 @@ fun CompiledField.select(name: String): Compiled? =
 
 fun Compiler.append(literal: Literal): Compiler =
 	copy(compiled = compiled.append(literal))
+
+val CompiledLine.rhsOrNull: Compiled?
+	get() =
+		typeLine.fieldOrNull?.let { field ->
+			field.rhs.compiled(expression)
+		}
