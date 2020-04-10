@@ -1,7 +1,10 @@
 package leo14.untyped.typed.lambda
 
 import leo.base.assertEqualTo
-import leo14.lambda2.*
+import leo14.lambda2.invoke
+import leo14.lambda2.nil
+import leo14.lambda2.pair
+import leo14.lambda2.value
 import leo14.untyped.className
 import leo14.untyped.fieldName
 import leo14.untyped.nameName
@@ -25,7 +28,7 @@ class NativeTest {
 	@Test
 	fun nativeClassNameText() {
 		type(nativeName lineTo type(className lineTo type(nameName lineTo textType)))
-			.compiled(value("java.lang.String").functionize)
+			.compiled(value("java.lang.String"))
 			.applyNativeClassNameText!!
 			.eval
 			.assertEqualTo(type(className lineTo nativeType).compiled(value(java.lang.String::class.java)))
