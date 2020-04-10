@@ -1,8 +1,11 @@
 package leo14.untyped.typed.lambda
 
 import leo.base.ifOrNull
+import leo14.*
+import leo14.Number
 import leo14.lambda2.*
 import leo14.untyped.typed.*
+import java.math.BigDecimal
 
 data class Compiled(val type: Type, val term: Term)
 data class CompiledLink(val lhs: Compiled, val rhs: CompiledLine)
@@ -13,7 +16,18 @@ fun Type.compiled(term: Term) = Compiled(this, term)
 infix fun Compiled.linkTo(line: CompiledLine) = CompiledLink(this, line)
 infix fun TypeLine.compiled(term: Term) = CompiledLine(this, term)
 infix fun TypeField.compiled(term: Term) = CompiledField(this, term)
+
 val emptyCompiled = emptyType.compiled(nil)
+val String.compiled get() = textType.compiled(value(this))
+val BigDecimal.compiled get() = numberType.compiled(value(this))
+val Int.compiled get() = bigDecimal.compiled
+val Double.compiled get() = bigDecimal.compiled
+val Number.compiled get() = bigDecimal.compiled
+val Literal.compiled
+	get() = when (this) {
+		is StringLiteral -> string.compiled
+		is NumberLiteral -> number.compiled
+	}
 
 fun Compiled.plus(line: CompiledLine): Compiled =
 	type.plus(line.typeLine).compiled(add(term, type.isStatic, line.term, line.typeLine.isStatic))

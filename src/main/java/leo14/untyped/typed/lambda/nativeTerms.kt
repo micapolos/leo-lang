@@ -8,3 +8,7 @@ val Term.nativeStringClassTerm
 	get() =
 		valueApply { stringClass }
 
+fun Term.nativeClassField(rhs: Term): Term =
+	valueApply(rhs) { rhs ->
+		(this as Class<*>).getField(rhs as String)
+	}

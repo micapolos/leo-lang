@@ -3,6 +3,7 @@ package leo14.untyped.typed.lambda
 import leo.java.lang.typeClassOrNull
 import leo14.lambda2.Term
 import leo14.untyped.className
+import leo14.untyped.fieldName
 import leo14.untyped.nameName
 import leo14.untyped.nativeName
 import leo14.untyped.typed.lineTo
@@ -31,3 +32,19 @@ fun Compiled.matchNativeClassNameText(termFn: Term.() -> Term): Compiled? =
 		}
 	}
 
+fun Compiled.matchNativeClassField(fn: Term.(Term) -> Term): Compiled? =
+	matchInfix(fieldName) { field ->
+		matchPrefix(className) {
+			matchNative {
+				let { classTerm ->
+					field.matchPrefix(nameName) {
+						matchText {
+							let { fieldNameTerm ->
+								type(fieldName lineTo nativeType).compiled(classTerm.fn(fieldNameTerm))
+							}
+						}
+					}
+				}
+			}
+		}
+	}
