@@ -1,14 +1,7 @@
 package leo14.untyped.typed
 
 import leo.base.bitCount
-import leo.base.orNullIf
 import kotlin.math.max
-
-const val maxBitCount = 64
-
-val Int.asBitCountOrNull: Int?
-	get() =
-		orNullIf { this > 64 }
 
 val Type.bitCountOrNull: Int?
 	get() =
@@ -19,7 +12,7 @@ val Type.bitCountOrNull: Int?
 			is LinkType -> link.bitCountOrNull
 			is AlternativeType -> alternative.bitCountOrNull
 			is FunctionType -> null
-			is RepeatingType -> repeating.bitCountOrNull
+			is RepeatingType -> null
 			is RecursiveType -> null
 			RecurseType -> null
 		}
@@ -28,7 +21,7 @@ val TypeLink.bitCountOrNull: Int?
 	get() =
 		lhs.bitCountOrNull?.let { lhsBitCount ->
 			line.bitCountOrNull?.let { lineBitCount ->
-				lhsBitCount.plus(lineBitCount).asBitCountOrNull
+				lhsBitCount.plus(lineBitCount)
 			}
 		}
 
@@ -46,7 +39,7 @@ val TypeField.intBitCountOrNull: Int?
 
 val TypeAlternative.bitCountOrNull: Int?
 	get() =
-		maxAlternativeBitCountOrNull?.plus(alternativeCount.bitCount)?.asBitCountOrNull
+		maxAlternativeBitCountOrNull?.plus(alternativeCount.bitCount)
 
 val Type.alternativeCount: Int
 	get() =
@@ -66,8 +59,3 @@ val TypeAlternative.maxAlternativeBitCountOrNull: Int?
 				max(rhsBitCount, lhsBitCount)
 			}
 		}
-
-val TypeRepeating.bitCountOrNull: Int?
-	get() =
-		if (type.bitCountOrNull == 0) maxBitCount
-		else null
