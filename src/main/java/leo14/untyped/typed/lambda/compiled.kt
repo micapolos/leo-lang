@@ -1,13 +1,20 @@
 package leo14.untyped.typed.lambda
 
+import leo.base.fold
 import leo.base.ifOrNull
 import leo14.*
-import leo14.Number
 import leo14.lambda2.*
+import leo14.untyped.leoString
 import leo14.untyped.typed.*
 import java.math.BigDecimal
 
-data class Compiled(val type: Type, val term: Term)
+data class Compiled(val type: Type, val term: Term) {
+	override fun toString() = script(
+		"compiled" lineTo script(
+			"type" lineTo type.script,
+			"term" lineTo term.script)).leoString
+}
+
 data class CompiledLink(val lhs: Compiled, val rhs: CompiledLine)
 data class CompiledLine(val typeLine: TypeLine, val term: Term)
 data class CompiledField(val typeField: TypeField, val term: Term)
@@ -16,46 +23,60 @@ fun Type.compiled(term: Term) = Compiled(this, term)
 infix fun Compiled.linkTo(line: CompiledLine) = CompiledLink(this, line)
 infix fun TypeLine.compiled(term: Term) = CompiledLine(this, term)
 infix fun TypeField.compiled(term: Term) = CompiledField(this, term)
+infix fun String.lineTo(compiled: Compiled): CompiledLine =
+	this.lineTo(compiled.type).compiled(compiled.term)
 
 val emptyCompiled = emptyType.compiled(nil)
-val String.compiled get() = textType.compiled(value(this))
-val BigDecimal.compiled get() = numberType.compiled(value(this))
-val Int.compiled get() = bigDecimal.compiled
-val Double.compiled get() = bigDecimal.compiled
-val Number.compiled get() = bigDecimal.compiled
+
+val Any?.nativeCompiledLine: CompiledLine get() = valueTerm.nativeCompiledLine
+val Any?.nativeCompiled: Compiled get() = valueTerm.nativeCompiled
+
+val Term.nativeCompiledLine: CompiledLine get() = nativeTypeLine.compiled(this)
+val Term.nativeCompiled: Compiled get() = compiled(nativeCompiledLine)
+
+val String.compiledLine: CompiledLine get() = textTypeLine.compiled(valueTerm)
+val String.compiled: Compiled get() = compiled(compiledLine)
+
+val Int.compiledLine: CompiledLine get() = bigDecimal.compiledLine
+val Int.compiled: Compiled get() = bigDecimal.compiled
+
+val BigDecimal.compiledLine: CompiledLine get() = numberTypeLine.compiled(valueTerm)
+val BigDecimal.compiled: Compiled get() = compiled(compiledLine)
+
 val Literal.compiled
 	get() = when (this) {
 		is StringLiteral -> string.compiled
-		is NumberLiteral -> number.compiled
+		is NumberLiteral -> number.bigDecimal.compiled
 	}
 
 fun Compiled.plus(line: CompiledLine): Compiled =
-	type.plus(line.typeLine).compiled(add(term, type.isStatic, line.term, line.typeLine.isStatic))
+	type.plus(line.typeLine).compiled(pair.invoke(term).invoke(line.term))
 
-fun add(lhs: Term, lhsIsStatic: Boolean, rhs: Term, rhsIsStatic: Boolean): Term =
-	if (lhsIsStatic)
-		if (rhsIsStatic) lhs
-		else rhs
-	else
-		if (rhsIsStatic) lhs
-		else pair(lhs)(rhs)
+fun compiled(vararg lines: CompiledLine): Compiled =
+	emptyCompiled.fold(lines) { plus(it) }
+
+fun compiled(name: String): Compiled =
+	compiled(name lineTo emptyCompiled)
 
 fun Compiled.matchEmpty(fn: () -> Compiled?): Compiled? =
 	ifOrNull(type.isEmpty, fn)
 
-fun Compiled.matchLink(fn: Compiled.(CompiledLine) -> Compiled?): Compiled? =
-	type.linkOrNull?.let { typeLink ->
-		if (typeLink.lhs.isStatic || typeLink.line.isStatic)
-			typeLink.lhs.compiled(term).fn(typeLink.line.compiled(term))
-		else
-			typeLink.lhs.compiled(at(1)).fn(typeLink.line.compiled(at(0)))?.let { compiled ->
-				compiled.type.compiled(fn(fn(fn(compiled.term))(at(0)(first))(at(0)(second)))(term))
-			}
+fun Compiled.updateOrNull(fn: (Compiled) -> Compiled?): Compiled? =
+	fn(type.compiled(at(0)))?.let { updated ->
+		updated.type.compiled(fn(updated.term).invoke(term))
 	}
 
-fun CompiledLine.matchField(fn: (CompiledField) -> Compiled?): Compiled? =
-	typeLine.fieldOrNull?.let { field ->
-		fn(field.compiled(term))
+val Compiled.linkOrNull: CompiledLink?
+	get() =
+		type.linkOrNull?.let { typeLink ->
+			typeLink.lhs.compiled(term.invoke(first)) linkTo typeLink.line.compiled(term.invoke(second))
+		}
+
+fun Compiled.matchLink(fn: Compiled.(CompiledLine) -> Compiled?): Compiled? =
+	updateOrNull {
+		linkOrNull?.let { link ->
+			link.lhs.fn(link.rhs)
+		}
 	}
 
 fun CompiledLine.match(name: String, fn: (Compiled) -> Compiled?): Compiled? =
@@ -95,18 +116,41 @@ fun Compiled.matchName(fn: String.() -> Compiled?): Compiled? =
 		}
 	}
 
-fun Compiled.matchNative(fn: Term.() -> Compiled?): Compiled? =
-	matchLink { line ->
+fun CompiledLine.matchText(fn: Term.() -> Compiled?): Compiled? =
+	ifOrNull(typeLine == textTypeLine) {
+		term.fn()
+	}
+
+fun CompiledLine.matchNumber(fn: Term.() -> Compiled?): Compiled? =
+	ifOrNull(typeLine == numberTypeLine) {
+		term.fn()
+	}
+
+fun CompiledLine.matchNative(fn: Term.() -> Compiled?): Compiled? =
+	ifOrNull(typeLine == nativeTypeLine) {
+		term.fn()
+	}
+
+fun Compiled.matchLine(fn: CompiledLine.() -> Compiled?): Compiled? =
+	matchLink { rhs ->
 		matchEmpty {
-			ifOrNull(line.typeLine is NativeTypeLine) {
-				line.term.fn()
-			}
+			rhs.fn()
 		}
 	}
 
 fun Compiled.matchText(fn: Term.() -> Compiled?): Compiled? =
-	ifOrNull(type == textType) {
-		term.fn()
+	matchLine {
+		matchText(fn)
+	}
+
+fun Compiled.matchNumber(fn: Term.() -> Compiled?): Compiled? =
+	matchLine {
+		matchNumber(fn)
+	}
+
+fun Compiled.matchNative(fn: Term.() -> Compiled?): Compiled? =
+	matchLine {
+		matchNative(fn)
 	}
 
 val Compiled.eval: Compiled

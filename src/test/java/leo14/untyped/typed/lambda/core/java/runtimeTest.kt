@@ -1,20 +1,14 @@
 package leo14.untyped.typed.lambda.core.java
 
 import leo.base.assertEqualTo
-import leo14.lambda2.invoke
-import leo14.lambda2.nil
-import leo14.lambda2.pair
-import leo14.lambda2.valueTerm
 import leo14.untyped.className
 import leo14.untyped.fieldName
 import leo14.untyped.nameName
 import leo14.untyped.nativeName
 import leo14.untyped.typed.lambda.compiled
 import leo14.untyped.typed.lambda.eval
-import leo14.untyped.typed.lineTo
-import leo14.untyped.typed.nativeType
-import leo14.untyped.typed.textType
-import leo14.untyped.typed.type
+import leo14.untyped.typed.lambda.lineTo
+import leo14.untyped.typed.lambda.nativeCompiled
 import java.lang.String
 import kotlin.test.Test
 
@@ -22,34 +16,33 @@ class RuntimeTest {
 	@Test
 	fun className() {
 		runtimeJavaCore
-			.apply(
-				type(nativeName lineTo type(className lineTo type("int")))
-					.compiled(nil))!!
+			.apply(compiled(nativeName lineTo compiled(className lineTo compiled("int"))))!!
 			.eval
-			.assertEqualTo(type(className lineTo nativeType).compiled(Integer.TYPE.valueTerm))
+			.assertEqualTo(compiled(className lineTo Integer.TYPE.nativeCompiled))
 	}
 
 	@Test
 	fun textClass() {
 		runtimeJavaCore
 			.apply(
-				type(nativeName lineTo type(className lineTo type(nameName lineTo textType)))
-					.compiled("java.lang.String".valueTerm))!!
+				compiled(
+					nativeName lineTo compiled(
+						className lineTo compiled(
+							nameName lineTo "java.lang.String".compiled))))!!
 			.eval
-			.assertEqualTo(type(className lineTo nativeType).compiled(String::class.java.valueTerm))
+			.assertEqualTo(compiled(className lineTo String::class.java.nativeCompiled))
 	}
 
 	@Test
 	fun classField() {
 		runtimeJavaCore
 			.apply(
-				type(
-					className lineTo nativeType,
-					fieldName lineTo type(nameName lineTo textType))
-					.compiled(pair(Integer::class.java.valueTerm)("MAX_VALUE".valueTerm)))!!
+				compiled(
+					className lineTo Integer::class.java.nativeCompiled,
+					fieldName lineTo compiled(
+						nameName lineTo "MAX_VALUE".compiled)))!!
 			.eval
 			.assertEqualTo(
-				type(fieldName lineTo nativeType)
-					.compiled(Integer::class.java.getField("MAX_VALUE").valueTerm))
+				compiled(fieldName lineTo Integer::class.java.getField("MAX_VALUE").nativeCompiled))
 	}
 }

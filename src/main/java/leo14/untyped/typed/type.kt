@@ -6,6 +6,7 @@ import leo.base.notNullIf
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
+import leo14.untyped.leoString
 import leo14.untyped.listName
 import leo14.untyped.numberName
 import leo14.untyped.textName
@@ -17,15 +18,33 @@ data class TypeRepeating(val type: Type)
 data class TypeRecursive(val type: Type)
 data class TypeOr(val type: Type)
 
-sealed class Type
+sealed class Type {
+	override fun toString() = script.leoString
+}
+
 object EmptyType : Type()
 object AnythingType : Type()
 object NothingType : Type()
-data class LinkType(val link: TypeLink) : Type()
-data class AlternativeType(val alternative: TypeAlternative) : Type()
-data class FunctionType(val function: TypeFunction) : Type()
-data class RepeatingType(val repeating: TypeRepeating) : Type()
-data class RecursiveType(val recursive: TypeRecursive) : Type()
+data class LinkType(val link: TypeLink) : Type() {
+	override fun toString() = super.toString()
+}
+
+data class AlternativeType(val alternative: TypeAlternative) : Type() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionType(val function: TypeFunction) : Type() {
+	override fun toString() = super.toString()
+}
+
+data class RepeatingType(val repeating: TypeRepeating) : Type() {
+	override fun toString() = super.toString()
+}
+
+data class RecursiveType(val recursive: TypeRecursive) : Type() {
+	override fun toString() = super.toString()
+}
+
 object RecurseType : Type()
 
 data class TypeLink(val lhs: Type, val line: TypeLine)

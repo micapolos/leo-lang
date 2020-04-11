@@ -2,10 +2,11 @@
 
 package leo14.lambda2
 
-import leo.stak.Stak
-import leo.stak.emptyStak
-import leo.stak.push
-import leo.stak.top
+import leo.base.iterate
+import leo.stak.*
+import leo13.fold
+import leo13.push
+import leo13.stack
 
 typealias ApplyFn = Thunk.(Thunk) -> Thunk?
 
@@ -24,7 +25,7 @@ val Term.thunk: Thunk get() = emptyStak<Thunk>().thunk(this)
 
 val Term.eval: Term
 	get() =
-		thunk.eval.term
+		thunk.eval.evaledTerm
 
 val Thunk.eval: Thunk
 	get() =
@@ -37,7 +38,11 @@ fun Thunk.eval(applyFn: ApplyFn): Thunk =
 	when (term) {
 		is ValueTerm -> this
 		is AbstractionTerm -> this
-		is ApplicationTerm -> stak.thunk(term.lhs).eval.apply(stak.thunk(term.rhs).eval, applyFn) ?: this
+		is ApplicationTerm -> stak.thunk(term.lhs).eval.let { lhs ->
+			stak.thunk(term.rhs).eval.let { rhs ->
+				lhs.apply(rhs, applyFn) ?: emptyStak<Thunk>().thunk(lhs.term(rhs.term))
+			}
+		}
 		is IndexTerm -> stak.top(term.index)!!
 	}
 
@@ -51,3 +56,15 @@ fun Thunk.apply(rhs: Thunk): Thunk? =
 		is ApplicationTerm -> null
 		is IndexTerm -> null
 	}
+
+val Thunk.evaledTerm: Term
+	get() =
+		term.freeVariableCount.let { count ->
+			(stak to stack<Thunk>()).iterate(count) {
+				first.unlink!!.let { pair ->
+					pair.first to second.push(pair.second)
+				}
+			}.second.let { stack ->
+				term.iterate(count) { fn(this) }.fold(stack) { invoke(it.evaledTerm) }
+			}
+		}

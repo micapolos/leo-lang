@@ -1,84 +1,114 @@
 package leo14.untyped.typed.lambda
 
 import leo.base.assertEqualTo
-import leo14.lambda2.*
+import leo14.lambda2.invoke
+import leo14.lambda2.nil
+import leo14.lambda2.pair
+import leo14.lambda2.valueTerm
 import leo14.untyped.typed.*
+import java.awt.Point
 import kotlin.test.Test
 
 class CompiledTest {
 	@Test
-	fun plus_static_static() {
-		type("foo").compiled(nil)
-			.plus("plus".lineTo(type("bar")).compiled(nil))
-			.assertEqualTo(
-				type("foo")
-					.plus("plus" lineTo type("bar"))
-					.compiled(nil))
+	fun updateOrNull() {
+		"foo".compiled
+			.updateOrNull { it }!!
+			.eval
+			.assertEqualTo("foo".compiled)
 	}
 
 	@Test
-	fun plus_static_dynamic() {
-		type("foo").compiled(nil)
-			.plus(textTypeLine.compiled(value("world!")))
-			.assertEqualTo(
-				type("foo")
-					.plus(textTypeLine)
-					.compiled(value("world!")))
+	fun linkOrNull() {
+		compiled("foo".nativeCompiledLine, "bar".nativeCompiledLine)
+			.linkOrNull!!
+			.run { lhs.plus(rhs) }
+			.eval
+			.assertEqualTo(compiled("foo".nativeCompiledLine, "bar".nativeCompiledLine))
 	}
 
 	@Test
-	fun plus_dynamic_static() {
-		textType.compiled(value("Hello, "))
-			.plus("plus".lineTo(type("bar")).compiled(nil))
+	fun textCompiled() {
+		"Hello, world!"
+			.compiledLine
+			.assertEqualTo(textTypeLine.compiled("Hello, world!".valueTerm))
+
+		"Hello, world!"
+			.compiled
+			.assertEqualTo(textType.compiled(pair.invoke(nil).invoke("Hello, world!".valueTerm)))
+	}
+
+	@Test
+	fun matchText() {
+		"Hello, world!"
+			.compiled
+			.matchText { compiled(textTypeLine.compiled(this)) }!!
+			.eval
+			.assertEqualTo("Hello, world!".compiled)
+	}
+
+	@Test
+	fun nativeCompiled() {
+		Point(10, 20)
+			.nativeCompiledLine
+			.assertEqualTo(nativeTypeLine.compiled(Point(10, 20).valueTerm))
+
+		Point(10, 20)
+			.nativeCompiled
+			.assertEqualTo(nativeType.compiled(pair.invoke(nil).invoke(Point(10, 20).valueTerm)))
+	}
+
+	@Test
+	fun matchNative() {
+		Point(10, 20)
+			.nativeCompiled
+			.matchNative {
+				nativeCompiled
+			}!!
+			.eval
+			.assertEqualTo(Point(10, 20).nativeCompiled)
+	}
+
+	@Test
+	fun matchInfix() {
+		compiled("Hello, ".compiledLine, "and" lineTo "world!".compiled)
+			.matchInfix("and") { rhs ->
+				plus("and" lineTo rhs)
+			}!!
+			.eval
+			.assertEqualTo(compiled("Hello, ".compiledLine, "and" lineTo "world!".compiled))
+	}
+
+	@Test
+	fun matchPrefix() {
+		compiled("name" lineTo "foo".compiled)
+			.matchPrefix("name") { compiled("surname" lineTo this) }!!
+			.eval
+			.assertEqualTo(compiled("surname" lineTo "foo".compiled))
+	}
+
+	@Test
+	fun compiledLines() {
+		compiled("Hello, ".compiledLine, "world!".compiledLine)
 			.assertEqualTo(
 				textType
-					.plus("plus" lineTo type("bar"))
-					.compiled(value("Hello, ")))
-	}
-
-	@Test
-	fun plus_dynamic_dynamic() {
-		textType.compiled(value("Hello, "))
-			.plus(textTypeLine.compiled(value("world!")))
-			.assertEqualTo(
-				textType
 					.plus(textTypeLine)
-					.compiled(pair(value("Hello, "))(value("world!"))))
+					.compiled(pair("Hello, ".compiled.term)("world!".compiledLine.term)))
 	}
 
 	@Test
-	fun matchLink_static_static() {
-		type("foo")
-			.plus("plus" lineTo type("bar"))
-			.compiled(nil)
-			.matchLink { line ->
-				textType.compiled(value("OK"))
-			}
-			.assertEqualTo(textType.compiled(value("OK")))
-	}
-
-	@Test
-	fun matchLink_dynamic_dynamic() {
-		textType
-			.plus(textTypeLine)
-			.compiled(value("pair"))
-			.matchLink { line ->
-				textType.compiled(value("+"))
-			}
-			.assertEqualTo(textType.compiled(fn(fn(fn(value("+")))(at(0)(first))(at(0)(second)))(value("pair"))))
+	fun matchLink() {
+		compiled("foo".nativeCompiledLine, "bar".nativeCompiledLine)
+			.matchLink { plus(it) }!!
+			.eval
+			.assertEqualTo(compiled("foo".nativeCompiledLine, "bar".nativeCompiledLine))
 	}
 
 	@Test
 	fun evaluatesOnce() {
-		val sumTerm = fn { lhs -> fn { rhs -> value(lhs.value.asString + rhs.value.asString) } }.assertEvaluatesOnce
-		textType.compiled(value("Hello, ").assertEvaluatesOnce)
-			.plus(("plus" lineTo textType).compiled(value("world!").assertEvaluatesOnce))
-			.matchInfix("plus") { rhs ->
-				textType.compiled(sumTerm(term)(rhs.term))
-			}!!
-			.term
+		compiled("Hello, ".compiledLine, "plus" lineTo "world!".compiled)
+			.matchInfix("plus") { plus("minus" lineTo it) }!!
 			.eval
-			.value
-			.assertEqualTo("Hello, world!")
+			.assertEqualTo(compiled("Hello, ".compiledLine, "minus" lineTo "world!".compiled))
 	}
 }

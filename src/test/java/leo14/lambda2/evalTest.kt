@@ -31,6 +31,35 @@ class EvalTest {
 	}
 
 	@Test
+	fun closure_depth1() {
+		fn(fn(at(1)))
+			.invoke("foo".valueTerm)
+			.eval
+			.assertEqualTo(fn(fn(at(1))).invoke("foo".valueTerm))
+	}
+
+	@Test
+	fun closure_depth2() {
+		fn(fn(fn(at(2))))
+			.invoke("foo".valueTerm)
+			.invoke("bar".valueTerm)
+			.eval
+			.assertEqualTo(
+				fn(fn(fn(at(2))))
+					.invoke("foo".valueTerm)
+					.invoke("bar".valueTerm))
+	}
+
+	@Test
+	fun closure_resolved() {
+		fn(fn(at(1)))
+			.invoke("foo".valueTerm)
+			.invoke("bar".valueTerm)
+			.eval
+			.assertEqualTo("foo".valueTerm)
+	}
+
+	@Test
 	fun func() {
 		fn { it }
 			.invoke(value(2))
@@ -46,5 +75,15 @@ class EvalTest {
 			.invoke(value(3))
 			.eval
 			.assertEqualTo(value(2))
+	}
+
+	@Test
+	fun pairAndUnpairAndRePair() {
+		fn(fn(fn(pair(at(0))(at(1))))
+			.invoke(at(0).invoke(first))
+			.invoke(at(0).invoke(second)))
+			.invoke(pair.invoke("one".valueTerm).invoke("two".valueTerm))
+			.eval
+			.assertEqualTo(pair("two".valueTerm)("one".valueTerm))
 	}
 }

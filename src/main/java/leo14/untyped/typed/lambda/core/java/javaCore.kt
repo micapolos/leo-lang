@@ -3,7 +3,6 @@ package leo14.untyped.typed.lambda.core.java
 import leo.base.notNullIf
 import leo.java.lang.typeClassOrNull
 import leo14.lambda2.valueApply
-import leo14.lambda2.valueTerm
 import leo14.untyped.className
 import leo14.untyped.fieldName
 import leo14.untyped.nameName
@@ -36,7 +35,7 @@ fun JavaCore.applyTypeClass(compiled: Compiled): Compiled? =
 		matchPrefix(className) {
 			matchName {
 				typeClassOrNull?.run {
-					type(className lineTo nativeType).compiled(typeClassFn().valueTerm)
+					compiled(className lineTo typeClassFn().nativeCompiled)
 				}
 			}
 		}
@@ -48,7 +47,7 @@ fun JavaCore.applyTextClass(compiled: Compiled): Compiled? =
 			matchPrefix(nameName) {
 				matchText {
 					let { nameTerm ->
-						type(className lineTo nativeType).compiled(nameTerm.valueApply(textClassFn))
+						compiled(className lineTo nameTerm.valueApply(textClassFn).nativeCompiled)
 					}
 				}
 			}
@@ -63,7 +62,7 @@ fun JavaCore.applyClassField(compiled: Compiled): Compiled? =
 					field.matchPrefix(nameName) {
 						matchText {
 							let { nameTerm ->
-								type(fieldName lineTo nativeType).compiled(classTerm.valueApply(nameTerm, classFieldFn))
+								compiled(fieldName lineTo classTerm.valueApply(nameTerm, classFieldFn).nativeCompiled)
 							}
 						}
 					}

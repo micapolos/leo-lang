@@ -1,7 +1,9 @@
 package leo14.lambda2
 
+import leo14.untyped.leoString
+
 sealed class Term {
-	override fun toString() = print
+	override fun toString() = script.leoString
 }
 
 data class ValueTerm(val value: Any?) : Term() {

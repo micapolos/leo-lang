@@ -26,7 +26,7 @@ fun Compiled.matchNativeClassNameText(termFn: Term.() -> Term): Compiled? =
 		matchPrefix(className) {
 			matchPrefix(nameName) {
 				matchText {
-					type(className lineTo nativeType).compiled(term.termFn())
+					compiled(className lineTo termFn().nativeCompiled)
 				}
 			}
 		}
@@ -40,7 +40,7 @@ fun Compiled.matchNativeClassField(fn: Term.(Term) -> Term): Compiled? =
 					field.matchPrefix(nameName) {
 						matchText {
 							let { fieldNameTerm ->
-								type(fieldName lineTo nativeType).compiled(classTerm.fn(fieldNameTerm))
+								compiled(fieldName lineTo classTerm.fn(fieldNameTerm).nativeCompiled)
 							}
 						}
 					}
