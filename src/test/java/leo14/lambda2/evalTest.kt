@@ -8,8 +8,8 @@ import kotlin.test.assertFails
 class EvalTest {
 	@Test
 	fun evaluatesOnce() {
-		val term = value(123).assertEvaluatesOnce
-		term.eval.assertEqualTo(value(123))
+		val term = 123.valueTerm.assertEvaluatesOnce
+		term.eval.assertEqualTo(123.valueTerm)
 		assertFails { term.eval }
 	}
 
