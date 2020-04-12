@@ -1,11 +1,10 @@
 package leo14.untyped.typed.lambda.sandbox
 
-import leo14.untyped.dsl2.java
 import leo14.untyped.dsl2.main_
-import leo14.untyped.dsl2.text
+import leo14.untyped.dsl2.nothing
 
 fun main() {
 	main_ {
-		text("foo").java
+		nothing
 	}
 }
