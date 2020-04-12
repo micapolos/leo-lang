@@ -49,6 +49,13 @@ class BlockTest {
 		zip(seq(1, 2), seq("a")).assertContains(1 to "a", 2 to null)
 		zip(seq(1, 2), seq("a", "b")).assertContains(1 to "a", 2 to "b")
 	}
+
+	@Test
+	fun takeOrNull() {
+		seq(1, 2, 3).takeOrNull(0).assertContains()
+		seq(1, 2, 3).takeOrNull(2).assertContains(1, 2)
+		seq(1, 2, 3).takeOrNull(5).assertContains(1, 2, 3, null, null)
+	}
 }
 
 fun <T> Seq<T>.assertContains(vararg items: T) {

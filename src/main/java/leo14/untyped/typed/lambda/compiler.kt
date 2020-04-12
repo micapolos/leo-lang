@@ -86,5 +86,5 @@ val Compiler.compiledTyped: Typed
 			typed.type.typed(
 				typed.term
 					.iterate(freeVariableCount) { fn(this) }
-					.fold(library.scope.entryStak.seq.map { typed.term }.unsafeTake(freeVariableCount).reverse) { invoke(it) })
+					.fold(library.scope.entryStak.seq.map { typed.term }.takeOrNull(freeVariableCount).reverse) { invoke(it!!) })
 		}
