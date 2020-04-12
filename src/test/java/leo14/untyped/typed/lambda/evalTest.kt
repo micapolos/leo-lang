@@ -5,14 +5,14 @@ import leo14.Script
 import leo14.untyped.dsl2.*
 import kotlin.test.Test
 
-fun Script.assertEvals(f: F) =
+fun Script.testGives_(f: F) =
 	eval.assertEqualTo(script_(f))
 
 class EvalTest {
 	@Test
 	fun literals() {
-		script_ { number(10) }.assertEvals { number(10) }
-		script_ { text("foo") }.assertEvals { text("foo") }
+		script_ { number(10) }.testGives_ { number(10) }
+		script_ { text("foo") }.testGives_ { text("foo") }
 	}
 
 	@Test
@@ -22,7 +22,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(20) }
 			}
-		}.assertEvals {
+		}.testGives_ {
 			point {
 				x { number(10) }
 				y { number(20) }
@@ -37,7 +37,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(20) }
 			}.x
-		}.assertEvals {
+		}.testGives_ {
 			x { number(10) }
 		}
 
@@ -46,7 +46,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(20) }
 			}.y
-		}.assertEvals {
+		}.testGives_ {
 			y { number(20) }
 		}
 	}
@@ -58,7 +58,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(20) }
 			}.center
-		}.assertEvals {
+		}.testGives_ {
 			center {
 				point {
 					x { number(10) }
