@@ -4,6 +4,6 @@ import leo14.untyped.dsl2.*
 
 fun main() =
 	main_ {
-		text("java.awt.Poin").name.class_.java
-			.field { text("x").name }
+		text("java.awt.Point").name.class_.java
+		field { text("x").name }
 	}
