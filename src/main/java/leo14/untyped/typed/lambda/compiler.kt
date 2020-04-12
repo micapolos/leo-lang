@@ -1,12 +1,12 @@
 package leo14.untyped.typed.lambda
 
-import leo.base.fold
-import leo.base.ifOrNull
-import leo.base.reverse
+import leo.base.*
 import leo.stak.reverseStack
+import leo.stak.seq
 import leo13.fold
 import leo14.*
 import leo14.lambda2.fn
+import leo14.lambda2.freeVariableCount
 import leo14.lambda2.invoke
 import leo14.untyped.isName
 import leo14.untyped.leoString
@@ -65,17 +65,26 @@ fun Compiler.plusNormalized(field: ScriptField): Compiler =
 fun Compiler.plusIs(field: ScriptField): Compiler? =
 	ifOrNull(field.string == isName) {
 		typed.staticTypeOrNull?.let { type ->
-			library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).typed.let { typed ->
+			library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).compiledTyped.let { typed ->
 				library.plus(type entryTo typed).compiler(emptyTyped)
 			}
 		}
 	}
 
 fun Compiler.plusField(field: ScriptField): Compiler =
-	plus(field.string lineTo library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).typed)
+	plus(field.string lineTo library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).compiledTyped)
 
 fun Compiler.plus(line: TypedLine): Compiler =
 	library.applyCompiler(typed.plus(line))
 
 fun Compiler.set(typed: Typed): Compiler =
 	copy(typed = typed)
+
+val Compiler.compiledTyped: Typed
+	get() =
+		typed.term.freeVariableCount.let { freeVariableCount ->
+			typed.type.typed(
+				typed.term
+					.iterate(freeVariableCount) { fn(this) }
+					.fold(library.scope.entryStak.seq.map { typed.term }.unsafeTake(freeVariableCount).reverse) { invoke(it) })
+		}

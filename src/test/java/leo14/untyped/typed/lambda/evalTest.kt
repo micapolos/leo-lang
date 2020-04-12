@@ -1,5 +1,6 @@
 package leo14.untyped.typed.lambda
 
+import leo14.bigDecimal
 import leo14.untyped.dsl2.*
 import kotlin.test.Test
 
@@ -10,10 +11,11 @@ class EvalTest {
 		script_ { text("foo") }.gives_ { text("foo") }
 	}
 
-//	@Test
-//	fun literalJava() {
-//		script_ { text("foo").java }.gives_ { this }
-//	}
+	@Test
+	fun literalJava() {
+		script_ { text("foo").java }.gives_ { java_("foo") }
+		script_ { number(123).java }.gives_ { java_(123.bigDecimal) }
+	}
 
 	@Test
 	fun structs() {
@@ -92,6 +94,38 @@ class EvalTest {
 				x { number }
 				y { number }
 			}
+		}
+	}
+
+	@Test
+	fun is_() {
+		script_ {
+			x.is_ { number(123) }
+		}.gives_ {
+			nothing_
+		}
+	}
+
+	@Test
+	fun manyIs() {
+		script_ {
+			x.is_ { number(123) }
+			y.is_ { number(124) }
+			z.is_ { number(125) }
+		}.gives_ {
+			nothing_
+		}
+	}
+
+	@Test
+	fun manyIsAndGet() {
+		script_ {
+			x.is_ { number(123) }
+			y.is_ { number(124) }
+			z.is_ { number(125) }
+			y
+		}.gives_ {
+			number(124)
 		}
 	}
 }

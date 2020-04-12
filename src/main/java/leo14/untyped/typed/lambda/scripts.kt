@@ -11,5 +11,5 @@ fun eval_(f: F) {
 val Script.eval: Script
 	get() =
 		emptyCompiler.plus(this).let { compiler ->
-			compiler.typed.eval.script(compiler.library.scope)
+			compiler.compiledTyped.eval.script(compiler.library.scope)
 		}

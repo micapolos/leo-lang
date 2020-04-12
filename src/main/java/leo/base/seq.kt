@@ -227,6 +227,14 @@ fun <V> repeatSeqNodeOrNull(value: V, count: Int): SeqNode<V>? =
 		value.then(repeatSeq(value, count.dec()))
 	}
 
+fun <V> Seq<V>.unsafeTake(count: Int): Seq<V> =
+	seq {
+		if (count == 0) null
+		else nodeOrNull!!.run {
+			first then remaining.unsafeTake(count.dec())
+		}
+	}
+
 fun <V> Seq<V>.mapFirst(fn: V.() -> V): Seq<V> =
 	Seq {
 		nodeOrNull?.let { node ->
