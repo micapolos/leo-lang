@@ -1,6 +1,7 @@
 package leo14.untyped.typed.lambda
 
 import leo.base.assertEqualTo
+import leo.base.assertNull
 import leo14.lambda2.invoke
 import leo14.lambda2.nil
 import leo14.lambda2.pair
@@ -116,8 +117,12 @@ class CompiledTest {
 	fun functions() {
 		numberType
 			.does(type(numberTypeLine, textTypeLine)) { plus("done".compiledLine) }
-			.invoke(123.compiled)!!
-			.eval
-			.assertEqualTo(compiled(123.compiledLine, "done".compiledLine))
+			.run {
+				invokeOrNull(123.compiled)!!
+					.eval
+					.assertEqualTo(compiled(123.compiledLine, "done".compiledLine))
+
+				invokeOrNull("123".compiled).assertNull
+			}
 	}
 }
