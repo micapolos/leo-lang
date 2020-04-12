@@ -10,6 +10,11 @@ class EvalTest {
 		script_ { text("foo") }.gives_ { text("foo") }
 	}
 
+//	@Test
+//	fun literalJava() {
+//		script_ { text("foo").java }.gives_ { this }
+//	}
+
 	@Test
 	fun structs() {
 		script_ {

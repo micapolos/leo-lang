@@ -131,4 +131,9 @@ class TypedTest {
 		"foo".typed.make("name")
 			.assertEqualTo(typed("name" lineTo "foo".typed))
 	}
+
+	@Test
+	fun numberJava() {
+		typed("java" lineTo 10.typed).applyGet!!.eval.assertEqualTo(10.typed)
+	}
 }

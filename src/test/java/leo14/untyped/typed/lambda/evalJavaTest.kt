@@ -18,7 +18,7 @@ class EvalJavaTest {
 		script_ {
 			missing.class_.java
 		}.gives_ {
-			missing.class_.java
+			java { class_ { missing } }
 		}
 	}
 
