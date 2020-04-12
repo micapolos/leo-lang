@@ -12,13 +12,16 @@ fun <V, R> V?.ifNull(fn: () -> R): R? =
 	if (this == null) fn()
 	else null
 
+fun <V : Any> V.notNullIf(boolean: Boolean): V? =
+	if (boolean) this else null
+
 fun <V : Any> V.orNullIf(boolean: Boolean): V? =
 	if (boolean) null else this
 
 fun <V : Any> V.orNullIf(fn: V.() -> Boolean): V? =
 	if (fn()) null else this
 
-fun <V: Any> V?.orIfNull(fn: () -> V) =
+fun <V : Any> V?.orIfNull(fn: () -> V) =
 	this ?: fn()
 
 fun <R, V : Any> R.updateIfNotNull(valueOrNull: V?, fn: R.(V) -> R): R =

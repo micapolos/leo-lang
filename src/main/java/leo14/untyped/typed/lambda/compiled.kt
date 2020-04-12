@@ -2,6 +2,7 @@ package leo14.untyped.typed.lambda
 
 import leo.base.fold
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo14.*
 import leo14.lambda2.*
 import leo14.untyped.leoString
@@ -15,7 +16,7 @@ data class Compiled(val type: Type, val term: Term) {
 			"term" lineTo term.script)).leoString
 }
 
-data class CompiledLink(val lhs: Compiled, val rhs: CompiledLine)
+data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
 data class CompiledLine(val typeLine: TypeLine, val term: Term)
 data class CompiledField(val typeField: TypeField, val term: Term)
 
@@ -72,10 +73,24 @@ val Compiled.linkOrNull: CompiledLink?
 			typeLink.lhs.compiled(term.invoke(first)) linkTo typeLink.line.compiled(term.invoke(second))
 		}
 
+val CompiledLink.onlyLineOrNull: CompiledLine?
+	get() =
+		notNullIf(lhs.type.isEmpty) { line }
+
+val CompiledLine.fieldOrNull: CompiledField?
+	get() =
+		typeLine.fieldOrNull?.let { typeField ->
+			typeField.compiled(term)
+		}
+
+val CompiledField.rhs: Compiled?
+	get() =
+		typeField.rhs.compiled(term)
+
 fun Compiled.matchLink(fn: Compiled.(CompiledLine) -> Compiled?): Compiled? =
 	updateOrNull {
 		linkOrNull?.let { link ->
-			link.lhs.fn(link.rhs)
+			link.lhs.fn(link.line)
 		}
 	}
 

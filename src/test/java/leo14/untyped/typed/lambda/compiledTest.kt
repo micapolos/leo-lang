@@ -22,7 +22,7 @@ class CompiledTest {
 	fun linkOrNull() {
 		compiled("foo".nativeCompiledLine, "bar".nativeCompiledLine)
 			.linkOrNull!!
-			.run { lhs.plus(rhs) }
+			.run { lhs.plus(line) }
 			.eval
 			.assertEqualTo(compiled("foo".nativeCompiledLine, "bar".nativeCompiledLine))
 	}
