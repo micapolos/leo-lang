@@ -128,4 +128,30 @@ class EvalTest {
 			number(124)
 		}
 	}
+
+	@Test
+	fun is_staticType() {
+		script_ {
+			number.is_ { result }
+			number
+		}.gives_ {
+			result
+		}
+
+		script_ {
+			number.is_ { result }
+			number(123)
+		}.gives_ {
+			number(123)
+		}
+	}
+
+	@Test
+	fun is_dynamicType() {
+		script_ {
+			number(123).is_ { result }
+		}.gives_ {
+			number(123).is_ { result }
+		}
+	}
 }

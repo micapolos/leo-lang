@@ -64,7 +64,7 @@ fun Compiler.plusNormalized(field: ScriptField): Compiler =
 
 fun Compiler.plusIs(field: ScriptField): Compiler? =
 	ifOrNull(field.string == isName) {
-		typed.staticTypeOrNull?.let { type ->
+		typed.staticStaticTypeOrNull?.let { type ->
 			library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).compiledTyped.let { typed ->
 				library.plus(type entryTo typed).compiler(emptyTyped)
 			}

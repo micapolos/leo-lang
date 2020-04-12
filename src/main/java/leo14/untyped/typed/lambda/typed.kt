@@ -221,3 +221,10 @@ val Typed.staticTypeOrNull: Type?
 		notNullIf(type.isStatic) {
 			type.script.type
 		}
+
+// TODO: Find better naming
+val Typed.staticStaticTypeOrNull: Type?
+	get() =
+		notNullIf(type.isStatic) {
+			type.script.staticType
+		}
