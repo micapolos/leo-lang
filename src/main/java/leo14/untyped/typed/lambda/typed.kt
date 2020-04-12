@@ -60,6 +60,10 @@ val Literal.typedLine: TypedLine
 		is NumberLiteral -> number.bigDecimal.typedLine
 	}
 
+val Literal.staticTypedLine: TypedLine
+	get() =
+		LiteralTypeLine(this).typed(nil)
+
 fun Typed.plus(line: TypedLine): Typed =
 	type.plus(line.typeLine).typed(pair.invoke(term).invoke(line.term))
 

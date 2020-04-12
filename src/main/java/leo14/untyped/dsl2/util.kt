@@ -1,11 +1,10 @@
 package leo14.untyped.dsl2
 
+import leo.base.println
 import leo.base.runWith
 import leo14.*
-import leo14.untyped.Reader
-import leo14.untyped.Resolver
-import leo14.untyped.emptyReader
-import leo14.untyped.rootResolverOrNull
+import leo14.untyped.*
+import leo14.untyped.typed.lambda.eval
 
 fun X.number(int: Int) = x(leo14.token(leo14.literal(int)))
 fun X.number(double: Double) = x(leo14.token(leo14.literal(double)))
@@ -27,6 +26,10 @@ fun <T> Reducer<T, Token>.read(f: F): Reducer<T, Token> =
 
 fun script_(f: F): Script =
 	emptyFragment.tokenReducer.read(f).state.script
+
+fun main_(f: F) {
+	script_(f).eval.leoString.println
+}
 
 val Fragment.tokenReducer: Reducer<Fragment, Token>
 	get() =

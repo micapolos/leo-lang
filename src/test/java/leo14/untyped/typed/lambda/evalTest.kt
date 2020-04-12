@@ -62,4 +62,31 @@ class EvalTest {
 			}
 		}
 	}
+
+	@Test
+	fun type() {
+		script_ {
+			number(10).type
+		}.gives_ {
+			number
+		}
+
+		script_ {
+			text("foo").type
+		}.gives_ {
+			text
+		}
+
+		script_ {
+			point {
+				x { number(10) }
+				y { number(10) }
+			}.type
+		}.gives_ {
+			point {
+				x { number }
+				y { number }
+			}
+		}
+	}
 }
