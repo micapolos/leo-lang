@@ -178,6 +178,14 @@ fun Compiled.matchNative(fn: Term.() -> Compiled?): Compiled? =
 		matchNative(fn)
 	}
 
+fun CompiledLine.matchName(fn: (String) -> Compiled?): Compiled? =
+	fieldOrNull?.matchName(fn)
+
+fun CompiledField.matchName(fn: (String) -> Compiled?): Compiled? =
+	ifOrNull(typeField.rhs.isEmpty) {
+		fn(typeField.name)
+	}
+
 val Compiled.eval: Compiled
 	get() =
 		type.compiled(term.eval)

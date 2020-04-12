@@ -2,7 +2,7 @@ package leo14.untyped.typed.lambda
 
 import leo14.lambda2.value
 
-val Compiled.apply: Compiled?
+val Compiled.nativeApply: Compiled?
 	get() =
 		null
 			?: applyNativeClassName
