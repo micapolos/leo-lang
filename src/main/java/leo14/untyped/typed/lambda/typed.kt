@@ -216,15 +216,12 @@ fun Typed.updateTerm(fn: Term.() -> Term): Typed =
 fun Typed.make(name: String): Typed? =
 	typed(name lineTo this)
 
-val Typed.staticTypeOrNull: Type?
+val Typed.staticScriptOrNull: Script?
 	get() =
 		notNullIf(type.isStatic) {
-			type.script.type
+			type.script
 		}
 
-// TODO: Find better naming
-val Typed.staticStaticTypeOrNull: Type?
+val Typed.staticTypeOrNull: Type?
 	get() =
-		notNullIf(type.isStatic) {
-			type.script.staticType
-		}
+		staticScriptOrNull?.type
