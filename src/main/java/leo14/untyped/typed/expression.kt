@@ -99,4 +99,4 @@ val Expression.numberString: Expression
 
 val Expression.array: Expression
 	get() =
-		doApply { listAsArray } // TODO: This works only for constant arrays
+		doApply { valueListAsArray } // TODO: This works only for constant arrays

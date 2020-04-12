@@ -35,7 +35,7 @@ fun JavaCore.applyTypeClass(typed: Typed): Typed? =
 		matchPrefix(className) {
 			matchName {
 				typeClassOrNull?.run {
-					typed(className lineTo typeClassFn().javaTyped)
+					typed(className lineTo typeClassFn().valueJavaTyped)
 				}
 			}
 		}

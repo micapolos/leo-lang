@@ -28,11 +28,11 @@ class AccessTest {
 			"this" lineTo typed(
 				10.typedLine,
 				"foo".typedLine,
-				Point(10, 20).javaTypedLine))
+				Point(10, 20).valueJavaTypedLine))
 			.run {
 				get(numberName)!!.eval.assertEqualTo(10.typed)
 				get(textName)!!.eval.assertEqualTo("foo".typed)
-				get(javaName)!!.eval.assertEqualTo(Point(10, 20).javaTyped)
+				get(javaName)!!.eval.assertEqualTo(Point(10, 20).valueJavaTyped)
 			}
 	}
 }

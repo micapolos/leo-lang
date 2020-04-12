@@ -118,7 +118,7 @@ val Compiled.applyNativeNull: Compiled?
 val Compiled.applyArrayJavaList: Compiled?
 	get() =
 		type.matchPrefix(arrayName) {
-			matchPrefix(javaName) {
+			matchPrefix(valueJavaName) {
 				matchPrefix(listName) {
 					matchRepeating {
 						matchLine {
@@ -149,7 +149,7 @@ val Compiled.applyNativeConstructorInvokeParameterList: Compiled?
 							matchRepeating {
 								matchJava {
 									linkApply(javaType) { rhs ->
-										rhs.listAsArray.let { array ->
+										rhs.valueListAsArray.let { array ->
 											(this as Constructor<*>).newInstance(*array)
 										}
 									}
@@ -188,7 +188,7 @@ val Compiled.applyNativeMethodInvokeParameterList: Compiled?
 											val method = first as Method
 											val rhs = second as Pair<*, *>
 											val object_ = rhs.first
-											val args = rhs.second.listAsArray
+											val args = rhs.second.valueListAsArray
 											method.invoke(object_, *args)
 										})
 									}
@@ -263,7 +263,7 @@ val Compiled.applyClassNativeConstructorParameterList: Compiled?
 							matchPrefix(className) {
 								matchJava {
 									linkApply(type(constructorName lineTo javaType)) { rhs ->
-										rhs.listAsArray.let { array ->
+										rhs.valueListAsArray.let { array ->
 											(this as Class<*>).getConstructor(*((array.toList() as List<Class<*>>).toTypedArray()))
 										}
 									}
@@ -307,7 +307,7 @@ val Compiled.applyClassNativeMethodParameterList: Compiled?
 												val class_ = first as Class<*>
 												val rhs = second as Pair<*, *>
 												val name = rhs.first as String
-												val types = (rhs.second.listAsArray.asArray.toList() as List<Class<*>>).toTypedArray()
+												val types = (rhs.second.valueListAsArray.asArray.toList() as List<Class<*>>).toTypedArray()
 												class_.getMethod(name, *types)
 											})
 										}

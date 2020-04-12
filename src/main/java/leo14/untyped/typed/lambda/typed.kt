@@ -6,6 +6,8 @@ import leo.base.notNullIf
 import leo14.*
 import leo14.lambda2.*
 import leo14.untyped.leoString
+import leo14.untyped.numberName
+import leo14.untyped.textName
 import leo14.untyped.typed.*
 import java.math.BigDecimal
 
@@ -29,19 +31,19 @@ infix fun String.lineTo(typed: Typed): TypedLine =
 
 val emptyTyped = emptyType.typed(nil)
 
-val Any?.javaTypedLine: TypedLine get() = valueTerm.javaTypedLine
-val Any?.javaTyped: Typed get() = valueTerm.javaTyped
+val Any?.valueJavaTypedLine: TypedLine get() = valueTerm.javaTypedLine
+val Any?.valueJavaTyped: Typed get() = valueTerm.javaTyped
 
 val Term.javaTypedLine: TypedLine get() = javaTypeLine.typed(this)
 val Term.javaTyped: Typed get() = typed(javaTypedLine)
 
-val String.typedLine: TypedLine get() = textTypeLine.typed(valueTerm)
+val String.typedLine: TypedLine get() = textName lineTo valueJavaTyped
 val String.typed: Typed get() = typed(typedLine)
 
 val Int.typedLine: TypedLine get() = bigDecimal.typedLine
 val Int.typed: Typed get() = bigDecimal.typed
 
-val BigDecimal.typedLine: TypedLine get() = numberTypeLine.typed(valueTerm)
+val BigDecimal.typedLine: TypedLine get() = numberName lineTo valueJavaTyped
 val BigDecimal.typed: Typed get() = typed(typedLine)
 
 fun Type.does(type: Type, f: Typed.() -> Typed): Typed =
@@ -154,12 +156,12 @@ fun Typed.matchName(fn: String.() -> Typed?): Typed? =
 
 fun TypedLine.matchText(fn: Term.() -> Typed?): Typed? =
 	ifOrNull(typeLine == textTypeLine) {
-		term.fn()
+		term.invoke(second).fn()
 	}
 
 fun TypedLine.matchNumber(fn: Term.() -> Typed?): Typed? =
 	ifOrNull(typeLine == numberTypeLine) {
-		term.fn()
+		term.invoke(second).fn()
 	}
 
 fun TypedLine.matchNative(fn: Term.() -> Typed?): Typed? =

@@ -46,27 +46,27 @@ tailrec fun Value.listReverseFill(array: Array<Value>, index: Int) {
 	}
 }
 
-val Value.listSize: Int get() = 0.plusListLength(this)
+val Value.valueListSize: Int get() = 0.plusListLength(this)
 
-val Value.listAsArray: Array<Value>
+val Value.valueListAsArray: Array<Value>
 	get() {
-		val size = listSize
+		val size = valueListSize
 		val array = arrayOfNulls<Value>(size)
 		listReverseFill(array, size)
 		return array
 	}
 
-val Value.javaString: String
+val Value.valueJavaString: String
 	get() =
 		when (this) {
 			is Array<*> -> this.contentDeepToString()
 			else -> toString()
 		}
 
-val Value.javaScriptLine: ScriptLine
+val Value.valueJavaScriptLine: ScriptLine
 	get() =
-		line(javaName)
+		line(valueJavaName)
 
-val Value.javaName: String
+val Value.valueJavaName: String
 	get() =
-		"#<$javaString>"
+		"#<$valueJavaString>"

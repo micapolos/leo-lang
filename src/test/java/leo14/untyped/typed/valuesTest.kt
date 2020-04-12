@@ -96,12 +96,12 @@ class ValuesTest {
 
 	@Test
 	fun arrays() {
-		nullValue.listSize.assertEqualTo(0)
-		null.to("foo").listSize.assertEqualTo(1)
-		null.to("foo").to("bar").listSize.assertEqualTo(2)
+		nullValue.valueListSize.assertEqualTo(0)
+		null.to("foo").valueListSize.assertEqualTo(1)
+		null.to("foo").to("bar").valueListSize.assertEqualTo(2)
 
-		nullValue.listAsArray.toList().assertEqualTo(listOf())
-		null.to("foo").listAsArray.toList().assertEqualTo(listOf("foo"))
-		null.to("foo").to("bar").listAsArray.toList().assertEqualTo(listOf("foo", "bar"))
+		nullValue.valueListAsArray.toList().assertEqualTo(listOf())
+		null.to("foo").valueListAsArray.toList().assertEqualTo(listOf("foo"))
+		null.to("foo").to("bar").valueListAsArray.toList().assertEqualTo(listOf("foo", "bar"))
 	}
 }

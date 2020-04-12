@@ -41,8 +41,8 @@ fun TypeLink.script(term: Term, scriptFn: ScriptFn): Script =
 
 fun TypeLine.scriptLine(term: Term, scriptFn: ScriptFn): ScriptLine =
 	when (this) {
-		textTypeLine -> line(term.value.valueLiteralOrNull!!)
-		numberTypeLine -> line(term.value.valueLiteralOrNull!!)
+		textTypeLine -> line(term.unsafeUnpair.second.value.valueLiteralOrNull!!)
+		numberTypeLine -> line(term.unsafeUnpair.second.value.valueLiteralOrNull!!)
 		is LiteralTypeLine -> TODO() // remove this type line
 		is FieldTypeLine -> field.scriptLine(term, scriptFn)
 		JavaTypeLine -> javaScriptLine(term)
@@ -52,7 +52,7 @@ fun TypeField.scriptLine(term: Term, scriptFn: ScriptFn): ScriptLine =
 	name lineTo rhs.typed(term).script(scriptFn)
 
 fun javaScriptLine(term: Term): ScriptLine =
-	term.value.javaScriptLine
+	term.value.valueJavaScriptLine
 
 fun TypeAlternative.script(term: Term, scriptFn: ScriptFn): Script =
 	TODO()

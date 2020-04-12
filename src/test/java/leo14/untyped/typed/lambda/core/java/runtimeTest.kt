@@ -6,9 +6,9 @@ import leo14.untyped.fieldName
 import leo14.untyped.javaName
 import leo14.untyped.nameName
 import leo14.untyped.typed.lambda.eval
-import leo14.untyped.typed.lambda.javaTyped
 import leo14.untyped.typed.lambda.lineTo
 import leo14.untyped.typed.lambda.typed
+import leo14.untyped.typed.lambda.valueJavaTyped
 import java.lang.String
 import kotlin.test.Test
 
@@ -18,7 +18,7 @@ class RuntimeTest {
 		runtimeJavaCore
 			.apply(typed(javaName lineTo typed(className lineTo typed("int"))))!!
 			.eval
-			.assertEqualTo(typed(className lineTo Integer.TYPE.javaTyped))
+			.assertEqualTo(typed(className lineTo Integer.TYPE.valueJavaTyped))
 	}
 
 	@Test
@@ -30,7 +30,7 @@ class RuntimeTest {
 						className lineTo typed(
 							nameName lineTo "java.lang.String".typed))))!!
 			.eval
-			.assertEqualTo(typed(className lineTo String::class.java.javaTyped))
+			.assertEqualTo(typed(className lineTo String::class.java.valueJavaTyped))
 	}
 
 	@Test
@@ -38,11 +38,11 @@ class RuntimeTest {
 		runtimeJavaCore
 			.apply(
 				typed(
-					className lineTo Integer::class.java.javaTyped,
+					className lineTo Integer::class.java.valueJavaTyped,
 					fieldName lineTo typed(
 						nameName lineTo "MAX_VALUE".typed)))!!
 			.eval
 			.assertEqualTo(
-				typed(fieldName lineTo Integer::class.java.getField("MAX_VALUE").javaTyped))
+				typed(fieldName lineTo Integer::class.java.getField("MAX_VALUE").valueJavaTyped))
 	}
 }

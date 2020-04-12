@@ -2,10 +2,13 @@ package leo14.untyped.typed.lambda
 
 import leo.base.assertEqualTo
 import leo.base.assertNull
+import leo14.bigDecimal
 import leo14.lambda2.invoke
 import leo14.lambda2.nil
 import leo14.lambda2.pair
 import leo14.lambda2.valueTerm
+import leo14.untyped.javaName
+import leo14.untyped.textName
 import leo14.untyped.typed.*
 import java.awt.Point
 import kotlin.test.Test
@@ -21,29 +24,29 @@ class TypedTest {
 
 	@Test
 	fun linkOrNull() {
-		typed("foo".javaTypedLine, "bar".javaTypedLine)
+		typed("foo".valueJavaTypedLine, "bar".valueJavaTypedLine)
 			.linkOrNull!!
 			.run { lhs.plus(line) }
 			.eval
-			.assertEqualTo(typed("foo".javaTypedLine, "bar".javaTypedLine))
+			.assertEqualTo(typed("foo".valueJavaTypedLine, "bar".valueJavaTypedLine))
 	}
 
 	@Test
 	fun textCompiled() {
 		"Hello, world!"
 			.typedLine
-			.assertEqualTo(textTypeLine.typed("Hello, world!".valueTerm))
+			.assertEqualTo(textName lineTo "Hello, world!".valueJavaTyped)
 
 		"Hello, world!"
 			.typed
-			.assertEqualTo(textType.typed(pair.invoke(nil).invoke("Hello, world!".valueTerm)))
+			.assertEqualTo(typed(textName lineTo "Hello, world!".valueJavaTyped))
 	}
 
 	@Test
 	fun matchText() {
 		"Hello, world!"
 			.typed
-			.matchText { typed(textTypeLine.typed(this)) }!!
+			.matchText { typed(textName lineTo javaTyped) }!!
 			.eval
 			.assertEqualTo("Hello, world!".typed)
 	}
@@ -51,23 +54,23 @@ class TypedTest {
 	@Test
 	fun javaCompiled() {
 		Point(10, 20)
-			.javaTypedLine
+			.valueJavaTypedLine
 			.assertEqualTo(javaTypeLine.typed(Point(10, 20).valueTerm))
 
 		Point(10, 20)
-			.javaTyped
+			.valueJavaTyped
 			.assertEqualTo(javaType.typed(pair.invoke(nil).invoke(Point(10, 20).valueTerm)))
 	}
 
 	@Test
 	fun matchNative() {
 		Point(10, 20)
-			.javaTyped
+			.valueJavaTyped
 			.matchNative {
 				javaTyped
 			}!!
 			.eval
-			.assertEqualTo(Point(10, 20).javaTyped)
+			.assertEqualTo(Point(10, 20).valueJavaTyped)
 	}
 
 	@Test
@@ -99,10 +102,10 @@ class TypedTest {
 
 	@Test
 	fun matchLink() {
-		typed("foo".javaTypedLine, "bar".javaTypedLine)
+		typed("foo".valueJavaTypedLine, "bar".valueJavaTypedLine)
 			.matchLink { plus(it) }!!
 			.eval
-			.assertEqualTo(typed("foo".javaTypedLine, "bar".javaTypedLine))
+			.assertEqualTo(typed("foo".valueJavaTypedLine, "bar".valueJavaTypedLine))
 	}
 
 	@Test
@@ -133,7 +136,8 @@ class TypedTest {
 	}
 
 	@Test
-	fun numberJava() {
-		typed("java" lineTo 10.typed).applyGet!!.eval.assertEqualTo(10.typed)
+	fun literalJava() {
+		typed(javaName lineTo "foo".typed).applyGet!!.eval.assertEqualTo("foo".valueJavaTyped)
+		typed(javaName lineTo 10.typed).applyGet!!.eval.assertEqualTo(10.bigDecimal.valueJavaTyped)
 	}
 }

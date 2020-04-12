@@ -13,7 +13,7 @@ class NativeTest {
 		typed(javaName lineTo typed(className lineTo typed("int")))
 			.applyJavaClassName!!
 			.eval
-			.assertEqualTo(typed(className lineTo Integer.TYPE.javaTyped))
+			.assertEqualTo(typed(className lineTo Integer.TYPE.valueJavaTyped))
 	}
 
 	@Test
@@ -23,17 +23,17 @@ class NativeTest {
 				nameName lineTo "java.lang.String".typed)))
 			.applyJavaClassNameText!!
 			.eval
-			.assertEqualTo(typed(className lineTo java.lang.String::class.java.javaTyped))
+			.assertEqualTo(typed(className lineTo java.lang.String::class.java.valueJavaTyped))
 	}
 
 	@Test
 	fun javaClassField() {
 		typed(
-			className lineTo java.lang.Integer::class.java.javaTyped,
+			className lineTo java.lang.Integer::class.java.valueJavaTyped,
 			fieldName lineTo typed(nameName lineTo "MAX_VALUE".typed))
 			.applyJavaClassField!!
 			.eval
 			.assertEqualTo(
-				typed(fieldName lineTo java.lang.Integer::class.java.getField("MAX_VALUE").javaTyped))
+				typed(fieldName lineTo java.lang.Integer::class.java.getField("MAX_VALUE").valueJavaTyped))
 	}
 }
