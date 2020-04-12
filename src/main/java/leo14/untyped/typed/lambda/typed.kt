@@ -12,15 +12,18 @@ import leo14.untyped.typed.*
 import java.math.BigDecimal
 
 data class Typed(val type: Type, val term: Term) {
-	override fun toString() = script(
-		"typed" lineTo script(
-			"type" lineTo type.script,
-			"term" lineTo term.script)).leoString
+	override fun toString() = reflectScriptLine.leoString
 }
 
 data class TypedLink(val lhs: Typed, val line: TypedLine)
 data class TypedLine(val typeLine: TypeLine, val term: Term)
 data class TypedField(val typeField: TypeField, val term: Term)
+
+val Typed.reflectScriptLine: ScriptLine
+	get() =
+		"typed" lineTo script(
+			"type" lineTo type.script,
+			"term" lineTo term.script)
 
 fun Type.typed(term: Term) = Typed(this, term)
 infix fun Typed.linkTo(line: TypedLine) = TypedLink(this, line)
@@ -212,3 +215,9 @@ fun Typed.updateTerm(fn: Term.() -> Term): Typed =
 
 fun Typed.make(name: String): Typed? =
 	typed(name lineTo this)
+
+val Typed.staticTypeOrNull: Type?
+	get() =
+		notNullIf(type.isStatic) {
+			type.script.type
+		}

@@ -1,6 +1,7 @@
 package leo14.untyped.typed.lambda
 
 import leo.base.fold
+import leo.base.ifOrNull
 import leo.base.reverse
 import leo.stak.reverseStack
 import leo13.fold
@@ -8,15 +9,20 @@ import leo14.*
 import leo14.lambda2.fn
 import leo14.lambda2.invoke
 import leo14.untyped.isName
+import leo14.untyped.leoString
 
-data class Compiler(
-	val library: Library,
-	val typed: Typed)
+data class Compiler(val library: Library, val typed: Typed) {
+	override fun toString() = reflectScriptLine.leoString
+}
 
 fun Library.compiler(typed: Typed): Compiler =
 	Compiler(this, typed)
 
 val emptyCompiler = emptyLibrary.compiler(emptyTyped)
+
+val Compiler.reflectScriptLine: ScriptLine
+	get() =
+		"compiler" lineTo script(library.reflectScriptLine, typed.reflectScriptLine)
 
 fun Library.applyCompiler(typed: Typed): Compiler =
 	null
@@ -52,10 +58,21 @@ fun Compiler.plus(field: ScriptField): Compiler =
 	else plusNormalized(field)
 
 fun Compiler.plusNormalized(field: ScriptField): Compiler =
-	when (field.string) {
-		isName -> TODO()
-		else -> plus(field.string lineTo library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).typed)
+	null
+		?: plusIs(field)
+		?: plusField(field)
+
+fun Compiler.plusIs(field: ScriptField): Compiler? =
+	ifOrNull(field.string == isName) {
+		typed.staticTypeOrNull?.let { type ->
+			library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).typed.let { typed ->
+				library.plus(type entryTo typed).compiler(emptyTyped)
+			}
+		}
 	}
+
+fun Compiler.plusField(field: ScriptField): Compiler =
+	plus(field.string lineTo library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).typed)
 
 fun Compiler.plus(line: TypedLine): Compiler =
 	library.applyCompiler(typed.plus(line))

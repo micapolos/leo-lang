@@ -4,6 +4,10 @@ import leo14.*
 import leo14.untyped.*
 import leo14.untyped.typed.*
 
+val Type.reflectScriptLine: ScriptLine
+	get() =
+		"type" lineTo script
+
 val Type.script: Script
 	get() =
 		when (this) {
