@@ -10,20 +10,27 @@ import leo14.untyped.typed.*
 
 typealias ScriptFn = (Typed) -> Script?
 
+val Typed.script: Script
+	get() =
+		script(emptyScope)
+
 fun Typed.script(scope: Scope): Script =
 	// TODO: Use "script" function from scope
 	script { null }
 
 fun Typed.script(scriptFn: ScriptFn): Script =
-	scriptFn(this) ?: when (type) {
+	scriptFn(this) ?: type.script(term, scriptFn)
+
+fun Type.script(term: Term, scriptFn: ScriptFn): Script =
+	when (this) {
 		EmptyType -> script()
 		AnythingType -> script(anythingName lineTo term.script)
 		NothingType -> null!!
-		is LinkType -> type.link.script(term, scriptFn)
-		is AlternativeType -> type.alternative.script(term, scriptFn)
-		is FunctionType -> type.function.script(term, scriptFn)
-		is RepeatingType -> type.repeating.script(term, scriptFn)
-		is RecursiveType -> type.recursive.script(term, scriptFn)
+		is LinkType -> link.script(term, scriptFn)
+		is AlternativeType -> alternative.script(term, scriptFn)
+		is FunctionType -> function.script(term, scriptFn)
+		is RepeatingType -> repeating.script(term, scriptFn)
+		is RecursiveType -> recursive.script(term, scriptFn)
 		RecurseType -> recurseScript(term, scriptFn)
 	}
 
@@ -34,6 +41,8 @@ fun TypeLink.script(term: Term, scriptFn: ScriptFn): Script =
 
 fun TypeLine.scriptLine(term: Term, scriptFn: ScriptFn): ScriptLine =
 	when (this) {
+		textTypeLine -> line(term.value.valueLiteralOrNull!!)
+		numberTypeLine -> line(term.value.valueLiteralOrNull!!)
 		is LiteralTypeLine -> TODO() // remove this type line
 		is FieldTypeLine -> field.scriptLine(term, scriptFn)
 		NativeTypeLine -> nativeScriptLine(term)

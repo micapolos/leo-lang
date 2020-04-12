@@ -54,10 +54,10 @@ fun Typed.invokeOrNull(typed: Typed): Typed? =
 		}
 	}
 
-val Literal.typed
+val Literal.typedLine: TypedLine
 	get() = when (this) {
-		is StringLiteral -> string.typed
-		is NumberLiteral -> number.bigDecimal.typed
+		is StringLiteral -> string.typedLine
+		is NumberLiteral -> number.bigDecimal.typedLine
 	}
 
 fun Typed.plus(line: TypedLine): Typed =
