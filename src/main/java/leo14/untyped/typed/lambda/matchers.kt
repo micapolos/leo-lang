@@ -6,16 +6,13 @@ import leo14.untyped.className
 import leo14.untyped.fieldName
 import leo14.untyped.javaName
 import leo14.untyped.nameName
-import leo14.untyped.typed.javaType
-import leo14.untyped.typed.lineTo
-import leo14.untyped.typed.type
 
 fun Typed.matchJavaClassName(classFn: Class<*>.() -> Term): Typed? =
 	matchPrefix(javaName) {
 		matchPrefix(className) {
 			matchName {
 				typeClassOrNull?.run {
-					type(className lineTo javaType).typed(classFn())
+					typed(className lineTo classFn().javaTyped)
 				}
 			}
 		}

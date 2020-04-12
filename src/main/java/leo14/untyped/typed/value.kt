@@ -65,4 +65,8 @@ val Value.javaString: String
 
 val Value.javaScriptLine: ScriptLine
 	get() =
-		line("#<$javaString>")
+		line(javaName)
+
+val Value.javaName: String
+	get() =
+		"#<$javaString>"

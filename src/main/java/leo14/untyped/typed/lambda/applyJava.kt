@@ -1,6 +1,6 @@
 package leo14.untyped.typed.lambda
 
-import leo14.lambda2.value
+import leo14.lambda2.valueTerm
 
 val Typed.javaApply: Typed?
 	get() =
@@ -11,7 +11,7 @@ val Typed.javaApply: Typed?
 
 val Typed.applyJavaClassName: Typed?
 	get() =
-		matchJavaClassName { value(this) }
+		matchJavaClassName { valueTerm }
 
 val Typed.applyJavaClassNameText: Typed?
 	get() =
