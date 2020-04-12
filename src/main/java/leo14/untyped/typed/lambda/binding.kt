@@ -6,14 +6,14 @@ import leo14.script
 import leo14.untyped.leoString
 import leo14.untyped.typed.Type
 
-data class Entry(val type: Type, val typed: Typed) {
+data class Binding(val type: Type, val typed: Typed) {
 	override fun toString() = reflectScriptLine.leoString
 }
 
-infix fun Type.entryTo(typed: Typed) = Entry(this, typed)
+infix fun Type.bindingTo(typed: Typed) = Binding(this, typed)
 
-val Entry.reflectScriptLine: ScriptLine
+val Binding.reflectScriptLine: ScriptLine
 	get() =
-		"entry" lineTo script(
+		"binding" lineTo script(
 			type.reflectScriptLine,
 			typed.reflectScriptLine)

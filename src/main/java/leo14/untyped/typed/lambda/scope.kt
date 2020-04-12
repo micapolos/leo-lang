@@ -11,20 +11,20 @@ import leo14.script
 import leo14.untyped.leoString
 import leo14.untyped.typed.Type
 
-data class Scope(val entryStak: Stak<Entry>) {
+data class Scope(val bindingStak: Stak<Binding>) {
 	override fun toString() = reflectScriptLine.leoString
 }
 
 val Scope.reflectScriptLine: ScriptLine
 	get() =
-		"scope" lineTo script().fold(entryStak.seq.reverse) { plus(it.reflectScriptLine) }
+		"scope" lineTo script().fold(bindingStak.seq.reverse) { plus(it.reflectScriptLine) }
 
-val Stak<Entry>.scope get() = Scope(this)
-val emptyScope = emptyStak<Entry>().scope
-fun Scope.plus(entry: Entry): Scope = entryStak.push(entry).scope
+val Stak<Binding>.scope get() = Scope(this)
+val emptyScope = emptyStak<Binding>().scope
+fun Scope.plus(entry: Binding): Scope = bindingStak.push(entry).scope
 
-fun Scope.indexedEntry(type: Type): IndexedValue<Entry>? =
-	entryStak.topIndexedValue { it.type == type }
+fun Scope.indexedEntry(type: Type): IndexedValue<Binding>? =
+	bindingStak.topIndexedValue { it.type == type }
 
 fun Scope.apply(typed: Typed): Typed? =
 	indexedEntry(typed.type)?.let { indexedEntry ->

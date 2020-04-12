@@ -30,13 +30,13 @@ fun Library.applyCompiler(typed: Typed): Compiler =
 		?: apply(typed)?.let { compiler(emptyTyped) }
 		?: compiler(typed.apply)
 
-fun Compiler.define(entry: Entry): Compiler =
+fun Compiler.define(entry: Binding): Compiler =
 	library.plus(entry).compiler(emptyTyped)
 
 val Compiler.end: Typed
 	get() =
 		typed.updateTerm {
-			fold(library.scope.entryStak.reverseStack) {
+			fold(library.scope.bindingStak.reverseStack) {
 				fn(this).invoke(it.typed.term)
 			}
 		}
@@ -66,7 +66,7 @@ fun Compiler.plusIs(field: ScriptField): Compiler? =
 	ifOrNull(field.string == isName) {
 		typed.staticStaticTypeOrNull?.let { type ->
 			library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).compiledTyped.let { typed ->
-				library.plus(type entryTo typed).compiler(emptyTyped)
+				library.plus(type bindingTo typed).compiler(emptyTyped)
 			}
 		}
 	}
@@ -86,7 +86,7 @@ val Compiler.compiledTyped: Typed
 			typed.type.typed(
 				typed.term
 					.iterate(freeVariableCount) { fn(this) }
-					.fold(library.scope.entryStak.seq.map { typed.term }.takeOrNull(freeVariableCount).reverse) { invoke(it!!) })
+					.fold(library.scope.bindingStak.seq.map { typed.term }.takeOrNull(freeVariableCount).reverse) { invoke(it!!) })
 		}
 
 val Compiler.evaluate: Compiler

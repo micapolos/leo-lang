@@ -15,9 +15,9 @@ class CompilerTest {
 	@Test
 	fun compiledTyped() {
 		emptyLibrary
-			.plus(type("x") entryTo 1.typed)
-			.plus(type("y") entryTo 2.typed)
-			.plus(type("z") entryTo 3.typed)
+			.plus(type("x") bindingTo 1.typed)
+			.plus(type("y") bindingTo 2.typed)
+			.plus(type("z") bindingTo 3.typed)
 			.compiler(numberType.typed(at(1)))
 			.compiledTyped
 			.assertEqualTo(numberType.typed(fn(fn(at(1))).invoke(2.typed.term).invoke(3.typed.term)))
@@ -29,14 +29,14 @@ class CompilerTest {
 		emptyLibrary
 			.compiler(typed("x"))
 			.plus(isName fieldTo leo(123))
-			.assertEqualTo(emptyLibrary.plus(type("x") entryTo 123.typed).compiler(emptyTyped))
+			.assertEqualTo(emptyLibrary.plus(type("x") bindingTo 123.typed).compiler(emptyTyped))
 	}
 
 	@Test
 	fun entryAccess() {
 		emptyLibrary
-			.plus(type("x") entryTo 1.typed)
-			.plus(type("y") entryTo 2.typed)
+			.plus(type("x") bindingTo 1.typed)
+			.plus(type("y") bindingTo 2.typed)
 			.run {
 				applyCompiler(typed("x")).assertEqualTo(compiler(1.typed.type.typed(at(1))))
 				applyCompiler(typed("y")).assertEqualTo(compiler(2.typed.type.typed(at(0))))
