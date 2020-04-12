@@ -15,6 +15,8 @@ val emptyLibrary get() = emptyScope.library(emptyScope.exported)
 fun Exported.plus(entry: Entry): Exported =
 	scope.plus(entry).exported
 
+val Library.clearExported: Library get() = scope.library(emptyScope.exported)
+
 fun Library.plus(entry: Entry) =
 	scope.plus(entry).library(exported.plus(entry))
 
@@ -23,7 +25,10 @@ fun Library.import(entry: Entry) =
 
 fun Library.import(library: Library): Library =
 	fold(library.exported.scope.entryStak.reverseStack) { import(it) }
-//
+
+fun Library.apply(typed: Typed): Library? =
+	null // TODO
+
 //fun Library.apply(lhs: Compiled, begin: Begin, rhs: Compiled): Compiled =
 //	scope.apply(lhs, begin, rhs)
 //

@@ -4,6 +4,7 @@ package leo.base
 
 import leo13.Stack
 import leo13.push
+import leo13.seq
 import leo13.stack
 
 data class SeqNode<T>(
@@ -236,3 +237,7 @@ fun <V> Seq<V>.mapFirst(fn: V.() -> V): Seq<V> =
 val <V> Seq<V>.reverseStack: Stack<V>
 	get() =
 		stack<V>().fold(this) { push(it) }
+
+val <V> Seq<V>.reverse: Seq<V>
+	get() =
+		reverseStack.seq
