@@ -2,7 +2,10 @@ package leo14.untyped.typed.lambda
 
 import leo14.Script
 import leo14.ScriptLine
+import leo14.lambda2.Term
+import leo14.lambda2.at
 import leo14.lambda2.fn
+import leo14.lambda2.invoke
 import leo14.lineTo
 import leo14.script
 import leo14.untyped.leoString
@@ -58,3 +61,9 @@ val Binding.type: Type
 			is ConstantBinding -> constant.type
 			is FunctionBinding -> function.type
 		}
+
+fun Binding.invoke(index: Int, term: Term): Typed? =
+	when (this) {
+		is ConstantBinding -> typed.type.typed(at(index))
+		is FunctionBinding -> function.typed.type.typed(at(index).invoke(term))
+	}

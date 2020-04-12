@@ -4,12 +4,14 @@ import leo.base.*
 import leo.stak.reverseStack
 import leo.stak.seq
 import leo13.fold
+import leo13.givenName
 import leo14.*
-import leo14.lambda2.fn
-import leo14.lambda2.freeVariableCount
-import leo14.lambda2.invoke
+import leo14.lambda2.*
+import leo14.untyped.doesName
 import leo14.untyped.isName
 import leo14.untyped.leoString
+import leo14.untyped.typed.lineTo
+import leo14.untyped.typed.type
 
 data class Compiler(val library: Library, val typed: Typed) {
 	override fun toString() = reflectScriptLine.leoString
@@ -60,14 +62,35 @@ fun Compiler.plus(field: ScriptField): Compiler =
 fun Compiler.plusNormalized(field: ScriptField): Compiler =
 	null
 		?: plusIs(field)
+		?: plusDoes(field)
 		?: plusField(field)
 
 fun Compiler.plusIs(field: ScriptField): Compiler? =
 	ifOrNull(field.string == isName) {
 		typed.staticScriptOrNull?.let { script ->
-			library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).compiledTyped.let { typed ->
-				library.plus(script bindingTo typed).compiler(emptyTyped)
-			}
+			library
+				.clearExported
+				.applyCompiler(emptyTyped)
+				.plus(field.rhs)
+				.compiledTyped
+				.let { typed -> library.plus(script bindingTo typed).compiler(emptyTyped) }
+		}
+	}
+
+fun Compiler.plusDoes(field: ScriptField): Compiler? =
+	ifOrNull(field.string == doesName) {
+		typed.staticTypeOrNull?.let { type ->
+			library
+				.clearExported
+				.plus(script(givenName) bindingTo type(givenName lineTo type).typed(nil))
+				.applyCompiler(emptyTyped)
+				.plus(field.rhs)
+				.compiledTyped
+				.let { typed ->
+					library
+						.plus(type bindingTo typed.type.typed(at(0)))
+						.compiler(emptyTyped)
+				}
 		}
 	}
 

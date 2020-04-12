@@ -4,7 +4,6 @@ import leo.base.fold
 import leo.base.reverse
 import leo.stak.*
 import leo14.ScriptLine
-import leo14.lambda2.at
 import leo14.lineTo
 import leo14.plus
 import leo14.script
@@ -23,10 +22,10 @@ val Stak<Binding>.scope get() = Scope(this)
 val emptyScope = emptyStak<Binding>().scope
 fun Scope.plus(entry: Binding): Scope = bindingStak.push(entry).scope
 
-fun Scope.indexedEntry(type: Type): IndexedValue<Binding>? =
+fun Scope.indexedBinding(type: Type): IndexedValue<Binding>? =
 	bindingStak.topIndexedValue { it.type == type }
 
 fun Scope.apply(typed: Typed): Typed? =
-	indexedEntry(typed.type)?.let { indexedEntry ->
-		indexedEntry.value.typed.type.typed(at(indexedEntry.index))
+	indexedBinding(typed.type)?.let { indexedBinding ->
+		indexedBinding.value.invoke(indexedBinding.index, typed.term)
 	}

@@ -1,14 +1,18 @@
 package leo14.untyped.typed.lambda
 
 import leo.base.assertEqualTo
+import leo13.givenName
 import leo14.fieldTo
 import leo14.lambda2.at
 import leo14.lambda2.fn
 import leo14.lambda2.invoke
 import leo14.leo
 import leo14.script
+import leo14.untyped.doesName
 import leo14.untyped.isName
+import leo14.untyped.typed.lineTo
 import leo14.untyped.typed.numberType
+import leo14.untyped.typed.type
 import org.junit.Test
 
 class CompilerTest {
@@ -25,7 +29,7 @@ class CompilerTest {
 	}
 
 	@Test
-	fun typeIsTyped() {
+	fun constantBinding() {
 		emptyLibrary
 			.compiler(typed("x"))
 			.plus(isName fieldTo leo(123))
@@ -33,13 +37,35 @@ class CompilerTest {
 	}
 
 	@Test
-	fun entryAccess() {
+	fun constantBindingAccess() {
 		emptyLibrary
 			.plus(script("x") bindingTo 1.typed)
 			.plus(script("y") bindingTo 2.typed)
 			.run {
 				applyCompiler(typed("x")).assertEqualTo(compiler(1.typed.type.typed(at(1))))
 				applyCompiler(typed("y")).assertEqualTo(compiler(2.typed.type.typed(at(0))))
+			}
+	}
+
+	@Test
+	fun dynamicBinding() {
+		emptyLibrary
+			.compiler(typed("number"))
+			.plus(doesName fieldTo script("given"))
+			.assertEqualTo(
+				emptyLibrary
+					.plus(numberType bindingTo type(givenName lineTo numberType).typed(at(0)))
+					.compiler(emptyTyped))
+	}
+
+	@Test
+	fun dynamicBindingAccess() {
+		emptyLibrary
+			.plus(numberType bindingTo type("done" lineTo numberType).typed(at(0)))
+			.run {
+				this
+					.applyCompiler(123.typed)
+					.assertEqualTo(compiler(type("done" lineTo numberType).typed(at(0).invoke(123.typed.term))))
 			}
 	}
 }
