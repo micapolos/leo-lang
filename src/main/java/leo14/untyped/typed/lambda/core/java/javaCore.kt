@@ -57,7 +57,7 @@ fun JavaCore.applyTextClass(typed: Typed): Typed? =
 fun JavaCore.applyClassField(typed: Typed): Typed? =
 	typed.matchInfix(fieldName) { field ->
 		matchPrefix(className) {
-			matchNative {
+			matchJava {
 				let { classTerm ->
 					field.matchPrefix(nameName) {
 						matchText {

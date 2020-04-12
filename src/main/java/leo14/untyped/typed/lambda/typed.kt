@@ -156,19 +156,19 @@ fun Typed.matchName(fn: String.() -> Typed?): Typed? =
 
 fun TypedLine.matchText(fn: Term.() -> Typed?): Typed? =
 	match(textName) { rhs ->
-		rhs.matchNative {
+		rhs.matchJava {
 			fn()
 		}
 	}
 
 fun TypedLine.matchNumber(fn: Term.() -> Typed?): Typed? =
 	match(numberName) { rhs ->
-		rhs.matchNative {
+		rhs.matchJava {
 			fn()
 		}
 	}
 
-fun TypedLine.matchNative(fn: Term.() -> Typed?): Typed? =
+fun TypedLine.matchJava(fn: Term.() -> Typed?): Typed? =
 	ifOrNull(typeLine is JavaTypeLine) {
 		term.fn()
 	}
@@ -190,9 +190,9 @@ fun Typed.matchNumber(fn: Term.() -> Typed?): Typed? =
 		matchNumber(fn)
 	}
 
-fun Typed.matchNative(fn: Term.() -> Typed?): Typed? =
+fun Typed.matchJava(fn: Term.() -> Typed?): Typed? =
 	matchLine {
-		matchNative(fn)
+		matchJava(fn)
 	}
 
 fun TypedLine.matchName(fn: (String) -> Typed?): Typed? =

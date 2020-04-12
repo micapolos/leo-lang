@@ -66,7 +66,7 @@ class TypedTest {
 	fun matchNative() {
 		Point(10, 20)
 			.valueJavaTyped
-			.matchNative {
+			.matchJava {
 				javaTyped
 			}!!
 			.eval

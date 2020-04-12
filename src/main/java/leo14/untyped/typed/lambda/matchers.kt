@@ -32,7 +32,7 @@ fun Typed.matchJavaClassNameText(termFn: Term.() -> Term): Typed? =
 fun Typed.matchJavaClassField(fn: Term.(Term) -> Term): Typed? =
 	matchInfix(fieldName) { field ->
 		matchPrefix(className) {
-			matchNative {
+			matchJava {
 				let { classTerm ->
 					field.matchPrefix(nameName) {
 						matchText {
