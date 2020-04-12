@@ -1,5 +1,8 @@
 package leo.stak
 
+import leo.base.Seq
+import leo.base.seq
+import leo.base.then
 import leo13.push
 import leo13.reverse
 import leo13.toReverseList
@@ -28,3 +31,11 @@ fun <R : Any, T : Any> Pair<R, Stak<T>>.reduce(fn: R.(T) -> R): Pair<R, Stak<T>>
 	second.unlink?.let { (stak, value) ->
 		first.fn(value) to stak
 	}
+
+val <T : Any> Stak<T>.seq: Seq<T>
+	get() =
+		nodeOrNull.seq
+
+val <T : Any> Node<T>?.seq: Seq<T>
+	get() =
+		seq { this?.run { value then linkOrNull?.node.seq } }
