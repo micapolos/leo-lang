@@ -11,28 +11,28 @@ import kotlin.test.Test
 class AccessTest {
 	@Test
 	fun getField() {
-		compiled(
-			"point" lineTo compiled(
-				"x" lineTo 10.compiled,
-				"y" lineTo 20.compiled))
+		typed(
+			"point" lineTo typed(
+				"x" lineTo 10.typed,
+				"y" lineTo 20.typed))
 			.run {
-				get("x")!!.eval.assertEqualTo(compiled("x" lineTo 10.compiled))
-				get("y")!!.eval.assertEqualTo(compiled("y" lineTo 20.compiled))
+				get("x")!!.eval.assertEqualTo(typed("x" lineTo 10.typed))
+				get("y")!!.eval.assertEqualTo(typed("y" lineTo 20.typed))
 				get("z").assertNull
 			}
 	}
 
 	@Test
 	fun getPrimitive() {
-		compiled(
-			"this" lineTo compiled(
-				10.compiledLine,
-				"foo".compiledLine,
-				Point(10, 20).nativeCompiledLine))
+		typed(
+			"this" lineTo typed(
+				10.typedLine,
+				"foo".typedLine,
+				Point(10, 20).nativeTypedLine))
 			.run {
-				get(numberName)!!.eval.assertEqualTo(10.compiled)
-				get(textName)!!.eval.assertEqualTo("foo".compiled)
-				get(nativeName)!!.eval.assertEqualTo(Point(10, 20).nativeCompiled)
+				get(numberName)!!.eval.assertEqualTo(10.typed)
+				get(textName)!!.eval.assertEqualTo("foo".typed)
+				get(nativeName)!!.eval.assertEqualTo(Point(10, 20).nativeTyped)
 			}
 	}
 }

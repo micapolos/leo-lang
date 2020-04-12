@@ -2,7 +2,7 @@ package leo14.untyped.typed.lambda.core
 
 import leo14.Literal
 import leo14.spacedString
-import leo14.untyped.typed.lambda.Compiled
+import leo14.untyped.typed.lambda.Typed
 import leo14.untyped.typed.lambda.core.java.apply
 import leo14.untyped.typed.lambda.core.java.compiledJavaCore
 import leo14.untyped.typed.lambda.core.java.runtimeJavaCore
@@ -12,7 +12,7 @@ import leo14.untyped.typed.valueLiteralOrNull
 class Core(
 	val literalTermFn: (Literal) -> Any?,
 	val termLiteralFn: (Any?) -> Literal?,
-	val applyFn: (Compiled) -> Compiled?)
+	val applyFn: (Typed) -> Typed?)
 
 val runtimeCore = Core(
 	literalTermFn = Literal::nativeValue,

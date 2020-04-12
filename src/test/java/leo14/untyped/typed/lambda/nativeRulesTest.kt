@@ -14,30 +14,30 @@ import org.junit.Test
 class NativeTest {
 	@Test
 	fun nativeClassName() {
-		compiled(nativeName lineTo compiled(className lineTo compiled("int")))
+		typed(nativeName lineTo typed(className lineTo typed("int")))
 			.applyNativeClassName!!
 			.eval
-			.assertEqualTo(type(className lineTo nativeType).compiled(value(Integer.TYPE)))
+			.assertEqualTo(type(className lineTo nativeType).typed(value(Integer.TYPE)))
 	}
 
 	@Test
 	fun nativeClassNameText() {
-		compiled(nativeName lineTo compiled(
-			className lineTo compiled(
-				nameName lineTo "java.lang.String".compiled)))
+		typed(nativeName lineTo typed(
+			className lineTo typed(
+				nameName lineTo "java.lang.String".typed)))
 			.applyNativeClassNameText!!
 			.eval
-			.assertEqualTo(compiled(className lineTo java.lang.String::class.java.nativeCompiled))
+			.assertEqualTo(typed(className lineTo java.lang.String::class.java.nativeTyped))
 	}
 
 	@Test
 	fun nativeClassField() {
-		compiled(
-			className lineTo java.lang.Integer::class.java.nativeCompiled,
-			fieldName lineTo compiled(nameName lineTo "MAX_VALUE".compiled))
+		typed(
+			className lineTo java.lang.Integer::class.java.nativeTyped,
+			fieldName lineTo typed(nameName lineTo "MAX_VALUE".typed))
 			.applyNativeClassField!!
 			.eval
 			.assertEqualTo(
-				compiled(fieldName lineTo java.lang.Integer::class.java.getField("MAX_VALUE").nativeCompiled))
+				typed(fieldName lineTo java.lang.Integer::class.java.getField("MAX_VALUE").nativeTyped))
 	}
 }

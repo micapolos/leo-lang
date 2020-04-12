@@ -1,6 +1,6 @@
 package leo14.untyped.typed.lambda
 
-val Compiled.apply: Compiled
+val Typed.apply: Typed
 	get() =
 		null
 			?: nativeApply

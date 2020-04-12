@@ -16,7 +16,7 @@ fun Scope.plus(entry: Entry): Scope = entryStak.push(entry).scope
 fun Scope.indexedEntry(type: Type): IndexedValue<Entry>? =
 	entryStak.topIndexedValue { it.type == type }
 
-fun Scope.apply(compiled: Compiled): Compiled? =
-	indexedEntry(compiled.type)?.let { indexedEntry ->
-		indexedEntry.value.compiled.type.compiled(at(indexedEntry.index))
+fun Scope.apply(typed: Typed): Typed? =
+	indexedEntry(typed.type)?.let { indexedEntry ->
+		indexedEntry.value.typed.type.typed(at(indexedEntry.index))
 	}

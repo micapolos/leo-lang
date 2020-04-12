@@ -10,17 +10,17 @@ import leo14.untyped.typed.FieldTypeLine
 import leo14.untyped.typed.LiteralTypeLine
 import leo14.untyped.typed.NativeTypeLine
 
-fun Compiled.get(name: String): Compiled? =
-	linkOrNull?.onlyLineOrNull?.fieldOrNull?.rhs?.lineOrNull(name)?.let { compiled(it) }
+fun Typed.get(name: String): Typed? =
+	linkOrNull?.onlyLineOrNull?.fieldOrNull?.rhs?.lineOrNull(name)?.let { typed(it) }
 
-fun Compiled.lineOrNull(name: String): CompiledLine? =
+fun Typed.lineOrNull(name: String): TypedLine? =
 	linkOrNull?.lineOrNull(name)
 
-fun CompiledLink.lineOrNull(name: String): CompiledLine? =
+fun TypedLink.lineOrNull(name: String): TypedLine? =
 	lhs.lineOrNull(name) ?: line.lineOrNull(name)
 
 // TODO: handle meta!!!
-fun CompiledLine.lineOrNull(name: String): CompiledLine? =
+fun TypedLine.lineOrNull(name: String): TypedLine? =
 	when (typeLine) {
 		is LiteralTypeLine ->
 			when (typeLine.literal) {

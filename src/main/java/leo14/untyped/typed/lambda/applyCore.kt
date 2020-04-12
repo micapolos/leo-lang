@@ -1,12 +1,12 @@
 package leo14.untyped.typed.lambda
 
-val Compiled.coreApply: Compiled?
+val Typed.coreApply: Typed?
 	get() =
 		null
 			?: applyGet
 			?: applyMake
 
-val Compiled.applyGet: Compiled?
+val Typed.applyGet: Typed?
 	get() =
 		matchLink { rhs ->
 			rhs.matchName { name ->
@@ -14,7 +14,7 @@ val Compiled.applyGet: Compiled?
 			}
 		}
 
-val Compiled.applyMake: Compiled?
+val Typed.applyMake: Typed?
 	get() =
 		matchLink { rhs ->
 			rhs.matchName { name ->

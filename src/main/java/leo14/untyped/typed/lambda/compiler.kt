@@ -7,18 +7,18 @@ import leo14.lambda2.invoke
 
 data class Compiler(
 	val library: Library,
-	val compiled: Compiled)
+	val typed: Typed)
 
-fun Library.compiler(compiled: Compiled) =
-	Compiler(this, compiled)
+fun Library.compiler(typed: Typed) =
+	Compiler(this, typed)
 
 fun Compiler.define(entry: Entry): Compiler =
-	library.plus(entry).compiler(emptyCompiled)
+	library.plus(entry).compiler(emptyTyped)
 
-val Compiler.end: Compiled
+val Compiler.end: Typed
 	get() =
-		compiled.updateTerm {
+		typed.updateTerm {
 			fold(library.scope.entryStak.reverseStack) {
-				fn(this).invoke(it.compiled.term)
+				fn(this).invoke(it.typed.term)
 			}
 		}

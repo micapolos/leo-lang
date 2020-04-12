@@ -19,50 +19,50 @@ class JavaCore(
 	val textClassFn: Any?.() -> Any?,
 	val classFieldFn: Any?.(Any?) -> Any?)
 
-fun JavaCore.apply(compiled: Compiled): Compiled? =
+fun JavaCore.apply(typed: Typed): Typed? =
 	null
-		?: applyTypeClass(compiled)
-		?: applyTextClass(compiled)
-		?: applyClassField(compiled)
+		?: applyTypeClass(typed)
+		?: applyTextClass(typed)
+		?: applyClassField(typed)
 
-fun JavaCore.applyBitNative(compiled: Compiled): Compiled? =
-	notNullIf(compiled.type == bitType) {
-		type("bit" lineTo nativeType).compiled(compiled.term.valueApply(bitIntFn))
+fun JavaCore.applyBitNative(typed: Typed): Typed? =
+	notNullIf(typed.type == bitType) {
+		type("bit" lineTo nativeType).typed(typed.term.valueApply(bitIntFn))
 	}
 
-fun JavaCore.applyTypeClass(compiled: Compiled): Compiled? =
-	compiled.matchPrefix(nativeName) {
+fun JavaCore.applyTypeClass(typed: Typed): Typed? =
+	typed.matchPrefix(nativeName) {
 		matchPrefix(className) {
 			matchName {
 				typeClassOrNull?.run {
-					compiled(className lineTo typeClassFn().nativeCompiled)
+					typed(className lineTo typeClassFn().nativeTyped)
 				}
 			}
 		}
 	}
 
-fun JavaCore.applyTextClass(compiled: Compiled): Compiled? =
-	compiled.matchPrefix(nativeName) {
+fun JavaCore.applyTextClass(typed: Typed): Typed? =
+	typed.matchPrefix(nativeName) {
 		matchPrefix(className) {
 			matchPrefix(nameName) {
 				matchText {
 					let { nameTerm ->
-						compiled(className lineTo nameTerm.valueApply(textClassFn).nativeCompiled)
+						typed(className lineTo nameTerm.valueApply(textClassFn).nativeTyped)
 					}
 				}
 			}
 		}
 	}
 
-fun JavaCore.applyClassField(compiled: Compiled): Compiled? =
-	compiled.matchInfix(fieldName) { field ->
+fun JavaCore.applyClassField(typed: Typed): Typed? =
+	typed.matchInfix(fieldName) { field ->
 		matchPrefix(className) {
 			matchNative {
 				let { classTerm ->
 					field.matchPrefix(nameName) {
 						matchText {
 							let { nameTerm ->
-								compiled(fieldName lineTo classTerm.valueApply(nameTerm, classFieldFn).nativeCompiled)
+								typed(fieldName lineTo classTerm.valueApply(nameTerm, classFieldFn).nativeTyped)
 							}
 						}
 					}

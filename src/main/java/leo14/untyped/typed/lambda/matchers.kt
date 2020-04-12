@@ -10,29 +10,29 @@ import leo14.untyped.typed.lineTo
 import leo14.untyped.typed.nativeType
 import leo14.untyped.typed.type
 
-fun Compiled.matchNativeClassName(classFn: Class<*>.() -> Term): Compiled? =
+fun Typed.matchNativeClassName(classFn: Class<*>.() -> Term): Typed? =
 	matchPrefix(nativeName) {
 		matchPrefix(className) {
 			matchName {
 				typeClassOrNull?.run {
-					type(className lineTo nativeType).compiled(classFn())
+					type(className lineTo nativeType).typed(classFn())
 				}
 			}
 		}
 	}
 
-fun Compiled.matchNativeClassNameText(termFn: Term.() -> Term): Compiled? =
+fun Typed.matchNativeClassNameText(termFn: Term.() -> Term): Typed? =
 	matchPrefix(nativeName) {
 		matchPrefix(className) {
 			matchPrefix(nameName) {
 				matchText {
-					compiled(className lineTo termFn().nativeCompiled)
+					typed(className lineTo termFn().nativeTyped)
 				}
 			}
 		}
 	}
 
-fun Compiled.matchNativeClassField(fn: Term.(Term) -> Term): Compiled? =
+fun Typed.matchNativeClassField(fn: Term.(Term) -> Term): Typed? =
 	matchInfix(fieldName) { field ->
 		matchPrefix(className) {
 			matchNative {
@@ -40,7 +40,7 @@ fun Compiled.matchNativeClassField(fn: Term.(Term) -> Term): Compiled? =
 					field.matchPrefix(nameName) {
 						matchText {
 							let { fieldNameTerm ->
-								compiled(fieldName lineTo classTerm.fn(fieldNameTerm).nativeCompiled)
+								typed(fieldName lineTo classTerm.fn(fieldNameTerm).nativeTyped)
 							}
 						}
 					}

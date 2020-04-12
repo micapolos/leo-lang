@@ -9,128 +9,128 @@ import leo14.untyped.leoString
 import leo14.untyped.typed.*
 import java.math.BigDecimal
 
-data class Compiled(val type: Type, val term: Term) {
+data class Typed(val type: Type, val term: Term) {
 	override fun toString() = script(
-		"compiled" lineTo script(
+		"typed" lineTo script(
 			"type" lineTo type.script,
 			"term" lineTo term.script)).leoString
 }
 
-data class CompiledLink(val lhs: Compiled, val line: CompiledLine)
-data class CompiledLine(val typeLine: TypeLine, val term: Term)
-data class CompiledField(val typeField: TypeField, val term: Term)
+data class TypedLink(val lhs: Typed, val line: TypedLine)
+data class TypedLine(val typeLine: TypeLine, val term: Term)
+data class TypedField(val typeField: TypeField, val term: Term)
 
-fun Type.compiled(term: Term) = Compiled(this, term)
-infix fun Compiled.linkTo(line: CompiledLine) = CompiledLink(this, line)
-infix fun TypeLine.compiled(term: Term) = CompiledLine(this, term)
-infix fun TypeField.compiled(term: Term) = CompiledField(this, term)
-infix fun String.lineTo(compiled: Compiled): CompiledLine =
-	this.lineTo(compiled.type).compiled(compiled.term)
+fun Type.typed(term: Term) = Typed(this, term)
+infix fun Typed.linkTo(line: TypedLine) = TypedLink(this, line)
+infix fun TypeLine.typed(term: Term) = TypedLine(this, term)
+infix fun TypeField.typed(term: Term) = TypedField(this, term)
+infix fun String.lineTo(typed: Typed): TypedLine =
+	this.lineTo(typed.type).typed(typed.term)
 
-val emptyCompiled = emptyType.compiled(nil)
+val emptyTyped = emptyType.typed(nil)
 
-val Any?.nativeCompiledLine: CompiledLine get() = valueTerm.nativeCompiledLine
-val Any?.nativeCompiled: Compiled get() = valueTerm.nativeCompiled
+val Any?.nativeTypedLine: TypedLine get() = valueTerm.nativeTypedLine
+val Any?.nativeTyped: Typed get() = valueTerm.nativeTyped
 
-val Term.nativeCompiledLine: CompiledLine get() = nativeTypeLine.compiled(this)
-val Term.nativeCompiled: Compiled get() = compiled(nativeCompiledLine)
+val Term.nativeTypedLine: TypedLine get() = nativeTypeLine.typed(this)
+val Term.nativeTyped: Typed get() = typed(nativeTypedLine)
 
-val String.compiledLine: CompiledLine get() = textTypeLine.compiled(valueTerm)
-val String.compiled: Compiled get() = compiled(compiledLine)
+val String.typedLine: TypedLine get() = textTypeLine.typed(valueTerm)
+val String.typed: Typed get() = typed(typedLine)
 
-val Int.compiledLine: CompiledLine get() = bigDecimal.compiledLine
-val Int.compiled: Compiled get() = bigDecimal.compiled
+val Int.typedLine: TypedLine get() = bigDecimal.typedLine
+val Int.typed: Typed get() = bigDecimal.typed
 
-val BigDecimal.compiledLine: CompiledLine get() = numberTypeLine.compiled(valueTerm)
-val BigDecimal.compiled: Compiled get() = compiled(compiledLine)
+val BigDecimal.typedLine: TypedLine get() = numberTypeLine.typed(valueTerm)
+val BigDecimal.typed: Typed get() = typed(typedLine)
 
-fun Type.does(type: Type, f: Compiled.() -> Compiled): Compiled =
-	functionTo(type).type.compiled(fn(type.compiled(at(0)).f().term))
+fun Type.does(type: Type, f: Typed.() -> Typed): Typed =
+	functionTo(type).type.typed(fn(type.typed(at(0)).f().term))
 
-fun Compiled.invokeOrNull(compiled: Compiled): Compiled? =
+fun Typed.invokeOrNull(typed: Typed): Typed? =
 	type.functionOrNull?.let { typeFunction ->
-		notNullIf(typeFunction.from == compiled.type) {
-			typeFunction.to.compiled(term.invoke(compiled.term))
+		notNullIf(typeFunction.from == typed.type) {
+			typeFunction.to.typed(term.invoke(typed.term))
 		}
 	}
 
-val Literal.compiled
+val Literal.typed
 	get() = when (this) {
-		is StringLiteral -> string.compiled
-		is NumberLiteral -> number.bigDecimal.compiled
+		is StringLiteral -> string.typed
+		is NumberLiteral -> number.bigDecimal.typed
 	}
 
-fun Compiled.plus(line: CompiledLine): Compiled =
-	type.plus(line.typeLine).compiled(pair.invoke(term).invoke(line.term))
+fun Typed.plus(line: TypedLine): Typed =
+	type.plus(line.typeLine).typed(pair.invoke(term).invoke(line.term))
 
-fun compiled(vararg lines: CompiledLine): Compiled =
-	emptyCompiled.fold(lines) { plus(it) }
+fun typed(vararg lines: TypedLine): Typed =
+	emptyTyped.fold(lines) { plus(it) }
 
-fun compiled(name: String): Compiled =
-	compiled(name lineTo emptyCompiled)
+fun typed(name: String): Typed =
+	typed(name lineTo emptyTyped)
 
-fun Compiled.matchEmpty(fn: () -> Compiled?): Compiled? =
+fun Typed.matchEmpty(fn: () -> Typed?): Typed? =
 	ifOrNull(type.isEmpty, fn)
 
-fun Compiled.updateOrNull(fn: (Compiled) -> Compiled?): Compiled? =
-	fn(type.compiled(at(0)))?.let { updated ->
-		updated.type.compiled(fn(updated.term).invoke(term))
+fun Typed.updateOrNull(fn: (Typed) -> Typed?): Typed? =
+	fn(type.typed(at(0)))?.let { updated ->
+		updated.type.typed(fn(updated.term).invoke(term))
 	}
 
-val Compiled.linkOrNull: CompiledLink?
+val Typed.linkOrNull: TypedLink?
 	get() =
 		type.linkOrNull?.let { typeLink ->
-			typeLink.lhs.compiled(term.invoke(first)) linkTo typeLink.line.compiled(term.invoke(second))
+			typeLink.lhs.typed(term.invoke(first)) linkTo typeLink.line.typed(term.invoke(second))
 		}
 
-val CompiledLink.onlyLineOrNull: CompiledLine?
+val TypedLink.onlyLineOrNull: TypedLine?
 	get() =
 		notNullIf(lhs.type.isEmpty) { line }
 
-val CompiledLine.fieldOrNull: CompiledField?
+val TypedLine.fieldOrNull: TypedField?
 	get() =
 		typeLine.fieldOrNull?.let { typeField ->
-			typeField.compiled(term)
+			typeField.typed(term)
 		}
 
-val CompiledField.rhs: Compiled?
+val TypedField.rhs: Typed?
 	get() =
-		typeField.rhs.compiled(term)
+		typeField.rhs.typed(term)
 
-fun Compiled.matchLink(fn: Compiled.(CompiledLine) -> Compiled?): Compiled? =
+fun Typed.matchLink(fn: Typed.(TypedLine) -> Typed?): Typed? =
 	updateOrNull {
 		linkOrNull?.let { link ->
 			link.lhs.fn(link.line)
 		}
 	}
 
-fun CompiledLine.match(name: String, fn: (Compiled) -> Compiled?): Compiled? =
+fun TypedLine.match(name: String, fn: (Typed) -> Typed?): Typed? =
 	typeLine.fieldOrNull?.let { field ->
 		ifOrNull(field.name == name) {
-			fn(field.rhs.compiled(term))
+			fn(field.rhs.typed(term))
 		}
 	}
 
-fun CompiledField.match(name: String, fn: (Compiled) -> Compiled?): Compiled? =
+fun TypedField.match(name: String, fn: (Typed) -> Typed?): Typed? =
 	ifOrNull(typeField.name == name) {
-		fn(typeField.rhs.compiled(term))
+		fn(typeField.rhs.typed(term))
 	}
 
-fun Compiled.matchInfix(name: String, fn: Compiled.(Compiled) -> Compiled?): Compiled? =
+fun Typed.matchInfix(name: String, fn: Typed.(Typed) -> Typed?): Typed? =
 	matchLink { line ->
 		line.match(name) { rhs ->
 			fn(rhs)
 		}
 	}
 
-fun Compiled.matchPrefix(name: String, fn: Compiled.() -> Compiled?): Compiled? =
+fun Typed.matchPrefix(name: String, fn: Typed.() -> Typed?): Typed? =
 	matchInfix(name) { rhs ->
 		matchEmpty {
 			rhs.fn()
 		}
 	}
 
-fun Compiled.matchName(fn: String.() -> Compiled?): Compiled? =
+fun Typed.matchName(fn: String.() -> Typed?): Typed? =
 	matchLink { line ->
 		matchEmpty {
 			line.typeLine.fieldOrNull?.let { field ->
@@ -141,57 +141,57 @@ fun Compiled.matchName(fn: String.() -> Compiled?): Compiled? =
 		}
 	}
 
-fun CompiledLine.matchText(fn: Term.() -> Compiled?): Compiled? =
+fun TypedLine.matchText(fn: Term.() -> Typed?): Typed? =
 	ifOrNull(typeLine == textTypeLine) {
 		term.fn()
 	}
 
-fun CompiledLine.matchNumber(fn: Term.() -> Compiled?): Compiled? =
+fun TypedLine.matchNumber(fn: Term.() -> Typed?): Typed? =
 	ifOrNull(typeLine == numberTypeLine) {
 		term.fn()
 	}
 
-fun CompiledLine.matchNative(fn: Term.() -> Compiled?): Compiled? =
+fun TypedLine.matchNative(fn: Term.() -> Typed?): Typed? =
 	ifOrNull(typeLine == nativeTypeLine) {
 		term.fn()
 	}
 
-fun Compiled.matchLine(fn: CompiledLine.() -> Compiled?): Compiled? =
+fun Typed.matchLine(fn: TypedLine.() -> Typed?): Typed? =
 	matchLink { rhs ->
 		matchEmpty {
 			rhs.fn()
 		}
 	}
 
-fun Compiled.matchText(fn: Term.() -> Compiled?): Compiled? =
+fun Typed.matchText(fn: Term.() -> Typed?): Typed? =
 	matchLine {
 		matchText(fn)
 	}
 
-fun Compiled.matchNumber(fn: Term.() -> Compiled?): Compiled? =
+fun Typed.matchNumber(fn: Term.() -> Typed?): Typed? =
 	matchLine {
 		matchNumber(fn)
 	}
 
-fun Compiled.matchNative(fn: Term.() -> Compiled?): Compiled? =
+fun Typed.matchNative(fn: Term.() -> Typed?): Typed? =
 	matchLine {
 		matchNative(fn)
 	}
 
-fun CompiledLine.matchName(fn: (String) -> Compiled?): Compiled? =
+fun TypedLine.matchName(fn: (String) -> Typed?): Typed? =
 	fieldOrNull?.matchName(fn)
 
-fun CompiledField.matchName(fn: (String) -> Compiled?): Compiled? =
+fun TypedField.matchName(fn: (String) -> Typed?): Typed? =
 	ifOrNull(typeField.rhs.isEmpty) {
 		fn(typeField.name)
 	}
 
-val Compiled.eval: Compiled
+val Typed.eval: Typed
 	get() =
-		type.compiled(term.eval)
+		type.typed(term.eval)
 
-fun Compiled.updateTerm(fn: Term.() -> Term): Compiled =
+fun Typed.updateTerm(fn: Term.() -> Term): Typed =
 	copy(term = term.fn())
 
-fun Compiled.make(name: String): Compiled? =
-	compiled(name lineTo this)
+fun Typed.make(name: String): Typed? =
+	typed(name lineTo this)

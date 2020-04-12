@@ -2,21 +2,21 @@ package leo14.untyped.typed.lambda
 
 import leo14.lambda2.value
 
-val Compiled.nativeApply: Compiled?
+val Typed.nativeApply: Typed?
 	get() =
 		null
 			?: applyNativeClassName
 			?: applyNativeClassNameText
 			?: applyNativeClassField
 
-val Compiled.applyNativeClassName: Compiled?
+val Typed.applyNativeClassName: Typed?
 	get() =
 		matchNativeClassName { value(this) }
 
-val Compiled.applyNativeClassNameText: Compiled?
+val Typed.applyNativeClassNameText: Typed?
 	get() =
 		matchNativeClassNameText { nativeStringClassTerm }
 
-val Compiled.applyNativeClassField: Compiled?
+val Typed.applyNativeClassField: Typed?
 	get() =
 		matchNativeClassField { nativeClassField(it) }
