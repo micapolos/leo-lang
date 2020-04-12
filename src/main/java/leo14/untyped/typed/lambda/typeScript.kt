@@ -41,7 +41,7 @@ val TypeLine.scriptLine: ScriptLine
 			numberTypeLine -> leo14.line(numberName)
 			is LiteralTypeLine -> leo14.line(literal)
 			is FieldTypeLine -> leo14.line(field.scriptField)
-			JavaTypeLine -> leo14.line(leo14.untyped.javaName)
+			JavaTypeLine -> leo14.line(javaName)
 		}
 
 val TypeAlternative.script: Script
