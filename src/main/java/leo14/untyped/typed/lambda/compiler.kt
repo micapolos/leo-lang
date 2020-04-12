@@ -48,7 +48,7 @@ fun Compiler.plus(literal: Literal): Compiler =
 	plus(literal.typedLine)
 
 fun Compiler.plus(field: ScriptField): Compiler =
-	if (field.isSimple) set(typed(field.string lineTo typed))
+	if (field.isSimple) library.applyCompiler(typed(field.string lineTo typed))
 	else plusNormalized(field)
 
 fun Compiler.plusNormalized(field: ScriptField): Compiler =

@@ -89,11 +89,9 @@ val TypedLink.onlyLineOrNull: TypedLine?
 
 val TypedLine.fieldOrNull: TypedField?
 	get() =
-		typeLine.fieldOrNull?.let { typeField ->
-			typeField.typed(term)
-		}
+		typeLine.fieldOrNull?.typed(term)
 
-val TypedField.rhs: Typed?
+val TypedField.rhs: Typed
 	get() =
 		typeField.rhs.typed(term)
 
@@ -127,6 +125,15 @@ fun Typed.matchPrefix(name: String, fn: Typed.() -> Typed?): Typed? =
 	matchInfix(name) { rhs ->
 		matchEmpty {
 			rhs.fn()
+		}
+	}
+
+fun Typed.matchPrefix(fn: String.(Typed) -> Typed?): Typed? =
+	matchLink { line ->
+		matchEmpty {
+			line.fieldOrNull?.let { field ->
+				field.typeField.name.fn(field.rhs)
+			}
 		}
 	}
 
