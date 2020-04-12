@@ -1,14 +1,10 @@
 package leo14.untyped.typed.lambda
 
 import leo.base.assertEqualTo
-import leo14.lambda2.value
 import leo14.untyped.className
 import leo14.untyped.fieldName
 import leo14.untyped.javaName
 import leo14.untyped.nameName
-import leo14.untyped.typed.javaType
-import leo14.untyped.typed.lineTo
-import leo14.untyped.typed.type
 import org.junit.Test
 
 class NativeTest {
@@ -17,7 +13,7 @@ class NativeTest {
 		typed(javaName lineTo typed(className lineTo typed("int")))
 			.applyJavaClassName!!
 			.eval
-			.assertEqualTo(type(className lineTo javaType).typed(value(Integer.TYPE)))
+			.assertEqualTo(typed(className lineTo Integer.TYPE.javaTyped))
 	}
 
 	@Test

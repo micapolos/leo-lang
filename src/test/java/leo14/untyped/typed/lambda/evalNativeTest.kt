@@ -1,7 +1,6 @@
 package leo14.untyped.typed.lambda
 
 import leo14.untyped.dsl2.*
-import leo14.untyped.typed.javaName
 import kotlin.test.Test
 
 class EvalJavaTest {
@@ -10,7 +9,16 @@ class EvalJavaTest {
 		script_ {
 			int.class_.java
 		}.gives_ {
-			class_ { x(Integer.TYPE.javaName) }
+			class_ { java_(Integer.TYPE) }
+		}
+	}
+
+	@Test
+	fun javaClass() {
+		script_ {
+			text("java.lang.String").name.class_.java
+		}.gives_ {
+			class_ { java_(java.lang.String::class.java) }
 		}
 	}
 }

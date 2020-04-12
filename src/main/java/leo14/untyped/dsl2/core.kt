@@ -8,6 +8,7 @@ import leo14.Token
 import leo14.reduce
 import leo14.unitReducer
 import leo14.untyped.emptyReader
+import leo14.untyped.typed.javaName
 import leo14.untyped.write
 
 val readerParameter = parameter(emptyReader)
@@ -23,4 +24,5 @@ fun X.x(token: Token) = this
 
 fun X.x(name: String, f: F) = x(leo14.token(leo14.begin(name))).f().x(leo14.token(leo14.end))
 fun X.x(name: String) = x(name) { this }
+fun X.java_(any: Any?) = x(any.javaName)
 
