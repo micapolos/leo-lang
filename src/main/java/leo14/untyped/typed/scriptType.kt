@@ -45,7 +45,7 @@ val ScriptField.type: Type
 val ScriptField.typeLine: TypeLine
 	get() =
 		when (string) {
-			nativeName -> notNullIf(rhs.isEmpty) { nativeTypeLine }
+			nativeName -> notNullIf(rhs.isEmpty) { javaTypeLine }
 			exactName -> TODO()
 			else -> null
 		} ?: string lineTo rhs.type

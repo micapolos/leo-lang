@@ -37,12 +37,12 @@ class TypeBitCountTest {
 		byteType.or(intType).bitCountOrNull.assertEqualTo(33)
 		intType.or(byteType).bitCountOrNull.assertEqualTo(33)
 		intType.or(intType).bitCountOrNull.assertEqualTo(33)
-		intType.or(nativeType).bitCountOrNull.assertNull
+		intType.or(javaType).bitCountOrNull.assertNull
 	}
 
 	@Test
 	fun native() {
-		nativeType.bitCountOrNull.assertNull
+		javaType.bitCountOrNull.assertNull
 	}
 
 	@Test

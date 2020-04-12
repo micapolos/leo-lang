@@ -8,9 +8,9 @@ import kotlin.test.Test
 class ScriptTypeTest {
 	@Test
 	fun primitives() {
-		leo("native"()).type.assertEqualTo(nativeType)
-		leo("repeating"("native"())).type.assertEqualTo(nativeType.repeating.toType)
-		leo("recursive"("native"())).type.assertEqualTo(nativeType.recursive.toType)
+		leo("native"()).type.assertEqualTo(javaType)
+		leo("repeating"("native"())).type.assertEqualTo(javaType.repeating.toType)
+		leo("recursive"("native"())).type.assertEqualTo(javaType.recursive.toType)
 		leo("recurse"()).type.assertEqualTo(recurseType)
 	}
 
@@ -18,6 +18,6 @@ class ScriptTypeTest {
 	fun structs() {
 		leo("point"("x"("native"()), "y"("native"())))
 			.type
-			.assertEqualTo(type("point" lineTo type("x" lineTo nativeType, "y" lineTo nativeType)))
+			.assertEqualTo(type("point" lineTo type("x" lineTo javaType, "y" lineTo javaType)))
 	}
 }

@@ -2,7 +2,7 @@ package leo14.untyped.typed.lambda
 
 import leo.base.assertEqualTo
 import leo.base.assertNull
-import leo14.untyped.nativeName
+import leo14.untyped.javaName
 import leo14.untyped.numberName
 import leo14.untyped.textName
 import java.awt.Point
@@ -28,11 +28,11 @@ class AccessTest {
 			"this" lineTo typed(
 				10.typedLine,
 				"foo".typedLine,
-				Point(10, 20).nativeTypedLine))
+				Point(10, 20).javaTypedLine))
 			.run {
 				get(numberName)!!.eval.assertEqualTo(10.typed)
 				get(textName)!!.eval.assertEqualTo("foo".typed)
-				get(nativeName)!!.eval.assertEqualTo(Point(10, 20).nativeTyped)
+				get(javaName)!!.eval.assertEqualTo(Point(10, 20).javaTyped)
 			}
 	}
 }

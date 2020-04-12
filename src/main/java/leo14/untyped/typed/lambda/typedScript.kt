@@ -45,14 +45,14 @@ fun TypeLine.scriptLine(term: Term, scriptFn: ScriptFn): ScriptLine =
 		numberTypeLine -> line(term.value.valueLiteralOrNull!!)
 		is LiteralTypeLine -> TODO() // remove this type line
 		is FieldTypeLine -> field.scriptLine(term, scriptFn)
-		NativeTypeLine -> nativeScriptLine(term)
+		JavaTypeLine -> javaScriptLine(term)
 	}
 
 fun TypeField.scriptLine(term: Term, scriptFn: ScriptFn): ScriptLine =
 	name lineTo rhs.typed(term).script(scriptFn)
 
-fun nativeScriptLine(term: Term): ScriptLine =
-	term.value.nativeScriptLine
+fun javaScriptLine(term: Term): ScriptLine =
+	term.value.javaScriptLine
 
 fun TypeAlternative.script(term: Term, scriptFn: ScriptFn): Script =
 	TODO()

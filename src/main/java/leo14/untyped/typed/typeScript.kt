@@ -42,7 +42,7 @@ val TypeLine.scriptLine: ScriptLine
 		when (this) {
 			is LiteralTypeLine -> line(literal)
 			is FieldTypeLine -> line(field.scriptField)
-			NativeTypeLine -> line(nativeName)
+			JavaTypeLine -> line(nativeName)
 		}
 
 val TypeAlternative.script: Script

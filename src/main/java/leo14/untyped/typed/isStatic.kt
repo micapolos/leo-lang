@@ -28,7 +28,7 @@ val TypeLine.isStatic: Boolean
 		when (this) {
 			is LiteralTypeLine -> true
 			is FieldTypeLine -> field.isStatic
-			NativeTypeLine -> false
+			JavaTypeLine -> false
 		}
 
 val TypeField.isStatic: Boolean

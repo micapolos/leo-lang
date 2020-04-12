@@ -9,6 +9,6 @@ class TypeTest {
 	fun staticOrNull() {
 		type(nativeName lineTo emptyType)
 			.staticOrNull
-			.assertEqualTo(nativeType)
+			.assertEqualTo(javaType)
 	}
 }

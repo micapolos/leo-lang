@@ -38,7 +38,7 @@ class CompiledTest {
 
 	@Test
 	fun erasedOnce() {
-		nativeType
+		javaType
 			.compiled { "foo" }
 			.assertEvaluatedOnce
 			.run {
@@ -50,26 +50,26 @@ class CompiledTest {
 	@Test
 	fun linkApply() {
 		emptyType
-			.plus(nativeTypeLine)
-			.plus(nativeTypeLine)
+			.plus(javaTypeLine)
+			.plus(javaTypeLine)
 			.compiled { "number: " to 10 }
 			.assertEvaluatedOnce
-			.linkApply(nativeType) { rhs ->
+			.linkApply(javaType) { rhs ->
 				asString + rhs.asInt.toString()
 			}!!
 			.typed
-			.assertEqualTo(nativeType typed "number: 10")
+			.assertEqualTo(javaType typed "number: 10")
 	}
 
 	@Test
 	fun select() {
 		emptyType
-			.plus("x" lineTo nativeType)
-			.plus("y" lineTo nativeType)
+			.plus("x" lineTo javaType)
+			.plus("y" lineTo javaType)
 			.compiled { 10 to 20 }
 			.run {
-				assertEvaluatedOnce.select("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo nativeType) typed 10)
-				assertEvaluatedOnce.select("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo nativeType) typed 20)
+				assertEvaluatedOnce.select("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo javaType) typed 10)
+				assertEvaluatedOnce.select("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo javaType) typed 20)
 				assertEvaluatedOnce.select("z").assertNull
 			}
 	}
@@ -78,34 +78,34 @@ class CompiledTest {
 	fun get() {
 		emptyType
 			.plus("point" lineTo emptyType
-				.plus("x" lineTo nativeType)
-				.plus("y" lineTo nativeType))
+				.plus("x" lineTo javaType)
+				.plus("y" lineTo javaType))
 			.compiled { 10 to 20 }
 			.run {
-				assertEvaluatedOnce.get("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo nativeType) typed 10)
-				assertEvaluatedOnce.get("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo nativeType) typed 20)
+				assertEvaluatedOnce.get("x")!!.typed.assertEqualTo(emptyType.plus("x" lineTo javaType) typed 10)
+				assertEvaluatedOnce.get("y")!!.typed.assertEqualTo(emptyType.plus("y" lineTo javaType) typed 20)
 				assertEvaluatedOnce.get("z").assertNull
 			}
 	}
 
 	@Test
 	fun matchInfix() {
-		nativeType
-			.plus("and" lineTo nativeType)
+		javaType
+			.plus("and" lineTo javaType)
 			.compiled { "Hello, " to "world!" }
 			// TODO: Fixit!!!
 			//.assertEvaluatedOnce
 			.matchInfix("and") { rhs ->
-				apply(rhs, nativeType) { asString + it.asString }
+				apply(rhs, javaType) { asString + it.asString }
 			}!!
 			.typed
-			.assertEqualTo(nativeType.typed("Hello, world!"))
+			.assertEqualTo(javaType.typed("Hello, world!"))
 	}
 
 	@Test
 	fun matchInfix_nameMismatch() {
-		nativeType
-			.plus("and" lineTo nativeType)
+		javaType
+			.plus("and" lineTo javaType)
 			.compiled { null!! }
 			.assertEvaluatedOnce
 			.matchInfix("or") { null!! }
@@ -114,18 +114,18 @@ class CompiledTest {
 
 	@Test
 	fun matchFunction() {
-		nativeType
-			.functionTo(nativeType)
+		javaType
+			.functionTo(javaType)
 			.type
 			.compiled { fn { it.asString.length } }
 			.assertEvaluatedOnce
 			.matchFunction { function, block ->
-				ifOrNull(function.from == nativeType) {
+				ifOrNull(function.from == javaType) {
 					function.to.compiled { block.value.asFn("Hello, world!") }
 				}
 			}!!
 			.typed
-			.assertEqualTo(nativeType.typed(13))
+			.assertEqualTo(javaType.typed(13))
 	}
 
 	@Test
@@ -136,6 +136,6 @@ class CompiledTest {
 					nativeName lineTo emptyType)))
 			.compiled(null)
 			.applyListOf!!
-			.assertEqualTo(type(listName lineTo nativeType.repeating.toType).compiled(null))
+			.assertEqualTo(type(listName lineTo javaType.repeating.toType).compiled(null))
 	}
 }

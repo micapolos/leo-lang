@@ -45,8 +45,8 @@ val Compiled.evaluate: Compiled get() = type.compiled(expression.evaluate)
 val Compiled.typed: Typed get() = type typed value
 
 fun Compiled.apply(literal: Literal): Compiled =
-	if (isEmpty) emptyType.plus(literal.valueTypeLine).compiled { literal.nativeValue }
-	else type.plus(literal.valueTypeLine).compiled { value to literal.nativeValue }
+	if (isEmpty) emptyType.plus(literal.valueTypeLine).compiled { literal.javaValue }
+	else type.plus(literal.valueTypeLine).compiled { value to literal.javaValue }
 
 fun Compiled.apply(begin: Begin, rhs: Compiled): Compiled =
 	null
@@ -111,7 +111,7 @@ val Compiled.applyNativeNull: Compiled?
 	get() =
 		type.matchPrefix(nativeName) {
 			match(nullName) {
-				nativeType.compiled(null)
+				javaType.compiled(null)
 			}
 		}
 
@@ -122,7 +122,7 @@ val Compiled.applyArrayJavaList: Compiled?
 				matchPrefix(listName) {
 					matchRepeating {
 						matchLine {
-							type(arrayName lineTo nativeType).compiled(expression.array)
+							type(arrayName lineTo javaType).compiled(expression.array)
 						}
 					}
 				}
@@ -133,8 +133,8 @@ val Compiled.applyNativeConstructorInvoke: Compiled?
 	get() =
 		type.matchPrefix(invokeName) {
 			matchPrefix(constructorName) {
-				matchNative {
-					nativeType.compiled(expression.doApply { (this as Constructor<*>).newInstance() })
+				matchJava {
+					javaType.compiled(expression.doApply { (this as Constructor<*>).newInstance() })
 				}
 			}
 		}
@@ -143,12 +143,12 @@ val Compiled.applyNativeConstructorInvokeParameterList: Compiled?
 	get() =
 		type.matchInfix(invokeName) { rhs ->
 			matchPrefix(constructorName) {
-				matchNative {
+				matchJava {
 					rhs.matchPrefix(parameterName) {
 						matchPrefix(listName) {
 							matchRepeating {
-								matchNative {
-									linkApply(nativeType) { rhs ->
+								matchJava {
+									linkApply(javaType) { rhs ->
 										rhs.listAsArray.let { array ->
 											(this as Constructor<*>).newInstance(*array)
 										}
@@ -165,9 +165,9 @@ val Compiled.applyNativeMethodInvoke: Compiled?
 	get() =
 		type.matchInfix(invokeName) { rhs ->
 			matchPrefix(methodName) {
-				matchNative {
-					rhs.matchNative {
-						linkApply(nativeType) { (this as Method).invoke(it) }
+				matchJava {
+					rhs.matchJava {
+						linkApply(javaType) { (this as Method).invoke(it) }
 					}
 				}
 			}
@@ -177,13 +177,13 @@ val Compiled.applyNativeMethodInvokeParameterList: Compiled?
 	get() =
 		type.matchInfix(invokeName) { rhs ->
 			matchPrefix(methodName) {
-				matchNative {
+				matchJava {
 					rhs.matchInfix(parameterName) { parameter ->
 						matchPrefix(objectName) {
-							matchNative {
+							matchJava {
 								parameter.matchList {
-									matchNative {
-										nativeType.compiled(expression.doApply {
+									matchJava {
+										javaType.compiled(expression.doApply {
 											this as Pair<*, *>
 											val method = first as Method
 											val rhs = second as Pair<*, *>
@@ -206,7 +206,7 @@ val Compiled.applyNativeClassNameText: Compiled?
 			matchPrefix(className) {
 				matchPrefix(nameName) {
 					matchText {
-						type(className lineTo nativeType).compiled(expression.doApply {
+						type(className lineTo javaType).compiled(expression.doApply {
 							asString.loadClass
 						})
 					}
@@ -220,7 +220,7 @@ val Compiled.applyNativeClassPrimitive: Compiled?
 			matchPrefix(className) {
 				matchName {
 					typeClassOrNull?.let { class_ ->
-						type(className lineTo nativeType).compiled(expression(class_))
+						type(className lineTo javaType).compiled(expression(class_))
 					}
 				}
 			}
@@ -230,10 +230,10 @@ val Compiled.applyNativeClassField: Compiled?
 	get() =
 		type.matchInfix(fieldName) { field ->
 			matchPrefix(className) {
-				matchNative {
+				matchJava {
 					field.matchPrefix(nameName) {
 						matchText {
-							linkApply(type(fieldName lineTo nativeType)) { name ->
+							linkApply(type(fieldName lineTo javaType)) { name ->
 								(this as Class<*>).getField(name as String)
 							}
 						}
@@ -246,8 +246,8 @@ val Compiled.applyClassNativeConstructor: Compiled?
 	get() =
 		type.matchPrefix(constructorName) {
 			matchPrefix(className) {
-				matchNative {
-					type(constructorName lineTo nativeType)
+				matchJava {
+					type(constructorName lineTo javaType)
 						.compiled(expression.doApply { (this as Class<*>).getConstructor() })
 				}
 			}
@@ -257,12 +257,12 @@ val Compiled.applyClassNativeConstructorParameterList: Compiled?
 	get() =
 		type.matchInfix(constructorName) { rhs ->
 			matchPrefix(className) {
-				matchNative {
+				matchJava {
 					rhs.matchPrefix(parameterName) {
 						matchList {
 							matchPrefix(className) {
-								matchNative {
-									linkApply(type(constructorName lineTo nativeType)) { rhs ->
+								matchJava {
+									linkApply(type(constructorName lineTo javaType)) { rhs ->
 										rhs.listAsArray.let { array ->
 											(this as Class<*>).getConstructor(*((array.toList() as List<Class<*>>).toTypedArray()))
 										}
@@ -279,10 +279,10 @@ val Compiled.applyClassNativeMethod: Compiled?
 	get() =
 		type.matchInfix(methodName) { rhs ->
 			matchPrefix(className) {
-				matchNative {
+				matchJava {
 					rhs.matchPrefix(nameName) {
 						matchText {
-							linkApply(type(methodName lineTo nativeType)) { name ->
+							linkApply(type(methodName lineTo javaType)) { name ->
 								(this as Class<*>).getMethod(name as String)
 							}
 						}
@@ -295,14 +295,14 @@ val Compiled.applyClassNativeMethodParameterList: Compiled?
 	get() =
 		type.matchInfix(methodName) { rhs ->
 			matchPrefix(className) {
-				matchNative {
+				matchJava {
 					rhs.matchInfix(parameterName) { parameter ->
 						matchPrefix(nameName) {
 							matchText {
 								parameter.matchList {
 									matchPrefix(className) {
-										matchNative {
-											type(methodName lineTo nativeType).compiled(expression.doApply {
+										matchJava {
+											type(methodName lineTo javaType).compiled(expression.doApply {
 												this as Pair<*, *>
 												val class_ = first as Class<*>
 												val rhs = second as Pair<*, *>
@@ -324,9 +324,9 @@ val Compiled.applyFieldNativeGet: Compiled?
 	get() =
 		type.matchInfix(getName) { rhs ->
 			matchPrefix(fieldName) {
-				matchNative {
-					rhs.matchNative {
-						linkApply(nativeType) { rhs ->
+				matchJava {
+					rhs.matchJava {
+						linkApply(javaType) { rhs ->
 							(this as Field).get(rhs)
 						}
 					}
@@ -344,7 +344,7 @@ fun Compiled.applyFunctionApply(rhs: Compiled): Compiled? =
 
 fun Compiled.append(literal: Literal): Compiled =
 	type.plus(literal.valueTypeLine).let { newType ->
-		if (type.isEmpty) newType.compiled(literal.nativeValue)
+		if (type.isEmpty) newType.compiled(literal.javaValue)
 		else newType.compiled(expression.doApply(literal.expression) { this to it })
 	}
 
@@ -405,7 +405,7 @@ fun Compiled.matchPrefix(name: String, fn: (Compiled) -> Compiled?): Compiled? =
 	}
 
 fun Compiled.matchNative(fn: Compiled.() -> Compiled?): Compiled? =
-	ifOrNull(type == nativeType) {
+	ifOrNull(type == javaType) {
 		fn()
 	}
 
@@ -425,8 +425,8 @@ fun CompiledLink.select(name: String): Compiled? =
 fun CompiledLine.select(name: String): Compiled? =
 	when (name) {
 		nativeName ->
-			notNullIf(typeLine == nativeTypeLine) {
-				nativeType.compiled(expression)
+			notNullIf(typeLine == javaTypeLine) {
+				javaType.compiled(expression)
 			}
 		functionName -> TODO()
 		else -> fieldOrNull?.select(name)

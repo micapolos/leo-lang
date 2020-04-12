@@ -30,7 +30,7 @@ val TypeLine.bitCountOrNull: Int?
 		when (this) {
 			is LiteralTypeLine -> null
 			is FieldTypeLine -> field.intBitCountOrNull
-			NativeTypeLine -> null
+			JavaTypeLine -> null
 		}
 
 val TypeField.intBitCountOrNull: Int?

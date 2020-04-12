@@ -47,7 +47,7 @@ fun Scope.scriptLine(line: TypeLine, value: Value, recursiveOrNull: TypeRecursiv
 		?: when (line) {
 			is LiteralTypeLine -> line(line.literal)
 			is FieldTypeLine -> scriptLine(line.field, value, recursiveOrNull)
-			NativeTypeLine -> nativeScriptLine(value)
+			JavaTypeLine -> nativeScriptLine(value)
 		}
 
 fun Scope.script(alternative: TypeAlternative, value: Value, recursiveOrNull: TypeRecursive?): Script =
@@ -76,7 +76,7 @@ fun Scope.script(repeating: TypeRepeating, value: Value, recursiveOrNull: TypeRe
 	}
 
 fun nativeScriptLine(value: Value): ScriptLine =
-	value.nativeScriptLine
+	value.javaScriptLine
 
 fun numberScriptLine(value: Value): ScriptLine =
 	line(literal(value as Number))

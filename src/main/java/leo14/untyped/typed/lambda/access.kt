@@ -3,12 +3,12 @@ package leo14.untyped.typed.lambda
 import leo.base.notNullIf
 import leo14.NumberLiteral
 import leo14.StringLiteral
-import leo14.untyped.nativeName
+import leo14.untyped.javaName
 import leo14.untyped.numberName
 import leo14.untyped.textName
 import leo14.untyped.typed.FieldTypeLine
+import leo14.untyped.typed.JavaTypeLine
 import leo14.untyped.typed.LiteralTypeLine
-import leo14.untyped.typed.NativeTypeLine
 
 fun Typed.get(name: String): Typed? =
 	linkOrNull?.onlyLineOrNull?.fieldOrNull?.rhs?.lineOrNull(name)?.let { typed(it) }
@@ -29,6 +29,6 @@ fun TypedLine.lineOrNull(name: String): TypedLine? =
 			}
 		is FieldTypeLine ->
 			notNullIf(typeLine.field.name == name)
-		NativeTypeLine ->
-			notNullIf(name == nativeName)
+		JavaTypeLine ->
+			notNullIf(name == javaName)
 	}

@@ -18,8 +18,8 @@ class TypedScriptTest {
 			.assertEqualTo(leo("foo"))
 
 		emptyScope
-			.script(emptyType.plus(nativeTypeLine).typed(Point(10, 20)))
-			.assertEqualTo(leo(Point(10, 20).nativeScriptLine))
+			.script(emptyType.plus(javaTypeLine).typed(Point(10, 20)))
+			.assertEqualTo(leo(Point(10, 20).javaScriptLine))
 
 		emptyScope
 			.script(emptyType.plus(numberTypeLine).typed(10.bigDecimal))

@@ -5,12 +5,12 @@ import leo.java.lang.typeClassOrNull
 import leo14.lambda2.valueApply
 import leo14.untyped.className
 import leo14.untyped.fieldName
+import leo14.untyped.javaName
 import leo14.untyped.nameName
-import leo14.untyped.nativeName
 import leo14.untyped.typed.bitType
+import leo14.untyped.typed.javaType
 import leo14.untyped.typed.lambda.*
 import leo14.untyped.typed.lineTo
-import leo14.untyped.typed.nativeType
 import leo14.untyped.typed.type
 
 class JavaCore(
@@ -27,27 +27,27 @@ fun JavaCore.apply(typed: Typed): Typed? =
 
 fun JavaCore.applyBitNative(typed: Typed): Typed? =
 	notNullIf(typed.type == bitType) {
-		type("bit" lineTo nativeType).typed(typed.term.valueApply(bitIntFn))
+		type("bit" lineTo javaType).typed(typed.term.valueApply(bitIntFn))
 	}
 
 fun JavaCore.applyTypeClass(typed: Typed): Typed? =
-	typed.matchPrefix(nativeName) {
+	typed.matchPrefix(javaName) {
 		matchPrefix(className) {
 			matchName {
 				typeClassOrNull?.run {
-					typed(className lineTo typeClassFn().nativeTyped)
+					typed(className lineTo typeClassFn().javaTyped)
 				}
 			}
 		}
 	}
 
 fun JavaCore.applyTextClass(typed: Typed): Typed? =
-	typed.matchPrefix(nativeName) {
+	typed.matchPrefix(javaName) {
 		matchPrefix(className) {
 			matchPrefix(nameName) {
 				matchText {
 					let { nameTerm ->
-						typed(className lineTo nameTerm.valueApply(textClassFn).nativeTyped)
+						typed(className lineTo nameTerm.valueApply(textClassFn).javaTyped)
 					}
 				}
 			}
@@ -62,7 +62,7 @@ fun JavaCore.applyClassField(typed: Typed): Typed? =
 					field.matchPrefix(nameName) {
 						matchText {
 							let { nameTerm ->
-								typed(fieldName lineTo classTerm.valueApply(nameTerm, classFieldFn).nativeTyped)
+								typed(fieldName lineTo classTerm.valueApply(nameTerm, classFieldFn).javaTyped)
 							}
 						}
 					}

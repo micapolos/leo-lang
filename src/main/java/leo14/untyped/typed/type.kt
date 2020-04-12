@@ -52,7 +52,7 @@ data class TypeLink(val lhs: Type, val line: TypeLine)
 sealed class TypeLine
 data class LiteralTypeLine(val literal: Literal) : TypeLine()
 data class FieldTypeLine(val field: TypeField) : TypeLine()
-object NativeTypeLine : TypeLine()
+object JavaTypeLine : TypeLine()
 
 data class TypeField(val name: String, val rhs: Type)
 
@@ -77,7 +77,7 @@ fun Type.plus(field: TypeField) = plus(field.line)
 fun Type.plus(name: String) = plus(name fieldTo emptyType)
 val Literal.typeLine: TypeLine get() = LiteralTypeLine(this)
 val TypeField.line: TypeLine get() = FieldTypeLine(this)
-val nativeTypeLine: TypeLine = NativeTypeLine
+val javaTypeLine: TypeLine = JavaTypeLine
 infix fun String.fieldTo(type: Type) = TypeField(this, type)
 infix fun String.lineTo(type: Type) = fieldTo(type).line
 operator fun String.invoke(type: Type) = lineTo(type)
@@ -93,9 +93,9 @@ val Type.repeatingOrNull: TypeRepeating? get() = (this as? RepeatingType)?.repea
 val TypeLine.fieldOrNull: TypeField? get() = (this as? FieldTypeLine)?.field
 val TypeLink.onlyLineOrNull: TypeLine? get() = notNullIf(lhs.isEmpty) { line }
 
-val nativeType = emptyType.plus(nativeTypeLine)
-val textTypeLine get() = textName lineTo nativeType
-val numberTypeLine get() = numberName lineTo nativeType
+val javaType = emptyType.plus(javaTypeLine)
+val textTypeLine get() = textName lineTo javaType
+val numberTypeLine get() = numberName lineTo javaType
 val textType = type(textTypeLine)
 val numberType = type(numberTypeLine)
 
@@ -147,8 +147,8 @@ fun <R : Any> Type.matchNumber(fn: () -> R?): R? =
 fun <R : Any> Type.matchText(fn: () -> R?): R? =
 	ifOrNull(this == textType) { fn() }
 
-fun <R : Any> Type.matchNative(fn: () -> R?): R? =
-	ifOrNull(this == nativeType) { fn() }
+fun <R : Any> Type.matchJava(fn: () -> R?): R? =
+	ifOrNull(this == javaType) { fn() }
 
 fun <R : Any> Type.matchFunction(fn: (TypeFunction) -> R?): R? =
 	functionOrNull?.let(fn)

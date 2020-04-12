@@ -21,11 +21,11 @@ class TypedTest {
 
 	@Test
 	fun linkOrNull() {
-		typed("foo".nativeTypedLine, "bar".nativeTypedLine)
+		typed("foo".javaTypedLine, "bar".javaTypedLine)
 			.linkOrNull!!
 			.run { lhs.plus(line) }
 			.eval
-			.assertEqualTo(typed("foo".nativeTypedLine, "bar".nativeTypedLine))
+			.assertEqualTo(typed("foo".javaTypedLine, "bar".javaTypedLine))
 	}
 
 	@Test
@@ -49,25 +49,25 @@ class TypedTest {
 	}
 
 	@Test
-	fun nativeCompiled() {
+	fun javaCompiled() {
 		Point(10, 20)
-			.nativeTypedLine
-			.assertEqualTo(nativeTypeLine.typed(Point(10, 20).valueTerm))
+			.javaTypedLine
+			.assertEqualTo(javaTypeLine.typed(Point(10, 20).valueTerm))
 
 		Point(10, 20)
-			.nativeTyped
-			.assertEqualTo(nativeType.typed(pair.invoke(nil).invoke(Point(10, 20).valueTerm)))
+			.javaTyped
+			.assertEqualTo(javaType.typed(pair.invoke(nil).invoke(Point(10, 20).valueTerm)))
 	}
 
 	@Test
 	fun matchNative() {
 		Point(10, 20)
-			.nativeTyped
+			.javaTyped
 			.matchNative {
-				nativeTyped
+				javaTyped
 			}!!
 			.eval
-			.assertEqualTo(Point(10, 20).nativeTyped)
+			.assertEqualTo(Point(10, 20).javaTyped)
 	}
 
 	@Test
@@ -99,10 +99,10 @@ class TypedTest {
 
 	@Test
 	fun matchLink() {
-		typed("foo".nativeTypedLine, "bar".nativeTypedLine)
+		typed("foo".javaTypedLine, "bar".javaTypedLine)
 			.matchLink { plus(it) }!!
 			.eval
-			.assertEqualTo(typed("foo".nativeTypedLine, "bar".nativeTypedLine))
+			.assertEqualTo(typed("foo".javaTypedLine, "bar".javaTypedLine))
 	}
 
 	@Test

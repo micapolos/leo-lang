@@ -29,11 +29,11 @@ infix fun String.lineTo(typed: Typed): TypedLine =
 
 val emptyTyped = emptyType.typed(nil)
 
-val Any?.nativeTypedLine: TypedLine get() = valueTerm.nativeTypedLine
-val Any?.nativeTyped: Typed get() = valueTerm.nativeTyped
+val Any?.javaTypedLine: TypedLine get() = valueTerm.javaTypedLine
+val Any?.javaTyped: Typed get() = valueTerm.javaTyped
 
-val Term.nativeTypedLine: TypedLine get() = nativeTypeLine.typed(this)
-val Term.nativeTyped: Typed get() = typed(nativeTypedLine)
+val Term.javaTypedLine: TypedLine get() = javaTypeLine.typed(this)
+val Term.javaTyped: Typed get() = typed(javaTypedLine)
 
 val String.typedLine: TypedLine get() = textTypeLine.typed(valueTerm)
 val String.typed: Typed get() = typed(typedLine)
@@ -159,7 +159,7 @@ fun TypedLine.matchNumber(fn: Term.() -> Typed?): Typed? =
 	}
 
 fun TypedLine.matchNative(fn: Term.() -> Typed?): Typed? =
-	ifOrNull(typeLine == nativeTypeLine) {
+	ifOrNull(typeLine == javaTypeLine) {
 		term.fn()
 	}
 

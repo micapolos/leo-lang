@@ -10,7 +10,7 @@ typealias Value = Any?
 typealias Evaluate = () -> Value
 typealias Fn = (Value) -> Value
 
-val Literal.nativeValue: Value
+val Literal.javaValue: Value
 	get() =
 		when (this) {
 			is StringLiteral -> string
@@ -56,13 +56,13 @@ val Value.listAsArray: Array<Value>
 		return array
 	}
 
-val Value.nativeString: String
+val Value.javaString: String
 	get() =
 		when (this) {
 			is Array<*> -> this.contentDeepToString()
 			else -> toString()
 		}
 
-val Value.nativeScriptLine: ScriptLine
+val Value.javaScriptLine: ScriptLine
 	get() =
-		line("#<$nativeString>")
+		line("#<$javaString>")

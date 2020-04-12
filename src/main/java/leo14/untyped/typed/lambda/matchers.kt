@@ -4,35 +4,35 @@ import leo.java.lang.typeClassOrNull
 import leo14.lambda2.Term
 import leo14.untyped.className
 import leo14.untyped.fieldName
+import leo14.untyped.javaName
 import leo14.untyped.nameName
-import leo14.untyped.nativeName
+import leo14.untyped.typed.javaType
 import leo14.untyped.typed.lineTo
-import leo14.untyped.typed.nativeType
 import leo14.untyped.typed.type
 
-fun Typed.matchNativeClassName(classFn: Class<*>.() -> Term): Typed? =
-	matchPrefix(nativeName) {
+fun Typed.matchJavaClassName(classFn: Class<*>.() -> Term): Typed? =
+	matchPrefix(javaName) {
 		matchPrefix(className) {
 			matchName {
 				typeClassOrNull?.run {
-					type(className lineTo nativeType).typed(classFn())
+					type(className lineTo javaType).typed(classFn())
 				}
 			}
 		}
 	}
 
-fun Typed.matchNativeClassNameText(termFn: Term.() -> Term): Typed? =
-	matchPrefix(nativeName) {
+fun Typed.matchJavaClassNameText(termFn: Term.() -> Term): Typed? =
+	matchPrefix(javaName) {
 		matchPrefix(className) {
 			matchPrefix(nameName) {
 				matchText {
-					typed(className lineTo termFn().nativeTyped)
+					typed(className lineTo termFn().javaTyped)
 				}
 			}
 		}
 	}
 
-fun Typed.matchNativeClassField(fn: Term.(Term) -> Term): Typed? =
+fun Typed.matchJavaClassField(fn: Term.(Term) -> Term): Typed? =
 	matchInfix(fieldName) { field ->
 		matchPrefix(className) {
 			matchNative {
@@ -40,7 +40,7 @@ fun Typed.matchNativeClassField(fn: Term.(Term) -> Term): Typed? =
 					field.matchPrefix(nameName) {
 						matchText {
 							let { fieldNameTerm ->
-								typed(fieldName lineTo classTerm.fn(fieldNameTerm).nativeTyped)
+								typed(fieldName lineTo classTerm.fn(fieldNameTerm).javaTyped)
 							}
 						}
 					}
