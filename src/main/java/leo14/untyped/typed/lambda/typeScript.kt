@@ -60,7 +60,7 @@ val TypeField.exactScriptField: ScriptField
 val String.isTypeKeyword: Boolean
 	get() =
 		when (this) {
-			valueJavaName -> true
+			javaName -> true
 			orName -> true
 			recursiveName -> true
 			recurseName -> true
