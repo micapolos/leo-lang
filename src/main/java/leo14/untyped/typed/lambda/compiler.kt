@@ -16,6 +16,8 @@ data class Compiler(
 fun Library.compiler(typed: Typed): Compiler =
 	Compiler(this, typed)
 
+val emptyCompiler = emptyLibrary.compiler(emptyTyped)
+
 fun Library.applyCompiler(typed: Typed): Compiler =
 	null
 		?: scope.apply(typed)?.let { compiler(it) }
