@@ -88,3 +88,7 @@ val Compiler.compiledTyped: Typed
 					.iterate(freeVariableCount) { fn(this) }
 					.fold(library.scope.entryStak.seq.map { typed.term }.takeOrNull(freeVariableCount).reverse) { invoke(it!!) })
 		}
+
+val Compiler.evaluate: Compiler
+	get() =
+		set(compiledTyped.eval)
