@@ -23,3 +23,8 @@ val <T : Any> Stak<T>.stack
 val <T : Any> Stak<T>.list
 	get() =
 		reverseStack.toReverseList()
+
+fun <R : Any, T : Any> Pair<R, Stak<T>>.reduce(fn: R.(T) -> R): Pair<R, Stak<T>>? =
+	second.unlink?.let { (stak, value) ->
+		first.fn(value) to stak
+	}
