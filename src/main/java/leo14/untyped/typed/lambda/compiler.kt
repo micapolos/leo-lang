@@ -38,9 +38,12 @@ fun Compiler.plus(script: Script): Compiler =
 
 fun Compiler.plus(line: ScriptLine): Compiler =
 	when (line) {
-		is LiteralScriptLine -> TODO()
-		is FieldScriptLine -> TODO()
+		is LiteralScriptLine -> plus(line.literal)
+		is FieldScriptLine -> plus(line.field)
 	}
+
+fun Compiler.plus(literal: Literal): Compiler =
+	plus(literal.nativeTypedLine)
 
 fun Compiler.plus(field: ScriptField): Compiler =
 	if (field.isSimple) set(typed(field.string lineTo typed))
