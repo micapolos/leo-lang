@@ -111,4 +111,13 @@ class CompiledTest {
 			.eval
 			.assertEqualTo(compiled("Hello, ".compiledLine, "minus" lineTo "world!".compiled))
 	}
+
+	@Test
+	fun functions() {
+		numberType
+			.does(type(numberTypeLine, textTypeLine)) { plus("done".compiledLine) }
+			.invoke(123.compiled)!!
+			.eval
+			.assertEqualTo(compiled(123.compiledLine, "done".compiledLine))
+	}
 }

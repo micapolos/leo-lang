@@ -44,6 +44,16 @@ val Int.compiled: Compiled get() = bigDecimal.compiled
 val BigDecimal.compiledLine: CompiledLine get() = numberTypeLine.compiled(valueTerm)
 val BigDecimal.compiled: Compiled get() = compiled(compiledLine)
 
+fun Type.does(type: Type, f: Compiled.() -> Compiled): Compiled =
+	functionTo(type).type.compiled(fn(type.compiled(at(0)).f().term))
+
+fun Compiled.invoke(compiled: Compiled): Compiled? =
+	type.functionOrNull?.let { typeFunction ->
+		notNullIf(typeFunction.from == compiled.type) {
+			typeFunction.to.compiled(term.invoke(compiled.term))
+		}
+	}
+
 val Literal.compiled
 	get() = when (this) {
 		is StringLiteral -> string.compiled

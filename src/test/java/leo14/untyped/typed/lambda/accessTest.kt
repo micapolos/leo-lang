@@ -10,7 +10,7 @@ import kotlin.test.Test
 
 class AccessTest {
 	@Test
-	fun field() {
+	fun getField() {
 		compiled(
 			"point" lineTo compiled(
 				"x" lineTo 10.compiled,
@@ -23,7 +23,7 @@ class AccessTest {
 	}
 
 	@Test
-	fun primitives() {
+	fun getPrimitive() {
 		compiled(
 			"this" lineTo compiled(
 				10.compiledLine,
