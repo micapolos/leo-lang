@@ -184,3 +184,6 @@ val Compiled.eval: Compiled
 
 fun Compiled.updateTerm(fn: Term.() -> Term): Compiled =
 	copy(term = term.fn())
+
+fun Compiled.make(name: String): Compiled? =
+	compiled(name lineTo this)

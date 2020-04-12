@@ -125,4 +125,10 @@ class CompiledTest {
 				invokeOrNull("123".compiled).assertNull
 			}
 	}
+
+	@Test
+	fun make() {
+		"foo".compiled.make("name")
+			.assertEqualTo(compiled("name" lineTo "foo".compiled))
+	}
 }
