@@ -11,9 +11,9 @@ fun Typed.matchJavaClassName(classFn: Class<*>.() -> Term): Typed? =
 	matchPrefix(javaName) {
 		matchPrefix(className) {
 			matchName {
-				typeClassOrNull?.run {
-					typed(className lineTo classFn().javaTyped)
-				}
+				typeClassOrNull
+					?.run { typed(className lineTo classFn().javaTyped) }
+					?: this@matchJavaClassName
 			}
 		}
 	}

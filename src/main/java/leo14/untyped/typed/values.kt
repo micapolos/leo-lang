@@ -60,7 +60,7 @@ val String.loadClass
 	get() =
 		classLoader.loadClass(this)
 
-val Value.stringClass
+val Value.stringClass: Class<*>
 	get() =
 		classLoader.loadClass(this as String)
 
