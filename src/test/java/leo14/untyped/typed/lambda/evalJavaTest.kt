@@ -8,7 +8,7 @@ class EvalJavaTest {
 	fun javaType() {
 		script_ {
 			int.class_.java
-		}.gives_ {
+		}.evals_ {
 			class_ { java_(Integer.TYPE) }
 		}
 	}
@@ -17,7 +17,7 @@ class EvalJavaTest {
 	fun javaType_missing() {
 		script_ {
 			missing.class_.java
-		}.gives_ {
+		}.evals_ {
 			java { class_ { missing } }
 		}
 	}
@@ -26,7 +26,7 @@ class EvalJavaTest {
 	fun javaClass() {
 		script_ {
 			text("java.lang.String").name.class_.java
-		}.gives_ {
+		}.evals_ {
 			class_ { java_(java.lang.String::class.java) }
 		}
 	}
@@ -35,7 +35,7 @@ class EvalJavaTest {
 	fun javaClass_missing() {
 		script_ {
 			text("Missing").name.class_.java
-		}.gives_ {
+		}.evals_ {
 			class_ { java_(ClassNotFoundException("Missing")) }
 		}
 	}
@@ -45,7 +45,7 @@ class EvalJavaTest {
 		script_ {
 			text("java.awt.Point").name.class_.java
 			field { text("x").name }
-		}.gives_ {
+		}.evals_ {
 			field { java_(java.awt.Point::class.java.getField("x")) }
 		}
 	}
@@ -55,7 +55,7 @@ class EvalJavaTest {
 		script_ {
 			text("java.awt.Point").name.class_.java
 			field { text("missing").name }
-		}.gives_ {
+		}.evals_ {
 			field { java_(NoSuchFieldException("missing")) }
 		}
 	}

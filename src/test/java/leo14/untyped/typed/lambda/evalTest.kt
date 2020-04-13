@@ -7,14 +7,14 @@ import kotlin.test.Test
 class EvalTest {
 	@Test
 	fun literals() {
-		script_ { number(10) }.gives_ { number(10) }
-		script_ { text("foo") }.gives_ { text("foo") }
+		script_ { number(10) }.evals_ { number(10) }
+		script_ { text("foo") }.evals_ { text("foo") }
 	}
 
 	@Test
 	fun literalJava() {
-		script_ { text("foo").java }.gives_ { java_("foo") }
-		script_ { number(123).java }.gives_ { java_(123.bigDecimal) }
+		script_ { text("foo").java }.evals_ { java_("foo") }
+		script_ { number(123).java }.evals_ { java_(123.bigDecimal) }
 	}
 
 	@Test
@@ -24,7 +24,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(20) }
 			}
-		}.gives_ {
+		}.evals_ {
 			point {
 				x { number(10) }
 				y { number(20) }
@@ -39,7 +39,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(20) }
 			}.x
-		}.gives_ {
+		}.evals_ {
 			x { number(10) }
 		}
 
@@ -48,7 +48,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(20) }
 			}.y
-		}.gives_ {
+		}.evals_ {
 			y { number(20) }
 		}
 	}
@@ -60,7 +60,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(20) }
 			}.center
-		}.gives_ {
+		}.evals_ {
 			center {
 				point {
 					x { number(10) }
@@ -74,13 +74,13 @@ class EvalTest {
 	fun type() {
 		script_ {
 			number(10).type
-		}.gives_ {
+		}.evals_ {
 			number
 		}
 
 		script_ {
 			text("foo").type
-		}.gives_ {
+		}.evals_ {
 			text
 		}
 
@@ -89,7 +89,7 @@ class EvalTest {
 				x { number(10) }
 				y { number(10) }
 			}.type
-		}.gives_ {
+		}.evals_ {
 			point {
 				x { number }
 				y { number }
@@ -101,7 +101,7 @@ class EvalTest {
 	fun is_() {
 		script_ {
 			x.is_ { number(123) }
-		}.gives_ {
+		}.evals_ {
 			nothing_
 		}
 	}
@@ -112,7 +112,7 @@ class EvalTest {
 			x.is_ { number(123) }
 			y.is_ { number(124) }
 			z.is_ { number(125) }
-		}.gives_ {
+		}.evals_ {
 			nothing_
 		}
 	}
@@ -124,7 +124,7 @@ class EvalTest {
 			y.is_ { number(124) }
 			z.is_ { number(125) }
 			y
-		}.gives_ {
+		}.evals_ {
 			number(124)
 		}
 	}
@@ -134,14 +134,14 @@ class EvalTest {
 		script_ {
 			number.is_ { result }
 			number
-		}.gives_ {
+		}.evals_ {
 			result
 		}
 
 		script_ {
 			number.is_ { result }
 			number(123)
-		}.gives_ {
+		}.evals_ {
 			number(123)
 		}
 	}
@@ -150,7 +150,7 @@ class EvalTest {
 	fun is_dynamicType() {
 		script_ {
 			number(123).is_ { result }
-		}.gives_ {
+		}.evals_ {
 			number(123).is_ { result }
 		}
 	}

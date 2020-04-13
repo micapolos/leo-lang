@@ -16,16 +16,20 @@ data class Scope(val bindingStak: Stak<Binding>) {
 
 val Scope.reflectScriptLine: ScriptLine
 	get() =
-		"scope" lineTo script().fold(bindingStak.seq.reverse) { plus(it.reflectScriptLine) }
+		"scope" lineTo script(
+			"binding" lineTo script(
+				"list" lineTo script()
+					.fold(bindingStak.seq.reverse) { plus(it.reflectScriptLine) }))
 
 val Stak<Binding>.scope get() = Scope(this)
 val emptyScope = emptyStak<Binding>().scope
 fun Scope.plus(entry: Binding): Scope = bindingStak.push(entry).scope
+val Scope.unsafePop: Scope get() = bindingStak.pop!!.scope
 
 fun Scope.indexedBinding(type: Type): IndexedValue<Binding>? =
-	bindingStak.topIndexedValue { it.type == type }
+	bindingStak.topIndexedValue { it.key.type == type }
 
 fun Scope.apply(typed: Typed): Typed? =
 	indexedBinding(typed.type)?.let { indexedBinding ->
-		indexedBinding.value.invoke(indexedBinding.index, typed.term)
+		indexedBinding.value.value.invoke(indexedBinding.index, typed.term)
 	}

@@ -12,6 +12,7 @@ import leo14.untyped.doesName
 import leo14.untyped.isName
 import leo14.untyped.typed.lineTo
 import leo14.untyped.typed.numberType
+import leo14.untyped.typed.textType
 import leo14.untyped.typed.type
 import org.junit.Test
 
@@ -54,18 +55,23 @@ class CompilerTest {
 			.plus(doesName fieldTo script("given"))
 			.assertEqualTo(
 				emptyLibrary
-					.plus(numberType bindingTo type(givenName lineTo numberType).typed(at(0)))
+					.plus(numberType bindingTo emptyScope.compiled(type(givenName lineTo numberType).typed(at(0))))
 					.compiler(emptyTyped))
 	}
 
 	@Test
 	fun dynamicBindingAccess() {
 		emptyLibrary
-			.plus(numberType bindingTo type("done" lineTo numberType).typed(at(0)))
+			.plus(numberType bindingTo emptyScope.compiled(type("first" lineTo numberType).typed(at(0))))
+			.plus(textType bindingTo emptyScope.compiled(type("second" lineTo textType).typed(at(0))))
 			.run {
 				this
 					.applyCompiler(123.typed)
-					.assertEqualTo(compiler(type("done" lineTo numberType).typed(at(0).invoke(123.typed.term))))
+					.assertEqualTo(compiler(type("done" lineTo numberType).typed(at(1).invoke(123.typed.term))))
+
+				this
+					.applyCompiler("foo".typed)
+					.assertEqualTo(compiler(type("done" lineTo numberType).typed(at(0).invoke("foo".typed.term))))
 			}
 	}
 }

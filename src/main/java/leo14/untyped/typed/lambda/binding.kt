@@ -14,56 +14,59 @@ import leo14.untyped.typed.functionTo
 import leo14.untyped.typed.staticType
 import leo14.untyped.typed.type
 
-data class BindingConstant(val type: Type, val typed: Typed)
-data class BindingFunction(val type: Type, val typed: Typed)
-
-sealed class Binding {
+data class Binding(val key: BindingKey, val value: BindingValue) {
 	override fun toString() = reflectScriptLine.leoString
 }
 
-data class ConstantBinding(val constant: BindingConstant) : Binding() {
+data class BindingKey(val type: Type)
+
+sealed class BindingValue {
+	override fun toString() = reflectScriptLine.leoString
+}
+
+data class TypedBindingValue(val typed: Typed) : BindingValue() {
 	override fun toString() = super.toString()
 }
 
-data class FunctionBinding(val function: BindingFunction) : Binding() {
+data class CompiledBindingValue(val compiled: Compiled) : BindingValue() {
 	override fun toString() = super.toString()
 }
 
-infix fun Script.bindingTo(typed: Typed): Binding = ConstantBinding(BindingConstant(staticType, typed))
-infix fun Type.bindingTo(typed: Typed): Binding = FunctionBinding(BindingFunction(this, typed))
+val Type.key: BindingKey get() = BindingKey(this)
+infix fun Script.bindingTo(typed: Typed): Binding = Binding(staticType.key, TypedBindingValue(typed))
+infix fun Type.bindingTo(compiled: Compiled): Binding = Binding(key, CompiledBindingValue(compiled))
 
-val BindingConstant.reflectScriptLine
+val BindingKey.reflectScriptLine: ScriptLine
 	get() =
-		"constant" lineTo script(type.reflectScriptLine, typed.reflectScriptLine)
+		"key" lineTo script(type.reflectScriptLine)
 
-val BindingFunction.reflectScriptLine
+val BindingValue.reflectScriptLine: ScriptLine
 	get() =
-		"function" lineTo script(type.reflectScriptLine, typed.reflectScriptLine)
+		"value" lineTo script(
+			when (this) {
+				is TypedBindingValue -> typed.reflectScriptLine
+				is CompiledBindingValue -> compiled.reflectScriptLine
+			})
 
 val Binding.reflectScriptLine: ScriptLine
 	get() =
 		"binding" lineTo script(
-			when (this) {
-				is ConstantBinding -> constant.reflectScriptLine
-				is FunctionBinding -> function.reflectScriptLine
-			})
+			key.reflectScriptLine,
+			value.reflectScriptLine)
 
 val Binding.typed: Typed
 	get() =
-		when (this) {
-			is ConstantBinding -> constant.typed
-			is FunctionBinding -> function.type.functionTo(function.typed.type).type.typed(fn(function.typed.term))
+		when (value) {
+			is TypedBindingValue -> value.typed
+			is CompiledBindingValue ->
+				key.type
+					.functionTo(value.compiled.typed.type)
+					.type
+					.typed(fn(value.compiled.typed.term))
 		}
 
-val Binding.type: Type
-	get() =
-		when (this) {
-			is ConstantBinding -> constant.type
-			is FunctionBinding -> function.type
-		}
-
-fun Binding.invoke(index: Int, term: Term): Typed? =
+fun BindingValue.invoke(index: Int, term: Term): Typed? =
 	when (this) {
-		is ConstantBinding -> typed.type.typed(at(index))
-		is FunctionBinding -> function.typed.type.typed(at(index).invoke(term))
+		is TypedBindingValue -> typed.type.typed(at(index))
+		is CompiledBindingValue -> compiled.typed.type.typed(at(index).invoke(term))
 	}

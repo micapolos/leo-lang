@@ -6,7 +6,10 @@ import leo.stak.seq
 import leo13.fold
 import leo13.givenName
 import leo14.*
-import leo14.lambda2.*
+import leo14.lambda2.fn
+import leo14.lambda2.freeVariableCount
+import leo14.lambda2.invoke
+import leo14.lambda2.nil
 import leo14.untyped.doesName
 import leo14.untyped.isName
 import leo14.untyped.leoString
@@ -88,7 +91,7 @@ fun Compiler.plusDoes(field: ScriptField): Compiler? =
 				.compiledTyped
 				.let { typed ->
 					library
-						.plus(type bindingTo typed.type.typed(at(0)))
+						.plus(type bindingTo library.scope.compiled(typed))
 						.compiler(emptyTyped)
 				}
 		}
@@ -111,6 +114,10 @@ val Compiler.compiledTyped: Typed
 					.iterate(freeVariableCount) { fn(this) }
 					.fold(library.scope.bindingStak.seq.map { typed.term }.takeOrNull(freeVariableCount).reverse) { invoke(it!!) })
 		}
+
+val Compiler.compiled: Compiled
+	get() =
+		compiledTyped.run { library.scope.compiled(typed) }
 
 val Compiler.evaluate: Compiler
 	get() =
