@@ -224,19 +224,11 @@ class EvalTest {
 	@Test
 	fun doesPointAccess() {
 		script_ {
-			point {
-				x { number }
-				y { number }
-			}.does { this_ }
-			point {
-				x { number(10) }
-				y { number(20) }
-			}
+			point { x { zero } }
+			does { x }
+			point { x { zero } }
 		}.evals {
-			point {
-				x { number(10) }
-				y { number(20) }
-			}
+			x { zero }
 		}
 	}
 }
