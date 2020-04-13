@@ -72,7 +72,7 @@ fun Compiler.plusIs(field: ScriptField): Compiler? =
 	ifOrNull(field.string == isName) {
 		typed.staticScriptOrNull?.let { script ->
 			library
-				.clearExported
+				.clearLocal
 				.applyCompiler(emptyTyped)
 				.plus(field.rhs)
 				.compiledTyped
@@ -84,7 +84,7 @@ fun Compiler.plusDoes(field: ScriptField): Compiler? =
 	ifOrNull(field.string == doesName) {
 		typed.staticTypeOrNull?.let { type ->
 			library
-				.clearExported
+				.clearLocal
 				.plus(script(givenName) bindingTo type(givenName lineTo type).typed(nil))
 				.applyCompiler(emptyTyped)
 				.plus(field.rhs)
@@ -98,7 +98,7 @@ fun Compiler.plusDoes(field: ScriptField): Compiler? =
 	}
 
 fun Compiler.plusField(field: ScriptField): Compiler =
-	plus(field.string lineTo library.clearExported.applyCompiler(emptyTyped).plus(field.rhs).compiledTyped)
+	plus(field.string lineTo library.clearLocal.applyCompiler(emptyTyped).plus(field.rhs).compiledTyped)
 
 fun Compiler.plus(line: TypedLine): Compiler =
 	library.applyCompiler(typed.plus(line))
