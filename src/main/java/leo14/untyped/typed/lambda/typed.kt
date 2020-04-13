@@ -86,11 +86,6 @@ fun typed(name: String): Typed =
 fun Typed.matchEmpty(fn: () -> Typed?): Typed? =
 	ifOrNull(type.isEmpty, fn)
 
-fun Typed.updateOrNull(fn: (Typed) -> Typed?): Typed? =
-	fn(type.typed(at(0)))?.let { updated ->
-		updated.type.typed(fn(updated.term).invoke(term))
-	}
-
 val Typed.linkOrNull: TypedLink?
 	get() =
 		type.linkOrNull?.let { typeLink ->
@@ -111,10 +106,8 @@ val TypedField.rhs: Typed
 		typeField.rhs.typed(term)
 
 fun Typed.matchLink(fn: Typed.(TypedLine) -> Typed?): Typed? =
-	updateOrNull {
-		linkOrNull?.let { link ->
-			link.lhs.fn(link.line)
-		}
+	linkOrNull?.let { link ->
+		link.lhs.fn(link.line)
 	}
 
 fun TypedLine.match(name: String, fn: (Typed) -> Typed?): Typed? =

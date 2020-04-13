@@ -44,14 +44,6 @@ class TypedTest {
 	}
 
 	@Test
-	fun updateOrNull() {
-		"foo".typed
-			.updateOrNull { it }!!
-			.eval
-			.assertEqualTo("foo".typed)
-	}
-
-	@Test
 	fun textCompiled() {
 		"Hello, world!"
 			.typedLine
