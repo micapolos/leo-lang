@@ -2,6 +2,7 @@ package leo14.untyped.typed.lambda
 
 import leo.base.fold
 import leo.base.ifOrNull
+import leo.base.map
 import leo.base.notNullIf
 import leo14.*
 import leo14.lambda2.*
@@ -129,6 +130,13 @@ fun Typed.matchInfix(name: String, fn: Typed.(Typed) -> Typed?): Typed? =
 		}
 	}
 
+fun Typed.matchInfixOrPrefix(name: String, fn: Typed.(Typed) -> Typed?): Typed? =
+	matchInfix(name) { rhs ->
+		fn(rhs)
+	} ?: matchPrefix(name) {
+		emptyTyped.fn(this)
+	}
+
 fun Typed.matchPrefix(name: String, fn: Typed.() -> Typed?): Typed? =
 	matchInfix(name) { rhs ->
 		matchEmpty {
@@ -228,3 +236,24 @@ val Typed.staticTypeOrNull: Type?
 val Typed.withFnTerm
 	get() =
 		type.typed(fn(term))
+
+fun Typed.repeatingOrNull(typeLine: TypeLine): Typed? =
+	if (type.isEmpty) javaType.typed(nil)
+	else linkOrNull?.let { link ->
+		ifOrNull(link.line.typeLine == typeLine) {
+			link.lhs.repeatingOrNull(typeLine)?.let { typedLhs ->
+				typedLhs.type.typed(fn { lhs ->
+					fn { rhs ->
+						lhs.plus(rhs)
+					}
+				}.invoke(typedLhs.term).invoke(link.line.term))
+			}
+		}
+	}
+
+inline fun <reified T> Typed.javaArrayOrNull(typeLine: TypeLine): Typed? =
+	repeatingOrNull(typeLine)?.let { repeating ->
+		javaType.typed(repeating.term.apply {
+			repeatingTermSeq.map { value as T }.toList().toTypedArray().valueTerm
+		})
+	}

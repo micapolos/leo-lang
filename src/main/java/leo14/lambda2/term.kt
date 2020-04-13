@@ -32,6 +32,10 @@ fun at(index: Int): Term = IndexTerm(index)
 
 val Term.value: Any? get() = (this as ValueTerm).value
 
+val Term.isPair: Boolean
+	get() =
+		unpairOrNull != null
+
 val Term.unpairOrNull: Pair<Term, Term>?
 	get() =
 		(this as? ApplicationTerm)?.let { outerApplication ->

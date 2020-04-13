@@ -4,13 +4,20 @@ import leo14.untyped.dsl2.*
 
 fun main() {
 	main_ {
-		point {
-			x { number(10) }
-			y { number(20) }
+		text("java.lang.String").name.class_.java
+		method {
+			name { text("substring") }
+			parameters {
+				parameter { int.class_.java }
+				parameter { int.class_.java }
+			}
 		}
-		give {
-			given.point.x.number
-			plus { given.point.y.number }
+		invoke {
+			object_ { text("Hello, world!").java }
+			parameters {
+				parameter { number(7).int.java }
+				parameter { number(12).int.java }
+			}
 		}
 	}
 }
