@@ -214,21 +214,20 @@ class EvalTest {
 	@Test
 	fun doesThisAccess() {
 		script_ {
-			point.does { this_ }
-			point
+			number.does { this_ }
+			number(123)
 		}.evals {
-			point
+			number(123)
 		}
 	}
 
 	@Test
-	fun doesPointAccess() {
+	fun doesJavaAccess() {
 		script_ {
-			point { x { zero } }
-			does { x }
-			point { x { zero } }
+			number.does { java }
+			number(123)
 		}.evals {
-			x { zero }
+			java_(123.bigDecimal)
 		}
 	}
 }
