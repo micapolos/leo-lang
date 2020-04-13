@@ -5,5 +5,8 @@ import leo14.Script
 import leo14.untyped.dsl2.F
 import leo14.untyped.dsl2.script_
 
-fun Script.evals_(f: F) =
+fun Script.compiles(f: F) =
+	compile.assertEqualTo(script_(f))
+
+fun Script.evals(f: F) =
 	eval.assertEqualTo(script_(f))

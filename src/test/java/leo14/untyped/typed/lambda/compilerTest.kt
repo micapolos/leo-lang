@@ -59,20 +59,26 @@ class CompilerTest {
 			.plus(doesName fieldTo script("given"))
 			.assertEqualTo(
 				emptyLibrary
-					.plus(numberType bindingTo emptyScope.compiled(type(givenName lineTo numberType).typed(fn(at(0)))))
+					.plus(numberType bindingTo emptyScope
+						.compiled(type(givenName lineTo numberType).typed(fn(at(0)))))
 					.compiler(emptyTyped))
 	}
 
 	@Test
 	fun dynamicBindingAccess() {
 		emptyLibrary
-			.plus(numberType bindingTo emptyScope.compiled(type("given" lineTo numberType).typed(fn(at(0)))))
-			.plus(textType bindingTo emptyScope.compiled(emptyTyped))
-			.plus(type("foo") bindingTo emptyScope.compiled(emptyTyped))
+			.plus(numberType bindingTo emptyScope.compiled(type(givenName lineTo numberType).typed(fn(at(0)))))
+			.plus(textType bindingTo emptyScope.compiled("foo".typed))
+			.plus(type("foo") bindingTo emptyScope.compiled(typed("bar")))
 			.run {
-				this
-					.applyCompiler(123.typed)
+				applyCompiler(123.typed)
 					.assertEqualTo(compiler(type("given" lineTo numberType).typed(at(2).invoke(123.typed.term))))
+
+				applyCompiler("foo".typed)
+					.assertEqualTo(compiler(textType.typed(at(1).invoke("foo".typed.term))))
+
+				applyCompiler(typed("foo"))
+					.assertEqualTo(compiler(type("bar").typed(at(0).invoke(typed("bar").term))))
 			}
 	}
 }

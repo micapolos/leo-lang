@@ -8,6 +8,7 @@ import leo14.script
 val Term.script: Script
 	get() =
 		when (this) {
+			id -> script("#id")
 			pair -> script("#pair")
 			first -> script("#first")
 			second -> script("#second")

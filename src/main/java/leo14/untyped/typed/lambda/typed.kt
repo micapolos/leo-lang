@@ -225,3 +225,7 @@ val Typed.staticScriptOrNull: Script?
 val Typed.staticTypeOrNull: Type?
 	get() =
 		staticScriptOrNull?.type
+
+val Typed.withFnTerm
+	get() =
+		type.typed(fn(term))

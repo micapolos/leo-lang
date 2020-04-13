@@ -12,8 +12,6 @@ import leo14.lambda2.invoke
 import leo14.untyped.doesName
 import leo14.untyped.isName
 import leo14.untyped.leoString
-import leo14.untyped.typed.lineTo
-import leo14.untyped.typed.type
 
 data class Compiler(val library: Library, val typed: Typed) {
 	override fun toString() = reflectScriptLine.leoString
@@ -83,7 +81,7 @@ fun Compiler.plusDoes(field: ScriptField): Compiler? =
 	ifOrNull(field.string == doesName) {
 		typed.staticTypeOrNull?.let { type ->
 			library
-				.plus(script(givenName) bindingTo type(givenName lineTo type).typed(at(0)))
+				.plus(script(givenName) bindingTo typed(givenName lineTo type.typed(at(0))))
 				.clearLocal
 				.applyCompiler(emptyTyped)
 				.plus(field.rhs)
@@ -92,7 +90,7 @@ fun Compiler.plusDoes(field: ScriptField): Compiler? =
 					library
 						.plus(type bindingTo compiled.copy(
 							scope = compiled.scope.unsafePop,
-							typed = compiled.typed.updateTerm { fn(this) }))
+							typed = compiled.typed.withFnTerm))
 						.compiler(emptyTyped)
 				}
 		}
