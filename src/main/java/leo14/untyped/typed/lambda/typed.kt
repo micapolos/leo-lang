@@ -15,7 +15,10 @@ data class Typed(val type: Type, val term: Term) {
 	override fun toString() = reflectScriptLine.leoString
 }
 
-data class TypedLink(val lhs: Typed, val line: TypedLine)
+data class TypedLink(val lhs: Typed, val line: TypedLine) {
+	override fun toString() = lhs.plus(line).reflectScriptLine.leoString
+}
+
 data class TypedLine(val typeLine: TypeLine, val term: Term)
 data class TypedField(val typeField: TypeField, val term: Term)
 
@@ -70,7 +73,9 @@ val Literal.staticTypedLine: TypedLine
 		LiteralTypeLine(this).typed(nil)
 
 fun Typed.plus(line: TypedLine): Typed =
-	type.plus(line.typeLine).typed(pair.invoke(term).invoke(line.term))
+	type.plus(line.typeLine).typed(
+		if (type.isEmpty) line.term
+		else pair.invoke(term).invoke(line.term))
 
 fun typed(vararg lines: TypedLine): Typed =
 	emptyTyped.fold(lines) { plus(it) }
@@ -89,7 +94,8 @@ fun Typed.updateOrNull(fn: (Typed) -> Typed?): Typed? =
 val Typed.linkOrNull: TypedLink?
 	get() =
 		type.linkOrNull?.let { typeLink ->
-			typeLink.lhs.typed(term.invoke(first)) linkTo typeLink.line.typed(term.invoke(second))
+			if (typeLink.lhs.isEmpty) emptyTyped linkTo typeLink.line.typed(term)
+			else typeLink.lhs.typed(term.invoke(first)) linkTo typeLink.line.typed(term.invoke(second))
 		}
 
 val TypedLink.onlyLineOrNull: TypedLine?

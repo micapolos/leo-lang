@@ -35,14 +35,15 @@ fun Type.script(term: Term, scriptFn: ScriptFn): Script =
 	}
 
 fun TypeLink.script(term: Term, scriptFn: ScriptFn): Script =
-	term.unsafeUnpair.let { (lhsTerm, rhsTerm) ->
+	if (lhs.isEmpty) script(line.scriptLine(term, scriptFn))
+	else term.unsafeUnpair.let { (lhsTerm, rhsTerm) ->
 		lhs.typed(lhsTerm).script(scriptFn).plus(line.scriptLine(rhsTerm, scriptFn))
 	}
 
 fun TypeLine.scriptLine(term: Term, scriptFn: ScriptFn): ScriptLine =
 	when (this) {
-		textTypeLine -> line(term.unsafeUnpair.second.value.valueLiteralOrNull!!)
-		numberTypeLine -> line(term.unsafeUnpair.second.value.valueLiteralOrNull!!)
+		textTypeLine -> line(term.value.valueLiteralOrNull!!)
+		numberTypeLine -> line(term.value.valueLiteralOrNull!!)
 		is LiteralTypeLine -> TODO() // remove this type line
 		is FieldTypeLine -> field.scriptLine(term, scriptFn)
 		JavaTypeLine -> javaScriptLine(term)

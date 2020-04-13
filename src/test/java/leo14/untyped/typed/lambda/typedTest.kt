@@ -3,10 +3,7 @@ package leo14.untyped.typed.lambda
 import leo.base.assertEqualTo
 import leo.base.assertNull
 import leo14.bigDecimal
-import leo14.lambda2.invoke
-import leo14.lambda2.nil
-import leo14.lambda2.pair
-import leo14.lambda2.valueTerm
+import leo14.lambda2.*
 import leo14.untyped.javaName
 import leo14.untyped.textName
 import leo14.untyped.typed.*
@@ -15,20 +12,43 @@ import kotlin.test.Test
 
 class TypedTest {
 	@Test
+	fun emptyPlus() {
+		emptyTyped
+			.plus(10.typedLine)
+			.assertEqualTo(numberType.typed(10.typedLine.term))
+	}
+
+	@Test
+	fun nonEmptyPlus() {
+		10.typed
+			.plus(20.typedLine)
+			.assertEqualTo(
+				type(numberTypeLine, numberTypeLine)
+					.typed(pair.invoke(10.typedLine.term).invoke(20.typedLine.term)))
+	}
+
+	@Test
+	fun linkOrNull_emptyLhs() {
+		10.typed
+			.linkOrNull
+			.assertEqualTo(emptyTyped linkTo 10.typedLine)
+	}
+
+	@Test
+	fun linkOrNull_nonEmptyLhs() {
+		typed(10.typedLine, 20.typedLine)
+			.linkOrNull
+			.assertEqualTo(
+				numberType.typed(typed(10.typedLine, 20.typedLine).term.invoke(first)) linkTo
+					numberTypeLine.typed(typed(10.typedLine, 20.typedLine).term.invoke(second)))
+	}
+
+	@Test
 	fun updateOrNull() {
 		"foo".typed
 			.updateOrNull { it }!!
 			.eval
 			.assertEqualTo("foo".typed)
-	}
-
-	@Test
-	fun linkOrNull() {
-		typed("foo".valueJavaTypedLine, "bar".valueJavaTypedLine)
-			.linkOrNull!!
-			.run { lhs.plus(line) }
-			.eval
-			.assertEqualTo(typed("foo".valueJavaTypedLine, "bar".valueJavaTypedLine))
 	}
 
 	@Test
@@ -59,7 +79,7 @@ class TypedTest {
 
 		Point(10, 20)
 			.valueJavaTyped
-			.assertEqualTo(javaType.typed(pair.invoke(nil).invoke(Point(10, 20).valueTerm)))
+			.assertEqualTo(javaType.typed(Point(10, 20).valueTerm))
 	}
 
 	@Test
