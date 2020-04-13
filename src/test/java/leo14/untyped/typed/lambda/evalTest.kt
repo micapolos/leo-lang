@@ -153,39 +153,57 @@ class EvalTest {
 	@Test
 	fun does() {
 		script_ {
-			number.does { given }
+			number.does { done }
 		}.evals {
 			nothing_
 		}
 	}
 
 	@Test
-	fun doesStaticAccess() {
+	fun doesStruct() {
 		script_ {
-			number.does { text("foo") }
-			number(123)
+			x { number }.does { done }
 		}.evals {
-			text("foo")
+			nothing_
 		}
 	}
 
 	@Test
-	fun doesGivenAccess() {
+	fun doesJava() {
 		script_ {
-			point.does { given }
-			point
+			number.does { java }
 		}.evals {
-			given { point }
+			nothing_
 		}
 	}
 
 	@Test
-	fun doesGivenNumberAccess() {
+	fun doesAccess() {
 		script_ {
-			number.does { given.number }
+			number.does { done }
 			number(123)
 		}.evals {
+			done { number(123) }
+		}
+	}
+
+	@Test
+	fun doesStructAccess() {
+		script_ {
+			x { number }.does { done }
+			x { number(123) }
+		}.evals {
+			done { x { number(123) } }
+		}
+	}
+
+	@Test
+	fun doesJavaAccess() {
+		script_ {
+			number.does { java }
 			number(123)
+		}.compiles {
+			java_(123.bigDecimal)
 		}
 	}
 }

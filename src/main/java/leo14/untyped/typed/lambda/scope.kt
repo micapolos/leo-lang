@@ -24,7 +24,6 @@ val Scope.reflectScriptLine: ScriptLine
 val Stak<Binding>.scope get() = Scope(this)
 val emptyScope = emptyStak<Binding>().scope
 fun Scope.plus(entry: Binding): Scope = bindingStak.push(entry).scope
-val Scope.unsafePop: Scope get() = bindingStak.pop!!.scope
 
 fun Scope.indexedBinding(type: Type): IndexedValue<Binding>? =
 	bindingStak.topIndexedValue { it.key.type == type }

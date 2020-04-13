@@ -56,11 +56,10 @@ class CompilerTest {
 	fun dynamicBinding() {
 		emptyLibrary
 			.compiler(typed("number"))
-			.plus(doesName fieldTo script("given"))
+			.plus(doesName fieldTo script("done"))
 			.assertEqualTo(
 				emptyLibrary
-					.plus(numberType bindingTo emptyScope
-						.compiled(type(givenName lineTo numberType).typed(fn(at(0)))))
+					.plus(numberType bindingTo emptyScope.compiled(typed("done" lineTo numberType.typed(at(0))).withFnTerm))
 					.compiler(emptyTyped))
 	}
 

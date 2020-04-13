@@ -4,7 +4,6 @@ import leo.base.*
 import leo.stak.reverseStack
 import leo.stak.seq
 import leo13.fold
-import leo13.givenName
 import leo14.*
 import leo14.lambda2.at
 import leo14.lambda2.fn
@@ -81,16 +80,13 @@ fun Compiler.plusDoes(field: ScriptField): Compiler? =
 	ifOrNull(field.string == doesName) {
 		typed.staticTypeOrNull?.let { type ->
 			library
-				.plus(script(givenName) bindingTo typed(givenName lineTo type.typed(at(0))))
 				.clearLocal
-				.applyCompiler(emptyTyped)
+				.applyCompiler(type.typed(at(0)))
 				.plus(field.rhs)
 				.compiled
 				.let { compiled ->
 					library
-						.plus(type bindingTo compiled.copy(
-							scope = compiled.scope.unsafePop,
-							typed = compiled.typed.withFnTerm))
+						.plus(type bindingTo compiled.scope.compiled(compiled.typed.withFnTerm))
 						.compiler(emptyTyped)
 				}
 		}
