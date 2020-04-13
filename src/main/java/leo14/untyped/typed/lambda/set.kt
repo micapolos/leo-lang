@@ -7,7 +7,9 @@ fun Typed.setOrNull(name: String, value: Typed): Typed? =
 		field.rhs.setLineOrNull(name, value)?.let { typed(field.typeField.name lineTo it) }
 	}
 
-// TODO: Handle number and text types
+// TODO: Handle setting number and text
+// TODO: Handle deeper fields
+// TODO: Handle setting multiple fields
 fun Typed.setLineOrNull(name: String, value: Typed): Typed? =
 	matchLink { line ->
 		line

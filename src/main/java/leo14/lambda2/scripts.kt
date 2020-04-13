@@ -1,9 +1,6 @@
 package leo14.lambda2
 
-import leo14.Script
-import leo14.lineTo
-import leo14.plus
-import leo14.script
+import leo14.*
 
 val Term.script: Script
 	get() =
@@ -17,7 +14,7 @@ val Term.script: Script
 				is ValueTerm -> script("value" lineTo script(value.toString()))
 				is AbstractionTerm -> script("lambda" lineTo body.script)
 				is ApplicationTerm -> lhs.script.plus("invoke" lineTo rhs.script)
-				is IndexTerm -> script("get" lineTo script("$index"))
+				is IndexTerm -> script("get" lineTo script(literal(index)))
 			}
 
 val Term.pairScriptOrNull: Script?
