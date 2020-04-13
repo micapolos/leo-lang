@@ -6,9 +6,9 @@ import leo.stak.seq
 import leo13.fold
 import leo13.givenName
 import leo14.*
+import leo14.lambda2.at
 import leo14.lambda2.fn
 import leo14.lambda2.invoke
-import leo14.lambda2.nil
 import leo14.untyped.doesName
 import leo14.untyped.isName
 import leo14.untyped.leoString
@@ -83,14 +83,14 @@ fun Compiler.plusDoes(field: ScriptField): Compiler? =
 	ifOrNull(field.string == doesName) {
 		typed.staticTypeOrNull?.let { type ->
 			library
+				.plus(script(givenName) bindingTo type(givenName lineTo type).typed(at(0)))
 				.clearLocal
-				.plus(script(givenName) bindingTo type(givenName lineTo type).typed(nil))
 				.applyCompiler(emptyTyped)
 				.plus(field.rhs)
-				.compiledTyped
-				.let { typed ->
+				.compiled
+				.let { compiled ->
 					library
-						.plus(type bindingTo library.scope.compiled(typed))
+						.plus(type bindingTo compiled.copy(scope = compiled.scope.unsafePop))
 						.compiler(emptyTyped)
 				}
 		}
@@ -110,7 +110,10 @@ val Compiler.compiledTyped: Typed
 		typed.type.typed(
 			typed.term
 				.iterate(library.localBindingCount) { fn(this) }
-				.fold(library.scope.bindingStak.seq.map { typed.term }.takeOrNull(library.localBindingCount).reverse) { invoke(it!!) })
+				.fold(library.scope.bindingStak.seq
+					.map { typed.term }
+					.takeOrNull(library.localBindingCount)
+					.reverse) { invoke(it!!) })
 
 val Compiler.compiled: Compiled
 	get() =

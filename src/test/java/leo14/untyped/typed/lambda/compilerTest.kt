@@ -31,7 +31,6 @@ class CompilerTest {
 						.invoke(1.typed.term)
 						.invoke(2.typed.term)
 						.invoke(3.typed.term)))
-
 	}
 
 	@Test

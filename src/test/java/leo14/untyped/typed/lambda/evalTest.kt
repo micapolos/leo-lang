@@ -149,4 +149,43 @@ class EvalTest {
 			number(123).is_ { result }
 		}
 	}
+
+	@Test
+	fun does() {
+		script_ {
+			number.does { given }
+		}.evals_ {
+			nothing_
+		}
+	}
+
+	@Test
+	fun doesStaticAccess() {
+		script_ {
+			number.does { text("foo") }
+			number(123)
+		}.evals_ {
+			text("foo")
+		}
+	}
+
+	@Test
+	fun doesGivenAccess() {
+		script_ {
+			number.does { given }
+			number(123)
+		}.evals_ {
+			given { number(123) }
+		}
+	}
+
+	@Test
+	fun doesGivenNumberAccess() {
+		script_ {
+			number.does { given.number }
+			number(123)
+		}.evals_ {
+			number(123)
+		}
+	}
 }
