@@ -4,18 +4,18 @@ import leo14.untyped.dsl2.*
 
 fun main() {
 	main_ {
-		text("java.awt.Point").name.class_.java
-		constructor {
-			parameters {
-				parameter { int.class_.java }
-				parameter { int.class_.java }
+		my.point.is_ {
+			point {
+				x { number(10) }
+				y { number(20) }
 			}
 		}
-		invoke {
-			parameters {
-				parameter { number(10).int.java }
-				parameter { number(20).int.java }
-			}
+
+		circle {
+			radius { number(10) }
+			center { my.point }
 		}
+
+//		my.circle
 	}
 }

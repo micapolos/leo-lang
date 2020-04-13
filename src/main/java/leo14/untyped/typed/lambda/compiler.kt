@@ -60,6 +60,7 @@ fun Compiler.plusNormalized(field: ScriptField): Compiler =
 	null
 		?: plusGive(field)
 		?: plusIs(field)
+		?: plusBecomes(field)
 		?: plusDoes(field)
 		?: plusField(field)
 
@@ -84,6 +85,18 @@ fun Compiler.plusIs(field: ScriptField): Compiler? =
 				.compiledTyped
 				.let { typed -> library.plus(script bindingTo typed).compiler(emptyTyped) }
 		}
+	}
+
+fun Compiler.plusBecomes(field: ScriptField): Compiler? =
+	ifOrNull(field.string == becomesName) {
+		library
+			.clearLocal
+			.applyCompiler(emptyTyped)
+			.plus(field.rhs)
+			.compiledTyped
+			.staticScriptOrNull?.let { script ->
+				library.plus(script bindingTo typed).compiler(emptyTyped)
+			}
 	}
 
 fun Compiler.plusDoes(field: ScriptField): Compiler? =
