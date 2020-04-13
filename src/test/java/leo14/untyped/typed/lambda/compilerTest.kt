@@ -25,7 +25,12 @@ class CompilerTest {
 			.plus(script("z") bindingTo 3.typed)
 			.compiler(numberType.typed(at(1)))
 			.compiledTyped
-			.assertEqualTo(numberType.typed(fn(fn(at(1))).invoke(2.typed.term).invoke(3.typed.term)))
+			.assertEqualTo(
+				numberType
+					.typed(fn(fn(fn(at(1))))
+						.invoke(1.typed.term)
+						.invoke(2.typed.term)
+						.invoke(3.typed.term)))
 
 	}
 

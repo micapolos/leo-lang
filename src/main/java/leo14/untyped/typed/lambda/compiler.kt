@@ -7,7 +7,6 @@ import leo13.fold
 import leo13.givenName
 import leo14.*
 import leo14.lambda2.fn
-import leo14.lambda2.freeVariableCount
 import leo14.lambda2.invoke
 import leo14.lambda2.nil
 import leo14.untyped.doesName
@@ -108,12 +107,10 @@ fun Compiler.set(typed: Typed): Compiler =
 
 val Compiler.compiledTyped: Typed
 	get() =
-		typed.term.freeVariableCount.let { freeVariableCount ->
-			typed.type.typed(
-				typed.term
-					.iterate(freeVariableCount) { fn(this) }
-					.fold(library.scope.bindingStak.seq.map { typed.term }.takeOrNull(freeVariableCount).reverse) { invoke(it!!) })
-		}
+		typed.type.typed(
+			typed.term
+				.iterate(library.localBindingCount) { fn(this) }
+				.fold(library.scope.bindingStak.seq.map { typed.term }.takeOrNull(library.localBindingCount).reverse) { invoke(it!!) })
 
 val Compiler.compiled: Compiled
 	get() =
