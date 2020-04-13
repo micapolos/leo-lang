@@ -72,17 +72,11 @@ class EvalTest {
 
 	@Test
 	fun type() {
-		script_ {
-			number(10).type
-		}.evals_ {
-			number
-		}
+		script_ { number(10).type }.evals_ { number }
+		script_ { text("foo").type }.evals_ { text }
 
-		script_ {
-			text("foo").type
-		}.evals_ {
-			text
-		}
+		script_ { number(10).java.type }.evals_ { java }
+		script_ { text("foo").java.type }.evals_ { java }
 
 		script_ {
 			point {
@@ -95,6 +89,7 @@ class EvalTest {
 				y { number }
 			}
 		}
+
 	}
 
 	@Test
