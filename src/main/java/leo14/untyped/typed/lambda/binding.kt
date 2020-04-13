@@ -4,7 +4,6 @@ import leo14.Script
 import leo14.ScriptLine
 import leo14.lambda2.Term
 import leo14.lambda2.at
-import leo14.lambda2.fn
 import leo14.lambda2.invoke
 import leo14.lineTo
 import leo14.script
@@ -62,7 +61,7 @@ val Binding.typed: Typed
 				key.type
 					.functionTo(value.compiled.typed.type)
 					.type
-					.typed(fn(value.compiled.typed.term))
+					.typed(value.compiled.typed.term)
 		}
 
 fun BindingValue.invoke(index: Int, term: Term): Typed? =

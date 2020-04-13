@@ -90,7 +90,9 @@ fun Compiler.plusDoes(field: ScriptField): Compiler? =
 				.compiled
 				.let { compiled ->
 					library
-						.plus(type bindingTo compiled.copy(scope = compiled.scope.unsafePop))
+						.plus(type bindingTo compiled.copy(
+							scope = compiled.scope.unsafePop,
+							typed = compiled.typed.updateTerm { fn(this) }))
 						.compiler(emptyTyped)
 				}
 		}
