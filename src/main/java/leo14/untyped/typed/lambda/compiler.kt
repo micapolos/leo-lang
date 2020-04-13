@@ -8,9 +8,7 @@ import leo14.*
 import leo14.lambda2.at
 import leo14.lambda2.fn
 import leo14.lambda2.invoke
-import leo14.untyped.doesName
-import leo14.untyped.isName
-import leo14.untyped.leoString
+import leo14.untyped.*
 
 data class Compiler(val library: Library, val typed: Typed) {
 	override fun toString() = reflectScriptLine.leoString
@@ -60,9 +58,21 @@ fun Compiler.plus(field: ScriptField): Compiler =
 
 fun Compiler.plusNormalized(field: ScriptField): Compiler =
 	null
+		?: plusGive(field)
 		?: plusIs(field)
 		?: plusDoes(field)
 		?: plusField(field)
+
+fun Compiler.plusGive(field: ScriptField): Compiler? =
+	ifOrNull(field.string == giveName) {
+		library
+			.plus(script(givenName) bindingTo typed(givenName lineTo typed.type.typed(at(0))))
+			.clearLocal
+			.applyCompiler(emptyTyped)
+			.plus(field.rhs)
+			.compiledTyped
+			.let { giveTyped -> library.compiler(giveTyped.type.typed(fn(giveTyped.term).invoke(typed.term))) }
+	}
 
 fun Compiler.plusIs(field: ScriptField): Compiler? =
 	ifOrNull(field.string == isName) {

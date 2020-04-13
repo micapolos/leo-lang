@@ -24,8 +24,8 @@ val Library.reflectScriptLine: ScriptLine
 
 val Library.clearLocal: Library get() = scope.libraryWithLocalBindingCount(0)
 
-fun Library.plus(entry: Binding) =
-	scope.plus(entry).libraryWithLocalBindingCount(localBindingCount.inc())
+fun Library.plus(binding: Binding) =
+	scope.plus(binding).libraryWithLocalBindingCount(localBindingCount.inc())
 
 fun Library.apply(typed: Typed): Library? =
 	null // TODO

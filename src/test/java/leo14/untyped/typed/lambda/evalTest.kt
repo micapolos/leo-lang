@@ -94,7 +94,24 @@ class EvalTest {
 				y { number }
 			}
 		}
+	}
 
+	@Test
+	fun giveGiven() {
+		script_ {
+			number(10).give { given }
+		}.evals {
+			given { number(10) }
+		}
+	}
+
+	@Test
+	fun giveGivenNumber() {
+		script_ {
+			number(10).give { given.number }
+		}.evals {
+			number(10)
+		}
 	}
 
 	@Test

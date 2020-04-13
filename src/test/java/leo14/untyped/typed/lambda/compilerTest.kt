@@ -9,6 +9,7 @@ import leo14.lambda2.invoke
 import leo14.leo
 import leo14.script
 import leo14.untyped.doesName
+import leo14.untyped.giveName
 import leo14.untyped.isName
 import leo14.untyped.typed.lineTo
 import leo14.untyped.typed.numberType
@@ -17,6 +18,15 @@ import leo14.untyped.typed.type
 import org.junit.Test
 
 class CompilerTest {
+	@Test
+	fun give() {
+		emptyLibrary
+			.compiler(10.typed)
+			.plus(giveName fieldTo script(givenName))
+			.assertEqualTo(
+				emptyLibrary.compiler(type(givenName lineTo numberType).typed(fn(at(0)).invoke(10.typed.term))))
+	}
+
 	@Test
 	fun compiledTyped() {
 		emptyLibrary
