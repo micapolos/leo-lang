@@ -18,6 +18,11 @@ class EvalTest {
 	}
 
 	@Test
+	fun this_() {
+		script_ { number(123).this_ }.evals { number(123) }
+	}
+
+	@Test
 	fun structs() {
 		script_ {
 			point {
@@ -160,6 +165,15 @@ class EvalTest {
 	}
 
 	@Test
+	fun doesThis() {
+		script_ {
+			number.does { this_ }
+		}.evals {
+			nothing_
+		}
+	}
+
+	@Test
 	fun doesStruct() {
 		script_ {
 			x { number }.does { done }
@@ -198,12 +212,31 @@ class EvalTest {
 	}
 
 	@Test
-	fun doesJavaAccess() {
+	fun doesThisAccess() {
 		script_ {
-			number.does { java }
-			number(123)
-		}.compiles {
-			java_(123.bigDecimal)
+			point.does { this_ }
+			point
+		}.evals {
+			point
+		}
+	}
+
+	@Test
+	fun doesPointAccess() {
+		script_ {
+			point {
+				x { number }
+				y { number }
+			}.does { this_ }
+			point {
+				x { number(10) }
+				y { number(20) }
+			}
+		}.evals {
+			point {
+				x { number(10) }
+				y { number(20) }
+			}
 		}
 	}
 }
