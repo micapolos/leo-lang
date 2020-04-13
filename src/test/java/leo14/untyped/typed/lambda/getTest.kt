@@ -8,7 +8,7 @@ import leo14.untyped.textName
 import java.awt.Point
 import kotlin.test.Test
 
-class AccessTest {
+class GetTest {
 	@Test
 	fun getField() {
 		typed(

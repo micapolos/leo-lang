@@ -38,7 +38,7 @@ class EvalTest {
 	}
 
 	@Test
-	fun fieldAccess() {
+	fun get() {
 		script_ {
 			point {
 				x { number(10) }
@@ -55,6 +55,49 @@ class EvalTest {
 			}.y
 		}.evals {
 			y { number(20) }
+		}
+	}
+
+	@Test
+	fun set() {
+		script_ {
+			point {
+				x { number(10) }
+				y { number(20) }
+			}
+			set { x { number(30) } }
+		}.evals {
+			point {
+				x { number(30) }
+				y { number(20) }
+			}
+		}
+
+		script_ {
+			point {
+				x { number(10) }
+				y { number(20) }
+			}
+			set { y { number(30) } }
+		}.evals {
+			point {
+				x { number(10) }
+				y { number(30) }
+			}
+		}
+
+		script_ {
+			point {
+				x { number(10) }
+				y { number(20) }
+			}
+			set { z { number(30) } }
+		}.evals {
+			point {
+				x { number(10) }
+				y { number(20) }
+			}
+			set { z { number(30) } }
 		}
 	}
 

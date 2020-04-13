@@ -32,3 +32,4 @@ fun TypedLine.lineOrNull(name: String): TypedLine? =
 		JavaTypeLine ->
 			notNullIf(name == javaName)
 	}
+
