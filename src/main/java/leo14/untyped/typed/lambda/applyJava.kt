@@ -61,18 +61,20 @@ val Typed.applyJavaClassField: Typed?
 
 val Typed.applyJavaClassConstructor: Typed?
 	get() =
-		matchInfixOrPrefix(constructorName) { rhs ->
+		matchInfix(constructorName) { rhs ->
 			matchPrefix(className) {
 				matchJava {
 					let { classTerm ->
-						rhs.javaArrayOrNull<Class<*>>(javaClassParameterTypeLine)?.let { parameters ->
-							javaConstructorType.typed(
-								fn { classTerm ->
-									fn { parameters ->
-										(classTerm.value as Class<*>)
-											.getConstructor(*parameters.value as Array<Class<*>>).valueTerm
-									}
-								}.invoke(classTerm).invoke(parameters.term))
+						rhs.matchPrefix("parameters") {
+							javaArrayOrNull<Class<*>>(javaClassParameterTypeLine)?.let { parameters ->
+								javaConstructorType.typed(
+									fn { classTerm ->
+										fn { parameters ->
+											(classTerm.value as Class<*>)
+												.getConstructor(*parameters.value as Array<Class<*>>).valueTerm
+										}
+									}.invoke(classTerm).invoke(parameters.term))
+							}
 						}
 					}
 				}
@@ -115,14 +117,16 @@ val Typed.applyJavaConstructorInvoke: Typed?
 			matchPrefix(constructorName) {
 				matchJava {
 					let { constructorTerm ->
-						rhs.javaArrayOrNull<Any?>(javaParameterTypeLine)?.let { parameters ->
-							javaType.typed(
-								fn { constructorTerm ->
-									fn { parameters ->
-										(constructorTerm.value as Constructor<*>)
-											.newInstance(*(parameters.value as Array<*>)).valueTerm
-									}
-								}.invoke(constructorTerm).invoke(parameters.term))
+						rhs.matchPrefix("parameters") {
+							javaArrayOrNull<Any?>(javaParameterTypeLine)?.let { parameters ->
+								javaType.typed(
+									fn { constructorTerm ->
+										fn { parameters ->
+											(constructorTerm.value as Constructor<*>)
+												.newInstance(*(parameters.value as Array<*>)).valueTerm
+										}
+									}.invoke(constructorTerm).invoke(parameters.term))
+							}
 						}
 					}
 				}
