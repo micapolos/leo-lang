@@ -1,10 +1,10 @@
 package leo15
 
 import leo14.bigDecimal
-import leo14.lambda2.fn
-import leo14.lambda2.invoke
-import leo14.lambda2.value
-import leo14.lambda2.valueTerm
+import leo15.lambda.fn
+import leo15.lambda.invoke
+import leo15.lambda.value
+import leo15.lambda.valueTerm
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method

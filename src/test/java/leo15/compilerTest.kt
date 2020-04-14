@@ -4,11 +4,11 @@ import leo.base.assertEqualTo
 import leo13.givenName
 import leo14.fieldTo
 import leo14.invoke
-import leo14.lambda2.at
-import leo14.lambda2.fn
-import leo14.lambda2.invoke
 import leo14.leo
 import leo14.script
+import leo15.lambda.at
+import leo15.lambda.fn
+import leo15.lambda.invoke
 import org.junit.Test
 
 class CompilerTest {

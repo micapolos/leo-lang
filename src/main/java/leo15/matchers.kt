@@ -1,7 +1,7 @@
 package leo15
 
 import leo.java.lang.typeClassOrNull
-import leo14.lambda2.Term
+import leo15.lambda.Term
 
 fun Typed.matchJavaClassName(classFn: Class<*>.() -> Term): Typed? =
 	matchPrefix(javaName) {

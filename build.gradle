@@ -43,7 +43,7 @@ compileKotlin {
 compileTestKotlin {
 	kotlinOptions {
 		jvmTarget = "1.8"
-        freeCompilerArgs = ["-XXLanguage:+InlineClasses", "-XXLanguage:+PolymorphicSignature"]
+        freeCompilerArgs = []
     }
 }
 

@@ -4,10 +4,10 @@ import leo.base.assertEqualTo
 import leo.base.assertNull
 import leo.base.indexed
 import leo14.bigDecimal
-import leo14.lambda2.at
-import leo14.lambda2.nil
-import leo14.lambda2.valueTerm
 import leo14.literal
+import leo15.lambda.at
+import leo15.lambda.nil
+import leo15.lambda.valueTerm
 import kotlin.test.Test
 
 class CastTest {

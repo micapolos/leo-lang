@@ -7,10 +7,10 @@ import leo.base.reverse
 import leo.stak.reverseStack
 import leo13.fold
 import leo14.*
-import leo14.lambda2.at
-import leo14.lambda2.fn
-import leo14.lambda2.invoke
 import leo14.untyped.leoString
+import leo15.lambda.at
+import leo15.lambda.fn
+import leo15.lambda.invoke
 
 data class Compiler(val library: Library, val typed: Typed) {
 	override fun toString() = reflectScriptLine.leoString

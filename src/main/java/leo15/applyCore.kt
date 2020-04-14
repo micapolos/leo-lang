@@ -1,7 +1,7 @@
 package leo15
 
 import leo.base.notNullIf
-import leo14.lambda2.valueApply
+import leo15.lambda.valueApply
 
 val Typed.coreApply: Typed?
 	get() =

@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package leo14.lambda2
+package leo15.lambda
 
 import leo.base.iterate
 import leo.stak.*

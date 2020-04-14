@@ -3,8 +3,8 @@ package leo15
 import leo.base.assertEqualTo
 import leo14.bigDecimal
 import leo14.invoke
-import leo14.lambda2.valueTerm
 import leo14.leo
+import leo15.lambda.valueTerm
 import kotlin.test.Test
 import kotlin.test.assertFails
 

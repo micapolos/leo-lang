@@ -1,8 +1,8 @@
 package leo15
 
 import leo.base.assertContains
-import leo14.lambda2.nil
-import leo14.lambda2.valueTerm
+import leo15.lambda.nil
+import leo15.lambda.valueTerm
 import kotlin.test.Test
 
 class TermsTest {

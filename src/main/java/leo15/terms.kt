@@ -4,11 +4,11 @@ import leo.base.Seq
 import leo.base.emptySeq
 import leo.base.seq
 import leo.base.then
-import leo14.lambda2.*
+import leo15.lambda.*
 import java.math.BigDecimal
 
 fun numberBinaryTerm(fn: BigDecimal.(BigDecimal) -> BigDecimal): Term =
-	fn { lhs -> fn { rhs -> (lhs.value as BigDecimal).fn(rhs.value as BigDecimal).valueTerm } }
+	leo15.lambda.fn { lhs -> leo15.lambda.fn { rhs -> (lhs.value as BigDecimal).fn(rhs.value as BigDecimal).valueTerm } }
 
 val numberPlusNumberTerm: Term = numberBinaryTerm { plus(it) }
 val numberMinusNumberTerm: Term = numberBinaryTerm { minus(it) }
@@ -28,4 +28,4 @@ val Term.repeatingTermSeq: Seq<Term>
 		}
 
 fun Term.apply(fn: Term.() -> Term): Term =
-	fn { it.fn() }.invoke(this)
+	leo15.lambda.fn { it.fn() }.invoke(this)

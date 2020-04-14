@@ -1,8 +1,8 @@
 package leo15
 
-import leo14.lambda2.Term
-import leo14.lambda2.valueApply
 import leo14.untyped.typed.stringClass
+import leo15.lambda.Term
+import leo15.lambda.valueApply
 
 val Term.javaStringClassTerm: Term
 	get() =

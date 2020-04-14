@@ -1,4 +1,4 @@
-package leo14.lambda2
+package leo15.lambda
 
 import leo.base.assertEqualTo
 import kotlin.test.Test

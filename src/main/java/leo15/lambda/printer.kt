@@ -1,4 +1,4 @@
-package leo14.lambda2
+package leo15.lambda
 
 data class Printer(val term: Term, val depth: Int)
 

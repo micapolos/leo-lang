@@ -5,8 +5,7 @@ import leo14.Literal
 import leo14.Number
 import leo14.NumberLiteral
 import leo14.StringLiteral
-import leo14.lambda2.*
-import leo14.untyped.typed.*
+import leo15.lambda.*
 
 sealed class Cast
 object IdentityCast : Cast()
