@@ -124,7 +124,7 @@ fun Compiler.plusGives(field: ScriptField): Compiler? =
 fun Compiler.plusAs(field: ScriptField): Compiler? =
 	ifOrNull(field.string == asName) {
 		field.rhs.type.let { type ->
-			typed.cast(type)?.let { castTyped ->
+			typed.castTo(type)?.let { castTyped ->
 				set(castTyped)
 			}
 		}

@@ -33,7 +33,7 @@ val Scope.pairOrNull: Pair<Scope, Binding>?
 
 fun Scope.apply(typed: Typed): Typed? =
 	bindingStak.indexedTop { binding ->
-		typed.cast(binding.key.type)?.let { castTyped ->
+		typed.castTo(binding.key.type)?.let { castTyped ->
 			binding.value.invoke(this, castTyped.term)
 		}
 	}

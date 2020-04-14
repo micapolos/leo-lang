@@ -1,6 +1,5 @@
 package leo14.lambda2
 
-import leo.base.notNullIf
 import leo14.untyped.leoString
 
 sealed class Term {
@@ -31,21 +30,3 @@ operator fun Term.invoke(rhs: Term): Term = ApplicationTerm(this, rhs)
 fun at(index: Int): Term = IndexTerm(index)
 
 val Term.value: Any? get() = (this as ValueTerm).value
-
-val Term.isPair: Boolean
-	get() =
-		unpairOrNull != null
-
-val Term.unpairOrNull: Pair<Term, Term>?
-	get() =
-		(this as? ApplicationTerm)?.let { outerApplication ->
-			(outerApplication.lhs as? ApplicationTerm)?.let { innerApplication ->
-				notNullIf(innerApplication.lhs == pair) {
-					innerApplication.rhs to outerApplication.rhs
-				}
-			}
-		}
-
-val Term.unsafeApplicationPair: Pair<Term, Term>
-	get() =
-		(this as ApplicationTerm).lhs to rhs

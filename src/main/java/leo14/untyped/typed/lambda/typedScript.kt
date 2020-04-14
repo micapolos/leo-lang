@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package leo14.untyped.typed.lambda
 
 import leo14.*

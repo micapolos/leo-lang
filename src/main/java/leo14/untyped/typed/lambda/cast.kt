@@ -21,7 +21,7 @@ fun Cast.term(input: Term): Term =
 		is TermCast -> term
 	}
 
-fun Typed.cast(to: Type): Typed? =
+fun Typed.castTo(to: Type): Typed? =
 	term.cast(type, to, null)?.let { cast ->
 		when (cast) {
 			IdentityCast -> to.typed(term)

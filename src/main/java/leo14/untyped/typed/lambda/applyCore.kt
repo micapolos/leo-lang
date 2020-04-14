@@ -1,14 +1,29 @@
 package leo14.untyped.typed.lambda
 
+import leo.base.notNullIf
+import leo14.lambda2.valueApply
+import leo14.untyped.equalsName
 import leo14.untyped.setName
 
 val Typed.coreApply: Typed?
 	get() =
 		null
+			?: applyEquals
 			?: applyThis
 			?: applyType
 			?: applySet
 			?: applyGet // must be last
+
+val Typed.applyEquals: Typed?
+	get() =
+		matchInfix(equalsName) { rhs ->
+			notNullIf(type == rhs.type) {
+				booleanType.typed(
+					term.valueApply(rhs.term) { rhs ->
+						(this == rhs).value
+					})
+			}
+		}
 
 val Typed.applyThis: Typed?
 	get() =

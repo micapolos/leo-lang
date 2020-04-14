@@ -1,5 +1,6 @@
 package leo14.lambda2
 
+import leo.base.notNullIf
 import kotlin.math.max
 
 val nil = value(null)
@@ -8,6 +9,12 @@ val id = fn(at(0))
 val first = fn(fn(at(1)))
 val second = fn(fn(at(0)))
 val pair = fn(fn(fn(at(0)(at(2))(at(1)))))
+
+fun Term.apply(fn: Term.() -> Term): Term =
+	fn { lhs -> lhs.fn() }.invoke(this)
+
+fun Term.apply(rhs: Term, fn: Term.(Term) -> Term): Term =
+	fn { lhs -> fn { rhs -> lhs.fn(rhs) } }.invoke(this).invoke(rhs)
 
 fun Term.valueApply(valueFn: Any?.() -> Any?): Term =
 	fn { value(it.value.valueFn()) }.invoke(this)
@@ -39,3 +46,21 @@ val Term.freeVariableCount: Int
 			is ApplicationTerm -> max(lhs.freeVariableCount, rhs.freeVariableCount)
 			is IndexTerm -> index + 1
 		}
+
+val Term.isPair: Boolean
+	get() =
+		unpairOrNull != null
+
+val Term.unpairOrNull: Pair<Term, Term>?
+	get() =
+		(this as? ApplicationTerm)?.let { outerApplication ->
+			(outerApplication.lhs as? ApplicationTerm)?.let { innerApplication ->
+				notNullIf(innerApplication.lhs == pair) {
+					innerApplication.rhs to outerApplication.rhs
+				}
+			}
+		}
+
+val Term.unsafeApplicationPair: Pair<Term, Term>
+	get() =
+		(this as ApplicationTerm).lhs to rhs
