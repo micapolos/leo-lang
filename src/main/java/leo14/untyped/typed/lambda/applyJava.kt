@@ -16,6 +16,9 @@ import java.math.BigDecimal
 val Typed.javaApply: Typed?
 	get() =
 		null
+			?: applyNumberPlusNumber
+			?: applyNumberMinusNumber
+			?: applyNumberTimesNumber
 			?: applyJavaIntNumber
 			?: applyNumberIntJava
 			?: applyJavaClassName
@@ -26,6 +29,48 @@ val Typed.javaApply: Typed?
 			?: applyJavaFieldGet
 			?: applyJavaConstructorInvoke
 			?: applyJavaMethodInvoke
+
+val Typed.applyNumberPlusNumber: Typed?
+	get() =
+		matchInfix(plusName) { rhs ->
+			matchNumber {
+				let { lhsNumberTerm ->
+					rhs.matchNumber {
+						let { rhsNumberTerm ->
+							numberType.typed(numberPlusNumberTerm.invoke(lhsNumberTerm).invoke(rhsNumberTerm))
+						}
+					}
+				}
+			}
+		}
+
+val Typed.applyNumberMinusNumber: Typed?
+	get() =
+		matchInfix(plusName) { rhs ->
+			matchNumber {
+				let { lhsNumberTerm ->
+					rhs.matchNumber {
+						let { rhsNumberTerm ->
+							numberType.typed(numberMinusNumberTerm.invoke(lhsNumberTerm).invoke(rhsNumberTerm))
+						}
+					}
+				}
+			}
+		}
+
+val Typed.applyNumberTimesNumber: Typed?
+	get() =
+		matchInfix(plusName) { rhs ->
+			matchNumber {
+				let { lhsNumberTerm ->
+					rhs.matchNumber {
+						let { rhsNumberTerm ->
+							numberType.typed(numberTimesNumberTerm.invoke(lhsNumberTerm).invoke(rhsNumberTerm))
+						}
+					}
+				}
+			}
+		}
 
 val Typed.applyJavaIntNumber: Typed?
 	get() =

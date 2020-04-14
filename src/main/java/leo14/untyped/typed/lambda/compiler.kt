@@ -1,8 +1,10 @@
 package leo14.untyped.typed.lambda
 
-import leo.base.*
+import leo.base.fold
+import leo.base.ifOrNull
+import leo.base.iterate
+import leo.base.reverse
 import leo.stak.reverseStack
-import leo.stak.seq
 import leo13.fold
 import leo14.*
 import leo14.lambda2.at
@@ -25,6 +27,7 @@ val Compiler.reflectScriptLine: ScriptLine
 
 fun Library.applyCompiler(typed: Typed): Compiler =
 	null
+		?: compiler(typed).apply
 		?: scope.apply(typed)?.let { compiler(it) }
 		?: apply(typed)?.let { compiler(emptyTyped) }
 		?: compiler(typed.apply)
@@ -61,7 +64,7 @@ fun Compiler.plusNormalized(field: ScriptField): Compiler =
 		?: plusGive(field)
 		?: plusIs(field)
 		?: plusBecomes(field)
-		?: plusDoes(field)
+		?: plusGives(field)
 		?: plusField(field)
 
 fun Compiler.plusGive(field: ScriptField): Compiler? =
@@ -99,17 +102,18 @@ fun Compiler.plusBecomes(field: ScriptField): Compiler? =
 			}
 	}
 
-fun Compiler.plusDoes(field: ScriptField): Compiler? =
-	ifOrNull(field.string == doesName) {
+fun Compiler.plusGives(field: ScriptField): Compiler? =
+	ifOrNull(field.string == givesName) {
 		typed.staticTypeOrNull?.let { type ->
 			library
+				.plus(script(givenName) bindingTo typed(givenName lineTo type.typed(at(0))))
 				.clearLocal
-				.applyCompiler(type.typed(at(0)))
+				.applyCompiler(emptyTyped)
 				.plus(field.rhs)
 				.compiled
 				.let { compiled ->
 					library
-						.plus(type bindingTo compiled.scope.compiled(compiled.typed.withFnTerm))
+						.plus(type bindingTo library.scope.compiled(compiled.typed.withFnTerm))
 						.compiler(emptyTyped)
 				}
 		}
@@ -126,17 +130,38 @@ fun Compiler.set(typed: Typed): Compiler =
 
 val Compiler.compiledTyped: Typed
 	get() =
-		typed.type.typed(
-			typed.term
-				.iterate(library.localBindingCount) { fn(this) }
-				.fold(library.scope.bindingStak.seq
-					.map { typed.term }
-					.takeOrNull(library.localBindingCount)) { invoke(it!!) })
+		compiled.typed
 
 val Compiler.compiled: Compiled
 	get() =
-		library.scope.iterate(library.localBindingCount) { pop!! }.compiled(compiledTyped)
+		library.scope.compiled(typed).iterate(library.localBindingCount) {
+			scope.pairOrNull!!.let { (tailScope, binding) ->
+				tailScope.compiled(typed.updateTerm { fn(this).invoke(binding.typed.term) })
+			}
+		}
 
 val Compiler.evaluate: Compiler
 	get() =
 		set(compiledTyped.eval)
+
+val Compiler.apply: Compiler?
+	get() =
+		null
+			?: applyDebug
+			?: applyEvaluate
+
+val Compiler.applyDebug: Compiler?
+	get() =
+		typed
+			.matchPrefix("debug") { this }
+			?.let { typed ->
+				emptyLibrary.compiler(typed(set(typed).reflectScriptLine.typedLine))
+			}
+
+val Compiler.applyEvaluate: Compiler?
+	get() =
+		typed
+			.matchPrefix("evaluate") { this }
+			?.let { typed ->
+				set(library.compiler(typed).evaluate.typed)
+			}

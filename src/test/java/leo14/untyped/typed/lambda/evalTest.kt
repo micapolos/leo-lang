@@ -216,65 +216,28 @@ class EvalTest {
 	}
 
 	@Test
-	fun does() {
+	fun gives() {
 		script_ {
-			number.does { done }
+			number.gives { given }
 		}.evals {
 			nothing_
 		}
 	}
 
 	@Test
-	fun doesThis() {
+	fun givesGiven() {
 		script_ {
-			number.does { this_ }
-		}.evals {
-			nothing_
-		}
-	}
-
-	@Test
-	fun doesStruct() {
-		script_ {
-			x { number }.does { done }
-		}.evals {
-			nothing_
-		}
-	}
-
-	@Test
-	fun doesJava() {
-		script_ {
-			number.does { java }
-		}.evals {
-			nothing_
-		}
-	}
-
-	@Test
-	fun doesAccess() {
-		script_ {
-			number.does { done }
+			number.gives { given }
 			number(123)
 		}.evals {
-			done { number(123) }
+			given { number(123) }
 		}
 	}
 
 	@Test
-	fun doesStructAccess() {
+	fun givesGivenNumber() {
 		script_ {
-			x { number }.does { done }
-			x { number(123) }
-		}.evals {
-			done { x { number(123) } }
-		}
-	}
-
-	@Test
-	fun doesThisAccess() {
-		script_ {
-			number.does { this_ }
+			number.gives { given.number }
 			number(123)
 		}.evals {
 			number(123)
@@ -282,12 +245,23 @@ class EvalTest {
 	}
 
 	@Test
-	fun doesJavaAccess() {
+	fun givesGivenNumberJava() {
 		script_ {
-			number.does { java }
+			number.gives { given.number.java }
 			number(123)
 		}.evals {
 			java_(123.bigDecimal)
+		}
+	}
+
+	@Test
+	fun failingUseCase1() {
+		script_ {
+			my.number.is_ { number(123) }
+			the.number.is_ { my.number }
+			the.number
+		}.evals {
+			number(123)
 		}
 	}
 }

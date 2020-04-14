@@ -26,6 +26,12 @@ val emptyScope = emptyStak<Binding>().scope
 fun Scope.plus(entry: Binding): Scope = bindingStak.push(entry).scope
 val Scope.pop: Scope? get() = bindingStak.pop?.scope
 
+val Scope.pairOrNull: Pair<Scope, Binding>?
+	get() =
+		bindingStak.unlink?.let { stakLink ->
+			stakLink.first.scope to stakLink.second
+		}
+
 fun Scope.indexedBinding(type: Type): IndexedValue<Binding>? =
 	bindingStak.topIndexedValue { it.key.type == type }
 

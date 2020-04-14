@@ -257,3 +257,6 @@ inline fun <reified T> Typed.javaArrayOrNull(typeLine: TypeLine): Typed? =
 			repeatingTermSeq.map { value as T }.toList().toTypedArray().valueTerm
 		})
 	}
+
+fun Typed.set(term: Term): Typed =
+	type.typed(term)

@@ -44,7 +44,7 @@ fun TypeLine.scriptLine(term: Term, scriptFn: ScriptFn): ScriptLine =
 	when (this) {
 		textTypeLine -> line(term.value.valueLiteralOrNull!!)
 		numberTypeLine -> line(term.value.valueLiteralOrNull!!)
-		is LiteralTypeLine -> TODO() // remove this type line
+		is LiteralTypeLine -> line(literal)
 		is FieldTypeLine -> field.scriptLine(term, scriptFn)
 		JavaTypeLine -> javaScriptLine(term)
 	}
