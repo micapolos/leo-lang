@@ -7,7 +7,6 @@ import leo.base.reverse
 import leo.stak.reverseStack
 import leo13.fold
 import leo14.*
-import leo14.untyped.leoString
 import leo15.lambda.at
 import leo15.lambda.fn
 import leo15.lambda.invoke

@@ -3,7 +3,6 @@ package leo15
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.script
-import leo14.untyped.leoString
 
 data class Compiled(val scope: Scope, val typed: Typed) {
 	override fun toString() = reflectScriptLine.leoString

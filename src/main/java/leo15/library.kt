@@ -4,7 +4,6 @@ import leo14.ScriptLine
 import leo14.lineTo
 import leo14.literal
 import leo14.script
-import leo14.untyped.leoString
 
 data class Library(val scope: Scope, val localBindingCount: Int) {
 	override fun toString() = reflectScriptLine.leoString

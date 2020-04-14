@@ -7,7 +7,6 @@ import leo14.ScriptLine
 import leo14.lineTo
 import leo14.plus
 import leo14.script
-import leo14.untyped.leoString
 
 data class Scope(val bindingStak: Stak<Binding>) {
 	override fun toString() = reflectScriptLine.leoString

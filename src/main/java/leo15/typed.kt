@@ -2,7 +2,6 @@ package leo15
 
 import leo.base.*
 import leo14.*
-import leo14.untyped.leoString
 import leo15.lambda.*
 import java.math.BigDecimal
 
@@ -263,7 +262,3 @@ fun Typed.set(term: Term): Typed =
 
 fun Type.typed(alternativeIndex: Int, term: Term): Typed =
 	typed((alternativeIndex indexed term).valueTerm)
-
-val Typed.optimizeTerm: Typed
-	get() =
-		type.typed(term.optimize)

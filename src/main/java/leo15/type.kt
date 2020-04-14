@@ -6,7 +6,6 @@ import leo.base.notNullIf
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
-import leo14.untyped.leoString
 import leo15.lambda.nil
 
 data class TypeFunction(val from: Type, val to: Type)

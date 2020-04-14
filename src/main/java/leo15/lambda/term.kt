@@ -1,6 +1,6 @@
 package leo15.lambda
 
-import leo14.untyped.leoString
+import leo15.leoString
 
 sealed class Term {
 	override fun toString() = script.leoString

@@ -4,7 +4,6 @@ import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.script
-import leo14.untyped.leoString
 import leo15.lambda.Term
 import leo15.lambda.at
 import leo15.lambda.invoke
