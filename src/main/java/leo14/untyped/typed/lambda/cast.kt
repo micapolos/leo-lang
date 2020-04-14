@@ -1,5 +1,6 @@
 package leo14.untyped.typed.lambda
 
+import leo.base.indexed
 import leo14.Literal
 import leo14.Number
 import leo14.NumberLiteral
@@ -14,6 +15,12 @@ data class TermCast(val term: Term) : Cast()
 val identityCast: Cast = IdentityCast
 val Term.cast: Cast get() = TermCast(this)
 
+fun Cast.term(input: Term): Term =
+	when (this) {
+		IdentityCast -> input
+		is TermCast -> term
+	}
+
 fun Typed.cast(to: Type): Typed? =
 	term.cast(type, to, null)?.let { cast ->
 		when (cast) {
@@ -22,13 +29,17 @@ fun Typed.cast(to: Type): Typed? =
 		}
 	}
 
+fun Typed.castTerm(to: Type): Term? =
+	term.cast(type, to, null)?.term(term)
+
 fun Term.cast(from: Type, to: Type, recursive: TypeRecursive?): Cast? =
-	when (from) {
+	if (from !is AlternativeType && to is AlternativeType) cast(from, to.alternative, 0, recursive)
+	else when (from) {
 		EmptyType -> castEmpty(to)
 		AnythingType -> castAnything(to)
 		NothingType -> castNothing(to)
 		is LinkType -> cast(from.link, to, recursive)
-		is AlternativeType -> cast(from.alternative, to, recursive)
+		is AlternativeType -> cast(from.alternative, to)
 		is FunctionType -> cast(from.function, to)
 		is RepeatingType -> cast(from.repeating, to, recursive)
 		is RecursiveType -> cast(from.recursive, to)
@@ -74,12 +85,19 @@ fun Term.cast(from: TypeLink, to: Type, recursive: TypeRecursive?): Cast? =
 		}
 	else null
 
-fun Term.cast(from: TypeAlternative, to: Type, recursive: TypeRecursive?): Cast? =
+fun cast(from: TypeAlternative, to: Type): Cast? =
 	if (to is AlternativeType) cast(from, to.alternative)
-	else TODO()
+	else null
 
-// TODO: Implement sub-alternative matching
-fun Term.cast(from: TypeAlternative, to: TypeAlternative): Cast? =
+fun Term.cast(from: Type, to: Type, alternativeIndex: Int, recursive: TypeRecursive?): Cast? =
+	cast(from, to, recursive)?.let { cast ->
+		(alternativeIndex indexed cast.term(this)).valueTerm.cast
+	}
+
+fun Term.cast(from: Type, to: TypeAlternative, alternativeIndex: Int, recursive: TypeRecursive?): Cast? =
+	cast(from, to.rhs, alternativeIndex, recursive) ?: cast(from, to.lhs, alternativeIndex.inc(), recursive)
+
+fun cast(from: TypeAlternative, to: TypeAlternative): Cast? =
 	if (from == to) identityCast
 	else null
 
