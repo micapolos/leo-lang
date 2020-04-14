@@ -56,7 +56,17 @@ fun javaScriptLine(term: Term): ScriptLine =
 	term.value.valueJavaScriptLine
 
 fun TypeAlternative.script(term: Term, scriptFn: ScriptFn): Script =
-	TODO()
+	(term.value as IndexedValue<Term>).let { (index, term) ->
+		script(index, term, scriptFn)
+	}
+
+fun TypeAlternative.script(index: Int, term: Term, scriptFn: ScriptFn): Script =
+	if (index == 0) rhs.script(term, scriptFn)
+	else lhs.script(index.dec(), term, scriptFn)
+
+fun Type.script(index: Int, term: Term, scriptFn: ScriptFn): Script =
+	if (index == 0) script(term, scriptFn)
+	else (this as AlternativeType).alternative.lhs.script(index.dec(), term, scriptFn)
 
 fun TypeFunction.script(term: Term, scriptFn: ScriptFn): Script =
 	TODO()

@@ -1,9 +1,6 @@
 package leo14.untyped.typed.lambda
 
-import leo.base.fold
-import leo.base.ifOrNull
-import leo.base.map
-import leo.base.notNullIf
+import leo.base.*
 import leo14.*
 import leo14.lambda2.*
 import leo14.untyped.leoString
@@ -266,3 +263,6 @@ inline fun <reified T> Typed.javaArrayOrNull(typeLine: TypeLine): Typed? =
 
 fun Typed.set(term: Term): Typed =
 	type.typed(term)
+
+fun Type.typed(alternativeIndex: Int, term: Term): Typed =
+	typed((alternativeIndex indexed term).valueTerm)
