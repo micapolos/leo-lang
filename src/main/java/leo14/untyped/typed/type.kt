@@ -76,6 +76,7 @@ fun Type.plus(line: TypeLine) = linkTo(line).type
 fun Type.plus(field: TypeField) = plus(field.line)
 fun Type.plus(name: String) = plus(name fieldTo emptyType)
 val Literal.typeLine: TypeLine get() = LiteralTypeLine(this)
+val Literal.type: Type get() = type(typeLine)
 val TypeField.line: TypeLine get() = FieldTypeLine(this)
 val javaTypeLine: TypeLine = JavaTypeLine
 infix fun String.fieldTo(type: Type) = TypeField(this, type)

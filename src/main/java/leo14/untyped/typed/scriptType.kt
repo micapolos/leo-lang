@@ -14,8 +14,8 @@ val Script.type: Type
 val ScriptLink.type: Type
 	get() =
 		null
-			?: typeAlternativeOrNull?.run { type }
-			?: lhs.type.plus(line.typeLine)
+			?: typeAlternativeOrNull?.type
+			?: if (lhs.isEmpty) line.type else lhs.type.plus(line.typeLine)
 
 val ScriptLink.typeAlternativeOrNull: TypeAlternative?
 	get() =

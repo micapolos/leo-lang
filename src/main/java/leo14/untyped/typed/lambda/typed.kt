@@ -69,9 +69,17 @@ val Literal.typedLine: TypedLine
 		is NumberLiteral -> number.bigDecimal.typedLine
 	}
 
+val Literal.typed: Typed
+	get() =
+		typed(typedLine)
+
 val Literal.staticTypedLine: TypedLine
 	get() =
 		LiteralTypeLine(this).typed(nil)
+
+val Literal.staticTyped: Typed
+	get() =
+		type.typed(nil)
 
 fun Typed.plus(line: TypedLine): Typed =
 	type.plus(line.typeLine).typed(
