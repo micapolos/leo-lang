@@ -4,16 +4,17 @@ import leo14.untyped.dsl2.*
 
 fun main() {
 	main_ {
-		boolean.is_ {
-			boolean {
-				true_
-				or { false_ }
-			}
+		boolean
+		is_ {
+			true_
+			or { false_ }
 		}
 
-		true_.type.is_ { boolean }
-		false_.type.is_ { boolean }
+		boolean.not
+		gives {
+			negate
+		}
 
-		true_.type
+		true_.not
 	}
 }

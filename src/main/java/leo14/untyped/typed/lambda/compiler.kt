@@ -11,6 +11,7 @@ import leo14.lambda2.at
 import leo14.lambda2.fn
 import leo14.lambda2.invoke
 import leo14.untyped.*
+import leo14.untyped.typed.type
 
 data class Compiler(val library: Library, val typed: Typed) {
 	override fun toString() = reflectScriptLine.leoString
@@ -65,6 +66,7 @@ fun Compiler.plusNormalized(field: ScriptField): Compiler =
 		?: plusIs(field)
 		?: plusBecomes(field)
 		?: plusGives(field)
+		?: plusAs(field)
 		?: plusField(field)
 
 fun Compiler.plusGive(field: ScriptField): Compiler? =
@@ -116,6 +118,15 @@ fun Compiler.plusGives(field: ScriptField): Compiler? =
 						.plus(type bindingTo library.scope.compiled(compiled.typed.withFnTerm))
 						.compiler(emptyTyped)
 				}
+		}
+	}
+
+fun Compiler.plusAs(field: ScriptField): Compiler? =
+	ifOrNull(field.string == asName) {
+		field.rhs.type.let { type ->
+			typed.cast(type)?.let { castTyped ->
+				set(castTyped)
+			}
 		}
 	}
 
