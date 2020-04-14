@@ -6,9 +6,6 @@ import leo14.StringLiteral
 import leo14.untyped.javaName
 import leo14.untyped.numberName
 import leo14.untyped.textName
-import leo14.untyped.typed.FieldTypeLine
-import leo14.untyped.typed.JavaTypeLine
-import leo14.untyped.typed.LiteralTypeLine
 
 fun Typed.get(name: String): Typed? =
 	linkOrNull?.onlyLineOrNull?.fieldOrNull?.rhs?.lineOrNull(name)?.let { typed(it) }

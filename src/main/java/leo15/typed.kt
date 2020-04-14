@@ -6,7 +6,6 @@ import leo14.lambda2.*
 import leo14.untyped.leoString
 import leo14.untyped.numberName
 import leo14.untyped.textName
-import leo14.untyped.typed.*
 import java.math.BigDecimal
 
 data class Typed(val type: Type, val term: Term) {

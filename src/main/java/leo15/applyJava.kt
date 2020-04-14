@@ -6,8 +6,6 @@ import leo14.lambda2.invoke
 import leo14.lambda2.value
 import leo14.lambda2.valueTerm
 import leo14.untyped.*
-import leo14.untyped.typed.javaType
-import leo14.untyped.typed.numberType
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method

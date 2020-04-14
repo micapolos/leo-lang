@@ -5,9 +5,6 @@ import leo14.bigDecimal
 import leo14.invoke
 import leo14.lambda2.valueTerm
 import leo14.leo
-import leo14.untyped.typed.numberType
-import leo14.untyped.typed.or
-import leo14.untyped.typed.textType
 import kotlin.test.Test
 import kotlin.test.assertFails
 

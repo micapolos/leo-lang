@@ -8,10 +8,6 @@ import leo14.lambda2.invoke
 import leo14.lineTo
 import leo14.script
 import leo14.untyped.leoString
-import leo14.untyped.typed.Type
-import leo14.untyped.typed.functionTo
-import leo14.untyped.typed.staticType
-import leo14.untyped.typed.type
 
 data class Binding(val key: BindingKey, val value: BindingValue) {
 	override fun toString() = reflectScriptLine.leoString

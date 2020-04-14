@@ -12,10 +12,6 @@ import leo14.script
 import leo14.untyped.giveName
 import leo14.untyped.givesName
 import leo14.untyped.isName
-import leo14.untyped.typed.lineTo
-import leo14.untyped.typed.numberType
-import leo14.untyped.typed.textType
-import leo14.untyped.typed.type
 import org.junit.Test
 
 class CompilerTest {

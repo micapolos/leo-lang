@@ -1,9 +1,6 @@
 package leo15
 
 import leo14.untyped.*
-import leo14.untyped.typed.javaType
-import leo14.untyped.typed.lineTo
-import leo14.untyped.typed.type
 
 val javaClassTypeLine = className lineTo javaType
 val javaClassType = type(javaClassTypeLine)

@@ -8,10 +8,6 @@ import leo14.lambda2.at
 import leo14.lambda2.nil
 import leo14.lambda2.valueTerm
 import leo14.literal
-import leo14.untyped.typed.numberType
-import leo14.untyped.typed.or
-import leo14.untyped.typed.textType
-import leo14.untyped.typed.type
 import kotlin.test.Test
 
 class CastTest {

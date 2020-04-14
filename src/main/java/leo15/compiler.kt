@@ -11,7 +11,6 @@ import leo14.lambda2.at
 import leo14.lambda2.fn
 import leo14.lambda2.invoke
 import leo14.untyped.*
-import leo14.untyped.typed.type
 
 data class Compiler(val library: Library, val typed: Typed) {
 	override fun toString() = reflectScriptLine.leoString

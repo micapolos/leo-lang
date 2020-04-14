@@ -9,7 +9,5 @@ fun main() {
 			y { number(20) }
 			z { number(30) }
 		}
-		x
-		debug
 	}
 }
