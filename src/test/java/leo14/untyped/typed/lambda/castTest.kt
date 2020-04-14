@@ -8,10 +8,7 @@ import leo14.lambda2.at
 import leo14.lambda2.nil
 import leo14.lambda2.valueTerm
 import leo14.literal
-import leo14.untyped.typed.numberType
-import leo14.untyped.typed.or
-import leo14.untyped.typed.textType
-import leo14.untyped.typed.type
+import leo14.untyped.typed.*
 import kotlin.test.Test
 
 class CastTest {
@@ -45,6 +42,11 @@ class CastTest {
 		"foo".typed.castTerm(numberType.or(textType)).assertEqualTo((0 indexed "foo".valueTerm).valueTerm)
 		10.typed.castTerm(numberType.or(textType)).assertEqualTo((1 indexed 10.bigDecimal.valueTerm).valueTerm)
 		emptyTyped.castTerm(numberType.or(textType)).assertNull
+	}
+
+	@Test
+	fun repeating() {
+		textType.repeating.type.typed
 	}
 
 	// TODO: Tests for other types.

@@ -3,10 +3,7 @@
 package leo14.untyped.typed.lambda
 
 import leo14.*
-import leo14.lambda2.Term
-import leo14.lambda2.script
-import leo14.lambda2.unsafeUnpair
-import leo14.lambda2.value
+import leo14.lambda2.*
 import leo14.untyped.anythingName
 import leo14.untyped.typed.*
 
@@ -74,7 +71,10 @@ fun TypeFunction.script(term: Term, scriptFn: ScriptFn): Script =
 	TODO()
 
 fun TypeRepeating.script(term: Term, scriptFn: ScriptFn): Script =
-	TODO()
+	if (term == nil) script()
+	else term.unsafeUnpair.let { (first, second) ->
+		type.script(first, scriptFn).plus(type.script(second, scriptFn))
+	}
 
 fun TypeRecursive.script(term: Term, scriptFn: ScriptFn): Script =
 	TODO()
