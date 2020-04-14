@@ -131,12 +131,11 @@ val Compiler.compiledTyped: Typed
 				.iterate(library.localBindingCount) { fn(this) }
 				.fold(library.scope.bindingStak.seq
 					.map { typed.term }
-					.takeOrNull(library.localBindingCount)
-					.reverse) { invoke(it!!) })
+					.takeOrNull(library.localBindingCount)) { invoke(it!!) })
 
 val Compiler.compiled: Compiled
 	get() =
-		compiledTyped.run { library.scope.compiled(typed) }
+		library.scope.iterate(library.localBindingCount) { pop!! }.compiled(compiledTyped)
 
 val Compiler.evaluate: Compiler
 	get() =

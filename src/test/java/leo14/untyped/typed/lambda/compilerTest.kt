@@ -3,6 +3,7 @@ package leo14.untyped.typed.lambda
 import leo.base.assertEqualTo
 import leo13.givenName
 import leo14.fieldTo
+import leo14.invoke
 import leo14.lambda2.at
 import leo14.lambda2.fn
 import leo14.lambda2.invoke
@@ -38,17 +39,31 @@ class CompilerTest {
 			.assertEqualTo(
 				numberType
 					.typed(fn(fn(fn(at(1))))
-						.invoke(1.typed.term)
+						.invoke(3.typed.term)
 						.invoke(2.typed.term)
-						.invoke(3.typed.term)))
+						.invoke(1.typed.term)))
 	}
 
 	@Test
 	fun constantBinding() {
 		emptyLibrary
 			.compiler(typed("x"))
-			.plus(isName fieldTo leo(123))
-			.assertEqualTo(emptyLibrary.plus(script("x") bindingTo 123.typed).compiler(emptyTyped))
+			.plus(isName fieldTo leo(10))
+			.assertEqualTo(emptyLibrary.plus(script("x") bindingTo 10.typed).compiler(emptyTyped))
+	}
+
+
+	@Test
+	fun constantBinding_next() {
+		emptyLibrary
+			.plus(script("x") bindingTo 10.typed)
+			.compiler(typed("y"))
+			.plus(isName fieldTo leo("x"()))
+			.assertEqualTo(
+				emptyLibrary
+					.plus(script("x") bindingTo 10.typed)
+					.plus(script("y") bindingTo numberType.typed(at(0)))
+					.compiler(emptyTyped))
 	}
 
 	@Test

@@ -16,6 +16,6 @@ fun main() {
 			center { my.point }
 		}
 
-//		my.circle
+		my.circle
 	}
 }
