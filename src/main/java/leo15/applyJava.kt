@@ -5,7 +5,6 @@ import leo14.lambda2.fn
 import leo14.lambda2.invoke
 import leo14.lambda2.value
 import leo14.lambda2.valueTerm
-import leo14.untyped.*
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method

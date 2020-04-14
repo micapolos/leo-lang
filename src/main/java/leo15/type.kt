@@ -8,9 +8,6 @@ import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo14.lambda2.nil
 import leo14.untyped.leoString
-import leo14.untyped.listName
-import leo14.untyped.numberName
-import leo14.untyped.textName
 
 data class TypeFunction(val from: Type, val to: Type)
 data class TypeAlternative(val lhs: Type, val rhs: Type)

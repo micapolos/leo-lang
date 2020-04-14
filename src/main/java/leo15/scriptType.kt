@@ -2,7 +2,6 @@ package leo15
 
 import leo.base.notNullIf
 import leo14.*
-import leo14.untyped.*
 
 val Script.type: Type
 	get() =

@@ -4,8 +4,8 @@ package leo15
 
 import leo14.*
 import leo14.lambda2.*
-import leo14.untyped.anythingName
-import leo14.untyped.typed.*
+import leo14.untyped.typed.valueJavaScriptLine
+import leo14.untyped.typed.valueLiteralOrNull
 
 typealias ScriptFn = (Typed) -> Script?
 

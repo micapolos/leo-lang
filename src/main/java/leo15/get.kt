@@ -3,9 +3,6 @@ package leo15
 import leo.base.notNullIf
 import leo14.NumberLiteral
 import leo14.StringLiteral
-import leo14.untyped.javaName
-import leo14.untyped.numberName
-import leo14.untyped.textName
 
 fun Typed.get(name: String): Typed? =
 	linkOrNull?.onlyLineOrNull?.fieldOrNull?.rhs?.lineOrNull(name)?.let { typed(it) }

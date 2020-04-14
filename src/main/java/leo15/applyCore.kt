@@ -2,8 +2,6 @@ package leo15
 
 import leo.base.notNullIf
 import leo14.lambda2.valueApply
-import leo14.untyped.equalsName
-import leo14.untyped.setName
 
 val Typed.coreApply: Typed?
 	get() =

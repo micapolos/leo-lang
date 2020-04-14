@@ -1,7 +1,6 @@
 package leo15
 
 import leo14.*
-import leo14.untyped.*
 
 val Type.reflectScriptLine: ScriptLine
 	get() =
