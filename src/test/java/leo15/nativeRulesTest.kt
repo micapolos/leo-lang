@@ -1,10 +1,6 @@
 package leo15
 
 import leo.base.assertEqualTo
-import leo14.untyped.className
-import leo14.untyped.fieldName
-import leo14.untyped.javaName
-import leo14.untyped.nameName
 import org.junit.Test
 import java.lang.String
 

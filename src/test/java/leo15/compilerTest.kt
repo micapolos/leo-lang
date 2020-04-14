@@ -9,9 +9,6 @@ import leo14.lambda2.fn
 import leo14.lambda2.invoke
 import leo14.leo
 import leo14.script
-import leo14.untyped.giveName
-import leo14.untyped.givesName
-import leo14.untyped.isName
 import org.junit.Test
 
 class CompilerTest {

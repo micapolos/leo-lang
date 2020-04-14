@@ -2,9 +2,6 @@ package leo15
 
 import leo.base.assertEqualTo
 import leo.base.assertNull
-import leo14.untyped.javaName
-import leo14.untyped.numberName
-import leo14.untyped.textName
 import java.awt.Point
 import kotlin.test.Test
 

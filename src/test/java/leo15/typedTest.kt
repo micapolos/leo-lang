@@ -4,9 +4,6 @@ import leo.base.assertEqualTo
 import leo.base.assertNull
 import leo14.bigDecimal
 import leo14.lambda2.*
-import leo14.untyped.javaName
-import leo14.untyped.textName
-import leo14.untyped.typed.*
 import java.awt.Point
 import kotlin.test.Test
 
