@@ -4,7 +4,7 @@ import leo.base.println
 import leo.base.runWith
 import leo14.*
 import leo14.untyped.*
-import leo14.untyped.typed.lambda.eval
+import leo15.eval
 
 fun X.number(int: Int) = x(leo14.token(leo14.literal(int)))
 fun X.number(double: Double) = x(leo14.token(leo14.literal(double)))
