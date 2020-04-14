@@ -8,7 +8,6 @@ import leo14.lineTo
 import leo14.plus
 import leo14.script
 import leo14.untyped.leoString
-import leo14.untyped.typed.Type
 
 data class Scope(val bindingStak: Stak<Binding>) {
 	override fun toString() = reflectScriptLine.leoString
@@ -32,10 +31,9 @@ val Scope.pairOrNull: Pair<Scope, Binding>?
 			stakLink.first.scope to stakLink.second
 		}
 
-fun Scope.indexedBinding(type: Type): IndexedValue<Binding>? =
-	bindingStak.topIndexedValue { it.key.type == type }
-
 fun Scope.apply(typed: Typed): Typed? =
-	indexedBinding(typed.type)?.let { indexedBinding ->
-		indexedBinding.value.value.invoke(indexedBinding.index, typed.term)
+	bindingStak.indexedTop { binding ->
+		typed.cast(binding.key.type)?.let { castTyped ->
+			binding.value.invoke(this, castTyped.term)
+		}
 	}

@@ -12,7 +12,7 @@ fun main() {
 
 		boolean.not
 		gives {
-			negate
+			given.not.negate
 		}
 
 		true_.not
