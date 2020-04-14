@@ -113,7 +113,7 @@ val TypedField.rhs: Typed
 
 fun Typed.matchLink(fn: Typed.(TypedLine) -> Typed?): Typed? =
 	linkOrNull?.let { link ->
-		link.lhs.fn(link.line)?.optimizeTerm
+		link.lhs.fn(link.line)
 	}
 
 fun TypedLine.match(name: String, fn: (Typed) -> Typed?): Typed? =
