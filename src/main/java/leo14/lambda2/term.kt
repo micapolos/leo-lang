@@ -30,3 +30,5 @@ operator fun Term.invoke(rhs: Term): Term = ApplicationTerm(this, rhs)
 fun at(index: Int): Term = IndexTerm(index)
 
 val Term.value: Any? get() = (this as ValueTerm).value
+val Term.applicationOrNull: ApplicationTerm? get() = (this as? ApplicationTerm)
+val Term.abstractionOrNull: AbstractionTerm? get() = (this as? AbstractionTerm)

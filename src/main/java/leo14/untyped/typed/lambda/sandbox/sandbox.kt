@@ -1,11 +1,15 @@
 package leo14.untyped.typed.lambda.sandbox
 
-import leo14.untyped.dsl2.equals_
-import leo14.untyped.dsl2.main_
-import leo14.untyped.dsl2.number
+import leo14.untyped.dsl2.*
 
 fun main() {
 	main_ {
-		number(10).equals_ { number(20) }
+		point {
+			x { number(10) }
+			y { number(20) }
+			z { number(30) }
+		}
+		x
+		debug
 	}
 }
