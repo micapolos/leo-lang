@@ -6,11 +6,11 @@ import leo15.lambda.*
 import java.math.BigDecimal
 
 data class Typed(val type: Type, val term: Term) {
-	override fun toString() = reflectScriptLine.leoString
+	override fun toString() = reflectScriptLine.string
 }
 
 data class TypedLink(val lhs: Typed, val line: TypedLine) {
-	override fun toString() = lhs.plus(line).reflectScriptLine.leoString
+	override fun toString() = lhs.plus(line).reflectScriptLine.string
 }
 
 data class TypedLine(val typeLine: TypeLine, val term: Term)

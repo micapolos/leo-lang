@@ -16,7 +16,7 @@ data class TypeRecursive(val type: Type)
 data class TypeOr(val type: Type)
 
 sealed class Type {
-	override fun toString(): String = script.leoString
+	override fun toString(): String = script.string
 }
 
 object EmptyType : Type()

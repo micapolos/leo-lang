@@ -6,7 +6,7 @@ import leo14.literal
 import leo14.script
 
 data class Library(val scope: Scope, val localBindingCount: Int) {
-	override fun toString() = reflectScriptLine.leoString
+	override fun toString() = reflectScriptLine.string
 }
 
 fun Scope.libraryWithLocalBindingCount(localBindingCount: Int) = Library(this, localBindingCount)

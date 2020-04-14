@@ -9,13 +9,13 @@ import leo15.lambda.at
 import leo15.lambda.invoke
 
 data class Binding(val key: BindingKey, val value: BindingValue) {
-	override fun toString() = reflectScriptLine.leoString
+	override fun toString() = reflectScriptLine.string
 }
 
 data class BindingKey(val type: Type)
 
 sealed class BindingValue {
-	override fun toString() = reflectScriptLine.leoString
+	override fun toString() = reflectScriptLine.string
 }
 
 data class TypedBindingValue(val typed: Typed) : BindingValue() {

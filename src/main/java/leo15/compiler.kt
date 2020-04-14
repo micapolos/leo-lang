@@ -12,7 +12,7 @@ import leo15.lambda.fn
 import leo15.lambda.invoke
 
 data class Compiler(val library: Library, val typed: Typed) {
-	override fun toString() = reflectScriptLine.leoString
+	override fun toString() = reflectScriptLine.string
 }
 
 fun Library.compiler(typed: Typed): Compiler =
