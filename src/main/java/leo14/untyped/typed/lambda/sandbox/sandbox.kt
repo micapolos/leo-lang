@@ -4,14 +4,16 @@ import leo14.untyped.dsl2.*
 
 fun main() {
 	main_ {
-		number.increment.gives {
-			given.increment.number.plus { number(1) }
+		boolean.is_ {
+			boolean {
+				true_
+				or { false_ }
+			}
 		}
 
-		number.double.increment.gives {
-			given.increment.double.number.increment.increment
-		}
+		true_.type.is_ { boolean }
+		false_.type.is_ { boolean }
 
-		number(123).double.increment
+		true_.type
 	}
 }

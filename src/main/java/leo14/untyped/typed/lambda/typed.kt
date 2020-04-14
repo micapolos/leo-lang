@@ -225,9 +225,7 @@ fun Typed.make(name: String): Typed? =
 
 val Typed.staticScriptOrNull: Script?
 	get() =
-		notNullIf(type.isStatic) {
-			type.script
-		}
+		type.staticScriptOrNull
 
 val Typed.staticTypeOrNull: Type?
 	get() =

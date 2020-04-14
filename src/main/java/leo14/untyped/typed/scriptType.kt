@@ -13,8 +13,15 @@ val Script.type: Type
 
 val ScriptLink.type: Type
 	get() =
-		if (lhs.isEmpty) line.type
-		else lhs.type.plus(line.typeLine)
+		null
+			?: typeAlternativeOrNull?.run { type }
+			?: lhs.type.plus(line.typeLine)
+
+val ScriptLink.typeAlternativeOrNull: TypeAlternative?
+	get() =
+		line.fieldOrNull?.rhsOrNull(orName)?.let { rhs ->
+			lhs.type alternativeTo rhs.type
+		}
 
 val ScriptLine.typeLine: TypeLine
 	get() =
@@ -48,6 +55,10 @@ val ScriptField.typeLine: TypeLine
 			textName -> notNullIf(rhs.isEmpty) { textTypeLine }
 			numberName -> notNullIf(rhs.isEmpty) { numberTypeLine }
 			nativeName -> notNullIf(rhs.isEmpty) { javaTypeLine }
-			exactName -> TODO()
+			exactName -> exactName lineTo type(exactTypeLine)
 			else -> null
-		} ?: string lineTo rhs.type
+		} ?: exactTypeLine
+
+val ScriptField.exactTypeLine: TypeLine
+	get() =
+		string lineTo rhs.type
