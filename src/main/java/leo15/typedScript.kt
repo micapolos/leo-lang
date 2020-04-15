@@ -73,7 +73,7 @@ fun TypeFunction.script(term: Term, scriptFn: ScriptFn): Script =
 fun TypeRepeating.script(term: Term, scriptFn: ScriptFn): Script =
 	if (term == nil) script()
 	else term.unsafeUnpair.let { (first, second) ->
-		type.script(first, scriptFn).plus(type.script(second, scriptFn))
+		script(first, scriptFn).plus(line.scriptLine(second, scriptFn))
 	}
 
 fun TypeRecursive.script(term: Term, scriptFn: ScriptFn): Script =

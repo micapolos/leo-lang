@@ -110,7 +110,7 @@ fun cast(from: TypeFunction, to: TypeFunction): Cast? =
 	else null
 
 fun Term.cast(from: TypeRepeating, to: Type, recursive: TypeRecursive?): Cast? =
-	if (to is RepeatingType) cast(from.type, to.repeating.type, recursive)
+	if (to is RepeatingType) cast(from.line, to.repeating.line, recursive)
 	else cast(from, to, recursive)
 
 fun Term.cast(from: TypeRecursive, to: Type): Cast? =

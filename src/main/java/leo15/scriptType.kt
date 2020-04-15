@@ -42,7 +42,7 @@ val ScriptField.type: Type
 			anythingName -> notNullIf(rhs.isEmpty) { anythingType }
 			nothingName -> notNullIf(rhs.isEmpty) { nothingType }
 			functionName -> TODO()
-			repeatingName -> rhs.type.repeating.toType
+			repeatingName -> rhs.type.linkOrNull?.onlyLineOrNull?.repeating?.type
 			recursiveName -> rhs.type.recursive.toType
 			recurseName -> recurseType
 			else -> null

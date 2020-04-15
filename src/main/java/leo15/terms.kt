@@ -18,6 +18,9 @@ fun Term.plus(term: Term): Term =
 	if (this == nil) term
 	else pair.invoke(this).invoke(term)
 
+fun Term.plusRepeating(term: Term): Term =
+	pair.invoke(this).invoke(term)
+
 val Term.repeatingTermSeq: Seq<Term>
 	get() =
 		seq {

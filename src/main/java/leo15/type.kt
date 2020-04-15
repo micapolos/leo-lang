@@ -11,7 +11,7 @@ import leo15.lambda.nil
 data class TypeFunction(val from: Type, val to: Type)
 data class TypeAlternative(val lhs: Type, val rhs: Type)
 
-data class TypeRepeating(val type: Type)
+data class TypeRepeating(val line: TypeLine)
 data class TypeRecursive(val type: Type)
 data class TypeOr(val type: Type)
 
@@ -58,7 +58,7 @@ data class TypeField(val name: String, val rhs: Type)
 infix fun Type.functionTo(type: Type) = TypeFunction(this, type)
 val Type.or get() = TypeOr(this)
 val Type.recursive get() = TypeRecursive(this)
-val Type.repeating get() = TypeRepeating(this)
+val TypeLine.repeating get() = TypeRepeating(this)
 val emptyType: Type = EmptyType
 val anythingType: Type = AnythingType
 val nothingType: Type = NothingType
@@ -66,7 +66,7 @@ val recurseType: Type = RecurseType
 val TypeAlternative.type: Type get() = AlternativeType(this)
 val TypeFunction.type: Type get() = FunctionType(this)
 val TypeRecursive.toType: Type get() = RecursiveType(this)
-val TypeRepeating.toType: Type get() = RepeatingType(this)
+val TypeRepeating.type: Type get() = RepeatingType(this)
 val TypeLink.type: Type get() = LinkType(this)
 infix fun Type.linkTo(line: TypeLine) = TypeLink(this, line)
 fun Type.plus(line: TypeLine) = linkTo(line).type
@@ -151,8 +151,8 @@ fun <R : Any> Type.matchJava(fn: () -> R?): R? =
 fun <R : Any> Type.matchFunction(fn: (TypeFunction) -> R?): R? =
 	functionOrNull?.let(fn)
 
-fun <R : Any> Type.matchRepeating(fn: Type.() -> R?): R? =
-	repeatingOrNull?.let { fn(it.type) }
+fun <R : Any> Type.matchRepeating(fn: TypeLine.() -> R?): R? =
+	repeatingOrNull?.let { fn(it.line) }
 
 fun <R : Any> Type.matchLine(fn: TypeLine.() -> R?): R? =
 	linkOrNull?.onlyLineOrNull?.let(fn)

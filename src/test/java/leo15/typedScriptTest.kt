@@ -37,4 +37,22 @@ class TypedScriptTest {
 				.script
 		}
 	}
+
+	@Test
+	fun repeating() {
+		textTypeLine.repeating.emptyTyped
+			.script
+			.assertEqualTo(leo())
+
+		textTypeLine.repeating.emptyTyped
+			.plusRepeating("foo".typedLine)
+			.script
+			.assertEqualTo(leo("foo"))
+
+		textTypeLine.repeating.emptyTyped
+			.plusRepeating("foo".typedLine)
+			.plusRepeating("bar".typedLine)
+			.script
+			.assertEqualTo(leo("foo", "bar"))
+	}
 }

@@ -30,6 +30,7 @@ infix fun String.lineTo(typed: Typed): TypedLine =
 	this.lineTo(typed.type).typed(typed.term)
 
 val emptyTyped = emptyType.typed(nil)
+val TypeRepeating.emptyTyped: Typed get() = type.typed(nil)
 
 val Any?.valueJavaTypedLine: TypedLine get() = valueTerm.javaTypedLine
 val Any?.valueJavaTyped: Typed get() = valueTerm.javaTyped
@@ -78,6 +79,9 @@ fun Typed.plus(line: TypedLine): Typed =
 	type.plus(line.typeLine).typed(
 		if (type.isEmpty) line.term
 		else pair.invoke(term).invoke(line.term))
+
+fun Typed.plusRepeating(line: TypedLine): Typed =
+	type.typed(term.plusRepeating(line.term))
 
 fun typed(vararg lines: TypedLine): Typed =
 	emptyTyped.fold(lines) { plus(it) }

@@ -30,7 +30,7 @@ val TypeRecursive.script: Script
 
 val TypeRepeating.script: Script
 	get() =
-		script(repeatingName lineTo type.script)
+		script(repeatingName lineTo script(line.scriptLine))
 
 val TypeLink.scriptLink: ScriptLink
 	get() =
