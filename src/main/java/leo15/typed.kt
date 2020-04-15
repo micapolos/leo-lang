@@ -169,6 +169,11 @@ fun Typed.matchName(fn: String.() -> Typed?): Typed? =
 		}
 	}
 
+fun Typed.matchRepeating(fn: () -> Typed?): Typed? =
+	type.matchRepeating {
+		fn()
+	}
+
 fun TypedLine.matchText(fn: Term.() -> Typed?): Typed? =
 	match(textName) { rhs ->
 		rhs.matchJava {

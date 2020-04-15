@@ -53,6 +53,11 @@ object JavaTypeLine : TypeLine()
 
 data class TypeField(val name: String, val rhs: Type)
 
+sealed class Choice
+object EmptyChoice : Choice()
+data class LinkChoice(val link: ChoiceLink) : Choice()
+data class ChoiceLink(val lhs: Choice, val line: TypeLine)
+
 // === constructors ===
 
 infix fun Type.functionTo(type: Type) = TypeFunction(this, type)
@@ -84,6 +89,12 @@ infix fun Type.alternativeTo(rhs: Type) = TypeAlternative(this, rhs)
 fun Type.or(rhs: Type): Type = alternativeTo(rhs).type
 fun type(vararg lines: TypeLine): Type = emptyType.fold(lines) { plus(it) }
 fun type(name: String): Type = type(name lineTo emptyType)
+
+val emptyChoice: Choice = EmptyChoice
+val ChoiceLink.choice: Choice get() = LinkChoice(this)
+infix fun Choice.linkTo(line: TypeLine) = ChoiceLink(this, line)
+operator fun Choice.plus(line: TypeLine): Choice = linkTo(line).choice
+fun choice(vararg lines: TypeLine): Choice = emptyChoice.fold(lines) { plus(it) }
 
 val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
 val Type.functionOrNull: TypeFunction? get() = (this as? FunctionType)?.function
