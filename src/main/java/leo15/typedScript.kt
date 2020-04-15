@@ -71,7 +71,7 @@ fun TypeFunction.script(term: Term, scriptFn: ScriptFn): Script =
 	TODO()
 
 fun TypeRepeating.script(term: Term, scriptFn: ScriptFn): Script =
-	if (term == nil) script()
+	if (term == nilTerm) script()
 	else term.unsafeUnpair.let { (first, second) ->
 		script(first, scriptFn).plus(line.scriptLine(second, scriptFn))
 	}

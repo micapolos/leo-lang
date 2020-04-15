@@ -21,7 +21,7 @@ class TypedTest {
 			.plus(20.typedLine)
 			.assertEqualTo(
 				type(numberTypeLine, numberTypeLine)
-					.typed(pair.invoke(10.typedLine.term).invoke(20.typedLine.term)))
+					.typed(pairTerm.invoke(10.typedLine.term).invoke(20.typedLine.term)))
 	}
 
 	@Test
@@ -36,8 +36,8 @@ class TypedTest {
 		leo15.typed(10.typedLine, 20.typedLine)
 			.linkOrNull
 			.assertEqualTo(
-				numberType.typed(leo15.typed(10.typedLine, 20.typedLine).term.invoke(first)) linkTo
-					numberTypeLine.typed(leo15.typed(10.typedLine, 20.typedLine).term.invoke(second)))
+				numberType.typed(leo15.typed(10.typedLine, 20.typedLine).term.invoke(firstTerm)) linkTo
+					numberTypeLine.typed(leo15.typed(10.typedLine, 20.typedLine).term.invoke(secondTerm)))
 	}
 
 	@Test
@@ -106,7 +106,7 @@ class TypedTest {
 			.assertEqualTo(
 				textType
 					.plus(textTypeLine)
-					.typed(pair("Hello, ".typed.term)("world!".typedLine.term)))
+					.typed(pairTerm("Hello, ".typed.term)("world!".typedLine.term)))
 	}
 
 	@Test

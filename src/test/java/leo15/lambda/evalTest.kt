@@ -79,11 +79,11 @@ class EvalTest {
 
 	@Test
 	fun pairAndUnpairAndRePair() {
-		fn(fn(fn(pair(at(0))(at(1))))
-			.invoke(at(0).invoke(first))
-			.invoke(at(0).invoke(second)))
-			.invoke(pair.invoke("one".valueTerm).invoke("two".valueTerm))
+		fn(fn(fn(pairTerm(at(0))(at(1))))
+			.invoke(at(0).invoke(firstTerm))
+			.invoke(at(0).invoke(secondTerm)))
+			.invoke(pairTerm.invoke("one".valueTerm).invoke("two".valueTerm))
 			.eval
-			.assertEqualTo(pair("two".valueTerm)("one".valueTerm))
+			.assertEqualTo(pairTerm("two".valueTerm)("one".valueTerm))
 	}
 }

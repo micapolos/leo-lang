@@ -29,8 +29,8 @@ infix fun TypeField.typed(term: Term) = TypedField(this, term)
 infix fun String.lineTo(typed: Typed): TypedLine =
 	this.lineTo(typed.type).typed(typed.term)
 
-val emptyTyped = emptyType.typed(nil)
-val TypeRepeating.emptyTyped: Typed get() = type.typed(nil)
+val emptyTyped = emptyType.typed(nilTerm)
+val TypeRepeating.emptyTyped: Typed get() = type.typed(nilTerm)
 
 val Any?.valueJavaTypedLine: TypedLine get() = valueTerm.javaTypedLine
 val Any?.valueJavaTyped: Typed get() = valueTerm.javaTyped
@@ -69,16 +69,16 @@ val Literal.typed: Typed
 
 val Literal.staticTypedLine: TypedLine
 	get() =
-		LiteralTypeLine(this).typed(nil)
+		LiteralTypeLine(this).typed(nilTerm)
 
 val Literal.staticTyped: Typed
 	get() =
-		type.typed(nil)
+		type.typed(nilTerm)
 
 fun Typed.plus(line: TypedLine): Typed =
 	type.plus(line.typeLine).typed(
 		if (type.isEmpty) line.term
-		else pair.invoke(term).invoke(line.term))
+		else pairTerm.invoke(term).invoke(line.term))
 
 fun Typed.plusRepeating(line: TypedLine): Typed =
 	type.typed(term.plusRepeating(line.term))
@@ -96,7 +96,7 @@ val Typed.linkOrNull: TypedLink?
 	get() =
 		type.linkOrNull?.let { typeLink ->
 			if (typeLink.lhs.isEmpty) emptyTyped linkTo typeLink.line.typed(term)
-			else typeLink.lhs.typed(term.invoke(first)) linkTo typeLink.line.typed(term.invoke(second))
+			else typeLink.lhs.typed(term.invoke(firstTerm)) linkTo typeLink.line.typed(term.invoke(secondTerm))
 		}
 
 val TypedLink.onlyLineOrNull: TypedLine?
@@ -246,7 +246,7 @@ val Typed.withFnTerm
 		type.typed(fn(term))
 
 fun Typed.repeatingOrNull(typeLine: TypeLine): Typed? =
-	if (type.isEmpty) javaType.typed(nil)
+	if (type.isEmpty) javaType.typed(nilTerm)
 	else linkOrNull?.let { link ->
 		ifOrNull(link.line.typeLine == typeLine) {
 			link.lhs.repeatingOrNull(typeLine)?.let { typedLhs ->

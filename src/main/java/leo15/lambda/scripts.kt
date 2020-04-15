@@ -8,10 +8,10 @@ val Term.script: Script
 			?: pairScriptOrNull
 			//?: bindScriptOrNull
 			?: when (this) {
-				id -> script("id")
-				pair -> script("pair")
-				first -> script("first")
-				second -> script("second")
+				idTerm -> script("id")
+				pairTerm -> script("pair")
+				firstTerm -> script("first")
+				secondTerm -> script("second")
 				is ValueTerm -> script("value" lineTo script(value.toString()))
 				is AbstractionTerm -> lambdaScript
 				is ApplicationTerm -> lhs.script.plus("invoke" lineTo rhs.script)

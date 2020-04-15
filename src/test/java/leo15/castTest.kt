@@ -7,19 +7,19 @@ import leo14.bigDecimal
 import leo14.literal
 import leo15.lambda.at
 import leo15.lambda.eval
-import leo15.lambda.nil
+import leo15.lambda.nilTerm
 import leo15.lambda.valueTerm
 import kotlin.test.Test
 
 class CastTest {
 	@Test
 	fun literal() {
-		literal(10).staticTyped.castTerm(literal(10).type).assertEqualTo(nil)
+		literal(10).staticTyped.castTerm(literal(10).type).assertEqualTo(nilTerm)
 		literal(10).staticTyped.castTerm(literal(11).type).assertNull
 		literal(10).staticTyped.castTerm(numberType).assertEqualTo(10.bigDecimal.valueTerm)
 		literal(10).staticTyped.castTerm(textType).assertNull
 
-		literal("foo").staticTyped.castTerm(literal("foo").type).assertEqualTo(nil)
+		literal("foo").staticTyped.castTerm(literal("foo").type).assertEqualTo(nilTerm)
 		literal("foo").staticTyped.castTerm(literal("bar").type).assertNull
 		literal("foo").staticTyped.castTerm(textType).assertEqualTo("foo".valueTerm)
 		literal("foo").staticTyped.castTerm(numberType).assertNull
@@ -48,17 +48,17 @@ class CastTest {
 	fun repeating() {
 		emptyTyped
 			.castTerm(textTypeLine.repeating.type)
-			.assertEqualTo(nil)
+			.assertEqualTo(nilTerm)
 
 		"foo".typed
 			.castTerm(textTypeLine.repeating.type)
-			.assertEqualTo(nil.plusRepeating("foo".valueTerm))
+			.assertEqualTo(nilTerm.plusRepeating("foo".valueTerm))
 
 		emptyTyped
 			.plus("foo".typedLine)
 			.plus("bar".typedLine)
 			.castTerm(textTypeLine.repeating.type)!!
 			.eval
-			.assertEqualTo(nil.plusRepeating("foo".valueTerm).plusRepeating("bar".valueTerm))
+			.assertEqualTo(nilTerm.plusRepeating("foo".valueTerm).plusRepeating("bar".valueTerm))
 	}
 }

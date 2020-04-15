@@ -6,7 +6,7 @@ import leo.base.notNullIf
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
-import leo15.lambda.nil
+import leo15.lambda.nilTerm
 
 data class TypeFunction(val from: Type, val to: Type)
 data class TypeAlternative(val lhs: Type, val rhs: Type)
@@ -181,4 +181,4 @@ fun <R : Any> Type.matchList(fn: Type.() -> R?): R? =
 val Type.staticOrNull: Type?
 	get() =
 		// TODO: Could it be made simpler, without involving scope?
-		typed(nil).script.type
+		typed(nilTerm).script.type

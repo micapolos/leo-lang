@@ -15,16 +15,16 @@ val numberMinusNumberTerm: Term = numberBinaryTerm { minus(it) }
 val numberTimesNumberTerm: Term = numberBinaryTerm { times(it) }
 
 fun Term.plus(term: Term): Term =
-	if (this == nil) term
-	else pair.invoke(this).invoke(term)
+	if (this == nilTerm) term
+	else pairTerm.invoke(this).invoke(term)
 
 fun Term.plusRepeating(term: Term): Term =
-	pair.invoke(this).invoke(term)
+	pairTerm.invoke(this).invoke(term)
 
 val Term.repeatingTermSeq: Seq<Term>
 	get() =
 		seq {
-			if (this == nil) null
+			if (this == nilTerm) null
 			else unpairOrNull
 				?.run { second then first.repeatingTermSeq }
 				?: this then emptySeq()

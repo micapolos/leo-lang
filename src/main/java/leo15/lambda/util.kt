@@ -1,14 +1,35 @@
 package leo15.lambda
 
+import leo.base.indexed
+import leo.base.iterate
 import leo.base.notNullIf
+import leo13.fold
+import leo13.push
+import leo13.stack
 import kotlin.math.max
 
-val nil = value(null)
-val const = fn(fn(at(0)(at(1))))
-val id = fn(at(0))
-val first = fn(fn(at(1)))
-val second = fn(fn(at(0)))
-val pair = fn(fn(fn(at(0)(at(2))(at(1)))))
+val nilTerm = value(null)
+val constTerm = fn(fn(at(1)))
+val idTerm = fn(at(0))
+val firstTerm = fn(fn(at(1)))
+val secondTerm = fn(fn(at(0)))
+val pairTerm = fn(fn(fn(at(0)(at(2))(at(1)))))
+
+fun choiceTerm(size: Int, index: Int, term: Term): Term =
+	at(index)
+		.invoke(at(size))
+		.iterate(size.inc()) { fn(this) }
+		.invoke(term)
+
+fun Term.unsafeUnchoice(size: Int): IndexedValue<Term> =
+	applicationOrNull!!.let { application ->
+		application
+			.lhs
+			.iterate(size.inc()) { abstractionOrNull!!.body }
+			.applicationOrNull!!
+			.lhs
+			.indexOrNull!! indexed application.rhs
+	}
 
 fun Term.apply(fn: Term.() -> Term): Term =
 	fn { lhs -> lhs.fn() }.invoke(this)
@@ -28,7 +49,7 @@ fun Term.valueApply(rhs: Term, f: Any?.(Any?) -> Any?): Term =
 
 val Term.functionize: Term
 	get() =
-		fn(this)(nil)
+		fn(this)(nilTerm)
 
 val Term.unsafeUnpair: Pair<Term, Term>
 	get() =
@@ -55,7 +76,7 @@ val Term.unpairOrNull: Pair<Term, Term>?
 	get() =
 		(this as? ApplicationTerm)?.let { outerApplication ->
 			(outerApplication.lhs as? ApplicationTerm)?.let { innerApplication ->
-				notNullIf(innerApplication.lhs == pair) {
+				notNullIf(innerApplication.lhs == pairTerm) {
 					innerApplication.rhs to outerApplication.rhs
 				}
 			}
@@ -64,3 +85,16 @@ val Term.unpairOrNull: Pair<Term, Term>?
 val Term.unsafeApplicationPair: Pair<Term, Term>
 	get() =
 		(this as ApplicationTerm).lhs to rhs
+
+fun Term.append(rhs: Term): Term =
+	pairTerm(this)(rhs)
+
+tailrec fun <R> R.unsafeFold(term: Term, fn: R.(Term) -> R): R =
+	if (term == idTerm) this
+	else {
+		val (lhs, rhs) = term.unsafeUnpair
+		fn(rhs).unsafeFold(lhs, fn)
+	}
+
+fun <R> R.unsafeFoldRight(term: Term, fn: R.(Term) -> R): R =
+	fold(stack<Term>().unsafeFold(term) { push(it) }, fn)

@@ -64,8 +64,8 @@ fun Term.cast(from: TypeLink, to: Type, recursive: TypeRecursive?): Cast? =
 		if (from.lhs.isEmpty)
 			if (to.link.lhs.isEmpty) cast(from.line, to.link.line, recursive)
 			else null
-		else invoke(first).let { lhsTerm ->
-			invoke(second).let { rhsTerm ->
+		else invoke(firstTerm).let { lhsTerm ->
+			invoke(secondTerm).let { rhsTerm ->
 				lhsTerm.cast(from.lhs, to.link.lhs, recursive)?.let { lhsCast ->
 					rhsTerm.cast(from.line, to.link.line, recursive)?.let { rhsCast ->
 						when (lhsCast) {
@@ -120,10 +120,10 @@ fun Term.cast(from: Type, to: TypeRepeating, recursive: TypeRecursive?): Cast? =
 fun Term.cast(from: TypeLink, to: TypeRepeating, recursive: TypeRecursive?): Cast? =
 	if (from.lhs.isEmpty)
 		cast(from.line, to.line, recursive)?.let { cast ->
-			nil.plusRepeating(cast.term(this)).cast
+			nilTerm.plusRepeating(cast.term(this)).cast
 		}
-	else invoke(first).let { lhsTerm ->
-		invoke(second).let { rhsTerm ->
+	else invoke(firstTerm).let { lhsTerm ->
+		invoke(secondTerm).let { rhsTerm ->
 			lhsTerm.cast(from.lhs, to, recursive)?.let { lhsCast ->
 				rhsTerm.cast(from.line, to.line, recursive)?.let { rhsCast ->
 					lhsCast.term(lhsTerm).plusRepeating(rhsCast.term(rhsTerm)).cast

@@ -55,6 +55,9 @@ tailrec fun <R, T> R.fold(stack: Stack<T>, fn: R.(T) -> R): R =
 		is LinkStack -> fn(stack.link.value).fold(stack.link.stack, fn)
 	}
 
+fun <R, T> R.foldRight(stack: Stack<T>, fn: R.(T) -> R): R =
+	fold(stack.reverse, fn)
+
 val <T> Stack<T>.reverse get() = stack<T>().fold(this) { push(it) }
 val <T> StackLink<T>.reverse get() = stackLink(value).fold(stack) { push(it) }
 val Stack<*>.isEmpty get() = this is EmptyStack

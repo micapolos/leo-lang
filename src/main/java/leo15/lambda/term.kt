@@ -32,3 +32,4 @@ fun at(index: Int): Term = IndexTerm(index)
 val Term.value: Any? get() = (this as ValueTerm).value
 val Term.applicationOrNull: ApplicationTerm? get() = (this as? ApplicationTerm)
 val Term.abstractionOrNull: AbstractionTerm? get() = (this as? AbstractionTerm)
+val Term.indexOrNull: Int? get() = (this as? IndexTerm)?.index
