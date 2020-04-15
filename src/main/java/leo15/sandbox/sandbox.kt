@@ -1,6 +1,6 @@
 package leo15.sandbox
 
-import leo14.untyped.dsl2.*
+import leo15.dsl.*
 
 fun main() {
 	main_ {
@@ -9,5 +9,6 @@ fun main() {
 			y { number(20) }
 			z { number(30) }
 		}
+		x.number.java
 	}
 }
