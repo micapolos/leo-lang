@@ -6,6 +6,7 @@ import leo.base.indexed
 import leo14.bigDecimal
 import leo14.literal
 import leo15.lambda.at
+import leo15.lambda.eval
 import leo15.lambda.nil
 import leo15.lambda.valueTerm
 import kotlin.test.Test
@@ -43,5 +44,21 @@ class CastTest {
 		emptyTyped.castTerm(numberType.or(textType)).assertNull
 	}
 
-	// TODO: Tests for other types.
+	@Test
+	fun repeating() {
+		emptyTyped
+			.castTerm(textTypeLine.repeating.type)
+			.assertEqualTo(nil)
+
+		"foo".typed
+			.castTerm(textTypeLine.repeating.type)
+			.assertEqualTo(nil.plusRepeating("foo".valueTerm))
+
+		emptyTyped
+			.plus("foo".typedLine)
+			.plus("bar".typedLine)
+			.castTerm(textTypeLine.repeating.type)!!
+			.eval
+			.assertEqualTo(nil.plusRepeating("foo".valueTerm).plusRepeating("bar".valueTerm))
+	}
 }

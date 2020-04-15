@@ -1,6 +1,7 @@
 package leo15
 
 import leo.base.indexed
+import leo.base.notNullIf
 import leo14.Literal
 import leo14.Number
 import leo14.NumberLiteral
@@ -33,6 +34,7 @@ fun Typed.castTerm(to: Type): Term? =
 
 fun Term.cast(from: Type, to: Type, recursive: TypeRecursive?): Cast? =
 	if (from !is AlternativeType && to is AlternativeType) cast(from, to.alternative, 0, recursive)
+	else if (from !is RepeatingType && to is RepeatingType) cast(from, to.repeating, recursive)
 	else when (from) {
 		EmptyType -> castEmpty(to)
 		AnythingType -> castAnything(to)
@@ -40,7 +42,7 @@ fun Term.cast(from: Type, to: Type, recursive: TypeRecursive?): Cast? =
 		is LinkType -> cast(from.link, to, recursive)
 		is AlternativeType -> cast(from.alternative, to)
 		is FunctionType -> cast(from.function, to)
-		is RepeatingType -> cast(from.repeating, to, recursive)
+		is RepeatingType -> cast(from.repeating, to)
 		is RecursiveType -> cast(from.recursive, to)
 		RecurseType -> castRecurse(to, recursive)
 	}
@@ -74,8 +76,8 @@ fun Term.cast(from: TypeLink, to: Type, recursive: TypeRecursive?): Cast? =
 								}
 							is TermCast ->
 								when (rhsCast) {
-									IdentityCast -> lhsCast.term.invoke(rhsTerm).cast
-									is TermCast -> lhsCast.term.invoke(rhsCast.term).cast
+									IdentityCast -> lhsCast.term.plus(rhsTerm).cast
+									is TermCast -> lhsCast.term.plus(rhsCast.term).cast
 								}
 						}
 					}
@@ -109,9 +111,30 @@ fun cast(from: TypeFunction, to: TypeFunction): Cast? =
 	if (from == to) identityCast
 	else null
 
-fun Term.cast(from: TypeRepeating, to: Type, recursive: TypeRecursive?): Cast? =
-	if (to is RepeatingType) cast(from.line, to.repeating.line, recursive)
-	else cast(from, to, recursive)
+fun Term.cast(from: Type, to: TypeRepeating, recursive: TypeRecursive?): Cast? =
+	if (from is RepeatingType) notNullIf(from.repeating == to) { identityCast }
+	else if (from is EmptyType) identityCast
+	else if (from is LinkType) cast(from.link, to, recursive)
+	else null
+
+fun Term.cast(from: TypeLink, to: TypeRepeating, recursive: TypeRecursive?): Cast? =
+	if (from.lhs.isEmpty)
+		cast(from.line, to.line, recursive)?.let { cast ->
+			nil.plusRepeating(cast.term(this)).cast
+		}
+	else invoke(first).let { lhsTerm ->
+		invoke(second).let { rhsTerm ->
+			lhsTerm.cast(from.lhs, to, recursive)?.let { lhsCast ->
+				rhsTerm.cast(from.line, to.line, recursive)?.let { rhsCast ->
+					lhsCast.term(lhsTerm).plusRepeating(rhsCast.term(rhsTerm)).cast
+				}
+			}
+		}
+	}
+
+fun cast(from: TypeRepeating, to: Type): Cast? =
+	if (to is RepeatingType) notNullIf(from == to.repeating) { identityCast }
+	else null
 
 fun Term.cast(from: TypeRecursive, to: Type): Cast? =
 	if (to is RecursiveType) cast(from.type, to.recursive.type, to.recursive)
