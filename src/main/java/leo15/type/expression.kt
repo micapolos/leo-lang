@@ -16,7 +16,11 @@ data class Expression(val term: Term, val isConstant: Boolean) {
 val Expression.reflectScriptLine: ScriptLine
 	get() =
 		"expression" lineTo script(
-			(if (isConstant) "constant" else "dynamic") lineTo term.script)
+			isConstant.isConstantName lineTo term.script)
+
+val Boolean.isConstantName
+	get() =
+		if (this) "constant" else "dynamic"
 
 fun Term.expression(isConstant: Boolean) = Expression(this, isConstant)
 val Term.constantExpression get() = expression(isConstant = true)
