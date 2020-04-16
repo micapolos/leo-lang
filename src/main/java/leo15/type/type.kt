@@ -42,7 +42,7 @@ object JavaTypeLine : TypeLine()
 data class TypeField(val name: String, val rhs: Type)
 
 sealed class Choice
-object EmptyChoice : Choice()
+data class LineChoice(val line: TypeLine) : Choice()
 data class LinkChoice(val link: ChoiceLink) : Choice()
 data class ChoiceLink(val lhs: Choice, val line: TypeLine)
 
@@ -62,7 +62,6 @@ fun Type.plus(choice: Choice) = linkTo(choice).type
 fun Type.plus(line: TypeLine) = linkTo(line).type
 fun Type.plus(field: TypeField) = plus(field.line)
 fun Type.plus(name: String) = plus(name fieldTo emptyType)
-val TypeLine.choice get() = choice(this)
 val Literal.typeLine: TypeLine get() = LiteralTypeLine(this)
 val Literal.type: Type get() = type(typeLine)
 val TypeField.line: TypeLine get() = FieldTypeLine(this)
@@ -74,22 +73,21 @@ operator fun String.invoke(type: Type) = lineTo(type)
 val Type.isEmpty: Boolean get() = this is EmptyType
 fun type(vararg choices: Choice): Type = emptyType.fold(choices) { plus(it) }
 fun type(line: TypeLine, vararg lines: TypeLine): Type = emptyType.plus(line).fold(lines) { plus(it) }
-fun type(name: String): Type = type(name lineTo emptyType)
+fun type(name: String, vararg names: String): Type = type(name lineTo emptyType).fold(names) { plus(it) }
 val Choice.type: Type get() = emptyType.plus(this)
 
-val emptyChoice: Choice = EmptyChoice
+val TypeLine.choice: Choice get() = LineChoice(this)
 val ChoiceLink.choice: Choice get() = LinkChoice(this)
 infix fun Choice.linkTo(line: TypeLine) = ChoiceLink(this, line)
 operator fun Choice.plus(line: TypeLine): Choice = linkTo(line).choice
-fun choice(vararg lines: TypeLine): Choice = emptyChoice.fold(lines) { plus(it) }
+fun choice(line: TypeLine, vararg lines: TypeLine): Choice = line.choice.fold(lines) { plus(it) }
 
 val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
 val Type.recursiveOrNull: Recursive? get() = (this as? RecursiveType)?.recursive
 val Type.isRecurse: Boolean get() = this is RecurseType
 val Type.repeatingOrNull: Repeating? get() = (this as? RepeatingType)?.repeating
 val Choice.linkOrNull: ChoiceLink? get() = (this as? LinkChoice)?.link
-val Choice.onlyLineOrNull: TypeLine? get() = linkOrNull?.onlyLineOrNull
-val ChoiceLink.onlyLineOrNull: TypeLine? get() = notNullIf(lhs is EmptyChoice) { line }
+val Choice.onlyLineOrNull: TypeLine? get() = (this as? LineChoice)?.line
 val TypeLine.arrowOrNull: Arrow? get() = (this as? ArrowTypeLine)?.arrow
 val TypeLine.fieldOrNull: TypeField? get() = (this as? FieldTypeLine)?.field
 val TypeLine.literalOrNull: Literal? get() = (this as? LiteralTypeLine)?.literal

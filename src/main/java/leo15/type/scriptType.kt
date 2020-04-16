@@ -36,24 +36,27 @@ val ScriptField.type: Type
 			repeatingName -> rhs.linkOrNull?.onlyLineOrNull?.fieldOrNull?.choice?.repeating?.toType
 			recursiveName -> rhs.type.recursive.toType
 			recurseName -> recurseType
+			choiceName -> rhs.choiceOrNull?.type
 			else -> null
 		} ?: choice.type
 
 val ScriptField.choice: Choice
 	get() =
-		if (string == choiceName) rhs.choice
-		else typeLine.choice
+		typeLine.choice
 
-val Script.choice: Choice
+val Script.choiceOrNull: Choice?
 	get() =
 		when (this) {
-			is UnitScript -> emptyChoice
+			is UnitScript -> null
 			is LinkScript -> link.choice
 		}
 
 val ScriptLink.choice: Choice
 	get() =
-		lhs.choice.plus(line.typeLine)
+		when (lhs) {
+			is UnitScript -> line.typeLine.choice
+			is LinkScript -> lhs.link.choice.plus(line.typeLine)
+		}
 
 val ScriptLine.typeLine: TypeLine
 	get() =

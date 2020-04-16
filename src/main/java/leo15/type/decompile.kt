@@ -11,9 +11,9 @@ val Typed.isEmpty: Boolean
 
 val Typed.decompileLink: TypedLink?
 	get() =
-		type.linkOrNull?.let { link ->
-			term.unsafeUnpair.let { pair ->
-				pair.first.of(link.lhs) linkTo pair.second.of(link.choice)
+		type.linkOrNull?.let { typeLink ->
+			term.decompileUnplus(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { termPair ->
+				termPair.first.of(typeLink.lhs) linkTo termPair.second.of(typeLink.choice)
 			}
 		}
 

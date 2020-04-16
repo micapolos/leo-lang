@@ -27,7 +27,7 @@ val Choice.scriptLine: ScriptLine
 val Choice.script: Script
 	get() =
 		when (this) {
-			EmptyChoice -> script()
+			is LineChoice -> script(line.scriptLine)
 			is LinkChoice -> link.script
 		}
 

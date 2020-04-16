@@ -7,21 +7,14 @@ import leo13.EmptyStack
 import leo13.LinkStack
 import leo13.Stack
 import leo14.ScriptLine
+import leo14.bigDecimal
 import leo14.lineTo
 import leo14.plus
+import leo15.*
 import leo15.lambda.*
-import leo15.ofName
-import leo15.plus
-import leo15.string
-import leo15.typedName
 
 data class Typed(val term: Term, val type: Type) {
-	override fun toString() =
-		reflectScriptLine.string
-
-	val reflectScriptLine: ScriptLine
-		get() =
-			typedName lineTo term.script.plus(ofName lineTo type.script)
+	override fun toString() = reflectScriptLine.string
 }
 
 data class TypedChoice(val term: Term, val choice: Choice)
@@ -33,6 +26,10 @@ data class TypedArrow(val term: Term, val function: Arrow)
 data class Match(val typeLineStack: Stack<TypeLine>, val term: Term, val typeOrNull: Type?)
 data class Case(val name: String, val typed: Typed)
 
+val Typed.reflectScriptLine: ScriptLine
+	get() =
+		typedName lineTo term.script.plus(ofName lineTo type.script)
+
 infix fun Term.of(type: Type) = Typed(this, type)
 infix fun Term.of(choice: Choice) = TypedChoice(this, choice)
 infix fun Term.of(line: TypeLine) = TypedLine(this, line)
@@ -40,14 +37,30 @@ infix fun Term.of(field: TypeField) = TypedField(this, field)
 infix fun Term.of(arrow: Arrow) = TypedArrow(this, arrow)
 infix fun Typed.linkTo(choice: TypedChoice) = TypedLink(this, choice)
 
-val emptyTyped: Typed = nilTerm.of(emptyType)
-fun Typed.plus(typed: TypedChoice): Typed = term.plus(typed.term).of(type.plus(typed.choice))
+val emptyTyped: Typed = idTerm of emptyType
+
+val Any?.javaTypedLine: TypedLine get() = valueTerm.of(javaTypeLine)
+val Any?.javaTyped: Typed get() = typed(javaTypedLine)
+
+val Int.typedLine: TypedLine get() = numberName lineTo bigDecimal.javaTyped
+val Int.typed: Typed get() = typed(typedLine)
+
+val String.typedLine: TypedLine get() = textName lineTo javaTyped
+val String.typed: Typed get() = typed(typedLine)
+
+fun Typed.plus(typed: TypedChoice): Typed =
+	plusTerm(term, type.isStatic, typed.term, typed.choice.isStatic) of type.plus(typed.choice)
+
 fun Typed.plus(typed: TypedLine): Typed = plus(typed.choice)
 fun Typed.plus(name: String): Typed = plus(name lineTo emptyTyped)
+
 val Typed.linkOrNull: TypedLink?
 	get() = type.linkOrNull?.let { typeLink ->
-		term.invoke(firstTerm).of(typeLink.lhs) linkTo term.invoke(secondTerm).of(typeLink.choice)
+		term.unplus(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { termPair ->
+			termPair.first.of(typeLink.lhs) linkTo termPair.second.of(typeLink.choice)
+		}
 	}
+
 val TypedLink.typed: Typed get() = lhs.plus(choice)
 
 infix fun String.lineTo(typed: Typed): TypedLine =
@@ -79,11 +92,11 @@ fun TypedLine.of(choice: Choice): TypedChoice? =
 
 val TypedLine.choice: TypedChoice
 	get() =
-		choiceTerm(1, 0, term) of typeLine.choice
+		term of typeLine.choice
 
 fun TypedLine.of(choice: Choice, size: Int, indexOrNull: Int?): TypedChoice? =
 	when (choice) {
-		EmptyChoice -> indexOrNull?.let { index -> choiceTerm(size, index, term) of choice }
+		is LineChoice -> indexOrNull?.let { index -> choiceTerm(size, index, term) of choice }
 		is LinkChoice -> of(choice.link, size, indexOrNull)
 	}
 

@@ -1,20 +1,14 @@
 package leo15.type
 
+import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class TypedTest {
 	@Test
-	fun empty() {
-		emptyTyped.assertEvalsTo(emptyTyped)
-		typed("foo").assertEvalsTo(typed("foo"))
-		typed("foo", "bar").assertEvalsTo(typed("foo", "bar"))
-	}
-
-	@Test
-	fun linkOrNull() {
-		typed("zero")
-			.linkOrNull!!
-			.typed
-			.assertEvalsTo(typed("zero"))
+	fun static() {
+		emptyTyped.assertEqualTo(emptyTerm of emptyType)
+		typed("zero").assertEqualTo(emptyTerm of type("zero"))
+		typed("zero", "one").assertEqualTo(emptyTerm of type("zero", "one"))
+		typed("point" lineTo typed("x", "y")).assertEqualTo(emptyTerm of type("point" lineTo type("x", "y")))
 	}
 }
