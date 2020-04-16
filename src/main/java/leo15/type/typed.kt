@@ -78,7 +78,7 @@ val Typed.rhsOrNull: Typed? get() = onlyLineOrNull?.fieldOrNull?.rhs
 val TypedChoice.onlyLineOrNull: TypedLine?
 	get() =
 		choice.onlyLineOrNull?.let { typeLine ->
-			term.invoke(idTerm) of typeLine
+			term of typeLine
 		}
 
 fun typed(line: TypedLine, vararg lines: TypedLine): Typed =
