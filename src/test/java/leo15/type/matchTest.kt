@@ -5,7 +5,7 @@ import kotlin.test.Test
 
 class MatchTest {
 	@Test
-	fun matchInfix() {
+	fun matchInfixStaticType() {
 		typed(
 			"zero" lineTo emptyTyped,
 			"plus" lineTo typed("one"))
@@ -18,7 +18,10 @@ class MatchTest {
 				typed(
 					"zero" lineTo emptyTyped,
 					"minus" lineTo typed("one")))
+	}
 
+	@Test
+	fun matchInfixConstant() {
 		typed(
 			10.typedLine,
 			"plus" lineTo 20.typed)
@@ -31,7 +34,10 @@ class MatchTest {
 				typed(
 					10.typedLine,
 					"minus" lineTo 20.typed))
+	}
 
+	@Test
+	fun matchInfixDynamic() {
 		typed(
 			10.typedLine,
 			"plus" lineTo 20.typed)
