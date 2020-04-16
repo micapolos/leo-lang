@@ -2,10 +2,8 @@
 
 package leo.base
 
+import leo13.*
 import leo13.Stack
-import leo13.push
-import leo13.seq
-import leo13.stack
 
 data class SeqNode<T>(
 	val first: T,
@@ -121,6 +119,9 @@ fun <T> Seq<T>.then(seq: Seq<T>): Seq<T> =
 
 fun <T, R> R.fold(seq: Seq<T>, fn: R.(T) -> R) =
 	seq.fold(this, fn)
+
+fun <T, R> R.foldRight(seq: Seq<T>, fn: R.(T) -> R) =
+	fold(seq.reverseStack, fn)
 
 fun <T, R> R.applyEach(seq: Seq<T>, fn: R.(T) -> Unit): R =
 	fold(seq) { apply { fn(it) } }
@@ -250,3 +251,14 @@ val <V> Seq<V>.reverseStack: Stack<V>
 val <V> Seq<V>.reverse: Seq<V>
 	get() =
 		reverseStack.seq
+
+val Seq<*>.size: Int
+	get() =
+		0.fold(this) { inc() }
+
+operator fun <T : Any> Seq<T>.get(index: Int): T? =
+	nodeOrNull?.get(index)
+
+operator fun <T : Any> SeqNode<T>.get(index: Int): T? =
+	if (index == 0) first
+	else remaining[index.dec()]

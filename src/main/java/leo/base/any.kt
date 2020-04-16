@@ -128,3 +128,10 @@ inline fun <R : Any> R.whileNotNull(fn: R.() -> R?): R {
 	} while (true)
 }
 
+inline fun <L : Any, R : Any, O : Any> L?.orNullApply(rhs: R?, fn: L.(R) -> O): O? =
+	if (this != null && rhs != null) fn(rhs)
+	else null
+
+inline fun <L, R : Any, O : Any> L.applyOrNull(rhs: R?, fn: L.(R) -> O): O? =
+	if (rhs != null) fn(rhs)
+	else null

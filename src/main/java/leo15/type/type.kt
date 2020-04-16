@@ -1,13 +1,10 @@
 package leo15.type
 
-import leo.base.fold
-import leo.base.notNullIf
+import leo.base.*
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
-import leo15.numberName
-import leo15.string
-import leo15.textName
+import leo15.*
 
 data class Arrow(val lhs: Type, val rhs: Type)
 
@@ -87,11 +84,16 @@ operator fun Choice.plus(line: TypeLine): Choice = linkTo(line).choice
 fun choice(vararg lines: TypeLine): Choice = emptyChoice.fold(lines) { plus(it) }
 
 val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
+val Type.recursiveOrNull: Recursive? get() = (this as? RecursiveType)?.recursive
+val Type.isRecurse: Boolean get() = this is RecurseType
 val Type.repeatingOrNull: Repeating? get() = (this as? RepeatingType)?.repeating
 val Choice.linkOrNull: ChoiceLink? get() = (this as? LinkChoice)?.link
 val Choice.onlyLineOrNull: TypeLine? get() = linkOrNull?.onlyLineOrNull
 val ChoiceLink.onlyLineOrNull: TypeLine? get() = notNullIf(lhs is EmptyChoice) { line }
+val TypeLine.arrowOrNull: Arrow? get() = (this as? ArrowTypeLine)?.arrow
 val TypeLine.fieldOrNull: TypeField? get() = (this as? FieldTypeLine)?.field
+val TypeLine.literalOrNull: Literal? get() = (this as? LiteralTypeLine)?.literal
+val TypeLine.isJava: Boolean get() = this is JavaTypeLine
 val TypeLink.onlyChoiceOrNull: Choice? get() = notNullIf(lhs.isEmpty) { choice }
 val TypeLink.onlyLineOrNull: TypeLine? get() = onlyChoiceOrNull?.onlyLineOrNull
 
@@ -107,3 +109,24 @@ val Literal.valueTypeLine: TypeLine
 			is StringLiteral -> textTypeLine
 			is NumberLiteral -> numberTypeLine
 		}
+
+val TypeLine.name: String
+	get() =
+		when (this) {
+			is LiteralTypeLine -> literal.name
+			is FieldTypeLine -> field.name
+			is ArrowTypeLine -> functionName
+			JavaTypeLine -> javaName
+		}
+
+val Literal.name: String
+	get() =
+		when (this) {
+			is StringLiteral -> textName
+			is NumberLiteral -> numberName
+		}
+
+val Choice.lineSeq: Seq<TypeLine> get() = seq { linkOrNull?.lineSeqNode }
+val ChoiceLink.lineSeqNode: SeqNode<TypeLine> get() = line then lhs.lineSeq
+
+val Choice.lineCount: Int get() = lineSeq.count()
