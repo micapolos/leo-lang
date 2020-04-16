@@ -12,35 +12,35 @@ val Typed.isEmpty: Boolean
 val Typed.decompileLink: TypedLink?
 	get() =
 		type.linkOrNull?.let { typeLink ->
-			term.decompileUnplus(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { termPair ->
+			expression.decompilePair(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { termPair ->
 				termPair.first.of(typeLink.lhs) linkTo termPair.second.of(typeLink.choice)
 			}
 		}
 
 fun Typed.decompileRecurse(recursive: Recursive): Typed? =
-	notNullIf(type.isRecurse) { term of recursive.type }
+	notNullIf(type.isRecurse) { expression of recursive.type }
 
-val TypedChoice.decompileLine: TypedLine
-	get() =
-		term
-			.unsafeUnchoice(choice.lineCount)
-			.runIndexToValue { it of choice.lineSeq[this]!! }
-
+//val TypedChoice.decompileLine: TypedLine
+//	get() =
+//		expression
+//			.unsafeUnchoice(choice.lineCount)
+//			.runIndexToValue { it of choice.lineSeq[this]!! }
+//
 val TypedLine.decompileField: TypedField?
 	get() =
-		term.applyOrNull(typeLine.fieldOrNull) { of(it) }
+		expression.applyOrNull(typeLine.fieldOrNull) { of(it) }
 
 val TypedLine.decompileArrow: TypedArrow?
 	get() =
-		term.applyOrNull(typeLine.arrowOrNull) { of(it) }
+		expression.applyOrNull(typeLine.arrowOrNull) { of(it) }
 
 val TypedLine.decompileLiteral: Literal?
 	get() =
 		typeLine.literalOrNull
 
-val TypedLine.decompileJavaTerm: Term?
-	get() =
-		notNullIf(typeLine.isJava) { term }
+//val TypedLine.decompileJavaTerm: Term?
+//	get() =
+//		notNullIf(typeLine.isJava) { expression }
 
 // === decompile script ===
 

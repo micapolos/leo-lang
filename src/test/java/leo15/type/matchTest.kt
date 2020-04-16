@@ -27,6 +27,20 @@ class MatchTest {
 					lhs.plus("minus" lineTo rhs)
 				}
 			}!!
+			.assertEqualTo(
+				typed(
+					10.typedLine,
+					"minus" lineTo 20.typed))
+
+		typed(
+			10.typedLine,
+			"plus" lineTo 20.typed)
+			.asDynamic
+			.run {
+				matchInfix("plus") { lhs, rhs ->
+					lhs.plus("minus" lineTo rhs)
+				}
+			}!!
 			.eval
 			.assertEqualTo(
 				typed(

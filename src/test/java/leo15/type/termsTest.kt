@@ -10,10 +10,10 @@ import kotlin.test.Test
 class TermsTest {
 	@Test
 	fun plus() {
-		plusTerm(10.term, false, 20.term, false).assertEqualTo(10.term.append(20.term))
-		plusTerm(10.term, false, 20.term, true).assertEqualTo(10.term)
-		plusTerm(10.term, true, 20.term, false).assertEqualTo(20.term)
-		plusTerm(10.term, true, 20.term, true).assertEqualTo(emptyTerm)
+		add(10.term, false, 20.term, false).assertEqualTo(10.term.append(20.term))
+		add(10.term, false, 20.term, true).assertEqualTo(10.term)
+		add(10.term, true, 20.term, false).assertEqualTo(20.term)
+		add(10.term, true, 20.term, true).assertEqualTo(emptyTerm)
 	}
 
 	@Test

@@ -8,7 +8,7 @@ val emptyTerm = idTerm
 val String.term get() = valueTerm
 val Int.term get() = bigDecimal.valueTerm
 
-fun plusTerm(lhs: Term, lhsIsStatic: Boolean, rhs: Term, rhsIsStatic: Boolean): Term =
+fun add(lhs: Term, lhsIsStatic: Boolean, rhs: Term, rhsIsStatic: Boolean): Term =
 	if (lhsIsStatic)
 		if (rhsIsStatic) emptyTerm
 		else rhs
