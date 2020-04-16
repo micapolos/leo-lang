@@ -32,6 +32,5 @@ class TermsTest {
 		term.decompileUnplus(false, true).assertEqualTo(term to emptyTerm)
 		term.decompileUnplus(true, false).assertEqualTo(emptyTerm to term)
 		term.decompileUnplus(true, true).assertEqualTo(emptyTerm to emptyTerm)
-
 	}
 }
