@@ -61,3 +61,6 @@ fun Expression.applyValue(rhs: Expression, valueFn: Any?.(Any?) -> Any?): Expres
 		term
 			.valueApply(rhs.term, valueFn)
 			.dynamicExpression
+
+fun Expression.updateTerm(fn: Term.() -> Term): Expression =
+	copy(term = term.fn())

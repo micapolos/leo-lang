@@ -4,7 +4,7 @@ import leo.base.ifOrNull
 import leo15.numberName
 import leo15.textName
 
-fun Typed.matchInfix(name: String, fn: (Typed, Typed) -> Typed?): Typed? =
+fun <R : Any> Typed.matchInfix(name: String, fn: (Typed, Typed) -> R?): R? =
 	linkOrNull?.let { link ->
 		link.choice.onlyLineOrNull?.fieldOrNull?.let { field ->
 			ifOrNull(field.field.name == name) {

@@ -48,7 +48,7 @@ data class ChoiceLink(val lhs: Choice, val line: TypeLine)
 
 // === constructors ===
 
-infix fun Type.functionTo(type: Type) = Arrow(this, type)
+infix fun Type.arrowTo(type: Type) = Arrow(this, type)
 val Type.recursive get() = Recursive(this)
 val Choice.repeating get() = Repeating(this)
 val emptyType: Type = EmptyType

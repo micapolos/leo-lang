@@ -4,11 +4,18 @@ import leo.base.foldRight
 import leo14.*
 import leo15.doesName
 import leo15.expandsName
-import leo15.isName
+import leo15.string
 
-data class Compiler(val library: Library, val typed: Typed)
+data class Compiler(val library: Library, val typed: Typed) {
+	override fun toString() = reflectScriptLine.string
+}
+
+val Compiler.reflectScriptLine: ScriptLine
+	get() =
+		"compiler" lineTo script(library.reflectScriptLine, typed.reflectScriptLine)
 
 fun Library.compiler(typed: Typed) = Compiler(this, typed)
+val emptyCompiler = emptyLibrary.compiler(emptyTyped)
 
 fun Compiler.compile(script: Script): Compiler =
 	foldRight(script.lineSeq) { compile(it) }
@@ -24,14 +31,10 @@ fun Compiler.compile(literal: Literal): Compiler =
 
 fun Compiler.compile(field: ScriptField): Compiler =
 	when (field.string) {
-		isName -> compileIs(field.rhs)
 		doesName -> compileDoes(field.rhs)
 		expandsName -> compileExpands(field.rhs)
 		else -> compilePlain(field)
 	}
-
-fun Compiler.compileIs(script: Script): Compiler =
-	TODO()
 
 fun Compiler.compileDoes(script: Script): Compiler =
 	TODO()
@@ -40,7 +43,11 @@ fun Compiler.compileExpands(script: Script): Compiler =
 	TODO()
 
 fun Compiler.compilePlain(field: ScriptField): Compiler =
-	set(typed.plus(field.string.lineTo(compileTypedRhs(field.rhs)).choice))
+	typed
+		.plus(field.string.lineTo(compileTypedRhs(field.rhs)).choice)
+		.let { typed ->
+			library.applyCompiler(typed)
+		}
 
 fun Compiler.set(typed: Typed): Compiler =
 	copy(typed = typed)
@@ -50,8 +57,8 @@ val Compiler.startLocal: Compiler
 		library.clearLocal.compiler(emptyTyped)
 
 fun Compiler.compileTypedRhs(script: Script): Typed =
-	startLocal.compile(script).compiledTyped
+	startLocal.compile(script).scoped.typed
 
-val Compiler.compiledTyped: Typed
+val Compiler.scoped: Scoped
 	get() =
-		TODO()
+		library.scoped(typed)

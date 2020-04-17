@@ -145,3 +145,6 @@ val Typed.asDynamic: Typed
 
 fun Typed.applyValue(rhs: Typed, fn: Any?.(Any?) -> Any?): Typed =
 	expression.applyValue(rhs.expression, fn) of javaType
+
+fun Typed.updateExpression(fn: Expression.() -> Expression): Typed =
+	copy(expression = expression.fn())
