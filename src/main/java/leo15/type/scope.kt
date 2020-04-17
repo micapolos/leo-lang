@@ -29,3 +29,15 @@ val Scope.reflectScript: Script
 			EmptyScope -> script()
 			is LinkScope -> link.lhs.reflectScript.plus(link.binding.reflectScriptLine)
 		}
+
+fun Scope.apply(typed: Typed, index: Int = 0): Typed? =
+	when (this) {
+		EmptyScope -> null
+		is LinkScope -> link.apply(typed, index)
+	}
+
+fun ScopeLink.apply(typed: Typed, index: Int): Typed? =
+	typed
+		.cast(binding.key.type)
+		?.let { arg -> binding.value.invoke(index, arg.expression.term) }
+		?: lhs.apply(typed, index.inc())

@@ -7,6 +7,7 @@ import leo13.Stack
 import leo14.*
 import leo15.*
 import leo15.lambda.append
+import leo15.lambda.fn
 import leo15.lambda.valueTerm
 
 data class Typed(val expression: Expression, val type: Type) {
@@ -148,3 +149,11 @@ fun Typed.applyValue(rhs: Typed, fn: Any?.(Any?) -> Any?): Typed =
 
 fun Typed.updateExpression(fn: Expression.() -> Expression): Typed =
 	copy(expression = expression.fn())
+
+val Typed.withFnTerm
+	get() =
+		fn(expression.term).dynamicExpression of type
+
+val Typed.staticScriptOrNull: Script?
+	get() =
+		notNullIf(type.isStatic) { type.script }

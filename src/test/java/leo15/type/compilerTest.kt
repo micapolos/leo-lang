@@ -9,11 +9,13 @@ class CompilerTest {
 	@Test
 	fun is_() {
 		emptyLibrary
-			.compiler(typed("foo"))
-			.compile(isName("bar"()))
+			.plus(type("foo").key bindingTo typed("bar").value)
+			.compiler(typed("zoo"))
+			.compile(isName("zar"()))
 			.assertEqualTo(
 				emptyLibrary
 					.plus(type("foo").key bindingTo typed("bar").value)
+					.plus(type("zoo").key bindingTo typed("zar").value)
 					.compiler(emptyTyped))
 	}
 }
