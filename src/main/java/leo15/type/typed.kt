@@ -1,5 +1,6 @@
 package leo15.type
 
+import leo.base.applyOrNull
 import leo.base.fold
 import leo.base.notNullIf
 import leo13.Stack
@@ -52,12 +53,13 @@ fun Typed.plus(typed: TypedChoice): Typed =
 fun Typed.plus(typed: TypedLine): Typed = plus(typed.choice)
 fun Typed.plus(name: String): Typed = plus(name lineTo emptyTyped)
 
-val Typed.linkOrNull: TypedLink?
-	get() = type.linkOrNull?.let { typeLink ->
-		expression.pair(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { expressionPair ->
-			expressionPair.first.of(typeLink.lhs) linkTo expressionPair.second.of(typeLink.choice)
-		}
+fun Expression.typedOf(typeLink: TypeLink): TypedLink =
+	pair(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { expressionPair ->
+		expressionPair.first.of(typeLink.lhs) linkTo expressionPair.second.of(typeLink.choice)
 	}
+
+val Typed.linkOrNull: TypedLink?
+	get() = expression.applyOrNull(type.linkOrNull) { typedOf(it) }
 
 val TypedLink.typed: Typed get() = lhs.plus(choice)
 
