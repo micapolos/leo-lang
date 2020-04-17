@@ -5,6 +5,19 @@ import leo15.lambda.choiceTerm
 
 val castRecursiveParameter: Parameter<Recursive?> = parameter(null)
 
+sealed class Cast
+object IdentityCast : Cast()
+data class ExpressionCast(val expression: Expression) : Cast()
+
+val identityCast: Cast = IdentityCast
+val Expression.cast: Cast get() = ExpressionCast(this)
+
+fun Cast.term(input: Expression): Expression =
+	when (this) {
+		IdentityCast -> input
+		is ExpressionCast -> expression
+	}
+
 fun Typed.cast(to: Type): Typed? =
 	when (to) {
 		EmptyType -> notNullIf(isEmpty) { this }
@@ -74,7 +87,7 @@ fun TypedRepeating.cast(to: Repeating): TypedRepeating? =
 fun Typed.castRepeating(to: Repeating): TypedRepeating? =
 	when (type) {
 		EmptyType -> expression.of(to)
-		is LinkType -> castRepeating(to)
+		is LinkType -> linkOrNull?.castRepeating(to)
 		is RepeatingType -> null
 		is RecursiveType -> null
 		RecurseType -> null
