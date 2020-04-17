@@ -50,8 +50,8 @@ fun Typed.plus(name: String): Typed = plus(name lineTo emptyTyped)
 
 val Typed.linkOrNull: TypedLink?
 	get() = type.linkOrNull?.let { typeLink ->
-		expression.pair(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { termPair ->
-			termPair.first.of(typeLink.lhs) linkTo termPair.second.of(typeLink.choice)
+		expression.pair(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { expressionPair ->
+			expressionPair.first.of(typeLink.lhs) linkTo expressionPair.second.of(typeLink.choice)
 		}
 	}
 
