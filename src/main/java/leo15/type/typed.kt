@@ -42,6 +42,10 @@ val Int.typed: Typed get() = typed(typedLine)
 val String.typedLine: TypedLine get() = textName lineTo javaTyped
 val String.typed: Typed get() = typed(typedLine)
 
+val Expression.javaTyped: Typed get() = of(javaType)
+val Expression.javaNumberTyped: Typed get() = typed(numberName lineTo of(javaType))
+val Expression.javaTextTyped: Typed get() = typed(textName lineTo of(javaType))
+
 fun Typed.plus(typed: TypedChoice): Typed =
 	add(expression, type.isStatic, typed.expression, typed.choice.isStatic) of type.plus(typed.choice)
 
@@ -120,3 +124,6 @@ val Typed.eval: Typed
 val Typed.asDynamic: Typed
 	get() =
 		expression.asDynamic of type
+
+fun Typed.applyValue(rhs: Typed, fn: Any?.(Any?) -> Any?): Typed =
+	expression.applyValue(rhs.expression, fn) of javaType

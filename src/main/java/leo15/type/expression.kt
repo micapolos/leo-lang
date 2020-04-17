@@ -4,9 +4,7 @@ import leo.base.runIf
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.script
-import leo15.lambda.Term
-import leo15.lambda.eval
-import leo15.lambda.script
+import leo15.lambda.*
 import leo15.string
 
 data class Expression(val term: Term, val isConstant: Boolean) {
@@ -52,3 +50,14 @@ val Expression.eval: Expression
 val Expression.asDynamic: Expression
 	get() =
 		term.dynamicExpression
+
+fun Expression.applyValue(rhs: Expression, valueFn: Any?.(Any?) -> Any?): Expression =
+	if (isConstant && rhs.isConstant)
+		term.value
+			.valueFn(rhs.term.value)
+			.valueTerm
+			.constantExpression
+	else
+		term
+			.valueApply(rhs.term, valueFn)
+			.dynamicExpression
