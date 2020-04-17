@@ -16,8 +16,12 @@ fun Typed.matchInfix(name: String, fn: (Typed, Typed) -> Typed?): Typed? =
 fun Typed.matchPrefix(name: String, fn: (Typed) -> Typed?): Typed? =
 	matchInfix(name) { _, rhs -> fn(rhs) }
 
-fun Typed.matchEmpty(name: String, fn: () -> Typed?): Typed? =
-	matchPrefix(name) { fn() }
+fun Typed.matchField(fn: (String, Typed) -> Typed?): Typed? =
+	linkOrNull?.let { link ->
+		link.choice.onlyLineOrNull?.fieldOrNull?.let { field ->
+			fn(field.field.name, field.rhs)
+		}
+	}
 
 fun Typed.matchJava(fn: (Expression) -> Typed?): Typed? =
 	onlyLineOrNull?.let { line ->
