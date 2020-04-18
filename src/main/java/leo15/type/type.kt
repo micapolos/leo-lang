@@ -46,6 +46,8 @@ data class LineChoice(val line: TypeLine) : Choice()
 data class LinkChoice(val link: ChoiceLink) : Choice()
 data class ChoiceLink(val lhs: Choice, val line: TypeLine)
 
+data class Thunk<T>(val thing: T, val recursiveOrNull: Recursive?)
+
 // === constructors ===
 
 infix fun Type.arrowTo(type: Type) = Arrow(this, type)
@@ -81,6 +83,17 @@ val ChoiceLink.choice: Choice get() = LinkChoice(this)
 infix fun Choice.linkTo(line: TypeLine) = ChoiceLink(this, line)
 operator fun Choice.plus(line: TypeLine): Choice = linkTo(line).choice
 fun choice(line: TypeLine, vararg lines: TypeLine): Choice = line.choice.fold(lines) { plus(it) }
+
+fun <T> T.thunk(recusiveOrNull: Recursive? = null) = Thunk(this, recusiveOrNull)
+val Thunk<Type>.type get() = thing
+val Thunk<TypeLine>.typeLine get() = thing
+val Thunk<TypeLink>.typeLink get() = thing
+val Thunk<Choice>.choice get() = thing
+val Thunk<ChoiceLink>.choiceLink get() = thing
+val Thunk<Repeating>.repeating get() = thing
+val Thunk<Recursive>.recursive get() = thing
+val Thunk<TypeField>.typeField get() = thing
+val Thunk<Arrow>.arrow get() = thing
 
 val Type.linkOrNull: TypeLink? get() = (this as? LinkType)?.link
 val Type.recursiveOrNull: Recursive? get() = (this as? RecursiveType)?.recursive
