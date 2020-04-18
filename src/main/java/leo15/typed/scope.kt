@@ -48,10 +48,10 @@ fun scopeApply(typed: Typed): Typed? =
 		.firstIndexed { fromType == typed.type }
 		?.let { indexedBinding ->
 			(bindings.size - indexedBinding.index - 1).let { bottomIndex ->
-				termFn { arg ->
+				thunkFn { arg ->
 					functions
 						.bottom(bottomIndex)!!.let { function ->
-							function.invoke(arg)
+							function.invoke(arg.evaledTerm).thunk
 						}
 				}.invoke(typed.term) of indexedBinding.value.toType
 			}

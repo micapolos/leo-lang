@@ -47,7 +47,7 @@ fun Thunk.eval(applyFn: ApplyFn): Thunk =
 	}
 
 fun Thunk.apply(rhs: Thunk, applyFn: ApplyFn): Thunk? =
-	applyFn(rhs) ?: apply(rhs)
+	applyFn(rhs)?.eval ?: apply(rhs)
 
 fun Thunk.apply(rhs: Thunk): Thunk? =
 	when (term) {
