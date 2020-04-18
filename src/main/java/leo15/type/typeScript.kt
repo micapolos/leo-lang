@@ -1,8 +1,13 @@
 package leo15.type
 
+import leo.base.ifNotNull
 import leo13.choiceName
 import leo14.*
 import leo15.*
+
+fun <T> Thunk<T>.script(thingScriptLineFn: T.() -> ScriptLine): Script =
+	script("thunk" lineTo script(thing.thingScriptLineFn()))
+		.ifNotNull(recursiveOrNull) { plus(it.script) }
 
 val Type.script: Script
 	get() =
