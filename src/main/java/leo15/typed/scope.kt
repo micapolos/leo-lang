@@ -60,7 +60,7 @@ fun scopeApply(typed: Typed): Typed? =
 				thunkFn { arg ->
 					functionThunks
 						.top(bottomIndex)!!.let { thunk ->
-							thunk.apply(arg)
+							thunk.apply(arg, defaultApplyFn)
 						}
 				}.invoke(typed.term) of indexedBinding.value.toType
 			}
