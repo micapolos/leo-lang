@@ -250,8 +250,8 @@ fun Typed.repeatingOrNull(typeLine: TypeLine): Typed? =
 	else linkOrNull?.let { link ->
 		ifOrNull(link.line.typeLine == typeLine) {
 			link.lhs.repeatingOrNull(typeLine)?.let { typedLhs ->
-				typedLhs.type.typed(fn { lhs ->
-					fn { rhs ->
+				typedLhs.type.typed(termFn { lhs ->
+					termFn { rhs ->
 						lhs.plus(rhs)
 					}
 				}.invoke(typedLhs.term).invoke(link.line.term))

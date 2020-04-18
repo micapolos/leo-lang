@@ -22,4 +22,4 @@ data class Lambda<F : Leo<F>, S : Leo<S>>(
 }
 
 fun <F : Leo<F>, S : Leo<S>> Typ<F>.gives(secondTyp: Typ<S>, fn: F.() -> S): Lambda<F, S> =
-	Lambda(this, secondTyp, leo15.lambda.fn { it.of(this).fn().term })
+	Lambda(this, secondTyp, leo15.lambda.termFn { it.of(this).fn().term })

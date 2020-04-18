@@ -18,8 +18,8 @@ val textPlusTextType = textType.append(plusName.valueTerm.append(textType))
 val intPlusIntFunction: Term
 	get() =
 		fn(
-			fn { lhs ->
-				fn { rhs ->
+			termFn { lhs ->
+				termFn { rhs ->
 					(lhs.value as Int).plus(rhs.value as Int).valueTerm
 				}
 			}.invoke(at(0).first).invoke(at(0).second))
@@ -27,8 +27,8 @@ val intPlusIntFunction: Term
 val textPlusTextFunction: Term
 	get() =
 		fn(
-			fn { lhs ->
-				fn { rhs ->
+			termFn { lhs ->
+				termFn { rhs ->
 					(lhs.value as String).plus(rhs.value as String).valueTerm
 				}
 			}.invoke(at(0).first).invoke(at(0).second))
@@ -48,7 +48,7 @@ fun scopeApply(typed: Typed): Typed? =
 		.firstIndexed { fromType == typed.type }
 		?.let { indexedBinding ->
 			(bindings.size - indexedBinding.index - 1).let { bottomIndex ->
-				fn { arg ->
+				termFn { arg ->
 					functions
 						.bottom(bottomIndex)!!.let { function ->
 							function.invoke(arg)

@@ -24,7 +24,9 @@ data class IndexTerm(val index: Int) : Term() {
 
 val Any?.valueTerm: Term get() = ValueTerm(this)
 fun value(value: Any?): Term = ValueTerm(value)
-fun fn(fn: (Term) -> Term): Term = value(fn)
+fun valueFn(fn: (Any?) -> Any?): Term = termFn { fn(it.value).valueTerm }
+fun termFn(fn: (Term) -> Term): Term = thunkFn { fn(it.term).thunk }
+fun thunkFn(fn: (Thunk) -> Thunk): Term = value(fn)
 fun fn(body: Term): Term = AbstractionTerm(body)
 operator fun Term.invoke(rhs: Term): Term = ApplicationTerm(this, rhs)
 fun at(index: Int): Term = IndexTerm(index)

@@ -12,8 +12,8 @@ typealias ApplyFn = Thunk.(Thunk) -> Thunk?
 
 val defaultApplyFn: ApplyFn = { rhs ->
 	(term as? ValueTerm)?.value.run {
-		(this as? ((Term) -> Term))?.run {
-			invoke(rhs.term).thunk
+		(this as? ((Thunk) -> Thunk))?.run {
+			invoke(rhs)
 		}
 	}
 }

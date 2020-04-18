@@ -61,13 +61,13 @@ class EvalTest {
 
 	@Test
 	fun func() {
-		fn { it }
+		termFn { it }
 			.invoke(value(2))
 			.eval
 			.assertEqualTo(value(2))
 
-		fn { lhs ->
-			fn { rhs ->
+		termFn { lhs ->
+			termFn { rhs ->
 				value(lhs.value.asInt - rhs.value.asInt)
 			}
 		}

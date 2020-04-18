@@ -8,7 +8,7 @@ import leo15.lambda.*
 import java.math.BigDecimal
 
 fun numberBinaryTerm(fn: BigDecimal.(BigDecimal) -> BigDecimal): Term =
-	leo15.lambda.fn { lhs -> leo15.lambda.fn { rhs -> (lhs.value as BigDecimal).fn(rhs.value as BigDecimal).valueTerm } }
+	leo15.lambda.termFn { lhs -> leo15.lambda.termFn { rhs -> (lhs.value as BigDecimal).fn(rhs.value as BigDecimal).valueTerm } }
 
 val numberPlusNumberTerm: Term = numberBinaryTerm { plus(it) }
 val numberMinusNumberTerm: Term = numberBinaryTerm { minus(it) }
@@ -31,4 +31,4 @@ val Term.repeatingTermSeq: Seq<Term>
 		}
 
 fun Term.apply(fn: Term.() -> Term): Term =
-	leo15.lambda.fn { it.fn() }.invoke(this)
+	leo15.lambda.termFn { it.fn() }.invoke(this)

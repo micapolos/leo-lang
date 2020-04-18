@@ -1,8 +1,8 @@
 package leo15
 
 import leo14.bigDecimal
-import leo15.lambda.fn
 import leo15.lambda.invoke
+import leo15.lambda.termFn
 import leo15.lambda.value
 import leo15.lambda.valueTerm
 import java.lang.reflect.Constructor
@@ -110,8 +110,8 @@ val Typed.applyJavaClassConstructor: Typed?
 						rhs.matchPrefix("parameters") {
 							javaArrayOrNull<Class<*>>(javaClassParameterTypeLine)?.let { parameters ->
 								javaConstructorType.typed(
-									fn { classTerm ->
-										fn { parameters ->
+									termFn { classTerm ->
+										termFn { parameters ->
 											(classTerm.value as Class<*>)
 												.getConstructor(*parameters.value as Array<Class<*>>).valueTerm
 										}
@@ -135,9 +135,9 @@ val Typed.applyJavaClassMethod: Typed?
 									let { name ->
 										parameters.javaArrayOrNull<Class<*>>(javaClassParameterTypeLine)?.let { parameters ->
 											javaMethodType.typed(
-												fn { class_ ->
-													fn { name ->
-														fn { parameters ->
+												termFn { class_ ->
+													termFn { name ->
+														termFn { parameters ->
 															(class_.value as Class<*>)
 																.getMethod(name.value as String, *parameters.value as Array<Class<*>>).valueTerm
 														}
@@ -162,8 +162,8 @@ val Typed.applyJavaConstructorInvoke: Typed?
 						rhs.matchPrefix("parameters") {
 							javaArrayOrNull<Any?>(javaParameterTypeLine)?.let { parameters ->
 								javaType.typed(
-									fn { constructorTerm ->
-										fn { parameters ->
+									termFn { constructorTerm ->
+										termFn { parameters ->
 											(constructorTerm.value as Constructor<*>)
 												.newInstance(*(parameters.value as Array<*>)).valueTerm
 										}
@@ -184,8 +184,8 @@ val Typed.applyJavaFieldGet: Typed?
 						rhs.matchJava {
 							let { obj ->
 								javaType.typed(
-									fn { field ->
-										fn { obj ->
+									termFn { field ->
+										termFn { obj ->
 											(field.value as Field).get(obj.value).valueTerm
 										}
 									}.invoke(field).invoke(obj)
@@ -209,9 +209,9 @@ val Typed.applyJavaMethodInvoke: Typed?
 									let { object_ ->
 										parameters.javaArrayOrNull<Any?>(javaParameterTypeLine)?.let { parameters ->
 											javaType.typed(
-												fn { method ->
-													fn { object_ ->
-														fn { parameters ->
+												termFn { method ->
+													termFn { object_ ->
+														termFn { parameters ->
 															(method.value as Method)
 																.invoke(object_.value, *(parameters.value as Array<*>)).valueTerm
 														}

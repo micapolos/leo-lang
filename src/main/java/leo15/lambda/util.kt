@@ -32,17 +32,17 @@ fun Term.unsafeUnchoice(size: Int): IndexedValue<Term> =
 	}
 
 fun Term.apply(fn: Term.() -> Term): Term =
-	fn { lhs -> lhs.fn() }.invoke(this)
+	termFn { lhs -> lhs.fn() }.invoke(this)
 
 fun Term.apply(rhs: Term, fn: Term.(Term) -> Term): Term =
-	fn { lhs -> fn { rhs -> lhs.fn(rhs) } }.invoke(this).invoke(rhs)
+	termFn { lhs -> termFn { rhs -> lhs.fn(rhs) } }.invoke(this).invoke(rhs)
 
 fun Term.valueApply(valueFn: Any?.() -> Any?): Term =
-	fn { value(it.value.valueFn()) }.invoke(this)
+	termFn { value(it.value.valueFn()) }.invoke(this)
 
 fun Term.valueApply(rhs: Term, f: Any?.(Any?) -> Any?): Term =
-	fn { lhs ->
-		fn { rhs ->
+	termFn { lhs ->
+		termFn { rhs ->
 			lhs.value.f(rhs.value).valueTerm
 		}
 	}.invoke(this).invoke(rhs)
