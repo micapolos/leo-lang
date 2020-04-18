@@ -1,12 +1,14 @@
 package leo15.core
 
 import leo14.invoke
-import leo15.*
+import leo15.absentName
 import leo15.lambda.Term
+import leo15.optionalName
+import leo15.presentName
 
 val <T : Leo<T>> Typ<T>.optionalTyp: Typ<Optional<T>>
 	get() =
-		Typ(optionalName(this)) { Optional(this@optionalTyp, this) }
+		Typ(optionalName(scriptLine)) { Optional(this@optionalTyp, this) }
 
 data class Optional<T : Leo<T>>(val itemTyp: Typ<T>, override val term: Term) : Leo<Optional<T>>() {
 	override val typ get() = itemTyp.optionalTyp

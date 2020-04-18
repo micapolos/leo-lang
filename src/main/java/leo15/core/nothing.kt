@@ -1,8 +1,6 @@
 package leo15.core
 
 import leo14.scriptLine
-import leo15.Leo
-import leo15.Typ
 import leo15.lambda.Term
 import leo15.nothingName
 import leo15.type.emptyTerm

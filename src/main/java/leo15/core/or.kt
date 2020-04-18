@@ -2,11 +2,8 @@ package leo15.core
 
 import leo14.ScriptLine
 import leo14.invoke
-import leo15.Leo
-import leo15.Typ
 import leo15.eitherName
 import leo15.lambda.*
-import leo15.leo
 
 infix fun <F : Leo<F>, S : Leo<S>> Typ<F>.or(secondTyp: Typ<S>): Typ<Or<F, S>> =
 	Typ(eitherName(scriptLine, secondTyp.scriptLine)) {
