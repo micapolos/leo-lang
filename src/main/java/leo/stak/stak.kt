@@ -52,6 +52,9 @@ val <T : Any> Stak<T>.unlink: Pair<Stak<T>, T>?
 fun <T : Any> Stak<T>.top(index: Int): T? =
 	nodeOrNull?.top(index)
 
+fun <T : Any> Stak<T>.bottom(index: Int): T? =
+	top(size - index - 1)
+
 val <T : Any> Stak<T>.pop: Stak<T>?
 	get() =
 		nodeOrNull?.let { stak(it.pop) }

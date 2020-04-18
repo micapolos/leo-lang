@@ -1,8 +1,7 @@
-package leo15.type.core
+package leo15.core
 
 import leo.base.assertEqualTo
 import leo.base.assertNull
-import leo15.core.*
 import kotlin.test.Test
 
 class OrTest {

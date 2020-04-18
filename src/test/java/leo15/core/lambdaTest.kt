@@ -1,6 +1,5 @@
-package leo15.type.core
+package leo15.core
 
-import leo15.core.*
 import kotlin.test.Test
 
 class LambdaTest {

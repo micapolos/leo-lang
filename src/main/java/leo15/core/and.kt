@@ -1,6 +1,9 @@
 package leo15.core
 
 import leo14.invoke
+import leo14.lineTo
+import leo14.plus
+import leo15.andName
 import leo15.firstName
 import leo15.lambda.*
 import leo15.pairName
@@ -16,6 +19,7 @@ data class And<F : Leo<F>, S : Leo<S>>(
 	val secondTyp: Typ<S>,
 	override val term: Term) : Leo<And<F, S>>() {
 	override val typ: Typ<And<F, S>> get() = firstTyp.and(secondTyp)
+	override val unsafeScript get() = unsafeFirst.unsafeScript.plus(andName lineTo unsafeSecond.unsafeScript)
 	val first: F get() = term.invoke(firstTerm).of(firstTyp)
 	val second: S get() = term.invoke(secondTerm).of(secondTyp)
 	val unsafeFirst: F get() = term.unsafeUnpair.first of firstTyp

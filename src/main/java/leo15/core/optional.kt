@@ -15,6 +15,7 @@ data class Optional<T : Leo<T>>(val itemTyp: Typ<T>, override val term: Term) : 
 		nothingOrItem.switch(forAbsent, forPresent)
 
 	val unsafeOrNull: T? get() = nothingOrItem.unsafeSecondOrNull
+	override val unsafeScript get() = TODO()
 }
 
 val <T : Leo<T>> Typ<T>.absent: Optional<T>

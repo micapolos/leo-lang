@@ -16,6 +16,7 @@ data class List<T : Leo<T>>(val itemTyp: Typ<T>, override val term: Term) : Leo<
 	override val typ get() = itemTyp.listTyp
 	val optionalLink: Optional<Link<T>> get() = term of itemTyp.linkTyp.optionalTyp
 	val unsafeLinkOrNull: Link<T>? get() = optionalLink.unsafeOrNull
+	override val unsafeScript get() = TODO()
 }
 
 val <T : Leo<T>> Typ<T>.list: List<T> get() = absent.term.of(listTyp)

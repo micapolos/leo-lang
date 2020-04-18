@@ -1,11 +1,8 @@
-package leo15.type.core
+package leo15.core
 
 import leo.base.assertContains
 import leo.base.assertEqualTo
 import leo.base.reverse
-import leo15.core.Leo
-import leo15.core.List
-import leo15.core.unsafeSeq
 
 fun <T : Leo<T>> T.assertGives(t: T) =
 	eval.assertEqualTo(t.eval)

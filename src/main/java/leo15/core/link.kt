@@ -14,6 +14,7 @@ val <T : Leo<T>> Typ<T>.linkTyp: Typ<Link<T>>
 data class Link<T : Leo<T>>(val itemTyp: Typ<T>, override val term: Term) : Leo<Link<T>>() {
 	override val typ get() = itemTyp.linkTyp
 	private val headAndTail: And<List<T>, T> get() = term of itemTyp.listTyp.and(itemTyp)
+	override val unsafeScript get() = TODO()
 	val tail: List<T> get() = headAndTail.first
 	val head: T get() = headAndTail.second
 	val unsafeTail: List<T> get() = headAndTail.unsafeFirst

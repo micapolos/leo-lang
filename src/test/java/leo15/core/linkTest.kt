@@ -1,9 +1,5 @@
-package leo15.type.core
+package leo15.core
 
-import leo15.core.intTyp
-import leo15.core.java
-import leo15.core.linkTo
-import leo15.core.list
 import kotlin.test.Test
 
 class LinkTest {

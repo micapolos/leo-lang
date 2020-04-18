@@ -1,7 +1,6 @@
-package leo15.type.core
+package leo15.core
 
 import leo.base.assertEqualTo
-import leo15.core.java
 import kotlin.test.Test
 
 class JavaTest {

@@ -1,7 +1,5 @@
-package leo15.type.core
+package leo15.core
 
-import leo15.core.java
-import leo15.core.word
 import kotlin.test.Test
 
 class WordTest {

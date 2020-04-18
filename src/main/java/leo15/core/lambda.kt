@@ -17,6 +17,7 @@ data class Lambda<F : Leo<F>, S : Leo<S>>(
 	val toTyp: Typ<S>,
 	override val term: Term) : Leo<Lambda<F, S>>() {
 	override val typ get() = fromTyp lambdaTypTo toTyp
+	override val unsafeScript get() = TODO()
 	operator fun invoke(first: F): S = term.invoke(first.term).of(toTyp)
 }
 

@@ -1,6 +1,7 @@
 package leo15
 
 val absentName = "absent"
+val andName = "and"
 val anythingName = "anything"
 val appendName = "append"
 val applyName = "apply"

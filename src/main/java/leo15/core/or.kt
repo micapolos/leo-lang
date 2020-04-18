@@ -17,6 +17,9 @@ data class Or<F : Leo<F>, S : Leo<S>>(
 	val secondTyp: Typ<S>,
 	override val term: Term) : Leo<Or<F, S>>() {
 	override val typ: Typ<Or<F, S>> get() = firstTyp or secondTyp
+	override val unsafeScript
+		get() =
+			unsafeFirstOrNull?.run { unsafeScript } ?: unsafeSecondOrNull!!.unsafeScript
 
 	fun <R : Leo<R>> switch(forFirst: Lambda<F, R>, forSecond: Lambda<S, R>): R =
 		term.invoke(forFirst.term).invoke(forSecond.term) of forFirst.toTyp

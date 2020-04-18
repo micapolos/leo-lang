@@ -1,5 +1,6 @@
 package leo15.core
 
+import leo14.script
 import leo14.untyped.typed.valueJavaScriptLine
 import leo15.lambda.Term
 import leo15.lambda.value
@@ -16,6 +17,7 @@ val intTyp = Integer::class.java.javaTyp
 
 data class Java<T : Any>(val class_: Class<T>, override val term: Term) : Leo<Java<T>>() {
 	override val typ: Typ<Java<T>> get() = class_.javaTyp
+	override val unsafeScript get() = script(unsafeValue.valueJavaScriptLine)
 	val unsafeValue: T get() = term.value as T
 }
 
