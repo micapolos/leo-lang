@@ -1,6 +1,7 @@
 package leo15.core
 
-import leo14.scriptLine
-import leo15.scriptName
+import leo14.Script
+import leo14.ScriptLine
 
-val scriptTyp: Typ<Nothing> = Typ(scriptName.scriptLine) { nothing }
+val scriptLineTyp = ScriptLine::class.java.javaTyp
+val scriptTyp = Script::class.java.javaTyp
