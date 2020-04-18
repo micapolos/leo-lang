@@ -3,6 +3,7 @@ package leo15.core
 import leo14.ScriptLine
 import leo14.scriptLine
 import leo15.lambda.Term
+import leo15.string
 import leo15.type.emptyTerm
 import leo15.typeName
 
