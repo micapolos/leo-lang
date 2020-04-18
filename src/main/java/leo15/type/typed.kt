@@ -59,8 +59,8 @@ fun TypedRepeating.plus(typed: TypedChoice): TypedRepeating? =
 		expression.term.append(typed.expression.term).dynamicExpression.of(repeating)
 	}
 
-fun Typed.plus(typed: TypedLine): Typed = plus(typed.choice)
-fun Typed.plus(name: String): Typed = plus(name lineTo emptyTyped)
+operator fun Typed.plus(typed: TypedLine): Typed = plus(typed.choice)
+operator fun Typed.plus(name: String): Typed = plus(name lineTo emptyTyped)
 
 fun Expression.typedOf(typeLink: TypeLink): TypedLink =
 	pair(typeLink.lhs.isStatic, typeLink.choice.isStatic).let { expressionPair ->
