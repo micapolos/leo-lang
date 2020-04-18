@@ -7,9 +7,16 @@ import kotlin.test.Test
 class TypedTest {
 	@Test
 	fun append() {
-		"Hello, ".typed
-			.apply(plusName, "world!".typed)
-			.eval
-			.assertEqualTo("Hello, world!".typed)
+		runLeo {
+			"Hello, ".typed
+				.apply(plusName, "world!".typed)
+				.eval
+				.assertEqualTo("Hello, world!".typed)
+
+			10.typed
+				.apply(plusName, 20.typed)
+				.eval
+				.assertEqualTo(30.typed)
+		}
 	}
 }

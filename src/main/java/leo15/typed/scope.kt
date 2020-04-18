@@ -1,11 +1,9 @@
 package leo15.typed
 
-import leo.stak.bottom
+import leo.stak.push
 import leo.stak.stakOf
-import leo13.firstIndexed
-import leo13.plusName
-import leo13.size
-import leo13.stack
+import leo.stak.top
+import leo13.*
 import leo15.lambda.*
 
 data class Binding(val fromType: Term, val toType: Term)
@@ -33,15 +31,26 @@ val textPlusTextFunction: Term
 				}
 			}.invoke(at(0).first).invoke(at(0).second))
 
-var bindings = stack(
-	//intPlusIntType,
-	textPlusTextType bindingTo textType
-)
+var bindings = stack<Binding>()
+var functionThunks = stakOf<Thunk>()
 
-var functions = stakOf(
-	//intPlusIntFunction,
-	textPlusTextFunction
-)
+fun define(from: Term, to: Term, fn: Term) {
+	bindings = bindings.push(from bindingTo to)
+	functionThunks = functionThunks.push(fn.thunk)
+}
+
+fun runLeo(fn: () -> Unit) {
+	val previousBindings = bindings
+	val previousThunks = functionThunks
+	define(intPlusIntType, intType, intPlusIntFunction)
+	define(textPlusTextType, textType, textPlusTextFunction)
+	try {
+		fn()
+	} finally {
+		bindings = previousBindings
+		functionThunks = previousThunks
+	}
+}
 
 fun scopeApply(typed: Typed): Typed? =
 	bindings
@@ -49,9 +58,9 @@ fun scopeApply(typed: Typed): Typed? =
 		?.let { indexedBinding ->
 			(bindings.size - indexedBinding.index - 1).let { bottomIndex ->
 				thunkFn { arg ->
-					functions
-						.bottom(bottomIndex)!!.let { function ->
-							function.invoke(arg.evaledTerm).thunk
+					functionThunks
+						.top(bottomIndex)!!.let { thunk ->
+							thunk.apply(arg)
 						}
 				}.invoke(typed.term) of indexedBinding.value.toType
 			}
