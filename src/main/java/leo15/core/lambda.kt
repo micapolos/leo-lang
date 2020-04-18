@@ -21,5 +21,5 @@ data class Lambda<F : Leo<F>, S : Leo<S>>(
 	operator fun invoke(first: F): S = term.invoke(first.term).eval.leo(toTyp)
 }
 
-fun <F : Leo<F>, S : Leo<S>> Typ<F>.lambdaTo(secondTyp: Typ<S>, fn: F.() -> S): Lambda<F, S> =
+fun <F : Leo<F>, S : Leo<S>> Typ<F>.gives(secondTyp: Typ<S>, fn: F.() -> S): Lambda<F, S> =
 	Lambda(this, secondTyp, leo15.lambda.fn { it.leo(this).fn().term })

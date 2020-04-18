@@ -17,5 +17,8 @@ abstract class Leo<T : Leo<T>> {
 	abstract val scriptLine: ScriptLine
 }
 
+fun <T : Leo<T>> Typ<T>.leo(term: Term): T =
+	term.fn()
+
 fun <T : Leo<T>> Term.leo(typ: Typ<T>): T =
 	typ.fn.invoke(this)

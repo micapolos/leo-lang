@@ -22,6 +22,13 @@ data class Or<F : Leo<F>, S : Leo<S>>(
 		get() =
 			match(ScriptLine::class.java.javaTyp, { scriptLine.anyJava }, { scriptLine.anyJava }).value
 
+	val firstOrNull: F?
+		get() =
+			term.unsafeUnchoice(2).run { if (index == 1) value.leo(firstTyp) else null }
+	val secondOrNull: S?
+		get() =
+			term.unsafeUnchoice(2).run { if (index == 0) value.leo(secondTyp) else null }
+
 	fun <R : Leo<R>> match(firstLambda: Lambda<F, R>, secondLambda: Lambda<S, R>): R =
 		term
 			.invoke(firstLambda.term)
@@ -35,7 +42,6 @@ data class Or<F : Leo<F>, S : Leo<S>>(
 			.invoke(fn { it.leo(secondTyp).secondFn().term })
 			.eval
 			.leo(typ)
-
 }
 
 infix fun <F : Leo<F>, S : Leo<S>> F.or(secondTyp: Typ<S>): Or<F, S> =

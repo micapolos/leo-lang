@@ -10,12 +10,9 @@ class AndTest {
 	fun pairTo() {
 		"foo".anyJava
 			.and(10.anyJava)
-			.first
-			.assertEqualTo("foo".anyJava)
-
-		"foo".anyJava
-			.and(10.anyJava)
-			.second
-			.assertEqualTo(10.anyJava)
+			.run {
+				first.assertEqualTo("foo".anyJava)
+				second.assertEqualTo(10.anyJava)
+			}
 	}
 }
