@@ -12,7 +12,7 @@ data class Typ<T : Leo<T>>(override val scriptLine: ScriptLine, val fn: Term.() 
 }
 
 abstract class Leo<T : Leo<T>> {
-	//final override fun toString() = scriptLine.string
+	final override fun toString() = scriptLine.string
 	abstract val typ: Typ<T>
 	abstract val term: Term
 	abstract val scriptLine: ScriptLine
