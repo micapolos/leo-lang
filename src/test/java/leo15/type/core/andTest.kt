@@ -1,30 +1,28 @@
 package leo15.type.core
 
 import leo.base.assertEqualTo
-import leo.base.assertNotEqualTo
 import leo15.core.and
-import leo15.core.anyJava
 import leo15.core.java
 import kotlin.test.Test
 
 class AndTest {
 	@Test
-	fun equality() {
-		10.java.and("foo".java)
-			.assertEqualTo(10.java.and("foo".java))
-		10.java.and("foo".java)
-			.assertNotEqualTo(10.java.and("bar".java))
-		10.java.and("foo".java)
-			.assertNotEqualTo(20.java.and("foo".java))
+	fun firstSecond() {
+		"foo".java
+			.and(10.java)
+			.run {
+				first.assertGives("foo".java)
+				second.assertGives(10.java)
+			}
 	}
 
 	@Test
-	fun pairTo() {
-		"foo".anyJava
-			.and(10.anyJava)
+	fun unsafe() {
+		"foo".java
+			.and(10.java)
 			.run {
-				first.assertEqualTo("foo".anyJava)
-				second.assertEqualTo(10.anyJava)
+				unsafeFirst.assertEqualTo("foo".java)
+				unsafeSecond.assertEqualTo(10.java)
 			}
 	}
 }

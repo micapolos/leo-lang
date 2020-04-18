@@ -3,31 +3,24 @@ package leo15.type.core
 import leo.base.assertEqualTo
 import leo.base.assertNotEqualTo
 import leo.base.assertNull
-import leo14.invoke
-import leo15.absentName
-import leo15.core.*
-import leo15.optionalName
-import leo15.presentName
+import leo15.core.absent
+import leo15.core.intTyp
+import leo15.core.java
+import leo15.core.present
 import kotlin.test.Test
 
 class OptionalTest {
 	@Test
 	fun equality() {
-		intTyp.optional.assertEqualTo(intTyp.optional)
-		10.java.optional.assertEqualTo(10.java.optional)
-		intTyp.optional.assertNotEqualTo(10.java.optional)
-		10.java.optional.assertNotEqualTo(intTyp.optional)
+		intTyp.absent.assertGives(intTyp.absent)
+		10.java.present.assertGives(10.java.present)
+		intTyp.absent.assertNotEqualTo(10.java.present)
+		10.java.present.assertNotEqualTo(intTyp.absent)
 	}
 
 	@Test
 	fun logic() {
-		nothingTyp.optional.orNull.assertNull
-		nothing.optional.orNull.assertEqualTo(nothing)
-	}
-
-	@Test
-	fun scriptLine() {
-		nothingTyp.optional.scriptLine.assertEqualTo(optionalName(absentName(nothingTyp.scriptLine)))
-		nothing.optional.scriptLine.assertEqualTo(optionalName(presentName(nothing.scriptLine)))
+		intTyp.absent.unsafeOrNull.assertNull
+		10.java.present.unsafeOrNull.assertEqualTo(10.java)
 	}
 }

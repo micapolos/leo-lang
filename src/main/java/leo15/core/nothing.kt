@@ -8,7 +8,6 @@ import leo15.type.emptyTerm
 val nothingTyp: Typ<Nothing> = Typ(nothingName.scriptLine) { Nothing }
 
 object Nothing : Leo<Nothing>() {
-	override val scriptLine = nothingName.scriptLine
 	override val term: Term = emptyTerm
 	override val typ: Typ<Nothing> = nothingTyp
 }

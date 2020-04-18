@@ -1,28 +1,21 @@
 package leo15.type.core
 
-import leo.base.assertContains
-import leo.base.assertEqualTo
-import leo.base.assertNull
 import leo15.core.*
 import kotlin.test.Test
 
 class ListTest {
 	@Test
-	fun equality() {
-		intTyp.list.assertEqualTo(intTyp.list)
-		intTyp.list.plus(10.java).assertEqualTo(intTyp.list.plus(10.java))
-	}
-
-	@Test
 	fun linkOrNull() {
-		intTyp.list.linkOrNull.assertNull
-		list(10.java).linkOrNull.assertEqualTo(intTyp.list.linkTo(10.java))
+		intTyp.list.optionalLink.assertGives(intTyp.linkTyp.absent)
+		list(10.java).optionalLink.assertGives(intTyp.list.linkTo(10.java).present)
+		list(10.java, 20.java).optionalLink.assertGives(list(10.java).linkTo(20.java).present)
 	}
 
 	@Test
 	fun seq() {
-		intTyp.list().seq.assertContains()
-		intTyp.list(10.java, 20.java).seq.assertContains(20.java, 10.java)
-		list(10.java, 20.java).seq.assertContains(20.java, 10.java)
+		intTyp.list().assertContains()
+		intTyp.list(10.java).assertContains(10.java)
+		intTyp.list(10.java, 20.java).assertContains(10.java, 20.java)
+		list(10.java, 20.java).assertContains(10.java, 20.java)
 	}
 }

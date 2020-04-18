@@ -1,9 +1,11 @@
 package leo15.core
 
-import leo14.ScriptLine
 import leo14.invoke
 import leo15.eitherName
-import leo15.lambda.*
+import leo15.lambda.Term
+import leo15.lambda.choiceTerm
+import leo15.lambda.invoke
+import leo15.lambda.unsafeUnchoice
 
 infix fun <F : Leo<F>, S : Leo<S>> Typ<F>.or(secondTyp: Typ<S>): Typ<Or<F, S>> =
 	Typ(eitherName(scriptLine, secondTyp.scriptLine)) {
@@ -14,31 +16,17 @@ data class Or<F : Leo<F>, S : Leo<S>>(
 	val firstTyp: Typ<F>,
 	val secondTyp: Typ<S>,
 	override val term: Term) : Leo<Or<F, S>>() {
-	override val typ get() = firstTyp or secondTyp
-	override val scriptLine: ScriptLine
-		get() =
-			match(ScriptLine::class.java.javaTyp, { scriptLine.anyJava }, { scriptLine.anyJava }).value
+	override val typ: Typ<Or<F, S>> get() = firstTyp or secondTyp
 
-	val firstOrNull: F?
-		get() =
-			term.unsafeUnchoice(2).run { if (index == 1) value.leo(firstTyp) else null }
-	val secondOrNull: S?
-		get() =
-			term.unsafeUnchoice(2).run { if (index == 0) value.leo(secondTyp) else null }
+	fun <R : Leo<R>> switch(forFirst: Lambda<F, R>, forSecond: Lambda<S, R>): R =
+		term.invoke(forFirst.term).invoke(forSecond.term) of forFirst.toTyp
 
-	fun <R : Leo<R>> match(firstLambda: Lambda<F, R>, secondLambda: Lambda<S, R>): R =
-		term
-			.invoke(firstLambda.term)
-			.invoke(secondLambda.term)
-			.eval
-			.leo(firstLambda.toTyp)
-
-	fun <R : Leo<R>> match(typ: Typ<R>, firstFn: F.() -> R, secondFn: S.() -> R): R =
-		term
-			.invoke(fn { it.leo(firstTyp).firstFn().term })
-			.invoke(fn { it.leo(secondTyp).secondFn().term })
-			.eval
-			.leo(typ)
+	val unsafeFirstOrNull: F?
+		get() =
+			term.unsafeUnchoice(2).run { if (index == 1) value.of(firstTyp) else null }
+	val unsafeSecondOrNull: S?
+		get() =
+			term.unsafeUnchoice(2).run { if (index == 0) value.of(secondTyp) else null }
 }
 
 infix fun <F : Leo<F>, S : Leo<S>> F.or(secondTyp: Typ<S>): Or<F, S> =
