@@ -84,12 +84,13 @@ fun Term.resolveVars(depth: Int): Term =
 
 val Term.resolveVars get() = resolveVars(0)
 
-var lambdaDepth = 0
+val lambdaDepthThreadLocal = ThreadLocal.withInitial { 0 }
 
 fun lambda(f: (Term) -> Term): Term {
-	lambdaDepth++
-	val x = fn(f(Var(lambdaDepth - 1).valueTerm))
-	lambdaDepth--
+	val v = Var(lambdaDepthThreadLocal.get()).valueTerm
+	lambdaDepthThreadLocal.set(lambdaDepthThreadLocal.get().inc())
+	val x = fn(f(v))
+	lambdaDepthThreadLocal.set(lambdaDepthThreadLocal.get().dec())
 	return x
 }
 
