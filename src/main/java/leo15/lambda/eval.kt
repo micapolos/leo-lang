@@ -25,21 +25,17 @@ val Term.thunk: Thunk get() = emptyStak<Thunk>().thunk(this)
 
 val Term.eval: Term
 	get() =
-		thunk.eval.evaledTerm
-
-val Thunk.eval: Thunk
-	get() =
 		eval(defaultApplyFn)
 
 fun Term.eval(applyFn: ApplyFn): Term =
-	thunk.eval(applyFn).term
+	resolveVars(0).thunk.eval(applyFn).evaledTerm
 
 fun Thunk.eval(applyFn: ApplyFn): Thunk =
 	when (term) {
 		is ValueTerm -> this
 		is AbstractionTerm -> this
-		is ApplicationTerm -> stak.thunk(term.lhs).eval.let { lhs ->
-			stak.thunk(term.rhs).eval.let { rhs ->
+		is ApplicationTerm -> stak.thunk(term.lhs).eval(applyFn).let { lhs ->
+			stak.thunk(term.rhs).eval(applyFn).let { rhs ->
 				lhs.apply(rhs, applyFn) ?: emptyStak<Thunk>().thunk(lhs.term(rhs.term))
 			}
 		}
@@ -47,12 +43,12 @@ fun Thunk.eval(applyFn: ApplyFn): Thunk =
 	}
 
 fun Thunk.apply(rhs: Thunk, applyFn: ApplyFn): Thunk? =
-	applyFn(rhs)?.eval ?: apply(rhs)
+	applyFn(rhs)?.eval(applyFn) ?: applyRaw(rhs, applyFn)
 
-fun Thunk.apply(rhs: Thunk): Thunk? =
+fun Thunk.applyRaw(rhs: Thunk, applyFn: ApplyFn): Thunk? =
 	when (term) {
 		is ValueTerm -> null
-		is AbstractionTerm -> stak.push(rhs).thunk(term.body).eval
+		is AbstractionTerm -> stak.push(rhs).thunk(term.body).eval(applyFn)
 		is ApplicationTerm -> null
 		is IndexTerm -> null
 	}

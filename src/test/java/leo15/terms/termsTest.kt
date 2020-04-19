@@ -1,5 +1,7 @@
 package leo15.terms
 
+import leo15.lambda.invoke
+import leo15.lambda.lambda
 import kotlin.test.Test
 
 class TermsTest {
@@ -9,6 +11,9 @@ class TermsTest {
 		30.term.intMinus(20.term).assertGives(10.term)
 		10.term.intTimes(20.term).assertGives(200.term)
 		10.term.intString.assertGives("10".term)
+
+		0.term.ifIntZero { 100.term }.otherwise { 200.term }.assertGives(100.term)
+		10.term.ifIntZero { 100.term }.otherwise { 200.term }.assertGives(200.term)
 
 		"Hello, ".term.stringPlus("world!".term).assertGives("Hello, world!".term)
 		"Hello, world!".term.stringLength.assertGives(13.term)
@@ -25,13 +30,13 @@ class TermsTest {
 	@Test
 	fun or() {
 		10.term.firstOr
-			.ifFirst { intPlus(1.term) }
-			.orSecond { intPlus(2.term) }
+			.ifFirst { it.intPlus(1.term) }
+			.orSecond { it.intPlus(2.term) }
 			.assertGives(11.term)
 
 		10.term.secondOr
-			.ifFirst { intPlus(1.term) }
-			.orSecond { intPlus(2.term) }
+			.ifFirst { it.intPlus(1.term) }
+			.orSecond { it.intPlus(2.term) }
 			.assertGives(12.term)
 	}
 
@@ -39,12 +44,12 @@ class TermsTest {
 	fun option() {
 		absent
 			.ifAbsent { 0.term }
-			.orPresent { intPlus(1.term) }
+			.orPresent { it.intPlus(1.term) }
 			.assertGives(0.term)
 
 		10.term.present
 			.ifAbsent { 0.term }
-			.orPresent { intPlus(1.term) }
+			.orPresent { it.intPlus(1.term) }
 			.assertGives(11.term)
 	}
 
@@ -60,12 +65,27 @@ class TermsTest {
 	fun list() {
 		empty
 			.ifEmpty { 0.term }
-			.orLink { head }
+			.orLink { it.head }
 			.assertGives(0.term)
 
 		empty.append(10.term)
 			.ifEmpty { 0.term }
-			.orLink { head }
+			.orLink { it.head }
 			.assertGives(10.term)
+	}
+
+	@Test
+	fun recursion() {
+		lambda { f -> f.invoke(f).invoke(100.term) }
+			.invoke(
+				lambda { f ->
+					lambda { x ->
+						x
+							.ifIntZero { 0.term }
+							.otherwise { f.invoke(f).invoke(x.intMinus(1.term)).intPlus(x) }
+					}
+				}
+			)
+			.assertGives(5050.term)
 	}
 }

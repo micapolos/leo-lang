@@ -68,6 +68,31 @@ val Term.freeVariableCount: Int
 			is IndexTerm -> index + 1
 		}
 
+data class Var(val depth: Int)
+
+fun v(depth: Int) = Var(depth).valueTerm
+
+fun Term.resolveVars(depth: Int): Term =
+	when (this) {
+		is ValueTerm ->
+			if (value is Var) at(depth - value.depth - 1)
+			else this
+		is AbstractionTerm -> fn(body.resolveVars(depth.inc()))
+		is ApplicationTerm -> lhs.resolveVars(depth).invoke(rhs.resolveVars(depth))
+		is IndexTerm -> this
+	}
+
+val Term.resolveVars get() = resolveVars(0)
+
+var lambdaDepth = 0
+
+fun lambda(f: (Term) -> Term): Term {
+	lambdaDepth++
+	val x = fn(f(Var(lambdaDepth - 1).valueTerm))
+	lambdaDepth--
+	return x
+}
+
 val Term.isPair: Boolean
 	get() =
 		unpairOrNull != null
