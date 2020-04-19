@@ -2,6 +2,10 @@ package leo15.lambda
 
 import leo.base.assertEqualTo
 import leo14.untyped.typed.asInt
+import leo15.terms.ifIntZero
+import leo15.terms.intMinus
+import leo15.terms.otherwise
+import leo15.terms.term
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -85,5 +89,32 @@ class EvalTest {
 			.invoke(pairTerm.invoke("one".valueTerm).invoke("two".valueTerm))
 			.eval
 			.assertEqualTo(pairTerm("two".valueTerm)("one".valueTerm))
+	}
+
+	@Test
+	fun repeatWithoutRepeating() {
+		0.term.repeat.eval.assertEqualTo(0.term.repeat)
+	}
+
+	@Test
+	fun repeatingWithoutRepeat() {
+		repeating { it }.invoke(0.term).eval.assertEqualTo(0.term)
+	}
+
+	@Test
+	fun repeatForever() {
+		val thread = Thread {
+			repeating { it.repeat }.invoke(0.term).eval
+			throw AssertionError("Should not finish")
+		}
+		thread.start()
+		thread.join(200)
+	}
+
+	@Test
+	fun repeatingWithConditionalRepeat() {
+		repeating { x ->
+			x.ifIntZero { x }.otherwise { x.intMinus(10.term).repeat }
+		}.invoke(100.term).eval.assertEqualTo(0.term)
 	}
 }

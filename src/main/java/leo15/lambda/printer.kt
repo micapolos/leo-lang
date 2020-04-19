@@ -17,8 +17,9 @@ val Printer.print: String
 		when (term) {
 			is ValueTerm -> "${term.value}"
 			is AbstractionTerm ->
-				"{ v$depth -> ${term.body.printer(depth.inc()).print} }"
+				"${term.isRepeating.isRepeatingLambdaName} { v$depth -> ${term.body.printer(depth.inc()).print} }"
 			is ApplicationTerm ->
 				term.lhs.printer(depth).print + "(" + term.rhs.printer(depth).print + ")"
 			is IndexTerm -> "v${depth - term.index - 1}"
+			is RepeatTerm -> "${term.rhs.printer(depth).print}.repeat"
 		}

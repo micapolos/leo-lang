@@ -36,21 +36,27 @@ fun Thunk.eval(applyFn: ApplyFn): Thunk =
 		is AbstractionTerm -> this
 		is ApplicationTerm -> stak.thunk(term.lhs).eval(applyFn).let { lhs ->
 			stak.thunk(term.rhs).eval(applyFn).let { rhs ->
-				lhs.apply(rhs, applyFn) ?: emptyStak<Thunk>().thunk(lhs.term(rhs.term))
+				lhs.apply(rhs, applyFn)!!
 			}
 		}
 		is IndexTerm -> stak.top(term.index)!!
+		is RepeatTerm -> stak.thunk(term.rhs).eval(applyFn).let { evaled ->
+			evaled.copy(term = evaled.term.repeat)
+		}
 	}
 
-fun Thunk.apply(rhs: Thunk, applyFn: ApplyFn): Thunk? =
-	applyFn(rhs)?.eval(applyFn) ?: applyRaw(rhs, applyFn)
-
-fun Thunk.applyRaw(rhs: Thunk, applyFn: ApplyFn): Thunk? =
-	when (term) {
+tailrec fun Thunk.apply(rhs: Thunk, applyFn: ApplyFn): Thunk? =
+	applyFn(rhs)?.eval(applyFn) ?: when (term) {
 		is ValueTerm -> null
-		is AbstractionTerm -> stak.push(rhs).thunk(term.body).eval(applyFn)
+		is AbstractionTerm -> {
+			val evaled = stak.push(rhs).thunk(term.body).eval(applyFn)
+			if (term.isRepeating && evaled.term is RepeatTerm)
+				apply(evaled.copy(term = evaled.term.rhs), applyFn)
+			else evaled
+		}
 		is ApplicationTerm -> null
 		is IndexTerm -> null
+		is RepeatTerm -> null
 	}
 
 val Thunk.evaledTerm: Term
