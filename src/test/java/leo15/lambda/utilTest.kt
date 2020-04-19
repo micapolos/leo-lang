@@ -107,7 +107,7 @@ class UtilTest {
 	@Test
 	fun lambda_() {
 		lambda { x -> x.invoke(x) }
-			.assertEqualTo(fn(v(0).invoke(v(0))))
+			.assertEqualTo(fn(lambdaVar(0).invoke(lambdaVar(0))))
 
 		lambda { x -> x.invoke(x) }
 			.resolveVars
@@ -118,7 +118,7 @@ class UtilTest {
 			.assertEqualTo(20.term)
 
 		lambda { x -> lambda { y -> x.invoke(y) } }
-			.assertEqualTo(fn(fn(v(0).invoke(v(1)))))
+			.assertEqualTo(fn(fn(lambdaVar(0).invoke(lambdaVar(1)))))
 
 		lambda { x -> lambda { y -> x.invoke(y) } }
 			.resolveVars

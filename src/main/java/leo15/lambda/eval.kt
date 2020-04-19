@@ -28,7 +28,7 @@ val Term.eval: Term
 		eval(defaultApplyFn)
 
 fun Term.eval(applyFn: ApplyFn): Term =
-	resolveVars(0).thunk.eval(applyFn).evaledTerm
+	resolveLambdaVars(0).thunk.eval(applyFn).evaledTerm
 
 fun Thunk.eval(applyFn: ApplyFn): Thunk =
 	when (term) {
