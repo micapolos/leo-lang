@@ -91,6 +91,18 @@ class EvalTest {
 			.assertEqualTo(pairTerm("two".valueTerm)("one".valueTerm))
 	}
 
+//	@Test
+//	fun infiniteLoop() {
+//		lambda {
+//			f -> f.invoke(f)
+//		}.invoke(
+//		lambda { f ->
+//			f.invoke(f)
+//		})
+//			.eval
+//			.assertEqualTo(null)
+//	}
+
 	@Test
 	fun tailRecursion_zero() {
 		lambda { f ->
@@ -98,7 +110,7 @@ class EvalTest {
 		}.invoke(
 			lambda { f ->
 				lambda { x ->
-					x.ifIntZero { x }.otherwise { f.invoke(x.intMinus(1.term)) }
+					x.ifIntZero { x }.otherwise { f.invoke(f).invoke(x.intMinus(1.term)) }
 				}
 			})
 			.invoke(0.term)
@@ -106,20 +118,59 @@ class EvalTest {
 			.assertEqualTo(0.term)
 	}
 
-//	@Test
-//	fun tailRecursion_recurseOnce() {
-//		lambda { f ->
-//			lambda { x ->
-//				f.invoke(f).invoke(x)
-//			}
-//		}.invoke(
-//			lambda { f ->
-//				lambda { x ->
-//					x.ifIntZero { x }.otherwise { f.invoke(x.intMinus(1.term)) }
-//				}
-//			})
-//			.invoke(100.term)
-//			.eval
-//			.assertEqualTo(0.term)
-//	}
+	@Test
+	fun tailRecursion_recurseOnce() {
+		lambda { f ->
+			lambda { x ->
+				f.invoke(f).invoke(x)
+			}
+		}.invoke(
+			lambda { f ->
+				lambda { x ->
+					x.ifIntZero { x }.otherwise { f.invoke(f).invoke(x.intMinus(1.term)) }
+				}
+			})
+			.invoke(1.term)
+			.eval
+			.assertEqualTo(0.term)
+	}
+
+	@Test
+	fun tailRecursion_recurseSmall() {
+		lambda { f ->
+			lambda { x ->
+				f.invoke(f).invoke(x)
+			}
+		}.invoke(
+			lambda { f ->
+				lambda { x ->
+					x.ifIntZero { x }.otherwise { f.invoke(f).invoke(x.intMinus(1.term)) }
+				}
+			})
+			.invoke(100.term)
+			.eval
+			.assertEqualTo(0.term)
+	}
+
+	@Test
+	fun tailRecursion_recurseHuge() {
+		try {
+			lambda { f ->
+				lambda { x ->
+					f.invoke(f).invoke(x)
+				}
+			}.invoke(
+				lambda { f ->
+					lambda { x ->
+						x.ifIntZero { x }.otherwise { f.invoke(f).invoke(x.intMinus(1.term)) }
+					}
+				})
+				.invoke(1000000.term)
+				.eval
+				.assertEqualTo(0.term)
+			throw AssertionError("Expected stack overflow")
+		} catch (e: StackOverflowError) {
+			// OK
+		}
+	}
 }
