@@ -92,29 +92,34 @@ class EvalTest {
 	}
 
 	@Test
-	fun repeatWithoutRepeating() {
-		0.term.repeat.eval.assertEqualTo(0.term.repeat)
+	fun tailRecursion_zero() {
+		lambda { f ->
+			f.invoke(f)
+		}.invoke(
+			lambda { f ->
+				lambda { x ->
+					x.ifIntZero { x }.otherwise { f.invoke(x.intMinus(1.term)) }
+				}
+			})
+			.invoke(0.term)
+			.eval
+			.assertEqualTo(0.term)
 	}
 
-	@Test
-	fun repeatingWithoutRepeat() {
-		repeating { it }.invoke(0.term).eval.assertEqualTo(0.term)
-	}
-
-	@Test
-	fun repeatForever() {
-		val thread = Thread {
-			repeating { it.repeat }.invoke(0.term).eval
-			throw AssertionError("Should not finish")
-		}
-		thread.start()
-		thread.join(200)
-	}
-
-	@Test
-	fun repeatingWithConditionalRepeat() {
-		repeating { x ->
-			x.ifIntZero { x }.otherwise { x.intMinus(10.term).repeat }
-		}.invoke(100.term).eval.assertEqualTo(0.term)
-	}
+//	@Test
+//	fun tailRecursion_recurseOnce() {
+//		lambda { f ->
+//			lambda { x ->
+//				f.invoke(f).invoke(x)
+//			}
+//		}.invoke(
+//			lambda { f ->
+//				lambda { x ->
+//					x.ifIntZero { x }.otherwise { f.invoke(x.intMinus(1.term)) }
+//				}
+//			})
+//			.invoke(100.term)
+//			.eval
+//			.assertEqualTo(0.term)
+//	}
 }

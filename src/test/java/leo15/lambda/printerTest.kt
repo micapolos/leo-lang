@@ -12,15 +12,15 @@ class PrinterTest {
 
 		fn(at(0))(value(123))
 			.print
-			.assertEqualTo("lambda { v0 -> v0 }(123)")
+			.assertEqualTo("{ v0 -> v0 }(123)")
 
 		fn(fn(at(0)))(value(123))(value(124))
 			.print
-			.assertEqualTo("lambda { v0 -> lambda { v1 -> v1 } }(123)(124)")
+			.assertEqualTo("{ v0 -> { v1 -> v1 } }(123)(124)")
 
 		fn(fn(at(0)))(value(123))(value(124))
 			.print
-			.assertEqualTo("lambda { v0 -> lambda { v1 -> v1 } }(123)(124)")
+			.assertEqualTo("{ v0 -> { v1 -> v1 } }(123)(124)")
 
 		fn("x", fn("y", value("x + y")))(value(123))(value(124))
 			.print

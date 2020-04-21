@@ -9,5 +9,5 @@ val Term.assertEvaluatesOnce: Term
 			evaluated.assertEqualTo(false, "Evaluated twice")
 			evaluated = true
 			term
-		}(this)
+		}.invoke(this)
 	}

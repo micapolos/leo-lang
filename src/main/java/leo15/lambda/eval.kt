@@ -2,11 +2,14 @@
 
 package leo15.lambda
 
+import leo.base.Parameter
 import leo.base.iterate
+import leo.base.parameter
+import leo.base.reverseStackLink
 import leo.stak.*
-import leo13.fold
-import leo13.push
-import leo13.stack
+import leo13.*
+
+const val useEval2 = false
 
 typealias ApplyFn = Thunk.(Thunk) -> Thunk?
 
@@ -18,6 +21,8 @@ val defaultApplyFn: ApplyFn = { rhs ->
 	}
 }
 
+val applyFnParameter: Parameter<ApplyFn> = parameter(defaultApplyFn)
+
 data class Thunk(val stak: Stak<Thunk>, val term: Term)
 
 fun Stak<Thunk>.thunk(term: Term): Thunk = Thunk(this, term)
@@ -25,38 +30,64 @@ val Term.thunk: Thunk get() = emptyStak<Thunk>().thunk(this)
 
 val Term.eval: Term
 	get() =
-		eval(defaultApplyFn)
+		evalThunk.evaledTerm
 
-fun Term.eval(applyFn: ApplyFn): Term =
-	resolveLambdaVars(0).thunk.eval(applyFn).evaledTerm
-
-fun Thunk.eval(applyFn: ApplyFn): Thunk =
-	when (term) {
-		is ValueTerm -> this
-		is AbstractionTerm -> this
-		is ApplicationTerm -> stak.thunk(term.lhs).eval(applyFn).let { lhs ->
-			stak.thunk(term.rhs).eval(applyFn).let { rhs ->
-				lhs.apply(rhs, applyFn)!!
-			}
-		}
-		is IndexTerm -> stak.top(term.index)!!
-		is RepeatTerm -> stak.thunk(term.rhs).eval(applyFn).let { evaled ->
-			evaled.copy(term = evaled.term.repeat)
-		}
+val Term.evalThunk: Thunk
+	get() = resolveLambdaVars(0).run {
+		if (useEval2) evalThunk2 else thunk.eval1
 	}
 
-tailrec fun Thunk.apply(rhs: Thunk, applyFn: ApplyFn): Thunk? =
-	applyFn(rhs)?.eval(applyFn) ?: when (term) {
-		is ValueTerm -> null
-		is AbstractionTerm -> {
-			val evaled = stak.push(rhs).thunk(term.body).eval(applyFn)
-			if (term.isRepeating && evaled.term is RepeatTerm)
-				apply(evaled.copy(term = evaled.term.rhs), applyFn)
-			else evaled
+val Term.evalThunk2: Thunk
+	get() = thunk.eval2
+
+fun Thunk.evalApplication(application: Thunk): Thunk {
+	val evaled = application.eval2
+	val fnApplied = applyFnParameter.value.invoke(this, evaled)
+	return if (fnApplied != null) fnApplied
+	else {
+		term as AbstractionTerm
+		stak.push(evaled).thunk(term.body).eval2
+	}
+}
+
+fun Thunk.evalApplications(applications: Stack<Thunk>): Thunk =
+	fold(applications) { evalApplication(it) }
+
+val Thunk.eval2: Thunk
+	get() {
+		val stackLink = term.applicationSeqNode.reverseStackLink
+		return stak.thunk(stackLink.value).resolve2
+			.evalApplications(stackLink.stack.map { stak.thunk(this) })
+	}
+
+val Thunk.resolve2: Thunk
+	get() =
+		when (term) {
+			is ValueTerm -> this
+			is AbstractionTerm -> this
+			is ApplicationTerm -> this
+			is IndexTerm -> stak.top(term.index)!!
 		}
+
+val Thunk.eval1: Thunk
+	get() =
+		when (term) {
+			is ValueTerm -> this
+			is AbstractionTerm -> this
+			is ApplicationTerm -> stak.thunk(term.lhs).eval1.let { lhs ->
+				stak.thunk(term.rhs).eval1.let { rhs ->
+					lhs.apply(rhs)!!
+				}
+			}
+			is IndexTerm -> stak.top(term.index)!!
+		}
+
+fun Thunk.apply(rhs: Thunk): Thunk? =
+	applyFnParameter.value.invoke(this, rhs)?.eval1 ?: when (term) {
+		is ValueTerm -> null
+		is AbstractionTerm -> stak.push(rhs).thunk(term.body).eval1
 		is ApplicationTerm -> null
 		is IndexTerm -> null
-		is RepeatTerm -> null
 	}
 
 val Thunk.evaledTerm: Term

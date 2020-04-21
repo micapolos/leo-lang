@@ -66,7 +66,6 @@ val Term.freeVariableCount: Int
 			is AbstractionTerm -> body.freeVariableCount - 1
 			is ApplicationTerm -> max(lhs.freeVariableCount, rhs.freeVariableCount)
 			is IndexTerm -> index + 1
-			is RepeatTerm -> rhs.freeVariableCount
 		}
 
 val Term.isPair: Boolean

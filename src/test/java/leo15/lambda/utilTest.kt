@@ -1,5 +1,6 @@
 package leo15.lambda
 
+import leo.base.assertContains
 import leo.base.assertEqualTo
 import leo.base.indexed
 import leo13.assertContains
@@ -99,5 +100,24 @@ class UtilTest {
 		stack<Term>()
 			.unsafeFold(idTerm.append(10.valueTerm).append(20.valueTerm).append(30.valueTerm)) { push(it) }
 			.assertContains(30.valueTerm, 20.valueTerm, 10.valueTerm)
+	}
+
+	@Test
+	fun applicationSeqNode() {
+		10.valueTerm
+			.applicationSeqNode
+			.assertContains(10.valueTerm)
+
+		10.valueTerm
+			.invoke(20.valueTerm)
+			.applicationSeqNode
+			.assertContains(20.valueTerm, 10.valueTerm)
+
+		10.valueTerm
+			.invoke(20.valueTerm)
+			.invoke(30.valueTerm)
+			.applicationSeqNode
+			.assertContains(30.valueTerm, 20.valueTerm, 10.valueTerm)
+
 	}
 }
