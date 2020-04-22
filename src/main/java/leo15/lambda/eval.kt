@@ -63,7 +63,7 @@ tailrec fun Thunk.evalTail(): Thunk =
 fun Thunk.apply(rhs: Thunk): Thunk? =
 	applyFnParameter.value.invoke(this, rhs)?.eval ?: when (term) {
 		is ValueTerm -> null
-		is AbstractionTerm -> stak.push(rhs).thunk(term.body).eval
+		is AbstractionTerm -> stak.push(rhs).thunk(term.body).evalTail()
 		is ApplicationTerm -> null
 		is IndexTerm -> null
 	}
