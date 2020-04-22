@@ -8,6 +8,7 @@ import leo15.terms.otherwise
 import leo15.terms.term
 import kotlin.test.Test
 import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class EvalTest {
 	@Test
@@ -91,17 +92,19 @@ class EvalTest {
 			.assertEqualTo(pairTerm("two".valueTerm)("one".valueTerm))
 	}
 
-//	@Test
-//	fun infiniteLoop() {
-//		lambda {
-//			f -> f.invoke(f)
-//		}.invoke(
-//		lambda { f ->
-//			f.invoke(f)
-//		})
-//			.eval
-//			.assertEqualTo(null)
-//	}
+	@Test
+	fun infiniteLoop() {
+		assertFailsWith(StackOverflowError::class) {
+			lambda { f ->
+				f.invoke(f)
+			}.invoke(
+				lambda { f ->
+					f.invoke(f)
+				})
+				.eval
+				.assertEqualTo(null)
+		}
+	}
 
 	@Test
 	fun tailRecursion_zero() {
@@ -154,7 +157,7 @@ class EvalTest {
 
 	@Test
 	fun tailRecursion_recurseHuge() {
-		try {
+		assertFailsWith(StackOverflowError::class) {
 			lambda { f ->
 				lambda { x ->
 					f.invoke(f).invoke(x)
@@ -168,9 +171,6 @@ class EvalTest {
 				.invoke(1000000.term)
 				.eval
 				.assertEqualTo(0.term)
-			throw AssertionError("Expected stack overflow")
-		} catch (e: StackOverflowError) {
-			// OK
 		}
 	}
 }

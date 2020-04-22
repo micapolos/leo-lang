@@ -9,7 +9,7 @@ import leo.base.reverseStackLink
 import leo.stak.*
 import leo13.*
 
-const val useEval2 = false
+const val useTailEval = false
 
 typealias ApplyFn = Thunk.(Thunk) -> Thunk?
 
@@ -34,33 +34,33 @@ val Term.eval: Term
 
 val Term.evalThunk: Thunk
 	get() = resolveLambdaVars(0).run {
-		if (useEval2) evalThunk2 else thunk.eval1
+		if (useTailEval) tailEvalThunk else thunk.eval
 	}
 
-val Term.evalThunk2: Thunk
-	get() = thunk.eval2
+val Term.tailEvalThunk: Thunk
+	get() = thunk.tailEval
 
 fun Thunk.evalApplication(application: Thunk): Thunk {
-	val evaled = application.eval2
+	val evaled = application.tailEval
 	val fnApplied = applyFnParameter.value.invoke(this, evaled)
 	return if (fnApplied != null) fnApplied
 	else {
 		term as AbstractionTerm
-		stak.push(evaled).thunk(term.body).eval2
+		stak.push(evaled).thunk(term.body).tailEval
 	}
 }
 
 fun Thunk.evalApplications(applications: Stack<Thunk>): Thunk =
 	fold(applications) { evalApplication(it) }
 
-val Thunk.eval2: Thunk
+val Thunk.tailEval: Thunk
 	get() {
 		val stackLink = term.applicationSeqNode.reverseStackLink
-		return stak.thunk(stackLink.value).resolve2
+		return stak.thunk(stackLink.value).tailResolve
 			.evalApplications(stackLink.stack.map { stak.thunk(this) })
 	}
 
-val Thunk.resolve2: Thunk
+val Thunk.tailResolve: Thunk
 	get() =
 		when (term) {
 			is ValueTerm -> this
@@ -69,23 +69,23 @@ val Thunk.resolve2: Thunk
 			is IndexTerm -> stak.top(term.index)!!
 		}
 
-val Thunk.eval1: Thunk
+val Thunk.eval: Thunk
 	get() =
 		when (term) {
 			is ValueTerm -> this
 			is AbstractionTerm -> this
-			is ApplicationTerm -> stak.thunk(term.lhs).eval1.let { lhs ->
-				stak.thunk(term.rhs).eval1.let { rhs ->
-					lhs.apply(rhs)!!
-				}
+			is ApplicationTerm -> {
+				val lhs = stak.thunk(term.lhs).eval
+				val rhs = stak.thunk(term.rhs).eval
+				lhs.apply(rhs)!!
 			}
 			is IndexTerm -> stak.top(term.index)!!
 		}
 
 fun Thunk.apply(rhs: Thunk): Thunk? =
-	applyFnParameter.value.invoke(this, rhs)?.eval1 ?: when (term) {
+	applyFnParameter.value.invoke(this, rhs)?.eval ?: when (term) {
 		is ValueTerm -> null
-		is AbstractionTerm -> stak.push(rhs).thunk(term.body).eval1
+		is AbstractionTerm -> stak.push(rhs).thunk(term.body).eval
 		is ApplicationTerm -> null
 		is IndexTerm -> null
 	}
