@@ -5,11 +5,10 @@ package leo15.lambda
 import leo.base.Parameter
 import leo.base.iterate
 import leo.base.parameter
-import leo.base.reverseStackLink
 import leo.stak.*
-import leo13.*
-
-const val useTailEval = false
+import leo13.fold
+import leo13.push
+import leo13.stack
 
 typealias ApplyFn = Thunk.(Thunk) -> Thunk?
 
@@ -33,41 +32,7 @@ val Term.eval: Term
 		evalThunk.evaledTerm
 
 val Term.evalThunk: Thunk
-	get() = resolveLambdaVars(0).run {
-		if (useTailEval) tailEvalThunk else thunk.evalTail()
-	}
-
-val Term.tailEvalThunk: Thunk
-	get() = thunk.tailEval
-
-fun Thunk.evalApplication(application: Thunk): Thunk {
-	val evaled = application.tailEval
-	val fnApplied = applyFnParameter.value.invoke(this, evaled)
-	return if (fnApplied != null) fnApplied
-	else {
-		term as AbstractionTerm
-		stak.push(evaled).thunk(term.body).tailEval
-	}
-}
-
-fun Thunk.evalApplications(applications: Stack<Thunk>): Thunk =
-	fold(applications) { evalApplication(it) }
-
-val Thunk.tailEval: Thunk
-	get() {
-		val stackLink = term.applicationSeqNode.reverseStackLink
-		return stak.thunk(stackLink.value).tailResolve
-			.evalApplications(stackLink.stack.map { stak.thunk(this) })
-	}
-
-val Thunk.tailResolve: Thunk
-	get() =
-		when (term) {
-			is ValueTerm -> this
-			is AbstractionTerm -> this
-			is ApplicationTerm -> this
-			is IndexTerm -> stak.top(term.index)!!
-		}
+	get() = resolveLambdaVars(0).thunk.evalTail()
 
 val Thunk.eval: Thunk
 	get() =

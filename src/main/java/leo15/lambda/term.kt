@@ -1,9 +1,5 @@
 package leo15.lambda
 
-import leo.base.SeqNode
-import leo.base.emptySeq
-import leo.base.seq
-import leo.base.then
 import leo15.string
 
 sealed class Term {
@@ -39,13 +35,3 @@ val Term.value: Any? get() = (this as ValueTerm).value
 val Term.applicationOrNull: ApplicationTerm? get() = (this as? ApplicationTerm)
 val Term.abstractionOrNull: AbstractionTerm? get() = (this as? AbstractionTerm)
 val Term.indexOrNull: Int? get() = (this as? IndexTerm)?.index
-
-val Term.applicationSeqNode: SeqNode<Term>
-	get() =
-		applicationOrNull
-			?.applicationSeqNode
-			?: this then emptySeq()
-
-val ApplicationTerm.applicationSeqNode: SeqNode<Term>
-	get() =
-		rhs then seq { lhs.applicationSeqNode }
