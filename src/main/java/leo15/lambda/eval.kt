@@ -34,7 +34,7 @@ val Term.eval: Term
 
 val Term.evalThunk: Thunk
 	get() = resolveLambdaVars(0).run {
-		if (useTailEval) tailEvalThunk else thunk.eval
+		if (useTailEval) tailEvalThunk else thunk.evalTail()
 	}
 
 val Term.tailEvalThunk: Thunk
@@ -81,6 +81,19 @@ val Thunk.eval: Thunk
 			}
 			is IndexTerm -> stak.top(term.index)!!
 		}
+
+tailrec fun Thunk.evalTail(): Thunk =
+	when (term) {
+		is ValueTerm -> this
+		is AbstractionTerm -> this
+		is ApplicationTerm -> {
+			val lhs = stak.thunk(term.lhs).eval
+			val rhs = stak.thunk(term.rhs).eval
+			applyFnParameter.value.invoke(lhs, rhs)?.eval
+				?: lhs.stak.push(rhs).thunk(lhs.term.abstractionOrNull!!.body).evalTail()
+		}
+		is IndexTerm -> stak.top(term.index)!!
+	}
 
 fun Thunk.apply(rhs: Thunk): Thunk? =
 	applyFnParameter.value.invoke(this, rhs)?.eval ?: when (term) {

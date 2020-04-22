@@ -28,3 +28,11 @@ val <V : Any> V?.assertNull
 
 fun <V, R> V.assertFails(fn: V.() -> R) =
 	kotlin.test.assertFails { fn() }
+
+fun assertTimesOutMillis(timeoutMillis: Long, fn: () -> Unit) {
+	val thread = Thread(fn)
+	thread.start()
+	thread.join(timeoutMillis)
+	if (thread.isAlive) thread.interrupt()
+	else throw AssertionError("Expected to timeout")
+}

@@ -1,6 +1,7 @@
 package leo15.lambda
 
 import leo.base.assertEqualTo
+import leo.base.assertTimesOutMillis
 import leo14.untyped.typed.asInt
 import leo15.terms.ifIntZero
 import leo15.terms.intMinus
@@ -8,7 +9,6 @@ import leo15.terms.otherwise
 import leo15.terms.term
 import kotlin.test.Test
 import kotlin.test.assertFails
-import kotlin.test.assertFailsWith
 
 class EvalTest {
 	@Test
@@ -94,7 +94,7 @@ class EvalTest {
 
 	@Test
 	fun infiniteLoop() {
-		assertFailsWith(StackOverflowError::class) {
+		assertTimesOutMillis(100L) {
 			lambda { f ->
 				f.invoke(f)
 			}.invoke(
@@ -157,20 +157,18 @@ class EvalTest {
 
 	@Test
 	fun tailRecursion_recurseHuge() {
-		assertFailsWith(StackOverflowError::class) {
+		lambda { f ->
+			lambda { x ->
+				f.invoke(f).invoke(x)
+			}
+		}.invoke(
 			lambda { f ->
 				lambda { x ->
-					f.invoke(f).invoke(x)
+					x.ifIntZero { x }.otherwise { f.invoke(f).invoke(x.intMinus(1.term)) }
 				}
-			}.invoke(
-				lambda { f ->
-					lambda { x ->
-						x.ifIntZero { x }.otherwise { f.invoke(f).invoke(x.intMinus(1.term)) }
-					}
-				})
-				.invoke(1000000.term)
-				.eval
-				.assertEqualTo(0.term)
-		}
+			})
+			.invoke(1000000.term)
+			.eval
+			.assertEqualTo(0.term)
 	}
 }
