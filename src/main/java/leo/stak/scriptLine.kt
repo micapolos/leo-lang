@@ -1,9 +1,8 @@
 package leo.stak
 
-import leo14.Script
-import leo14.ScriptLine
-import leo14.lineTo
-import leo14.script
+import leo.base.fold
+import leo.base.reverse
+import leo14.*
 
 fun <T : Any> Stak<T>.scriptLine(fn: T.() -> Script): ScriptLine =
 	"stak" lineTo script(
@@ -18,3 +17,6 @@ fun <T : Any> Link<T>.scriptLine(fn: T.() -> Script): ScriptLine =
 	"link" lineTo script(
 		node.scriptLine(fn),
 		linkOrNull?.scriptLine(fn) ?: "link" lineTo script("null"))
+
+fun <T : Any> Stak<T>.contentScript(fn: T.() -> ScriptLine): Script =
+	emptyScript.fold(seq.reverse) { plus(it.fn()) }

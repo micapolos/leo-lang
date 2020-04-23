@@ -9,6 +9,12 @@ import leo.stak.*
 import leo13.fold
 import leo13.push
 import leo13.stack
+import leo14.ScriptLine
+import leo14.invoke
+import leo15.stackName
+import leo15.string
+import leo15.termName
+import leo15.thunkName
 
 typealias ApplyFn = Thunk.(Thunk) -> Thunk?
 
@@ -22,7 +28,13 @@ val defaultApplyFn: ApplyFn = { rhs ->
 
 val applyFnParameter: Parameter<ApplyFn> = parameter(defaultApplyFn)
 
-data class Thunk(val stak: Stak<Thunk>, val term: Term)
+data class Thunk(val stak: Stak<Thunk>, val term: Term) {
+	override fun toString() = reflectScriptLine.string
+}
+
+val Thunk.reflectScriptLine: ScriptLine
+	get() =
+		thunkName(stackName(stak.contentScript { reflectScriptLine }), termName(term.script))
 
 fun Stak<Thunk>.thunk(term: Term): Thunk = Thunk(this, term)
 val Term.thunk: Thunk get() = emptyStak<Thunk>().thunk(this)

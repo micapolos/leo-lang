@@ -5,6 +5,7 @@ import leo.base.indexed
 import leo13.assertContains
 import leo13.push
 import leo13.stack
+import leo15.terms.*
 import kotlin.test.Test
 
 class UtilTest {
@@ -99,5 +100,24 @@ class UtilTest {
 		stack<Term>()
 			.unsafeFold(idTerm.append(10.valueTerm).append(20.valueTerm).append(30.valueTerm)) { push(it) }
 			.assertContains(30.valueTerm, 20.valueTerm, 10.valueTerm)
+	}
+
+	@Test
+	fun tailRecursion() {
+		lambda { f ->
+			f.invoke(f)
+		}.invoke(
+			lambda { f ->
+				lambda { acc ->
+					lambda { x ->
+						x.ifIntZero { acc }
+							.otherwise { f.invoke(f).invoke(acc.intPlus(x)).invoke(x.intMinus(1.term)) }
+					}
+				}
+			})
+			.invoke(0.term)
+			.invoke(1000000.term)
+			.eval
+			.assertEqualTo(1784293664.term)
 	}
 }
