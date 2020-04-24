@@ -2,6 +2,8 @@ package leo.stak
 
 import leo.base.appendableString
 import leo.base.fold
+import leo.base.map
+import leo.base.reverse
 import leo14.script
 
 // Stack with binary-replicated links.
@@ -190,3 +192,6 @@ fun <T : Any, R : Any> Stak<T>.indexedTop(fn: Int.(T) -> R?): R? {
 	}
 	return null
 }
+
+fun <T : Any, R : Any> Stak<T>.map(f: T.() -> R): Stak<R> =
+	emptyStak<R>().fold(seq.map(f).reverse) { push(it) }

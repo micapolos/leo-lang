@@ -4,11 +4,14 @@ import leo.stak.Stak
 import leo.stak.emptyStak
 import leo.stak.get
 import leo.stak.push
+import leo15.string
 
 typealias Scope<T> = Stak<Thunk<T>>
 typealias Apply<T> = T.(T) -> T
 
-data class Thunk<out T>(val scope: Scope<T>, val atom: Atom<T>)
+data class Thunk<out T>(val scope: Scope<T>, val atom: Atom<T>) {
+	override fun toString() = anyScriptLine.string
+}
 
 val anyEmptyScope: Scope<Any?> = emptyStak()
 

@@ -6,20 +6,22 @@ import leo15.lambda.IndexTerm
 import leo15.lambda.ValueTerm
 import leo15.lambda.Term as LambdaTerm
 
+fun <T> term(lambdaTerm: LambdaTerm): Term<T> = term(lambdaTerm, null)
+
 @Suppress("UNCHECKED_CAST")
-fun <T> term(lambdaTerm: LambdaTerm): Term<T> =
+fun <T> term(lambdaTerm: LambdaTerm, applicationOrNull: Application<T>?): Term<T> =
 	when (lambdaTerm) {
-		is ValueTerm -> term(atom(lambdaTerm), null)
-		is AbstractionTerm -> term(atom(term(lambdaTerm.body)), null)
-		is ApplicationTerm -> TODO()//term(atom(lambdaTerm), term(lambdaTerm.rhs))
-		is IndexTerm -> term(atom(lambdaTerm.index), null)
+		is ValueTerm -> term(atom(lambdaTerm.value as T), applicationOrNull)
+		is AbstractionTerm -> term(atom(term(lambdaTerm.body)), applicationOrNull)
+		is ApplicationTerm -> term(lambdaTerm.lhs, application(lambdaTerm.rhs, applicationOrNull))
+		is IndexTerm -> term(atom(lambdaTerm.index), applicationOrNull)
 	}
 
 @Suppress("UNCHECKED_CAST")
-fun <T> atom(lambdaTerm: LambdaTerm): Atom<T> =
-	when (lambdaTerm) {
-		is ValueTerm -> atom(lambdaTerm.value as T)
-		is AbstractionTerm -> atom(term(lambdaTerm.body))
-		is ApplicationTerm -> null!!
-		is IndexTerm -> atom(lambdaTerm.index)
-	}
+fun <T> application(lambdaTerm: LambdaTerm, applicationOrNull: Application<T>?): Application<T> =
+	if (lambdaTerm is ApplicationTerm) application(lambdaTerm, applicationOrNull)
+	else application(term(lambdaTerm, null), null)
+
+@Suppress("UNCHECKED_CAST")
+fun <T> application(applicationTerm: ApplicationTerm, applicationOrNull: Application<T>?): Application<T> =
+	application(term(applicationTerm.lhs, null), application(applicationTerm.rhs, applicationOrNull))

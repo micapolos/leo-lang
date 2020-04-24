@@ -1,6 +1,11 @@
 package leo15.lambda.runtime
 
-data class Term<out T>(val atom: Atom<T>, val applicationOrNull: Application<T>?)
+import leo15.string
+
+data class Term<out T>(val atom: Atom<T>, val applicationOrNull: Application<T>?) {
+	override fun toString() = anyScript.string
+}
+
 data class Application<out T>(val term: Term<T>, val applicationOrNull: Application<T>?)
 
 sealed class Atom<out T>
