@@ -1,6 +1,7 @@
 package leo15.lambda.java
 
 sealed class Java
+data class PrintingJava(val label: String) : Java()
 data class IntJava(val int: Int) : Java()
 data class StringJava(val string: String) : Java()
 object PlusJava : Java()
@@ -17,6 +18,7 @@ val String.java: Java get() = StringJava(this)
 
 fun Java.apply(rhs: Java): Java =
 	when (this) {
+		is PrintingJava -> rhs.also { println("$label: $it") }
 		PlusJava -> when (rhs) {
 			is IntJava -> IntPlusJava(rhs.int)
 			is StringJava -> StringPlusJava(rhs.string)

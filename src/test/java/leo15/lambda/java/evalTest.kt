@@ -32,4 +32,13 @@ class EvalTest {
 			.eval
 			.assertEqualTo("Hello, world!".java)
 	}
+
+	@Test
+	fun printing() {
+		term(atom(PrintingJava("What is it")),
+			application(term(atom("foo".java), null),
+				null))
+			.eval
+			.assertEqualTo("foo".java)
+	}
 }
