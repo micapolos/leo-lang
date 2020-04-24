@@ -21,3 +21,8 @@ fun <T> term(atom: Atom<T>, applicationOrNull: Application<T>?) = Term(atom, app
 fun <T> application(term: Term<T>, applicationOrNull: Application<T>?) = Application(term, applicationOrNull)
 
 val <T> Atom<T>.value get() = (this as ValueAtom).value
+
+fun <T> term(atom: Atom<T>, vararg terms: Term<T>): Term<T> =
+	terms
+		.foldRight(null as Application<T>?) { term, application -> application(term, application) }
+		.let { application -> term(atom, application) }

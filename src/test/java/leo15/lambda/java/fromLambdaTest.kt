@@ -9,6 +9,6 @@ import kotlin.test.Test
 class FromLambdaTest {
 	@Test
 	fun script() {
-		term<Any?>(idTerm).assertEqualTo(term(atom(term(atom(0), null)), null))
+		term<Any?>(idTerm).assertEqualTo(term(atom(term(atom(0)))))
 	}
 }
