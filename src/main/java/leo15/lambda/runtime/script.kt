@@ -23,7 +23,7 @@ fun <T> Atom<T>.scriptLine(fn: ScriptLineFn<T>): ScriptLine =
 	when (this) {
 		is IndexAtom -> getName(line(literal(index)))
 		is ValueAtom -> value.fn()
-		is TermAtom -> lambdaName(term.script(fn))
+		is LambdaTermAtom -> lambdaName(body.script(fn))
 	}
 
 fun <T> Thunk<T>.scriptLine(fn: ScriptLineFn<T>): ScriptLine =

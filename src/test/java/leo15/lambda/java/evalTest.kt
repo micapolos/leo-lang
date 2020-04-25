@@ -5,14 +5,16 @@ import leo.base.assertTimesOutMillis
 import leo15.lambda.invoke
 import leo15.lambda.lambda
 import leo15.lambda.resolveVars
-import leo15.lambda.runtime.atom
+import leo15.lambda.runtime.at
+import leo15.lambda.runtime.lambda
 import leo15.lambda.runtime.term
+import leo15.lambda.runtime.value
 import kotlin.test.Test
 
 class EvalTest {
 	@Test
 	fun prim() {
-		term(atom(10.java))
+		term(value(10.java))
 			.eval
 			.assertEqualTo(10.java)
 	}
@@ -20,8 +22,8 @@ class EvalTest {
 	@Test
 	fun op1() {
 		term(
-			atom(LengthJava),
-			term(atom("Hello, world!".java)))
+			value(LengthJava),
+			term(value("Hello, world!".java)))
 			.eval
 			.assertEqualTo(13.java)
 	}
@@ -29,9 +31,9 @@ class EvalTest {
 	@Test
 	fun op2() {
 		term(
-			atom(PlusJava),
-			term(atom("Hello, ".java)),
-			term(atom("world!".java)))
+			value(PlusJava),
+			term(value("Hello, ".java)),
+			term(value("world!".java)))
 			.eval
 			.assertEqualTo("Hello, world!".java)
 	}
@@ -39,8 +41,8 @@ class EvalTest {
 	@Test
 	fun printing() {
 		term(
-			atom(PrintingJava("What is it")),
-			term(atom("foo".java)))
+			value(PrintingJava("What is it")),
+			term(value("foo".java)))
 			.eval
 			.assertEqualTo("foo".java)
 	}
@@ -48,8 +50,8 @@ class EvalTest {
 	@Test
 	fun id() {
 		term(
-			atom(term(atom(0))),
-			term(atom(10.java)))
+			lambda(term(at(0))),
+			term(value(10.java)))
 			.eval
 			.assertEqualTo(10.java)
 	}

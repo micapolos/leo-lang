@@ -36,7 +36,7 @@ fun <T> Atom<T>.apply(scope: Scope<T>): Thunk<T> =
 	when (this) {
 		is IndexAtom -> scope[index]!!
 		is ValueAtom -> Thunk(emptyScope(), this)
-		is TermAtom -> Thunk(scope, this)
+		is LambdaTermAtom -> Thunk(scope, this)
 	}
 
 fun <T> Thunk<T>.apply(termScope: Scope<T>, term: Term<T>, applyFn: ApplyFn<T>): Thunk<T> {
@@ -44,7 +44,7 @@ fun <T> Thunk<T>.apply(termScope: Scope<T>, term: Term<T>, applyFn: ApplyFn<T>):
 	return when (atom) {
 		is IndexAtom -> null!!
 		is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
-		is TermAtom -> atom.term.eval(scope.push(rhs), applyFn)
+		is LambdaTermAtom -> atom.body.eval(scope.push(rhs), applyFn)
 	}
 }
 
@@ -55,20 +55,20 @@ tailrec fun <T> Thunk<T>.apply(scope: Scope<T>, applicationOrNull: Application<T
 		when (atom) {
 			is IndexAtom -> null!!
 			is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
-			is TermAtom -> {
-				val lhs = atom.term.atom.apply(innerScope)
-				if (atom.term.applicationOrNull == null) lhs
-				else apply(innerScope, atom.term.applicationOrNull, applyFn)
+			is LambdaTermAtom -> {
+				val lhs = atom.body.atom.apply(innerScope)
+				if (atom.body.applicationOrNull == null) lhs
+				else apply(innerScope, atom.body.applicationOrNull, applyFn)
 			}
 		}
-	} else if (atom is TermAtom && atom.term.applicationOrNull == null) {
-		val lhs = atom.term.atom.apply(innerScope)
+	} else if (atom is LambdaTermAtom && atom.body.applicationOrNull == null) {
+		val lhs = atom.body.atom.apply(innerScope)
 		lhs.apply(innerScope, applicationOrNull, applyFn)
 	} else {
 		val lhs = when (atom) {
 			is IndexAtom -> null!!
 			is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
-			is TermAtom -> apply(scope, applicationOrNull.term, applyFn)
+			is LambdaTermAtom -> apply(scope, applicationOrNull.term, applyFn)
 		}
 		lhs.apply(scope, applicationOrNull.applicationOrNull, applyFn)
 	}

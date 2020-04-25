@@ -11,10 +11,10 @@ fun <T> term(lambdaTerm: LambdaTerm): Term<T> = term(lambdaTerm, null)
 @Suppress("UNCHECKED_CAST")
 fun <T> term(lambdaTerm: LambdaTerm, applicationOrNull: Application<T>?): Term<T> =
 	when (lambdaTerm) {
-		is ValueTerm -> term(atom(lambdaTerm.value as T), applicationOrNull)
-		is AbstractionTerm -> term(atom(term(lambdaTerm.body)), applicationOrNull)
+		is ValueTerm -> term(value(lambdaTerm.value as T), applicationOrNull)
+		is AbstractionTerm -> term(lambda(term(lambdaTerm.body)), applicationOrNull)
 		is ApplicationTerm -> term(lambdaTerm.lhs, application(lambdaTerm.rhs, applicationOrNull))
-		is IndexTerm -> term(atom(lambdaTerm.index), applicationOrNull)
+		is IndexTerm -> term(at(lambdaTerm.index), applicationOrNull)
 	}
 
 @Suppress("UNCHECKED_CAST")
