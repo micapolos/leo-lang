@@ -1,6 +1,6 @@
 package leo15.lambda.runtime
 
-import leo.base.ifNotNull
+import leo.base.fold
 import leo.stak.contentScript
 import leo13.atomName
 import leo14.*
@@ -17,13 +17,7 @@ val Thunk<Any?>.anyScriptLine: ScriptLine
 		scriptLine { line(toString()) }
 
 fun <T> Term<T>.script(fn: ScriptLineFn<T>): Script =
-	emptyScript.plus(this, fn)
-
-fun <T> Script.plus(term: Term<T>, fn: ScriptLineFn<T>): Script =
-	plus(applyName(term.atom.scriptLine(fn))).ifNotNull(term.applicationOrNull) { plus(it, fn) }
-
-fun <T> Script.plus(application: Application<T>, fn: ScriptLineFn<T>): Script =
-	plus(application.term, fn).ifNotNull(application.applicationOrNull) { plus(it, fn) }
+	emptyScript.plus(atom.scriptLine(fn)).fold(applicationOrNull.termSeq) { plus(applyName(it.script(fn))) }
 
 fun <T> Atom<T>.scriptLine(fn: ScriptLineFn<T>): ScriptLine =
 	when (this) {

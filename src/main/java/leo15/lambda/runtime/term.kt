@@ -1,5 +1,6 @@
 package leo15.lambda.runtime
 
+import leo.base.*
 import leo15.string
 
 data class Term<out T>(val atom: Atom<T>, val applicationOrNull: Application<T>?) {
@@ -26,3 +27,14 @@ fun <T> term(atom: Atom<T>, vararg terms: Term<T>): Term<T> =
 	terms
 		.foldRight(null as Application<T>?) { term, application -> application(term, application) }
 		.let { application -> term(atom, application) }
+
+val <T> Application<T>?.termSeq: Seq<Term<T>>
+	get() =
+		seq { this?.termSeqNode }
+
+val <T> Application<T>.termSeqNode: SeqNode<Term<T>>
+	get() =
+		term then applicationOrNull.termSeq
+
+fun <T> Application<T>?.join(applicationOrNull: Application<T>?): Application<T>? =
+	applicationOrNull.fold(termSeq.reverse) { application(it, this) }
