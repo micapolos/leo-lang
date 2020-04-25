@@ -3,12 +3,14 @@ package leo15.lambda.runtime
 import leo.base.ifNotNull
 import leo.stak.Stak
 import leo.stak.emptyStak
-import leo.stak.get
 import leo.stak.push
+import leo.stak.top
 import leo15.string
 
 typealias Scope<T> = Stak<Thunk<T>>
 typealias ApplyFn<T> = T.(T) -> T
+
+const val tailOptimization = false
 
 data class Thunk<out T>(val scope: Scope<T>, val atom: Atom<T>) {
 	override fun toString() = anyScriptLine.string
@@ -34,9 +36,9 @@ fun <T> Term<T>.eval(scope: Scope<T>, applyFn: ApplyFn<T>): Thunk<T> =
 
 fun <T> Atom<T>.apply(scope: Scope<T>): Thunk<T> =
 	when (this) {
-		is IndexAtom -> scope[index]!!
+		is IndexAtom -> scope.top(index)!!
 		is ValueAtom -> Thunk(emptyScope(), this)
-		is LambdaTermAtom -> Thunk(scope, this)
+		is LambdaAtom -> Thunk(scope, this)
 	}
 
 fun <T> Thunk<T>.apply(termScope: Scope<T>, term: Term<T>, applyFn: ApplyFn<T>): Thunk<T> {
@@ -44,32 +46,35 @@ fun <T> Thunk<T>.apply(termScope: Scope<T>, term: Term<T>, applyFn: ApplyFn<T>):
 	return when (atom) {
 		is IndexAtom -> null!!
 		is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
-		is LambdaTermAtom -> atom.body.eval(scope.push(rhs), applyFn)
+		is LambdaAtom -> atom.body.eval(scope.push(rhs), applyFn)
 	}
 }
 
-tailrec fun <T> Thunk<T>.apply(scope: Scope<T>, applicationOrNull: Application<T>, applyFn: ApplyFn<T>): Thunk<T> {
-	val rhs = applicationOrNull.term.eval(scope, applyFn)
+tailrec fun <T> Thunk<T>.apply(applicationScope: Scope<T>, applicationOrNull: Application<T>, applyFn: ApplyFn<T>): Thunk<T> {
+	val rhs = applicationOrNull.term.eval(applicationScope, applyFn)
 	val innerScope = scope.push(rhs)
 	return if (applicationOrNull.applicationOrNull == null) {
 		when (atom) {
 			is IndexAtom -> null!!
 			is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
-			is LambdaTermAtom -> {
-				val lhs = atom.body.atom.apply(innerScope)
-				if (atom.body.applicationOrNull == null) lhs
-				else apply(innerScope, atom.body.applicationOrNull, applyFn)
-			}
+			is LambdaAtom ->
+				if (tailOptimization) {
+					val lhs = atom.body.atom.apply(innerScope)
+					if (atom.body.applicationOrNull == null) lhs
+					else apply(innerScope, atom.body.applicationOrNull, applyFn)
+				} else {
+					atom.body.eval(innerScope, applyFn)
+				}
 		}
-	} else if (atom is LambdaTermAtom && atom.body.applicationOrNull == null) {
+	} else if (tailOptimization && atom is LambdaAtom && atom.body.applicationOrNull == null) {
 		val lhs = atom.body.atom.apply(innerScope)
 		lhs.apply(innerScope, applicationOrNull, applyFn)
 	} else {
 		val lhs = when (atom) {
 			is IndexAtom -> null!!
 			is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
-			is LambdaTermAtom -> apply(scope, applicationOrNull.term, applyFn)
+			is LambdaAtom -> atom.body.eval(innerScope, applyFn)
 		}
-		lhs.apply(scope, applicationOrNull.applicationOrNull, applyFn)
+		lhs.apply(applicationScope, applicationOrNull.applicationOrNull, applyFn)
 	}
 }

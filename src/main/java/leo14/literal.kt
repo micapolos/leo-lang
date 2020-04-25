@@ -56,3 +56,5 @@ val String.literalString
 				.fold(this) { char -> append(char.escapedString) }
 				.append("\"")
 		}
+
+val Int.literalString: String get() = "$this"

@@ -12,7 +12,7 @@ class EvalTest {
 	@Test
 	fun prim() {
 		term(value(10.java))
-			.eval
+			.evalJava
 			.assertEqualTo(10.java)
 	}
 
@@ -21,7 +21,7 @@ class EvalTest {
 		term(
 			value(StringLengthJava),
 			term(value("Hello, world!".java)))
-			.eval
+			.evalJava
 			.assertEqualTo(13.java)
 	}
 
@@ -31,7 +31,7 @@ class EvalTest {
 			value(StringPlusStringJava),
 			term(value("Hello, ".java)),
 			term(value("world!".java)))
-			.eval
+			.evalJava
 			.assertEqualTo("Hello, world!".java)
 	}
 
@@ -44,7 +44,7 @@ class EvalTest {
 				value(IntTimesIntJava),
 				term(value(2.java)),
 				term(value(2.java))))
-			.eval
+			.evalJava
 			.assertEqualTo(6.java)
 
 		term(
@@ -54,7 +54,7 @@ class EvalTest {
 				term(value(2.java)),
 				term(value(2.java))),
 			term(value(2.java)))
-			.eval
+			.evalJava
 			.assertEqualTo(8.java)
 	}
 
@@ -63,7 +63,7 @@ class EvalTest {
 		term(
 			value(PrintingJava("What is it")),
 			term(value("foo".java)))
-			.eval
+			.evalJava
 			.assertEqualTo("foo".java)
 	}
 
@@ -72,7 +72,7 @@ class EvalTest {
 		term(
 			lambda(term(at(0))),
 			term(value(10.java)))
-			.eval
+			.evalJava
 			.assertEqualTo(10.java)
 	}
 
@@ -82,7 +82,71 @@ class EvalTest {
 			term<Java>(
 				lambda(at(0), term(at(0))),
 				term(lambda(at(0), term(at(0)))))
-				.eval
+				.evalJava
 		}
+	}
+
+	@Test
+	fun first() {
+		term(
+			lambda(lambda(at(1))),
+			term(value(10.java)),
+			term(value(20.java)))
+			.evalJava
+			.assertEqualTo(10.java)
+	}
+
+	@Test
+	fun second() {
+		term(
+			lambda(lambda(at(0))),
+			term(value(10.java)),
+			term(value(20.java)))
+			.evalJava
+			.assertEqualTo(20.java)
+	}
+
+	@Test
+	fun pairFirst() {
+		term(
+			lambda(lambda(lambda(at(0), term(at(2)), term(at(1))))),
+			term(value(10.java)),
+			term(value(20.java)),
+			term(lambda(lambda(at(1)))))
+			.evalJava
+			.assertEqualTo(10.java)
+	}
+
+	@Test
+	fun pairSecond() {
+		term(
+			lambda(lambda(lambda(at(0), term(at(2)), term(at(1))))),
+			term(value(10.java)),
+			term(value(20.java)),
+			term(lambda(lambda(at(0)))))
+			.evalJava
+			.assertEqualTo(20.java)
+	}
+
+	@Test
+	fun eitherFirst() {
+		term(
+			lambda(lambda(lambda(at(1), term(at(2))))),
+			term(value(10.java)),
+			term(value(IntMinusIntJava), term(value(100.java))),
+			term(value(StringPlusStringJava), term(value("ok: ".java))))
+			.evalJava
+			.assertEqualTo(90.java)
+	}
+
+	@Test
+	fun eitherSecond() {
+		term(
+			lambda(lambda(lambda(at(0), term(at(2))))),
+			term(value("foo".java)),
+			term(value(IntMinusIntJava), term(value(100.java))),
+			term(value(StringPlusStringJava), term(value("ok: ".java))))
+			.evalJava
+			.assertEqualTo("ok: foo".java)
 	}
 }

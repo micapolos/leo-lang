@@ -12,11 +12,11 @@ data class Application<out T>(val term: Term<T>, val applicationOrNull: Applicat
 sealed class Atom<out T>
 data class IndexAtom<T>(val index: Int) : Atom<T>()
 data class ValueAtom<T>(val value: T) : Atom<T>()
-data class LambdaTermAtom<T>(val body: Term<T>) : Atom<T>()
+data class LambdaAtom<T>(val body: Term<T>) : Atom<T>()
 
 fun <T> at(index: Int): Atom<T> = IndexAtom(index)
 fun <T> value(value: T): Atom<T> = ValueAtom(value)
-fun <T> lambda(body: Term<T>): Atom<T> = LambdaTermAtom(body)
+fun <T> lambda(body: Term<T>): Atom<T> = LambdaAtom(body)
 
 fun <T> term(atom: Atom<T>, applicationOrNull: Application<T>?) = Term(atom, applicationOrNull)
 fun <T> application(term: Term<T>, applicationOrNull: Application<T>?) = Application(term, applicationOrNull)

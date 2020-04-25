@@ -11,6 +11,6 @@ val Term<Java>.evalThunk: Thunk<Java>
 	get() =
 		eval(Java::apply)
 
-val Term<Java>.eval: Java
+val Term<Java>.evalJava: Java
 	get() =
 		(evalThunk.atom as ValueAtom<Java>).value
