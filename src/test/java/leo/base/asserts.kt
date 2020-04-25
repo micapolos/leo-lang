@@ -1,6 +1,7 @@
 package leo.base
 
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotEquals
 
 fun <V> V.assertReturns() {}
@@ -36,3 +37,6 @@ fun assertTimesOutMillis(timeoutMillis: Long, fn: () -> Unit) {
 	if (thread.isAlive) thread.interrupt()
 	else throw AssertionError("Expected to timeout")
 }
+
+fun assertStackOverflows(fn: () -> Unit) =
+	assertFailsWith(StackOverflowError::class, fn)

@@ -58,7 +58,7 @@ tailrec fun <T> Thunk<T>.apply(applicationScope: Scope<T>, applicationOrNull: Ap
 		}
 	} else if (tailOptimization && atom is LambdaAtom && atom.body.applicationOrNull == null) {
 		val lhs = atom.body.atom.apply(innerScope)
-		lhs.apply(innerScope, applicationOrNull.applicationOrNull, applyFn)
+		lhs.apply(applicationScope, applicationOrNull.applicationOrNull, applyFn)
 	} else {
 		val lhs = when (atom) {
 			is IndexAtom -> null!!

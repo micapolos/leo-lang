@@ -1,10 +1,10 @@
 package leo15.lambda.java
 
 import leo.base.assertEqualTo
+import leo.base.assertStackOverflows
 import leo.base.assertTimesOutMillis
 import leo15.lambda.runtime.*
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
 
 class EvalTest {
 	@Test
@@ -147,7 +147,7 @@ class EvalTest {
 				if (tailOptimization) {
 					assertTimesOutMillis(100) { evalJava }
 				} else {
-					assertFailsWith(StackOverflowError::class) { evalJava }
+					assertStackOverflows { evalJava }
 				}
 			}
 	}
@@ -172,5 +172,118 @@ class EvalTest {
 			term(lambda(value("not zero".java))))
 			.evalJava
 			.assertEqualTo("not zero".java)
+	}
+
+	@Test
+	fun recursionSmall() {
+		term(
+			lambda(
+				lambda(
+					at(1),
+					term(at(1)),
+					term(at(0)))),
+			term(
+				lambda(
+					lambda(
+						value(IntIfZero),
+						term(at(0)),
+						term(lambda(value(0.java))),
+						term(lambda(
+							value(IntPlusIntJava),
+							term(at(1)),
+							term(
+								at(2),
+								term(at(2)),
+								term(
+									value(IntMinusIntJava),
+									term(at(1)),
+									term(value(1.java))))))))),
+			term(value(100.java)))
+			.evalJava
+			.assertEqualTo(5050.java)
+	}
+
+	@Test
+	fun recursionHuge() {
+		assertStackOverflows {
+			term(
+				lambda(
+					lambda(
+						at(1),
+						term(at(1)),
+						term(at(0)))),
+				term(
+					lambda(
+						lambda(
+							value(IntIfZero),
+							term(at(0)),
+							term(lambda(value(0.java))),
+							term(lambda(
+								value(IntPlusIntJava),
+								term(at(1)),
+								term(
+									at(2),
+									term(at(2)),
+									term(
+										value(IntMinusIntJava),
+										term(at(1)),
+										term(value(1.java))))))))),
+				term(value(1000000.java)))
+				.evalJava
+		}
+	}
+
+	@Test
+	fun tailRecursionSmall() {
+		term(
+			lambda(
+				lambda(
+					at(1),
+					term(at(1)),
+					term(at(0)))),
+			term(
+				lambda(
+					lambda(
+						value(IntIfZero),
+						term(at(0)),
+						term(lambda(value("OK".java))),
+						term(lambda(
+							term(
+								at(2),
+								term(at(2)),
+								term(
+									value(IntMinusIntJava),
+									term(at(1)),
+									term(value(1.java))))))))),
+			term(value(100.java)))
+			.evalJava
+			.assertEqualTo("OK".java)
+	}
+
+	@Test
+	fun tailRecursionHuge() {
+		term(
+			lambda(
+				lambda(
+					at(1),
+					term(at(1)),
+					term(at(0)))),
+			term(
+				lambda(
+					lambda(
+						value(IntIfZero),
+						term(at(0)),
+						term(lambda(value("OK".java))),
+						term(lambda(
+							term(
+								at(2),
+								term(at(2)),
+								term(
+									value(IntMinusIntJava),
+									term(at(1)),
+									term(value(1.java))))))))),
+			term(value(1000000.java)))
+			.evalJava
+			.assertEqualTo("OK".java)
 	}
 }

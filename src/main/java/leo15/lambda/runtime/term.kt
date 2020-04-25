@@ -30,7 +30,7 @@ fun <T> term(atom: Atom<T>, vararg terms: Term<T>): Term<T> =
 		.foldRight(null as Application<T>?) { term, application -> application(term, application) }
 		.let { application -> term(atom, application) }
 
-fun <T> lambda(atom: Atom<T>, vararg terms: Term<T>) = lambda(term(atom, *terms))
+fun <T> lambda(atom: Atom<T>, vararg terms: Term<T>): Atom<T> = lambda(term(atom, *terms))
 
 val <T> Application<T>?.termSeq: Seq<Term<T>>
 	get() =
