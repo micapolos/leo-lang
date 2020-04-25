@@ -11,6 +11,9 @@ object StringPlusStringJava : Java()
 object IntPlusIntJava : Java()
 object IntMinusIntJava : Java()
 object IntTimesIntJava : Java()
+object IntIncJava : Java()
+object IntDecJava : Java()
+object IntInvJava : Java()
 object IntAndIntJava : Java()
 object IntOrIntJava : Java()
 object IntXorIntJava : Java()
@@ -39,6 +42,9 @@ fun Java.apply(rhs: Java): Atom<Java> =
 		IntPlusIntJava -> Int_PlusIntJava(rhs.int).atom
 		IntMinusIntJava -> Int_MinusIntJava(rhs.int).atom
 		IntTimesIntJava -> Int_TimesIntJava(rhs.int).atom
+		IntIncJava -> IntJava(rhs.int.inc()).atom
+		IntDecJava -> IntJava(rhs.int.dec()).atom
+		IntInvJava -> IntJava(rhs.int.inv()).atom
 		IntAndIntJava -> Int_AndIntJava(rhs.int).atom
 		IntOrIntJava -> Int_OrIntJava(rhs.int).atom
 		IntXorIntJava -> Int_XorIntJava(rhs.int).atom

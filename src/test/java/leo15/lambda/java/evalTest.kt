@@ -195,9 +195,8 @@ class EvalTest {
 								at(2),
 								term(at(2)),
 								term(
-									value(IntMinusIntJava),
-									term(at(1)),
-									term(value(1.java))))))))),
+									value(IntDecJava),
+									term(at(1))))))))),
 			term(value(100.java)))
 			.evalJava
 			.assertEqualTo(5050.java)
@@ -225,9 +224,8 @@ class EvalTest {
 									at(2),
 									term(at(2)),
 									term(
-										value(IntMinusIntJava),
-										term(at(1)),
-										term(value(1.java))))))))),
+										value(IntDecJava),
+										term(at(1))))))))),
 				term(value(1000000.java)))
 				.evalJava
 		}
@@ -252,9 +250,8 @@ class EvalTest {
 								at(2),
 								term(at(2)),
 								term(
-									value(IntMinusIntJava),
-									term(at(1)),
-									term(value(1.java))))))))),
+									value(IntDecJava),
+									term(at(1))))))))),
 			term(value(100.java)))
 			.evalJava
 			.assertEqualTo("OK".java)
@@ -279,9 +276,34 @@ class EvalTest {
 								at(2),
 								term(at(2)),
 								term(
-									value(IntMinusIntJava),
-									term(at(1)),
-									term(value(1.java))))))))),
+									value(IntDecJava),
+									term(at(1))))))))),
+			term(value(1000000.java)))
+			.evalJava
+			.assertEqualTo("OK".java)
+	}
+
+	@Test
+	fun tailRecursionHuge_innerTailPosition() {
+		term(
+			lambda(
+				lambda(
+					at(1),
+					term(at(1)),
+					term(at(0)))),
+			term(
+				lambda(
+					lambda(
+						value(IntIfZero),
+						term(value(IntInvJava), term(at(0))),
+						term(lambda(
+							term(
+								at(2),
+								term(at(2)),
+								term(
+									value(IntDecJava),
+									term(at(1)))))),
+						term(lambda(value("OK".java)))))),
 			term(value(1000000.java)))
 			.evalJava
 			.assertEqualTo("OK".java)
