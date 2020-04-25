@@ -2,9 +2,6 @@ package leo15.lambda.java
 
 import leo.base.assertEqualTo
 import leo.base.assertTimesOutMillis
-import leo15.lambda.invoke
-import leo15.lambda.lambda
-import leo15.lambda.resolveVars
 import leo15.lambda.runtime.at
 import leo15.lambda.runtime.lambda
 import leo15.lambda.runtime.term
@@ -60,12 +57,8 @@ class EvalTest {
 	fun loop() {
 		assertTimesOutMillis(100) {
 			term<Java>(
-				lambda { f ->
-					f.invoke(f)
-				}.invoke(
-					lambda { f ->
-						f.invoke(f)
-					}).resolveVars)
+				lambda(at(0), term(at(0))),
+				term(lambda(at(0), term(at(0)))))
 				.eval
 		}
 	}
