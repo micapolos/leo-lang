@@ -2,11 +2,9 @@ package leo15.lambda.java
 
 import leo.base.assertEqualTo
 import leo.base.assertTimesOutMillis
-import leo15.lambda.runtime.at
-import leo15.lambda.runtime.lambda
-import leo15.lambda.runtime.term
-import leo15.lambda.runtime.value
+import leo15.lambda.runtime.*
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 class EvalTest {
 	@Test
@@ -78,11 +76,20 @@ class EvalTest {
 
 	@Test
 	fun loop() {
-		assertTimesOutMillis(100) {
-			term<Java>(
-				lambda(at(0), term(at(0))),
-				term(lambda(at(0), term(at(0)))))
-				.evalJava
+		if (tailOptimization) {
+			assertTimesOutMillis(100) {
+				term<Java>(
+					lambda(at(0), term(at(0))),
+					term(lambda(at(0), term(at(0)))))
+					.evalJava
+			}
+		} else {
+			assertFailsWith(StackOverflowError::class) {
+				term<Java>(
+					lambda(at(0), term(at(0))),
+					term(lambda(at(0), term(at(0)))))
+					.evalJava
+			}
 		}
 	}
 
