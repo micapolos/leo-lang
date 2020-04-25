@@ -50,19 +50,18 @@ fun <T> Thunk<T>.apply(termScope: Scope<T>, term: Term<T>, applyFn: ApplyFn<T>):
 
 tailrec fun <T> Thunk<T>.apply(scope: Scope<T>, applicationOrNull: Application<T>, applyFn: ApplyFn<T>): Thunk<T> {
 	val rhs = applicationOrNull.term.eval(scope, applyFn)
+	val innerScope = scope.push(rhs)
 	return if (applicationOrNull.applicationOrNull == null) {
 		when (atom) {
 			is IndexAtom -> null!!
 			is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
 			is TermAtom -> {
-				val innerScope = scope.push(rhs)
 				val lhs = atom.term.atom.apply(innerScope)
 				if (atom.term.applicationOrNull == null) lhs
 				else apply(innerScope, atom.term.applicationOrNull, applyFn)
 			}
 		}
 	} else if (atom is TermAtom && atom.term.applicationOrNull == null) {
-		val innerScope = scope.push(rhs)
 		val lhs = atom.term.atom.apply(innerScope)
 		lhs.apply(innerScope, applicationOrNull, applyFn)
 	} else {
