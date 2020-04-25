@@ -19,7 +19,7 @@ class EvalTest {
 	@Test
 	fun op1() {
 		term(
-			value(LengthJava),
+			value(StringLengthJava),
 			term(value("Hello, world!".java)))
 			.eval
 			.assertEqualTo(13.java)
@@ -28,11 +28,34 @@ class EvalTest {
 	@Test
 	fun op2() {
 		term(
-			value(PlusJava),
+			value(StringPlusStringJava),
 			term(value("Hello, ".java)),
 			term(value("world!".java)))
 			.eval
 			.assertEqualTo("Hello, world!".java)
+	}
+
+	@Test
+	fun op3() {
+		term(
+			value(IntPlusIntJava),
+			term(value(2.java)),
+			term(
+				value(IntTimesIntJava),
+				term(value(2.java)),
+				term(value(2.java))))
+			.eval
+			.assertEqualTo(6.java)
+
+		term(
+			value(IntTimesIntJava),
+			term(
+				value(IntPlusIntJava),
+				term(value(2.java)),
+				term(value(2.java))),
+			term(value(2.java)))
+			.eval
+			.assertEqualTo(8.java)
 	}
 
 	@Test
