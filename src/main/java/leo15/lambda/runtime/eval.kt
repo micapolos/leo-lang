@@ -16,17 +16,7 @@ data class Thunk<out T>(val scope: Scope<T>, val atom: Atom<T>) {
 	override fun toString() = anyScriptLine.string
 }
 
-val anyEmptyScope: Scope<Any?> = emptyStak()
-
-@Suppress("UNCHECKED_CAST")
-fun <T> emptyScope(): Scope<T> = anyEmptyScope as Scope<T>
-
-@Suppress("UNCHECKED_CAST")
-val Term<Any?>.anyEval: Thunk<Any?>
-	get() =
-		eval {
-			(this as ((Any?) -> Any?)).invoke(it)
-		}
+fun <T> emptyScope(): Scope<T> = emptyStak()
 
 fun <T> Term<T>.eval(applyFn: ApplyFn<T>): Thunk<T> =
 	eval(emptyScope(), applyFn)
