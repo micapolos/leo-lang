@@ -1,4 +1,4 @@
-package leo15.lambda.java
+package leo15.lambda.runtime.java
 
 import leo.base.ifNotNull
 import leo14.literalString

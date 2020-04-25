@@ -1,4 +1,4 @@
-package leo15.lambda.java
+package leo15.lambda.runtime.java
 
 import leo15.lambda.runtime.Term
 import leo15.lambda.runtime.Thunk

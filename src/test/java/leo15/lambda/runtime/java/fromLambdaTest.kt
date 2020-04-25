@@ -1,4 +1,4 @@
-package leo15.lambda.java
+package leo15.lambda.runtime.java
 
 import leo.base.assertEqualTo
 import leo15.lambda.idTerm
