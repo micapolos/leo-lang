@@ -8,7 +8,7 @@ import leo.stak.top
 import leo15.string
 
 typealias Scope<T> = Stak<Thunk<T>>
-typealias ApplyFn<T> = T.(T) -> T
+typealias ApplyFn<T> = T.(T) -> Atom<T>
 
 const val tailOptimization = true
 
@@ -35,7 +35,7 @@ fun <T> Thunk<T>.apply(termScope: Scope<T>, term: Term<T>, applyFn: ApplyFn<T>):
 	val rhs = term.eval(termScope, applyFn)
 	return when (atom) {
 		is IndexAtom -> null!!
-		is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
+		is ValueAtom -> Thunk(emptyScope(), atom.value.applyFn(rhs.atom.value))
 		is LambdaAtom -> atom.body.eval(scope.push(rhs), applyFn)
 	}
 }
@@ -46,7 +46,7 @@ tailrec fun <T> Thunk<T>.apply(applicationScope: Scope<T>, applicationOrNull: Ap
 	return if (applicationOrNull.applicationOrNull == null) {
 		when (atom) {
 			is IndexAtom -> null!!
-			is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
+			is ValueAtom -> Thunk(emptyScope(), atom.value.applyFn(rhs.atom.value))
 			is LambdaAtom ->
 				if (tailOptimization) {
 					val lhs = atom.body.atom.apply(innerScope)
@@ -62,7 +62,7 @@ tailrec fun <T> Thunk<T>.apply(applicationScope: Scope<T>, applicationOrNull: Ap
 	} else {
 		val lhs = when (atom) {
 			is IndexAtom -> null!!
-			is ValueAtom -> Thunk(emptyScope(), ValueAtom(atom.value.applyFn(rhs.atom.value)))
+			is ValueAtom -> Thunk(emptyScope(), atom.value.applyFn(rhs.atom.value))
 			is LambdaAtom -> atom.body.eval(innerScope, applyFn)
 		}
 		lhs.apply(applicationScope, applicationOrNull.applicationOrNull, applyFn)

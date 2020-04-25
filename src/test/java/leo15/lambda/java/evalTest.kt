@@ -75,25 +75,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun loop() {
-		if (tailOptimization) {
-			assertTimesOutMillis(100) {
-				term<Java>(
-					lambda(at(0), term(at(0))),
-					term(lambda(at(0), term(at(0)))))
-					.evalJava
-			}
-		} else {
-			assertFailsWith(StackOverflowError::class) {
-				term<Java>(
-					lambda(at(0), term(at(0))),
-					term(lambda(at(0), term(at(0)))))
-					.evalJava
-			}
-		}
-	}
-
-	@Test
 	fun first() {
 		term(
 			lambda(lambda(at(1))),
@@ -155,5 +136,41 @@ class EvalTest {
 			term(value(StringPlusStringJava), term(value("ok: ".java))))
 			.evalJava
 			.assertEqualTo("ok: foo".java)
+	}
+
+	@Test
+	fun loop() {
+		term<Java>(
+			lambda(at(0), term(at(0))),
+			term(lambda(at(0), term(at(0)))))
+			.run {
+				if (tailOptimization) {
+					assertTimesOutMillis(100) { evalJava }
+				} else {
+					assertFailsWith(StackOverflowError::class) { evalJava }
+				}
+			}
+	}
+
+	@Test
+	fun ifZero_zero() {
+		term(
+			value(IntIfZero),
+			term(value(0.java)),
+			term(lambda(value("zero".java))),
+			term(lambda(value("not zero".java))))
+			.evalJava
+			.assertEqualTo("zero".java)
+	}
+
+	@Test
+	fun ifZero_notZero() {
+		term(
+			value(IntIfZero),
+			term(value(123.java)),
+			term(lambda(value("zero".java))),
+			term(lambda(value("not zero".java))))
+			.evalJava
+			.assertEqualTo("not zero".java)
 	}
 }

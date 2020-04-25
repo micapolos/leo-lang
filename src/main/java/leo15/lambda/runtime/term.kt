@@ -18,6 +18,8 @@ fun <T> at(index: Int): Atom<T> = IndexAtom(index)
 fun <T> value(value: T): Atom<T> = ValueAtom(value)
 fun <T> lambda(body: Term<T>): Atom<T> = LambdaAtom(body)
 
+val <T> T.atom: Atom<T> get() = ValueAtom(this)
+
 fun <T> term(atom: Atom<T>, applicationOrNull: Application<T>?) = Term(atom, applicationOrNull)
 fun <T> application(term: Term<T>, applicationOrNull: Application<T>?) = Application(term, applicationOrNull)
 
