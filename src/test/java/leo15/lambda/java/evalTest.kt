@@ -3,7 +3,10 @@ package leo15.lambda.java
 import leo.base.assertEqualTo
 import leo.base.assertStackOverflows
 import leo.base.assertTimesOutMillis
-import leo15.lambda.runtime.*
+import leo15.lambda.runtime.at
+import leo15.lambda.runtime.lambda
+import leo15.lambda.runtime.term
+import leo15.lambda.runtime.value
 import kotlin.test.Test
 
 class EvalTest {
@@ -140,16 +143,12 @@ class EvalTest {
 
 	@Test
 	fun loop() {
-		term<Java>(
-			lambda(at(0), term(at(0))),
-			term(lambda(at(0), term(at(0)))))
-			.run {
-				if (tailOptimization) {
-					assertTimesOutMillis(100) { evalJava }
-				} else {
-					assertStackOverflows { evalJava }
-				}
-			}
+		assertTimesOutMillis(100) {
+			term<Java>(
+				lambda(at(0), term(at(0))),
+				term(lambda(at(0), term(at(0)))))
+				.evalJava
+		}
 	}
 
 	@Test
