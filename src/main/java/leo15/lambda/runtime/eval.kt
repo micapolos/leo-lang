@@ -10,7 +10,7 @@ import leo15.string
 typealias Scope<T> = Stak<Thunk<T>>
 typealias ApplyFn<T> = T.(T) -> T
 
-const val tailOptimization = false
+const val tailOptimization = true
 
 data class Thunk<out T>(val scope: Scope<T>, val atom: Atom<T>) {
 	override fun toString() = anyScriptLine.string
@@ -61,14 +61,14 @@ tailrec fun <T> Thunk<T>.apply(applicationScope: Scope<T>, applicationOrNull: Ap
 				if (tailOptimization) {
 					val lhs = atom.body.atom.apply(innerScope)
 					if (atom.body.applicationOrNull == null) lhs
-					else apply(innerScope, atom.body.applicationOrNull, applyFn)
+					else lhs.apply(innerScope, atom.body.applicationOrNull, applyFn)
 				} else {
 					atom.body.eval(innerScope, applyFn)
 				}
 		}
 	} else if (tailOptimization && atom is LambdaAtom && atom.body.applicationOrNull == null) {
 		val lhs = atom.body.atom.apply(innerScope)
-		lhs.apply(innerScope, applicationOrNull, applyFn)
+		lhs.apply(innerScope, applicationOrNull.applicationOrNull, applyFn)
 	} else {
 		val lhs = when (atom) {
 			is IndexAtom -> null!!
