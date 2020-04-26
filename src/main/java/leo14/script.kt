@@ -399,3 +399,11 @@ val ScriptLine.fieldOrNull: ScriptField?
 val ScriptLink.onlyLineOrNull: ScriptLine?
 	get() =
 		notNullIf(lhs.isEmpty) { line }
+
+val ScriptField.onlyStringOrNull: String?
+	get() =
+		notNullIf(rhs.isEmpty) { string }
+
+val Script.onlyStringOrNull: String?
+	get() =
+		linkOrNull?.onlyLineOrNull?.fieldOrNull?.onlyStringOrNull
