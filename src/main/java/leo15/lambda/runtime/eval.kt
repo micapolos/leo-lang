@@ -74,3 +74,6 @@ tailrec fun <T> Closure<T>.apply(applicationScope: Scope<T>, applicationOrNull: 
 		lhs.apply(applicationScope, applicationOrNull.applicationOrNull, applyFn)
 	}
 }
+
+fun <T> Closure<T>.apply(rhs: Closure<T>, applyFn: ApplyFn<T>): Closure<T> =
+	apply(rhs.scope, term(rhs.atom), applyFn)
