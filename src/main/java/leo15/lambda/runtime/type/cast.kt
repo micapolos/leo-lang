@@ -8,6 +8,11 @@ import leo15.lambda.runtime.builder.choiceTerm
 
 data class Cast<V>(val termOrNull: Term<V>?)
 
+fun <V, T> Typed<V, T>.castTo(rhs: Type<T>): Typed<V, T>? =
+	cast(type, term, rhs, null)?.let { cast ->
+		cast.termOrNull?.of(rhs) ?: this
+	}
+
 fun <V, T> cast(lhs: Type<T>, term: Term<V>, rhs: Type<T>, recursiveOrNull: Recursive<T>?): Cast<V>? =
 	when (rhs) {
 		is ValueType ->
