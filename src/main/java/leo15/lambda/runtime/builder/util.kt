@@ -1,4 +1,4 @@
-package leo15.lambda.builder
+package leo15.lambda.runtime.builder
 
 fun <T> id() = lambda<T>(get(0))
 fun <T> const() = lambda<T>(lambda(get(1)))

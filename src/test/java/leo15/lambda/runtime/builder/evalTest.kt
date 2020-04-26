@@ -1,4 +1,4 @@
-package leo15.lambda.builder
+package leo15.lambda.runtime.builder
 
 import leo.base.assertEqualTo
 import leo15.lambda.runtime.*

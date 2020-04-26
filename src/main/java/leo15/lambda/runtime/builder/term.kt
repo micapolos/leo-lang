@@ -1,4 +1,4 @@
-package leo15.lambda.builder
+package leo15.lambda.runtime.builder
 
 import leo15.string
 
@@ -22,6 +22,7 @@ data class IndexTerm<out V>(val index: Int) : Term<V>() {
 	override fun toString() = super.toString()
 }
 
+fun <V> term(value: V): Term<V> = ValueTerm(value)
 val <V> V.term: Term<V> get() = ValueTerm(this)
 fun <V> lambda(body: Term<V>): Term<V> = AbstractionTerm(body)
 operator fun <V> Term<V>.invoke(rhs: Term<V>): Term<V> = ApplicationTerm(this, rhs)

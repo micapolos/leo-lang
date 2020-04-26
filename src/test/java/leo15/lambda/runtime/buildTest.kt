@@ -1,8 +1,8 @@
 package leo15.lambda.runtime
 
 import leo.base.assertEqualTo
-import leo15.lambda.builder.append
-import leo15.lambda.builder.term
+import leo15.lambda.runtime.builder.append
+import leo15.lambda.runtime.builder.term
 import org.junit.Test
 
 class BuildTest {

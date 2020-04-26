@@ -1,10 +1,10 @@
 package leo15.lambda.runtime
 
-import leo15.lambda.builder.AbstractionTerm
-import leo15.lambda.builder.ApplicationTerm
-import leo15.lambda.builder.IndexTerm
-import leo15.lambda.builder.ValueTerm
-import leo15.lambda.builder.Term as BuilderTerm
+import leo15.lambda.runtime.builder.AbstractionTerm
+import leo15.lambda.runtime.builder.ApplicationTerm
+import leo15.lambda.runtime.builder.IndexTerm
+import leo15.lambda.runtime.builder.ValueTerm
+import leo15.lambda.runtime.builder.Term as BuilderTerm
 
 val <T> BuilderTerm<T>.build get() = term(this)
 
