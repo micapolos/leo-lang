@@ -1,14 +1,14 @@
 package leo15.lambda.runtime.java
 
+import leo15.lambda.runtime.Closure
 import leo15.lambda.runtime.Term
-import leo15.lambda.runtime.Thunk
 import leo15.lambda.runtime.ValueAtom
 import leo15.lambda.runtime.eval
 
-val Term<Java>.evalThunk: Thunk<Java>
+val Term<Java>.evalClosure: Closure<Java>
 	get() =
 		eval(Java::apply)
 
 val Term<Java>.evalJava: Java
 	get() =
-		(evalThunk.atom as ValueAtom<Java>).value
+		(evalClosure.atom as ValueAtom<Java>).value

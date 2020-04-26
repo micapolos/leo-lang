@@ -12,7 +12,7 @@ val Term<Any?>.anyScript: Script
 	get() =
 		script { line(toString()) }
 
-val Thunk<Any?>.anyScriptLine: ScriptLine
+val Closure<Any?>.anyScriptLine: ScriptLine
 	get() =
 		scriptLine { line(toString()) }
 
@@ -26,7 +26,7 @@ fun <T> Atom<T>.scriptLine(fn: ScriptLineFn<T>): ScriptLine =
 		is LambdaAtom -> lambdaName(body.script(fn))
 	}
 
-fun <T> Thunk<T>.scriptLine(fn: ScriptLineFn<T>): ScriptLine =
-	thunkName(
+fun <T> Closure<T>.scriptLine(fn: ScriptLineFn<T>): ScriptLine =
+	closureName(
 		scopeName(scope.contentScript { atomName(scriptLine(fn)) }),
 		atomName(atom.scriptLine(fn)))
