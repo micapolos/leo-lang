@@ -23,6 +23,7 @@ operator fun String.invoke(vararg sentences: Sentence) = invoke(script(*sentence
 val Script.leo14Script: leo14.Script
 	get() =
 		leo14.script().fold(sentenceStack.reverse) { plus(it.leo14ScriptLine) }
+
 val Sentence.leo14ScriptLine: leo14.ScriptLine
 	get() =
 		firstWord lineTo followingScript.leo14Script
