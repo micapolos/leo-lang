@@ -1,19 +1,19 @@
 package leo16
 
 import leo.base.notNullIf
-import leo13.linkOrNull
-import leo13.mapFirst
-import leo13.onlyOrNull
-import leo13.stack
+import leo13.*
+import leo15.lastName
 
 data class Case(val selectedWord: String, val fn: Script.() -> Script)
 
 fun String.gives(fn: Script.() -> Script) = Case(this, fn)
 
+val Script.thing: Script
+	get() =
+		sentenceStack.onlyOrNull!!.followingScript
+
 infix fun Script.get(word: String): Script =
-	sentenceStack
-		.onlyOrNull!!
-		.followingScript
+	thing
 		.sentenceStack
 		.mapFirst {
 			notNullIf(firstWord == word) {
@@ -24,17 +24,17 @@ infix fun Script.get(word: String): Script =
 infix fun Script.make(word: String): Script =
 	script(word(this))
 
-val Script.thing: Script
+val Script.last: Script
 	get() =
-		sentenceStack.onlyOrNull!!.followingScript
+		script(lastName(thing.sentenceStack.linkOrNull!!.value))
 
-val Script.tail: Script
+val Script.previous: Script
 	get() =
-		sentenceStack.linkOrNull!!.stack.script
+		sentenceStack.onlyOrNull!!.run {
+			script(previousName(firstWord(followingScript.sentenceStack.linkOrNull!!.stack.script)))
+		}
 
-val Script.head: Script
-	get() =
-		script(sentenceStack.linkOrNull!!.value)
+val Script.listIsEmpty: Boolean get() = thing.sentenceStack.isEmpty
 
 fun Script.match(vararg cases: Case): Script =
 	sentenceStack
