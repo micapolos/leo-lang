@@ -1,4 +1,4 @@
-package leo15.lambda.runtime.type
+package leo15.lambda.runtime.builder.type
 
 import leo13.firstIndexed
 import leo13.onlyOrNull
@@ -27,7 +27,12 @@ fun <V, T> cast(lhs: Type<T>, term: Term<V>, rhs: Type<T>, recursiveOrNull: Recu
 			if (lhs is ArrowType) cast(lhs.arrow, rhs.arrow)
 			else null
 		is RecursiveType ->
-			cast(lhs, term, rhs.recursive.type, rhs.recursive)
+			if (lhs is RecursiveType)
+				if (lhs.recursive == rhs.recursive) Cast<V>(null)
+				else null
+			else
+				if (lhs == rhs.recursive.type) Cast<V>(null)
+				else null
 		is RecurseType ->
 			if (lhs is RecurseType) Cast(null)
 			else if (lhs == recursiveOrNull!!.type) Cast(null)

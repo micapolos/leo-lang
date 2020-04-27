@@ -1,4 +1,4 @@
-package leo15.lambda.runtime.type
+package leo15.lambda.runtime.builder.type
 
 import leo15.lambda.runtime.builder.Term
 
