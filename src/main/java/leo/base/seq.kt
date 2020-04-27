@@ -244,6 +244,12 @@ fun <V> Seq<V>.mapFirst(fn: V.() -> V): Seq<V> =
 		}
 	}
 
+fun <V, R : Any> Seq<V>.mapFirstOrNull(fn: V.() -> R?): R? =
+	nodeOrNull?.mapFirstOrNull(fn)
+
+fun <V, R : Any> SeqNode<V>.mapFirstOrNull(fn: V.() -> R?): R? =
+	first.fn() ?: remaining.mapFirstOrNull(fn)
+
 val <V> Seq<V>.reverseStack: Stack<V>
 	get() =
 		stack<V>().fold(this) { push(it) }
@@ -266,3 +272,13 @@ operator fun <T : Any> Seq<T>.get(index: Int): T? =
 operator fun <T : Any> SeqNode<T>.get(index: Int): T? =
 	if (index == 0) first
 	else remaining[index.dec()]
+
+val <V> Seq<V>.indexed get() = indexed(0)
+val <V> SeqNode<V>.indexed get() = indexed(0)
+
+fun <V> Seq<V>.indexed(startIndex: Int): Seq<IndexedValue<V>> =
+	seq { nodeOrNull?.indexed(startIndex) }
+
+fun <V> SeqNode<V>.indexed(startIndex: Int): SeqNode<IndexedValue<V>> =
+	startIndex.indexed(first).then(remaining.indexed(startIndex.inc()))
+
