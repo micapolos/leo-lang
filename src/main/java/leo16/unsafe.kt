@@ -4,10 +4,6 @@ import leo.base.notNullIf
 import leo13.*
 import leo15.lastName
 
-data class Case(val selectedWord: String, val fn: Script.() -> Script)
-
-fun String.gives(fn: Script.() -> Script) = Case(this, fn)
-
 val Script.thing: Script
 	get() =
 		sentenceStack.onlyOrNull!!.followingScript
