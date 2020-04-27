@@ -66,6 +66,7 @@ class UnsafeTest {
 				listIsEmpty.assertEqualTo(false)
 				last.assertEqualTo(script(lastName("two"())))
 				previous.assertEqualTo(script(previousName("items"("zero"(), "one"()))))
+				append("three"()).assertEqualTo(script("items"("zero"(), "one"(), "two"(), "three"())))
 			}
 
 		script("items"())
@@ -73,6 +74,7 @@ class UnsafeTest {
 				listIsEmpty.assertEqualTo(true)
 				assertFails { last }
 				assertFails { previous }
+				append("zero"()).assertEqualTo(script("items"("zero"())))
 			}
 	}
 

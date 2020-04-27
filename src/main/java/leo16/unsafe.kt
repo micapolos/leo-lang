@@ -30,6 +30,11 @@ val Script.previous: Script
 			script(previousName(firstWord(followingScript.sentenceStack.linkOrNull!!.stack.script)))
 		}
 
+fun Script.append(sentence: Sentence) =
+	sentenceStack.onlyOrNull!!.run {
+		script(firstWord(followingScript.plus(sentence)))
+	}
+
 val Script.listIsEmpty: Boolean get() = thing.sentenceStack.isEmpty
 
 fun Script.match(vararg cases: Case): Script =
