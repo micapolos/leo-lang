@@ -1,6 +1,7 @@
 package leo15.lambda.runtime.type
 
 import leo13.Stack
+import leo13.stack
 
 sealed class Type<out T>
 data class ValueType<T>(val value: T) : Type<T>()
@@ -16,5 +17,16 @@ data class Arrow<out T>(val givenType: Type<T>, val givesType: Type<T>)
 data class Recursive<out T>(val type: Type<T>)
 object Recurse
 
-data class TypeScope<out T>(val closureStack: Stack<TypeClosure<T>>)
-data class TypeClosure<out T>(val scope: TypeScope<T>, val type: Type<T>)
+val <T> T.type: Type<T> get() = ValueType(this)
+val <T> Struct<T>.type: Type<T> get() = StructType(this)
+val <T> Choice<T>.type: Type<T> get() = ChoiceType(this)
+val <T> Arrow<T>.type: Type<T> get() = ArrowType(this)
+fun <T> Recursive<T>.type(): Type<T> = RecursiveType(this)
+fun <T> Recurse.type(): Type<T> = RecurseType(this)
+
+fun <T> struct(vararg fields: Field<T>) = Struct(stack(*fields))
+fun <T> choice(vararg fields: Field<T>) = Choice(stack(*fields))
+infix fun <T> String.fieldTo(type: Type<T>) = Field(this, type)
+infix fun <T> Type<T>.arrowTo(type: Type<T>) = Arrow(this, type)
+val <T> Type<T>.recursive get() = Recursive(this)
+val recurse = Recurse
