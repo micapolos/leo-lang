@@ -1,5 +1,7 @@
 package leo16
 
+import leo.base.*
+import leo13.seq
 import leo14.LiteralToken
 import leo15.beginName
 import leo15.endName
@@ -26,10 +28,18 @@ val Token.sentence: Sentence
 				EndToken -> endName()
 			})
 
-val leo14.Token.tokenOrNull: Token?
+val leo14.Token.tokenSeq: Seq<Token>
 	get() =
 		when (this) {
-			is LiteralToken -> null
-			is leo14.BeginToken -> begin.string.beginToken
-			is leo14.EndToken -> endToken
+			is LiteralToken -> literal.expandSentence.tokenSeq
+			is leo14.BeginToken -> begin.string.beginToken.onlySeq
+			is leo14.EndToken -> endToken.onlySeq
 		}
+
+val Script.tokenSeq: Seq<Token>
+	get() =
+		sentenceStack.seq.reverse.mapFlat { tokenSeq }
+
+val Sentence.tokenSeq: Seq<Token>
+	get() =
+		seq { firstWord.beginToken.then(followingScript.tokenSeq) }.thenFn { endToken.onlySeq }

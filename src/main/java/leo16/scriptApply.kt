@@ -3,6 +3,7 @@ package leo16
 import leo13.onlyOrNull
 import leo15.appendName
 import leo15.lastName
+import leo15.nodeName
 import leo15.previousName
 
 val Script.apply: Script?
@@ -10,6 +11,7 @@ val Script.apply: Script?
 		null
 			?: applyLast
 			?: applyPrevious
+			?: applyNode
 			?: applyAppend
 			?: applyGet
 
@@ -30,7 +32,13 @@ val Script.applyLast: Script?
 val Script.applyPrevious: Script?
 	get() =
 		matchPrefix(previousName) { rhs ->
-			rhs.previouOrNull
+			rhs.previousOrNull
+		}
+
+val Script.applyNode: Script?
+	get() =
+		matchPrefix(nodeName) { rhs ->
+			rhs.nodeOrNull
 		}
 
 val Script.applyAppend: Script?

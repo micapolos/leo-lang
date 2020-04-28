@@ -3,6 +3,9 @@ package leo16
 import leo.base.notNullIf
 import leo13.*
 import leo15.lastName
+import leo15.linkName
+import leo15.nodeName
+import leo15.previousName
 
 val Script.isEmpty: Boolean
 	get() =
@@ -34,20 +37,36 @@ infix fun Script.make(word: String): Script =
 
 val Script.lastOrNull: Script?
 	get() =
-		thingOrNull?.sentenceStack?.linkOrNull?.let { link ->
-			script(lastName(link.value))
+		matchPrefix(listName) { rhs ->
+			rhs.sentenceStack.linkOrNull?.let { link ->
+				script(lastName(link.value))
+			}
 		}
 
-val Script.previouOrNull: Script?
+val Script.previousOrNull: Script?
 	get() =
-		sentenceStack.onlyOrNull?.run {
-			followingScript.sentenceStack.linkOrNull?.let { link ->
-				script(previousName(firstWord(link.stack.script)))
+		matchPrefix(listName) { rhs ->
+			rhs.sentenceStack.linkOrNull?.let { link ->
+				script(previousName(listName(link.stack.script)))
 			}
 		}
 
 fun Script.appendOrNull(sentence: Sentence): Script? =
-	sentenceStack.onlyOrNull?.run {
-		script(firstWord(followingScript.plus(sentence)))
+	matchPrefix(listName) { rhs ->
+		script(listName(rhs.plus(sentence)))
 	}
 
+val Script.nodeOrNull: Script?
+	get() =
+		matchPrefix(listName) { rhs ->
+			script(
+				nodeName(
+					rhs.sentenceStack.linkOrNull
+						?.run {
+							script(
+								linkName(
+									previousName(stack.script.make(listName)),
+									lastName(value)))
+						}
+						?: script(emptyName())))
+		}

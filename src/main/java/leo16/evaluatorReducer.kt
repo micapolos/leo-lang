@@ -1,12 +1,13 @@
 package leo16
 
+import leo.base.fold
 import leo14.Reducer
 import leo14.reducer
 import leo14.stringCharReducer
 
 val Evaluator.tokenReducer: Reducer<Evaluator, leo14.Token>
 	get() =
-		reducer { plus(it.tokenOrNull!!).tokenReducer }
+		reducer { fold(it.tokenSeq, Evaluator::plus).tokenReducer }
 
 val Evaluator.stringCharReducer: Reducer<String, Char>
 	get() =
