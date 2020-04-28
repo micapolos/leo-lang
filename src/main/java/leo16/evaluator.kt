@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.notNullIf
+import leo.base.nullOf
 import leo.base.runIfNotNull
 import leo15.thisName
 
@@ -9,6 +10,13 @@ data class EvaluatorParent(val evaluator: Evaluator, val word: String)
 
 fun EvaluatorParent?.evaluator(script: Script) = Evaluator(this, script)
 fun Evaluator.parent(word: String) = EvaluatorParent(this, word)
+val emptyEvaluator = nullOf<EvaluatorParent>().evaluator(script())
+
+operator fun Evaluator.plus(token: Token) =
+	when (token) {
+		is BeginToken -> begin(token.word)
+		EndToken -> end!!
+	}
 
 fun Evaluator.begin(word: String): Evaluator =
 	parent(word).evaluator(script())

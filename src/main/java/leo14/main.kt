@@ -14,8 +14,10 @@ import leo14.untyped.dsl2.library.prelude
 import leo14.untyped.dsl2.read
 import leo14.untyped.stringCharReducer
 import leo14.untyped.typed.stringCharReducer
+import leo16.stringCharReducer
 import java.io.InputStreamReader
 
+val useLeo16 = true
 val errorTriggerCount = 7
 val importPrelude = true
 val memory = if (importPrelude) emptyContext.preludeMemory() else memory()
@@ -23,7 +25,9 @@ val untyped = true
 val untypedTyped = true
 
 fun main() {
-	if (untyped)
+	if (useLeo16)
+		run(leo16.emptyEvaluator.stringCharReducer)
+	else if (untyped)
 		if (untypedTyped) {
 			run(leo14.untyped.typed.emptyReader.stringCharReducer)
 		} else {

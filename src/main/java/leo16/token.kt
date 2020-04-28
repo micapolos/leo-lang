@@ -1,5 +1,6 @@
 package leo16
 
+import leo14.LiteralToken
 import leo15.beginName
 import leo15.endName
 import leo15.tokenName
@@ -24,3 +25,11 @@ val Token.sentence: Sentence
 				is BeginToken -> beginName(word())
 				EndToken -> endName()
 			})
+
+val leo14.Token.tokenOrNull: Token?
+	get() =
+		when (this) {
+			is LiteralToken -> null
+			is leo14.BeginToken -> begin.string.beginToken
+			is leo14.EndToken -> endToken
+		}

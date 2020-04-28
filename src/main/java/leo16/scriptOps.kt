@@ -21,9 +21,9 @@ val Script.thingOrNull: Script?
 		sentenceStack.onlyOrNull?.followingScript
 
 infix fun Script.getOrNull(word: String): Script? =
-	thing
-		.sentenceStack
-		.mapFirst {
+	thingOrNull
+		?.sentenceStack
+		?.mapFirst {
 			notNullIf(firstWord == word) {
 				script(this)
 			}
@@ -34,7 +34,7 @@ infix fun Script.make(word: String): Script =
 
 val Script.lastOrNull: Script?
 	get() =
-		thing.sentenceStack.linkOrNull?.let { link ->
+		thingOrNull?.sentenceStack?.linkOrNull?.let { link ->
 			script(lastName(link.value))
 		}
 
