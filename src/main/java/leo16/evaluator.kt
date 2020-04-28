@@ -33,13 +33,12 @@ operator fun Evaluator.plus(sentence: Sentence): Evaluator =
 
 val Evaluator.normalizeAndApply: Evaluator
 	get() =
-		parentOrNull.evaluator(script.normalize).apply
+		parentOrNull.evaluator(script.normalize).apply.resolveThis
 
 val Evaluator.apply: Evaluator
 	get() =
 		null
 			?: applyStatic
-			?: applyThis
 			?: this
 
 val Evaluator.applyStatic: Evaluator?
@@ -51,6 +50,10 @@ val Evaluator.applyThis: Evaluator?
 		notNullIf(script == script(thisName())) {
 			parentOrNull.evaluator(script(thisName(rootScript)))
 		}
+
+val Evaluator.resolveThis: Evaluator
+	get() =
+		applyThis ?: this
 
 val Evaluator.rootScript: Script
 	get() =
