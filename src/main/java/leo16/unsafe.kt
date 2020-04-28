@@ -17,9 +17,6 @@ infix fun Script.get(word: String): Script =
 			}
 		}!!
 
-infix fun Script.make(word: String): Script =
-	script(word(this))
-
 val Script.last: Script
 	get() =
 		script(lastName(thing.sentenceStack.linkOrNull!!.value))
