@@ -2,6 +2,9 @@ package leo16
 
 import leo.base.*
 import leo.binary.utf8ByteSeq
+import leo13.EmptyStack
+import leo13.LinkStack
+import leo13.Stack
 import leo13.base.Bit
 import leo13.base.bit0
 import leo13.base.bit1
@@ -22,27 +25,38 @@ val Bit.expandSentence: Sentence
 
 val Byte.expandSentence: Sentence
 	get() =
-		byteName(bitName(listName(
-			bit7.expandSentence,
-			bit6.expandSentence,
-			bit5.expandSentence,
-			bit4.expandSentence,
-			bit3.expandSentence,
-			bit2.expandSentence,
-			bit1.expandSentence,
-			bit0.expandSentence)))
+		byteName(
+			firstName(bit7.expandSentence),
+			secondName(bit6.expandSentence),
+			thirdName(bit5.expandSentence),
+			fourthName(bit4.expandSentence),
+			fifthName(bit3.expandSentence),
+			sixthName(bit2.expandSentence),
+			seventhName(bit1.expandSentence),
+			eighthName(bit0.expandSentence))
 
 val Int.expandSentence: Sentence
 	get() =
-		intName(byteName(listName(
-			byte3.expandSentence,
-			byte2.expandSentence,
-			byte1.expandSentence,
-			byte0.expandSentence)))
+		intName(
+			firstName(byte3.expandSentence),
+			secondName(byte2.expandSentence),
+			thirdName(byte1.expandSentence),
+			fourthName(byte0.expandSentence))
+
+// TODO: Convert to tailrec
+fun <V> Stack<V>.expandSentence(scriptFn: V.() -> Sentence): Sentence =
+	listName(
+		when (this) {
+			is EmptyStack -> nothingName()
+			is LinkStack -> linkName(
+				previousName(link.stack.expandSentence(scriptFn)),
+				lastName(link.value.scriptFn()))
+		}
+	)
 
 val String.expandSentence: Sentence
 	get() =
-		stringName(byteName(listName(utf8ByteSeq.map { expandSentence }.reverse.reverseStack.script)))
+		stringName(utf8ByteSeq.reverseStack.expandSentence { expandSentence })
 
 val Literal.expandSentence: Sentence
 	get() =

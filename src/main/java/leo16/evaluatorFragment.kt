@@ -1,9 +1,6 @@
 package leo16
 
-import leo14.Fragment
-import leo14.FragmentParent
-import leo14.fragment
-import leo14.parent
+import leo14.*
 
 val Evaluator.fragment: Fragment
 	get() =
@@ -11,4 +8,4 @@ val Evaluator.fragment: Fragment
 
 val EvaluatorParent.fragmentParent: FragmentParent
 	get() =
-		evaluator.fragment.parent(leo14.begin(word))
+		evaluator.fragment.parent(begin(word))

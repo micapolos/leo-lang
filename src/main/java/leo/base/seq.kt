@@ -254,6 +254,10 @@ val <V> Seq<V>.reverseStack: Stack<V>
 	get() =
 		stack<V>().fold(this) { push(it) }
 
+val <V> Seq<V>.stack: Stack<V>
+	get() =
+		reverseStack.reverse
+
 val <V> SeqNode<V>.reverseStackLink: StackLink<V>
 	get() =
 		link(stack(), first).fold(remaining) { push(it) }
