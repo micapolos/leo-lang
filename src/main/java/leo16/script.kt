@@ -3,6 +3,8 @@ package leo16
 import leo13.*
 import leo14.lineTo
 import leo14.plus
+import leo14.script
+import leo14.untyped.scriptLine
 import leo15.string
 
 data class Script(val sentenceStack: Stack<Sentence>) {
@@ -21,8 +23,12 @@ operator fun String.invoke(vararg sentences: Sentence) = invoke(script(*sentence
 
 val Script.leo14Script: leo14.Script
 	get() =
-		leo14.script().fold(sentenceStack.reverse) { plus(it.leo14ScriptLine) }
+		null
+			?: literalOrNull?.scriptLine?.script
+			?: script().fold(sentenceStack.reverse) { plus(it.leo14ScriptLine) }
 
 val Sentence.leo14ScriptLine: leo14.ScriptLine
 	get() =
 		word lineTo script.leo14Script
+
+val Script.isEmpty get() = sentenceStack.isEmpty

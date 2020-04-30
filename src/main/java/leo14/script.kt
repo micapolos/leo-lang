@@ -49,6 +49,7 @@ fun script(vararg lines: ScriptLine): Script = script(Unit).plus(*lines)
 fun script(string: String, vararg strings: String) = script(field(string)).fold(strings) { plus(field(it)) }
 fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }
+val ScriptLine.script get() = script(this)
 
 val emptyScript: Script = UnitScript(Unit)
 val String.scriptLine get() = line(this)

@@ -62,5 +62,5 @@ val Literal.expandSentence: Sentence
 	get() =
 		when (this) {
 			is StringLiteral -> string.expandSentence
-			is NumberLiteral -> number.bigDecimal.toInt().expandSentence
+			is NumberLiteral -> number.bigDecimal.intValueExact().expandSentence
 		}
