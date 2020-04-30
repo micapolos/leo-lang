@@ -34,60 +34,22 @@ val Script.bitOrNull: Bit?
 val Script.byteOrNull: Byte?
 	get() =
 		matchPrefix(byteName) { rhs ->
-			rhs.matchInfix(eighthName) { lhs, rhs ->
-				rhs.bitOrNull?.let { eighth ->
-					lhs.matchInfix(seventhName) { lhs, rhs ->
-						rhs.bitOrNull?.let { seventh ->
-							lhs.matchInfix(sixthName) { lhs, rhs ->
-								rhs.bitOrNull?.let { sixth ->
-									lhs.matchInfix(fifthName) { lhs, rhs ->
-										rhs.bitOrNull?.let { fifth ->
-											lhs.matchInfix(fourthName) { lhs, rhs ->
-												rhs.bitOrNull?.let { fourth ->
-													lhs.matchInfix(thirdName) { lhs, rhs ->
-														rhs.bitOrNull?.let { third ->
-															lhs.matchInfix(secondName) { lhs, rhs ->
-																rhs.bitOrNull?.let { second ->
-																	lhs.matchPrefix(firstName) { rhs ->
-																		rhs.bitOrNull?.let { first ->
-																			byte(first, second, third, fourth, fifth, sixth, seventh, eighth)
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+			rhs.matchPrefix(bitName) { rhs ->
+				rhs
+					.stackOrNull { bitOrNull }
+					?.array
+					?.let { byte(it[0], it[1], it[2], it[3], it[4], it[5], it[6], it[7]) }
 			}
 		}
 
 val Script.intOrNull: Int?
 	get() =
 		matchPrefix(intName) { rhs ->
-			rhs.matchInfix(fourthName) { lhs, rhs ->
-				rhs.byteOrNull?.let { fourth ->
-					lhs.matchInfix(thirdName) { lhs, rhs ->
-						rhs.byteOrNull?.let { third ->
-							lhs.matchInfix(secondName) { lhs, rhs ->
-								rhs.byteOrNull?.let { second ->
-									lhs.matchPrefix(firstName) { rhs ->
-										rhs.byteOrNull?.let { first ->
-											int(short(first, second), short(third, fourth))
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+			rhs.matchPrefix(byteName) { rhs ->
+				rhs
+					.stackOrNull { byteOrNull }
+					?.array
+					?.let { int(short(it[0], it[1]), short(it[2], it[3])) }
 			}
 		}
 

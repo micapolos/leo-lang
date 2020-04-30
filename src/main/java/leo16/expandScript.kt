@@ -14,6 +14,7 @@ import leo13.base.bit4
 import leo13.base.bit5
 import leo13.base.bit6
 import leo13.base.bit7
+import leo13.stack
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
@@ -26,22 +27,13 @@ val Bit.expandSentence: Sentence
 val Byte.expandSentence: Sentence
 	get() =
 		byteName(
-			firstName(bit7.expandSentence),
-			secondName(bit6.expandSentence),
-			thirdName(bit5.expandSentence),
-			fourthName(bit4.expandSentence),
-			fifthName(bit3.expandSentence),
-			sixthName(bit2.expandSentence),
-			seventhName(bit1.expandSentence),
-			eighthName(bit0.expandSentence))
+			bitName(
+				stack(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)
+					.expandSentence { expandSentence }))
 
 val Int.expandSentence: Sentence
 	get() =
-		intName(
-			firstName(byte3.expandSentence),
-			secondName(byte2.expandSentence),
-			thirdName(byte1.expandSentence),
-			fourthName(byte0.expandSentence))
+		intName(byteName(stack(byte3, byte2, byte1, byte0).expandSentence { expandSentence }))
 
 // TODO: Convert to tailrec
 fun <V> Stack<V>.expandSentence(scriptFn: V.() -> Sentence): Sentence =
