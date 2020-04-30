@@ -8,7 +8,7 @@ val Script.pattern: Pattern
 	get() =
 		null
 			?: anyPatternOrNull
-			?: exactPattern
+			?: structPattern
 
 val Script.anyPatternOrNull: Pattern?
 	get() =
@@ -16,7 +16,7 @@ val Script.anyPatternOrNull: Pattern?
 			anyPattern
 		}
 
-val Script.exactPattern: Pattern
+val Script.structPattern: Pattern
 	get() =
 		patternStruct.pattern
 

@@ -4,6 +4,8 @@ import leo.base.nullOf
 import leo.base.runIfNotNull
 import leo13.array
 import leo13.map
+import leo15.givesName
+import leo15.isName
 import leo15.matchName
 
 data class Evaluator(val parentOrNull: EvaluatorParent?, val closure: Closure)
@@ -35,6 +37,25 @@ fun EvaluatorParent.endEvaluator(closure: Closure): Evaluator? =
 	evaluator.plus(word.invoke(closure.value))
 
 operator fun Evaluator.plus(line: Line): Evaluator? =
+	when (line.word) {
+		isName -> plusIs(line.value)
+		givesName -> plusGives(line.value)
+		else -> append(line)
+	}
+
+fun Evaluator.plusIs(value: Value): Evaluator =
+	parentOrNull.evaluator(
+		closure.scope
+			.plus(closure.value.script.exactPattern.bindingTo(value.body))
+			.closure)
+
+fun Evaluator.plusGives(value: Value): Evaluator =
+	parentOrNull.evaluator(
+		closure.scope
+			.plus(closure.value.script.pattern.bindingTo(closure.scope.function(value.script).body))
+			.closure)
+
+fun Evaluator.append(line: Line): Evaluator? =
 	closure.plus(line)?.let { closure ->
 		parentOrNull.evaluator(closure).normalizeAndApply
 	}
@@ -52,7 +73,7 @@ val Evaluator.apply: Evaluator
 
 val Evaluator.applyClosure: Evaluator?
 	get() =
-		parentOrNull.runIfNotNull(closure.value.apply) { evaluator(closure.scope.closure(it)) }
+		parentOrNull.runIfNotNull(closure.apply) { evaluator(it) }
 
 val Evaluator.applyMatch: Evaluator?
 	get() =
