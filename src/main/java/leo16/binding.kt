@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.notNullIf
+import leo15.matchingName
 
 data class Binding(val pattern: Pattern, val body: Body)
 
@@ -22,3 +23,7 @@ fun Body.apply(arg: Value): Value =
 		is ValueBody -> value
 		is FunctionBody -> function.invoke(arg)
 	}
+
+val Value.matchingBinding: Binding
+	get() =
+		matchingName.pattern bindingTo body

@@ -17,6 +17,7 @@ val PatternStruct.pattern: Pattern get() = StructPattern(this)
 val Stack<PatternLine>.struct get() = PatternStruct(this)
 fun struct(vararg patternLines: PatternLine) = stack(*patternLines).struct
 fun pattern(vararg patternLines: PatternLine) = struct(*patternLines).pattern
+val String.pattern get() = pattern(invoke(pattern()))
 operator fun String.invoke(pattern: Pattern): PatternLine = PatternLine(this, pattern)
 
 fun Value.matches(pattern: Pattern): Boolean =

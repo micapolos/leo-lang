@@ -15,5 +15,8 @@ operator fun Scope.plus(binding: Binding): Scope = bindingStack.push(binding).sc
 fun Scope.apply(value: Value): Value? =
 	bindingStack.mapFirst { apply(value) }
 
-fun Scope.evaluate(script: Script): Closure =
+fun Scope.evaluateClosure(script: Script): Closure =
 	evaluator.fold(script.tokenSeq) { plus(it)!! }.closure
+
+fun Scope.evaluate(script: Script): Value =
+	evaluateClosure(script).value

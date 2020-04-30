@@ -5,7 +5,6 @@ import leo.base.runIfNotNull
 import leo13.array
 import leo13.map
 import leo15.matchName
-import leo15.matchingName
 
 data class Evaluator(val parentOrNull: EvaluatorParent?, val closure: Closure)
 data class EvaluatorParent(val evaluator: Evaluator, val word: String)
@@ -61,10 +60,9 @@ val Evaluator.applyMatch: Evaluator?
 			rhs.structOrNull?.let { struct ->
 				lhs.matchOrNull(*struct.lineStack.map {
 					word.gives {
-						closure.scope.plus(
-							pattern(matchingName.invoke(pattern())).bindingTo(value(matchingName.invoke(lhs)).body))
+						closure.scope
+							.plus(lhs.matchingBinding)
 							.evaluate(value.script)
-							.value
 					}
 				}.array)?.let { matchScript ->
 					parentOrNull.evaluator(closure.updateValue { matchScript })
