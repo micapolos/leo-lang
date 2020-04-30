@@ -82,7 +82,7 @@ val Evaluator.applyMatch: Evaluator?
 				lhs.matchOrNull(*struct.lineStack.map {
 					word.gives {
 						closure.scope
-							.plus(lhs.matchingBinding)
+							.plus(matchingBinding)
 							.evaluate(value.script)
 					}
 				}.array)?.let { matchScript ->

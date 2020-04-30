@@ -27,8 +27,8 @@ fun Body.apply(arg: Value): Value =
 
 val Value.matchingBinding: Binding
 	get() =
-		matchingName.pattern bindingTo body
+		matchingName.pattern bindingTo value(matchingName.invoke(this)).body
 
 val Value.givenBinding: Binding
 	get() =
-		givenName.pattern bindingTo body
+		givenName.pattern bindingTo value(givenName.invoke(this)).body

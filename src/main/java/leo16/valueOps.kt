@@ -49,7 +49,7 @@ fun Value.matchOrNull(vararg cases: Case): Value? =
 		?.let { line ->
 			stack(*cases).mapFirst {
 				notNullIf(line.word == selectedWord) {
-					fn.invoke(value(line))
+					fn.invoke(line.value)
 				}
 			}
 		}
