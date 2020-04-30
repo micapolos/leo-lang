@@ -8,14 +8,14 @@ import leo15.givesName
 import leo15.isName
 import leo15.matchName
 
-data class Evaluator(val parentOrNull: EvaluatorParent?, val closure: Closure)
+data class Evaluator(val parentOrNull: EvaluatorParent?, val evaluated: Evaluated)
 data class EvaluatorParent(val evaluator: Evaluator, val word: String)
 
-fun EvaluatorParent?.evaluator(closure: Closure) = Evaluator(this, closure)
-val Closure.evaluator get() = nullOf<EvaluatorParent>().evaluator(this)
-val Scope.evaluator get() = closure(value()).evaluator
+fun EvaluatorParent?.evaluator(evaluated: Evaluated) = Evaluator(this, evaluated)
+val Evaluated.evaluator get() = nullOf<EvaluatorParent>().evaluator(this)
+val Scope.evaluator get() = evaluated(value()).evaluator
 fun Evaluator.parent(word: String) = EvaluatorParent(this, word)
-val emptyEvaluator = emptyScope.closure(value()).evaluator
+val emptyEvaluator = emptyScope.evaluated(value()).evaluator
 
 operator fun Evaluator.plus(token: Token): Evaluator? =
 	when (token) {
@@ -24,17 +24,17 @@ operator fun Evaluator.plus(token: Token): Evaluator? =
 	}
 
 fun Evaluator.begin(word: String): Evaluator? =
-	when (closure.value) {
-		is StructValue -> parent(word).evaluator(closure.begin)
+	when (evaluated.value) {
+		is StructValue -> parent(word).evaluator(evaluated.begin)
 		is FunctionValue -> null
 	}
 
 val Evaluator.end: Evaluator?
 	get() =
-		parentOrNull?.endEvaluator(closure)
+		parentOrNull?.endEvaluator(evaluated)
 
-fun EvaluatorParent.endEvaluator(closure: Closure): Evaluator? =
-	evaluator.plus(word.invoke(closure.value))
+fun EvaluatorParent.endEvaluator(evaluated: Evaluated): Evaluator? =
+	evaluator.plus(word.invoke(evaluated.value))
 
 operator fun Evaluator.plus(line: Line): Evaluator? =
 	when (line.word) {
@@ -45,24 +45,24 @@ operator fun Evaluator.plus(line: Line): Evaluator? =
 
 fun Evaluator.plusIs(value: Value): Evaluator =
 	parentOrNull.evaluator(
-		closure.scope
-			.plus(closure.value.script.exactPattern.bindingTo(value.body))
-			.closure)
+		evaluated.scope
+			.plus(evaluated.value.script.exactPattern.bindingTo(value.body))
+			.evaluated(value()))
 
 fun Evaluator.plusGives(value: Value): Evaluator =
 	parentOrNull.evaluator(
-		closure.scope
-			.plus(closure.value.script.pattern.bindingTo(closure.scope.function(value.script).body))
-			.closure)
+		evaluated.scope
+			.plus(evaluated.value.script.pattern.bindingTo(evaluated.scope.function(value.script).body))
+			.evaluated(value()))
 
 fun Evaluator.append(line: Line): Evaluator? =
-	closure.plus(line)?.let { closure ->
-		parentOrNull.evaluator(closure).normalizeAndApply
+	evaluated.plus(line)?.let { evaluated ->
+		parentOrNull.evaluator(evaluated).normalizeAndApply
 	}
 
 val Evaluator.normalizeAndApply: Evaluator
 	get() =
-		parentOrNull.evaluator(closure.updateValue { normalize }).apply
+		parentOrNull.evaluator(evaluated.updateValue { normalize }).apply
 
 val Evaluator.apply: Evaluator
 	get() =
@@ -73,20 +73,20 @@ val Evaluator.apply: Evaluator
 
 val Evaluator.applyClosure: Evaluator?
 	get() =
-		parentOrNull.runIfNotNull(closure.apply) { evaluator(it) }
+		parentOrNull.runIfNotNull(evaluated.apply) { evaluator(it) }
 
 val Evaluator.applyMatch: Evaluator?
 	get() =
-		closure.value.matchInfix(matchName) { lhs, rhs ->
+		evaluated.value.matchInfix(matchName) { lhs, rhs ->
 			rhs.structOrNull?.let { struct ->
 				lhs.matchOrNull(*struct.lineStack.map {
 					word.gives {
-						closure.scope
+						evaluated.scope
 							.plus(matchingBinding)
 							.evaluate(value.script)
 					}
 				}.array)?.let { matchScript ->
-					parentOrNull.evaluator(closure.updateValue { matchScript })
+					parentOrNull.evaluator(evaluated.updateValue { matchScript })
 				}
 			}
 		}
