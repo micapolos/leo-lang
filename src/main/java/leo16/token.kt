@@ -42,4 +42,4 @@ val Script.tokenSeq: Seq<Token>
 
 val Sentence.tokenSeq: Seq<Token>
 	get() =
-		seq { firstWord.beginToken.then(followingScript.tokenSeq) }.thenFn { endToken.onlySeq }
+		seq { word.beginToken.then(script.tokenSeq) }.thenFn { endToken.onlySeq }

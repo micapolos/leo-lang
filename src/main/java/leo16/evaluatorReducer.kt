@@ -7,7 +7,7 @@ import leo14.stringCharReducer
 
 val Evaluator.tokenReducer: Reducer<Evaluator, leo14.Token>
 	get() =
-		reducer { fold(it.tokenSeq, Evaluator::plus).tokenReducer }
+		reducer { fold(it.tokenSeq) { plus(it)!! }.tokenReducer }
 
 val Evaluator.stringCharReducer: Reducer<String, Char>
 	get() =

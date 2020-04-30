@@ -9,7 +9,7 @@ data class Script(val sentenceStack: Stack<Sentence>) {
 	override fun toString() = leo14Script.string
 }
 
-data class Sentence(val firstWord: String, val followingScript: Script) {
+data class Sentence(val word: String, val script: Script) {
 	override fun toString() = leo14ScriptLine.string
 }
 
@@ -25,4 +25,4 @@ val Script.leo14Script: leo14.Script
 
 val Sentence.leo14ScriptLine: leo14.ScriptLine
 	get() =
-		firstWord lineTo followingScript.leo14Script
+		word lineTo script.leo14Script
