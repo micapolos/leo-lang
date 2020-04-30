@@ -58,14 +58,16 @@ val Evaluator.applyClosure: Evaluator?
 val Evaluator.applyMatch: Evaluator?
 	get() =
 		closure.value.matchInfix(matchName) { lhs, rhs ->
-			lhs.matchOrNull(*rhs.structOrNull!!.lineStack.map {
-				word.gives {
-					closure.scope.plus(
-						pattern(matchingName.invoke(pattern())).bindingTo(value(matchingName.invoke(lhs)).body))
-						.evaluate(script)
-						.value
+			rhs.structOrNull?.let { struct ->
+				lhs.matchOrNull(*struct.lineStack.map {
+					word.gives {
+						closure.scope.plus(
+							pattern(matchingName.invoke(pattern())).bindingTo(value(matchingName.invoke(lhs)).body))
+							.evaluate(value.script)
+							.value
+					}
+				}.array)?.let { matchScript ->
+					parentOrNull.evaluator(closure.updateValue { matchScript })
 				}
-			}.array)?.let { matchScript ->
-				parentOrNull.evaluator(closure.updateValue { matchScript })
 			}
 		}
