@@ -23,12 +23,12 @@ operator fun String.invoke(vararg sentences: Sentence) = invoke(script(*sentence
 
 val Script.leo14Script: leo14.Script
 	get() =
-		null
-			?: literalOrNull?.scriptLine?.script
-			?: script().fold(sentenceStack.reverse) { plus(it.leo14ScriptLine) }
+		script().fold(sentenceStack.reverse) { plus(it.leo14ScriptLine) }
 
 val Sentence.leo14ScriptLine: leo14.ScriptLine
 	get() =
-		word lineTo script.leo14Script
+		null
+			?: literalOrNull?.scriptLine
+			?: word lineTo script.leo14Script
 
 val Script.isEmpty get() = sentenceStack.isEmpty
