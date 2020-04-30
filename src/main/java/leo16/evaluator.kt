@@ -2,6 +2,10 @@ package leo16
 
 import leo.base.nullOf
 import leo.base.runIfNotNull
+import leo13.array
+import leo13.map
+import leo15.matchName
+import leo15.matchingName
 
 data class Evaluator(val parentOrNull: EvaluatorParent?, val closure: Closure)
 data class EvaluatorParent(val evaluator: Evaluator, val word: String)
@@ -53,16 +57,15 @@ val Evaluator.applyClosure: Evaluator?
 
 val Evaluator.applyMatch: Evaluator?
 	get() =
-		TODO()
-//	fragment.script.matchInfix(matchName) { lhs, rhs ->
-//		lhs.matchOrNull(*rhs.sentenceStack.map {
-//			word.gives {
-//				closure.scope.plus(script(matchingName())
-//					.bindingTo(closure.scope.closure(this)))
-//					.evaluate(script)
-//					.script
-//			}
-//		}.array)?.let { matchScript ->
-//			parentOrNull.evaluator(scope, fragment.updateScript { matchScript })
-//		}
-//	}
+		closure.value.matchInfix(matchName) { lhs, rhs ->
+			lhs.matchOrNull(*rhs.structOrNull!!.lineStack.map {
+				word.gives {
+					closure.scope.plus(
+						pattern(matchingName.invoke(pattern())).bindingTo(value(matchingName.invoke(lhs)).body))
+						.evaluate(script)
+						.value
+				}
+			}.array)?.let { matchScript ->
+				parentOrNull.evaluator(closure.updateValue { matchScript })
+			}
+		}
