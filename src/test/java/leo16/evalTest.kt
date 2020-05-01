@@ -98,4 +98,35 @@ class EvalTest {
 		evaluate_ { import { zero } }.assertGives { import { zero } }
 		evaluate_ { import { zero.is_ { one }.zero } }.assertGives { import { zero.is_ { one }.zero } }
 	}
+
+	@Test
+	fun compiler() {
+		evaluate_ {
+			zero.is_ { one }.compiler
+		}.assertGives {
+			compiler {
+				parent { nothing }
+				compiled {
+					library {
+						scope {
+							binding {
+								pattern { zero }
+								body { value { one } }
+							}
+						}
+						public {
+							scope {
+								binding {
+									pattern { zero }
+									body { value { one } }
+								}
+							}
+						}
+					}
+					value { nothing_ }
+				}
+				meta { false_ }
+			}
+		}
+	}
 }
