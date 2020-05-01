@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.ifOrNull
 import leo.base.runIfNotNull
+import leo13.onlyOrNull
 import leo15.*
 
 fun Compiled.apply(line: Line): Compiled =
@@ -21,6 +22,7 @@ fun Compiled.applyNormalized(line: Line): Compiled =
 		?: applyMatch(line)
 		?: applyLibrary(line)
 		?: applyImport(line)
+		?: applyLoad(line)
 		?: plus(line)
 
 fun Compiled.applyValue(line: Line): Compiled? =
@@ -93,3 +95,9 @@ fun Compiled.applyImport(line: Line): Compiled? =
 	line.matchPrefix(importName) { rhs ->
 		rhs.libraryOrNull?.let { scope.plus(it) }?.compiled(value)
 	}
+
+fun Compiled.applyLoad(line: Line): Compiled? =
+	line.matchPrefix(loadName) { rhs ->
+		rhs.script.sentenceStack.onlyOrNull?.library?.let { scope.plus(it) }?.compiled(value)
+	}
+

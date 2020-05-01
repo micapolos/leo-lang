@@ -12,3 +12,4 @@ fun evaluate_(f: F) = value_(f).script
 fun read_(f: F) = emptyCompiler.copy(isMeta = true).read(f).compiled.value.script
 fun print_(f: F) = evaluate_(f).print
 fun run_(f: F) = Unit.also { compile_(f) }
+fun library_(f: F) = value_ { library { f() } }.libraryOrNull!!

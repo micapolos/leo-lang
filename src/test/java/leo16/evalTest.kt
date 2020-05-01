@@ -147,6 +147,14 @@ class EvalTest {
 	}
 
 	@Test
+	fun load() {
+		evaluate_ {
+			load { bit }
+			zero.bit.negate
+		}.assertGives { bit { one } }
+	}
+
+	@Test
 	fun compiler() {
 		evaluate_ {
 			zero.is_ { one }.compiler
