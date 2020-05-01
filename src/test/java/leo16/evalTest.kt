@@ -22,28 +22,28 @@ class EvalTest {
 	}
 
 	@Test
-	fun script() {
-		evaluate_ { script { nothing_ } }.assertGives { nothing_ }
-		evaluate_ { script { zero.negate } }.assertGives { zero.negate }
-		evaluate_ { script { zero.is_ { one } } }.assertGives { zero.is_ { one } }
+	fun quote() {
+		evaluate_ { quote { nothing_ } }.assertGives { nothing_ }
+		evaluate_ { quote { zero.negate } }.assertGives { zero.negate }
+		evaluate_ { quote { zero.is_ { one } } }.assertGives { zero.is_ { one } }
 	}
 
 	@Test
 	fun evaluate() {
-		evaluate_ { script { nothing_ }.evaluate }.assertGives { nothing_ }
-		evaluate_ { script { zero.negate }.evaluate }.assertGives { negate { zero } }
-		evaluate_ { script { zero.is_ { one } }.evaluate }.assertGives { nothing_ }
-		evaluate_ { script { zero.is_ { one }.zero }.evaluate }.assertGives { one }
-		evaluate_ { script { zero.is_ { one } }.evaluate.zero }.assertGives { zero }
+		evaluate_ { quote { nothing_ }.evaluate }.assertGives { nothing_ }
+		evaluate_ { quote { zero.negate }.evaluate }.assertGives { negate { zero } }
+		evaluate_ { quote { zero.is_ { one } }.evaluate }.assertGives { nothing_ }
+		evaluate_ { quote { zero.is_ { one }.zero }.evaluate }.assertGives { one }
+		evaluate_ { quote { zero.is_ { one } }.evaluate.zero }.assertGives { zero }
 	}
 
 	@Test
 	fun compile() {
-		evaluate_ { script { nothing_ }.compile }.assertGives { nothing_ }
-		evaluate_ { script { zero.negate }.compile }.assertGives { negate { zero } }
-		evaluate_ { script { zero.is_ { one } }.compile }.assertGives { nothing_ }
-		evaluate_ { script { zero.is_ { one }.zero }.compile }.assertGives { one }
-		evaluate_ { script { zero.is_ { one } }.compile.zero }.assertGives { one }
+		evaluate_ { quote { nothing_ }.compile }.assertGives { nothing_ }
+		evaluate_ { quote { zero.negate }.compile }.assertGives { negate { zero } }
+		evaluate_ { quote { zero.is_ { one } }.compile }.assertGives { nothing_ }
+		evaluate_ { quote { zero.is_ { one }.zero }.compile }.assertGives { one }
+		evaluate_ { quote { zero.is_ { one } }.compile.zero }.assertGives { one }
 	}
 
 	@Test

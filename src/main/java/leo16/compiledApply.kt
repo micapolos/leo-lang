@@ -14,7 +14,7 @@ fun Compiled.applyNormalized(line: Line): Compiled =
 		?: applyValue(line)
 		?: applyEvaluate(line)
 		?: applyCompile(line)
-		?: applyScript(line)
+		?: applyQuote(line)
 		?: applyScope(line)
 		?: applyGiving(line)
 		?: applyGive(line)
@@ -26,9 +26,9 @@ fun Compiled.applyNormalized(line: Line): Compiled =
 fun Compiled.applyValue(line: Line): Compiled? =
 	scope.runIfNotNull(value.apply(line)) { compiled(it) }
 
-fun Compiled.applyScript(line: Line): Compiled? =
+fun Compiled.applyQuote(line: Line): Compiled? =
 	value.matchEmpty {
-		line.matchPrefix(scriptName) { rhs ->
+		line.matchPrefix(quoteName) { rhs ->
 			scope.compiled(rhs)
 		}
 	}
