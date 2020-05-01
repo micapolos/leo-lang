@@ -20,7 +20,7 @@ data class Sentence(val word: String, val script: Script) {
 val Stack<Sentence>.script get() = Script(this)
 fun script(vararg sentences: Sentence) = stack(*sentences).script
 operator fun Script.plus(sentence: Sentence) = sentenceStack.push(sentence).script
-operator fun String.invoke(followingScript: Script) = Sentence(this, followingScript)
+operator fun String.invoke(script: Script) = Sentence(this, script)
 operator fun String.invoke(vararg sentences: Sentence) = invoke(script(*sentences))
 
 val Script.asSentence: Sentence
@@ -38,6 +38,7 @@ val Script.leo14Script: leo14.Script
 val Sentence.leo14ScriptLine: leo14.ScriptLine
 	get() =
 		null
+			?: parseSentenceStackOrNull { leo14ScriptLine }?.let { listName lineTo script(*it.array) }
 			?: literalOrNull?.scriptLine
 			?: word lineTo script.leo14Script
 

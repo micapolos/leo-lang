@@ -22,5 +22,5 @@ fun main() = print_ {
 	one.bit.xor { zero.bit }.is_ { zero.bit }
 	one.bit.xor { one.bit }.is_ { one.bit }
 
-	zero.bit.negate
+	number(123)
 }

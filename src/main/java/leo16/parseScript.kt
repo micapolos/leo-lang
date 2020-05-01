@@ -13,15 +13,16 @@ import leo14.Literal
 import leo14.literal
 import leo15.*
 import leo15.byteName
+import leo15.emptyName
 import leo15.linkName
 import leo15.listName
 import leo15.oneName
 import leo15.previousName
 import leo15.zeroName
 
-val Script.bitOrNull: Bit?
+val Sentence.bitOrNull: Bit?
 	get() =
-		matchPrefix(bitName) { rhs ->
+		match(bitName) { rhs ->
 			rhs.matchWord { word ->
 				when (word) {
 					zeroName -> zeroBit
@@ -31,71 +32,57 @@ val Script.bitOrNull: Bit?
 			}
 		}
 
-val Script.byteOrNull: Byte?
+val Sentence.byteOrNull: Byte?
 	get() =
-		matchPrefix(byteName) { rhs ->
+		match(byteName) { rhs ->
 			rhs.matchPrefix(bitName) { rhs ->
-				rhs
-					.stackOrNull { bitOrNull }
+				rhs.sentenceStack.onlyOrNull
+					?.parseSentenceStackOrNull { bitOrNull }
 					?.array
 					?.let { byte(it[0], it[1], it[2], it[3], it[4], it[5], it[6], it[7]) }
 			}
 		}
 
-val Script.intOrNull: Int?
+val Sentence.intOrNull: Int?
 	get() =
-		matchPrefix(intName) { rhs ->
+		match(intName) { rhs ->
 			rhs.matchPrefix(byteName) { rhs ->
-				rhs
-					.stackOrNull { byteOrNull }
+				rhs.sentenceStack.onlyOrNull
+					?.parseSentenceStackOrNull { byteOrNull }
 					?.array
 					?.let { int(short(it[0], it[1]), short(it[2], it[3])) }
 			}
 		}
 
-// TODO: Convert to tailrec
-fun <T> Script.stackOrNull(fn: Script.() -> T?): Stack<T>? =
-	matchPrefix(listName) { rhs ->
-		rhs.matchLink { lhs, word, rhs ->
-			when (word) {
-				nothingName ->
-					lhs.matchEmpty {
-						rhs.matchEmpty {
-							stack<T>()
-						}
-					}
-				linkName ->
-					lhs.matchEmpty {
-						rhs.matchInfix(lastName) { lhs, rhs ->
-							rhs.fn()?.let { value ->
-								lhs.matchPrefix(previousName) { rhs ->
-									rhs.stackOrNull(fn)?.let { stack ->
-										stack.push(value)
-									}
-								}
-							}
-						}
-					}
-				else -> null
-			}
-		}
-	}
-
-val Script.stringOrNull: String?
+val Sentence.stringOrNull: String?
 	get() =
-		matchPrefix(stringName) { rhs ->
-			rhs
-				.stackOrNull { byteOrNull }
+		match(stringName) { rhs ->
+			rhs.sentenceStack.onlyOrNull
+				?.parseSentenceStackOrNull { byteOrNull }
 				?.array
 				?.toByteArray()
 				?.utf8String
 		}
 
-val Sentence.literalOrNull: Literal?
+val Sentence.parseSentenceStackOrNull: Stack<Sentence>?
 	get() =
-		script(this).literalOrNull
+		match(listName) { rhs ->
+			if (rhs == script(emptyName())) stack()
+			else rhs.matchPrefix(linkName) { rhs ->
+				rhs.matchInfix(lastName) { lhs, last ->
+					last.sentenceStack.onlyOrNull?.let { lastSentence ->
+						lhs.matchPrefix(previousName) { previous ->
+							previous.sentenceStack.onlyOrNull?.parseSentenceStackOrNull?.push(lastSentence)
+						}
+					}
+				}
+			}
+		}
 
-val Script.literalOrNull: Literal?
+fun <T : Any> Sentence.parseSentenceStackOrNull(fn: Sentence.() -> T?): Stack<T>? =
+	parseSentenceStackOrNull?.mapOrNull(fn)
+
+val Sentence.literalOrNull: Literal?
 	get() =
 		null
 			?: intOrNull?.literal
