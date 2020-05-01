@@ -11,5 +11,6 @@ val String.wordIsMeta: Boolean
 			givingName -> true
 			matchName -> true
 			scriptName -> true
+			importName -> true
 			else -> false
 		}

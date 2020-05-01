@@ -1,6 +1,8 @@
 package leo16
 
 import leo.base.runIfNotNull
+import leo13.fold
+import leo13.reverse
 import leo15.libraryName
 import leo15.publicName
 
@@ -19,8 +21,11 @@ val Library.asSentence: Sentence
 			scope.asSentence,
 			publicName(publicScope.asSentence))
 
-fun Library.plus(binding: Binding): Library =
+operator fun Library.plus(binding: Binding): Library =
 	scope.plus(binding).libraryWithPublic(publicScope.plus(binding))
+
+operator fun Library.plus(scope: Scope) =
+	fold(scope.bindingStack.reverse) { plus(it) }
 
 fun Library.applyBinding(value: Value): Library? =
 	runIfNotNull(scope.bindingOrNull(value)) { plus(it) }

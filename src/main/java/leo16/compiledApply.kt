@@ -19,6 +19,7 @@ fun Compiled.applyNormalized(line: Line): Compiled =
 		?: applyGiving(line)
 		?: applyGive(line)
 		?: applyMatch(line)
+		?: applyImport(line)
 		?: plus(line)
 
 fun Compiled.applyValue(line: Line): Compiled? =
@@ -70,6 +71,15 @@ fun Compiled.applyMatch(line: Line): Compiled? =
 				compiled.library.publicScope.apply(value)?.let { matching ->
 					library.compiled(matching)
 				}
+			}
+		}
+	}
+
+fun Compiled.applyImport(line: Line): Compiled? =
+	line.matchPrefix(importName) { rhs ->
+		library.compiler.plus(rhs.script).compiled.let { compiled ->
+			ifOrNull(compiled.value.isEmpty) {
+				library.plus(compiled.library.publicScope).compiled(value)
 			}
 		}
 	}

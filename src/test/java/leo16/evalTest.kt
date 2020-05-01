@@ -85,4 +85,17 @@ class EvalTest {
 		evaluate_ { zero.match { one } }.assertGives { zero.match { one } }
 		evaluate_ { zero.match { zero.is_ { one }.one } }.assertGives { zero.match { zero.is_ { one }.one } }
 	}
+
+	@Test
+	fun import() {
+		evaluate_ { import { nothing_ } }.assertGives { nothing_ }
+		evaluate_ { import { zero.is_ { one } } }.assertGives { nothing_ }
+		evaluate_ { import { zero.is_ { one } }.zero }.assertGives { one }
+
+		evaluate_ { zero.import { zero.is_ { one } } }.assertGives { zero }
+		evaluate_ { zero.import { zero.is_ { one } }.evaluate }.assertGives { one }
+
+		evaluate_ { import { zero } }.assertGives { import { zero } }
+		evaluate_ { import { zero.is_ { one }.zero } }.assertGives { import { zero.is_ { one }.zero } }
+	}
 }
