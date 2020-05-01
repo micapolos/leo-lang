@@ -14,7 +14,6 @@ import leo14.literal
 import leo15.*
 import leo15.byteName
 import leo15.emptyName
-import leo15.linkName
 import leo15.listName
 import leo15.oneName
 import leo15.previousName
@@ -68,12 +67,10 @@ val Sentence.parseSentenceStackOrNull: Stack<Sentence>?
 	get() =
 		match(listName) { rhs ->
 			if (rhs == script(emptyName())) stack()
-			else rhs.matchPrefix(linkName) { rhs ->
-				rhs.matchInfix(lastName) { lhs, last ->
-					last.sentenceStack.onlyOrNull?.let { lastSentence ->
-						lhs.matchPrefix(previousName) { previous ->
-							previous.sentenceStack.onlyOrNull?.parseSentenceStackOrNull?.push(lastSentence)
-						}
+			else rhs.matchInfix(lastName) { lhs, last ->
+				last.sentenceStack.onlyOrNull?.let { lastSentence ->
+					lhs.matchPrefix(previousName) { previous ->
+						previous.sentenceStack.onlyOrNull?.parseSentenceStackOrNull?.push(lastSentence)
 					}
 				}
 			}

@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.assertEqualTo
+import leo.base.assertNotNull
 import leo.base.clampedByte
 import leo13.base.oneBit
 import leo13.base.zeroBit
@@ -30,10 +31,10 @@ class ExpandTest {
 		stack("bit"("zero"()), "bit"("one"()))
 			.expandSentence
 			.assertEqualTo(
-				listName(linkName(
-					previousName(listName(linkName(
+				listName(
+					previousName(listName(
 						previousName(listName(emptyName())),
-						lastName(bitName(zeroName()))))),
-					lastName(bitName(oneName())))))
+						lastName(bitName(zeroName())))),
+					lastName(bitName(oneName()))))
 	}
 }

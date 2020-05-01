@@ -12,18 +12,18 @@ class ScriptPrintTest {
 			.assertEqualTo(script(listName()))
 
 		script(
-			listName(linkName(
+			listName(
 				previousName(listName(emptyName())),
-				lastName(bitName(zeroName())))))
+				lastName(bitName(zeroName()))))
 			.printScript
 			.assertEqualTo(script(listName(bitName(zeroName()))))
 
 		script(
-			listName(linkName(
-				previousName(listName(linkName(
+			listName(
+				previousName(listName(
 					previousName(listName(emptyName())),
-					lastName(bitName(zeroName()))))),
-				lastName(bitName(oneName())))))
+					lastName(bitName(zeroName())))),
+				lastName(bitName(oneName()))))
 			.printScript
 			.assertEqualTo(script(listName(bitName(zeroName()), bitName(oneName()))))
 	}

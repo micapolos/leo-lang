@@ -52,14 +52,14 @@ val Stack<Sentence>.expandSentence: Sentence
 	get() =
 		listName(
 			when (this) {
-				is EmptyStack -> emptyName()
-				is LinkStack -> link.expandSentence
+				is EmptyStack -> script(emptyName())
+				is LinkStack -> link.expandScript
 			}
 		)
 
-val StackLink<Sentence>.expandSentence: Sentence
+val StackLink<Sentence>.expandScript: Script
 	get() =
-		linkName(previousName(stack.expandSentence), lastName(value))
+		script(previousName(stack.expandSentence), lastName(value))
 
 val String.expandSentence: Sentence
 	get() =
