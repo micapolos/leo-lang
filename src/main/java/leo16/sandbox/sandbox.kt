@@ -4,6 +4,8 @@ import leo15.dsl.*
 import leo16.print_
 
 fun main() = print_ {
+	load { bit }
+
 	list
 	append { zero.bit }
 	append { one.bit }
@@ -12,6 +14,4 @@ fun main() = print_ {
 		empty.is_ { ok }
 		any.link.is_ { ok.not }
 	}
-
-	compiler
 }
