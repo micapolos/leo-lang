@@ -14,7 +14,7 @@ operator fun Function.invoke(value: Value): Value =
 
 val Function.struct: Struct
 	get() =
-		script(givingName.invoke(script)).struct
+		script(givingName(script)).struct
 
 val Function.asSentence: Sentence
 	get() =

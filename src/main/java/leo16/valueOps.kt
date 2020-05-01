@@ -4,10 +4,7 @@ import leo.base.notNullIf
 import leo13.linkOrNull
 import leo13.mapFirst
 import leo13.onlyOrNull
-import leo15.functionName
-import leo15.lastName
-import leo15.listName
-import leo15.previousName
+import leo15.*
 
 val Value.normalize: Value
 	get() =
@@ -28,6 +25,7 @@ infix fun Value.accessOrNull(word: String): Value? =
 	when (this) {
 		is StructValue -> accessOrNull(word)
 		is FunctionValue -> accessOrNull(word)
+		is ScopeValue -> accessOrNull(word)
 	}
 
 infix fun StructValue.accessOrNull(word: String): Value? =
@@ -39,6 +37,9 @@ infix fun StructValue.accessOrNull(word: String): Value? =
 
 infix fun FunctionValue.accessOrNull(word: String): Value? =
 	notNullIf(word == functionName)
+
+infix fun ScopeValue.accessOrNull(word: String): Value? =
+	notNullIf(word == scopeName)
 
 infix fun Value.make(word: String): Value =
 	value(word.invoke(this))

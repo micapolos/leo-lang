@@ -9,8 +9,8 @@ val String.wordIsMeta: Boolean
 			evaluateName -> true
 			givesName -> true
 			givingName -> true
+			libraryName -> true
 			matchName -> true
 			scriptName -> true
-			importName -> true
 			else -> false
 		}

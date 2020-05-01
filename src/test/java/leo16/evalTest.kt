@@ -87,16 +87,42 @@ class EvalTest {
 	}
 
 	@Test
+	fun library() {
+		evaluate_ {
+			library { nothing_ }
+		}.assertGives { library }
+
+		evaluate_ {
+			library {
+				zero.is_ { one }
+			}
+		}.assertGives {
+			library {
+				pattern { zero }
+			}
+		}
+
+		evaluate_ {
+			library {
+				zero.is_ { one }
+				one.is_ { zero }
+			}
+		}.assertGives {
+			library {
+				pattern { zero }
+				pattern { one }
+			}
+		}
+	}
+
+	@Test
 	fun import() {
-		evaluate_ { import { nothing_ } }.assertGives { nothing_ }
-		evaluate_ { import { zero.is_ { one } } }.assertGives { nothing_ }
-		evaluate_ { import { zero.is_ { one } }.zero }.assertGives { one }
+		evaluate_ { library { nothing_ }.import }.assertGives { nothing_ }
+		evaluate_ { library { zero.is_ { one } }.import }.assertGives { nothing_ }
+		evaluate_ { library { zero.is_ { one } }.import.zero }.assertGives { one }
 
-		evaluate_ { zero.import { zero.is_ { one } } }.assertGives { zero }
-		evaluate_ { zero.import { zero.is_ { one } }.evaluate }.assertGives { one }
-
-		evaluate_ { import { zero } }.assertGives { import { zero } }
-		evaluate_ { import { zero.is_ { one }.zero } }.assertGives { import { zero.is_ { one }.zero } }
+		evaluate_ { zero.import { library { zero.is_ { one } } } }.assertGives { zero }
+		evaluate_ { zero.import { library { zero.is_ { one } } }.evaluate }.assertGives { one }
 	}
 
 	@Test

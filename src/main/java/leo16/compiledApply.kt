@@ -19,6 +19,7 @@ fun Compiled.applyNormalized(line: Line): Compiled =
 		?: applyGiving(line)
 		?: applyGive(line)
 		?: applyMatch(line)
+		?: applyLibrary(line)
 		?: applyImport(line)
 		?: plus(line)
 
@@ -75,11 +76,18 @@ fun Compiled.applyMatch(line: Line): Compiled? =
 		}
 	}
 
-fun Compiled.applyImport(line: Line): Compiled? =
-	line.matchPrefix(importName) { rhs ->
-		library.compiler.plus(rhs.script).compiled.let { compiled ->
-			ifOrNull(compiled.value.isEmpty) {
-				library.plus(compiled.library.publicScope).compiled(value)
+fun Compiled.applyLibrary(line: Line): Compiled? =
+	value.matchEmpty {
+		line.matchPrefix(libraryName) { rhs ->
+			library.compiler.plus(rhs.script).compiled.let { compiled ->
+				ifOrNull(compiled.value.isEmpty) {
+					library.compiled(compiled.library.publicScope.value)
+				}
 			}
 		}
+	}
+
+fun Compiled.applyImport(line: Line): Compiled? =
+	line.matchPrefix(importName) { rhs ->
+		rhs.scopeOrNull?.let { library.plus(it) }?.compiled(value)
 	}

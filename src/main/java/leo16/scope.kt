@@ -1,6 +1,7 @@
 package leo16
 
 import leo13.*
+import leo15.libraryName
 import leo15.scopeName
 
 data class Scope(val bindingStack: Stack<Binding>) {
@@ -23,3 +24,8 @@ fun Scope.evaluate(script: Script): Value? =
 val Scope.asSentence: Sentence
 	get() =
 		scopeName.invoke(bindingStack.map { asSentence }.script)
+
+val Scope.librarySentence: Sentence
+	get() =
+		libraryName(bindingStack.map { pattern.asSentence }.script)
+
