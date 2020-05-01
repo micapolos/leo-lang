@@ -9,7 +9,7 @@ fun Compiled.apply(line: Line): Compiled =
 
 fun Compiled.applyNormalized(line: Line): Compiled =
 	null
-		?: applyDefinition(line)
+		?: applyBinding(line)
 		?: applyValue(line)
 		?: applyEvaluate(line)
 		?: applyCompile(line)
@@ -39,15 +39,14 @@ fun Compiled.applyEvaluate(line: Line): Compiled? =
 fun Compiled.applyCompile(line: Line): Compiled? =
 	value.matchEmpty {
 		line.matchPrefix(compileName) { rhs ->
-			// TODO: This should extend current library
-			library.scope.compile(rhs.script)
+			library.compiler.plus(rhs.script).compiled
 		}
 	}
 
 fun Compiled.applyScope(line: Line): Compiled? =
 	library.scope.apply(value.plus(line))?.let { library.compiled(it) }
 
-fun Compiled.applyDefinition(line: Line): Compiled? =
+fun Compiled.applyBinding(line: Line): Compiled? =
 	library.applyBinding(value.plus(line))?.emptyCompiled
 
 fun Compiled.applyGiving(line: Line): Compiled? =
