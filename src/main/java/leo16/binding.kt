@@ -52,3 +52,4 @@ fun Body.apply(arg: Value): Value =
 val Value.givenBinding: Binding
 	get() =
 		givenName.pattern bindingTo value(givenName.invoke(this)).body
+

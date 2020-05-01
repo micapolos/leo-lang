@@ -15,7 +15,7 @@ fun Scope.apply(value: Value): Value? =
 	bindingStack.mapFirst { apply(value) }
 
 fun Scope.compile(script: Script): Compiled? =
-	compiler.plus(script).compiled
+	emptyLibrary.compiler.plus(script).compiled
 
 fun Scope.evaluate(script: Script): Value? =
 	compile(script)?.value

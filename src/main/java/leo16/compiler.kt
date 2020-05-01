@@ -9,9 +9,9 @@ data class CompilerParent(val compiler: Compiler, val word: String)
 fun CompilerParent?.evaluator(compiled: Compiled, isMeta: Boolean) = Compiler(this, compiled, isMeta)
 infix fun CompilerParent?.evaluator(compiled: Compiled) = Compiler(this, compiled, isMeta = false)
 val Compiled.compiler get() = nullOf<CompilerParent>().evaluator(this)
-val Scope.compiler get() = compiled(value()).compiler
+val Library.compiler get() = emptyCompiled.compiler
 fun Compiler.parent(word: String) = CompilerParent(this, word)
-val emptyCompiler = emptyScope.compiled(value()).compiler
+val emptyCompiler = emptyLibrary.emptyCompiled.compiler
 
 operator fun Compiler.plus(script: Script): Compiler =
 	fold(script.tokenSeq) { plus(it) }
