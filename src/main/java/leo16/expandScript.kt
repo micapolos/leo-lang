@@ -3,6 +3,7 @@ package leo16
 import leo.base.*
 import leo.binary.utf8ByteSeq
 import leo13.*
+import leo13.Stack
 import leo13.base.Bit
 import leo13.base.bit0
 import leo13.base.bit1
