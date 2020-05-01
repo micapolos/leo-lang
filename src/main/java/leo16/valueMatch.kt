@@ -33,3 +33,20 @@ fun <R : Any> Value.matchWord(fn: (String) -> R?): R? =
 			}
 		}
 	}
+
+fun <R : Any> Line.matchPrefix(word: String, fn: (Value) -> R?): R? =
+	ifOrNull(this.word == word) {
+		fn(value)
+	}
+
+fun <R : Any> Line.matchWord(fn: (String) -> R?): R? =
+	value.matchEmpty {
+		fn(word)
+	}
+
+fun <R : Any> Line.match(word: String, fn: () -> R?): R? =
+	this@match.matchWord { aWord ->
+		ifOrNull(aWord == word) {
+			fn()
+		}
+	}

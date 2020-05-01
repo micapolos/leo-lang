@@ -3,7 +3,6 @@ package leo16
 import leo.base.fold
 import leo.base.nullOf
 import leo.base.orNull
-import leo.base.runIf
 
 data class Compiler(val parentOrNull: CompilerParent?, val compiled: Compiled, val isMeta: Boolean)
 data class CompilerParent(val compiler: Compiler, val word: String)
@@ -39,7 +38,8 @@ fun CompilerParent.endEvaluator(compiled: Compiled): Compiler? =
 
 operator fun Compiler.plus(line: Line): Compiler? =
 	updateEvaluated {
-		plus(line).runIf(!isMeta) { apply }
+		if (isMeta) plus(line)
+		else apply(line)
 	}
 
 fun Compiler.updateEvaluated(fn: Compiled.() -> Compiled): Compiler =

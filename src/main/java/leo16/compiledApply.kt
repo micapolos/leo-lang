@@ -6,54 +6,54 @@ import leo15.evaluateName
 import leo15.givingName
 import leo15.scriptName
 
-val Compiled.apply: Compiled
-	get() =
-		updateValue { normalize }.applyNormalized
+fun Compiled.apply(line: Line): Compiled =
+	if (line.value.isEmpty) scope.compiled(value()).applyNormalized(line.word.invoke(value))
+	else applyNormalized(line)
 
-val Compiled.applyNormalized: Compiled
-	get() =
-		null
-			?: applyDefinition
-			?: applyValue
-			?: applyEvaluate
-			?: applyCompile
-			?: applyScript
-			?: applyScope
-			?: applyGiving
-			?: this
+fun Compiled.applyNormalized(line: Line): Compiled =
+	null
+		?: applyDefinition(line)
+		?: applyValue(line)
+		?: applyEvaluate(line)
+		?: applyCompile(line)
+		?: applyScript(line)
+		?: applyScope(line)
+		?: applyGiving(line)
+		?: plus(line)
 
-val Compiled.applyValue: Compiled?
-	get() =
-		scope.runIfNotNull(value.apply) { compiled(it) }
+fun Compiled.applyValue(line: Line): Compiled? =
+	scope.runIfNotNull(value.apply(line)) { compiled(it) }
 
-val Compiled.applyScript: Compiled?
-	get() =
-		value.matchPrefix(scriptName) { rhs ->
+fun Compiled.applyScript(line: Line): Compiled? =
+	value.matchEmpty {
+		line.matchPrefix(scriptName) { rhs ->
 			scope.compiled(rhs)
 		}
+	}
 
-val Compiled.applyEvaluate: Compiled?
-	get() =
-		value.matchPrefix(evaluateName) { rhs ->
+fun Compiled.applyEvaluate(line: Line): Compiled? =
+	value.matchEmpty {
+		line.matchPrefix(evaluateName) { rhs ->
 			scope.evaluate(rhs.script)?.let { scope.compiled(it) }
 		}
+	}
 
-val Compiled.applyCompile: Compiled?
-	get() =
-		value.matchPrefix(compileName) { rhs ->
+fun Compiled.applyCompile(line: Line): Compiled? =
+	value.matchEmpty {
+		line.matchPrefix(compileName) { rhs ->
 			scope.compile(rhs.script)
 		}
+	}
 
-val Compiled.applyScope: Compiled?
-	get() =
-		scope.apply(value)?.let { scope.compiled(it) }
+fun Compiled.applyScope(line: Line): Compiled? =
+	scope.apply(value.plus(line))?.let { scope.compiled(it) }
 
-val Compiled.applyDefinition: Compiled?
-	get() =
-		scope.applyDefinition(value)?.compiled(value())
+fun Compiled.applyDefinition(line: Line): Compiled? =
+	scope.applyDefinition(value.plus(line))?.compiled(value())
 
-val Compiled.applyGiving: Compiled?
-	get() =
-		value.matchPrefix(givingName) { rhs ->
+fun Compiled.applyGiving(line: Line): Compiled? =
+	value.matchEmpty {
+		line.matchPrefix(givingName) { rhs ->
 			updateValue { scope.function(rhs.script).value }
 		}
+	}

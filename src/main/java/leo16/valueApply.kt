@@ -1,23 +1,25 @@
 package leo16
 
+import leo15.giveName
 import leo15.thingName
 
-val Value.apply: Value?
-	get() =
-		null
-			?: applyThing
-			?: applyGet
+fun Value.apply(line: Line): Value? =
+	null
+		?: applyThing(line)
+		?: applyGet(line)
+		?: applyGive(line)
 
-val Value.applyGet: Value?
-	get() =
-		matchLink { lhs, word, rhs ->
-			lhs.matchEmpty {
-				rhs.getOrNull(word)
-			}
-		}
+fun Value.applyGet(line: Line): Value? =
+	line.matchWord { word ->
+		getOrNull(word)
+	}
 
-val Value.applyThing: Value?
-	get() =
-		matchPrefix(thingName) { rhs ->
-			rhs.thingOrNull
-		}
+fun Value.applyThing(line: Line): Value? =
+	line.match(thingName) {
+		thingOrNull
+	}
+
+fun Value.applyGive(line: Line): Value? =
+	line.matchPrefix(giveName) { rhs ->
+		functionOrNull?.invoke(rhs)
+	}
