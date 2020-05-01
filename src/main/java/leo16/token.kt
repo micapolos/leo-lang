@@ -8,7 +8,7 @@ import leo15.endName
 import leo15.tokenName
 
 sealed class Token {
-	override fun toString() = sentence.toString()
+	override fun toString() = asSentence.toString()
 }
 
 data class BeginToken(val word: String) : Token() {
@@ -20,7 +20,7 @@ object EndToken : Token()
 val String.beginToken: Token get() = BeginToken(this)
 val endToken: Token = EndToken
 
-val Token.sentence: Sentence
+val Token.asSentence: Sentence
 	get() =
 		tokenName(
 			when (this) {

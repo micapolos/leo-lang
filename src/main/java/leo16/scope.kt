@@ -1,11 +1,11 @@
 package leo16
 
-import leo13.Stack
-import leo13.mapFirst
-import leo13.push
-import leo13.stack
+import leo13.*
+import leo15.scopeName
 
-data class Scope(val bindingStack: Stack<Binding>)
+data class Scope(val bindingStack: Stack<Binding>) {
+	override fun toString() = asSentence.toString()
+}
 
 val Stack<Binding>.scope get() = Scope(this)
 val emptyScope = stack<Binding>().scope
@@ -15,7 +15,11 @@ fun Scope.apply(value: Value): Value? =
 	bindingStack.mapFirst { apply(value) }
 
 fun Scope.compile(script: Script): Compiled? =
-	compiler.plus(script)?.compiled
+	compiler.plus(script).compiled
 
 fun Scope.evaluate(script: Script): Value? =
 	compile(script)?.value
+
+val Scope.asSentence: Sentence
+	get() =
+		scopeName.invoke(bindingStack.map { asSentence }.script)

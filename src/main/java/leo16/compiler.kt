@@ -2,7 +2,6 @@ package leo16
 
 import leo.base.fold
 import leo.base.nullOf
-import leo.base.orNull
 
 data class Compiler(val parentOrNull: CompilerParent?, val compiled: Compiled, val isMeta: Boolean)
 data class CompilerParent(val compiler: Compiler, val word: String)
@@ -14,29 +13,29 @@ val Scope.compiler get() = compiled(value()).compiler
 fun Compiler.parent(word: String) = CompilerParent(this, word)
 val emptyCompiler = emptyScope.compiled(value()).compiler
 
-operator fun Compiler.plus(script: Script): Compiler? =
-	orNull.fold(script.tokenSeq) { plus(it) }
+operator fun Compiler.plus(script: Script): Compiler =
+	fold(script.tokenSeq) { plus(it) }
 
-operator fun Compiler.plus(token: Token): Compiler? =
+operator fun Compiler.plus(token: Token): Compiler =
 	when (token) {
 		is BeginToken -> begin(token.word)
 		EndToken -> end
 	}
 
-fun Compiler.begin(word: String): Compiler? =
+fun Compiler.begin(word: String): Compiler =
 	when (compiled.value) {
 		is StructValue -> parent(word).evaluator(compiled.begin, isMeta || word.wordIsMeta)
-		is FunctionValue -> null
+		is FunctionValue -> null!!
 	}
 
-val Compiler.end: Compiler?
+val Compiler.end: Compiler
 	get() =
-		parentOrNull?.endEvaluator(compiled)
+		parentOrNull!!.endEvaluator(compiled)
 
-fun CompilerParent.endEvaluator(compiled: Compiled): Compiler? =
+fun CompilerParent.endEvaluator(compiled: Compiled): Compiler =
 	compiler.plus(word.invoke(compiled.value))
 
-operator fun Compiler.plus(line: Line): Compiler? =
+operator fun Compiler.plus(line: Line): Compiler =
 	updateEvaluated {
 		if (isMeta) plus(line)
 		else apply(line)

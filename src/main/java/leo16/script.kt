@@ -5,6 +5,8 @@ import leo14.lineTo
 import leo14.plus
 import leo14.script
 import leo14.untyped.scriptLine
+import leo15.scriptName
+import leo15.sentenceName
 import leo15.string
 
 data class Script(val sentenceStack: Stack<Sentence>) {
@@ -20,6 +22,14 @@ fun script(vararg sentences: Sentence) = stack(*sentences).script
 operator fun Script.plus(sentence: Sentence) = sentenceStack.push(sentence).script
 operator fun String.invoke(followingScript: Script) = Sentence(this, followingScript)
 operator fun String.invoke(vararg sentences: Sentence) = invoke(script(*sentences))
+
+val Script.asSentence: Sentence
+	get() =
+		scriptName(this)
+
+val Sentence.asSentence: Sentence
+	get() =
+		sentenceName(this)
 
 val Script.leo14Script: leo14.Script
 	get() =

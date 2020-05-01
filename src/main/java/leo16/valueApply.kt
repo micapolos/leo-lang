@@ -10,13 +10,15 @@ fun Value.apply(line: Line): Value? =
 		?: applyGive(line)
 
 fun Value.applyGet(line: Line): Value? =
-	line.matchWord { word ->
-		getOrNull(word)
+	matchEmpty {
+		line.value.getOrNull(line.word)
 	}
 
 fun Value.applyThing(line: Line): Value? =
-	line.match(thingName) {
-		thingOrNull
+	matchEmpty {
+		line.matchPrefix(thingName) { rhs ->
+			rhs.thingOrNull
+		}
 	}
 
 fun Value.applyGive(line: Line): Value? =

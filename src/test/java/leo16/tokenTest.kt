@@ -10,8 +10,8 @@ import kotlin.test.Test
 class TokenTest {
 	@Test
 	fun sentence() {
-		"plus".beginToken.sentence.assertEqualTo(tokenName(beginName("plus"())))
-		endToken.sentence.assertEqualTo(tokenName(endName()))
+		"plus".beginToken.asSentence.assertEqualTo(tokenName(beginName("plus"())))
+		endToken.asSentence.assertEqualTo(tokenName(endName()))
 	}
 
 	@Test

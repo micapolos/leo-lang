@@ -24,7 +24,6 @@ fun <T> Reducer<T, Token>.read(f: F): Reducer<T, Token> =
 			tokenReducerParameter.value as Reducer<T, Token>
 		}
 
-
 fun script_(f: F): Script =
 	emptyFragment.tokenReducer.read(f).state.script
 

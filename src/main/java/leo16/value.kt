@@ -1,15 +1,51 @@
 package leo16
 
-import leo13.Stack
-import leo13.isEmpty
-import leo13.push
-import leo13.stack
+import leo13.*
+import leo15.structName
+import leo15.valueName
 
-sealed class Value
-data class StructValue(val struct: Struct) : Value()
-data class FunctionValue(val function: Function) : Value()
-data class Struct(val lineStack: Stack<Line>)
-data class Line(val word: String, val value: Value)
+sealed class Value {
+	override fun toString() = asSentence.toString()
+}
+
+data class StructValue(val struct: Struct) : Value() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionValue(val function: Function) : Value() {
+	override fun toString() = super.toString()
+}
+
+data class Struct(val lineStack: Stack<Line>) {
+	override fun toString() = asSentence.toString()
+}
+
+data class Line(val word: String, val value: Value) {
+	override fun toString() = asSentence.toString()
+}
+
+val Value.asSentence: Sentence
+	get() =
+		valueName(asScript)
+
+val Value.asScript: Script
+	get() =
+		when (this) {
+			is StructValue -> struct.asScript
+			is FunctionValue -> function.asSentence.script
+		}
+
+val Struct.asSentence: Sentence
+	get() =
+		structName(asScript)
+
+val Struct.asScript: Script
+	get() =
+		lineStack.map { asSentence }.script
+
+val Line.asSentence: Sentence
+	get() =
+		word.invoke(value.asScript)
 
 val Struct.value: Value get() = StructValue(this)
 val Function.value: Value get() = FunctionValue(this)
