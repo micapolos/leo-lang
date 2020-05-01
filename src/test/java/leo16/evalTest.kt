@@ -111,14 +111,14 @@ class EvalTest {
 						scope {
 							binding {
 								pattern { zero }
-								body { value { one } }
+								body { one }
 							}
 						}
 						public {
 							scope {
 								binding {
 									pattern { zero }
-									body { value { one } }
+									body { one }
 								}
 							}
 						}
