@@ -38,8 +38,8 @@ val Script.leo14Script: leo14.Script
 val Sentence.leo14ScriptLine: leo14.ScriptLine
 	get() =
 		null
-			?: parseSentenceStackOrNull { leo14ScriptLine }?.let { listName lineTo script(*it.array) }
-			?: literalOrNull?.scriptLine
+		//?: parseSentenceStackOrNull { leo14ScriptLine }?.let { listName lineTo script(*it.array) }
+		//?: literalOrNull?.scriptLine
 			?: word lineTo script.leo14Script
 
 val Script.isEmpty get() = sentenceStack.isEmpty

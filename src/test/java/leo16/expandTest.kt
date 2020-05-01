@@ -1,7 +1,6 @@
 package leo16
 
 import leo.base.assertEqualTo
-import leo.base.assertNotNull
 import leo.base.clampedByte
 import leo13.base.oneBit
 import leo13.base.zeroBit
@@ -19,7 +18,24 @@ class ExpandTest {
 	@Test
 	fun byte() {
 		13.clampedByte.expandSentence
-			.assertNotNull
+			.assertEqualTo(
+				byteName(bitName(listName(
+					previousName(listName(
+						previousName(listName(
+							previousName(listName(
+								previousName(listName(
+									previousName(listName(
+										previousName(listName(
+											previousName(listName(
+												previousName(listName(emptyName())),
+												lastName(bitName(zeroName())))),
+											lastName(bitName(zeroName())))),
+										lastName(bitName(zeroName())))),
+									lastName(bitName(zeroName())))),
+								lastName(bitName(oneName())))),
+							lastName(bitName(oneName())))),
+						lastName(bitName(zeroName())))),
+					lastName(bitName(oneName()))))))
 	}
 
 	@Test
