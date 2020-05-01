@@ -60,6 +60,23 @@ class EvalTest {
 	}
 
 	@Test
+	fun list() {
+		evaluate_ { list { bit { zero }; bit { one } }.last }
+			.assertGives { last { bit { one } } }
+		evaluate_ { list { bit { zero }; bit { one } }.previous }
+			.assertGives { previous { list { bit { zero } } } }
+		evaluate_ { list.append { zero.bit } }
+			.assertGives { list { bit { zero } } }
+		evaluate_ { list.append { zero.bit }.append { one.bit } }
+			.assertGives { list { bit { zero }; bit { one } } }
+
+		evaluate_ { list.match { empty.gives { given } } }
+			.assertGives { given { empty } }
+		evaluate_ { list { bit { zero } }.match { any.link.gives { given } } }
+			.assertGives { given { link { previous { list }; last { bit { zero } } } } }
+	}
+
+	@Test
 	fun is_() {
 		evaluate_ { zero.is_ { one } }.assertGives { nothing_ }
 		evaluate_ { zero.is_ { one }.zero }.assertGives { one }
@@ -78,12 +95,17 @@ class EvalTest {
 
 	@Test
 	fun match() {
-		evaluate_ { zero.match { zero.is_ { one } } }.assertGives { one }
-		evaluate_ { zero.match { zero.gives { given } } }.assertGives { given { zero } }
+		evaluate_ { zero.bit.match { zero.is_ { one } } }
+			.assertGives { one }
+		evaluate_ { zero.bit.match { zero.gives { given } } }
+			.assertGives { given { zero } }
 
-		evaluate_ { zero.match { nothing_ } }.assertGives { match { zero } }
-		evaluate_ { zero.match { one } }.assertGives { zero.match { one } }
-		evaluate_ { zero.match { zero.is_ { one }.one } }.assertGives { zero.match { zero.is_ { one }.one } }
+		evaluate_ { zero.bit.match { nothing_ } }
+			.assertGives { match { bit { zero } } }
+		evaluate_ { zero.bit.match { one } }
+			.assertGives { bit { zero }.match { one } }
+		evaluate_ { zero.bit.match { zero.is_ { one }.one } }
+			.assertGives { bit { zero }.match { zero.is_ { one }.one } }
 	}
 
 	@Test

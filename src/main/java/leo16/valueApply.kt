@@ -1,11 +1,13 @@
 package leo16
 
+import leo13.onlyOrNull
 import leo15.*
 
 fun Value.apply(line: Line): Value? =
 	null
 		?: applyLast(line)
 		?: applyPrevious(line)
+		?: applyAppend(line)
 		?: applyThing(line)
 		?: applyGet(line)
 		?: applyGive(line)
@@ -21,6 +23,13 @@ fun Value.applyPrevious(line: Line): Value? =
 	matchEmpty {
 		line.matchPrefix(previousName) { rhs ->
 			rhs.previousOrNull
+		}
+	}
+
+fun Value.applyAppend(line: Line): Value? =
+	line.matchPrefix(appendName) { rhs ->
+		rhs.structOrNull?.lineStack?.onlyOrNull?.let { line ->
+			listAppendOrNull(line)
 		}
 	}
 

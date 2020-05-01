@@ -59,3 +59,25 @@ val Value.previousOrNull: Value?
 				value(previousName(listName(value)))
 			}
 		}
+
+fun Value.listAppendOrNull(line: Line): Value? =
+	matchPrefix(listName) { rhs ->
+		rhs.structOrNull?.let { struct ->
+			value(listName(struct.plus(line).value))
+		}
+	}
+
+val Value.matchValueOrNull: Value?
+	get() =
+		structOrNull?.lineStack?.onlyOrNull?.let { line ->
+			when (line.word) {
+				listName -> line.value.structOrNull?.listMatchValue
+				else -> line.value
+			}
+		}
+
+val Struct.listMatchValue: Value
+	get() =
+		lineStack.linkOrNull
+			?.run { value(linkName(previousName(listName(stack.struct.value)), lastName(value))) }
+			?: value(emptyName.invoke(value()))

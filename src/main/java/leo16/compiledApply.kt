@@ -67,10 +67,12 @@ fun Compiled.applyGive(line: Line): Compiled? =
 
 fun Compiled.applyMatch(line: Line): Compiled? =
 	line.matchPrefix(matchName) { rhs ->
-		scope.compiler.plus(rhs.script).compiled.let { compiled ->
-			ifOrNull(compiled.value.isEmpty) {
-				compiled.scope.exportLibrary.apply(value)?.let { matching ->
-					scope.compiled(matching)
+		value.matchValueOrNull?.let { matchValue ->
+			scope.compiler.plus(rhs.script).compiled.let { compiled ->
+				ifOrNull(compiled.value.isEmpty) {
+					compiled.scope.exportLibrary.apply(matchValue)?.let { matching ->
+						scope.compiled(matching)
+					}
 				}
 			}
 		}
