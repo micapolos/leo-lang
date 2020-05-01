@@ -4,7 +4,6 @@ import leo.base.notNullIf
 import leo13.linkOrNull
 import leo13.mapFirst
 import leo13.onlyOrNull
-import leo13.stack
 import leo15.functionName
 
 val Value.normalize: Value
@@ -40,16 +39,3 @@ infix fun FunctionValue.accessOrNull(word: String): Value? =
 
 infix fun Value.make(word: String): Value =
 	value(word.invoke(this))
-
-fun Value.matchOrNull(vararg cases: Case): Value? =
-	thingOrNull
-		?.structOrNull
-		?.lineStack
-		?.onlyOrNull
-		?.let { line ->
-			stack(*cases).mapFirst {
-				notNullIf(line.word == selectedWord) {
-					fn.invoke(line.value)
-				}
-			}
-		}

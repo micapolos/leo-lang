@@ -22,5 +22,12 @@ val Value.functionOrNull: Function? get() = (this as? FunctionValue)?.function
 val Struct.isEmpty get() = lineStack.isEmpty
 val Value.isEmpty get() = structOrNull?.isEmpty ?: false
 
+val Value.struct: Struct
+	get() =
+		when (this) {
+			is StructValue -> struct
+			is FunctionValue -> function.struct
+		}
+
 operator fun Struct.plus(line: Line): Struct = lineStack.push(line).struct
-operator fun Value.plus(line: Line): Value? = structOrNull?.plus(line)?.value
+operator fun Value.plus(line: Line): Value = struct.plus(line).value

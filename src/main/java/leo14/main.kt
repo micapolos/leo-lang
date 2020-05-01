@@ -26,7 +26,7 @@ val untypedTyped = true
 
 fun main() {
 	if (useLeo16)
-		run(leo16.emptyEvaluator.stringCharReducer)
+		run(leo16.emptyCompiler.stringCharReducer)
 	else if (untyped)
 		if (untypedTyped) {
 			run(leo14.untyped.typed.emptyReader.stringCharReducer)

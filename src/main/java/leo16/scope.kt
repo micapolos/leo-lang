@@ -1,6 +1,5 @@
 package leo16
 
-import leo.base.fold
 import leo13.Stack
 import leo13.mapFirst
 import leo13.push
@@ -15,8 +14,8 @@ operator fun Scope.plus(binding: Binding): Scope = bindingStack.push(binding).sc
 fun Scope.apply(value: Value): Value? =
 	bindingStack.mapFirst { apply(value) }
 
-fun Scope.evaluateClosure(script: Script): Evaluated =
-	evaluator.fold(script.tokenSeq) { plus(it)!! }.evaluated
+fun Scope.compile(script: Script): Compiled? =
+	compiler.plus(script)?.compiled
 
-fun Scope.evaluate(script: Script): Value =
-	evaluateClosure(script).value
+fun Scope.evaluate(script: Script): Value? =
+	compile(script)?.value
