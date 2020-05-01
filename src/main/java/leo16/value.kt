@@ -51,7 +51,8 @@ val Struct.value: Value get() = StructValue(this)
 val Function.value: Value get() = FunctionValue(this)
 val Stack<Line>.struct get() = Struct(this)
 fun value(vararg lines: Line) = stack(*lines).struct.value
-infix fun String.invoke(value: Value) = Line(this, value)
+operator fun String.invoke(value: Value) = Line(this, value)
+operator fun String.invoke(line: Line, vararg lines: Line) = invoke(stack(line, *lines).struct.value)
 
 val Value.structOrNull: Struct? get() = (this as? StructValue)?.struct
 val Value.functionOrNull: Function? get() = (this as? FunctionValue)?.function

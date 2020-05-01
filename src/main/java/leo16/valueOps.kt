@@ -5,6 +5,9 @@ import leo13.linkOrNull
 import leo13.mapFirst
 import leo13.onlyOrNull
 import leo15.functionName
+import leo15.lastName
+import leo15.listName
+import leo15.previousName
 
 val Value.normalize: Value
 	get() =
@@ -39,3 +42,19 @@ infix fun FunctionValue.accessOrNull(word: String): Value? =
 
 infix fun Value.make(word: String): Value =
 	value(word.invoke(this))
+
+val Value.lastOrNull: Value?
+	get() =
+		matchPrefix(listName) { rhs ->
+			rhs.structOrNull?.lineStack?.linkOrNull?.value?.let { line ->
+				value(lastName(line))
+			}
+		}
+
+val Value.previousOrNull: Value?
+	get() =
+		matchPrefix(listName) { rhs ->
+			rhs.structOrNull?.lineStack?.linkOrNull?.stack?.struct?.value?.let { value ->
+				value(previousName(listName(value)))
+			}
+		}
