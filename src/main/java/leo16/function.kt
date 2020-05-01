@@ -3,14 +3,14 @@ package leo16
 import leo15.functionName
 import leo15.givingName
 
-data class Function(val scope: Scope, val script: Script) {
+data class Function(val library: Library, val script: Script) {
 	override fun toString() = asSentence.toString()
 }
 
-infix fun Scope.function(script: Script) = Function(this, script)
+infix fun Library.function(script: Script) = Function(this, script)
 
 operator fun Function.invoke(value: Value): Value =
-	scope.plus(value.givenBinding).evaluate(script)!!
+	library.plus(value.givenBinding).evaluate(script)!!
 
 val Function.struct: Struct
 	get() =
@@ -18,4 +18,4 @@ val Function.struct: Struct
 
 val Function.asSentence: Sentence
 	get() =
-		functionName(scope.asSentence, script.asSentence)
+		functionName(library.asSentence, script.asSentence)

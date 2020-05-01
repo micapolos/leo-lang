@@ -1,31 +1,30 @@
 package leo16
 
-import leo.base.runIfNotNull
-import leo13.fold
-import leo13.reverse
+import leo13.*
 import leo15.libraryName
-import leo15.publicName
 
-data class Library(val scope: Scope, val publicScope: Scope) {
+data class Library(val bindingStack: Stack<Binding>) {
 	override fun toString() = asSentence.toString()
 }
 
-fun Scope.libraryWithPublic(scope: Scope) = Library(this, scope)
-val Scope.emptyLibrary get() = libraryWithPublic(emptyScope)
-val emptyLibrary get() = emptyScope.emptyLibrary
-val Library.begin get() = scope.emptyLibrary
+val Stack<Binding>.library get() = Library(this)
+val emptyLibrary = stack<Binding>().library
+operator fun Library.plus(binding: Binding): Library = bindingStack.push(binding).library
+
+fun Library.apply(value: Value): Value? =
+	bindingStack.mapFirst { apply(value) }
+
+fun Library.compile(script: Script): Compiled? =
+	emptyScope.compiler.plus(script).compiled
+
+fun Library.evaluate(script: Script): Value? =
+	compile(script)?.value
 
 val Library.asSentence: Sentence
 	get() =
-		libraryName(
-			scope.asSentence,
-			publicName(publicScope.asSentence))
+		libraryName.invoke(bindingStack.map { asSentence }.script)
 
-operator fun Library.plus(binding: Binding): Library =
-	scope.plus(binding).libraryWithPublic(publicScope.plus(binding))
+val Library.librarySentence: Sentence
+	get() =
+		libraryName(bindingStack.map { pattern.asSentence }.script)
 
-operator fun Library.plus(scope: Scope) =
-	fold(scope.bindingStack.reverse) { plus(it) }
-
-fun Library.applyBinding(value: Value): Library? =
-	runIfNotNull(scope.bindingOrNull(value)) { plus(it) }

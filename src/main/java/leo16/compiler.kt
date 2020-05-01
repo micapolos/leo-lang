@@ -17,9 +17,9 @@ data class CompilerParent(val compiler: Compiler, val word: String) {
 fun CompilerParent?.evaluator(compiled: Compiled, isMeta: Boolean) = Compiler(this, compiled, isMeta)
 infix fun CompilerParent?.evaluator(compiled: Compiled) = Compiler(this, compiled, isMeta = false)
 val Compiled.compiler get() = nullOf<CompilerParent>().evaluator(this)
-val Library.compiler get() = emptyCompiled.compiler
+val Scope.compiler get() = emptyCompiled.compiler
 fun Compiler.parent(word: String) = CompilerParent(this, word)
-val emptyCompiler = emptyLibrary.emptyCompiled.compiler
+val emptyCompiler = emptyScope.emptyCompiled.compiler
 
 val Compiler.asSentence: Sentence
 	get() =
@@ -59,7 +59,7 @@ operator fun Compiler.plus(line: Line): Compiler =
 
 fun Compiler.applyCompiler(line: Line): Compiled? =
 	notNullIf(line == compilerName(value())) {
-		compiled.library.compiled(value(asSentence.line))
+		compiled.scope.compiled(value(asSentence.line))
 	}
 
 fun Compiler.updateCompiled(fn: Compiled.() -> Compiled): Compiler =

@@ -3,7 +3,7 @@ package leo16
 import leo15.givesName
 import leo15.isName
 
-fun Scope.bindingOrNull(value: Value): Binding? =
+fun Library.bindingOrNull(value: Value): Binding? =
 	null
 		?: value.isBindingOrNull
 		?: givesBindingOrNull(value)
@@ -14,7 +14,7 @@ val Value.isBindingOrNull: Binding?
 			lhs.script.exactPattern.bindingTo(rhs.body)
 		}
 
-fun Scope.givesBindingOrNull(value: Value): Binding? =
+fun Library.givesBindingOrNull(value: Value): Binding? =
 	value.matchInfix(givesName) { lhs, rhs ->
 		lhs.script.pattern.bindingTo(function(rhs.script).body)
 	}

@@ -7,7 +7,7 @@ val Value.script: Script
 		when (this) {
 			is StructValue -> struct.script
 			is FunctionValue -> function.struct.script
-			is ScopeValue -> script(scope.librarySentence)
+			is ScopeValue -> script(library.librarySentence)
 		}
 
 val Struct.script: Script

@@ -133,15 +133,15 @@ class EvalTest {
 			compiler {
 				parent { nothing }
 				compiled {
-					library {
-						scope {
+					scope {
+						library {
 							binding {
 								pattern { zero }
 								body { one }
 							}
 						}
-						public {
-							scope {
+						export {
+							library {
 								binding {
 									pattern { zero }
 									body { one }
