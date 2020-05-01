@@ -71,7 +71,7 @@ fun Value.matches(pattern: Pattern): Boolean =
 fun Struct.matches(patternStruct: PatternStruct): Boolean =
 	true
 		.zipFoldOrNull(lineStack, patternStruct.lineStack) { line, patternLine ->
-			line.matches(patternLine)
+			and(line.matches(patternLine))
 		}
 		?: false
 

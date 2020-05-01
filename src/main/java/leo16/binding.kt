@@ -4,7 +4,6 @@ import leo.base.notNullIf
 import leo15.bindingName
 import leo15.bodyName
 import leo15.givenName
-import leo15.matchingName
 
 data class Binding(val pattern: Pattern, val body: Body) {
 	override fun toString() = asSentence.toString()
@@ -39,9 +38,9 @@ infix fun Pattern.bindingTo(body: Body) = Binding(this, body)
 val Value.body: Body get() = ValueBody(this)
 val Function.body: Body get() = FunctionBody(this)
 
-fun Binding.apply(value: Value): Value? =
-	notNullIf(value.matches(pattern)) {
-		body.apply(value)
+fun Binding.apply(arg: Value): Value? =
+	notNullIf(arg.matches(pattern)) {
+		body.apply(arg)
 	}
 
 fun Body.apply(arg: Value): Value =
@@ -49,10 +48,6 @@ fun Body.apply(arg: Value): Value =
 		is ValueBody -> value
 		is FunctionBody -> function.invoke(arg)
 	}
-
-val Value.matchingBinding: Binding
-	get() =
-		matchingName.pattern bindingTo value(matchingName.invoke(this)).body
 
 val Value.givenBinding: Binding
 	get() =
