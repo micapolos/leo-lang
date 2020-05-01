@@ -11,7 +11,7 @@ fun Library.bindingOrNull(value: Value): Binding? =
 val Value.isBindingOrNull: Binding?
 	get() =
 		matchInfix(isName) { lhs, rhs ->
-			lhs.script.exactPattern.bindingTo(rhs.body)
+			lhs.script.pattern.bindingTo(rhs.body)
 		}
 
 fun Library.givesBindingOrNull(value: Value): Binding? =

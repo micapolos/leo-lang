@@ -80,8 +80,7 @@ class EvalTest {
 	fun is_() {
 		evaluate_ { zero.is_ { one } }.assertGives { nothing_ }
 		evaluate_ { zero.is_ { one }.zero }.assertGives { one }
-		evaluate_ { any.is_ { one }.zero }.assertGives { zero }
-		evaluate_ { any.is_ { one }.any }.assertGives { one }
+		evaluate_ { any.is_ { one }.zero }.assertGives { one }
 	}
 
 	@Test

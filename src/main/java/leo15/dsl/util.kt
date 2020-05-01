@@ -27,6 +27,8 @@ fun main_(f: F) {
 	script_(f).eval.leoString.println
 }
 
+fun dsl_(f: F): F = f
+
 val Fragment.tokenReducer: Reducer<Fragment, Token>
 	get() =
 		reducer { plus(it).tokenReducer }
