@@ -23,10 +23,7 @@ operator fun Compiler.plus(token: Token): Compiler =
 	}
 
 fun Compiler.begin(word: String): Compiler =
-	when (compiled.value) {
-		is StructValue -> parent(word).evaluator(compiled.begin, isMeta || word.wordIsMeta)
-		is FunctionValue -> null!!
-	}
+	parent(word).evaluator(compiled.begin, isMeta || word.wordIsMeta)
 
 val Compiler.end: Compiler
 	get() =

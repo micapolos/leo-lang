@@ -1,10 +1,7 @@
 package leo16
 
 import leo.base.runIfNotNull
-import leo15.compileName
-import leo15.evaluateName
-import leo15.givingName
-import leo15.scriptName
+import leo15.*
 
 fun Compiled.apply(line: Line): Compiled =
 	if (line.value.isEmpty) scope.compiled(value()).applyNormalized(line.word.invoke(value))
@@ -19,6 +16,7 @@ fun Compiled.applyNormalized(line: Line): Compiled =
 		?: applyScript(line)
 		?: applyScope(line)
 		?: applyGiving(line)
+		?: applyGive(line)
 		?: plus(line)
 
 fun Compiled.applyValue(line: Line): Compiled? =
@@ -56,4 +54,9 @@ fun Compiled.applyGiving(line: Line): Compiled? =
 		line.matchPrefix(givingName) { rhs ->
 			updateValue { scope.function(rhs.script).value }
 		}
+	}
+
+fun Compiled.applyGive(line: Line): Compiled? =
+	line.matchPrefix(giveName) { rhs ->
+		scope.runIfNotNull(value.functionOrNull?.invoke(rhs)) { compiled(it) }
 	}

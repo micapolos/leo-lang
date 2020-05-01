@@ -4,7 +4,6 @@ import leo13.*
 import leo14.lineTo
 import leo14.plus
 import leo14.script
-import leo14.untyped.scriptLine
 import leo15.scriptName
 import leo15.sentenceName
 import leo15.string
