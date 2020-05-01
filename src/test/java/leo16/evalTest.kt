@@ -75,4 +75,14 @@ class EvalTest {
 		evaluate_ { zero.gives { given }.zero }.assertGives { given { zero } }
 		evaluate_ { zero.gives { given }.one }.assertGives { one }
 	}
+
+	@Test
+	fun match() {
+		evaluate_ { zero.match { zero.is_ { one } } }.assertGives { one }
+		evaluate_ { zero.match { zero.gives { given } } }.assertGives { given { zero } }
+
+		evaluate_ { zero.match { nothing_ } }.assertGives { match { zero } }
+		evaluate_ { zero.match { one } }.assertGives { zero.match { one } }
+		evaluate_ { zero.match { zero.is_ { one }.one } }.assertGives { zero.match { zero.is_ { one }.one } }
+	}
 }

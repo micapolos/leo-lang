@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.ifOrNull
 import leo.base.runIfNotNull
 import leo15.*
 
@@ -17,6 +18,7 @@ fun Compiled.applyNormalized(line: Line): Compiled =
 		?: applyScope(line)
 		?: applyGiving(line)
 		?: applyGive(line)
+		?: applyMatch(line)
 		?: plus(line)
 
 fun Compiled.applyValue(line: Line): Compiled? =
@@ -59,4 +61,15 @@ fun Compiled.applyGiving(line: Line): Compiled? =
 fun Compiled.applyGive(line: Line): Compiled? =
 	line.matchPrefix(giveName) { rhs ->
 		library.runIfNotNull(value.functionOrNull?.invoke(rhs)) { compiled(it) }
+	}
+
+fun Compiled.applyMatch(line: Line): Compiled? =
+	line.matchPrefix(matchName) { rhs ->
+		library.compiler.plus(rhs.script).compiled.let { compiled ->
+			ifOrNull(compiled.value.isEmpty) {
+				compiled.library.publicScope.apply(value)?.let { matching ->
+					library.compiled(matching)
+				}
+			}
+		}
 	}
