@@ -6,7 +6,7 @@ val Value.script: Script
 	get() =
 		when (this) {
 			is StructValue -> struct.script
-			is FunctionValue -> function.struct.script
+			is FunctionValue -> script(function.valueSentence)
 			is ScopeValue -> script(library.librarySentence)
 		}
 

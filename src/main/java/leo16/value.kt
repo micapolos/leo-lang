@@ -71,8 +71,8 @@ val Value.struct: Struct
 	get() =
 		when (this) {
 			is StructValue -> struct
-			is FunctionValue -> function.struct
-			is ScopeValue -> struct(library.asSentence.line)
+			is FunctionValue -> struct(function.valueSentence.line)
+			is ScopeValue -> struct(library.librarySentence.line)
 		}
 
 operator fun Struct.plus(line: Line): Struct = lineStack.push(line).struct

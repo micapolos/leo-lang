@@ -1,11 +1,11 @@
 package leo16
 
 import leo.base.*
+import leo13.quoteName
 import leo13.seq
 import leo14.LiteralToken
 import leo15.beginName
 import leo15.endName
-import leo15.scriptName
 import leo15.tokenName
 
 sealed class Token {
@@ -32,7 +32,7 @@ val Token.asSentence: Sentence
 val leo14.Token.tokenSeq: Seq<Token>
 	get() =
 		when (this) {
-			is LiteralToken -> scriptName(literal.expandSentence).tokenSeq
+			is LiteralToken -> quoteName(literal.expandSentence).tokenSeq
 			is leo14.BeginToken -> begin.string.beginToken.onlySeq
 			is leo14.EndToken -> endToken.onlySeq
 		}
