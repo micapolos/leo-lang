@@ -14,6 +14,9 @@ operator fun Library.plus(binding: Binding): Library = bindingStack.push(binding
 fun Library.apply(value: Value): Value? =
 	bindingStack.mapFirst { apply(value) }
 
+fun Library.resolve(value: Value): Value =
+	bindingStack.mapFirst { apply(value) } ?: value
+
 fun Library.compile(script: Script): Compiled? =
 	emptyScope.compiler.plus(script).compiled
 

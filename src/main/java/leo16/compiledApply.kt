@@ -11,18 +11,17 @@ fun Compiled.apply(field: Field): Compiled =
 fun Compiled.applyNormalized(field: Field): Compiled =
 	null
 		?: applyValue(field) // keep first
+		?: applyBinding(field)
 		?: applyEvaluate(field)
 		?: applyCompile(field)
 		?: applyQuote(field)
-		?: applyScope(field)
 		?: applyGiving(field)
 		?: applyGive(field)
 		?: applyMatch(field)
 		?: applyLibrary(field)
 		?: applyImport(field)
 		?: applyLoad(field)
-		?: applyBinding(field) // keep last
-		?: plus(field)
+		?: resolve(field)
 
 fun Compiled.applyValue(field: Field): Compiled? =
 	scope.runIfNotNull(value.apply(field)) { compiled(it) }
@@ -48,8 +47,8 @@ fun Compiled.applyCompile(field: Field): Compiled? =
 		}
 	}
 
-fun Compiled.applyScope(field: Field): Compiled? =
-	scope.library.apply(value.plus(field))?.let { scope.compiled(it) }
+fun Compiled.resolve(field: Field): Compiled =
+	scope.compiled(scope.library.resolve(value.plus(field)))
 
 fun Compiled.applyBinding(field: Field): Compiled? =
 	scope.applyBinding(value.plus(field))?.emptyCompiled
