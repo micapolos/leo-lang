@@ -138,7 +138,7 @@ class EvalTest {
 	fun library() {
 		evaluate_ {
 			library { nothing_ }
-		}.assertGives { library }
+		}.assertGives { library { export { list } } }
 
 		evaluate_ {
 			library {
@@ -146,7 +146,11 @@ class EvalTest {
 			}
 		}.assertGives {
 			library {
-				export { zero }
+				export {
+					list {
+						export { zero }
+					}
+				}
 			}
 		}
 
@@ -157,8 +161,12 @@ class EvalTest {
 			}
 		}.assertGives {
 			library {
-				export { zero }
-				export { one }
+				export {
+					list {
+						export { zero }
+						export { one }
+					}
+				}
 			}
 		}
 	}
