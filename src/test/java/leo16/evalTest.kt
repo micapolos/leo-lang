@@ -47,14 +47,18 @@ class EvalTest {
 	}
 
 	@Test
-	fun get() {
+	fun getField() {
 		evaluate_ { point { x { zero }; y { one } }.x }.assertGives { x { zero } }
 		evaluate_ { point { x { zero }; y { one } }.y }.assertGives { y { one } }
 	}
 
 	@Test
-	fun getSpecial() {
+	fun getGiving() {
 		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { nothing_ } }
+	}
+
+	@Test
+	fun getLibrary() {
 		evaluate_ { the { giving { given } }.giving }.assertGives { giving { given } }
 	}
 
@@ -114,8 +118,12 @@ class EvalTest {
 	}
 
 	@Test
-	fun function() {
+	fun giving() {
 		evaluate_ { giving { given } }.assertGives { giving { given } }
+	}
+
+	@Test
+	fun give() {
 		evaluate_ { giving { given }.give { zero } }.assertGives { given { zero } }
 	}
 
