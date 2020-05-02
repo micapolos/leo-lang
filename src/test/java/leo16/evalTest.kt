@@ -33,8 +33,8 @@ class EvalTest {
 
 	@Test
 	fun literal() {
-		evaluate_ { text("foo") }.assertGives { text("foo") }
-		evaluate_ { number(123) }.assertGives { number(123) }
+		evaluate_ { "foo".text }.assertGives { "foo".text }
+		evaluate_ { 123.number }.assertGives { 123.number }
 	}
 
 	@Test
@@ -78,8 +78,8 @@ class EvalTest {
 
 	@Test
 	fun getSpecial() {
-		evaluate_ { the { text("foo") }.text }.assertGives { text("foo") }
-		evaluate_ { the { number(123) }.number }.assertGives { number(123) }
+		evaluate_ { the { "foo".text }.text }.assertGives { "foo".text }
+		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
 		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { pattern { list } } }
 		evaluate_ { the { giving { given } }.giving }.assertGives { giving { given } }
 	}
@@ -93,19 +93,19 @@ class EvalTest {
 
 	@Test
 	fun texts() {
-		evaluate_ { text("Hello") }.assertGives { text("Hello") }
-		evaluate_ { text("Hello").native }.assertGives { x("Hello".nativeString) }
-		evaluate_ { text("Hello, ").plus { text("world!") } }.assertGives { text("Hello, world!") }
-		evaluate_ { text("Hello, world!").length }.assertGives { number(13) }
+		evaluate_ { "Hello".text }.assertGives { "Hello".text }
+		evaluate_ { "Hello".text.native }.assertGives { "Hello".nativeString.word_ }
+		evaluate_ { "Hello, ".text.plus { "world!".text } }.assertGives { "Hello, world!".text }
+		evaluate_ { "Hello, world!".text.length }.assertGives { 13.number }
 	}
 
 	@Test
 	fun numbers() {
-		evaluate_ { number(123) }.assertGives { number(123) }
-		evaluate_ { number(123).native }.assertGives { x(123.bigDecimal.nativeString) }
-		evaluate_ { number(2).plus { number(3) } }.assertGives { number(5) }
-		evaluate_ { number(5).minus { number(3) } }.assertGives { number(2) }
-		evaluate_ { number(2).times { number(3) } }.assertGives { number(6) }
+		evaluate_ { 123.number }.assertGives { 123.number }
+		evaluate_ { 123.number.native }.assertGives { 123.bigDecimal.nativeString.word_ }
+		evaluate_ { 2.number.plus { 3.number } }.assertGives { 5.number }
+		evaluate_ { 5.number.minus { 3.number } }.assertGives { 2.number }
+		evaluate_ { 2.number.times { 3.number } }.assertGives { 6.number }
 	}
 
 	@Test
@@ -114,8 +114,8 @@ class EvalTest {
 		evaluate_ { zero.is_ { one }.zero }.assertGives { one }
 		evaluate_ { any.is_ { one }.zero }.assertGives { one }
 
-		evaluate_ { any.text.is_ { ok }; text("foo") }.assertGives { ok }
-		evaluate_ { any.number.is_ { ok }; number(123) }.assertGives { ok }
+		evaluate_ { any.text.is_ { ok }; "foo".text }.assertGives { ok }
+		evaluate_ { any.number.is_ { ok }; 123.number }.assertGives { ok }
 	}
 
 	@Test
@@ -126,8 +126,8 @@ class EvalTest {
 		evaluate_ { zero.gives { given }.zero }.assertGives { given { zero } }
 		evaluate_ { zero.gives { given }.one }.assertGives { one }
 
-		evaluate_ { any.text.gives { given }; text("foo") }.assertGives { given { text("foo") } }
-		evaluate_ { any.number.gives { given }; number(123) }.assertGives { given { number(123) } }
+		evaluate_ { any.text.gives { given }; "foo".text }.assertGives { given { "foo".text } }
+		evaluate_ { any.number.gives { given }; 123.number }.assertGives { given { 123.number } }
 	}
 
 	@Test
@@ -213,7 +213,7 @@ class EvalTest {
 	@Test
 	fun load() {
 		evaluate_ { ping.load }.assertGives { pong }
-		evaluate_ { text("foo").load }.assertGives { load { text("foo") } }
+		evaluate_ { "foo".text.load }.assertGives { load { "foo".text } }
 	}
 
 	@Test

@@ -9,6 +9,10 @@ import leo15.eval
 fun X.number(int: Int) = x(token(literal(int)))
 fun X.number(double: Double) = x(token(literal(double)))
 fun X.text(string: String) = x(token(literal(string)))
+val String.text: X get() = X.text(this)
+val Int.number: X get() = X.number(this)
+val Double.number: X get() = X.number(this)
+val String.word_: X get() = X.x(this)
 val nothing_ = X
 
 fun <T> Reducer<T, Token>.read(f: F): Reducer<T, Token> =
