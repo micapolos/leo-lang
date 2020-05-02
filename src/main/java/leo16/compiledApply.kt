@@ -43,7 +43,7 @@ fun Compiled.applyEvaluate(field: Field): Compiled? =
 fun Compiled.applyCompile(field: Field): Compiled? =
 	value.matchEmpty {
 		field.matchPrefix(compileName) { rhs ->
-			scope.compiler.plus(rhs.printScript).compiled
+			scope.compiler.plus(rhs).compiled
 		}
 	}
 
@@ -68,7 +68,7 @@ fun Compiled.applyGive(field: Field): Compiled? =
 fun Compiled.applyMatch(field: Field): Compiled? =
 	field.matchPrefix(matchName) { rhs ->
 		value.matchValueOrNull?.let { matchValue ->
-			scope.compiler.plus(rhs.printScript).compiled.let { compiled ->
+			scope.compiler.plus(rhs).compiled.let { compiled ->
 				ifOrNull(compiled.value.isEmpty) {
 					compiled.scope.exportLibrary.apply(matchValue)?.let { matching ->
 						scope.compiled(matching)
@@ -81,7 +81,7 @@ fun Compiled.applyMatch(field: Field): Compiled? =
 fun Compiled.applyLibrary(field: Field): Compiled? =
 	value.matchEmpty {
 		field.matchPrefix(libraryName) { rhs ->
-			scope.compiler.plus(rhs.printScript).compiled.let { compiled ->
+			scope.compiler.plus(rhs).compiled.let { compiled ->
 				ifOrNull(compiled.value.isEmpty) {
 					scope.compiled(compiled.scope.exportLibrary.field.value)
 				}

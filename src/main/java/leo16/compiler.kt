@@ -4,6 +4,8 @@ import leo.base.fold
 import leo.base.notNullIf
 import leo.base.nullOf
 import leo.base.orIfNull
+import leo13.fold
+import leo13.reverse
 import leo15.*
 
 data class Compiler(val parentOrNull: CompilerParent?, val compiled: Compiled, val isMeta: Boolean) {
@@ -41,6 +43,19 @@ operator fun Compiler.plus(token: Token): Compiler =
 		EndToken -> end
 	}
 
+operator fun Compiler.plus(value: Value): Compiler =
+	fold(value.fieldStack.reverse) { plus(it) }
+
+operator fun Compiler.plus(field: Field): Compiler =
+	when (field) {
+		is SentenceField -> plus(field.sentence)
+		is FunctionField -> append(field)
+		is LibraryField -> append(field)
+	}
+
+operator fun Compiler.plus(sentence: ValueSentence): Compiler =
+	begin(sentence.word).plus(sentence.value).end
+
 fun Compiler.begin(word: String): Compiler =
 	parent(word).evaluator(compiled.begin, isMeta || word.wordIsMeta)
 
@@ -49,9 +64,9 @@ val Compiler.end: Compiler
 		parentOrNull!!.endEvaluator(compiled)
 
 fun CompilerParent.endEvaluator(compiled: Compiled): Compiler =
-	compiler.plus(word.invoke(compiled.value))
+	compiler.append(word.invoke(compiled.value))
 
-operator fun Compiler.plus(field: Field): Compiler =
+fun Compiler.append(field: Field): Compiler =
 	updateCompiled {
 		applyCompiler(field) ?: if (isMeta) plus(field)
 		else apply(field)
