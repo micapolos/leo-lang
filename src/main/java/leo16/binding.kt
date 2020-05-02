@@ -6,11 +6,11 @@ import leo15.bodyName
 import leo15.givenName
 
 data class Binding(val pattern: Pattern, val body: Body) {
-	override fun toString() = asSentence.toString()
+	override fun toString() = asField.toString()
 }
 
 sealed class Body {
-	override fun toString() = asSentence.toString()
+	override fun toString() = asField.toString()
 }
 
 data class ValueBody(val value: Value) : Body() {
@@ -21,16 +21,16 @@ data class FunctionBody(val function: Function) : Body() {
 	override fun toString() = super.toString()
 }
 
-val Binding.asSentence: Sentence
+val Binding.asField: Field
 	get() =
-		bindingName.invoke(pattern.asSentence, body.asSentence)
+		bindingName.invoke(pattern.asField, body.asField)
 
-val Body.asSentence: Sentence
+val Body.asField: Field
 	get() =
 		bodyName(
 			when (this) {
 				is ValueBody -> value
-				is FunctionBody -> function.asSentence.value
+				is FunctionBody -> function.asField.value
 			}
 		)
 

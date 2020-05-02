@@ -9,9 +9,9 @@ data class Compiled(val scope: Scope, val value: Value) {
 infix fun Scope.compiled(value: Value) = Compiled(this, value)
 val Scope.emptyCompiled get() = compiled(value())
 
-val Compiled.asSentence: Sentence
+val Compiled.asSentence: Field
 	get() =
-		compiledName(scope.asSentence, value.asSentence)
+		compiledName(scope.asField, value.asField)
 
 fun Compiled.updateValue(fn: Value.() -> Value) = copy(value = value.fn())
 

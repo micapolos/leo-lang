@@ -7,7 +7,7 @@ import leo15.exportName
 import leo15.scopeName
 
 data class Scope(val library: Library, val exportLibrary: Library) {
-	override fun toString() = asSentence.toString()
+	override fun toString() = asField.toString()
 }
 
 fun Library.scopeWithPublic(library: Library) = Scope(this, library)
@@ -15,11 +15,11 @@ val Library.emptyScope get() = scopeWithPublic(emptyLibrary)
 val emptyScope get() = emptyLibrary.emptyScope
 val Scope.begin get() = library.emptyScope
 
-val Scope.asSentence: Sentence
+val Scope.asField: Field
 	get() =
 		scopeName(
-			library.asSentence,
-			exportName(exportLibrary.asSentence))
+			library.asField,
+			exportName(exportLibrary.asField))
 
 operator fun Scope.plus(binding: Binding): Scope =
 	library.plus(binding).scopeWithPublic(exportLibrary.plus(binding))

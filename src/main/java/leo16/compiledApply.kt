@@ -56,7 +56,7 @@ fun Compiled.applyBinding(field: Field): Compiled? =
 fun Compiled.applyGiving(field: Field): Compiled? =
 	value.matchEmpty {
 		field.matchPrefix(givingName) { rhs ->
-			updateValue { scope.library.function(rhs.print).field.value }
+			updateValue { scope.library.function(rhs).field.value }
 		}
 	}
 

@@ -10,25 +10,25 @@ import leo15.libraryName
 val Pattern.value: Value
 	get() =
 		when (this) {
-			AnyPattern -> value(anyName.invoke(value()))
+			AnyPattern -> value(anyName())
 			is ValuePattern -> value.value
 		}
 
 val PatternValue.value: Value
 	get() =
-		fieldStack.map { sentence.field }.value
+		fieldStack.map { valueField }.value
 
-val PatternField.sentence: Sentence
+val PatternField.valueField: Field
 	get() =
 		when (this) {
-			is SentencePatternField -> sentence.sentence
-			FunctionPatternField -> givingName(anyName(value()))
-			LibraryPatternField -> libraryName(anyName.invoke(value()))
+			is SentencePatternField -> sentence.valueField
+			FunctionPatternField -> givingName(anyName())
+			LibraryPatternField -> libraryName(anyName())
 		}
 
-val PatternSentence.sentence: Sentence
+val PatternSentence.valueField: Field
 	get() =
-		word.invoke(pattern.value).runIf(word.isPatternKeyword) { exactName(this) }
+		word(pattern.value).runIf(word.isPatternKeyword) { exactName(this) }
 
 val String.isPatternKeyword: Boolean
 	get() =

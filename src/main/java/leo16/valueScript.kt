@@ -13,7 +13,7 @@ val Value.script: Script
 
 val Field.scriptLine: ScriptLine
 	get() =
-		printValueSentence.scriptLine
+		printSentence.scriptLine
 
 val Sentence.scriptLine: ScriptLine
 	get() =

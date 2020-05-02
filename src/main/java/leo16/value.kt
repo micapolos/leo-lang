@@ -2,7 +2,6 @@ package leo16
 
 import leo.base.notNullIf
 import leo13.*
-import leo14.Literal
 import leo15.string
 
 data class Value(val fieldStack: Stack<Field>) {
@@ -33,17 +32,9 @@ data class Sentence(val word: String, val value: Value) {
 	override fun toString() = scriptLine.string
 }
 
-val Value.asSentence: Sentence
+val Value.asField: Field
 	get() =
 		valueName(this)
-
-val Field.asSentence: Sentence
-	get() =
-		when (this) {
-			is SentenceField -> sentence
-			is FunctionField -> function.asSentence
-			is LibraryField -> library.asSentence
-		}
 
 val Stack<Field>.value: Value get() = Value(this)
 val Sentence.field: Field get() = SentenceField(this)
@@ -51,9 +42,11 @@ val Function.field: Field get() = FunctionField(this)
 val Library.field: Field get() = LibraryField(this)
 fun value(vararg fields: Field) = stack(*fields).value
 fun value(sentence: Sentence, vararg sentences: Sentence) = stack(sentence, *sentences).map { field }.value
-operator fun String.invoke(value: Value) = Sentence(this, value)
-operator fun String.invoke(vararg fields: Field) = invoke(stack(*fields).value)
-operator fun String.invoke(sentence: Sentence, vararg sentences: Sentence) = invoke(value(sentence, *sentences))
+infix fun String.sentenceTo(value: Value) = Sentence(this, value)
+fun String.sentenceTo(vararg fields: Field): Sentence = sentenceTo(stack(*fields).value)
+operator fun String.invoke(value: Value): Field = Sentence(this, value).field
+operator fun String.invoke(vararg fields: Field): Field = invoke(stack(*fields).value)
+operator fun String.invoke(sentence: Sentence, vararg sentences: Sentence): Field = invoke(value(sentence, *sentences))
 val Field.value get() = value(this)
 
 val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence

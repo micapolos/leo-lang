@@ -5,7 +5,7 @@ import leo15.bindingName
 import leo15.libraryName
 
 data class Library(val bindingStack: Stack<Binding>) {
-	override fun toString() = asSentence.toString()
+	override fun toString() = asField.toString()
 }
 
 val Stack<Binding>.library get() = Library(this)
@@ -24,6 +24,6 @@ fun Library.compile(value: Value): Compiled? =
 fun Library.evaluate(value: Value): Value? =
 	compile(value)?.value
 
-val Library.asSentence: Sentence
+val Library.asField: Field
 	get() =
-		libraryName(bindingName(bindingStack.expandSentence { asSentence.field }))
+		libraryName(bindingName(bindingStack.expandSentence { asField }))

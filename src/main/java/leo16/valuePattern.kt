@@ -22,7 +22,7 @@ val Value.valuePattern: Pattern
 
 val Field.patternField: PatternField
 	get() =
-		this.printValueSentence.patternField
+		printSentence.patternField
 
 val Sentence.patternField: PatternField
 	get() =

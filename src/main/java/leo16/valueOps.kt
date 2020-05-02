@@ -9,7 +9,7 @@ import leo15.*
 fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 	val wordOrNull = field.onlyWordOrNull
 	return if (wordOrNull == null) fn(field)
-	else value().fn(wordOrNull(this).field)
+	else value().fn(wordOrNull(this))
 }
 
 val Value.thingOrNull: Value?

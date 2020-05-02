@@ -10,7 +10,7 @@ import leo15.libraryName
 import leo15.patternName
 
 sealed class Pattern {
-	override fun toString() = asSentence.toString()
+	override fun toString() = asField.toString()
 }
 
 object AnyPattern : Pattern()
@@ -39,36 +39,36 @@ fun pattern(vararg fields: PatternField) = patternValue(*fields).pattern
 val String.pattern get() = pattern(invoke(pattern()))
 operator fun String.invoke(pattern: Pattern): PatternField = PatternSentence(this, pattern).field
 
-val Pattern.asSentence: Sentence
+val Pattern.asField: Field
 	get() =
-		patternName(asScript)
+		patternName.invoke(asValue)
 
-val Pattern.asScript: Value
+val Pattern.asValue: Value
 	get() =
 		when (this) {
 			AnyPattern -> value(anyName())
-			is ValuePattern -> value.asScript
+			is ValuePattern -> value.asValue
 		}
 
-val PatternValue.asSentence: Sentence
+val PatternValue.asField: Field
 	get() =
-		leo15.structName(asScript)
+		leo15.structName(asValue)
 
-val PatternValue.asScript: Value
+val PatternValue.asValue: Value
 	get() =
-		fieldStack.map { asSentence.field }.value
+		fieldStack.map { asField }.value
 
-val PatternField.asSentence: Sentence
+val PatternField.asField: Field
 	get() =
 		when (this) {
-			is SentencePatternField -> sentence.asSentence
+			is SentencePatternField -> sentence.asField
 			FunctionPatternField -> givingName(anyName())
 			LibraryPatternField -> libraryName(anyName())
 		}
 
-val PatternSentence.asSentence: Sentence
+val PatternSentence.asField: Field
 	get() =
-		word(pattern.asScript)
+		word(pattern.asValue)
 
 fun Value.matches(pattern: Pattern): Boolean =
 	when (pattern) {

@@ -12,11 +12,11 @@ import leo14.Token
 import leo15.*
 
 data class Compiler(val parentOrNull: CompilerParent?, val compiled: Compiled, val isMeta: Boolean) {
-	override fun toString() = asSentence.toString()
+	override fun toString() = asField.toString()
 }
 
 data class CompilerParent(val compiler: Compiler, val word: String) {
-	override fun toString() = asSentence.toString()
+	override fun toString() = asField.toString()
 }
 
 fun CompilerParent?.evaluator(compiled: Compiled, isMeta: Boolean) = Compiler(this, compiled, isMeta)
@@ -26,16 +26,16 @@ val Scope.compiler get() = emptyCompiled.compiler
 fun Compiler.parent(word: String) = CompilerParent(this, word)
 val emptyCompiler = emptyScope.emptyCompiled.compiler
 
-val Compiler.asSentence: Sentence
+val Compiler.asField: Field
 	get() =
 		compilerName(
-			parentOrNull?.asSentence.orIfNull { parentName(nothingName()) },
+			parentOrNull?.asField.orIfNull { parentName(nothingName()) },
 			compiled.asSentence,
 			metaName(if (isMeta) trueName() else falseName()))
 
-val CompilerParent.asSentence: Sentence
+val CompilerParent.asField: Field
 	get() =
-		parentName(compiler.asSentence, wordName(word()))
+		parentName(compiler.asField, wordName(word()))
 
 operator fun Compiler.plus(token: Token): Compiler? =
 	when (token) {
@@ -77,8 +77,8 @@ fun Compiler.append(sentence: Sentence): Compiler =
 	append(sentence.field)
 
 fun Compiler.applyCompiler(field: Field): Compiled? =
-	notNullIf(field == compilerName(value()).field) {
-		compiled.scope.compiled(value(asSentence.field))
+	notNullIf(field == compilerName(value())) {
+		compiled.scope.compiled(value(asField))
 	}
 
 fun Compiler.updateCompiled(fn: Compiled.() -> Compiled): Compiler =

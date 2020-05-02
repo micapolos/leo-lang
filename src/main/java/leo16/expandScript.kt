@@ -21,40 +21,40 @@ import leo15.*
 import leo15.bitName
 import leo15.byteName
 
-val Bit.expandSentence: Sentence
+val Bit.asField: Field
 	get() =
 		bitName(if (isOne) oneName() else zeroName())
 
-val Byte.expandSentence: Sentence
+val Byte.asField: Field
 	get() =
 		byteName(
 			bitName(
 				stack(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)
-					.expandSentence { expandSentence.field }))
+					.expandSentence { this@asField.asField }))
 
-val Int.expandSentence: Sentence
+val Int.asField: Field
 	get() =
 		intName(
 			byteName(
 				stack(byte3, byte2, byte1, byte0)
-					.expandSentence { expandSentence.field }))
+					.expandSentence { this@asField.asField }))
 
-fun <T> Stack<T>.expandSentence(fn: T.() -> Field): Sentence =
-	map(fn).expandSentence
+fun <T> Stack<T>.expandSentence(fn: T.() -> Field): Field =
+	map(fn).asField
 
-val Stack<Field>.expandSentence: Sentence
+val Stack<Field>.asField: Field
 	get() =
 		listName(value)
 
-val String.expandSentence: Sentence
+val String.expandSentence: Field
 	get() =
 		stringName(
 			utf8ByteSeq.reverseStack
-				.expandSentence { expandSentence.field })
+				.expandSentence { asField })
 
-val Literal.expandSentence: Sentence
+val Literal.asField: Field
 	get() =
 		when (this) {
 			is StringLiteral -> string.expandSentence
-			is NumberLiteral -> number.bigDecimal.intValueExact().expandSentence
+			is NumberLiteral -> number.bigDecimal.intValueExact().asField
 		}
