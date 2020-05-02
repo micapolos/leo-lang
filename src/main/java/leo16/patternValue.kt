@@ -24,6 +24,7 @@ val PatternField.valueField: Field
 			is SentencePatternField -> sentence.valueField
 			FunctionPatternField -> givingName(anyName())
 			LibraryPatternField -> libraryName(anyName())
+			is LiteralPatternField -> literal.field
 		}
 
 val PatternSentence.valueField: Field

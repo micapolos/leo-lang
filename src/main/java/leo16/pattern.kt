@@ -4,6 +4,7 @@ import leo13.Stack
 import leo13.map
 import leo13.stack
 import leo13.zipFoldOrNull
+import leo14.Literal
 import leo15.anyName
 import leo15.givingName
 import leo15.libraryName
@@ -23,6 +24,7 @@ data class PatternValue(val fieldStack: Stack<PatternField>)
 
 sealed class PatternField
 data class SentencePatternField(val sentence: PatternSentence) : PatternField()
+data class LiteralPatternField(val literal: Literal) : PatternField()
 object FunctionPatternField : PatternField()
 object LibraryPatternField : PatternField()
 
@@ -64,6 +66,7 @@ val PatternField.asField: Field
 			is SentencePatternField -> sentence.asField
 			FunctionPatternField -> givingName(anyName())
 			LibraryPatternField -> libraryName(anyName())
+			is LiteralPatternField -> literal.field
 		}
 
 val PatternSentence.asField: Field
@@ -88,7 +91,7 @@ fun Field.matches(field: PatternField): Boolean =
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
 		is FunctionField -> field is FunctionPatternField
 		is LibraryField -> field is LibraryPatternField
-		is LiteralField -> TODO()
+		is LiteralField -> field is LiteralPatternField && literal == field.literal
 	}
 
 fun Sentence.matches(sentence: PatternSentence): Boolean =
