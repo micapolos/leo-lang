@@ -228,12 +228,32 @@ class EvalTest {
 
 	@Test
 	fun reflection() {
-		evaluate_ { int.native.class_ }
-			.assertGives { class_ { Integer.TYPE.native_ } }
-		evaluate_ { "java.lang.Integer".text.name.native.class_ }
-			.assertGives { class_ { Integer::class.java.native_ } }
-		evaluate_ { "java.lang.Integer".text.name.native.class_.field { name { "MAX_VALUE".text } } }
-			.assertGives { field { Integer::class.java.getField("MAX_VALUE").native_ } }
+		evaluate_ {
+			int.native.class_
+		}.assertGives {
+			class_ { Integer.TYPE.native_ }
+		}
+
+		evaluate_ {
+			"java.lang.Integer".text.name.native.class_
+		}.assertGives {
+			class_ { Integer::class.java.native_ }
+		}
+
+		evaluate_ {
+			"java.lang.Integer".text.name.native.class_
+			field { name { "MAX_VALUE".text } }
+		}.assertGives {
+			field { Integer::class.java.getField("MAX_VALUE").native_ }
+		}
+
+		evaluate_ {
+			"java.lang.Integer".text.name.native.class_
+			field { name { "MAX_VALUE".text } }
+			get
+		}.assertGives {
+			Integer.MAX_VALUE.native_
+		}
 	}
 
 	@Test

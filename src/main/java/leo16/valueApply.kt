@@ -2,6 +2,7 @@ package leo16
 
 import leo.java.lang.typeClassOrNull
 import leo14.bigDecimal
+import leo14.untyped.typed.loadClass
 import leo14.untyped.typed.loadClassOrNull
 import leo15.*
 import java.math.BigDecimal
@@ -24,6 +25,8 @@ fun Value.apply(field: Field): Value? =
 		?: applyTypeNativeClass(field)
 		?: applyTextNameNativeClass(field)
 		?: applyNativeClassField(field)
+		?: applyNativeFieldStaticGet(field)
+		?: applyNativeFieldGet(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -109,8 +112,8 @@ fun Value.applyTextNameNativeClass(field: Field): Value? =
 			rhs.matchPrefix(nativeName) { rhs ->
 				rhs.matchPrefix(nameName) { rhs ->
 					rhs.matchText { text ->
-						text.loadClassOrNull?.let { class_ ->
-							className(class_.nativeField).value
+						nullIfThrowsException {
+							className(text.loadClass.nativeField).value
 						}
 					}
 				}
@@ -129,6 +132,34 @@ fun Value.applyNativeClassField(field: Field): Value? =
 								fieldName(class_.getField(name).nativeField).value
 							}
 						}
+					}
+				}
+			}
+		}
+	}
+
+fun Value.applyNativeFieldStaticGet(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(getName) { rhs ->
+			rhs.matchPrefix(fieldName) { rhs ->
+				rhs.matchNative { nativeField ->
+					rhs.matchNative { native ->
+						nullIfThrowsException {
+							(nativeField as java.lang.reflect.Field).get(native).nativeValue
+						}
+					}
+				}
+			}
+		}
+	}
+
+fun Value.applyNativeFieldGet(field: Field): Value? =
+	matchPrefix(fieldName) { rhs ->
+		rhs.matchNative { nativeField ->
+			field.matchPrefix(getName) { rhs ->
+				rhs.matchNative { nativeObject ->
+					nullIfThrowsException {
+						(nativeField as java.lang.reflect.Field).get(nativeObject).nativeValue
 					}
 				}
 			}
