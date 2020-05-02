@@ -36,7 +36,7 @@ fun Compiled.applyQuote(field: Field): Compiled? =
 fun Compiled.applyEvaluate(field: Field): Compiled? =
 	value.matchEmpty {
 		field.matchPrefix(evaluateName) { rhs ->
-			scope.library.evaluate(rhs.printScript)?.let { scope.compiled(it) }
+			scope.library.evaluate(rhs)?.let { scope.compiled(it) }
 		}
 	}
 

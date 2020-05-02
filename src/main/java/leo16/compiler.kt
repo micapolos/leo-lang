@@ -1,6 +1,5 @@
 package leo16
 
-import leo.base.fold
 import leo.base.notNullIf
 import leo.base.nullOf
 import leo.base.orIfNull
@@ -34,10 +33,7 @@ val CompilerParent.asSentence: Sentence
 	get() =
 		parentName(compiler.asSentence, wordName(word()))
 
-operator fun Compiler.plus(script: Script): Compiler =
-	fold(script.tokenSeq) { plus(it) }
-
-operator fun Compiler.plus(token: Token): Compiler =
+operator fun Compiler.plus(token: Token): Compiler? =
 	when (token) {
 		is BeginToken -> begin(token.word)
 		EndToken -> end
@@ -54,14 +50,14 @@ operator fun Compiler.plus(field: Field): Compiler =
 	}
 
 operator fun Compiler.plus(sentence: ValueSentence): Compiler =
-	begin(sentence.word).plus(sentence.value).end
+	begin(sentence.word).plus(sentence.value).end!!
 
 fun Compiler.begin(word: String): Compiler =
 	parent(word).evaluator(compiled.begin, isMeta || word.wordIsMeta)
 
-val Compiler.end: Compiler
+val Compiler.end: Compiler?
 	get() =
-		parentOrNull!!.endEvaluator(compiled)
+		parentOrNull?.endEvaluator(compiled)
 
 fun CompilerParent.endEvaluator(compiled: Compiled): Compiler =
 	compiler.append(word.invoke(compiled.value))
