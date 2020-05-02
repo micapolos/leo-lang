@@ -5,11 +5,8 @@ import leo.base.runIfNotNull
 import leo13.onlyOrNull
 import leo15.*
 
-fun Compiled.apply(field: Field): Compiled {
-	val wordOrNull = field.onlyWordOrNull
-	return if (wordOrNull != null) clearValue.applyNormalized(wordOrNull(value))
-	else applyNormalized(field)
-}
+fun Compiled.apply(field: Field): Compiled =
+	value.normalize(field) { set(this).applyNormalized(it) }
 
 fun Compiled.applyNormalized(field: Field): Compiled =
 	null
