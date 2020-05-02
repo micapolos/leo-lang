@@ -1,6 +1,5 @@
-package leo16
+package leo.base
 
-import leo.base.assertEqualTo
 import kotlin.test.Test
 
 class TextTest {

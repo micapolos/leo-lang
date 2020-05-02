@@ -1,7 +1,4 @@
-package leo16
-
-import leo.base.appendableString
-import leo13.*
+package leo.base
 
 sealed class Text {
 	override fun toString() = string
