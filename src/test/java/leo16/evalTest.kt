@@ -271,7 +271,7 @@ class EvalTest {
 		evaluate_ {
 			"java.lang.Integer".text.name.native.class_
 			field { name { "MAX_VALUE".text } }
-			get { null_.native }
+			get { object_ { null_.native } }
 		}.assertGives {
 			Integer.MAX_VALUE.native_
 		}
@@ -282,9 +282,11 @@ class EvalTest {
 		evaluate_ {
 			"java.awt.Point".text.name.native.class_
 			constructor {
-				list {
-					this_ { int.native.class_ }
-					this_ { int.native.class_ }
+				parameter {
+					list {
+						this_ { int.native.class_ }
+						this_ { int.native.class_ }
+					}
 				}
 			}
 		}.assertGives {
@@ -299,20 +301,69 @@ class EvalTest {
 		evaluate_ {
 			"java.awt.Point".text.name.native.class_
 			constructor {
-				list {
-					this_ { int.native.class_ }
-					this_ { int.native.class_ }
+				parameter {
+					list {
+						this_ { int.native.class_ }
+						this_ { int.native.class_ }
+					}
 				}
 			}
 			invoke {
-				list {
-					this_ { 10.number.int.native }
-					this_ { 20.number.int.native }
+				parameter {
+					list {
+						this_ { 10.number.int.native }
+						this_ { 20.number.int.native }
+					}
 				}
 			}
 		}.assertGives {
 			Point(10, 20).native_
 		}
+	}
+
+	@Test
+	fun nativeClassMethod() {
+		evaluate_ {
+			"java.lang.String".text.name.native.class_
+			method {
+				name { "substring".text }
+				parameter {
+					list {
+						this_ { int.native.class_ }
+						this_ { int.native.class_ }
+					}
+				}
+			}
+		}.assertGives {
+			method {
+				String::class.java.getMethod("substring", Integer.TYPE, Integer.TYPE).native_
+			}
+		}
+	}
+
+	@Test
+	fun nativeMethodInvoke() {
+		evaluate_ {
+			"java.lang.String".text.name.native.class_
+			method {
+				name { "substring".text }
+				parameter {
+					list {
+						this_ { int.native.class_ }
+						this_ { int.native.class_ }
+					}
+				}
+			}
+			invoke {
+				object_ { "Hello, world!".text.native }
+				parameter {
+					list {
+						this_ { 7.number.int.native }
+						this_ { 12.number.int.native }
+					}
+				}
+			}
+		}.assertGives { "world".native_ }
 	}
 
 	@Test

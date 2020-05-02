@@ -8,6 +8,7 @@ import leo14.bigDecimal
 import leo14.untyped.typed.loadClass
 import leo15.*
 import java.lang.reflect.Constructor
+import java.lang.reflect.Method
 import java.math.BigDecimal
 import kotlin.minus
 import kotlin.plus
@@ -33,6 +34,8 @@ fun Value.apply(field: Field): Value? =
 		?: applyNativeFieldGet(field)
 		?: applyNativeClassConstructor(field)
 		?: applyNativeConstructorInvoke(field)
+		?: applyNativeClassMethod(field)
+		?: applyNativeMethodInvoke(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -172,9 +175,11 @@ fun Value.applyNativeFieldGet(field: Field): Value? =
 	matchPrefix(fieldName) { rhs ->
 		rhs.matchNative { nativeField ->
 			field.matchPrefix(getName) { rhs ->
-				rhs.matchNative { nativeObject ->
-					nullIfThrowsException {
-						(nativeField as java.lang.reflect.Field).get(nativeObject).nativeValue
+				rhs.matchPrefix(objectName) { rhs ->
+					rhs.matchNative { nativeObject ->
+						nullIfThrowsException {
+							(nativeField as java.lang.reflect.Field).get(nativeObject).nativeValue
+						}
 					}
 				}
 			}
@@ -185,21 +190,23 @@ fun Value.applyNativeClassConstructor(field: Field): Value? =
 	matchPrefix(className) { rhs ->
 		rhs.matchNative { nativeClass ->
 			field.matchPrefix(constructorName) { rhs ->
-				rhs
-					.listOrNull {
-						matchPrefix(className) { rhs ->
-							rhs.matchNative { it }
+				rhs.matchPrefix(parameterName) { rhs ->
+					rhs
+						.listOrNull {
+							matchPrefix(className) { rhs ->
+								rhs.matchNative { it }
+							}
 						}
-					}
-					?.mapOrNull { this as? Class<*> }
-					?.array
-					?.let { parameterClasses ->
-						nullIfThrowsException {
-							constructorName((nativeClass as Class<*>)
-								.getConstructor(*parameterClasses).nativeField)
-								.value
+						?.mapOrNull { this as? Class<*> }
+						?.array
+						?.let { parameterClasses ->
+							nullIfThrowsException {
+								constructorName((nativeClass as Class<*>)
+									.getConstructor(*parameterClasses).nativeField)
+									.value
+							}
 						}
-					}
+				}
 			}
 		}
 	}
@@ -208,17 +215,76 @@ fun Value.applyNativeConstructorInvoke(field: Field): Value? =
 	matchPrefix(constructorName) { rhs ->
 		rhs.matchNative { nativeConstructor ->
 			field.matchPrefix(invokeName) { rhs ->
-				rhs
-					.listOrNull { this }
-					?.mapOrNull { matchNative { it } }
-					?.array
-					?.let { args ->
-						nullIfThrowsException {
-							(nativeConstructor as Constructor<*>)
-								.newInstance(*args)
-								.nativeValue
+				rhs.matchPrefix(parameterName) { rhs ->
+					rhs
+						.listOrNull { this }
+						?.mapOrNull { matchNative { it } }
+						?.array
+						?.let { args ->
+							nullIfThrowsException {
+								(nativeConstructor as Constructor<*>)
+									.newInstance(*args)
+									.nativeValue
+							}
 						}
-					}
+				}
 			}
 		}
 	}
+
+fun Value.applyNativeClassMethod(field: Field): Value? =
+	matchPrefix(className) { rhs ->
+		rhs.matchNative { nativeClass ->
+			field.matchPrefix(methodName) { rhs ->
+				rhs.matchInfix(parameterName) { lhs, parameter ->
+					lhs.matchPrefix(nameName) { lhs ->
+						lhs.matchText { name ->
+							parameter
+								.listOrNull {
+									matchPrefix(className) { rhs ->
+										rhs.matchNative { it }
+									}
+								}
+								?.mapOrNull { this as? Class<*> }
+								?.array
+								?.let { parameterClasses ->
+									nullIfThrowsException {
+										methodName((nativeClass as Class<*>)
+											.getMethod(name, *parameterClasses).nativeField)
+											.value
+									}
+								}
+						}
+					}
+				}
+			}
+		}
+	}
+
+fun Value.applyNativeMethodInvoke(field: Field): Value? =
+	matchPrefix(methodName) { rhs ->
+		rhs.matchNative { nativeMethod ->
+			field.matchPrefix(invokeName) { rhs ->
+				rhs.matchInfix(parameterName) { lhs, parameter ->
+					lhs.matchPrefix(objectName) { rhs ->
+						rhs.matchNative { native ->
+							parameter
+								.listOrNull { this }
+								?.mapOrNull { matchNative { it } }
+								?.array
+								?.let { args ->
+									nullIfThrowsException {
+										(nativeMethod as Method)
+											.invoke(native, *args)
+											.nativeValue
+									}
+								}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
