@@ -234,6 +234,12 @@ class EvalTest {
 	}
 
 	@Test
+	fun trueFalseNative() {
+		evaluate_ { true_.native }.assertGives { true.native_ }
+		evaluate_ { false_.native }.assertGives { false.native_ }
+	}
+
+	@Test
 	fun numberIntNative() {
 		evaluate_ { 123.number.int.native }.assertGives { 123.native_ }
 	}
