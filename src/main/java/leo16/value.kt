@@ -24,6 +24,10 @@ data class LibraryField(val library: Library) : Field() {
 	override fun toString() = super.toString()
 }
 
+//data class StringField(val string: String): Field() {
+//	override fun toString() = super.toString()
+//}
+
 data class ValueSentence(val word: String, val value: Value) {
 	override fun toString() = asSentence.toString()
 }
