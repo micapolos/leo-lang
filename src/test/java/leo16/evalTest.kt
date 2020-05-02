@@ -10,6 +10,11 @@ fun Script.assertGives(f: F) {
 
 class EvalTest {
 	@Test
+	fun normalization() {
+		evaluate_ { zero.negate }.assertGives { negate { zero } }
+	}
+
+	@Test
 	fun nothing() {
 		evaluate_ { nothing }.assertGives { nothing_ }
 		evaluate_ { x { nothing } }.assertGives { x { nothing_ } }
@@ -18,15 +23,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun appending() {
+	fun sentences() {
 		evaluate_ { nothing_ }.assertGives { nothing_ }
 		evaluate_ { zero }.assertGives { zero }
 		evaluate_ { zero.plus { one } }.assertGives { zero.plus { one } }
-	}
-
-	@Test
-	fun normalization() {
-		evaluate_ { zero.negate }.assertGives { negate { zero } }
 	}
 
 	@Test
