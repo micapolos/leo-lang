@@ -11,17 +11,14 @@ val Value.print: Value
 	get() =
 		fieldStack.map { print }.value
 
-val Field.printSentence: Sentence
-	get() =
-		when (this) {
-			is SentenceField -> sentence.printSentence
-			is FunctionField -> function.printSentence
-			is LibraryField -> library.printSentence
-		}
-
 val Field.print: Field
 	get() =
-		printSentence.field
+		when (this) {
+			is SentenceField -> sentence.printSentence.field
+			is FunctionField -> function.printSentence.field
+			is LibraryField -> library.printSentence.field
+			is LiteralField -> this
+		}
 
 val Sentence.printSentence: Sentence
 	get() =

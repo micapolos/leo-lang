@@ -22,7 +22,12 @@ val Value.valuePattern: Pattern
 
 val Field.patternField: PatternField
 	get() =
-		printSentence.patternField
+		when (this) {
+			is SentenceField -> sentence.patternField
+			is FunctionField -> function.printSentence.patternField
+			is LibraryField -> library.printSentence.patternField
+			is LiteralField -> TODO()
+		}
 
 val Sentence.patternField: PatternField
 	get() =

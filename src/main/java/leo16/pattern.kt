@@ -88,6 +88,7 @@ fun Field.matches(field: PatternField): Boolean =
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
 		is FunctionField -> field is FunctionPatternField
 		is LibraryField -> field is LibraryPatternField
+		is LiteralField -> TODO()
 	}
 
 fun Sentence.matches(sentence: PatternSentence): Boolean =

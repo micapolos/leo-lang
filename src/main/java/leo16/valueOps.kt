@@ -4,6 +4,9 @@ import leo.base.notNullIf
 import leo13.linkOrNull
 import leo13.mapFirst
 import leo13.onlyOrNull
+import leo14.Literal
+import leo14.NumberLiteral
+import leo14.StringLiteral
 import leo15.*
 
 fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
@@ -30,6 +33,14 @@ val Field.selectWord: String
 			is SentenceField -> sentence.word
 			is FunctionField -> givingName
 			is LibraryField -> libraryName
+			is LiteralField -> literal.selectWord
+		}
+
+val Literal.selectWord: String
+	get() =
+		when (this) {
+			is StringLiteral -> textName
+			is NumberLiteral -> numberName
 		}
 
 infix fun Field.accessOrNull(word: String): Value? =

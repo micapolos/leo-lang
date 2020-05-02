@@ -31,6 +31,12 @@ class EvalTest {
 	}
 
 	@Test
+	fun literal() {
+		evaluate_ { text("foo") }.assertGives { text("foo") }
+		evaluate_ { number(123) }.assertGives { number(123) }
+	}
+
+	@Test
 	fun quote() {
 		evaluate_ { quote { nothing_ } }.assertGives { nothing_ }
 		evaluate_ { quote { zero.negate } }.assertGives { zero.negate }

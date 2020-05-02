@@ -6,6 +6,7 @@ import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.script
+import leo14.untyped.scriptLine
 
 val Value.script: Script
 	get() =
@@ -13,7 +14,12 @@ val Value.script: Script
 
 val Field.scriptLine: ScriptLine
 	get() =
-		printSentence.scriptLine
+		when (this) {
+			is SentenceField -> sentence.scriptLine
+			is FunctionField -> function.printSentence.scriptLine
+			is LibraryField -> library.printSentence.scriptLine
+			is LiteralField -> literal.scriptLine
+		}
 
 val Sentence.scriptLine: ScriptLine
 	get() =
