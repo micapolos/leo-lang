@@ -76,12 +76,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun getGiving() {
+	fun getSpecial() {
+		evaluate_ { the { text("foo") }.text }.assertGives { text("foo") }
+		evaluate_ { the { number(123) }.number }.assertGives { number(123) }
 		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { pattern { list } } }
-	}
-
-	@Test
-	fun getLibrary() {
 		evaluate_ { the { giving { given } }.giving }.assertGives { giving { given } }
 	}
 
@@ -97,6 +95,9 @@ class EvalTest {
 		evaluate_ { zero.is_ { one } }.assertGives { nothing_ }
 		evaluate_ { zero.is_ { one }.zero }.assertGives { one }
 		evaluate_ { any.is_ { one }.zero }.assertGives { one }
+
+		evaluate_ { any.text.is_ { ok }; text("foo") }.assertGives { ok }
+		evaluate_ { any.number.is_ { ok }; number(123) }.assertGives { ok }
 	}
 
 	@Test
@@ -106,6 +107,9 @@ class EvalTest {
 		evaluate_ { zero.gives { one }.one }.assertGives { one }
 		evaluate_ { zero.gives { given }.zero }.assertGives { given { zero } }
 		evaluate_ { zero.gives { given }.one }.assertGives { one }
+
+		evaluate_ { any.text.gives { given }; text("foo") }.assertGives { given { text("foo") } }
+		evaluate_ { any.number.gives { given }; number(123) }.assertGives { given { number(123) } }
 	}
 
 	@Test

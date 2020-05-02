@@ -2,10 +2,7 @@ package leo16
 
 import leo.base.runIf
 import leo13.map
-import leo15.anyName
-import leo15.exactName
-import leo15.givingName
-import leo15.libraryName
+import leo15.*
 
 val Pattern.value: Value
 	get() =
@@ -22,8 +19,6 @@ val PatternField.valueField: Field
 	get() =
 		when (this) {
 			is SentencePatternField -> sentence.valueField
-			FunctionPatternField -> givingName(anyName())
-			LibraryPatternField -> libraryName(anyName())
 			is LiteralPatternField -> literal.field
 		}
 
@@ -37,6 +32,8 @@ val String.isPatternKeyword: Boolean
 			givingName -> true
 			libraryName -> true
 			anyName -> true
+			textName -> true
+			numberName -> true
 			exactName -> true
 			else -> false
 		}
