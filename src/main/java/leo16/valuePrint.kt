@@ -2,10 +2,10 @@ package leo16
 
 import leo13.Stack
 import leo13.map
-import leo15.exportName
 import leo15.givingName
 import leo15.libraryName
 import leo15.listName
+import leo15.patternName
 
 val Value.print: Value
 	get() =
@@ -29,11 +29,11 @@ val ValueSentence.print: ValueSentence
 
 val Library.printValueSentence: ValueSentence
 	get() =
-		libraryName(exportName(bindingStack.printField { printValueSentence.field }))
+		libraryName(patternName(bindingStack.printField { printValueSentence.field }))
 
 val Binding.printValueSentence: ValueSentence
 	get() =
-		exportName(pattern.value)
+		patternName(pattern.value)
 
 val Function.printValueSentence: ValueSentence
 	get() =

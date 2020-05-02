@@ -70,7 +70,7 @@ class EvalTest {
 
 	@Test
 	fun getGiving() {
-		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { export { list } } }
+		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { pattern { list } } }
 	}
 
 	@Test
@@ -138,7 +138,7 @@ class EvalTest {
 	fun library() {
 		evaluate_ {
 			library { nothing_ }
-		}.assertGives { library { export { list } } }
+		}.assertGives { library { pattern { list } } }
 
 		evaluate_ {
 			library {
@@ -146,9 +146,9 @@ class EvalTest {
 			}
 		}.assertGives {
 			library {
-				export {
+				pattern {
 					list {
-						export { zero }
+						pattern { zero }
 					}
 				}
 			}
@@ -161,10 +161,10 @@ class EvalTest {
 			}
 		}.assertGives {
 			library {
-				export {
+				pattern {
 					list {
-						export { zero }
-						export { one }
+						pattern { zero }
+						pattern { one }
 					}
 				}
 			}
