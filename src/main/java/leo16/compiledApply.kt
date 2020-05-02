@@ -95,7 +95,9 @@ fun Compiled.applyImport(field: Field): Compiled? =
 	}
 
 fun Compiled.applyLoad(field: Field): Compiled? =
-	field.matchPrefix(loadName) { rhs ->
-		rhs.printScript.sentenceStack.onlyOrNull?.library?.let { scope.plus(it) }?.compiled(value)
+	value.matchEmpty {
+		field.matchPrefix(loadName) { rhs ->
+			rhs.printScript.sentenceStack.onlyOrNull?.loadedValue?.let { set(it) }
+		}
 	}
 

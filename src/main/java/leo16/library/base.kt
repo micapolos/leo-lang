@@ -1,8 +1,10 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.library_
+import leo16.value_
 
-val baseLibrary = library_ {
-	any.clear.gives { nothing }
+val base = value_ {
+	library {
+		any.clear.gives { nothing }
+	}
 }

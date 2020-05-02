@@ -70,7 +70,7 @@ class EvalTest {
 
 	@Test
 	fun getGiving() {
-		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { nothing_ } }
+		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { export { list } } }
 	}
 
 	@Test
@@ -183,10 +183,7 @@ class EvalTest {
 
 	@Test
 	fun load() {
-		evaluate_ {
-			load { bit }
-			zero.bit.negate
-		}.assertGives { bit { one } }
+		evaluate_ { load { ping } }.assertGives { pong }
 	}
 
 	@Test

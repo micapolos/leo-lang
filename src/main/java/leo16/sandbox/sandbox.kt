@@ -4,9 +4,9 @@ import leo15.dsl.*
 import leo16.print_
 
 fun main() = print_ {
-	load { base }
-	load { bit }
-	load { list }
+	import { base.load }
+	import { bit.load }
+	import { list.load }
 
 	list
 	append { zero.bit }

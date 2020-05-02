@@ -1,9 +1,13 @@
 package leo16
 
-import leo16.library.libraryFnMap
+import leo16.library.valueFunMap
 
-val libraryMap = mutableMapOf<Sentence, Library>()
+val loadedValueMap = mutableMapOf<Sentence, Value>()
 
-val Sentence.library: Library
+val Sentence.loadValue: Value
 	get() =
-		libraryMap.computeIfAbsent(this) { libraryFnMap[it]!!.invoke() }
+		valueFunMap[this]!!.invoke()
+
+val Sentence.loadedValue: Value
+	get() =
+		loadedValueMap.computeIfAbsent(this) { it.loadValue }
