@@ -2,15 +2,15 @@ package leo16
 
 import leo15.functionName
 
-data class Function(val library: Library, val script: Script) {
+data class Function(val library: Library, val bodyValue: Value) {
 	override fun toString() = asSentence.toString()
 }
 
-infix fun Library.function(script: Script) = Function(this, script)
+infix fun Library.function(value: Value) = Function(this, value)
 
 operator fun Function.invoke(value: Value): Value =
-	library.plus(value.givenBinding).evaluate(script)!!
+	library.plus(value.givenBinding).evaluate(bodyValue)!!
 
 val Function.asSentence: Sentence
 	get() =
-		functionName(library.asSentence, script.asSentence)
+		functionName(library.asSentence, bodyValue.asSentence)

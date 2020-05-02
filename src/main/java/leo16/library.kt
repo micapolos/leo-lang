@@ -21,8 +21,14 @@ fun Library.resolve(value: Value): Value =
 fun Library.compile(script: Script): Compiled? =
 	emptyScope.compiler.plus(script).compiled
 
+fun Library.compile(value: Value): Compiled? =
+	emptyScope.compiler.plus(value).compiled
+
 fun Library.evaluate(script: Script): Value? =
 	compile(script)?.value
+
+fun Library.evaluate(value: Value): Value? =
+	compile(value)?.value
 
 val Library.asSentence: Sentence
 	get() =

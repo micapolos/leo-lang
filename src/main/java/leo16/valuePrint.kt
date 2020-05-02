@@ -37,7 +37,7 @@ val Binding.printValueSentence: ValueSentence
 
 val Function.printValueSentence: ValueSentence
 	get() =
-		givingName(script.value.print)
+		givingName(bodyValue.print)
 
 fun <T> Stack<T>.printField(fn: T.() -> Field): ValueSentence =
 	map(fn).printSentence

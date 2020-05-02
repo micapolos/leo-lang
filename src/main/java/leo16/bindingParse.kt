@@ -16,5 +16,5 @@ val Value.isBindingOrNull: Binding?
 
 fun Library.givesBindingOrNull(value: Value): Binding? =
 	value.matchInfix(givesName) { lhs, rhs ->
-		lhs.pattern.bindingTo(function(rhs.asScript).body)
+		lhs.pattern.bindingTo(function(rhs).body)
 	}
