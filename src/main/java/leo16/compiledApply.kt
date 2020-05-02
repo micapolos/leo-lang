@@ -97,7 +97,7 @@ fun Compiled.applyImport(field: Field): Compiled? =
 fun Compiled.applyLoad(field: Field): Compiled? =
 	value.matchEmpty {
 		field.matchPrefix(loadName) { rhs ->
-			rhs.printScript.sentenceStack.onlyOrNull?.loadedValue?.let { set(it) }
+			set(rhs.pattern.loadValue)
 		}
 	}
 

@@ -2,12 +2,12 @@ package leo16
 
 import leo16.library.valueFunMap
 
-val loadedValueMap = mutableMapOf<Sentence, Value>()
+val loadedValueMap = mutableMapOf<Pattern, Value>()
 
-val Sentence.loadValue: Value
+val Pattern.loadValue: Value
 	get() =
 		valueFunMap[this]!!.invoke()
 
-val Sentence.loadedValue: Value
+val Pattern.loadedValue: Value
 	get() =
 		loadedValueMap.computeIfAbsent(this) { it.loadValue }
