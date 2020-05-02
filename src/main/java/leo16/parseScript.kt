@@ -35,7 +35,7 @@ val Sentence.byteOrNull: Byte?
 			rhs.matchPrefix(bitName) { rhs ->
 				rhs.fieldStack.onlyOrNull
 					?.sentenceOrNull
-					?.parseSentenceStackOrNull { bitOrNull }
+					?.listOrNull { bitOrNull }
 					?.array
 					?.let { byte(it[0], it[1], it[2], it[3], it[4], it[5], it[6], it[7]) }
 			}
@@ -47,7 +47,7 @@ val Sentence.intOrNull: Int?
 			rhs.matchPrefix(byteName) { rhs ->
 				rhs.fieldStack.onlyOrNull
 					?.sentenceOrNull
-					?.parseSentenceStackOrNull { byteOrNull }
+					?.listOrNull { byteOrNull }
 					?.array
 					?.let { int(short(it[0], it[1]), short(it[2], it[3])) }
 			}
@@ -58,18 +58,18 @@ val Sentence.stringOrNull: String?
 		field.matchPrefix(stringName) { rhs ->
 			rhs.fieldStack.onlyOrNull
 				?.sentenceOrNull
-				?.parseSentenceStackOrNull { byteOrNull }
+				?.listOrNull { byteOrNull }
 				?.array
 				?.toByteArray()
 				?.utf8String
 		}
 
-val Sentence.parseSentenceStackOrNull: Stack<Field>?
+val Sentence.fieldListOrNull: Stack<Field>?
 	get() =
 		field.matchPrefix(listName) { it.fieldStack }
 
-fun <T : Any> Sentence.parseSentenceStackOrNull(fn: Field.() -> T?): Stack<T>? =
-	parseSentenceStackOrNull?.mapOrNull(fn)
+fun <T : Any> Sentence.listOrNull(fn: Field.() -> T?): Stack<T>? =
+	fieldListOrNull?.mapOrNull(fn)
 
 val Sentence.literalOrNull: Literal?
 	get() =

@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.linkOrNull
 import leo13.mapFirst
@@ -19,8 +20,14 @@ val Value.thingOrNull: Value?
 	get() =
 		fieldStack.onlyOrNull?.sentenceOrNull?.value
 
+val Value.isList: Boolean
+	get() =
+		matchPrefix(listName) { true } ?: false
+
 infix fun Value.getOrNull(word: String): Value? =
-	thingOrNull?.accessOrNull(word)
+	ifOrNull(!isList) {
+		thingOrNull?.accessOrNull(word)
+	}
 
 infix fun Value.accessOrNull(word: String): Value? =
 	fieldStack.mapFirst {

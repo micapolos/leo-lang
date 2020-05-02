@@ -4,6 +4,7 @@ import leo.base.assertEqualTo
 import leo14.Script
 import leo14.bigDecimal
 import leo15.dsl.*
+import java.awt.Point
 import kotlin.test.Test
 
 fun Script.assertGives(f: F) {
@@ -50,6 +51,7 @@ class EvalTest {
 		evaluate_ { x { zero }.this_ { nothing_ } }.assertGives { x { zero } }
 		evaluate_ { x { zero }.this_ { y { one } } }.assertGives { x { zero }; y { one } }
 		evaluate_ { x { zero }.this_ { y { one }; z { two } } }.assertGives { x { zero }; y { one }; z { two } }
+		evaluate_ { this_ { zero }; this_ { one } }.assertGives { zero; one }
 	}
 
 	@Test
@@ -227,34 +229,67 @@ class EvalTest {
 	}
 
 	@Test
-	fun natives() {
+	fun nullNative() {
 		evaluate_ { null_.native }.assertGives { null.native_ }
+	}
 
+	@Test
+	fun typeNativeClass() {
 		evaluate_ {
 			int.native.class_
 		}.assertGives {
 			class_ { Integer.TYPE.native_ }
 		}
+	}
 
+	@Test
+	fun textNameNativeClass() {
 		evaluate_ {
 			"java.lang.Integer".text.name.native.class_
 		}.assertGives {
 			class_ { Integer::class.java.native_ }
 		}
+	}
 
+	@Test
+	fun nativeClassField() {
 		evaluate_ {
 			"java.lang.Integer".text.name.native.class_
 			field { name { "MAX_VALUE".text } }
 		}.assertGives {
 			field { Integer::class.java.getField("MAX_VALUE").native_ }
 		}
+	}
 
+	@Test
+	fun nativeFieldGet() {
 		evaluate_ {
 			"java.lang.Integer".text.name.native.class_
 			field { name { "MAX_VALUE".text } }
 			get { null_.native }
 		}.assertGives {
 			Integer.MAX_VALUE.native_
+		}
+	}
+
+	@Test
+	fun nativeClassConstructor() {
+		evaluate_ {
+			"java.awt.Point".text.name.native.class_
+			constructor {
+				parameter {
+					class_ {
+						list {
+							this_ { int.native.class_ }
+							this_ { int.native.class_ }
+						}
+					}
+				}
+			}
+		}.assertGives {
+			constructor {
+				Point::class.java.getConstructor(Integer.TYPE, Integer.TYPE).native_
+			}
 		}
 	}
 

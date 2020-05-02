@@ -1,6 +1,9 @@
 package leo16
 
 import leo.java.lang.typeClassOrNull
+import leo13.array
+import leo13.map
+import leo13.mapOrNull
 import leo14.bigDecimal
 import leo14.untyped.typed.loadClass
 import leo15.*
@@ -26,6 +29,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyNullNative(field)
 		?: applyNativeClassField(field)
 		?: applyNativeFieldGet(field)
+		?: applyNativeClassConstructor(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -162,12 +166,28 @@ fun Value.applyNativeFieldGet(field: Field): Value? =
 	}
 
 fun Value.applyNativeClassConstructor(field: Field): Value? =
-	matchPrefix(fieldName) { rhs ->
-		rhs.matchNative { nativeField ->
-			field.matchPrefix(getName) { rhs ->
-				rhs.matchNative { nativeObject ->
-					nullIfThrowsException {
-						(nativeField as java.lang.reflect.Field).get(nativeObject).nativeValue
+	matchPrefix(className) { rhs ->
+		rhs.matchNative { nativeClass ->
+			field.matchPrefix(constructorName) { rhs ->
+				rhs.matchPrefix(parameterName) { rhs ->
+					rhs.matchPrefix(className) { rhs ->
+						rhs
+							.onlyFieldOrNull
+							?.sentenceOrNull
+							?.listOrNull {
+								matchPrefix(className) { rhs ->
+									rhs.matchNative { it }
+								}
+							}
+							?.mapOrNull { this as? Class<*> }
+							?.array
+							?.let { parameterClasses ->
+								nullIfThrowsException {
+									constructorName((nativeClass as Class<*>)
+										.getConstructor(*parameterClasses).nativeField)
+										.value
+								}
+							}
 					}
 				}
 			}
