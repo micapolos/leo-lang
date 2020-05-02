@@ -3,7 +3,6 @@ package leo16
 import leo13.array
 import leo13.map
 import leo14.*
-import leo14.untyped.scriptLine
 
 val Value.script: Script
 	get() =
@@ -11,13 +10,27 @@ val Value.script: Script
 
 val Field.scriptLine: ScriptLine
 	get() =
+		null
+			?: textScriptLineOrNull
+			?: numberScriptLineOrNull
+			?: defaultScriptLine
+
+val Field.defaultScriptLine: ScriptLine
+	get() =
 		when (this) {
 			is SentenceField -> sentence.scriptLine
 			is FunctionField -> function.printSentence.scriptLine
 			is LibraryField -> library.printSentence.scriptLine
-			is LiteralField -> literal.scriptLine
 			is NativeField -> native.nativeScriptLine
 		}
+
+val Field.textScriptLineOrNull: ScriptLine?
+	get() =
+		matchText { it.literal.line }
+
+val Field.numberScriptLineOrNull: ScriptLine?
+	get() =
+		matchNumber { literal(number(it)).line }
 
 val Sentence.scriptLine: ScriptLine
 	get() =
@@ -25,4 +38,4 @@ val Sentence.scriptLine: ScriptLine
 
 val Any?.nativeScriptLine: ScriptLine
 	get() =
-		"#<$this>".line
+		nativeString.line

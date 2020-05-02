@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.assertEqualTo
 import leo14.Script
+import leo14.bigDecimal
 import leo15.dsl.*
 import kotlin.test.Test
 
@@ -92,12 +93,16 @@ class EvalTest {
 
 	@Test
 	fun texts() {
+		evaluate_ { text("Hello") }.assertGives { text("Hello") }
+		evaluate_ { text("Hello").native }.assertGives { x("Hello".nativeString) }
 		evaluate_ { text("Hello, ").plus { text("world!") } }.assertGives { text("Hello, world!") }
 		evaluate_ { text("Hello, world!").length }.assertGives { number(13) }
 	}
 
 	@Test
 	fun numbers() {
+		evaluate_ { number(123) }.assertGives { number(123) }
+		evaluate_ { number(123).native }.assertGives { x(123.bigDecimal.nativeString) }
 		evaluate_ { number(2).plus { number(3) } }.assertGives { number(5) }
 		evaluate_ { number(5).minus { number(3) } }.assertGives { number(2) }
 		evaluate_ { number(2).times { number(3) } }.assertGives { number(6) }

@@ -17,7 +17,6 @@ val Field.print: Field
 			is SentenceField -> sentence.printSentence.field
 			is FunctionField -> function.printSentence.field
 			is LibraryField -> library.printSentence.field
-			is LiteralField -> this
 			is NativeField -> this
 		}
 

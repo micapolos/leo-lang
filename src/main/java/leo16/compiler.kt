@@ -36,7 +36,7 @@ val CompilerParent.asField: Field
 
 operator fun Compiler.plus(token: Token): Compiler? =
 	when (token) {
-		is LiteralToken -> append(token.literal.field)
+		is LiteralToken -> plus(token.literal)
 		is BeginToken -> begin(token.begin.string)
 		is EndToken -> end
 	}
@@ -49,7 +49,6 @@ operator fun Compiler.plus(field: Field): Compiler =
 		is SentenceField -> plus(field.sentence)
 		is FunctionField -> append(field)
 		is LibraryField -> append(field)
-		is LiteralField -> append(field)
 		is NativeField -> append(field)
 	}
 
@@ -57,7 +56,10 @@ operator fun Compiler.plus(sentence: Sentence): Compiler =
 	begin(sentence.word).plus(sentence.value).end!!
 
 operator fun Compiler.plus(literal: Literal): Compiler =
-	plus(token(literal))!!
+	when (literal) {
+		is StringLiteral -> plus(literal.string.field)
+		is NumberLiteral -> plus(literal.number.bigDecimal.field)
+	}
 
 fun Compiler.begin(word: String): Compiler =
 	parent(word).evaluator(compiled.begin, isMeta || word.wordIsMeta)

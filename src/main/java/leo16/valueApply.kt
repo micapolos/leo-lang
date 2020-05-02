@@ -1,8 +1,11 @@
 package leo16
 
-import leo14.*
-import leo14.Number
+import leo14.bigDecimal
 import leo15.*
+import java.math.BigDecimal
+import kotlin.minus
+import kotlin.plus
+import kotlin.times
 
 fun Value.apply(field: Field): Value? =
 	null
@@ -50,7 +53,7 @@ fun Value.applyTextPlusText(field: Field): Value? =
 	matchText { lhsString ->
 		field.matchPrefix(plusName) { rhs ->
 			rhs.matchText { rhsString ->
-				lhsString.plus(rhsString).literal.field.value
+				lhsString.plus(rhsString).field.value
 			}
 		}
 	}
@@ -59,25 +62,25 @@ fun Value.applyTextLength(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(lengthName) { rhs ->
 			rhs.matchText { text ->
-				literal(text.length).field.value
+				text.length.bigDecimal.field.value
 			}
 		}
 	}
 
 fun Value.applyNumberPlusNumber(field: Field): Value? =
-	applyNumberOpNumber(field, plusName, Number::plus)
+	applyNumberOpNumber(field, plusName, BigDecimal::plus)
 
 fun Value.applyNumberMinusNumber(field: Field): Value? =
-	applyNumberOpNumber(field, minusName, Number::minus)
+	applyNumberOpNumber(field, minusName, BigDecimal::minus)
 
 fun Value.applyNumberTimesNumber(field: Field): Value? =
-	applyNumberOpNumber(field, timesName, Number::times)
+	applyNumberOpNumber(field, timesName, BigDecimal::times)
 
-fun Value.applyNumberOpNumber(field: Field, word: String, fn: Number.(Number) -> Number): Value? =
+fun Value.applyNumberOpNumber(field: Field, word: String, fn: BigDecimal.(BigDecimal) -> BigDecimal): Value? =
 	matchNumber { lhsNumber ->
 		field.matchPrefix(word) { rhs ->
 			rhs.matchNumber { rhsNumber ->
-				literal(lhsNumber.fn(rhsNumber)).field.value
+				lhsNumber.fn(rhsNumber).field.value
 			}
 		}
 	}

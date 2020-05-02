@@ -1,6 +1,8 @@
 package leo16
 
+import leo.base.The
 import leo.base.notNullIf
+import leo.base.the
 import leo13.*
 import leo14.Literal
 import leo15.string
@@ -25,10 +27,6 @@ data class LibraryField(val library: Library) : Field() {
 	override fun toString() = super.toString()
 }
 
-data class LiteralField(val literal: Literal) : Field() {
-	override fun toString() = super.toString()
-}
-
 data class NativeField(val native: Any?) : Field() {
 	override fun toString() = super.toString()
 }
@@ -45,7 +43,6 @@ val Stack<Field>.value: Value get() = Value(this)
 val Sentence.field: Field get() = SentenceField(this)
 val Function.field: Field get() = FunctionField(this)
 val Library.field: Field get() = LibraryField(this)
-val Literal.field: Field get() = LiteralField(this)
 val Any?.nativeField: Field get() = NativeField(this)
 fun value(vararg fields: Field) = stack(*fields).value
 fun value(sentence: Sentence, vararg sentences: Sentence) = stack(sentence, *sentences).map { field }.value
@@ -59,8 +56,7 @@ val Field.value get() = value(this)
 val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
 val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
 val Field.libraryOrNull: Library? get() = (this as? LibraryField)?.library
-val Field.literalOrNull: Literal? get() = (this as? LiteralField)?.literal
-val Field.nativeOrNull: Any? get() = (this as? NativeField)?.native
+val Field.theNativeOrNull: The<Any?>? get() = if (this is NativeField) native.the else null
 val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
 val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull
 val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull
