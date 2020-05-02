@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.notNullIf
 import leo13.*
 import leo15.valueName
 
@@ -64,6 +65,9 @@ val Value.sentenceOrNull: ValueSentence? get() = onlyFieldOrNull?.sentenceOrNull
 val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull
 val Value.libraryOrNull: Library? get() = onlyFieldOrNull?.libraryOrNull
 val Value.isEmpty: Boolean get() = fieldStack.isEmpty
+
+val ValueSentence.onlyWordOrNull: String? get() = notNullIf(value.isEmpty) { word }
+val Field.onlyWordOrNull: String? get() = sentenceOrNull?.onlyWordOrNull
 
 operator fun Value.plus(field: Field): Value = fieldStack.push(field).value
 operator fun Value.plus(value: Value): Value = fieldStack.pushAll(value.fieldStack).value

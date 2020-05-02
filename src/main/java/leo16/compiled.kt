@@ -19,5 +19,12 @@ val Compiled.begin: Compiled
 	get() =
 		scope.begin.compiled(value())
 
+fun Compiled.set(value: Value): Compiled =
+	copy(value = value)
+
+val Compiled.clearValue: Compiled
+	get() =
+		set(value())
+
 operator fun Compiled.plus(field: Field): Compiled =
-	copy(value = value.plus(field))
+	set(value.plus(field))

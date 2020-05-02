@@ -6,9 +6,9 @@ import leo13.onlyOrNull
 import leo15.*
 
 fun Compiled.apply(field: Field): Compiled =
-	if (field is SentenceField && field.sentence.value.isEmpty)
-		scope.compiled(value()).applyNormalized(field.sentence.word.invoke(value))
-	else applyNormalized(field)
+	field.onlyWordOrNull
+		?.let { word -> clearValue.applyNormalized(word(value)) }
+		?: applyNormalized(field)
 
 fun Compiled.applyNormalized(field: Field): Compiled =
 	null
