@@ -5,7 +5,6 @@ import leo13.map
 import leo13.stack
 import leo13.zipFoldOrNull
 import leo15.anyName
-import leo15.functionName
 import leo15.patternName
 import leo15.structName
 
@@ -14,28 +13,30 @@ sealed class Pattern {
 }
 
 object AnyPattern : Pattern()
-object FunctionPattern : Pattern()
 
-data class StructPattern(val struct: PatternStruct) : Pattern() {
+data class ValuePattern(val value: PatternValue) : Pattern() {
 	override fun toString() = super.toString()
 }
 
-data class PatternStruct(val lineStack: Stack<PatternLine>) {
-	override fun toString() = asSentence.toString()
-}
+data class PatternValue(val fieldStack: Stack<PatternField>)
 
-data class PatternLine(val word: String, val pattern: Pattern) {
-	override fun toString() = asSentence.toString()
-}
+sealed class PatternField
+data class SentencePatternField(val sentence: PatternSentence) : PatternField()
+object FunctionPatternField : PatternField()
+object LibraryPatternField : PatternField()
+
+data class PatternSentence(val word: String, val pattern: Pattern)
 
 val anyPattern: Pattern = AnyPattern
-val functionPattern: Pattern = FunctionPattern
-val PatternStruct.pattern: Pattern get() = StructPattern(this)
-val Stack<PatternLine>.struct get() = PatternStruct(this)
-fun struct(vararg patternLines: PatternLine) = stack(*patternLines).struct
-fun pattern(vararg patternLines: PatternLine) = struct(*patternLines).pattern
+val PatternValue.pattern: Pattern get() = ValuePattern(this)
+val PatternSentence.field: PatternField get() = SentencePatternField(this)
+val functionPatternField: PatternField = FunctionPatternField
+val libraryPatternField: PatternField = LibraryPatternField
+val Stack<PatternField>.value get() = PatternValue(this)
+fun patternValue(vararg fields: PatternField) = stack(*fields).value
+fun pattern(vararg fields: PatternField) = patternValue(*fields).pattern
 val String.pattern get() = pattern(invoke(pattern()))
-operator fun String.invoke(pattern: Pattern): PatternLine = PatternLine(this, pattern)
+operator fun String.invoke(pattern: Pattern): PatternField = PatternSentence(this, pattern).field
 
 val Pattern.asSentence: Sentence
 	get() =
@@ -45,35 +46,48 @@ val Pattern.asScript: Script
 	get() =
 		when (this) {
 			AnyPattern -> script(anyName())
-			FunctionPattern -> script(functionName())
-			is StructPattern -> struct.asScript
+			is ValuePattern -> value.asScript
 		}
 
-val PatternStruct.asSentence: Sentence
+val PatternValue.asSentence: Sentence
 	get() =
 		structName(asScript)
 
-val PatternStruct.asScript: Script
+val PatternValue.asScript: Script
 	get() =
-		lineStack.map { asSentence }.script
+		fieldStack.map { asSentence }.script
 
-val PatternLine.asSentence: Sentence
+val PatternField.asSentence: Sentence
+	get() =
+		when (this) {
+			is SentencePatternField -> sentence.asSentence
+			FunctionPatternField -> leo15.functionName(anyName())
+			LibraryPatternField -> leo15.libraryName(anyName())
+		}
+
+val PatternSentence.asSentence: Sentence
 	get() =
 		word(pattern.asScript)
 
 fun Value.matches(pattern: Pattern): Boolean =
 	when (pattern) {
 		AnyPattern -> true
-		FunctionPattern -> this is FunctionValue
-		is StructPattern -> this is StructValue && struct.matches(pattern.struct)
+		is ValuePattern -> matches(pattern.value)
 	}
 
-fun Struct.matches(patternStruct: PatternStruct): Boolean =
+fun Value.matches(value: PatternValue): Boolean =
 	true
-		.zipFoldOrNull(lineStack, patternStruct.lineStack) { line, patternLine ->
-			and(line.matches(patternLine))
+		.zipFoldOrNull(fieldStack, value.fieldStack) { field, patternField ->
+			and(field.matches(patternField))
 		}
 		?: false
 
-fun Line.matches(line: PatternLine): Boolean =
-	word == line.word && value.matches(line.pattern)
+fun Field.matches(field: PatternField): Boolean =
+	when (this) {
+		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
+		is FunctionField -> field is FunctionPatternField
+		is LibraryField -> field is LibraryPatternField
+	}
+
+fun ValueSentence.matches(sentence: PatternSentence): Boolean =
+	word == sentence.word && value.matches(sentence.pattern)

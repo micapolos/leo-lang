@@ -8,7 +8,7 @@ val Script.pattern: Pattern
 	get() =
 		null
 			?: anyPatternOrNull
-			?: structPattern
+			?: valuePattern
 
 val Script.anyPatternOrNull: Pattern?
 	get() =
@@ -16,14 +16,11 @@ val Script.anyPatternOrNull: Pattern?
 			anyPattern
 		}
 
-val Script.structPattern: Pattern
+val Script.valuePattern: Pattern
 	get() =
-		patternStruct.pattern
+		sentenceStack.map { patternField }.value.pattern
 
-val Script.patternStruct: PatternStruct
+val Sentence.patternField: PatternField
 	get() =
-		sentenceStack.map { patternLine }.struct
-
-val Sentence.patternLine: PatternLine
-	get() =
+		// TODO: Function and library
 		word.invoke(script.pattern)

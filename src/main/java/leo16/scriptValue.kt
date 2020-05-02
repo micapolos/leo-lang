@@ -4,12 +4,8 @@ import leo13.map
 
 val Script.value: Value
 	get() =
-		struct.value
+		sentenceStack.map { field }.value
 
-val Script.struct: Struct
-	get() =
-		sentenceStack.map { line }.struct
-
-val Sentence.line: Line
+val Sentence.field: Field
 	get() =
 		word.invoke(script.value)

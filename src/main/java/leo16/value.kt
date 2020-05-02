@@ -1,30 +1,29 @@
 package leo16
 
 import leo13.*
-import leo15.structName
 import leo15.valueName
 
-sealed class Value {
+data class Value(val fieldStack: Stack<Field>) {
+	override fun toString() = super.toString()
+}
+
+sealed class Field {
 	override fun toString() = asSentence.toString()
 }
 
-data class StructValue(val struct: Struct) : Value() {
+data class SentenceField(val sentence: ValueSentence) : Field() {
 	override fun toString() = super.toString()
 }
 
-data class FunctionValue(val function: Function) : Value() {
+data class FunctionField(val function: Function) : Field() {
 	override fun toString() = super.toString()
 }
 
-data class ScopeValue(val library: Library) : Value() {
+data class LibraryField(val library: Library) : Field() {
 	override fun toString() = super.toString()
 }
 
-data class Struct(val lineStack: Stack<Line>) {
-	override fun toString() = asSentence.toString()
-}
-
-data class Line(val word: String, val value: Value) {
+data class ValueSentence(val word: String, val value: Value) {
 	override fun toString() = asSentence.toString()
 }
 
@@ -34,46 +33,36 @@ val Value.asSentence: Sentence
 
 val Value.asScript: Script
 	get() =
+		fieldStack.map { asSentence }.script
+
+val Field.asSentence: Sentence
+	get() =
 		when (this) {
-			is StructValue -> struct.asScript
-			is FunctionValue -> function.asSentence.script
-			is ScopeValue -> library.asSentence.script
+			is SentenceField -> sentence.asSentence
+			is FunctionField -> function.asSentence
+			is LibraryField -> library.asSentence
 		}
 
-val Struct.asSentence: Sentence
-	get() =
-		structName(asScript)
-
-val Struct.asScript: Script
-	get() =
-		lineStack.map { asSentence }.script
-
-val Line.asSentence: Sentence
+val ValueSentence.asSentence: Sentence
 	get() =
 		word.invoke(value.asScript)
 
-val Struct.value: Value get() = StructValue(this)
-val Function.value: Value get() = FunctionValue(this)
-val Library.value: Value get() = ScopeValue(this)
-val Stack<Line>.struct get() = Struct(this)
-fun struct(vararg lines: Line) = stack(*lines).struct
-fun value(vararg lines: Line) = struct(*lines).value
-operator fun String.invoke(value: Value) = Line(this, value)
-operator fun String.invoke(line: Line, vararg lines: Line) = invoke(stack(line, *lines).struct.value)
+val Stack<Field>.value: Value get() = Value(this)
+val ValueSentence.field: Field get() = SentenceField(this)
+val Function.field: Field get() = FunctionField(this)
+val Library.field: Field get() = LibraryField(this)
+fun value(vararg fields: Field) = stack(*fields).value
+operator fun String.invoke(value: Value) = ValueSentence(this, value).field
+operator fun String.invoke(field: Field, vararg fields: Field) = invoke(stack(field, *fields).value)
+val Field.value get() = value(this)
 
-val Value.structOrNull: Struct? get() = (this as? StructValue)?.struct
-val Value.functionOrNull: Function? get() = (this as? FunctionValue)?.function
-val Value.libraryOrNull: Library? get() = (this as? ScopeValue)?.library
-val Struct.isEmpty get() = lineStack.isEmpty
-val Value.isEmpty get() = structOrNull?.isEmpty ?: false
+val Field.sentenceOrNull: ValueSentence? get() = (this as? SentenceField)?.sentence
+val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
+val Field.libraryOrNull: Library? get() = (this as? LibraryField)?.library
+val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
+val Value.sentenceOrNull: ValueSentence? get() = onlyFieldOrNull?.sentenceOrNull
+val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull
+val Value.libraryOrNull: Library? get() = onlyFieldOrNull?.libraryOrNull
+val Value.isEmpty: Boolean get() = fieldStack.isEmpty
 
-val Value.struct: Struct
-	get() =
-		when (this) {
-			is StructValue -> struct
-			is FunctionValue -> struct(function.valueSentence.line)
-			is ScopeValue -> struct(library.librarySentence.line)
-		}
-
-operator fun Struct.plus(line: Line): Struct = lineStack.push(line).struct
-operator fun Value.plus(line: Line): Value = struct.plus(line).value
+operator fun Value.plus(field: Field): Value = fieldStack.push(field).value

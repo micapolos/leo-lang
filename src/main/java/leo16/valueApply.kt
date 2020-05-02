@@ -3,49 +3,52 @@ package leo16
 import leo13.onlyOrNull
 import leo15.*
 
-fun Value.apply(line: Line): Value? =
+fun Value.apply(field: Field): Value? =
 	null
-		?: applyLast(line)
-		?: applyPrevious(line)
-		?: applyAppend(line)
-		?: applyThing(line)
-		?: applyGet(line)
-		?: applyGive(line)
+		?: applyLast(field)
+		?: applyPrevious(field)
+		?: applyAppend(field)
+		?: applyThing(field)
+		?: applyGet(field)
+		?: applyGive(field)
 
-fun Value.applyLast(line: Line): Value? =
+fun Value.applyLast(field: Field): Value? =
 	matchEmpty {
-		line.matchPrefix(lastName) { rhs ->
+		field.matchPrefix(lastName) { rhs ->
 			rhs.lastOrNull
 		}
 	}
 
-fun Value.applyPrevious(line: Line): Value? =
+fun Value.applyPrevious(field: Field): Value? =
 	matchEmpty {
-		line.matchPrefix(previousName) { rhs ->
+		field.matchPrefix(previousName) { rhs ->
 			rhs.previousOrNull
 		}
 	}
 
-fun Value.applyAppend(line: Line): Value? =
-	line.matchPrefix(appendName) { rhs ->
-		rhs.structOrNull?.lineStack?.onlyOrNull?.let { line ->
-			listAppendOrNull(line)
+fun Value.applyAppend(field: Field): Value? =
+	field.matchPrefix(appendName) { rhs ->
+		rhs.fieldStack.onlyOrNull?.let { field ->
+			listAppendOrNull(field)
 		}
 	}
 
-fun Value.applyGet(line: Line): Value? =
+fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
-		line.value.getOrNull(line.word)
+		field.sentenceOrNull?.let { sentence ->
+			sentence.value.getOrNull(sentence.word)
+		}
 	}
 
-fun Value.applyThing(line: Line): Value? =
+fun Value.applyThing(field: Field): Value? =
 	matchEmpty {
-		line.matchPrefix(thingName) { rhs ->
+		field.matchPrefix(thingName) { rhs ->
 			rhs.thingOrNull
 		}
 	}
 
-fun Value.applyGive(line: Line): Value? =
-	line.matchPrefix(giveName) { rhs ->
-		functionOrNull?.invoke(rhs)
-	}
+fun Value.applyGive(field: Field): Value? =
+	null // TODO()
+//	field.matchPrefix(giveName) { rhs ->
+//		functionOrNull?.invoke(rhs)
+//	}

@@ -23,8 +23,3 @@ fun Library.evaluate(script: Script): Value? =
 val Library.asSentence: Sentence
 	get() =
 		libraryName.invoke(bindingStack.map { asSentence }.script)
-
-val Library.librarySentence: Sentence
-	get() =
-		libraryName(bindingStack.map { pattern.asSentence }.script)
-

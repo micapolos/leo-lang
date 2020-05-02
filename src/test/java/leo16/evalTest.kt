@@ -119,7 +119,7 @@ class EvalTest {
 			}
 		}.assertGives {
 			library {
-				pattern { zero }
+				export { zero }
 			}
 		}
 
@@ -130,8 +130,8 @@ class EvalTest {
 			}
 		}.assertGives {
 			library {
-				pattern { zero }
-				pattern { one }
+				export { zero }
+				export { one }
 			}
 		}
 	}

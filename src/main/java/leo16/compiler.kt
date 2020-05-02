@@ -51,15 +51,15 @@ val Compiler.end: Compiler
 fun CompilerParent.endEvaluator(compiled: Compiled): Compiler =
 	compiler.plus(word.invoke(compiled.value))
 
-operator fun Compiler.plus(line: Line): Compiler =
+operator fun Compiler.plus(field: Field): Compiler =
 	updateCompiled {
-		applyCompiler(line) ?: if (isMeta) plus(line)
-		else apply(line)
+		applyCompiler(field) ?: if (isMeta) plus(field)
+		else apply(field)
 	}
 
-fun Compiler.applyCompiler(line: Line): Compiled? =
-	notNullIf(line == compilerName(value())) {
-		compiled.scope.compiled(value(asSentence.line))
+fun Compiler.applyCompiler(field: Field): Compiled? =
+	notNullIf(field == compilerName(value())) {
+		compiled.scope.compiled(value(asSentence.field))
 	}
 
 fun Compiler.updateCompiled(fn: Compiled.() -> Compiled): Compiler =

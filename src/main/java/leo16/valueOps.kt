@@ -6,40 +6,30 @@ import leo13.mapFirst
 import leo13.onlyOrNull
 import leo15.*
 
-val Value.normalize: Value
-	get() =
-		structOrNull?.lineStack?.linkOrNull?.let { lineLink ->
-			notNullIf(lineLink.value.value.isEmpty) {
-				value(lineLink.value.word.invoke(lineLink.stack.struct.value))
-			}
-		} ?: this
-
 val Value.thingOrNull: Value?
 	get() =
-		structOrNull?.lineStack?.onlyOrNull?.value
+		fieldStack.onlyOrNull?.sentenceOrNull?.value
 
 infix fun Value.getOrNull(word: String): Value? =
 	thingOrNull?.accessOrNull(word)
 
 infix fun Value.accessOrNull(word: String): Value? =
-	when (this) {
-		is StructValue -> accessOrNull(word)
-		is FunctionValue -> accessOrNull(word)
-		is ScopeValue -> accessOrNull(word)
+	fieldStack.mapFirst {
+		accessOrNull(word)
 	}
 
-infix fun StructValue.accessOrNull(word: String): Value? =
-	struct.lineStack.mapFirst {
-		notNullIf(this.word == word) {
-			value(this)
+val Field.selectWord: String
+	get() =
+		when (this) {
+			is SentenceField -> sentence.word
+			is FunctionField -> functionName
+			is LibraryField -> libraryName
 		}
+
+infix fun Field.accessOrNull(word: String): Value? =
+	notNullIf(word == selectWord) {
+		value(this)
 	}
-
-infix fun FunctionValue.accessOrNull(word: String): Value? =
-	notNullIf(word == functionName)
-
-infix fun ScopeValue.accessOrNull(word: String): Value? =
-	notNullIf(word == scopeName)
 
 infix fun Value.make(word: String): Value =
 	value(word.invoke(this))
@@ -47,37 +37,35 @@ infix fun Value.make(word: String): Value =
 val Value.lastOrNull: Value?
 	get() =
 		matchPrefix(listName) { rhs ->
-			rhs.structOrNull?.lineStack?.linkOrNull?.value?.let { line ->
-				value(lastName(line))
+			rhs.fieldStack.linkOrNull?.value?.let { line ->
+				lastName(line).value
 			}
 		}
 
 val Value.previousOrNull: Value?
 	get() =
 		matchPrefix(listName) { rhs ->
-			rhs.structOrNull?.lineStack?.linkOrNull?.stack?.struct?.value?.let { value ->
+			rhs.fieldStack.linkOrNull?.stack?.value?.let { value ->
 				value(previousName(listName(value)))
 			}
 		}
 
-fun Value.listAppendOrNull(line: Line): Value? =
+fun Value.listAppendOrNull(field: Field): Value? =
 	matchPrefix(listName) { rhs ->
-		rhs.structOrNull?.let { struct ->
-			value(listName(struct.plus(line).value))
-		}
+		value(listName(rhs.plus(field)))
 	}
 
 val Value.matchValueOrNull: Value?
 	get() =
-		structOrNull?.lineStack?.onlyOrNull?.let { line ->
-			when (line.word) {
-				listName -> line.value.structOrNull?.listMatchValue
-				else -> line.value
+		fieldStack.onlyOrNull?.sentenceOrNull?.let { sentence ->
+			when (sentence.word) {
+				listName -> sentence.value.listMatchValue
+				else -> sentence.value
 			}
 		}
 
-val Struct.listMatchValue: Value
+val Value.listMatchValue: Value
 	get() =
-		lineStack.linkOrNull
-			?.run { value(linkName(previousName(listName(stack.struct.value)), lastName(value))) }
+		fieldStack.linkOrNull
+			?.run { value(linkName(previousName(listName(stack.value)), lastName(value))) }
 			?: value(emptyName.invoke(value()))

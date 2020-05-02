@@ -4,7 +4,7 @@ import leo14.*
 
 val Compiler.fragment: Fragment
 	get() =
-		parentOrNull?.fragmentParent.fragment(compiled.value.script.leo14Script)
+		parentOrNull?.fragmentParent.fragment(compiled.value.printScript.leo14Script)
 
 val CompilerParent.fragmentParent: FragmentParent
 	get() =
