@@ -2,9 +2,20 @@ package leo16
 
 import leo.base.ifOrNull
 import leo13.linkOrNull
+import leo13.onlyOrNull
+import leo14.Literal
+import leo14.Number
+import leo14.numberOrNull
+import leo14.stringOrNull
 
 fun <R : Any> Value.matchEmpty(fn: () -> R?): R? =
 	ifOrNull(isEmpty) { fn() }
+
+fun <R : Any> Value.matchText(fn: (String) -> R?): R? =
+	fieldStack.onlyOrNull?.matchText(fn)
+
+fun <R : Any> Value.matchNumber(fn: (Number) -> R?): R? =
+	fieldStack.onlyOrNull?.matchNumber(fn)
 
 fun <R : Any> Value.matchLink(fn: (Value, String, Value) -> R?): R? =
 	fieldStack.linkOrNull?.run {
@@ -51,8 +62,17 @@ fun <R : Any> Field.matchWord(fn: (String) -> R?): R? =
 	}
 
 fun <R : Any> Field.match(word: String, fn: () -> R?): R? =
-	this@match.matchWord { aWord ->
+	matchWord { aWord ->
 		ifOrNull(aWord == word) {
 			fn()
 		}
 	}
+
+fun <R : Any> Field.matchLiteral(fn: (Literal) -> R?): R? =
+	literalOrNull?.let(fn)
+
+fun <R : Any> Field.matchText(fn: (String) -> R?): R? =
+	matchLiteral { it.stringOrNull?.let(fn) }
+
+fun <R : Any> Field.matchNumber(fn: (Number) -> R?): R? =
+	matchLiteral { it.numberOrNull?.let(fn) }

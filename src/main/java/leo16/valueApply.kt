@@ -1,9 +1,8 @@
 package leo16
 
-import leo15.giveName
-import leo15.nothingName
-import leo15.thingName
-import leo15.thisName
+import leo14.*
+import leo14.Number
+import leo15.*
 
 fun Value.apply(field: Field): Value? =
 	null
@@ -12,6 +11,11 @@ fun Value.apply(field: Field): Value? =
 		?: applyGive(field)
 		?: applyThis(field)
 		?: applyNothing(field)
+		?: applyTextPlusText(field)
+		?: applyTextLength(field)
+		?: applyNumberPlusNumber(field)
+		?: applyNumberMinusNumber(field)
+		?: applyNumberTimesNumber(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -40,4 +44,40 @@ fun Value.applyThis(field: Field): Value? =
 fun Value.applyNothing(field: Field): Value? =
 	matchEmpty {
 		field.match(nothingName) { value() }
+	}
+
+fun Value.applyTextPlusText(field: Field): Value? =
+	matchText { lhsString ->
+		field.matchPrefix(plusName) { rhs ->
+			rhs.matchText { rhsString ->
+				lhsString.plus(rhsString).literal.field.value
+			}
+		}
+	}
+
+fun Value.applyTextLength(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(lengthName) { rhs ->
+			rhs.matchText { text ->
+				literal(text.length).field.value
+			}
+		}
+	}
+
+fun Value.applyNumberPlusNumber(field: Field): Value? =
+	applyNumberOpNumber(field, plusName, Number::plus)
+
+fun Value.applyNumberMinusNumber(field: Field): Value? =
+	applyNumberOpNumber(field, minusName, Number::minus)
+
+fun Value.applyNumberTimesNumber(field: Field): Value? =
+	applyNumberOpNumber(field, timesName, Number::times)
+
+fun Value.applyNumberOpNumber(field: Field, word: String, fn: Number.(Number) -> Number): Value? =
+	matchNumber { lhsNumber ->
+		field.matchPrefix(word) { rhs ->
+			rhs.matchNumber { rhsNumber ->
+				literal(lhsNumber.fn(rhsNumber)).field.value
+			}
+		}
 	}

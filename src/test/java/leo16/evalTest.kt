@@ -91,6 +91,19 @@ class EvalTest {
 	}
 
 	@Test
+	fun texts() {
+		evaluate_ { text("Hello, ").plus { text("world!") } }.assertGives { text("Hello, world!") }
+		evaluate_ { text("Hello, world!").length }.assertGives { number(13) }
+	}
+
+	@Test
+	fun numbers() {
+		evaluate_ { number(2).plus { number(3) } }.assertGives { number(5) }
+		evaluate_ { number(5).minus { number(3) } }.assertGives { number(2) }
+		evaluate_ { number(2).times { number(3) } }.assertGives { number(6) }
+	}
+
+	@Test
 	fun is_() {
 		evaluate_ { zero.is_ { one } }.assertGives { nothing_ }
 		evaluate_ { zero.is_ { one }.zero }.assertGives { one }
