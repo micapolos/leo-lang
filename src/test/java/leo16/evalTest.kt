@@ -208,6 +208,16 @@ class EvalTest {
 
 		evaluate_ { zero.import { library { zero.is_ { one } } } }.assertGives { zero }
 		evaluate_ { zero.import { library { zero.is_ { one } } }.evaluate }.assertGives { one }
+
+		evaluate_ {
+			zero.is_ { one }
+			import {
+				library {
+					zero.is_ { two }
+				}
+			}
+			one
+		}.assertGives { one }
 	}
 
 	@Test

@@ -8,6 +8,7 @@ data class Compiled(val scope: Scope, val value: Value) {
 
 infix fun Scope.compiled(value: Value) = Compiled(this, value)
 val Scope.emptyCompiled get() = compiled(value())
+val emptyCompiled get() = emptyScope.emptyCompiled
 
 val Compiled.asSentence: Field
 	get() =

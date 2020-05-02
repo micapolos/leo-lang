@@ -81,7 +81,7 @@ fun Compiled.applyMatch(field: Field): Compiled? =
 fun Compiled.applyLibrary(field: Field): Compiled? =
 	value.matchEmpty {
 		field.matchPrefix(libraryName) { rhs ->
-			scope.compiler.plus(rhs).compiled.let { compiled ->
+			emptyCompiler.plus(rhs).compiled.let { compiled ->
 				ifOrNull(compiled.value.isEmpty) {
 					scope.compiled(compiled.scope.exportLibrary.field.value)
 				}
@@ -91,7 +91,7 @@ fun Compiled.applyLibrary(field: Field): Compiled? =
 
 fun Compiled.applyImport(field: Field): Compiled? =
 	field.matchPrefix(importName) { rhs ->
-		rhs.fieldStack.onlyOrNull?.libraryOrNull?.let { scope.plus(it) }?.compiled(value)
+		rhs.fieldStack.onlyOrNull?.libraryOrNull?.let { scope.import(it) }?.compiled(value)
 	}
 
 fun Compiled.applyLoad(field: Field): Compiled? =

@@ -24,8 +24,11 @@ val Scope.asField: Field
 operator fun Scope.plus(binding: Binding): Scope =
 	library.plus(binding).scopeWithPublic(exportLibrary.plus(binding))
 
-operator fun Scope.plus(library: Library) =
-	fold(library.bindingStack.reverse) { plus(it) }
+fun Scope.import(binding: Binding): Scope =
+	library.plus(binding).scopeWithPublic(exportLibrary)
+
+fun Scope.import(library: Library) =
+	fold(library.bindingStack.reverse) { import(it) }
 
 fun Scope.applyBinding(value: Value): Scope? =
 	runIfNotNull(library.bindingOrNull(value)) { plus(it) }
