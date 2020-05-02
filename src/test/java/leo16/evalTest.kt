@@ -227,7 +227,9 @@ class EvalTest {
 	}
 
 	@Test
-	fun reflection() {
+	fun natives() {
+		evaluate_ { null_.native }.assertGives { null.native_ }
+
 		evaluate_ {
 			int.native.class_
 		}.assertGives {
@@ -250,7 +252,7 @@ class EvalTest {
 		evaluate_ {
 			"java.lang.Integer".text.name.native.class_
 			field { name { "MAX_VALUE".text } }
-			get
+			get { null_.native }
 		}.assertGives {
 			Integer.MAX_VALUE.native_
 		}

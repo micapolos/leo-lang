@@ -3,7 +3,6 @@ package leo16
 import leo.java.lang.typeClassOrNull
 import leo14.bigDecimal
 import leo14.untyped.typed.loadClass
-import leo14.untyped.typed.loadClassOrNull
 import leo15.*
 import java.math.BigDecimal
 import kotlin.minus
@@ -24,8 +23,8 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberTimesNumber(field)
 		?: applyTypeNativeClass(field)
 		?: applyTextNameNativeClass(field)
+		?: applyNullNative(field)
 		?: applyNativeClassField(field)
-		?: applyNativeFieldStaticGet(field)
 		?: applyNativeFieldGet(field)
 
 fun Value.applyGet(field: Field): Value? =
@@ -93,6 +92,17 @@ fun Value.applyNumberOpNumber(field: Field, word: String, fn: BigDecimal.(BigDec
 		}
 	}
 
+fun Value.applyNullNative(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(nativeName) { rhs ->
+			rhs.matchPrefix(nullName) { rhs ->
+				rhs.matchEmpty {
+					null.nativeValue
+				}
+			}
+		}
+	}
+
 fun Value.applyTypeNativeClass(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(className) { rhs ->
@@ -138,22 +148,20 @@ fun Value.applyNativeClassField(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNativeFieldStaticGet(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(getName) { rhs ->
-			rhs.matchPrefix(fieldName) { rhs ->
-				rhs.matchNative { nativeField ->
-					rhs.matchNative { native ->
-						nullIfThrowsException {
-							(nativeField as java.lang.reflect.Field).get(native).nativeValue
-						}
+fun Value.applyNativeFieldGet(field: Field): Value? =
+	matchPrefix(fieldName) { rhs ->
+		rhs.matchNative { nativeField ->
+			field.matchPrefix(getName) { rhs ->
+				rhs.matchNative { nativeObject ->
+					nullIfThrowsException {
+						(nativeField as java.lang.reflect.Field).get(nativeObject).nativeValue
 					}
 				}
 			}
 		}
 	}
 
-fun Value.applyNativeFieldGet(field: Field): Value? =
+fun Value.applyNativeClassConstructor(field: Field): Value? =
 	matchPrefix(fieldName) { rhs ->
 		rhs.matchNative { nativeField ->
 			field.matchPrefix(getName) { rhs ->
