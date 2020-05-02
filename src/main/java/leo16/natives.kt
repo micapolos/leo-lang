@@ -20,3 +20,10 @@ val Int.field: Field
 val Any?.nativeString: String
 	get() =
 		"#<$this>"
+
+fun <R : Any> nullIfThrowsException(fn: () -> R): R? =
+	try {
+		fn()
+	} catch (e: Exception) {
+		null
+	}

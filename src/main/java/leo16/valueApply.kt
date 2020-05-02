@@ -21,8 +21,9 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberPlusNumber(field)
 		?: applyNumberMinusNumber(field)
 		?: applyNumberTimesNumber(field)
-		?: applyNativeClassType(field)
-		?: applyNativeClassNameText(field)
+		?: applyTypeNativeClass(field)
+		?: applyTextNameNativeClass(field)
+		?: applyNativeClassField(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -89,24 +90,45 @@ fun Value.applyNumberOpNumber(field: Field, word: String, fn: BigDecimal.(BigDec
 		}
 	}
 
-fun Value.applyNativeClassType(field: Field): Value? =
+fun Value.applyTypeNativeClass(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(className) { rhs ->
+		field.matchPrefix(className) { rhs ->
+			rhs.matchPrefix(nativeName) { rhs ->
 				rhs.matchWord { word ->
-					word.typeClassOrNull?.nativeValue
+					word.typeClassOrNull?.let { class_ ->
+						className(class_.nativeField).value
+					}
 				}
 			}
 		}
 	}
 
-fun Value.applyNativeClassNameText(field: Field): Value? =
+fun Value.applyTextNameNativeClass(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(className) { rhs ->
+		field.matchPrefix(className) { rhs ->
+			rhs.matchPrefix(nativeName) { rhs ->
 				rhs.matchPrefix(nameName) { rhs ->
 					rhs.matchText { text ->
-						text.loadClassOrNull?.nativeValue
+						text.loadClassOrNull?.let { class_ ->
+							className(class_.nativeField).value
+						}
+					}
+				}
+			}
+		}
+	}
+
+fun Value.applyNativeClassField(field: Field): Value? =
+	matchPrefix(className) { lhs ->
+		lhs.matchNative { native ->
+			(native as? Class<*>)?.let { class_ ->
+				field.matchPrefix(fieldName) { rhs ->
+					rhs.matchPrefix(nameName) { rhs ->
+						rhs.matchText { name ->
+							nullIfThrowsException {
+								fieldName(class_.getField(name).nativeField).value
+							}
+						}
 					}
 				}
 			}
