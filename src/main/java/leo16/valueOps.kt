@@ -34,11 +34,6 @@ infix fun Field.accessOrNull(word: String): Value? =
 infix fun Value.make(word: String): Value =
 	value(word.invoke(this))
 
-fun Value.listAppendOrNull(field: Field): Value? =
-	matchPrefix(listName) { rhs ->
-		value(listName(rhs.plus(field)))
-	}
-
 val Value.matchValueOrNull: Value?
 	get() =
 		fieldStack.onlyOrNull?.sentenceOrNull?.let { sentence ->
