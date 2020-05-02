@@ -97,7 +97,9 @@ fun Compiled.applyImport(field: Field): Compiled? =
 fun Compiled.applyLoad(field: Field): Compiled? =
 	value.matchEmpty {
 		field.matchPrefix(loadName) { rhs ->
-			set(rhs.pattern.loadValue)
+			rhs.pattern.loadedValueOrNull?.let { loadedValue ->
+				set(loadedValue)
+			}
 		}
 	}
 

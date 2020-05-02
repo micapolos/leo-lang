@@ -1,7 +1,6 @@
 package leo16
 
 import leo.base.ifOrNull
-import leo.base.the
 import leo13.linkOrNull
 import leo13.onlyOrNull
 import leo15.numberName
@@ -77,13 +76,13 @@ fun <R : Any> Field.matchNative(fn: (Any?) -> R?): R? =
 fun <R : Any> Field.matchText(fn: (String) -> R?): R? =
 	matchPrefix(textName) { rhs ->
 		rhs.matchNative { native ->
-			fn(native as String)
+			(native as? String)?.let(fn)
 		}
 	}
 
 fun <R : Any> Field.matchNumber(fn: (BigDecimal) -> R?): R? =
 	matchPrefix(numberName) { rhs ->
 		rhs.matchNative { native ->
-			fn(native as BigDecimal)
+			(native as? BigDecimal)?.let(fn)
 		}
 	}
