@@ -5,13 +5,11 @@ import leo16.print_
 
 fun main() = print_ {
 	load { bit }
+	load { list }
 
 	list
 	append { zero.bit }
 	append { one.bit }
 	append { zero.bit }
-	match {
-		empty.is_ { ok }
-		any.link.is_ { ok.not }
-	}
+	tail
 }

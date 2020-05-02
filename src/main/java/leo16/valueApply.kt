@@ -1,30 +1,16 @@
 package leo16
 
 import leo13.onlyOrNull
-import leo15.*
+import leo15.appendName
+import leo15.giveName
+import leo15.thingName
 
 fun Value.apply(field: Field): Value? =
 	null
-		?: applyLast(field)
-		?: applyPrevious(field)
 		?: applyAppend(field)
 		?: applyThing(field)
 		?: applyGet(field)
 		?: applyGive(field)
-
-fun Value.applyLast(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(lastName) { rhs ->
-			rhs.lastOrNull
-		}
-	}
-
-fun Value.applyPrevious(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(previousName) { rhs ->
-			rhs.previousOrNull
-		}
-	}
 
 fun Value.applyAppend(field: Field): Value? =
 	field.matchPrefix(appendName) { rhs ->

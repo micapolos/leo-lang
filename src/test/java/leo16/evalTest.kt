@@ -71,10 +71,6 @@ class EvalTest {
 
 	@Test
 	fun list() {
-		evaluate_ { list { bit { zero }; bit { one } }.last }
-			.assertGives { last { bit { one } } }
-		evaluate_ { list { bit { zero }; bit { one } }.previous }
-			.assertGives { previous { list { bit { zero } } } }
 		evaluate_ { list.append { zero.bit } }
 			.assertGives { list { bit { zero } } }
 		evaluate_ { list.append { zero.bit }.append { one.bit } }
