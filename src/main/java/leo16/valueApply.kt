@@ -7,6 +7,7 @@ import leo13.mapOrNull
 import leo14.bigDecimal
 import leo14.untyped.typed.loadClass
 import leo15.*
+import java.lang.reflect.Constructor
 import java.math.BigDecimal
 import kotlin.minus
 import kotlin.plus
@@ -27,9 +28,11 @@ fun Value.apply(field: Field): Value? =
 		?: applyTypeNativeClass(field)
 		?: applyTextNameNativeClass(field)
 		?: applyNullNative(field)
+		?: applyNumberIntNative(field)
 		?: applyNativeClassField(field)
 		?: applyNativeFieldGet(field)
 		?: applyNativeClassConstructor(field)
+		?: applyNativeConstructorInvoke(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -107,6 +110,19 @@ fun Value.applyNullNative(field: Field): Value? =
 		}
 	}
 
+fun Value.applyNumberIntNative(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(nativeName) { rhs ->
+			rhs.matchPrefix(intName) { rhs ->
+				rhs.matchNumber { number ->
+					nullIfThrowsException {
+						number.intValueExact().nativeValue
+					}
+				}
+			}
+		}
+	}
+
 fun Value.applyTypeNativeClass(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(className) { rhs ->
@@ -169,27 +185,40 @@ fun Value.applyNativeClassConstructor(field: Field): Value? =
 	matchPrefix(className) { rhs ->
 		rhs.matchNative { nativeClass ->
 			field.matchPrefix(constructorName) { rhs ->
-				rhs.matchPrefix(parameterName) { rhs ->
-					rhs.matchPrefix(className) { rhs ->
-						rhs
-							.onlyFieldOrNull
-							?.sentenceOrNull
-							?.listOrNull {
-								matchPrefix(className) { rhs ->
-									rhs.matchNative { it }
-								}
-							}
-							?.mapOrNull { this as? Class<*> }
-							?.array
-							?.let { parameterClasses ->
-								nullIfThrowsException {
-									constructorName((nativeClass as Class<*>)
-										.getConstructor(*parameterClasses).nativeField)
-										.value
-								}
-							}
+				rhs
+					.listOrNull {
+						matchPrefix(className) { rhs ->
+							rhs.matchNative { it }
+						}
 					}
-				}
+					?.mapOrNull { this as? Class<*> }
+					?.array
+					?.let { parameterClasses ->
+						nullIfThrowsException {
+							constructorName((nativeClass as Class<*>)
+								.getConstructor(*parameterClasses).nativeField)
+								.value
+						}
+					}
+			}
+		}
+	}
+
+fun Value.applyNativeConstructorInvoke(field: Field): Value? =
+	matchPrefix(constructorName) { rhs ->
+		rhs.matchNative { nativeConstructor ->
+			field.matchPrefix(invokeName) { rhs ->
+				rhs
+					.listOrNull { this }
+					?.mapOrNull { matchNative { it } }
+					?.array
+					?.let { args ->
+						nullIfThrowsException {
+							(nativeConstructor as Constructor<*>)
+								.newInstance(*args)
+								.nativeValue
+						}
+					}
 			}
 		}
 	}

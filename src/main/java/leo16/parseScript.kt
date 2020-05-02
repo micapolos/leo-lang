@@ -71,6 +71,9 @@ val Sentence.fieldListOrNull: Stack<Field>?
 fun <T : Any> Sentence.listOrNull(fn: Field.() -> T?): Stack<T>? =
 	fieldListOrNull?.mapOrNull(fn)
 
+fun <T : Any> Value.listOrNull(fn: Field.() -> T?): Stack<T>? =
+	onlyFieldOrNull?.sentenceOrNull?.listOrNull(fn)
+
 val Sentence.literalOrNull: Literal?
 	get() =
 		null

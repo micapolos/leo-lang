@@ -234,6 +234,11 @@ class EvalTest {
 	}
 
 	@Test
+	fun numberIntNative() {
+		evaluate_ { 123.number.int.native }.assertGives { 123.native_ }
+	}
+
+	@Test
 	fun typeNativeClass() {
 		evaluate_ {
 			int.native.class_
@@ -277,19 +282,36 @@ class EvalTest {
 		evaluate_ {
 			"java.awt.Point".text.name.native.class_
 			constructor {
-				parameter {
-					class_ {
-						list {
-							this_ { int.native.class_ }
-							this_ { int.native.class_ }
-						}
-					}
+				list {
+					this_ { int.native.class_ }
+					this_ { int.native.class_ }
 				}
 			}
 		}.assertGives {
 			constructor {
 				Point::class.java.getConstructor(Integer.TYPE, Integer.TYPE).native_
 			}
+		}
+	}
+
+	@Test
+	fun nativeConstructorInvoke() {
+		evaluate_ {
+			"java.awt.Point".text.name.native.class_
+			constructor {
+				list {
+					this_ { int.native.class_ }
+					this_ { int.native.class_ }
+				}
+			}
+			invoke {
+				list {
+					this_ { 10.number.int.native }
+					this_ { 20.number.int.native }
+				}
+			}
+		}.assertGives {
+			Point(10, 20).native_
 		}
 	}
 
