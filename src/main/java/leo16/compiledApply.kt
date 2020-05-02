@@ -10,8 +10,7 @@ fun Compiled.apply(field: Field): Compiled =
 
 fun Compiled.applyNormalized(field: Field): Compiled =
 	null
-		?: applyBinding(field)
-		?: applyValue(field)
+		?: applyValue(field) // keep first
 		?: applyEvaluate(field)
 		?: applyCompile(field)
 		?: applyQuote(field)
@@ -22,6 +21,7 @@ fun Compiled.applyNormalized(field: Field): Compiled =
 		?: applyLibrary(field)
 		?: applyImport(field)
 		?: applyLoad(field)
+		?: applyBinding(field) // keep last
 		?: plus(field)
 
 fun Compiled.applyValue(field: Field): Compiled? =
