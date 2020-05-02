@@ -20,37 +20,22 @@ class ExpandTest {
 		13.clampedByte.expandSentence
 			.assertEqualTo(
 				byteName(bitName(listName(
-					previousName(listName(
-						previousName(listName(
-							previousName(listName(
-								previousName(listName(
-									previousName(listName(
-										previousName(listName(
-											previousName(listName(
-												previousName(listName(emptyName())),
-												lastName(bitName(zeroName())))),
-											lastName(bitName(zeroName())))),
-										lastName(bitName(zeroName())))),
-									lastName(bitName(zeroName())))),
-								lastName(bitName(oneName())))),
-							lastName(bitName(oneName())))),
-						lastName(bitName(zeroName())))),
-					lastName(bitName(oneName()))))))
+					bitName(zeroName()),
+					bitName(zeroName()),
+					bitName(zeroName()),
+					bitName(zeroName()),
+					bitName(oneName()),
+					bitName(oneName()),
+					bitName(zeroName()),
+					bitName(oneName())))))
 	}
 
 	@Test
 	fun stack() {
-		stack<Sentence>()
-			.expandSentence
-			.assertEqualTo(listName(emptyName()))
+		stack<Sentence>().expandSentence.assertEqualTo(listName())
 
 		stack("bit"("zero"()), "bit"("one"()))
 			.expandSentence
-			.assertEqualTo(
-				listName(
-					previousName(listName(
-						previousName(listName(emptyName())),
-						lastName(bitName(zeroName())))),
-					lastName(bitName(oneName()))))
+			.assertEqualTo(listName(bitName(zeroName()), bitName(oneName())))
 	}
 }

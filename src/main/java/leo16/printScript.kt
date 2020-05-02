@@ -2,7 +2,6 @@ package leo16
 
 import leo13.map
 import leo15.exportName
-import leo15.functionName
 import leo15.givingName
 import leo15.libraryName
 
@@ -24,7 +23,7 @@ val ValueSentence.printSentence: Sentence
 
 val Library.printSentence: Sentence
 	get() =
-		libraryName(bindingStack.map { printSentence }.script)
+		libraryName(exportName(bindingStack.expandSentence { printSentence }))
 
 val Binding.printSentence: Sentence
 	get() =

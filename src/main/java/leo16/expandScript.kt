@@ -2,7 +2,6 @@ package leo16
 
 import leo.base.*
 import leo.binary.utf8ByteSeq
-import leo13.*
 import leo13.Stack
 import leo13.base.Bit
 import leo13.base.bit0
@@ -13,19 +12,14 @@ import leo13.base.bit4
 import leo13.base.bit5
 import leo13.base.bit6
 import leo13.base.bit7
+import leo13.map
 import leo13.stack
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
+import leo15.*
 import leo15.bitName
 import leo15.byteName
-import leo15.emptyName
-import leo15.intName
-import leo15.lastName
-import leo15.listName
-import leo15.oneName
-import leo15.stringName
-import leo15.zeroName
 
 val Bit.expandSentence: Sentence
 	get() =
@@ -50,16 +44,7 @@ fun <T> Stack<T>.expandSentence(fn: T.() -> Sentence): Sentence =
 
 val Stack<Sentence>.expandSentence: Sentence
 	get() =
-		listName(
-			when (this) {
-				is EmptyStack -> script(emptyName())
-				is LinkStack -> link.expandScript
-			}
-		)
-
-val StackLink<Sentence>.expandScript: Script
-	get() =
-		script(previousName(stack.expandSentence), lastName(value))
+		listName(script)
 
 val String.expandSentence: Sentence
 	get() =

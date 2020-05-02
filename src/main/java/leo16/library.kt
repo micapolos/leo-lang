@@ -1,6 +1,7 @@
 package leo16
 
 import leo13.*
+import leo15.bindingName
 import leo15.libraryName
 
 data class Library(val bindingStack: Stack<Binding>) {
@@ -25,4 +26,4 @@ fun Library.evaluate(script: Script): Value? =
 
 val Library.asSentence: Sentence
 	get() =
-		libraryName.invoke(bindingStack.map { asSentence }.script)
+		libraryName(bindingName(bindingStack.expandSentence { asSentence }))

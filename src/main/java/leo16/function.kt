@@ -14,7 +14,3 @@ operator fun Function.invoke(value: Value): Value =
 val Function.asSentence: Sentence
 	get() =
 		functionName(library.asSentence, script.asSentence)
-
-val Function.valueSentence: Sentence
-	get() =
-		functionName(script)

@@ -7,23 +7,19 @@ import kotlin.test.Test
 class ScriptPrintTest {
 	@Test
 	fun list() {
-		script(listName(emptyName()))
+		script(listName())
 			.printScript
 			.assertEqualTo(script(listName()))
 
 		script(
-			listName(
-				previousName(listName(emptyName())),
-				lastName(bitName(zeroName()))))
+			listName(bitName(zeroName())))
 			.printScript
 			.assertEqualTo(script(listName(bitName(zeroName()))))
 
 		script(
 			listName(
-				previousName(listName(
-					previousName(listName(emptyName())),
-					lastName(bitName(zeroName())))),
-				lastName(bitName(oneName()))))
+				bitName(zeroName()),
+				bitName(oneName())))
 			.printScript
 			.assertEqualTo(script(listName(bitName(zeroName()), bitName(oneName()))))
 	}

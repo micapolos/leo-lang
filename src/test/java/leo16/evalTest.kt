@@ -192,15 +192,23 @@ class EvalTest {
 					scope {
 						library {
 							binding {
-								pattern { zero }
-								body { one }
+								list {
+									binding {
+										pattern { zero }
+										body { one }
+									}
+								}
 							}
 						}
 						export {
 							library {
 								binding {
-									pattern { zero }
-									body { one }
+									list {
+										binding {
+											pattern { zero }
+											body { one }
+										}
+									}
 								}
 							}
 						}
