@@ -50,6 +50,7 @@ operator fun Compiler.plus(field: Field): Compiler =
 		is FunctionField -> append(field)
 		is LibraryField -> append(field)
 		is LiteralField -> append(field)
+		is NativeField -> append(field)
 	}
 
 operator fun Compiler.plus(sentence: Sentence): Compiler =

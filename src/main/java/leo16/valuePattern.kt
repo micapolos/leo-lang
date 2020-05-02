@@ -26,7 +26,8 @@ val Field.patternField: PatternField
 			is SentenceField -> sentence.patternField
 			is FunctionField -> function.printSentence.patternField
 			is LibraryField -> library.printSentence.patternField
-			is LiteralField -> TODO()
+			is LiteralField -> literal.patternField
+			is NativeField -> nativePatternField
 		}
 
 val Sentence.patternField: PatternField

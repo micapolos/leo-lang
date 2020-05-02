@@ -2,10 +2,7 @@ package leo16
 
 import leo13.array
 import leo13.map
-import leo14.Script
-import leo14.ScriptLine
-import leo14.lineTo
-import leo14.script
+import leo14.*
 import leo14.untyped.scriptLine
 
 val Value.script: Script
@@ -19,8 +16,13 @@ val Field.scriptLine: ScriptLine
 			is FunctionField -> function.printSentence.scriptLine
 			is LibraryField -> library.printSentence.scriptLine
 			is LiteralField -> literal.scriptLine
+			is NativeField -> native.nativeScriptLine
 		}
 
 val Sentence.scriptLine: ScriptLine
 	get() =
 		word lineTo value.script
+
+val Any?.nativeScriptLine: ScriptLine
+	get() =
+		"#<$this>".line

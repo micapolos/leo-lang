@@ -29,6 +29,10 @@ data class LiteralField(val literal: Literal) : Field() {
 	override fun toString() = super.toString()
 }
 
+data class NativeField(val native: Any?) : Field() {
+	override fun toString() = super.toString()
+}
+
 data class Sentence(val word: String, val value: Value) {
 	override fun toString() = scriptLine.string
 }
@@ -42,6 +46,7 @@ val Sentence.field: Field get() = SentenceField(this)
 val Function.field: Field get() = FunctionField(this)
 val Library.field: Field get() = LibraryField(this)
 val Literal.field: Field get() = LiteralField(this)
+val Any?.nativeField: Field get() = NativeField(this)
 fun value(vararg fields: Field) = stack(*fields).value
 fun value(sentence: Sentence, vararg sentences: Sentence) = stack(sentence, *sentences).map { field }.value
 infix fun String.sentenceTo(value: Value) = Sentence(this, value)
@@ -55,6 +60,7 @@ val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
 val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
 val Field.libraryOrNull: Library? get() = (this as? LibraryField)?.library
 val Field.literalOrNull: Literal? get() = (this as? LiteralField)?.literal
+val Field.nativeOrNull: Any? get() = (this as? NativeField)?.native
 val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
 val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull
 val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull

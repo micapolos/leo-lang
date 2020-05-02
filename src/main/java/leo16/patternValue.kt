@@ -20,6 +20,7 @@ val PatternField.valueField: Field
 		when (this) {
 			is SentencePatternField -> sentence.valueField
 			is LiteralPatternField -> literal.field
+			is NativePatternField -> native.nativeField
 		}
 
 val PatternSentence.valueField: Field
@@ -33,6 +34,7 @@ val String.isPatternKeyword: Boolean
 			libraryName -> true
 			anyName -> true
 			textName -> true
+			nativeName -> true
 			numberName -> true
 			exactName -> true
 			else -> false

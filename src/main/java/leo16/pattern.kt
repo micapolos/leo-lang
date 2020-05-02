@@ -24,12 +24,15 @@ data class PatternValue(val fieldStack: Stack<PatternField>)
 sealed class PatternField
 data class SentencePatternField(val sentence: PatternSentence) : PatternField()
 data class LiteralPatternField(val literal: Literal) : PatternField()
+data class NativePatternField(val native: Any?) : PatternField()
 
 data class PatternSentence(val word: String, val pattern: Pattern)
 
 val anyPattern: Pattern = AnyPattern
 val PatternValue.pattern: Pattern get() = ValuePattern(this)
 val PatternSentence.field: PatternField get() = SentencePatternField(this)
+val Literal.patternField: PatternField get() = LiteralPatternField(this)
+val Any?.nativePatternField: PatternField get() = NativePatternField(this)
 val Stack<PatternField>.value get() = PatternValue(this)
 fun patternValue(vararg fields: PatternField) = stack(*fields).value
 fun pattern(vararg fields: PatternField) = patternValue(*fields).pattern
@@ -60,6 +63,7 @@ val PatternField.asField: Field
 		when (this) {
 			is SentencePatternField -> sentence.asField
 			is LiteralPatternField -> literal.field
+			is NativePatternField -> native.nativeField
 		}
 
 val PatternSentence.asField: Field
@@ -82,9 +86,10 @@ fun Value.matches(value: PatternValue): Boolean =
 fun Field.matches(field: PatternField): Boolean =
 	when (this) {
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
+		is LiteralField -> literal.matches(field)
 		is FunctionField -> field == givingName(anyPattern)
 		is LibraryField -> field == libraryName(anyPattern)
-		is LiteralField -> literal.matches(field)
+		is NativeField -> field == nativeName(anyPattern)
 	}
 
 fun Sentence.matches(sentence: PatternSentence): Boolean =

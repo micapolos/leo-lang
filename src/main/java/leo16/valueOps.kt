@@ -34,6 +34,7 @@ val Field.selectWord: String
 			is FunctionField -> givingName
 			is LibraryField -> libraryName
 			is LiteralField -> literal.selectWord
+			is NativeField -> nativeName
 		}
 
 val Literal.selectWord: String
