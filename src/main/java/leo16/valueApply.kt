@@ -1,6 +1,8 @@
 package leo16
 
+import leo.java.lang.typeClassOrNull
 import leo14.bigDecimal
+import leo14.untyped.typed.loadClassOrNull
 import leo15.*
 import java.math.BigDecimal
 import kotlin.minus
@@ -19,6 +21,8 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberPlusNumber(field)
 		?: applyNumberMinusNumber(field)
 		?: applyNumberTimesNumber(field)
+		?: applyNativeClassType(field)
+		?: applyNativeClassNameText(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -81,6 +85,30 @@ fun Value.applyNumberOpNumber(field: Field, word: String, fn: BigDecimal.(BigDec
 		field.matchPrefix(word) { rhs ->
 			rhs.matchNumber { rhsNumber ->
 				lhsNumber.fn(rhsNumber).field.value
+			}
+		}
+	}
+
+fun Value.applyNativeClassType(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(nativeName) { rhs ->
+			rhs.matchPrefix(className) { rhs ->
+				rhs.matchWord { word ->
+					word.typeClassOrNull?.nativeValue
+				}
+			}
+		}
+	}
+
+fun Value.applyNativeClassNameText(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(nativeName) { rhs ->
+			rhs.matchPrefix(className) { rhs ->
+				rhs.matchPrefix(nameName) { rhs ->
+					rhs.matchText { text ->
+						text.loadClassOrNull?.nativeValue
+					}
+				}
 			}
 		}
 	}

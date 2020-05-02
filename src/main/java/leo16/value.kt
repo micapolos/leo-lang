@@ -44,6 +44,7 @@ val Sentence.field: Field get() = SentenceField(this)
 val Function.field: Field get() = FunctionField(this)
 val Library.field: Field get() = LibraryField(this)
 val Any?.nativeField: Field get() = NativeField(this)
+val Any?.nativeValue: Value get() = nativeField.value
 fun value(vararg fields: Field) = stack(*fields).value
 fun value(sentence: Sentence, vararg sentences: Sentence) = stack(sentence, *sentences).map { field }.value
 infix fun String.sentenceTo(value: Value) = Sentence(this, value)

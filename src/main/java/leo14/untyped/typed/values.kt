@@ -56,9 +56,17 @@ val Value.applyNumberTimesNumber: Value
 
 // === Reflection ===
 
-val String.loadClass
+val String.loadClass: Class<*>
 	get() =
 		classLoader.loadClass(this)
+
+val String.loadClassOrNull: Class<*>?
+	get() =
+		try {
+			classLoader.loadClass(this)
+		} catch (e: ClassNotFoundException) {
+			null
+		}
 
 val Value.stringClass: Class<*>
 	get() =
