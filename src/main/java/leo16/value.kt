@@ -57,8 +57,10 @@ val ValueSentence.field: Field get() = SentenceField(this)
 val Function.field: Field get() = FunctionField(this)
 val Library.field: Field get() = LibraryField(this)
 fun value(vararg fields: Field) = stack(*fields).value
-operator fun String.invoke(value: Value) = ValueSentence(this, value).field
+fun value(sentence: ValueSentence, vararg sentences: ValueSentence) = stack(sentence, *sentences).map { field }.value
+operator fun String.invoke(value: Value) = ValueSentence(this, value)
 operator fun String.invoke(field: Field, vararg fields: Field) = invoke(stack(field, *fields).value)
+operator fun String.invoke(sentence: ValueSentence, vararg sentences: ValueSentence) = invoke(value(sentence, *sentences))
 val Field.value get() = value(this)
 
 val Field.sentenceOrNull: ValueSentence? get() = (this as? SentenceField)?.sentence

@@ -72,8 +72,11 @@ fun Compiler.append(field: Field): Compiler =
 		else apply(field)
 	}
 
+fun Compiler.append(valueSentence: ValueSentence): Compiler =
+	append(valueSentence.field)
+
 fun Compiler.applyCompiler(field: Field): Compiled? =
-	notNullIf(field == compilerName(value())) {
+	notNullIf(field == compilerName(value()).field) {
 		compiled.scope.compiled(value(asSentence.field))
 	}
 

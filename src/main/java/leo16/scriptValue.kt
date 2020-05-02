@@ -8,4 +8,4 @@ val Script.value: Value
 
 val Sentence.field: Field
 	get() =
-		word.invoke(script.value)
+		word(script.value).field
