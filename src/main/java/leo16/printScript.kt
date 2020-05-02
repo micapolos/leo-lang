@@ -3,6 +3,7 @@ package leo16
 import leo13.map
 import leo15.exportName
 import leo15.functionName
+import leo15.givingName
 import leo15.libraryName
 
 val Value.printScript: Script
@@ -31,4 +32,4 @@ val Binding.printSentence: Sentence
 
 val Function.printSentence: Sentence
 	get() =
-		functionName(script)
+		givingName(script)

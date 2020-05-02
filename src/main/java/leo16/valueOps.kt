@@ -22,7 +22,7 @@ val Field.selectWord: String
 	get() =
 		when (this) {
 			is SentenceField -> sentence.word
-			is FunctionField -> functionName
+			is FunctionField -> givingName
 			is LibraryField -> libraryName
 		}
 

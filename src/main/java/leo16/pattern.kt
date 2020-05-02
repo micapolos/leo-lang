@@ -4,9 +4,7 @@ import leo13.Stack
 import leo13.map
 import leo13.stack
 import leo13.zipFoldOrNull
-import leo15.anyName
-import leo15.patternName
-import leo15.structName
+import leo15.*
 
 sealed class Pattern {
 	override fun toString() = asSentence.toString()
@@ -61,8 +59,8 @@ val PatternField.asSentence: Sentence
 	get() =
 		when (this) {
 			is SentencePatternField -> sentence.asSentence
-			FunctionPatternField -> leo15.functionName(anyName())
-			LibraryPatternField -> leo15.libraryName(anyName())
+			FunctionPatternField -> givingName(anyName())
+			LibraryPatternField -> libraryName(anyName())
 		}
 
 val PatternSentence.asSentence: Sentence

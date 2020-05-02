@@ -48,7 +48,6 @@ fun Value.applyThing(field: Field): Value? =
 	}
 
 fun Value.applyGive(field: Field): Value? =
-	null // TODO()
-//	field.matchPrefix(giveName) { rhs ->
-//		functionOrNull?.invoke(rhs)
-//	}
+	field.matchPrefix(giveName) { rhs ->
+		functionOrNull?.invoke(rhs)
+	}

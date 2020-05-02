@@ -53,6 +53,12 @@ class EvalTest {
 	}
 
 	@Test
+	fun getSpecial() {
+		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { nothing_ } }
+		evaluate_ { the { giving { given } }.giving }.assertGives { giving { given } }
+	}
+
+	@Test
 	fun thing() {
 		evaluate_ { thing }.assertGives { thing }
 		evaluate_ { point { x { zero }; y { one } }.thing }.assertGives { x { zero }; y { one } }
@@ -105,6 +111,12 @@ class EvalTest {
 			.assertGives { bit { zero }.match { one } }
 		evaluate_ { zero.bit.match { zero.is_ { one }.one } }
 			.assertGives { bit { zero }.match { zero.is_ { one }.one } }
+	}
+
+	@Test
+	fun function() {
+		evaluate_ { giving { given } }.assertGives { giving { given } }
+		evaluate_ { giving { given }.give { zero } }.assertGives { given { zero } }
 	}
 
 	@Test
