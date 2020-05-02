@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.assertEqualTo
+import leo.base.clampedByte
 import leo14.Script
 import leo14.bigDecimal
 import leo15.dsl.*
@@ -229,19 +230,15 @@ class EvalTest {
 	}
 
 	@Test
-	fun nullNative() {
+	fun natives() {
 		evaluate_ { null_.native }.assertGives { null.native_ }
-	}
-
-	@Test
-	fun trueFalseNative() {
 		evaluate_ { true_.native }.assertGives { true.native_ }
 		evaluate_ { false_.native }.assertGives { false.native_ }
-	}
-
-	@Test
-	fun numberIntNative() {
-		evaluate_ { 123.number.int.native }.assertGives { 123.native_ }
+		evaluate_ { 10.number.byte.native }.assertGives { 10.toByte().native_ }
+		evaluate_ { 10.number.int.native }.assertGives { 10.native_ }
+		evaluate_ { 10.number.long.native }.assertGives { 10L.native_ }
+		evaluate_ { 10.number.float.native }.assertGives { 10f.native_ }
+		evaluate_ { 10.number.double.native }.assertGives { 10.0.native_ }
 	}
 
 	@Test

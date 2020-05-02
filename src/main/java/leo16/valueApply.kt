@@ -31,7 +31,11 @@ fun Value.apply(field: Field): Value? =
 		?: applyNullNative(field)
 		?: applyTrueNative(field)
 		?: applyFalseNative(field)
+		?: applyNumberByteNative(field)
 		?: applyNumberIntNative(field)
+		?: applyNumberLongNative(field)
+		?: applyNumberFloatNative(field)
+		?: applyNumberDoubleNative(field)
 		?: applyNativeClassField(field)
 		?: applyNativeFieldGet(field)
 		?: applyNativeClassConstructor(field)
@@ -137,6 +141,19 @@ fun Value.applyFalseNative(field: Field): Value? =
 		}
 	}
 
+fun Value.applyNumberByteNative(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(nativeName) { rhs ->
+			rhs.matchPrefix(byteName) { rhs ->
+				rhs.matchNumber { number ->
+					nullIfThrowsException {
+						number.byteValueExact().nativeValue
+					}
+				}
+			}
+		}
+	}
+
 fun Value.applyNumberIntNative(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(nativeName) { rhs ->
@@ -144,6 +161,45 @@ fun Value.applyNumberIntNative(field: Field): Value? =
 				rhs.matchNumber { number ->
 					nullIfThrowsException {
 						number.intValueExact().nativeValue
+					}
+				}
+			}
+		}
+	}
+
+fun Value.applyNumberLongNative(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(nativeName) { rhs ->
+			rhs.matchPrefix(longName) { rhs ->
+				rhs.matchNumber { number ->
+					nullIfThrowsException {
+						number.longValueExact().nativeValue
+					}
+				}
+			}
+		}
+	}
+
+fun Value.applyNumberFloatNative(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(nativeName) { rhs ->
+			rhs.matchPrefix(floatName) { rhs ->
+				rhs.matchNumber { number ->
+					nullIfThrowsException {
+						number.toFloat().nativeValue
+					}
+				}
+			}
+		}
+	}
+
+fun Value.applyNumberDoubleNative(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(nativeName) { rhs ->
+			rhs.matchPrefix(doubleName) { rhs ->
+				rhs.matchNumber { number ->
+					nullIfThrowsException {
+						number.toDouble().nativeValue
 					}
 				}
 			}
