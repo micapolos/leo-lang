@@ -30,27 +30,27 @@ val Byte.expandSentence: Sentence
 		byteName(
 			bitName(
 				stack(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)
-					.expandSentence { expandSentence }))
+					.expandSentence { expandSentence.field }))
 
 val Int.expandSentence: Sentence
 	get() =
 		intName(
 			byteName(
 				stack(byte3, byte2, byte1, byte0)
-					.expandSentence { expandSentence }))
+					.expandSentence { expandSentence.field }))
 
-fun <T> Stack<T>.expandSentence(fn: T.() -> Sentence): Sentence =
+fun <T> Stack<T>.expandSentence(fn: T.() -> Field): Sentence =
 	map(fn).expandSentence
 
-val Stack<Sentence>.expandSentence: Sentence
+val Stack<Field>.expandSentence: Sentence
 	get() =
-		listName(script)
+		listName(value)
 
 val String.expandSentence: Sentence
 	get() =
 		stringName(
 			utf8ByteSeq.reverseStack
-				.expandSentence { expandSentence })
+				.expandSentence { expandSentence.field })
 
 val Literal.expandSentence: Sentence
 	get() =

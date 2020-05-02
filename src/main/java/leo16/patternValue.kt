@@ -16,17 +16,17 @@ val Pattern.value: Value
 
 val PatternValue.value: Value
 	get() =
-		fieldStack.map { valueSentence.field }.value
+		fieldStack.map { sentence.field }.value
 
-val PatternField.valueSentence: ValueSentence
+val PatternField.sentence: Sentence
 	get() =
 		when (this) {
-			is SentencePatternField -> sentence.valueSentence
+			is SentencePatternField -> sentence.sentence
 			FunctionPatternField -> givingName(anyName(value()))
 			LibraryPatternField -> libraryName(anyName.invoke(value()))
 		}
 
-val PatternSentence.valueSentence: ValueSentence
+val PatternSentence.sentence: Sentence
 	get() =
 		word.invoke(pattern.value).runIf(word.isPatternKeyword) { exactName(this) }
 

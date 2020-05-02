@@ -4,7 +4,10 @@ import leo13.Stack
 import leo13.map
 import leo13.stack
 import leo13.zipFoldOrNull
-import leo15.*
+import leo15.anyName
+import leo15.givingName
+import leo15.libraryName
+import leo15.patternName
 
 sealed class Pattern {
 	override fun toString() = asSentence.toString()
@@ -40,20 +43,20 @@ val Pattern.asSentence: Sentence
 	get() =
 		patternName(asScript)
 
-val Pattern.asScript: Script
+val Pattern.asScript: Value
 	get() =
 		when (this) {
-			AnyPattern -> script(anyName())
+			AnyPattern -> value(anyName())
 			is ValuePattern -> value.asScript
 		}
 
 val PatternValue.asSentence: Sentence
 	get() =
-		structName(asScript)
+		leo15.structName(asScript)
 
-val PatternValue.asScript: Script
+val PatternValue.asScript: Value
 	get() =
-		fieldStack.map { asSentence }.script
+		fieldStack.map { asSentence.field }.value
 
 val PatternField.asSentence: Sentence
 	get() =
@@ -87,5 +90,5 @@ fun Field.matches(field: PatternField): Boolean =
 		is LibraryField -> field is LibraryPatternField
 	}
 
-fun ValueSentence.matches(sentence: PatternSentence): Boolean =
+fun Sentence.matches(sentence: PatternSentence): Boolean =
 	word == sentence.word && value.matches(sentence.pattern)

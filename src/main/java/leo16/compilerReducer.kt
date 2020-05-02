@@ -7,7 +7,7 @@ import leo14.stringCharReducer
 
 val Compiler.tokenReducer: Reducer<Compiler, leo14.Token>
 	get() =
-		reducer { fold(it.tokenSeq) { plus(it)!! }.tokenReducer }
+		reducer { plus(it)!!.tokenReducer }
 
 val Compiler.stringCharReducer: Reducer<String, Char>
 	get() =

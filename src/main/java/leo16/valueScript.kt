@@ -15,6 +15,6 @@ val Field.scriptLine: ScriptLine
 	get() =
 		printValueSentence.scriptLine
 
-val ValueSentence.scriptLine: ScriptLine
+val Sentence.scriptLine: ScriptLine
 	get() =
 		word lineTo value.script

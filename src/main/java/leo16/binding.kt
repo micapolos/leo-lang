@@ -29,8 +29,8 @@ val Body.asSentence: Sentence
 	get() =
 		bodyName(
 			when (this) {
-				is ValueBody -> value.asScript
-				is FunctionBody -> function.asSentence.script
+				is ValueBody -> value
+				is FunctionBody -> function.asSentence.value
 			}
 		)
 

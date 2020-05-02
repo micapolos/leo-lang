@@ -2,17 +2,18 @@ package leo16
 
 import leo.base.notNullIf
 import leo13.*
-import leo15.valueName
+import leo14.Literal
+import leo15.string
 
 data class Value(val fieldStack: Stack<Field>) {
-	override fun toString() = super.toString()
+	override fun toString() = script.string
 }
 
 sealed class Field {
-	override fun toString() = asSentence.toString()
+	override fun toString() = scriptLine.string
 }
 
-data class SentenceField(val sentence: ValueSentence) : Field() {
+data class SentenceField(val sentence: Sentence) : Field() {
 	override fun toString() = super.toString()
 }
 
@@ -24,55 +25,47 @@ data class LibraryField(val library: Library) : Field() {
 	override fun toString() = super.toString()
 }
 
-//data class StringField(val string: String): Field() {
+//data class LiteralField(val literal: Literal): Field() {
 //	override fun toString() = super.toString()
 //}
 
-data class ValueSentence(val word: String, val value: Value) {
-	override fun toString() = asSentence.toString()
+data class Sentence(val word: String, val value: Value) {
+	override fun toString() = scriptLine.string
 }
 
 val Value.asSentence: Sentence
 	get() =
-		valueName(asScript)
-
-val Value.asScript: Script
-	get() =
-		fieldStack.map { asSentence }.script
+		valueName(this)
 
 val Field.asSentence: Sentence
 	get() =
 		when (this) {
-			is SentenceField -> sentence.asSentence
+			is SentenceField -> sentence
 			is FunctionField -> function.asSentence
 			is LibraryField -> library.asSentence
 		}
 
-val ValueSentence.asSentence: Sentence
-	get() =
-		word.invoke(value.asScript)
-
 val Stack<Field>.value: Value get() = Value(this)
-val ValueSentence.field: Field get() = SentenceField(this)
+val Sentence.field: Field get() = SentenceField(this)
 val Function.field: Field get() = FunctionField(this)
 val Library.field: Field get() = LibraryField(this)
 fun value(vararg fields: Field) = stack(*fields).value
-fun value(sentence: ValueSentence, vararg sentences: ValueSentence) = stack(sentence, *sentences).map { field }.value
-operator fun String.invoke(value: Value) = ValueSentence(this, value)
-operator fun String.invoke(field: Field, vararg fields: Field) = invoke(stack(field, *fields).value)
-operator fun String.invoke(sentence: ValueSentence, vararg sentences: ValueSentence) = invoke(value(sentence, *sentences))
+fun value(sentence: Sentence, vararg sentences: Sentence) = stack(sentence, *sentences).map { field }.value
+operator fun String.invoke(value: Value) = Sentence(this, value)
+operator fun String.invoke(vararg fields: Field) = invoke(stack(*fields).value)
+operator fun String.invoke(sentence: Sentence, vararg sentences: Sentence) = invoke(value(sentence, *sentences))
 val Field.value get() = value(this)
 
-val Field.sentenceOrNull: ValueSentence? get() = (this as? SentenceField)?.sentence
+val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
 val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
 val Field.libraryOrNull: Library? get() = (this as? LibraryField)?.library
 val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
-val Value.sentenceOrNull: ValueSentence? get() = onlyFieldOrNull?.sentenceOrNull
+val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull
 val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull
 val Value.libraryOrNull: Library? get() = onlyFieldOrNull?.libraryOrNull
 val Value.isEmpty: Boolean get() = fieldStack.isEmpty
 
-val ValueSentence.onlyWordOrNull: String? get() = notNullIf(value.isEmpty) { word }
+val Sentence.onlyWordOrNull: String? get() = notNullIf(value.isEmpty) { word }
 val Field.onlyWordOrNull: String? get() = sentenceOrNull?.onlyWordOrNull
 
 operator fun Value.plus(field: Field): Value = fieldStack.push(field).value

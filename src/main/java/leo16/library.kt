@@ -26,4 +26,4 @@ fun Library.evaluate(value: Value): Value? =
 
 val Library.asSentence: Sentence
 	get() =
-		libraryName(bindingName(bindingStack.expandSentence { asSentence }))
+		libraryName(bindingName(bindingStack.expandSentence { asSentence.field }))

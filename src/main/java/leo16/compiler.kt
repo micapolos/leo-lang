@@ -5,6 +5,10 @@ import leo.base.nullOf
 import leo.base.orIfNull
 import leo13.fold
 import leo13.reverse
+import leo14.BeginToken
+import leo14.EndToken
+import leo14.LiteralToken
+import leo14.Token
 import leo15.*
 
 data class Compiler(val parentOrNull: CompilerParent?, val compiled: Compiled, val isMeta: Boolean) {
@@ -35,8 +39,9 @@ val CompilerParent.asSentence: Sentence
 
 operator fun Compiler.plus(token: Token): Compiler? =
 	when (token) {
-		is BeginToken -> begin(token.word)
-		EndToken -> end
+		is LiteralToken -> TODO()
+		is BeginToken -> begin(token.begin.string)
+		is EndToken -> end
 	}
 
 operator fun Compiler.plus(value: Value): Compiler =
@@ -49,7 +54,7 @@ operator fun Compiler.plus(field: Field): Compiler =
 		is LibraryField -> append(field)
 	}
 
-operator fun Compiler.plus(sentence: ValueSentence): Compiler =
+operator fun Compiler.plus(sentence: Sentence): Compiler =
 	begin(sentence.word).plus(sentence.value).end!!
 
 fun Compiler.begin(word: String): Compiler =
@@ -68,8 +73,8 @@ fun Compiler.append(field: Field): Compiler =
 		else apply(field)
 	}
 
-fun Compiler.append(valueSentence: ValueSentence): Compiler =
-	append(valueSentence.field)
+fun Compiler.append(sentence: Sentence): Compiler =
+	append(sentence.field)
 
 fun Compiler.applyCompiler(field: Field): Compiled? =
 	notNullIf(field == compilerName(value()).field) {

@@ -15,33 +15,33 @@ val Field.print: Field
 	get() =
 		printValueSentence.field
 
-val Field.printValueSentence: ValueSentence
+val Field.printValueSentence: Sentence
 	get() =
 		when (this) {
 			is SentenceField -> sentence.print
-			is FunctionField -> function.printValueSentence
-			is LibraryField -> library.printValueSentence
+			is FunctionField -> function.printSentence
+			is LibraryField -> library.printSentence
 		}
 
-val ValueSentence.print: ValueSentence
+val Sentence.print: Sentence
 	get() =
 		word(value.print)
 
-val Library.printValueSentence: ValueSentence
+val Library.printSentence: Sentence
 	get() =
-		libraryName(patternName(bindingStack.printField { printValueSentence.field }))
+		libraryName(patternName(bindingStack.printField { printSentence.field }))
 
-val Binding.printValueSentence: ValueSentence
+val Binding.printSentence: Sentence
 	get() =
 		patternName(pattern.value)
 
-val Function.printValueSentence: ValueSentence
+val Function.printSentence: Sentence
 	get() =
 		givingName(bodyValue.print)
 
-fun <T> Stack<T>.printField(fn: T.() -> Field): ValueSentence =
+fun <T> Stack<T>.printField(fn: T.() -> Field): Sentence =
 	map(fn).printSentence
 
-val Stack<Field>.printSentence: ValueSentence
+val Stack<Field>.printSentence: Sentence
 	get() =
 		listName(value)
