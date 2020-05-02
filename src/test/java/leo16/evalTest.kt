@@ -10,6 +10,14 @@ fun Script.assertGives(f: F) {
 
 class EvalTest {
 	@Test
+	fun nothing() {
+		evaluate_ { nothing }.assertGives { nothing_ }
+		evaluate_ { x { nothing } }.assertGives { x { nothing_ } }
+		evaluate_ { x.nothing }.assertGives { nothing { x } }
+		evaluate_ { x.nothing { y } }.assertGives { x.nothing { y } }
+	}
+
+	@Test
 	fun appending() {
 		evaluate_ { nothing_ }.assertGives { nothing_ }
 		evaluate_ { zero }.assertGives { zero }
