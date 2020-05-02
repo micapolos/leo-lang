@@ -19,6 +19,11 @@ val Field.print: Field
 			is LibraryField -> library.printField
 		}
 
+val Field.printValueSentence: ValueSentence
+	get() =
+		// TODO: To it the other way around
+		print.sentenceOrNull!!
+
 val ValueSentence.printField: Field
 	get() =
 		word(value.print)
@@ -29,7 +34,7 @@ val Library.printField: Field
 
 val Binding.printField: Field
 	get() =
-		exportName(pattern.asScript.value)
+		exportName(pattern.value)
 
 val Function.printField: Field
 	get() =

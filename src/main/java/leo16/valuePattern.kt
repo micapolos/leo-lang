@@ -22,8 +22,13 @@ val Value.valuePattern: Pattern
 
 val Field.patternField: PatternField
 	get() =
-		printSentence.patternField
+		printValueSentence.patternField
 
 val ValueSentence.patternField: PatternField
+	get() =
+		// TODO: pattern keywords
+		exactPatternField
+
+val ValueSentence.exactPatternField: PatternField
 	get() =
 		word.invoke(value.pattern)
