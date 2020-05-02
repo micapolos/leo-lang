@@ -29,6 +29,14 @@ class EvalTest {
 	}
 
 	@Test
+	fun this_() {
+		evaluate_ { this_ { nothing_ } }.assertGives { nothing_ }
+		evaluate_ { x { zero }.this_ { nothing_ } }.assertGives { x { zero } }
+		evaluate_ { x { zero }.this_ { y { one } } }.assertGives { x { zero }; y { one } }
+		evaluate_ { x { zero }.this_ { y { one }; z { two } } }.assertGives { x { zero }; y { one }; z { two } }
+	}
+
+	@Test
 	fun evaluate() {
 		evaluate_ { quote { nothing_ }.evaluate }.assertGives { nothing_ }
 		evaluate_ { quote { zero.negate }.evaluate }.assertGives { negate { zero } }

@@ -66,3 +66,4 @@ val Value.libraryOrNull: Library? get() = onlyFieldOrNull?.libraryOrNull
 val Value.isEmpty: Boolean get() = fieldStack.isEmpty
 
 operator fun Value.plus(field: Field): Value = fieldStack.push(field).value
+operator fun Value.plus(value: Value): Value = fieldStack.pushAll(value.fieldStack).value

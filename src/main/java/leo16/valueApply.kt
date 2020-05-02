@@ -4,6 +4,7 @@ import leo13.onlyOrNull
 import leo15.appendName
 import leo15.giveName
 import leo15.thingName
+import leo15.thisName
 
 fun Value.apply(field: Field): Value? =
 	null
@@ -11,6 +12,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyThing(field)
 		?: applyGet(field)
 		?: applyGive(field)
+		?: applyThis(field)
 
 fun Value.applyAppend(field: Field): Value? =
 	field.matchPrefix(appendName) { rhs ->
@@ -36,4 +38,9 @@ fun Value.applyThing(field: Field): Value? =
 fun Value.applyGive(field: Field): Value? =
 	field.matchPrefix(giveName) { rhs ->
 		functionOrNull?.invoke(rhs)
+	}
+
+fun Value.applyThis(field: Field): Value? =
+	field.matchPrefix(thisName) { rhs ->
+		plus(rhs)
 	}
