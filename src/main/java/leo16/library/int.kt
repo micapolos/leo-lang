@@ -68,6 +68,8 @@ val int = dictionary_ {
 		int
 	}
 
+	test { 2.int.plus { 3.int }.gives { 5.int } }
+
 	any.int
 	minus { any.int }
 	gives {
@@ -83,6 +85,8 @@ val int = dictionary_ {
 		int
 	}
 
+	test { 5.int.minus { 3.int }.gives { 2.int } }
+
 	any.int
 	times { any.int }
 	gives {
@@ -97,6 +101,8 @@ val int = dictionary_ {
 		}
 		int
 	}
+
+	test { 2.int.times { 3.int }.gives { 6.int } }
 }
 
 fun plus(a: Int, b: Int) = a.plus(b)

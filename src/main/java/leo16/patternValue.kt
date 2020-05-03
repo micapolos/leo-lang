@@ -2,7 +2,8 @@ package leo16
 
 import leo.base.runIf
 import leo13.map
-import leo15.*
+import leo15.anyName
+import leo15.exactName
 
 val Pattern.value: Value
 	get() =
@@ -29,10 +30,7 @@ val PatternSentence.valueField: Field
 val String.isPatternKeyword: Boolean
 	get() =
 		when (this) {
-			givingName -> true
-			dictionaryName -> true
 			anyName -> true
-			nativeName -> true
 			exactName -> true
 			else -> false
 		}
