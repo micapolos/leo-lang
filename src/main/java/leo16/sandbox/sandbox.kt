@@ -4,8 +4,8 @@ import leo15.dsl.*
 import leo16.print_
 
 fun main() = print_ {
-	text.library.import
-	reflection.library.import
+	text.dictionary.import
+	reflection.dictionary.import
 
 	"Hello, world!".text
 	split { regex { " ".text } }

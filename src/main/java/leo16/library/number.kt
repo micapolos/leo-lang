@@ -5,7 +5,7 @@ import leo16.value_
 
 val number = value_ {
 	dictionary {
-		reflection.library.import
+		reflection.dictionary.import
 
 		import {
 			dictionary {

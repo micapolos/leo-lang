@@ -97,27 +97,27 @@ class EvalTest {
 	@Test
 	fun texts() {
 		evaluate_ {
-			text.library.import
+			text.dictionary.import
 			"Hello".text
 		}.assertGives { "Hello".text }
 
 		evaluate_ {
-			text.library.import
+			text.dictionary.import
 			"Hello".text.native
 		}.assertGives { "Hello".native_ }
 
 		evaluate_ {
-			text.library.import
+			text.dictionary.import
 			"Hello, ".text.plus { "world!".text }
 		}.assertGives { "Hello, world!".text }
 
 		evaluate_ {
-			text.library.import
+			text.dictionary.import
 			"Hello, world!".text.length
 		}.assertGives { 13.number }
 
 		evaluate_ {
-			text.library.import
+			text.dictionary.import
 			"Hello, world!".text
 			replace {
 				all { "Hello".text }
@@ -128,20 +128,20 @@ class EvalTest {
 
 	@Test
 	fun numbers() {
-		evaluate_ { number.library.import; 123.number }.assertGives { 123.number }
-		evaluate_ { number.library.import; 123.number.native }.assertGives { 123.native_ }
-		evaluate_ { number.library.import; 2.number.plus { 3.number } }.assertGives { 5.number }
-		evaluate_ { number.library.import; 5.number.minus { 3.number } }.assertGives { 2.number }
-		evaluate_ { number.library.import; 2.number.times { 3.number } }.assertGives { 6.number }
+		evaluate_ { number.dictionary.import; 123.number }.assertGives { 123.number }
+		evaluate_ { number.dictionary.import; 123.number.native }.assertGives { 123.native_ }
+		evaluate_ { number.dictionary.import; 2.number.plus { 3.number } }.assertGives { 5.number }
+		evaluate_ { number.dictionary.import; 5.number.minus { 3.number } }.assertGives { 2.number }
+		evaluate_ { number.dictionary.import; 2.number.times { 3.number } }.assertGives { 6.number }
 	}
 
 	@Test
 	fun ints() {
-		evaluate_ { int.library.import; 123.int }.assertGives { 123.int }
-		evaluate_ { int.library.import; 123.int.native }.assertGives { 123.native_ }
-		evaluate_ { int.library.import; 2.int.plus { 3.int } }.assertGives { 5.int }
-		evaluate_ { int.library.import; 5.int.minus { 3.int } }.assertGives { 2.int }
-		evaluate_ { int.library.import; 2.int.times { 3.int } }.assertGives { 6.int }
+		evaluate_ { int.dictionary.import; 123.int }.assertGives { 123.int }
+		evaluate_ { int.dictionary.import; 123.int.native }.assertGives { 123.native_ }
+		evaluate_ { int.dictionary.import; 2.int.plus { 3.int } }.assertGives { 5.int }
+		evaluate_ { int.dictionary.import; 5.int.minus { 3.int } }.assertGives { 2.int }
+		evaluate_ { int.dictionary.import; 2.int.times { 3.int } }.assertGives { 6.int }
 	}
 
 	@Test
@@ -269,7 +269,7 @@ class EvalTest {
 
 	@Test
 	fun loaded() {
-		evaluate_ { ping.library }.assertGives { pong }
+		evaluate_ { ping.dictionary.import.ping }.assertGives { pong }
 	}
 
 	@Test
@@ -286,34 +286,34 @@ class EvalTest {
 
 	@Test
 	fun typeClass() {
-		evaluate_ { reflection.library.import; byte.class_ }
+		evaluate_ { reflection.dictionary.import; byte.class_ }
 			.assertGives { class_ { Byte::class.java.native_ } }
-		evaluate_ { reflection.library.import; char.class_ }
+		evaluate_ { reflection.dictionary.import; char.class_ }
 			.assertGives { class_ { Char::class.java.native_ } }
-		evaluate_ { reflection.library.import; short.class_ }
+		evaluate_ { reflection.dictionary.import; short.class_ }
 			.assertGives { class_ { Short::class.java.native_ } }
-		evaluate_ { reflection.library.import; int.class_ }
+		evaluate_ { reflection.dictionary.import; int.class_ }
 			.assertGives { class_ { Int::class.java.native_ } }
-		evaluate_ { reflection.library.import; long.class_ }
+		evaluate_ { reflection.dictionary.import; long.class_ }
 			.assertGives { class_ { Long::class.java.native_ } }
-		evaluate_ { reflection.library.import; float.class_ }
+		evaluate_ { reflection.dictionary.import; float.class_ }
 			.assertGives { class_ { Float::class.java.native_ } }
-		evaluate_ { reflection.library.import; double.class_ }
+		evaluate_ { reflection.dictionary.import; double.class_ }
 			.assertGives { class_ { Double::class.java.native_ } }
-		evaluate_ { reflection.library.import; boolean.class_ }
+		evaluate_ { reflection.dictionary.import; boolean.class_ }
 			.assertGives { class_ { Boolean::class.java.native_ } }
 	}
 
 	@Test
 	fun textNameClass() {
-		evaluate_ { reflection.library.import; "java.lang.Integer".text.name.class_ }
+		evaluate_ { reflection.dictionary.import; "java.lang.Integer".text.name.class_ }
 			.assertGives { class_ { Integer::class.java.native_ } }
 	}
 
 	@Test
 	fun nativeClassField() {
 		evaluate_ {
-			reflection.library.import
+			reflection.dictionary.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 		}.assertGives {
@@ -324,7 +324,7 @@ class EvalTest {
 	@Test
 	fun nativeFieldGet() {
 		evaluate_ {
-			reflection.library.import
+			reflection.dictionary.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 			get
@@ -336,7 +336,7 @@ class EvalTest {
 	@Test
 	fun nativeObjectFieldGet() {
 		evaluate_ {
-			reflection.library.import
+			reflection.dictionary.import
 			"java.awt.Point".text.name.class_
 			constructor { parameter { list } }
 			invoke { parameter { list } }
@@ -350,7 +350,7 @@ class EvalTest {
 	@Test
 	fun nativeClassConstructor() {
 		evaluate_ {
-			reflection.library.import
+			reflection.dictionary.import
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
@@ -370,7 +370,7 @@ class EvalTest {
 	@Test
 	fun nativeConstructorInvoke() {
 		evaluate_ {
-			reflection.library.import
+			reflection.dictionary.import
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
@@ -396,7 +396,7 @@ class EvalTest {
 	@Test
 	fun nativeClassMethod() {
 		evaluate_ {
-			reflection.library.import
+			reflection.dictionary.import
 			"java.lang.String".text.name.class_
 			method {
 				name { "substring".text }
@@ -417,7 +417,7 @@ class EvalTest {
 	@Test
 	fun nativeMethodInvoke() {
 		evaluate_ {
-			reflection.library.import
+			reflection.dictionary.import
 			"Hello, world!".text.native
 			invoke {
 				"java.lang.String".text.name.class_
@@ -443,7 +443,7 @@ class EvalTest {
 	@Test
 	fun nativeObjectMethodInvoke() {
 		evaluate_ {
-			reflection.library.import
+			reflection.dictionary.import
 			"java.lang.String".text.name.class_
 			method {
 				name { "valueOf".text }

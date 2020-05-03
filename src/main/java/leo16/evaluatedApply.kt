@@ -24,8 +24,10 @@ fun Evaluated.applyNormalized(word: String, evaluated: Evaluated): Evaluated =
 
 fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
 	value.matchEmpty {
-		notNullIf(word == dictionaryName) {
-			scope.evaluated(evaluated.scope.exportDictionary.field.value)
+		ifOrNull(word == dictionaryName) {
+			evaluated.value.matchEmpty {
+				scope.evaluated(evaluated.scope.exportDictionary.field.value)
+			}
 		}
 	}
 
