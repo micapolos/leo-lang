@@ -24,8 +24,8 @@ fun Value.apply(field: Field): Value? =
 		?: applyIntPlusInt(field)
 		?: applyIntMinusInt(field)
 		?: applyIntTimesInt(field)
-		?: applyTypeNativeClass(field)
-		?: applyTextNameNativeClass(field)
+		?: applyTypeClass(field)
+		?: applyTextNameClass(field)
 		?: applyNullNative(field)
 		?: applyTrueNative(field)
 		?: applyFalseNative(field)
@@ -34,14 +34,14 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberLong(field)
 		?: applyNumberFloat(field)
 		?: applyNumberDouble(field)
-		?: applyNativeClassField(field)
-		?: applyNativeGetField(field)
-		?: applyNativeObjectGetField(field)
-		?: applyNativeClassConstructor(field)
-		?: applyNativeConstructorInvoke(field)
-		?: applyNativeClassMethod(field)
-		?: applyNativeMethodInvoke(field)
-		?: applyNativeObjectMethodInvoke(field)
+		?: applyClassField(field)
+		?: applyFieldGet(field)
+		?: applyObjectGetField(field)
+		?: applyClassConstructor(field)
+		?: applyConstructorInvoke(field)
+		?: applyClassMethod(field)
+		?: applyMethodInvoke(field)
+		?: applyObjectMethodInvoke(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -214,35 +214,31 @@ fun Value.applyNumberDouble(field: Field): Value? =
 		}
 	}
 
-fun Value.applyTypeNativeClass(field: Field): Value? =
+fun Value.applyTypeClass(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(className) { rhs ->
-			rhs.matchPrefix(nativeName) { rhs ->
-				rhs.matchWord { word ->
-					word.typeClassOrNull?.let { class_ ->
-						className(class_.nativeField).value
+			rhs.matchWord { word ->
+				word.typeClassOrNull?.let { class_ ->
+					className(class_.nativeField).value
+				}
+			}
+		}
+	}
+
+fun Value.applyTextNameClass(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(className) { rhs ->
+			rhs.matchPrefix(nameName) { rhs ->
+				rhs.matchText { text ->
+					nullIfThrowsException {
+						className(text.loadClass.nativeField).value
 					}
 				}
 			}
 		}
 	}
 
-fun Value.applyTextNameNativeClass(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(className) { rhs ->
-			rhs.matchPrefix(nativeName) { rhs ->
-				rhs.matchPrefix(nameName) { rhs ->
-					rhs.matchText { text ->
-						nullIfThrowsException {
-							className(text.loadClass.nativeField).value
-						}
-					}
-				}
-			}
-		}
-	}
-
-fun Value.applyNativeClassField(field: Field): Value? =
+fun Value.applyClassField(field: Field): Value? =
 	matchPrefix(className) { lhs ->
 		lhs.matchNative { native ->
 			(native as? Class<*>)?.let { class_ ->
@@ -259,7 +255,7 @@ fun Value.applyNativeClassField(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNativeGetField(field: Field): Value? =
+fun Value.applyFieldGet(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(getName) { rhs ->
 			rhs.matchPrefix(fieldName) { rhs ->
@@ -272,7 +268,7 @@ fun Value.applyNativeGetField(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNativeObjectGetField(field: Field): Value? =
+fun Value.applyObjectGetField(field: Field): Value? =
 	matchNative { nativeObject ->
 		field.matchPrefix(getName) { rhs ->
 			rhs.matchPrefix(fieldName) { rhs ->
@@ -285,7 +281,7 @@ fun Value.applyNativeObjectGetField(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNativeClassConstructor(field: Field): Value? =
+fun Value.applyClassConstructor(field: Field): Value? =
 	matchPrefix(className) { rhs ->
 		rhs.matchNative { nativeClass ->
 			field.matchPrefix(constructorName) { rhs ->
@@ -310,7 +306,7 @@ fun Value.applyNativeClassConstructor(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNativeConstructorInvoke(field: Field): Value? =
+fun Value.applyConstructorInvoke(field: Field): Value? =
 	matchPrefix(constructorName) { rhs ->
 		rhs.matchNative { nativeConstructor ->
 			field.matchPrefix(invokeName) { rhs ->
@@ -331,7 +327,7 @@ fun Value.applyNativeConstructorInvoke(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNativeClassMethod(field: Field): Value? =
+fun Value.applyClassMethod(field: Field): Value? =
 	matchPrefix(className) { rhs ->
 		rhs.matchNative { nativeClass ->
 			field.matchPrefix(methodName) { rhs ->
@@ -360,7 +356,7 @@ fun Value.applyNativeClassMethod(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNativeMethodInvoke(field: Field): Value? =
+fun Value.applyMethodInvoke(field: Field): Value? =
 	matchPrefix(methodName) { method ->
 		method.matchNative { nativeMethod ->
 			field.matchPrefix(invokeName) { lhs ->
@@ -381,7 +377,7 @@ fun Value.applyNativeMethodInvoke(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNativeObjectMethodInvoke(field: Field): Value? =
+fun Value.applyObjectMethodInvoke(field: Field): Value? =
 	matchNative { native ->
 		field.matchPrefix(invokeName) { rhs ->
 			rhs.matchInfix(parameterName) { lhs, parameter ->

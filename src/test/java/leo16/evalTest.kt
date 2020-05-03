@@ -262,27 +262,26 @@ class EvalTest {
 	}
 
 	@Test
-	fun typeNativeClass() {
-		evaluate_ {
-			int.native.class_
-		}.assertGives {
-			class_ { Integer.TYPE.native_ }
-		}
+	fun typeClass() {
+		evaluate_ { byte.class_ }.assertGives { class_ { Byte::class.java.native_ } }
+		evaluate_ { short.class_ }.assertGives { class_ { Short::class.java.native_ } }
+		evaluate_ { int.class_ }.assertGives { class_ { Int::class.java.native_ } }
+		evaluate_ { long.class_ }.assertGives { class_ { Long::class.java.native_ } }
+		evaluate_ { float.class_ }.assertGives { class_ { Float::class.java.native_ } }
+		evaluate_ { double.class_ }.assertGives { class_ { Double::class.java.native_ } }
+		evaluate_ { boolean.class_ }.assertGives { class_ { Boolean::class.java.native_ } }
 	}
 
 	@Test
-	fun textNameNativeClass() {
-		evaluate_ {
-			"java.lang.Integer".text.name.native.class_
-		}.assertGives {
-			class_ { Integer::class.java.native_ }
-		}
+	fun textNameClass() {
+		evaluate_ { "java.lang.Integer".text.name.class_ }
+			.assertGives { class_ { Integer::class.java.native_ } }
 	}
 
 	@Test
 	fun nativeClassField() {
 		evaluate_ {
-			"java.lang.Integer".text.name.native.class_
+			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 		}.assertGives {
 			field { Integer::class.java.getField("MAX_VALUE").native_ }
@@ -292,7 +291,7 @@ class EvalTest {
 	@Test
 	fun nativeFieldGet() {
 		evaluate_ {
-			"java.lang.Integer".text.name.native.class_
+			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 			get
 		}.assertGives {
@@ -303,11 +302,11 @@ class EvalTest {
 	@Test
 	fun nativeObjectFieldGet() {
 		evaluate_ {
-			"java.awt.Point".text.name.native.class_
+			"java.awt.Point".text.name.class_
 			constructor { parameter { list } }
 			invoke { parameter { list } }
 			get {
-				"java.awt.Point".text.name.native.class_
+				"java.awt.Point".text.name.class_
 				field { name { "x".text } }
 			}
 		}.assertGives { 0.native_ }
@@ -316,12 +315,12 @@ class EvalTest {
 	@Test
 	fun nativeClassConstructor() {
 		evaluate_ {
-			"java.awt.Point".text.name.native.class_
+			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
 					list {
-						this_ { int.native.class_ }
-						this_ { int.native.class_ }
+						this_ { int.class_ }
+						this_ { int.class_ }
 					}
 				}
 			}
@@ -335,20 +334,20 @@ class EvalTest {
 	@Test
 	fun nativeConstructorInvoke() {
 		evaluate_ {
-			"java.awt.Point".text.name.native.class_
+			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
 					list {
-						this_ { int.native.class_ }
-						this_ { int.native.class_ }
+						this_ { int.class_ }
+						this_ { int.class_ }
 					}
 				}
 			}
 			invoke {
 				parameter {
 					list {
-						this_ { 10.number.int.native }
-						this_ { 20.number.int.native }
+						this_ { 10.int.native }
+						this_ { 20.int.native }
 					}
 				}
 			}
@@ -360,13 +359,13 @@ class EvalTest {
 	@Test
 	fun nativeClassMethod() {
 		evaluate_ {
-			"java.lang.String".text.name.native.class_
+			"java.lang.String".text.name.class_
 			method {
 				name { "substring".text }
 				parameter {
 					list {
-						this_ { int.native.class_ }
-						this_ { int.native.class_ }
+						this_ { int.class_ }
+						this_ { int.class_ }
 					}
 				}
 			}
@@ -382,20 +381,20 @@ class EvalTest {
 		evaluate_ {
 			"Hello, world!".text.native
 			invoke {
-				"java.lang.String".text.name.native.class_
+				"java.lang.String".text.name.class_
 				method {
 					name { "substring".text }
 					parameter {
 						list {
-							this_ { int.native.class_ }
-							this_ { int.native.class_ }
+							this_ { int.class_ }
+							this_ { int.class_ }
 						}
 					}
 				}
 				parameter {
 					list {
-						this_ { 7.number.int.native }
-						this_ { 12.number.int.native }
+						this_ { 7.int.native }
+						this_ { 12.int.native }
 					}
 				}
 			}
@@ -405,12 +404,12 @@ class EvalTest {
 	@Test
 	fun nativeObjectMethodInvoke() {
 		evaluate_ {
-			"java.lang.String".text.name.native.class_
+			"java.lang.String".text.name.class_
 			method {
 				name { "valueOf".text }
 				parameter {
 					list {
-						this_ { int.native.class_ }
+						this_ { int.class_ }
 					}
 				}
 			}
