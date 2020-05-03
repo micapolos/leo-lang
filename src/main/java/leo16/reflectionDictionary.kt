@@ -4,3 +4,4 @@ val reflectionDictionary =
 	emptyDictionary
 		.plus(nameClassDefinition)
 		.plus(classFieldDefinition)
+		.plus(fieldGetDefinition)

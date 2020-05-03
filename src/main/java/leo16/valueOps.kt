@@ -72,3 +72,7 @@ val Value.listMatchValue: Value
 		fieldStack.linkOrNull
 			?.run { value(linkName(previousName(listName(stack.value)), lastName(value))) }
 			?: value(emptyName.invoke(value()))
+
+val Value.nativeOrNull: Any?
+	get() =
+		onlyFieldOrNull?.theNativeOrNull?.value

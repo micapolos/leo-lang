@@ -2,6 +2,7 @@ package leo16
 
 import leo14.untyped.typed.loadClass
 import leo15.*
+import java.lang.reflect.Field
 
 fun Value.gives(apply: Value.() -> Value) =
 	pattern.definitionTo(
@@ -12,14 +13,14 @@ fun Value.gives(apply: Value.() -> Value) =
 		})
 
 val nameClassDefinition =
-	value(className(nameName(textName(anyName())))).gives {
-		this
+	value(className(nameName(textName(nativeName(anyName()))))).gives {
+		val name = this
 			.getOrNull(className)!!
 			.getOrNull(nameName)!!
 			.getOrNull(textName)!!
-			.matchText { text ->
-				className(text.loadClass.nativeField).value
-			}!!
+			.getOrNull(nativeName)!!
+			.nativeOrNull!! as String
+		className(name.loadClass.nativeField).value
 	}
 
 val classFieldDefinition =
@@ -30,15 +31,22 @@ val classFieldDefinition =
 		val class_ = this
 			.getOrNull(className)!!
 			.getOrNull(nativeName)!!
-			.onlyFieldOrNull!!
-			.theNativeOrNull!!.value as Class<*>
+			.nativeOrNull!! as Class<*>
 		val name = this
 			.getOrNull(fieldName)!!
 			.getOrNull(nameName)!!
 			.getOrNull(textName)!!
 			.getOrNull(nativeName)!!
-			.onlyFieldOrNull!!
-			.theNativeOrNull!!
-			.value as String
+			.nativeOrNull!! as String
 		fieldName(class_.getField(name).nativeField).value
+	}
+
+val fieldGetDefinition =
+	value(getName(fieldName(nativeName(anyName())))).gives {
+		val field = this
+			.getOrNull(getName)!!
+			.getOrNull(fieldName)!!
+			.getOrNull(nativeName)!!
+			.nativeOrNull!! as Field
+		field.get(null).nativeValue
 	}

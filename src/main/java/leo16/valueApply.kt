@@ -3,7 +3,6 @@ package leo16
 import leo.java.lang.typeClassOrNull
 import leo13.array
 import leo13.mapOrNull
-import leo14.untyped.typed.loadClass
 import leo15.*
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
@@ -33,8 +32,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberFloat(field)
 		?: applyNumberDouble(field)
 		?: applyTypeClass(field)
-		//?: applyClassField(field)
-		?: applyFieldGet(field)
 		?: applyObjectGetField(field)
 		?: applyClassConstructor(field)
 		?: applyConstructorInvoke(field)
@@ -219,36 +216,6 @@ fun Value.applyTypeClass(field: Field): Value? =
 			rhs.matchWord { word ->
 				word.typeClassOrNull?.let { class_ ->
 					className(class_.nativeField).value
-				}
-			}
-		}
-	}
-
-fun Value.applyClassField(field: Field): Value? =
-	matchPrefix(className) { lhs ->
-		lhs.matchNative { native ->
-			(native as? Class<*>)?.let { class_ ->
-				field.matchPrefix(fieldName) { rhs ->
-					rhs.matchPrefix(nameName) { rhs ->
-						rhs.matchText { name ->
-							nullIfThrowsException {
-								fieldName(class_.getField(name).nativeField).value
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-fun Value.applyFieldGet(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(getName) { rhs ->
-			rhs.matchPrefix(fieldName) { rhs ->
-				rhs.matchNative { nativeField ->
-					nullIfThrowsException {
-						(nativeField as java.lang.reflect.Field).get(null).nativeValue
-					}
 				}
 			}
 		}
