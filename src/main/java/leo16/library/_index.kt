@@ -8,6 +8,7 @@ private fun Field.dictionary(fn: () -> Value) =
 
 // TODO: Use reflection instead of hard-coded index.
 val valueFunMap = mapOf(
+	coreName().dictionary { core },
 	pingName().dictionary { ping },
 	reflectionName().dictionary { reflection },
 	intName().dictionary { int },

@@ -17,6 +17,26 @@ class EvalTest {
 	}
 
 	@Test
+	fun comment() {
+		evaluate_ { comment { nothing_ } }.assertGives { nothing_ }
+		evaluate_ { comment { zero } }.assertGives { nothing_ }
+		evaluate_ {
+			comment { a { point } }
+			point {
+				comment { x.coordinate }
+				x { 10.number }
+				comment { y.coordinate }
+				y { 20.number }
+			}
+		}.assertGives {
+			point {
+				x { 10.number }
+				y { 20.number }
+			}
+		}
+	}
+
+	@Test
 	fun nothing() {
 		evaluate_ { nothing }.assertGives { nothing_ }
 		evaluate_ { x { nothing } }.assertGives { x { nothing_ } }

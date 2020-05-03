@@ -17,6 +17,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberLong(field)
 		?: applyNumberFloat(field)
 		?: applyNumberDouble(field)
+		?: applyComment(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -134,3 +135,6 @@ fun Value.applyNumberDouble(field: Field): Value? =
 			}
 		}
 	}
+
+fun Value.applyComment(field: Field): Value? =
+	field.matchPrefix(commentName) { this }
