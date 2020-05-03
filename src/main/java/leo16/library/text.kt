@@ -82,6 +82,8 @@ val text = dictionary_ {
 		int.number
 	}
 
+	test { "Hello, world!".text.length.gives { 13.number } }
+
 	any.text
 	cut {
 		from { any.number }
@@ -101,6 +103,15 @@ val text = dictionary_ {
 		text
 	}
 
+	test {
+		"Hello, world!".text
+		cut {
+			from { 7.number }
+			to { 12.number }
+		}
+		gives { "world".text }
+	}
+
 	any.text
 	plus { any.text }
 	gives {
@@ -111,6 +122,8 @@ val text = dictionary_ {
 		}
 		text
 	}
+
+	test { "Hello, ".text.plus { "world!".text }.gives { "Hello, world!".text } }
 
 	any.text
 	replace {
@@ -129,6 +142,15 @@ val text = dictionary_ {
 			}
 		}
 		text
+	}
+
+	test {
+		"foo|bar|zoo".text
+		replace {
+			all { "|".text }
+			with { ", ".text }
+		}
+		gives { "foo, bar, zoo".text }
 	}
 
 	any.text

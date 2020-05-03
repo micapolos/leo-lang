@@ -15,6 +15,7 @@ fun X.text(string: String) = x(token(literal(string)))
 val BigDecimal.number: X get() = X.number(this)
 val Int.number get() = toBigDecimal().number
 val String.text: X get() = X.text(this)
+val String.number get() = toBigDecimal().number
 val Byte.byte: X get() = X.byte { toInt().toBigDecimal().number }
 val Int.int: X get() = X.int { toBigDecimal().number }
 val Long.long: X get() = X.long { toBigDecimal().number }

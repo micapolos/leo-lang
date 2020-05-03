@@ -2,7 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
-import leo16.value_
 
 val number = dictionary_ {
 	reflection.dictionary.import
@@ -65,6 +64,8 @@ val number = dictionary_ {
 		number
 	}
 
+	test { 2.number.plus { 3.number }.gives { 5.number } }
+
 	any.number
 	minus { any.number }
 	gives {
@@ -76,6 +77,8 @@ val number = dictionary_ {
 		number
 	}
 
+	test { 5.number.minus { 3.number }.gives { 2.number } }
+
 	any.number
 	times { any.number }
 	gives {
@@ -85,5 +88,12 @@ val number = dictionary_ {
 			parameter { list { given.times.number.native } }
 		}
 		number
+	}
+
+	test { 2.number.times { 3.number }.gives { 6.number } }
+	test {
+		"12345678901234567890".number
+		times { "12345678901234567890".number }
+		gives { "152415787532388367501905199875019052100".number }
 	}
 }
