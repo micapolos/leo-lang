@@ -4,7 +4,7 @@ import leo15.dsl.*
 import leo16.value_
 
 val base = value_ {
-	library {
-		any.clear.gives { nothing }
+	dictionary {
+		define { any.clear.gives { nothing } }
 	}
 }
