@@ -7,6 +7,7 @@ import leo14.untyped.typed.loadClass
 import leo15.*
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
+import java.math.BigDecimal
 
 fun Value.apply(field: Field): Value? =
 	null
@@ -17,6 +18,9 @@ fun Value.apply(field: Field): Value? =
 		?: applyNothing(field)
 		?: applyTextPlusText(field)
 		?: applyTextLength(field)
+		?: applyNumberPlusNumber(field)
+		?: applyNumberMinusNumber(field)
+		?: applyNumberTimesNumber(field)
 		?: applyIntPlusInt(field)
 		?: applyIntMinusInt(field)
 		?: applyIntTimesInt(field)
@@ -79,7 +83,7 @@ fun Value.applyTextLength(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(lengthName) { rhs ->
 			rhs.matchText { text ->
-				text.length.field.value
+				text.length.toBigDecimal().field.value
 			}
 		}
 	}
@@ -98,6 +102,24 @@ fun Value.applyIntOpInt(field: Field, word: String, fn: Int.(Int) -> Int): Value
 		field.matchPrefix(word) { rhs ->
 			rhs.matchInt { rhsInt ->
 				lhsInt.fn(rhsInt).field.value
+			}
+		}
+	}
+
+fun Value.applyNumberPlusNumber(field: Field): Value? =
+	applyNumberOpNumber(field, plusName, BigDecimal::plus)
+
+fun Value.applyNumberMinusNumber(field: Field): Value? =
+	applyNumberOpNumber(field, minusName, BigDecimal::minus)
+
+fun Value.applyNumberTimesNumber(field: Field): Value? =
+	applyNumberOpNumber(field, timesName, BigDecimal::times)
+
+fun Value.applyNumberOpNumber(field: Field, word: String, fn: BigDecimal.(BigDecimal) -> BigDecimal): Value? =
+	matchNumber { lhsNumber ->
+		field.matchPrefix(word) { rhs ->
+			rhs.matchNumber { rhsNumber ->
+				lhsNumber.fn(rhsNumber).field.value
 			}
 		}
 	}

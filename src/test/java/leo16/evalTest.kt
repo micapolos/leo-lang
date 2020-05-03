@@ -101,7 +101,16 @@ class EvalTest {
 		evaluate_ { "Hello".text }.assertGives { "Hello".text }
 		evaluate_ { "Hello".text.native }.assertGives { "Hello".native_ }
 		evaluate_ { "Hello, ".text.plus { "world!".text } }.assertGives { "Hello, world!".text }
-		evaluate_ { "Hello, world!".text.length }.assertGives { 13.int }
+		evaluate_ { "Hello, world!".text.length }.assertGives { 13.number }
+	}
+
+	@Test
+	fun numbers() {
+		evaluate_ { 123.number }.assertGives { 123.number }
+		evaluate_ { 123.number.native }.assertGives { 123.native_ }
+		evaluate_ { 2.number.plus { 3.number } }.assertGives { 5.number }
+		evaluate_ { 5.number.minus { 3.number } }.assertGives { 2.number }
+		evaluate_ { 2.number.times { 3.number } }.assertGives { 6.number }
 	}
 
 	@Test
