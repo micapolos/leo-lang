@@ -24,8 +24,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyIntPlusInt(field)
 		?: applyIntMinusInt(field)
 		?: applyIntTimesInt(field)
-		?: applyTypeClass(field)
-		?: applyTextNameClass(field)
 		?: applyNullNative(field)
 		?: applyTrueNative(field)
 		?: applyFalseNative(field)
@@ -34,7 +32,8 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberLong(field)
 		?: applyNumberFloat(field)
 		?: applyNumberDouble(field)
-		?: applyClassField(field)
+		?: applyTypeClass(field)
+		//?: applyClassField(field)
 		?: applyFieldGet(field)
 		?: applyObjectGetField(field)
 		?: applyClassConstructor(field)
@@ -225,19 +224,6 @@ fun Value.applyTypeClass(field: Field): Value? =
 		}
 	}
 
-fun Value.applyTextNameClass(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(className) { rhs ->
-			rhs.matchPrefix(nameName) { rhs ->
-				rhs.matchText { text ->
-					nullIfThrowsException {
-						className(text.loadClass.nativeField).value
-					}
-				}
-			}
-		}
-	}
-
 fun Value.applyClassField(field: Field): Value? =
 	matchPrefix(className) { lhs ->
 		lhs.matchNative { native ->
@@ -399,5 +385,3 @@ fun Value.applyObjectMethodInvoke(field: Field): Value? =
 			}
 		}
 	}
-
-

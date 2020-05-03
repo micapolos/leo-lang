@@ -274,13 +274,14 @@ class EvalTest {
 
 	@Test
 	fun textNameClass() {
-		evaluate_ { "java.lang.Integer".text.name.class_ }
+		evaluate_ { reflection.load.import; "java.lang.Integer".text.name.class_ }
 			.assertGives { class_ { Integer::class.java.native_ } }
 	}
 
 	@Test
 	fun nativeClassField() {
 		evaluate_ {
+			reflection.load.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 		}.assertGives {
@@ -291,6 +292,7 @@ class EvalTest {
 	@Test
 	fun nativeFieldGet() {
 		evaluate_ {
+			reflection.load.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 			get
@@ -302,6 +304,7 @@ class EvalTest {
 	@Test
 	fun nativeObjectFieldGet() {
 		evaluate_ {
+			reflection.load.import
 			"java.awt.Point".text.name.class_
 			constructor { parameter { list } }
 			invoke { parameter { list } }
@@ -315,6 +318,7 @@ class EvalTest {
 	@Test
 	fun nativeClassConstructor() {
 		evaluate_ {
+			reflection.load.import
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
@@ -334,6 +338,7 @@ class EvalTest {
 	@Test
 	fun nativeConstructorInvoke() {
 		evaluate_ {
+			reflection.load.import
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
@@ -359,6 +364,7 @@ class EvalTest {
 	@Test
 	fun nativeClassMethod() {
 		evaluate_ {
+			reflection.load.import
 			"java.lang.String".text.name.class_
 			method {
 				name { "substring".text }
@@ -379,6 +385,7 @@ class EvalTest {
 	@Test
 	fun nativeMethodInvoke() {
 		evaluate_ {
+			reflection.load.import
 			"Hello, world!".text.native
 			invoke {
 				"java.lang.String".text.name.class_
@@ -404,6 +411,7 @@ class EvalTest {
 	@Test
 	fun nativeObjectMethodInvoke() {
 		evaluate_ {
+			reflection.load.import
 			"java.lang.String".text.name.class_
 			method {
 				name { "valueOf".text }
