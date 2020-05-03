@@ -18,8 +18,8 @@ fun Library.apply(value: Value): Value? =
 fun Library.resolve(value: Value): Value =
 	bindingStack.mapFirst { apply(value) } ?: value
 
-fun Library.compile(value: Value): Compiled? =
-	emptyScope.compiler.plus(value).compiled
+fun Library.compile(value: Value): Evaluated? =
+	emptyScope.evaluator.plus(value).compiled
 
 fun Library.evaluate(value: Value): Value? =
 	compile(value)?.value
