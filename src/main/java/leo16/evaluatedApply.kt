@@ -49,6 +49,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyGiving(field)
 		?: applyGive(field)
 		?: applyImport(field)
+		?: applyExport(field)
 		?: applyLoaded(field)
 		?: applyTest(field)
 		?: resolve(field)
@@ -107,6 +108,11 @@ fun Evaluated.applyMatch(word: String, evaluated: Evaluated): Evaluated? =
 fun Evaluated.applyImport(field: Field): Evaluated? =
 	field.matchPrefix(importName) { rhs ->
 		rhs.fieldStack.onlyOrNull?.dictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
+	}
+
+fun Evaluated.applyExport(field: Field): Evaluated? =
+	field.matchPrefix(exportName) { rhs ->
+		rhs.fieldStack.onlyOrNull?.dictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
 	}
 
 fun Evaluated.applyLoaded(field: Field): Evaluated? =

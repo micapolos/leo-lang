@@ -30,8 +30,14 @@ fun Scope.plus(dictionary: Dictionary) =
 fun Scope.import(definition: Definition): Scope =
 	dictionary.plus(definition).scopeWithPublic(exportDictionary)
 
+fun Scope.export(definition: Definition): Scope =
+	dictionary.scopeWithPublic(exportDictionary.plus(definition))
+
 fun Scope.import(dictionary: Dictionary) =
 	fold(dictionary.definitionStack.reverse) { import(it) }
+
+fun Scope.export(dictionary: Dictionary) =
+	fold(dictionary.definitionStack.reverse) { export(it) }
 
 fun Scope.applyBinding(value: Value): Scope? =
 	runIfNotNull(dictionary.definitionOrNull(value)) { plus(it) }

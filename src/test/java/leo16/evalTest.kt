@@ -238,6 +238,49 @@ class EvalTest {
 	}
 
 	@Test
+	fun export() {
+		evaluate_ {
+			import {
+				dictionary {
+					export {
+						dictionary {
+							zero.is_ { one }
+						}
+					}
+				}
+			}
+			zero
+		}.assertGives { one }
+
+		evaluate_ {
+			import {
+				dictionary {
+					export {
+						dictionary {
+							zero.is_ { one }
+						}
+					}
+					two.is_ { zero }
+				}
+			}
+			two
+		}.assertGives { zero }
+
+		evaluate_ {
+			import {
+				dictionary {
+					import {
+						dictionary {
+							zero.is_ { one }
+						}
+					}
+				}
+			}
+			zero
+		}.assertGives { zero }
+	}
+
+	@Test
 	fun loaded() {
 		evaluate_ { ping.dictionary.import.ping }.assertGives { pong }
 	}

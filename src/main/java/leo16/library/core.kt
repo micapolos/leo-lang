@@ -4,6 +4,8 @@ import leo15.dsl.*
 import leo16.dictionary_
 
 val core = dictionary_ {
+	any.clear.gives { nothing }
+
 	comment { nothing }
 	test { nothing.gives { nothing_ } }
 

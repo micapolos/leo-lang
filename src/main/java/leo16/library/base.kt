@@ -4,5 +4,9 @@ import leo15.dsl.*
 import leo16.dictionary_
 
 val base = dictionary_ {
-	any.clear.gives { nothing }
+	core.dictionary.export
+	number.dictionary.export
+	int.dictionary.export
+	text.dictionary.export
+	list.dictionary.export
 }
