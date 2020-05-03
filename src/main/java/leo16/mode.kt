@@ -6,6 +6,7 @@ import leo15.*
 enum class Mode {
 	EVALUATE,
 	DEFINE,
+	NORMALIZE,
 	QUOTE;
 
 	override fun toString() = asField.toString()
@@ -18,14 +19,15 @@ val Mode.asField: Field
 fun Mode.begin(mode: Mode): Mode =
 	when (this) {
 		Mode.EVALUATE -> mode
-		Mode.DEFINE -> this // What about mode == QUOTE?
+		Mode.DEFINE -> this
+		Mode.NORMALIZE -> this
 		Mode.QUOTE -> this
 	}
 
 val String.mode: Mode
 	get() =
 		when (this) {
-			defineName -> Mode.DEFINE
+			defineName -> Mode.NORMALIZE
 			givesName -> Mode.QUOTE
 			givingName -> Mode.QUOTE
 			dictionaryName -> Mode.QUOTE

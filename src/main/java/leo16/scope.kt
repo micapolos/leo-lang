@@ -24,6 +24,9 @@ val Scope.asField: Field
 operator fun Scope.plus(definition: Definition): Scope =
 	dictionary.plus(definition).scopeWithPublic(exportDictionary.plus(definition))
 
+fun Scope.plus(dictionary: Dictionary) =
+	fold(dictionary.definitionStack.reverse) { plus(it) }
+
 fun Scope.import(definition: Definition): Scope =
 	dictionary.plus(definition).scopeWithPublic(exportDictionary)
 

@@ -27,4 +27,7 @@ val Evaluated.clearValue: Evaluated
 		set(value())
 
 operator fun Evaluated.plus(field: Field): Evaluated =
+	value.normalize(field) { set(this).plusNormalized(it) }
+
+fun Evaluated.plusNormalized(field: Field): Evaluated =
 	set(value.plus(field))

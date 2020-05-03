@@ -5,8 +5,19 @@ import leo.base.runIfNotNull
 import leo13.onlyOrNull
 import leo15.*
 
+fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
+	when (mode) {
+		Mode.EVALUATE -> apply(field)
+		Mode.DEFINE -> define(field)
+		Mode.NORMALIZE -> plus(field)
+		Mode.QUOTE -> plusNormalized(field)
+	}
+
 fun Evaluated.apply(field: Field): Evaluated =
 	value.normalize(field) { set(this).applyNormalized(it) }
+
+fun Evaluated.define(field: Field): Evaluated =
+	applyBinding(field) ?: plusNormalized(field)
 
 fun Evaluated.applyNormalized(field: Field): Evaluated =
 	null
@@ -20,6 +31,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyMatch(field)
 		?: applyDictionary(field)
 		?: applyImport(field)
+		?: applyDefine(field)
 		?: applyLoad(field)
 		?: resolve(field)
 
@@ -81,9 +93,9 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 fun Evaluated.applyDictionary(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(dictionaryName) { rhs ->
-			emptyEvaluator.plus(rhs).evaluated.let { compiled ->
-				ifOrNull(compiled.value.isEmpty) {
-					scope.evaluated(compiled.scope.exportDictionary.field.value)
+			emptyEvaluator.plus(rhs).evaluated.let { evaluated ->
+				ifOrNull(evaluated.value.isEmpty) {
+					scope.evaluated(evaluated.scope.exportDictionary.field.value)
 				}
 			}
 		}
@@ -92,6 +104,12 @@ fun Evaluated.applyDictionary(field: Field): Evaluated? =
 fun Evaluated.applyImport(field: Field): Evaluated? =
 	field.matchPrefix(importName) { rhs ->
 		rhs.fieldStack.onlyOrNull?.dictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
+	}
+
+fun Evaluated.applyDefine(field: Field): Evaluated? =
+	field.matchPrefix(defineName) { rhs ->
+		// TODO: This is still wrong, because we don't want to double-evaluate
+		scope.plus(emptyEvaluator.copy(mode = Mode.DEFINE).plus(rhs).evaluated.scope.exportDictionary).evaluated(value)
 	}
 
 fun Evaluated.applyLoad(field: Field): Evaluated? =

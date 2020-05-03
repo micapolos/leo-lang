@@ -76,8 +76,7 @@ fun EvaluatorParent.endEvaluator(evaluated: Evaluated): Evaluator =
 
 fun Evaluator.append(field: Field): Evaluator =
 	updateCompiled {
-		applyCompiler(field) ?: if (mode != Mode.EVALUATE) plus(field)
-		else apply(field)
+		applyCompiler(field) ?: apply(field, mode)
 	}
 
 fun Evaluator.append(sentence: Sentence): Evaluator =

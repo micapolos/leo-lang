@@ -1,7 +1,6 @@
 package leo16
 
 import leo.base.assertEqualTo
-import leo.base.clampedByte
 import leo14.Script
 import leo14.bigDecimal
 import leo15.dsl.*
@@ -109,6 +108,28 @@ class EvalTest {
 		evaluate_ { 2.number.plus { 3.number } }.assertGives { 5.number }
 		evaluate_ { 5.number.minus { 3.number } }.assertGives { 2.number }
 		evaluate_ { 2.number.times { 3.number } }.assertGives { 6.number }
+	}
+
+	@Test
+	fun defineIs() {
+		evaluate_ { define { zero.is_ { one } } }.assertGives { nothing_ }
+		evaluate_ { define { zero.is_ { one } }.zero }.assertGives { one }
+		evaluate_ { define { any.is_ { one } }.zero }.assertGives { one }
+
+		evaluate_ { define { any.text.is_ { ok } }; "foo".text }.assertGives { ok }
+		evaluate_ { define { any.number.is_ { ok } }; 123.number }.assertGives { ok }
+	}
+
+	@Test
+	fun defineGives() {
+		evaluate_ { define { zero.gives { one } } }.assertGives { nothing_ }
+		evaluate_ { define { zero.gives { one } }.zero }.assertGives { one }
+		evaluate_ { define { zero.gives { one } }.one }.assertGives { one }
+		evaluate_ { define { zero.gives { given } }.zero }.assertGives { given { zero } }
+		evaluate_ { define { zero.gives { given } }.one }.assertGives { one }
+
+		evaluate_ { define { any.text.gives { given } }; "foo".text }.assertGives { given { "foo".text } }
+		evaluate_ { define { any.number.gives { given } }; 123.number }.assertGives { given { 123.number } }
 	}
 
 	@Test
