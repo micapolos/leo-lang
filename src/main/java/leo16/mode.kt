@@ -20,6 +20,7 @@ fun Mode.begin(word: String): Mode =
 			when (word) {
 				givesName -> Mode.QUOTE
 				quoteName -> Mode.QUOTE
+				testName -> Mode.QUOTE
 				else -> this
 			}
 		Mode.QUOTE -> this

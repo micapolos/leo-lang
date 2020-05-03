@@ -4,6 +4,7 @@ import leo.base.assertEqualTo
 import leo14.Script
 import leo15.dsl.*
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 fun Script.assertGives(f: F) {
 	assertEqualTo(read_(f))
@@ -231,6 +232,41 @@ class EvalTest {
 		evaluate_ { 10L.long.native }.assertGives { 10L.native_ }
 		evaluate_ { 10f.float.native }.assertGives { 10f.native_ }
 		evaluate_ { 10.0.double.native }.assertGives { 10.0.native_ }
+	}
+
+	@Test
+	fun testTest() {
+		evaluate_ {
+			test { zero.gives { zero } }
+		}.assertGives { nothing_ }
+
+		evaluate_ {
+			result.is_ { one }
+			test { one.gives { result } }
+		}.assertGives { nothing_ }
+
+		evaluate_ {
+			result.is_ { one }
+			test { result.gives { one } }
+		}.assertGives { nothing_ }
+
+		assertFailsWith(AssertionError::class) {
+			evaluate_ { test { zero.gives { one } } }
+		}
+
+		assertFailsWith(AssertionError::class) {
+			evaluate_ {
+				result.is_ { one }
+				test { zero.gives { result } }
+			}
+		}
+
+		assertFailsWith(AssertionError::class) {
+			evaluate_ {
+				result.is_ { one }
+				test { result.gives { zero } }
+			}
+		}
 	}
 
 	@Test

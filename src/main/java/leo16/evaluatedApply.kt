@@ -1,7 +1,6 @@
 package leo16
 
 import leo.base.ifOrNull
-import leo.base.notNullIf
 import leo.base.runIfNotNull
 import leo13.onlyOrNull
 import leo15.*
@@ -51,6 +50,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyGive(field)
 		?: applyImport(field)
 		?: applyLoaded(field)
+		?: applyTest(field)
 		?: resolve(field)
 
 fun Evaluated.applyValue(field: Field): Evaluated? =
@@ -111,3 +111,23 @@ fun Evaluated.applyImport(field: Field): Evaluated? =
 
 fun Evaluated.applyLoaded(field: Field): Evaluated? =
 	value.plus(field).pattern.loadedValueOrNull?.let { set(it) }
+
+fun Evaluated.applyTest(field: Field): Evaluated? =
+	value.matchEmpty {
+		field.matchPrefix(testName) { rhs ->
+			rhs.matchInfix(givesName) { lhs, rhs ->
+				scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
+					scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
+						if (evaluatedLhs == evaluatedRhs) this
+						else throw AssertionError(
+							value(
+								testName(
+									errorName(
+										itName(lhs),
+										gaveName(evaluatedLhs),
+										shouldName(giveName(evaluatedRhs))))).toString())
+					}
+				}
+			}
+		}
+	}
