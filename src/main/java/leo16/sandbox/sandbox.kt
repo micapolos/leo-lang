@@ -5,10 +5,9 @@ import leo16.print_
 
 fun main() = print_ {
 	text.load.import
+	reflection.load.import
 
 	"Hello, world!".text
-	replace {
-		all { "Hello".text }
-		with { "Goodbye".text }
-	}
+	split { regex { " ".text } }
+	array.list
 }

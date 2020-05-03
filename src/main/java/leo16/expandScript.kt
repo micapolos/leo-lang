@@ -30,16 +30,16 @@ val Byte.asField: Field
 		byteName(
 			bitName(
 				stack(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)
-					.expandSentence { this@asField.asField }))
+					.expandField { this@asField.asField }))
 
 val Int.asField: Field
 	get() =
 		intName(
 			byteName(
 				stack(byte3, byte2, byte1, byte0)
-					.expandSentence { this@asField.asField }))
+					.expandField { this@asField.asField }))
 
-fun <T> Stack<T>.expandSentence(fn: T.() -> Field): Field =
+fun <T> Stack<T>.expandField(fn: T.() -> Field): Field =
 	map(fn).asField
 
 val Stack<Field>.asField: Field
@@ -50,7 +50,7 @@ val String.expandSentence: Field
 	get() =
 		stringName(
 			utf8ByteSeq.reverseStack
-				.expandSentence { asField })
+				.expandField { asField })
 
 val Literal.asField: Field
 	get() =

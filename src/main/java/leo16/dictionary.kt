@@ -27,4 +27,4 @@ fun Dictionary.evaluate(value: Value): Value? =
 
 val Dictionary.asField: Field
 	get() =
-		dictionaryName(definitionName(definitionStack.expandSentence { asField }))
+		dictionaryName(definitionName(definitionStack.expandField { asField }))

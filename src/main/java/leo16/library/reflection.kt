@@ -1,6 +1,7 @@
 package leo16.library
 
 import leo13.array
+import leo13.stack
 import leo14.untyped.typed.loadClass
 import leo15.*
 import leo16.*
@@ -198,6 +199,17 @@ private val objectInvokeMethodDefinition =
 		method.invoke(object_, *args).nativeValue
 	}
 
+private val arrayListDefinition =
+	value(listName(arrayName(nativeName(anyName())))).gives {
+		val array = this
+			.getOrNull(listName)!!
+			.thingOrNull!! // Not ideal, but probably OK.
+			.getOrNull(nativeName)!!
+			.theNativeOrNull!!
+			.value as Array<*>
+		stack(*array).expandField { nativeField }.value
+	}
+
 private val reflectionDictionary =
 	emptyDictionary
 		.plus(booleanName.definition(Boolean::class.java))
@@ -217,5 +229,6 @@ private val reflectionDictionary =
 		.plus(classMethodDefinition)
 		.plus(methodInvokeDefinition)
 		.plus(objectInvokeMethodDefinition)
+		.plus(arrayListDefinition)
 
 val reflection = reflectionDictionary.field.value

@@ -61,6 +61,14 @@ val text = value_ {
 						}
 					}
 				}
+
+				string.split.method.is_ {
+					string.class_
+					method {
+						name { "split".text }
+						parameter { list { string.class_ } }
+					}
+				}
 			}
 		}
 
@@ -121,6 +129,16 @@ val text = value_ {
 				}
 			}
 			text
+		}
+
+		any.text
+		split { regex { any.text } }
+		gives {
+			given.text.native
+			invoke {
+				string.split.method
+				parameter { list { given.split.regex.text.native } }
+			}
 		}
 	}
 }
