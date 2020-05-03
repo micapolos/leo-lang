@@ -5,8 +5,8 @@ import leo16.dictionary_
 import leo16.value_
 
 val text = dictionary_ {
-	number.dictionary.import
-	reflection.dictionary.import
+	number.import
+	reflection.import
 
 	import {
 		dictionary {

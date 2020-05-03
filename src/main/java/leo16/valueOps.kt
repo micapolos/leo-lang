@@ -77,3 +77,7 @@ val Value.listMatchValue: Value
 val Value.theNativeOrNull: The<Any?>?
 	get() =
 		onlyFieldOrNull?.theNativeOrNull
+
+val Value.loadedDictionaryOrNull: Dictionary?
+	get() =
+		dictionaryOrNull ?: dictionaryName(this).value.pattern.loadedValueOrNull?.dictionaryOrNull

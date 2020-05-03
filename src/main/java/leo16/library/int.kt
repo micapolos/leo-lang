@@ -4,7 +4,7 @@ import leo15.dsl.*
 import leo16.dictionary_
 
 val int = dictionary_ {
-	reflection.dictionary.import
+	reflection.import
 
 	import {
 		dictionary {

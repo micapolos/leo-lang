@@ -283,6 +283,7 @@ class EvalTest {
 	@Test
 	fun loaded() {
 		evaluate_ { ping.dictionary.import.ping }.assertGives { pong }
+		evaluate_ { ping.import.ping }.assertGives { pong }
 	}
 
 	@Test

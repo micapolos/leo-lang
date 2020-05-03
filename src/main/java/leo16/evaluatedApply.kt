@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.ifOrNull
+import leo.base.orIfNull
 import leo.base.runIfNotNull
 import leo13.onlyOrNull
 import leo15.*
@@ -107,12 +108,12 @@ fun Evaluated.applyMatch(word: String, evaluated: Evaluated): Evaluated? =
 
 fun Evaluated.applyImport(field: Field): Evaluated? =
 	field.matchPrefix(importName) { rhs ->
-		rhs.fieldStack.onlyOrNull?.dictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
+		rhs.loadedDictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
 	}
 
 fun Evaluated.applyExport(field: Field): Evaluated? =
 	field.matchPrefix(exportName) { rhs ->
-		rhs.fieldStack.onlyOrNull?.dictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
+		rhs.loadedDictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
 	}
 
 fun Evaluated.applyLoaded(field: Field): Evaluated? =
