@@ -37,6 +37,8 @@ val emptyPattern = pattern()
 val String.pattern get() = pattern(invoke(pattern()))
 operator fun String.invoke(pattern: Pattern): PatternField = PatternSentence(this, pattern).field
 
+val Pattern.isEmpty get() = this is ValuePattern && value.fieldStack.isEmpty
+
 operator fun Pattern.plus(field: PatternField): Pattern =
 	when (this) {
 		AnyPattern -> pattern(anyName.invoke(emptyPattern))

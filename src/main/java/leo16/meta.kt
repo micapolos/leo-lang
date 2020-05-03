@@ -2,11 +2,16 @@ package leo16
 
 import leo15.*
 
+enum class Mode {
+	EVALUATE,
+	DEFINE,
+	QUOTE
+}
+
 val String.wordIsMeta: Boolean
 	get() =
 		when (this) {
-			compileName -> true
-			evaluateName -> true
+			defineName -> true
 			givesName -> true
 			givingName -> true
 			dictionaryName -> true
