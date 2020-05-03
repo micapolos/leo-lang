@@ -34,6 +34,7 @@ val Any?.nativePatternField: PatternField get() = NativePatternField(this)
 val Stack<PatternField>.value get() = PatternValue(this)
 fun patternValue(vararg fields: PatternField) = stack(*fields).value
 fun pattern(vararg fields: PatternField) = patternValue(*fields).pattern
+val emptyPattern = pattern()
 val String.pattern get() = pattern(invoke(pattern()))
 operator fun String.invoke(pattern: Pattern): PatternField = PatternSentence(this, pattern).field
 

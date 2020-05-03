@@ -43,7 +43,7 @@ fun Evaluated.applyEvaluate(field: Field): Evaluated? =
 fun Evaluated.applyCompile(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(compileName) { rhs ->
-			scope.evaluator.plus(rhs).compiled
+			scope.emptyEvaluator.plus(rhs).evaluated
 		}
 	}
 
@@ -68,7 +68,7 @@ fun Evaluated.applyGive(field: Field): Evaluated? =
 fun Evaluated.applyMatch(field: Field): Evaluated? =
 	field.matchPrefix(matchName) { rhs ->
 		value.matchValueOrNull?.let { matchValue ->
-			scope.evaluator.plus(rhs).compiled.let { compiled ->
+			scope.emptyEvaluator.plus(rhs).evaluated.let { compiled ->
 				ifOrNull(compiled.value.isEmpty) {
 					compiled.scope.exportDictionary.apply(matchValue)?.let { matching ->
 						scope.evaluated(matching)
@@ -81,7 +81,7 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 fun Evaluated.applyDictionary(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(dictionaryName) { rhs ->
-			emptyEvaluator.plus(rhs).compiled.let { compiled ->
+			emptyEvaluator.plus(rhs).evaluated.let { compiled ->
 				ifOrNull(compiled.value.isEmpty) {
 					scope.evaluated(compiled.scope.exportDictionary.field.value)
 				}

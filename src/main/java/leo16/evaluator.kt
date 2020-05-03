@@ -8,7 +8,7 @@ import leo13.reverse
 import leo14.*
 import leo15.*
 
-data class Evaluator(val parentOrNull: EvaluatorParent?, val compiled: Evaluated, val isMeta: Boolean) {
+data class Evaluator(val parentOrNull: EvaluatorParent?, val evaluated: Evaluated, val isMeta: Boolean) {
 	override fun toString() = asField.toString()
 }
 
@@ -19,7 +19,7 @@ data class EvaluatorParent(val evaluator: Evaluator, val word: String) {
 fun EvaluatorParent?.evaluator(evaluated: Evaluated, isMeta: Boolean) = Evaluator(this, evaluated, isMeta)
 infix fun EvaluatorParent?.evaluator(evaluated: Evaluated) = Evaluator(this, evaluated, isMeta = false)
 val Evaluated.evaluator get() = nullOf<EvaluatorParent>().evaluator(this)
-val Scope.evaluator get() = emptyEvaluated.evaluator
+val Scope.emptyEvaluator get() = emptyEvaluated.evaluator
 fun Evaluator.parent(word: String) = EvaluatorParent(this, word)
 val emptyEvaluator = emptyScope.emptyEvaluated.evaluator
 
@@ -27,7 +27,7 @@ val Evaluator.asField: Field
 	get() =
 		compilerName(
 			parentOrNull?.asField.orIfNull { parentName(nothingName()) },
-			compiled.asSentence,
+			evaluated.asSentence,
 			metaName(if (isMeta) trueName() else falseName()))
 
 val EvaluatorParent.asField: Field
@@ -62,11 +62,11 @@ operator fun Evaluator.plus(literal: Literal): Evaluator =
 	}
 
 fun Evaluator.begin(word: String): Evaluator =
-	parent(word).evaluator(compiled.begin, isMeta || word.wordIsMeta)
+	parent(word).evaluator(evaluated.begin, isMeta || word.wordIsMeta)
 
 val Evaluator.end: Evaluator?
 	get() =
-		parentOrNull?.endEvaluator(compiled)
+		parentOrNull?.endEvaluator(evaluated)
 
 fun EvaluatorParent.endEvaluator(evaluated: Evaluated): Evaluator =
 	evaluator.append(word.invoke(evaluated.value))
@@ -82,8 +82,8 @@ fun Evaluator.append(sentence: Sentence): Evaluator =
 
 fun Evaluator.applyCompiler(field: Field): Evaluated? =
 	notNullIf(field == compilerName(value())) {
-		compiled.scope.evaluated(value(asField))
+		evaluated.scope.evaluated(value(asField))
 	}
 
 fun Evaluator.updateCompiled(fn: Evaluated.() -> Evaluated): Evaluator =
-	copy(compiled = compiled.fn())
+	copy(evaluated = evaluated.fn())

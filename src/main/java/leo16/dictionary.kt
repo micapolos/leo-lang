@@ -20,7 +20,7 @@ fun Dictionary.resolve(value: Value): Value =
 	definitionStack.mapFirst { apply(value) } ?: value
 
 fun Dictionary.compile(value: Value): Evaluated? =
-	emptyScope.evaluator.plus(value).compiled
+	emptyScope.emptyEvaluator.plus(value).evaluated
 
 fun Dictionary.evaluate(value: Value): Value? =
 	compile(value)?.value

@@ -4,7 +4,7 @@ import leo14.*
 
 val Evaluator.fragment: Fragment
 	get() =
-		parentOrNull?.fragmentParent.fragment(compiled.value.script)
+		parentOrNull?.fragmentParent.fragment(evaluated.value.script)
 
 val EvaluatorParent.fragmentParent: FragmentParent
 	get() =
