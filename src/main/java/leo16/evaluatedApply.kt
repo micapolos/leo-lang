@@ -48,7 +48,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyGiving(field)
 		?: applyGive(field)
 		?: applyImport(field)
-		?: applyLoad(field)
+		?: applyLoaded(field)
 		?: resolve(field)
 
 fun Evaluated.applyValue(field: Field): Evaluated? =
@@ -107,12 +107,5 @@ fun Evaluated.applyImport(field: Field): Evaluated? =
 		rhs.fieldStack.onlyOrNull?.dictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
 	}
 
-fun Evaluated.applyLoad(field: Field): Evaluated? =
-	value.matchEmpty {
-		field.matchPrefix(loadName) { rhs ->
-			rhs.pattern.loadedValueOrNull?.let { loadedValue ->
-				set(loadedValue)
-			}
-		}
-	}
-
+fun Evaluated.applyLoaded(field: Field): Evaluated? =
+	value.plus(field).pattern.loadedValueOrNull?.let { set(it) }
