@@ -4,9 +4,10 @@ sealed class Reader
 
 object VoidReader : Reader()
 data class EvaluatorReader(val evaluator: Evaluator) : Reader()
-data class LibrarianReader(val librarian: Librarian) : Reader()
+data class DictionarianReader(val dictionarian: Dictionarian) : Reader()
+data class CompilerReader(val compiler: Compiler) : Reader()
 
 val voidReader: Reader = VoidReader
 val Evaluator.reader: Reader get() = EvaluatorReader(this)
-val Librarian.reader: Reader get() = LibrarianReader(this)
-
+val Dictionarian.reader: Reader get() = DictionarianReader(this)
+val Compiler.reader: Reader get() = CompilerReader(this)
