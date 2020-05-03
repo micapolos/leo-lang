@@ -21,7 +21,7 @@ class EvalTest {
 		evaluate_ { comment { nothing_ } }.assertGives { nothing_ }
 		evaluate_ { comment { zero } }.assertGives { nothing_ }
 		evaluate_ {
-			comment { a { point } }
+			comment { two { dimensional { point } } }
 			point {
 				comment { x.coordinate }
 				x { 10.number }
