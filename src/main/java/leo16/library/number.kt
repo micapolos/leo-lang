@@ -13,7 +13,7 @@ val number = value_ {
 					"java.math.BigDecimal".text.name.class_
 				}
 
-				big.decimal.long.value.method.is_ {
+				long.big.decimal.method.is_ {
 					big.decimal.class_
 					method {
 						name { "valueOf".text }
@@ -25,7 +25,7 @@ val number = value_ {
 
 		any.int.number
 		gives {
-			big.decimal.long.value.method
+			long.big.decimal.method
 			invoke { parameter { list { given.number.int.native } } }
 			number
 		}

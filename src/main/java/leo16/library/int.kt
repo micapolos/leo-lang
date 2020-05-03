@@ -101,6 +101,6 @@ val int = value_ {
 	}
 }
 
-private fun plus(a: Int, b: Int) = a.plus(b)
-private fun minus(a: Int, b: Int) = a.minus(b)
-private fun times(a: Int, b: Int) = a.times(b)
+fun plus(a: Int, b: Int) = a.plus(b)
+fun minus(a: Int, b: Int) = a.minus(b)
+fun times(a: Int, b: Int) = a.times(b)
