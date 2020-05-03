@@ -9,25 +9,98 @@ val int = value_ {
 
 		import {
 			dictionary {
-				big.decimal.class_.is_ {
-					"java.math.BigDecimal".text.name.class_
+				integer.class_.is_ {
+					"leo16.library.IntKt".text.name.class_
 				}
 
-				big.decimal.long.value.method.is_ {
-					big.decimal.class_
+				integer.plus.method.is_ {
+					integer.class_
 					method {
-						name { "valueOf".text }
-						parameter { list { long.class_ } }
+						name { "plus".text }
+						parameter {
+							list {
+								this_ { int.class_ }
+								this_ { int.class_ }
+							}
+						}
+					}
+				}
+
+				integer.minus.method.is_ {
+					integer.class_
+					method {
+						name { "minus".text }
+						parameter {
+							list {
+								this_ { int.class_ }
+								this_ { int.class_ }
+							}
+						}
+					}
+				}
+
+				integer.times.method.is_ {
+					integer.class_
+					method {
+						name { "times".text }
+						parameter {
+							list {
+								this_ { int.class_ }
+								this_ { int.class_ }
+							}
+						}
 					}
 				}
 			}
 		}
 
-		any.int.number
+		any.int
+		plus { any.int }
 		gives {
-			big.decimal.long.value.method
-			invoke { parameter { list { given.number.int.native } } }
-			number
+			integer.plus.method
+			invoke {
+				parameter {
+					list {
+						this_ { given.int.native }
+						this_ { given.plus.int.native }
+					}
+				}
+			}
+			int
+		}
+
+		any.int
+		minus { any.int }
+		gives {
+			integer.minus.method
+			invoke {
+				parameter {
+					list {
+						this_ { given.int.native }
+						this_ { given.minus.int.native }
+					}
+				}
+			}
+			int
+		}
+
+		any.int
+		times { any.int }
+		gives {
+			integer.times.method
+			invoke {
+				parameter {
+					list {
+						this_ { given.int.native }
+						this_ { given.times.int.native }
+					}
+				}
+			}
+			int
 		}
 	}
 }
+
+private fun plus(a: Int, b: Int) = a.plus(b)
+private fun minus(a: Int, b: Int) = a.minus(b)
+private fun times(a: Int, b: Int) = a.times(b)

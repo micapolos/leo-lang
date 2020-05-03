@@ -113,11 +113,11 @@ class EvalTest {
 
 	@Test
 	fun ints() {
-		evaluate_ { 123.int }.assertGives { 123.int }
-		evaluate_ { 123.int.native }.assertGives { 123.native_ }
-		evaluate_ { 2.int.plus { 3.int } }.assertGives { 5.int }
-		evaluate_ { 5.int.minus { 3.int } }.assertGives { 2.int }
-		evaluate_ { 2.int.times { 3.int } }.assertGives { 6.int }
+		evaluate_ { int.load.import; 123.int }.assertGives { 123.int }
+		evaluate_ { int.load.import; 123.int.native }.assertGives { 123.native_ }
+		evaluate_ { int.load.import; 2.int.plus { 3.int } }.assertGives { 5.int }
+		evaluate_ { int.load.import; 5.int.minus { 3.int } }.assertGives { 2.int }
+		evaluate_ { int.load.import; 2.int.times { 3.int } }.assertGives { 6.int }
 	}
 
 	@Test

@@ -8,6 +8,7 @@ val valueFunMap = mapOf(
 	pingName.pattern to { ping },
 	reflectionName.pattern to { reflection },
 	intName.pattern to { int },
+	numberName.pattern to { number },
 	baseName.pattern to { base },
 	bitName.pattern to { bit },
 	listName.pattern to { list },

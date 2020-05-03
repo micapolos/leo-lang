@@ -5,7 +5,7 @@ import leo16.value_
 
 val text = value_ {
 	dictionary {
-		import { int.load }
+		import { number.load }
 		import { reflection.load }
 
 		import {
