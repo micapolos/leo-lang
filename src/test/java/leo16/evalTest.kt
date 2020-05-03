@@ -96,10 +96,34 @@ class EvalTest {
 
 	@Test
 	fun texts() {
-		evaluate_ { text.load.import; "Hello".text }.assertGives { "Hello".text }
-		evaluate_ { text.load.import; "Hello".text.native }.assertGives { "Hello".native_ }
-		evaluate_ { text.load.import; "Hello, ".text.plus { "world!".text } }.assertGives { "Hello, world!".text }
-		evaluate_ { text.load.import; "Hello, world!".text.length }.assertGives { 13.number }
+		evaluate_ {
+			text.load.import
+			"Hello".text
+		}.assertGives { "Hello".text }
+
+		evaluate_ {
+			text.load.import
+			"Hello".text.native
+		}.assertGives { "Hello".native_ }
+
+		evaluate_ {
+			text.load.import
+			"Hello, ".text.plus { "world!".text }
+		}.assertGives { "Hello, world!".text }
+
+		evaluate_ {
+			text.load.import
+			"Hello, world!".text.length
+		}.assertGives { 13.number }
+
+		evaluate_ {
+			text.load.import
+			"Hello, world!".text
+			replace {
+				all { "Hello".text }
+				with { "Goodbye".text }
+			}
+		}.assertGives { "Goodbye, world!".text }
 	}
 
 	@Test

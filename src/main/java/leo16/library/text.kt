@@ -14,6 +14,10 @@ val text = value_ {
 					"java.lang.String".text.name.class_
 				}
 
+				char.sequence.class_.is_ {
+					"java.lang.CharSequence".text.name.class_
+				}
+
 				string.length.method.is_ {
 					string.class_
 					method {
@@ -40,6 +44,19 @@ val text = value_ {
 							list {
 								this_ { int.class_ }
 								this_ { int.class_ }
+							}
+						}
+					}
+				}
+
+				string.replace.method.is_ {
+					string.class_
+					method {
+						name { "replace".text }
+						parameter {
+							list {
+								this_ { char.sequence.class_ }
+								this_ { char.sequence.class_ }
 							}
 						}
 					}
@@ -83,6 +100,25 @@ val text = value_ {
 			invoke {
 				string.concat.method
 				parameter { list { given.plus.text.native } }
+			}
+			text
+		}
+
+		any.text
+		replace {
+			all { any.text }
+			with { any.text }
+		}
+		gives {
+			given.text.native
+			invoke {
+				string.replace.method
+				parameter {
+					list {
+						this_ { given.replace.all.text.native }
+						this_ { given.replace.with.text.native }
+					}
+				}
 			}
 			text
 		}

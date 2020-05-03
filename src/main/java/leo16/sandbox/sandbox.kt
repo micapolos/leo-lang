@@ -4,8 +4,11 @@ import leo15.dsl.*
 import leo16.print_
 
 fun main() = print_ {
-	number.load.import
+	text.load.import
 
-	2.number
-	plus { 3.number }
+	"Hello, world!".text
+	replace {
+		all { "Hello".text }
+		with { "Goodbye".text }
+	}
 }
