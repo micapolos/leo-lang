@@ -379,9 +379,9 @@ class EvalTest {
 				compiled {
 					scope {
 						library {
-							binding {
+							definition {
 								list {
-									binding {
+									definition {
 										pattern { zero }
 										body { one }
 									}
@@ -390,9 +390,9 @@ class EvalTest {
 						}
 						export {
 							library {
-								binding {
+								definition {
 									list {
-										binding {
+										definition {
 											pattern { zero }
 											body { one }
 										}

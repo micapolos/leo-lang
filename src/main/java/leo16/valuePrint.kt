@@ -26,9 +26,9 @@ val Sentence.printSentence: Sentence
 
 val Library.printSentence: Sentence
 	get() =
-		libraryName.sentenceTo(patternName(bindingStack.printField { printField }))
+		libraryName.sentenceTo(patternName(definitionStack.printField { printField }))
 
-val Binding.printField: Field
+val Definition.printField: Field
 	get() =
 		patternName(pattern.value)
 

@@ -21,14 +21,14 @@ val Scope.asField: Field
 			library.asField,
 			exportName(exportLibrary.asField))
 
-operator fun Scope.plus(binding: Binding): Scope =
-	library.plus(binding).scopeWithPublic(exportLibrary.plus(binding))
+operator fun Scope.plus(definition: Definition): Scope =
+	library.plus(definition).scopeWithPublic(exportLibrary.plus(definition))
 
-fun Scope.import(binding: Binding): Scope =
-	library.plus(binding).scopeWithPublic(exportLibrary)
+fun Scope.import(definition: Definition): Scope =
+	library.plus(definition).scopeWithPublic(exportLibrary)
 
 fun Scope.import(library: Library) =
-	fold(library.bindingStack.reverse) { import(it) }
+	fold(library.definitionStack.reverse) { import(it) }
 
 fun Scope.applyBinding(value: Value): Scope? =
-	runIfNotNull(library.bindingOrNull(value)) { plus(it) }
+	runIfNotNull(library.definitionOrNull(value)) { plus(it) }
