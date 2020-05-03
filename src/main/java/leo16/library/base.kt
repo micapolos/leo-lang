@@ -1,10 +1,8 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.value_
+import leo16.dictionary_
 
-val base = value_ {
-	dictionary {
-		any.clear.gives { nothing }
-	}
+val base = dictionary_ {
+	any.clear.gives { nothing }
 }

@@ -1,10 +1,8 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.value_
+import leo16.dictionary_
 
-val ping = value_ {
-	dictionary {
-		ping.is_ { pong }
-	}
+val ping = dictionary_ {
+	ping.is_ { pong }
 }
