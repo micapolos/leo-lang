@@ -18,7 +18,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyGiving(field)
 		?: applyGive(field)
 		?: applyMatch(field)
-		?: applyLibrary(field)
+		?: applyDictionary(field)
 		?: applyImport(field)
 		?: applyLoad(field)
 		?: resolve(field)
@@ -36,7 +36,7 @@ fun Evaluated.applyQuote(field: Field): Evaluated? =
 fun Evaluated.applyEvaluate(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(evaluateName) { rhs ->
-			scope.library.evaluate(rhs)?.let { scope.evaluated(it) }
+			scope.dictionary.evaluate(rhs)?.let { scope.evaluated(it) }
 		}
 	}
 
@@ -48,7 +48,7 @@ fun Evaluated.applyCompile(field: Field): Evaluated? =
 	}
 
 fun Evaluated.resolve(field: Field): Evaluated =
-	scope.evaluated(scope.library.resolve(value.plus(field)))
+	scope.evaluated(scope.dictionary.resolve(value.plus(field)))
 
 fun Evaluated.applyBinding(field: Field): Evaluated? =
 	scope.applyBinding(value.plus(field))?.emptyEvaluated
@@ -56,7 +56,7 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 fun Evaluated.applyGiving(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(givingName) { rhs ->
-			updateValue { scope.library.function(rhs).field.value }
+			updateValue { scope.dictionary.function(rhs).field.value }
 		}
 	}
 
@@ -70,7 +70,7 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 		value.matchValueOrNull?.let { matchValue ->
 			scope.evaluator.plus(rhs).compiled.let { compiled ->
 				ifOrNull(compiled.value.isEmpty) {
-					compiled.scope.exportLibrary.apply(matchValue)?.let { matching ->
+					compiled.scope.exportDictionary.apply(matchValue)?.let { matching ->
 						scope.evaluated(matching)
 					}
 				}
@@ -78,12 +78,12 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 		}
 	}
 
-fun Evaluated.applyLibrary(field: Field): Evaluated? =
+fun Evaluated.applyDictionary(field: Field): Evaluated? =
 	value.matchEmpty {
-		field.matchPrefix(libraryName) { rhs ->
+		field.matchPrefix(dictionaryName) { rhs ->
 			emptyEvaluator.plus(rhs).compiled.let { compiled ->
 				ifOrNull(compiled.value.isEmpty) {
-					scope.evaluated(compiled.scope.exportLibrary.field.value)
+					scope.evaluated(compiled.scope.exportDictionary.field.value)
 				}
 			}
 		}
@@ -91,7 +91,7 @@ fun Evaluated.applyLibrary(field: Field): Evaluated? =
 
 fun Evaluated.applyImport(field: Field): Evaluated? =
 	field.matchPrefix(importName) { rhs ->
-		rhs.fieldStack.onlyOrNull?.libraryOrNull?.let { scope.import(it) }?.evaluated(value)
+		rhs.fieldStack.onlyOrNull?.dictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
 	}
 
 fun Evaluated.applyLoad(field: Field): Evaluated? =

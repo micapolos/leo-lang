@@ -30,7 +30,7 @@ val String.isPatternKeyword: Boolean
 	get() =
 		when (this) {
 			givingName -> true
-			libraryName -> true
+			dictionaryName -> true
 			anyName -> true
 			nativeName -> true
 			exactName -> true

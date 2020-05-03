@@ -9,7 +9,7 @@ val String.wordIsMeta: Boolean
 			evaluateName -> true
 			givesName -> true
 			givingName -> true
-			libraryName -> true
+			dictionaryName -> true
 			matchName -> true
 			quoteName -> true
 			else -> false

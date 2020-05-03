@@ -4,7 +4,6 @@ import leo.base.The
 import leo.base.notNullIf
 import leo.base.the
 import leo13.*
-import leo14.Literal
 import leo15.string
 
 data class Value(val fieldStack: Stack<Field>) {
@@ -23,7 +22,7 @@ data class FunctionField(val function: Function) : Field() {
 	override fun toString() = super.toString()
 }
 
-data class LibraryField(val library: Library) : Field() {
+data class DictionaryField(val dictionary: Dictionary) : Field() {
 	override fun toString() = super.toString()
 }
 
@@ -42,7 +41,7 @@ val Value.asField: Field
 val Stack<Field>.value: Value get() = Value(this)
 val Sentence.field: Field get() = SentenceField(this)
 val Function.field: Field get() = FunctionField(this)
-val Library.field: Field get() = LibraryField(this)
+val Dictionary.field: Field get() = DictionaryField(this)
 val Any?.nativeField: Field get() = NativeField(this)
 val Any?.nativeValue: Value get() = nativeField.value
 fun value(vararg fields: Field) = stack(*fields).value
@@ -56,12 +55,12 @@ val Field.value get() = value(this)
 
 val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
 val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
-val Field.libraryOrNull: Library? get() = (this as? LibraryField)?.library
+val Field.dictionaryOrNull: Dictionary? get() = (this as? DictionaryField)?.dictionary
 val Field.theNativeOrNull: The<Any?>? get() = if (this is NativeField) native.the else null
 val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
 val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull
 val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull
-val Value.libraryOrNull: Library? get() = onlyFieldOrNull?.libraryOrNull
+val Value.dictionaryOrNull: Dictionary? get() = onlyFieldOrNull?.dictionaryOrNull
 val Value.isEmpty: Boolean get() = fieldStack.isEmpty
 
 val Sentence.onlyWordOrNull: String? get() = notNullIf(value.isEmpty) { word }

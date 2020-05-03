@@ -25,7 +25,7 @@ val Field.patternField: PatternField
 		when (this) {
 			is SentenceField -> sentence.patternField
 			is FunctionField -> function.printSentence.patternField
-			is LibraryField -> library.printSentence.patternField
+			is DictionaryField -> dictionary.printSentence.patternField
 			is NativeField -> nativePatternField
 		}
 

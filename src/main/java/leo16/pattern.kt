@@ -84,7 +84,7 @@ fun Field.matches(field: PatternField): Boolean =
 	when (this) {
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
 		is FunctionField -> field == givingName(anyPattern)
-		is LibraryField -> field == libraryName(anyPattern)
+		is DictionaryField -> field == dictionaryName(anyPattern)
 		is NativeField -> field == nativeName(anyPattern)
 	}
 

@@ -48,7 +48,7 @@ operator fun Evaluator.plus(field: Field): Evaluator =
 	when (field) {
 		is SentenceField -> plus(field.sentence)
 		is FunctionField -> append(field)
-		is LibraryField -> append(field)
+		is DictionaryField -> append(field)
 		is NativeField -> append(field)
 	}
 

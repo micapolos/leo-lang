@@ -83,7 +83,7 @@ class EvalTest {
 	fun getSpecial() {
 		evaluate_ { the { "foo".text }.text }.assertGives { "foo".text }
 		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
-		evaluate_ { the { library { nothing_ } }.library }.assertGives { library { pattern { list } } }
+		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { pattern { list } } }
 		evaluate_ { the { giving { given } }.giving }.assertGives { giving { given } }
 	}
 
@@ -167,17 +167,17 @@ class EvalTest {
 	}
 
 	@Test
-	fun library() {
+	fun dictionary() {
 		evaluate_ {
-			library { nothing_ }
-		}.assertGives { library { pattern { list } } }
+			dictionary { nothing_ }
+		}.assertGives { dictionary { pattern { list } } }
 
 		evaluate_ {
-			library {
+			dictionary {
 				zero.is_ { one }
 			}
 		}.assertGives {
-			library {
+			dictionary {
 				pattern {
 					list {
 						pattern { zero }
@@ -187,12 +187,12 @@ class EvalTest {
 		}
 
 		evaluate_ {
-			library {
+			dictionary {
 				zero.is_ { one }
 				one.is_ { zero }
 			}
 		}.assertGives {
-			library {
+			dictionary {
 				pattern {
 					list {
 						pattern { zero }
@@ -205,17 +205,17 @@ class EvalTest {
 
 	@Test
 	fun import() {
-		evaluate_ { library { nothing_ }.import }.assertGives { nothing_ }
-		evaluate_ { library { zero.is_ { one } }.import }.assertGives { nothing_ }
-		evaluate_ { library { zero.is_ { one } }.import.zero }.assertGives { one }
+		evaluate_ { dictionary { nothing_ }.import }.assertGives { nothing_ }
+		evaluate_ { dictionary { zero.is_ { one } }.import }.assertGives { nothing_ }
+		evaluate_ { dictionary { zero.is_ { one } }.import.zero }.assertGives { one }
 
-		evaluate_ { zero.import { library { zero.is_ { one } } } }.assertGives { zero }
-		evaluate_ { zero.import { library { zero.is_ { one } } }.evaluate }.assertGives { one }
+		evaluate_ { zero.import { dictionary { zero.is_ { one } } } }.assertGives { zero }
+		evaluate_ { zero.import { dictionary { zero.is_ { one } } }.evaluate }.assertGives { one }
 
 		evaluate_ {
 			zero.is_ { one }
 			import {
-				library {
+				dictionary {
 					zero.is_ { two }
 				}
 			}
@@ -378,7 +378,7 @@ class EvalTest {
 				parent { nothing }
 				compiled {
 					scope {
-						library {
+						dictionary {
 							definition {
 								list {
 									definition {
@@ -389,7 +389,7 @@ class EvalTest {
 							}
 						}
 						export {
-							library {
+							dictionary {
 								definition {
 									list {
 										definition {

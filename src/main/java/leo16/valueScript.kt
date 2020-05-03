@@ -20,7 +20,7 @@ val Field.defaultScriptLine: ScriptLine
 		when (this) {
 			is SentenceField -> sentence.scriptLine
 			is FunctionField -> function.printSentence.scriptLine
-			is LibraryField -> library.printSentence.scriptLine
+			is DictionaryField -> dictionary.printSentence.scriptLine
 			is NativeField -> native.nativeScriptLine
 		}
 

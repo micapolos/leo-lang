@@ -6,29 +6,29 @@ import leo13.reverse
 import leo15.exportName
 import leo15.scopeName
 
-data class Scope(val library: Library, val exportLibrary: Library) {
+data class Scope(val dictionary: Dictionary, val exportDictionary: Dictionary) {
 	override fun toString() = asField.toString()
 }
 
-fun Library.scopeWithPublic(library: Library) = Scope(this, library)
-val Library.emptyScope get() = scopeWithPublic(emptyLibrary)
-val emptyScope get() = emptyLibrary.emptyScope
-val Scope.begin get() = library.emptyScope
+fun Dictionary.scopeWithPublic(dictionary: Dictionary) = Scope(this, dictionary)
+val Dictionary.emptyScope get() = scopeWithPublic(emptyDictionary)
+val emptyScope get() = emptyDictionary.emptyScope
+val Scope.begin get() = dictionary.emptyScope
 
 val Scope.asField: Field
 	get() =
 		scopeName(
-			library.asField,
-			exportName(exportLibrary.asField))
+			dictionary.asField,
+			exportName(exportDictionary.asField))
 
 operator fun Scope.plus(definition: Definition): Scope =
-	library.plus(definition).scopeWithPublic(exportLibrary.plus(definition))
+	dictionary.plus(definition).scopeWithPublic(exportDictionary.plus(definition))
 
 fun Scope.import(definition: Definition): Scope =
-	library.plus(definition).scopeWithPublic(exportLibrary)
+	dictionary.plus(definition).scopeWithPublic(exportDictionary)
 
-fun Scope.import(library: Library) =
-	fold(library.definitionStack.reverse) { import(it) }
+fun Scope.import(dictionary: Dictionary) =
+	fold(dictionary.definitionStack.reverse) { import(it) }
 
 fun Scope.applyBinding(value: Value): Scope? =
-	runIfNotNull(library.definitionOrNull(value)) { plus(it) }
+	runIfNotNull(dictionary.definitionOrNull(value)) { plus(it) }
