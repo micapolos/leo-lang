@@ -231,6 +231,19 @@ class EvalTest {
 	}
 
 	@Test
+	fun dictionaryInsideDictionary() {
+//		evaluate_ {
+//			dictionary {
+//				dictionary {
+//					define { zero.is_ { one } }
+//				}.import
+//
+//				define { two.is_ { zero } }
+//			}.import.two
+//		}.assertGives { one }
+	}
+
+	@Test
 	fun import() {
 		evaluate_ { dictionary { nothing_ }.import }.assertGives { nothing_ }
 		evaluate_ { dictionary { define { zero.is_ { one } } }.import }.assertGives { nothing_ }
@@ -432,13 +445,13 @@ class EvalTest {
 	}
 
 	@Test
-	fun compiler() {
+	fun evaluator() {
 		evaluate_ {
-			define { zero.is_ { one } }.compiler
+			define { zero.is_ { one } }.evaluator
 		}.assertGives {
-			compiler {
+			evaluator {
 				parent { nothing }
-				compiled {
+				evaluated {
 					scope {
 						dictionary {
 							definition {

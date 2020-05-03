@@ -6,9 +6,5 @@ import leo16.print_
 fun main() = print_ {
 	text.load.import
 
-	"Hello, world!".text
-	cut {
-		from { 7.number }
-		to { 12.number }
-	}
+	"Hello, world!".text.len
 }

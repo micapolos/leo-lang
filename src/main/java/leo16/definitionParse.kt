@@ -5,14 +5,13 @@ import leo15.isName
 
 fun Dictionary.definitionOrNull(value: Value): Definition? =
 	null
-		?: value.isDefinitionOrNull
+		?: isDefinitionOrNull(value)
 		?: givesDefinitionOrNull(value)
 
-val Value.isDefinitionOrNull: Definition?
-	get() =
-		matchInfix(isName) { lhs, rhs ->
-			lhs.pattern.definitionTo(rhs.body)
-		}
+fun Dictionary.isDefinitionOrNull(value: Value): Definition? =
+	value.matchInfix(isName) { lhs, rhs ->
+		lhs.pattern.definitionTo(emptyScope.emptyEvaluator.plus(rhs).evaluated.value.body)
+	}
 
 fun Dictionary.givesDefinitionOrNull(value: Value): Definition? =
 	value.matchInfix(givesName) { lhs, rhs ->

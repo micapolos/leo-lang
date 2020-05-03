@@ -5,6 +5,24 @@ import leo16.value_
 
 val text = value_ {
 	dictionary {
+		int.load.import
+
+		define {
+			any.text.len
+			gives {
+				given.len.text.native
+				invoke {
+					"java.lang.String".text.name.native.class_
+					method {
+						name { "length".text }
+						parameter { list }
+					}
+					parameter { list }
+				}
+				int.number
+			}
+		}
+
 		define {
 			any.text
 			cut {

@@ -1,6 +1,6 @@
 package leo16
 
-import leo15.compiledName
+import leo15.evaluatedName
 
 data class Evaluated(val scope: Scope, val value: Value) {
 	override fun toString() = asField.toString()
@@ -11,7 +11,7 @@ val Scope.emptyEvaluated get() = evaluated(value())
 
 val Evaluated.asField: Field
 	get() =
-		compiledName(scope.asField, value.asField)
+		evaluatedName(scope.asField, value.asField)
 
 fun Evaluated.updateValue(fn: Value.() -> Value) = copy(value = value.fn())
 

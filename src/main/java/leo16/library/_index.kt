@@ -6,6 +6,7 @@ import leo16.pattern
 // TODO: Use reflection instead of hard-coded index.
 val valueFunMap = mapOf(
 	pingName.pattern to { ping },
+	intName.pattern to { int },
 	baseName.pattern to { base },
 	bitName.pattern to { bit },
 	listName.pattern to { list },

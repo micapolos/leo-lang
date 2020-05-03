@@ -3,10 +3,10 @@ package leo16
 import leo.base.notNullIf
 import leo.base.nullOf
 import leo.base.orIfNull
+import leo13.evaluatorName
 import leo13.fold
 import leo13.reverse
 import leo14.*
-import leo15.compilerName
 import leo15.nothingName
 import leo15.parentName
 import leo15.wordName
@@ -28,7 +28,7 @@ val emptyEvaluator = emptyScope.emptyEvaluated.evaluator
 
 val Evaluator.asField: Field
 	get() =
-		compilerName(
+		evaluatorName(
 			parentOrNull?.asField.orIfNull { parentName(nothingName()) },
 			evaluated.asField,
 			mode.asField)
@@ -72,20 +72,25 @@ val Evaluator.end: Evaluator?
 		parentOrNull?.endEvaluator(evaluated)
 
 fun EvaluatorParent.endEvaluator(evaluated: Evaluated): Evaluator =
-	evaluator.append(word.invoke(evaluated.value))
+	evaluator.endWith(word, evaluated)
+
+fun Evaluator.endWith(word: String, evaluated: Evaluated): Evaluator =
+	updateEvaluated {
+		applyEvaluator(word(evaluated.value)) ?: apply(word, evaluated, mode)
+	}
 
 fun Evaluator.append(field: Field): Evaluator =
-	updateCompiled {
-		applyCompiler(field) ?: apply(field, mode)
+	updateEvaluated {
+		applyEvaluator(field) ?: apply(field, mode)
 	}
 
 fun Evaluator.append(sentence: Sentence): Evaluator =
 	append(sentence.field)
 
-fun Evaluator.applyCompiler(field: Field): Evaluated? =
-	notNullIf(field == compilerName(value())) {
+fun Evaluator.applyEvaluator(field: Field): Evaluated? =
+	notNullIf(field == evaluatorName(value())) {
 		evaluated.scope.evaluated(value(asField))
 	}
 
-fun Evaluator.updateCompiled(fn: Evaluated.() -> Evaluated): Evaluator =
+fun Evaluator.updateEvaluated(fn: Evaluated.() -> Evaluated): Evaluator =
 	copy(evaluated = evaluated.fn())

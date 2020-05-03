@@ -1,9 +1,34 @@
 package leo16
 
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo.base.runIfNotNull
 import leo13.onlyOrNull
 import leo15.*
+
+fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
+	when (mode) {
+		Mode.EVALUATE -> apply(word, evaluated)
+		Mode.DEFINE -> define(word(evaluated.value))
+		Mode.NORMALIZE -> plus(word(evaluated.value))
+		Mode.QUOTE -> plusNormalized(word(evaluated.value))
+	}
+
+fun Evaluated.apply(word: String, evaluated: Evaluated): Evaluated =
+	if (evaluated.value.isEmpty) clearValue.applyNormalized(word, evaluated.scope.evaluated(value))
+	else applyNormalized(word, evaluated)
+
+fun Evaluated.applyNormalized(word: String, evaluated: Evaluated): Evaluated =
+	null
+		?: applyDictionary(word, evaluated)
+		?: applyNormalized(word(evaluated.value))
+
+fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
+	value.matchEmpty {
+		notNullIf(word == dictionaryName) {
+			scope.evaluated(evaluated.scope.exportDictionary.field.value)
+		}
+	}
 
 fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 	when (mode) {
@@ -28,7 +53,6 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyGiving(field)
 		?: applyGive(field)
 		?: applyMatch(field)
-		?: applyDictionary(field)
 		?: applyImport(field)
 		?: applyDefine(field)
 		?: applyLoad(field)
@@ -82,17 +106,6 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 					compiled.scope.exportDictionary.apply(matchValue)?.let { matching ->
 						scope.evaluated(matching)
 					}
-				}
-			}
-		}
-	}
-
-fun Evaluated.applyDictionary(field: Field): Evaluated? =
-	value.matchEmpty {
-		field.matchPrefix(dictionaryName) { rhs ->
-			emptyEvaluator.plus(rhs).evaluated.let { evaluated ->
-				ifOrNull(evaluated.value.isEmpty) {
-					scope.evaluated(evaluated.scope.exportDictionary.field.value)
 				}
 			}
 		}
