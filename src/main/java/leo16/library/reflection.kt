@@ -201,6 +201,7 @@ private val objectInvokeMethodDefinition =
 private val reflectionDictionary =
 	emptyDictionary
 		.plus(booleanName.definition(Boolean::class.java))
+		.plus(charName.definition(Char::class.java))
 		.plus(byteName.definition(Byte::class.java))
 		.plus(shortName.definition(Short::class.java))
 		.plus(intName.definition(Int::class.java))

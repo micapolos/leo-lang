@@ -265,6 +265,8 @@ class EvalTest {
 	fun typeClass() {
 		evaluate_ { reflection.load.import; byte.class_ }
 			.assertGives { class_ { Byte::class.java.native_ } }
+		evaluate_ { reflection.load.import; char.class_ }
+			.assertGives { class_ { Char::class.java.native_ } }
 		evaluate_ { reflection.load.import; short.class_ }
 			.assertGives { class_ { Short::class.java.native_ } }
 		evaluate_ { reflection.load.import; int.class_ }
