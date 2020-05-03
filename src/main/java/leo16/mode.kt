@@ -30,8 +30,8 @@ val String.mode: Mode
 			defineName -> Mode.NORMALIZE
 			givesName -> Mode.QUOTE
 			givingName -> Mode.QUOTE
-			dictionaryName -> Mode.QUOTE
-			matchName -> Mode.QUOTE
+			dictionaryName -> Mode.NORMALIZE
+			matchName -> Mode.NORMALIZE
 			quoteName -> Mode.QUOTE
 			else -> Mode.EVALUATE
 		}

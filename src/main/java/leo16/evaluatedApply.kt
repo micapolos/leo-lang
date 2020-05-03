@@ -22,7 +22,6 @@ fun Evaluated.define(field: Field): Evaluated =
 fun Evaluated.applyNormalized(field: Field): Evaluated =
 	null
 		?: applyValue(field) // keep first
-		?: applyBinding(field)
 		?: applyEvaluate(field)
 		?: applyCompile(field)
 		?: applyQuote(field)
@@ -80,7 +79,7 @@ fun Evaluated.applyGive(field: Field): Evaluated? =
 fun Evaluated.applyMatch(field: Field): Evaluated? =
 	field.matchPrefix(matchName) { rhs ->
 		value.matchValueOrNull?.let { matchValue ->
-			scope.emptyEvaluator.plus(rhs).evaluated.let { compiled ->
+			scope.emptyEvaluator.copy(mode = Mode.DEFINE).plus(rhs).evaluated.let { compiled ->
 				ifOrNull(compiled.value.isEmpty) {
 					compiled.scope.exportDictionary.apply(matchValue)?.let { matching ->
 						scope.evaluated(matching)
