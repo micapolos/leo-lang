@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.The
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.linkOrNull
@@ -73,6 +74,6 @@ val Value.listMatchValue: Value
 			?.run { value(linkName(previousName(listName(stack.value)), lastName(value))) }
 			?: value(emptyName.invoke(value()))
 
-val Value.nativeOrNull: Any?
+val Value.theNativeOrNull: The<Any?>?
 	get() =
-		onlyFieldOrNull?.theNativeOrNull?.value
+		onlyFieldOrNull?.theNativeOrNull

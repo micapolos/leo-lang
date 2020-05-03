@@ -5,3 +5,6 @@ val reflectionDictionary =
 		.plus(nameClassDefinition)
 		.plus(classFieldDefinition)
 		.plus(fieldGetDefinition)
+		.plus(objectGetFieldDefinition)
+		.plus(classConstuctorDefinition)
+		.plus(constructorInvokeDefinition)

@@ -32,9 +32,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberFloat(field)
 		?: applyNumberDouble(field)
 		?: applyTypeClass(field)
-		?: applyObjectGetField(field)
-		?: applyClassConstructor(field)
-		?: applyConstructorInvoke(field)
+		//?: applyConstructorInvoke(field)
 		?: applyClassMethod(field)
 		?: applyMethodInvoke(field)
 		?: applyObjectMethodInvoke(field)
@@ -221,65 +219,27 @@ fun Value.applyTypeClass(field: Field): Value? =
 		}
 	}
 
-fun Value.applyObjectGetField(field: Field): Value? =
-	matchNative { nativeObject ->
-		field.matchPrefix(getName) { rhs ->
-			rhs.matchPrefix(fieldName) { rhs ->
-				rhs.matchNative { nativeField ->
-					nullIfThrowsException {
-						(nativeField as java.lang.reflect.Field).get(nativeObject!!).nativeValue
-					}
-				}
-			}
-		}
-	}
-
-fun Value.applyClassConstructor(field: Field): Value? =
-	matchPrefix(className) { rhs ->
-		rhs.matchNative { nativeClass ->
-			field.matchPrefix(constructorName) { rhs ->
-				rhs.matchPrefix(parameterName) { rhs ->
-					rhs
-						.listOrNull {
-							matchPrefix(className) { rhs ->
-								rhs.matchNative { it }
-							}
-						}
-						?.mapOrNull { this as? Class<*> }
-						?.array
-						?.let { parameterClasses ->
-							nullIfThrowsException {
-								constructorName((nativeClass as Class<*>)
-									.getConstructor(*parameterClasses).nativeField)
-									.value
-							}
-						}
-				}
-			}
-		}
-	}
-
-fun Value.applyConstructorInvoke(field: Field): Value? =
-	matchPrefix(constructorName) { rhs ->
-		rhs.matchNative { nativeConstructor ->
-			field.matchPrefix(invokeName) { rhs ->
-				rhs.matchPrefix(parameterName) { rhs ->
-					rhs
-						.listOrNull { this }
-						?.mapOrNull { matchNative { it } }
-						?.array
-						?.let { args ->
-							nullIfThrowsException {
-								(nativeConstructor as Constructor<*>)
-									.newInstance(*args)
-									.nativeValue
-							}
-						}
-				}
-			}
-		}
-	}
-
+//fun Value.applyConstructorInvoke(field: Field): Value? =
+//	matchPrefix(constructorName) { rhs ->
+//		rhs.matchNative { nativeConstructor ->
+//			field.matchPrefix(invokeName) { rhs ->
+//				rhs.matchPrefix(parameterName) { rhs ->
+//					rhs
+//						.listOrNull { this }
+//						?.mapOrNull { matchNative { it } }
+//						?.array
+//						?.let { args ->
+//							nullIfThrowsException {
+//								(nativeConstructor as Constructor<*>)
+//									.newInstance(*args)
+//									.nativeValue
+//							}
+//						}
+//				}
+//			}
+//		}
+//	}
+//
 fun Value.applyClassMethod(field: Field): Value? =
 	matchPrefix(className) { rhs ->
 		rhs.matchNative { nativeClass ->
