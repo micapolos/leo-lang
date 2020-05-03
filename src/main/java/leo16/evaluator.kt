@@ -6,9 +6,12 @@ import leo.base.orIfNull
 import leo13.fold
 import leo13.reverse
 import leo14.*
-import leo15.*
+import leo15.compilerName
+import leo15.nothingName
+import leo15.parentName
+import leo15.wordName
 
-data class Evaluator(val parentOrNull: EvaluatorParent?, val evaluated: Evaluated, val isMeta: Boolean) {
+data class Evaluator(val parentOrNull: EvaluatorParent?, val evaluated: Evaluated, val mode: Mode) {
 	override fun toString() = asField.toString()
 }
 
@@ -16,8 +19,8 @@ data class EvaluatorParent(val evaluator: Evaluator, val word: String) {
 	override fun toString() = asField.toString()
 }
 
-fun EvaluatorParent?.evaluator(evaluated: Evaluated, isMeta: Boolean) = Evaluator(this, evaluated, isMeta)
-infix fun EvaluatorParent?.evaluator(evaluated: Evaluated) = Evaluator(this, evaluated, isMeta = false)
+fun EvaluatorParent?.evaluator(evaluated: Evaluated, mode: Mode) = Evaluator(this, evaluated, mode)
+infix fun EvaluatorParent?.evaluator(evaluated: Evaluated) = Evaluator(this, evaluated, Mode.EVALUATE)
 val Evaluated.evaluator get() = nullOf<EvaluatorParent>().evaluator(this)
 val Scope.emptyEvaluator get() = emptyEvaluated.evaluator
 fun Evaluator.parent(word: String) = EvaluatorParent(this, word)
@@ -27,8 +30,8 @@ val Evaluator.asField: Field
 	get() =
 		compilerName(
 			parentOrNull?.asField.orIfNull { parentName(nothingName()) },
-			evaluated.asSentence,
-			metaName(if (isMeta) trueName() else falseName()))
+			evaluated.asField,
+			mode.asField)
 
 val EvaluatorParent.asField: Field
 	get() =
@@ -62,7 +65,7 @@ operator fun Evaluator.plus(literal: Literal): Evaluator =
 	}
 
 fun Evaluator.begin(word: String): Evaluator =
-	parent(word).evaluator(evaluated.begin, isMeta || word.wordIsMeta)
+	parent(word).evaluator(evaluated.begin, mode.begin(word.mode))
 
 val Evaluator.end: Evaluator?
 	get() =
@@ -73,7 +76,7 @@ fun EvaluatorParent.endEvaluator(evaluated: Evaluated): Evaluator =
 
 fun Evaluator.append(field: Field): Evaluator =
 	updateCompiled {
-		applyCompiler(field) ?: if (isMeta) plus(field)
+		applyCompiler(field) ?: if (mode != Mode.EVALUATE) plus(field)
 		else apply(field)
 	}
 

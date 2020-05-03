@@ -3,13 +3,13 @@ package leo16
 import leo15.compiledName
 
 data class Evaluated(val scope: Scope, val value: Value) {
-	override fun toString() = asSentence.toString()
+	override fun toString() = asField.toString()
 }
 
 infix fun Scope.evaluated(value: Value) = Evaluated(this, value)
 val Scope.emptyEvaluated get() = evaluated(value())
 
-val Evaluated.asSentence: Field
+val Evaluated.asField: Field
 	get() =
 		compiledName(scope.asField, value.asField)
 

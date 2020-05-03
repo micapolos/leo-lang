@@ -403,7 +403,7 @@ class EvalTest {
 					}
 					value { nothing_ }
 				}
-				meta { false_ }
+				mode { evaluate }
 			}
 		}
 	}
