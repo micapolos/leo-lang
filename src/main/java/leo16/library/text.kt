@@ -139,6 +139,8 @@ val text = value_ {
 				string.split.method
 				parameter { list { given.split.regex.text.native } }
 			}
+			array.list
+			// TODO: Map to text
 		}
 	}
 }

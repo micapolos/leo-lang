@@ -9,5 +9,4 @@ fun main() = print_ {
 
 	"Hello, world!".text
 	split { regex { " ".text } }
-	array.list
 }
