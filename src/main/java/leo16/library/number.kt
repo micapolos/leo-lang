@@ -2,6 +2,7 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
+import leo16.run_
 
 val number = dictionary_ {
 	reflection.import
@@ -97,3 +98,5 @@ val number = dictionary_ {
 		gives { "152415787532388367501905199875019052100".number }
 	}
 }
+
+fun main() = run_ { number }

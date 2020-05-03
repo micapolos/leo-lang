@@ -2,6 +2,7 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
+import leo16.run_
 
 val core = dictionary_ {
 	any.clear.gives { nothing }
@@ -27,3 +28,5 @@ val core = dictionary_ {
 	comment { normalization }
 	test { zero.negate.gives { negate { zero } } }
 }
+
+fun main() = run_ { core }

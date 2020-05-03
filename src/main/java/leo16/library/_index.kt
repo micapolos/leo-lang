@@ -10,6 +10,7 @@ private fun Field.dictionary(fn: () -> Value) =
 val valueFunMap = mapOf(
 	coreName().dictionary { core },
 	pingName().dictionary { ping },
+	reflectionName(nativeName()).dictionary { nativeReflection },
 	reflectionName().dictionary { reflection },
 	intName().dictionary { int },
 	numberName().dictionary { number },

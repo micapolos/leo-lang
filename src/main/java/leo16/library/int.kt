@@ -2,6 +2,7 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
+import leo16.run_
 
 val int = dictionary_ {
 	reflection.import
@@ -108,3 +109,5 @@ val int = dictionary_ {
 fun plus(a: Int, b: Int) = a.plus(b)
 fun minus(a: Int, b: Int) = a.minus(b)
 fun times(a: Int, b: Int) = a.times(b)
+
+fun main() = run_ { int }

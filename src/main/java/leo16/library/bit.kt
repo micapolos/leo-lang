@@ -2,6 +2,7 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
+import leo16.run_
 
 val bit = dictionary_ {
 	zero.bit.negate.is_ { one.bit }
@@ -22,3 +23,5 @@ val bit = dictionary_ {
 	one.bit.xor { zero.bit }.is_ { zero.bit }
 	one.bit.xor { one.bit }.is_ { one.bit }
 }
+
+fun main() = run_ { bit }

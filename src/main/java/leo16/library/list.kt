@@ -2,7 +2,7 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
-import leo16.value_
+import leo16.run_
 
 val list = dictionary_ {
 	any.list.last
@@ -29,3 +29,5 @@ val list = dictionary_ {
 		list
 	}
 }
+
+fun main() = run_ { list }

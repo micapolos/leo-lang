@@ -2,7 +2,7 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
-import leo16.value_
+import leo16.run_
 
 val text = dictionary_ {
 	number.import
@@ -165,3 +165,5 @@ val text = dictionary_ {
 		// TODO: Map to text
 	}
 }
+
+fun main() = run_ { text }
