@@ -6,13 +6,20 @@ import leo14.*
 import leo14.untyped.leoString
 import leo15.eval
 import leo16.nativeString
+import java.math.BigDecimal
 
+fun X.number(bigDecimal: BigDecimal) = x(token(literal(leo14.number(bigDecimal))))
 fun X.number(int: Int) = x(token(literal(int)))
 fun X.number(double: Double) = x(token(literal(double)))
 fun X.text(string: String) = x(token(literal(string)))
+val BigDecimal.number: X get() = X.number(this)
+val Int.number get() = toBigDecimal().number
 val String.text: X get() = X.text(this)
-val Int.number: X get() = X.number(this)
-val Double.number: X get() = X.number(this)
+val Byte.byte: X get() = X.byte { toInt().toBigDecimal().number }
+val Int.int: X get() = X.int { toBigDecimal().number }
+val Long.long: X get() = X.long { toBigDecimal().number }
+val Double.double: X get() = X.double { toBigDecimal().number }
+val Float.float: X get() = X.float { toBigDecimal().number }
 val String.word_: X get() = X.x(this)
 val Any?.native_: X get() = nativeString.word_
 val nothing_ = X

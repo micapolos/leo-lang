@@ -2,17 +2,11 @@ package leo16
 
 import leo.java.lang.typeClassOrNull
 import leo13.array
-import leo13.map
 import leo13.mapOrNull
-import leo14.bigDecimal
 import leo14.untyped.typed.loadClass
 import leo15.*
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
-import java.math.BigDecimal
-import kotlin.minus
-import kotlin.plus
-import kotlin.times
 
 fun Value.apply(field: Field): Value? =
 	null
@@ -23,19 +17,19 @@ fun Value.apply(field: Field): Value? =
 		?: applyNothing(field)
 		?: applyTextPlusText(field)
 		?: applyTextLength(field)
-		?: applyNumberPlusNumber(field)
-		?: applyNumberMinusNumber(field)
-		?: applyNumberTimesNumber(field)
+		?: applyIntPlusInt(field)
+		?: applyIntMinusInt(field)
+		?: applyIntTimesInt(field)
 		?: applyTypeNativeClass(field)
 		?: applyTextNameNativeClass(field)
 		?: applyNullNative(field)
 		?: applyTrueNative(field)
 		?: applyFalseNative(field)
-		?: applyNumberByteNative(field)
-		?: applyNumberIntNative(field)
-		?: applyNumberLongNative(field)
-		?: applyNumberFloatNative(field)
-		?: applyNumberDoubleNative(field)
+		?: applyNumberByte(field)
+		?: applyNumberInt(field)
+		?: applyNumberLong(field)
+		?: applyNumberFloat(field)
+		?: applyNumberDouble(field)
 		?: applyNativeClassField(field)
 		?: applyNativeFieldGet(field)
 		?: applyNativeClassConstructor(field)
@@ -85,25 +79,25 @@ fun Value.applyTextLength(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(lengthName) { rhs ->
 			rhs.matchText { text ->
-				text.length.bigDecimal.field.value
+				text.length.field.value
 			}
 		}
 	}
 
-fun Value.applyNumberPlusNumber(field: Field): Value? =
-	applyNumberOpNumber(field, plusName, BigDecimal::plus)
+fun Value.applyIntPlusInt(field: Field): Value? =
+	applyIntOpInt(field, plusName, Int::plus)
 
-fun Value.applyNumberMinusNumber(field: Field): Value? =
-	applyNumberOpNumber(field, minusName, BigDecimal::minus)
+fun Value.applyIntMinusInt(field: Field): Value? =
+	applyIntOpInt(field, minusName, Int::minus)
 
-fun Value.applyNumberTimesNumber(field: Field): Value? =
-	applyNumberOpNumber(field, timesName, BigDecimal::times)
+fun Value.applyIntTimesInt(field: Field): Value? =
+	applyIntOpInt(field, timesName, Int::times)
 
-fun Value.applyNumberOpNumber(field: Field, word: String, fn: BigDecimal.(BigDecimal) -> BigDecimal): Value? =
-	matchNumber { lhsNumber ->
+fun Value.applyIntOpInt(field: Field, word: String, fn: Int.(Int) -> Int): Value? =
+	matchInt { lhsInt ->
 		field.matchPrefix(word) { rhs ->
-			rhs.matchNumber { rhsNumber ->
-				lhsNumber.fn(rhsNumber).field.value
+			rhs.matchInt { rhsInt ->
+				lhsInt.fn(rhsInt).field.value
 			}
 		}
 	}
@@ -141,66 +135,56 @@ fun Value.applyFalseNative(field: Field): Value? =
 		}
 	}
 
-fun Value.applyNumberByteNative(field: Field): Value? =
+fun Value.applyNumberByte(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(byteName) { rhs ->
-				rhs.matchNumber { number ->
-					nullIfThrowsException {
-						number.byteValueExact().nativeValue
-					}
+		field.matchPrefix(byteName) { rhs ->
+			rhs.matchNumber { number ->
+				nullIfThrowsException {
+					byteName(number.byteValueExact().nativeField).value
 				}
 			}
 		}
 	}
 
-fun Value.applyNumberIntNative(field: Field): Value? =
+fun Value.applyNumberInt(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(intName) { rhs ->
-				rhs.matchNumber { number ->
-					nullIfThrowsException {
-						number.intValueExact().nativeValue
-					}
+		field.matchPrefix(intName) { rhs ->
+			rhs.matchNumber { number ->
+				nullIfThrowsException {
+					intName(number.intValueExact().nativeField).value
 				}
 			}
 		}
 	}
 
-fun Value.applyNumberLongNative(field: Field): Value? =
+fun Value.applyNumberLong(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(longName) { rhs ->
-				rhs.matchNumber { number ->
-					nullIfThrowsException {
-						number.longValueExact().nativeValue
-					}
+		field.matchPrefix(longName) { rhs ->
+			rhs.matchNumber { number ->
+				nullIfThrowsException {
+					longName(number.longValueExact().nativeField).value
 				}
 			}
 		}
 	}
 
-fun Value.applyNumberFloatNative(field: Field): Value? =
+fun Value.applyNumberFloat(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(floatName) { rhs ->
-				rhs.matchNumber { number ->
-					nullIfThrowsException {
-						number.toFloat().nativeValue
-					}
+		field.matchPrefix(floatName) { rhs ->
+			rhs.matchNumber { number ->
+				nullIfThrowsException {
+					floatName(number.toFloat().nativeField).value
 				}
 			}
 		}
 	}
 
-fun Value.applyNumberDoubleNative(field: Field): Value? =
+fun Value.applyNumberDouble(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(doubleName) { rhs ->
-				rhs.matchNumber { number ->
-					nullIfThrowsException {
-						number.toDouble().nativeValue
-					}
+		field.matchPrefix(doubleName) { rhs ->
+			rhs.matchNumber { number ->
+				nullIfThrowsException {
+					doubleName(number.toDouble().nativeField).value
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.assertEqualTo
+import leo.base.clampedByte
 import leo14.Script
 import leo14.bigDecimal
 import leo15.dsl.*
@@ -100,16 +101,16 @@ class EvalTest {
 		evaluate_ { "Hello".text }.assertGives { "Hello".text }
 		evaluate_ { "Hello".text.native }.assertGives { "Hello".native_ }
 		evaluate_ { "Hello, ".text.plus { "world!".text } }.assertGives { "Hello, world!".text }
-		evaluate_ { "Hello, world!".text.length }.assertGives { 13.number }
+		evaluate_ { "Hello, world!".text.length }.assertGives { 13.int }
 	}
 
 	@Test
-	fun numbers() {
-		evaluate_ { 123.number }.assertGives { 123.number }
-		evaluate_ { 123.number.native }.assertGives { 123.bigDecimal.native_ }
-		evaluate_ { 2.number.plus { 3.number } }.assertGives { 5.number }
-		evaluate_ { 5.number.minus { 3.number } }.assertGives { 2.number }
-		evaluate_ { 2.number.times { 3.number } }.assertGives { 6.number }
+	fun ints() {
+		evaluate_ { 123.int }.assertGives { 123.int }
+		evaluate_ { 123.int.native }.assertGives { 123.native_ }
+		evaluate_ { 2.int.plus { 3.int } }.assertGives { 5.int }
+		evaluate_ { 5.int.minus { 3.int } }.assertGives { 2.int }
+		evaluate_ { 2.int.times { 3.int } }.assertGives { 6.int }
 	}
 
 	@Test
@@ -253,11 +254,11 @@ class EvalTest {
 		evaluate_ { null_.native }.assertGives { null.native_ }
 		evaluate_ { true_.native }.assertGives { true.native_ }
 		evaluate_ { false_.native }.assertGives { false.native_ }
-		evaluate_ { 10.number.byte.native }.assertGives { 10.toByte().native_ }
-		evaluate_ { 10.number.int.native }.assertGives { 10.native_ }
-		evaluate_ { 10.number.long.native }.assertGives { 10L.native_ }
-		evaluate_ { 10.number.float.native }.assertGives { 10f.native_ }
-		evaluate_ { 10.number.double.native }.assertGives { 10.0.native_ }
+		evaluate_ { 10.toByte().byte.native }.assertGives { 10.toByte().native_ }
+		evaluate_ { 10.int.native }.assertGives { 10.native_ }
+		evaluate_ { 10L.long.native }.assertGives { 10L.native_ }
+		evaluate_ { 10f.float.native }.assertGives { 10f.native_ }
+		evaluate_ { 10.0.double.native }.assertGives { 10.0.native_ }
 	}
 
 	@Test
