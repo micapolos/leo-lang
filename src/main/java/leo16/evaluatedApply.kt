@@ -9,8 +9,6 @@ import leo15.*
 fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
 	when (mode) {
 		Mode.EVALUATE -> apply(word, evaluated)
-		Mode.DEFINE -> define(word(evaluated.value))
-		Mode.NORMALIZE -> plus(word(evaluated.value))
 		Mode.QUOTE -> plusNormalized(word(evaluated.value))
 	}
 
@@ -21,6 +19,7 @@ fun Evaluated.apply(word: String, evaluated: Evaluated): Evaluated =
 fun Evaluated.applyNormalized(word: String, evaluated: Evaluated): Evaluated =
 	null
 		?: applyDictionary(word, evaluated)
+		?: applyMatch(word, evaluated)
 		?: applyNormalized(word(evaluated.value))
 
 fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
@@ -33,28 +32,22 @@ fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
 fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 	when (mode) {
 		Mode.EVALUATE -> apply(field)
-		Mode.DEFINE -> define(field)
-		Mode.NORMALIZE -> plus(field)
 		Mode.QUOTE -> plusNormalized(field)
 	}
 
 fun Evaluated.apply(field: Field): Evaluated =
 	value.normalize(field) { set(this).applyNormalized(it) }
 
-fun Evaluated.define(field: Field): Evaluated =
-	applyBinding(field) ?: plusNormalized(field)
-
 fun Evaluated.applyNormalized(field: Field): Evaluated =
 	null
 		?: applyValue(field) // keep first
+		?: applyBinding(field)
 		?: applyEvaluate(field)
 		?: applyCompile(field)
 		?: applyQuote(field)
 		?: applyGiving(field)
 		?: applyGive(field)
-		?: applyMatch(field)
 		?: applyImport(field)
-		?: applyDefine(field)
 		?: applyLoad(field)
 		?: resolve(field)
 
@@ -98,14 +91,12 @@ fun Evaluated.applyGive(field: Field): Evaluated? =
 		scope.runIfNotNull(value.fieldStack.onlyOrNull?.functionOrNull?.invoke(rhs)) { evaluated(it) }
 	}
 
-fun Evaluated.applyMatch(field: Field): Evaluated? =
-	field.matchPrefix(matchName) { rhs ->
-		value.matchValueOrNull?.let { matchValue ->
-			scope.emptyEvaluator.copy(mode = Mode.DEFINE).plus(rhs).evaluated.let { compiled ->
-				ifOrNull(compiled.value.isEmpty) {
-					compiled.scope.exportDictionary.apply(matchValue)?.let { matching ->
-						scope.evaluated(matching)
-					}
+fun Evaluated.applyMatch(word: String, evaluated: Evaluated): Evaluated? =
+	value.matchEmpty {
+		ifOrNull(word == matchName) {
+			evaluated.value.matchValueOrNull?.let { matchValue ->
+				evaluated.scope.exportDictionary.apply(matchValue)?.let { matching ->
+					scope.evaluated(matching)
 				}
 			}
 		}
@@ -114,19 +105,6 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 fun Evaluated.applyImport(field: Field): Evaluated? =
 	field.matchPrefix(importName) { rhs ->
 		rhs.fieldStack.onlyOrNull?.dictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
-	}
-
-fun Evaluated.applyDefine(field: Field): Evaluated? =
-	field.matchPrefix(defineName) { rhs ->
-		emptyEvaluator
-			.copy(mode = Mode.DEFINE)
-			.plus(rhs)
-			.evaluated
-			.scope
-			.exportDictionary
-			.definitionStack
-			.onlyOrNull
-			?.let { definition -> scope.plus(definition).evaluated(value) }
 	}
 
 fun Evaluated.applyLoad(field: Field): Evaluated? =

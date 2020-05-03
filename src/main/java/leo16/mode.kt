@@ -5,8 +5,6 @@ import leo15.*
 // TODO: This is a temporary solution.
 enum class Mode {
 	EVALUATE,
-	DEFINE,
-	NORMALIZE,
 	QUOTE;
 
 	override fun toString() = asField.toString()
@@ -16,21 +14,13 @@ val Mode.asField: Field
 	get() =
 		modeName(name.toLowerCase()())
 
-fun Mode.begin(mode: Mode): Mode =
+fun Mode.begin(word: String): Mode =
 	when (this) {
-		Mode.EVALUATE -> mode
-		Mode.DEFINE -> this
-		Mode.NORMALIZE -> this
+		Mode.EVALUATE ->
+			when (word) {
+				givesName -> Mode.QUOTE
+				quoteName -> Mode.QUOTE
+				else -> this
+			}
 		Mode.QUOTE -> this
 	}
-
-val String.mode: Mode
-	get() =
-		when (this) {
-			defineName -> Mode.NORMALIZE
-			givesName -> Mode.QUOTE
-			givingName -> Mode.QUOTE
-			matchName -> Mode.NORMALIZE
-			quoteName -> Mode.QUOTE
-			else -> Mode.EVALUATE
-		}

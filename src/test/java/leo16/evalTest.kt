@@ -59,18 +59,18 @@ class EvalTest {
 	fun evaluate() {
 		evaluate_ { quote { nothing_ }.evaluate }.assertGives { nothing_ }
 		evaluate_ { quote { zero.negate }.evaluate }.assertGives { negate { zero } }
-		evaluate_ { quote { define { zero.is_ { one } } }.evaluate }.assertGives { nothing_ }
-		evaluate_ { quote { define { zero.is_ { one } }.zero }.evaluate }.assertGives { one }
-		evaluate_ { quote { define { zero.is_ { one } } }.evaluate.zero }.assertGives { zero }
+		evaluate_ { quote { zero.is_ { one } }.evaluate }.assertGives { nothing_ }
+		evaluate_ { quote { zero.is_ { one }.zero }.evaluate }.assertGives { one }
+		evaluate_ { quote { zero.is_ { one } }.evaluate.zero }.assertGives { zero }
 	}
 
 	@Test
 	fun compile() {
 		evaluate_ { quote { nothing_ }.compile }.assertGives { nothing_ }
 		evaluate_ { quote { zero.negate }.compile }.assertGives { negate { zero } }
-		evaluate_ { quote { define { zero.is_ { one } } }.compile }.assertGives { nothing_ }
-		evaluate_ { quote { define { zero.is_ { one } }.zero }.compile }.assertGives { one }
-		evaluate_ { quote { define { zero.is_ { one } } }.compile.zero }.assertGives { one }
+		evaluate_ { quote { zero.is_ { one } }.compile }.assertGives { nothing_ }
+		evaluate_ { quote { zero.is_ { one }.zero }.compile }.assertGives { one }
+		evaluate_ { quote { zero.is_ { one } }.compile.zero }.assertGives { one }
 	}
 
 	@Test
@@ -121,43 +121,25 @@ class EvalTest {
 	}
 
 	@Test
-	fun defineIs() {
-		evaluate_ { define { zero.is_ { one } } }.assertGives { nothing_ }
-		evaluate_ { define { zero.is_ { one } }.zero }.assertGives { one }
-		evaluate_ { define { any.is_ { one } }.zero }.assertGives { one }
+	fun is_() {
+		evaluate_ { zero.is_ { one } }.assertGives { nothing_ }
+		evaluate_ { zero.is_ { one }.zero }.assertGives { one }
+		evaluate_ { any.is_ { one }.zero }.assertGives { one }
 
-		evaluate_ { define { any.text.is_ { ok } }; "foo".text }.assertGives { ok }
-		evaluate_ { define { any.number.is_ { ok } }; 123.number }.assertGives { ok }
+		evaluate_ { any.text.is_ { ok }; "foo".text }.assertGives { ok }
+		evaluate_ { any.number.is_ { ok }; 123.number }.assertGives { ok }
 	}
 
 	@Test
-	fun defineGives() {
-		evaluate_ { define { zero.gives { one } } }.assertGives { nothing_ }
-		evaluate_ { define { zero.gives { one } }.zero }.assertGives { one }
-		evaluate_ { define { zero.gives { one } }.one }.assertGives { one }
-		evaluate_ { define { zero.gives { given } }.zero }.assertGives { given { zero } }
-		evaluate_ { define { zero.gives { given } }.one }.assertGives { one }
+	fun gives() {
+		evaluate_ { zero.gives { one } }.assertGives { nothing_ }
+		evaluate_ { zero.gives { one }.zero }.assertGives { one }
+		evaluate_ { zero.gives { one }.one }.assertGives { one }
+		evaluate_ { zero.gives { given }.zero }.assertGives { given { zero } }
+		evaluate_ { zero.gives { given }.one }.assertGives { one }
 
-		evaluate_ { define { any.text.gives { given } }; "foo".text }.assertGives { given { "foo".text } }
-		evaluate_ { define { any.number.gives { given } }; 123.number }.assertGives { given { 123.number } }
-	}
-
-	@Test
-	fun defineInvalid() {
-		evaluate_ { define { nothing_ } }.assertGives { define { nothing_ } }
-		evaluate_ { define { zero } }.assertGives { define { zero } }
-
-		evaluate_ {
-			define { zero.is_ { one }.one }
-		}.assertGives {
-			define { one { zero.is_ { one } } }
-		}
-	}
-
-	@Test
-	fun definitionOutSideDefine() {
-		evaluate_ { zero.is_ { one } }.assertGives { zero.is_ { one } }
-		evaluate_ { zero.gives { one } }.assertGives { zero.gives { one } }
+		evaluate_ { any.text.gives { given }; "foo".text }.assertGives { given { "foo".text } }
+		evaluate_ { any.number.gives { given }; 123.number }.assertGives { given { 123.number } }
 	}
 
 	@Test
@@ -171,8 +153,6 @@ class EvalTest {
 			.assertGives { match { bit { zero } } }
 		evaluate_ { zero.bit.match { one } }
 			.assertGives { bit { zero }.match { one } }
-		evaluate_ { zero.bit.match { zero.is_ { one }.one } }
-			.assertGives { bit { zero }.match { one { zero.is_ { one } } } }
 	}
 
 	@Test
@@ -201,7 +181,7 @@ class EvalTest {
 
 		evaluate_ {
 			dictionary {
-				define { zero.is_ { one } }
+				zero.is_ { one }
 			}
 		}.assertGives {
 			dictionary {
@@ -215,8 +195,8 @@ class EvalTest {
 
 		evaluate_ {
 			dictionary {
-				define { zero.is_ { one } }
-				define { one.is_ { zero } }
+				zero.is_ { one }
+				one.is_ { zero }
 			}
 		}.assertGives {
 			dictionary {
@@ -232,34 +212,34 @@ class EvalTest {
 
 	@Test
 	fun dictionaryInsideDictionary() {
-//		evaluate_ {
-//			dictionary {
-//				dictionary {
-//					define { zero.is_ { one } }
-//				}.import
-//
-//				define { two.is_ { zero } }
-//			}.import.two
-//		}.assertGives { one }
+		evaluate_ {
+			dictionary {
+				dictionary {
+					zero.is_ { one }
+				}.import
+
+				two.is_ { zero }
+			}.import.two
+		}.assertGives { one }
 	}
 
 	@Test
 	fun import() {
 		evaluate_ { dictionary { nothing_ }.import }.assertGives { nothing_ }
-		evaluate_ { dictionary { define { zero.is_ { one } } }.import }.assertGives { nothing_ }
-		evaluate_ { dictionary { define { zero.is_ { one } } }.import.zero }.assertGives { one }
+		evaluate_ { dictionary { zero.is_ { one } }.import }.assertGives { nothing_ }
+		evaluate_ { dictionary { zero.is_ { one } }.import.zero }.assertGives { one }
 
-		evaluate_ { zero.import { dictionary { define { zero.is_ { one } } } } }.assertGives { zero }
-		evaluate_ { zero.import { dictionary { define { zero.is_ { one } } } }.evaluate }.assertGives { one }
+		evaluate_ { zero.import { dictionary { zero.is_ { one } } } }.assertGives { zero }
+		evaluate_ { zero.import { dictionary { zero.is_ { one } } }.evaluate }.assertGives { one }
 
 		evaluate_ {
-			define { zero.is_ { one } }
+			zero.is_ { one }
 			import {
 				dictionary {
-					define { zero.is_ { two } }
+					two.is_ { zero }
 				}
 			}
-			one
+			two
 		}.assertGives { one }
 	}
 
@@ -447,7 +427,7 @@ class EvalTest {
 	@Test
 	fun debug() {
 		evaluate_ {
-			define { zero.is_ { one } }.debug
+			zero.is_ { one }.debug
 		}.assertGives {
 			evaluator {
 				parent { nothing }

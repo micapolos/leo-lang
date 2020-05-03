@@ -66,7 +66,7 @@ operator fun Evaluator.plus(literal: Literal): Evaluator =
 	}
 
 fun Evaluator.begin(word: String): Evaluator =
-	parent(word).evaluator(evaluated.begin, mode.begin(word.mode))
+	parent(word).evaluator(evaluated.begin, mode.begin(word))
 
 val Evaluator.end: Evaluator?
 	get() =
