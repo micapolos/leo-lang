@@ -299,13 +299,25 @@ class EvalTest {
 	@Test
 	fun nativeFieldGet() {
 		evaluate_ {
-			get {
-				"java.lang.Integer".text.name.native.class_
-				field { name { "MAX_VALUE".text } }
-			}
+			"java.lang.Integer".text.name.native.class_
+			field { name { "MAX_VALUE".text } }
+			get
 		}.assertGives {
 			Integer.MAX_VALUE.native_
 		}
+	}
+
+	@Test
+	fun nativeObjectFieldGet() {
+		evaluate_ {
+			"java.awt.Point".text.name.native.class_
+			constructor { parameter { list } }
+			invoke { parameter { list } }
+			get {
+				"java.awt.Point".text.name.native.class_
+				field { name { "x".text } }
+			}
+		}.assertGives { 0.native_ }
 	}
 
 	@Test
