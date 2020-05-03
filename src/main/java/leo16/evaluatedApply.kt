@@ -38,10 +38,8 @@ fun Evaluated.applyValue(field: Field): Evaluated? =
 	scope.runIfNotNull(value.apply(field)) { evaluated(it) }
 
 fun Evaluated.applyQuote(field: Field): Evaluated? =
-	value.matchEmpty {
-		field.matchPrefix(quoteName) { rhs ->
-			scope.evaluated(rhs)
-		}
+	field.matchPrefix(quoteName) { rhs ->
+		scope.evaluated(value.plus(rhs))
 	}
 
 fun Evaluated.applyEvaluate(field: Field): Evaluated? =

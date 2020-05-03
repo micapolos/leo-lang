@@ -43,6 +43,7 @@ class EvalTest {
 		evaluate_ { quote { nothing_ } }.assertGives { nothing_ }
 		evaluate_ { quote { zero.negate } }.assertGives { zero.negate }
 		evaluate_ { quote { zero.is_ { one } } }.assertGives { zero.is_ { one } }
+		evaluate_ { zero.quote { one.two } }.assertGives { zero.one.two }
 	}
 
 	@Test
