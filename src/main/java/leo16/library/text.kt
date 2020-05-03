@@ -11,7 +11,7 @@ val text = value_ {
 		gives {
 			given.length.text.native
 			invoke {
-				"java.lang.String".text.name.native.class_
+				"java.lang.String".text.name.class_
 				method {
 					name { "length".text }
 					parameter { list }
@@ -29,13 +29,13 @@ val text = value_ {
 		gives {
 			given.text.native
 			invoke {
-				"java.lang.String".text.name.native.class_
+				"java.lang.String".text.name.class_
 				method {
 					name { "substring".text }
 					parameter {
 						list {
-							this_ { int.native.class_ }
-							this_ { int.native.class_ }
+							this_ { int.class_ }
+							this_ { int.class_ }
 						}
 					}
 				}
