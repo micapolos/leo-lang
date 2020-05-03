@@ -1,9 +1,7 @@
 package leo16
 
 import leo.base.assertEqualTo
-import leo.base.clampedByte
 import leo14.Script
-import leo14.bigDecimal
 import leo15.dsl.*
 import java.awt.Point
 import kotlin.test.Test
@@ -301,9 +299,10 @@ class EvalTest {
 	@Test
 	fun nativeFieldGet() {
 		evaluate_ {
-			"java.lang.Integer".text.name.native.class_
-			field { name { "MAX_VALUE".text } }
-			get { object_ { null_.native } }
+			get {
+				"java.lang.Integer".text.name.native.class_
+				field { name { "MAX_VALUE".text } }
+			}
 		}.assertGives {
 			Integer.MAX_VALUE.native_
 		}
@@ -376,18 +375,18 @@ class EvalTest {
 	@Test
 	fun nativeMethodInvoke() {
 		evaluate_ {
-			"java.lang.String".text.name.native.class_
-			method {
-				name { "substring".text }
-				parameter {
-					list {
-						this_ { int.native.class_ }
-						this_ { int.native.class_ }
+			"Hello, world!".text.native
+			invoke {
+				"java.lang.String".text.name.native.class_
+				method {
+					name { "substring".text }
+					parameter {
+						list {
+							this_ { int.native.class_ }
+							this_ { int.native.class_ }
+						}
 					}
 				}
-			}
-			invoke {
-				object_ { "Hello, world!".text.native }
 				parameter {
 					list {
 						this_ { 7.number.int.native }
