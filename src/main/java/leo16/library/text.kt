@@ -5,17 +5,53 @@ import leo16.value_
 
 val text = value_ {
 	dictionary {
-		int.load.import
+		import { int.load }
+		import { reflection.load }
+
+		import {
+			dictionary {
+				string.class_.is_ {
+					"java.lang.String".text.name.class_
+				}
+
+				string.length.method.is_ {
+					string.class_
+					method {
+						name { "length".text }
+						parameter { list }
+					}
+				}
+
+				string.concat.method.is_ {
+					string.class_
+					method {
+						name { "concat".text }
+						parameter {
+							list { string.class_ }
+						}
+					}
+				}
+
+				string.substring.method.is_ {
+					string.class_
+					method {
+						name { "substring".text }
+						parameter {
+							list {
+								this_ { int.class_ }
+								this_ { int.class_ }
+							}
+						}
+					}
+				}
+			}
+		}
 
 		any.text.length
 		gives {
 			given.length.text.native
 			invoke {
-				"java.lang.String".text.name.class_
-				method {
-					name { "length".text }
-					parameter { list }
-				}
+				string.length.method
 				parameter { list }
 			}
 			int.number
@@ -29,22 +65,24 @@ val text = value_ {
 		gives {
 			given.text.native
 			invoke {
-				"java.lang.String".text.name.class_
-				method {
-					name { "substring".text }
-					parameter {
-						list {
-							this_ { int.class_ }
-							this_ { int.class_ }
-						}
-					}
-				}
+				string.substring.method
 				parameter {
 					list {
 						this_ { given.cut.from.number.int.native }
 						this_ { given.cut.to.number.int.native }
 					}
 				}
+			}
+			text
+		}
+
+		any.text
+		plus { any.text }
+		gives {
+			given.text.native
+			invoke {
+				string.concat.method
+				parameter { list { given.plus.text.native } }
 			}
 			text
 		}

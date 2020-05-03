@@ -10,8 +10,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyGive(field)
 		?: applyThis(field)
 		?: applyNothing(field)
-		?: applyTextPlusText(field)
-		?: applyTextLength(field)
 		?: applyNumberPlusNumber(field)
 		?: applyNumberMinusNumber(field)
 		?: applyNumberTimesNumber(field)
@@ -54,24 +52,6 @@ fun Value.applyThis(field: Field): Value? =
 fun Value.applyNothing(field: Field): Value? =
 	matchEmpty {
 		field.match(nothingName) { value() }
-	}
-
-fun Value.applyTextPlusText(field: Field): Value? =
-	matchText { lhsString ->
-		field.matchPrefix(plusName) { rhs ->
-			rhs.matchText { rhsString ->
-				lhsString.plus(rhsString).field.value
-			}
-		}
-	}
-
-fun Value.applyTextLength(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(lengthName) { rhs ->
-			rhs.matchText { text ->
-				text.length.toBigDecimal().field.value
-			}
-		}
 	}
 
 fun Value.applyIntPlusInt(field: Field): Value? =
