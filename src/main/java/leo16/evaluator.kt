@@ -7,6 +7,7 @@ import leo13.evaluatorName
 import leo13.fold
 import leo13.reverse
 import leo14.*
+import leo15.debugName
 import leo15.nothingName
 import leo15.parentName
 import leo15.wordName
@@ -76,19 +77,19 @@ fun EvaluatorParent.endEvaluator(evaluated: Evaluated): Evaluator =
 
 fun Evaluator.endWith(word: String, evaluated: Evaluated): Evaluator =
 	updateEvaluated {
-		applyEvaluator(word(evaluated.value)) ?: apply(word, evaluated, mode)
+		applyDebug(word(evaluated.value)) ?: apply(word, evaluated, mode)
 	}
 
 fun Evaluator.append(field: Field): Evaluator =
 	updateEvaluated {
-		applyEvaluator(field) ?: apply(field, mode)
+		applyDebug(field) ?: apply(field, mode)
 	}
 
 fun Evaluator.append(sentence: Sentence): Evaluator =
 	append(sentence.field)
 
-fun Evaluator.applyEvaluator(field: Field): Evaluated? =
-	notNullIf(field == evaluatorName(value())) {
+fun Evaluator.applyDebug(field: Field): Evaluated? =
+	notNullIf(field == debugName(value())) {
 		evaluated.scope.evaluated(value(asField))
 	}
 

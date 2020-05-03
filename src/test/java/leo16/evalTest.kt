@@ -445,9 +445,9 @@ class EvalTest {
 	}
 
 	@Test
-	fun evaluator() {
+	fun debug() {
 		evaluate_ {
-			define { zero.is_ { one } }.evaluator
+			define { zero.is_ { one } }.debug
 		}.assertGives {
 			evaluator {
 				parent { nothing }
