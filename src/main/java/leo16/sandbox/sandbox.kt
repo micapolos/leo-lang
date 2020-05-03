@@ -4,13 +4,11 @@ import leo15.dsl.*
 import leo16.print_
 
 fun main() = print_ {
-	import { base.load }
-	import { bit.load }
-	import { list.load }
+	text.load.import
 
-	list
-	append { zero.bit }
-	append { one.bit }
-	append { zero.bit }
-	append { keyword }
+	"Hello, world!".text
+	cut {
+		from { 7.number }
+		to { 12.number }
+	}
 }
