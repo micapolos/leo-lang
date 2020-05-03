@@ -1,3 +1,3 @@
 package leo16
 
-data class Compiler(val context: Context, val compiled: Compiled)
+data class Compiler(val scope: Scope, val compiled: Compiled)

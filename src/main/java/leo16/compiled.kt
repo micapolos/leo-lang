@@ -1,3 +1,5 @@
 package leo16
 
-data class Compiled(val scope: Scope, val code: Code)
+import leo14.Script
+
+data class Compiled(val script: Script)

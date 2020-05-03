@@ -1,5 +1,7 @@
 package leo16
 
+import java.lang.Compiler
+
 sealed class Reader
 
 object VoidReader : Reader()
