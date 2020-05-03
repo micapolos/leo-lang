@@ -8,6 +8,11 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
+private fun String.definition(class_: Class<*>) =
+	value(className(this())).gives {
+		className(class_.nativeField).value
+	}
+
 private val nameClassDefinition =
 	value(className(nameName(textName(nativeName(anyName()))))).gives {
 		val name = this
@@ -195,6 +200,13 @@ private val objectInvokeMethodDefinition =
 
 private val reflectionDictionary =
 	emptyDictionary
+		.plus(booleanName.definition(Boolean::class.java))
+		.plus(byteName.definition(Byte::class.java))
+		.plus(shortName.definition(Short::class.java))
+		.plus(intName.definition(Int::class.java))
+		.plus(longName.definition(Long::class.java))
+		.plus(floatName.definition(Float::class.java))
+		.plus(doubleName.definition(Double::class.java))
 		.plus(nameClassDefinition)
 		.plus(classFieldDefinition)
 		.plus(fieldGetDefinition)

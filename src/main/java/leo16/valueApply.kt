@@ -1,6 +1,5 @@
 package leo16
 
-import leo.java.lang.typeClassOrNull
 import leo15.*
 import java.math.BigDecimal
 
@@ -27,7 +26,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberLong(field)
 		?: applyNumberFloat(field)
 		?: applyNumberDouble(field)
-		?: applyTypeClass(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -195,17 +193,6 @@ fun Value.applyNumberDouble(field: Field): Value? =
 			rhs.matchNumber { number ->
 				nullIfThrowsException {
 					doubleName(number.toDouble().nativeField).value
-				}
-			}
-		}
-	}
-
-fun Value.applyTypeClass(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(className) { rhs ->
-			rhs.matchWord { word ->
-				word.typeClassOrNull?.let { class_ ->
-					className(class_.nativeField).value
 				}
 			}
 		}

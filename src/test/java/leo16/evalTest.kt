@@ -263,13 +263,20 @@ class EvalTest {
 
 	@Test
 	fun typeClass() {
-		evaluate_ { byte.class_ }.assertGives { class_ { Byte::class.java.native_ } }
-		evaluate_ { short.class_ }.assertGives { class_ { Short::class.java.native_ } }
-		evaluate_ { int.class_ }.assertGives { class_ { Int::class.java.native_ } }
-		evaluate_ { long.class_ }.assertGives { class_ { Long::class.java.native_ } }
-		evaluate_ { float.class_ }.assertGives { class_ { Float::class.java.native_ } }
-		evaluate_ { double.class_ }.assertGives { class_ { Double::class.java.native_ } }
-		evaluate_ { boolean.class_ }.assertGives { class_ { Boolean::class.java.native_ } }
+		evaluate_ { reflection.load.import; byte.class_ }
+			.assertGives { class_ { Byte::class.java.native_ } }
+		evaluate_ { reflection.load.import; short.class_ }
+			.assertGives { class_ { Short::class.java.native_ } }
+		evaluate_ { reflection.load.import; int.class_ }
+			.assertGives { class_ { Int::class.java.native_ } }
+		evaluate_ { reflection.load.import; long.class_ }
+			.assertGives { class_ { Long::class.java.native_ } }
+		evaluate_ { reflection.load.import; float.class_ }
+			.assertGives { class_ { Float::class.java.native_ } }
+		evaluate_ { reflection.load.import; double.class_ }
+			.assertGives { class_ { Double::class.java.native_ } }
+		evaluate_ { reflection.load.import; boolean.class_ }
+			.assertGives { class_ { Boolean::class.java.native_ } }
 	}
 
 	@Test
