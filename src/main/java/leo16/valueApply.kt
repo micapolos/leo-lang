@@ -365,21 +365,17 @@ fun Value.applyNativeMethodInvoke(field: Field): Value? =
 		method.matchNative { nativeMethod ->
 			field.matchPrefix(invokeName) { lhs ->
 				lhs.matchPrefix(parameterName) { parameter ->
-					lhs.matchPrefix(objectName) { rhs ->
-						rhs.matchNative { native ->
-							parameter
-								.listOrNull { this }
-								?.mapOrNull { matchNative { it } }
-								?.array
-								?.let { args ->
-									nullIfThrowsException {
-										(nativeMethod as Method)
-											.invoke(native, *args)
-											.nativeValue
-									}
-								}
+					parameter
+						.listOrNull { this }
+						?.mapOrNull { matchNative { it } }
+						?.array
+						?.let { args ->
+							nullIfThrowsException {
+								(nativeMethod as Method)
+									.invoke(null, *args)
+									.nativeValue
+							}
 						}
-					}
 				}
 			}
 		}

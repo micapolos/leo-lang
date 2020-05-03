@@ -398,6 +398,28 @@ class EvalTest {
 	}
 
 	@Test
+	fun nativeObjectMethodInvoke() {
+		evaluate_ {
+			"java.lang.String".text.name.native.class_
+			method {
+				name { "valueOf".text }
+				parameter {
+					list {
+						this_ { int.native.class_ }
+					}
+				}
+			}
+			invoke {
+				parameter {
+					list {
+						this_ { 123.int.native }
+					}
+				}
+			}
+		}.assertGives { "123".native_ }
+	}
+
+	@Test
 	fun compiler() {
 		evaluate_ {
 			define { zero.is_ { one } }.compiler
