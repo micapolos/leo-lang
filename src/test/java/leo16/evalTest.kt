@@ -133,6 +133,18 @@ class EvalTest {
 	}
 
 	@Test
+	fun defineInvalid() {
+		evaluate_ { define { nothing_ } }.assertGives { define { nothing_ } }
+		evaluate_ { define { zero } }.assertGives { define { zero } }
+
+		evaluate_ {
+			define { zero.is_ { one }.one }
+		}.assertGives {
+			define { one { zero.is_ { one } } }
+		}
+	}
+
+	@Test
 	fun definitionOutSideDefine() {
 		evaluate_ { zero.is_ { one } }.assertGives { zero.is_ { one } }
 		evaluate_ { zero.gives { one } }.assertGives { zero.gives { one } }
