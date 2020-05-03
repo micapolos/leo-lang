@@ -1,13 +1,12 @@
 package leo16
 
-import leo13.Stack
-import leo13.map
-import leo13.stack
-import leo13.zipFoldOrNull
+import leo13.*
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo15.*
+import leo15.givingName
+import leo15.textName
 
 sealed class Pattern {
 	override fun toString() = asField.toString()
@@ -37,6 +36,15 @@ fun pattern(vararg fields: PatternField) = patternValue(*fields).pattern
 val emptyPattern = pattern()
 val String.pattern get() = pattern(invoke(pattern()))
 operator fun String.invoke(pattern: Pattern): PatternField = PatternSentence(this, pattern).field
+
+operator fun Pattern.plus(field: PatternField): Pattern =
+	when (this) {
+		AnyPattern -> pattern(anyName.invoke(emptyPattern))
+		is ValuePattern -> value.plus(field).pattern
+	}
+
+operator fun PatternValue.plus(field: PatternField): PatternValue =
+	fieldStack.push(field).value
 
 val Pattern.asField: Field
 	get() =

@@ -1,5 +1,6 @@
 package leo16
 
+import leo14.Literal
 import leo15.givesName
 import leo15.isName
 
@@ -14,3 +15,15 @@ fun Dictionarian.begin(word: String): Reader =
 		givesName -> dictionary.emptyCompiler.reader
 		else -> dictionary.emptyDictionarian.reader
 	}
+
+fun Dictionarian.plus(literal: Literal): Dictionarian =
+	dictionary.dictionarian(pattern.plus(literal.asField.patternField))
+
+fun Dictionarian.clearPlus(definition: Definition): Dictionarian =
+	dictionary.plus(definition).emptyDictionarian
+
+fun Dictionarian.plusIs(value: Value): Dictionarian =
+	clearPlus(pattern.definitionTo(value.body))
+
+fun Dictionarian.plusGives(function: Function): Dictionarian =
+	clearPlus(pattern.definitionTo(function.body))
