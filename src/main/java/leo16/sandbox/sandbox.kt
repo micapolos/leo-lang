@@ -4,8 +4,8 @@ import leo15.dsl.*
 import leo16.print_
 
 fun main() = print_ {
-	int.load.import
+	number.load.import
 
-	2.int
-	plus { 3.int }
+	2.number
+	plus { 3.number }
 }

@@ -1,7 +1,6 @@
 package leo16
 
 import leo15.*
-import java.math.BigDecimal
 
 fun Value.apply(field: Field): Value? =
 	null
@@ -10,12 +9,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyGive(field)
 		?: applyThis(field)
 		?: applyNothing(field)
-		?: applyNumberPlusNumber(field)
-		?: applyNumberMinusNumber(field)
-		?: applyNumberTimesNumber(field)
-//		?: applyIntPlusInt(field)
-//		?: applyIntMinusInt(field)
-//		?: applyIntTimesInt(field)
 		?: applyNullNative(field)
 		?: applyTrueNative(field)
 		?: applyFalseNative(field)
@@ -52,42 +45,6 @@ fun Value.applyThis(field: Field): Value? =
 fun Value.applyNothing(field: Field): Value? =
 	matchEmpty {
 		field.match(nothingName) { value() }
-	}
-
-fun Value.applyIntPlusInt(field: Field): Value? =
-	applyIntOpInt(field, plusName, Int::plus)
-
-fun Value.applyIntMinusInt(field: Field): Value? =
-	applyIntOpInt(field, minusName, Int::minus)
-
-fun Value.applyIntTimesInt(field: Field): Value? =
-	applyIntOpInt(field, timesName, Int::times)
-
-fun Value.applyIntOpInt(field: Field, word: String, fn: Int.(Int) -> Int): Value? =
-	matchInt { lhsInt ->
-		field.matchPrefix(word) { rhs ->
-			rhs.matchInt { rhsInt ->
-				lhsInt.fn(rhsInt).field.value
-			}
-		}
-	}
-
-fun Value.applyNumberPlusNumber(field: Field): Value? =
-	applyNumberOpNumber(field, plusName, BigDecimal::plus)
-
-fun Value.applyNumberMinusNumber(field: Field): Value? =
-	applyNumberOpNumber(field, minusName, BigDecimal::minus)
-
-fun Value.applyNumberTimesNumber(field: Field): Value? =
-	applyNumberOpNumber(field, timesName, BigDecimal::times)
-
-fun Value.applyNumberOpNumber(field: Field, word: String, fn: BigDecimal.(BigDecimal) -> BigDecimal): Value? =
-	matchNumber { lhsNumber ->
-		field.matchPrefix(word) { rhs ->
-			rhs.matchNumber { rhsNumber ->
-				lhsNumber.fn(rhsNumber).field.value
-			}
-		}
 	}
 
 fun Value.applyNullNative(field: Field): Value? =
