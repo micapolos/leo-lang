@@ -107,8 +107,15 @@ fun Evaluated.applyImport(field: Field): Evaluated? =
 
 fun Evaluated.applyDefine(field: Field): Evaluated? =
 	field.matchPrefix(defineName) { rhs ->
-		// TODO: This is still wrong, because we don't want to double-evaluate
-		scope.plus(emptyEvaluator.copy(mode = Mode.DEFINE).plus(rhs).evaluated.scope.exportDictionary).evaluated(value)
+		emptyEvaluator
+			.copy(mode = Mode.DEFINE)
+			.plus(rhs)
+			.evaluated
+			.scope
+			.exportDictionary
+			.definitionStack
+			.onlyOrNull
+			?.let { definition -> scope.plus(definition).evaluated(value) }
 	}
 
 fun Evaluated.applyLoad(field: Field): Evaluated? =
