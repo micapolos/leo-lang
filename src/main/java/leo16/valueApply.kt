@@ -1,11 +1,7 @@
 package leo16
 
 import leo.java.lang.typeClassOrNull
-import leo13.array
-import leo13.mapOrNull
 import leo15.*
-import java.lang.reflect.Constructor
-import java.lang.reflect.Method
 import java.math.BigDecimal
 
 fun Value.apply(field: Field): Value? =
@@ -32,10 +28,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyNumberFloat(field)
 		?: applyNumberDouble(field)
 		?: applyTypeClass(field)
-		//?: applyConstructorInvoke(field)
-		?: applyClassMethod(field)
-		?: applyMethodInvoke(field)
-		?: applyObjectMethodInvoke(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -214,100 +206,6 @@ fun Value.applyTypeClass(field: Field): Value? =
 			rhs.matchWord { word ->
 				word.typeClassOrNull?.let { class_ ->
 					className(class_.nativeField).value
-				}
-			}
-		}
-	}
-
-//fun Value.applyConstructorInvoke(field: Field): Value? =
-//	matchPrefix(constructorName) { rhs ->
-//		rhs.matchNative { nativeConstructor ->
-//			field.matchPrefix(invokeName) { rhs ->
-//				rhs.matchPrefix(parameterName) { rhs ->
-//					rhs
-//						.listOrNull { this }
-//						?.mapOrNull { matchNative { it } }
-//						?.array
-//						?.let { args ->
-//							nullIfThrowsException {
-//								(nativeConstructor as Constructor<*>)
-//									.newInstance(*args)
-//									.nativeValue
-//							}
-//						}
-//				}
-//			}
-//		}
-//	}
-//
-fun Value.applyClassMethod(field: Field): Value? =
-	matchPrefix(className) { rhs ->
-		rhs.matchNative { nativeClass ->
-			field.matchPrefix(methodName) { rhs ->
-				rhs.matchInfix(parameterName) { lhs, parameter ->
-					lhs.matchPrefix(nameName) { lhs ->
-						lhs.matchText { name ->
-							parameter
-								.listOrNull {
-									matchPrefix(className) { rhs ->
-										rhs.matchNative { it }
-									}
-								}
-								?.mapOrNull { this as? Class<*> }
-								?.array
-								?.let { parameterClasses ->
-									nullIfThrowsException {
-										methodName((nativeClass as Class<*>)
-											.getMethod(name, *parameterClasses).nativeField)
-											.value
-									}
-								}
-						}
-					}
-				}
-			}
-		}
-	}
-
-fun Value.applyMethodInvoke(field: Field): Value? =
-	matchPrefix(methodName) { method ->
-		method.matchNative { nativeMethod ->
-			field.matchPrefix(invokeName) { lhs ->
-				lhs.matchPrefix(parameterName) { parameter ->
-					parameter
-						.listOrNull { this }
-						?.mapOrNull { matchNative { it } }
-						?.array
-						?.let { args ->
-							nullIfThrowsException {
-								(nativeMethod as Method)
-									.invoke(null, *args)
-									.nativeValue
-							}
-						}
-				}
-			}
-		}
-	}
-
-fun Value.applyObjectMethodInvoke(field: Field): Value? =
-	matchNative { native ->
-		field.matchPrefix(invokeName) { rhs ->
-			rhs.matchInfix(parameterName) { lhs, parameter ->
-				lhs.matchPrefix(methodName) { method ->
-					method.matchNative { nativeMethod ->
-						parameter
-							.listOrNull { this }
-							?.mapOrNull { matchNative { it } }
-							?.array
-							?.let { args ->
-								nullIfThrowsException {
-									(nativeMethod as Method)
-										.invoke(native!!, *args)
-										.nativeValue
-								}
-							}
-					}
 				}
 			}
 		}

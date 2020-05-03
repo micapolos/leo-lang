@@ -61,3 +61,8 @@ val Value.givenDefinition: Definition
 	get() =
 		givenName.pattern definitionTo value(givenName.invoke(this)).body
 
+fun Value.gives(apply: Value.() -> Value) =
+	pattern.definitionTo(
+		body {
+			nullIfThrowsException { apply(this) } ?: this
+		})
