@@ -5,17 +5,15 @@ import leo16.value_
 
 val int = value_ {
 	dictionary {
-		define {
-			any.int.number
-			gives {
-				"java.math.BigDecimal".text.name.native.class_
-				method {
-					name { "valueOf".text }
-					parameter { list { long.native.class_ } }
-				}
-				invoke { parameter { list { given.number.int.native } } }
-				number
+		any.int.number
+		gives {
+			"java.math.BigDecimal".text.name.native.class_
+			method {
+				name { "valueOf".text }
+				parameter { list { long.native.class_ } }
 			}
+			invoke { parameter { list { given.number.int.native } } }
+			number
 		}
 	}
 }

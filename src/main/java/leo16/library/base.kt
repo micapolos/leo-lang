@@ -5,6 +5,6 @@ import leo16.value_
 
 val base = value_ {
 	dictionary {
-		define { any.clear.gives { nothing } }
+		any.clear.gives { nothing }
 	}
 }
