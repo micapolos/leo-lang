@@ -67,6 +67,12 @@ class EvalTest {
 	}
 
 	@Test
+	fun script() {
+		evaluate_ { giving { zero }.script.give { one } }
+			.assertGives { giving { zero }.give { one } }
+	}
+
+	@Test
 	fun this_() {
 		evaluate_ { this_ { nothing_ } }.assertGives { nothing_ }
 		evaluate_ { x { zero }.this_ { nothing_ } }.assertGives { x { zero } }

@@ -11,8 +11,17 @@ val reflection = dictionary_ {
 
 	import {
 		dictionary {
+			object_.class_.is_ { "java.lang.Object".text.class_ }
 			boolean.class_.is_ { "java.lang.Boolean".text.name.class_ }
 			integer.class_.is_ { "java.lang.Integer".text.class_ }
+
+			object_.string.method.is_ {
+				object_.class_
+				method {
+					name { "toString".text }
+					parameter { list }
+				}
+			}
 
 			boolean.true_.field.is_ {
 				boolean.class_.field { name { "TRUE".text } }
@@ -24,9 +33,18 @@ val reflection = dictionary_ {
 		}
 	}
 
+	any.native.string.gives {
+		given.string.native
+		invoke {
+			object_.string.method
+			parameter { list }
+		}
+	}
+
+	text {
+		123.number.native.string.text.gives { "123".text }
+	}
+
 	true_.native.is_ { boolean.true_.field.get }
 	false_.native.is_ { boolean.false_.field.get }
-
-	test { true_.native.matches { any.native } }
-	test { false_.native.matches { any.native } }
 }

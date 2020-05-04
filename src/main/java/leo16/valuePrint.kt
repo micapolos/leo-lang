@@ -14,7 +14,7 @@ val Field.print: Field
 			is SentenceField -> sentence.printSentence.field
 			is FunctionField -> function.printSentence.field
 			is DictionaryField -> dictionary.printSentence.field
-			is NativeField -> this
+			is NativeField -> native.nativeString()
 		}
 
 val Sentence.printSentence: Sentence
