@@ -1,5 +1,8 @@
 package leo16
 
+import leo.ansi
+import leo.magenta
+import leo.reset
 import leo15.intName
 import leo15.numberName
 import leo15.textName
@@ -19,7 +22,7 @@ val Int.field: Field
 
 val Any?.nativeString: String
 	get() =
-		"#<$this>"
+		"${ansi.magenta}«$this»${ansi.reset}"
 
 fun <R : Any> nullIfThrowsException(fn: () -> R): R? =
 	try {
