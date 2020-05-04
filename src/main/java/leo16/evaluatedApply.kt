@@ -1,7 +1,6 @@
 package leo16
 
 import leo.base.ifOrNull
-import leo.base.orIfNull
 import leo.base.runIfNotNull
 import leo13.onlyOrNull
 import leo15.*
@@ -122,19 +121,44 @@ fun Evaluated.applyLoaded(field: Field): Evaluated? =
 fun Evaluated.applyTest(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(testName) { rhs ->
-			rhs.matchInfix(givesName) { lhs, rhs ->
-				scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
-					scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
-						if (evaluatedLhs == evaluatedRhs) this
-						else throw AssertionError(
-							value(
-								testName(
-									errorName(
-										itName(lhs),
-										gaveName(evaluatedLhs),
-										shouldName(giveName(evaluatedRhs))))).toString())
-					}
-				}
+			null
+				?: applyTestGives(rhs)
+				?: applyTestMatches(rhs)
+				?: testSyntaxError(rhs)
+		}
+	}
+
+fun Evaluated.applyTestGives(value: Value): Evaluated? =
+	value.matchInfix(givesName) { lhs, rhs ->
+		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
+			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
+				if (evaluatedLhs == evaluatedRhs) this
+				else throw AssertionError(
+					value(
+						testName(
+							errorName(
+								itName(lhs),
+								gaveName(evaluatedLhs),
+								shouldName(giveName(evaluatedRhs))))).toString())
 			}
 		}
 	}
+
+fun Evaluated.applyTestMatches(value: Value): Evaluated? =
+	value.matchInfix(matchesName) { lhs, rhs ->
+		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
+			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
+				if (evaluatedLhs.matches(evaluatedRhs.pattern)) this
+				else throw AssertionError(
+					value(
+						testName(
+							errorName(
+								itName(lhs),
+								givingName(evaluatedLhs),
+								doesName(notName(matchName(evaluatedRhs)))))).toString())
+			}
+		}
+	}
+
+fun Evaluated.testSyntaxError(value: Value): Evaluated =
+	throw AssertionError(value(testName(errorName(syntaxName(value)))).toString())
