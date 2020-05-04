@@ -206,4 +206,15 @@ class ReflectionTest {
 		evaluate_ { reflection.import; 10f.float.number }.assertGives { 10f.number }
 		evaluate_ { reflection.import; 10.0.double.number }.assertGives { 10.0.number }
 	}
+
+	@Test
+	fun booleanToNative() {
+		evaluate_ { reflection.import; true_.boolean.native }.assertGives { true.native_ }
+		evaluate_ { reflection.import; false_.boolean.native }.assertGives { false.native_ }
+	}
+
+	@Test
+	fun nullNative() {
+		evaluate_ { reflection.import; null_.native }.assertGives { null.native_ }
+	}
 }

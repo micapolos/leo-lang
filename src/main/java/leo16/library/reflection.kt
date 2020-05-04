@@ -215,12 +215,12 @@ val reflection = dictionary_ {
 		123.number.native.string.text.gives { "123".text }
 	}
 
-//	true_.native.is_ { boolean.true_.field.get }
-//	false_.native.is_ { boolean.false_.field.get }
-//
-//	any.native.boolean.gives {
-//		native.boolean.method.invoke { parameter { list { given.boolean.native } } }
-//	}
-//
-//	test { true_.native.boolean.gives { true_.boolean } }
+	true_.boolean.native.is_ { boolean.true_.field.get }
+	false_.boolean.native.is_ { boolean.false_.field.get }
+
+	any.native.boolean.gives {
+		native.boolean.method
+		invoke { parameter { list { given.boolean.native } } }
+		boolean
+	}
 }

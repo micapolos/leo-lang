@@ -14,6 +14,11 @@ private fun String.definition(class_: Class<*>) =
 		className(class_.nativeField).value
 	}
 
+private val nullNativeDefinition =
+	value(nativeName(nullName())).gives {
+		null.nativeValue
+	}
+
 private val nameClassDefinition =
 	value(className(nameName(textName(anyName())))).gives {
 		val name = this
@@ -230,5 +235,6 @@ private val reflectionDictionary =
 		.plus(methodInvokeDefinition)
 		.plus(nativeInvokeMethodDefinition)
 		.plus(arrayListDefinition)
+		.plus(nullNativeDefinition)
 
 val nativeReflection = reflectionDictionary.field.value

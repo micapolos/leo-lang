@@ -9,9 +9,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyGive(field)
 		?: applyThis(field)
 		?: applyNothing(field)
-		?: applyNullNative(field)
-		?: applyTrueNative(field)
-		?: applyFalseNative(field)
 		?: applyComment(field)
 		?: applyScript(field)
 
@@ -42,39 +39,6 @@ fun Value.applyThis(field: Field): Value? =
 fun Value.applyNothing(field: Field): Value? =
 	matchEmpty {
 		field.match(nothingName) { value() }
-	}
-
-fun Value.applyNullNative(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(nullName) { rhs ->
-				rhs.matchEmpty {
-					null.nativeValue
-				}
-			}
-		}
-	}
-
-fun Value.applyTrueNative(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(trueName) { rhs ->
-				rhs.matchEmpty {
-					true.nativeValue
-				}
-			}
-		}
-	}
-
-fun Value.applyFalseNative(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(nativeName) { rhs ->
-			rhs.matchPrefix(falseName) { rhs ->
-				rhs.matchEmpty {
-					false.nativeValue
-				}
-			}
-		}
 	}
 
 fun Value.applyComment(field: Field): Value? =

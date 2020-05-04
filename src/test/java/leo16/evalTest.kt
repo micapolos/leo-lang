@@ -298,13 +298,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun natives() {
-		evaluate_ { null_.native }.assertGives { null.native_ }
-		evaluate_ { true_.native }.assertGives { true.native_ }
-		evaluate_ { false_.native }.assertGives { false.native_ }
-	}
-
-	@Test
 	fun testTest() {
 		evaluate_ {
 			test { zero.gives { zero } }
