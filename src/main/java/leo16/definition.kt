@@ -64,7 +64,7 @@ val Value.givenDefinition: Definition
 fun Value.gives(apply: Value.() -> Value) =
 	pattern.definitionTo(
 		body {
-			//nullIfThrowsException {
-			apply(this)
-			//} ?: this
+			nullIfThrowsException {
+				apply(this)
+			} ?: this
 		})
