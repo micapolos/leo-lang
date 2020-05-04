@@ -23,10 +23,10 @@ val Byte.scriptLine
 val leonardoScript =
 	script(
 		"leonardo" lineTo script(
-			"version" lineTo script(
-				literal("0.1")),
 			"author" lineTo script(
 				literal("Michał Pociecha-Łoś")),
+			"version" lineTo script(
+				literal("0.1")),
 			"operating" lineTo script(
 				"system" lineTo script(
 					"name" lineTo script(

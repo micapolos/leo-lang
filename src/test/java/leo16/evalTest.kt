@@ -73,6 +73,11 @@ class EvalTest {
 	}
 
 	@Test
+	fun leonardo() {
+		evaluate_ { leonardo.author.text }.assertGives { "Michał Pociecha-Łoś".text }
+	}
+
+	@Test
 	fun this_() {
 		evaluate_ { this_ { nothing_ } }.assertGives { nothing_ }
 		evaluate_ { x { zero }.this_ { nothing_ } }.assertGives { x { zero } }
