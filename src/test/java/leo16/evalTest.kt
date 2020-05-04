@@ -302,11 +302,6 @@ class EvalTest {
 		evaluate_ { null_.native }.assertGives { null.native_ }
 		evaluate_ { true_.native }.assertGives { true.native_ }
 		evaluate_ { false_.native }.assertGives { false.native_ }
-		evaluate_ { 10.toByte().byte.native }.assertGives { 10.toByte().native_ }
-		evaluate_ { 10.int.native }.assertGives { 10.native_ }
-		evaluate_ { 10L.long.native }.assertGives { 10L.native_ }
-		evaluate_ { 10f.float.native }.assertGives { 10f.native_ }
-		evaluate_ { 10.0.double.native }.assertGives { 10.0.native_ }
 	}
 
 	@Test

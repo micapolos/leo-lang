@@ -13,6 +13,14 @@ val int = dictionary_ {
 				"leo16.library.IntKt".text.name.class_
 			}
 
+			big.decimal.int.value.method.is_ {
+				big.decimal.class_
+				method {
+					name { "intValueExact".text }
+					parameter { list }
+				}
+			}
+
 			integer.plus.method.is_ {
 				integer.class_
 				method {

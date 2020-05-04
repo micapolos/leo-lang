@@ -7,7 +7,6 @@ import java.awt.Point
 import kotlin.test.Test
 
 class ReflectionTest {
-
 	@Test
 	fun typeClass() {
 		evaluate_ { reflection.dictionary.import; byte.class_ }
@@ -141,7 +140,8 @@ class ReflectionTest {
 	@Test
 	fun nativeMethodInvoke() {
 		evaluate_ {
-			reflection.dictionary.import
+			reflection.import
+
 			"Hello, world!".text.native
 			invoke {
 				"java.lang.String".text.name.class_
@@ -185,5 +185,25 @@ class ReflectionTest {
 				}
 			}
 		}.assertGives { "123".native_ }
+	}
+
+	@Test
+	fun numberToPrimitive() {
+		evaluate_ { reflection.import; 10.toByte().byte.native }.assertGives { 10.toByte().native_ }
+		evaluate_ { reflection.import; 10.toShort().short.native }.assertGives { 10.toShort().native_ }
+		evaluate_ { reflection.import; 10.int.native }.assertGives { 10.native_ }
+		evaluate_ { reflection.import; 10L.long.native }.assertGives { 10L.native_ }
+		evaluate_ { reflection.import; 10f.float.native }.assertGives { 10f.native_ }
+		evaluate_ { reflection.import; 10.0.double.native }.assertGives { 10.0.native_ }
+	}
+
+	@Test
+	fun primitiveToNumber() {
+		evaluate_ { reflection.import; 10.toByte().byte.number }.assertGives { 10.number }
+		evaluate_ { reflection.import; 10.toShort().short.number }.assertGives { 10.number }
+		evaluate_ { reflection.import; 10.int.number }.assertGives { 10.number }
+		evaluate_ { reflection.import; 10L.long.number }.assertGives { 10.number }
+		evaluate_ { reflection.import; 10f.float.number }.assertGives { 10f.number }
+		evaluate_ { reflection.import; 10.0.double.number }.assertGives { 10.0.number }
 	}
 }

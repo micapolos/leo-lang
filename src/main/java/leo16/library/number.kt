@@ -4,6 +4,8 @@ import leo15.dsl.*
 import leo16.dictionary_
 import leo16.run_
 
+fun main() = run_ { number }
+
 val number = dictionary_ {
 	reflection.import
 
@@ -11,14 +13,6 @@ val number = dictionary_ {
 		dictionary {
 			big.decimal.class_.is_ {
 				"java.math.BigDecimal".text.name.class_
-			}
-
-			long.big.decimal.method.is_ {
-				big.decimal.class_
-				method {
-					name { "valueOf".text }
-					parameter { list { long.class_ } }
-				}
 			}
 
 			big.decimal.add.method.is_ {
@@ -45,13 +39,6 @@ val number = dictionary_ {
 				}
 			}
 		}
-	}
-
-	any.int.number
-	gives {
-		long.big.decimal.method
-		invoke { parameter { list { given.number.int.native } } }
-		number
 	}
 
 	any.number
@@ -98,5 +85,3 @@ val number = dictionary_ {
 		gives { "152415787532388367501905199875019052100".number }
 	}
 }
-
-fun main() = run_ { number }
