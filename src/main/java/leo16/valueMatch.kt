@@ -4,7 +4,6 @@ import leo.base.ifOrNull
 import leo13.Stack
 import leo13.linkOrNull
 import leo13.onlyOrNull
-import leo15.intName
 import leo15.numberName
 import leo15.textName
 import java.math.BigDecimal
@@ -20,9 +19,6 @@ fun <R : Any> Value.matchText(fn: (String) -> R?): R? =
 
 fun <R : Any> Value.matchNumber(fn: (BigDecimal) -> R?): R? =
 	fieldStack.onlyOrNull?.matchNumber(fn)
-
-fun <R : Any> Value.matchInt(fn: (Int) -> R?): R? =
-	fieldStack.onlyOrNull?.matchInt(fn)
 
 fun <R : Any> Value.matchLink(fn: (Value, String, Value) -> R?): R? =
 	fieldStack.linkOrNull?.run {
@@ -89,13 +85,6 @@ fun <R : Any> Field.matchNumber(fn: (BigDecimal) -> R?): R? =
 	matchPrefix(numberName) { rhs ->
 		rhs.matchNative { native ->
 			(native as? BigDecimal)?.let(fn)
-		}
-	}
-
-fun <R : Any> Field.matchInt(fn: (Int) -> R?): R? =
-	matchPrefix(intName) { rhs ->
-		rhs.matchNative { native ->
-			(native as? Int)?.let(fn)
 		}
 	}
 
