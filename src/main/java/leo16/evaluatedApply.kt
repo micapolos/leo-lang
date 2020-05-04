@@ -3,6 +3,7 @@ package leo16
 import leo.base.ifOrNull
 import leo.base.runIfNotNull
 import leo13.onlyOrNull
+import leo14.leonardoScript
 import leo15.*
 
 fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
@@ -41,7 +42,8 @@ fun Evaluated.apply(field: Field): Evaluated =
 
 fun Evaluated.applyNormalized(field: Field): Evaluated =
 	null
-		?: applyValue(field) // keep first
+		?: applyLeonardo(field) // keep first
+		?: applyValue(field) // keep second
 		?: applyBinding(field)
 		?: applyEvaluate(field)
 		?: applyCompile(field)
@@ -53,6 +55,13 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyLoaded(field)
 		?: applyTest(field)
 		?: resolve(field)
+
+fun Evaluated.applyLeonardo(field: Field): Evaluated? =
+	value.matchEmpty {
+		field.match(leonardoName) {
+			scope.evaluated(leonardoScript.asValue)
+		}
+	}
 
 fun Evaluated.applyValue(field: Field): Evaluated? =
 	scope.runIfNotNull(value.apply(field)) { evaluated(it) }
@@ -160,5 +169,5 @@ fun Evaluated.applyTestMatches(value: Value): Evaluated? =
 		}
 	}
 
-fun Evaluated.testSyntaxError(value: Value): Evaluated =
+fun testSyntaxError(value: Value): Evaluated =
 	throw AssertionError(value(testName(errorName(syntaxName(value)))).toString())

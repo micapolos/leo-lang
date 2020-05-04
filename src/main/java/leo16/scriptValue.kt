@@ -12,7 +12,7 @@ val Script.asValue: Value
 val ScriptLine.field: Field
 	get() =
 		when (this) {
-			is LiteralScriptLine -> literal.nativeField
+			is LiteralScriptLine -> literal.asField
 			is FieldScriptLine -> field.sentence.field
 		}
 

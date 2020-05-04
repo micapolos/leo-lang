@@ -55,6 +55,6 @@ val String.expandSentence: Field
 val Literal.asField: Field
 	get() =
 		when (this) {
-			is StringLiteral -> string.expandSentence
-			is NumberLiteral -> number.bigDecimal.intValueExact().asField
+			is StringLiteral -> textName(string.nativeField)
+			is NumberLiteral -> numberName(number.bigDecimal.nativeField)
 		}
