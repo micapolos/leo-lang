@@ -1,4 +1,4 @@
-package leo16.library.dictionary
+package leo16.lib.dictionary
 
 import leo15.dsl.*
 import leo16.dictionary_
@@ -10,7 +10,7 @@ val int = dictionary_ {
 	import {
 		dictionary {
 			integer.class_.is_ {
-				"leo16.library.dictionary.IntKt".text.name.class_
+				"leo16.native.IntKt".text.name.class_
 			}
 
 			big.decimal.int.value.method.is_ {
@@ -113,9 +113,5 @@ val int = dictionary_ {
 
 	test { 2.int.times { 3.int }.gives { 6.int } }
 }
-
-fun plus(a: Int, b: Int) = a.plus(b)
-fun minus(a: Int, b: Int) = a.minus(b)
-fun times(a: Int, b: Int) = a.times(b)
 
 fun main() = run_ { int }

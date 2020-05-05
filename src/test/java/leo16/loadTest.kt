@@ -8,7 +8,7 @@ class LoadTest {
 	@Test
 	fun loadClassName() {
 		value(testingName(pingName()))
-			.loadOrNull("leo16.library.")
+			.loadOrNull
 			.assertEqualTo(value(pongName()))
 	}
 }

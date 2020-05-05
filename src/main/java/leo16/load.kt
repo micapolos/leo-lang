@@ -9,7 +9,7 @@ val loadedMap = mutableMapOf<Value, Value?>()
 
 val Value.loadOrNull: Value?
 	get() =
-		loadOrNull("leo16.library.")
+		loadOrNull("leo16.lib.")
 
 val Value.loadedOrNull: Value?
 	get() =

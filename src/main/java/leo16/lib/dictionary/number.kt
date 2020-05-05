@@ -1,4 +1,4 @@
-package leo16.library.dictionary
+package leo16.lib.dictionary
 
 import leo15.dsl.*
 import leo16.dictionary_

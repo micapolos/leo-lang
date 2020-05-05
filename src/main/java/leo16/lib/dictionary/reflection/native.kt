@@ -1,4 +1,4 @@
-package leo16.library.dictionary.reflection
+package leo16.lib.dictionary.reflection
 
 import leo16.field
 import leo16.value

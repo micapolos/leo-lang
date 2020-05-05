@@ -1,7 +1,6 @@
-package leo16.library
+package leo16
 
 import leo15.dsl.*
-import leo16.evaluate_
 import kotlin.test.Test
 
 class IndexTest {

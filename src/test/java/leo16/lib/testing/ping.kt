@@ -1,4 +1,4 @@
-package leo16.library.testing
+package leo16.lib.testing
 
 import leo15.dsl.*
 import leo16.value_

@@ -1,8 +1,6 @@
-package leo16.library
+package leo16
 
 import leo15.dsl.*
-import leo16.assertGives
-import leo16.evaluate_
 import java.awt.Point
 import kotlin.test.Test
 
