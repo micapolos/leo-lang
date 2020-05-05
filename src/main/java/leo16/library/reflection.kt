@@ -200,8 +200,8 @@ val reflection = dictionary_ {
 		number
 	}
 
-	any.native.string.gives {
-		given.string.native
+	any.native.object_.string.gives {
+		given.string.object_.native
 		invoke {
 			object_.string.method
 			parameter { list }
@@ -209,7 +209,7 @@ val reflection = dictionary_ {
 	}
 
 	test {
-		123.number.native.string.text.gives { "123".text }
+		123.number.native.object_.string.text.gives { "123".text }
 	}
 
 	true_.boolean.native.is_ { boolean.true_.field.get }

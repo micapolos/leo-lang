@@ -6,6 +6,14 @@ import kotlin.test.Test
 
 class ReflectionTest {
 	@Test
+	fun nativeClass() {
+		evaluate_ {
+			reflection.import
+			"Hello!".text.native.object_.class_
+		}.assertGives { class_ { String::class.java.native_ } }
+	}
+
+	@Test
 	fun typeClass() {
 		evaluate_ { reflection.import; byte.class_ }
 			.assertGives { class_ { Byte::class.java.native_ } }

@@ -1,5 +1,6 @@
 package leo16.native
 
+import leo.parser.caseTo
 import leo13.array
 import leo13.stack
 import leo14.untyped.typed.loadClass
@@ -11,6 +12,18 @@ import java.lang.reflect.Method
 
 fun String.definition(class_: Class<*>) =
 	value(className(this())).gives {
+		className(class_.nativeField).value
+	}
+
+val nativeObjectClassDefinition =
+	value(className(objectName(nativeName(anyName())))).gives {
+		val class_ = this
+			.getOrNull(className)!!
+			.getOrNull(objectName)!!
+			.getOrNull(nativeName)!!
+			.theNativeOrNull!!
+			.value!!
+			.javaClass
 		className(class_.nativeField).value
 	}
 

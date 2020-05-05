@@ -25,3 +25,4 @@ val dictionary =
 		.plus(nativeInvokeMethodDefinition)
 		.plus(arrayListDefinition)
 		.plus(nullNativeDefinition)
+		.plus(nativeObjectClassDefinition)
