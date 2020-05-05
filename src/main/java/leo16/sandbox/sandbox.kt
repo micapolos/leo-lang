@@ -1,12 +1,8 @@
 package leo16.sandbox
 
 import leo15.dsl.*
-import leo16.print_
+import leo16.leo_
 
-fun main() = print_ {
-	text.import
-	reflection.import
-
-	"Hello, world!".text
-	split { regex { " ".text } }
+fun main() = leo_ {
+	"http://mwiacek.com".text.url.get.length
 }

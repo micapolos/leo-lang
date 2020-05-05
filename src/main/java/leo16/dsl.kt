@@ -14,3 +14,4 @@ fun read_(f: F) = emptyEvaluator.copy(mode = Mode.QUOTE).read(f).evaluated.value
 fun print_(f: F) = evaluate_(f).print
 fun run_(f: F) = Unit.also { compile_(f) }
 fun library_(f: F) = value_ { library { f() } }.dictionaryOrNull!!
+fun leo_(f: F) = evaluate_ { base.import; f() }.print
