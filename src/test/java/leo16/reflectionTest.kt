@@ -7,34 +7,34 @@ import kotlin.test.Test
 class ReflectionTest {
 	@Test
 	fun typeClass() {
-		evaluate_ { reflection.dictionary.import; byte.class_ }
+		evaluate_ { reflection.import; byte.class_ }
 			.assertGives { class_ { Byte::class.java.native_ } }
-		evaluate_ { reflection.dictionary.import; char.class_ }
+		evaluate_ { reflection.import; char.class_ }
 			.assertGives { class_ { Char::class.java.native_ } }
-		evaluate_ { reflection.dictionary.import; short.class_ }
+		evaluate_ { reflection.import; short.class_ }
 			.assertGives { class_ { Short::class.java.native_ } }
-		evaluate_ { reflection.dictionary.import; int.class_ }
+		evaluate_ { reflection.import; int.class_ }
 			.assertGives { class_ { Int::class.java.native_ } }
-		evaluate_ { reflection.dictionary.import; long.class_ }
+		evaluate_ { reflection.import; long.class_ }
 			.assertGives { class_ { Long::class.java.native_ } }
-		evaluate_ { reflection.dictionary.import; float.class_ }
+		evaluate_ { reflection.import; float.class_ }
 			.assertGives { class_ { Float::class.java.native_ } }
-		evaluate_ { reflection.dictionary.import; double.class_ }
+		evaluate_ { reflection.import; double.class_ }
 			.assertGives { class_ { Double::class.java.native_ } }
-		evaluate_ { reflection.dictionary.import; boolean.class_ }
+		evaluate_ { reflection.import; boolean.class_ }
 			.assertGives { class_ { Boolean::class.java.native_ } }
 	}
 
 	@Test
 	fun textNameClass() {
-		evaluate_ { reflection.dictionary.import; "java.lang.Integer".text.name.class_ }
+		evaluate_ { reflection.import; "java.lang.Integer".text.name.class_ }
 			.assertGives { class_ { Integer::class.java.native_ } }
 	}
 
 	@Test
 	fun nativeClassField() {
 		evaluate_ {
-			reflection.dictionary.import
+			reflection.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 		}.assertGives {
@@ -45,7 +45,7 @@ class ReflectionTest {
 	@Test
 	fun nativeFieldGet() {
 		evaluate_ {
-			reflection.dictionary.import
+			reflection.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 			get
@@ -57,7 +57,7 @@ class ReflectionTest {
 	@Test
 	fun nativeObjectFieldGet() {
 		evaluate_ {
-			reflection.dictionary.import
+			reflection.import
 			"java.awt.Point".text.name.class_
 			constructor { parameter { list } }
 			invoke { parameter { list } }
@@ -71,7 +71,7 @@ class ReflectionTest {
 	@Test
 	fun nativeClassConstructor() {
 		evaluate_ {
-			reflection.dictionary.import
+			reflection.import
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
@@ -91,7 +91,7 @@ class ReflectionTest {
 	@Test
 	fun nativeConstructorInvoke() {
 		evaluate_ {
-			reflection.dictionary.import
+			reflection.import
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
@@ -117,7 +117,7 @@ class ReflectionTest {
 	@Test
 	fun nativeClassMethod() {
 		evaluate_ {
-			reflection.dictionary.import
+			reflection.import
 			"java.lang.String".text.name.class_
 			method {
 				name { "substring".text }
@@ -165,7 +165,7 @@ class ReflectionTest {
 	@Test
 	fun nativeObjectMethodInvoke() {
 		evaluate_ {
-			reflection.dictionary.import
+			reflection.import
 			"java.lang.String".text.name.class_
 			method {
 				name { "valueOf".text }

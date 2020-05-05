@@ -53,7 +53,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyImport(field)
 		?: applyExport(field)
 		?: applyTest(field)
-		?: applyLoaded(field) // keep last
+		?: applyLoad(field)
 		?: resolve(field)
 
 fun Evaluated.applyLeonardo(field: Field): Evaluated? =
@@ -122,9 +122,11 @@ fun Evaluated.applyExport(field: Field): Evaluated? =
 		rhs.loadedDictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
 	}
 
-fun Evaluated.applyLoaded(field: Field): Evaluated? =
+fun Evaluated.applyLoad(field: Field): Evaluated? =
 	value.matchEmpty {
-		value(field).loadedOrNull?.let { set(it) }
+		field.matchPrefix(loadName) { rhs ->
+			rhs.loadedOrNull?.let { set(it) }
+		}
 	}
 
 fun Evaluated.applyTest(field: Field): Evaluated? =

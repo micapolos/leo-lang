@@ -84,7 +84,7 @@ val Value.theNativeOrNull: The<Any?>?
 
 val Value.loadedDictionaryOrNull: Dictionary?
 	get() =
-		dictionaryOrNull ?: dictionaryName(this).value.loadedOrNull?.dictionaryOrNull
+		dictionaryOrNull ?: loadedOrNull?.dictionaryOrNull
 
 val Value.wordOrNullSeq: Seq<String?>
 	get() =

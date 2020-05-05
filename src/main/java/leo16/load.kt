@@ -1,19 +1,32 @@
 package leo16
 
+import leo.base.The
+import leo.base.println
+import leo.base.the
 import leo13.array
 import leo13.linkOrNull
 import leo13.push
 import leo14.untyped.typed.loadClass
+import leo15.loadName
 
-val loadedMap = mutableMapOf<Value, Value?>()
+val loadedMap = mutableMapOf<Value, The<Value?>?>()
 
 val Value.loadOrNull: Value?
 	get() =
-		loadOrNull("leo16.lib.")
+		loadOrNull("leo16.library.")
 
 val Value.loadedOrNull: Value?
-	get() =
-		loadedMap.computeIfAbsent(this) { it.loadOrNull }
+	get() {
+		val theValue = loadedMap[this]
+		return if (theValue != null) theValue.value
+		else {
+			loadedMap[this] = null.the
+			loadName(this).println
+			val loadedValue = loadOrNull
+			loadedMap[this] = loadedValue.the
+			loadedValue
+		}
+	}
 
 fun Value.loadOrNull(packagePrefix: String): Value? =
 	nullIfThrowsException {

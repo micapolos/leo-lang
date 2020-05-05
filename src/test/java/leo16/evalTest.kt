@@ -216,7 +216,7 @@ class EvalTest {
 
 	@Test
 	fun load() {
-		evaluate_ { ping.testing }.assertGives { pong }
+		evaluate_ { ping.testing.load }.assertGives { pong }
 	}
 
 	@Test
