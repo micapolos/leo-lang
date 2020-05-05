@@ -16,6 +16,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyComment(field)
 		?: applyScript(field)
 		?: applyFold(field)
+		?: applyMatches(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -54,6 +55,11 @@ fun Value.applyScript(field: Field): Value? =
 		field.matchPrefix(scriptName) { rhs ->
 			rhs.print
 		}
+	}
+
+fun Value.applyMatches(field: Field): Value? =
+	field.matchPrefix(matchesName) { rhs ->
+		matches(rhs).field.value
 	}
 
 fun Value.applyFold(field: Field): Value? =

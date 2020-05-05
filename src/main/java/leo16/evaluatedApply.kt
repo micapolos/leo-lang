@@ -10,6 +10,7 @@ fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
 	when (mode) {
 		Mode.EVALUATE -> apply(word, evaluated)
 		Mode.QUOTE -> plusNormalized(word(evaluated.value))
+		Mode.META -> plusNormalized(word(evaluated.value))
 	}
 
 fun Evaluated.apply(word: String, evaluated: Evaluated): Evaluated =
@@ -35,6 +36,7 @@ fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 	when (mode) {
 		Mode.EVALUATE -> apply(field)
 		Mode.QUOTE -> plusNormalized(field)
+		Mode.META -> plusNormalized(field)
 	}
 
 fun Evaluated.apply(field: Field): Evaluated =

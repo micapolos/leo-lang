@@ -5,6 +5,7 @@ import leo15.*
 // TODO: This is a temporary solution.
 enum class Mode {
 	EVALUATE,
+	META,
 	QUOTE;
 
 	override fun toString() = asField.toString()
@@ -22,7 +23,10 @@ fun Mode.begin(word: String): Mode =
 				givingName -> Mode.QUOTE
 				quoteName -> Mode.QUOTE
 				testName -> Mode.QUOTE
+				//listName -> Mode.META
+				//choiceName -> Mode.META
 				else -> this
 			}
+		Mode.META -> Mode.EVALUATE.begin(word)
 		Mode.QUOTE -> this
 	}

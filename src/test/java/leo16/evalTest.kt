@@ -349,6 +349,12 @@ class EvalTest {
 		}.assertGives { list { 2.number; 1.number } }
 	}
 
+	@Test
+	fun matches() {
+		evaluate_ { zero.matches { zero } }.assertGives { boolean { true_ } }
+		evaluate_ { zero.matches { one } }.assertGives { boolean { false_ } }
+	}
+
 //	@Test
 //	fun debug() {
 //		evaluate_ {
