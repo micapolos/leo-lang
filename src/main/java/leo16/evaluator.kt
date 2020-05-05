@@ -7,10 +7,7 @@ import leo13.evaluatorName
 import leo13.fold
 import leo13.reverse
 import leo14.*
-import leo15.debugName
-import leo15.nothingName
-import leo15.parentName
-import leo15.wordName
+import leo15.*
 
 data class Evaluator(val parentOrNull: EvaluatorParent?, val evaluated: Evaluated, val mode: Mode) {
 	override fun toString() = asField.toString()
@@ -26,6 +23,7 @@ val Evaluated.evaluator get() = nullOf<EvaluatorParent>().evaluator(this)
 val Scope.emptyEvaluator get() = emptyEvaluated.evaluator
 fun Evaluator.parent(word: String) = EvaluatorParent(this, word)
 val emptyEvaluator = emptyScope.emptyEvaluated.evaluator
+val baseEvaluator = emptyScope.emptyEvaluated.evaluator.plus(importName(baseName()))
 
 val Evaluator.asField: Field
 	get() =
@@ -90,7 +88,7 @@ fun Evaluator.append(sentence: Sentence): Evaluator =
 
 fun Evaluator.applyDebug(field: Field): Evaluated? =
 	notNullIf(field == debugName(value())) {
-		evaluated.scope.evaluated(value(asField))
+		evaluated.scope.evaluated(evaluated.scope.dictionary.printSentence.field.value)
 	}
 
 fun Evaluator.updateEvaluated(fn: Evaluated.() -> Evaluated): Evaluator =

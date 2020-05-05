@@ -15,6 +15,7 @@ class IndexTest {
 			import { reflection }
 			import { number }
 			import { text }
+			import { url }
 		}
 	}
 }

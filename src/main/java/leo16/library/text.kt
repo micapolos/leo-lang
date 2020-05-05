@@ -4,6 +4,8 @@ import leo15.dsl.*
 import leo16.dictionary_
 import leo16.run_
 
+fun main() = run_ { text }
+
 val text = dictionary_ {
 	number.import
 	reflection.import
@@ -180,5 +182,3 @@ val text = dictionary_ {
 		gives { list { "zero".text; "one".text; "two".text } }
 	}
 }
-
-fun main() = run_ { text }
