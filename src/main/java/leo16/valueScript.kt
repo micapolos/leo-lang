@@ -1,6 +1,7 @@
 package leo16
 
 import leo13.array
+import leo13.itemName
 import leo13.map
 import leo14.*
 
@@ -34,7 +35,14 @@ val Field.numberScriptLineOrNull: ScriptLine?
 
 val Sentence.scriptLine: ScriptLine
 	get() =
-		word lineTo value.script
+		word.scriptWord lineTo value.script
+
+val String.scriptWord: String
+	get() =
+		when (this) {
+			itemName -> "-"
+			else -> this
+		}
 
 val Any?.nativeScriptLine: ScriptLine
 	get() =

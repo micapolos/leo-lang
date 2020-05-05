@@ -3,7 +3,7 @@ package leo15
 import leo.base.*
 import leo14.*
 
-val useDots = false
+const val useDots = true
 
 val Script.string
 	get() =
