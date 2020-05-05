@@ -399,6 +399,57 @@ class EvalTest {
 				}
 			}
 		}.assertGives { true.boolean }
+
+		evaluate_ {
+			choice {
+				case { zero }
+				case { one }
+			}
+			matches {
+				quote {
+					choice {
+						case { zero }
+						case { one }
+					}
+				}
+			}
+		}.assertGives { false.boolean }
+	}
+
+	@Test
+	fun matchesDictionary() {
+		evaluate_ {
+			dictionary { zero.is_ { one } }
+			matches { dictionary }
+		}.assertGives { false.boolean }
+
+		evaluate_ {
+			dictionary { zero.is_ { one } }
+			matches { quote { dictionary } }
+		}.assertGives { true.boolean }
+
+		evaluate_ {
+			dictionary { zero.is_ { one } }
+			matches { dictionary { zero.is_ { one } } }
+		}.assertGives { true.boolean }
+	}
+
+	@Test
+	fun matchesGiving() {
+		evaluate_ {
+			giving { given }
+			matches { giving }
+		}.assertGives { false.boolean }
+
+		evaluate_ {
+			giving { given }
+			matches { quote { giving } }
+		}.assertGives { true.boolean }
+
+		evaluate_ {
+			giving { given }
+			matches { giving { given } }
+		}.assertGives { true.boolean }
 	}
 
 //	@Test
