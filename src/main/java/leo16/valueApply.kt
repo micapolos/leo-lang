@@ -1,5 +1,9 @@
 package leo16
 
+import leo.base.ifOrNull
+import leo13.fold
+import leo13.isEmpty
+import leo13.linkOrNull
 import leo15.*
 
 fun Value.apply(field: Field): Value? =
@@ -11,6 +15,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyNothing(field)
 		?: applyComment(field)
 		?: applyScript(field)
+		?: applyFold(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -48,5 +53,22 @@ fun Value.applyScript(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(scriptName) { rhs ->
 			rhs.print
+		}
+	}
+
+fun Value.applyFold(field: Field): Value? =
+	field.matchPrefix(foldName) { rhs ->
+		rhs.fieldStack.linkOrNull?.let { link ->
+			link.value.functionOrNull?.let { function ->
+				link.stack.linkOrNull?.let { link ->
+					link.value.matchList { list ->
+						ifOrNull(link.stack.isEmpty) {
+							this.fold(list) { field ->
+								function.invoke(value(foldedName(this), nextName(field)))
+							}
+						}
+					}
+				}
+			}
 		}
 	}

@@ -331,6 +331,25 @@ class EvalTest {
 	}
 
 	@Test
+	fun fold() {
+		evaluate_ {
+			fold {
+				list
+				giving { given }
+			}
+		}.assertGives { nothing_ }
+
+		evaluate_ {
+			import { list }
+			list
+			fold {
+				list { 1.number; 2.number }
+				giving { given.folded.list.append { given.next.number } }
+			}
+		}.assertGives { list { 2.number; 1.number } }
+	}
+
+	@Test
 	fun debug() {
 		evaluate_ {
 			zero.is_ { one }.debug

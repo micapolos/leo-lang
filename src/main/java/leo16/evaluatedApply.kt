@@ -92,10 +92,8 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 	scope.applyBinding(value.plus(field))?.emptyEvaluated
 
 fun Evaluated.applyGiving(field: Field): Evaluated? =
-	value.matchEmpty {
-		field.matchPrefix(givingName) { rhs ->
-			updateValue { scope.dictionary.function(rhs).field.value }
-		}
+	field.matchPrefix(givingName) { rhs ->
+		updateValue { plus(scope.dictionary.function(rhs).field) }
 	}
 
 fun Evaluated.applyGive(field: Field): Evaluated? =

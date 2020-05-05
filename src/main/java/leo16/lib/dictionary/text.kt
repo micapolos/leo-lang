@@ -7,6 +7,7 @@ import leo16.run_
 val text = dictionary_ {
 	number.import
 	reflection.import
+	list.import
 
 	import {
 		dictionary {
@@ -162,7 +163,13 @@ val text = dictionary_ {
 			parameter { list { given.split.regex.text.native } }
 		}
 		array.list
-		// TODO: Map to text
+		map { giving { given.native.text } }
+	}
+
+	test {
+		"zero one two".text
+		split { regex { " ".text } }
+		gives { list { "zero".text; "one".text; "two".text } }
 	}
 }
 

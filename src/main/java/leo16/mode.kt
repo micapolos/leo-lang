@@ -19,6 +19,7 @@ fun Mode.begin(word: String): Mode =
 		Mode.EVALUATE ->
 			when (word) {
 				givesName -> Mode.QUOTE
+				givingName -> Mode.QUOTE
 				quoteName -> Mode.QUOTE
 				testName -> Mode.QUOTE
 				else -> this
