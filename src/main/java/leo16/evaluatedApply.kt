@@ -52,8 +52,8 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyGive(field)
 		?: applyImport(field)
 		?: applyExport(field)
-		?: applyLoaded(field)
 		?: applyTest(field)
+		?: applyLoaded(field) // keep last
 		?: resolve(field)
 
 fun Evaluated.applyLeonardo(field: Field): Evaluated? =
@@ -125,7 +125,9 @@ fun Evaluated.applyExport(field: Field): Evaluated? =
 	}
 
 fun Evaluated.applyLoaded(field: Field): Evaluated? =
-	value.plus(field).pattern.loadedValueOrNull?.let { set(it) }
+	value.matchEmpty {
+		value(field).loadedOrNull?.let { set(it) }
+	}
 
 fun Evaluated.applyTest(field: Field): Evaluated? =
 	value.matchEmpty {

@@ -1,4 +1,4 @@
-package leo16.library
+package leo16.native
 
 import leo13.array
 import leo13.stack
@@ -9,17 +9,17 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
-private fun String.definition(class_: Class<*>) =
+fun String.definition(class_: Class<*>) =
 	value(className(this())).gives {
 		className(class_.nativeField).value
 	}
 
-private val nullNativeDefinition =
+val nullNativeDefinition =
 	value(nativeName(nullName())).gives {
 		null.nativeValue
 	}
 
-private val nameClassDefinition =
+val nameClassDefinition =
 	value(className(nameName(textName(anyName())))).gives {
 		val name = this
 			.getOrNull(className)!!
@@ -31,7 +31,7 @@ private val nameClassDefinition =
 		className(name.loadClass.nativeField).value
 	}
 
-private val classFieldDefinition =
+val classFieldDefinition =
 	value(
 		className(anyName()),
 		fieldName(nameName(textName(anyName())))
@@ -51,7 +51,7 @@ private val classFieldDefinition =
 		fieldName(class_.getField(name).nativeField).value
 	}
 
-private val fieldGetDefinition =
+val fieldGetDefinition =
 	value(getName(fieldName(anyName()))).gives {
 		val field = this
 			.getOrNull(getName)!!
@@ -62,7 +62,7 @@ private val fieldGetDefinition =
 		field.get(null).nativeValue
 	}
 
-private val nativeGetFieldDefinition =
+val nativeGetFieldDefinition =
 	value(
 		nativeName(anyName()),
 		getName(fieldName(anyName()))
@@ -80,7 +80,7 @@ private val nativeGetFieldDefinition =
 		field.get(object_).nativeValue
 	}
 
-private val classConstructorDefinition =
+val classConstructorDefinition =
 	value(
 		className(anyName()),
 		constructorName(parameterName(listName(anyName())))
@@ -105,7 +105,7 @@ private val classConstructorDefinition =
 		constructorName(class_.getConstructor(*classes).nativeField).value
 	}
 
-private val constructorInvokeDefinition =
+val constructorInvokeDefinition =
 	value(
 		constructorName(anyName()),
 		invokeName(parameterName(listName(anyName())))
@@ -124,7 +124,7 @@ private val constructorInvokeDefinition =
 		constructor.newInstance(*args).nativeValue
 	}
 
-private val classMethodDefinition =
+val classMethodDefinition =
 	value(
 		className(anyName()),
 		methodName(
@@ -159,7 +159,7 @@ private val classMethodDefinition =
 		methodName(class_.getMethod(name, *classes).nativeField).value
 	}
 
-private val methodInvokeDefinition =
+val methodInvokeDefinition =
 	value(
 		methodName(anyName()),
 		invokeName(parameterName(listName(anyName())))
@@ -178,7 +178,7 @@ private val methodInvokeDefinition =
 		method.invoke(null, *args).nativeValue
 	}
 
-private val nativeInvokeMethodDefinition =
+val nativeInvokeMethodDefinition =
 	value(
 		nativeName(anyName()),
 		invokeName(
@@ -204,7 +204,7 @@ private val nativeInvokeMethodDefinition =
 		method.invoke(object_, *args).nativeValue
 	}
 
-private val arrayListDefinition =
+val arrayListDefinition =
 	value(listName(arrayName(anyName()))).gives {
 		val array = this
 			.getOrNull(listName)!!
@@ -214,27 +214,3 @@ private val arrayListDefinition =
 			.value as Array<*>
 		stack(*array).expandField { nativeField }.value
 	}
-
-private val reflectionDictionary =
-	emptyDictionary
-		.plus(booleanName.definition(Boolean::class.java))
-		.plus(charName.definition(Char::class.java))
-		.plus(byteName.definition(Byte::class.java))
-		.plus(shortName.definition(Short::class.java))
-		.plus(intName.definition(Int::class.java))
-		.plus(longName.definition(Long::class.java))
-		.plus(floatName.definition(Float::class.java))
-		.plus(doubleName.definition(Double::class.java))
-		.plus(nameClassDefinition)
-		.plus(classFieldDefinition)
-		.plus(fieldGetDefinition)
-		.plus(nativeGetFieldDefinition)
-		.plus(classConstructorDefinition)
-		.plus(constructorInvokeDefinition)
-		.plus(classMethodDefinition)
-		.plus(methodInvokeDefinition)
-		.plus(nativeInvokeMethodDefinition)
-		.plus(arrayListDefinition)
-		.plus(nullNativeDefinition)
-
-val nativeReflection = reflectionDictionary.field.value

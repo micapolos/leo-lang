@@ -197,7 +197,6 @@ class EvalTest {
 				}
 			}
 		}
-
 		evaluate_ {
 			dictionary {
 				zero.is_ { one }
@@ -213,6 +212,11 @@ class EvalTest {
 				}
 			}
 		}
+	}
+
+	@Test
+	fun load() {
+		evaluate_ { ping.testing }.assertGives { pong }
 	}
 
 	@Test
@@ -289,12 +293,6 @@ class EvalTest {
 			}
 			zero
 		}.assertGives { zero }
-	}
-
-	@Test
-	fun loaded() {
-		evaluate_ { ping.dictionary.import.ping }.assertGives { pong }
-		evaluate_ { ping.import.ping }.assertGives { pong }
 	}
 
 	@Test

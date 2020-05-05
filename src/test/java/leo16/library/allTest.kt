@@ -1,20 +1,21 @@
 package leo16.library
 
-import leo.base.assertEqualTo
-import leo13.stack
-import leo15.importName
-import leo16.*
+import leo15.dsl.*
+import leo16.evaluate_
 import kotlin.test.Test
 
 class IndexTest {
 	@Test
-	fun allTest() {
-		valueFunMap.keys
-			.map { importName(it.value) }
-			.toTypedArray()
-			.let { stack(*it) }
-			.value
-			.let { emptyScope.emptyEvaluator.plus(it).evaluated.value }
-			.assertEqualTo(value())
+	fun test() {
+		evaluate_ {
+			import { base }
+			import { bit }
+			import { core }
+			import { int }
+			import { list }
+			import { reflection }
+			import { number }
+			import { text }
+		}
 	}
 }

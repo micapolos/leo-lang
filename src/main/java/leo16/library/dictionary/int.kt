@@ -1,4 +1,4 @@
-package leo16.library
+package leo16.library.dictionary
 
 import leo15.dsl.*
 import leo16.dictionary_
@@ -10,7 +10,7 @@ val int = dictionary_ {
 	import {
 		dictionary {
 			integer.class_.is_ {
-				"leo16.library.IntKt".text.name.class_
+				"leo16.library.dictionary.IntKt".text.name.class_
 			}
 
 			big.decimal.int.value.method.is_ {
