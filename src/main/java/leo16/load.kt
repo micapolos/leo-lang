@@ -8,6 +8,7 @@ import leo13.linkOrNull
 import leo13.push
 import leo14.untyped.typed.loadClass
 import leo15.loadName
+import leo15.loadingName
 
 val loadedMap = mutableMapOf<Value, The<Value?>?>()
 
@@ -21,7 +22,6 @@ val Value.loadedOrNull: Value?
 		return if (theValue != null) theValue.value
 		else {
 			loadedMap[this] = null.the
-			loadName(this).println
 			val loadedValue = loadOrNull
 			loadedMap[this] = loadedValue.the
 			loadedValue
@@ -39,6 +39,7 @@ fun Value.loadOrNull(packagePrefix: String): Value? =
 						.joinToString("."))
 				.loadClass
 				.getMethod("get" + wordLink.value.capitalize())
+				//.also { loadingName(this).println }
 				.invoke(null) as Value
 		}
 	}
