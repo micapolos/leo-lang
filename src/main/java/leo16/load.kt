@@ -1,14 +1,11 @@
 package leo16
 
 import leo.base.The
-import leo.base.println
 import leo.base.the
 import leo13.array
 import leo13.linkOrNull
 import leo13.push
 import leo14.untyped.typed.loadClass
-import leo15.loadName
-import leo15.loadingName
 
 val loadedMap = mutableMapOf<Value, The<Value?>?>()
 
