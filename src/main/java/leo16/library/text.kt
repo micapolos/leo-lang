@@ -171,6 +171,14 @@ val text = dictionary_ {
 		split { regex { " ".text } }
 		gives { list { "zero".text; "one".text; "two".text } }
 	}
+
+	any.text.lines
+	gives { given.lines.text.split { regex { "\n".text } } }
+
+	test {
+		"zero\none\ntwo".text.lines
+		gives { list { "zero".text; "one".text; "two".text } }
+	}
 }
 
 fun main() = run_ { text }
