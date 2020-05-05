@@ -15,11 +15,16 @@ val Field.print: Field
 			is FunctionField -> function.printSentence.field
 			is DictionaryField -> dictionary.printSentence.field
 			is NativeField -> native.nativeString()
+			is ChoiceField -> choice.printSentence.field
 		}
 
 val Sentence.printSentence: Sentence
 	get() =
 		word.sentenceTo(value.print)
+
+val Choice.printSentence: Sentence
+	get() =
+		choiceName.sentenceTo(fieldStack.map { printSentence.field }.value)
 
 val Dictionary.printSentence: Sentence
 	get() =

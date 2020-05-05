@@ -97,6 +97,7 @@ fun Field.matches(field: PatternField): Boolean =
 		is FunctionField -> field == givingName(anyPattern)
 		is DictionaryField -> field == dictionaryName(anyPattern)
 		is NativeField -> field == nativeName(anyPattern)
+		is ChoiceField -> false // TODO()
 	}
 
 fun Sentence.matches(sentence: PatternSentence): Boolean =

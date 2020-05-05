@@ -30,7 +30,15 @@ data class NativeField(val native: Any?) : Field() {
 	override fun toString() = super.toString()
 }
 
+data class ChoiceField(val choice: Choice) : Field() {
+	override fun toString() = super.toString()
+}
+
 data class Sentence(val word: String, val value: Value) {
+	override fun toString() = scriptLine.string
+}
+
+data class Choice(val fieldStack: Stack<Field>) {
 	override fun toString() = scriptLine.string
 }
 

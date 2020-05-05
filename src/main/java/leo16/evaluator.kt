@@ -52,6 +52,7 @@ operator fun Evaluator.plus(field: Field): Evaluator =
 		is FunctionField -> append(field)
 		is DictionaryField -> append(field)
 		is NativeField -> append(field)
+		is ChoiceField -> append(field)
 	}
 
 operator fun Evaluator.plus(sentence: Sentence): Evaluator =

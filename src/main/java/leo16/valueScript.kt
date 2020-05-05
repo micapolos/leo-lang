@@ -4,6 +4,7 @@ import leo13.array
 import leo13.itemName
 import leo13.map
 import leo14.*
+import leo15.choiceName
 
 val Value.script: Script
 	get() =
@@ -23,6 +24,7 @@ val Field.defaultScriptLine: ScriptLine
 			is FunctionField -> function.printSentence.scriptLine
 			is DictionaryField -> dictionary.printSentence.scriptLine
 			is NativeField -> native.nativeScriptLine
+			is ChoiceField -> choice.scriptLine
 		}
 
 val Field.textScriptLineOrNull: ScriptLine?
@@ -36,6 +38,10 @@ val Field.numberScriptLineOrNull: ScriptLine?
 val Sentence.scriptLine: ScriptLine
 	get() =
 		word.scriptWord lineTo value.script
+
+val Choice.scriptLine: ScriptLine
+	get() =
+		choiceName(fieldStack.map { scriptLine })
 
 val String.scriptWord: String
 	get() =

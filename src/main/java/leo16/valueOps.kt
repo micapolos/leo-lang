@@ -1,19 +1,15 @@
 package leo16
 
 import leo.base.*
-import leo.base.mapOrNull
-import leo13.*
 import leo13.Stack
+import leo13.linkOrNull
+import leo13.mapFirst
+import leo13.mapOrNull
+import leo13.onlyOrNull
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo15.*
-import leo15.emptyName
-import leo15.givingName
-import leo15.linkName
-import leo15.listName
-import leo15.previousName
-import leo15.textName
 
 fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 	val wordOrNull = field.onlyWordOrNull
@@ -46,6 +42,7 @@ val Field.selectWord: String
 			is FunctionField -> givingName
 			is DictionaryField -> dictionaryName
 			is NativeField -> nativeName
+			is ChoiceField -> choiceName
 		}
 
 val Literal.selectWord: String
