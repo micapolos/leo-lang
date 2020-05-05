@@ -13,4 +13,4 @@ operator fun Function.invoke(value: Value): Value =
 
 val Function.asField: Field
 	get() =
-		functionName(dictionary.asField, bodyValue.asField)
+		functionName(/*dictionary.asField, */bodyValue.asField)

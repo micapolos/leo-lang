@@ -19,7 +19,7 @@ import java.io.InputStreamReader
 
 val useLeo16 = true
 val errorTriggerCount = 7
-val importPrelude = true
+val importPrelude = false
 val memory = if (importPrelude) emptyContext.preludeMemory() else memory()
 val untyped = true
 val untypedTyped = true
