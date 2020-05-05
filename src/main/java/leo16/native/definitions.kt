@@ -1,6 +1,5 @@
 package leo16.native
 
-import leo.parser.caseTo
 import leo13.array
 import leo13.stack
 import leo14.untyped.typed.loadClass
