@@ -2,7 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
-import leo16.run_
 
 val base = dictionary_ {
 	core.export
@@ -12,5 +11,3 @@ val base = dictionary_ {
 	list.export
 	url.export
 }
-
-fun main() = run_ { base }

@@ -2,7 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
-import leo16.run_
 
 val list = dictionary_ {
 	any.list.last
@@ -71,6 +70,17 @@ val list = dictionary_ {
 		map { giving { given } }
 		gives { list { given { 1.number }; given { 2.number }; given { 3.number } } }
 	}
-}
 
-fun main() = run_ { list }
+	any.list.length
+	gives {
+		number.import
+		0.number
+		fold {
+			given.length.list
+			giving { given.folded.number.plus { 1.number } }
+		}
+	}
+
+	test { list.length.gives { 0.number } }
+	test { list { 0.number; 1.number; 2.number }.length.gives { 3.number } }
+}

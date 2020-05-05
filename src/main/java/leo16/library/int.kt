@@ -2,7 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
-import leo16.run_
 
 val int = dictionary_ {
 	reflection.import
@@ -113,5 +112,3 @@ val int = dictionary_ {
 
 	test { 2.int.times { 3.int }.gives { 6.int } }
 }
-
-fun main() = run_ { int }

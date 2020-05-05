@@ -349,42 +349,42 @@ class EvalTest {
 		}.assertGives { list { 2.number; 1.number } }
 	}
 
-	@Test
-	fun debug() {
-		evaluate_ {
-			zero.is_ { one }.debug
-		}.assertGives {
-			evaluator {
-				parent { nothing }
-				evaluated {
-					scope {
-						dictionary {
-							definition {
-								list {
-									definition {
-										pattern { zero }
-										body { one }
-									}
-								}
-							}
-						}
-						export {
-							dictionary {
-								definition {
-									list {
-										definition {
-											pattern { zero }
-											body { one }
-										}
-									}
-								}
-							}
-						}
-					}
-					value { nothing_ }
-				}
-				mode { evaluate }
-			}
-		}
-	}
+//	@Test
+//	fun debug() {
+//		evaluate_ {
+//			zero.is_ { one }.debug
+//		}.assertGives {
+//			evaluator {
+//				parent { nothing }
+//				evaluated {
+//					scope {
+//						dictionary {
+//							definition {
+//								list {
+//									definition {
+//										pattern { zero }
+//										body { one }
+//									}
+//								}
+//							}
+//						}
+//						export {
+//							dictionary {
+//								definition {
+//									list {
+//										definition {
+//											pattern { zero }
+//											body { one }
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//					value { nothing_ }
+//				}
+//				mode { evaluate }
+//			}
+//		}
+//	}
 }

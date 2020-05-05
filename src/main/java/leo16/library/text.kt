@@ -2,9 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.dictionary_
-import leo16.run_
-
-fun main() = run_ { text }
 
 val text = dictionary_ {
 	number.import
