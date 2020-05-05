@@ -12,6 +12,7 @@ fun X.number(bigDecimal: BigDecimal) = x(token(literal(leo14.number(bigDecimal))
 fun X.number(int: Int) = x(token(literal(int)))
 fun X.number(double: Double) = x(token(literal(double)))
 fun X.text(string: String) = x(token(literal(string)))
+val Boolean.boolean: X get() = X.boolean { if (this@boolean) true_ else false_ }
 val BigDecimal.number: X get() = X.number(this)
 val Int.number get() = toBigDecimal().number
 val Float.number get() = toBigDecimal().number

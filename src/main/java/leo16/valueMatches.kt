@@ -1,6 +1,6 @@
 package leo16
 
-import leo13.any
+import leo13.fold
 import leo13.zipFoldOrNull
 import leo15.*
 
@@ -25,7 +25,7 @@ fun Field.matches(choice: Choice): Boolean =
 	this is ChoiceField && this.choice == choice || matchesCase(choice)
 
 fun Field.matchesCase(choice: Choice): Boolean =
-	choice.fieldStack.any { this@matchesCase.matches(this) }
+	false.fold(choice.caseFieldStack) { or(matches(it)) }
 
 fun Field.matches(sentence: Sentence): Boolean =
 	when (this) {
@@ -48,5 +48,5 @@ fun Dictionary.matches(dictionary: Dictionary): Boolean =
 fun Choice.matches(sentence: Sentence): Boolean =
 	sentence.word == choiceName &&
 		true
-			.zipFoldOrNull(fieldStack, sentence.value.fieldStack) { lhs, rhs -> and(lhs.matches(rhs)) }
+			.zipFoldOrNull(caseFieldStack, sentence.value.fieldStack) { lhs, rhs -> and(lhs.matches(rhs)) }
 		?: false

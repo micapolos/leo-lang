@@ -350,9 +350,55 @@ class EvalTest {
 	}
 
 	@Test
-	fun matches() {
-		evaluate_ { zero.matches { zero } }.assertGives { boolean { true_ } }
-		evaluate_ { zero.matches { one } }.assertGives { boolean { false_ } }
+	fun matchesSentence() {
+		evaluate_ { zero.matches { zero } }.assertGives { true.boolean }
+		evaluate_ { zero.matches { one } }.assertGives { false.boolean }
+	}
+
+	@Test
+	fun matchesChoice() {
+		evaluate_ {
+			zero
+			matches {
+				choice {
+					case { zero }
+					case { one }
+				}
+			}
+		}.assertGives { true.boolean }
+
+		evaluate_ {
+			one
+			matches {
+				choice {
+					case { zero }
+					case { one }
+				}
+			}
+		}.assertGives { true.boolean }
+
+		evaluate_ {
+			two
+			matches {
+				choice {
+					case { zero }
+					case { one }
+				}
+			}
+		}.assertGives { false.boolean }
+
+		evaluate_ {
+			choice {
+				case { zero }
+				case { one }
+			}
+			matches {
+				choice {
+					case { zero }
+					case { one }
+				}
+			}
+		}.assertGives { true.boolean }
 	}
 
 //	@Test

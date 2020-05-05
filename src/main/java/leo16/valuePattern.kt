@@ -38,7 +38,7 @@ val Sentence.patternField: PatternField
 
 val Choice.patternField: PatternField
 	get() =
-		choiceName.invoke(fieldStack.map { patternField }.value.pattern)
+		choiceName.invoke(caseFieldStack.map { patternField }.value.pattern)
 
 val Sentence.exactPatternField: PatternField
 	get() =

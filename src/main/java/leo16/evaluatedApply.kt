@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.ifOrNull
 import leo.base.runIfNotNull
+import leo13.mapOrNull
 import leo13.onlyOrNull
 import leo14.leonardoScript
 import leo15.*
@@ -51,6 +52,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyCompile(field)
 		?: applyQuote(field)
 		?: applyGiving(field)
+		?: applyChoice(field)
 		?: applyGive(field)
 		?: applyImport(field)
 		?: applyExport(field)
@@ -96,6 +98,16 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 fun Evaluated.applyGiving(field: Field): Evaluated? =
 	field.matchPrefix(givingName) { rhs ->
 		updateValue { plus(scope.dictionary.function(rhs).field) }
+	}
+
+fun Evaluated.applyChoice(field: Field): Evaluated? =
+	field.matchPrefix(choiceName) { rhs ->
+		rhs.fieldStack
+			.mapOrNull { caseFieldOrNull }
+			?.choice
+			?.field
+			?.value
+			?.let { set(it) }
 	}
 
 fun Evaluated.applyGive(field: Field): Evaluated? =

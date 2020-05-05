@@ -24,7 +24,7 @@ val Sentence.printSentence: Sentence
 
 val Choice.printSentence: Sentence
 	get() =
-		choiceName.sentenceTo(fieldStack.map { printSentence.field }.value)
+		choiceName.sentenceTo(caseFieldStack.map { printSentence.field }.value)
 
 val Dictionary.printSentence: Sentence
 	get() =

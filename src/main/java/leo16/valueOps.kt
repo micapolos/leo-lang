@@ -94,3 +94,9 @@ val Value.wordOrNullSeq: Seq<String?>
 val Value.wordStackOrNull: Stack<String>?
 	get() =
 		wordOrNullSeq.reverseStack.mapOrNull { this }
+
+val Field.caseFieldOrNull: Field?
+	get() =
+		matchPrefix(caseName) { rhs ->
+			rhs.onlyFieldOrNull
+		}

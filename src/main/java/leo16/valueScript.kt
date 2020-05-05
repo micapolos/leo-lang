@@ -41,7 +41,7 @@ val Sentence.scriptLine: ScriptLine
 
 val Choice.scriptLine: ScriptLine
 	get() =
-		choiceName(fieldStack.map { scriptLine })
+		choiceName(caseFieldStack.map { scriptLine })
 
 val String.scriptWord: String
 	get() =
