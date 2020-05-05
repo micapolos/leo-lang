@@ -79,10 +79,10 @@ val text = dictionary_ {
 			string.length.method
 			parameter { list }
 		}
-		int.number
+		int.number.length
 	}
 
-	test { "Hello, world!".text.length.gives { 13.number } }
+	test { "Hello, world!".text.length.gives { 13.number.length } }
 
 	any.text
 	cut {
@@ -171,11 +171,11 @@ val text = dictionary_ {
 		gives { list { "zero".text; "one".text; "two".text } }
 	}
 
-	any.text.lines
-	gives { given.lines.text.split { regex { "\n".text } } }
+	any.text.line.list
+	gives { given.list.line.text.split { regex { "\n".text } } }
 
 	test {
-		"zero\none\ntwo".text.lines
+		"zero\none\ntwo".text.line.list
 		gives { list { "zero".text; "one".text; "two".text } }
 	}
 }

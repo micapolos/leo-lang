@@ -30,9 +30,9 @@ val Value.isList: Boolean
 		matchPrefix(listName) { true } ?: false
 
 infix fun Value.getOrNull(word: String): Value? =
-	ifOrNull(!isList) {
-		thingOrNull?.accessOrNull(word)
-	}
+	//ifOrNull(!isList) {
+	thingOrNull?.accessOrNull(word)
+//}
 
 infix fun Value.accessOrNull(word: String): Value? =
 	fieldStack.mapFirst {

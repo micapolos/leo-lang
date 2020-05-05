@@ -23,6 +23,6 @@ val url = dictionary_ {
 	gives {
 		url.get.method
 		invoke { parameter { list { given.get.url.text.native } } }
-		text
+		text.get
 	}
 }

@@ -78,9 +78,9 @@ val list = dictionary_ {
 		fold {
 			given.length.list
 			giving { given.folded.number.plus { 1.number } }
-		}
+		}.length
 	}
 
-	test { list.length.gives { 0.number } }
-	test { list { 0.number; 1.number; 2.number }.length.gives { 3.number } }
+	test { list.length.gives { 0.number.length } }
+	test { list { 0.number; 1.number; 2.number }.length.gives { 3.number.length } }
 }
