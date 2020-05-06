@@ -1,9 +1,12 @@
 package leo14.untyped
 
+import leo.ansi
 import leo.base.*
+import leo.magenta
+import leo.reset
 import leo14.*
 
-val useDots = false
+val useDots = true
 
 val Script.leoString
 	get() =
@@ -77,7 +80,15 @@ fun AppendableIndented.leoAppend(field: ScriptField): AppendableIndented =
 	else append(field.string).indented { append("\n").leoAppend(field.rhs) }
 
 fun AppendableIndented.leoAppend(literal: Literal): AppendableIndented =
-	append(literal.string)
+	leoAppendEllipsized(literal.toString())
+
+const val stringEllipsizedHalfLength = 40
+
+fun AppendableIndented.leoAppendEllipsized(string: String): AppendableIndented =
+	if (string.length <= stringEllipsizedHalfLength * 2) append(string)
+	else append(string.substring(0, stringEllipsizedHalfLength))
+		.append("...")
+		.append(string.substring(string.length - stringEllipsizedHalfLength))
 
 fun AppendableIndented.leoAppend(fragment: Fragment): AppendableIndented =
 	this

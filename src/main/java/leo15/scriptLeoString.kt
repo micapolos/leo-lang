@@ -73,7 +73,12 @@ fun AppendableIndented.append(field: ScriptField): AppendableIndented =
 	else append(field.string).indented { append("\n").append(field.rhs) }
 
 fun AppendableIndented.append(literal: Literal): AppendableIndented =
-	append(literal.string)
+	append(literal.toString().literalEllipsized)
+
+val String.literalEllipsized
+	get() =
+		if (string.length <= 60) this
+		else string.substring(0, 30) + "..." + string.substring(string.length - 30)
 
 fun AppendableIndented.append(fragment: Fragment): AppendableIndented =
 	this
