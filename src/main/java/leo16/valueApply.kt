@@ -4,6 +4,7 @@ import leo.base.ifOrNull
 import leo13.fold
 import leo13.isEmpty
 import leo13.linkOrNull
+import leo14.leonardoScript
 import leo15.*
 
 fun Value.apply(field: Field): Value? =
@@ -17,6 +18,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyScript(field)
 		?: applyFold(field)
 		?: applyMatches(field)
+		?: applyLeonardo(field)
 
 fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
@@ -78,3 +80,11 @@ fun Value.applyFold(field: Field): Value? =
 			}
 		}
 	}
+
+fun Value.applyLeonardo(field: Field): Value? =
+	matchEmpty {
+		field.match(leonardoName) {
+			leonardoScript.asValue
+		}
+	}
+

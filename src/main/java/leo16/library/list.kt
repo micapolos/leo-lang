@@ -83,4 +83,18 @@ val list = dictionary_ {
 
 	test { list.length.gives { 0.number.length } }
 	test { list { 0.number; 1.number; 2.number }.length.gives { 3.number.length } }
+
+	any.list
+	fold {
+		from { any }
+		step { giving { any } }
+	}
+	gives {
+		step.is_ { given.fold.step }
+		given.fold.from.thing
+		fold {
+			given.list
+			this_ { step.giving }
+		}
+	}
 }

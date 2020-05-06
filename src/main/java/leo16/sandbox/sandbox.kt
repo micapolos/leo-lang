@@ -4,13 +4,15 @@ import leo15.dsl.*
 import leo16.leo_
 
 fun main() = leo_ {
-	0.number
+	"http://mwiacek.com".text.url.get.text.line.list
+	map { giving { given.text.length.number } }
 	fold {
-		"http://mwiacek.com".text.url.get.lines
-		map { giving { given.text.length } }
-		giving {
-			given.folded.number
-			plus { given.next.number }
+		from { 0.number }
+		step {
+			giving {
+				given.folded.number
+				plus { given.next.number }
+			}
 		}
 	}
 }
