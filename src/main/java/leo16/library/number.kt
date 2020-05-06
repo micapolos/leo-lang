@@ -16,7 +16,7 @@ val number = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "add".text }
-					parameter { list { big.decimal.class_ } }
+					parameter { list { item { big.decimal.class_ } } }
 				}
 			}
 
@@ -24,7 +24,7 @@ val number = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "subtract".text }
-					parameter { list { big.decimal.class_ } }
+					parameter { list { item { big.decimal.class_ } } }
 				}
 			}
 
@@ -32,7 +32,7 @@ val number = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "multiply".text }
-					parameter { list { big.decimal.class_ } }
+					parameter { list { item { big.decimal.class_ } } }
 				}
 			}
 		}
@@ -44,7 +44,7 @@ val number = dictionary_ {
 		number.native
 		invoke {
 			big.decimal.add.method
-			parameter { list { plus.number.native } }
+			parameter { list { item { plus.number.native } } }
 		}
 		number
 	}
@@ -57,7 +57,7 @@ val number = dictionary_ {
 		number.native
 		invoke {
 			big.decimal.subtract.method
-			parameter { list { minus.number.native } }
+			parameter { list { item { minus.number.native } } }
 		}
 		number
 	}
@@ -70,7 +70,7 @@ val number = dictionary_ {
 		number.native
 		invoke {
 			big.decimal.multiply.method
-			parameter { list { times.number.native } }
+			parameter { list { item { times.number.native } } }
 		}
 		number
 	}

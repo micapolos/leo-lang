@@ -72,8 +72,8 @@ fun Value.applyFold(field: Field): Value? =
 				field.matchPrefix(stepName) { rhs ->
 					rhs.matchFunction(value(toName(anyName()), itemName(anyName()))) { function ->
 						lhs.matchPrefix(toName) { from ->
-							from.fold(list) { field ->
-								function.invoke(value(toName(this), field))
+							from.fold(list) { value ->
+								function.invoke(value(toName(this), itemName(value)))
 							}
 						}
 					}

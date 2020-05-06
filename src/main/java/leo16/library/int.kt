@@ -26,8 +26,8 @@ val int = dictionary_ {
 					name { "plus".text }
 					parameter {
 						list {
-							this_ { int.class_ }
-							this_ { int.class_ }
+							item { int.class_ }
+							item { int.class_ }
 						}
 					}
 				}
@@ -39,8 +39,8 @@ val int = dictionary_ {
 					name { "minus".text }
 					parameter {
 						list {
-							this_ { int.class_ }
-							this_ { int.class_ }
+							item { int.class_ }
+							item { int.class_ }
 						}
 					}
 				}
@@ -52,8 +52,8 @@ val int = dictionary_ {
 					name { "times".text }
 					parameter {
 						list {
-							this_ { int.class_ }
-							this_ { int.class_ }
+							item { int.class_ }
+							item { int.class_ }
 						}
 					}
 				}
@@ -68,8 +68,8 @@ val int = dictionary_ {
 		invoke {
 			parameter {
 				list {
-					this_ { int.native }
-					this_ { plus.int.native }
+					item { int.native }
+					item { plus.int.native }
 				}
 			}
 		}
@@ -85,8 +85,8 @@ val int = dictionary_ {
 		invoke {
 			parameter {
 				list {
-					this_ { int.native }
-					this_ { minus.int.native }
+					item { int.native }
+					item { minus.int.native }
 				}
 			}
 		}
@@ -102,8 +102,8 @@ val int = dictionary_ {
 		invoke {
 			parameter {
 				list {
-					this_ { int.native }
-					this_ { times.int.native }
+					item { int.native }
+					item { times.int.native }
 				}
 			}
 		}

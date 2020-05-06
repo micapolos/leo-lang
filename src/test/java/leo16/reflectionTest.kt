@@ -84,8 +84,8 @@ class ReflectionTest {
 			constructor {
 				parameter {
 					list {
-						this_ { int.class_ }
-						this_ { int.class_ }
+						item { int.class_ }
+						item { int.class_ }
 					}
 				}
 			}
@@ -104,16 +104,16 @@ class ReflectionTest {
 			constructor {
 				parameter {
 					list {
-						this_ { int.class_ }
-						this_ { int.class_ }
+						item { int.class_ }
+						item { int.class_ }
 					}
 				}
 			}
 			invoke {
 				parameter {
 					list {
-						this_ { 10.int.native }
-						this_ { 20.int.native }
+						item { 10.int.native }
+						item { 20.int.native }
 					}
 				}
 			}
@@ -131,8 +131,8 @@ class ReflectionTest {
 				name { "substring".text }
 				parameter {
 					list {
-						this_ { int.class_ }
-						this_ { int.class_ }
+						item { int.class_ }
+						item { int.class_ }
 					}
 				}
 			}
@@ -155,15 +155,15 @@ class ReflectionTest {
 					name { "substring".text }
 					parameter {
 						list {
-							this_ { int.class_ }
-							this_ { int.class_ }
+							item { int.class_ }
+							item { int.class_ }
 						}
 					}
 				}
 				parameter {
 					list {
-						this_ { 7.int.native }
-						this_ { 12.int.native }
+						item { 7.int.native }
+						item { 12.int.native }
 					}
 				}
 			}
@@ -179,14 +179,14 @@ class ReflectionTest {
 				name { "valueOf".text }
 				parameter {
 					list {
-						this_ { int.class_ }
+						item { int.class_ }
 					}
 				}
 			}
 			invoke {
 				parameter {
 					list {
-						this_ { 123.int.native }
+						item { 123.int.native }
 					}
 				}
 			}

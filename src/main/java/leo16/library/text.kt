@@ -31,7 +31,7 @@ val text = dictionary_ {
 				method {
 					name { "concat".text }
 					parameter {
-						list { string.class_ }
+						list { item { string.class_ } }
 					}
 				}
 			}
@@ -42,8 +42,8 @@ val text = dictionary_ {
 					name { "substring".text }
 					parameter {
 						list {
-							this_ { int.class_ }
-							this_ { int.class_ }
+							item { int.class_ }
+							item { int.class_ }
 						}
 					}
 				}
@@ -55,8 +55,8 @@ val text = dictionary_ {
 					name { "replace".text }
 					parameter {
 						list {
-							this_ { char.sequence.class_ }
-							this_ { char.sequence.class_ }
+							item { char.sequence.class_ }
+							item { char.sequence.class_ }
 						}
 					}
 				}
@@ -66,7 +66,7 @@ val text = dictionary_ {
 				string.class_
 				method {
 					name { "split".text }
-					parameter { list { string.class_ } }
+					parameter { list { item { string.class_ } } }
 				}
 			}
 		}
@@ -95,8 +95,8 @@ val text = dictionary_ {
 			string.substring.method
 			parameter {
 				list {
-					this_ { cut.from.number.int.native }
-					this_ { cut.to.number.int.native }
+					item { cut.from.number.int.native }
+					item { cut.to.number.int.native }
 				}
 			}
 		}
@@ -118,7 +118,7 @@ val text = dictionary_ {
 		text.native
 		invoke {
 			string.concat.method
-			parameter { list { plus.text.native } }
+			parameter { list { item { plus.text.native } } }
 		}
 		text
 	}
@@ -136,8 +136,8 @@ val text = dictionary_ {
 			string.replace.method
 			parameter {
 				list {
-					this_ { replace.all.text.native }
-					this_ { replace.with.text.native }
+					item { replace.all.text.native }
+					item { replace.with.text.native }
 				}
 			}
 		}
@@ -159,7 +159,7 @@ val text = dictionary_ {
 		text.native
 		invoke {
 			string.split.method
-			parameter { list { split.regex.text.native } }
+			parameter { list { item { split.regex.text.native } } }
 		}
 		array.list
 		map { any.item.giving { item.native.text } }

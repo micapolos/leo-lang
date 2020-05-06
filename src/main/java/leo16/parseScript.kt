@@ -64,14 +64,18 @@ val Sentence.stringOrNull: String?
 				?.utf8String
 		}
 
-val Sentence.fieldListOrNull: Stack<Field>?
+val Sentence.fieldListOrNull: Stack<Value>?
 	get() =
-		field.matchPrefix(listName) { it.fieldStack }
+		field.matchPrefix(listName) { rhs ->
+			rhs.fieldStack.mapOrNull {
+				matchPrefix(leo15.itemName) { it }
+			}
+		}
 
-fun <T : Any> Sentence.listOrNull(fn: Field.() -> T?): Stack<T>? =
+fun <T : Any> Sentence.listOrNull(fn: Value.() -> T?): Stack<T>? =
 	fieldListOrNull?.mapOrNull(fn)
 
-fun <T : Any> Value.listOrNull(fn: Field.() -> T?): Stack<T>? =
+fun <T : Any> Value.listOrNull(fn: Value.() -> T?): Stack<T>? =
 	onlyFieldOrNull?.sentenceOrNull?.listOrNull(fn)
 
 val Sentence.literalOrNull: Literal?

@@ -103,5 +103,11 @@ val list = dictionary_ {
 	}
 
 	test { list.length.gives { 0.number.length } }
-	test { list { 0.number; 1.number; 2.number }.length.gives { 3.number.length } }
+	test {
+		list {
+			item { 0.number }
+			item { 1.number }
+			item { 2.number }
+		}.length.gives { 3.number.length }
+	}
 }

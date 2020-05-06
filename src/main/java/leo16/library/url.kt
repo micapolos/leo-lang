@@ -20,7 +20,7 @@ val url = dictionary_ {
 				constructor {
 					parameter {
 						list {
-							"java.lang.String".text.name.class_
+							item { "java.lang.String".text.name.class_ }
 						}
 					}
 				}
@@ -30,7 +30,7 @@ val url = dictionary_ {
 				url.kotlin.class_
 				method {
 					name { "get".text }
-					parameter { list { url.class_ } }
+					parameter { list { item { url.class_ } } }
 				}
 			}
 		}
@@ -39,14 +39,14 @@ val url = dictionary_ {
 	any.text.url
 	gives {
 		string.url.constructor
-		invoke { parameter { list { url.text.native } } }
+		invoke { parameter { list { item { url.text.native } } } }
 		url
 	}
 
 	any.url.get
 	gives {
 		url.get.method
-		invoke { parameter { list { get.url.native } } }
+		invoke { parameter { list { item { get.url.native } } } }
 		text.get
 	}
 }

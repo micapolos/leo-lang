@@ -18,7 +18,7 @@ val reflection = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "valueOf".text }
-					parameter { list { long.class_ } }
+					parameter { list { item { long.class_ } } }
 				}
 			}
 
@@ -26,7 +26,7 @@ val reflection = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "valueOf".text }
-					parameter { list { double.class_ } }
+					parameter { list { item { double.class_ } } }
 				}
 			}
 
@@ -98,7 +98,7 @@ val reflection = dictionary_ {
 				boolean.object_.class_
 				method {
 					name { "valueOf".text }
-					parameter { list { boolean.class_ } }
+					parameter { list { item { boolean.class_ } } }
 				}
 			}
 		}
@@ -161,42 +161,42 @@ val reflection = dictionary_ {
 	any.long.number
 	gives {
 		long.big.decimal.method
-		invoke { parameter { list { number.long.native } } }
+		invoke { parameter { list { item { number.long.native } } } }
 		number
 	}
 
 	any.int.number
 	gives {
 		long.big.decimal.method
-		invoke { parameter { list { number.int.native } } }
+		invoke { parameter { list { item { number.int.native } } } }
 		number
 	}
 
 	any.short.number
 	gives {
 		long.big.decimal.method
-		invoke { parameter { list { number.short.native } } }
+		invoke { parameter { list { item { number.short.native } } } }
 		number
 	}
 
 	any.byte.number
 	gives {
 		long.big.decimal.method
-		invoke { parameter { list { number.byte.native } } }
+		invoke { parameter { list { item { number.byte.native } } } }
 		number
 	}
 
 	any.float.number
 	gives {
 		double.big.decimal.method
-		invoke { parameter { list { number.float.native } } }
+		invoke { parameter { list { item { number.float.native } } } }
 		number
 	}
 
 	any.double.number
 	gives {
 		double.big.decimal.method
-		invoke { parameter { list { number.double.native } } }
+		invoke { parameter { list { item { number.double.native } } } }
 		number
 	}
 
