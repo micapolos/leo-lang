@@ -2,7 +2,10 @@ package leo16
 
 import leo13.Stack
 import leo13.map
-import leo15.*
+import leo15.choiceName
+import leo15.dictionaryName
+import leo15.listName
+import leo15.takingName
 
 val Value.print: Value
 	get() =
@@ -32,11 +35,11 @@ val Choice.printSentence: Sentence
 
 val Dictionary.printSentence: Sentence
 	get() =
-		dictionaryName.sentenceTo(patternName(definitionStack.printField { printField }))
+		dictionaryName.sentenceTo(takingName(definitionStack.printField { printField }))
 
 val Definition.printField: Field
 	get() =
-		patternName(pattern.value)
+		takingName(pattern.value)
 
 fun <T> Stack<T>.printField(fn: T.() -> Field): Field =
 	map(fn).printField

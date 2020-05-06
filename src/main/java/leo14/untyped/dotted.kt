@@ -87,7 +87,7 @@ val String.colored
 	get() =
 		"${ansi.magenta}${this}${ansi.reset}"
 
-const val stringEllipsizedHalfLength = 40
+const val stringEllipsizedHalfLength = 50
 
 val String.maybeColored
 	get() =
