@@ -39,14 +39,14 @@ val url = dictionary_ {
 	any.text.url
 	gives {
 		string.url.constructor
-		invoke { parameter { list { given.url.text.native } } }
+		invoke { parameter { list { url.text.native } } }
 		url
 	}
 
 	any.url.get
 	gives {
 		url.get.method
-		invoke { parameter { list { given.get.url.native } } }
+		invoke { parameter { list { get.url.native } } }
 		text.get
 	}
 }
