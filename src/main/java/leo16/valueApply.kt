@@ -73,7 +73,7 @@ fun Value.applyFold(field: Field): Value? =
 					rhs.matchFunction(value(toName(anyName()), itemName(anyName()))) { function ->
 						lhs.matchPrefix(toName) { from ->
 							from.fold(list) { field ->
-								function.invoke(value(toName(this), itemName(field)))
+								function.invoke(value(toName(this), field))
 							}
 						}
 					}

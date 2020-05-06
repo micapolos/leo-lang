@@ -347,7 +347,10 @@ class EvalTest {
 		}.assertGives { zero }
 
 		evaluate_ {
-			list { 1.number; 2.number }
+			list {
+				item { 1.number }
+				item { 2.number }
+			}
 			fold {
 				to { 0.number }
 				step {

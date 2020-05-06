@@ -168,7 +168,13 @@ val text = dictionary_ {
 	test {
 		"zero one two".text
 		split { regex { " ".text } }
-		gives { list { "zero".text; "one".text; "two".text } }
+		gives {
+			list {
+				item { "zero".text }
+				item { "one".text }
+				item { "two".text }
+			}
+		}
 	}
 
 	any.text.line.list
@@ -176,6 +182,12 @@ val text = dictionary_ {
 
 	test {
 		"zero\none\ntwo".text.line.list
-		gives { list { "zero".text; "one".text; "two".text } }
+		gives {
+			list {
+				item { "zero".text }
+				item { "one".text }
+				item { "two".text }
+			}
+		}
 	}
 }

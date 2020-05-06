@@ -4,40 +4,27 @@ import leo15.dsl.*
 import leo16.dictionary_
 
 val list = dictionary_ {
-	any.list.last
-	gives {
-		last.list.match {
-			empty.is_ { last }
-			any.link.gives { link.last }
-		}
-	}
-
-	any.list.previous
-	gives {
-		previous.list.match {
-			empty.is_ { previous }
-			any.link.gives { link.previous }
-		}
-	}
+	empty.list
+	is_ { quote { list } }
 
 	any.list
-	append { any }
+	append { item { any } }
 	gives {
 		list.thing
-		this_ { append.thing }
+		this_ { append.item }
 		list
 	}
 
 	test {
 		list
-		append { 1.number }
-		gives { list { 1.number } }
+		append { item { 1.number } }
+		gives { list { item { 1.number } } }
 	}
 
 	test {
-		list { 1.number; }
-		append { 2.number }
-		gives { list { 1.number; 2.number } }
+		list { item { 1.number } }
+		append { item { 2.number } }
+		gives { list { item { 1.number }; item { 2.number } } }
 	}
 
 	any.list.reverse
@@ -48,14 +35,24 @@ val list = dictionary_ {
 			step {
 				to { any }
 				item { any }
-				giving { to.list.append { item.thing } }
+				giving { to.list.append { item } }
 			}
 		}
 	}
 
 	test {
-		list { 1.number; 2.number; 3.number }.reverse
-		gives { list { 3.number; 2.number; 1.number } }
+		list {
+			item { 1.number }
+			item { 2.number }
+			item { 3.number }
+		}.reverse
+		gives {
+			list {
+				item { 3.number }
+				item { 2.number }
+				item { 1.number }
+			}
+		}
 	}
 
 	any.list
@@ -63,22 +60,32 @@ val list = dictionary_ {
 	gives {
 		list.reverse
 		fold {
-			to { quote { list } }
+			to { empty.list }
 			step {
 				to { any }
 				item { any }
 				giving {
 					to.list
-					append { map.taking.give { item } }
+					append { item { map.taking.give { item } } }
 				}
 			}
 		}
 	}
 
 	test {
-		list { 1.number; 2.number; 3.number }
-		map { any.item.giving { item } }
-		gives { list { item { 1.number }; item { 2.number }; item { 3.number } } }
+		list {
+			item { 1.number }
+			item { 2.number }
+			item { 3.number }
+		}
+		map { any.item.giving { item.number.ok } }
+		gives {
+			list {
+				item { 1.number.ok }
+				item { 2.number.ok }
+				item { 3.number.ok }
+			}
+		}
 	}
 
 	any.list.length
@@ -90,9 +97,7 @@ val list = dictionary_ {
 			step {
 				to { any }
 				item { any }
-				giving {
-					to.number.plus { 1.number }
-				}
+				giving { to.number.plus { 1.number } }
 			}
 		}.length
 	}

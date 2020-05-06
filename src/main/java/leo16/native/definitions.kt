@@ -224,5 +224,5 @@ val arrayListDefinition =
 			.getOrNull(nativeName)!!
 			.theNativeOrNull!!
 			.value as Array<*>
-		stack(*array).expandField { nativeField }.value
+		stack(*array).expandField { itemName(nativeField) }.value
 	}
