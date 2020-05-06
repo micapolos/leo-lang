@@ -7,6 +7,7 @@ import leo.reset
 import leo14.*
 
 val useDots = true
+val dottedColorsParameter = parameter(true)
 
 val Script.leoString
 	get() =
@@ -80,7 +81,17 @@ fun AppendableIndented.leoAppend(field: ScriptField): AppendableIndented =
 	else append(field.string).indented { append("\n").leoAppend(field.rhs) }
 
 fun AppendableIndented.leoAppend(literal: Literal): AppendableIndented =
-	leoAppendEllipsized(literal.toString())
+	if (dottedColorsParameter.value)
+		this
+			.append(ansi.magenta)
+			.leoAppendEllipsized(literal.toString())
+			.append(ansi.reset)
+	else
+		leoAppendEllipsized(literal.toString())
+
+val String.colored
+	get() =
+		"${ansi.magenta}${this}${ansi.reset}"
 
 const val stringEllipsizedHalfLength = 40
 

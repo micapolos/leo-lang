@@ -1,5 +1,6 @@
 package leo14.untyped
 
+import leo.base.runWith
 import leo14.*
 import leo14.line
 import leo14.lineTo
@@ -868,10 +869,12 @@ class EvalTest {
 
 	@Test
 	fun scriptText() {
-		leo(1, "plus"("2"), "script"(), "text"())
-			.assertEvalsTo(
-				if (useDots) leo("1.plus \"2\"")
-				else leo("1\nplus \"2\""))
+		dottedColorsParameter.runWith(false) {
+			leo(1, "plus"("2"), "script"(), "text"())
+				.assertEvalsTo(
+					if (useDots) leo("1.plus \"2\"")
+					else leo("1\nplus \"2\""))
+		}
 	}
 
 	@Test
