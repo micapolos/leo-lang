@@ -164,8 +164,8 @@ class EvalTest {
 	fun matchList() {
 		evaluate_ { list.match { empty.gives { given } } }
 			.assertGives { given { empty } }
-		evaluate_ { list { bit { zero } }.match { any.link.gives { given } } }
-			.assertGives { given { link { previous { list }; last { bit { zero } } } } }
+		evaluate_ { list { bit { zero } }.match { any.linked.gives { given } } }
+			.assertGives { given { linked { previous { list }; last { bit { zero } } } } }
 	}
 
 	@Test
