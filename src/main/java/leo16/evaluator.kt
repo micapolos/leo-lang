@@ -22,8 +22,8 @@ infix fun EvaluatorParent?.evaluator(evaluated: Evaluated) = Evaluator(this, eva
 val Evaluated.evaluator get() = nullOf<EvaluatorParent>().evaluator(this)
 val Scope.emptyEvaluator get() = emptyEvaluated.evaluator
 fun Evaluator.parent(word: String) = EvaluatorParent(this, word)
-val emptyEvaluator = emptyScope.emptyEvaluated.evaluator
-val baseEvaluator = emptyScope.emptyEvaluated.evaluator.plus(importName(baseName()))
+val emptyEvaluator get() = emptyScope.emptyEvaluated.evaluator
+val baseEvaluator get() = emptyScope.emptyEvaluated.evaluator.plus(importName(baseName()))
 
 val Evaluator.asField: Field
 	get() =
@@ -49,7 +49,7 @@ operator fun Evaluator.plus(value: Value): Evaluator =
 operator fun Evaluator.plus(field: Field): Evaluator =
 	when (field) {
 		is SentenceField -> plus(field.sentence)
-		is FunctionField -> append(field)
+		is TakingField -> append(field)
 		is DictionaryField -> append(field)
 		is NativeField -> append(field)
 		is ChoiceField -> append(field)

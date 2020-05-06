@@ -162,7 +162,7 @@ val text = dictionary_ {
 			parameter { list { given.split.regex.text.native } }
 		}
 		array.list
-		map { giving { given.native.text } }
+		map { any.item.giving { given.item.native.text } }
 	}
 
 	test {

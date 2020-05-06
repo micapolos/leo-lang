@@ -4,6 +4,7 @@ import leo.base.notNullIf
 import leo13.map
 import leo15.anyName
 import leo15.choiceName
+import leo15.takingName
 
 val Value.pattern: Pattern
 	get() =
@@ -25,7 +26,7 @@ val Field.patternField: PatternField
 	get() =
 		when (this) {
 			is SentenceField -> sentence.patternField
-			is FunctionField -> function.printSentence.patternField
+			is TakingField -> taking.asField.patternField
 			is DictionaryField -> dictionary.printSentence.patternField
 			is NativeField -> nativePatternField
 			is ChoiceField -> choice.patternField
@@ -33,8 +34,10 @@ val Field.patternField: PatternField
 
 val Sentence.patternField: PatternField
 	get() =
-		// TODO: pattern keywords
-		exactPatternField
+		when (word) {
+			takingName -> value.pattern.taking.field
+			else -> exactPatternField
+		}
 
 val Choice.patternField: PatternField
 	get() =

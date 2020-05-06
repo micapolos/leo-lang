@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.ifOrNull
+import leo.base.orNull
 import leo13.fold
 import leo13.isEmpty
 import leo13.linkOrNull
@@ -36,7 +37,7 @@ fun Value.applyThing(field: Field): Value? =
 
 fun Value.applyGive(field: Field): Value? =
 	field.matchPrefix(giveName) { rhs ->
-		functionOrNull?.invoke(rhs)
+		takingOrNull?.invoke(rhs)
 	}
 
 fun Value.applyThis(field: Field): Value? =
@@ -65,14 +66,14 @@ fun Value.applyMatches(field: Field): Value? =
 	}
 
 fun Value.applyFold(field: Field): Value? =
-	field.matchPrefix(foldName) { rhs ->
-		rhs.fieldStack.linkOrNull?.let { link ->
-			link.value.functionOrNull?.let { function ->
-				link.stack.linkOrNull?.let { link ->
-					link.value.matchList { list ->
-						ifOrNull(link.stack.isEmpty) {
-							this.fold(list) { field ->
-								function.invoke(value(foldedName(this), nextName(field)))
+	matchList { list ->
+		field.matchPrefix(foldName) { rhs ->
+			rhs.split { lhs, field ->
+				field.matchPrefix(stepName) { rhs ->
+					rhs.matchFunction(value(toName(anyName()), itemName(anyName()))) { function ->
+						lhs.matchPrefix(toName) { from ->
+							from.fold(list) { field ->
+								function.invoke(value(toName(this), itemName(field)))
 							}
 						}
 					}

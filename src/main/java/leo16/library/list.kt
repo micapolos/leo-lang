@@ -42,10 +42,14 @@ val list = dictionary_ {
 
 	any.list.reverse
 	gives {
-		list
+		given.reverse.list
 		fold {
-			given.reverse.list
-			giving { given.folded.list.append { given.next.thing } }
+			to { list }
+			step {
+				to { any }
+				item { any }
+				giving { given.to.list.append { given.item.thing } }
+			}
 		}
 	}
 
@@ -55,46 +59,45 @@ val list = dictionary_ {
 	}
 
 	any.list
-	map { any.giving }
+	map { taking { any.item } }
 	gives {
 		map.is_ { given.map }
-		list
+		given.list.reverse
 		fold {
-			given.list.reverse
-			giving { given.folded.list.append { map.giving.give { given.next.thing } } }
+			to { list }
+			step {
+				to { any }
+				item { any }
+				giving {
+					given.to.list
+					append { map.taking.give { given.item } }
+				}
+			}
 		}
 	}
 
 	test {
 		list { 1.number; 2.number; 3.number }
-		map { giving { given } }
-		gives { list { given { 1.number }; given { 2.number }; given { 3.number } } }
+		map { any.item.giving { given.item } }
+		gives { list { item { 1.number }; item { 2.number }; item { 3.number } } }
 	}
 
 	any.list.length
 	gives {
 		number.import
-		0.number
+		given.length.list
 		fold {
-			given.length.list
-			giving { given.folded.number.plus { 1.number } }
+			to { 0.number }
+			step {
+				to { any }
+				item { any }
+				giving {
+					given.to.number.plus { 1.number }
+				}
+			}
 		}.length
 	}
 
 	test { list.length.gives { 0.number.length } }
 	test { list { 0.number; 1.number; 2.number }.length.gives { 3.number.length } }
-
-	any.list
-	fold {
-		from { any }
-		step { giving { any } }
-	}
-	gives {
-		step.is_ { given.fold.step }
-		given.fold.from.thing
-		fold {
-			given.list
-			this_ { step.giving }
-		}
-	}
 }

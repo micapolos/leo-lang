@@ -88,7 +88,7 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 
 fun Evaluated.applyGiving(field: Field): Evaluated? =
 	field.matchPrefix(givingName) { rhs ->
-		updateValue { plus(scope.dictionary.function(rhs).field) }
+		updateValue { value.pattern.giving(scope.dictionary.function(rhs)).field.value }
 	}
 
 fun Evaluated.applyChoice(field: Field): Evaluated? =
@@ -103,7 +103,7 @@ fun Evaluated.applyChoice(field: Field): Evaluated? =
 
 fun Evaluated.applyGive(field: Field): Evaluated? =
 	field.matchPrefix(giveName) { rhs ->
-		scope.runIfNotNull(value.fieldStack.onlyOrNull?.functionOrNull?.invoke(rhs)) { evaluated(it) }
+		scope.runIfNotNull(value.fieldStack.onlyOrNull?.takingOrNull?.invoke(rhs)) { evaluated(it) }
 	}
 
 fun Evaluated.applyMatch(word: String, evaluated: Evaluated): Evaluated? =

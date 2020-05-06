@@ -5,6 +5,7 @@ import leo13.itemName
 import leo13.map
 import leo14.*
 import leo15.choiceName
+import leo15.takingName
 
 val Value.script: Script
 	get() =
@@ -21,7 +22,7 @@ val Field.defaultScriptLine: ScriptLine
 	get() =
 		when (this) {
 			is SentenceField -> sentence.scriptLine
-			is FunctionField -> function.printSentence.scriptLine
+			is TakingField -> taking.scriptLine
 			is DictionaryField -> dictionary.printSentence.scriptLine
 			is NativeField -> native.nativeScriptLine
 			is ChoiceField -> choice.scriptLine
@@ -39,6 +40,10 @@ val Sentence.scriptLine: ScriptLine
 	get() =
 		word.scriptWord lineTo value.script
 
+val Taking.scriptLine: ScriptLine
+	get() =
+		takingName(pattern.asValue.script)
+
 val Choice.scriptLine: ScriptLine
 	get() =
 		choiceName(caseFieldStack.map { scriptLine })
@@ -46,7 +51,7 @@ val Choice.scriptLine: ScriptLine
 val String.scriptWord: String
 	get() =
 		when (this) {
-			itemName -> "-"
+			//itemName -> "-"
 			else -> this
 		}
 

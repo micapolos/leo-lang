@@ -68,8 +68,8 @@ class EvalTest {
 
 	@Test
 	fun script() {
-		evaluate_ { giving { zero }.script.give { one } }
-			.assertGives { giving { zero }.give { one } }
+		evaluate_ { zero.giving { given }.script.give { zero } }
+			.assertGives { taking { zero }.give { zero } }
 	}
 
 	@Test
@@ -115,7 +115,8 @@ class EvalTest {
 		evaluate_ { the { "foo".text }.text }.assertGives { "foo".text }
 		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
 		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { pattern { list } } }
-		evaluate_ { the { giving { given } }.giving }.assertGives { giving { given } }
+		evaluate_ { the { zero.giving { given } }.taking }.assertGives { taking { zero } }
+		evaluate_ { the { zero.giving { given } }.taking.give { zero } }.assertGives { given { zero } }
 	}
 
 	@Test
@@ -170,12 +171,13 @@ class EvalTest {
 
 	@Test
 	fun giving() {
-		evaluate_ { giving { given } }.assertGives { giving { given } }
+		evaluate_ { zero.giving { given } }.assertGives { taking { zero } }
 	}
 
 	@Test
 	fun give() {
-		evaluate_ { giving { given }.give { zero } }.assertGives { given { zero } }
+		evaluate_ { zero.giving { given }.give { zero } }.assertGives { given { zero } }
+		evaluate_ { one.giving { given }.give { zero } }.assertGives { taking { one }.give { zero } }
 	}
 
 	@Test
@@ -333,20 +335,28 @@ class EvalTest {
 	@Test
 	fun fold() {
 		evaluate_ {
-			fold {
-				list
-				giving { given }
-			}
-		}.assertGives { nothing_ }
-
-		evaluate_ {
-			import { list }
 			list
 			fold {
-				list { 1.number; 2.number }
-				giving { given.folded.list.append { given.next.number } }
+				to { zero }
+				step {
+					to { any }
+					item { any }
+					giving { given }
+				}
 			}
-		}.assertGives { list { 2.number; 1.number } }
+		}.assertGives { zero }
+
+		evaluate_ {
+			list { 1.number; 2.number }
+			fold {
+				to { 0.number }
+				step {
+					to { any }
+					item { any }
+					giving { given.to.thing.this_ { given.item.thing } }
+				}
+			}
+		}.assertGives { 0.number; 2.number; 1.number }
 	}
 
 	@Test
@@ -437,19 +447,14 @@ class EvalTest {
 	@Test
 	fun matchesGiving() {
 		evaluate_ {
-			giving { given }
-			matches { giving }
+			zero.giving { given }
+			matches { taking { zero } }
+		}.assertGives { true.boolean }
+
+		evaluate_ {
+			zero.giving { given }
+			matches { taking { one } }
 		}.assertGives { false.boolean }
-
-		evaluate_ {
-			giving { given }
-			matches { quote { giving } }
-		}.assertGives { true.boolean }
-
-		evaluate_ {
-			giving { given }
-			matches { giving { given } }
-		}.assertGives { true.boolean }
 	}
 
 //	@Test

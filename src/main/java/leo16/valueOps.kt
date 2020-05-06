@@ -39,7 +39,7 @@ val Field.selectWord: String
 	get() =
 		when (this) {
 			is SentenceField -> sentence.word
-			is FunctionField -> givingName
+			is TakingField -> takingName
 			is DictionaryField -> dictionaryName
 			is NativeField -> nativeName
 			is ChoiceField -> choiceName

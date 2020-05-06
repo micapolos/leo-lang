@@ -12,7 +12,7 @@ val Field.print: Field
 	get() =
 		when (this) {
 			is SentenceField -> sentence.printSentence.field
-			is FunctionField -> function.printSentence.field
+			is TakingField -> taking.printSentence.field
 			is DictionaryField -> dictionary.printSentence.field
 			is NativeField -> native.nativeString()
 			is ChoiceField -> choice.printSentence.field
@@ -21,6 +21,10 @@ val Field.print: Field
 val Sentence.printSentence: Sentence
 	get() =
 		word.sentenceTo(value.print)
+
+val Taking.printSentence: Sentence
+	get() =
+		takingName.sentenceTo(pattern.asValue)
 
 val Choice.printSentence: Sentence
 	get() =
@@ -33,10 +37,6 @@ val Dictionary.printSentence: Sentence
 val Definition.printField: Field
 	get() =
 		patternName(pattern.value)
-
-val Function.printSentence: Sentence
-	get() =
-		givingName.sentenceTo(bodyValue.print)
 
 fun <T> Stack<T>.printField(fn: T.() -> Field): Field =
 	map(fn).printField

@@ -27,6 +27,11 @@ fun <R : Any> Value.matchLink(fn: (Value, String, Value) -> R?): R? =
 		}
 	}
 
+fun <R : Any> Value.split(fn: (Value, Field) -> R?): R? =
+	fieldStack.linkOrNull?.run {
+		fn(stack.value, value)
+	}
+
 fun <R : Any> Value.matchInfix(word: String, fn: (Value, Value) -> R?): R? =
 	matchLink { lhs, linkWord, rhs ->
 		ifOrNull(linkWord == word) {
@@ -56,6 +61,16 @@ fun <R : Any> Field.matchPrefix(word: String, fn: (Value) -> R?): R? =
 			fn(value)
 		}
 	}
+
+fun <R : Any> Field.matchFunction(value: Value, fn: (Function) -> R?): R? =
+	takingOrNull?.let { taking ->
+		ifOrNull(taking.pattern == value.pattern) {
+			fn(taking.function)
+		}
+	}
+
+fun <R : Any> Value.matchFunction(value: Value, fn: (Function) -> R?): R? =
+	onlyFieldOrNull?.matchFunction(value, fn)
 
 fun <R : Any> Field.matchWord(fn: (String) -> R?): R? =
 	sentenceOrNull?.run {

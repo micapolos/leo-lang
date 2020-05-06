@@ -4,6 +4,7 @@ import leo.base.runIf
 import leo13.map
 import leo15.anyName
 import leo15.exactName
+import leo15.takingName
 
 val Pattern.value: Value
 	get() =
@@ -21,11 +22,16 @@ val PatternField.valueField: Field
 		when (this) {
 			is SentencePatternField -> sentence.valueField
 			is NativePatternField -> native.nativeField
+			is TakingPatternField -> taking.valueField
 		}
 
 val PatternSentence.valueField: Field
 	get() =
 		word(pattern.value).runIf(word.isPatternKeyword) { exactName(this) }
+
+val PatternTaking.valueField: Field
+	get() =
+		takingName(pattern.value)
 
 val String.isPatternKeyword: Boolean
 	get() =
