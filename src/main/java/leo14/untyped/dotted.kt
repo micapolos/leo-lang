@@ -81,13 +81,7 @@ fun AppendableIndented.leoAppend(field: ScriptField): AppendableIndented =
 	else append(field.string).indented { append("\n").leoAppend(field.rhs) }
 
 fun AppendableIndented.leoAppend(literal: Literal): AppendableIndented =
-	if (dottedColorsParameter.value)
-		this
-			.append(ansi.magenta)
-			.leoAppendEllipsized(literal.toString())
-			.append(ansi.reset)
-	else
-		leoAppendEllipsized(literal.toString())
+	leoAppendEllipsized(literal.toString())
 
 val String.colored
 	get() =
@@ -95,11 +89,16 @@ val String.colored
 
 const val stringEllipsizedHalfLength = 40
 
+val String.maybeColored
+	get() =
+		if (dottedColorsParameter.value) colored
+		else this
+
 fun AppendableIndented.leoAppendEllipsized(string: String): AppendableIndented =
-	if (string.length <= stringEllipsizedHalfLength * 2) append(string)
-	else append(string.substring(0, stringEllipsizedHalfLength))
+	if (string.length <= stringEllipsizedHalfLength * 2) append(string.maybeColored)
+	else append(string.substring(0, stringEllipsizedHalfLength).maybeColored)
 		.append("...")
-		.append(string.substring(string.length - stringEllipsizedHalfLength))
+		.append(string.substring(string.length - stringEllipsizedHalfLength).maybeColored)
 
 fun AppendableIndented.leoAppend(fragment: Fragment): AppendableIndented =
 	this
