@@ -13,6 +13,9 @@ val emptyDictionary = stack<Definition>().dictionary
 operator fun Dictionary.plus(definition: Definition): Dictionary =
 	definitionStack.push(definition).dictionary
 
+operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
+	fold(dictionary.definitionStack.reverse) { plus(it) }
+
 fun Dictionary.apply(value: Value): Value? =
 	definitionStack.mapFirst { apply(value) }
 

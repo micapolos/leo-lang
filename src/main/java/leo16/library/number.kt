@@ -41,10 +41,10 @@ val number = dictionary_ {
 	any.number
 	plus { any.number }
 	gives {
-		given.number.native
+		number.native
 		invoke {
 			big.decimal.add.method
-			parameter { list { given.plus.number.native } }
+			parameter { list { plus.number.native } }
 		}
 		number
 	}
@@ -54,10 +54,10 @@ val number = dictionary_ {
 	any.number
 	minus { any.number }
 	gives {
-		given.number.native
+		number.native
 		invoke {
 			big.decimal.subtract.method
-			parameter { list { given.minus.number.native } }
+			parameter { list { minus.number.native } }
 		}
 		number
 	}
@@ -67,10 +67,10 @@ val number = dictionary_ {
 	any.number
 	times { any.number }
 	gives {
-		given.number.native
+		number.native
 		invoke {
 			big.decimal.multiply.method
-			parameter { list { given.times.number.native } }
+			parameter { list { times.number.native } }
 		}
 		number
 	}

@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.notNullIf
 import leo13.definitionName
+import leo13.map
 import leo15.bodyName
 import leo15.givenName
 import leo15.nativeName
@@ -57,9 +58,9 @@ fun Body.apply(arg: Value): Value =
 		is NativeBody -> apply(givenName(arg).value)
 	}
 
-val Value.givenDefinition: Definition
+val Value.parameterDictionary: Dictionary
 	get() =
-		givenName.pattern definitionTo value(givenName.invoke(this)).body
+		fieldStack.map { selectWord.pattern.definitionTo(value.body) }.dictionary
 
 fun Value.gives(apply: Value.() -> Value) =
 	pattern.definitionTo(

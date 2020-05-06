@@ -116,7 +116,7 @@ class EvalTest {
 		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
 		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { pattern { list } } }
 		evaluate_ { the { zero.giving { given } }.taking }.assertGives { taking { zero } }
-		evaluate_ { the { zero.giving { given } }.taking.give { zero } }.assertGives { given { zero } }
+		evaluate_ { the { x { zero }.giving { x } }.taking.give { x { zero } } }.assertGives { x { zero } }
 	}
 
 	@Test
@@ -141,19 +141,19 @@ class EvalTest {
 		evaluate_ { zero.gives { one } }.assertGives { nothing_ }
 		evaluate_ { zero.gives { one }.zero }.assertGives { one }
 		evaluate_ { zero.gives { one }.one }.assertGives { one }
-		evaluate_ { zero.gives { given }.zero }.assertGives { given { zero } }
-		evaluate_ { zero.gives { given }.one }.assertGives { one }
+		evaluate_ { any.x.gives { x }.zero.x }.assertGives { x { zero } }
+		evaluate_ { any.x.gives { x }.zero.y }.assertGives { y { zero } }
 
-		evaluate_ { any.text.gives { given }; "foo".text }.assertGives { given { "foo".text } }
-		evaluate_ { any.number.gives { given }; 123.number }.assertGives { given { 123.number } }
+		evaluate_ { any.text.gives { text }; "foo".text }.assertGives { "foo".text }
+		evaluate_ { any.number.gives { number }; 123.number }.assertGives { 123.number }
 	}
 
 	@Test
 	fun matchSentence() {
 		evaluate_ { zero.bit.match { zero.is_ { one } } }
 			.assertGives { one }
-		evaluate_ { zero.bit.match { zero.gives { given } } }
-			.assertGives { given { zero } }
+		evaluate_ { zero.bit.match { zero.gives { one } } }
+			.assertGives { one }
 
 		evaluate_ { zero.bit.match { nothing_ } }
 			.assertGives { match { bit { zero } } }
@@ -163,10 +163,10 @@ class EvalTest {
 
 	@Test
 	fun matchList() {
-		evaluate_ { list.match { empty.gives { given } } }
-			.assertGives { given { empty } }
-		evaluate_ { list { bit { zero } }.match { any.linked.gives { given } } }
-			.assertGives { given { linked { previous { list }; last { bit { zero } } } } }
+		evaluate_ { list.match { empty.is_ { ok } } }
+			.assertGives { ok }
+		evaluate_ { list { bit { zero } }.match { any.linked.gives { linked } } }
+			.assertGives { linked { previous { list }; last { bit { zero } } } }
 	}
 
 	@Test
@@ -176,8 +176,8 @@ class EvalTest {
 
 	@Test
 	fun give() {
-		evaluate_ { zero.giving { given }.give { zero } }.assertGives { given { zero } }
-		evaluate_ { one.giving { given }.give { zero } }.assertGives { taking { one }.give { zero } }
+		evaluate_ { any.x.giving { x }.give { x { zero } } }.assertGives { x { zero } }
+		evaluate_ { any.x.giving { x }.give { y { zero } } }.assertGives { taking { x { any } }.give { y { zero } } }
 	}
 
 	@Test
@@ -353,7 +353,7 @@ class EvalTest {
 				step {
 					to { any }
 					item { any }
-					giving { given.to.thing.this_ { given.item.thing } }
+					giving { to.thing.this_ { item.thing } }
 				}
 			}
 		}.assertGives { 0.number; 2.number; 1.number }

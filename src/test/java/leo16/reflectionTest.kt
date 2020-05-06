@@ -8,41 +8,41 @@ class ReflectionTest {
 	@Test
 	fun nativeClass() {
 		evaluate_ {
-			reflection.import
+			native.reflection.import
 			"Hello!".text.native.object_.class_
 		}.assertGives { class_ { String::class.java.native_ } }
 	}
 
 	@Test
 	fun typeClass() {
-		evaluate_ { reflection.import; byte.class_ }
+		evaluate_ { native.reflection.import; byte.class_ }
 			.assertGives { class_ { Byte::class.java.native_ } }
-		evaluate_ { reflection.import; char.class_ }
+		evaluate_ { native.reflection.import; char.class_ }
 			.assertGives { class_ { Char::class.java.native_ } }
-		evaluate_ { reflection.import; short.class_ }
+		evaluate_ { native.reflection.import; short.class_ }
 			.assertGives { class_ { Short::class.java.native_ } }
-		evaluate_ { reflection.import; int.class_ }
+		evaluate_ { native.reflection.import; int.class_ }
 			.assertGives { class_ { Int::class.java.native_ } }
-		evaluate_ { reflection.import; long.class_ }
+		evaluate_ { native.reflection.import; long.class_ }
 			.assertGives { class_ { Long::class.java.native_ } }
-		evaluate_ { reflection.import; float.class_ }
+		evaluate_ { native.reflection.import; float.class_ }
 			.assertGives { class_ { Float::class.java.native_ } }
-		evaluate_ { reflection.import; double.class_ }
+		evaluate_ { native.reflection.import; double.class_ }
 			.assertGives { class_ { Double::class.java.native_ } }
-		evaluate_ { reflection.import; boolean.class_ }
+		evaluate_ { native.reflection.import; boolean.class_ }
 			.assertGives { class_ { Boolean::class.java.native_ } }
 	}
 
 	@Test
 	fun textNameClass() {
-		evaluate_ { reflection.import; "java.lang.Integer".text.name.class_ }
+		evaluate_ { native.reflection.import; "java.lang.Integer".text.name.class_ }
 			.assertGives { class_ { Integer::class.java.native_ } }
 	}
 
 	@Test
 	fun nativeClassField() {
 		evaluate_ {
-			reflection.import
+			native.reflection.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 		}.assertGives {
@@ -53,7 +53,7 @@ class ReflectionTest {
 	@Test
 	fun nativeFieldGet() {
 		evaluate_ {
-			reflection.import
+			native.reflection.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 			get
@@ -65,7 +65,7 @@ class ReflectionTest {
 	@Test
 	fun nativeObjectFieldGet() {
 		evaluate_ {
-			reflection.import
+			native.reflection.import
 			"java.awt.Point".text.name.class_
 			constructor { parameter { list } }
 			invoke { parameter { list } }
@@ -79,7 +79,7 @@ class ReflectionTest {
 	@Test
 	fun nativeClassConstructor() {
 		evaluate_ {
-			reflection.import
+			native.reflection.import
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
@@ -125,7 +125,7 @@ class ReflectionTest {
 	@Test
 	fun nativeClassMethod() {
 		evaluate_ {
-			reflection.import
+			native.reflection.import
 			"java.lang.String".text.name.class_
 			method {
 				name { "substring".text }

@@ -74,7 +74,7 @@ val text = dictionary_ {
 
 	any.text.length
 	gives {
-		given.length.text.native
+		length.text.native
 		invoke {
 			string.length.method
 			parameter { list }
@@ -90,13 +90,13 @@ val text = dictionary_ {
 		to { any.number }
 	}
 	gives {
-		given.text.native
+		text.native
 		invoke {
 			string.substring.method
 			parameter {
 				list {
-					this_ { given.cut.from.number.int.native }
-					this_ { given.cut.to.number.int.native }
+					this_ { cut.from.number.int.native }
+					this_ { cut.to.number.int.native }
 				}
 			}
 		}
@@ -115,10 +115,10 @@ val text = dictionary_ {
 	any.text
 	plus { any.text }
 	gives {
-		given.text.native
+		text.native
 		invoke {
 			string.concat.method
-			parameter { list { given.plus.text.native } }
+			parameter { list { plus.text.native } }
 		}
 		text
 	}
@@ -131,13 +131,13 @@ val text = dictionary_ {
 		with { any.text }
 	}
 	gives {
-		given.text.native
+		text.native
 		invoke {
 			string.replace.method
 			parameter {
 				list {
-					this_ { given.replace.all.text.native }
-					this_ { given.replace.with.text.native }
+					this_ { replace.all.text.native }
+					this_ { replace.with.text.native }
 				}
 			}
 		}
@@ -156,13 +156,13 @@ val text = dictionary_ {
 	any.text
 	split { regex { any.text } }
 	gives {
-		given.text.native
+		text.native
 		invoke {
 			string.split.method
-			parameter { list { given.split.regex.text.native } }
+			parameter { list { split.regex.text.native } }
 		}
 		array.list
-		map { any.item.giving { given.item.native.text } }
+		map { any.item.giving { item.native.text } }
 	}
 
 	test {
@@ -172,7 +172,7 @@ val text = dictionary_ {
 	}
 
 	any.text.line.list
-	gives { given.list.line.text.split { regex { "\n".text } } }
+	gives { list.line.text.split { regex { "\n".text } } }
 
 	test {
 		"zero\none\ntwo".text.line.list

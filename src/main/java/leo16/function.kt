@@ -9,7 +9,7 @@ data class Function(val dictionary: Dictionary, val bodyValue: Value) {
 infix fun Dictionary.function(value: Value) = Function(this, value)
 
 operator fun Function.invoke(value: Value): Value =
-	dictionary.plus(value.givenDefinition).evaluate(bodyValue)!!
+	dictionary.plus(value.parameterDictionary).evaluate(bodyValue)!!
 
 val Function.asField: Field
 	get() =

@@ -68,8 +68,8 @@ val int = dictionary_ {
 		invoke {
 			parameter {
 				list {
-					this_ { given.int.native }
-					this_ { given.plus.int.native }
+					this_ { int.native }
+					this_ { plus.int.native }
 				}
 			}
 		}
@@ -85,8 +85,8 @@ val int = dictionary_ {
 		invoke {
 			parameter {
 				list {
-					this_ { given.int.native }
-					this_ { given.minus.int.native }
+					this_ { int.native }
+					this_ { minus.int.native }
 				}
 			}
 		}
@@ -102,8 +102,8 @@ val int = dictionary_ {
 		invoke {
 			parameter {
 				list {
-					this_ { given.int.native }
-					this_ { given.times.int.native }
+					this_ { int.native }
+					this_ { times.int.native }
 				}
 			}
 		}

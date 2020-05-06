@@ -6,25 +6,25 @@ import leo16.dictionary_
 val list = dictionary_ {
 	any.list.last
 	gives {
-		given.last.list.match {
-			empty.is_ { given.last }
-			any.link.gives { given.link.last }
+		last.list.match {
+			empty.is_ { last }
+			any.link.gives { link.last }
 		}
 	}
 
 	any.list.previous
 	gives {
-		given.previous.list.match {
-			empty.is_ { given.previous }
-			any.link.gives { given.link.previous }
+		previous.list.match {
+			empty.is_ { previous }
+			any.link.gives { link.previous }
 		}
 	}
 
 	any.list
 	append { any }
 	gives {
-		given.list.thing
-		this_ { given.append.thing }
+		list.thing
+		this_ { append.thing }
 		list
 	}
 
@@ -42,13 +42,13 @@ val list = dictionary_ {
 
 	any.list.reverse
 	gives {
-		given.reverse.list
+		reverse.list
 		fold {
 			to { list }
 			step {
 				to { any }
 				item { any }
-				giving { given.to.list.append { given.item.thing } }
+				giving { to.list.append { item.thing } }
 			}
 		}
 	}
@@ -61,16 +61,15 @@ val list = dictionary_ {
 	any.list
 	map { taking { any.item } }
 	gives {
-		map.is_ { given.map }
-		given.list.reverse
+		list.reverse
 		fold {
-			to { list }
+			to { quote { list } }
 			step {
 				to { any }
 				item { any }
 				giving {
-					given.to.list
-					append { map.taking.give { given.item } }
+					to.list
+					append { map.taking.give { item } }
 				}
 			}
 		}
@@ -78,21 +77,21 @@ val list = dictionary_ {
 
 	test {
 		list { 1.number; 2.number; 3.number }
-		map { any.item.giving { given.item } }
+		map { any.item.giving { item } }
 		gives { list { item { 1.number }; item { 2.number }; item { 3.number } } }
 	}
 
 	any.list.length
 	gives {
 		number.import
-		given.length.list
+		length.list
 		fold {
 			to { 0.number }
 			step {
 				to { any }
 				item { any }
 				giving {
-					given.to.number.plus { 1.number }
+					to.number.plus { 1.number }
 				}
 			}
 		}.length

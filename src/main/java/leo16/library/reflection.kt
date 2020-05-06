@@ -106,7 +106,7 @@ val reflection = dictionary_ {
 
 	any.number.long
 	gives {
-		given.long.number.native
+		long.number.native
 		invoke {
 			big.decimal.long.method
 			parameter { list }
@@ -115,7 +115,7 @@ val reflection = dictionary_ {
 
 	any.number.int
 	gives {
-		given.int.number.native
+		int.number.native
 		invoke {
 			big.decimal.int.method
 			parameter { list }
@@ -124,7 +124,7 @@ val reflection = dictionary_ {
 
 	any.number.short
 	gives {
-		given.short.number.native
+		short.number.native
 		invoke {
 			big.decimal.short.method
 			parameter { list }
@@ -133,7 +133,7 @@ val reflection = dictionary_ {
 
 	any.number.byte
 	gives {
-		given.byte.number.native
+		byte.number.native
 		invoke {
 			big.decimal.byte.method
 			parameter { list }
@@ -142,7 +142,7 @@ val reflection = dictionary_ {
 
 	any.number.float
 	gives {
-		given.float.number.native
+		float.number.native
 		invoke {
 			big.decimal.float.method
 			parameter { list }
@@ -151,7 +151,7 @@ val reflection = dictionary_ {
 
 	any.number.double
 	gives {
-		given.double.number.native
+		double.number.native
 		invoke {
 			big.decimal.double.method
 			parameter { list }
@@ -161,47 +161,47 @@ val reflection = dictionary_ {
 	any.long.number
 	gives {
 		long.big.decimal.method
-		invoke { parameter { list { given.number.long.native } } }
+		invoke { parameter { list { number.long.native } } }
 		number
 	}
 
 	any.int.number
 	gives {
 		long.big.decimal.method
-		invoke { parameter { list { given.number.int.native } } }
+		invoke { parameter { list { number.int.native } } }
 		number
 	}
 
 	any.short.number
 	gives {
 		long.big.decimal.method
-		invoke { parameter { list { given.number.short.native } } }
+		invoke { parameter { list { number.short.native } } }
 		number
 	}
 
 	any.byte.number
 	gives {
 		long.big.decimal.method
-		invoke { parameter { list { given.number.byte.native } } }
+		invoke { parameter { list { number.byte.native } } }
 		number
 	}
 
 	any.float.number
 	gives {
 		double.big.decimal.method
-		invoke { parameter { list { given.number.float.native } } }
+		invoke { parameter { list { number.float.native } } }
 		number
 	}
 
 	any.double.number
 	gives {
 		double.big.decimal.method
-		invoke { parameter { list { given.number.double.native } } }
+		invoke { parameter { list { number.double.native } } }
 		number
 	}
 
 	any.native.object_.string.gives {
-		given.string.object_.native
+		string.object_.native
 		invoke {
 			object_.string.method
 			parameter { list }
@@ -217,7 +217,7 @@ val reflection = dictionary_ {
 
 	any.native.boolean.gives {
 		native.boolean.method
-		invoke { parameter { list { given.boolean.native } } }
+		invoke { parameter { list { boolean.native } } }
 		boolean
 	}
 }
