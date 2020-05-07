@@ -2,7 +2,7 @@
 <module external.linked.project.id="leo:test" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="leo" external.system.module.type="sourceSet" external.system.module.version="0.1" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
-      <configuration version="3" platform="JVM 1.8" allPlatforms="JVM [1.8]" useProjectSettings="false">
+      <configuration version="3" platform="JVM 11" allPlatforms="JVM [11]" useProjectSettings="false">
         <compilerSettings />
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/../../build/classes/kotlin/test" />
@@ -10,7 +10,7 @@
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="leo" />
-          <option name="jvmTarget" value="1.8" />
+          <option name="jvmTarget" value="11" />
           <option name="friendPaths">
             <array>
               <option value="$MODULE_DIR$/../../build/classes/java/main" />

@@ -16,6 +16,10 @@ val number = dictionary_ {
 				"java.math.BigDecimal".text.name.class_
 			}
 
+			math.context.class_.is_ {
+				"java.math.MathContext".text.name.class_
+			}
+
 			big.decimal.add.method.is_ {
 				big.decimal.class_
 				method {
@@ -38,6 +42,31 @@ val number = dictionary_ {
 					name { "multiply".text }
 					parameter { list { item { big.decimal.class_ } } }
 				}
+			}
+
+			big.decimal.multiply.method.is_ {
+				big.decimal.class_
+				method {
+					name { "multiply".text }
+					parameter { list { item { big.decimal.class_ } } }
+				}
+			}
+
+			big.decimal.sqrt.method.is_ {
+				big.decimal.class_
+				method {
+					name { "sqrt".text }
+					parameter { list { item { math.context.class_ } } }
+				}
+			}
+
+			math.context.unlimited.field.is_ {
+				math.context.class_
+				field { name { "UNLIMITED".text } }
+			}
+
+			math.context.unlimited.is_ {
+				math.context.unlimited.field.get
 			}
 		}
 	}
@@ -88,4 +117,15 @@ val number = dictionary_ {
 
 	any.number.squared.gives { squared.number.times { squared.number } }
 	test { 5.number.squared.gives { 25.number } }
+
+	any.number.square.root.gives {
+		root.square.number.native
+		invoke {
+			method { big.decimal.sqrt }
+			parameter { list { item { math.context.unlimited } } }
+		}
+		number
+	}
+
+	test { 25.number.square.root.gives { 5.number } }
 }
