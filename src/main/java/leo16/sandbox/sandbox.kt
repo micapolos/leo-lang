@@ -6,17 +6,9 @@ import leo16.leo_
 fun main() = leo_ {
 	"http://mwiacek.com".text
 	url.read.text
-	line.list
+	split { " się ".text.regex }
 	map {
 		item { any }
-		giving { item.text.length.number }
-	}
-	fold {
-		to { 0.number }
-		step {
-			to { any }
-			item { any }
-			giving { to.number.plus { item.number } }
-		}
+		giving { zero { item.text.split { " i ".text.regex } } }
 	}
 }

@@ -133,4 +133,39 @@ val url = dictionary_ {
 			}
 		}
 	}
+
+	any.native.url.browse
+	gives {
+		"java.awt.Desktop".text.name.class_
+		method {
+			name { "getDesktop".text }
+			parameter { empty.list }
+		}
+		invoke { parameter { empty.list } }
+		invoke {
+			"java.awt.Desktop".text.name.class_
+			method {
+				name { "browse".text }
+				parameter { list { item { "java.net.URI".text.name.class_ } } }
+			}
+			parameter {
+				list {
+					item {
+						browse.url.native
+						invoke {
+							url.class_
+							method {
+								name { "toURI".text }
+								parameter { empty.list }
+							}
+							parameter { empty.list }
+						}
+					}
+				}
+			}
+		}
+		clear
+	}
+
+	test { "http://mwiacek.com".text.url.browse.gives { nothing_ } }
 }
