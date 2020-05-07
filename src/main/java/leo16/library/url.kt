@@ -164,8 +164,6 @@ val url = dictionary_ {
 				}
 			}
 		}
-		clear
+		give { nothing }
 	}
-
-	test { "http://mwiacek.com".text.url.browse.gives { nothing_ } }
 }
