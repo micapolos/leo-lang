@@ -114,7 +114,7 @@ class EvalTest {
 	fun getSpecial() {
 		evaluate_ { the { "foo".text }.text }.assertGives { "foo".text }
 		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
-		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { taking { list } } }
+		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { definition { list } } }
 		evaluate_ { the { zero.giving { given } }.taking }.assertGives { taking { zero } }
 		evaluate_ { the { x { zero }.giving { x } }.take { x { zero } } }.assertGives { x { zero } }
 	}
@@ -193,7 +193,13 @@ class EvalTest {
 	fun dictionary() {
 		evaluate_ {
 			dictionary { nothing_ }
-		}.assertGives { dictionary { taking { list } } }
+		}.assertGives {
+			dictionary {
+				definition {
+					list
+				}
+			}
+		}
 
 		evaluate_ {
 			dictionary {
@@ -201,9 +207,11 @@ class EvalTest {
 			}
 		}.assertGives {
 			dictionary {
-				taking {
+				definition {
 					list {
-						taking { zero }
+						definition {
+							zero.is_ { one }
+						}
 					}
 				}
 			}
@@ -215,10 +223,10 @@ class EvalTest {
 			}
 		}.assertGives {
 			dictionary {
-				taking {
+				definition {
 					list {
-						taking { zero }
-						taking { one }
+						definition { zero.is_ { one } }
+						definition { one.is_ { one } }
 					}
 				}
 			}
