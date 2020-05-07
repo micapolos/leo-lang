@@ -1,10 +1,6 @@
 package leo16
 
-import leo.base.ifOrNull
-import leo.base.orNull
 import leo13.fold
-import leo13.isEmpty
-import leo13.linkOrNull
 import leo14.leonardoScript
 import leo15.*
 
@@ -12,7 +8,7 @@ fun Value.apply(field: Field): Value? =
 	null
 		?: applyThing(field)
 		?: applyGet(field)
-		?: applyGive(field)
+		?: applyTake(field)
 		?: applyThis(field)
 		?: applyNothing(field)
 		?: applyComment(field)
@@ -35,9 +31,9 @@ fun Value.applyThing(field: Field): Value? =
 		}
 	}
 
-fun Value.applyGive(field: Field): Value? =
-	field.matchPrefix(giveName) { rhs ->
-		takingOrNull?.invoke(rhs)
+fun Value.applyTake(field: Field): Value? =
+	field.matchPrefix(takeName) { rhs ->
+		takingOrNull?.take(rhs)
 	}
 
 fun Value.applyThis(field: Field): Value? =

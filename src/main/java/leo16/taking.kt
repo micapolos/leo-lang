@@ -9,7 +9,7 @@ data class Taking(val pattern: Pattern, val function: Function) {
 
 fun Pattern.giving(function: Function) = Taking(this, function)
 
-operator fun Taking.invoke(value: Value): Value? =
+fun Taking.take(value: Value): Value? =
 	notNullIf(value.matches(pattern)) {
 		function.invoke(value)
 	}
