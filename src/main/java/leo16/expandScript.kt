@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.*
 import leo.binary.utf8ByteSeq
+import leo13.*
 import leo13.Stack
 import leo13.base.Bit
 import leo13.base.bit0
@@ -12,14 +13,21 @@ import leo13.base.bit4
 import leo13.base.bit5
 import leo13.base.bit6
 import leo13.base.bit7
-import leo13.map
 import leo13.stack
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
-import leo15.*
 import leo15.bitName
 import leo15.byteName
+import leo15.emptyName
+import leo15.intName
+import leo15.itemName
+import leo15.listName
+import leo15.numberName
+import leo15.oneName
+import leo15.stringName
+import leo15.textName
+import leo15.zeroName
 
 val Bit.asField: Field
 	get() =
@@ -45,6 +53,13 @@ fun <T> Stack<T>.expandField(fn: T.() -> Field): Field =
 val Stack<Field>.asField: Field
 	get() =
 		listName(value)
+
+val Stack<Value>.field: Field
+	get() =
+		when (this) {
+			is EmptyStack -> listName(emptyName())
+			is LinkStack -> listName(map { itemName.invoke(this) }.value)
+		}
 
 val String.expandSentence: Field
 	get() =

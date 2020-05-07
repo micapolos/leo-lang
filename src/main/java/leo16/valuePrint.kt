@@ -33,7 +33,7 @@ val Choice.printSentence: Sentence
 val Dictionary.printSentence: Sentence
 	get() =
 		dictionaryName.sentenceTo(
-			definitionName(definitionStack.printField { printField }))
+			definitionName(definitionStack.map { printField.value }.field))
 
 val Definition.printField: Field
 	get() =
