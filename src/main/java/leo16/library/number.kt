@@ -3,6 +3,10 @@ package leo16.library
 import leo15.dsl.*
 import leo16.dictionary_
 
+fun main() {
+	number
+}
+
 val number = dictionary_ {
 	reflection.import
 
@@ -81,4 +85,7 @@ val number = dictionary_ {
 		times { "12345678901234567890".number }
 		gives { "152415787532388367501905199875019052100".number }
 	}
+
+	any.number.squared.gives { squared.number.times { squared.number } }
+	test { 5.number.squared.gives { 25.number } }
 }
