@@ -3,6 +3,10 @@ package leo16.library
 import leo15.dsl.*
 import leo16.dictionary_
 
+fun main() {
+	reflection
+}
+
 val reflection = dictionary_ {
 	native.reflection.import
 	native.reflection.export
@@ -34,7 +38,7 @@ val reflection = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "longValueExact".text }
-					parameter { list }
+					parameter { empty.list }
 				}
 			}
 
@@ -42,7 +46,7 @@ val reflection = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "intValueExact".text }
-					parameter { list }
+					parameter { empty.list }
 				}
 			}
 
@@ -50,7 +54,7 @@ val reflection = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "shortValueExact".text }
-					parameter { list }
+					parameter { empty.list }
 				}
 			}
 
@@ -58,7 +62,7 @@ val reflection = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "byteValueExact".text }
-					parameter { list }
+					parameter { empty.list }
 				}
 			}
 
@@ -66,7 +70,7 @@ val reflection = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "floatValue".text }
-					parameter { list }
+					parameter { empty.list }
 				}
 			}
 
@@ -74,7 +78,7 @@ val reflection = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "doubleValue".text }
-					parameter { list }
+					parameter { empty.list }
 				}
 			}
 
@@ -82,7 +86,7 @@ val reflection = dictionary_ {
 				object_.class_
 				method {
 					name { "toString".text }
-					parameter { list }
+					parameter { empty.list }
 				}
 			}
 
@@ -109,7 +113,7 @@ val reflection = dictionary_ {
 		long.number.native
 		invoke {
 			big.decimal.long.method
-			parameter { list }
+			parameter { empty.list }
 		}.long
 	}
 
@@ -118,7 +122,7 @@ val reflection = dictionary_ {
 		int.number.native
 		invoke {
 			big.decimal.int.method
-			parameter { list }
+			parameter { empty.list }
 		}.int
 	}
 
@@ -127,7 +131,7 @@ val reflection = dictionary_ {
 		short.number.native
 		invoke {
 			big.decimal.short.method
-			parameter { list }
+			parameter { empty.list }
 		}.short
 	}
 
@@ -136,7 +140,7 @@ val reflection = dictionary_ {
 		byte.number.native
 		invoke {
 			big.decimal.byte.method
-			parameter { list }
+			parameter { empty.list }
 		}.byte
 	}
 
@@ -145,7 +149,7 @@ val reflection = dictionary_ {
 		float.number.native
 		invoke {
 			big.decimal.float.method
-			parameter { list }
+			parameter { empty.list }
 		}.float
 	}
 
@@ -154,7 +158,7 @@ val reflection = dictionary_ {
 		double.number.native
 		invoke {
 			big.decimal.double.method
-			parameter { list }
+			parameter { empty.list }
 		}.double
 	}
 
@@ -204,7 +208,7 @@ val reflection = dictionary_ {
 		string.object_.native
 		invoke {
 			object_.string.method
-			parameter { list }
+			parameter { empty.list }
 		}
 	}
 

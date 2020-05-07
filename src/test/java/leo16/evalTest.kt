@@ -163,10 +163,10 @@ class EvalTest {
 
 	@Test
 	fun matchList() {
-		evaluate_ { list.match { empty.is_ { ok } } }
+		evaluate_ { empty.list.match { empty.is_ { ok } } }
 			.assertGives { ok }
-		evaluate_ { list { bit { zero } }.match { any.linked.gives { linked } } }
-			.assertGives { linked { previous { list }; last { bit { zero } } } }
+		evaluate_ { list { item { zero } }.match { any.linked.gives { linked } } }
+			.assertGives { linked { previous { list { empty } }; last { item { zero } } } }
 	}
 
 	@Test
@@ -344,7 +344,7 @@ class EvalTest {
 	@Test
 	fun fold() {
 		evaluate_ {
-			list
+			empty.list
 			fold {
 				to { zero }
 				step {

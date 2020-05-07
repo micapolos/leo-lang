@@ -22,7 +22,7 @@ val text = dictionary_ {
 				string.class_
 				method {
 					name { "length".text }
-					parameter { list }
+					parameter { empty.list }
 				}
 			}
 
@@ -77,7 +77,7 @@ val text = dictionary_ {
 		length.text.native
 		invoke {
 			string.length.method
-			parameter { list }
+			parameter { empty.list }
 		}
 		int.number.length
 	}

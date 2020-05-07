@@ -67,8 +67,8 @@ class ReflectionTest {
 		evaluate_ {
 			native.reflection.import
 			"java.awt.Point".text.name.class_
-			constructor { parameter { list } }
-			invoke { parameter { list } }
+			constructor { parameter { empty.list } }
+			invoke { parameter { empty.list } }
 			get {
 				"java.awt.Point".text.name.class_
 				field { name { "x".text } }
@@ -221,6 +221,6 @@ class ReflectionTest {
 
 	@Test
 	fun nullNative() {
-		evaluate_ { reflection.import; null_.native }.assertGives { null.native_ }
+		evaluate_ { native.reflection.import; null_.native }.assertGives { null.native_ }
 	}
 }

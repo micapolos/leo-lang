@@ -88,7 +88,7 @@ val PatternTaking.asField: Field
 
 fun Value.matches(pattern: Pattern): Boolean =
 	when (pattern) {
-		AnyPattern -> true
+		AnyPattern -> true // !isEmpty
 		is ValuePattern -> matches(pattern.value)
 	}
 

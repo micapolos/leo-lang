@@ -67,13 +67,18 @@ val Sentence.stringOrNull: String?
 val Sentence.fieldListOrNull: Stack<Value>?
 	get() =
 		field.matchPrefix(listName) { rhs ->
-			rhs.fieldStack.mapOrNull {
+			if (rhs == value(leo15.emptyName())) stack()
+			else rhs.fieldStack.linkOrNull?.let { stack(it) }?.mapOrNull {
 				matchPrefix(leo15.itemName) { it }
 			}
 		}
 
 fun <T : Any> Sentence.listOrNull(fn: Value.() -> T?): Stack<T>? =
 	fieldListOrNull?.mapOrNull(fn)
+
+val Value.listOrNull: Stack<Value>?
+	get() =
+		listOrNull { this }
 
 fun <T : Any> Value.listOrNull(fn: Value.() -> T?): Stack<T>? =
 	onlyFieldOrNull?.sentenceOrNull?.listOrNull(fn)

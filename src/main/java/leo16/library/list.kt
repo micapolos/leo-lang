@@ -3,20 +3,23 @@ package leo16.library
 import leo15.dsl.*
 import leo16.dictionary_
 
-val list = dictionary_ {
-	empty.list
-	is_ { quote { list } }
+fun main() {
+	list
+}
 
+val list = dictionary_ {
 	any.list
 	append { item { any } }
 	gives {
-		list.thing
-		this_ { append.item }
 		list
+		match {
+			empty.is_ { list { append.item } }
+			any.linked.gives { list.thing.this_ { append.item }.list }
+		}
 	}
 
 	test {
-		list
+		empty.list
 		append { item { 1.number } }
 		gives { list { item { 1.number } } }
 	}
@@ -31,7 +34,7 @@ val list = dictionary_ {
 	gives {
 		reverse.list
 		fold {
-			to { list }
+			to { empty.list }
 			step {
 				to { any }
 				item { any }
@@ -102,7 +105,7 @@ val list = dictionary_ {
 		}.length
 	}
 
-	test { list.length.gives { 0.number.length } }
+	test { empty.list.length.gives { 0.number.length } }
 	test {
 		list {
 			item { 0.number }

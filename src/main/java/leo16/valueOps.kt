@@ -1,15 +1,19 @@
 package leo16
 
 import leo.base.*
+import leo13.*
 import leo13.Stack
-import leo13.linkOrNull
-import leo13.mapFirst
-import leo13.mapOrNull
-import leo13.onlyOrNull
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo15.*
+import leo15.caseName
+import leo15.choiceName
+import leo15.emptyName
+import leo15.itemName
+import leo15.listName
+import leo15.previousName
+import leo15.textName
 
 fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 	val wordOrNull = field.onlyWordOrNull
@@ -69,11 +73,16 @@ val Value.matchValueOrNull: Value?
 			}
 		}
 
-val Value.listMatchValue: Value
+val Value.listMatchValue: Value?
 	get() =
-		fieldStack.linkOrNull
-			?.run { value(linkedName(previousName(listName(stack.value)), lastName(value))) }
-			?: value(emptyName.invoke(value()))
+		if (this == value(emptyName())) this
+		else fieldStack.linkOrNull?.let { fieldLink ->
+			fieldLink.value.matchPrefix(itemName) {
+				value(linkedName(
+					previousName(listName(if (fieldLink.stack.isEmpty) value(emptyName()) else fieldLink.stack.value)),
+					lastName(fieldLink.value)))
+			}
+		}
 
 val Value.theNativeOrNull: The<Any?>?
 	get() =
