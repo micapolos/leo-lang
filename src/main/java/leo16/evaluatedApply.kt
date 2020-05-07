@@ -3,7 +3,6 @@ package leo16
 import leo.base.ifOrNull
 import leo.base.runIfNotNull
 import leo13.mapOrNull
-import leo13.onlyOrNull
 import leo15.*
 
 fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
@@ -50,6 +49,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyCompile(field)
 		?: applyQuote(field)
 		?: applyGiving(field)
+		?: applyGive(field)
 		?: applyChoice(field)
 		?: applyImport(field)
 		?: applyExport(field)
@@ -88,6 +88,11 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 fun Evaluated.applyGiving(field: Field): Evaluated? =
 	field.matchPrefix(givingName) { rhs ->
 		updateValue { value.pattern.giving(scope.dictionary.function(rhs)).field.value }
+	}
+
+fun Evaluated.applyGive(field: Field): Evaluated? =
+	field.matchPrefix(giveName) { rhs ->
+		set(scope.dictionary.function(rhs).invoke(value))
 	}
 
 fun Evaluated.applyChoice(field: Field): Evaluated? =

@@ -21,6 +21,7 @@ fun Mode.begin(word: String): Mode =
 			when (word) {
 				givesName -> Mode.QUOTE
 				givingName -> Mode.QUOTE
+				giveName -> Mode.QUOTE
 				quoteName -> Mode.QUOTE
 				testName -> Mode.QUOTE
 				//listName -> Mode.META

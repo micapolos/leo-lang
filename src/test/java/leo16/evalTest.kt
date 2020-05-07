@@ -175,9 +175,18 @@ class EvalTest {
 	}
 
 	@Test
-	fun give() {
+	fun take() {
 		evaluate_ { any.x.giving { x }.take { x { zero } } }.assertGives { x { zero } }
 		evaluate_ { any.x.giving { x }.take { y { zero } } }.assertGives { taking { x { any } }.take { y { zero } } }
+	}
+
+	@Test
+	fun give() {
+		evaluate_ {
+			x { zero }
+			y { one }
+			give { x.and { y } }
+		}.assertGives { x { zero }.and { y { one } } }
 	}
 
 	@Test
