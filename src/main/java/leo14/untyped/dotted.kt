@@ -183,7 +183,7 @@ val ScriptLine.isDottableRhs: Boolean
 	get() =
 		when (this) {
 			is LiteralScriptLine -> false
-			is FieldScriptLine -> true
+			is FieldScriptLine -> field.isSimple
 		}
 
 val Script.isDotted: Boolean

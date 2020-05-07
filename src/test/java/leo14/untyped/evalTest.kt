@@ -872,7 +872,7 @@ class EvalTest {
 		dottedColorsParameter.runWith(false) {
 			leo(1, "plus"("2"), "script"(), "text"())
 				.assertEvalsTo(
-					if (useDots) leo("1.plus \"2\"")
+					if (useDots) leo("1\nplus \"2\"")
 					else leo("1\nplus \"2\""))
 		}
 	}
