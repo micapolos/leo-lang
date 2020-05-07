@@ -68,8 +68,8 @@ class EvalTest {
 
 	@Test
 	fun script() {
-		evaluate_ { zero.giving { given }.script.give { zero } }
-			.assertGives { taking { zero }.give { zero } }
+		evaluate_ { zero.giving { given }.script.take { zero } }
+			.assertGives { taking { zero }.take { zero } }
 	}
 
 	@Test
