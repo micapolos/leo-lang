@@ -51,7 +51,6 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyQuote(field)
 		?: applyGiving(field)
 		?: applyChoice(field)
-		?: applyGive(field)
 		?: applyImport(field)
 		?: applyExport(field)
 		?: applyTest(field)
@@ -99,11 +98,6 @@ fun Evaluated.applyChoice(field: Field): Evaluated? =
 			?.field
 			?.value
 			?.let { set(it) }
-	}
-
-fun Evaluated.applyGive(field: Field): Evaluated? =
-	field.matchPrefix(giveName) { rhs ->
-		scope.runIfNotNull(value.fieldStack.onlyOrNull?.takingOrNull?.invoke(rhs)) { evaluated(it) }
 	}
 
 fun Evaluated.applyMatch(word: String, evaluated: Evaluated): Evaluated? =
