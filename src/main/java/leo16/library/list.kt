@@ -93,7 +93,7 @@ val list = dictionary_ {
 
 	any.list.length
 	gives {
-		number.import
+		import { number }
 		length.list
 		fold {
 			to { 0.number }
