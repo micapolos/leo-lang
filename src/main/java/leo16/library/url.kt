@@ -83,11 +83,11 @@ val url = dictionary_ {
 		url
 	}
 
-	any.native.url.get
+	any.native.url.read
 	gives {
 		url.get.method
-		invoke { parameter { list { item { get.url.native } } } }
-		text.get
+		invoke { parameter { list { item { read.url.native } } } }
+		text.read
 	}
 
 	any.native.url.protocol.gives {

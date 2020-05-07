@@ -1,6 +1,8 @@
 package leo16
 
+import leo14.lambda.runtime.invoke
 import leo15.evaluatedName
+import leo15.reflectName
 
 data class Evaluated(val scope: Scope, val value: Value) {
 	override fun toString() = asField.toString()
@@ -31,3 +33,11 @@ operator fun Evaluated.plus(field: Field): Evaluated =
 
 fun Evaluated.plusNormalized(field: Field): Evaluated =
 	set(value.plus(field))
+
+val Evaluated.reflectValueOrNull: Value?
+	get() =
+		scope.dictionary.apply(reflectName.sentenceTo(value).field.value)
+
+val Evaluated.reflectValue: Value
+	get() =
+		reflectValueOrNull ?: value

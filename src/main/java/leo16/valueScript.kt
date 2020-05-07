@@ -1,7 +1,6 @@
 package leo16
 
 import leo13.array
-import leo13.itemName
 import leo13.map
 import leo14.*
 import leo15.choiceName

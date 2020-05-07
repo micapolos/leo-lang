@@ -5,7 +5,7 @@ import leo16.leo_
 
 fun main() = leo_ {
 	"http://mwiacek.com".text
-	url.get.text
+	url.read.text
 	line.list
 	map {
 		item { any }
