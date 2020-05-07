@@ -32,7 +32,7 @@ val nullNativeDefinition =
 	}
 
 val nameClassDefinition =
-	value(className(nameName(textName(anyName())))).gives {
+	value(className(nameName(textName(nativeName(anyName()))))).gives {
 		val name = this
 			.getOrNull(className)!!
 			.getOrNull(nameName)!!
@@ -46,7 +46,7 @@ val nameClassDefinition =
 val classFieldDefinition =
 	value(
 		className(anyName()),
-		fieldName(nameName(textName(anyName())))
+		fieldName(nameName(textName(nativeName(anyName()))))
 	).gives {
 		val class_ = this
 			.getOrNull(className)!!
@@ -64,7 +64,7 @@ val classFieldDefinition =
 	}
 
 val fieldGetDefinition =
-	value(getName(fieldName(anyName()))).gives {
+	value(getName(fieldName(nativeName(anyName())))).gives {
 		val field = this
 			.getOrNull(getName)!!
 			.getOrNull(fieldName)!!
@@ -77,7 +77,7 @@ val fieldGetDefinition =
 val nativeGetFieldDefinition =
 	value(
 		nativeName(anyName()),
-		getName(fieldName(anyName()))
+		getName(fieldName(nativeName(anyName())))
 	).gives {
 		val object_ = this
 			.getOrNull(nativeName)!!
@@ -94,7 +94,7 @@ val nativeGetFieldDefinition =
 
 val classConstructorDefinition =
 	value(
-		className(anyName()),
+		className(nativeName(anyName())),
 		constructorName(parameterName(listName(anyName())))
 	).gives {
 		val class_ = this
@@ -119,7 +119,7 @@ val classConstructorDefinition =
 
 val constructorInvokeDefinition =
 	value(
-		constructorName(anyName()),
+		constructorName(nativeName(anyName())),
 		invokeName(parameterName(listName(anyName())))
 	).gives {
 		val constructor = this
@@ -138,9 +138,9 @@ val constructorInvokeDefinition =
 
 val classMethodDefinition =
 	value(
-		className(anyName()),
+		className(nativeName(anyName())),
 		methodName(
-			nameName(textName(anyName())),
+			nameName(textName(nativeName(anyName()))),
 			parameterName(listName(anyName()))
 		)
 	).gives {
@@ -173,7 +173,7 @@ val classMethodDefinition =
 
 val methodInvokeDefinition =
 	value(
-		methodName(anyName()),
+		methodName(nativeName(anyName())),
 		invokeName(parameterName(listName(anyName())))
 	).gives {
 		val method = this
@@ -194,7 +194,7 @@ val nativeInvokeMethodDefinition =
 	value(
 		nativeName(anyName()),
 		invokeName(
-			methodName(anyName()),
+			methodName(nativeName(anyName())),
 			parameterName(listName(anyName())))
 	).gives {
 		val object_ = this
@@ -217,7 +217,7 @@ val nativeInvokeMethodDefinition =
 	}
 
 val arrayListDefinition =
-	value(listName(arrayName(anyName()))).gives {
+	value(listName(arrayName(nativeName(anyName())))).gives {
 		val array = this
 			.getOrNull(listName)!!
 			.thingOrNull!! // Not ideal, but probably OK.
