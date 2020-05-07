@@ -3,6 +3,10 @@ package leo16.library
 import leo15.dsl.*
 import leo16.dictionary_
 
+fun main() {
+	text
+}
+
 val text = dictionary_ {
 	number.import
 	reflection.import
@@ -154,31 +158,35 @@ val text = dictionary_ {
 	}
 
 	any.text
-	split { regex { any.text } }
+	split { by { any.text.regular.expression } }
 	gives {
 		text.native
 		invoke {
 			string.split.method
-			parameter { list { item { split.regex.text.native } } }
+			parameter { list { item { split.by.expression.regular.text.native } } }
 		}
 		array.list
 		map { any.item.giving { item.native.text } }
+		split
 	}
 
 	test {
 		"zero one two".text
-		split { regex { " ".text } }
+		split { by { " ".text.regular.expression } }
 		gives {
 			list {
 				item { "zero".text }
 				item { "one".text }
 				item { "two".text }
-			}
+			}.split
 		}
 	}
 
 	any.text.line.list
-	gives { list.line.text.split { regex { "\n".text } } }
+	gives {
+		list.line.text
+		split { by { "\n".text.regular.expression } }.list
+	}
 
 	test {
 		"zero\none\ntwo".text.line.list
