@@ -116,7 +116,7 @@ class EvalTest {
 		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
 		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { taking { list } } }
 		evaluate_ { the { zero.giving { given } }.taking }.assertGives { taking { zero } }
-		evaluate_ { the { x { zero }.giving { x } }.taking.take { x { zero } } }.assertGives { x { zero } }
+		evaluate_ { the { x { zero }.giving { x } }.take { x { zero } } }.assertGives { x { zero } }
 	}
 
 	@Test
@@ -176,8 +176,8 @@ class EvalTest {
 
 	@Test
 	fun take() {
-		evaluate_ { any.x.giving { x }.take { x { zero } } }.assertGives { x { zero } }
-		evaluate_ { any.x.giving { x }.take { y { zero } } }.assertGives { taking { x { any } }.take { y { zero } } }
+		evaluate_ { the { any.x.giving { x } }.take { x { zero } } }.assertGives { x { zero } }
+		evaluate_ { the { any.x.giving { x } }.take { y { zero } } }.assertGives { the { taking { x { any } } }.take { y { zero } } }
 	}
 
 	@Test

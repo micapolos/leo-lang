@@ -66,7 +66,7 @@ val list = dictionary_ {
 				item { any }
 				giving {
 					to.list
-					append { item { map.taking.take { item } } }
+					append { item { map.take { item } } }
 				}
 			}
 		}
