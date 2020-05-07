@@ -8,7 +8,8 @@ val int = dictionary_ {
 
 	import {
 		dictionary {
-			integer.class_.is_ {
+			integer.class_
+			is_ {
 				"leo16.native.IntKt".text.name.class_
 			}
 
@@ -93,7 +94,7 @@ val int = dictionary_ {
 		int
 	}
 
-	test { 5.int.minus { 3.int }.gives { 2.int } }
+	test { 5.int minus { 3.int } gives { 2.int } }
 
 	any.int
 	times { any.int }
@@ -110,5 +111,5 @@ val int = dictionary_ {
 		int
 	}
 
-	test { 2.int.times { 3.int }.gives { 6.int } }
+	test { 2.int times { 3.int } gives { 6.int } }
 }

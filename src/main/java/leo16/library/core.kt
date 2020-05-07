@@ -4,14 +4,14 @@ import leo15.dsl.*
 import leo16.dictionary_
 
 val core = dictionary_ {
-	any.clear.gives { nothing }
+	any.clear gives { nothing }
 
 	comment { nothing }
-	test { nothing.gives { nothing_ } }
+	test { nothing gives { nothing_ } }
 
 	comment { commenting }
-	test { comment.gives { nothing_ } }
-	test { comment { anything }.gives { nothing_ } }
+	test { comment gives { nothing_ } }
+	test { comment { anything } gives { nothing_ } }
 	test {
 		comment { start }
 		x { 10.number }

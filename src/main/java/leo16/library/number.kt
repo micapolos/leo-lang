@@ -12,15 +12,18 @@ val number = dictionary_ {
 
 	import {
 		dictionary {
-			big.decimal.class_.is_ {
+			big.decimal.class_
+			is_ {
 				"java.math.BigDecimal".text.name.class_
 			}
 
-			math.context.class_.is_ {
+			math.context.class_
+			is_ {
 				"java.math.MathContext".text.name.class_
 			}
 
-			big.decimal.add.method.is_ {
+			big.decimal.add.method
+			is_ {
 				big.decimal.class_
 				method {
 					name { "add".text }
@@ -28,7 +31,8 @@ val number = dictionary_ {
 				}
 			}
 
-			big.decimal.subtract.method.is_ {
+			big.decimal.subtract.method
+			is_ {
 				big.decimal.class_
 				method {
 					name { "subtract".text }
@@ -36,7 +40,8 @@ val number = dictionary_ {
 				}
 			}
 
-			big.decimal.multiply.method.is_ {
+			big.decimal.multiply.method
+			is_ {
 				big.decimal.class_
 				method {
 					name { "multiply".text }
@@ -44,7 +49,8 @@ val number = dictionary_ {
 				}
 			}
 
-			big.decimal.multiply.method.is_ {
+			big.decimal.multiply.method
+			is_ {
 				big.decimal.class_
 				method {
 					name { "multiply".text }
@@ -52,7 +58,8 @@ val number = dictionary_ {
 				}
 			}
 
-			big.decimal.sqrt.method.is_ {
+			big.decimal.sqrt.method
+			is_ {
 				big.decimal.class_
 				method {
 					name { "sqrt".text }
@@ -60,12 +67,14 @@ val number = dictionary_ {
 				}
 			}
 
-			math.context.unlimited.field.is_ {
+			math.context.unlimited.field
+			is_ {
 				math.context.class_
 				field { name { "UNLIMITED".text } }
 			}
 
-			math.context.unlimited.is_ {
+			math.context.unlimited
+			is_ {
 				math.context.unlimited.field.get
 			}
 		}
@@ -82,7 +91,7 @@ val number = dictionary_ {
 		number
 	}
 
-	test { 2.number.plus { 3.number }.gives { 5.number } }
+	test { 2.number plus { 3.number } gives { 5.number } }
 
 	any.number
 	minus { any.number }
@@ -95,7 +104,7 @@ val number = dictionary_ {
 		number
 	}
 
-	test { 5.number.minus { 3.number }.gives { 2.number } }
+	test { 5.number minus { 3.number } gives { 2.number } }
 
 	any.number
 	times { any.number }
@@ -108,15 +117,15 @@ val number = dictionary_ {
 		number
 	}
 
-	test { 2.number.times { 3.number }.gives { 6.number } }
+	test { 2.number times { 3.number } gives { 6.number } }
 	test {
 		"12345678901234567890".number
 		times { "12345678901234567890".number }
 		gives { "152415787532388367501905199875019052100".number }
 	}
 
-	any.number.squared.gives { squared.number.times { squared.number } }
-	test { 5.number.squared.gives { 25.number } }
+	any.number.squared gives { squared.number.times { squared.number } }
+	test { 5.number.squared gives { 25.number } }
 
 	any.number.square.root.gives {
 		root.square.number.native
@@ -127,5 +136,5 @@ val number = dictionary_ {
 		number
 	}
 
-	test { 25.number.square.root.gives { 5.number } }
+	test { 25.number.square.root gives { 5.number } }
 }
