@@ -141,7 +141,7 @@ val constructorInvokeDefinition =
 			.getOrNull(invokeName)!!
 			.getOrNull(parameterName)!!
 			.getOrNull(listName)!!
-			.listOrNull { theNativeOrNull!!.value }!!
+			.theListOrNull { theNativeOrNull }!!
 			.array
 		constructor.newInstance(*args).nativeValue
 	}
@@ -195,7 +195,7 @@ val methodInvokeDefinition =
 			.getOrNull(invokeName)!!
 			.getOrNull(parameterName)!!
 			.getOrNull(listName)!!
-			.listOrNull { theNativeOrNull!!.value }!!
+			.theListOrNull { theNativeOrNull }!!
 			.array
 		method.invoke(null, *args).nativeValue
 	}
@@ -221,7 +221,7 @@ val nativeInvokeMethodDefinition =
 			.getOrNull(invokeName)!!
 			.getOrNull(parameterName)!!
 			.getOrNull(listName)!!
-			.listOrNull { theNativeOrNull!!.value }!!
+			.theListOrNull { theNativeOrNull }!!
 			.array
 		method.invoke(object_, *args).nativeValue
 	}

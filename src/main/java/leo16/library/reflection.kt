@@ -14,6 +14,7 @@ val reflection = dictionary_ {
 	import {
 		dictionary {
 			object_.class_.is_ { "java.lang.Object".text.name.class_ }
+			objects.class_.is_ { "java.util.Objects".text.name.class_ }
 			boolean.object_.class_.is_ { "java.lang.Boolean".text.name.class_ }
 			integer.class_.is_ { "java.lang.Integer".text.name.class_ }
 			big.decimal.class_.is_ { "java.math.BigDecimal".text.name.class_ }
@@ -95,6 +96,19 @@ val reflection = dictionary_ {
 				method {
 					name { "equals".text }
 					parameter { list { item { object_.class_ } } }
+				}
+			}
+
+			objects.equals_.method.is_ {
+				objects.class_
+				method {
+					name { "equals".text }
+					parameter {
+						list {
+							item { object_.class_ }
+							item { object_.class_ }
+						}
+					}
 				}
 			}
 
@@ -230,10 +244,14 @@ val reflection = dictionary_ {
 	any.native.object_
 	equals_ { any.native }
 	gives {
-		object_.native
+		objects.equals_.method
 		invoke {
-			quote { object_ }.equals_.method
-			parameter { list { item { equals_.native } } }
+			parameter {
+				list {
+					item { object_.native }
+					item { equals_.native }
+				}
+			}
 		}
 	}
 

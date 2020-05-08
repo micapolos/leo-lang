@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.The
 import leo.base.int
 import leo.base.short
 import leo.base.utf8String
@@ -76,12 +77,18 @@ val Sentence.fieldListOrNull: Stack<Value>?
 fun <T : Any> Sentence.listOrNull(fn: Value.() -> T?): Stack<T>? =
 	fieldListOrNull?.mapOrNull(fn)
 
+fun <T> Sentence.theListOrNull(fn: Value.() -> The<T>?): Stack<T>? =
+	fieldListOrNull?.mapOrNull(fn)?.map { value }
+
 val Value.listOrNull: Stack<Value>?
 	get() =
 		listOrNull { this }
 
 fun <T : Any> Value.listOrNull(fn: Value.() -> T?): Stack<T>? =
 	onlyFieldOrNull?.sentenceOrNull?.listOrNull(fn)
+
+fun <T> Value.theListOrNull(fn: Value.() -> The<T>?): Stack<T>? =
+	onlyFieldOrNull?.sentenceOrNull?.theListOrNull(fn)
 
 val Sentence.literalOrNull: Literal?
 	get() =

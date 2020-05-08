@@ -10,6 +10,7 @@ fun main() {
 val url = dictionary_ {
 	reflection.import
 	list.import
+	number.import
 
 	import {
 		dictionary {
@@ -104,6 +105,35 @@ val url = dictionary_ {
 		}.text.host
 	}
 
+	any.native.url.port.gives {
+		port.url.native.invoke {
+			method { url.get.port }
+			parameter { empty.list }
+		}.int.number
+		give {
+			number.equals_ { (-1).number }
+			match {
+				true_.gives { none }
+				false_.gives { number }
+			}.port
+		}
+	}
+
+	any.native.url.query.gives {
+		query.url.native
+		invoke {
+			method { url.get.query }
+			parameter { empty.list }
+		}
+		give {
+			native.object_.equals_ { null_.native }.boolean
+			match {
+				true_.is_ { none }
+				false_.is_ { native.text }
+			}.query
+		}
+	}
+
 	any.native.url.path.gives {
 		path.url.native.invoke {
 			method { url.get.path }
@@ -113,14 +143,20 @@ val url = dictionary_ {
 
 	test { "http://mwiacek.com".text.url.protocol gives { "http".text.protocol } }
 	test { "http://mwiacek.com".text.url.host gives { "mwiacek.com".text.host } }
+	test { "http://mwiacek.com".text.url.port gives { none.port } }
+	test { "http://mwiacek.com:8080".text.url.port gives { 8080.number.port } }
 	test { "http://mwiacek.com".text.url.path gives { "".text.path } }
 	test { "http://mwiacek.com/index.html".text.url.path gives { "/index.html".text.path } }
+	test { "http://mwiacek.com".text.url.query gives { none.query } }
+	test { "http://mwiacek.com?q=foo".text.url.query gives { "q=foo".text.query } }
 
 	any.native.url.reflect.gives {
 		url {
 			this_ { reflect.url.protocol }
 			this_ { reflect.url.host }
+			this_ { reflect.url.port }
 			this_ { reflect.url.path }
+			this_ { reflect.url.query }
 		}
 	}
 
@@ -129,7 +165,9 @@ val url = dictionary_ {
 			url {
 				protocol { "http".text }
 				host { "mwiacek.com".text }
+				port { none }
 				path { "/index.html".text }
+				query { none }
 			}
 		}
 	}
