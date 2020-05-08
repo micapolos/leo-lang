@@ -18,6 +18,10 @@ val text = dictionary_ {
 				"java.lang.String".text.name.class_
 			}
 
+			kotlin.string.class_.is_ {
+				"leo16.native.StringKt".text.name.class_
+			}
+
 			char.sequence.class_.is_ {
 				"java.lang.CharSequence".text.name.class_
 			}
@@ -67,10 +71,15 @@ val text = dictionary_ {
 			}
 
 			string.split.method.is_ {
-				string.class_
+				kotlin.string.class_
 				method {
 					name { "split".text }
-					parameter { list { item { string.class_ } } }
+					parameter {
+						list {
+							item { string.class_ }
+							item { string.class_ }
+						}
+					}
 				}
 			}
 		}
@@ -158,34 +167,37 @@ val text = dictionary_ {
 	}
 
 	any.text
-	split { by { any.text.regular.expression } }
+	split { by { any.text } }
 	gives {
-		text.native
+		string.split.method
 		invoke {
-			string.split.method
-			parameter { list { item { split.by.expression.regular.text.native } } }
+			parameter {
+				list {
+					item { text.native }
+					item { split.by.text.native }
+				}
+			}
 		}
 		array.list
 		map { any.item.giving { item.native.text } }
-		split
 	}
 
 	test {
 		"zero one two".text
-		split { by { " ".text.regular.expression } }
+		split { by { " ".text } }
 		gives {
 			list {
 				item { "zero".text }
 				item { "one".text }
 				item { "two".text }
-			}.split
+			}
 		}
 	}
 
 	any.text.line.list
 	gives {
 		list.line.text
-		split { by { "\n".text.regular.expression } }.list
+		split { by { "\n".text } }
 	}
 
 	test {
