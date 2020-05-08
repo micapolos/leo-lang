@@ -80,7 +80,7 @@ fun Evaluated.applyCompile(field: Field): Evaluated? =
 	}
 
 fun Evaluated.resolve(field: Field): Evaluated =
-	scope.evaluated(scope.dictionary.resolve(value.plus(field)))
+	scope.dictionary.resolve(scope.evaluated(value.plus(field)))
 
 fun Evaluated.applyBinding(field: Field): Evaluated? =
 	scope.applyBinding(value.plus(field))?.emptyEvaluated

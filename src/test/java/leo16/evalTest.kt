@@ -190,6 +190,36 @@ class EvalTest {
 	}
 
 	@Test
+	fun expands() {
+		evaluate_ {
+			expand.expands {
+				quote { zero.is_ { one } }
+			}
+		}.assertGives { nothing_ }
+	}
+
+	@Test
+	fun expandsApply() {
+		evaluate_ {
+			expand.expands {
+				quote { zero.is_ { one } }
+			}
+			expand
+		}.assertGives { nothing_ }
+	}
+
+	@Test
+	fun expandsApplyUse() {
+		evaluate_ {
+			expand.expands {
+				quote { zero.is_ { one } }
+			}
+			expand
+			zero
+		}.assertGives { one }
+	}
+
+	@Test
 	fun dictionary() {
 		evaluate_ {
 			dictionary { nothing_ }

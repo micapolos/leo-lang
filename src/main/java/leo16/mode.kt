@@ -19,6 +19,7 @@ fun Mode.begin(word: String): Mode =
 	when (this) {
 		Mode.EVALUATE ->
 			when (word) {
+				expandsName -> Mode.QUOTE
 				givesName -> Mode.QUOTE
 				givingName -> Mode.QUOTE
 				giveName -> Mode.QUOTE
