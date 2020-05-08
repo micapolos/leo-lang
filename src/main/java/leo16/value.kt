@@ -62,6 +62,7 @@ operator fun String.invoke(vararg fields: Field): Field = invoke(stack(*fields).
 operator fun String.invoke(sentence: Sentence, vararg sentences: Sentence): Field = invoke(value(sentence, *sentences))
 val Stack<Field>.choice: Choice get() = Choice(this)
 val Field.value get() = value(this)
+val emptyValue = value()
 
 val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
 val Field.takingOrNull: Taking? get() = (this as? TakingField)?.taking

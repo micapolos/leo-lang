@@ -57,3 +57,4 @@ val String.scriptWord: String
 val Any?.nativeScriptLine: ScriptLine
 	get() =
 		nativeString.line
+
