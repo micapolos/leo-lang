@@ -90,6 +90,14 @@ val reflection = dictionary_ {
 				}
 			}
 
+			object_.equals_.method.is_ {
+				object_.class_
+				method {
+					name { "equals".text }
+					parameter { list { item { object_.class_ } } }
+				}
+			}
+
 			boolean.true_.field.is_ {
 				boolean.object_.class_.field { name { "TRUE".text } }
 			}
@@ -219,9 +227,25 @@ val reflection = dictionary_ {
 	true_.boolean.native.is_ { boolean.true_.field.get }
 	false_.boolean.native.is_ { boolean.false_.field.get }
 
-	any.native.boolean.gives {
-		native.boolean.method
-		invoke { parameter { list { boolean.native } } }
-		boolean
+	any.native.object_
+	equals_ { any.native }
+	gives {
+		object_.native
+		invoke {
+			quote { object_ }.equals_.method
+			parameter { list { item { equals_.native } } }
+		}
+	}
+
+	test {
+		"hello".text.native.object_
+		equals_ { "hello".text.native }.boolean
+		gives { boolean { true_ } }
+	}
+
+	test {
+		"hello".text.native.object_
+		equals_ { "world".text.native }.boolean
+		gives { boolean { false_ } }
 	}
 }

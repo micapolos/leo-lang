@@ -31,6 +31,16 @@ val nullNativeDefinition =
 		null.nativeValue
 	}
 
+val nativeBooleanDefinition =
+	value(booleanName(nativeName(anyName()))).gives {
+		this
+			.getOrNull(booleanName)!!
+			.getOrNull(nativeName)!!
+			.theNativeOrNull!!
+			.run { value as Boolean }
+			.field.value
+	}
+
 val nameClassDefinition =
 	value(className(nameName(textName(nativeName(anyName()))))).gives {
 		val name = this
