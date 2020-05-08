@@ -2,9 +2,19 @@ package leo16
 
 import leo13.array
 import leo13.map
-import leo14.*
+import leo14.Script
+import leo14.ScriptLine
+import leo14.invoke
+import leo14.isEmpty
+import leo14.line
+import leo14.lineTo
+import leo14.literal
+import leo14.number
+import leo14.plus
+import leo14.script
 import leo15.choiceName
 import leo15.takingName
+import leo16.names.*
 
 val Value.script: Script
 	get() =
@@ -58,3 +68,25 @@ val Any?.nativeScriptLine: ScriptLine
 	get() =
 		nativeString.line
 
+fun Value.listBodyScriptOrNull(word: String): Script? =
+	matchPrefix(word) { rhs ->
+		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
+			when (sentence.word) {
+				_empty -> script()
+				_linked -> sentence.value.matchInfix(_last) { lhs, last ->
+					lhs.matchPrefix(_previous) { previous ->
+						previous.listBodyScriptOrNull(word)?.plus(_item(last.script))
+					}
+				}
+				else -> null
+			}
+		}
+	}
+
+val Value.listScriptOrNull: Script?
+	get() =
+		onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
+			listBodyScriptOrNull(sentence.word)?.let { script ->
+				script(sentence.word(if (script.isEmpty) script(_empty) else script))
+			}
+		}
