@@ -73,9 +73,15 @@ val number = dictionary_ {
 				field { name { "UNLIMITED".text } }
 			}
 
-			math.context.unlimited
+			math.context.decimal.field
 			is_ {
-				math.context.unlimited.field.get
+				math.context.class_
+				field { name { "DECIMAL128".text } }
+			}
+
+			math.context.decimal
+			is_ {
+				math.context.decimal.field.get
 			}
 		}
 	}
@@ -127,16 +133,17 @@ val number = dictionary_ {
 	any.number.squared gives { squared.number.times { squared.number } }
 	test { 5.number.squared gives { 25.number } }
 
-	any.number.square.root.gives {
-		root.square.number.native
+	any.number.square.root.approximate.gives {
+		approximate.root.square.number.native
 		invoke {
 			method { big.decimal.sqrt }
-			parameter { list { item { math.context.unlimited } } }
+			parameter { list { item { math.context.decimal } } }
 		}
 		number
 	}
 
-	test { 25.number.square.root gives { 5.number } }
+	test { 25.number.square.root.approximate gives { 5.number } }
+	test { 5.number.square.root.approximate gives { "2.236067977499789696409173668731276".number } }
 
 	any.number
 	equals_ { any.number }
