@@ -220,6 +220,17 @@ class EvalTest {
 	}
 
 	@Test
+	fun expandsLocals() {
+		evaluate_ {
+			expand.expands {
+				zero.is_ { one }
+				zero
+			}
+			expand
+		}.assertGives { one }
+	}
+
+	@Test
 	fun dictionary() {
 		evaluate_ {
 			dictionary { nothing_ }
