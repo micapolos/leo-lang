@@ -112,8 +112,8 @@ val url = dictionary_ {
 		}.text.protocol
 	}
 
-	any.native.url.user.info.gives {
-		info.user.url.native
+	any.native.url.user.gives {
+		user.url.native
 		invoke {
 			method { url.get.user.info }
 			parameter { empty.list }
@@ -123,7 +123,7 @@ val url = dictionary_ {
 			match {
 				true_.is_ { none }
 				false_.is_ { native.text }
-			}.info.user
+			}.user
 		}
 	}
 
@@ -195,13 +195,13 @@ val url = dictionary_ {
 	test { "http://mwiacek.com?q=foo".text.url.query gives { "q=foo".text.query } }
 	test { "http://mwiacek.com".text.url.fragment gives { none.fragment } }
 	test { "http://mwiacek.com#foo".text.url.fragment gives { "foo".text.fragment } }
-	test { "http://mwiacek.com".text.url.user.info gives { none.info.user } }
-	test { "http://foo@mwiacek.com".text.url.user.info gives { "foo".text.info.user } }
+	test { "http://mwiacek.com".text.url.user gives { none.user } }
+	test { "http://foo@mwiacek.com".text.url.user gives { "foo".text.user } }
 
 	any.native.url.reflect.gives {
 		url {
 			this_ { reflect.url.protocol }
-			this_ { reflect.url.user.info }
+			this_ { reflect.url.user }
 			this_ { reflect.url.host }
 			this_ { reflect.url.port }
 			this_ { reflect.url.path }
@@ -214,7 +214,7 @@ val url = dictionary_ {
 		"http://mwiacek.com/index.html".text.url.reflect.gives {
 			url {
 				protocol { "http".text }
-				user { info { none } }
+				user { none }
 				host { "mwiacek.com".text }
 				port { none }
 				path { "/index.html".text }
