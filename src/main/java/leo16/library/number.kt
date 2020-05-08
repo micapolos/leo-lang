@@ -137,4 +137,15 @@ val number = dictionary_ {
 	}
 
 	test { 25.number.square.root gives { 5.number } }
+
+	any.number
+	equals_ { any.number }
+	gives {
+		number.native
+		object_.equals_ { equals_.number.native }
+		boolean
+	}
+
+	test { 123.number.equals_ { 123.number }.gives { true_.boolean } }
+	test { 123.number.equals_ { 124.number }.gives { false_.boolean } }
 }

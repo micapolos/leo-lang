@@ -198,4 +198,15 @@ val text = dictionary_ {
 			}
 		}
 	}
+
+	any.text
+	equals_ { any.text }
+	gives {
+		text.native
+		object_.equals_ { equals_.text.native }
+		boolean
+	}
+
+	test { "hello".text.equals_ { "hello".text }.gives { true_.boolean } }
+	test { "hello".text.equals_ { "world".text }.gives { false_.boolean } }
 }
