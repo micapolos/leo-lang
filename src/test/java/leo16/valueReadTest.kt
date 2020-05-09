@@ -6,18 +6,18 @@ import kotlin.test.Test
 
 class ValueReadTest {
 	@Test
-	fun listScriptValue_empty() {
+	fun readEmpty_empty() {
 		_stack(_empty())
-			.listFieldOrNull
-			.assertEqualTo(null)
+			.read
+			.assertEqualTo(_stack(_empty()))
 	}
 
 	@Test
-	fun listScriptValue_nonEmpty() {
+	fun readList_nonEmpty() {
 		_stack(
 			_item(_zero()),
 			_item(_one()))
-			.listFieldOrNull
+			.read
 			.assertEqualTo(
 				_stack(_list(
 					_previous(_stack(_list(

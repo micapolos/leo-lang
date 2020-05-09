@@ -64,7 +64,7 @@ fun Evaluated.apply(field: Field): Evaluated =
 
 fun Evaluated.applyNormalized(field: Field): Evaluated =
 	null
-		?: applyValue(field) // keep second
+		?: applyValue(field) // keep first
 		?: applyBinding(field)
 		?: applyEvaluate(field)
 		?: applyCompile(field)

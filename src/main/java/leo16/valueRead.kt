@@ -6,7 +6,13 @@ import leo13.mapOrNull
 import leo13.push
 import leo16.names.*
 
-fun Sentence.listFieldOrNull(name: String): Field? =
+val Field.read: Field?
+	get() =
+		null
+			?: listFieldOrNull
+			?: this
+
+fun Sentence.readListFieldOrNull(name: String): Field? =
 	ifOrNull(word == name) {
 		value
 			.fieldStack
@@ -16,10 +22,10 @@ fun Sentence.listFieldOrNull(name: String): Field? =
 			?.field(name)
 	}
 
-val Sentence.listFieldOrNull: Field?
+val Sentence.readListOrNull: Field?
 	get() =
-		listFieldOrNull(word)
+		readListFieldOrNull(word)
 
 val Field.listFieldOrNull: Field?
 	get() =
-		sentenceOrNull?.listFieldOrNull
+		sentenceOrNull?.readListOrNull
