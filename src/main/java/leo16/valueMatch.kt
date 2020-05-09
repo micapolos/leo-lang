@@ -103,12 +103,6 @@ fun <R : Any> Field.matchNumber(fn: (BigDecimal) -> R?): R? =
 		}
 	}
 
-fun <R : Any> Field.matchList(fn: (Stack<Value>) -> R?): R? =
-	sentenceOrNull?.fieldListOrNull?.let(fn)
-
-fun <R : Any> Value.matchList(fn: (Stack<Value>) -> R?): R? =
-	fieldStack.onlyOrNull?.matchList(fn)
-
 fun <R : Any> Field.matchStack(fn: (Stack<Value>) -> R?): R? =
 	valueStackOrNull?.let(fn)
 

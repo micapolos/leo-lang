@@ -160,14 +160,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun matchList() {
-		evaluate_ { empty.list.match { empty { ok } } }
-			.assertGives { ok }
-		evaluate_ { list { item { zero } }.match { linked { linked } } }
-			.assertGives { linked { previous { list { empty } }; last { item { zero } } } }
-	}
-
-	@Test
 	fun matchEmpty() {
 		evaluate_ { empty.stack.match { empty { ok } } }
 			.assertGives { ok }
@@ -414,36 +406,6 @@ class EvalTest {
 				test { result.gives { zero } }
 			}
 		}
-	}
-
-	@Test
-	fun fold() {
-		evaluate_ {
-			empty.list
-			fold {
-				to { zero }
-				step {
-					to { any }
-					item { any }
-					giving { given }
-				}
-			}
-		}.assertGives { zero }
-
-		evaluate_ {
-			list {
-				item { 1.number }
-				item { 2.number }
-			}
-			fold {
-				to { 0.number }
-				step {
-					to { any }
-					item { any }
-					giving { to.thing.this_ { item.thing } }
-				}
-			}
-		}.assertGives { 0.number; 2.number; 1.number }
 	}
 
 	@Test

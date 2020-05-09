@@ -2,7 +2,14 @@ package leo16
 
 import leo13.fold
 import leo14.leonardoScript
-import leo15.*
+import leo15.commentName
+import leo15.leonardoName
+import leo15.matchesName
+import leo15.nothingName
+import leo15.scriptName
+import leo15.takeName
+import leo15.thingName
+import leo15.thisName
 import leo16.names.*
 
 fun Value.apply(field: Field): Value? =
@@ -14,7 +21,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyNothing(field)
 		?: applyComment(field)
 		?: applyScript(field)
-		?: applyFold(field)
 		?: applyStackFold(field)
 		?: applyMatches(field)
 		?: applyLeonardo(field)
@@ -63,23 +69,6 @@ fun Value.applyScript(field: Field): Value? =
 fun Value.applyMatches(field: Field): Value? =
 	field.matchPrefix(matchesName) { rhs ->
 		matches(rhs).field.value
-	}
-
-fun Value.applyFold(field: Field): Value? =
-	matchList { list ->
-		field.matchPrefix(foldName) { rhs ->
-			rhs.split { lhs, field ->
-				field.matchPrefix(stepName) { rhs ->
-					rhs.matchFunction(value(toName(anyName()), itemName(anyName()))) { function ->
-						lhs.matchPrefix(toName) { from ->
-							from.fold(list) { value ->
-								function.invoke(value(toName(this), itemName(value)))
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 fun Value.applyStackFold(field: Field): Value? =

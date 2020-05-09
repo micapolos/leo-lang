@@ -9,6 +9,6 @@ fun main() = leo_ {
 	split { by { " się ".text } }
 	map {
 		any
-		giving { zero { text.split { by { " i ".text } } } }
+		giving { text.split { by { " i ".text } } }
 	}
 }
