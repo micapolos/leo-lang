@@ -1,31 +1,20 @@
 package leo16
 
 import leo.base.assertEqualTo
-import leo16.names.*
+import leo14.bigDecimal
+import leo14.literal
+import leo14.script
 import kotlin.test.Test
-import leo14.invoke as to
 
 class ScriptValueTest {
 	@Test
 	fun listScriptValue_empty() {
-		_stack.to(_empty.to())
-			.field
-			.assertEqualTo(
-				_stack(_empty())
-			)
-	}
+		script(literal("Hello, world!"))
+			.asValue
+			.assertEqualTo("Hello, world!".field.value)
 
-	@Test
-	fun listScriptValue_nonEmpty() {
-		_stack.to(
-			_item.to(_zero.to()),
-			_item.to(_one.to()))
-			.field
-			.assertEqualTo(
-				_stack(_linked(
-					_previous(_stack(_linked(
-						_previous(_stack(_empty())),
-						_last(_zero())))),
-					_last(_one()))))
+		script(literal(123))
+			.asValue
+			.assertEqualTo(123.bigDecimal.field.value)
 	}
 }
