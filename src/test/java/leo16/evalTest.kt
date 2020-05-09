@@ -181,9 +181,9 @@ class EvalTest {
 				next { one }
 				next { two }
 			}
-			match { linked { linked } }
+			match { link { link } }
 		}.assertGives {
-			linked {
+			link {
 				previous {
 					stack {
 						next { zero }

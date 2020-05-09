@@ -14,8 +14,8 @@ class ValuePrintTest {
 
 	@Test
 	fun list() {
-		_stack(_linked(
-			_previous(_stack(_linked(
+		_stack(_link(
+			_previous(_stack(_link(
 				_previous(_stack(_empty())),
 				_last(_zero())))),
 			_last(_one())))
@@ -28,14 +28,14 @@ class ValuePrintTest {
 
 	@Test
 	fun linked() {
-		_linked(
-			_previous(_stack(_linked(
+		_link(
+			_previous(_stack(_link(
 				_previous(_stack(_empty())),
 				_last(_zero())))),
 			_last(_one()))
 			.printed
 			.assertEqualTo(
-				_linked(
+				_link(
 					_previous(_stack(_next(_zero()))),
 					_last(_one())))
 	}

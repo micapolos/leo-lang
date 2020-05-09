@@ -19,8 +19,8 @@ class ValueReadTest {
 			_next(_one()))
 			.read
 			.assertEqualTo(
-				_stack(_linked(
-					_previous(_stack(_linked(
+				_stack(_link(
+					_previous(_stack(_link(
 						_previous(_stack(_empty())),
 						_last(_zero())))),
 					_last(_one()))))
