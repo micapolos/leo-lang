@@ -66,7 +66,7 @@ fun Field.listPrintValueOrNull(word: String): Value? =
 		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
 			when (sentence.word) {
 				_empty -> value()
-				_list -> sentence.value.matchInfix(_last) { lhs, last ->
+				_linked -> sentence.value.matchInfix(_last) { lhs, last ->
 					lhs.matchPrefix(_previous) { previous ->
 						previous.onlyFieldOrNull?.listPrintValueOrNull(word)?.plus(_item(last.print))
 					}
