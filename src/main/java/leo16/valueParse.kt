@@ -4,19 +4,29 @@ import leo.base.The
 import leo.base.int
 import leo.base.short
 import leo.base.utf8String
-import leo13.*
+import leo13.Stack
+import leo13.array
 import leo13.base.Bit
 import leo13.base.byte
 import leo13.base.oneBit
 import leo13.base.zeroBit
 import leo13.bitName
+import leo13.linkOrNull
+import leo13.map
+import leo13.mapOrNull
+import leo13.onlyOrNull
+import leo13.push
+import leo13.reverse
+import leo13.stack
 import leo14.Literal
 import leo14.literal
-import leo15.*
 import leo15.byteName
+import leo15.intName
 import leo15.listName
 import leo15.oneName
+import leo15.stringName
 import leo15.zeroName
+import leo16.names.*
 
 val Sentence.bitOrNull: Bit?
 	get() =
@@ -95,3 +105,25 @@ val Sentence.literalOrNull: Literal?
 		null
 			?: intOrNull?.literal
 			?: stringOrNull?.literal
+
+fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? =
+	field.matchPrefix(_stack) { rhs ->
+		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
+			when (sentence.word) {
+				_empty -> this
+				_link -> sentence.value.matchInfix(_last) { lhs, last ->
+					lhs.matchPrefix(_previous) { previous ->
+						previous.onlyFieldOrNull?.let { previousField ->
+							push(last).pushOrNull(previousField)
+						}
+					}
+				}
+				else -> null
+			}
+		}
+	}
+
+val Field.valueStackOrNull: Stack<Value>?
+	get() =
+		stack<Value>().pushOrNull(this)?.reverse
+
