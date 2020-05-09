@@ -3,6 +3,7 @@ package leo16
 import leo13.fold
 import leo14.leonardoScript
 import leo15.*
+import leo16.names.*
 
 fun Value.apply(field: Field): Value? =
 	null
@@ -83,13 +84,13 @@ fun Value.applyFold(field: Field): Value? =
 
 fun Value.applyStackFold(field: Field): Value? =
 	matchStack { stack ->
-		field.matchPrefix(foldName) { rhs ->
+		field.matchPrefix(_fold) { rhs ->
 			rhs.split { lhs, field ->
-				field.matchPrefix(stepName) { rhs ->
-					rhs.matchFunction(value(toName(anyName()), itemName(anyName()))) { function ->
-						lhs.matchPrefix(toName) { from ->
+				field.matchPrefix(_step) { rhs ->
+					rhs.matchFunction(value(_to(_any()), _next(_any()))) { function ->
+						lhs.matchPrefix(_to) { from ->
 							from.fold(stack) { value ->
-								function.invoke(value(toName(this), itemName(value)))
+								function.invoke(value(_to(this), _next(value)))
 							}
 						}
 					}

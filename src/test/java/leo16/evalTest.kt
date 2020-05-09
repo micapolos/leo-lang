@@ -454,7 +454,7 @@ class EvalTest {
 				to { zero }
 				step {
 					to { any }
-					item { any }
+					next { any }
 					giving { given }
 				}
 			}
@@ -472,8 +472,8 @@ class EvalTest {
 				to { 0.number }
 				step {
 					to { any }
-					item { any }
-					giving { to.thing.this_ { item.thing } }
+					next { any }
+					giving { to.thing.this_ { next.thing } }
 				}
 			}
 		}.assertGives { 0.number; 2.number; 1.number }
