@@ -1,7 +1,6 @@
 package leo16
 
-import leo15.evaluatedName
-import leo15.reflectName
+import leo16.names.*
 
 data class Evaluated(val scope: Scope, val value: Value) {
 	override fun toString() = asField.toString()
@@ -12,7 +11,7 @@ val Scope.emptyEvaluated get() = evaluated(value())
 
 val Evaluated.asField: Field
 	get() =
-		evaluatedName(scope.asField, value.asField)
+		_evaluated(scope.asField, value.asField)
 
 fun Evaluated.updateValue(fn: Value.() -> Value) = copy(value = value.fn())
 
@@ -35,7 +34,7 @@ fun Evaluated.plusNormalized(field: Field): Evaluated =
 
 val Evaluated.reflectValueOrNull: Value?
 	get() =
-		scope.dictionary.apply(reflectName.sentenceTo(value).field.value)
+		scope.dictionary.apply(_reflect.sentenceTo(value).field.value)
 
 val Evaluated.reflectValue: Value
 	get() =

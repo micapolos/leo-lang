@@ -1,11 +1,7 @@
 package leo16
 
 import leo.base.notNullIf
-import leo13.definitionName
 import leo13.map
-import leo15.bodyName
-import leo15.givenName
-import leo15.nativeName
 import leo16.names.*
 
 data class Definition(val pattern: Pattern, val body: Body, val isMacro: Boolean) {
@@ -34,15 +30,15 @@ data class NativeBody(val apply: Value.() -> Value) : Body() {
 
 val Definition.asField: Field
 	get() =
-		definitionName.invoke(pattern.asField, body.asField)
+		_definition.invoke(pattern.asField, body.asField)
 
 val Body.asField: Field
 	get() =
-		bodyName(
+		_body(
 			when (this) {
 				is ValueBody -> value
 				is FunctionBody -> function.asField.value
-				is NativeBody -> value(nativeName())
+				is NativeBody -> value(_native())
 				is RecurseBody -> _recurse(function.asField.value).value
 			}
 		)
@@ -69,7 +65,7 @@ fun Body.apply(arg: Value): Value =
 	when (this) {
 		is ValueBody -> value
 		is FunctionBody -> function.invoke(arg)
-		is NativeBody -> apply(givenName(arg).value)
+		is NativeBody -> apply(_given(arg).value)
 		is RecurseBody -> function.invoke(arg.thingOrNull!!)
 	}
 

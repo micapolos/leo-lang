@@ -36,7 +36,7 @@ fun Value.loadOrNull(packagePrefix: String): Value? =
 						.joinToString("."))
 				.loadClass
 				.getMethod("get" + wordLink.value.capitalize())
-				//.also { loadingName(this).println }
+				//.also { _loading(this).println }
 				.invoke(null) as Value
 		}
 	}

@@ -1,7 +1,12 @@
 package leo16
 
-import leo13.*
-import leo15.dictionaryName
+import leo13.Stack
+import leo13.fold
+import leo13.mapFirst
+import leo13.push
+import leo13.reverse
+import leo13.stack
+import leo16.names.*
 
 data class Dictionary(val definitionStack: Stack<Definition>) {
 	override fun toString() = asField.toString()
@@ -33,4 +38,4 @@ fun Dictionary.evaluate(value: Value): Value? =
 
 val Dictionary.asField: Field
 	get() =
-		dictionaryName(definitionName(definitionStack.expandField { asField }))
+		_dictionary(_definition(definitionStack.expandField { asField }))

@@ -4,8 +4,7 @@ import leo.base.ifOrNull
 import leo13.Stack
 import leo13.linkOrNull
 import leo13.onlyOrNull
-import leo15.numberName
-import leo15.textName
+import leo16.names.*
 import java.math.BigDecimal
 
 fun <R : Any> Value.matchEmpty(fn: () -> R?): R? =
@@ -98,14 +97,14 @@ fun <R : Any> Field.matchNative(fn: (Any?) -> R?): R? =
 	theNativeOrNull?.let { fn(it.value) }
 
 fun <R : Any> Field.matchText(fn: (String) -> R?): R? =
-	matchPrefix(textName) { rhs ->
+	matchPrefix(_text) { rhs ->
 		rhs.matchNative { native ->
 			(native as? String)?.let(fn)
 		}
 	}
 
 fun <R : Any> Field.matchNumber(fn: (BigDecimal) -> R?): R? =
-	matchPrefix(numberName) { rhs ->
+	matchPrefix(_number) { rhs ->
 		rhs.matchNative { native ->
 			(native as? BigDecimal)?.let(fn)
 		}

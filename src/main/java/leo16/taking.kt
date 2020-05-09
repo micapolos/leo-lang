@@ -1,7 +1,7 @@
 package leo16
 
 import leo.base.notNullIf
-import leo15.takingName
+import leo16.names.*
 
 data class Taking(val pattern: Pattern, val function: Function) {
 	override fun toString() = asField.toString()
@@ -16,4 +16,4 @@ fun Taking.take(value: Value): Value? =
 
 val Taking.asField: Field
 	get() =
-		takingName(pattern.asField, function.asField)
+		_taking(pattern.asField, function.asField)

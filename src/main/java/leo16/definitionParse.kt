@@ -1,8 +1,6 @@
 package leo16
 
-import leo15.expandsName
-import leo15.givesName
-import leo15.isName
+import leo16.names.*
 
 fun Dictionary.definitionOrNull(value: Value): Definition? =
 	null
@@ -11,16 +9,16 @@ fun Dictionary.definitionOrNull(value: Value): Definition? =
 		?: expandsDefinitionOrNull(value)
 
 fun Dictionary.isDefinitionOrNull(value: Value): Definition? =
-	value.matchInfix(isName) { lhs, rhs ->
+	value.matchInfix(_is) { lhs, rhs ->
 		lhs.pattern.definitionTo(emptyScope.emptyEvaluator.plus(rhs).evaluated.value.body)
 	}
 
 fun Dictionary.givesDefinitionOrNull(value: Value): Definition? =
-	value.matchInfix(givesName) { lhs, rhs ->
+	value.matchInfix(_gives) { lhs, rhs ->
 		lhs.pattern.definitionTo(function(rhs).body)
 	}
 
 fun Dictionary.expandsDefinitionOrNull(value: Value): Definition? =
-	value.matchInfix(expandsName) { lhs, rhs ->
+	value.matchInfix(_expands) { lhs, rhs ->
 		lhs.pattern.macroTo(function(rhs).body)
 	}

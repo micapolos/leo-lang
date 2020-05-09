@@ -3,8 +3,7 @@ package leo16
 import leo.base.runIfNotNull
 import leo13.fold
 import leo13.reverse
-import leo15.exportName
-import leo15.scopeName
+import leo16.names.*
 
 data class Scope(val dictionary: Dictionary, val exportDictionary: Dictionary) {
 	override fun toString() = asField.toString()
@@ -17,9 +16,9 @@ val Scope.begin get() = dictionary.emptyScope
 
 val Scope.asField: Field
 	get() =
-		scopeName(
+		_scope(
 			dictionary.asField,
-			exportName(exportDictionary.asField))
+			_export(exportDictionary.asField))
 
 operator fun Scope.plus(definition: Definition): Scope =
 	dictionary.plus(definition).scopeWithPublic(exportDictionary.plus(definition))

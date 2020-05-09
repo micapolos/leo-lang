@@ -10,11 +10,7 @@ import leo13.Stack
 import leo13.mapFirst
 import leo13.mapOrNull
 import leo13.onlyOrNull
-import leo15.caseName
-import leo15.choiceName
-import leo15.dictionaryName
-import leo15.nativeName
-import leo15.takingName
+import leo16.names.*
 
 fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 	val wordOrNull = field.onlyWordOrNull
@@ -38,10 +34,10 @@ val Field.selectWord: String
 	get() =
 		when (this) {
 			is SentenceField -> sentence.word
-			is TakingField -> takingName
-			is DictionaryField -> dictionaryName
-			is NativeField -> nativeName
-			is ChoiceField -> choiceName
+			is TakingField -> _taking
+			is DictionaryField -> _dictionary
+			is NativeField -> _native
+			is ChoiceField -> _choice
 		}
 
 infix fun Field.accessOrNull(word: String): Value? =
@@ -78,7 +74,7 @@ val Value.wordStackOrNull: Stack<String>?
 
 val Field.caseFieldOrNull: Field?
 	get() =
-		matchPrefix(caseName) { rhs ->
+		matchPrefix(_case) { rhs ->
 			rhs.onlyFieldOrNull
 		}
 

@@ -4,27 +4,6 @@ import leo.base.ifOrNull
 import leo.base.runIfNotNull
 import leo13.first
 import leo13.mapOrNull
-import leo15.choiceName
-import leo15.compileName
-import leo15.dictionaryName
-import leo15.doesName
-import leo15.errorName
-import leo15.evaluateName
-import leo15.exportName
-import leo15.gaveName
-import leo15.giveName
-import leo15.givesName
-import leo15.givingName
-import leo15.importName
-import leo15.itName
-import leo15.loadName
-import leo15.matchName
-import leo15.matchesName
-import leo15.notName
-import leo15.quoteName
-import leo15.shouldName
-import leo15.syntaxName
-import leo15.testName
 import leo16.names.*
 
 fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
@@ -45,7 +24,7 @@ fun Evaluated.applyNormalized(word: String, evaluated: Evaluated): Evaluated =
 
 fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
 	value.matchEmpty {
-		ifOrNull(word == dictionaryName) {
+		ifOrNull(word == _dictionary) {
 			evaluated.value.matchEmpty {
 				scope.evaluated(evaluated.scope.exportDictionary.field.value)
 			}
@@ -86,20 +65,20 @@ fun Evaluated.applyValue(field: Field): Evaluated? =
 	scope.runIfNotNull(value.apply(field)) { evaluated(it) }
 
 fun Evaluated.applyQuote(field: Field): Evaluated? =
-	field.matchPrefix(quoteName) { rhs ->
+	field.matchPrefix(_quote) { rhs ->
 		scope.evaluated(value.plus(rhs))
 	}
 
 fun Evaluated.applyEvaluate(field: Field): Evaluated? =
 	value.matchEmpty {
-		field.matchPrefix(evaluateName) { rhs ->
+		field.matchPrefix(_evaluate) { rhs ->
 			scope.dictionary.evaluate(rhs)?.let { scope.evaluated(it) }
 		}
 	}
 
 fun Evaluated.applyCompile(field: Field): Evaluated? =
 	value.matchEmpty {
-		field.matchPrefix(compileName) { rhs ->
+		field.matchPrefix(_compile) { rhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated
 		}
 	}
@@ -111,17 +90,17 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 	scope.applyBinding(value.plus(field))?.emptyEvaluated
 
 fun Evaluated.applyGiving(field: Field): Evaluated? =
-	field.matchPrefix(givingName) { rhs ->
+	field.matchPrefix(_giving) { rhs ->
 		updateValue { value.pattern.giving(scope.dictionary.function(rhs)).field.value }
 	}
 
 fun Evaluated.applyGive(field: Field): Evaluated? =
-	field.matchPrefix(giveName) { rhs ->
+	field.matchPrefix(_give) { rhs ->
 		set(scope.dictionary.function(rhs).invoke(value))
 	}
 
 fun Evaluated.applyChoice(field: Field): Evaluated? =
-	field.matchPrefix(choiceName) { rhs ->
+	field.matchPrefix(_choice) { rhs ->
 		rhs.fieldStack
 			.mapOrNull { caseFieldOrNull }
 			?.choice
@@ -131,18 +110,18 @@ fun Evaluated.applyChoice(field: Field): Evaluated? =
 	}
 
 fun Evaluated.applyImport(field: Field): Evaluated? =
-	field.matchPrefix(importName) { rhs ->
+	field.matchPrefix(_import) { rhs ->
 		rhs.loadedDictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
 	}
 
 fun Evaluated.applyExport(field: Field): Evaluated? =
-	field.matchPrefix(exportName) { rhs ->
+	field.matchPrefix(_export) { rhs ->
 		rhs.loadedDictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
 	}
 
 fun Evaluated.applyLoad(field: Field): Evaluated? =
 	value.matchEmpty {
-		field.matchPrefix(loadName) { rhs ->
+		field.matchPrefix(_load) { rhs ->
 			rhs.loadedOrNull?.let { set(it) }
 		}
 	}
@@ -164,7 +143,7 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 
 fun Evaluated.applyTest(field: Field): Evaluated? =
 	value.matchEmpty {
-		field.matchPrefix(testName) { rhs ->
+		field.matchPrefix(_test) { rhs ->
 			null
 				?: applyTestGives(rhs)
 				?: applyTestMatches(rhs)
@@ -173,36 +152,36 @@ fun Evaluated.applyTest(field: Field): Evaluated? =
 	}
 
 fun Evaluated.applyTestGives(value: Value): Evaluated? =
-	value.matchInfix(givesName) { lhs, rhs ->
+	value.matchInfix(_gives) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
 				if (evaluatedLhs == evaluatedRhs) this
 				else throw AssertionError(
 					value(
-						testName(
-							errorName(
-								itName(lhs),
-								gaveName(evaluatedLhs),
-								shouldName(giveName(evaluatedRhs))))).toString())
+						_test(
+							_error(
+								_it(lhs),
+								_gave(evaluatedLhs),
+								_should(_give(evaluatedRhs))))).toString())
 			}
 		}
 	}
 
 fun Evaluated.applyTestMatches(value: Value): Evaluated? =
-	value.matchInfix(matchesName) { lhs, rhs ->
+	value.matchInfix(_matches) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
 				if (evaluatedLhs.matches(evaluatedRhs.pattern)) this
 				else throw AssertionError(
 					value(
-						testName(
-							errorName(
-								itName(lhs),
-								givingName(evaluatedLhs),
-								doesName(notName(matchName(evaluatedRhs)))))).toString())
+						_test(
+							_error(
+								_it(lhs),
+								_giving(evaluatedLhs),
+								_does(_not(_match(evaluatedRhs)))))).toString())
 			}
 		}
 	}
 
 fun testSyntaxError(value: Value): Evaluated =
-	throw AssertionError(value(testName(errorName(syntaxName(value)))).toString())
+	throw AssertionError(value(_test(_error(_syntax(value)))).toString())

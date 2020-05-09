@@ -2,9 +2,7 @@ package leo16
 
 import leo.base.notNullIf
 import leo13.map
-import leo15.anyName
-import leo15.choiceName
-import leo15.takingName
+import leo16.names.*
 
 val Value.pattern: Pattern
 	get() =
@@ -14,7 +12,7 @@ val Value.pattern: Pattern
 
 val Value.anyPatternOrNull: Pattern?
 	get() =
-		notNullIf(this == value(anyName(value()))) {
+		notNullIf(this == value(_any(value()))) {
 			anyPattern
 		}
 
@@ -35,13 +33,13 @@ val Field.patternField: PatternField
 val Sentence.patternField: PatternField
 	get() =
 		when (word) {
-			takingName -> value.pattern.taking.field
+			_taking -> value.pattern.taking.field
 			else -> exactPatternField
 		}
 
 val Choice.patternField: PatternField
 	get() =
-		choiceName.invoke(caseFieldStack.map { patternField }.value.pattern)
+		_choice.invoke(caseFieldStack.map { patternField }.value.pattern)
 
 val Sentence.exactPatternField: PatternField
 	get() =

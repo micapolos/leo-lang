@@ -2,14 +2,12 @@ package leo16
 
 import leo.base.runIf
 import leo13.map
-import leo15.anyName
-import leo15.exactName
-import leo15.takingName
+import leo16.names.*
 
 val Pattern.value: Value
 	get() =
 		when (this) {
-			AnyPattern -> value(anyName())
+			AnyPattern -> value(_any())
 			is ValuePattern -> value.value
 		}
 
@@ -27,16 +25,16 @@ val PatternField.valueField: Field
 
 val PatternSentence.valueField: Field
 	get() =
-		word(pattern.value).runIf(word.isPatternKeyword) { exactName(this) }
+		word(pattern.value).runIf(word.isPatternKeyword) { _exact(this) }
 
 val PatternTaking.valueField: Field
 	get() =
-		takingName(pattern.value)
+		_taking(pattern.value)
 
 val String.isPatternKeyword: Boolean
 	get() =
 		when (this) {
-			anyName -> true
-			exactName -> true
+			_any -> true
+			_exact -> true
 			else -> false
 		}

@@ -3,22 +3,20 @@ package leo16
 import leo.ansi
 import leo.magenta
 import leo.reset
-import leo15.intName
-import leo15.numberName
-import leo15.textName
+import leo16.names.*
 import java.math.BigDecimal
 
 val String.field: Field
 	get() =
-		textName(nativeField)
+		_text(nativeField)
 
 val BigDecimal.field: Field
 	get() =
-		numberName(nativeField)
+		_number(nativeField)
 
 val Int.field: Field
 	get() =
-		intName(nativeField)
+		_int(nativeField)
 
 val Any?.nativeString: String
 	get() =

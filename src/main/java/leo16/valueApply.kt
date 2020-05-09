@@ -1,14 +1,6 @@
 package leo16
 
 import leo14.leonardoScript
-import leo15.commentName
-import leo15.leonardoName
-import leo15.matchesName
-import leo15.nothingName
-import leo15.scriptName
-import leo15.takeName
-import leo15.thingName
-import leo15.thisName
 import leo16.names.*
 
 fun Value.apply(field: Field): Value? =
@@ -32,46 +24,46 @@ fun Value.applyGet(field: Field): Value? =
 
 fun Value.applyThing(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(thingName) { rhs ->
+		field.matchPrefix(_thing) { rhs ->
 			rhs.thingOrNull
 		}
 	}
 
 fun Value.applyTake(field: Field): Value? =
 	thingOrNull?.run {
-		field.matchPrefix(takeName) { rhs ->
+		field.matchPrefix(_take) { rhs ->
 			takingOrNull?.take(rhs)
 		}
 	}
 
 fun Value.applyThis(field: Field): Value? =
-	field.matchPrefix(thisName) { rhs ->
+	field.matchPrefix(_this) { rhs ->
 		plus(rhs)
 	}
 
 fun Value.applyNothing(field: Field): Value? =
 	matchEmpty {
-		field.match(nothingName) { value() }
+		field.match(_nothing) { value() }
 	}
 
 fun Value.applyComment(field: Field): Value? =
-	field.matchPrefix(commentName) { this }
+	field.matchPrefix(_comment) { this }
 
 fun Value.applyScript(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(scriptName) { rhs ->
+		field.matchPrefix(_script) { rhs ->
 			rhs.printed
 		}
 	}
 
 fun Value.applyMatches(field: Field): Value? =
-	field.matchPrefix(matchesName) { rhs ->
+	field.matchPrefix(_matches) { rhs ->
 		matches(rhs).field.value
 	}
 
 fun Value.applyLeonardo(field: Field): Value? =
 	matchEmpty {
-		field.match(leonardoName) {
+		field.match(_leonardo) {
 			leonardoScript.asValue
 		}
 	}

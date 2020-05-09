@@ -1,14 +1,14 @@
 package leo16
 
 import leo.base.assertEqualTo
-import leo15.*
+import leo16.names.*
 import kotlin.test.Test
 
 class LoadTest {
 	@Test
-	fun loadClassName() {
-		value(testingName(pingName()))
+	fun _loadClass() {
+		value(_testing(_ping()))
 			.loadOrNull
-			.assertEqualTo(value(pongName()))
+			.assertEqualTo(value(_pong()))
 	}
 }

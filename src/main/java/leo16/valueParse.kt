@@ -10,7 +10,6 @@ import leo13.base.Bit
 import leo13.base.byte
 import leo13.base.oneBit
 import leo13.base.zeroBit
-import leo13.bitName
 import leo13.linkOrNull
 import leo13.map
 import leo13.mapOrNull
@@ -20,21 +19,15 @@ import leo13.reverse
 import leo13.stack
 import leo14.Literal
 import leo14.literal
-import leo15.byteName
-import leo15.intName
-import leo15.listName
-import leo15.oneName
-import leo15.stringName
-import leo15.zeroName
 import leo16.names.*
 
 val Sentence.bitOrNull: Bit?
 	get() =
-		field.matchPrefix(bitName) { rhs ->
+		field.matchPrefix(_bit) { rhs ->
 			rhs.matchWord { word ->
 				when (word) {
-					zeroName -> zeroBit
-					oneName -> oneBit
+					_zero -> zeroBit
+					_one -> oneBit
 					else -> null
 				}
 			}
@@ -42,8 +35,8 @@ val Sentence.bitOrNull: Bit?
 
 val Sentence.byteOrNull: Byte?
 	get() =
-		field.matchPrefix(byteName) { rhs ->
-			rhs.matchPrefix(bitName) { rhs ->
+		field.matchPrefix(_byte) { rhs ->
+			rhs.matchPrefix(_bit) { rhs ->
 				rhs.fieldStack.onlyOrNull
 					?.sentenceOrNull
 					?.listOrNull { bitOrNull }
@@ -54,8 +47,8 @@ val Sentence.byteOrNull: Byte?
 
 val Sentence.intOrNull: Int?
 	get() =
-		field.matchPrefix(intName) { rhs ->
-			rhs.matchPrefix(byteName) { rhs ->
+		field.matchPrefix(_int) { rhs ->
+			rhs.matchPrefix(_byte) { rhs ->
 				rhs.fieldStack.onlyOrNull
 					?.sentenceOrNull
 					?.listOrNull { byteOrNull }
@@ -66,7 +59,7 @@ val Sentence.intOrNull: Int?
 
 val Sentence.stringOrNull: String?
 	get() =
-		field.matchPrefix(stringName) { rhs ->
+		field.matchPrefix(_string) { rhs ->
 			rhs.fieldStack.onlyOrNull
 				?.sentenceOrNull
 				?.listOrNull { byteOrNull }
@@ -77,10 +70,10 @@ val Sentence.stringOrNull: String?
 
 val Sentence.fieldListOrNull: Stack<Value>?
 	get() =
-		field.matchPrefix(listName) { rhs ->
-			if (rhs == value(leo15.emptyName())) stack()
+		field.matchPrefix(_list) { rhs ->
+			if (rhs == value(_empty())) stack()
 			else rhs.fieldStack.linkOrNull?.let { stack(it) }?.mapOrNull {
-				matchPrefix(leo15.itemName) { it }
+				matchPrefix(_item) { it }
 			}
 		}
 

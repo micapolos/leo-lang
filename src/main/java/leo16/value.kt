@@ -3,8 +3,15 @@ package leo16
 import leo.base.The
 import leo.base.notNullIf
 import leo.base.the
-import leo13.*
+import leo13.Stack
+import leo13.isEmpty
+import leo13.map
+import leo13.onlyOrNull
+import leo13.push
+import leo13.pushAll
+import leo13.stack
 import leo15.string
+import leo16.names.*
 
 data class Value(val fieldStack: Stack<Field>) {
 	override fun toString() = script.string
@@ -44,7 +51,7 @@ data class Choice(val caseFieldStack: Stack<Field>) {
 
 val Value.asField: Field
 	get() =
-		valueName(this)
+		_value(this)
 
 val Stack<Field>.value: Value get() = Value(this)
 val Sentence.field: Field get() = SentenceField(this)

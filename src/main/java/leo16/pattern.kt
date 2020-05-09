@@ -1,11 +1,15 @@
 package leo16
 
-import leo13.*
+import leo13.Stack
+import leo13.isEmpty
+import leo13.map
+import leo13.push
+import leo13.stack
+import leo13.zipFoldOrNull
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
-import leo15.*
-import leo15.textName
+import leo16.names.*
 
 sealed class Pattern {
 	override fun toString() = asField.toString()
@@ -44,7 +48,7 @@ val Pattern.isEmpty get() = this is ValuePattern && value.fieldStack.isEmpty
 
 operator fun Pattern.plus(field: PatternField): Pattern =
 	when (this) {
-		AnyPattern -> pattern(anyName.invoke(emptyPattern))
+		AnyPattern -> pattern(_any.invoke(emptyPattern))
 		is ValuePattern -> value.plus(field).pattern
 	}
 
@@ -53,18 +57,18 @@ operator fun PatternValue.plus(field: PatternField): PatternValue =
 
 val Pattern.asField: Field
 	get() =
-		patternName.invoke(asValue)
+		_pattern.invoke(asValue)
 
 val Pattern.asValue: Value
 	get() =
 		when (this) {
-			AnyPattern -> value(anyName())
+			AnyPattern -> value(_any())
 			is ValuePattern -> value.asValue
 		}
 
 val PatternValue.asField: Field
 	get() =
-		leo15.structName(asValue)
+		_struct(asValue)
 
 val PatternValue.asValue: Value
 	get() =
@@ -84,7 +88,7 @@ val PatternSentence.asField: Field
 
 val PatternTaking.asField: Field
 	get() =
-		takingName(pattern.asValue)
+		_taking(pattern.asValue)
 
 fun Value.matches(pattern: Pattern): Boolean =
 	when (pattern) {
@@ -103,8 +107,8 @@ fun Field.matches(field: PatternField): Boolean =
 	when (this) {
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
 		is TakingField -> field is TakingPatternField && taking.pattern == field.taking.pattern
-		is DictionaryField -> field == dictionaryName(anyPattern)
-		is NativeField -> field == nativeName(anyPattern)
+		is DictionaryField -> field == _dictionary(anyPattern)
+		is NativeField -> field == _native(anyPattern)
 		is ChoiceField -> false // TODO()
 	}
 
@@ -113,6 +117,6 @@ fun Sentence.matches(sentence: PatternSentence): Boolean =
 
 fun Literal.matches(field: PatternField): Boolean =
 	when (this) {
-		is StringLiteral -> field == textName(anyPattern)
-		is NumberLiteral -> field == numberName(anyPattern)
+		is StringLiteral -> field == _text(anyPattern)
+		is NumberLiteral -> field == _number(anyPattern)
 	}

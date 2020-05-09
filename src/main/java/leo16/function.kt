@@ -1,6 +1,5 @@
 package leo16
 
-import leo15.functionName
 import leo16.names.*
 
 data class Function(val dictionary: Dictionary, val bodyValue: Value) {
@@ -47,4 +46,4 @@ fun Function.invokeOnce(value: Value): Value =
 
 val Function.asField: Field
 	get() =
-		functionName(/*dictionary.asField, */bodyValue.asField)
+		_function(/*dictionary.asField, */bodyValue.asField)

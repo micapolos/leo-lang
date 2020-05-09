@@ -10,8 +10,7 @@ import leo14.lineTo
 import leo14.literal
 import leo14.number
 import leo14.script
-import leo15.choiceName
-import leo15.takingName
+import leo16.names.*
 
 val Value.script: Script
 	get() =
@@ -48,16 +47,16 @@ val Sentence.scriptLine: ScriptLine
 
 val Taking.scriptLine: ScriptLine
 	get() =
-		takingName(pattern.asValue.script)
+		_taking(pattern.asValue.script)
 
 val Choice.scriptLine: ScriptLine
 	get() =
-		choiceName(caseFieldStack.map { scriptLine })
+		_choice(caseFieldStack.map { scriptLine })
 
 val String.scriptWord: String
 	get() =
 		when (this) {
-			//itemName -> "-"
+			//_item -> "-"
 			else -> this
 		}
 

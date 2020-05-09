@@ -3,13 +3,6 @@ package leo16
 import leo.base.notNullIf
 import leo13.Stack
 import leo13.map
-import leo15.choiceName
-import leo15.definitionName
-import leo15.dictionaryName
-import leo15.givesName
-import leo15.isName
-import leo15.listName
-import leo15.takingName
 import leo16.names.*
 import java.math.BigDecimal
 
@@ -41,27 +34,27 @@ val Sentence.printSentence: Sentence
 
 val Taking.printSentence: Sentence
 	get() =
-		takingName.sentenceTo(pattern.asValue)
+		_taking.sentenceTo(pattern.asValue)
 
 val Choice.printSentence: Sentence
 	get() =
-		choiceName.sentenceTo(caseFieldStack.map { printSentence.field }.value)
+		_choice.sentenceTo(caseFieldStack.map { printSentence.field }.value)
 
 val Dictionary.printSentence: Sentence
 	get() =
-		dictionaryName.sentenceTo(
-			definitionName(definitionStack.map { printField.value }.field))
+		_dictionary.sentenceTo(
+			_definition(definitionStack.map { printField.value }.field))
 
 val Definition.printField: Field
 	get() =
-		definitionName(pattern.value.plus(body.printField))
+		_definition(pattern.value.plus(body.printField))
 
 val Body.printField: Field
 	get() =
 		when (this) {
-			is ValueBody -> isName(value)
-			is FunctionBody -> givesName(function.bodyValue)
-			is NativeBody -> givesName(apply.nativeField)
+			is ValueBody -> _is(value)
+			is FunctionBody -> _gives(function.bodyValue)
+			is NativeBody -> _gives(apply.nativeField)
 			is RecurseBody -> _recurse(function.bodyValue)
 		}
 
@@ -70,7 +63,7 @@ fun <T> Stack<T>.printField(fn: T.() -> Field): Field =
 
 val Stack<Field>.printField: Field
 	get() =
-		listName(value)
+		_list(value)
 
 val Field.stackPrintValueOrNull: Value?
 	get() =

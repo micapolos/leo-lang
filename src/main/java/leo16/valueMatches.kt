@@ -2,10 +2,10 @@ package leo16
 
 import leo13.fold
 import leo13.zipFoldOrNull
-import leo15.*
+import leo16.names.*
 
 fun Value.matches(value: Value): Boolean =
-	value == value(anythingName()) || fieldsMatch(value)
+	value == value(_anything()) || fieldsMatch(value)
 
 fun Value.fieldsMatch(value: Value): Boolean =
 	true
@@ -30,9 +30,9 @@ fun Field.matchesCase(choice: Choice): Boolean =
 fun Field.matches(sentence: Sentence): Boolean =
 	when (this) {
 		is SentenceField -> this.sentence.matches(sentence)
-		is TakingField -> sentence.word == takingName && taking.pattern == sentence.value.pattern
-		is DictionaryField -> sentence == dictionaryName.sentenceTo()
-		is NativeField -> sentence == nativeName.sentenceTo()
+		is TakingField -> sentence.word == _taking && taking.pattern == sentence.value.pattern
+		is DictionaryField -> sentence == _dictionary.sentenceTo()
+		is NativeField -> sentence == _native.sentenceTo()
 		is ChoiceField -> choice.matches(sentence)
 	}
 
@@ -46,7 +46,7 @@ fun Dictionary.matches(dictionary: Dictionary): Boolean =
 	this == dictionary
 
 fun Choice.matches(sentence: Sentence): Boolean =
-	sentence.word == choiceName &&
+	sentence.word == _choice &&
 		true
 			.zipFoldOrNull(caseFieldStack, sentence.value.fieldStack) { lhs, rhs -> and(lhs.matches(rhs)) }
 		?: false
