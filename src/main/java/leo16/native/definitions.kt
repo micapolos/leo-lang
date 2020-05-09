@@ -30,7 +30,7 @@ import leo16.nativeValue
 import leo16.stackOrNull
 import leo16.theNativeOrNull
 import leo16.value
-import leo16.listValue
+import leo16.valueValue
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -265,5 +265,5 @@ val arrayStackDefinition =
 			.getOrNull(nativeName)!!
 			.theNativeOrNull!!
 			.value as Array<*>
-		stack(*array).map { value(nativeField) }.listValue
+		stack(*array).map { value(nativeField) }.valueValue
 	}

@@ -73,7 +73,7 @@ val Stack<Field>.printField: Field
 
 val Field.stackPrintValueOrNull: Value?
 	get() =
-		matchPrefix(_stack) { rhs ->
+		matchPrefix(_list) { rhs ->
 			rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
 				when (sentence.word) {
 					_empty -> value()
@@ -90,7 +90,7 @@ val Field.stackPrintValueOrNull: Value?
 val Field.stackPrintOrNull: Field?
 	get() =
 		stackPrintValueOrNull?.let { value ->
-			_stack(if (value.isEmpty) value(_empty()) else value)
+			_list(if (value.isEmpty) value(_empty()) else value)
 		}
 
 val Field.textPrintOrNull: Field?

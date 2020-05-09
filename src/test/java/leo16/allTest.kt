@@ -11,7 +11,7 @@ class IndexTest {
 			import { bit }
 			import { core }
 			import { int }
-			import { stack }
+			import { list }
 			import { reflection }
 			import { number }
 			import { text }

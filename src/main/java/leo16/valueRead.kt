@@ -19,5 +19,5 @@ val Field.listFieldOrNull: Field?
 				.mapOrNull { matchPrefix(_item) { it } }
 				?.linkOrNull
 				?.run { stack.push(value) }
-				?.listField
+				?.valueField
 		}
