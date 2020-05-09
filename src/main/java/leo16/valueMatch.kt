@@ -55,6 +55,14 @@ fun <R : Any> Value.matchWord(fn: (String) -> R?): R? =
 		}
 	}
 
+fun <R : Any> Value.match(word: String, fn: () -> R?): R? =
+	matchWord {
+		ifOrNull(it == word) {
+			fn()
+		}
+	}
+
+
 fun <R : Any> Field.matchPrefix(word: String, fn: (Value) -> R?): R? =
 	sentenceOrNull?.run {
 		ifOrNull(this.word == word) {

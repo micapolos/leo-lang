@@ -7,18 +7,14 @@ import leo.base.reverseStack
 import leo.base.seq
 import leo.base.then
 import leo13.Stack
-import leo13.isEmpty
-import leo13.linkOrNull
 import leo13.mapFirst
 import leo13.mapOrNull
 import leo13.onlyOrNull
 import leo15.caseName
 import leo15.choiceName
 import leo15.dictionaryName
-import leo15.emptyName
 import leo15.nativeName
 import leo15.takingName
-import leo16.names.*
 
 fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 	val wordOrNull = field.onlyWordOrNull
@@ -85,3 +81,12 @@ val Field.caseFieldOrNull: Field?
 		matchPrefix(caseName) { rhs ->
 			rhs.onlyFieldOrNull
 		}
+
+fun Value.rhsOrNull(word: String): Value? =
+	onlyFieldOrNull?.rhsOrNull(word)
+
+fun Field.rhsOrNull(word: String): Value? =
+	matchPrefix(word) { it }
+
+fun Value.pairOrNull(word: String): Pair<Value, Value>? =
+	matchInfix(word) { lhs, rhs -> lhs to rhs }
