@@ -5,6 +5,7 @@ import leo16.dictionary_
 
 val base = dictionary_ {
 	core.export
+	printing.export
 	number.export
 	int.export
 	text.export

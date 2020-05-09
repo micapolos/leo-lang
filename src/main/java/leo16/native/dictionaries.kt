@@ -4,7 +4,7 @@ import leo15.*
 import leo16.emptyDictionary
 import leo16.plus
 
-val dictionary =
+val reflectionDictionary =
 	emptyDictionary
 		.plus(booleanName.definition(Boolean::class.java))
 		.plus(charName.definition(Char::class.java))
@@ -27,3 +27,7 @@ val dictionary =
 		.plus(nullNativeDefinition)
 		.plus(nativeBooleanDefinition)
 		.plus(nativeObjectClassDefinition)
+
+val printingDictionary =
+	emptyDictionary
+		.plus(printingDefinition)

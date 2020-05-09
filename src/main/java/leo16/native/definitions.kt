@@ -1,5 +1,6 @@
 package leo16.native
 
+import leo.base.println
 import leo13.array
 import leo13.map
 import leo13.stack
@@ -29,6 +30,7 @@ import leo16.nativeField
 import leo16.nativeValue
 import leo16.stackOrNull
 import leo16.theNativeOrNull
+import leo16.thingOrNull
 import leo16.value
 import leo16.valueValue
 import java.lang.reflect.Constructor
@@ -266,4 +268,12 @@ val arrayStackDefinition =
 			.theNativeOrNull!!
 			.value as Array<*>
 		stack(*array).map { value(nativeField) }.valueValue
+	}
+
+val printingDefinition =
+	value(_printing(anyName())).gives {
+		val thing = this
+			.getOrNull(_printing)!!
+			.thingOrNull!!
+		thing.also { thing.println }
 	}
