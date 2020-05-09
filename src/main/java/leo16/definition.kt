@@ -6,6 +6,7 @@ import leo13.map
 import leo15.bodyName
 import leo15.givenName
 import leo15.nativeName
+import leo16.names.*
 
 data class Definition(val pattern: Pattern, val body: Body, val isMacro: Boolean) {
 	override fun toString() = asField.toString()
@@ -20,6 +21,10 @@ data class ValueBody(val value: Value) : Body() {
 }
 
 data class FunctionBody(val function: Function) : Body() {
+	override fun toString() = super.toString()
+}
+
+data class RecurseBody(val function: Function) : Body() {
 	override fun toString() = super.toString()
 }
 
@@ -38,6 +43,7 @@ val Body.asField: Field
 				is ValueBody -> value
 				is FunctionBody -> function.asField.value
 				is NativeBody -> value(nativeName())
+				is RecurseBody -> _recurse(function.asField.value).value
 			}
 		)
 
@@ -45,6 +51,7 @@ infix fun Pattern.definitionTo(body: Body) = Definition(this, body, isMacro = fa
 infix fun Pattern.macroTo(body: Body) = Definition(this, body, isMacro = true)
 val Value.body: Body get() = ValueBody(this)
 val Function.body: Body get() = FunctionBody(this)
+val Function.recurseBody: Body get() = RecurseBody(this)
 fun body(apply: Value.() -> Value): Body = NativeBody(apply)
 
 fun Definition.apply(arg: Value): Value? =
@@ -63,6 +70,7 @@ fun Body.apply(arg: Value): Value =
 		is ValueBody -> value
 		is FunctionBody -> function.invoke(arg)
 		is NativeBody -> apply(givenName(arg).value)
+		is RecurseBody -> function.invoke(arg.thingOrNull!!)
 	}
 
 val Value.parameterDictionary: Dictionary

@@ -62,6 +62,7 @@ val Body.printField: Field
 			is ValueBody -> isName(value)
 			is FunctionBody -> givesName(function.bodyValue)
 			is NativeBody -> givesName(apply.nativeField)
+			is RecurseBody -> _recurse(function.bodyValue)
 		}
 
 fun <T> Stack<T>.printField(fn: T.() -> Field): Field =

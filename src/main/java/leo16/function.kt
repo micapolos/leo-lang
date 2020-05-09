@@ -34,7 +34,12 @@ fun Function.invokeRepeatingOrNull(value: Value): Value? =
 	}
 
 fun Function.invokeRecursingOrNull(value: Value): Value? =
-	null // TODO()
+	bodyValue.matchPrefix(_recursing) { recursingValue ->
+		dictionary
+			.plus(value.parameterDictionary)
+			.plus(_recurse(_any()).value.pattern.definitionTo(recurseBody))
+			.evaluate(recursingValue)!!
+	}
 
 fun Function.invokeOnce(value: Value): Value =
 	dictionary.plus(value.parameterDictionary).evaluate(bodyValue)!!

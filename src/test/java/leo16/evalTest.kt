@@ -238,6 +238,36 @@ class EvalTest {
 	}
 
 	@Test
+	fun giveRecursing_noRecurse() {
+		evaluate_ {
+			10.number
+			give {
+				recursing {
+					number
+				}
+			}
+		}.assertGives { 10.number }
+	}
+
+	@Test
+	fun giveRecursing_recurse() {
+		evaluate_ {
+			import { number }
+			10.number
+			give {
+				recursing {
+					number
+					equals_ { 0.number }
+					match {
+						true_ { number }
+						false_ { number.minus { 1.number }.recurse }
+					}
+				}
+			}
+		}.assertGives { 0.number }
+	}
+
+	@Test
 	fun expands() {
 		evaluate_ {
 			expand.expands {
