@@ -63,6 +63,9 @@ fun Evaluated.apply(field: Field): Evaluated =
 	value.normalize(field) { set(this).applyNormalized(it) }
 
 fun Evaluated.applyNormalized(field: Field): Evaluated =
+	applyNormalizedAndRead(field.read)
+
+fun Evaluated.applyNormalizedAndRead(field: Field): Evaluated =
 	null
 		?: applyValue(field) // keep first
 		?: applyBinding(field)

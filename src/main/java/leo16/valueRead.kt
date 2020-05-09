@@ -6,7 +6,7 @@ import leo13.mapOrNull
 import leo13.push
 import leo16.names.*
 
-val Field.read: Field?
+val Field.read: Field
 	get() =
 		null
 			?: listFieldOrNull

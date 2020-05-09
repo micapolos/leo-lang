@@ -13,19 +13,19 @@ import leo15.takingName
 import leo16.names.*
 import java.math.BigDecimal
 
-val Value.print: Value
+val Value.printed: Value
 	get() =
-		fieldStack.map { print }.value
+		fieldStack.map { printed }.value
 
-val Field.print: Field
+val Field.printed: Field
 	get() =
 		null
 			?: textPrintOrNull
 			?: numberPrintOrNull
 			?: listPrintOrNull
-			?: defaultPrint
+			?: defaultPrinted
 
-val Field.defaultPrint: Field
+val Field.defaultPrinted: Field
 	get() =
 		when (this) {
 			is SentenceField -> sentence.printSentence.field
@@ -37,7 +37,7 @@ val Field.defaultPrint: Field
 
 val Sentence.printSentence: Sentence
 	get() =
-		word.sentenceTo(value.print)
+		word.sentenceTo(value.printed)
 
 val Taking.printSentence: Sentence
 	get() =
@@ -78,7 +78,7 @@ fun Field.listPrintValueOrNull(word: String): Value? =
 				_empty -> value()
 				_linked -> sentence.value.matchInfix(_last) { lhs, last ->
 					lhs.matchPrefix(_previous) { previous ->
-						previous.onlyFieldOrNull?.listPrintValueOrNull(word)?.plus(_next(last.print))
+						previous.onlyFieldOrNull?.listPrintValueOrNull(word)?.plus(_next(last.printed))
 					}
 				}
 				else -> null

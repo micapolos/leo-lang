@@ -8,7 +8,7 @@ class ValuePrintTest {
 	@Test
 	fun empty() {
 		_stack(_empty())
-			.print
+			.printed
 			.assertEqualTo(_stack(_empty()))
 	}
 
@@ -19,7 +19,7 @@ class ValuePrintTest {
 				_previous(_stack(_empty())),
 				_last(_zero())))),
 			_last(_one())))
-			.print
+			.printed
 			.assertEqualTo(
 				_stack(
 					_next(_zero()),
@@ -33,7 +33,7 @@ class ValuePrintTest {
 				_previous(_stack(_empty())),
 				_last(_zero())))),
 			_last(_one()))
-			.print
+			.printed
 			.assertEqualTo(
 				_linked(
 					_previous(_stack(_next(_zero()))),

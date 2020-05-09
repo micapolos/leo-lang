@@ -54,7 +54,7 @@ fun Value.applyComment(field: Field): Value? =
 fun Value.applyScript(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(scriptName) { rhs ->
-			rhs.print
+			rhs.printed
 		}
 	}
 

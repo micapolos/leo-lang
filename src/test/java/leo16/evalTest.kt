@@ -168,6 +168,34 @@ class EvalTest {
 	}
 
 	@Test
+	fun matchEmpty() {
+		evaluate_ { empty.stack.match { empty { ok } } }
+			.assertGives { ok }
+	}
+
+	@Test
+	fun matchLinked() {
+		evaluate_ {
+			stack {
+				next { zero }
+				next { one }
+				next { two }
+			}
+			match { linked { linked } }
+		}.assertGives {
+			linked {
+				previous {
+					stack {
+						next { zero }
+						next { one }
+					}
+				}
+				last { two }
+			}
+		}
+	}
+
+	@Test
 	fun giving() {
 		evaluate_ { zero.giving { given } }.assertGives { taking { zero } }
 	}
