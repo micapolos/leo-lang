@@ -33,13 +33,13 @@ val list = dictionary_ {
 
 	any.list.reverse
 	gives {
-		reverse.list
+		empty.list
 		fold {
-			to { empty.list }
+			reverse.list
 			step {
-				to { any }
+				folded { any }
 				item { any }
-				giving { to.list.append { item } }
+				giving { folded.list.append { item } }
 			}
 		}
 	}
@@ -62,14 +62,14 @@ val list = dictionary_ {
 	any.list
 	map { taking { any.item } }
 	gives {
-		list.reverse
+		empty.list
 		fold {
-			to { empty.list }
+			list.reverse
 			step {
-				to { any }
+				folded { any }
 				item { any }
 				giving {
-					to.list
+					folded.list
 					append { map.take { item } }
 				}
 			}
@@ -95,13 +95,13 @@ val list = dictionary_ {
 	any.list.length
 	gives {
 		import { number }
-		length.list
+		0.number
 		fold {
-			to { 0.number }
+			length.list
 			step {
-				to { any }
+				folded { any }
 				item { any }
-				giving { to.number.plus { 1.number } }
+				giving { folded.number.plus { 1.number } }
 			}
 		}.length
 	}

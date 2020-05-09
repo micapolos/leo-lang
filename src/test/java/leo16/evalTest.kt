@@ -409,13 +409,13 @@ class EvalTest {
 	}
 
 	@Test
-	fun foldlist_empty() {
+	fun fold_empty() {
 		evaluate_ {
-			empty.list
+			zero
 			fold {
-				to { zero }
+				list { empty }
 				step {
-					to { any }
+					folded { any }
 					item { any }
 					giving { given }
 				}
@@ -424,21 +424,21 @@ class EvalTest {
 	}
 
 	@Test
-	fun foldlist_nonEmpty() {
+	fun fold_nonEmpty() {
 		evaluate_ {
-			list {
-				item { 1.number }
-				item { 2.number }
-			}
+			0.number
 			fold {
-				to { 0.number }
+				list {
+					item { 2.number }
+					item { 1.number }
+				}
 				step {
-					to { any }
+					folded { any }
 					item { any }
-					giving { to.thing.this_ { item.thing } }
+					giving { folded.thing.this_ { item.thing } }
 				}
 			}
-		}.assertGives { 0.number; 2.number; 1.number }
+		}.assertGives { 0.number; 1.number; 2.number }
 	}
 
 
