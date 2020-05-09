@@ -179,7 +179,7 @@ val text = dictionary_ {
 			}
 		}
 		array.list
-		map { any.giving { native.text } }
+		map { any.item.giving { item.native.text.item } }
 	}
 
 	test {

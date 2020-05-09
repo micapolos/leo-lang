@@ -3,7 +3,7 @@ package leo16
 import leo15.dsl.*
 import kotlin.test.Test
 
-class IndexTest {
+class LibraryTest {
 	@Test
 	fun test() {
 		evaluate_ {

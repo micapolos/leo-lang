@@ -9,25 +9,25 @@ fun main() {
 
 val list = dictionary_ {
 	any.list
-	plus { any }
+	plus { item { any } }
 	gives {
 		list {
 			link {
 				previous { list }
-				last { plus.thing }
+				last { plus.item }
 			}
 		}
 	}
 
 	test {
 		empty.list
-		plus { 1.number }
+		plus { item { 1.number } }
 		gives { list { item { 1.number } } }
 	}
 
 	test {
 		list { item { 1.number } }
-		plus { 2.number }
+		plus { item { 2.number } }
 		gives { list { item { 1.number }; item { 2.number } } }
 	}
 
@@ -39,7 +39,7 @@ val list = dictionary_ {
 			step {
 				to { any }
 				item { any }
-				giving { to.list.plus { item.thing } }
+				giving { to.list.plus { item } }
 			}
 		}
 	}
@@ -60,7 +60,7 @@ val list = dictionary_ {
 	}
 
 	any.list
-	map { taking { any } }
+	map { taking { any.item } }
 	gives {
 		list.reverse
 		fold {
@@ -70,7 +70,7 @@ val list = dictionary_ {
 				item { any }
 				giving {
 					to.list
-					plus { map.take { item.thing } }
+					plus { map.take { item } }
 				}
 			}
 		}
@@ -82,7 +82,7 @@ val list = dictionary_ {
 			item { 2.number }
 			item { 3.number }
 		}
-		map { any.giving { number.ok } }
+		map { any.item.giving { item.number.ok.item } }
 		gives {
 			list {
 				item { 1.number.ok }

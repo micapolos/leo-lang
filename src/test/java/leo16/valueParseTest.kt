@@ -17,8 +17,8 @@ class ValueParseTest {
 		_list(_link(
 			_previous(_list(_link(
 				_previous(_list(_empty())),
-				_last(_zero())))),
-			_last(_one())))
+				_last(_item(_zero()))))),
+			_last(_item(_one()))))
 			.stackOrNull!!
 			.assertContains(value(_zero()), value(_one()))
 	}

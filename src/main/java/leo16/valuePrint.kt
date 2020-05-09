@@ -78,8 +78,10 @@ val Field.stackPrintValueOrNull: Value?
 				when (sentence.word) {
 					_empty -> value()
 					_link -> sentence.value.matchInfix(_last) { lhs, last ->
-						lhs.matchPrefix(_previous) { previous ->
-							previous.onlyFieldOrNull?.stackPrintValueOrNull?.plus(_item(last.printed))
+						last.matchPrefix(_item) {
+							lhs.matchPrefix(_previous) { previous ->
+								previous.onlyFieldOrNull?.stackPrintValueOrNull?.plus(last)
+							}
 						}
 					}
 					else -> null
