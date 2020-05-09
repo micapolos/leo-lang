@@ -24,9 +24,6 @@ operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
 fun Dictionary.apply(value: Value): Value? =
 	definitionStack.mapFirst { apply(value) }
 
-fun Dictionary.resolve(value: Value): Value =
-	definitionStack.mapFirst { apply(value) } ?: value
-
 fun Dictionary.resolve(evaluated: Evaluated): Evaluated =
 	definitionStack.mapFirst { apply(evaluated) } ?: evaluated
 
