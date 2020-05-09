@@ -75,7 +75,7 @@ fun Field.listBodyScriptOrNull(word: String): Script? =
 				_empty -> script()
 				_linked -> sentence.value.matchInfix(_last) { lhs, last ->
 					lhs.matchPrefix(_previous) { previous ->
-						previous.onlyFieldOrNull?.listBodyScriptOrNull(word)?.plus(_item(last.script))
+						previous.onlyFieldOrNull?.listBodyScriptOrNull(word)?.plus(last.script)
 					}
 				}
 				else -> null

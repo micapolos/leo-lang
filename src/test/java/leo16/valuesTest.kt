@@ -9,19 +9,19 @@ class ValuesTest {
 	@Test
 	fun emptyStackValue() {
 		stack<Value>()
-			.value(_string)
-			.assertEqualTo(value(_string(_empty())))
+			.value(_stack)
+			.assertEqualTo(value(_stack(_empty())))
 	}
 
 	@Test
 	fun linkedStackValue() {
 		stack(value(_zero()), value(_one()))
-			.value(_string)
+			.value(_stack)
 			.assertEqualTo(
-				value(_string(_linked(
-					_previous(_string(_linked(
-						_previous(_string(_empty())),
-						_last(_zero())))),
-					_last(_one())))))
+				value(_stack(_linked(
+					_previous(_stack(_linked(
+						_previous(_stack(_empty())),
+						_last(_item(_zero()))))),
+					_last(_item(_one()))))))
 	}
 }

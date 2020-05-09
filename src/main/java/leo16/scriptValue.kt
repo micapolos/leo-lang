@@ -5,7 +5,11 @@ import leo.base.ifOrNull
 import leo.base.map
 import leo.base.reverse
 import leo.base.reverseStack
+import leo.base.stack
+import leo13.linkOrNull
 import leo13.mapOrNull
+import leo13.push
+import leo13.stack
 import leo14.FieldScriptLine
 import leo14.LiteralScriptLine
 import leo14.Script
@@ -14,6 +18,7 @@ import leo14.ScriptLine
 import leo14.fieldOrNull
 import leo14.lineSeq
 import leo14.rhsOrNull
+import leo14.script
 import leo16.names.*
 
 val Script.asValue: Value
@@ -41,7 +46,10 @@ fun ScriptField.listFieldOrNull(name: String): Field? =
 	ifOrNull(string == name) {
 		rhs
 			.lineSeq
-			.reverseStack.mapOrNull { fieldOrNull?.rhsOrNull(_item)?.asValue }
+			.stack
+			.mapOrNull { fieldOrNull?.rhsOrNull(_item)?.asValue }
+			?.linkOrNull
+			?.run { stack.push(value) }
 			?.field(name)
 	}
 
