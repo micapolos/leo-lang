@@ -182,7 +182,7 @@ class EvalTest {
 						item { one }
 					}
 				}
-				last { item { two } }
+				last { two }
 			}
 		}
 	}

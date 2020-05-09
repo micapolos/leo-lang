@@ -87,9 +87,8 @@ tailrec fun Value.applyListFold(listValue: Value, function: Function): Value? {
 			else null
 		_link -> {
 			val (lhs, last) = body.value.pairOrNull(_last) ?: return null
-			val item = last.rhsOrNull(_item) ?: return null
 			val previous = lhs.rhsOrNull(_previous) ?: return null
-			function.invoke(value(_folded(this), _item(item))).applyListFold(previous, function)
+			function.invoke(value(_folded(this), _item(last))).applyListFold(previous, function)
 		}
 		else -> null
 	}

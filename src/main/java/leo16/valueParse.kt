@@ -112,11 +112,9 @@ fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? =
 			when (sentence.word) {
 				_empty -> this
 				_link -> sentence.value.matchInfix(_last) { lhs, last ->
-					last.matchPrefix(_item) { item ->
-						lhs.matchPrefix(_previous) { previous ->
-							previous.onlyFieldOrNull?.let { previousField ->
-								push(item).pushOrNull(previousField)
-							}
+					lhs.matchPrefix(_previous) { previous ->
+						previous.onlyFieldOrNull?.let { previousField ->
+							push(last).pushOrNull(previousField)
 						}
 					}
 				}

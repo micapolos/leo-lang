@@ -84,7 +84,7 @@ fun Field.plusValue(stack: Stack<Value>): Field =
 			_list(
 				_link(
 					_previous(this),
-					_last(_item(stack.link.value))))
+					_last(stack.link.value)))
 				.plusValue(stack.link.stack)
 	}
 

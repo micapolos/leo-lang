@@ -21,7 +21,7 @@ class ValuesTest {
 				value(_list(_link(
 					_previous(_list(_link(
 						_previous(_list(_empty())),
-						_last(_item(_zero()))))),
-					_last(_item(_one()))))))
+						_last(_zero())))),
+					_last(_one())))))
 	}
 }
