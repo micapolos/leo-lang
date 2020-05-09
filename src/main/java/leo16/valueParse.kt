@@ -127,3 +127,7 @@ val Field.valueStackOrNull: Stack<Value>?
 	get() =
 		stack<Value>().pushOrNull(this)?.reverse
 
+val Value.stackOrNull: Stack<Value>?
+	get() =
+		onlyFieldOrNull?.valueStackOrNull
+

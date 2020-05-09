@@ -8,7 +8,7 @@ fun main() = leo_ {
 	url.read.text
 	split { by { " się ".text } }
 	map {
-		item { any }
-		giving { zero { item.text.split { by { " i ".text } } } }
+		any
+		giving { zero { text.split { by { " i ".text } } } }
 	}
 }

@@ -8,6 +8,6 @@ val base = dictionary_ {
 	number.export
 	int.export
 	text.export
-	list.export
+	stack.export
 	url.export
 }

@@ -27,7 +27,7 @@ val number = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "add".text }
-					parameter { list { item { big.decimal.class_ } } }
+					parameter { stack { item { big.decimal.class_ } } }
 				}
 			}
 
@@ -36,7 +36,7 @@ val number = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "subtract".text }
-					parameter { list { item { big.decimal.class_ } } }
+					parameter { stack { item { big.decimal.class_ } } }
 				}
 			}
 
@@ -45,7 +45,7 @@ val number = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "multiply".text }
-					parameter { list { item { big.decimal.class_ } } }
+					parameter { stack { item { big.decimal.class_ } } }
 				}
 			}
 
@@ -54,7 +54,7 @@ val number = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "multiply".text }
-					parameter { list { item { big.decimal.class_ } } }
+					parameter { stack { item { big.decimal.class_ } } }
 				}
 			}
 
@@ -63,7 +63,7 @@ val number = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "sqrt".text }
-					parameter { list { item { math.context.class_ } } }
+					parameter { stack { item { math.context.class_ } } }
 				}
 			}
 
@@ -92,7 +92,7 @@ val number = dictionary_ {
 		number.native
 		invoke {
 			big.decimal.add.method
-			parameter { list { item { plus.number.native } } }
+			parameter { stack { item { plus.number.native } } }
 		}
 		number
 	}
@@ -105,7 +105,7 @@ val number = dictionary_ {
 		number.native
 		invoke {
 			big.decimal.subtract.method
-			parameter { list { item { minus.number.native } } }
+			parameter { stack { item { minus.number.native } } }
 		}
 		number
 	}
@@ -118,7 +118,7 @@ val number = dictionary_ {
 		number.native
 		invoke {
 			big.decimal.multiply.method
-			parameter { list { item { times.number.native } } }
+			parameter { stack { item { times.number.native } } }
 		}
 		number
 	}
@@ -137,7 +137,7 @@ val number = dictionary_ {
 		approximate.root.square.number.native
 		invoke {
 			method { big.decimal.sqrt }
-			parameter { list { item { math.context.decimal } } }
+			parameter { stack { item { math.context.decimal } } }
 		}
 		number
 	}

@@ -9,7 +9,7 @@ fun main() {
 
 val url = dictionary_ {
 	reflection.import
-	list.import
+	stack.import
 	number.import
 
 	import {
@@ -25,7 +25,7 @@ val url = dictionary_ {
 				url.class_
 				constructor {
 					parameter {
-						list {
+						stack {
 							item { "java.lang.String".text.name.class_ }
 						}
 					}
@@ -35,49 +35,49 @@ val url = dictionary_ {
 			url.get.protocol.method.is_ {
 				url.class_.method {
 					name { "getProtocol".text }
-					parameter { empty.list }
+					parameter { empty.stack }
 				}
 			}
 
 			url.get.user.info.method.is_ {
 				url.class_.method {
 					name { "getUserInfo".text }
-					parameter { empty.list }
+					parameter { empty.stack }
 				}
 			}
 
 			url.get.host.method.is_ {
 				url.class_.method {
 					name { "getHost".text }
-					parameter { empty.list }
+					parameter { empty.stack }
 				}
 			}
 
 			url.get.port.method.is_ {
 				url.class_.method {
 					name { "getPort".text }
-					parameter { empty.list }
+					parameter { empty.stack }
 				}
 			}
 
 			url.get.path.method.is_ {
 				url.class_.method {
 					name { "getPath".text }
-					parameter { empty.list }
+					parameter { empty.stack }
 				}
 			}
 
 			url.get.query.method.is_ {
 				url.class_.method {
 					name { "getQuery".text }
-					parameter { empty.list }
+					parameter { empty.stack }
 				}
 			}
 
 			url.get.ref.method.is_ {
 				url.class_.method {
 					name { "getRef".text }
-					parameter { empty.list }
+					parameter { empty.stack }
 				}
 			}
 
@@ -85,7 +85,7 @@ val url = dictionary_ {
 				url.kotlin.class_
 				method {
 					name { "get".text }
-					parameter { list { item { url.class_ } } }
+					parameter { stack { item { url.class_ } } }
 				}
 			}
 		}
@@ -94,21 +94,21 @@ val url = dictionary_ {
 	any.text.url
 	gives {
 		string.url.constructor
-		invoke { parameter { list { item { url.text.native } } } }
+		invoke { parameter { stack { item { url.text.native } } } }
 		url
 	}
 
 	any.native.url.read
 	gives {
 		url.get.method
-		invoke { parameter { list { item { read.url.native } } } }
+		invoke { parameter { stack { item { read.url.native } } } }
 		text.read
 	}
 
 	any.native.url.protocol.gives {
 		protocol.url.native.invoke {
 			method { url.get.protocol }
-			parameter { empty.list }
+			parameter { empty.stack }
 		}.text.protocol
 	}
 
@@ -116,7 +116,7 @@ val url = dictionary_ {
 		user.url.native
 		invoke {
 			method { url.get.user.info }
-			parameter { empty.list }
+			parameter { empty.stack }
 		}
 		give {
 			native.object_.equals_ { null_.native }.boolean
@@ -130,14 +130,14 @@ val url = dictionary_ {
 	any.native.url.host.gives {
 		host.url.native.invoke {
 			method { url.get.host }
-			parameter { empty.list }
+			parameter { empty.stack }
 		}.text.host
 	}
 
 	any.native.url.port.gives {
 		port.url.native.invoke {
 			method { url.get.port }
-			parameter { empty.list }
+			parameter { empty.stack }
 		}.int.number
 		give {
 			number.equals_ { (-1).number }
@@ -151,7 +151,7 @@ val url = dictionary_ {
 	any.native.url.path.gives {
 		path.url.native.invoke {
 			method { url.get.path }
-			parameter { empty.list }
+			parameter { empty.stack }
 		}.text.path
 	}
 
@@ -159,7 +159,7 @@ val url = dictionary_ {
 		query.url.native
 		invoke {
 			method { url.get.query }
-			parameter { empty.list }
+			parameter { empty.stack }
 		}
 		give {
 			native.object_.equals_ { null_.native }.boolean
@@ -174,7 +174,7 @@ val url = dictionary_ {
 		fragment.url.native
 		invoke {
 			method { url.get.ref }
-			parameter { empty.list }
+			parameter { empty.stack }
 		}
 		give {
 			native.object_.equals_ { null_.native }.boolean
@@ -229,26 +229,26 @@ val url = dictionary_ {
 		"java.awt.Desktop".text.name.class_
 		method {
 			name { "getDesktop".text }
-			parameter { empty.list }
+			parameter { empty.stack }
 		}
-		invoke { parameter { empty.list } }
+		invoke { parameter { empty.stack } }
 		invoke {
 			"java.awt.Desktop".text.name.class_
 			method {
 				name { "browse".text }
-				parameter { list { item { "java.net.URI".text.name.class_ } } }
+				parameter { stack { item { "java.net.URI".text.name.class_ } } }
 			}
 			parameter {
-				list {
+				stack {
 					item {
 						browse.url.native
 						invoke {
 							url.class_
 							method {
 								name { "toURI".text }
-								parameter { empty.list }
+								parameter { empty.stack }
 							}
-							parameter { empty.list }
+							parameter { empty.stack }
 						}
 					}
 				}

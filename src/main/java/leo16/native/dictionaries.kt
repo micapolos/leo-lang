@@ -23,7 +23,7 @@ val dictionary =
 		.plus(classMethodDefinition)
 		.plus(methodInvokeDefinition)
 		.plus(nativeInvokeMethodDefinition)
-		.plus(arrayListDefinition)
+		.plus(arrayStackDefinition)
 		.plus(nullNativeDefinition)
 		.plus(nativeBooleanDefinition)
 		.plus(nativeObjectClassDefinition)
