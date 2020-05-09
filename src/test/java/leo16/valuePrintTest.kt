@@ -7,21 +7,21 @@ import kotlin.test.Test
 class ValuePrintTest {
 	@Test
 	fun empty() {
-		_stack(_empty())
+		_list(_empty())
 			.printed
-			.assertEqualTo(_stack(_empty()))
+			.assertEqualTo(_list(_empty()))
 	}
 
 	@Test
 	fun list() {
-		_stack(_link(
-			_previous(_stack(_link(
-				_previous(_stack(_empty())),
+		_list(_link(
+			_previous(_list(_link(
+				_previous(_list(_empty())),
 				_last(_zero())))),
 			_last(_one())))
 			.printed
 			.assertEqualTo(
-				_stack(
+				_list(
 					_item(_zero()),
 					_item(_one())))
 	}
@@ -29,14 +29,14 @@ class ValuePrintTest {
 	@Test
 	fun linked() {
 		_link(
-			_previous(_stack(_link(
-				_previous(_stack(_empty())),
+			_previous(_list(_link(
+				_previous(_list(_empty())),
 				_last(_zero())))),
 			_last(_one()))
 			.printed
 			.assertEqualTo(
 				_link(
-					_previous(_stack(_item(_zero()))),
+					_previous(_list(_item(_zero()))),
 					_last(_one())))
 	}
 }

@@ -4,54 +4,54 @@ import leo15.dsl.*
 import leo16.dictionary_
 
 fun main() {
-	stack
+	list
 }
 
-val stack = dictionary_ {
-	any.stack
+val list = dictionary_ {
+	any.list
 	plus { any }
 	gives {
-		stack {
+		list {
 			link {
-				previous { stack }
+				previous { list }
 				last { plus.thing }
 			}
 		}
 	}
 
 	test {
-		empty.stack
+		empty.list
 		plus { 1.number }
-		gives { stack { item { 1.number } } }
+		gives { list { item { 1.number } } }
 	}
 
 	test {
-		stack { item { 1.number } }
+		list { item { 1.number } }
 		plus { 2.number }
-		gives { stack { item { 1.number }; item { 2.number } } }
+		gives { list { item { 1.number }; item { 2.number } } }
 	}
 
-	any.stack.reverse
+	any.list.reverse
 	gives {
-		reverse.stack
+		reverse.list
 		fold {
-			to { empty.stack }
+			to { empty.list }
 			step {
 				to { any }
 				item { any }
-				giving { to.stack.plus { item.thing } }
+				giving { to.list.plus { item.thing } }
 			}
 		}
 	}
 
 	test {
-		stack {
+		list {
 			item { 1.number }
 			item { 2.number }
 			item { 3.number }
 		}.reverse
 		gives {
-			stack {
+			list {
 				item { 3.number }
 				item { 2.number }
 				item { 1.number }
@@ -59,17 +59,17 @@ val stack = dictionary_ {
 		}
 	}
 
-	any.stack
+	any.list
 	map { taking { any } }
 	gives {
-		stack.reverse
+		list.reverse
 		fold {
-			to { empty.stack }
+			to { empty.list }
 			step {
 				to { any }
 				item { any }
 				giving {
-					to.stack
+					to.list
 					plus { map.take { item.thing } }
 				}
 			}
@@ -77,14 +77,14 @@ val stack = dictionary_ {
 	}
 
 	test {
-		stack {
+		list {
 			item { 1.number }
 			item { 2.number }
 			item { 3.number }
 		}
 		map { any.giving { number.ok } }
 		gives {
-			stack {
+			list {
 				item { 1.number.ok }
 				item { 2.number.ok }
 				item { 3.number.ok }
@@ -92,10 +92,10 @@ val stack = dictionary_ {
 		}
 	}
 
-	any.stack.length
+	any.list.length
 	gives {
 		import { number }
-		length.stack
+		length.list
 		fold {
 			to { 0.number }
 			step {
@@ -107,12 +107,12 @@ val stack = dictionary_ {
 	}
 
 	test {
-		empty.stack.length
+		empty.list.length
 		gives { 0.number.length }
 	}
 
 	test {
-		stack {
+		list {
 			item { 0.number }
 			item { 1.number }
 			item { 2.number }

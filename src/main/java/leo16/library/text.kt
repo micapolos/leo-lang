@@ -10,7 +10,7 @@ fun main() {
 val text = dictionary_ {
 	number.import
 	reflection.import
-	stack.import
+	list.import
 
 	import {
 		dictionary {
@@ -30,7 +30,7 @@ val text = dictionary_ {
 				string.class_
 				method {
 					name { "length".text }
-					parameter { empty.stack }
+					parameter { empty.list }
 				}
 			}
 
@@ -39,7 +39,7 @@ val text = dictionary_ {
 				method {
 					name { "concat".text }
 					parameter {
-						stack { item { string.class_ } }
+						list { item { string.class_ } }
 					}
 				}
 			}
@@ -49,7 +49,7 @@ val text = dictionary_ {
 				method {
 					name { "substring".text }
 					parameter {
-						stack {
+						list {
 							item { int.class_ }
 							item { int.class_ }
 						}
@@ -62,7 +62,7 @@ val text = dictionary_ {
 				method {
 					name { "replace".text }
 					parameter {
-						stack {
+						list {
 							item { char.sequence.class_ }
 							item { char.sequence.class_ }
 						}
@@ -75,7 +75,7 @@ val text = dictionary_ {
 				method {
 					name { "split".text }
 					parameter {
-						stack {
+						list {
 							item { string.class_ }
 							item { string.class_ }
 						}
@@ -90,7 +90,7 @@ val text = dictionary_ {
 		length.text.native
 		invoke {
 			string.length.method
-			parameter { empty.stack }
+			parameter { empty.list }
 		}
 		int.number.length
 	}
@@ -107,7 +107,7 @@ val text = dictionary_ {
 		invoke {
 			string.substring.method
 			parameter {
-				stack {
+				list {
 					item { cut.from.number.int.native }
 					item { cut.to.number.int.native }
 				}
@@ -131,7 +131,7 @@ val text = dictionary_ {
 		text.native
 		invoke {
 			string.concat.method
-			parameter { stack { item { plus.text.native } } }
+			parameter { list { item { plus.text.native } } }
 		}
 		text
 	}
@@ -148,7 +148,7 @@ val text = dictionary_ {
 		invoke {
 			string.replace.method
 			parameter {
-				stack {
+				list {
 					item { replace.all.text.native }
 					item { replace.with.text.native }
 				}
@@ -172,13 +172,13 @@ val text = dictionary_ {
 		string.split.method
 		invoke {
 			parameter {
-				stack {
+				list {
 					item { text.native }
 					item { split.by.text.native }
 				}
 			}
 		}
-		array.stack
+		array.list
 		map { any.giving { native.text } }
 	}
 
@@ -186,7 +186,7 @@ val text = dictionary_ {
 		"zero one two".text
 		split { by { " ".text } }
 		gives {
-			stack {
+			list {
 				item { "zero".text }
 				item { "one".text }
 				item { "two".text }
@@ -194,16 +194,16 @@ val text = dictionary_ {
 		}
 	}
 
-	any.text.line.stack
+	any.text.line.list
 	gives {
-		stack.line.text
+		list.line.text
 		split { by { "\n".text } }
 	}
 
 	test {
-		"zero\none\ntwo".text.line.stack
+		"zero\none\ntwo".text.line.list
 		gives {
-			stack {
+			list {
 				item { "zero".text }
 				item { "one".text }
 				item { "two".text }

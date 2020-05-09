@@ -7,16 +7,16 @@ import kotlin.test.Test
 class ValueParseTest {
 	@Test
 	fun valueStackOrNull_empty() {
-		_stack(_empty())
+		_list(_empty())
 			.valueStackOrNull!!
 			.assertContains()
 	}
 
 	@Test
 	fun stackOrNull_linked() {
-		_stack(_link(
-			_previous(_stack(_link(
-				_previous(_stack(_empty())),
+		_list(_link(
+			_previous(_list(_link(
+				_previous(_list(_empty())),
 				_last(_zero())))),
 			_last(_one())))
 			.valueStackOrNull!!

@@ -13,7 +13,7 @@ val Field.read: Field
 
 val Field.stackFieldOrNull: Field?
 	get() =
-		matchPrefix(_stack) { rhs ->
+		matchPrefix(_list) { rhs ->
 			rhs
 				.fieldStack
 				.mapOrNull { matchPrefix(_item) { it } }

@@ -107,7 +107,7 @@ val Sentence.literalOrNull: Literal?
 			?: stringOrNull?.literal
 
 fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? =
-	field.matchPrefix(_stack) { rhs ->
+	field.matchPrefix(_list) { rhs ->
 		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
 			when (sentence.word) {
 				_empty -> this

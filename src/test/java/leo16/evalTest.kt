@@ -161,14 +161,14 @@ class EvalTest {
 
 	@Test
 	fun matchEmpty() {
-		evaluate_ { empty.stack.match { empty { ok } } }
+		evaluate_ { empty.list.match { empty { ok } } }
 			.assertGives { ok }
 	}
 
 	@Test
 	fun matchLinked() {
 		evaluate_ {
-			stack {
+			list {
 				item { zero }
 				item { one }
 				item { two }
@@ -177,7 +177,7 @@ class EvalTest {
 		}.assertGives {
 			link {
 				previous {
-					stack {
+					list {
 						item { zero }
 						item { one }
 					}
@@ -409,9 +409,9 @@ class EvalTest {
 	}
 
 	@Test
-	fun foldStack_empty() {
+	fun foldlist_empty() {
 		evaluate_ {
-			empty.stack
+			empty.list
 			fold {
 				to { zero }
 				step {
@@ -424,9 +424,9 @@ class EvalTest {
 	}
 
 	@Test
-	fun foldStack_nonEmpty() {
+	fun foldlist_nonEmpty() {
 		evaluate_ {
-			stack {
+			list {
 				item { 1.number }
 				item { 2.number }
 			}

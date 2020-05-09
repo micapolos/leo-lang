@@ -133,7 +133,7 @@ val nativeGetFieldDefinition =
 val classConstructorDefinition =
 	value(
 		className(nativeName(anyName())),
-		constructorName(parameterName(_stack(anyName())))
+		constructorName(parameterName(_list(anyName())))
 	).gives {
 		val class_ = this
 			.getOrNull(className)!!
@@ -143,7 +143,7 @@ val classConstructorDefinition =
 		val classes = this
 			.getOrNull(constructorName)!!
 			.getOrNull(parameterName)!!
-			.getOrNull(_stack)!!
+			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map {
 				this
@@ -159,7 +159,7 @@ val classConstructorDefinition =
 val constructorInvokeDefinition =
 	value(
 		constructorName(nativeName(anyName())),
-		invokeName(parameterName(_stack(anyName())))
+		invokeName(parameterName(_list(anyName())))
 	).gives {
 		val constructor = this
 			.getOrNull(constructorName)!!
@@ -169,7 +169,7 @@ val constructorInvokeDefinition =
 		val args = this
 			.getOrNull(invokeName)!!
 			.getOrNull(parameterName)!!
-			.getOrNull(_stack)!!
+			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map { theNativeOrNull!!.value }
 			.array
@@ -181,7 +181,7 @@ val classMethodDefinition =
 		className(nativeName(anyName())),
 		methodName(
 			nameName(textName(nativeName(anyName()))),
-			parameterName(_stack(anyName()))
+			parameterName(_list(anyName()))
 		)
 	).gives {
 		val class_ = this
@@ -199,7 +199,7 @@ val classMethodDefinition =
 		val classes = this
 			.getOrNull(methodName)!!
 			.getOrNull(parameterName)!!
-			.getOrNull(_stack)!!
+			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map {
 				this
@@ -215,7 +215,7 @@ val classMethodDefinition =
 val methodInvokeDefinition =
 	value(
 		methodName(nativeName(anyName())),
-		invokeName(parameterName(_stack(anyName())))
+		invokeName(parameterName(_list(anyName())))
 	).gives {
 		val method = this
 			.getOrNull(methodName)!!
@@ -225,7 +225,7 @@ val methodInvokeDefinition =
 		val args = this
 			.getOrNull(invokeName)!!
 			.getOrNull(parameterName)!!
-			.getOrNull(_stack)!!
+			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map { theNativeOrNull!!.value }
 			.array
@@ -237,7 +237,7 @@ val nativeInvokeMethodDefinition =
 		nativeName(anyName()),
 		invokeName(
 			methodName(nativeName(anyName())),
-			parameterName(_stack(anyName())))
+			parameterName(_list(anyName())))
 	).gives {
 		val object_ = this
 			.getOrNull(nativeName)!!
@@ -252,7 +252,7 @@ val nativeInvokeMethodDefinition =
 		val args = this
 			.getOrNull(invokeName)!!
 			.getOrNull(parameterName)!!
-			.getOrNull(_stack)!!
+			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map { theNativeOrNull!!.value }
 			.array
@@ -260,9 +260,9 @@ val nativeInvokeMethodDefinition =
 	}
 
 val arrayStackDefinition =
-	value(_stack(arrayName(nativeName(anyName())))).gives {
+	value(_list(arrayName(nativeName(anyName())))).gives {
 		val array = this
-			.getOrNull(_stack)!!
+			.getOrNull(_list)!!
 			.getOrNull(arrayName)!!
 			.getOrNull(nativeName)!!
 			.theNativeOrNull!!

@@ -7,21 +7,21 @@ import kotlin.test.Test
 class ValueReadTest {
 	@Test
 	fun readEmpty_empty() {
-		_stack(_empty())
+		_list(_empty())
 			.read
-			.assertEqualTo(_stack(_empty()))
+			.assertEqualTo(_list(_empty()))
 	}
 
 	@Test
 	fun readList_nonEmpty() {
-		_stack(
+		_list(
 			_item(_zero()),
 			_item(_one()))
 			.read
 			.assertEqualTo(
-				_stack(_link(
-					_previous(_stack(_link(
-						_previous(_stack(_empty())),
+				_list(_link(
+					_previous(_list(_link(
+						_previous(_list(_empty())),
 						_last(_zero())))),
 					_last(_one()))))
 	}

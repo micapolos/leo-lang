@@ -10,7 +10,7 @@ class ValuesTest {
 	fun emptyStackValue() {
 		stack<Value>()
 			.valueValue
-			.assertEqualTo(value(_stack(_empty())))
+			.assertEqualTo(value(_list(_empty())))
 	}
 
 	@Test
@@ -18,9 +18,9 @@ class ValuesTest {
 		stack(value(_zero()), value(_one()))
 			.valueValue
 			.assertEqualTo(
-				value(_stack(_link(
-					_previous(_stack(_link(
-						_previous(_stack(_empty())),
+				value(_list(_link(
+					_previous(_list(_link(
+						_previous(_list(_empty())),
 						_last(_zero())))),
 					_last(_one())))))
 	}

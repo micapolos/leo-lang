@@ -81,7 +81,7 @@ fun Field.plusValue(stack: Stack<Value>): Field =
 	when (stack) {
 		is EmptyStack -> this
 		is LinkStack ->
-			_stack(
+			_list(
 				_link(
 					_previous(this),
 					_last(stack.link.value)))
@@ -90,7 +90,7 @@ fun Field.plusValue(stack: Stack<Value>): Field =
 
 val Stack<Value>.valueField: Field
 	get() =
-		_stack(_empty()).plusValue(reverse)
+		_list(_empty()).plusValue(reverse)
 
 val Stack<Value>.valueValue: Value
 	get() =

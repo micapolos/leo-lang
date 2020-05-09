@@ -17,7 +17,7 @@ val int = dictionary_ {
 				big.decimal.class_
 				method {
 					name { "intValueExact".text }
-					parameter { stack }
+					parameter { list }
 				}
 			}
 
@@ -26,7 +26,7 @@ val int = dictionary_ {
 				method {
 					name { "plus".text }
 					parameter {
-						stack {
+						list {
 							item { int.class_ }
 							item { int.class_ }
 						}
@@ -39,7 +39,7 @@ val int = dictionary_ {
 				method {
 					name { "minus".text }
 					parameter {
-						stack {
+						list {
 							item { int.class_ }
 							item { int.class_ }
 						}
@@ -52,7 +52,7 @@ val int = dictionary_ {
 				method {
 					name { "times".text }
 					parameter {
-						stack {
+						list {
 							item { int.class_ }
 							item { int.class_ }
 						}
@@ -68,7 +68,7 @@ val int = dictionary_ {
 		integer.plus.method
 		invoke {
 			parameter {
-				stack {
+				list {
 					item { int.native }
 					item { plus.int.native }
 				}
@@ -85,7 +85,7 @@ val int = dictionary_ {
 		integer.minus.method
 		invoke {
 			parameter {
-				stack {
+				list {
 					item { int.native }
 					item { minus.int.native }
 				}
@@ -102,7 +102,7 @@ val int = dictionary_ {
 		integer.times.method
 		invoke {
 			parameter {
-				stack {
+				list {
 					item { int.native }
 					item { times.int.native }
 				}
