@@ -208,6 +208,36 @@ class EvalTest {
 	}
 
 	@Test
+	fun giveRepeating_noRepeat() {
+		evaluate_ {
+			10.number
+			give {
+				repeating {
+					number
+				}
+			}
+		}.assertGives { 10.number }
+	}
+
+	@Test
+	fun giveRepeating_repeating() {
+		evaluate_ {
+			import { number }
+			10.number
+			give {
+				repeating {
+					number
+					equals_ { 0.number }
+					match {
+						true_ { number }
+						false_ { number.minus { 1.number }.repeat }
+					}
+				}
+			}
+		}.assertGives { 0.number }
+	}
+
+	@Test
 	fun expands() {
 		evaluate_ {
 			expand.expands {
@@ -440,7 +470,6 @@ class EvalTest {
 			}
 		}.assertGives { 0.number; 1.number; 2.number }
 	}
-
 
 	@Test
 	fun matchesSentence() {
