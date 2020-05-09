@@ -16,7 +16,7 @@ fun Sentence.readListFieldOrNull(name: String): Field? =
 	ifOrNull(word == name) {
 		value
 			.fieldStack
-			.mapOrNull { matchPrefix(_item) { it } }
+			.mapOrNull { matchPrefix(_next) { it } }
 			?.linkOrNull
 			?.run { stack.push(value) }
 			?.field(name)

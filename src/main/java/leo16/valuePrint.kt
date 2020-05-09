@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.notNullIf
 import leo13.Stack
 import leo13.map
 import leo15.choiceName
@@ -10,6 +11,7 @@ import leo15.isName
 import leo15.listName
 import leo15.takingName
 import leo16.names.*
+import java.math.BigDecimal
 
 val Value.print: Value
 	get() =
@@ -17,7 +19,15 @@ val Value.print: Value
 
 val Field.print: Field
 	get() =
-		listPrintOrNull ?: when (this) {
+		null
+			?: textPrintOrNull
+			?: numberPrintOrNull
+			?: listPrintOrNull
+			?: defaultPrint
+
+val Field.defaultPrint: Field
+	get() =
+		when (this) {
 			is SentenceField -> sentence.printSentence.field
 			is TakingField -> taking.printSentence.field
 			is DictionaryField -> dictionary.printSentence.field
@@ -68,7 +78,7 @@ fun Field.listPrintValueOrNull(word: String): Value? =
 				_empty -> value()
 				_linked -> sentence.value.matchInfix(_last) { lhs, last ->
 					lhs.matchPrefix(_previous) { previous ->
-						previous.onlyFieldOrNull?.listPrintValueOrNull(word)?.plus(_item(last.print))
+						previous.onlyFieldOrNull?.listPrintValueOrNull(word)?.plus(_next(last.print))
 					}
 				}
 				else -> null
@@ -81,5 +91,25 @@ val Field.listPrintOrNull: Field?
 		sentenceOrNull?.let { sentence ->
 			listPrintValueOrNull(sentence.word)?.let { value ->
 				sentence.word(if (value.isEmpty) value(_empty()) else value)
+			}
+		}
+
+val Field.textPrintOrNull: Field?
+	get() =
+		matchPrefix(_text) { rhs ->
+			rhs.matchNative { native ->
+				notNullIf(native is String) {
+					this
+				}
+			}
+		}
+
+val Field.numberPrintOrNull: Field?
+	get() =
+		matchPrefix(_number) { rhs ->
+			rhs.matchNative { native ->
+				notNullIf(native is BigDecimal) {
+					this
+				}
 			}
 		}

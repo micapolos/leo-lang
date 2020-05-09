@@ -6,23 +6,37 @@ import kotlin.test.Test
 
 class ValuePrintTest {
 	@Test
-	fun valueListScript_empty() {
+	fun empty() {
 		_stack(_empty())
-			.listPrintOrNull
+			.print
 			.assertEqualTo(_stack(_empty()))
 	}
 
 	@Test
-	fun valueListScript_linked() {
+	fun list() {
 		_stack(_linked(
 			_previous(_stack(_linked(
 				_previous(_stack(_empty())),
 				_last(_zero())))),
 			_last(_one())))
-			.listPrintOrNull
+			.print
 			.assertEqualTo(
 				_stack(
-					_item(_zero()),
-					_item(_one())))
+					_next(_zero()),
+					_next(_one())))
+	}
+
+	@Test
+	fun linked() {
+		_linked(
+			_previous(_stack(_linked(
+				_previous(_stack(_empty())),
+				_last(_zero())))),
+			_last(_one()))
+			.print
+			.assertEqualTo(
+				_linked(
+					_previous(_stack(_next(_zero()))),
+					_last(_one())))
 	}
 }

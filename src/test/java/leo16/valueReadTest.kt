@@ -15,8 +15,8 @@ class ValueReadTest {
 	@Test
 	fun readList_nonEmpty() {
 		_stack(
-			_item(_zero()),
-			_item(_one()))
+			_next(_zero()),
+			_next(_one()))
 			.read
 			.assertEqualTo(
 				_stack(_linked(
