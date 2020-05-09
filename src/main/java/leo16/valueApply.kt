@@ -20,7 +20,6 @@ fun Value.apply(field: Field): Value? =
 		?: applyNothing(field)
 		?: applyComment(field)
 		?: applyScript(field)
-		?: applyListFold(field)
 		?: applyMatches(field)
 		?: applyLeonardo(field)
 
@@ -69,30 +68,6 @@ fun Value.applyMatches(field: Field): Value? =
 	field.matchPrefix(matchesName) { rhs ->
 		matches(rhs).field.value
 	}
-
-fun Value.applyListFold(field: Field): Value? =
-	field.matchPrefix(_fold) { rhs ->
-		rhs.matchInfix(_step) { list, step ->
-			step.matchFunction(value(_folded(_any()), _item(_any()))) { function ->
-				applyListFold(list, function)
-			}
-		}
-	}
-
-tailrec fun Value.applyListFold(listValue: Value, function: Function): Value? {
-	val body = listValue.rhsOrNull(_list)?.onlyFieldOrNull?.sentenceOrNull ?: return null
-	return when (body.word) {
-		_empty ->
-			if (body.value.isEmpty) this
-			else null
-		_link -> {
-			val (lhs, last) = body.value.pairOrNull(_last) ?: return null
-			val previous = lhs.rhsOrNull(_previous) ?: return null
-			function.invoke(value(_folded(this), _item(last))).applyListFold(previous, function)
-		}
-		else -> null
-	}
-}
 
 fun Value.applyLeonardo(field: Field): Value? =
 	matchEmpty {

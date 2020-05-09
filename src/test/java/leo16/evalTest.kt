@@ -469,39 +469,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun fold_empty() {
-		evaluate_ {
-			zero
-			fold {
-				list { empty }
-				step {
-					folded { any }
-					item { any }
-					giving { given }
-				}
-			}
-		}.assertGives { zero }
-	}
-
-	@Test
-	fun fold_nonEmpty() {
-		evaluate_ {
-			0.number
-			fold {
-				list {
-					item { 2.number }
-					item { 1.number }
-				}
-				step {
-					folded { any }
-					item { any }
-					giving { folded.thing.this_ { item.thing } }
-				}
-			}
-		}.assertGives { 0.number; 1.number; 2.number }
-	}
-
-	@Test
 	fun matchesSentence() {
 		evaluate_ { zero.matches { zero } }.assertGives { true.boolean }
 		evaluate_ { zero.matches { one } }.assertGives { false.boolean }
