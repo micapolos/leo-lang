@@ -14,6 +14,7 @@ import leo15.itemName
 import leo15.listName
 import leo15.previousName
 import leo15.textName
+import leo16.names.*
 
 fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 	val wordOrNull = field.onlyWordOrNull
@@ -64,23 +65,23 @@ infix fun Field.accessOrNull(word: String): Value? =
 infix fun Value.make(word: String): Value =
 	value(word.invoke(this))
 
-val Value.matchValueOrNull: Value?
+val Value.matchFieldOrNull: Field?
 	get() =
 		fieldStack.onlyOrNull?.sentenceOrNull?.let { sentence ->
 			when (sentence.word) {
-				listName -> sentence.value.listMatchValue
-				else -> sentence.value
+				listName -> sentence.value.listMatchField
+				else -> sentence.value.onlyFieldOrNull
 			}
 		}
 
-val Value.listMatchValue: Value?
+val Value.listMatchField: Field?
 	get() =
-		if (this == value(emptyName())) this
+		if (this == value(_empty())) _empty()
 		else fieldStack.linkOrNull?.let { fieldLink ->
-			fieldLink.value.matchPrefix(itemName) {
-				value(linkedName(
-					previousName(listName(if (fieldLink.stack.isEmpty) value(emptyName()) else fieldLink.stack.value)),
-					lastName(fieldLink.value)))
+			fieldLink.value.matchPrefix(_item) {
+				_linked(
+					_previous(_list(if (fieldLink.stack.isEmpty) value(emptyName()) else fieldLink.stack.value)),
+					_last(fieldLink.value))
 			}
 		}
 

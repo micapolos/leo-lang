@@ -1,6 +1,5 @@
 package leo16
 
-import leo14.lambda.runtime.invoke
 import leo15.evaluatedName
 import leo15.reflectName
 

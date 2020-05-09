@@ -2,8 +2,30 @@ package leo16
 
 import leo.base.ifOrNull
 import leo.base.runIfNotNull
+import leo13.first
 import leo13.mapOrNull
-import leo15.*
+import leo15.choiceName
+import leo15.compileName
+import leo15.dictionaryName
+import leo15.doesName
+import leo15.errorName
+import leo15.evaluateName
+import leo15.exportName
+import leo15.gaveName
+import leo15.giveName
+import leo15.givesName
+import leo15.givingName
+import leo15.importName
+import leo15.itName
+import leo15.loadName
+import leo15.matchName
+import leo15.matchesName
+import leo15.notName
+import leo15.quoteName
+import leo15.shouldName
+import leo15.syntaxName
+import leo15.testName
+import leo16.names.*
 
 fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
 	when (mode) {
@@ -19,7 +41,6 @@ fun Evaluated.apply(word: String, evaluated: Evaluated): Evaluated =
 fun Evaluated.applyNormalized(word: String, evaluated: Evaluated): Evaluated =
 	null
 		?: applyDictionary(word, evaluated)
-		?: applyMatch(word, evaluated)
 		?: applyNormalized(word(evaluated.value))
 
 fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
@@ -50,6 +71,7 @@ fun Evaluated.applyNormalized(field: Field): Evaluated =
 		?: applyQuote(field)
 		?: applyGiving(field)
 		?: applyGive(field)
+		?: applyMatch(field)
 		?: applyChoice(field)
 		?: applyImport(field)
 		?: applyExport(field)
@@ -105,17 +127,6 @@ fun Evaluated.applyChoice(field: Field): Evaluated? =
 			?.let { set(it) }
 	}
 
-fun Evaluated.applyMatch(word: String, evaluated: Evaluated): Evaluated? =
-	value.matchEmpty {
-		ifOrNull(word == matchName) {
-			evaluated.value.matchValueOrNull?.let { matchValue ->
-				evaluated.scope.exportDictionary.apply(matchValue)?.let { matching ->
-					scope.evaluated(matching)
-				}
-			}
-		}
-	}
-
 fun Evaluated.applyImport(field: Field): Evaluated? =
 	field.matchPrefix(importName) { rhs ->
 		rhs.loadedDictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
@@ -132,6 +143,21 @@ fun Evaluated.applyLoad(field: Field): Evaluated? =
 			rhs.loadedOrNull?.let { set(it) }
 		}
 	}
+
+fun Evaluated.applyMatch(field: Field): Evaluated? =
+	value.matchFieldOrNull?.let { matchField ->
+		field.matchPrefix(_match) { rhs ->
+			rhs.fieldStack
+				.first { it.selectWord == matchField.selectWord }
+				?.sentenceOrNull
+				?.let { caseSentence ->
+					scope
+						.plus(caseSentence.word.pattern.definitionTo(matchField.value.body))
+						.evaluate(caseSentence.value)
+				}
+		}
+	}
+
 
 fun Evaluated.applyTest(field: Field): Evaluated? =
 	value.matchEmpty {

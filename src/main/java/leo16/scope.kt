@@ -41,3 +41,6 @@ fun Scope.export(dictionary: Dictionary) =
 
 fun Scope.applyBinding(value: Value): Scope? =
 	runIfNotNull(dictionary.definitionOrNull(value)) { plus(it) }
+
+fun Scope.evaluate(value: Value): Evaluated =
+	emptyEvaluator.plus(value).evaluated

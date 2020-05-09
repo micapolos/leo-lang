@@ -1,6 +1,6 @@
 package leo16
 
-import leo15.*
+import leo16.names.*
 
 // TODO: This is a temporary solution.
 enum class Mode {
@@ -13,20 +13,19 @@ enum class Mode {
 
 val Mode.asField: Field
 	get() =
-		modeName(name.toLowerCase()())
+		_mode(name.toLowerCase()())
 
 fun Mode.begin(word: String): Mode =
 	when (this) {
 		Mode.EVALUATE ->
 			when (word) {
-				expandsName -> Mode.QUOTE
-				givesName -> Mode.QUOTE
-				givingName -> Mode.QUOTE
-				giveName -> Mode.QUOTE
-				quoteName -> Mode.QUOTE
-				testName -> Mode.QUOTE
-				//listName -> Mode.META
-				//choiceName -> Mode.META
+				_expands -> Mode.QUOTE
+				_gives -> Mode.QUOTE
+				_giving -> Mode.QUOTE
+				_give -> Mode.QUOTE
+				_match -> Mode.QUOTE
+				_quote -> Mode.QUOTE
+				_test -> Mode.QUOTE
 				else -> this
 			}
 		Mode.META -> Mode.EVALUATE.begin(word)

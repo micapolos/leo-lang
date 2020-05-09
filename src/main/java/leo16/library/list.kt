@@ -13,8 +13,8 @@ val list = dictionary_ {
 	gives {
 		list
 		match {
-			empty.is_ { list { append.item } }
-			any.linked.gives { list.thing.this_ { append.item }.list }
+			empty { list { append.item } }
+			linked { list.thing.this_ { append.item }.list }
 		}
 	}
 

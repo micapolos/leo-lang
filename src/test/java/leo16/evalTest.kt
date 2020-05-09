@@ -150,9 +150,7 @@ class EvalTest {
 
 	@Test
 	fun matchSentence() {
-		evaluate_ { zero.bit.match { zero.is_ { one } } }
-			.assertGives { one }
-		evaluate_ { zero.bit.match { zero.gives { one } } }
+		evaluate_ { zero.bit.match { zero { one } } }
 			.assertGives { one }
 
 		evaluate_ { zero.bit.match { nothing_ } }
@@ -163,9 +161,9 @@ class EvalTest {
 
 	@Test
 	fun matchList() {
-		evaluate_ { empty.list.match { empty.is_ { ok } } }
+		evaluate_ { empty.list.match { empty { ok } } }
 			.assertGives { ok }
-		evaluate_ { list { item { zero } }.match { any.linked.gives { linked } } }
+		evaluate_ { list { item { zero } }.match { linked { linked } } }
 			.assertGives { linked { previous { list { empty } }; last { item { zero } } } }
 	}
 

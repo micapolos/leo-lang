@@ -121,8 +121,8 @@ val url = dictionary_ {
 		give {
 			native.object_.equals_ { null_.native }.boolean
 			match {
-				true_.is_ { none }
-				false_.is_ { native.text }
+				true_ { none }
+				false_ { native.text }
 			}.user
 		}
 	}
@@ -142,8 +142,8 @@ val url = dictionary_ {
 		give {
 			number.equals_ { (-1).number }
 			match {
-				true_.gives { none }
-				false_.gives { number }
+				true_ { none }
+				false_ { number }
 			}.port
 		}
 	}
@@ -164,8 +164,8 @@ val url = dictionary_ {
 		give {
 			native.object_.equals_ { null_.native }.boolean
 			match {
-				true_.is_ { none }
-				false_.is_ { native.text }
+				true_ { none }
+				false_ { native.text }
 			}.query
 		}
 	}
@@ -179,8 +179,8 @@ val url = dictionary_ {
 		give {
 			native.object_.equals_ { null_.native }.boolean
 			match {
-				true_.is_ { none }
-				false_.is_ { native.text }
+				true_ { none }
+				false_ { native.text }
 			}.fragment
 		}
 	}
