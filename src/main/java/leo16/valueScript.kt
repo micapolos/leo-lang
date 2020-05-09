@@ -68,14 +68,14 @@ val Any?.nativeScriptLine: ScriptLine
 	get() =
 		nativeString.line
 
-fun Value.listBodyScriptOrNull(word: String): Script? =
+fun Field.listBodyScriptOrNull(word: String): Script? =
 	matchPrefix(word) { rhs ->
 		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
 			when (sentence.word) {
 				_empty -> script()
 				_linked -> sentence.value.matchInfix(_last) { lhs, last ->
 					lhs.matchPrefix(_previous) { previous ->
-						previous.listBodyScriptOrNull(word)?.plus(_item(last.script))
+						previous.onlyFieldOrNull?.listBodyScriptOrNull(word)?.plus(_item(last.script))
 					}
 				}
 				else -> null
@@ -83,10 +83,10 @@ fun Value.listBodyScriptOrNull(word: String): Script? =
 		}
 	}
 
-val Value.listScriptOrNull: Script?
+val Field.listScriptLineOrNull: ScriptLine?
 	get() =
-		onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
+		sentenceOrNull?.let { sentence ->
 			listBodyScriptOrNull(sentence.word)?.let { script ->
-				script(sentence.word(if (script.isEmpty) script(_empty) else script))
+				sentence.word(if (script.isEmpty) script(_empty) else script)
 			}
 		}

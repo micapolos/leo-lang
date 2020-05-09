@@ -11,22 +11,20 @@ class ValueScriptTest {
 	@Test
 	fun valueListScript_empty() {
 		stack<Value>()
-			.value(_list)
-			.listScriptOrNull
+			.field(_list)
+			.listScriptLineOrNull
 			.assertEqualTo(
-				script(
-					_list lineTo script(_empty)))
+				_list lineTo script(_empty))
 	}
 
 	@Test
 	fun valueListScript_linked() {
 		stack(value(_zero()), value(_one()))
-			.value(_list)
-			.listScriptOrNull
+			.field(_list)
+			.listScriptLineOrNull
 			.assertEqualTo(
-				script(
-					_list lineTo script(
-						_item lineTo script(_zero),
-						_item lineTo script(_one))))
+				_list lineTo script(
+					_item lineTo script(_zero),
+					_item lineTo script(_one)))
 	}
 }
