@@ -72,7 +72,7 @@ fun Value.applyMatches(field: Field): Value? =
 	}
 
 fun Value.applyStackFold(field: Field): Value? =
-	matchStack { stack ->
+	matchList { stack ->
 		field.matchPrefix(_fold) { rhs ->
 			rhs.split { lhs, field ->
 				field.matchPrefix(_step) { rhs ->

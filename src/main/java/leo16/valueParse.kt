@@ -107,7 +107,7 @@ val Sentence.literalOrNull: Literal?
 			?: stringOrNull?.literal
 
 fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? =
-	field.matchPrefix(_stack) { rhs ->
+	field.matchPrefix(_list) { rhs ->
 		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
 			when (sentence.word) {
 				_empty -> this
@@ -123,11 +123,11 @@ fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? =
 		}
 	}
 
-val Field.valueStackOrNull: Stack<Value>?
+val Field.stackOrNull: Stack<Value>?
 	get() =
 		stack<Value>().pushOrNull(this)?.reverse
 
 val Value.stackOrNull: Stack<Value>?
 	get() =
-		onlyFieldOrNull?.valueStackOrNull
+		onlyFieldOrNull?.stackOrNull
 

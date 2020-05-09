@@ -67,8 +67,8 @@ class ReflectionTest {
 		evaluate_ {
 			native.reflection.import
 			"java.awt.Point".text.name.class_
-			constructor { parameter { empty.stack } }
-			invoke { parameter { empty.stack } }
+			constructor { parameter { empty.list } }
+			invoke { parameter { empty.list } }
 			get {
 				"java.awt.Point".text.name.class_
 				field { name { "x".text } }
@@ -83,7 +83,7 @@ class ReflectionTest {
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
-					stack {
+					list {
 						item { int.class_ }
 						item { int.class_ }
 					}
@@ -103,7 +103,7 @@ class ReflectionTest {
 			"java.awt.Point".text.name.class_
 			constructor {
 				parameter {
-					stack {
+					list {
 						item { int.class_ }
 						item { int.class_ }
 					}
@@ -111,7 +111,7 @@ class ReflectionTest {
 			}
 			invoke {
 				parameter {
-					stack {
+					list {
 						item { 10.int.native }
 						item { 20.int.native }
 					}
@@ -130,7 +130,7 @@ class ReflectionTest {
 			method {
 				name { "substring".text }
 				parameter {
-					stack {
+					list {
 						item { int.class_ }
 						item { int.class_ }
 					}
@@ -154,14 +154,14 @@ class ReflectionTest {
 				method {
 					name { "substring".text }
 					parameter {
-						stack {
+						list {
 							item { int.class_ }
 							item { int.class_ }
 						}
 					}
 				}
 				parameter {
-					stack {
+					list {
 						item { 7.int.native }
 						item { 12.int.native }
 					}
@@ -178,14 +178,14 @@ class ReflectionTest {
 			method {
 				name { "valueOf".text }
 				parameter {
-					stack {
+					list {
 						item { int.class_ }
 					}
 				}
 			}
 			invoke {
 				parameter {
-					stack {
+					list {
 						item { 123.int.native }
 					}
 				}

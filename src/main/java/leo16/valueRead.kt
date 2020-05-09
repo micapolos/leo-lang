@@ -8,16 +8,16 @@ import leo16.names.*
 val Field.read: Field
 	get() =
 		null
-			?: stackFieldOrNull
+			?: listFieldOrNull
 			?: this
 
-val Field.stackFieldOrNull: Field?
+val Field.listFieldOrNull: Field?
 	get() =
-		matchPrefix(_stack) { rhs ->
+		matchPrefix(_list) { rhs ->
 			rhs
 				.fieldStack
 				.mapOrNull { matchPrefix(_item) { it } }
 				?.linkOrNull
 				?.run { stack.push(value) }
-				?.valueField
+				?.listField
 		}

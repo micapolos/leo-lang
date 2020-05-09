@@ -77,21 +77,21 @@ val Literal.asField: Field
 			is NumberLiteral -> _number(number.bigDecimal.nativeField)
 		}
 
-fun Field.plusValue(stack: Stack<Value>): Field =
+fun Field.plusListValue(stack: Stack<Value>): Field =
 	when (stack) {
 		is EmptyStack -> this
 		is LinkStack ->
-			_stack(
+			_list(
 				_link(
 					_previous(this),
 					_last(stack.link.value)))
-				.plusValue(stack.link.stack)
+				.plusListValue(stack.link.stack)
 	}
 
-val Stack<Value>.valueField: Field
+val Stack<Value>.listField: Field
 	get() =
-		_stack(_empty()).plusValue(reverse)
+		_list(_empty()).plusListValue(reverse)
 
-val Stack<Value>.valueValue: Value
+val Stack<Value>.listValue: Value
 	get() =
-		valueField.value
+		listField.value
