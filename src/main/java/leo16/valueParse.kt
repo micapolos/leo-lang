@@ -99,22 +99,20 @@ val Sentence.literalOrNull: Literal?
 			?: intOrNull?.literal
 			?: stringOrNull?.literal
 
-fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? =
-	field.matchPrefix(_list) { rhs ->
-		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
-			when (sentence.word) {
-				_empty -> this
-				_link -> sentence.value.matchInfix(_last) { lhs, last ->
-					lhs.matchPrefix(_previous) { previous ->
-						previous.onlyFieldOrNull?.let { previousField ->
-							push(last).pushOrNull(previousField)
-						}
-					}
-				}
-				else -> null
-			}
+tailrec fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? {
+	val sentence = field.rhsOrNull(_list)?.onlyFieldOrNull?.sentenceOrNull ?: return null
+	return when (sentence.word) {
+		_empty ->
+			if (sentence.value.isEmpty) this
+			else null
+		_link -> {
+			val (lhs, last) = sentence.value.pairOrNull(_last) ?: return null
+			val previous = lhs.rhsOrNull(_previous)?.onlyFieldOrNull ?: return null
+			push(last).pushOrNull(previous)
 		}
+		else -> null
 	}
+}
 
 val Field.stackOrNull: Stack<Value>?
 	get() =

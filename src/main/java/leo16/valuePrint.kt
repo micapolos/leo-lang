@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.notNullIf
 import leo13.Stack
+import leo13.isEmpty
 import leo13.map
 import leo16.names.*
 import java.math.BigDecimal
@@ -65,26 +66,10 @@ val Stack<Field>.printField: Field
 	get() =
 		_list(value)
 
-val Field.stackPrintValueOrNull: Value?
-	get() =
-		matchPrefix(_list) { rhs ->
-			rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
-				when (sentence.word) {
-					_empty -> value()
-					_link -> sentence.value.matchInfix(_last) { lhs, last ->
-						lhs.matchPrefix(_previous) { previous ->
-							previous.onlyFieldOrNull?.stackPrintValueOrNull?.plus(_item(last.printed))
-						}
-					}
-					else -> null
-				}
-			}
-		}
-
 val Field.stackPrintOrNull: Field?
 	get() =
-		stackPrintValueOrNull?.let { value ->
-			_list(if (value.isEmpty) value(_empty()) else value)
+		stackOrNull?.let { stack ->
+			_list(if (stack.isEmpty) value(_empty()) else stack.map { _item(this) }.value)
 		}
 
 val Field.textPrintOrNull: Field?
