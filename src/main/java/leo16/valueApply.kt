@@ -87,10 +87,10 @@ fun Value.applyStackFold(field: Field): Value? =
 		field.matchPrefix(_fold) { rhs ->
 			rhs.split { lhs, field ->
 				field.matchPrefix(_step) { rhs ->
-					rhs.matchFunction(value(_to(_any()), _pushed(_any()))) { function ->
+					rhs.matchFunction(value(_to(_any()), _item(_any()))) { function ->
 						lhs.matchPrefix(_to) { from ->
 							from.fold(stack) { value ->
-								function.invoke(value(_to(this), _pushed(value)))
+								function.invoke(value(_to(this), _item(value)))
 							}
 						}
 					}

@@ -22,8 +22,8 @@ class ValuePrintTest {
 			.printed
 			.assertEqualTo(
 				_stack(
-					_pushed(_zero()),
-					_pushed(_one())))
+					_item(_zero()),
+					_item(_one())))
 	}
 
 	@Test
@@ -36,7 +36,7 @@ class ValuePrintTest {
 			.printed
 			.assertEqualTo(
 				_link(
-					_previous(_stack(_pushed(_zero()))),
+					_previous(_stack(_item(_zero()))),
 					_last(_one())))
 	}
 }

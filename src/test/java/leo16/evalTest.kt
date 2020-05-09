@@ -177,17 +177,17 @@ class EvalTest {
 	fun matchLinked() {
 		evaluate_ {
 			stack {
-				pushed { zero }
-				pushed { one }
-				pushed { two }
+				item { zero }
+				item { one }
+				item { two }
 			}
 			match { link { link } }
 		}.assertGives {
 			link {
 				previous {
 					stack {
-						pushed { zero }
-						pushed { one }
+						item { zero }
+						item { one }
 					}
 				}
 				last { two }
@@ -454,7 +454,7 @@ class EvalTest {
 				to { zero }
 				step {
 					to { any }
-					pushed { any }
+					item { any }
 					giving { given }
 				}
 			}
@@ -465,15 +465,15 @@ class EvalTest {
 	fun foldStack_nonEmpty() {
 		evaluate_ {
 			stack {
-				pushed { 1.number }
-				pushed { 2.number }
+				item { 1.number }
+				item { 2.number }
 			}
 			fold {
 				to { 0.number }
 				step {
 					to { any }
-					pushed { any }
-					giving { to.thing.this_ { pushed.thing } }
+					item { any }
+					giving { to.thing.this_ { item.thing } }
 				}
 			}
 		}.assertGives { 0.number; 2.number; 1.number }
