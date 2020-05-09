@@ -9,26 +9,26 @@ fun main() {
 
 val stack = dictionary_ {
 	any.stack
-	plus { any }
+	push { any }
 	gives {
 		stack {
 			link {
 				previous { stack }
-				last { plus.thing }
+				last { push.thing }
 			}
 		}
 	}
 
 	test {
 		empty.stack
-		plus { 1.number }
-		gives { stack { next { 1.number } } }
+		push { 1.number }
+		gives { stack { pushed { 1.number } } }
 	}
 
 	test {
-		stack { next { 1.number } }
-		plus { 2.number }
-		gives { stack { next { 1.number }; next { 2.number } } }
+		stack { pushed { 1.number } }
+		push { 2.number }
+		gives { stack { pushed { 1.number }; pushed { 2.number } } }
 	}
 
 	any.stack.reverse
@@ -38,23 +38,23 @@ val stack = dictionary_ {
 			to { empty.stack }
 			step {
 				to { any }
-				next { any }
-				giving { to.stack.plus { next.thing } }
+				pushed { any }
+				giving { to.stack.push { pushed.thing } }
 			}
 		}
 	}
 
 	test {
 		stack {
-			next { 1.number }
-			next { 2.number }
-			next { 3.number }
+			pushed { 1.number }
+			pushed { 2.number }
+			pushed { 3.number }
 		}.reverse
 		gives {
 			stack {
-				next { 3.number }
-				next { 2.number }
-				next { 1.number }
+				pushed { 3.number }
+				pushed { 2.number }
+				pushed { 1.number }
 			}
 		}
 	}
@@ -67,10 +67,10 @@ val stack = dictionary_ {
 			to { empty.stack }
 			step {
 				to { any }
-				next { any }
+				pushed { any }
 				giving {
 					to.stack
-					plus { map.take { next.thing } }
+					push { map.take { pushed.thing } }
 				}
 			}
 		}
@@ -78,16 +78,16 @@ val stack = dictionary_ {
 
 	test {
 		stack {
-			next { 1.number }
-			next { 2.number }
-			next { 3.number }
+			pushed { 1.number }
+			pushed { 2.number }
+			pushed { 3.number }
 		}
 		map { any.giving { number.ok } }
 		gives {
 			stack {
-				next { 1.number.ok }
-				next { 2.number.ok }
-				next { 3.number.ok }
+				pushed { 1.number.ok }
+				pushed { 2.number.ok }
+				pushed { 3.number.ok }
 			}
 		}
 	}
@@ -100,7 +100,7 @@ val stack = dictionary_ {
 			to { 0.number }
 			step {
 				to { any }
-				next { any }
+				pushed { any }
 				giving { to.number.plus { 1.number } }
 			}
 		}.length
@@ -113,9 +113,9 @@ val stack = dictionary_ {
 
 	test {
 		stack {
-			next { 0.number }
-			next { 1.number }
-			next { 2.number }
+			pushed { 0.number }
+			pushed { 1.number }
+			pushed { 2.number }
 		}.length
 		gives { 3.number.length }
 	}

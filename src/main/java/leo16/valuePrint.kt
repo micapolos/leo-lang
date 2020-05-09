@@ -22,7 +22,7 @@ val Field.printed: Field
 		null
 			?: textPrintOrNull
 			?: numberPrintOrNull
-			?: listPrintOrNull
+			?: stackPrintOrNull
 			?: defaultPrinted
 
 val Field.defaultPrinted: Field
@@ -71,7 +71,7 @@ val Stack<Field>.printField: Field
 	get() =
 		listName(value)
 
-val Field.listPrintValueOrNull: Value?
+val Field.stackPrintValueOrNull: Value?
 	get() =
 		matchPrefix(_stack) { rhs ->
 			rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
@@ -79,7 +79,7 @@ val Field.listPrintValueOrNull: Value?
 					_empty -> value()
 					_link -> sentence.value.matchInfix(_last) { lhs, last ->
 						lhs.matchPrefix(_previous) { previous ->
-							previous.onlyFieldOrNull?.listPrintValueOrNull?.plus(_next(last.printed))
+							previous.onlyFieldOrNull?.stackPrintValueOrNull?.plus(_pushed(last.printed))
 						}
 					}
 					else -> null
@@ -87,9 +87,9 @@ val Field.listPrintValueOrNull: Value?
 			}
 		}
 
-val Field.listPrintOrNull: Field?
+val Field.stackPrintOrNull: Field?
 	get() =
-		listPrintValueOrNull?.let { value ->
+		stackPrintValueOrNull?.let { value ->
 			_stack(if (value.isEmpty) value(_empty()) else value)
 		}
 

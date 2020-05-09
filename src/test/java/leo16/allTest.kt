@@ -12,6 +12,7 @@ class IndexTest {
 			import { core }
 			import { int }
 			import { list }
+			import { stack }
 			import { reflection }
 			import { number }
 			import { text }
