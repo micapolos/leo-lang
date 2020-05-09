@@ -108,3 +108,9 @@ fun <R : Any> Field.matchList(fn: (Stack<Value>) -> R?): R? =
 
 fun <R : Any> Value.matchList(fn: (Stack<Value>) -> R?): R? =
 	fieldStack.onlyOrNull?.matchList(fn)
+
+fun <R : Any> Field.matchStack(fn: (Stack<Value>) -> R?): R? =
+	valueStackOrNull?.let(fn)
+
+fun <R : Any> Value.matchStack(fn: (Stack<Value>) -> R?): R? =
+	fieldStack.onlyOrNull?.matchStack(fn)

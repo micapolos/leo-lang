@@ -14,6 +14,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyComment(field)
 		?: applyScript(field)
 		?: applyFold(field)
+		?: applyStackFold(field)
 		?: applyMatches(field)
 		?: applyLeonardo(field)
 
@@ -71,6 +72,23 @@ fun Value.applyFold(field: Field): Value? =
 					rhs.matchFunction(value(toName(anyName()), itemName(anyName()))) { function ->
 						lhs.matchPrefix(toName) { from ->
 							from.fold(list) { value ->
+								function.invoke(value(toName(this), itemName(value)))
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+fun Value.applyStackFold(field: Field): Value? =
+	matchStack { stack ->
+		field.matchPrefix(foldName) { rhs ->
+			rhs.split { lhs, field ->
+				field.matchPrefix(stepName) { rhs ->
+					rhs.matchFunction(value(toName(anyName()), itemName(anyName()))) { function ->
+						lhs.matchPrefix(toName) { from ->
+							from.fold(stack) { value ->
 								function.invoke(value(toName(this), itemName(value)))
 							}
 						}

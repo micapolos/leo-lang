@@ -84,8 +84,8 @@ val Field.listPrintValueOrNull: Value?
 					}
 					else -> null
 				}
+			}
 		}
-	}
 
 val Field.listPrintOrNull: Field?
 	get() =
