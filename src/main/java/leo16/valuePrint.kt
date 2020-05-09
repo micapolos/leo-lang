@@ -71,27 +71,26 @@ val Stack<Field>.printField: Field
 	get() =
 		listName(value)
 
-fun Field.listPrintValueOrNull(word: String): Value? =
-	matchPrefix(word) { rhs ->
-		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
-			when (sentence.word) {
-				_empty -> value()
-				_link -> sentence.value.matchInfix(_last) { lhs, last ->
-					lhs.matchPrefix(_previous) { previous ->
-						previous.onlyFieldOrNull?.listPrintValueOrNull(word)?.plus(_next(last.printed))
+val Field.listPrintValueOrNull: Value?
+	get() =
+		matchPrefix(_stack) { rhs ->
+			rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
+				when (sentence.word) {
+					_empty -> value()
+					_link -> sentence.value.matchInfix(_last) { lhs, last ->
+						lhs.matchPrefix(_previous) { previous ->
+							previous.onlyFieldOrNull?.listPrintValueOrNull?.plus(_next(last.printed))
+						}
 					}
+					else -> null
 				}
-				else -> null
-			}
 		}
 	}
 
 val Field.listPrintOrNull: Field?
 	get() =
-		sentenceOrNull?.let { sentence ->
-			listPrintValueOrNull(sentence.word)?.let { value ->
-				sentence.word(if (value.isEmpty) value(_empty()) else value)
-			}
+		listPrintValueOrNull?.let { value ->
+			_stack(if (value.isEmpty) value(_empty()) else value)
 		}
 
 val Field.textPrintOrNull: Field?
