@@ -82,7 +82,7 @@ fun Field.plus(stack: Stack<Value>, word: String): Field =
 		is EmptyStack -> this
 		is LinkStack ->
 			word(
-				_linked(
+				_list(
 					_previous(this),
 					_last(stack.link.value)))
 				.plus(stack.link.stack, word)

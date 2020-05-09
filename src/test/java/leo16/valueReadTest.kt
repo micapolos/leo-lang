@@ -19,8 +19,8 @@ class ValueReadTest {
 			_item(_one()))
 			.listFieldOrNull
 			.assertEqualTo(
-				_stack(_linked(
-					_previous(_stack(_linked(
+				_stack(_list(
+					_previous(_stack(_list(
 						_previous(_stack(_empty())),
 						_last(_zero())))),
 					_last(_one()))))

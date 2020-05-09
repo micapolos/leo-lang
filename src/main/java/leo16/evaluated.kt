@@ -39,4 +39,4 @@ val Evaluated.reflectValueOrNull: Value?
 
 val Evaluated.reflectValue: Value
 	get() =
-		reflectValueOrNull ?: value
+		reflectValueOrNull ?: value.print

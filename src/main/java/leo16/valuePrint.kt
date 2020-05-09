@@ -17,7 +17,7 @@ val Value.print: Value
 
 val Field.print: Field
 	get() =
-		when (this) {
+		listPrintOrNull ?: when (this) {
 			is SentenceField -> sentence.printSentence.field
 			is TakingField -> taking.printSentence.field
 			is DictionaryField -> dictionary.printSentence.field
@@ -66,9 +66,9 @@ fun Field.listPrintValueOrNull(word: String): Value? =
 		rhs.onlyFieldOrNull?.sentenceOrNull?.let { sentence ->
 			when (sentence.word) {
 				_empty -> value()
-				_linked -> sentence.value.matchInfix(_last) { lhs, last ->
+				_list -> sentence.value.matchInfix(_last) { lhs, last ->
 					lhs.matchPrefix(_previous) { previous ->
-						previous.onlyFieldOrNull?.listPrintValueOrNull(word)?.plus(_item.invoke(last))
+						previous.onlyFieldOrNull?.listPrintValueOrNull(word)?.plus(_item(last.print))
 					}
 				}
 				else -> null
