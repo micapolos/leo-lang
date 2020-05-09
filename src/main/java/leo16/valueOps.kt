@@ -90,3 +90,4 @@ fun Field.rhsOrNull(word: String): Value? =
 
 fun Value.pairOrNull(word: String): Pair<Value, Value>? =
 	matchInfix(word) { lhs, rhs -> lhs to rhs }
+

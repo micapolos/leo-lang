@@ -1,6 +1,5 @@
 package leo16
 
-import leo13.fold
 import leo14.leonardoScript
 import leo15.commentName
 import leo15.leonardoName
@@ -21,7 +20,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyNothing(field)
 		?: applyComment(field)
 		?: applyScript(field)
-		?: applyStackFold(field)
+		?: applyListFold(field)
 		?: applyMatches(field)
 		?: applyLeonardo(field)
 
@@ -71,22 +70,34 @@ fun Value.applyMatches(field: Field): Value? =
 		matches(rhs).field.value
 	}
 
-fun Value.applyStackFold(field: Field): Value? =
-	matchList { stack ->
-		field.matchPrefix(_fold) { rhs ->
-			rhs.split { lhs, field ->
-				field.matchPrefix(_step) { rhs ->
-					rhs.matchFunction(value(_to(_any()), _item(_any()))) { function ->
-						lhs.matchPrefix(_to) { from ->
-							from.fold(stack) { value ->
-								function.invoke(value(_to(this), _item(value)))
-							}
-						}
+fun Value.applyListFold(field: Field): Value? =
+	field.matchPrefix(_fold) { rhs ->
+		rhs.split { lhs, field ->
+			field.matchPrefix(_step) { rhs ->
+				rhs.matchFunction(value(_to(_any()), _item(_any()))) { function ->
+					lhs.matchPrefix(_to) { folded ->
+						applyListFold(folded, function)
 					}
 				}
 			}
 		}
 	}
+
+tailrec fun Value.applyListFold(folded: Value, function: Function): Value? {
+	val body = rhsOrNull(_list)?.onlyFieldOrNull?.sentenceOrNull ?: return null
+	return when (body.word) {
+		_empty ->
+			if (body.value.isEmpty) folded
+			else null
+		_link -> {
+			val (lhs, last) = body.value.pairOrNull(_last) ?: return null
+			val item = last.rhsOrNull(_item) ?: return null
+			val previous = lhs.rhsOrNull(_previous) ?: return null
+			previous.applyListFold(function.invoke(value(_to(folded), _item(item))), function)
+		}
+		else -> null
+	}
+}
 
 fun Value.applyLeonardo(field: Field): Value? =
 	matchEmpty {
