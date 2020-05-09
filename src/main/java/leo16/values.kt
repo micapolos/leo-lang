@@ -84,7 +84,7 @@ fun Field.plus(stack: Stack<Value>, word: String): Field =
 			word(
 				_linked(
 					_previous(this),
-					_last(_item(stack.link.value))))
+					_last(stack.link.value)))
 				.plus(stack.link.stack, word)
 	}
 

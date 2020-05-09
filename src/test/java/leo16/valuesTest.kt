@@ -21,7 +21,7 @@ class ValuesTest {
 				value(_stack(_linked(
 					_previous(_stack(_linked(
 						_previous(_stack(_empty())),
-						_last(_item(_zero()))))),
-					_last(_item(_one()))))))
+						_last(_zero())))),
+					_last(_one())))))
 	}
 }
