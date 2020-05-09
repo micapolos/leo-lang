@@ -9,25 +9,25 @@ fun main() {
 
 val list = dictionary_ {
 	any.list
-	plus { item { any } }
+	append { item { any } }
 	gives {
 		list {
 			link {
 				previous { list }
-				last { plus.item }
+				last { append.item }
 			}
 		}
 	}
 
 	test {
 		empty.list
-		plus { item { 1.number } }
+		append { item { 1.number } }
 		gives { list { item { 1.number } } }
 	}
 
 	test {
 		list { item { 1.number } }
-		plus { item { 2.number } }
+		append { item { 2.number } }
 		gives { list { item { 1.number }; item { 2.number } } }
 	}
 
@@ -39,7 +39,7 @@ val list = dictionary_ {
 			step {
 				to { any }
 				item { any }
-				giving { to.list.plus { item } }
+				giving { to.list.append { item } }
 			}
 		}
 	}
@@ -70,7 +70,7 @@ val list = dictionary_ {
 				item { any }
 				giving {
 					to.list
-					plus { map.take { item } }
+					append { map.take { item } }
 				}
 			}
 		}
