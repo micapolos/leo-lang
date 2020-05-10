@@ -14,7 +14,7 @@ val list = dictionary_ {
 		list {
 			link {
 				previous { list }
-				last { append.thing }
+				last { append.content }
 			}
 		}
 	}
@@ -44,15 +44,15 @@ val list = dictionary_ {
 	gives {
 		repeating {
 			list.match {
-				empty { fold.to.thing }
+				empty { fold.to.content }
 				link {
 					link.previous.list
 					fold {
 						to {
 							fold.step
 							take {
-								item { link.last.thing }
-								to { fold.to.thing }
+								item { link.last.content }
+								to { fold.to.content }
 							}
 						}
 						this_ { fold.step }
@@ -74,7 +74,7 @@ val list = dictionary_ {
 			step {
 				item { any }
 				to { any }
-				giving { to.list.append { item.thing } }
+				giving { to.list.append { item.content } }
 			}
 		}
 		gives {
@@ -94,7 +94,7 @@ val list = dictionary_ {
 			step {
 				item { any }
 				to { any }
-				giving { to.list.append { item.thing } }
+				giving { to.list.append { item.content } }
 			}
 		}
 	}
@@ -125,7 +125,7 @@ val list = dictionary_ {
 				to { any }
 				giving {
 					to.list
-					append { map.take { item.thing } }
+					append { map.take { item.content } }
 				}
 			}
 		}

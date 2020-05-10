@@ -66,7 +66,7 @@ fun Body.apply(arg: Value): Value =
 		is ValueBody -> value
 		is FunctionBody -> function.invoke(arg)
 		is NativeBody -> apply(_given(arg).value)
-		is RecurseBody -> function.invoke(arg.thingOrNull!!)
+		is RecurseBody -> function.invoke(arg.contentOrNull!!)
 	}
 
 val Value.parameterDictionary: Dictionary

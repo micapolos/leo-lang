@@ -120,10 +120,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun thing() {
-		evaluate_ { thing }.assertGives { thing }
-		evaluate_ { point { x { zero }; y { one } }.thing }.assertGives { x { zero }; y { one } }
-		evaluate_ { x { zero }; y { one }; thing }.assertGives { thing { x { zero }; y { one } } }
+	fun content() {
+		evaluate_ { content }.assertGives { content }
+		evaluate_ { point { x { zero }; y { one } }.content }.assertGives { x { zero }; y { one } }
+		evaluate_ { x { zero }; y { one }; content }.assertGives { content { x { zero }; y { one } } }
 	}
 
 	@Test

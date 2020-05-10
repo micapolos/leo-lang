@@ -30,7 +30,7 @@ import leo16.nativeField
 import leo16.nativeValue
 import leo16.stackOrNull
 import leo16.theNativeOrNull
-import leo16.thingOrNull
+import leo16.contentOrNull
 import leo16.value
 import leo16.valueValue
 import java.lang.reflect.Constructor
@@ -272,8 +272,8 @@ val arrayStackDefinition =
 
 val printingDefinition =
 	value(_printing(anyName())).gives {
-		val thing = this
+		val content = this
 			.getOrNull(_printing)!!
-			.thingOrNull!!
-		thing.also { thing.println }
+			.contentOrNull!!
+		content.also { content.println }
 	}

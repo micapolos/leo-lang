@@ -18,12 +18,12 @@ fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 	else value().fn(wordOrNull(this))
 }
 
-val Value.thingOrNull: Value?
+val Value.contentOrNull: Value?
 	get() =
 		fieldStack.onlyOrNull?.sentenceOrNull?.value
 
 infix fun Value.getOrNull(word: String): Value? =
-	thingOrNull?.accessOrNull(word)
+	contentOrNull?.accessOrNull(word)
 
 infix fun Value.accessOrNull(word: String): Value? =
 	fieldStack.mapFirst {
