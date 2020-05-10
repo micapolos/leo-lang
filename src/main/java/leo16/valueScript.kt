@@ -27,7 +27,7 @@ val Field.defaultScriptLine: ScriptLine
 	get() =
 		when (this) {
 			is SentenceField -> sentence.scriptLine
-			is GivesField -> function.scriptLine
+			is FunctionField -> function.scriptLine
 			is DictionaryField -> dictionary.printSentence.scriptLine
 			is NativeField -> native.nativeScriptLine
 			is ChoiceField -> choice.scriptLine

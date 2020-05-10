@@ -34,11 +34,9 @@ val list = dictionary_ {
 	list { any }
 	fold {
 		to { any }
-		step {
-			taking {
-				item { any }
-				to { any }
-			}
+		function {
+			item { any }
+			to { any }
 		}
 	}
 	gives {
@@ -49,13 +47,13 @@ val list = dictionary_ {
 					link.previous.list
 					fold {
 						to {
-							fold.step
+							fold.function
 							take {
 								item { link.last.content }
 								to { fold.to.content }
 							}
 						}
-						this_ { fold.step }
+						this_ { fold.function }
 					}
 					repeat
 				}
@@ -71,10 +69,10 @@ val list = dictionary_ {
 		}
 		fold {
 			to { empty.list }
-			step {
+			function {
 				item { any }
 				to { any }
-				giving { to.list.append { item.content } }
+				gives { to.list.append { item.content } }
 			}
 		}
 		gives {
@@ -91,10 +89,10 @@ val list = dictionary_ {
 		reverse.list
 		fold {
 			to { empty.list }
-			step {
+			function {
 				item { any }
 				to { any }
-				giving { to.list.append { item.content } }
+				gives { to.list.append { item.content } }
 			}
 		}
 	}
@@ -115,17 +113,17 @@ val list = dictionary_ {
 	}
 
 	any.list
-	map { taking { any } }
+	map { function { any } }
 	gives {
 		list.reverse
 		fold {
 			to { empty.list }
-			step {
+			function {
 				item { any }
 				to { any }
-				giving {
+				gives {
 					to.list
-					append { map.take { item.content } }
+					append { map.function.take { item.content } }
 				}
 			}
 		}
@@ -137,7 +135,7 @@ val list = dictionary_ {
 			item { 2.number }
 			item { 3.number }
 		}
-		map { any.giving { number.ok } }
+		map { function { any.gives { number.ok } } }
 		gives {
 			list {
 				item { 1.number.ok }
@@ -153,10 +151,10 @@ val list = dictionary_ {
 		length.list
 		fold {
 			to { 0.number }
-			step {
+			function {
 				item { any }
 				to { any }
-				giving { to.number.plus { 1.number } }
+				gives { to.number.plus { 1.number } }
 			}
 		}.length
 	}

@@ -17,7 +17,7 @@ val Field.patternField: PatternField
 	get() =
 		when (this) {
 			is SentenceField -> sentence.patternField
-			is GivesField -> function.asPatternField.patternField
+			is FunctionField -> function.asPatternField.patternField
 			is DictionaryField -> dictionary.printSentence.patternField
 			is NativeField -> nativePatternField
 			is ChoiceField -> choice.patternField
@@ -26,7 +26,7 @@ val Field.patternField: PatternField
 val Sentence.patternField: PatternField
 	get() =
 		when (word) {
-			_taking -> value.pattern.taking.field
+			_function -> value.pattern.function.field
 			else -> exactPatternField
 		}
 

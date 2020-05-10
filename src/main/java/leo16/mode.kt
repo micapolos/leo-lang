@@ -6,6 +6,7 @@ import leo16.names.*
 enum class Mode {
 	EVALUATE,
 	META,
+	TYPE,
 	QUOTE;
 
 	override fun toString() = asField.toString()
@@ -23,10 +24,15 @@ fun Mode.begin(word: String): Mode =
 				_gives -> Mode.QUOTE
 				_giving -> Mode.QUOTE
 				_give -> Mode.QUOTE
-				_function -> Mode.QUOTE
+				_function -> Mode.TYPE
 				_match -> Mode.QUOTE
 				_quote -> Mode.QUOTE
 				_test -> Mode.QUOTE
+				else -> this
+			}
+		Mode.TYPE ->
+			when (word) {
+				_gives -> Mode.QUOTE
 				else -> this
 			}
 		Mode.META -> Mode.EVALUATE.begin(word)

@@ -25,7 +25,7 @@ data class SentenceField(val sentence: Sentence) : Field() {
 	override fun toString() = super.toString()
 }
 
-data class GivesField(val function: Function) : Field() {
+data class FunctionField(val function: Function) : Field() {
 	override fun toString() = super.toString()
 }
 
@@ -55,7 +55,7 @@ val Value.asField: Field
 
 val Stack<Field>.value: Value get() = Value(this)
 val Sentence.field: Field get() = SentenceField(this)
-val Function.field: Field get() = GivesField(this)
+val Function.field: Field get() = FunctionField(this)
 val Dictionary.field: Field get() = DictionaryField(this)
 val Choice.field: Field get() = ChoiceField(this)
 val Any?.nativeField: Field get() = NativeField(this)
@@ -72,7 +72,7 @@ val Field.value get() = value(this)
 val emptyValue = value()
 
 val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
-val Field.functionOrNull: Function? get() = (this as? GivesField)?.function
+val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
 val Field.dictionaryOrNull: Dictionary? get() = (this as? DictionaryField)?.dictionary
 val Field.choiceOrNull: Choice? get() = (this as? ChoiceField)?.choice
 val Field.theNativeOrNull: The<Any?>? get() = if (this is NativeField) native.the else null

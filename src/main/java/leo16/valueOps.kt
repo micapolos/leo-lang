@@ -34,7 +34,7 @@ val Field.selectWord: String
 	get() =
 		when (this) {
 			is SentenceField -> sentence.word
-			is GivesField -> _taking
+			is FunctionField -> _function
 			is DictionaryField -> _dictionary
 			is NativeField -> _native
 			is ChoiceField -> _choice

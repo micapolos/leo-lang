@@ -8,19 +8,20 @@ import leo16.names.*
 
 fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
 	when (mode) {
-		Mode.EVALUATE -> apply(word, evaluated)
+		Mode.EVALUATE -> apply(word, evaluated, isType = false)
+		Mode.TYPE -> apply(word, evaluated, isType = true)
 		Mode.QUOTE -> plusNormalized(word(evaluated.value))
 		Mode.META -> plusNormalized(word(evaluated.value))
 	}
 
-fun Evaluated.apply(word: String, evaluated: Evaluated): Evaluated =
-	if (evaluated.value.isEmpty) clearValue.applyNormalized(word, evaluated.scope.evaluated(value))
-	else applyNormalized(word, evaluated)
+fun Evaluated.apply(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
+	if (evaluated.value.isEmpty) clearValue.applyNormalized(word, evaluated.scope.evaluated(value), isType)
+	else applyNormalized(word, evaluated, isType)
 
-fun Evaluated.applyNormalized(word: String, evaluated: Evaluated): Evaluated =
+fun Evaluated.applyNormalized(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
 	null
 		?: applyDictionary(word, evaluated)
-		?: applyNormalized(word(evaluated.value))
+		?: applyNormalized(word(evaluated.value), isType)
 
 fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
 	value.matchEmpty {
@@ -33,25 +34,25 @@ fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
 
 fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 	when (mode) {
-		Mode.EVALUATE -> apply(field)
+		Mode.EVALUATE -> apply(field, isType = false)
+		Mode.TYPE -> apply(field, isType = true)
 		Mode.QUOTE -> plusNormalized(field)
 		Mode.META -> plusNormalized(field)
 	}
 
-fun Evaluated.apply(field: Field): Evaluated =
-	value.normalize(field) { set(this).applyNormalized(it) }
+fun Evaluated.apply(field: Field, isType: Boolean): Evaluated =
+	value.normalize(field) { set(this).applyNormalized(it, isType) }
 
-fun Evaluated.applyNormalized(field: Field): Evaluated =
-	applyNormalizedAndRead(field.read)
+fun Evaluated.applyNormalized(field: Field, isType: Boolean): Evaluated =
+	applyNormalizedAndRead(field.read, isType)
 
-fun Evaluated.applyNormalizedAndRead(field: Field): Evaluated =
+fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Evaluated =
 	null
 		?: applyValue(field) // keep first
-		?: applyBinding(field)
+		?: ifOrNull(!isType) { applyBinding(field) }
 		?: applyEvaluate(field)
 		?: applyCompile(field)
 		?: applyQuote(field)
-		?: applyGiving(field)
 		?: applyGive(field)
 		?: applyFunction(field)
 		?: applyMatch(field)
@@ -90,16 +91,9 @@ fun Evaluated.resolve(field: Field): Evaluated =
 fun Evaluated.applyBinding(field: Field): Evaluated? =
 	scope.applyBinding(value.plus(field))?.emptyEvaluated
 
-fun Evaluated.applyGiving(field: Field): Evaluated? =
-	field.matchPrefix(_giving) { rhs ->
-		updateValue { value.pattern.gives(scope.dictionary.compiled(rhs)).field.value }
-	}
-
 fun Evaluated.applyFunction(field: Field): Evaluated? =
-	value.matchEmpty {
-		field.matchPrefix(_function) { rhs ->
-			scope.dictionary.givesOrNull(rhs)?.field?.value?.let { set(it) }
-		}
+	field.matchPrefix(_function) { rhs ->
+		scope.dictionary.givesOrNull(rhs)?.field?.let { set(value.plus(it)) }
 	}
 
 fun Evaluated.applyGive(field: Field): Evaluated? =
@@ -170,7 +164,7 @@ fun Evaluated.applyTestGives(value: Value): Evaluated? =
 							_error(
 								_it(lhs),
 								_gave(evaluatedLhs),
-								_should(_give(evaluatedRhs))))).toString())
+								_should(_give(evaluatedRhs))))).printed.toString())
 			}
 		}
 	}
@@ -187,7 +181,7 @@ fun Evaluated.applyTestMatches(value: Value): Evaluated? =
 								_error(
 									_it(lhs),
 									_giving(evaluatedLhs),
-									_does(_not(_match(evaluatedRhs)))))).toString())
+									_does(_not(_match(evaluatedRhs)))))).printed.toString())
 				}
 			}
 		}

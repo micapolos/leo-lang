@@ -68,8 +68,14 @@ class EvalTest {
 
 	@Test
 	fun script() {
-		evaluate_ { zero.giving { one }.script.take { zero } }
-			.assertGives { taking { zero.giving { one } }.take { zero } }
+		evaluate_ {
+			function { zero.gives { one } }
+			script
+			take { zero }
+		}.assertGives {
+			function { zero.gives { one } }
+			take { zero }
+		}
 	}
 
 	@Test
@@ -115,8 +121,7 @@ class EvalTest {
 		evaluate_ { the { "foo".text }.text }.assertGives { "foo".text }
 		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
 		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { definition { list { empty } } } }
-		evaluate_ { the { zero.giving { one } }.taking }.assertGives { taking { zero.giving { one } } }
-		evaluate_ { the { x { zero }.giving { x } }.take { x { zero } } }.assertGives { x { zero } }
+		evaluate_ { the { function { zero.gives { one } } }.function }.assertGives { function { zero.gives { one } } }
 	}
 
 	@Test
@@ -124,6 +129,26 @@ class EvalTest {
 		evaluate_ { content }.assertGives { content }
 		evaluate_ { point { x { zero }; y { one } }.content }.assertGives { x { zero }; y { one } }
 		evaluate_ { x { zero }; y { one }; content }.assertGives { content { x { zero }; y { one } } }
+	}
+
+	@Test
+	fun functionFunction() {
+		evaluate_ {
+			function { function { zero }.gives { ok } }
+			take { function { zero.gives { one } } }
+		}.assertGives { ok }
+	}
+
+	@Test
+	fun functionAsField() {
+		evaluate_ {
+			the {
+				0.number
+				"hello".text
+				function { zero.gives { one } }
+			}
+			function.take { zero }
+		}.assertGives { one }
 	}
 
 	@Test
@@ -199,18 +224,45 @@ class EvalTest {
 	}
 
 	@Test
-	fun giving() {
-		evaluate_ { zero.giving { one } }.assertGives { taking { zero.giving { one } } }
+	fun function() {
+		evaluate_ {
+			function { zero.gives { one } }
+		}.assertGives {
+			function { zero.gives { one } }
+		}
+
+		evaluate_ {
+			function { zero.gives { one } }
+			zero
+		}.assertGives {
+			zero { function { zero.gives { one } } }
+		}
+
+		evaluate_ {
+			function { zero.plus { one } }
+			zero
+		}.assertGives { zero }
 	}
 
 	@Test
 	fun take() {
 		evaluate_ {
-			the { any.x.giving { x } }.take { x { zero } }
-		}.assertGives { x { zero } }
+			function { zero.gives { one } }
+			take { zero }
+		}.assertGives { one }
+
 		evaluate_ {
-			the { any.x.giving { x } }.take { y { zero } }
-		}.assertGives { the { taking { x { any }.giving { x } } }.take { y { zero } } }
+			function { any.bit.gives { ok } }
+			take { zero.bit }
+		}.assertGives { ok }
+
+		evaluate_ {
+			function { any.x.gives { x } }
+			take { y { zero } }
+		}.assertGives {
+			function { x { any }.gives { x } }
+			take { y { zero } }
+		}
 	}
 
 	@Test
@@ -566,13 +618,13 @@ class EvalTest {
 	@Test
 	fun matchesGiving() {
 		evaluate_ {
-			zero.giving { given }
-			matches { taking { zero } }
+			function { zero.gives { one } }
+			matches { function { zero } }
 		}.assertGives { true.boolean }
 
 		evaluate_ {
-			zero.giving { given }
-			matches { taking { one } }
+			function { zero.gives { one } }
+			matches { function { one } }
 		}.assertGives { false.boolean }
 	}
 

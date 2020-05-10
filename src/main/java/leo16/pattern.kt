@@ -25,10 +25,10 @@ data class PatternValue(val fieldStack: Stack<PatternField>)
 sealed class PatternField
 data class SentencePatternField(val sentence: PatternSentence) : PatternField()
 data class NativePatternField(val native: Any?) : PatternField()
-data class TakingPatternField(val taking: PatternTaking) : PatternField()
+data class FunctionPatternField(val function: PatternFunction) : PatternField()
 
 data class PatternSentence(val word: String, val pattern: Pattern)
-data class PatternTaking(val pattern: Pattern)
+data class PatternFunction(val pattern: Pattern)
 
 data class Match(val anyFieldStackOrNull: Stack<Field>?, val fieldStack: Stack<Field>)
 
@@ -37,8 +37,8 @@ val emptyPattern = pattern()
 val anyPattern: Pattern = Pattern(isAny = true, value = emptyPatternValue)
 val PatternValue.pattern: Pattern get() = Pattern(false, this)
 val PatternSentence.field: PatternField get() = SentencePatternField(this)
-val Pattern.taking: PatternTaking get() = PatternTaking(this)
-val PatternTaking.field: PatternField get() = TakingPatternField(this)
+val Pattern.function: PatternFunction get() = PatternFunction(this)
+val PatternFunction.field: PatternField get() = FunctionPatternField(this)
 val Any?.nativePatternField: PatternField get() = NativePatternField(this)
 val Stack<PatternField>.value get() = PatternValue(this)
 fun patternValue(vararg fields: PatternField) = stack(*fields).value
@@ -79,16 +79,16 @@ val PatternField.asField: Field
 		when (this) {
 			is SentencePatternField -> sentence.asField
 			is NativePatternField -> native.nativeField
-			is TakingPatternField -> taking.asField
+			is FunctionPatternField -> function.asField
 		}
 
 val PatternSentence.asField: Field
 	get() =
 		word(pattern.asValue)
 
-val PatternTaking.asField: Field
+val PatternFunction.asField: Field
 	get() =
-		_taking(pattern.asValue)
+		_function(pattern.asValue)
 
 val emptyMatch = Match(null, stack())
 
@@ -135,7 +135,7 @@ fun Value.matches(pattern: Pattern): Boolean =
 fun Field.matches(field: PatternField): Boolean =
 	when (this) {
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
-		is GivesField -> field is TakingPatternField && function.pattern == field.taking.pattern
+		is FunctionField -> field is FunctionPatternField && function.pattern == field.function.pattern
 		is DictionaryField -> field == _dictionary(anyPattern)
 		is NativeField -> field == _native(anyPattern)
 		is ChoiceField -> false // TODO()
