@@ -8,7 +8,7 @@ data class Is(val pattern: Pattern, val value: Value) {
 
 val Is.asValue get() = pattern.asValue.plus(_is(value))
 infix fun Pattern.is_(value: Value) = Is(this, value)
-fun Is.invoke(arg: Value) = pattern.matchOrNull(arg)?.let { value }
+fun Is.apply(arg: Value): Value? = pattern.matchOrNull(arg)?.let { value }
 
 val Value.isOrNull: Is?
 	get() =

@@ -48,16 +48,7 @@ val Dictionary.printSentence: Sentence
 
 val Definition.printField: Field
 	get() =
-		_definition(pattern.asValue.plus(body.printField))
-
-val Body.printField: Field
-	get() =
-		when (this) {
-			is ValueBody -> _is(value)
-			is FunctionBody -> _gives(function.bodyValue)
-			is NativeBody -> _gives(apply.nativeField)
-			is RecurseBody -> _recurse(function.bodyValue)
-		}
+		asField
 
 fun <T> Stack<T>.printField(fn: T.() -> Field): Field =
 	map(fn).printField

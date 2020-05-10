@@ -134,7 +134,7 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 				?.sentenceOrNull
 				?.let { caseSentence ->
 					scope
-						.plus(caseSentence.word.pattern.definitionTo(matchField.value.body))
+						.plus(caseSentence.word.pattern.is_(matchField.value).definition)
 						.evaluate(caseSentence.value)
 				}
 		}
@@ -171,14 +171,16 @@ fun Evaluated.applyTestMatches(value: Value): Evaluated? =
 	value.matchInfix(_matches) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
-				if (evaluatedLhs.matches(evaluatedRhs.pattern)) this
-				else throw AssertionError(
-					value(
-						_test(
-							_error(
-								_it(lhs),
-								_giving(evaluatedLhs),
-								_does(_not(_match(evaluatedRhs)))))).toString())
+				evaluatedRhs.pattern.matchOrNull(evaluatedLhs).let { match ->
+					if (match != null) this
+					else throw AssertionError(
+						value(
+							_test(
+								_error(
+									_it(lhs),
+									_giving(evaluatedLhs),
+									_does(_not(_match(evaluatedRhs)))))).toString())
+				}
 			}
 		}
 	}

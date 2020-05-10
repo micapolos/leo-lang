@@ -22,11 +22,11 @@ operator fun Dictionary.plus(definition: Definition): Dictionary =
 operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
 	fold(dictionary.definitionStack.reverse) { plus(it) }
 
-fun Dictionary.apply(value: Value): Value? =
-	definitionStack.mapFirst { apply(value) }
+fun Dictionary.apply(evaluated: Evaluated): Evaluated? =
+	definitionStack.mapFirst { apply(evaluated) }
 
 fun Dictionary.resolve(evaluated: Evaluated): Evaluated =
-	definitionStack.mapFirst { apply(evaluated) } ?: evaluated
+	apply(evaluated) ?: evaluated
 
 fun Dictionary.compile(value: Value): Evaluated? =
 	emptyScope.emptyEvaluator.plus(value).evaluated
@@ -41,4 +41,4 @@ val Dictionary.asField: Field
 fun Dictionary.plus(match: Match): Dictionary =
 	this
 		.ifNotNull(match.anyParameterDefinitionOrNull) { plus(it) }
-		.fold(match.fieldStack) { plus(it.parameterDefinition) }
+		.fold(match.value.fieldStack) { plus(it.parameterDefinition) }

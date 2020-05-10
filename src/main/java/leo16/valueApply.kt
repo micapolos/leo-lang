@@ -32,7 +32,7 @@ fun Value.applyContent(field: Field): Value? =
 fun Value.applyTake(field: Field): Value? =
 	contentOrNull?.run {
 		field.matchPrefix(_take) { rhs ->
-			givesOrNull?.take(rhs)
+			givesOrNull?.apply(rhs)
 		}
 	}
 

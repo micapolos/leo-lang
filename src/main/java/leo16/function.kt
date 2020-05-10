@@ -38,7 +38,7 @@ fun Function.invokeRecursingOrNull(match: Match): Value? =
 		// TODO: We are login match after one repetition.
 		dictionary
 			.plus(match)
-			.plus(_recurse(_any()).value.pattern.definitionTo(recurseBody))
+			//.plus(_recurse(_any()).value.pattern.definitionTo(recurseBody))
 			.evaluate(recursingValue)!!
 	}
 

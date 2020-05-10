@@ -4,69 +4,57 @@ import leo13.map
 import leo13.reverse
 import leo16.names.*
 
-data class Definition(val pattern: Pattern, val body: Body, val isMacro: Boolean) {
+sealed class Definition {
 	override fun toString() = asField.toString()
 }
 
-sealed class Body {
-	override fun toString() = asField.toString()
-}
-
-data class ValueBody(val value: Value) : Body() {
+data class IsDefinition(val is_: Is) : Definition() {
 	override fun toString() = super.toString()
 }
 
-data class FunctionBody(val function: Function) : Body() {
+data class GivesDefinition(val gives: Gives) : Definition() {
 	override fun toString() = super.toString()
 }
 
-data class RecurseBody(val function: Function) : Body() {
+data class ExpandsDefinition(val expands: Expands) : Definition() {
 	override fun toString() = super.toString()
 }
 
-data class NativeBody(val apply: Value.() -> Value) : Body() {
+data class FnDefinition(val fn: Fn) : Definition() {
+	override fun toString() = super.toString()
+}
+
+data class RecurseDefinition(val recurse: Recurse) : Definition() {
 	override fun toString() = super.toString()
 }
 
 val Definition.asField: Field
 	get() =
-		_definition.invoke(pattern.asField, body.asField)
+		_definition(asValue)
 
-val Body.asField: Field
+val Definition.asValue: Value
 	get() =
-		_body(
-			when (this) {
-				is ValueBody -> value
-				is FunctionBody -> function.asField.value
-				is NativeBody -> value(_native())
-				is RecurseBody -> _recurse(function.asField.value).value
-			}
-		)
+		when (this) {
+			is IsDefinition -> is_.asValue
+			is GivesDefinition -> gives.asValue
+			is ExpandsDefinition -> expands.asValue
+			is FnDefinition -> fn.nativeString().value
+			is RecurseDefinition -> recurse.asField.value
+		}
 
-infix fun Pattern.definitionTo(body: Body) = Definition(this, body, isMacro = false)
-infix fun Pattern.macroTo(body: Body) = Definition(this, body, isMacro = true)
-val Value.body: Body get() = ValueBody(this)
-val Function.body: Body get() = FunctionBody(this)
-val Function.recurseBody: Body get() = RecurseBody(this)
-fun body(apply: Value.() -> Value): Body = NativeBody(apply)
-
-fun Definition.apply(arg: Value): Value? =
-	pattern.matchOrNull(arg)?.let { match ->
-		body.apply(match)
-	}
+val Is.definition: Definition get() = IsDefinition(this)
+val Gives.definition: Definition get() = GivesDefinition(this)
+val Expands.definition: Definition get() = ExpandsDefinition(this)
+val Recurse.definition: Definition get() = RecurseDefinition(this)
+val Fn.definition: Definition get() = FnDefinition(this)
 
 fun Definition.apply(evaluated: Evaluated): Evaluated? =
-	apply(evaluated.value)?.let { value ->
-		if (isMacro) evaluated.scope.emptyEvaluator.plus(value).evaluated
-		else evaluated.set(value)
-	}
-
-fun Body.apply(match: Match): Value =
 	when (this) {
-		is ValueBody -> value
-		is FunctionBody -> function.invoke(match)
-		is NativeBody -> apply(_given(match.value).value)
-		is RecurseBody -> function.invoke(match.value.contentOrNull!!.match)
+		is IsDefinition -> is_.apply(evaluated.value)?.let { evaluated.set(it) }
+		is GivesDefinition -> gives.apply(evaluated.value)?.let { evaluated.set(it) }
+		is ExpandsDefinition -> expands.apply(evaluated)
+		is FnDefinition -> fn.apply(evaluated.value)?.let { evaluated.set(it) }
+		is RecurseDefinition -> recurse.apply(evaluated.value).let { evaluated.set(it) }
 	}
 
 val Value.parameterDictionary: Dictionary
@@ -74,16 +62,11 @@ val Value.parameterDictionary: Dictionary
 		fieldStack.map { parameterDefinition }.dictionary
 
 fun Value.gives(apply: Value.() -> Value) =
-	pattern.definitionTo(
-		body {
-			nullIfThrowsException {
-				apply(this)
-			} ?: this
-		})
+	pattern.fn(apply).definition
 
 val Field.parameterDefinition: Definition
 	get() =
-		selectWord.pattern.definitionTo(value.body)
+		selectWord.pattern.is_(value).definition
 
 val Match.anyParameterDefinitionOrNull: Definition?
 	get() =

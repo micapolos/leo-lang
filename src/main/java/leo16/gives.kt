@@ -1,6 +1,5 @@
 package leo16
 
-import leo.base.notNullIf
 import leo16.names.*
 
 data class Gives(val pattern: Pattern, val function: Function) {
@@ -9,10 +8,9 @@ data class Gives(val pattern: Pattern, val function: Function) {
 
 fun Pattern.gives(function: Function) = Gives(this, function)
 
-fun Gives.take(value: Value): Value? =
-	notNullIf(value.matches(pattern)) {
-		// TODO: any
-		function.invoke(value.match)
+fun Gives.apply(value: Value): Value? =
+	pattern.matchOrNull(value)?.let { match ->
+		function.invoke(match)
 	}
 
 val Gives.asPatternField: Field

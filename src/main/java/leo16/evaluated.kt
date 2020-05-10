@@ -34,7 +34,7 @@ fun Evaluated.plusNormalized(field: Field): Evaluated =
 
 val Evaluated.reflectValueOrNull: Value?
 	get() =
-		scope.dictionary.apply(_reflect.sentenceTo(value).field.value)
+		scope.dictionary.apply(emptyScope.evaluated(_reflect.sentenceTo(value).field.value))?.value
 
 val Evaluated.reflectValue: Value
 	get() =
