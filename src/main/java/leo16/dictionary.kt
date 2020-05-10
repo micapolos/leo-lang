@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.ifNotNull
 import leo13.Stack
 import leo13.fold
 import leo13.mapFirst
@@ -36,3 +37,8 @@ fun Dictionary.evaluate(value: Value): Value? =
 val Dictionary.asField: Field
 	get() =
 		_dictionary(_definition(definitionStack.expandField { asField }))
+
+fun Dictionary.plus(match: Match): Dictionary =
+	this
+		.ifNotNull(match.anyParameterDefinitionOrNull) { plus(it) }
+		.fold(match.fieldStack) { plus(it.parameterDefinition) }

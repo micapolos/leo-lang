@@ -11,7 +11,8 @@ fun Pattern.giving(function: Function) = Taking(this, function)
 
 fun Taking.take(value: Value): Value? =
 	notNullIf(value.matches(pattern)) {
-		function.invoke(value)
+		// TODO: any
+		function.invoke(value.match)
 	}
 
 val Taking.asField: Field

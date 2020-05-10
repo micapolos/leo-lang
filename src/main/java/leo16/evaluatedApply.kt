@@ -96,7 +96,7 @@ fun Evaluated.applyGiving(field: Field): Evaluated? =
 
 fun Evaluated.applyGive(field: Field): Evaluated? =
 	field.matchPrefix(_give) { rhs ->
-		set(scope.dictionary.function(rhs).invoke(value))
+		set(scope.dictionary.function(rhs).invoke(value.match))
 	}
 
 fun Evaluated.applyChoice(field: Field): Evaluated? =

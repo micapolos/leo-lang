@@ -1,13 +1,16 @@
 package leo16
 
+import leo.base.ifNotNull
+import leo.base.orIfNull
 import leo.base.orNull
 import leo13.Stack
 import leo13.isEmpty
 import leo13.map
 import leo13.push
+import leo13.pushAll
+import leo13.reverse
 import leo13.stack
 import leo13.zipFold
-import leo13.zipFoldOrNull
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
@@ -26,6 +29,8 @@ data class TakingPatternField(val taking: PatternTaking) : PatternField()
 
 data class PatternSentence(val word: String, val pattern: Pattern)
 data class PatternTaking(val pattern: Pattern)
+
+data class Match(val anyFieldStackOrNull: Stack<Field>?, val fieldStack: Stack<Field>)
 
 val emptyPatternValue: PatternValue = PatternValue(stack())
 val emptyPattern = pattern()
@@ -85,18 +90,47 @@ val PatternTaking.asField: Field
 	get() =
 		_taking(pattern.asValue)
 
-fun Value.matches(pattern: Pattern): Boolean =
-	true
-		.orNull
-		.zipFold(fieldStack, pattern.value.fieldStack) { fieldOrNull, patternFieldOrNull ->
+val emptyMatch = Match(null, stack())
+
+fun Match.plus(field: Field) =
+	copy(fieldStack = fieldStack.push(field))
+
+fun Match.anyPlus(field: Field) =
+	copy(anyFieldStackOrNull = anyFieldStackOrNull.orIfNull { stack() }.push(field))
+
+val Value.match get() = Match(null, fieldStack.reverse)
+
+val Match.value
+	get() =
+		stack<Field>()
+			.ifNotNull(anyFieldStackOrNull) { pushAll(it) }
+			.pushAll(fieldStack)
+			.value
+
+fun Match.plusMatchOrNull(pattern: Pattern, value: Value): Match? =
+	orNull
+		.zipFold(value.fieldStack, pattern.value.fieldStack) { fieldOrNull, patternFieldOrNull ->
 			when {
 				this == null -> null
-				patternFieldOrNull == null -> pattern.isAny || fieldOrNull == null
-				fieldOrNull == null -> false
-				else -> and(fieldOrNull.matches(patternFieldOrNull))
+				patternFieldOrNull == null ->
+					if (pattern.isAny)
+						if (fieldOrNull == null) this
+						else anyPlus(fieldOrNull)
+					else
+						if (fieldOrNull == null) this
+						else null
+				fieldOrNull == null -> null
+				else ->
+					if (fieldOrNull.matches(patternFieldOrNull)) plus(fieldOrNull)
+					else null
 			}
 		}
-		?: false
+
+fun Pattern.matchOrNull(value: Value): Match? =
+	emptyMatch.plusMatchOrNull(this, value)
+
+fun Value.matches(pattern: Pattern): Boolean =
+	emptyMatch.plusMatchOrNull(pattern, this) != null
 
 fun Field.matches(field: PatternField): Boolean =
 	when (this) {

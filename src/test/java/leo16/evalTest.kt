@@ -149,6 +149,17 @@ class EvalTest {
 	}
 
 	@Test
+	fun anyGives() {
+		evaluate_ {
+			any.plus { any }
+			gives { the.content.add { plus.content } }
+			two.plus { three }
+		}.assertGives {
+			two.add { three }
+		}
+	}
+
+	@Test
 	fun matchSentence() {
 		evaluate_ { zero.bit.match { zero { one } } }
 			.assertGives { one }

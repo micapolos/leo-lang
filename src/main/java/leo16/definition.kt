@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.notNullIf
 import leo13.map
+import leo13.reverse
 import leo16.names.*
 
 data class Definition(val pattern: Pattern, val body: Body, val isMacro: Boolean) {
@@ -51,8 +52,8 @@ val Function.recurseBody: Body get() = RecurseBody(this)
 fun body(apply: Value.() -> Value): Body = NativeBody(apply)
 
 fun Definition.apply(arg: Value): Value? =
-	notNullIf(arg.matches(pattern)) {
-		body.apply(arg)
+	pattern.matchOrNull(arg)?.let { match ->
+		body.apply(match)
 	}
 
 fun Definition.apply(evaluated: Evaluated): Evaluated? =
@@ -61,17 +62,17 @@ fun Definition.apply(evaluated: Evaluated): Evaluated? =
 		else evaluated.set(value)
 	}
 
-fun Body.apply(arg: Value): Value =
+fun Body.apply(match: Match): Value =
 	when (this) {
 		is ValueBody -> value
-		is FunctionBody -> function.invoke(arg)
-		is NativeBody -> apply(_given(arg).value)
-		is RecurseBody -> function.invoke(arg.contentOrNull!!)
+		is FunctionBody -> function.invoke(match)
+		is NativeBody -> apply(_given(match.value).value)
+		is RecurseBody -> function.invoke(match.value.contentOrNull!!.match)
 	}
 
 val Value.parameterDictionary: Dictionary
 	get() =
-		fieldStack.map { selectWord.pattern.definitionTo(value.body) }.dictionary
+		fieldStack.map { parameterDefinition }.dictionary
 
 fun Value.gives(apply: Value.() -> Value) =
 	pattern.definitionTo(
@@ -80,3 +81,13 @@ fun Value.gives(apply: Value.() -> Value) =
 				apply(this)
 			} ?: this
 		})
+
+val Field.parameterDefinition: Definition
+	get() =
+		selectWord.pattern.definitionTo(value.body)
+
+val Match.anyParameterDefinitionOrNull: Definition?
+	get() =
+		anyFieldStackOrNull?.let { fieldStack ->
+			_the(fieldStack.reverse.value).parameterDefinition
+		}

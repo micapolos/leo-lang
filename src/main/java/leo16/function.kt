@@ -8,15 +8,16 @@ data class Function(val dictionary: Dictionary, val bodyValue: Value) {
 
 infix fun Dictionary.function(value: Value) = Function(this, value)
 
-operator fun Function.invoke(value: Value): Value =
+operator fun Function.invoke(match: Match): Value =
 	null
-		?: invokeRepeatingOrNull(value)
-		?: invokeRecursingOrNull(value)
-		?: invokeOnce(value)
+		?: invokeRepeatingOrNull(match)
+		?: invokeRecursingOrNull(match)
+		?: invokeOnce(match)
 
-fun Function.invokeRepeatingOrNull(value: Value): Value? =
+fun Function.invokeRepeatingOrNull(match: Match): Value? =
 	bodyValue.matchPrefix(_repeating) { repeatingValue ->
-		var repeated = value
+		// TODO: We are login match after one repetition.
+		var repeated = match.value
 		while (true) {
 			val evaluated = dictionary
 				.plus(repeated.parameterDictionary)
@@ -32,16 +33,17 @@ fun Function.invokeRepeatingOrNull(value: Value): Value? =
 		repeated
 	}
 
-fun Function.invokeRecursingOrNull(value: Value): Value? =
+fun Function.invokeRecursingOrNull(match: Match): Value? =
 	bodyValue.matchPrefix(_recursing) { recursingValue ->
+		// TODO: We are login match after one repetition.
 		dictionary
-			.plus(value.parameterDictionary)
+			.plus(match)
 			.plus(_recurse(_any()).value.pattern.definitionTo(recurseBody))
 			.evaluate(recursingValue)!!
 	}
 
-fun Function.invokeOnce(value: Value): Value =
-	dictionary.plus(value.parameterDictionary).evaluate(bodyValue)!!
+fun Function.invokeOnce(match: Match): Value =
+	dictionary.plus(match).evaluate(bodyValue)!!
 
 
 val Function.asField: Field
