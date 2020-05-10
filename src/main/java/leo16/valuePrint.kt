@@ -23,7 +23,7 @@ val Field.defaultPrinted: Field
 	get() =
 		when (this) {
 			is SentenceField -> sentence.printSentence.field
-			is TakingField -> taking.printSentence.field
+			is TakingField -> gives.printSentence.field
 			is DictionaryField -> dictionary.printSentence.field
 			is NativeField -> native.nativeString()
 			is ChoiceField -> choice.printSentence.field
@@ -33,9 +33,9 @@ val Sentence.printSentence: Sentence
 	get() =
 		word.sentenceTo(value.printed)
 
-val Taking.printSentence: Sentence
+val Gives.printSentence: Sentence
 	get() =
-		_taking.sentenceTo(pattern.asValue)
+		_taking.sentenceTo(pattern.asValue.plus(_giving(function.bodyValue)))
 
 val Choice.printSentence: Sentence
 	get() =

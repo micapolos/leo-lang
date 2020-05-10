@@ -25,7 +25,7 @@ data class SentenceField(val sentence: Sentence) : Field() {
 	override fun toString() = super.toString()
 }
 
-data class TakingField(val taking: Taking) : Field() {
+data class TakingField(val gives: Gives) : Field() {
 	override fun toString() = super.toString()
 }
 
@@ -55,7 +55,7 @@ val Value.asField: Field
 
 val Stack<Field>.value: Value get() = Value(this)
 val Sentence.field: Field get() = SentenceField(this)
-val Taking.field: Field get() = TakingField(this)
+val Gives.field: Field get() = TakingField(this)
 val Dictionary.field: Field get() = DictionaryField(this)
 val Choice.field: Field get() = ChoiceField(this)
 val Any?.nativeField: Field get() = NativeField(this)
@@ -72,13 +72,13 @@ val Field.value get() = value(this)
 val emptyValue = value()
 
 val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
-val Field.takingOrNull: Taking? get() = (this as? TakingField)?.taking
+val Field.givesOrNull: Gives? get() = (this as? TakingField)?.gives
 val Field.dictionaryOrNull: Dictionary? get() = (this as? DictionaryField)?.dictionary
 val Field.choiceOrNull: Choice? get() = (this as? ChoiceField)?.choice
 val Field.theNativeOrNull: The<Any?>? get() = if (this is NativeField) native.the else null
 val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
 val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull
-val Value.takingOrNull: Taking? get() = onlyFieldOrNull?.takingOrNull
+val Value.givesOrNull: Gives? get() = onlyFieldOrNull?.givesOrNull
 val Value.dictionaryOrNull: Dictionary? get() = onlyFieldOrNull?.dictionaryOrNull
 val Value.isEmpty: Boolean get() = fieldStack.isEmpty
 

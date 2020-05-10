@@ -68,8 +68,8 @@ class EvalTest {
 
 	@Test
 	fun script() {
-		evaluate_ { zero.giving { given }.script.take { zero } }
-			.assertGives { taking { zero }.take { zero } }
+		evaluate_ { zero.giving { one }.script.take { zero } }
+			.assertGives { taking { zero.giving { one } }.take { zero } }
 	}
 
 	@Test
@@ -115,7 +115,7 @@ class EvalTest {
 		evaluate_ { the { "foo".text }.text }.assertGives { "foo".text }
 		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
 		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { definition { list { empty } } } }
-		evaluate_ { the { zero.giving { given } }.taking }.assertGives { taking { zero } }
+		evaluate_ { the { zero.giving { one } }.taking }.assertGives { taking { zero.giving { one } } }
 		evaluate_ { the { x { zero }.giving { x } }.take { x { zero } } }.assertGives { x { zero } }
 	}
 
@@ -200,13 +200,17 @@ class EvalTest {
 
 	@Test
 	fun giving() {
-		evaluate_ { zero.giving { given } }.assertGives { taking { zero } }
+		evaluate_ { zero.giving { one } }.assertGives { taking { zero.giving { one } } }
 	}
 
 	@Test
 	fun take() {
-		evaluate_ { the { any.x.giving { x } }.take { x { zero } } }.assertGives { x { zero } }
-		evaluate_ { the { any.x.giving { x } }.take { y { zero } } }.assertGives { the { taking { x { any } } }.take { y { zero } } }
+		evaluate_ {
+			the { any.x.giving { x } }.take { x { zero } }
+		}.assertGives { x { zero } }
+		evaluate_ {
+			the { any.x.giving { x } }.take { y { zero } }
+		}.assertGives { the { taking { x { any }.giving { x } } }.take { y { zero } } }
 	}
 
 	@Test

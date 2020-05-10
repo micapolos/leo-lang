@@ -135,7 +135,7 @@ fun Value.matches(pattern: Pattern): Boolean =
 fun Field.matches(field: PatternField): Boolean =
 	when (this) {
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
-		is TakingField -> field is TakingPatternField && taking.pattern == field.taking.pattern
+		is TakingField -> field is TakingPatternField && gives.pattern == field.taking.pattern
 		is DictionaryField -> field == _dictionary(anyPattern)
 		is NativeField -> field == _native(anyPattern)
 		is ChoiceField -> false // TODO()

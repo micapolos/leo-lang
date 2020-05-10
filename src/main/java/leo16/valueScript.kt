@@ -27,7 +27,7 @@ val Field.defaultScriptLine: ScriptLine
 	get() =
 		when (this) {
 			is SentenceField -> sentence.scriptLine
-			is TakingField -> taking.scriptLine
+			is TakingField -> gives.scriptLine
 			is DictionaryField -> dictionary.printSentence.scriptLine
 			is NativeField -> native.nativeScriptLine
 			is ChoiceField -> choice.scriptLine
@@ -45,7 +45,7 @@ val Sentence.scriptLine: ScriptLine
 	get() =
 		word.scriptWord lineTo value.script
 
-val Taking.scriptLine: ScriptLine
+val Gives.scriptLine: ScriptLine
 	get() =
 		_taking(pattern.asValue.script)
 

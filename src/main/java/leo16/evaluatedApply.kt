@@ -91,7 +91,7 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 
 fun Evaluated.applyGiving(field: Field): Evaluated? =
 	field.matchPrefix(_giving) { rhs ->
-		updateValue { value.pattern.giving(scope.dictionary.function(rhs)).field.value }
+		updateValue { value.pattern.gives(scope.dictionary.function(rhs)).field.value }
 	}
 
 fun Evaluated.applyGive(field: Field): Evaluated? =

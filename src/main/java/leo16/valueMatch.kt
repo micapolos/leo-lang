@@ -70,7 +70,7 @@ fun <R : Any> Field.matchPrefix(word: String, fn: (Value) -> R?): R? =
 	}
 
 fun <R : Any> Field.matchFunction(value: Value, fn: (Function) -> R?): R? =
-	takingOrNull?.let { taking ->
+	givesOrNull?.let { taking ->
 		ifOrNull(taking.pattern == value.pattern) {
 			fn(taking.function)
 		}
