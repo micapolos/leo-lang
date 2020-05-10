@@ -1,23 +1,19 @@
 package leo16
 
+import leo.base.orNull
 import leo13.Stack
 import leo13.isEmpty
 import leo13.map
 import leo13.push
 import leo13.stack
+import leo13.zipFold
 import leo13.zipFoldOrNull
 import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo16.names.*
 
-sealed class Pattern {
-	override fun toString() = asField.toString()
-}
-
-object AnyPattern : Pattern()
-
-data class ValuePattern(val value: PatternValue) : Pattern() {
+data class Pattern(val isAny: Boolean, val value: PatternValue) {
 	override fun toString() = super.toString()
 }
 
@@ -31,8 +27,10 @@ data class TakingPatternField(val taking: PatternTaking) : PatternField()
 data class PatternSentence(val word: String, val pattern: Pattern)
 data class PatternTaking(val pattern: Pattern)
 
-val anyPattern: Pattern = AnyPattern
-val PatternValue.pattern: Pattern get() = ValuePattern(this)
+val emptyPatternValue: PatternValue = PatternValue(stack())
+val emptyPattern = pattern()
+val anyPattern: Pattern = Pattern(isAny = true, value = emptyPatternValue)
+val PatternValue.pattern: Pattern get() = Pattern(false, this)
 val PatternSentence.field: PatternField get() = SentencePatternField(this)
 val Pattern.taking: PatternTaking get() = PatternTaking(this)
 val PatternTaking.field: PatternField get() = TakingPatternField(this)
@@ -40,17 +38,13 @@ val Any?.nativePatternField: PatternField get() = NativePatternField(this)
 val Stack<PatternField>.value get() = PatternValue(this)
 fun patternValue(vararg fields: PatternField) = stack(*fields).value
 fun pattern(vararg fields: PatternField) = patternValue(*fields).pattern
-val emptyPattern = pattern()
 val String.pattern get() = pattern(invoke(pattern()))
 operator fun String.invoke(pattern: Pattern): PatternField = PatternSentence(this, pattern).field
 
-val Pattern.isEmpty get() = this is ValuePattern && value.fieldStack.isEmpty
+val Pattern.isEmpty get() = !isAny && value.fieldStack.isEmpty
 
 operator fun Pattern.plus(field: PatternField): Pattern =
-	when (this) {
-		AnyPattern -> pattern(_any.invoke(emptyPattern))
-		is ValuePattern -> value.plus(field).pattern
-	}
+	copy(value = value.plus(field))
 
 operator fun PatternValue.plus(field: PatternField): PatternValue =
 	fieldStack.push(field).value
@@ -59,12 +53,13 @@ val Pattern.asField: Field
 	get() =
 		_pattern.invoke(asValue)
 
+val Pattern.anyValue: Value
+	get() =
+		if (isAny) value(_any()) else value()
+
 val Pattern.asValue: Value
 	get() =
-		when (this) {
-			AnyPattern -> value(_any())
-			is ValuePattern -> value.asValue
-		}
+		anyValue.plus(value.asValue)
 
 val PatternValue.asField: Field
 	get() =
@@ -91,15 +86,15 @@ val PatternTaking.asField: Field
 		_taking(pattern.asValue)
 
 fun Value.matches(pattern: Pattern): Boolean =
-	when (pattern) {
-		AnyPattern -> true // !isEmpty
-		is ValuePattern -> matches(pattern.value)
-	}
-
-fun Value.matches(value: PatternValue): Boolean =
 	true
-		.zipFoldOrNull(fieldStack, value.fieldStack) { field, patternField ->
-			and(field.matches(patternField))
+		.orNull
+		.zipFold(fieldStack, pattern.value.fieldStack) { fieldOrNull, patternFieldOrNull ->
+			when {
+				this == null -> null
+				patternFieldOrNull == null -> pattern.isAny || fieldOrNull == null
+				fieldOrNull == null -> false
+				else -> and(fieldOrNull.matches(patternFieldOrNull))
+			}
 		}
 		?: false
 

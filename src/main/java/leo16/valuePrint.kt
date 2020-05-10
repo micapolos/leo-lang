@@ -48,7 +48,7 @@ val Dictionary.printSentence: Sentence
 
 val Definition.printField: Field
 	get() =
-		_definition(pattern.value.plus(body.printField))
+		_definition(pattern.asValue.plus(body.printField))
 
 val Body.printField: Field
 	get() =

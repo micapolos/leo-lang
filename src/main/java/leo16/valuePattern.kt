@@ -1,24 +1,17 @@
 package leo16
 
-import leo.base.notNullIf
+import leo13.fold
 import leo13.map
+import leo13.reverse
 import leo16.names.*
 
 val Value.pattern: Pattern
 	get() =
-		null
-			?: anyPatternOrNull
-			?: valuePattern
+		emptyPattern.fold(fieldStack.reverse) { plus(it) }
 
-val Value.anyPatternOrNull: Pattern?
-	get() =
-		notNullIf(this == value(_any(value()))) {
-			anyPattern
-		}
-
-val Value.valuePattern: Pattern
-	get() =
-		fieldStack.map { patternField }.value.pattern
+fun Pattern.plus(field: Field): Pattern =
+	if (field == _any() && isEmpty) anyPattern
+	else plus(field.patternField)
 
 val Field.patternField: PatternField
 	get() =
