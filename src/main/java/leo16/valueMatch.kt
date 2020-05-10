@@ -69,14 +69,14 @@ fun <R : Any> Field.matchPrefix(word: String, fn: (Value) -> R?): R? =
 		}
 	}
 
-fun <R : Any> Field.matchFunction(value: Value, fn: (Function) -> R?): R? =
-	givesOrNull?.let { taking ->
+fun <R : Any> Field.matchFunction(value: Value, fn: (Compiled) -> R?): R? =
+	functionOrNull?.let { taking ->
 		ifOrNull(taking.pattern == value.pattern) {
-			fn(taking.function)
+			fn(taking.compiled)
 		}
 	}
 
-fun <R : Any> Value.matchFunction(value: Value, fn: (Function) -> R?): R? =
+fun <R : Any> Value.matchFunction(value: Value, fn: (Compiled) -> R?): R? =
 	onlyFieldOrNull?.matchFunction(value, fn)
 
 fun <R : Any> Field.matchWord(fn: (String) -> R?): R? =

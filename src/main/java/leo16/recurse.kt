@@ -2,17 +2,17 @@ package leo16
 
 import leo16.names.*
 
-data class Recurse(val gives: Gives) {
+data class Recurse(val function: Function) {
 	override fun toString() = asField.toString()
 }
 
-val Recurse.asField get() = _recursing(gives.asValue)
-val Gives.recurse get() = Recurse(this)
+val Recurse.asField get() = _recursing(function.asValue)
+val Function.recurse get() = Recurse(this)
 
 fun Recurse.apply(arg: Value): Value =
-	gives.pattern
-		.gives(gives.function.dictionary
+	function.pattern
+		.gives(function.compiled.dictionary
 			//.plus(_recurse(_any()).value.pattern.definitionTo(gives.function.body))
-			.function(gives.function.bodyValue))
+			.compiled(function.compiled.bodyValue))
 		.apply(arg)
 		?: _recurse(arg).value

@@ -53,6 +53,7 @@ fun Evaluated.applyNormalizedAndRead(field: Field): Evaluated =
 		?: applyQuote(field)
 		?: applyGiving(field)
 		?: applyGive(field)
+		?: applyFunction(field)
 		?: applyMatch(field)
 		?: applyChoice(field)
 		?: applyImport(field)
@@ -91,12 +92,19 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 
 fun Evaluated.applyGiving(field: Field): Evaluated? =
 	field.matchPrefix(_giving) { rhs ->
-		updateValue { value.pattern.gives(scope.dictionary.function(rhs)).field.value }
+		updateValue { value.pattern.gives(scope.dictionary.compiled(rhs)).field.value }
+	}
+
+fun Evaluated.applyFunction(field: Field): Evaluated? =
+	value.matchEmpty {
+		field.matchPrefix(_function) { rhs ->
+			scope.dictionary.givesOrNull(rhs)?.field?.value?.let { set(it) }
+		}
 	}
 
 fun Evaluated.applyGive(field: Field): Evaluated? =
 	field.matchPrefix(_give) { rhs ->
-		set(scope.dictionary.function(rhs).invoke(value.match))
+		set(scope.dictionary.compiled(rhs).invoke(value.match))
 	}
 
 fun Evaluated.applyChoice(field: Field): Evaluated? =

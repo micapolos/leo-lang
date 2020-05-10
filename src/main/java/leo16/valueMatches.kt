@@ -15,7 +15,7 @@ fun Value.fieldsMatch(value: Value): Boolean =
 fun Field.matches(field: Field): Boolean =
 	when (field) {
 		is SentenceField -> matches(field.sentence)
-		is TakingField -> this is TakingField && gives.pattern == field.gives.pattern
+		is GivesField -> this is GivesField && function.pattern == field.function.pattern
 		is DictionaryField -> this is DictionaryField && dictionary.matches(field.dictionary)
 		is NativeField -> this is NativeField && native == field.native
 		is ChoiceField -> matches(field.choice)
@@ -30,7 +30,7 @@ fun Field.matchesCase(choice: Choice): Boolean =
 fun Field.matches(sentence: Sentence): Boolean =
 	when (this) {
 		is SentenceField -> this.sentence.matches(sentence)
-		is TakingField -> sentence.word == _taking && gives.pattern == sentence.value.pattern
+		is GivesField -> sentence.word == _taking && function.pattern == sentence.value.pattern
 		is DictionaryField -> sentence == _dictionary.sentenceTo()
 		is NativeField -> sentence == _native.sentenceTo()
 		is ChoiceField -> choice.matches(sentence)
@@ -39,8 +39,8 @@ fun Field.matches(sentence: Sentence): Boolean =
 fun Sentence.matches(sentence: Sentence): Boolean =
 	word == sentence.word && value.matches(sentence.value)
 
-fun Function.matches(function: Function): Boolean =
-	this == function
+fun Compiled.matches(compiled: Compiled): Boolean =
+	this == compiled
 
 fun Dictionary.matches(dictionary: Dictionary): Boolean =
 	this == dictionary

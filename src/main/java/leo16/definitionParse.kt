@@ -7,10 +7,10 @@ fun Dictionary.definitionOrNull(value: Value): Definition? =
 		?: expandsDefinitionOrNull(value)
 
 fun Dictionary.isDefinitionOrNull(value: Value): Definition? =
-	value.isOrNull?.definition
+	value.constantOrNull?.definition
 
 fun Dictionary.givesDefinitionOrNull(value: Value): Definition? =
 	givesOrNull(value)?.definition
 
 fun Dictionary.expandsDefinitionOrNull(value: Value): Definition? =
-	expandsOrNull(value)?.definition
+	macroOrNull(value)?.definition
