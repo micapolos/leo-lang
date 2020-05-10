@@ -22,3 +22,8 @@ val Gives.asPatternField: Field
 val Gives.asValue: Value
 	get() =
 		pattern.asValue.plus(_gives(function.bodyValue))
+
+fun Dictionary.givesOrNull(value: Value): Gives? =
+	value.matchInfix(_gives) { lhs, rhs ->
+		lhs.pattern.gives(function(rhs))
+	}
