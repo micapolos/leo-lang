@@ -30,8 +30,8 @@ fun Value.applyContent(field: Field): Value? =
 	}
 
 fun Value.applyTake(field: Field): Value? =
-	field.matchPrefix(_take) { rhs ->
-		functionOrNull?.apply(rhs)
+	matchInfix(_take, field) { lhs, rhs ->
+		lhs.functionOrNull?.apply(rhs)
 	}
 
 fun Value.applyThis(field: Field): Value? =

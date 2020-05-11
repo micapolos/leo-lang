@@ -263,6 +263,10 @@ class EvalTest {
 			function { x { any }.gives { x } }
 			take { y { zero } }
 		}
+
+		evaluate_ {
+			function { gives { zero } }.take
+		}.assertGives { zero }
 	}
 
 	@Test

@@ -108,3 +108,9 @@ fun <R : Any> Field.matchNumber(fn: (BigDecimal) -> R?): R? =
 			(native as? BigDecimal)?.let(fn)
 		}
 	}
+
+fun <R : Any> Value.matchInfix(word: String, field: Field, fn: (Value, Value) -> R?): R? =
+	field.matchPrefix(word) { rhs ->
+		if (isEmpty) fn(rhs, this)
+		else fn(this, rhs)
+	}
