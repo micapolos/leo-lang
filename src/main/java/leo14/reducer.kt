@@ -12,7 +12,7 @@ data class Reducer<S, T>(
 fun <S, T> S.reducer(reduceFn: S.(T) -> Reducer<S, T>) =
 	Reducer(this, reduceFn)
 
-fun <S, T> Reducer<S, T>.reduce(token: T) =
+fun <S, T> Reducer<S, T>.reduce(token: T): Reducer<S, T> =
 	state.reduceFn(token)
 
 fun <S1, S2, T> Reducer<S1, T>.mapState(fn: S1.() -> S2): Reducer<S2, T> =

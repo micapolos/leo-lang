@@ -1,6 +1,13 @@
 package leo16.native
 
-import leo15.*
+import leo15.booleanName
+import leo15.byteName
+import leo15.charName
+import leo15.doubleName
+import leo15.floatName
+import leo15.intName
+import leo15.longName
+import leo15.shortName
 import leo16.emptyDictionary
 import leo16.plus
 
