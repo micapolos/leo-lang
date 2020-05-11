@@ -12,7 +12,7 @@ val list = dictionary_ {
 	append { any }
 	gives {
 		list {
-			link {
+			linked {
 				previous { list }
 				last { append.content }
 			}
@@ -43,13 +43,13 @@ val list = dictionary_ {
 		repeating {
 			list.match {
 				empty { fold.to.content }
-				link {
-					link.previous.list
+				linked {
+					linked.previous.list
 					fold {
 						to {
 							fold.function
 							take {
-								item { link.last.content }
+								item { linked.last.content }
 								to { fold.to.content }
 							}
 						}

@@ -1,7 +1,6 @@
 package leo16
 
 import leo.base.ifOrNull
-import leo13.Stack
 import leo13.linkOrNull
 import leo13.onlyOrNull
 import leo16.names.*
@@ -109,9 +108,3 @@ fun <R : Any> Field.matchNumber(fn: (BigDecimal) -> R?): R? =
 			(native as? BigDecimal)?.let(fn)
 		}
 	}
-
-fun <R : Any> Field.matchList(fn: (Stack<Value>) -> R?): R? =
-	stackOrNull?.let(fn)
-
-fun <R : Any> Value.matchList(fn: (Stack<Value>) -> R?): R? =
-	fieldStack.onlyOrNull?.matchList(fn)

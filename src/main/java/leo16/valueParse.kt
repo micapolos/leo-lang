@@ -1,25 +1,57 @@
 package leo16
 
+import leo13.Either
+import leo13.Empty
+import leo13.FirstEither
+import leo13.Link
+import leo13.SecondEither
 import leo13.Stack
+import leo13.empty
+import leo13.firstEither
+import leo13.linkTo
 import leo13.push
 import leo13.reverse
+import leo13.secondEither
 import leo13.stack
 import leo16.names.*
 
 tailrec fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? {
-	val sentence = field.rhsOrNull(_list)?.onlyFieldOrNull?.sentenceOrNull ?: return null
-	return when (sentence.word) {
-		_empty ->
-			if (sentence.value.isEmpty) this
-			else null
-		_link -> {
-			val (lhs, last) = sentence.value.pairOrNull(_last) ?: return null
-			val previous = lhs.rhsOrNull(_previous)?.onlyFieldOrNull ?: return null
-			push(last).pushOrNull(previous)
+	val either = field.parseEitherEmptyOrLink ?: return null
+	return when (either) {
+		is FirstEither -> this
+		is SecondEither -> {
+			val head = either.second.head
+			val tail = either.second.tail.onlyFieldOrNull ?: return null
+			push(head).pushOrNull(tail)
 		}
-		else -> null
 	}
 }
+
+val Field.parseEitherEmptyOrLink: Either<Empty, Link<Value, Value>>?
+	get() =
+		matchPrefix(_list) { rhs ->
+			null
+				?: rhs.onlyFieldOrNull?.parseEmpty?.firstEither()
+				?: rhs.onlyFieldOrNull?.parseLink?.secondEither()
+		}
+
+val Field.parseEmpty: Empty?
+	get() =
+		matchPrefix(_empty) { rhs ->
+			rhs.matchEmpty {
+				empty
+			}
+		}
+
+val Field.parseLink: Link<Value, Value>?
+	get() =
+		matchPrefix(_linked) { rhs ->
+			rhs.matchInfix(_last) { lhs, last ->
+				lhs.matchPrefix(_previous) { previous ->
+					previous.linkTo(last)
+				}
+			}
+		}
 
 val Field.stackOrNull: Stack<Value>?
 	get() =
