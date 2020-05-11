@@ -47,6 +47,7 @@ val <T : Any> Stack<T>.onlyOrNull
 			link.value
 		}
 	}
+val <T> StackLink<T>.asStack: Stack<T> get() = stack(this)
 
 val <T> T.onlyStack get() = stack(this)
 
@@ -74,6 +75,9 @@ fun <T> Stack<T>.contains(value: T): Boolean =
 
 fun <T, R> Stack<T>.map(fn: T.() -> R): Stack<R> =
 	reverseMap(fn).reverse
+
+fun <T, R> StackLink<T>.map(fn: T.() -> R): StackLink<R> =
+	stack.map(fn).linkTo(value.fn())
 
 fun <T, R> Stack<T>.reverseMap(fn: T.() -> R): Stack<R> =
 	stack<R>().fold(this) { push(fn(it)) }

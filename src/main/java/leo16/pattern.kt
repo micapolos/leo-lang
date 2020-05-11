@@ -30,7 +30,7 @@ data class FunctionPatternField(val function: PatternFunction) : PatternField()
 data class PatternSentence(val word: String, val pattern: Pattern)
 data class PatternFunction(val pattern: Pattern)
 
-data class Match(val anyFieldStackOrNull: Stack<Field>?, val fieldStack: Stack<Field>)
+data class PatternMatch(val anyFieldStackOrNull: Stack<Field>?, val fieldStack: Stack<Field>)
 
 val emptyPatternValue: PatternValue = PatternValue(stack())
 val emptyPattern = pattern()
@@ -90,24 +90,24 @@ val PatternFunction.asField: Field
 	get() =
 		_function(pattern.asValue)
 
-val emptyMatch = Match(null, stack())
+val emptyMatch = PatternMatch(null, stack())
 
-fun Match.plus(field: Field) =
+fun PatternMatch.plus(field: Field) =
 	copy(fieldStack = fieldStack.push(field))
 
-fun Match.anyPlus(field: Field) =
+fun PatternMatch.anyPlus(field: Field) =
 	copy(anyFieldStackOrNull = anyFieldStackOrNull.orIfNull { stack() }.push(field))
 
-val Value.match get() = Match(null, fieldStack.reverse)
+val Value.match get() = PatternMatch(null, fieldStack.reverse)
 
-val Match.value
+val PatternMatch.value
 	get() =
 		stack<Field>()
 			.ifNotNull(anyFieldStackOrNull) { pushAll(it) }
 			.pushAll(fieldStack)
 			.value
 
-fun Match.plusMatchOrNull(pattern: Pattern, value: Value): Match? =
+fun PatternMatch.plusMatchOrNull(pattern: Pattern, value: Value): PatternMatch? =
 	orNull
 		.zipFold(value.fieldStack, pattern.value.fieldStack) { fieldOrNull, patternFieldOrNull ->
 			when {
@@ -126,7 +126,7 @@ fun Match.plusMatchOrNull(pattern: Pattern, value: Value): Match? =
 			}
 		}
 
-fun Pattern.matchOrNull(value: Value): Match? =
+fun Pattern.matchOrNull(value: Value): PatternMatch? =
 	emptyMatch.plusMatchOrNull(this, value)
 
 fun Value.matches(pattern: Pattern): Boolean =

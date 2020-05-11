@@ -6,15 +6,20 @@ data class Compiled(val dictionary: Dictionary, val bodyValue: Value) {
 	override fun toString() = asField.toString()
 }
 
-infix fun Dictionary.compiled(value: Value) = Compiled(this, value)
+data class CompiledSentence(val word: String, val compiled: Compiled)
 
-operator fun Compiled.invoke(match: Match): Value =
+infix fun Dictionary.compiled(value: Value) = Compiled(this, value)
+fun String.sentenceTo(compiled: Compiled) = CompiledSentence(this, compiled)
+
+val Compiled.isEmpty get() = bodyValue.isEmpty
+
+operator fun Compiled.invoke(match: PatternMatch): Value =
 	null
 		?: invokeRepeatingOrNull(match)
 		?: invokeRecursingOrNull(match)
 		?: invokeOnce(match)
 
-fun Compiled.invokeRepeatingOrNull(match: Match): Value? =
+fun Compiled.invokeRepeatingOrNull(match: PatternMatch): Value? =
 	bodyValue.matchPrefix(_repeating) { repeatingValue ->
 		// TODO: We are login match after one repetition.
 		var repeated = match.value
@@ -33,7 +38,7 @@ fun Compiled.invokeRepeatingOrNull(match: Match): Value? =
 		repeated
 	}
 
-fun Compiled.invokeRecursingOrNull(match: Match): Value? =
+fun Compiled.invokeRecursingOrNull(match: PatternMatch): Value? =
 	bodyValue.matchPrefix(_recursing) { recursingValue ->
 		// TODO: We are login match after one repetition.
 		dictionary
@@ -42,7 +47,7 @@ fun Compiled.invokeRecursingOrNull(match: Match): Value? =
 			.evaluate(recursingValue)!!
 	}
 
-fun Compiled.invokeOnce(match: Match): Value =
+fun Compiled.invokeOnce(match: PatternMatch): Value =
 	dictionary.plus(match).evaluate(bodyValue)!!
 
 

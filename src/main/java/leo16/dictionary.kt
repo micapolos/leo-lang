@@ -38,7 +38,7 @@ val Dictionary.asField: Field
 	get() =
 		_dictionary(_definition(definitionStack.expandField { asField }))
 
-fun Dictionary.plus(match: Match): Dictionary =
+fun Dictionary.plus(match: PatternMatch): Dictionary =
 	this
 		.ifNotNull(match.anyParameterDefinitionOrNull) { plus(it) }
 		.fold(match.value.fieldStack) { plus(it.parameterDefinition) }

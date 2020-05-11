@@ -68,7 +68,7 @@ val Field.parameterDefinition: Definition
 	get() =
 		selectWord.pattern.is_(value).definition
 
-val Match.anyParameterDefinitionOrNull: Definition?
+val PatternMatch.anyParameterDefinitionOrNull: Definition?
 	get() =
 		anyFieldStackOrNull?.let { fieldStack ->
 			_the(fieldStack.reverse.value).parameterDefinition
