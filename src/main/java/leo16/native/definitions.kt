@@ -31,6 +31,7 @@ import leo16.nativeValue
 import leo16.stackOrNull
 import leo16.theNativeOrNull
 import leo16.contentOrNull
+import leo16.printed
 import leo16.value
 import leo16.valueValue
 import java.lang.reflect.Constructor
@@ -275,5 +276,5 @@ val printingDefinition =
 		val content = this
 			.getOrNull(_printing)!!
 			.contentOrNull!!
-		content.also { content.println }
+		content.also { content.printed.println }
 	}

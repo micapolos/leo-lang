@@ -77,8 +77,8 @@ fun AppendableIndented.append(literal: Literal): AppendableIndented =
 
 val String.literalEllipsized
 	get() =
-		if (string.length <= 60) this
-		else string.substring(0, 30) + "..." + string.substring(string.length - 30)
+		if (length <= 100) this
+		else substring(0, 30) + "..." + substring(string.length - 30)
 
 fun AppendableIndented.append(fragment: Fragment): AppendableIndented =
 	this
