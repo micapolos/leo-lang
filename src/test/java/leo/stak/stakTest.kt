@@ -1,5 +1,7 @@
 package leo.stak
 
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 import leo.base.*
 import leo13.Stack
 import leo13.get
@@ -118,6 +120,7 @@ class StakTest {
 			var stak0: Stak<Int>? = null
 			var stack0: Stack<Int>? = null
 			var list0: List<Int>? = null
+			var plist0: PersistentList<Int>? = null
 
 			print("Create Stack: ")
 			printTime {
@@ -132,6 +135,11 @@ class StakTest {
 			print("Create List: ")
 			printTime {
 				list0 = mutableListOf<Int>().iterate(size) { also { add(Random.nextInt()) } }.toList()
+			}
+
+			print("Create PersistentList: ")
+			printTime {
+				plist0 = persistentListOf<Int>().iterate(size) { add(Random.nextInt()) }
 			}
 
 			var sum = 0
@@ -159,6 +167,14 @@ class StakTest {
 				}
 			}
 
+			val plist = plist0!!
+			print("Random access PersistentList ($access): ")
+			printTime {
+				repeat(access) {
+					sum += plist.get(Random.nextInt(size))
+				}
+			}
+
 			print("Random access Stak ($size): ")
 			printTime {
 				repeat(size) {
@@ -170,6 +186,13 @@ class StakTest {
 			printTime {
 				repeat(size) {
 					sum += list.get(Random.nextInt(size))
+				}
+			}
+
+			print("Random access PersistentList ($size): ")
+			printTime {
+				repeat(size) {
+					sum += plist.get(Random.nextInt(size))
 				}
 			}
 
