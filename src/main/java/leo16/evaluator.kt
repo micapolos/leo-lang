@@ -48,10 +48,10 @@ operator fun Evaluator.plus(token: Token): Evaluator? =
 		is EndToken -> end
 	}
 
-inline operator fun Evaluator.plus(value: Value): Evaluator =
+operator fun Evaluator.plus(value: Value): Evaluator =
 	fold(value.fieldStack.reverse) { plus(it) }
 
-inline operator fun Evaluator.plus(field: Field): Evaluator =
+operator fun Evaluator.plus(field: Field): Evaluator =
 	when (field) {
 		is SentenceField -> plus(field.sentence)
 		is FunctionField -> append(field)
@@ -76,10 +76,10 @@ inline val Evaluator.end: Evaluator?
 	get() =
 		parentOrNull?.endEvaluator(evaluated)
 
-inline fun EvaluatorParent.endEvaluator(evaluated: Evaluated): Evaluator =
+fun EvaluatorParent.endEvaluator(evaluated: Evaluated): Evaluator =
 	evaluator.endWith(word, evaluated)
 
-inline fun Evaluator.endWith(word: String, evaluated: Evaluated): Evaluator =
+fun Evaluator.endWith(word: String, evaluated: Evaluated): Evaluator =
 	updateEvaluated {
 		applyDebug(word(evaluated.value)) ?: apply(word, evaluated, mode)
 	}
