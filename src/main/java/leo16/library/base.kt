@@ -3,6 +3,10 @@ package leo16.library
 import leo15.dsl.*
 import leo16.dictionary_
 
+fun main() {
+	base
+}
+
 val base = dictionary_ {
 	core.export
 	printing.export

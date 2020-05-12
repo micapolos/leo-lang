@@ -270,19 +270,19 @@ class EvalTest {
 	}
 
 	@Test
-	fun give() {
+	fun do_() {
 		evaluate_ {
 			x { zero }
 			y { one }
-			give { x.and { y } }
+			do_ { x.and { y } }
 		}.assertDoes { x { zero }.and { y { one } } }
 	}
 
 	@Test
-	fun giveRepeat() {
+	fun doRepeat() {
 		evaluate_ {
 			one.bit
-			give {
+			do_ {
 				bit.match {
 					zero { bit }
 					one { zero.bit.repeat }
@@ -460,34 +460,34 @@ class EvalTest {
 	@Test
 	fun testTest() {
 		evaluate_ {
-			test { zero.does { zero } }
+			test { zero.equals_ { zero } }
 		}.assertDoes { nothing_ }
 
 		evaluate_ {
 			result.is_ { one }
-			test { one.does { result } }
+			test { one.equals_ { result } }
 		}.assertDoes { nothing_ }
 
 		evaluate_ {
 			result.is_ { one }
-			test { result.does { one } }
+			test { result.equals_ { one } }
 		}.assertDoes { nothing_ }
 
 		assertFailsWith(AssertionError::class) {
-			evaluate_ { test { zero.does { one } } }
+			evaluate_ { test { zero.equals_ { one } } }
 		}
 
 		assertFailsWith(AssertionError::class) {
 			evaluate_ {
 				result.is_ { one }
-				test { zero.does { result } }
+				test { zero.equals_ { result } }
 			}
 		}
 
 		assertFailsWith(AssertionError::class) {
 			evaluate_ {
 				result.is_ { one }
-				test { result.does { zero } }
+				test { result.equals_ { zero } }
 			}
 		}
 	}

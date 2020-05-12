@@ -53,7 +53,7 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyEvaluate(field)
 		?: applyCompile(field)
 		?: applyQuote(field)
-		?: applyGive(field)
+		?: applyDo(field)
 		?: applyFunction(field)
 		?: applyMatch(field)
 		?: applyChoice(field)
@@ -96,8 +96,8 @@ fun Evaluated.applyFunction(field: Field): Evaluated? =
 		scope.dictionary.doesOrNull(rhs)?.field?.let { set(value.plus(it)) }
 	}
 
-fun Evaluated.applyGive(field: Field): Evaluated? =
-	field.matchPrefix(_give) { rhs ->
+fun Evaluated.applyDo(field: Field): Evaluated? =
+	field.matchPrefix(_do) { rhs ->
 		set(scope.dictionary.compiled(rhs).invoke(value.match))
 	}
 
@@ -146,14 +146,14 @@ fun Evaluated.applyTest(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_test) { rhs ->
 			null
-				?: applyTestDoes(rhs)
+				?: applyTestEquals(rhs)
 				?: applyTestMatches(rhs)
 				?: testSyntaxError(rhs)
 		}
 	}
 
-fun Evaluated.applyTestDoes(value: Value): Evaluated? =
-	value.matchInfix(_does) { lhs, rhs ->
+fun Evaluated.applyTestEquals(value: Value): Evaluated? =
+	value.matchInfix(_equals) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
 				if (evaluatedLhs == evaluatedRhs) this
@@ -162,8 +162,8 @@ fun Evaluated.applyTestDoes(value: Value): Evaluated? =
 						_test(
 							_error(
 								_it(lhs),
-								_gave(evaluatedLhs),
-								_should(_give(evaluatedRhs))))).printed.toString())
+								_equals(evaluatedLhs),
+								_should(_equal(evaluatedRhs))))).printed.toString())
 			}
 		}
 	}

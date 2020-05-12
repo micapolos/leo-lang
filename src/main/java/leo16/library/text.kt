@@ -95,7 +95,7 @@ val text = dictionary_ {
 		int.number.length
 	}
 
-	test { "Hello, world!".text.length.does { 13.number.length } }
+	test { "Hello, world!".text.length.equals_ { 13.number.length } }
 
 	any.text
 	cut {
@@ -122,7 +122,7 @@ val text = dictionary_ {
 			from { 7.number }
 			to { 12.number }
 		}
-		does { "world".text }
+		equals_ { "world".text }
 	}
 
 	any.text
@@ -136,7 +136,7 @@ val text = dictionary_ {
 		text
 	}
 
-	test { "Hello, ".text.plus { "world!".text }.does { "Hello, world!".text } }
+	test { "Hello, ".text.plus { "world!".text }.equals_ { "Hello, world!".text } }
 
 	any.text
 	replace {
@@ -163,7 +163,7 @@ val text = dictionary_ {
 			all { "|".text }
 			with { ", ".text }
 		}
-		does { "foo, bar, zoo".text }
+		equals_ { "foo, bar, zoo".text }
 	}
 
 	any.text
@@ -185,7 +185,7 @@ val text = dictionary_ {
 	test {
 		"zero one two".text
 		split { by { " ".text } }
-		does {
+		equals_ {
 			list {
 				item { "zero".text }
 				item { "one".text }
@@ -202,7 +202,7 @@ val text = dictionary_ {
 
 	test {
 		"zero\none\ntwo".text.line.list
-		does {
+		equals_ {
 			list {
 				item { "zero".text }
 				item { "one".text }
@@ -219,6 +219,6 @@ val text = dictionary_ {
 		boolean
 	}
 
-	test { "hello".text.equals_ { "hello".text }.does { true_.boolean } }
-	test { "hello".text.equals_ { "world".text }.does { false_.boolean } }
+	test { "hello".text.equals_ { "hello".text }.equals_ { true_.boolean } }
+	test { "hello".text.equals_ { "world".text }.equals_ { false_.boolean } }
 }

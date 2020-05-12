@@ -23,7 +23,7 @@ fun Mode.begin(word: String): Mode =
 				_expands -> Mode.QUOTE
 				_does -> Mode.QUOTE
 				_giving -> Mode.QUOTE
-				_give -> Mode.QUOTE
+				_do -> Mode.QUOTE
 				_function -> Mode.TYPE
 				_match -> Mode.QUOTE
 				_quote -> Mode.QUOTE

@@ -235,7 +235,7 @@ val reflection = dictionary_ {
 	}
 
 	test {
-		123.number.native.object_.string.text.does { "123".text }
+		123.number.native.object_.string.text.equals_ { "123".text }
 	}
 
 	true_.boolean.native.is_ { boolean.true_.field.get }
@@ -258,12 +258,12 @@ val reflection = dictionary_ {
 	test {
 		"hello".text.native.object_
 		equals_ { "hello".text.native }.boolean
-		does { boolean { true_ } }
+		equals_ { boolean { true_ } }
 	}
 
 	test {
 		"hello".text.native.object_
 		equals_ { "world".text.native }.boolean
-		does { boolean { false_ } }
+		equals_ { boolean { false_ } }
 	}
 }

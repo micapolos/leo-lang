@@ -118,7 +118,7 @@ val url = dictionary_ {
 			method { url.get.user.info }
 			parameter { empty.list }
 		}
-		give {
+		do_ {
 			native.object_.equals_ { null_.native }.boolean
 			match {
 				true_ { none }
@@ -139,7 +139,7 @@ val url = dictionary_ {
 			method { url.get.port }
 			parameter { empty.list }
 		}.int.number
-		give {
+		do_ {
 			number.equals_ { (-1).number }
 			match {
 				true_ { none }
@@ -161,7 +161,7 @@ val url = dictionary_ {
 			method { url.get.query }
 			parameter { empty.list }
 		}
-		give {
+		do_ {
 			native.object_.equals_ { null_.native }.boolean
 			match {
 				true_ { none }
@@ -176,7 +176,7 @@ val url = dictionary_ {
 			method { url.get.ref }
 			parameter { empty.list }
 		}
-		give {
+		do_ {
 			native.object_.equals_ { null_.native }.boolean
 			match {
 				true_ { none }
@@ -185,18 +185,18 @@ val url = dictionary_ {
 		}
 	}
 
-	test { "http://mwiacek.com".text.url.protocol does { "http".text.protocol } }
-	test { "http://mwiacek.com".text.url.host does { "mwiacek.com".text.host } }
-	test { "http://mwiacek.com".text.url.port does { none.port } }
-	test { "http://mwiacek.com:8080".text.url.port does { 8080.number.port } }
-	test { "http://mwiacek.com".text.url.path does { "".text.path } }
-	test { "http://mwiacek.com/index.html".text.url.path does { "/index.html".text.path } }
-	test { "http://mwiacek.com".text.url.query does { none.query } }
-	test { "http://mwiacek.com?q=foo".text.url.query does { "q=foo".text.query } }
-	test { "http://mwiacek.com".text.url.fragment does { none.fragment } }
-	test { "http://mwiacek.com#foo".text.url.fragment does { "foo".text.fragment } }
-	test { "http://mwiacek.com".text.url.user does { none.user } }
-	test { "http://foo@mwiacek.com".text.url.user does { "foo".text.user } }
+	test { "http://mwiacek.com".text.url.protocol equals_ { "http".text.protocol } }
+	test { "http://mwiacek.com".text.url.host equals_ { "mwiacek.com".text.host } }
+	test { "http://mwiacek.com".text.url.port equals_ { none.port } }
+	test { "http://mwiacek.com:8080".text.url.port equals_ { 8080.number.port } }
+	test { "http://mwiacek.com".text.url.path equals_ { "".text.path } }
+	test { "http://mwiacek.com/index.html".text.url.path equals_ { "/index.html".text.path } }
+	test { "http://mwiacek.com".text.url.query equals_ { none.query } }
+	test { "http://mwiacek.com?q=foo".text.url.query equals_ { "q=foo".text.query } }
+	test { "http://mwiacek.com".text.url.fragment equals_ { none.fragment } }
+	test { "http://mwiacek.com#foo".text.url.fragment equals_ { "foo".text.fragment } }
+	test { "http://mwiacek.com".text.url.user equals_ { none.user } }
+	test { "http://foo@mwiacek.com".text.url.user equals_ { "foo".text.user } }
 
 	any.native.url.reflect.does {
 		url {
@@ -211,7 +211,8 @@ val url = dictionary_ {
 	}
 
 	test {
-		"http://mwiacek.com/index.html".text.url.reflect.does {
+		"http://mwiacek.com/index.html".text.url.reflect
+		equals_ {
 			url {
 				protocol { "http".text }
 				user { none }
@@ -254,6 +255,6 @@ val url = dictionary_ {
 				}
 			}
 		}
-		give { nothing }
+		do_ { nothing }
 	}
 }

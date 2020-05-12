@@ -22,13 +22,13 @@ val list = dictionary_ {
 	test {
 		empty.list
 		append { 1.number }
-		does { list { item { 1.number } } }
+		equals_ { list { item { 1.number } } }
 	}
 
 	test {
 		list { item { 1.number } }
 		append { 2.number }
-		does { list { item { 1.number }; item { 2.number } } }
+		equals_ { list { item { 1.number }; item { 2.number } } }
 	}
 
 	list { any }
@@ -73,7 +73,7 @@ val list = dictionary_ {
 				does { to.list.append { item.content } }
 			}
 		}
-		does {
+		equals_ {
 			list {
 				item { two }
 				item { one }
@@ -101,7 +101,7 @@ val list = dictionary_ {
 			item { 2.number }
 			item { 3.number }
 		}.reverse
-		does {
+		equals_ {
 			list {
 				item { 3.number }
 				item { 2.number }
@@ -134,7 +134,7 @@ val list = dictionary_ {
 			item { 3.number }
 		}
 		map { function { any.does { number.ok } } }
-		does {
+		equals_ {
 			list {
 				item { 1.number.ok }
 				item { 2.number.ok }
@@ -159,7 +159,7 @@ val list = dictionary_ {
 
 	test {
 		empty.list.length
-		does { 0.number.length }
+		equals_ { 0.number.length }
 	}
 
 	test {
@@ -168,6 +168,6 @@ val list = dictionary_ {
 			item { 1.number }
 			item { 2.number }
 		}.length
-		does { 3.number.length }
+		equals_ { 3.number.length }
 	}
 }

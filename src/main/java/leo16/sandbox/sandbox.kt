@@ -13,7 +13,7 @@ fun main() = leo_ {
 //	}
 
 	0.number
-	give {
+	do_ {
 		number.printing
 		plus { 1.number }
 		repeat
