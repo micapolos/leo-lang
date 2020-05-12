@@ -1,33 +1,40 @@
 package leo16
 
-import leo.base.printTime
+import leo.base.iterate
+import leo.base.timeMillis
 import leo15.dsl.*
 import kotlin.test.Test
 
+fun measure(label: String, fn: () -> Unit) {
+	val warmUpTimes = 5
+	val measureTimes = 10
+	repeat(warmUpTimes) { fn() }
+	val time = 0L.iterate(measureTimes) { plus(timeMillis(fn)) }.div(measureTimes)
+	println("$label: ${time}ms")
+}
+
 class PerformanceTest {
-	/** Last measurement: ~140ms */
+	/** Last measurement: ~141ms */
 	@Test
 	fun fibonacci() {
-		repeat(15) {
-			printTime {
-				evaluate_ {
-					import { boolean }
-					import { number }
+		measure("fibonacci") {
+			evaluate_ {
+				import { boolean }
+				import { number }
 
-					15.number
-					do_ {
-						number.equals_ { 0.number }
-						or { number.equals_ { 1.number } }
-						match {
-							true_ { number }
-							false_ {
-								number.minus { 2.number }.repeat
-								plus { number.minus { 1.number }.repeat }
-							}
+				15.number
+				do_ {
+					number.equals_ { 0.number }
+					or { number.equals_ { 1.number } }
+					match {
+						true_ { number }
+						false_ {
+							number.minus { 2.number }.repeat
+							plus { number.minus { 1.number }.repeat }
 						}
 					}
-				}.assertEquals { 610.number }
-			}
+				}
+			}.assertEquals { 610.number }
 		}
 	}
 }
