@@ -107,7 +107,7 @@ val PatternMatch.value
 			.pushAll(fieldStack)
 			.value
 
-fun PatternMatch.plusMatchOrNull(pattern: Pattern, value: Value): PatternMatch? =
+inline fun PatternMatch.plusMatchOrNull(pattern: Pattern, value: Value): PatternMatch? =
 	orNull
 		.zipFold(value.fieldStack, pattern.value.fieldStack) { fieldOrNull, patternFieldOrNull ->
 			when {
@@ -126,13 +126,13 @@ fun PatternMatch.plusMatchOrNull(pattern: Pattern, value: Value): PatternMatch? 
 			}
 		}
 
-fun Pattern.matchOrNull(value: Value): PatternMatch? =
+inline fun Pattern.matchOrNull(value: Value): PatternMatch? =
 	emptyMatch.plusMatchOrNull(this, value)
 
 fun Value.matches(pattern: Pattern): Boolean =
 	emptyMatch.plusMatchOrNull(pattern, this) != null
 
-fun Field.matches(field: PatternField): Boolean =
+inline fun Field.matches(field: PatternField): Boolean =
 	when (this) {
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
 		is FunctionField -> field is FunctionPatternField && function.pattern == field.function.pattern
@@ -141,10 +141,10 @@ fun Field.matches(field: PatternField): Boolean =
 		is ChoiceField -> false // TODO()
 	}
 
-fun Sentence.matches(sentence: PatternSentence): Boolean =
+inline fun Sentence.matches(sentence: PatternSentence): Boolean =
 	word == sentence.word && value.matches(sentence.pattern)
 
-fun Literal.matches(field: PatternField): Boolean =
+inline fun Literal.matches(field: PatternField): Boolean =
 	when (this) {
 		is StringLiteral -> field == _text(anyPattern)
 		is NumberLiteral -> field == _number(anyPattern)

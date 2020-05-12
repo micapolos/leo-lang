@@ -6,7 +6,7 @@ import leo13.first
 import leo13.mapOrNull
 import leo16.names.*
 
-fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
+inline fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
 	when (mode) {
 		Mode.EVALUATE -> apply(word, evaluated, isType = false)
 		Mode.TYPE -> apply(word, evaluated, isType = true)
@@ -14,11 +14,11 @@ fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
 		Mode.META -> plusNormalized(word(evaluated.value))
 	}
 
-fun Evaluated.apply(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
+inline fun Evaluated.apply(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
 	if (evaluated.value.isEmpty) clearValue.applyNormalized(word, evaluated.scope.evaluated(value), isType)
 	else applyNormalized(word, evaluated, isType)
 
-fun Evaluated.applyNormalized(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
+inline fun Evaluated.applyNormalized(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
 	null
 		?: applyDictionary(word, evaluated)
 		?: applyNormalized(word(evaluated.value), isType)
@@ -43,10 +43,10 @@ fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 fun Evaluated.apply(field: Field, isType: Boolean): Evaluated =
 	value.normalize(field) { set(this).applyNormalized(it, isType) }
 
-fun Evaluated.applyNormalized(field: Field, isType: Boolean): Evaluated =
+inline fun Evaluated.applyNormalized(field: Field, isType: Boolean): Evaluated =
 	applyNormalizedAndRead(field.read, isType)
 
-fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Evaluated =
+inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Evaluated =
 	null
 		?: applyValue(field) // keep first
 		?: ifOrNull(!isType) { applyBinding(field) }
