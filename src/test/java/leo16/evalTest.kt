@@ -6,20 +6,20 @@ import leo15.dsl.*
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
-fun Script.assertGives(f: F) {
+fun Script.assertDoes(f: F) {
 	assertEqualTo(read_(f))
 }
 
 class EvalTest {
 	@Test
 	fun normalization() {
-		evaluate_ { zero.negate }.assertGives { negate { zero } }
+		evaluate_ { zero.negate }.assertDoes { negate { zero } }
 	}
 
 	@Test
 	fun comment() {
-		evaluate_ { comment { nothing_ } }.assertGives { nothing_ }
-		evaluate_ { comment { zero } }.assertGives { nothing_ }
+		evaluate_ { comment { nothing_ } }.assertDoes { nothing_ }
+		evaluate_ { comment { zero } }.assertDoes { nothing_ }
 		evaluate_ {
 			comment { two { dimensional { point } } }
 			point {
@@ -28,7 +28,7 @@ class EvalTest {
 				comment { y.coordinate }
 				y { 20.number }
 			}
-		}.assertGives {
+		}.assertDoes {
 			point {
 				x { 10.number }
 				y { 20.number }
@@ -38,105 +38,105 @@ class EvalTest {
 
 	@Test
 	fun nothing() {
-		evaluate_ { nothing }.assertGives { nothing_ }
-		evaluate_ { x { nothing } }.assertGives { x { nothing_ } }
-		evaluate_ { x.nothing }.assertGives { nothing { x } }
-		evaluate_ { x.nothing { y } }.assertGives { x.nothing { y } }
+		evaluate_ { nothing }.assertDoes { nothing_ }
+		evaluate_ { x { nothing } }.assertDoes { x { nothing_ } }
+		evaluate_ { x.nothing }.assertDoes { nothing { x } }
+		evaluate_ { x.nothing { y } }.assertDoes { x.nothing { y } }
 	}
 
 	@Test
 	fun sentences() {
-		evaluate_ { nothing_ }.assertGives { nothing_ }
-		evaluate_ { zero }.assertGives { zero }
-		evaluate_ { zero.plus { one } }.assertGives { zero.plus { one } }
+		evaluate_ { nothing_ }.assertDoes { nothing_ }
+		evaluate_ { zero }.assertDoes { zero }
+		evaluate_ { zero.plus { one } }.assertDoes { zero.plus { one } }
 	}
 
 	@Test
 	fun literal() {
-		evaluate_ { "foo".text }.assertGives { "foo".text }
-		evaluate_ { 123.number }.assertGives { 123.number }
+		evaluate_ { "foo".text }.assertDoes { "foo".text }
+		evaluate_ { 123.number }.assertDoes { 123.number }
 	}
 
 	@Test
 	fun quote() {
-		evaluate_ { quote { nothing_ } }.assertGives { nothing_ }
-		evaluate_ { quote { zero.negate } }.assertGives { zero.negate }
-		evaluate_ { quote { zero.is_ { one } } }.assertGives { zero.is_ { one } }
-		evaluate_ { zero.quote { one.two } }.assertGives { zero.one.two }
-		evaluate_ { zero.one.quote { two } }.assertGives { one { zero }.two }
+		evaluate_ { quote { nothing_ } }.assertDoes { nothing_ }
+		evaluate_ { quote { zero.negate } }.assertDoes { zero.negate }
+		evaluate_ { quote { zero.is_ { one } } }.assertDoes { zero.is_ { one } }
+		evaluate_ { zero.quote { one.two } }.assertDoes { zero.one.two }
+		evaluate_ { zero.one.quote { two } }.assertDoes { one { zero }.two }
 	}
 
 	@Test
 	fun script() {
 		evaluate_ {
-			function { zero.gives { one } }
+			function { zero.does { one } }
 			script
 			take { zero }
-		}.assertGives {
-			function { zero.gives { one } }
+		}.assertDoes {
+			function { zero.does { one } }
 			take { zero }
 		}
 	}
 
 	@Test
 	fun leonardo() {
-		evaluate_ { leonardo.author.text }.assertGives { "Michał Pociecha-Łoś".text }
+		evaluate_ { leonardo.author.text }.assertDoes { "Michał Pociecha-Łoś".text }
 	}
 
 	@Test
 	fun this_() {
-		evaluate_ { this_ { nothing_ } }.assertGives { nothing_ }
-		evaluate_ { x { zero }.this_ { nothing_ } }.assertGives { x { zero } }
-		evaluate_ { x { zero }.this_ { y { one } } }.assertGives { x { zero }; y { one } }
-		evaluate_ { x { zero }.this_ { y { one }; z { two } } }.assertGives { x { zero }; y { one }; z { two } }
-		evaluate_ { this_ { zero }; this_ { one } }.assertGives { zero; one }
+		evaluate_ { this_ { nothing_ } }.assertDoes { nothing_ }
+		evaluate_ { x { zero }.this_ { nothing_ } }.assertDoes { x { zero } }
+		evaluate_ { x { zero }.this_ { y { one } } }.assertDoes { x { zero }; y { one } }
+		evaluate_ { x { zero }.this_ { y { one }; z { two } } }.assertDoes { x { zero }; y { one }; z { two } }
+		evaluate_ { this_ { zero }; this_ { one } }.assertDoes { zero; one }
 	}
 
 	@Test
 	fun evaluate() {
-		evaluate_ { quote { nothing_ }.evaluate }.assertGives { nothing_ }
-		evaluate_ { quote { zero.negate }.evaluate }.assertGives { negate { zero } }
-		evaluate_ { quote { zero.is_ { one } }.evaluate }.assertGives { nothing_ }
-		evaluate_ { quote { zero.is_ { one }.zero }.evaluate }.assertGives { one }
-		evaluate_ { quote { zero.is_ { one } }.evaluate.zero }.assertGives { zero }
+		evaluate_ { quote { nothing_ }.evaluate }.assertDoes { nothing_ }
+		evaluate_ { quote { zero.negate }.evaluate }.assertDoes { negate { zero } }
+		evaluate_ { quote { zero.is_ { one } }.evaluate }.assertDoes { nothing_ }
+		evaluate_ { quote { zero.is_ { one }.zero }.evaluate }.assertDoes { one }
+		evaluate_ { quote { zero.is_ { one } }.evaluate.zero }.assertDoes { zero }
 	}
 
 	@Test
 	fun compile() {
-		evaluate_ { quote { nothing_ }.compile }.assertGives { nothing_ }
-		evaluate_ { quote { zero.negate }.compile }.assertGives { negate { zero } }
-		evaluate_ { quote { zero.is_ { one } }.compile }.assertGives { nothing_ }
-		evaluate_ { quote { zero.is_ { one }.zero }.compile }.assertGives { one }
-		evaluate_ { quote { zero.is_ { one } }.compile.zero }.assertGives { one }
+		evaluate_ { quote { nothing_ }.compile }.assertDoes { nothing_ }
+		evaluate_ { quote { zero.negate }.compile }.assertDoes { negate { zero } }
+		evaluate_ { quote { zero.is_ { one } }.compile }.assertDoes { nothing_ }
+		evaluate_ { quote { zero.is_ { one }.zero }.compile }.assertDoes { one }
+		evaluate_ { quote { zero.is_ { one } }.compile.zero }.assertDoes { one }
 	}
 
 	@Test
 	fun getField() {
-		evaluate_ { point { x { zero }; y { one } }.x }.assertGives { x { zero } }
-		evaluate_ { point { x { zero }; y { one } }.y }.assertGives { y { one } }
+		evaluate_ { point { x { zero }; y { one } }.x }.assertDoes { x { zero } }
+		evaluate_ { point { x { zero }; y { one } }.y }.assertDoes { y { one } }
 	}
 
 	@Test
 	fun getSpecial() {
-		evaluate_ { the { "foo".text }.text }.assertGives { "foo".text }
-		evaluate_ { the { 123.number }.number }.assertGives { 123.number }
-		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertGives { dictionary { definition { list { empty } } } }
-		evaluate_ { the { function { zero.gives { one } } }.function }.assertGives { function { zero.gives { one } } }
+		evaluate_ { the { "foo".text }.text }.assertDoes { "foo".text }
+		evaluate_ { the { 123.number }.number }.assertDoes { 123.number }
+		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertDoes { dictionary { definition { list { empty } } } }
+		evaluate_ { the { function { zero.does { one } } }.function }.assertDoes { function { zero.does { one } } }
 	}
 
 	@Test
 	fun content() {
-		evaluate_ { content }.assertGives { content }
-		evaluate_ { point { x { zero }; y { one } }.content }.assertGives { x { zero }; y { one } }
-		evaluate_ { x { zero }; y { one }; content }.assertGives { content { x { zero }; y { one } } }
+		evaluate_ { content }.assertDoes { content }
+		evaluate_ { point { x { zero }; y { one } }.content }.assertDoes { x { zero }; y { one } }
+		evaluate_ { x { zero }; y { one }; content }.assertDoes { content { x { zero }; y { one } } }
 	}
 
 	@Test
 	fun functionFunction() {
 		evaluate_ {
-			function { function { zero }.gives { ok } }
-			take { function { zero.gives { one } } }
-		}.assertGives { ok }
+			function { function { zero }.does { ok } }
+			take { function { zero.does { one } } }
+		}.assertDoes { ok }
 	}
 
 	@Test
@@ -145,41 +145,41 @@ class EvalTest {
 			the {
 				0.number
 				"hello".text
-				function { zero.gives { one } }
+				function { zero.does { one } }
 			}
 			function.take { zero }
-		}.assertGives { one }
+		}.assertDoes { one }
 	}
 
 	@Test
 	fun is_() {
-		evaluate_ { zero.is_ { one } }.assertGives { nothing_ }
-		evaluate_ { zero.is_ { one }.zero }.assertGives { one }
-		evaluate_ { any.is_ { one }.zero }.assertGives { one }
+		evaluate_ { zero.is_ { one } }.assertDoes { nothing_ }
+		evaluate_ { zero.is_ { one }.zero }.assertDoes { one }
+		evaluate_ { any.is_ { one }.zero }.assertDoes { one }
 
-		evaluate_ { any.text.is_ { ok }; "foo".text }.assertGives { ok }
-		evaluate_ { any.number.is_ { ok }; 123.number }.assertGives { ok }
+		evaluate_ { any.text.is_ { ok }; "foo".text }.assertDoes { ok }
+		evaluate_ { any.number.is_ { ok }; 123.number }.assertDoes { ok }
 	}
 
 	@Test
-	fun gives() {
-		evaluate_ { zero.gives { one } }.assertGives { nothing_ }
-		evaluate_ { zero.gives { one }.zero }.assertGives { one }
-		evaluate_ { zero.gives { one }.one }.assertGives { one }
-		evaluate_ { any.x.gives { x }.zero.x }.assertGives { x { zero } }
-		evaluate_ { any.x.gives { x }.zero.y }.assertGives { y { zero } }
+	fun does() {
+		evaluate_ { zero.does { one } }.assertDoes { nothing_ }
+		evaluate_ { zero.does { one }.zero }.assertDoes { one }
+		evaluate_ { zero.does { one }.one }.assertDoes { one }
+		evaluate_ { any.x.does { x }.zero.x }.assertDoes { x { zero } }
+		evaluate_ { any.x.does { x }.zero.y }.assertDoes { y { zero } }
 
-		evaluate_ { any.text.gives { text }; "foo".text }.assertGives { "foo".text }
-		evaluate_ { any.number.gives { number }; 123.number }.assertGives { 123.number }
+		evaluate_ { any.text.does { text }; "foo".text }.assertDoes { "foo".text }
+		evaluate_ { any.number.does { number }; 123.number }.assertDoes { 123.number }
 	}
 
 	@Test
-	fun anyGives() {
+	fun anyDoes() {
 		evaluate_ {
 			any.plus { any }
-			gives { the.content.add { plus.content } }
+			does { the.content.add { plus.content } }
 			two.plus { three }
-		}.assertGives {
+		}.assertDoes {
 			two.add { three }
 		}
 	}
@@ -187,18 +187,18 @@ class EvalTest {
 	@Test
 	fun matchSentence() {
 		evaluate_ { zero.bit.match { zero { one } } }
-			.assertGives { one }
+			.assertDoes { one }
 
 		evaluate_ { zero.bit.match { nothing_ } }
-			.assertGives { match { bit { zero } } }
+			.assertDoes { match { bit { zero } } }
 		evaluate_ { zero.bit.match { one } }
-			.assertGives { bit { zero }.match { one } }
+			.assertDoes { bit { zero }.match { one } }
 	}
 
 	@Test
 	fun matchEmpty() {
 		evaluate_ { empty.list.match { empty { ok } } }
-			.assertGives { ok }
+			.assertDoes { ok }
 	}
 
 	@Test
@@ -210,7 +210,7 @@ class EvalTest {
 				item { two }
 			}
 			match { linked { linked } }
-		}.assertGives {
+		}.assertDoes {
 			linked {
 				previous {
 					list {
@@ -226,47 +226,47 @@ class EvalTest {
 	@Test
 	fun function() {
 		evaluate_ {
-			function { zero.gives { one } }
-		}.assertGives {
-			function { zero.gives { one } }
+			function { zero.does { one } }
+		}.assertDoes {
+			function { zero.does { one } }
 		}
 
 		evaluate_ {
-			function { zero.gives { one } }
+			function { zero.does { one } }
 			zero
-		}.assertGives {
-			zero { function { zero.gives { one } } }
+		}.assertDoes {
+			zero { function { zero.does { one } } }
 		}
 
 		evaluate_ {
 			function { zero.plus { one } }
 			zero
-		}.assertGives { zero }
+		}.assertDoes { zero }
 	}
 
 	@Test
 	fun take() {
 		evaluate_ {
-			function { zero.gives { one } }
+			function { zero.does { one } }
 			take { zero }
-		}.assertGives { one }
+		}.assertDoes { one }
 
 		evaluate_ {
-			function { any.bit.gives { ok } }
+			function { any.bit.does { ok } }
 			take { zero.bit }
-		}.assertGives { ok }
+		}.assertDoes { ok }
 
 		evaluate_ {
-			function { any.x.gives { x } }
+			function { any.x.does { x } }
 			take { y { zero } }
-		}.assertGives {
-			function { x { any }.gives { x } }
+		}.assertDoes {
+			function { x { any }.does { x } }
 			take { y { zero } }
 		}
 
 		evaluate_ {
-			function { gives { zero } }.take
-		}.assertGives { zero }
+			function { does { zero } }.take
+		}.assertDoes { zero }
 	}
 
 	@Test
@@ -275,7 +275,7 @@ class EvalTest {
 			x { zero }
 			y { one }
 			give { x.and { y } }
-		}.assertGives { x { zero }.and { y { one } } }
+		}.assertDoes { x { zero }.and { y { one } } }
 	}
 
 	@Test
@@ -288,7 +288,7 @@ class EvalTest {
 					one { zero.bit.repeat }
 				}
 			}
-		}.assertGives { bit { zero } }
+		}.assertDoes { bit { zero } }
 	}
 
 	@Test
@@ -297,7 +297,7 @@ class EvalTest {
 			expand.expands {
 				quote { zero.is_ { one } }
 			}
-		}.assertGives { nothing_ }
+		}.assertDoes { nothing_ }
 	}
 
 	@Test
@@ -307,7 +307,7 @@ class EvalTest {
 				quote { zero.is_ { one } }
 			}
 			expand
-		}.assertGives { nothing_ }
+		}.assertDoes { nothing_ }
 	}
 
 	@Test
@@ -318,7 +318,7 @@ class EvalTest {
 			}
 			expand
 			zero
-		}.assertGives { one }
+		}.assertDoes { one }
 	}
 
 	@Test
@@ -329,14 +329,14 @@ class EvalTest {
 				zero
 			}
 			expand
-		}.assertGives { one }
+		}.assertDoes { one }
 	}
 
 	@Test
 	fun dictionary() {
 		evaluate_ {
 			dictionary { nothing_ }
-		}.assertGives {
+		}.assertDoes {
 			dictionary {
 				definition { list { empty } }
 			}
@@ -346,7 +346,7 @@ class EvalTest {
 			dictionary {
 				zero.is_ { one }
 			}
-		}.assertGives {
+		}.assertDoes {
 			dictionary {
 				definition {
 					list {
@@ -364,7 +364,7 @@ class EvalTest {
 				zero.is_ { one }
 				one.is_ { zero }
 			}
-		}.assertGives {
+		}.assertDoes {
 			dictionary {
 				definition {
 					list {
@@ -378,7 +378,7 @@ class EvalTest {
 
 	@Test
 	fun load() {
-		evaluate_ { ping.testing.load }.assertGives { pong }
+		evaluate_ { ping.testing.load }.assertDoes { pong }
 	}
 
 	@Test
@@ -391,17 +391,17 @@ class EvalTest {
 
 				two.is_ { zero }
 			}.import.two
-		}.assertGives { one }
+		}.assertDoes { one }
 	}
 
 	@Test
 	fun import() {
-		evaluate_ { dictionary { nothing_ }.import }.assertGives { nothing_ }
-		evaluate_ { dictionary { zero.is_ { one } }.import }.assertGives { nothing_ }
-		evaluate_ { dictionary { zero.is_ { one } }.import.zero }.assertGives { one }
+		evaluate_ { dictionary { nothing_ }.import }.assertDoes { nothing_ }
+		evaluate_ { dictionary { zero.is_ { one } }.import }.assertDoes { nothing_ }
+		evaluate_ { dictionary { zero.is_ { one } }.import.zero }.assertDoes { one }
 
-		evaluate_ { zero.import { dictionary { zero.is_ { one } } } }.assertGives { zero }
-		evaluate_ { zero.import { dictionary { zero.is_ { one } } }.evaluate }.assertGives { one }
+		evaluate_ { zero.import { dictionary { zero.is_ { one } } } }.assertDoes { zero }
+		evaluate_ { zero.import { dictionary { zero.is_ { one } } }.evaluate }.assertDoes { one }
 
 		evaluate_ {
 			zero.is_ { one }
@@ -411,7 +411,7 @@ class EvalTest {
 				}
 			}
 			two
-		}.assertGives { one }
+		}.assertDoes { one }
 	}
 
 	@Test
@@ -427,7 +427,7 @@ class EvalTest {
 				}
 			}
 			zero
-		}.assertGives { one }
+		}.assertDoes { one }
 
 		evaluate_ {
 			import {
@@ -441,7 +441,7 @@ class EvalTest {
 				}
 			}
 			two
-		}.assertGives { zero }
+		}.assertDoes { zero }
 
 		evaluate_ {
 			import {
@@ -454,48 +454,48 @@ class EvalTest {
 				}
 			}
 			zero
-		}.assertGives { zero }
+		}.assertDoes { zero }
 	}
 
 	@Test
 	fun testTest() {
 		evaluate_ {
-			test { zero.gives { zero } }
-		}.assertGives { nothing_ }
+			test { zero.does { zero } }
+		}.assertDoes { nothing_ }
 
 		evaluate_ {
 			result.is_ { one }
-			test { one.gives { result } }
-		}.assertGives { nothing_ }
+			test { one.does { result } }
+		}.assertDoes { nothing_ }
 
 		evaluate_ {
 			result.is_ { one }
-			test { result.gives { one } }
-		}.assertGives { nothing_ }
+			test { result.does { one } }
+		}.assertDoes { nothing_ }
 
 		assertFailsWith(AssertionError::class) {
-			evaluate_ { test { zero.gives { one } } }
+			evaluate_ { test { zero.does { one } } }
 		}
 
 		assertFailsWith(AssertionError::class) {
 			evaluate_ {
 				result.is_ { one }
-				test { zero.gives { result } }
+				test { zero.does { result } }
 			}
 		}
 
 		assertFailsWith(AssertionError::class) {
 			evaluate_ {
 				result.is_ { one }
-				test { result.gives { zero } }
+				test { result.does { zero } }
 			}
 		}
 	}
 
 	@Test
 	fun matchesSentence() {
-		evaluate_ { zero.matches { zero } }.assertGives { true.boolean }
-		evaluate_ { zero.matches { one } }.assertGives { false.boolean }
+		evaluate_ { zero.matches { zero } }.assertDoes { true.boolean }
+		evaluate_ { zero.matches { one } }.assertDoes { false.boolean }
 	}
 
 	@Test
@@ -508,7 +508,7 @@ class EvalTest {
 					case { one }
 				}
 			}
-		}.assertGives { true.boolean }
+		}.assertDoes { true.boolean }
 
 		evaluate_ {
 			one
@@ -518,7 +518,7 @@ class EvalTest {
 					case { one }
 				}
 			}
-		}.assertGives { true.boolean }
+		}.assertDoes { true.boolean }
 
 		evaluate_ {
 			two
@@ -528,7 +528,7 @@ class EvalTest {
 					case { one }
 				}
 			}
-		}.assertGives { false.boolean }
+		}.assertDoes { false.boolean }
 
 		evaluate_ {
 			choice {
@@ -541,7 +541,7 @@ class EvalTest {
 					case { one }
 				}
 			}
-		}.assertGives { true.boolean }
+		}.assertDoes { true.boolean }
 
 		evaluate_ {
 			choice {
@@ -556,7 +556,7 @@ class EvalTest {
 					}
 				}
 			}
-		}.assertGives { false.boolean }
+		}.assertDoes { false.boolean }
 	}
 
 	@Test
@@ -564,37 +564,37 @@ class EvalTest {
 		evaluate_ {
 			dictionary { zero.is_ { one } }
 			matches { dictionary }
-		}.assertGives { false.boolean }
+		}.assertDoes { false.boolean }
 
 		evaluate_ {
 			dictionary { zero.is_ { one } }
 			matches { quote { dictionary } }
-		}.assertGives { true.boolean }
+		}.assertDoes { true.boolean }
 
 		evaluate_ {
 			dictionary { zero.is_ { one } }
 			matches { dictionary { zero.is_ { one } } }
-		}.assertGives { true.boolean }
+		}.assertDoes { true.boolean }
 	}
 
 	@Test
 	fun matchesGiving() {
 		evaluate_ {
-			function { zero.gives { one } }
+			function { zero.does { one } }
 			matches { function { zero } }
-		}.assertGives { true.boolean }
+		}.assertDoes { true.boolean }
 
 		evaluate_ {
-			function { zero.gives { one } }
+			function { zero.does { one } }
 			matches { function { one } }
-		}.assertGives { false.boolean }
+		}.assertDoes { false.boolean }
 	}
 
 //	@Test
 //	fun debug() {
 //		evaluate_ {
 //			zero.is_ { one }.debug
-//		}.assertGives {
+//		}.assertDoes {
 //			evaluator {
 //				parent { nothing }
 //				evaluated {

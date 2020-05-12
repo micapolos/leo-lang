@@ -35,7 +35,7 @@ val Sentence.printSentence: Sentence
 
 val Function.printSentence: Sentence
 	get() =
-		_function.sentenceTo(pattern.asValue.plus(_gives(compiled.bodyValue)))
+		_function.sentenceTo(pattern.asValue.plus(_does(compiled.bodyValue)))
 
 val Choice.printSentence: Sentence
 	get() =

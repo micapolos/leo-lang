@@ -6,7 +6,7 @@ data class Function(val pattern: Pattern, val compiled: Compiled) {
 	override fun toString() = asValue.toString()
 }
 
-fun Pattern.gives(compiled: Compiled) = Function(this, compiled)
+fun Pattern.does(compiled: Compiled) = Function(this, compiled)
 
 fun Function.apply(value: Value): Value? =
 	pattern.matchOrNull(value)?.let { match ->
@@ -19,9 +19,9 @@ val Function.asPatternField: Field
 
 val Function.asValue: Value
 	get() =
-		pattern.asValue.plus(_gives(compiled.bodyValue))
+		pattern.asValue.plus(_does(compiled.bodyValue))
 
-fun Dictionary.givesOrNull(value: Value): Function? =
-	value.matchInfix(_gives) { lhs, rhs ->
-		lhs.pattern.gives(compiled(rhs))
+fun Dictionary.doesOrNull(value: Value): Function? =
+	value.matchInfix(_does) { lhs, rhs ->
+		lhs.pattern.does(compiled(rhs))
 	}

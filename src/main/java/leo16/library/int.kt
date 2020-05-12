@@ -64,7 +64,7 @@ val int = dictionary_ {
 
 	any.int
 	plus { any.int }
-	gives {
+	does {
 		integer.plus.method
 		invoke {
 			parameter {
@@ -77,11 +77,11 @@ val int = dictionary_ {
 		int
 	}
 
-	test { 2.int.plus { 3.int }.gives { 5.int } }
+	test { 2.int.plus { 3.int }.does { 5.int } }
 
 	any.int
 	minus { any.int }
-	gives {
+	does {
 		integer.minus.method
 		invoke {
 			parameter {
@@ -94,11 +94,11 @@ val int = dictionary_ {
 		int
 	}
 
-	test { 5.int minus { 3.int } gives { 2.int } }
+	test { 5.int minus { 3.int } does { 2.int } }
 
 	any.int
 	times { any.int }
-	gives {
+	does {
 		integer.times.method
 		invoke {
 			parameter {
@@ -111,5 +111,5 @@ val int = dictionary_ {
 		int
 	}
 
-	test { 2.int times { 3.int } gives { 6.int } }
+	test { 2.int times { 3.int } does { 6.int } }
 }

@@ -92,27 +92,27 @@ val url = dictionary_ {
 	}
 
 	any.text.url
-	gives {
+	does {
 		string.url.constructor
 		invoke { parameter { list { item { url.text.native } } } }
 		url
 	}
 
 	any.native.url.read
-	gives {
+	does {
 		url.get.method
 		invoke { parameter { list { item { read.url.native } } } }
 		text.read
 	}
 
-	any.native.url.protocol.gives {
+	any.native.url.protocol.does {
 		protocol.url.native.invoke {
 			method { url.get.protocol }
 			parameter { empty.list }
 		}.text.protocol
 	}
 
-	any.native.url.user.gives {
+	any.native.url.user.does {
 		user.url.native
 		invoke {
 			method { url.get.user.info }
@@ -127,14 +127,14 @@ val url = dictionary_ {
 		}
 	}
 
-	any.native.url.host.gives {
+	any.native.url.host.does {
 		host.url.native.invoke {
 			method { url.get.host }
 			parameter { empty.list }
 		}.text.host
 	}
 
-	any.native.url.port.gives {
+	any.native.url.port.does {
 		port.url.native.invoke {
 			method { url.get.port }
 			parameter { empty.list }
@@ -148,14 +148,14 @@ val url = dictionary_ {
 		}
 	}
 
-	any.native.url.path.gives {
+	any.native.url.path.does {
 		path.url.native.invoke {
 			method { url.get.path }
 			parameter { empty.list }
 		}.text.path
 	}
 
-	any.native.url.query.gives {
+	any.native.url.query.does {
 		query.url.native
 		invoke {
 			method { url.get.query }
@@ -170,7 +170,7 @@ val url = dictionary_ {
 		}
 	}
 
-	any.native.url.fragment.gives {
+	any.native.url.fragment.does {
 		fragment.url.native
 		invoke {
 			method { url.get.ref }
@@ -185,20 +185,20 @@ val url = dictionary_ {
 		}
 	}
 
-	test { "http://mwiacek.com".text.url.protocol gives { "http".text.protocol } }
-	test { "http://mwiacek.com".text.url.host gives { "mwiacek.com".text.host } }
-	test { "http://mwiacek.com".text.url.port gives { none.port } }
-	test { "http://mwiacek.com:8080".text.url.port gives { 8080.number.port } }
-	test { "http://mwiacek.com".text.url.path gives { "".text.path } }
-	test { "http://mwiacek.com/index.html".text.url.path gives { "/index.html".text.path } }
-	test { "http://mwiacek.com".text.url.query gives { none.query } }
-	test { "http://mwiacek.com?q=foo".text.url.query gives { "q=foo".text.query } }
-	test { "http://mwiacek.com".text.url.fragment gives { none.fragment } }
-	test { "http://mwiacek.com#foo".text.url.fragment gives { "foo".text.fragment } }
-	test { "http://mwiacek.com".text.url.user gives { none.user } }
-	test { "http://foo@mwiacek.com".text.url.user gives { "foo".text.user } }
+	test { "http://mwiacek.com".text.url.protocol does { "http".text.protocol } }
+	test { "http://mwiacek.com".text.url.host does { "mwiacek.com".text.host } }
+	test { "http://mwiacek.com".text.url.port does { none.port } }
+	test { "http://mwiacek.com:8080".text.url.port does { 8080.number.port } }
+	test { "http://mwiacek.com".text.url.path does { "".text.path } }
+	test { "http://mwiacek.com/index.html".text.url.path does { "/index.html".text.path } }
+	test { "http://mwiacek.com".text.url.query does { none.query } }
+	test { "http://mwiacek.com?q=foo".text.url.query does { "q=foo".text.query } }
+	test { "http://mwiacek.com".text.url.fragment does { none.fragment } }
+	test { "http://mwiacek.com#foo".text.url.fragment does { "foo".text.fragment } }
+	test { "http://mwiacek.com".text.url.user does { none.user } }
+	test { "http://foo@mwiacek.com".text.url.user does { "foo".text.user } }
 
-	any.native.url.reflect.gives {
+	any.native.url.reflect.does {
 		url {
 			this_ { reflect.url.protocol }
 			this_ { reflect.url.user }
@@ -211,7 +211,7 @@ val url = dictionary_ {
 	}
 
 	test {
-		"http://mwiacek.com/index.html".text.url.reflect.gives {
+		"http://mwiacek.com/index.html".text.url.reflect.does {
 			url {
 				protocol { "http".text }
 				user { none }
@@ -225,7 +225,7 @@ val url = dictionary_ {
 	}
 
 	any.native.url.browse
-	gives {
+	does {
 		"java.awt.Desktop".text.name.class_
 		method {
 			name { "getDesktop".text }

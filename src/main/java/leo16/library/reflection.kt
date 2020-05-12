@@ -131,7 +131,7 @@ val reflection = dictionary_ {
 	}
 
 	any.number.long
-	gives {
+	does {
 		long.number.native
 		invoke {
 			big.decimal.long.method
@@ -140,7 +140,7 @@ val reflection = dictionary_ {
 	}
 
 	any.number.int
-	gives {
+	does {
 		int.number.native
 		invoke {
 			big.decimal.int.method
@@ -149,7 +149,7 @@ val reflection = dictionary_ {
 	}
 
 	any.number.short
-	gives {
+	does {
 		short.number.native
 		invoke {
 			big.decimal.short.method
@@ -158,7 +158,7 @@ val reflection = dictionary_ {
 	}
 
 	any.number.byte
-	gives {
+	does {
 		byte.number.native
 		invoke {
 			big.decimal.byte.method
@@ -167,7 +167,7 @@ val reflection = dictionary_ {
 	}
 
 	any.number.float
-	gives {
+	does {
 		float.number.native
 		invoke {
 			big.decimal.float.method
@@ -176,7 +176,7 @@ val reflection = dictionary_ {
 	}
 
 	any.number.double
-	gives {
+	does {
 		double.number.native
 		invoke {
 			big.decimal.double.method
@@ -185,48 +185,48 @@ val reflection = dictionary_ {
 	}
 
 	any.long.number
-	gives {
+	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.long.native } } } }
 		number
 	}
 
 	any.int.number
-	gives {
+	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.int.native } } } }
 		number
 	}
 
 	any.short.number
-	gives {
+	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.short.native } } } }
 		number
 	}
 
 	any.byte.number
-	gives {
+	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.byte.native } } } }
 		number
 	}
 
 	any.float.number
-	gives {
+	does {
 		double.big.decimal.method
 		invoke { parameter { list { item { number.float.native } } } }
 		number
 	}
 
 	any.double.number
-	gives {
+	does {
 		double.big.decimal.method
 		invoke { parameter { list { item { number.double.native } } } }
 		number
 	}
 
-	any.native.object_.string.gives {
+	any.native.object_.string.does {
 		string.object_.native
 		invoke {
 			object_.string.method
@@ -235,7 +235,7 @@ val reflection = dictionary_ {
 	}
 
 	test {
-		123.number.native.object_.string.text.gives { "123".text }
+		123.number.native.object_.string.text.does { "123".text }
 	}
 
 	true_.boolean.native.is_ { boolean.true_.field.get }
@@ -243,7 +243,7 @@ val reflection = dictionary_ {
 
 	any.native.object_
 	equals_ { any.native }
-	gives {
+	does {
 		objects.equals_.method
 		invoke {
 			parameter {
@@ -258,12 +258,12 @@ val reflection = dictionary_ {
 	test {
 		"hello".text.native.object_
 		equals_ { "hello".text.native }.boolean
-		gives { boolean { true_ } }
+		does { boolean { true_ } }
 	}
 
 	test {
 		"hello".text.native.object_
 		equals_ { "world".text.native }.boolean
-		gives { boolean { false_ } }
+		does { boolean { false_ } }
 	}
 }

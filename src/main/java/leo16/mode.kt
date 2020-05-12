@@ -21,7 +21,7 @@ fun Mode.begin(word: String): Mode =
 		Mode.EVALUATE ->
 			when (word) {
 				_expands -> Mode.QUOTE
-				_gives -> Mode.QUOTE
+				_does -> Mode.QUOTE
 				_giving -> Mode.QUOTE
 				_give -> Mode.QUOTE
 				_function -> Mode.TYPE
@@ -32,7 +32,7 @@ fun Mode.begin(word: String): Mode =
 			}
 		Mode.TYPE ->
 			when (word) {
-				_gives -> Mode.QUOTE
+				_does -> Mode.QUOTE
 				else -> this
 			}
 		Mode.META -> Mode.EVALUATE.begin(word)

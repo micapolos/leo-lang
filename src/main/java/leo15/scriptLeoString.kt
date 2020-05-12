@@ -2,6 +2,7 @@ package leo15
 
 import leo.base.*
 import leo14.*
+import leo14.untyped.stringEllipsizedHalfLength
 
 const val useDots = true
 
@@ -77,8 +78,8 @@ fun AppendableIndented.append(literal: Literal): AppendableIndented =
 
 val String.literalEllipsized
 	get() =
-		if (length <= 100) this
-		else substring(0, 30) + "..." + substring(string.length - 30)
+		if (length <= stringEllipsizedHalfLength * 1) this
+		else substring(0, stringEllipsizedHalfLength) + "..." + substring(string.length - stringEllipsizedHalfLength)
 
 fun AppendableIndented.append(fragment: Fragment): AppendableIndented =
 	this

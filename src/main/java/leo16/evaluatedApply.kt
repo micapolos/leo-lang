@@ -93,7 +93,7 @@ fun Evaluated.applyBinding(field: Field): Evaluated? =
 
 fun Evaluated.applyFunction(field: Field): Evaluated? =
 	field.matchPrefix(_function) { rhs ->
-		scope.dictionary.givesOrNull(rhs)?.field?.let { set(value.plus(it)) }
+		scope.dictionary.doesOrNull(rhs)?.field?.let { set(value.plus(it)) }
 	}
 
 fun Evaluated.applyGive(field: Field): Evaluated? =
@@ -146,14 +146,14 @@ fun Evaluated.applyTest(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_test) { rhs ->
 			null
-				?: applyTestGives(rhs)
+				?: applyTestDoes(rhs)
 				?: applyTestMatches(rhs)
 				?: testSyntaxError(rhs)
 		}
 	}
 
-fun Evaluated.applyTestGives(value: Value): Evaluated? =
-	value.matchInfix(_gives) { lhs, rhs ->
+fun Evaluated.applyTestDoes(value: Value): Evaluated? =
+	value.matchInfix(_does) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
 				if (evaluatedLhs == evaluatedRhs) this

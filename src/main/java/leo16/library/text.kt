@@ -86,7 +86,7 @@ val text = dictionary_ {
 	}
 
 	any.text.length
-	gives {
+	does {
 		length.text.native
 		invoke {
 			string.length.method
@@ -95,14 +95,14 @@ val text = dictionary_ {
 		int.number.length
 	}
 
-	test { "Hello, world!".text.length.gives { 13.number.length } }
+	test { "Hello, world!".text.length.does { 13.number.length } }
 
 	any.text
 	cut {
 		from { any.number }
 		to { any.number }
 	}
-	gives {
+	does {
 		text.native
 		invoke {
 			string.substring.method
@@ -122,12 +122,12 @@ val text = dictionary_ {
 			from { 7.number }
 			to { 12.number }
 		}
-		gives { "world".text }
+		does { "world".text }
 	}
 
 	any.text
 	plus { any.text }
-	gives {
+	does {
 		text.native
 		invoke {
 			string.concat.method
@@ -136,14 +136,14 @@ val text = dictionary_ {
 		text
 	}
 
-	test { "Hello, ".text.plus { "world!".text }.gives { "Hello, world!".text } }
+	test { "Hello, ".text.plus { "world!".text }.does { "Hello, world!".text } }
 
 	any.text
 	replace {
 		all { any.text }
 		with { any.text }
 	}
-	gives {
+	does {
 		text.native
 		invoke {
 			string.replace.method
@@ -163,12 +163,12 @@ val text = dictionary_ {
 			all { "|".text }
 			with { ", ".text }
 		}
-		gives { "foo, bar, zoo".text }
+		does { "foo, bar, zoo".text }
 	}
 
 	any.text
 	split { by { any.text } }
-	gives {
+	does {
 		string.split.method
 		invoke {
 			parameter {
@@ -179,13 +179,13 @@ val text = dictionary_ {
 			}
 		}
 		array.list
-		map { function { any.gives { native.text } } }
+		map { function { any.does { native.text } } }
 	}
 
 	test {
 		"zero one two".text
 		split { by { " ".text } }
-		gives {
+		does {
 			list {
 				item { "zero".text }
 				item { "one".text }
@@ -195,14 +195,14 @@ val text = dictionary_ {
 	}
 
 	any.text.line.list
-	gives {
+	does {
 		list.line.text
 		split { by { "\n".text } }
 	}
 
 	test {
 		"zero\none\ntwo".text.line.list
-		gives {
+		does {
 			list {
 				item { "zero".text }
 				item { "one".text }
@@ -213,12 +213,12 @@ val text = dictionary_ {
 
 	any.text
 	equals_ { any.text }
-	gives {
+	does {
 		text.native
 		object_.equals_ { equals_.text.native }
 		boolean
 	}
 
-	test { "hello".text.equals_ { "hello".text }.gives { true_.boolean } }
-	test { "hello".text.equals_ { "world".text }.gives { false_.boolean } }
+	test { "hello".text.equals_ { "hello".text }.does { true_.boolean } }
+	test { "hello".text.equals_ { "world".text }.does { false_.boolean } }
 }

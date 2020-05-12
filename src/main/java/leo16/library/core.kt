@@ -4,26 +4,26 @@ import leo15.dsl.*
 import leo16.dictionary_
 
 val core = dictionary_ {
-	any.clear gives { nothing }
+	any.clear does { nothing }
 
 	comment { nothing }
-	test { nothing gives { nothing_ } }
+	test { nothing does { nothing_ } }
 
 	comment { commenting }
-	test { comment gives { nothing_ } }
-	test { comment { anything } gives { nothing_ } }
+	test { comment does { nothing_ } }
+	test { comment { anything } does { nothing_ } }
 	test {
 		comment { start }
 		x { 10.number }
 		comment { middle }
 		y { 20.number }
 		comment { end }
-		gives {
+		does {
 			x { 10.number }
 			y { 20.number }
 		}
 	}
 
 	comment { normalization }
-	test { zero.negate.gives { negate { zero } } }
+	test { zero.negate.does { negate { zero } } }
 }

@@ -15,7 +15,7 @@ class PrintingTest {
 		evaluate_ {
 			printing.import
 			zero.printing
-		}.assertGives { zero }
+		}.assertDoes { zero }
 		System.setOut(null)
 		bos.toString().assertEqualTo(_zero().toString() + "\n")
 	}

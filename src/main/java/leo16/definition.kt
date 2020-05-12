@@ -61,7 +61,7 @@ val Value.parameterDictionary: Dictionary
 	get() =
 		fieldStack.map { parameterDefinition }.dictionary
 
-fun Value.gives(apply: Value.() -> Value) =
+fun Value.does(apply: Value.() -> Value) =
 	pattern.fn(apply).definition
 
 val Field.parameterDefinition: Definition

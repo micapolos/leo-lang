@@ -10,7 +10,7 @@ fun main() {
 val list = dictionary_ {
 	any.list
 	append { any }
-	gives {
+	does {
 		list {
 			linked {
 				previous { list }
@@ -22,13 +22,13 @@ val list = dictionary_ {
 	test {
 		empty.list
 		append { 1.number }
-		gives { list { item { 1.number } } }
+		does { list { item { 1.number } } }
 	}
 
 	test {
 		list { item { 1.number } }
 		append { 2.number }
-		gives { list { item { 1.number }; item { 2.number } } }
+		does { list { item { 1.number }; item { 2.number } } }
 	}
 
 	list { any }
@@ -39,7 +39,7 @@ val list = dictionary_ {
 			to { any }
 		}
 	}
-	gives {
+	does {
 		list.match {
 			empty { fold.to.content }
 			linked {
@@ -70,10 +70,10 @@ val list = dictionary_ {
 			function {
 				item { any }
 				to { any }
-				gives { to.list.append { item.content } }
+				does { to.list.append { item.content } }
 			}
 		}
-		gives {
+		does {
 			list {
 				item { two }
 				item { one }
@@ -83,14 +83,14 @@ val list = dictionary_ {
 	}
 
 	any.list.reverse
-	gives {
+	does {
 		reverse.list
 		fold {
 			to { empty.list }
 			function {
 				item { any }
 				to { any }
-				gives { to.list.append { item.content } }
+				does { to.list.append { item.content } }
 			}
 		}
 	}
@@ -101,7 +101,7 @@ val list = dictionary_ {
 			item { 2.number }
 			item { 3.number }
 		}.reverse
-		gives {
+		does {
 			list {
 				item { 3.number }
 				item { 2.number }
@@ -112,14 +112,14 @@ val list = dictionary_ {
 
 	any.list
 	map { function { any } }
-	gives {
+	does {
 		list.reverse
 		fold {
 			to { empty.list }
 			function {
 				item { any }
 				to { any }
-				gives {
+				does {
 					to.list
 					append { map.function.take { item.content } }
 				}
@@ -133,8 +133,8 @@ val list = dictionary_ {
 			item { 2.number }
 			item { 3.number }
 		}
-		map { function { any.gives { number.ok } } }
-		gives {
+		map { function { any.does { number.ok } } }
+		does {
 			list {
 				item { 1.number.ok }
 				item { 2.number.ok }
@@ -144,7 +144,7 @@ val list = dictionary_ {
 	}
 
 	any.list.length
-	gives {
+	does {
 		import { number }
 		length.list
 		fold {
@@ -152,14 +152,14 @@ val list = dictionary_ {
 			function {
 				item { any }
 				to { any }
-				gives { to.number.plus { 1.number } }
+				does { to.number.plus { 1.number } }
 			}
 		}.length
 	}
 
 	test {
 		empty.list.length
-		gives { 0.number.length }
+		does { 0.number.length }
 	}
 
 	test {
@@ -168,6 +168,6 @@ val list = dictionary_ {
 			item { 1.number }
 			item { 2.number }
 		}.length
-		gives { 3.number.length }
+		does { 3.number.length }
 	}
 }

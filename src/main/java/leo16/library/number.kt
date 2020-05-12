@@ -88,7 +88,7 @@ val number = dictionary_ {
 
 	any.number
 	plus { any.number }
-	gives {
+	does {
 		number.native
 		invoke {
 			big.decimal.add.method
@@ -97,11 +97,11 @@ val number = dictionary_ {
 		number
 	}
 
-	test { 2.number plus { 3.number } gives { 5.number } }
+	test { 2.number plus { 3.number } does { 5.number } }
 
 	any.number
 	minus { any.number }
-	gives {
+	does {
 		number.native
 		invoke {
 			big.decimal.subtract.method
@@ -110,11 +110,11 @@ val number = dictionary_ {
 		number
 	}
 
-	test { 5.number minus { 3.number } gives { 2.number } }
+	test { 5.number minus { 3.number } does { 2.number } }
 
 	any.number
 	times { any.number }
-	gives {
+	does {
 		number.native
 		invoke {
 			big.decimal.multiply.method
@@ -123,17 +123,17 @@ val number = dictionary_ {
 		number
 	}
 
-	test { 2.number times { 3.number } gives { 6.number } }
+	test { 2.number times { 3.number } does { 6.number } }
 	test {
 		"12345678901234567890".number
 		times { "12345678901234567890".number }
-		gives { "152415787532388367501905199875019052100".number }
+		does { "152415787532388367501905199875019052100".number }
 	}
 
-	any.number.squared gives { squared.number.times { squared.number } }
-	test { 5.number.squared gives { 25.number } }
+	any.number.squared does { squared.number.times { squared.number } }
+	test { 5.number.squared does { 25.number } }
 
-	any.number.square.root.approximate.gives {
+	any.number.square.root.approximate.does {
 		approximate.root.square.number.native
 		invoke {
 			method { big.decimal.sqrt }
@@ -142,17 +142,17 @@ val number = dictionary_ {
 		number
 	}
 
-	test { 25.number.square.root.approximate gives { 5.number } }
-	test { 5.number.square.root.approximate gives { "2.236067977499789696409173668731276".number } }
+	test { 25.number.square.root.approximate does { 5.number } }
+	test { 5.number.square.root.approximate does { "2.236067977499789696409173668731276".number } }
 
 	any.number
 	equals_ { any.number }
-	gives {
+	does {
 		number.native
 		object_.equals_ { equals_.number.native }
 		boolean
 	}
 
-	test { 123.number.equals_ { 123.number }.gives { true_.boolean } }
-	test { 123.number.equals_ { 124.number }.gives { false_.boolean } }
+	test { 123.number.equals_ { 123.number }.does { true_.boolean } }
+	test { 123.number.equals_ { 124.number }.does { false_.boolean } }
 }
