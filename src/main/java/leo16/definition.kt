@@ -48,7 +48,7 @@ val Macro.definition: Definition get() = MacroDefinition(this)
 val Repeat.definition: Definition get() = RepeatDefinition(this)
 val Fn.definition: Definition get() = FunctionNativeDefinition(this)
 
-fun Definition.apply(evaluated: Evaluated): Evaluated? =
+inline fun Definition.apply(evaluated: Evaluated): Evaluated? =
 	when (this) {
 		is ConstantDefinition -> constant.apply(evaluated.value)?.let { evaluated.set(it) }
 		is FunctionDefinition -> function.apply(evaluated.value)?.let { evaluated.set(it) }

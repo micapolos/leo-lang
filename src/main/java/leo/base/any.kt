@@ -8,7 +8,7 @@ val <V> V.orNull: V?
 	get() =
 		this
 
-fun <V, R> V?.ifNull(fn: () -> R): R? =
+inline fun <V, R> V?.ifNull(fn: () -> R): R? =
 	if (this == null) fn()
 	else null
 
@@ -18,44 +18,44 @@ fun <V : Any> V.notNullIf(boolean: Boolean): V? =
 fun <V : Any> V.orNullIf(boolean: Boolean): V? =
 	if (boolean) null else this
 
-fun <V : Any> V.orNullIf(fn: V.() -> Boolean): V? =
+inline fun <V : Any> V.orNullIf(fn: V.() -> Boolean): V? =
 	if (fn()) null else this
 
-fun <V : Any> V?.orIfNull(fn: () -> V) =
+inline fun <V : Any> V?.orIfNull(fn: () -> V) =
 	this ?: fn()
 
-fun <R, V : Any> R.updateIfNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
+inline fun <R, V : Any> R.updateIfNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
 	if (valueOrNull != null) fn(valueOrNull)
 	else this
 
-fun <V> V.updateIf(boolean: Boolean, fn: V.() -> V): V =
+inline fun <V> V.updateIf(boolean: Boolean, fn: V.() -> V): V =
 	if (boolean) fn()
 	else this
 
-fun <R, V : Any> R.updateOrNullIfNotNull(valueOrNull: V?, fn: R.(V) -> R?): R? =
+inline fun <R, V : Any> R.updateOrNullIfNotNull(valueOrNull: V?, fn: R.(V) -> R?): R? =
 	if (valueOrNull != null) fn(valueOrNull)
 	else this
 
-fun <V : Any, R> V?.ifNotNull(fn: (V) -> R?): R? =
+inline fun <V : Any, R> V?.ifNotNull(fn: (V) -> R?): R? =
 	if (this != null) fn(this) else null
 
-fun <V : Any> V?.notNullAnd(fn: (V) -> Boolean): Boolean =
+inline fun <V : Any> V?.notNullAnd(fn: (V) -> Boolean): Boolean =
 	if (this != null) fn(this) else false
 
 inline fun <V : Any> notNullIf(condition: Boolean, fn: () -> V): V? =
 	if (condition) fn() else null
 
-fun <V: Any> ifOrNull(condition: Boolean, fn: () -> V?): V? =
+inline fun <V : Any> ifOrNull(condition: Boolean, fn: () -> V?): V? =
 	if (condition) fn() else null
 
-fun <V : Any, R> V?.ifNotNullOr(notNullFn: (V) -> R, nullFn: () -> R): R =
+inline fun <V : Any, R> V?.ifNotNullOr(notNullFn: (V) -> R, nullFn: () -> R): R =
 	if (this != null) notNullFn(this) else nullFn()
 
-fun <V, R> R.ifNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
+inline fun <V, R> R.ifNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
 	if (valueOrNull == null) this
 	else fn(valueOrNull)
 
-fun <V, R, O> R.runIfNotNull(valueOrNull: V?, fn: R.(V) -> O): O? =
+inline fun <V, R, O> R.runIfNotNull(valueOrNull: V?, fn: R.(V) -> O): O? =
 	if (valueOrNull == null) null
 	else fn(valueOrNull)
 
@@ -90,26 +90,26 @@ fun <V> identity(): (V) -> V =
 fun <R> Any.useSiblingResourceBitStreamOrNull(siblingName: String, fn: Stream<EnumBit>?.() -> R): R =
 	this::class.java.useResourceBitStreamOrNull(siblingName, fn)
 
-fun <V : Any, R : Any> V?.matchNull(fn: () -> R?): R? =
+inline fun <V : Any, R : Any> V?.matchNull(fn: () -> R?): R? =
 	if (this == null) fn() else null
 
 tailrec fun <V> V.iterate(count: Int, fn: V.() -> V): V =
 	if (count == 0) this
 	else fn().iterate(count.dec(), fn)
 
-fun <V> V.runIf(boolean: Boolean, fn: V.() -> V): V =
+inline fun <V> V.runIf(boolean: Boolean, fn: V.() -> V): V =
 	if (boolean) fn()
 	else this
 
-fun <V : Any> V?.nullableEq(value: V?, fn: V.(V) -> Boolean): Boolean =
+inline fun <V : Any> V?.nullableEq(value: V?, fn: V.(V) -> Boolean): Boolean =
 	if (this == null) value == null
 	else value != null && fn(value)
 
-fun <V : Any> V?.nullableContains(value: V?, fn: V.(V) -> Boolean): Boolean =
+inline fun <V : Any> V?.nullableContains(value: V?, fn: V.(V) -> Boolean): Boolean =
 	if (this == null) value == null
 	else value == null || fn(value)
 
-fun <V : Any> V?.nullableMerge(valueOrNull: V?, union: V.(V) -> V?): The<V?>? =
+inline fun <V : Any> V?.nullableMerge(valueOrNull: V?, union: V.(V) -> V?): The<V?>? =
 	if (this == null) the(valueOrNull)
 	else if (valueOrNull == null) the(this)
 	else union(valueOrNull)?.the

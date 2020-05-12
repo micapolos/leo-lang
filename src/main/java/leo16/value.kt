@@ -4,8 +4,6 @@ import leo.base.The
 import leo.base.notNullIf
 import leo.base.the
 import leo13.Stack
-import leo13.StackLink
-import leo13.fold
 import leo13.isEmpty
 import leo13.map
 import leo13.onlyOrNull

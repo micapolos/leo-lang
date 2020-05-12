@@ -12,7 +12,7 @@ import leo13.mapOrNull
 import leo13.onlyOrNull
 import leo16.names.*
 
-fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
+inline fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 	val wordOrNull = field.onlyWordOrNull
 	return if (wordOrNull == null) fn(field)
 	else value().fn(wordOrNull(this))

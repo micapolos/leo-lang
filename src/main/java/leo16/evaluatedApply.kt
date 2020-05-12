@@ -6,7 +6,7 @@ import leo13.first
 import leo13.mapOrNull
 import leo16.names.*
 
-fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
+inline fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
 	when (mode) {
 		Mode.EVALUATE -> apply(word, evaluated, isType = false)
 		Mode.TYPE -> apply(word, evaluated, isType = true)
@@ -14,16 +14,16 @@ fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
 		Mode.META -> plusNormalized(word(evaluated.value))
 	}
 
-fun Evaluated.apply(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
+inline fun Evaluated.apply(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
 	if (evaluated.value.isEmpty) clearValue.applyNormalized(word, evaluated.scope.evaluated(value), isType)
 	else applyNormalized(word, evaluated, isType)
 
-fun Evaluated.applyNormalized(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
+inline fun Evaluated.applyNormalized(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
 	null
 		?: applyDictionary(word, evaluated)
 		?: applyNormalized(word(evaluated.value), isType)
 
-fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
+inline fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
 	value.matchEmpty {
 		ifOrNull(word == _dictionary) {
 			evaluated.value.matchEmpty {
@@ -32,7 +32,7 @@ fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
 		}
 	}
 
-fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
+inline fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 	when (mode) {
 		Mode.EVALUATE -> apply(field, isType = false)
 		Mode.TYPE -> apply(field, isType = true)
@@ -40,13 +40,13 @@ fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 		Mode.META -> plusNormalized(field)
 	}
 
-fun Evaluated.apply(field: Field, isType: Boolean): Evaluated =
+inline fun Evaluated.apply(field: Field, isType: Boolean): Evaluated =
 	value.normalize(field) { set(this).applyNormalized(it, isType) }
 
-fun Evaluated.applyNormalized(field: Field, isType: Boolean): Evaluated =
+inline fun Evaluated.applyNormalized(field: Field, isType: Boolean): Evaluated =
 	applyNormalizedAndRead(field.read, isType)
 
-fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Evaluated =
+inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Evaluated =
 	null
 		?: applyValue(field) // keep first
 		?: ifOrNull(!isType) { applyBinding(field) }
@@ -63,45 +63,45 @@ fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Evaluated =
 		?: applyLoad(field)
 		?: resolve(field)
 
-fun Evaluated.applyValue(field: Field): Evaluated? =
+inline fun Evaluated.applyValue(field: Field): Evaluated? =
 	scope.runIfNotNull(value.apply(field)) { evaluated(it) }
 
-fun Evaluated.applyQuote(field: Field): Evaluated? =
+inline fun Evaluated.applyQuote(field: Field): Evaluated? =
 	field.matchPrefix(_quote) { rhs ->
 		scope.evaluated(value.plus(rhs))
 	}
 
-fun Evaluated.applyEvaluate(field: Field): Evaluated? =
+inline fun Evaluated.applyEvaluate(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_evaluate) { rhs ->
 			scope.dictionary.evaluate(rhs)?.let { scope.evaluated(it) }
 		}
 	}
 
-fun Evaluated.applyCompile(field: Field): Evaluated? =
+inline fun Evaluated.applyCompile(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_compile) { rhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated
 		}
 	}
 
-fun Evaluated.resolve(field: Field): Evaluated =
+inline fun Evaluated.resolve(field: Field): Evaluated =
 	scope.dictionary.resolve(scope.evaluated(value.plus(field)))
 
-fun Evaluated.applyBinding(field: Field): Evaluated? =
+inline fun Evaluated.applyBinding(field: Field): Evaluated? =
 	scope.applyBinding(value.plus(field))?.emptyEvaluated
 
-fun Evaluated.applyFunction(field: Field): Evaluated? =
+inline fun Evaluated.applyFunction(field: Field): Evaluated? =
 	field.matchPrefix(_function) { rhs ->
 		scope.dictionary.givesOrNull(rhs)?.field?.let { set(value.plus(it)) }
 	}
 
-fun Evaluated.applyGive(field: Field): Evaluated? =
+inline fun Evaluated.applyGive(field: Field): Evaluated? =
 	field.matchPrefix(_give) { rhs ->
 		set(scope.dictionary.compiled(rhs).invoke(value.match))
 	}
 
-fun Evaluated.applyChoice(field: Field): Evaluated? =
+inline fun Evaluated.applyChoice(field: Field): Evaluated? =
 	field.matchPrefix(_choice) { rhs ->
 		rhs.fieldStack
 			.mapOrNull { caseFieldOrNull }
@@ -111,24 +111,24 @@ fun Evaluated.applyChoice(field: Field): Evaluated? =
 			?.let { set(it) }
 	}
 
-fun Evaluated.applyImport(field: Field): Evaluated? =
+inline fun Evaluated.applyImport(field: Field): Evaluated? =
 	field.matchPrefix(_import) { rhs ->
 		rhs.loadedDictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
 	}
 
-fun Evaluated.applyExport(field: Field): Evaluated? =
+inline fun Evaluated.applyExport(field: Field): Evaluated? =
 	field.matchPrefix(_export) { rhs ->
 		rhs.loadedDictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
 	}
 
-fun Evaluated.applyLoad(field: Field): Evaluated? =
+inline fun Evaluated.applyLoad(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_load) { rhs ->
 			rhs.loadedOrNull?.let { set(it) }
 		}
 	}
 
-fun Evaluated.applyMatch(field: Field): Evaluated? =
+inline fun Evaluated.applyMatch(field: Field): Evaluated? =
 	value.matchFieldOrNull?.let { matchField ->
 		field.matchPrefix(_match) { rhs ->
 			rhs.fieldStack
@@ -143,7 +143,7 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 	}
 
 
-fun Evaluated.applyTest(field: Field): Evaluated? =
+inline fun Evaluated.applyTest(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_test) { rhs ->
 			null
@@ -153,7 +153,7 @@ fun Evaluated.applyTest(field: Field): Evaluated? =
 		}
 	}
 
-fun Evaluated.applyTestGives(value: Value): Evaluated? =
+inline fun Evaluated.applyTestGives(value: Value): Evaluated? =
 	value.matchInfix(_gives) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
@@ -169,7 +169,7 @@ fun Evaluated.applyTestGives(value: Value): Evaluated? =
 		}
 	}
 
-fun Evaluated.applyTestMatches(value: Value): Evaluated? =
+inline fun Evaluated.applyTestMatches(value: Value): Evaluated? =
 	value.matchInfix(_matches) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
@@ -187,5 +187,5 @@ fun Evaluated.applyTestMatches(value: Value): Evaluated? =
 		}
 	}
 
-fun testSyntaxError(value: Value): Evaluated =
+inline fun testSyntaxError(value: Value): Evaluated =
 	throw AssertionError(value(_test(_error(_syntax(value)))).toString())

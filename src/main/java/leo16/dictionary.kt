@@ -22,16 +22,16 @@ operator fun Dictionary.plus(definition: Definition): Dictionary =
 operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
 	fold(dictionary.definitionStack.reverse) { plus(it) }
 
-fun Dictionary.apply(evaluated: Evaluated): Evaluated? =
+inline fun Dictionary.apply(evaluated: Evaluated): Evaluated? =
 	definitionStack.mapFirst { apply(evaluated) }
 
-fun Dictionary.resolve(evaluated: Evaluated): Evaluated =
+inline fun Dictionary.resolve(evaluated: Evaluated): Evaluated =
 	apply(evaluated) ?: evaluated
 
-fun Dictionary.compile(value: Value): Evaluated? =
+inline fun Dictionary.compile(value: Value): Evaluated? =
 	emptyScope.emptyEvaluator.plus(value).evaluated
 
-fun Dictionary.evaluate(value: Value): Value? =
+inline fun Dictionary.evaluate(value: Value): Value? =
 	compile(value)?.value
 
 val Dictionary.asField: Field

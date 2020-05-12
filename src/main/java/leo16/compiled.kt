@@ -13,7 +13,7 @@ fun String.sentenceTo(compiled: Compiled) = CompiledSentence(this, compiled)
 
 val Compiled.isEmpty get() = bodyValue.isEmpty
 
-operator fun Compiled.invoke(match: PatternMatch): Value =
+inline operator fun Compiled.invoke(match: PatternMatch): Value =
 	dictionary.plus(repeat.definition).plus(match).evaluate(bodyValue)!!
 
 val Compiled.asField: Field
