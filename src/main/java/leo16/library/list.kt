@@ -40,23 +40,21 @@ val list = dictionary_ {
 		}
 	}
 	gives {
-		repeating {
-			list.match {
-				empty { fold.to.content }
-				linked {
-					linked.previous.list
-					fold {
-						to {
-							fold.function
-							take {
-								item { linked.last.content }
-								to { fold.to.content }
-							}
+		list.match {
+			empty { fold.to.content }
+			linked {
+				linked.previous.list
+				fold {
+					to {
+						fold.function
+						take {
+							item { linked.last.content }
+							to { fold.to.content }
 						}
-						this_ { fold.function }
 					}
-					repeat
+					this_ { fold.function }
 				}
+				repeat
 			}
 		}
 	}

@@ -5,7 +5,9 @@ import leo13.fold
 import leo13.reverse
 import leo16.names.*
 
-data class Scope(val dictionary: Dictionary, val exportDictionary: Dictionary) {
+data class Scope(
+	val dictionary: Dictionary,
+	val exportDictionary: Dictionary) {
 	override fun toString() = asField.toString()
 }
 

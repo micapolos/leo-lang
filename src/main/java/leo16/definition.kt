@@ -20,11 +20,11 @@ data class MacroDefinition(val macro: Macro) : Definition() {
 	override fun toString() = super.toString()
 }
 
-data class FnDefinition(val fn: Fn) : Definition() {
+data class FunctionNativeDefinition(val function: Fn) : Definition() {
 	override fun toString() = super.toString()
 }
 
-data class RecurseDefinition(val recurse: Recurse) : Definition() {
+data class RepeatDefinition(val repeat: Repeat) : Definition() {
 	override fun toString() = super.toString()
 }
 
@@ -38,23 +38,23 @@ val Definition.asValue: Value
 			is ConstantDefinition -> constant.asValue
 			is FunctionDefinition -> function.asValue
 			is MacroDefinition -> macro.asValue
-			is FnDefinition -> fn.nativeString().value
-			is RecurseDefinition -> recurse.asField.value
+			is FunctionNativeDefinition -> function.nativeString().value
+			is RepeatDefinition -> repeat.asField.value
 		}
 
 val Constant.definition: Definition get() = ConstantDefinition(this)
 val Function.definition: Definition get() = FunctionDefinition(this)
 val Macro.definition: Definition get() = MacroDefinition(this)
-val Recurse.definition: Definition get() = RecurseDefinition(this)
-val Fn.definition: Definition get() = FnDefinition(this)
+val Repeat.definition: Definition get() = RepeatDefinition(this)
+val Fn.definition: Definition get() = FunctionNativeDefinition(this)
 
 fun Definition.apply(evaluated: Evaluated): Evaluated? =
 	when (this) {
 		is ConstantDefinition -> constant.apply(evaluated.value)?.let { evaluated.set(it) }
 		is FunctionDefinition -> function.apply(evaluated.value)?.let { evaluated.set(it) }
 		is MacroDefinition -> macro.apply(evaluated)
-		is FnDefinition -> fn.apply(evaluated.value)?.let { evaluated.set(it) }
-		is RecurseDefinition -> recurse.apply(evaluated.value).let { evaluated.set(it) }
+		is FunctionNativeDefinition -> function.apply(evaluated.value)?.let { evaluated.set(it) }
+		is RepeatDefinition -> repeat.apply(evaluated.value)?.let { evaluated.set(it) }
 	}
 
 val Value.parameterDictionary: Dictionary

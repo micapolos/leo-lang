@@ -279,59 +279,17 @@ class EvalTest {
 	}
 
 	@Test
-	fun giveRepeating_noRepeat() {
-		evaluate_ {
-			10.number
-			give {
-				repeating {
-					number
-				}
-			}
-		}.assertGives { 10.number }
-	}
-
-	@Test
-	fun giveRepeating_repeating() {
+	fun giveRepeat() {
 		evaluate_ {
 			one.bit
 			give {
-				repeating {
-					bit.match {
-						zero { bit }
-						one { zero.bit.repeat }
-					}
+				bit.match {
+					zero { bit }
+					one { zero.bit.repeat }
 				}
 			}
 		}.assertGives { bit { zero } }
 	}
-
-	@Test
-	fun giveRecursing_noRecurse() {
-		evaluate_ {
-			10.number
-			give {
-				recursing {
-					number
-				}
-			}
-		}.assertGives { 10.number }
-	}
-
-	// TODO: Fix recursion and uncomment
-//	@Test
-//	fun giveRecursing_recurse() {
-//		evaluate_ {
-//			one.bit
-//			give {
-//				recursing {
-//					bit.match {
-//						zero { bit }
-//						one { zero.bit.recurse }
-//					}
-//				}
-//			}
-//		}.assertGives { bit { zero } }
-//	}
 
 	@Test
 	fun expands() {
