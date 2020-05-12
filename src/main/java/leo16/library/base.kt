@@ -9,6 +9,7 @@ fun main() {
 
 val base = dictionary_ {
 	core.export
+	boolean.export
 	printing.export
 	number.export
 	int.export

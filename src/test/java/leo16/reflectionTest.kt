@@ -10,33 +10,33 @@ class ReflectionTest {
 		evaluate_ {
 			native.reflection.import
 			"Hello!".text.native.object_.class_
-		}.assertDoes { class_ { String::class.java.native_ } }
+		}.assertEquals { class_ { String::class.java.native_ } }
 	}
 
 	@Test
 	fun typeClass() {
 		evaluate_ { native.reflection.import; byte.class_ }
-			.assertDoes { class_ { Byte::class.java.native_ } }
+			.assertEquals { class_ { Byte::class.java.native_ } }
 		evaluate_ { native.reflection.import; char.class_ }
-			.assertDoes { class_ { Char::class.java.native_ } }
+			.assertEquals { class_ { Char::class.java.native_ } }
 		evaluate_ { native.reflection.import; short.class_ }
-			.assertDoes { class_ { Short::class.java.native_ } }
+			.assertEquals { class_ { Short::class.java.native_ } }
 		evaluate_ { native.reflection.import; int.class_ }
-			.assertDoes { class_ { Int::class.java.native_ } }
+			.assertEquals { class_ { Int::class.java.native_ } }
 		evaluate_ { native.reflection.import; long.class_ }
-			.assertDoes { class_ { Long::class.java.native_ } }
+			.assertEquals { class_ { Long::class.java.native_ } }
 		evaluate_ { native.reflection.import; float.class_ }
-			.assertDoes { class_ { Float::class.java.native_ } }
+			.assertEquals { class_ { Float::class.java.native_ } }
 		evaluate_ { native.reflection.import; double.class_ }
-			.assertDoes { class_ { Double::class.java.native_ } }
+			.assertEquals { class_ { Double::class.java.native_ } }
 		evaluate_ { native.reflection.import; boolean.class_ }
-			.assertDoes { class_ { Boolean::class.java.native_ } }
+			.assertEquals { class_ { Boolean::class.java.native_ } }
 	}
 
 	@Test
 	fun textNameClass() {
 		evaluate_ { native.reflection.import; "java.lang.Integer".text.name.class_ }
-			.assertDoes { class_ { Integer::class.java.native_ } }
+			.assertEquals { class_ { Integer::class.java.native_ } }
 	}
 
 	@Test
@@ -45,7 +45,7 @@ class ReflectionTest {
 			native.reflection.import
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
-		}.assertDoes {
+		}.assertEquals {
 			field { Integer::class.java.getField("MAX_VALUE").native_ }
 		}
 	}
@@ -57,7 +57,7 @@ class ReflectionTest {
 			"java.lang.Integer".text.name.class_
 			field { name { "MAX_VALUE".text } }
 			get
-		}.assertDoes {
+		}.assertEquals {
 			Integer.MAX_VALUE.native_
 		}
 	}
@@ -73,7 +73,7 @@ class ReflectionTest {
 				"java.awt.Point".text.name.class_
 				field { name { "x".text } }
 			}
-		}.assertDoes { 0.native_ }
+		}.assertEquals { 0.native_ }
 	}
 
 	@Test
@@ -89,7 +89,7 @@ class ReflectionTest {
 					}
 				}
 			}
-		}.assertDoes {
+		}.assertEquals {
 			constructor {
 				Point::class.java.getConstructor(Integer.TYPE, Integer.TYPE).native_
 			}
@@ -117,7 +117,7 @@ class ReflectionTest {
 					}
 				}
 			}
-		}.assertDoes {
+		}.assertEquals {
 			Point(10, 20).native_
 		}
 	}
@@ -136,7 +136,7 @@ class ReflectionTest {
 					}
 				}
 			}
-		}.assertDoes {
+		}.assertEquals {
 			method {
 				String::class.java.getMethod("substring", Integer.TYPE, Integer.TYPE).native_
 			}
@@ -167,7 +167,7 @@ class ReflectionTest {
 					}
 				}
 			}
-		}.assertDoes { "world".native_ }
+		}.assertEquals { "world".native_ }
 	}
 
 	@Test
@@ -190,37 +190,37 @@ class ReflectionTest {
 					}
 				}
 			}
-		}.assertDoes { "123".native_ }
+		}.assertEquals { "123".native_ }
 	}
 
 	@Test
 	fun numberToPrimitive() {
-		evaluate_ { reflection.import; 10.toByte().byte.native }.assertDoes { 10.toByte().native_ }
-		evaluate_ { reflection.import; 10.toShort().short.native }.assertDoes { 10.toShort().native_ }
-		evaluate_ { reflection.import; 10.int.native }.assertDoes { 10.native_ }
-		evaluate_ { reflection.import; 10L.long.native }.assertDoes { 10L.native_ }
-		evaluate_ { reflection.import; 10f.float.native }.assertDoes { 10f.native_ }
-		evaluate_ { reflection.import; 10.0.double.native }.assertDoes { 10.0.native_ }
+		evaluate_ { reflection.import; 10.toByte().byte.native }.assertEquals { 10.toByte().native_ }
+		evaluate_ { reflection.import; 10.toShort().short.native }.assertEquals { 10.toShort().native_ }
+		evaluate_ { reflection.import; 10.int.native }.assertEquals { 10.native_ }
+		evaluate_ { reflection.import; 10L.long.native }.assertEquals { 10L.native_ }
+		evaluate_ { reflection.import; 10f.float.native }.assertEquals { 10f.native_ }
+		evaluate_ { reflection.import; 10.0.double.native }.assertEquals { 10.0.native_ }
 	}
 
 	@Test
 	fun primitiveToNumber() {
-		evaluate_ { reflection.import; 10.toByte().byte.number }.assertDoes { 10.number }
-		evaluate_ { reflection.import; 10.toShort().short.number }.assertDoes { 10.number }
-		evaluate_ { reflection.import; 10.int.number }.assertDoes { 10.number }
-		evaluate_ { reflection.import; 10L.long.number }.assertDoes { 10.number }
-		evaluate_ { reflection.import; 10f.float.number }.assertDoes { 10f.number }
-		evaluate_ { reflection.import; 10.0.double.number }.assertDoes { 10.0.number }
+		evaluate_ { reflection.import; 10.toByte().byte.number }.assertEquals { 10.number }
+		evaluate_ { reflection.import; 10.toShort().short.number }.assertEquals { 10.number }
+		evaluate_ { reflection.import; 10.int.number }.assertEquals { 10.number }
+		evaluate_ { reflection.import; 10L.long.number }.assertEquals { 10.number }
+		evaluate_ { reflection.import; 10f.float.number }.assertEquals { 10f.number }
+		evaluate_ { reflection.import; 10.0.double.number }.assertEquals { 10.0.number }
 	}
 
 	@Test
 	fun booleanToNative() {
-		evaluate_ { reflection.import; true_.boolean.native }.assertDoes { true.native_ }
-		evaluate_ { reflection.import; false_.boolean.native }.assertDoes { false.native_ }
+		evaluate_ { reflection.import; true_.boolean.native }.assertEquals { true.native_ }
+		evaluate_ { reflection.import; false_.boolean.native }.assertEquals { false.native_ }
 	}
 
 	@Test
 	fun nullNative() {
-		evaluate_ { native.reflection.import; null_.native }.assertDoes { null.native_ }
+		evaluate_ { native.reflection.import; null_.native }.assertEquals { null.native_ }
 	}
 }
