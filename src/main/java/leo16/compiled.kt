@@ -1,5 +1,6 @@
 package leo16
 
+import leo13.compiler.booleanTypeDefinition
 import leo16.names.*
 
 data class Compiled(val dictionary: Dictionary, val bodyValue: Value) {
@@ -14,8 +15,12 @@ fun String.sentenceTo(compiled: Compiled) = CompiledSentence(this, compiled)
 val Compiled.isEmpty get() = bodyValue.isEmpty
 
 inline operator fun Compiled.invoke(match: PatternMatch): Value =
-	dictionary.plus(repeat.definition).plus(match).evaluate(bodyValue)!!
+	dictionary.plus(repeat.definition).plus(match).evaluate(bodyValue)
 
 val Compiled.asField: Field
 	get() =
 		_function(/*dictionary.asField, */bodyValue.asField)
+
+val Compiled.evaluate: Value
+	get() =
+		dictionary.evaluate(bodyValue)

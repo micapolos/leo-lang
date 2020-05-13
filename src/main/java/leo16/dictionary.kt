@@ -28,11 +28,11 @@ inline fun Dictionary.apply(evaluated: Evaluated): Evaluated? =
 inline fun Dictionary.resolve(evaluated: Evaluated): Evaluated =
 	apply(evaluated) ?: evaluated
 
-inline fun Dictionary.compile(value: Value): Evaluated? =
+inline fun Dictionary.compile(value: Value): Evaluated =
 	emptyScope.emptyEvaluator.plus(value).evaluated
 
-inline fun Dictionary.evaluate(value: Value): Value? =
-	compile(value)?.value
+inline fun Dictionary.evaluate(value: Value): Value =
+	compile(value).value
 
 val Dictionary.asField: Field
 	get() =

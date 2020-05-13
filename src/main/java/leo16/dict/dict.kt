@@ -9,6 +9,7 @@ import leo16.ChoiceField
 import leo16.DictionaryField
 import leo16.Field
 import leo16.FunctionField
+import leo16.LazyField
 import leo16.NativeField
 import leo16.Pattern
 import leo16.Sentence
@@ -45,6 +46,7 @@ fun <T> Node<T>.get(field: Field): Node<T>? =
 		is DictionaryField -> TODO()
 		is NativeField -> TODO()
 		is ChoiceField -> TODO()
+		is LazyField -> TODO()
 	}
 
 fun <T> Node<T>.get(sentence: Sentence): Node<T>? =

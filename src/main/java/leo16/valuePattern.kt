@@ -21,6 +21,7 @@ val Field.patternField: PatternField
 			is DictionaryField -> dictionary.printSentence.patternField
 			is NativeField -> nativePatternField
 			is ChoiceField -> choice.patternField
+			is LazyField -> lazy.patternField
 		}
 
 val Sentence.patternField: PatternField
@@ -33,6 +34,10 @@ val Sentence.patternField: PatternField
 val Choice.patternField: PatternField
 	get() =
 		_choice.invoke(caseFieldStack.map { patternField }.value.pattern)
+
+val Lazy.patternField: PatternField
+	get() =
+		_lazy.invoke(compiled.bodyValue.pattern)
 
 val Sentence.exactPatternField: PatternField
 	get() =

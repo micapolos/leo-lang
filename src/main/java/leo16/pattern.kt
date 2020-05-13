@@ -139,6 +139,7 @@ inline fun Field.matches(field: PatternField): Boolean =
 		is DictionaryField -> field == _dictionary(anyPattern)
 		is NativeField -> field == _native(anyPattern)
 		is ChoiceField -> false // TODO()
+		is LazyField -> false
 	}
 
 inline fun Sentence.matches(sentence: PatternSentence): Boolean =

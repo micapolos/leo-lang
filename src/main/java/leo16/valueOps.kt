@@ -38,6 +38,7 @@ val Field.selectWord: String
 			is DictionaryField -> _dictionary
 			is NativeField -> _native
 			is ChoiceField -> _choice
+			is LazyField -> _lazy
 		}
 
 infix fun Field.accessOrNull(word: String): Value? =

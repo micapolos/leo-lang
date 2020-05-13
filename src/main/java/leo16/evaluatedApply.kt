@@ -54,6 +54,8 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyCompile(field)
 		?: applyQuote(field)
 		?: applyDo(field)
+		?: applyLazy(field)
+		?: applyForce(field)
 		?: applyFunction(field)
 		?: applyMatch(field)
 		?: applyChoice(field)
@@ -74,7 +76,7 @@ fun Evaluated.applyQuote(field: Field): Evaluated? =
 fun Evaluated.applyEvaluate(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_evaluate) { rhs ->
-			scope.dictionary.evaluate(rhs)?.let { scope.evaluated(it) }
+			scope.dictionary.evaluate(rhs).let { scope.evaluated(it) }
 		}
 	}
 
@@ -99,6 +101,20 @@ fun Evaluated.applyFunction(field: Field): Evaluated? =
 fun Evaluated.applyDo(field: Field): Evaluated? =
 	field.matchPrefix(_do) { rhs ->
 		set(scope.dictionary.compiled(rhs).invoke(value.match))
+	}
+
+fun Evaluated.applyLazy(field: Field): Evaluated? =
+	field.matchPrefix(_lazy) { rhs ->
+		set(value.plus(scope.dictionary.compiled(rhs).lazy.field.value))
+	}
+
+fun Evaluated.applyForce(field: Field): Evaluated? =
+	value.matchEmpty {
+		field.matchPrefix(_force) { rhs ->
+			rhs.onlyFieldOrNull?.lazyOrNull?.let { lazy ->
+				set(_force(lazy.evaluate).value)
+			}
+		}
 	}
 
 fun Evaluated.applyChoice(field: Field): Evaluated? =

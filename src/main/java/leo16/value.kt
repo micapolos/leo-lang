@@ -41,6 +41,10 @@ data class ChoiceField(val choice: Choice) : Field() {
 	override fun toString() = super.toString()
 }
 
+data class LazyField(val lazy: Lazy) : Field() {
+	override fun toString() = super.toString()
+}
+
 data class Sentence(val word: String, val value: Value) {
 	override fun toString() = scriptLine.string
 }
@@ -58,6 +62,7 @@ val Sentence.field: Field get() = SentenceField(this)
 val Function.field: Field get() = FunctionField(this)
 val Dictionary.field: Field get() = DictionaryField(this)
 val Choice.field: Field get() = ChoiceField(this)
+val Lazy.field: Field get() = LazyField(this)
 val Any?.nativeField: Field get() = NativeField(this)
 val Any?.nativeValue: Value get() = nativeField.value
 fun value(vararg fields: Field) = stack(*fields).value
@@ -75,6 +80,7 @@ val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
 val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
 val Field.dictionaryOrNull: Dictionary? get() = (this as? DictionaryField)?.dictionary
 val Field.choiceOrNull: Choice? get() = (this as? ChoiceField)?.choice
+val Field.lazyOrNull: Lazy? get() = (this as? LazyField)?.lazy
 val Field.theNativeOrNull: The<Any?>? get() = if (this is NativeField) native.the else null
 val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
 val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull

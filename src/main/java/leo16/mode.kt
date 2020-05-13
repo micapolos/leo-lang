@@ -25,6 +25,7 @@ fun Mode.begin(word: String): Mode =
 				_giving -> Mode.QUOTE
 				_do -> Mode.QUOTE
 				_function -> Mode.TYPE
+				_lazy -> Mode.QUOTE
 				_match -> Mode.QUOTE
 				_quote -> Mode.QUOTE
 				_test -> Mode.QUOTE

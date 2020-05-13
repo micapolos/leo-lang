@@ -31,6 +31,7 @@ val Field.defaultScriptLine: ScriptLine
 			is DictionaryField -> dictionary.printSentence.scriptLine
 			is NativeField -> native.nativeScriptLine
 			is ChoiceField -> choice.scriptLine
+			is LazyField -> lazy.scriptLine
 		}
 
 val Field.textScriptLineOrNull: ScriptLine?
@@ -52,6 +53,10 @@ val Function.scriptLine: ScriptLine
 val Choice.scriptLine: ScriptLine
 	get() =
 		_choice(caseFieldStack.map { scriptLine })
+
+val Lazy.scriptLine: ScriptLine
+	get() =
+		_lazy(compiled.bodyValue.script)
 
 val String.scriptWord: String
 	get() =

@@ -93,6 +93,23 @@ class EvalTest {
 	}
 
 	@Test
+	fun lazy() {
+		evaluate_ {
+			zero.is_ { one }
+			lazy_ { zero }
+		}.assertEquals { lazy_ { zero } }
+	}
+
+	@Test
+	fun force() {
+		evaluate_ {
+			zero.is_ { one }
+			lazy_ { zero }
+			force
+		}.assertEquals { force { one } }
+	}
+
+	@Test
 	fun evaluate() {
 		evaluate_ { quote { nothing_ }.evaluate }.assertEquals { nothing_ }
 		evaluate_ { quote { zero.negate }.evaluate }.assertEquals { negate { zero } }

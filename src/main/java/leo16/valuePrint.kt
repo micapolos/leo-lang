@@ -27,6 +27,7 @@ val Field.defaultPrinted: Field
 			is DictionaryField -> dictionary.printSentence.field
 			is NativeField -> native.nativeString()
 			is ChoiceField -> choice.printSentence.field
+			is LazyField -> lazy.printSentence.field
 		}
 
 val Sentence.printSentence: Sentence
@@ -40,6 +41,10 @@ val Function.printSentence: Sentence
 val Choice.printSentence: Sentence
 	get() =
 		_choice.sentenceTo(caseFieldStack.map { printSentence.field }.value)
+
+val Lazy.printSentence: Sentence
+	get() =
+		_lazy.sentenceTo(compiled.bodyValue.printed)
 
 val Dictionary.printSentence: Sentence
 	get() =

@@ -19,6 +19,7 @@ fun Field.matches(field: Field): Boolean =
 		is DictionaryField -> this is DictionaryField && dictionary.matches(field.dictionary)
 		is NativeField -> this is NativeField && native == field.native
 		is ChoiceField -> matches(field.choice)
+		is LazyField -> false
 	}
 
 fun Field.matches(choice: Choice): Boolean =
@@ -34,6 +35,7 @@ fun Field.matches(sentence: Sentence): Boolean =
 		is DictionaryField -> sentence == _dictionary.sentenceTo()
 		is NativeField -> sentence == _native.sentenceTo()
 		is ChoiceField -> choice.matches(sentence)
+		is LazyField -> false
 	}
 
 fun Sentence.matches(sentence: Sentence): Boolean =
