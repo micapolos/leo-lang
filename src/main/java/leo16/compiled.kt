@@ -1,6 +1,5 @@
 package leo16
 
-import leo13.compiler.booleanTypeDefinition
 import leo16.names.*
 
 data class Compiled(val dictionary: Dictionary, val bodyValue: Value) {
