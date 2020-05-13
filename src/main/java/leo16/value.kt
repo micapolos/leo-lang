@@ -49,6 +49,18 @@ data class Choice(val caseFieldStack: Stack<Field>) {
 	override fun toString() = scriptLine.string
 }
 
+sealed class Thunk {
+	override fun toString() = script.toString()
+}
+
+data class ValueThunk(val value: Value) : Thunk() {
+	override fun toString() = super.toString()
+}
+
+data class LazyThunk(val compiled: Compiled) : Thunk() {
+	override fun toString() = super.toString()
+}
+
 val Value.asField: Field
 	get() =
 		_value(this)
