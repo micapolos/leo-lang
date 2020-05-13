@@ -63,11 +63,3 @@ val String.scriptWord: String
 val Any?.nativeScriptLine: ScriptLine
 	get() =
 		nativeString.line
-
-
-val Thunk.script: Script
-	get() =
-		when (this) {
-			is ValueThunk -> value.script
-			is LazyThunk -> script(_lazy(compiled.bodyValue))
-		}
