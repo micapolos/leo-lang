@@ -1,13 +1,14 @@
 package leo16.library
 
 import leo15.dsl.*
+import leo16.compile_
 import leo16.dictionary_
 
 fun main() {
 	boolean
 }
 
-val boolean = dictionary_ {
+val boolean = compile_ {
 	false_.boolean.negate is_ { true_.boolean }
 	true_.boolean.negate.is_ { false_.boolean }
 

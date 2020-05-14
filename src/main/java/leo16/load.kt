@@ -6,14 +6,17 @@ import leo13.array
 import leo13.linkOrNull
 import leo13.push
 import leo14.untyped.typed.loadClass
+import kotlin.collections.joinToString
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
-val loadedMap = mutableMapOf<Value, The<Value?>?>()
+val loadedMap = mutableMapOf<Value, The<Evaluated?>?>()
 
-val Value.loadOrNull: Value?
+val Value.loadOrNull: Evaluated?
 	get() =
 		loadOrNull("leo16.library.")
 
-val Value.loadedOrNull: Value?
+val Value.loadedOrNull: Evaluated?
 	get() {
 		val theValue = loadedMap[this]
 		return if (theValue != null) theValue.value
@@ -25,7 +28,7 @@ val Value.loadedOrNull: Value?
 		}
 	}
 
-fun Value.loadOrNull(packagePrefix: String): Value? =
+fun Value.loadOrNull(packagePrefix: String): Evaluated? =
 	nullIfThrowsException {
 		wordStackOrNull!!.linkOrNull!!.let { wordLink ->
 			packagePrefix
@@ -37,6 +40,6 @@ fun Value.loadOrNull(packagePrefix: String): Value? =
 				.loadClass
 				.getMethod("get" + wordLink.value.capitalize())
 				//.also { _loading(this).println }
-				.invoke(null) as Value
+				.invoke(null) as Evaluated
 		}
 	}

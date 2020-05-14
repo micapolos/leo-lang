@@ -146,7 +146,7 @@ fun Evaluated.applyExport(field: Field): Evaluated? =
 fun Evaluated.applyLoad(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_load) { rhs ->
-			rhs.loadedOrNull?.let { set(it) }
+			rhs.loadedOrNull
 		}
 	}
 

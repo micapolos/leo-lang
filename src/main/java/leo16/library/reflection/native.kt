@@ -1,7 +1,8 @@
 package leo16.library.reflection
 
-import leo16.field
+import leo16.emptyDictionary
+import leo16.emptyEvaluated
 import leo16.native.reflectionDictionary
-import leo16.value
+import leo16.scopeWithPublic
 
-val native = reflectionDictionary.field.value
+val native = emptyDictionary.scopeWithPublic(reflectionDictionary).emptyEvaluated

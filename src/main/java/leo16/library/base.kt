@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.dictionary_
+import leo16.compile_
 
 fun main() {
 	base
 }
 
-val base = dictionary_ {
+val base = compile_ {
 	core.export
 	boolean.export
 	printing.export

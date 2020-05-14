@@ -9,6 +9,6 @@ class LoadTest {
 	fun _loadClass() {
 		value(_testing(_ping()))
 			.loadOrNull
-			.assertEqualTo(value(_pong()))
+			.assertEqualTo(value(_pong()).evaluated)
 	}
 }

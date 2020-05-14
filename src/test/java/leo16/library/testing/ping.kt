@@ -1,6 +1,6 @@
 package leo16.library.testing
 
 import leo15.dsl.*
-import leo16.value_
+import leo16.compile_
 
-val ping = value_ { pong }
+val ping = compile_ { pong }

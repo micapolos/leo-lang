@@ -1,13 +1,14 @@
 package leo16.library
 
 import leo15.dsl.*
+import leo16.compile_
 import leo16.dictionary_
 
 fun main() {
 	core
 }
 
-val core = dictionary_ {
+val core = compile_ {
 	any.clear does { nothing }
 
 	comment { nothing }

@@ -1,13 +1,14 @@
 package leo16.library
 
 import leo15.dsl.*
+import leo16.compile_
 import leo16.dictionary_
 
 fun main() {
 	number
 }
 
-val number = dictionary_ {
+val number = compile_ {
 	reflection.import
 
 	import {

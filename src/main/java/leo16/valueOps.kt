@@ -59,7 +59,7 @@ val Value.theNativeOrNull: The<Any?>?
 
 val Value.loadedDictionaryOrNull: Dictionary?
 	get() =
-		dictionaryOrNull ?: loadedOrNull?.dictionaryOrNull
+		dictionaryOrNull ?: loadedOrNull?.scope?.exportDictionary
 
 val Value.wordOrNullSeq: Seq<String?>
 	get() =

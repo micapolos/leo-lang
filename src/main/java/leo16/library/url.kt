@@ -1,13 +1,14 @@
 package leo16.library
 
 import leo15.dsl.*
+import leo16.compile_
 import leo16.dictionary_
 
 fun main() {
 	url
 }
 
-val url = dictionary_ {
+val url = compile_ {
 	reflection.import
 	list.import
 	number.import

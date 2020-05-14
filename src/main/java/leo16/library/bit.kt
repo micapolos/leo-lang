@@ -1,13 +1,14 @@
 package leo16.library
 
 import leo15.dsl.*
+import leo16.compile_
 import leo16.dictionary_
 
 fun main() {
 	bit
 }
 
-val bit = dictionary_ {
+val bit = compile_ {
 	zero.bit.negate is_ { one.bit }
 	one.bit.negate.is_ { zero.bit }
 
