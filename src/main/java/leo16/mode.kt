@@ -29,6 +29,7 @@ fun Mode.begin(word: String): Mode =
 				_match -> Mode.QUOTE
 				_quote -> Mode.QUOTE
 				_test -> Mode.QUOTE
+				_use -> Mode.QUOTE
 				else -> this
 			}
 		Mode.TYPE ->

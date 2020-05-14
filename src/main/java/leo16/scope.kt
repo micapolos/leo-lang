@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.ifOrNull
 import leo.base.runIfNotNull
 import leo13.fold
 import leo13.reverse
@@ -45,3 +46,8 @@ fun Scope.applyBinding(value: Value): Scope? =
 
 fun Scope.evaluate(value: Value): Evaluated =
 	emptyEvaluator.plus(value).evaluated
+
+fun Scope.useOrNull(evaluated: Evaluated): Scope? =
+	ifOrNull(evaluated.value.isEmpty) {
+		plus(evaluated.scope.exportDictionary)
+	}

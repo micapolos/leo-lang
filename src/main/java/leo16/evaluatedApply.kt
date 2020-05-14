@@ -61,6 +61,7 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyChoice(field)
 		?: applyImport(field)
 		?: applyExport(field)
+		?: applyUse(field)
 		?: applyTest(field)
 		?: applyLoad(field)
 		?: resolve(field)
@@ -101,6 +102,11 @@ fun Evaluated.applyFunction(field: Field): Evaluated? =
 fun Evaluated.applyDo(field: Field): Evaluated? =
 	field.matchPrefix(_do) { rhs ->
 		set(scope.dictionary.compiled(rhs).invoke(value.match))
+	}
+
+fun Evaluated.applyUse(field: Field): Evaluated? =
+	field.matchPrefix(_use) { rhs ->
+		scope.useOrNull(scope.dictionary.compile(rhs))?.evaluated(value)
 	}
 
 fun Evaluated.applyLazy(field: Field): Evaluated? =

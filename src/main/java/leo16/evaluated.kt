@@ -9,6 +9,8 @@ data class Evaluated(val scope: Scope, val value: Value) {
 infix fun Scope.evaluated(value: Value) = Evaluated(this, value)
 val Scope.emptyEvaluated get() = evaluated(value())
 
+val Value.evaluated get() = emptyScope.evaluated(this)
+
 val Evaluated.asField: Field
 	get() =
 		_evaluated(scope.asField, value.asField)

@@ -399,6 +399,33 @@ class EvalTest {
 	}
 
 	@Test
+	fun useNothing() {
+		evaluate_ {
+			zero
+			use { nothing }
+		}.assertEquals { zero }
+	}
+
+	@Test
+	fun useSomething() {
+		evaluate_ {
+			zero
+			use { x.is_ { one } }
+			plus { x }
+		}.assertEquals { zero.plus { one } }
+	}
+
+	@Test
+	fun useCapturesScope() {
+		evaluate_ {
+			x.is_ { zero }
+			x
+			use { y.is_ { x.done } }
+			and { y }
+		}.assertEquals { zero.and { done { zero } } }
+	}
+
+	@Test
 	fun dictionaryInsideDictionary() {
 		evaluate_ {
 			dictionary {
