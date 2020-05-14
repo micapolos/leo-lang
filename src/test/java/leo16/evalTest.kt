@@ -426,6 +426,13 @@ class EvalTest {
 	}
 
 	@Test
+	fun useInvalid() {
+		evaluate_ {
+			use { x }
+		}.assertEquals { use { x } }
+	}
+
+	@Test
 	fun dictionaryInsideDictionary() {
 		evaluate_ {
 			dictionary {
