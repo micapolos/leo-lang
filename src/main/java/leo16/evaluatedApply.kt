@@ -63,7 +63,7 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyExport(field)
 		?: applyUse(field)
 		?: applyTest(field)
-		?: applyLoad(field)
+		?: applyLibrary(field)
 		?: resolve(field)
 
 fun Evaluated.applyValue(field: Field): Evaluated? =
@@ -143,9 +143,9 @@ fun Evaluated.applyExport(field: Field): Evaluated? =
 		rhs.loadedDictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
 	}
 
-fun Evaluated.applyLoad(field: Field): Evaluated? =
+fun Evaluated.applyLibrary(field: Field): Evaluated? =
 	value.matchEmpty {
-		field.matchPrefix(_load) { rhs ->
+		field.matchPrefix(_library) { rhs ->
 			rhs.loadedOrNull
 		}
 	}

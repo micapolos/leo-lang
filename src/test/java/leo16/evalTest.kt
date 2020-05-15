@@ -394,8 +394,8 @@ class EvalTest {
 	}
 
 	@Test
-	fun load() {
-		evaluate_ { ping.testing.load }.assertEquals { pong }
+	fun library() {
+		evaluate_ { ping.testing.library }.assertEquals { pong }
 	}
 
 	@Test
