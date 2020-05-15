@@ -50,12 +50,31 @@ val number = compile_ {
 				}
 			}
 
-			big.decimal.multiply.method
+			big.decimal.divide.method
 			is_ {
 				big.decimal.class_
 				method {
-					name { "multiply".text }
-					parameter { list { item { big.decimal.class_ } } }
+					name { "divide".text }
+					parameter {
+						list {
+							item { big.decimal.class_ }
+							item { math.context.class_ }
+						}
+					}
+				}
+			}
+
+			big.decimal.remainder.method
+			is_ {
+				big.decimal.class_
+				method {
+					name { "remainder".text }
+					parameter {
+						list {
+							item { big.decimal.class_ }
+							item { math.context.class_ }
+						}
+					}
 				}
 			}
 
@@ -131,11 +150,52 @@ val number = compile_ {
 		equals_ { "152415787532388367501905199875019052100".number }
 	}
 
-	any.number.squared does { squared.number.times { squared.number } }
-	test { 5.number.squared equals_ { 25.number } }
+	any.number
+	divided { by { any.number } }
+	does {
+		number.native
+		invoke {
+			method { big.decimal.divide }
+			parameter {
+				list {
+					item { divided.by.number.native }
+					item { math.context.decimal }
+				}
+			}
+		}
+		number
+	}
 
-	any.number.square.root.approximate.does {
-		approximate.root.square.number.native
+	test {
+		15.number
+		divided { by { 5.number } }
+		equals_ { 3.number }
+	}
+
+	any.number
+	modulo { any.number }
+	does {
+		number.native
+		invoke {
+			method { big.decimal.remainder }
+			parameter {
+				list {
+					item { modulo.number.native }
+					item { math.context.decimal }
+				}
+			}
+		}
+		number
+	}
+
+	test {
+		15.number
+		modulo { 7.number }
+		equals_ { 1.number }
+	}
+
+	any.number.square.root.does {
+		root.square.number.native
 		invoke {
 			method { big.decimal.sqrt }
 			parameter { list { item { math.context.decimal } } }
@@ -143,8 +203,8 @@ val number = compile_ {
 		number
 	}
 
-	test { 25.number.square.root.approximate equals_ { 5.number } }
-	test { 5.number.square.root.approximate equals_ { "2.236067977499789696409173668731276".number } }
+	test { 25.number.square.root equals_ { 5.number } }
+	test { 5.number.square.root equals_ { "2.236067977499789696409173668731276".number } }
 
 	any.number
 	equals_ { any.number }
