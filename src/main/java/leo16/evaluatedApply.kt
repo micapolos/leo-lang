@@ -146,7 +146,9 @@ fun Evaluated.applyExport(field: Field): Evaluated? =
 fun Evaluated.applyLibrary(field: Field): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_library) { rhs ->
-			rhs.loadedOrNull
+			rhs
+				.match(_empty) { emptyEvaluated }
+				?: rhs.loadedOrNull
 		}
 	}
 

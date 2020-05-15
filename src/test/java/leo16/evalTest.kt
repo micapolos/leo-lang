@@ -399,6 +399,23 @@ class EvalTest {
 	}
 
 	@Test
+	fun emptyLibrary() {
+		evaluate_ {
+			x.is_ { zero }
+			empty.library
+			x
+		}.assertEquals { x }
+	}
+
+	@Test
+	fun unknownLibrary() {
+		evaluate_ {
+			// Pick some library which does not exist.
+			unknown.library
+		}.assertEquals { library { unknown } }
+	}
+
+	@Test
 	fun useNothing() {
 		evaluate_ {
 			zero
