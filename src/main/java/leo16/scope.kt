@@ -49,5 +49,5 @@ fun Scope.evaluate(value: Value): Evaluated =
 
 fun Scope.useOrNull(evaluated: Evaluated): Scope? =
 	ifOrNull(evaluated.value.isEmpty) {
-		plus(evaluated.scope.exportDictionary)
+		import(evaluated.scope.exportDictionary)
 	}

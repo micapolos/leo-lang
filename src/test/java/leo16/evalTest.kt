@@ -450,6 +450,18 @@ class EvalTest {
 	}
 
 	@Test
+	fun useDoesNotExport() {
+		evaluate_ {
+			use {
+				use {
+					x.is_ { zero }
+				}
+			}
+			x
+		}.assertEquals { x }
+	}
+
+	@Test
 	fun dictionaryInsideDictionary() {
 		evaluate_ {
 			dictionary {
