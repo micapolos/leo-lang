@@ -3,6 +3,7 @@ package leo16
 import leo.base.assertEqualTo
 import leo14.Script
 import leo15.dsl.*
+import leo16.names.*
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
@@ -107,6 +108,11 @@ class EvalTest {
 		evaluate_ { zero.equals_ { one } }.assertEquals { boolean { false_ } }
 		evaluate_ { function { does { zero } }.equals_ { function { does { zero } } } }.assertEquals { boolean { true_ } }
 		evaluate_ { function { does { zero } }.equals_ { function { does { one } } } }.assertEquals { boolean { false_ } }
+	}
+
+	@Test
+	fun hash() {
+		evaluate_ { zero.hash }.assertEquals { hash { value(_zero()).hashCode().number } }
 	}
 
 	@Test

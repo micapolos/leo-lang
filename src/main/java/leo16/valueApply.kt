@@ -1,5 +1,6 @@
 package leo16
 
+import leo14.bigDecimal
 import leo14.leonardoScript
 import leo16.names.*
 
@@ -13,6 +14,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyComment(field)
 		?: applyScript(field)
 		?: applyMatches(field)
+		?: applyHash(field)
 		?: applyEquals(field)
 		?: applyLeonardo(field)
 
@@ -63,6 +65,13 @@ fun Value.applyMatches(field: Field): Value? =
 fun Value.applyEquals(field: Field): Value? =
 	field.matchPrefix(_equals) { rhs ->
 		this.equals(rhs).field.value
+	}
+
+fun Value.applyHash(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(_hash) { rhs ->
+			value(_hash(rhs.hashCode().bigDecimal.field))
+		}
 	}
 
 fun Value.applyLeonardo(field: Field): Value? =
