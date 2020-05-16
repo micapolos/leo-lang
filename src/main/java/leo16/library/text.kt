@@ -2,7 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.compile_
-import leo16.dictionary_
 
 fun main() {
 	text
@@ -211,15 +210,4 @@ val text = compile_ {
 			}
 		}
 	}
-
-	any.text
-	equals_ { any.text }
-	does {
-		text.native
-		object_.equals_ { equals_.text.native }
-		boolean
-	}
-
-	test { "hello".text.equals_ { "hello".text }.equals_ { true_.boolean } }
-	test { "hello".text.equals_ { "world".text }.equals_ { false_.boolean } }
 }

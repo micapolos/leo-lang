@@ -119,7 +119,7 @@ val url = compile_ {
 			parameter { empty.list }
 		}
 		do_ {
-			native.object_.equals_ { null_.native }.boolean
+			native.equals_ { null_.native }
 			match {
 				true_ { none }
 				false_ { native.text }
@@ -162,7 +162,7 @@ val url = compile_ {
 			parameter { empty.list }
 		}
 		do_ {
-			native.object_.equals_ { null_.native }.boolean
+			native.equals_ { null_.native }
 			match {
 				true_ { none }
 				false_ { native.text }
@@ -177,7 +177,7 @@ val url = compile_ {
 			parameter { empty.list }
 		}
 		do_ {
-			native.object_.equals_ { null_.native }.boolean
+			native.equals_ { null_.native }
 			match {
 				true_ { none }
 				false_ { native.text }

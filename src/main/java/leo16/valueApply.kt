@@ -13,6 +13,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyComment(field)
 		?: applyScript(field)
 		?: applyMatches(field)
+		?: applyEquals(field)
 		?: applyLeonardo(field)
 
 fun Value.applyGet(field: Field): Value? =
@@ -57,6 +58,11 @@ fun Value.applyScript(field: Field): Value? =
 fun Value.applyMatches(field: Field): Value? =
 	field.matchPrefix(_matches) { rhs ->
 		matches(rhs).field.value
+	}
+
+fun Value.applyEquals(field: Field): Value? =
+	field.matchPrefix(_equals) { rhs ->
+		this.equals(rhs).field.value
 	}
 
 fun Value.applyLeonardo(field: Field): Value? =

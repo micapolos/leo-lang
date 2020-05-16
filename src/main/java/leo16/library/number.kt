@@ -2,7 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.compile_
-import leo16.dictionary_
 
 fun main() {
 	number
@@ -205,15 +204,4 @@ val number = compile_ {
 
 	test { 25.number.square.root equals_ { 5.number } }
 	test { 5.number.square.root equals_ { "2.236067977499789696409173668731276".number } }
-
-	any.number
-	equals_ { any.number }
-	does {
-		number.native
-		object_.equals_ { equals_.number.native }
-		boolean
-	}
-
-	test { 123.number.equals_ { 123.number }.equals_ { true_.boolean } }
-	test { 123.number.equals_ { 124.number }.equals_ { false_.boolean } }
 }

@@ -2,7 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.compile_
-import leo16.dictionary_
 
 fun main() {
 	reflection
@@ -241,30 +240,4 @@ val reflection = compile_ {
 
 	true_.boolean.native.is_ { boolean.true_.field.get }
 	false_.boolean.native.is_ { boolean.false_.field.get }
-
-	any.native.object_
-	equals_ { any.native }
-	does {
-		objects.equals_.method
-		invoke {
-			parameter {
-				list {
-					item { object_.native }
-					item { equals_.native }
-				}
-			}
-		}
-	}
-
-	test {
-		"hello".text.native.object_
-		equals_ { "hello".text.native }.boolean
-		equals_ { boolean { true_ } }
-	}
-
-	test {
-		"hello".text.native.object_
-		equals_ { "world".text.native }.boolean
-		equals_ { boolean { false_ } }
-	}
 }

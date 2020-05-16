@@ -93,6 +93,14 @@ class EvalTest {
 	}
 
 	@Test
+	fun equals_() {
+		evaluate_ { zero.equals_ { zero } }.assertEquals { boolean { true_ } }
+		evaluate_ { zero.equals_ { one } }.assertEquals { boolean { false_ } }
+		evaluate_ { function { does { zero } }.equals_ { function { does { zero } } } }.assertEquals { boolean { true_ } }
+		evaluate_ { function { does { zero } }.equals_ { function { does { one } } } }.assertEquals { boolean { false_ } }
+	}
+
+	@Test
 	fun lazy() {
 		evaluate_ {
 			zero.is_ { one }
