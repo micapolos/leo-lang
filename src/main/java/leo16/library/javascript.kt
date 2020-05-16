@@ -10,6 +10,9 @@ fun main() {
 val javascript = compile_ {
 	use { base.library }
 
+	empty.javascript
+	is_ { "".text.javascript }
+
 	any.text.javascript.html
 	does {
 		"<script>window.onload=function(){".text
@@ -24,10 +27,10 @@ val javascript = compile_ {
 		run.javascript.html.open
 	}
 
-	any.text.javascript.show
+	any.text.expression.javascript.show
 	does {
 		"document.body.textContent=".text
-		plus { show.javascript.text }
+		plus { show.javascript.expression.text }
 		javascript.run
 	}
 
@@ -64,50 +67,124 @@ val javascript = compile_ {
 		javascript
 	}
 
-	any.text.javascript.string
+	any.text.expression.javascript.string
 	does {
 		"'".text
-		plus { string.javascript.text.comment { escape } }
+		plus { string.javascript.expression.text.comment { escape } }
 		plus { "'".text }
-		javascript
+		expression.javascript
 	}
 
 	test {
-		"hello".text.javascript.string
-		equals_ { "'hello'".text.javascript }
+		"hello".text.expression.javascript.string
+		equals_ { "'hello'".text.expression.javascript }
 	}
 
-	any.text.javascript
+	any.text.expression.javascript
 	in_ { parentheses }
 	does {
 		"(".text
-		plus { javascript.text }
+		plus { javascript.expression.text }
 		plus { ")".text }
-		javascript
+		expression.javascript
 	}
 
 	test {
-		"a + b".text.javascript.in_ { parentheses }
-		equals_ { "(a + b)".text.javascript }
+		"a + b".text.expression.javascript.in_ { parentheses }
+		equals_ { "(a + b)".text.expression.javascript }
+	}
+
+	any.text.expression.javascript
+	plus { any.text.expression.javascript }
+	does {
+		javascript.in_ { parentheses }.expression.text
+		plus { " + ".text }
+		plus { plus.javascript.in_ { parentheses }.expression.text }
+		expression.javascript
+	}
+
+	test {
+		"a".text.expression.javascript
+		plus { "b".text.expression.javascript }
+		equals_ { "(a) + (b)".text.expression.javascript }
+	}
+
+	any.text.expression.javascript
+	times { any.text.expression.javascript }
+	does {
+		javascript.in_ { parentheses }.expression.text
+		plus { " * ".text }
+		plus { times.javascript.in_ { parentheses }.expression.text }
+		expression.javascript
+	}
+
+	test {
+		"a".text.expression.javascript
+		times { "b".text.expression.javascript }
+		equals_ { "(a) * (b)".text.expression.javascript }
+	}
+
+	any.text.expression.javascript.sin
+	does {
+		"Math.sin".text
+		plus { sin.javascript.in_ { parentheses }.expression.text }
+		expression.javascript
+	}
+
+	test {
+		"a".text.expression.javascript.sin
+		equals_ { "Math.sin(a)".text.expression.javascript }
+	}
+
+	any.text.expression.javascript.cos
+	does {
+		"Math.cos".text
+		plus { cos.javascript.in_ { parentheses }.expression.text }
+		expression.javascript
+	}
+
+	test {
+		"a".text.expression.javascript.cos
+		equals_ { "Math.cos(a)".text.expression.javascript }
 	}
 
 	any.text.javascript
-	plus { any.text.javascript }
+	fill {
+		text { any.text.expression.javascript }
+		x { any.text.expression.javascript }
+		y { any.text.expression.javascript }
+	}
 	does {
-		javascript.in_ { parentheses }.text
-		plus { " + ".text }
-		plus { plus.javascript.in_ { parentheses }.text }
+		javascript.text
+		plus {
+			"context.fillText(".text
+			plus { fill.text.javascript.expression.text }
+			plus { ", ".text }
+			plus { fill.x.javascript.expression.text }
+			plus { ", ".text }
+			plus { fill.y.javascript.expression.text }
+			plus { ")\n".text }
+		}
 		javascript
 	}
 
 	test {
-		"a".text.javascript
-		plus { "b".text.javascript }
-		equals_ { "(a) + (b)".text.javascript }
+		empty.javascript
+		fill {
+			text { "'Hello'".text.expression.javascript }
+			x { "10".text.expression.javascript }
+			y { "20".text.expression.javascript }
+		}
+		equals_ { "context.fillText('Hello', 10, 20)\n".text.javascript }
 	}
 
-	comment { put { last } }
-
-	any.text
-	does { text.javascript.string }
+	any.text.javascript
+	set { font { any.text.expression.javascript } }
+	does {
+		javascript.text
+		plus { "context.font = ".text }
+		plus { set.font.javascript.expression.text }
+		plus { "\n".text }
+		javascript
+	}
 }
