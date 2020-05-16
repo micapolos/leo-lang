@@ -9,9 +9,11 @@ data class Fn(val pattern: Pattern, val nativeFn: (Value) -> Value) {
 	// TODO: Remove _given, and pass value directly
 	fun apply(arg: Value): Value? =
 		pattern.matchOrNull(arg)?.value?.let { value ->
-			nullIfThrowsException {
+			try {
 				nativeFn(_given(value).value)
-			} ?: value
+			} catch (throwable: Throwable) {
+				_error(throwable.nativeValue).value
+			}
 		}
 }
 
