@@ -3,6 +3,10 @@ package leo16.library
 import leo15.dsl.*
 import leo16.compile_
 
+fun main() {
+	javascript
+}
+
 val javascript = compile_ {
 	use { base.library }
 
@@ -59,4 +63,51 @@ val javascript = compile_ {
 		}
 		javascript
 	}
+
+	any.text.javascript.string
+	does {
+		"'".text
+		plus { string.javascript.text.comment { escape } }
+		plus { "'".text }
+		javascript
+	}
+
+	test {
+		"hello".text.javascript.string
+		equals_ { "'hello'".text.javascript }
+	}
+
+	any.text.javascript
+	in_ { parentheses }
+	does {
+		"(".text
+		plus { javascript.text }
+		plus { ")".text }
+		javascript
+	}
+
+	test {
+		"a + b".text.javascript.in_ { parentheses }
+		equals_ { "(a + b)".text.javascript }
+	}
+
+	any.text.javascript
+	plus { any.text.javascript }
+	does {
+		javascript.in_ { parentheses }.text
+		plus { " + ".text }
+		plus { plus.javascript.in_ { parentheses }.text }
+		javascript
+	}
+
+	test {
+		"a".text.javascript
+		plus { "b".text.javascript }
+		equals_ { "(a) + (b)".text.javascript }
+	}
+
+	comment { put { last } }
+
+	any.text
+	does { text.javascript.string }
 }

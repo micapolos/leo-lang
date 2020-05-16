@@ -139,6 +139,11 @@ class EvalTest {
 	}
 
 	@Test
+	fun asText() {
+		evaluate_ { 123.number.as_ { text } }.assertEquals { "123".text }
+	}
+
+	@Test
 	fun lazy() {
 		evaluate_ {
 			zero.is_ { one }

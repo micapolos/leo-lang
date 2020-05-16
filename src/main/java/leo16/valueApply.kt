@@ -15,6 +15,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyMatches(field)
 		?: applyHash(field)
 		?: applyEquals(field)
+		?: applyAsText(field)
 		?: applyLeonardo(field)
 
 fun Value.applyGet(field: Field): Value? =
@@ -64,6 +65,13 @@ fun Value.applyMatches(field: Field): Value? =
 fun Value.applyEquals(field: Field): Value? =
 	field.matchPrefix(_equals) { rhs ->
 		this.equals(rhs).field.value
+	}
+
+fun Value.applyAsText(field: Field): Value? =
+	field.matchPrefix(_as) { rhs ->
+		rhs.match(_text) {
+			printed.toString().field.value
+		}
 	}
 
 fun Value.applyHash(field: Field): Value? =
