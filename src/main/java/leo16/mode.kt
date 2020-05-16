@@ -28,8 +28,10 @@ fun Mode.begin(word: String): Mode =
 				_lazy -> Mode.QUOTE
 				_match -> Mode.QUOTE
 				_quote -> Mode.QUOTE
+				_script -> Mode.QUOTE
 				_test -> Mode.QUOTE
 				_use -> Mode.QUOTE
+				_word -> Mode.META
 				else -> this
 			}
 		Mode.TYPE ->

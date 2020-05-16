@@ -67,6 +67,15 @@ class EvalTest {
 	}
 
 	@Test
+	fun word() {
+		evaluate_ { word { nothing_ } }.assertEquals { nothing_ }
+		evaluate_ { word { zero } }.assertEquals { zero }
+		evaluate_ { word { zero.one } }.assertEquals { zero.one }
+		evaluate_ { word { zero.is_ { one } } }.assertEquals { zero.is_ { one } }
+		evaluate_ { zero.word { is_ { one } } }.assertEquals { zero.is_ { one } }
+	}
+
+	@Test
 	fun script() {
 		evaluate_ {
 			function { zero.does { one } }
