@@ -38,7 +38,7 @@ val Definition.asValue: Value
 			is ConstantDefinition -> constant.asValue
 			is FunctionDefinition -> function.asValue
 			is MacroDefinition -> macro.asValue
-			is FunctionNativeDefinition -> function.nativeString().value
+			is FunctionNativeDefinition -> function.asValue
 			is RepeatDefinition -> repeat.asField.value
 		}
 
