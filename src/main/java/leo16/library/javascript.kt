@@ -124,27 +124,27 @@ val javascript = compile_ {
 		equals_ { "(a) * (b)".text.expression.javascript }
 	}
 
-	any.text.expression.javascript.sin
+	any.text.expression.javascript.sinus
 	does {
 		"Math.sin".text
-		plus { sin.javascript.in_ { parentheses }.expression.text }
+		plus { sinus.javascript.in_ { parentheses }.expression.text }
 		expression.javascript
 	}
 
 	test {
-		"a".text.expression.javascript.sin
+		"a".text.expression.javascript.sinus
 		equals_ { "Math.sin(a)".text.expression.javascript }
 	}
 
-	any.text.expression.javascript.cos
+	any.text.expression.javascript.cosinus
 	does {
 		"Math.cos".text
-		plus { cos.javascript.in_ { parentheses }.expression.text }
+		plus { cosinus.javascript.in_ { parentheses }.expression.text }
 		expression.javascript
 	}
 
 	test {
-		"a".text.expression.javascript.cos
+		"a".text.expression.javascript.cosinus
 		equals_ { "Math.cos(a)".text.expression.javascript }
 	}
 
