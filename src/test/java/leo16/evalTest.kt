@@ -202,6 +202,16 @@ class EvalTest {
 	}
 
 	@Test
+	fun has() {
+		evaluate_ { zero.has { one } }.assertEquals { nothing_ }
+		evaluate_ { zero.has { one }.zero }.assertEquals { zero { one } }
+		evaluate_ { any.has { one }.zero }.assertEquals { any { one } }
+
+		evaluate_ { any.text.has { ok }; "foo".text }.assertEquals { text { ok } }
+		evaluate_ { any.number.has { ok }; 123.number }.assertEquals { number { ok } }
+	}
+
+	@Test
 	fun does() {
 		evaluate_ { zero.does { one } }.assertEquals { nothing_ }
 		evaluate_ { zero.does { one }.zero }.assertEquals { one }

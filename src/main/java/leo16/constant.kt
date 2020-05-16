@@ -10,8 +10,16 @@ data class Constant(val pattern: Pattern, val value: Value) {
 
 infix fun Pattern.is_(value: Value) = Constant(this, value)
 
-val Value.constantOrNull: Constant?
+val Value.isConstantOrNull: Constant?
 	get() =
 		matchInfix(_is) { lhs, rhs ->
 			lhs.pattern.is_(rhs)
+		}
+
+val Value.hasConstantOrNull: Constant?
+	get() =
+		matchInfix(_has) { lhs, rhs ->
+			lhs.onlyFieldOrNull?.sentenceOrNull?.word?.let { word ->
+				lhs.pattern.is_(word(rhs).value)
+			}
 		}
