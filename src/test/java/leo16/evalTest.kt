@@ -112,7 +112,7 @@ class EvalTest {
 
 	@Test
 	fun hash() {
-		evaluate_ { zero.hash }.assertEquals { hash { value(_zero()).hashCode().number } }
+		evaluate_ { zero.hash }.assertEquals { hash { value(_zero()).hashBigDecimal.number } }
 	}
 
 	@Test

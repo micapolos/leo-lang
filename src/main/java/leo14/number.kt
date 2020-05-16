@@ -19,6 +19,7 @@ val Int.number: Number get() = number(this)
 val Double.number: Number get() = number(this)
 
 val Int.bigDecimal get() = BigDecimal.valueOf(toLong())
+val Int.unsignedBigDecimal get() = BigDecimal.valueOf(toUInt().toLong())
 val Double.bigDecimal get() = BigDecimal.valueOf(this)
 
 val String.numberOrNull: Number?

@@ -10,6 +10,7 @@ import leo13.Stack
 import leo13.mapFirst
 import leo13.mapOrNull
 import leo13.onlyOrNull
+import leo14.unsignedBigDecimal
 import leo16.names.*
 
 inline fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
@@ -87,3 +88,7 @@ fun Field.rhsOrNull(word: String): Value? =
 
 fun Value.pairOrNull(word: String): Pair<Value, Value>? =
 	matchInfix(word) { lhs, rhs -> lhs to rhs }
+
+val Value.hashBigDecimal
+	get() =
+		hashCode().unsignedBigDecimal
