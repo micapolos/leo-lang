@@ -110,6 +110,21 @@ class EvalTest {
 	}
 
 	@Test
+	fun apply() {
+		evaluate_ {
+			x.is_ { zero }
+			quote { x }
+			apply
+		}.assertEquals { zero }
+
+		evaluate_ {
+			x.is_ { zero }
+			quote { the { x } }
+			apply
+		}.assertEquals { apply { the { x } } }
+	}
+
+	@Test
 	fun evaluate() {
 		evaluate_ { quote { nothing_ }.evaluate }.assertEquals { nothing_ }
 		evaluate_ { quote { zero.negate }.evaluate }.assertEquals { negate { zero } }

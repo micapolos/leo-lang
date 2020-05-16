@@ -50,6 +50,7 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 	null
 		?: applyValue(field) // keep first
 		?: ifOrNull(!isType) { applyBinding(field) }
+		?: applyApply(field)
 		?: applyEvaluate(field)
 		?: applyCompile(field)
 		?: applyQuote(field)
@@ -72,6 +73,13 @@ fun Evaluated.applyValue(field: Field): Evaluated? =
 fun Evaluated.applyQuote(field: Field): Evaluated? =
 	field.matchPrefix(_quote) { rhs ->
 		scope.evaluated(value.plus(rhs))
+	}
+
+fun Evaluated.applyApply(field: Field): Evaluated? =
+	value.matchEmpty {
+		field.matchPrefix(_apply) { rhs ->
+			scope.dictionary.apply(rhs.evaluated)?.let { scope.evaluated(it.value) }
+		}
 	}
 
 fun Evaluated.applyEvaluate(field: Field): Evaluated? =
