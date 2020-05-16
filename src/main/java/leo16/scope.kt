@@ -51,3 +51,7 @@ fun Scope.useOrNull(evaluated: Evaluated): Scope? =
 	ifOrNull(evaluated.value.isEmpty) {
 		import(evaluated.scope.exportDictionary)
 	}
+
+val Scope.beginEvaluated: Evaluated
+	get() =
+		dictionary.resolve(emptyEvaluated)

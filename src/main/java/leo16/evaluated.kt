@@ -20,7 +20,7 @@ fun Evaluated.updateValue(fn: Value.() -> Value) = copy(value = value.fn())
 
 val Evaluated.begin: Evaluated
 	get() =
-		scope.begin.evaluated(value())
+		scope.beginEvaluated
 
 fun Evaluated.set(value: Value): Evaluated =
 	copy(value = value)

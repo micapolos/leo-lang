@@ -111,6 +111,29 @@ class EvalTest {
 	}
 
 	@Test
+	fun evaluateBegin() {
+		evaluate_ {
+			is_ { new { line } }
+			zero
+		}.assertEquals { zero { new { line } } }
+
+		evaluate_ {
+			is_ { new { line } }
+			x { zero }
+			y { one }
+		}.assertEquals {
+			x {
+				new { line }
+				zero { new { line } }
+			}
+			y {
+				new { line }
+				one { new { line } }
+			}
+		}
+	}
+
+	@Test
 	fun hash() {
 		evaluate_ { zero.hash }.assertEquals { hash { value(_zero()).hashBigDecimal.number } }
 	}
