@@ -20,7 +20,6 @@ fun Mode.begin(word: String): Mode =
 	when (this) {
 		Mode.EVALUATE ->
 			when (word) {
-				_animate -> Mode.QUOTE
 				_expands -> Mode.QUOTE
 				_does -> Mode.QUOTE
 				_giving -> Mode.QUOTE

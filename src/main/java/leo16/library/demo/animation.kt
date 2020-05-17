@@ -31,5 +31,6 @@ val animation = compile_ {
 			y { mouse.y.number }
 		}
 	}
-	animate
+	animation
+	show
 }
