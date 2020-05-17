@@ -127,6 +127,18 @@ val javascript = compile_ {
 		equals_ { "(a) * (b)".text.expression.javascript }
 	}
 
+	any.text.expression.javascript.negate
+	does {
+		"-".text
+		plus { negate.javascript.in_ { parentheses }.expression.text }
+		expression.javascript
+	}
+
+	test {
+		"a".text.expression.javascript.negate
+		equals_ { "-(a)".text.expression.javascript }
+	}
+
 	any.text.expression.javascript.sinus
 	does {
 		"Math.sin".text

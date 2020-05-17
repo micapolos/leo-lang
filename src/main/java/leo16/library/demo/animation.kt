@@ -47,16 +47,14 @@ val animation = compile_ {
 			x {
 				mouse.x.number
 				plus {
-					animation.second.number
-					sinus
+					animation.second.number.sinus
 					times { 40.number }
 				}
 			}
 			y {
 				mouse.y.number
 				plus {
-					animation.second.number
-					cosinus
+					animation.second.number.cosinus.negate
 					times { 40.number }
 				}
 			}
