@@ -39,29 +39,37 @@ val javascript = compile_ {
 		"".text
 		plus {
 			"""
+      document.body.style = "position:absolute; width:100%; height:100%; margin:0"
 			const canvas = document.createElement('canvas')
 			const scale = window.devicePixelRatio
-		  canvas.width = 640 * scale
-      canvas.height = 480 * scale
-			canvas.style.width = "640px" 
-			canvas.style.height = "480px"
+			canvas.style = "position:absolute; width:100%; height: 100%"
 			const context = canvas.getContext('2d')
-			context.scale(scale, scale)
-			context.font = "20px Helvetica"
       document.body.appendChild(canvas)
 			var animationFrame = 0
-			var mouseX = 0
-			var mouseY = 0
+			var width = 0
+			var height = 0
+			function resize() {
+			  width = window.innerWidth
+				height = window.innerHeight
+			  canvas.width = width * scale
+        canvas.height = height * scale
+        context.scale(scale, scale)
+  			context.font = "20px Menlo"
+			}
+			resize()
+			var mouseX = width / 2
+			var mouseY = height / 2
+			window.onresize = resize;
 			function handleMouseEvent(event) {
 			  mouseX = event.offsetX
 			  mouseY = event.offsetY
 			}
-			canvas.addEventListener('mousemove', handleMouseEvent, false)
-			canvas.addEventListener('mouseenter', handleMouseEvent, false)
+			canvas.onmousemove = handleMouseEvent
+			canvas.ommouseenter = handleMouseEvent
 			const animate = function(time) {
 			  const animationSecond = time / 1000
 			  animationFrame++;
-			  context.clearRect(0, 0, 640, 480);
+			  context.clearRect(0, 0, width, height);
 			""".text
 		}
 		plus { animated.javascript.text }
