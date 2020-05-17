@@ -44,6 +44,7 @@ val javascript = compile_ {
       canvas.height = 480
 			const context = canvas.getContext('2d')
       document.body.appendChild(canvas)
+			var animationFrame = 0
 			var mouseX = 0
 			var mouseY = 0
 			function handleMouseEvent(event) {
@@ -53,6 +54,8 @@ val javascript = compile_ {
 			canvas.addEventListener('mousemove', handleMouseEvent, false)
 			canvas.addEventListener('mouseenter', handleMouseEvent, false)
 			const animate = function(time) {
+			  const animationSecond = time / 1000
+			  animationFrame++;
 			  context.clearRect(0, 0, 640, 480);
 			""".text
 		}

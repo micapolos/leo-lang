@@ -10,9 +10,10 @@ fun main() {
 val dsl = compile_ {
 	use { javascript.library }
 
-	time.is_ { "time".text.expression.javascript }
-	mouse.x.is_ { "mouseX".text.expression.javascript }
-	mouse.y.is_ { "mouseY".text.expression.javascript }
+	animation.frame.number.is_ { "animationFrame".text.expression.javascript }
+	animation.second.number.is_ { "animationSecond".text.expression.javascript }
+	mouse.x.number.is_ { "mouseX".text.expression.javascript }
+	mouse.y.number.is_ { "mouseY".text.expression.javascript }
 
 	any.native.text
 	does { text.expression.javascript.string }
