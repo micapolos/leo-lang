@@ -10,8 +10,6 @@ fun main() {
 val animation = compile_ {
 	use { animation.library }
 
-	set { font { "20px Menlo".text } }
-
 	fill {
 		text {
 			"Time: ".text

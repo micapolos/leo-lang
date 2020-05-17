@@ -43,6 +43,7 @@ val javascript = compile_ {
 		  canvas.width = 640
       canvas.height = 480
 			const context = canvas.getContext('2d')
+			context.font = "20px Helvetica"
       document.body.appendChild(canvas)
 			var animationFrame = 0
 			var mouseX = 0
