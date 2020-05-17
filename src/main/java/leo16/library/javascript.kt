@@ -126,6 +126,21 @@ val javascript = compile_ {
 	}
 
 	any.text.expression.javascript
+	minus { any.text.expression.javascript }
+	does {
+		javascript.in_ { parentheses }.expression.text
+		plus { " - ".text }
+		plus { minus.javascript.in_ { parentheses }.expression.text }
+		expression.javascript
+	}
+
+	test {
+		"a".text.expression.javascript
+		minus { "b".text.expression.javascript }
+		equals_ { "(a) - (b)".text.expression.javascript }
+	}
+
+	any.text.expression.javascript
 	times { any.text.expression.javascript }
 	does {
 		javascript.in_ { parentheses }.expression.text
@@ -138,6 +153,21 @@ val javascript = compile_ {
 		"a".text.expression.javascript
 		times { "b".text.expression.javascript }
 		equals_ { "(a) * (b)".text.expression.javascript }
+	}
+
+	any.text.expression.javascript
+	modulo { any.text.expression.javascript }
+	does {
+		javascript.in_ { parentheses }.expression.text
+		plus { " % ".text }
+		plus { modulo.javascript.in_ { parentheses }.expression.text }
+		expression.javascript
+	}
+
+	test {
+		"a".text.expression.javascript
+		modulo { "b".text.expression.javascript }
+		equals_ { "(a) % (b)".text.expression.javascript }
 	}
 
 	any.text.expression.javascript.negate
