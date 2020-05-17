@@ -148,6 +148,13 @@ val javascript = compile_ {
 		equals_ { "Math.cos(a)".text.expression.javascript }
 	}
 
+	any.text.expression.javascript.absolute
+	does {
+		"Math.abs".text
+		plus { absolute.javascript.in_ { parentheses }.expression.text }
+		expression.javascript
+	}
+
 	any.text.javascript
 	fill {
 		text { any.text.expression.javascript }
@@ -185,6 +192,28 @@ val javascript = compile_ {
 		plus { "context.font = ".text }
 		plus { set.font.javascript.expression.text }
 		plus { "\n".text }
+		javascript
+	}
+
+	any.text.javascript
+	fill {
+		circle {
+			radius { any.text.expression.javascript }
+			x { any.text.expression.javascript }
+			y { any.text.expression.javascript }
+		}
+	}
+	does {
+		javascript.text
+		plus { "context.beginPath()\n".text }
+		plus { "context.arc(".text }
+		plus { fill.circle.x.javascript.expression.text }
+		plus { ", ".text }
+		plus { fill.circle.y.javascript.expression.text }
+		plus { ", ".text }
+		plus { fill.circle.radius.javascript.expression.text }
+		plus { ", 0, 2 * Math.PI, false)\n".text }
+		plus { "context.fill()\n".text }
 		javascript
 	}
 }
