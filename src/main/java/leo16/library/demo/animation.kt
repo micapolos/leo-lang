@@ -8,56 +8,28 @@ fun main() {
 }
 
 val animation = compile_ {
-	use { animation.library }
+	use { base.library }
 
 	fill {
 		text {
-			"Time: ".text
-			plus { animation.second.number }
-			plus { "s".text }
+			"Frame: ".text
+			plus { animation.frame.number }
 		}
 		x { 10.number }
-		y { 40.number }
-	}
-
-	fill {
-		text { "Frame: ".text.plus { animation.frame.number } }
-		x { 10.number }
-		y { 70.number }
+		y { 30.number }
 	}
 
 	fill {
 		circle {
 			radius {
 				animation.second.number
+				times { 5.number }
 				sinus.absolute
-				times { 15.number }
-				plus { 10.number }
+				times { 30.number }
 			}
 			x { mouse.x.number }
 			y { mouse.y.number }
 		}
 	}
-
-	fill {
-		circle {
-			radius { 10.number }
-			x {
-				mouse.x.number
-				plus {
-					animation.second.number.sinus
-					times { 40.number }
-				}
-			}
-			y {
-				mouse.y.number
-				plus {
-					animation.second.number.cosinus.negate
-					times { 40.number }
-				}
-			}
-		}
-	}
-
-	show
+	animate
 }

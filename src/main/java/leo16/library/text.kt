@@ -85,7 +85,7 @@ val text = compile_ {
 		}
 	}
 
-	any.text.length
+	any.native.text.length
 	does {
 		length.text.native
 		invoke {
@@ -97,10 +97,10 @@ val text = compile_ {
 
 	test { "Hello, world!".text.length.equals_ { 13.number.length } }
 
-	any.text
+	any.native.text
 	cut {
-		from { any.number }
-		to { any.number }
+		from { any.native.number }
+		to { any.native.number }
 	}
 	does {
 		text.native
@@ -125,8 +125,8 @@ val text = compile_ {
 		equals_ { "world".text }
 	}
 
-	any.text
-	plus { any.text }
+	any.native.text
+	plus { any.native.text }
 	does {
 		text.native
 		invoke {
@@ -138,10 +138,10 @@ val text = compile_ {
 
 	test { "Hello, ".text.plus { "world!".text }.equals_ { "Hello, world!".text } }
 
-	any.text
+	any.native.text
 	replace {
-		all { any.text }
-		with { any.text }
+		all { any.native.text }
+		with { any.native.text }
 	}
 	does {
 		text.native
@@ -166,8 +166,8 @@ val text = compile_ {
 		equals_ { "foo, bar, zoo".text }
 	}
 
-	any.text
-	split { by { any.text } }
+	any.native.text
+	split { by { any.native.text } }
 	does {
 		string.split.method
 		invoke {
@@ -194,7 +194,7 @@ val text = compile_ {
 		}
 	}
 
-	any.text.line.list
+	any.native.text.line.list
 	does {
 		list.line.text
 		split { by { "\n".text } }

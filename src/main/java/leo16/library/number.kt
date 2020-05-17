@@ -105,8 +105,8 @@ val number = compile_ {
 		}
 	}
 
-	any.number
-	plus { any.number }
+	any.native.number
+	plus { any.native.number }
 	does {
 		number.native
 		invoke {
@@ -118,8 +118,8 @@ val number = compile_ {
 
 	test { 2.number plus { 3.number } equals_ { 5.number } }
 
-	any.number
-	minus { any.number }
+	any.native.number
+	minus { any.native.number }
 	does {
 		number.native
 		invoke {
@@ -131,7 +131,7 @@ val number = compile_ {
 
 	test { 5.number minus { 3.number } equals_ { 2.number } }
 
-	any.number.negate
+	any.native.number.negate
 	does {
 		0.number
 		minus { negate.number }
@@ -139,8 +139,8 @@ val number = compile_ {
 
 	test { 5.number.negate.equals_ { (-5).number } }
 
-	any.number
-	times { any.number }
+	any.native.number
+	times { any.native.number }
 	does {
 		number.native
 		invoke {
@@ -157,8 +157,8 @@ val number = compile_ {
 		equals_ { "152415787532388367501905199875019052100".number }
 	}
 
-	any.number
-	divided { by { any.number } }
+	any.native.number
+	divided { by { any.native.number } }
 	does {
 		number.native
 		invoke {
@@ -179,8 +179,8 @@ val number = compile_ {
 		equals_ { 3.number }
 	}
 
-	any.number
-	modulo { any.number }
+	any.native.number
+	modulo { any.native.number }
 	does {
 		number.native
 		invoke {
@@ -201,7 +201,8 @@ val number = compile_ {
 		equals_ { 1.number }
 	}
 
-	any.number.square.root.does {
+	any.native.number.square.root
+	does {
 		root.square.number.native
 		invoke {
 			method { big.decimal.sqrt }

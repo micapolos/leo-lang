@@ -8,11 +8,11 @@ fun main() {
 }
 
 val animation = compile_ {
-	any.show
+	any.animate
 	does {
 		body {
 			use { dsl.javascript.library }
-			show.content.evaluate
+			animate.content.evaluate
 		}
 		do_ {
 			use { javascript.library }
