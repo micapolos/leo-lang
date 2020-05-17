@@ -4,15 +4,15 @@ import leo15.dsl.*
 import leo16.compile_
 
 fun main() {
-	animate
+	animation
 }
 
-val animate = compile_ {
-	any.animate
+val animation = compile_ {
+	any.show
 	does {
 		body {
 			use { dsl.javascript.library }
-			animate.content.evaluate
+			show.content.evaluate
 		}
 		do_ {
 			use { javascript.library }

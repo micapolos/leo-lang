@@ -57,16 +57,16 @@ inline fun Definition.apply(evaluated: Evaluated): Evaluated? =
 		is RepeatDefinition -> repeat.apply(evaluated.value)?.let { evaluated.set(it) }
 	}
 
-val Value.parameterDictionary: Dictionary
-	get() =
-		fieldStack.map { parameterDefinition }.dictionary
-
 fun Value.does(apply: Value.() -> Value) =
 	pattern.fn(apply).definition
 
 val Field.parameterDefinition: Definition
 	get() =
 		selectWord.pattern.is_(value).definition
+
+val Value.contentParameterDefinition: Definition
+	get() =
+		_content.pattern.is_(this).definition
 
 val PatternMatch.anyParameterDefinitionOrNull: Definition?
 	get() =

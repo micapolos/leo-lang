@@ -105,6 +105,7 @@ val PatternMatch.value
 		stack<Field>()
 			.ifNotNull(anyFieldStackOrNull) { pushAll(it) }
 			.pushAll(fieldStack)
+			.reverse
 			.value
 
 inline fun PatternMatch.plusMatchOrNull(pattern: Pattern, value: Value): PatternMatch? =

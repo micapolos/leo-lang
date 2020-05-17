@@ -41,4 +41,5 @@ val Dictionary.asField: Field
 fun Dictionary.plus(match: PatternMatch): Dictionary =
 	this
 		.ifNotNull(match.anyParameterDefinitionOrNull) { plus(it) }
+		.plus(match.value.contentParameterDefinition)
 		.fold(match.value.fieldStack) { plus(it.parameterDefinition) }

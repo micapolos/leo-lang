@@ -372,6 +372,18 @@ class EvalTest {
 	}
 
 	@Test
+	fun doContent() {
+		evaluate_ {
+			x { zero }
+			y { one }
+			do_ { content }
+		}.assertEquals {
+			x { zero }
+			y { one }
+		}
+	}
+
+	@Test
 	fun doRepeat() {
 		evaluate_ {
 			one.bit
