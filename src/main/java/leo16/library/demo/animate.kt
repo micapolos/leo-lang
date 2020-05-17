@@ -13,10 +13,7 @@ val animate = compile_ {
 	set { font { "30px Arial".text } }
 
 	fill {
-		text {
-			"Time: ".text
-			plus { time }
-		}
+		text { "Time: ".text.plus { time } }
 		x { 10.number }
 		y { 40.number }
 	}
@@ -27,8 +24,8 @@ val animate = compile_ {
 				time
 				times { 0.005.number }
 				sinus.absolute
-				times { 5.number }
-				plus { 25.number }
+				times { 15.number }
+				plus { 10.number }
 			}
 			x { mouse.x }
 			y { mouse.y }
@@ -37,7 +34,7 @@ val animate = compile_ {
 
 	fill {
 		circle {
-			radius { 5.number }
+			radius { 10.number }
 			x {
 				mouse.x
 				plus {
