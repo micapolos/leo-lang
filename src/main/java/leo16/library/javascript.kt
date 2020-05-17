@@ -40,9 +40,13 @@ val javascript = compile_ {
 		plus {
 			"""
 			const canvas = document.createElement('canvas')
-		  canvas.width = 640
-      canvas.height = 480
+			const scale = window.devicePixelRatio
+		  canvas.width = 640 * scale
+      canvas.height = 480 * scale
+			canvas.style.width = "640px" 
+			canvas.style.height = "480px"
 			const context = canvas.getContext('2d')
+			context.scale(scale, scale)
 			context.font = "20px Helvetica"
       document.body.appendChild(canvas)
 			var animationFrame = 0
