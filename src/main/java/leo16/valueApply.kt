@@ -9,6 +9,8 @@ fun Value.apply(field: Field): Value? =
 		?: applyGet(field)
 		?: applyTake(field)
 		?: applyThis(field)
+//		?: applyQuote(field)
+//		?: applyMeta(field)
 		?: applyNothing(field)
 		?: applyComment(field)
 		?: applyScript(field)
@@ -60,6 +62,16 @@ fun Value.applyScript(field: Field): Value? =
 fun Value.applyMatches(field: Field): Value? =
 	field.matchPrefix(_matches) { rhs ->
 		matches(rhs).field.value
+	}
+
+fun Value.applyQuote(field: Field): Value? =
+	field.matchPrefix(_quote) { rhs ->
+		plus(rhs)
+	}
+
+fun Value.applyMeta(field: Field): Value? =
+	field.matchPrefix(_meta) { rhs ->
+		plus(rhs)
 	}
 
 fun Value.applyEquals(field: Field): Value? =

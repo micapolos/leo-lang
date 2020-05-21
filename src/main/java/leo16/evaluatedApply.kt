@@ -54,7 +54,7 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyEvaluate(field)
 		?: applyCompile(field)
 		?: applyQuote(field)
-		?: applyWord(field)
+		?: applyMeta(field)
 		?: applyDo(field)
 		?: applyLazy(field)
 		?: applyForce(field)
@@ -76,8 +76,8 @@ fun Evaluated.applyQuote(field: Field): Evaluated? =
 		scope.evaluated(value.plus(rhs))
 	}
 
-fun Evaluated.applyWord(field: Field): Evaluated? =
-	field.matchPrefix(_word) { rhs ->
+fun Evaluated.applyMeta(field: Field): Evaluated? =
+	field.matchPrefix(_meta) { rhs ->
 		scope.evaluated(value.plus(rhs))
 	}
 

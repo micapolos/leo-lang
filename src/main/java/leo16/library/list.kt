@@ -175,7 +175,7 @@ val list = compile_ {
 	does {
 		flat.list.reverse
 		fold {
-			to { word { flat } }
+			to { meta { flat } }
 			function {
 				item { any }
 				to { any }

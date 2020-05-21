@@ -5,17 +5,17 @@ import leo15.dsl.*
 import leo16.compile_
 
 fun main() {
-	name.value.print
+	word.value.print
 }
 
-val name = compile_ {
+val word = compile_ {
 	use { list.library }
 
-	any.name
+	any.word
 	plus { any.letter }
 	does {
-		name.list
+		word.list
 		append { plus.letter }
-		name
+		word
 	}
 }

@@ -68,12 +68,12 @@ class EvalTest {
 	}
 
 	@Test
-	fun word() {
-		evaluate_ { word { nothing_ } }.assertEquals { nothing_ }
-		evaluate_ { word { zero } }.assertEquals { zero }
-		evaluate_ { word { zero.one } }.assertEquals { zero.one }
-		evaluate_ { word { zero.is_ { one } } }.assertEquals { zero.is_ { one } }
-		evaluate_ { zero.word { is_ { one } } }.assertEquals { zero.is_ { one } }
+	fun meta() {
+		evaluate_ { meta { nothing_ } }.assertEquals { nothing_ }
+		evaluate_ { meta { zero } }.assertEquals { zero }
+		evaluate_ { meta { zero.one } }.assertEquals { zero.one }
+		evaluate_ { meta { zero.is_ { one } } }.assertEquals { zero.is_ { one } }
+		evaluate_ { zero.meta { is_ { one } } }.assertEquals { zero.is_ { one } }
 	}
 
 	@Test
@@ -508,8 +508,8 @@ class EvalTest {
 	@Test
 	fun mode() {
 		evaluate_ {
-			word { word { zero } }.mode
-			is_ { word { quote }.mode }
+			word { zero }.mode
+			is_ { meta { quote }.mode }
 			zero { zero.is_ { one } }
 		}.assertEquals { zero { zero.is_ { one } } }
 	}

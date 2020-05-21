@@ -122,7 +122,7 @@ val number = compile_ {
 	test { 5.number.square.root equals_ { "2.236067977499789696409173668731276".number } }
 
 	native.number.text
-	does { text.number.as_ { word { text } } }
+	does { text.number.as_ { meta { text } } }
 	test { 123.number.text.equals_ { "123".text } }
 
 	native.text.number
