@@ -43,3 +43,6 @@ fun Dictionary.plus(match: PatternMatch): Dictionary =
 		.ifNotNull(match.anyParameterDefinitionOrNull) { plus(it) }
 		.plus(match.value.contentParameterDefinition)
 		.fold(match.value.fieldStack) { plus(it.parameterDefinition) }
+
+fun Dictionary.modeOrNull(word: String): Mode? =
+	apply(_mode(_word(word())).value.evaluated)?.value?.modeOrNull

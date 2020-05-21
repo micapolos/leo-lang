@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo.base.nullOf
 import leo.base.orIfNull
@@ -72,7 +73,15 @@ operator fun Evaluator.plus(literal: Literal): Evaluator =
 	}
 
 fun Evaluator.begin(word: String): Evaluator =
-	parent(word).evaluator(evaluated.begin, mode.begin(word))
+	parent(word).evaluator(evaluated.begin, mode(word))
+
+fun Evaluator.mode(word: String): Mode =
+	modeOrNull(word) ?: mode.begin(word)
+
+fun Evaluator.modeOrNull(word: String): Mode? =
+	ifOrNull(mode == Mode.EVALUATE) {
+		evaluated.scope.dictionary.modeOrNull(word)
+	}
 
 inline val Evaluator.end: Evaluator?
 	get() =

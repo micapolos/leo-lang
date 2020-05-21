@@ -42,3 +42,17 @@ fun Mode.begin(word: String): Mode =
 		Mode.META -> Mode.EVALUATE.begin(word)
 		Mode.QUOTE -> this
 	}
+
+val Value.modeOrNull: Mode?
+	get() =
+		matchPrefix(_mode) { rhs ->
+			rhs.matchWord { word ->
+				when (word) {
+					_evaluate -> Mode.EVALUATE
+					_quote -> Mode.QUOTE
+					_meta -> Mode.META
+					_type -> Mode.TYPE
+					else -> null
+				}
+			}
+		}

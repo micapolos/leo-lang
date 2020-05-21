@@ -512,6 +512,15 @@ class EvalTest {
 	}
 
 	@Test
+	fun mode() {
+		evaluate_ {
+			word { word { zero } }.mode
+			is_ { word { quote }.mode }
+			zero { zero.is_ { one } }
+		}.assertEquals { zero { zero.is_ { one } } }
+	}
+
+	@Test
 	fun useSomething() {
 		evaluate_ {
 			zero
