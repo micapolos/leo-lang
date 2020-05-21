@@ -6,9 +6,16 @@ import leo16.compile_
 val big = compile_ {
 	use { reflection.library }
 	use { math.context.native.library }
+	use { string.native.library }
 
 	big.decimal.class_
 	is_ { "java.math.BigDecimal".text.name.class_ }
+
+	big.decimal.string.constructor
+	is_ {
+		big.decimal.class_
+		constructor { parameter { list { item { string.class_ } } } }
+	}
 
 	big.decimal.add.method
 	is_ {

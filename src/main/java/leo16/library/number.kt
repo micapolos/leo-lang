@@ -123,6 +123,22 @@ val number = compile_ {
 
 	any.native.number.text
 	does { text.number.as_ { word { text } } }
-
 	test { 123.number.text.equals_ { "123".text } }
+
+	any.native.text.number
+	does {
+		big.decimal.string.constructor
+		invoke { parameter { list { item { number.text.native } } } }
+		do_ {
+			native.object_.class_
+			equals_ { big.decimal.class_ }
+			match {
+				true_ { native.number }
+				false_ { number }
+			}
+		}
+	}
+
+	test { "123".text.number.equals_ { 123.number } }
+	test { "gaga".text.number.equals_ { quote { number { "gaga".text } } } }
 }
