@@ -30,10 +30,22 @@ val digit = compile_ {
 		function {
 			any
 			does {
-				this_ { named.content.digit.number.word { is_ { number } } }
-				this_ { named.content.digit.character.word { is_ { number.as_ { text }.character } } }
-				this_ { number.digit.word { is_ { named.content.digit } } }
-				this_ { number.as_ { text }.character.digit.word { is_ { named.content.digit } } }
+				this_ {
+					named.content.digit.number
+					word { is_ { number } }
+				}
+				this_ {
+					named.content.digit.character
+					word { is_ { number.as_ { text }.character } }
+				}
+				this_ {
+					number.digit
+					word { is_ { named.content.digit } }
+				}
+				this_ {
+					number.as_ { text }.character.digit
+					word { is_ { named.content.digit } }
+				}
 			}
 		}
 	}
