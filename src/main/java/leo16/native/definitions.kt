@@ -285,7 +285,7 @@ val printingDefinition =
 val leoHeadDefinition =
 	value(_head(_any())).does {
 		this
-			.getOrNull(_lhs)!!
+			.getOrNull(_head)!!
 			.contentOrNull!!
 			.fieldStack
 			.linkOrNull
