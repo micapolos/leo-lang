@@ -20,6 +20,7 @@ fun Field.matches(field: Field): Boolean =
 		is NativeField -> this is NativeField && native == field.native
 		is ChoiceField -> matches(field.choice)
 		is LazyField -> false
+		is EvaluatedField -> false
 	}
 
 fun Field.matches(choice: Choice): Boolean =
@@ -36,6 +37,7 @@ fun Field.matches(sentence: Sentence): Boolean =
 		is NativeField -> sentence == _native.sentenceTo()
 		is ChoiceField -> choice.matches(sentence)
 		is LazyField -> false
+		is EvaluatedField -> false
 	}
 
 fun Sentence.matches(sentence: Sentence): Boolean =

@@ -28,6 +28,7 @@ val Field.defaultPrinted: Field
 			is NativeField -> native.nativeString()
 			is ChoiceField -> choice.printSentence.field
 			is LazyField -> lazy.printSentence.field
+			is EvaluatedField -> evaluated.printSentence.field
 		}
 
 val Sentence.printSentence: Sentence
@@ -45,6 +46,10 @@ val Choice.printSentence: Sentence
 val Lazy.printSentence: Sentence
 	get() =
 		_lazy.sentenceTo(compiled.bodyValue.printed)
+
+val Evaluated.printSentence: Sentence
+	get() =
+		_evaluated.sentenceTo(asField) // TODO???
 
 val Dictionary.printSentence: Sentence
 	get() =

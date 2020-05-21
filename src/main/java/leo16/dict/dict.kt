@@ -7,6 +7,8 @@ import leo.base.orNullFold
 import leo13.seq
 import leo16.ChoiceField
 import leo16.DictionaryField
+import leo16.Evaluated
+import leo16.EvaluatedField
 import leo16.Field
 import leo16.FunctionField
 import leo16.LazyField
@@ -47,6 +49,7 @@ fun <T> Node<T>.get(field: Field): Node<T>? =
 		is NativeField -> TODO()
 		is ChoiceField -> TODO()
 		is LazyField -> TODO()
+		is EvaluatedField -> TODO()
 	}
 
 fun <T> Node<T>.get(sentence: Sentence): Node<T>? =

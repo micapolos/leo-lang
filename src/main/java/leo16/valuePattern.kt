@@ -22,6 +22,7 @@ val Field.patternField: PatternField
 			is NativeField -> nativePatternField
 			is ChoiceField -> choice.patternField
 			is LazyField -> lazy.patternField
+			is EvaluatedField -> evaluated.patternField
 		}
 
 val Sentence.patternField: PatternField
@@ -38,6 +39,10 @@ val Choice.patternField: PatternField
 val Lazy.patternField: PatternField
 	get() =
 		_lazy.invoke(compiled.bodyValue.pattern)
+
+val Evaluated.patternField: PatternField
+	get() =
+		asField.patternField
 
 val Sentence.exactPatternField: PatternField
 	get() =
