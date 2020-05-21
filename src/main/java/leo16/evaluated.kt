@@ -35,10 +35,6 @@ operator fun Evaluated.plus(field: Field): Evaluated =
 fun Evaluated.plusNormalized(field: Field): Evaluated =
 	set(value.plus(field))
 
-val Evaluated.reflectValueOrNull: Value?
-	get() =
-		scope.dictionary.apply(emptyScope.evaluated(_reflect.sentenceTo(value).field.value))?.value
-
 val Evaluated.reflectValue: Value
 	get() =
-		reflectValueOrNull ?: value.printed
+		scope.dictionary.reflect(value.printed)

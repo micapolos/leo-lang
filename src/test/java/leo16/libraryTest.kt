@@ -15,6 +15,7 @@ class LibraryTest {
 			import { reflection }
 			import { number }
 			import { text }
+			import { character }
 			import { url }
 		}
 	}

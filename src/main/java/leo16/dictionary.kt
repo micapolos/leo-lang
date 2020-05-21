@@ -46,3 +46,9 @@ fun Dictionary.plus(match: PatternMatch): Dictionary =
 
 fun Dictionary.modeOrNull(word: String): Mode? =
 	apply(_mode(_word(word())).value.evaluated)?.value?.modeOrNull
+
+fun Dictionary.applyReflect(field: Field): Field =
+	apply(_reflect(field.value).value.evaluated)?.value?.onlyFieldOrNull ?: field
+
+fun Dictionary.reflect(value: Value): Value =
+	value.traverse { this@reflect.applyReflect(this) }

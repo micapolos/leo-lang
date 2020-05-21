@@ -7,6 +7,7 @@ import leo.base.reverseStack
 import leo.base.seq
 import leo.base.then
 import leo13.Stack
+import leo13.map
 import leo13.mapFirst
 import leo13.mapOrNull
 import leo13.onlyOrNull
