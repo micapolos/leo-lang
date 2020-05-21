@@ -15,7 +15,7 @@ val text = compile_ {
 	use { string.native.library }
 	use { character.library }
 
-	any.native.text.length
+	native.text.length
 	does {
 		length.text.native
 		invoke {
@@ -27,10 +27,10 @@ val text = compile_ {
 
 	test { "Hello, world!".text.length.equals_ { 13.number.length } }
 
-	any.native.text
+	native.text
 	cut {
-		from { any.native.number }
-		to { any.native.number }
+		from { native.number }
+		to { native.number }
 	}
 	does {
 		text.native
@@ -55,8 +55,8 @@ val text = compile_ {
 		equals_ { "world".text }
 	}
 
-	any.native.text
-	plus { any.native.text }
+	native.text
+	plus { native.text }
 	does {
 		text.native
 		invoke {
@@ -68,10 +68,10 @@ val text = compile_ {
 
 	test { "Hello, ".text.plus { "world!".text }.equals_ { "Hello, world!".text } }
 
-	any.native.text
+	native.text
 	replace {
-		all { any.native.text }
-		with { any.native.text }
+		all { native.text }
+		with { native.text }
 	}
 	does {
 		text.native
@@ -96,8 +96,8 @@ val text = compile_ {
 		equals_ { "foo, bar, zoo".text }
 	}
 
-	any.native.text
-	split { by { any.native.text } }
+	native.text
+	split { by { native.text } }
 	does {
 		string.split.method
 		invoke {
@@ -124,7 +124,7 @@ val text = compile_ {
 		}
 	}
 
-	any.native.text.line.list
+	native.text.line.list
 	does {
 		list.line.text
 		split { by { "\n".text } }
@@ -141,8 +141,8 @@ val text = compile_ {
 		}
 	}
 
-	any.native.text
-	character { any.native.number }
+	native.text
+	character { native.number }
 	does {
 		text.native
 		invoke {
@@ -159,7 +159,7 @@ val text = compile_ {
 		equals_ { "character ${'h'.nativeString}".text }
 	}
 
-	any.native.text.character
+	native.text.character
 	does {
 		character.text.length.number.equals_ { 1.number }
 		match {
@@ -172,8 +172,8 @@ val text = compile_ {
 	test { "a".text.character.equals_ { "a".text.character { 0.number } } }
 	test { "ab".text.character.equals_ { "ab".text.character } }
 
-	any.native.text
-	plus { any.native.character }
+	native.text
+	plus { native.character }
 	does { text.plus { plus.character.text } }
 
 	test {

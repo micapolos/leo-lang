@@ -20,21 +20,21 @@ val url = compile_ {
 		url
 	}
 
-	any.native.url.read
+	native.url.read
 	does {
 		url.get.method
 		invoke { parameter { list { item { read.url.native } } } }
 		text.read
 	}
 
-	any.native.url.protocol.does {
+	native.url.protocol.does {
 		protocol.url.native.invoke {
 			method { url.get.protocol }
 			parameter { empty.list }
 		}.text.protocol
 	}
 
-	any.native.url.user.does {
+	native.url.user.does {
 		user.url.native
 		invoke {
 			method { url.get.user.info }
@@ -49,14 +49,14 @@ val url = compile_ {
 		}
 	}
 
-	any.native.url.host.does {
+	native.url.host.does {
 		host.url.native.invoke {
 			method { url.get.host }
 			parameter { empty.list }
 		}.text.host
 	}
 
-	any.native.url.port.does {
+	native.url.port.does {
 		port.url.native.invoke {
 			method { url.get.port }
 			parameter { empty.list }
@@ -70,14 +70,14 @@ val url = compile_ {
 		}
 	}
 
-	any.native.url.path.does {
+	native.url.path.does {
 		path.url.native.invoke {
 			method { url.get.path }
 			parameter { empty.list }
 		}.text.path
 	}
 
-	any.native.url.query.does {
+	native.url.query.does {
 		query.url.native
 		invoke {
 			method { url.get.query }
@@ -92,7 +92,7 @@ val url = compile_ {
 		}
 	}
 
-	any.native.url.fragment.does {
+	native.url.fragment.does {
 		fragment.url.native
 		invoke {
 			method { url.get.ref }
@@ -120,7 +120,7 @@ val url = compile_ {
 	test { "http://mwiacek.com".text.url.user equals_ { none.user } }
 	test { "http://foo@mwiacek.com".text.url.user equals_ { "foo".text.user } }
 
-	any.native.url.reflect.does {
+	native.url.reflect.does {
 		url {
 			this_ { reflect.url.protocol }
 			this_ { reflect.url.user }
@@ -147,7 +147,7 @@ val url = compile_ {
 		}
 	}
 
-	any.native.url.browse
+	native.url.browse
 	does {
 		"java.awt.Desktop".text.name.class_
 		method {

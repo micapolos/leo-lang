@@ -174,7 +174,7 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 				?.sentenceOrNull
 				?.let { caseSentence ->
 					scope
-						.plus(caseSentence.word.pattern.is_(matchField.value).definition)
+						.plus(caseSentence.word().value.is_(matchField.value).definition)
 						.evaluate(caseSentence.value)
 				}
 		}

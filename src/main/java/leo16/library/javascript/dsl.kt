@@ -17,7 +17,7 @@ val dsl = compile_ {
 	mouse.x.number.is_ { "mouseX".text.expression.javascript }
 	mouse.y.number.is_ { "mouseY".text.expression.javascript }
 
-	any.native.text
+	native.text
 	does { text.expression.javascript.string }
 
 	test {
@@ -25,7 +25,7 @@ val dsl = compile_ {
 		equals_ { quote { javascript { expression { "'hello'".text } } } }
 	}
 
-	any.native.number
+	native.number
 	does { number.as_ { text }.expression.javascript }
 
 	test {

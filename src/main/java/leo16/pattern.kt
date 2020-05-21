@@ -44,7 +44,8 @@ val Stack<PatternField>.value get() = PatternValue(this)
 fun patternValue(vararg fields: PatternField) = stack(*fields).value
 fun pattern(vararg fields: PatternField) = patternValue(*fields).pattern
 val String.pattern get() = pattern(invoke(pattern()))
-operator fun String.invoke(pattern: Pattern): PatternField = PatternSentence(this, pattern).field
+fun String.sentenceTo(pattern: Pattern) = PatternSentence(this, pattern)
+operator fun String.invoke(pattern: Pattern): PatternField = sentenceTo(pattern).field
 
 val Pattern.isEmpty get() = !isAny && value.fieldStack.isEmpty
 
@@ -138,14 +139,15 @@ inline fun Field.matches(field: PatternField): Boolean =
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
 		is FunctionField -> field is FunctionPatternField && function.pattern == field.function.pattern
 		is DictionaryField -> field == _dictionary(anyPattern)
-		is NativeField -> (field is NativePatternField && native == field.native) || field == _native(anyPattern)
+		is NativeField -> (field is NativePatternField && native == field.native) || field == _native(emptyPattern)
 		is ChoiceField -> field == _choice(anyPattern)
 		is LazyField -> field == _lazy(anyPattern)
 		is EvaluatedField -> field == _evaluated(anyPattern)
 	}
 
 inline fun Sentence.matches(sentence: PatternSentence): Boolean =
-	word == sentence.word && value.matches(sentence.pattern)
+	if (sentence == _native.sentenceTo(emptyPattern)) false
+	else word == sentence.word && value.matches(sentence.pattern)
 
 inline fun Literal.matches(field: PatternField): Boolean =
 	when (this) {

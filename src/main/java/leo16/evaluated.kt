@@ -37,4 +37,4 @@ fun Evaluated.plusNormalized(field: Field): Evaluated =
 
 val Evaluated.reflectValue: Value
 	get() =
-		scope.dictionary.reflect(value.printed)
+		scope.dictionary.reflect(value).printed

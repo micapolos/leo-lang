@@ -44,7 +44,7 @@ fun String.definition(class_: Class<*>) =
 	}
 
 val nativeObjectClassDefinition =
-	value(className(objectName(nativeName(anyName())))).does {
+	value(className(objectName(nativeName()))).does {
 		val class_ = this
 			.getOrNull(className)!!
 			.getOrNull(objectName)!!
@@ -61,7 +61,7 @@ val nullNativeDefinition =
 	}
 
 val nativeBooleanDefinition =
-	value(booleanName(nativeName(anyName()))).does {
+	value(booleanName(nativeName())).does {
 		this
 			.getOrNull(booleanName)!!
 			.getOrNull(nativeName)!!
@@ -71,7 +71,7 @@ val nativeBooleanDefinition =
 	}
 
 val nameClassDefinition =
-	value(className(nameName(textName(nativeName(anyName()))))).does {
+	value(className(nameName(textName(nativeName())))).does {
 		val name = this
 			.getOrNull(className)!!
 			.getOrNull(nameName)!!
@@ -85,7 +85,7 @@ val nameClassDefinition =
 val classFieldDefinition =
 	value(
 		className(anyName()),
-		fieldName(nameName(textName(nativeName(anyName()))))
+		fieldName(nameName(textName(nativeName())))
 	).does {
 		val class_ = this
 			.getOrNull(className)!!
@@ -103,7 +103,7 @@ val classFieldDefinition =
 	}
 
 val fieldGetDefinition =
-	value(getName(fieldName(nativeName(anyName())))).does {
+	value(getName(fieldName(nativeName()))).does {
 		val field = this
 			.getOrNull(getName)!!
 			.getOrNull(fieldName)!!
@@ -115,8 +115,8 @@ val fieldGetDefinition =
 
 val nativeGetFieldDefinition =
 	value(
-		nativeName(anyName()),
-		getName(fieldName(nativeName(anyName())))
+		nativeName(),
+		getName(fieldName(nativeName()))
 	).does {
 		val object_ = this
 			.getOrNull(nativeName)!!
@@ -133,7 +133,7 @@ val nativeGetFieldDefinition =
 
 val classConstructorDefinition =
 	value(
-		className(nativeName(anyName())),
+		className(nativeName()),
 		constructorName(parameterName(_list(anyName())))
 	).does {
 		val class_ = this
@@ -159,7 +159,7 @@ val classConstructorDefinition =
 
 val constructorInvokeDefinition =
 	value(
-		constructorName(nativeName(anyName())),
+		constructorName(nativeName()),
 		invokeName(parameterName(_list(anyName())))
 	).does {
 		val constructor = this
@@ -179,9 +179,9 @@ val constructorInvokeDefinition =
 
 val classMethodDefinition =
 	value(
-		className(nativeName(anyName())),
+		className(nativeName()),
 		methodName(
-			nameName(textName(nativeName(anyName()))),
+			nameName(textName(nativeName())),
 			parameterName(_list(anyName()))
 		)
 	).does {
@@ -215,7 +215,7 @@ val classMethodDefinition =
 
 val methodInvokeDefinition =
 	value(
-		methodName(nativeName(anyName())),
+		methodName(nativeName()),
 		invokeName(parameterName(_list(anyName())))
 	).does {
 		val method = this
@@ -235,9 +235,9 @@ val methodInvokeDefinition =
 
 val nativeInvokeMethodDefinition =
 	value(
-		nativeName(anyName()),
+		nativeName(),
 		invokeName(
-			methodName(nativeName(anyName())),
+			methodName(nativeName()),
 			parameterName(_list(anyName())))
 	).does {
 		val object_ = this
@@ -261,7 +261,7 @@ val nativeInvokeMethodDefinition =
 	}
 
 val arrayStackDefinition =
-	value(_list(arrayName(nativeName(anyName())))).does {
+	value(_list(arrayName(nativeName()))).does {
 		val array = this
 			.getOrNull(_list)!!
 			.getOrNull(arrayName)!!

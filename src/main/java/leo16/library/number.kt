@@ -12,8 +12,8 @@ val number = compile_ {
 	use { big.decimal.native.library }
 	use { math.context.native.library }
 
-	any.native.number
-	plus { any.native.number }
+	native.number
+	plus { native.number }
 	does {
 		number.native
 		invoke {
@@ -25,8 +25,8 @@ val number = compile_ {
 
 	test { 2.number plus { 3.number } equals_ { 5.number } }
 
-	any.native.number
-	minus { any.native.number }
+	native.number
+	minus { native.number }
 	does {
 		number.native
 		invoke {
@@ -38,7 +38,7 @@ val number = compile_ {
 
 	test { 5.number minus { 3.number } equals_ { 2.number } }
 
-	any.native.number.negate
+	native.number.negate
 	does {
 		0.number
 		minus { negate.number }
@@ -46,8 +46,8 @@ val number = compile_ {
 
 	test { 5.number.negate.equals_ { (-5).number } }
 
-	any.native.number
-	times { any.native.number }
+	native.number
+	times { native.number }
 	does {
 		number.native
 		invoke {
@@ -64,8 +64,8 @@ val number = compile_ {
 		equals_ { "152415787532388367501905199875019052100".number }
 	}
 
-	any.native.number
-	divided { by { any.native.number } }
+	native.number
+	divided { by { native.number } }
 	does {
 		number.native
 		invoke {
@@ -86,8 +86,8 @@ val number = compile_ {
 		equals_ { 3.number }
 	}
 
-	any.native.number
-	modulo { any.native.number }
+	native.number
+	modulo { native.number }
 	does {
 		number.native
 		invoke {
@@ -108,7 +108,7 @@ val number = compile_ {
 		equals_ { 1.number }
 	}
 
-	any.native.number.square.root
+	native.number.square.root
 	does {
 		root.square.number.native
 		invoke {
@@ -121,11 +121,11 @@ val number = compile_ {
 	test { 25.number.square.root equals_ { 5.number } }
 	test { 5.number.square.root equals_ { "2.236067977499789696409173668731276".number } }
 
-	any.native.number.text
+	native.number.text
 	does { text.number.as_ { word { text } } }
 	test { 123.number.text.equals_ { "123".text } }
 
-	any.native.text.number
+	native.text.number
 	does {
 		big.decimal.string.constructor
 		invoke { parameter { list { item { number.text.native } } } }

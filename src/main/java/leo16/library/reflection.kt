@@ -226,7 +226,7 @@ val reflection = compile_ {
 		number
 	}
 
-	any.native.object_.string.does {
+	native.object_.string.does {
 		string.object_.native
 		invoke {
 			object_.string.method

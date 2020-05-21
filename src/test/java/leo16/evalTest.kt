@@ -238,20 +238,14 @@ class EvalTest {
 	fun is_() {
 		evaluate_ { zero.is_ { one } }.assertEquals { nothing_ }
 		evaluate_ { zero.is_ { one }.zero }.assertEquals { one }
-		evaluate_ { any.is_ { one }.zero }.assertEquals { one }
-
-		evaluate_ { any.text.is_ { ok }; "foo".text }.assertEquals { ok }
-		evaluate_ { any.number.is_ { ok }; 123.number }.assertEquals { ok }
+		evaluate_ { any.is_ { one }.any }.assertEquals { one }
 	}
 
 	@Test
 	fun has() {
 		evaluate_ { zero.has { one } }.assertEquals { nothing_ }
 		evaluate_ { zero.has { one }.zero }.assertEquals { zero { one } }
-		evaluate_ { any.has { one }.zero }.assertEquals { any { one } }
-
-		evaluate_ { any.text.has { ok }; "foo".text }.assertEquals { text { ok } }
-		evaluate_ { any.number.has { ok }; 123.number }.assertEquals { number { ok } }
+		evaluate_ { any.has { one }.any }.assertEquals { any { one } }
 	}
 
 	@Test
@@ -527,6 +521,14 @@ class EvalTest {
 			is_ { "world".text }
 			"hello".text
 		}.assertEquals { "world".text }
+	}
+
+	@Test
+	fun nativePattern() {
+		evaluate_ {
+			native.text.check.does { ok }
+			"hello".text.check
+		}.assertEquals { ok }
 	}
 
 	@Test

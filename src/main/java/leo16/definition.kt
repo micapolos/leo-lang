@@ -62,11 +62,11 @@ fun Value.does(apply: Value.() -> Value) =
 
 val Field.parameterDefinition: Definition
 	get() =
-		selectWord.pattern.is_(value).definition
+		selectWord().value.is_(value).definition
 
 val Value.contentParameterDefinition: Definition
 	get() =
-		_content.pattern.is_(this).definition
+		_content().value.is_(this).definition
 
 val PatternMatch.anyParameterDefinitionOrNull: Definition?
 	get() =
