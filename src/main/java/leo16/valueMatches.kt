@@ -5,7 +5,7 @@ import leo13.zipFoldOrNull
 import leo16.names.*
 
 fun Value.matches(value: Value): Boolean =
-	value == value(_anything()) || fieldsMatch(value)
+	value == value(_any()) || fieldsMatch(value)
 
 fun Value.fieldsMatch(value: Value): Boolean =
 	true
