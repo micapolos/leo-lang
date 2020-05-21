@@ -170,4 +170,33 @@ val list = compile_ {
 		}.length
 		equals_ { 3.number.length }
 	}
+
+	any.list.flat
+	does {
+		flat.list.reverse
+		fold {
+			to { word { flat } }
+			function {
+				item { any }
+				to { any }
+				does {
+					to.flat.content
+					this_ { item.content }
+					flat
+				}
+			}
+		}
+	}
+
+	test {
+		list {
+			item { 0.number }
+			item { 1.number }
+		}
+		flat.content
+		equals_ {
+			0.number
+			1.number
+		}
+	}
 }
