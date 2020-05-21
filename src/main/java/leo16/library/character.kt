@@ -18,4 +18,11 @@ val character = compile_ {
 
 	any.native.character.reflect
 	does { character { reflect.character.text } }
+
+	any.native.character.letter.boolean
+	does {
+		character.word { is_ { letter } }.method
+		invoke { parameter { list { item { boolean.letter.character.native } } } }
+		boolean
+	}
 }

@@ -13,4 +13,13 @@ val character = compile_ {
 
 	character.class_
 	is_ { "java.lang.Character".text.name.class_ }
+
+	character.word { is_ { letter } }.method
+	is_ {
+		character.class_
+		method {
+			name { "isLetter".text }
+			parameter { list { item { char.class_ } } }
+		}
+	}
 }
