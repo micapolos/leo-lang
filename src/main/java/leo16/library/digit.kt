@@ -15,36 +15,36 @@ val digit = compile_ {
 	use { number.library }
 
 	list {
-		item { 0.number.named { zero } }
-		item { 1.number.named { one } }
-		item { 2.number.named { two } }
-		item { 3.number.named { three } }
-		item { 4.number.named { four } }
-		item { 5.number.named { five } }
-		item { 6.number.named { six } }
-		item { 7.number.named { seven } }
-		item { 8.number.named { eight } }
-		item { 9.number.named { nine } }
+		item { 0.number.name { zero } }
+		item { 1.number.name { one } }
+		item { 2.number.name { two } }
+		item { 3.number.name { three } }
+		item { 4.number.name { four } }
+		item { 5.number.name { five } }
+		item { 6.number.name { six } }
+		item { 7.number.name { seven } }
+		item { 8.number.name { eight } }
+		item { 9.number.name { nine } }
 	}
 	map {
 		function {
 			any
 			does {
 				this_ {
-					named.content.digit.number
+					name.content.digit.number
 					word { is_ { number } }
 				}
 				this_ {
-					named.content.digit.character
+					name.content.digit.character
 					word { is_ { number.text.character } }
 				}
 				this_ {
 					number.digit
-					word { is_ { named.content.digit } }
+					word { is_ { name.content.digit } }
 				}
 				this_ {
 					number.text.character.digit
-					word { is_ { named.content.digit } }
+					word { is_ { name.content.digit } }
 				}
 			}
 		}
