@@ -14,6 +14,7 @@ val base = compile_ {
 	number.export
 	int.export
 	text.export
+	character.export
 	list.export
 	url.export
 	animation.export

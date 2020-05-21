@@ -2,6 +2,7 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.compile_
+import leo16.nativeString
 
 fun main() {
 	text
@@ -11,79 +12,7 @@ val text = compile_ {
 	number.import
 	reflection.import
 	list.import
-
-	import {
-		dictionary {
-			string.class_.is_ {
-				"java.lang.String".text.name.class_
-			}
-
-			kotlin.string.class_.is_ {
-				"leo16.native.StringKt".text.name.class_
-			}
-
-			char.sequence.class_.is_ {
-				"java.lang.CharSequence".text.name.class_
-			}
-
-			string.length.method.is_ {
-				string.class_
-				method {
-					name { "length".text }
-					parameter { empty.list }
-				}
-			}
-
-			string.concat.method.is_ {
-				string.class_
-				method {
-					name { "concat".text }
-					parameter {
-						list { item { string.class_ } }
-					}
-				}
-			}
-
-			string.substring.method.is_ {
-				string.class_
-				method {
-					name { "substring".text }
-					parameter {
-						list {
-							item { int.class_ }
-							item { int.class_ }
-						}
-					}
-				}
-			}
-
-			string.replace.method.is_ {
-				string.class_
-				method {
-					name { "replace".text }
-					parameter {
-						list {
-							item { char.sequence.class_ }
-							item { char.sequence.class_ }
-						}
-					}
-				}
-			}
-
-			string.split.method.is_ {
-				kotlin.string.class_
-				method {
-					name { "split".text }
-					parameter {
-						list {
-							item { string.class_ }
-							item { string.class_ }
-						}
-					}
-				}
-			}
-		}
-	}
+	use { string.native.library }
 
 	any.native.text.length
 	does {
@@ -209,5 +138,23 @@ val text = compile_ {
 				item { "two".text }
 			}
 		}
+	}
+
+	any.native.text
+	character { any.native.number }
+	does {
+		text.native
+		invoke {
+			string.char { at { int } }.method
+			parameter { list { item { character.number.int.native } } }
+		}
+		character
+	}
+
+	test {
+		"hello".text
+		character { 0.number }
+		as_ { text }
+		equals_ { "character ${'h'.nativeString}".text }
 	}
 }
