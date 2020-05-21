@@ -38,3 +38,9 @@ val reflectionDictionary =
 val printingDictionary =
 	emptyDictionary
 		.plus(printingDefinition)
+
+val leoDictionary =
+	emptyDictionary
+		.plus(leoHeadDefinition)
+		.plus(leoTailDefinition)
+		.plus(leoOpDefinition)

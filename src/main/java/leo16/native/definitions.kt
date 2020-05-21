@@ -2,6 +2,7 @@ package leo16.native
 
 import leo.base.println
 import leo13.array
+import leo13.linkOrNull
 import leo13.map
 import leo13.stack
 import leo14.untyped.typed.loadClass
@@ -21,17 +22,19 @@ import leo15.objectName
 import leo15.parameterName
 import leo15.textName
 import leo16.accessOrNull
+import leo16.contentOrNull
+import leo16.does
 import leo16.field
 import leo16.getOrNull
-import leo16.does
 import leo16.invoke
 import leo16.names.*
 import leo16.nativeField
 import leo16.nativeValue
+import leo16.onlyFieldOrNull
+import leo16.printed
+import leo16.sentenceOrNull
 import leo16.stackOrNull
 import leo16.theNativeOrNull
-import leo16.contentOrNull
-import leo16.printed
 import leo16.value
 import leo16.valueValue
 import java.lang.reflect.Constructor
@@ -277,4 +280,43 @@ val printingDefinition =
 			.getOrNull(_printing)!!
 			.contentOrNull!!
 		content.also { content.printed.println }
+	}
+
+val leoHeadDefinition =
+	value(_head(_any())).does {
+		this
+			.getOrNull(_lhs)!!
+			.contentOrNull!!
+			.fieldStack
+			.linkOrNull
+			?.value
+			?.value
+			?: this.getOrNull(_head)!!
+	}
+
+val leoTailDefinition =
+	value(_tail(_any())).does {
+		this
+			.getOrNull(_tail)!!
+			.contentOrNull!!
+			.fieldStack
+			.linkOrNull
+			?.stack
+			?.value
+			?: this.getOrNull(_tail)!!
+	}
+
+val leoOpDefinition =
+	value(_op(_any())).does {
+		this
+			.getOrNull(_op)!!
+			.contentOrNull!!
+			.fieldStack
+			.linkOrNull
+			?.value
+			?.sentenceOrNull
+			?.word
+			?.invoke()
+			?.value
+			?: this.getOrNull(_op)!!
 	}
