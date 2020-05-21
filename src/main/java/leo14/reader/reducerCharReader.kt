@@ -1,12 +1,21 @@
 package leo14.reader
 
 import leo.base.orIfNull
-import leo14.*
-import leo14.parser.*
-import leo14.untyped.itName
-import leo14.untyped.minusName
-import leo14.untyped.plusName
-import leo14.untyped.timesName
+import leo14.Reducer
+import leo14.Token
+import leo14.begin
+import leo14.parser.NameSpacedTokenParser
+import leo14.parser.NewSpacedTokenParser
+import leo14.parser.SpacedTokenParser
+import leo14.parser.canContinue
+import leo14.parser.isNew
+import leo14.parser.newSpacedTokenParser
+import leo14.parser.parse
+import leo14.parser.tokenOrNull
+import leo14.reduce
+import leo14.reducer
+import leo14.token
+import leo16.names.*
 
 data class ReducerCharReader<S>(
 	val tokenReducer: Reducer<S, Token>,
@@ -32,19 +41,51 @@ fun <S> ReducerCharReader<S>.putOperatorOrNull(char: Char): ReducerCharReader<S>
 		when (char) {
 			'+' ->
 				ReducerCharReader(
-					tokenReducer.reduce(token(begin(plusName))),
+					tokenReducer.reduce(token(begin(_plus))),
 					NewSpacedTokenParser)
 			'-' ->
 				ReducerCharReader(
-					tokenReducer.reduce(token(begin(minusName))),
+					tokenReducer.reduce(token(begin(_minus))),
 					NewSpacedTokenParser)
 			'*' ->
 				ReducerCharReader(
-					tokenReducer.reduce(token(begin(timesName))),
+					tokenReducer.reduce(token(begin(_times))),
 					NewSpacedTokenParser)
-			'>' ->
+			'=' ->
 				ReducerCharReader(
-					tokenReducer.reduce(token(begin(itName))),
+					tokenReducer.reduce(token(begin(_equals))),
+					NewSpacedTokenParser)
+			'&' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_and))),
+					NewSpacedTokenParser)
+			'|' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_or))),
+					NewSpacedTokenParser)
+			'@' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_at))),
+					NewSpacedTokenParser)
+			'%' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_percent))),
+					NewSpacedTokenParser)
+			',' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_comma))),
+					NewSpacedTokenParser)
+			'#' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_hash))),
+					NewSpacedTokenParser)
+			'/' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_by))),
+					NewSpacedTokenParser)
+			'\'' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_quote))),
 					NewSpacedTokenParser)
 			else -> null
 		}

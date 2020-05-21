@@ -38,13 +38,13 @@ val number = compile_ {
 
 	test { 5.number minus { 3.number } equals_ { 2.number } }
 
-	native.number.negate
+	native.number.minus
 	does {
 		0.number
-		minus { negate.number }
+		minus { minus.number }
 	}
 
-	test { 5.number.negate.equals_ { (-5).number } }
+	test { 5.number.minus.equals_ { (-5).number } }
 
 	native.number
 	times { native.number }

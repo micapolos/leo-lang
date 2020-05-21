@@ -14,6 +14,8 @@ val digit = compile_ {
 	use { list.library }
 	use { number.library }
 
+	any.digit.check.does { false_.boolean }
+
 	list {
 		item { 0.number.name { zero } }
 		item { 1.number.name { one } }
@@ -30,6 +32,10 @@ val digit = compile_ {
 		function {
 			any
 			does {
+				this_ {
+					word { word { word { check { name.content.digit } } } }
+					word { is_ { true_.boolean } }
+				}
 				this_ {
 					name.content.digit.number
 					word { is_ { number } }
@@ -51,6 +57,8 @@ val digit = compile_ {
 	}
 	flat.content.compile
 
+	test { ten.digit.check.equals_ { false_.boolean } }
+	test { seven.digit.check.equals_ { true_.boolean } }
 	test { seven.digit.number.equals_ { 7.number } }
 	test { seven.digit.character.equals_ { "7".text.character } }
 	test { 7.number.digit.equals_ { seven.digit } }

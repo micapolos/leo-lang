@@ -1,8 +1,10 @@
 package leo14
 
 import leo.*
+import leo.base.int
 import leo.base.runIf
 import leo.java.lang.sttyPrivateMode
+import leo14.parser.escapeChar
 import leo14.reader.*
 import leo14.typed.compiler.compiler
 import leo14.typed.compiler.js.emptyContext
