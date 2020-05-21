@@ -36,14 +36,14 @@ val digit = compile_ {
 				}
 				this_ {
 					named.content.digit.character
-					word { is_ { number.as_ { text }.character } }
+					word { is_ { number.text.character } }
 				}
 				this_ {
 					number.digit
 					word { is_ { named.content.digit } }
 				}
 				this_ {
-					number.as_ { text }.character.digit
+					number.text.character.digit
 					word { is_ { named.content.digit } }
 				}
 			}
