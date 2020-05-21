@@ -521,6 +521,15 @@ class EvalTest {
 	}
 
 	@Test
+	fun nativePatternMatch() {
+		evaluate_ {
+			"hello".text
+			is_ { "world".text }
+			"hello".text
+		}.assertEquals { "world".text }
+	}
+
+	@Test
 	fun useSomething() {
 		evaluate_ {
 			zero

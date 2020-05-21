@@ -14,7 +14,10 @@ fun measure(label: String, fn: () -> Unit) {
 }
 
 class PerformanceTest {
-	/** Last measurement: ~141ms */
+	/**
+	 * 05.05.2020: ~141ms
+	 * 20.05.2020: ~230ms
+	 */
 	@Test
 	fun fibonacci() {
 		measure("fibonacci") {

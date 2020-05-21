@@ -19,7 +19,7 @@ val Field.patternField: PatternField
 			is SentenceField -> sentence.patternField
 			is FunctionField -> function.asPatternField.patternField
 			is DictionaryField -> dictionary.printSentence.patternField
-			is NativeField -> nativePatternField
+			is NativeField -> native.nativePatternField
 			is ChoiceField -> choice.patternField
 			is LazyField -> lazy.patternField
 			is EvaluatedField -> evaluated.patternField
