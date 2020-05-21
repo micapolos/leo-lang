@@ -13,6 +13,7 @@ val text = compile_ {
 	reflection.import
 	list.import
 	use { string.native.library }
+	use { character.library }
 
 	any.native.text.length
 	does {
@@ -156,5 +157,28 @@ val text = compile_ {
 		character { 0.number }
 		as_ { text }
 		equals_ { "character ${'h'.nativeString}".text }
+	}
+
+	any.native.text.character
+	does {
+		character.text.length.number.equals_ { 1.number }
+		match {
+			false_ { content }
+			true_ { character.text.character { 0.number } }
+		}
+	}
+
+	test { "".text.character.equals_ { "".text.character } }
+	test { "a".text.character.equals_ { "a".text.character { 0.number } } }
+	test { "ab".text.character.equals_ { "ab".text.character } }
+
+	any.native.text
+	plus { any.native.character }
+	does { text.plus { plus.character.text } }
+
+	test {
+		"Hello".text
+		plus { "!".text.character { 0.number } }
+		equals_ { "Hello!".text }
 	}
 }

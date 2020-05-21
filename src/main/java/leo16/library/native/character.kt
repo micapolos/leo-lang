@@ -9,6 +9,8 @@ fun main() {
 }
 
 val character = compile_ {
+	use { reflection.library }
+
 	character.class_
 	is_ { "java.lang.Character".text.name.class_ }
 }
