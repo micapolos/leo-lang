@@ -12,7 +12,7 @@ val help = compile_ {
 					list {
 						item { clear }
 						item { leonardo }
-						item { help }
+						item { definition.list }
 					}
 				}
 				library {
@@ -26,5 +26,10 @@ val help = compile_ {
 				}
 			}
 		}
+	}
+
+	dictionary.help
+	is_ {
+		ok
 	}
 }

@@ -1,6 +1,5 @@
 package leo16
 
-import leo13.map
 import leo13.reverse
 import leo16.names.*
 
@@ -56,6 +55,16 @@ inline fun Definition.apply(evaluated: Evaluated): Evaluated? =
 		is FunctionNativeDefinition -> function.apply(evaluated.value)?.let { evaluated.set(it) }
 		is RepeatDefinition -> repeat.apply(evaluated.value)?.let { evaluated.set(it) }
 	}
+
+val Definition.patternOrNull: Pattern?
+	get() =
+		when (this) {
+			is ConstantDefinition -> constant.key.pattern
+			is FunctionDefinition -> function.pattern
+			is MacroDefinition -> macro.pattern
+			is FunctionNativeDefinition -> function.pattern
+			is RepeatDefinition -> null
+		}
 
 fun Value.does(apply: Value.() -> Value) =
 	pattern.fn(apply).definition

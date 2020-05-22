@@ -3,7 +3,10 @@ package leo16
 import leo.base.ifOrNull
 import leo.base.orIfNull
 import leo.base.runIfNotNull
+import leo13.filterNulls
 import leo13.first
+import leo13.reverse
+import leo13.map
 import leo13.mapOrNull
 import leo16.names.*
 
@@ -66,6 +69,7 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyExport(field)
 		?: applyUse(field)
 		?: applyTest(field)
+		?: applyDefinitionList(field)
 		?: resolve(field)
 
 fun Evaluated.applyValue(field: Field): Evaluated? =
@@ -172,6 +176,18 @@ fun Evaluated.applyMatch(field: Field): Evaluated? =
 						.plus(caseSentence.word().value.is_(matchField.value).definition)
 						.evaluate(caseSentence.value)
 				}
+		}
+	}
+
+fun Evaluated.applyDefinitionList(field: Field): Evaluated? =
+	field.matchPrefix(_list) { rhs ->
+		rhs.match(_definition) {
+			set(
+				scope.dictionary.definitionStack.reverse
+					.map { patternOrNull?.asValue }
+					.filterNulls
+					.valueField
+					.value)
 		}
 	}
 

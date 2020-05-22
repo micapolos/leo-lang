@@ -41,8 +41,8 @@ fun <S> ReducerCharReader<S>.putNonOperator(char: Char): ReducerCharReader<S> =
 		else if (tokenParser is NewSpacedTokenParser || tokenParser.parse(' ')?.tokenOrNull != null) putRaw(' ')
 		else putRaw(' ').putRaw(' ')
 	else if (char == '.')
-		if (tokenParser is NameSpacedTokenParser
-			|| (tokenParser is LiteralSpacedTokenParser
+		if (tokenParser is NameSpacedTokenParser) putRaw(' ').putRaw(' ')
+		else if ((tokenParser is LiteralSpacedTokenParser
 				&& tokenParser.literalParser is StringLiteralParser
 				&& tokenParser.literalParser.stringParser is EndStringParser)
 			|| (tokenParser is LiteralSpacedTokenParser
