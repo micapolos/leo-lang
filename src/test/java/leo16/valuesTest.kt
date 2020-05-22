@@ -14,12 +14,12 @@ class ValuesTest {
 	}
 
 	@Test
-	fun linkedStackValue() {
+	fun linkStackValue() {
 		stack(value(_zero()), value(_one()))
 			.valueValue
 			.assertEqualTo(
-				value(_list(_linked(
-					_previous(_list(_linked(
+				value(_list(_link(
+					_previous(_list(_link(
 						_previous(_list(_empty())),
 						_last(_zero())))),
 					_last(_one())))))

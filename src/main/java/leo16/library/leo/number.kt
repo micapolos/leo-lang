@@ -16,14 +16,14 @@ val number = compile_ {
 	does {
 		empty.list
 		append { number.digit }
-		linked.number
+		link.number
 	}
 
 	test {
 		four.digit.number
 		equals_ {
 			number {
-				linked {
+				link {
 					previous { empty.list }
 					last { four.digit }
 				}
@@ -34,8 +34,8 @@ val number = compile_ {
 	any.number
 	plus { any.digit }
 	does {
-		number.linked.list
+		number.link.list
 		append { plus.digit }
-		linked.number
+		link.number
 	}
 }

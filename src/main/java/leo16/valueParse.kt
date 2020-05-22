@@ -45,7 +45,7 @@ val Field.parseEmpty: Empty?
 
 val Field.parseLink: Link<Value, Value>?
 	get() =
-		matchPrefix(_linked) { rhs ->
+		matchPrefix(_link) { rhs ->
 			rhs.matchInfix(_last) { lhs, last ->
 				lhs.matchPrefix(_previous) { previous ->
 					previous.linkTo(last)

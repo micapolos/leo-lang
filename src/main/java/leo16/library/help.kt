@@ -6,24 +6,22 @@ import leo16.compile_
 val help = compile_ {
 	help
 	is_ {
-		quote {
-			help {
-				command {
-					list {
-						item { clear }
-						item { leonardo }
-						item { definition.list }
-					}
+		help {
+			command {
+				list {
+					item { quote { clear } }
+					item { quote { leonardo } }
+					item { quote { definition.list } }
 				}
-				library {
-					list {
-						item { use { reflection } }
-						item { use { approximate.math } }
-					}
+			}
+			library {
+				list {
+					item { quote { use { reflection } } }
+					item { quote { use { approximate.math } } }
 				}
-				manual {
-					url { "https://github.com/micapolos/leo-lang/wiki/Leonardo-language".text }
-				}
+			}
+			manual {
+				url { "https://github.com/micapolos/leo-lang/wiki/Leonardo-language".text }
 			}
 		}
 	}

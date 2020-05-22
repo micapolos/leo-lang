@@ -12,7 +12,7 @@ val list = compile_ {
 	append { any }
 	does {
 		list {
-			linked {
+			link {
 				previous { list }
 				last { append.content }
 			}
@@ -42,13 +42,13 @@ val list = compile_ {
 	does {
 		list.match {
 			empty { fold.to.content }
-			linked {
-				linked.previous.list
+			link {
+				link.previous.list
 				fold {
 					to {
 						fold.function
 						take {
-							item { linked.last.content }
+							item { link.last.content }
 							to { fold.to.content }
 						}
 					}

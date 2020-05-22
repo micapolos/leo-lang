@@ -288,16 +288,16 @@ class EvalTest {
 	}
 
 	@Test
-	fun matchLinked() {
+	fun matchLink() {
 		evaluate_ {
 			list {
 				item { zero }
 				item { one }
 				item { two }
 			}
-			match { linked { linked } }
+			match { link { link } }
 		}.assertEquals {
-			linked {
+			link {
 				previous {
 					list {
 						item { zero }

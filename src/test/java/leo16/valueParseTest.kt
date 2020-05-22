@@ -13,9 +13,9 @@ class ValueParseTest {
 	}
 
 	@Test
-	fun stackOrNull_linked() {
-		_list(_linked(
-			_previous(_list(_linked(
+	fun stackOrNull_link() {
+		_list(_link(
+			_previous(_list(_link(
 				_previous(_list(_empty())),
 				_last(_zero())))),
 			_last(_one())))
