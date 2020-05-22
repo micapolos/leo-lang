@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.assertEqualTo
+import leo15.dsl.*
 import leo16.names.*
 import kotlin.test.Test
 
@@ -9,6 +10,6 @@ class LoadTest {
 	fun _loadClass() {
 		value(_testing(_ping()))
 			.loadOrNull
-			.assertEqualTo(value(_pong()).evaluated)
+			.assertEqualTo(compile_ { ping.is_ { pong } })
 	}
 }

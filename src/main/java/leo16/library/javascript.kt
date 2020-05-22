@@ -8,7 +8,7 @@ fun main() {
 }
 
 val javascript = compile_ {
-	use { base.library }
+	use { base }
 
 	empty.javascript
 	is_ { "".text.javascript }
@@ -23,7 +23,7 @@ val javascript = compile_ {
 
 	any.text.javascript.run
 	does {
-		use { html.library }
+		use { html }
 		run.javascript.html.open
 	}
 

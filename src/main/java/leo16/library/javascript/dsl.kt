@@ -8,7 +8,7 @@ fun main() {
 }
 
 val dsl = compile_ {
-	use { javascript.library }
+	use { javascript }
 
 	animation.frame.number.is_ { "animationFrame".text.expression.javascript }
 	animation.second.number.is_ { "animationSecond".text.expression.javascript }

@@ -8,7 +8,7 @@ fun main() {
 }
 
 val animation = compile_ {
-	use { base.library }
+	use { base }
 
 	fill {
 		text {

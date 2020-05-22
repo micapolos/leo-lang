@@ -9,8 +9,8 @@ fun main() {
 }
 
 val number = compile_ {
-	use { base.library }
-	use { digit.library }
+	use { base }
+	use { digit }
 
 	any.number.natural.parser
 	plus { any.character }

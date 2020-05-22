@@ -8,10 +8,10 @@ fun main() {
 }
 
 val url = compile_ {
-	use { reflection.library }
-	use { list.library }
-	use { number.library }
-	use { url.native.library }
+	use { reflection }
+	use { list }
+	use { number }
+	use { url.native }
 
 	any.text.url
 	does {

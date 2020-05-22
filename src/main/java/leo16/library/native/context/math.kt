@@ -4,7 +4,7 @@ import leo15.dsl.*
 import leo16.compile_
 
 val math = compile_ {
-	use { reflection.library }
+	use { reflection }
 
 	math.context.class_
 	is_ { "java.math.MathContext".text.name.class_ }

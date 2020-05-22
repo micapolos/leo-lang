@@ -9,8 +9,8 @@ fun main() {
 }
 
 val number = compile_ {
-	use { digit.library }
-	use { list.library }
+	use { digit }
+	use { list }
 
 	any.digit.number
 	does {

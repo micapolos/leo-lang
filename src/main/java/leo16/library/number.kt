@@ -8,9 +8,9 @@ fun main() {
 }
 
 val number = compile_ {
-	use { reflection.library }
-	use { big.decimal.native.library }
-	use { math.context.native.library }
+	use { reflection }
+	use { big.decimal.native }
+	use { math.context.native }
 
 	native.number
 	plus { native.number }

@@ -9,7 +9,7 @@ fun main() {
 }
 
 val word = compile_ {
-	use { list.library }
+	use { list }
 
 	any.word
 	plus { any.letter }

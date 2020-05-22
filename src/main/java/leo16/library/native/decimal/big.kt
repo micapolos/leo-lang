@@ -4,9 +4,9 @@ import leo15.dsl.*
 import leo16.compile_
 
 val big = compile_ {
-	use { reflection.library }
-	use { math.context.native.library }
-	use { string.native.library }
+	use { reflection }
+	use { math.context.native }
+	use { string.native }
 
 	big.decimal.class_
 	is_ { "java.math.BigDecimal".text.name.class_ }

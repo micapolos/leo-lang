@@ -11,9 +11,9 @@ fun main() {
 }
 
 val approximate = compile_ {
-	use { reflection.library }
-	use { big.decimal.native.library }
-	use { double.native.library }
+	use { reflection }
+	use { big.decimal.native }
+	use { double.native }
 
 	native.number.approximate
 	does {

@@ -7,16 +7,16 @@ class LibraryTest {
 	@Test
 	fun test() {
 		evaluate_ {
-			import { base }
-			import { bit }
-			import { core }
-			import { int }
-			import { list }
-			import { reflection }
-			import { number }
-			import { text }
-			import { character }
-			import { url }
+			use { base }
+			use { bit }
+			use { core }
+			use { int }
+			use { list }
+			use { reflection }
+			use { number }
+			use { text }
+			use { character }
+			use { url }
 		}
 	}
 }

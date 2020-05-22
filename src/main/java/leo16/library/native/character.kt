@@ -9,7 +9,7 @@ fun main() {
 }
 
 val character = compile_ {
-	use { reflection.library }
+	use { reflection }
 
 	character.class_
 	is_ { "java.lang.Character".text.name.class_ }

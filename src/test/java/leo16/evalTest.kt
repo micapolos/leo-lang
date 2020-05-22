@@ -476,25 +476,30 @@ class EvalTest {
 	}
 
 	@Test
-	fun library() {
-		evaluate_ { ping.testing.library }.assertEquals { pong }
+	fun useLoaded() {
+		evaluate_ { use { ping.testing }.ping }.assertEquals { pong }
 	}
 
 	@Test
-	fun emptyLibrary() {
+	fun useInline() {
 		evaluate_ {
-			x.is_ { zero }
-			empty.library
-			x
-		}.assertEquals { x }
+			use {
+				ping.is_ { pong }
+			}
+			ping
+		}.assertEquals { pong }
 	}
 
 	@Test
-	fun unknownLibrary() {
+	fun useDeepInline() {
 		evaluate_ {
-			// Pick some library which does not exist.
-			unknown.library
-		}.assertEquals { library { unknown } }
+			use {
+				use {
+					ping.is_ { pong }
+				}
+			}
+			ping
+		}.assertEquals { ping }
 	}
 
 	@Test

@@ -4,8 +4,8 @@ import leo15.dsl.*
 import leo16.compile_
 
 val html = compile_ {
-	use { base.library }
-	use { reflection.library }
+	use { base }
+	use { reflection }
 
 	any.text.html.open
 	does {

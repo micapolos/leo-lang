@@ -9,7 +9,7 @@ fun main() {
 }
 
 val letter = compile_ {
-	use { list.library }
+	use { list }
 
 	any.letter.check
 	does { check.letter.error }

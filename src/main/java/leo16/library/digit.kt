@@ -9,10 +9,10 @@ fun main() {
 }
 
 val digit = compile_ {
-	use { character.library }
-	use { text.library }
-	use { list.library }
-	use { number.library }
+	use { character }
+	use { text }
+	use { list }
+	use { number }
 
 	any.digit.check.does { false_.boolean }
 

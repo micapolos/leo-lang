@@ -9,7 +9,7 @@ fun main() {
 }
 
 val double = compile_ {
-	use { reflection.library }
+	use { reflection }
 
 	java.double.class_
 	is_ { "java.lang.Double".text.name.class_ }

@@ -9,8 +9,8 @@ fun main() {
 }
 
 val string = compile_ {
-	use { reflection.library }
-	use { char.sequence.native.library }
+	use { reflection }
+	use { char.sequence.native }
 
 	string.class_
 	is_ { "java.lang.String".text.name.class_ }

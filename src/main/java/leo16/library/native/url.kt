@@ -4,7 +4,7 @@ import leo15.dsl.*
 import leo16.compile_
 
 val url = compile_ {
-	use { reflection.library }
+	use { reflection }
 
 	url.class_
 	is_ { "java.net.URL".text.name.class_ }

@@ -12,8 +12,8 @@ val text = compile_ {
 	number.import
 	reflection.import
 	list.import
-	use { string.native.library }
-	use { character.library }
+	use { string.native }
+	use { character }
 
 	native.text.length
 	does {

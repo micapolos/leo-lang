@@ -11,11 +11,11 @@ val animation = compile_ {
 	any.animation.show
 	does {
 		body {
-			use { dsl.javascript.library }
+			use { dsl.javascript }
 			show.animation.content.evaluate
 		}
 		do_ {
-			use { javascript.library }
+			use { javascript }
 			empty.javascript
 			this_ { body.content }
 			evaluate

@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.ifOrNull
+import leo.base.orIfNull
 import leo.base.runIfNotNull
 import leo13.first
 import leo13.mapOrNull
@@ -65,7 +66,6 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyExport(field)
 		?: applyUse(field)
 		?: applyTest(field)
-		?: applyLibrary(field)
 		?: resolve(field)
 
 fun Evaluated.applyValue(field: Field): Evaluated? =
@@ -120,7 +120,11 @@ fun Evaluated.applyDo(field: Field): Evaluated? =
 
 fun Evaluated.applyUse(field: Field): Evaluated? =
 	field.matchPrefix(_use) { rhs ->
-		scope.useOrNull(scope.dictionary.compile(rhs))?.evaluated(value)
+		scope.dictionary.compile(rhs).let { rhs ->
+			rhs.value.loadedOrNull
+				.orIfNull { rhs }
+				.let { rhs -> scope.useOrNull(rhs)?.evaluated(value) }
+		}
 	}
 
 fun Evaluated.applyLazy(field: Field): Evaluated? =
@@ -155,15 +159,6 @@ fun Evaluated.applyImport(field: Field): Evaluated? =
 fun Evaluated.applyExport(field: Field): Evaluated? =
 	field.matchPrefix(_export) { rhs ->
 		rhs.loadedDictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
-	}
-
-fun Evaluated.applyLibrary(field: Field): Evaluated? =
-	value.matchEmpty {
-		field.matchPrefix(_library) { rhs ->
-			rhs
-				.match(_empty) { emptyEvaluated }
-				?: rhs.loadedOrNull
-		}
 	}
 
 fun Evaluated.applyMatch(field: Field): Evaluated? =
