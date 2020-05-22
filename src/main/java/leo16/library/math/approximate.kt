@@ -14,6 +14,7 @@ val approximate = compile_ {
 	use { reflection }
 	use { big.decimal.native }
 	use { double.native }
+	use { math.native }
 
 	native.number.approximate
 	does {
@@ -167,6 +168,42 @@ val approximate = compile_ {
 		7.number.approximate
 		modulo { 4.number.approximate }
 		equals_ { 3.number.approximate }
+	}
+
+	native.approximate.sinus
+	does {
+		method { math.double.sin }
+		invoke {
+			parameter {
+				list {
+					item { sinus.approximate.native }
+				}
+			}
+		}
+		approximate
+	}
+
+	test {
+		0.number.approximate.sinus
+		equals_ { 0.number.approximate }
+	}
+
+	native.approximate.cosinus
+	does {
+		method { math.double.cos }
+		invoke {
+			parameter {
+				list {
+					item { cosinus.approximate.native }
+				}
+			}
+		}
+		approximate
+	}
+
+	test {
+		0.number.approximate.cosinus
+		equals_ { 1.number.approximate }
 	}
 
 	native.number.read
