@@ -44,7 +44,7 @@ fun Evaluated.apply(field: Field, isType: Boolean): Evaluated =
 	value.normalize(field) { set(this).applyNormalized(it, isType) }
 
 inline fun Evaluated.applyNormalized(field: Field, isType: Boolean): Evaluated =
-	applyNormalizedAndRead(field.read, isType)
+	applyNormalizedAndRead(scope.dictionary.applyRead(field), isType)
 
 inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Evaluated =
 	null

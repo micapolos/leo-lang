@@ -17,6 +17,25 @@ val big = compile_ {
 		constructor { parameter { list { item { string.class_ } } } }
 	}
 
+	big.decimal.double.constructor
+	is_ {
+		big.decimal.class_
+		constructor { parameter { list { item { double.class_ } } } }
+	}
+
+	big.decimal.double.context.constructor
+	is_ {
+		big.decimal.class_
+		constructor {
+			parameter {
+				list {
+					item { double.class_ }
+					item { math.context.class_ }
+				}
+			}
+		}
+	}
+
 	big.decimal.add.method
 	is_ {
 		big.decimal.class_
@@ -78,6 +97,15 @@ val big = compile_ {
 		method {
 			name { "sqrt".text }
 			parameter { list { item { math.context.class_ } } }
+		}
+	}
+
+	big.decimal.double.value.method
+	is_ {
+		big.decimal.class_
+		method {
+			name { "doubleValue".text }
+			parameter { empty.list }
 		}
 	}
 }

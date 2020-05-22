@@ -87,6 +87,10 @@ fun <S> ReducerCharReader<S>.putOperatorOrNull(char: Char): ReducerCharReader<S>
 				ReducerCharReader(
 					tokenReducer.reduce(token(begin(_quote))),
 					NewSpacedTokenParser)
+			'`' ->
+				ReducerCharReader(
+					tokenReducer.reduce(token(begin(_comment))),
+					NewSpacedTokenParser)
 			else -> null
 		}
 	else null

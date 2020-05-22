@@ -52,3 +52,9 @@ fun Dictionary.applyReflect(field: Field): Field =
 
 fun Dictionary.reflect(value: Value): Value =
 	value.traverse { this@reflect.applyReflect(this) }
+
+fun Dictionary.applyRead(field: Field): Field =
+	apply(_read(field.value).value.evaluated)
+		?.value
+		?.onlyFieldOrNull
+		?: field.read // TODO: implement list reading as definition, and remove ".read"
