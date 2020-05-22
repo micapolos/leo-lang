@@ -11,16 +11,18 @@ val help = compile_ {
 				command {
 					list {
 						item { clear }
-						item { debug }
-						item { help }
 						item { leonardo }
+						item { help }
 					}
 				}
 				library {
 					list {
-						item { use { approximate.math } }
 						item { use { reflection } }
+						item { use { approximate.math } }
 					}
+				}
+				manual {
+					url { "https://github.com/micapolos/leo-lang/wiki/Leonardo-language".text }
 				}
 			}
 		}
