@@ -71,7 +71,6 @@ val big = compile_ {
 			parameter {
 				list {
 					item { big.decimal.class_ }
-					item { math.context.class_ }
 				}
 			}
 		}
@@ -85,13 +84,12 @@ val big = compile_ {
 			parameter {
 				list {
 					item { big.decimal.class_ }
-					item { math.context.class_ }
 				}
 			}
 		}
 	}
 
-	big.decimal.sqrt.method
+	big.decimal.sqrt.context.method
 	is_ {
 		big.decimal.class_
 		method {

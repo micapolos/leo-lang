@@ -24,4 +24,7 @@ val math = compile_ {
 
 	math.context.decimal
 	is_ { math.context.decimal.field.get }
+
+	math.context.unlimited
+	is_ { math.context.unlimited.field.get }
 }

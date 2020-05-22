@@ -65,41 +65,59 @@ val number = compile_ {
 	}
 
 	native.number
-	divided { by { native.number } }
+	by { native.number }
 	does {
+		input.is_ { content }
 		number.native
 		invoke {
 			method { big.decimal.divide }
 			parameter {
 				list {
-					item { divided.by.number.native }
-					item { math.context.decimal }
+					item { by.number.native }
 				}
 			}
 		}
-		number
+		do_ {
+			native.object_.class_
+			equals_ { big.decimal.class_ }
+			match {
+				true_ { native.number }
+				false_ { input }
+			}
+		}
 	}
 
 	test {
-		15.number
-		divided { by { 5.number } }
+		15.number.by { 5.number }
 		equals_ { 3.number }
+	}
+
+	test {
+		15.number.by { 11.number }
+		equals_ { quote { 15.number.by { 11.number } } }
 	}
 
 	native.number
 	modulo { native.number }
 	does {
+		input.is_ { content }
 		number.native
 		invoke {
 			method { big.decimal.remainder }
 			parameter {
 				list {
 					item { modulo.number.native }
-					item { math.context.decimal }
 				}
 			}
 		}
-		number
+		do_ {
+			native.object_.class_
+			equals_ { big.decimal.class_ }
+			match {
+				true_ { native.number }
+				false_ { input }
+			}
+		}
 	}
 
 	test {
@@ -110,16 +128,24 @@ val number = compile_ {
 
 	native.number.square.root
 	does {
+		input.is_ { content }
 		root.square.number.native
 		invoke {
-			method { big.decimal.sqrt }
-			parameter { list { item { math.context.decimal } } }
+			method { big.decimal.sqrt.context }
+			parameter { list { item { math.context.unlimited } } }
 		}
-		number
+		do_ {
+			native.object_.class_
+			equals_ { big.decimal.class_ }
+			match {
+				true_ { native.number }
+				false_ { input }
+			}
+		}
 	}
 
 	test { 25.number.square.root equals_ { 5.number } }
-	test { 5.number.square.root equals_ { "2.236067977499789696409173668731276".number } }
+	test { 5.number.square.root equals_ { quote { root { square { 5.number } } } } }
 
 	native.number.text
 	does { text.number.as_ { meta { text } } }
