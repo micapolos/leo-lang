@@ -45,6 +45,7 @@ val approximate = compile_ {
 				}
 			}
 		}
+		number
 		// TODO: Handle arithmetic errors, infinity, NaN and so on...
 	}
 
