@@ -2,7 +2,6 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.compile_
-import leo16.dictionary_
 
 fun main() {
 	bit
@@ -26,4 +25,7 @@ val bit = compile_ {
 	zero.bit xor { one.bit } is_ { zero.bit }
 	one.bit xor { zero.bit } is_ { zero.bit }
 	one.bit xor { one.bit } is_ { one.bit }
+
+	zero.bit.number.is_ { 0.number }
+	one.bit.number.is_ { 1.number }
 }
