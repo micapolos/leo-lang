@@ -19,3 +19,9 @@ gradle jar
 ```
 java -jar build/libs/leo-0.1.jar
 ```
+
+##### Updating
+
+```
+git pull
+```
