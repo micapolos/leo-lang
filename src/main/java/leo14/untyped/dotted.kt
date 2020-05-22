@@ -78,7 +78,10 @@ fun AppendableIndented.leoAppend(line: ScriptLine): AppendableIndented =
 fun AppendableIndented.leoAppend(field: ScriptField): AppendableIndented =
 	if (field.rhs.isEmpty) append(field.string)
 	else if (field.isSpaceable) append(field.string).append(" ").leoAppend(field.rhs)
-	else append(field.string).indented { append("\n").leoAppend(field.rhs) }
+	else append(field.string).run {
+		if (field.string.length == 1) indented { append(" ").leoAppend(field.rhs) }
+		else indented { append("\n").leoAppend(field.rhs) }
+	}
 
 fun AppendableIndented.leoAppend(literal: Literal): AppendableIndented =
 	leoAppendEllipsized(literal.toString())

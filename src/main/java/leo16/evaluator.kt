@@ -29,7 +29,7 @@ val Evaluated.evaluator get() = nullOf<EvaluatorParent>().evaluator(this)
 val Scope.emptyEvaluator get() = emptyEvaluated.evaluator
 fun Evaluator.parent(word: String) = EvaluatorParent(this, word)
 val emptyEvaluator get() = emptyScope.emptyEvaluated.evaluator
-val baseEvaluator get() = emptyScope.emptyEvaluated.evaluator.plus(_import(_base()))
+val baseEvaluator get() = emptyScope.emptyEvaluated.evaluator.plus(_use(_base()))
 
 val Evaluator.asField: Field
 	get() =
