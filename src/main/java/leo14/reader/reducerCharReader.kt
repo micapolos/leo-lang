@@ -30,7 +30,7 @@ fun <S> ReducerCharReader<S>.put(char: Char): ReducerCharReader<S> =
 		?: putNonOperator(char)
 
 fun <S> ReducerCharReader<S>.putNonOperator(char: Char): ReducerCharReader<S> =
-	if (char == '\n')
+	if (char == '\n' || char == '.')
 		if (tokenParser is NameSpacedTokenParser) putRaw(' ').putRaw(' ')
 		else if (tokenParser is NewSpacedTokenParser || tokenParser.parse(' ')?.tokenOrNull != null) putRaw(' ')
 		else putRaw(' ').putRaw(' ')
