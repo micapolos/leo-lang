@@ -145,7 +145,7 @@ val list = compile_ {
 
 	any.list.length
 	does {
-		import { number }
+		use { number }
 		length.list
 		fold {
 			to { 0.number }

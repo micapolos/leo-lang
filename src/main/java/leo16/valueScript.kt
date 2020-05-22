@@ -28,7 +28,6 @@ val Field.defaultScriptLine: ScriptLine
 		when (this) {
 			is SentenceField -> sentence.scriptLine
 			is FunctionField -> function.scriptLine
-			is DictionaryField -> dictionary.printSentence.scriptLine
 			is NativeField -> native.nativeScriptLine
 			is ChoiceField -> choice.scriptLine
 			is LazyField -> lazy.scriptLine

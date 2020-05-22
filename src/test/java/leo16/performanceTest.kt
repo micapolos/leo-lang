@@ -22,8 +22,8 @@ class PerformanceTest {
 	fun fibonacci() {
 		measure("fibonacci") {
 			evaluate_ {
-				import { boolean }
-				import { number }
+				use { boolean }
+				use { number }
 
 				15.number
 				do_ {

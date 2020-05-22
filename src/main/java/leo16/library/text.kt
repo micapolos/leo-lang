@@ -9,9 +9,9 @@ fun main() {
 }
 
 val text = compile_ {
-	number.import
-	reflection.import
-	list.import
+	use { number }
+	use { reflection }
+	use { list }
 	use { string.native }
 	use { character }
 

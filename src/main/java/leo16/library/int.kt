@@ -8,58 +8,56 @@ fun main() {
 }
 
 val int = compile_ {
-	reflection.import
+	use { reflection }
 
-	import {
-		dictionary {
+	use {
+		integer.class_
+		is_ {
+			"leo16.native.IntKt".text.name.class_
+		}
+
+		big.decimal.int.value.method.is_ {
+			big.decimal.class_
+			method {
+				name { "intValueExact".text }
+				parameter { list }
+			}
+		}
+
+		integer.plus.method.is_ {
 			integer.class_
-			is_ {
-				"leo16.native.IntKt".text.name.class_
-			}
-
-			big.decimal.int.value.method.is_ {
-				big.decimal.class_
-				method {
-					name { "intValueExact".text }
-					parameter { list }
-				}
-			}
-
-			integer.plus.method.is_ {
-				integer.class_
-				method {
-					name { "plus".text }
-					parameter {
-						list {
-							item { int.class_ }
-							item { int.class_ }
-						}
+			method {
+				name { "plus".text }
+				parameter {
+					list {
+						item { int.class_ }
+						item { int.class_ }
 					}
 				}
 			}
+		}
 
-			integer.minus.method.is_ {
-				integer.class_
-				method {
-					name { "minus".text }
-					parameter {
-						list {
-							item { int.class_ }
-							item { int.class_ }
-						}
+		integer.minus.method.is_ {
+			integer.class_
+			method {
+				name { "minus".text }
+				parameter {
+					list {
+						item { int.class_ }
+						item { int.class_ }
 					}
 				}
 			}
+		}
 
-			integer.times.method.is_ {
-				integer.class_
-				method {
-					name { "times".text }
-					parameter {
-						list {
-							item { int.class_ }
-							item { int.class_ }
-						}
+		integer.times.method.is_ {
+			integer.class_
+			method {
+				name { "times".text }
+				parameter {
+					list {
+						item { int.class_ }
+						item { int.class_ }
 					}
 				}
 			}

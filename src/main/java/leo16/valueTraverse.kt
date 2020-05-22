@@ -10,7 +10,6 @@ fun Field.traverse(fn: Field.() -> Field): Field =
 	when (this) {
 		is SentenceField -> sentence.word.sentenceTo(sentence.value.traverse(fn)).field
 		is FunctionField -> this
-		is DictionaryField -> this
 		is NativeField -> this
 		is ChoiceField -> this
 		is LazyField -> this

@@ -16,7 +16,6 @@ fun Field.matches(field: Field): Boolean =
 	when (field) {
 		is SentenceField -> matches(field.sentence)
 		is FunctionField -> this is FunctionField && function.pattern == field.function.pattern
-		is DictionaryField -> this is DictionaryField && dictionary.matches(field.dictionary)
 		is NativeField -> this is NativeField && native == field.native
 		is ChoiceField -> matches(field.choice)
 		is LazyField -> false
@@ -33,7 +32,6 @@ fun Field.matches(sentence: Sentence): Boolean =
 	when (this) {
 		is SentenceField -> this.sentence.matches(sentence)
 		is FunctionField -> sentence.word == _function && function.pattern == sentence.value.pattern
-		is DictionaryField -> sentence == _dictionary.sentenceTo()
 		is NativeField -> sentence == _native.sentenceTo()
 		is ChoiceField -> choice.matches(sentence)
 		is LazyField -> false

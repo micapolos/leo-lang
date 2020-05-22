@@ -1,13 +1,10 @@
 package leo16.dict
 
 import kotlinx.collections.immutable.PersistentMap
-import leo.base.notNullIf
 import leo.base.orNull
 import leo.base.orNullFold
 import leo13.seq
 import leo16.ChoiceField
-import leo16.DictionaryField
-import leo16.Evaluated
 import leo16.EvaluatedField
 import leo16.Field
 import leo16.FunctionField
@@ -45,7 +42,6 @@ fun <T> Node<T>.get(field: Field): Node<T>? =
 	when (field) {
 		is SentenceField -> get(field.sentence)
 		is FunctionField -> TODO()
-		is DictionaryField -> TODO()
 		is NativeField -> TODO()
 		is ChoiceField -> TODO()
 		is LazyField -> TODO()

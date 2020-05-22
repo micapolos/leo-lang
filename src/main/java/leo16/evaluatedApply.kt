@@ -5,9 +5,9 @@ import leo.base.orIfNull
 import leo.base.runIfNotNull
 import leo13.filterNulls
 import leo13.first
-import leo13.reverse
 import leo13.map
 import leo13.mapOrNull
+import leo13.reverse
 import leo16.names.*
 
 inline fun Evaluated.apply(word: String, evaluated: Evaluated, mode: Mode): Evaluated =
@@ -23,18 +23,7 @@ inline fun Evaluated.apply(word: String, evaluated: Evaluated, isType: Boolean):
 	else applyNormalized(word, evaluated, isType)
 
 inline fun Evaluated.applyNormalized(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
-	null
-		?: applyDictionary(word, evaluated)
-		?: applyNormalized(word(evaluated.value), isType)
-
-fun Evaluated.applyDictionary(word: String, evaluated: Evaluated): Evaluated? =
-	value.matchEmpty {
-		ifOrNull(word == _dictionary) {
-			evaluated.value.matchEmpty {
-				scope.evaluated(evaluated.scope.exportDictionary.field.value)
-			}
-		}
-	}
+	applyNormalized(word(evaluated.value), isType)
 
 fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 	when (mode) {
@@ -65,7 +54,6 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyFunction(field)
 		?: applyMatch(field)
 		?: applyChoice(field)
-		?: applyImport(field)
 		?: applyExport(field)
 		?: applyUse(field)
 		?: applyTest(field)
@@ -153,11 +141,6 @@ fun Evaluated.applyChoice(field: Field): Evaluated? =
 			?.field
 			?.value
 			?.let { set(it) }
-	}
-
-fun Evaluated.applyImport(field: Field): Evaluated? =
-	field.matchPrefix(_import) { rhs ->
-		rhs.loadedDictionaryOrNull?.let { scope.import(it) }?.evaluated(value)
 	}
 
 fun Evaluated.applyExport(field: Field): Evaluated? =

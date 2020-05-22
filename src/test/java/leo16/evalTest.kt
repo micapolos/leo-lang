@@ -203,7 +203,6 @@ class EvalTest {
 	fun getSpecial() {
 		evaluate_ { the { "foo".text }.text }.assertEquals { "foo".text }
 		evaluate_ { the { 123.number }.number }.assertEquals { 123.number }
-		evaluate_ { the { dictionary { nothing_ } }.dictionary }.assertEquals { dictionary { definition { list { empty } } } }
 		evaluate_ { the { function { zero.does { one } } }.function }.assertEquals { function { zero.does { one } } }
 	}
 
@@ -432,50 +431,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun dictionary() {
-		evaluate_ {
-			dictionary { nothing_ }
-		}.assertEquals {
-			dictionary {
-				definition { list { empty } }
-			}
-		}
-
-		evaluate_ {
-			dictionary {
-				zero.is_ { one }
-			}
-		}.assertEquals {
-			dictionary {
-				definition {
-					list {
-						item {
-							definition {
-								zero.is_ { one }
-							}
-						}
-					}
-				}
-			}
-		}
-		evaluate_ {
-			dictionary {
-				zero.is_ { one }
-				one.is_ { zero }
-			}
-		}.assertEquals {
-			dictionary {
-				definition {
-					list {
-						item { definition { zero.is_ { one } } }
-						item { definition { one.is_ { one } } }
-					}
-				}
-			}
-		}
-	}
-
-	@Test
 	fun useLoaded() {
 		evaluate_ { use { ping.testing }.ping }.assertEquals { pong }
 	}
@@ -572,82 +527,6 @@ class EvalTest {
 			}
 			x
 		}.assertEquals { x }
-	}
-
-	@Test
-	fun dictionaryInsideDictionary() {
-		evaluate_ {
-			dictionary {
-				dictionary {
-					zero.is_ { one }
-				}.import
-
-				two.is_ { zero }
-			}.import.two
-		}.assertEquals { one }
-	}
-
-	@Test
-	fun import() {
-		evaluate_ { dictionary { nothing_ }.import }.assertEquals { nothing_ }
-		evaluate_ { dictionary { zero.is_ { one } }.import }.assertEquals { nothing_ }
-		evaluate_ { dictionary { zero.is_ { one } }.import.zero }.assertEquals { one }
-
-		evaluate_ { zero.import { dictionary { zero.is_ { one } } } }.assertEquals { zero }
-		evaluate_ { zero.import { dictionary { zero.is_ { one } } }.evaluate }.assertEquals { one }
-
-		evaluate_ {
-			zero.is_ { one }
-			import {
-				dictionary {
-					two.is_ { zero }
-				}
-			}
-			two
-		}.assertEquals { one }
-	}
-
-	@Test
-	fun export() {
-		evaluate_ {
-			import {
-				dictionary {
-					export {
-						dictionary {
-							zero.is_ { one }
-						}
-					}
-				}
-			}
-			zero
-		}.assertEquals { one }
-
-		evaluate_ {
-			import {
-				dictionary {
-					export {
-						dictionary {
-							zero.is_ { one }
-						}
-					}
-					two.is_ { zero }
-				}
-			}
-			two
-		}.assertEquals { zero }
-
-		evaluate_ {
-			import {
-				dictionary {
-					import {
-						dictionary {
-							zero.is_ { one }
-						}
-					}
-				}
-			}
-			zero
-		}.assertEquals { zero }
 	}
 
 	@Test
@@ -753,24 +632,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun matchesDictionary() {
-		evaluate_ {
-			dictionary { zero.is_ { one } }
-			matches { dictionary }
-		}.assertEquals { false.boolean }
-
-		evaluate_ {
-			dictionary { zero.is_ { one } }
-			matches { quote { dictionary } }
-		}.assertEquals { true.boolean }
-
-		evaluate_ {
-			dictionary { zero.is_ { one } }
-			matches { dictionary { zero.is_ { one } } }
-		}.assertEquals { true.boolean }
-	}
-
-	@Test
 	fun matchesGiving() {
 		evaluate_ {
 			function { zero.does { one } }
@@ -782,43 +643,4 @@ class EvalTest {
 			matches { function { one } }
 		}.assertEquals { false.boolean }
 	}
-
-//	@Test
-//	fun debug() {
-//		evaluate_ {
-//			zero.is_ { one }.debug
-//		}.assertDoes {
-//			evaluator {
-//				parent { nothing }
-//				evaluated {
-//					scope {
-//						dictionary {
-//							definition {
-//								list {
-//									definition {
-//										pattern { zero }
-//										body { one }
-//									}
-//								}
-//							}
-//						}
-//						export {
-//							dictionary {
-//								definition {
-//									list {
-//										definition {
-//											pattern { zero }
-//											body { one }
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//					value { nothing_ }
-//				}
-//				mode { evaluate }
-//			}
-//		}
-//	}
 }

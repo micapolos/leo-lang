@@ -13,7 +13,7 @@ class PrintingTest {
 		val bos = ByteArrayOutputStream()
 		System.setOut(PrintStream(bos))
 		evaluate_ {
-			printing.import
+			use { printing }
 			zero.printing
 		}.assertEquals { zero }
 		System.setOut(null)

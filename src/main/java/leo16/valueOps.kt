@@ -37,7 +37,6 @@ val Field.selectWord: String
 		when (this) {
 			is SentenceField -> sentence.word
 			is FunctionField -> _function
-			is DictionaryField -> _dictionary
 			is NativeField -> _native
 			is ChoiceField -> _choice
 			is LazyField -> _lazy
@@ -62,7 +61,7 @@ val Value.theNativeOrNull: The<Any?>?
 
 val Value.loadedDictionaryOrNull: Dictionary?
 	get() =
-		dictionaryOrNull ?: loadedOrNull?.scope?.exportDictionary
+		loadedOrNull?.scope?.exportDictionary
 
 val Value.wordOrNullSeq: Seq<String?>
 	get() =

@@ -18,7 +18,6 @@ val Field.patternField: PatternField
 		when (this) {
 			is SentenceField -> sentence.patternField
 			is FunctionField -> function.asPatternField.patternField
-			is DictionaryField -> dictionary.printSentence.patternField
 			is NativeField -> native.nativePatternField
 			is ChoiceField -> choice.patternField
 			is LazyField -> lazy.patternField

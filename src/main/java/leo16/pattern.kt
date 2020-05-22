@@ -138,7 +138,6 @@ inline fun Field.matches(field: PatternField): Boolean =
 	when (this) {
 		is SentenceField -> field is SentencePatternField && sentence.matches(field.sentence)
 		is FunctionField -> field is FunctionPatternField && function.pattern == field.function.pattern
-		is DictionaryField -> field == _dictionary(anyPattern)
 		is NativeField -> (field is NativePatternField && native == field.native) || field == _native(emptyPattern)
 		is ChoiceField -> field == _choice(anyPattern)
 		is LazyField -> field == _lazy(anyPattern)

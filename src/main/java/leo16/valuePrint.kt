@@ -24,7 +24,6 @@ val Field.defaultPrinted: Field
 		when (this) {
 			is SentenceField -> sentence.printSentence.field
 			is FunctionField -> function.printSentence.field
-			is DictionaryField -> dictionary.printSentence.field
 			is NativeField -> native.nativeString()
 			is ChoiceField -> choice.printSentence.field
 			is LazyField -> lazy.printSentence.field
