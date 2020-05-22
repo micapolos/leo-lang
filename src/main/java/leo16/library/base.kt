@@ -9,6 +9,7 @@ fun main() {
 
 val base = compile_ {
 	core.export
+	help.export
 	leo.export
 	boolean.export
 	printing.export

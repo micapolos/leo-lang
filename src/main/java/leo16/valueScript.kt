@@ -66,7 +66,7 @@ val Evaluated.scriptLine: ScriptLine
 val String.scriptWord: String
 	get() =
 		when (this) {
-			//_item -> "-"
+			_item -> "·"
 			else -> this
 		}
 
