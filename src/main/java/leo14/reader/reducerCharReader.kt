@@ -4,9 +4,15 @@ import leo.base.orIfNull
 import leo14.Reducer
 import leo14.Token
 import leo14.begin
+import leo14.parser.EndStringParser
+import leo14.parser.FullNumberParser
+import leo14.parser.LiteralSpacedTokenParser
+import leo14.parser.LiteralTokenParser
 import leo14.parser.NameSpacedTokenParser
 import leo14.parser.NewSpacedTokenParser
+import leo14.parser.NumberLiteralParser
 import leo14.parser.SpacedTokenParser
+import leo14.parser.StringLiteralParser
 import leo14.parser.canContinue
 import leo14.parser.isNew
 import leo14.parser.newSpacedTokenParser
@@ -30,10 +36,19 @@ fun <S> ReducerCharReader<S>.put(char: Char): ReducerCharReader<S> =
 		?: putNonOperator(char)
 
 fun <S> ReducerCharReader<S>.putNonOperator(char: Char): ReducerCharReader<S> =
-	if (char == '\n' || char == '.')
+	if (char == '\n')
 		if (tokenParser is NameSpacedTokenParser) putRaw(' ').putRaw(' ')
 		else if (tokenParser is NewSpacedTokenParser || tokenParser.parse(' ')?.tokenOrNull != null) putRaw(' ')
 		else putRaw(' ').putRaw(' ')
+	else if (char == '.')
+		if (tokenParser is NameSpacedTokenParser
+			|| (tokenParser is LiteralSpacedTokenParser
+				&& tokenParser.literalParser is StringLiteralParser
+				&& tokenParser.literalParser.stringParser is EndStringParser)
+			|| (tokenParser is LiteralSpacedTokenParser
+				&& tokenParser.literalParser is NumberLiteralParser
+				&& tokenParser.literalParser.numberParser is FullNumberParser)) putRaw(' ')
+		else putRaw(char)
 	else putRaw(char)
 
 fun <S> ReducerCharReader<S>.putOperatorOrNull(char: Char): ReducerCharReader<S>? =
