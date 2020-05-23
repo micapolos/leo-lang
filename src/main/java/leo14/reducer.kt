@@ -26,3 +26,10 @@ fun <T> Reducer<T, Token>.stringCharReducer(fragmentFn: T.() -> Fragment): Reduc
 	charReader().reducer.mapState {
 		tokenReducer.state.fragmentFn().leoStringNonTail.plus(tokenParser.coreString)
 	}
+
+fun <T> Reducer<T, Token>.promptStringCharReducer(promptToFragmentFn: T.() -> Pair<String, Fragment>): Reducer<String, Char> =
+	charReader().reducer.mapState {
+		tokenReducer.state.promptToFragmentFn().let { (prompt, fragment) ->
+			prompt + fragment.leoStringNonTail.plus(tokenParser.coreString)
+		}
+	}

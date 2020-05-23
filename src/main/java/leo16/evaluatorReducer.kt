@@ -1,8 +1,13 @@
 package leo16
 
+import leo.ansi
+import leo.blue
+import leo.magenta
+import leo.reset
+import leo13.size
 import leo14.Reducer
+import leo14.promptStringCharReducer
 import leo14.reducer
-import leo14.stringCharReducer
 
 val Evaluator.tokenReducer: Reducer<Evaluator, leo14.Token>
 	get() =
@@ -10,5 +15,10 @@ val Evaluator.tokenReducer: Reducer<Evaluator, leo14.Token>
 
 val Evaluator.stringCharReducer: Reducer<String, Char>
 	get() =
-		tokenReducer.stringCharReducer { fragment }
+		tokenReducer
+			.promptStringCharReducer { promptString to fragment }
 
+val Evaluator.promptString: String
+	get() =
+		""
+//"${ansi.magenta}=> Leonardo v0.1 ${ansi.blue}(${evaluated.scope.dictionary.definitionStack.size} definitions)${ansi.reset}\n"
