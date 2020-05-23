@@ -1,10 +1,8 @@
 package leo14
 
 import leo.*
-import leo.base.int
 import leo.base.runIf
 import leo.java.lang.sttyPrivateMode
-import leo14.parser.escapeChar
 import leo14.reader.*
 import leo14.typed.compiler.compiler
 import leo14.typed.compiler.js.emptyContext
@@ -85,7 +83,7 @@ fun run(reducer: Reducer<String, Char>) {
 					reduce(char.toChar()).apply {
 						// Pre-fetch string for error detection
 						// TODO: This solution sucks, do it properly.
-						state
+						reduced
 					}
 				}
 			}
@@ -101,7 +99,7 @@ fun run(reducer: Reducer<String, Char>) {
 }
 
 fun print(reducer: Reducer<String, Char>) {
-	printLeo(reducer.state)
+	printLeo(reducer.reduced)
 }
 
 fun printLeo(string: String) {

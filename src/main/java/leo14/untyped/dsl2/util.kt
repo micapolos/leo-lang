@@ -25,7 +25,7 @@ fun <T> Reducer<T, Token>.read(f: F): Reducer<T, Token> =
 		}
 
 fun script_(f: F): Script =
-	emptyFragment.tokenReducer.read(f).state.script
+	emptyFragment.tokenReducer.read(f).reduced.script
 
 fun main_(f: F) {
 	script_(f).eval.leoString.println

@@ -5,7 +5,7 @@ import leo14.untyped.leoString
 import leo15.dsl.*
 
 fun Evaluator.read(f: F): Evaluator =
-	tokenReducer.read(f).state
+	tokenReducer.read(f).reduced
 
 fun compile_(f: F) = emptyEvaluator.read(f).evaluated
 fun value_(f: F) = compile_(f).value

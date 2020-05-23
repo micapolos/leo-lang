@@ -50,6 +50,9 @@ val <T : Any> Stack<T>.onlyOrNull
 val <T> StackLink<T>.asStack: Stack<T> get() = stack(this)
 
 val <T> T.onlyStack get() = stack(this)
+val <T> T.stackLink get() = stack<T>().linkTo(this)
+
+val <T : Any> StackLink<T>.onlyOrNull get() = notNullIf(stack.isEmpty) { value }
 
 tailrec fun <R, T> R.fold(stack: Stack<T>, fn: R.(T) -> R): R =
 	when (stack) {
