@@ -72,6 +72,7 @@ fun field(string: String) = string fieldTo script()
 infix fun Script.linkTo(line: ScriptLine) = ScriptLink(this, line)
 infix fun String.lineTo(script: Script) = line(fieldTo(script))
 val String.line: ScriptLine get() = this lineTo script()
+val Stack<ScriptLine>.script get() = emptyScript.fold(reverse) { plus(it) }
 
 val Script.isEmpty get() = (this is UnitScript)
 val Script.linkOrNull get() = (this as? LinkScript)?.link
