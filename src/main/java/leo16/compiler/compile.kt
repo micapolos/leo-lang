@@ -23,7 +23,7 @@ fun Compiled.plus(value: Value, typeChoice: TypeChoice): Compiled? =
 	if (typeChoice.hasOneCase) plus(value, typeChoice.caseStackLink.value)
 	else typeChoice.caseStackLink.asStack.reverse.seq.indexed.mapFirstOrNull {
 		this@plus
-			.plus(index.primitive)
+			.plus(index)
 			.plus(value, this.value)
 			?.plusZeros(typeChoice.casesSize.minus(this.value.size))
 	}

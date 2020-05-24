@@ -24,15 +24,15 @@ class TypedBinaryTest {
 
 		value(_zero())
 			.compile(type)!!
-			.assertEqualTo(compiled(0.primitive))
+			.assertEqualTo(compiled(0))
 
 		value(_one())
 			.compile(type)!!
-			.assertEqualTo(compiled(1.primitive))
+			.assertEqualTo(compiled(1))
 
 		value(_two())
 			.compile(type)!!
-			.assertEqualTo(compiled(2.primitive))
+			.assertEqualTo(compiled(2))
 	}
 
 	@Test
@@ -46,7 +46,7 @@ class TypedBinaryTest {
 
 		value(_point(_x(_zero()), (_y(_one()))))
 			.compile(type)!!
-			.assertEqualTo(compiled(0.primitive, 1.primitive))
+			.assertEqualTo(compiled(0, 1))
 	}
 
 	@Test
@@ -61,14 +61,14 @@ class TypedBinaryTest {
 
 		value(_option(_absent()))
 			.compile(type)!!
-			.assertEqualTo(compiled(0.primitive).plusZeros(4))
+			.assertEqualTo(compiled(0).plusZeros(4))
 
 		value(_option(_present(_bit(_zero()))))
 			.compile(type)!!
-			.assertEqualTo(compiled(1.primitive, 0.primitive))
+			.assertEqualTo(compiled(1, 0))
 
 		value(_option(_present(_bit(_one()))))
 			.compile(type)!!
-			.assertEqualTo(compiled(1.primitive, 1.primitive))
+			.assertEqualTo(compiled(1, 1))
 	}
 }

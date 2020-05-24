@@ -1,37 +1,40 @@
 package leo16.compiler
 
+import leo.base.byte0
+import leo.base.byte1
+import leo.base.byte2
+import leo.base.byte3
 import leo.base.clampedByte
 import leo.base.fold
 import leo.base.iterate
-import leo13.Stack
-import leo13.map
-import leo13.push
-import leo13.stack
 import leo16.Field
 import leo16.invoke
 import leo16.names.*
-import leo16.plus
-import leo16.value
 
-data class Compiled(val primitiveStack: Stack<Primitive>, val byteSize: Int) {
+data class Compiled(val binary: Binary, val size: Int) {
 	override fun toString() = asField.toString()
 }
 
-val emptyCompiled get() = Compiled(stack(), 0)
+val emptyCompiled get() = Compiled(emptyBinary, 0)
 
-operator fun Compiled.plus(primitive: Primitive) =
-	Compiled(primitiveStack.push(primitive), byteSize + primitive.byteSize)
+operator fun Compiled.plus(byte: Byte) =
+	Compiled(binary.plus(byte), size.inc())
+
+operator fun Compiled.plus(int: Int): Compiled =
+	plus(Alignment.ALIGNMENT_4).plus(int.byte0).plus(int.byte1).plus(int.byte2).plus(int.byte3)
 
 tailrec operator fun Compiled.plus(alignment: Alignment): Compiled =
-	if (byteSize and alignment.mask == 0) this
-	else plus(0.clampedByte.primitive).plus(alignment)
+	if (size and alignment.mask == 0) this
+	else plus(0.clampedByte).plus(alignment)
 
 val Compiled.asField: Field
 	get() =
-		_compiled(primitiveStack.map { asField }.value.plus(_byte(_size(byteSize.asField))))
+		_compiled(
+			binary.asField,
+			_size(size.asField))
 
-fun compiled(vararg primitives: Primitive) =
-	emptyCompiled.fold(primitives) { plus(it) }
+fun compiled(vararg ints: Int) =
+	emptyCompiled.fold(ints.toList()) { plus(it) }
 
-fun Compiled.plusZeros(byteSize: Int): Compiled =
-	iterate(byteSize) { plus(0.toByte().primitive) }
+fun Compiled.plusZeros(size: Int): Compiled =
+	iterate(size) { plus(0.toByte()) }
