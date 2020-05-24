@@ -4,7 +4,7 @@ val TypeBody.isStatic: Boolean
 	get() =
 		when (this) {
 			EmptyTypeBody -> true
-			is LinkTypeBody -> link.type.isStatic && link.field.isStatic
+			is LinkTypeBody -> link.previousType.isStatic && link.lastField.isStatic
 			is AlternativeTypeBody -> false
 		}
 

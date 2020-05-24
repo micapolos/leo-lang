@@ -48,7 +48,7 @@ val SentenceTyped.valueField: Field
 
 val FunctionTyped.valueField: Field
 	get() =
-		_taking(type.input.asValue.plus(_giving(type.output.asValue)))
+		_taking(type.input.value.plus(_giving(type.output.value)))
 
 val NativeTyped.valueField: Field
 	get() =

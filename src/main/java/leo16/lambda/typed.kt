@@ -1,7 +1,9 @@
 package leo16.lambda
 
+import leo.base.fold
 import leo.base.ifOrNull
 import leo15.lambda.Term
+import leo15.lambda.idTerm
 import leo15.lambda.invoke
 import leo15.plus
 import leo15.terms.first
@@ -25,6 +27,10 @@ infix fun Term.of(sentence: TypeSentence) = SentenceTyped(this, sentence)
 infix fun Term.of(function: TypeFunction) = FunctionTyped(this, function)
 infix fun Term.of(native: Any) = NativeTyped(this, native)
 
+val emptyTyped
+	get() =
+		idTerm of emptyType
+
 val Typed.body: BodyTyped
 	get() =
 		term of type.body
@@ -45,11 +51,11 @@ val BodyTyped.linkOrNull: LinkTyped?
 
 val LinkTyped.tail: Typed
 	get() =
-		(if (type.type.isStatic || type.field.isStatic) term else term.first) of type.type
+		(if (type.previousType.isStatic || type.lastField.isStatic) term else term.first) of type.previousType
 
 val LinkTyped.head: FieldTyped
 	get() =
-		(if (type.type.isStatic || type.field.isStatic) term else term.second) of type.field
+		(if (type.previousType.isStatic || type.lastField.isStatic) term else term.second) of type.lastField
 
 val LinkTyped.onlyHead
 	get() =
@@ -100,3 +106,26 @@ fun Typed.plus(field: FieldTyped): Typed =
 	else
 		if (field.type.isStatic) term
 		else term.plus(field.term)) of type.plus(field.type)
+
+fun String.sentenceTo(typed: Typed): SentenceTyped =
+	typed.term of sentenceTo(typed.type)
+
+fun String.fieldTo(typed: Typed): FieldTyped =
+	sentenceTo(typed).field
+
+val SentenceTyped.field: FieldTyped
+	get() =
+		term of type.field
+
+operator fun String.invoke(vararg fields: FieldTyped): FieldTyped =
+	fieldTo(typed(*fields))
+
+operator fun String.invoke(typed: Typed): FieldTyped =
+	fieldTo(typed)
+
+fun typed(vararg fields: FieldTyped): Typed =
+	emptyTyped.fold(fields) { plus(it) }
+
+val NativeTyped.field: FieldTyped
+	get() =
+		term of native.nativeTypeField
