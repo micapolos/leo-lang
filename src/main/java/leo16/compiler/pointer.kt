@@ -1,14 +1,8 @@
 package leo16.compiler
 
 import leo.base.Effect
-import leo.base.bind
-import leo.base.byte0
-import leo.base.byte1
-import leo.base.byte2
-import leo.base.byte3
 import leo.base.effect
 import leo.base.fold
-import leo.base.int
 import leo.base.iterate
 import leo16.invoke
 import leo16.names.*
@@ -28,10 +22,10 @@ val Pointer.asField
 val Pointer.inc get() = memory.pointer(index.inc())
 
 fun Pointer.write(byte: Byte): Pointer =
-	inc.also { memory[index] = byte }
+	inc.also { memory.set(index, byte) }
 
 fun Pointer.write(int: Int): Pointer =
-	write(int.byte0).write(int.byte1).write(int.byte2).write(int.byte3)
+	memory.pointer(index + 4).also { memory.set(index, int) }
 
 val Pointer.writeZero: Pointer
 	get() =
@@ -42,19 +36,11 @@ fun Pointer.writeZeros(count: Int): Pointer =
 
 val Pointer.readByte: Effect<Pointer, Byte>
 	get() =
-		inc effect memory[index]
+		inc effect memory.byte(index)
 
 val Pointer.readInt: Effect<Pointer, Int>
 	get() =
-		readByte.bind { byte0 ->
-			readByte.bind { byte1 ->
-				readByte.bind { byte2 ->
-					readByte.bind { byte3 ->
-						this effect int(byte3, byte2, byte1, byte0)
-					}
-				}
-			}
-		}
+		memory.pointer(index + 4) effect memory.int(index)
 
 fun Pointer.skip(count: Int): Pointer =
 	iterate(count) { readByte.state }

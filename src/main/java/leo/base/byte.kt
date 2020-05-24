@@ -142,10 +142,10 @@ val Int.short0 get() = clampedShort
 
 fun int(hi: Short, lo: Short) = hi.uint.shl(16) or lo.uint
 
-val Int.byte3 get() = shr(24).and(0xff).clampedByte
-val Int.byte2 get() = shr(16).and(0xff).clampedByte
-val Int.byte1 get() = shr(8).and(0xff).clampedByte
-val Int.byte0 get() = and(0xff).clampedByte
+inline val Int.byte3 get() = shr(24).and(0xff).clampedByte
+inline val Int.byte2 get() = shr(16).and(0xff).clampedByte
+inline val Int.byte1 get() = shr(8).and(0xff).clampedByte
+inline val Int.byte0 get() = and(0xff).clampedByte
 
 fun int(byte3: Byte, byte2: Byte, byte1: Byte, byte0: Byte) =
 	int(short(byte3, byte2), short(byte1, byte0))
