@@ -9,6 +9,7 @@ import leo15.plus
 import leo15.terms.first
 import leo15.terms.second
 import leo15.terms.term
+import leo16.names.*
 
 data class Typed(val term: Term, val type: Type)
 data class BodyTyped(val term: Term, val body: TypeBody)
@@ -108,6 +109,12 @@ fun Typed.plus(field: FieldTyped): Typed =
 		if (field.field.isStatic) term
 		else term.plus(field.term)) of type.plus(field.field)
 
+fun Typed.plusOrNull(typed: Typed): Typed? =
+	typed.bodyTyped.match(
+		{ this },
+		{ plusOrNull(it.previousTyped)?.plus(it.lastFieldTyped) },
+		{ null })
+
 fun String.sentenceTo(typed: Typed): SentenceTyped =
 	typed.term of sentenceTo(typed.type)
 
@@ -137,3 +144,9 @@ val FieldTyped.typed
 
 val Int.typedField get() = term of intTypeField
 val String.typedField get() = term of stringTypeField
+val Boolean.typedField
+	get() = _boolean(
+		if (this) type(_false(type())).or(typed(_true(typed())))
+		else typed(_false(typed())).or(type(_true(type()))))
+
+val Typed.isEmpty get() = type.isEmpty
