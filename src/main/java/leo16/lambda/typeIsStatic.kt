@@ -1,14 +1,11 @@
 package leo16.lambda
 
-val TypeChoice.isStatic: Boolean
-	get() =
-		onlyCaseOrNull?.isStatic ?: false
-
-val TypeCase.isStatic: Boolean
+val TypeBody.isStatic: Boolean
 	get() =
 		when (this) {
-			EmptyTypeCase -> true
-			is LinkTypeCase -> link.type.isStatic && link.field.isStatic
+			EmptyTypeBody -> true
+			is LinkTypeBody -> link.type.isStatic && link.field.isStatic
+			is AlternativeTypeBody -> false
 		}
 
 val TypeField.isStatic: Boolean

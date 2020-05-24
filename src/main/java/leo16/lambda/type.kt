@@ -1,28 +1,26 @@
 package leo16.lambda
 
-import leo13.StackLink
-import leo13.onlyOrNull
-import leo13.stackLink
-
-data class Type(val choice: TypeChoice, val isStatic: Boolean) {
+data class Type(val body: TypeBody, val isStatic: Boolean) {
 	override fun toString() = asField.toString()
 }
 
-data class TypeChoice(val caseStackLink: StackLink<TypeCase>) {
+sealed class TypeBody {
 	override fun toString() = asField.toString()
 }
 
-sealed class TypeCase {
-	override fun toString() = asField.toString()
+object EmptyTypeBody : TypeBody()
+
+data class LinkTypeBody(val link: TypeLink) : TypeBody() {
+	override fun toString() = super.toString()
 }
 
-object EmptyTypeCase : TypeCase()
-
-data class LinkTypeCase(val link: TypeLink) : TypeCase() {
+data class AlternativeTypeBody(val alternative: TypeAlternative) : TypeBody() {
 	override fun toString() = super.toString()
 }
 
 data class TypeLink(val type: Type, val field: TypeField)
+
+data class TypeAlternative(val firstType: Type, val secondType: Type)
 
 sealed class TypeField {
 	override fun toString() = asField.toString()
@@ -48,21 +46,20 @@ data class TypeFunction(val input: Type, val output: Type) {
 	override fun toString() = asField.toString()
 }
 
-val TypeChoice.type get() = Type(this, isStatic)
+val emptyTypeBody: TypeBody = EmptyTypeBody
+val emptyType = emptyTypeBody.type
+val TypeBody.type: Type get() = Type(this, isStatic)
 val TypeSentence.field: TypeField get() = SentenceTypeField(this)
 val Any.nativeTypeField: TypeField get() = NativeTypeField(this)
-val StackLink<TypeCase>.choice get() = TypeChoice(this)
-val emptyTypeCase: TypeCase = EmptyTypeCase
-val emptyType get() = emptyTypeCase.choice.type
-val TypeLink.case: TypeCase get() = LinkTypeCase(this)
+val emptyTypeCase: TypeBody = EmptyTypeBody
+val TypeLink.case: TypeBody get() = LinkTypeBody(this)
 fun Type.linkTo(field: TypeField) = TypeLink(this, field)
 fun String.sentenceTo(type: Type) = TypeSentence(this, type)
-val TypeCase.choice get() = stackLink.choice
-val TypeCase.type get() = choice.type
-val TypeChoice.onlyCaseOrNull get() = caseStackLink.onlyOrNull
 val TypeField.sentenceOrNull get() = (this as? SentenceTypeField)?.sentence
 val TypeField.functionOrNull get() = (this as? FunctionTypeField)?.function
 val TypeField.nativeOrNull get() = (this as? NativeTypeField)?.native
-val Type.isEmpty get() = choice.onlyCaseOrNull?.isEmpty ?: false
-val TypeCase.isEmpty get() = (this is EmptyTypeCase)
+val Type.isEmpty get() = body.isEmpty
+val TypeBody.isEmpty get() = (this is EmptyTypeBody)
+val TypeBody.linkOrNull get() = (this as? LinkTypeBody)?.link
+val TypeBody.alternativeOrNull get() = (this as? AlternativeTypeBody)?.alternative
 fun Type.plus(field: TypeField) = linkTo(field).type

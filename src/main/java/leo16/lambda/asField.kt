@@ -1,10 +1,8 @@
 package leo16.lambda
 
-import leo13.map
 import leo16.Field
 import leo16.Value
 import leo16.emptyValue
-import leo16.field
 import leo16.invoke
 import leo16.names.*
 import leo16.nativeField
@@ -18,23 +16,22 @@ val Type?.orNullAsField: Field
 
 val Type.asField: Field
 	get() =
-		_type((if (isStatic) _static else _dynamic)(choice.asField))
+		_type(asValue)
 
-val TypeChoice.asField: Field
+val Type.asValue: Value
 	get() =
-		null
-			?: onlyCaseOrNull?.asField
-			?: _choice(caseStackLink.map { asField }.value)
+		(if (isStatic) _static else _dynamic)(body.asField).value
 
-val TypeCase.asField: Field
+val TypeBody.asField: Field
 	get() =
 		_case(asValue)
 
-val TypeCase.asValue: Value
+val TypeBody.asValue: Value
 	get() =
 		when (this) {
-			EmptyTypeCase -> emptyValue
-			is LinkTypeCase -> link.type.asField.value.plus(link.field.asField)
+			EmptyTypeBody -> emptyValue
+			is LinkTypeBody -> link.type.asValue.plus(link.field.asField)
+			is AlternativeTypeBody -> alternative.asValue
 		}
 
 val TypeField.asField: Field
@@ -56,3 +53,7 @@ val TypeFunction.asField: Field
 		_function(
 			_input(input.asField),
 			_output(output.asField))
+
+val TypeAlternative.asValue: Value
+	get() =
+		firstType.asValue.plus(_or(secondType.asValue))

@@ -2,10 +2,6 @@ package leo16.lambda
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo13.StackLink
-import leo13.asStack
-import leo13.fold
-import leo13.reverse
 import leo15.lambda.Term
 import leo15.lambda.invoke
 import leo15.plus
@@ -16,29 +12,21 @@ data class Typed<out T>(val term: Term, val type: T)
 
 infix fun <T> Term.of(type: T) = Typed(this, type)
 
-val Typed<Type>.typeChoice: Typed<TypeChoice>
+val Typed<Type>.typeBody: Typed<TypeBody>
 	get() =
-		term of type.choice
+		term of type.body
 
-val Typed<TypeChoice>.choiceOnlyCaseOrNull: Typed<TypeCase>?
+val Typed<TypeBody>.bodyLinkOrNull: Typed<TypeLink>?
 	get() =
-		type.onlyCaseOrNull?.let { typeCase ->
-			term of typeCase
-		}
+		type.linkOrNull?.let { term of it }
 
-fun Typed<TypeChoice>.plusMatch(whenTermLink: StackLink<Term>, type: Type): Typed<Type>? =
-	term.fold(whenTermLink.asStack.reverse) { invoke(it) } of type
-
-val Typed<TypeCase>.caseLinkOrNull: Typed<TypeLink>?
+val Typed<TypeBody>.bodyAlternativeOrNull: Typed<TypeAlternative>?
 	get() =
-		when (type) {
-			EmptyTypeCase -> null
-			is LinkTypeCase -> term of type.link
-		}
+		type.alternativeOrNull?.let { term of it }
 
-val Typed<TypeCase>.caseOnlyFieldOrNull: Typed<TypeField>?
+val Typed<TypeBody>.bodyOnlyFieldOrNull: Typed<TypeField>?
 	get() =
-		caseLinkOrNull?.let { link ->
+		bodyLinkOrNull?.let { link ->
 			notNullIf(link.type.type.isEmpty) {
 				link.linkField
 			}
@@ -60,13 +48,17 @@ val Typed<TypeField>.fieldFunctionOrNull: Typed<TypeFunction>?
 	get() =
 		type.functionOrNull?.let { term of it }
 
+val Typed<TypeField>.fieldNativeOrNull: Typed<Any>?
+	get() =
+		type.nativeOrNull?.let { term of it }
+
 val Typed<TypeSentence>.sentenceType: Typed<Type>
 	get() =
 		term of type.type
 
 val Typed<Type>.typeFunctionOrNull: Typed<TypeFunction>?
 	get() =
-		typeChoice.choiceOnlyCaseOrNull?.caseOnlyFieldOrNull?.fieldFunctionOrNull
+		typeBody.bodyOnlyFieldOrNull?.fieldFunctionOrNull
 
 fun Typed<Type>.typeInvokeOrNull(typed: Typed<Type>): Typed<Type>? =
 	typeFunctionOrNull?.functionInvokeOrNull(typed)
