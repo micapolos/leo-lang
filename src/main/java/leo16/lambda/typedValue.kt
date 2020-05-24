@@ -11,51 +11,51 @@ import leo16.names.*
 import leo16.nativeField
 import leo16.plus
 
-val Typed<Type>.typeValue: Value
+val Typed.value: Value
 	get() =
-		typeBody.bodyValue
+		body.value
 
-val Typed<TypeBody>.bodyValue: Value
+val BodyTyped.value: Value
 	get() =
-		bodyMatch(
+		match(
 			{ emptyValue },
-			{ it.linkValue },
-			{ it.alternativeValue }
+			{ it.value },
+			{ it.value }
 		)
 
-val Typed<TypeLink>.linkValue: Value
+val LinkTyped.value: Value
 	get() =
-		linkType.typeValue.plus(linkField.fieldValueField)
+		tail.value.plus(head.valueField)
 
-val Typed<TypeAlternative>.alternativeValue: Value
+val AlternativeTyped.value: Value
 	get() =
 		term.unsafeUnchoice(2).run {
-			if (index == 0) (value of type.firstType).typeValue
-			else (value of type.secondType).typeValue
+			if (index == 0) (value of type.firstType).value
+			else (value of type.secondType).value
 		}
 
-val Typed<TypeField>.fieldValueField: Field
+val FieldTyped.valueField: Field
 	get() =
-		when (type) {
-			is SentenceTypeField -> (term of type.sentence).sentenceValueField
-			is FunctionTypeField -> (term of type.function).functionValueField
-			is NativeTypeField -> (term of type.native).nativeValueField
-		}
+		match(
+			{ it.valueField },
+			{ it.valueField },
+			{ it.valueField }
+		)
 
-val Typed<TypeSentence>.sentenceValueField: Field
+val SentenceTyped.valueField: Field
 	get() =
-		type.word.invoke(sentenceType.typeValue)
+		type.word.invoke(rhs.value)
 
-val Typed<TypeFunction>.functionValueField: Field
+val FunctionTyped.valueField: Field
 	get() =
 		_taking(type.input.asValue.plus(_giving(type.output.asValue)))
 
-val Typed<Any>.nativeValueField: Field
+val NativeTyped.valueField: Field
 	get() =
 		term.value!!.nativeField
 
-fun Typed<Type>.or(type: Type): Typed<Type> =
+fun Typed.or(type: Type): Typed =
 	choiceTerm(2, 0, term) of (this.type or type)
 
-fun Type.or(typed: Typed<Type>): Typed<Type> =
+fun Type.or(typed: Typed): Typed =
 	choiceTerm(2, 1, typed.term) of (this or typed.type)

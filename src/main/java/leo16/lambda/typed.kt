@@ -1,84 +1,99 @@
 package leo16.lambda
 
 import leo.base.ifOrNull
-import leo.base.notNullIf
 import leo15.lambda.Term
 import leo15.lambda.invoke
 import leo15.plus
 import leo15.terms.first
 import leo15.terms.second
 
-data class Typed<out T>(val term: Term, val type: T)
+data class Typed(val term: Term, val type: Type)
+data class BodyTyped(val term: Term, val type: TypeBody)
+data class LinkTyped(val term: Term, val type: TypeLink)
+data class AlternativeTyped(val term: Term, val type: TypeAlternative)
+data class FieldTyped(val term: Term, val type: TypeField)
+data class SentenceTyped(val term: Term, val type: TypeSentence)
+data class FunctionTyped(val term: Term, val type: TypeFunction)
+data class NativeTyped(val term: Term, val native: Any)
 
-infix fun <T> Term.of(type: T) = Typed(this, type)
+infix fun Term.of(type: Type) = Typed(this, type)
+infix fun Term.of(body: TypeBody) = BodyTyped(this, body)
+infix fun Term.of(link: TypeLink) = LinkTyped(this, link)
+infix fun Term.of(alternative: TypeAlternative) = AlternativeTyped(this, alternative)
+infix fun Term.of(field: TypeField) = FieldTyped(this, field)
+infix fun Term.of(sentence: TypeSentence) = SentenceTyped(this, sentence)
+infix fun Term.of(function: TypeFunction) = FunctionTyped(this, function)
+infix fun Term.of(native: Any) = NativeTyped(this, native)
 
-val Typed<Type>.typeBody: Typed<TypeBody>
+val Typed.body: BodyTyped
 	get() =
 		term of type.body
 
-val Typed<TypeBody>.bodyLinkOrNull: Typed<TypeLink>?
-	get() =
-		type.linkOrNull?.let { term of it }
-
-val Typed<TypeBody>.bodyAlternativeOrNull: Typed<TypeAlternative>?
-	get() =
-		type.alternativeOrNull?.let { term of it }
-
-val Typed<TypeBody>.bodyOnlyFieldOrNull: Typed<TypeField>?
-	get() =
-		bodyLinkOrNull?.let { link ->
-			notNullIf(link.type.type.isEmpty) {
-				link.linkField
-			}
-		}
-
-fun <R> Typed<TypeBody>.bodyMatch(
+fun <R> BodyTyped.match(
 	emptyFn: () -> R,
-	linkFn: (Typed<TypeLink>) -> R,
-	alternativeFn: (Typed<TypeAlternative>) -> R): R =
+	linkFn: (LinkTyped) -> R,
+	alternativeFn: (AlternativeTyped) -> R): R =
 	when (type) {
 		EmptyTypeBody -> emptyFn()
 		is LinkTypeBody -> linkFn(term of type.link)
 		is AlternativeTypeBody -> alternativeFn(term of type.alternative)
 	}
 
-val Typed<TypeLink>.linkType: Typed<Type>
+val BodyTyped.linkOrNull: LinkTyped?
+	get() =
+		match({ null }, { it }, { null })
+
+val LinkTyped.tail: Typed
 	get() =
 		(if (type.type.isStatic || type.field.isStatic) term else term.first) of type.type
 
-val Typed<TypeLink>.linkField: Typed<TypeField>
+val LinkTyped.head: FieldTyped
 	get() =
 		(if (type.type.isStatic || type.field.isStatic) term else term.second) of type.field
 
-val Typed<TypeField>.fieldSentenceOrNull: Typed<TypeSentence>?
+val LinkTyped.onlyHead
+	get() =
+		ifOrNull(tail.type.isEmpty) { head }
+
+fun <R> FieldTyped.match(
+	sentenceFn: (SentenceTyped) -> R,
+	functionFn: (FunctionTyped) -> R,
+	nativeFn: (NativeTyped) -> R) =
+	when (type) {
+		is SentenceTypeField -> sentenceFn(term of type.sentence)
+		is FunctionTypeField -> functionFn(term of type.function)
+		is NativeTypeField -> nativeFn(term of type.native)
+	}
+
+val FieldTyped.sentenceOrNull: SentenceTyped?
 	get() =
 		type.sentenceOrNull?.let { term of it }
 
-val Typed<TypeField>.fieldFunctionOrNull: Typed<TypeFunction>?
+val FieldTyped.functionOrNull: FunctionTyped?
 	get() =
 		type.functionOrNull?.let { term of it }
 
-val Typed<TypeField>.fieldNativeOrNull: Typed<Any>?
+val FieldTyped.nativeOrNull: NativeTyped?
 	get() =
 		type.nativeOrNull?.let { term of it }
 
-val Typed<TypeSentence>.sentenceType: Typed<Type>
+val SentenceTyped.rhs: Typed
 	get() =
 		term of type.type
 
-val Typed<Type>.typeFunctionOrNull: Typed<TypeFunction>?
+val Typed.typeFunctionOrNull: FunctionTyped?
 	get() =
-		typeBody.bodyOnlyFieldOrNull?.fieldFunctionOrNull
+		body.linkOrNull?.onlyHead?.functionOrNull
 
-fun Typed<Type>.typeInvokeOrNull(typed: Typed<Type>): Typed<Type>? =
-	typeFunctionOrNull?.functionInvokeOrNull(typed)
+fun Typed.typeInvokeOrNull(typed: Typed): Typed? =
+	typeFunctionOrNull?.invokeOrNull(typed)
 
-fun Typed<TypeFunction>.functionInvokeOrNull(typed: Typed<Type>): Typed<Type>? =
+fun FunctionTyped.invokeOrNull(typed: Typed): Typed? =
 	ifOrNull(type.input == typed.type) {
 		term.invoke(typed.term) of type.output
 	}
 
-fun Typed<Type>.typePlus(field: Typed<TypeField>): Typed<Type> =
+fun Typed.plus(field: FieldTyped): Typed =
 	(if (type.isStatic)
 		if (field.type.isStatic) term
 		else field.term
