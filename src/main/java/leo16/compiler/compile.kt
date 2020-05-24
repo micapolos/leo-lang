@@ -19,23 +19,25 @@ fun Value.compile(type: Type): Memory? =
 fun Pointer.write(value: Value, type: Type): Pointer? =
 	this.write(value, type.choice)
 
-fun Pointer.write(value: Value, typeChoice: TypeChoice): Pointer? =
-	if (typeChoice.hasOneCase) write(value, typeChoice.caseStackLink.value)
-	else typeChoice.caseStackLink.asStack.reverse.seq.indexed.mapFirstOrNull {
-		this@write
-			.write(index)
-			.write(value, this.value)
-			?.writeZeros(typeChoice.casesSize.minus(this.value.size))
+fun Pointer.write(value: Value, choice: TypeChoice): Pointer? =
+	if (choice.hasOneCase) write(value, choice.caseStackLink.value)
+	else choice.caseStackLink.asStack.reverse.seq.indexed.mapFirstOrNull {
+		let { (index, case) ->
+			write(index).write(value, choice, case)
+		}
 	}
 
-fun Pointer.write(value: Value, typeCase: TypeCase): Pointer? =
-	when (typeCase) {
+fun Pointer.write(value: Value, choice: TypeChoice, case: TypeCase): Pointer? =
+	write(value, case)?.writeZeros(choice.slackSize(case))
+
+fun Pointer.write(value: Value, case: TypeCase): Pointer? =
+	when (case) {
 		EmptyTypeCase -> this
 		is LinkTypeCase -> value.fieldStack.linkOrNull
 			?.let { valueFieldStack ->
 				this
-					.write(valueFieldStack.stack.value, typeCase.link.type)
-					?.write(valueFieldStack.value, typeCase.link.field)
+					.write(valueFieldStack.stack.value, case.link.type)
+					?.write(valueFieldStack.value, case.link.field)
 			}
 	}
 

@@ -55,3 +55,4 @@ fun String.sentenceTo(type: Type) = TypeSentence(this, type)
 val TypeCase.choice get() = stackLink.choice
 val TypeCase.type get() = choice.type
 val TypeChoice.hasOneCase get() = caseStackLink.stack.isEmpty
+fun TypeChoice.slackSize(case: TypeCase) = casesSize - case.size
