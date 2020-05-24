@@ -28,3 +28,7 @@ infix fun Alignment.and(alignment: Alignment): Alignment =
 val Alignment.mask: Int
 	get() =
 		size - 1
+
+fun Alignment.align(int: Int): Int =
+	if (int.and(mask) == 0) int
+	else int.and(mask.inv()).plus(size)

@@ -19,4 +19,15 @@ class AlignMaskTest {
 		Alignment.ALIGNMENT_4.mask.assertEqualTo(0b11)
 		Alignment.ALIGNMENT_8.mask.assertEqualTo(0b111)
 	}
+
+	@Test
+	fun align() {
+		Alignment.ALIGNMENT_4.align(0).assertEqualTo(0)
+		Alignment.ALIGNMENT_4.align(1).assertEqualTo(4)
+		Alignment.ALIGNMENT_4.align(3).assertEqualTo(4)
+		Alignment.ALIGNMENT_4.align(4).assertEqualTo(4)
+		Alignment.ALIGNMENT_4.align(5).assertEqualTo(8)
+		Alignment.ALIGNMENT_4.align(7).assertEqualTo(8)
+		Alignment.ALIGNMENT_4.align(8).assertEqualTo(8)
+	}
 }
