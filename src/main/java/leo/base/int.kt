@@ -36,6 +36,11 @@ val Int.bitMaskOrNull: Int?
 			else -> null
 		}
 
+val Int.nearestPot: Int
+	get() =
+		if (this == 0) 0
+		else 1.shl(bitCount)
+
 val Int.pow2: Int
 	get() =
 		when {
@@ -43,12 +48,17 @@ val Int.pow2: Int
 			else -> 1.shl(this)
 		}
 
-fun Int.bitSequence(count: Int): Seq<EnumBit> =
+fun Int.bitSeq(count: Int): Seq<EnumBit> =
 	Seq {
 		if (count == 0) null
-		else and((count - 1).pow2).enumBit then bitSequence(count - 1)
+		else and((count - 1).pow2).enumBit then bitSeq(count - 1)
 	}
 
+fun Int.littleEndianBitSeq(bitCount: Int): Seq<EnumBit> =
+	Seq {
+		if (bitCount == 0) null
+		else and(1).enumBit.then(ushr(1).littleEndianBitSeq(bitCount.dec()))
+	}
 
 val maxInt = Integer.MAX_VALUE
 

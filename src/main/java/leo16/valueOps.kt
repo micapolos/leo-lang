@@ -7,7 +7,6 @@ import leo.base.reverseStack
 import leo.base.seq
 import leo.base.then
 import leo13.Stack
-import leo13.map
 import leo13.mapFirst
 import leo13.mapOrNull
 import leo13.onlyOrNull
@@ -93,3 +92,7 @@ fun Value.pairOrNull(word: String): Pair<Value, Value>? =
 val Value.hashBigDecimal
 	get() =
 		hashCode().unsignedBigDecimal
+
+fun <T : Any> T?.orNullAsField(word: String, fn: T.() -> Field): Field =
+	if (this == null) word(_none())
+	else fn()

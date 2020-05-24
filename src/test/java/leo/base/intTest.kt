@@ -40,9 +40,9 @@ class IntTest {
 
 	@Test
 	fun bits() {
-		13.bitSequence(0).map(EnumBit::int).assertContains()
-		13.bitSequence(4).map(EnumBit::int).assertContains(1, 1, 0, 1)
-		13.bitSequence(64).map(EnumBit::int).assertContains(
+		13.bitSeq(0).map(EnumBit::int).assertContains()
+		13.bitSeq(4).map(EnumBit::int).assertContains(1, 1, 0, 1)
+		13.bitSeq(64).map(EnumBit::int).assertContains(
 			0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0,
@@ -63,5 +63,18 @@ class IntTest {
 		0x12345678.setByte(2, 0x01).assertEqualTo(0x12015678)
 		0x12345678.setByte(1, 0x01).assertEqualTo(0x12340178)
 		0x12345678.setByte(0, 0x01).assertEqualTo(0x12345601)
+	}
+
+	@Test
+	fun nearestPot() {
+		0.nearestPot.assertEqualTo(0)
+		1.nearestPot.assertEqualTo(1)
+		2.nearestPot.assertEqualTo(2)
+		3.nearestPot.assertEqualTo(4)
+		4.nearestPot.assertEqualTo(4)
+		7.nearestPot.assertEqualTo(8)
+		8.nearestPot.assertEqualTo(8)
+		15.nearestPot.assertEqualTo(16)
+		16.nearestPot.assertEqualTo(16)
 	}
 }
