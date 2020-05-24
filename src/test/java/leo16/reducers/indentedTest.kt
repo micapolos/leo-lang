@@ -7,7 +7,7 @@ class IndentedTest {
 	@Test
 	fun indented() {
 		reduceString {
-			indented(3).charReduce("foo\nbar\nzoo\n")
+			indented(3).charReduce("foo\nbar\nzoo")
 		}.assertEqualTo("foo\n      bar\n      zoo")
 	}
 }
