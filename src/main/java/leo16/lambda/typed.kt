@@ -32,6 +32,16 @@ val Typed<TypeBody>.bodyOnlyFieldOrNull: Typed<TypeField>?
 			}
 		}
 
+fun <R> Typed<TypeBody>.bodyMatch(
+	emptyFn: () -> R,
+	linkFn: (Typed<TypeLink>) -> R,
+	alternativeFn: (Typed<TypeAlternative>) -> R): R =
+	when (type) {
+		EmptyTypeBody -> emptyFn()
+		is LinkTypeBody -> linkFn(term of type.link)
+		is AlternativeTypeBody -> alternativeFn(term of type.alternative)
+	}
+
 val Typed<TypeLink>.linkType: Typed<Type>
 	get() =
 		(if (type.type.isStatic || type.field.isStatic) term else term.first) of type.type
