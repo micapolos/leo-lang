@@ -58,10 +58,6 @@ val LinkTyped.lastFieldTyped: FieldTyped
 	get() =
 		(if (link.previousType.isStatic || link.lastField.isStatic) term else term.second) of link.lastField
 
-val Typed.contentTypedOrNull: Typed?
-	get() =
-		bodyTyped.linkTypedOrNull?.onlyFieldTyped?.sentenceOrNull?.rhsTyped
-
 val LinkTyped.onlyFieldTyped
 	get() =
 		ifOrNull(previousTyped.type.isEmpty) { lastFieldTyped }

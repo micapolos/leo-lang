@@ -27,4 +27,17 @@ class TypedOpsTest {
 				getOrNull(_z).assertEqualTo(null)
 			}
 	}
+
+	@Test
+	fun contentOrNull() {
+		typed(
+			_point(
+				_x(10.typedField),
+				_y(20.typedField)))
+			.contentOrNull!!
+			.assertEqualTo(
+				typed(
+					_x(10.typedField),
+					_y(20.typedField)))
+	}
 }
