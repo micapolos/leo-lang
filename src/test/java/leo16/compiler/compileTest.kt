@@ -11,11 +11,11 @@ class TypedBinaryTest {
 	fun staticValues() {
 		value(_zero())
 			.compile(value(_zero()).typeOrNull!!)!!
-			.assertEqualTo(compiled())
+			.assertEqualTo(memory())
 
 		value(_point(_x(_zero()), _y(_zero())))
 			.compile(value(_point(_x(_zero()), _y(_zero()))).typeOrNull!!)!!
-			.assertEqualTo(compiled())
+			.assertEqualTo(memory())
 	}
 
 	@Test
@@ -24,15 +24,15 @@ class TypedBinaryTest {
 
 		value(_zero())
 			.compile(type)!!
-			.assertEqualTo(compiled(0))
+			.assertEqualTo(memory(0))
 
 		value(_one())
 			.compile(type)!!
-			.assertEqualTo(compiled(1))
+			.assertEqualTo(memory(1))
 
 		value(_two())
 			.compile(type)!!
-			.assertEqualTo(compiled(2))
+			.assertEqualTo(memory(2))
 	}
 
 	@Test
@@ -46,7 +46,7 @@ class TypedBinaryTest {
 
 		value(_point(_x(_zero()), (_y(_one()))))
 			.compile(type)!!
-			.assertEqualTo(compiled(0, 1))
+			.assertEqualTo(memory(0, 1))
 	}
 
 	@Test
@@ -61,14 +61,14 @@ class TypedBinaryTest {
 
 		value(_option(_absent()))
 			.compile(type)!!
-			.assertEqualTo(compiled(0).plusZeros(4))
+			.assertEqualTo(memory(0, 0))
 
 		value(_option(_present(_bit(_zero()))))
 			.compile(type)!!
-			.assertEqualTo(compiled(1, 0))
+			.assertEqualTo(memory(1, 0))
 
 		value(_option(_present(_bit(_one()))))
 			.compile(type)!!
-			.assertEqualTo(compiled(1, 1))
+			.assertEqualTo(memory(1, 1))
 	}
 }

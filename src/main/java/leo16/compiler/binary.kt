@@ -19,7 +19,7 @@ data class Binary(val byteStack: Stack<Byte>) {
 val Stack<Byte>.binary get() = Binary(this)
 val emptyBinary = Binary(stack())
 
-fun Binary.plus(byte: Byte): Binary =
+fun Binary.write(byte: Byte): Binary =
 	byteStack.push(byte).binary
 
 val Binary.asField: Field

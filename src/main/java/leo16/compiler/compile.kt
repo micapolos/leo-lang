@@ -13,39 +13,39 @@ import leo16.Value
 import leo16.sentenceOrNull
 import leo16.value
 
-fun Value.compile(type: Type): Compiled? =
-	emptyCompiled.plus(this, type)
+fun Value.compile(type: Type): Memory? =
+	type.size.sizeMemory.startPointer.write(this, type)?.memory
 
-fun Compiled.plus(value: Value, type: Type): Compiled? =
-	plus(value, type.choice)
+fun Pointer.write(value: Value, type: Type): Pointer? =
+	this.write(value, type.choice)
 
-fun Compiled.plus(value: Value, typeChoice: TypeChoice): Compiled? =
-	if (typeChoice.hasOneCase) plus(value, typeChoice.caseStackLink.value)
+fun Pointer.write(value: Value, typeChoice: TypeChoice): Pointer? =
+	if (typeChoice.hasOneCase) write(value, typeChoice.caseStackLink.value)
 	else typeChoice.caseStackLink.asStack.reverse.seq.indexed.mapFirstOrNull {
-		this@plus
-			.plus(index)
-			.plus(value, this.value)
-			?.plusZeros(typeChoice.casesSize.minus(this.value.size))
+		this@write
+			.write(index)
+			.write(value, this.value)
+			?.writeZeros(typeChoice.casesSize.minus(this.value.size))
 	}
 
-fun Compiled.plus(value: Value, typeCase: TypeCase): Compiled? =
+fun Pointer.write(value: Value, typeCase: TypeCase): Pointer? =
 	when (typeCase) {
 		EmptyTypeCase -> this
 		is LinkTypeCase -> value.fieldStack.linkOrNull
 			?.let { valueFieldStack ->
 				this
-					.plus(valueFieldStack.stack.value, typeCase.link.type)
-					?.plus(valueFieldStack.value, typeCase.link.field)
+					.write(valueFieldStack.stack.value, typeCase.link.type)
+					?.write(valueFieldStack.value, typeCase.link.field)
 			}
 	}
 
-fun Compiled.plus(field: Field, typeField: TypeField): Compiled? =
+fun Pointer.write(field: Field, typeField: TypeField): Pointer? =
 	when (typeField) {
-		is SentenceTypeField -> field.sentenceOrNull?.let { plus(it, typeField.sentence) }
+		is SentenceTypeField -> field.sentenceOrNull?.let { write(it, typeField.sentence) }
 		is FunctionTypeField -> TODO()
 	}
 
-fun Compiled.plus(sentence: Sentence, typeSentence: TypeSentence): Compiled? =
+fun Pointer.write(sentence: Sentence, typeSentence: TypeSentence): Pointer? =
 	ifOrNull(sentence.word == typeSentence.word) {
-		plus(sentence.value, typeSentence.type)
+		write(sentence.value, typeSentence.type)
 	}
