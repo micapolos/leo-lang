@@ -1,6 +1,9 @@
 package leo16.compiler
 
+import leo13.Link
 import leo13.Stack
+import leo13.linkOrNull
+import leo13.linkTo
 import leo13.map
 import leo13.push
 import leo13.stack
@@ -22,3 +25,7 @@ fun Binary.plus(byte: Byte): Binary =
 val Binary.asField: Field
 	get() =
 		_binary.invoke(byteStack.map { asField }.value)
+
+val Binary.readByte: Link<Binary, Byte>?
+	get() =
+		byteStack.linkOrNull?.run { stack.binary linkTo value }

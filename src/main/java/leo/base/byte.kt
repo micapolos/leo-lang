@@ -147,6 +147,9 @@ val Int.byte2 get() = shr(16).and(0xff).clampedByte
 val Int.byte1 get() = shr(8).and(0xff).clampedByte
 val Int.byte0 get() = and(0xff).clampedByte
 
+fun int(byte3: Byte, byte2: Byte, byte1: Byte, byte0: Byte) =
+	int(short(byte3, byte2), short(byte1, byte0))
+
 inline fun Int.updateByte3(fn: Byte.() -> Byte) = byte3.fn().int.and(0xFF).shl(24).or(and(0x00FFFFFF))
 inline fun Int.updateByte2(fn: Byte.() -> Byte) = byte2.fn().int.and(0xFF).shl(16).or(and(0xFF00FFFF.toInt()))
 inline fun Int.updateByte1(fn: Byte.() -> Byte) = byte1.fn().int.and(0xFF).shl(8).or(and(0xFFFF00FF.toInt()))
