@@ -5,10 +5,10 @@ import leo16.names.*
 import kotlin.math.max
 
 enum class Alignment {
-	ALIGNMENT_1,
-	ALIGNMENT_2,
-	ALIGNMENT_4,
-	ALIGNMENT_8;
+	BYTE,
+	SHORT,
+	INT,
+	LONG;
 
 	override fun toString() = asField.toString()
 }
@@ -16,7 +16,7 @@ enum class Alignment {
 val Alignment.asField get() = _alignment(size.toString()())
 
 val alignments = Alignment.values().toList()
-val indexAlignment = Alignment.ALIGNMENT_4
+val indexAlignment = Alignment.INT
 
 val Alignment.size: Int
 	get() =

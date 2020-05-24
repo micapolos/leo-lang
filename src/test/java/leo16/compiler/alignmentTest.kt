@@ -6,28 +6,28 @@ import kotlin.test.Test
 class AlignMaskTest {
 	@Test
 	fun alignmentByteSize() {
-		Alignment.ALIGNMENT_1.size.assertEqualTo(1)
-		Alignment.ALIGNMENT_2.size.assertEqualTo(2)
-		Alignment.ALIGNMENT_4.size.assertEqualTo(4)
-		Alignment.ALIGNMENT_8.size.assertEqualTo(8)
+		Alignment.BYTE.size.assertEqualTo(1)
+		Alignment.SHORT.size.assertEqualTo(2)
+		Alignment.INT.size.assertEqualTo(4)
+		Alignment.LONG.size.assertEqualTo(8)
 	}
 
 	@Test
 	fun alignmentIndexMask() {
-		Alignment.ALIGNMENT_1.mask.assertEqualTo(0b0)
-		Alignment.ALIGNMENT_2.mask.assertEqualTo(0b1)
-		Alignment.ALIGNMENT_4.mask.assertEqualTo(0b11)
-		Alignment.ALIGNMENT_8.mask.assertEqualTo(0b111)
+		Alignment.BYTE.mask.assertEqualTo(0b0)
+		Alignment.SHORT.mask.assertEqualTo(0b1)
+		Alignment.INT.mask.assertEqualTo(0b11)
+		Alignment.LONG.mask.assertEqualTo(0b111)
 	}
 
 	@Test
 	fun align() {
-		Alignment.ALIGNMENT_4.align(0).assertEqualTo(0)
-		Alignment.ALIGNMENT_4.align(1).assertEqualTo(4)
-		Alignment.ALIGNMENT_4.align(3).assertEqualTo(4)
-		Alignment.ALIGNMENT_4.align(4).assertEqualTo(4)
-		Alignment.ALIGNMENT_4.align(5).assertEqualTo(8)
-		Alignment.ALIGNMENT_4.align(7).assertEqualTo(8)
-		Alignment.ALIGNMENT_4.align(8).assertEqualTo(8)
+		Alignment.INT.align(0).assertEqualTo(0)
+		Alignment.INT.align(1).assertEqualTo(4)
+		Alignment.INT.align(3).assertEqualTo(4)
+		Alignment.INT.align(4).assertEqualTo(4)
+		Alignment.INT.align(5).assertEqualTo(8)
+		Alignment.INT.align(7).assertEqualTo(8)
+		Alignment.INT.align(8).assertEqualTo(8)
 	}
 }

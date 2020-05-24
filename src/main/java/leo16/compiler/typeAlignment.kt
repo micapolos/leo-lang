@@ -10,7 +10,7 @@ val TypeChoice.alignment: Alignment
 val TypeCase.alignment: Alignment
 	get() =
 		when (this) {
-			EmptyTypeCase -> Alignment.ALIGNMENT_1
+			EmptyTypeCase -> Alignment.BYTE
 			is LinkTypeCase -> link.type.alignment and link.field.alignment
 		}
 
