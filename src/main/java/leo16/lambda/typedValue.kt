@@ -1,5 +1,6 @@
 package leo16.lambda
 
+import leo15.lambda.choiceTerm
 import leo15.lambda.unsafeUnchoice
 import leo15.lambda.value
 import leo16.Field
@@ -52,3 +53,9 @@ val Typed<TypeFunction>.functionValueField: Field
 val Typed<Any>.nativeValueField: Field
 	get() =
 		term.value!!.nativeField
+
+fun Typed<Type>.or(type: Type): Typed<Type> =
+	choiceTerm(2, 0, term) of (this.type or type)
+
+fun Type.or(typed: Typed<Type>): Typed<Type> =
+	choiceTerm(2, 1, typed.term) of (this or typed.type)

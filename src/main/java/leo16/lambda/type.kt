@@ -63,3 +63,6 @@ val TypeBody.isEmpty get() = (this is EmptyTypeBody)
 val TypeBody.linkOrNull get() = (this as? LinkTypeBody)?.link
 val TypeBody.alternativeOrNull get() = (this as? AlternativeTypeBody)?.alternative
 fun Type.plus(field: TypeField) = linkTo(field).type
+fun Type.alternative(type: Type) = TypeAlternative(this, type)
+val TypeAlternative.body: TypeBody get() = AlternativeTypeBody(this)
+infix fun Type.or(type: Type) = alternative(type).body.type
