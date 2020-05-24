@@ -8,14 +8,15 @@ import leo15.lambda.invoke
 import leo15.plus
 import leo15.terms.first
 import leo15.terms.second
+import leo15.terms.term
 
 data class Typed(val term: Term, val type: Type)
-data class BodyTyped(val term: Term, val type: TypeBody)
-data class LinkTyped(val term: Term, val type: TypeLink)
-data class AlternativeTyped(val term: Term, val type: TypeAlternative)
-data class FieldTyped(val term: Term, val type: TypeField)
-data class SentenceTyped(val term: Term, val type: TypeSentence)
-data class FunctionTyped(val term: Term, val type: TypeFunction)
+data class BodyTyped(val term: Term, val body: TypeBody)
+data class LinkTyped(val term: Term, val link: TypeLink)
+data class AlternativeTyped(val term: Term, val alternative: TypeAlternative)
+data class FieldTyped(val term: Term, val field: TypeField)
+data class SentenceTyped(val term: Term, val sentence: TypeSentence)
+data class FunctionTyped(val term: Term, val function: TypeFunction)
 data class NativeTyped(val term: Term, val native: Any)
 
 infix fun Term.of(type: Type) = Typed(this, type)
@@ -31,7 +32,7 @@ val emptyTyped
 	get() =
 		idTerm of emptyType
 
-val Typed.body: BodyTyped
+val Typed.bodyTyped: BodyTyped
 	get() =
 		term of type.body
 
@@ -39,83 +40,87 @@ fun <R> BodyTyped.match(
 	emptyFn: () -> R,
 	linkFn: (LinkTyped) -> R,
 	alternativeFn: (AlternativeTyped) -> R): R =
-	when (type) {
+	when (body) {
 		EmptyTypeBody -> emptyFn()
-		is LinkTypeBody -> linkFn(term of type.link)
-		is AlternativeTypeBody -> alternativeFn(term of type.alternative)
+		is LinkTypeBody -> linkFn(term of body.link)
+		is AlternativeTypeBody -> alternativeFn(term of body.alternative)
 	}
 
-val BodyTyped.linkOrNull: LinkTyped?
+val BodyTyped.linkTypedOrNull: LinkTyped?
 	get() =
 		match({ null }, { it }, { null })
 
-val LinkTyped.tail: Typed
+val LinkTyped.previousTyped: Typed
 	get() =
-		(if (type.previousType.isStatic || type.lastField.isStatic) term else term.first) of type.previousType
+		(if (link.previousType.isStatic || link.lastField.isStatic) term else term.first) of link.previousType
 
-val LinkTyped.head: FieldTyped
+val LinkTyped.lastFieldTyped: FieldTyped
 	get() =
-		(if (type.previousType.isStatic || type.lastField.isStatic) term else term.second) of type.lastField
+		(if (link.previousType.isStatic || link.lastField.isStatic) term else term.second) of link.lastField
 
-val LinkTyped.onlyHead
+val Typed.contentTypedOrNull: Typed?
 	get() =
-		ifOrNull(tail.type.isEmpty) { head }
+		bodyTyped.linkTypedOrNull?.onlyFieldTyped?.sentenceOrNull?.rhsTyped
+
+val LinkTyped.onlyFieldTyped
+	get() =
+		ifOrNull(previousTyped.type.isEmpty) { lastFieldTyped }
 
 fun <R> FieldTyped.match(
 	sentenceFn: (SentenceTyped) -> R,
 	functionFn: (FunctionTyped) -> R,
 	nativeFn: (NativeTyped) -> R) =
-	when (type) {
-		is SentenceTypeField -> sentenceFn(term of type.sentence)
-		is FunctionTypeField -> functionFn(term of type.function)
-		is NativeTypeField -> nativeFn(term of type.native)
+	when (field) {
+		is SentenceTypeField -> sentenceFn(term of field.sentence)
+		is FunctionTypeField -> functionFn(term of field.function)
+		is NativeTypeField -> nativeFn(term of field.native)
 	}
 
 val FieldTyped.sentenceOrNull: SentenceTyped?
 	get() =
-		type.sentenceOrNull?.let { term of it }
+		field.sentenceOrNull?.let { term of it }
 
 val FieldTyped.functionOrNull: FunctionTyped?
 	get() =
-		type.functionOrNull?.let { term of it }
+		field.functionOrNull?.let { term of it }
 
 val FieldTyped.nativeOrNull: NativeTyped?
 	get() =
-		type.nativeOrNull?.let { term of it }
+		field.nativeOrNull?.let { term of it }
 
-val SentenceTyped.rhs: Typed
+val SentenceTyped.rhsTyped: Typed
 	get() =
-		term of type.type
+		term of sentence.type
 
 val Typed.typeFunctionOrNull: FunctionTyped?
 	get() =
-		body.linkOrNull?.onlyHead?.functionOrNull
+		bodyTyped.linkTypedOrNull?.onlyFieldTyped?.functionOrNull
 
 fun Typed.typeInvokeOrNull(typed: Typed): Typed? =
 	typeFunctionOrNull?.invokeOrNull(typed)
 
 fun FunctionTyped.invokeOrNull(typed: Typed): Typed? =
-	ifOrNull(type.input == typed.type) {
-		term.invoke(typed.term) of type.output
+	ifOrNull(function.input == typed.type) {
+		term.invoke(typed.term) of function.output
 	}
 
 fun Typed.plus(field: FieldTyped): Typed =
 	(if (type.isStatic)
-		if (field.type.isStatic) term
+		if (field.field.isStatic) term
 		else field.term
 	else
-		if (field.type.isStatic) term
-		else term.plus(field.term)) of type.plus(field.type)
+		if (field.field.isStatic) term
+		else term.plus(field.term)) of type.plus(field.field)
 
 fun String.sentenceTo(typed: Typed): SentenceTyped =
 	typed.term of sentenceTo(typed.type)
 
 fun String.fieldTo(typed: Typed): FieldTyped =
-	sentenceTo(typed).field
+	sentenceTo(typed).fieldTyped
 
-val SentenceTyped.field: FieldTyped
+val SentenceTyped.fieldTyped: FieldTyped
 	get() =
-		term of type.field
+		term of sentence.field
 
 operator fun String.invoke(vararg fields: FieldTyped): FieldTyped =
 	fieldTo(typed(*fields))
@@ -126,6 +131,13 @@ operator fun String.invoke(typed: Typed): FieldTyped =
 fun typed(vararg fields: FieldTyped): Typed =
 	emptyTyped.fold(fields) { plus(it) }
 
-val NativeTyped.field: FieldTyped
+val NativeTyped.fieldTyped: FieldTyped
 	get() =
 		term of native.nativeTypeField
+
+val FieldTyped.typed
+	get() =
+		term of type(field)
+
+val Int.typedField get() = term of intTypeField
+val String.typedField get() = term of stringTypeField

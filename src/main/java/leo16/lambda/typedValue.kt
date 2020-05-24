@@ -13,7 +13,7 @@ import leo16.plus
 
 val Typed.value: Value
 	get() =
-		body.value
+		bodyTyped.value
 
 val BodyTyped.value: Value
 	get() =
@@ -25,13 +25,13 @@ val BodyTyped.value: Value
 
 val LinkTyped.value: Value
 	get() =
-		tail.value.plus(head.valueField)
+		previousTyped.value.plus(lastFieldTyped.valueField)
 
 val AlternativeTyped.value: Value
 	get() =
 		term.unsafeUnchoice(2).run {
-			if (index == 0) (value of type.firstType).value
-			else (value of type.secondType).value
+			if (index == 0) (value of alternative.firstType).value
+			else (value of alternative.secondType).value
 		}
 
 val FieldTyped.valueField: Field
@@ -44,11 +44,11 @@ val FieldTyped.valueField: Field
 
 val SentenceTyped.valueField: Field
 	get() =
-		type.word.invoke(rhs.value)
+		sentence.word.invoke(rhsTyped.value)
 
 val FunctionTyped.valueField: Field
 	get() =
-		_taking(type.input.value.plus(_giving(type.output.value)))
+		_taking(function.input.value.plus(_giving(function.output.value)))
 
 val NativeTyped.valueField: Field
 	get() =

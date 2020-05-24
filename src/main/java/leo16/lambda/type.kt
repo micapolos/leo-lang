@@ -1,6 +1,7 @@
 package leo16.lambda
 
 import leo.base.fold
+import leo16.names.*
 
 data class Type(val body: TypeBody, val isStatic: Boolean) {
 	override fun toString() = reflectField.toString()
@@ -75,3 +76,14 @@ operator fun String.invoke(vararg fields: TypeField) = fieldTo(type(*fields))
 operator fun String.invoke(type: Type) = fieldTo(type)
 infix fun Type.giving(type: Type) = TypeFunction(this, type)
 val TypeFunction.field: TypeField get() = FunctionTypeField(this)
+
+val TypeField.selectWord
+	get() =
+		when (this) {
+			is SentenceTypeField -> sentence.word
+			is FunctionTypeField -> _taking
+			is NativeTypeField -> _native
+		}
+
+val stringTypeField: TypeField = String::class.java.nativeTypeField
+val intTypeField: TypeField = Int::class.java.nativeTypeField
