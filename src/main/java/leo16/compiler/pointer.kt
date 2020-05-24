@@ -10,13 +10,13 @@ import leo.base.effect
 import leo.base.int
 import leo.base.iterate
 
-class Pointer(val byteArray: ByteArray, val index: Int)
+data class Pointer(val memory: Memory, val index: Int)
 
-fun ByteArray.pointer(index: Int) = Pointer(this, index)
-val Pointer.inc get() = byteArray.pointer(index.inc())
+fun Memory.pointer(index: Int) = Pointer(this, index)
+val Pointer.inc get() = memory.pointer(index.inc())
 
 fun Pointer.write(byte: Byte): Pointer =
-	inc.also { byteArray[index] = byte }
+	inc.also { memory[index] = byte }
 
 fun Pointer.write(int: Int): Pointer =
 	write(int.byte0).write(int.byte1).write(int.byte2).write(int.byte3)
@@ -26,7 +26,7 @@ fun Pointer.writeZeros(count: Int): Pointer =
 
 val Pointer.readByte: Effect<Pointer, Byte>
 	get() =
-		inc effect byteArray[index]
+		inc effect memory[index]
 
 val Pointer.readInt: Effect<Pointer, Int>
 	get() =
