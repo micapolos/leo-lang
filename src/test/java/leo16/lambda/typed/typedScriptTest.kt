@@ -1,10 +1,16 @@
-package leo16.lambda
+package leo16.lambda.typed
 
 import leo.base.assertEqualTo
 import leo14.emptyScript
 import leo14.script
 import leo15.lambda.idTerm
 import leo15.lambda.valueTerm
+import leo16.lambda.invoke
+import leo16.lambda.type.field
+import leo16.lambda.type.giving
+import leo16.lambda.type.invoke
+import leo16.lambda.type.nativeTypeField
+import leo16.lambda.type.type
 import leo16.names.*
 import leo16.nativeScriptLine
 import org.junit.Test

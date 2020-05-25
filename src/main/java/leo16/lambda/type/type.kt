@@ -1,4 +1,4 @@
-package leo16.lambda
+package leo16.lambda.type
 
 import leo.base.fold
 import leo14.untyped.leoString
@@ -88,4 +88,5 @@ val TypeField.selectWord
 
 val stringTypeField: TypeField = String::class.java.nativeTypeField
 val intTypeField: TypeField = Int::class.java.nativeTypeField
+val doubleTypeField: TypeField = Double::class.java.nativeTypeField
 val booleanTypeField: TypeField = _boolean(type(_false(type())).or(type(_true(type()))))

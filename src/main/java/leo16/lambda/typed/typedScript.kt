@@ -1,4 +1,4 @@
-package leo16.lambda
+package leo16.lambda.typed
 
 import leo14.Script
 import leo14.ScriptLine
@@ -8,6 +8,9 @@ import leo14.plus
 import leo15.lambda.choiceTerm
 import leo15.lambda.unsafeUnchoice
 import leo15.lambda.value
+import leo16.lambda.type.Type
+import leo16.lambda.type.or
+import leo16.lambda.type.script
 import leo16.names.*
 import leo16.nativeScriptLine
 

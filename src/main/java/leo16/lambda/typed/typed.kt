@@ -1,4 +1,4 @@
-package leo16.lambda
+package leo16.lambda.typed
 
 import leo.base.fold
 import leo.base.ifOrNull
@@ -9,6 +9,33 @@ import leo15.plus
 import leo15.terms.first
 import leo15.terms.second
 import leo15.terms.term
+import leo16.lambda.type.AlternativeTypeBody
+import leo16.lambda.type.EmptyTypeBody
+import leo16.lambda.type.FunctionTypeField
+import leo16.lambda.type.LinkTypeBody
+import leo16.lambda.type.NativeTypeField
+import leo16.lambda.type.SentenceTypeField
+import leo16.lambda.type.Type
+import leo16.lambda.type.TypeAlternative
+import leo16.lambda.type.TypeBody
+import leo16.lambda.type.TypeField
+import leo16.lambda.type.TypeFunction
+import leo16.lambda.type.TypeLink
+import leo16.lambda.type.TypeSentence
+import leo16.lambda.type.emptyType
+import leo16.lambda.type.field
+import leo16.lambda.type.functionOrNull
+import leo16.lambda.type.intTypeField
+import leo16.lambda.type.invoke
+import leo16.lambda.type.isEmpty
+import leo16.lambda.type.isStatic
+import leo16.lambda.type.nativeOrNull
+import leo16.lambda.type.nativeTypeField
+import leo16.lambda.type.plus
+import leo16.lambda.type.sentenceOrNull
+import leo16.lambda.type.sentenceTo
+import leo16.lambda.type.stringTypeField
+import leo16.lambda.type.type
 import leo16.names.*
 
 data class Typed(val term: Term, val type: Type)

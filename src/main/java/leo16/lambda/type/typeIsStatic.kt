@@ -1,4 +1,4 @@
-package leo16.lambda
+package leo16.lambda.type
 
 val TypeBody.isStatic: Boolean
 	get() =

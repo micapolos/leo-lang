@@ -1,4 +1,4 @@
-package leo16.lambda
+package leo16.lambda.typed
 
 import leo15.lambda.eval
 

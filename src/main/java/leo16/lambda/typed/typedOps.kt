@@ -1,6 +1,7 @@
-package leo16.lambda
+package leo16.lambda.typed
 
 import leo.base.notNullIf
+import leo16.lambda.type.selectWord
 
 fun Typed.accessOrNull(word: String): Typed? =
 	bodyTyped.linkTypedOrNull?.accessOrNull(word)

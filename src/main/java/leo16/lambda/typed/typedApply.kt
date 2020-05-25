@@ -1,4 +1,4 @@
-package leo16.lambda
+package leo16.lambda.typed
 
 import leo.base.ifOrNull
 import leo16.names.*

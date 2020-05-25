@@ -1,4 +1,4 @@
-package leo16.lambda
+package leo16.lambda.type
 
 import leo14.Script
 import leo14.ScriptLine
