@@ -67,6 +67,17 @@ class TypedOpsTest {
 	}
 
 	@Test
+	fun matchOrNull_evaluate() {
+		typed(_zero(typed()))
+			.or(type(_one(type())))
+			.matchOrNull(
+				fn(0.term) of type(type(_zero(type())).giving(type(intTypeField)).field),
+				fn(1.term) of type(type(_one(type())).giving(type(intTypeField)).field))!!
+			.evaluate
+			.assertEqualTo(0.term of type(intTypeField))
+	}
+
+	@Test
 	fun matchOrNull_invalidFirstInputType() {
 		typed(_zero(typed()))
 			.or(type(_one(type())))

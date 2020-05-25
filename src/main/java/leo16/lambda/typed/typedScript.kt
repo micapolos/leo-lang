@@ -58,7 +58,7 @@ val NativeTyped.scriptLine: ScriptLine
 		term.value!!.nativeScriptLine
 
 fun Typed.or(type: Type): Typed =
-	choiceTerm(2, 0, term) of (this.type or type)
+	choiceTerm(2, 1, term) of (this.type or type)
 
 fun Type.or(typed: Typed): Typed =
-	choiceTerm(2, 1, typed.term) of (this or typed.type)
+	choiceTerm(2, 0, typed.term) of (this or typed.type)
