@@ -1,14 +1,15 @@
 package leo16.lambda
 
 import leo.base.fold
+import leo14.untyped.leoString
 import leo16.names.*
 
 data class Type(val body: TypeBody, val isStatic: Boolean) {
-	override fun toString() = reflectField.toString()
+	override fun toString() = reflect.leoString
 }
 
 sealed class TypeBody {
-	override fun toString() = reflectField.toString()
+	override fun toString() = reflect.leoString
 }
 
 object EmptyTypeBody : TypeBody()
@@ -26,7 +27,7 @@ data class TypeLink(val previousType: Type, val lastField: TypeField)
 data class TypeAlternative(val firstType: Type, val secondType: Type)
 
 sealed class TypeField {
-	override fun toString() = reflectField.toString()
+	override fun toString() = reflect.leoString
 }
 
 data class SentenceTypeField(val sentence: TypeSentence) : TypeField() {
@@ -42,11 +43,11 @@ data class NativeTypeField(val native: Any) : TypeField() {
 }
 
 data class TypeSentence(val word: String, val type: Type) {
-	override fun toString() = reflectField.toString()
+	override fun toString() = reflect.leoString
 }
 
 data class TypeFunction(val input: Type, val output: Type) {
-	override fun toString() = reflectField.toString()
+	override fun toString() = reflect.leoString
 }
 
 val emptyTypeBody: TypeBody = EmptyTypeBody
