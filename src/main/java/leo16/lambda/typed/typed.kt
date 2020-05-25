@@ -78,6 +78,10 @@ val BodyTyped.linkTypedOrNull: LinkTyped?
 	get() =
 		match({ null }, { it }, { null })
 
+val Typed.alternativeTypedOrNull: AlternativeTyped?
+	get() =
+		bodyTyped.match({ null }, { null }, { it })
+
 val LinkTyped.previousTyped: Typed
 	get() =
 		(if (link.previousType.isStatic || link.lastField.isStatic) term else term.first) of link.previousType

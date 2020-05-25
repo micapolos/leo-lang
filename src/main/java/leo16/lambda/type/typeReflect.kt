@@ -8,6 +8,7 @@ import leo14.plus
 import leo14.script
 import leo16.names.*
 import leo16.nativeField
+import leo16.nativeScriptLine
 
 val Type.reflect: ScriptLine
 	get() =
@@ -35,7 +36,7 @@ val TypeField.reflect: ScriptLine
 			when (this) {
 				is SentenceTypeField -> sentence.reflect
 				is FunctionTypeField -> function.reflect
-				is NativeTypeField -> native.nativeField
+				is NativeTypeField -> native.nativeScriptLine
 			}
 		)
 

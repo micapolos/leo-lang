@@ -1,6 +1,18 @@
 package leo16.lambda.typed
 
 import leo.base.assertEqualTo
+import leo.base.assertNull
+import leo15.lambda.choiceTerm
+import leo15.lambda.fn
+import leo15.lambda.idTerm
+import leo15.lambda.invoke
+import leo15.type.term
+import leo16.lambda.type.field
+import leo16.lambda.type.giving
+import leo16.lambda.type.intTypeField
+import leo16.lambda.type.invoke
+import leo16.lambda.type.stringTypeField
+import leo16.lambda.type.type
 import leo16.names.*
 import kotlin.test.Test
 
@@ -39,5 +51,77 @@ class TypedOpsTest {
 				typed(
 					_x(10.typedField),
 					_y(20.typedField)))
+	}
+
+	@Test
+	fun matchOrNull() {
+		typed(_zero(typed()))
+			.or(type(_one(type())))
+			.matchOrNull(
+				fn(0.term) of type(type(_zero(type())).giving(type(intTypeField)).field),
+				fn(1.term) of type(type(_one(type())).giving(type(intTypeField)).field))
+			.assertEqualTo(
+				choiceTerm(2, 0, idTerm)
+					.invoke(fn(0.term))
+					.invoke(fn(1.term)) of type(intTypeField))
+	}
+
+	@Test
+	fun matchOrNull_invalidFirstInputType() {
+		typed(_zero(typed()))
+			.or(type(_one(type())))
+			.matchOrNull(
+				fn(0.term) of type(type(_one(type())).giving(type(intTypeField)).field),
+				fn(1.term) of type(type(_one(type())).giving(type(intTypeField)).field))
+			.assertNull
+	}
+
+	@Test
+	fun matchOrNull_invalidSecondInputType() {
+		typed(_zero(typed()))
+			.or(type(_one(type())))
+			.matchOrNull(
+				fn(0.term) of type(type(_zero(type())).giving(type(intTypeField)).field),
+				fn(1.term) of type(type(_zero(type())).giving(type(intTypeField)).field))
+			.assertNull
+	}
+
+	@Test
+	fun matchOrNull_differentOutputTypes() {
+		typed(_zero(typed()))
+			.or(type(_one(type())))
+			.matchOrNull(
+				fn("0".term) of type(type(_zero(type())).giving(type(stringTypeField)).field),
+				fn(1.term) of type(type(_one(type())).giving(type(intTypeField)).field))
+			.assertNull
+	}
+
+	@Test
+	fun matchOrNull_notAlternative() {
+		typed(_zero(typed()))
+			.matchOrNull(
+				fn("0".term) of type(type(_zero(type())).giving(type(stringTypeField)).field),
+				fn(1.term) of type(type(_one(type())).giving(type(intTypeField)).field))
+			.assertNull
+	}
+
+	@Test
+	fun matchOrNull_firstNotFunction() {
+		typed(_zero(typed()))
+			.or(type(_one(type())))
+			.matchOrNull(
+				0.term of type(stringTypeField),
+				fn(1.term) of type(type(_one(type())).giving(type(intTypeField)).field))
+			.assertNull
+	}
+
+	@Test
+	fun matchOrNull_secondNotFunction() {
+		typed(_zero(typed()))
+			.or(type(_one(type())))
+			.matchOrNull(
+				fn(0.term) of type(type(_zero(type())).giving(type(intTypeField)).field),
+				1.term of type(intTypeField))
+			.assertNull
 	}
 }

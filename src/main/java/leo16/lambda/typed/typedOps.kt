@@ -1,6 +1,8 @@
 package leo16.lambda.typed
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
+import leo15.lambda.invoke
 import leo16.lambda.type.selectWord
 
 fun Typed.accessOrNull(word: String): Typed? =
@@ -18,3 +20,20 @@ fun Typed.getOrNull(word: String): Typed? =
 val Typed.contentOrNull: Typed?
 	get() =
 		bodyTyped.linkTypedOrNull?.onlyFieldTyped?.sentenceOrNull?.rhsTyped
+
+fun Typed.matchOrNull(whenFirst: Typed, whenSecond: Typed): Typed? =
+	alternativeTypedOrNull?.let { alternative ->
+		whenFirst.typeFunctionOrNull?.let { firstFunction ->
+			whenSecond.typeFunctionOrNull?.let { secondFunction ->
+				ifOrNull(firstFunction.function.input == alternative.alternative.firstType) {
+					ifOrNull(secondFunction.function.input == alternative.alternative.secondType) {
+						ifOrNull(firstFunction.function.output == secondFunction.function.output) {
+							alternative.term
+								.invoke(firstFunction.term)
+								.invoke(secondFunction.term) of firstFunction.function.output
+						}
+					}
+				}
+			}
+		}
+	}
