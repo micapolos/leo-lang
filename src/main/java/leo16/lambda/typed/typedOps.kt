@@ -1,8 +1,10 @@
 package leo16.lambda.typed
 
+import leo.base.failIfOr
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo15.lambda.invoke
+import leo16.lambda.type.Type
 import leo16.lambda.type.selectWord
 
 fun Typed.accessOrNull(word: String): Typed? =
@@ -36,4 +38,12 @@ fun Typed.matchOrNull(whenFirst: Typed, whenSecond: Typed): Typed? =
 				}
 			}
 		}
+	}
+
+fun Typed.assertType(type: Type): Typed =
+	failIfOr(this.type != type) { this }
+
+fun FunctionTyped.applyOrNull(typed: Typed): Typed? =
+	notNullIf(typed.type == function.input) {
+		term.invoke(typed.term) of function.output
 	}
