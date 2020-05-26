@@ -18,6 +18,7 @@ val Int.number get() = toBigDecimal().number
 val Float.number get() = toBigDecimal().number
 val Double.number get() = toBigDecimal().number
 val String.text: X get() = X.text(this)
+val Any?.nativeText get() = nativeString.text
 val String.number get() = toBigDecimal().number
 val Byte.byte: X get() = X.byte { toInt().toBigDecimal().number }
 val Short.short: X get() = X.short { toInt().toBigDecimal().number }
