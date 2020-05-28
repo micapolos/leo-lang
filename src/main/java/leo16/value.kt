@@ -49,7 +49,11 @@ data class Sentence(val word: String, val value: Value) {
 	override fun toString() = scriptLine.string
 }
 
-data class Choice(val caseFieldStack: Stack<Field>) {
+data class Choice(val eitherStack: Stack<Either>) {
+	override fun toString() = scriptLine.string
+}
+
+data class Either(val field: Field) {
 	override fun toString() = scriptLine.string
 }
 
@@ -71,7 +75,7 @@ fun String.sentenceTo(vararg fields: Field): Sentence = sentenceTo(stack(*fields
 operator fun String.invoke(value: Value): Field = Sentence(this, value).field
 operator fun String.invoke(vararg fields: Field): Field = invoke(stack(*fields).value)
 operator fun String.invoke(sentence: Sentence, vararg sentences: Sentence): Field = invoke(value(sentence, *sentences))
-val Stack<Field>.choice: Choice get() = Choice(this)
+val Stack<Either>.choice: Choice get() = Choice(this)
 val Field.value get() = value(this)
 val emptyValue = value()
 
@@ -80,6 +84,7 @@ val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
 val Field.choiceOrNull: Choice? get() = (this as? ChoiceField)?.choice
 val Field.lazyOrNull: Lazy? get() = (this as? LazyField)?.lazy
 val Field.theNativeOrNull: The<Any?>? get() = if (this is NativeField) native.the else null
+val Field.either get() = Either(this)
 val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
 val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull
 val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull

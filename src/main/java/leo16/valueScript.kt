@@ -52,7 +52,11 @@ val Function.scriptLine: ScriptLine
 
 val Choice.scriptLine: ScriptLine
 	get() =
-		_choice(caseFieldStack.map { scriptLine })
+		_choice(eitherStack.map { scriptLine }.script)
+
+val Either.scriptLine: ScriptLine
+	get() =
+		_either(field.scriptLine)
 
 val Lazy.scriptLine: ScriptLine
 	get() =

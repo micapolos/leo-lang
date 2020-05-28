@@ -74,10 +74,10 @@ val Value.wordStackOrNull: Stack<String>?
 	get() =
 		wordOrNullSeq.reverseStack.mapOrNull { this }
 
-val Field.caseFieldOrNull: Field?
+val Field.eitherOrNull: Either?
 	get() =
-		matchPrefix(_case) { rhs ->
-			rhs.onlyFieldOrNull
+		matchPrefix(_either) { rhs ->
+			rhs.onlyFieldOrNull?.either
 		}
 
 fun Value.rhsOrNull(word: String): Value? =

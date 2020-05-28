@@ -40,7 +40,11 @@ val Function.printSentence: Sentence
 
 val Choice.printSentence: Sentence
 	get() =
-		_choice.sentenceTo(caseFieldStack.map { printSentence.field }.value)
+		_choice.sentenceTo(eitherStack.map { printSentence.field }.value)
+
+val Either.printSentence: Sentence
+	get() =
+		_either.sentenceTo(field.printed)
 
 val Lazy.printSentence: Sentence
 	get() =

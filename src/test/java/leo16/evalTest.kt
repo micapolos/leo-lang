@@ -576,8 +576,8 @@ class EvalTest {
 			zero
 			matches {
 				choice {
-					case { zero }
-					case { one }
+					either { zero }
+					either { one }
 				}
 			}
 		}.assertEquals { true.boolean }
@@ -586,8 +586,8 @@ class EvalTest {
 			one
 			matches {
 				choice {
-					case { zero }
-					case { one }
+					either { zero }
+					either { one }
 				}
 			}
 		}.assertEquals { true.boolean }
@@ -596,35 +596,35 @@ class EvalTest {
 			two
 			matches {
 				choice {
-					case { zero }
-					case { one }
+					either { zero }
+					either { one }
 				}
 			}
 		}.assertEquals { false.boolean }
 
 		evaluate_ {
 			choice {
-				case { zero }
-				case { one }
+				either { zero }
+				either { one }
 			}
 			matches {
 				choice {
-					case { zero }
-					case { one }
+					either { zero }
+					either { one }
 				}
 			}
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
 			choice {
-				case { zero }
-				case { one }
+				either { zero }
+				either { one }
 			}
 			matches {
 				quote {
 					choice {
-						case { zero }
-						case { one }
+						either { zero }
+						either { one }
 					}
 				}
 			}

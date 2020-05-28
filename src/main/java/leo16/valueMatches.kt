@@ -26,7 +26,10 @@ fun Field.matches(choice: Choice): Boolean =
 	this is ChoiceField && this.choice == choice || matchesCase(choice)
 
 fun Field.matchesCase(choice: Choice): Boolean =
-	false.fold(choice.caseFieldStack) { or(matches(it)) }
+	false.fold(choice.eitherStack) { or(matches(it)) }
+
+fun Field.matches(either: Either): Boolean =
+	matches(either.field)
 
 fun Field.matches(sentence: Sentence): Boolean =
 	when (this) {
@@ -50,5 +53,8 @@ fun Dictionary.matches(dictionary: Dictionary): Boolean =
 fun Choice.matches(sentence: Sentence): Boolean =
 	sentence.word == _choice &&
 		true
-			.zipFoldOrNull(caseFieldStack, sentence.value.fieldStack) { lhs, rhs -> and(lhs.matches(rhs)) }
+			.zipFoldOrNull(eitherStack, sentence.value.fieldStack) { lhs, rhs -> and(lhs.matches(rhs)) }
 		?: false
+
+fun Either.matches(field: Field): Boolean =
+	this.field.matches(field)

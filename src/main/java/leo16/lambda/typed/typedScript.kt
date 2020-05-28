@@ -33,7 +33,7 @@ val LinkTyped.script: Script
 val AlternativeTyped.script: Script
 	get() =
 		term.unsafeUnchoice(2).run {
-			if (index == 0) (value of alternative.firstType).script
+			if (index == 1) (value of alternative.firstType).script
 			else (value of alternative.secondType).script
 		}
 

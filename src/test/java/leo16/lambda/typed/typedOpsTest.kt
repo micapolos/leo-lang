@@ -61,7 +61,7 @@ class TypedOpsTest {
 				fn(0.term) of type(type(_zero(type())).giving(type(intTypeField)).field),
 				fn(1.term) of type(type(_one(type())).giving(type(intTypeField)).field))
 			.assertEqualTo(
-				choiceTerm(2, 0, idTerm)
+				choiceTerm(2, 1, idTerm)
 					.invoke(fn(0.term))
 					.invoke(fn(1.term)) of type(intTypeField))
 	}

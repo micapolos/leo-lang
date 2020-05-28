@@ -33,7 +33,11 @@ val Sentence.patternField: PatternField
 
 val Choice.patternField: PatternField
 	get() =
-		_choice.invoke(caseFieldStack.map { patternField }.value.pattern)
+		_choice.invoke(eitherStack.map { patternField }.value.pattern)
+
+val Either.patternField: PatternField
+	get() =
+		field.patternField
 
 val Lazy.patternField: PatternField
 	get() =

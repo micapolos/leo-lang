@@ -136,7 +136,7 @@ fun Evaluated.applyForce(field: Field): Evaluated? =
 fun Evaluated.applyChoice(field: Field): Evaluated? =
 	field.matchPrefix(_choice) { rhs ->
 		rhs.fieldStack
-			.mapOrNull { caseFieldOrNull }
+			.mapOrNull { eitherOrNull }
 			?.choice
 			?.field
 			?.value
