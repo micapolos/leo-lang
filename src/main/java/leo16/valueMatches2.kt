@@ -33,9 +33,15 @@ fun Link<Value, Field>.matches2(link: Link<Value, Field>): Boolean =
 
 fun Field.matches2(field: Field): Boolean =
 	null
+		?: matchesExactOrNull2(field)
 		?: matchesNativeOrNull2(field)
 		?: matchesTakingOrNull2(field)
 		?: matchesDefault2(field)
+
+fun Field.matchesExactOrNull2(field: Field): Boolean? =
+	field.matchPrefix(_exact) { rhs ->
+		runIfNotNull(rhs.onlyFieldOrNull) { matches(it) }
+	}
 
 fun Field.matchesNativeOrNull2(field: Field): Boolean? =
 	field.match(_native) {

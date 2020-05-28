@@ -27,6 +27,18 @@ class ValueMatchesTest {
 		value(_x(_zero()), _y(_one()))
 			.matches2(value(_x(_any()), _y(_any())))
 			.assert
+
+		value(_anything())
+			.matches2(value(_anything()))
+			.assert
+
+		value(_anything())
+			.matches2(value(_exact(_anything())))
+			.assert
+
+		value(_zero())
+			.matches2(value(_exact(_anything())))
+			.negate.assert
 	}
 
 	@Test
@@ -42,12 +54,28 @@ class ValueMatchesTest {
 		value(_two())
 			.matches2(value(_zero(), _or(_one())))
 			.negate.assert
+
+		value(_zero(), _or(_one()))
+			.matches2(value(_zero(), _or(_one())))
+			.negate.assert
+
+		value(_zero(), _or(_one()))
+			.matches2(value(_zero(), _exact(_or(_one()))))
+			.assert
 	}
 
 	@Test
 	fun taking() {
 		value(value(_zero()).does(value(_one()).compiled))
 			.matches2(value(_taking(_zero())))
+			.assert
+
+		value(_taking(_zero()))
+			.matches2(value(_taking(_zero())))
+			.assert
+
+		value(_taking(_zero()))
+			.matches2(value(_exact(_taking(_zero()))))
 			.assert
 	}
 }
