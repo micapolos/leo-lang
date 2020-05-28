@@ -3,8 +3,11 @@ package leo16
 import leo.base.The
 import leo.base.notNullIf
 import leo.base.the
+import leo13.Link
 import leo13.Stack
 import leo13.isEmpty
+import leo13.linkOrNull
+import leo13.linkTo
 import leo13.map
 import leo13.onlyOrNull
 import leo13.push
@@ -95,3 +98,11 @@ val Field.onlyWordOrNull: String? get() = sentenceOrNull?.onlyWordOrNull
 
 operator fun Value.plus(field: Field): Value = fieldStack.push(field).value
 operator fun Value.plus(value: Value): Value = fieldStack.pushAll(value.fieldStack).value
+
+val Value.linkOrNull: Link<Value, Field>?
+	get() =
+		fieldStack.linkOrNull?.run {
+			stack.value linkTo value
+		}
+
+fun Value.does(compiled: Compiled): Field = pattern.does(compiled).field

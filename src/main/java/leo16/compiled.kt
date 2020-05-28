@@ -10,6 +10,7 @@ data class CompiledSentence(val word: String, val compiled: Compiled)
 
 infix fun Dictionary.compiled(value: Value) = Compiled(this, value)
 fun String.sentenceTo(compiled: Compiled) = CompiledSentence(this, compiled)
+val Value.compiled get() = emptyDictionary.compiled(this)
 
 val Compiled.isEmpty get() = bodyValue.isEmpty
 
