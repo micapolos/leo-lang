@@ -14,9 +14,6 @@ val Value.compiled get() = emptyDictionary.compiled(this)
 
 val Compiled.isEmpty get() = bodyValue.isEmpty
 
-inline operator fun Compiled.invoke(match: PatternMatch): Value =
-	dictionary.plus(repeat.definition).plus(match).evaluate(bodyValue)
-
 inline operator fun Compiled.invoke(value: Value): Value =
 	dictionary.plus(repeat.definition).bind(value).evaluate(bodyValue)
 

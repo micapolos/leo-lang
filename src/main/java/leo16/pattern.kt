@@ -99,14 +99,6 @@ fun PatternMatch.plus(field: Field) =
 fun PatternMatch.anyPlus(field: Field) =
 	copy(anyFieldStackOrNull = anyFieldStackOrNull.orIfNull { stack() }.push(field))
 
-val PatternMatch.value
-	get() =
-		stack<Field>()
-			.ifNotNull(anyFieldStackOrNull) { pushAll(it) }
-			.pushAll(fieldStack)
-			.reverse
-			.value
-
 inline fun PatternMatch.plusMatchOrNull(pattern: Pattern, value: Value): PatternMatch? =
 	orNull
 		.zipFold(value.fieldStack, pattern.value.fieldStack) { fieldOrNull, patternFieldOrNull ->
