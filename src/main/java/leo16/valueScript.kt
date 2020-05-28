@@ -47,7 +47,7 @@ val Sentence.scriptLine: ScriptLine
 
 val Function.scriptLine: ScriptLine
 	get() =
-		_taking(pattern.asValue.script)
+		_taking(patternValue.script)
 
 val Lazy.scriptLine: ScriptLine
 	get() =

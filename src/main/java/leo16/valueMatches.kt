@@ -35,7 +35,7 @@ fun Field.matches(field: Field): Boolean =
 	null
 		?: matchesExactOrNull(field)
 		?: matchesNativeOrNull(field)
-		?: matchesTakingOrNull2(field)
+		?: matchesFunctionOrNull2(field)
 		?: matchesDefault(field)
 
 fun Field.matchesExactOrNull(field: Field): Boolean? =
@@ -48,8 +48,9 @@ fun Field.matchesNativeOrNull(field: Field): Boolean? =
 		this is NativeField
 	}
 
-fun Field.matchesTakingOrNull2(field: Field): Boolean? =
-	field.matchPrefix(_taking) { rhs ->
+fun Field.matchesFunctionOrNull2(field: Field): Boolean? =
+	// TODO: Rename to _taking
+	field.matchPrefix(_function) { rhs ->
 		functionOrNull?.matches(rhs)
 	}
 
@@ -63,7 +64,7 @@ fun Field.matchesDefault(field: Field): Boolean =
 	} ?: false
 
 fun Function.matches(value: Value): Boolean =
-	pattern.asValue == value
+	patternValue == value
 
 fun Sentence.matches(sentence: Sentence): Boolean =
 	word == sentence.word && value.matches(sentence.value)

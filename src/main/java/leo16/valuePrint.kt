@@ -35,7 +35,7 @@ val Sentence.printSentence: Sentence
 
 val Function.printSentence: Sentence
 	get() =
-		_function.sentenceTo(pattern.asValue.plus(_does(compiled.bodyValue)))
+		_function.sentenceTo(patternValue.plus(_does(compiled.bodyValue)))
 
 val Lazy.printSentence: Sentence
 	get() =

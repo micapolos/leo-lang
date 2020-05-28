@@ -156,7 +156,7 @@ fun Evaluated.applyDefinitionList(field: Field): Evaluated? =
 		rhs.match(_definition) {
 			set(
 				scope.dictionary.definitionStack.reverse
-					.map { patternOrNull?.asValue }
+					.map { patternValueOrNull }
 					.filterNulls
 					.valueField
 					.value)
@@ -193,7 +193,7 @@ fun Evaluated.applyTestMatches(value: Value): Evaluated? =
 	value.matchInfix(_matches) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
-				if (evaluatedRhs.pattern.isMatching(evaluatedLhs)) this
+				if (evaluatedLhs.matches(evaluatedRhs)) this
 				else throw AssertionError(
 					value(
 						_test(

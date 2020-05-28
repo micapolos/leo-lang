@@ -67,15 +67,15 @@ class ValueMatchesTest {
 	@Test
 	fun taking() {
 		value(value(_zero()).does(value(_one()).compiled))
-			.matches(value(_taking(_zero())))
+			.matches(value(_function(_zero())))
 			.assert
 
-		value(_taking(_zero()))
-			.matches(value(_taking(_zero())))
+		value(_function(_zero()))
+			.matches(value(_function(_zero())))
 			.assert
 
-		value(_taking(_zero()))
-			.matches(value(_exact(_taking(_zero()))))
+		value(_function(_zero()))
+			.matches(value(_exact(_function(_zero()))))
 			.assert
 	}
 }

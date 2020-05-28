@@ -1,6 +1,5 @@
 package leo16
 
-import leo13.reverse
 import leo16.names.*
 
 sealed class Definition {
@@ -56,18 +55,18 @@ inline fun Definition.apply(evaluated: Evaluated): Evaluated? =
 		is RepeatDefinition -> repeat.apply(evaluated.value)?.let { evaluated.set(it) }
 	}
 
-val Definition.patternOrNull: Pattern?
+val Definition.patternValueOrNull: Value?
 	get() =
 		when (this) {
-			is ConstantDefinition -> constant.key.pattern
-			is FunctionDefinition -> function.pattern
-			is MacroDefinition -> macro.pattern
-			is FunctionNativeDefinition -> function.pattern
+			is ConstantDefinition -> constant.key
+			is FunctionDefinition -> function.patternValue
+			is MacroDefinition -> macro.patternValue
+			is FunctionNativeDefinition -> function.patternValue
 			is RepeatDefinition -> null
 		}
 
 fun Value.does(apply: Value.() -> Value) =
-	pattern.fn(apply).definition
+	fn(apply).definition
 
 val Field.parameterDefinition: Definition
 	get() =
@@ -76,10 +75,3 @@ val Field.parameterDefinition: Definition
 val Value.contentParameterDefinition: Definition
 	get() =
 		_content().value.is_(this).definition
-
-val PatternMatch.anyParameterDefinitionOrNull: Definition?
-	get() =
-		null
-//		anyFieldStackOrNull?.let { fieldStack ->
-//			_the(fieldStack.reverse.value).parameterDefinition
-//		}

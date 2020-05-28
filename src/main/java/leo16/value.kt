@@ -89,4 +89,4 @@ val Value.linkOrNull: Link<Value, Field>?
 			stack.value linkTo value
 		}
 
-fun Value.does(compiled: Compiled): Field = pattern.does(compiled).field
+fun Value.does(compiled: Compiled): Field = functionTo(compiled).field

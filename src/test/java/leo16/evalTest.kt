@@ -591,12 +591,12 @@ class EvalTest {
 	fun matchesGiving() {
 		evaluate_ {
 			function { zero.does { one } }
-			matches { taking { zero } }
+			matches { function { zero } }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
 			function { zero.does { one } }
-			matches { taking { one } }
+			matches { function { one } }
 		}.assertEquals { false.boolean }
 	}
 }

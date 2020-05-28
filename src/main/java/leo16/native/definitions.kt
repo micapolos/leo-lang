@@ -30,7 +30,6 @@ import leo16.invoke
 import leo16.names.*
 import leo16.nativeField
 import leo16.nativeValue
-import leo16.onlyFieldOrNull
 import leo16.printed
 import leo16.sentenceOrNull
 import leo16.stackOrNull
