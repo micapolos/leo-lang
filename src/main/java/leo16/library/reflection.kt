@@ -128,7 +128,7 @@ val reflection = compile_ {
 		}
 	}
 
-	any.number.long
+	native.number.long
 	does {
 		long.number.native
 		invoke {
@@ -137,7 +137,7 @@ val reflection = compile_ {
 		}.long
 	}
 
-	any.number.int
+	native.number.int
 	does {
 		int.number.native
 		invoke {
@@ -146,7 +146,7 @@ val reflection = compile_ {
 		}.int
 	}
 
-	any.number.short
+	native.number.short
 	does {
 		short.number.native
 		invoke {
@@ -155,7 +155,7 @@ val reflection = compile_ {
 		}.short
 	}
 
-	any.number.byte
+	native.number.byte
 	does {
 		byte.number.native
 		invoke {
@@ -164,7 +164,7 @@ val reflection = compile_ {
 		}.byte
 	}
 
-	any.number.float
+	native.number.float
 	does {
 		float.number.native
 		invoke {
@@ -173,7 +173,7 @@ val reflection = compile_ {
 		}.float
 	}
 
-	any.number.double
+	native.number.double
 	does {
 		double.number.native
 		invoke {
@@ -182,42 +182,42 @@ val reflection = compile_ {
 		}.double
 	}
 
-	any.long.number
+	anything.long.number
 	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.long.native } } } }
 		number
 	}
 
-	any.int.number
+	anything.int.number
 	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.int.native } } } }
 		number
 	}
 
-	any.short.number
+	anything.short.number
 	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.short.native } } } }
 		number
 	}
 
-	any.byte.number
+	anything.byte.number
 	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.byte.native } } } }
 		number
 	}
 
-	any.float.number
+	anything.float.number
 	does {
 		double.big.decimal.method
 		invoke { parameter { list { item { number.float.native } } } }
 		number
 	}
 
-	any.double.number
+	anything.double.number
 	does {
 		double.big.decimal.method
 		invoke { parameter { list { item { number.double.native } } } }

@@ -7,7 +7,7 @@ val html = compile_ {
 	use { base }
 	use { reflection }
 
-	any.text.html.open
+	text.any.html.open
 	does {
 		"leo14.js.compiler.MainKt".text.name.class_
 		method {

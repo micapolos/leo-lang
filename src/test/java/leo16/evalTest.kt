@@ -327,15 +327,15 @@ class EvalTest {
 		}.assertEquals { one }
 
 		evaluate_ {
-			function { any.bit.does { ok } }
+			function { anything.bit.does { ok } }
 			take { zero.bit }
 		}.assertEquals { ok }
 
 		evaluate_ {
-			function { any.x.does { x } }
+			function { anything.x.does { x } }
 			take { y { zero } }
 		}.assertEquals {
-			function { x { any }.does { x } }
+			function { x { anything }.does { x } }
 			take { y { zero } }
 		}
 

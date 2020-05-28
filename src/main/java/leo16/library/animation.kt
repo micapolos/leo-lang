@@ -8,7 +8,7 @@ fun main() {
 }
 
 val animation = compile_ {
-	any.animation.show
+	anything.animation.show
 	does {
 		body {
 			use { dsl.javascript }

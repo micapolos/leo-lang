@@ -8,6 +8,7 @@ fun main() {
 }
 
 val url = compile_ {
+	use { text }
 	use { reflection }
 	use { list }
 	use { number }
@@ -15,7 +16,7 @@ val url = compile_ {
 
 	url.any.is_ { native.url }
 
-	any.text.url
+	text.any.url
 	does {
 		string.url.constructor
 		invoke { parameter { list { item { url.text.native } } } }

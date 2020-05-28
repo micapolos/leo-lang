@@ -111,7 +111,7 @@ val text = compile_ {
 			}
 		}
 		array.list
-		map { function { any.does { native.text } } }
+		map { function { anything.does { native.text } } }
 	}
 
 	test {

@@ -10,7 +10,7 @@ fun Value.matches(value: Value): Boolean =
 val Value.isAnything: Boolean
 	get() =
 		// TODO: Remove any.
-		this == value(_any()) || this == value(_anything())
+		this == value(_anything())
 
 fun Value.matchesDefault(value: Value): Boolean =
 	runIfNotNull(value.linkOrNull) { matches(it) } ?: isEmpty

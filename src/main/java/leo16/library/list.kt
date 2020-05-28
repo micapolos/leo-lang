@@ -8,8 +8,10 @@ fun main() {
 }
 
 val list = compile_ {
-	any.list
-	append { any }
+	list.any.is_ { list { anything } }
+
+	list.any
+	append { anything }
 	does {
 		list {
 			link {
@@ -31,12 +33,12 @@ val list = compile_ {
 		equals_ { list { item { 1.number }; item { 2.number } } }
 	}
 
-	list { any }
+	list.any
 	fold {
-		to { any }
+		to { anything }
 		function {
-			item { any }
-			to { any }
+			item { anything }
+			to { anything }
 		}
 	}
 	does {
@@ -68,8 +70,8 @@ val list = compile_ {
 		fold {
 			to { empty.list }
 			function {
-				item { any }
-				to { any }
+				item { anything }
+				to { anything }
 				does { to.list.append { item.content } }
 			}
 		}
@@ -82,14 +84,14 @@ val list = compile_ {
 		}
 	}
 
-	any.list.reverse
+	list.any.reverse
 	does {
 		reverse.list
 		fold {
 			to { empty.list }
 			function {
-				item { any }
-				to { any }
+				item { anything }
+				to { anything }
 				does { to.list.append { item.content } }
 			}
 		}
@@ -110,15 +112,15 @@ val list = compile_ {
 		}
 	}
 
-	any.list
-	map { function { any } }
+	list.any
+	map { function { anything } }
 	does {
 		list.reverse
 		fold {
 			to { empty.list }
 			function {
-				item { any }
-				to { any }
+				item { anything }
+				to { anything }
 				does {
 					to.list
 					append { map.function.take { item.content } }
@@ -133,7 +135,7 @@ val list = compile_ {
 			item { 2.number }
 			item { 3.number }
 		}
-		map { function { any.does { number.ok } } }
+		map { function { anything.does { number.ok } } }
 		equals_ {
 			list {
 				item { 1.number.ok }
@@ -143,15 +145,15 @@ val list = compile_ {
 		}
 	}
 
-	any.list.length
+	list.any.length
 	does {
 		use { number }
 		length.list
 		fold {
 			to { 0.number }
 			function {
-				item { any }
-				to { any }
+				item { anything }
+				to { anything }
 				does { to.number.plus { 1.number } }
 			}
 		}.length
@@ -171,14 +173,14 @@ val list = compile_ {
 		equals_ { 3.number.length }
 	}
 
-	any.list.flat
+	list.any.flat
 	does {
 		flat.list.reverse
 		fold {
 			to { meta { flat } }
 			function {
-				item { any }
-				to { any }
+				item { anything }
+				to { anything }
 				does {
 					to.flat.content
 					this_ { item.content }

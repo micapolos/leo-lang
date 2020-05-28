@@ -6,7 +6,6 @@ import leo13.linkOrNull
 import leo13.map
 import leo13.stack
 import leo14.untyped.typed.loadClass
-import leo15.anyName
 import leo15.arrayName
 import leo15.booleanName
 import leo15.className
@@ -86,7 +85,7 @@ val nameClassDefinition =
 
 val classFieldDefinition =
 	value(
-		className(anyName()),
+		className(_anything()),
 		fieldName(nameName(textName(nativeName())))
 	).does {
 		val class_ = this
@@ -136,7 +135,7 @@ val nativeGetFieldDefinition =
 val classConstructorDefinition =
 	value(
 		className(nativeName()),
-		constructorName(parameterName(_list(anyName())))
+		constructorName(parameterName(_list(_anything())))
 	).does {
 		val class_ = this
 			.getOrNull(className)!!
@@ -162,7 +161,7 @@ val classConstructorDefinition =
 val constructorInvokeDefinition =
 	value(
 		constructorName(nativeName()),
-		invokeName(parameterName(_list(anyName())))
+		invokeName(parameterName(_list(_anything())))
 	).does {
 		val constructor = this
 			.getOrNull(constructorName)!!
@@ -184,7 +183,7 @@ val classMethodDefinition =
 		className(nativeName()),
 		methodName(
 			nameName(textName(nativeName())),
-			parameterName(_list(anyName()))
+			parameterName(_list(_anything()))
 		)
 	).does {
 		val class_ = this
@@ -218,7 +217,7 @@ val classMethodDefinition =
 val methodInvokeDefinition =
 	value(
 		methodName(nativeName()),
-		invokeName(parameterName(_list(anyName())))
+		invokeName(parameterName(_list(_anything())))
 	).does {
 		val method = this
 			.getOrNull(methodName)!!
@@ -240,7 +239,7 @@ val nativeInvokeMethodDefinition =
 		nativeName(),
 		invokeName(
 			methodName(nativeName()),
-			parameterName(_list(anyName())))
+			parameterName(_list(_anything())))
 	).does {
 		val object_ = this
 			.getOrNull(nativeName)!!
@@ -274,7 +273,7 @@ val arrayStackDefinition =
 	}
 
 val printingDefinition =
-	value(_printing(anyName())).does {
+	value(_printing(_anything())).does {
 		val content = this
 			.getOrNull(_printing)!!
 			.contentOrNull!!
@@ -282,7 +281,7 @@ val printingDefinition =
 	}
 
 val leoHeadDefinition =
-	value(_head(_any())).does {
+	value(_head(_anything())).does {
 		this
 			.getOrNull(_head)!!
 			.contentOrNull!!
@@ -294,7 +293,7 @@ val leoHeadDefinition =
 	}
 
 val leoTailDefinition =
-	value(_tail(_any())).does {
+	value(_tail(_anything())).does {
 		this
 			.getOrNull(_tail)!!
 			.contentOrNull!!
@@ -306,7 +305,7 @@ val leoTailDefinition =
 	}
 
 val leoOpDefinition =
-	value(_op(_any())).does {
+	value(_op(_anything())).does {
 		this
 			.getOrNull(_op)!!
 			.contentOrNull!!

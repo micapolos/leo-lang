@@ -19,13 +19,13 @@ class ValueMatchesTest {
 	}
 
 	@Test
-	fun any() {
+	fun anything() {
 		value(_x(_zero()), _y(_one()))
-			.matches(value(_any()))
+			.matches(value(_anything()))
 			.assert
 
 		value(_x(_zero()), _y(_one()))
-			.matches(value(_x(_any()), _y(_any())))
+			.matches(value(_x(_anything()), _y(_anything())))
 			.assert
 
 		value(_anything())

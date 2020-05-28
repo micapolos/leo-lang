@@ -8,6 +8,8 @@ fun main() {
 }
 
 val dsl = compile_ {
+	use { text }
+	use { number }
 	use { javascript }
 
 	animation.frame.number.is_ { "animationFrame".text.expression.javascript }
@@ -17,7 +19,7 @@ val dsl = compile_ {
 	mouse.x.number.is_ { "mouseX".text.expression.javascript }
 	mouse.y.number.is_ { "mouseY".text.expression.javascript }
 
-	native.text
+	text.any
 	does { text.expression.javascript.string }
 
 	test {
@@ -25,7 +27,7 @@ val dsl = compile_ {
 		equals_ { quote { javascript { expression { "'hello'".text } } } }
 	}
 
-	native.number
+	number.any
 	does { number.as_ { text }.expression.javascript }
 
 	test {
