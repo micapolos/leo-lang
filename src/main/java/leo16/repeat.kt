@@ -11,5 +11,5 @@ val Compiled.repeat get() = Repeat(this)
 
 inline fun Repeat.apply(arg: Value): Value? =
 	arg.matchPrefix(_repeat) { rhs ->
-		compiled.invoke(rhs.match)
+		compiled.invoke(rhs)
 	}

@@ -41,8 +41,12 @@ val Dictionary.asField: Field
 fun Dictionary.plus(match: PatternMatch): Dictionary =
 	this
 		.ifNotNull(match.anyParameterDefinitionOrNull) { plus(it) }
-		.plus(match.value.contentParameterDefinition)
-		.fold(match.value.fieldStack) { plus(it.parameterDefinition) }
+		.bind(match.value)
+
+fun Dictionary.bind(value: Value): Dictionary =
+	this
+		.plus(value.contentParameterDefinition)
+		.fold(value.fieldStack) { plus(it.parameterDefinition) }
 
 fun Dictionary.modeOrNull(word: String): Mode? =
 	apply(_mode(_word(word())).value.evaluated)?.value?.modeOrNull

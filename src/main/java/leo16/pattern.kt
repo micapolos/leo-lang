@@ -99,8 +99,6 @@ fun PatternMatch.plus(field: Field) =
 fun PatternMatch.anyPlus(field: Field) =
 	copy(anyFieldStackOrNull = anyFieldStackOrNull.orIfNull { stack() }.push(field))
 
-val Value.match get() = PatternMatch(null, fieldStack.reverse)
-
 val PatternMatch.value
 	get() =
 		stack<Field>()
@@ -128,8 +126,8 @@ inline fun PatternMatch.plusMatchOrNull(pattern: Pattern, value: Value): Pattern
 			}
 		}
 
-inline fun Pattern.matchOrNull(value: Value): PatternMatch? =
-	emptyMatch.plusMatchOrNull(this, value)
+fun Pattern.isMatching(value: Value): Boolean =
+	value.matches(this)
 
 fun Value.matches(pattern: Pattern): Boolean =
 	emptyMatch.plusMatchOrNull(pattern, this) != null

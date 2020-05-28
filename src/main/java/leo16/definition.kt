@@ -79,6 +79,7 @@ val Value.contentParameterDefinition: Definition
 
 val PatternMatch.anyParameterDefinitionOrNull: Definition?
 	get() =
-		anyFieldStackOrNull?.let { fieldStack ->
-			_the(fieldStack.reverse.value).parameterDefinition
-		}
+		null
+//		anyFieldStackOrNull?.let { fieldStack ->
+//			_the(fieldStack.reverse.value).parameterDefinition
+//		}

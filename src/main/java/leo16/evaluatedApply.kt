@@ -105,7 +105,7 @@ fun Evaluated.applyFunction(field: Field): Evaluated? =
 
 fun Evaluated.applyDo(field: Field): Evaluated? =
 	field.matchPrefix(_do) { rhs ->
-		set(scope.dictionary.compiled(rhs).invoke(value.match))
+		set(scope.dictionary.compiled(rhs).invoke(value))
 	}
 
 fun Evaluated.applyUse(field: Field): Evaluated? =
@@ -193,16 +193,14 @@ fun Evaluated.applyTestMatches(value: Value): Evaluated? =
 	value.matchInfix(_matches) { lhs, rhs ->
 		scope.emptyEvaluator.plus(lhs).evaluated.value.let { evaluatedLhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated.value.let { evaluatedRhs ->
-				evaluatedRhs.pattern.matchOrNull(evaluatedLhs).let { match ->
-					if (match != null) this
-					else throw AssertionError(
-						value(
-							_test(
-								_error(
-									_it(lhs),
-									_giving(evaluatedLhs),
-									_does(_not(_match(evaluatedRhs)))))).printed.toString())
-				}
+				if (evaluatedRhs.pattern.isMatching(evaluatedLhs)) this
+				else throw AssertionError(
+					value(
+						_test(
+							_error(
+								_it(lhs),
+								_giving(evaluatedLhs),
+								_does(_not(_match(evaluatedRhs)))))).printed.toString())
 			}
 		}
 	}

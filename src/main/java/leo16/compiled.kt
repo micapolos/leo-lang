@@ -17,6 +17,9 @@ val Compiled.isEmpty get() = bodyValue.isEmpty
 inline operator fun Compiled.invoke(match: PatternMatch): Value =
 	dictionary.plus(repeat.definition).plus(match).evaluate(bodyValue)
 
+inline operator fun Compiled.invoke(value: Value): Value =
+	dictionary.plus(repeat.definition).bind(value).evaluate(bodyValue)
+
 val Compiled.asField: Field
 	get() =
 		_function(/*dictionary.asField, */bodyValue.asField)

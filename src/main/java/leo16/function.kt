@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.notNullIf
 import leo16.names.*
 
 data class Function(val pattern: Pattern, val compiled: Compiled) {
@@ -9,8 +10,8 @@ data class Function(val pattern: Pattern, val compiled: Compiled) {
 fun Pattern.does(compiled: Compiled) = Function(this, compiled)
 
 fun Function.apply(value: Value): Value? =
-	pattern.matchOrNull(value)?.let { match ->
-		compiled.invoke(match)
+	notNullIf(pattern.isMatching(value)) {
+		compiled.invoke(value)
 	}
 
 val Function.asPatternField: Field

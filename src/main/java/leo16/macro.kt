@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.notNullIf
 import leo16.names.*
 
 data class Macro(val pattern: Pattern, val compiled: Compiled) {
@@ -8,8 +9,8 @@ data class Macro(val pattern: Pattern, val compiled: Compiled) {
 	val asValue get() = pattern.asValue.plus(_expands(compiled.bodyValue))
 
 	fun apply(evaluated: Evaluated): Evaluated? =
-		pattern.matchOrNull(evaluated.value)?.let { match ->
-			compiled.invoke(match).let { invoked ->
+		notNullIf(pattern.isMatching(evaluated.value)) {
+			compiled.invoke(evaluated.value).let { invoked ->
 				evaluated.scope.emptyEvaluator.plus(invoked).evaluated
 			}
 		}

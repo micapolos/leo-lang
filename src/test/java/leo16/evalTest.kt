@@ -260,17 +260,6 @@ class EvalTest {
 	}
 
 	@Test
-	fun anyDoes() {
-		evaluate_ {
-			any.plus { any }
-			does { the.content.add { plus.content } }
-			two.plus { three }
-		}.assertEquals {
-			two.add { three }
-		}
-	}
-
-	@Test
 	fun matchSentence() {
 		evaluate_ { zero.bit.match { zero { one } } }
 			.assertEquals { one }
