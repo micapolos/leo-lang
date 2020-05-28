@@ -18,17 +18,21 @@ val byte = compile_ {
 	use { int }
 	use { reflection }
 
-	byte {
-		first { any.bit }
-		second { any.bit }
-		third { any.bit }
-		fourth { any.bit }
-		fifth { any.bit }
-		sixth { any.bit }
-		seventh { any.bit }
-		eighth { any.bit }
+	byte.any
+	is_ {
+		byte {
+			first { bit.any }
+			second { bit.any }
+			third { bit.any }
+			fourth { bit.any }
+			fifth { bit.any }
+			sixth { bit.any }
+			seventh { bit.any }
+			eighth { bit.any }
+		}
 	}
-	read
+
+	byte.any.read
 	does {
 		read.byte.first.bit.number.times { 128.number }
 		plus { read.byte.second.bit.number.times { 64.number } }

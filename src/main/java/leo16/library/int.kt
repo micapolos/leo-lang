@@ -64,8 +64,10 @@ val int = compile_ {
 		}
 	}
 
-	any.int
-	plus { any.int }
+	int.any.is_ { native.int }
+
+	int.any
+	plus { int.any }
 	does {
 		integer.plus.method
 		invoke {
@@ -81,8 +83,8 @@ val int = compile_ {
 
 	test { 2.int.plus { 3.int }.equals_ { 5.int } }
 
-	any.int
-	minus { any.int }
+	int.any
+	minus { int.any }
 	does {
 		integer.minus.method
 		invoke {
@@ -98,8 +100,8 @@ val int = compile_ {
 
 	test { 5.int minus { 3.int } equals_ { 2.int } }
 
-	any.int
-	times { any.int }
+	int.any
+	times { int.any }
 	does {
 		integer.times.method
 		invoke {

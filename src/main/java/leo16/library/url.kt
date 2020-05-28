@@ -13,6 +13,8 @@ val url = compile_ {
 	use { number }
 	use { url.native }
 
+	url.any.is_ { native.url }
+
 	any.text.url
 	does {
 		string.url.constructor

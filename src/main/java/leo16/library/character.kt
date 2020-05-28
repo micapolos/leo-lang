@@ -13,13 +13,15 @@ val character = compile_ {
 	use { string.native }
 	use { character.native }
 
-	native.character.text
+	character.any.is_ { native.character }
+
+	character.any.text
 	does { text.character.native.object_.string.text }
 
-	native.character.reflect
+	character.any.reflect
 	does { character { reflect.character.text } }
 
-	native.character.letter.boolean
+	character.any.letter.boolean
 	does {
 		character.word { is_ { letter } }.method
 		invoke { parameter { list { item { boolean.letter.character.native } } } }

@@ -8,6 +8,8 @@ fun main() {
 }
 
 val boolean = compile_ {
+	boolean.any.is_ { boolean { true_.or { false_ } } }
+
 	false_.boolean.negate is_ { true_.boolean }
 	true_.boolean.negate.is_ { false_.boolean }
 

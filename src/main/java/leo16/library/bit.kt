@@ -8,6 +8,8 @@ fun main() {
 }
 
 val bit = compile_ {
+	bit.any.is_ { bit { zero.or { one } } }
+
 	zero.bit.negate is_ { one.bit }
 	one.bit.negate.is_ { zero.bit }
 

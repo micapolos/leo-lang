@@ -12,11 +12,14 @@ fun main() {
 
 val approximate = compile_ {
 	use { reflection }
+	use { number }
 	use { big.decimal.native }
 	use { double.native }
 	use { math.native }
 
-	native.number.approximate
+	approximate.any.is_ { native.approximate }
+
+	number.any.approximate
 	does {
 		approximate.number.native
 		invoke {
@@ -36,7 +39,7 @@ val approximate = compile_ {
 		equals_ { java.lang.Double::class.java.nativeString.text }
 	}
 
-	native.approximate.number
+	approximate.any.number
 	does {
 		big.decimal.double.constructor
 		invoke {
@@ -54,8 +57,8 @@ val approximate = compile_ {
 		0.1.number.approximate.number.equals_ { BigDecimal(0.1).number }
 	}
 
-	native.approximate
-	plus { native.approximate }
+	approximate.any
+	plus { approximate.any }
 	does {
 		method { double.plus }
 		invoke {
@@ -75,8 +78,8 @@ val approximate = compile_ {
 		equals_ { 5.number.approximate }
 	}
 
-	native.approximate
-	minus { native.approximate }
+	approximate.any
+	minus { approximate.any }
 	does {
 		method { double.minus }
 		invoke {
@@ -96,8 +99,8 @@ val approximate = compile_ {
 		equals_ { 2.number.approximate }
 	}
 
-	native.approximate
-	times { native.approximate }
+	approximate.any
+	times { approximate.any }
 	does {
 		method { double.times }
 		invoke {
@@ -117,7 +120,7 @@ val approximate = compile_ {
 		equals_ { 6.number.approximate }
 	}
 
-	native.approximate.minus
+	approximate.any.minus
 	does {
 		0.number.approximate
 		minus { minus.approximate }
@@ -128,8 +131,8 @@ val approximate = compile_ {
 		equals_ { (-2).number.approximate }
 	}
 
-	native.approximate
-	by { native.approximate }
+	approximate.any
+	by { approximate.any }
 	does {
 		method { double.div }
 		invoke {
@@ -149,8 +152,8 @@ val approximate = compile_ {
 		equals_ { 2.number.approximate }
 	}
 
-	native.approximate
-	modulo { native.approximate }
+	approximate.any
+	modulo { approximate.any }
 	does {
 		method { double.mod }
 		invoke {
@@ -170,7 +173,7 @@ val approximate = compile_ {
 		equals_ { 3.number.approximate }
 	}
 
-	native.approximate.sinus
+	approximate.any.sinus
 	does {
 		method { math.double.sin }
 		invoke {
@@ -188,7 +191,7 @@ val approximate = compile_ {
 		equals_ { 0.number.approximate }
 	}
 
-	native.approximate.cosinus
+	approximate.any.cosinus
 	does {
 		method { math.double.cos }
 		invoke {
@@ -206,9 +209,9 @@ val approximate = compile_ {
 		equals_ { 1.number.approximate }
 	}
 
-	native.number.read
+	number.any.read
 	does { read.number.approximate }
 
-	native.approximate.reflect
+	approximate.any.reflect
 	does { reflect.approximate.number }
 }

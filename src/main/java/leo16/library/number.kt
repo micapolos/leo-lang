@@ -12,7 +12,9 @@ val number = compile_ {
 	use { big.decimal.native }
 	use { math.context.native }
 
-	native.number
+	number.any.is_ { native.number }
+
+	number.any
 	plus { native.number }
 	does {
 		number.native
@@ -25,8 +27,8 @@ val number = compile_ {
 
 	test { 2.number plus { 3.number } equals_ { 5.number } }
 
-	native.number
-	minus { native.number }
+	number.any
+	minus { number.any }
 	does {
 		number.native
 		invoke {
@@ -38,7 +40,7 @@ val number = compile_ {
 
 	test { 5.number minus { 3.number } equals_ { 2.number } }
 
-	native.number.minus
+	number.any.minus
 	does {
 		0.number
 		minus { minus.number }
@@ -46,8 +48,8 @@ val number = compile_ {
 
 	test { 5.number.minus.equals_ { (-5).number } }
 
-	native.number
-	times { native.number }
+	number.any
+	times { number.any }
 	does {
 		number.native
 		invoke {
@@ -64,8 +66,8 @@ val number = compile_ {
 		equals_ { "152415787532388367501905199875019052100".number }
 	}
 
-	native.number
-	by { native.number }
+	number.any
+	by { number.any }
 	does {
 		input.is_ { content }
 		number.native
@@ -97,8 +99,8 @@ val number = compile_ {
 		equals_ { quote { 15.number.by { 11.number } } }
 	}
 
-	native.number
-	modulo { native.number }
+	number.any
+	modulo { number.any }
 	does {
 		input.is_ { content }
 		number.native
@@ -126,7 +128,7 @@ val number = compile_ {
 		equals_ { 1.number }
 	}
 
-	native.number.square.root
+	number.any.square.root
 	does {
 		input.is_ { content }
 		root.square.number.native
@@ -147,10 +149,11 @@ val number = compile_ {
 	test { 25.number.square.root equals_ { 5.number } }
 	test { 5.number.square.root equals_ { quote { root { square { 5.number } } } } }
 
-	native.number.text
+	number.any.text
 	does { text.number.as_ { meta { text } } }
 	test { 123.number.text.equals_ { "123".text } }
 
+	// TODO: Move to text?
 	native.text.number
 	does {
 		big.decimal.string.constructor
