@@ -25,7 +25,6 @@ val Field.defaultPrinted: Field
 			is SentenceField -> sentence.printSentence.field
 			is FunctionField -> function.printSentence.field
 			is NativeField -> native.nativeString()
-			is ChoiceField -> choice.printSentence.field
 			is LazyField -> lazy.printSentence.field
 			is EvaluatedField -> evaluated.printSentence.field
 		}
@@ -37,14 +36,6 @@ val Sentence.printSentence: Sentence
 val Function.printSentence: Sentence
 	get() =
 		_function.sentenceTo(pattern.asValue.plus(_does(compiled.bodyValue)))
-
-val Choice.printSentence: Sentence
-	get() =
-		_choice.sentenceTo(eitherStack.map { printSentence.field }.value)
-
-val Either.printSentence: Sentence
-	get() =
-		_either.sentenceTo(field.printed)
 
 val Lazy.printSentence: Sentence
 	get() =

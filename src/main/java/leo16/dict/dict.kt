@@ -4,7 +4,6 @@ import kotlinx.collections.immutable.PersistentMap
 import leo.base.orNull
 import leo.base.orNullFold
 import leo13.seq
-import leo16.ChoiceField
 import leo16.EvaluatedField
 import leo16.Field
 import leo16.FunctionField
@@ -43,7 +42,6 @@ fun <T> Node<T>.get(field: Field): Node<T>? =
 		is SentenceField -> get(field.sentence)
 		is FunctionField -> TODO()
 		is NativeField -> TODO()
-		is ChoiceField -> TODO()
 		is LazyField -> TODO()
 		is EvaluatedField -> TODO()
 	}

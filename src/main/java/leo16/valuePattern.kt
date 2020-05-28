@@ -1,7 +1,6 @@
 package leo16
 
 import leo13.fold
-import leo13.map
 import leo13.reverse
 import leo16.names.*
 
@@ -19,7 +18,6 @@ val Field.patternField: PatternField
 			is SentenceField -> sentence.patternField
 			is FunctionField -> function.asPatternField.patternField
 			is NativeField -> native.nativePatternField
-			is ChoiceField -> choice.patternField
 			is LazyField -> lazy.patternField
 			is EvaluatedField -> evaluated.patternField
 		}
@@ -30,14 +28,6 @@ val Sentence.patternField: PatternField
 			_function -> value.pattern.function.field
 			else -> exactPatternField
 		}
-
-val Choice.patternField: PatternField
-	get() =
-		_choice.invoke(eitherStack.map { patternField }.value.pattern)
-
-val Either.patternField: PatternField
-	get() =
-		field.patternField
 
 val Lazy.patternField: PatternField
 	get() =

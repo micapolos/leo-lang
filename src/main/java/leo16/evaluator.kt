@@ -57,7 +57,6 @@ inline operator fun Evaluator.plus(field: Field): Evaluator =
 		is SentenceField -> plus(field.sentence)
 		is FunctionField -> append(field)
 		is NativeField -> append(field)
-		is ChoiceField -> append(field)
 		is LazyField -> append(field)
 		is EvaluatedField -> append(field)
 	}

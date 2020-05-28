@@ -37,7 +37,6 @@ val Field.selectWord: String
 			is SentenceField -> sentence.word
 			is FunctionField -> _function
 			is NativeField -> _native
-			is ChoiceField -> _choice
 			is LazyField -> _lazy
 			is EvaluatedField -> _evaluated
 		}
@@ -73,12 +72,6 @@ val Value.wordOrNullSeq: Seq<String?>
 val Value.wordStackOrNull: Stack<String>?
 	get() =
 		wordOrNullSeq.reverseStack.mapOrNull { this }
-
-val Field.eitherOrNull: Either?
-	get() =
-		matchPrefix(_either) { rhs ->
-			rhs.onlyFieldOrNull?.either
-		}
 
 fun Value.rhsOrNull(word: String): Value? =
 	onlyFieldOrNull?.rhsOrNull(word)

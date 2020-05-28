@@ -6,7 +6,6 @@ import leo.base.runIfNotNull
 import leo13.filterNulls
 import leo13.first
 import leo13.map
-import leo13.mapOrNull
 import leo13.reverse
 import leo16.names.*
 
@@ -53,7 +52,6 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyForce(field)
 		?: applyFunction(field)
 		?: applyMatch(field)
-		?: applyChoice(field)
 		?: applyExport(field)
 		?: applyUse(field)
 		?: applyTest(field)
@@ -133,15 +131,6 @@ fun Evaluated.applyForce(field: Field): Evaluated? =
 		}
 	}
 
-fun Evaluated.applyChoice(field: Field): Evaluated? =
-	field.matchPrefix(_choice) { rhs ->
-		rhs.fieldStack
-			.mapOrNull { eitherOrNull }
-			?.choice
-			?.field
-			?.value
-			?.let { set(it) }
-	}
 
 fun Evaluated.applyExport(field: Field): Evaluated? =
 	field.matchPrefix(_export) { rhs ->

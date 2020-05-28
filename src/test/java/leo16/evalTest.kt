@@ -574,73 +574,40 @@ class EvalTest {
 	fun matchesChoice() {
 		evaluate_ {
 			zero
-			matches {
-				choice {
-					either { zero }
-					either { one }
-				}
-			}
+			matches { zero.or { one } }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
 			one
-			matches {
-				choice {
-					either { zero }
-					either { one }
-				}
-			}
+			matches { zero.or { one } }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
 			two
-			matches {
-				choice {
-					either { zero }
-					either { one }
-				}
-			}
+			matches { zero.or { one } }
 		}.assertEquals { false.boolean }
 
 		evaluate_ {
-			choice {
-				either { zero }
-				either { one }
-			}
-			matches {
-				choice {
-					either { zero }
-					either { one }
-				}
-			}
+			zero.or { one }
+			matches { zero.or { one } }
+		}.assertEquals { false.boolean }
+
+		evaluate_ {
+			zero.or { one }
+			matches { zero.exact { or { one } } }
 		}.assertEquals { true.boolean }
-
-		evaluate_ {
-			choice {
-				either { zero }
-				either { one }
-			}
-			matches {
-				quote {
-					choice {
-						either { zero }
-						either { one }
-					}
-				}
-			}
-		}.assertEquals { false.boolean }
 	}
 
 	@Test
 	fun matchesGiving() {
 		evaluate_ {
 			function { zero.does { one } }
-			matches { function { zero } }
+			matches { taking { zero } }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
 			function { zero.does { one } }
-			matches { function { one } }
+			matches { taking { one } }
 		}.assertEquals { false.boolean }
 	}
 }

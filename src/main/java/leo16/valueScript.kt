@@ -29,7 +29,6 @@ val Field.defaultScriptLine: ScriptLine
 			is SentenceField -> sentence.scriptLine
 			is FunctionField -> function.scriptLine
 			is NativeField -> native.nativeScriptLine
-			is ChoiceField -> choice.scriptLine
 			is LazyField -> lazy.scriptLine
 			is EvaluatedField -> evaluated.scriptLine
 		}
@@ -49,14 +48,6 @@ val Sentence.scriptLine: ScriptLine
 val Function.scriptLine: ScriptLine
 	get() =
 		_taking(pattern.asValue.script)
-
-val Choice.scriptLine: ScriptLine
-	get() =
-		_choice(eitherStack.map { scriptLine }.script)
-
-val Either.scriptLine: ScriptLine
-	get() =
-		_either(field.scriptLine)
 
 val Lazy.scriptLine: ScriptLine
 	get() =
