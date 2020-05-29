@@ -1,6 +1,5 @@
 package leo16
 
-import leo.base.notNullIf
 import leo.base.runIfNotNull
 import leo13.Link
 import leo16.names.*
@@ -16,7 +15,7 @@ fun matchesAnythingOrNull(value: Value): Boolean? =
 
 fun Value.matchesQuoteOrNull(value: Value): Boolean? =
 	value.matchPrefix(_quote) { rhs ->
-		matches(rhs)
+		this == rhs
 	}
 
 fun Value.matchesDefault(value: Value): Boolean =
