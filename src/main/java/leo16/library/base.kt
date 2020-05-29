@@ -14,6 +14,7 @@ val base = compile_ {
 	export { boolean }
 	export { printing }
 	export { number }
+	export { bit }
 	export { byte }
 	export { int }
 	export { text }
