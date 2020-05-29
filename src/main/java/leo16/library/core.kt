@@ -2,14 +2,15 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.compile_
-import leo16.dictionary_
 
 fun main() {
 	core
 }
 
 val core = compile_ {
-	any.clear does { nothing }
+	anything.clear does { nothing }
+
+	test { zero.clear.equals_ { nothing } }
 
 	comment { nothing }
 	test { nothing equals_ { nothing_ } }
