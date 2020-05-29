@@ -600,4 +600,12 @@ class EvalTest {
 			matches { function { one } }
 		}.assertEquals { false.boolean }
 	}
+
+	@Test
+	fun matchesQuote() {
+		evaluate_ {
+			zero.or { one }
+			matches { meta { quote { zero.or { one } } } }
+		}.assertEquals { true.boolean }
+	}
 }
