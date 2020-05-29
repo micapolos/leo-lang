@@ -9,6 +9,7 @@ fun main() {
 
 val base = compile_ {
 	export { core }
+	export { option }
 	export { help }
 	export { leo }
 	export { boolean }
