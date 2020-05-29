@@ -4,7 +4,9 @@ import leo.base.assertEqualTo
 import leo14.Script
 import leo15.dsl.*
 import leo16.names.*
+import org.junit.Assert
 import kotlin.test.Test
+import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 
 fun Script.assertEquals(f: F) {
@@ -607,5 +609,27 @@ class EvalTest {
 			meta { quote { zero.or { one } } }
 			matches { zero.or { one } }
 		}.assertEquals { true.boolean }
+	}
+
+	@Test
+	fun of() {
+		evaluate_ {
+			zero
+			of { zero.or { one } }
+			equals_ { zero }
+		}
+
+		evaluate_ {
+			one
+			of { zero.or { one } }
+			equals_ { one }
+		}
+
+		assertFails {
+			evaluate_ {
+				two
+				of { zero.or { one } }
+			}
+		}
 	}
 }

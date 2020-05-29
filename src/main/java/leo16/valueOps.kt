@@ -89,3 +89,7 @@ val Value.hashBigDecimal
 fun <T : Any> T?.orNullAsField(word: String, fn: T.() -> Field): Field =
 	if (this == null) word(_none())
 	else fn()
+
+fun Value.of(patternValue: Value): Value =
+	if (matches(patternValue)) this
+	else throw AssertionError(value(_error(this.plus(_of(patternValue)))))
