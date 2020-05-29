@@ -61,7 +61,7 @@ fun Value.applyScript(field: Field): Value? =
 
 fun Value.applyMatches(field: Field): Value? =
 	field.matchPrefix(_matches) { rhs ->
-		matches(rhs).field.value
+		rhs.matches(this).field.value
 	}
 
 fun Value.applyQuote(field: Field): Value? =

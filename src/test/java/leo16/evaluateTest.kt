@@ -563,18 +563,18 @@ class EvalTest {
 	@Test
 	fun matchesChoice() {
 		evaluate_ {
-			zero
-			matches { zero.or { one } }
+			zero.or { one }
+			matches { zero }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
-			one
-			matches { zero.or { one } }
+			zero.or { one }
+			matches { one }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
-			two
-			matches { zero.or { one } }
+			zero.or { one }
+			matches { two }
 		}.assertEquals { false.boolean }
 
 		evaluate_ {
@@ -583,16 +583,16 @@ class EvalTest {
 		}.assertEquals { false.boolean }
 
 		evaluate_ {
-			zero.or { one }
-			matches { zero.exact { or { one } } }
+			zero.exact { or { one } }
+			matches { zero.or { one } }
 		}.assertEquals { true.boolean }
 	}
 
 	@Test
 	fun matchesGiving() {
 		evaluate_ {
-			function { zero.does { one } }
-			matches { function { zero } }
+			function { zero }
+			matches { function { zero.does { one } } }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
@@ -604,8 +604,8 @@ class EvalTest {
 	@Test
 	fun matchesQuote() {
 		evaluate_ {
-			zero.or { one }
-			matches { meta { quote { zero.or { one } } } }
+			meta { quote { zero.or { one } } }
+			matches { zero.or { one } }
 		}.assertEquals { true.boolean }
 	}
 }

@@ -4,6 +4,8 @@ import leo.base.runIfNotNull
 import leo13.Link
 import leo16.names.*
 
+// TODO: Refactor, so pattern is this, and value is argument.
+
 fun Value.matches(value: Value): Boolean =
 	null
 		?: matchesAnythingOrNull(value)

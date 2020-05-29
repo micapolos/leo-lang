@@ -28,20 +28,20 @@ val option = compile_ {
 	}
 
 	test {
-		zero.the.option
-		matches { zero.or { one }.option.any }
+		zero.or { one }.option.any
+		matches { zero.the.option }
 		equals_ { true_.boolean }
 	}
 
 	test {
-		one.the.option
-		matches { zero.or { one }.option.any }
+		zero.or { one }.option.any
+		matches { one.the.option }
 		equals_ { true_.boolean }
 	}
 
 	test {
-		zero.or { one }.no.option
-		matches { zero.or { one }.option.any }
+		zero.or { one }.option.any
+		matches { zero.or { one }.no.option }
 		equals_ { true_.boolean }
 	}
 }
