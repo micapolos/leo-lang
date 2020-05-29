@@ -8,7 +8,18 @@ fun main() {
 }
 
 val list = compile_ {
-	list.any.is_ { list { anything } }
+	link.any.is_ {
+		link {
+			previous { anything }
+			last { anything }
+		}
+	}
+
+	list.any.is_ {
+		list {
+			empty.or { link.any }
+		}
+	}
 
 	list.any
 	append { anything }
