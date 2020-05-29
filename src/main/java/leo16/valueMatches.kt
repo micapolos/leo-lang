@@ -1,16 +1,23 @@
 package leo16
 
+import leo.base.notNullIf
 import leo.base.runIfNotNull
 import leo13.Link
 import leo16.names.*
 
 fun Value.matches(value: Value): Boolean =
-	value.isAnything || matchesDefault(value)
+	null
+		?: matchesAnythingOrNull(value)
+		?: matchesQuoteOrNull(value)
+		?: matchesDefault(value)
 
-val Value.isAnything: Boolean
-	get() =
-		// TODO: Remove any.
-		this == value(_anything())
+fun matchesAnythingOrNull(value: Value): Boolean? =
+	value.match(_anything) { true }
+
+fun Value.matchesQuoteOrNull(value: Value): Boolean? =
+	value.matchPrefix(_quote) { rhs ->
+		matches(rhs)
+	}
 
 fun Value.matchesDefault(value: Value): Boolean =
 	runIfNotNull(value.linkOrNull) { matches(it) } ?: isEmpty
@@ -18,14 +25,14 @@ fun Value.matchesDefault(value: Value): Boolean =
 fun Value.matches(link: Link<Value, Field>): Boolean =
 	null
 		?: matchesAlternativeOrNull(link)
-		?: matchesExact(link)
+		?: matchesDefault(link)
 
 fun Value.matchesAlternativeOrNull(link: Link<Value, Field>): Boolean? =
 	link.head.matchPrefix(_or) { rhs ->
 		matches(rhs) || matches(link.tail)
 	}
 
-fun Value.matchesExact(link: Link<Value, Field>): Boolean =
+fun Value.matchesDefault(link: Link<Value, Field>): Boolean =
 	linkOrNull?.matches(link) ?: false
 
 fun Link<Value, Field>.matches(link: Link<Value, Field>): Boolean =

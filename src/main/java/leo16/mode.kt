@@ -38,7 +38,7 @@ fun Mode.begin(word: String): Mode =
 				_does -> Mode.QUOTE
 				else -> this
 			}
-		Mode.META -> Mode.EVALUATE.begin(word)
+		Mode.META -> Mode.EVALUATE
 		Mode.QUOTE -> this
 	}
 

@@ -74,6 +74,7 @@ class EvalTest {
 		evaluate_ { meta { zero.one } }.assertEquals { zero.one }
 		evaluate_ { meta { zero.is_ { one } } }.assertEquals { zero.is_ { one } }
 		evaluate_ { zero.meta { is_ { one } } }.assertEquals { zero.is_ { one } }
+		evaluate_ { meta { quote { zero.is_ { one }.zero } } }.assertEquals { quote { one } }
 	}
 
 	@Test

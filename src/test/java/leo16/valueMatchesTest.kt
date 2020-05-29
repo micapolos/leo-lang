@@ -78,4 +78,11 @@ class ValueMatchesTest {
 			.matches(value(_exact(_function(_zero()))))
 			.assert
 	}
+
+	@Test
+	fun quote() {
+		value(_anything(), _or(_anything()))
+			.matches(value(_quote(_anything(), _or(_anything()))))
+			.assert
+	}
 }
