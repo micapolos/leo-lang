@@ -10,10 +10,13 @@ fun main() {
 val javascript = compile_ {
 	use { base }
 
+	javascript.any.is_ { text.any.javascript }
+	expression.javascript.any.is_ { text.any.expression.javascript }
+
 	empty.javascript
 	is_ { "".text.javascript }
 
-	text.any.javascript.html
+	javascript.any.html
 	does {
 		"<script>window.onload=function(){".text
 		plus { html.javascript.text }
@@ -21,20 +24,20 @@ val javascript = compile_ {
 		html
 	}
 
-	text.any.javascript.run
+	javascript.any.run
 	does {
 		use { html }
 		run.javascript.html.open
 	}
 
-	text.any.expression.javascript.show
+	expression.javascript.any.show
 	does {
 		"document.body.textContent=".text
 		plus { show.javascript.expression.text }
 		javascript.run
 	}
 
-	text.any.javascript.animated
+	javascript.any.animated
 	does {
 		"".text
 		plus {
@@ -83,7 +86,7 @@ val javascript = compile_ {
 		javascript
 	}
 
-	text.any.expression.javascript.string
+	expression.javascript.any.string
 	does {
 		"'".text
 		plus { string.javascript.expression.text.comment { escape } }
@@ -96,7 +99,7 @@ val javascript = compile_ {
 		equals_ { "'hello'".text.expression.javascript }
 	}
 
-	text.any.expression.javascript
+	expression.javascript.any
 	in_ { parentheses }
 	does {
 		"(".text
@@ -110,8 +113,8 @@ val javascript = compile_ {
 		equals_ { "(a + b)".text.expression.javascript }
 	}
 
-	text.any.expression.javascript
-	plus { text.any.expression.javascript }
+	expression.javascript.any
+	plus { expression.javascript.any }
 	does {
 		javascript.in_ { parentheses }.expression.text
 		plus { " + ".text }
@@ -125,8 +128,8 @@ val javascript = compile_ {
 		equals_ { "(a) + (b)".text.expression.javascript }
 	}
 
-	text.any.expression.javascript
-	minus { text.any.expression.javascript }
+	expression.javascript.any
+	minus { expression.javascript.any }
 	does {
 		javascript.in_ { parentheses }.expression.text
 		plus { " - ".text }
@@ -140,8 +143,8 @@ val javascript = compile_ {
 		equals_ { "(a) - (b)".text.expression.javascript }
 	}
 
-	text.any.expression.javascript
-	times { text.any.expression.javascript }
+	expression.javascript.any
+	times { expression.javascript.any }
 	does {
 		javascript.in_ { parentheses }.expression.text
 		plus { " * ".text }
@@ -155,8 +158,8 @@ val javascript = compile_ {
 		equals_ { "(a) * (b)".text.expression.javascript }
 	}
 
-	text.any.expression.javascript
-	modulo { text.any.expression.javascript }
+	expression.javascript.any
+	modulo { expression.javascript.any }
 	does {
 		javascript.in_ { parentheses }.expression.text
 		plus { " % ".text }
@@ -170,7 +173,7 @@ val javascript = compile_ {
 		equals_ { "(a) % (b)".text.expression.javascript }
 	}
 
-	text.any.expression.javascript.negate
+	expression.javascript.any.negate
 	does {
 		"-".text
 		plus { negate.javascript.in_ { parentheses }.expression.text }
@@ -182,7 +185,7 @@ val javascript = compile_ {
 		equals_ { "-(a)".text.expression.javascript }
 	}
 
-	text.any.expression.javascript.sinus
+	expression.javascript.any.sinus
 	does {
 		"Math.sin".text
 		plus { sinus.javascript.in_ { parentheses }.expression.text }
@@ -194,7 +197,7 @@ val javascript = compile_ {
 		equals_ { "Math.sin(a)".text.expression.javascript }
 	}
 
-	text.any.expression.javascript.cosinus
+	expression.javascript.any.cosinus
 	does {
 		"Math.cos".text
 		plus { cosinus.javascript.in_ { parentheses }.expression.text }
@@ -206,18 +209,18 @@ val javascript = compile_ {
 		equals_ { "Math.cos(a)".text.expression.javascript }
 	}
 
-	text.any.expression.javascript.absolute
+	expression.javascript.any.absolute
 	does {
 		"Math.abs".text
 		plus { absolute.javascript.in_ { parentheses }.expression.text }
 		expression.javascript
 	}
 
-	text.any.javascript
+	javascript.any
 	fill {
-		text { text.any.expression.javascript }
-		x { text.any.expression.javascript }
-		y { text.any.expression.javascript }
+		text { expression.javascript.any }
+		x { expression.javascript.any }
+		y { expression.javascript.any }
 	}
 	does {
 		javascript.text
@@ -243,8 +246,8 @@ val javascript = compile_ {
 		equals_ { "context.fillText('Hello', 10, 20)\n".text.javascript }
 	}
 
-	text.any.javascript
-	set { font { text.any.expression.javascript } }
+	javascript.any
+	set { font { expression.javascript.any } }
 	does {
 		javascript.text
 		plus { "context.font = ".text }
@@ -253,12 +256,12 @@ val javascript = compile_ {
 		javascript
 	}
 
-	text.any.javascript
+	javascript.any
 	fill {
 		circle {
-			radius { text.any.expression.javascript }
-			x { text.any.expression.javascript }
-			y { text.any.expression.javascript }
+			radius { expression.javascript.any }
+			x { expression.javascript.any }
+			y { expression.javascript.any }
 		}
 	}
 	does {
