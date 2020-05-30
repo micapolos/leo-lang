@@ -183,4 +183,9 @@ val text = compile_ {
 		plus { "!".text.character { 0.number } }
 		equals_ { "Hello!".text }
 	}
+
+	meta { quote { text.any } }.reflect
+	does { quote { any { text } } }
+
+	test { text.any.reflect.equals_ { quote { any { text } } } }
 }

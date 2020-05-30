@@ -170,4 +170,9 @@ val number = compile_ {
 
 	test { "123".text.number.equals_ { 123.number } }
 	test { "gaga".text.number.equals_ { quote { number { "gaga".text } } } }
+
+	meta { quote { number.any } }.reflect
+	does { quote { any { number } } }
+
+	test { number.any.reflect.equals_ { quote { any { number } } } }
 }
