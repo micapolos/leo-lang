@@ -478,7 +478,7 @@ class EvalTest {
 	@Test
 	fun nativePattern() {
 		evaluate_ {
-			native.text.check.does { ok }
+			native.any.text.check.does { ok }
 			"hello".text.check
 		}.assertEquals { ok }
 	}

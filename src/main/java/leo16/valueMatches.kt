@@ -53,7 +53,7 @@ fun Field.matchesExactOrNull(field: Field): Boolean? =
 	}
 
 fun Field.matchesNativeOrNull(field: Field): Boolean? =
-	notNullIf(field == _native()) {
+	notNullIf(field == _any(_native())) {
 		this is NativeField
 	}
 

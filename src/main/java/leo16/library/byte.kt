@@ -60,7 +60,7 @@ val byte = compile_ {
 		equals_ { _byte(13.clampedByte.nativeField).toString().text }
 	}
 
-	native.byte.reflect
+	native.any.byte.reflect
 	does { meta { byte { reflect.byte.native.int.number } } }
 
 	test {

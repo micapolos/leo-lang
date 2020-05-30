@@ -15,7 +15,7 @@ val text = compile_ {
 	use { string.native }
 	use { character }
 
-	text.any.is_ { native.text }
+	text.any.is_ { native.any.text }
 
 	text.any.length
 	does {
@@ -31,8 +31,8 @@ val text = compile_ {
 
 	text.any
 	cut {
-		from { native.number }
-		to { native.number }
+		from { number.any }
+		to { number.any }
 	}
 	does {
 		text.native
@@ -58,7 +58,7 @@ val text = compile_ {
 	}
 
 	text.any
-	plus { native.text }
+	plus { text.any }
 	does {
 		text.native
 		invoke {
@@ -72,8 +72,8 @@ val text = compile_ {
 
 	text.any
 	replace {
-		all { native.text }
-		with { native.text }
+		all { text.any }
+		with { text.any }
 	}
 	does {
 		text.native
@@ -99,7 +99,7 @@ val text = compile_ {
 	}
 
 	text.any
-	split { by { native.text } }
+	split { by { text.any } }
 	does {
 		string.split.method
 		invoke {
@@ -144,7 +144,7 @@ val text = compile_ {
 	}
 
 	text.any
-	character { native.number }
+	character { number.any }
 	does {
 		text.native
 		invoke {
@@ -175,7 +175,7 @@ val text = compile_ {
 	test { "ab".text.character.equals_ { "ab".text.character } }
 
 	text.any
-	plus { native.character }
+	plus { character.any }
 	does { text.plus { plus.character.text } }
 
 	test {

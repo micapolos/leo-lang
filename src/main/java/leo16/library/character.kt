@@ -13,7 +13,7 @@ val character = compile_ {
 	use { string.native }
 	use { character.native }
 
-	character.any.is_ { native.character }
+	character.any.is_ { native.any.character }
 
 	character.any.text
 	does { text.character.native.object_.string.text }

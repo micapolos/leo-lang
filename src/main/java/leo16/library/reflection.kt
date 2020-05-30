@@ -128,7 +128,7 @@ val reflection = compile_ {
 		}
 	}
 
-	native.number.long
+	native.any.number.long
 	does {
 		long.number.native
 		invoke {
@@ -137,7 +137,7 @@ val reflection = compile_ {
 		}.long
 	}
 
-	native.number.int
+	native.any.number.int
 	does {
 		int.number.native
 		invoke {
@@ -146,7 +146,7 @@ val reflection = compile_ {
 		}.int
 	}
 
-	native.number.short
+	native.any.number.short
 	does {
 		short.number.native
 		invoke {
@@ -155,7 +155,7 @@ val reflection = compile_ {
 		}.short
 	}
 
-	native.number.byte
+	native.any.number.byte
 	does {
 		byte.number.native
 		invoke {
@@ -164,7 +164,7 @@ val reflection = compile_ {
 		}.byte
 	}
 
-	native.number.float
+	native.any.number.float
 	does {
 		float.number.native
 		invoke {
@@ -173,7 +173,7 @@ val reflection = compile_ {
 		}.float
 	}
 
-	native.number.double
+	native.any.number.double
 	does {
 		double.number.native
 		invoke {
@@ -182,49 +182,49 @@ val reflection = compile_ {
 		}.double
 	}
 
-	anything.long.number
+	native.any.long.number
 	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.long.native } } } }
 		number
 	}
 
-	anything.int.number
+	native.any.int.number
 	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.int.native } } } }
 		number
 	}
 
-	anything.short.number
+	native.any.short.number
 	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.short.native } } } }
 		number
 	}
 
-	anything.byte.number
+	native.any.byte.number
 	does {
 		long.big.decimal.method
 		invoke { parameter { list { item { number.byte.native } } } }
 		number
 	}
 
-	anything.float.number
+	native.any.float.number
 	does {
 		double.big.decimal.method
 		invoke { parameter { list { item { number.float.native } } } }
 		number
 	}
 
-	anything.double.number
+	native.any.double.number
 	does {
 		double.big.decimal.method
 		invoke { parameter { list { item { number.double.native } } } }
 		number
 	}
 
-	native.object_.string.does {
+	native.any.object_.string.does {
 		string.object_.native
 		invoke {
 			object_.string.method

@@ -12,7 +12,7 @@ val number = compile_ {
 	use { big.decimal.native }
 	use { math.context.native }
 
-	number.any.is_ { native.number }
+	number.any.is_ { native.any.number }
 
 	number.any
 	plus { number.any }
@@ -154,7 +154,7 @@ val number = compile_ {
 	test { 123.number.text.equals_ { "123".text } }
 
 	// TODO: Move to text?
-	native.text.number
+	native.any.text.number
 	does {
 		big.decimal.string.constructor
 		invoke { parameter { list { item { number.text.native } } } }

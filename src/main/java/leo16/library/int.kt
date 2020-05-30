@@ -64,7 +64,7 @@ val int = compile_ {
 		}
 	}
 
-	int.any.is_ { native.int }
+	int.any.is_ { native.any.int }
 
 	int.any
 	plus { int.any }
