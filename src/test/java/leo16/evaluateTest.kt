@@ -584,7 +584,7 @@ class EvaluateTest {
 		}.assertEquals { false.boolean }
 
 		evaluate_ {
-			zero.exact { or { one } }
+			zero.meta { meta { or { one } } }
 			matches { zero.or { one } }
 		}.assertEquals { true.boolean }
 	}

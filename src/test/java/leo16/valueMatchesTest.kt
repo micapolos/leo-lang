@@ -32,11 +32,11 @@ class ValueMatchesTest {
 			.matches(value(_anything()))
 			.assert
 
-		value(_exact(_anything()))
+		value(_meta(_anything()))
 			.matches(value(_anything()))
 			.assert
 
-		value(_exact(_anything()))
+		value(_meta(_anything()))
 			.matches(value(_zero()))
 			.negate.assert
 	}
@@ -59,7 +59,7 @@ class ValueMatchesTest {
 			.matches(value(_zero(), _or(_one())))
 			.negate.assert
 
-		value(_zero(), _exact(_or(_one())))
+		value(_zero(), _meta(_or(_one())))
 			.matches(value(_zero(), _or(_one())))
 			.assert
 	}
@@ -74,7 +74,7 @@ class ValueMatchesTest {
 			.matches(value(_function(_zero())))
 			.assert
 
-		value(_exact(_function(_zero())))
+		value(_meta(_function(_zero())))
 			.matches(value(_function(_zero())))
 			.assert
 	}

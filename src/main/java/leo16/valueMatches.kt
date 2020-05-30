@@ -66,13 +66,13 @@ fun Matcher.matches(patternLink: Link<Value, Field>, link: Link<Value, Field>): 
 
 fun Matcher.matches(patternField: Field, field: Field): Boolean =
 	null
-		?: matchesExactOrNull(patternField, field)
+		?: matchesMetaOrNull(patternField, field)
 		?: matchesNativeOrNull(patternField, field)
 		?: matchesFunctionOrNull2(patternField, field)
 		?: matchesDefault(patternField, field)
 
-fun Matcher.matchesExactOrNull(patternField: Field, field: Field): Boolean? =
-	patternField.matchPrefix(_exact) { rhsPattern ->
+fun Matcher.matchesMetaOrNull(patternField: Field, field: Field): Boolean? =
+	patternField.matchPrefix(_meta) { rhsPattern ->
 		runIfNotNull(rhsPattern.onlyFieldOrNull) { matches(it, field) }
 	}
 
