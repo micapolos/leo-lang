@@ -10,7 +10,7 @@ data class Function(val patternValue: Value, val compiled: Compiled) {
 fun Value.functionTo(compiled: Compiled) = Function(this, compiled)
 
 fun Function.apply(value: Value): Value? =
-	notNullIf(value.matches(patternValue)) {
+	notNullIf(patternValue.matches(value)) {
 		compiled.invoke(value)
 	}
 

@@ -91,5 +91,5 @@ fun <T : Any> T?.orNullAsField(word: String, fn: T.() -> Field): Field =
 	else fn()
 
 fun Value.of(patternValue: Value): Value =
-	if (matches(patternValue)) this
+	if (patternValue.matches(this)) this
 	else throw AssertionError(value(_error(this.plus(_of(patternValue)))))

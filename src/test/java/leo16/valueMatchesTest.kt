@@ -20,69 +20,69 @@ class ValueMatchesTest {
 
 	@Test
 	fun anything() {
-		value(_x(_zero()), _y(_one()))
-			.matches(value(_anything()))
+		value(_anything())
+			.matches(value(_x(_zero()), _y(_one())))
 			.assert
 
-		value(_x(_zero()), _y(_one()))
-			.matches(value(_x(_anything()), _y(_anything())))
+		value(_x(_anything()), _y(_anything()))
+			.matches(value(_x(_zero()), _y(_one())))
 			.assert
 
 		value(_anything())
 			.matches(value(_anything()))
 			.assert
 
-		value(_anything())
-			.matches(value(_exact(_anything())))
+		value(_exact(_anything()))
+			.matches(value(_anything()))
 			.assert
 
-		value(_zero())
-			.matches(value(_exact(_anything())))
+		value(_exact(_anything()))
+			.matches(value(_zero()))
 			.negate.assert
 	}
 
 	@Test
 	fun or() {
-		value(_zero())
-			.matches(value(_zero(), _or(_one())))
+		value(_zero(), _or(_one()))
+			.matches(value(_zero()))
 			.assert
 
-		value(_one())
-			.matches(value(_zero(), _or(_one())))
+		value(_zero(), _or(_one()))
+			.matches(value(_one()))
 			.assert
 
-		value(_two())
-			.matches(value(_zero(), _or(_one())))
+		value(_zero(), _or(_one()))
+			.matches(value(_two()))
 			.negate.assert
 
 		value(_zero(), _or(_one()))
 			.matches(value(_zero(), _or(_one())))
 			.negate.assert
 
-		value(_zero(), _or(_one()))
-			.matches(value(_zero(), _exact(_or(_one()))))
+		value(_zero(), _exact(_or(_one())))
+			.matches(value(_zero(), _or(_one())))
 			.assert
 	}
 
 	@Test
 	fun taking() {
-		value(value(_zero()).does(value(_one()).compiled))
-			.matches(value(_function(_zero())))
+		value(_function(_zero()))
+			.matches(value(value(_zero()).does(value(_one()).compiled)))
 			.assert
 
 		value(_function(_zero()))
 			.matches(value(_function(_zero())))
 			.assert
 
-		value(_function(_zero()))
-			.matches(value(_exact(_function(_zero()))))
+		value(_exact(_function(_zero())))
+			.matches(value(_function(_zero())))
 			.assert
 	}
 
 	@Test
 	fun quote() {
-		value(_anything(), _or(_anything()))
-			.matches(value(_quote(_anything(), _or(_anything()))))
+		value(_quote(_anything(), _or(_anything())))
+			.matches(value(_anything(), _or(_anything())))
 			.assert
 	}
 }

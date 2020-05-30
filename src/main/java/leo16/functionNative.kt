@@ -9,7 +9,7 @@ data class Fn(val patternValue: Value, val nativeFn: (Value) -> Value) {
 
 	// TODO: Remove _given, and pass value directly
 	fun apply(arg: Value): Value? =
-		notNullIf(arg.matches(patternValue)) {
+		notNullIf(patternValue.matches(arg)) {
 			try {
 				nativeFn(_given(arg).value)
 			} catch (throwable: Throwable) {

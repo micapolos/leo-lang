@@ -9,7 +9,7 @@ data class Macro(val patternValue: Value, val compiled: Compiled) {
 	val asValue get() = patternValue.plus(_expands(compiled.bodyValue))
 
 	fun apply(evaluated: Evaluated): Evaluated? =
-		notNullIf(evaluated.value.matches(patternValue)) {
+		notNullIf(patternValue.matches(evaluated.value)) {
 			compiled.invoke(evaluated.value).let { invoked ->
 				evaluated.scope.emptyEvaluator.plus(invoked).evaluated
 			}
