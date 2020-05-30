@@ -165,7 +165,7 @@ val text = compile_ {
 	does {
 		character.text.length.number.equals_ { 1.number }
 		match {
-			false_ { content }
+			false_ { thing }
 			true_ { character.text.character { 0.number } }
 		}
 	}

@@ -39,7 +39,7 @@ val Dictionary.asField: Field
 
 fun Dictionary.bind(value: Value): Dictionary =
 	this
-		.plus(value.contentParameterDefinition)
+		.plus(value.thingParameterDefinition)
 		.fold(value.fieldStack) { plus(it.parameterDefinition) }
 
 fun Dictionary.modeOrNull(word: String): Mode? =

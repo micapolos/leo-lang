@@ -17,9 +17,9 @@ fun FieldTyped.accessOrNull(word: String): Typed? =
 	notNullIf(word == field.selectWord) { typed }
 
 fun Typed.getOrNull(word: String): Typed? =
-	this.contentOrNull?.accessOrNull(word)
+	this.thingOrNull?.accessOrNull(word)
 
-val Typed.contentOrNull: Typed?
+val Typed.thingOrNull: Typed?
 	get() =
 		bodyTyped.linkTypedOrNull?.onlyFieldTyped?.sentenceOrNull?.rhsTyped
 

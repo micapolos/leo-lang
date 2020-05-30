@@ -4,7 +4,6 @@ import leo.base.assertEqualTo
 import leo14.Script
 import leo15.dsl.*
 import leo16.names.*
-import org.junit.Assert
 import kotlin.test.Test
 import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
@@ -13,7 +12,7 @@ fun Script.assertEquals(f: F) {
 	assertEqualTo(read_(f))
 }
 
-class EvalTest {
+class EvaluateTest {
 	@Test
 	fun normalization() {
 		evaluate_ { zero.negate }.assertEquals { negate { zero } }
@@ -210,10 +209,10 @@ class EvalTest {
 	}
 
 	@Test
-	fun content() {
-		evaluate_ { content }.assertEquals { content }
-		evaluate_ { point { x { zero }; y { one } }.content }.assertEquals { x { zero }; y { one } }
-		evaluate_ { x { zero }; y { one }; content }.assertEquals { content { x { zero }; y { one } } }
+	fun thing() {
+		evaluate_ { thing }.assertEquals { thing }
+		evaluate_ { point { x { zero }; y { one } }.thing }.assertEquals { x { zero }; y { one } }
+		evaluate_ { x { zero }; y { one }; thing }.assertEquals { thing { x { zero }; y { one } } }
 	}
 
 	@Test
@@ -357,11 +356,11 @@ class EvalTest {
 	}
 
 	@Test
-	fun doContent() {
+	fun doThing() {
 		evaluate_ {
 			x { zero }
 			y { one }
-			do_ { content }
+			do_ { thing }
 		}.assertEquals {
 			x { zero }
 			y { one }

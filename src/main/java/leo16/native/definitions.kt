@@ -7,7 +7,7 @@ import leo13.map
 import leo13.stack
 import leo14.untyped.typed.loadClass
 import leo16.accessOrNull
-import leo16.contentOrNull
+import leo16.thingOrNull
 import leo16.does
 import leo16.field
 import leo16.getOrNull
@@ -260,17 +260,17 @@ val arrayStackDefinition =
 
 val printingDefinition =
 	value(_printing(_anything())).does {
-		val content = this
+		val thing = this
 			.getOrNull(_printing)!!
-			.contentOrNull!!
-		content.also { content.printed.println }
+			.thingOrNull!!
+		thing.also { thing.printed.println }
 	}
 
 val leoHeadDefinition =
 	value(_head(_anything())).does {
 		this
 			.getOrNull(_head)!!
-			.contentOrNull!!
+			.thingOrNull!!
 			.fieldStack
 			.linkOrNull
 			?.value
@@ -282,7 +282,7 @@ val leoTailDefinition =
 	value(_tail(_anything())).does {
 		this
 			.getOrNull(_tail)!!
-			.contentOrNull!!
+			.thingOrNull!!
 			.fieldStack
 			.linkOrNull
 			?.stack
@@ -294,7 +294,7 @@ val leoOpDefinition =
 	value(_op(_anything())).does {
 		this
 			.getOrNull(_op)!!
-			.contentOrNull!!
+			.thingOrNull!!
 			.fieldStack
 			.linkOrNull
 			?.value

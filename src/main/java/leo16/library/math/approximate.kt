@@ -35,7 +35,7 @@ val approximate = compile_ {
 	}
 
 	test {
-		123.number.approximate.native.object_.class_.content.as_ { text }
+		123.number.approximate.native.object_.class_.thing.as_ { text }
 		equals_ { java.lang.Double::class.java.nativeString.text }
 	}
 

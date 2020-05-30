@@ -5,7 +5,7 @@ import leo16.names.*
 
 fun Value.apply(field: Field): Value? =
 	null
-		?: applyContent(field)
+		?: applyThing(field)
 		?: applyGet(field)
 		?: applyTake(field)
 		?: applyThis(field)
@@ -28,10 +28,10 @@ fun Value.applyGet(field: Field): Value? =
 		}
 	}
 
-fun Value.applyContent(field: Field): Value? =
+fun Value.applyThing(field: Field): Value? =
 	matchEmpty {
-		field.matchPrefix(_content) { rhs ->
-			rhs.contentOrNull
+		field.matchPrefix(_thing) { rhs ->
+			rhs.thingOrNull
 		}
 	}
 

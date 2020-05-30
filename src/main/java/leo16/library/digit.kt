@@ -33,29 +33,29 @@ val digit = compile_ {
 			any
 			does {
 				this_ {
-					word { word { word { check { name.content.digit } } } }
+					word { word { word { check { name.thing.digit } } } }
 					word { is_ { true_.boolean } }
 				}
 				this_ {
-					name.content.digit.number
+					name.thing.digit.number
 					word { is_ { number } }
 				}
 				this_ {
-					name.content.digit.character
+					name.thing.digit.character
 					word { is_ { number.text.character } }
 				}
 				this_ {
 					number.digit
-					word { is_ { name.content.digit } }
+					word { is_ { name.thing.digit } }
 				}
 				this_ {
 					number.text.character.digit
-					word { is_ { name.content.digit } }
+					word { is_ { name.thing.digit } }
 				}
 			}
 		}
 	}
-	flat.content.compile
+	flat.thing.compile
 
 	test { ten.digit.check.equals_ { false_.boolean } }
 	test { seven.digit.check.equals_ { true_.boolean } }

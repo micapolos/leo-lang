@@ -12,16 +12,16 @@ val animation = compile_ {
 	does {
 		body {
 			use { dsl.javascript }
-			show.animation.content.evaluate
+			show.animation.thing.evaluate
 		}
 		do_ {
 			use { javascript }
 			empty.javascript
-			this_ { body.content }
+			this_ { body.thing }
 			evaluate
 			animated
 			run
-			do_ { show.content }
+			do_ { show.thing }
 		}
 	}
 }

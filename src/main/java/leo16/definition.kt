@@ -72,6 +72,6 @@ val Field.parameterDefinition: Definition
 	get() =
 		selectWord().value.is_(value).definition
 
-val Value.contentParameterDefinition: Definition
+val Value.thingParameterDefinition: Definition
 	get() =
-		_content().value.is_(this).definition
+		_thing().value.is_(this).definition

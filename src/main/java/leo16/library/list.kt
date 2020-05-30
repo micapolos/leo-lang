@@ -27,7 +27,7 @@ val list = compile_ {
 		list {
 			link {
 				previous { list }
-				last { append.content }
+				last { append.thing }
 			}
 		}
 	}
@@ -54,15 +54,15 @@ val list = compile_ {
 	}
 	does {
 		list.match {
-			empty { fold.to.content }
+			empty { fold.to.thing }
 			link {
 				link.previous.list
 				fold {
 					to {
 						fold.function
 						take {
-							item { link.last.content }
-							to { fold.to.content }
+							item { link.last.thing }
+							to { fold.to.thing }
 						}
 					}
 					this_ { fold.function }
@@ -83,7 +83,7 @@ val list = compile_ {
 			function {
 				item { anything }
 				to { anything }
-				does { to.list.append { item.content } }
+				does { to.list.append { item.thing } }
 			}
 		}
 		equals_ {
@@ -103,7 +103,7 @@ val list = compile_ {
 			function {
 				item { anything }
 				to { anything }
-				does { to.list.append { item.content } }
+				does { to.list.append { item.thing } }
 			}
 		}
 	}
@@ -134,7 +134,7 @@ val list = compile_ {
 				to { anything }
 				does {
 					to.list
-					append { map.function.take { item.content } }
+					append { map.function.take { item.thing } }
 				}
 			}
 		}
@@ -193,8 +193,8 @@ val list = compile_ {
 				item { anything }
 				to { anything }
 				does {
-					to.flat.content
-					this_ { item.content }
+					to.flat.thing
+					this_ { item.thing }
 					flat
 				}
 			}
@@ -206,7 +206,7 @@ val list = compile_ {
 			item { 0.number }
 			item { 1.number }
 		}
-		flat.content
+		flat.thing
 		equals_ {
 			0.number
 			1.number

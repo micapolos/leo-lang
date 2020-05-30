@@ -8,7 +8,7 @@ val Typed.applyOrNull: Typed?
 		bodyTyped.linkTypedOrNull?.let { linkTyped ->
 			linkTyped.lastFieldTyped.sentenceOrNull?.let { sentenceTyped ->
 				when (sentenceTyped.sentence.word) {
-					_content -> ifOrNull(isEmpty) { sentenceTyped.rhsTyped.contentOrNull }
+					_thing -> ifOrNull(isEmpty) { sentenceTyped.rhsTyped.thingOrNull }
 					_quote -> plusOrNull(sentenceTyped.rhsTyped)
 					_meta -> plusOrNull(sentenceTyped.rhsTyped)
 					_this -> plusOrNull(sentenceTyped.rhsTyped)

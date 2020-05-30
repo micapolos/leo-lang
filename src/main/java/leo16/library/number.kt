@@ -69,7 +69,7 @@ val number = compile_ {
 	number.any
 	by { number.any }
 	does {
-		input.is_ { content }
+		input.is_ { thing }
 		number.native
 		invoke {
 			method { big.decimal.divide }
@@ -102,7 +102,7 @@ val number = compile_ {
 	number.any
 	modulo { number.any }
 	does {
-		input.is_ { content }
+		input.is_ { thing }
 		number.native
 		invoke {
 			method { big.decimal.remainder }
@@ -130,7 +130,7 @@ val number = compile_ {
 
 	number.any.square.root
 	does {
-		input.is_ { content }
+		input.is_ { thing }
 		root.square.number.native
 		invoke {
 			method { big.decimal.sqrt.context }

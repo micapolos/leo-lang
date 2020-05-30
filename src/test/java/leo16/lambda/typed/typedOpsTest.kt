@@ -41,12 +41,12 @@ class TypedOpsTest {
 	}
 
 	@Test
-	fun contentOrNull() {
+	fun thingOrNull() {
 		typed(
 			_point(
 				_x(10.typedField),
 				_y(20.typedField)))
-			.contentOrNull!!
+			.thingOrNull!!
 			.assertEqualTo(
 				typed(
 					_x(10.typedField),

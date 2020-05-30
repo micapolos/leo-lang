@@ -12,8 +12,8 @@ val option = compile_ {
 	anything.option.any
 	does {
 		option {
-			no { meta { quote { any.option.content } } }
-			or { the { any.option.content } }
+			no { meta { quote { any.option.thing } } }
+			or { the { any.option.thing } }
 		}
 	}
 
