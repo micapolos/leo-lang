@@ -209,6 +209,11 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun make() {
+		evaluate_ { zero.make { number } }.assertEquals { number { zero } }
+	}
+
+	@Test
 	fun thing() {
 		evaluate_ { thing }.assertEquals { thing }
 		evaluate_ { point { x { zero }; y { one } }.thing }.assertEquals { x { zero }; y { one } }

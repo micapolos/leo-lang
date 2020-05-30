@@ -24,4 +24,5 @@ val base = compile_ {
 	export { list }
 	export { url }
 	export { animation }
+	export { lambda }
 }

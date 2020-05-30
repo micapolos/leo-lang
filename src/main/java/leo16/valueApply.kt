@@ -7,6 +7,7 @@ fun Value.apply(field: Field): Value? =
 	null
 		?: applyThing(field)
 		?: applyGet(field)
+		?: applyMake(field)
 		?: applyTake(field)
 		?: applyThis(field)
 		?: applyQuote(field)
@@ -25,6 +26,13 @@ fun Value.applyGet(field: Field): Value? =
 	matchEmpty {
 		field.sentenceOrNull?.let { sentence ->
 			sentence.value.getOrNull(sentence.word)
+		}
+	}
+
+fun Value.applyMake(field: Field): Value? =
+	field.matchPrefix(_make) { rhs ->
+		rhs.matchWord { word ->
+			make(word)
 		}
 	}
 
