@@ -6,20 +6,6 @@ import leo13.linkOrNull
 import leo13.map
 import leo13.stack
 import leo14.untyped.typed.loadClass
-import leo15.arrayName
-import leo15.booleanName
-import leo15.className
-import leo15.constructorName
-import leo15.fieldName
-import leo15.getName
-import leo15.invokeName
-import leo15.methodName
-import leo15.nameName
-import leo15.nativeName
-import leo15.nullName
-import leo15.objectName
-import leo15.parameterName
-import leo15.textName
 import leo16.accessOrNull
 import leo16.contentOrNull
 import leo16.does
@@ -40,75 +26,75 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 fun String.definition(class_: Class<*>) =
-	value(className(this())).does {
-		className(class_.nativeField).value
+	value(_class(this())).does {
+		_class(class_.nativeField).value
 	}
 
 val nativeObjectClassDefinition =
-	value(className(objectName(nativeName()))).does {
+	value(_class(_object(_native()))).does {
 		val class_ = this
-			.getOrNull(className)!!
-			.getOrNull(objectName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_class)!!
+			.getOrNull(_object)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value!!
 			.javaClass
-		className(class_.nativeField).value
+		_class(class_.nativeField).value
 	}
 
 val nullNativeDefinition =
-	value(nativeName(nullName())).does {
+	value(_native(_null())).does {
 		null.nativeValue
 	}
 
 val nativeBooleanDefinition =
-	value(booleanName(nativeName())).does {
+	value(_boolean(_native())).does {
 		this
-			.getOrNull(booleanName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_boolean)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.run { value as Boolean }
 			.field.value
 	}
 
 val nameClassDefinition =
-	value(className(nameName(textName(nativeName())))).does {
+	value(_class(_name(_text(_native())))).does {
 		val name = this
-			.getOrNull(className)!!
-			.getOrNull(nameName)!!
-			.getOrNull(textName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_class)!!
+			.getOrNull(_name)!!
+			.getOrNull(_text)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as String
-		className(name.loadClass.nativeField).value
+		_class(name.loadClass.nativeField).value
 	}
 
 val classFieldDefinition =
 	value(
-		className(_anything()),
-		fieldName(nameName(textName(nativeName())))
+		_class(_anything()),
+		_field(_name(_text(_native())))
 	).does {
 		val class_ = this
-			.getOrNull(className)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_class)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Class<*>
 		val name = this
-			.getOrNull(fieldName)!!
-			.getOrNull(nameName)!!
-			.getOrNull(textName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_field)!!
+			.getOrNull(_name)!!
+			.getOrNull(_text)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as String
-		fieldName(class_.getField(name).nativeField).value
+		_field(class_.getField(name).nativeField).value
 	}
 
 val fieldGetDefinition =
-	value(getName(fieldName(nativeName()))).does {
+	value(_get(_field(_native()))).does {
 		val field = this
-			.getOrNull(getName)!!
-			.getOrNull(fieldName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_get)!!
+			.getOrNull(_field)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Field
 		field.get(null).nativeValue
@@ -116,17 +102,17 @@ val fieldGetDefinition =
 
 val nativeGetFieldDefinition =
 	value(
-		nativeName(),
-		getName(fieldName(nativeName()))
+		_native(),
+		_get(_field(_native()))
 	).does {
 		val object_ = this
-			.getOrNull(nativeName)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value
 		val field = this
-			.getOrNull(getName)!!
-			.getOrNull(fieldName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_get)!!
+			.getOrNull(_field)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Field
 		field.get(object_).nativeValue
@@ -134,43 +120,43 @@ val nativeGetFieldDefinition =
 
 val classConstructorDefinition =
 	value(
-		className(nativeName()),
-		constructorName(parameterName(_list(_anything())))
+		_class(_native()),
+		_constructor(_parameter(_list(_anything())))
 	).does {
 		val class_ = this
-			.getOrNull(className)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_class)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Class<*>
 		val classes = this
-			.getOrNull(constructorName)!!
-			.getOrNull(parameterName)!!
+			.getOrNull(_constructor)!!
+			.getOrNull(_parameter)!!
 			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map {
 				this
-					.accessOrNull(className)!!
-					.getOrNull(nativeName)!!
+					.accessOrNull(_class)!!
+					.getOrNull(_native)!!
 					.theNativeOrNull!!
 					.value as Class<*>
 			}
 			.array
-		constructorName(class_.getConstructor(*classes).nativeField).value
+		_constructor(class_.getConstructor(*classes).nativeField).value
 	}
 
 val constructorInvokeDefinition =
 	value(
-		constructorName(nativeName()),
-		invokeName(parameterName(_list(_anything())))
+		_constructor(_native()),
+		_invoke(_parameter(_list(_anything())))
 	).does {
 		val constructor = this
-			.getOrNull(constructorName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_constructor)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Constructor<*>
 		val args = this
-			.getOrNull(invokeName)!!
-			.getOrNull(parameterName)!!
+			.getOrNull(_invoke)!!
+			.getOrNull(_parameter)!!
 			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map { theNativeOrNull!!.value }
@@ -180,53 +166,53 @@ val constructorInvokeDefinition =
 
 val classMethodDefinition =
 	value(
-		className(nativeName()),
-		methodName(
-			nameName(textName(nativeName())),
-			parameterName(_list(_anything()))
+		_class(_native()),
+		_method(
+			_name(_text(_native())),
+			_parameter(_list(_anything()))
 		)
 	).does {
 		val class_ = this
-			.getOrNull(className)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_class)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Class<*>
 		val name = this
-			.getOrNull(methodName)!!
-			.getOrNull(nameName)!!
-			.getOrNull(textName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_method)!!
+			.getOrNull(_name)!!
+			.getOrNull(_text)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as String
 		val classes = this
-			.getOrNull(methodName)!!
-			.getOrNull(parameterName)!!
+			.getOrNull(_method)!!
+			.getOrNull(_parameter)!!
 			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map {
 				this
-					.accessOrNull(className)!!
-					.getOrNull(nativeName)!!
+					.accessOrNull(_class)!!
+					.getOrNull(_native)!!
 					.theNativeOrNull!!
 					.value as Class<*>
 			}
 			.array
-		methodName(class_.getMethod(name, *classes).nativeField).value
+		_method(class_.getMethod(name, *classes).nativeField).value
 	}
 
 val methodInvokeDefinition =
 	value(
-		methodName(nativeName()),
-		invokeName(parameterName(_list(_anything())))
+		_method(_native()),
+		_invoke(_parameter(_list(_anything())))
 	).does {
 		val method = this
-			.getOrNull(methodName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_method)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Method
 		val args = this
-			.getOrNull(invokeName)!!
-			.getOrNull(parameterName)!!
+			.getOrNull(_invoke)!!
+			.getOrNull(_parameter)!!
 			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map { theNativeOrNull!!.value }
@@ -236,24 +222,24 @@ val methodInvokeDefinition =
 
 val nativeInvokeMethodDefinition =
 	value(
-		nativeName(),
-		invokeName(
-			methodName(nativeName()),
-			parameterName(_list(_anything())))
+		_native(),
+		_invoke(
+			_method(_native()),
+			_parameter(_list(_anything())))
 	).does {
 		val object_ = this
-			.getOrNull(nativeName)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value
 		val method = this
-			.getOrNull(invokeName)!!
-			.getOrNull(methodName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_invoke)!!
+			.getOrNull(_method)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Method
 		val args = this
-			.getOrNull(invokeName)!!
-			.getOrNull(parameterName)!!
+			.getOrNull(_invoke)!!
+			.getOrNull(_parameter)!!
 			.getOrNull(_list)!!
 			.stackOrNull!!
 			.map { theNativeOrNull!!.value }
@@ -262,11 +248,11 @@ val nativeInvokeMethodDefinition =
 	}
 
 val arrayStackDefinition =
-	value(_list(arrayName(nativeName()))).does {
+	value(_list(_array(_native()))).does {
 		val array = this
 			.getOrNull(_list)!!
-			.getOrNull(arrayName)!!
-			.getOrNull(nativeName)!!
+			.getOrNull(_array)!!
+			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Array<*>
 		stack(*array).map { value(nativeField) }.valueValue

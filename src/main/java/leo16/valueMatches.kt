@@ -1,5 +1,6 @@
 package leo16
 
+import leo.base.notNullIf
 import leo.base.runIfNotNull
 import leo13.Link
 import leo16.names.*
@@ -52,7 +53,7 @@ fun Field.matchesExactOrNull(field: Field): Boolean? =
 	}
 
 fun Field.matchesNativeOrNull(field: Field): Boolean? =
-	field.match(_native) {
+	notNullIf(field == _native()) {
 		this is NativeField
 	}
 

@@ -15,7 +15,7 @@ val number = compile_ {
 	number.any.is_ { native.number }
 
 	number.any
-	plus { native.number }
+	plus { number.any }
 	does {
 		number.native
 		invoke {
