@@ -612,6 +612,25 @@ class EvalTest {
 	}
 
 	@Test
+	fun matchesThe() {
+		evaluate_ {
+			natural {
+				zero
+				or { natural.the.next }
+			}
+			matches { zero.natural }
+		}.assertEquals { true.boolean }
+
+		evaluate_ {
+			natural {
+				zero
+				or { natural.the.next }
+			}
+			matches { zero.natural.next.natural }
+		}.assertEquals { true.boolean }
+	}
+
+	@Test
 	fun of() {
 		evaluate_ {
 			zero

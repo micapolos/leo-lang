@@ -10,6 +10,6 @@ val Repeat.asField get() = _recursing(compiled.bodyValue)
 val Compiled.repeat get() = Repeat(this)
 
 inline fun Repeat.apply(arg: Value): Value? =
-	arg.matchPrefix(_repeat) { rhs ->
+	arg.matchPrefix(_containing) { rhs ->
 		compiled.invoke(rhs)
 	}

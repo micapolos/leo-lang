@@ -5,16 +5,18 @@ import leo.base.runIfNotNull
 import leo13.Link
 import leo13.Stack
 import leo13.first
+import leo13.push
 import leo13.stack
 import leo16.names.*
 
 // TODO: Refactor, so pattern is this, and value is argument.
 
-data class Matcher(val parentFieldStack: Stack<Sentence>)
+data class Matcher(val theSentenceStack: Stack<Sentence>)
 
 val Stack<Sentence>.matcher get() = Matcher(this)
 val emptyMatcher = stack<Sentence>().matcher
-fun Matcher.getOrNull(word: String) = parentFieldStack.first { it.word == word }
+fun Matcher.push(sentence: Sentence) = theSentenceStack.push(sentence).matcher
+fun Matcher.getOrNull(word: String) = theSentenceStack.first { it.word == word }
 
 fun Value.matches(value: Value): Boolean =
 	emptyMatcher.matches(this, value)
@@ -22,11 +24,21 @@ fun Value.matches(value: Value): Boolean =
 fun Matcher.matches(patternValue: Value, value: Value): Boolean =
 	null
 		?: matchesAnythingOrNull(patternValue)
+		?: matchesTheOrNull(patternValue, value)
 		?: matchesQuoteOrNull(patternValue, value)
 		?: matchesDefault(patternValue, value)
 
 fun matchesAnythingOrNull(patternValue: Value): Boolean? =
 	patternValue.match(_anything) { true }
+
+fun Matcher.matchesTheOrNull(patternValue: Value, value: Value): Boolean? =
+	patternValue.matchPrefix(_the) { rhs ->
+		rhs.matchWord { word ->
+			getOrNull(word)?.let { patternSentence ->
+				matches(patternSentence.field.value, value)
+			}
+		}
+	}
 
 fun matchesQuoteOrNull(patternValue: Value, value: Value): Boolean? =
 	patternValue.matchPrefix(_quote) { rhs ->
@@ -64,7 +76,7 @@ fun Matcher.matchesExactOrNull(patternField: Field, field: Field): Boolean? =
 		runIfNotNull(rhsPattern.onlyFieldOrNull) { matches(it, field) }
 	}
 
-fun Matcher.matchesNativeOrNull(patternField: Field, field: Field): Boolean? =
+fun matchesNativeOrNull(patternField: Field, field: Field): Boolean? =
 	notNullIf(patternField == _any(_native())) {
 		field is NativeField
 	}
@@ -84,9 +96,10 @@ fun Matcher.matchesDefault(patternField: Field, field: Field): Boolean =
 		is EvaluatedField -> TODO()
 	} ?: false
 
-fun Matcher.matches(patternValue: Value, function: Function): Boolean =
+fun matches(patternValue: Value, function: Function): Boolean =
 	function.patternValue == patternValue
 
 fun Matcher.matches(patternSentence: Sentence, sentence: Sentence): Boolean =
-	patternSentence.word == sentence.word && matches(patternSentence.value, sentence.value)
+	patternSentence.word == sentence.word &&
+		push(patternSentence).matches(patternSentence.value, sentence.value)
 
