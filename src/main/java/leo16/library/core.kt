@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	core
+	library_(core)
 }
 
-val core = compile_ {
+val core = dsl_ {
 	anything.clear does { nothing }
 
 	test { zero.clear.equals_ { nothing } }

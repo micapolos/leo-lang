@@ -1,14 +1,13 @@
 package leo16.library
 
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	lambda.value.print
+	library_(lambda)
 }
 
-val lambda = compile_ {
+val lambda = dsl_ {
 	use { number }
 
 	term.any.is_ {

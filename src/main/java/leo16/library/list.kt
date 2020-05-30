@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	list
+	library_(list)
 }
 
-val list = compile_ {
+val list = dsl_ {
 	list.any.is_ {
 		list {
 			empty

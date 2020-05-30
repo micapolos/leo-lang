@@ -1,14 +1,13 @@
 package leo16.library
 
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	character.value.print
+	library_(character)
 }
 
-val character = compile_ {
+val character = dsl_ {
 	use { reflection }
 	use { string.native }
 	use { character.native }

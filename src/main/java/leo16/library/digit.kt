@@ -1,14 +1,13 @@
 package leo16.library
 
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	digit.value.print
+	library_(digit)
 }
 
-val digit = compile_ {
+val digit = dsl_ {
 	use { character }
 	use { text }
 	use { list }

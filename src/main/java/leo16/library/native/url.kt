@@ -1,9 +1,8 @@
 package leo16.library.native
 
 import leo15.dsl.*
-import leo16.compile_
 
-val url = compile_ {
+val url = dsl_ {
 	use { reflection }
 
 	url.class_

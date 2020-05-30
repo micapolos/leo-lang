@@ -1,14 +1,13 @@
 package leo16.library.native
 
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	double.value.print
+	library_(double)
 }
 
-val double = compile_ {
+val double = dsl_ {
 	use { reflection }
 
 	java.double.class_

@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	animation
+	library_(animation)
 }
 
-val animation = compile_ {
+val animation = dsl_ {
 	anything.animation.show
 	does {
 		body {

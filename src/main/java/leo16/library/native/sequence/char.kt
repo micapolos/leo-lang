@@ -1,14 +1,13 @@
 package leo16.library.native.sequence
 
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	char.value.print
+	library_(char)
 }
 
-val char = compile_ {
+val char = dsl_ {
 	use { reflection }
 
 	char.sequence.class_

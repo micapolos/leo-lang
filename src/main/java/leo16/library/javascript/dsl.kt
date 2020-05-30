@@ -1,13 +1,13 @@
 package leo16.library.javascript
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	dsl
+	library_(dsl)
 }
 
-val dsl = compile_ {
+val dsl = dsl_ {
 	use { text }
 	use { number }
 	use { javascript }

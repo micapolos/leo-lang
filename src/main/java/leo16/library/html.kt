@@ -1,9 +1,8 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
 
-val html = compile_ {
+val html = dsl_ {
 	use { base }
 	use { reflection }
 

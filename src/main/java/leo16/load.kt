@@ -6,6 +6,7 @@ import leo13.array
 import leo13.linkOrNull
 import leo13.push
 import leo14.untyped.typed.loadClass
+import leo15.dsl.*
 import kotlin.collections.joinToString
 import kotlin.collections.mutableMapOf
 import kotlin.collections.set
@@ -40,6 +41,12 @@ fun Value.loadOrNull(packagePrefix: String): Evaluated? =
 				.loadClass
 				.getMethod("get" + wordLink.value.capitalize())
 				//.also { _loading(this).println }
-				.invoke(null) as Evaluated
+				.invoke(null)
+				.run {
+					when (this) {
+						is Evaluated -> this
+						else -> compile_(this as F)
+					}
+				}
 		}
 	}

@@ -1,18 +1,17 @@
 package leo16.library
 
 import leo.base.clampedByte
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
 import leo16.invoke
+import leo16.library_
 import leo16.names.*
 import leo16.nativeField
 
 fun main() {
-	byte.value.print
+	library_(byte)
 }
 
-val byte = compile_ {
+val byte = dsl_ {
 	use { bit }
 	use { number }
 	use { int }

@@ -1,9 +1,9 @@
 package leo16.library.native.decimal
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
-val big = compile_ {
+val big = dsl_ {
 	use { reflection }
 	use { math.context.native }
 	use { string.native }

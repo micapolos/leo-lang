@@ -1,9 +1,8 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
 
-val help = compile_ {
+val help = dsl_ {
 	help
 	is_ {
 		help {

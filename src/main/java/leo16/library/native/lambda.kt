@@ -1,19 +1,18 @@
 package leo16.library.native
 
-import leo.base.print
 import leo15.dsl.*
 import leo15.lambda.AbstractionTerm
 import leo15.lambda.ApplicationTerm
 import leo15.lambda.IndexTerm
 import leo15.lambda.Term
 import leo15.lambda.ValueTerm
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	lambda.value.print
+	library_(lambda)
 }
 
-val lambda = compile_ {
+val lambda = dsl_ {
 	use { reflection }
 	use { objects.native }
 

@@ -1,13 +1,13 @@
 package leo16.library.demo
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.print_
 
 fun main() {
-	animation
+	print_(animation)
 }
 
-val animation = compile_ {
+val animation = dsl_ {
 	use { base }
 
 	fill {

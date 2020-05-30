@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	bit
+	library_(bit)
 }
 
-val bit = compile_ {
+val bit = dsl_ {
 	bit.any.is_ { bit { zero.or { one } } }
 
 	zero.bit.negate is_ { one.bit }

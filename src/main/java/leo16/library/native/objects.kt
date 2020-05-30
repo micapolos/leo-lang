@@ -1,14 +1,13 @@
 package leo16.library.native
 
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	objects.value.print
+	library_(objects)
 }
 
-val objects = compile_ {
+val objects = dsl_ {
 	use { reflection }
 
 	object_.class_.is_ { "java.lang.Object".text.name.class_ }

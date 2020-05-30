@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	base
+	library_(base)
 }
 
-val base = compile_ {
+val base = dsl_ {
 	export { core }
 	export { option }
 	export { help }

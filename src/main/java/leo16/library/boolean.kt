@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	boolean
+	library_(boolean)
 }
 
-val boolean = compile_ {
+val boolean = dsl_ {
 	boolean.any.is_ { boolean { true_.or { false_ } } }
 
 	false_.boolean.negate is_ { true_.boolean }

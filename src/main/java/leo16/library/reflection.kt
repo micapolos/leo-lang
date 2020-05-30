@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	reflection
+	library_(reflection)
 }
 
-val reflection = compile_ {
+val reflection = dsl_ {
 	use { native.reflection }
 	export { native.reflection }
 

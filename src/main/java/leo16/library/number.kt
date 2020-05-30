@@ -1,13 +1,13 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	number
+	library_(number)
 }
 
-val number = compile_ {
+val number = dsl_ {
 	use { reflection }
 	use { big.decimal.native }
 	use { math.context.native }

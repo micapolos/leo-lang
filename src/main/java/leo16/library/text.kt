@@ -1,14 +1,14 @@
 package leo16.library
 
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 import leo16.nativeString
 
 fun main() {
-	text
+	library_(text)
 }
 
-val text = compile_ {
+val text = dsl_ {
 	use { number }
 	use { reflection }
 	use { list }

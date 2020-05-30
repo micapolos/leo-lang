@@ -1,14 +1,13 @@
 package leo16.library
 
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 
 fun main() {
-	option.value.print
+	library_(option)
 }
 
-val option = compile_ {
+val option = dsl_ {
 	anything.option.any
 	does {
 		option {

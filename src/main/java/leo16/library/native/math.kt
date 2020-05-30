@@ -1,9 +1,8 @@
 package leo16.library.native
 
 import leo15.dsl.*
-import leo16.compile_
 
-val math = compile_ {
+val math = dsl_ {
 	use { reflection }
 
 	math.class_

@@ -1,16 +1,15 @@
 package leo16.library.math
 
-import leo.base.print
 import leo15.dsl.*
-import leo16.compile_
+import leo16.library_
 import leo16.nativeString
 import java.math.BigDecimal
 
 fun main() {
-	approximate.value.print
+	library_(approximate)
 }
 
-val approximate = compile_ {
+val approximate = dsl_ {
 	use { reflection }
 	use { number }
 	use { big.decimal.native }
