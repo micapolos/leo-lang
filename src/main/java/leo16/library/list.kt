@@ -8,16 +8,15 @@ fun main() {
 }
 
 val list = compile_ {
-	link.any.is_ {
-		link {
-			previous { anything }
-			last { anything }
-		}
-	}
-
 	list.any.is_ {
 		list {
-			empty.or { link.any }
+			empty
+			or {
+				link {
+					previous { list.repeating }
+					last { anything }
+				}
+			}
 		}
 	}
 
