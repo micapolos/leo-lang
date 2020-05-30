@@ -20,6 +20,7 @@ val base = compile_ {
 	export { int }
 	export { text }
 	export { character }
+	export { option }
 	export { list }
 	export { url }
 	export { animation }
