@@ -611,11 +611,11 @@ class EvaluateTest {
 	}
 
 	@Test
-	fun matchesRepeat() {
+	fun matchesRepeating() {
 		evaluate_ {
 			natural {
 				zero
-				or { natural.repeat.next }
+				or { natural.repeating.next }
 			}
 			matches { zero.natural }
 		}.assertEquals { true.boolean }
@@ -623,7 +623,7 @@ class EvaluateTest {
 		evaluate_ {
 			natural {
 				zero
-				or { natural.repeat.next }
+				or { natural.repeating.next }
 			}
 			matches { zero.natural.next.natural }
 		}.assertEquals { true.boolean }

@@ -11,12 +11,12 @@ import leo16.names.*
 
 // TODO: Refactor, so pattern is this, and value is argument.
 
-data class Matcher(val repeatSentenceStack: Stack<Sentence>)
+data class Matcher(val repeatingSentenceStack: Stack<Sentence>)
 
 val Stack<Sentence>.matcher get() = Matcher(this)
 val emptyMatcher = stack<Sentence>().matcher
-fun Matcher.push(sentence: Sentence) = repeatSentenceStack.push(sentence).matcher
-fun Matcher.getOrNull(word: String) = repeatSentenceStack.first { it.word == word }
+fun Matcher.push(sentence: Sentence) = repeatingSentenceStack.push(sentence).matcher
+fun Matcher.getOrNull(word: String) = repeatingSentenceStack.first { it.word == word }
 
 fun Value.matches(value: Value): Boolean =
 	emptyMatcher.matches(this, value)
@@ -24,15 +24,15 @@ fun Value.matches(value: Value): Boolean =
 fun Matcher.matches(patternValue: Value, value: Value): Boolean =
 	null
 		?: matchesAnythingOrNull(patternValue)
-		?: matchesRepeatOrNull(patternValue, value)
+		?: matchesRepeatingOrNull(patternValue, value)
 		?: matchesQuoteOrNull(patternValue, value)
 		?: matchesDefault(patternValue, value)
 
 fun matchesAnythingOrNull(patternValue: Value): Boolean? =
 	patternValue.match(_anything) { true }
 
-fun Matcher.matchesRepeatOrNull(patternValue: Value, value: Value): Boolean? =
-	patternValue.matchPrefix(_repeat) { rhs ->
+fun Matcher.matchesRepeatingOrNull(patternValue: Value, value: Value): Boolean? =
+	patternValue.matchPrefix(_repeating) { rhs ->
 		rhs.matchWord { word ->
 			getOrNull(word)?.let { patternSentence ->
 				matches(patternSentence.field.value, value)
