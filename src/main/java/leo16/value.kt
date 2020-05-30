@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.The
 import leo.base.notNullIf
+import leo.base.runWith
 import leo.base.the
 import leo13.Link
 import leo13.Stack
@@ -13,15 +14,17 @@ import leo13.onlyOrNull
 import leo13.push
 import leo13.pushAll
 import leo13.stack
+import leo14.untyped.dottedColorsParameter
+import leo14.untyped.leoString
 import leo15.string
 import leo16.names.*
 
 data class Value(val fieldStack: Stack<Field>) {
-	override fun toString() = script.string
+	override fun toString() = dottedColorsParameter.runWith(false) { script.leoString }
 }
 
 sealed class Field {
-	override fun toString() = scriptLine.string
+	override fun toString() = dottedColorsParameter.runWith(false) { scriptLine.leoString }
 }
 
 data class SentenceField(val sentence: Sentence) : Field() {

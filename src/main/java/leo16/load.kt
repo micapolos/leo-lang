@@ -43,6 +43,7 @@ fun Value.loadOrNull(packagePrefix: String): Evaluated? =
 				//.also { _loading(this).println }
 				.invoke(null)
 				.run {
+					@Suppress("UNCHECKED_CAST")
 					when (this) {
 						is Evaluated -> this
 						else -> compile_(this as F)
