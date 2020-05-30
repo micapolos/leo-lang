@@ -18,6 +18,7 @@ class PerformanceTest {
 	 * 05.05.2020: ~141ms
 	 * 20.05.2020: ~230ms
 	 * 28.05.2020: ~430ms
+	 * 30.05.2020: ~480ms
 	 */
 	@Test
 	fun fibonacci() {
