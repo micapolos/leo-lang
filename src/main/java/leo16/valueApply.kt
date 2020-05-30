@@ -6,6 +6,7 @@ import leo16.names.*
 fun Value.apply(field: Field): Value? =
 	null
 		?: applyThing(field)
+		?: applyImplicitGet(field)
 		?: applyGet(field)
 		?: applyMake(field)
 		?: applyTake(field)
@@ -22,10 +23,17 @@ fun Value.apply(field: Field): Value? =
 		?: applyOf(field)
 		?: applyLeonardo(field)
 
-fun Value.applyGet(field: Field): Value? =
+fun Value.applyImplicitGet(field: Field): Value? =
 	matchEmpty {
 		field.sentenceOrNull?.let { sentence ->
 			sentence.value.getOrNull(sentence.word)
+		}
+	}
+
+fun Value.applyGet(field: Field): Value? =
+	field.matchPrefix(_get) { rhs ->
+		rhs.matchWord { word ->
+			getOrNull(word)
 		}
 	}
 

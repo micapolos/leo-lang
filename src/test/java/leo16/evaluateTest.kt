@@ -202,6 +202,13 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun get() {
+		evaluate_ { point { x { zero }; y { one } }.get { x } }.assertEquals { x { zero } }
+		evaluate_ { point { x { zero }; y { one } }.get { y } }.assertEquals { y { one } }
+		evaluate_ { the { function { zero.does { one } } }.get { function } }.assertEquals { function { zero.does { one } } }
+	}
+
+	@Test
 	fun getSpecial() {
 		evaluate_ { the { "foo".text }.text }.assertEquals { "foo".text }
 		evaluate_ { the { 123.number }.number }.assertEquals { 123.number }
