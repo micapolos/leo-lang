@@ -21,6 +21,8 @@ val TypeBody.script: Script
 			is FunctionTypeBody -> function.script
 			is NativeTypeBody -> native.nativeScript
 			is LazyTypeBody -> lazy.script
+			is RepeatingTypeBody -> repeating.script
+			RepeatTypeBody -> _repeat().script
 		}
 
 val TypeLink.script
@@ -42,3 +44,7 @@ val TypeFunction.script
 val TypeLazy.script
 	get() =
 		_lazy(resultType.script).script
+
+val TypeRepeating.script
+	get() =
+		_repeating(type.script).script

@@ -34,6 +34,12 @@ data class LazyTypeBody(val lazy: TypeLazy) : TypeBody() {
 	override fun toString() = super.toString()
 }
 
+data class RepeatingTypeBody(val repeating: TypeRepeating) : TypeBody() {
+	override fun toString() = super.toString()
+}
+
+object RepeatTypeBody : TypeBody()
+
 data class TypeLink(val previousType: Type, val lastSentence: TypeSentence)
 
 data class TypeAlternative(val firstType: Type, val secondType: Type)
@@ -47,6 +53,10 @@ data class TypeFunction(val parameterType: Type, val resultType: Type) {
 }
 
 data class TypeLazy(val resultType: Type) {
+	override fun toString() = reflectScript.leoString
+}
+
+data class TypeRepeating(val type: Type) {
 	override fun toString() = reflectScript.leoString
 }
 
@@ -79,6 +89,7 @@ infix fun Type.giving(type: Type) = functionGiving(type).body.type
 val Any.nativeTypeBody: TypeBody get() = NativeTypeBody(this)
 val Any.nativeType: Type get() = nativeTypeBody.type
 val Type.lazy get() = TypeLazy(this)
+val Type.repeatingBody get() = TypeRepeating(this)
 
 val stringType: Type = String::class.java.nativeType
 val intType: Type = Int::class.java.nativeType

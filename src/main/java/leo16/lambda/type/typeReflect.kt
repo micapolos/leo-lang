@@ -30,6 +30,8 @@ val TypeBody.reflectScript: Script
 			is FunctionTypeBody -> function.reflectScript
 			is NativeTypeBody -> native.nativeScript
 			is LazyTypeBody -> lazy.reflectScript
+			is RepeatingTypeBody -> repeating.reflectScript
+			RepeatTypeBody -> _repeat().script
 		}
 
 val TypeSentence.reflect: ScriptLine
@@ -47,3 +49,7 @@ val TypeAlternative.reflectScript: Script
 val TypeLazy.reflectScript: Script
 	get() =
 		_lazy(resultType.reflectScript).script
+
+val TypeRepeating.reflectScript: Script
+	get() =
+		_repeating(type.reflectScript).script

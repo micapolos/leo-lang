@@ -9,6 +9,8 @@ val TypeBody.isStatic: Boolean
 			is AlternativeTypeBody -> false
 			is NativeTypeBody -> false
 			is LazyTypeBody -> lazy.isStatic
+			is RepeatingTypeBody -> false
+			RepeatTypeBody -> false
 		}
 
 val TypeSentence.isStatic

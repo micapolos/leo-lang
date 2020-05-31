@@ -28,7 +28,9 @@ val BodyTyped.script: Script
 			{ it.script },
 			{ it.script },
 			{ it.term.value.nativeScript },
-			{ it.scriptLine.script })
+			{ it.scriptLine.script },
+			{ it.scriptLine.script },
+			{ _repeat().script })
 
 val LinkTyped.script: Script
 	get() =
@@ -60,6 +62,10 @@ val NativeTyped.scriptLine: ScriptLine
 val LazyTyped.scriptLine: ScriptLine
 	get() =
 		_lazy(lazy.script)
+
+val RepeatingTyped.scriptLine: ScriptLine
+	get() =
+		_repeating(repeating.type.script)
 
 fun Typed.or(type: Type): Typed =
 	choiceTerm(2, 1, term) of (this.type or type)
