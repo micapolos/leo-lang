@@ -4,6 +4,7 @@ import leo14.Script
 import leo14.emptyScript
 import leo14.invoke
 import leo14.plus
+import leo14.script
 import leo16.names.*
 import leo16.nativeScript
 
@@ -19,6 +20,7 @@ val TypeBody.script: Script
 			is AlternativeTypeBody -> alternative.script
 			is FunctionTypeBody -> function.script
 			is NativeTypeBody -> native.nativeScript
+			is LazyTypeBody -> lazy.script
 		}
 
 val TypeLink.script
@@ -35,4 +37,8 @@ val TypeSentence.scriptLine
 
 val TypeFunction.script
 	get() =
-		input.script.plus(_giving(output.script))
+		parameterType.script.plus(_giving(resultType.script))
+
+val TypeLazy.script
+	get() =
+		_lazy(resultType.script).script

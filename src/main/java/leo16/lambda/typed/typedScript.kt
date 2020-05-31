@@ -5,6 +5,7 @@ import leo14.ScriptLine
 import leo14.emptyScript
 import leo14.invoke
 import leo14.plus
+import leo14.script
 import leo15.lambda.choiceTerm
 import leo15.lambda.unsafeUnchoice
 import leo15.lambda.value
@@ -26,7 +27,8 @@ val BodyTyped.script: Script
 			{ it.script },
 			{ it.script },
 			{ it.script },
-			{ it.term.value.nativeScript })
+			{ it.term.value.nativeScript },
+			{ it.scriptLine.script })
 
 val LinkTyped.script: Script
 	get() =
@@ -45,15 +47,19 @@ val SentenceTyped.scriptLine: ScriptLine
 
 val FunctionTyped.scriptLine: ScriptLine
 	get() =
-		_taking(function.input.script.plus(_giving(function.output.script)))
+		_taking(function.parameterType.script.plus(_giving(function.resultType.script)))
 
 val FunctionTyped.script: Script
 	get() =
-		function.input.script.plus(_giving(function.output.script))
+		function.parameterType.script.plus(_giving(function.resultType.script))
 
 val NativeTyped.scriptLine: ScriptLine
 	get() =
 		term.value!!.nativeScriptLine
+
+val LazyTyped.scriptLine: ScriptLine
+	get() =
+		_lazy(lazy.script)
 
 fun Typed.or(type: Type): Typed =
 	choiceTerm(2, 1, term) of (this.type or type)

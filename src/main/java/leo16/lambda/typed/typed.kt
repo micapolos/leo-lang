@@ -12,12 +12,14 @@ import leo15.terms.term
 import leo16.lambda.type.AlternativeTypeBody
 import leo16.lambda.type.EmptyTypeBody
 import leo16.lambda.type.FunctionTypeBody
+import leo16.lambda.type.LazyTypeBody
 import leo16.lambda.type.LinkTypeBody
 import leo16.lambda.type.NativeTypeBody
 import leo16.lambda.type.Type
 import leo16.lambda.type.TypeAlternative
 import leo16.lambda.type.TypeBody
 import leo16.lambda.type.TypeFunction
+import leo16.lambda.type.TypeLazy
 import leo16.lambda.type.TypeLink
 import leo16.lambda.type.TypeSentence
 import leo16.lambda.type.emptyType
@@ -39,6 +41,7 @@ data class AlternativeTyped(val term: Term, val alternative: TypeAlternative)
 data class SentenceTyped(val term: Term, val sentence: TypeSentence)
 data class FunctionTyped(val term: Term, val function: TypeFunction)
 data class NativeTyped(val term: Term, val native: Any)
+data class LazyTyped(val term: Term, val lazy: TypeLazy)
 
 infix fun Term.of(type: Type) = Typed(this, type)
 infix fun Term.of(body: TypeBody) = BodyTyped(this, body)
@@ -47,6 +50,7 @@ infix fun Term.of(alternative: TypeAlternative) = AlternativeTyped(this, alterna
 infix fun Term.of(sentence: TypeSentence) = SentenceTyped(this, sentence)
 infix fun Term.of(function: TypeFunction) = FunctionTyped(this, function)
 infix fun Term.of(native: Any) = NativeTyped(this, native)
+infix fun Term.of(lazy: TypeLazy) = LazyTyped(this, lazy)
 
 val emptyTyped
 	get() =
@@ -61,30 +65,32 @@ fun <R> BodyTyped.match(
 	linkFn: (LinkTyped) -> R,
 	alternativeFn: (AlternativeTyped) -> R,
 	functionFn: (FunctionTyped) -> R,
-	nativeFn: (NativeTyped) -> R): R =
+	nativeFn: (NativeTyped) -> R,
+	lazyFn: (LazyTyped) -> R): R =
 	when (body) {
 		EmptyTypeBody -> emptyFn()
 		is LinkTypeBody -> linkFn(term of body.link)
 		is AlternativeTypeBody -> alternativeFn(term of body.alternative)
 		is FunctionTypeBody -> functionFn(term of body.function)
 		is NativeTypeBody -> nativeFn(term of body.native)
+		is LazyTypeBody -> lazyFn(term of body.lazy)
 	}
 
 val BodyTyped.linkTypedOrNull: LinkTyped?
 	get() =
-		match({ null }, { it }, { null }, { null }, { null })
+		match({ null }, { it }, { null }, { null }, { null }, { null })
 
 val Typed.alternativeTypedOrNull: AlternativeTyped?
 	get() =
-		bodyTyped.match({ null }, { null }, { it }, { null }, { null })
+		bodyTyped.match({ null }, { null }, { it }, { null }, { null }, { null })
 
 val Typed.functionTypedOrNull: FunctionTyped?
 	get() =
-		bodyTyped.match({ null }, { null }, { null }, { it }, { null })
+		bodyTyped.match({ null }, { null }, { null }, { it }, { null }, { null })
 
 val Typed.nativeTypedOrNull: NativeTyped?
 	get() =
-		bodyTyped.match({ null }, { null }, { null }, { null }, { it })
+		bodyTyped.match({ null }, { null }, { null }, { null }, { it }, { null })
 
 val LinkTyped.previousTyped: Typed
 	get() =
@@ -106,8 +112,8 @@ fun Typed.typeInvokeOrNull(typed: Typed): Typed? =
 	functionTypedOrNull?.invokeOrNull(typed)
 
 fun FunctionTyped.invokeOrNull(typed: Typed): Typed? =
-	ifOrNull(function.input == typed.type) {
-		term.invoke(typed.term) of function.output
+	ifOrNull(function.parameterType == typed.type) {
+		term.invoke(typed.term) of function.resultType
 	}
 
 fun Typed.plus(sentenceTyped: SentenceTyped): Typed =
@@ -119,12 +125,9 @@ fun Typed.plus(sentenceTyped: SentenceTyped): Typed =
 		else term.plus(sentenceTyped.term)) of type.plus(sentenceTyped.sentence)
 
 fun Typed.plusOrNull(typed: Typed): Typed? =
-	typed.bodyTyped.match(
-		{ this },
-		{ plusOrNull(it.previousTyped)?.plus(it.lastSentenceTyped) },
-		{ null },
-		{ null },
-		{ null })
+	typed.bodyTyped.linkTypedOrNull?.run {
+		plusOrNull(previousTyped)?.plus(lastSentenceTyped)
+	}
 
 fun String.sentenceTo(typed: Typed): SentenceTyped =
 	typed.term of sentenceTo(typed.type)

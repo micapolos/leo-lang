@@ -105,4 +105,3 @@ val Value.force: Value
 val Field.forceValue: Value?
 	get() =
 		lazyOrNull?.evaluate
-

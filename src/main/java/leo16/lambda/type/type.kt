@@ -30,6 +30,10 @@ data class NativeTypeBody(val native: Any) : TypeBody() {
 	override fun toString() = super.toString()
 }
 
+data class LazyTypeBody(val lazy: TypeLazy) : TypeBody() {
+	override fun toString() = super.toString()
+}
+
 data class TypeLink(val previousType: Type, val lastSentence: TypeSentence)
 
 data class TypeAlternative(val firstType: Type, val secondType: Type)
@@ -38,7 +42,11 @@ data class TypeSentence(val word: String, val type: Type) {
 	override fun toString() = reflect.leoString
 }
 
-data class TypeFunction(val input: Type, val output: Type) {
+data class TypeFunction(val parameterType: Type, val resultType: Type) {
+	override fun toString() = reflectScript.leoString
+}
+
+data class TypeLazy(val resultType: Type) {
 	override fun toString() = reflectScript.leoString
 }
 
@@ -60,6 +68,7 @@ fun Type.alternative(type: Type) = TypeAlternative(this, type)
 val TypeLink.body: TypeBody get() = LinkTypeBody(this)
 val TypeAlternative.body: TypeBody get() = AlternativeTypeBody(this)
 val TypeFunction.body: TypeBody get() = FunctionTypeBody(this)
+val TypeLazy.body: TypeBody get() = LazyTypeBody(this)
 infix fun Type.or(type: Type) = alternative(type).body.type
 fun type(vararg sentences: TypeSentence) = emptyType.fold(sentences) { plus(it) }
 fun String.sentence(vararg sentences: TypeSentence) = sentenceTo(type(*sentences))
@@ -69,6 +78,7 @@ infix fun Type.functionGiving(type: Type) = TypeFunction(this, type)
 infix fun Type.giving(type: Type) = functionGiving(type).body.type
 val Any.nativeTypeBody: TypeBody get() = NativeTypeBody(this)
 val Any.nativeType: Type get() = nativeTypeBody.type
+val Type.lazy get() = TypeLazy(this)
 
 val stringType: Type = String::class.java.nativeType
 val intType: Type = Int::class.java.nativeType

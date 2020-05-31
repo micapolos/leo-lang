@@ -26,12 +26,12 @@ fun Typed.matchOrNull(whenFirst: Typed, whenSecond: Typed): Typed? =
 	alternativeTypedOrNull?.let { alternative ->
 		whenFirst.functionTypedOrNull?.let { firstFunction ->
 			whenSecond.functionTypedOrNull?.let { secondFunction ->
-				ifOrNull(firstFunction.function.input == alternative.alternative.firstType) {
-					ifOrNull(secondFunction.function.input == alternative.alternative.secondType) {
-						ifOrNull(firstFunction.function.output == secondFunction.function.output) {
+				ifOrNull(firstFunction.function.parameterType == alternative.alternative.firstType) {
+					ifOrNull(secondFunction.function.parameterType == alternative.alternative.secondType) {
+						ifOrNull(firstFunction.function.resultType == secondFunction.function.resultType) {
 							alternative.term
 								.invoke(firstFunction.term)
-								.invoke(secondFunction.term) of firstFunction.function.output
+								.invoke(secondFunction.term) of firstFunction.function.resultType
 						}
 					}
 				}
@@ -43,6 +43,6 @@ fun Typed.assertType(type: Type): Typed =
 	failIfOr(this.type != type) { this }
 
 fun FunctionTyped.applyOrNull(typed: Typed): Typed? =
-	notNullIf(typed.type == function.input) {
-		term.invoke(typed.term) of function.output
+	notNullIf(typed.type == function.parameterType) {
+		term.invoke(typed.term) of function.resultType
 	}
