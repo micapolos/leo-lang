@@ -7,8 +7,6 @@ import leo15.lambda.fn
 import leo15.lambda.idTerm
 import leo15.lambda.invoke
 import leo15.type.term
-import leo16.lambda.type.field
-import leo16.lambda.type.giving
 import leo16.lambda.type.giving
 import leo16.lambda.type.intTypeField
 import leo16.lambda.type.invoke

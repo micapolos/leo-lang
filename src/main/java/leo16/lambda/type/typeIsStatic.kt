@@ -7,6 +7,7 @@ val TypeBody.isStatic: Boolean
 			is LinkTypeBody -> link.previousType.isStatic && link.lastField.isStatic
 			is FunctionTypeBody -> function.isStatic
 			is AlternativeTypeBody -> false
+			is NativeTypeBody -> false
 		}
 
 val TypeField.isStatic: Boolean

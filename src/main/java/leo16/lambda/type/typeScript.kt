@@ -6,6 +6,7 @@ import leo14.emptyScript
 import leo14.invoke
 import leo14.plus
 import leo16.names.*
+import leo16.nativeScript
 import leo16.nativeScriptLine
 
 val Type.script: Script
@@ -19,6 +20,7 @@ val TypeBody.script: Script
 			is LinkTypeBody -> link.script
 			is AlternativeTypeBody -> alternative.script
 			is FunctionTypeBody -> function.script
+			is NativeTypeBody -> native.nativeScript
 		}
 
 val TypeLink.script

@@ -13,6 +13,7 @@ import leo16.lambda.type.AlternativeTypeBody
 import leo16.lambda.type.EmptyTypeBody
 import leo16.lambda.type.FunctionTypeBody
 import leo16.lambda.type.LinkTypeBody
+import leo16.lambda.type.NativeTypeBody
 import leo16.lambda.type.NativeTypeField
 import leo16.lambda.type.SentenceTypeField
 import leo16.lambda.type.Type
@@ -67,25 +68,31 @@ fun <R> BodyTyped.match(
 	emptyFn: () -> R,
 	linkFn: (LinkTyped) -> R,
 	alternativeFn: (AlternativeTyped) -> R,
-	functionFn: (FunctionTyped) -> R): R =
+	functionFn: (FunctionTyped) -> R,
+	nativeFn: (NativeTyped) -> R): R =
 	when (body) {
 		EmptyTypeBody -> emptyFn()
 		is LinkTypeBody -> linkFn(term of body.link)
 		is AlternativeTypeBody -> alternativeFn(term of body.alternative)
 		is FunctionTypeBody -> functionFn(term of body.function)
+		is NativeTypeBody -> nativeFn(term of body.native)
 	}
 
 val BodyTyped.linkTypedOrNull: LinkTyped?
 	get() =
-		match({ null }, { it }, { null }, { null })
+		match({ null }, { it }, { null }, { null }, { null })
 
 val Typed.alternativeTypedOrNull: AlternativeTyped?
 	get() =
-		bodyTyped.match({ null }, { null }, { it }, { null })
+		bodyTyped.match({ null }, { null }, { it }, { null }, { null })
 
 val Typed.functionTypedOrNull: FunctionTyped?
 	get() =
-		bodyTyped.match({ null }, { null }, { null }, { it })
+		bodyTyped.match({ null }, { null }, { null }, { it }, { null })
+
+val Typed.nativeTypedOrNull: NativeTyped?
+	get() =
+		bodyTyped.match({ null }, { null }, { null }, { null }, { it })
 
 val LinkTyped.previousTyped: Typed
 	get() =
@@ -119,12 +126,8 @@ val SentenceTyped.rhsTyped: Typed
 	get() =
 		term of sentence.type
 
-val Typed.typeFunctionOrNull: FunctionTyped?
-	get() =
-		bodyTyped.match({ null }, { null }, { null }, { it })
-
 fun Typed.typeInvokeOrNull(typed: Typed): Typed? =
-	typeFunctionOrNull?.invokeOrNull(typed)
+	functionTypedOrNull?.invokeOrNull(typed)
 
 fun FunctionTyped.invokeOrNull(typed: Typed): Typed? =
 	ifOrNull(function.input == typed.type) {
@@ -143,6 +146,7 @@ fun Typed.plusOrNull(typed: Typed): Typed? =
 	typed.bodyTyped.match(
 		{ this },
 		{ plusOrNull(it.previousTyped)?.plus(it.lastFieldTyped) },
+		{ null },
 		{ null },
 		{ null })
 

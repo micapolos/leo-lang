@@ -12,6 +12,7 @@ import leo16.lambda.type.Type
 import leo16.lambda.type.or
 import leo16.lambda.type.script
 import leo16.names.*
+import leo16.nativeScript
 import leo16.nativeScriptLine
 
 val Typed.script: Script
@@ -24,7 +25,8 @@ val BodyTyped.script: Script
 			{ emptyScript },
 			{ it.script },
 			{ it.script },
-			{ it.script })
+			{ it.script },
+			{ it.nativeScript })
 
 val LinkTyped.script: Script
 	get() =

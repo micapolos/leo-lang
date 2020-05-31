@@ -7,6 +7,7 @@ import leo14.invoke
 import leo14.plus
 import leo14.script
 import leo16.names.*
+import leo16.nativeScript
 import leo16.nativeScriptLine
 
 val Type.reflect: ScriptLine
@@ -28,6 +29,7 @@ val TypeBody.reflectScript: Script
 			is LinkTypeBody -> link.previousType.reflectScript.plus(link.lastField.reflect)
 			is AlternativeTypeBody -> alternative.reflectScript
 			is FunctionTypeBody -> function.reflectScript
+			is NativeTypeBody -> native.nativeScript
 		}
 
 val TypeField.reflect: ScriptLine

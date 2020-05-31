@@ -25,8 +25,8 @@ val Typed.thingOrNull: Typed?
 
 fun Typed.matchOrNull(whenFirst: Typed, whenSecond: Typed): Typed? =
 	alternativeTypedOrNull?.let { alternative ->
-		whenFirst.typeFunctionOrNull?.let { firstFunction ->
-			whenSecond.typeFunctionOrNull?.let { secondFunction ->
+		whenFirst.functionTypedOrNull?.let { firstFunction ->
+			whenSecond.functionTypedOrNull?.let { secondFunction ->
 				ifOrNull(firstFunction.function.input == alternative.alternative.firstType) {
 					ifOrNull(secondFunction.function.input == alternative.alternative.secondType) {
 						ifOrNull(firstFunction.function.output == secondFunction.function.output) {

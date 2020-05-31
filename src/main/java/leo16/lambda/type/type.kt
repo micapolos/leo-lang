@@ -26,6 +26,10 @@ data class AlternativeTypeBody(val alternative: TypeAlternative) : TypeBody() {
 	override fun toString() = super.toString()
 }
 
+data class NativeTypeBody(val native: Any) : TypeBody() {
+	override fun toString() = super.toString()
+}
+
 data class TypeLink(val previousType: Type, val lastField: TypeField)
 
 data class TypeAlternative(val firstType: Type, val secondType: Type)
@@ -66,6 +70,7 @@ val TypeBody.isEmpty get() = (this is EmptyTypeBody)
 val TypeBody.linkOrNull get() = (this as? LinkTypeBody)?.link
 val TypeBody.alternativeOrNull get() = (this as? AlternativeTypeBody)?.alternative
 val TypeBody.functionOrNull get() = (this as? FunctionTypeBody)?.function
+val TypeBody.nativeOrNull get() = (this as? NativeTypeBody)?.native
 fun Type.plus(field: TypeField) = linkTo(field).body.type
 fun Type.alternative(type: Type) = TypeAlternative(this, type)
 val TypeLink.body: TypeBody get() = LinkTypeBody(this)
