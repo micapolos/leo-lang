@@ -5,23 +5,22 @@ import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo15.lambda.invoke
 import leo16.lambda.type.Type
-import leo16.lambda.type.selectWord
 
 fun Typed.accessOrNull(word: String): Typed? =
 	bodyTyped.linkTypedOrNull?.accessOrNull(word)
 
 fun LinkTyped.accessOrNull(word: String): Typed? =
-	lastFieldTyped.accessOrNull(word) ?: previousTyped.accessOrNull(word)
+	lastSentenceTyped.accessOrNull(word) ?: previousTyped.accessOrNull(word)
 
-fun FieldTyped.accessOrNull(word: String): Typed? =
-	notNullIf(word == field.selectWord) { typed }
+fun SentenceTyped.accessOrNull(word: String): Typed? =
+	notNullIf(word == sentence.word) { typed(this) }
 
 fun Typed.getOrNull(word: String): Typed? =
 	this.thingOrNull?.accessOrNull(word)
 
 val Typed.thingOrNull: Typed?
 	get() =
-		bodyTyped.linkTypedOrNull?.onlyFieldTyped?.sentenceOrNull?.rhsTyped
+		bodyTyped.linkTypedOrNull?.onlySentenceTyped?.rhsTyped
 
 fun Typed.matchOrNull(whenFirst: Typed, whenSecond: Typed): Typed? =
 	alternativeTypedOrNull?.let { alternative ->

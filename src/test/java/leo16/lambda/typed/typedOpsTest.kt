@@ -8,9 +8,9 @@ import leo15.lambda.idTerm
 import leo15.lambda.invoke
 import leo15.type.term
 import leo16.lambda.type.giving
-import leo16.lambda.type.intTypeField
+import leo16.lambda.type.intType
 import leo16.lambda.type.invoke
-import leo16.lambda.type.stringTypeField
+import leo16.lambda.type.stringType
 import leo16.lambda.type.type
 import leo16.names.*
 import kotlin.test.Test
@@ -57,12 +57,12 @@ class TypedOpsTest {
 		typed(_zero(typed()))
 			.or(type(_one(type())))
 			.matchOrNull(
-				fn(0.term) of type(_zero(type())).giving(type(intTypeField)),
-				fn(1.term) of type(_one(type())).giving(type(intTypeField)))
+				fn(0.term) of type(_zero(type())).giving(intType),
+				fn(1.term) of type(_one(type())).giving(intType))
 			.assertEqualTo(
 				choiceTerm(2, 1, idTerm)
 					.invoke(fn(0.term))
-					.invoke(fn(1.term)) of type(intTypeField))
+					.invoke(fn(1.term)) of intType)
 	}
 
 	@Test
@@ -70,10 +70,10 @@ class TypedOpsTest {
 		typed(_zero(typed()))
 			.or(type(_one(type())))
 			.matchOrNull(
-				fn(0.term) of type(_zero(type())).giving(type(intTypeField)),
-				fn(1.term) of type(_one(type())).giving(type(intTypeField)))!!
+				fn(0.term) of type(_zero(type())).giving(intType),
+				fn(1.term) of type(_one(type())).giving(intType))!!
 			.evaluate
-			.assertEqualTo(0.term of type(intTypeField))
+			.assertEqualTo(0.term of intType)
 	}
 
 	@Test
@@ -81,8 +81,8 @@ class TypedOpsTest {
 		typed(_zero(typed()))
 			.or(type(_one(type())))
 			.matchOrNull(
-				fn(0.term) of type(_one(type())).giving(type(intTypeField)),
-				fn(1.term) of type(_one(type())).giving(type(intTypeField)))
+				fn(0.term) of type(_one(type())).giving(intType),
+				fn(1.term) of type(_one(type())).giving(intType))
 			.assertNull
 	}
 
@@ -91,8 +91,8 @@ class TypedOpsTest {
 		typed(_zero(typed()))
 			.or(type(_one(type())))
 			.matchOrNull(
-				fn(0.term) of type(_zero(type())).giving(type(intTypeField)),
-				fn(1.term) of type(_zero(type())).giving(type(intTypeField)))
+				fn(0.term) of type(_zero(type())).giving(intType),
+				fn(1.term) of type(_zero(type())).giving(intType))
 			.assertNull
 	}
 
@@ -101,8 +101,8 @@ class TypedOpsTest {
 		typed(_zero(typed()))
 			.or(type(_one(type())))
 			.matchOrNull(
-				fn("0".term) of type(_zero(type())).giving(type(stringTypeField)),
-				fn(1.term) of type(_one(type())).giving(type(intTypeField)))
+				fn("0".term) of type(_zero(type())).giving(stringType),
+				fn(1.term) of type(_one(type())).giving(intType))
 			.assertNull
 	}
 
@@ -110,8 +110,8 @@ class TypedOpsTest {
 	fun matchOrNull_notAlternative() {
 		typed(_zero(typed()))
 			.matchOrNull(
-				fn("0".term) of type(_zero(type())).giving(type(stringTypeField)),
-				fn(1.term) of type(_one(type())).giving(type(intTypeField)))
+				fn("0".term) of type(_zero(type())).giving(stringType),
+				fn(1.term) of type(_one(type())).giving(intType))
 			.assertNull
 	}
 
@@ -120,8 +120,8 @@ class TypedOpsTest {
 		typed(_zero(typed()))
 			.or(type(_one(type())))
 			.matchOrNull(
-				0.term of type(stringTypeField),
-				fn(1.term) of type(_one(type())).giving(type(intTypeField)))
+				0.term of stringType,
+				fn(1.term) of type(_one(type())).giving(intType))
 			.assertNull
 	}
 
@@ -130,8 +130,8 @@ class TypedOpsTest {
 		typed(_zero(typed()))
 			.or(type(_one(type())))
 			.matchOrNull(
-				fn(0.term) of type(_zero(type())).giving(type(intTypeField)),
-				1.term of type(intTypeField))
+				fn(0.term) of type(_zero(type())).giving(intType),
+				1.term of intType)
 			.assertNull
 	}
 }

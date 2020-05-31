@@ -26,11 +26,11 @@ val BodyTyped.script: Script
 			{ it.script },
 			{ it.script },
 			{ it.script },
-			{ it.nativeScript })
+			{ it.term.value.nativeScript })
 
 val LinkTyped.script: Script
 	get() =
-		previousTyped.script.plus(lastFieldTyped.scriptLine)
+		previousTyped.script.plus(lastSentenceTyped.scriptLine)
 
 val AlternativeTyped.script: Script
 	get() =
@@ -38,12 +38,6 @@ val AlternativeTyped.script: Script
 			if (index == 1) (value of alternative.firstType).script
 			else (value of alternative.secondType).script
 		}
-
-val FieldTyped.scriptLine: ScriptLine
-	get() =
-		match(
-			{ it.scriptLine },
-			{ it.scriptLine })
 
 val SentenceTyped.scriptLine: ScriptLine
 	get() =

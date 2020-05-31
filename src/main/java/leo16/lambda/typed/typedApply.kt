@@ -6,7 +6,7 @@ import leo16.names.*
 val Typed.applyOrNull: Typed?
 	get() =
 		bodyTyped.linkTypedOrNull?.let { linkTyped ->
-			linkTyped.lastFieldTyped.sentenceOrNull?.let { sentenceTyped ->
+			linkTyped.lastSentenceTyped.let { sentenceTyped ->
 				when (sentenceTyped.sentence.word) {
 					_thing -> ifOrNull(isEmpty) { sentenceTyped.rhsTyped.thingOrNull }
 					_quote -> plusOrNull(sentenceTyped.rhsTyped)

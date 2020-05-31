@@ -14,27 +14,21 @@ import leo16.lambda.type.EmptyTypeBody
 import leo16.lambda.type.FunctionTypeBody
 import leo16.lambda.type.LinkTypeBody
 import leo16.lambda.type.NativeTypeBody
-import leo16.lambda.type.NativeTypeField
-import leo16.lambda.type.SentenceTypeField
 import leo16.lambda.type.Type
 import leo16.lambda.type.TypeAlternative
 import leo16.lambda.type.TypeBody
-import leo16.lambda.type.TypeField
 import leo16.lambda.type.TypeFunction
 import leo16.lambda.type.TypeLink
 import leo16.lambda.type.TypeSentence
 import leo16.lambda.type.emptyType
-import leo16.lambda.type.field
-import leo16.lambda.type.intTypeField
+import leo16.lambda.type.intType
 import leo16.lambda.type.invoke
 import leo16.lambda.type.isEmpty
 import leo16.lambda.type.isStatic
-import leo16.lambda.type.nativeOrNull
-import leo16.lambda.type.nativeTypeField
+import leo16.lambda.type.nativeTypeBody
 import leo16.lambda.type.plus
-import leo16.lambda.type.sentenceOrNull
 import leo16.lambda.type.sentenceTo
-import leo16.lambda.type.stringTypeField
+import leo16.lambda.type.stringType
 import leo16.lambda.type.type
 import leo16.names.*
 
@@ -42,7 +36,6 @@ data class Typed(val term: Term, val type: Type)
 data class BodyTyped(val term: Term, val body: TypeBody)
 data class LinkTyped(val term: Term, val link: TypeLink)
 data class AlternativeTyped(val term: Term, val alternative: TypeAlternative)
-data class FieldTyped(val term: Term, val field: TypeField)
 data class SentenceTyped(val term: Term, val sentence: TypeSentence)
 data class FunctionTyped(val term: Term, val function: TypeFunction)
 data class NativeTyped(val term: Term, val native: Any)
@@ -51,7 +44,6 @@ infix fun Term.of(type: Type) = Typed(this, type)
 infix fun Term.of(body: TypeBody) = BodyTyped(this, body)
 infix fun Term.of(link: TypeLink) = LinkTyped(this, link)
 infix fun Term.of(alternative: TypeAlternative) = AlternativeTyped(this, alternative)
-infix fun Term.of(field: TypeField) = FieldTyped(this, field)
 infix fun Term.of(sentence: TypeSentence) = SentenceTyped(this, sentence)
 infix fun Term.of(function: TypeFunction) = FunctionTyped(this, function)
 infix fun Term.of(native: Any) = NativeTyped(this, native)
@@ -96,31 +88,15 @@ val Typed.nativeTypedOrNull: NativeTyped?
 
 val LinkTyped.previousTyped: Typed
 	get() =
-		(if (link.previousType.isStatic || link.lastField.isStatic) term else term.first) of link.previousType
+		(if (link.previousType.isStatic || link.lastSentence.isStatic) term else term.first) of link.previousType
 
-val LinkTyped.lastFieldTyped: FieldTyped
+val LinkTyped.lastSentenceTyped: SentenceTyped
 	get() =
-		(if (link.previousType.isStatic || link.lastField.isStatic) term else term.second) of link.lastField
+		(if (link.previousType.isStatic || link.lastSentence.isStatic) term else term.second) of link.lastSentence
 
-val LinkTyped.onlyFieldTyped
+val LinkTyped.onlySentenceTyped
 	get() =
-		ifOrNull(previousTyped.type.isEmpty) { lastFieldTyped }
-
-fun <R> FieldTyped.match(
-	sentenceFn: (SentenceTyped) -> R,
-	nativeFn: (NativeTyped) -> R) =
-	when (field) {
-		is SentenceTypeField -> sentenceFn(term of field.sentence)
-		is NativeTypeField -> nativeFn(term of field.native)
-	}
-
-val FieldTyped.sentenceOrNull: SentenceTyped?
-	get() =
-		field.sentenceOrNull?.let { term of it }
-
-val FieldTyped.nativeOrNull: NativeTyped?
-	get() =
-		field.nativeOrNull?.let { term of it }
+		ifOrNull(previousTyped.type.isEmpty) { lastSentenceTyped }
 
 val SentenceTyped.rhsTyped: Typed
 	get() =
@@ -134,18 +110,18 @@ fun FunctionTyped.invokeOrNull(typed: Typed): Typed? =
 		term.invoke(typed.term) of function.output
 	}
 
-fun Typed.plus(field: FieldTyped): Typed =
+fun Typed.plus(sentenceTyped: SentenceTyped): Typed =
 	(if (type.isStatic)
-		if (field.field.isStatic) term
-		else field.term
+		if (sentenceTyped.sentence.isStatic) term
+		else sentenceTyped.term
 	else
-		if (field.field.isStatic) term
-		else term.plus(field.term)) of type.plus(field.field)
+		if (sentenceTyped.sentence.isStatic) term
+		else term.plus(sentenceTyped.term)) of type.plus(sentenceTyped.sentence)
 
 fun Typed.plusOrNull(typed: Typed): Typed? =
 	typed.bodyTyped.match(
 		{ this },
-		{ plusOrNull(it.previousTyped)?.plus(it.lastFieldTyped) },
+		{ plusOrNull(it.previousTyped)?.plus(it.lastSentenceTyped) },
 		{ null },
 		{ null },
 		{ null })
@@ -153,32 +129,21 @@ fun Typed.plusOrNull(typed: Typed): Typed? =
 fun String.sentenceTo(typed: Typed): SentenceTyped =
 	typed.term of sentenceTo(typed.type)
 
-fun String.fieldTo(typed: Typed): FieldTyped =
-	sentenceTo(typed).fieldTyped
+operator fun String.invoke(vararg fields: SentenceTyped): SentenceTyped =
+	sentenceTo(typed(*fields))
 
-val SentenceTyped.fieldTyped: FieldTyped
+operator fun String.invoke(typed: Typed): SentenceTyped =
+	sentenceTo(typed)
+
+fun typed(vararg sentences: SentenceTyped): Typed =
+	emptyTyped.fold(sentences) { plus(it) }
+
+val NativeTyped.bodyTyped: BodyTyped
 	get() =
-		term of sentence.field
+		term of native.nativeTypeBody
 
-operator fun String.invoke(vararg fields: FieldTyped): FieldTyped =
-	fieldTo(typed(*fields))
-
-operator fun String.invoke(typed: Typed): FieldTyped =
-	fieldTo(typed)
-
-fun typed(vararg fields: FieldTyped): Typed =
-	emptyTyped.fold(fields) { plus(it) }
-
-val NativeTyped.fieldTyped: FieldTyped
-	get() =
-		term of native.nativeTypeField
-
-val FieldTyped.typed
-	get() =
-		term of type(field)
-
-val Int.typedField get() = term of intTypeField
-val String.typedField get() = term of stringTypeField
+val Int.typedField get() = term of intType
+val String.typedField get() = term of stringType
 val Boolean.typedField
 	get() = _boolean(
 		if (this) type(_false(type())).or(typed(_true(typed())))

@@ -30,21 +30,9 @@ data class NativeTypeBody(val native: Any) : TypeBody() {
 	override fun toString() = super.toString()
 }
 
-data class TypeLink(val previousType: Type, val lastField: TypeField)
+data class TypeLink(val previousType: Type, val lastSentence: TypeSentence)
 
 data class TypeAlternative(val firstType: Type, val secondType: Type)
-
-sealed class TypeField {
-	override fun toString() = reflect.leoString
-}
-
-data class SentenceTypeField(val sentence: TypeSentence) : TypeField() {
-	override fun toString() = super.toString()
-}
-
-data class NativeTypeField(val native: Any) : TypeField() {
-	override fun toString() = super.toString()
-}
 
 data class TypeSentence(val word: String, val type: Type) {
 	override fun toString() = reflect.leoString
@@ -57,41 +45,32 @@ data class TypeFunction(val input: Type, val output: Type) {
 val emptyTypeBody: TypeBody = EmptyTypeBody
 val emptyType = emptyTypeBody.type
 val TypeBody.type: Type get() = Type(this, isStatic)
-val TypeSentence.field: TypeField get() = SentenceTypeField(this)
-val Any.nativeTypeField: TypeField get() = NativeTypeField(this)
 val emptyTypeCase: TypeBody = EmptyTypeBody
 val TypeLink.case: TypeBody get() = LinkTypeBody(this)
-fun Type.linkTo(field: TypeField) = TypeLink(this, field)
+fun Type.linkTo(sentence: TypeSentence) = TypeLink(this, sentence)
 fun String.sentenceTo(type: Type) = TypeSentence(this, type)
-val TypeField.sentenceOrNull get() = (this as? SentenceTypeField)?.sentence
-val TypeField.nativeOrNull get() = (this as? NativeTypeField)?.native
 val Type.isEmpty get() = body.isEmpty
 val TypeBody.isEmpty get() = (this is EmptyTypeBody)
 val TypeBody.linkOrNull get() = (this as? LinkTypeBody)?.link
 val TypeBody.alternativeOrNull get() = (this as? AlternativeTypeBody)?.alternative
 val TypeBody.functionOrNull get() = (this as? FunctionTypeBody)?.function
 val TypeBody.nativeOrNull get() = (this as? NativeTypeBody)?.native
-fun Type.plus(field: TypeField) = linkTo(field).body.type
+fun Type.plus(sentence: TypeSentence) = linkTo(sentence).body.type
 fun Type.alternative(type: Type) = TypeAlternative(this, type)
 val TypeLink.body: TypeBody get() = LinkTypeBody(this)
 val TypeAlternative.body: TypeBody get() = AlternativeTypeBody(this)
 val TypeFunction.body: TypeBody get() = FunctionTypeBody(this)
 infix fun Type.or(type: Type) = alternative(type).body.type
-fun String.fieldTo(type: Type) = sentenceTo(type).field
-fun type(vararg fields: TypeField) = emptyType.fold(fields) { plus(it) }
-operator fun String.invoke(vararg fields: TypeField) = fieldTo(type(*fields))
-operator fun String.invoke(type: Type) = fieldTo(type)
+fun type(vararg sentences: TypeSentence) = emptyType.fold(sentences) { plus(it) }
+fun String.sentence(vararg sentences: TypeSentence) = sentenceTo(type(*sentences))
+operator fun String.invoke(vararg sentences: TypeSentence) = sentence(*sentences)
+operator fun String.invoke(type: Type) = sentenceTo(type)
 infix fun Type.functionGiving(type: Type) = TypeFunction(this, type)
 infix fun Type.giving(type: Type) = functionGiving(type).body.type
+val Any.nativeTypeBody: TypeBody get() = NativeTypeBody(this)
+val Any.nativeType: Type get() = nativeTypeBody.type
 
-val TypeField.selectWord
-	get() =
-		when (this) {
-			is SentenceTypeField -> sentence.word
-			is NativeTypeField -> _native
-		}
-
-val stringTypeField: TypeField = String::class.java.nativeTypeField
-val intTypeField: TypeField = Int::class.java.nativeTypeField
-val doubleTypeField: TypeField = Double::class.java.nativeTypeField
-val booleanTypeField: TypeField = _boolean(type(_false(type())).or(type(_true(type()))))
+val stringType: Type = String::class.java.nativeType
+val intType: Type = Int::class.java.nativeType
+val doubleType: Type = Double::class.java.nativeType
+val booleanType: Type = type(_boolean(type(_false(type())).or(type(_true(type())))))

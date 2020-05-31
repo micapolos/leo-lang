@@ -7,8 +7,8 @@ import leo15.lambda.idTerm
 import leo15.lambda.valueTerm
 import leo16.lambda.invoke
 import leo16.lambda.type.giving
+import leo16.lambda.type.intType
 import leo16.lambda.type.invoke
-import leo16.lambda.type.nativeTypeField
 import leo16.lambda.type.type
 import leo16.names.*
 import leo16.nativeScriptLine
@@ -55,7 +55,7 @@ class TypedValueTest {
 
 	@Test
 	fun native() {
-		typed(123.valueTerm of "int".nativeTypeField)
+		123.valueTerm.of(intType)
 			.script
 			.assertEqualTo(script(123.nativeScriptLine))
 	}
