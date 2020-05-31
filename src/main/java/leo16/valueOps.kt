@@ -21,13 +21,13 @@ inline fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 
 val Value.thingOrNull: Value?
 	get() =
-		fieldStack.onlyOrNull?.valueOrNull
+		force.fieldStack.onlyOrNull?.thingOrNull
 
 infix fun Value.getOrNull(word: String): Value? =
 	thingOrNull?.accessOrNull(word)
 
 infix fun Value.accessOrNull(word: String): Value? =
-	fieldStack.mapFirst {
+	force.fieldStack.mapFirst {
 		accessOrNull(word)
 	}
 
@@ -94,12 +94,15 @@ fun Value.of(patternValue: Value): Value =
 	if (patternValue.matches(this)) this
 	else throw AssertionError(value(_error(this.plus(_of(patternValue)))))
 
-val Field.valueOrNull: Value?
+val Field.thingOrNull: Value?
 	get() =
-		when (this) {
-			is SentenceField -> sentence.value
-			is FunctionField -> null
-			is NativeField -> null
-			is LazyField -> lazy.evaluate
-			is EvaluatedField -> null
-		}
+		sentenceOrNull?.value
+
+val Value.force: Value
+	get() =
+		onlyFieldOrNull?.forceValue ?: this
+
+val Field.forceValue: Value?
+	get() =
+		lazyOrNull?.evaluate
+

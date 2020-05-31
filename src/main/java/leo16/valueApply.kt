@@ -9,6 +9,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyImplicitGet(field)
 		?: applyGet(field)
 		?: applyMake(field)
+		?: applyForce(field)
 		?: applyTake(field)
 		?: applyThis(field)
 		?: applyQuote(field)
@@ -79,6 +80,13 @@ fun Value.applyScript(field: Field): Value? =
 fun Value.applyMatches(field: Field): Value? =
 	field.matchPrefix(_matches) { rhs ->
 		matches(rhs).field.value
+	}
+
+fun Value.applyForce(field: Field): Value? =
+	matchEmpty {
+		field.matchPrefix(_force) { rhs ->
+			rhs.force
+		}
 	}
 
 fun Value.applyQuote(field: Field): Value? =

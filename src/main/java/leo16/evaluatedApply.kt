@@ -117,8 +117,10 @@ fun Evaluated.applyUse(field: Field): Evaluated? =
 	}
 
 fun Evaluated.applyLazy(field: Field): Evaluated? =
-	field.matchPrefix(_lazy) { rhs ->
-		set(value.plus(scope.dictionary.compiled(rhs).lazy.field.value))
+	value.matchEmpty {
+		field.matchPrefix(_lazy) { rhs ->
+			set(scope.dictionary.compiled(rhs).lazy.field.value)
+		}
 	}
 
 fun Evaluated.applyExport(field: Field): Evaluated? =
