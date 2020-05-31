@@ -4,15 +4,15 @@ import kotlin.test.Test
 
 fun funFib(i: Int): Int =
 	when (i) {
+		0 -> 0
 		1 -> 1
-		2 -> 1
 		else -> funFib(i.dec()) + funFib(i.dec().dec())
 	}
 
 val fixFib = fix { i: Int ->
 	when (i) {
+		0 -> 0
 		1 -> 1
-		2 -> 1
 		else -> this(i.dec()) + this(i.dec().dec())
 	}
 }

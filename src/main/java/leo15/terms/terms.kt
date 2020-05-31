@@ -15,6 +15,7 @@ val Int.term get() = valueTerm
 val String.term get() = valueTerm
 
 fun Term.ifIntZero(f: Fn): Switch = apply { if (value as Int == 0) nil.firstOr else nil.secondOr }.switch(f)
+fun Term.ifIntNegative(f: Fn): Switch = apply { if ((value as Int) < 0) nil.firstOr else nil.secondOr }.switch(f)
 fun Term.intPlus(rhs: Term): Term = valueApply(rhs) { (this as Int).plus(it as Int) }
 fun Term.intMinus(rhs: Term): Term = valueApply(rhs) { (this as Int).minus(it as Int) }
 fun Term.intTimes(rhs: Term): Term = valueApply(rhs) { (this as Int).times(it as Int) }
