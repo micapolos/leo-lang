@@ -23,8 +23,8 @@ val BodyTyped.script: Script
 		match(
 			{ emptyScript },
 			{ it.script },
-			{ it.script }
-		)
+			{ it.script },
+			{ it.script })
 
 val LinkTyped.script: Script
 	get() =
@@ -41,9 +41,7 @@ val FieldTyped.scriptLine: ScriptLine
 	get() =
 		match(
 			{ it.scriptLine },
-			{ it.scriptLine },
-			{ it.scriptLine }
-		)
+			{ it.scriptLine })
 
 val SentenceTyped.scriptLine: ScriptLine
 	get() =
@@ -52,6 +50,10 @@ val SentenceTyped.scriptLine: ScriptLine
 val FunctionTyped.scriptLine: ScriptLine
 	get() =
 		_taking(function.input.script.plus(_giving(function.output.script)))
+
+val FunctionTyped.script: Script
+	get() =
+		function.input.script.plus(_giving(function.output.script))
 
 val NativeTyped.scriptLine: ScriptLine
 	get() =

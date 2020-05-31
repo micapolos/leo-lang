@@ -11,7 +11,7 @@ import leo15.terms.second
 import leo15.terms.term
 import leo16.lambda.type.AlternativeTypeBody
 import leo16.lambda.type.EmptyTypeBody
-import leo16.lambda.type.FunctionTypeField
+import leo16.lambda.type.FunctionTypeBody
 import leo16.lambda.type.LinkTypeBody
 import leo16.lambda.type.NativeTypeField
 import leo16.lambda.type.SentenceTypeField
@@ -24,7 +24,6 @@ import leo16.lambda.type.TypeLink
 import leo16.lambda.type.TypeSentence
 import leo16.lambda.type.emptyType
 import leo16.lambda.type.field
-import leo16.lambda.type.functionOrNull
 import leo16.lambda.type.intTypeField
 import leo16.lambda.type.invoke
 import leo16.lambda.type.isEmpty
@@ -67,20 +66,26 @@ val Typed.bodyTyped: BodyTyped
 fun <R> BodyTyped.match(
 	emptyFn: () -> R,
 	linkFn: (LinkTyped) -> R,
-	alternativeFn: (AlternativeTyped) -> R): R =
+	alternativeFn: (AlternativeTyped) -> R,
+	functionFn: (FunctionTyped) -> R): R =
 	when (body) {
 		EmptyTypeBody -> emptyFn()
 		is LinkTypeBody -> linkFn(term of body.link)
 		is AlternativeTypeBody -> alternativeFn(term of body.alternative)
+		is FunctionTypeBody -> functionFn(term of body.function)
 	}
 
 val BodyTyped.linkTypedOrNull: LinkTyped?
 	get() =
-		match({ null }, { it }, { null })
+		match({ null }, { it }, { null }, { null })
 
 val Typed.alternativeTypedOrNull: AlternativeTyped?
 	get() =
-		bodyTyped.match({ null }, { null }, { it })
+		bodyTyped.match({ null }, { null }, { it }, { null })
+
+val Typed.functionTypedOrNull: FunctionTyped?
+	get() =
+		bodyTyped.match({ null }, { null }, { null }, { it })
 
 val LinkTyped.previousTyped: Typed
 	get() =
@@ -96,21 +101,15 @@ val LinkTyped.onlyFieldTyped
 
 fun <R> FieldTyped.match(
 	sentenceFn: (SentenceTyped) -> R,
-	functionFn: (FunctionTyped) -> R,
 	nativeFn: (NativeTyped) -> R) =
 	when (field) {
 		is SentenceTypeField -> sentenceFn(term of field.sentence)
-		is FunctionTypeField -> functionFn(term of field.function)
 		is NativeTypeField -> nativeFn(term of field.native)
 	}
 
 val FieldTyped.sentenceOrNull: SentenceTyped?
 	get() =
 		field.sentenceOrNull?.let { term of it }
-
-val FieldTyped.functionOrNull: FunctionTyped?
-	get() =
-		field.functionOrNull?.let { term of it }
 
 val FieldTyped.nativeOrNull: NativeTyped?
 	get() =
@@ -122,7 +121,7 @@ val SentenceTyped.rhsTyped: Typed
 
 val Typed.typeFunctionOrNull: FunctionTyped?
 	get() =
-		bodyTyped.linkTypedOrNull?.onlyFieldTyped?.functionOrNull
+		bodyTyped.match({ null }, { null }, { null }, { it })
 
 fun Typed.typeInvokeOrNull(typed: Typed): Typed? =
 	typeFunctionOrNull?.invokeOrNull(typed)
@@ -144,6 +143,7 @@ fun Typed.plusOrNull(typed: Typed): Typed? =
 	typed.bodyTyped.match(
 		{ this },
 		{ plusOrNull(it.previousTyped)?.plus(it.lastFieldTyped) },
+		{ null },
 		{ null })
 
 fun String.sentenceTo(typed: Typed): SentenceTyped =

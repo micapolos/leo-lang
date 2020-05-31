@@ -7,7 +7,6 @@ import leo14.invoke
 import leo14.plus
 import leo14.script
 import leo16.names.*
-import leo16.nativeField
 import leo16.nativeScriptLine
 
 val Type.reflect: ScriptLine
@@ -28,6 +27,7 @@ val TypeBody.reflectScript: Script
 			EmptyTypeBody -> emptyScript
 			is LinkTypeBody -> link.previousType.reflectScript.plus(link.lastField.reflect)
 			is AlternativeTypeBody -> alternative.reflectScript
+			is FunctionTypeBody -> function.reflectScript
 		}
 
 val TypeField.reflect: ScriptLine
@@ -35,7 +35,6 @@ val TypeField.reflect: ScriptLine
 		_field(
 			when (this) {
 				is SentenceTypeField -> sentence.reflect
-				is FunctionTypeField -> function.reflect
 				is NativeTypeField -> native.nativeScriptLine
 			}
 		)
@@ -44,11 +43,9 @@ val TypeSentence.reflect: ScriptLine
 	get() =
 		word(type.reflect)
 
-val TypeFunction.reflect: ScriptLine
+val TypeFunction.reflectScript: Script
 	get() =
-		_function(
-			_input(input.reflect),
-			_output(output.reflect))
+		input.reflectScript.plus(_giving(output.reflectScript))
 
 val TypeAlternative.reflectScript: Script
 	get() =

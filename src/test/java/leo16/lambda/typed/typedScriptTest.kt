@@ -6,7 +6,6 @@ import leo14.script
 import leo15.lambda.idTerm
 import leo15.lambda.valueTerm
 import leo16.lambda.invoke
-import leo16.lambda.type.field
 import leo16.lambda.type.giving
 import leo16.lambda.type.invoke
 import leo16.lambda.type.nativeTypeField
@@ -49,9 +48,9 @@ class TypedValueTest {
 	@Test
 	fun function() {
 		idTerm
-			.of(type(type(_zero(type())).giving(type(_one(type()))).field))
+			.of(type(_zero(type())).giving(type(_one(type()))))
 			.script
-			.assertEqualTo(script(_taking(_zero(script()), _giving(_one(script())))))
+			.assertEqualTo(script(_zero(script()), _giving(_one(script()))))
 	}
 
 	@Test

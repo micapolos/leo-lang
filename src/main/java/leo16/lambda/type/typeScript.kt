@@ -18,6 +18,7 @@ val TypeBody.script: Script
 			EmptyTypeBody -> emptyScript
 			is LinkTypeBody -> link.script
 			is AlternativeTypeBody -> alternative.script
+			is FunctionTypeBody -> function.script
 		}
 
 val TypeLink.script
@@ -32,7 +33,6 @@ val TypeField.scriptLine: ScriptLine
 	get() =
 		when (this) {
 			is SentenceTypeField -> sentence.scriptLine
-			is FunctionTypeField -> function.scriptLine
 			is NativeTypeField -> native.nativeScriptLine
 		}
 
@@ -40,6 +40,6 @@ val TypeSentence.scriptLine
 	get() =
 		word(type.script)
 
-val TypeFunction.scriptLine
+val TypeFunction.script
 	get() =
-		_taking(input.script.plus(_giving(output.script)))
+		input.script.plus(_giving(output.script))

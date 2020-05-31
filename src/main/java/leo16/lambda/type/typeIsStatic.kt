@@ -5,6 +5,7 @@ val TypeBody.isStatic: Boolean
 		when (this) {
 			EmptyTypeBody -> true
 			is LinkTypeBody -> link.previousType.isStatic && link.lastField.isStatic
+			is FunctionTypeBody -> function.isStatic
 			is AlternativeTypeBody -> false
 		}
 
@@ -12,7 +13,6 @@ val TypeField.isStatic: Boolean
 	get() =
 		when (this) {
 			is SentenceTypeField -> sentence.isStatic
-			is FunctionTypeField -> function.isStatic
 			is NativeTypeField -> false
 		}
 
