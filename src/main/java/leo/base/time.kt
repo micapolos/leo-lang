@@ -1,16 +1,28 @@
 package leo.base
 
-fun timeMillis(fn: () -> Unit): Long {
+inline fun <T> resultToTimeMillis(fn: () -> T): Pair<T, Long> {
 	val startTime = System.currentTimeMillis()
-	fn()
+	val result = fn()
 	val endTime = System.currentTimeMillis()
-	return endTime - startTime
+	val time = endTime - startTime
+	return result to time
 }
 
-fun printTime(fn: () -> Unit) {
-	println("${timeMillis(fn)}ms")
+inline fun timeMillis(fn: () -> Unit): Long =
+	resultToTimeMillis { fn() }.second
+
+inline fun <T, R> T.runPrintingTime(prefix: String, fn: T.() -> R): R {
+	val resultToTime = resultToTimeMillis { fn() }
+	println("${prefix}${resultToTime.second}ms")
+	return resultToTime.first
 }
 
-fun printTime(label: String, fn: () -> Unit) {
-	println("$label: ${timeMillis(fn)}ms")
+inline fun <T, R> T.runPrintingTime(fn: T.() -> R): R =
+	runPrintingTime("", fn)
+
+inline fun printTime(label: String, fn: () -> Unit) {
+	Unit.runPrintingTime(label) { fn() }
 }
+
+inline fun printTime(fn: () -> Unit) =
+	printTime("", fn)
