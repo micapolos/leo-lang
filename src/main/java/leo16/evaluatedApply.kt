@@ -49,7 +49,6 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyMeta(field)
 		?: applyDo(field)
 		?: applyLazy(field)
-		?: applyForce(field)
 		?: applyFunction(field)
 		?: applyMatch(field)
 		?: applyExport(field)
@@ -121,16 +120,6 @@ fun Evaluated.applyLazy(field: Field): Evaluated? =
 	field.matchPrefix(_lazy) { rhs ->
 		set(value.plus(scope.dictionary.compiled(rhs).lazy.field.value))
 	}
-
-fun Evaluated.applyForce(field: Field): Evaluated? =
-	value.matchEmpty {
-		field.matchPrefix(_force) { rhs ->
-			rhs.onlyFieldOrNull?.lazyOrNull?.let { lazy ->
-				set(_force(lazy.evaluate).value)
-			}
-		}
-	}
-
 
 fun Evaluated.applyExport(field: Field): Evaluated? =
 	field.matchPrefix(_export) { rhs ->

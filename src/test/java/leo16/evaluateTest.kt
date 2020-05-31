@@ -148,18 +148,27 @@ class EvaluateTest {
 	@Test
 	fun lazy() {
 		evaluate_ {
-			zero.is_ { one }
-			lazy_ { zero }
-		}.assertEquals { lazy_ { zero } }
+			color.is_ { color { red } }
+			lazy_ { color }
+		}.assertEquals { lazy_ { color } }
 	}
 
 	@Test
-	fun force() {
+	fun lazyThing() {
 		evaluate_ {
-			zero.is_ { one }
-			lazy_ { zero }
-			force
-		}.assertEquals { force { one } }
+			color.is_ { color { red } }
+			lazy_ { color }
+			thing
+		}.assertEquals { color { red } }
+	}
+
+	@Test
+	fun lazyGetField() {
+		evaluate_ {
+			color.is_ { color { red } }
+			lazy_ { color }
+			color
+		}.assertEquals { color { red } }
 	}
 
 	@Test
