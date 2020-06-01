@@ -85,7 +85,7 @@ fun Value.applyMatches(field: Field): Value? =
 fun Value.applyForce(field: Field): Value? =
 	matchEmpty {
 		field.matchPrefix(_force) { rhs ->
-			rhs.force
+			rhs.forceOrNull
 		}
 	}
 

@@ -156,9 +156,8 @@ class EvaluateTest {
 	@Test
 	fun force() {
 		evaluate_ {
-			color { red }
-			force
-		}.assertEquals { color { red } }
+			force { zero }
+		}.assertEquals { force { zero } }
 	}
 
 	@Test
@@ -176,33 +175,6 @@ class EvaluateTest {
 				y { one }
 			}
 		}
-	}
-
-	@Test
-	fun lazyThing() {
-		evaluate_ {
-			point.has {
-				x { zero }
-				y { one }
-			}
-			lazy_ { point }
-			thing
-		}.assertEquals {
-			x { zero }
-			y { one }
-		}
-	}
-
-	@Test
-	fun lazyGetField() {
-		evaluate_ {
-			point.has {
-				x { zero }
-				y { one }
-			}
-			lazy_ { point }
-			x
-		}.assertEquals { x { zero } }
 	}
 
 	@Test

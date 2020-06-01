@@ -21,13 +21,13 @@ inline fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
 
 val Value.thingOrNull: Value?
 	get() =
-		force.fieldStack.onlyOrNull?.thingOrNull
+		fieldStack.onlyOrNull?.thingOrNull
 
 infix fun Value.getOrNull(word: String): Value? =
 	thingOrNull?.accessOrNull(word)
 
 infix fun Value.accessOrNull(word: String): Value? =
-	force.fieldStack.mapFirst {
+	fieldStack.mapFirst {
 		accessOrNull(word)
 	}
 
@@ -98,10 +98,6 @@ val Field.thingOrNull: Value?
 	get() =
 		sentenceOrNull?.value
 
-val Value.force: Value
+val Value.forceOrNull: Value?
 	get() =
-		onlyFieldOrNull?.forceValue ?: this
-
-val Field.forceValue: Value?
-	get() =
-		lazyOrNull?.evaluate
+		onlyFieldOrNull?.lazyOrNull?.evaluate
