@@ -21,7 +21,7 @@ fun Value.apply(field: Field): Value? =
 		?: applyHash(field)
 		?: applyEquals(field)
 		?: applyAsText(field)
-		?: applyOf(field)
+		?: applyMatching(field)
 		?: applyLeonardo(field)
 
 fun Value.applyImplicitGet(field: Field): Value? =
@@ -111,8 +111,8 @@ fun Value.applyAsText(field: Field): Value? =
 		}
 	}
 
-fun Value.applyOf(field: Field): Value? =
-	field.matchPrefix(_of) { rhs ->
+fun Value.applyMatching(field: Field): Value? =
+	field.matchPrefix(_matching) { rhs ->
 		of(rhs)
 	}
 

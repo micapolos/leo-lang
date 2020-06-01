@@ -15,7 +15,7 @@ val natural = dsl_ {
 		do_ {
 			natural {
 				zero
-				or { successor { to { lazy_ { repeat } } } }
+				or { successor { of { lazy_ { repeat } } } }
 			}
 		}
 	}
@@ -27,29 +27,29 @@ val natural = dsl_ {
 
 	test {
 		any { natural }
-		matches { natural { successor { to { natural { zero } } } } }
+		matches { natural { successor { of { natural { zero } } } } }
 	}
 
 	test {
 		any { natural }
-		matches { natural { successor { to { natural { successor { to { natural { zero } } } } } } } }
+		matches { natural { successor { of { natural { successor { of { natural { zero } } } } } } } }
 	}
 
 	natural.any.next
-	does { natural { successor { to { next.natural } } } }
+	does { natural { successor { of { next.natural } } } }
 
 	test {
 		zero.natural.next
-		equals_ { natural { successor { to { natural { zero } } } } }
+		equals_ { natural { successor { of { natural { zero } } } } }
 	}
 
 	test {
 		zero.natural.next.next
-		equals_ { natural { successor { to { natural { successor { to { natural { zero } } } } } } } }
+		equals_ { natural { successor { of { natural { successor { of { natural { zero } } } } } } } }
 	}
 
-	natural { successor { to { natural.any } } }.previous
-	does { previous.natural.successor.to.natural }
+	natural { successor { of { natural.any } } }.previous
+	does { previous.natural.successor.of.natural }
 
 	test { zero.natural.previous.equals_ { zero.natural.make { previous } } }
 	test { zero.natural.next.previous.equals_ { zero.natural } }

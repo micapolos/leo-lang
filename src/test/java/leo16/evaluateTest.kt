@@ -679,23 +679,23 @@ class EvaluateTest {
 	}
 
 	@Test
-	fun of() {
+	fun matching() {
 		evaluate_ {
 			zero
-			of { zero.or { one } }
+			matching { zero.or { one } }
 			equals_ { zero }
 		}
 
 		evaluate_ {
 			one
-			of { zero.or { one } }
+			matching { zero.or { one } }
 			equals_ { one }
 		}
 
 		assertFails {
 			evaluate_ {
 				two
-				of { zero.or { one } }
+				matching { zero.or { one } }
 			}
 		}
 	}
