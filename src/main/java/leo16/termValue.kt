@@ -8,6 +8,8 @@ import leo15.lambda.unsafeUnpair
 import leo15.lambda.value
 import leo16.names.*
 
+// TODO: Perform static optimization
+
 fun Value.value(term: Term): Value =
 	force.forcedValue(term)
 
