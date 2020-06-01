@@ -10,27 +10,50 @@ fun main() {
 val natural = dsl_ {
 	use { leo }
 
-	natural.any
+	any { natural }
 	is_ {
 		do_ {
-			zero
-			or { lazy_ { repeat }.next }
-			natural
+			natural {
+				zero
+				or { successor { to { lazy_ { repeat } } } }
+			}
 		}
 	}
 
-	test { natural.any.matches { zero.natural } }
-	test { natural.any.matches { zero.natural.next.natural } }
-	test { natural.any.matches { zero.natural.next.natural.next.natural } }
+	test {
+		any { natural }
+		matches { natural { zero } }
+	}
 
-	natural.any
-	next.natural
-	previous.natural
-	does { natural.previous.natural.next.natural }
+	test {
+		any { natural }
+		matches { natural { successor { to { natural { zero } } } } }
+	}
 
-	test { zero.natural.previous.natural.equals_ { zero.natural.previous.natural } }
-	test { zero.natural.next.natural.previous.natural.equals_ { zero.natural } }
-	test { zero.natural.next.natural.next.natural.previous.natural.equals_ { zero.natural.next.natural } }
+	test {
+		any { natural }
+		matches { natural { successor { to { natural { successor { to { natural { zero } } } } } } } }
+	}
+
+	natural.any.next
+	does { natural { successor { to { next.natural } } } }
+
+	test {
+		zero.natural.next
+		equals_ { natural { successor { to { natural { zero } } } } }
+	}
+
+	test {
+		zero.natural.next.next
+		equals_ { natural { successor { to { natural { successor { to { natural { zero } } } } } } } }
+	}
+
+	natural { successor { to { natural.any } } }.previous
+	does { previous.natural.successor.to.natural }
+
+	test { zero.natural.previous.equals_ { zero.natural.make { previous } } }
+	test { zero.natural.next.previous.equals_ { zero.natural } }
+	test { zero.natural.next.next.previous.equals_ { zero.natural.next } }
 
 	natural.any
 	plus { natural.any }
@@ -39,15 +62,15 @@ val natural = dsl_ {
 		match {
 			true_ { natural }
 			false_ {
-				natural.next.natural
-				plus { plus.natural.previous.natural }
+				natural.next
+				plus { plus.natural.previous }
 				repeat
 			}
 		}
 	}
 
 	test { zero.natural.plus { zero.natural }.equals_ { zero.natural } }
-	test { zero.natural.next.natural.plus { zero.natural }.equals_ { zero.natural.next.natural } }
-	test { zero.natural.plus { zero.natural.next.natural }.equals_ { zero.natural.next.natural } }
-	test { zero.natural.next.natural.plus { zero.natural.next.natural }.equals_ { zero.natural.next.natural.next.natural } }
+	test { zero.natural.plus { zero.natural.next }.equals_ { zero.natural.next } }
+	test { zero.natural.next.plus { zero.natural }.equals_ { zero.natural.next } }
+	test { zero.natural.next.plus { zero.natural.next }.equals_ { zero.natural.next.next } }
 }
