@@ -1,6 +1,7 @@
 package leo16
 
 import leo.base.ifOrNull
+import leo.base.notNullIf
 import leo.base.runIfNotNull
 import leo13.Link
 import leo15.lambda.Term
@@ -26,11 +27,13 @@ fun Value.anythingTermOrNull(value: Value): Term? =
 
 fun Value.quoteTermOrNull(value: Value): Term? =
 	matchPrefix(_quote) { rhs ->
-		rhs.termOrNull(value)
+		rhs.defaultTermOrNull(value)
 	}
 
 fun Value.defaultTermOrNull(value: Value): Term? =
-	linkOrNull?.term(value) ?: idTerm
+	null
+		?: linkOrNull?.term(value)
+		?: notNullIf(value.isEmpty) { idTerm }
 
 fun Link<Value, Field>.term(value: Value): Term? =
 	null
@@ -62,7 +65,7 @@ fun Field.termOrNull(field: Field): Term? =
 
 fun Field.metaTermOrNull(field: Field): Term? =
 	matchPrefix(_meta) { rhs ->
-		rhs.onlyFieldOrNull?.termOrNull(field)
+		rhs.onlyFieldOrNull?.defaultTermOrNull(field)
 	}
 
 fun Field.nativeTermOrNull(field: Field): Term? =

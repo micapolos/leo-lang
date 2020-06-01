@@ -26,7 +26,7 @@ fun Value.anythingValueOrNull(term: Term): Value? =
 
 fun Value.quoteValueOrNull(term: Term): Value? =
 	matchPrefix(_quote) { rhs ->
-		rhs.value(term)
+		rhs.defaultValue(term)
 	}
 
 fun Value.defaultValue(term: Term): Value =
@@ -59,7 +59,7 @@ fun Field.field(term: Term): Field =
 
 fun Field.metaFieldOrNull(term: Term): Field? =
 	matchPrefix(_meta) { rhs ->
-		rhs.onlyFieldOrNull?.field(term)
+		rhs.onlyFieldOrNull?.defaultField(term)
 	}
 
 fun Field.nativeFieldOrNull(term: Term): Field? =
