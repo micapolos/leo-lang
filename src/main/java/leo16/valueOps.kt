@@ -98,6 +98,10 @@ val Field.thingOrNull: Value?
 	get() =
 		sentenceOrNull?.value
 
+val Value.force: Value
+	get() =
+		forceOrNull ?: this
+
 val Value.forceOrNull: Value?
 	get() =
-		onlyFieldOrNull?.lazyOrNull?.evaluate
+		lazyOrNull?.evaluate

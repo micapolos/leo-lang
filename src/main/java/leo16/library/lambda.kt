@@ -11,11 +11,14 @@ val lambda = dsl_ {
 	use { number }
 
 	term.any.is_ {
-		value { anything }
-		or { at { number.any } }
-		or { lambda { term.repeating } }
-		or { term.repeating.apply { term.repeating } }
-		term
+		do_ {
+			term {
+				value { anything }
+				or { at { number.any } }
+				or { lambda { lazy_ { repeat } } }
+				or { lazy_ { repeat }.apply { lazy_ { repeat } } }
+			}
+		}
 	}
 
 	test { term.any.matches { zero.value.term } }

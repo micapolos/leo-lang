@@ -78,6 +78,7 @@ val Field.theNativeOrNull: The<Any?>? get() = if (this is NativeField) native.th
 val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
 val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull
 val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull
+val Value.lazyOrNull: Lazy? get() = onlyFieldOrNull?.lazyOrNull
 val Value.isEmpty: Boolean get() = fieldStack.isEmpty
 
 val Sentence.onlyWordOrNull: String? get() = notNullIf(value.isEmpty) { word }

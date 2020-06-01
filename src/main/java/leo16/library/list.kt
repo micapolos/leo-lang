@@ -9,12 +9,14 @@ fun main() {
 
 val list = dsl_ {
 	list.any.is_ {
-		list {
-			empty
-			or {
-				link {
-					previous { list.repeating }
-					last { anything }
+		do_ {
+			list {
+				empty
+				or {
+					link {
+						previous { lazy_ { repeat } }
+						last { anything }
+					}
 				}
 			}
 		}

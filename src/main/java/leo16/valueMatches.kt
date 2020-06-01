@@ -3,103 +3,80 @@ package leo16
 import leo.base.notNullIf
 import leo.base.runIfNotNull
 import leo13.Link
-import leo13.Stack
-import leo13.first
-import leo13.push
-import leo13.stack
 import leo16.names.*
 
-// TODO: Refactor, so pattern is this, and value is argument.
-
-data class Matcher(val repeatingSentenceStack: Stack<Sentence>)
-
-val Stack<Sentence>.matcher get() = Matcher(this)
-val emptyMatcher = stack<Sentence>().matcher
-fun Matcher.push(sentence: Sentence) = repeatingSentenceStack.push(sentence).matcher
-fun Matcher.getOrNull(word: String) = repeatingSentenceStack.first { it.word == word }
-
 fun Value.matches(value: Value): Boolean =
-	emptyMatcher.matches(this, value)
+	force.forcedMatches(value)
 
-fun Matcher.matches(patternValue: Value, value: Value): Boolean =
+fun Value.forcedMatches(value: Value): Boolean =
 	null
-		?: matchesAnythingOrNull(patternValue)
-		?: matchesRepeatingOrNull(patternValue, value)
-		?: matchesQuoteOrNull(patternValue, value)
-		?: matchesDefault(patternValue, value)
+		?: matchesAnythingOrNull
+		?: matchesQuoteOrNull(value)
+		?: matchesDefault(value)
 
-fun matchesAnythingOrNull(patternValue: Value): Boolean? =
-	patternValue.match(_anything) { true }
+val Value.matchesAnythingOrNull: Boolean?
+	get() =
+		match(_anything) { true }
 
-fun Matcher.matchesRepeatingOrNull(patternValue: Value, value: Value): Boolean? =
-	patternValue.matchPrefix(_repeating) { rhs ->
-		rhs.matchWord { word ->
-			getOrNull(word)?.let { patternSentence ->
-				matches(patternSentence.field.value, value)
-			}
-		}
-	}
-
-fun matchesQuoteOrNull(patternValue: Value, value: Value): Boolean? =
-	patternValue.matchPrefix(_quote) { rhs ->
+fun Value.matchesQuoteOrNull(value: Value): Boolean? =
+	matchPrefix(_quote) { rhs ->
 		rhs == value
 	}
 
-fun Matcher.matchesDefault(patternValue: Value, value: Value): Boolean =
-	runIfNotNull(patternValue.linkOrNull) { matches(it, value) } ?: value.isEmpty
+fun Value.matchesDefault(value: Value): Boolean =
+	runIfNotNull(linkOrNull) { it.matches(value) } ?: value.isEmpty
 
-fun Matcher.matches(patternLink: Link<Value, Field>, value: Value): Boolean =
+fun Link<Value, Field>.matches(value: Value): Boolean =
 	null
-		?: matchesAlternativeOrNull(patternLink, value)
-		?: matchesDefault(patternLink, value)
+		?: matchesAlternativeOrNull(value)
+		?: matchesDefault(value)
 
-fun Matcher.matchesAlternativeOrNull(patternLink: Link<Value, Field>, value: Value): Boolean? =
-	patternLink.head.matchPrefix(_or) { rhsPattern ->
-		matches(rhsPattern, value) || matches(patternLink.tail, value)
+fun Link<Value, Field>.matchesAlternativeOrNull(value: Value): Boolean? =
+	head.matchPrefix(_or) { rhsPattern ->
+		rhsPattern.matches(value) || tail.matches(value)
 	}
 
-fun Matcher.matchesDefault(patternLink: Link<Value, Field>, value: Value): Boolean =
-	runIfNotNull(value.linkOrNull) { matches(patternLink, it) } ?: false
+fun Link<Value, Field>.matchesDefault(value: Value): Boolean =
+	runIfNotNull(value.linkOrNull) { matches(it) } ?: false
 
-fun Matcher.matches(patternLink: Link<Value, Field>, link: Link<Value, Field>): Boolean =
-	matches(patternLink.head, link.head) && matches(patternLink.tail, link.tail)
+fun Link<Value, Field>.matches(link: Link<Value, Field>): Boolean =
+	head.matches(link.head) && tail.matches(link.tail)
 
-fun Matcher.matches(patternField: Field, field: Field): Boolean =
+fun Field.matches(field: Field): Boolean =
 	null
-		?: matchesMetaOrNull(patternField, field)
-		?: matchesNativeOrNull(patternField, field)
-		?: matchesFunctionOrNull2(patternField, field)
-		?: matchesDefault(patternField, field)
+		?: matchesMetaOrNull(field)
+		?: matchesNativeOrNull(field)
+		?: matchesFunctionOrNull(field)
+		?: matchesDefault(field)
 
-fun Matcher.matchesMetaOrNull(patternField: Field, field: Field): Boolean? =
-	patternField.matchPrefix(_meta) { rhsPattern ->
-		runIfNotNull(rhsPattern.onlyFieldOrNull) { matches(it, field) }
+fun Field.matchesMetaOrNull(field: Field): Boolean? =
+	matchPrefix(_meta) { rhsPattern ->
+		runIfNotNull(rhsPattern.onlyFieldOrNull) { it.matches(field) }
 	}
 
-fun matchesNativeOrNull(patternField: Field, field: Field): Boolean? =
-	notNullIf(patternField == _any(_native())) {
+fun Field.matchesNativeOrNull(field: Field): Boolean? =
+	notNullIf(this == _any(_native())) {
 		field is NativeField
 	}
 
-fun Matcher.matchesFunctionOrNull2(patternField: Field, field: Field): Boolean? =
+fun Field.matchesFunctionOrNull(field: Field): Boolean? =
 	// TODO: Rename to _taking
-	patternField.matchPrefix(_function) { rhsPattern ->
-		runIfNotNull(field.functionOrNull) { matches(rhsPattern, it) }
+	matchPrefix(_function) { rhsPattern ->
+		runIfNotNull(field.functionOrNull) { rhsPattern.matches(it) }
 	}
 
-fun Matcher.matchesDefault(patternField: Field, field: Field): Boolean =
-	when (patternField) {
-		is SentenceField -> runIfNotNull(field.sentenceOrNull) { matches(patternField.sentence, it) }
-		is FunctionField -> runIfNotNull(field.functionOrNull) { patternField.function == it }
-		is NativeField -> runIfNotNull(field.theNativeOrNull) { patternField.native == it.value }
-		is LazyField -> runIfNotNull(field.lazyOrNull) { patternField.lazy == it }
+fun Field.matchesDefault(field: Field): Boolean =
+	when (this) {
+		is SentenceField -> runIfNotNull(field.sentenceOrNull) { sentence.matches(it) }
+		is FunctionField -> runIfNotNull(field.functionOrNull) { function == it }
+		is NativeField -> runIfNotNull(field.theNativeOrNull) { native == it.value }
+		is LazyField -> runIfNotNull(field.lazyOrNull) { lazy == it }
 		is EvaluatedField -> TODO()
 	} ?: false
 
-fun matches(patternValue: Value, function: Function): Boolean =
-	function.patternValue == patternValue
+fun Value.matches(function: Function): Boolean =
+	function.patternValue == this
 
-fun Matcher.matches(patternSentence: Sentence, sentence: Sentence): Boolean =
-	patternSentence.word == sentence.word &&
-		push(patternSentence).matches(patternSentence.value, sentence.value)
+fun Sentence.matches(sentence: Sentence): Boolean =
+	word == sentence.word && value.matches(sentence.value)
 

@@ -640,20 +640,42 @@ class EvaluateTest {
 	@Test
 	fun matchesRepeating() {
 		evaluate_ {
-			natural {
-				zero
-				or { natural.repeating.next }
+			do_ {
+				natural {
+					zero
+					or { next { lazy_ { repeat } } }
+				}
 			}
 			matches { zero.natural }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
-			natural {
-				zero
-				or { natural.repeating.next }
+			do_ {
+				natural {
+					zero
+					or { next { lazy_ { repeat } } }
+				}
 			}
 			matches { zero.natural.next.natural }
 		}.assertEquals { true.boolean }
+	}
+
+	@Test
+	fun matchesLazy() {
+		evaluate_ {
+			lazy_ { zero }
+			matches { zero }
+		}.assertEquals { true.boolean }
+
+		evaluate_ {
+			lazy_ { zero }
+			matches { lazy_ { zero } }
+		}.assertEquals { false.boolean }
+
+		evaluate_ {
+			zero
+			matches { lazy_ { zero } }
+		}.assertEquals { false.boolean }
 	}
 
 	@Test

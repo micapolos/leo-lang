@@ -85,15 +85,4 @@ class ValueMatchesTest {
 			.matches(value(_anything(), _or(_anything())))
 			.assert
 	}
-
-	@Test
-	fun repeating() {
-		value(_natural(_zero(), _or(_next(_repeating(_natural())))))
-			.matches(value(_natural(_zero())))
-			.assert
-
-		value(_natural(_zero(), _or(_next(_repeating(_natural())))))
-			.matches(value(_natural(_next(_natural(_zero())))))
-			.assert
-	}
 }
