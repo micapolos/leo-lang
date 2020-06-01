@@ -3,13 +3,14 @@ package leo16
 import leo.base.iterate
 import leo.base.timeMillis
 import leo15.dsl.*
+import kotlin.math.min
 import kotlin.test.Test
 
 fun measure(label: String, fn: () -> Unit) {
-	val warmUpTimes = 5
-	val measureTimes = 10
+	val warmUpTimes = 1
+	val measureTimes = 3
 	repeat(warmUpTimes) { fn() }
-	val time = 0L.iterate(measureTimes) { plus(timeMillis(fn)) }.div(measureTimes)
+	val time = Long.MAX_VALUE.iterate(measureTimes) { min(this, timeMillis(fn)) }
 	println("$label: ${time}ms")
 }
 

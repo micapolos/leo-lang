@@ -12,5 +12,4 @@ fun Field.traverse(fn: Field.() -> Field): Field =
 		is FunctionField -> this
 		is NativeField -> this
 		is LazyField -> this
-		is EvaluatedField -> this
 	}

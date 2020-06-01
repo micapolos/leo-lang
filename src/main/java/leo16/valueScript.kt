@@ -30,7 +30,6 @@ val Field.defaultScriptLine: ScriptLine
 			is FunctionField -> function.scriptLine
 			is NativeField -> native.nativeScriptLine
 			is LazyField -> lazy.scriptLine
-			is EvaluatedField -> evaluated.scriptLine
 		}
 
 val Field.textScriptLineOrNull: ScriptLine?
@@ -52,10 +51,6 @@ val Function.scriptLine: ScriptLine
 val Lazy.scriptLine: ScriptLine
 	get() =
 		_lazy(compiled.bodyValue.script)
-
-val Evaluated.scriptLine: ScriptLine
-	get() =
-		_evaluated(scope.asField, value.asField)
 
 val String.scriptWord: String
 	get() =

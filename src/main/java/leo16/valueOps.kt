@@ -38,7 +38,6 @@ val Field.selectWord: String
 			is FunctionField -> _function
 			is NativeField -> _native
 			is LazyField -> _lazy
-			is EvaluatedField -> _evaluated
 		}
 
 infix fun Field.accessOrNull(word: String): Value? =

@@ -70,7 +70,6 @@ fun Field.matchesDefault(field: Field): Boolean =
 		is FunctionField -> runIfNotNull(field.functionOrNull) { function == it }
 		is NativeField -> runIfNotNull(field.theNativeOrNull) { native == it.value }
 		is LazyField -> runIfNotNull(field.lazyOrNull) { lazy == it }
-		is EvaluatedField -> TODO()
 	} ?: false
 
 fun Value.matches(function: Function): Boolean =

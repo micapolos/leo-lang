@@ -43,10 +43,6 @@ data class LazyField(val lazy: Lazy) : Field() {
 	override fun toString() = super.toString()
 }
 
-data class EvaluatedField(val evaluated: Evaluated) : Field() {
-	override fun toString() = super.toString()
-}
-
 data class Sentence(val word: String, val value: Value) {
 	override fun toString() = scriptLine.string
 }
