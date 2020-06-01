@@ -113,7 +113,7 @@ fun Value.applyAsText(field: Field): Value? =
 
 fun Value.applyMatching(field: Field): Value? =
 	field.matchPrefix(_matching) { rhs ->
-		of(rhs)
+		matching(rhs)
 	}
 
 fun Value.applyHash(field: Field): Value? =

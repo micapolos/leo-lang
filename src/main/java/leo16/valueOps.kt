@@ -90,9 +90,9 @@ fun <T : Any> T?.orNullAsField(word: String, fn: T.() -> Field): Field =
 	if (this == null) word(_none())
 	else fn()
 
-fun Value.of(patternValue: Value): Value =
+fun Value.matching(patternValue: Value): Value =
 	if (patternValue.matches(this)) this
-	else throw AssertionError(value(_error(this.plus(_of(patternValue)))))
+	else throw AssertionError(value(_error(this.plus(_matching(patternValue)))))
 
 val Field.thingOrNull: Value?
 	get() =
