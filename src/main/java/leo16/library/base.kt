@@ -13,6 +13,7 @@ val base = dsl_ {
 	export { help }
 	export { leo }
 	export { boolean }
+	export { natural }
 	export { printing }
 	export { number }
 	export { bit }
