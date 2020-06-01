@@ -60,7 +60,6 @@ fun Field.matchesNativeOrNull(field: Field): Boolean? =
 	}
 
 fun Field.matchesFunctionOrNull(field: Field): Boolean? =
-	// TODO: Rename to _taking
 	matchPrefix(_function) { rhsPattern ->
 		runIfNotNull(field.functionOrNull) { rhsPattern.matches(it) }
 	}
