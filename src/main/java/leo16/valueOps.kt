@@ -1,60 +1,57 @@
 package leo16
 
 import leo.base.Seq
-import leo.base.The
 import leo.base.notNullIf
 import leo.base.reverseStack
 import leo.base.seq
 import leo.base.then
 import leo13.Stack
-import leo13.mapFirst
 import leo13.mapOrNull
-import leo13.onlyOrNull
 import leo14.unsignedBigDecimal
 import leo16.names.*
 
-inline fun <R> Value.normalize(field: Field, fn: Value.(Field) -> R): R {
-	val wordOrNull = field.onlyWordOrNull
-	return if (wordOrNull == null) fn(field)
+inline fun <R> Value.normalize(sentence: Sentence, fn: Value.(Sentence) -> R): R {
+	val wordOrNull = sentence.onlyWordOrNull
+	return if (wordOrNull == null) fn(sentence)
 	else value().fn(wordOrNull(this))
 }
 
 val Value.thingOrNull: Value?
 	get() =
-		fieldStack.onlyOrNull?.thingOrNull
+		onlySentenceOrNull?.rhsValue
 
 infix fun Value.getOrNull(word: String): Value? =
 	thingOrNull?.accessOrNull(word)
 
 infix fun Value.accessOrNull(word: String): Value? =
-	fieldStack.mapFirst {
-		accessOrNull(word)
+	when (this) {
+		EmptyValue -> null
+		is LinkValue -> link.accessOrNull(word)
+		is NativeValue -> notNullIf(word == _native)
+		is FunctionValue -> notNullIf(word == _function)
+		is LazyValue -> notNullIf(word == _lazy)
 	}
 
-val Field.selectWord: String
-	get() =
-		when (this) {
-			is SentenceField -> sentence.word
-			is FunctionField -> _function
-			is NativeField -> _native
-			is LazyField -> _lazy
-		}
+infix fun ValueLink.accessOrNull(word: String): Value? =
+	lastSentence.accessOrNull(word) ?: previousValue.accessOrNull(word)
 
-infix fun Field.accessOrNull(word: String): Value? =
-	notNullIf(word == selectWord) {
+infix fun Sentence.accessOrNull(word: String): Value? =
+	notNullIf(word == this.word) {
 		value(this)
 	}
 
 infix fun Value.make(word: String): Value =
 	value(word.invoke(this))
 
-val Value.matchFieldOrNull: Field?
+val Value.matchWordOrNull: String?
 	get() =
-		fieldStack.onlyOrNull?.sentenceOrNull?.value?.onlyFieldOrNull
-
-val Value.theNativeOrNull: The<Any?>?
-	get() =
-		onlyFieldOrNull?.theNativeOrNull
+		when (this) {
+			EmptyValue -> null
+			is LinkValue -> onlySentenceOrNull?.word
+			is NativeValue -> _native
+			is FunctionValue -> _function
+			is LazyValue -> _lazy
+		}
 
 val Value.loadedDictionaryOrNull: Dictionary?
 	get() =
@@ -63,8 +60,8 @@ val Value.loadedDictionaryOrNull: Dictionary?
 val Value.wordOrNullSeq: Seq<String?>
 	get() =
 		seq {
-			onlyFieldOrNull?.sentenceOrNull?.run {
-				word then value.wordOrNullSeq
+			onlySentenceOrNull?.run {
+				word then rhsValue.wordOrNullSeq
 			}
 		}
 
@@ -73,9 +70,9 @@ val Value.wordStackOrNull: Stack<String>?
 		wordOrNullSeq.reverseStack.mapOrNull { this }
 
 fun Value.rhsOrNull(word: String): Value? =
-	onlyFieldOrNull?.rhsOrNull(word)
+	onlySentenceOrNull?.rhsOrNull(word)
 
-fun Field.rhsOrNull(word: String): Value? =
+fun Sentence.rhsOrNull(word: String): Value? =
 	matchPrefix(word) { it }
 
 fun Value.pairOrNull(word: String): Pair<Value, Value>? =
@@ -85,17 +82,13 @@ val Value.hashBigDecimal
 	get() =
 		hashCode().unsignedBigDecimal
 
-fun <T : Any> T?.orNullAsField(word: String, fn: T.() -> Field): Field =
+fun <T : Any> T?.orNullAsSentence(word: String, fn: T.() -> Sentence): Sentence =
 	if (this == null) word(_none())
 	else fn()
 
 fun Value.matching(patternValue: Value): Value =
 	if (patternValue.matches(this)) this
 	else throw AssertionError(value(_error(this.plus(_matching(patternValue)))))
-
-val Field.thingOrNull: Value?
-	get() =
-		sentenceOrNull?.value
 
 val Value.force: Value
 	get() =

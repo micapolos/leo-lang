@@ -5,18 +5,18 @@ import leo13.mapOrNull
 import leo13.push
 import leo16.names.*
 
-val Field.read: Field
+val Sentence.read: Sentence
 	get() =
 		null
 			?: listFieldOrNull
 			?: this
 
-val Field.listFieldOrNull: Field?
+val Sentence.listFieldOrNull: Sentence?
 	get() =
 		matchPrefix(_list) { rhs ->
 			rhs
-				.fieldStack
-				.mapOrNull { matchPrefix(_item) { it } }
+				.sentenceStackOrNull
+				?.mapOrNull { matchPrefix(_item) { it } }
 				?.linkOrNull
 				?.run { stack.push(value) }
 				?.valueField

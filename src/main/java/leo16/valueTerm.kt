@@ -2,8 +2,6 @@ package leo16
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo.base.runIfNotNull
-import leo13.Link
 import leo15.lambda.Term
 import leo15.lambda.choiceTerm
 import leo15.lambda.idTerm
@@ -18,6 +16,8 @@ fun Value.forcedTermOrNull(value: Value): Term? =
 	null
 		?: anythingTermOrNull(value)
 		?: quoteTermOrNull(value)
+		?: nativeTermOrNull(value)
+		?: functionTermOrNull(value)
 		?: defaultTermOrNull(value)
 
 fun Value.anythingTermOrNull(value: Value): Term? =
@@ -30,60 +30,61 @@ fun Value.quoteTermOrNull(value: Value): Term? =
 		rhs.defaultTermOrNull(value)
 	}
 
-fun Value.defaultTermOrNull(value: Value): Term? =
-	null
-		?: linkOrNull?.term(value)
-		?: notNullIf(value.isEmpty) { idTerm }
+fun Value.nativeTermOrNull(value: Value): Term? =
+	matchPrefix(_any) { rhs ->
+		rhs.match(_native) {
+			value.theNativeOrNull?.let { it.value.valueTerm }
+		}
+	}
 
-fun Link<Value, Field>.term(value: Value): Term? =
+fun Value.functionTermOrNull(value: Value): Term? =
+	matchPrefix(_function) { rhs ->
+		value.matchFunction(rhs) { compiled ->
+			compiled.valueTerm // TODO: Replace with compiled function
+		}
+	}
+
+fun Value.defaultTermOrNull(value: Value): Term? =
+	when (this) {
+		EmptyValue -> notNullIf(this == value) { idTerm }
+		is LinkValue -> link.termOrNull(value)
+		is NativeValue -> notNullIf(this == value) { idTerm }
+		is FunctionValue -> notNullIf(this == value) { idTerm }
+		is LazyValue -> notNullIf(this == value) { idTerm }
+	}
+
+fun ValueLink.termOrNull(value: Value): Term? =
 	null
 		?: alternativeTermOrNull(value)
 		?: defaultTermOrNull(value)
 
-fun Link<Value, Field>.alternativeTermOrNull(value: Value): Term? =
-	head.matchPrefix(_or) { rhs ->
+fun ValueLink.alternativeTermOrNull(value: Value): Term? =
+	lastSentence.matchPrefix(_or) { rhs ->
 		null
 			?: rhs.termOrNull(value)?.let { choiceTerm(2, 0, it) }
-			?: tail.termOrNull(value)?.let { choiceTerm(2, 1, it) }
+			?: previousValue.termOrNull(value)?.let { choiceTerm(2, 1, it) }
 	}
 
-fun Link<Value, Field>.defaultTermOrNull(value: Value): Term? =
+fun ValueLink.defaultTermOrNull(value: Value): Term? =
 	value.linkOrNull?.let { valueLink ->
-		head.termOrNull(valueLink.head)?.let { headTerm ->
-			tail.termOrNull(valueLink.tail)?.let { tailTerm ->
-				tailTerm.plus(headTerm)
+		lastSentence.termOrNull(valueLink.lastSentence)?.let { lastSentenceTerm ->
+			previousValue.termOrNull(valueLink.previousValue)?.let { previousValueTerm ->
+				previousValueTerm.plus(lastSentenceTerm)
 			}
 		}
 	}
 
-fun Field.termOrNull(field: Field): Term? =
+fun Sentence.termOrNull(field: Sentence): Term? =
 	null
 		?: metaTermOrNull(field)
-		?: nativeTermOrNull(field)
-		?: functionTermOrNull(field)
 		?: defaultTermOrNull(field)
 
-fun Field.metaTermOrNull(field: Field): Term? =
+fun Sentence.metaTermOrNull(field: Sentence): Term? =
 	matchPrefix(_meta) { rhs ->
-		rhs.onlyFieldOrNull?.defaultTermOrNull(field)
+		rhs.onlySentenceOrNull?.defaultTermOrNull(field)
 	}
 
-fun Field.nativeTermOrNull(field: Field): Term? =
-	ifOrNull(this == _any(_native())) {
-		field.theNativeOrNull?.run { value.valueTerm }
-	}
-
-fun Field.functionTermOrNull(field: Field): Term? =
-	matchPrefix(_function) { rhs ->
-		TODO()
-	}
-
-fun Field.defaultTermOrNull(field: Field): Term? =
-	null
-		?: sentenceOrNull?.runIfNotNull(field.sentenceOrNull) { termOrNull(it) }
-		?: ifOrNull(this == field) { idTerm }
-
-fun Sentence.termOrNull(sentence: Sentence): Term? =
+fun Sentence.defaultTermOrNull(sentence: Sentence): Term? =
 	ifOrNull(word == sentence.word) {
-		value.termOrNull(sentence.value)
+		rhsValue.termOrNull(sentence.rhsValue)
 	}

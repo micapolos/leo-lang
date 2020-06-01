@@ -3,129 +3,125 @@ package leo16
 import leo14.leonardoScript
 import leo16.names.*
 
-fun Value.apply(field: Field): Value? =
+fun Value.apply(sentence: Sentence): Value? =
 	null
-		?: applyThing(field)
-		?: applyImplicitGet(field)
-		?: applyGet(field)
-		?: applyMake(field)
-		?: applyForce(field)
-		?: applyTake(field)
-		?: applyThis(field)
-		?: applyQuote(field)
-		?: applyMeta(field)
-		?: applyNothing(field)
-		?: applyComment(field)
-		?: applyScript(field)
-		?: applyMatches(field)
-		?: applyHash(field)
-		?: applyEquals(field)
-		?: applyAsText(field)
-		?: applyMatching(field)
-		?: applyLeonardo(field)
+		?: applyThing(sentence)
+		?: applyImplicitGet(sentence)
+		?: applyGet(sentence)
+		?: applyMake(sentence)
+		?: applyForce(sentence)
+		?: applyTake(sentence)
+		?: applyThis(sentence)
+		?: applyQuote(sentence)
+		?: applyMeta(sentence)
+		?: applyNothing(sentence)
+		?: applyComment(sentence)
+		?: applyMatches(sentence)
+		?: applyHash(sentence)
+		?: applyEquals(sentence)
+		?: applyAsText(sentence)
+		?: applyMatching(sentence)
+		?: applyLeonardo(sentence)
 
-fun Value.applyImplicitGet(field: Field): Value? =
+fun Value.applyImplicitGet(sentence: Sentence): Value? =
 	matchEmpty {
-		field.sentenceOrNull?.let { sentence ->
-			sentence.value.getOrNull(sentence.word)
-		}
+		sentence.rhsValue.getOrNull(sentence.word)
 	}
 
-fun Value.applyGet(field: Field): Value? =
-	field.matchPrefix(_get) { rhs ->
+fun Value.applyGet(sentence: Sentence): Value? =
+	sentence.matchPrefix(_get) { rhs ->
 		rhs.matchWord { word ->
 			getOrNull(word)
 		}
 	}
 
-fun Value.applyMake(field: Field): Value? =
-	field.matchPrefix(_make) { rhs ->
+fun Value.applyMake(sentence: Sentence): Value? =
+	sentence.matchPrefix(_make) { rhs ->
 		rhs.matchWord { word ->
 			make(word)
 		}
 	}
 
-fun Value.applyThing(field: Field): Value? =
+fun Value.applyThing(sentence: Sentence): Value? =
 	matchEmpty {
-		field.matchPrefix(_thing) { rhs ->
+		sentence.matchPrefix(_thing) { rhs ->
 			rhs.thingOrNull
 		}
 	}
 
-fun Value.applyTake(field: Field): Value? =
-	matchInfix(_take, field) { lhs, rhs ->
+fun Value.applyTake(sentence: Sentence): Value? =
+	matchInfix(_take, sentence) { lhs, rhs ->
 		lhs.functionOrNull?.apply(rhs)
 	}
 
-fun Value.applyThis(field: Field): Value? =
-	field.matchPrefix(_this) { rhs ->
-		plus(rhs)
-	}
-
-fun Value.applyNothing(field: Field): Value? =
-	matchEmpty {
-		field.match(_nothing) { value() }
-	}
-
-fun Value.applyComment(field: Field): Value? =
-	field.matchPrefix(_comment) { this }
-
-fun Value.applyScript(field: Field): Value? =
-	matchEmpty {
-		field.matchPrefix(_script) { rhs ->
-			rhs.printed
+fun Value.applyThis(sentence: Sentence): Value? =
+	sentence.matchPrefix(_this) { rhs ->
+		rhs.onlySentenceOrNull?.let { sentence ->
+			plus(sentence)
 		}
 	}
 
-fun Value.applyMatches(field: Field): Value? =
-	field.matchPrefix(_matches) { rhs ->
-		matches(rhs).field.value
+fun Value.applyNothing(sentence: Sentence): Value? =
+	matchEmpty {
+		sentence.match(_nothing) { value() }
 	}
 
-fun Value.applyForce(field: Field): Value? =
+fun Value.applyComment(sentence: Sentence): Value? =
+	sentence.matchPrefix(_comment) { this }
+
+fun Value.applyMatches(sentence: Sentence): Value? =
+	sentence.matchPrefix(_matches) { rhs ->
+		matches(rhs).sentence.onlyValue
+	}
+
+fun Value.applyForce(sentence: Sentence): Value? =
 	matchEmpty {
-		field.matchPrefix(_force) { rhs ->
+		sentence.matchPrefix(_force) { rhs ->
 			rhs.forceOrNull
 		}
 	}
 
-fun Value.applyQuote(field: Field): Value? =
-	field.matchPrefix(_quote) { rhs ->
-		plus(rhs)
-	}
-
-fun Value.applyMeta(field: Field): Value? =
-	field.matchPrefix(_meta) { rhs ->
-		plus(rhs)
-	}
-
-fun Value.applyEquals(field: Field): Value? =
-	field.matchPrefix(_equals) { rhs ->
-		this.equals(rhs).field.value
-	}
-
-fun Value.applyAsText(field: Field): Value? =
-	field.matchPrefix(_as) { rhs ->
-		rhs.match(_text) {
-			printed.toString().field.value
+fun Value.applyQuote(sentence: Sentence): Value? =
+	matchEmpty {
+		sentence.matchPrefix(_quote) { rhs ->
+			rhs
 		}
 	}
 
-fun Value.applyMatching(field: Field): Value? =
-	field.matchPrefix(_matching) { rhs ->
+fun Value.applyMeta(sentence: Sentence): Value? =
+	sentence.matchPrefix(_meta) { rhs ->
+		rhs.onlySentenceOrNull?.let { sentence ->
+			plus(sentence)
+		}
+	}
+
+fun Value.applyEquals(sentence: Sentence): Value? =
+	sentence.matchPrefix(_equals) { rhs ->
+		(this == rhs).sentence.onlyValue
+	}
+
+fun Value.applyAsText(sentence: Sentence): Value? =
+	sentence.matchPrefix(_as) { rhs ->
+		rhs.match(_text) {
+			printed.toString().value
+		}
+	}
+
+fun Value.applyMatching(sentence: Sentence): Value? =
+	sentence.matchPrefix(_matching) { rhs ->
 		matching(rhs)
 	}
 
-fun Value.applyHash(field: Field): Value? =
+fun Value.applyHash(sentence: Sentence): Value? =
 	matchEmpty {
-		field.matchPrefix(_hash) { rhs ->
-			value(_hash(rhs.hashBigDecimal.field))
+		sentence.matchPrefix(_hash) { rhs ->
+			value(_hash(rhs.hashBigDecimal.sentence))
 		}
 	}
 
-fun Value.applyLeonardo(field: Field): Value? =
+fun Value.applyLeonardo(sentence: Sentence): Value? =
 	matchEmpty {
-		field.match(_leonardo) {
+		sentence.match(_leonardo) {
 			leonardoScript.asValue
 		}
 	}

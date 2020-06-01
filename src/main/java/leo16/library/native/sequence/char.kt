@@ -8,8 +8,11 @@ fun main() {
 }
 
 val char = dsl_ {
-	use { reflection }
+	use { native.reflection }
 
 	char.sequence.class_
-	is_ { "java.lang.CharSequence".text.name.class_ }
+	is_ {
+		"java.lang.CharSequence".text.name.class_
+		matching { native.any.class_ }
+	}
 }

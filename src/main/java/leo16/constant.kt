@@ -20,7 +20,7 @@ val Value.isConstantOrNull: Constant?
 val Value.hasConstantOrNull: Constant?
 	get() =
 		matchInfix(_has) { lhs, rhs ->
-			lhs.onlyFieldOrNull?.sentenceOrNull?.word?.let { word ->
-				lhs.is_(word(rhs).value)
+			lhs.onlySentenceOrNull?.word?.let { word ->
+				lhs.is_(word(rhs).onlyValue)
 			}
 		}

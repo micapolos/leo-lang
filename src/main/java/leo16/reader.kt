@@ -4,16 +4,16 @@ import leo.base.nullOf
 import leo16.names.*
 
 data class Reader(val parentOrNull: ReaderParent?, val evaluator: Evaluator) {
-	override fun toString() = asField.toString()
-	val asField
-		get(): Field = _reader(
-			parentOrNull?.asField ?: _parent(_none()),
+	override fun toString() = asSentence.toString()
+	val asSentence
+		get(): Sentence = _reader(
+			parentOrNull?.asSentence ?: _parent(_none()),
 			evaluator.asField)
 }
 
 data class ReaderParent(val reader: Reader, val word: String) {
-	override fun toString() = asField.toString()
-	val asField get(): Field = _parent(reader.asField, _word(word.field))
+	override fun toString() = asSentence.toString()
+	val asSentence get(): Sentence = _parent(reader.asSentence, _word(word.sentence))
 }
 
 fun ReaderParent?.reader(evaluator: Evaluator) = Reader(this, evaluator)

@@ -12,19 +12,15 @@ import leo14.lineSeq
 
 val Script.asValue: Value
 	get() =
-		value().fold(lineSeq.map { field }.reverse) { plus(it) }
+		emptyValue.fold(lineSeq.map { asSentence }.reverse) { plus(it) }
 
-val ScriptLine.field: Field
+val ScriptLine.asSentence: Sentence
 	get() =
 		when (this) {
-			is LiteralScriptLine -> literal.asField
-			is FieldScriptLine -> field.asField
+			is LiteralScriptLine -> literal.asSentence
+			is FieldScriptLine -> field.asSentence
 		}
 
-val ScriptField.asField: Field
-	get() =
-		sentence.field
-
-val ScriptField.sentence: Sentence
+val ScriptField.asSentence: Sentence
 	get() =
 		string.sentenceTo(rhs.asValue)

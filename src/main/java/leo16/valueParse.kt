@@ -15,27 +15,27 @@ import leo13.secondEither
 import leo13.stack
 import leo16.names.*
 
-tailrec fun Stack<Value>.pushOrNull(field: Field): Stack<Value>? {
+tailrec fun Stack<Value>.pushOrNull(field: Sentence): Stack<Value>? {
 	val either = field.parseEitherEmptyOrLink ?: return null
 	return when (either) {
 		is FirstEither -> this
 		is SecondEither -> {
 			val head = either.second.head
-			val tail = either.second.tail.onlyFieldOrNull ?: return null
+			val tail = either.second.tail.onlySentenceOrNull ?: return null
 			push(head).pushOrNull(tail)
 		}
 	}
 }
 
-val Field.parseEitherEmptyOrLink: Either<Empty, Link<Value, Value>>?
+val Sentence.parseEitherEmptyOrLink: Either<Empty, Link<Value, Value>>?
 	get() =
 		matchPrefix(_list) { rhs ->
 			null
-				?: rhs.onlyFieldOrNull?.parseEmpty?.firstEither()
-				?: rhs.onlyFieldOrNull?.parseLink?.secondEither()
+				?: rhs.onlySentenceOrNull?.parseEmpty?.firstEither()
+				?: rhs.onlySentenceOrNull?.parseLink?.secondEither()
 		}
 
-val Field.parseEmpty: Empty?
+val Sentence.parseEmpty: Empty?
 	get() =
 		matchPrefix(_empty) { rhs ->
 			rhs.matchEmpty {
@@ -43,7 +43,7 @@ val Field.parseEmpty: Empty?
 			}
 		}
 
-val Field.parseLink: Link<Value, Value>?
+val Sentence.parseLink: Link<Value, Value>?
 	get() =
 		matchPrefix(_link) { rhs ->
 			rhs.matchInfix(_last) { lhs, last ->
@@ -53,11 +53,11 @@ val Field.parseLink: Link<Value, Value>?
 			}
 		}
 
-val Field.stackOrNull: Stack<Value>?
+val Sentence.stackOrNull: Stack<Value>?
 	get() =
 		stack<Value>().pushOrNull(this)?.reverse
 
 val Value.stackOrNull: Stack<Value>?
 	get() =
-		onlyFieldOrNull?.stackOrNull
+		onlySentenceOrNull?.stackOrNull
 

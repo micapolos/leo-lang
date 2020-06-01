@@ -17,7 +17,7 @@ val Dictionary.emptyScope get() = scopeWithPublic(emptyDictionary)
 val emptyScope get() = emptyDictionary.emptyScope
 val Scope.begin get() = dictionary.emptyScope
 
-val Scope.asField: Field
+val Scope.asField: Sentence
 	get() =
 		_scope(
 			dictionary.asField,

@@ -2,23 +2,22 @@ package leo16.native
 
 import leo.base.println
 import leo13.array
-import leo13.linkOrNull
 import leo13.map
 import leo13.stack
 import leo14.untyped.typed.loadClass
 import leo16.accessOrNull
-import leo16.thingOrNull
 import leo16.does
-import leo16.field
 import leo16.getOrNull
 import leo16.invoke
+import leo16.linkOrNull
 import leo16.names.*
-import leo16.nativeField
 import leo16.nativeValue
+import leo16.onlyValue
 import leo16.printed
-import leo16.sentenceOrNull
+import leo16.sentence
 import leo16.stackOrNull
 import leo16.theNativeOrNull
+import leo16.thingOrNull
 import leo16.value
 import leo16.valueValue
 import java.lang.reflect.Constructor
@@ -27,7 +26,7 @@ import java.lang.reflect.Method
 
 fun String.definition(class_: Class<*>) =
 	value(_class(this())).does {
-		_class(class_.nativeField).value
+		_class(class_.nativeValue).onlyValue
 	}
 
 val nativeObjectClassDefinition =
@@ -39,7 +38,7 @@ val nativeObjectClassDefinition =
 			.theNativeOrNull!!
 			.value!!
 			.javaClass
-		_class(class_.nativeField).value
+		value(_class(class_.nativeValue))
 	}
 
 val nullNativeDefinition =
@@ -54,7 +53,8 @@ val nativeBooleanDefinition =
 			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.run { value as Boolean }
-			.field.value
+			.sentence
+			.onlyValue
 	}
 
 val nameClassDefinition =
@@ -66,7 +66,7 @@ val nameClassDefinition =
 			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as String
-		_class(name.loadClass.nativeField).value
+		_class(name.loadClass.nativeValue).onlyValue
 	}
 
 val classFieldDefinition =
@@ -86,7 +86,7 @@ val classFieldDefinition =
 			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as String
-		_field(class_.getField(name).nativeField).value
+		_field(class_.getField(name).nativeValue).onlyValue
 	}
 
 val fieldGetDefinition =
@@ -141,7 +141,7 @@ val classConstructorDefinition =
 					.value as Class<*>
 			}
 			.array
-		_constructor(class_.getConstructor(*classes).nativeField).value
+		_constructor(class_.getConstructor(*classes).nativeValue).onlyValue
 	}
 
 val constructorInvokeDefinition =
@@ -197,7 +197,7 @@ val classMethodDefinition =
 					.value as Class<*>
 			}
 			.array
-		_method(class_.getMethod(name, *classes).nativeField).value
+		_method(class_.getMethod(name, *classes).nativeValue).onlyValue
 	}
 
 val methodInvokeDefinition =
@@ -255,7 +255,7 @@ val arrayStackDefinition =
 			.getOrNull(_native)!!
 			.theNativeOrNull!!
 			.value as Array<*>
-		stack(*array).map { value(nativeField) }.valueValue
+		stack(*array).map { nativeValue }.valueValue
 	}
 
 val printingDefinition =
@@ -271,10 +271,9 @@ val leoHeadDefinition =
 		this
 			.getOrNull(_head)!!
 			.thingOrNull!!
-			.fieldStack
 			.linkOrNull
-			?.value
-			?.value
+			?.lastSentence
+			?.rhsValue
 			?: this.getOrNull(_head)!!
 	}
 
@@ -283,10 +282,8 @@ val leoTailDefinition =
 		this
 			.getOrNull(_tail)!!
 			.thingOrNull!!
-			.fieldStack
 			.linkOrNull
-			?.stack
-			?.value
+			?.previousValue
 			?: this.getOrNull(_tail)!!
 	}
 
@@ -295,12 +292,10 @@ val leoOpDefinition =
 		this
 			.getOrNull(_op)!!
 			.thingOrNull!!
-			.fieldStack
 			.linkOrNull
-			?.value
-			?.sentenceOrNull
+			?.lastSentence
 			?.word
 			?.invoke()
-			?.value
+			?.rhsValue
 			?: this.getOrNull(_op)!!
 	}

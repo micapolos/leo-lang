@@ -19,8 +19,8 @@ class ValueTermTest {
 	@Test
 	fun native() {
 		value(_any(_native()))
-			.termOrNull(value("foo".nativeField))
-			.assertEqualTo(idTerm.plus("foo".valueTerm))
+			.termOrNull("foo".nativeValue)
+			.assertEqualTo("foo".valueTerm)
 	}
 
 	@Test
@@ -34,15 +34,9 @@ class ValueTermTest {
 	fun link() {
 		value(
 			_any(_native()),
-			_any(_native()))
-			.termOrNull(
-				value(
-					"foo".nativeField,
-					"bar".nativeField))
-			.assertEqualTo(
-				idTerm
-					.plus("foo".valueTerm)
-					.plus("bar".valueTerm))
+			_to(_any(_native())))
+			.termOrNull("foo".nativeValue.plus(_to("bar".nativeValue)))
+			.assertEqualTo("foo".valueTerm.plus("bar".valueTerm))
 	}
 
 	@Test

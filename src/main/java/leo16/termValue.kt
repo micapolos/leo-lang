@@ -1,7 +1,6 @@
 package leo16
 
 import leo.base.notNullIf
-import leo13.Link
 import leo15.lambda.Term
 import leo15.lambda.unsafeUnchoice
 import leo15.lambda.unsafeUnpair
@@ -17,6 +16,8 @@ fun Value.forcedValue(term: Term): Value =
 	null
 		?: anythingValueOrNull(term)
 		?: quoteValueOrNull(term)
+		?: nativeValueOrNull(term)
+		?: functionValueOrNull(term)
 		?: defaultValue(term)
 
 fun Value.anythingValueOrNull(term: Term): Value? =
@@ -29,51 +30,46 @@ fun Value.quoteValueOrNull(term: Term): Value? =
 		rhs.defaultValue(term)
 	}
 
-fun Value.defaultValue(term: Term): Value =
-	linkOrNull?.value(term) ?: emptyValue
-
-fun Link<Value, Field>.value(term: Term): Value =
-	null
-		?: alternativeValueOrNull(term)
-		?: defaultValue(term)
-
-fun Link<Value, Field>.alternativeValueOrNull(term: Term): Value? =
-	head.matchPrefix(_or) { rhs ->
-		term.unsafeUnchoice(2).let { (index, term) ->
-			if (index == 0) rhs.value(term)
-			else tail.value(term)
-		}
+fun Value.nativeValueOrNull(term: Term): Value? =
+	notNullIf(this == leo16.value(_any(_native()))) {
+		term.value.nativeValue
 	}
 
-fun Link<Value, Field>.defaultValue(term: Term): Value =
-	term.unsafeUnpair.let { termPair ->
-		tail.value(termPair.first).plus(head.field(termPair.second))
-	}
-
-fun Field.field(term: Term): Field =
-	null
-		?: metaFieldOrNull(term)
-		?: nativeFieldOrNull(term)
-		?: functionFieldOrNull(term)
-		?: defaultField(term)
-
-fun Field.metaFieldOrNull(term: Term): Field? =
-	matchPrefix(_meta) { rhs ->
-		rhs.onlyFieldOrNull?.defaultField(term)
-	}
-
-fun Field.nativeFieldOrNull(term: Term): Field? =
-	notNullIf(this == _any(_native())) {
-		term.value.nativeField
-	}
-
-fun Field.functionFieldOrNull(term: Term): Field? =
+fun Value.functionValueOrNull(term: Term): Value? =
 	matchPrefix(_function) { rhs ->
 		this
 	}
 
-fun Field.defaultField(term: Term): Field =
-	sentenceOrNull?.sentence(term)?.field ?: this
+fun Value.defaultValue(term: Term): Value =
+	linkOrNull?.value(term) ?: emptyValue
 
-fun Sentence.sentence(term: Term): Sentence =
-	word.sentenceTo(value.value(term))
+fun ValueLink.value(term: Term): Value =
+	null
+		?: alternativeValueOrNull(term)
+		?: defaultValue(term)
+
+fun ValueLink.alternativeValueOrNull(term: Term): Value? =
+	lastSentence.matchPrefix(_or) { rhs ->
+		term.unsafeUnchoice(2).let { (index, term) ->
+			if (index == 0) rhs.value(term)
+			else previousValue.value(term)
+		}
+	}
+
+fun ValueLink.defaultValue(term: Term): Value =
+	term.unsafeUnpair.let { termPair ->
+		previousValue.value(termPair.first).plus(lastSentence.field(termPair.second))
+	}
+
+fun Sentence.field(term: Term): Sentence =
+	null
+		?: metaSentenceOrNull(term)
+		?: defaultSentence(term)
+
+fun Sentence.metaSentenceOrNull(term: Term): Sentence? =
+	matchPrefix(_meta) { rhs ->
+		rhs.onlySentenceOrNull?.defaultSentence(term)
+	}
+
+fun Sentence.defaultSentence(term: Term): Sentence =
+	word.sentenceTo(rhsValue.value(term))

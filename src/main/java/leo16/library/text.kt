@@ -111,7 +111,7 @@ val text = dsl_ {
 			}
 		}
 		array.list
-		map { function { anything.does { native.text } } }
+		map { using { function { anything.does { native.text } } } }
 	}
 
 	test {

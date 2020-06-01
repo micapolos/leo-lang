@@ -1,92 +1,86 @@
 package leo16
 
 import leo.base.The
+import leo.base.fold
 import leo.base.notNullIf
 import leo.base.runWith
 import leo.base.the
-import leo13.Link
 import leo13.Stack
-import leo13.isEmpty
-import leo13.linkOrNull
-import leo13.linkTo
-import leo13.map
-import leo13.onlyOrNull
+import leo13.array
 import leo13.push
-import leo13.pushAll
-import leo13.stack
 import leo14.untyped.dottedColorsParameter
 import leo14.untyped.leoString
-import leo15.string
 import leo16.names.*
 
-data class Value(val fieldStack: Stack<Field>) {
+sealed class Value {
 	override fun toString() = dottedColorsParameter.runWith(false) { script.leoString }
 }
 
-sealed class Field {
+object EmptyValue : Value()
+
+data class LinkValue(val link: ValueLink) : Value() {
+	override fun toString() = super.toString()
+}
+
+data class NativeValue(val native: Any?) : Value() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionValue(val function: Function) : Value() {
+	override fun toString() = super.toString()
+}
+
+data class LazyValue(val lazy: Lazy) : Value() {
+	override fun toString() = super.toString()
+}
+
+data class ValueLink(val previousValue: Value, val lastSentence: Sentence) {
+	override fun toString() = dottedColorsParameter.runWith(false) { script.leoString }
+}
+
+data class Sentence(val word: String, val rhsValue: Value) {
 	override fun toString() = dottedColorsParameter.runWith(false) { scriptLine.leoString }
 }
 
-data class SentenceField(val sentence: Sentence) : Field() {
-	override fun toString() = super.toString()
-}
-
-data class FunctionField(val function: Function) : Field() {
-	override fun toString() = super.toString()
-}
-
-data class NativeField(val native: Any?) : Field() {
-	override fun toString() = super.toString()
-}
-
-data class LazyField(val lazy: Lazy) : Field() {
-	override fun toString() = super.toString()
-}
-
-data class Sentence(val word: String, val value: Value) {
-	override fun toString() = scriptLine.string
-}
-
-val Value.asField: Field
-	get() =
-		_value(this)
-
-val Stack<Field>.value: Value get() = Value(this)
-val Sentence.field: Field get() = SentenceField(this)
-val Function.field: Field get() = FunctionField(this)
-val Lazy.field: Field get() = LazyField(this)
-val Any?.nativeField: Field get() = NativeField(this)
-val Any?.nativeValue: Value get() = nativeField.value
-fun value(vararg fields: Field) = stack(*fields).value
-fun value(sentence: Sentence, vararg sentences: Sentence) = stack(sentence, *sentences).map { field }.value
+val emptyValue: Value get() = EmptyValue
+val ValueLink.value: Value get() = LinkValue(this)
+val Function.value: Value get() = FunctionValue(this)
+val Lazy.value: Value get() = LazyValue(this)
+val Any?.nativeValue: Value get() = NativeValue(this)
+fun Value.linkTo(sentence: Sentence) = ValueLink(this, sentence)
+fun Value.plus(sentence: Sentence): Value = linkTo(sentence).value
+val Sentence.onlyValue: Value get() = emptyValue.linkTo(this).value
+fun value(vararg sentences: Sentence): Value = emptyValue.fold(sentences) { plus(it) }
 infix fun String.sentenceTo(value: Value) = Sentence(this, value)
-fun String.sentenceTo(vararg fields: Field): Sentence = sentenceTo(stack(*fields).value)
-operator fun String.invoke(value: Value): Field = Sentence(this, value).field
-operator fun String.invoke(vararg fields: Field): Field = invoke(stack(*fields).value)
-operator fun String.invoke(sentence: Sentence, vararg sentences: Sentence): Field = invoke(value(sentence, *sentences))
-val Field.value get() = value(this)
-val emptyValue = value()
+fun String.sentenceTo(vararg sentences: Sentence): Sentence = sentenceTo(value(*sentences))
+operator fun String.invoke(value: Value): Sentence = sentenceTo(value)
+operator fun String.invoke(vararg sentences: Sentence): Sentence = sentenceTo(value(*sentences))
+//operator fun String.invoke(sentence: Sentence, vararg sentences: Sentence): Sentence = invoke(value(sentence, *sentences))
 
-val Field.sentenceOrNull: Sentence? get() = (this as? SentenceField)?.sentence
-val Field.functionOrNull: Function? get() = (this as? FunctionField)?.function
-val Field.lazyOrNull: Lazy? get() = (this as? LazyField)?.lazy
-val Field.theNativeOrNull: The<Any?>? get() = if (this is NativeField) native.the else null
-val Value.onlyFieldOrNull: Field? get() = fieldStack.onlyOrNull
-val Value.sentenceOrNull: Sentence? get() = onlyFieldOrNull?.sentenceOrNull
-val Value.functionOrNull: Function? get() = onlyFieldOrNull?.functionOrNull
-val Value.lazyOrNull: Lazy? get() = onlyFieldOrNull?.lazyOrNull
-val Value.isEmpty: Boolean get() = fieldStack.isEmpty
+val Value.isEmpty get() = this is EmptyValue
+val Value.functionOrNull: Function? get() = (this as? FunctionValue)?.function
+val Value.lazyOrNull: Lazy? get() = (this as? LazyValue)?.lazy
+val Value.theNativeOrNull: The<Any?>? get() = if (this is NativeValue) native.the else null
+val Value.linkOrNull: ValueLink? get() = (this as? LinkValue)?.link
+val Value.onlySentenceOrNull: Sentence? get() = linkOrNull?.onlySentenceOrNull
+val ValueLink.onlySentenceOrNull: Sentence? get() = notNullIf(previousValue.isEmpty) { lastSentence }
 
-val Sentence.onlyWordOrNull: String? get() = notNullIf(value.isEmpty) { word }
-val Field.onlyWordOrNull: String? get() = sentenceOrNull?.onlyWordOrNull
+val Sentence.onlyWordOrNull: String? get() = notNullIf(rhsValue.isEmpty) { word }
 
-operator fun Value.plus(field: Field): Value = fieldStack.push(field).value
-operator fun Value.plus(value: Value): Value = fieldStack.pushAll(value.fieldStack).value
+fun Value.does(compiled: Compiled): Value = functionTo(compiled).value
 
-val Value.linkOrNull: Link<Value, Field>?
+val Value.asSentence get() = _value(this)
+
+val Value.sentenceStackOrNull: Stack<Sentence>?
 	get() =
-		fieldStack.linkOrNull?.run {
-			stack.value linkTo value
+		when (this) {
+			EmptyValue -> leo13.stack()
+			is LinkValue -> link.previousValue.sentenceStackOrNull?.push(link.lastSentence)
+			is NativeValue -> null
+			is FunctionValue -> null
+			is LazyValue -> null
 		}
 
-fun Value.does(compiled: Compiled): Field = functionTo(compiled).field
+val Stack<Sentence>.value: Value
+	get() =
+		value(*array)

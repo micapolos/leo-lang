@@ -11,9 +11,9 @@ data class Fn(val patternValue: Value, val nativeFn: (Value) -> Value) {
 	fun apply(arg: Value): Value? =
 		notNullIf(patternValue.matches(arg)) {
 			try {
-				nativeFn(_given(arg).value)
+				nativeFn(_given(arg).onlyValue)
 			} catch (throwable: Throwable) {
-				_error(throwable.nativeValue).value
+				_error(throwable.nativeValue).onlyValue
 			}
 		}
 }

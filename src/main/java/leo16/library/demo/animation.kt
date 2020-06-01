@@ -11,15 +11,6 @@ val animation = dsl_ {
 	use { base }
 
 	fill {
-		text {
-			"Frame: ".text
-			plus { animation.frame.number }
-		}
-		x { 10.number }
-		y { 30.number }
-	}
-
-	fill {
 		circle {
 			radius {
 				animation.second.number

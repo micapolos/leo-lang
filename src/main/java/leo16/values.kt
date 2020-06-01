@@ -25,57 +25,66 @@ import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo16.names.*
+import java.math.BigDecimal
 
-val Boolean.field: Field
+val String.value: Value
+	get() =
+		_text(nativeValue).onlyValue
+
+val BigDecimal.value: Value
+	get() =
+		_number(nativeValue).onlyValue
+
+val Boolean.sentence: Sentence
 	get() =
 		_boolean(if (this) _true() else _false())
 
-val Bit.asField: Field
+val Bit.asField: Sentence
 	get() =
 		_bit(if (isOne) _one() else _zero())
 
-val Byte.asField: Field
+val Byte.asField: Sentence
 	get() =
 		_byte(
 			_bit(
 				stack(bit7, bit6, bit5, bit4, bit3, bit2, bit1, bit0)
-					.expandField { this@asField.asField }))
+					.expandSentence { this@asField.asField }))
 
-val Int.asField: Field
+val Int.asField: Sentence
 	get() =
 		_int(
 			_byte(
 				stack(byte3, byte2, byte1, byte0)
-					.expandField { this@asField.asField }))
+					.expandSentence { this@asField.asField }))
 
-fun <T> Stack<T>.expandField(fn: T.() -> Field): Field =
+fun <T> Stack<T>.expandSentence(fn: T.() -> Sentence): Sentence =
 	map(fn).asField
 
-val Stack<Field>.asField: Field
+val Stack<Sentence>.asField: Sentence
 	get() =
 		_list(value)
 
-val Stack<Value>.field: Field
+val Stack<Value>.field: Sentence
 	get() =
 		when (this) {
 			is EmptyStack -> _list(_empty())
 			is LinkStack -> _list(map { _item.invoke(this) }.value)
 		}
 
-val String.expandSentence: Field
+val String.expandSentence: Sentence
 	get() =
 		_string(
 			utf8ByteSeq.reverseStack
-				.expandField { asField })
+				.expandSentence { asField })
 
-val Literal.asField: Field
+val Literal.asSentence: Sentence
 	get() =
 		when (this) {
-			is StringLiteral -> _text(string.nativeField)
-			is NumberLiteral -> _number(number.bigDecimal.nativeField)
+			is StringLiteral -> _text(string.nativeValue)
+			is NumberLiteral -> _number(number.bigDecimal.nativeValue)
 		}
 
-fun Field.plusValue(stack: Stack<Value>): Field =
+fun Sentence.plusValue(stack: Stack<Value>): Sentence =
 	when (stack) {
 		is EmptyStack -> this
 		is LinkStack ->
@@ -86,10 +95,10 @@ fun Field.plusValue(stack: Stack<Value>): Field =
 				.plusValue(stack.link.stack)
 	}
 
-val Stack<Value>.valueField: Field
+val Stack<Value>.valueField: Sentence
 	get() =
 		_list(_empty()).plusValue(reverse)
 
 val Stack<Value>.valueValue: Value
 	get() =
-		valueField.value
+		valueField.onlyValue

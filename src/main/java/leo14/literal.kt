@@ -3,6 +3,7 @@ package leo14
 import leo.base.appendableString
 import leo.base.fold
 import leo14.parser.escapedString
+import java.math.BigDecimal
 
 sealed class Literal
 
@@ -26,6 +27,8 @@ fun literal(double: Double): Literal = literal(number(double))
 val String.literal get() = literal(this)
 val Int.literal get() = literal(this)
 val Double.literal get() = literal(this)
+val BigDecimal.literal get() = number(this).literal
+val Number.literal get() = literal(this)
 
 val Literal.any
 	get() =

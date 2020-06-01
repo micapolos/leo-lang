@@ -3,10 +3,10 @@ package leo16
 import leo16.names.*
 
 data class Repeat(val compiled: Compiled) {
-	override fun toString() = asField.toString()
+	override fun toString() = asSentence.toString()
 }
 
-val Repeat.asField get() = _repeat(compiled.bodyValue)
+val Repeat.asSentence get() = _repeat(compiled.bodyValue)
 val Compiled.repeat get() = Repeat(this)
 
 inline fun Repeat.apply(arg: Value): Value? =

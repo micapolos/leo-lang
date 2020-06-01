@@ -7,36 +7,37 @@ import kotlin.test.Test
 class ValuePrintTest {
 	@Test
 	fun empty() {
-		_list(_empty())
+		value(_list(_empty()))
 			.printed
-			.assertEqualTo(_list(_empty()))
+			.assertEqualTo(value(_list(_empty())))
 	}
 
 	@Test
 	fun list() {
-		_list(_link(
+		value(_list(_link(
+			_previous(_list(_link(
+				_previous(_list(_empty())),
+				_last(_zero())))),
+			_last(_one()))))
+			.printed
+			.assertEqualTo(
+				value(_list(
+					_item(_zero()),
+					_item(_one()))))
+	}
+
+	@Test
+	fun link() {
+		value(_link(
 			_previous(_list(_link(
 				_previous(_list(_empty())),
 				_last(_zero())))),
 			_last(_one())))
 			.printed
 			.assertEqualTo(
-				_list(
-					_item(_zero()),
-					_item(_one())))
-	}
-
-	@Test
-	fun link() {
-		_link(
-			_previous(_list(_link(
-				_previous(_list(_empty())),
-				_last(_zero())))),
-			_last(_one()))
-			.printed
-			.assertEqualTo(
-				_link(
-					_previous(_list(_item(_zero()))),
-					_last(_one())))
+				value(
+					_link(
+						_previous(_list(_item(_zero()))),
+						_last(_one()))))
 	}
 }

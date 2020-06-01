@@ -15,6 +15,8 @@ import leo13.push
 import leo13.stack
 import leo16.names.*
 
+// TODO: Remove this class?
+
 data class Selector(val wordStackLink: StackLink<String>) {
 	override fun toString() = asField.toString()
 	val asValue get() = wordStackLink.map { this() }.value
@@ -28,13 +30,13 @@ data class Case(val selector: Selector, val compiled: Compiled) {
 			selector.wordStackLink.stack.map { this() }
 				.push(selector.wordStackLink.value(compiled.bodyValue))
 				.value
-	val asField: Field get() = _case(asValue)
+	val asField: Sentence get() = _case(asValue)
 }
 
 data class Match(val caseStack: Stack<Case>) {
 	override fun toString() = asField.toString()
-	val asField: Field get() = _match(asValue)
-	val asValue: Value get() = value().fold(caseStack.map { asValue }) { plus(it) }
+	val asField: Sentence get() = _match(asValue)
+	val asValue: Value get() = TODO() // value().fold(caseStack.map { asValue }) { plus(it) }
 }
 
 val StackLink<String>.selector get() = Selector(this)

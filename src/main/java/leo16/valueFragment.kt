@@ -16,8 +16,8 @@ val ValueFragment.end: ValueFragment?
 fun ValueParent.endFragment(value: Value): ValueFragment =
 	fragment.plus(word(value))
 
-fun ValueFragment.plus(field: Field): ValueFragment =
-	parentOrNull.fragment(value.plus(field))
+fun ValueFragment.plus(sentence: Sentence): ValueFragment =
+	parentOrNull.fragment(value.plus(sentence))
 
 tailrec fun ValueFragment.rootValue(): Value {
 	val ended = end

@@ -1,61 +1,66 @@
 package leo16
 
-import leo13.array
-import leo13.map
 import leo14.Script
 import leo14.ScriptLine
+import leo14.emptyScript
 import leo14.invoke
 import leo14.line
 import leo14.lineTo
 import leo14.literal
-import leo14.number
+import leo14.plus
 import leo14.script
+import leo14.untyped.scriptLine
 import leo16.names.*
 
 val Value.script: Script
 	get() =
-		script(*fieldStack.map { scriptLine }.array)
-
-val Field.scriptLine: ScriptLine
-	get() =
 		null
-			?: textScriptLineOrNull
-			?: numberScriptLineOrNull
-			?: defaultScriptLine
+			?: numberScriptOrNull
+			?: textScriptOrNull
+			?: defaultScript
 
-val Field.defaultScriptLine: ScriptLine
+val Value.defaultScript: Script
 	get() =
 		when (this) {
-			is SentenceField -> sentence.scriptLine
-			is FunctionField -> function.scriptLine
-			is NativeField -> native.nativeScriptLine
-			is LazyField -> lazy.scriptLine
+			EmptyValue -> emptyScript
+			is LinkValue -> link.script
+			is FunctionValue -> function.script
+			is LazyValue -> lazy.script
+			is NativeValue -> native.nativeScript
 		}
 
-val Field.textScriptLineOrNull: ScriptLine?
+val Value.textScriptOrNull: Script?
 	get() =
-		matchText { it.literal.line }
+		matchText { string ->
+			string.literal.scriptLine.script
+		}
 
-val Field.numberScriptLineOrNull: ScriptLine?
+val Value.numberScriptOrNull: Script?
 	get() =
-		matchNumber { literal(number(it)).line }
+		matchNumber { bigDecimal ->
+			bigDecimal.literal.scriptLine.script
+		}
+
+val ValueLink.script: Script
+	get() =
+		previousValue.script.plus(lastSentence.scriptLine)
 
 val Sentence.scriptLine: ScriptLine
 	get() =
-		word.scriptWord lineTo value.script
+		word.scriptWord lineTo rhsValue.script
 
-val Function.scriptLine: ScriptLine
+val Function.script: Script
 	get() =
-		_taking(patternValue.script)
+		_taking(patternValue.script).script
 
-val Lazy.scriptLine: ScriptLine
+val Lazy.script: Script
 	get() =
-		_lazy(compiled.bodyValue.script)
+		_lazy(compiled.bodyValue.script).script
 
 val String.scriptWord: String
 	get() =
 		when (this) {
-			_item -> "·"
+			//_item -> "·"
 			else -> this
 		}
 

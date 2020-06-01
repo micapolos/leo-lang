@@ -64,30 +64,19 @@ class EvaluateTest {
 		evaluate_ { quote { nothing_ } }.assertEquals { nothing_ }
 		evaluate_ { quote { zero.negate } }.assertEquals { zero.negate }
 		evaluate_ { quote { zero.is_ { one } } }.assertEquals { zero.is_ { one } }
-		evaluate_ { zero.quote { one.two } }.assertEquals { zero.one.two }
-		evaluate_ { zero.one.quote { two } }.assertEquals { one { zero }.two }
+		evaluate_ { zero.quote { one.two } }.assertEquals { zero.quote { one.two } }
+		evaluate_ { zero.one.quote { two } }.assertEquals { one { zero }.quote { two } }
 	}
 
 	@Test
 	fun meta() {
-		evaluate_ { meta { nothing_ } }.assertEquals { nothing_ }
+		evaluate_ { meta }.assertEquals { meta }
 		evaluate_ { meta { zero } }.assertEquals { zero }
-		evaluate_ { meta { zero.one } }.assertEquals { zero.one }
-		evaluate_ { meta { zero.is_ { one } } }.assertEquals { zero.is_ { one } }
+		evaluate_ { meta { zero { one } } }.assertEquals { zero { one } }
+		evaluate_ { meta { zero.one } }.assertEquals { meta { zero.one } }
+		evaluate_ { meta { zero.is_ { one } } }.assertEquals { meta { zero.is_ { one } } }
 		evaluate_ { zero.meta { is_ { one } } }.assertEquals { zero.is_ { one } }
 		evaluate_ { meta { quote { zero.is_ { one }.zero } } }.assertEquals { quote { one } }
-	}
-
-	@Test
-	fun script() {
-		evaluate_ {
-			function { zero.does { one } }
-			script
-			take { zero }
-		}.assertEquals {
-			function { zero.does { one } }
-			take { zero }
-		}
 	}
 
 	@Test
@@ -97,10 +86,10 @@ class EvaluateTest {
 
 	@Test
 	fun this_() {
-		evaluate_ { this_ { nothing_ } }.assertEquals { nothing_ }
+		evaluate_ { this_ }.assertEquals { this_ }
 		evaluate_ { x { zero }.this_ { nothing_ } }.assertEquals { x { zero } }
 		evaluate_ { x { zero }.this_ { y { one } } }.assertEquals { x { zero }; y { one } }
-		evaluate_ { x { zero }.this_ { y { one }; z { two } } }.assertEquals { x { zero }; y { one }; z { two } }
+		evaluate_ { x { zero }.this_ { y { one }; z { two } } }.assertEquals { x { zero }; this_ { y { one }; z { two } } }
 		evaluate_ { this_ { zero }; this_ { one } }.assertEquals { zero; one }
 	}
 
@@ -231,6 +220,11 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun getNative() {
+		evaluate_ { "foo".text.native.as_ { text } }.assertEquals { "foo".nativeText }
+	}
+
+	@Test
 	fun make() {
 		evaluate_ { zero.make { number } }.assertEquals { number { zero } }
 	}
@@ -259,6 +253,21 @@ class EvaluateTest {
 				function { zero.does { one } }
 			}
 			function.take { zero }
+		}.assertEquals {
+			function { zero.does { one } }
+			take { zero }
+		}
+	}
+
+	@Test
+	fun functionInsideField() {
+		evaluate_ {
+			the {
+				0.number
+				"hello".text
+				my { function { zero.does { one } } }
+			}
+			my.function.take { zero }
 		}.assertEquals { one }
 	}
 
@@ -281,6 +290,9 @@ class EvaluateTest {
 		evaluate_ { zero.does { one } }.assertEquals { nothing_ }
 		evaluate_ { zero.does { one }.zero }.assertEquals { one }
 		evaluate_ { zero.does { one }.one }.assertEquals { one }
+
+		evaluate_ { native.any.text.does { ok }; "hello".text }.assertEquals { ok }
+
 		evaluate_ { any.x.does { x }.zero.x }.assertEquals { x { zero } }
 		evaluate_ { any.x.does { x }.zero.y }.assertEquals { y { zero } }
 
@@ -292,6 +304,8 @@ class EvaluateTest {
 	fun matchSentence() {
 		evaluate_ { zero.bit.match { zero { one } } }
 			.assertEquals { one }
+		evaluate_ { circle { radius { zero } }.match { radius { radius } } }
+			.assertEquals { radius { zero } }
 
 		evaluate_ { zero.bit.match { nothing_ } }
 			.assertEquals { match { bit { zero } } }
@@ -548,6 +562,22 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun useListRead() {
+		evaluate_ {
+			use {
+				x
+				is_ {
+					list {
+						item { zero }
+						item { one }
+					}
+				}
+			}
+			x.link.last.thing
+		}.assertEquals { one }
+	}
+
+	@Test
 	fun testTest() {
 		evaluate_ {
 			test { zero.equals_ { zero } }
@@ -617,10 +647,15 @@ class EvaluateTest {
 	}
 
 	@Test
-	fun matchesGiving() {
+	fun matchesFunction() {
 		evaluate_ {
 			function { zero }
 			matches { function { zero.does { one } } }
+		}.assertEquals { true.boolean }
+
+		evaluate_ {
+			function { anything }
+			matches { function { anything.does { one } } }
 		}.assertEquals { true.boolean }
 
 		evaluate_ {
@@ -698,5 +733,45 @@ class EvaluateTest {
 				matching { zero.or { one } }
 			}
 		}
+	}
+
+	@Test
+	fun listRead() {
+		evaluate_ {
+			list {
+				item { zero }
+				item { one }
+			}
+			link.last.thing
+		}.assertEquals { one }
+	}
+
+	@Test
+	fun read() {
+		evaluate_ {
+			zero { one }.read
+			is_ { two { three } }
+			one
+		}.assertEquals { one }
+
+		evaluate_ {
+			zero { one }.read
+			is_ { two { three } }
+			zero { one }
+		}.assertEquals { two { three } }
+
+		evaluate_ {
+			zero { one }.read
+			is_ { two { three } }
+			test { zero { one }.equals_ { two { three } } }
+		}.assertEquals { nothing_ }
+	}
+
+	@Test
+	fun emptyDefinition() {
+		evaluate_ {
+			does { zero }
+			x
+		}.assertEquals { x { zero } }
 	}
 }

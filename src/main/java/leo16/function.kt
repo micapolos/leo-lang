@@ -14,9 +14,9 @@ fun Function.apply(value: Value): Value? =
 		compiled.invoke(value)
 	}
 
-val Function.asPatternField: Field
+val Function.asPatternSentence: Sentence
 	get() =
-		_function(patternValue.asField, compiled.asField)
+		_function(patternValue.asSentence, compiled.asSentence)
 
 val Function.asValue: Value
 	get() =

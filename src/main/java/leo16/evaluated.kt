@@ -7,14 +7,14 @@ data class Evaluated(val scope: Scope, val value: Value) {
 }
 
 infix fun Scope.evaluated(value: Value) = Evaluated(this, value)
-val Scope.emptyEvaluated get() = evaluated(value())
+val Scope.emptyEvaluated get() = evaluated(emptyValue)
 
 val Value.evaluated get() = emptyScope.evaluated(this)
 val emptyEvaluated get() = emptyScope.emptyEvaluated
 
-val Evaluated.asField: Field
+val Evaluated.asField: Sentence
 	get() =
-		_evaluated(scope.asField, value.asField)
+		_evaluated(scope.asField, value.asSentence)
 
 fun Evaluated.updateValue(fn: Value.() -> Value) = copy(value = value.fn())
 
@@ -29,12 +29,12 @@ val Evaluated.clearValue: Evaluated
 	get() =
 		set(value())
 
-operator fun Evaluated.plus(field: Field): Evaluated =
+operator fun Evaluated.plus(field: Sentence): Evaluated =
 	value.normalize(field) { set(this).plusNormalized(it) }
 
-fun Evaluated.plusNormalized(field: Field): Evaluated =
+fun Evaluated.plusNormalized(field: Sentence): Evaluated =
 	set(value.plus(field))
 
 val Evaluated.reflectValue: Value
 	get() =
-		scope.dictionary.reflect(value).printed
+		scope.dictionary.applyReflect(value)

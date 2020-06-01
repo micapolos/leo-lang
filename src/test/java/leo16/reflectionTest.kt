@@ -126,6 +126,7 @@ class ReflectionTest {
 	fun nativeClassMethod() {
 		evaluate_ {
 			use { native.reflection }
+
 			"java.lang.String".text.name.class_
 			method {
 				name { "substring".text }
@@ -146,34 +147,35 @@ class ReflectionTest {
 	@Test
 	fun nativeMethodInvoke() {
 		evaluate_ {
-			use { reflection }
+			use { native.reflection }
 
 			"Hello, world!".text.native
 			invoke {
 				"java.lang.String".text.name.class_
 				method {
-					name { "substring".text }
+					name { "replaceAll".text }
 					parameter {
 						list {
-							item { int.class_ }
-							item { int.class_ }
+							item { "java.lang.String".text.name.class_ }
+							item { "java.lang.String".text.name.class_ }
 						}
 					}
 				}
 				parameter {
 					list {
-						item { 7.int.native }
-						item { 12.int.native }
+						item { "e".text.native }
+						item { "a".text.native }
 					}
 				}
 			}
-		}.assertEquals { "world".native_ }
+		}.assertEquals { "Hallo, world!".native_ }
 	}
 
 	@Test
 	fun nativeObjectMethodInvoke() {
 		evaluate_ {
 			use { reflection }
+
 			"java.lang.String".text.name.class_
 			method {
 				name { "valueOf".text }

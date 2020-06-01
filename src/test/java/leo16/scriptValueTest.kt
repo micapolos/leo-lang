@@ -11,10 +11,10 @@ class ScriptValueTest {
 	fun listScriptValue_empty() {
 		script(literal("Hello, world!"))
 			.asValue
-			.assertEqualTo("Hello, world!".field.value)
+			.assertEqualTo(value("Hello, world!".sentence))
 
 		script(literal(123))
 			.asValue
-			.assertEqualTo(123.bigDecimal.field.value)
+			.assertEqualTo(value(123.bigDecimal.sentence))
 	}
 }

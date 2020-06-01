@@ -21,7 +21,7 @@ class PerformanceTest {
 	 * 28.05.2020: ~430ms
 	 * 30.05.2020: ~480ms
 	 */
-	@Test
+	//@Test
 	fun fibonacci() {
 		measure("fibonacci") {
 			evaluate_ {

@@ -8,14 +8,20 @@ fun main() {
 }
 
 val string = dsl_ {
-	use { reflection }
+	use { native.reflection }
 	use { char.sequence.native }
 
 	string.class_
-	is_ { "java.lang.String".text.name.class_ }
+	is_ {
+		"java.lang.String".text.name.class_
+		matching { native.any.class_ }
+	}
 
 	kotlin.string.class_
-	is_ { "leo16.native.StringKt".text.name.class_ }
+	is_ {
+		"leo16.native.StringKt".text.name.class_
+		matching { native.any.class_ }
+	}
 
 	string.char { at { int } }.method
 	is_ {
@@ -24,6 +30,7 @@ val string = dsl_ {
 			name { "charAt".text }
 			parameter { list { item { int.class_ } } }
 		}
+		matching { native.any.method }
 	}
 
 	string.length.method
@@ -33,6 +40,7 @@ val string = dsl_ {
 			name { "length".text }
 			parameter { empty.list }
 		}
+		matching { native.any.method }
 	}
 
 	string.concat.method
@@ -42,6 +50,7 @@ val string = dsl_ {
 			name { "concat".text }
 			parameter { list { item { string.class_ } } }
 		}
+		matching { native.any.method }
 	}
 
 	string.substring.method
@@ -56,6 +65,7 @@ val string = dsl_ {
 				}
 			}
 		}
+		matching { native.any.method }
 	}
 
 	string.replace.method
@@ -70,6 +80,7 @@ val string = dsl_ {
 				}
 			}
 		}
+		matching { native.any.method }
 	}
 
 	string.split.method
@@ -84,5 +95,6 @@ val string = dsl_ {
 				}
 			}
 		}
+		matching { native.any.method }
 	}
 }

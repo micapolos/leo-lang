@@ -5,7 +5,7 @@ import leo15.dsl.*
 import leo16.invoke
 import leo16.library_
 import leo16.names.*
-import leo16.nativeField
+import leo16.nativeValue
 
 fun main() {
 	library_(byte)
@@ -42,6 +42,7 @@ val byte = dsl_ {
 		plus { read.byte.seventh.bit.number.times { 2.number } }
 		plus { read.byte.eighth.bit.number }
 		byte
+		matching { native.any.byte }
 	}
 
 	test {
@@ -56,7 +57,7 @@ val byte = dsl_ {
 			eighth { one.bit }
 		}
 		as_ { text }
-		equals_ { _byte(13.clampedByte.nativeField).toString().text }
+		equals_ { _byte(13.clampedByte.nativeValue).toString().text }
 	}
 
 	native.any.byte.reflect

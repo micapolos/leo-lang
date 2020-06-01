@@ -22,6 +22,21 @@ val list = dsl_ {
 		}
 	}
 
+	test {
+		list.any
+		matches { empty.list }
+	}
+
+	test {
+		list.any
+		matches {
+			list {
+				item { zero }
+				item { one }
+			}
+		}
+	}
+
 	list.any
 	append { anything }
 	does {
@@ -48,9 +63,11 @@ val list = dsl_ {
 	list.any
 	fold {
 		to { anything }
-		function {
-			item { anything }
-			to { anything }
+		using {
+			function {
+				item { anything }
+				to { anything }
+			}
 		}
 	}
 	does {
@@ -60,13 +77,13 @@ val list = dsl_ {
 				link.previous.list
 				fold {
 					to {
-						fold.function
+						fold.using.function
 						take {
 							item { link.last.thing }
 							to { fold.to.thing }
 						}
 					}
-					this_ { fold.function }
+					using { fold.using.function }
 				}
 				repeat
 			}
@@ -81,10 +98,12 @@ val list = dsl_ {
 		}
 		fold {
 			to { empty.list }
-			function {
-				item { anything }
-				to { anything }
-				does { to.list.append { item.thing } }
+			using {
+				function {
+					item { anything }
+					to { anything }
+					does { to.list.append { item.thing } }
+				}
 			}
 		}
 		equals_ {
@@ -101,10 +120,12 @@ val list = dsl_ {
 		reverse.list
 		fold {
 			to { empty.list }
-			function {
-				item { anything }
-				to { anything }
-				does { to.list.append { item.thing } }
+			using {
+				function {
+					item { anything }
+					to { anything }
+					does { to.list.append { item.thing } }
+				}
 			}
 		}
 	}
@@ -125,17 +146,19 @@ val list = dsl_ {
 	}
 
 	list.any
-	map { function { anything } }
+	map { using { function { anything } } }
 	does {
 		list.reverse
 		fold {
 			to { empty.list }
-			function {
-				item { anything }
-				to { anything }
-				does {
-					to.list
-					append { map.function.take { item.thing } }
+			using {
+				function {
+					item { anything }
+					to { anything }
+					does {
+						to.list
+						append { map.using.function.take { item.thing } }
+					}
 				}
 			}
 		}
@@ -147,7 +170,7 @@ val list = dsl_ {
 			item { 2.number }
 			item { 3.number }
 		}
-		map { function { anything.does { number.ok } } }
+		map { using { function { anything.does { number.ok } } } }
 		equals_ {
 			list {
 				item { 1.number.ok }
@@ -163,10 +186,12 @@ val list = dsl_ {
 		length.list
 		fold {
 			to { 0.number }
-			function {
-				item { anything }
-				to { anything }
-				does { to.number.plus { 1.number } }
+			using {
+				function {
+					item { anything }
+					to { anything }
+					does { to.number.plus { 1.number } }
+				}
 			}
 		}.length
 	}
@@ -190,13 +215,15 @@ val list = dsl_ {
 		flat.list.reverse
 		fold {
 			to { meta { flat } }
-			function {
-				item { anything }
-				to { anything }
-				does {
-					to.flat.thing
-					this_ { item.thing }
-					flat
+			using {
+				function {
+					item { anything }
+					to { anything }
+					does {
+						to.flat.thing
+						this_ { item.thing }
+						flat
+					}
 				}
 			}
 		}
@@ -204,13 +231,13 @@ val list = dsl_ {
 
 	test {
 		list {
-			item { 0.number }
-			item { 1.number }
+			item { x { zero } }
+			item { y { one } }
 		}
 		flat.thing
 		equals_ {
-			0.number
-			1.number
+			x { zero }
+			y { one }
 		}
 	}
 }

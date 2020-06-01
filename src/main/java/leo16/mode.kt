@@ -9,10 +9,10 @@ enum class Mode {
 	TYPE,
 	QUOTE;
 
-	override fun toString() = asField.toString()
+	override fun toString() = asSentence.toString()
 }
 
-val Mode.asField: Field
+val Mode.asSentence: Sentence
 	get() =
 		_mode(name.toLowerCase()())
 

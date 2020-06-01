@@ -1,11 +1,12 @@
 package leo16
 
 import leo.base.assertEqualTo
+import leo15.lambda.valueTerm
 import leo16.names.*
 import org.junit.Test
 
 fun Value.assertConverts(value: Value) =
-	value(termOrNull(value)!!).assertEqualTo(value)
+	this.value(this.termOrNull(value)!!).assertEqualTo(value)
 
 class TermValueTest {
 	@Test
@@ -17,7 +18,7 @@ class TermValueTest {
 	@Test
 	fun native() {
 		value(_any(_native()))
-			.assertConverts(value("foo".nativeField))
+			.assertConverts("foo".nativeValue)
 	}
 
 	@Test
@@ -30,11 +31,8 @@ class TermValueTest {
 	fun link() {
 		value(
 			_any(_native()),
-			_any(_native()))
-			.assertConverts(
-				value(
-					"foo".nativeField,
-					"bar".nativeField))
+			_to(_any(_native())))
+			.assertConverts("foo".nativeValue.plus(_to("bar".nativeValue)))
 	}
 
 	@Test

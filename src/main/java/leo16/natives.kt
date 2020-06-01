@@ -3,20 +3,35 @@ package leo16
 import leo.ansi
 import leo.magenta
 import leo.reset
+import leo14.Literal
+import leo14.Number
+import leo14.NumberLiteral
+import leo14.StringLiteral
 import leo16.names.*
 import java.math.BigDecimal
 
-val String.field: Field
+val Literal.sentence: Sentence
 	get() =
-		_text(nativeField)
+		when (this) {
+			is StringLiteral -> string.sentence
+			is NumberLiteral -> number.sentence
+		}
 
-val BigDecimal.field: Field
+val String.sentence: Sentence
 	get() =
-		_number(nativeField)
+		_text(nativeValue)
 
-val Int.field: Field
+val Number.sentence: Sentence
 	get() =
-		_int(nativeField)
+		bigDecimal.sentence
+
+val BigDecimal.sentence: Sentence
+	get() =
+		_number(nativeValue)
+
+val Int.sentence: Sentence
+	get() =
+		_int(nativeValue)
 
 val Any?.nativeString: String
 	get() =

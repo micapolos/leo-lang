@@ -3,13 +3,20 @@ package leo16.library.native.decimal
 import leo15.dsl.*
 import leo16.library_
 
+fun main() {
+	library_(big)
+}
+
 val big = dsl_ {
-	use { reflection }
+	use { native.reflection }
 	use { math.context.native }
 	use { string.native }
 
 	big.decimal.class_
-	is_ { "java.math.BigDecimal".text.name.class_ }
+	is_ {
+		"java.math.BigDecimal".text.name.class_
+		matching { native.any.class_ }
+	}
 
 	big.decimal.string.constructor
 	is_ {

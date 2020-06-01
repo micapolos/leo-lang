@@ -2,6 +2,7 @@ package leo16
 
 import leo.base.ifOrNull
 import leo.base.orIfNull
+import leo.base.println
 import leo.base.runIfNotNull
 import leo13.filterNulls
 import leo13.first
@@ -24,7 +25,7 @@ inline fun Evaluated.apply(word: String, evaluated: Evaluated, isType: Boolean):
 inline fun Evaluated.applyNormalized(word: String, evaluated: Evaluated, isType: Boolean): Evaluated =
 	applyNormalized(word(evaluated.value), isType)
 
-fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
+fun Evaluated.apply(field: Sentence, mode: Mode): Evaluated =
 	when (mode) {
 		Mode.EVALUATE -> apply(field, isType = false)
 		Mode.TYPE -> apply(field, isType = true)
@@ -32,13 +33,13 @@ fun Evaluated.apply(field: Field, mode: Mode): Evaluated =
 		Mode.META -> plusNormalized(field)
 	}
 
-fun Evaluated.apply(field: Field, isType: Boolean): Evaluated =
+fun Evaluated.apply(field: Sentence, isType: Boolean): Evaluated =
 	value.normalize(field) { set(this).applyNormalized(it, isType) }
 
-inline fun Evaluated.applyNormalized(field: Field, isType: Boolean): Evaluated =
+inline fun Evaluated.applyNormalized(field: Sentence, isType: Boolean): Evaluated =
 	applyNormalizedAndRead(scope.dictionary.applyRead(field), isType)
 
-inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Evaluated =
+inline fun Evaluated.applyNormalizedAndRead(field: Sentence, isType: Boolean): Evaluated =
 	null
 		?: applyValue(field) // keep first
 		?: ifOrNull(!isType) { applyBinding(field) }
@@ -57,57 +58,63 @@ inline fun Evaluated.applyNormalizedAndRead(field: Field, isType: Boolean): Eval
 		?: applyDefinitionList(field)
 		?: resolve(field)
 
-fun Evaluated.applyValue(field: Field): Evaluated? =
+fun Evaluated.applyValue(field: Sentence): Evaluated? =
 	scope.runIfNotNull(value.apply(field)) { evaluated(it) }
 
-fun Evaluated.applyQuote(field: Field): Evaluated? =
-	field.matchPrefix(_quote) { rhs ->
-		scope.evaluated(value.plus(rhs))
+fun Evaluated.applyQuote(field: Sentence): Evaluated? =
+	value.matchEmpty {
+		field.matchPrefix(_quote) { rhs ->
+			scope.evaluated(rhs)
+		}
 	}
 
-fun Evaluated.applyMeta(field: Field): Evaluated? =
+fun Evaluated.applyMeta(field: Sentence): Evaluated? =
 	field.matchPrefix(_meta) { rhs ->
-		scope.evaluated(value.plus(rhs))
+		rhs.onlySentenceOrNull?.let { sentence ->
+			scope.evaluated(value.plus(sentence))
+		}
 	}
 
-fun Evaluated.applyApply(field: Field): Evaluated? =
+fun Evaluated.applyApply(field: Sentence): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_apply) { rhs ->
 			scope.dictionary.apply(rhs.evaluated)?.let { scope.evaluated(it.value) }
 		}
 	}
 
-fun Evaluated.applyEvaluate(field: Field): Evaluated? =
+fun Evaluated.applyEvaluate(field: Sentence): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_evaluate) { rhs ->
 			scope.dictionary.evaluate(rhs).let { scope.evaluated(it) }
 		}
 	}
 
-fun Evaluated.applyCompile(field: Field): Evaluated? =
+fun Evaluated.applyCompile(field: Sentence): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_compile) { rhs ->
 			scope.emptyEvaluator.plus(rhs).evaluated
 		}
 	}
 
-fun Evaluated.resolve(field: Field): Evaluated =
-	scope.dictionary.resolve(scope.evaluated(value.plus(field)))
+fun Evaluated.resolve(sentence: Sentence): Evaluated =
+	scope.dictionary.resolve(scope.evaluated(value.plus(sentence)))
 
-fun Evaluated.applyBinding(field: Field): Evaluated? =
+fun Evaluated.applyBinding(field: Sentence): Evaluated? =
 	scope.applyBinding(value.plus(field))?.emptyEvaluated
 
-fun Evaluated.applyFunction(field: Field): Evaluated? =
-	field.matchPrefix(_function) { rhs ->
-		scope.dictionary.doesOrNull(rhs)?.field?.let { set(value.plus(it)) }
+fun Evaluated.applyFunction(field: Sentence): Evaluated? =
+	value.matchEmpty {
+		field.matchPrefix(_function) { rhs ->
+			scope.dictionary.doesOrNull(rhs)?.value?.let { set(it) }
+		}
 	}
 
-fun Evaluated.applyDo(field: Field): Evaluated? =
+fun Evaluated.applyDo(field: Sentence): Evaluated? =
 	field.matchPrefix(_do) { rhs ->
 		set(scope.dictionary.compiled(rhs).invoke(value))
 	}
 
-fun Evaluated.applyUse(field: Field): Evaluated? =
+fun Evaluated.applyUse(field: Sentence): Evaluated? =
 	field.matchPrefix(_use) { rhs ->
 		scope.dictionary.compile(rhs).let { rhs ->
 			rhs.value.loadedOrNull
@@ -116,33 +123,34 @@ fun Evaluated.applyUse(field: Field): Evaluated? =
 		}
 	}
 
-fun Evaluated.applyLazy(field: Field): Evaluated? =
+fun Evaluated.applyLazy(field: Sentence): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_lazy) { rhs ->
-			set(scope.dictionary.compiled(rhs).lazy.field.value)
+			set(scope.dictionary.compiled(rhs).lazy.value)
 		}
 	}
 
-fun Evaluated.applyExport(field: Field): Evaluated? =
+fun Evaluated.applyExport(field: Sentence): Evaluated? =
 	field.matchPrefix(_export) { rhs ->
 		rhs.loadedDictionaryOrNull?.let { scope.export(it) }?.evaluated(value)
 	}
 
-fun Evaluated.applyMatch(field: Field): Evaluated? =
-	value.matchFieldOrNull?.let { matchField ->
-		field.matchPrefix(_match) { rhs ->
-			rhs.fieldStack
-				.first { it.selectWord == matchField.selectWord }
-				?.sentenceOrNull
-				?.let { caseSentence ->
-					scope
-						.plus(caseSentence.word().value.is_(matchField.value).definition)
-						.evaluate(caseSentence.value)
-				}
+fun Evaluated.applyMatch(field: Sentence): Evaluated? =
+	field.matchPrefix(_match) { rhs ->
+		value.thingOrNull?.let { matchedValue ->
+			matchedValue.matchWordOrNull?.let { matchWord ->
+				rhs.sentenceStackOrNull
+					?.first { it.word == matchWord }
+					?.let { caseSentence ->
+						scope
+							.plus(value(matchWord()).is_(matchedValue).definition)
+							.evaluate(caseSentence.rhsValue)
+					}
+			}
 		}
 	}
 
-fun Evaluated.applyDefinitionList(field: Field): Evaluated? =
+fun Evaluated.applyDefinitionList(field: Sentence): Evaluated? =
 	field.matchPrefix(_list) { rhs ->
 		rhs.match(_definition) {
 			set(
@@ -150,11 +158,11 @@ fun Evaluated.applyDefinitionList(field: Field): Evaluated? =
 					.map { patternValueOrNull }
 					.filterNulls
 					.valueField
-					.value)
+					.rhsValue)
 		}
 	}
 
-fun Evaluated.applyTest(field: Field): Evaluated? =
+fun Evaluated.applyTest(field: Sentence): Evaluated? =
 	value.matchEmpty {
 		field.matchPrefix(_test) { rhs ->
 			null

@@ -1,9 +1,15 @@
 package leo16
 
+import leo13.Stack
+import leo13.StackLink
+import leo13.asStack
+import leo13.linkTo
+import leo13.onlyStack
+import leo13.stack
 import leo16.names.*
 
 sealed class Definition {
-	override fun toString() = asField.toString()
+	override fun toString() = asSentence.toString()
 }
 
 data class ConstantDefinition(val constant: Constant) : Definition() {
@@ -26,7 +32,7 @@ data class RepeatDefinition(val repeat: Repeat) : Definition() {
 	override fun toString() = super.toString()
 }
 
-val Definition.asField: Field
+val Definition.asSentence: Sentence
 	get() =
 		_definition(asValue)
 
@@ -37,7 +43,7 @@ val Definition.asValue: Value
 			is FunctionDefinition -> function.asValue
 			is MacroDefinition -> macro.asValue
 			is FunctionNativeDefinition -> function.asValue
-			is RepeatDefinition -> repeat.asField.value
+			is RepeatDefinition -> repeat.asSentence.rhsValue
 		}
 
 val Constant.definition: Definition get() = ConstantDefinition(this)
@@ -68,10 +74,24 @@ val Definition.patternValueOrNull: Value?
 fun Value.does(apply: Value.() -> Value) =
 	fn(apply).definition
 
-val Field.parameterDefinition: Definition
+val Sentence.parameterDefinition: Definition
 	get() =
-		selectWord().value.is_(value).definition
+		value(word()).is_(onlyValue).definition
 
 val Value.thingParameterDefinition: Definition
 	get() =
-		_thing().value.is_(this).definition
+		value(_thing()).is_(this).definition
+
+val Value.parameterDefinitionStack: Stack<Definition>
+	get() =
+		when (this) {
+			EmptyValue -> stack()
+			is LinkValue -> link.parameterDefinitionStackLink.asStack
+			is NativeValue -> value(_native()).is_(this).definition.onlyStack
+			is FunctionValue -> value(_function()).is_(this).definition.onlyStack
+			is LazyValue -> value(_lazy()).is_(this).definition.onlyStack
+		}
+
+val ValueLink.parameterDefinitionStackLink: StackLink<Definition>
+	get() =
+		previousValue.parameterDefinitionStack.linkTo(lastSentence.parameterDefinition)

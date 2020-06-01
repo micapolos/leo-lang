@@ -2,6 +2,7 @@ package leo16.library
 
 import leo15.dsl.*
 import leo16.library_
+import java.math.BigDecimal
 
 fun main() {
 	library_(reflection)
@@ -11,12 +12,36 @@ val reflection = dsl_ {
 	use { native.reflection }
 	export { native.reflection }
 
+	class_.any.is_ { native.any.class_ }
+	method.any.is_ { native.any.method }
+	field.any.is_ { native.any.field }
+	constructor.any.is_ { native.any.constructor }
+
 	use {
-		object_.class_.is_ { "java.lang.Object".text.name.class_ }
-		objects.class_.is_ { "java.util.Objects".text.name.class_ }
-		boolean.object_.class_.is_ { "java.lang.Boolean".text.name.class_ }
-		integer.class_.is_ { "java.lang.Integer".text.name.class_ }
-		big.decimal.class_.is_ { "java.math.BigDecimal".text.name.class_ }
+		object_.class_.is_ {
+			"java.lang.Object".text.name.class_
+			matching { class_.any }
+		}
+
+		objects.class_.is_ {
+			"java.util.Objects".text.name.class_
+			matching { class_.any }
+		}
+
+		boolean.object_.class_.is_ {
+			"java.lang.Boolean".text.name.class_
+			matching { class_.any }
+		}
+
+		integer.class_.is_ {
+			"java.lang.Integer".text.name.class_
+			matching { class_.any }
+		}
+
+		big.decimal.class_.is_ {
+			"java.math.BigDecimal".text.name.class_
+			matching { class_.any }
+		}
 
 		long.big.decimal.method.is_ {
 			big.decimal.class_
@@ -24,6 +49,7 @@ val reflection = dsl_ {
 				name { "valueOf".text }
 				parameter { list { item { long.class_ } } }
 			}
+			matching { method.any }
 		}
 
 		double.big.decimal.method.is_ {
@@ -32,6 +58,7 @@ val reflection = dsl_ {
 				name { "valueOf".text }
 				parameter { list { item { double.class_ } } }
 			}
+			matching { method.any }
 		}
 
 		big.decimal.long.method.is_ {
@@ -40,6 +67,7 @@ val reflection = dsl_ {
 				name { "longValueExact".text }
 				parameter { empty.list }
 			}
+			matching { method.any }
 		}
 
 		big.decimal.int.method.is_ {
@@ -48,6 +76,7 @@ val reflection = dsl_ {
 				name { "intValueExact".text }
 				parameter { empty.list }
 			}
+			matching { method.any }
 		}
 
 		big.decimal.short.method.is_ {
@@ -56,6 +85,7 @@ val reflection = dsl_ {
 				name { "shortValueExact".text }
 				parameter { empty.list }
 			}
+			matching { method.any }
 		}
 
 		big.decimal.byte.method.is_ {
@@ -64,6 +94,7 @@ val reflection = dsl_ {
 				name { "byteValueExact".text }
 				parameter { empty.list }
 			}
+			matching { method.any }
 		}
 
 		big.decimal.float.method.is_ {
@@ -72,6 +103,7 @@ val reflection = dsl_ {
 				name { "floatValue".text }
 				parameter { empty.list }
 			}
+			matching { method.any }
 		}
 
 		big.decimal.double.method.is_ {
@@ -80,6 +112,7 @@ val reflection = dsl_ {
 				name { "doubleValue".text }
 				parameter { empty.list }
 			}
+			matching { method.any }
 		}
 
 		object_.string.method.is_ {
@@ -88,6 +121,7 @@ val reflection = dsl_ {
 				name { "toString".text }
 				parameter { empty.list }
 			}
+			matching { method.any }
 		}
 
 		object_.equals_.method.is_ {
@@ -96,6 +130,7 @@ val reflection = dsl_ {
 				name { "equals".text }
 				parameter { list { item { object_.class_ } } }
 			}
+			matching { method.any }
 		}
 
 		objects.equals_.method.is_ {
@@ -109,14 +144,17 @@ val reflection = dsl_ {
 					}
 				}
 			}
+			matching { method.any }
 		}
 
 		boolean.true_.field.is_ {
 			boolean.object_.class_.field { name { "TRUE".text } }
+			matching { field.any }
 		}
 
 		boolean.false_.field.is_ {
 			boolean.object_.class_.field { name { "FALSE".text } }
+			matching { field.any }
 		}
 
 		native.boolean.method.is_ {
@@ -125,6 +163,7 @@ val reflection = dsl_ {
 				name { "valueOf".text }
 				parameter { list { item { boolean.class_ } } }
 			}
+			matching { method.any }
 		}
 	}
 
@@ -163,6 +202,8 @@ val reflection = dsl_ {
 			parameter { empty.list }
 		}.byte
 	}
+
+	test { 123.number.byte.native.as_ { text }.equals_ { 123.toByte().nativeText } }
 
 	native.any.number.float
 	does {
@@ -209,6 +250,8 @@ val reflection = dsl_ {
 		invoke { parameter { list { item { number.byte.native } } } }
 		number
 	}
+
+	test { 123.number.byte.number.equals_ { 123.number } }
 
 	native.any.float.number
 	does {

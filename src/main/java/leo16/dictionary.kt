@@ -33,26 +33,23 @@ inline fun Dictionary.compile(value: Value): Evaluated =
 inline fun Dictionary.evaluate(value: Value): Value =
 	compile(value).value
 
-val Dictionary.asField: Field
+val Dictionary.asField: Sentence
 	get() =
-		_dictionary(_definition(definitionStack.expandField { asField }))
+		_dictionary(_definition(definitionStack.expandSentence { asSentence }))
 
 fun Dictionary.bind(value: Value): Dictionary =
 	this
 		.plus(value.thingParameterDefinition)
-		.fold(value.fieldStack) { plus(it.parameterDefinition) }
+		.fold(value.parameterDefinitionStack.reverse) { plus(it) }
 
 fun Dictionary.modeOrNull(word: String): Mode? =
-	apply(_mode(_word(word())).value.evaluated)?.value?.modeOrNull
+	apply(value(_mode(_word(word()))).evaluated)?.value?.modeOrNull
 
-fun Dictionary.applyReflect(field: Field): Field =
-	apply(_reflect(field.value).value.evaluated)?.value?.onlyFieldOrNull ?: field
+fun Dictionary.applyReflect(value: Value): Value =
+	apply(value(_reflect(value)).evaluated)?.value ?: value
 
-fun Dictionary.reflect(value: Value): Value =
-	value.traverse { this@reflect.applyReflect(this) }
-
-fun Dictionary.applyRead(field: Field): Field =
-	apply(_read(field.value).value.evaluated)
+fun Dictionary.applyRead(sentence: Sentence): Sentence =
+	apply(value(_read(sentence)).evaluated)
 		?.value
-		?.onlyFieldOrNull
-		?: field.read // TODO: implement list reading as definition, and remove ".read"
+		?.onlySentenceOrNull
+		?: sentence.read // TODO: implement list reading as definition, and remove ".read"

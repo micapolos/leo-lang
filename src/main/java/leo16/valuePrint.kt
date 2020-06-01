@@ -9,60 +9,64 @@ import java.math.BigDecimal
 
 val Value.printed: Value
 	get() =
-		fieldStack.map { printed }.value
-
-val Field.printed: Field
-	get() =
 		null
 			?: textPrintOrNull
 			?: numberPrintOrNull
 			?: stackPrintOrNull
 			?: defaultPrinted
 
-val Field.defaultPrinted: Field
+val Value.defaultPrinted: Value
 	get() =
 		when (this) {
-			is SentenceField -> sentence.printSentence.field
-			is FunctionField -> function.printSentence.field
-			is NativeField -> native.nativeString()
-			is LazyField -> lazy.printSentence.field
+			EmptyValue -> emptyValue
+			is LinkValue -> link.printed
+			is NativeValue -> native.nativeString().onlyValue
+			is FunctionValue -> function.printed.onlyValue
+			is LazyValue -> lazy.printedSentence.onlyValue
 		}
 
-val Sentence.printSentence: Sentence
+val ValueLink.printed: Value
 	get() =
-		word.sentenceTo(value.printed)
+		previousValue.printed.plus(lastSentence.printedSentence)
 
-val Function.printSentence: Sentence
+val Sentence.printedSentence: Sentence
+	get() =
+		word.sentenceTo(rhsValue.printed)
+
+val Function.printed: Sentence
 	get() =
 		_function.sentenceTo(patternValue.plus(_does(compiled.bodyValue)))
 
-val Lazy.printSentence: Sentence
+val Lazy.printedSentence: Sentence
 	get() =
 		_lazy.sentenceTo(compiled.bodyValue.printed)
 
 val Dictionary.printSentence: Sentence
 	get() =
 		_dictionary.sentenceTo(
-			_definition(definitionStack.map { printField.value }.field))
+			_definition(definitionStack.map { printField.onlyValue }.field))
 
-val Definition.printField: Field
+val Definition.printField: Sentence
 	get() =
-		asField
+		asSentence
 
-fun <T> Stack<T>.printField(fn: T.() -> Field): Field =
+fun <T> Stack<T>.printField(fn: T.() -> Sentence): Sentence =
 	map(fn).printField
 
-val Stack<Field>.printField: Field
+val Stack<Sentence>.printField: Sentence
 	get() =
 		_list(value)
 
-val Field.stackPrintOrNull: Field?
+val Value.stackPrintOrNull: Value?
 	get() =
 		stackOrNull?.let { stack ->
-			_list(if (stack.isEmpty) value(_empty()) else stack.map { _item(this) }.value)
+			_list(
+				if (stack.isEmpty) value(_empty())
+				else stack.map { _item.invoke(this) }.value
+			).onlyValue
 		}
 
-val Field.textPrintOrNull: Field?
+val Value.textPrintOrNull: Value?
 	get() =
 		matchPrefix(_text) { rhs ->
 			rhs.matchNative { native ->
@@ -72,7 +76,7 @@ val Field.textPrintOrNull: Field?
 			}
 		}
 
-val Field.numberPrintOrNull: Field?
+val Value.numberPrintOrNull: Value?
 	get() =
 		matchPrefix(_number) { rhs ->
 			rhs.matchNative { native ->
