@@ -43,17 +43,17 @@ class ValueTermTest {
 	fun alternative() {
 		value(_x(_anything()), _or(_y(_anything())))
 			.termOrNull(value(_x(_zero())))
-			.assertEqualTo(choiceTerm(2, 1, idTerm.plus(value(_zero()).valueTerm)))
+			.assertEqualTo(choiceTerm(2, 1, value(_zero()).valueTerm))
 
 		value(_x(_anything()), _or(_y(_anything())))
 			.termOrNull(value(_y(_zero())))
-			.assertEqualTo(choiceTerm(2, 0, idTerm.plus(value(_zero()).valueTerm)))
+			.assertEqualTo(choiceTerm(2, 0, value(_zero()).valueTerm))
 	}
 
 	@Test
 	fun quote() {
 		value(_quote(_anything()))
 			.termOrNull(value(_anything()))
-			.assertEqualTo(idTerm.plus(idTerm))
+			.assertEqualTo(idTerm)
 	}
 }

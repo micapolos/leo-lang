@@ -11,6 +11,6 @@ class TypedTest {
 	fun of() {
 		value(_zero())
 			.of(value(_zero()).type)
-			.assertEqualTo(idTerm.plus(idTerm).of(value(_zero()).type))
+			.assertEqualTo(idTerm.of(value(_zero()).type))
 	}
 }

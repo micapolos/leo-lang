@@ -68,7 +68,8 @@ fun ValueLink.alternativeTermOrNull(value: Value): Term? =
 fun ValueLink.defaultTermOrNull(value: Value): Term? =
 	value.linkOrNull?.let { valueLink ->
 		lastSentence.termOrNull(valueLink.lastSentence)?.let { lastSentenceTerm ->
-			previousValue.termOrNull(valueLink.previousValue)?.let { previousValueTerm ->
+			if (previousValue.isEmpty) lastSentenceTerm
+			else previousValue.termOrNull(valueLink.previousValue)?.let { previousValueTerm ->
 				previousValueTerm.plus(lastSentenceTerm)
 			}
 		}

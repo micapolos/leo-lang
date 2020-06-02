@@ -57,7 +57,8 @@ fun ValueLink.alternativeValueOrNull(term: Term): Value? =
 	}
 
 fun ValueLink.defaultValue(term: Term): Value =
-	term.unsafeUnpair.let { termPair ->
+	if (previousValue.isEmpty) leo16.value(lastSentence.field(term))
+	else term.unsafeUnpair.let { termPair ->
 		previousValue.value(termPair.first).plus(lastSentence.field(termPair.second))
 	}
 
