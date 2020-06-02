@@ -97,6 +97,11 @@ tailrec fun <V> V.iterate(count: Int, fn: V.() -> V): V =
 	if (count == 0) this
 	else fn().iterate(count.dec(), fn)
 
+fun <V> V.iterateIndexed(count: Int, fn: IndexedValue<V>.() -> V): V =
+	0.indexed(this).iterate(count) {
+		index.inc().indexed(fn())
+	}.value
+
 inline fun <V> V.runIf(boolean: Boolean, fn: V.() -> V): V =
 	if (boolean) fn()
 	else this
