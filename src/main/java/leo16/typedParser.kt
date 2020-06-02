@@ -54,6 +54,18 @@ fun TypedParser.plus(scriptLine: ScriptLine): TypedParser =
 fun TypedParser.plus(scriptField: ScriptField): TypedParser =
 	begin(scriptField.string).plus(scriptField.rhs).end
 
-val TypedParser.end: TypedParser get() = TODO()
+val TypedParser.end: TypedParser
+	get() =
+		parentOrNull!!.end(evaluator)
+
+fun TypedParserParent.end(evaluator: TypedEvaluator): TypedParser =
+	parser.plus(word, evaluator)
+
+fun TypedParser.plus(word: String, evaluator: TypedEvaluator): TypedParser =
+	set(evaluator.plus(word, evaluator))
+
+val TypedParser.resolve
+	get() =
+		set(evaluator.resolve)
 
 fun TypedParser.set(evaluator: TypedEvaluator) = copy(evaluator = evaluator)

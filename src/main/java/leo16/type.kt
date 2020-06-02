@@ -8,3 +8,4 @@ val Value.type get() = Type(this)
 val emptyType = emptyValue.type
 val nativeType = value(_any(_native())).type
 val Type.isEmpty get() = value.isEmpty
+val Type.normalize get() = value.normalize.type

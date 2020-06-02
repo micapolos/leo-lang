@@ -97,3 +97,13 @@ val Value.force: Value
 val Value.forceOrNull: Value?
 	get() =
 		lazyOrNull?.evaluate
+
+val ValueLink.normalize
+	get() =
+		lastSentence.matchWord { word ->
+			previousValue.make(word)
+		}
+
+val Value.normalize
+	get() =
+		linkOrNull?.normalize ?: this

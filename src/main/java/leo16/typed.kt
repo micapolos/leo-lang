@@ -4,6 +4,7 @@ import leo.base.notNullIf
 import leo15.lambda.Term
 import leo15.lambda.idTerm
 import leo15.lambda.valueTerm
+import leo15.plus
 import leo16.names.*
 
 data class Typed(val term: Term, val type: Type)
@@ -24,3 +25,16 @@ val Any?.nativeTyped: Typed
 
 fun Typed.plusNativeOrNull(native: Any?): Typed? =
 	notNullIf(type.isEmpty) { native.nativeTyped }
+
+fun Typed.plus(word: String, typed: Typed): Typed =
+	term.plus(typed.term) of type.value.plus(word.sentenceTo(typed.value)).type
+
+val Typed.normalize
+	get() =
+		term of type.normalize
+
+val Typed.thingOrNull: Typed?
+	get() =
+		type.value.force.onlySentenceOrNull?.let { sentence ->
+			term of value(sentence).type
+		}
