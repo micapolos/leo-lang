@@ -46,6 +46,7 @@ fun Value.matchesDefault(value: Value): Boolean =
 		is NativeValue -> this == value
 		is FunctionValue -> this == value
 		is LazyValue -> this == value
+		is FuncValue -> TODO()
 	}
 
 fun ValueLink.matches(value: Value): Boolean =

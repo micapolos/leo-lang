@@ -51,6 +51,7 @@ fun Value.defaultTermOrNull(value: Value): Term? =
 		is NativeValue -> notNullIf(this == value) { idTerm }
 		is FunctionValue -> notNullIf(this == value) { idTerm }
 		is LazyValue -> notNullIf(this == value) { idTerm }
+		is FuncValue -> TODO()
 	}
 
 fun ValueLink.termOrNull(value: Value): Term? =

@@ -27,6 +27,7 @@ val Value.defaultScript: Script
 			is FunctionValue -> function.script
 			is LazyValue -> lazy.script
 			is NativeValue -> native.nativeScript
+			is FuncValue -> TODO()
 		}
 
 val Value.textScriptOrNull: Script?

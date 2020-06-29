@@ -23,6 +23,7 @@ val Value.defaultPrinted: Value
 			is NativeValue -> native.nativeString().onlyValue
 			is FunctionValue -> function.printed.onlyValue
 			is LazyValue -> lazy.printedSentence.onlyValue
+			is FuncValue -> TODO()
 		}
 
 val ValueLink.printed: Value

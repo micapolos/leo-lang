@@ -90,6 +90,7 @@ val Value.parameterDefinitionStack: Stack<Definition>
 			is NativeValue -> value(_native()).is_(this).definition.onlyStack
 			is FunctionValue -> value(_function()).is_(this).definition.onlyStack
 			is LazyValue -> value(_lazy()).is_(this).definition.onlyStack
+			is FuncValue -> TODO()
 		}
 
 val ValueLink.parameterDefinitionStackLink: StackLink<Definition>

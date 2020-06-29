@@ -23,6 +23,9 @@ val Value.thingOrNull: Value?
 infix fun Value.getOrNull(word: String): Value? =
 	thingOrNull?.accessOrNull(word)
 
+operator fun Value.get(word: String): Value =
+	getOrNull(word)!!
+
 infix fun Value.accessOrNull(word: String): Value? =
 	when (this) {
 		EmptyValue -> null
@@ -30,6 +33,7 @@ infix fun Value.accessOrNull(word: String): Value? =
 		is NativeValue -> notNullIf(word == _native)
 		is FunctionValue -> notNullIf(word == _function)
 		is LazyValue -> notNullIf(word == _lazy)
+		is FuncValue -> notNullIf(word == _function)
 	}
 
 infix fun ValueLink.accessOrNull(word: String): Value? =
@@ -51,6 +55,7 @@ val Value.matchWordOrNull: String?
 			is NativeValue -> _native
 			is FunctionValue -> _function
 			is LazyValue -> _lazy
+			is FuncValue -> _function
 		}
 
 val Value.loadedDictionaryOrNull: Dictionary?

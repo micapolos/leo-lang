@@ -8,6 +8,7 @@ import leo.base.the
 import leo13.Stack
 import leo13.array
 import leo13.push
+import leo13.stack
 import leo14.untyped.dottedColorsParameter
 import leo14.untyped.leoString
 import leo16.names.*
@@ -27,6 +28,10 @@ data class NativeValue(val native: Any?) : Value() {
 }
 
 data class FunctionValue(val function: Function) : Value() {
+	override fun toString() = super.toString()
+}
+
+data class FuncValue(val func: Func) : Value() {
 	override fun toString() = super.toString()
 }
 
@@ -74,11 +79,12 @@ val Value.asSentence get() = _value(this)
 val Value.sentenceStackOrNull: Stack<Sentence>?
 	get() =
 		when (this) {
-			EmptyValue -> leo13.stack()
+			EmptyValue -> stack()
 			is LinkValue -> link.previousValue.sentenceStackOrNull?.push(link.lastSentence)
 			is NativeValue -> null
 			is FunctionValue -> null
 			is LazyValue -> null
+			is FuncValue -> null
 		}
 
 val Stack<Sentence>.value: Value

@@ -10,7 +10,6 @@ import leo14.untyped.dottedColorsParameter
 import leo14.untyped.leoString
 import leo14.untyped.scriptLine
 import leo16.names.*
-import leo16.nativeString
 
 sealed class Term<out T> {
 	override fun toString() = dottedColorsParameter.runWith(false) { script.leoString }
