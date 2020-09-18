@@ -3,6 +3,7 @@ package vm3
 import leo.base.assertEqualTo
 import leo.base.assertNotNull
 import vm3.dsl.data
+import vm3.dsl.f32
 import vm3.dsl.fn
 import vm3.dsl.i32
 import vm3.dsl.inc
@@ -27,6 +28,13 @@ class ExecutorTest {
 	fun i32() {
 		i32.fn { inc + inc.inc }.executor.run {
 			execute(10.data).assertEqualTo(23.data)
+		}
+	}
+
+	@Test
+	fun f32() {
+		f32.fn { this + this }.executor.run {
+			execute(12.3f.data).assertEqualTo(24.6f.data)
 		}
 	}
 }

@@ -15,7 +15,7 @@ fun Executor.execute(data: Data): Data {
 
 fun executor(fn: Fn): Executor {
 	val compiled = compile(fn)
-	return Executor(Vm(ByteArray(compiled.dataSize), compiled.code), fn.input, fn.output.type(fn.input))
+	return Executor(Vm(ByteArray(compiled.dataSize), compiled.code), fn.input, compiled.outputType)
 }
 
 val Fn.executor get() = executor(this)
