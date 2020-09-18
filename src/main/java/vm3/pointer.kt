@@ -1,5 +1,7 @@
 package vm3
 
+import leo.base.notNullIf
+
 data class Pointer(val byteArray: ByteArray, val index: Int, val layout: Layout)
 
 val Pointer.boolean: Boolean
@@ -25,10 +27,13 @@ val Pointer.float: Float
 
 operator fun Pointer.get(index: Int): Pointer =
 	when (layout.body) {
-		is Layout.Body.Array -> Pointer(
-			byteArray,
-			index + index * layout.body.itemLayout.size,
-			layout.body.itemLayout)
+		is Layout.Body.Array ->
+			notNullIf(index >= 0 && index < layout.body.itemCount) {
+				Pointer(
+					byteArray,
+					index + index * layout.body.itemLayout.size,
+					layout.body.itemLayout)
+			}
 		else -> null
 	} ?: error("$this.get($index)")
 
