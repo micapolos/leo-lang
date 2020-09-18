@@ -3,21 +3,21 @@ package vm3
 import leo.base.assertEqualTo
 import leo.base.assertNotNull
 import vm3.dsl.data
+import vm3.dsl.fn
 import vm3.dsl.i32
-import vm3.dsl.input
-import vm3.dsl.intInc
-import vm3.dsl.intPlus
+import vm3.dsl.inc
+import vm3.dsl.plus
 import kotlin.test.Test
 
 class ExecutorTest {
 	@Test
 	fun compile() {
-		executor(i32, input).assertNotNull
+		i32.fn { this }.executor.assertNotNull
 	}
 
 	@Test
 	fun bypass() {
-		executor(i32, input).run {
+		i32.fn { this }.executor.run {
 			execute(123.data).assertEqualTo(123.data)
 			execute(65536.data).assertEqualTo(65536.data)
 		}
@@ -25,7 +25,7 @@ class ExecutorTest {
 
 	@Test
 	fun i32() {
-		executor(i32, input.intInc.intPlus(input.intInc.intInc)).run {
+		i32.fn { inc + inc.inc }.executor.run {
 			execute(10.data).assertEqualTo(23.data)
 		}
 	}

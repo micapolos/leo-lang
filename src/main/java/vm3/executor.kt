@@ -13,7 +13,9 @@ fun Executor.execute(data: Data): Data {
 	return vm.data.data(vm.data.size - outputType.size, outputType)
 }
 
-fun executor(inputType: Type, outputValue: Value): Executor {
-	val compiled = compile(inputType, outputValue)
-	return Executor(Vm(ByteArray(compiled.dataSize), compiled.code), inputType, outputValue.type(inputType))
+fun executor(fn: Fn): Executor {
+	val compiled = compile(fn)
+	return Executor(Vm(ByteArray(compiled.dataSize), compiled.code), fn.input, fn.output.type(fn.input))
 }
+
+val Fn.executor get() = executor(this)
