@@ -1,6 +1,5 @@
 package vm3
 
-import leo.base.appendParenthesized
 import leo.base.appendSquareParenthesized
 import leo.base.appendableString
 import java.io.InputStream
@@ -15,6 +14,9 @@ val Int.hexString get() = appendableString { it.append(this) }
 fun Appendable.append(int: Int) =
 	append("0x").append(int.toString(16).padStart(8, '0'))
 
+fun Appendable.appendPlain(int: Int) =
+	append("$int")
+
 fun Appendable.append(byte: Byte) =
 	append("0x").append(byte.toString(16).padStart(2, '0'))
 
@@ -28,8 +30,10 @@ fun Appendable.append(op: Op) =
 		is Op.JumpIf -> append("if ").appendMem(op.cond).append(" jump ").append(op.addr)
 		is Op.Call -> append("call ").append(op.addr).append(" ret ").append(op.retAddr)
 
-		is Op.Set -> appendAssign({ appendMem(op.dst) }, { append(op.lhs) })
-		is Op.Copy -> appendAssign({ appendMem(op.dst) }, { appendMem(op.lhs) })
+		is Op.SetConst -> appendAssign({ appendMem(op.dst) }, { append(op.value) })
+		is Op.Set -> appendAssign({ appendMem(op.dst) }, { appendMem(op.lhs) })
+		is Op.SetOffset -> appendAssign({ appendMem(op.dst) }, { appendMemOffset(op.lhs, op.offset) })
+		is Op.SetOffsetTimes -> appendAssign({ appendMem(op.dst) }, { appendMemOffsetTimes(op.lhs, op.offset, op.size) })
 
 		is Op.I32Inc -> appendAssignOp(op.dst, op.lhs, "i32.inc")
 		is Op.I32Dec -> appendAssignOp(op.dst, op.lhs, "i32.dec")
@@ -50,6 +54,12 @@ fun Appendable.appendOps(ops: List<Op>): Appendable =
 
 fun Appendable.appendMem(index: Int): Appendable =
 	appendSquareParenthesized { append(index) }
+
+fun Appendable.appendMemOffset(index: Int, offset: Int): Appendable =
+	appendSquareParenthesized { append(index).append(" + ").appendPlain(offset) }
+
+fun Appendable.appendMemOffsetTimes(index: Int, offset: Int, size: Int): Appendable =
+	appendSquareParenthesized { append(index).append(" + ").appendMem(offset).append(" * ").appendPlain(size) }
 
 fun Appendable.appendInfix(appendLhs: Appender, op: String, appendRhs: Appender): Appendable =
 	appendLhs().append(" ").append(op).append(" ").appendRhs()

@@ -1,5 +1,8 @@
 package vm3
 
+import vm3.dsl.layout.offset
+import vm3.dsl.type.get
+import vm3.dsl.type.item
 import java.io.ByteArrayOutputStream
 
 data class Compiler(
@@ -39,8 +42,8 @@ fun Compiler.compileOffset(value: Value): Int =
 		is Value.Array -> TODO()
 		is Value.Struct -> TODO()
 
-		is Value.ArrayAt -> TODO()
-		is Value.StructAt -> TODO()
+		is Value.ArrayAt -> add(value)
+		is Value.StructAt -> add(value)
 
 		is Value.Inc ->
 			when (type(value)) {
@@ -83,6 +86,29 @@ fun Compiler.addOp(op: Byte, type: Type, lhs: Value): Int =
 		}
 	}
 
+fun Compiler.add(arrayAt: Value.ArrayAt): Int =
+	offset(arrayAt.lhs).let { lhs ->
+		offset(arrayAt.index).let { index ->
+			dataOutputStream.writeHole(4).also { dst ->
+				codeOutputStream.writeByte(0x0B)
+				codeOutputStream.writeInt(dst)
+				codeOutputStream.writeInt(lhs)
+				codeOutputStream.writeInt(index)
+				codeOutputStream.writeInt(layout(type(arrayAt)).size)
+			}
+		}
+	}
+
+fun Compiler.add(structAt: Value.StructAt): Int =
+	offset(structAt.lhs).let { lhs ->
+		dataOutputStream.writeHole(4).also { dst ->
+			codeOutputStream.writeByte(0x0A)
+			codeOutputStream.writeInt(dst)
+			codeOutputStream.writeInt(lhs)
+			codeOutputStream.writeInt(layout(type(structAt.lhs)).offset(structAt.name))
+		}
+	}
+
 fun Compiler.addOp(op: Byte, type: Type, lhs: Value, rhs: Value): Int =
 	offset(lhs).let { lhs ->
 		offset(rhs).let { rhs ->
@@ -106,8 +132,8 @@ fun Compiler.compileType(value: Value): Type =
 		is Value.F32 -> Type.F32
 		is Value.Struct -> Type.Struct(value.fields.map { Type.Struct.Field(it.name, type(it.value)) })
 		is Value.Array -> Type.Array(type(value.values[0]), value.values.size)
-		is Value.ArrayAt -> TODO()
-		is Value.StructAt -> TODO()
+		is Value.ArrayAt -> type(value.lhs).item
+		is Value.StructAt -> type(value.lhs)[value.name]
 		is Value.Inc ->
 			when (type(value.lhs)) {
 				Type.I32 -> Type.I32

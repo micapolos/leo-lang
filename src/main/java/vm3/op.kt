@@ -13,8 +13,10 @@ sealed class Op {
 	data class JumpIf(val cond: Int, val addr: Int) : Op()
 	data class Call(val addr: Int, val retAddr: Int) : Op()
 
+	data class SetConst(val dst: Int, val value: Int) : Op()
 	data class Set(val dst: Int, val lhs: Int) : Op()
-	data class Copy(val dst: Int, val lhs: Int) : Op()
+	data class SetOffset(val dst: Int, val lhs: Int, val offset: Int) : Op()
+	data class SetOffsetTimes(val dst: Int, val lhs: Int, val offset: Int, val size: Int) : Op()
 
 	data class I32Inc(val dst: Int, val lhs: Int) : Op()
 	data class I32Dec(val dst: Int, val lhs: Int) : Op()
@@ -43,8 +45,10 @@ val Op.argCount: Int
 			is Op.Jump -> 1
 			is Op.JumpIf -> 2
 			is Op.Call -> 2
+			is Op.SetConst -> 2
 			is Op.Set -> 2
-			is Op.Copy -> 2
+			is Op.SetOffset -> 3
+			is Op.SetOffsetTimes -> 4
 			is Op.I32Inc -> 2
 			is Op.I32Dec -> 2
 			is Op.I32Plus -> 3
@@ -66,8 +70,10 @@ fun OutputStream.write(op: Op) {
 		is Op.JumpIf -> writeOp(0x5, op.cond, op.addr)
 		is Op.Call -> writeOp(0x5, op.addr, op.retAddr)
 
-		is Op.Set -> writeOp(0x08, op.dst, op.lhs)
-		is Op.Copy -> writeOp(0x09, op.dst, op.lhs)
+		is Op.SetConst -> writeOp(0x08, op.dst, op.value)
+		is Op.Set -> writeOp(0x09, op.dst, op.lhs)
+		is Op.SetOffset -> writeOp(0x0A, op.dst, op.lhs, op.offset)
+		is Op.SetOffsetTimes -> writeOp(0x0B, op.dst, op.lhs, op.offset, op.size)
 
 		is Op.I32Inc -> writeOp(0x10, op.dst, op.lhs)
 		is Op.I32Dec -> writeOp(0x11, op.dst, op.lhs)
@@ -101,6 +107,14 @@ fun OutputStream.writeOp(op: Int, dst: Int, lhs: Int, rhs: Int) {
 	writeInt(rhs)
 }
 
+fun OutputStream.writeOp(op: Int, dst: Int, lhs: Int, rhs: Int, x: Int) {
+	writeOp(op)
+	writeInt(dst)
+	writeInt(lhs)
+	writeInt(rhs)
+	writeInt(x)
+}
+
 fun InputStream.readOpInt(): Int? =
 	read().orNullIf { this == -1 }
 
@@ -115,8 +129,10 @@ fun InputStream.readOp(): Op? =
 			0x04 -> Op.JumpIf(readInt(), readInt())
 			0x05 -> Op.Call(readInt(), readInt())
 
-			0x08 -> Op.Set(readInt(), readInt())
-			0x09 -> Op.Copy(readInt(), readInt())
+			0x08 -> Op.SetConst(readInt(), readInt())
+			0x09 -> Op.Set(readInt(), readInt())
+			0x0A -> Op.SetOffset(readInt(), readInt(), readInt())
+			0x0B -> Op.SetOffsetTimes(readInt(), readInt(), readInt(), readInt())
 
 			0x10 -> Op.I32Inc(readInt(), readInt())
 			0x11 -> Op.I32Dec(readInt(), readInt())

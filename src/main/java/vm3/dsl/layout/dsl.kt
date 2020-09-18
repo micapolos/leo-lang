@@ -23,6 +23,16 @@ fun struct(vararg fields: Pair<String, Layout>): Layout =
 				}
 			}))
 
+val Layout.itemSize: Int
+	get() =
+		(body as Layout.Body.Array).itemLayout.size
+
+fun Layout.offset(index: Int): Int =
+	(body as Layout.Body.Array).offset(index)
+
+fun Layout.offset(name: String): Int =
+	(body as Layout.Body.Struct).offset(name)
+
 fun Layout.Body.Array.offset(index: Int): Int =
 	checkIndex(itemCount, index).run {
 		itemLayout.size * index

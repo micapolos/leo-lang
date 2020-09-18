@@ -21,6 +21,8 @@ fun Vm.run() {
 
 			0x08 -> dataSet(fetch32(), fetch32())
 			0x09 -> copy(fetch32(), fetch32())
+			0x0A -> offset(fetch32(), fetch32(), fetch32())
+			0x0B -> index(fetch32(), fetch32(), fetch32(), fetch32())
 
 			0x10 -> intOp1(Int::inc)
 			0x11 -> intOp1(Int::dec)
@@ -88,6 +90,12 @@ inline fun Vm.dataSet(index: Int, int: Int) =
 
 inline fun Vm.copy(index: Int, addr: Int) =
 	dataSet(index, dataInt(addr))
+
+inline fun Vm.offset(dst: Int, src: Int, offset: Int) =
+	dataSet(dst, dataInt(src + offset))
+
+inline fun Vm.index(dst: Int, src: Int, index: Int, size: Int) =
+	dataSet(dst, dataInt(src) + dataInt(index) * size)
 
 inline fun Vm.advance8() =
 	also { pc += 1 }
