@@ -14,4 +14,4 @@ val Compiled.disassemble: String
 		linesString(
 			"dataSize: ${dataSize.hexString}",
 			"--- disassembly ---",
-			code.assemblerString)
+			code.disassemble)

@@ -6,7 +6,8 @@ data class Compiler(
 	val dataOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
 	val opOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
 	val valueIndices: MutableMap<Value, Int> = HashMap(),
-	val valueTypes: MutableMap<Value, Type> = HashMap()
+	val valueTypes: MutableMap<Value, Type> = HashMap(),
+	val typeLayouts: MutableMap<Type, Layout> = HashMap()
 )
 
 val Fn.compiled: Compiled get() = compile(this)
@@ -42,10 +43,11 @@ fun Compiler.add(value: Value): Int =
 		is Value.I32 -> addConst(value.int)
 		is Value.F32 -> addConst(value.float.int)
 
-		is Value.Struct -> TODO()
 		is Value.Array -> TODO()
-		is Value.StructAt -> TODO()
+		is Value.Struct -> TODO()
+
 		is Value.ArrayAt -> TODO()
+		is Value.StructAt -> TODO()
 
 		is Value.Inc ->
 			when (type(value)) {
@@ -159,3 +161,36 @@ fun Compiler.compileType(value: Value): Type =
 				else -> null
 			}
 	} ?: error("type($value)")
+
+fun Compiler.layout(type: Type): Layout {
+	val layout = typeLayouts.get(type)
+	return if (layout != null) layout
+	else {
+		val layout = compileLayout(type)
+		typeLayouts[type] = layout
+		layout
+	}
+}
+
+fun Compiler.compileLayout(type: Type): Layout =
+	when (type) {
+		Type.Bool -> Layout(4, Layout.Body.Bool)
+		Type.I32 -> Layout(4, Layout.Body.I32)
+		Type.F32 -> Layout(4, Layout.Body.F32)
+		is Type.Array -> layout(type.itemType).let { itemLayout ->
+			Layout(type.itemCount * itemLayout.size, Layout.Body.Array(itemLayout, type.itemCount))
+		}
+		is Type.Struct -> type.fields
+			.map { layout(it.valueType) }
+			.let { fieldLayouts ->
+				var offset = 0
+				val layoutFields = fieldLayouts.map { fieldLayout ->
+					Layout.Body.Struct.Field(offset, fieldLayout).also { offset += fieldLayout.size }
+				}
+				Layout(
+					layoutFields.sumBy { it.layout.size },
+					Layout.Body.Struct(
+						hashMapOf(*type.fields.map { it.name }.zip(type.fields.indices).toTypedArray()),
+						layoutFields))
+			}
+	}

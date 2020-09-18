@@ -90,7 +90,7 @@ fun Appendable.disassemble(address: Int, inputStream: InputStream): Appendable {
 	}
 }
 
-val ByteArray.assemblerString: String
+val ByteArray.disassemble: String
 	get() =
 		appendableString { appendable ->
 			appendable.disassemble(0, inputStream())

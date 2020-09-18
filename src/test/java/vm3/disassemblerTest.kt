@@ -23,7 +23,7 @@ class DisassemblerTest {
 			0x34, 0x10, 0, 0, 0, 0x20, 0, 0, 0, 0x30, 0, 0, 0,
 			0x35, 0x10, 0, 0, 0, 0x20, 0, 0, 0, 0x30, 0, 0, 0,
 			0x36, 0x10, 0, 0, 0, 0x20, 0, 0, 0, 0x30, 0, 0, 0)
-			.assemblerString
+			.disassemble
 			.assertEqualTo("""
 					0x00000000: exit
 					0x00000001: nop

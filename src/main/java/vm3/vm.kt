@@ -11,11 +11,8 @@ class Vm(
 fun Vm.run() {
 	while (true) {
 		when (val op = fetchOp()) {
-			0x00 -> {
-				return
-			}
-			0x01 -> {
-			}
+			0x00 -> return
+			0x01 -> Unit
 			0x02 -> syscall()
 
 			0x03 -> jump(fetch32())

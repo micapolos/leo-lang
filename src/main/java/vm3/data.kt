@@ -54,7 +54,7 @@ fun ByteArray.data(index: Int, type: Type): Data =
 		Type.Bool -> Data.Bool(int(index).boolean)
 		Type.I32 -> Data.I32(int(index))
 		Type.F32 -> Data.F32(int(index).float)
-		is Type.Array -> arrayData(index, type.type, type.size)
+		is Type.Array -> arrayData(index, type.itemType, type.itemCount)
 		is Type.Struct -> structData(index, type.fields)
 	}
 
@@ -72,7 +72,7 @@ fun ByteArray.structData(index: Int, fields: List<Type.Struct.Field>): Data {
 		fields.map { field ->
 			Data.Struct.Field(
 				field.name,
-				data(index, field.value))
-				.also { index += field.value.size }
+				data(index, field.valueType))
+				.also { index += field.valueType.size }
 		})
 }
