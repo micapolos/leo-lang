@@ -1,9 +1,12 @@
 package vm3
 
 import leo.base.assertEqualTo
+import vm3.dsl.type.f32
 import vm3.dsl.type.i32
 import vm3.dsl.value.dec
+import vm3.dsl.value.f32
 import vm3.dsl.value.fn
+import vm3.dsl.value.i32
 import vm3.dsl.value.inc
 import vm3.dsl.value.plus
 import kotlin.test.Test
@@ -22,5 +25,18 @@ class CompilerTest {
 0x00000012: [0x0000000c] <- [0x00000004] i32.plus [0x00000008]
 0x0000001f: exit
 """)
+	}
+
+	@Test
+	fun type() {
+		Compiler().run {
+			type(10.i32).assertEqualTo(i32)
+			type(10f.f32).assertEqualTo(f32)
+
+			type(10.i32.inc).assertEqualTo(i32)
+			type(10.i32.dec).assertEqualTo(i32)
+			type(10.i32.plus(20.i32)).assertEqualTo(i32)
+			type(10f.f32.plus(20f.f32)).assertEqualTo(f32)
+		}
 	}
 }
