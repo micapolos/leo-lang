@@ -92,7 +92,7 @@ inline fun Vm.copy(index: Int, addr: Int) =
 	dataSet(index, dataInt(addr))
 
 inline fun Vm.offset(dst: Int, src: Int, offset: Int) =
-	dataSet(dst, dataInt(src + offset))
+	dataSet(dst, dataInt(src) + offset)
 
 inline fun Vm.index(dst: Int, src: Int, index: Int, size: Int) =
 	dataSet(dst, dataInt(src) + dataInt(index) * size)
