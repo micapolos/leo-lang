@@ -1,6 +1,7 @@
 package vm3.dsl.layout
 
 import vm3.Layout
+import vm3.checkIndex
 
 val bool: Layout = Layout(4, Layout.Body.Bool)
 val i32: Layout = Layout(4, Layout.Body.I32)
@@ -21,3 +22,11 @@ fun struct(vararg fields: Pair<String, Layout>): Layout =
 					Layout.Body.Struct.Field(offset, fieldLayout).also { offset += fieldLayout.size }
 				}
 			}))
+
+fun Layout.Body.Array.offset(index: Int): Int =
+	checkIndex(itemCount, index).run {
+		itemLayout.size * index
+	}
+
+fun Layout.Body.Struct.offset(name: String): Int =
+	fields[fieldIndices[name]!!].offset
