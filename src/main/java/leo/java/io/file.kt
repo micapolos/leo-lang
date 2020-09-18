@@ -21,3 +21,13 @@ fun <R> File.useCharSeq(fn: Seq<Char>.() -> R): R {
 		return fn(reader.charSeq)
 	}
 }
+
+fun <R> String.inTempFile(extension: String, fn: (File) -> R): R {
+	val tempFile = File.createTempFile("tmp", ".$extension")
+	try {
+		tempFile.writeText(this)
+		return fn(tempFile)
+	} finally {
+		tempFile.delete()
+	}
+}

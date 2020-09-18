@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto/auto.iml" filepath="$PROJECT_DIR$/.idea/modules/auto/auto.iml" group="leo/auto" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto-lambda/auto-lambda.iml" filepath="$PROJECT_DIR$/.idea/modules/auto-lambda/auto-lambda.iml" group="leo/auto-lambda" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/base/base.iml" filepath="$PROJECT_DIR$/.idea/modules/base/base.iml" group="leo/base" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo.iml" filepath="$PROJECT_DIR$/.idea/modules/leo.iml" group="leo" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo_main.iml" filepath="$PROJECT_DIR$/.idea/modules/leo_main.iml" group="leo" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo_test.iml" filepath="$PROJECT_DIR$/.idea/modules/leo_test.iml" group="leo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo.iml" filepath="$PROJECT_DIR$/.idea/modules/leo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto/leo.auto.iml" filepath="$PROJECT_DIR$/.idea/modules/auto/leo.auto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto-lambda/leo.auto-lambda.iml" filepath="$PROJECT_DIR$/.idea/modules/auto-lambda/leo.auto-lambda.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/base/leo.base.iml" filepath="$PROJECT_DIR$/.idea/modules/base/leo.base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo.main.iml" filepath="$PROJECT_DIR$/.idea/modules/leo.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leo.test.iml" filepath="$PROJECT_DIR$/.idea/modules/leo.test.iml" />
     </modules>
   </component>
 </project>

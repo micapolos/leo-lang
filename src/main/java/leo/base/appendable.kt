@@ -21,3 +21,6 @@ fun string(fn: Appendable.() -> Unit) {
 
 fun Appendable.appendParenthesized(fn: Appendable.() -> Appendable) =
 	append('(').fn().append(')')
+
+fun Appendable.appendSquareParenthesized(fn: Appendable.() -> Appendable) =
+	append('[').fn().append(']')
