@@ -1,11 +1,11 @@
 package vm3
 
 import leo.base.assertEqualTo
-import vm3.dsl.dec
-import vm3.dsl.fn
-import vm3.dsl.i32
-import vm3.dsl.inc
-import vm3.dsl.plus
+import vm3.dsl.type.i32
+import vm3.dsl.value.dec
+import vm3.dsl.value.fn
+import vm3.dsl.value.inc
+import vm3.dsl.value.plus
 import kotlin.test.Test
 
 class CompilerTest {

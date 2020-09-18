@@ -8,12 +8,11 @@ sealed class Value {
 	data class F32(val float: Float) : Value()
 
 	data class Array(val values: List<Value>) : Value()
-	data class Struct(val fields: List<Field>) : Value() {
-		data class Field(val name: String, val value: Value)
-	}
+	data class ArrayAt(val lhs: Value, val index: Value) : Value()
 
-	data class StructAt(val index: Int) : Value()
-	data class ArrayAt(val index: Value) : Value()
+	data class Struct(val fields: List<Field>) : Value()
+	data class Field(val name: String, val value: Value)
+	data class StructAt(val lhs: Value, val name: String) : Value()
 
 	data class Inc(val lhs: Value) : Value()
 	data class Dec(val lhs: Value) : Value()
