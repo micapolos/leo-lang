@@ -4,8 +4,8 @@ import java.io.ByteArrayOutputStream
 
 data class Compiler(
 	val dataOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
-	val opOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
-	val valueIndices: MutableMap<Value, Int> = HashMap(),
+	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
+	val valueOffsets: MutableMap<Value, Int> = HashMap(),
 	val valueTypes: MutableMap<Value, Type> = HashMap(),
 	val typeLayouts: MutableMap<Type, Layout> = HashMap()
 )
@@ -16,26 +16,19 @@ fun compile(fn: Fn): Compiled {
 	val compiler = Compiler()
 	compiler.valueTypes[Value.Input] = fn.input
 	compiler.dataOutputStream.writeHole(fn.input.size)
-	val outputIndex = compiler.index(fn.output)
-	compiler.opOutputStream.writeOp(0x00)
+	val outputIndex = compiler.offset(fn.output)
+	compiler.codeOutputStream.writeOp(0x00)
 	return Compiled(
-		compiler.opOutputStream.toByteArray(),
+		compiler.codeOutputStream.toByteArray(),
 		compiler.dataOutputStream.size(),
 		compiler.type(fn.output),
 		outputIndex)
 }
 
-fun Compiler.index(value: Value): Int {
-	val index = valueIndices.get(value)
-	return if (index != null) index
-	else {
-		val index = add(value)
-		valueIndices[value] = index
-		index
-	}
-}
+fun Compiler.offset(value: Value): Int =
+	valueOffsets.get(value) { compileOffset(value) }
 
-fun Compiler.add(value: Value): Int =
+fun Compiler.compileOffset(value: Value): Int =
 	when (value) {
 		is Value.Input -> 0
 
@@ -76,41 +69,34 @@ fun Compiler.add(value: Value): Int =
 
 fun Compiler.addConst(lhs: Int): Int =
 	dataOutputStream.writeHole(4).also { dst ->
-		opOutputStream.writeByte(0x08)
-		opOutputStream.writeInt(dst)
-		opOutputStream.writeInt(lhs)
+		codeOutputStream.writeByte(0x08)
+		codeOutputStream.writeInt(dst)
+		codeOutputStream.writeInt(lhs)
 	}
 
 fun Compiler.addOp(op: Byte, type: Type, lhs: Value): Int =
-	index(lhs).let { lhs ->
+	offset(lhs).let { lhs ->
 		dataOutputStream.writeHole(type.size).also { dst ->
-			opOutputStream.writeByte(op)
-			opOutputStream.writeInt(dst)
-			opOutputStream.writeInt(lhs)
+			codeOutputStream.writeByte(op)
+			codeOutputStream.writeInt(dst)
+			codeOutputStream.writeInt(lhs)
 		}
 	}
 
 fun Compiler.addOp(op: Byte, type: Type, lhs: Value, rhs: Value): Int =
-	index(lhs).let { lhs ->
-		index(rhs).let { rhs ->
+	offset(lhs).let { lhs ->
+		offset(rhs).let { rhs ->
 			dataOutputStream.writeHole(type.size).also { dst ->
-				opOutputStream.writeByte(op)
-				opOutputStream.writeInt(dst)
-				opOutputStream.writeInt(lhs)
-				opOutputStream.writeInt(rhs)
+				codeOutputStream.writeByte(op)
+				codeOutputStream.writeInt(dst)
+				codeOutputStream.writeInt(lhs)
+				codeOutputStream.writeInt(rhs)
 			}
 		}
 	}
 
-fun Compiler.type(value: Value): Type {
-	val type = valueTypes.get(value)
-	return if (type != null) type
-	else {
-		val type = compileType(value)
-		valueTypes[value] = type
-		type
-	}
-}
+fun Compiler.type(value: Value): Type =
+	valueTypes.get(value) { compileType(value) }
 
 fun Compiler.compileType(value: Value): Type =
 	when (value) {
@@ -162,15 +148,8 @@ fun Compiler.compileType(value: Value): Type =
 			}
 	} ?: error("type($value)")
 
-fun Compiler.layout(type: Type): Layout {
-	val layout = typeLayouts.get(type)
-	return if (layout != null) layout
-	else {
-		val layout = compileLayout(type)
-		typeLayouts[type] = layout
-		layout
-	}
-}
+fun Compiler.layout(type: Type): Layout =
+	typeLayouts.get(type) { compileLayout(type) }
 
 fun Compiler.compileLayout(type: Type): Layout =
 	when (type) {
