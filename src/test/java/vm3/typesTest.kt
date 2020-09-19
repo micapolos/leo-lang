@@ -13,6 +13,7 @@ import vm3.dsl.value.get
 import vm3.dsl.value.gives
 import vm3.dsl.value.plus
 import vm3.dsl.value.struct
+import vm3.dsl.value.switch
 import vm3.dsl.value.value
 import kotlin.test.Test
 
@@ -35,6 +36,8 @@ class TypesTest {
 			get(i32.gives(argument).give(10.value)).assertEqualTo(i32)
 			get(i32.gives(argument.plus(argument)).give(10.value)).assertEqualTo(i32)
 			get(i32.gives(10f.value).give(10.value)).assertEqualTo(f32)
+
+			get(argument.switch(i32.gives(argument), f32.gives(100.value))).assertEqualTo(i32)
 		}
 	}
 }

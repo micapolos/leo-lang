@@ -6,7 +6,7 @@ sealed class Type {
 	object F32 : Type()
 	data class Array(val itemType: Type, val itemCount: Int) : Type()
 	data class Struct(val fields: List<Field>) : Type()
-	data class Choice(val fields: List<Field>) : Type()
+	data class Choice(val caseTypes: List<Type>) : Type()
 	data class Field(val name: String, val valueType: Type)
 }
 
@@ -18,7 +18,7 @@ val Type.size: Int
 			Type.F32 -> 4
 			is Type.Array -> itemType.size.times(itemCount)
 			is Type.Struct -> fields.map { it.valueType.size }.sum()
-			is Type.Choice -> 4 + (fields.map { it.valueType.size }.max() ?: 0)
+			is Type.Choice -> 4 + (caseTypes.map { it.size }.max() ?: 0)
 		}
 
 val Type.code: String
@@ -32,8 +32,8 @@ val Type.code: String
 				if (fields.isEmpty()) "{}"
 				else "{ ${fields.joinToString(", ") { it.code }} }"
 			is Type.Choice ->
-				if (fields.isEmpty()) "<>"
-				else "< ${fields.joinToString(" | ") { it.code }} >"
+				if (caseTypes.isEmpty()) "<>"
+				else "< ${caseTypes.joinToString(" | ") { it.code }} >"
 		}
 
 val Type.Field.code: String

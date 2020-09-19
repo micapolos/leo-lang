@@ -12,7 +12,7 @@ class TypeTest {
 		f32
 		i32[128]
 		struct("x" to f32, "y" to f32)
-		choice("int" to i32, "float" to f32)
+		choice(i32, f32)
 	}
 
 	@Test
@@ -27,6 +27,6 @@ class TypeTest {
 		struct("x" to i32, "y" to f32).code.assertEqualTo("{ x: i32, y: f32 }")
 
 		choice().code.assertEqualTo("<>")
-		choice("int" to i32, "float" to f32).code.assertEqualTo("< int: i32 | float: f32 >")
+		choice(i32, f32).code.assertEqualTo("< i32 | f32 >")
 	}
 }

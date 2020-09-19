@@ -27,14 +27,14 @@ fun Layouts.newLayout(type: Type): Layout =
 						layoutFields))
 			}
 		is Type.Choice ->
-			type.fields
-				.map { get(it.valueType) }
+			type.caseTypes
+				.map { get(it) }
 				.map { fieldLayout -> Layout.Body.Field(4, fieldLayout) }
 				.let { layoutFields ->
 					Layout(
 						4 + (layoutFields.map { it.layout.size }.max() ?: 0),
 						Layout.Body.Choice(
-							hashMapOf(*type.fields.map { it.name }.zip(type.fields.indices).toTypedArray()),
+							hashMapOf(*type.caseTypes.zip(type.caseTypes.indices).toTypedArray()),
 							layoutFields))
 				}
 	}
