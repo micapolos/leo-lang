@@ -6,7 +6,7 @@ import kotlin.collections.HashMap
 import kotlin.collections.MutableMap
 
 data class Compiler(
-	var dataSize: Int = 0,
+	var dataOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
 	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
 	val valueOffsets: MutableMap<Value, Offset> = HashMap(),
 	val types: Types = Types(),
@@ -23,7 +23,7 @@ fun compile(fn: Fn): Compiled {
 	compiler.codeOutputStream.writeOp(0x00)
 	return Compiled(
 		compiler.codeOutputStream.toByteArray(),
-		compiler.dataSize,
+		compiler.dataOutputStream.size(),
 		compiler.type(fn.output),
 		outputOffset)
 }
@@ -166,4 +166,4 @@ fun Compiler.layout(type: Type): Layout =
 	layouts.get(type)
 
 fun Compiler.dataHole(size: Int): Int =
-	dataSize.apply { dataSize += size }
+	dataOutputStream.writeHole(size)
