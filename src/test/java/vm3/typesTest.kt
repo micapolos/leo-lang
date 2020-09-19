@@ -6,6 +6,7 @@ import vm3.dsl.type.f32
 import vm3.dsl.type.get
 import vm3.dsl.type.i32
 import vm3.dsl.type.struct
+import vm3.dsl.value.argument
 import vm3.dsl.value.array
 import vm3.dsl.value.give
 import vm3.dsl.value.get
@@ -31,9 +32,9 @@ class TypesTest {
 			get(array(10.value, 20.value)[0.value]).assertEqualTo(i32)
 			get(array(10.value, 20.value)[1.value]).assertEqualTo(i32)
 
-			get(i32.gives { it }.give(10.value)).assertEqualTo(i32)
-			get(i32.gives { it.plus(it) }.give(10.value)).assertEqualTo(i32)
-			get(i32.gives { 10f.value }.give(10.value)).assertEqualTo(f32)
+			get(i32.gives(argument).give(10.value)).assertEqualTo(i32)
+			get(i32.gives(argument.plus(argument)).give(10.value)).assertEqualTo(i32)
+			get(i32.gives(10f.value).give(10.value)).assertEqualTo(f32)
 		}
 	}
 }

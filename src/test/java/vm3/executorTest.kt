@@ -9,6 +9,7 @@ import vm3.dsl.type.f32
 import vm3.dsl.type.get
 import vm3.dsl.type.i32
 import vm3.dsl.type.struct
+import vm3.dsl.value.argument
 import vm3.dsl.value.array
 import vm3.dsl.value.dec
 import vm3.dsl.value.get
@@ -23,12 +24,12 @@ import kotlin.test.Test
 class ExecutorTest {
 	@Test
 	fun compile() {
-		i32.gives { it }.executor.assertNotNull
+		i32.gives(argument).executor.assertNotNull
 	}
 
 	@Test
 	fun bypass() {
-		i32.gives { it }.executor.run {
+		i32.gives(argument).executor.run {
 			execute(123.data).assertEqualTo(123.data)
 			execute(65536.data).assertEqualTo(65536.data)
 		}
@@ -36,22 +37,25 @@ class ExecutorTest {
 
 	@Test
 	fun i32() {
-		i32.gives { it.inc + it.inc.inc }.executor.run {
-			execute(10.data).assertEqualTo(23.data)
-		}
+		i32.gives(argument.inc + argument.inc.inc)
+			.executor
+			.execute(10.data)
+			.assertEqualTo(23.data)
 	}
 
 	@Test
 	fun f32() {
-		f32.gives { it + it }.executor.run {
-			execute(12.3f.data).assertEqualTo(24.6f.data)
-		}
+		f32
+			.gives(argument + argument)
+			.executor.run {
+				execute(12.3f.data).assertEqualTo(24.6f.data)
+			}
 	}
 
 	@Test
 	fun arr() {
 		f32[2]
-			.gives { it }
+			.gives(argument)
 			.executor
 			.execute(array(10f.data, 20f.data))
 			.assertEqualTo(array(10f.data, 20f.data))
@@ -60,7 +64,7 @@ class ExecutorTest {
 	@Test
 	fun arrAt0() {
 		f32[3]
-			.gives { it[0.value] }
+			.gives(argument[0.value])
 			.executor
 			.execute(array(10f.data, 20f.data, 30f.data))
 			.assertEqualTo(10f.data)
@@ -69,7 +73,7 @@ class ExecutorTest {
 	@Test
 	fun arrAt1() {
 		f32[3]
-			.gives { it[1.value] }
+			.gives(argument[1.value])
 			.executor
 			.execute(array(10f.data, 20f.data, 30f.data))
 			.assertEqualTo(20f.data)
@@ -77,7 +81,8 @@ class ExecutorTest {
 
 	@Test
 	fun struct() {
-		struct("x" to f32, "y" to f32).gives { it }
+		struct("x" to f32, "y" to f32)
+			.gives(argument)
 			.executor
 			.execute(struct("x" to 10f.data, "y" to 20f.data))
 			.assertEqualTo(struct("x" to 10f.data, "y" to 20f.data))
@@ -85,7 +90,7 @@ class ExecutorTest {
 
 	@Test
 	fun structGet() {
-		struct("x" to f32, "y" to f32).gives { it["y"] }
+		struct("x" to f32, "y" to f32).gives(argument["y"])
 			.executor
 			.execute(struct("x" to 10f.data, "y" to 20f.data))
 			.assertEqualTo(20f.data)
@@ -93,7 +98,8 @@ class ExecutorTest {
 
 	@Test
 	fun arrayOfArraysGet() {
-		f32[2][3].gives { it[1.value][1.value] }
+		f32[2][3]
+			.gives(argument[1.value][1.value])
 			.executor
 			.execute(
 				array(
@@ -105,7 +111,8 @@ class ExecutorTest {
 
 	@Test
 	fun arrayOfStructsGet() {
-		struct("x" to f32, "y" to f32)[3].gives { it[1.value]["y"] }
+		struct("x" to f32, "y" to f32)[3]
+			.gives(argument[1.value]["y"])
 			.executor
 			.execute(
 				array(
@@ -119,7 +126,8 @@ class ExecutorTest {
 	fun structOfStructsGet() {
 		struct(
 			"first" to struct("x" to f32, "y" to f32),
-			"second" to struct("z" to f32, "w" to f32)).gives { it["second"]["w"] }
+			"second" to struct("z" to f32, "w" to f32))
+			.gives(argument["second"]["w"])
 			.executor
 			.execute(
 				struct(
@@ -133,7 +141,7 @@ class ExecutorTest {
 		struct(
 			"first" to f32[2],
 			"second" to f32[2])
-			.gives { it["second"][1.value] }
+			.gives(argument["second"][1.value])
 			.executor
 			.execute(
 				struct(
@@ -145,7 +153,7 @@ class ExecutorTest {
 	@Test
 	fun arrayValue() {
 		i32
-			.gives { array(it, it) }
+			.gives(array(argument, argument))
 			.executor
 			.execute(10.data)
 			.assertEqualTo(array(10.data, 10.data))
@@ -154,7 +162,7 @@ class ExecutorTest {
 	@Test
 	fun arrayValueIncDec() {
 		i32
-			.gives { array(it.inc, it.dec) }
+			.gives(array(argument.inc, argument.dec))
 			.executor
 			.execute(10.data)
 			.assertEqualTo(array(11.data, 9.data))
@@ -163,7 +171,7 @@ class ExecutorTest {
 	@Test
 	fun arrayValuePlus() {
 		i32
-			.gives { array(it, it.plus(it)) }
+			.gives(array(argument, argument.plus(argument)))
 			.executor
 			.execute(10.data)
 			.assertEqualTo(array(10.data, 20.data))
@@ -172,7 +180,7 @@ class ExecutorTest {
 	@Test
 	fun structValue() {
 		i32
-			.gives { struct("x" to it, "y" to it) }
+			.gives(struct("x" to argument, "y" to argument))
 			.executor
 			.execute(10.data)
 			.assertEqualTo(struct("x" to 10.data, "y" to 10.data))
@@ -181,7 +189,7 @@ class ExecutorTest {
 	@Test
 	fun structValueIncDec() {
 		i32
-			.gives { struct("x" to it.inc, "y" to it.dec) }
+			.gives(struct("x" to argument.inc, "y" to argument.dec))
 			.executor
 			.execute(10.data)
 			.assertEqualTo(struct("x" to 11.data, "y" to 9.data))
@@ -190,7 +198,7 @@ class ExecutorTest {
 	@Test
 	fun structValuePlus() {
 		i32
-			.gives { struct("x" to it, "y" to it.plus(it)) }
+			.gives(struct("x" to argument, "y" to argument.plus(argument)))
 			.executor
 			.execute(10.data)
 			.assertEqualTo(struct("x" to 10.data, "y" to 20.data))
@@ -198,6 +206,10 @@ class ExecutorTest {
 
 	@Test
 	fun program() {
+		val radius = argument.get("circle").get("radius")
+		val pi = Math.PI.toFloat().value
+		val area = radius.times(radius).times(pi)
+
 		struct(
 			"circle" to struct(
 				"radius" to f32,
@@ -205,11 +217,7 @@ class ExecutorTest {
 					"point" to struct(
 						"x" to f32,
 						"y" to f32))))
-			.gives {
-				val radius = it.get("circle").get("radius")
-				val pi = Math.PI.toFloat().value
-				radius.times(radius).times(pi)
-			}
+			.gives(area)
 			.executor
 			.execute(
 				struct(

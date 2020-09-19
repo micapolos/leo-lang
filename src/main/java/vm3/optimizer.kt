@@ -63,7 +63,7 @@ val Value.innerOptimize: Value
 			is Value.ArrayAt -> Value.ArrayAt(lhs.optimize, index.optimize)
 			is Value.Struct -> Value.Struct(fields.map { it.optimize })
 			is Value.StructAt -> Value.StructAt(lhs.optimize, name)
-			is Value.Switch -> Value.Switch(lhs, cases.map { it.optimize })
+			is Value.Switch -> Value.Switch(lhs, functions.map { it.optimize })
 			is Value.Inc -> Value.Inc(lhs.optimize)
 			is Value.Dec -> Value.Dec(lhs.optimize)
 			is Value.Plus -> Value.Plus(lhs.optimize, rhs.optimize)

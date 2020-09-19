@@ -6,6 +6,7 @@ import vm3.dsl.type.f32
 import vm3.dsl.type.get
 import vm3.dsl.type.i32
 import vm3.dsl.type.struct
+import vm3.dsl.value.argument
 import vm3.dsl.value.array
 import vm3.dsl.value.dec
 import vm3.dsl.value.get
@@ -19,7 +20,7 @@ import kotlin.test.Test
 class CompilerTest {
 	@Test
 	fun test() {
-		val compiled = i32.gives { it.inc + it.dec }.compiled
+		val compiled = i32.gives(argument.inc + argument.dec).compiled
 
 		compiled
 			.disassemble
@@ -40,7 +41,7 @@ class CompilerTest {
 	@Test
 	fun array() {
 		f32[3]
-			.gives { it }
+			.gives(argument)
 			.compiled
 			.disassemble
 			.assertEqualTo("""
@@ -55,7 +56,7 @@ class CompilerTest {
 	@Test
 	fun arrayGet() {
 		f32[3]
-			.gives { it[1.value] }
+			.gives(argument[1.value])
 			.compiled
 			.disassemble
 			.assertEqualTo("""
@@ -75,7 +76,7 @@ class CompilerTest {
 	@Test
 	fun struct() {
 		struct("x" to i32, "y" to f32)
-			.gives { it }
+			.gives(argument)
 			.compiled
 			.disassemble
 			.assertEqualTo("""
@@ -90,7 +91,7 @@ class CompilerTest {
 	@Test
 	fun structGet() {
 		struct("x" to i32, "y" to f32)
-			.gives { it["y"] }
+			.gives(argument["y"])
 			.compiled
 			.disassemble
 			.assertEqualTo("""

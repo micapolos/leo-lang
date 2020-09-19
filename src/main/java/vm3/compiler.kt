@@ -253,10 +253,10 @@ fun Compiler.addOp(op: Int, type: Type, lhs: Offset, rhs: Offset): Offset =
 	}
 
 fun Compiler.type(value: Value): Type =
-	types.get(value)
+	types[value]
 
 fun Compiler.layout(type: Type): Layout =
-	layouts.get(type)
+	layouts[type]
 
 fun Compiler.dataHole(size: Int): Int =
 	dataSize.also { dataSize += size }

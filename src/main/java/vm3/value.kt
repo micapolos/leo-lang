@@ -14,7 +14,7 @@ sealed class Value {
 	data class Field(val name: String, val value: Value)
 	data class StructAt(val lhs: Value, val name: String) : Value()
 
-	data class Switch(val lhs: Value, var cases: List<Field>) : Value()
+	data class Switch(val lhs: Value, var functions: List<Function>) : Value()
 
 	data class Call(val function: Function, val param: Value) : Value()
 
@@ -31,7 +31,7 @@ sealed class Value {
 val Value.code: String
 	get() =
 		when (this) {
-			is Value.Argument -> "argument($depth)"
+			is Value.Argument -> if (depth == 0) "argument" else "argument(-$depth)"
 			is Value.Bool -> "$boolean"
 			is Value.I32 -> "$int"
 			is Value.F32 -> "$float"
@@ -39,7 +39,7 @@ val Value.code: String
 			is Value.ArrayAt -> "${lhs.code}[${index.code}]"
 			is Value.Struct -> "{${fields.joinToString(", ") { it.code }}}"
 			is Value.StructAt -> "${lhs.code}.$name"
-			is Value.Switch -> "${lhs.code}.switch(${cases.joinToString(", ") { it.code }})"
+			is Value.Switch -> "${lhs.code}.switch { ${functions.joinToString(", ") { it.switchCode }} }"
 			is Value.Inc -> "${lhs.code}.inc"
 			is Value.Dec -> "${lhs.code}.dec"
 			is Value.Plus -> "${lhs.code}.plus(${rhs.code})"
@@ -51,6 +51,10 @@ val Value.code: String
 val Value.Function.code: String
 	get() =
 		"${param.code}.gives(${body.code})"
+
+val Value.Function.switchCode: String
+	get() =
+		"${param.code} => ${body.code}"
 
 val Value.Field.code: String
 	get() =
