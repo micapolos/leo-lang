@@ -64,28 +64,28 @@ val Op.argCount: Int
 
 fun OutputStream.write(op: Op) {
 	when (op) {
-		Op.Exit -> writeOp(0x00)
-		Op.Nop -> writeOp(0x01)
-		Op.SysCall -> writeOp(0x03)
+		Op.Exit -> writeOp(x00_returnOpcode)
+		Op.Nop -> writeOp(x01_nopOpcode)
+		Op.SysCall -> writeOp(x02_syscallOpcode)
 
-		is Op.Jump -> writeOp(0x03, op.addr)
-		is Op.JumpIf -> writeOp(0x5, op.cond, op.addr)
-		is Op.Call -> writeOp(0x5, op.addr, op.retAddr)
+		is Op.Jump -> writeOp(x03_jumpOpcode, op.addr)
+		is Op.JumpIf -> writeOp(x04_jumpIfOpcode, op.cond, op.addr)
+		is Op.Call -> writeOp(x05_callOpcode, op.addr, op.retAddr)
 
-		is Op.SetConst -> writeOp(0x08, op.dst, op.value)
-		is Op.Set -> writeOp(0x09, op.dst, op.lhs)
-		is Op.SetOffset -> writeOp(0x0A, op.dst, op.lhs, op.offset)
-		is Op.SetOffsetTimes -> writeOp(0x0B, op.dst, op.lhs, op.offset, op.size)
+		is Op.SetConst -> writeOp(x08_set32Opcode, op.dst, op.value)
+		is Op.Set -> writeOp(x09_copy32Opcode, op.dst, op.lhs)
+		is Op.SetOffset -> writeOp(x0A_setOffsetOpcode, op.dst, op.lhs, op.offset)
+		is Op.SetOffsetTimes -> writeOp(x0B_setIndexedOpcode, op.dst, op.lhs, op.offset, op.size)
 
-		is Op.I32Inc -> writeOp(0x10, op.dst, op.lhs)
-		is Op.I32Dec -> writeOp(0x11, op.dst, op.lhs)
-		is Op.I32Plus -> writeOp(0x16, op.dst, op.lhs, op.rhs)
-		is Op.I32Minus -> writeOp(0x17, op.dst, op.lhs, op.rhs)
+		is Op.I32Inc -> writeOp(x10_i32IncOpcode, op.dst, op.lhs)
+		is Op.I32Dec -> writeOp(x11_i32DecOpcode, op.dst, op.lhs)
+		is Op.I32Plus -> writeOp(x16_i32PlusOpcode, op.dst, op.lhs, op.rhs)
+		is Op.I32Minus -> writeOp(x17_i32MinusOpcode, op.dst, op.lhs, op.rhs)
 
-		is Op.F32Plus -> writeOp(0x33, op.dst, op.lhs, op.rhs)
-		is Op.F32Minus -> writeOp(0x34, op.dst, op.lhs, op.rhs)
-		is Op.F32Times -> writeOp(0x35, op.dst, op.lhs, op.rhs)
-		is Op.F32Div -> writeOp(0x36, op.dst, op.lhs, op.rhs)
+		is Op.F32Plus -> writeOp(x33_f32PlusOpcode, op.dst, op.lhs, op.rhs)
+		is Op.F32Minus -> writeOp(x34_f32MinusOpcode, op.dst, op.lhs, op.rhs)
+		is Op.F32Times -> writeOp(x35_f32TimesOpcode, op.dst, op.lhs, op.rhs)
+		is Op.F32Div -> writeOp(x36_f32DivOpcode, op.dst, op.lhs, op.rhs)
 
 		is Op.Unknown -> writeOp(op.byte.toInt())
 	}
@@ -123,30 +123,30 @@ fun InputStream.readOpInt(): Int? =
 fun InputStream.readOp(): Op? =
 	readOpInt()?.let { op ->
 		when (op) {
-			0x00 -> Op.Exit
-			0x01 -> Op.Nop
-			0x02 -> Op.SysCall
+			x00_returnOpcode -> Op.Exit
+			x01_nopOpcode -> Op.Nop
+			x02_syscallOpcode -> Op.SysCall
 
-			0x03 -> Op.Jump(readInt())
-			0x04 -> Op.JumpIf(readInt(), readInt())
-			0x05 -> Op.Call(readInt(), readInt())
+			x03_jumpOpcode -> Op.Jump(readInt())
+			x04_jumpIfOpcode -> Op.JumpIf(readInt(), readInt())
+			x05_callOpcode -> Op.Call(readInt(), readInt())
 
-			0x08 -> Op.SetConst(readInt(), readInt())
-			0x09 -> Op.Set(readInt(), readInt())
-			0x0A -> Op.SetOffset(readInt(), readInt(), readInt())
-			0x0B -> Op.SetOffsetTimes(readInt(), readInt(), readInt(), readInt())
+			x08_set32Opcode -> Op.SetConst(readInt(), readInt())
+			x09_copy32Opcode -> Op.Set(readInt(), readInt())
+			x0A_setOffsetOpcode -> Op.SetOffset(readInt(), readInt(), readInt())
+			x0B_setIndexedOpcode -> Op.SetOffsetTimes(readInt(), readInt(), readInt(), readInt())
 
-			0x10 -> Op.I32Inc(readInt(), readInt())
-			0x11 -> Op.I32Dec(readInt(), readInt())
+			x10_i32IncOpcode -> Op.I32Inc(readInt(), readInt())
+			x11_i32DecOpcode -> Op.I32Dec(readInt(), readInt())
 
-			0x16 -> Op.I32Plus(readInt(), readInt(), readInt())
-			0x17 -> Op.I32Minus(readInt(), readInt(), readInt())
-			0x18 -> Op.I32Times(readInt(), readInt(), readInt())
+			x16_i32PlusOpcode -> Op.I32Plus(readInt(), readInt(), readInt())
+			x17_i32MinusOpcode -> Op.I32Minus(readInt(), readInt(), readInt())
+			x18_i32TimesOpcode -> Op.I32Times(readInt(), readInt(), readInt())
 
-			0x33 -> Op.F32Plus(readInt(), readInt(), readInt())
-			0x34 -> Op.F32Minus(readInt(), readInt(), readInt())
-			0x35 -> Op.F32Times(readInt(), readInt(), readInt())
-			0x36 -> Op.F32Div(readInt(), readInt(), readInt())
+			x33_f32PlusOpcode -> Op.F32Plus(readInt(), readInt(), readInt())
+			x34_f32MinusOpcode -> Op.F32Minus(readInt(), readInt(), readInt())
+			x35_f32TimesOpcode -> Op.F32Times(readInt(), readInt(), readInt())
+			x36_f32DivOpcode -> Op.F32Div(readInt(), readInt(), readInt())
 
 			else -> Op.Unknown(op.toByte())
 		}

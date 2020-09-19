@@ -2,8 +2,6 @@ package vm3
 
 import vm3.dsl.layout.offset
 import java.io.ByteArrayOutputStream
-import kotlin.collections.HashMap
-import kotlin.collections.MutableMap
 
 data class Compiler(
 	var dataOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
@@ -20,7 +18,7 @@ fun compile(fn: Fn): Compiled {
 	compiler.types[Value.Input] = fn.input
 	compiler.dataHole(fn.input.size)
 	val outputOffset = compiler.offset(fn.output)
-	compiler.codeOutputStream.writeOp(0x00)
+	compiler.codeOutputStream.writeOp(x00_returnOpcode)
 	return Compiled(
 		compiler.codeOutputStream.toByteArray(),
 		compiler.dataOutputStream.size(),
@@ -35,7 +33,7 @@ fun Compiler.index(offset: Offset): Int =
 	when (offset) {
 		is Offset.Direct -> offset.index
 		is Offset.Indirect -> dataHole(4).also { index ->
-			codeOutputStream.writeByte(0x09)
+			codeOutputStream.writeOp(x09_copy32Opcode)
 			codeOutputStream.writeInt(index)
 			codeOutputStream.writeInt(offset.index)
 		}
@@ -49,14 +47,14 @@ fun Compiler.indirectIndex(offset: Offset): Int =
 
 fun Compiler.indirect(directIndex: Int): Int =
 	dataHole(4).also { index ->
-		codeOutputStream.writeByte(0x08)
+		codeOutputStream.writeOp(x08_set32Opcode)
 		codeOutputStream.writeInt(index)
 		codeOutputStream.writeInt(directIndex)
 	}
 
 fun Compiler.direct(index: Int): Int =
 	dataHole(4).also { dst ->
-		codeOutputStream.writeByte(0x09)
+		codeOutputStream.writeOp(x09_copy32Opcode)
 		codeOutputStream.writeInt(dst)
 		codeOutputStream.writeInt(index)
 	}
@@ -77,31 +75,31 @@ fun Compiler.compileOffset(value: Value): Offset =
 
 		is Value.Inc ->
 			when (type(value)) {
-				Type.I32 -> addOp(0x10, Type.I32, value.lhs)
+				Type.I32 -> addOp(x10_i32IncOpcode, Type.I32, value.lhs)
 				else -> TODO()
 			}
 		is Value.Dec ->
 			when (type(value)) {
-				Type.I32 -> addOp(0x11, Type.I32, value.lhs)
+				Type.I32 -> addOp(x11_i32DecOpcode, Type.I32, value.lhs)
 				else -> TODO()
 			}
 		is Value.Plus ->
 			when (type(value)) {
-				Type.I32 -> addOp(0x16, Type.I32, value.lhs, value.rhs)
-				Type.F32 -> addOp(0x33, Type.F32, value.lhs, value.rhs)
+				Type.I32 -> addOp(x16_i32PlusOpcode, Type.I32, value.lhs, value.rhs)
+				Type.F32 -> addOp(x33_f32PlusOpcode, Type.F32, value.lhs, value.rhs)
 				else -> TODO()
 			}
 		is Value.Minus ->
 			when (type(value)) {
-				Type.I32 -> addOp(0x17, Type.I32, value.lhs, value.rhs)
-				Type.F32 -> addOp(0x34, Type.F32, value.lhs, value.rhs)
+				Type.I32 -> addOp(x17_i32MinusOpcode, Type.I32, value.lhs, value.rhs)
+				Type.F32 -> addOp(x34_f32MinusOpcode, Type.F32, value.lhs, value.rhs)
 				else -> TODO()
 			}
 	}
 
 fun Compiler.constOffset(lhs: Int): Offset =
 	dataHole(4).let { dst ->
-		codeOutputStream.writeByte(0x08)
+		codeOutputStream.writeOp(x08_set32Opcode)
 		codeOutputStream.writeInt(dst)
 		codeOutputStream.writeInt(lhs)
 		Offset.Direct(dst)
@@ -113,7 +111,7 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 			is Offset.Direct ->
 				Offset.Direct(lhsOffset.index + layout(type(structAt.lhs)).offset(structAt.name))
 			is Offset.Indirect -> dataHole(4).let { dst ->
-				codeOutputStream.writeByte(0x0A)
+				codeOutputStream.writeOp(x0A_setOffsetOpcode)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhsOffset.index)
 				codeOutputStream.writeInt(layout(type(structAt.lhs)).offset(structAt.name))
@@ -126,7 +124,7 @@ fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 	indirectIndex(offset(arrayAt.lhs)).let { lhs ->
 		index(offset(arrayAt.index)).let { index ->
 			dataHole(4).let { dst ->
-				codeOutputStream.writeByte(0x0B)
+				codeOutputStream.writeOp(x0B_setIndexedOpcode)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhs)
 				codeOutputStream.writeInt(index)
@@ -136,21 +134,21 @@ fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 		}
 	}
 
-fun Compiler.addOp(op: Byte, type: Type, lhs: Value): Offset =
+fun Compiler.addOp(op: Int, type: Type, lhs: Value): Offset =
 	index(offset(lhs)).let { lhs ->
 		dataHole(type.size).let { dst ->
-			codeOutputStream.writeByte(op)
+			codeOutputStream.writeOp(op)
 			codeOutputStream.writeInt(dst)
 			codeOutputStream.writeInt(lhs)
 			Offset.Direct(dst)
 		}
 	}
 
-fun Compiler.addOp(op: Byte, type: Type, lhs: Value, rhs: Value): Offset =
+fun Compiler.addOp(op: Int, type: Type, lhs: Value, rhs: Value): Offset =
 	index(offset(lhs)).let { lhs ->
 		index(offset(rhs)).let { rhs ->
 			dataHole(type.size).let { dst ->
-				codeOutputStream.writeByte(op)
+				codeOutputStream.writeOp(op)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhs)
 				codeOutputStream.writeInt(rhs)
