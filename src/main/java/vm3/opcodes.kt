@@ -23,7 +23,6 @@ val x16_i32PlusOpcode = 0x16
 val x17_i32MinusOpcode = 0x17
 val x18_i32TimesOpcode = 0x18
 val x19_i32DivOpcode = 0x19
-val x1A_i32RemOpcode = 0x1A
 
 val x1B_i32InvOpcode = 0x1B
 val x1D_i32AndOpcode = 0x1D
