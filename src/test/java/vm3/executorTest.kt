@@ -88,7 +88,6 @@ class ExecutorTest {
 	fun structGet() {
 		struct("x" to f32, "y" to f32).fn { this["y"] }
 			.executor
-			.apply { dump }
 			.execute(struct("x" to 10f.data, "y" to 20f.data))
 			.assertEqualTo(20f.data)
 	}
