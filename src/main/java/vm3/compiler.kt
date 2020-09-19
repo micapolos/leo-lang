@@ -170,7 +170,19 @@ fun Compiler.set(dst: Int, array: Value.Array) {
 }
 
 fun Compiler.set(dst: Int, switch: Value.Switch) {
-	TODO()
+	val lhsType = type(switch.lhs)
+	val functionOrNull = switch
+		.functions
+		.findLast { lhsType == it.param }
+	if (functionOrNull != null) {
+		types.push(lhsType) {
+			push(offset(switch.lhs)) {
+				set(dst, functionOrNull.body)
+			}
+		}
+	} else {
+		TODO()
+	}
 }
 
 fun Compiler.setSize(dst: Int, src: Int, size: Int) {
@@ -269,3 +281,11 @@ fun Compiler.dataHole(size: Int): Int =
 
 fun Compiler.size(value: Value): Int =
 	layout(type(value)).size
+
+fun <T> Compiler.push(offset: Offset, fn: () -> T): T {
+	parameterOffsets.add(offset)
+	val result = fn()
+	parameterOffsets.removeAt(parameterOffsets.size - 1)
+	return result
+}
+

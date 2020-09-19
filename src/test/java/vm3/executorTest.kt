@@ -5,6 +5,7 @@ import leo.base.assertNotNull
 import vm3.dsl.data.array
 import vm3.dsl.data.data
 import vm3.dsl.data.struct
+import vm3.dsl.type.bool
 import vm3.dsl.type.f32
 import vm3.dsl.type.get
 import vm3.dsl.type.i32
@@ -17,6 +18,7 @@ import vm3.dsl.value.gives
 import vm3.dsl.value.inc
 import vm3.dsl.value.plus
 import vm3.dsl.value.struct
+import vm3.dsl.value.switch
 import vm3.dsl.value.times
 import vm3.dsl.value.value
 import kotlin.test.Test
@@ -228,5 +230,17 @@ class ExecutorTest {
 								"x" to 20f.data,
 								"y" to 30f.data)))))
 			.assertEqualTo(10f.times(10f).times(Math.PI.toFloat()).data)
+	}
+
+	@Test
+	fun staticSwitch() {
+		i32.gives(
+			argument.switch(
+				f32.gives(100.value),
+				i32.gives(200.value),
+				bool.gives(300.value)))
+			.executor
+			.execute(100.data)
+			.assertEqualTo(200.data)
 	}
 }
