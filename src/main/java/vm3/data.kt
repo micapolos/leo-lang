@@ -55,6 +55,7 @@ fun ByteArray.data(index: Int, type: Type): Data =
 		Type.F32 -> Data.F32(int(index).float)
 		is Type.Array -> arrayData(index, type.itemType, type.itemCount)
 		is Type.Struct -> structData(index, type.fields)
+		is Type.Choice -> TODO()
 	}
 
 fun ByteArray.arrayData(index: Int, type: Type, size: Int): Data {
