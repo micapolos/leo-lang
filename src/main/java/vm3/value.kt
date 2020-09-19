@@ -41,3 +41,7 @@ val Value.code: String
 val Value.Field.code: String
 	get() =
 		"$name: ${value.code}"
+
+val Value.booleanOrNull get() = (this as? Value.Bool)?.boolean
+val Value.intOrNull get() = (this as? Value.I32)?.int
+val Value.floatOrNull get() = (this as? Value.F32)?.float
