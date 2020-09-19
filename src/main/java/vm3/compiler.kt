@@ -33,7 +33,7 @@ fun Compiler.index(offset: Offset): Int =
 	when (offset) {
 		is Offset.Direct -> offset.index
 		is Offset.Indirect -> dataHole(4).also { index ->
-			codeOutputStream.writeOp(x09_copy32Opcode)
+			codeOutputStream.writeOp(x09_set32Opcode)
 			codeOutputStream.writeInt(index)
 			codeOutputStream.writeInt(offset.index)
 		}
@@ -47,14 +47,14 @@ fun Compiler.indirectIndex(offset: Offset): Int =
 
 fun Compiler.indirect(directIndex: Int): Int =
 	dataHole(4).also { index ->
-		codeOutputStream.writeOp(x08_set32Opcode)
+		codeOutputStream.writeOp(x08_setConst32Opcode)
 		codeOutputStream.writeInt(index)
 		codeOutputStream.writeInt(directIndex)
 	}
 
 fun Compiler.direct(index: Int): Int =
 	dataHole(4).also { dst ->
-		codeOutputStream.writeOp(x09_copy32Opcode)
+		codeOutputStream.writeOp(x09_set32Opcode)
 		codeOutputStream.writeInt(dst)
 		codeOutputStream.writeInt(index)
 	}
@@ -99,7 +99,7 @@ fun Compiler.compileOffset(value: Value): Offset =
 
 fun Compiler.constOffset(lhs: Int): Offset =
 	dataHole(4).let { dst ->
-		codeOutputStream.writeOp(x08_set32Opcode)
+		codeOutputStream.writeOp(x08_setConst32Opcode)
 		codeOutputStream.writeInt(dst)
 		codeOutputStream.writeInt(lhs)
 		Offset.Direct(dst)

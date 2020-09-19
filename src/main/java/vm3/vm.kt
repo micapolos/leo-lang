@@ -29,8 +29,8 @@ fun Vm.run() {
 			x04_jumpIfOpcode -> jumpIf(fetch32().boolean, fetch32())
 			x05_callOpcode -> call(fetch32(), fetch32())
 
-			x08_set32Opcode -> setConstant(fetch32(), fetch32())
-			x09_copy32Opcode -> copy(fetch32(), fetch32())
+			x08_setConst32Opcode -> setConstant(fetch32(), fetch32())
+			x09_set32Opcode -> copy(fetch32(), fetch32())
 			x0A_setOffsetOpcode -> addOffset(fetch32(), fetch32(), fetch32())
 			x0B_setIndexedOpcode -> addIndex(fetch32(), fetch32(), fetch32(), fetch32())
 

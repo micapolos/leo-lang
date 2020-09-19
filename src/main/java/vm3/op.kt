@@ -72,8 +72,8 @@ fun OutputStream.write(op: Op) {
 		is Op.JumpIf -> writeOp(x04_jumpIfOpcode, op.cond, op.addr)
 		is Op.Call -> writeOp(x05_callOpcode, op.addr, op.retAddr)
 
-		is Op.SetConst -> writeOp(x08_set32Opcode, op.dst, op.value)
-		is Op.Set -> writeOp(x09_copy32Opcode, op.dst, op.lhs)
+		is Op.SetConst -> writeOp(x08_setConst32Opcode, op.dst, op.value)
+		is Op.Set -> writeOp(x09_set32Opcode, op.dst, op.lhs)
 		is Op.SetOffset -> writeOp(x0A_setOffsetOpcode, op.dst, op.lhs, op.offset)
 		is Op.SetOffsetTimes -> writeOp(x0B_setIndexedOpcode, op.dst, op.lhs, op.offset, op.size)
 
@@ -131,8 +131,8 @@ fun InputStream.readOp(): Op? =
 			x04_jumpIfOpcode -> Op.JumpIf(readInt(), readInt())
 			x05_callOpcode -> Op.Call(readInt(), readInt())
 
-			x08_set32Opcode -> Op.SetConst(readInt(), readInt())
-			x09_copy32Opcode -> Op.Set(readInt(), readInt())
+			x08_setConst32Opcode -> Op.SetConst(readInt(), readInt())
+			x09_set32Opcode -> Op.Set(readInt(), readInt())
 			x0A_setOffsetOpcode -> Op.SetOffset(readInt(), readInt(), readInt())
 			x0B_setIndexedOpcode -> Op.SetOffsetTimes(readInt(), readInt(), readInt(), readInt())
 

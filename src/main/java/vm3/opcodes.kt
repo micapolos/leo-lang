@@ -8,8 +8,8 @@ val x03_jumpOpcode = 0x03
 val x04_jumpIfOpcode = 0x04
 val x05_callOpcode = 0x05
 
-val x08_set32Opcode = 0x08
-val x09_copy32Opcode = 0x09
+val x08_setConst32Opcode = 0x08
+val x09_set32Opcode = 0x09
 val x0A_setOffsetOpcode = 0x0A
 val x0B_setIndexedOpcode = 0x0B
 
