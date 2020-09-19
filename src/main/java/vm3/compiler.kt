@@ -6,7 +6,7 @@ import kotlin.collections.HashMap
 import kotlin.collections.MutableMap
 
 data class Compiler(
-	val dataOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
+	var dataSize: Int = 0,
 	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
 	val valueOffsets: MutableMap<Value, Offset> = HashMap(),
 	val types: Types = Types(),
@@ -18,12 +18,12 @@ val Fn.compiled: Compiled get() = compile(this)
 fun compile(fn: Fn): Compiled {
 	val compiler = Compiler()
 	compiler.types[Value.Input] = fn.input
-	compiler.dataOutputStream.writeHole(fn.input.size)
+	compiler.dataHole(fn.input.size)
 	val outputOffset = compiler.offset(fn.output)
 	compiler.codeOutputStream.writeOp(0x00)
 	return Compiled(
 		compiler.codeOutputStream.toByteArray(),
-		compiler.dataOutputStream.size(),
+		compiler.dataSize,
 		compiler.type(fn.output),
 		outputOffset)
 }
@@ -34,7 +34,7 @@ fun Compiler.offset(value: Value): Offset =
 fun Compiler.index(offset: Offset): Int =
 	when (offset) {
 		is Offset.Direct -> offset.index
-		is Offset.Indirect -> dataOutputStream.writeHole(4).also { index ->
+		is Offset.Indirect -> dataHole(4).also { index ->
 			codeOutputStream.writeByte(0x09)
 			codeOutputStream.writeInt(index)
 			codeOutputStream.writeInt(offset.index)
@@ -48,14 +48,14 @@ fun Compiler.indirectIndex(offset: Offset): Int =
 	}
 
 fun Compiler.indirect(directIndex: Int): Int =
-	dataOutputStream.writeHole(4).also { index ->
+	dataHole(4).also { index ->
 		codeOutputStream.writeByte(0x08)
 		codeOutputStream.writeInt(index)
 		codeOutputStream.writeInt(directIndex)
 	}
 
 fun Compiler.direct(index: Int): Int =
-	dataOutputStream.writeHole(4).also { dst ->
+	dataHole(4).also { dst ->
 		codeOutputStream.writeByte(0x09)
 		codeOutputStream.writeInt(dst)
 		codeOutputStream.writeInt(index)
@@ -100,7 +100,7 @@ fun Compiler.compileOffset(value: Value): Offset =
 	}
 
 fun Compiler.constOffset(lhs: Int): Offset =
-	dataOutputStream.writeHole(4).let { dst ->
+	dataHole(4).let { dst ->
 		codeOutputStream.writeByte(0x08)
 		codeOutputStream.writeInt(dst)
 		codeOutputStream.writeInt(lhs)
@@ -112,7 +112,7 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 		when (lhsOffset) {
 			is Offset.Direct ->
 				Offset.Direct(lhsOffset.index + layout(type(structAt.lhs)).offset(structAt.name))
-			is Offset.Indirect -> dataOutputStream.writeHole(4).let { dst ->
+			is Offset.Indirect -> dataHole(4).let { dst ->
 				codeOutputStream.writeByte(0x0A)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhsOffset.index)
@@ -125,7 +125,7 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 	indirectIndex(offset(arrayAt.lhs)).let { lhs ->
 		index(offset(arrayAt.index)).let { index ->
-			dataOutputStream.writeHole(4).let { dst ->
+			dataHole(4).let { dst ->
 				codeOutputStream.writeByte(0x0B)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhs)
@@ -138,7 +138,7 @@ fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 
 fun Compiler.addOp(op: Byte, type: Type, lhs: Value): Offset =
 	index(offset(lhs)).let { lhs ->
-		dataOutputStream.writeHole(type.size).let { dst ->
+		dataHole(type.size).let { dst ->
 			codeOutputStream.writeByte(op)
 			codeOutputStream.writeInt(dst)
 			codeOutputStream.writeInt(lhs)
@@ -149,7 +149,7 @@ fun Compiler.addOp(op: Byte, type: Type, lhs: Value): Offset =
 fun Compiler.addOp(op: Byte, type: Type, lhs: Value, rhs: Value): Offset =
 	index(offset(lhs)).let { lhs ->
 		index(offset(rhs)).let { rhs ->
-			dataOutputStream.writeHole(type.size).let { dst ->
+			dataHole(type.size).let { dst ->
 				codeOutputStream.writeByte(op)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhs)
@@ -164,3 +164,6 @@ fun Compiler.type(value: Value): Type =
 
 fun Compiler.layout(type: Type): Layout =
 	layouts.get(type)
+
+fun Compiler.dataHole(size: Int): Int =
+	dataSize.apply { dataSize += size }
