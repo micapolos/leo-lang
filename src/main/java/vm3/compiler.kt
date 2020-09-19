@@ -1,43 +1,60 @@
 package vm3
 
 import vm3.dsl.layout.offset
-import vm3.dsl.type.get
-import vm3.dsl.type.item
 import java.io.ByteArrayOutputStream
+import kotlin.collections.HashMap
+import kotlin.collections.MutableMap
 
 data class Compiler(
 	val dataOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
 	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
-	val valueOffsets: MutableMap<Value, Int> = HashMap(),
-	val valueTypes: MutableMap<Value, Type> = HashMap(),
-	val typeLayouts: MutableMap<Type, Layout> = HashMap()
+	val valueOffsets: MutableMap<Value, Offset> = HashMap(),
+	val types: Types = Types(),
+	val layouts: Layouts = Layouts()
 )
 
 val Fn.compiled: Compiled get() = compile(this)
 
 fun compile(fn: Fn): Compiled {
 	val compiler = Compiler()
-	compiler.valueTypes[Value.Input] = fn.input
+	compiler.types[Value.Input] = fn.input
 	compiler.dataOutputStream.writeHole(fn.input.size)
-	val outputIndex = compiler.offset(fn.output)
+	val outputOffset = compiler.offset(fn.output)
 	compiler.codeOutputStream.writeOp(0x00)
 	return Compiled(
 		compiler.codeOutputStream.toByteArray(),
 		compiler.dataOutputStream.size(),
 		compiler.type(fn.output),
-		outputIndex)
+		outputOffset)
 }
 
-fun Compiler.offset(value: Value): Int =
+fun Compiler.offset(value: Value): Offset =
 	valueOffsets.get(value) { compileOffset(value) }
 
-fun Compiler.compileOffset(value: Value): Int =
-	when (value) {
-		is Value.Input -> 0
+fun Compiler.index(offset: Offset): Int =
+	when (offset) {
+		is Offset.Direct -> offset.index
+		is Offset.Indirect -> dataOutputStream.writeHole(4).also { index ->
+			codeOutputStream.writeByte(0x09)
+			codeOutputStream.writeInt(index)
+			codeOutputStream.writeInt(offset.index)
+		}
+	}
 
-		is Value.Bool -> addConst(value.boolean.int)
-		is Value.I32 -> addConst(value.int)
-		is Value.F32 -> addConst(value.float.int)
+fun Compiler.direct(index: Int): Int =
+	dataOutputStream.writeHole(4).also { dst ->
+		codeOutputStream.writeByte(0x09)
+		codeOutputStream.writeInt(dst)
+		codeOutputStream.writeInt(index)
+	}
+
+fun Compiler.compileOffset(value: Value): Offset =
+	when (value) {
+		is Value.Input -> Offset.Direct(0)
+
+		is Value.Bool -> constOffset(value.boolean.int)
+		is Value.I32 -> constOffset(value.int)
+		is Value.F32 -> constOffset(value.float.int)
 
 		is Value.Array -> TODO()
 		is Value.Struct -> TODO()
@@ -69,133 +86,68 @@ fun Compiler.compileOffset(value: Value): Int =
 			}
 	}
 
-
-fun Compiler.addConst(lhs: Int): Int =
-	dataOutputStream.writeHole(4).also { dst ->
+fun Compiler.constOffset(lhs: Int): Offset =
+	dataOutputStream.writeHole(4).let { dst ->
 		codeOutputStream.writeByte(0x08)
 		codeOutputStream.writeInt(dst)
 		codeOutputStream.writeInt(lhs)
+		Offset.Direct(dst)
 	}
 
-fun Compiler.addOp(op: Byte, type: Type, lhs: Value): Int =
-	offset(lhs).let { lhs ->
-		dataOutputStream.writeHole(type.size).also { dst ->
-			codeOutputStream.writeByte(op)
-			codeOutputStream.writeInt(dst)
-			codeOutputStream.writeInt(lhs)
+fun Compiler.add(structAt: Value.StructAt): Offset =
+	offset(structAt.lhs).let { lhsOffset ->
+		when (lhsOffset) {
+			is Offset.Direct ->
+				Offset.Direct(lhsOffset.index + layout(type(structAt.lhs)).offset(structAt.name))
+			is Offset.Indirect -> dataOutputStream.writeHole(4).let { dst ->
+				codeOutputStream.writeByte(0x09)
+				codeOutputStream.writeInt(dst)
+				codeOutputStream.writeInt(lhsOffset.index)
+				// TODO()
+				Offset.Indirect(dst)
+			}
 		}
 	}
 
-fun Compiler.add(arrayAt: Value.ArrayAt): Int =
-	offset(arrayAt.lhs).let { lhs ->
-		offset(arrayAt.index).let { index ->
-			dataOutputStream.writeHole(4).also { dst ->
+fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
+	index(offset(arrayAt.lhs)).let { lhs ->
+		index(offset(arrayAt.index)).let { index ->
+			dataOutputStream.writeHole(4).let { dst ->
 				codeOutputStream.writeByte(0x0B)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhs)
 				codeOutputStream.writeInt(index)
 				codeOutputStream.writeInt(layout(type(arrayAt)).size)
+				Offset.Indirect(dst)
 			}
 		}
 	}
 
-fun Compiler.add(structAt: Value.StructAt): Int =
-	offset(structAt.lhs).let { lhs ->
-		dataOutputStream.writeHole(4).also { dst ->
-			codeOutputStream.writeByte(0x0A)
+fun Compiler.addOp(op: Byte, type: Type, lhs: Value): Offset =
+	index(offset(lhs)).let { lhs ->
+		dataOutputStream.writeHole(type.size).let { dst ->
+			codeOutputStream.writeByte(op)
 			codeOutputStream.writeInt(dst)
 			codeOutputStream.writeInt(lhs)
-			codeOutputStream.writeInt(layout(type(structAt.lhs)).offset(structAt.name))
+			Offset.Direct(dst)
 		}
 	}
 
-fun Compiler.addOp(op: Byte, type: Type, lhs: Value, rhs: Value): Int =
-	offset(lhs).let { lhs ->
-		offset(rhs).let { rhs ->
-			dataOutputStream.writeHole(type.size).also { dst ->
+fun Compiler.addOp(op: Byte, type: Type, lhs: Value, rhs: Value): Offset =
+	index(offset(lhs)).let { lhs ->
+		index(offset(rhs)).let { rhs ->
+			dataOutputStream.writeHole(type.size).let { dst ->
 				codeOutputStream.writeByte(op)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhs)
 				codeOutputStream.writeInt(rhs)
+				Offset.Direct(dst)
 			}
 		}
 	}
 
 fun Compiler.type(value: Value): Type =
-	valueTypes.get(value) { compileType(value) }
-
-fun Compiler.compileType(value: Value): Type =
-	when (value) {
-		Value.Input -> error("unknown type")
-		is Value.Bool -> Type.Bool
-		is Value.I32 -> Type.I32
-		is Value.F32 -> Type.F32
-		is Value.Struct -> Type.Struct(value.fields.map { Type.Struct.Field(it.name, type(it.value)) })
-		is Value.Array -> Type.Array(type(value.values[0]), value.values.size)
-		is Value.ArrayAt -> type(value.lhs).item
-		is Value.StructAt -> type(value.lhs)[value.name]
-		is Value.Inc ->
-			when (type(value.lhs)) {
-				Type.I32 -> Type.I32
-				else -> null
-			}
-		is Value.Dec ->
-			when (type(value.lhs)) {
-				Type.I32 -> Type.I32
-				else -> null
-			}
-		is Value.Plus ->
-			when (type(value.lhs)) {
-				Type.I32 ->
-					when (type(value.lhs)) {
-						Type.I32 -> Type.I32
-						else -> null
-					}
-				Type.F32 ->
-					when (type(value.lhs)) {
-						Type.F32 -> Type.F32
-						else -> null
-					}
-				else -> null
-			}
-		is Value.Minus ->
-			when (type(value.lhs)) {
-				Type.I32 ->
-					when (type(value.lhs)) {
-						Type.I32 -> Type.I32
-						else -> null
-					}
-				Type.F32 ->
-					when (type(value.lhs)) {
-						Type.F32 -> Type.F32
-						else -> null
-					}
-				else -> null
-			}
-	} ?: error("type($value)")
+	types.get(value)
 
 fun Compiler.layout(type: Type): Layout =
-	typeLayouts.get(type) { compileLayout(type) }
-
-fun Compiler.compileLayout(type: Type): Layout =
-	when (type) {
-		Type.Bool -> Layout(4, Layout.Body.Bool)
-		Type.I32 -> Layout(4, Layout.Body.I32)
-		Type.F32 -> Layout(4, Layout.Body.F32)
-		is Type.Array -> layout(type.itemType).let { itemLayout ->
-			Layout(type.itemCount * itemLayout.size, Layout.Body.Array(itemLayout, type.itemCount))
-		}
-		is Type.Struct -> type.fields
-			.map { layout(it.valueType) }
-			.let { fieldLayouts ->
-				var offset = 0
-				val layoutFields = fieldLayouts.map { fieldLayout ->
-					Layout.Body.Struct.Field(offset, fieldLayout).also { offset += fieldLayout.size }
-				}
-				Layout(
-					layoutFields.sumBy { it.layout.size },
-					Layout.Body.Struct(
-						hashMapOf(*type.fields.map { it.name }.zip(type.fields.indices).toTypedArray()),
-						layoutFields))
-			}
-	}
+	layouts.get(type)

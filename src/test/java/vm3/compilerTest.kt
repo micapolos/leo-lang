@@ -28,6 +28,7 @@ class CompilerTest {
 			.assertEqualTo(
 				"""
 					dataSize: 0x00000010
+					outputOffset: 0x0000000c
 					--- disassembly ---
 					0x00000000: [0x00000004] <- [0x00000000] i32.inc
 					0x00000009: [0x00000008] <- [0x00000000] i32.dec
@@ -46,6 +47,7 @@ class CompilerTest {
 			.disassemble
 			.assertEqualTo("""
 				dataSize: 0x0000000c
+				outputOffset: 0x00000000
 				--- disassembly ---
 				0x00000000: exit
 				
@@ -60,6 +62,7 @@ class CompilerTest {
 			.disassemble
 			.assertEqualTo("""
 				dataSize: 0x00000014
+				outputOffset: [0x00000010]
 				--- disassembly ---
 				0x00000000: [0x0000000c] <- 0x00000001
 				0x00000009: [0x00000010] <- [0x00000000 + [0x0000000c] * 4]
@@ -76,6 +79,7 @@ class CompilerTest {
 			.disassemble
 			.assertEqualTo("""
 				dataSize: 0x00000008
+				outputOffset: 0x00000000
 				--- disassembly ---
 				0x00000000: exit
 				
@@ -89,10 +93,10 @@ class CompilerTest {
 			.compiled
 			.disassemble
 			.assertEqualTo("""
-				dataSize: 0x0000000c
+				dataSize: 0x00000008
+				outputOffset: 0x00000004
 				--- disassembly ---
-				0x00000000: [0x00000008] <- [0x00000000 + 4]
-				0x0000000d: exit
+				0x00000000: exit
 				
 				""".trimIndent())
 	}

@@ -6,12 +6,13 @@ data class Compiled(
 	val code: ByteArray,
 	val dataSize: Int,
 	val outputType: Type,
-	val outputIndex: Int
+	val outputOffset: Offset
 )
 
 val Compiled.disassemble: String
 	get() =
 		linesString(
 			"dataSize: ${dataSize.hexString}",
+			"outputOffset: ${outputOffset.code}",
 			"--- disassembly ---",
 			code.disassemble)

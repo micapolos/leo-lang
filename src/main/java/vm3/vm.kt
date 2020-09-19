@@ -19,10 +19,10 @@ fun Vm.run() {
 			0x04 -> jumpIf(fetch32().boolean, fetch32())
 			0x05 -> call(fetch32(), fetch32())
 
-			0x08 -> dataSet(fetch32(), fetch32())
+			0x08 -> setConstant(fetch32(), fetch32())
 			0x09 -> copy(fetch32(), fetch32())
-			0x0A -> offset(fetch32(), fetch32(), fetch32())
-			0x0B -> index(fetch32(), fetch32(), fetch32(), fetch32())
+			0x0A -> addOffset(fetch32(), fetch32(), fetch32())
+			0x0B -> addIndex(fetch32(), fetch32(), fetch32(), fetch32())
 
 			0x10 -> intOp1(Int::inc)
 			0x11 -> intOp1(Int::dec)
@@ -88,13 +88,16 @@ inline fun Vm.dataInt(index: Int) =
 inline fun Vm.dataSet(index: Int, int: Int) =
 	data.set(index, int)
 
+inline fun Vm.setConstant(index: Int, value: Int) =
+	dataSet(index, value)
+
 inline fun Vm.copy(index: Int, addr: Int) =
 	dataSet(index, dataInt(addr))
 
-inline fun Vm.offset(dst: Int, src: Int, offset: Int) =
+inline fun Vm.addOffset(dst: Int, src: Int, offset: Int) =
 	dataSet(dst, dataInt(src) + offset)
 
-inline fun Vm.index(dst: Int, src: Int, index: Int, size: Int) =
+inline fun Vm.addIndex(dst: Int, src: Int, index: Int, size: Int) =
 	dataSet(dst, dataInt(src) + dataInt(index) * size)
 
 inline fun Vm.advance8() =
