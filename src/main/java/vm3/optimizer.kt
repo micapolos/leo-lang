@@ -7,7 +7,7 @@ val Value.optimize: Value
 val Value.outerOptimize: Value
 	get() =
 		when (this) {
-			Value.Input -> null
+			is Value.Argument -> null
 			is Value.Bool -> null
 			is Value.I32 -> null
 			is Value.F32 -> null
@@ -54,7 +54,7 @@ val Value.Field.optimize
 val Value.innerOptimize: Value
 	get() =
 		when (this) {
-			Value.Input -> this
+			is Value.Argument -> this
 			is Value.Bool -> this
 			is Value.I32 -> this
 			is Value.F32 -> this

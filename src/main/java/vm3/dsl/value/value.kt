@@ -3,7 +3,7 @@ package vm3.dsl.value
 import vm3.Type
 import vm3.Value
 
-val input: Value = Value.Input
+fun argument(depth: Int): Value = Value.Argument(depth)
 
 val Boolean.value: Value get() = Value.Bool(this)
 val Int.value: Value get() = Value.I32(this)
@@ -23,4 +23,4 @@ operator fun Value.plus(rhs: Value): Value = Value.Plus(this, rhs)
 operator fun Value.minus(rhs: Value): Value = Value.Minus(this, rhs)
 operator fun Value.times(rhs: Value): Value = Value.Times(this, rhs)
 
-fun Type.gives(fn: (Value) -> Value) = Value.Fn(this, fn(input))
+fun Type.gives(fn: (Value) -> Value) = Value.Fn(this, fn(argument(0)))

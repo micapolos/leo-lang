@@ -7,7 +7,8 @@ import java.io.ByteArrayOutputStream
 data class Compiler(
 	var dataSize: Int = 0,
 	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
-	val valueOffsets: MutableMap<Value, Offset> = HashMap(),
+	val valueOffsets: MutableMap<Value, Offset> = mutableMapOf(),
+	val parameterOffsets: MutableList<Offset> = mutableListOf(),
 	val types: Types = Types(),
 	val layouts: Layouts = Layouts()
 )
@@ -16,7 +17,8 @@ val Value.Fn.compiled: Compiled get() = compile(this)
 
 fun compile(fn: Value.Fn): Compiled {
 	val compiler = Compiler()
-	compiler.types[Value.Input] = fn.inputType
+	compiler.parameterOffsets.add(Offset.Direct(0))
+	compiler.types.push(fn.inputType)
 	val outputType = compiler.type(fn.resultValue)
 	compiler.dataHole(fn.inputType.size)
 	val outputOffset = compiler.offset(fn.resultValue)
@@ -30,7 +32,8 @@ fun compile(fn: Value.Fn): Compiled {
 
 fun Compiler.offset(value: Value): Offset =
 	value.optimize.let { value ->
-		valueOffsets.get(value) { compileOffset(value) }
+		if (value is Value.Argument) compileOffset(value)
+		else valueOffsets.getOrCompute(value) { compileOffset(value) }
 	}
 
 fun Compiler.pointerOffset(value: Value): Offset =
@@ -77,7 +80,7 @@ fun Compiler.direct(index: Int): Int =
 
 fun Compiler.compileOffset(value: Value): Offset =
 	when (value) {
-		is Value.Input -> Offset.Direct(0)
+		is Value.Argument -> parameterOffsets[parameterOffsets.size - 1 - value.depth]
 
 		is Value.Bool -> add32(value.boolean.int)
 		is Value.I32 -> add32(value.int)
@@ -91,7 +94,7 @@ fun Compiler.compileOffset(value: Value): Offset =
 
 fun Compiler.set(dst: Int, value: Value) {
 	when (value) {
-		is Value.Input -> setSize(dst, index(value), size(value))
+		is Value.Argument -> setSize(dst, index(value), size(value))
 
 		is Value.Bool -> setConst32(dst, value.boolean.int)
 		is Value.I32 -> setConst32(dst, value.int)

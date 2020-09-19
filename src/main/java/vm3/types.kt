@@ -3,18 +3,26 @@ package vm3
 import vm3.dsl.type.get
 import vm3.dsl.type.item
 
-data class Types(val map: MutableMap<Value, Type> = HashMap())
+data class Types(
+	val parameters: MutableList<Type> = mutableListOf(),
+	val map: MutableMap<Value, Type> = mutableMapOf()
+)
 
 operator fun Types.get(value: Value): Type =
-	map.get(value) { newType(value) }
+	if (value is Value.Argument) computeType(value)
+	else map.getOrCompute(value) { computeType(value) }
 
-operator fun Types.set(value: Value, type: Type) {
-	map[value] = type
+fun Types.push(type: Type) {
+	parameters.add(type)
 }
 
-fun Types.newType(value: Value): Type =
+fun Types.pop() {
+	parameters.removeAt(parameters.size - 1)
+}
+
+fun Types.computeType(value: Value): Type =
 	when (value) {
-		Value.Input -> null
+		is Value.Argument -> parameters[parameters.size - 1 - value.depth]
 		is Value.Bool -> Type.Bool
 		is Value.I32 -> Type.I32
 		is Value.F32 -> Type.F32

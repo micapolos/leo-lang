@@ -3,7 +3,7 @@ package vm3
 data class Layouts(val map: MutableMap<Type, Layout> = HashMap())
 
 operator fun Layouts.get(type: Type): Layout =
-	map.get(type) { newLayout(type) }
+	map.getOrCompute(type) { newLayout(type) }
 
 fun Layouts.newLayout(type: Type): Layout =
 	when (type) {

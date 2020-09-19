@@ -1,7 +1,7 @@
 package vm3
 
 sealed class Value {
-	object Input : Value()
+	data class Argument(val depth: Int) : Value()
 
 	data class Bool(val boolean: Boolean) : Value()
 	data class I32(val int: Int) : Value()
@@ -29,7 +29,7 @@ sealed class Value {
 val Value.code: String
 	get() =
 		when (this) {
-			Value.Input -> "input"
+			is Value.Argument -> "argument($depth)"
 			is Value.Bool -> "$boolean"
 			is Value.I32 -> "$int"
 			is Value.F32 -> "$float"

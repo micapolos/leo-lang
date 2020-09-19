@@ -1,6 +1,6 @@
 package vm3
 
-fun <K, V> MutableMap<K, V>.get(key: K, fn: () -> V): V {
+fun <K, V> MutableMap<K, V>.getOrCompute(key: K, fn: () -> V): V {
 	val value = get(key)
 	return if (value != null) value
 	else {
