@@ -19,3 +19,17 @@ val Type.size: Int
 			is Type.Array -> itemType.size.times(itemCount)
 			is Type.Struct -> fields.map { it.valueType }.map { it.size }.fold(0, Int::plus)
 		}
+
+val Type.code: String
+	get() =
+		when (this) {
+			Type.Bool -> "bool"
+			Type.I32 -> "i32"
+			Type.F32 -> "f32"
+			is Type.Array -> "${itemType.code}[$itemCount]"
+			is Type.Struct -> "{${fields.joinToString(", ") { it.code }}}"
+		}
+
+val Type.Struct.Field.code: String
+	get() =
+		"$name: ${valueType.code}"

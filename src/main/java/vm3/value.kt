@@ -20,3 +20,24 @@ sealed class Value {
 	data class Plus(val lhs: Value, val rhs: Value) : Value()
 	data class Minus(val lhs: Value, val rhs: Value) : Value()
 }
+
+val Value.code: String
+	get() =
+		when (this) {
+			Value.Input -> "input"
+			is Value.Bool -> "$boolean"
+			is Value.I32 -> "$int"
+			is Value.F32 -> "$float"
+			is Value.Array -> "[${items.joinToString(", ") { it.code }}]"
+			is Value.ArrayAt -> "${lhs.code}[${index.code}]"
+			is Value.Struct -> "{${fields.joinToString(", ") { it.code }}}"
+			is Value.StructAt -> "${lhs.code}.$name"
+			is Value.Inc -> "${lhs.code}.inc"
+			is Value.Dec -> "${lhs.code}.dec"
+			is Value.Plus -> "${lhs.code}.plus(${rhs.code})"
+			is Value.Minus -> "${lhs.code}.minus(${rhs.code})"
+		}
+
+val Value.Field.code: String
+	get() =
+		"$name: ${value.code}"

@@ -37,7 +37,7 @@ val Executor.dump get() = disassemble.println
 
 val Executor.disassemble
 	get() = """
-	input: ${inputType}
-  output: ${outputType}
-	outputOffset: ${outputOffset}
+	input: ${inputType.code}
+  output: ${outputType.code}
+	outputOffset: ${outputOffset.code}
   ${vm.disassemble}""".trimIndent()

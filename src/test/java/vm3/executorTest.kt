@@ -76,47 +76,41 @@ class ExecutorTest {
 	fun struct() {
 		struct("x" to f32, "y" to f32).fn { this }
 			.executor
-			.run {
-				execute(struct("x" to 10f.f32, "y" to 20f.f32))
-					.assertEqualTo(struct("x" to 10f.f32, "y" to 20f.f32))
-			}
+			.execute(struct("x" to 10f.f32, "y" to 20f.f32))
+			.assertEqualTo(struct("x" to 10f.f32, "y" to 20f.f32))
 	}
 
 	@Test
 	fun structGet() {
 		struct("x" to f32, "y" to f32).fn { this["y"] }
 			.executor
-			.run {
-				execute(struct("x" to 10f.f32, "y" to 20f.f32)).assertEqualTo(20f.f32)
-			}
+			.apply { dump }
+			.execute(struct("x" to 10f.f32, "y" to 20f.f32))
+			.assertEqualTo(20f.f32)
 	}
 
 	@Test
 	fun arrayOfArraysGet() {
 		f32[2][3].fn { this[1.i32v][1.i32v] }
 			.executor
-			.run {
-				execute(
-					array(
-						array(10f.f32, 20f.f32),
-						array(30f.f32, 40f.f32),
-						array(50f.f32, 60f.f32)))
-					.assertEqualTo(40f.f32)
-			}
+			.execute(
+				array(
+					array(10f.f32, 20f.f32),
+					array(30f.f32, 40f.f32),
+					array(50f.f32, 60f.f32)))
+			.assertEqualTo(40f.f32)
 	}
 
 	@Test
 	fun arrayOfStructsGet() {
 		struct("x" to f32, "y" to f32)[3].fn { this[1.i32v]["y"] }
 			.executor
-			.run {
-				execute(
-					array(
-						struct("x" to 10f.f32, "y" to 20f.f32),
-						struct("x" to 30f.f32, "y" to 40f.f32),
-						struct("x" to 50f.f32, "y" to 60f.f32)))
-					.assertEqualTo(40f.f32)
-			}
+			.execute(
+				array(
+					struct("x" to 10f.f32, "y" to 20f.f32),
+					struct("x" to 30f.f32, "y" to 40f.f32),
+					struct("x" to 50f.f32, "y" to 60f.f32)))
+			.assertEqualTo(40f.f32)
 	}
 
 	@Test
@@ -125,13 +119,11 @@ class ExecutorTest {
 			"first" to struct("x" to f32, "y" to f32),
 			"second" to struct("z" to f32, "w" to f32)).fn { this["second"]["w"] }
 			.executor
-			.run {
-				execute(
-					struct(
-						"first" to struct("x" to 10f.f32, "y" to 20f.f32),
-						"second" to struct("z" to 30f.f32, "w" to 40f.f32)))
-					.assertEqualTo(40f.f32)
-			}
+			.execute(
+				struct(
+					"first" to struct("x" to 10f.f32, "y" to 20f.f32),
+					"second" to struct("z" to 30f.f32, "w" to 40f.f32)))
+			.assertEqualTo(40f.f32)
 	}
 
 	@Test
@@ -141,12 +133,10 @@ class ExecutorTest {
 			"second" to f32[2])
 			.fn { this["second"][1.i32v] }
 			.executor
-			.run {
-				execute(
-					struct(
-						"first" to array(10f.f32, 20f.f32),
-						"second" to array(30f.f32, 40f.f32)))
-					.assertEqualTo(40f.f32)
-			}
+			.execute(
+				struct(
+					"first" to array(10f.f32, 20f.f32),
+					"second" to array(30f.f32, 40f.f32)))
+			.assertEqualTo(40f.f32)
 	}
 }

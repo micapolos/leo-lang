@@ -1,6 +1,7 @@
 package vm3
 
 import vm3.dsl.layout.offset
+import vm3.dsl.type.i32
 import java.io.ByteArrayOutputStream
 
 data class Compiler(
@@ -28,6 +29,12 @@ fun compile(fn: Fn): Compiled {
 
 fun Compiler.offset(value: Value): Offset =
 	valueOffsets.get(value) { compileOffset(value) }
+
+fun Compiler.pointerOffset(value: Value): Offset =
+	indirectOffset(offset(value))
+
+fun Compiler.indirectOffset(offset: Offset): Offset =
+	Offset.Indirect(indirectIndex(offset))
 
 fun Compiler.index(offset: Offset): Int =
 	when (offset) {
@@ -120,6 +127,13 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 		}
 	}
 
+fun Compiler.add2(structAt: Value.StructAt): Offset =
+	pointerOffset(structAt.lhs).let { structOffset ->
+		constOffset(layout(type(structAt.lhs)).offset(structAt.name)).let { fieldOffset ->
+			addOp(x16_i32PlusOpcode, i32, structOffset, fieldOffset)
+		}
+	}
+
 fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 	indirectIndex(offset(arrayAt.lhs)).let { lhs ->
 		index(offset(arrayAt.index)).let { index ->
@@ -135,7 +149,10 @@ fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 	}
 
 fun Compiler.addOp(op: Int, type: Type, lhs: Value): Offset =
-	index(offset(lhs)).let { lhs ->
+	addOp(op, type, offset(lhs))
+
+fun Compiler.addOp(op: Int, type: Type, lhs: Offset): Offset =
+	index(lhs).let { lhs ->
 		dataHole(type.size).let { dst ->
 			codeOutputStream.writeOp(op)
 			codeOutputStream.writeInt(dst)
@@ -145,8 +162,11 @@ fun Compiler.addOp(op: Int, type: Type, lhs: Value): Offset =
 	}
 
 fun Compiler.addOp(op: Int, type: Type, lhs: Value, rhs: Value): Offset =
-	index(offset(lhs)).let { lhs ->
-		index(offset(rhs)).let { rhs ->
+	addOp(op, type, offset(lhs), offset(rhs))
+
+fun Compiler.addOp(op: Int, type: Type, lhs: Offset, rhs: Offset): Offset =
+	index(lhs).let { lhs ->
+		index(rhs).let { rhs ->
 			dataHole(type.size).let { dst ->
 				codeOutputStream.writeOp(op)
 				codeOutputStream.writeInt(dst)
