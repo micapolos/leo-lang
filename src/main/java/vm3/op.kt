@@ -1,5 +1,7 @@
 package vm3
 
+import kotlinx.collections.immutable.persistentListOf
+import leo.base.iterate
 import leo.base.orNullIf
 import java.io.InputStream
 import java.io.OutputStream
@@ -11,6 +13,7 @@ sealed class Op {
 
 	data class Jump(val addr: Int) : Op()
 	data class JumpIf(val cond: Int, val addr: Int) : Op()
+	data class JumpTable(val index: Int, val indices: List<Int>) : Op()
 	data class Call(val addr: Int, val retAddr: Int) : Op()
 
 	data class SetConst(val dst: Int, val value: Int) : Op()
@@ -45,6 +48,7 @@ val Op.argCount: Int
 			Op.SysCall -> 0
 			is Op.Jump -> 1
 			is Op.JumpIf -> 2
+			is Op.JumpTable -> 2 + indices.size
 			is Op.Call -> 2
 			is Op.SetConst -> 2
 			is Op.Set -> 2
@@ -70,7 +74,7 @@ fun OutputStream.write(op: Op) {
 
 		is Op.Jump -> writeOp(x03_jumpOpcode, op.addr)
 		is Op.JumpIf -> writeOp(x04_jumpIfOpcode, op.cond, op.addr)
-		is Op.Call -> writeOp(x05_callOpcode, op.addr, op.retAddr)
+		is Op.Call -> writeOp(x06_callOpcode, op.addr, op.retAddr)
 
 		is Op.SetConst -> writeOp(x08_setConst32Opcode, op.dst, op.value)
 		is Op.Set -> writeOp(x09_set32Opcode, op.dst, op.lhs)
@@ -128,7 +132,15 @@ fun InputStream.readOp(): Op? =
 
 			x03_jumpOpcode -> Op.Jump(readInt())
 			x04_jumpIfOpcode -> Op.JumpIf(readInt(), readInt())
-			x05_callOpcode -> Op.Call(readInt(), readInt())
+			x05_jumpTable -> readInt().let { size ->
+				readInt().let { cond ->
+					persistentListOf<Int>().iterate(size) { add(readInt()) }.let { indices ->
+						Op.JumpTable(cond, indices.toList())
+					}
+				}
+			}
+
+			x06_callOpcode -> Op.Call(readInt(), readInt())
 
 			x08_setConst32Opcode -> Op.SetConst(readInt(), readInt())
 			x09_set32Opcode -> Op.Set(readInt(), readInt())

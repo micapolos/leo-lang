@@ -26,8 +26,9 @@ fun Vm.run() {
 			x02_syscallOpcode -> syscall()
 
 			x03_jumpOpcode -> jump(fetch32())
-			x04_jumpIfOpcode -> jumpIf(fetch32().boolean, fetch32())
-			x05_callOpcode -> call(fetch32(), fetch32())
+			x04_jumpIfOpcode -> jumpIf(fetch32(), fetch32())
+			x05_jumpTable -> jumpTable(fetch32(), fetch32())
+			x06_callOpcode -> call(fetch32(), fetch32())
 
 			x08_setConst32Opcode -> setConstant(fetch32(), fetch32())
 			x09_set32Opcode -> copy(fetch32(), fetch32())
@@ -141,8 +142,11 @@ inline fun Vm.fetchIndex() =
 inline fun Vm.jump(index: Int) =
 	also { pc = index }
 
-inline fun Vm.jumpIf(cond: Boolean, index: Int) =
-	also { if (cond) jump(index) }
+inline fun Vm.jumpIf(cond: Int, index: Int) =
+	also { if (dataInt(cond).boolean) jump(index) }
+
+inline fun Vm.jumpTable(size: Int, index: Int) =
+	also { pc = codeInt(pc + 4 * dataInt(index)) }
 
 inline fun Vm.call(jumpIndex: Int, retIndex: Int) =
 	also {
