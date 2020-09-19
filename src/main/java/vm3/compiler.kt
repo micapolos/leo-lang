@@ -43,12 +43,15 @@ fun Compiler.index(offset: Offset): Int =
 
 fun Compiler.indirectIndex(offset: Offset): Int =
 	when (offset) {
-		is Offset.Direct -> dataOutputStream.writeHole(4).also { index ->
-			codeOutputStream.writeByte(0x08)
-			codeOutputStream.writeInt(index)
-			codeOutputStream.writeInt(offset.index)
-		}
+		is Offset.Direct -> indirect(offset.index)
 		is Offset.Indirect -> offset.index
+	}
+
+fun Compiler.indirect(directIndex: Int): Int =
+	dataOutputStream.writeHole(4).also { index ->
+		codeOutputStream.writeByte(0x08)
+		codeOutputStream.writeInt(index)
+		codeOutputStream.writeInt(directIndex)
 	}
 
 fun Compiler.direct(index: Int): Int =
@@ -110,10 +113,10 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 			is Offset.Direct ->
 				Offset.Direct(lhsOffset.index + layout(type(structAt.lhs)).offset(structAt.name))
 			is Offset.Indirect -> dataOutputStream.writeHole(4).let { dst ->
-				codeOutputStream.writeByte(0x09)
+				codeOutputStream.writeByte(0x0A)
 				codeOutputStream.writeInt(dst)
 				codeOutputStream.writeInt(lhsOffset.index)
-				// TODO()
+				codeOutputStream.writeInt(layout(type(structAt.lhs)).offset(structAt.name))
 				Offset.Indirect(dst)
 			}
 		}

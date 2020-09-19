@@ -2,8 +2,6 @@ package vm3
 
 import leo.base.assertEqualTo
 import leo.base.assertNotNull
-import leo.base.println
-import leo.java.lang.exec
 import vm3.dsl.data.array
 import vm3.dsl.data.f32
 import vm3.dsl.data.i32
@@ -14,10 +12,10 @@ import vm3.dsl.type.i32
 import vm3.dsl.type.struct
 import vm3.dsl.value.fn
 import vm3.dsl.value.get
-import vm3.dsl.value.i32 as i32v
 import vm3.dsl.value.inc
 import vm3.dsl.value.plus
 import kotlin.test.Test
+import vm3.dsl.value.i32 as i32v
 
 class ExecutorTest {
 	@Test
@@ -117,6 +115,37 @@ class ExecutorTest {
 						struct("x" to 10f.f32, "y" to 20f.f32),
 						struct("x" to 30f.f32, "y" to 40f.f32),
 						struct("x" to 50f.f32, "y" to 60f.f32)))
+					.assertEqualTo(40f.f32)
+			}
+	}
+
+	@Test
+	fun structOfStructsGet() {
+		struct(
+			"first" to struct("x" to f32, "y" to f32),
+			"second" to struct("z" to f32, "w" to f32)).fn { this["second"]["w"] }
+			.executor
+			.run {
+				execute(
+					struct(
+						"first" to struct("x" to 10f.f32, "y" to 20f.f32),
+						"second" to struct("z" to 30f.f32, "w" to 40f.f32)))
+					.assertEqualTo(40f.f32)
+			}
+	}
+
+	@Test
+	fun structOfArraysGet() {
+		struct(
+			"first" to f32[2],
+			"second" to f32[2])
+			.fn { this["second"][1.i32v] }
+			.executor
+			.run {
+				execute(
+					struct(
+						"first" to array(10f.f32, 20f.f32),
+						"second" to array(30f.f32, 40f.f32)))
 					.assertEqualTo(40f.f32)
 			}
 	}
