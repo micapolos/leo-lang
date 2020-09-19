@@ -1,8 +1,5 @@
 package vm3
 
-import leo16.term.chez.value
-import vm3.dsl.value.get
-
 val Value.optimize: Value
 	get() =
 		innerOptimize.outerOptimize
@@ -17,7 +14,7 @@ val Value.outerOptimize: Value
 			is Value.Array -> null
 			is Value.ArrayAt -> (lhs as? Value.Array)?.let { lhs ->
 				(index as? Value.I32)?.let { index ->
-					lhs.items[index.int]
+					lhs.items.getOrNull(index.int)
 				}
 			}
 			is Value.Struct -> null
@@ -33,13 +30,13 @@ val Value.outerOptimize: Value
 				else -> null
 			}
 			is Value.Plus -> when (lhs) {
-				is Value.I32 -> (rhs as Value.I32).let { Value.I32(lhs.int + rhs.int) }
-				is Value.F32 -> (rhs as Value.F32).let { Value.F32(lhs.float + rhs.float) }
+				is Value.I32 -> (rhs as? Value.I32)?.let { Value.I32(lhs.int + rhs.int) }
+				is Value.F32 -> (rhs as? Value.F32)?.let { Value.F32(lhs.float + rhs.float) }
 				else -> null
 			}
 			is Value.Minus -> when (lhs) {
-				is Value.I32 -> (rhs as Value.I32).let { Value.I32(lhs.int - rhs.int) }
-				is Value.F32 -> (rhs as Value.F32).let { Value.F32(lhs.float - rhs.float) }
+				is Value.I32 -> (rhs as? Value.I32)?.let { Value.I32(lhs.int - rhs.int) }
+				is Value.F32 -> (rhs as? Value.F32)?.let { Value.F32(lhs.float - rhs.float) }
 				else -> null
 			}
 		} ?: this

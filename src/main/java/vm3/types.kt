@@ -14,7 +14,7 @@ operator fun Types.set(value: Value, type: Type) {
 
 fun Types.newType(value: Value): Type =
 	when (value) {
-		Value.Input -> error("unknown type")
+		Value.Input -> null
 		is Value.Bool -> Type.Bool
 		is Value.I32 -> Type.I32
 		is Value.F32 -> Type.F32
@@ -60,4 +60,4 @@ fun Types.newType(value: Value): Type =
 					}
 				else -> null
 			}
-	} ?: error("type($value)")
+	} ?: error("$value.type")

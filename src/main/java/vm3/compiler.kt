@@ -17,18 +17,21 @@ val Fn.compiled: Compiled get() = compile(this)
 fun compile(fn: Fn): Compiled {
 	val compiler = Compiler()
 	compiler.types[Value.Input] = fn.input
+	val outputType = compiler.type(fn.output)
 	compiler.dataHole(fn.input.size)
 	val outputOffset = compiler.offset(fn.output)
 	compiler.codeOutputStream.writeOp(x00_returnOpcode)
 	return Compiled(
 		compiler.codeOutputStream.toByteArray(),
 		compiler.dataOutputStream.size(),
-		compiler.type(fn.output),
+		outputType,
 		outputOffset)
 }
 
 fun Compiler.offset(value: Value): Offset =
-	valueOffsets.get(value) { compileOffset(value) }
+	value.optimize.let { value ->
+		valueOffsets.get(value) { compileOffset(value) }
+	}
 
 fun Compiler.pointerOffset(value: Value): Offset =
 	indirectOffset(offset(value))
