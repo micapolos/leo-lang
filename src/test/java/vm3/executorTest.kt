@@ -2,6 +2,7 @@ package vm3
 
 import leo.base.assertEqualTo
 import leo.base.assertNotNull
+import leo.base.println
 import leo.java.lang.exec
 import vm3.dsl.data.array
 import vm3.dsl.data.f32
@@ -57,7 +58,7 @@ class ExecutorTest {
 
 	@Test
 	fun arrAt0() {
-		f32[2]
+		f32[3]
 			.fn { this[0.i32v] }
 			.executor
 			.execute(array(10f.f32, 20f.f32))
@@ -66,7 +67,7 @@ class ExecutorTest {
 
 	@Test
 	fun arrAt1() {
-		f32[2]
+		f32[3]
 			.fn { this[1.i32v] }
 			.executor
 			.execute(array(10f.f32, 20f.f32))
@@ -89,6 +90,34 @@ class ExecutorTest {
 			.executor
 			.run {
 				execute(struct("x" to 10f.f32, "y" to 20f.f32)).assertEqualTo(20f.f32)
+			}
+	}
+
+	@Test
+	fun arrayOfArraysGet() {
+		f32[2][3].fn { this[1.i32v][1.i32v] }
+			.executor
+			.run {
+				execute(
+					array(
+						array(10f.f32, 20f.f32),
+						array(30f.f32, 40f.f32),
+						array(50f.f32, 60f.f32)))
+					.assertEqualTo(40f.f32)
+			}
+	}
+
+	@Test
+	fun arrayOfStructsGet() {
+		struct("x" to f32, "y" to f32)[3].fn { this[1.i32v]["y"] }
+			.executor
+			.run {
+				execute(
+					array(
+						struct("x" to 10f.f32, "y" to 20f.f32),
+						struct("x" to 30f.f32, "y" to 40f.f32),
+						struct("x" to 50f.f32, "y" to 60f.f32)))
+					.assertEqualTo(40f.f32)
 			}
 	}
 }

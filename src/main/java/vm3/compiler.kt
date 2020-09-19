@@ -41,6 +41,16 @@ fun Compiler.index(offset: Offset): Int =
 		}
 	}
 
+fun Compiler.indirectIndex(offset: Offset): Int =
+	when (offset) {
+		is Offset.Direct -> dataOutputStream.writeHole(4).also { index ->
+			codeOutputStream.writeByte(0x08)
+			codeOutputStream.writeInt(index)
+			codeOutputStream.writeInt(offset.index)
+		}
+		is Offset.Indirect -> offset.index
+	}
+
 fun Compiler.direct(index: Int): Int =
 	dataOutputStream.writeHole(4).also { dst ->
 		codeOutputStream.writeByte(0x09)
@@ -110,7 +120,7 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 	}
 
 fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
-	index(offset(arrayAt.lhs)).let { lhs ->
+	indirectIndex(offset(arrayAt.lhs)).let { lhs ->
 		index(offset(arrayAt.index)).let { index ->
 			dataOutputStream.writeHole(4).let { dst ->
 				codeOutputStream.writeByte(0x0B)

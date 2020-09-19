@@ -1,7 +1,6 @@
 package vm3
 
 import leo.base.assertEqualTo
-import vm3.dsl.data.array
 import vm3.dsl.type.bool
 import vm3.dsl.type.f32
 import vm3.dsl.type.get
@@ -61,12 +60,13 @@ class CompilerTest {
 			.compiled
 			.disassemble
 			.assertEqualTo("""
-				dataSize: 0x00000014
-				outputOffset: [0x00000010]
+				dataSize: 0x00000018
+				outputOffset: [0x00000014]
 				--- disassembly ---
-				0x00000000: [0x0000000c] <- 0x00000001
-				0x00000009: [0x00000010] <- [0x00000000 + [0x0000000c] * 4]
-				0x0000001a: exit
+				0x00000000: [0x0000000c] <- 0x00000000
+				0x00000009: [0x00000010] <- 0x00000001
+				0x00000012: [0x00000014] <- [0x0000000c] + [0x00000010] * 4
+				0x00000023: exit
 				
 				""".trimIndent())
 	}

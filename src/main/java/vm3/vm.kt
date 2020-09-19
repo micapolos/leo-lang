@@ -1,11 +1,17 @@
 package vm3
 
+import leo.base.println
+
 class Vm(
 	val data: ByteArray,
 	val code: ByteArray,
 	var pc: Int = 0,
 	val syscall: () -> Unit = { error("Unknown system call") }
 )
+
+val Vm.dump: Unit
+	get() =
+		"pc: ${pc.hexString}\n--- code ---\n${code.disassemble}--- data ---\n${data.contentToString()}".println
 
 @OptIn(ExperimentalStdlibApi::class)
 fun Vm.run() {

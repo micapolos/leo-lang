@@ -23,6 +23,7 @@ sealed class Op {
 
 	data class I32Plus(val dst: Int, val lhs: Int, val rhs: Int) : Op()
 	data class I32Minus(val dst: Int, val lhs: Int, val rhs: Int) : Op()
+	data class I32Times(val dst: Int, val lhs: Int, val rhs: Int) : Op()
 
 	data class F32Plus(val dst: Int, val lhs: Int, val rhs: Int) : Op()
 	data class F32Minus(val dst: Int, val lhs: Int, val rhs: Int) : Op()
@@ -53,6 +54,7 @@ val Op.argCount: Int
 			is Op.I32Dec -> 2
 			is Op.I32Plus -> 3
 			is Op.I32Minus -> 3
+			is Op.I32Times -> 3
 			is Op.F32Plus -> 3
 			is Op.F32Minus -> 3
 			is Op.F32Times -> 3
@@ -139,6 +141,7 @@ fun InputStream.readOp(): Op? =
 
 			0x16 -> Op.I32Plus(readInt(), readInt(), readInt())
 			0x17 -> Op.I32Minus(readInt(), readInt(), readInt())
+			0x18 -> Op.I32Times(readInt(), readInt(), readInt())
 
 			0x33 -> Op.F32Plus(readInt(), readInt(), readInt())
 			0x34 -> Op.F32Minus(readInt(), readInt(), readInt())

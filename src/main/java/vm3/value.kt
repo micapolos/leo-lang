@@ -7,7 +7,7 @@ sealed class Value {
 	data class I32(val int: Int) : Value()
 	data class F32(val float: Float) : Value()
 
-	data class Array(val values: List<Value>) : Value()
+	data class Array(val items: List<Value>) : Value()
 	data class ArrayAt(val lhs: Value, val index: Value) : Value()
 
 	data class Struct(val fields: List<Field>) : Value()

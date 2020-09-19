@@ -19,7 +19,7 @@ fun Types.newType(value: Value): Type =
 		is Value.I32 -> Type.I32
 		is Value.F32 -> Type.F32
 		is Value.Struct -> Type.Struct(value.fields.map { Type.Struct.Field(it.name, get(it.value)) })
-		is Value.Array -> Type.Array(get(value.values[0]), value.values.size)
+		is Value.Array -> Type.Array(get(value.items[0]), value.items.size)
 		is Value.ArrayAt -> get(value.lhs).item
 		is Value.StructAt -> get(value.lhs)[value.name]
 		is Value.Inc ->
