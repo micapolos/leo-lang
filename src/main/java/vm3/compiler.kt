@@ -124,7 +124,7 @@ fun Compiler.compileOffset(value: Value): Offset =
 
 fun Compiler.set(dst: Int, value: Value) {
 	when (value) {
-		is Value.Input -> TODO() // traverse the layout or memcpy?
+		is Value.Input -> setSize(dst, index(value), size(value))
 
 		is Value.Bool -> setConst32(dst, value.boolean.int)
 		is Value.I32 -> setConst32(dst, value.int)
@@ -193,6 +193,13 @@ fun Compiler.set(dst: Int, array: Value.Array) {
 			set(dst + index * layout.itemLayout.size, value)
 		}
 	}
+}
+
+fun Compiler.setSize(dst: Int, src: Int, size: Int) {
+	codeOutputStream.writeOp(x0B_setSizeOpcode)
+	codeOutputStream.writeInt(dst)
+	codeOutputStream.writeInt(src)
+	codeOutputStream.writeInt(size)
 }
 
 fun Compiler.add(size: Int, setFn: (Int) -> Unit): Offset =

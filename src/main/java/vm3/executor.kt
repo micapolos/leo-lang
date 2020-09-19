@@ -10,6 +10,7 @@ data class Executor(
 )
 
 fun Executor.execute(data: Data): Data {
+	if (data.type != inputType) error("${data.type.code} != ${inputType.code}")
 	vm.data.set(0, data)
 	vm.pc = 0
 	vm.run()

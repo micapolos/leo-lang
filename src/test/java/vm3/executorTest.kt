@@ -63,7 +63,7 @@ class ExecutorTest {
 		f32[3]
 			.fn { this[0.i32v] }
 			.executor
-			.execute(array(10f.f32, 20f.f32))
+			.execute(array(10f.f32, 20f.f32, 30f.f32))
 			.assertEqualTo(10f.f32)
 	}
 
@@ -72,7 +72,7 @@ class ExecutorTest {
 		f32[3]
 			.fn { this[1.i32v] }
 			.executor
-			.execute(array(10f.f32, 20f.f32))
+			.execute(array(10f.f32, 20f.f32, 30f.f32))
 			.assertEqualTo(20f.f32)
 	}
 
@@ -147,11 +147,10 @@ class ExecutorTest {
 	@Test
 	fun arrayValue() {
 		i32
-			.fn { array(10.i32v.plus(input), 20.i32v.plus(input)) }
+			.fn { array(input, input) }
 			.executor
-			.apply { dump }
-			.execute(vm3.dsl.data.struct())
-			.assertEqualTo(array(11.i32, 21.i32))
+			.execute(10.i32)
+			.assertEqualTo(array(10.i32, 10.i32))
 	}
 
 	@Test
