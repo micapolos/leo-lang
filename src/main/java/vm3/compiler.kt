@@ -55,6 +55,9 @@ fun Compiler.index(offset: Offset): Int =
 		}
 	}
 
+fun Compiler.index(value: Value): Int =
+	index(offset(value))
+
 fun Compiler.indirectIndex(offset: Offset): Int =
 	when (offset) {
 		is Offset.Direct -> indirect(offset.index)
@@ -83,8 +86,8 @@ fun Compiler.compileOffset(value: Value): Offset =
 		is Value.I32 -> constOffset(value.int)
 		is Value.F32 -> constOffset(value.float.int)
 
-		is Value.Array -> TODO()
-		is Value.Struct -> TODO()
+		is Value.Array -> add(value)
+		is Value.Struct -> add(value)
 
 		is Value.ArrayAt -> add(value)
 		is Value.StructAt -> add(value)
@@ -119,6 +122,51 @@ fun Compiler.compileOffset(value: Value): Offset =
 			}
 	}
 
+fun Compiler.set(dst: Int, value: Value) {
+	when (value) {
+		is Value.Input -> TODO() // traverse the layout or memcpy?
+
+		is Value.Bool -> setConst32(dst, value.boolean.int)
+		is Value.I32 -> setConst32(dst, value.int)
+		is Value.F32 -> setConst32(dst, value.float.int)
+
+		is Value.Array -> set(dst, value)
+		is Value.Struct -> set(dst, value)
+
+		is Value.ArrayAt -> TODO()
+		is Value.StructAt -> TODO()
+
+		is Value.Inc ->
+			when (type(value)) {
+				Type.I32 -> setOp(x10_i32IncOpcode, dst, value.lhs)
+				else -> TODO()
+			}
+		is Value.Dec ->
+			when (type(value)) {
+				Type.I32 -> setOp(x11_i32DecOpcode, dst, value.lhs)
+				else -> TODO()
+			}
+		is Value.Plus ->
+			when (type(value)) {
+				Type.I32 -> setOp(x16_i32PlusOpcode, dst, value.lhs)
+				Type.F32 -> setOp(x33_f32PlusOpcode, dst, value.lhs)
+				else -> TODO()
+			}
+		is Value.Minus ->
+			when (type(value)) {
+				Type.I32 -> setOp(x17_i32MinusOpcode, dst, value.lhs)
+				Type.F32 -> setOp(x34_f32MinusOpcode, dst, value.lhs)
+				else -> TODO()
+			}
+		is Value.Times ->
+			when (type(value)) {
+				Type.I32 -> setOp(x18_i32TimesOpcode, dst, value.lhs)
+				Type.F32 -> setOp(x35_f32TimesOpcode, dst, value.lhs)
+				else -> TODO()
+			}
+	}
+}
+
 fun Compiler.constOffset(lhs: Int): Offset =
 	dataHole(4).let { dst ->
 		codeOutputStream.writeOp(x08_setConst32Opcode)
@@ -126,6 +174,39 @@ fun Compiler.constOffset(lhs: Int): Offset =
 		codeOutputStream.writeInt(lhs)
 		Offset.Direct(dst)
 	}
+
+fun Compiler.setConst32(dst: Int, src: Int) {
+	codeOutputStream.writeOp(x08_setConst32Opcode)
+	codeOutputStream.writeInt(dst)
+	codeOutputStream.writeInt(src)
+}
+
+fun Compiler.set(dst: Int, struct: Value.Struct) {
+	struct.fields.zip((layout(type(struct)).body as Layout.Body.Struct).fields).map { (field, layout) ->
+		set(dst + layout.offset, field.value)
+	}
+}
+
+fun Compiler.set(dst: Int, array: Value.Array) {
+	(layout(type(array)).body as Layout.Body.Array).let { layout ->
+		array.items.mapIndexed { index, value ->
+			set(dst + index * layout.itemLayout.size, value)
+		}
+	}
+}
+
+fun Compiler.add(size: Int, setFn: (Int) -> Unit): Offset =
+	dataHole(size).let { dst ->
+		setFn(dst)
+		Offset.Direct(dst)
+	}
+
+
+fun Compiler.add(struct: Value.Struct): Offset =
+	add(size(struct)) { dst -> set(dst, struct) }
+
+fun Compiler.add(array: Value.Array): Offset =
+	add(size(array)) { dst -> set(dst, array) }
 
 fun Compiler.add(structAt: Value.StructAt): Offset =
 	pointerOffset(structAt.lhs).let { structOffset ->
@@ -137,7 +218,7 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 	pointerOffset(arrayAt.lhs).let { arrayOffset ->
 		offset(arrayAt.index).let { indexOffset ->
-			constOffset(layout(type(arrayAt)).size).let { sizeOffset ->
+			constOffset(size(arrayAt)).let { sizeOffset ->
 				addOp(x18_i32TimesOpcode, i32, indexOffset, sizeOffset).let { itemOffset ->
 					depointerOffset(addOp(x16_i32PlusOpcode, i32, arrayOffset, itemOffset))
 				}
@@ -157,6 +238,25 @@ fun Compiler.addOp(op: Int, type: Type, lhs: Offset): Offset =
 			Offset.Direct(dst)
 		}
 	}
+
+fun Compiler.setOp(op: Int, dst: Int, lhs: Value) =
+	setOp(op, dst, index(lhs))
+
+fun Compiler.setOp(op: Int, dst: Int, lhs: Value, rhs: Value) =
+	setOp(op, dst, index(lhs), index(rhs))
+
+fun Compiler.setOp(op: Int, dst: Int, lhs: Int) {
+	codeOutputStream.writeOp(op)
+	codeOutputStream.writeInt(dst)
+	codeOutputStream.writeInt(lhs)
+}
+
+fun Compiler.setOp(op: Int, dst: Int, lhs: Int, rhs: Int) {
+	codeOutputStream.writeOp(op)
+	codeOutputStream.writeInt(dst)
+	codeOutputStream.writeInt(lhs)
+	codeOutputStream.writeInt(rhs)
+}
 
 fun Compiler.addOp(op: Int, type: Type, lhs: Value, rhs: Value): Offset =
 	addOp(op, type, offset(lhs), offset(rhs))
@@ -182,3 +282,6 @@ fun Compiler.layout(type: Type): Layout =
 
 fun Compiler.dataHole(size: Int): Int =
 	dataSize.also { dataSize += size }
+
+fun Compiler.size(value: Value): Int =
+	layout(type(value)).size

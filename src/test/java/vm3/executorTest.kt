@@ -10,6 +10,7 @@ import vm3.dsl.type.f32
 import vm3.dsl.type.get
 import vm3.dsl.type.i32
 import vm3.dsl.type.struct
+import vm3.dsl.value.array
 import vm3.dsl.value.fn
 import vm3.dsl.value.get
 import vm3.dsl.value.inc
@@ -141,6 +142,16 @@ class ExecutorTest {
 					"first" to array(10f.f32, 20f.f32),
 					"second" to array(30f.f32, 40f.f32)))
 			.assertEqualTo(40f.f32)
+	}
+
+	@Test
+	fun arrayValue() {
+		i32
+			.fn { array(10.i32v.plus(input), 20.i32v.plus(input)) }
+			.executor
+			.apply { dump }
+			.execute(vm3.dsl.data.struct())
+			.assertEqualTo(array(11.i32, 21.i32))
 	}
 
 	@Test
