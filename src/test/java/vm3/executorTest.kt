@@ -11,11 +11,13 @@ import vm3.dsl.type.get
 import vm3.dsl.type.i32
 import vm3.dsl.type.struct
 import vm3.dsl.value.array
+import vm3.dsl.value.dec
 import vm3.dsl.value.fn
 import vm3.dsl.value.get
 import vm3.dsl.value.inc
 import vm3.dsl.value.input
 import vm3.dsl.value.plus
+import vm3.dsl.value.struct
 import vm3.dsl.value.times
 import kotlin.test.Test
 import vm3.dsl.value.i32 as i32v
@@ -151,6 +153,51 @@ class ExecutorTest {
 			.executor
 			.execute(10.i32)
 			.assertEqualTo(array(10.i32, 10.i32))
+	}
+
+	@Test
+	fun arrayValueIncDec() {
+		i32
+			.fn { array(input.inc, input.dec) }
+			.executor
+			.execute(10.i32)
+			.assertEqualTo(array(11.i32, 9.i32))
+	}
+
+	@Test
+	fun arrayValuePlus() {
+		i32
+			.fn { array(input, input.plus(input)) }
+			.executor
+			.execute(10.i32)
+			.assertEqualTo(array(10.i32, 20.i32))
+	}
+
+	@Test
+	fun structValue() {
+		i32
+			.fn { struct("x" to input, "y" to input) }
+			.executor
+			.execute(10.i32)
+			.assertEqualTo(struct("x" to 10.i32, "y" to 10.i32))
+	}
+
+	@Test
+	fun structValueIncDec() {
+		i32
+			.fn { struct("x" to input.inc, "y" to input.dec) }
+			.executor
+			.execute(10.i32)
+			.assertEqualTo(struct("x" to 11.i32, "y" to 9.i32))
+	}
+
+	@Test
+	fun structValuePlus() {
+		i32
+			.fn { struct("x" to input, "y" to input.plus(input)) }
+			.executor
+			.execute(10.i32)
+			.assertEqualTo(struct("x" to 10.i32, "y" to 20.i32))
 	}
 
 	@Test

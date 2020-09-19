@@ -148,20 +148,20 @@ fun Compiler.set(dst: Int, value: Value) {
 			}
 		is Value.Plus ->
 			when (type(value)) {
-				Type.I32 -> setOp(x16_i32PlusOpcode, dst, value.lhs)
-				Type.F32 -> setOp(x33_f32PlusOpcode, dst, value.lhs)
+				Type.I32 -> setOp(x16_i32PlusOpcode, dst, value.lhs, value.rhs)
+				Type.F32 -> setOp(x33_f32PlusOpcode, dst, value.lhs, value.rhs)
 				else -> TODO()
 			}
 		is Value.Minus ->
 			when (type(value)) {
-				Type.I32 -> setOp(x17_i32MinusOpcode, dst, value.lhs)
-				Type.F32 -> setOp(x34_f32MinusOpcode, dst, value.lhs)
+				Type.I32 -> setOp(x17_i32MinusOpcode, dst, value.lhs, value.rhs)
+				Type.F32 -> setOp(x34_f32MinusOpcode, dst, value.lhs, value.rhs)
 				else -> TODO()
 			}
 		is Value.Times ->
 			when (type(value)) {
-				Type.I32 -> setOp(x18_i32TimesOpcode, dst, value.lhs)
-				Type.F32 -> setOp(x35_f32TimesOpcode, dst, value.lhs)
+				Type.I32 -> setOp(x18_i32TimesOpcode, dst, value.lhs, value.rhs)
+				Type.F32 -> setOp(x35_f32TimesOpcode, dst, value.lhs, value.rhs)
 				else -> TODO()
 			}
 	}
