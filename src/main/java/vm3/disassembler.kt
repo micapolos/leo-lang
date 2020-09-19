@@ -32,7 +32,6 @@ fun Appendable.append(op: Op) =
 
 		is Op.SetConst -> appendAssign({ appendMem(op.dst) }, { append(op.value) })
 		is Op.Set -> appendAssign({ appendMem(op.dst) }, { appendMem(op.lhs) })
-		is Op.SetOffsetTimes -> appendAssign({ appendMem(op.dst) }, { appendMemIndex(op.lhs, op.offset, op.size) })
 
 		is Op.I32Inc -> appendAssignOp(op.dst, op.lhs, "i32.inc")
 		is Op.I32Dec -> appendAssignOp(op.dst, op.lhs, "i32.dec")

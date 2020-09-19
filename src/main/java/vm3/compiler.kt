@@ -129,15 +129,12 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 	}
 
 fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
-	indirectIndex(offset(arrayAt.lhs)).let { lhs ->
-		index(offset(arrayAt.index)).let { index ->
-			dataHole(4).let { dst ->
-				codeOutputStream.writeOp(x0B_setIndexedOpcode)
-				codeOutputStream.writeInt(dst)
-				codeOutputStream.writeInt(lhs)
-				codeOutputStream.writeInt(index)
-				codeOutputStream.writeInt(layout(type(arrayAt)).size)
-				Offset.Indirect(dst)
+	pointerOffset(arrayAt.lhs).let { arrayOffset ->
+		offset(arrayAt.index).let { indexOffset ->
+			constOffset(layout(type(arrayAt)).size).let { sizeOffset ->
+				addOp(x18_i32TimesOpcode, i32, indexOffset, sizeOffset).let { itemOffset ->
+					depointerOffset(addOp(x16_i32PlusOpcode, i32, arrayOffset, itemOffset))
+				}
 			}
 		}
 	}
