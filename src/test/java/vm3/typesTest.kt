@@ -2,6 +2,7 @@ package vm3
 
 import leo.base.assertEqualTo
 import vm3.dsl.type.bool
+import vm3.dsl.type.choice
 import vm3.dsl.type.f32
 import vm3.dsl.type.get
 import vm3.dsl.type.i32
@@ -32,6 +33,12 @@ class TypesTest {
 			get(array(10.value, 20.value)).assertEqualTo(i32[2])
 			get(array(10.value, 20.value)[0.value]).assertEqualTo(i32)
 			get(array(10.value, 20.value)[1.value]).assertEqualTo(i32)
+
+			get(array(10.value, 20f.value)).assertEqualTo(choice(i32, f32)[2])
+			get(array(10.value, 20f.value, 30.value)).assertEqualTo(choice(i32, f32)[3])
+			get(array(10f.value, 20.value, 30f.value)).assertEqualTo(choice(f32, i32)[3])
+
+			get(array(10.value, 20f.value)[argument]).assertEqualTo(choice(i32, f32))
 
 			get(i32.gives(argument).give(10.value)).assertEqualTo(i32)
 			get(i32.gives(argument.plus(argument)).give(10.value)).assertEqualTo(i32)

@@ -2,6 +2,7 @@ package vm3
 
 import vm3.dsl.type.get
 import vm3.dsl.type.item
+import vm3.dsl.type.struct
 
 data class Types(
 	val parameters: MutableList<Type> = mutableListOf(),
@@ -35,8 +36,12 @@ fun Types.computeType(value: Value): Type =
 		is Value.I32 -> Type.I32
 		is Value.F32 -> Type.F32
 
-		is Value.Struct -> Type.Struct(value.fields.map { Type.Field(it.name, get(it.value)) })
-		is Value.Array -> Type.Array(get(value.items[0]), value.items.size)
+		is Value.Struct -> Type.Struct(
+			value.fields.map { Type.Field(it.name, get(it.value)) })
+
+		is Value.Array -> Type.Array(
+			combine(value.items.map { get(it) }),
+			value.items.size)
 
 		is Value.ArrayAt -> get(value.lhs).item
 		is Value.StructAt -> get(value.lhs)[value.name]
@@ -103,3 +108,12 @@ fun Types.computeType(value: Value): Type =
 				else -> null
 			}
 	} ?: error("$value.type")
+
+fun combine(types: List<Type>): Type =
+	types.deduplicate.let { types ->
+		when (types.size) {
+			0 -> struct()
+			1 -> types[0]
+			else -> Type.Choice(types)
+		}
+	}

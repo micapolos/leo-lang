@@ -222,19 +222,6 @@ fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 		}
 	}
 
-fun Compiler.addOp(op: Int, type: Type, lhs: Value): Offset =
-	addOp(op, type, offset(lhs))
-
-fun Compiler.addOp(op: Int, type: Type, lhs: Offset): Offset =
-	index(lhs).let { lhs ->
-		dataHole(type.size).let { dst ->
-			codeOutputStream.writeOp(op)
-			codeOutputStream.writeInt(dst)
-			codeOutputStream.writeInt(lhs)
-			Offset.Direct(dst)
-		}
-	}
-
 fun Compiler.setOp(op: Int, dst: Int, lhs: Value) =
 	setOp(op, dst, index(lhs))
 
@@ -253,9 +240,6 @@ fun Compiler.setOp(op: Int, dst: Int, lhs: Int, rhs: Int) {
 	codeOutputStream.writeInt(lhs)
 	codeOutputStream.writeInt(rhs)
 }
-
-fun Compiler.addOp(op: Int, type: Type, lhs: Value, rhs: Value): Offset =
-	addOp(op, type, offset(lhs), offset(rhs))
 
 fun Compiler.addOp(op: Int, type: Type, lhs: Offset, rhs: Offset): Offset =
 	index(lhs).let { lhs ->
