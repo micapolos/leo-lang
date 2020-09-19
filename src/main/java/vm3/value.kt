@@ -19,6 +19,7 @@ sealed class Value {
 
 	data class Plus(val lhs: Value, val rhs: Value) : Value()
 	data class Minus(val lhs: Value, val rhs: Value) : Value()
+	data class Times(val lhs: Value, val rhs: Value) : Value()
 }
 
 val Value.code: String
@@ -36,6 +37,7 @@ val Value.code: String
 			is Value.Dec -> "${lhs.code}.dec"
 			is Value.Plus -> "${lhs.code}.plus(${rhs.code})"
 			is Value.Minus -> "${lhs.code}.minus(${rhs.code})"
+			is Value.Times -> "${lhs.code}.times(${rhs.code})"
 		}
 
 val Value.Field.code: String

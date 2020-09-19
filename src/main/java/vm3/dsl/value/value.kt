@@ -22,5 +22,6 @@ val Value.dec: Value get() = Value.Dec(this)
 
 operator fun Value.plus(rhs: Value): Value = Value.Plus(this, rhs)
 operator fun Value.minus(rhs: Value): Value = Value.Minus(this, rhs)
+operator fun Value.times(rhs: Value): Value = Value.Times(this, rhs)
 
 fun Type.fn(fn: Value.() -> Value): Fn = Fn(this, input.fn())

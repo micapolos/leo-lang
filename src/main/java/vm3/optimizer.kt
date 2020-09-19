@@ -39,6 +39,11 @@ val Value.outerOptimize: Value
 				is Value.F32 -> (rhs as? Value.F32)?.let { Value.F32(lhs.float - rhs.float) }
 				else -> null
 			}
+			is Value.Times -> when (lhs) {
+				is Value.I32 -> (rhs as? Value.I32)?.let { Value.I32(lhs.int * rhs.int) }
+				is Value.F32 -> (rhs as? Value.F32)?.let { Value.F32(lhs.float * rhs.float) }
+				else -> null
+			}
 		} ?: this
 
 val Value.Field.optimize
@@ -60,4 +65,5 @@ val Value.innerOptimize: Value
 			is Value.Dec -> Value.Dec(lhs.optimize)
 			is Value.Plus -> Value.Plus(lhs.optimize, rhs.optimize)
 			is Value.Minus -> Value.Minus(lhs.optimize, rhs.optimize)
+			is Value.Times -> Value.Times(lhs.optimize, rhs.optimize)
 		}

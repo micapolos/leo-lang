@@ -13,7 +13,7 @@ fun Executor.execute(data: Data): Data {
 	vm.data.set(0, data)
 	vm.pc = 0
 	vm.run()
-	return vm.data.data(outputOffset.index(vm.data), outputType)
+	return vm.data.data(outputOffset.index(vm.data), outputType).apply { dump }
 }
 
 fun executor(fn: Fn): Executor {

@@ -60,4 +60,18 @@ fun Types.newType(value: Value): Type =
 					}
 				else -> null
 			}
+		is Value.Times ->
+			when (get(value.lhs)) {
+				Type.I32 ->
+					when (get(value.lhs)) {
+						Type.I32 -> Type.I32
+						else -> null
+					}
+				Type.F32 ->
+					when (get(value.lhs)) {
+						Type.F32 -> Type.F32
+						else -> null
+					}
+				else -> null
+			}
 	} ?: error("$value.type")

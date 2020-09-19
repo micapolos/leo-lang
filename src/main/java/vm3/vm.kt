@@ -31,6 +31,7 @@ fun Vm.run() {
 
 			x08_setConst32Opcode -> setConstant(fetch32(), fetch32())
 			x09_set32Opcode -> copy(fetch32(), fetch32())
+			x0A_setIndirect32Opcode -> setIndirect(fetch32(), fetch32())
 
 			x10_i32IncOpcode -> intOp1(Int::inc)
 			x11_i32DecOpcode -> intOp1(Int::dec)
@@ -101,6 +102,9 @@ inline fun Vm.setConstant(index: Int, value: Int) =
 
 inline fun Vm.copy(index: Int, addr: Int) =
 	dataSet(index, dataInt(addr))
+
+inline fun Vm.setIndirect(index: Int, addr: Int) =
+	dataSet(index, dataInt(dataInt(addr)))
 
 inline fun Vm.addOffset(dst: Int, src: Int, offset: Int) =
 	dataSet(dst, dataInt(src) + offset)

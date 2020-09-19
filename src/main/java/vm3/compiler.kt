@@ -49,7 +49,7 @@ fun Compiler.index(offset: Offset): Int =
 	when (offset) {
 		is Offset.Direct -> offset.index
 		is Offset.Indirect -> dataHole(4).also { index ->
-			codeOutputStream.writeOp(x09_set32Opcode)
+			codeOutputStream.writeOp(x0A_setIndirect32Opcode)
 			codeOutputStream.writeInt(index)
 			codeOutputStream.writeInt(offset.index)
 		}
@@ -109,6 +109,12 @@ fun Compiler.compileOffset(value: Value): Offset =
 			when (type(value)) {
 				Type.I32 -> addOp(x17_i32MinusOpcode, Type.I32, value.lhs, value.rhs)
 				Type.F32 -> addOp(x34_f32MinusOpcode, Type.F32, value.lhs, value.rhs)
+				else -> TODO()
+			}
+		is Value.Times ->
+			when (type(value)) {
+				Type.I32 -> addOp(x18_i32TimesOpcode, Type.I32, value.lhs, value.rhs)
+				Type.F32 -> addOp(x35_f32TimesOpcode, Type.F32, value.lhs, value.rhs)
 				else -> TODO()
 			}
 	}

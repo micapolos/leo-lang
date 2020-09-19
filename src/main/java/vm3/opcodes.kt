@@ -10,6 +10,7 @@ val x05_callOpcode = 0x05
 
 val x08_setConst32Opcode = 0x08
 val x09_set32Opcode = 0x09
+val x0A_setIndirect32Opcode = 0x0A
 
 val x10_i32IncOpcode = 0x10
 val x11_i32DecOpcode = 0x11

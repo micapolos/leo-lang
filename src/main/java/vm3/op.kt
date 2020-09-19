@@ -15,6 +15,7 @@ sealed class Op {
 
 	data class SetConst(val dst: Int, val value: Int) : Op()
 	data class Set(val dst: Int, val lhs: Int) : Op()
+	data class SetIndirect(val dst: Int, val lhs: Int) : Op()
 
 	data class I32Inc(val dst: Int, val lhs: Int) : Op()
 	data class I32Dec(val dst: Int, val lhs: Int) : Op()
@@ -46,6 +47,7 @@ val Op.argCount: Int
 			is Op.Call -> 2
 			is Op.SetConst -> 2
 			is Op.Set -> 2
+			is Op.SetIndirect -> 2
 			is Op.I32Inc -> 2
 			is Op.I32Dec -> 2
 			is Op.I32Plus -> 3
@@ -127,6 +129,7 @@ fun InputStream.readOp(): Op? =
 
 			x08_setConst32Opcode -> Op.SetConst(readInt(), readInt())
 			x09_set32Opcode -> Op.Set(readInt(), readInt())
+			x0A_setIndirect32Opcode -> Op.SetIndirect(readInt(), readInt())
 
 			x10_i32IncOpcode -> Op.I32Inc(readInt(), readInt())
 			x11_i32DecOpcode -> Op.I32Dec(readInt(), readInt())

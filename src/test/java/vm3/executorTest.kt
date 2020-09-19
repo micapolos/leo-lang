@@ -13,9 +13,12 @@ import vm3.dsl.type.struct
 import vm3.dsl.value.fn
 import vm3.dsl.value.get
 import vm3.dsl.value.inc
+import vm3.dsl.value.input
 import vm3.dsl.value.plus
+import vm3.dsl.value.times
 import kotlin.test.Test
 import vm3.dsl.value.i32 as i32v
+import vm3.dsl.value.f32 as f32v
 
 class ExecutorTest {
 	@Test
@@ -138,5 +141,31 @@ class ExecutorTest {
 					"first" to array(10f.f32, 20f.f32),
 					"second" to array(30f.f32, 40f.f32)))
 			.assertEqualTo(40f.f32)
+	}
+
+	@Test
+	fun program() {
+		val circle = struct(
+			"circle" to struct(
+				"radius" to f32,
+				"center" to struct(
+					"point" to struct(
+						"x" to f32,
+						"y" to f32))))
+		val radius = input.get("circle").get("radius")
+		val pi = Math.PI.toFloat().f32v
+		var area = radius.times(radius).times(pi)
+
+		circle.fn { area }
+			.executor
+			.execute(
+				struct(
+					"circle" to struct(
+						"radius" to 10f.f32,
+						"center" to struct(
+							"point" to struct(
+								"x" to 20f.f32,
+								"y" to 30f.f32)))))
+			.assertEqualTo(10f.times(10f).times(Math.PI.toFloat()).f32)
 	}
 }

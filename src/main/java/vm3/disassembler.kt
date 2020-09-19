@@ -32,6 +32,7 @@ fun Appendable.append(op: Op) =
 
 		is Op.SetConst -> appendAssign({ appendMem(op.dst) }, { append(op.value) })
 		is Op.Set -> appendAssign({ appendMem(op.dst) }, { appendMem(op.lhs) })
+		is Op.SetIndirect -> appendAssign({ appendMem(op.dst) }, { appendMemMem(op.lhs) })
 
 		is Op.I32Inc -> appendAssignOp(op.dst, op.lhs, "i32.inc")
 		is Op.I32Dec -> appendAssignOp(op.dst, op.lhs, "i32.dec")
@@ -53,6 +54,9 @@ fun Appendable.appendOps(ops: List<Op>): Appendable =
 
 fun Appendable.appendMem(index: Int): Appendable =
 	appendSquareParenthesized { append(index) }
+
+fun Appendable.appendMemMem(index: Int): Appendable =
+	appendSquareParenthesized { appendMem(index) }
 
 fun Appendable.appendMemOffset(index: Int, offset: Int): Appendable =
 	appendSquareParenthesized { append(index).append(" + ").appendPlain(offset) }
