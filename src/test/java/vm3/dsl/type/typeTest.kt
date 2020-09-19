@@ -16,7 +16,10 @@ class TypeTest {
 
 	@Test
 	fun code() {
+		bool.code.assertEqualTo("bool")
+		i32.code.assertEqualTo("i32")
+		f32.code.assertEqualTo("f32")
 		i32[128].code.assertEqualTo("i32[128]")
-		struct("x" to f32, "y" to f32).code.assertEqualTo("{x: f32, y: f32}")
+		struct("x" to i32, "y" to f32).code.assertEqualTo("{x: i32, y: f32}")
 	}
 }
