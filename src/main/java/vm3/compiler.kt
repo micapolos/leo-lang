@@ -42,9 +42,6 @@ fun Compiler.depointerOffset(offset: Offset): Offset =
 		is Offset.Indirect -> TODO()
 	}
 
-fun Compiler.indirectOffset(offset: Offset): Offset =
-	Offset.Direct(indirectIndex(offset))
-
 fun Compiler.index(offset: Offset): Int =
 	when (offset) {
 		is Offset.Direct -> offset.index
