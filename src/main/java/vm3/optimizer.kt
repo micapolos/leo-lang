@@ -21,6 +21,7 @@ val Value.outerOptimize: Value
 			is Value.StructAt -> (lhs as? Value.Struct)?.let { lhs ->
 				lhs.fields.firstOrNull { it.name == name }?.value
 			}
+			is Value.Switch -> null
 			is Value.Inc -> when (lhs) {
 				is Value.I32 -> Value.I32(lhs.int.inc())
 				else -> null
@@ -61,6 +62,7 @@ val Value.innerOptimize: Value
 			is Value.ArrayAt -> Value.ArrayAt(lhs.optimize, index.optimize)
 			is Value.Struct -> Value.Struct(fields.map { it.optimize })
 			is Value.StructAt -> Value.StructAt(lhs.optimize, name)
+			is Value.Switch -> Value.Switch(lhs, cases.map { it.optimize })
 			is Value.Inc -> Value.Inc(lhs.optimize)
 			is Value.Dec -> Value.Dec(lhs.optimize)
 			is Value.Plus -> Value.Plus(lhs.optimize, rhs.optimize)

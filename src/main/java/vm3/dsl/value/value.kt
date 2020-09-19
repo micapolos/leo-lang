@@ -1,6 +1,5 @@
 package vm3.dsl.value
 
-import vm3.Fn
 import vm3.Type
 import vm3.Value
 
@@ -24,4 +23,4 @@ operator fun Value.plus(rhs: Value): Value = Value.Plus(this, rhs)
 operator fun Value.minus(rhs: Value): Value = Value.Minus(this, rhs)
 operator fun Value.times(rhs: Value): Value = Value.Times(this, rhs)
 
-fun Type.fn(fn: Value.() -> Value): Fn = Fn(this, input.fn())
+fun Type.gives(fn: (Value) -> Value) = Value.Fn(this, fn(input))

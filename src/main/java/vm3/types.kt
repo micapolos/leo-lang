@@ -22,6 +22,9 @@ fun Types.newType(value: Value): Type =
 		is Value.Array -> Type.Array(get(value.items[0]), value.items.size)
 		is Value.ArrayAt -> get(value.lhs).item
 		is Value.StructAt -> get(value.lhs)[value.name]
+		is Value.Switch -> (get(value.lhs) as? Type.Choice)?.let { choiceType ->
+			TODO()
+		}
 		is Value.Inc ->
 			when (get(value.lhs)) {
 				Type.I32 -> Type.I32

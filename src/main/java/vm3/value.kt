@@ -14,12 +14,16 @@ sealed class Value {
 	data class Field(val name: String, val value: Value)
 	data class StructAt(val lhs: Value, val name: String) : Value()
 
+	data class Switch(val lhs: Value, var cases: List<Field>) : Value()
+
 	data class Inc(val lhs: Value) : Value()
 	data class Dec(val lhs: Value) : Value()
 
 	data class Plus(val lhs: Value, val rhs: Value) : Value()
 	data class Minus(val lhs: Value, val rhs: Value) : Value()
 	data class Times(val lhs: Value, val rhs: Value) : Value()
+
+	data class Fn(val inputType: Type, val resultValue: Value)
 }
 
 val Value.code: String
@@ -33,6 +37,7 @@ val Value.code: String
 			is Value.ArrayAt -> "${lhs.code}[${index.code}]"
 			is Value.Struct -> "{${fields.joinToString(", ") { it.code }}}"
 			is Value.StructAt -> "${lhs.code}.$name"
+			is Value.Switch -> "${lhs.code}.switch(${cases.joinToString(", ") { it.code }})"
 			is Value.Inc -> "${lhs.code}.inc"
 			is Value.Dec -> "${lhs.code}.dec"
 			is Value.Plus -> "${lhs.code}.plus(${rhs.code})"

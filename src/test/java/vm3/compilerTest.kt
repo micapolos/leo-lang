@@ -8,8 +8,8 @@ import vm3.dsl.type.i32
 import vm3.dsl.type.struct
 import vm3.dsl.value.array
 import vm3.dsl.value.dec
-import vm3.dsl.value.fn
 import vm3.dsl.value.get
+import vm3.dsl.value.gives
 import vm3.dsl.value.inc
 import vm3.dsl.value.plus
 import vm3.dsl.value.struct
@@ -19,7 +19,7 @@ import kotlin.test.Test
 class CompilerTest {
 	@Test
 	fun test() {
-		val compiled = i32.fn { inc + dec }.compiled
+		val compiled = i32.gives { it.inc + it.dec }.compiled
 
 		compiled
 			.disassemble
@@ -40,7 +40,7 @@ class CompilerTest {
 	@Test
 	fun array() {
 		f32[3]
-			.fn { this }
+			.gives { it }
 			.compiled
 			.disassemble
 			.assertEqualTo("""
@@ -55,7 +55,7 @@ class CompilerTest {
 	@Test
 	fun arrayGet() {
 		f32[3]
-			.fn { this[1.value] }
+			.gives { it[1.value] }
 			.compiled
 			.disassemble
 			.assertEqualTo("""
@@ -75,7 +75,7 @@ class CompilerTest {
 	@Test
 	fun struct() {
 		struct("x" to i32, "y" to f32)
-			.fn { this }
+			.gives { it }
 			.compiled
 			.disassemble
 			.assertEqualTo("""
@@ -90,7 +90,7 @@ class CompilerTest {
 	@Test
 	fun structGet() {
 		struct("x" to i32, "y" to f32)
-			.fn { this["y"] }
+			.gives { it["y"] }
 			.compiled
 			.disassemble
 			.assertEqualTo("""
