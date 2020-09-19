@@ -3,8 +3,7 @@ package vm3
 import leo.base.assertEqualTo
 import leo.base.assertNotNull
 import vm3.dsl.data.array
-import vm3.dsl.data.f32
-import vm3.dsl.data.i32
+import vm3.dsl.data.data
 import vm3.dsl.data.struct
 import vm3.dsl.type.f32
 import vm3.dsl.type.get
@@ -19,9 +18,8 @@ import vm3.dsl.value.input
 import vm3.dsl.value.plus
 import vm3.dsl.value.struct
 import vm3.dsl.value.times
+import vm3.dsl.value.value
 import kotlin.test.Test
-import vm3.dsl.value.i32 as i32v
-import vm3.dsl.value.f32 as f32v
 
 class ExecutorTest {
 	@Test
@@ -32,22 +30,22 @@ class ExecutorTest {
 	@Test
 	fun bypass() {
 		i32.fn { this }.executor.run {
-			execute(123.i32).assertEqualTo(123.i32)
-			execute(65536.i32).assertEqualTo(65536.i32)
+			execute(123.data).assertEqualTo(123.data)
+			execute(65536.data).assertEqualTo(65536.data)
 		}
 	}
 
 	@Test
 	fun i32() {
 		i32.fn { inc + inc.inc }.executor.run {
-			execute(10.i32).assertEqualTo(23.i32)
+			execute(10.data).assertEqualTo(23.data)
 		}
 	}
 
 	@Test
 	fun f32() {
 		f32.fn { this + this }.executor.run {
-			execute(12.3f.f32).assertEqualTo(24.6f.f32)
+			execute(12.3f.data).assertEqualTo(24.6f.data)
 		}
 	}
 
@@ -56,34 +54,34 @@ class ExecutorTest {
 		f32[2]
 			.fn { this }
 			.executor
-			.execute(array(10f.f32, 20f.f32))
-			.assertEqualTo(array(10f.f32, 20f.f32))
+			.execute(array(10f.data, 20f.data))
+			.assertEqualTo(array(10f.data, 20f.data))
 	}
 
 	@Test
 	fun arrAt0() {
 		f32[3]
-			.fn { this[0.i32v] }
+			.fn { this[0.value] }
 			.executor
-			.execute(array(10f.f32, 20f.f32, 30f.f32))
-			.assertEqualTo(10f.f32)
+			.execute(array(10f.data, 20f.data, 30f.data))
+			.assertEqualTo(10f.data)
 	}
 
 	@Test
 	fun arrAt1() {
 		f32[3]
-			.fn { this[1.i32v] }
+			.fn { this[1.value] }
 			.executor
-			.execute(array(10f.f32, 20f.f32, 30f.f32))
-			.assertEqualTo(20f.f32)
+			.execute(array(10f.data, 20f.data, 30f.data))
+			.assertEqualTo(20f.data)
 	}
 
 	@Test
 	fun struct() {
 		struct("x" to f32, "y" to f32).fn { this }
 			.executor
-			.execute(struct("x" to 10f.f32, "y" to 20f.f32))
-			.assertEqualTo(struct("x" to 10f.f32, "y" to 20f.f32))
+			.execute(struct("x" to 10f.data, "y" to 20f.data))
+			.assertEqualTo(struct("x" to 10f.data, "y" to 20f.data))
 	}
 
 	@Test
@@ -91,32 +89,32 @@ class ExecutorTest {
 		struct("x" to f32, "y" to f32).fn { this["y"] }
 			.executor
 			.apply { dump }
-			.execute(struct("x" to 10f.f32, "y" to 20f.f32))
-			.assertEqualTo(20f.f32)
+			.execute(struct("x" to 10f.data, "y" to 20f.data))
+			.assertEqualTo(20f.data)
 	}
 
 	@Test
 	fun arrayOfArraysGet() {
-		f32[2][3].fn { this[1.i32v][1.i32v] }
+		f32[2][3].fn { this[1.value][1.value] }
 			.executor
 			.execute(
 				array(
-					array(10f.f32, 20f.f32),
-					array(30f.f32, 40f.f32),
-					array(50f.f32, 60f.f32)))
-			.assertEqualTo(40f.f32)
+					array(10f.data, 20f.data),
+					array(30f.data, 40f.data),
+					array(50f.data, 60f.data)))
+			.assertEqualTo(40f.data)
 	}
 
 	@Test
 	fun arrayOfStructsGet() {
-		struct("x" to f32, "y" to f32)[3].fn { this[1.i32v]["y"] }
+		struct("x" to f32, "y" to f32)[3].fn { this[1.value]["y"] }
 			.executor
 			.execute(
 				array(
-					struct("x" to 10f.f32, "y" to 20f.f32),
-					struct("x" to 30f.f32, "y" to 40f.f32),
-					struct("x" to 50f.f32, "y" to 60f.f32)))
-			.assertEqualTo(40f.f32)
+					struct("x" to 10f.data, "y" to 20f.data),
+					struct("x" to 30f.data, "y" to 40f.data),
+					struct("x" to 50f.data, "y" to 60f.data)))
+			.assertEqualTo(40f.data)
 	}
 
 	@Test
@@ -127,9 +125,9 @@ class ExecutorTest {
 			.executor
 			.execute(
 				struct(
-					"first" to struct("x" to 10f.f32, "y" to 20f.f32),
-					"second" to struct("z" to 30f.f32, "w" to 40f.f32)))
-			.assertEqualTo(40f.f32)
+					"first" to struct("x" to 10f.data, "y" to 20f.data),
+					"second" to struct("z" to 30f.data, "w" to 40f.data)))
+			.assertEqualTo(40f.data)
 	}
 
 	@Test
@@ -137,13 +135,13 @@ class ExecutorTest {
 		struct(
 			"first" to f32[2],
 			"second" to f32[2])
-			.fn { this["second"][1.i32v] }
+			.fn { this["second"][1.value] }
 			.executor
 			.execute(
 				struct(
-					"first" to array(10f.f32, 20f.f32),
-					"second" to array(30f.f32, 40f.f32)))
-			.assertEqualTo(40f.f32)
+					"first" to array(10f.data, 20f.data),
+					"second" to array(30f.data, 40f.data)))
+			.assertEqualTo(40f.data)
 	}
 
 	@Test
@@ -151,8 +149,8 @@ class ExecutorTest {
 		i32
 			.fn { array(input, input) }
 			.executor
-			.execute(10.i32)
-			.assertEqualTo(array(10.i32, 10.i32))
+			.execute(10.data)
+			.assertEqualTo(array(10.data, 10.data))
 	}
 
 	@Test
@@ -160,8 +158,8 @@ class ExecutorTest {
 		i32
 			.fn { array(input.inc, input.dec) }
 			.executor
-			.execute(10.i32)
-			.assertEqualTo(array(11.i32, 9.i32))
+			.execute(10.data)
+			.assertEqualTo(array(11.data, 9.data))
 	}
 
 	@Test
@@ -169,8 +167,8 @@ class ExecutorTest {
 		i32
 			.fn { array(input, input.plus(input)) }
 			.executor
-			.execute(10.i32)
-			.assertEqualTo(array(10.i32, 20.i32))
+			.execute(10.data)
+			.assertEqualTo(array(10.data, 20.data))
 	}
 
 	@Test
@@ -178,8 +176,8 @@ class ExecutorTest {
 		i32
 			.fn { struct("x" to input, "y" to input) }
 			.executor
-			.execute(10.i32)
-			.assertEqualTo(struct("x" to 10.i32, "y" to 10.i32))
+			.execute(10.data)
+			.assertEqualTo(struct("x" to 10.data, "y" to 10.data))
 	}
 
 	@Test
@@ -187,8 +185,8 @@ class ExecutorTest {
 		i32
 			.fn { struct("x" to input.inc, "y" to input.dec) }
 			.executor
-			.execute(10.i32)
-			.assertEqualTo(struct("x" to 11.i32, "y" to 9.i32))
+			.execute(10.data)
+			.assertEqualTo(struct("x" to 11.data, "y" to 9.data))
 	}
 
 	@Test
@@ -196,8 +194,8 @@ class ExecutorTest {
 		i32
 			.fn { struct("x" to input, "y" to input.plus(input)) }
 			.executor
-			.execute(10.i32)
-			.assertEqualTo(struct("x" to 10.i32, "y" to 20.i32))
+			.execute(10.data)
+			.assertEqualTo(struct("x" to 10.data, "y" to 20.data))
 	}
 
 	@Test
@@ -210,7 +208,7 @@ class ExecutorTest {
 						"x" to f32,
 						"y" to f32))))
 		val radius = input.get("circle").get("radius")
-		val pi = Math.PI.toFloat().f32v
+		val pi = Math.PI.toFloat().value
 		var area = radius.times(radius).times(pi)
 
 		circle.fn { area }
@@ -218,11 +216,11 @@ class ExecutorTest {
 			.execute(
 				struct(
 					"circle" to struct(
-						"radius" to 10f.f32,
+						"radius" to 10f.data,
 						"center" to struct(
 							"point" to struct(
-								"x" to 20f.f32,
-								"y" to 30f.f32)))))
-			.assertEqualTo(10f.times(10f).times(Math.PI.toFloat()).f32)
+								"x" to 20f.data,
+								"y" to 30f.data)))))
+			.assertEqualTo(10f.times(10f).times(Math.PI.toFloat()).data)
 	}
 }

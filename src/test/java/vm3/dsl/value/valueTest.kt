@@ -7,22 +7,22 @@ import kotlin.test.Test
 class ValueTest {
 	@Test
 	fun dsl() {
-		false.bool
-		10.i32
-		10f.f32
-		array(10.i32, 20.i32)
-		array(10.i32, 20.i32)[0.i32]
-		struct("x" to 10.i32, "y" to 20.i32)
-		struct("x" to 10.i32, "y" to 20.i32)["x"]
+		false.value
+		10.value
+		10f.value
+		array(10.value, 20.value)
+		array(10.value, 20.value)[0.value]
+		struct("x" to 10.value, "y" to 20.value)
+		struct("x" to 10.value, "y" to 20.value)["x"]
 	}
 
 	@Test
 	fun code() {
-		array(10.i32, 20.i32)[1.i32]
+		array(10.value, 20.value)[1.value]
 			.code
 			.assertEqualTo("[10, 20][1]")
 
-		struct("x" to 10.i32, "y" to 20.i32)["x"]
+		struct("x" to 10.value, "y" to 20.value)["x"]
 			.code
 			.assertEqualTo("{x: 10, y: 20}.x")
 	}

@@ -6,9 +6,9 @@ import vm3.Value
 
 val input: Value = Value.Input
 
-val Boolean.bool: Value get() = Value.Bool(this)
-val Int.i32: Value get() = Value.I32(this)
-val Float.f32: Value get() = Value.F32(this)
+val Boolean.value: Value get() = Value.Bool(this)
+val Int.value: Value get() = Value.I32(this)
+val Float.value: Value get() = Value.F32(this)
 
 fun array(vararg values: Value): Value = Value.Array(values.toList())
 operator fun Value.get(index: Value): Value = Value.ArrayAt(this, index)

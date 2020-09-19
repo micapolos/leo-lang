@@ -8,13 +8,12 @@ import vm3.dsl.type.i32
 import vm3.dsl.type.struct
 import vm3.dsl.value.array
 import vm3.dsl.value.dec
-import vm3.dsl.value.f32
 import vm3.dsl.value.fn
 import vm3.dsl.value.get
-import vm3.dsl.value.i32
 import vm3.dsl.value.inc
 import vm3.dsl.value.plus
 import vm3.dsl.value.struct
+import vm3.dsl.value.value
 import kotlin.test.Test
 
 class CompilerTest {
@@ -56,7 +55,7 @@ class CompilerTest {
 	@Test
 	fun arrayGet() {
 		f32[3]
-			.fn { this[1.i32] }
+			.fn { this[1.value] }
 			.compiled
 			.disassemble
 			.assertEqualTo("""
@@ -109,21 +108,21 @@ class CompilerTest {
 	@Test
 	fun type() {
 		Compiler().run {
-			type(10.i32).assertEqualTo(i32)
-			type(10f.f32).assertEqualTo(f32)
+			type(10.value).assertEqualTo(i32)
+			type(10f.value).assertEqualTo(f32)
 
-			type(10.i32.inc).assertEqualTo(i32)
-			type(10.i32.dec).assertEqualTo(i32)
-			type(10.i32.plus(20.i32)).assertEqualTo(i32)
-			type(10f.f32.plus(20f.f32)).assertEqualTo(f32)
+			type(10.value.inc).assertEqualTo(i32)
+			type(10.value.dec).assertEqualTo(i32)
+			type(10.value.plus(20.value)).assertEqualTo(i32)
+			type(10f.value.plus(20f.value)).assertEqualTo(f32)
 
-			array(10f.f32, 20f.f32).let { array ->
+			array(10f.value, 20f.value).let { array ->
 				type(array).assertEqualTo(f32[2])
-				type(array[0.i32]).assertEqualTo(f32)
-				type(array[1.i32]).assertEqualTo(f32)
+				type(array[0.value]).assertEqualTo(f32)
+				type(array[1.value]).assertEqualTo(f32)
 			}
 
-			struct("x" to 10.i32, "y" to 20f.f32).let { struct ->
+			struct("x" to 10.value, "y" to 20f.value).let { struct ->
 				type(struct).assertEqualTo(struct("x" to i32, "y" to f32))
 				type(struct["x"]).assertEqualTo(i32)
 				type(struct["y"]).assertEqualTo(f32)
