@@ -93,10 +93,13 @@ class CompilerTest {
 			.compiled
 			.disassemble
 			.assertEqualTo("""
-				dataSize: 0x00000008
-				outputOffset: 0x00000004
+				dataSize: 0x00000014
+				outputOffset: [0x00000010]
 				--- disassembly ---
-				0x00000000: exit
+				0x00000000: [0x00000008] <- 0x00000000
+				0x00000009: [0x0000000c] <- 0x00000004
+				0x00000012: [0x00000010] <- [0x00000008] i32.plus [0x0000000c]
+				0x0000001f: exit
 				
 				""".trimIndent())
 	}

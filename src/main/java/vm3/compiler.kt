@@ -5,7 +5,7 @@ import vm3.dsl.type.i32
 import java.io.ByteArrayOutputStream
 
 data class Compiler(
-	var dataOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
+	var dataSize: Int = 0,
 	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
 	val valueOffsets: MutableMap<Value, Offset> = HashMap(),
 	val types: Types = Types(),
@@ -23,7 +23,7 @@ fun compile(fn: Fn): Compiled {
 	compiler.codeOutputStream.writeOp(x00_returnOpcode)
 	return Compiled(
 		compiler.codeOutputStream.toByteArray(),
-		compiler.dataOutputStream.size(),
+		compiler.dataSize,
 		outputType,
 		outputOffset)
 }
@@ -34,10 +34,16 @@ fun Compiler.offset(value: Value): Offset =
 	}
 
 fun Compiler.pointerOffset(value: Value): Offset =
-	indirectOffset(offset(value))
+	Offset.Direct(indirectIndex(offset(value)))
+
+fun Compiler.depointerOffset(offset: Offset): Offset =
+	when (offset) {
+		is Offset.Direct -> Offset.Indirect(offset.index)
+		is Offset.Indirect -> TODO()
+	}
 
 fun Compiler.indirectOffset(offset: Offset): Offset =
-	Offset.Indirect(indirectIndex(offset))
+	Offset.Direct(indirectIndex(offset))
 
 fun Compiler.index(offset: Offset): Int =
 	when (offset) {
@@ -116,24 +122,9 @@ fun Compiler.constOffset(lhs: Int): Offset =
 	}
 
 fun Compiler.add(structAt: Value.StructAt): Offset =
-	offset(structAt.lhs).let { lhsOffset ->
-		when (lhsOffset) {
-			is Offset.Direct ->
-				Offset.Direct(lhsOffset.index + layout(type(structAt.lhs)).offset(structAt.name))
-			is Offset.Indirect -> dataHole(4).let { dst ->
-				codeOutputStream.writeOp(x0A_setOffsetOpcode)
-				codeOutputStream.writeInt(dst)
-				codeOutputStream.writeInt(lhsOffset.index)
-				codeOutputStream.writeInt(layout(type(structAt.lhs)).offset(structAt.name))
-				Offset.Indirect(dst)
-			}
-		}
-	}
-
-fun Compiler.add2(structAt: Value.StructAt): Offset =
 	pointerOffset(structAt.lhs).let { structOffset ->
 		constOffset(layout(type(structAt.lhs)).offset(structAt.name)).let { fieldOffset ->
-			addOp(x16_i32PlusOpcode, i32, structOffset, fieldOffset)
+			depointerOffset(addOp(x16_i32PlusOpcode, i32, structOffset, fieldOffset))
 		}
 	}
 
@@ -187,4 +178,4 @@ fun Compiler.layout(type: Type): Layout =
 	layouts.get(type)
 
 fun Compiler.dataHole(size: Int): Int =
-	dataOutputStream.writeHole(size)
+	dataSize.also { dataSize += size }

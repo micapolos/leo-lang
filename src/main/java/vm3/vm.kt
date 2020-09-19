@@ -31,7 +31,6 @@ fun Vm.run() {
 
 			x08_setConst32Opcode -> setConstant(fetch32(), fetch32())
 			x09_set32Opcode -> copy(fetch32(), fetch32())
-			x0A_setOffsetOpcode -> addOffset(fetch32(), fetch32(), fetch32())
 			x0B_setIndexedOpcode -> addIndex(fetch32(), fetch32(), fetch32(), fetch32())
 
 			x10_i32IncOpcode -> intOp1(Int::inc)
