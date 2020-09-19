@@ -108,6 +108,8 @@ fun Compiler.set(dst: Int, value: Value) {
 
 		is Value.Call -> TODO()
 
+		is Value.Switch -> set(dst, value)
+
 		is Value.Inc ->
 			when (type(value)) {
 				Type.I32 -> setOp(x10_i32IncOpcode, dst, value.lhs)
@@ -165,6 +167,10 @@ fun Compiler.set(dst: Int, array: Value.Array) {
 			set(dst + index * layout.itemLayout.size, value)
 		}
 	}
+}
+
+fun Compiler.set(dst: Int, switch: Value.Switch) {
+	TODO()
 }
 
 fun Compiler.setSize(dst: Int, src: Int, size: Int) {
