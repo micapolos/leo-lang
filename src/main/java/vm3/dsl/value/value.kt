@@ -23,4 +23,5 @@ operator fun Value.plus(rhs: Value): Value = Value.Plus(this, rhs)
 operator fun Value.minus(rhs: Value): Value = Value.Minus(this, rhs)
 operator fun Value.times(rhs: Value): Value = Value.Times(this, rhs)
 
-fun Type.gives(fn: (Value) -> Value) = Value.Fn(this, fn(argument(0)))
+fun Type.gives(fn: (Value) -> Value) = Value.Function(this, fn(argument(0)))
+fun Value.Function.give(value: Value): Value = Value.Call(this, value)

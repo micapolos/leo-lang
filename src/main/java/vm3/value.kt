@@ -16,6 +16,8 @@ sealed class Value {
 
 	data class Switch(val lhs: Value, var cases: List<Field>) : Value()
 
+	data class Call(val function: Function, val param: Value) : Value()
+
 	data class Inc(val lhs: Value) : Value()
 	data class Dec(val lhs: Value) : Value()
 
@@ -23,7 +25,7 @@ sealed class Value {
 	data class Minus(val lhs: Value, val rhs: Value) : Value()
 	data class Times(val lhs: Value, val rhs: Value) : Value()
 
-	data class Fn(val inputType: Type, val resultValue: Value)
+	data class Function(val param: Type, val body: Value)
 }
 
 val Value.code: String
@@ -43,7 +45,12 @@ val Value.code: String
 			is Value.Plus -> "${lhs.code}.plus(${rhs.code})"
 			is Value.Minus -> "${lhs.code}.minus(${rhs.code})"
 			is Value.Times -> "${lhs.code}.times(${rhs.code})"
+			is Value.Call -> "${function.code}.call(${param.code})"
 		}
+
+val Value.Function.code: String
+	get() =
+		"${param.code}.gives(${body.code})"
 
 val Value.Field.code: String
 	get() =

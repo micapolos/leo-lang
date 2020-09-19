@@ -13,15 +13,15 @@ data class Compiler(
 	val layouts: Layouts = Layouts()
 )
 
-val Value.Fn.compiled: Compiled get() = compile(this)
+val Value.Function.compiled: Compiled get() = compile(this)
 
-fun compile(fn: Value.Fn): Compiled {
+fun compile(function: Value.Function): Compiled {
 	val compiler = Compiler()
 	compiler.parameterOffsets.add(Offset.Direct(0))
-	compiler.types.push(fn.inputType)
-	val outputType = compiler.type(fn.resultValue)
-	compiler.dataHole(fn.inputType.size)
-	val outputOffset = compiler.offset(fn.resultValue)
+	compiler.types.push(function.param)
+	val outputType = compiler.type(function.body)
+	compiler.dataHole(function.param.size)
+	val outputOffset = compiler.offset(function.body)
 	compiler.codeOutputStream.writeOp(x00_returnOpcode)
 	return Compiled(
 		compiler.codeOutputStream.toByteArray(),
@@ -105,6 +105,8 @@ fun Compiler.set(dst: Int, value: Value) {
 
 		is Value.ArrayAt -> TODO()
 		is Value.StructAt -> TODO()
+
+		is Value.Call -> TODO()
 
 		is Value.Inc ->
 			when (type(value)) {

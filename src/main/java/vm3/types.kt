@@ -20,6 +20,13 @@ fun Types.pop() {
 	parameters.removeAt(parameters.size - 1)
 }
 
+fun <T> Types.push(type: Type, fn: () -> T): T {
+	push(type)
+	val result = fn()
+	pop()
+	return result
+}
+
 fun Types.computeType(value: Value): Type =
 	when (value) {
 		is Value.Argument -> parameters[parameters.size - 1 - value.depth]
@@ -85,4 +92,7 @@ fun Types.computeType(value: Value): Type =
 					}
 				else -> null
 			}
+		is Value.Call -> push(value.function.param) {
+			get(value.function.body)
+		}
 	} ?: error("$value.type")

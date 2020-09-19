@@ -17,16 +17,16 @@ fun Executor.execute(data: Data): Data {
 	return vm.data.data(outputOffset.index(vm.data), outputType)
 }
 
-fun executor(fn: Value.Fn): Executor {
-	val compiled = compile(fn)
+fun executor(function: Value.Function): Executor {
+	val compiled = compile(function)
 	return Executor(
 		Vm(ByteArray(compiled.dataSize), compiled.code),
-		fn.inputType,
+		function.param,
 		compiled.outputType,
 		compiled.outputOffset)
 }
 
-val Value.Fn.executor get() = executor(this)
+val Value.Function.executor get() = executor(this)
 
 fun Offset.index(byteArray: ByteArray): Int =
 	when (this) {

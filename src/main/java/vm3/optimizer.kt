@@ -45,6 +45,7 @@ val Value.outerOptimize: Value
 				is Value.F32 -> (rhs as? Value.F32)?.let { Value.F32(lhs.float * rhs.float) }
 				else -> null
 			}
+			is Value.Call -> null
 		} ?: this
 
 val Value.Field.optimize
@@ -68,4 +69,9 @@ val Value.innerOptimize: Value
 			is Value.Plus -> Value.Plus(lhs.optimize, rhs.optimize)
 			is Value.Minus -> Value.Minus(lhs.optimize, rhs.optimize)
 			is Value.Times -> Value.Times(lhs.optimize, rhs.optimize)
+			is Value.Call -> Value.Call(function.optimize, param.optimize)
 		}
+
+val Value.Function.optimize
+	get() =
+		Value.Function(param, body.optimize)
