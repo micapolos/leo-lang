@@ -18,7 +18,7 @@ fun Layouts.newLayout(type: Type): Layout =
 			.let { fieldLayouts ->
 				var offset = 0
 				val layoutFields = fieldLayouts.map { fieldLayout ->
-					Layout.Body.Struct.Field(offset, fieldLayout).also { offset += fieldLayout.size }
+					Layout.Body.Field(offset, fieldLayout).also { offset += fieldLayout.size }
 				}
 				Layout(
 					layoutFields.sumBy { it.layout.size },

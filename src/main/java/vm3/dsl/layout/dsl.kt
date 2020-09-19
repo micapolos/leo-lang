@@ -19,7 +19,7 @@ fun struct(vararg fields: Pair<String, Layout>): Layout =
 			Unit.run {
 				var offset = 0
 				fields.map { (fieldName, fieldLayout) ->
-					Layout.Body.Struct.Field(offset, fieldLayout).also { offset += fieldLayout.size }
+					Layout.Body.Field(offset, fieldLayout).also { offset += fieldLayout.size }
 				}
 			}))
 

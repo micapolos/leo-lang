@@ -5,9 +5,8 @@ sealed class Type {
 	object I32 : Type()
 	object F32 : Type()
 	data class Array(val itemType: Type, val itemCount: Int) : Type()
-	data class Struct(val fields: List<Field>) : Type() {
-		data class Field(val name: String, val valueType: Type)
-	}
+	data class Struct(val fields: List<Field>) : Type()
+	data class Field(val name: String, val valueType: Type)
 }
 
 val Type.size: Int
@@ -30,6 +29,6 @@ val Type.code: String
 			is Type.Struct -> "{${fields.joinToString(", ") { it.code }}}"
 		}
 
-val Type.Struct.Field.code: String
+val Type.Field.code: String
 	get() =
 		"$name: ${valueType.code}"

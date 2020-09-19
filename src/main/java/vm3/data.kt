@@ -5,9 +5,8 @@ sealed class Data {
 	data class I32(val int: Int) : Data()
 	data class F32(val float: Float) : Data()
 	data class Array(val items: List<Data>) : Data()
-	data class Struct(val fields: List<Field>) : Data() {
-		data class Field(val name: String, val value: Data)
-	}
+	data class Struct(val fields: List<Field>) : Data()
+	data class Field(val name: String, val value: Data)
 }
 
 val Data.type: Type
@@ -17,7 +16,7 @@ val Data.type: Type
 			is Data.I32 -> Type.I32
 			is Data.F32 -> Type.F32
 			is Data.Array -> Type.Array(items[0].type, items.size)
-			is Data.Struct -> Type.Struct(fields.map { Type.Struct.Field(it.name, it.value.type) })
+			is Data.Struct -> Type.Struct(fields.map { Type.Field(it.name, it.value.type) })
 		}
 
 val Data.code: String
@@ -30,7 +29,7 @@ val Data.code: String
 			is Data.Struct -> "{ ${fields.joinToString(", ") { it.code }} }"
 		}
 
-val Data.Struct.Field.code: String
+val Data.Field.code: String
 	get() =
 		"$name: ${value.code}"
 
@@ -66,11 +65,11 @@ fun ByteArray.arrayData(index: Int, type: Type, size: Int): Data {
 		})
 }
 
-fun ByteArray.structData(index: Int, fields: List<Type.Struct.Field>): Data {
+fun ByteArray.structData(index: Int, fields: List<Type.Field>): Data {
 	var index = index
 	return Data.Struct(
 		fields.map { field ->
-			Data.Struct.Field(
+			Data.Field(
 				field.name,
 				data(index, field.valueType))
 				.also { index += field.valueType.size }
