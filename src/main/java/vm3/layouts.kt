@@ -26,6 +26,15 @@ fun Layouts.newLayout(type: Type): Layout =
 						hashMapOf(*type.fields.map { it.name }.zip(type.fields.indices).toTypedArray()),
 						layoutFields))
 			}
-		is Type.Choice -> TODO()
+		is Type.Choice ->
+			type.fields
+				.map { get(it.valueType) }
+				.map { fieldLayout -> Layout.Body.Field(4, fieldLayout) }
+				.let { layoutFields ->
+					Layout(
+						4 + (layoutFields.map { it.layout.size }.max() ?: 0),
+						Layout.Body.Choice(
+							hashMapOf(*type.fields.map { it.name }.zip(type.fields.indices).toTypedArray()),
+							layoutFields))
+				}
 	}
-
