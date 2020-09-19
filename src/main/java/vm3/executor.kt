@@ -1,5 +1,7 @@
 package vm3
 
+import leo.base.println
+
 data class Executor(
 	val vm: Vm,
 	val inputType: Type,
@@ -30,3 +32,12 @@ fun Offset.index(byteArray: ByteArray): Int =
 		is Offset.Direct -> index
 		is Offset.Indirect -> byteArray.int(index)
 	}
+
+val Executor.dump get() = disassemble.println
+
+val Executor.disassemble
+	get() = """
+	input: ${inputType}
+  output: ${outputType}
+	outputOffset: ${outputOffset}
+  ${vm.disassemble}""".trimIndent()

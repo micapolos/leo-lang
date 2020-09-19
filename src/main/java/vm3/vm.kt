@@ -11,7 +11,11 @@ class Vm(
 
 val Vm.dump: Unit
 	get() =
-		"pc: ${pc.hexString}\n--- code ---\n${code.disassemble}--- data ---\n${data.contentToString()}".println
+		disassemble.println
+
+val Vm.disassemble: String
+	get() =
+		"pc: ${pc.hexString}\n--- code ---\n${code.disassemble}--- data ---\n${data.contentToString()}"
 
 @OptIn(ExperimentalStdlibApi::class)
 fun Vm.run() {
