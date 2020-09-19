@@ -26,11 +26,11 @@ class CompilerTest {
 			.assertEqualTo(
 				"""
 					dataSize: 0x00000010
-					outputOffset: 0x0000000c
+					outputOffset: 0x00000004
 					--- disassembly ---
-					0x00000000: [0x00000004] <- [0x00000000] i32.inc
-					0x00000009: [0x00000008] <- [0x00000000] i32.dec
-					0x00000012: [0x0000000c] <- [0x00000004] i32.plus [0x00000008]
+					0x00000000: [0x00000008] <- [0x00000000] i32.inc
+					0x00000009: [0x0000000c] <- [0x00000000] i32.dec
+					0x00000012: [0x00000004] <- [0x00000008] i32.plus [0x0000000c]
 					0x0000001f: exit
 					
 					""".trimIndent()

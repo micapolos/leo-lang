@@ -82,45 +82,15 @@ fun Compiler.compileOffset(value: Value): Offset =
 	when (value) {
 		is Value.Input -> Offset.Direct(0)
 
-		is Value.Bool -> constOffset(value.boolean.int)
-		is Value.I32 -> constOffset(value.int)
-		is Value.F32 -> constOffset(value.float.int)
-
-		is Value.Array -> add(value)
-		is Value.Struct -> add(value)
+		is Value.Bool -> add32(value.boolean.int)
+		is Value.I32 -> add32(value.int)
+		is Value.F32 -> add32(value.float.int)
 
 		is Value.ArrayAt -> add(value)
 		is Value.StructAt -> add(value)
 
-		is Value.Inc ->
-			when (type(value)) {
-				Type.I32 -> addOp(x10_i32IncOpcode, Type.I32, value.lhs)
-				else -> TODO()
-			}
-		is Value.Dec ->
-			when (type(value)) {
-				Type.I32 -> addOp(x11_i32DecOpcode, Type.I32, value.lhs)
-				else -> TODO()
-			}
-		is Value.Plus ->
-			when (type(value)) {
-				Type.I32 -> addOp(x16_i32PlusOpcode, Type.I32, value.lhs, value.rhs)
-				Type.F32 -> addOp(x33_f32PlusOpcode, Type.F32, value.lhs, value.rhs)
-				else -> TODO()
-			}
-		is Value.Minus ->
-			when (type(value)) {
-				Type.I32 -> addOp(x17_i32MinusOpcode, Type.I32, value.lhs, value.rhs)
-				Type.F32 -> addOp(x34_f32MinusOpcode, Type.F32, value.lhs, value.rhs)
-				else -> TODO()
-			}
-		is Value.Times ->
-			when (type(value)) {
-				Type.I32 -> addOp(x18_i32TimesOpcode, Type.I32, value.lhs, value.rhs)
-				Type.F32 -> addOp(x35_f32TimesOpcode, Type.F32, value.lhs, value.rhs)
-				else -> TODO()
-			}
-	}
+		else -> null
+	} ?: add(size(value)) { dst -> set(dst, value) }
 
 fun Compiler.set(dst: Int, value: Value) {
 	when (value) {
@@ -167,7 +137,7 @@ fun Compiler.set(dst: Int, value: Value) {
 	}
 }
 
-fun Compiler.constOffset(lhs: Int): Offset =
+fun Compiler.add32(lhs: Int): Offset =
 	dataHole(4).let { dst ->
 		codeOutputStream.writeOp(x08_setConst32Opcode)
 		codeOutputStream.writeInt(dst)
@@ -208,7 +178,6 @@ fun Compiler.add(size: Int, setFn: (Int) -> Unit): Offset =
 		Offset.Direct(dst)
 	}
 
-
 fun Compiler.add(struct: Value.Struct): Offset =
 	add(size(struct)) { dst -> set(dst, struct) }
 
@@ -217,7 +186,7 @@ fun Compiler.add(array: Value.Array): Offset =
 
 fun Compiler.add(structAt: Value.StructAt): Offset =
 	pointerOffset(structAt.lhs).let { structOffset ->
-		constOffset(layout(type(structAt.lhs)).offset(structAt.name)).let { fieldOffset ->
+		add32(layout(type(structAt.lhs)).offset(structAt.name)).let { fieldOffset ->
 			depointerOffset(addOp(x16_i32PlusOpcode, i32, structOffset, fieldOffset))
 		}
 	}
@@ -225,7 +194,7 @@ fun Compiler.add(structAt: Value.StructAt): Offset =
 fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 	pointerOffset(arrayAt.lhs).let { arrayOffset ->
 		offset(arrayAt.index).let { indexOffset ->
-			constOffset(size(arrayAt)).let { sizeOffset ->
+			add32(size(arrayAt)).let { sizeOffset ->
 				addOp(x18_i32TimesOpcode, i32, indexOffset, sizeOffset).let { itemOffset ->
 					depointerOffset(addOp(x16_i32PlusOpcode, i32, arrayOffset, itemOffset))
 				}
