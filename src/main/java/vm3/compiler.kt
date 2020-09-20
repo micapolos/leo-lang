@@ -9,6 +9,7 @@ data class Compiler(
 	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
 	val valueOffsets: MutableMap<Value, Offset> = mutableMapOf(),
 	val parameterOffsets: MutableList<Offset> = mutableListOf(),
+	val functionOffsets: MutableMap<Value.Function, Offset> = mutableMapOf(),
 	val types: Types = Types(),
 	val layouts: Layouts = Layouts()
 )
@@ -264,7 +265,10 @@ fun Compiler.dataHole(size: Int): Int =
 	dataSize.also { dataSize += size }
 
 fun Compiler.size(value: Value): Int =
-	layout(type(value)).size
+	size(type(value))
+
+fun Compiler.size(type: Type): Int =
+	layout(type).size
 
 fun <T> Compiler.push(offset: Offset, fn: () -> T): T {
 	parameterOffsets.add(offset)
