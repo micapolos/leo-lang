@@ -28,7 +28,9 @@ fun Vm.run() {
 			x03_jumpOpcode -> jump(fetch32())
 			x04_jumpIfOpcode -> jumpIf(fetch32(), fetch32())
 			x05_jumpTable -> jumpTable(fetch32(), fetch32())
+
 			x06_callOpcode -> call(fetch32(), fetch32())
+			x07_retOpcode -> jump(dataInt(fetch32()))
 
 			x08_setConst32Opcode -> setConstant(fetch32(), fetch32())
 			x09_set32Opcode -> copy(fetch32(), fetch32())

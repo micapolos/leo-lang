@@ -14,7 +14,9 @@ sealed class Op {
 	data class Jump(val addr: Int) : Op()
 	data class JumpIf(val cond: Int, val addr: Int) : Op()
 	data class JumpTable(val index: Int, val indices: List<Int>) : Op()
+
 	data class Call(val addr: Int, val retAddr: Int) : Op()
+	data class Ret(val addr: Int) : Op()
 
 	data class SetConst(val dst: Int, val value: Int) : Op()
 	data class Set(val dst: Int, val lhs: Int) : Op()
@@ -50,6 +52,7 @@ val Op.argCount: Int
 			is Op.JumpIf -> 2
 			is Op.JumpTable -> 2 + indices.size
 			is Op.Call -> 2
+			is Op.Ret -> 1
 			is Op.SetConst -> 2
 			is Op.Set -> 2
 			is Op.SetIndirect -> 2
@@ -73,8 +76,11 @@ fun OutputStream.write(op: Op) {
 		Op.SysCall -> writeOp(x02_syscallOpcode)
 
 		is Op.Jump -> writeOp(x03_jumpOpcode, op.addr)
+		is Op.Ret -> writeOp(x07_retOpcode, op.addr)
 		is Op.JumpIf -> writeOp(x04_jumpIfOpcode, op.cond, op.addr)
+
 		is Op.Call -> writeOp(x06_callOpcode, op.addr, op.retAddr)
+		is Op.Ret -> writeOp(x07_retOpcode, op.addr)
 
 		is Op.SetConst -> writeOp(x08_setConst32Opcode, op.dst, op.value)
 		is Op.Set -> writeOp(x09_set32Opcode, op.dst, op.lhs)
@@ -141,6 +147,7 @@ fun InputStream.readOp(): Op? =
 			}
 
 			x06_callOpcode -> Op.Call(readInt(), readInt())
+			x07_retOpcode -> Op.Ret(readInt())
 
 			x08_setConst32Opcode -> Op.SetConst(readInt(), readInt())
 			x09_set32Opcode -> Op.Set(readInt(), readInt())

@@ -31,6 +31,7 @@ fun Appendable.append(op: Op) =
 		is Op.JumpTable -> append("jump ").appendMem(op.index).append(" in [ ${op.indices.joinToString(", ") { it.hexString }} ]")
 
 		is Op.Call -> append("call ").append(op.addr).append(" ret ").append(op.retAddr)
+		is Op.Ret -> append("ret ").appendMem(op.addr)
 
 		is Op.SetConst -> appendAssign({ appendMem(op.dst) }, { append(op.value) })
 		is Op.Set -> appendAssign({ appendMem(op.dst) }, { appendMem(op.lhs) })

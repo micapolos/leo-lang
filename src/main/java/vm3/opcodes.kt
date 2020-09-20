@@ -9,6 +9,7 @@ val x04_jumpIfOpcode = 0x04
 val x05_jumpTable = 0x05
 
 val x06_callOpcode = 0x06
+val x07_retOpcode = 0x07
 
 val x08_setConst32Opcode = 0x08
 val x09_set32Opcode = 0x09
