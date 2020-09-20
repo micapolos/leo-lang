@@ -1,5 +1,7 @@
 package vm3
 
+import leo.base.notNullOrError
+import leo16.names.*
 import vm3.dsl.layout.offset
 import vm3.dsl.type.i32
 import java.io.ByteArrayOutputStream
@@ -10,14 +12,23 @@ data class Compiler(
 	val valueOffsets: MutableMap<Value, Offset> = mutableMapOf(),
 	val parameterOffsets: MutableList<Offset> = mutableListOf(),
 	val functionOffsets: MutableMap<Value.Function, Offset> = mutableMapOf(),
+	val compiledFunctions: MutableMap<Value.Function, CompiledFunction> = mutableMapOf(),
 	val types: Types = Types(),
 	val layouts: Layouts = Layouts()
+)
+
+data class CompiledFunction(
+	val inputIndex: Int,
+	val jumpAddress: Int,
+	val retAddress: Int,
+	val outputIndex: Int
 )
 
 val Value.Function.compiled: Compiled get() = compile(this)
 
 fun compile(function: Value.Function): Compiled {
 	val compiler = Compiler()
+	compiler.compileFunctions(function.body)
 	compiler.parameterOffsets.add(Offset.Direct(0))
 	compiler.types.push(function.param)
 	val outputType = compiler.type(function.body)
@@ -89,6 +100,8 @@ fun Compiler.compileOffset(value: Value): Offset =
 
 		is Value.ArrayAt -> add(value)
 		is Value.StructAt -> add(value)
+
+		is Value.Call -> compileOffset(value)
 
 		else -> null
 	} ?: add(size(value)) { dst -> set(dst, value) }
@@ -193,11 +206,26 @@ fun Compiler.setSize(dst: Int, src: Int, size: Int) {
 	codeOutputStream.writeInt(size)
 }
 
+fun Compiler.compileOffset(call: Value.Call): Offset =
+	compiledFunctions[call.function]
+		.notNullOrError("${call.function} not compiled")
+		.let { compiledFunction ->
+			set(compiledFunction.inputIndex, call.param)
+			emitCall(compiledFunction.jumpAddress, compiledFunction.retAddress)
+			Offset.Direct(compiledFunction.outputIndex)
+		}
+
 fun Compiler.add(size: Int, setFn: (Int) -> Unit): Offset =
 	dataHole(size).let { dst ->
 		setFn(dst)
 		Offset.Direct(dst)
 	}
+
+fun Compiler.emitCall(jumpAddr: Int, retAddr: Int) {
+	codeOutputStream.writeOp(x06_callOpcode)
+	codeOutputStream.writeInt(jumpAddr)
+	codeOutputStream.writeInt(retAddr)
+}
 
 fun Compiler.add(struct: Value.Struct): Offset =
 	add(size(struct)) { dst -> set(dst, struct) }
@@ -277,3 +305,59 @@ fun <T> Compiler.push(offset: Offset, fn: () -> T): T {
 	return result
 }
 
+fun Compiler.compileFunctions(value: Value) {
+	when (value) {
+		is Value.Argument -> {
+		}
+		is Value.Bool -> {
+		}
+		is Value.I32 -> {
+		}
+		is Value.F32 -> {
+		}
+		is Value.Array -> value.items.forEach { compileFunctions(it) }
+		is Value.ArrayAt -> {
+			compileFunctions(value.lhs)
+			compileFunctions(value.index)
+		}
+		is Value.Struct -> value.fields.forEach { compileFunctions(it.value) }
+		is Value.StructAt -> compileFunctions(value.lhs)
+		is Value.Switch -> {
+			compileFunctions(value.lhs)
+			value.functions.forEach { compile(it) }
+		}
+		is Value.Call -> {
+			compileFunction(value.function)
+			compileFunctions(value.param)
+		}
+		is Value.Inc -> compileFunctions(value.lhs)
+		is Value.Dec -> compileFunctions(value.lhs)
+		is Value.Plus -> {
+			compileFunctions(value.lhs)
+			compileFunctions(value.rhs)
+		}
+		is Value.Minus -> {
+			compileFunctions(value.lhs)
+			compileFunctions(value.rhs)
+		}
+		is Value.Times -> {
+			compileFunctions(value.lhs)
+			compileFunctions(value.rhs)
+		}
+	}
+}
+
+fun Compiler.compileFunction(function: Value.Function) {
+	compiledFunctions.getOrCompute(function) {
+		val jumpAddress = codeOutputStream.size()
+		val paramIndex = dataHole(size(function.param))
+		val retAddress = dataHole(4)
+		val outputIndex = index(function.body)
+		// TODO: Emit ret
+		CompiledFunction(
+			inputIndex = paramIndex,
+			jumpAddress = jumpAddress,
+			retAddress = retAddress,
+			outputIndex = outputIndex)
+	}
+}

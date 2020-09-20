@@ -150,7 +150,7 @@ inline fun Vm.jumpTable(size: Int, index: Int) =
 
 inline fun Vm.call(jumpIndex: Int, retIndex: Int) =
 	also {
-		codeSet(retIndex, pc)
+		dataSet(retIndex, pc)
 		jump(jumpIndex)
 	}
 
