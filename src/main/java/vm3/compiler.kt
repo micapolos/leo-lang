@@ -1,7 +1,6 @@
 package vm3
 
 import leo.base.notNullOrError
-import leo16.names.*
 import vm3.dsl.layout.offset
 import vm3.dsl.type.i32
 import java.io.ByteArrayOutputStream
@@ -9,9 +8,8 @@ import java.io.ByteArrayOutputStream
 data class Compiler(
 	var dataSize: Int = 0,
 	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
-	val valueOffsets: MutableMap<Value, Offset> = mutableMapOf(),
+	var valueOffsets: MutableMap<Value, Offset> = mutableMapOf(),
 	val parameterOffsets: MutableList<Offset> = mutableListOf(),
-	val functionOffsets: MutableMap<Value.Function, Offset> = mutableMapOf(),
 	val compiledFunctions: MutableMap<Value.Function, CompiledFunction> = mutableMapOf(),
 	val types: Types = Types(),
 	val layouts: Layouts = Layouts()
@@ -221,12 +219,6 @@ fun Compiler.add(size: Int, setFn: (Int) -> Unit): Offset =
 		Offset.Direct(dst)
 	}
 
-fun Compiler.emitCall(jumpAddr: Int, retAddr: Int) {
-	codeOutputStream.writeOp(x06_callOpcode)
-	codeOutputStream.writeInt(jumpAddr)
-	codeOutputStream.writeInt(retAddr)
-}
-
 fun Compiler.add(struct: Value.Struct): Offset =
 	add(size(struct)) { dst -> set(dst, struct) }
 
@@ -305,6 +297,15 @@ fun <T> Compiler.push(offset: Offset, fn: () -> T): T {
 	return result
 }
 
+fun <T> Compiler.clearValueOffsets(fn: () -> T): T {
+	val oldValueOffsets = valueOffsets
+	val result = fn()
+	valueOffsets = oldValueOffsets
+	return result
+}
+
+val Compiler.pc get() = codeOutputStream.size()
+
 fun Compiler.compileFunctions(value: Value) {
 	when (value) {
 		is Value.Argument -> {
@@ -349,15 +350,32 @@ fun Compiler.compileFunctions(value: Value) {
 
 fun Compiler.compileFunction(function: Value.Function) {
 	compiledFunctions.getOrCompute(function) {
-		val jumpAddress = codeOutputStream.size()
+		val jumpAddress = pc
 		val paramIndex = dataHole(size(function.param))
 		val retAddress = dataHole(4)
-		val outputIndex = index(function.body)
-		// TODO: Emit ret
+		val outputIndex = types.push(function.param) {
+			push(Offset.Direct(paramIndex)) {
+				clearValueOffsets {
+					index(function.body)
+				}
+			}
+		}
+		emitRet(retAddress)
 		CompiledFunction(
 			inputIndex = paramIndex,
 			jumpAddress = jumpAddress,
 			retAddress = retAddress,
 			outputIndex = outputIndex)
 	}
+}
+
+fun Compiler.emitCall(jumpAddr: Int, retAddr: Int) {
+	codeOutputStream.writeOp(x06_callOpcode)
+	codeOutputStream.writeInt(jumpAddr)
+	codeOutputStream.writeInt(retAddr)
+}
+
+fun Compiler.emitRet(addr: Int) {
+	codeOutputStream.writeOp(x07_retOpcode)
+	codeOutputStream.writeInt(addr)
 }
