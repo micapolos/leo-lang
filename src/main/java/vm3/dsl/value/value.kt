@@ -1,6 +1,6 @@
 package vm3.dsl.value
 
-import vm3.Type
+import vm3.type.Type
 import vm3.value.Value
 
 fun argument(depth: Int): Value = Value.Argument(depth)

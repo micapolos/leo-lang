@@ -1,6 +1,6 @@
 package vm3.dsl.data
 
-import vm3.Data
+import vm3.data.Data
 
 val Boolean.data: Data get() = Data.Bool(this)
 val Int.data: Data get() = Data.I32(this)

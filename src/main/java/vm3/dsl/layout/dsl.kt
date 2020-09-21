@@ -6,6 +6,7 @@ import vm3.checkIndex
 val bool: Layout = Layout(4, Layout.Body.Bool)
 val i32: Layout = Layout(4, Layout.Body.I32)
 val f32: Layout = Layout(4, Layout.Body.F32)
+
 operator fun Layout.get(itemCount: Int): Layout =
 	Layout(
 		size * itemCount,

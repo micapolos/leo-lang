@@ -1,5 +1,7 @@
 package vm3
 
+import vm3.type.Type
+
 data class Layout(val size: Int, val body: Body) {
 	sealed class Body {
 		object Bool : Body()

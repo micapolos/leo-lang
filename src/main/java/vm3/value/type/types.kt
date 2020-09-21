@@ -1,8 +1,11 @@
-package vm3
+package vm3.value.type
 
+import vm3.deduplicate
 import vm3.dsl.type.get
 import vm3.dsl.type.item
 import vm3.dsl.type.struct
+import vm3.getOrCompute
+import vm3.type.Type
 import vm3.value.Value
 
 data class Types(

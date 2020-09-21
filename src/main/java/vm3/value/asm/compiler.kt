@@ -4,18 +4,19 @@ import leo.base.notNullOrError
 import vm3.Layout
 import vm3.Layouts
 import vm3.Offset
-import vm3.Type
-import vm3.Types
+import vm3.type.Type
+import vm3.value.type.Types
 import vm3.asm.Op
 import vm3.asm.compiledBytes
 import vm3.dsl.layout.offset
 import vm3.dsl.type.i32
 import vm3.get
+import vm3.value.type.get
 import vm3.getOrCompute
 import vm3.int
 import vm3.optimize
-import vm3.push
-import vm3.size
+import vm3.value.type.push
+import vm3.type.size
 import vm3.value.Value
 
 data class Compiler(

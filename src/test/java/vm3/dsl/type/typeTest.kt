@@ -1,7 +1,7 @@
 package vm3.dsl.type
 
 import leo.base.assertEqualTo
-import vm3.code
+import vm3.type.code
 import kotlin.test.Test
 
 class TypeTest {

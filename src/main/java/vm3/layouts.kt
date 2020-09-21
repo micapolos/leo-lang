@@ -1,5 +1,7 @@
 package vm3
 
+import vm3.type.Type
+
 data class Layouts(val map: MutableMap<Type, Layout> = HashMap())
 
 operator fun Layouts.get(type: Type): Layout =

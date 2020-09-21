@@ -1,4 +1,11 @@
-package vm3
+package vm3.data
+
+import vm3.type.Type
+import vm3.boolean
+import vm3.float
+import vm3.int
+import vm3.set
+import vm3.type.size
 
 sealed class Data {
 	data class Bool(val boolean: Boolean) : Data()

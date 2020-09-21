@@ -1,6 +1,6 @@
 package vm3.dsl.type
 
-import vm3.Type
+import vm3.type.Type
 
 val bool = Type.Bool
 val i32 = Type.I32

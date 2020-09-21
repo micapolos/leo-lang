@@ -1,6 +1,12 @@
 package vm3
 
 import leo.base.println
+import vm3.data.Data
+import vm3.data.data
+import vm3.data.set
+import vm3.data.type
+import vm3.type.Type
+import vm3.type.code
 import vm3.value.Value
 import vm3.value.asm.compile
 

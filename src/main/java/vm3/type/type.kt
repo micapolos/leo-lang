@@ -1,4 +1,4 @@
-package vm3
+package vm3.type
 
 sealed class Type {
 	object Bool : Type()
