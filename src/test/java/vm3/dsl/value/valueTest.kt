@@ -1,10 +1,10 @@
 package vm3.dsl.value
 
 import leo.base.assertEqualTo
-import vm3.code
 import vm3.dsl.type.bool
 import vm3.dsl.type.f32
 import vm3.dsl.type.i32
+import vm3.value.code
 import kotlin.test.Test
 
 class ValueTest {

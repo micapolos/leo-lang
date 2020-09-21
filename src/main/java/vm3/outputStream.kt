@@ -11,8 +11,9 @@ inline fun OutputStream.writeByte(byte: Byte) {
 	write(byte.toInt())
 }
 
-inline fun OutputStream.writeOp(int: Int) {
+inline fun OutputStream.writeOp(int: Int, vararg args: Int) {
 	write(int)
+	args.forEach { writeInt(it) }
 }
 
 inline fun OutputStream.writeInt(int: Int) {
@@ -27,3 +28,4 @@ inline fun ByteArrayOutputStream.writeIntHole(): Int =
 
 inline fun ByteArrayOutputStream.writeHole(size: Int): Int =
 	size().also { repeat(size) { writeByte(0) } }
+

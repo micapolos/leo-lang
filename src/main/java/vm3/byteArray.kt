@@ -5,6 +5,7 @@ import leo.base.byte1
 import leo.base.byte2
 import leo.base.byte3
 import leo.base.int
+import leo.base.setInt
 
 inline fun ByteArray.byte(index: Int) = this[index]
 
@@ -23,4 +24,8 @@ inline fun ByteArray.set(index: Int, int: Int) {
 	set(index + 1, int.byte1)
 	set(index + 2, int.byte2)
 	set(index + 3, int.byte3)
+}
+
+inline fun ByteArray.updateInt(index: Int, fn: (Int) -> Int) {
+	set(index, fn(int(index)))
 }

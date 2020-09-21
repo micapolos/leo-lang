@@ -3,6 +3,7 @@ package vm3
 import leo.base.notNullOrError
 import vm3.dsl.layout.offset
 import vm3.dsl.type.i32
+import vm3.value.Value
 import java.io.ByteArrayOutputStream
 
 data class Compiler(
@@ -32,7 +33,7 @@ fun compile(function: Value.Function): Compiled {
 	val outputType = compiler.type(function.body)
 	compiler.dataHole(function.param.size)
 	val outputOffset = compiler.offset(function.body)
-	compiler.codeOutputStream.writeOp(x00_returnOpcode)
+	compiler.codeOutputStream.writeOp(x00_exitOpcode)
 	return Compiled(
 		compiler.codeOutputStream.toByteArray(),
 		compiler.dataSize,
@@ -308,24 +309,26 @@ val Compiler.pc get() = codeOutputStream.size()
 
 fun Compiler.compileFunctions(value: Value) {
 	when (value) {
-		is Value.Argument -> {
+		is Value.Argument -> Unit
+		is Value.Bool -> Unit
+		is Value.I32 -> Unit
+		is Value.F32 -> Unit
+		is Value.Array -> value.items.forEach {
+			compileFunctions(it)
 		}
-		is Value.Bool -> {
-		}
-		is Value.I32 -> {
-		}
-		is Value.F32 -> {
-		}
-		is Value.Array -> value.items.forEach { compileFunctions(it) }
 		is Value.ArrayAt -> {
 			compileFunctions(value.lhs)
 			compileFunctions(value.index)
 		}
-		is Value.Struct -> value.fields.forEach { compileFunctions(it.value) }
+		is Value.Struct -> value.fields.forEach {
+			compileFunctions(it.value)
+		}
 		is Value.StructAt -> compileFunctions(value.lhs)
 		is Value.Switch -> {
 			compileFunctions(value.lhs)
-			value.functions.forEach { compile(it) }
+			value.functions.forEach {
+				compileFunction(it)
+			}
 		}
 		is Value.Call -> {
 			compileFunction(value.function)

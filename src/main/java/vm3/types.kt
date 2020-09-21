@@ -3,6 +3,7 @@ package vm3
 import vm3.dsl.type.get
 import vm3.dsl.type.item
 import vm3.dsl.type.struct
+import vm3.value.Value
 
 data class Types(
 	val parameters: MutableList<Type> = mutableListOf(),

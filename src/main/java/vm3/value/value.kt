@@ -1,4 +1,7 @@
-package vm3
+package vm3.value
+
+import vm3.Type
+import vm3.code
 
 sealed class Value {
 	data class Argument(val depth: Int) : Value()

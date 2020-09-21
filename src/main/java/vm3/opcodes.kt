@@ -1,6 +1,6 @@
 package vm3
 
-val x00_returnOpcode = 0x00
+val x00_exitOpcode = 0x00
 val x01_nopOpcode = 0x01
 val x02_syscallOpcode = 0x02
 

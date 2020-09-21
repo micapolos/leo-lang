@@ -21,7 +21,7 @@ val Vm.disassemble: String
 fun Vm.run() {
 	while (true) {
 		when (val op = fetchOp()) {
-			x00_returnOpcode -> return
+			x00_exitOpcode -> return
 			x01_nopOpcode -> Unit
 			x02_syscallOpcode -> syscall()
 

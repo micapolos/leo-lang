@@ -231,16 +231,4 @@ class ExecutorTest {
 								"y" to 30f.data)))))
 			.assertEqualTo(10f.times(10f).times(Math.PI.toFloat()).data)
 	}
-
-	@Test
-	fun staticSwitch() {
-		i32.gives(
-			argument.switch(
-				f32.gives(100.value),
-				i32.gives(200.value),
-				bool.gives(300.value)))
-			.executor
-			.execute(100.data)
-			.assertEqualTo(200.data)
-	}
 }

@@ -71,7 +71,7 @@ val Op.argCount: Int
 
 fun OutputStream.write(op: Op) {
 	when (op) {
-		Op.Exit -> writeOp(x00_returnOpcode)
+		Op.Exit -> writeOp(x00_exitOpcode)
 		Op.Nop -> writeOp(x01_nopOpcode)
 		Op.SysCall -> writeOp(x02_syscallOpcode)
 
@@ -132,7 +132,7 @@ fun InputStream.readOpInt(): Int? =
 fun InputStream.readOp(): Op? =
 	readOpInt()?.let { op ->
 		when (op) {
-			x00_returnOpcode -> Op.Exit
+			x00_exitOpcode -> Op.Exit
 			x01_nopOpcode -> Op.Nop
 			x02_syscallOpcode -> Op.SysCall
 

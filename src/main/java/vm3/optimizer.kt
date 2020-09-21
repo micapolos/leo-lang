@@ -1,5 +1,7 @@
 package vm3
 
+import vm3.value.Value
+
 val Value.optimize: Value
 	get() =
 		innerOptimize.outerOptimize
