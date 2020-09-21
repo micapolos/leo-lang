@@ -6,6 +6,8 @@ import vm3.Layouts
 import vm3.Offset
 import vm3.Type
 import vm3.Types
+import vm3.asm.Op
+import vm3.asm.compiledBytes
 import vm3.dsl.layout.offset
 import vm3.dsl.type.i32
 import vm3.get
@@ -15,28 +17,10 @@ import vm3.optimize
 import vm3.push
 import vm3.size
 import vm3.value.Value
-import vm3.writeInt
-import vm3.writeOp
-import vm3.x00_exitOpcode
-import vm3.x06_callOpcode
-import vm3.x07_retOpcode
-import vm3.x08_setConst32Opcode
-import vm3.x09_set32Opcode
-import vm3.x0A_setIndirect32Opcode
-import vm3.x0B_setSizeOpcode
-import vm3.x10_i32IncOpcode
-import vm3.x11_i32DecOpcode
-import vm3.x16_i32PlusOpcode
-import vm3.x17_i32MinusOpcode
-import vm3.x18_i32TimesOpcode
-import vm3.x33_f32PlusOpcode
-import vm3.x34_f32MinusOpcode
-import vm3.x35_f32TimesOpcode
-import java.io.ByteArrayOutputStream
 
 data class Compiler(
 	var dataSize: Int = 0,
-	val codeOutputStream: ByteArrayOutputStream = ByteArrayOutputStream(),
+	val ops: MutableList<Op> = mutableListOf(),
 	var valueOffsets: MutableMap<Value, Offset> = mutableMapOf(),
 	val parameterOffsets: MutableList<Offset> = mutableListOf(),
 	val compiledFunctions: MutableMap<Value.Function, CompiledFunction> = mutableMapOf(),
@@ -61,9 +45,9 @@ fun compile(function: Value.Function): Compiled {
 	val outputType = compiler.type(function.body)
 	compiler.dataHole(function.param.size)
 	val outputOffset = compiler.offset(function.body)
-	compiler.codeOutputStream.writeOp(x00_exitOpcode)
+	compiler.ops.add(Op.Exit)
 	return Compiled(
-		compiler.codeOutputStream.toByteArray(),
+		compiler.ops.compiledBytes.byteArray,
 		compiler.dataSize,
 		outputType,
 		outputOffset)
@@ -88,9 +72,7 @@ fun Compiler.index(offset: Offset): Int =
 	when (offset) {
 		is Offset.Direct -> offset.index
 		is Offset.Indirect -> dataHole(4).also { index ->
-			codeOutputStream.writeOp(x0A_setIndirect32Opcode)
-			codeOutputStream.writeInt(index)
-			codeOutputStream.writeInt(offset.index)
+			ops.add(Op.CopyIndirect32(index, offset.index))
 		}
 	}
 
@@ -105,16 +87,12 @@ fun Compiler.indirectIndex(offset: Offset): Int =
 
 fun Compiler.indirect(directIndex: Int): Int =
 	dataHole(4).also { index ->
-		codeOutputStream.writeOp(x08_setConst32Opcode)
-		codeOutputStream.writeInt(index)
-		codeOutputStream.writeInt(directIndex)
+		setConst32(index, directIndex)
 	}
 
 fun Compiler.direct(index: Int): Int =
 	dataHole(4).also { dst ->
-		codeOutputStream.writeOp(x09_set32Opcode)
-		codeOutputStream.writeInt(dst)
-		codeOutputStream.writeInt(index)
+		ops.add(Op.Copy32(dst, index))
 	}
 
 fun Compiler.compileOffset(value: Value): Offset =
@@ -151,32 +129,31 @@ fun Compiler.set(dst: Int, value: Value) {
 
 		is Value.Switch -> set(dst, value)
 
-		is Value.Inc ->
-			when (type(value)) {
-				Type.I32 -> setOp(x10_i32IncOpcode, dst, value.lhs)
-				else -> TODO()
-			}
-		is Value.Dec ->
-			when (type(value)) {
-				Type.I32 -> setOp(x11_i32DecOpcode, dst, value.lhs)
-				else -> TODO()
-			}
+		is Value.Inc -> when (type(value)) {
+			Type.I32 -> ops.add(Op.I32Inc(dst, index(value.lhs)))
+			else -> TODO()
+		}
+		is Value.Dec -> when (type(value)) {
+			Type.I32 -> ops.add(Op.I32Dec(dst, index(value.lhs)))
+			else -> TODO()
+		}
+
 		is Value.Plus ->
 			when (type(value)) {
-				Type.I32 -> setOp(x16_i32PlusOpcode, dst, value.lhs, value.rhs)
-				Type.F32 -> setOp(x33_f32PlusOpcode, dst, value.lhs, value.rhs)
+				Type.I32 -> ops.add(Op.I32Add(dst, index(value.lhs), index(value.rhs)))
+				Type.F32 -> ops.add(Op.F32Add(dst, index(value.lhs), index(value.rhs)))
 				else -> TODO()
 			}
 		is Value.Minus ->
 			when (type(value)) {
-				Type.I32 -> setOp(x17_i32MinusOpcode, dst, value.lhs, value.rhs)
-				Type.F32 -> setOp(x34_f32MinusOpcode, dst, value.lhs, value.rhs)
+				Type.I32 -> ops.add(Op.I32Sub(dst, index(value.lhs), index(value.rhs)))
+				Type.F32 -> ops.add(Op.F32Sub(dst, index(value.lhs), index(value.rhs)))
 				else -> TODO()
 			}
 		is Value.Times ->
 			when (type(value)) {
-				Type.I32 -> setOp(x18_i32TimesOpcode, dst, value.lhs, value.rhs)
-				Type.F32 -> setOp(x35_f32TimesOpcode, dst, value.lhs, value.rhs)
+				Type.I32 -> ops.add(Op.I32Mul(dst, index(value.lhs), index(value.rhs)))
+				Type.F32 -> ops.add(Op.F32Mul(dst, index(value.lhs), index(value.rhs)))
 				else -> TODO()
 			}
 	}
@@ -184,16 +161,12 @@ fun Compiler.set(dst: Int, value: Value) {
 
 fun Compiler.add32(lhs: Int): Offset =
 	dataHole(4).let { dst ->
-		codeOutputStream.writeOp(x08_setConst32Opcode)
-		codeOutputStream.writeInt(dst)
-		codeOutputStream.writeInt(lhs)
+		setConst32(dst, lhs)
 		Offset.Direct(dst)
 	}
 
 fun Compiler.setConst32(dst: Int, src: Int) {
-	codeOutputStream.writeOp(x08_setConst32Opcode)
-	codeOutputStream.writeInt(dst)
-	codeOutputStream.writeInt(src)
+	ops.add(Op.Set32(dst, src))
 }
 
 fun Compiler.set(dst: Int, struct: Value.Struct) {
@@ -227,10 +200,7 @@ fun Compiler.set(dst: Int, switch: Value.Switch) {
 }
 
 fun Compiler.setSize(dst: Int, src: Int, size: Int) {
-	codeOutputStream.writeOp(x0B_setSizeOpcode)
-	codeOutputStream.writeInt(dst)
-	codeOutputStream.writeInt(src)
-	codeOutputStream.writeInt(size)
+	ops.add(Op.CopyBlock(dst, src, size))
 }
 
 fun Compiler.compileOffset(call: Value.Call): Offset =
@@ -238,7 +208,7 @@ fun Compiler.compileOffset(call: Value.Call): Offset =
 		.notNullOrError("${call.function} not compiled")
 		.let { compiledFunction ->
 			set(compiledFunction.inputIndex, call.param)
-			emitCall(compiledFunction.jumpAddress, compiledFunction.retAddress)
+			ops.add(Op.Call(compiledFunction.jumpAddress, compiledFunction.retAddress))
 			Offset.Direct(compiledFunction.outputIndex)
 		}
 
@@ -257,7 +227,7 @@ fun Compiler.add(array: Value.Array): Offset =
 fun Compiler.add(structAt: Value.StructAt): Offset =
 	pointerOffset(structAt.lhs).let { structOffset ->
 		add32(layout(type(structAt.lhs)).offset(structAt.name)).let { fieldOffset ->
-			depointerOffset(addOp(x16_i32PlusOpcode, i32, structOffset, fieldOffset))
+			depointerOffset(addOp(i32, structOffset, fieldOffset) { a, b, c -> Op.I32Add(a, b, c) })
 		}
 	}
 
@@ -265,40 +235,18 @@ fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
 	pointerOffset(arrayAt.lhs).let { arrayOffset ->
 		offset(arrayAt.index).let { indexOffset ->
 			add32(size(arrayAt)).let { sizeOffset ->
-				addOp(x18_i32TimesOpcode, i32, indexOffset, sizeOffset).let { itemOffset ->
-					depointerOffset(addOp(x16_i32PlusOpcode, i32, arrayOffset, itemOffset))
+				addOp(i32, indexOffset, sizeOffset) { a, b, c -> Op.I32Mul(a, b, c) }.let { itemOffset ->
+					depointerOffset(addOp(i32, arrayOffset, itemOffset) { a, b, c -> Op.I32Add(a, b, c) })
 				}
 			}
 		}
 	}
 
-fun Compiler.setOp(op: Int, dst: Int, lhs: Value) =
-	setOp(op, dst, index(lhs))
-
-fun Compiler.setOp(op: Int, dst: Int, lhs: Value, rhs: Value) =
-	setOp(op, dst, index(lhs), index(rhs))
-
-fun Compiler.setOp(op: Int, dst: Int, lhs: Int) {
-	codeOutputStream.writeOp(op)
-	codeOutputStream.writeInt(dst)
-	codeOutputStream.writeInt(lhs)
-}
-
-fun Compiler.setOp(op: Int, dst: Int, lhs: Int, rhs: Int) {
-	codeOutputStream.writeOp(op)
-	codeOutputStream.writeInt(dst)
-	codeOutputStream.writeInt(lhs)
-	codeOutputStream.writeInt(rhs)
-}
-
-fun Compiler.addOp(op: Int, type: Type, lhs: Offset, rhs: Offset): Offset =
+fun Compiler.addOp(type: Type, lhs: Offset, rhs: Offset, fn: (Int, Int, Int) -> Op): Offset =
 	index(lhs).let { lhs ->
 		index(rhs).let { rhs ->
 			dataHole(type.size).let { dst ->
-				codeOutputStream.writeOp(op)
-				codeOutputStream.writeInt(dst)
-				codeOutputStream.writeInt(lhs)
-				codeOutputStream.writeInt(rhs)
+				ops.add(fn(dst, lhs, rhs))
 				Offset.Direct(dst)
 			}
 		}
@@ -333,7 +281,7 @@ fun <T> Compiler.clearValueOffsets(fn: () -> T): T {
 	return result
 }
 
-val Compiler.pc get() = codeOutputStream.size()
+val Compiler.pc get() = ops.size
 
 fun Compiler.compileFunctions(value: Value) {
 	when (value) {
@@ -391,22 +339,11 @@ fun Compiler.compileFunction(function: Value.Function) {
 				}
 			}
 		}
-		emitRet(retAddress)
+		ops.add(Op.Ret(retAddress))
 		CompiledFunction(
 			inputIndex = paramIndex,
 			jumpAddress = jumpAddress,
 			retAddress = retAddress,
 			outputIndex = outputIndex)
 	}
-}
-
-fun Compiler.emitCall(jumpAddr: Int, retAddr: Int) {
-	codeOutputStream.writeOp(x06_callOpcode)
-	codeOutputStream.writeInt(jumpAddr)
-	codeOutputStream.writeInt(retAddr)
-}
-
-fun Compiler.emitRet(addr: Int) {
-	codeOutputStream.writeOp(x07_retOpcode)
-	codeOutputStream.writeInt(addr)
 }

@@ -14,7 +14,10 @@ import vm3.x06_callOpcode
 import vm3.x07_retOpcode
 import vm3.x08_setConst32Opcode
 import vm3.x09_set32Opcode
+import vm3.x0A_setIndirect32Opcode
 import vm3.x0B_setSizeOpcode
+import vm3.x10_i32IncOpcode
+import vm3.x11_i32DecOpcode
 import vm3.x16_i32PlusOpcode
 import vm3.x17_i32MinusOpcode
 import vm3.x18_i32TimesOpcode
@@ -61,7 +64,10 @@ operator fun Compiler.plus(op: Op) {
 		is Op.Ret -> writeOp(x07_retOpcode, op.index)
 		is Op.Set32 -> writeOp(x08_setConst32Opcode, op.dst, op.src)
 		is Op.Copy32 -> writeOp(x09_set32Opcode, op.dst, op.src)
+		is Op.CopyIndirect32 -> writeOp(x0A_setIndirect32Opcode, op.dst, op.src)
 		is Op.CopyBlock -> writeOp(x0B_setSizeOpcode, op.dst, op.src, op.size)
+		is Op.I32Inc -> writeOp(x10_i32IncOpcode, op.dst, op.src)
+		is Op.I32Dec -> writeOp(x11_i32DecOpcode, op.dst, op.src)
 		is Op.I32Add -> writeOp(x16_i32PlusOpcode, op.dst, op.lhs, op.rhs)
 		is Op.I32Sub -> writeOp(x17_i32MinusOpcode, op.dst, op.lhs, op.rhs)
 		is Op.I32Mul -> writeOp(x18_i32TimesOpcode, op.dst, op.lhs, op.rhs)

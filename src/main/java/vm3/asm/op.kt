@@ -12,7 +12,11 @@ sealed class Op {
 
 	data class Set32(val dst: Int, val src: Int) : Op()
 	data class Copy32(val dst: Int, val src: Int) : Op()
+	data class CopyIndirect32(val dst: Int, val src: Int) : Op()
 	data class CopyBlock(val dst: Int, val src: Int, val size: Int) : Op()
+
+	data class I32Inc(val dst: Int, val src: Int) : Op()
+	data class I32Dec(val dst: Int, val src: Int) : Op()
 
 	data class I32Add(val dst: Int, val lhs: Int, val rhs: Int) : Op()
 	data class I32Sub(val dst: Int, val lhs: Int, val rhs: Int) : Op()
