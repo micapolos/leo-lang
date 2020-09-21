@@ -25,7 +25,8 @@ data class Compiler(
 	val parameterOffsets: MutableList<Offset> = mutableListOf(),
 	val compiledFunctions: MutableMap<Value.Function, CompiledFunction> = mutableMapOf(),
 	val types: Types = Types(),
-	val layouts: Layouts = Layouts()
+	val layouts: Layouts = Layouts(),
+	val parentCompilerOrNull: Compiler? = null
 )
 
 data class CompiledFunction(
@@ -99,12 +100,8 @@ fun Compiler.compileOffset(value: Value): Offset =
 	when (value) {
 		is Value.Argument -> parameterOffsets[parameterOffsets.size - 1 - value.depth]
 
-		is Value.Bool -> add32(value.boolean.int)
-		is Value.I32 -> add32(value.int)
-		is Value.F32 -> add32(value.float.int)
-
-		is Value.ArrayAt -> add(value)
-		is Value.StructAt -> add(value)
+		is Value.ArrayAt -> compileOffset(value)
+		is Value.StructAt -> compileOffset(value)
 
 		is Value.Call -> compileOffset(value)
 
@@ -224,14 +221,14 @@ fun Compiler.add(struct: Value.Struct): Offset =
 fun Compiler.add(array: Value.Array): Offset =
 	add(size(array)) { dst -> set(dst, array) }
 
-fun Compiler.add(structAt: Value.StructAt): Offset =
+fun Compiler.compileOffset(structAt: Value.StructAt): Offset =
 	pointerOffset(structAt.lhs).let { structOffset ->
 		add32(layout(type(structAt.lhs)).offset(structAt.name)).let { fieldOffset ->
 			depointerOffset(addOp(i32, structOffset, fieldOffset) { a, b, c -> Op.I32Add(a, b, c) })
 		}
 	}
 
-fun Compiler.add(arrayAt: Value.ArrayAt): Offset =
+fun Compiler.compileOffset(arrayAt: Value.ArrayAt): Offset =
 	pointerOffset(arrayAt.lhs).let { arrayOffset ->
 		offset(arrayAt.index).let { indexOffset ->
 			add32(size(arrayAt)).let { sizeOffset ->
