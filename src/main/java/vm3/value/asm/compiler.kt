@@ -6,7 +6,7 @@ import vm3.type.layout.Layouts
 import vm3.type.Type
 import vm3.value.type.Types
 import vm3.asm.Op
-import vm3.asm.compiledBytes
+import vm3.asm.bytes
 import vm3.dsl.layout.offset
 import vm3.dsl.type.i32
 import vm3.type.layout.get
@@ -47,7 +47,7 @@ fun compile(function: Value.Function): Compiled {
 	val outputOffset = compiler.offset(function.body)
 	compiler.ops.add(Op.Exit)
 	return Compiled(
-		compiler.ops.compiledBytes.byteArray,
+		compiler.ops.bytes.byteArray,
 		compiler.dataSize,
 		outputType,
 		outputOffset)
