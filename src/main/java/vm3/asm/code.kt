@@ -35,7 +35,7 @@ fun memCode(code: String) = "[$code]"
 fun blockCode(index: Int, size: Int) = "[$index:$size]"
 fun prefixCode(op: String, rhs: String) = "$op $rhs"
 fun infixCode(lhs: String, op: String, rhs: String) = "$lhs $op $rhs"
-fun assignCode(lhs: String, rhs: String) = infixCode(lhs, ":=", rhs)
+fun assignCode(lhs: String, rhs: String) = infixCode(lhs, "<-", rhs)
 fun assignCode(lhs: Int, rhs: String) = assignCode(memCode(lhs), rhs)
 fun opCode(dst: Int, op: String, src: Int) = assignCode(dst, prefixCode(op, memCode(src)))
 fun opCode(dst: Int, lhs: Int, op: String, rhs: Int) = assignCode(dst, infixCode(memCode(lhs), op, memCode(rhs)))
