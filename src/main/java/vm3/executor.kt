@@ -2,6 +2,7 @@ package vm3
 
 import leo.base.println
 import vm3.value.Value
+import vm3.value.asm.compile
 
 data class Executor(
 	val vm: Vm,

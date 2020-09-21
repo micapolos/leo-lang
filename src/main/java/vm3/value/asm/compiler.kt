@@ -1,9 +1,37 @@
-package vm3
+package vm3.value.asm
 
 import leo.base.notNullOrError
+import vm3.Layout
+import vm3.Layouts
+import vm3.Offset
+import vm3.Type
+import vm3.Types
 import vm3.dsl.layout.offset
 import vm3.dsl.type.i32
+import vm3.get
+import vm3.getOrCompute
+import vm3.int
+import vm3.optimize
+import vm3.push
+import vm3.size
 import vm3.value.Value
+import vm3.writeInt
+import vm3.writeOp
+import vm3.x00_exitOpcode
+import vm3.x06_callOpcode
+import vm3.x07_retOpcode
+import vm3.x08_setConst32Opcode
+import vm3.x09_set32Opcode
+import vm3.x0A_setIndirect32Opcode
+import vm3.x0B_setSizeOpcode
+import vm3.x10_i32IncOpcode
+import vm3.x11_i32DecOpcode
+import vm3.x16_i32PlusOpcode
+import vm3.x17_i32MinusOpcode
+import vm3.x18_i32TimesOpcode
+import vm3.x33_f32PlusOpcode
+import vm3.x34_f32MinusOpcode
+import vm3.x35_f32TimesOpcode
 import java.io.ByteArrayOutputStream
 
 data class Compiler(
