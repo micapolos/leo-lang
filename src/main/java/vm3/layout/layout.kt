@@ -1,4 +1,4 @@
-package vm3
+package vm3.layout
 
 import vm3.type.Type
 

@@ -8,6 +8,8 @@ import vm3.data.type
 import vm3.type.Type
 import vm3.type.code
 import vm3.value.Value
+import vm3.value.asm.Offset
+import vm3.value.asm.code
 import vm3.value.asm.compile
 
 data class Executor(

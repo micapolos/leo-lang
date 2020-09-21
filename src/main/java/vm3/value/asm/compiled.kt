@@ -1,8 +1,6 @@
 package vm3.value.asm
 
 import leo13.base.linesString
-import vm3.Offset
-import vm3.code
 import vm3.type.Type
 import vm3.disassemble
 import vm3.hexString

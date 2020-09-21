@@ -1,4 +1,4 @@
-package vm3
+package vm3.value.type
 
 import leo.base.assertEqualTo
 import vm3.dsl.type.bool
@@ -16,8 +16,6 @@ import vm3.dsl.value.plus
 import vm3.dsl.value.struct
 import vm3.dsl.value.switch
 import vm3.dsl.value.value
-import vm3.value.type.Types
-import vm3.value.type.get
 import kotlin.test.Test
 
 class TypesTest {

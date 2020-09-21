@@ -1,4 +1,4 @@
-package vm3
+package vm3.type.layout
 
 import leo.base.assertEqualTo
 import vm3.dsl.type.bool

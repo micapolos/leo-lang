@@ -1,4 +1,6 @@
-package vm3
+package vm3.value.asm
+
+import vm3.hexString
 
 sealed class Offset {
 	data class Direct(val index: Int) : Offset()

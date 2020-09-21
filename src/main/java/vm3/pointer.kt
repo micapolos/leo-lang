@@ -1,6 +1,7 @@
 package vm3
 
 import leo.base.notNullIf
+import vm3.layout.Layout
 
 data class Pointer(val byteArray: ByteArray, val index: Int, val layout: Layout)
 

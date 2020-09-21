@@ -1,6 +1,6 @@
 package vm3.dsl.layout
 
-import vm3.Layout
+import vm3.layout.Layout
 import vm3.checkIndex
 
 val bool: Layout = Layout(4, Layout.Body.Bool)
