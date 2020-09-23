@@ -3,7 +3,7 @@ package vm.c
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import leo.base.Effect
-import leo.base.bind
+import leo.base.apply
 import leo.base.effect
 import leo.base.persistentListMap
 import leo.base.update
@@ -26,7 +26,7 @@ data class ValueCodegen(
 fun ValueCodegen.name(value: Value): Effect<ValueCodegen, String> =
 	valueNames[value].let { nameOrNull ->
 		if (nameOrNull != null) effect(nameOrNull)
-		else codeEffect(value.op).bind { valueCode ->
+		else codeEffect(value.op).apply { valueCode ->
 			"v${valueNames.size}".let { varName ->
 				ValueCodegen(
 					valueNames.put(value, varName),
@@ -43,12 +43,12 @@ fun ValueCodegen.codeEffect(op: Op): Effect<ValueCodegen, String> =
 			.persistentListMap { name(it) }
 			.update { "{ ${it.joinToString(", ")} }" }
 		is FieldAccessOp ->
-			name(op.lhs).bind { lhs ->
+			name(op.lhs).apply { lhs ->
 				effect("${lhs}.${op.name}")
 			}
 		is ArrayAccessOp ->
-			name(op.lhs).bind { lhs ->
-				name(op.index).bind { index ->
+			name(op.lhs).apply { lhs ->
+				name(op.index).apply { index ->
 					effect("$lhs[$index]")
 				}
 			}
@@ -61,6 +61,6 @@ fun ValueCodegen.codeEffect(op: Op): Effect<ValueCodegen, String> =
 
 val Value.bodyCode
 	get() =
-		ValueCodegen().name(this).bind { name ->
+		ValueCodegen().name(this).apply { name ->
 			"${bodyCode}return ${name};"
 		}
