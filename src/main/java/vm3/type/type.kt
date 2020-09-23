@@ -1,5 +1,12 @@
 package vm3.type
 
+import leo.base.Seq
+import leo.base.failIfOr
+import leo.base.ifOrNull
+import leo.base.nodeOrNull
+import leo.base.orNullIf
+import vm3.dsl.type.struct
+
 sealed class Type {
 	object Bool : Type()
 	object I32 : Type()
@@ -39,3 +46,12 @@ val Type.code: String
 val Type.Field.code: String
 	get() =
 		"$name: ${valueType.code}"
+
+val Seq<Type>.arrayItemType: Type
+	get() =
+		nodeOrNull
+			.let { nodeOrNull ->
+				if (nodeOrNull == null) struct()
+				else nodeOrNull.first.orNullIf(nodeOrNull.remaining.all { it == nodeOrNull.first })
+			}
+			?: error("$this.arrayItemType")

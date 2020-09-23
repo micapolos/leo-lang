@@ -12,4 +12,4 @@ fun choice(vararg types: Type): Type = Type.Choice(types.toList())
 val Pair<String, Type>.field get() = Type.Field(first, second)
 
 val Type.item: Type get() = (this as Type.Array).itemType
-operator fun Type.get(name: String): Type = (this as Type.Struct).fields.first { it.name == name }.valueType
+operator fun Type.get(name: String): Type = (this as Type.Struct).fields.last { it.name == name }.valueType

@@ -10,6 +10,10 @@ infix fun <S, V> S.effect(value: V) = Effect(this, value)
 inline fun <S, V1, V2> Effect<S, V1>.bind(fn: S.(V1) -> V2): V2 =
 	state.fn(value)
 
+inline fun <S, V1 : Any, V2 : Any> Effect<S, V1?>.nullableBind(fn: S.(V1) -> Effect<S, V2?>): Effect<S, V2?> =
+	if (value == null) state.effect(null)
+	else state.fn(value)
+
 inline fun <S, V> Effect<S, V>.updateState(fn: S.() -> S): Effect<S, V> =
 	state.fn() effect value
 
