@@ -8,7 +8,6 @@ import vm3.value.type.Types
 import vm3.asm.Op
 import vm3.asm.bytes
 import vm3.dsl.layout.offset
-import vm3.dsl.type.i32
 import vm3.type.layout.get
 import vm3.value.type.get
 import vm3.getOrCompute
@@ -100,7 +99,6 @@ fun Compiler.compileOffset(value: Value): Offset =
 	when (value) {
 		is Value.Argument -> parameterOffsets[parameterOffsets.size - 1 - value.depth]
 
-		is Value.ArrayAt -> compileOffset(value)
 		is Value.StructAt -> compileOffset(value)
 
 		is Value.Call -> compileOffset(value)
@@ -112,44 +110,28 @@ fun Compiler.set(dst: Int, value: Value) {
 	when (value) {
 		is Value.Argument -> setSize(dst, index(value), size(value))
 
-		is Value.Bool -> setConst32(dst, value.boolean.int)
-		is Value.I32 -> setConst32(dst, value.int)
 		is Value.F32 -> setConst32(dst, value.float.int)
 
-		is Value.Array -> set(dst, value)
 		is Value.Struct -> set(dst, value)
 
-		is Value.ArrayAt -> TODO()
 		is Value.StructAt -> TODO()
 
 		is Value.Call -> TODO()
 
 		is Value.Switch -> set(dst, value)
 
-		is Value.Inc -> when (type(value)) {
-			Type.I32 -> ops.add(Op.I32Inc(dst, index(value.lhs)))
-			else -> TODO()
-		}
-		is Value.Dec -> when (type(value)) {
-			Type.I32 -> ops.add(Op.I32Dec(dst, index(value.lhs)))
-			else -> TODO()
-		}
-
 		is Value.Plus ->
 			when (type(value)) {
-				Type.I32 -> ops.add(Op.I32Add(dst, index(value.lhs), index(value.rhs)))
 				Type.F32 -> ops.add(Op.F32Add(dst, index(value.lhs), index(value.rhs)))
 				else -> TODO()
 			}
 		is Value.Minus ->
 			when (type(value)) {
-				Type.I32 -> ops.add(Op.I32Sub(dst, index(value.lhs), index(value.rhs)))
 				Type.F32 -> ops.add(Op.F32Sub(dst, index(value.lhs), index(value.rhs)))
 				else -> TODO()
 			}
 		is Value.Times ->
 			when (type(value)) {
-				Type.I32 -> ops.add(Op.I32Mul(dst, index(value.lhs), index(value.rhs)))
 				Type.F32 -> ops.add(Op.F32Mul(dst, index(value.lhs), index(value.rhs)))
 				else -> TODO()
 			}
@@ -169,14 +151,6 @@ fun Compiler.setConst32(dst: Int, src: Int) {
 fun Compiler.set(dst: Int, struct: Value.Struct) {
 	struct.fields.zip((layout(type(struct)).body as Layout.Body.Struct).fields).map { (field, layout) ->
 		set(dst + layout.offset, field.value)
-	}
-}
-
-fun Compiler.set(dst: Int, array: Value.Array) {
-	(layout(type(array)).body as Layout.Body.Array).let { layout ->
-		array.items.mapIndexed { index, value ->
-			set(dst + index * layout.itemLayout.size, value)
-		}
 	}
 }
 
@@ -218,31 +192,17 @@ fun Compiler.add(size: Int, setFn: (Int) -> Unit): Offset =
 fun Compiler.add(struct: Value.Struct): Offset =
 	add(size(struct)) { dst -> set(dst, struct) }
 
-fun Compiler.add(array: Value.Array): Offset =
-	add(size(array)) { dst -> set(dst, array) }
-
 fun Compiler.compileOffset(structAt: Value.StructAt): Offset =
 	pointerOffset(structAt.lhs).let { structOffset ->
 		add32(layout(type(structAt.lhs)).offset(structAt.name)).let { fieldOffset ->
-			depointerOffset(addOp(i32, structOffset, fieldOffset) { a, b, c -> Op.I32Add(a, b, c) })
+			depointerOffset(addOp(4, structOffset, fieldOffset) { a, b, c -> Op.I32Add(a, b, c) })
 		}
 	}
 
-fun Compiler.compileOffset(arrayAt: Value.ArrayAt): Offset =
-	pointerOffset(arrayAt.lhs).let { arrayOffset ->
-		offset(arrayAt.index).let { indexOffset ->
-			add32(size(arrayAt)).let { sizeOffset ->
-				addOp(i32, indexOffset, sizeOffset) { a, b, c -> Op.I32Mul(a, b, c) }.let { itemOffset ->
-					depointerOffset(addOp(i32, arrayOffset, itemOffset) { a, b, c -> Op.I32Add(a, b, c) })
-				}
-			}
-		}
-	}
-
-fun Compiler.addOp(type: Type, lhs: Offset, rhs: Offset, fn: (Int, Int, Int) -> Op): Offset =
+fun Compiler.addOp(size: Int, lhs: Offset, rhs: Offset, fn: (Int, Int, Int) -> Op): Offset =
 	index(lhs).let { lhs ->
 		index(rhs).let { rhs ->
-			dataHole(type.size).let { dst ->
+			dataHole(size).let { dst ->
 				ops.add(fn(dst, lhs, rhs))
 				Offset.Direct(dst)
 			}
@@ -283,16 +243,7 @@ val Compiler.pc get() = ops.size
 fun Compiler.compileFunctions(value: Value) {
 	when (value) {
 		is Value.Argument -> Unit
-		is Value.Bool -> Unit
-		is Value.I32 -> Unit
 		is Value.F32 -> Unit
-		is Value.Array -> value.items.forEach {
-			compileFunctions(it)
-		}
-		is Value.ArrayAt -> {
-			compileFunctions(value.lhs)
-			compileFunctions(value.index)
-		}
 		is Value.Struct -> value.fields.forEach {
 			compileFunctions(it.value)
 		}
@@ -307,8 +258,6 @@ fun Compiler.compileFunctions(value: Value) {
 			compileFunction(value.function)
 			compileFunctions(value.param)
 		}
-		is Value.Inc -> compileFunctions(value.lhs)
-		is Value.Dec -> compileFunctions(value.lhs)
 		is Value.Plus -> {
 			compileFunctions(value.lhs)
 			compileFunctions(value.rhs)

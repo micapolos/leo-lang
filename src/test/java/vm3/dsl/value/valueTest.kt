@@ -1,47 +1,35 @@
 package vm3.dsl.value
 
 import leo.base.assertEqualTo
-import vm3.dsl.type.bool
 import vm3.dsl.type.f32
-import vm3.dsl.type.i32
+import vm3.dsl.type.struct
 import vm3.value.code
 import kotlin.test.Test
 
 class ValueTest {
 	@Test
 	fun dsl() {
-		false.value
-		10.value
 		10f.value
 
-		array(10.value, 20.value)
-		array(10.value, 20.value)[0.value]
-
-		struct("x" to 10.value, "y" to 20.value)
-		struct("x" to 10.value, "y" to 20.value)["x"]
+		struct("x" to 10f.value, "y" to 20f.value)
+		struct("x" to 10f.value, "y" to 20f.value)["x"]
 
 		argument.switch(
-			i32.gives(100.value),
-			f32.gives(200.value),
-			bool.gives(300.value))
+			f32.gives(200f.value),
+			struct("f" to f32).gives(struct("f" to 300f.value)))
 	}
 
 	@Test
 	fun code() {
-		array(10.value, 20.value)[1.value]
+		struct("x" to 10f.value, "y" to 20f.value)["x"]
 			.code
-			.assertEqualTo("[10, 20][1]")
-
-		struct("x" to 10.value, "y" to 20.value)["x"]
-			.code
-			.assertEqualTo("{x: 10, y: 20}.x")
+			.assertEqualTo("{x: 10.0, y: 20.0}.x")
 
 		argument
 			.switch(
-				i32.gives(100.value),
-				f32.gives(200.value),
-				bool.gives(300.value))
+				f32.gives(200f.value),
+				struct("x" to f32).gives(struct("x" to 300f.value)))
 			.code
-			.assertEqualTo("argument.switch { i32 => 100, f32 => 200, bool => 300 }")
+			.assertEqualTo("argument.switch { f32 => 200.0, { x: f32 } => {x: 300.0} }")
 	}
 }

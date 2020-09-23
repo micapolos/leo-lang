@@ -39,11 +39,7 @@ fun FunctionCompiler.addressEffect(value: Value): Effect<FunctionCompiler, Int?>
 fun FunctionCompiler.compileAddressEffect(value: Value): Effect<FunctionCompiler, Int?> =
 	when (value) {
 		is Value.Argument -> null
-		is Value.Bool -> emitSetEffect(value.boolean.int)
-		is Value.I32 -> emitSetEffect(value.int)
 		is Value.F32 -> emitSetEffect(value.float.int)
-		is Value.Array -> TODO()
-		is Value.ArrayAt -> TODO()
 		is Value.Struct -> TODO()
 		is Value.StructAt -> TODO()
 		is Value.Switch -> TODO()
@@ -53,31 +49,18 @@ fun FunctionCompiler.compileAddressEffect(value: Value): Effect<FunctionCompiler
 					TODO()
 				}
 			}
-		is Value.Inc ->
-			when (type(value)) {
-				is Type.I32 -> emitOpEffect(value.lhs) { dst, lhs -> Op.I32Inc(dst, lhs) }
-				else -> null
-			}
-		is Value.Dec ->
-			when (type(value)) {
-				is Type.I32 -> emitOpEffect(value.lhs) { dst, lhs -> Op.I32Dec(dst, lhs) }
-				else -> null
-			}
 		is Value.Plus ->
 			when (type(value)) {
-				is Type.I32 -> emitOpEffect(value.lhs, value.rhs) { dst, lhs, rhs -> Op.I32Add(dst, lhs, rhs) }
 				is Type.F32 -> emitOpEffect(value.lhs, value.rhs) { dst, lhs, rhs -> Op.F32Add(dst, lhs, rhs) }
 				else -> null
 			}
 		is Value.Minus ->
 			when (type(value)) {
-				is Type.I32 -> emitOpEffect(value.lhs, value.rhs) { dst, lhs, rhs -> Op.I32Sub(dst, lhs, rhs) }
 				is Type.F32 -> emitOpEffect(value.lhs, value.rhs) { dst, lhs, rhs -> Op.F32Sub(dst, lhs, rhs) }
 				else -> null
 			}
 		is Value.Times ->
 			when (type(value)) {
-				is Type.I32 -> emitOpEffect(value.lhs, value.rhs) { dst, lhs, rhs -> Op.I32Mul(dst, lhs, rhs) }
 				is Type.F32 -> emitOpEffect(value.lhs, value.rhs) { dst, lhs, rhs -> Op.F32Mul(dst, lhs, rhs) }
 				else -> null
 			}

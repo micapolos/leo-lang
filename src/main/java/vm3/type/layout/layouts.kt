@@ -11,12 +11,7 @@ operator fun Layouts.get(type: Type): Layout =
 
 fun Layouts.newLayout(type: Type): Layout =
 	when (type) {
-		Type.Bool -> Layout(4, Layout.Body.Bool)
-		Type.I32 -> Layout(4, Layout.Body.I32)
 		Type.F32 -> Layout(4, Layout.Body.F32)
-		is Type.Array -> get(type.itemType).let { itemLayout ->
-			Layout(type.itemCount * itemLayout.size, Layout.Body.Array(itemLayout, type.itemCount))
-		}
 		is Type.Struct -> type.fields
 			.map { get(it.valueType) }
 			.let { fieldLayouts ->
