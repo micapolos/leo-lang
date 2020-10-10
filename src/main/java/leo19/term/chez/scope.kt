@@ -18,7 +18,7 @@ fun Scope.string(term: Term): String =
 		is IntTerm -> "${term.int}"
 		is TupleTerm -> "(vector ${term.list.joinToString(" ") { string(it) }})"
 		is TupleGetTerm -> "(vector-ref ${string(term.tuple)} ${string(term.index)})"
-		is FunctionTerm -> "(lambda (v${variableCount}) ${push.string(term.body)})"
+		is FunctionTerm -> "(lambda (v${variableCount}) ${push.string(term.function.body)})"
 		is InvokeTerm -> "(${string(term.function)} ${string(term.param)})"
-		is VariableTerm -> "v${variableCount - term.index - 1}"
+		is VariableTerm -> "v${variableCount - term.variable.index - 1}"
 	}

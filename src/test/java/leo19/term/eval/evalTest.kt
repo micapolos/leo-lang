@@ -1,11 +1,11 @@
 package leo19.term.eval
 
 import leo.base.assertEqualTo
-import leo19.term.functionTerm
+import leo19.term.function
 import leo19.term.get
 import leo19.term.invoke
 import leo19.term.term
-import leo19.term.variableTerm
+import leo19.term.variable
 import kotlin.test.Test
 
 class EvalTest {
@@ -32,14 +32,14 @@ class EvalTest {
 
 	@Test
 	fun function() {
-		functionTerm(term(10))
+		term(function(term(10)))
 			.eval
-			.assertEqualTo(functionValue(scope(), term(10)))
+			.assertEqualTo(value(function(scope(), term(10))))
 	}
 
 	@Test
 	fun invoke() {
-		functionTerm(variableTerm(0))
+		term(function(term(variable(0))))
 			.invoke(term(10))
 			.eval
 			.assertEqualTo(value(10))
@@ -48,7 +48,7 @@ class EvalTest {
 	@Test
 	fun variable() {
 		val scope = scope(value(10), value(20))
-		scope.eval(variableTerm(0)).assertEqualTo(value(20))
-		scope.eval(variableTerm(1)).assertEqualTo(value(10))
+		scope.eval(term(variable(0))).assertEqualTo(value(20))
+		scope.eval(term(variable(1))).assertEqualTo(value(10))
 	}
 }

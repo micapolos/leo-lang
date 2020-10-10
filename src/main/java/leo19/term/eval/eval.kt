@@ -13,12 +13,12 @@ val Term.eval get() = emptyScope.eval(this)
 
 fun Scope.eval(term: Term): Value =
 	when (term) {
-		is IntTerm -> IntValue(term.int)
+		is IntTerm -> value(term.int)
 		is TupleTerm -> TupleValue(term.list.map { eval(it) })
 		is TupleGetTerm -> (eval(term.tuple) as TupleValue).list[(eval(term.index) as IntValue).int]
-		is FunctionTerm -> FunctionValue(this, term.body)
-		is InvokeTerm -> (eval(term.function) as FunctionValue).let { function ->
+		is FunctionTerm -> value(function(this, term.function.body))
+		is InvokeTerm -> (eval(term.function) as FunctionValue).function.let { function ->
 			function.scope.push(eval(term.param)).eval(function.body)
 		}
-		is VariableTerm -> stack.get(term.index)!!
+		is VariableTerm -> stack.get(term.variable.index)!!
 	}
