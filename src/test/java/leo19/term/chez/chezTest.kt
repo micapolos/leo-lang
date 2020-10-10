@@ -17,14 +17,14 @@ class ChezTest {
 	}
 
 	@Test
-	fun tuple() {
+	fun array() {
 		term(term(10), term(20))
 			.chez
 			.assertEqualTo("(vector 10 20)")
 	}
 
 	@Test
-	fun tupleGet() {
+	fun arrayGet() {
 		term(term(10), term(20))
 			.get(term(0))
 			.chez

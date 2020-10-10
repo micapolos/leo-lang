@@ -17,14 +17,14 @@ class EvalTest {
 	}
 
 	@Test
-	fun tuple() {
+	fun array() {
 		term(term(10), term(20))
 			.eval
 			.assertEqualTo(value(value(10), value(20)))
 	}
 
 	@Test
-	fun tupleGet() {
+	fun arrayGet() {
 		val tuple = term(term(10), term(20))
 		tuple.get(term(0)).eval.assertEqualTo(value(10))
 		tuple.get(term(1)).eval.assertEqualTo(value(20))
