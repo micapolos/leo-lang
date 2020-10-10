@@ -13,7 +13,9 @@ val Op.code: String
 			Op.Nop -> "nop"
 			Op.SysCall -> "syscall"
 			is Op.Jump -> "jump $index"
+			is Op.Switch -> "jump $index from [${jumpIndices.joinToString(", ")}]"
 			is Op.Call -> "call $jumpIndex ret $retIndex"
+			is Op.CallTable -> "call $selector from [...]"
 			is Op.Ret -> "ret $index"
 			is Op.Set32 -> assignCode(dst, code32(src))
 			is Op.Copy32 -> assignCode(dst, memCode(src))

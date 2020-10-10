@@ -16,6 +16,7 @@ val x09_set32Opcode = 0x09
 val x0A_setIndirect32Opcode = 0x0A
 
 val x0B_setSizeOpcode = 0x0B
+val x0C_tableCall = 0x0C
 
 val x10_i32IncOpcode = 0x10
 val x11_i32DecOpcode = 0x11

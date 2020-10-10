@@ -36,6 +36,7 @@ fun Vm.run() {
 			x09_set32Opcode -> copy(fetch32(), fetch32())
 			x0A_setIndirect32Opcode -> setIndirect(fetch32(), fetch32())
 			x0B_setSizeOpcode -> setSize(fetch32(), fetch32(), fetch32())
+			x0C_tableCall -> callTable(fetch32(), fetch32())
 
 			x10_i32IncOpcode -> intOp1(Int::inc)
 			x11_i32DecOpcode -> intOp1(Int::dec)
@@ -149,6 +150,17 @@ inline fun Vm.jumpIf(cond: Int, index: Int) =
 
 inline fun Vm.jumpTable(size: Int, index: Int) =
 	also { pc = codeInt(pc + 4 * dataInt(index)) }
+
+inline fun Vm.callTable(index: Int, size: Int) =
+	also {
+		val index = dataInt(index)
+		val offset = pc + index * 8
+		val jumpAddress = codeInt(offset)
+		val retAddress = codeInt(offset + 4)
+		pc += size * 8
+		dataSet(retAddress, pc)
+		jump(jumpAddress)
+	}
 
 inline fun Vm.call(jumpIndex: Int, retIndex: Int) =
 	also {

@@ -7,9 +7,10 @@ import leo.base.bind
 import leo.base.effect
 import leo.base.fold
 import leo.base.seq
-import leo.base.stack
 import leo.base.update
 import leo.base.updateState
+import leo.base.zip
+import leo.base.zipFold
 import leo.stak.Stak
 import leo.stak.push
 import leo.stak.stakOf
@@ -17,6 +18,7 @@ import leo.stak.top
 import leo13.push
 import leo13.stack
 import leo13.toList
+import leo13.zipFoldOrNull
 import vm3.dsl.type.get
 import vm3.type.Type
 import vm3.value.Value
@@ -37,8 +39,10 @@ fun Typer.typeEffect(value: Value): Effect<Typer, Type> =
 
 fun Typer.computeTypeEffect(value: Value): Effect<Typer, Type> =
 	when (value) {
-		is Value.Argument -> effect(argumentTypeStak.top(value.depth)!!)
-		is Value.F32 -> effect(Type.F32)
+		is Value.Argument ->
+			effect(argumentTypeStak.top(value.depth)!!)
+		is Value.F32 ->
+			effect(Type.F32)
 		is Value.Struct ->
 			effect(stack<Type.Field>()).fold(value.fields.seq) { field ->
 				typeEffect(field.value).update { type ->
@@ -47,14 +51,17 @@ fun Typer.computeTypeEffect(value: Value): Effect<Typer, Type> =
 			}.update { fieldStack ->
 				Type.Struct(fieldStack.toList())
 			}
-		is Value.StructAt -> typeEffect(value.lhs).bind { lhs ->
-			lhs as Type.Struct
-			effect(lhs[value.name])
-		}
-		is Value.Switch -> TODO()
-		is Value.Call -> push(value.function.param)
-			.typeEffect(value.function.body)
-			.updateState { this@computeTypeEffect }
+		is Value.StructAt ->
+			typeEffect(value.lhs).bind { lhs ->
+				lhs as Type.Struct
+				effect(lhs[value.name])
+			}
+		is Value.Switch ->
+			TODO()
+		is Value.Call ->
+			push(value.function.param)
+				.typeEffect(value.function.body)
+				.updateState { this@computeTypeEffect }
 		is Value.Plus ->
 			typeEffect(value.lhs).bind { lhs ->
 				typeEffect(value.rhs).bind { rhs ->

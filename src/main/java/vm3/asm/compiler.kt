@@ -6,6 +6,8 @@ import leo.base.byte0
 import leo.base.byte1
 import leo.base.byte2
 import leo.base.byte3
+import leo.base.fold
+import leo.base.seq
 import vm3.Bytes
 import vm3.bytes
 import vm3.updateLittleEndian
@@ -13,12 +15,14 @@ import vm3.x00_exitOpcode
 import vm3.x01_nopOpcode
 import vm3.x02_syscallOpcode
 import vm3.x03_jumpOpcode
+import vm3.x05_jumpTable
 import vm3.x06_callOpcode
 import vm3.x07_retOpcode
 import vm3.x08_setConst32Opcode
 import vm3.x09_set32Opcode
 import vm3.x0A_setIndirect32Opcode
 import vm3.x0B_setSizeOpcode
+import vm3.x0C_tableCall
 import vm3.x10_i32IncOpcode
 import vm3.x11_i32DecOpcode
 import vm3.x16_i32PlusOpcode
@@ -51,7 +55,20 @@ fun Compiler.emit(op: Op): Compiler =
 			Op.Nop -> emitOp(x01_nopOpcode)
 			Op.SysCall -> emitOp(x02_syscallOpcode)
 			is Op.Jump -> emitOp(x03_jumpOpcode).emitAddress(op.index)
+			is Op.Switch -> this
+				.emitOp(x05_jumpTable)
+				.emitAddress(op.index)
+				.emit(op.jumpIndices.size)
+				.fold(op.jumpIndices.seq) { emit(it) }
 			is Op.Call -> emitOp(x06_callOpcode).emitAddress(op.jumpIndex).emit(op.retIndex)
+			is Op.CallTable -> emitOp(x0C_tableCall)
+				.emitAddress(op.selector)
+				.emit(op.calls.size)
+				.fold(op.calls.seq) { call ->
+					this
+						.emitAddress(call.jumpIndex)
+						.emit(call.retIndex)
+				}
 			is Op.Ret -> emitOp(x07_retOpcode, op.index)
 			is Op.Set32 -> emitOp(x08_setConst32Opcode, op.dst, op.src)
 			is Op.Copy32 -> emitOp(x09_set32Opcode, op.dst, op.src)
