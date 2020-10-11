@@ -5,6 +5,7 @@ import leo13.LinkStack
 import leo13.push
 import leo19.term.ArrayTerm
 import leo19.term.Term
+import leo19.term.nullTerm
 import leo19.term.term
 import leo19.type.Type
 import leo19.type.fieldTo
@@ -19,7 +20,7 @@ infix fun Term.of(type: Type) = Typed(this, type)
 infix fun String.fieldTo(typed: Typed) = TypedField(this, typed)
 val TypedField.typeField get() = name fieldTo typed.type
 
-val emptyTyped = Typed(term(), struct())
+val emptyTyped = Typed(nullTerm, struct())
 
 fun Typed.plus(field: TypedField) =
 	type.structOrNull!!.let { struct ->

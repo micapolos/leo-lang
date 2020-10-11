@@ -5,6 +5,7 @@ import leo13.all
 val Type.isStatic: Boolean
 	get() =
 		when (this) {
+			NullType -> true
 			is StructType -> struct.isStatic
 			is ChoiceType -> false
 			is ArrowType -> false
