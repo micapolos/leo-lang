@@ -13,14 +13,11 @@ import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
 import leo14.lineSeq
+import leo19.term.get
+import leo19.term.term
 import leo19.type.Arrow
 import leo19.type.indexedOrNull
-import leo19.type.native
 import leo19.type.structOrNull
-import leo19.typed.Typed
-import leo19.typed.TypedField
-import leo19.typed.typed
-import leo19.value.ListGetValue
 
 data class Compiler(
 	val context: Stack<Arrow>,
@@ -54,15 +51,10 @@ fun Compiler.plus(name: String): Compiler =
 
 fun Compiler.maybePlusGet(name: String): Compiler? =
 	typedFieldStack.onlyOrNull?.let { typedField ->
-		typedField.value.let { typed ->
+		typedField.typed.let { typed ->
 			typed.type.structOrNull?.let { struct ->
 				struct.indexedOrNull(name)?.let { indexed ->
-					set(
-						TypedField(
-							typedField.name,
-							Typed(
-								ListGetValue(typed.value, indexed.index),
-								native(indexed.value))))
+					set(typedField.name.fieldTo(typed.term.get(term(indexed.index)).of(indexed.value)))
 				}
 			}
 		}

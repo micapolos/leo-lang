@@ -2,52 +2,42 @@ package leo19.type
 
 import leo.base.assertEqualTo
 import leo14.lineTo
-import leo14.literal
 import leo14.script
-import leo19.value.indexed
-import leo19.value.nativeValue
-import leo19.value.value
+import leo19.term.eval.value
 import kotlin.test.Test
 
 class ScriptTest {
 	@Test
-	fun nativeScript() {
-		native(String::class)
-			.script(nativeValue("Hello, world!"))
-			.assertEqualTo(script(literal("Hello, world!")))
-	}
-
-	@Test
 	fun emptyStructScript() {
 		struct()
-			.script(nativeValue(null))
+			.script(value())
 			.assertEqualTo(script())
 	}
 
 	@Test
 	fun simpleStructScript() {
-		struct("number" to native(Int::class))
-			.script(nativeValue(10))
-			.assertEqualTo(script("number" lineTo script(literal(10))))
+		struct("number" fieldTo struct())
+			.script(value())
+			.assertEqualTo(script("number" lineTo script()))
 	}
 
 	@Test
 	fun complexStructScript() {
 		struct(
-			"x" to native(Int::class),
-			"y" to native(Int::class))
-			.script(value(nativeValue(10), nativeValue(20)))
+			"x" fieldTo choice("zero" caseTo struct(), "one" caseTo struct()),
+			"y" fieldTo choice("zero" caseTo struct(), "one" caseTo struct()))
+			.script(value(value(0), value(1)))
 			.assertEqualTo(
 				script(
-					"x" lineTo script(literal(10)),
-					"y" lineTo script(literal(20))))
+					"x" lineTo script("zero"),
+					"y" lineTo script("one")))
 	}
 
 	@Test
 	fun simpleChoiceScript() {
 		val type = choice(
-			"false" to struct(),
-			"true" to struct())
+			"false" caseTo struct(),
+			"true" caseTo struct())
 		type
 			.script(value(0))
 			.assertEqualTo(script("false"))
@@ -60,13 +50,19 @@ class ScriptTest {
 	fun complexChoiceScript() {
 		val type =
 			choice(
-				"number" to native(Int::class),
-				"text" to native(String::class))
+				"boolean" caseTo choice("false" caseTo struct(), "true" caseTo struct()),
+				"bit" caseTo choice("zero" caseTo struct(), "one" caseTo struct()))
 		type
-			.script(0 indexed nativeValue(10))
-			.assertEqualTo(script("number" lineTo script(literal(10))))
+			.script(value(value(0), value(0)))
+			.assertEqualTo(script("boolean" lineTo script("false")))
 		type
-			.script(1 indexed nativeValue("foo"))
-			.assertEqualTo(script("text" lineTo script(literal("foo"))))
+			.script(value(value(0), value(1)))
+			.assertEqualTo(script("boolean" lineTo script("true")))
+		type
+			.script(value(value(1), value(0)))
+			.assertEqualTo(script("bit" lineTo script("zero")))
+		type
+			.script(value(value(1), value(1)))
+			.assertEqualTo(script("bit" lineTo script("one")))
 	}
 }
