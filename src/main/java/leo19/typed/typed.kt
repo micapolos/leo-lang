@@ -1,5 +1,6 @@
 package leo19.typed
 
+import leo.base.fold
 import leo19.term.Term
 import leo19.term.get
 import leo19.term.nullTerm
@@ -24,6 +25,9 @@ val TypedField.typeField get() = name fieldTo typed.type
 
 val nullTyped = Typed(nullTerm, struct())
 
+fun typed(vararg fields: TypedField): Typed =
+	nullTyped.fold(fields) { plus(it) }
+
 fun Typed.plus(field: TypedField): Typed =
 	type.structOrNull!!.let { struct ->
 		if (struct.isStatic)
@@ -44,3 +48,6 @@ fun Typed.getOrNull(name: String): Typed? =
 			}.of(indexedField.value)
 		}
 	}
+
+fun Typed.make(name: String): Typed =
+	term.of(struct(name fieldTo type))

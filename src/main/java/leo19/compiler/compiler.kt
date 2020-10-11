@@ -12,18 +12,14 @@ import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
 import leo14.StringLiteral
+import leo14.isEmpty
 import leo14.lineSeq
-import leo19.term.get
-import leo19.term.term
 import leo19.type.Arrow
-import leo19.type.contentOrNull
-import leo19.type.indexedFieldOrNull
-import leo19.type.structOrNull
 import leo19.typed.Typed
 import leo19.typed.TypedField
-import leo19.typed.fieldTo
+import leo19.typed.getOrNull
+import leo19.typed.make
 import leo19.typed.nullTyped
-import leo19.typed.of
 import leo19.typed.plus
 
 data class Compiler(
@@ -49,13 +45,14 @@ fun Compiler.plus(literal: Literal): Compiler =
 	}
 
 fun Compiler.plus(scriptField: ScriptField) =
-	plus(
+	if (scriptField.rhs.isEmpty) plus(scriptField.string)
+	else plus(
 		TypedField(
 			scriptField.string,
 			Compiler(context, nullTyped).plus(scriptField.rhs).typed))
 
 fun Compiler.plus(typedField: TypedField): Compiler =
-	copy(typed = typed.plus(typedField))
+	set(typed.plus(typedField))
 
 fun Compiler.plus(name: String): Compiler =
 	null
@@ -63,14 +60,10 @@ fun Compiler.plus(name: String): Compiler =
 		?: plusMake(name)
 
 fun Compiler.maybePlusGet(name: String): Compiler? =
-	typed.type.structOrNull?.contentOrNull?.structOrNull?.let { struct ->
-		struct.indexedFieldOrNull(name)?.let { indexedField ->
-			set(indexedField.value.name.fieldTo(typed.term.get(term(indexedField.index)).of(indexedField.value.type)))
-		}
-	}
+	typed.getOrNull(name)?.let { set(it) }
 
 fun Compiler.plusMake(name: String): Compiler =
-	set(TypedField(name, typed))
+	set(typed.make(name))
 
-fun Compiler.set(typedField: TypedField) =
-	copy(typed = nullTyped.plus(typedField))
+fun Compiler.set(typed: Typed) =
+	copy(typed = typed)
