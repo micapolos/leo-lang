@@ -20,7 +20,7 @@ infix fun Term.of(type: Type) = Typed(this, type)
 infix fun String.fieldTo(typed: Typed) = TypedField(this, typed)
 val TypedField.typeField get() = name fieldTo typed.type
 
-val emptyTyped = Typed(nullTerm, struct())
+val nullTyped = Typed(nullTerm, struct())
 
 fun Typed.plus(field: TypedField) =
 	type.structOrNull!!.let { struct ->

@@ -10,7 +10,6 @@ import leo13.size
 import leo13.stack
 
 sealed class Type
-object NullType : Type()
 data class StructType(val struct: Struct) : Type()
 data class ChoiceType(val choice: Choice) : Type()
 data class ArrowType(val arrow: Arrow) : Type()
@@ -22,7 +21,6 @@ data class Field(val name: String, val type: Type)
 data class Case(val name: String, val type: Type)
 data class Arrow(val lhs: Type, val rhs: Type)
 
-val nullType: Type = NullType
 fun struct(vararg fields: Field): Type = StructType(Struct(stack(*fields)))
 fun choice(vararg cases: Case): Type = ChoiceType(Choice(stack(*cases)))
 fun Type.arrow(type: Type): Type = ArrowType(Arrow(this, type))

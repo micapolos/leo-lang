@@ -14,7 +14,6 @@ import leo19.term.eval.Value
 
 fun Type.script(value: Value): Script =
 	when (this) {
-		NullType -> script()
 		is StructType -> struct.script(value)
 		is ChoiceType -> choice.script(value)
 		is ArrowType -> script("<function>" lineTo script())
