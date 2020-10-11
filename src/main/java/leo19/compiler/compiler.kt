@@ -2,8 +2,6 @@ package leo19.compiler
 
 import leo.base.fold
 import leo.base.reverse
-import leo.base.runIf
-import leo13.firstIndexed
 import leo14.FieldScriptLine
 import leo14.Literal
 import leo14.LiteralScriptLine
@@ -17,7 +15,6 @@ import leo14.lineSeq
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.term
-import leo19.term.variable
 import leo19.type.Arrow
 import leo19.type.fieldTo
 import leo19.type.struct
@@ -94,11 +91,6 @@ fun Compiler.set(typed: Typed) =
 
 val Compiler.resolve: Compiler
 	get() =
-		scope.bindingStack.firstIndexed { arrow.lhs == typed.type }
-			?.let { indexedBinding ->
-				set(
-					term(variable(indexedBinding.index))
-						.runIf(!indexedBinding.value.isConstant) { invoke(typed.term) }
-						.of(indexedBinding.value.arrow.rhs))
-			}
+		scope.resolveOrNull(typed)
+			?.let { set(it) }
 			?: this

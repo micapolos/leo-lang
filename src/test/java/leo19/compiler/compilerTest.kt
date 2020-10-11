@@ -9,6 +9,7 @@ import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
+import leo19.type.choice
 import leo19.type.fieldTo
 import leo19.type.struct
 import leo19.typed.fieldTo
@@ -120,7 +121,7 @@ class CompilerTest {
 						struct("output" fieldTo struct()))))
 			.typed(script("input"))
 			.assertEqualTo(
-				term(variable(0))
+				nullTerm
 					.invoke(typed("input" fieldTo typed()).term)
 					.of(struct("output" fieldTo struct())))
 	}
@@ -135,5 +136,26 @@ class CompilerTest {
 				term(function(term(variable(0))))
 					.invoke(nullTerm)
 					.of(struct("given" fieldTo struct("zero" fieldTo struct()))))
+	}
+
+	@Test
+	fun giveComplex() {
+		script(
+			"x" lineTo script("zero"),
+			"y" lineTo script("one"),
+			"give" lineTo script(
+				"given" lineTo script(),
+				"x" lineTo script(),
+				"and" lineTo script(
+					"given" lineTo script(),
+					"y" lineTo script())))
+			.typed
+			.assertEqualTo(
+				term(function(nullTerm))
+					.invoke(nullTerm)
+					.of(
+						struct(
+							"x" fieldTo struct("zero" fieldTo struct()),
+							"and" fieldTo struct("y" fieldTo struct("one" fieldTo struct())))))
 	}
 }
