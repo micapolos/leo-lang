@@ -3,46 +3,59 @@ package leo19.compiler
 import leo.base.fold
 import leo.base.reverse
 import leo13.Stack
-import leo13.onlyOrNull
-import leo13.push
 import leo13.stack
-import leo13.toList
 import leo14.FieldScriptLine
+import leo14.Literal
 import leo14.LiteralScriptLine
+import leo14.NumberLiteral
 import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
+import leo14.StringLiteral
 import leo14.lineSeq
 import leo19.term.get
 import leo19.term.term
 import leo19.type.Arrow
-import leo19.type.indexedOrNull
+import leo19.type.contentOrNull
+import leo19.type.indexedFieldOrNull
 import leo19.type.structOrNull
+import leo19.typed.Typed
+import leo19.typed.TypedField
+import leo19.typed.fieldTo
+import leo19.typed.nullTyped
+import leo19.typed.of
+import leo19.typed.plus
 
 data class Compiler(
 	val context: Stack<Arrow>,
-	val typedFieldStack: Stack<TypedField>
+	val typed: Typed
 )
 
-val emptyCompiler = Compiler(stack(), stack())
+val emptyCompiler = Compiler(stack(), nullTyped)
 
 fun Compiler.plus(script: Script): Compiler =
 	fold(script.lineSeq.reverse) { plus(it) }
 
 fun Compiler.plus(scriptLine: ScriptLine) =
 	when (scriptLine) {
-		is LiteralScriptLine -> TODO()
+		is LiteralScriptLine -> plus(scriptLine.literal)
 		is FieldScriptLine -> plus(scriptLine.field)
+	}
+
+fun Compiler.plus(literal: Literal): Compiler =
+	when (literal) {
+		is StringLiteral -> TODO()
+		is NumberLiteral -> TODO()
 	}
 
 fun Compiler.plus(scriptField: ScriptField) =
 	plus(
 		TypedField(
 			scriptField.string,
-			Compiler(context, stack()).plus(scriptField.rhs).typed))
+			Compiler(context, nullTyped).plus(scriptField.rhs).typed))
 
 fun Compiler.plus(typedField: TypedField): Compiler =
-	copy(typedFieldStack = typedFieldStack.push(typedField))
+	copy(typed = typed.plus(typedField))
 
 fun Compiler.plus(name: String): Compiler =
 	null
@@ -50,13 +63,9 @@ fun Compiler.plus(name: String): Compiler =
 		?: plusMake(name)
 
 fun Compiler.maybePlusGet(name: String): Compiler? =
-	typedFieldStack.onlyOrNull?.let { typedField ->
-		typedField.typed.let { typed ->
-			typed.type.structOrNull?.let { struct ->
-				struct.indexedOrNull(name)?.let { indexed ->
-					set(typedField.name.fieldTo(typed.term.get(term(indexed.index)).of(indexed.value)))
-				}
-			}
+	typed.type.structOrNull?.contentOrNull?.structOrNull?.let { struct ->
+		struct.indexedFieldOrNull(name)?.let { indexedField ->
+			set(indexedField.value.name.fieldTo(typed.term.get(term(indexedField.index)).of(indexedField.value.type)))
 		}
 	}
 
@@ -64,8 +73,4 @@ fun Compiler.plusMake(name: String): Compiler =
 	set(TypedField(name, typed))
 
 fun Compiler.set(typedField: TypedField) =
-	copy(typedFieldStack = stack(typedField))
-
-val Compiler.typed
-	get() =
-		typed(*typedFieldStack.toList().toTypedArray())
+	copy(typed = nullTyped.plus(typedField))

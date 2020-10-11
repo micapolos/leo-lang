@@ -1,6 +1,7 @@
 package leo19.term
 
 import leo13.Stack
+import leo13.push
 import leo13.stack
 
 sealed class Term
@@ -25,3 +26,5 @@ fun term(variable: Variable): Term = VariableTerm(variable)
 
 fun variable(index: Int) = Variable(index)
 fun function(body: Term) = Function(body)
+
+fun Term.plus(term: Term) = ArrayTerm((this as ArrayTerm).stack.push(term))

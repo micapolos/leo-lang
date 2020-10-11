@@ -1,12 +1,15 @@
 package leo19.type
 
+import leo.base.fold
 import leo.base.indexed
+import leo.base.nullOf
+import leo.base.reverse
+import leo.base.runIf
 import leo13.Stack
 import leo13.first
-import leo13.firstIndexed
 import leo13.onlyOrNull
 import leo13.push
-import leo13.size
+import leo13.seq
 import leo13.stack
 
 sealed class Type
@@ -44,10 +47,16 @@ fun Type.getOrNull(name: String) =
 		?.first { it.name == name }
 		?.let { struct(it) }
 
-fun Struct.indexedOrNull(name: String): IndexedValue<Type>? =
-	fieldStack.firstIndexed { this.name == name }?.let { indexed ->
-		fieldStack.size
-			.minus(indexed.index)
-			.dec()
-			.indexed(indexed.value.type)
-	}
+fun Struct.indexedFieldOrNull(name: String): IndexedValue<Field>? =
+	0.indexed(nullOf<IndexedValue<Field>>()).fold(fieldStack.seq.reverse) { field ->
+		index
+			.runIf(!field.isStatic) { inc() }
+			.indexed(if (field.name == name) index.indexed(field) else value)
+	}.value
+
+fun Type.indexedOrNull(name: String): IndexedValue<Type>? =
+	structOrNull
+		?.contentOrNull
+		?.structOrNull
+		?.indexedFieldOrNull(name)
+		?.run { index indexed struct(value) }
