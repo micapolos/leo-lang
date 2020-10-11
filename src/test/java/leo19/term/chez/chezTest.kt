@@ -4,11 +4,19 @@ import leo.base.assertEqualTo
 import leo19.term.function
 import leo19.term.get
 import leo19.term.invoke
+import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
 import kotlin.test.Test
 
 class ChezTest {
+	@Test
+	fun nul() {
+		nullTerm
+			.chez
+			.assertEqualTo("'()")
+	}
+
 	@Test
 	fun int() {
 		term(10)

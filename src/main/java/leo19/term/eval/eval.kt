@@ -8,6 +8,7 @@ import leo19.term.ArrayTerm
 import leo19.term.FunctionTerm
 import leo19.term.IntTerm
 import leo19.term.InvokeTerm
+import leo19.term.NullTerm
 import leo19.term.Term
 import leo19.term.VariableTerm
 
@@ -15,6 +16,7 @@ val Term.eval get() = emptyScope.eval(this)
 
 fun Scope.eval(term: Term): Value =
 	when (term) {
+		NullTerm -> NullValue
 		is IntTerm -> value(term.int)
 		is ArrayTerm -> ArrayValue(term.stack.map { eval(this) }.toList())
 		is ArrayGetTerm -> (eval(term.tuple) as ArrayValue).list[(eval(term.index) as IntValue).int]

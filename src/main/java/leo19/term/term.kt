@@ -4,6 +4,7 @@ import leo13.Stack
 import leo13.stack
 
 sealed class Term
+object NullTerm : Term()
 data class IntTerm(val int: Int) : Term()
 data class ArrayTerm(val stack: Stack<Term>) : Term()
 data class ArrayGetTerm(val tuple: Term, val index: Term) : Term()
@@ -14,6 +15,7 @@ data class VariableTerm(val variable: Variable) : Term()
 data class Variable(val index: Int)
 data class Function(val body: Term)
 
+val nullTerm: Term = NullTerm
 fun term(int: Int): Term = IntTerm(int)
 fun term(vararg terms: Term): Term = ArrayTerm(stack(*terms))
 fun Term.get(index: Term): Term = ArrayGetTerm(this, index)
