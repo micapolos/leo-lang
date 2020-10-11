@@ -52,14 +52,3 @@ fun Struct.indexedOrNull(name: String): IndexedValue<Type>? =
 			.dec()
 			.indexed(indexed.value.type)
 	}
-
-val Type.isStatic: Boolean
-	get() =
-		when (this) {
-			is StructType -> struct.isStatic
-			is ChoiceType -> false
-			is ArrowType -> false
-		}
-
-val Struct.isStatic get() = fieldStack.all { isStatic }
-val Field.isStatic get() = type.isStatic
