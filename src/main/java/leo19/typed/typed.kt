@@ -1,11 +1,14 @@
 package leo19.typed
 
+import leo.base.failIfOr
 import leo.base.fold
 import leo19.term.Term
 import leo19.term.get
+import leo19.term.invoke
 import leo19.term.nullTerm
 import leo19.term.plus
 import leo19.term.term
+import leo19.type.ArrowType
 import leo19.type.Type
 import leo19.type.contentOrNull
 import leo19.type.fieldTo
@@ -51,3 +54,10 @@ fun Typed.getOrNull(name: String): Typed? =
 
 fun Typed.make(name: String): Typed =
 	term.of(struct(name fieldTo type))
+
+fun Typed.invoke(typed: Typed): Typed =
+	(type as ArrowType).arrow.let { arrow ->
+		failIfOr(arrow.lhs != typed.type) {
+			term.invoke(typed.term).of(arrow.rhs)
+		}
+	}
