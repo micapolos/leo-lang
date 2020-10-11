@@ -13,8 +13,6 @@ val Type.isStatic: Boolean
 		}
 
 val Struct.isStatic get() = fieldStack.all { isStatic }
-val Struct.isDynamic get() = !isStatic
-
 val Field.isStatic get() = type.isStatic
 
-val Struct.isComplex get() = fieldStack.filter { isDynamic }.linkOrNull?.stack?.linkOrNull != null
+val Struct.isComplex get() = fieldStack.filter { !isStatic }.linkOrNull?.stack?.linkOrNull != null
