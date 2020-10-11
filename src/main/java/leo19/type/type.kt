@@ -2,9 +2,11 @@ package leo19.type
 
 import leo.base.indexed
 import leo13.Stack
+import leo13.all
 import leo13.first
 import leo13.firstIndexed
 import leo13.onlyOrNull
+import leo13.push
 import leo13.size
 import leo13.stack
 
@@ -27,7 +29,13 @@ fun Type.arrow(type: Type): Type = ArrowType(Arrow(this, type))
 infix fun String.fieldTo(type: Type) = Field(this, type)
 infix fun String.caseTo(type: Type) = Case(this, type)
 val Type.structOrNull: Struct? get() = (this as? StructType)?.struct
+val Type.choiceOrNull: Choice? get() = (this as? ChoiceType)?.choice
 val Struct.contentOrNull: Type? get() = fieldStack.onlyOrNull?.type
+fun Struct.plus(field: Field) = Struct(fieldStack.push(field))
+fun Choice.plus(case: Case) = Choice(caseStack.push(case))
+
+fun Type.plus(field: Field) = StructType(structOrNull!!.plus(field))
+fun Type.plus(case: Case) = ChoiceType(choiceOrNull!!.plus(case))
 
 fun Type.getOrNull(name: String) =
 	structOrNull
@@ -44,3 +52,14 @@ fun Struct.indexedOrNull(name: String): IndexedValue<Type>? =
 			.dec()
 			.indexed(indexed.value.type)
 	}
+
+val Type.isStatic: Boolean
+	get() =
+		when (this) {
+			is StructType -> struct.isStatic
+			is ChoiceType -> false
+			is ArrowType -> false
+		}
+
+val Struct.isStatic get() = fieldStack.all { isStatic }
+val Field.isStatic get() = type.isStatic
