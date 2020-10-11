@@ -47,11 +47,15 @@ fun Compiler.plus(literal: Literal): Compiler =
 	}
 
 fun Compiler.plus(scriptField: ScriptField) =
-	if (scriptField.rhs.isEmpty) plus(scriptField.string)
+	if (scriptField.string == "switch") plusSwitch(scriptField.rhs)
+	else if (scriptField.rhs.isEmpty) plus(scriptField.string)
 	else plus(
 		TypedField(
 			scriptField.string,
 			Compiler(scope, nullTyped).plus(scriptField.rhs).typed))
+
+fun Compiler.plusSwitch(script: Script): Compiler =
+	TODO()
 
 fun Compiler.plus(typedField: TypedField): Compiler =
 	set(typed.plus(typedField)).resolve

@@ -13,7 +13,7 @@ import leo19.type.Type
 import leo19.type.contentOrNull
 import leo19.type.fieldTo
 import leo19.type.indexedOrNull
-import leo19.type.isSingle
+import leo19.type.isComplex
 import leo19.type.isStatic
 import leo19.type.plus
 import leo19.type.struct
@@ -46,7 +46,7 @@ fun Typed.getOrNull(name: String): Typed? =
 		type.indexedOrNull(name)?.let { indexedField ->
 			when {
 				struct.isStatic -> nullTerm
-				struct.isSingle -> if (indexedField.value.isStatic) nullTerm else term
+				!struct.isComplex -> if (indexedField.value.isStatic) nullTerm else term
 				else -> term.get(term(indexedField.index))
 			}.of(indexedField.value)
 		}
