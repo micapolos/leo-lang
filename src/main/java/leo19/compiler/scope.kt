@@ -8,11 +8,15 @@ import leo19.type.Arrow
 import leo19.typed.Typed
 import leo19.typed.nullTyped
 
-data class Scope(val arrowStack: Stack<Arrow>)
+data class Binding(val arrow: Arrow, val isConstant: Boolean)
+data class Scope(val bindingStack: Stack<Binding>)
+
+fun constantBinding(arrow: Arrow) = Binding(arrow, true)
+fun functionBinding(arrow: Arrow) = Binding(arrow, false)
 
 val emptyScope = Scope(stack())
-fun scope(vararg arrows: Arrow) = Scope(stack(*arrows))
-fun Scope.plus(arrow: Arrow) = Scope(arrowStack.push(arrow))
+fun scope(vararg bindings: Binding) = Scope(stack(*bindings))
+fun Scope.plus(binding: Binding) = Scope(bindingStack.push(binding))
 
-fun Scope.compile(script: Script): Typed =
+fun Scope.typed(script: Script): Typed =
 	Compiler(this, nullTyped).plus(script).typed

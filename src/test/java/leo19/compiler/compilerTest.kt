@@ -3,7 +3,9 @@ package leo19.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
+import leo19.term.function
 import leo19.term.invoke
+import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
@@ -112,13 +114,26 @@ class CompilerTest {
 	fun resolve() {
 		emptyScope
 			.plus(
-				Arrow(
-					struct("input" fieldTo struct()),
-					struct("output" fieldTo struct())))
-			.compile(script("input"))
+				functionBinding(
+					Arrow(
+						struct("input" fieldTo struct()),
+						struct("output" fieldTo struct()))))
+			.typed(script("input"))
 			.assertEqualTo(
 				term(variable(0))
 					.invoke(typed("input" fieldTo typed()).term)
 					.of(struct("output" fieldTo struct())))
+	}
+
+	@Test
+	fun give() {
+		script(
+			"zero" lineTo script(),
+			"give" lineTo script("given"))
+			.typed
+			.assertEqualTo(
+				term(function(term(variable(0))))
+					.invoke(nullTerm)
+					.of(struct("given" fieldTo struct("zero" fieldTo struct()))))
 	}
 }

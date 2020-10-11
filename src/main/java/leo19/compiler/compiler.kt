@@ -2,6 +2,7 @@ package leo19.compiler
 
 import leo.base.fold
 import leo.base.reverse
+import leo.base.runIf
 import leo13.firstIndexed
 import leo14.FieldScriptLine
 import leo14.Literal
@@ -13,9 +14,13 @@ import leo14.ScriptLine
 import leo14.StringLiteral
 import leo14.isEmpty
 import leo14.lineSeq
+import leo19.term.function
 import leo19.term.invoke
 import leo19.term.term
 import leo19.term.variable
+import leo19.type.Arrow
+import leo19.type.fieldTo
+import leo19.type.struct
 import leo19.typed.Typed
 import leo19.typed.TypedField
 import leo19.typed.getOrNull
@@ -47,12 +52,25 @@ fun Compiler.plus(literal: Literal): Compiler =
 	}
 
 fun Compiler.plus(scriptField: ScriptField) =
-	if (scriptField.string == "switch") plusSwitch(scriptField.rhs)
+	if (scriptField.string == "give") plusGive(scriptField.rhs)
+	else if (scriptField.string == "switch") plusSwitch(scriptField.rhs)
 	else if (scriptField.rhs.isEmpty) plus(scriptField.string)
 	else plus(
 		TypedField(
 			scriptField.string,
 			Compiler(scope, nullTyped).plus(scriptField.rhs).typed))
+
+fun Compiler.plusGive(script: Script): Compiler =
+	scope
+		.plus(
+			constantBinding(
+				Arrow(
+					struct("given" fieldTo struct()),
+					struct("given" fieldTo typed.type))))
+		.typed(script)
+		.let { giveTyped ->
+			set(term(function(giveTyped.term)).invoke(typed.term).of(giveTyped.type))
+		}
 
 fun Compiler.plusSwitch(script: Script): Compiler =
 	TODO()
@@ -76,8 +94,11 @@ fun Compiler.set(typed: Typed) =
 
 val Compiler.resolve: Compiler
 	get() =
-		scope.arrowStack.firstIndexed { lhs == typed.type }
-			?.let { indexedArrow ->
-				set(term(variable(indexedArrow.index)).invoke(typed.term).of(indexedArrow.value.rhs))
+		scope.bindingStack.firstIndexed { arrow.lhs == typed.type }
+			?.let { indexedBinding ->
+				set(
+					term(variable(indexedBinding.index))
+						.runIf(!indexedBinding.value.isConstant) { invoke(typed.term) }
+						.of(indexedBinding.value.arrow.rhs))
 			}
 			?: this
