@@ -11,6 +11,8 @@ import leo19.term.InvokeTerm
 import leo19.term.NullTerm
 import leo19.term.Term
 import leo19.term.VariableTerm
+import leo19.term.nullTerm
+import leo19.term.term
 
 val Term.eval get() = emptyScope.eval(this)
 
@@ -26,3 +28,12 @@ fun Scope.eval(term: Term): Value =
 		}
 		is VariableTerm -> stack.get(term.variable.index)!!
 	}
+
+val Value.term: Term
+	get() =
+		when (this) {
+			NullValue -> nullTerm
+			is IntValue -> term(int)
+			is ArrayValue -> term(*list.map { it.term }.toTypedArray())
+			is FunctionValue -> null
+		}!!
