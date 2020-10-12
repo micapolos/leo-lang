@@ -9,7 +9,6 @@ import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
-import leo19.type.choice
 import leo19.type.fieldTo
 import leo19.type.struct
 import leo19.typed.fieldTo
@@ -133,7 +132,7 @@ class CompilerTest {
 			"give" lineTo script("given"))
 			.typed
 			.assertEqualTo(
-				term(function(term(variable(0))))
+				term(function(nullTerm))
 					.invoke(nullTerm)
 					.of(struct("given" fieldTo struct("zero" fieldTo struct()))))
 	}

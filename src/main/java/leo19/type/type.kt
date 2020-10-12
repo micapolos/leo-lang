@@ -30,6 +30,8 @@ fun Type.arrow(type: Type): Type = ArrowType(Arrow(this, type))
 
 infix fun String.fieldTo(type: Type) = Field(this, type)
 infix fun String.caseTo(type: Type) = Case(this, type)
+val String.field get() = this fieldTo struct()
+val String.case get() = this caseTo struct()
 val Type.structOrNull: Struct? get() = (this as? StructType)?.struct
 val Type.choiceOrNull: Choice? get() = (this as? ChoiceType)?.choice
 val Struct.contentOrNull: Type? get() = fieldStack.onlyOrNull?.type
