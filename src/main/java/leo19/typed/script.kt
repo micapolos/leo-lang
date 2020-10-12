@@ -29,7 +29,6 @@ val Typed.script: Script
 					type.choice.caseStack.get(index)!!.let { case ->
 						script(case.name lineTo term.of(case.type).script)
 					}
-
 				}
 			is ArrowType -> null
 		}!!

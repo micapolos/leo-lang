@@ -2,8 +2,14 @@
 
 package leo.base
 
-import leo13.*
 import leo13.Stack
+import leo13.StackLink
+import leo13.fold
+import leo13.link
+import leo13.push
+import leo13.reverse
+import leo13.seq
+import leo13.stack
 
 data class SeqNode<T>(
 	val first: T,
@@ -122,6 +128,12 @@ fun <T, R> R.fold(seq: Seq<T>, fn: R.(T) -> R) =
 
 fun <T, R> R.foldRight(seq: Seq<T>, fn: R.(T) -> R) =
 	fold(seq.reverseStack, fn)
+
+tailrec fun <T, R, F : Any> R.foldMapFirstOrNull(seq: Seq<T>, fn: R.(T) -> Pair<R, F?>): F? {
+	val node = seq.nodeOrNull ?: return null
+	val (folded, mapped) = fn(node.first)
+	return mapped ?: folded.foldMapFirstOrNull(node.remaining, fn)
+}
 
 fun <T, R> R.applyEach(seq: Seq<T>, fn: R.(T) -> Unit): R =
 	fold(seq) { apply { fn(it) } }

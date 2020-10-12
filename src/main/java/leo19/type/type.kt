@@ -11,18 +11,43 @@ import leo13.onlyOrNull
 import leo13.push
 import leo13.seq
 import leo13.stack
+import leo14.untyped.leoString
 
-sealed class Type
-data class StructType(val struct: Struct) : Type()
-data class ChoiceType(val choice: Choice) : Type()
-data class ArrowType(val arrow: Arrow) : Type()
+sealed class Type {
+	override fun toString() = reflectScript.leoString
+}
 
-data class Struct(val fieldStack: Stack<Field>)
-data class Choice(val caseStack: Stack<Case>)
+data class StructType(val struct: Struct) : Type() {
+	override fun toString() = super.toString()
+}
 
-data class Field(val name: String, val type: Type)
-data class Case(val name: String, val type: Type)
-data class Arrow(val lhs: Type, val rhs: Type)
+data class ChoiceType(val choice: Choice) : Type() {
+	override fun toString() = super.toString()
+}
+
+data class ArrowType(val arrow: Arrow) : Type() {
+	override fun toString() = super.toString()
+}
+
+data class Struct(val fieldStack: Stack<Field>) {
+	override fun toString() = reflectScript.leoString
+}
+
+data class Choice(val caseStack: Stack<Case>) {
+	override fun toString() = reflectScript.leoString
+}
+
+data class Field(val name: String, val type: Type) {
+	override fun toString() = reflectScriptLine.leoString
+}
+
+data class Case(val name: String, val type: Type) {
+	override fun toString() = reflectScriptLine.leoString
+}
+
+data class Arrow(val lhs: Type, val rhs: Type) {
+	override fun toString() = reflectScript.leoString
+}
 
 fun struct(vararg fields: Field): Type = StructType(Struct(stack(*fields)))
 fun struct(name: String) = struct(name fieldTo struct())

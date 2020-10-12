@@ -2,11 +2,15 @@ package leo19.typed
 
 import leo.base.failIfOr
 import leo.base.fold
+import leo14.lineTo
+import leo14.plus
+import leo14.untyped.leoString
 import leo19.term.Term
 import leo19.term.get
 import leo19.term.invoke
 import leo19.term.nullTerm
 import leo19.term.plus
+import leo19.term.reflectScript
 import leo19.term.term
 import leo19.type.ArrowType
 import leo19.type.Type
@@ -16,11 +20,20 @@ import leo19.type.indexedOrNull
 import leo19.type.isComplex
 import leo19.type.isStatic
 import leo19.type.plus
+import leo19.type.reflectScript
 import leo19.type.struct
 import leo19.type.structOrNull
 
-data class Typed(val term: Term, val type: Type)
-data class TypedField(val name: String, val typed: Typed)
+data class Typed(val term: Term, val type: Type) {
+	override fun toString() = reflectScript.leoString
+}
+
+data class TypedField(val name: String, val typed: Typed) {
+	override fun toString() = reflectScriptLine.leoString
+}
+
+val Typed.reflectScript get() = term.reflectScript.plus("of" lineTo type.reflectScript)
+val TypedField.reflectScriptLine get() = name lineTo typed.reflectScript
 
 infix fun Term.of(type: Type) = Typed(this, type)
 infix fun String.fieldTo(typed: Typed) = TypedField(this, typed)
