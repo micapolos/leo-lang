@@ -1,9 +1,14 @@
 package leo19.compiler
 
+import leo.base.indexed
+import leo.base.mapFirst
+import leo.base.mapFirstOrNull
+import leo.base.notNullIf
 import leo.base.runIf
 import leo13.Stack
 import leo13.firstIndexed
 import leo13.push
+import leo13.seq
 import leo13.stack
 import leo14.Script
 import leo19.term.invoke
@@ -30,9 +35,12 @@ fun Scope.typed(script: Script): Typed =
 	Compiler(this, nullTyped).plus(script).typed
 
 fun Scope.resolveOrNull(typed: Typed): Typed? =
-	bindingStack.firstIndexed { arrow.lhs == typed.type }
-		?.let { indexedBinding ->
-			term(variable(indexedBinding.index))
-				.runIf(!indexedBinding.value.isConstant) { invoke(typed.term) }
-				.of(indexedBinding.value.arrow.rhs)
+	bindingStack.seq.indexed.mapFirstOrNull {
+		value.let { binding ->
+			notNullIf(binding.arrow.lhs == typed.type) {
+				term(variable(index))
+					.runIf(!binding.isConstant) { invoke(typed.term) }
+					.of(binding.arrow.rhs)
+			}
 		}
+	}

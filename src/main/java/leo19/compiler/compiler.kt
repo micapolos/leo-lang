@@ -20,11 +20,13 @@ import leo19.type.fieldTo
 import leo19.type.struct
 import leo19.typed.Typed
 import leo19.typed.TypedField
+import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.make
 import leo19.typed.nullTyped
 import leo19.typed.of
 import leo19.typed.plus
+import leo19.typed.typed
 
 data class Compiler(
 	val scope: Scope,
@@ -78,19 +80,26 @@ fun Compiler.plus(typedField: TypedField): Compiler =
 fun Compiler.plus(name: String): Compiler =
 	null
 		?: maybePlusGet(name)
+		?: maybeResolve(name)
 		?: plusMake(name)
 
 fun Compiler.maybePlusGet(name: String): Compiler? =
 	typed.getOrNull(name)?.let { set(it) }
 
+fun Compiler.maybeResolve(name: String): Compiler? =
+	set(typed.plus(name fieldTo typed())).maybeResolve
+
 fun Compiler.plusMake(name: String): Compiler =
-	set(typed.make(name)).resolve
+	set(typed.make(name))
 
 fun Compiler.set(typed: Typed) =
 	copy(typed = typed)
 
 val Compiler.resolve: Compiler
 	get() =
+		maybeResolve ?: this
+
+val Compiler.maybeResolve: Compiler?
+	get() =
 		scope.resolveOrNull(typed)
 			?.let { set(it) }
-			?: this
