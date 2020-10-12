@@ -9,6 +9,7 @@ import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
+import leo19.type.bitType
 import leo19.type.fieldTo
 import leo19.type.struct
 import leo19.typed.fieldTo
@@ -111,7 +112,7 @@ class CompilerTest {
 	}
 
 	@Test
-	fun resolve() {
+	fun resolveConstant() {
 		emptyScope
 			.plus(
 				functionBinding(
@@ -120,9 +121,24 @@ class CompilerTest {
 						struct("output" fieldTo struct()))))
 			.typed(script("input"))
 			.assertEqualTo(
-				nullTerm
+				term(variable(0))
 					.invoke(typed("input" fieldTo typed()).term)
 					.of(struct("output" fieldTo struct())))
+	}
+
+	@Test
+	fun resolveCast() {
+		emptyScope
+			.plus(
+				functionBinding(
+					Arrow(
+						struct("bit" fieldTo struct("zero" fieldTo struct())),
+						bitType)))
+			.typed(script("bit" lineTo script("zero")))
+			.assertEqualTo(
+				term(variable(0))
+					.invoke(nullTerm)
+					.of(bitType))
 	}
 
 	@Test
@@ -132,7 +148,7 @@ class CompilerTest {
 			"give" lineTo script("given"))
 			.typed
 			.assertEqualTo(
-				term(function(nullTerm))
+				term(function(term(variable(0))))
 					.invoke(nullTerm)
 					.of(struct("given" fieldTo struct("zero" fieldTo struct()))))
 	}

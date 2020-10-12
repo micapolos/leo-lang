@@ -32,7 +32,7 @@ fun Scope.typed(script: Script): Typed =
 fun Scope.resolveOrNull(typed: Typed): Typed? =
 	bindingStack.firstIndexed { arrow.lhs == typed.type }
 		?.let { indexedBinding ->
-			(if (typed.type.isStatic) nullTerm else term(variable(indexedBinding.index)))
+			term(variable(indexedBinding.index))
 				.runIf(!indexedBinding.value.isConstant) { invoke(typed.term) }
 				.of(indexedBinding.value.arrow.rhs)
 		}
