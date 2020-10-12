@@ -2,9 +2,10 @@ package leo19.typed
 
 import leo.base.failIfOr
 import leo.base.fold
+import leo14.indentString
 import leo14.lineTo
 import leo14.plus
-import leo14.untyped.leoString
+import leo14.untyped.pretty.indentString
 import leo19.term.Term
 import leo19.term.get
 import leo19.term.invoke
@@ -25,11 +26,11 @@ import leo19.type.struct
 import leo19.type.structOrNull
 
 data class Typed(val term: Term, val type: Type) {
-	override fun toString() = reflectScript.leoString
+	override fun toString() = reflectScript.indentString
 }
 
 data class TypedField(val name: String, val typed: Typed) {
-	override fun toString() = reflectScriptLine.leoString
+	override fun toString() = reflectScriptLine.indentString(0)
 }
 
 val Typed.reflectScript get() = term.reflectScript.plus("of" lineTo type.reflectScript)

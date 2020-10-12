@@ -14,7 +14,7 @@ val Term.reflectScript: Script
 		when (this) {
 			NullTerm -> script("null")
 			is IntTerm -> script(literal(int))
-			is ArrayTerm -> script(*stack.map { "item" lineTo reflectScript }.array)
+			is ArrayTerm -> script(*stack.map { "push" lineTo reflectScript }.array)
 			is ArrayGetTerm -> tuple.reflectScript.plus("get" lineTo index.reflectScript)
 			is FunctionTerm -> script(function.reflectScriptLine)
 			is InvokeTerm -> function.reflectScript.plus("invoke" lineTo param.reflectScript)

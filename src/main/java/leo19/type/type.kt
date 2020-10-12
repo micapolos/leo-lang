@@ -1,9 +1,8 @@
 package leo19.type
 
-import leo.base.fold
+import leo.base.foldMapFirstOrNull
 import leo.base.indexed
-import leo.base.nullOf
-import leo.base.reverse
+import leo.base.notNullIf
 import leo.base.runIf
 import leo13.Stack
 import leo13.first
@@ -11,10 +10,11 @@ import leo13.onlyOrNull
 import leo13.push
 import leo13.seq
 import leo13.stack
-import leo14.untyped.leoString
+import leo14.indentString
+import leo14.untyped.pretty.indentString
 
 sealed class Type {
-	override fun toString() = reflectScript.leoString
+	override fun toString() = reflectScript.indentString
 }
 
 data class StructType(val struct: Struct) : Type() {
@@ -30,23 +30,23 @@ data class ArrowType(val arrow: Arrow) : Type() {
 }
 
 data class Struct(val fieldStack: Stack<Field>) {
-	override fun toString() = reflectScript.leoString
+	override fun toString() = reflectScript.indentString
 }
 
 data class Choice(val caseStack: Stack<Case>) {
-	override fun toString() = reflectScript.leoString
+	override fun toString() = reflectScript.indentString
 }
 
 data class Field(val name: String, val type: Type) {
-	override fun toString() = reflectScriptLine.leoString
+	override fun toString() = reflectScriptLine.indentString(0)
 }
 
 data class Case(val name: String, val type: Type) {
-	override fun toString() = reflectScriptLine.leoString
+	override fun toString() = reflectScriptLine.indentString(0)
 }
 
 data class Arrow(val lhs: Type, val rhs: Type) {
-	override fun toString() = reflectScript.leoString
+	override fun toString() = reflectScript.indentString
 }
 
 fun struct(vararg fields: Field): Type = StructType(Struct(stack(*fields)))
@@ -76,19 +76,5 @@ fun Type.getOrNull(name: String) =
 		?.fieldStack
 		?.first { it.name == name }
 		?.let { struct(it) }
-
-fun Struct.indexedFieldOrNull(name: String): IndexedValue<Field>? =
-	0.indexed(nullOf<IndexedValue<Field>>()).fold(fieldStack.seq.reverse) { field ->
-		index
-			.runIf(!field.isStatic) { inc() }
-			.indexed(if (field.name == name) index.indexed(field) else value)
-	}.value
-
-fun Type.indexedOrNull(name: String): IndexedValue<Type>? =
-	structOrNull
-		?.contentOrNull
-		?.structOrNull
-		?.indexedFieldOrNull(name)
-		?.run { index indexed struct(value) }
 
 val Case.field get() = name fieldTo type

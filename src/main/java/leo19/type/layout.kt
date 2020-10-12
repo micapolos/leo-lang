@@ -2,6 +2,8 @@ package leo19.type
 
 import leo.base.filter
 import leo.base.foldMapFirstOrNull
+import leo.base.indexed
+import leo.base.notNullIf
 import leo.base.runIf
 import leo.base.size
 import leo13.all
@@ -44,3 +46,19 @@ fun Choice.possibleCaseIndex(name: String): Int =
 		else this.runIf(case.isPossible) { inc() } to null
 	}!!
 
+fun Struct.indexedFieldOrNull(name: String): IndexedValue<Field>? =
+	0.foldMapFirstOrNull(fieldStack.seq) { field ->
+		runIf(!field.isStatic) { inc() } to notNullIf(field.name == name) { indexed(field) }
+	}
+
+fun Choice.indexedCaseOrNull(name: String): IndexedValue<Case>? =
+	0.foldMapFirstOrNull(caseStack.seq) { case ->
+		runIf(case.isPossible) { inc() } to notNullIf(case.name == name) { indexed(case) }
+	}
+
+fun Type.indexedOrNull(name: String): IndexedValue<Type>? =
+	structOrNull
+		?.contentOrNull
+		?.structOrNull
+		?.indexedFieldOrNull(name)
+		?.run { index indexed struct(value) }

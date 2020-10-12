@@ -9,15 +9,15 @@ class TypeTest {
 	fun indexedOrNull() {
 		struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo choice()))
 			.indexedOrNull("x")
-			.assertEqualTo(0 indexed struct("x" fieldTo choice()))
+			.assertEqualTo(1 indexed struct("x" fieldTo choice()))
 
 		struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo choice()))
 			.indexedOrNull("y")
-			.assertEqualTo(1 indexed struct("y" fieldTo choice()))
+			.assertEqualTo(0 indexed struct("y" fieldTo choice()))
 
 		struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo choice()))
 			.indexedOrNull("x")
-			.assertEqualTo(0 indexed struct("x" fieldTo struct()))
+			.assertEqualTo(1 indexed struct("x" fieldTo struct()))
 
 		struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo choice()))
 			.indexedOrNull("y")
@@ -29,7 +29,7 @@ class TypeTest {
 
 		struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo struct()))
 			.indexedOrNull("y")
-			.assertEqualTo(1 indexed struct("y" fieldTo struct()))
+			.assertEqualTo(0 indexed struct("y" fieldTo struct()))
 
 		struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo struct()))
 			.indexedOrNull("x")
