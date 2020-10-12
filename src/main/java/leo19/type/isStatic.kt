@@ -16,3 +16,4 @@ val Struct.isStatic get() = fieldStack.all { isStatic }
 val Field.isStatic get() = type.isStatic
 
 val Struct.isComplex get() = fieldStack.filter { !isStatic }.linkOrNull?.stack?.linkOrNull != null
+val Choice.isSimple get() = caseStack.all { type.isStatic }

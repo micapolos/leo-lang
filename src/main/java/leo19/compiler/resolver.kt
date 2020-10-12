@@ -18,19 +18,19 @@ import leo19.typed.nullTyped
 import leo19.typed.of
 
 data class Binding(val arrow: Arrow, val isConstant: Boolean)
-data class Scope(val bindingStack: Stack<Binding>)
+data class Resolver(val bindingStack: Stack<Binding>)
 
 fun constantBinding(arrow: Arrow) = Binding(arrow, true)
 fun functionBinding(arrow: Arrow) = Binding(arrow, false)
 
-val emptyScope = Scope(stack())
-fun scope(vararg bindings: Binding) = Scope(stack(*bindings))
-fun Scope.plus(binding: Binding) = Scope(bindingStack.push(binding))
+val emptyResolver = Resolver(stack())
+fun resolver(vararg bindings: Binding) = Resolver(stack(*bindings))
+fun Resolver.plus(binding: Binding) = Resolver(bindingStack.push(binding))
 
-fun Scope.typed(script: Script): Typed =
+fun Resolver.typed(script: Script): Typed =
 	Compiler(this, nullTyped).plus(script).typed
 
-fun Scope.resolveOrNull(typed: Typed): Typed? =
+fun Resolver.resolveOrNull(typed: Typed): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {
 		value.let { binding ->
 			notNullIf(binding.arrow.lhs == typed.type) {
@@ -41,5 +41,5 @@ fun Scope.resolveOrNull(typed: Typed): Typed? =
 		}
 	}
 
-fun Scope.resolve(typed: Typed): Typed =
+fun Resolver.resolve(typed: Typed): Typed =
 	resolveOrNull(typed) ?: typed

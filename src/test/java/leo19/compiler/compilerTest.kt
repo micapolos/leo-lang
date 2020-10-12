@@ -115,7 +115,7 @@ class CompilerTest {
 
 	@Test
 	fun resolve() {
-		emptyScope
+		emptyResolver
 			.plus(
 				functionBinding(
 					Arrow(
@@ -130,7 +130,7 @@ class CompilerTest {
 
 	@Test
 	fun resolveDynamic() {
-		emptyScope
+		emptyResolver
 			.plus(
 				functionBinding(
 					Arrow(

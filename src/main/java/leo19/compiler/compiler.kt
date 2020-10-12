@@ -29,11 +29,11 @@ import leo19.typed.plus
 import leo19.typed.typed
 
 data class Compiler(
-	val scope: Scope,
+	val resolver: Resolver,
 	val typed: Typed
 )
 
-val emptyCompiler = Compiler(emptyScope, nullTyped)
+val emptyCompiler = Compiler(emptyResolver, nullTyped)
 
 fun Compiler.plus(script: Script): Compiler =
 	fold(script.lineSeq.reverse) { plus(it) }
@@ -57,10 +57,10 @@ fun Compiler.plus(scriptField: ScriptField) =
 	else plus(
 		TypedField(
 			scriptField.string,
-			Compiler(scope, nullTyped).plus(scriptField.rhs).typed))
+			Compiler(resolver, nullTyped).plus(scriptField.rhs).typed))
 
 fun Compiler.plusGive(script: Script): Compiler =
-	scope
+	resolver
 		.plus(
 			constantBinding(
 				Arrow(
@@ -101,5 +101,5 @@ val Compiler.resolve: Compiler
 
 val Compiler.maybeResolve: Compiler?
 	get() =
-		scope.resolveOrNull(typed)
+		resolver.resolveOrNull(typed)
 			?.let { set(it) }

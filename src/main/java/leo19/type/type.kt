@@ -62,3 +62,5 @@ fun Type.indexedOrNull(name: String): IndexedValue<Type>? =
 		?.structOrNull
 		?.indexedFieldOrNull(name)
 		?.run { index indexed struct(value) }
+
+val Case.field get() = name fieldTo type
