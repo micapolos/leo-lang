@@ -3,6 +3,7 @@ package leo19.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
+import leo19.term.eval.emptyScope
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.nullTerm
@@ -11,9 +12,13 @@ import leo19.term.variable
 import leo19.type.Arrow
 import leo19.type.bitType
 import leo19.type.booleanType
+import leo19.type.case
+import leo19.type.caseTo
+import leo19.type.choice
 import leo19.type.fieldTo
 import leo19.type.plus
 import leo19.type.struct
+import leo19.typed.castTo
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.of
@@ -182,5 +187,24 @@ class CompilerTest {
 						struct(
 							"x" fieldTo struct("zero" fieldTo struct()),
 							"and" fieldTo struct("y" fieldTo struct("one" fieldTo struct())))))
+	}
+
+	@Test
+	fun cast() {
+		script(
+			"bit" lineTo script("zero"),
+			"as" lineTo script(
+				"bit" lineTo script(
+					"choice" lineTo script(
+						"zero" lineTo script(),
+						"one" lineTo script()))))
+			.typed
+			.assertEqualTo(
+				typed("bit" fieldTo typed("zero"))
+					.castTo(
+						struct(
+							"bit" fieldTo choice(
+								"zero" caseTo struct(),
+								"one" caseTo struct()))))
 	}
 }

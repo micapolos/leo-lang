@@ -31,6 +31,8 @@ val nullTyped = Typed(nullTerm, struct())
 fun typed(vararg fields: TypedField): Typed =
 	nullTyped.fold(fields) { plus(it) }
 
+fun typed(name: String) = typed(name fieldTo typed())
+
 fun Typed.plus(field: TypedField): Typed =
 	type.structOrNull!!.let { struct ->
 		if (struct.isStatic)

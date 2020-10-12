@@ -20,6 +20,7 @@ import leo19.type.fieldTo
 import leo19.type.struct
 import leo19.typed.Typed
 import leo19.typed.TypedField
+import leo19.typed.castTo
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.make
@@ -34,6 +35,9 @@ data class Compiler(
 )
 
 val emptyCompiler = Compiler(emptyResolver, nullTyped)
+
+fun Resolver.compiler(typed: Typed) =
+	Compiler(this, typed)
 
 fun Compiler.plus(script: Script): Compiler =
 	fold(script.lineSeq.reverse) { plus(it) }
@@ -53,6 +57,7 @@ fun Compiler.plus(literal: Literal): Compiler =
 fun Compiler.plus(scriptField: ScriptField) =
 	if (scriptField.string == "give") plusGive(scriptField.rhs)
 	else if (scriptField.string == "switch") plusSwitch(scriptField.rhs)
+	else if (scriptField.string == "as") plusAs(scriptField.rhs)
 	else if (scriptField.rhs.isEmpty) plus(scriptField.string)
 	else plus(
 		TypedField(
@@ -73,6 +78,9 @@ fun Compiler.plusGive(script: Script): Compiler =
 
 fun Compiler.plusSwitch(script: Script): Compiler =
 	TODO()
+
+fun Compiler.plusAs(script: Script): Compiler =
+	set(typed.castTo(script.type))
 
 fun Compiler.plus(typedField: TypedField): Compiler =
 	set(typed.plus(typedField)).resolve

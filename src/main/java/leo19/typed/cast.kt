@@ -31,6 +31,9 @@ import leo19.type.arrowOrNull
 import leo19.type.isSimple
 import leo19.type.structOrNull
 
+fun Typed.castTo(dstType: Type): Typed =
+	cast(term, type, dstType).of(dstType)
+
 fun cast(srcTerm: Term, srcType: Type, dstType: Type): Term =
 	if (srcType == dstType) srcTerm
 	else when (srcType) {
