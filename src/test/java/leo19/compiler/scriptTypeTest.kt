@@ -3,7 +3,7 @@ package leo19.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
-import leo19.type.arrow
+import leo19.type.giving
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
@@ -46,7 +46,7 @@ class ScriptTypeTest {
 				"one" lineTo script()))
 			.type
 			.assertEqualTo(
-				struct("zero" fieldTo struct()).arrow(struct("one" fieldTo struct())))
+				struct("zero" fieldTo struct()).giving(struct("one" fieldTo struct())))
 
 	}
 }
