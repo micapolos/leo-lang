@@ -2,11 +2,17 @@ package leo19.typed
 
 import leo.base.failIfOr
 import leo.base.fold
+import leo13.Stack
+import leo13.array
+import leo13.map
+import leo13.push
+import leo13.stack
 import leo14.indentString
 import leo14.lineTo
 import leo14.plus
 import leo14.untyped.pretty.indentString
 import leo19.term.Term
+import leo19.term.function
 import leo19.term.get
 import leo19.term.invoke
 import leo19.term.nullTerm
@@ -15,10 +21,12 @@ import leo19.term.reflectScript
 import leo19.term.term
 import leo19.type.ArrowType
 import leo19.type.Type
+import leo19.type.choiceOrNull
 import leo19.type.contentOrNull
 import leo19.type.fieldTo
 import leo19.type.indexedOrNull
 import leo19.type.isComplex
+import leo19.type.isSimple
 import leo19.type.isStatic
 import leo19.type.plus
 import leo19.type.reflectScript
@@ -33,6 +41,8 @@ data class TypedField(val name: String, val typed: Typed) {
 	override fun toString() = reflectScriptLine.indentString(0)
 }
 
+data class TypedSwitch(val termStack: Stack<Term>, val typeOrNull: Type?)
+
 val Typed.reflectScript get() = term.reflectScript.plus("of" lineTo type.reflectScript)
 val TypedField.reflectScriptLine get() = name lineTo typed.reflectScript
 
@@ -41,6 +51,8 @@ infix fun String.fieldTo(typed: Typed) = TypedField(this, typed)
 val TypedField.typeField get() = name fieldTo typed.type
 
 val nullTyped = Typed(nullTerm, struct())
+
+val emptyTypedSwitch = TypedSwitch(stack(), null)
 
 fun typed(vararg fields: TypedField): Typed =
 	nullTyped.fold(fields) { plus(it) }
@@ -58,7 +70,7 @@ fun Typed.plus(field: TypedField): Typed =
 	} of type.plus(field.typeField)
 
 fun Typed.getOrNull(name: String): Typed? =
-	type.structOrNull?.contentOrNull?.structOrNull?.let { struct ->
+	type.contentOrNull?.structOrNull?.let { struct ->
 		type.indexedOrNull(name)?.let { indexedField ->
 			when {
 				struct.isStatic -> nullTerm
@@ -77,3 +89,23 @@ fun Typed.invoke(typed: Typed): Typed =
 			term.invoke(typed.term).of(arrow.rhs)
 		}
 	}
+
+val Typed.content: Typed
+	get() =
+		term of type.contentOrNull!!
+
+fun Typed.invoke(switch: TypedSwitch): Typed =
+	type.contentOrNull!!.choiceOrNull!!.let { choice ->
+		choice.isSimple.let { isSimple ->
+			term(*switch.termStack.map { term(function(this)) }.array)
+				.get(if (isSimple) term else term.get(term(0)))
+				.of(switch.typeOrNull!!)
+		}
+	}
+
+fun TypedSwitch.plus(case: TypedField): TypedSwitch =
+	TypedSwitch(
+		termStack.push(case.typed.term),
+		if (typeOrNull == null) case.typed.type
+		else if (case.typed.type != typeOrNull) error("case type mismatch")
+		else typeOrNull)

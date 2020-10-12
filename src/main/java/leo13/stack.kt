@@ -41,6 +41,7 @@ val <T : Any> Stack<T>.valueOrNull: T? get() = linkOrNull?.value
 val <T> Stack<T>.link get() = linkOrNull!!
 val <T> Stack<T>.pop get() = link.stack
 val <T> Stack<T>.top get() = link.value
+val <T> Stack<T>.topOrNull: T? get() = linkOrNull?.value
 val <T : Any> Stack<T>.onlyOrNull
 	get() = linkOrNull?.let { link ->
 		notNullIf(link.stack.isEmpty) {

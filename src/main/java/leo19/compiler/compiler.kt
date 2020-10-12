@@ -1,6 +1,7 @@
 package leo19.compiler
 
 import leo.base.fold
+import leo.base.notNullOrError
 import leo.base.reverse
 import leo14.FieldScriptLine
 import leo14.Literal
@@ -16,13 +17,17 @@ import leo19.term.function
 import leo19.term.invoke
 import leo19.term.term
 import leo19.type.Arrow
+import leo19.type.choiceOrNull
+import leo19.type.contentOrNull
 import leo19.type.fieldTo
 import leo19.type.struct
 import leo19.typed.Typed
 import leo19.typed.TypedField
+import leo19.typed.TypedSwitch
 import leo19.typed.castTo
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
+import leo19.typed.invoke
 import leo19.typed.make
 import leo19.typed.nullTyped
 import leo19.typed.of
@@ -77,7 +82,18 @@ fun Compiler.plusGive(script: Script): Compiler =
 		}
 
 fun Compiler.plusSwitch(script: Script): Compiler =
-	TODO()
+	plus(
+		resolver.switchCompiler(
+			typed.type
+				.contentOrNull.notNullOrError("not a struct")
+				.choiceOrNull.notNullOrError("not a choice")
+				.switchBuilder)
+			.plus(script)
+			.switchBuilder
+			.build)
+
+fun Compiler.plus(switch: TypedSwitch): Compiler =
+	set(typed.invoke(switch))
 
 fun Compiler.plusAs(script: Script): Compiler =
 	set(typed.castTo(script.type))
