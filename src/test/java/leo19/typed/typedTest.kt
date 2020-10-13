@@ -22,12 +22,12 @@ class TypedTest {
 		term(variable(0))
 			.of(struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo choice())))
 			.getOrNull("x")
-			.assertEqualTo(term(variable(0)).get(term(1)).of(struct("x" fieldTo choice())))
+			.assertEqualTo(term(variable(0)).get(term(0)).of(struct("x" fieldTo choice())))
 
 		term(variable(0))
 			.of(struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo choice())))
 			.getOrNull("y")
-			.assertEqualTo(term(variable(0)).get(term(0)).of(struct("y" fieldTo choice())))
+			.assertEqualTo(term(variable(0)).get(term(1)).of(struct("y" fieldTo choice())))
 
 		term(variable(0))
 			.of(struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo choice())))

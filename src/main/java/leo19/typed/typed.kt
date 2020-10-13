@@ -20,7 +20,6 @@ import leo19.type.Type
 import leo19.type.choiceOrNull
 import leo19.type.contentOrNull
 import leo19.type.fieldTo
-import leo19.type.indexedOrNull
 import leo19.type.isComplex
 import leo19.type.isSimple
 import leo19.type.isStatic

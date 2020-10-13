@@ -8,13 +8,11 @@ import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
 import leo19.type.Struct
-import leo19.type.StructType
-import leo19.type.fieldTo
-import leo19.type.indexedFieldOrNull
 import leo19.type.isStatic
 import leo19.type.nameOrNull
 import leo19.type.struct
 import leo19.typed.Typed
+import leo19.typed.indexedFieldOrNull
 import leo19.typed.of
 
 sealed class Binding

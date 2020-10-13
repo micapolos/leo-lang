@@ -40,7 +40,7 @@ class BindingTest {
 			.resolveOrNull(typed("zero"), 64)
 			.assertEqualTo(
 				term(variable(64))
-					.get(term(1))
+					.get(term(0))
 					.of(struct("zero" fieldTo choice("foo".case))))
 	}
 
@@ -53,7 +53,7 @@ class BindingTest {
 			.resolveOrNull(typed("one"), 64)
 			.assertEqualTo(
 				term(variable(64))
-					.get(term(0))
+					.get(term(1))
 					.of(struct("one" fieldTo choice("bar".case))))
 	}
 

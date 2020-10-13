@@ -24,6 +24,7 @@ val Struct.isStatic get() = fieldStack.all { isStatic }
 val Field.isStatic get() = type.isStatic
 
 val Struct.isComplex get() = fieldStack.filter { !isStatic }.linkOrNull?.stack?.linkOrNull != null
+val Struct.layoutSize get() = fieldStack.filter { !isStatic }.size
 val Choice.isSimple get() = caseStack.all { type.isStatic }
 
 val Type.isPossible: Boolean
@@ -47,22 +48,22 @@ fun Choice.possibleCaseIndex(name: String): Int =
 		else this.runIf(case.isPossible) { inc() } to null
 	}!!
 
-fun Struct.indexedFieldOrNull(name: String): IndexedValue<Field>? =
-	0.foldMapFirstOrNull(fieldStack.seq) { field ->
-		runIf(!field.isStatic) { inc() } to notNullIf(field.name == name) { indexed(field) }
-	}
+//fun Struct.indexedFieldOrNull(name: String): IndexedValue<Field>? =
+//	0.foldMapFirstOrNull(fieldStack.seq) { field ->
+//		runIf(!field.isStatic) { inc() } to notNullIf(field.name == name) { indexed(field) }
+//	}
 
 fun Choice.indexedCaseOrNull(name: String): IndexedValue<Case>? =
 	0.foldMapFirstOrNull(caseStack.seq) { case ->
 		runIf(case.isPossible) { inc() } to notNullIf(case.name == name) { indexed(case) }
 	}
 
-fun Type.indexedOrNull(name: String): IndexedValue<Type>? =
-	structOrNull
-		?.contentOrNull
-		?.structOrNull
-		?.indexedFieldOrNull(name)
-		?.run { index indexed struct(value) }
+//fun Type.indexedOrNull(name: String): IndexedValue<Type>? =
+//	structOrNull
+//		?.contentOrNull
+//		?.structOrNull
+//		?.indexedFieldOrNull(name)
+//		?.run { index indexed struct(value) }
 
 // TODO: Include only possible cases.
 val Choice.size: Int get() = caseStack.size
