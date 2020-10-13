@@ -7,8 +7,8 @@ import leo19.type.caseTo
 import leo19.type.struct
 import leo19.typed.emptyTypedChoice
 import leo19.typed.fieldTo
-import leo19.typed.plusIgnored
-import leo19.typed.plusSelected
+import leo19.typed.plusNo
+import leo19.typed.plusYes
 import leo19.typed.typed
 import kotlin.test.Test
 import kotlin.test.assertFails
@@ -23,8 +23,8 @@ class ChoiceCompilerTest {
 					"yes" lineTo script("square" lineTo script("side"))))
 			.assertEqualTo(
 				emptyTypedChoice
-					.plusIgnored("circle" caseTo struct("radius"))
-					.plusSelected("square" fieldTo typed("side")))
+					.plusNo("circle" caseTo struct("radius"))
+					.plusYes("square" fieldTo typed("side")))
 	}
 
 	@Test

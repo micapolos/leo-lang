@@ -13,10 +13,10 @@ class TypedChoiceTest {
 	@Test
 	fun simple() {
 		emptyTypedChoice
-			.plusIgnored("zero" caseTo struct())
-			.plusIgnored("one" caseTo struct())
-			.plusSelected("two" fieldTo typed())
-			.plusIgnored("three" caseTo struct())
+			.plusNo("zero" caseTo struct())
+			.plusNo("one" caseTo struct())
+			.plusYes("two" fieldTo typed())
+			.plusNo("three" caseTo struct())
 			.typed
 			.assertEqualTo(
 				term(2)
@@ -30,10 +30,10 @@ class TypedChoiceTest {
 	@Test
 	fun complex() {
 		emptyTypedChoice
-			.plusIgnored("zero" caseTo choice())
-			.plusIgnored("one" caseTo struct())
-			.plusSelected("two" fieldTo typed())
-			.plusIgnored("three" caseTo struct())
+			.plusNo("zero" caseTo choice())
+			.plusNo("one" caseTo struct())
+			.plusYes("two" fieldTo typed())
+			.plusNo("three" caseTo struct())
 			.typed
 			.assertEqualTo(
 				term(term(2), nullTerm)
@@ -48,8 +48,8 @@ class TypedChoiceTest {
 	fun doubleSelection() {
 		assertFails {
 			emptyTypedChoice
-				.plusSelected("zero" fieldTo typed())
-				.plusSelected("one" fieldTo typed())
+				.plusYes("zero" fieldTo typed())
+				.plusYes("one" fieldTo typed())
 		}
 	}
 
@@ -57,7 +57,7 @@ class TypedChoiceTest {
 	fun noSelection() {
 		assertFails {
 			emptyTypedChoice
-				.plusIgnored("zero" caseTo choice())
+				.plusNo("zero" caseTo choice())
 				.typed
 		}
 	}

@@ -8,6 +8,7 @@ import leo13.fold
 import leo13.isEmpty
 import leo13.linkOrNull
 import leo13.reverse
+import leo13.toList
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
@@ -20,12 +21,17 @@ import leo19.type.ArrowType
 import leo19.type.ChoiceType
 import leo19.type.Field
 import leo19.type.StructType
+import leo19.type.field
 import leo19.type.isStatic
+import leo19.type.struct
 import leo19.typed.Typed
+import leo19.typed.TypedChoice
 import leo19.typed.TypedField
 import leo19.typed.TypedStruct
 import leo19.typed.fieldTo
+import leo19.typed.index
 import leo19.typed.of
+import leo19.typed.yesTerm
 
 data class StructDecompiler(
 	val script: Script,
@@ -36,7 +42,7 @@ val Typed.script: Script
 	get() =
 		when (type) {
 			is StructType -> term.of(type.struct).script
-			is ChoiceType -> TODO()
+			is ChoiceType -> term.of(type.choice).script
 			is ArrowType -> TODO()
 		}
 
@@ -47,6 +53,10 @@ val TypedStruct.script: Script
 		StructDecompiler(script(), struct.fieldStack.reverse)
 			.fold((term as ArrayTerm).stack) { plus(it) }
 			.decompile
+
+val TypedChoice.script: Script
+	get() =
+		yesTerm.of(struct(choice.caseStack.toList().get(index).field)).script
 
 fun StructDecompiler.plus(term: Term): StructDecompiler =
 	remainingFieldStack.linkOrNull.notNullOrError("no more fields").let { fieldLink ->

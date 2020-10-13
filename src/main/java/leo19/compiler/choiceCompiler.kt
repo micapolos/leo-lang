@@ -12,8 +12,8 @@ import leo14.onlyLineOrNull
 import leo19.typed.TypedChoice
 import leo19.typed.emptyTypedChoice
 import leo19.typed.fieldTo
-import leo19.typed.plusIgnored
-import leo19.typed.plusSelected
+import leo19.typed.plusNo
+import leo19.typed.plusYes
 
 data class ChoiceCompiler(
 	val resolver: Resolver,
@@ -36,9 +36,9 @@ fun ChoiceCompiler.choicePlus(scriptField: ScriptField): TypedChoice =
 	}
 
 fun ChoiceCompiler.choicePlusYes(field: ScriptField): TypedChoice =
-	choice.plusSelected(
+	choice.plusYes(
 		field.string fieldTo resolver.typed(field.rhs)
 	)
 
 fun ChoiceCompiler.choicePlusNo(field: ScriptField): TypedChoice =
-	choice.plusIgnored(field.case)
+	choice.plusNo(field.case)
