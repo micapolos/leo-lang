@@ -30,7 +30,7 @@ fun SwitchBuilder.plus(case: TypedField) =
 		.linkOrNull
 		.notNullOrError("exhausted")
 		.let { link ->
-			if (link.value.name != case.name || link.value.type != case.typed.type) error("case mismatch")
+			if (link.value.name != case.name) error("case name mismatch: ${link.value.name} - ${case.name}")
 			else copy(remainingCaseStack = link.stack, switch = switch.plus(case))
 		}
 

@@ -24,6 +24,8 @@ import leo19.type.StructType
 import leo19.type.field
 import leo19.type.isComplex
 import leo19.type.isStatic
+import leo19.type.reflectScript
+import leo19.type.script
 import leo19.type.struct
 import leo19.typed.Typed
 import leo19.typed.TypedChoice
@@ -38,6 +40,10 @@ data class StructDecompiler(
 	val script: Script,
 	val remainingFieldStack: Stack<Field>
 )
+
+val Typed.typedScript: Script
+	get() =
+		script.plus("of" lineTo type.reflectScript)
 
 val Typed.script: Script
 	get() =

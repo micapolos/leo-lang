@@ -3,6 +3,7 @@ package leo19.compiler
 import leo.base.fold
 import leo.base.map
 import leo.base.notNullOrError
+import leo.base.reverse
 import leo13.topOrNull
 import leo14.Script
 import leo14.ScriptField
@@ -23,7 +24,7 @@ fun Resolver.switchCompiler(switchBuilder: SwitchBuilder) =
 	SwitchCompiler(this, switchBuilder)
 
 fun SwitchCompiler.plus(script: Script) =
-	fold(script.lineSeq.map { fieldOrNull.notNullOrError("not a case") }) { plus(it) }
+	fold(script.lineSeq.reverse.map { fieldOrNull.notNullOrError("not a case") }) { plus(it) }
 
 fun SwitchCompiler.plus(scriptField: ScriptField): SwitchCompiler =
 	switchBuilder.remainingCaseStack.topOrNull.notNullOrError("switch exhausted").let { case ->

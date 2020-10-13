@@ -14,5 +14,5 @@ fun TypedSwitch.plus(case: TypedField): TypedSwitch =
 	TypedSwitch(
 		termStack.push(case.typed.term),
 		if (typeOrNull == null) case.typed.type
-		else if (case.typed.type != typeOrNull) error("case type mismatch")
+		else if (case.typed.type != typeOrNull) error("case type mismatch: ${case.typed.type} : ${typeOrNull}")
 		else typeOrNull)
