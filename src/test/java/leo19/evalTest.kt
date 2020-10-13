@@ -124,15 +124,14 @@ class EvalTest {
 
 	@Test
 	fun switchGiven() {
-		// TODO: Bind individual fields.
 		script(
 			_shape(_choice(_yes(_circle(_radius(_zero()))))),
-			_switch(_circle(_given())))
-			.assertGives(script(_given(_circle(_radius(_zero())))))
+			_switch(_circle(_radius())))
+			.assertGives(script(_radius(_zero())))
 	}
 
 	@Test
-	fun give() {
+	fun give_static() {
 		script(
 			_zero(),
 			_give(_one()))
@@ -141,11 +140,11 @@ class EvalTest {
 
 
 	@Test
-	fun giveGiven() {
-		// TODO: Bind individual fields.
+	fun give_dynamic() {
 		script(
-			_zero(),
-			_give(_given()))
-			.assertGives(script(_given(_zero())))
+			_x(_zero()),
+			_y(_one()),
+			_give(_x()))
+			.assertGives(script(_x(_zero())))
 	}
 }

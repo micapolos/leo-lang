@@ -1,14 +1,10 @@
 package leo19.type
 
-import leo.base.foldMapFirstOrNull
-import leo.base.indexed
 import leo.base.notNullIf
-import leo.base.runIf
 import leo13.Stack
 import leo13.first
 import leo13.onlyOrNull
 import leo13.push
-import leo13.seq
 import leo13.stack
 import leo14.indentString
 import leo14.untyped.pretty.indentString
@@ -79,3 +75,11 @@ fun Type.getOrNull(name: String) =
 		?.let { struct(it) }
 
 val Case.field get() = name fieldTo type
+
+val Type.nameOrNull: String?
+	get() =
+		structOrNull?.fieldStack?.onlyOrNull?.nameOrNull
+
+val Field.nameOrNull: String?
+	get() =
+		notNullIf(type == struct()) { name }

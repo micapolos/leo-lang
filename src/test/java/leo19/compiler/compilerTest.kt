@@ -157,13 +157,13 @@ class CompilerTest {
 	@Test
 	fun give() {
 		script(
-			"zero" lineTo script(),
-			"give" lineTo script("given"))
+			"x" lineTo script("zero"),
+			"give" lineTo script("x"))
 			.typed
 			.assertEqualTo(
-				term(function(term(variable(0))))
+				term(function(nullTerm))
 					.invoke(nullTerm)
-					.of(struct("given" fieldTo struct("zero" fieldTo struct()))))
+					.of(struct("x" fieldTo struct("zero" fieldTo struct()))))
 	}
 
 	@Test
@@ -172,10 +172,8 @@ class CompilerTest {
 			"x" lineTo script("zero"),
 			"y" lineTo script("one"),
 			"give" lineTo script(
-				"given" lineTo script(),
 				"x" lineTo script(),
 				"and" lineTo script(
-					"given" lineTo script(),
 					"y" lineTo script())))
 			.typed
 			.assertEqualTo(
