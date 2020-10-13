@@ -10,6 +10,7 @@ import leo13.all
 import leo13.filter
 import leo13.linkOrNull
 import leo13.seq
+import leo13.size
 
 val Type.isStatic: Boolean
 	get() =
@@ -62,3 +63,6 @@ fun Type.indexedOrNull(name: String): IndexedValue<Type>? =
 		?.structOrNull
 		?.indexedFieldOrNull(name)
 		?.run { index indexed struct(value) }
+
+// TODO: Include only possible cases.
+val Choice.size: Int get() = caseStack.size

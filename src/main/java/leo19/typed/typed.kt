@@ -21,6 +21,7 @@ import leo19.term.reflectScript
 import leo19.term.term
 import leo19.type.ArrowType
 import leo19.type.Type
+import leo19.type.caseTo
 import leo19.type.choiceOrNull
 import leo19.type.contentOrNull
 import leo19.type.fieldTo
@@ -49,6 +50,7 @@ val TypedField.reflectScriptLine get() = name lineTo typed.reflectScript
 infix fun Term.of(type: Type) = Typed(this, type)
 infix fun String.fieldTo(typed: Typed) = TypedField(this, typed)
 val TypedField.typeField get() = name fieldTo typed.type
+val TypedField.typeCase get() = name caseTo typed.type
 
 val nullTyped = Typed(nullTerm, struct())
 

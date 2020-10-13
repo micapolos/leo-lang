@@ -19,9 +19,12 @@ import leo19.type.fieldTo
 import leo19.type.plus
 import leo19.type.struct
 import leo19.typed.castTo
+import leo19.typed.emptyTypedChoice
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.of
+import leo19.typed.plusIgnored
+import leo19.typed.plusSelected
 import leo19.typed.typed
 import kotlin.test.Test
 
@@ -206,5 +209,21 @@ class CompilerTest {
 							"bit" fieldTo choice(
 								"zero" caseTo struct(),
 								"one" caseTo struct()))))
+	}
+
+	@Test
+	fun choice() {
+		script(
+			"choice" lineTo script(
+				"no" lineTo script("circle" lineTo script("radius")),
+				"yes" lineTo script("square" lineTo script("side"))))
+			.typed
+			.assertEqualTo(
+				emptyResolver
+					.choice(
+						script(
+							"no" lineTo script("circle" lineTo script("radius")),
+							"yes" lineTo script("square" lineTo script("side"))))
+					.typed)
 	}
 }

@@ -353,6 +353,17 @@ fun Script.lineOrNull(string: String): ScriptLine? =
 		is LinkScript -> link.lineOrNull(string)
 	}
 
+val Script.onlyLineOrNull: ScriptLine?
+	get() =
+		when (this) {
+			is UnitScript -> null
+			is LinkScript ->
+				when (link.lhs) {
+					is UnitScript -> link.line
+					is LinkScript -> null
+				}
+		}
+
 fun ScriptLink.lineOrNull(string: String) =
 	line.ifNamed(string) ?: lhs.lineOrNull(string)
 

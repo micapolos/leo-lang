@@ -61,6 +61,7 @@ fun Compiler.plus(literal: Literal): Compiler =
 
 fun Compiler.plus(scriptField: ScriptField) =
 	if (scriptField.string == "give") plusGive(scriptField.rhs)
+	else if (scriptField.string == "choice") plusChoice(scriptField.rhs)
 	else if (scriptField.string == "switch") plusSwitch(scriptField.rhs)
 	else if (scriptField.string == "as") plusAs(scriptField.rhs)
 	else if (scriptField.rhs.isEmpty) plus(scriptField.string)
@@ -80,6 +81,9 @@ fun Compiler.plusGive(script: Script): Compiler =
 		.let { giveTyped ->
 			set(term(function(giveTyped.term)).invoke(typed.term).of(giveTyped.type))
 		}
+
+fun Compiler.plusChoice(script: Script): Compiler =
+	set(resolver.choice(script).typed)
 
 fun Compiler.plusSwitch(script: Script): Compiler =
 	plus(
