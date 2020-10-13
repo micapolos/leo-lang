@@ -1,4 +1,4 @@
-package leo19.term.eval
+package leo19.expr.eval
 
 import leo.base.fold
 import leo.base.seq

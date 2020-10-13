@@ -1,7 +1,7 @@
 package leo19.value
 
 import leo19.expr.Expr
-import leo19.term.eval.Scope
+import leo19.expr.eval.Scope
 
 sealed class Value
 object NullValue : Value()

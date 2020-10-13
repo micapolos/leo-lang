@@ -3,7 +3,6 @@ package leo19.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
-import leo19.term.eval.emptyScope
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.nullTerm
@@ -12,19 +11,15 @@ import leo19.term.variable
 import leo19.type.Arrow
 import leo19.type.bitType
 import leo19.type.booleanType
-import leo19.type.case
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
 import leo19.type.plus
 import leo19.type.struct
 import leo19.typed.castTo
-import leo19.typed.emptyTypedChoice
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.of
-import leo19.typed.plusIgnored
-import leo19.typed.plusSelected
 import leo19.typed.typed
 import kotlin.test.Test
 
