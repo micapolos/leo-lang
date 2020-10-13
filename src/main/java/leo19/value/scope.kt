@@ -1,11 +1,10 @@
-package leo19.expr.eval
+package leo19.value
 
 import leo.base.fold
 import leo.base.seq
 import leo13.Stack
 import leo13.push
 import leo13.stack
-import leo19.value.Value
 
 data class Scope(val stack: Stack<Value>)
 

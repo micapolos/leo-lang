@@ -1,7 +1,7 @@
 package leo19.term.eval
 
 import leo.base.assertEqualTo
-import leo19.expr.eval.scope
+import leo19.value.scope
 import leo19.term.expr.expr
 import leo19.term.function
 import leo19.term.get
