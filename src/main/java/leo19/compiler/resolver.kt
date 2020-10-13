@@ -13,15 +13,24 @@ import leo19.term.invoke
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
+import leo19.type.Struct
+import leo19.type.StructType
+import leo19.type.Type
+import leo19.type.fieldTo
+import leo19.type.indexedOrNull
+import leo19.type.struct
 import leo19.typed.Typed
 import leo19.typed.nullTyped
 import leo19.typed.of
 
-data class Binding(val arrow: Arrow, val isConstant: Boolean)
+sealed class Binding
+data class StructBinding(val struct: Struct) : Binding()
+data class ArrowBinding(val arrow: Arrow) : Binding()
+
 data class Resolver(val bindingStack: Stack<Binding>)
 
-fun constantBinding(arrow: Arrow) = Binding(arrow, true)
-fun functionBinding(arrow: Arrow) = Binding(arrow, false)
+fun binding(struct: Struct): Binding = StructBinding(struct)
+fun binding(arrow: Arrow): Binding = ArrowBinding(arrow)
 
 val emptyResolver = Resolver(stack())
 fun resolver(vararg bindings: Binding) = Resolver(stack(*bindings))
@@ -33,13 +42,21 @@ fun Resolver.typed(script: Script): Typed =
 fun Resolver.resolveOrNull(typed: Typed): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {
 		value.let { binding ->
-			notNullIf(binding.arrow.lhs == typed.type) {
-				term(variable(index))
-					.runIf(!binding.isConstant) { invoke(typed.term) }
-					.of(binding.arrow.rhs)
-			}
+			binding.resolveOrNull(typed, index)
 		}
 	}
 
 fun Resolver.resolve(typed: Typed): Typed =
 	resolveOrNull(typed) ?: typed
+
+fun Binding.resolveOrNull(typed: Typed, index: Int): Typed? =
+	when (this) {
+		is StructBinding ->
+			notNullIf(typed.type == struct("given")) {
+				term(variable(index)).of(struct("given" fieldTo StructType(struct)))
+			}
+		is ArrowBinding ->
+			notNullIf(arrow.lhs == typed.type) {
+				term(variable(index)).invoke(typed.term).of(arrow.rhs)
+			}
+	}

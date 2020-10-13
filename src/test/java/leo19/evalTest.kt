@@ -21,6 +21,46 @@ class EvalTest {
 	}
 
 	@Test
+	fun struct() {
+		script(
+			_x(_zero()),
+			_y(_one()))
+			.assertGives(
+				script(
+					_x(_zero()),
+					_y(_one())))
+	}
+
+	@Test
+	fun get0() {
+		script(
+			_point(_x(_zero()), _y(_one())),
+			_x())
+			.assertGives(script(_x(_zero())))
+	}
+
+	@Test
+	fun get1() {
+		script(
+			_point(_x(_zero()), _y(_one())),
+			_y())
+			.assertGives(script(_y(_one())))
+	}
+
+	@Test
+	fun make() {
+		script(
+			_x(_zero()),
+			_y(_one()),
+			_point())
+			.assertGives(
+				script(
+					_point(
+						_x(_zero()),
+						_y(_one()))))
+	}
+
+	@Test
 	fun choice0() {
 		script(
 			_bit(
@@ -83,32 +123,12 @@ class EvalTest {
 	}
 
 	@Test
-	fun get0() {
+	fun switchGiven() {
+		// TODO: Bind individual fields.
 		script(
-			_point(_x(_zero()), _y(_one())),
-			_x())
-			.assertGives(script(_x(_zero())))
-	}
-
-	@Test
-	fun get1() {
-		script(
-			_point(_x(_zero()), _y(_one())),
-			_y())
-			.assertGives(script(_y(_one())))
-	}
-
-	@Test
-	fun make() {
-		script(
-			_x(_zero()),
-			_y(_one()),
-			_point())
-			.assertGives(
-				script(
-					_point(
-						_x(_zero()),
-						_y(_one()))))
+			_shape(_choice(_yes(_circle(_radius(_zero()))))),
+			_switch(_circle(_given())))
+			.assertGives(script(_given(_circle(_radius(_zero())))))
 	}
 
 	@Test
@@ -122,6 +142,7 @@ class EvalTest {
 
 	@Test
 	fun giveGiven() {
+		// TODO: Bind individual fields.
 		script(
 			_zero(),
 			_give(_given()))

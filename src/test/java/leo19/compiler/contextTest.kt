@@ -27,7 +27,7 @@ class ContextTest {
 				Context(
 					stack(term(0)),
 					resolver(
-						functionBinding(
+						binding(
 							Arrow(
 								struct("zero" fieldTo struct()),
 								choice("zero" caseTo struct()))))))
@@ -41,7 +41,7 @@ class ContextTest {
 				Context(
 					stack(term(term(0), term(variable(0)))),
 					resolver(
-						functionBinding(
+						binding(
 							Arrow(
 								struct("zero" fieldTo choice()),
 								choice("zero" caseTo choice()))))))
@@ -56,7 +56,7 @@ class ContextTest {
 				Context(
 					stack(term(0)),
 					resolver(
-						functionBinding(
+						binding(
 							Arrow(
 								struct("bit" fieldTo struct("zero" fieldTo struct())),
 								type)))))
@@ -73,11 +73,11 @@ class ContextTest {
 						term(0),
 						term(1)),
 					resolver(
-						functionBinding(
+						binding(
 							Arrow(
 								struct("zero" fieldTo struct()),
 								type)),
-						functionBinding(
+						binding(
 							Arrow(
 								struct("one" fieldTo struct()),
 								type)))))

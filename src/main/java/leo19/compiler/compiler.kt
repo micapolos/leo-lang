@@ -21,6 +21,7 @@ import leo19.type.choiceOrNull
 import leo19.type.contentOrNull
 import leo19.type.fieldTo
 import leo19.type.struct
+import leo19.type.structOrNull
 import leo19.typed.Typed
 import leo19.typed.TypedField
 import leo19.typed.TypedSwitch
@@ -72,11 +73,7 @@ fun Compiler.plus(scriptField: ScriptField) =
 
 fun Compiler.plusGive(script: Script): Compiler =
 	resolver
-		.plus(
-			constantBinding(
-				Arrow(
-					struct("given" fieldTo struct()),
-					struct("given" fieldTo typed.type))))
+		.plus(binding(typed.type.structOrNull!!))
 		.typed(script)
 		.let { giveTyped ->
 			set(term(function(giveTyped.term)).invoke(typed.term).of(giveTyped.type))

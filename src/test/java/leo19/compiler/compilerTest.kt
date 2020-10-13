@@ -120,7 +120,7 @@ class CompilerTest {
 	fun resolve() {
 		emptyResolver
 			.plus(
-				functionBinding(
+				binding(
 					Arrow(
 						struct("bit" fieldTo struct("zero" fieldTo struct())),
 						bitType)))
@@ -135,12 +135,12 @@ class CompilerTest {
 	fun resolveDynamic() {
 		emptyResolver
 			.plus(
-				functionBinding(
+				binding(
 					Arrow(
 						struct("bit" fieldTo struct("zero" fieldTo struct())),
 						bitType)))
 			.plus(
-				functionBinding(
+				binding(
 					Arrow(
 						bitType.plus("boolean" fieldTo struct()),
 						booleanType)))

@@ -11,7 +11,7 @@ import kotlin.test.Test
 
 class SwitchCompilerTest {
 	@Test
-	fun add() {
+	fun static() {
 		val switchBuilder = switchBuilder("zero" caseTo struct())
 		emptyResolver
 			.switchCompiler(switchBuilder)

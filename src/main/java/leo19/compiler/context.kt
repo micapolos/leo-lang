@@ -40,7 +40,7 @@ fun Context.define(choice: Choice, wrapFn: (Type) -> Type): Context =
 					if (isSimple) term(indexedCase.index)
 					else term(term(indexedCase.index), term(variable(0)))),
 				resolver.plus(
-					functionBinding(
+					binding(
 						Arrow(
 							wrapFn(struct(indexedCase.value.field)),
 							wrapFn(ChoiceType(choice))))))

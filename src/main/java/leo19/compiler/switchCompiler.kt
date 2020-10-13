@@ -12,6 +12,7 @@ import leo14.lineSeq
 import leo19.type.Arrow
 import leo19.type.field
 import leo19.type.struct
+import leo19.type.structOrNull
 import leo19.typed.fieldTo
 import leo19.typed.nullTyped
 
@@ -30,7 +31,7 @@ fun SwitchCompiler.plus(scriptField: ScriptField): SwitchCompiler =
 	switchBuilder.remainingCaseStack.topOrNull.notNullOrError("switch exhausted").let { case ->
 		copy(switchBuilder = switchBuilder.plus(
 			scriptField.string fieldTo resolver
-				.plus(constantBinding(Arrow(struct(case.name), struct(case.field))))
+				.plus(binding(struct(case.field).structOrNull!!))
 				.compiler(nullTyped)
 				.plus(scriptField.rhs)
 				.typed))
