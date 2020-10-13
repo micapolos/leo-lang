@@ -22,6 +22,7 @@ import leo19.type.ChoiceType
 import leo19.type.Field
 import leo19.type.StructType
 import leo19.type.field
+import leo19.type.isComplex
 import leo19.type.isStatic
 import leo19.type.struct
 import leo19.typed.Typed
@@ -50,8 +51,14 @@ val TypedField.scriptLine: ScriptLine get() = name lineTo typed.script
 
 val TypedStruct.script: Script
 	get() =
-		StructDecompiler(script(), struct.fieldStack.reverse)
-			.fold((term as ArrayTerm).stack) { plus(it) }
+		if (struct.isStatic) StructDecompiler(script(), struct.fieldStack.reverse)
+			.dropStatic
+			.decompile
+		else if (!struct.isComplex) StructDecompiler(script(), struct.fieldStack.reverse)
+			.plus(term)
+			.decompile
+		else StructDecompiler(script(), struct.fieldStack.reverse)
+			.fold((term as ArrayTerm).stack.reverse) { plus(it) }
 			.decompile
 
 val TypedChoice.script: Script
