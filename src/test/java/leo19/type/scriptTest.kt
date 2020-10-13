@@ -3,7 +3,7 @@ package leo19.type
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
-import leo19.term.eval.value
+import leo19.value.value
 import kotlin.test.Test
 
 class ScriptTest {

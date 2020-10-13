@@ -1,12 +1,15 @@
 package leo19.term.eval
 
 import leo.base.assertEqualTo
+import leo19.term.expr.expr
 import leo19.term.function
 import leo19.term.get
 import leo19.term.invoke
 import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
+import leo19.value.nullValue
+import leo19.value.value
 import kotlin.test.Test
 
 class EvalTest {
@@ -42,7 +45,7 @@ class EvalTest {
 	fun function() {
 		term(function(term(10)))
 			.eval
-			.assertEqualTo(value(function(scope(), term(10))))
+			.assertEqualTo(value(leo19.value.function(scope(), expr(10))))
 	}
 
 	@Test

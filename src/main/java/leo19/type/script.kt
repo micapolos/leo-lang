@@ -8,9 +8,9 @@ import leo14.Script
 import leo14.fieldTo
 import leo14.lineTo
 import leo14.script
-import leo19.term.eval.ArrayValue
-import leo19.term.eval.IntValue
-import leo19.term.eval.Value
+import leo19.value.ArrayValue
+import leo19.value.IntValue
+import leo19.value.Value
 
 fun Type.script(value: Value): Script =
 	when (this) {
