@@ -2,31 +2,40 @@ package leo19.typed
 
 import leo.base.runIf
 import leo13.stack
+import leo19.term.Term
+import leo19.term.nullTerm
 import leo19.term.term
 import leo19.type.Case
 import leo19.type.Choice
 import leo19.type.ChoiceType
 import leo19.type.isSimple
+import leo19.type.isStatic
 import leo19.type.plus
 import leo19.type.size
 
 data class TypedChoice(
-	val selectionOrNull: Selection?,
+	val termOrNull: Term?,
 	val choice: Choice
 )
 
 val emptyTypedChoice = TypedChoice(null, Choice(stack()))
 
 fun TypedChoice.plusSelected(field: TypedField) =
-	if (selectionOrNull != null) error("already selected")
-	else TypedChoice(field.typed.term.at(choice.size), choice.plus(field.typeCase))
+	if (termOrNull != null) error("already selected")
+	else TypedChoice(
+		term(choice.size).runIf(!choice.isSimple) {
+			term(this, field.typed.term)
+		},
+		choice.plus(field.typeCase))
 
 fun TypedChoice.plusIgnored(case: Case) =
-	TypedChoice(selectionOrNull, choice.plus(case))
+	TypedChoice(
+		termOrNull?.runIf(choice.isSimple && !case.type.isStatic) {
+			term(this, nullTerm)
+		},
+		choice.plus(case))
 
 val TypedChoice.typed: Typed
 	get() =
-		if (selectionOrNull == null) error("not selected")
-		else term(selectionOrNull.index)
-			.runIf(!choice.isSimple) { term(this, selectionOrNull.term) }
-			.of(ChoiceType(choice))
+		if (termOrNull == null) error("not selected")
+		else termOrNull.of(ChoiceType(choice))
