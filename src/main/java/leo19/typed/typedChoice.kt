@@ -1,6 +1,5 @@
 package leo19.typed
 
-import leo.base.indexed
 import leo.base.runIf
 import leo13.stack
 import leo19.term.term
