@@ -20,6 +20,7 @@ import leo19.term.plus
 import leo19.term.reflectScript
 import leo19.term.term
 import leo19.type.ArrowType
+import leo19.type.Struct
 import leo19.type.Type
 import leo19.type.caseTo
 import leo19.type.choiceOrNull

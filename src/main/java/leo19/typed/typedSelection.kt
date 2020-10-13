@@ -1,6 +1,10 @@
 package leo19.typed
 
-data class TypedSelection(
-	val field: TypedField,
-	val caseIndex: Int
+import leo19.term.Term
+
+data class Selection(
+	val term: Term,
+	val index: Int
 )
+
+fun Term.at(index: Int) = Selection(this, index)
