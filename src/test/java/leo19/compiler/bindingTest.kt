@@ -19,14 +19,14 @@ import kotlin.test.Test
 class BindingTest {
 	@Test
 	fun arrowBinding_match() {
-		binding(Arrow(struct("zero"), struct("one")))
+		functionBinding(Arrow(struct("zero"), struct("one")))
 			.resolveOrNull(term(variable(128)).of(struct("zero")), 64)
 			.assertEqualTo(term(variable(64)).invoke(term(variable(128))).of(struct("one")))
 	}
 
 	@Test
 	fun arrowBinding_mismatch() {
-		binding(Arrow(struct("zero"), struct("one")))
+		functionBinding(Arrow(struct("zero"), struct("one")))
 			.resolveOrNull(term(variable(128)).of(struct("one")), 64)
 			.assertNull
 	}

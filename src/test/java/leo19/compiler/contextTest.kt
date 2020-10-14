@@ -2,6 +2,8 @@ package leo19.compiler
 
 import leo.base.assertEqualTo
 import leo13.stack
+import leo19.term.function
+import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
@@ -9,6 +11,8 @@ import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
 import leo19.type.struct
+import leo19.typed.of
+import leo19.typed.typed
 import kotlin.test.Test
 
 class ContextTest {
@@ -25,12 +29,12 @@ class ContextTest {
 			.defineChoice(choice("zero" caseTo struct()))
 			.assertEqualTo(
 				Context(
-					stack(term(0)),
 					resolver(
-						binding(
+						functionBinding(
 							Arrow(
 								struct("zero" fieldTo struct()),
-								choice("zero" caseTo struct()))))))
+								choice("zero" caseTo struct())))),
+					stack(term(0))))
 	}
 
 	@Test
@@ -39,12 +43,12 @@ class ContextTest {
 			.defineChoice(choice("zero" caseTo choice()))
 			.assertEqualTo(
 				Context(
-					stack(term(term(0), term(variable(0)))),
 					resolver(
-						binding(
+						functionBinding(
 							Arrow(
 								struct("zero" fieldTo choice()),
-								choice("zero" caseTo choice()))))))
+								choice("zero" caseTo choice())))),
+					stack(term(term(0), term(variable(0))))))
 	}
 
 	@Test
@@ -54,12 +58,12 @@ class ContextTest {
 			.defineChoice(type)
 			.assertEqualTo(
 				Context(
-					stack(term(0)),
 					resolver(
-						binding(
+						functionBinding(
 							Arrow(
 								struct("bit" fieldTo struct("zero" fieldTo struct())),
-								type)))))
+								type))),
+					stack(term(0))))
 	}
 
 	@Test
@@ -69,17 +73,37 @@ class ContextTest {
 			.defineChoice(type)
 			.assertEqualTo(
 				Context(
-					stack(
-						term(0),
-						term(1)),
 					resolver(
-						binding(
+						functionBinding(
 							Arrow(
 								struct("zero" fieldTo struct()),
 								type)),
-						binding(
+						functionBinding(
 							Arrow(
 								struct("one" fieldTo struct()),
-								type)))))
+								type))),
+					stack(
+						term(0),
+						term(1))))
+	}
+
+	@Test
+	fun defineIs() {
+		emptyContext
+			.defineIs(struct("zero"), term(variable(128)).of(struct("one")))
+			.assertEqualTo(
+				Context(
+					emptyResolver.plus(constantBinding(Arrow(struct("zero"), struct("one")))),
+					stack(term(variable(128)))))
+	}
+
+	@Test
+	fun defineGives() {
+		emptyContext
+			.defineGives(struct("zero"), term(variable(128)).of(struct("one")))
+			.assertEqualTo(
+				Context(
+					emptyResolver.plus(functionBinding(Arrow(struct("zero"), struct("one")))),
+					stack(term(function(term(variable(128)))))))
 	}
 }

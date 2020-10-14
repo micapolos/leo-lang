@@ -3,6 +3,8 @@ package leo19.compiler
 import leo.base.fold
 import leo.base.notNullOrError
 import leo.base.reverse
+import leo13.reverse
+import leo13.seq
 import leo14.FieldScriptLine
 import leo14.Literal
 import leo14.LiteralScriptLine
@@ -13,13 +15,13 @@ import leo14.ScriptLine
 import leo14.StringLiteral
 import leo14.isEmpty
 import leo14.lineSeq
+import leo14.lineTo
+import leo14.script
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.term
-import leo19.type.Arrow
 import leo19.type.choiceOrNull
 import leo19.type.contentOrNull
-import leo19.type.fieldTo
 import leo19.type.struct
 import leo19.type.structOrNull
 import leo19.typed.Typed
@@ -33,16 +35,23 @@ import leo19.typed.make
 import leo19.typed.nullTyped
 import leo19.typed.of
 import leo19.typed.plus
+import leo19.typed.reflectScript
 import leo19.typed.typed
 
 data class Compiler(
-	val resolver: Resolver,
+	val context: Context,
 	val typed: Typed
-)
+) {
+	override fun toString() = reflect.toString()
+}
 
-val emptyCompiler = Compiler(emptyResolver, nullTyped)
+val Compiler.reflect: ScriptLine
+	get() =
+		"compiler" lineTo script(context.reflect, "typed" lineTo typed.reflectScript)
 
-fun Resolver.compiler(typed: Typed) =
+val emptyCompiler = Compiler(emptyContext, nullTyped)
+
+fun Context.compiler(typed: Typed) =
 	Compiler(this, typed)
 
 fun Compiler.plus(script: Script): Compiler =
@@ -64,27 +73,29 @@ fun Compiler.plus(scriptField: ScriptField) =
 	if (scriptField.string == "give") plusGive(scriptField.rhs)
 	else if (scriptField.string == "choice") plusChoice(scriptField.rhs)
 	else if (scriptField.string == "switch") plusSwitch(scriptField.rhs)
+	else if (scriptField.string == "define") plusDefine(scriptField.rhs)
 	else if (scriptField.string == "as") plusAs(scriptField.rhs)
 	else if (scriptField.rhs.isEmpty) plus(scriptField.string)
 	else plus(
 		TypedField(
 			scriptField.string,
-			Compiler(resolver, nullTyped).plus(scriptField.rhs).typed))
+			context.typed(scriptField.rhs)))
 
 fun Compiler.plusGive(script: Script): Compiler =
-	resolver
+	context.resolver
 		.plus(binding(typed.type.structOrNull!!))
+		.emptyContext
 		.typed(script)
 		.let { giveTyped ->
 			set(term(function(giveTyped.term)).invoke(typed.term).of(giveTyped.type))
 		}
 
 fun Compiler.plusChoice(script: Script): Compiler =
-	set(resolver.choice(script).typed)
+	set(context.resolver.choice(script).typed)
 
 fun Compiler.plusSwitch(script: Script): Compiler =
 	plus(
-		resolver.switchCompiler(
+		context.resolver.switchCompiler(
 			typed.type
 				.contentOrNull.notNullOrError("not a struct")
 				.choiceOrNull.notNullOrError("not a choice")
@@ -95,6 +106,9 @@ fun Compiler.plusSwitch(script: Script): Compiler =
 
 fun Compiler.plus(switch: TypedSwitch): Compiler =
 	set(typed.invoke(switch))
+
+fun Compiler.plusDefine(script: Script): Compiler =
+	copy(context = DefineCompiler(context, struct()).plus(script).compiledContext)
 
 fun Compiler.plusAs(script: Script): Compiler =
 	set(typed.castTo(script.type))
@@ -126,5 +140,9 @@ val Compiler.resolve: Compiler
 
 val Compiler.maybeResolve: Compiler?
 	get() =
-		resolver.resolveOrNull(typed)
+		context.resolver.resolveOrNull(typed)
 			?.let { set(it) }
+
+val Compiler.compiledTyped
+	get() =
+		typed.term.fold(context.scope.reverse.seq) { invoke(it) }.of(typed.type)

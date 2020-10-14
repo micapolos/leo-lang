@@ -9,9 +9,6 @@ import leo14.Script
 import leo14.ScriptField
 import leo14.fieldOrNull
 import leo14.lineSeq
-import leo19.type.Arrow
-import leo19.type.field
-import leo19.type.struct
 import leo19.type.structOrNull
 import leo19.typed.fieldTo
 import leo19.typed.nullTyped
@@ -32,6 +29,7 @@ fun SwitchCompiler.plus(scriptField: ScriptField): SwitchCompiler =
 		copy(switchBuilder = switchBuilder.plus(
 			scriptField.string fieldTo resolver
 				.plus(binding(case.type.structOrNull!!))
+				.emptyContext
 				.compiler(nullTyped)
 				.plus(scriptField.rhs)
 				.typed))

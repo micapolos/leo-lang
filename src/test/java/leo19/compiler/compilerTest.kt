@@ -1,8 +1,10 @@
 package leo19.compiler
 
 import leo.base.assertEqualTo
+import leo14.lambda.runtime.invoke
 import leo14.lineTo
 import leo14.script
+import leo14.syntax.type
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.nullTerm
@@ -120,10 +122,11 @@ class CompilerTest {
 	fun resolve() {
 		emptyResolver
 			.plus(
-				binding(
+				functionBinding(
 					Arrow(
 						struct("bit" fieldTo struct("zero" fieldTo struct())),
 						bitType)))
+			.emptyContext
 			.typed(script("bit" lineTo script("zero")))
 			.assertEqualTo(
 				term(variable(0))
@@ -135,15 +138,16 @@ class CompilerTest {
 	fun resolveDynamic() {
 		emptyResolver
 			.plus(
-				binding(
+				functionBinding(
 					Arrow(
 						struct("bit" fieldTo struct("zero" fieldTo struct())),
 						bitType)))
 			.plus(
-				binding(
+				functionBinding(
 					Arrow(
 						bitType.plus("boolean" fieldTo struct()),
 						booleanType)))
+			.emptyContext
 			.typed(
 				script(
 					"bit" lineTo script("zero"),

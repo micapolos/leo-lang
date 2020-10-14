@@ -8,7 +8,14 @@ import leo13.onlyOrNull
 import leo13.push
 import leo13.seq
 import leo13.stack
+import leo14.Script
+import leo14.ScriptLine
+import leo14.lineTo
+import leo14.reflectOrEmptyScript
+import leo14.script
 import leo19.term.Term
+import leo19.term.function
+import leo19.term.reflect
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
@@ -21,13 +28,26 @@ import leo19.type.field
 import leo19.type.fieldTo
 import leo19.type.isSimple
 import leo19.type.struct
+import leo19.typed.Typed
+import leo19.typed.nullTyped
 
 data class Context(
-	val termStack: Stack<Term>,
-	val resolver: Resolver
-)
+	val resolver: Resolver,
+	val scope: Stack<Term>
+) {
+	override fun toString() = reflect.toString()
+}
 
-val emptyContext = Context(stack(), emptyResolver)
+val Context.reflect: ScriptLine
+	get() =
+		"context" lineTo script(
+			resolver.reflect,
+			"scope" lineTo scope.reflectOrEmptyScript { reflect })
+
+fun Resolver.context(termStack: Stack<Term>) = Context(this, termStack)
+val Resolver.emptyContext get() = context(stack())
+
+val emptyContext = Context(emptyResolver, stack())
 
 fun Context.defineChoice(type: Type): Context =
 	defineChoice(type) { it }
@@ -36,14 +56,14 @@ fun Context.define(choice: Choice, wrapFn: (Type) -> Type): Context =
 	choice.isSimple.let { isSimple ->
 		fold(choice.caseStack.seq.reverse.indexed) { indexedCase ->
 			Context(
-				termStack.push(
-					if (isSimple) term(indexedCase.index)
-					else term(term(indexedCase.index), term(variable(0)))),
 				resolver.plus(
-					binding(
+					functionBinding(
 						Arrow(
 							wrapFn(struct(indexedCase.value.field)),
-							wrapFn(ChoiceType(choice))))))
+							wrapFn(ChoiceType(choice))))),
+				scope.push(
+					if (isSimple) term(indexedCase.index)
+					else term(term(indexedCase.index), term(variable(0)))))
 		}
 	}
 
@@ -58,3 +78,16 @@ fun Context.defineChoice(type: Type, wrapFn: (Type) -> Type): Context =
 		is ChoiceType -> define(type.choice, wrapFn)
 		is ArrowType -> null
 	}!!
+
+fun Context.defineIs(type: Type, typed: Typed): Context =
+	Context(
+		resolver.plus(constantBinding(Arrow(type, typed.type))),
+		scope.push(typed.term))
+
+fun Context.defineGives(type: Type, typed: Typed): Context =
+	Context(
+		resolver.plus(functionBinding(Arrow(type, typed.type))),
+		scope.push(term(function(typed.term))))
+
+fun Context.typed(script: Script): Typed =
+	Compiler(this, nullTyped).plus(script).compiledTyped

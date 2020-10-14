@@ -9,6 +9,10 @@ import leo14.literal
 import leo14.plus
 import leo14.script
 
+val Term.reflect: ScriptLine
+	get() =
+		"term" lineTo reflectScript
+
 val Term.reflectScript: Script
 	get() =
 		when (this) {

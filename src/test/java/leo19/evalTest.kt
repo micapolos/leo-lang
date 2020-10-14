@@ -138,7 +138,6 @@ class EvalTest {
 			.assertGives(script(_one()))
 	}
 
-
 	@Test
 	fun give_dynamic() {
 		script(
