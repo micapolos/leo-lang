@@ -18,14 +18,28 @@ import kotlin.test.Test
 
 class BindingTest {
 	@Test
-	fun arrowBinding_match() {
+	fun constantBinding_match() {
+		constantBinding(Arrow(type("zero"), type("one")))
+			.resolveOrNull(term(variable(128)).of(type("zero")), 64)
+			.assertEqualTo(term(variable(64)).of(type("one")))
+	}
+
+	@Test
+	fun constantBinding_mismatch() {
+		constantBinding(Arrow(type("zero"), type("one")))
+			.resolveOrNull(term(variable(128)).of(type("one")), 64)
+			.assertNull
+	}
+
+	@Test
+	fun functionBinding_match() {
 		functionBinding(Arrow(type("zero"), type("one")))
 			.resolveOrNull(term(variable(128)).of(type("zero")), 64)
 			.assertEqualTo(term(variable(64)).invoke(term(variable(128))).of(type("one")))
 	}
 
 	@Test
-	fun arrowBinding_mismatch() {
+	fun functionBinding_mismatch() {
 		functionBinding(Arrow(type("zero"), type("one")))
 			.resolveOrNull(term(variable(128)).of(type("one")), 64)
 			.assertNull

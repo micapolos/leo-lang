@@ -145,4 +145,4 @@ val Compiler.maybeResolve: Compiler?
 
 val Compiler.compiledTyped
 	get() =
-		typed.term.fold(context.scope.reverse.seq) { invoke(it) }.of(typed.type)
+		context.scope.wrap(typed.term).of(typed.type)

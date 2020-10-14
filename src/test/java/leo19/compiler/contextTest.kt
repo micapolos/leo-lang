@@ -32,7 +32,7 @@ class ContextTest {
 							Arrow(
 								type("zero" fieldTo type()),
 								choice("zero" caseTo type())))),
-					stack(term(0))))
+					scope(term(0))))
 	}
 
 	@Test
@@ -46,7 +46,7 @@ class ContextTest {
 							Arrow(
 								type("zero" fieldTo choice()),
 								choice("zero" caseTo choice())))),
-					stack(term(term(0), term(variable(0))))))
+					scope(term(term(0), term(variable(0))))))
 	}
 
 	@Test
@@ -61,7 +61,7 @@ class ContextTest {
 							Arrow(
 								type("bit" fieldTo type("zero" fieldTo type())),
 								type))),
-					stack(term(0))))
+					scope(term(0))))
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class ContextTest {
 							Arrow(
 								type("one" fieldTo type()),
 								type))),
-					stack(
+					scope(
 						term(0),
 						term(1))))
 	}
@@ -92,7 +92,7 @@ class ContextTest {
 			.assertEqualTo(
 				Context(
 					emptyResolver.plus(constantBinding(Arrow(type("zero"), type("one")))),
-					stack(term(variable(128)))))
+					scope(term(variable(128)))))
 	}
 
 	@Test
@@ -102,6 +102,6 @@ class ContextTest {
 			.assertEqualTo(
 				Context(
 					emptyResolver.plus(functionBinding(Arrow(type("zero"), type("one")))),
-					stack(term(function(term(variable(128)))))))
+					scope(term(function(term(variable(128)))))))
 	}
 }

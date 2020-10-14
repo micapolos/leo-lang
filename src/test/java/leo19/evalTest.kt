@@ -146,4 +146,42 @@ class EvalTest {
 			_give(_x()))
 			.assertGives(script(_x(_zero())))
 	}
+
+	@Test
+	fun defineIs() {
+		script(
+			_define(
+				_zero(),
+				_is(_one())))
+			.assertGives(script())
+	}
+
+	@Test
+	fun defineIsResolve() {
+		script(
+			_define(
+				_zero(),
+				_is(_one())),
+			_zero())
+			.assertGives(script(_one()))
+	}
+
+	@Test
+	fun defineGives() {
+		script(
+			_define(
+				_zero(),
+				_gives(_one())))
+			.assertGives(script())
+	}
+
+	@Test
+	fun defineGivesResolve() {
+		script(
+			_define(
+				_bit(_zero()),
+				_gives(_done(_bit()))),
+			_bit(_zero()))
+			.assertGives(script(_done(_bit(_zero()))))
+	}
 }

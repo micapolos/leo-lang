@@ -230,6 +230,6 @@ class CompilerTest {
 					"define" lineTo script(
 						"zero" lineTo script(),
 						"is" lineTo script("one"))))
-			.assertEqualTo(null)
+			.assertEqualTo(emptyContext.defineIs(type("zero"), typed("one")).compiler(typed()))
 	}
 }
