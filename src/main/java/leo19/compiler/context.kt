@@ -27,7 +27,7 @@ import leo19.type.Type
 import leo19.type.field
 import leo19.type.fieldTo
 import leo19.type.isSimple
-import leo19.type.struct
+import leo19.type.type
 import leo19.typed.Typed
 import leo19.typed.nullTyped
 
@@ -59,7 +59,7 @@ fun Context.define(choice: Choice, wrapFn: (Type) -> Type): Context =
 				resolver.plus(
 					functionBinding(
 						Arrow(
-							wrapFn(struct(indexedCase.value.field)),
+							wrapFn(type(indexedCase.value.field)),
 							wrapFn(ChoiceType(choice))))),
 				scope.push(
 					if (isSimple) term(indexedCase.index)
@@ -72,7 +72,7 @@ fun Context.defineChoice(type: Type, wrapFn: (Type) -> Type): Context =
 		is StructType ->
 			type.struct.fieldStack.onlyOrNull!!.let { field ->
 				defineChoice(field.type) { innerType ->
-					struct(field.name fieldTo wrapFn(innerType))
+					type(field.name fieldTo wrapFn(innerType))
 				}
 			}
 		is ChoiceType -> define(type.choice, wrapFn)

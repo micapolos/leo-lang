@@ -10,7 +10,7 @@ import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
 import leo19.type.giving
-import leo19.type.struct
+import leo19.type.type
 import kotlin.test.Test
 
 class CastTest {
@@ -20,12 +20,12 @@ class CastTest {
 	fun structToStruct() {
 		cast(
 			inputTerm,
-			struct(
-				"x" fieldTo struct("zero"),
-				"y" fieldTo struct("one")),
-			struct(
-				"x" fieldTo struct("zero"),
-				"y" fieldTo struct("one")))
+			type(
+				"x" fieldTo type("zero"),
+				"y" fieldTo type("one")),
+			type(
+				"x" fieldTo type("zero"),
+				"y" fieldTo type("one")))
 			.assertEqualTo(inputTerm)
 	}
 
@@ -33,8 +33,8 @@ class CastTest {
 	fun fieldToChoice_simple0() {
 		cast(
 			inputTerm,
-			struct("zero" fieldTo struct()),
-			choice("zero" caseTo struct(), "one" caseTo struct()))
+			type("zero" fieldTo type()),
+			choice("zero" caseTo type(), "one" caseTo type()))
 			.assertEqualTo(term(0))
 	}
 
@@ -42,8 +42,8 @@ class CastTest {
 	fun fieldToChoice_simple1() {
 		cast(
 			inputTerm,
-			struct("one" fieldTo struct()),
-			choice("zero" caseTo struct(), "one" caseTo struct()))
+			type("one" fieldTo type()),
+			choice("zero" caseTo type(), "one" caseTo type()))
 			.assertEqualTo(term(1))
 	}
 
@@ -51,7 +51,7 @@ class CastTest {
 	fun fieldToChoice_complex0() {
 		cast(
 			inputTerm,
-			struct("zero" fieldTo choice()),
+			type("zero" fieldTo choice()),
 			choice("zero" caseTo choice(), "one" caseTo choice()))
 			.assertEqualTo(term(term(0), inputTerm))
 	}
@@ -60,7 +60,7 @@ class CastTest {
 	fun fieldToChoice_complex1() {
 		cast(
 			inputTerm,
-			struct("one" fieldTo choice()),
+			type("one" fieldTo choice()),
 			choice("zero" caseTo choice(), "one" caseTo choice()))
 			.assertEqualTo(term(term(1), inputTerm))
 	}
@@ -69,7 +69,7 @@ class CastTest {
 	fun arrowToArrow() {
 		cast(
 			inputTerm,
-			struct("zero") giving choice("true".case, "false".case),
+			type("zero") giving choice("true".case, "false".case),
 			choice("zero".case, "one".case) giving choice("true".case, "false".case))
 			.assertEqualTo(term(function(inputTerm.invoke(term(0)))))
 	}
@@ -78,8 +78,8 @@ class CastTest {
 	fun arrowToArrow2() {
 		cast(
 			inputTerm,
-			struct("zero") giving choice("true".case, "false".case),
-			struct("zero") giving struct("true"))
+			type("zero") giving choice("true".case, "false".case),
+			type("zero") giving type("true"))
 			.assertEqualTo(term(function(term(0))))
 	}
 }

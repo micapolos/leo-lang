@@ -18,7 +18,7 @@ import leo19.type.Type
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
-import leo19.type.struct
+import leo19.type.type
 
 val Script.type: Type
 	get() =
@@ -26,7 +26,7 @@ val Script.type: Type
 
 val Script.structType: Type
 	get() =
-		struct(*fieldList.toTypedArray())
+		type(*fieldList.toTypedArray())
 
 val Script.choiceTypeOrNull: Type?
 	get() =

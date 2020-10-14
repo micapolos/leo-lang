@@ -14,7 +14,7 @@ import leo19.type.Struct
 import leo19.type.isStatic
 import leo19.type.nameOrNull
 import leo19.type.reflectScript
-import leo19.type.struct
+import leo19.type.type
 import leo19.typed.Typed
 import leo19.typed.indexedFieldOrNull
 import leo19.typed.of
@@ -52,8 +52,8 @@ fun Binding.resolveOrNull(typed: Typed, index: Int): Typed? =
 		is StructBinding ->
 			typed.type.nameOrNull?.let { name ->
 				struct.indexedFieldOrNull(name)?.let { indexedField ->
-					if (indexedField.value.isStatic) nullTerm.of(struct(indexedField.value))
-					else term(variable(index)).get(term(indexedField.index)).of(struct(indexedField.value))
+					if (indexedField.value.isStatic) nullTerm.of(type(indexedField.value))
+					else term(variable(index)).get(term(indexedField.index)).of(type(indexedField.value))
 				}
 			}
 		is FunctionBinding ->

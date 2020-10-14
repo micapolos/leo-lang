@@ -8,7 +8,7 @@ import leo19.term.term
 import leo19.term.variable
 import leo19.type.choice
 import leo19.type.fieldTo
-import leo19.type.struct
+import leo19.type.type
 import kotlin.test.Test
 
 class TypedTest {
@@ -20,43 +20,43 @@ class TypedTest {
 	@Test
 	fun getField() {
 		term(variable(0))
-			.of(struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo choice())))
+			.of(type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo choice())))
 			.getOrNull("x")
-			.assertEqualTo(term(variable(0)).get(term(0)).of(struct("x" fieldTo choice())))
+			.assertEqualTo(term(variable(0)).get(term(0)).of(type("x" fieldTo choice())))
 
 		term(variable(0))
-			.of(struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo choice())))
+			.of(type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo choice())))
 			.getOrNull("y")
-			.assertEqualTo(term(variable(0)).get(term(1)).of(struct("y" fieldTo choice())))
+			.assertEqualTo(term(variable(0)).get(term(1)).of(type("y" fieldTo choice())))
 
 		term(variable(0))
-			.of(struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo choice())))
+			.of(type("point" fieldTo type("x" fieldTo type(), "y" fieldTo choice())))
 			.getOrNull("x")
-			.assertEqualTo(nullTerm.of(struct("x" fieldTo struct())))
+			.assertEqualTo(nullTerm.of(type("x" fieldTo type())))
 
 		term(variable(0))
-			.of(struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo choice())))
+			.of(type("point" fieldTo type("x" fieldTo type(), "y" fieldTo choice())))
 			.getOrNull("y")
-			.assertEqualTo(term(variable(0)).of(struct("y" fieldTo choice())))
+			.assertEqualTo(term(variable(0)).of(type("y" fieldTo choice())))
 
 		term(variable(0))
-			.of(struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo struct())))
+			.of(type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo type())))
 			.getOrNull("x")
-			.assertEqualTo(term(variable(0)).of(struct("x" fieldTo choice())))
+			.assertEqualTo(term(variable(0)).of(type("x" fieldTo choice())))
 
 		term(variable(0))
-			.of(struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo struct())))
+			.of(type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo type())))
 			.getOrNull("y")
-			.assertEqualTo(nullTerm.of(struct("y" fieldTo struct())))
+			.assertEqualTo(nullTerm.of(type("y" fieldTo type())))
 
 		term(variable(0))
-			.of(struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo struct())))
+			.of(type("point" fieldTo type("x" fieldTo type(), "y" fieldTo type())))
 			.getOrNull("x")
-			.assertEqualTo(nullTerm.of(struct("x" fieldTo struct())))
+			.assertEqualTo(nullTerm.of(type("x" fieldTo type())))
 
 		term(variable(0))
-			.of(struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo struct())))
+			.of(type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo type())))
 			.getOrNull("y")
-			.assertEqualTo(nullTerm.of(struct("y" fieldTo struct())))
+			.assertEqualTo(nullTerm.of(type("y" fieldTo type())))
 	}
 }

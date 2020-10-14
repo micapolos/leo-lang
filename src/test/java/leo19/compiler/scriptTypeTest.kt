@@ -7,7 +7,7 @@ import leo19.type.giving
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
-import leo19.type.struct
+import leo19.type.type
 import kotlin.test.Test
 
 class ScriptTypeTest {
@@ -18,9 +18,9 @@ class ScriptTypeTest {
 			"y" lineTo script())
 			.type
 			.assertEqualTo(
-				struct(
-					"x" fieldTo struct(),
-					"y" fieldTo struct()))
+				type(
+					"x" fieldTo type(),
+					"y" fieldTo type()))
 
 	}
 
@@ -33,8 +33,8 @@ class ScriptTypeTest {
 			.type
 			.assertEqualTo(
 				choice(
-					"zero" caseTo struct(),
-					"one" caseTo struct()))
+					"zero" caseTo type(),
+					"one" caseTo type()))
 
 	}
 
@@ -46,7 +46,7 @@ class ScriptTypeTest {
 				"one" lineTo script()))
 			.type
 			.assertEqualTo(
-				struct("zero" fieldTo struct()).giving(struct("one" fieldTo struct())))
+				type("zero" fieldTo type()).giving(type("one" fieldTo type())))
 
 	}
 }

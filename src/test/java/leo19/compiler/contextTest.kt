@@ -3,16 +3,14 @@ package leo19.compiler
 import leo.base.assertEqualTo
 import leo13.stack
 import leo19.term.function
-import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
-import leo19.type.struct
+import leo19.type.type
 import leo19.typed.of
-import leo19.typed.typed
 import kotlin.test.Test
 
 class ContextTest {
@@ -26,14 +24,14 @@ class ContextTest {
 	@Test
 	fun defineChoice_simple() {
 		emptyContext
-			.defineChoice(choice("zero" caseTo struct()))
+			.defineChoice(choice("zero" caseTo type()))
 			.assertEqualTo(
 				Context(
 					resolver(
 						functionBinding(
 							Arrow(
-								struct("zero" fieldTo struct()),
-								choice("zero" caseTo struct())))),
+								type("zero" fieldTo type()),
+								choice("zero" caseTo type())))),
 					stack(term(0))))
 	}
 
@@ -46,14 +44,14 @@ class ContextTest {
 					resolver(
 						functionBinding(
 							Arrow(
-								struct("zero" fieldTo choice()),
+								type("zero" fieldTo choice()),
 								choice("zero" caseTo choice())))),
 					stack(term(term(0), term(variable(0))))))
 	}
 
 	@Test
 	fun defineChoice_deep() {
-		val type = struct("bit" fieldTo choice("zero" caseTo struct()))
+		val type = type("bit" fieldTo choice("zero" caseTo type()))
 		emptyContext
 			.defineChoice(type)
 			.assertEqualTo(
@@ -61,14 +59,14 @@ class ContextTest {
 					resolver(
 						functionBinding(
 							Arrow(
-								struct("bit" fieldTo struct("zero" fieldTo struct())),
+								type("bit" fieldTo type("zero" fieldTo type())),
 								type))),
 					stack(term(0))))
 	}
 
 	@Test
 	fun defineChoice_twoCases() {
-		val type = choice("zero" caseTo struct(), "one" caseTo struct())
+		val type = choice("zero" caseTo type(), "one" caseTo type())
 		emptyContext
 			.defineChoice(type)
 			.assertEqualTo(
@@ -76,11 +74,11 @@ class ContextTest {
 					resolver(
 						functionBinding(
 							Arrow(
-								struct("zero" fieldTo struct()),
+								type("zero" fieldTo type()),
 								type)),
 						functionBinding(
 							Arrow(
-								struct("one" fieldTo struct()),
+								type("one" fieldTo type()),
 								type))),
 					stack(
 						term(0),
@@ -90,20 +88,20 @@ class ContextTest {
 	@Test
 	fun defineIs() {
 		emptyContext
-			.defineIs(struct("zero"), term(variable(128)).of(struct("one")))
+			.defineIs(type("zero"), term(variable(128)).of(type("one")))
 			.assertEqualTo(
 				Context(
-					emptyResolver.plus(constantBinding(Arrow(struct("zero"), struct("one")))),
+					emptyResolver.plus(constantBinding(Arrow(type("zero"), type("one")))),
 					stack(term(variable(128)))))
 	}
 
 	@Test
 	fun defineGives() {
 		emptyContext
-			.defineGives(struct("zero"), term(variable(128)).of(struct("one")))
+			.defineGives(type("zero"), term(variable(128)).of(type("one")))
 			.assertEqualTo(
 				Context(
-					emptyResolver.plus(functionBinding(Arrow(struct("zero"), struct("one")))),
+					emptyResolver.plus(functionBinding(Arrow(type("zero"), type("one")))),
 					stack(term(function(term(variable(128)))))))
 	}
 }

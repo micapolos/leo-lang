@@ -1,15 +1,15 @@
 package leo19.type
 
-val void = struct()
+val void = type()
 
 val bitType =
-	struct(
+	type(
 		"bit" fieldTo choice(
 			"zero" caseTo void,
 			"one" caseTo void))
 
 val booleanType =
-	struct(
+	type(
 		"boolean" fieldTo choice(
 			"true" caseTo void,
 			"false" caseTo void))

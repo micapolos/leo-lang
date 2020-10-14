@@ -9,23 +9,23 @@ import kotlin.test.Test
 class ScriptTest {
 	@Test
 	fun emptyStructScript() {
-		struct()
+		type()
 			.script(value())
 			.assertEqualTo(script())
 	}
 
 	@Test
 	fun simpleStructScript() {
-		struct("number" fieldTo struct())
+		type("number" fieldTo type())
 			.script(value())
 			.assertEqualTo(script("number" lineTo script()))
 	}
 
 	@Test
 	fun complexStructScript() {
-		struct(
-			"x" fieldTo choice("zero" caseTo struct(), "one" caseTo struct()),
-			"y" fieldTo choice("zero" caseTo struct(), "one" caseTo struct()))
+		type(
+			"x" fieldTo choice("zero" caseTo type(), "one" caseTo type()),
+			"y" fieldTo choice("zero" caseTo type(), "one" caseTo type()))
 			.script(value(value(0), value(1)))
 			.assertEqualTo(
 				script(
@@ -36,8 +36,8 @@ class ScriptTest {
 	@Test
 	fun simpleChoiceScript() {
 		val type = choice(
-			"false" caseTo struct(),
-			"true" caseTo struct())
+			"false" caseTo type(),
+			"true" caseTo type())
 		type
 			.script(value(0))
 			.assertEqualTo(script("false"))
@@ -50,8 +50,8 @@ class ScriptTest {
 	fun complexChoiceScript() {
 		val type =
 			choice(
-				"boolean" caseTo choice("false" caseTo struct(), "true" caseTo struct()),
-				"bit" caseTo choice("zero" caseTo struct(), "one" caseTo struct()))
+				"boolean" caseTo choice("false" caseTo type(), "true" caseTo type()),
+				"bit" caseTo choice("zero" caseTo type(), "one" caseTo type()))
 		type
 			.script(value(value(0), value(0)))
 			.assertEqualTo(script("boolean" lineTo script("false")))

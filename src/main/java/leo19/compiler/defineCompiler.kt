@@ -11,7 +11,7 @@ import leo14.lineSeq
 import leo19.type.Type
 import leo19.type.fieldTo
 import leo19.type.plus
-import leo19.type.struct
+import leo19.type.type
 
 data class DefineCompiler(
 	val context: Context,
@@ -19,7 +19,7 @@ data class DefineCompiler(
 )
 
 fun Context.defineCompiler(type: Type) = DefineCompiler(this, type)
-val emptyDefineCompiler = emptyContext.defineCompiler(struct())
+val emptyDefineCompiler = emptyContext.defineCompiler(type())
 
 fun DefineCompiler.plus(script: Script): DefineCompiler =
 	fold(script.lineSeq.reverse.map { it.fieldOrNull!! }) { plus(it) }
@@ -34,18 +34,18 @@ fun DefineCompiler.plus(scriptField: ScriptField): DefineCompiler =
 fun DefineCompiler.plusIs(script: Script): DefineCompiler =
 	DefineCompiler(
 		context.defineIs(type, context.typed(script)),
-		struct())
+		type())
 
 fun DefineCompiler.plusGives(script: Script): DefineCompiler =
 	DefineCompiler(
 		context.defineGives(type, context.typed(script)),
-		struct())
+		type())
 
 fun DefineCompiler.plusRaw(scriptField: ScriptField): DefineCompiler =
 	copy(type = type.plus(
 		scriptField.string fieldTo
-			copy(type = struct()).plus(scriptField.rhs).type))
+			copy(type = type()).plus(scriptField.rhs).type))
 
 val DefineCompiler.compiledContext
 	get() =
-		notNullIf(type == struct()) { context }.notNullOrError("non empty type")
+		notNullIf(type == type()) { context }.notNullOrError("non empty type")

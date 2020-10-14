@@ -4,7 +4,7 @@ import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
 import leo19.type.caseTo
-import leo19.type.struct
+import leo19.type.type
 import leo19.typed.emptyTypedChoice
 import leo19.typed.fieldTo
 import leo19.typed.plusNo
@@ -23,7 +23,7 @@ class ChoiceCompilerTest {
 					"yes" lineTo script("square" lineTo script("side"))))
 			.assertEqualTo(
 				emptyTypedChoice
-					.plusNo("circle" caseTo struct("radius"))
+					.plusNo("circle" caseTo type("radius"))
 					.plusYes("square" fieldTo typed("side")))
 	}
 

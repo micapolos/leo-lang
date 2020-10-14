@@ -25,8 +25,7 @@ import leo19.type.field
 import leo19.type.isComplex
 import leo19.type.isStatic
 import leo19.type.reflectScript
-import leo19.type.script
-import leo19.type.struct
+import leo19.type.type
 import leo19.typed.Typed
 import leo19.typed.TypedChoice
 import leo19.typed.TypedField
@@ -69,7 +68,7 @@ val TypedStruct.script: Script
 
 val TypedChoice.script: Script
 	get() =
-		yesTerm.of(struct(choice.caseStack.toList().get(index).field)).script
+		yesTerm.of(type(choice.caseStack.toList().get(index).field)).script
 
 fun StructDecompiler.plus(term: Term): StructDecompiler =
 	remainingFieldStack.linkOrNull.notNullOrError("no more fields").let { fieldLink ->

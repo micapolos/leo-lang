@@ -9,7 +9,7 @@ import leo19.type.Struct
 import leo19.type.Type
 import leo19.type.contentOrNull
 import leo19.type.layoutSize
-import leo19.type.struct
+import leo19.type.type
 import leo19.type.structOrNull
 
 data class TypedStruct(val term: Term, val struct: Struct)
@@ -26,4 +26,4 @@ fun Struct.indexedFieldOrNull(name: String): IndexedValue<Field>? =
 	}
 
 fun Type.indexedOrNull(name: String): IndexedValue<Type>? =
-	contentOrNull?.structOrNull?.indexedFieldOrNull(name)?.run { index indexed struct(value) }
+	contentOrNull?.structOrNull?.indexedFieldOrNull(name)?.run { index indexed type(value) }

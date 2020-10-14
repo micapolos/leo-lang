@@ -22,7 +22,7 @@ import leo19.term.invoke
 import leo19.term.term
 import leo19.type.choiceOrNull
 import leo19.type.contentOrNull
-import leo19.type.struct
+import leo19.type.type
 import leo19.type.structOrNull
 import leo19.typed.Typed
 import leo19.typed.TypedField
@@ -108,7 +108,7 @@ fun Compiler.plus(switch: TypedSwitch): Compiler =
 	set(typed.invoke(switch))
 
 fun Compiler.plusDefine(script: Script): Compiler =
-	copy(context = DefineCompiler(context, struct()).plus(script).compiledContext)
+	copy(context = DefineCompiler(context, type()).plus(script).compiledContext)
 
 fun Compiler.plusAs(script: Script): Compiler =
 	set(typed.castTo(script.type))

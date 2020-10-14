@@ -5,7 +5,7 @@ import leo19.term.nullTerm
 import leo19.term.term
 import leo19.type.caseTo
 import leo19.type.choice
-import leo19.type.struct
+import leo19.type.type
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -13,35 +13,35 @@ class TypedChoiceTest {
 	@Test
 	fun simple() {
 		emptyTypedChoice
-			.plusNo("zero" caseTo struct())
-			.plusNo("one" caseTo struct())
+			.plusNo("zero" caseTo type())
+			.plusNo("one" caseTo type())
 			.plusYes("two" fieldTo typed())
-			.plusNo("three" caseTo struct())
+			.plusNo("three" caseTo type())
 			.typed
 			.assertEqualTo(
 				term(2)
 					.of(choice(
-						"zero" caseTo struct(),
-						"one" caseTo struct(),
-						"two" caseTo struct(),
-						"three" caseTo struct())))
+						"zero" caseTo type(),
+						"one" caseTo type(),
+						"two" caseTo type(),
+						"three" caseTo type())))
 	}
 
 	@Test
 	fun complex() {
 		emptyTypedChoice
 			.plusNo("zero" caseTo choice())
-			.plusNo("one" caseTo struct())
+			.plusNo("one" caseTo type())
 			.plusYes("two" fieldTo typed())
-			.plusNo("three" caseTo struct())
+			.plusNo("three" caseTo type())
 			.typed
 			.assertEqualTo(
 				term(term(2), nullTerm)
 					.of(choice(
 						"zero" caseTo choice(),
-						"one" caseTo struct(),
-						"two" caseTo struct(),
-						"three" caseTo struct())))
+						"one" caseTo type(),
+						"two" caseTo type(),
+						"three" caseTo type())))
 	}
 
 	@Test

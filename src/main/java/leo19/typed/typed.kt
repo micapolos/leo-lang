@@ -25,7 +25,7 @@ import leo19.type.isSimple
 import leo19.type.isStatic
 import leo19.type.plus
 import leo19.type.reflectScript
-import leo19.type.struct
+import leo19.type.type
 import leo19.type.structOrNull
 
 data class Typed(val term: Term, val type: Type) {
@@ -36,7 +36,7 @@ val Typed.reflectScript get() = term.reflectScript.plus("of" lineTo type.reflect
 
 infix fun Term.of(type: Type) = Typed(this, type)
 
-val nullTyped = Typed(nullTerm, struct())
+val nullTyped = Typed(nullTerm, type())
 
 fun typed(vararg fields: TypedField): Typed =
 	nullTyped.fold(fields) { plus(it) }
@@ -65,7 +65,7 @@ fun Typed.getOrNull(name: String): Typed? =
 	}
 
 fun Typed.make(name: String): Typed =
-	term.of(struct(name fieldTo type))
+	term.of(type(name fieldTo type))
 
 fun Typed.invoke(typed: Typed): Typed =
 	(type as ArrowType).arrow.let { arrow ->

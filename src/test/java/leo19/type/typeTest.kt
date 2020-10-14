@@ -8,36 +8,36 @@ import kotlin.test.Test
 class TypeTest {
 	@Test
 	fun indexedOrNull() {
-		struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo choice()))
+		type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo choice()))
 			.indexedOrNull("x")
-			.assertEqualTo(0 indexed struct("x" fieldTo choice()))
+			.assertEqualTo(0 indexed type("x" fieldTo choice()))
 
-		struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo choice()))
+		type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo choice()))
 			.indexedOrNull("y")
-			.assertEqualTo(1 indexed struct("y" fieldTo choice()))
+			.assertEqualTo(1 indexed type("y" fieldTo choice()))
 
-		struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo choice()))
+		type("point" fieldTo type("x" fieldTo type(), "y" fieldTo choice()))
 			.indexedOrNull("x")
-			.assertEqualTo(0 indexed struct("x" fieldTo struct()))
+			.assertEqualTo(0 indexed type("x" fieldTo type()))
 
-		struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo choice()))
+		type("point" fieldTo type("x" fieldTo type(), "y" fieldTo choice()))
 			.indexedOrNull("y")
-			.assertEqualTo(0 indexed struct("y" fieldTo choice()))
+			.assertEqualTo(0 indexed type("y" fieldTo choice()))
 
-		struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo struct()))
+		type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo type()))
 			.indexedOrNull("x")
-			.assertEqualTo(0 indexed struct("x" fieldTo choice()))
+			.assertEqualTo(0 indexed type("x" fieldTo choice()))
 
-		struct("point" fieldTo struct("x" fieldTo choice(), "y" fieldTo struct()))
+		type("point" fieldTo type("x" fieldTo choice(), "y" fieldTo type()))
 			.indexedOrNull("y")
-			.assertEqualTo(1 indexed struct("y" fieldTo struct()))
+			.assertEqualTo(1 indexed type("y" fieldTo type()))
 
-		struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo struct()))
+		type("point" fieldTo type("x" fieldTo type(), "y" fieldTo type()))
 			.indexedOrNull("x")
-			.assertEqualTo(0 indexed struct("x" fieldTo struct()))
+			.assertEqualTo(0 indexed type("x" fieldTo type()))
 
-		struct("point" fieldTo struct("x" fieldTo struct(), "y" fieldTo struct()))
+		type("point" fieldTo type("x" fieldTo type(), "y" fieldTo type()))
 			.indexedOrNull("y")
-			.assertEqualTo(0 indexed struct("y" fieldTo struct()))
+			.assertEqualTo(0 indexed type("y" fieldTo type()))
 	}
 }

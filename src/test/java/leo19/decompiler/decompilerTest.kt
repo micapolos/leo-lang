@@ -9,7 +9,7 @@ import leo19.type.case
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
-import leo19.type.struct
+import leo19.type.type
 import leo19.typed.of
 import org.junit.Test
 
@@ -42,9 +42,9 @@ class DecompilerTest {
 	fun struct_static() {
 		nullTerm
 			.of(
-				struct(
-					"x" fieldTo struct(),
-					"y" fieldTo struct()))
+				type(
+					"x" fieldTo type(),
+					"y" fieldTo type()))
 			.script
 			.assertEqualTo(
 				script(
@@ -56,8 +56,8 @@ class DecompilerTest {
 	fun struct_simple() {
 		term(0)
 			.of(
-				struct(
-					"x" fieldTo struct(),
+				type(
+					"x" fieldTo type(),
 					"y" fieldTo choice("zero".case, "one".case)))
 			.script
 			.assertEqualTo(
@@ -70,7 +70,7 @@ class DecompilerTest {
 	fun struct_complex() {
 		term(term(0), term(1))
 			.of(
-				struct(
+				type(
 					"x" fieldTo choice("zero".case, "one".case),
 					"y" fieldTo choice("zero".case, "one".case)))
 			.script

@@ -32,7 +32,7 @@ fun Struct.script(value: Value): Script =
 	}
 
 fun Choice.script(value: Value): Script =
-	if (caseStack.all { this.type == struct() })
+	if (caseStack.all { this.type == type() })
 		(value as IntValue).int.let { index ->
 			caseStack.toList()[index].run {
 				script(name fieldTo script())

@@ -1,10 +1,8 @@
 package leo19.compiler
 
 import leo.base.assertEqualTo
-import leo14.lambda.runtime.invoke
 import leo14.lineTo
 import leo14.script
-import leo14.syntax.type
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.nullTerm
@@ -17,7 +15,7 @@ import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
 import leo19.type.plus
-import leo19.type.struct
+import leo19.type.type
 import leo19.typed.castTo
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
@@ -124,7 +122,7 @@ class CompilerTest {
 			.plus(
 				functionBinding(
 					Arrow(
-						struct("bit" fieldTo struct("zero" fieldTo struct())),
+						type("bit" fieldTo type("zero" fieldTo type())),
 						bitType)))
 			.emptyContext
 			.typed(script("bit" lineTo script("zero")))
@@ -140,12 +138,12 @@ class CompilerTest {
 			.plus(
 				functionBinding(
 					Arrow(
-						struct("bit" fieldTo struct("zero" fieldTo struct())),
+						type("bit" fieldTo type("zero" fieldTo type())),
 						bitType)))
 			.plus(
 				functionBinding(
 					Arrow(
-						bitType.plus("boolean" fieldTo struct()),
+						bitType.plus("boolean" fieldTo type()),
 						booleanType)))
 			.emptyContext
 			.typed(
@@ -167,7 +165,7 @@ class CompilerTest {
 			.assertEqualTo(
 				term(function(nullTerm))
 					.invoke(nullTerm)
-					.of(struct("x" fieldTo struct("zero" fieldTo struct()))))
+					.of(type("x" fieldTo type("zero" fieldTo type()))))
 	}
 
 	@Test
@@ -184,9 +182,9 @@ class CompilerTest {
 				term(function(nullTerm))
 					.invoke(nullTerm)
 					.of(
-						struct(
-							"x" fieldTo struct("zero" fieldTo struct()),
-							"and" fieldTo struct("y" fieldTo struct("one" fieldTo struct())))))
+						type(
+							"x" fieldTo type("zero" fieldTo type()),
+							"and" fieldTo type("y" fieldTo type("one" fieldTo type())))))
 	}
 
 	@Test
@@ -202,10 +200,10 @@ class CompilerTest {
 			.assertEqualTo(
 				typed("bit" fieldTo typed("zero"))
 					.castTo(
-						struct(
+						type(
 							"bit" fieldTo choice(
-								"zero" caseTo struct(),
-								"one" caseTo struct()))))
+								"zero" caseTo type(),
+								"one" caseTo type()))))
 	}
 
 	@Test
