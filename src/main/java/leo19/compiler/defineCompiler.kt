@@ -18,6 +18,9 @@ data class DefineCompiler(
 	val type: Type
 )
 
+fun Context.defineCompiler(type: Type) = DefineCompiler(this, type)
+val emptyDefineCompiler = emptyContext.defineCompiler(struct())
+
 fun DefineCompiler.plus(script: Script): DefineCompiler =
 	fold(script.lineSeq.reverse.map { it.fieldOrNull!! }) { plus(it) }
 

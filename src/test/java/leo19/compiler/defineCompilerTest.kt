@@ -10,10 +10,27 @@ import kotlin.test.Test
 class DefineCompilerTest {
 	@Test
 	fun defineIs() {
-		DefineCompiler(
-			emptyContext,
-			struct("zero"))
-			.plus(script("is" lineTo script("one")))
-			.assertEqualTo(DefineCompiler(emptyContext.defineIs(struct("zero"), typed("one")), struct()))
+		emptyDefineCompiler
+			.plus(
+				script(
+					"zero" lineTo script(),
+					"is" lineTo script("one")))
+			.assertEqualTo(
+				emptyContext
+					.defineIs(struct("zero"), typed("one"))
+					.defineCompiler(struct()))
+	}
+
+	@Test
+	fun defineGives() {
+		emptyDefineCompiler
+			.plus(
+				script(
+					"zero" lineTo script(),
+					"gives" lineTo script("one")))
+			.assertEqualTo(
+				emptyContext
+					.defineGives(struct("zero"), typed("one"))
+					.defineCompiler(struct()))
 	}
 }

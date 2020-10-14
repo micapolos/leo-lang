@@ -223,4 +223,15 @@ class CompilerTest {
 							"yes" lineTo script("square" lineTo script("side"))))
 					.typed)
 	}
+
+	@Test
+	fun defineIs() {
+		emptyCompiler
+			.plus(
+				script(
+					"define" lineTo script(
+						"zero" lineTo script(),
+						"is" lineTo script("one"))))
+			.assertEqualTo(null)
+	}
 }
