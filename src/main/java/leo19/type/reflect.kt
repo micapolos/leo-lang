@@ -13,7 +13,6 @@ import kotlin.ranges.IntRange
 val Type.reflectScript: Script
 	get() =
 		when (this) {
-			is IntRangeType -> script(intRange.reflectScriptLine)
 			is StructType -> struct.reflectScript
 			is ChoiceType -> choice.reflectScript
 			is ArrowType -> arrow.reflectScript

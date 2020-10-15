@@ -3,6 +3,7 @@ package leo19.value
 import leo13.get
 import leo19.expr.ArrayExpr
 import leo19.expr.ArrayGetExpr
+import leo19.expr.EqualsExpr
 import leo19.expr.Expr
 import leo19.expr.FunctionExpr
 import leo19.expr.IntExpr
@@ -23,4 +24,5 @@ fun Scope.eval(expr: Expr): Value =
 			function.scope.push(eval(expr.param)).eval(function.body)
 		}
 		is VariableExpr -> stack.get(expr.index)!!
+		is EqualsExpr -> value(if (value(eval(expr.lhs)) == value(eval(expr.rhs))) 0 else 1)
 	}

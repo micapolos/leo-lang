@@ -1,5 +1,6 @@
 package leo19.expr
 
+import leo19.term.EqualsTerm
 import leo19.term.NullTerm
 import leo19.term.Term
 import leo19.term.function
@@ -18,4 +19,5 @@ val Expr.term: Term
 			is FunctionExpr -> term(function(body.term))
 			is InvokeExpr -> term(function.term).invoke(param.term)
 			is VariableExpr -> term(variable(index))
+			is EqualsExpr -> EqualsTerm(lhs.term, rhs.term)
 		}

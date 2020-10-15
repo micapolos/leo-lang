@@ -22,7 +22,6 @@ import leo19.term.nullTerm
 import leo19.type.ArrowType
 import leo19.type.ChoiceType
 import leo19.type.Field
-import leo19.type.IntRangeType
 import leo19.type.StructType
 import leo19.type.field
 import leo19.type.isComplex
@@ -53,7 +52,6 @@ val Typed.script: Script
 			is StructType -> term.of(type.struct).script
 			is ChoiceType -> term.of(type.choice).script
 			is ArrowType -> TODO()
-			is IntRangeType -> script(literal((term as IntTerm).int)) // TODO: Should it contain range?
 		}
 
 val TypedField.scriptLine: ScriptLine get() = name lineTo typed.script

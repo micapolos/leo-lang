@@ -11,7 +11,6 @@ val Type.isStatic: Boolean
 			is StructType -> struct.isStatic
 			is ChoiceType -> false
 			is ArrowType -> false
-			is IntRangeType -> intRange.first == intRange.last
 		}
 
 val Struct.isStatic get() = fieldStack.all { isStatic }

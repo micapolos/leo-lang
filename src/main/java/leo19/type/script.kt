@@ -19,7 +19,6 @@ fun Type.script(value: Value): Script =
 		is StructType -> struct.script(value)
 		is ChoiceType -> choice.script(value)
 		is ArrowType -> script("<function>" lineTo script())
-		is IntRangeType -> TODO()
 	}
 
 fun Struct.script(value: Value): Script =

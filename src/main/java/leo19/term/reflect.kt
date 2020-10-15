@@ -23,6 +23,7 @@ val Term.reflectScript: Script
 			is FunctionTerm -> script(function.reflectScriptLine)
 			is InvokeTerm -> function.reflectScript.plus("invoke" lineTo param.reflectScript)
 			is VariableTerm -> script(variable.reflectScriptLine)
+			is EqualsTerm -> lhs.reflectScript.plus("equals" lineTo rhs.reflectScript)
 		}
 
 val Function.reflectScriptLine

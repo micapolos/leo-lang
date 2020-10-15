@@ -7,6 +7,7 @@ import leo13.map
 import leo14.indentString
 import leo14.lineTo
 import leo14.plus
+import leo19.term.EqualsTerm
 import leo19.term.Term
 import leo19.term.function
 import leo19.term.get
@@ -17,6 +18,7 @@ import leo19.term.reflectScript
 import leo19.term.term
 import leo19.type.ArrowType
 import leo19.type.Type
+import leo19.type.booleanType
 import leo19.type.choiceOrNull
 import leo19.type.contentOrNull
 import leo19.type.fieldTo
@@ -25,8 +27,8 @@ import leo19.type.isSimple
 import leo19.type.isStatic
 import leo19.type.plus
 import leo19.type.reflectScript
-import leo19.type.type
 import leo19.type.structOrNull
+import leo19.type.type
 
 data class Typed(val term: Term, val type: Type) {
 	override fun toString() = reflectScript.indentString
@@ -86,3 +88,7 @@ fun Typed.invoke(switch: TypedSwitch): Typed =
 				.of(switch.typeOrNull!!)
 		}
 	}
+
+fun Typed.typedEquals(typed: Typed): Typed =
+	if (type != typed.type) error("type mismatch")
+	else EqualsTerm(term, typed.term).of(type("equals" fieldTo booleanType))

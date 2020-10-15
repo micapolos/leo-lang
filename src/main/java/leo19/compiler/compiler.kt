@@ -3,8 +3,6 @@ package leo19.compiler
 import leo.base.fold
 import leo.base.notNullOrError
 import leo.base.reverse
-import leo13.reverse
-import leo13.seq
 import leo14.FieldScriptLine
 import leo14.Literal
 import leo14.LiteralScriptLine
@@ -23,11 +21,11 @@ import leo19.term.term
 import leo19.type.choiceOrNull
 import leo19.type.contentOrNull
 import leo19.type.type
-import leo19.type.structOrNull
 import leo19.typed.Typed
 import leo19.typed.TypedField
 import leo19.typed.TypedSwitch
 import leo19.typed.castTo
+import leo19.typed.typedEquals
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.invoke
@@ -113,7 +111,13 @@ fun Compiler.plusAs(script: Script): Compiler =
 	set(typed.castTo(script.type))
 
 fun Compiler.plus(typedField: TypedField): Compiler =
-	set(typed.plus(typedField)).resolve
+	when (typedField.name) {
+		equalsKeyword -> plusEquals(typedField.typed)
+		else -> set(typed.plus(typedField)).resolve
+	}
+
+fun Compiler.plusEquals(rhs: Typed): Compiler =
+	set(typed.typedEquals(rhs))
 
 fun Compiler.plus(name: String): Compiler =
 	null

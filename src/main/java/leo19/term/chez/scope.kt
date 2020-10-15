@@ -3,6 +3,7 @@ package leo19.term.chez
 import leo13.toList
 import leo19.term.ArrayGetTerm
 import leo19.term.ArrayTerm
+import leo19.term.EqualsTerm
 import leo19.term.FunctionTerm
 import leo19.term.IntTerm
 import leo19.term.InvokeTerm
@@ -24,4 +25,5 @@ fun Scope.string(term: Term): String =
 		is FunctionTerm -> "(lambda (v${variableCount}) ${push.string(term.function.body)})"
 		is InvokeTerm -> "(${string(term.function)} ${string(term.param)})"
 		is VariableTerm -> "v${variableCount - term.variable.index - 1}"
+		is EqualsTerm -> "(equal? ${term.lhs} ${term.rhs})"
 	}
