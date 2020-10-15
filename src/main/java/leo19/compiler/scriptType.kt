@@ -10,14 +10,13 @@ import leo14.linkOrNull
 import leo14.onlyLineOrNull
 import leo14.rhsOrNull
 import leo16.names.*
-import leo19.type.Arrow
-import leo19.type.ArrowType
 import leo19.type.Case
 import leo19.type.Field
 import leo19.type.Type
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
+import leo19.type.giving
 import leo19.type.type
 
 val Script.type: Type
@@ -36,7 +35,7 @@ val Script.arrowTypeOrNull: Type?
 	get() =
 		linkOrNull?.let { link ->
 			link.line.fieldOrNull?.rhsOrNull(_giving)?.let { rhs ->
-				ArrowType(Arrow(link.lhs.type, rhs.type))
+				link.lhs.type.giving(rhs.type)
 			}
 		}
 

@@ -3,15 +3,12 @@ package leo19.compiler
 import leo.base.fold
 import leo.base.indexed
 import leo.base.reverse
-import leo13.Stack
 import leo13.onlyOrNull
 import leo13.seq
-import leo13.stack
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.script
-import leo19.term.Term
 import leo19.term.function
 import leo19.term.term
 import leo19.term.variable
@@ -21,6 +18,7 @@ import leo19.type.Choice
 import leo19.type.ChoiceType
 import leo19.type.StructType
 import leo19.type.Type
+import leo19.type.arrowTo
 import leo19.type.field
 import leo19.type.fieldTo
 import leo19.type.isSimple
@@ -78,12 +76,12 @@ fun Context.defineChoice(type: Type, wrapFn: (Type) -> Type): Context =
 
 fun Context.defineIs(type: Type, typed: Typed): Context =
 	Context(
-		resolver.plus(constantBinding(Arrow(type, typed.type))),
+		resolver.plus(constantBinding(type arrowTo typed.type)),
 		scope.plus(typed.term))
 
 fun Context.defineGives(type: Type, typed: Typed): Context =
 	Context(
-		resolver.plus(functionBinding(Arrow(type, typed.type))),
+		resolver.plus(functionBinding(type arrowTo typed.type)),
 		scope.plus(term(function(typed.term))))
 
 fun Context.typed(script: Script): Typed =

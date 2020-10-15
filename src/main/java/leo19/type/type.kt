@@ -46,6 +46,7 @@ data class Arrow(val lhs: Type, val rhs: Type) {
 }
 
 fun struct(vararg fields: Field) = Struct(stack(*fields))
+infix fun Type.arrowTo(type: Type) = Arrow(this, type)
 
 fun type(vararg fields: Field): Type = StructType(struct(*fields))
 fun type(name: String) = type(name fieldTo type())
