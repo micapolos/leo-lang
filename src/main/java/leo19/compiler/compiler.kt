@@ -79,12 +79,11 @@ fun Compiler.plus(scriptField: ScriptField) =
 	else plus(
 		TypedField(
 			scriptField.string,
-			context.typed(scriptField.rhs)))
+			context.resolver.typed(scriptField.rhs)))
 
 fun Compiler.plusGive(script: Script): Compiler =
 	context.resolver
 		.plus(binding(typed.type.structOrNull!!))
-		.emptyContext
 		.typed(script)
 		.let { giveTyped ->
 			set(term(function(giveTyped.term)).invoke(typed.term).of(giveTyped.type))

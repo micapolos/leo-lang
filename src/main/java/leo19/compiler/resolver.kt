@@ -11,6 +11,7 @@ import leo14.ScriptLine
 import leo14.lineTo
 import leo14.reflectOrEmptyScript
 import leo19.typed.Typed
+import leo19.typed.typed
 
 data class Resolver(val bindingStack: Stack<Binding>) {
 	override fun toString() = reflect.toString()
@@ -35,4 +36,4 @@ fun Resolver.resolve(typed: Typed): Typed =
 	resolveOrNull(typed) ?: typed
 
 fun Resolver.typed(script: Script): Typed =
-	emptyContext.typed(script)
+	emptyContext.compiler(typed()).plus(script).compiledTyped

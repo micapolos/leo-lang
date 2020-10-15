@@ -33,12 +33,12 @@ fun DefineCompiler.plus(scriptField: ScriptField): DefineCompiler =
 
 fun DefineCompiler.plusIs(script: Script): DefineCompiler =
 	DefineCompiler(
-		context.defineIs(type, context.typed(script)),
+		context.defineIs(type, context.resolver.typed(script)),
 		type())
 
 fun DefineCompiler.plusGives(script: Script): DefineCompiler =
 	DefineCompiler(
-		context.defineGives(type, context.typed(script)),
+		context.defineGives(type, context.resolver.typed(script)),
 		type())
 
 fun DefineCompiler.plusRaw(scriptField: ScriptField): DefineCompiler =

@@ -5,11 +5,9 @@ import leo.base.indexed
 import leo.base.reverse
 import leo13.onlyOrNull
 import leo13.seq
-import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.script
-import leo19.term.function
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
@@ -24,7 +22,6 @@ import leo19.type.fieldTo
 import leo19.type.isSimple
 import leo19.type.type
 import leo19.typed.Typed
-import leo19.typed.nullTyped
 
 data class Context(
 	val resolver: Resolver,
@@ -82,7 +79,4 @@ fun Context.defineIs(type: Type, typed: Typed): Context =
 fun Context.defineGives(type: Type, typed: Typed): Context =
 	Context(
 		resolver.plus(functionBinding(type arrowTo typed.type)),
-		scope.plus(term(function(typed.term))))
-
-fun Context.typed(script: Script): Typed =
-	Compiler(this, nullTyped).plus(script).compiledTyped
+		scope.plus(typed.term))

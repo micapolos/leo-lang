@@ -1,4 +1,3 @@
-
 package leo14
 
 import leo.base.ifNotNull

@@ -3,6 +3,7 @@ package leo19.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
+import leo16.names.*
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.nullTerm
@@ -17,6 +18,7 @@ import leo19.type.fieldTo
 import leo19.type.plus
 import leo19.type.type
 import leo19.typed.castTo
+import leo19.typed.eval
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.of
@@ -124,7 +126,6 @@ class CompilerTest {
 					Arrow(
 						type("bit" fieldTo type("zero" fieldTo type())),
 						bitType)))
-			.emptyContext
 			.typed(script("bit" lineTo script("zero")))
 			.assertEqualTo(
 				term(variable(0))
@@ -145,7 +146,6 @@ class CompilerTest {
 					Arrow(
 						bitType.plus("boolean" fieldTo type()),
 						booleanType)))
-			.emptyContext
 			.typed(
 				script(
 					"bit" lineTo script("zero"),
@@ -231,5 +231,16 @@ class CompilerTest {
 						"zero" lineTo script(),
 						"is" lineTo script("one"))))
 			.assertEqualTo(emptyContext.defineIs(type("zero"), typed("one")).compiler(typed()))
+	}
+
+	@Test
+	fun defineGives() {
+		emptyCompiler
+			.plus(
+				script(
+					"define" lineTo script(
+						"zero" lineTo script(),
+						"gives" lineTo script("one"))))
+			.assertEqualTo(emptyContext.defineGives(type("zero"), typed("one")).compiler(typed()))
 	}
 }

@@ -37,7 +37,7 @@ fun ChoiceCompiler.choicePlus(scriptField: ScriptField): TypedChoice =
 
 fun ChoiceCompiler.choicePlusYes(field: ScriptField): TypedChoice =
 	choice.plusYes(
-		field.string fieldTo resolver.emptyContext.typed(field.rhs)
+		field.string fieldTo resolver.typed(field.rhs)
 	)
 
 fun ChoiceCompiler.choicePlusNo(field: ScriptField): TypedChoice =

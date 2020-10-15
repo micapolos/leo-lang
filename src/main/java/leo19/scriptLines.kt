@@ -1,6 +1,5 @@
 package leo19
 
-import leo14.invoke
-import leo16.names.*
+import leo15.dsl.*
 
-val bitScriptLine = _bit(_choice(_zero(), _one()))
+val bitScriptLine = scriptLine_ { bit { choice { zero; one } } }

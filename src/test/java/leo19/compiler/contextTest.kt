@@ -1,11 +1,10 @@
 package leo19.compiler
 
 import leo.base.assertEqualTo
-import leo13.stack
-import leo19.term.function
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
+import leo19.type.arrowTo
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
@@ -98,10 +97,10 @@ class ContextTest {
 	@Test
 	fun defineGives() {
 		emptyContext
-			.defineGives(type("zero"), term(variable(128)).of(type("one")))
+			.defineGives(type("zero"), term(variable(128)) of type("one"))
 			.assertEqualTo(
 				Context(
-					emptyResolver.plus(functionBinding(Arrow(type("zero"), type("one")))),
-					scope(term(function(term(variable(128)))))))
+					emptyResolver.plus(functionBinding(type("zero") arrowTo type("one"))),
+					scope(term(variable(128)))))
 	}
 }
