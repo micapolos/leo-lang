@@ -39,7 +39,7 @@ fun DefineCompiler.plusIs(script: Script): DefineCompiler =
 
 fun DefineCompiler.plusGives(script: Script): DefineCompiler =
 	DefineCompiler(
-		context.defineGives(type, context.resolver.plus(binding(type.structOrNull!!)).typed(script)),
+		context.defineGives(type, context.resolver.plus(binding(type)).typed(script)),
 		type())
 
 fun DefineCompiler.plusRaw(scriptField: ScriptField): DefineCompiler =

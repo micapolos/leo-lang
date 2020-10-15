@@ -6,12 +6,10 @@ import leo19.term.get
 import leo19.term.invoke
 import leo19.term.term
 import leo19.term.variable
-import leo19.type.Arrow
 import leo19.type.arrowTo
 import leo19.type.case
 import leo19.type.choice
 import leo19.type.fieldTo
-import leo19.type.structOrNull
 import leo19.type.type
 import leo19.typed.of
 import leo19.typed.typed
@@ -51,7 +49,7 @@ class BindingTest {
 		binding(
 			type(
 				"zero" fieldTo choice("foo".case),
-				"one" fieldTo choice("bar".case)).structOrNull!!)
+				"one" fieldTo choice("bar".case)))
 			.resolveOrNull(typed("zero"), 64)
 			.assertEqualTo(
 				term(variable(64))
@@ -64,7 +62,7 @@ class BindingTest {
 		binding(
 			type(
 				"zero" fieldTo choice("foo".case),
-				"one" fieldTo choice("bar".case)).structOrNull!!)
+				"one" fieldTo choice("bar".case)))
 			.resolveOrNull(typed("one"), 64)
 			.assertEqualTo(
 				term(variable(64))
@@ -77,7 +75,7 @@ class BindingTest {
 		binding(
 			type(
 				"zero" fieldTo type(),
-				"one" fieldTo type()).structOrNull!!)
+				"one" fieldTo type()))
 			.resolveOrNull(typed("two"), 64)
 			.assertNull
 	}

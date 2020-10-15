@@ -10,10 +10,11 @@ import leo19.term.nullTerm
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
-import leo19.type.Struct
+import leo19.type.Type
 import leo19.type.isStatic
 import leo19.type.nameOrNull
 import leo19.type.reflectScript
+import leo19.type.structOrNull
 import leo19.type.type
 import leo19.typed.Typed
 import leo19.typed.indexedFieldOrNull
@@ -23,7 +24,7 @@ sealed class Binding {
 	override fun toString() = reflect.toString()
 }
 
-data class StructBinding(val struct: Struct) : Binding() {
+data class TypeBinding(val type: Type) : Binding() {
 	override fun toString() = super.toString()
 }
 
@@ -38,20 +39,21 @@ data class ConstantBinding(val arrow: Arrow) : Binding() {
 val Binding.reflect: ScriptLine
 	get() =
 		"binding" lineTo when (this) {
-			is StructBinding -> script("struct" lineTo struct.reflectScript)
+			is TypeBinding -> script("type" lineTo type.reflectScript)
 			is FunctionBinding -> script("function" lineTo arrow.reflectScript)
 			is ConstantBinding -> script("constant" lineTo arrow.reflectScript)
 		}
 
-fun binding(struct: Struct): Binding = StructBinding(struct)
+fun binding(type: Type): Binding = TypeBinding(type)
 fun functionBinding(arrow: Arrow): Binding = FunctionBinding(arrow)
 fun constantBinding(arrow: Arrow): Binding = ConstantBinding(arrow)
 
 fun Binding.resolveOrNull(typed: Typed, index: Int): Typed? =
 	when (this) {
-		is StructBinding ->
+		is TypeBinding ->
 			typed.type.nameOrNull?.let { name ->
-				struct.indexedFieldOrNull(name)?.let { indexedField ->
+				// TODO: Bind "given"
+				type.structOrNull?.indexedFieldOrNull(name)?.let { indexedField ->
 					if (indexedField.value.isStatic) nullTerm.of(type(indexedField.value))
 					else term(variable(index)).get(term(indexedField.index)).of(type(indexedField.value))
 				}

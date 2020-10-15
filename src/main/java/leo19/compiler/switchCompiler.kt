@@ -28,7 +28,7 @@ fun SwitchCompiler.plus(scriptField: ScriptField): SwitchCompiler =
 	switchBuilder.remainingCaseStack.topOrNull.notNullOrError("switch exhausted").let { case ->
 		copy(switchBuilder = switchBuilder.plus(
 			scriptField.string fieldTo resolver
-				.plus(binding(case.type.structOrNull!!))
+				.plus(binding(case.type))
 				.emptyContext
 				.compiler(nullTyped)
 				.plus(scriptField.rhs)
