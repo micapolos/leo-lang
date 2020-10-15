@@ -73,6 +73,7 @@ fun Compiler.plus(scriptField: ScriptField) =
 	else if (scriptField.string == switchKeyword) plusSwitch(scriptField.rhs)
 	else if (scriptField.string == defineKeyword) plusDefine(scriptField.rhs)
 	else if (scriptField.string == asKeyword) plusAs(scriptField.rhs)
+	else if (scriptField.string == testKeyword) plusTest(scriptField.rhs)
 	else if (scriptField.rhs.isEmpty) plus(scriptField.string)
 	else plus(
 		TypedField(
@@ -106,6 +107,9 @@ fun Compiler.plus(switch: TypedSwitch): Compiler =
 
 fun Compiler.plusDefine(script: Script): Compiler =
 	copy(context = DefineCompiler(context, type()).plus(script).compiledContext)
+
+fun Compiler.plusTest(script: Script): Compiler =
+	also { context.resolver.testCompiler.plus(script).end }
 
 fun Compiler.plusAs(script: Script): Compiler =
 	set(typed.castTo(script.type))

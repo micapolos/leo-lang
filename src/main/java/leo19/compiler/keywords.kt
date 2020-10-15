@@ -10,3 +10,4 @@ val doKeyword = _do
 val equalsKeyword = _equals
 val isKeyword = _is
 val switchKeyword = _switch
+val testKeyword = _test

@@ -3,9 +3,11 @@ package leo19
 import leo.base.assertEqualTo
 import leo14.Script
 import leo14.invoke
+import leo14.plus
 import leo14.script
 import leo16.names.*
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 fun Script.assertGives(script: Script) = eval.assertEqualTo(script)
 
@@ -199,5 +201,19 @@ class EvalTest {
 			_choice(_yes(_zero()), _no(_one())),
 			_equals(_choice(_no(_zero()), _yes(_one()))))
 			.assertGives(script(_equals(_boolean(_false()))))
+	}
+
+	@Test
+	fun test_match() {
+		script(
+			_test(true.script.plus(_equals(true.script))))
+			.assertGives(script())
+	}
+
+	@Test
+	fun test_mismatch() {
+		assertFails {
+			script(_test(true.script.plus(_equals(false.script)))).eval
+		}
 	}
 }
