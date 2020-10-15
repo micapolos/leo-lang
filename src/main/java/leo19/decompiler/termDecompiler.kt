@@ -12,14 +12,17 @@ import leo13.toList
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
+import leo14.literal
 import leo14.plus
 import leo14.script
 import leo19.term.ArrayTerm
+import leo19.term.IntTerm
 import leo19.term.Term
 import leo19.term.nullTerm
 import leo19.type.ArrowType
 import leo19.type.ChoiceType
 import leo19.type.Field
+import leo19.type.IntRangeType
 import leo19.type.StructType
 import leo19.type.field
 import leo19.type.isComplex
@@ -50,6 +53,7 @@ val Typed.script: Script
 			is StructType -> term.of(type.struct).script
 			is ChoiceType -> term.of(type.choice).script
 			is ArrowType -> TODO()
+			is IntRangeType -> script(literal((term as IntTerm).int)) // TODO: Should it contain range?
 		}
 
 val TypedField.scriptLine: ScriptLine get() = name lineTo typed.script

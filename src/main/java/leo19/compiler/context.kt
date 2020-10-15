@@ -14,6 +14,7 @@ import leo19.type.Arrow
 import leo19.type.ArrowType
 import leo19.type.Choice
 import leo19.type.ChoiceType
+import leo19.type.IntRangeType
 import leo19.type.StructType
 import leo19.type.Type
 import leo19.type.arrowTo
@@ -69,6 +70,7 @@ fun Context.defineChoice(type: Type, wrapFn: (Type) -> Type): Context =
 			}
 		is ChoiceType -> define(type.choice, wrapFn)
 		is ArrowType -> null
+		is IntRangeType -> null
 	}!!
 
 fun Context.defineIs(type: Type, typed: Typed): Context =

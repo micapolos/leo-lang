@@ -24,6 +24,7 @@ import leo19.type.ArrowType
 import leo19.type.Choice
 import leo19.type.ChoiceType
 import leo19.type.Field
+import leo19.type.IntRangeType
 import leo19.type.Struct
 import leo19.type.StructType
 import leo19.type.Type
@@ -42,6 +43,7 @@ fun cast(srcTerm: Term, srcType: Type, dstType: Type): Term =
 			else cast(srcTerm, srcType.struct, dstType.structOrNull!!)
 		is ChoiceType -> null
 		is ArrowType -> cast(srcTerm, srcType.arrow, dstType.arrowOrNull!!)
+		is IntRangeType -> TODO()
 	}!!
 
 fun cast(srcTerm: Term, srcStruct: Struct, dstChoice: Choice): Term =

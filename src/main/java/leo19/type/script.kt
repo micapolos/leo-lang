@@ -12,11 +12,14 @@ import leo19.value.ArrayValue
 import leo19.value.IntValue
 import leo19.value.Value
 
+// TODO: This file seems to be not used.
+
 fun Type.script(value: Value): Script =
 	when (this) {
 		is StructType -> struct.script(value)
 		is ChoiceType -> choice.script(value)
 		is ArrowType -> script("<function>" lineTo script())
+		is IntRangeType -> TODO()
 	}
 
 fun Struct.script(value: Value): Script =

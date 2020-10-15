@@ -5,12 +5,15 @@ import leo13.map
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
+import leo14.literal
 import leo14.plus
 import leo14.script
+import kotlin.ranges.IntRange
 
 val Type.reflectScript: Script
 	get() =
 		when (this) {
+			is IntRangeType -> script(intRange.reflectScriptLine)
 			is StructType -> struct.reflectScript
 			is ChoiceType -> choice.reflectScript
 			is ArrowType -> arrow.reflectScript
@@ -35,3 +38,10 @@ val Field.reflectScriptLine: ScriptLine
 val Case.reflectScriptLine: ScriptLine
 	get() =
 		name lineTo type.reflectScript
+
+val IntRange.reflectScriptLine: ScriptLine
+	get() =
+		"range" lineTo script(
+			"int" lineTo script(
+				"min" lineTo script(literal(start)),
+				"max" lineTo script(literal(endInclusive))))

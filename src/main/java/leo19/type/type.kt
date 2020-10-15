@@ -13,6 +13,10 @@ sealed class Type {
 	override fun toString() = reflectScript.indentString
 }
 
+data class IntRangeType(val intRange: IntRange) : Type() {
+	override fun toString() = super.toString()
+}
+
 data class StructType(val struct: Struct) : Type() {
 	override fun toString() = super.toString()
 }
