@@ -184,4 +184,20 @@ class EvalTest {
 			_bit(_zero()))
 			.assertGives(script(_done(_bit(_zero()))))
 	}
+
+	@Test
+	fun equals_true() {
+		script(
+			_choice(_yes(_zero()), _no(_one())),
+			_equals(_choice(_yes(_zero()), _no(_one()))))
+			.assertGives(script(_equals(_boolean(_true()))))
+	}
+
+	@Test
+	fun equals_false() {
+		script(
+			_choice(_yes(_zero()), _no(_one())),
+			_equals(_choice(_no(_zero()), _yes(_one()))))
+			.assertGives(script(_equals(_boolean(_false()))))
+	}
 }
