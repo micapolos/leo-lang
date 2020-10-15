@@ -70,11 +70,11 @@ fun Compiler.plus(literal: Literal): Compiler =
 	}
 
 fun Compiler.plus(scriptField: ScriptField) =
-	if (scriptField.string == "give") plusGive(scriptField.rhs)
-	else if (scriptField.string == "choice") plusChoice(scriptField.rhs)
-	else if (scriptField.string == "switch") plusSwitch(scriptField.rhs)
-	else if (scriptField.string == "define") plusDefine(scriptField.rhs)
-	else if (scriptField.string == "as") plusAs(scriptField.rhs)
+	if (scriptField.string == doKeyword) plusGive(scriptField.rhs)
+	else if (scriptField.string == choiceKeyword) plusChoice(scriptField.rhs)
+	else if (scriptField.string == switchKeyword) plusSwitch(scriptField.rhs)
+	else if (scriptField.string == defineKeyword) plusDefine(scriptField.rhs)
+	else if (scriptField.string == asKeyword) plusAs(scriptField.rhs)
 	else if (scriptField.rhs.isEmpty) plus(scriptField.string)
 	else plus(
 		TypedField(

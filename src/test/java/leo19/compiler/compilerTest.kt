@@ -3,7 +3,6 @@ package leo19.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
-import leo16.names.*
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.nullTerm
@@ -18,7 +17,6 @@ import leo19.type.fieldTo
 import leo19.type.plus
 import leo19.type.type
 import leo19.typed.castTo
-import leo19.typed.eval
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.of
@@ -157,10 +155,10 @@ class CompilerTest {
 	}
 
 	@Test
-	fun give() {
+	fun doSimple() {
 		script(
 			"x" lineTo script("zero"),
-			"give" lineTo script("x"))
+			"do" lineTo script("x"))
 			.typed
 			.assertEqualTo(
 				term(function(nullTerm))
@@ -169,11 +167,11 @@ class CompilerTest {
 	}
 
 	@Test
-	fun giveComplex() {
+	fun doComplex() {
 		script(
 			"x" lineTo script("zero"),
 			"y" lineTo script("one"),
-			"give" lineTo script(
+			"do" lineTo script(
 				"x" lineTo script(),
 				"and" lineTo script(
 					"y" lineTo script())))
@@ -234,13 +232,13 @@ class CompilerTest {
 	}
 
 	@Test
-	fun defineGives() {
+	fun defineDoes() {
 		emptyCompiler
 			.plus(
 				script(
 					"define" lineTo script(
 						"zero" lineTo script(),
-						"gives" lineTo script("one"))))
+						"does" lineTo script("one"))))
 			.assertEqualTo(emptyContext.defineGives(type("zero"), typed("one")).compiler(typed()))
 	}
 }

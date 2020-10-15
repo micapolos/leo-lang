@@ -27,7 +27,7 @@ class DefineCompilerTest {
 			.plus(
 				script(
 					"zero" lineTo script(),
-					"gives" lineTo script("one")))
+					"does" lineTo script("one")))
 			.assertEqualTo(
 				emptyContext
 					.defineGives(type("zero"), typed("one"))

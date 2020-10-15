@@ -134,7 +134,7 @@ class EvalTest {
 	fun give_static() {
 		script(
 			_zero(),
-			_give(_one()))
+			_do(_one()))
 			.assertGives(script(_one()))
 	}
 
@@ -143,7 +143,7 @@ class EvalTest {
 		script(
 			_x(_zero()),
 			_y(_one()),
-			_give(_x()))
+			_do(_x()))
 			.assertGives(script(_x(_zero())))
 	}
 
@@ -171,7 +171,7 @@ class EvalTest {
 		script(
 			_define(
 				_zero(),
-				_gives(_one())))
+				_does(_one())))
 			.assertGives(script())
 	}
 
@@ -180,7 +180,7 @@ class EvalTest {
 		script(
 			_define(
 				_bit(_zero()),
-				_gives(_done(_bit()))),
+				_does(_done(_bit()))),
 			_bit(_zero()))
 			.assertGives(script(_done(_bit(_zero()))))
 	}
