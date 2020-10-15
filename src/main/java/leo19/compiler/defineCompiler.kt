@@ -11,6 +11,7 @@ import leo14.lineSeq
 import leo19.type.Type
 import leo19.type.fieldTo
 import leo19.type.plus
+import leo19.type.structOrNull
 import leo19.type.type
 
 data class DefineCompiler(
@@ -38,7 +39,7 @@ fun DefineCompiler.plusIs(script: Script): DefineCompiler =
 
 fun DefineCompiler.plusGives(script: Script): DefineCompiler =
 	DefineCompiler(
-		context.defineGives(type, context.resolver.typed(script)),
+		context.defineGives(type, context.resolver.plus(binding(type.structOrNull!!)).typed(script)),
 		type())
 
 fun DefineCompiler.plusRaw(scriptField: ScriptField): DefineCompiler =
