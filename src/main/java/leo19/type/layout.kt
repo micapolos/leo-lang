@@ -11,6 +11,8 @@ val Type.isStatic: Boolean
 			is StructType -> struct.isStatic
 			is ChoiceType -> false
 			is ArrowType -> false
+			is RecursiveType -> false
+			is RecurseType -> false
 		}
 
 val Struct.isStatic get() = fieldStack.all { isStatic }

@@ -25,6 +25,14 @@ data class ArrowType(val arrow: Arrow) : Type() {
 	override fun toString() = super.toString()
 }
 
+data class RecursiveType(val type: Type) : Type() {
+	override fun toString() = super.toString()
+}
+
+data class RecurseType(val depth: Int) : Type() {
+	override fun toString() = super.toString()
+}
+
 data class Struct(val fieldStack: Stack<Field>) {
 	override fun toString() = reflectScript.indentString
 }

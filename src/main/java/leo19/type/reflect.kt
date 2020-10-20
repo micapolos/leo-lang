@@ -16,6 +16,8 @@ val Type.reflectScript: Script
 			is StructType -> struct.reflectScript
 			is ChoiceType -> choice.reflectScript
 			is ArrowType -> arrow.reflectScript
+			is RecursiveType -> script("recursive" lineTo type.reflectScript)
+			is RecurseType -> script("recurse" lineTo script(literal(depth)))
 		}
 
 val Struct.reflectScript
