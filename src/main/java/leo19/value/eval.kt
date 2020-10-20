@@ -26,7 +26,7 @@ fun Scope.eval(expr: Expr): Value =
 		is RhsExpr -> eval(expr.pair).resolveRhs
 		is ArrayExpr -> ArrayValue(expr.list.map { eval(it) })
 		is ArrayGetExpr -> eval(expr.array).resolveGet(eval(expr.index))
-		is FunctionExpr -> value(function(this, expr.body))
+		is FunctionExpr -> value(function(this, expr.body, expr.isRecursive))
 		is InvokeExpr -> eval(expr.function).function.invoke(eval(expr.param))
 		is VariableExpr -> stack.get(expr.index)!!
 		is EqualsExpr -> value(if (value(eval(expr.lhs)) == value(eval(expr.rhs))) 0 else 1)
