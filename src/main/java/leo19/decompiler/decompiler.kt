@@ -57,7 +57,7 @@ fun Decompiler.script(typed: Typed): Script =
 	}
 
 fun Decompiler.scriptLine(typedField: TypedField): ScriptLine =
-	typedField.name lineTo typedField.typed.script
+	typedField.name lineTo script(typedField.typed)
 
 fun Decompiler.script(typedStruct: TypedStruct): Script =
 	if (typedStruct.struct.isStatic) StructDecompiler(this, script(), typedStruct.struct.fieldStack.reverse)
@@ -71,7 +71,6 @@ fun Decompiler.script(typedStruct: TypedStruct): Script =
 		.decompile
 
 fun Decompiler.script(typedChoice: TypedChoice): Script =
-	typedChoice.yesTerm
-		.of(type(typedChoice.choice.caseStack.toList().get(typedChoice.index).field))
-		.script
+	script(typedChoice.yesTerm
+		.of(type(typedChoice.choice.caseStack.toList().get(typedChoice.index).field)))
 

@@ -73,6 +73,8 @@ val Type.choiceOrNull: Choice? get() = (this as? ChoiceType)?.choice
 val Struct.contentOrNull: Type? get() = fieldStack.onlyOrNull?.type
 fun Struct.plus(field: Field) = Struct(fieldStack.push(field))
 fun Choice.plus(case: Case) = Choice(caseStack.push(case))
+fun recursive(type: Type): Type = RecursiveType(type)
+fun recurse(depth: Int): Type = RecurseType(depth)
 
 fun Type.plus(field: Field) = StructType(structOrNull!!.plus(field))
 fun Type.plus(case: Case) = ChoiceType(choiceOrNull!!.plus(case))

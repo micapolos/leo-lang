@@ -9,9 +9,12 @@ import leo19.type.case
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
+import leo19.type.recurse
+import leo19.type.recursive
+import leo19.type.struct
 import leo19.type.type
 import leo19.typed.of
-import org.junit.Test
+import kotlin.test.Test
 
 class DecompilerTest {
 	@Test
@@ -78,5 +81,44 @@ class DecompilerTest {
 				script(
 					"x" lineTo script("zero"),
 					"y" lineTo script("one")))
+	}
+
+	@Test
+	fun recursiveSimple() {
+		term(term(0), term())
+			.of(
+				recursive(
+					choice(
+						"zero" caseTo type(),
+						"one" caseTo recurse(0))))
+			.script
+			.assertEqualTo(
+				script("zero"))
+	}
+
+	@Test
+	fun recursiveOnce() {
+		term(term(1), term(term(0), term()))
+			.of(
+				recursive(
+					choice(
+						"zero" caseTo type(),
+						"one" caseTo recurse(0))))
+			.script
+			.assertEqualTo(
+				script("one" lineTo script("zero")))
+	}
+
+	@Test
+	fun recursiveTwice() {
+		term(term(1), term(term(1), term(term(0), term())))
+			.of(
+				recursive(
+					choice(
+						"zero" caseTo type(),
+						"one" caseTo recurse(0))))
+			.script
+			.assertEqualTo(
+				script("one" lineTo script("one" lineTo script("zero"))))
 	}
 }
