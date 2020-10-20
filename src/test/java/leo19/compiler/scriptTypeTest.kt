@@ -3,7 +3,7 @@ package leo19.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
-import leo19.type.giving
+import leo19.type.doing
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
@@ -45,11 +45,11 @@ class ScriptTypeTest {
 	fun functionType() {
 		script(
 			"zero" lineTo script(),
-			"giving" lineTo script(
+			"doing" lineTo script(
 				"one" lineTo script()))
 			.type
 			.assertEqualTo(
-				type("zero" fieldTo type()).giving(type("one" fieldTo type())))
+				type("zero" fieldTo type()).doing(type("one" fieldTo type())))
 
 	}
 

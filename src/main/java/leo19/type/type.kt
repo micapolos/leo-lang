@@ -60,7 +60,7 @@ fun type(vararg fields: Field): Type = StructType(struct(*fields))
 fun type(name: String) = type(name fieldTo type())
 fun choice(vararg cases: Case): Type = ChoiceType(Choice(stack(*cases)))
 fun choice(name: String) = choice(name caseTo type())
-infix fun Type.giving(type: Type): Type = ArrowType(Arrow(this, type))
+infix fun Type.doing(type: Type): Type = ArrowType(Arrow(this, type))
 
 infix fun String.fieldTo(type: Type) = Field(this, type)
 infix fun String.caseTo(type: Type) = Case(this, type)

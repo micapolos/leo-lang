@@ -9,7 +9,7 @@ import leo19.type.case
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
-import leo19.type.giving
+import leo19.type.doing
 import leo19.type.type
 import kotlin.test.Test
 
@@ -69,8 +69,8 @@ class CastTest {
 	fun arrowToArrow() {
 		cast(
 			inputTerm,
-			type("zero") giving choice("true".case, "false".case),
-			choice("zero".case, "one".case) giving choice("true".case, "false".case))
+			type("zero") doing choice("true".case, "false".case),
+			choice("zero".case, "one".case) doing choice("true".case, "false".case))
 			.assertEqualTo(term(function(inputTerm.invoke(term(0)))))
 	}
 
@@ -78,8 +78,8 @@ class CastTest {
 	fun arrowToArrow2() {
 		cast(
 			inputTerm,
-			type("zero") giving choice("true".case, "false".case),
-			type("zero") giving type("true"))
+			type("zero") doing choice("true".case, "false".case),
+			type("zero") doing type("true"))
 			.assertEqualTo(term(function(term(0))))
 	}
 }

@@ -14,7 +14,7 @@ import leo19.type.Type
 import leo19.type.caseTo
 import leo19.type.choice
 import leo19.type.fieldTo
-import leo19.type.giving
+import leo19.type.doing
 import leo19.type.plus
 import leo19.type.recurse
 import leo19.type.recursive
@@ -49,15 +49,15 @@ fun TypeCompiler.plusType(type: Type, scriptField: ScriptField): Type =
 
 fun TypeCompiler.plusRawType(type: Type, scriptField: ScriptField): Type =
 	when (scriptField.string) {
-		"giving" -> type.giving(type(scriptField.rhs))
+		doingKeyword -> type.doing(type(scriptField.rhs))
 		else -> type.plus(field(scriptField))
 	}
 
 fun TypeCompiler.type(scriptField: ScriptField): Type =
 	when (scriptField.string) {
-		"choice" -> choice(*scriptField.rhs.lineSeq.map { case(fieldOrNull!!) }.reverse.toList().toTypedArray())
-		"recurse" -> if (recursiveDepth > 0) recurse(0) else error("not recursive")
-		"recursive" -> recursive(beginRecursive.type(scriptField.rhs))
+		choiceKeyword -> choice(*scriptField.rhs.lineSeq.map { case(fieldOrNull!!) }.reverse.toList().toTypedArray())
+		recurseKeyword -> if (recursiveDepth > 0) recurse(0) else error("not recursive")
+		recursiveKeyword -> recursive(beginRecursive.type(scriptField.rhs))
 		else -> plusRawType(type(), scriptField)
 	}
 
