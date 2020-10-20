@@ -23,7 +23,7 @@ import leo19.type.type
 data class TypeCompiler(val recursiveDepth: Int)
 
 val emptyTypeCompiler = TypeCompiler(0)
-val TypeCompiler.pushRecursive get() = TypeCompiler(recursiveDepth.inc())
+val TypeCompiler.beginRecursive get() = TypeCompiler(recursiveDepth.inc())
 
 val Script.type get() = emptyTypeCompiler.type(this)
 
@@ -57,7 +57,7 @@ fun TypeCompiler.type(scriptField: ScriptField): Type =
 	when (scriptField.string) {
 		"choice" -> choice(*scriptField.rhs.lineSeq.map { case(fieldOrNull!!) }.reverse.toList().toTypedArray())
 		"recurse" -> if (recursiveDepth > 0) recurse(0) else error("not recursive")
-		"recursive" -> recursive(pushRecursive.type(scriptField.rhs))
+		"recursive" -> recursive(beginRecursive.type(scriptField.rhs))
 		else -> plusRawType(type(), scriptField)
 	}
 

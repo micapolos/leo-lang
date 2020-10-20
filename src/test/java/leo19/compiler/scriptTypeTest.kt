@@ -63,7 +63,7 @@ class ScriptTypeTest {
 	@Test
 	fun recurseOnce() {
 		emptyTypeCompiler
-			.pushRecursive
+			.beginRecursive
 			.type(script("recurse"))
 			.assertEqualTo(recurse(0))
 	}

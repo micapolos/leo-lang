@@ -68,7 +68,7 @@ fun Compiler.plus(literal: Literal): Compiler =
 	}
 
 fun Compiler.plus(scriptField: ScriptField) =
-	if (scriptField.string == doKeyword) plusGive(scriptField.rhs)
+	if (scriptField.string == doKeyword) plusDo(scriptField.rhs)
 	else if (scriptField.string == choiceKeyword) plusChoice(scriptField.rhs)
 	else if (scriptField.string == switchKeyword) plusSwitch(scriptField.rhs)
 	else if (scriptField.string == defineKeyword) plusDefine(scriptField.rhs)
@@ -80,7 +80,7 @@ fun Compiler.plus(scriptField: ScriptField) =
 			scriptField.string,
 			context.resolver.typed(scriptField.rhs)))
 
-fun Compiler.plusGive(script: Script): Compiler =
+fun Compiler.plusDo(script: Script): Compiler =
 	context.resolver
 		.plus(binding(typed.type))
 		.typed(script)
