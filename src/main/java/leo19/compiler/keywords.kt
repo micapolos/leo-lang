@@ -12,5 +12,6 @@ val doingKeyword = _doing
 val isKeyword = _is
 val switchKeyword = _switch
 val recursiveKeyword = _recursive
+val recursivelyKeyword = _recursively
 val recurseKeyword = _recurse
 val testKeyword = _test

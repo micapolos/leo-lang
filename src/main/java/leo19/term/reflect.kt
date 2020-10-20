@@ -1,5 +1,6 @@
 package leo19.term
 
+import leo.base.runIf
 import leo13.array
 import leo13.map
 import leo14.Script
@@ -31,7 +32,9 @@ val Term.reflectScript: Script
 
 val Function.reflectScriptLine
 	get() =
-		"function" lineTo body.reflectScript
+		("function" lineTo body.reflectScript).runIf(isRecursive) {
+			"recursive" lineTo script(this)
+		}
 
 val Variable.reflectScriptLine: ScriptLine
 	get() =

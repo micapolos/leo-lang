@@ -14,7 +14,9 @@ import leo14.StringLiteral
 import leo14.isEmpty
 import leo14.lineSeq
 import leo14.lineTo
+import leo14.rhsOrNull
 import leo14.script
+import leo16.names.*
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.term
@@ -25,7 +27,6 @@ import leo19.typed.Typed
 import leo19.typed.TypedField
 import leo19.typed.TypedSwitch
 import leo19.typed.castTo
-import leo19.typed.typedEquals
 import leo19.typed.fieldTo
 import leo19.typed.getOrNull
 import leo19.typed.invoke
@@ -35,6 +36,7 @@ import leo19.typed.of
 import leo19.typed.plus
 import leo19.typed.reflectScript
 import leo19.typed.typed
+import leo19.typed.typedEquals
 
 data class Compiler(
 	val context: Context,
@@ -81,11 +83,17 @@ fun Compiler.plus(scriptField: ScriptField) =
 			context.resolver.typed(scriptField.rhs)))
 
 fun Compiler.plusDo(script: Script): Compiler =
+	script
+		.rhsOrNull(recursivelyKeyword)
+		?.let { plusDo(it, isRecursive = true) }
+		?: plusDo(script, isRecursive = false)
+
+fun Compiler.plusDo(script: Script, isRecursive: Boolean): Compiler =
 	context.resolver
 		.plus(binding(typed.type))
 		.typed(script)
 		.let { giveTyped ->
-			set(term(function(giveTyped.term)).invoke(typed.term).of(giveTyped.type))
+			set(term(function(giveTyped.term, isRecursive)).invoke(typed.term).of(giveTyped.type))
 		}
 
 fun Compiler.plusChoice(script: Script): Compiler =

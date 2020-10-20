@@ -6,6 +6,7 @@ import leo14.script
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.nullTerm
+import leo19.term.recursiveFunction
 import leo19.term.term
 import leo19.term.variable
 import leo19.type.Arrow
@@ -183,6 +184,18 @@ class CompilerTest {
 						type(
 							"x" fieldTo type("zero" fieldTo type()),
 							"and" fieldTo type("y" fieldTo type("one" fieldTo type())))))
+	}
+
+	@Test
+	fun doRecursively() {
+		script(
+			"zero" lineTo script(),
+			"do" lineTo script("recursively" lineTo script("one")))
+			.typed
+			.assertEqualTo(
+				term(recursiveFunction(nullTerm))
+					.invoke(nullTerm)
+					.of(type("one")))
 	}
 
 	@Test
