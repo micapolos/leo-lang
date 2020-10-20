@@ -1,5 +1,6 @@
 package leo19.value
 
+import leo.base.runIf
 import leo13.get
 import leo19.expr.ArrayExpr
 import leo19.expr.ArrayGetExpr
@@ -26,9 +27,7 @@ fun Scope.eval(expr: Expr): Value =
 		is ArrayExpr -> ArrayValue(expr.list.map { eval(it) })
 		is ArrayGetExpr -> eval(expr.array).resolveGet(eval(expr.index))
 		is FunctionExpr -> value(function(this, expr.body))
-		is InvokeExpr -> (eval(expr.function) as FunctionValue).function.let { function ->
-			function.scope.push(eval(expr.param)).eval(function.body)
-		}
+		is InvokeExpr -> eval(expr.function).function.invoke(eval(expr.param))
 		is VariableExpr -> stack.get(expr.index)!!
 		is EqualsExpr -> value(if (value(eval(expr.lhs)) == value(eval(expr.rhs))) 0 else 1)
 	}
@@ -36,3 +35,10 @@ fun Scope.eval(expr: Expr): Value =
 val Value.resolveLhs get() = (this as PairValue).lhs
 val Value.resolveRhs get() = (this as PairValue).rhs
 fun Value.resolveGet(index: Value) = (this as ArrayValue).list[(index as IntValue).int]
+val Value.function get() = (this as FunctionValue).function
+
+fun Function.invoke(value: Value): Value =
+	scope
+		.runIf(isRecursive) { push(value(this@invoke)) }
+		.push(value)
+		.eval(body)

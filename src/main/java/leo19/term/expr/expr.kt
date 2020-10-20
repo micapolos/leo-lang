@@ -37,7 +37,7 @@ val Term.expr: Expr
 			is RhsTerm -> RhsExpr(pair.expr)
 			is ArrayTerm -> ArrayExpr(stack.map { expr }.toList())
 			is ArrayGetTerm -> ArrayGetExpr(tuple.expr, index.expr)
-			is FunctionTerm -> FunctionExpr(function.body.expr)
+			is FunctionTerm -> FunctionExpr(function.body.expr, isRecursive = function.isRecursive)
 			is InvokeTerm -> InvokeExpr(function.expr, param.expr)
 			is VariableTerm -> VariableExpr(variable.index)
 			is EqualsTerm -> EqualsExpr(lhs.expr, rhs.expr)

@@ -1,5 +1,7 @@
 package leo19.term.chez
 
+import leo.base.runIf
+import leo.base.updateIfNotNull
 import leo13.lhs
 import leo13.toList
 import leo15.lambda.runtime.builder.term
@@ -30,7 +32,9 @@ fun Scope.string(term: Term): String =
 		is RhsTerm -> "(cdr ${string(term.pair)})"
 		is ArrayTerm -> "(vector ${term.stack.toList().joinToString(" ") { string(it) }})"
 		is ArrayGetTerm -> "(vector-ref ${string(term.tuple)} ${string(term.index)})"
-		is FunctionTerm -> "(lambda (v${variableCount}) ${push.string(term.function.body)})"
+		is FunctionTerm ->
+			if (!term.function.isRecursive) "(lambda (v${variableCount}) ${push.string(term.function.body)})"
+			else "(letrec ((v${variableCount} (lambda (v${variableCount.inc()}) ${push.push.string(term.function.body)}))) v${variableCount})"
 		is InvokeTerm -> "(${string(term.function)} ${string(term.param)})"
 		is VariableTerm -> "v${variableCount - term.variable.index - 1}"
 		is EqualsTerm -> "(equal? ${term.lhs} ${term.rhs})"

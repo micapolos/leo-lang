@@ -18,7 +18,7 @@ data class VariableTerm(val variable: Variable) : Term()
 data class EqualsTerm(val lhs: Term, val rhs: Term) : Term()
 
 data class Variable(val index: Int)
-data class Function(val body: Term)
+data class Function(val body: Term, val isRecursive: Boolean)
 
 val nullTerm: Term = NullTerm
 fun term(int: Int): Term = IntTerm(int)
@@ -33,6 +33,8 @@ fun term(variable: Variable): Term = VariableTerm(variable)
 fun Term.termEquals(rhs: Term): Term = EqualsTerm(this, rhs)
 
 fun variable(index: Int) = Variable(index)
-fun function(body: Term) = Function(body)
+fun function(body: Term, isRecursive: Boolean) = Function(body, isRecursive)
+fun function(body: Term) = function(body, isRecursive = false)
+fun recursiveFunction(body: Term) = function(body, isRecursive = true)
 
 fun Term.plus(term: Term) = ArrayTerm((this as ArrayTerm).stack.push(term))

@@ -22,7 +22,7 @@ val Expr.term: Term
 			is RhsExpr -> RhsTerm(pair.term)
 			is ArrayExpr -> term(*list.map { it.term }.toTypedArray())
 			is ArrayGetExpr -> term(array.term).get(index.term)
-			is FunctionExpr -> term(function(body.term))
+			is FunctionExpr -> term(function(body.term, isRecursive))
 			is InvokeExpr -> term(function.term).invoke(param.term)
 			is VariableExpr -> term(variable(index))
 			is EqualsExpr -> EqualsTerm(lhs.term, rhs.term)

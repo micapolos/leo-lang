@@ -6,6 +6,7 @@ import leo19.term.get
 import leo19.term.invoke
 import leo19.term.lhs
 import leo19.term.nullTerm
+import leo19.term.recursiveFunction
 import leo19.term.rhs
 import leo19.term.term
 import leo19.term.to
@@ -68,6 +69,13 @@ class ChezTest {
 		term(function(term(variable(0))))
 			.chez
 			.assertEqualTo("(lambda (v0) v0)")
+	}
+
+	@Test
+	fun recursiveFunction() {
+		term(recursiveFunction(term(variable(0))))
+			.chez
+			.assertEqualTo("(letrec ((v0 (lambda (v1) v1))) v0)")
 	}
 
 	@Test
