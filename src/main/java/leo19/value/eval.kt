@@ -8,7 +8,10 @@ import leo19.expr.Expr
 import leo19.expr.FunctionExpr
 import leo19.expr.IntExpr
 import leo19.expr.InvokeExpr
+import leo19.expr.LhsExpr
 import leo19.expr.NullExpr
+import leo19.expr.PairExpr
+import leo19.expr.RhsExpr
 import leo19.expr.VariableExpr
 
 val Expr.eval get() = emptyScope.eval(this)
@@ -17,6 +20,9 @@ fun Scope.eval(expr: Expr): Value =
 	when (expr) {
 		NullExpr -> NullValue
 		is IntExpr -> value(expr.int)
+		is PairExpr -> eval(expr.lhs).to(eval(expr.rhs))
+		is LhsExpr -> eval(expr).lhs
+		is RhsExpr -> eval(expr).rhs
 		is ArrayExpr -> ArrayValue(expr.list.map { eval(it) })
 		is ArrayGetExpr -> (eval(expr.array) as ArrayValue).list[(eval(expr.index) as IntValue).int]
 		is FunctionExpr -> value(function(this, expr.body))

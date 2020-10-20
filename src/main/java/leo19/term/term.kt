@@ -7,6 +7,9 @@ import leo13.stack
 sealed class Term
 object NullTerm : Term()
 data class IntTerm(val int: Int) : Term()
+data class PairTerm(val lhs: Term, val rhs: Term) : Term()
+data class LhsTerm(val pair: Term) : Term()
+data class RhsTerm(val pair: Term) : Term()
 data class ArrayTerm(val stack: Stack<Term>) : Term()
 data class ArrayGetTerm(val tuple: Term, val index: Term) : Term()
 data class FunctionTerm(val function: Function) : Term()
