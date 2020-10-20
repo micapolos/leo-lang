@@ -1,6 +1,7 @@
 package leo19.compiler
 
 import leo.base.assertEqualTo
+import leo14.lambda.runtime.invoke
 import leo14.lineTo
 import leo14.script
 import leo19.term.function
@@ -187,7 +188,7 @@ class CompilerTest {
 	}
 
 	@Test
-	fun doRecursively() {
+	fun doRecursively_noRecurse() {
 		script(
 			"zero" lineTo script(),
 			"do" lineTo script("recursively" lineTo script("one")))
@@ -196,6 +197,18 @@ class CompilerTest {
 				term(recursiveFunction(nullTerm))
 					.invoke(nullTerm)
 					.of(type("one")))
+	}
+
+	@Test
+	fun doRecursively_recurse() {
+		script(
+			"repeat" lineTo script("me"),
+			"do" lineTo script("recursively" lineTo script("repeat" lineTo script("me"))))
+			.typed
+			.assertEqualTo(
+				term(recursiveFunction(term(variable(1)).invoke(nullTerm)))
+					.invoke(nullTerm)
+					.of(type("dupa")))
 	}
 
 	@Test
