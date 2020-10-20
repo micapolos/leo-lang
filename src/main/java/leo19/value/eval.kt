@@ -21,10 +21,10 @@ fun Scope.eval(expr: Expr): Value =
 		NullExpr -> NullValue
 		is IntExpr -> value(expr.int)
 		is PairExpr -> eval(expr.lhs).to(eval(expr.rhs))
-		is LhsExpr -> eval(expr).lhs
-		is RhsExpr -> eval(expr).rhs
+		is LhsExpr -> eval(expr.pair).resolveLhs
+		is RhsExpr -> eval(expr.pair).resolveRhs
 		is ArrayExpr -> ArrayValue(expr.list.map { eval(it) })
-		is ArrayGetExpr -> (eval(expr.array) as ArrayValue).list[(eval(expr.index) as IntValue).int]
+		is ArrayGetExpr -> eval(expr.array).resolveGet(eval(expr.index))
 		is FunctionExpr -> value(function(this, expr.body))
 		is InvokeExpr -> (eval(expr.function) as FunctionValue).function.let { function ->
 			function.scope.push(eval(expr.param)).eval(function.body)
@@ -32,3 +32,7 @@ fun Scope.eval(expr: Expr): Value =
 		is VariableExpr -> stack.get(expr.index)!!
 		is EqualsExpr -> value(if (value(eval(expr.lhs)) == value(eval(expr.rhs))) 0 else 1)
 	}
+
+val Value.resolveLhs get() = (this as PairValue).lhs
+val Value.resolveRhs get() = (this as PairValue).rhs
+fun Value.resolveGet(index: Value) = (this as ArrayValue).list[(index as IntValue).int]

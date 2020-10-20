@@ -1,22 +1,26 @@
 package leo19.term.eval
 
 import leo.base.assertEqualTo
-import leo19.value.scope
 import leo19.term.expr.expr
 import leo19.term.function
 import leo19.term.get
 import leo19.term.invoke
+import leo19.term.lhs
 import leo19.term.nullTerm
+import leo19.term.rhs
 import leo19.term.term
 import leo19.term.termEquals
+import leo19.term.to
 import leo19.term.variable
 import leo19.value.nullValue
+import leo19.value.scope
+import leo19.value.to
 import leo19.value.value
 import kotlin.test.Test
 
 class EvalTest {
 	@Test
-	fun nul() {
+	fun nil() {
 		nullTerm
 			.eval
 			.assertEqualTo(nullValue)
@@ -27,6 +31,21 @@ class EvalTest {
 		term(12)
 			.eval
 			.assertEqualTo(value(12))
+	}
+
+	@Test
+	fun pair() {
+		term(10).to(term(20)).eval.assertEqualTo(value(10).to(value(20)))
+	}
+
+	@Test
+	fun lhs() {
+		term(10).to(term(20)).lhs.eval.assertEqualTo(value(10))
+	}
+
+	@Test
+	fun rhs() {
+		term(10).to(term(20)).rhs.eval.assertEqualTo(value(20))
 	}
 
 	@Test
