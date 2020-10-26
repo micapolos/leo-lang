@@ -17,7 +17,6 @@ import leo14.lineSeq
 import leo14.lineTo
 import leo14.rhsOrNull
 import leo14.script
-import leo16.names.*
 import leo19.term.function
 import leo19.term.invoke
 import leo19.term.term
@@ -92,7 +91,9 @@ fun Compiler.plusDo(script: Script): Compiler =
 
 fun Compiler.plusDo(script: Script, isRecursive: Boolean): Compiler =
 	context.resolver
-		.runIf(isRecursive) { plus(functionBinding(typed.type arrowTo type("dupa"))) } // TODO: resolve rhs type
+		.runIf(isRecursive) {
+			plus(functionBinding(typed.type arrowTo type("dupa")))
+		} // TODO: resolve rhs type
 		.plus(binding(typed.type))
 		.typed(script)
 		.let { giveTyped ->
