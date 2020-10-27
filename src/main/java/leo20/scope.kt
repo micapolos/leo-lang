@@ -18,7 +18,7 @@ data class Scope(val bindingStack: Stack<Binding>)
 val emptyScope = Scope(stack())
 fun Scope.push(binding: Binding): Scope = Scope(bindingStack.push(binding))
 fun Scope.push(param: Value): Scope = fold(param.lineStack.reverse) { push(it.binding) }
-fun Scope.unsafeValueAt(index: Int): Value = bindingStack.get(index)!!.value
+fun Scope.unsafeValueAt(index: Int): Value = (bindingStack.get(index)!! as ValueBinding).value
 
 fun Scope.resolveOrNull(param: Value): Value? =
 	bindingStack.mapFirst { resolveOrNull(param) }
@@ -31,8 +31,8 @@ fun Scope.defineOrNull(script: Script): Scope? =
 		link.lhs.patternOrNull?.let { pattern ->
 			link.line.fieldOrNull?.let { field ->
 				when (field.string) {
-					"gives" -> push(Binding(pattern, value(field.rhs), false))
-					"does" -> push(Binding(pattern, functionValue(field.rhs), true))
+					"gives" -> push(ValueBinding(pattern, value(field.rhs)))
+					"does" -> push(FunctionBinding(pattern, parseFunction(field.rhs)))
 					else -> null
 				}
 			}
@@ -43,12 +43,12 @@ fun Scope.functionValue(script: Script): Value =
 	value(line(parseFunction(script)))
 
 fun Scope.parseFunction(script: Script): Function =
-	recursiveFunctionOrNull(script) ?: function(body(script))
+	recursivelyFunctionOrNull(script) ?: function(body(script))
 
-fun Scope.recursiveFunctionOrNull(script: Script): Function? =
+fun Scope.recursivelyFunctionOrNull(script: Script): Function? =
 	script.onlyLineOrNull?.fieldOrNull?.let { field ->
-		notNullIf(field.string == "recursive") {
-			function(body(field.rhs))
+		notNullIf(field.string == "recursively") {
+			Function(this, body(field.rhs), isRecursive = true)
 		}
 	}
 

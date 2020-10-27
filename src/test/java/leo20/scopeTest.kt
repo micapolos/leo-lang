@@ -134,10 +134,9 @@ class ScopeTest {
 					"gives" lineTo script("number")))
 			.assertEqualTo(
 				emptyScope
-					.push(Binding(
+					.push(ValueBinding(
 						pattern("number" lineTo anyPattern),
-						value("number" lineTo value()),
-						false)))
+						value("number" lineTo value()))))
 	}
 
 	@Test
@@ -149,20 +148,18 @@ class ScopeTest {
 					"does" lineTo script("number")))
 			.assertEqualTo(
 				emptyScope
-					.push(Binding(
+					.push(FunctionBinding(
 						pattern("number" lineTo anyPattern),
-						value(line(emptyScope.function(body(script("number"))))),
-						true)))
+						emptyScope.function(body(script("number"))))))
 	}
 
 	@Test
 	fun resolveGives() {
 		emptyScope
 			.push(
-				Binding(
+				ValueBinding(
 					pattern("number" lineTo anyPattern),
-					value("ok" lineTo value()),
-					false))
+					value("ok" lineTo value())))
 			.resolveOrNull(value(line(128)))
 			.assertEqualTo(value("ok" lineTo value()))
 	}
@@ -171,10 +168,9 @@ class ScopeTest {
 	fun resolveDoes() {
 		emptyScope
 			.push(
-				Binding(
+				FunctionBinding(
 					pattern("number" lineTo anyPattern),
-					value(line(emptyScope.function(body(script("good" lineTo script("number")))))),
-					true))
+					emptyScope.function(body(script("good" lineTo script("number"))))))
 			.resolveOrNull(value(line(128)))
 			.assertEqualTo(value("good" lineTo value(line(128))))
 	}
@@ -183,12 +179,11 @@ class ScopeTest {
 	fun resolveNumberPlus() {
 		emptyScope
 			.push(
-				Binding(
+				FunctionBinding(
 					pattern(
 						numberPatternLine,
 						"plus" lineTo pattern(numberPatternLine)),
-					value(line(emptyScope.function(NumberPlusBody))),
-					true))
+					emptyScope.function(NumberPlusBody)))
 			.resolveOrNull(value(line(128), "plus" lineTo value(line(128))))
 			.assertEqualTo(value(line(256)))
 	}
@@ -228,7 +223,6 @@ class ScopeTest {
 			.assertEqualTo(value(line(5)))
 	}
 
-
 	@Test
 	fun value_numberEquals() {
 		emptyScope
@@ -238,5 +232,48 @@ class ScopeTest {
 					leo14.line(literal(2)),
 					"equals" lineTo script(leo14.line(literal(3)))))
 			.assertEqualTo(false.value)
+	}
+
+	@Test
+	fun value_doRecursively() {
+		emptyScope
+			.value(
+				script(
+					"bit" lineTo script("one"),
+					"do" lineTo script(
+						"recursively" lineTo script(
+							"bit" lineTo script(),
+							"switch" lineTo script(
+								"one" lineTo script(
+									"bit" lineTo script("zero"),
+									"recurse" lineTo script()),
+								"zero" lineTo script("done"))))))
+			.assertEqualTo(value("done" lineTo value()))
+	}
+
+	@Test
+	fun value_doFactorial() {
+		emptyScope
+			.pushPrelude
+			.value(
+				script(
+					"sum" lineTo script(literal(10)),
+					"do" lineTo script(
+						"recursively" lineTo script(
+							"sum" lineTo script(),
+							"number" lineTo script(),
+							"equals" lineTo script(literal(0)),
+							"switch" lineTo script(
+								"true" lineTo script(literal(0)),
+								"false" lineTo script(
+									"sum" lineTo script(),
+									"number" lineTo script(),
+									"plus" lineTo script(
+										"sum" lineTo script(),
+										"number" lineTo script(),
+										"minus" lineTo script(literal(1)),
+										"sum" lineTo script(),
+										"recurse" lineTo script())))))))
+			.assertEqualTo(value(line(55)))
 	}
 }

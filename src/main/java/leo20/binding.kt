@@ -1,37 +1,50 @@
 package leo20
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
-import leo.base.runIf
+import leo13.linkOrNull
 
-data class Binding(val pattern: Pattern, val value: Value, val isFunction: Boolean)
+sealed class Binding
+data class ValueBinding(val pattern: Pattern, val value: Value) : Binding()
+data class FunctionBinding(val pattern: Pattern, val function: Function) : Binding()
+data class RecurseBinding(val function: Function) : Binding()
 
-val Line.binding get() = Binding(pattern(selectName lineTo pattern()), value(this), false)
+val Line.binding: Binding get() = ValueBinding(pattern(selectName lineTo pattern()), value(this))
 
 fun Binding.resolveOrNull(param: Value): Value? =
-	notNullIf(param.matches(pattern)) {
-		value.runIf(isFunction) { apply(param) }
+	when (this) {
+		is ValueBinding ->
+			notNullIf(param.matches(pattern)) { value }
+		is FunctionBinding ->
+			notNullIf(param.matches(pattern)) { function.apply(param) }
+		is RecurseBinding ->
+			param.lineStack.linkOrNull?.let { link ->
+				(link.value as? FieldLine)?.field?.let { field ->
+					ifOrNull(field.name == "recurse") {
+						function.apply(Value(link.stack))
+					}
+				}
+			}
 	}
 
-val numberPlusBinding =
-	Binding(
+
+val numberPlusBinding: Binding =
+	FunctionBinding(
 		pattern(
 			numberPatternLine,
 			"plus" lineTo pattern(numberPatternLine)),
-		value(line(emptyScope.function(NumberPlusBody))),
-		true)
+		emptyScope.function(NumberPlusBody))
 
-val numberMinusBinding =
-	Binding(
+val numberMinusBinding: Binding =
+	FunctionBinding(
 		pattern(
 			numberPatternLine,
 			"minus" lineTo pattern(numberPatternLine)),
-		value(line(emptyScope.function(NumberMinusBody))),
-		true)
+		emptyScope.function(NumberMinusBody))
 
-val numberEqualsBinding =
-	Binding(
+val numberEqualsBinding: Binding =
+	FunctionBinding(
 		pattern(
 			numberPatternLine,
 			"equals" lineTo pattern(numberPatternLine)),
-		value(line(emptyScope.function(NumberEqualsBody))),
-		true)
+		emptyScope.function(NumberEqualsBody))
