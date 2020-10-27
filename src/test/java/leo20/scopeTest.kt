@@ -150,7 +150,24 @@ class ScopeTest {
 				emptyScope
 					.push(FunctionBinding(
 						pattern("number" lineTo anyPattern),
-						emptyScope.function(body(script("number"))))))
+						emptyScope.function(body(script("number"))),
+						isRecursive = false)))
+	}
+
+	@Test
+	fun define_does_recursively() {
+		emptyScope
+			.defineOrNull(
+				script(
+					"number" lineTo script("any"),
+					"does" lineTo script(
+						"recursively" lineTo script("number"))))
+			.assertEqualTo(
+				emptyScope
+					.push(FunctionBinding(
+						pattern("number" lineTo anyPattern),
+						emptyScope.function(body(script("number"))),
+						isRecursive = true)))
 	}
 
 	@Test
@@ -170,7 +187,8 @@ class ScopeTest {
 			.push(
 				FunctionBinding(
 					pattern("number" lineTo anyPattern),
-					emptyScope.function(body(script("good" lineTo script("number"))))))
+					emptyScope.function(body(script("good" lineTo script("number")))),
+					isRecursive = false))
 			.resolveOrNull(value(line(128)))
 			.assertEqualTo(value("good" lineTo value(line(128))))
 	}
@@ -183,7 +201,8 @@ class ScopeTest {
 					pattern(
 						numberPatternLine,
 						"plus" lineTo pattern(numberPatternLine)),
-					emptyScope.function(NumberPlusBody)))
+					emptyScope.function(NumberPlusBody),
+					isRecursive = false))
 			.resolveOrNull(value(line(128), "plus" lineTo value(line(128))))
 			.assertEqualTo(value(line(256)))
 	}
@@ -235,45 +254,29 @@ class ScopeTest {
 	}
 
 	@Test
-	fun value_doRecursively() {
+	fun value_resolveRecursively() {
 		emptyScope
-			.value(
-				script(
-					"bit" lineTo script("one"),
-					"do" lineTo script(
-						"recursively" lineTo script(
-							"bit" lineTo script(),
-							"switch" lineTo script(
-								"one" lineTo script(
-									"bit" lineTo script("zero"),
-									"recurse" lineTo script()),
-								"zero" lineTo script("done"))))))
-			.assertEqualTo(value("done" lineTo value()))
-	}
-
-	@Test
-	fun value_doFactorial() {
-		emptyScope
-			.pushPrelude
-			.value(
-				script(
-					"sum" lineTo script(literal(10)),
-					"do" lineTo script(
-						"recursively" lineTo script(
-							"sum" lineTo script(),
-							"number" lineTo script(),
-							"equals" lineTo script(literal(0)),
-							"switch" lineTo script(
-								"true" lineTo script(literal(0)),
-								"false" lineTo script(
-									"sum" lineTo script(),
-									"number" lineTo script(),
-									"plus" lineTo script(
-										"sum" lineTo script(),
+			.push(
+				FunctionBinding(
+					pattern(numberPatternLine, "sum" lineTo pattern()),
+					emptyScope.pushPrelude.function(
+						body(
+							script(
+								"number" lineTo script(),
+								"equals" lineTo script(literal(1)),
+								"switch" lineTo script(
+									"true" lineTo script("number"),
+									"false" lineTo script(
 										"number" lineTo script(),
-										"minus" lineTo script(literal(1)),
-										"sum" lineTo script(),
-										"recurse" lineTo script())))))))
+										"plus" lineTo script(
+											"number" lineTo script(),
+											"minus" lineTo script(literal(1)),
+											"sum" lineTo script())))))),
+					isRecursive = true))
+			.value(
+				script(
+					leo14.line(literal(10)),
+					"sum" lineTo script()))
 			.assertEqualTo(value(line(55)))
 	}
 }

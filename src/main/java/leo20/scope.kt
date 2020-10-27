@@ -32,28 +32,30 @@ fun Scope.defineOrNull(script: Script): Scope? =
 			link.line.fieldOrNull?.let { field ->
 				when (field.string) {
 					"gives" -> push(ValueBinding(pattern, value(field.rhs)))
-					"does" -> push(FunctionBinding(pattern, parseFunction(field.rhs)))
+					"does" -> defineDoes(pattern, field.rhs)
 					else -> null
 				}
 			}
 		}
 	}
 
-fun Scope.functionValue(script: Script): Value =
-	value(line(parseFunction(script)))
-
-fun Scope.parseFunction(script: Script): Function =
-	recursivelyFunctionOrNull(script) ?: function(body(script))
-
-fun Scope.recursivelyFunctionOrNull(script: Script): Function? =
-	script.onlyLineOrNull?.fieldOrNull?.let { field ->
-		notNullIf(field.string == "recursively") {
-			Function(this, body(field.rhs), isRecursive = true)
+fun Scope.defineDoes(pattern: Pattern, script: Script): Scope =
+	script.recursivelyBodyOrNull
+		?.let { recursivelyBody ->
+			push(FunctionBinding(pattern, function(body(recursivelyBody)), isRecursive = true))
 		}
-	}
+		?: push(FunctionBinding(pattern, function(body(script)), isRecursive = false))
 
 val Scope.pushPrelude
 	get() = this
 		.push(numberPlusBinding)
 		.push(numberMinusBinding)
 		.push(numberEqualsBinding)
+
+val Script.recursivelyBodyOrNull: Script?
+	get() =
+		onlyLineOrNull?.fieldOrNull?.let { field ->
+			notNullIf(field.string == "recursively") {
+				field.rhs
+			}
+		}
