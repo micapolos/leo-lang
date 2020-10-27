@@ -3,27 +3,22 @@ package leo20
 import leo.base.applyOrNull
 import leo.base.orNullFold
 import leo.base.reverse
-import leo13.push
-import leo13.stack
 import leo14.FieldScriptLine
 import leo14.LiteralScriptLine
 import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
 import leo14.lineSeq
+import leo14.lineTo
 import leo14.script
 
 val Script.patternOrNull: Pattern?
 	get() =
-		if (this == script("any")) AnyPattern
-		else structPatternOrNull
+		pattern().orNullFold(lineSeq.reverse) { plusOrNull(it) }
 
-val Script.structPatternOrNull: StructPattern?
-	get() =
-		StructPattern(stack()).orNullFold(lineSeq.reverse) { plusOrNull(it) }
-
-fun StructPattern.plusOrNull(scriptLine: ScriptLine): StructPattern? =
-	lineStack.applyOrNull(scriptLine.patternLineOrNull) { push(it) }?.let { StructPattern(it) }
+fun Pattern.plusOrNull(scriptLine: ScriptLine): Pattern? =
+	if (scriptLine == "any" lineTo script() && isEmpty) anyPattern
+	else applyOrNull(scriptLine.patternLineOrNull) { plus(it) }
 
 val ScriptLine.patternLineOrNull: PatternLine?
 	get() =

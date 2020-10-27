@@ -53,5 +53,7 @@ fun Scope.recursiveFunctionOrNull(script: Script): Function? =
 	}
 
 val Scope.pushPrelude
-	get() =
-		push(numberPlusBinding)
+	get() = this
+		.push(numberPlusBinding)
+		.push(numberMinusBinding)
+		.push(numberEqualsBinding)

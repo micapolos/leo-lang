@@ -65,3 +65,6 @@ val Value.unsafeNumber get() = (lineStack.onlyOrNull as NumberLine).number
 val Value.unsafeString get() = (lineStack.onlyOrNull as StringLine).string
 fun Value.unsafeNumberPlus(value: Value) = value(line(unsafeNumber.toDouble().plus(value.unsafeNumber.toDouble())))
 fun Value.unsafeNumberMinus(value: Value) = value(line(unsafeNumber.toDouble().minus(value.unsafeNumber.toDouble())))
+
+val Boolean.name get() = if (this) "true" else "false"
+val Boolean.value get() = value("boolean" lineTo value(name lineTo value()))

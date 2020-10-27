@@ -1,27 +1,29 @@
 package leo20
 
 import leo13.Stack
+import leo13.isEmpty
+import leo13.push
 import leo13.stack
-import leo13.zipFoldOrNull
+import leo13.zipFold
 
-sealed class Pattern
-object AnyPattern : Pattern()
-data class StructPattern(val lineStack: Stack<PatternLine>) : Pattern()
+data class Pattern(val startsWithAny: Boolean, val lineStack: Stack<PatternLine>)
 data class PatternLine(val name: String, val rhs: Pattern)
 
-val anyPattern: Pattern = AnyPattern
-fun pattern(vararg lines: PatternLine): Pattern = StructPattern(stack(*lines))
+val anyPattern = Pattern(true, stack())
+fun pattern(vararg lines: PatternLine) = Pattern(false, stack(*lines))
+fun Pattern.plus(line: PatternLine) = copy(lineStack = lineStack.push(line))
 infix fun String.lineTo(rhs: Pattern) = PatternLine(this, rhs)
-
-val Pattern.isAny get() = this is AnyPattern
+val Pattern.isEmpty get() = !startsWithAny && lineStack.isEmpty
+val Pattern.isAny get() = startsWithAny && lineStack.isEmpty
 
 fun Value.matches(pattern: Pattern): Boolean =
-	when (pattern) {
-		AnyPattern -> true
-		is StructPattern -> true
-			.zipFoldOrNull(lineStack, pattern.lineStack) { line, patternLine ->
-				this && line.matches(patternLine)
-			} ?: false
+	true.zipFold(lineStack, pattern.lineStack) { lineOrNull, patternLineOrNull ->
+		this && if (patternLineOrNull == null)
+			if (lineOrNull == null) false
+			else pattern.startsWithAny
+		else
+			if (lineOrNull == null) false
+			else lineOrNull.matches(patternLineOrNull)
 	}
 
 fun Line.matches(patternLine: PatternLine): Boolean =

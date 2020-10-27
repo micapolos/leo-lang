@@ -12,6 +12,15 @@ class PatternTest {
 	}
 
 	@Test
+	fun anyWithTail() {
+		value(
+			"head" lineTo value(),
+			"tail" lineTo value())
+			.matches(anyPattern.plus("tail" lineTo pattern()))
+			.assert
+	}
+
+	@Test
 	fun number() {
 		value(line(128))
 			.matches(pattern(numberPatternLine))

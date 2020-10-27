@@ -10,7 +10,7 @@ fun Function.apply(param: Value): Value = scope
 	.runIf(isRecursive) {
 		push(
 			Binding(
-				pattern("recurse" lineTo anyPattern),
+				anyPattern.plus("recurse" lineTo pattern()),
 				value(line(this@apply)),
 				true))
 	}

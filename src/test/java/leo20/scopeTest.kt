@@ -216,4 +216,27 @@ class ScopeTest {
 					leo14.line(literal(128))))
 			.assertEqualTo(value("good" lineTo value(line(128))))
 	}
+
+	@Test
+	fun value_numberPlus() {
+		emptyScope
+			.pushPrelude
+			.value(
+				script(
+					leo14.line(literal(2)),
+					"plus" lineTo script(leo14.line(literal(3)))))
+			.assertEqualTo(value(line(5)))
+	}
+
+
+	@Test
+	fun value_numberEquals() {
+		emptyScope
+			.pushPrelude
+			.value(
+				script(
+					leo14.line(literal(2)),
+					"equals" lineTo script(leo14.line(literal(3)))))
+			.assertEqualTo(false.value)
+	}
 }

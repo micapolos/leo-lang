@@ -35,5 +35,5 @@ val Body.script
 			is ScriptBody -> script
 			NumberPlusBody -> TODO()
 			NumberMinusBody -> TODO()
-			EqualsBody -> TODO()
+			NumberEqualsBody -> TODO()
 		}

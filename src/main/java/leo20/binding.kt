@@ -19,3 +19,19 @@ val numberPlusBinding =
 			"plus" lineTo pattern(numberPatternLine)),
 		value(line(emptyScope.function(NumberPlusBody))),
 		true)
+
+val numberMinusBinding =
+	Binding(
+		pattern(
+			numberPatternLine,
+			"minus" lineTo pattern(numberPatternLine)),
+		value(line(emptyScope.function(NumberMinusBody))),
+		true)
+
+val numberEqualsBinding =
+	Binding(
+		pattern(
+			numberPatternLine,
+			"equals" lineTo pattern(numberPatternLine)),
+		value(line(emptyScope.function(NumberEqualsBody))),
+		true)
