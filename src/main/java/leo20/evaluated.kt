@@ -52,6 +52,7 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"do" -> plusDo(scriptField.rhs)
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"define" -> plusDefineOrNull(scriptField.rhs)
+		"test" -> plusTestOrNull(scriptField.rhs)
 		else -> plusResolve(scriptField)
 	} ?: plusQuoted(scriptField)
 
@@ -89,6 +90,9 @@ fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
 
 fun Evaluated.plusDefineOrNull(script: Script): Evaluated? =
 	scope.defineOrNull(script)?.evaluated(value())
+
+fun Evaluated.plusTestOrNull(script: Script): Evaluated? =
+	TODO()
 
 fun Evaluated.plus(name: String): Evaluated =
 	Evaluated(
