@@ -22,9 +22,18 @@ val Line.scriptLine: ScriptLine
 			is FieldLine -> field.scriptLine
 			is StringLine -> "text" lineTo script(literal(string))
 			is NumberLine -> "number" lineTo script(literal(number(BigDecimal(number.toString()))))
-			is FunctionLine -> "function" lineTo function.body
+			is FunctionLine -> "function" lineTo function.body.script
 		}
 
 val Field.scriptLine
 	get() =
 		name lineTo rhs.script
+
+val Body.script
+	get() =
+		when (this) {
+			is ScriptBody -> script
+			NumberPlusBody -> TODO()
+			NumberMinusBody -> TODO()
+			EqualsBody -> TODO()
+		}

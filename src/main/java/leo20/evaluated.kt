@@ -67,20 +67,20 @@ fun Evaluated.plusResolve(line: Line): Evaluated =
 	Evaluated(scope, scope.resolve(value.plus(line)))
 
 fun Evaluated.plusFunction(script: Script): Evaluated =
-	Evaluated(scope, value.plus(line(scope.function(script))))
+	Evaluated(scope, value.plus(line(scope.function(body(script)))))
 
 fun Evaluated.plusApplyOrNull(script: Script): Evaluated? =
 	value.applyOrNull(scope.value(script))?.let { Evaluated(scope, it) }
 
 fun Evaluated.plusDo(script: Script): Evaluated =
-	Evaluated(scope, scope.function(script).apply(value))
+	Evaluated(scope, scope.function(body(script)).apply(value))
 
 fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
 	value.bodyOrNull?.lineStack?.onlyOrNull?.selectName?.let { selectName ->
 		script.lineSeq.mapFirstOrNull {
 			fieldOrNull?.let { field ->
 				ifOrNull(field.string == selectName) {
-					scope.function(field.rhs).apply(value.bodyOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.rhs!!)
+					scope.function(body(field.rhs)).apply(value.bodyOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.rhs!!)
 				}
 			}
 		}

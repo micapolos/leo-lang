@@ -27,7 +27,7 @@ class PatternTest {
 
 	@Test
 	fun function() {
-		value(line(emptyScope.function(script())))
+		value(line(emptyScope.function(body(script()))))
 			.matches(pattern(functionPatternLine))
 			.assert
 	}

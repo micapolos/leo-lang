@@ -1,22 +1,12 @@
 package leo20
 
 import leo.base.fold
-import leo.base.reverse
 import leo13.Stack
 import leo13.first
 import leo13.onlyOrNull
 import leo13.push
 import leo13.stack
-import leo14.FieldScriptLine
-import leo14.Literal
-import leo14.LiteralScriptLine
-import leo14.NumberLiteral
-import leo14.Script
-import leo14.ScriptField
-import leo14.ScriptLine
-import leo14.StringLiteral
 import leo14.bigDecimal
-import leo14.lineSeq
 import java.math.BigDecimal
 
 data class Value(val lineStack: Stack<Line>)
@@ -28,7 +18,6 @@ data class NumberLine(val number: Number) : Line()
 data class FunctionLine(val function: Function) : Line()
 
 data class Field(val name: String, val rhs: Value)
-data class Function(val scope: Scope, val body: Script)
 
 val emptyValue = Value(stack())
 fun Value.plus(line: Line) = Value(lineStack.push(line))
@@ -37,8 +26,8 @@ infix fun String.lineTo(rhs: Value): Line = FieldLine(Field(this, rhs))
 fun line(function: Function): Line = FunctionLine(function)
 fun line(string: String): Line = StringLine(string)
 fun line(int: Int): Line = NumberLine(int.bigDecimal)
+fun line(double: Double): Line = NumberLine(double.bigDecimal)
 fun line(bigDecimal: BigDecimal): Line = NumberLine(bigDecimal)
-fun Scope.function(body: Script) = Function(this, body)
 
 val Line.selectName: String
 	get() =
@@ -71,5 +60,8 @@ fun Value.applyOrNull(param: Value): Value? =
 fun Value.apply(param: Value): Value =
 	applyOrNull(param) ?: plus("apply" lineTo param)
 
-fun Function.apply(param: Value): Value =
-	scope.push(param).value(body)
+fun Value.unsafeGet(name: String) = getOrNull(name)!!
+val Value.unsafeNumber get() = (lineStack.onlyOrNull as NumberLine).number
+val Value.unsafeString get() = (lineStack.onlyOrNull as StringLine).string
+fun Value.unsafeNumberPlus(value: Value) = value(line(unsafeNumber.toDouble().plus(value.unsafeNumber.toDouble())))
+fun Value.unsafeNumberMinus(value: Value) = value(line(unsafeNumber.toDouble().minus(value.unsafeNumber.toDouble())))

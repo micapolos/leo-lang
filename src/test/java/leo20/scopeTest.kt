@@ -76,7 +76,7 @@ class ScopeTest {
 	fun value_function() {
 		emptyScope
 			.value(script("function" lineTo script("foo")))
-			.assertEqualTo(value(line(Function(emptyScope, script("foo")))))
+			.assertEqualTo(value(line(Function(emptyScope, body(script("foo"))))))
 	}
 
 	@Test
@@ -151,7 +151,7 @@ class ScopeTest {
 				emptyScope
 					.push(Binding(
 						pattern("number" lineTo anyPattern),
-						value(line(emptyScope.function(script("number")))),
+						value(line(emptyScope.function(body(script("number"))))),
 						true)))
 	}
 
@@ -173,10 +173,24 @@ class ScopeTest {
 			.push(
 				Binding(
 					pattern("number" lineTo anyPattern),
-					value(line(emptyScope.function(script("good" lineTo script("number"))))),
+					value(line(emptyScope.function(body(script("good" lineTo script("number")))))),
 					true))
 			.resolveOrNull(value(line(128)))
 			.assertEqualTo(value("good" lineTo value(line(128))))
+	}
+
+	@Test
+	fun resolveNumberPlus() {
+		emptyScope
+			.push(
+				Binding(
+					pattern(
+						numberPatternLine,
+						"plus" lineTo pattern(numberPatternLine)),
+					value(line(emptyScope.function(NumberPlusBody))),
+					true))
+			.resolveOrNull(value(line(128), "plus" lineTo value(line(128))))
+			.assertEqualTo(value(line(256)))
 	}
 
 	@Test

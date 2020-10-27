@@ -4,6 +4,7 @@ import leo.base.notNullIf
 import leo.base.runIf
 import leo13.Stack
 import leo13.fold
+import leo13.get
 import leo13.mapFirst
 import leo13.push
 import leo13.reverse
@@ -22,6 +23,7 @@ val Line.binding get() = Binding(pattern(selectName lineTo pattern()), value(thi
 val emptyScope = Scope(stack())
 fun Scope.push(binding: Binding): Scope = Scope(bindingStack.push(binding))
 fun Scope.push(param: Value): Scope = fold(param.lineStack.reverse) { push(it.binding) }
+fun Scope.unsafeValueAt(index: Int): Value = bindingStack.get(index)!!.value
 
 fun Scope.resolveOrNull(param: Value): Value? =
 	bindingStack.mapFirst { resolveOrNull(param) }
@@ -51,11 +53,11 @@ fun Scope.functionValue(script: Script): Value =
 	value(line(parseFunction(script)))
 
 fun Scope.parseFunction(script: Script): Function =
-	recursiveFunctionOrNull(script) ?: function(script)
+	recursiveFunctionOrNull(script) ?: function(body(script))
 
 fun Scope.recursiveFunctionOrNull(script: Script): Function? =
 	script.onlyLineOrNull?.fieldOrNull?.let { field ->
 		notNullIf(field.string == "recursive") {
-			function(field.rhs)
+			function(body(field.rhs))
 		}
 	}
