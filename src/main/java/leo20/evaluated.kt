@@ -40,7 +40,7 @@ fun Evaluated.plus(scriptLine: ScriptLine): Evaluated =
 fun Evaluated.plus(literal: Literal): Evaluated =
 	when (literal) {
 		is StringLiteral -> Evaluated(scope, scope.resolve(value.plus(leo20.line(literal.string))))
-		is NumberLiteral -> Evaluated(scope, scope.resolve(value.plus(leo20.line(literal.number.bigDecimal))))
+		is NumberLiteral -> Evaluated(scope, scope.resolve(value.plus(line(literal.number.bigDecimal))))
 	}
 
 fun Evaluated.plus(scriptField: ScriptField): Evaluated =

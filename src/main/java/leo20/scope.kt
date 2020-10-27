@@ -11,12 +11,13 @@ import leo13.stack
 import leo14.Script
 import leo14.fieldOrNull
 import leo14.linkOrNull
+import leo14.onlyLineOrNull
 
 data class Scope(val bindingStack: Stack<Binding>)
 
 data class Binding(val pattern: Pattern, val value: Value, val isFunction: Boolean)
 
-val Line.binding get() = Binding(pattern(selectName fieldTo pattern()), value(this), false)
+val Line.binding get() = Binding(pattern(selectName lineTo pattern()), value(this), false)
 
 val emptyScope = Scope(stack())
 fun Scope.push(binding: Binding): Scope = Scope(bindingStack.push(binding))
@@ -39,9 +40,22 @@ fun Scope.defineOrNull(script: Script): Scope? =
 			link.line.fieldOrNull?.let { field ->
 				when (field.string) {
 					"gives" -> push(Binding(pattern, value(field.rhs), false))
-					"does" -> push(Binding(pattern, value(line(function(field.rhs))), true))
+					"does" -> push(Binding(pattern, functionValue(field.rhs), true))
 					else -> null
 				}
 			}
+		}
+	}
+
+fun Scope.functionValue(script: Script): Value =
+	value(line(parseFunction(script)))
+
+fun Scope.parseFunction(script: Script): Function =
+	recursiveFunctionOrNull(script) ?: function(script)
+
+fun Scope.recursiveFunctionOrNull(script: Script): Function? =
+	script.onlyLineOrNull?.fieldOrNull?.let { field ->
+		notNullIf(field.string == "recursive") {
+			function(field.rhs)
 		}
 	}

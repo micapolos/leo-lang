@@ -11,7 +11,7 @@ data class PatternLine(val name: String, val rhs: Pattern)
 
 val anyPattern: Pattern = AnyPattern
 fun pattern(vararg lines: PatternLine): Pattern = StructPattern(stack(*lines))
-infix fun String.fieldTo(rhs: Pattern) = PatternLine(this, rhs)
+infix fun String.lineTo(rhs: Pattern) = PatternLine(this, rhs)
 
 val Pattern.isAny get() = this is AnyPattern
 
@@ -34,3 +34,7 @@ fun Line.matches(patternLine: PatternLine): Boolean =
 
 fun Field.matches(patternLine: PatternLine): Boolean =
 	name == patternLine.name && rhs.matches(patternLine.rhs)
+
+val textPatternLine = "text" lineTo anyPattern
+val numberPatternLine = "number" lineTo anyPattern
+val functionPatternLine = "function" lineTo anyPattern

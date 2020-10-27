@@ -21,7 +21,7 @@ class ScriptPatternTest {
 			.patternOrNull
 			.assertEqualTo(
 				pattern(
-					"x" fieldTo anyPattern,
-					"y" fieldTo anyPattern))
+					"x" lineTo anyPattern,
+					"y" lineTo anyPattern))
 	}
 }

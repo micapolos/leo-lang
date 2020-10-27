@@ -135,7 +135,7 @@ class ScopeTest {
 			.assertEqualTo(
 				emptyScope
 					.push(Binding(
-						pattern("number" fieldTo anyPattern),
+						pattern("number" lineTo anyPattern),
 						value("number" lineTo value()),
 						false)))
 	}
@@ -150,7 +150,7 @@ class ScopeTest {
 			.assertEqualTo(
 				emptyScope
 					.push(Binding(
-						pattern("number" fieldTo anyPattern),
+						pattern("number" lineTo anyPattern),
 						value(line(emptyScope.function(script("number")))),
 						true)))
 	}
@@ -160,7 +160,7 @@ class ScopeTest {
 		emptyScope
 			.push(
 				Binding(
-					pattern("number" fieldTo anyPattern),
+					pattern("number" lineTo anyPattern),
 					value("ok" lineTo value()),
 					false))
 			.resolveOrNull(value(line(128)))
@@ -172,7 +172,7 @@ class ScopeTest {
 		emptyScope
 			.push(
 				Binding(
-					pattern("number" fieldTo anyPattern),
+					pattern("number" lineTo anyPattern),
 					value(line(emptyScope.function(script("good" lineTo script("number"))))),
 					true))
 			.resolveOrNull(value(line(128)))

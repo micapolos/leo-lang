@@ -34,4 +34,4 @@ val ScriptLine.patternLineOrNull: PatternLine?
 
 val ScriptField.patternLineOrNull
 	get() =
-		string.applyOrNull(rhs.patternOrNull) { fieldTo(it) }
+		string.applyOrNull(rhs.patternOrNull) { lineTo(it) }

@@ -14,21 +14,21 @@ class PatternTest {
 	@Test
 	fun number() {
 		value(line(128))
-			.matches(pattern("number" fieldTo anyPattern))
+			.matches(pattern(numberPatternLine))
 			.assert
 	}
 
 	@Test
 	fun text() {
 		value(line("ok"))
-			.matches(pattern("text" fieldTo anyPattern))
+			.matches(pattern(textPatternLine))
 			.assert
 	}
 
 	@Test
 	fun function() {
 		value(line(emptyScope.function(script())))
-			.matches(pattern("function" fieldTo anyPattern))
+			.matches(pattern(functionPatternLine))
 			.assert
 	}
 
@@ -40,8 +40,8 @@ class PatternTest {
 			"y" lineTo value(line(20)))
 			.matches(
 				pattern(
-					"x" fieldTo pattern("number" fieldTo anyPattern),
-					"y" fieldTo pattern("number" fieldTo anyPattern)))
+					"x" lineTo pattern(numberPatternLine),
+					"y" lineTo pattern(numberPatternLine)))
 			.assert
 	}
 }
