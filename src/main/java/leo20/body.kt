@@ -13,7 +13,7 @@ fun body(script: Script): Body = ScriptBody(script)
 fun Scope.unsafeValue(body: Body): Value =
 	when (body) {
 		is ScriptBody -> value(body.script)
-		NumberPlusBody -> unsafeValueAt(0).run { unsafeGet("number").unsafeNumberPlus(unsafeGet("plus")) }
-		NumberMinusBody -> unsafeValueAt(0).run { unsafeGet("number").unsafeNumberPlus(unsafeGet("plus")) }
+		NumberPlusBody -> unsafeValueAt(1).unsafeNumberPlus(unsafeValueAt(0).unsafeGet("number"))
+		NumberMinusBody -> unsafeValueAt(1).unsafeNumberMinus(unsafeValueAt(0).unsafeGet("number"))
 		EqualsBody -> TODO()
 	}

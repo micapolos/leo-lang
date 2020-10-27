@@ -1,7 +1,18 @@
 package leo20
 
-data class Function(val scope: Scope, val body: Body)
+import leo.base.runIf
 
-fun Scope.function(body: Body) = Function(this, body)
+data class Function(val scope: Scope, val body: Body, val isRecursive: Boolean)
 
-fun Function.apply(param: Value): Value = scope.push(param).unsafeValue(body)
+fun Scope.function(body: Body) = Function(this, body, isRecursive = false)
+
+fun Function.apply(param: Value): Value = scope
+	.runIf(isRecursive) {
+		push(
+			Binding(
+				pattern("recurse" lineTo anyPattern),
+				value(line(this@apply)),
+				true))
+	}
+	.push(param)
+	.unsafeValue(body)

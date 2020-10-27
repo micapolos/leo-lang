@@ -25,7 +25,7 @@ fun value(vararg lines: Line) = emptyValue.fold(lines) { plus(it) }
 infix fun String.lineTo(rhs: Value): Line = FieldLine(Field(this, rhs))
 fun line(function: Function): Line = FunctionLine(function)
 fun line(string: String): Line = StringLine(string)
-fun line(int: Int): Line = NumberLine(int.bigDecimal)
+fun line(int: Int): Line = NumberLine(int.toDouble().bigDecimal)
 fun line(double: Double): Line = NumberLine(double.bigDecimal)
 fun line(bigDecimal: BigDecimal): Line = NumberLine(bigDecimal)
 

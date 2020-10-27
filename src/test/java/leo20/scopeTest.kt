@@ -76,7 +76,7 @@ class ScopeTest {
 	fun value_function() {
 		emptyScope
 			.value(script("function" lineTo script("foo")))
-			.assertEqualTo(value(line(Function(emptyScope, body(script("foo"))))))
+			.assertEqualTo(value(line(emptyScope.function(body(script("foo"))))))
 	}
 
 	@Test
