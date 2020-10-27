@@ -3,8 +3,6 @@ package leo20
 import leo13.Stack
 import leo13.stack
 import leo13.zipFoldOrNull
-import leo14.ScriptField
-import leo14.ScriptLine
 
 sealed class Pattern
 object AnyPattern : Pattern()

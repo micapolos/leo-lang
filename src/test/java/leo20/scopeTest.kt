@@ -113,4 +113,93 @@ class ScopeTest {
 						"square" lineTo script("side"))))
 			.assertEqualTo(value("radius" lineTo value(line(10))))
 	}
+
+	@Test
+	fun value_defineGives() {
+		emptyScope
+			.value(
+				script(
+					"define" lineTo script(
+						"number" lineTo script("any"),
+						"gives" lineTo script(literal("ok")))))
+			.assertEqualTo(value())
+	}
+
+	@Test
+	fun define_gives() {
+		emptyScope
+			.defineOrNull(
+				script(
+					"number" lineTo script("any"),
+					"gives" lineTo script("number")))
+			.assertEqualTo(
+				emptyScope
+					.push(Binding(
+						pattern("number" fieldTo anyPattern),
+						value("number" lineTo value()),
+						false)))
+	}
+
+	@Test
+	fun define_does() {
+		emptyScope
+			.defineOrNull(
+				script(
+					"number" lineTo script("any"),
+					"does" lineTo script("number")))
+			.assertEqualTo(
+				emptyScope
+					.push(Binding(
+						pattern("number" fieldTo anyPattern),
+						value(line(emptyScope.function(script("number")))),
+						true)))
+	}
+
+	@Test
+	fun resolveGives() {
+		emptyScope
+			.push(
+				Binding(
+					pattern("number" fieldTo anyPattern),
+					value("ok" lineTo value()),
+					false))
+			.resolveOrNull(value(line(128)))
+			.assertEqualTo(value("ok" lineTo value()))
+	}
+
+	@Test
+	fun resolveDoes() {
+		emptyScope
+			.push(
+				Binding(
+					pattern("number" fieldTo anyPattern),
+					value(line(emptyScope.function(script("good" lineTo script("number"))))),
+					true))
+			.resolveOrNull(value(line(128)))
+			.assertEqualTo(value("good" lineTo value(line(128))))
+	}
+
+	@Test
+	fun value_defineDoes() {
+		emptyScope
+			.value(
+				script(
+					"define" lineTo script(
+						"number" lineTo script("any"),
+						"does" lineTo script("number"))))
+			.assertEqualTo(value())
+	}
+
+	@Test
+	fun value_defineDoesResolve() {
+		emptyScope
+			.value(
+				script(
+					"define" lineTo script(
+						"number" lineTo script("any"),
+						"does" lineTo script(
+							"good" lineTo script("number"))),
+					leo14.line(literal(128))))
+			.assertEqualTo(value("good" lineTo value(line(128))))
+	}
 }
