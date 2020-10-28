@@ -18,6 +18,7 @@ import leo14.fieldOrNull
 import leo14.isEmpty
 import leo14.line
 import leo14.lineSeq
+import leo14.onlyStringOrNull
 
 data class Evaluated(
 	val scope: Scope,
@@ -50,6 +51,7 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"function" -> plusFunction(scriptField.rhs)
 		"apply" -> plusApplyOrNull(scriptField.rhs)
 		"do" -> plusDo(scriptField.rhs)
+		"make" -> plusMakeOrNull(scriptField.rhs)
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"define" -> plusDefineOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
@@ -73,6 +75,11 @@ fun Evaluated.plusFunction(script: Script): Evaluated =
 
 fun Evaluated.plusApplyOrNull(script: Script): Evaluated? =
 	value.applyOrNull(scope.value(script))?.let { Evaluated(scope, it) }
+
+fun Evaluated.plusMakeOrNull(script: Script): Evaluated? =
+	script.onlyStringOrNull?.let { name ->
+		Evaluated(scope, value.make(name))
+	}
 
 fun Evaluated.plusDo(script: Script): Evaluated =
 	Evaluated(scope, scope.function(body(script)).apply(value))
@@ -99,5 +106,4 @@ fun Evaluated.plus(name: String): Evaluated =
 		scope,
 		null
 			?: value.getOrNull(name)
-			?: scope.resolveOrNull(value.plus(name lineTo value()))
-			?: value.make(name))
+			?: scope.resolve(value.plus(name lineTo value())))

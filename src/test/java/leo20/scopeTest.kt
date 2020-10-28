@@ -64,7 +64,7 @@ class ScopeTest {
 				script(
 					"x" lineTo script(literal(10)),
 					"y" lineTo script(literal(20)),
-					"point" lineTo script()))
+					"make" lineTo script("point" lineTo script())))
 			.assertEqualTo(
 				value(
 					"point" lineTo value(
