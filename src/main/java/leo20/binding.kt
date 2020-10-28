@@ -19,7 +19,6 @@ fun Binding.resolveOrNull(param: Value): Value? =
 			}
 	}
 
-
 val numberPlusBinding: Binding =
 	FunctionBinding(
 		pattern(
