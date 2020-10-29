@@ -69,8 +69,7 @@ fun Evaluated.plusMakeOrNull(script: Script): Evaluated? =
 	value.makeOrNull(script)?.let { copy(value = it) }
 
 fun Evaluated.plusGetOrNull(script: Script): Evaluated? =
-	if (value == value()) scope.getOrNull(script)?.let { copy(value = it) }
-	else value.getOrNull(script)?.let { copy(value = it) }
+	getValueOrNull(script)?.let { copy(value = it) }
 
 fun Evaluated.plusDo(script: Script): Evaluated =
 	copy(value = scope.push(value).value(script))
@@ -91,3 +90,7 @@ fun Evaluated.plusDefineOrNull(script: Script): Evaluated? =
 
 fun Evaluated.plusTestOrNull(script: Script): Evaluated? =
 	notNullIf(value == value()) { also { scope.test(script) } }
+
+fun Evaluated.getValueOrNull(script: Script): Value? =
+	if (value == value()) scope.getOrNull(script)
+	else value.getOrNull(script)
