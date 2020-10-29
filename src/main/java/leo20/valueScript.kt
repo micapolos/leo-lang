@@ -20,8 +20,8 @@ val Line.scriptLine: ScriptLine
 	get() =
 		when (this) {
 			is FieldLine -> field.scriptLine
-			is StringLine -> "text" lineTo script(literal(string))
-			is NumberLine -> "number" lineTo script(literal(number(BigDecimal(number.toString()))))
+			is StringLine -> leo14.line(literal(string))
+			is NumberLine -> leo14.line(literal(number(BigDecimal(number.toString()))))
 			is FunctionLine -> "function" lineTo function.body.script
 		}
 

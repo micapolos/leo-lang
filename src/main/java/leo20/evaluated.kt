@@ -3,6 +3,7 @@ package leo20
 import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.mapFirstOrNull
+import leo.base.notNullIf
 import leo.base.reverse
 import leo13.onlyOrNull
 import leo14.FieldScriptLine
@@ -99,7 +100,7 @@ fun Evaluated.plusDefineOrNull(script: Script): Evaluated? =
 	scope.defineOrNull(script)?.evaluated(value())
 
 fun Evaluated.plusTestOrNull(script: Script): Evaluated? =
-	TODO()
+	notNullIf(value == value()) { also { scope.test(script) } }
 
 fun Evaluated.plus(name: String): Evaluated =
 	Evaluated(

@@ -1,8 +1,10 @@
 package leo20
 
 import leo.base.fold
+import leo.base.ifOrNull
 import leo13.Stack
 import leo13.first
+import leo13.linkOrNull
 import leo13.onlyOrNull
 import leo13.push
 import leo13.stack
@@ -68,3 +70,17 @@ fun Value.unsafeNumberMinus(value: Value) = value(line(unsafeNumber.toDouble().m
 
 val Boolean.name get() = if (this) "true" else "false"
 val Boolean.value get() = value("boolean" lineTo value(name lineTo value()))
+
+val Value.resolveGetOrNull: Value?
+	get() =
+		lineStack.linkOrNull?.let { lineLink ->
+			lineLink.value.fieldOrNull?.let { field ->
+				ifOrNull(field.rhs == value()) {
+					Value(lineLink.stack).getOrNull(field.name)
+				}
+			}
+		}
+
+val Value.resolve: Value
+	get() =
+		resolveGetOrNull ?: this

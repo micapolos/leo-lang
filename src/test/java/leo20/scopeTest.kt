@@ -5,6 +5,7 @@ import leo14.lineTo
 import leo14.literal
 import leo14.script
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class ScopeTest {
 	@Test
@@ -278,5 +279,36 @@ class ScopeTest {
 					leo14.line(literal(10)),
 					"sum" lineTo script()))
 			.assertEqualTo(value(line(55)))
+	}
+
+	@Test
+	fun test_failure() {
+		assertFails {
+			emptyScope
+				.pushPrelude
+				.value(
+					script(
+						"test" lineTo script(
+							leo14.line(literal(2)),
+							"plus" lineTo script(literal(3)),
+							"equals" lineTo script(
+								leo14.line(literal(3)),
+								"plus" lineTo script(literal(4))))))
+		}
+	}
+
+	@Test
+	fun test_pass() {
+		emptyScope
+			.pushPrelude
+			.value(
+				script(
+					"test" lineTo script(
+						leo14.line(literal(2)),
+						"plus" lineTo script(literal(3)),
+						"equals" lineTo script(
+							leo14.line(literal(3)),
+							"plus" lineTo script(literal(2))))))
+			.assertEqualTo(value())
 	}
 }

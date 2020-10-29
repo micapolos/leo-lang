@@ -10,8 +10,10 @@ import leo13.reverse
 import leo13.stack
 import leo14.Script
 import leo14.fieldOrNull
+import leo14.lineTo
 import leo14.linkOrNull
 import leo14.onlyLineOrNull
+import leo14.plus
 
 data class Scope(val bindingStack: Stack<Binding>)
 
@@ -24,7 +26,7 @@ fun Scope.resolveOrNull(param: Value): Value? =
 	bindingStack.mapFirst { resolveOrNull(param) }
 
 fun Scope.resolve(param: Value): Value =
-	resolveOrNull(param) ?: param
+	resolveOrNull(param) ?: param.resolve
 
 fun Scope.defineOrNull(script: Script): Scope? =
 	script.linkOrNull?.let { link ->
@@ -59,3 +61,15 @@ val Script.recursivelyBodyOrNull: Script?
 				field.rhs
 			}
 		}
+
+fun Scope.test(script: Script) {
+	val link = script.linkOrNull ?: error("syntax" lineTo script)
+	val field = link.line.fieldOrNull ?: error("syntax" lineTo script)
+	if (field.string != "equals") error("syntax" lineTo script)
+	val lhsValue = value(link.lhs)
+	val rhsValue = value(field.rhs)
+	if (lhsValue != rhsValue)
+		error(
+			"test" lineTo script,
+			"result" lineTo lhsValue.script.plus("equals" lineTo rhsValue.script))
+}
