@@ -73,7 +73,7 @@ fun Evaluated.plusGetOrNull(script: Script): Evaluated? =
 	else value.getOrNull(script)?.let { copy(value = it) }
 
 fun Evaluated.plusDo(script: Script): Evaluated =
-	copy(value = scope.function(body(script)).apply(value))
+	copy(value = scope.push(value).value(script))
 
 fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
 	value.bodyOrNull?.lineStack?.onlyOrNull?.selectName?.let { selectName ->
