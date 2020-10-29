@@ -52,10 +52,26 @@ class ScopeTest {
 					"point" lineTo script(
 						"x" lineTo script(literal(10)),
 						"y" lineTo script(literal(20))),
-					"x" lineTo script()))
+					"get" lineTo script(
+						"x" lineTo script())))
 			.assertEqualTo(
 				value(
 					"x" lineTo value(line(10))))
+	}
+
+	@Test
+	fun value_getDeep() {
+		emptyScope
+			.value(
+				script(
+					"point" lineTo script(
+						"x" lineTo script(literal(10)),
+						"y" lineTo script(literal(20))),
+					"get" lineTo script(
+						"x" lineTo script(
+							"number" lineTo script()))))
+			.assertEqualTo(
+				value(line(10)))
 	}
 
 	@Test

@@ -437,7 +437,7 @@ tailrec fun Stack<String>.plusNamesOrNull(script: Script): Stack<String>? =
 	when (script) {
 		is UnitScript -> this
 		is LinkScript -> {
-			val field = script.link.onlyLineOrNull?.fieldOrNull
+			val field = script.onlyLineOrNull?.fieldOrNull
 			if (field == null) null
 			else push(field.string).plusNamesOrNull(field.rhs)
 		}

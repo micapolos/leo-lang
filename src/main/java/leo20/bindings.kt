@@ -26,7 +26,7 @@ fun Bindings.resolveOrNull(param: Value): Value? =
 	bindingStack.mapFirst { resolveOrNull(param) }
 
 fun Bindings.resolve(param: Value): Value =
-	resolveOrNull(param) ?: param.resolve
+	resolveOrNull(param) ?: param
 
 fun Bindings.defineOrNull(script: Script): Bindings? =
 	script.linkOrNull?.let { link ->

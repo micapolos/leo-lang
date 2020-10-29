@@ -47,29 +47,26 @@ fun Evaluated.plus(literal: Literal): Evaluated =
 	}
 
 fun Evaluated.plus(scriptField: ScriptField): Evaluated =
-	if (scriptField.rhs.isEmpty) plus(scriptField.string)
-	else when (scriptField.string) {
+	when (scriptField.string) {
 		"function" -> plusFunction(scriptField.rhs)
 		"apply" -> plusApplyOrNull(scriptField.rhs)
 		"do" -> plusDo(scriptField.rhs)
 		"make" -> plusMakeOrNull(scriptField.rhs)
+		"get" -> plusGetOrNull(scriptField.rhs)
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"define" -> plusDefineOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
 		else -> plusResolve(scriptField)
-	} ?: plusQuoted(scriptField)
-
-fun Evaluated.plusQuoted(scriptLine: ScriptLine): Evaluated =
-	Evaluated(bindings, value.plus(scriptLine))
-
-fun Evaluated.plusQuoted(scriptField: ScriptField): Evaluated =
-	plus(line(scriptField))
+	} ?: plusQuoted(scriptField.valueLine)
 
 fun Evaluated.plusResolve(scriptField: ScriptField): Evaluated =
 	plusResolve(scriptField.string lineTo bindings.value(scriptField.rhs))
 
 fun Evaluated.plusResolve(line: Line): Evaluated =
 	Evaluated(bindings, bindings.resolve(value.plus(line)))
+
+fun Evaluated.plusQuoted(line: Line): Evaluated =
+	copy(value = value.plus(line))
 
 fun Evaluated.plusFunction(script: Script): Evaluated =
 	Evaluated(bindings, value.plus(line(bindings.function(body(script)))))
@@ -81,6 +78,9 @@ fun Evaluated.plusMakeOrNull(script: Script): Evaluated? =
 	script.onlyStringOrNull?.let { name ->
 		Evaluated(bindings, value.make(name))
 	}
+
+fun Evaluated.plusGetOrNull(script: Script): Evaluated? =
+	value.getOrNull(script)?.let { copy(value = it) }
 
 fun Evaluated.plusDo(script: Script): Evaluated =
 	Evaluated(bindings, bindings.function(body(script)).apply(value))
