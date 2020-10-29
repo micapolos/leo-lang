@@ -37,7 +37,7 @@ fun Evaluator.beginResolve(name: String): Evaluator =
 	Evaluator(ResolveEvaluatorParent(name, this), evaluated.begin)
 
 fun Evaluator.pushFunction(script: Script): Evaluator =
-	push(line(evaluated.scope.function(body(script))))
+	push(line(evaluated.bindings.function(body(script))))
 
 fun Evaluator.push(line: Line): Evaluator =
 	copy(evaluated = evaluated.plus(line))

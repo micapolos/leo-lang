@@ -10,7 +10,7 @@ object NumberEqualsBody : Body()
 
 fun body(script: Script): Body = ScriptBody(script)
 
-fun Scope.unsafeValue(body: Body): Value =
+fun Bindings.unsafeValue(body: Body): Value =
 	when (body) {
 		is ScriptBody -> value(body.script)
 		NumberPlusBody -> unsafeValueAt(1).unsafeNumberPlus(unsafeValueAt(0).unsafeGet("number"))

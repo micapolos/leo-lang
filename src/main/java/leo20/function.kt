@@ -1,14 +1,14 @@
 package leo20
 
-data class Function(val scope: Scope, val body: Body)
+data class Function(val bindings: Bindings, val body: Body)
 
-fun Scope.function(body: Body) = Function(this, body)
+fun Bindings.function(body: Body) = Function(this, body)
 
-fun Function.apply(param: Value): Value = scope
+fun Function.apply(param: Value): Value = bindings
 	.push(param)
 	.unsafeValue(body)
 
-fun Function.applyRecursively(pattern: Pattern, param: Value): Value = scope
+fun Function.applyRecursively(pattern: Pattern, param: Value): Value = bindings
 	.push(FunctionBinding(pattern, this, isRecursive = true))
 	.push(param)
 	.unsafeValue(body)

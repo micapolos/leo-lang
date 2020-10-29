@@ -15,20 +15,20 @@ import leo14.linkOrNull
 import leo14.onlyLineOrNull
 import leo14.plus
 
-data class Scope(val bindingStack: Stack<Binding>)
+data class Bindings(val bindingStack: Stack<Binding>)
 
-val emptyScope = Scope(stack())
-fun Scope.push(binding: Binding): Scope = Scope(bindingStack.push(binding))
-fun Scope.push(param: Value): Scope = fold(param.lineStack.reverse) { push(it.binding) }
-fun Scope.unsafeValueAt(index: Int): Value = (bindingStack.get(index)!! as ValueBinding).value
+val emptyScope = Bindings(stack())
+fun Bindings.push(binding: Binding): Bindings = Bindings(bindingStack.push(binding))
+fun Bindings.push(param: Value): Bindings = fold(param.lineStack.reverse) { push(it.binding) }
+fun Bindings.unsafeValueAt(index: Int): Value = (bindingStack.get(index)!! as ValueBinding).value
 
-fun Scope.resolveOrNull(param: Value): Value? =
+fun Bindings.resolveOrNull(param: Value): Value? =
 	bindingStack.mapFirst { resolveOrNull(param) }
 
-fun Scope.resolve(param: Value): Value =
+fun Bindings.resolve(param: Value): Value =
 	resolveOrNull(param) ?: param.resolve
 
-fun Scope.defineOrNull(script: Script): Scope? =
+fun Bindings.defineOrNull(script: Script): Bindings? =
 	script.linkOrNull?.let { link ->
 		link.lhs.patternOrNull?.let { pattern ->
 			link.line.fieldOrNull?.let { field ->
@@ -41,14 +41,14 @@ fun Scope.defineOrNull(script: Script): Scope? =
 		}
 	}
 
-fun Scope.defineDoes(pattern: Pattern, script: Script): Scope =
+fun Bindings.defineDoes(pattern: Pattern, script: Script): Bindings =
 	script.recursivelyBodyOrNull
 		?.let { recursivelyBody ->
 			push(FunctionBinding(pattern, function(body(recursivelyBody)), isRecursive = true))
 		}
 		?: push(FunctionBinding(pattern, function(body(script)), isRecursive = false))
 
-val Scope.pushPrelude
+val Bindings.pushPrelude
 	get() = this
 		.push(numberPlusBinding)
 		.push(numberMinusBinding)
@@ -62,7 +62,7 @@ val Script.recursivelyBodyOrNull: Script?
 			}
 		}
 
-fun Scope.test(script: Script) {
+fun Bindings.test(script: Script) {
 	val link = script.linkOrNull ?: error("syntax" lineTo script)
 	val field = link.line.fieldOrNull ?: error("syntax" lineTo script)
 	if (field.string != "equals") error("syntax" lineTo script)

@@ -1,14 +1,22 @@
 package leo20
 
+import leo.base.SeqNode
 import leo.base.fold
 import leo.base.ifOrNull
+import leo.base.mapFirstOrNull
+import leo.base.nodeOrNull
+import leo.base.seqNode
 import leo13.Stack
 import leo13.first
 import leo13.linkOrNull
 import leo13.onlyOrNull
 import leo13.push
+import leo13.seq
+import leo13.seqNode
 import leo13.stack
+import leo14.Script
 import leo14.bigDecimal
+import leo14.nameStackOrNull
 import java.math.BigDecimal
 
 data class Value(val lineStack: Stack<Line>)
@@ -84,3 +92,26 @@ val Value.resolveGetOrNull: Value?
 val Value.resolve: Value
 	get() =
 		resolveGetOrNull ?: this
+
+fun Value.lineOrNull(name: String, vararg names: String): Line? =
+	lineOrNull(seqNode(name, *names))
+
+fun Value.lineOrNull(nameSeqNode: SeqNode<String>): Line? =
+	lineStack.seq.mapFirstOrNull { orNull(nameSeqNode) }
+
+fun Line.orNull(nameSeqNode: SeqNode<String>): Line? =
+	ifOrNull(nameSeqNode.first == selectName) {
+		nameSeqNode.remaining.nodeOrNull.let { remainingNodeOrNull ->
+			if (remainingNodeOrNull == null) this
+			else fieldOrNull?.rhs?.lineOrNull(remainingNodeOrNull)
+		}
+	}
+
+fun Value.getOrNull(name: String, vararg names: String): Value? =
+	getOrNull(seqNode(name, *names))
+
+fun Value.getOrNull(nameSeqNode: SeqNode<String>): Value? =
+	bodyOrNull?.lineOrNull(nameSeqNode)?.let { value(it) }
+
+fun Value.getOrNull(script: Script): Value? =
+	script.nameStackOrNull?.linkOrNull?.seqNode?.let { getOrNull(it) }

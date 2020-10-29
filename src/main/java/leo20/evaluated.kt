@@ -22,13 +22,13 @@ import leo14.lineSeq
 import leo14.onlyStringOrNull
 
 data class Evaluated(
-	val scope: Scope,
+	val bindings: Bindings,
 	val value: Value
 )
 
-fun Scope.evaluated(value: Value) = Evaluated(this, value)
+fun Bindings.evaluated(value: Value) = Evaluated(this, value)
 
-fun Scope.value(script: Script): Value =
+fun Bindings.value(script: Script): Value =
 	Evaluated(this, value()).plus(script).value
 
 fun Evaluated.plus(script: Script): Evaluated =
@@ -42,8 +42,8 @@ fun Evaluated.plus(scriptLine: ScriptLine): Evaluated =
 
 fun Evaluated.plus(literal: Literal): Evaluated =
 	when (literal) {
-		is StringLiteral -> Evaluated(scope, scope.resolve(value.plus(leo20.line(literal.string))))
-		is NumberLiteral -> Evaluated(scope, scope.resolve(value.plus(line(literal.number.bigDecimal.toDouble().bigDecimal))))
+		is StringLiteral -> Evaluated(bindings, bindings.resolve(value.plus(leo20.line(literal.string))))
+		is NumberLiteral -> Evaluated(bindings, bindings.resolve(value.plus(line(literal.number.bigDecimal.toDouble().bigDecimal))))
 	}
 
 fun Evaluated.plus(scriptField: ScriptField): Evaluated =
@@ -60,51 +60,51 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 	} ?: plusQuoted(scriptField)
 
 fun Evaluated.plusQuoted(scriptLine: ScriptLine): Evaluated =
-	Evaluated(scope, value.plus(scriptLine))
+	Evaluated(bindings, value.plus(scriptLine))
 
 fun Evaluated.plusQuoted(scriptField: ScriptField): Evaluated =
 	plus(line(scriptField))
 
 fun Evaluated.plusResolve(scriptField: ScriptField): Evaluated =
-	plusResolve(scriptField.string lineTo scope.value(scriptField.rhs))
+	plusResolve(scriptField.string lineTo bindings.value(scriptField.rhs))
 
 fun Evaluated.plusResolve(line: Line): Evaluated =
-	Evaluated(scope, scope.resolve(value.plus(line)))
+	Evaluated(bindings, bindings.resolve(value.plus(line)))
 
 fun Evaluated.plusFunction(script: Script): Evaluated =
-	Evaluated(scope, value.plus(line(scope.function(body(script)))))
+	Evaluated(bindings, value.plus(line(bindings.function(body(script)))))
 
 fun Evaluated.plusApplyOrNull(script: Script): Evaluated? =
-	value.applyOrNull(scope.value(script))?.let { Evaluated(scope, it) }
+	value.applyOrNull(bindings.value(script))?.let { Evaluated(bindings, it) }
 
 fun Evaluated.plusMakeOrNull(script: Script): Evaluated? =
 	script.onlyStringOrNull?.let { name ->
-		Evaluated(scope, value.make(name))
+		Evaluated(bindings, value.make(name))
 	}
 
 fun Evaluated.plusDo(script: Script): Evaluated =
-	Evaluated(scope, scope.function(body(script)).apply(value))
+	Evaluated(bindings, bindings.function(body(script)).apply(value))
 
 fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
 	value.bodyOrNull?.lineStack?.onlyOrNull?.selectName?.let { selectName ->
 		script.lineSeq.mapFirstOrNull {
 			fieldOrNull?.let { field ->
 				ifOrNull(field.string == selectName) {
-					scope.function(body(field.rhs)).apply(value.bodyOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.rhs!!)
+					bindings.function(body(field.rhs)).apply(value.bodyOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.rhs!!)
 				}
 			}
 		}
-	}?.let { Evaluated(scope, it) }
+	}?.let { Evaluated(bindings, it) }
 
 fun Evaluated.plusDefineOrNull(script: Script): Evaluated? =
-	scope.defineOrNull(script)?.evaluated(value())
+	bindings.defineOrNull(script)?.evaluated(value())
 
 fun Evaluated.plusTestOrNull(script: Script): Evaluated? =
-	notNullIf(value == value()) { also { scope.test(script) } }
+	notNullIf(value == value()) { also { bindings.test(script) } }
 
 fun Evaluated.plus(name: String): Evaluated =
 	Evaluated(
-		scope,
+		bindings,
 		null
 			?: value.getOrNull(name)
-			?: scope.resolve(value.plus(name lineTo value())))
+			?: bindings.resolve(value.plus(name lineTo value())))

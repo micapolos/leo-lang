@@ -1,9 +1,21 @@
 package leo14
 
-import leo.base.*
+import leo.base.Indent
+import leo.base.Seq
+import leo.base.SeqNode
+import leo.base.emptySeq
+import leo.base.fold
+import leo.base.inc
+import leo.base.indent
+import leo.base.notNullIf
+import leo.base.seq
+import leo.base.string
+import leo.base.then
 import leo13.Stack
 import leo13.fold
+import leo13.push
 import leo13.reverse
+import leo13.stack
 
 sealed class Script {
 	override fun toString() = string(0.indent, defaultIndentConfig)
@@ -420,3 +432,17 @@ val ScriptField.onlyStringOrNull: String?
 val Script.onlyStringOrNull: String?
 	get() =
 		linkOrNull?.onlyLineOrNull?.fieldOrNull?.onlyStringOrNull
+
+tailrec fun Stack<String>.plusNamesOrNull(script: Script): Stack<String>? =
+	when (script) {
+		is UnitScript -> this
+		is LinkScript -> {
+			val field = script.link.onlyLineOrNull?.fieldOrNull
+			if (field == null) null
+			else push(field.string).plusNamesOrNull(field.rhs)
+		}
+	}
+
+val Script.nameStackOrNull: Stack<String>?
+	get() =
+		stack<String>().plusNamesOrNull(this)?.reverse
