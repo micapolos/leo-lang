@@ -7,7 +7,7 @@ import leo14.script
 import kotlin.test.Test
 import kotlin.test.assertFails
 
-class ScopeTest {
+class BindingsTest {
 	@Test
 	fun value_empty() {
 		emptyScope
@@ -42,6 +42,21 @@ class ScopeTest {
 					"point" lineTo value(
 						"x" lineTo value(line(10)),
 						"y" lineTo value(line(20)))))
+	}
+
+	@Test
+	fun value_staticGet() {
+		emptyScope
+			.value(
+				script(
+					"x" lineTo script(literal(10)),
+					"y" lineTo script(literal(20)),
+					"z" lineTo script("get" lineTo script("x" lineTo script("number")))))
+			.assertEqualTo(
+				value(
+					"x" lineTo value(line(10)),
+					"y" lineTo value(line(20)),
+					"z" lineTo value(line(10))))
 	}
 
 	@Test
@@ -101,7 +116,7 @@ class ScopeTest {
 		emptyScope
 			.value(
 				script(
-					"function" lineTo script("number"),
+					"function" lineTo script("get" lineTo script("number")),
 					"apply" lineTo script(literal(10))))
 			.assertEqualTo(value(line(10)))
 	}
@@ -113,7 +128,7 @@ class ScopeTest {
 				script(
 					"x" lineTo script(literal(10)),
 					"y" lineTo script(literal(20)),
-					"do" lineTo script("x")))
+					"do" lineTo script("get" lineTo script("x"))))
 			.assertEqualTo(value("x" lineTo value(line(10))))
 	}
 
@@ -126,34 +141,9 @@ class ScopeTest {
 						"circle" lineTo script(
 							"radius" lineTo script(literal(10)))),
 					"switch" lineTo script(
-						"circle" lineTo script("radius"),
-						"square" lineTo script("side"))))
+						"circle" lineTo script("get" lineTo script("radius")),
+						"square" lineTo script("get" lineTo script("side")))))
 			.assertEqualTo(value("radius" lineTo value(line(10))))
-	}
-
-	@Test
-	fun value_defineGives() {
-		emptyScope
-			.value(
-				script(
-					"define" lineTo script(
-						"number" lineTo script("any"),
-						"gives" lineTo script(literal("ok")))))
-			.assertEqualTo(value())
-	}
-
-	@Test
-	fun define_gives() {
-		emptyScope
-			.defineOrNull(
-				script(
-					"number" lineTo script("any"),
-					"gives" lineTo script("number")))
-			.assertEqualTo(
-				emptyScope
-					.push(ValueBinding(
-						pattern("number" lineTo anyPattern),
-						value("number" lineTo value()))))
 	}
 
 	@Test
@@ -165,7 +155,7 @@ class ScopeTest {
 					"does" lineTo script("number")))
 			.assertEqualTo(
 				emptyScope
-					.push(FunctionBinding(
+					.push(Binding(
 						pattern("number" lineTo anyPattern),
 						emptyScope.function(body(script("number"))),
 						isRecursive = false)))
@@ -181,40 +171,29 @@ class ScopeTest {
 						"recursively" lineTo script("number"))))
 			.assertEqualTo(
 				emptyScope
-					.push(FunctionBinding(
+					.push(Binding(
 						pattern("number" lineTo anyPattern),
 						emptyScope.function(body(script("number"))),
 						isRecursive = true)))
 	}
 
 	@Test
-	fun resolveGives() {
-		emptyScope
-			.push(
-				ValueBinding(
-					pattern("number" lineTo anyPattern),
-					value("ok" lineTo value())))
-			.resolveOrNull(value(line(128)))
-			.assertEqualTo(value("ok" lineTo value()))
-	}
-
-	@Test
 	fun resolveDoes() {
-		emptyScope
+		emptyBindings
 			.push(
-				FunctionBinding(
+				Binding(
 					pattern("number" lineTo anyPattern),
-					emptyScope.function(body(script("good" lineTo script("number")))),
+					emptyScope.function(body(script("get" lineTo script("number")))),
 					isRecursive = false))
 			.resolveOrNull(value(line(128)))
-			.assertEqualTo(value("good" lineTo value(line(128))))
+			.assertEqualTo(value(line(128)))
 	}
 
 	@Test
 	fun resolveNumberPlus() {
-		emptyScope
+		emptyBindings
 			.push(
-				FunctionBinding(
+				Binding(
 					pattern(
 						numberPatternLine,
 						"plus" lineTo pattern(numberPatternLine)),
@@ -243,9 +222,9 @@ class ScopeTest {
 					"define" lineTo script(
 						"number" lineTo script("any"),
 						"does" lineTo script(
-							"good" lineTo script("number"))),
+							"get" lineTo script("number"))),
 					leo14.line(literal(128))))
-			.assertEqualTo(value("good" lineTo value(line(128))))
+			.assertEqualTo(value(line(128)))
 	}
 
 	@Test
@@ -274,19 +253,19 @@ class ScopeTest {
 	fun value_resolveRecursively() {
 		emptyScope
 			.push(
-				FunctionBinding(
+				Binding(
 					pattern(numberPatternLine, "sum" lineTo pattern()),
 					emptyScope.pushPrelude.function(
 						body(
 							script(
-								"number" lineTo script(),
+								"get" lineTo script("number"),
 								"equals" lineTo script(literal(1)),
 								"switch" lineTo script(
-									"true" lineTo script("number"),
+									"true" lineTo script(literal(1)),
 									"false" lineTo script(
-										"number" lineTo script(),
+										"get" lineTo script("number"),
 										"plus" lineTo script(
-											"number" lineTo script(),
+											"get" lineTo script("number"),
 											"minus" lineTo script(literal(1)),
 											"sum" lineTo script())))))),
 					isRecursive = true))

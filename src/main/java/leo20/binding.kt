@@ -2,25 +2,16 @@ package leo20
 
 import leo.base.notNullIf
 
-sealed class Binding
-data class ValueBinding(val pattern: Pattern, val value: Value) : Binding()
-data class FunctionBinding(val pattern: Pattern, val function: Function, val isRecursive: Boolean) : Binding()
-
-val Line.binding: Binding get() = ValueBinding(pattern(selectName lineTo pattern()), value(this))
+data class Binding(val pattern: Pattern, val function: Function, val isRecursive: Boolean)
 
 fun Binding.resolveOrNull(param: Value): Value? =
-	when (this) {
-		is ValueBinding ->
-			notNullIf(param.matches(pattern)) { value }
-		is FunctionBinding ->
-			notNullIf(param.matches(pattern)) {
-				if (isRecursive) function.applyRecursively(pattern, param)
-				else function.apply(param)
-			}
+	notNullIf(param.matches(pattern)) {
+		if (isRecursive) function.applyRecursively(pattern, param)
+		else function.apply(param)
 	}
 
 val numberPlusBinding: Binding =
-	FunctionBinding(
+	Binding(
 		pattern(
 			numberPatternLine,
 			"plus" lineTo pattern(numberPatternLine)),
@@ -28,7 +19,7 @@ val numberPlusBinding: Binding =
 		isRecursive = false)
 
 val numberMinusBinding: Binding =
-	FunctionBinding(
+	Binding(
 		pattern(
 			numberPatternLine,
 			"minus" lineTo pattern(numberPatternLine)),
@@ -36,7 +27,7 @@ val numberMinusBinding: Binding =
 		isRecursive = false)
 
 val numberEqualsBinding: Binding =
-	FunctionBinding(
+	Binding(
 		pattern(
 			numberPatternLine,
 			"equals" lineTo pattern(numberPatternLine)),

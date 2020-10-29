@@ -11,6 +11,7 @@ import leo13.first
 import leo13.linkOrNull
 import leo13.onlyOrNull
 import leo13.push
+import leo13.reverse
 import leo13.seq
 import leo13.seqNode
 import leo13.stack
@@ -31,6 +32,7 @@ data class Field(val name: String, val rhs: Value)
 
 val emptyValue = Value(stack())
 fun Value.plus(line: Line) = Value(lineStack.push(line))
+fun Value.plus(value: Value): Value = fold(value.lineStack.reverse.seq) { plus(it) }
 fun value(vararg lines: Line) = emptyValue.fold(lines) { plus(it) }
 infix fun String.lineTo(rhs: Value): Line = FieldLine(Field(this, rhs))
 fun line(function: Function): Line = FunctionLine(function)
@@ -63,6 +65,11 @@ fun Value.getOrNull(name: String): Value? =
 
 fun Value.make(name: String): Value =
 	value(name lineTo this)
+
+fun Value.makeOrNull(script: Script): Value? =
+	script.nameStackOrNull?.reverse?.let { nameStack ->
+		fold(nameStack.seq) { make(it) }
+	}
 
 fun Value.applyOrNull(param: Value): Value? =
 	lineStack.onlyOrNull?.functionOrNull?.apply(param)

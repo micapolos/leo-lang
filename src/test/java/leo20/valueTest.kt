@@ -1,6 +1,8 @@
 package leo20
 
 import leo.base.assertEqualTo
+import leo14.lineTo
+import leo14.script
 import kotlin.test.Test
 
 class ValueTest {
@@ -38,5 +40,18 @@ class ValueTest {
 		value.getOrNull("y").assertEqualTo(value("y" lineTo value(line(20))))
 		value.getOrNull("x", "number").assertEqualTo(value(line(10)))
 		value.getOrNull("y", "number").assertEqualTo(value(line(20)))
+	}
+
+	@Test
+	fun getOrNull_script() {
+		val value = value(
+			"point" lineTo value(
+				"x" lineTo value(line(10)),
+				"y" lineTo value(line(20))))
+
+		value.getOrNull(script("x")).assertEqualTo(value("x" lineTo value(line(10))))
+		value.getOrNull(script("y")).assertEqualTo(value("y" lineTo value(line(20))))
+		value.getOrNull(script("x" lineTo script("number"))).assertEqualTo(value(line(10)))
+		value.getOrNull(script("y" lineTo script("number"))).assertEqualTo(value(line(20)))
 	}
 }

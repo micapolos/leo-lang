@@ -127,4 +127,11 @@ class ScriptTest {
 				token(end),
 				token(end))
 	}
+
+	@Test
+	fun nameStackOrNull() {
+		script().nameStackOrNull!!.assertContains()
+		script("x").nameStackOrNull!!.assertContains("x")
+		script("x" lineTo script("y")).nameStackOrNull!!.assertContains("y", "x")
+	}
 }

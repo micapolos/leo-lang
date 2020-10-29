@@ -10,10 +10,10 @@ object NumberEqualsBody : Body()
 
 fun body(script: Script): Body = ScriptBody(script)
 
-fun Bindings.unsafeValue(body: Body): Value =
+fun Scope.unsafeValue(body: Body): Value =
 	when (body) {
 		is ScriptBody -> value(body.script)
-		NumberPlusBody -> unsafeValueAt(1).unsafeNumberPlus(unsafeValueAt(0).unsafeGet("number"))
-		NumberMinusBody -> unsafeValueAt(1).unsafeNumberMinus(unsafeValueAt(0).unsafeGet("number"))
-		NumberEqualsBody -> unsafeValueAt(1).equals(unsafeValueAt(0).unsafeGet("number")).value
+		NumberPlusBody -> unsafeGet("number").unsafeNumberPlus(unsafeGet("plus", "number"))
+		NumberMinusBody -> unsafeGet("number").unsafeNumberMinus(unsafeGet("minus", "number"))
+		NumberEqualsBody -> unsafeGet("number").equals(unsafeGet("equals", "number")).value
 	}

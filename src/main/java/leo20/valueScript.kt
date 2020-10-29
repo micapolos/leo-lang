@@ -33,7 +33,7 @@ val Body.script
 	get() =
 		when (this) {
 			is ScriptBody -> script
-			NumberPlusBody -> TODO()
-			NumberMinusBody -> TODO()
-			NumberEqualsBody -> TODO()
+			NumberPlusBody -> script(toString())
+			NumberMinusBody -> script(toString())
+			NumberEqualsBody -> script(toString())
 		}
