@@ -76,11 +76,11 @@ fun Evaluated.plusDo(script: Script): Evaluated =
 	copy(value = scope.push(value).value(script))
 
 fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
-	value.bodyOrNull?.lineStack?.onlyOrNull?.selectName?.let { selectName ->
+	value.bodyOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.let { switchField ->
 		script.lineSeq.mapFirstOrNull {
-			fieldOrNull?.let { field ->
-				ifOrNull(field.string == selectName) {
-					scope.function(body(field.rhs)).apply(value.bodyOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.rhs!!)
+			fieldOrNull?.let { caseField ->
+				ifOrNull(caseField.string == switchField.name) {
+					scope.push(switchField.rhs).value(caseField.rhs)
 				}
 			}
 		}
