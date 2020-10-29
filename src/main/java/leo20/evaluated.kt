@@ -39,13 +39,13 @@ fun Evaluated.plus(literal: Literal): Evaluated =
 
 fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 	when (scriptField.string) {
-		"function" -> plusFunction(scriptField.rhs)
 		"apply" -> plusApplyOrNull(scriptField.rhs)
-		"do" -> plusDo(scriptField.rhs)
-		"make" -> plusMakeOrNull(scriptField.rhs)
-		"get" -> plusGetOrNull(scriptField.rhs)
-		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"define" -> plusDefineOrNull(scriptField.rhs)
+		"do" -> plusDo(scriptField.rhs)
+		"function" -> plusFunction(scriptField.rhs)
+		"get" -> plusGetOrNull(scriptField.rhs)
+		"make" -> plusMakeOrNull(scriptField.rhs)
+		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
 		else -> plusResolve(scriptField)
 	} ?: plusQuoted(scriptField.valueLine)
