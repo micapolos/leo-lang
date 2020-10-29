@@ -15,7 +15,10 @@ import leo13.reverse
 import leo13.seq
 import leo13.seqNode
 import leo13.stack
+import leo14.Literal
+import leo14.NumberLiteral
 import leo14.Script
+import leo14.StringLiteral
 import leo14.bigDecimal
 import leo14.nameStackOrNull
 import java.math.BigDecimal
@@ -37,6 +40,11 @@ fun value(vararg lines: Line) = emptyValue.fold(lines) { plus(it) }
 infix fun String.lineTo(rhs: Value): Line = FieldLine(Field(this, rhs))
 fun line(function: Function): Line = FunctionLine(function)
 fun line(string: String): Line = StringLine(string)
+fun line(literal: Literal) = when (literal) {
+	is StringLiteral -> line(literal.string)
+	is NumberLiteral -> line(literal.number.bigDecimal.toDouble())
+}
+
 fun line(int: Int): Line = NumberLine(int.toDouble().bigDecimal)
 fun line(double: Double): Line = NumberLine(double.bigDecimal)
 fun line(bigDecimal: BigDecimal): Line = NumberLine(bigDecimal)

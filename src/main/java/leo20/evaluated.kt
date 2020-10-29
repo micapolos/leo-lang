@@ -9,12 +9,9 @@ import leo13.onlyOrNull
 import leo14.FieldScriptLine
 import leo14.Literal
 import leo14.LiteralScriptLine
-import leo14.NumberLiteral
 import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
-import leo14.StringLiteral
-import leo14.bigDecimal
 import leo14.fieldOrNull
 import leo14.lineSeq
 
@@ -38,10 +35,7 @@ fun Evaluated.plus(scriptLine: ScriptLine): Evaluated =
 	}
 
 fun Evaluated.plus(literal: Literal): Evaluated =
-	when (literal) {
-		is StringLiteral -> Evaluated(scope, scope.bindings.resolve(value.plus(leo20.line(literal.string))))
-		is NumberLiteral -> Evaluated(scope, scope.bindings.resolve(value.plus(line(literal.number.bigDecimal.toDouble().bigDecimal))))
-	}
+	plusResolve(line(literal))
 
 fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 	when (scriptField.string) {
