@@ -8,7 +8,7 @@ val run_ = dsl_ {
 			zero
 			does { one }
 		}
-		run { zero }
+		do_ { zero }
 		equals_ { one }
 	}
 
@@ -17,7 +17,7 @@ val run_ = dsl_ {
 			zero
 			does { one }
 		}
-		run { one }
+		do_ { one }
 		fails
 	}
 }
