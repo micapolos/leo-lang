@@ -9,6 +9,6 @@ fun Function.apply(param: Value): Value = scope
 	.unsafeValue(body)
 
 fun Function.applyRecursively(pattern: Pattern, param: Value): Value = scope
-	.push(Binding(pattern, this, isRecursive = true))
+	.push(Definition(pattern, this, isRecursive = true))
 	.push(param)
 	.unsafeValue(body)

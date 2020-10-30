@@ -9,23 +9,23 @@ import leo14.Script
 import leo14.fieldOrNull
 import leo14.onlyLineOrNull
 
-data class Bindings(val bindingStack: Stack<Binding>)
+data class Bindings(val definitionStack: Stack<Definition>)
 
 val emptyBindings = Bindings(stack())
-fun Bindings.push(binding: Binding): Bindings = Bindings(bindingStack.push(binding))
+fun Bindings.push(definition: Definition): Bindings = Bindings(definitionStack.push(definition))
 
 fun Bindings.resolveOrNull(param: Value): Value? =
-	bindingStack.mapFirst { resolveOrNull(param) }
+	definitionStack.mapFirst { resolveOrNull(param) }
 
 fun Bindings.resolve(param: Value): Value =
 	resolveOrNull(param) ?: param
 
 val Bindings.pushPrelude
 	get() = this
-		.push(numberPlusBinding)
-		.push(numberMinusBinding)
-		.push(numberEqualsBinding)
-		.push(textAppendBinding)
+		.push(numberPlusDefinition)
+		.push(numberMinusDefinition)
+		.push(numberEqualsDefinition)
+		.push(textAppendDefinition)
 
 val Script.recursivelyBodyOrNull: Script?
 	get() =

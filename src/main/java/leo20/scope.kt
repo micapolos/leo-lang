@@ -14,7 +14,7 @@ data class Scope(
 val emptyScope = Scope(emptyBindings, value())
 val Scope.pushPrelude get() = Scope(bindings.pushPrelude, value)
 
-fun Scope.push(binding: Binding) = copy(bindings = bindings.push(binding))
+fun Scope.push(definition: Definition) = copy(bindings = bindings.push(definition))
 fun Scope.push(value: Value) = copy(value = this.value.plus(value))
 
 fun Scope.defineOrNull(script: Script): Scope? =
@@ -32,9 +32,9 @@ fun Scope.defineOrNull(script: Script): Scope? =
 fun Scope.defineDoes(pattern: Pattern, script: Script): Scope =
 	script.recursivelyBodyOrNull
 		?.let { recursivelyBody ->
-			push(Binding(pattern, function(body(recursivelyBody)), isRecursive = true))
+			push(Definition(pattern, function(body(recursivelyBody)), isRecursive = true))
 		}
-		?: push(Binding(pattern, function(body(script)), isRecursive = false))
+		?: push(Definition(pattern, function(body(script)), isRecursive = false))
 
 fun Scope.test(script: Script) {
 	val link = script.linkOrNull ?: error("syntax" lineTo script)

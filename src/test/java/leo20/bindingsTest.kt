@@ -155,7 +155,7 @@ class BindingsTest {
 					"does" lineTo script("number")))
 			.assertEqualTo(
 				emptyScope
-					.push(Binding(
+					.push(Definition(
 						pattern("number" lineTo anyPattern),
 						emptyScope.function(body(script("number"))),
 						isRecursive = false)))
@@ -171,7 +171,7 @@ class BindingsTest {
 						"recursively" lineTo script("number"))))
 			.assertEqualTo(
 				emptyScope
-					.push(Binding(
+					.push(Definition(
 						pattern("number" lineTo anyPattern),
 						emptyScope.function(body(script("number"))),
 						isRecursive = true)))
@@ -181,7 +181,7 @@ class BindingsTest {
 	fun resolveDoes() {
 		emptyBindings
 			.push(
-				Binding(
+				Definition(
 					pattern("number" lineTo anyPattern),
 					emptyScope.function(body(script("get" lineTo script("number")))),
 					isRecursive = false))
@@ -193,7 +193,7 @@ class BindingsTest {
 	fun resolveNumberPlus() {
 		emptyBindings
 			.push(
-				Binding(
+				Definition(
 					pattern(
 						numberPatternLine,
 						"plus" lineTo pattern(numberPatternLine)),
@@ -253,7 +253,7 @@ class BindingsTest {
 	fun value_resolveRecursively() {
 		emptyScope
 			.push(
-				Binding(
+				Definition(
 					pattern(numberPatternLine, "sum" lineTo pattern()),
 					emptyScope.pushPrelude.function(
 						body(

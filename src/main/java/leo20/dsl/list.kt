@@ -51,6 +51,7 @@ val list_ = dsl_ {
 	}
 
 	define {
+		folded { any }
 		list { any }
 		fold { function { any } }
 		does {
@@ -59,7 +60,7 @@ val list_ = dsl_ {
 				switch {
 					empty {
 						does {
-							list { get { empty } }
+							get { list }
 						}
 					}
 					link {

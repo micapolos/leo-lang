@@ -2,40 +2,40 @@ package leo20
 
 import leo.base.notNullIf
 
-data class Binding(val pattern: Pattern, val function: Function, val isRecursive: Boolean)
+data class Definition(val pattern: Pattern, val function: Function, val isRecursive: Boolean)
 
-fun Binding.resolveOrNull(param: Value): Value? =
+fun Definition.resolveOrNull(param: Value): Value? =
 	notNullIf(param.matches(pattern)) {
 		if (isRecursive) function.applyRecursively(pattern, param)
 		else function.apply(param)
 	}
 
-val numberPlusBinding: Binding =
-	Binding(
+val numberPlusDefinition: Definition =
+	Definition(
 		pattern(
 			numberPatternLine,
 			"plus" lineTo pattern(numberPatternLine)),
 		emptyScope.function(NumberPlusBody),
 		isRecursive = false)
 
-val numberMinusBinding: Binding =
-	Binding(
+val numberMinusDefinition: Definition =
+	Definition(
 		pattern(
 			numberPatternLine,
 			"minus" lineTo pattern(numberPatternLine)),
 		emptyScope.function(NumberMinusBody),
 		isRecursive = false)
 
-val numberEqualsBinding: Binding =
-	Binding(
+val numberEqualsDefinition: Definition =
+	Definition(
 		pattern(
 			numberPatternLine,
 			"equals" lineTo pattern(numberPatternLine)),
 		emptyScope.function(NumberEqualsBody),
 		isRecursive = false)
 
-val textAppendBinding: Binding =
-	Binding(
+val textAppendDefinition: Definition =
+	Definition(
 		pattern(
 			textPatternLine,
 			"append" lineTo pattern(textPatternLine)),
