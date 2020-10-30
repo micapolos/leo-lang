@@ -51,6 +51,7 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"get" -> plusGetOrNull(scriptField.rhs)
 		"make" -> plusMakeOrNull(scriptField.rhs)
 		"quote" -> plusQuote(scriptField.rhs)
+		"save" -> plusSave(scriptField.rhs)
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
 		else -> plusContent(line(scriptField))
@@ -127,3 +128,7 @@ fun Evaluated.plusQuote(script: Script): Evaluated =
 
 fun Evaluated.plusQuote(scriptLine: ScriptLine): Evaluated =
 	plusQuoted(scriptLine.valueLine)
+
+fun Evaluated.plusSave(script: Script): Evaluated =
+	copy(scope = scope.push(scope.value(script)))
+
