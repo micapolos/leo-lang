@@ -41,6 +41,7 @@ fun Evaluated.plus(literal: Literal): Evaluated =
 fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 	when (scriptField.string) {
 		"apply" -> plusApplyOrNull(scriptField.rhs)
+		"content" -> plusContent(scriptField.rhs)
 		"define" -> plusDefineOrNull(scriptField.rhs)
 		"do" -> plusDo(scriptField.rhs)
 		"function" -> plusFunction(scriptField.rhs)
@@ -49,7 +50,6 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"quote" -> plusQuote(scriptField.rhs)
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
-		"with" -> plusWith(scriptField.rhs)
 		else -> plusResolve(scriptField)
 	} ?: plusQuoted(scriptField.valueLine)
 
@@ -102,10 +102,10 @@ fun Evaluated.getValueOrNull(script: Script): Value? =
 	if (value == value()) scope.getOrNull(script)
 	else value.getOrNull(script)
 
-fun Evaluated.plusWith(script: Script): Evaluated =
-	fold(script.lineSeq.reverse) { plusWith(it) }
+fun Evaluated.plusContent(script: Script): Evaluated =
+	fold(script.lineSeq.reverse) { plusContent(it) }
 
-fun Evaluated.plusWith(scriptLine: ScriptLine): Evaluated =
+fun Evaluated.plusContent(scriptLine: ScriptLine): Evaluated =
 	when (scriptLine) {
 		is LiteralScriptLine -> copy(value = value.plus(scriptLine.literal.line))
 		is FieldScriptLine -> copy(value = value.plus(scriptLine.field.string lineTo scope.value(scriptLine.field.rhs)))

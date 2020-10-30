@@ -12,7 +12,7 @@ val with_ = dsl_ {
 			y { any }
 			does { one }
 		}
-		with { x { y { z } } }
+		content { x { y { z } } }
 		equals_ { x { one } }
 	}
 }
