@@ -9,13 +9,13 @@ val switch_ = dsl_ {
 			number {
 				does {
 					get { number }
-					plus { number(1) }
+					do_ { plus { number(1) } }
 				}
 			}
 			text {
 				does {
 					get { text }
-					append { text("+1") }
+					do_ { append { text("+1") } }
 				}
 			}
 		}
@@ -28,13 +28,13 @@ val switch_ = dsl_ {
 			number {
 				does {
 					get { number }
-					plus { number(1) }
+					do_ { plus { number(1) } }
 				}
 			}
 			text {
 				does {
 					get { text }
-					append { text("+1") }
+					do_ { append { text("+1") } }
 				}
 			}
 		}

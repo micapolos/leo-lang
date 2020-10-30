@@ -16,7 +16,7 @@ val define_ = dsl_ {
 			zero
 			does { one }
 		}
-		zero
+		do_ { zero }
 		equals_ { one }
 	}
 
@@ -26,11 +26,11 @@ val define_ = dsl_ {
 			increment
 			does {
 				get { number }
-				plus { number(1) }
+				do_ { plus { number(1) } }
 			}
 		}
 		number(10)
-		increment
+		do_ { increment }
 		equals_ { number(11) }
 	}
 }

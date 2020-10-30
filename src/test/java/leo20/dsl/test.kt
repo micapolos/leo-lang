@@ -12,7 +12,7 @@ class Test {
 		run_(give_)
 		run_(define_)
 		run_(run_)
-		run_(with_)
+		run_(content_)
 		run_(quote_)
 		run_(make_)
 		run_(switch_)

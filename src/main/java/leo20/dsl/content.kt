@@ -2,7 +2,7 @@ package leo20.dsl
 
 import leo15.dsl.*
 
-val with_ = dsl_ {
+val content_ = dsl_ {
 	test {
 		define {
 			x { any }
@@ -12,7 +12,7 @@ val with_ = dsl_ {
 			y { any }
 			does { one }
 		}
-		content { x { y { z } } }
+		content { x { do_ { y { z } } } }
 		equals_ { x { one } }
 	}
 }

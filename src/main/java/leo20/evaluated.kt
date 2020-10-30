@@ -38,7 +38,7 @@ fun Evaluated.plus(scriptLine: ScriptLine): Evaluated =
 	}
 
 fun Evaluated.plus(literal: Literal): Evaluated =
-	plusResolve(leo20.line(literal))
+	plusQuoted(leo20.line(literal))
 
 fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 	when (scriptField.string) {
@@ -53,11 +53,8 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"quote" -> plusQuote(scriptField.rhs)
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
-		else -> plusResolve(scriptField)
+		else -> plusContent(line(scriptField))
 	} ?: plusFallback(scriptField.valueLine)
-
-fun Evaluated.plusResolve(scriptField: ScriptField): Evaluated =
-	plusResolve(scriptField.string lineTo scope.push(value).value(scriptField.rhs))
 
 fun Evaluated.plusResolve(line: Line): Evaluated =
 	copy(value = scope.dictionary.resolve(value.plus(line)))
@@ -122,7 +119,7 @@ fun Evaluated.plusContent(script: Script): Evaluated =
 fun Evaluated.plusContent(scriptLine: ScriptLine): Evaluated =
 	when (scriptLine) {
 		is LiteralScriptLine -> copy(value = value.plus(scriptLine.literal.line))
-		is FieldScriptLine -> copy(value = value.plus(scriptLine.field.string lineTo scope.value(scriptLine.field.rhs)))
+		is FieldScriptLine -> copy(value = value.plus(scriptLine.field.string lineTo scope.push(value).value(scriptLine.field.rhs)))
 	}
 
 fun Evaluated.plusQuote(script: Script): Evaluated =
