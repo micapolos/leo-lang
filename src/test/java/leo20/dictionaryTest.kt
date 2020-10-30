@@ -122,13 +122,13 @@ class DictionaryTest {
 	}
 
 	@Test
-	fun value_do() {
+	fun value_give() {
 		emptyScope
 			.value(
 				script(
 					"x" lineTo script(literal(10)),
 					"y" lineTo script(literal(20)),
-					"do" lineTo script("get" lineTo script("x"))))
+					"give" lineTo script("get" lineTo script("x"))))
 			.assertEqualTo(value("x" lineTo value(line(10))))
 	}
 

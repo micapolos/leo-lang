@@ -9,7 +9,7 @@ class Test {
 		run_(text_)
 		run_(get_)
 		run_(scope_)
-		run_(do__)
+		run_(give_)
 		run_(define_)
 		run_(run_)
 		run_(with_)

@@ -2,11 +2,11 @@ package leo20.dsl
 
 import leo15.dsl.*
 
-val do__ = dsl_ {
+val give_ = dsl_ {
 	test {
 		x { zero }
 		y { one }
-		do_ {
+		give {
 			get { x }
 			plus { get { y } }
 		}
