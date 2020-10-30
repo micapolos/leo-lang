@@ -11,6 +11,7 @@ class Test {
 		run_(scope_)
 		run_(do__)
 		run_(define_)
+		run_(run_)
 		run_(with_)
 		run_(quote_)
 		run_(make_)

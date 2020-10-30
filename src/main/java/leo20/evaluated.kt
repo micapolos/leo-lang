@@ -46,6 +46,7 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"content" -> plusContent(scriptField.rhs)
 		"define" -> plusDefineOrNull(scriptField.rhs)
 		"do" -> plusDo(scriptField.rhs)
+		"run" -> plusRunOrNull(scriptField.rhs)
 		"function" -> plusFunction(scriptField.rhs)
 		"get" -> plusGetOrNull(scriptField.rhs)
 		"make" -> plusMakeOrNull(scriptField.rhs)
@@ -84,6 +85,11 @@ fun Evaluated.plusGetOrNull(script: Script): Evaluated? =
 
 fun Evaluated.plusDo(script: Script): Evaluated =
 	copy(value = scope.push(value).value(script))
+
+fun Evaluated.plusRunOrNull(script: Script): Evaluated? =
+	scope.dictionary
+		.resolveOrNull(value.plus(scope.push(value).evaluated(value()).plusContent(script).value))
+		?.let { copy(value = it) }
 
 fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
 	value.contentOrNull?.lineStack?.onlyOrNull?.let { switchLine ->
