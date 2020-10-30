@@ -26,16 +26,24 @@ val get_ = dsl_ {
 			x { number(10) }
 			y { number(20) }
 		}
-		get { x { number } }
-		equals_ { number(10) }
+		get { z }
+		equals_ {
+			quote {
+				point {
+					x { number(10) }
+					y { number(20) }
+				}
+				get { z }
+			}
+		}
 	}
 
 	test {
-		x { number(10) }
-		y { get { x { number } } }
-		equals_ {
+		point {
 			x { number(10) }
-			y { number(10) }
+			y { number(20) }
 		}
+		get { x { number } }
+		equals_ { number(10) }
 	}
 }

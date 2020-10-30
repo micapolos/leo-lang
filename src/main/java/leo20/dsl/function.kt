@@ -4,9 +4,7 @@ import leo15.dsl.*
 
 val function_ = dsl_ {
 	test {
-		function {
-			get { x }
-		}
+		function { get { x } }
 		apply {
 			x { number(10) }
 			y { number(20) }

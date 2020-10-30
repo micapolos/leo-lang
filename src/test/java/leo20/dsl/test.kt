@@ -7,6 +7,7 @@ class Test {
 	fun all() {
 		run_(number_)
 		run_(get_)
+		run_(scope_)
 		run_(do__)
 		run_(define_)
 		run_(with_)
