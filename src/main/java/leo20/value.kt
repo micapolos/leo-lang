@@ -111,6 +111,7 @@ val Value.unsafeBigDecimal get() = bodyOrNull("number")!!.nativeOrNull as BigDec
 val Value.unsafeString get() = bodyOrNull("text")!!.nativeOrNull as String
 fun Value.unsafeNumberPlus(value: Value) = value(line(unsafeBigDecimal.plus(value.unsafeBigDecimal)))
 fun Value.unsafeNumberMinus(value: Value) = value(line(unsafeBigDecimal.minus(value.unsafeBigDecimal)))
+fun Value.unsafeTextAppend(value: Value) = value(line(unsafeString.plus(value.unsafeString)))
 
 val Boolean.name get() = if (this) "true" else "false"
 val Boolean.value get() = value("boolean" lineTo value(name lineTo value()))

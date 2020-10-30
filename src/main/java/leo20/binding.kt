@@ -33,3 +33,11 @@ val numberEqualsBinding: Binding =
 			"equals" lineTo pattern(numberPatternLine)),
 		emptyScope.function(NumberEqualsBody),
 		isRecursive = false)
+
+val textAppendBinding: Binding =
+	Binding(
+		pattern(
+			textPatternLine,
+			"append" lineTo pattern(textPatternLine)),
+		emptyScope.function(StringAppendBody),
+		isRecursive = false)

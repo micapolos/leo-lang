@@ -25,6 +25,7 @@ val Bindings.pushPrelude
 		.push(numberPlusBinding)
 		.push(numberMinusBinding)
 		.push(numberEqualsBinding)
+		.push(textAppendBinding)
 
 val Script.recursivelyBodyOrNull: Script?
 	get() =

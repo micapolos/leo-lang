@@ -38,4 +38,5 @@ val Body.script
 			NumberPlusBody -> script(toString())
 			NumberMinusBody -> script(toString())
 			NumberEqualsBody -> script(toString())
+			StringAppendBody -> script(toString())
 		}

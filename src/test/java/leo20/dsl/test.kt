@@ -6,6 +6,7 @@ class Test {
 	@Test
 	fun all() {
 		run_(number_)
+		run_(text_)
 		run_(get_)
 		run_(scope_)
 		run_(do__)

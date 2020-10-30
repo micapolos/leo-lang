@@ -261,13 +261,14 @@ class BindingsTest {
 								"get" lineTo script("number"),
 								"equals" lineTo script(literal(1)),
 								"switch" lineTo script(
-									"true" lineTo script(literal(1)),
+									"true" lineTo script("do" lineTo script(literal(1))),
 									"false" lineTo script(
-										"get" lineTo script("number"),
-										"plus" lineTo script(
+										"do" lineTo script(
 											"get" lineTo script("number"),
-											"minus" lineTo script(literal(1)),
-											"sum" lineTo script())))))),
+											"plus" lineTo script(
+												"get" lineTo script("number"),
+												"minus" lineTo script(literal(1)),
+												"sum" lineTo script()))))))),
 					isRecursive = true))
 			.value(
 				script(

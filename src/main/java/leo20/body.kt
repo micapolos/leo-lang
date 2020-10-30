@@ -7,6 +7,7 @@ data class ScriptBody(val script: Script) : Body()
 object NumberPlusBody : Body()
 object NumberMinusBody : Body()
 object NumberEqualsBody : Body()
+object StringAppendBody : Body()
 
 fun body(script: Script): Body = ScriptBody(script)
 
@@ -16,4 +17,5 @@ fun Scope.unsafeValue(body: Body): Value =
 		NumberPlusBody -> unsafeGet("number").unsafeNumberPlus(unsafeGet("plus", "number"))
 		NumberMinusBody -> unsafeGet("number").unsafeNumberMinus(unsafeGet("minus", "number"))
 		NumberEqualsBody -> unsafeGet("number").equals(unsafeGet("equals", "number")).value
+		StringAppendBody -> unsafeGet("text").unsafeTextAppend(unsafeGet("append", "text"))
 	}
