@@ -16,5 +16,7 @@ class Test {
 		run_(make_)
 		run_(switch_)
 		run_(function_)
+
+		run_(list_)
 	}
 }
