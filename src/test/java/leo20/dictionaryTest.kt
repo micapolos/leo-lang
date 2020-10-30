@@ -7,7 +7,7 @@ import leo14.script
 import kotlin.test.Test
 import kotlin.test.assertFails
 
-class BindingsTest {
+class DictionaryTest {
 	@Test
 	fun value_empty() {
 		emptyScope
@@ -179,7 +179,7 @@ class BindingsTest {
 
 	@Test
 	fun resolveDoes() {
-		emptyBindings
+		emptyDictionary
 			.push(
 				Definition(
 					pattern("number" lineTo anyPattern),
@@ -191,7 +191,7 @@ class BindingsTest {
 
 	@Test
 	fun resolveNumberPlus() {
-		emptyBindings
+		emptyDictionary
 			.push(
 				Definition(
 					pattern(

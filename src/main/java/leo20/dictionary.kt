@@ -9,18 +9,19 @@ import leo14.Script
 import leo14.fieldOrNull
 import leo14.onlyLineOrNull
 
-data class Bindings(val definitionStack: Stack<Definition>)
+data class Dictionary(val definitionStack: Stack<Definition>)
 
-val emptyBindings = Bindings(stack())
-fun Bindings.push(definition: Definition): Bindings = Bindings(definitionStack.push(definition))
+val emptyDictionary = Dictionary(stack())
+fun Dictionary.push(definition: Definition): Dictionary =
+	Dictionary(definitionStack.push(definition))
 
-fun Bindings.resolveOrNull(param: Value): Value? =
+fun Dictionary.resolveOrNull(param: Value): Value? =
 	definitionStack.mapFirst { resolveOrNull(param) }
 
-fun Bindings.resolve(param: Value): Value =
+fun Dictionary.resolve(param: Value): Value =
 	resolveOrNull(param) ?: param
 
-val Bindings.pushPrelude
+val Dictionary.pushPrelude
 	get() = this
 		.push(numberPlusDefinition)
 		.push(numberMinusDefinition)

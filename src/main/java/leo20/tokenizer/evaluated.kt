@@ -21,9 +21,9 @@ val Evaluated.begin get() = Evaluated(scope, value())
 
 fun Evaluated.push(literal: Literal): Evaluated =
 	when (literal) {
-		is StringLiteral -> Evaluated(scope, scope.bindings.resolve(value.plus(line(literal.string))))
-		is NumberLiteral -> Evaluated(scope, scope.bindings.resolve(value.plus(line(literal.number.bigDecimal.toDouble().bigDecimal))))
+		is StringLiteral -> Evaluated(scope, scope.dictionary.resolve(value.plus(line(literal.string))))
+		is NumberLiteral -> Evaluated(scope, scope.dictionary.resolve(value.plus(line(literal.number.bigDecimal.toDouble().bigDecimal))))
 	}
 
 fun Evaluated.plus(line: Line): Evaluated =
-	copy(value = scope.bindings.resolve(value.plus(line)))
+	copy(value = scope.dictionary.resolve(value.plus(line)))

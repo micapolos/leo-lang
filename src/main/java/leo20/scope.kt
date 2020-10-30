@@ -7,14 +7,14 @@ import leo14.linkOrNull
 import leo14.plus
 
 data class Scope(
-	val bindings: Bindings,
+	val dictionary: Dictionary,
 	val value: Value
 )
 
-val emptyScope = Scope(emptyBindings, value())
-val Scope.pushPrelude get() = Scope(bindings.pushPrelude, value)
+val emptyScope = Scope(emptyDictionary, value())
+val Scope.pushPrelude get() = Scope(dictionary.pushPrelude, value)
 
-fun Scope.push(definition: Definition) = copy(bindings = bindings.push(definition))
+fun Scope.push(definition: Definition) = copy(dictionary = dictionary.push(definition))
 fun Scope.push(value: Value) = copy(value = this.value.plus(value))
 
 fun Scope.defineOrNull(script: Script): Scope? =

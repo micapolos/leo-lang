@@ -58,7 +58,7 @@ fun Evaluated.plusResolve(scriptField: ScriptField): Evaluated =
 	plusResolve(scriptField.string lineTo scope.push(value).value(scriptField.rhs))
 
 fun Evaluated.plusResolve(line: Line): Evaluated =
-	copy(value = scope.bindings.resolve(value.plus(line)))
+	copy(value = scope.dictionary.resolve(value.plus(line)))
 
 fun Evaluated.plusQuoted(line: Line): Evaluated =
 	copy(value = value.plus(line))

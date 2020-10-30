@@ -51,9 +51,8 @@ val list_ = dsl_ {
 	}
 
 	define {
-		folded { any }
 		list { any }
-		fold { function { any } }
+		map { function { any } }
 		does {
 			recursively {
 				get { list }
@@ -66,9 +65,9 @@ val list_ = dsl_ {
 					link {
 						does {
 							get { link { previous { list } } }
-							fold { get { fold { function } } }
+							map { get { map { function } } }
 							append {
-								get { fold { function } }
+								get { map { function } }
 								apply { get { link { last { item } } } }
 							}
 						}
@@ -80,7 +79,7 @@ val list_ = dsl_ {
 
 	test {
 		list { empty }
-		fold {
+		map {
 			function {
 				item {
 					get { item { number } }
@@ -97,7 +96,7 @@ val list_ = dsl_ {
 		list { empty }
 		append { item { number(1) } }
 		append { item { number(2) } }
-		fold {
+		map {
 			function {
 				item {
 					get { item { number } }
