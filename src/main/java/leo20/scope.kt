@@ -2,6 +2,7 @@ package leo20
 
 import leo14.Script
 import leo14.fieldOrNull
+import leo14.isEmpty
 import leo14.lineTo
 import leo14.linkOrNull
 import leo14.plus
@@ -39,13 +40,27 @@ fun Scope.defineDoes(pattern: Pattern, script: Script): Scope =
 fun Scope.test(script: Script) {
 	val link = script.linkOrNull ?: error("syntax" lineTo script)
 	val field = link.line.fieldOrNull ?: error("syntax" lineTo script)
-	if (field.string != "equals") error("syntax" lineTo script)
-	val lhsValue = value(link.lhs)
-	val rhsValue = value(field.rhs)
-	if (lhsValue != rhsValue)
-		error(
-			"test" lineTo script,
-			"result" lineTo lhsValue.script.plus("equals" lineTo rhsValue.script))
+	when (field.string) {
+		"equals" -> {
+			val lhsValue = value(link.lhs)
+			val rhsValue = value(field.rhs)
+			if (lhsValue != rhsValue)
+				error(
+					"test" lineTo script,
+					"result" lineTo lhsValue.script.plus("equals" lineTo rhsValue.script))
+		}
+		"fails" -> {
+			if (!field.rhs.isEmpty) error("syntax" lineTo script)
+			try {
+				value(link.lhs)
+				error("test" lineTo script)
+			} catch (exception: Exception) {
+				// OK
+			}
+		}
+		else -> error("syntax" lineTo script)
+	}
+
 }
 
 fun Scope.getOrNull(name: String, vararg names: String) =

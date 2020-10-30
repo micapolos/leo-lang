@@ -47,14 +47,6 @@ val switch_ = dsl_ {
 			circle { does { nothing_ } }
 			square { does { nothing_ } }
 		}
-		equals_ {
-			quote {
-				shape { triangle }
-				switch {
-					circle { does { nothing_ } }
-					square { does { nothing_ } }
-				}
-			}
-		}
+		fails
 	}
 }

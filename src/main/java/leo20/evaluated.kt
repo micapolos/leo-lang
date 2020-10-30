@@ -15,6 +15,7 @@ import leo14.ScriptLine
 import leo14.fieldOrNull
 import leo14.line
 import leo14.lineSeq
+import leo14.lineTo
 import leo14.rhsOrNull
 
 data class Evaluated(
@@ -52,7 +53,7 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
 		else -> plusResolve(scriptField)
-	} ?: plusQuoted(scriptField.valueLine)
+	} ?: plusFallback(scriptField.valueLine)
 
 fun Evaluated.plusResolve(scriptField: ScriptField): Evaluated =
 	plusResolve(scriptField.string lineTo scope.push(value).value(scriptField.rhs))
@@ -60,8 +61,14 @@ fun Evaluated.plusResolve(scriptField: ScriptField): Evaluated =
 fun Evaluated.plusResolve(line: Line): Evaluated =
 	copy(value = scope.dictionary.resolve(value.plus(line)))
 
+fun Evaluated.plusFallback(line: Line): Evaluated =
+	plusError(line)
+
 fun Evaluated.plusQuoted(line: Line): Evaluated =
 	copy(value = value.plus(line))
+
+fun Evaluated.plusError(line: Line): Evaluated =
+	error(("error" lineTo value.plus(line).script).toString())
 
 fun Evaluated.plusFunction(script: Script): Evaluated =
 	copy(value = value.plus(line(scope.function(body(script)))))

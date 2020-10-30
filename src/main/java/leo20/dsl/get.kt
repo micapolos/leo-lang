@@ -27,15 +27,7 @@ val get_ = dsl_ {
 			y { number(20) }
 		}
 		get { z }
-		equals_ {
-			quote {
-				point {
-					x { number(10) }
-					y { number(20) }
-				}
-				get { z }
-			}
-		}
+		fails
 	}
 
 	test {

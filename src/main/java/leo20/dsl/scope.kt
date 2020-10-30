@@ -5,7 +5,7 @@ import leo15.dsl.*
 val scope_ = dsl_ {
 	test {
 		get { x }
-		equals_ { quote { get { x } } }
+		fails
 	}
 
 	test {
@@ -22,11 +22,6 @@ val scope_ = dsl_ {
 	test {
 		x { zero }
 		y { get { y } }
-		equals_ {
-			quote {
-				x { zero }
-				y { get { y } }
-			}
-		}
+		fails
 	}
 }
