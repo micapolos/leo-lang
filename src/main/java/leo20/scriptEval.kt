@@ -4,4 +4,4 @@ import leo14.Script
 
 val Script.eval: Script
 	get() =
-		emptyScope.value(this).script
+		emptyScope.pushPrelude.value(this).script

@@ -13,6 +13,7 @@ import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
 import leo14.fieldOrNull
+import leo14.line
 import leo14.lineSeq
 
 data class Evaluated(
@@ -35,7 +36,7 @@ fun Evaluated.plus(scriptLine: ScriptLine): Evaluated =
 	}
 
 fun Evaluated.plus(literal: Literal): Evaluated =
-	plusResolve(line(literal))
+	plusResolve(leo20.line(literal))
 
 fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 	when (scriptField.string) {
@@ -47,6 +48,8 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"make" -> plusMakeOrNull(scriptField.rhs)
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
+		"with" -> plusWith(scriptField.rhs)
+		"quote" -> plusQuote(scriptField.rhs)
 		else -> plusResolve(scriptField)
 	} ?: plusQuoted(scriptField.valueLine)
 
@@ -94,3 +97,18 @@ fun Evaluated.plusTestOrNull(script: Script): Evaluated? =
 fun Evaluated.getValueOrNull(script: Script): Value? =
 	if (value == value()) scope.getOrNull(script)
 	else value.getOrNull(script)
+
+fun Evaluated.plusWith(script: Script): Evaluated =
+	fold(script.lineSeq.reverse) { plusWith(it) }
+
+fun Evaluated.plusWith(scriptLine: ScriptLine): Evaluated =
+	when (scriptLine) {
+		is LiteralScriptLine -> copy(value = value.plus(scriptLine.literal.line))
+		is FieldScriptLine -> copy(value = value.plus(scriptLine.field.string lineTo scope.value(scriptLine.field.rhs)))
+	}
+
+fun Evaluated.plusQuote(script: Script): Evaluated =
+	fold(script.lineSeq.reverse) { plusQuote(it) }
+
+fun Evaluated.plusQuote(scriptLine: ScriptLine): Evaluated =
+	plusQuoted(scriptLine.valueLine)
