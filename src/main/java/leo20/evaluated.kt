@@ -5,7 +5,6 @@ import leo.base.ifOrNull
 import leo.base.mapFirstOrNull
 import leo.base.notNullIf
 import leo.base.reverse
-import leo13.onlyOrNull
 import leo14.FieldScriptLine
 import leo14.Literal
 import leo14.LiteralScriptLine
@@ -15,6 +14,7 @@ import leo14.ScriptLine
 import leo14.fieldOrNull
 import leo14.line
 import leo14.lineSeq
+import leo14.rhsOrNull
 
 data class Evaluated(
 	val scope: Scope,
@@ -46,10 +46,10 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"function" -> plusFunction(scriptField.rhs)
 		"get" -> plusGetOrNull(scriptField.rhs)
 		"make" -> plusMakeOrNull(scriptField.rhs)
+		"quote" -> plusQuote(scriptField.rhs)
 		"switch" -> plusSwitchOrNull(scriptField.rhs)
 		"test" -> plusTestOrNull(scriptField.rhs)
 		"with" -> plusWith(scriptField.rhs)
-		"quote" -> plusQuote(scriptField.rhs)
 		else -> plusResolve(scriptField)
 	} ?: plusQuoted(scriptField.valueLine)
 
@@ -78,11 +78,15 @@ fun Evaluated.plusDo(script: Script): Evaluated =
 	copy(value = scope.push(value).value(script))
 
 fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
-	value.bodyOrNull?.lineStack?.onlyOrNull?.let { switchLine ->
+	value.contentOrNull?.fieldOrNull?.let { switchField ->
 		script.lineSeq.mapFirstOrNull {
 			fieldOrNull?.let { caseField ->
-				ifOrNull(caseField.string == switchLine.selectName) {
-					scope.evaluated(value(switchLine)).plus(caseField.rhs).value
+				caseField.string.let { caseName ->
+					caseField.rhs.rhsOrNull("to")?.let { caseBody ->
+						ifOrNull(caseName == switchField.name) {
+							scope.evaluated(value(switchField.name lineTo switchField.rhs)).plus(caseBody).value
+						}
+					}
 				}
 			}
 		}

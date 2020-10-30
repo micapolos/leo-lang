@@ -46,4 +46,22 @@ val get_ = dsl_ {
 		get { x { number } }
 		equals_ { number(10) }
 	}
+
+	test {
+		point {
+			x { number(10) }
+			y { number(20) }
+		}
+		get { content }
+		equals_ {
+			x { number(10) }
+			y { number(20) }
+		}
+	}
+
+	test {
+		shape { circle { radius { number(10) } } }
+		get { content { content { content } } }
+		equals_ { number(10) }
+	}
 }

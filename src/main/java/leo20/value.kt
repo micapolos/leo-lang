@@ -1,11 +1,14 @@
 package leo20
 
+import leo.base.Seq
 import leo.base.SeqNode
+import leo.base.applyOrNull
 import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.mapFirstOrNull
 import leo.base.nodeOrNull
 import leo.base.notNullIf
+import leo.base.orNullApply
 import leo.base.seqNode
 import leo13.Stack
 import leo13.first
@@ -54,11 +57,11 @@ val Line.selectName: String
 val Line.fieldOrNull get() = (this as? FieldLine)?.field
 val Line.functionOrNull get() = (this as? FunctionLine)?.function
 
-val Value.bodyOrNull: Value?
+val Value.contentOrNull: Value?
 	get() =
 		lineStack.onlyOrNull?.fieldOrNull?.rhs
 
-fun Value.bodyOrNull(name: String) =
+fun Value.contentOrNull(name: String) =
 	lineStack.onlyOrNull?.fieldOrNull?.let { field ->
 		notNullIf(field.name == name) {
 			field.rhs
@@ -69,7 +72,7 @@ fun Value.lineOrNull(name: String): Line? =
 	lineStack.first { it.selectName == name }
 
 fun Value.getOrNull(name: String): Value? =
-	bodyOrNull?.lineOrNull(name)?.let { value(it) }
+	contentOrNull?.lineOrNull(name)?.let { value(it) }
 
 fun Value.make(name: String): Value =
 	value(name lineTo this)
@@ -84,6 +87,10 @@ fun Value.applyOrNull(param: Value): Value? =
 
 fun Value.apply(param: Value): Value =
 	applyOrNull(param) ?: plus("apply" lineTo param)
+
+val Value.fieldOrNull: Field?
+	get() =
+		lineStack.onlyOrNull?.fieldOrNull
 
 val Line.nativeOrNull get() = (this as? NativeLine)?.native
 val Value.nativeOrNull get() = lineStack.onlyOrNull?.nativeOrNull
@@ -107,8 +114,8 @@ val Field.stringOrNull
 		}
 
 fun Value.unsafeGet(name: String) = getOrNull(name)!!
-val Value.unsafeBigDecimal get() = bodyOrNull("number")!!.nativeOrNull as BigDecimal
-val Value.unsafeString get() = bodyOrNull("text")!!.nativeOrNull as String
+val Value.unsafeBigDecimal get() = contentOrNull("number")!!.nativeOrNull as BigDecimal
+val Value.unsafeString get() = contentOrNull("text")!!.nativeOrNull as String
 fun Value.unsafeNumberPlus(value: Value) = value(line(unsafeBigDecimal.plus(value.unsafeBigDecimal)))
 fun Value.unsafeNumberMinus(value: Value) = value(line(unsafeBigDecimal.minus(value.unsafeBigDecimal)))
 fun Value.unsafeTextAppend(value: Value) = value(line(unsafeString.plus(value.unsafeString)))
@@ -147,8 +154,15 @@ fun Line.orNull(nameSeqNode: SeqNode<String>): Line? =
 fun Value.getOrNull(name: String, vararg names: String): Value? =
 	getOrNull(seqNode(name, *names))
 
+fun Value.getOrNull(nameSeq: Seq<String>): Value? =
+	nameSeq.nodeOrNull.let { nodeOrNull ->
+		if (nodeOrNull == null) this
+		else getOrNull(nodeOrNull)
+	}
+
 fun Value.getOrNull(nameSeqNode: SeqNode<String>): Value? =
-	bodyOrNull?.lineOrNull(nameSeqNode)?.let { value(it) }
+	if (nameSeqNode.first == "content") contentOrNull?.getOrNull(nameSeqNode.remaining)
+	else contentOrNull?.lineOrNull(nameSeqNode)?.let { value(it) }
 
 fun Value.getOrNull(script: Script): Value? =
 	script.nameStackOrNull?.linkOrNull?.seqNode?.let { getOrNull(it) }

@@ -6,8 +6,8 @@ val switch_ = dsl_ {
 	test {
 		x { number(10) }
 		switch {
-			number { plus { number(1) } }
-			text { append { text("+1") } }
+			number { to { plus { number(1) } } }
+			text { to { append { text("+1") } } }
 		}
 		equals_ { number(11) }
 	}
@@ -15,8 +15,8 @@ val switch_ = dsl_ {
 	test {
 		x { text("foo") }
 		switch {
-			number { plus { number(1) } }
-			text { append { text("+1") } }
+			number { to { plus { number(1) } } }
+			text { to { append { text("+1") } } }
 		}
 		equals_ { text("foo+1") }
 	}
@@ -24,8 +24,8 @@ val switch_ = dsl_ {
 	test {
 		shape { circle { radius { number(0) } } }
 		switch {
-			circle { get { radius } }
-			square { get { side } }
+			circle { to { get { radius } } }
+			square { to { get { side } } }
 		}
 		equals_ { radius { number(0) } }
 	}
@@ -33,8 +33,8 @@ val switch_ = dsl_ {
 	test {
 		shape { square { side { number(0) } } }
 		switch {
-			circle { get { radius } }
-			square { get { side } }
+			circle { to { get { radius } } }
+			square { to { get { side } } }
 		}
 		equals_ { side { number(0) } }
 	}
@@ -42,15 +42,15 @@ val switch_ = dsl_ {
 	test {
 		triangle { height { side { number(0) } } }
 		switch {
-			circle { get { radius } }
-			square { get { side } }
+			circle { to { get { radius } } }
+			square { to { get { side } } }
 		}
 		equals_ {
 			quote {
 				triangle { height { side { number(0) } } }
 				switch {
-					circle { get { radius } }
-					square { get { side } }
+					circle { to { get { radius } } }
+					square { to { get { side } } }
 				}
 			}
 		}
