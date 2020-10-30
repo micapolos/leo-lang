@@ -2,13 +2,11 @@ package leo20
 
 import leo.base.Seq
 import leo.base.SeqNode
-import leo.base.applyOrNull
 import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.mapFirstOrNull
 import leo.base.nodeOrNull
 import leo.base.notNullIf
-import leo.base.orNullApply
 import leo.base.seqNode
 import leo13.Stack
 import leo13.first
@@ -29,7 +27,8 @@ data class Value(val lineStack: Stack<Line>)
 
 sealed class Line
 data class FieldLine(val field: Field) : Line()
-data class NativeLine(val native: Any) : Line()
+data class BigDecimalLine(val bigDecimal: BigDecimal) : Line()
+data class StringLine(val string: String) : Line()
 data class FunctionLine(val function: Function) : Line()
 
 data class Field(val name: String, val rhs: Value)
@@ -40,17 +39,21 @@ fun Value.plus(value: Value): Value = fold(value.lineStack.reverse.seq) { plus(i
 fun value(vararg lines: Line) = emptyValue.fold(lines) { plus(it) }
 infix fun String.lineTo(rhs: Value): Line = FieldLine(Field(this, rhs))
 fun line(function: Function): Line = FunctionLine(function)
-fun line(string: String): Line = "text" lineTo value(NativeLine(string))
-fun line(bigDecimal: BigDecimal): Line = "number" lineTo value(NativeLine(bigDecimal))
+fun line(string: String): Line = StringLine(string)
+fun line(bigDecimal: BigDecimal): Line = BigDecimalLine(bigDecimal)
 fun line(int: Int): Line = line(int.bigDecimal)
 fun line(double: Double): Line = line(double.bigDecimal)
 fun line(literal: Literal) = literal.valueLine
+
+fun value(int: Int) = value(line(int))
+fun value(string: String) = value(line(string))
 
 val Line.selectName: String
 	get() =
 		when (this) {
 			is FieldLine -> field.name
-			is NativeLine -> "_" // Refactor to selectNameOrNull
+			is BigDecimalLine -> "number"
+			is StringLine -> "text"
 			is FunctionLine -> "function"
 		}
 
@@ -92,30 +95,15 @@ val Value.fieldOrNull: Field?
 	get() =
 		lineStack.onlyOrNull?.fieldOrNull
 
-val Line.nativeOrNull get() = (this as? NativeLine)?.native
-val Value.nativeOrNull get() = lineStack.onlyOrNull?.nativeOrNull
-
 val Value.bigDecimalOrNull get() = lineStack.onlyOrNull?.bigDecimalOrNull
 val Value.stringOrNull get() = lineStack.onlyOrNull?.stringOrNull
 
-val Line.bigDecimalOrNull get() = fieldOrNull?.bigDecimalOrNull
-val Line.stringOrNull get() = fieldOrNull?.stringOrNull
-
-val Field.bigDecimalOrNull
-	get() =
-		ifOrNull(name == "number") {
-			rhs.nativeOrNull as? BigDecimal
-		}
-
-val Field.stringOrNull
-	get() =
-		ifOrNull(name == "text") {
-			rhs.nativeOrNull as? String
-		}
+val Line.bigDecimalOrNull get() = (this as? BigDecimalLine)?.bigDecimal
+val Line.stringOrNull get() = (this as? StringLine)?.string
 
 fun Value.unsafeGet(name: String) = getOrNull(name)!!
-val Value.unsafeBigDecimal get() = contentOrNull("number")!!.nativeOrNull as BigDecimal
-val Value.unsafeString get() = contentOrNull("text")!!.nativeOrNull as String
+val Value.unsafeBigDecimal get() = bigDecimalOrNull!!
+val Value.unsafeString get() = stringOrNull!!
 fun Value.unsafeNumberPlus(value: Value) = value(line(unsafeBigDecimal.plus(value.unsafeBigDecimal)))
 fun Value.unsafeNumberMinus(value: Value) = value(line(unsafeBigDecimal.minus(value.unsafeBigDecimal)))
 fun Value.unsafeTextAppend(value: Value) = value(line(unsafeString.plus(value.unsafeString)))

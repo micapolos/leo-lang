@@ -5,6 +5,7 @@ import leo.base.ifOrNull
 import leo.base.mapFirstOrNull
 import leo.base.notNullIf
 import leo.base.reverse
+import leo13.onlyOrNull
 import leo14.FieldScriptLine
 import leo14.Literal
 import leo14.LiteralScriptLine
@@ -78,13 +79,13 @@ fun Evaluated.plusDo(script: Script): Evaluated =
 	copy(value = scope.push(value).value(script))
 
 fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
-	value.contentOrNull?.fieldOrNull?.let { switchField ->
+	value.contentOrNull?.lineStack?.onlyOrNull?.let { switchLine ->
 		script.lineSeq.mapFirstOrNull {
 			fieldOrNull?.let { caseField ->
 				caseField.string.let { caseName ->
 					caseField.rhs.rhsOrNull("does")?.let { caseBody ->
-						ifOrNull(caseName == switchField.name) {
-							scope.push(value(switchField.name lineTo switchField.rhs)).value(caseBody)
+						ifOrNull(caseName == switchLine.selectName) {
+							scope.push(value(switchLine)).value(caseBody)
 						}
 					}
 				}

@@ -29,7 +29,8 @@ fun Value.matches(pattern: Pattern): Boolean =
 fun Line.matches(patternLine: PatternLine): Boolean =
 	when (this) {
 		is FieldLine -> field.matches(patternLine)
-		is NativeLine -> false
+		is BigDecimalLine -> patternLine.name == "number" && patternLine.rhs.isAny
+		is StringLine -> patternLine.name == "text" && patternLine.rhs.isAny
 		is FunctionLine -> patternLine.name == "function" && patternLine.rhs.isAny
 	}
 

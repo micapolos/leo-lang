@@ -22,14 +22,14 @@ class PatternTest {
 
 	@Test
 	fun number() {
-		value(line(128))
+		value(128)
 			.matches(pattern(numberPatternLine))
 			.assert
 	}
 
 	@Test
 	fun text() {
-		value(line("ok"))
+		value("ok")
 			.matches(pattern(textPatternLine))
 			.assert
 	}

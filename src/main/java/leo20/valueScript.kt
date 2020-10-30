@@ -17,14 +17,12 @@ val Value.script: Script
 
 val Line.scriptLine: ScriptLine
 	get() =
-		null
-			?: bigDecimalOrNull?.run { leo14.line(literal(number(this))) }
-			?: stringOrNull?.run { leo14.line(literal(this)) }
-			?: when (this) {
-				is FieldLine -> field.scriptLine
-				is NativeLine -> "native" lineTo script(native.toString())
-				is FunctionLine -> "function" lineTo function.body.script
-			}
+		when (this) {
+			is FieldLine -> field.scriptLine
+			is BigDecimalLine -> leo14.line(literal(number(bigDecimal)))
+			is StringLine -> leo14.line(literal(string))
+			is FunctionLine -> "function" lineTo function.body.script
+		}
 
 val Field.scriptLine
 	get() =
