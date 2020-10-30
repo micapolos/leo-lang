@@ -64,6 +64,10 @@ val Value.contentOrNull: Value?
 	get() =
 		lineStack.onlyOrNull?.fieldOrNull?.rhs
 
+val Value.subjectOrNull: Value?
+	get() =
+		lineStack.linkOrNull?.stack?.let { Value(it) }
+
 fun Value.contentOrNull(name: String) =
 	lineStack.onlyOrNull?.fieldOrNull?.let { field ->
 		notNullIf(field.name == name) {
@@ -150,6 +154,7 @@ fun Value.getOrNull(nameSeq: Seq<String>): Value? =
 
 fun Value.getOrNull(nameSeqNode: SeqNode<String>): Value? =
 	if (nameSeqNode.first == "content") contentOrNull?.getOrNull(nameSeqNode.remaining)
+	else if (nameSeqNode.first == "subject") subjectOrNull?.getOrNull(nameSeqNode.remaining)
 	else contentOrNull?.lineOrNull(nameSeqNode)?.let { value(it) }
 
 fun Value.getOrNull(script: Script): Value? =

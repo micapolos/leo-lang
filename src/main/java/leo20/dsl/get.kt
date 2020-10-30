@@ -64,4 +64,17 @@ val get_ = dsl_ {
 		get { content { content { content } } }
 		equals_ { number(10) }
 	}
+
+	test {
+		x { number(10) }
+		get { subject }
+		equals_ { nothing_ }
+	}
+
+	test {
+		x { number(10) }
+		y { number(20) }
+		get { subject }
+		equals_ { x { number(10) } }
+	}
 }
