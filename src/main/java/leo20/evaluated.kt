@@ -82,9 +82,9 @@ fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
 		script.lineSeq.mapFirstOrNull {
 			fieldOrNull?.let { caseField ->
 				caseField.string.let { caseName ->
-					caseField.rhs.rhsOrNull("to")?.let { caseBody ->
+					caseField.rhs.rhsOrNull("does")?.let { caseBody ->
 						ifOrNull(caseName == switchField.name) {
-							scope.evaluated(value(switchField.name lineTo switchField.rhs)).plus(caseBody).value
+							scope.push(value(switchField.name lineTo switchField.rhs)).value(caseBody)
 						}
 					}
 				}

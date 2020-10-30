@@ -141,8 +141,8 @@ class BindingsTest {
 						"circle" lineTo script(
 							"radius" lineTo script(literal(10)))),
 					"switch" lineTo script(
-						"circle" lineTo script("to" lineTo script("get" lineTo script("radius"))),
-						"square" lineTo script("to" lineTo script("get" lineTo script("side"))))))
+						"circle" lineTo script("does" lineTo script("get" lineTo script("circle" lineTo script("radius")))),
+						"square" lineTo script("does" lineTo script("get" lineTo script("square" lineTo script("side")))))))
 			.assertEqualTo(value("radius" lineTo value(line(10))))
 	}
 
@@ -261,15 +261,15 @@ class BindingsTest {
 								"get" lineTo script("number"),
 								"equals" lineTo script(literal(1)),
 								"switch" lineTo script(
-									"true" lineTo script("to" lineTo script("do" lineTo script(literal(1)))),
+									"true" lineTo script(
+										"does" lineTo script(literal(1))),
 									"false" lineTo script(
-										"to" lineTo script(
-											"do" lineTo script(
+										"does" lineTo script(
+											"get" lineTo script("number"),
+											"plus" lineTo script(
 												"get" lineTo script("number"),
-												"plus" lineTo script(
-													"get" lineTo script("number"),
-													"minus" lineTo script(literal(1)),
-													"sum" lineTo script())))))))),
+												"minus" lineTo script(literal(1)),
+												"sum" lineTo script()))))))),
 					isRecursive = true))
 			.value(
 				script(
