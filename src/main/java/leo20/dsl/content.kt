@@ -12,7 +12,7 @@ val content_ = dsl_ {
 			y { any }
 			does { one }
 		}
-		content { x { do_ { y { z } } } }
-		equals_ { x { one } }
+		content { do_ { x { do_ { y { z } } } } }
+		equals_ { quote { do_ { x { one } } } }
 	}
 }
