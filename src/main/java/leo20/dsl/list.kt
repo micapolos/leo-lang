@@ -18,12 +18,33 @@ val list_ = dsl_ {
 
 	test {
 		list { empty }
-		append { item { number(0) } }
+		append { item { number(1) } }
 		equals_ {
 			list {
 				link {
 					previous { list { empty } }
-					last { item { number(0) } }
+					last { item { number(1) } }
+				}
+			}
+		}
+	}
+
+	test {
+		list { empty }
+		append { item { number(1) } }
+		append { item { number(2) } }
+		equals_ {
+			list {
+				link {
+					previous {
+						list {
+							link {
+								previous { list { empty } }
+								last { item { number(1) } }
+							}
+						}
+					}
+					last { item { number(2) } }
 				}
 			}
 		}
