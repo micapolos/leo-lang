@@ -6,7 +6,6 @@ import leo14.Script
 sealed class Definition
 data class FunctionDefinition(val pattern: Pattern, val function: Function, val isRecursive: Boolean) : Definition()
 data class ValueDefinition(val value: Value) : Definition()
-data class RecursiveDefinition(val dictionary: Dictionary) : Definition()
 
 fun Definition.resolveOrNull(param: Value): Value? =
 	when (this) {
@@ -15,14 +14,12 @@ fun Definition.resolveOrNull(param: Value): Value? =
 			else function.apply(param)
 		}
 		is ValueDefinition -> null
-		is RecursiveDefinition -> dictionary.resolveOrNull(param)
 	}
 
 fun Definition.getOrNull(script: Script): Value? =
 	when (this) {
 		is FunctionDefinition -> null
 		is ValueDefinition -> value("given" lineTo value).getOrNull(script)
-		is RecursiveDefinition -> dictionary.getOrNull(script)
 	}
 
 val numberPlusDefinition: Definition =
