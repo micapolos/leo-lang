@@ -308,4 +308,27 @@ class DictionaryTest {
 							"plus" lineTo script(literal(2))))))
 			.assertEqualTo(value())
 	}
+
+	@Test
+	fun testFails_success() {
+		emptyScope
+			.value(
+				script(
+					"test" lineTo script(
+						"fail" lineTo script(),
+						"fails" lineTo script())))
+			.assertEqualTo(value())
+	}
+
+	@Test
+	fun testFails_failure() {
+		assertFails {
+			emptyScope
+				.value(
+					script(
+						"test" lineTo script(
+							"zero" lineTo script(),
+							"fails" lineTo script())))
+		}
+	}
 }

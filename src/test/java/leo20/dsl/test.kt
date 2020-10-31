@@ -5,6 +5,7 @@ import kotlin.test.Test
 class Test {
 	@Test
 	fun all() {
+		run_(fail_)
 		run_(number_)
 		run_(text_)
 		run_(get_)

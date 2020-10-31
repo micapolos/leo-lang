@@ -13,6 +13,7 @@ import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
 import leo14.fieldOrNull
+import leo14.isEmpty
 import leo14.line
 import leo14.lineSeq
 import leo14.lineTo
@@ -47,6 +48,7 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"define" -> plusDefineOrNull(scriptField.rhs)
 		"do" -> plusDo(scriptField.rhs)
 		"resolve" -> plusResolveOrNull(scriptField.rhs)
+		"fail" -> plusFailOrNull(scriptField.rhs)
 		"function" -> plusFunction(scriptField.rhs)
 		"get" -> plusGetOrNull(scriptField.rhs)
 		"make" -> plusMakeOrNull(scriptField.rhs)
@@ -65,10 +67,15 @@ fun Evaluated.plusResolve(line: Line): Evaluated =
 	copy(value = scope.dictionary.resolve(value.plus(line)))
 
 fun Evaluated.plusFallback(line: Line): Evaluated =
-	plusQuoted(line)
+	plusError(line)
 
 fun Evaluated.plusQuoted(line: Line): Evaluated =
 	copy(value = value.plus(line))
+
+fun Evaluated.plusFailOrNull(script: Script): Evaluated? =
+	notNullIf(script.isEmpty) {
+		error(("error" lineTo value.script).toString())
+	}
 
 fun Evaluated.plusError(line: Line): Evaluated =
 	error(("error" lineTo value.plus(line).script).toString())

@@ -51,12 +51,13 @@ fun Scope.test(script: Script) {
 		}
 		"fails" -> {
 			if (!field.rhs.isEmpty) error("syntax" lineTo script)
-			try {
+			val success = try {
 				value(link.lhs)
-				error("test" lineTo script)
+				true
 			} catch (exception: Exception) {
-				// OK
+				false
 			}
+			if (success) error("test" lineTo script)
 		}
 		else -> error("syntax" lineTo script)
 	}
