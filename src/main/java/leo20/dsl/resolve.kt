@@ -2,13 +2,13 @@ package leo20.dsl
 
 import leo15.dsl.*
 
-val run_ = dsl_ {
+val resolve_ = dsl_ {
 	test {
 		define {
 			zero
 			does { one }
 		}
-		do_ { zero }
+		resolve { zero }
 		equals_ { one }
 	}
 
@@ -17,7 +17,7 @@ val run_ = dsl_ {
 			zero
 			does { one }
 		}
-		do_ { one }
+		resolve { one }
 		fails
 	}
 }

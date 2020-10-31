@@ -234,7 +234,7 @@ class DictionaryTest {
 			.value(
 				script(
 					leo14.line(literal(2)),
-					"do" lineTo script("plus" lineTo script(leo14.line(literal(3))))))
+					"plus" lineTo script(leo14.line(literal(3)))))
 			.assertEqualTo(value(line(5)))
 	}
 
@@ -245,7 +245,7 @@ class DictionaryTest {
 			.value(
 				script(
 					leo14.line(literal(2)),
-					"do" lineTo script("equals" lineTo script(leo14.line(literal(3))))))
+					"equals" lineTo script(leo14.line(literal(3)))))
 			.assertEqualTo(false.value)
 	}
 
@@ -259,23 +259,22 @@ class DictionaryTest {
 						body(
 							script(
 								"get" lineTo script("number"),
-								"do" lineTo script("equals" lineTo script(literal(1))),
+								"equals" lineTo script(literal(1)),
 								"switch" lineTo script(
 									"true" lineTo script(
 										"does" lineTo script(literal(1))),
 									"false" lineTo script(
 										"does" lineTo script(
 											"get" lineTo script("number"),
-											"do" lineTo script(
-												"plus" lineTo script(
-													"get" lineTo script("number"),
-													"do" lineTo script("minus" lineTo script(literal(1))),
-													"do" lineTo script("sum" lineTo script()))))))))),
+											"plus" lineTo script(
+												"get" lineTo script("number"),
+												"minus" lineTo script(literal(1)),
+												"sum" lineTo script()))))))),
 					isRecursive = true))
 			.value(
 				script(
 					leo14.line(literal(10)),
-					"do" lineTo script("sum" lineTo script())))
+					"sum" lineTo script()))
 			.assertEqualTo(value(line(55)))
 	}
 
@@ -303,10 +302,10 @@ class DictionaryTest {
 				script(
 					"test" lineTo script(
 						leo14.line(literal(2)),
-						"do" lineTo script("plus" lineTo script(literal(3))),
+						"plus" lineTo script(literal(3)),
 						"equals" lineTo script(
 							leo14.line(literal(3)),
-							"do" lineTo script("plus" lineTo script(literal(2)))))))
+							"plus" lineTo script(literal(2))))))
 			.assertEqualTo(value())
 	}
 }

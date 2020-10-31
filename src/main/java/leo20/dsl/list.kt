@@ -18,7 +18,7 @@ val list_ = dsl_ {
 
 	test {
 		list { empty }
-		do_ { append { item { number(1) } } }
+		append { item { number(1) } }
 		equals_ {
 			list {
 				link {
@@ -31,8 +31,8 @@ val list_ = dsl_ {
 
 	test {
 		list { empty }
-		do_ { append { item { number(1) } } }
-		do_ { append { item { number(2) } } }
+		append { item { number(1) } }
+		append { item { number(2) } }
 		equals_ {
 			list {
 				link {
@@ -65,12 +65,10 @@ val list_ = dsl_ {
 					link {
 						does {
 							get { link { previous { list } } }
-							do_ { map { get { map { function } } } }
-							do_ {
-								append {
-									get { map { function } }
-									apply { get { link { last { item } } } }
-								}
+							map { get { map { function } } }
+							append {
+								get { map { function } }
+								apply { get { link { last { item } } } }
 							}
 						}
 					}
@@ -81,13 +79,11 @@ val list_ = dsl_ {
 
 	test {
 		list { empty }
-		do_ {
-			map {
-				function {
-					item {
-						get { item { number } }
-						do_ { plus { number(1) } }
-					}
+		map {
+			function {
+				item {
+					get { item { number } }
+					plus { number(1) }
 				}
 			}
 		}
@@ -98,22 +94,20 @@ val list_ = dsl_ {
 
 	test {
 		list { empty }
-		do_ { append { item { number(1) } } }
-		do_ { append { item { number(2) } } }
-		do_ {
-			map {
-				function {
-					item {
-						get { item { number } }
-						do_ { plus { number(10) } }
-					}
+		append { item { number(1) } }
+		append { item { number(2) } }
+		map {
+			function {
+				item {
+					get { item { number } }
+					plus { number(10) }
 				}
 			}
 		}
 		equals_ {
 			list { empty }
-			do_ { append { item { number(11) } } }
-			do_ { append { item { number(12) } } }
+			append { item { number(11) } }
+			append { item { number(12) } }
 		}
 	}
 }

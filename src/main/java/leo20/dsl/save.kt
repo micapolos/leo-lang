@@ -14,7 +14,7 @@ val save_ = dsl_ {
 		save {
 			x {
 				get { x { number } }
-				do_ { plus { number(1) } }
+				plus { number(1) }
 			}
 		}
 		get { x { number } }
@@ -26,7 +26,7 @@ val save_ = dsl_ {
 		save {
 			y {
 				get { x { number } }
-				do_ { plus { number(1) } }
+				plus { number(1) }
 			}
 		}
 		get { y { number } }
