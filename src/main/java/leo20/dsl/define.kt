@@ -4,11 +4,12 @@ import leo15.dsl.*
 
 val define_ = dsl_ {
 	test {
+		bit { zero }
 		define {
 			zero
 			does { one }
 		}
-		equals_ { nothing_ }
+		equals_ { bit { zero } }
 	}
 
 	test {

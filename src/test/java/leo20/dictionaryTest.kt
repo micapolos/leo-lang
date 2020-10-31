@@ -10,28 +10,28 @@ import kotlin.test.assertFails
 class DictionaryTest {
 	@Test
 	fun value_empty() {
-		emptyScope
+		emptyDictionary
 			.value(script())
 			.assertEqualTo(value())
 	}
 
 	@Test
 	fun value_string() {
-		emptyScope
+		emptyDictionary
 			.value(script(literal("foo")))
 			.assertEqualTo(value(line("foo")))
 	}
 
 	@Test
 	fun value_number() {
-		emptyScope
+		emptyDictionary
 			.value(script(literal(10)))
 			.assertEqualTo(value(line(10)))
 	}
 
 	@Test
 	fun value_struct() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"point" lineTo script(
@@ -46,7 +46,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_staticGet() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"x" lineTo script(literal(10)),
@@ -61,7 +61,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_get() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"point" lineTo script(
@@ -76,7 +76,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_getDeep() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"point" lineTo script(
@@ -91,7 +91,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_make() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"x" lineTo script(literal(10)),
@@ -106,14 +106,14 @@ class DictionaryTest {
 
 	@Test
 	fun value_function() {
-		emptyScope
+		emptyDictionary
 			.value(script("function" lineTo script("foo")))
-			.assertEqualTo(value(line(emptyScope.function(body(script("foo"))))))
+			.assertEqualTo(value(line(emptyDictionary.function(body(script("foo"))))))
 	}
 
 	@Test
 	fun value_apply() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"function" lineTo script("get" lineTo script("number")),
@@ -123,7 +123,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_do() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"x" lineTo script(literal(10)),
@@ -134,7 +134,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_switch() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"shape" lineTo script(
@@ -148,32 +148,32 @@ class DictionaryTest {
 
 	@Test
 	fun define_does() {
-		emptyScope
+		emptyDictionary
 			.defineOrNull(
 				script(
 					"number" lineTo script("any"),
 					"does" lineTo script("number")))
 			.assertEqualTo(
-				emptyScope
-					.push(Definition(
+				emptyDictionary
+					.push(FunctionDefinition(
 						pattern("number" lineTo anyPattern),
-						emptyScope.function(body(script("number"))),
+						emptyDictionary.function(body(script("number"))),
 						isRecursive = false)))
 	}
 
 	@Test
 	fun define_does_recursively() {
-		emptyScope
+		emptyDictionary
 			.defineOrNull(
 				script(
 					"number" lineTo script("any"),
 					"does" lineTo script(
 						"recursively" lineTo script("number"))))
 			.assertEqualTo(
-				emptyScope
-					.push(Definition(
+				emptyDictionary
+					.push(FunctionDefinition(
 						pattern("number" lineTo anyPattern),
-						emptyScope.function(body(script("number"))),
+						emptyDictionary.function(body(script("number"))),
 						isRecursive = true)))
 	}
 
@@ -181,9 +181,9 @@ class DictionaryTest {
 	fun resolveDoes() {
 		emptyDictionary
 			.push(
-				Definition(
+				FunctionDefinition(
 					pattern("number" lineTo anyPattern),
-					emptyScope.function(body(script("get" lineTo script("number")))),
+					emptyDictionary.function(body(script("get" lineTo script("number")))),
 					isRecursive = false))
 			.resolveOrNull(value(line(128)))
 			.assertEqualTo(value(line(128)))
@@ -193,11 +193,11 @@ class DictionaryTest {
 	fun resolveNumberPlus() {
 		emptyDictionary
 			.push(
-				Definition(
+				FunctionDefinition(
 					pattern(
 						numberPatternLine,
 						"plus" lineTo pattern(numberPatternLine)),
-					emptyScope.function(NumberPlusBody),
+					emptyDictionary.function(NumberPlusBody),
 					isRecursive = false))
 			.resolveOrNull(value(line(128), "plus" lineTo value(line(128))))
 			.assertEqualTo(value(line(256)))
@@ -205,7 +205,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_defineDoes() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"define" lineTo script(
@@ -216,7 +216,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_defineDoesResolve() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"define" lineTo script(
@@ -229,7 +229,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_numberPlus() {
-		emptyScope
+		emptyDictionary
 			.pushPrelude
 			.value(
 				script(
@@ -240,7 +240,7 @@ class DictionaryTest {
 
 	@Test
 	fun value_numberEquals() {
-		emptyScope
+		emptyDictionary
 			.pushPrelude
 			.value(
 				script(
@@ -251,11 +251,11 @@ class DictionaryTest {
 
 	@Test
 	fun value_resolveRecursively() {
-		emptyScope
+		emptyDictionary
 			.push(
-				Definition(
+				FunctionDefinition(
 					pattern(numberPatternLine, "sum" lineTo pattern()),
-					emptyScope.pushPrelude.function(
+					emptyDictionary.pushPrelude.function(
 						body(
 							script(
 								"get" lineTo script("number"),
@@ -281,7 +281,7 @@ class DictionaryTest {
 	@Test
 	fun test_failure() {
 		assertFails {
-			emptyScope
+			emptyDictionary
 				.pushPrelude
 				.value(
 					script(
@@ -296,7 +296,7 @@ class DictionaryTest {
 
 	@Test
 	fun test_pass() {
-		emptyScope
+		emptyDictionary
 			.pushPrelude
 			.value(
 				script(
@@ -311,7 +311,7 @@ class DictionaryTest {
 
 	@Test
 	fun testFails_success() {
-		emptyScope
+		emptyDictionary
 			.value(
 				script(
 					"test" lineTo script(
@@ -323,7 +323,7 @@ class DictionaryTest {
 	@Test
 	fun testFails_failure() {
 		assertFails {
-			emptyScope
+			emptyDictionary
 				.value(
 					script(
 						"test" lineTo script(

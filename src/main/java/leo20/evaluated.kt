@@ -20,13 +20,13 @@ import leo14.lineTo
 import leo14.rhsOrNull
 
 data class Evaluated(
-	val scope: Scope,
+	val dictionary: Dictionary,
 	val value: Value
 )
 
-fun Scope.evaluated(value: Value) = Evaluated(this, value)
+fun Dictionary.evaluated(value: Value) = Evaluated(this, value)
 
-fun Scope.value(script: Script): Value =
+fun Dictionary.value(script: Script): Value =
 	Evaluated(this, value()).plus(script).value
 
 fun Evaluated.plus(script: Script): Evaluated =
@@ -60,11 +60,11 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 	} ?: plusFallback(scriptField.valueLine)
 
 fun Evaluated.plusResolve(scriptField: ScriptField): Evaluated =
-	plusResolve(scriptField.string lineTo scope.push(value).value(scriptField.rhs))
+	plusResolve(scriptField.string lineTo dictionary.push(value).value(scriptField.rhs))
 
 
 fun Evaluated.plusResolve(line: Line): Evaluated =
-	copy(value = scope.dictionary.resolve(value.plus(line)))
+	copy(value = dictionary.resolve(value.plus(line)))
 
 fun Evaluated.plusFallback(line: Line): Evaluated =
 	plusError(line)
@@ -81,10 +81,10 @@ fun Evaluated.plusError(line: Line): Evaluated =
 	error(("error" lineTo value.plus(line).script).toString())
 
 fun Evaluated.plusFunction(script: Script): Evaluated =
-	copy(value = value.plus(line(scope.function(body(script)))))
+	copy(value = value.plus(line(dictionary.function(body(script)))))
 
 fun Evaluated.plusApplyOrNull(script: Script): Evaluated? =
-	value.applyOrNull(scope.value(script))?.let { copy(value = it) }
+	value.applyOrNull(dictionary.value(script))?.let { copy(value = it) }
 
 fun Evaluated.plusMakeOrNull(script: Script): Evaluated? =
 	value.makeOrNull(script)?.let { copy(value = it) }
@@ -93,11 +93,11 @@ fun Evaluated.plusGetOrNull(script: Script): Evaluated? =
 	getValueOrNull(script)?.let { copy(value = it) }
 
 fun Evaluated.plusDo(script: Script): Evaluated =
-	copy(value = scope.push(value).value(script))
+	copy(value = dictionary.push(value).value(script))
 
 fun Evaluated.plusResolveOrNull(script: Script): Evaluated? =
-	scope.dictionary
-		.resolveOrNull(value.plus(scope.push(value).evaluated(value()).plusContent(script).value))
+	dictionary
+		.resolveOrNull(value.plus(dictionary.push(value).evaluated(value()).plusContent(script).value))
 		?.let { copy(value = it) }
 
 fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
@@ -107,7 +107,7 @@ fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
 				caseField.string.let { caseName ->
 					caseField.rhs.rhsOrNull("does")?.let { caseBody ->
 						ifOrNull(caseName == switchLine.selectName) {
-							scope.push(value(switchLine)).value(caseBody)
+							dictionary.push(value(switchLine)).value(caseBody)
 						}
 					}
 				}
@@ -116,13 +116,13 @@ fun Evaluated.plusSwitchOrNull(script: Script): Evaluated? =
 	}?.let { copy(value = it) }
 
 fun Evaluated.plusDefineOrNull(script: Script): Evaluated? =
-	scope.defineOrNull(script)?.evaluated(value())
+	dictionary.defineOrNull(script)?.evaluated(value)
 
 fun Evaluated.plusTestOrNull(script: Script): Evaluated? =
-	notNullIf(value == value()) { also { scope.test(script) } }
+	notNullIf(value == value()) { also { dictionary.test(script) } }
 
 fun Evaluated.getValueOrNull(script: Script): Value? =
-	if (value == value()) scope.getOrNull(script)
+	if (value == value()) dictionary.getOrNull(script)
 	else value.getOrNull(script)
 
 fun Evaluated.plusContent(script: Script): Evaluated =
@@ -131,7 +131,7 @@ fun Evaluated.plusContent(script: Script): Evaluated =
 fun Evaluated.plusContent(scriptLine: ScriptLine): Evaluated =
 	when (scriptLine) {
 		is LiteralScriptLine -> copy(value = value.plus(scriptLine.literal.line))
-		is FieldScriptLine -> copy(value = value.plus(scriptLine.field.string lineTo scope.push(value).value(scriptLine.field.rhs)))
+		is FieldScriptLine -> copy(value = value.plus(scriptLine.field.string lineTo dictionary.push(value).value(scriptLine.field.rhs)))
 	}
 
 fun Evaluated.plusQuote(script: Script): Evaluated =
@@ -141,5 +141,5 @@ fun Evaluated.plusQuote(scriptLine: ScriptLine): Evaluated =
 	plusQuoted(scriptLine.valueLine)
 
 fun Evaluated.plusSave(script: Script): Evaluated =
-	copy(scope = scope.push(scope.value(script)))
+	copy(dictionary = dictionary.push(dictionary.value(script)))
 

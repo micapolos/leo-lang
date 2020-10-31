@@ -31,7 +31,7 @@ class ValueScriptTest {
 
 	@Test
 	fun function() {
-		value(line(emptyScope.function(body(script("foo")))))
+		value(line(emptyDictionary.function(body(script("foo")))))
 			.script
 			.assertEqualTo(script("function" lineTo script("foo")))
 	}

@@ -1,43 +1,58 @@
 package leo20
 
 import leo.base.notNullIf
+import leo14.Script
 
-data class Definition(val pattern: Pattern, val function: Function, val isRecursive: Boolean)
+sealed class Definition
+data class FunctionDefinition(val pattern: Pattern, val function: Function, val isRecursive: Boolean) : Definition()
+data class ValueDefinition(val value: Value) : Definition()
+data class RecursiveDefinition(val dictionary: Dictionary) : Definition()
 
 fun Definition.resolveOrNull(param: Value): Value? =
-	notNullIf(param.matches(pattern)) {
-		if (isRecursive) function.applyRecursively(pattern, param)
-		else function.apply(param)
+	when (this) {
+		is FunctionDefinition -> notNullIf(param.matches(pattern)) {
+			if (isRecursive) function.applyRecursively(pattern, param)
+			else function.apply(param)
+		}
+		is ValueDefinition -> null
+		is RecursiveDefinition -> dictionary.resolveOrNull(param)
+	}
+
+fun Definition.getOrNull(script: Script): Value? =
+	when (this) {
+		is FunctionDefinition -> null
+		is ValueDefinition -> value("given" lineTo value).getOrNull(script)
+		is RecursiveDefinition -> dictionary.getOrNull(script)
 	}
 
 val numberPlusDefinition: Definition =
-	Definition(
+	FunctionDefinition(
 		pattern(
 			numberPatternLine,
 			"plus" lineTo pattern(numberPatternLine)),
-		emptyScope.function(NumberPlusBody),
+		emptyDictionary.function(NumberPlusBody),
 		isRecursive = false)
 
 val numberMinusDefinition: Definition =
-	Definition(
+	FunctionDefinition(
 		pattern(
 			numberPatternLine,
 			"minus" lineTo pattern(numberPatternLine)),
-		emptyScope.function(NumberMinusBody),
+		emptyDictionary.function(NumberMinusBody),
 		isRecursive = false)
 
 val numberEqualsDefinition: Definition =
-	Definition(
+	FunctionDefinition(
 		pattern(
 			numberPatternLine,
 			"equals" lineTo pattern(numberPatternLine)),
-		emptyScope.function(NumberEqualsBody),
+		emptyDictionary.function(NumberEqualsBody),
 		isRecursive = false)
 
 val textAppendDefinition: Definition =
-	Definition(
+	FunctionDefinition(
 		pattern(
 			textPatternLine,
 			"append" lineTo pattern(textPatternLine)),
-		emptyScope.function(StringAppendBody),
+		emptyDictionary.function(StringAppendBody),
 		isRecursive = false)

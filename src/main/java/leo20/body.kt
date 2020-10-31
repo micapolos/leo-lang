@@ -1,6 +1,7 @@
 package leo20
 
 import leo14.Script
+import leo15.dsl.*
 
 sealed class Body
 data class ScriptBody(val script: Script) : Body()
@@ -11,11 +12,11 @@ object StringAppendBody : Body()
 
 fun body(script: Script): Body = ScriptBody(script)
 
-fun Scope.unsafeValue(body: Body): Value =
+fun Dictionary.unsafeValue(body: Body): Value =
 	when (body) {
 		is ScriptBody -> value(body.script)
-		NumberPlusBody -> unsafeGet("number").unsafeNumberPlus(unsafeGet("plus", "number"))
-		NumberMinusBody -> unsafeGet("number").unsafeNumberMinus(unsafeGet("minus", "number"))
-		NumberEqualsBody -> unsafeGet("number").equals(unsafeGet("equals", "number")).value
-		StringAppendBody -> unsafeGet("text").unsafeTextAppend(unsafeGet("append", "text"))
+		NumberPlusBody -> unsafeGiven.unsafeGet("number").unsafeNumberPlus(unsafeGiven.unsafeGet("plus").unsafeGet("number"))
+		NumberMinusBody -> unsafeGiven.unsafeGet("number").unsafeNumberMinus(unsafeGiven.unsafeGet("minus").unsafeGet("number"))
+		NumberEqualsBody -> unsafeGiven.unsafeGet("number").equals(unsafeGiven.unsafeGet("equals").unsafeGet("number")).value
+		StringAppendBody -> unsafeGiven.unsafeGet("text").unsafeTextAppend(unsafeGiven.unsafeGet("append").unsafeGet("text"))
 	}
