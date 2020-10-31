@@ -45,7 +45,7 @@ fun Evaluated.plus(scriptField: ScriptField): Evaluated =
 		"apply" -> plusApplyOrNull(scriptField.rhs)
 		"content" -> plusContent(scriptField.rhs)
 		"define" -> plusDefineOrNull(scriptField.rhs)
-		"give" -> plusGive(scriptField.rhs)
+		"do" -> plusDo(scriptField.rhs)
 		"resolve" -> plusResolveOrNull(scriptField.rhs)
 		"function" -> plusFunction(scriptField.rhs)
 		"get" -> plusGetOrNull(scriptField.rhs)
@@ -85,7 +85,7 @@ fun Evaluated.plusMakeOrNull(script: Script): Evaluated? =
 fun Evaluated.plusGetOrNull(script: Script): Evaluated? =
 	getValueOrNull(script)?.let { copy(value = it) }
 
-fun Evaluated.plusGive(script: Script): Evaluated =
+fun Evaluated.plusDo(script: Script): Evaluated =
 	copy(value = scope.push(value).value(script))
 
 fun Evaluated.plusResolveOrNull(script: Script): Evaluated? =

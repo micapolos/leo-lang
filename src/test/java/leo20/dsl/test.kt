@@ -10,7 +10,7 @@ class Test {
 		run_(get_)
 		run_(scope_)
 		run_(save_)
-		run_(give_)
+		run_(do_)
 		run_(define_)
 		run_(resolve_)
 		run_(content_)
