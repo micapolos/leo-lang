@@ -20,3 +20,5 @@ infix fun Choice.compiled(fieldCompiled: FieldCompiled): Compiled =
 			else plusNotChosen(case)
 		}
 	}
+
+val FieldCompiled.rhs get() = Compiled(valueTerm, field.rhs)

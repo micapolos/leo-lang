@@ -1,5 +1,8 @@
 package leo21.compiled
 
+import leo.base.assertEqualTo
+import leo.base.assertNotNull
+import leo.base.assertNull
 import leo15.numberType
 import leo15.textType
 import leo21.type.choice
@@ -79,5 +82,34 @@ class CompiledTest {
 			"number" fieldTo doubleType,
 			"text" fieldTo stringType)
 			.compiled("number" fieldTo compiled(10.0))
+	}
+
+	@Test
+	fun get_first() {
+		compiled(
+			"point" fieldTo compiled(
+				"x" fieldTo compiled(10.0),
+				"y" fieldTo compiled(20.0)))
+			.get("x")
+	}
+
+	@Test
+	fun get_second() {
+		compiled(
+			"point" fieldTo compiled(
+				"x" fieldTo compiled(10.0),
+				"y" fieldTo compiled(20.0)))
+			.get("y")
+	}
+
+	@Test
+	fun get_missing() {
+		assertFails {
+			compiled(
+				"point" fieldTo compiled(
+					"x" fieldTo compiled(10.0),
+					"y" fieldTo compiled(20.0)))
+				.get("z")
+		}
 	}
 }

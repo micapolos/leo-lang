@@ -1,6 +1,11 @@
 package leo21.compiled
 
+import leo13.EmptyStack
+import leo13.LinkStack
+import leo13.onlyOrNull
 import leo14.lambda.Term
+import leo14.lambda.first
+import leo14.lambda.second
 import leo14.lambda.value.Value
 import leo21.term.nilTerm
 import leo21.term.plus
@@ -22,3 +27,16 @@ fun StructCompiled.plus(compiled: FieldCompiled): StructCompiled =
 val StructCompiled.compiled
 	get() =
 		Compiled(valueTerm, type(struct))
+
+fun StructCompiled.field(name: String): FieldCompiled =
+	when (struct.fieldStack) {
+		is EmptyStack -> error("no field")
+		is LinkStack -> struct.fieldStack.link.let { link ->
+			if (link.value.name == name) FieldCompiled(valueTerm.second, link.value)
+			else StructCompiled(valueTerm.first, Struct(link.stack)).field(name)
+		}
+	}
+
+val StructCompiled.onlyField: FieldCompiled
+	get() =
+		FieldCompiled(valueTerm.second, struct.fieldStack.onlyOrNull!!)
