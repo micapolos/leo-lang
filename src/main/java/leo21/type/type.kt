@@ -18,8 +18,8 @@ data class Arrow(val lhs: Type, val rhs: Type)
 sealed class Line
 object StringLine : Line()
 object DoubleLine : Line()
-data class ArrowLine(val arrow: Arrow) : Line()
 data class FieldLine(val field: Field) : Line()
+data class ArrowLine(val arrow: Arrow) : Line()
 
 data class Field(val name: String, val rhs: Type)
 
@@ -71,6 +71,6 @@ val Line.name: String
 		when (this) {
 			StringLine -> "text"
 			DoubleLine -> "number"
-			is ArrowLine -> "function"
 			is FieldLine -> field.name
+			is ArrowLine -> "function"
 		}

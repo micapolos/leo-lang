@@ -23,6 +23,13 @@ class TypedScriptTest {
 	}
 
 	@Test
+	fun simpleStruct() {
+		typed("x" lineTo typed(10.0))
+			.script
+			.assertEqualTo(script("x" lineTo script(literal(10.0))))
+	}
+
+	@Test
 	fun struct() {
 		typed(
 			"x" lineTo typed(10.0),

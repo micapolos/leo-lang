@@ -22,4 +22,4 @@ infix fun Choice.typed(typed: LineTyped): Typed =
 		}
 	}
 
-val FieldTyped.rhs get() = Typed(valueTerm, field.rhs)
+val FieldTyped.rhsTyped: Typed get() = Typed(valueTerm, field.rhs)
