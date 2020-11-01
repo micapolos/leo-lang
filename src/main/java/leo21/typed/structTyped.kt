@@ -8,7 +8,9 @@ import leo13.isEmpty
 import leo13.linkOrNull
 import leo13.linkTo
 import leo14.lambda.Term
+import leo14.lambda.first
 import leo14.lambda.pair
+import leo14.lambda.second
 import leo14.lambda.value.Value
 import leo21.term.nilTerm
 import leo21.term.plus
@@ -64,6 +66,13 @@ val StructTyped.isEmpty: Boolean
 		struct.lineStack.isEmpty
 
 val StructTyped.linkOrNull: Link<StructTyped, LineTyped>?
+	get() =
+		struct.lineStack.linkOrNull?.let { link ->
+			if (link.stack.isEmpty) emptyStructTyped linkTo LineTyped(valueTerm, link.value)
+			else StructTyped(valueTerm.first, Struct(link.stack)) linkTo LineTyped(valueTerm.second, link.value)
+		}
+
+val StructTyped.decompileLinkOrNull: Link<StructTyped, LineTyped>?
 	get() =
 		struct.lineStack.linkOrNull?.let { link ->
 			if (link.stack.isEmpty) emptyStructTyped linkTo LineTyped(valueTerm, link.value)

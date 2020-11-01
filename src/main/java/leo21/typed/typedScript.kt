@@ -16,7 +16,7 @@ val Typed.script: Script
 
 val StructTyped.script: Script
 	get() =
-		linkOrNull
+		decompileLinkOrNull
 			?.let { link -> link.tail.script.plus(link.head.scriptLine) }
 			?: script()
 
