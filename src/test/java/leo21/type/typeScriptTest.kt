@@ -31,6 +31,17 @@ class TypeScriptTest {
 	}
 
 	@Test
+	fun choice_() {
+		type(choice(stringLine, doubleLine))
+			.script
+			.assertEqualTo(
+				script(
+					"choice" lineTo script(
+						"text" lineTo script(),
+						"number" lineTo script())))
+	}
+
+	@Test
 	fun function() {
 		type(line(doubleType arrowTo stringType))
 			.script
