@@ -5,6 +5,7 @@ import leo14.lambda.Term
 import leo14.lambda.value.Value
 import leo21.term.term
 import leo21.type.Type
+import leo21.type.arrow
 import leo21.type.choice
 import leo21.type.doubleType
 import leo21.type.stringType
@@ -23,6 +24,8 @@ fun compiled(double: Double) = Compiled(term(double), doubleType)
 
 val Compiled.struct get() = StructCompiled(valueTerm, type.struct)
 val Compiled.choice get() = ChoiceCompiled(valueTerm, type.choice)
+val Compiled.arrow get() = ArrowCompiled(valueTerm, type.arrow)
 
 fun Compiled.get(name: String) = compiled(struct.onlyField.rhs.struct.field(name))
-fun Compiled.make(name: String) = compiled("name" fieldTo this)
+fun Compiled.make(name: String) = compiled(name fieldTo this)
+fun Compiled.invoke(compiled: Compiled) = arrow.invoke(compiled)
