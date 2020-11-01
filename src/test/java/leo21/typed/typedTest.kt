@@ -2,13 +2,10 @@ package leo21.typed
 
 import leo.base.assertEqualTo
 import leo14.lambda.arg
-import leo14.typed.numberLine
 import leo21.type.arrowTo
 import leo21.type.choice
-import leo21.type.doubleLine
 import leo21.type.doubleType
 import leo21.type.lineTo
-import leo21.type.stringLine
 import leo21.type.stringType
 import leo21.type.type
 import kotlin.test.Test
@@ -225,8 +222,8 @@ class TypedTest {
 				"one" lineTo type())
 				.typed("zero" lineTo typed()))
 			.switch
-			.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
 			.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+			.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
 			.typed
 			.type
 			.assertEqualTo(stringType)
@@ -246,7 +243,7 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.case("one", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
 		}
 	}
 
@@ -259,8 +256,8 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("two", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("foo", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
 		}
 	}
 
@@ -273,7 +270,7 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.case("zero", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("one", ArrowTyped(arg(0), type("foo" lineTo type()) arrowTo stringType))
 		}
 	}
 
@@ -286,8 +283,8 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo doubleType))
+				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo doubleType))
 		}
 	}
 
@@ -313,9 +310,9 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
 				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
-				.case("two", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("foo", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
 		}
 	}
 }

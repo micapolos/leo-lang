@@ -21,7 +21,7 @@ data class SwitchTyped(
 
 val ChoiceTyped.switchTyped: SwitchTyped
 	get() =
-		SwitchTyped(valueTermOrNull!!, choice.lineStack.reverse, null)
+		SwitchTyped(valueTermOrNull!!, choice.lineStack, null)
 
 fun SwitchTyped.case(name: String, typed: ArrowTyped): SwitchTyped =
 	remainingLineTypedStack.linkOrNull.notNullOrError("exhausted").let { link ->
