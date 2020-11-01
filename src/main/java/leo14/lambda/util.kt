@@ -1,12 +1,32 @@
 package leo14.lambda
 
-import leo.base.*
-import leo.binary.*
-import leo13.*
+import leo.base.byte0
+import leo.base.byte1
+import leo.base.fold
+import leo.base.int
+import leo.base.map
+import leo.base.short
+import leo.base.short0
+import leo.base.short1
+import leo.binary.Bit
+import leo.binary.bit
+import leo.binary.isOne
+import leo.binary.utf8ByteSeq
+import leo.binary.utf8String
+import leo13.Index
 import leo13.Stack
-import leo14.*
+import leo13.fold
+import leo13.push
+import leo13.reverse
+import leo13.seq
+import leo13.stack
 import leo14.Int2
 import leo14.Int4
+import leo14.byte
+import leo14.hi
+import leo14.int2
+import leo14.int4
+import leo14.lo
 
 fun <T> fn(body: Term<T>) = term(abstraction(body))
 fun <T> fn2(body: Term<T>) = fn(fn(body))
@@ -60,6 +80,22 @@ fun <T> Term<T>.pair(): Pair<Term<T>, Term<T>> =
 			else error("$this is not a pair")
 		}
 	}
+
+// === switch
+
+val <T> Term<T>.switchesFirst: Boolean
+	get() =
+		abstraction { body ->
+			body.abstraction { body ->
+				body.variable { index ->
+					when (index) {
+						0 -> false
+						1 -> true
+						else -> null!!
+					}
+				}
+			}
+		}
 
 // === bit
 
@@ -116,6 +152,26 @@ tailrec fun <T> Term<T>.invokeArgs(index: Index): Term<T> =
 tailrec fun <T> Term<T>.fn(index: Index): Term<T> =
 	if (index == 0) this
 	else fn(this).fn(index.dec())
+
+// === either
+
+val <T> Term<T>.eitherFirst get() = fn(fn(arg<T>(1).invoke(this)))
+val <T> Term<T>.eitherSecond get() = fn(fn(arg<T>(0).invoke(this)))
+
+fun <T, R> Term<T>.either(firstFn: (Term<T>) -> R, secondFn: (Term<T>) -> R): R =
+	abstraction { body ->
+		body.abstraction { body ->
+			body.application { selector, term ->
+				selector.variable { index ->
+					when (index) {
+						0 -> secondFn(term)
+						1 -> firstFn(term)
+						else -> null!!
+					}
+				}
+			}
+		}
+	}
 
 // === one of
 

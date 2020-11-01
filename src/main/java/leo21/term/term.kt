@@ -12,3 +12,5 @@ val nilTerm = id<Value>()
 fun term(string: String) = leo14.lambda.term(value(string))
 fun term(double: Double) = leo14.lambda.term(value(double))
 fun term(int: Int) = term(int.toDouble())
+
+typealias TT = Term<Value>

@@ -1,6 +1,25 @@
 package leo13
 
-import leo.base.*
+import leo.base.Nat
+import leo.base.Seq
+import leo.base.SeqNode
+import leo.base.SuccNat
+import leo.base.Writer
+import leo.base.ZeroNat
+import leo.base.appendableString
+import leo.base.emptySeq
+import leo.base.fail
+import leo.base.fold
+import leo.base.ifNotNull
+import leo.base.indexed
+import leo.base.notNullIf
+import leo.base.orNull
+import leo.base.orNullIf
+import leo.base.runIf
+import leo.base.seq
+import leo.base.the
+import leo.base.then
+import leo.base.writerFold
 
 sealed class Stack<out T>
 
@@ -375,3 +394,11 @@ tailrec fun <V> Stack<V>.reversePushOrNull(stack: Stack<V>, count: Index): Stack
 
 fun <V> Stack<V>.takeOrNull(count: Index): Stack<V>? =
 	stack<V>().reversePushOrNull(this, count)?.reverse
+
+val <V> Stack<V>.valueLinkOrNull: Link<Stack<V>, V>?
+	get() =
+		linkOrNull?.valueLink
+
+val <V> StackLink<V>.valueLink: Link<Stack<V>, V>
+	get() =
+		Link(stack, value)
