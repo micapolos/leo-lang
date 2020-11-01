@@ -5,6 +5,28 @@ import kotlin.test.Test
 
 class EvaluateTest {
 	@Test
+	fun get_first() {
+		typed(
+			"point" lineTo typed(
+				"x" lineTo typed(10.0),
+				"y" lineTo typed(20.0)))
+			.get("x")
+			.evaluate
+			.assertEqualTo(typed("x" lineTo typed(10.0)))
+	}
+
+	@Test
+	fun get_second() {
+		typed(
+			"point" lineTo typed(
+				"x" lineTo typed(10.0),
+				"y" lineTo typed(20.0)))
+			.get("y")
+			.evaluate
+			.assertEqualTo(typed("y" lineTo typed(20.0)))
+	}
+
+	@Test
 	fun doublePlus() {
 		typed(10.0)
 			.doublePlus(typed(20.0))
