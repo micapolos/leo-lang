@@ -49,11 +49,16 @@ val Typed.choice get() = choiceOrNull.notNullOrError("not choice")
 fun Typed.getOrNull(name: String): Typed? =
 	structOrNull?.onlyLineOrNull?.rhsOrNull?.structOrNull?.lineOrNull(name)?.let { typed(it) }
 
+val Typed.contentOrNull: Typed?
+	get() =
+		structOrNull?.onlyLineOrNull?.rhsOrNull
+
 fun Typed.invokeOrNull(typed: Typed) = structOrNull?.onlyLineOrNull?.arrowTypedOrNull?.invokeOrNull(typed)
 
 fun Typed.get(name: String) = getOrNull(name).notNullOrError("no field")
 fun Typed.invoke(typed: Typed) = invokeOrNull(typed).notNullOrError("invoke")
 fun Typed.make(name: String) = typed(name lineTo this)
+val Typed.switch: SwitchTyped get() = contentOrNull?.choiceOrNull.notNullOrError("not choice").switchTyped
 
 fun Typed.plus(line: LineTyped): Typed = struct.plus(line).typed
 

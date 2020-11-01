@@ -2,10 +2,13 @@ package leo21.typed
 
 import leo.base.assertEqualTo
 import leo14.lambda.arg
+import leo14.typed.numberLine
 import leo21.type.arrowTo
 import leo21.type.choice
+import leo21.type.doubleLine
 import leo21.type.doubleType
 import leo21.type.lineTo
+import leo21.type.stringLine
 import leo21.type.stringType
 import leo21.type.type
 import kotlin.test.Test
@@ -212,5 +215,107 @@ class TypedTest {
 		assertFails { typed("foo").stringPlus(typed(20.0)) }
 		assertFails { typed(10.0).stringPlus(typed("foo")) }
 		assertFails { typed(10.0).stringPlus(typed(20.0)) }
+	}
+
+	@Test
+	fun switch() {
+		typed(
+			"bit" lineTo choice(
+				"zero" lineTo type(),
+				"one" lineTo type())
+				.typed("zero" lineTo typed()))
+			.switch
+			.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+			.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+			.typed
+			.type
+			.assertEqualTo(stringType)
+	}
+
+	@Test
+	fun switch_notChoice() {
+		assertFails { typed("bit" lineTo typed("zero")).switch }
+	}
+
+	@Test
+	fun switch_firstCaseMismatch() {
+		assertFails {
+			typed(
+				"bit" lineTo choice(
+					"zero" lineTo type(),
+					"one" lineTo type())
+					.typed("zero" lineTo typed()))
+				.switch
+				.case("one", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+		}
+	}
+
+	@Test
+	fun switch_secondCaseMismatch() {
+		assertFails {
+			typed(
+				"bit" lineTo choice(
+					"zero" lineTo type(),
+					"one" lineTo type())
+					.typed("zero" lineTo typed()))
+				.switch
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("two", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+		}
+	}
+
+	@Test
+	fun switch_arrowLhsTypeMismatch() {
+		assertFails {
+			typed(
+				"bit" lineTo choice(
+					"zero" lineTo type(),
+					"one" lineTo type())
+					.typed("zero" lineTo typed()))
+				.switch
+				.case("zero", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+		}
+	}
+
+	@Test
+	fun switch_arrowRhsTypeMismatch() {
+		assertFails {
+			typed(
+				"bit" lineTo choice(
+					"zero" lineTo type(),
+					"one" lineTo type())
+					.typed("zero" lineTo typed()))
+				.switch
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo doubleType))
+		}
+	}
+
+	@Test
+	fun switch_notExhaustive() {
+		assertFails {
+			typed(
+				"bit" lineTo choice(
+					"zero" lineTo type(),
+					"one" lineTo type())
+					.typed("zero" lineTo typed()))
+				.switch
+				.typed
+		}
+	}
+
+	@Test
+	fun switch_exhausted() {
+		assertFails {
+			typed(
+				"bit" lineTo choice(
+					"zero" lineTo type(),
+					"one" lineTo type())
+					.typed("zero" lineTo typed()))
+				.switch
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("two", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+		}
 	}
 }
