@@ -16,8 +16,8 @@ data class StructCompiled(
 
 val emptyCompiledStruct = StructCompiled(nilTerm, struct())
 
-fun StructCompiled.plus(compiled: LineCompiled): StructCompiled =
-	StructCompiled(valueTerm.plus(compiled.valueTerm), struct.plus(compiled.line))
+fun StructCompiled.plus(compiled: FieldCompiled): StructCompiled =
+	StructCompiled(valueTerm.plus(compiled.valueTerm), struct.plus(compiled.field))
 
 val StructCompiled.compiled
 	get() =

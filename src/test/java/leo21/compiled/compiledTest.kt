@@ -1,19 +1,72 @@
 package leo21.compiled
 
-import leo21.type.doubleLine
+import leo21.type.doubleType
+import leo21.type.fieldTo
+import leo21.type.stringType
 import kotlin.test.Test
+import kotlin.test.assertFails
 
 class CompiledTest {
 	@Test
-	fun build() {
+	fun empty() {
 		compiled()
+	}
+
+	@Test
+	fun struct() {
 		compiled(
-			"x" lineTo compiled(10),
-			"y" lineTo compiled(20))
+			"x" fieldTo compiled(10.0),
+			"y" fieldTo compiled(20.0))
+	}
+
+	@Test
+	fun struct_duplicateField() {
+		assertFails {
+			compiled(
+				"x" fieldTo compiled(10.0),
+				"x" fieldTo compiled(20.0))
+		}
+	}
+
+	@Test
+	fun choice() {
 		compiledChoice {
 			this
-				.plusNotChosen(doubleLine)
-				.plusChosen(compiledLine("foo"))
+				.plusNotChosen("number" fieldTo doubleType)
+				.plusChosen("text" fieldTo compiled("foo"))
+		}
+	}
+
+	@Test
+	fun choice_duplicateField() {
+		assertFails {
+			compiledChoice {
+				this
+					.plusNotChosen("number" fieldTo doubleType)
+					.plusChosen("number" fieldTo compiled("foo"))
+			}
+		}
+	}
+
+	@Test
+	fun choice_notChosen() {
+		assertFails {
+			compiledChoice {
+				this
+					.plusNotChosen("number" fieldTo doubleType)
+					.plusNotChosen("text" fieldTo stringType)
+			}
+		}
+	}
+
+	@Test
+	fun choice_chosenTwice() {
+		assertFails {
+			compiledChoice {
+				this
+					.plusChosen("number" fieldTo compiled(10.0))
+					.plusChosen("text" fieldTo compiled("foo"))
+			}
 		}
 	}
 }
