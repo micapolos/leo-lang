@@ -9,6 +9,7 @@ import leo14.lineTo
 import leo14.literal
 import leo14.plus
 import leo14.script
+import leo21.type.script
 
 val Typed.script: Script
 	get() =
@@ -46,4 +47,4 @@ val FieldTyped.scriptLine: ScriptLine
 
 val ArrowTyped.scriptLine: ScriptLine
 	get() =
-		TODO()
+		"function" lineTo arrow.script
