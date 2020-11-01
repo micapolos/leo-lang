@@ -1,8 +1,9 @@
 package leo21.scoped
 
-import leo21.compiled.Compiled
+import leo21.typed.Typed
 
 data class Scoped(
 	val scope: Scope,
-	val body: Compiled
+	val body: Typed
 )
+
