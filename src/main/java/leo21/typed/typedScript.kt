@@ -31,7 +31,7 @@ val LineTyped.scriptLine: ScriptLine
 
 val ChoiceTyped.script: Script
 	get() =
-		TODO()
+		decompileChosenLineTyped.scriptLine.script
 
 val StringTyped.scriptLine: ScriptLine
 	get() =
