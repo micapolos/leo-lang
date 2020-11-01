@@ -2,7 +2,6 @@ package leo21.typed
 
 import leo.base.assertEqualTo
 import leo14.lambda.fn
-import leo14.lambda.term
 import leo21.term.term
 import leo21.type.arrowTo
 import leo21.type.choice
