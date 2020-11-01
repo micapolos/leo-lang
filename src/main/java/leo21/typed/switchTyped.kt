@@ -23,7 +23,7 @@ val ChoiceTyped.switchTyped: SwitchTyped
 	get() =
 		SwitchTyped(valueTermOrNull!!, choice.lineStack, null)
 
-fun SwitchTyped.case(name: String, typed: ArrowTyped): SwitchTyped =
+fun SwitchTyped.reversedCase(name: String, typed: ArrowTyped): SwitchTyped =
 	remainingLineTypedStack.linkOrNull.notNullOrError("exhausted").let { link ->
 		if (link.value.name != name) error("case mismatch")
 		else if (type(link.value) != typed.arrow.lhs) error("arrow lhs illegal")
