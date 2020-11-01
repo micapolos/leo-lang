@@ -1,10 +1,5 @@
 package leo21.compiled
 
-import leo.base.assertEqualTo
-import leo.base.assertNotNull
-import leo.base.assertNull
-import leo15.numberType
-import leo15.textType
 import leo21.type.choice
 import leo21.type.doubleType
 import leo21.type.fieldTo
@@ -111,5 +106,13 @@ class CompiledTest {
 					"y" fieldTo compiled(20.0)))
 				.get("z")
 		}
+	}
+
+	@Test
+	fun make() {
+		compiled(
+			"x" fieldTo compiled(10.0),
+			"y" fieldTo compiled(20.0))
+			.make("point")
 	}
 }
