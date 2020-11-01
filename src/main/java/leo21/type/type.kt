@@ -30,9 +30,9 @@ val Type.struct get() = (this as StructType).struct
 
 val emptyChoice = Choice(stack())
 fun choice(vararg lines: Field) = emptyChoice.fold(lines) { plus(it) }
-fun Choice.plus(line: Field) =
-	if (fieldStack.any { name == line.name }) error("duplicate case")
-	else Choice(fieldStack.push(line))
+fun Choice.plus(field: Field) =
+	if (fieldStack.any { name == field.name }) error("duplicate case")
+	else Choice(fieldStack.push(field))
 
 val Type.choice get() = (this as ChoiceType).choice
 

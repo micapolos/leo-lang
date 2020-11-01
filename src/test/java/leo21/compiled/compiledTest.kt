@@ -1,5 +1,8 @@
 package leo21.compiled
 
+import leo15.numberType
+import leo15.textType
+import leo21.type.choice
 import leo21.type.doubleType
 import leo21.type.fieldTo
 import leo21.type.stringType
@@ -29,7 +32,7 @@ class CompiledTest {
 	}
 
 	@Test
-	fun choice() {
+	fun choice_ok() {
 		compiledChoice {
 			this
 				.plusNotChosen("number" fieldTo doubleType)
@@ -68,5 +71,13 @@ class CompiledTest {
 					.plusChosen("text" fieldTo compiled("foo"))
 			}
 		}
+	}
+
+	@Test
+	fun choice_compiled() {
+		choice(
+			"number" fieldTo doubleType,
+			"text" fieldTo stringType)
+			.compiled("number" fieldTo compiled(10.0))
 	}
 }
