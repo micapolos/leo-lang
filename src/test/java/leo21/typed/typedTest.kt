@@ -5,7 +5,7 @@ import leo14.lambda.arg
 import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.doubleType
-import leo21.type.fieldTo
+import leo21.type.lineTo
 import leo21.type.stringType
 import leo21.type.type
 import kotlin.test.Test
@@ -22,21 +22,21 @@ class TypedTest {
 	@Test
 	fun struct() {
 		typed(
-			"x" fieldTo typed(10.0),
-			"y" fieldTo typed(20.0))
+			"x" lineTo typed(10.0),
+			"y" lineTo typed(20.0))
 			.type
 			.assertEqualTo(
 				type(
-					"x" fieldTo doubleType,
-					"y" fieldTo doubleType))
+					"x" lineTo doubleType,
+					"y" lineTo doubleType))
 	}
 
 	@Test
 	fun struct_duplicateField() {
 		assertFails {
 			typed(
-				"x" fieldTo typed(10.0),
-				"x" fieldTo typed(20.0))
+				"x" lineTo typed(10.0),
+				"x" lineTo typed(20.0))
 		}
 	}
 
@@ -44,14 +44,14 @@ class TypedTest {
 	fun choice_ok() {
 		choiceTyped {
 			this
-				.plusNotChosen("number" fieldTo doubleType)
-				.plusChosen("text" fieldTo typed("foo"))
+				.plusNotChosen("number" lineTo doubleType)
+				.plusChosen("text" lineTo typed("foo"))
 		}.type
 			.assertEqualTo(
 				type(
 					choice(
-						"number" fieldTo doubleType,
-						"text" fieldTo stringType)))
+						"number" lineTo doubleType,
+						"text" lineTo stringType)))
 	}
 
 	@Test
@@ -59,8 +59,8 @@ class TypedTest {
 		assertFails {
 			choiceTyped {
 				this
-					.plusNotChosen("number" fieldTo doubleType)
-					.plusChosen("number" fieldTo typed("foo"))
+					.plusNotChosen("number" lineTo doubleType)
+					.plusChosen("number" lineTo typed("foo"))
 			}
 		}
 	}
@@ -70,8 +70,8 @@ class TypedTest {
 		assertFails {
 			choiceTyped {
 				this
-					.plusNotChosen("number" fieldTo doubleType)
-					.plusNotChosen("text" fieldTo stringType)
+					.plusNotChosen("number" lineTo doubleType)
+					.plusNotChosen("text" lineTo stringType)
 			}
 		}
 	}
@@ -81,8 +81,8 @@ class TypedTest {
 		assertFails {
 			choiceTyped {
 				this
-					.plusChosen("number" fieldTo typed(10.0))
-					.plusChosen("text" fieldTo typed("foo"))
+					.plusChosen("number" lineTo typed(10.0))
+					.plusChosen("text" lineTo typed("foo"))
 			}
 		}
 	}
@@ -90,46 +90,64 @@ class TypedTest {
 	@Test
 	fun choice_typed() {
 		choice(
-			"number" fieldTo doubleType,
-			"text" fieldTo stringType)
-			.typed("number" fieldTo typed(10.0))
+			"number" lineTo doubleType,
+			"text" lineTo stringType)
+			.typed("number" lineTo typed(10.0))
 			.type
 			.assertEqualTo(
 				type(
 					choice(
-						"number" fieldTo doubleType,
-						"text" fieldTo stringType)))
+						"number" lineTo doubleType,
+						"text" lineTo stringType)))
 	}
 
 	@Test
 	fun get_first() {
 		typed(
-			"point" fieldTo typed(
-				"x" fieldTo typed(10.0),
-				"y" fieldTo typed(20.0)))
+			"point" lineTo typed(
+				"x" lineTo typed(10.0),
+				"y" lineTo typed(20.0)))
 			.get("x")
 			.type
-			.assertEqualTo(type("x" fieldTo doubleType))
+			.assertEqualTo(type("x" lineTo doubleType))
 	}
 
 	@Test
 	fun get_second() {
 		typed(
-			"point" fieldTo typed(
-				"x" fieldTo typed(10.0),
-				"y" fieldTo typed(20.0)))
+			"point" lineTo typed(
+				"x" lineTo typed(10.0),
+				"y" lineTo typed(20.0)))
 			.get("y")
 			.type
-			.assertEqualTo(type("y" fieldTo doubleType))
+			.assertEqualTo(type("y" lineTo doubleType))
+	}
+
+	@Test
+	fun get_number() {
+		typed(
+			"x" lineTo typed(10.0))
+			.get("number")
+			.type
+			.assertEqualTo(doubleType)
+	}
+
+	@Test
+	fun get_text() {
+		typed(
+			"x" lineTo typed("foo"))
+			.get("text")
+			.type
+			.assertEqualTo(stringType)
 	}
 
 	@Test
 	fun get_missing() {
 		assertFails {
 			typed(
-				"point" fieldTo typed(
-					"x" fieldTo typed(10.0),
-					"y" fieldTo typed(20.0)))
+				"point" lineTo typed(
+					"x" lineTo typed(10.0),
+					"y" lineTo typed(20.0)))
 				.get("z")
 		}
 	}
@@ -137,15 +155,15 @@ class TypedTest {
 	@Test
 	fun make() {
 		typed(
-			"x" fieldTo typed(10.0),
-			"y" fieldTo typed(20.0))
+			"x" lineTo typed(10.0),
+			"y" lineTo typed(20.0))
 			.make("point")
 			.type
 			.assertEqualTo(
 				type(
-					"point" fieldTo type(
-						"x" fieldTo doubleType,
-						"y" fieldTo doubleType)))
+					"point" lineTo type(
+						"x" lineTo doubleType,
+						"y" lineTo doubleType)))
 	}
 
 	@Test

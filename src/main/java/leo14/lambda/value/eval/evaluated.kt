@@ -1,5 +1,7 @@
 package leo14.lambda.value.eval
 
+import leo14.lambda.Term
+import leo14.lambda.term
 import leo14.lambda.value.Value
 
 sealed class Evaluated
@@ -12,3 +14,10 @@ fun evaluated(function: Function): Evaluated = FunctionEvaluated(function)
 
 val Evaluated.function get() = (this as FunctionEvaluated).function
 val Evaluated.value get() = (this as ValueEvaluated).value
+
+val Evaluated.term: Term<Value>
+	get() =
+		when (this) {
+			is ValueEvaluated -> term(value)
+			is FunctionEvaluated -> function.term
+		}
