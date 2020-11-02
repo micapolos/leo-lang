@@ -27,20 +27,3 @@ fun Binding.resolveOrNull(index: Int, name: String): Typed? =
 		is ArrowBinding -> null
 		is TypeBinding -> Typed(arg(index), type).make("given").getOrNull(name)
 	}
-
-//fun Typed.push(binding: Binding): Typed =
-//	Typed(fn(valueTerm).invoke(binding.valueTerm), binding.type)
-//
-//val Binding.valueTerm: Term<Value>
-//	get() =
-//		when (this) {
-//			is ArrowBinding -> fn(typed.valueTerm)
-//			is GivenBinding -> typed.valueTerm
-//		}
-//
-//val Binding.type: Type
-//	get() =
-//		when (this) {
-//			is ArrowBinding -> typed.type
-//			is GivenBinding -> typed.type
-//		}

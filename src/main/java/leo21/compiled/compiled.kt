@@ -94,4 +94,3 @@ fun Compiled.plus(typed: LineTyped): Compiled =
 	setBody(scope.resolve(body.plus(typed)))
 
 fun Compiled.setBody(body: Typed) = copy(body = body, isEmpty = false)
-//val Compiled.typed: Typed get() = body.push(scope)
