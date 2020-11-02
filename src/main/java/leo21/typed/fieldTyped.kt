@@ -3,7 +3,7 @@ package leo21.typed
 import leo13.fold
 import leo13.reverse
 import leo14.lambda.Term
-import leo14.lambda.value.Value
+import leo21.value.Value
 import leo21.type.Choice
 import leo21.type.Field
 import leo21.type.fieldTo

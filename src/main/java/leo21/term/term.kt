@@ -3,8 +3,8 @@ package leo21.term
 import leo14.lambda.Term
 import leo14.lambda.id
 import leo14.lambda.pair
-import leo14.lambda.value.Value
-import leo14.lambda.value.value
+import leo21.value.Value
+import leo21.value.value
 
 fun <T> Term<T>.plus(term: Term<T>): Term<T> = pair(this, term)
 

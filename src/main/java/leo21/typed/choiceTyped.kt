@@ -5,7 +5,7 @@ import leo14.lambda.Term
 import leo14.lambda.either
 import leo14.lambda.eitherFirst
 import leo14.lambda.eitherSecond
-import leo14.lambda.value.Value
+import leo21.value.Value
 import leo21.type.Choice
 import leo21.type.Line
 import leo21.type.choice

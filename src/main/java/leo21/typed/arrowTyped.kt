@@ -3,7 +3,7 @@ package leo21.typed
 import leo.base.notNullOrError
 import leo14.lambda.Term
 import leo14.lambda.invoke
-import leo14.lambda.value.Value
+import leo21.value.Value
 import leo21.type.Arrow
 
 data class ArrowTyped(

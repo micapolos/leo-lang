@@ -5,8 +5,8 @@ import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo14.lambda.Term
 import leo14.lambda.term
-import leo14.lambda.value.Value
-import leo14.lambda.value.value
+import leo21.value.Value
+import leo21.value.value
 import leo21.type.ArrowLine
 import leo21.type.DoubleLine
 import leo21.type.FieldLine

@@ -1,4 +1,4 @@
-package leo14.lambda.value
+package leo21.value
 
 sealed class Value
 data class StringValue(val string: String) : Value()

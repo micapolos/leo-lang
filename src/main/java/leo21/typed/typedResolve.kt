@@ -2,11 +2,11 @@ package leo21.typed
 
 import leo.base.notNullIf
 import leo14.lambda.invoke
-import leo14.lambda.value.DoubleMinusDoubleValue
-import leo14.lambda.value.DoublePlusDoubleValue
-import leo14.lambda.value.DoubleTimesDoubleValue
-import leo14.lambda.value.StringPlusStringValue
-import leo14.lambda.value.Value
+import leo21.value.DoubleMinusDoubleValue
+import leo21.value.DoublePlusDoubleValue
+import leo21.value.DoubleTimesDoubleValue
+import leo21.value.StringPlusStringValue
+import leo21.value.Value
 import leo21.type.Line
 import leo21.type.Type
 import leo21.type.doubleLine

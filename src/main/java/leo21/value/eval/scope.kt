@@ -1,4 +1,4 @@
-package leo14.lambda.value.eval
+package leo21.value.eval
 
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
@@ -7,20 +7,20 @@ import leo14.lambda.ApplicationTerm
 import leo14.lambda.NativeTerm
 import leo14.lambda.Term
 import leo14.lambda.VariableTerm
-import leo14.lambda.value.DoubleMinusDoubleValue
-import leo14.lambda.value.DoublePlusDoubleValue
-import leo14.lambda.value.DoubleTimesDoubleValue
-import leo14.lambda.value.DoubleValue
-import leo14.lambda.value.MinusDoubleValue
-import leo14.lambda.value.PlusDoubleValue
-import leo14.lambda.value.PlusStringValue
-import leo14.lambda.value.StringPlusStringValue
-import leo14.lambda.value.StringValue
-import leo14.lambda.value.TimesDoubleValue
-import leo14.lambda.value.Value
-import leo14.lambda.value.double
-import leo14.lambda.value.string
-import leo14.lambda.value.value
+import leo21.value.DoubleMinusDoubleValue
+import leo21.value.DoublePlusDoubleValue
+import leo21.value.DoubleTimesDoubleValue
+import leo21.value.DoubleValue
+import leo21.value.MinusDoubleValue
+import leo21.value.PlusDoubleValue
+import leo21.value.PlusStringValue
+import leo21.value.StringPlusStringValue
+import leo21.value.StringValue
+import leo21.value.TimesDoubleValue
+import leo21.value.Value
+import leo21.value.double
+import leo21.value.string
+import leo21.value.value
 
 data class Scope(val evaluatedList: PersistentList<Evaluated>)
 

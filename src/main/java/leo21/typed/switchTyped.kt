@@ -10,7 +10,7 @@ import leo13.reverse
 import leo13.stack
 import leo14.lambda.Term
 import leo14.lambda.invoke
-import leo14.lambda.value.Value
+import leo21.value.Value
 import leo21.type.Line
 import leo21.type.Type
 import leo21.type.name

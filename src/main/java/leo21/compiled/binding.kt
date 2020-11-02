@@ -3,7 +3,7 @@ package leo21.compiled
 import leo.base.notNullIf
 import leo14.lambda.arg
 import leo14.lambda.invoke
-import leo14.lambda.value.Value
+import leo21.value.Value
 import leo21.type.Arrow
 import leo21.type.Type
 import leo21.typed.Typed

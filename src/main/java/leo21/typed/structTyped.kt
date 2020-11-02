@@ -11,7 +11,7 @@ import leo14.lambda.Term
 import leo14.lambda.first
 import leo14.lambda.pair
 import leo14.lambda.second
-import leo14.lambda.value.Value
+import leo21.value.Value
 import leo21.term.nilTerm
 import leo21.term.plus
 import leo21.type.Struct

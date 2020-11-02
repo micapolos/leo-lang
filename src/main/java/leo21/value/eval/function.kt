@@ -1,8 +1,8 @@
-package leo14.lambda.value.eval
+package leo21.value.eval
 
 import leo14.lambda.Term
 import leo14.lambda.invoke
-import leo14.lambda.value.Value
+import leo21.value.Value
 
 data class Function(val scope: Scope, val bodyTerm: Term<Value>)
 

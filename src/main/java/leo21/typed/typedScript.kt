@@ -3,8 +3,8 @@ package leo21.typed
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lambda.native
-import leo14.lambda.value.double
-import leo14.lambda.value.string
+import leo21.value.double
+import leo21.value.string
 import leo14.lineTo
 import leo14.literal
 import leo14.plus
