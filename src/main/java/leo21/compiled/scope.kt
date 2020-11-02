@@ -4,6 +4,7 @@ import leo.base.indexed
 import leo.base.mapFirstOrNull
 import leo13.Stack
 import leo13.fold
+import leo13.push
 import leo13.reverse
 import leo13.seq
 import leo13.stack
@@ -13,6 +14,7 @@ import leo21.typed.resolve
 data class Scope(val bindingStack: Stack<Binding>)
 
 val emptyScope = Scope(stack())
+fun Scope.push(binding: Binding) = Scope(bindingStack.push(binding))
 
 fun Scope.resolveOrNull(name: String): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {
