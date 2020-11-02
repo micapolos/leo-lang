@@ -222,9 +222,9 @@ class TypedTest {
 				"one" lineTo type())
 				.typed("zero" lineTo typed()))
 			.switch
-			.reversedCase("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
-			.reversedCase("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
-			.typed
+			.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+			.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+			.end
 			.type
 			.assertEqualTo(stringType)
 	}
@@ -243,7 +243,7 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.reversedCase("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
 		}
 	}
 
@@ -256,8 +256,8 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.reversedCase("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
-				.reversedCase("foo", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
 		}
 	}
 
@@ -270,7 +270,7 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.reversedCase("one", ArrowTyped(arg(0), type("foo" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowTyped(arg(0), type("foo" lineTo type()) arrowTo stringType))
 		}
 	}
 
@@ -283,8 +283,8 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.reversedCase("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
-				.reversedCase("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo doubleType))
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo doubleType))
 		}
 	}
 
@@ -297,7 +297,7 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.typed
+				.end
 		}
 	}
 
@@ -310,9 +310,9 @@ class TypedTest {
 					"one" lineTo type())
 					.typed("zero" lineTo typed()))
 				.switch
-				.reversedCase("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
-				.reversedCase("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.reversedCase("foo", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("two", ArrowTyped(arg(0), type("two" lineTo type()) arrowTo stringType))
 		}
 	}
 }

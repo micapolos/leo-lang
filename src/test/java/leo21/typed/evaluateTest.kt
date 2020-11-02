@@ -41,9 +41,9 @@ class EvaluateTest {
 				"one" lineTo type())
 				.typed("zero" lineTo typed()))
 			.switch
-			.reversedCase("one", ArrowTyped(fn(term("true")), type("one" lineTo type()) arrowTo stringType))
-			.reversedCase("zero", ArrowTyped(fn(term("false")), type("zero" lineTo type()) arrowTo stringType))
-			.typed
+			.case("zero", ArrowTyped(fn(term("false")), type("zero" lineTo type()) arrowTo stringType))
+			.case("one", ArrowTyped(fn(term("true")), type("one" lineTo type()) arrowTo stringType))
+			.end
 			.evaluate
 			.assertEqualTo(typed("false"))
 	}
@@ -56,9 +56,9 @@ class EvaluateTest {
 				"one" lineTo type())
 				.typed("one" lineTo typed()))
 			.switch
-			.reversedCase("one", ArrowTyped(fn(term("true")), type("one" lineTo type()) arrowTo stringType))
-			.reversedCase("zero", ArrowTyped(fn(term("false")), type("zero" lineTo type()) arrowTo stringType))
-			.typed
+			.case("zero", ArrowTyped(fn(term("false")), type("zero" lineTo type()) arrowTo stringType))
+			.case("one", ArrowTyped(fn(term("true")), type("one" lineTo type()) arrowTo stringType))
+			.end
 			.evaluate
 			.assertEqualTo(typed("true"))
 	}
