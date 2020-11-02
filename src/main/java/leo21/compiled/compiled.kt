@@ -40,6 +40,19 @@ fun Compiled.plus(literal: Literal): Compiled =
 	plus(lineTyped(literal)).resolve
 
 fun Compiled.plus(scriptField: ScriptField): Compiled =
+	null
+		?: plusKeywordOrNull(scriptField)
+		?: plusNonKeyword(scriptField)
+
+fun Compiled.plusKeywordOrNull(scriptField: ScriptField): Compiled? =
+	when (scriptField.string) {
+		"do" -> TODO()
+		"function" -> TODO()
+		"make" -> TODO()
+		else -> null
+	}
+
+fun Compiled.plusNonKeyword(scriptField: ScriptField): Compiled =
 	if (scriptField.rhs.isEmpty) plusOrNull(scriptField.string)!!
 	else resolvePlus(scriptField).resolve
 
