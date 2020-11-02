@@ -1,4 +1,4 @@
-package leo21.prim.eval
+package leo21.prim.evaluate
 
 import leo.base.assertEqualTo
 import leo14.lambda.invoke

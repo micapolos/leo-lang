@@ -1,6 +1,6 @@
 package leo21.typed
 
-import leo21.prim.eval.evaluate
+import leo21.prim.evaluate.evaluate
 
 val Typed.evaluate: Typed
 	get() =

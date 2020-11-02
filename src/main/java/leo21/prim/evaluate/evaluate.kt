@@ -1,14 +1,10 @@
-package leo21.prim.eval
+package leo21.prim.evaluate
 
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
-import leo14.lambda.AbstractionTerm
-import leo14.lambda.ApplicationTerm
-import leo14.lambda.NativeTerm
 import leo14.lambda.Term
 import leo14.lambda.Value
-import leo14.lambda.VariableTerm
 import leo14.lambda.evalTerm
+import leo14.lambda.evaluate
+import leo14.lambda.evaluator
 import leo14.lambda.native
 import leo14.lambda.term
 import leo14.lambda.value
@@ -27,26 +23,11 @@ import leo21.prim.double
 import leo21.prim.prim
 import leo21.prim.string
 
-data class Scope(val evaluatedList: PersistentList<Evaluated>)
-
-val PersistentList<Evaluated>.scope get() = Scope(this)
-val emptyScope: Scope = persistentListOf<Evaluated>().scope
-fun Scope.push(evaluated: Evaluated) = evaluatedList.add(evaluated).scope
-fun Scope.at(depth: Int): Evaluated = evaluatedList[evaluatedList.size - depth - 1]
-
-fun Scope.evaluate(term: Term<Prim>): Evaluated =
-	when (term) {
-		is NativeTerm -> evaluated(term.native)
-		is AbstractionTerm -> evaluated(function(term.abstraction.body))
-		is ApplicationTerm -> evaluate(term.application.lhs).apply(evaluate(term.application.rhs))
-		is VariableTerm -> at(term.variable.index)
-	}
-
-fun Evaluated.apply(evaluated: Evaluated): Evaluated =
-	when (this) {
-		is ValueEvaluated -> evaluated(aPrim.applyOrNull(evaluated.value)!!)
-		is FunctionEvaluated -> function.apply(evaluated)
-	}
+val Term<Prim>.evaluate: Term<Prim>
+	get() =
+		evaluator(Prim::apply)
+			.evaluate(value)
+			.evalTerm
 
 fun Prim.apply(value: Value<Prim>): Value<Prim> =
 	term(applyOrNull(value.evalTerm.native)!!).value
