@@ -15,8 +15,7 @@ class CompiledTest {
 			emptyScope,
 			typed(
 				"x" lineTo typed(10.0),
-				"y" lineTo typed(20.0)),
-			isEmpty = false)
+				"y" lineTo typed(20.0)))
 			.plus("make" lineTo script("point"))
 			.assertEqualTo(
 				Compiled(
@@ -24,7 +23,6 @@ class CompiledTest {
 					typed(
 						"x" lineTo typed(10.0),
 						"y" lineTo typed(20.0))
-						.make("point"),
-					isEmpty = false))
+						.make("point")))
 	}
 }

@@ -14,6 +14,7 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lineSeq
 import leo14.onlyStringOrNull
+import leo21.type.type
 import leo21.typed.LineTyped
 import leo21.typed.Typed
 import leo21.typed.getOrNull
@@ -25,12 +26,11 @@ import leo21.typed.typed
 
 data class Compiled(
 	val scope: Scope,
-	val body: Typed,
-	val isEmpty: Boolean
+	val body: Typed
 )
 
 fun Scope.typed(script: Script): Typed =
-	Compiled(this, typed(), isEmpty = true).plus(script).body
+	Compiled(this, typed()).plus(script).body
 
 fun Compiled.plus(script: Script): Compiled =
 	fold(script.lineSeq.reverse) { plus(it) }
@@ -83,7 +83,7 @@ fun Compiled.resolvePlus(scriptField: ScriptField): Compiled =
 	plus(scriptField.string lineTo scope.typed(scriptField.rhs))
 
 fun Compiled.plusOrNull(name: String): Compiled? =
-	if (isEmpty) scope.resolveOrNull(name)?.let { setBody(it) }
+	if (body.type == type()) scope.resolveOrNull(name)?.let { setBody(it) }
 	else body.getOrNull(name)?.let { setBody(it) }
 
 val Compiled.resolve
@@ -93,4 +93,4 @@ val Compiled.resolve
 fun Compiled.plus(typed: LineTyped): Compiled =
 	setBody(scope.resolve(body.plus(typed)))
 
-fun Compiled.setBody(body: Typed) = copy(body = body, isEmpty = false)
+fun Compiled.setBody(body: Typed) = copy(body = body)
