@@ -26,6 +26,3 @@ val <T> Value<T>.pair: Pair<Value<T>, Value<T>>
 			if (function.term == arg0<T>()(arg2())(arg1())) function.scope.at(1) to function.scope.at(0)
 			else error("$this not pair")
 		}
-
-fun <T, R> Value<T>.eitherSwitch(firstFn: (Value<T>) -> R, secondFn: (Value<T>) -> R): R =
-	TODO()
