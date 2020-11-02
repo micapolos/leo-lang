@@ -13,6 +13,7 @@ import leo21.type.FieldLine
 import leo21.type.Line
 import leo21.type.StringLine
 import leo21.type.doubleLine
+import leo21.type.line
 import leo21.type.lineTo
 import leo21.type.stringLine
 
@@ -34,6 +35,7 @@ fun <R> LineTyped.switch(
 fun line(string: String) = LineTyped(term(value(string)), stringLine)
 fun line(double: Double) = LineTyped(term(value(double)), doubleLine)
 infix fun String.lineTo(rhs: Typed) = LineTyped(rhs.valueTerm, this lineTo rhs.type)
+fun lineTyped(arrowTyped: ArrowTyped) = LineTyped(arrowTyped.valueTerm, line(arrowTyped.arrow))
 
 fun lineTyped(literal: Literal): LineTyped =
 	when (literal) {

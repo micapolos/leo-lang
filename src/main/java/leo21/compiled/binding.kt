@@ -1,48 +1,46 @@
 package leo21.compiled
 
 import leo.base.notNullIf
-import leo14.lambda.Term
 import leo14.lambda.arg
-import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.value.Value
+import leo21.type.Arrow
 import leo21.type.Type
 import leo21.typed.Typed
 import leo21.typed.getOrNull
-import leo21.typed.invoke
 import leo21.typed.make
 
 sealed class Binding
-data class ArrowBinding(val type: Type, val typed: Typed) : Binding()
-data class GivenBinding(val typed: Typed) : Binding()
+data class ArrowBinding(val arrow: Arrow) : Binding()
+data class TypeBinding(val type: Type) : Binding()
 
 fun Binding.resolveOrNull(index: Int, typed: Typed): Typed? =
 	when (this) {
-		is ArrowBinding -> notNullIf(typed.type == type) {
-			Typed(arg(index), typed.type).invoke(typed)
+		is ArrowBinding -> notNullIf(typed.type == arrow.lhs) {
+			Typed(arg<Value>(index).invoke(typed.valueTerm), arrow.rhs)
 		}
-		is GivenBinding -> null
+		is TypeBinding -> null
 	}
 
 fun Binding.resolveOrNull(index: Int, name: String): Typed? =
 	when (this) {
 		is ArrowBinding -> null
-		is GivenBinding -> Typed(arg(index), type).make("given").getOrNull(name)
+		is TypeBinding -> Typed(arg(index), type).make("given").getOrNull(name)
 	}
 
-fun Typed.push(binding: Binding): Typed =
-	Typed(fn(valueTerm).invoke(binding.valueTerm), binding.type)
-
-val Binding.valueTerm: Term<Value>
-	get() =
-		when (this) {
-			is ArrowBinding -> fn(typed.valueTerm)
-			is GivenBinding -> typed.valueTerm
-		}
-
-val Binding.type: Type
-	get() =
-		when (this) {
-			is ArrowBinding -> typed.type
-			is GivenBinding -> typed.type
-		}
+//fun Typed.push(binding: Binding): Typed =
+//	Typed(fn(valueTerm).invoke(binding.valueTerm), binding.type)
+//
+//val Binding.valueTerm: Term<Value>
+//	get() =
+//		when (this) {
+//			is ArrowBinding -> fn(typed.valueTerm)
+//			is GivenBinding -> typed.valueTerm
+//		}
+//
+//val Binding.type: Type
+//	get() =
+//		when (this) {
+//			is ArrowBinding -> typed.type
+//			is GivenBinding -> typed.type
+//		}

@@ -22,6 +22,32 @@ class ScriptEvaluateTest {
 			.assertEqualTo(script(literal(10.0)))
 	}
 
+//	@Test
+//	fun struct() {
+//		script(
+//			"x" lineTo script(literal(10.0)),
+//			"y" lineTo script(literal(20.0)))
+//			.evaluate
+//			.assertEqualTo(
+//				script(
+//					"x" lineTo script(literal(10.0)),
+//					"y" lineTo script(literal(20.0))))
+//	}
+//
+//	@Test
+//	fun make() {
+//		script(
+//			"x" lineTo script(literal(10.0)),
+//			"y" lineTo script(literal(20.0)),
+//			"make" lineTo script("point"))
+//			.evaluate
+//			.assertEqualTo(
+//				script(
+//					"point" lineTo script(
+//						"x" lineTo script(literal(10.0)),
+//						"y" lineTo script(literal(20.0)))))
+//	}
+
 	@Test
 	fun do_() {
 		script(
