@@ -32,6 +32,24 @@ class ScriptEvaluateTest {
 	}
 
 	@Test
+	fun numberMinusNumber() {
+		script(
+			line(literal(30.0)),
+			"minus" lineTo script(literal(20.0)))
+			.evaluate
+			.assertEqualTo(script(literal(10.0)))
+	}
+
+	@Test
+	fun numberTimesNumber() {
+		script(
+			line(literal(10.0)),
+			"times" lineTo script(literal(20.0)))
+			.evaluate
+			.assertEqualTo(script(literal(200.0)))
+	}
+
+	@Test
 	fun textPlusText() {
 		script(
 			line(literal("Hello, ")),
