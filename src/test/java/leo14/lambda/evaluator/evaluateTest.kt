@@ -16,16 +16,24 @@ class EvaluateTest {
 	fun pairFirst() {
 		pair(term("foo"), term("bar"))
 			.first
-			.value
-			.assertEqualTo(value("foo"))
+			.evaluate
+			.assertEqualTo(term("foo"))
 	}
 
 	@Test
 	fun pairSecond() {
 		pair(term("foo"), term("bar"))
 			.second
-			.value
-			.assertEqualTo(value("bar"))
+			.evaluate
+			.assertEqualTo(term("bar"))
+	}
+
+	@Test
+	fun pairUnpair() {
+		pair(term("foo"), term("bar"))
+			.evaluate
+			.pair()
+			.assertEqualTo(term("foo") to term("bar"))
 	}
 
 	@Test
@@ -33,8 +41,8 @@ class EvaluateTest {
 		term("foo")
 			.eitherFirst
 			.eitherSwitch(fn(term("first")), fn(term("second")))
-			.value
-			.assertEqualTo(value("first"))
+			.evaluate
+			.assertEqualTo(term("first"))
 	}
 
 	@Test
@@ -42,7 +50,7 @@ class EvaluateTest {
 		term("foo")
 			.eitherSecond
 			.eitherSwitch(fn(term("first")), fn(term("second")))
-			.value
-			.assertEqualTo(value("second"))
+			.evaluate
+			.assertEqualTo(term("second"))
 	}
 }

@@ -1,5 +1,8 @@
 package leo14.lambda.evaluator
 
+import leo14.lambda.Term
+import leo14.lambda.term
+
 sealed class Value<out T>
 
 data class NativeValue<T>(val native: T) : Value<T>()
@@ -13,3 +16,10 @@ fun <T> Value<T>.apply(value: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 		is NativeValue -> native.nativeApply(value)
 		is FunctionValue -> function.apply(value, nativeApply)
 	}
+
+val <T> Value<T>.term: Term<T>
+	get() =
+		when (this) {
+			is NativeValue -> term(native)
+			is FunctionValue -> function.term
+		}
