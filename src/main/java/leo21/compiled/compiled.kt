@@ -37,21 +37,22 @@ fun Compiled.plus(scriptLine: ScriptLine): Compiled =
 	}
 
 fun Compiled.plus(literal: Literal): Compiled =
-	plus(lineTyped(literal))
+	plus(lineTyped(literal)).resolve
 
 fun Compiled.plus(scriptField: ScriptField): Compiled =
 	if (scriptField.rhs.isEmpty) plusOrNull(scriptField.string)!!
-	else plusResolve(scriptField)
+	else resolvePlus(scriptField).resolve
 
-fun Compiled.plusResolve(scriptField: ScriptField): Compiled =
-	plusResolve(scriptField.string lineTo scope.typed(scriptField.rhs))
-
-fun Compiled.plusResolve(lineTyped: LineTyped): Compiled =
-	setBody(scope.resolve(body.plus(lineTyped)))
+fun Compiled.resolvePlus(scriptField: ScriptField): Compiled =
+	plus(scriptField.string lineTo scope.typed(scriptField.rhs))
 
 fun Compiled.plusOrNull(name: String): Compiled? =
 	if (isEmpty) scope.resolveOrNull(name)?.let { setBody(it) }
 	else body.getOrNull(name)?.let { setBody(it) }
+
+val Compiled.resolve
+	get() =
+		setBody(scope.resolve(body))
 
 fun Compiled.plus(typed: LineTyped): Compiled =
 	setBody(scope.resolve(body.plus(typed)))
