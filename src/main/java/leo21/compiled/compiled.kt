@@ -51,11 +51,15 @@ fun Compiled.plus(scriptField: ScriptField): Compiled =
 
 fun Compiled.plusKeywordOrNull(scriptField: ScriptField): Compiled? =
 	when (scriptField.string) {
+		"define" -> plusDefine(scriptField.rhs)
 		"do" -> plusDo(scriptField.rhs)
 		"function" -> plusFunction(scriptField.rhs)
 		"make" -> plusMake(scriptField.rhs)
 		else -> null
 	}
+
+fun Compiled.plusDefine(script: Script): Compiled =
+	TODO()
 
 fun Compiled.plusDo(script: Script): Compiled =
 	scope.push(body.type).typed(script).let { typed ->

@@ -37,9 +37,6 @@ fun Scope.resolveOrNull(typed: Typed): Typed? =
 fun Scope.resolve(typed: Typed): Typed =
 	resolveOrNull(typed) ?: typed.resolve
 
-//fun Typed.push(scope: Scope): Typed =
-//	fold(scope.bindingStack.reverse) { push(it) }
-
 fun Scope.arrowTyped(script: Script): ArrowTyped =
 	script.linkOrNull.notNullOrError("function syntax error").let { link ->
 		link.line.fieldOrNull.notNullOrError("function syntax error").let { field ->
