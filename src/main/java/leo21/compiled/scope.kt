@@ -8,6 +8,7 @@ import leo13.reverse
 import leo13.seq
 import leo13.stack
 import leo21.typed.Typed
+import leo21.typed.resolve
 
 data class Scope(val bindingStack: Stack<Binding>)
 
@@ -24,7 +25,7 @@ fun Scope.resolveOrNull(typed: Typed): Typed? =
 	}
 
 fun Scope.resolve(typed: Typed): Typed =
-	resolveOrNull(typed) ?: typed
+	resolveOrNull(typed) ?: typed.resolve
 
 fun Typed.push(scope: Scope): Typed =
 	fold(scope.bindingStack.reverse) { push(it) }
