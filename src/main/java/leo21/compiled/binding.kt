@@ -14,6 +14,9 @@ sealed class Binding
 data class ArrowBinding(val arrow: Arrow) : Binding()
 data class TypeBinding(val type: Type) : Binding()
 
+fun binding(arrow: Arrow): Binding = ArrowBinding(arrow)
+fun binding(type: Type): Binding = TypeBinding(type)
+
 fun Binding.resolveOrNull(index: Int, typed: Typed): Typed? =
 	when (this) {
 		is ArrowBinding -> notNullIf(typed.type == arrow.lhs) {
