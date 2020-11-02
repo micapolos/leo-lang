@@ -15,6 +15,7 @@ data class Scope(val bindingStack: Stack<Binding>)
 
 val emptyScope = Scope(stack())
 fun Scope.push(binding: Binding) = Scope(bindingStack.push(binding))
+fun Scope.push(typed: Typed) = push(GivenBinding(typed))
 
 fun Scope.resolveOrNull(name: String): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {

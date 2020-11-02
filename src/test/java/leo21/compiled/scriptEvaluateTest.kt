@@ -23,6 +23,18 @@ class ScriptEvaluateTest {
 	}
 
 	@Test
+	fun do_() {
+		script(
+			"x" lineTo script(literal(10.0)),
+			"y" lineTo script(literal(20.0)),
+			"do" lineTo script(
+				"x" lineTo script()))
+			.evaluate
+			.assertEqualTo(script("x" lineTo script(literal(10.0))))
+	}
+
+
+	@Test
 	fun numberPlusNumber() {
 		script(
 			line(literal(10.0)),

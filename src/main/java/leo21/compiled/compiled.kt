@@ -9,6 +9,8 @@ import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
 import leo14.isEmpty
+import leo14.lambda.fn
+import leo14.lambda.invoke
 import leo14.lineSeq
 import leo21.typed.LineTyped
 import leo21.typed.Typed
@@ -25,7 +27,7 @@ data class Compiled(
 )
 
 fun Scope.typed(script: Script): Typed =
-	Compiled(this, typed(), isEmpty = true).plus(script).typed
+	Compiled(this, typed(), isEmpty = true).plus(script).body
 
 fun Compiled.plus(script: Script): Compiled =
 	fold(script.lineSeq.reverse) { plus(it) }
@@ -46,10 +48,18 @@ fun Compiled.plus(scriptField: ScriptField): Compiled =
 
 fun Compiled.plusKeywordOrNull(scriptField: ScriptField): Compiled? =
 	when (scriptField.string) {
-		"do" -> TODO()
+		"do" -> plusDo(scriptField.rhs)
 		"function" -> TODO()
 		"make" -> TODO()
 		else -> null
+	}
+
+fun Compiled.plusDo(script: Script): Compiled =
+	scope.push(body).typed(script).let { typed ->
+		setBody(
+			Typed(
+				fn(typed.valueTerm).invoke(body.valueTerm),
+				typed.type))
 	}
 
 fun Compiled.plusNonKeyword(scriptField: ScriptField): Compiled =
