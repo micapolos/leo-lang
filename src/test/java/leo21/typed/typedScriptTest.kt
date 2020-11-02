@@ -45,6 +45,20 @@ class TypedScriptTest {
 	}
 
 	@Test
+	fun struct_emptyFields() {
+		typed(
+			"x" lineTo typed(10.0),
+			"foo" lineTo typed(),
+			"y" lineTo typed(20.0))
+			.script
+			.assertEqualTo(
+				script(
+					"x" lineTo script(literal(10.0)),
+					"foo" lineTo script(),
+					"y" lineTo script(literal(20.0))))
+	}
+
+	@Test
 	fun choice_first() {
 		choice(stringLine, doubleLine)
 			.typed(line("foo"))

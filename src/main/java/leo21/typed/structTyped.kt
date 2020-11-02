@@ -15,6 +15,7 @@ import leo14.lambda.value.Value
 import leo21.term.nilTerm
 import leo21.term.plus
 import leo21.type.Struct
+import leo21.type.isStatic
 import leo21.type.name
 import leo21.type.plus
 import leo21.type.struct
@@ -29,7 +30,8 @@ val emptyStructTyped = StructTyped(nilTerm, struct())
 
 fun StructTyped.plus(typed: LineTyped): StructTyped =
 	StructTyped(
-		if (isEmpty) typed.valueTerm
+		if (struct.isStatic) typed.valueTerm
+		else if (typed.line.isStatic) valueTerm
 		else valueTerm.plus(typed.valueTerm),
 		struct.plus(typed.line))
 
@@ -68,14 +70,16 @@ val StructTyped.isEmpty: Boolean
 val StructTyped.linkOrNull: Link<StructTyped, LineTyped>?
 	get() =
 		struct.lineStack.linkOrNull?.let { link ->
-			if (link.stack.isEmpty) emptyStructTyped linkTo LineTyped(valueTerm, link.value)
+			if (Struct(link.stack).isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(valueTerm, link.value)
+			else if (link.value.isStatic) StructTyped(valueTerm, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
 			else StructTyped(valueTerm.first, Struct(link.stack)) linkTo LineTyped(valueTerm.second, link.value)
 		}
 
 val StructTyped.decompileLinkOrNull: Link<StructTyped, LineTyped>?
 	get() =
 		struct.lineStack.linkOrNull?.let { link ->
-			if (link.stack.isEmpty) emptyStructTyped linkTo LineTyped(valueTerm, link.value)
+			if (Struct(link.stack).isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(valueTerm, link.value)
+			else if (link.value.isStatic) StructTyped(valueTerm, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
 			else valueTerm.pair().let { (lhs, rhs) ->
 				StructTyped(lhs, Struct(link.stack)) linkTo LineTyped(rhs, link.value)
 			}
