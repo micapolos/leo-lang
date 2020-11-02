@@ -11,7 +11,7 @@ import leo14.lambda.Term
 import leo14.lambda.first
 import leo14.lambda.pair
 import leo14.lambda.second
-import leo21.value.Value
+import leo21.prim.Prim
 import leo21.term.nilTerm
 import leo21.term.plus
 import leo21.type.Struct
@@ -22,7 +22,7 @@ import leo21.type.struct
 import leo21.type.type
 
 data class StructTyped(
-	val valueTerm: Term<Value>,
+	val term: Term<Prim>,
 	val struct: Struct
 )
 
@@ -30,9 +30,9 @@ val emptyStructTyped = StructTyped(nilTerm, struct())
 
 fun StructTyped.plus(typed: LineTyped): StructTyped =
 	StructTyped(
-		if (struct.isStatic) typed.valueTerm
-		else if (typed.line.isStatic) valueTerm
-		else valueTerm.plus(typed.valueTerm),
+		if (struct.isStatic) typed.term
+		else if (typed.line.isStatic) term
+		else term.plus(typed.term),
 		struct.plus(typed.line))
 
 fun structTyped(vararg lines: LineTyped): StructTyped =
@@ -40,7 +40,7 @@ fun structTyped(vararg lines: LineTyped): StructTyped =
 
 val StructTyped.typed
 	get() =
-		Typed(valueTerm, type(struct))
+		Typed(term, type(struct))
 
 fun StructTyped.line(name: String): LineTyped =
 	lineOrNull(name).notNullOrError("no field")
@@ -70,17 +70,17 @@ val StructTyped.isEmpty: Boolean
 val StructTyped.linkOrNull: Link<StructTyped, LineTyped>?
 	get() =
 		struct.lineStack.linkOrNull?.let { link ->
-			if (Struct(link.stack).isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(valueTerm, link.value)
-			else if (link.value.isStatic) StructTyped(valueTerm, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
-			else StructTyped(valueTerm.first, Struct(link.stack)) linkTo LineTyped(valueTerm.second, link.value)
+			if (Struct(link.stack).isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(term, link.value)
+			else if (link.value.isStatic) StructTyped(term, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
+			else StructTyped(term.first, Struct(link.stack)) linkTo LineTyped(term.second, link.value)
 		}
 
 val StructTyped.decompileLinkOrNull: Link<StructTyped, LineTyped>?
 	get() =
 		struct.lineStack.linkOrNull?.let { link ->
-			if (Struct(link.stack).isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(valueTerm, link.value)
-			else if (link.value.isStatic) StructTyped(valueTerm, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
-			else valueTerm.pair().let { (lhs, rhs) ->
+			if (Struct(link.stack).isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(term, link.value)
+			else if (link.value.isStatic) StructTyped(term, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
+			else term.pair().let { (lhs, rhs) ->
 				StructTyped(lhs, Struct(link.stack)) linkTo LineTyped(rhs, link.value)
 			}
 		}

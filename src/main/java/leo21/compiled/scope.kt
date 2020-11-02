@@ -4,14 +4,11 @@ import leo.base.indexed
 import leo.base.mapFirstOrNull
 import leo.base.notNullOrError
 import leo13.Stack
-import leo13.fold
 import leo13.push
-import leo13.reverse
 import leo13.seq
 import leo13.stack
 import leo14.Script
 import leo14.fieldOrNull
-import leo14.lambda.arg
 import leo14.lambda.fn
 import leo14.linkOrNull
 import leo21.type.Type
@@ -49,7 +46,7 @@ fun Scope.arrowTyped(script: Script): ArrowTyped =
 			if (field.string != "doing") error("function syntax error")
 			else link.lhs.type.let { lhsType ->
 				push(lhsType).typed(field.rhs).let { bodyTyped ->
-					ArrowTyped(fn(bodyTyped.valueTerm), lhsType arrowTo bodyTyped.type)
+					ArrowTyped(fn(bodyTyped.term), lhsType arrowTo bodyTyped.type)
 				}
 			}
 		}

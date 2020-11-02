@@ -3,8 +3,8 @@ package leo21.typed
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lambda.native
-import leo21.value.double
-import leo21.value.string
+import leo21.prim.double
+import leo21.prim.string
 import leo14.lineTo
 import leo14.literal
 import leo14.plus
@@ -35,11 +35,11 @@ val ChoiceTyped.script: Script
 
 val StringTyped.scriptLine: ScriptLine
 	get() =
-		leo14.line(literal(valueTerm.native.string))
+		leo14.line(literal(term.native.string))
 
 val DoubleTyped.scriptLine: ScriptLine
 	get() =
-		leo14.line(literal(valueTerm.native.double))
+		leo14.line(literal(term.native.double))
 
 val FieldTyped.scriptLine: ScriptLine
 	get() =

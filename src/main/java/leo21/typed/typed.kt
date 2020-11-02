@@ -5,11 +5,11 @@ import leo.base.notNullOrError
 import leo14.lambda.Term
 import leo14.lambda.invoke
 import leo14.lambda.term
-import leo21.value.DoubleMinusDoubleValue
-import leo21.value.DoublePlusDoubleValue
-import leo21.value.DoubleTimesDoubleValue
-import leo21.value.StringPlusStringValue
-import leo21.value.Value
+import leo21.prim.DoubleMinusDoublePrim
+import leo21.prim.DoublePlusDoublePrim
+import leo21.prim.DoubleTimesDoublePrim
+import leo21.prim.StringPlusStringPrim
+import leo21.prim.Prim
 import leo21.type.ChoiceType
 import leo21.type.StructType
 import leo21.type.Type
@@ -17,18 +17,18 @@ import leo21.type.doubleType
 import leo21.type.stringType
 import leo21.type.type
 
-data class Typed(val valueTerm: Term<Value>, val type: Type)
+data class Typed(val term: Term<Prim>, val type: Type)
 
-fun typed(typed: StructTyped) = Typed(typed.valueTerm, type(typed.struct))
-fun typed(typed: ChoiceTyped) = Typed(typed.valueTermOrNull!!, type(typed.choice))
+fun typed(typed: StructTyped) = Typed(typed.term, type(typed.struct))
+fun typed(typed: ChoiceTyped) = Typed(typed.termOrNull!!, type(typed.choice))
 
 fun <R> Typed.switch(
 	structFn: (StructTyped) -> R,
 	choiceFn: (ChoiceTyped) -> R
 ): R =
 	when (type) {
-		is StructType -> structFn(StructTyped(valueTerm, type.struct))
-		is ChoiceType -> choiceFn(ChoiceTyped(valueTerm, type.choice))
+		is StructType -> structFn(StructTyped(term, type.struct))
+		is ChoiceType -> choiceFn(ChoiceTyped(term, type.choice))
 	}
 
 fun typed(vararg lines: LineTyped): Typed =
@@ -62,30 +62,30 @@ val Typed.switch: SwitchTyped get() = contentOrNull?.choiceOrNull.notNullOrError
 
 fun Typed.plus(line: LineTyped): Typed = struct.plus(line).typed
 
-val Typed.stringValueTerm: Term<Value>
+val Typed.stringPrimTerm: Term<Prim>
 	get() =
-		structOrNull!!.onlyLineOrNull!!.stringTypedOrNull!!.valueTerm
+		structOrNull!!.onlyLineOrNull!!.stringTypedOrNull!!.term
 
-val Typed.doubleValueTerm: Term<Value>
+val Typed.doublePrimTerm: Term<Prim>
 	get() =
-		structOrNull!!.onlyLineOrNull!!.doubleTypedOrNull!!.valueTerm
+		structOrNull!!.onlyLineOrNull!!.doubleTypedOrNull!!.term
 
 fun Typed.doublePlus(typed: Typed): Typed =
 	Typed(
-		term(DoublePlusDoubleValue).invoke(doubleValueTerm).invoke(typed.doubleValueTerm),
+		term(DoublePlusDoublePrim).invoke(doublePrimTerm).invoke(typed.doublePrimTerm),
 		doubleType)
 
 fun Typed.doubleMinus(typed: Typed): Typed =
 	Typed(
-		term(DoubleMinusDoubleValue).invoke(doubleValueTerm).invoke(typed.doubleValueTerm),
+		term(DoubleMinusDoublePrim).invoke(doublePrimTerm).invoke(typed.doublePrimTerm),
 		doubleType)
 
 fun Typed.doubleTimes(typed: Typed): Typed =
 	Typed(
-		term(DoubleTimesDoubleValue).invoke(doubleValueTerm).invoke(typed.doubleValueTerm),
+		term(DoubleTimesDoublePrim).invoke(doublePrimTerm).invoke(typed.doublePrimTerm),
 		doubleType)
 
 fun Typed.stringPlus(typed: Typed): Typed =
 	Typed(
-		term(StringPlusStringValue).invoke(stringValueTerm).invoke(typed.stringValueTerm),
+		term(StringPlusStringPrim).invoke(stringPrimTerm).invoke(typed.stringPrimTerm),
 		stringType)

@@ -61,7 +61,7 @@ fun Compiled.plusDo(script: Script): Compiled =
 	scope.push(body.type).typed(script).let { typed ->
 		setBody(
 			Typed(
-				fn(typed.valueTerm).invoke(body.valueTerm),
+				fn(typed.term).invoke(body.term),
 				typed.type))
 	}
 
