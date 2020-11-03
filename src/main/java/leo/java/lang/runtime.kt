@@ -1,11 +1,11 @@
 package leo.java.lang
 
-fun execExpectingExitCode(exitCode: Int, vararg command: String): String {
+fun execExpectingExitCode(expectedExitCode: Int, vararg command: String): String {
 	val runtime = Runtime.getRuntime()
 	val process = runtime.exec(command)
 	val string = process.inputStream.reader().readText()
 	val exitCode = process.waitFor()
-	if (exitCode != exitCode) error("exec(${command.contentToString()}) = $exitCode")
+	if (exitCode != expectedExitCode) error("exec(${command.contentToString()}) = $exitCode")
 	else return string
 }
 
