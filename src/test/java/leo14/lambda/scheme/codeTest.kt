@@ -20,7 +20,7 @@ class GenTest {
 		fn(arg0).code.assertEqualTo(code("(lambda (v0) v0)"))
 		fn2(arg0).code.assertEqualTo(code("(lambda (v0) (lambda (v1) v1))"))
 		fn2(arg1).code.assertEqualTo(code("(lambda (v0) (lambda (v1) v0))"))
-		a(b).code.assertEqualTo(code("(apply a b)"))
+		a(b).code.assertEqualTo(code("(a b)"))
 		arg0.code(gen.inc.inc).assertEqualTo(code("v1"))
 		arg1.code(gen.inc.inc).assertEqualTo(code("v0"))
 		assertFails { arg2.code(gen.inc.inc) }

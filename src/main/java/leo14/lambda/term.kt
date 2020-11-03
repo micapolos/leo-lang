@@ -1,7 +1,14 @@
 package leo14.lambda
 
 import leo13.Index
-import leo14.*
+import leo14.Script
+import leo14.ScriptLine
+import leo14.indentString
+import leo14.line
+import leo14.lineTo
+import leo14.literal
+import leo14.plus
+import leo14.script
 
 sealed class Term<out T> {
 	override fun toString() = script { line(literal(toString())) }.indentString
@@ -98,3 +105,11 @@ fun nativeFn(fn: (Any) -> Any) = term(fn)
 
 val Any.anyIntInc: Any get() = (this as Int).inc()
 fun Any.anyIntPlus(rhs: Any): Any = (this as Int) + (rhs as Int)
+
+fun <I, O> Term<I>.map(fn: (I) -> O): Term<O> =
+	when (this) {
+		is NativeTerm -> term(fn(native))
+		is AbstractionTerm -> fn(abstraction.body.map(fn))
+		is ApplicationTerm -> application.lhs.map(fn).invoke(application.rhs.map(fn))
+		is VariableTerm -> arg(variable.index)
+	}

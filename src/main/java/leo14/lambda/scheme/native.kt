@@ -10,4 +10,4 @@ infix fun Code.ret(body: Code): Code =
 	code("(lambda ($this) $body)")
 
 infix fun Code.ap(rhs: Code): Code =
-	code("(apply $this $rhs)")
+	code("($this $rhs)")
