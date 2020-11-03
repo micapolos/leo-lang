@@ -16,22 +16,21 @@ import leo21.term.term
 import leo21.type.lineTo
 import leo21.type.make
 import leo21.type.plus
-import leo21.type.stringLine
 import leo21.type.stringType
 import leo21.type.type
 import kotlin.test.Test
 
-val term1 = term("lhs")
-val term2 = term("rhs")
+val term1 = term("term1")
+val term2 = term("term2")
 
-val staticLine1 = "x" lineTo type()
-val staticLine2 = "y" lineTo type()
+val staticLine1 = "name1" lineTo type()
+val staticLine2 = "name2" lineTo type()
 
 val staticType1 = type(staticLine1)
 val staticType2 = type(staticLine2)
 
-val dynamicLine1 = "x" lineTo stringType
-val dynamicLine2 = "y" lineTo stringType
+val dynamicLine1 = "name1" lineTo stringType
+val dynamicLine2 = "name2" lineTo stringType
 
 val dynamicType1 = type(dynamicLine1)
 val dynamicType2 = type(dynamicLine2)
