@@ -43,6 +43,8 @@ fun Struct.plus(line: Line) =
 	if (lineStack.any { name == line.name }) error("duplicate field")
 	else Struct(lineStack.push(line))
 
+fun Type.plus(line: Line): Type = type(struct.plus(line))
+
 val emptyChoice = Choice(stack())
 fun choice(vararg lines: Line) = emptyChoice.fold(lines) { plus(it) }
 fun Choice.plus(line: Line) =
@@ -74,3 +76,6 @@ val Line.name: String
 			is FieldLine -> field.name
 			is ArrowLine -> "function"
 		}
+
+fun Type.make(name: String): Type =
+	type(name lineTo this)

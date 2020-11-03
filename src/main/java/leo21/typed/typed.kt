@@ -8,8 +8,8 @@ import leo14.lambda.term
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoubleTimesDoublePrim
-import leo21.prim.StringPlusStringPrim
 import leo21.prim.Prim
+import leo21.prim.StringPlusStringPrim
 import leo21.type.ChoiceType
 import leo21.type.StructType
 import leo21.type.Type
@@ -18,6 +18,8 @@ import leo21.type.stringType
 import leo21.type.type
 
 data class Typed(val term: Term<Prim>, val type: Type)
+
+infix fun Term<Prim>.of(type: Type) = Typed(this, type)
 
 fun typed(typed: StructTyped) = Typed(typed.term, type(typed.struct))
 fun typed(typed: ChoiceTyped) = Typed(typed.termOrNull!!, type(typed.choice))

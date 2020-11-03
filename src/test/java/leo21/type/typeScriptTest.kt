@@ -3,8 +3,6 @@ package leo21.type
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
-import leo14.typed.numberLine
-import leo15.numberType
 import kotlin.test.Test
 
 class TypeScriptTest {

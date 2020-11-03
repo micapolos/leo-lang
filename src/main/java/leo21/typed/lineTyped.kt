@@ -19,6 +19,8 @@ import leo21.type.stringLine
 
 data class LineTyped(val term: Term<Prim>, val line: Line)
 
+infix fun Term<Prim>.of(line: Line) = LineTyped(this, line)
+
 fun <R> LineTyped.switch(
 	stringFn: (StringTyped) -> R,
 	doubleFn: (DoubleTyped) -> R,

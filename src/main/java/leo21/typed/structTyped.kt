@@ -7,6 +7,8 @@ import leo13.Link
 import leo13.isEmpty
 import leo13.linkOrNull
 import leo13.linkTo
+import leo13.runtime.head
+import leo13.runtime.tail
 import leo14.lambda.Term
 import leo14.lambda.first
 import leo14.lambda.pair
@@ -30,9 +32,12 @@ val emptyStructTyped = StructTyped(nilTerm, struct())
 
 fun StructTyped.plus(typed: LineTyped): StructTyped =
 	StructTyped(
-		if (struct.isStatic) typed.term
-		else if (typed.line.isStatic) term
-		else term.plus(typed.term),
+		if (struct.isStatic)
+			if (typed.line.isStatic) nilTerm
+			else typed.term
+		else
+			if (typed.line.isStatic) term
+			else term.plus(typed.term),
 		struct.plus(typed.line))
 
 fun structTyped(vararg lines: LineTyped): StructTyped =
@@ -70,10 +75,21 @@ val StructTyped.isEmpty: Boolean
 val StructTyped.linkOrNull: Link<StructTyped, LineTyped>?
 	get() =
 		struct.lineStack.linkOrNull?.let { link ->
-			if (Struct(link.stack).isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(term, link.value)
-			else if (link.value.isStatic) StructTyped(term, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
-			else StructTyped(term.first, Struct(link.stack)) linkTo LineTyped(term.second, link.value)
+			if (Struct(link.stack).isStatic)
+				if (link.value.isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
+				else StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(term, link.value)
+			else
+				if (link.value.isStatic) StructTyped(term, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
+				else StructTyped(term.first, Struct(link.stack)) linkTo LineTyped(term.second, link.value)
 		}
+
+val StructTyped.link: Link<StructTyped, LineTyped>
+	get() =
+		linkOrNull!!
+
+val Typed.link: Link<Typed, LineTyped>
+	get() =
+		struct.link.run { (tail.term of type(tail.struct)) linkTo head }
 
 val StructTyped.decompileLinkOrNull: Link<StructTyped, LineTyped>?
 	get() =
