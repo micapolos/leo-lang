@@ -6,7 +6,6 @@ import leo14.lambda.arg
 import leo14.lambda.eitherFirst
 import leo14.lambda.eitherSecond
 import leo14.lambda.eitherSwitch
-import leo14.lambda.eval
 import leo14.lambda.first
 import leo14.lambda.fix
 import leo14.lambda.fn
@@ -78,5 +77,13 @@ class EvaluateTest {
 			.invoke(nativeTerm(0))
 			.evaluate
 			.assertEqualTo(nativeTerm(times))
+	}
+
+	@Test
+	fun fixFib() {
+		fix<Any>()
+			.invoke(fn(fn(nativeTerm(10))))
+			.evaluate
+			.assertEqualTo(nativeTerm(10))
 	}
 }
