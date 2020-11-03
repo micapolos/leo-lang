@@ -10,7 +10,7 @@ fun execExpectingExitCode(expectedExitCode: Int, vararg command: String): String
 }
 
 fun exec(vararg command: String): String =
-	execExpectingExitCode(1, *command)
+	execExpectingExitCode(0, *command)
 
 fun sttyPrivateMode() {
 	val sttyConfig = exec("sh", "-c", "stty -g < /dev/tty").trim()
