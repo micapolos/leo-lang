@@ -1,4 +1,4 @@
-package leo14.lambda.evaluator
+package leo14.lambda.value
 
 import leo14.lambda.arg0
 import leo14.lambda.arg1

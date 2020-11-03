@@ -1,4 +1,4 @@
-package leo14.lambda.evaluator
+package leo14.lambda.value
 
 import leo.base.iterate
 import leo13.fold

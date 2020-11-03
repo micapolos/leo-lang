@@ -1,4 +1,4 @@
-package leo14.lambda.evaluator
+package leo14.lambda.value
 
 import leo.base.assertEqualTo
 import leo.base.iterate

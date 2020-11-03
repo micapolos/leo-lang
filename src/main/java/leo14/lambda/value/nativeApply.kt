@@ -1,3 +1,3 @@
-package leo14.lambda.evaluator
+package leo14.lambda.value
 
 typealias NativeApply<T> = T.(Value<T>) -> Value<T>
