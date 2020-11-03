@@ -9,7 +9,6 @@ import leo14.lambda.eitherSwitch
 import leo14.lambda.first
 import leo14.lambda.fn
 import leo14.lambda.invoke
-import leo14.lambda.nativeFn
 import leo14.lambda.nativeTerm
 import leo14.lambda.pair
 import leo14.lambda.second
@@ -62,20 +61,20 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun nativeApply() {
+		nativeTerm(Any::anyIntInc)
+			.invoke(nativeTerm(1))
+			.evaluate
+			.assertEqualTo(nativeTerm(2))
+	}
+
+	@Test
 	fun tailRecursion() {
-		val times = 100000
+		val times = 1000000
 		fn(arg<Any>(0))
 			.iterate(times) { fn(invoke(nativeTerm(Any::anyIntInc).invoke(arg(0)))) }
 			.invoke(nativeTerm(0))
 			.evaluate
 			.assertEqualTo(nativeTerm(times))
-	}
-
-	@Test
-	fun defaultApply() {
-		nativeTerm(Any::anyIntInc)
-			.invoke(nativeTerm(1))
-			.evaluate
-			.assertEqualTo(nativeTerm(2))
 	}
 }
