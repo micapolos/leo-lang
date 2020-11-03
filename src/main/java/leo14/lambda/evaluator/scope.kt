@@ -21,9 +21,9 @@ fun <T> Scope<T>.value(term: Term<T>, nativeApply: NativeApply<T>): Value<T> =
 		is NativeTerm -> value(term.native)
 		is AbstractionTerm -> value(function(term.abstraction.body))
 		is ApplicationTerm -> {
-			val lhs = value(term.application.lhs, nativeApply)
-			val rhs = value(term.application.rhs, nativeApply)
-			lhs.apply(rhs, nativeApply)
+			val rhsValue = value(term.application.rhs, nativeApply)
+			val lhsValue = value(term.application.lhs, nativeApply)
+			lhsValue.apply(rhsValue, nativeApply)
 		}
 		is VariableTerm -> at(term.variable.index)
 	}
