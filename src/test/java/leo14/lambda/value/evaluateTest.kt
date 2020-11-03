@@ -6,7 +6,9 @@ import leo14.lambda.arg
 import leo14.lambda.eitherFirst
 import leo14.lambda.eitherSecond
 import leo14.lambda.eitherSwitch
+import leo14.lambda.eval
 import leo14.lambda.first
+import leo14.lambda.fix
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.nativeTerm

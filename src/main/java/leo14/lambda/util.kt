@@ -183,3 +183,7 @@ fun <T> choiceTerm(index: Index, count: Index, term: Term<T>): Term<T> =
 
 fun <T> Term<T>.matchTerm(vararg fns: Term<T>): Term<T> =
 	invoke(*fns)
+
+fun <T> fix(): Term<T> =
+	fn(fn(arg<T>(1).invoke(arg<T>(0).invoke(arg(0))))
+		.invoke(fn(arg<T>(1).invoke(arg<T>(0).invoke(arg(0))))))
