@@ -187,3 +187,8 @@ fun <T> Term<T>.matchTerm(vararg fns: Term<T>): Term<T> =
 fun <T> fix(): Term<T> =
 	fn(fn(arg<T>(1).invoke(fn(arg<T>(1).invoke(arg(1)).invoke(arg(0)))))
 		.invoke(fn(arg<T>(1).invoke(fn(arg<T>(1).invoke(arg(1)).invoke(arg(0)))))))
+
+// ===
+
+fun <T> Term<T>.reference(f: Term<T>.() -> Term<T>): Term<T> =
+	fn(arg0<T>().f()).invoke(this)

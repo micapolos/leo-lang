@@ -1,20 +1,20 @@
 package leo21.typed
 
 import leo.base.assertEqualTo
-import leo.base.string
 import leo13.linkTo
+import leo14.lambda.arg0
 import leo14.lambda.first
+import leo14.lambda.fn
+import leo14.lambda.invoke
 import leo14.lambda.second
+import leo21.prim.Prim
 import leo21.term.nilTerm
 import leo21.term.plus
 import leo21.term.term
-import leo21.type.doubleLine
 import leo21.type.lineTo
 import leo21.type.make
 import leo21.type.plus
-import leo21.type.stringLine
 import leo21.type.stringType
-import leo21.type.struct
 import leo21.type.type
 import kotlin.test.Test
 
@@ -84,6 +84,13 @@ class TypedTermTest {
 	fun dynamicPlusDynamicLink() {
 		(term1 of dynamicType1.plus(dynamicLine2)).link
 			.assertEqualTo((term1.first of dynamicType1) linkTo (term1.second of dynamicLine2))
+	}
+
+	@Test
+	fun reference() {
+		(term1 of dynamicType1)
+			.reference { term.invoke(term2) of type.plus(dynamicLine2) }
+			.assertEqualTo(fn(arg0<Prim>().invoke(term2)).invoke(term1) of dynamicType1.plus(dynamicLine2))
 	}
 
 	@Test

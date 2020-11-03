@@ -3,6 +3,8 @@ package leo21.typed
 import leo.base.fold
 import leo.base.notNullOrError
 import leo14.lambda.Term
+import leo14.lambda.arg0
+import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.term
 import leo21.prim.DoubleMinusDoublePrim
@@ -91,3 +93,8 @@ fun Typed.stringPlus(typed: Typed): Typed =
 	Typed(
 		term(StringPlusStringPrim).invoke(stringPrimTerm).invoke(typed.stringPrimTerm),
 		stringType)
+
+fun Typed.reference(f: Typed.() -> Typed): Typed =
+	arg0<Prim>().of(type).f().let { typed ->
+		fn(typed.term).invoke(term).of(typed.type)
+	}
