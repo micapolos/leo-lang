@@ -63,13 +63,6 @@ class TypedTermTest {
 	}
 
 	@Test
-	fun make() {
-		term1.of(dynamicType1)
-			.make("foo")
-			.assertEqualTo(term1 of dynamicType1.make("foo"))
-	}
-
-	@Test
 	fun staticPlusStaticLink() {
 		(term1 of staticType1.plus(staticLine2)).link
 			.assertEqualTo((nilTerm of staticType1) linkTo (nilTerm of staticLine2))
@@ -91,5 +84,12 @@ class TypedTermTest {
 	fun dynamicPlusDynamicLink() {
 		(term1 of dynamicType1.plus(dynamicLine2)).link
 			.assertEqualTo((term1.first of dynamicType1) linkTo (term1.second of dynamicLine2))
+	}
+
+	@Test
+	fun make() {
+		term1.of(dynamicType1)
+			.make("foo")
+			.assertEqualTo(term1 of dynamicType1.make("foo"))
 	}
 }
