@@ -8,6 +8,8 @@ import leo14.lambda.code.code
 data class Native(val code: Code)
 
 fun native(code: Code) = Native(code)
+val nullNative = native("null")
+
 fun native(int: Int) = native(code("$int"))
 fun native(double: Double) = native(code("$double"))
 fun native(string: String) = native(code("\"$string\""))

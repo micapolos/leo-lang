@@ -1,6 +1,7 @@
 package leo21.prim.js
 
 import leo14.js.ast.Expr
+import leo14.js.ast.NULL
 import leo14.js.ast.expr
 import leo14.js.ast.id
 import leo14.js.ast.lambda
@@ -10,6 +11,7 @@ import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoublePrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.MinusDoublePrim
+import leo21.prim.NilPrim
 import leo21.prim.PlusDoublePrim
 import leo21.prim.PlusStringPrim
 import leo21.prim.Prim
@@ -20,6 +22,7 @@ import leo21.prim.TimesDoublePrim
 val Prim.expr: Expr
 	get() =
 		when (this) {
+			is NilPrim -> expr(NULL)
 			is StringPrim -> expr(string)
 			is DoublePrim -> expr(double)
 			DoublePlusDoublePrim -> op2Expr("+")

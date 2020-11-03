@@ -9,15 +9,20 @@ import leo13.seq
 import leo13.stack
 import leo14.Script
 import leo14.fieldOrNull
+import leo14.lambda.arg0
 import leo14.lambda.fn
+import leo14.lambda.invoke
 import leo14.linkOrNull
+import leo21.prim.Prim
 import leo21.type.Type
 import leo21.type.arrowTo
 import leo21.type.type
 import leo21.typed.ArrowTyped
 import leo21.typed.Typed
+import leo21.typed.of
 import leo21.typed.reference
 import leo21.typed.resolve
+import leo21.typed.resolveOrNull
 
 data class Scope(val bindingStack: Stack<Binding>)
 
@@ -36,7 +41,10 @@ fun Scope.resolveOrNull(typed: Typed): Typed? =
 	}
 
 fun Scope.resolve(typed: Typed): Typed =
-	resolveOrNull(typed) ?: typed.reference { resolve }
+	null
+		?: resolveOrNull(typed)
+		?: arg0<Prim>().of(typed.type).resolveOrNull?.let { fn(it.term).invoke(typed.term).of(it.type) }
+		?: typed
 
 fun Scope.arrowTyped(script: Script): ArrowTyped =
 	script.linkOrNull.notNullOrError("function syntax error").let { link ->

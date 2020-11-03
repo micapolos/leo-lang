@@ -8,6 +8,7 @@ import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoublePrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.MinusDoublePrim
+import leo21.prim.NilPrim
 import leo21.prim.PlusDoublePrim
 import leo21.prim.PlusStringPrim
 import leo21.prim.Prim
@@ -15,12 +16,14 @@ import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
 import leo21.prim.TimesDoublePrim
 
+val nullJulia = julia("null")
 val String.julia: Julia get() = julia(literalString)
 val Double.julia: Julia get() = julia("$this")
 
 val Prim.julia: Julia
 	get() =
 		when (this) {
+			is NilPrim -> nullJulia
 			is StringPrim -> string.julia
 			is DoublePrim -> double.julia
 			DoublePlusDoublePrim -> op2Julia("+")

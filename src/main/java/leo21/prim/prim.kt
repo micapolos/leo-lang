@@ -1,6 +1,7 @@
 package leo21.prim
 
 sealed class Prim
+object NilPrim : Prim()
 data class StringPrim(val string: String) : Prim()
 data class DoublePrim(val double: Double) : Prim()
 
@@ -14,6 +15,7 @@ data class MinusDoublePrim(val double: Double) : Prim()
 data class TimesDoublePrim(val double: Double) : Prim()
 data class PlusStringPrim(val string: String) : Prim()
 
+val nilPrim: Prim = NilPrim
 val Prim.string get() = (this as StringPrim).string
 val Prim.double get() = (this as DoublePrim).double
 

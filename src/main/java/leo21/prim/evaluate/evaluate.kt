@@ -10,6 +10,7 @@ import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoublePrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.MinusDoublePrim
+import leo21.prim.NilPrim
 import leo21.prim.PlusDoublePrim
 import leo21.prim.PlusStringPrim
 import leo21.prim.Prim
@@ -36,6 +37,7 @@ fun Prim.apply(rhs: Prim): Prim =
 
 fun Prim.applyOrNull(rhs: Prim): Prim? =
 	when (this) {
+		is NilPrim -> null
 		is StringPrim -> null
 		is DoublePrim -> null
 		DoublePlusDoublePrim -> PlusDoublePrim(rhs.double)
