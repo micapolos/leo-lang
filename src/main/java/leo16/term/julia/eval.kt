@@ -22,7 +22,7 @@ val File.run: String
 			.push(absolutePath)
 			.toList()
 			.toTypedArray()
-			.let { execExpectingExitCode(1, *it) }
+			.let { execExpectingExitCode(0, *it) }
 
 fun main() {
 	"5.0-3.0".eval.println
