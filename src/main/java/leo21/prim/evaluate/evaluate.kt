@@ -20,6 +20,10 @@ import leo21.prim.double
 import leo21.prim.prim
 import leo21.prim.string
 
+val Term<Prim>.value: Value<Prim>
+	get() =
+		value(Prim::apply)
+
 val Term<Prim>.evaluate: Term<Prim>
 	get() =
 		evaluate(Prim::apply)
