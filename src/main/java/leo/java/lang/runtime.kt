@@ -1,13 +1,16 @@
 package leo.java.lang
 
-fun exec(vararg command: String): String {
+fun execExpectingExitCode(exitCode: Int, vararg command: String): String {
 	val runtime = Runtime.getRuntime()
 	val process = runtime.exec(command)
 	val string = process.inputStream.reader().readText()
 	val exitCode = process.waitFor()
-	if (exitCode != 0) error("exec(${command.contentToString()}) = $exitCode")
+	if (exitCode != exitCode) error("exec(${command.contentToString()}) = $exitCode")
 	else return string
 }
+
+fun exec(vararg command: String): String =
+	execExpectingExitCode(1, *command)
 
 fun sttyPrivateMode() {
 	val sttyConfig = exec("sh", "-c", "stty -g < /dev/tty").trim()
