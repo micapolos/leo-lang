@@ -7,13 +7,16 @@ import leo14.lambda.first
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.second
+import leo14.lambda.term
 import leo21.prim.Prim
+import leo21.prim.StringPlusStringPrim
 import leo21.term.nilTerm
 import leo21.term.plus
 import leo21.term.term
 import leo21.type.lineTo
 import leo21.type.make
 import leo21.type.plus
+import leo21.type.stringLine
 import leo21.type.stringType
 import leo21.type.type
 import kotlin.test.Test
@@ -98,5 +101,16 @@ class TypedTermTest {
 		term1.of(dynamicType1)
 			.make("foo")
 			.assertEqualTo(term1 of dynamicType1.make("foo"))
+	}
+
+	@Test
+	fun stringPlusResolve() {
+		term1.of(stringType.plus("plus" lineTo stringType))
+			.resolve
+			.assertEqualTo(
+				term(StringPlusStringPrim)
+					.invoke(term1.first)
+					.invoke(term1.second)
+					.of(stringType))
 	}
 }

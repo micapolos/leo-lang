@@ -16,6 +16,7 @@ import leo21.type.arrowTo
 import leo21.type.type
 import leo21.typed.ArrowTyped
 import leo21.typed.Typed
+import leo21.typed.reference
 import leo21.typed.resolve
 
 data class Scope(val bindingStack: Stack<Binding>)
@@ -35,7 +36,7 @@ fun Scope.resolveOrNull(typed: Typed): Typed? =
 	}
 
 fun Scope.resolve(typed: Typed): Typed =
-	resolveOrNull(typed) ?: typed.resolve
+	resolveOrNull(typed) ?: typed.reference { resolve }
 
 fun Scope.arrowTyped(script: Script): ArrowTyped =
 	script.linkOrNull.notNullOrError("function syntax error").let { link ->
