@@ -23,3 +23,6 @@ val <T> Value<T>.term: Term<T>
 			is NativeValue -> term(native)
 			is FunctionValue -> function.term
 		}
+
+fun Any.anyApply(value: Value<Any>): Value<Any> =
+	value((this as (Any) -> Any).invoke((value as NativeValue).native))

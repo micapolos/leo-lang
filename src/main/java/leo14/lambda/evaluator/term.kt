@@ -8,10 +8,10 @@ fun <T> Term<T>.value(nativeApply: NativeApply<T>): Value<T> =
 fun <T> Term<T>.evaluate(nativeApply: NativeApply<T>): Term<T> =
 	value(nativeApply).term
 
-val <T> Term<T>.value: Value<T>
+val Term<Any>.value: Value<Any>
 	get() =
-		value { error("nativeApply") }
+		value(Any::anyApply)
 
-val <T> Term<T>.evaluate: Term<T>
+val Term<Any>.evaluate: Term<Any>
 	get() =
 		value.term

@@ -20,10 +20,20 @@ fun <T> Scope<T>.value(term: Term<T>, nativeApply: NativeApply<T>): Value<T> =
 	when (term) {
 		is NativeTerm -> value(term.native)
 		is AbstractionTerm -> value(function(term.abstraction.body))
-		is ApplicationTerm -> {
-			val rhsValue = value(term.application.rhs, nativeApply)
-			val lhsValue = value(term.application.lhs, nativeApply)
-			lhsValue.apply(rhsValue, nativeApply)
-		}
+		is ApplicationTerm -> value(term.application.lhs, value(term.application.rhs, nativeApply), nativeApply)
 		is VariableTerm -> at(term.variable.index)
+	}
+
+tailrec fun <T> Scope<T>.value(lhs: Term<T>, rhsValue: Value<T>, nativeApply: NativeApply<T>): Value<T> =
+	if (lhs is AbstractionTerm) {
+		if (lhs.abstraction.body is ApplicationTerm) {
+			value(
+				lhs.abstraction.body.application.lhs,
+				push(rhsValue).value(lhs.abstraction.body.application.rhs, nativeApply),
+				nativeApply)
+		} else {
+			value(lhs, nativeApply).apply(rhsValue, nativeApply)
+		}
+	} else {
+		value(lhs, nativeApply).apply(rhsValue, nativeApply)
 	}

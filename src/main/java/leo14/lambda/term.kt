@@ -91,3 +91,10 @@ fun <T> Application<Term<T>>.script(nativeFn: T.() -> ScriptLine) =
 val <T> Variable<T>.script
 	get() =
 		script("variable" lineTo script(literal(index)))
+
+fun nativeFn(fn: (Any) -> Any) = term(fn)
+
+// === native helpers
+
+val Any.anyIntInc: Any get() = (this as Int).inc()
+fun Any.anyIntPlus(rhs: Any): Any = (this as Int) + (rhs as Int)

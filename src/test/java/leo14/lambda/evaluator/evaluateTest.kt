@@ -1,7 +1,6 @@
 package leo14.lambda.evaluator
 
 import leo.base.assertEqualTo
-import leo.base.assertStackOverflows
 import leo.base.iterate
 import leo14.lambda.arg
 import leo14.lambda.eitherFirst
@@ -9,12 +8,15 @@ import leo14.lambda.eitherSecond
 import leo14.lambda.eitherSwitch
 import leo14.lambda.first
 import leo14.lambda.fn
-import leo14.lambda.id
 import leo14.lambda.invoke
+import leo14.lambda.nativeFn
+import leo14.lambda.nativeTerm
 import leo14.lambda.pair
 import leo14.lambda.second
 import leo14.lambda.term
 import kotlin.test.Test
+
+val Any.anyIntInc: Any get() = (this as Int).inc()
 
 class EvaluateTest {
 	@Test
@@ -61,14 +63,19 @@ class EvaluateTest {
 
 	@Test
 	fun tailRecursion() {
-		// FIXIT: This should not overflow when tail recursion is working.
-		assertStackOverflows {
-			val times = 100000
-			term("done")
-				.iterate(times) { fn(this) }
-				.iterate(times) { invoke(term("run")) }
-				.evaluate
-				.assertEqualTo(term("done"))
-		}
+		val times = 100000
+		fn(arg<Any>(0))
+			.iterate(times) { fn(invoke(nativeTerm(Any::anyIntInc).invoke(arg(0)))) }
+			.invoke(nativeTerm(0))
+			.evaluate
+			.assertEqualTo(nativeTerm(times))
+	}
+
+	@Test
+	fun defaultApply() {
+		nativeTerm(Any::anyIntInc)
+			.invoke(nativeTerm(1))
+			.evaluate
+			.assertEqualTo(nativeTerm(2))
 	}
 }
