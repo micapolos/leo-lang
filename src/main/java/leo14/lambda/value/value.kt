@@ -11,6 +11,9 @@ data class FunctionValue<T>(val function: Function<T>) : Value<T>()
 fun <T> value(native: T): Value<T> = NativeValue(native)
 fun <T> value(function: Function<T>): Value<T> = FunctionValue(function)
 
+val <T> Value<T>.native: T get() = (this as NativeValue).native
+val <T> Value<T>.function: Function<T> get() = (this as FunctionValue).function
+
 fun <T> Value<T>.apply(value: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 	when (this) {
 		is NativeValue -> native.nativeApply(value)
@@ -25,4 +28,4 @@ val <T> Value<T>.term: Term<T>
 		}
 
 fun Any.anyApply(value: Value<Any>): Value<Any> =
-	value((this as (Any) -> Any).invoke((value as NativeValue).native))
+	value((this as (Any) -> Any).invoke(value.native))

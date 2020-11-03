@@ -10,6 +10,8 @@ import leo14.lambda.NativeTerm
 import leo14.lambda.Term
 import leo14.lambda.VariableTerm
 
+val useTailCallOptimization = true
+
 data class Scope<out T>(val valueStack: Stack<Value<T>>)
 
 fun <T> emptyScope(): Scope<T> = Scope(stack())
@@ -25,15 +27,12 @@ fun <T> Scope<T>.value(term: Term<T>, nativeApply: NativeApply<T>): Value<T> =
 	}
 
 tailrec fun <T> Scope<T>.value(lhs: Term<T>, rhsValue: Value<T>, nativeApply: NativeApply<T>): Value<T> =
-	if (lhs is AbstractionTerm) {
-		if (lhs.abstraction.body is ApplicationTerm) {
-			value(
-				lhs.abstraction.body.application.lhs,
-				push(rhsValue).value(lhs.abstraction.body.application.rhs, nativeApply),
-				nativeApply)
-		} else {
-			value(lhs, nativeApply).apply(rhsValue, nativeApply)
-		}
+	if (useTailCallOptimization && lhs is AbstractionTerm && lhs.abstraction.body is ApplicationTerm) {
+		val rhsScope = push(rhsValue)
+		rhsScope.value(
+			lhs.abstraction.body.application.lhs,
+			rhsScope.value(lhs.abstraction.body.application.rhs, nativeApply),
+			nativeApply)
 	} else {
 		value(lhs, nativeApply).apply(rhsValue, nativeApply)
 	}
