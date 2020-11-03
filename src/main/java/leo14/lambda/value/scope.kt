@@ -22,14 +22,17 @@ fun <T> Scope<T>.value(term: Term<T>, nativeApply: NativeApply<T>): Value<T> =
 	when (term) {
 		is NativeTerm -> value(term.native)
 		is AbstractionTerm -> value(function(term.abstraction.body))
-		is ApplicationTerm -> value(term.application.lhs, value(term.application.rhs, nativeApply), nativeApply)
+		is ApplicationTerm -> apply(
+			term.application.lhs,
+			value(term.application.rhs, nativeApply),
+			nativeApply)
 		is VariableTerm -> at(term.variable.index)
 	}
 
-tailrec fun <T> Scope<T>.value(lhs: Term<T>, rhsValue: Value<T>, nativeApply: NativeApply<T>): Value<T> =
+tailrec fun <T> Scope<T>.apply(lhs: Term<T>, rhsValue: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 	if (applyTailCallOptimization && lhs is AbstractionTerm && lhs.abstraction.body is ApplicationTerm) {
 		val rhsScope = push(rhsValue)
-		rhsScope.value(
+		rhsScope.apply(
 			lhs.abstraction.body.application.lhs,
 			rhsScope.value(lhs.abstraction.body.application.rhs, nativeApply),
 			nativeApply)
