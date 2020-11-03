@@ -18,6 +18,6 @@ class CodeTest {
 			.invoke(term(prim(3)))
 			.map(Prim::code)
 			.code
-			.assertEqualTo(code("(((lambda (a) (lambda (b) (+ a b)) 2.0) 3.0)"))
+			.assertEqualTo(code("(((lambda (a) (lambda (b) (+ a b))) 2.0) 3.0)"))
 	}
 }

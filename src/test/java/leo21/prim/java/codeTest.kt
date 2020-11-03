@@ -4,7 +4,6 @@ import leo.base.assertEqualTo
 import leo14.lambda.invoke
 import leo14.lambda.java.code
 import leo14.lambda.map
-import leo14.lambda.scheme.code
 import leo14.lambda.term
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.Prim
@@ -19,6 +18,6 @@ class CodeTest {
 			.invoke(term(prim(3)))
 			.map(Prim::native)
 			.code
-			.assertEqualTo(code("apply(apply(fn(a -> fn(b -> ((Double)a) + ((Double)b))), 2.0), 3.0)"))
+			.assertEqualTo("apply(apply(fn(a -> fn(b -> ((Double)a) + ((Double)b))), 2.0), 3.0)")
 	}
 }
