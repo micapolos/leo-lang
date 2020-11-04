@@ -4,7 +4,6 @@ import leo14.lambda.code.code
 import leo14.lambda.java.Native
 import leo14.lambda.java.native
 import leo14.lambda.java.nullNative
-import leo14.lambda.julia.julia
 import leo14.literalString
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim

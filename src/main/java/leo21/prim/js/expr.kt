@@ -7,7 +7,6 @@ import leo14.js.ast.id
 import leo14.js.ast.invoke
 import leo14.js.ast.lambda
 import leo14.js.ast.op
-import leo14.lambda.runtime.invoke
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoublePrim
