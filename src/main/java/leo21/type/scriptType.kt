@@ -16,6 +16,8 @@ import leo14.isEmpty
 import leo14.lineSeq
 import leo14.onlyLineOrNull
 
+// TODO: Reimplement using TypeCompiler for incremental compilation
+
 val Script.type: Type
 	get() =
 		choiceTypeOrNull ?: type(struct)
