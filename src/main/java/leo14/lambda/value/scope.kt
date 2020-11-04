@@ -17,6 +17,7 @@ data class Scope<out T>(val valueStack: Stack<Value<T>>)
 fun <T> emptyScope(): Scope<T> = Scope(stack())
 fun <T> Scope<T>.push(value: Value<T>): Scope<T> = Scope(valueStack.push(value))
 fun <T> Scope<T>.at(index: Int): Value<T> = valueStack.get(index)!!
+fun <T> scope(vararg values: Value<T>) = Scope(stack(*values))
 
 fun <T> Scope<T>.value(term: Term<T>, nativeApply: NativeApply<T>): Value<T> =
 	when (term) {

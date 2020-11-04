@@ -9,15 +9,12 @@ import leo14.LiteralScriptLine
 import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
-import leo14.isEmpty
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lineSeq
 import leo14.onlyStringOrNull
-import leo21.type.type
 import leo21.typed.LineTyped
 import leo21.typed.Typed
-import leo21.typed.getOrNull
 import leo21.typed.lineTo
 import leo21.typed.lineTyped
 import leo21.typed.make
