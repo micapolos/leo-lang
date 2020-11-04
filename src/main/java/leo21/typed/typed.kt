@@ -6,22 +6,33 @@ import leo14.lambda.Term
 import leo14.lambda.arg0
 import leo14.lambda.fn
 import leo14.lambda.invoke
+import leo14.lambda.script
 import leo14.lambda.term
+import leo14.lineTo
+import leo14.plus
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
+import leo21.prim.scriptLine
 import leo21.type.ChoiceType
 import leo21.type.StructType
 import leo21.type.Type
 import leo21.type.doubleType
+import leo21.type.script
 import leo21.type.stringType
 import leo21.type.type
 
-data class Typed(val term: Term<Prim>, val type: Type)
+data class Typed(val term: Term<Prim>, val type: Type) {
+	override fun toString() = scriptLine.toString()
+}
 
 infix fun Term<Prim>.of(type: Type) = Typed(this, type)
+
+val Typed.scriptLine
+	get() =
+		"typed" lineTo term.script { scriptLine }.plus("of" lineTo type.script)
 
 fun typed(typed: StructTyped) = Typed(typed.term, type(typed.struct))
 fun typed(typed: ChoiceTyped) = Typed(typed.termOrNull!!, type(typed.choice))
