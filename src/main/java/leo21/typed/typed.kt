@@ -2,6 +2,7 @@ package leo21.typed
 
 import leo.base.fold
 import leo.base.notNullOrError
+import leo14.Scriptable
 import leo14.lambda.Term
 import leo14.lambda.arg0
 import leo14.lambda.fn
@@ -23,15 +24,14 @@ import leo21.type.script
 import leo21.type.stringType
 import leo21.type.type
 
-data class Typed(val term: Term<Prim>, val type: Type) {
-	override fun toString() = scriptLine.toString()
+data class Typed(val term: Term<Prim>, val type: Type) : Scriptable() {
+	override fun toString() = super.toString()
+	override val reflectScriptLine
+		get() =
+			"typed" lineTo term.script { reflectScriptLine }.plus("of" lineTo type.script)
 }
 
 infix fun Term<Prim>.of(type: Type) = Typed(this, type)
-
-val Typed.scriptLine
-	get() =
-		"typed" lineTo term.script { reflectScriptLine }.plus("of" lineTo type.script)
 
 fun typed(typed: StructTyped) = Typed(typed.term, type(typed.struct))
 fun typed(typed: ChoiceTyped) = Typed(typed.termOrNull!!, type(typed.choice))

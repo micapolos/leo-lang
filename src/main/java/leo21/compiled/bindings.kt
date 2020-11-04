@@ -8,11 +8,14 @@ import leo13.push
 import leo13.seq
 import leo13.stack
 import leo14.Script
+import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.fieldOrNull
 import leo14.lambda.arg0
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.linkOrNull
+import leo14.reflectOrEmptyScriptLine
 import leo21.prim.Prim
 import leo21.type.Type
 import leo21.type.arrowTo
@@ -22,7 +25,10 @@ import leo21.typed.Typed
 import leo21.typed.of
 import leo21.typed.resolveOrNull
 
-data class Bindings(val bindingStack: Stack<Binding>)
+data class Bindings(val bindingStack: Stack<Binding>) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = bindingStack.reflectOrEmptyScriptLine("bindings") { reflectScriptLine }
+}
 
 val emptyBindings = Bindings(stack())
 fun Bindings.push(binding: Binding) = Bindings(bindingStack.push(binding))

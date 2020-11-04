@@ -9,10 +9,13 @@ import leo14.LiteralScriptLine
 import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lineSeq
+import leo14.lineTo
 import leo14.onlyStringOrNull
+import leo14.script
 import leo21.typed.LineTyped
 import leo21.typed.Typed
 import leo21.typed.lineTo
@@ -25,7 +28,11 @@ import leo21.typed.typed
 data class Compiled(
 	val bindings: Bindings,
 	val body: Typed
-)
+) : Scriptable() {
+	override fun toString() = super.toString()
+	override val reflectScriptLine: ScriptLine
+		get() = "compiled" lineTo script(bindings.reflectScriptLine, body.reflectScriptLine)
+}
 
 fun Bindings.typed(script: Script): Typed =
 	Compiled(this, typed()).plus(script).body

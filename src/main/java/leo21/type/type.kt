@@ -9,10 +9,11 @@ import leo13.onlyOrNull
 import leo13.push
 import leo13.stack
 import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.lineTo
 
-sealed class Type {
-	override fun toString() = scriptLine.toString()
+sealed class Type : Scriptable() {
+	override val reflectScriptLine: ScriptLine get() = "type" lineTo script
 }
 
 data class StructType(val struct: Struct) : Type() {
@@ -34,8 +35,6 @@ data class FieldLine(val field: Field) : Line()
 data class ArrowLine(val arrow: Arrow) : Line()
 
 data class Field(val name: String, val rhs: Type)
-
-val Type.scriptLine: ScriptLine get() = "type" lineTo script
 
 fun type(struct: Struct): Type = StructType(struct)
 fun type(choice: Choice): Type = ChoiceType(choice)

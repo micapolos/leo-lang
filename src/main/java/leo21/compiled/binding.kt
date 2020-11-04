@@ -1,8 +1,13 @@
 package leo21.compiled
 
 import leo.base.notNullIf
+import leo14.ScriptLine
+import leo14.Scriptable
+import leo14.anyReflectScriptLine
 import leo14.lambda.arg
 import leo14.lambda.invoke
+import leo14.lineTo
+import leo14.script
 import leo21.prim.Prim
 import leo21.type.Arrow
 import leo21.type.Type
@@ -11,7 +16,15 @@ import leo21.typed.Typed
 import leo21.typed.getOrNull
 import leo21.typed.make
 
-sealed class Binding
+sealed class Binding : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "binding" lineTo script(when (this) {
+			is ConstantBinding -> "constant" lineTo script(arrow.anyReflectScriptLine)
+			is FunctionBinding -> "function" lineTo script(arrow.anyReflectScriptLine)
+			is GivenBinding -> "given" lineTo script(type.reflectScriptLine)
+		})
+}
+
 data class ConstantBinding(val arrow: Arrow) : Binding()
 data class FunctionBinding(val arrow: Arrow) : Binding()
 data class GivenBinding(val type: Type) : Binding()
