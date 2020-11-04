@@ -11,21 +11,21 @@ import leo21.prim.string
 
 val Value<Prim>.applyDoublePlusDouble
 	get() =
-		applyOp2(Prim::double, Prim::double, Double::prim, Double::plus)
+		applyOp2(Prim::double, Double::plus, Prim::double, Double::prim)
 val Value<Prim>.applyDoubleMinusDouble
 	get() =
-		applyOp2(Prim::double, Prim::double, Double::prim, Double::minus)
+		applyOp2(Prim::double, Double::minus, Prim::double, Double::prim)
 val Value<Prim>.applyDoubleTimesDouble
 	get() =
-		applyOp2(Prim::double, Prim::double, Double::prim, Double::times)
+		applyOp2(Prim::double, Double::times, Prim::double, Double::prim)
 val Value<Prim>.applyStringPlusString
 	get() =
-		applyOp2(Prim::string, Prim::string, String::prim, String::plus)
+		applyOp2(Prim::string, String::plus, Prim::string, String::prim)
 
 inline fun <L, R, O> Value<Prim>.applyOp2(
-	lfn: Prim.() -> L,
-	rfn: Prim.() -> R,
-	ofn: O.() -> Prim,
-	fn: L.(R) -> O
+	lhs: Prim.() -> L,
+	op: L.(R) -> O,
+	rhs: Prim.() -> R,
+	ret: O.() -> Prim
 ): Value<Prim> =
-	pair.run { value(first.native.lfn().fn(second.native.rfn()).ofn()) }
+	pair.run { value(first.native.lhs().op(second.native.rhs()).ret()) }
