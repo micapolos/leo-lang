@@ -27,15 +27,15 @@ import leo21.typed.typed
 
 data class Compiler(
 	val bindings: Bindings,
-	val body: Typed
+	val typed: Typed
 ) : Scriptable() {
 	override fun toString() = super.toString()
 	override val reflectScriptLine: ScriptLine
-		get() = "compiled" lineTo script(bindings.reflectScriptLine, body.reflectScriptLine)
+		get() = "compiled" lineTo script(bindings.reflectScriptLine, typed.reflectScriptLine)
 }
 
 fun Bindings.typed(script: Script): Typed =
-	Compiler(this, typed()).plus(script).body
+	Compiler(this, typed()).plus(script).typed
 
 fun Compiler.plus(script: Script): Compiler =
 	fold(script.lineSeq.reverse) { plus(it) }
@@ -63,18 +63,18 @@ fun Compiler.plusKeywordOrNull(scriptField: ScriptField): Compiler? =
 	}
 
 fun Compiler.plusDo(script: Script): Compiler =
-	bindings.push(body.type).typed(script).let { typed ->
+	bindings.push(typed.type).typed(script).let { typed ->
 		setBody(
 			Typed(
-				fn(typed.term).invoke(body.term),
+				fn(typed.term).invoke(this.typed.term),
 				typed.type))
 	}
 
 fun Compiler.plusFunction(script: Script): Compiler =
-	setBody(body.plus(lineTyped(bindings.arrowTyped(script))))
+	setBody(typed.plus(lineTyped(bindings.arrowTyped(script))))
 
 fun Compiler.plusMake(script: Script): Compiler =
-	setBody(body.make(script.onlyStringOrNull.notNullOrError("make syntax error")))
+	setBody(typed.make(script.onlyStringOrNull.notNullOrError("make syntax error")))
 
 fun Compiler.plusNonKeyword(scriptField: ScriptField): Compiler =
 	resolvePlus(scriptField).resolve
@@ -84,9 +84,9 @@ fun Compiler.resolvePlus(scriptField: ScriptField): Compiler =
 
 val Compiler.resolve
 	get() =
-		setBody(body.resolveGetOrNull ?: bindings.resolve(body))
+		setBody(typed.resolveGetOrNull ?: bindings.resolve(typed))
 
 fun Compiler.plus(typed: LineTyped): Compiler =
-	setBody(bindings.resolve(body.plus(typed)))
+	setBody(bindings.resolve(this.typed.plus(typed)))
 
-fun Compiler.setBody(body: Typed) = copy(body = body)
+fun Compiler.setBody(body: Typed) = copy(typed = body)
