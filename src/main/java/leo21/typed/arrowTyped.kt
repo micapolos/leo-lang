@@ -11,6 +11,8 @@ data class ArrowTyped(
 	val arrow: Arrow
 )
 
+infix fun Term<Prim>.of(arrow: Arrow) = ArrowTyped(this, arrow)
+
 fun ArrowTyped.invokeOrNull(typed: Typed): Typed? =
 	if (arrow.lhs != typed.type) null
 	else Typed(term.invoke(typed.term), arrow.rhs)
