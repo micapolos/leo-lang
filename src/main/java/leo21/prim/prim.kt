@@ -60,6 +60,9 @@ val nilPrim: Prim = NilPrim
 val Prim.string get() = (this as StringPrim).string
 val Prim.double get() = (this as DoublePrim).double
 
+val Double.prim get() = prim(this)
+val String.prim get() = prim(this)
+
 fun prim(string: String): Prim = StringPrim(string)
 fun prim(double: Double): Prim = DoublePrim(double)
 fun prim(int: Int): Prim = prim(int.toDouble())

@@ -4,6 +4,8 @@ import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.anyReflectScriptLine
 import leo14.lambda.Term
+import leo14.lambda.arg
+import leo14.lambda.invoke
 import leo14.lambda.term
 import leo14.lineTo
 import leo14.script
@@ -57,3 +59,6 @@ val <T> Value<T>.term: Term<T>
 
 fun Any.anyApply(value: Value<Any>): Value<Any> =
 	value((this as (Any) -> Any).invoke(value.native))
+
+fun <T> Value<T>.plus(value: Value<T>): Value<T> =
+	value(scope(this, value).function(arg<T>(0).invoke(arg(2)).invoke(arg(1))))

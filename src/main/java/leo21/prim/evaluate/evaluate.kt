@@ -4,6 +4,7 @@ import leo14.lambda.Term
 import leo14.lambda.value.Value
 import leo14.lambda.value.evaluate
 import leo14.lambda.value.native
+import leo14.lambda.value.pair
 import leo14.lambda.value.value
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
