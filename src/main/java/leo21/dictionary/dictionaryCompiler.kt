@@ -7,8 +7,8 @@ import leo14.ScriptField
 import leo14.ScriptLine
 import leo14.fieldOrNull
 import leo14.lineSeq
-import leo21.compiled.Bindings
-import leo21.compiled.push
+import leo21.compiler.Bindings
+import leo21.compiler.push
 
 data class DictionaryCompiler(
 	val bindings: Bindings,

@@ -1,4 +1,4 @@
-package leo21.evaluated
+package leo21.evaluator
 
 import leo14.Script
 import leo14.ScriptLine

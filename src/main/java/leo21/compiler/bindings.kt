@@ -1,4 +1,4 @@
-package leo21.compiled
+package leo21.compiler
 
 import leo.base.indexed
 import leo.base.mapFirstOrNull

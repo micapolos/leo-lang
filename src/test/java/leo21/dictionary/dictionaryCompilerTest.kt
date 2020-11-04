@@ -3,7 +3,7 @@ package leo21.dictionary
 import leo.base.assertNotNull
 import leo14.lineTo
 import leo14.script
-import leo21.compiled.emptyBindings
+import leo21.compiler.emptyBindings
 import kotlin.test.Test
 
 class DictionaryCompilerTest {

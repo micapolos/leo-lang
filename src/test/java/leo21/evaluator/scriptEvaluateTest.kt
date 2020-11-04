@@ -1,4 +1,4 @@
-package leo21.evaluated
+package leo21.evaluator
 
 import leo.base.assertEqualTo
 import leo14.line
@@ -7,7 +7,7 @@ import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
-class EvaluateTest {
+class ScriptEvaluateTest {
 	@Test
 	fun numberPlus() {
 		script(

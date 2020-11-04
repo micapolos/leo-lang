@@ -1,9 +1,8 @@
-package leo21.typed
+package leo21.evaluator
 
 import leo.base.assertEqualTo
 import leo14.lambda.fn
 import leo14.lambda.value.value
-import leo21.evaluated.of
 import leo21.prim.prim
 import leo21.term.term
 import leo21.type.arrowTo
@@ -12,9 +11,20 @@ import leo21.type.doubleType
 import leo21.type.lineTo
 import leo21.type.stringType
 import leo21.type.type
+import leo21.typed.ArrowTyped
+import leo21.typed.case
+import leo21.typed.doubleMinus
+import leo21.typed.doublePlus
+import leo21.typed.doubleTimes
+import leo21.typed.end
+import leo21.typed.get
+import leo21.typed.lineTo
+import leo21.typed.stringPlus
+import leo21.typed.switch
+import leo21.typed.typed
 import kotlin.test.Test
 
-class EvaluateTest {
+class TypedEvaluateTest {
 	@Test
 	fun get_first() {
 		typed(

@@ -7,7 +7,7 @@ import leo14.Script
 import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.reflectOrEmptyScriptLine
-import leo21.compiled.Bindings
+import leo21.compiler.Bindings
 
 data class Dictionary(val definitionStack: Stack<Definition>) : Scriptable() {
 	override fun toString() = super.toString()

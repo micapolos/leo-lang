@@ -6,7 +6,7 @@ import leo14.lambda.fn
 import leo14.lineTo
 import leo14.literal
 import leo14.script
-import leo21.compiled.emptyBindings
+import leo21.compiler.emptyBindings
 import leo21.type.arrowTo
 import leo21.type.doubleType
 import leo21.type.lineTo

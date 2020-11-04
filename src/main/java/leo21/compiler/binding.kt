@@ -1,4 +1,4 @@
-package leo21.compiled
+package leo21.compiler
 
 import leo.base.notNullIf
 import leo14.ScriptLine
