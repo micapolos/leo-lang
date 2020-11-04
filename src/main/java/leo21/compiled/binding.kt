@@ -6,7 +6,6 @@ import leo14.lambda.invoke
 import leo21.prim.Prim
 import leo21.type.Arrow
 import leo21.type.Type
-import leo21.type.make
 import leo21.type.onlyNameOrNull
 import leo21.typed.Typed
 import leo21.typed.getOrNull
@@ -35,13 +34,4 @@ fun Binding.resolveOrNull(index: Int, typed: Typed): Typed? =
 				else -> Typed(arg(index), type).make("given").getOrNull(name)
 			}
 		}
-	}
-
-fun Binding.resolveOrNull(index: Int, name: String): Typed? =
-	when (this) {
-		is ConstantBinding -> null
-		is FunctionBinding -> null
-		is GivenBinding ->
-			if (name == "given") Typed(arg(index), type).make("given").getOrNull(name)
-			else Typed(arg(index), type).make("given").getOrNull(name)
 	}

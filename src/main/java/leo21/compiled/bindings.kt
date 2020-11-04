@@ -28,11 +28,6 @@ val emptyBindings = Bindings(stack())
 fun Bindings.push(binding: Binding) = Bindings(bindingStack.push(binding))
 fun Bindings.push(type: Type) = push(GivenBinding(type))
 
-fun Bindings.resolveOrNull(name: String): Typed? =
-	bindingStack.seq.indexed.mapFirstOrNull {
-		value.resolveOrNull(index, name)
-	}
-
 fun Bindings.resolveOrNull(typed: Typed): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {
 		value.resolveOrNull(index, typed)
