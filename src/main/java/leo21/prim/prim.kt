@@ -2,7 +2,6 @@ package leo21.prim
 
 import leo14.ScriptLine
 import leo14.Scriptable
-import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
@@ -18,10 +17,6 @@ sealed class Prim : Scriptable() {
 				DoubleMinusDoublePrim -> script("double" lineTo script(), "minus" lineTo script("double"))
 				DoubleTimesDoublePrim -> script("double" lineTo script(), "times" lineTo script("double"))
 				StringPlusStringPrim -> script("string" lineTo script(), "plus" lineTo script("string"))
-				is PlusDoublePrim -> script(line(literal(double)), "plus" lineTo script("double"))
-				is MinusDoublePrim -> script(line(literal(double)), "minus" lineTo script("double"))
-				is TimesDoublePrim -> script(line(literal(double)), "times" lineTo script("double"))
-				is PlusStringPrim -> script(line(literal(string)), "plus" lineTo script("double"))
 			}
 }
 
@@ -39,22 +34,6 @@ object DoublePlusDoublePrim : Prim()
 object DoubleMinusDoublePrim : Prim()
 object DoubleTimesDoublePrim : Prim()
 object StringPlusStringPrim : Prim()
-
-data class PlusDoublePrim(val double: Double) : Prim() {
-	override fun toString() = super.toString()
-}
-
-data class MinusDoublePrim(val double: Double) : Prim() {
-	override fun toString() = super.toString()
-}
-
-data class TimesDoublePrim(val double: Double) : Prim() {
-	override fun toString() = super.toString()
-}
-
-data class PlusStringPrim(val string: String) : Prim() {
-	override fun toString() = super.toString()
-}
 
 val nilPrim: Prim = NilPrim
 val Prim.string get() = (this as StringPrim).string

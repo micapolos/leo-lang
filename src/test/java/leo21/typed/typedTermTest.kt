@@ -101,15 +101,4 @@ class TypedTermTest {
 			.make("foo")
 			.assertEqualTo(term1 of dynamicType1.make("foo"))
 	}
-
-	@Test
-	fun stringPlusResolve() {
-		term1.of(stringType.plus("plus" lineTo stringType))
-			.resolve
-			.assertEqualTo(
-				term(StringPlusStringPrim)
-					.invoke(term1.first)
-					.invoke(term1.second)
-					.of(stringType))
-	}
 }

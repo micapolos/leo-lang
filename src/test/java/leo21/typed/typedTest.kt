@@ -183,38 +183,6 @@ class TypedTest {
 	}
 
 	@Test
-	fun doublePlus() {
-		typed(10.0).doublePlus(typed(20.0)).type.assertEqualTo(doubleType)
-		assertFails { typed("foo").doublePlus(typed(20.0)) }
-		assertFails { typed(10.0).doublePlus(typed("foo")) }
-		assertFails { typed("foo").doublePlus(typed("bar")) }
-	}
-
-	@Test
-	fun doubleMinus() {
-		typed(10.0).doubleMinus(typed(20.0)).type.assertEqualTo(doubleType)
-		assertFails { typed("foo").doubleMinus(typed(20.0)) }
-		assertFails { typed(10.0).doubleMinus(typed("foo")) }
-		assertFails { typed("foo").doubleMinus(typed("bar")) }
-	}
-
-	@Test
-	fun doubleTimes() {
-		typed(10.0).doubleTimes(typed(20.0)).type.assertEqualTo(doubleType)
-		assertFails { typed("foo").doubleTimes(typed(20.0)) }
-		assertFails { typed(10.0).doubleTimes(typed("foo")) }
-		assertFails { typed("foo").doubleTimes(typed("bar")) }
-	}
-
-	@Test
-	fun stringPlus() {
-		typed("foo").stringPlus(typed("bar")).type.assertEqualTo(stringType)
-		assertFails { typed("foo").stringPlus(typed(20.0)) }
-		assertFails { typed(10.0).stringPlus(typed("foo")) }
-		assertFails { typed(10.0).stringPlus(typed(20.0)) }
-	}
-
-	@Test
 	fun switch() {
 		typed(
 			"bit" lineTo choice(

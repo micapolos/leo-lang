@@ -13,13 +13,9 @@ import leo21.type.stringType
 import leo21.type.type
 import leo21.typed.ArrowTyped
 import leo21.typed.case
-import leo21.typed.doubleMinus
-import leo21.typed.doublePlus
-import leo21.typed.doubleTimes
 import leo21.typed.end
 import leo21.typed.get
 import leo21.typed.lineTo
-import leo21.typed.stringPlus
 import leo21.typed.switch
 import leo21.typed.typed
 import kotlin.test.Test
@@ -75,37 +71,5 @@ class TypedEvaluateTest {
 			.end
 			.evaluated
 			.assertEqualTo(value(prim("true")) of stringType)
-	}
-
-	@Test
-	fun doublePlus() {
-		typed(10.0)
-			.doublePlus(typed(20.0))
-			.evaluated
-			.assertEqualTo(value(prim(30.0)) of doubleType)
-	}
-
-	@Test
-	fun doubleMinus() {
-		typed(30.0)
-			.doubleMinus(typed(20.0))
-			.evaluated
-			.assertEqualTo(value(prim(10.0)) of doubleType)
-	}
-
-	@Test
-	fun doubleTimes() {
-		typed(10.0)
-			.doubleTimes(typed(20.0))
-			.evaluated
-			.assertEqualTo(value(prim(200.0)) of doubleType)
-	}
-
-	@Test
-	fun stringPlus() {
-		typed("Hello, ")
-			.stringPlus(typed("world!"))
-			.evaluated
-			.assertEqualTo(value(prim("Hello, world!")) of stringType)
 	}
 }

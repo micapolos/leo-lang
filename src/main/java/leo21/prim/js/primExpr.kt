@@ -10,14 +10,10 @@ import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoublePrim
 import leo21.prim.DoubleTimesDoublePrim
-import leo21.prim.MinusDoublePrim
 import leo21.prim.NilPrim
-import leo21.prim.PlusDoublePrim
-import leo21.prim.PlusStringPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
-import leo21.prim.TimesDoublePrim
 
 val Prim.expr: Expr
 	get() =
@@ -29,10 +25,6 @@ val Prim.expr: Expr
 			DoubleMinusDoublePrim -> op2Expr("-")
 			DoubleTimesDoublePrim -> op2Expr("*")
 			StringPlusStringPrim -> op2Expr("*")
-			is PlusDoublePrim -> op2Expr(expr(double), "+")
-			is MinusDoublePrim -> op2Expr(expr(double), "-")
-			is TimesDoublePrim -> op2Expr(expr(double), "*")
-			is PlusStringPrim -> op2Expr(expr(string), "+")
 		}
 
 fun op2Expr(op: String): Expr = expr(lambda("a", expr(lambda("b", expr(expr(id("a")).op(op, expr(id("b"))))))))

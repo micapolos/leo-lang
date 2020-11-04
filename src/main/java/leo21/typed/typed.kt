@@ -8,20 +8,13 @@ import leo14.lambda.arg0
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.script
-import leo14.lambda.term
 import leo14.lineTo
 import leo14.plus
-import leo21.prim.DoubleMinusDoublePrim
-import leo21.prim.DoublePlusDoublePrim
-import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.Prim
-import leo21.prim.StringPlusStringPrim
 import leo21.type.ChoiceType
 import leo21.type.StructType
 import leo21.type.Type
-import leo21.type.doubleType
 import leo21.type.script
-import leo21.type.stringType
 import leo21.type.type
 
 data class Typed(val term: Term<Prim>, val type: Type) : Scriptable() {
@@ -75,34 +68,6 @@ fun Typed.make(name: String) = typed(name lineTo this)
 val Typed.switch: SwitchTyped get() = contentOrNull?.choiceOrNull.notNullOrError("not choice").switchTyped
 
 fun Typed.plus(line: LineTyped): Typed = struct.plus(line).typed
-
-val Typed.stringPrimTerm: Term<Prim>
-	get() =
-		structOrNull!!.onlyLineOrNull!!.stringTypedOrNull!!.term
-
-val Typed.doublePrimTerm: Term<Prim>
-	get() =
-		structOrNull!!.onlyLineOrNull!!.doubleTypedOrNull!!.term
-
-fun Typed.doublePlus(typed: Typed): Typed =
-	Typed(
-		term(DoublePlusDoublePrim).invoke(doublePrimTerm).invoke(typed.doublePrimTerm),
-		doubleType)
-
-fun Typed.doubleMinus(typed: Typed): Typed =
-	Typed(
-		term(DoubleMinusDoublePrim).invoke(doublePrimTerm).invoke(typed.doublePrimTerm),
-		doubleType)
-
-fun Typed.doubleTimes(typed: Typed): Typed =
-	Typed(
-		term(DoubleTimesDoublePrim).invoke(doublePrimTerm).invoke(typed.doublePrimTerm),
-		doubleType)
-
-fun Typed.stringPlus(typed: Typed): Typed =
-	Typed(
-		term(StringPlusStringPrim).invoke(stringPrimTerm).invoke(typed.stringPrimTerm),
-		stringType)
 
 fun Typed.reference(f: Typed.() -> Typed): Typed =
 	arg0<Prim>().of(type).f().let { typed ->
