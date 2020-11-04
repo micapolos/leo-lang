@@ -26,7 +26,7 @@ data class Bindings(val bindingStack: Stack<Binding>)
 
 val emptyBindings = Bindings(stack())
 fun Bindings.push(binding: Binding) = Bindings(bindingStack.push(binding))
-fun Bindings.push(type: Type) = push(TypeBinding(type))
+fun Bindings.push(type: Type) = push(GivenBinding(type))
 
 fun Bindings.resolveOrNull(name: String): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {

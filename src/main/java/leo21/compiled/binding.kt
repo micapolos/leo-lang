@@ -11,22 +11,28 @@ import leo21.typed.getOrNull
 import leo21.typed.make
 
 sealed class Binding
-data class ArrowBinding(val arrow: Arrow) : Binding()
-data class TypeBinding(val type: Type) : Binding()
+data class ConstantBinding(val arrow: Arrow) : Binding()
+data class FunctionBinding(val arrow: Arrow) : Binding()
+data class GivenBinding(val type: Type) : Binding()
 
-fun binding(arrow: Arrow): Binding = ArrowBinding(arrow)
-fun binding(type: Type): Binding = TypeBinding(type)
+fun constantBinding(arrow: Arrow): Binding = ConstantBinding(arrow)
+fun functionBinding(arrow: Arrow): Binding = FunctionBinding(arrow)
+fun givenBinding(type: Type): Binding = GivenBinding(type)
 
 fun Binding.resolveOrNull(index: Int, typed: Typed): Typed? =
 	when (this) {
-		is ArrowBinding -> notNullIf(typed.type == arrow.lhs) {
+		is ConstantBinding -> notNullIf(typed.type == arrow.lhs) {
+			Typed(arg(index), arrow.rhs)
+		}
+		is FunctionBinding -> notNullIf(typed.type == arrow.lhs) {
 			Typed(arg<Prim>(index).invoke(typed.term), arrow.rhs)
 		}
-		is TypeBinding -> null
+		is GivenBinding -> null
 	}
 
 fun Binding.resolveOrNull(index: Int, name: String): Typed? =
 	when (this) {
-		is ArrowBinding -> null
-		is TypeBinding -> Typed(arg(index), type).make("given").getOrNull(name)
+		is ConstantBinding -> null
+		is FunctionBinding -> null
+		is GivenBinding -> Typed(arg(index), type).make("given").getOrNull(name)
 	}

@@ -5,7 +5,7 @@ import leo14.lambda.fn
 import leo14.matchInfix
 import leo21.compiled.Binding
 import leo21.compiled.Bindings
-import leo21.compiled.binding
+import leo21.compiled.functionBinding
 import leo21.compiled.push
 import leo21.compiled.typed
 import leo21.type.arrowTo
@@ -23,7 +23,7 @@ fun definition(arrowTyped: ArrowTyped): Definition = FunctionDefinition(arrowTyp
 val Definition.binding: Binding
 	get() =
 		when (this) {
-			is FunctionDefinition -> binding(arrowTyped.arrow)
+			is FunctionDefinition -> functionBinding(arrowTyped.arrow)
 			is ConstantDefinition -> TODO()
 		}
 
