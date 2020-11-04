@@ -33,7 +33,7 @@ fun Bindings.push(type: Type) = push(GivenBinding(type))
 
 fun Bindings.resolveOrNull(typed: Typed): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {
-		value.resolveOrNull(index, typed)
+		value.applyOrNull(index, typed)
 	}
 
 fun Bindings.resolve(typed: Typed): Typed =

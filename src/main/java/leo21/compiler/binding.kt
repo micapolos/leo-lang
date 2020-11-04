@@ -40,7 +40,7 @@ fun constantBinding(arrow: Arrow): Binding = ConstantBinding(arrow)
 fun functionBinding(arrow: Arrow): Binding = FunctionBinding(arrow)
 fun givenBinding(type: Type): Binding = GivenBinding(type)
 
-fun Binding.resolveOrNull(index: Int, typed: Typed): Typed? =
+fun Binding.applyOrNull(index: Int, typed: Typed): Typed? =
 	when (this) {
 		is ConstantBinding -> notNullIf(typed.type == arrow.lhs) {
 			Typed(arg(index), arrow.rhs)
