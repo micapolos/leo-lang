@@ -22,6 +22,7 @@ import leo21.typed.Typed
 import leo21.typed.resolvePrimOrNull
 
 data class Bindings(val bindingStack: Stack<Binding>) : Scriptable() {
+	override fun toString() = super.toString()
 	override val reflectScriptLine: ScriptLine
 		get() = bindingStack.reflectOrEmptyScriptLine("bindings") { reflectScriptLine }
 }

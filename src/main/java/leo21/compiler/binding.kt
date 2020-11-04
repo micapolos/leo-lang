@@ -25,9 +25,17 @@ sealed class Binding : Scriptable() {
 		})
 }
 
-data class ConstantBinding(val arrow: Arrow) : Binding()
-data class FunctionBinding(val arrow: Arrow) : Binding()
-data class GivenBinding(val type: Type) : Binding()
+data class ConstantBinding(val arrow: Arrow) : Binding() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionBinding(val arrow: Arrow) : Binding() {
+	override fun toString() = super.toString()
+}
+
+data class GivenBinding(val type: Type) : Binding() {
+	override fun toString() = super.toString()
+}
 
 fun constantBinding(arrow: Arrow): Binding = ConstantBinding(arrow)
 fun functionBinding(arrow: Arrow): Binding = FunctionBinding(arrow)
