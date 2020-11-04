@@ -8,13 +8,24 @@ import kotlin.test.Test
 
 class DictionaryCompilerTest {
 	@Test
-	fun plusDefine() {
+	fun plusDefineDoes() {
 		emptyBindings
 			.emptyDictionaryCompiler
 			.plusOrNull(
 				"define" lineTo script(
 					"x" lineTo script("number"),
 					"does" lineTo script("x")))
+			.assertNotNull
+	}
+
+	@Test
+	fun plusDefineGives() {
+		emptyBindings
+			.emptyDictionaryCompiler
+			.plusOrNull(
+				"define" lineTo script(
+					"x" lineTo script("number"),
+					"gives" lineTo script("x")))
 			.assertNotNull
 	}
 }
