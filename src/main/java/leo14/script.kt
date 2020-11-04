@@ -448,6 +448,8 @@ val Script.nameStackOrNull: Stack<String>?
 	get() =
 		stack<String>().plusNamesOrNull(this)?.reverse
 
+// === matching
+
 fun <R : Any> Script.matchInfix(name: String, fn: (Script, Script) -> R?): R? =
 	linkOrNull?.let { link ->
 		link.lhs.let { lhs ->
@@ -476,4 +478,12 @@ fun <R : Any> Script.match(name: String, fn: () -> R?): R? =
 fun <R : Any> Script.matchEmpty(fn: () -> R?): R? =
 	ifOrNull(isEmpty) {
 		fn()
+	}
+
+fun <R : Any> ScriptLine.match(name: String, fn: (Script) -> R?): R? =
+	fieldOrNull?.match(name, fn)
+
+fun <R : Any> ScriptField.match(name: String, fn: (Script) -> R?): R? =
+	ifOrNull(string == name) {
+		fn(rhs)
 	}

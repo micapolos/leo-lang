@@ -14,21 +14,12 @@ import leo14.UnitScript
 import leo14.fieldOrNull
 import leo14.isEmpty
 import leo14.lineSeq
-import leo14.onlyLineOrNull
 
 // TODO: Reimplement using TypeCompiler for incremental compilation
 
 val Script.type: Type
 	get() =
-		choiceTypeOrNull ?: type(struct)
-
-val Script.choiceTypeOrNull: Type?
-	get() =
-		onlyLineOrNull?.fieldOrNull?.let { field ->
-			notNullIf(field.string == "choice") {
-				type(field.rhs.choice)
-			}
-		}
+		emptyTypeCompiler.fold(lineSeq.reverse) { plus(it) }.type
 
 val Script.struct: Struct
 	get() =
