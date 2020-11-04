@@ -27,10 +27,10 @@ fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 		StringPlusStringPrim -> rhs.apply(Prim::string, String::plus, Prim::string, String::prim)
 	}!!
 
-inline fun <L, R, O> Value<Prim>.apply(
-	lhs: Prim.() -> L,
-	op: L.(R) -> O,
-	rhs: Prim.() -> R,
-	ret: O.() -> Prim
+inline fun <Lhs, Rhs, Out> Value<Prim>.apply(
+	lhs: Prim.() -> Lhs,
+	op: Lhs.(Rhs) -> Out,
+	rhs: Prim.() -> Rhs,
+	out: Out.() -> Prim
 ): Value<Prim> =
-	pair.run { value(first.native.lhs().op(second.native.rhs()).ret()) }
+	pair.run { value(first.native.lhs().op(second.native.rhs()).out()) }
