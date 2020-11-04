@@ -5,6 +5,7 @@ import leo.base.Seq
 import leo.base.SeqNode
 import leo.base.emptySeq
 import leo.base.fold
+import leo.base.ifOrNull
 import leo.base.inc
 import leo.base.indent
 import leo.base.notNullIf
@@ -446,3 +447,33 @@ tailrec fun Stack<String>.plusNamesOrNull(script: Script): Stack<String>? =
 val Script.nameStackOrNull: Stack<String>?
 	get() =
 		stack<String>().plusNamesOrNull(this)?.reverse
+
+fun <R : Any> Script.matchInfix(name: String, fn: (Script, Script) -> R?): R? =
+	linkOrNull?.let { link ->
+		link.lhs.let { lhs ->
+			link.rhsOrNull(name)?.let { rhs ->
+				fn(lhs, rhs)
+			}
+		}
+	}
+
+fun <R : Any> Script.matchPrefix(name: String, fn: (Script) -> R?): R? =
+	matchInfix(name) { lhs, rhs ->
+		lhs.matchEmpty {
+			fn(rhs)
+		}
+	}
+
+fun <R : Any> Script.match(name: String, fn: () -> R?): R? =
+	matchInfix(name) { lhs, rhs ->
+		lhs.matchEmpty {
+			rhs.matchEmpty {
+				fn()
+			}
+		}
+	}
+
+fun <R : Any> Script.matchEmpty(fn: () -> R?): R? =
+	ifOrNull(isEmpty) {
+		fn()
+	}
