@@ -1,7 +1,8 @@
 package leo21.typed
 
-import leo21.prim.evaluate.evaluate
+import leo21.evaluated.Evaluated
+import leo21.prim.evaluate.value
 
-val Typed.evaluate: Typed
+val Typed.evaluated: Evaluated
 	get() =
-		Typed(term.evaluate, type)
+		Evaluated(term.value, type)

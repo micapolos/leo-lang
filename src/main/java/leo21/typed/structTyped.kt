@@ -7,11 +7,8 @@ import leo13.Link
 import leo13.isEmpty
 import leo13.linkOrNull
 import leo13.linkTo
-import leo13.runtime.head
-import leo13.runtime.tail
 import leo14.lambda.Term
 import leo14.lambda.first
-import leo14.lambda.pair
 import leo14.lambda.second
 import leo21.prim.Prim
 import leo21.term.nilTerm
@@ -94,13 +91,3 @@ val Typed.link: Link<Typed, LineTyped>
 val Typed.linkOrNull: Link<Typed, LineTyped>?
 	get() =
 		structOrNull?.linkOrNull?.run { (tail.term of type(tail.struct)) linkTo head }
-
-val StructTyped.decompileLinkOrNull: Link<StructTyped, LineTyped>?
-	get() =
-		struct.lineStack.linkOrNull?.let { link ->
-			if (Struct(link.stack).isStatic) StructTyped(nilTerm, Struct(link.stack)) linkTo LineTyped(term, link.value)
-			else if (link.value.isStatic) StructTyped(term, Struct(link.stack)) linkTo LineTyped(nilTerm, link.value)
-			else term.pair().let { (lhs, rhs) ->
-				StructTyped(lhs, Struct(link.stack)) linkTo LineTyped(rhs, link.value)
-			}
-		}

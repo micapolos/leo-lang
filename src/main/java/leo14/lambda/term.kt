@@ -1,6 +1,8 @@
 package leo14.lambda
 
+import leo.base.failIfOr
 import leo13.Index
+import leo13.failIfError
 import leo14.Script
 import leo14.ScriptLine
 import leo14.Scriptable
@@ -57,6 +59,13 @@ fun <T, R> Term<T>.variable(fn: (Index) -> R): R =
 	when (this) {
 		is VariableTerm -> fn(variable.index)
 		else -> error("$this as variable")
+	}
+
+fun <T, R> Term<T>.variable(index: Int, fn: () -> R): R =
+	variable { int ->
+		failIfOr(int != index) {
+			fn()
+		}
 	}
 
 fun <T, R> Term<T>.native(fn: (T) -> R): R =

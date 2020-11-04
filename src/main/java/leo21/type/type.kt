@@ -3,8 +3,11 @@ package leo21.type
 import leo.base.fold
 import leo.base.notNullOrError
 import leo.base.orNullIf
+import leo13.Link
 import leo13.Stack
 import leo13.any
+import leo13.linkOrNull
+import leo13.linkTo
 import leo13.onlyOrNull
 import leo13.push
 import leo13.stack
@@ -97,3 +100,10 @@ val Type.onlyNameOrNull: String?
 	get() =
 		structOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.orNullIf { rhs != type() }?.name
 
+val Struct.linkOrNull: Link<Struct, Line>?
+	get() =
+		lineStack.linkOrNull?.run { Struct(stack) linkTo value }
+
+val Choice.linkOrNull: Link<Choice, Line>?
+	get() =
+		lineStack.linkOrNull?.run { Choice(stack) linkTo value }

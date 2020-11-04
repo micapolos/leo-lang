@@ -6,6 +6,7 @@ import leo13.reverse
 import leo13.size
 import leo13.takeOrNull
 import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.lambda.Term
 import leo14.lambda.fn
 import leo14.lambda.freeVariableCount
@@ -16,8 +17,9 @@ import leo14.anyReflectScriptLine
 import leo14.script
 import kotlin.math.min
 
-data class Function<out T>(val scope: Scope<T>, val bodyTerm: Term<T>) {
+data class Function<out T>(val scope: Scope<T>, val bodyTerm: Term<T>) : Scriptable() {
 	override fun toString() = scriptLine { anyReflectScriptLine }.toString()
+	override val reflectScriptLine get() = scriptLine { anyReflectScriptLine }
 }
 
 fun <T> Function<T>.scriptLine(nativeScriptLine: T.() -> ScriptLine): ScriptLine =

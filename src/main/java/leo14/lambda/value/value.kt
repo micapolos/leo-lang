@@ -1,14 +1,20 @@
 package leo14.lambda.value
 
 import leo14.ScriptLine
+import leo14.Scriptable
+import leo14.anyReflectScriptLine
 import leo14.lambda.Term
 import leo14.lambda.term
 import leo14.lineTo
-import leo14.anyReflectScriptLine
 import leo14.script
 
-sealed class Value<out T> {
+sealed class Value<out T> : Scriptable() {
 	override fun toString() = scriptLine { anyReflectScriptLine }.toString()
+	override val reflectScriptLine: ScriptLine
+		get() = "value" lineTo script(when (this) {
+			is NativeValue -> "native" lineTo script(native.anyReflectScriptLine)
+			is FunctionValue -> function.reflectScriptLine
+		})
 }
 
 data class NativeValue<T>(val native: T) : Value<T>() {
@@ -30,8 +36,11 @@ fun <T> Value<T>.scriptLine(nativeScriptLine: T.() -> ScriptLine): ScriptLine =
 fun <T> value(native: T): Value<T> = NativeValue(native)
 fun <T> value(function: Function<T>): Value<T> = FunctionValue(function)
 
-val <T> Value<T>.native: T get() = (this as NativeValue).native
-val <T> Value<T>.function: Function<T> get() = (this as FunctionValue).function
+val <T> Value<T>.native: T get() = nativeOrNull!!
+val <T> Value<T>.function: Function<T> get() = functionOrNull!!
+
+val <T> Value<T>.nativeOrNull: T? get() = (this as? NativeValue)?.native
+val <T> Value<T>.functionOrNull: Function<T>? get() = (this as? FunctionValue)?.function
 
 fun <T> Value<T>.apply(value: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 	when (this) {

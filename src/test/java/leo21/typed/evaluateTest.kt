@@ -2,9 +2,13 @@ package leo21.typed
 
 import leo.base.assertEqualTo
 import leo14.lambda.fn
+import leo14.lambda.value.value
+import leo21.evaluated.of
+import leo21.prim.prim
 import leo21.term.term
 import leo21.type.arrowTo
 import leo21.type.choice
+import leo21.type.doubleType
 import leo21.type.lineTo
 import leo21.type.stringType
 import leo21.type.type
@@ -18,8 +22,8 @@ class EvaluateTest {
 				"x" lineTo typed(10.0),
 				"y" lineTo typed(20.0)))
 			.get("x")
-			.evaluate
-			.assertEqualTo(typed("x" lineTo typed(10.0)))
+			.evaluated
+			.assertEqualTo(value(prim(10.0)) of type("x" lineTo doubleType))
 	}
 
 	@Test
@@ -29,8 +33,8 @@ class EvaluateTest {
 				"x" lineTo typed(10.0),
 				"y" lineTo typed(20.0)))
 			.get("y")
-			.evaluate
-			.assertEqualTo(typed("y" lineTo typed(20.0)))
+			.evaluated
+			.assertEqualTo(value(prim(20.0)) of type("y" lineTo doubleType))
 	}
 
 	@Test
@@ -44,8 +48,8 @@ class EvaluateTest {
 			.case("zero", ArrowTyped(fn(term("false")), type("zero" lineTo type()) arrowTo stringType))
 			.case("one", ArrowTyped(fn(term("true")), type("one" lineTo type()) arrowTo stringType))
 			.end
-			.evaluate
-			.assertEqualTo(typed("false"))
+			.evaluated
+			.assertEqualTo(value(prim("false")) of stringType)
 	}
 
 	@Test
@@ -59,39 +63,39 @@ class EvaluateTest {
 			.case("zero", ArrowTyped(fn(term("false")), type("zero" lineTo type()) arrowTo stringType))
 			.case("one", ArrowTyped(fn(term("true")), type("one" lineTo type()) arrowTo stringType))
 			.end
-			.evaluate
-			.assertEqualTo(typed("true"))
+			.evaluated
+			.assertEqualTo(value(prim("true")) of stringType)
 	}
 
 	@Test
 	fun doublePlus() {
 		typed(10.0)
 			.doublePlus(typed(20.0))
-			.evaluate
-			.assertEqualTo(typed(30.0))
+			.evaluated
+			.assertEqualTo(value(prim(30.0)) of doubleType)
 	}
 
 	@Test
 	fun doubleMinus() {
 		typed(30.0)
 			.doubleMinus(typed(20.0))
-			.evaluate
-			.assertEqualTo(typed(10.0))
+			.evaluated
+			.assertEqualTo(value(prim(10.0)) of doubleType)
 	}
 
 	@Test
 	fun doubleTimes() {
 		typed(10.0)
 			.doubleTimes(typed(20.0))
-			.evaluate
-			.assertEqualTo(typed(200.0))
+			.evaluated
+			.assertEqualTo(value(prim(200.0)) of doubleType)
 	}
 
 	@Test
 	fun stringPlus() {
 		typed("Hello, ")
 			.stringPlus(typed("world!"))
-			.evaluate
-			.assertEqualTo(typed("Hello, world!"))
+			.evaluated
+			.assertEqualTo(value(prim("Hello, world!")) of stringType)
 	}
 }
