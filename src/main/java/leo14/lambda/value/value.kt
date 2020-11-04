@@ -1,12 +1,31 @@
 package leo14.lambda.value
 
+import leo14.ScriptLine
 import leo14.lambda.Term
 import leo14.lambda.term
+import leo14.lineTo
+import leo14.nativeScriptLine
+import leo14.script
 
-sealed class Value<out T>
+sealed class Value<out T> {
+	override fun toString() = scriptLine { nativeScriptLine }.toString()
+}
 
-data class NativeValue<T>(val native: T) : Value<T>()
-data class FunctionValue<T>(val function: Function<T>) : Value<T>()
+data class NativeValue<T>(val native: T) : Value<T>() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionValue<T>(val function: Function<T>) : Value<T>() {
+	override fun toString() = super.toString()
+}
+
+fun <T> Value<T>.scriptLine(nativeScriptLine: T.() -> ScriptLine): ScriptLine =
+	"value" lineTo script(
+		when (this) {
+			is NativeValue -> "native" lineTo script(native.nativeScriptLine())
+			is FunctionValue -> function.scriptLine(nativeScriptLine)
+		}
+	)
 
 fun <T> value(native: T): Value<T> = NativeValue(native)
 fun <T> value(function: Function<T>): Value<T> = FunctionValue(function)
