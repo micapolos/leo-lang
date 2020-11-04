@@ -15,7 +15,6 @@ import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
-import leo21.prim.scriptLine
 import leo21.type.ChoiceType
 import leo21.type.StructType
 import leo21.type.Type
@@ -32,7 +31,7 @@ infix fun Term<Prim>.of(type: Type) = Typed(this, type)
 
 val Typed.scriptLine
 	get() =
-		"typed" lineTo term.script { scriptLine }.plus("of" lineTo type.script)
+		"typed" lineTo term.script { reflectScriptLine }.plus("of" lineTo type.script)
 
 fun typed(typed: StructTyped) = Typed(typed.term, type(typed.struct))
 fun typed(typed: ChoiceTyped) = Typed(typed.termOrNull!!, type(typed.choice))

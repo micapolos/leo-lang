@@ -4,11 +4,11 @@ import leo14.ScriptLine
 import leo14.lambda.Term
 import leo14.lambda.term
 import leo14.lineTo
-import leo14.nativeScriptLine
+import leo14.anyReflectScriptLine
 import leo14.script
 
 sealed class Value<out T> {
-	override fun toString() = scriptLine { nativeScriptLine }.toString()
+	override fun toString() = scriptLine { anyReflectScriptLine }.toString()
 }
 
 data class NativeValue<T>(val native: T) : Value<T>() {

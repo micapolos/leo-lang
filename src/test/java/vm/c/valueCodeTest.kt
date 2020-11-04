@@ -11,7 +11,7 @@ class ExpressionCodeTest {
 	@Test
 	fun code() {
 		value(123).bodyCode.assertEqualTo("int v0 = 123; return v0;")
-		array().bodyCode.assertEqualTo("{  }")
+		array().bodyCode.assertEqualTo("void[0] v0 = {  }; return v0;")
 		array(value(10), value(20))
 			.bodyCode
 			.assertEqualTo("int v0 = 10; int v1 = 20; int[2] v2 = { v0, v1 }; return v2;")

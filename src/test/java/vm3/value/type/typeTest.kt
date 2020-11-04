@@ -23,6 +23,6 @@ class TypeTest {
 		10f.value.plus(20f.value).type.assertEqualTo(f32)
 
 		f32.gives(argument).give(10f.value).type.assertEqualTo(f32)
-		f32.gives(struct("x" to argument)).give(10f.value).type.assertEqualTo(struct("x" to f32))
+//		f32.gives(struct("x" to argument)).give(10f.value).type.assertEqualTo(struct("x" to f32))
 	}
 }

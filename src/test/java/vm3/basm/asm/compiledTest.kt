@@ -1,6 +1,6 @@
 package vm3.basm.asm
 
-import leo.base.assertEqualTo
+import leo.base.assertNotNull
 import vm3.basm.block
 import kotlin.test.Test
 
@@ -9,6 +9,6 @@ class InstrTest {
 	fun prim() {
 		block()
 			.compiled
-			.assertEqualTo(null)
+			.assertNotNull
 	}
 }

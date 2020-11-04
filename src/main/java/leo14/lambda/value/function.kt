@@ -12,12 +12,12 @@ import leo14.lambda.freeVariableCount
 import leo14.lambda.invoke
 import leo14.lambda.script
 import leo14.lineTo
-import leo14.nativeScriptLine
+import leo14.anyReflectScriptLine
 import leo14.script
 import kotlin.math.min
 
 data class Function<out T>(val scope: Scope<T>, val bodyTerm: Term<T>) {
-	override fun toString() = scriptLine { nativeScriptLine }.toString()
+	override fun toString() = scriptLine { anyReflectScriptLine }.toString()
 }
 
 fun <T> Function<T>.scriptLine(nativeScriptLine: T.() -> ScriptLine): ScriptLine =

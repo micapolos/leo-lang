@@ -3,15 +3,18 @@ package leo14.lambda
 import leo13.Index
 import leo14.Script
 import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.indentString
 import leo14.line
 import leo14.lineTo
 import leo14.literal
+import leo14.anyReflectScriptLine
 import leo14.plus
 import leo14.script
 
-sealed class Term<out T> {
+sealed class Term<out T> : Scriptable() {
 	override fun toString() = script { line(literal(toString())) }.indentString
+	override val reflectScriptLine: ScriptLine get() = "term" lineTo script { anyReflectScriptLine }
 }
 
 data class NativeTerm<T>(val native: T) : Term<T>() {

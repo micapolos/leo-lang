@@ -487,7 +487,3 @@ fun <R : Any> ScriptField.match(name: String, fn: (Script) -> R?): R? =
 	ifOrNull(string == name) {
 		fn(rhs)
 	}
-
-val Any?.nativeScriptLine: ScriptLine
-	get() =
-		"any" lineTo script(literal(toString()))

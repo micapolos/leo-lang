@@ -1,9 +1,9 @@
 package vm.c
 
-import leo.base.assertEqualTo
+import leo.base.assertNotNull
+import vm.get
 import vm.of
 import vm.value
-import vm.get
 import kotlin.test.Test
 
 class ProgramTest {
@@ -17,6 +17,6 @@ class ProgramTest {
 			"center" of value(
 				"point" of point))
 		val area = circle["center"]["point"]["x"]
-		area.bodyCode.clangFormat.assertEqualTo("")
+		area.bodyCode.clangFormat.assertNotNull
 	}
 }

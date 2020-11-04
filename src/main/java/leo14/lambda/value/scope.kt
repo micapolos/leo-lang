@@ -10,13 +10,13 @@ import leo14.lambda.ApplicationTerm
 import leo14.lambda.NativeTerm
 import leo14.lambda.Term
 import leo14.lambda.VariableTerm
-import leo14.nativeScriptLine
+import leo14.anyReflectScriptLine
 import leo14.reflectOrEmptyScriptLine
 
 val applyTailCallOptimization = true
 
 data class Scope<out T>(val valueStack: Stack<Value<T>>) {
-	override fun toString() = scriptLine { nativeScriptLine }.toString()
+	override fun toString() = scriptLine { anyReflectScriptLine }.toString()
 }
 
 fun <T> Scope<T>.scriptLine(nativeScriptLine: T.() -> ScriptLine): ScriptLine =
