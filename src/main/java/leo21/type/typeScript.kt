@@ -8,6 +8,7 @@ import leo14.ScriptLine
 import leo14.lineTo
 import leo14.plus
 import leo14.script
+import leo14.scriptLine
 
 val Type.script: Script
 	get() =
@@ -31,16 +32,16 @@ val Stack<Line>.script
 val Line.scriptLine: ScriptLine
 	get() =
 		when (this) {
-			StringLine -> "text" lineTo script()
-			DoubleLine -> "number" lineTo script()
+			StringLine -> "text".scriptLine
+			DoubleLine -> "number".scriptLine
 			is FieldLine -> field.scriptLine
-			is ArrowLine -> "function" lineTo arrow.script
+			is ArrowLine -> arrow.scriptLine
 		}
 
 val Field.scriptLine: ScriptLine
 	get() =
 		name lineTo rhs.script
 
-val Arrow.script: Script
+val Arrow.scriptLine: ScriptLine
 	get() =
-		lhs.script.plus("doing" lineTo rhs.script)
+		"function" lineTo lhs.script.plus("doing" lineTo rhs.script)

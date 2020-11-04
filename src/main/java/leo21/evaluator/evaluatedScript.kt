@@ -16,7 +16,6 @@ import leo21.prim.Prim
 import leo21.prim.double
 import leo21.prim.nilPrim
 import leo21.prim.string
-import leo21.type.Arrow
 import leo21.type.ArrowLine
 import leo21.type.Choice
 import leo21.type.ChoiceType
@@ -30,7 +29,7 @@ import leo21.type.StructType
 import leo21.type.Type
 import leo21.type.isStatic
 import leo21.type.linkOrNull
-import leo21.type.script
+import leo21.type.scriptLine
 
 fun script(value: Value<Prim>, type: Type): Script =
 	when (type) {
@@ -64,11 +63,8 @@ fun scriptLine(value: Value<Prim>, line: Line): ScriptLine =
 		StringLine -> line(literal(value.native.string))
 		DoubleLine -> line(literal(value.native.double))
 		is FieldLine -> scriptLine(value, line.field)
-		is ArrowLine -> scriptLine(line.arrow)
+		is ArrowLine -> line.arrow.scriptLine
 	}
 
 fun scriptLine(value: Value<Prim>, field: Field): ScriptLine =
 	field.name lineTo script(value, field.rhs)
-
-fun scriptLine(arrow: Arrow): ScriptLine =
-	"function" lineTo arrow.script
