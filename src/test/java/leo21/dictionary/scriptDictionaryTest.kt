@@ -8,7 +8,6 @@ import leo14.literal
 import leo14.script
 import leo21.compiled.emptyBindings
 import leo21.type.arrowTo
-import leo21.type.doubleLine
 import leo21.type.doubleType
 import leo21.type.lineTo
 import leo21.type.type
@@ -22,6 +21,7 @@ class ScriptDictionaryTest {
 		emptyBindings
 			.dictionary(
 				script(
+					// TODO: We don't want "defines" at the top level.
 					"define" lineTo script(
 						"x" lineTo script("number"),
 						"does" lineTo script("given")),
