@@ -15,8 +15,6 @@ import leo14.fieldOrNull
 import leo14.isEmpty
 import leo14.lineSeq
 
-// TODO: Reimplement using TypeCompiler for incremental compilation
-
 val Script.type: Type
 	get() =
 		emptyTypeCompiler.fold(lineSeq.reverse) { plus(it) }.type
