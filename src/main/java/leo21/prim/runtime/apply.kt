@@ -1,4 +1,4 @@
-package leo21.prim.evaluate
+package leo21.prim.runtime
 
 import leo14.lambda.Term
 import leo14.lambda.value.Value
@@ -21,8 +21,8 @@ fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 		is NilPrim -> null
 		is StringPrim -> null
 		is DoublePrim -> null
-		DoublePlusDoublePrim -> rhs.applyDoublePlusDouble
-		DoubleMinusDoublePrim -> rhs.applyDoubleMinusDouble
-		DoubleTimesDoublePrim -> rhs.applyDoubleTimesDouble
-		StringPlusStringPrim -> rhs.applyStringPlusString
+		DoublePlusDoublePrim -> rhs.resolveDoublePlusDouble
+		DoubleMinusDoublePrim -> rhs.resolveDoubleMinusDouble
+		DoubleTimesDoublePrim -> rhs.resolveDoubleTimesDouble
+		StringPlusStringPrim -> rhs.resolveStringPlusString
 	}!!

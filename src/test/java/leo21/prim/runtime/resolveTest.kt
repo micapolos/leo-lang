@@ -1,4 +1,4 @@
-package leo21.prim.evaluate
+package leo21.prim.runtime
 
 import leo.base.assertEqualTo
 import leo14.lambda.value.plus
@@ -11,7 +11,7 @@ class ApplyTest {
 	fun doublePlusDouble() {
 		value(prim(10.0))
 			.plus(value(prim(20.0)))
-			.applyDoublePlusDouble
+			.resolveDoublePlusDouble
 			.assertEqualTo(value(prim(30.0)))
 	}
 
@@ -19,7 +19,7 @@ class ApplyTest {
 	fun doubleMinusDouble() {
 		value(prim(30.0))
 			.plus(value(prim(20.0)))
-			.applyDoubleMinusDouble
+			.resolveDoubleMinusDouble
 			.assertEqualTo(value(prim(10.0)))
 	}
 
@@ -27,7 +27,7 @@ class ApplyTest {
 	fun doubleTimesDouble() {
 		value(prim(30.0))
 			.plus(value(prim(20.0)))
-			.applyDoubleTimesDouble
+			.resolveDoubleTimesDouble
 			.assertEqualTo(value(prim(600.0)))
 	}
 
@@ -35,7 +35,7 @@ class ApplyTest {
 	fun stringPlusString() {
 		value(prim("Hello, "))
 			.plus(value(prim("world!")))
-			.applyStringPlusString
+			.resolveStringPlusString
 			.assertEqualTo(value(prim("Hello, world!")))
 	}
 }

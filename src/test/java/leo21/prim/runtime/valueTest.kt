@@ -1,4 +1,4 @@
-package leo21.prim.evaluate
+package leo21.prim.runtime
 
 import leo.base.assertEqualTo
 import leo14.lambda.invoke
@@ -11,7 +11,7 @@ import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.prim
 import kotlin.test.Test
-import leo21.prim.evaluate.value as primValue
+import leo21.prim.runtime.value as primValue
 
 class EvaluateTest {
 	@Test
