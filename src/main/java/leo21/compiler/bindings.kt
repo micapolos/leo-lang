@@ -29,7 +29,7 @@ data class Bindings(val bindingStack: Stack<Binding>) : Scriptable() {
 
 val emptyBindings = Bindings(stack())
 fun Bindings.push(binding: Binding) = Bindings(bindingStack.push(binding))
-fun Bindings.push(type: Type) = push(GivenBinding(type))
+fun Bindings.push(type: Type) = push(givenBinding(type))
 
 fun Bindings.resolveOrNull(typed: Typed): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {
