@@ -25,11 +25,11 @@ import leo21.typed.plus
 import leo21.typed.typed
 
 data class Compiled(
-	val scope: Scope,
+	val bindings: Bindings,
 	val body: Typed
 )
 
-fun Scope.typed(script: Script): Typed =
+fun Bindings.typed(script: Script): Typed =
 	Compiled(this, typed()).plus(script).body
 
 fun Compiled.plus(script: Script): Compiled =
@@ -58,7 +58,7 @@ fun Compiled.plusKeywordOrNull(scriptField: ScriptField): Compiled? =
 	}
 
 fun Compiled.plusDo(script: Script): Compiled =
-	scope.push(body.type).typed(script).let { typed ->
+	bindings.push(body.type).typed(script).let { typed ->
 		setBody(
 			Typed(
 				fn(typed.term).invoke(body.term),
@@ -66,7 +66,7 @@ fun Compiled.plusDo(script: Script): Compiled =
 	}
 
 fun Compiled.plusFunction(script: Script): Compiled =
-	setBody(body.plus(lineTyped(scope.arrowTyped(script))))
+	setBody(body.plus(lineTyped(bindings.arrowTyped(script))))
 
 fun Compiled.plusMake(script: Script): Compiled =
 	setBody(body.make(script.onlyStringOrNull.notNullOrError("make syntax error")))
@@ -76,17 +76,17 @@ fun Compiled.plusNonKeyword(scriptField: ScriptField): Compiled =
 	else resolvePlus(scriptField).resolve
 
 fun Compiled.resolvePlus(scriptField: ScriptField): Compiled =
-	plus(scriptField.string lineTo scope.typed(scriptField.rhs))
+	plus(scriptField.string lineTo bindings.typed(scriptField.rhs))
 
 fun Compiled.plusOrNull(name: String): Compiled? =
-	if (body.type == type()) scope.resolveOrNull(name)?.let { setBody(it) }
+	if (body.type == type()) bindings.resolveOrNull(name)?.let { setBody(it) }
 	else body.getOrNull(name)?.let { setBody(it) }
 
 val Compiled.resolve
 	get() =
-		setBody(scope.resolve(body))
+		setBody(bindings.resolve(body))
 
 fun Compiled.plus(typed: LineTyped): Compiled =
-	setBody(scope.resolve(body.plus(typed)))
+	setBody(bindings.resolve(body.plus(typed)))
 
 fun Compiled.setBody(body: Typed) = copy(body = body)

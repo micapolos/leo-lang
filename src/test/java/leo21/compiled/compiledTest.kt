@@ -12,14 +12,14 @@ class CompiledTest {
 	@Test
 	fun make() {
 		Compiled(
-			emptyScope,
+			emptyBindings,
 			typed(
 				"x" lineTo typed(10.0),
 				"y" lineTo typed(20.0)))
 			.plus("make" lineTo script("point"))
 			.assertEqualTo(
 				Compiled(
-					emptyScope,
+					emptyBindings,
 					typed(
 						"x" lineTo typed(10.0),
 						"y" lineTo typed(20.0))

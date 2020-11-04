@@ -15,7 +15,7 @@ import kotlin.test.Test
 class ScopeTest {
 	@Test
 	fun resolveStringPlus() {
-		emptyScope
+		emptyBindings
 			.resolve(
 				term1.plus(term2)
 					.of(stringType.plus("plus" lineTo stringType)))

@@ -1,13 +1,14 @@
 package leo21.evaluated
 
+import leo14.lambda.value.Scope
 import leo14.lambda.value.emptyScope
+import leo21.compiled.Bindings
+import leo21.compiled.emptyBindings
 import leo21.prim.Prim
-import leo14.lambda.value.Scope as ValueScope
-import leo21.compiled.Scope as CompiledScope
 
 data class Context(
-	val primScope: ValueScope<Prim>,
-	val compiledScope: CompiledScope
+	val scope: Scope<Prim>,
+	val bindings: Bindings
 )
 
-val emptyContext = Context(emptyScope(), leo21.compiled.emptyScope)
+val emptyContext = Context(emptyScope(), emptyBindings)

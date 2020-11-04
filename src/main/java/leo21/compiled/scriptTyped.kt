@@ -5,4 +5,4 @@ import leo21.typed.Typed
 
 val Script.typed: Typed
 	get() =
-		emptyScope.typed(this)
+		emptyBindings.typed(this)

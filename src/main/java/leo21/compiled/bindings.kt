@@ -20,33 +20,31 @@ import leo21.type.type
 import leo21.typed.ArrowTyped
 import leo21.typed.Typed
 import leo21.typed.of
-import leo21.typed.reference
-import leo21.typed.resolve
 import leo21.typed.resolveOrNull
 
-data class Scope(val bindingStack: Stack<Binding>)
+data class Bindings(val bindingStack: Stack<Binding>)
 
-val emptyScope = Scope(stack())
-fun Scope.push(binding: Binding) = Scope(bindingStack.push(binding))
-fun Scope.push(type: Type) = push(TypeBinding(type))
+val emptyBindings = Bindings(stack())
+fun Bindings.push(binding: Binding) = Bindings(bindingStack.push(binding))
+fun Bindings.push(type: Type) = push(TypeBinding(type))
 
-fun Scope.resolveOrNull(name: String): Typed? =
+fun Bindings.resolveOrNull(name: String): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {
 		value.resolveOrNull(index, name)
 	}
 
-fun Scope.resolveOrNull(typed: Typed): Typed? =
+fun Bindings.resolveOrNull(typed: Typed): Typed? =
 	bindingStack.seq.indexed.mapFirstOrNull {
 		value.resolveOrNull(index, typed)
 	}
 
-fun Scope.resolve(typed: Typed): Typed =
+fun Bindings.resolve(typed: Typed): Typed =
 	null
 		?: resolveOrNull(typed)
 		?: arg0<Prim>().of(typed.type).resolveOrNull?.let { fn(it.term).invoke(typed.term).of(it.type) }
 		?: typed
 
-fun Scope.arrowTyped(script: Script): ArrowTyped =
+fun Bindings.arrowTyped(script: Script): ArrowTyped =
 	script.linkOrNull.notNullOrError("function syntax error").let { link ->
 		link.line.fieldOrNull.notNullOrError("function syntax error").let { field ->
 			if (field.string != "doing") error("function syntax error")
