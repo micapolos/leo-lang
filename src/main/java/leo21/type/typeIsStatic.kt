@@ -19,9 +19,13 @@ val Line.isStatic: Boolean
 			StringLine -> false
 			DoubleLine -> false
 			is FieldLine -> field.isStatic
-			is ArrowLine -> false // TODO???
+			is ArrowLine -> arrow.isStatic
 		}
 
 val Field.isStatic: Boolean
+	get() =
+		rhs.isStatic
+
+val Arrow.isStatic: Boolean
 	get() =
 		rhs.isStatic
