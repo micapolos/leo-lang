@@ -3,7 +3,6 @@ package leo21.compiler
 import leo.base.notNullIf
 import leo14.ScriptLine
 import leo14.Scriptable
-import leo14.anyReflectScriptLine
 import leo14.lambda.arg
 import leo14.lambda.invoke
 import leo14.lineTo
@@ -19,8 +18,8 @@ import leo21.typed.make
 sealed class Binding : Scriptable() {
 	override val reflectScriptLine: ScriptLine
 		get() = "binding" lineTo script(when (this) {
-			is ConstantBinding -> "constant" lineTo script(arrow.anyReflectScriptLine)
-			is FunctionBinding -> "function" lineTo script(arrow.anyReflectScriptLine)
+			is ConstantBinding -> "constant" lineTo script(arrow.reflectScriptLine)
+			is FunctionBinding -> "function" lineTo script(arrow.reflectScriptLine)
 			is GivenBinding -> "given" lineTo script(type.reflectScriptLine)
 		})
 }
