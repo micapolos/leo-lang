@@ -11,7 +11,7 @@ class ApplyTest {
 	fun doublePlusDouble() {
 		value(prim(10.0))
 			.plus(value(prim(20.0)))
-			.resolveDoublePlusDouble
+			.applyDoublePlusDouble
 			.assertEqualTo(value(prim(30.0)))
 	}
 
@@ -19,7 +19,7 @@ class ApplyTest {
 	fun doubleMinusDouble() {
 		value(prim(30.0))
 			.plus(value(prim(20.0)))
-			.resolveDoubleMinusDouble
+			.applyDoubleMinusDouble
 			.assertEqualTo(value(prim(10.0)))
 	}
 
@@ -27,7 +27,7 @@ class ApplyTest {
 	fun doubleTimesDouble() {
 		value(prim(30.0))
 			.plus(value(prim(20.0)))
-			.resolveDoubleTimesDouble
+			.applyDoubleTimesDouble
 			.assertEqualTo(value(prim(600.0)))
 	}
 
@@ -35,7 +35,7 @@ class ApplyTest {
 	fun stringPlusString() {
 		value(prim("Hello, "))
 			.plus(value(prim("world!")))
-			.resolveStringPlusString
+			.applyStringPlusString
 			.assertEqualTo(value(prim("Hello, world!")))
 	}
 }
