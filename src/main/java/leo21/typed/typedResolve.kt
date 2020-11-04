@@ -1,12 +1,13 @@
 package leo21.typed
 
+import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo14.lambda.invoke
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoubleTimesDoublePrim
-import leo21.prim.StringPlusStringPrim
 import leo21.prim.Prim
+import leo21.prim.StringPlusStringPrim
 import leo21.type.Line
 import leo21.type.Type
 import leo21.type.doubleLine
@@ -34,6 +35,15 @@ val Typed.resolveOrNull: Typed?
 			?: resolveBinaryOp(doubleLine, DoubleTimesDoublePrim, "times", doubleType)
 			?: resolveBinaryOp(stringLine, StringPlusStringPrim, "plus", stringType)
 
+val Typed.resolveGetOrNull: Typed?
+	get() =
+		linkOrNull?.run {
+			head.fieldTypedOrNull?.let { fieldTyped ->
+				ifOrNull(fieldTyped.rhsTyped.type == type()) {
+					tail.getOrNull(fieldTyped.field.name)
+				}
+			}
+		}
 
 val Typed.resolve: Typed
 	get() =

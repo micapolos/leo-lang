@@ -22,6 +22,7 @@ import leo21.typed.lineTo
 import leo21.typed.lineTyped
 import leo21.typed.make
 import leo21.typed.plus
+import leo21.typed.resolveGetOrNull
 import leo21.typed.typed
 
 data class Compiled(
@@ -72,19 +73,14 @@ fun Compiled.plusMake(script: Script): Compiled =
 	setBody(body.make(script.onlyStringOrNull.notNullOrError("make syntax error")))
 
 fun Compiled.plusNonKeyword(scriptField: ScriptField): Compiled =
-	if (scriptField.rhs.isEmpty) plusOrNull(scriptField.string)!!
-	else resolvePlus(scriptField).resolve
+	resolvePlus(scriptField).resolve
 
 fun Compiled.resolvePlus(scriptField: ScriptField): Compiled =
 	plus(scriptField.string lineTo bindings.typed(scriptField.rhs))
 
-fun Compiled.plusOrNull(name: String): Compiled? =
-	if (body.type == type()) bindings.resolveOrNull(name)?.let { setBody(it) }
-	else body.getOrNull(name)?.let { setBody(it) }
-
 val Compiled.resolve
 	get() =
-		setBody(bindings.resolve(body))
+		setBody(body.resolveGetOrNull ?: bindings.resolve(body))
 
 fun Compiled.plus(typed: LineTyped): Compiled =
 	setBody(bindings.resolve(body.plus(typed)))

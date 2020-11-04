@@ -91,6 +91,10 @@ val Typed.link: Link<Typed, LineTyped>
 	get() =
 		struct.link.run { (tail.term of type(tail.struct)) linkTo head }
 
+val Typed.linkOrNull: Link<Typed, LineTyped>?
+	get() =
+		structOrNull?.linkOrNull?.run { (tail.term of type(tail.struct)) linkTo head }
+
 val StructTyped.decompileLinkOrNull: Link<StructTyped, LineTyped>?
 	get() =
 		struct.lineStack.linkOrNull?.let { link ->

@@ -29,7 +29,12 @@ fun Binding.resolveOrNull(index: Int, typed: Typed): Typed? =
 		is FunctionBinding -> notNullIf(typed.type == arrow.lhs) {
 			Typed(arg<Prim>(index).invoke(typed.term), arrow.rhs)
 		}
-		is GivenBinding -> null
+		is GivenBinding -> typed.type.onlyNameOrNull?.let { name ->
+			when (name) {
+				"given" -> Typed(arg(index), type).make("given")
+				else -> Typed(arg(index), type).make("given").getOrNull(name)
+			}
+		}
 	}
 
 fun Binding.resolveOrNull(index: Int, name: String): Typed? =
@@ -37,6 +42,6 @@ fun Binding.resolveOrNull(index: Int, name: String): Typed? =
 		is ConstantBinding -> null
 		is FunctionBinding -> null
 		is GivenBinding ->
-			if (name == "given") Typed(arg(index), type).make("given")
+			if (name == "given") Typed(arg(index), type).make("given").getOrNull(name)
 			else Typed(arg(index), type).make("given").getOrNull(name)
 	}
