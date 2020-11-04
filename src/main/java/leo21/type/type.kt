@@ -2,8 +2,10 @@ package leo21.type
 
 import leo.base.fold
 import leo.base.notNullOrError
+import leo.base.orNullIf
 import leo13.Stack
 import leo13.any
+import leo13.onlyOrNull
 import leo13.push
 import leo13.stack
 
@@ -79,3 +81,8 @@ val Line.name: String
 
 fun Type.make(name: String): Type =
 	type(name lineTo this)
+
+val Type.onlyNameOrNull: String?
+	get() =
+		structOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.orNullIf { rhs != type() }?.name
+
