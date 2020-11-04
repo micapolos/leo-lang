@@ -9,14 +9,14 @@ import leo16.term.julia.eval
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.Prim
 import leo21.prim.prim
+import leo21.term.plus
 import kotlin.test.Test
 
 class EvalTest {
 	@Test
 	fun doublePlus() {
 		term<Prim>(DoubleMinusDoublePrim)
-			.invoke(term(prim(5.0)))
-			.invoke(term(prim(3.0)))
+			.invoke(term(prim(5.0)).plus(term(prim(3.0))))
 			.map(Prim::julia)
 			.code
 			.eval

@@ -28,5 +28,4 @@ val Prim.julia: Julia
 			StringPlusStringPrim -> op2Julia("+")
 		}
 
-fun op2Julia(op: String) = julia("a->b->a${op}b")
-fun op2Julia(lhs: Julia, op: String) = julia("a->($lhs)${op}a")
+fun op2Julia(op: String) = julia("x->x(a->b->a)${op}x(a->b->b)")

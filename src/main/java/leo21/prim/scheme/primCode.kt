@@ -22,11 +22,14 @@ val Prim.code: Code
 			is NilPrim -> nilCode
 			is StringPrim -> string.code
 			is DoublePrim -> double.code
-			DoublePlusDoublePrim -> op2Code("+")
-			DoubleMinusDoublePrim -> op2Code("-")
-			DoubleTimesDoublePrim -> op2Code("*")
-			StringPlusStringPrim -> op2Code("string-append")
+			DoublePlusDoublePrim -> fn2Code("+")
+			DoubleMinusDoublePrim -> fn2Code("-")
+			DoubleTimesDoublePrim -> fn2Code("*")
+			StringPlusStringPrim -> fn2Code("string-append")
 		}
 
-fun op2Code(name: String): Code = code("(lambda (a) (lambda (b) ($name a b)))")
-fun op2Code(lhs: Code, name: String): Code = code("(lambda (a) ($name $lhs b))")
+val firstCode = code("(lambda (a) (lambda (b) a))")
+val secondCode = code("(lambda (a) (lambda (b) b))")
+
+fun fn2Code(op: String) =
+	code("(lambda (x) ($op (x $firstCode) (x $secondCode)))")

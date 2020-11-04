@@ -4,6 +4,7 @@ import leo14.lambda.code.code
 import leo14.lambda.java.Native
 import leo14.lambda.java.native
 import leo14.lambda.java.nullNative
+import leo14.lambda.julia.julia
 import leo14.literalString
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
@@ -23,8 +24,14 @@ val Prim.native: Native
 			is NilPrim -> nullNative
 			is StringPrim -> string.native
 			is DoublePrim -> double.native
-			DoublePlusDoublePrim -> native(code("fn(a -> fn(b -> ((Double)a) + ((Double)b)))"))
-			DoubleMinusDoublePrim -> native(code("fn(a -> fn(b -> ((Double)a) - ((Double)b)))"))
-			DoubleTimesDoublePrim -> native(code("fn(a -> fn(b -> ((Double)a) * ((Double)b)))"))
-			StringPlusStringPrim -> native(code("fn(a -> fn(b -> ((String)a) + ((String)b)))"))
+			DoublePlusDoublePrim -> op2Native("+", "Double")
+			DoubleMinusDoublePrim -> op2Native("-", "Double")
+			DoubleTimesDoublePrim -> op2Native("*", "Double")
+			StringPlusStringPrim -> op2Native("+", "String")
 		}
+
+val lhs = "fn(a->fn(b->a))"
+val rhs = "fn(a->fn(b->b))"
+
+fun op2Native(op: String, type: String) =
+	native(code("fn(x->($type)apply(x, $lhs)${op}(${type})apply(x, $rhs))"))

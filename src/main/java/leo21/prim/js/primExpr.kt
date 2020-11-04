@@ -4,8 +4,10 @@ import leo14.js.ast.Expr
 import leo14.js.ast.NULL
 import leo14.js.ast.expr
 import leo14.js.ast.id
+import leo14.js.ast.invoke
 import leo14.js.ast.lambda
 import leo14.js.ast.op
+import leo14.lambda.runtime.invoke
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoublePrim
@@ -27,5 +29,7 @@ val Prim.expr: Expr
 			StringPlusStringPrim -> op2Expr("*")
 		}
 
-fun op2Expr(op: String): Expr = expr(lambda("a", expr(lambda("b", expr(expr(id("a")).op(op, expr(id("b"))))))))
-fun op2Expr(lhs: Expr, op: String): Expr = expr(lambda("a", expr(lhs.op(op, expr(id("b"))))))
+val lhsExpr = expr(lambda("a", expr(lambda("b", expr(id("a"))))))
+val rhsExpr = expr(lambda("a", expr(lambda("b", expr(id("b"))))))
+
+fun op2Expr(op: String): Expr = expr(lambda("x", expr(expr(id("x")).invoke(lhsExpr).op(op, expr(id("x")).invoke(rhsExpr)))))

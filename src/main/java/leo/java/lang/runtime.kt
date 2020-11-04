@@ -5,7 +5,7 @@ fun execExpectingExitCode(expectedExitCode: Int, vararg command: String): String
 	val process = runtime.exec(command)
 	val string = process.inputStream.reader().readText()
 	val exitCode = process.waitFor()
-	if (exitCode != expectedExitCode) error("exec(${command.contentToString()}) = $exitCode")
+	if (exitCode != expectedExitCode) error("exec(${command.contentToString()}) = $exitCode\n${process.errorStream.reader().readText()}")
 	else return string
 }
 
