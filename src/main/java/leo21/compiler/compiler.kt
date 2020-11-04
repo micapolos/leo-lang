@@ -25,7 +25,7 @@ import leo21.typed.plus
 import leo21.typed.resolveGetOrNull
 import leo21.typed.typed
 
-data class Compiled(
+data class Compiler(
 	val bindings: Bindings,
 	val body: Typed
 ) : Scriptable() {
@@ -35,26 +35,26 @@ data class Compiled(
 }
 
 fun Bindings.typed(script: Script): Typed =
-	Compiled(this, typed()).plus(script).body
+	Compiler(this, typed()).plus(script).body
 
-fun Compiled.plus(script: Script): Compiled =
+fun Compiler.plus(script: Script): Compiler =
 	fold(script.lineSeq.reverse) { plus(it) }
 
-fun Compiled.plus(scriptLine: ScriptLine): Compiled =
+fun Compiler.plus(scriptLine: ScriptLine): Compiler =
 	when (scriptLine) {
 		is LiteralScriptLine -> plus(scriptLine.literal)
 		is FieldScriptLine -> plus(scriptLine.field)
 	}
 
-fun Compiled.plus(literal: Literal): Compiled =
+fun Compiler.plus(literal: Literal): Compiler =
 	plus(lineTyped(literal)).resolve
 
-fun Compiled.plus(scriptField: ScriptField): Compiled =
+fun Compiler.plus(scriptField: ScriptField): Compiler =
 	null
 		?: plusKeywordOrNull(scriptField)
 		?: plusNonKeyword(scriptField)
 
-fun Compiled.plusKeywordOrNull(scriptField: ScriptField): Compiled? =
+fun Compiler.plusKeywordOrNull(scriptField: ScriptField): Compiler? =
 	when (scriptField.string) {
 		"do" -> plusDo(scriptField.rhs)
 		"function" -> plusFunction(scriptField.rhs)
@@ -62,7 +62,7 @@ fun Compiled.plusKeywordOrNull(scriptField: ScriptField): Compiled? =
 		else -> null
 	}
 
-fun Compiled.plusDo(script: Script): Compiled =
+fun Compiler.plusDo(script: Script): Compiler =
 	bindings.push(body.type).typed(script).let { typed ->
 		setBody(
 			Typed(
@@ -70,23 +70,23 @@ fun Compiled.plusDo(script: Script): Compiled =
 				typed.type))
 	}
 
-fun Compiled.plusFunction(script: Script): Compiled =
+fun Compiler.plusFunction(script: Script): Compiler =
 	setBody(body.plus(lineTyped(bindings.arrowTyped(script))))
 
-fun Compiled.plusMake(script: Script): Compiled =
+fun Compiler.plusMake(script: Script): Compiler =
 	setBody(body.make(script.onlyStringOrNull.notNullOrError("make syntax error")))
 
-fun Compiled.plusNonKeyword(scriptField: ScriptField): Compiled =
+fun Compiler.plusNonKeyword(scriptField: ScriptField): Compiler =
 	resolvePlus(scriptField).resolve
 
-fun Compiled.resolvePlus(scriptField: ScriptField): Compiled =
+fun Compiler.resolvePlus(scriptField: ScriptField): Compiler =
 	plus(scriptField.string lineTo bindings.typed(scriptField.rhs))
 
-val Compiled.resolve
+val Compiler.resolve
 	get() =
 		setBody(body.resolveGetOrNull ?: bindings.resolve(body))
 
-fun Compiled.plus(typed: LineTyped): Compiled =
+fun Compiler.plus(typed: LineTyped): Compiler =
 	setBody(bindings.resolve(body.plus(typed)))
 
-fun Compiled.setBody(body: Typed) = copy(body = body)
+fun Compiler.setBody(body: Typed) = copy(body = body)

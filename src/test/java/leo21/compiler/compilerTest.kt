@@ -8,17 +8,17 @@ import leo21.typed.make
 import leo21.typed.typed
 import kotlin.test.Test
 
-class CompiledTest {
+class CompilerTest {
 	@Test
 	fun make() {
-		Compiled(
+		Compiler(
 			emptyBindings,
 			typed(
 				"x" lineTo typed(10.0),
 				"y" lineTo typed(20.0)))
 			.plus("make" lineTo script("point"))
 			.assertEqualTo(
-				Compiled(
+				Compiler(
 					emptyBindings,
 					typed(
 						"x" lineTo typed(10.0),
