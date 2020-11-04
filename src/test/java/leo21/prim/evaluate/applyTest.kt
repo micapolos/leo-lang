@@ -35,7 +35,7 @@ class ApplyTest {
 	fun stringPlusString() {
 		value(prim("Hello, "))
 			.plus(value(prim("world!")))
-			.applyDoubleTimesDouble
+			.applyStringPlusString
 			.assertEqualTo(value(prim("Hello, world!")))
 	}
 }

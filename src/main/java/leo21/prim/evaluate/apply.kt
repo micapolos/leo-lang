@@ -14,10 +14,10 @@ val Value<Prim>.applyDoublePlusDouble
 		applyOp2(Prim::double, Prim::double, Double::prim, Double::plus)
 val Value<Prim>.applyDoubleMinusDouble
 	get() =
-		applyOp2(Prim::double, Prim::double, Double::prim, Double::plus)
+		applyOp2(Prim::double, Prim::double, Double::prim, Double::minus)
 val Value<Prim>.applyDoubleTimesDouble
 	get() =
-		applyOp2(Prim::double, Prim::double, Double::prim, Double::plus)
+		applyOp2(Prim::double, Prim::double, Double::prim, Double::times)
 val Value<Prim>.applyStringPlusString
 	get() =
 		applyOp2(Prim::string, Prim::string, String::prim, String::plus)
