@@ -9,7 +9,7 @@ import leo14.lambda.value.value
 import leo14.lineTo
 import leo14.script
 import leo21.prim.Prim
-import leo21.prim.prim
+import leo21.prim.nilPrim
 import leo21.type.Type
 import leo21.type.type
 import leo21.typed.Typed
@@ -22,7 +22,7 @@ data class Evaluated(val value: Value<Prim>, val type: Type) : Scriptable() {
 
 infix fun Value<Prim>.of(type: Type) = Evaluated(this, type)
 
-val emptyEvaluated = Evaluated(value(prim(0)), type())
+val emptyEvaluated = Evaluated(value(nilPrim), type())
 
 val Evaluated.typed: Typed
 	get() =
