@@ -13,7 +13,6 @@ import leo21.type.lineTo
 import leo21.type.stringType
 import leo21.typed.LineTyped
 import leo21.typed.evaluated
-import leo21.typed.line
 import leo21.typed.lineTo
 import leo21.typed.typed
 import kotlin.test.Test
