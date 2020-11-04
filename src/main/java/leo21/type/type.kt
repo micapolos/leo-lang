@@ -29,7 +29,6 @@ data class ChoiceType(val choice: Choice) : Type() {
 
 data class Struct(val lineStack: Stack<Line>)
 data class Choice(val lineStack: Stack<Line>)
-data class Arrow(val lhs: Type, val rhs: Type)
 
 sealed class Line
 object StringLine : Line()
@@ -38,6 +37,7 @@ data class FieldLine(val field: Field) : Line()
 data class ArrowLine(val arrow: Arrow) : Line()
 
 data class Field(val name: String, val rhs: Type)
+data class Arrow(val lhs: Type, val rhs: Type)
 
 fun type(struct: Struct): Type = StructType(struct)
 fun type(choice: Choice): Type = ChoiceType(choice)
@@ -45,8 +45,6 @@ fun type(choice: Choice): Type = ChoiceType(choice)
 val Type.structOrNull get() = (this as? StructType)?.struct
 val Type.choiceOrNull get() = (this as? ChoiceType)?.choice
 
-val Line.isString: Boolean get() = this is StringLine
-val Line.isDouble: Boolean get() = this is DoubleLine
 val Line.arrowOrNull: Arrow? get() = (this as? ArrowLine)?.arrow
 val Line.fieldOrNull: Field? get() = (this as? FieldLine)?.field
 
