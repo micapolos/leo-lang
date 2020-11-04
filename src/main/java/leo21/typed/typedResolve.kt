@@ -13,7 +13,8 @@ import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
 import leo21.type.Type
 import leo21.type.doubleType
-import leo21.type.op2Type
+import leo21.type.lineTo
+import leo21.type.plus
 import leo21.type.stringType
 import leo21.type.type
 
@@ -34,7 +35,7 @@ val Typed.resolve: Typed
 val Type.fn2Typed: Typed get() = fn(arg<Prim>(0)) of this
 
 fun Typed.resolveFn2OrNull(lhs: Type, name: String, rhs: Type, prim: Prim, result: Type): Typed? =
-	notNullIf(type == op2Type(lhs, name, rhs)) {
+	notNullIf(type == lhs.plus(name lineTo rhs)) {
 		fn(nativeTerm(prim).invoke(arg(0))).invoke(term).of(result)
 	}
 
