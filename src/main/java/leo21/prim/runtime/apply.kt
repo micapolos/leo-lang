@@ -21,27 +21,11 @@ fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 		is NilPrim -> null
 		is StringPrim -> null
 		is DoublePrim -> null
-		DoublePlusDoublePrim -> rhs.applyDoublePlusDouble
-		DoubleMinusDoublePrim -> rhs.applyDoubleMinusDouble
-		DoubleTimesDoublePrim -> rhs.applyDoubleTimesDouble
-		StringPlusStringPrim -> rhs.applyStringPlusString
+		DoublePlusDoublePrim -> rhs.apply(Prim::double, Double::plus, Prim::double, Double::prim)
+		DoubleMinusDoublePrim -> rhs.apply(Prim::double, Double::minus, Prim::double, Double::prim)
+		DoubleTimesDoublePrim -> rhs.apply(Prim::double, Double::times, Prim::double, Double::prim)
+		StringPlusStringPrim -> rhs.apply(Prim::string, String::plus, Prim::string, String::prim)
 	}!!
-
-val Value<Prim>.applyDoublePlusDouble
-	get() =
-		apply(Prim::double, Double::plus, Prim::double, Double::prim)
-
-val Value<Prim>.applyDoubleMinusDouble
-	get() =
-		apply(Prim::double, Double::minus, Prim::double, Double::prim)
-
-val Value<Prim>.applyDoubleTimesDouble
-	get() =
-		apply(Prim::double, Double::times, Prim::double, Double::prim)
-
-val Value<Prim>.applyStringPlusString
-	get() =
-		apply(Prim::string, String::plus, Prim::string, String::prim)
 
 inline fun <L, R, O> Value<Prim>.apply(
 	lhs: Prim.() -> L,

@@ -3,39 +3,39 @@ package leo21.prim.runtime
 import leo.base.assertEqualTo
 import leo14.lambda.value.plus
 import leo14.lambda.value.value
+import leo21.prim.DoubleMinusDoublePrim
+import leo21.prim.DoublePlusDoublePrim
+import leo21.prim.DoubleTimesDoublePrim
+import leo21.prim.StringPlusStringPrim
 import leo21.prim.prim
 import kotlin.test.Test
 
 class ApplyTest {
 	@Test
 	fun doublePlusDouble() {
-		value(prim(10.0))
-			.plus(value(prim(20.0)))
-			.applyDoublePlusDouble
+		DoublePlusDoublePrim
+			.apply(value(prim(10.0)).plus(value(prim(20.0))))
 			.assertEqualTo(value(prim(30.0)))
 	}
 
 	@Test
 	fun doubleMinusDouble() {
-		value(prim(30.0))
-			.plus(value(prim(20.0)))
-			.applyDoubleMinusDouble
+		DoubleMinusDoublePrim
+			.apply(value(prim(30.0)).plus(value(prim(20.0))))
 			.assertEqualTo(value(prim(10.0)))
 	}
 
 	@Test
 	fun doubleTimesDouble() {
-		value(prim(30.0))
-			.plus(value(prim(20.0)))
-			.applyDoubleTimesDouble
-			.assertEqualTo(value(prim(600.0)))
+		DoubleTimesDoublePrim
+			.apply(value(prim(10.0)).plus(value(prim(20.0))))
+			.assertEqualTo(value(prim(200.0)))
 	}
 
 	@Test
 	fun stringPlusString() {
-		value(prim("Hello, "))
-			.plus(value(prim("world!")))
-			.applyStringPlusString
+		StringPlusStringPrim
+			.apply(value(prim("Hello, ")).plus(value(prim("world!"))))
 			.assertEqualTo(value(prim("Hello, world!")))
 	}
 }
