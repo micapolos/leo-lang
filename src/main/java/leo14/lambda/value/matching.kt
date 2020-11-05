@@ -19,7 +19,7 @@ fun <T, R> Value<T>.native(fn: (T) -> R): R =
 val <T> Value<T>.pair: Pair<Value<T>, Value<T>>
 	get() =
 		function.let { function ->
-			function.bodyTerm.application { lhs, arg0 ->
+			function.term.application { lhs, arg0 ->
 				arg0.variable(1) {
 					lhs.application { lhs, arg1 ->
 						arg1.variable(2) {
@@ -35,12 +35,12 @@ val <T> Value<T>.pair: Pair<Value<T>, Value<T>>
 fun <T, R> Value<T>.switch(firstFn: (Value<T>) -> R, secondFn: (Value<T>) -> R): R =
 	function.let { function ->
 		function.scope.at(0).let { value ->
-			function.bodyTerm.abstraction { body ->
+			function.term.abstraction { body ->
 				body.application { lhs, rhs ->
 					lhs.variable { index ->
 						when (index) {
 							0 -> rhs.abstraction { body ->
-								firstFn(value(function.copy(bodyTerm = body)))
+								firstFn(value(function.copy(term = body)))
 							}
 							1 -> rhs.variable(0) {
 								secondFn(value)
