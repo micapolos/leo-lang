@@ -39,8 +39,10 @@ class EvaluateTest {
 	fun pairUnpair() {
 		pair(term("foo"), term("bar"))
 			.value
-			.pair
-			.assertEqualTo(value("foo") to value("bar"))
+			.pair { lhs, rhs ->
+				lhs.assertEqualTo(value("foo"))
+				rhs.assertEqualTo(value("bar"))
+			}
 	}
 
 	@Test
