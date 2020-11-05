@@ -45,7 +45,7 @@ fun script(value: Value<Prim>, struct: Struct): Script =
 				else script(value(nilPrim), lhsStruct).plus(scriptLine(value, rhsLine))
 			else
 				if (rhsLine.isStatic) script(value, lhsStruct).plus(scriptLine(value(nilPrim), rhsLine))
-				else value.pair.let { (lhsValue, rhsValue) ->
+				else value.pair { lhsValue, rhsValue ->
 					script(lhsValue, lhsStruct).plus(scriptLine(rhsValue, rhsLine))
 				}
 		}
