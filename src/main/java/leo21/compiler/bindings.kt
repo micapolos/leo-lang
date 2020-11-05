@@ -2,7 +2,6 @@ package leo21.compiler
 
 import leo.base.indexed
 import leo.base.mapFirstOrNull
-import leo.base.notNullOrError
 import leo13.Stack
 import leo13.push
 import leo13.seq
@@ -10,15 +9,15 @@ import leo13.stack
 import leo14.Script
 import leo14.ScriptLine
 import leo14.Scriptable
-import leo14.fieldOrNull
 import leo14.lambda.fn
-import leo14.linkOrNull
+import leo14.matchInfix
 import leo14.reflectOrEmptyScriptLine
 import leo21.type.Type
 import leo21.type.arrowTo
 import leo21.type.type
 import leo21.typed.ArrowTyped
 import leo21.typed.Typed
+import leo21.typed.of
 import leo21.typed.resolvePrimOrNull
 
 data class Bindings(val bindingStack: Stack<Binding>) : Scriptable() {
@@ -43,13 +42,10 @@ fun Bindings.resolve(typed: Typed): Typed =
 		?: typed
 
 fun Bindings.arrowTyped(script: Script): ArrowTyped =
-	script.linkOrNull.notNullOrError("function syntax error").let { link ->
-		link.line.fieldOrNull.notNullOrError("function syntax error").let { field ->
-			if (field.string != "doing") error("function syntax error")
-			else link.lhs.type.let { lhsType ->
-				push(lhsType).typed(field.rhs).let { bodyTyped ->
-					ArrowTyped(fn(bodyTyped.term), lhsType arrowTo bodyTyped.type)
-				}
+	script.matchInfix("doing") { lhs, rhs ->
+		lhs.type.let { lhsType ->
+			push(lhsType).typed(rhs).let { bodyTyped ->
+				fn(bodyTyped.term) of (lhsType arrowTo bodyTyped.type)
 			}
 		}
-	}
+	}!!
