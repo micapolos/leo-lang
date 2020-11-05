@@ -16,21 +16,20 @@ fun <T, R> Value<T>.native(fn: (T) -> R): R =
 		else -> error("$this as native")
 	}
 
-val <T> Value<T>.pair: Pair<Value<T>, Value<T>>
-	get() =
-		function.let { function ->
-			function.term.application { lhs, arg0 ->
-				arg0.variable(1) {
-					lhs.application { lhs, arg1 ->
-						arg1.variable(2) {
-							lhs.variable(0) {
-								function.scope.at(1) to function.scope.at(0)
-							}
+fun <T, R> Value<T>.pair(fn: (Value<T>, Value<T>) -> R): R =
+	function.let { function ->
+		function.term.application { lhs, arg0 ->
+			arg0.variable(1) {
+				lhs.application { lhs, arg1 ->
+					arg1.variable(2) {
+						lhs.variable(0) {
+							fn(function.scope.at(1), function.scope.at(0))
 						}
 					}
 				}
 			}
 		}
+	}
 
 fun <T, R> Value<T>.switch(firstFn: (Value<T>) -> R, secondFn: (Value<T>) -> R): R =
 	function.let { function ->
