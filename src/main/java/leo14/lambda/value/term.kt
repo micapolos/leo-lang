@@ -11,7 +11,3 @@ fun <T> Term<T>.evaluate(nativeApply: NativeApply<T>): Term<T> =
 val Term<Any>.value: Value<Any>
 	get() =
 		value(Any::anyApply)
-
-val Term<Any>.evaluate: Term<Any>
-	get() =
-		value.term

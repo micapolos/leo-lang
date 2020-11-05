@@ -23,24 +23,24 @@ class EvaluateTest {
 	fun pairFirst() {
 		pair(term("foo"), term("bar"))
 			.first
-			.evaluate
-			.assertEqualTo(term("foo"))
+			.value
+			.assertEqualTo(value("foo"))
 	}
 
 	@Test
 	fun pairSecond() {
 		pair(term("foo"), term("bar"))
 			.second
-			.evaluate
-			.assertEqualTo(term("bar"))
+			.value
+			.assertEqualTo(value("bar"))
 	}
 
 	@Test
 	fun pairUnpair() {
 		pair(term("foo"), term("bar"))
-			.evaluate
-			.pair()
-			.assertEqualTo(term("foo") to term("bar"))
+			.value
+			.pair
+			.assertEqualTo(value("foo") to value("bar"))
 	}
 
 	@Test
@@ -48,8 +48,8 @@ class EvaluateTest {
 		term("foo")
 			.eitherFirst
 			.eitherSwitch(fn(term("first")), fn(term("second")))
-			.evaluate
-			.assertEqualTo(term("first"))
+			.value
+			.assertEqualTo(value("first"))
 	}
 
 	@Test
@@ -57,16 +57,16 @@ class EvaluateTest {
 		term("foo")
 			.eitherSecond
 			.eitherSwitch(fn(term("first")), fn(term("second")))
-			.evaluate
-			.assertEqualTo(term("second"))
+			.value
+			.assertEqualTo(value("second"))
 	}
 
 	@Test
 	fun nativeApply() {
 		nativeTerm(Any::anyIntInc)
 			.invoke(nativeTerm(1))
-			.evaluate
-			.assertEqualTo(nativeTerm(2))
+			.value
+			.assertEqualTo(value(2))
 	}
 
 	@Test
@@ -75,15 +75,17 @@ class EvaluateTest {
 		fn(arg<Any>(0))
 			.iterate(times) { fn(invoke(nativeTerm(Any::anyIntInc).invoke(arg(0)))) }
 			.invoke(nativeTerm(0))
-			.evaluate
-			.assertEqualTo(nativeTerm(times))
+			.value
+			.assertEqualTo(value(times))
 	}
 
 	@Test
 	fun fixFib() {
 		fix<Any>()
 			.invoke(fn(fn(nativeTerm(10))))
-			.evaluate
+			.value
+			.function
+			.term
 			.assertEqualTo(nativeTerm(10))
 	}
 }

@@ -32,7 +32,7 @@ fun <T> Scope<T>.function(term: Term<T>): Function<T> = Function(this, term)
 fun <T> Function<T>.apply(value: Value<T>, nativeApply: NativeApply<T>): Value<T> =
 	scope.push(value).value(term, nativeApply)
 
-val <T> Function<T>.term: Term<T>
+val <T> Function<T>.topLevelTerm: Term<T>
 	get() =
 		term
 			.iterate(term.freeVariableCount) { fn(this) }

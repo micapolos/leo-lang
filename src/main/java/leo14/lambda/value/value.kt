@@ -54,7 +54,7 @@ val <T> Value<T>.term: Term<T>
 	get() =
 		when (this) {
 			is NativeValue -> term(native)
-			is FunctionValue -> function.term
+			is FunctionValue -> function.topLevelTerm
 		}
 
 fun Any.anyApply(value: Value<Any>): Value<Any> =
