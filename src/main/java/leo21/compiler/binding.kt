@@ -11,9 +11,9 @@ import leo21.prim.Prim
 import leo21.type.Arrow
 import leo21.type.Type
 import leo21.type.onlyNameOrNull
-import leo21.typed.Typed
-import leo21.typed.getOrNull
-import leo21.typed.make
+import leo21.compiled.Compiled
+import leo21.compiled.getOrNull
+import leo21.compiled.make
 
 sealed class Binding : Scriptable() {
 	override val reflectScriptLine: ScriptLine
@@ -40,18 +40,18 @@ fun constantBinding(arrow: Arrow): Binding = ConstantBinding(arrow)
 fun functionBinding(arrow: Arrow): Binding = FunctionBinding(arrow)
 fun givenBinding(type: Type): Binding = GivenBinding(type)
 
-fun Binding.applyOrNull(index: Int, typed: Typed): Typed? =
+fun Binding.applyOrNull(index: Int, compiled: Compiled): Compiled? =
 	when (this) {
-		is ConstantBinding -> notNullIf(typed.type == arrow.lhs) {
-			Typed(arg(index), arrow.rhs)
+		is ConstantBinding -> notNullIf(compiled.type == arrow.lhs) {
+			Compiled(arg(index), arrow.rhs)
 		}
-		is FunctionBinding -> notNullIf(typed.type == arrow.lhs) {
-			Typed(arg<Prim>(index).invoke(typed.term), arrow.rhs)
+		is FunctionBinding -> notNullIf(compiled.type == arrow.lhs) {
+			Compiled(arg<Prim>(index).invoke(compiled.term), arrow.rhs)
 		}
-		is GivenBinding -> typed.type.onlyNameOrNull?.let { name ->
+		is GivenBinding -> compiled.type.onlyNameOrNull?.let { name ->
 			when (name) {
-				"given" -> Typed(arg(index), type).make("given")
-				else -> Typed(arg(index), type).make("given").getOrNull(name)
+				"given" -> Compiled(arg(index), type).make("given")
+				else -> Compiled(arg(index), type).make("given").getOrNull(name)
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package leo21.typed
+package leo21.compiled
 
 import leo.base.assertEqualTo
 import leo14.lambda.arg
@@ -11,19 +11,19 @@ import leo21.type.type
 import kotlin.test.Test
 import kotlin.test.assertFails
 
-class TypedTest {
+class CompiledTest {
 	@Test
 	fun empty() {
-		typed()
+		compiled()
 			.type
 			.assertEqualTo(type())
 	}
 
 	@Test
 	fun struct() {
-		typed(
-			"x" lineTo typed(10.0),
-			"y" lineTo typed(20.0))
+		compiled(
+			"x" lineTo compiled(10.0),
+			"y" lineTo compiled(20.0))
 			.type
 			.assertEqualTo(
 				type(
@@ -34,9 +34,9 @@ class TypedTest {
 	@Test
 	fun struct_duplicateField() {
 		assertFails {
-			typed(
-				"x" lineTo typed(10.0),
-				"x" lineTo typed(20.0))
+			compiled(
+				"x" lineTo compiled(10.0),
+				"x" lineTo compiled(20.0))
 		}
 	}
 
@@ -45,7 +45,7 @@ class TypedTest {
 		choiceTyped {
 			this
 				.plusNotChosen("number" lineTo doubleType)
-				.plusChosen("text" lineTo typed("foo"))
+				.plusChosen("text" lineTo compiled("foo"))
 		}.type
 			.assertEqualTo(
 				type(
@@ -60,7 +60,7 @@ class TypedTest {
 			choiceTyped {
 				this
 					.plusNotChosen("number" lineTo doubleType)
-					.plusChosen("number" lineTo typed("foo"))
+					.plusChosen("number" lineTo compiled("foo"))
 			}
 		}
 	}
@@ -81,8 +81,8 @@ class TypedTest {
 		assertFails {
 			choiceTyped {
 				this
-					.plusChosen("number" lineTo typed(10.0))
-					.plusChosen("text" lineTo typed("foo"))
+					.plusChosen("number" lineTo compiled(10.0))
+					.plusChosen("text" lineTo compiled("foo"))
 			}
 		}
 	}
@@ -92,7 +92,7 @@ class TypedTest {
 		choice(
 			"number" lineTo doubleType,
 			"text" lineTo stringType)
-			.typed("number" lineTo typed(10.0))
+			.compiled("number" lineTo compiled(10.0))
 			.type
 			.assertEqualTo(
 				type(
@@ -103,10 +103,10 @@ class TypedTest {
 
 	@Test
 	fun get_first() {
-		typed(
-			"point" lineTo typed(
-				"x" lineTo typed(10.0),
-				"y" lineTo typed(20.0)))
+		compiled(
+			"point" lineTo compiled(
+				"x" lineTo compiled(10.0),
+				"y" lineTo compiled(20.0)))
 			.get("x")
 			.type
 			.assertEqualTo(type("x" lineTo doubleType))
@@ -114,10 +114,10 @@ class TypedTest {
 
 	@Test
 	fun get_second() {
-		typed(
-			"point" lineTo typed(
-				"x" lineTo typed(10.0),
-				"y" lineTo typed(20.0)))
+		compiled(
+			"point" lineTo compiled(
+				"x" lineTo compiled(10.0),
+				"y" lineTo compiled(20.0)))
 			.get("y")
 			.type
 			.assertEqualTo(type("y" lineTo doubleType))
@@ -125,8 +125,8 @@ class TypedTest {
 
 	@Test
 	fun get_number() {
-		typed(
-			"x" lineTo typed(10.0))
+		compiled(
+			"x" lineTo compiled(10.0))
 			.get("number")
 			.type
 			.assertEqualTo(doubleType)
@@ -134,8 +134,8 @@ class TypedTest {
 
 	@Test
 	fun get_text() {
-		typed(
-			"x" lineTo typed("foo"))
+		compiled(
+			"x" lineTo compiled("foo"))
 			.get("text")
 			.type
 			.assertEqualTo(stringType)
@@ -144,19 +144,19 @@ class TypedTest {
 	@Test
 	fun get_missing() {
 		assertFails {
-			typed(
-				"point" lineTo typed(
-					"x" lineTo typed(10.0),
-					"y" lineTo typed(20.0)))
+			compiled(
+				"point" lineTo compiled(
+					"x" lineTo compiled(10.0),
+					"y" lineTo compiled(20.0)))
 				.get("z")
 		}
 	}
 
 	@Test
 	fun make() {
-		typed(
-			"x" lineTo typed(10.0),
-			"y" lineTo typed(20.0))
+		compiled(
+			"x" lineTo compiled(10.0),
+			"y" lineTo compiled(20.0))
 			.make("point")
 			.type
 			.assertEqualTo(
@@ -168,8 +168,8 @@ class TypedTest {
 
 	@Test
 	fun invoke() {
-		ArrowTyped(arg(0), doubleType arrowTo stringType)
-			.invoke(typed(10.0))
+		ArrowCompiled(arg(0), doubleType arrowTo stringType)
+			.invoke(compiled(10.0))
 			.type
 			.assertEqualTo(stringType)
 	}
@@ -177,21 +177,21 @@ class TypedTest {
 	@Test
 	fun invoke_typeMismatch() {
 		assertFails {
-			ArrowTyped(arg(0), stringType arrowTo doubleType)
-				.invoke(typed(10.0))
+			ArrowCompiled(arg(0), stringType arrowTo doubleType)
+				.invoke(compiled(10.0))
 		}
 	}
 
 	@Test
 	fun switch() {
-		typed(
+		compiled(
 			"bit" lineTo choice(
 				"zero" lineTo type(),
 				"one" lineTo type())
-				.typed("zero" lineTo typed()))
+				.compiled("zero" lineTo compiled()))
 			.switch
-			.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
-			.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+			.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
+			.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo stringType))
 			.end
 			.type
 			.assertEqualTo(stringType)
@@ -199,71 +199,71 @@ class TypedTest {
 
 	@Test
 	fun switch_notChoice() {
-		assertFails { typed("bit" lineTo typed("zero")).switch }
+		assertFails { compiled("bit" lineTo compiled("zero")).switch }
 	}
 
 	@Test
 	fun switch_firstCaseMismatch() {
 		assertFails {
-			typed(
+			compiled(
 				"bit" lineTo choice(
 					"zero" lineTo type(),
 					"one" lineTo type())
-					.typed("zero" lineTo typed()))
+					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo stringType))
 		}
 	}
 
 	@Test
 	fun switch_secondCaseMismatch() {
 		assertFails {
-			typed(
+			compiled(
 				"bit" lineTo choice(
 					"zero" lineTo type(),
 					"one" lineTo type())
-					.typed("zero" lineTo typed()))
+					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
 		}
 	}
 
 	@Test
 	fun switch_arrowLhsTypeMismatch() {
 		assertFails {
-			typed(
+			compiled(
 				"bit" lineTo choice(
 					"zero" lineTo type(),
 					"one" lineTo type())
-					.typed("zero" lineTo typed()))
+					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("zero", ArrowTyped(arg(0), type("foo" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowCompiled(arg(0), type("foo" lineTo type()) arrowTo stringType))
 		}
 	}
 
 	@Test
 	fun switch_arrowRhsTypeMismatch() {
 		assertFails {
-			typed(
+			compiled(
 				"bit" lineTo choice(
 					"zero" lineTo type(),
 					"one" lineTo type())
-					.typed("zero" lineTo typed()))
+					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo doubleType))
+				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo doubleType))
 		}
 	}
 
 	@Test
 	fun switch_notExhaustive() {
 		assertFails {
-			typed(
+			compiled(
 				"bit" lineTo choice(
 					"zero" lineTo type(),
 					"one" lineTo type())
-					.typed("zero" lineTo typed()))
+					.compiled("zero" lineTo compiled()))
 				.switch
 				.end
 		}
@@ -272,15 +272,15 @@ class TypedTest {
 	@Test
 	fun switch_exhausted() {
 		assertFails {
-			typed(
+			compiled(
 				"bit" lineTo choice(
 					"zero" lineTo type(),
 					"one" lineTo type())
-					.typed("zero" lineTo typed()))
+					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("zero", ArrowTyped(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("one", ArrowTyped(arg(0), type("one" lineTo type()) arrowTo stringType))
-				.case("two", ArrowTyped(arg(0), type("two" lineTo type()) arrowTo stringType))
+				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
+				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.case("two", ArrowCompiled(arg(0), type("two" lineTo type()) arrowTo stringType))
 		}
 	}
 }

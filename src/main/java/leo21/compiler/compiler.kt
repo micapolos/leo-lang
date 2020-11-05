@@ -16,26 +16,26 @@ import leo14.lineSeq
 import leo14.lineTo
 import leo14.onlyStringOrNull
 import leo14.script
-import leo21.typed.LineTyped
-import leo21.typed.Typed
-import leo21.typed.lineTo
-import leo21.typed.lineTyped
-import leo21.typed.make
-import leo21.typed.plus
-import leo21.typed.resolveGetOrNull
-import leo21.typed.typed
+import leo21.compiled.Compiled
+import leo21.compiled.LineCompiled
+import leo21.compiled.compiled
+import leo21.compiled.lineCompiled
+import leo21.compiled.lineTo
+import leo21.compiled.make
+import leo21.compiled.plus
+import leo21.compiled.resolveGetOrNull
 
 data class Compiler(
 	val bindings: Bindings,
-	val typed: Typed
+	val compiled: Compiled
 ) : Scriptable() {
 	override fun toString() = super.toString()
 	override val reflectScriptLine: ScriptLine
-		get() = "compiled" lineTo script(bindings.reflectScriptLine, typed.reflectScriptLine)
+		get() = "compiled" lineTo script(bindings.reflectScriptLine, compiled.reflectScriptLine)
 }
 
-fun Bindings.typed(script: Script): Typed =
-	Compiler(this, typed()).plus(script).typed
+fun Bindings.compiled(script: Script): Compiled =
+	Compiler(this, compiled()).plus(script).compiled
 
 fun Compiler.plus(script: Script): Compiler =
 	fold(script.lineSeq.reverse) { plus(it) }
@@ -47,7 +47,7 @@ fun Compiler.plus(scriptLine: ScriptLine): Compiler =
 	}
 
 fun Compiler.plus(literal: Literal): Compiler =
-	plus(lineTyped(literal)).resolve
+	plus(lineCompiled(literal)).resolve
 
 fun Compiler.plus(scriptField: ScriptField): Compiler =
 	null
@@ -63,30 +63,30 @@ fun Compiler.plusKeywordOrNull(scriptField: ScriptField): Compiler? =
 	}
 
 fun Compiler.plusDo(script: Script): Compiler =
-	bindings.push(typed.type).typed(script).let { typed ->
+	bindings.push(compiled.type).compiled(script).let { typed ->
 		setBody(
-			Typed(
-				fn(typed.term).invoke(this.typed.term),
+			Compiled(
+				fn(typed.term).invoke(this.compiled.term),
 				typed.type))
 	}
 
 fun Compiler.plusFunction(script: Script): Compiler =
-	setBody(typed.plus(lineTyped(bindings.arrowTyped(script))))
+	setBody(compiled.plus(lineCompiled(bindings.arrowTyped(script))))
 
 fun Compiler.plusMake(script: Script): Compiler =
-	setBody(typed.make(script.onlyStringOrNull.notNullOrError("make syntax error")))
+	setBody(compiled.make(script.onlyStringOrNull.notNullOrError("make syntax error")))
 
 fun Compiler.plusNonKeyword(scriptField: ScriptField): Compiler =
 	resolvePlus(scriptField).resolve
 
 fun Compiler.resolvePlus(scriptField: ScriptField): Compiler =
-	plus(scriptField.string lineTo bindings.typed(scriptField.rhs))
+	plus(scriptField.string lineTo bindings.compiled(scriptField.rhs))
 
 val Compiler.resolve
 	get() =
-		setBody(typed.resolveGetOrNull ?: bindings.resolve(typed))
+		setBody(compiled.resolveGetOrNull ?: bindings.resolve(compiled))
 
-fun Compiler.plus(typed: LineTyped): Compiler =
-	setBody(bindings.resolve(this.typed.plus(typed)))
+fun Compiler.plus(compiled: LineCompiled): Compiler =
+	setBody(bindings.resolve(this.compiled.plus(compiled)))
 
-fun Compiler.setBody(body: Typed) = copy(typed = body)
+fun Compiler.setBody(body: Compiled) = copy(compiled = body)

@@ -5,21 +5,21 @@ import leo14.lambda.id
 import leo14.lineTo
 import leo14.literal
 import leo14.script
+import leo21.compiled.LineCompiled
+import leo21.compiled.compiled
+import leo21.compiled.lineTo
 import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.doubleType
 import leo21.type.line
 import leo21.type.lineTo
 import leo21.type.stringType
-import leo21.typed.LineTyped
-import leo21.typed.lineTo
-import leo21.typed.typed
 import kotlin.test.Test
 
 class EvaluatedScriptTest {
 	@Test
 	fun number() {
-		typed(10.0)
+		compiled(10.0)
 			.evaluated
 			.script
 			.assertEqualTo(script(literal(10.0)))
@@ -27,7 +27,7 @@ class EvaluatedScriptTest {
 
 	@Test
 	fun string() {
-		typed("foo")
+		compiled("foo")
 			.evaluated
 			.script
 			.assertEqualTo(script(literal("foo")))
@@ -35,10 +35,10 @@ class EvaluatedScriptTest {
 
 	@Test
 	fun struct() {
-		typed(
-			"x" lineTo typed(10.0),
-			"y" lineTo typed(),
-			"z" lineTo typed(20.0))
+		compiled(
+			"x" lineTo compiled(10.0),
+			"y" lineTo compiled(),
+			"z" lineTo compiled(20.0))
 			.evaluated
 			.script
 			.assertEqualTo(
@@ -53,7 +53,7 @@ class EvaluatedScriptTest {
 		choice(
 			"x" lineTo stringType,
 			"y" lineTo stringType)
-			.typed("y" lineTo typed("foo"))
+			.compiled("y" lineTo compiled("foo"))
 			.evaluated
 			.script
 			.assertEqualTo(script("y" lineTo script(literal("foo"))))
@@ -64,7 +64,7 @@ class EvaluatedScriptTest {
 		choice(
 			"x" lineTo stringType,
 			"y" lineTo stringType)
-			.typed("x" lineTo typed("foo"))
+			.compiled("x" lineTo compiled("foo"))
 			.evaluated
 			.script
 			.assertEqualTo(script("x" lineTo script(literal("foo"))))
@@ -72,7 +72,7 @@ class EvaluatedScriptTest {
 
 	@Test
 	fun function() {
-		typed(LineTyped(id(), line(stringType arrowTo doubleType)))
+		compiled(LineCompiled(id(), line(stringType arrowTo doubleType)))
 			.evaluated
 			.script
 			.assertEqualTo(

@@ -6,13 +6,13 @@ import leo14.lambda.fn
 import leo14.lineTo
 import leo14.literal
 import leo14.script
+import leo21.compiled.ArrowCompiled
+import leo21.compiled.compiled
 import leo21.compiler.emptyBindings
 import leo21.type.arrowTo
 import leo21.type.doubleType
 import leo21.type.lineTo
 import leo21.type.type
-import leo21.typed.ArrowTyped
-import leo21.typed.typed
 import kotlin.test.Test
 
 class ScriptDictionaryTest {
@@ -32,12 +32,12 @@ class ScriptDictionaryTest {
 				emptyDictionary
 					.plus(
 						definition(
-							ArrowTyped(
+							ArrowCompiled(
 								fn(arg(0)),
 								type("x" lineTo doubleType) arrowTo type("given" lineTo type("x" lineTo doubleType)))))
 					.plus(
 						definition(
 							type("y" lineTo type()),
-							typed(10.0))))
+							compiled(10.0))))
 	}
 }

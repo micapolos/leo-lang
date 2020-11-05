@@ -1,8 +1,8 @@
 package leo21.compiler
 
 import leo14.Script
-import leo21.typed.Typed
+import leo21.compiled.Compiled
 
-val Script.typed: Typed
+val Script.compiled: Compiled
 	get() =
-		emptyBindings.typed(this)
+		emptyBindings.compiled(this)

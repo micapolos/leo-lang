@@ -3,9 +3,9 @@ package leo21.compiler
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
-import leo21.typed.lineTo
-import leo21.typed.make
-import leo21.typed.typed
+import leo21.compiled.compiled
+import leo21.compiled.lineTo
+import leo21.compiled.make
 import kotlin.test.Test
 
 class CompilerTest {
@@ -13,16 +13,16 @@ class CompilerTest {
 	fun make() {
 		Compiler(
 			emptyBindings,
-			typed(
-				"x" lineTo typed(10.0),
-				"y" lineTo typed(20.0)))
+			compiled(
+				"x" lineTo compiled(10.0),
+				"y" lineTo compiled(20.0)))
 			.plus("make" lineTo script("point"))
 			.assertEqualTo(
 				Compiler(
 					emptyBindings,
-					typed(
-						"x" lineTo typed(10.0),
-						"y" lineTo typed(20.0))
+					compiled(
+						"x" lineTo compiled(10.0),
+						"y" lineTo compiled(20.0))
 						.make("point")))
 	}
 }

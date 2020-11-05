@@ -1,4 +1,4 @@
-package leo21.typed
+package leo21.compiled
 
 import leo.base.ifOrNull
 import leo.base.notNullIf
@@ -18,28 +18,28 @@ import leo21.type.plus
 import leo21.type.stringType
 import leo21.type.type
 
-val Typed.resolveGetOrNull: Typed?
+val Compiled.resolveGetOrNull: Compiled?
 	get() =
 		linkOrNull?.run {
-			head.fieldTypedOrNull?.let { fieldTyped ->
-				ifOrNull(fieldTyped.rhsTyped.type == type()) {
+			head.fieldCompiledOrNull?.let { fieldTyped ->
+				ifOrNull(fieldTyped.rhsCompiled.type == type()) {
 					tail.getOrNull(fieldTyped.field.name)
 				}
 			}
 		}
 
-val Typed.resolve: Typed
+val Compiled.resolve: Compiled
 	get() =
 		resolvePrimOrNull ?: this
 
-val Type.fn2Typed: Typed get() = fn(arg<Prim>(0)) of this
+val Type.fn2Compiled: Compiled get() = fn(arg<Prim>(0)) of this
 
-fun Typed.resolveFn2OrNull(lhs: Type, name: String, rhs: Type, prim: Prim, result: Type): Typed? =
+fun Compiled.resolveFn2OrNull(lhs: Type, name: String, rhs: Type, prim: Prim, result: Type): Compiled? =
 	notNullIf(type == lhs.plus(name lineTo rhs)) {
 		fn(nativeTerm(prim).invoke(arg(0))).invoke(term).of(result)
 	}
 
-val Typed.resolvePrimOrNull: Typed?
+val Compiled.resolvePrimOrNull: Compiled?
 	get() =
 		null
 			?: resolveFn2OrNull(doubleType, "plus", doubleType, DoublePlusDoublePrim, doubleType)

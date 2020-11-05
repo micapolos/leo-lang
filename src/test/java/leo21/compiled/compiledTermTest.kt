@@ -1,4 +1,4 @@
-package leo21.typed
+package leo21.compiled
 
 import leo.base.assertEqualTo
 import leo13.linkTo
@@ -7,9 +7,7 @@ import leo14.lambda.first
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.second
-import leo14.lambda.term
 import leo21.prim.Prim
-import leo21.prim.StringPlusStringPrim
 import leo21.term.nilTerm
 import leo21.term.plus
 import leo21.term.term
@@ -35,7 +33,7 @@ val dynamicLine2 = "name2" lineTo stringType
 val dynamicType1 = type(dynamicLine1)
 val dynamicType2 = type(dynamicLine2)
 
-class TypedTermTest {
+class CompiledTermTest {
 	@Test
 	fun staticPlusStatic() {
 		term1.of(staticType1)

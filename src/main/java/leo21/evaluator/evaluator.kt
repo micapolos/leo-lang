@@ -18,7 +18,7 @@ fun Evaluator.plus(script: Script): Evaluator =
 	fold(script.lineSeq.reverse) { plus(it) }
 
 fun Evaluator.plus(scriptLine: ScriptLine): Evaluator =
-	Compiler(context.bindings, evaluated.typed).plus(scriptLine).typed
+	Compiler(context.bindings, evaluated.compiled).plus(scriptLine).compiled
 		.let { body ->
 			body.term.value.let { value ->
 				Evaluator(context, Evaluated(value, body.type))
@@ -35,7 +35,7 @@ fun Evaluator.plusDefine(rhs: Script): Evaluator =
 	TODO()
 
 fun Evaluator.plusEvaluate(scriptField: ScriptField): Evaluator =
-	Compiler(context.bindings, evaluated.typed).plus(scriptField).typed
+	Compiler(context.bindings, evaluated.compiled).plus(scriptField).compiled
 		.let { body ->
 			body.term.value.let { value ->
 				Evaluator(context, Evaluated(value, body.type))

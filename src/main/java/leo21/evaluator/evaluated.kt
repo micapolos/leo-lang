@@ -12,7 +12,7 @@ import leo21.prim.Prim
 import leo21.prim.nilPrim
 import leo21.type.Type
 import leo21.type.type
-import leo21.typed.Typed
+import leo21.compiled.Compiled
 
 data class Evaluated(val value: Value<Prim>, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
@@ -24,9 +24,9 @@ infix fun Value<Prim>.of(type: Type) = Evaluated(this, type)
 
 val emptyEvaluated = Evaluated(value(nilPrim), type())
 
-val Evaluated.typed: Typed
+val Evaluated.compiled: Compiled
 	get() =
-		Typed(value.term, type)
+		Compiled(value.term, type)
 
 val Evaluated.script: Script
 	get() =

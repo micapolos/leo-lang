@@ -3,6 +3,13 @@ package leo21.evaluator
 import leo.base.assertEqualTo
 import leo14.lambda.fn
 import leo14.lambda.value.value
+import leo21.compiled.case
+import leo21.compiled.compiled
+import leo21.compiled.end
+import leo21.compiled.get
+import leo21.compiled.lineTo
+import leo21.compiled.of
+import leo21.compiled.switch
 import leo21.prim.prim
 import leo21.term.term
 import leo21.type.arrowTo
@@ -11,22 +18,15 @@ import leo21.type.doubleType
 import leo21.type.lineTo
 import leo21.type.stringType
 import leo21.type.type
-import leo21.typed.ArrowTyped
-import leo21.typed.case
-import leo21.typed.end
-import leo21.typed.get
-import leo21.typed.lineTo
-import leo21.typed.switch
-import leo21.typed.typed
 import kotlin.test.Test
 
 class TypedEvaluateTest {
 	@Test
 	fun get_first() {
-		typed(
-			"point" lineTo typed(
-				"x" lineTo typed(10.0),
-				"y" lineTo typed(20.0)))
+		compiled(
+			"point" lineTo compiled(
+				"x" lineTo compiled(10.0),
+				"y" lineTo compiled(20.0)))
 			.get("x")
 			.evaluated
 			.assertEqualTo(value(prim(10.0)) of type("x" lineTo doubleType))
@@ -34,10 +34,10 @@ class TypedEvaluateTest {
 
 	@Test
 	fun get_second() {
-		typed(
-			"point" lineTo typed(
-				"x" lineTo typed(10.0),
-				"y" lineTo typed(20.0)))
+		compiled(
+			"point" lineTo compiled(
+				"x" lineTo compiled(10.0),
+				"y" lineTo compiled(20.0)))
 			.get("y")
 			.evaluated
 			.assertEqualTo(value(prim(20.0)) of type("y" lineTo doubleType))
@@ -45,14 +45,14 @@ class TypedEvaluateTest {
 
 	@Test
 	fun switch_first() {
-		typed(
+		compiled(
 			"bit" lineTo choice(
 				"zero" lineTo type(),
 				"one" lineTo type())
-				.typed("zero" lineTo typed()))
+				.compiled("zero" lineTo compiled()))
 			.switch
-			.case("zero", ArrowTyped(fn(term("false")), type("zero" lineTo type()) arrowTo stringType))
-			.case("one", ArrowTyped(fn(term("true")), type("one" lineTo type()) arrowTo stringType))
+			.case("zero", fn(term("false")) of (type("zero" lineTo type()) arrowTo stringType))
+			.case("one", fn(term("true")) of (type("one" lineTo type()) arrowTo stringType))
 			.end
 			.evaluated
 			.assertEqualTo(value(prim("false")) of stringType)
@@ -60,14 +60,14 @@ class TypedEvaluateTest {
 
 	@Test
 	fun switch_second() {
-		typed(
+		compiled(
 			"bit" lineTo choice(
 				"zero" lineTo type(),
 				"one" lineTo type())
-				.typed("one" lineTo typed()))
+				.compiled("one" lineTo compiled()))
 			.switch
-			.case("zero", ArrowTyped(fn(term("false")), type("zero" lineTo type()) arrowTo stringType))
-			.case("one", ArrowTyped(fn(term("true")), type("one" lineTo type()) arrowTo stringType))
+			.case("zero", fn(term("false")) of (type("zero" lineTo type()) arrowTo stringType))
+			.case("one", fn(term("true")) of (type("one" lineTo type()) arrowTo stringType))
 			.end
 			.evaluated
 			.assertEqualTo(value(prim("true")) of stringType)

@@ -6,4 +6,4 @@ import leo21.evaluator.evaluated
 
 val Script.evaluate: Script
 	get() =
-		typed.evaluated.script
+		compiled.evaluated.script
