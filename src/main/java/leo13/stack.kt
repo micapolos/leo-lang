@@ -402,3 +402,5 @@ val <V> Stack<V>.valueLinkOrNull: Link<Stack<V>, V>?
 val <V> StackLink<V>.valueLink: Link<Stack<V>, V>
 	get() =
 		Link(stack, value)
+
+val Stack<Char>.charString: String get() = String(array.toCharArray())
