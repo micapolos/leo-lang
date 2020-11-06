@@ -33,16 +33,16 @@ class EvaluateTest {
 					"y" lineTo script(literal(20.0))))
 	}
 
-//	@Test
-//	fun get() {
-//		script(
-//			"point" lineTo script(
-//				"x" lineTo script(literal(10.0)),
-//				"y" lineTo script(literal(20.0))),
-//			"x" lineTo script())
-//			.evaluate
-//			.assertEqualTo(script("x" lineTo script(literal(10.0))))
-//	}
+	@Test
+	fun get() {
+		script(
+			"point" lineTo script(
+				"x" lineTo script(literal(10.0)),
+				"y" lineTo script(literal(20.0))),
+			"x" lineTo script())
+			.evaluate
+			.assertEqualTo(script("x" lineTo script(literal(10.0))))
+	}
 
 	@Test
 	fun do_() {
