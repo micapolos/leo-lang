@@ -11,7 +11,9 @@ import leo21.compiler.Compiler
 import leo21.compiler.emptyBindings
 import leo21.compiler.plus
 import leo21.compiler.plusDo
+import leo21.compiler.plusRaw
 import leo21.compiler.push
+import leo21.compiler.resolve
 import leo21.token.processor.CompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
 
@@ -48,7 +50,7 @@ fun TokenCompiler.plus(token: Token): TokenProcessor =
 	}
 
 fun TokenCompiler.plus(compiled: LineCompiled): TokenCompiler =
-	copy(lineCompiler = lineCompiler.plus(compiled))
+	copy(lineCompiler = lineCompiler.plusRaw(compiled).resolve)
 
 fun TokenCompiler.plusDo(compiled: Compiled): TokenCompiler =
 	copy(lineCompiler = lineCompiler.plusDo(compiled))

@@ -92,8 +92,11 @@ val Compiler.resolve
 	get() =
 		setBody(compiled.resolveGetOrNull ?: bindings.resolve(compiled))
 
-fun Compiler.plus(compiled: LineCompiled): Compiler =
-	setBody(bindings.resolve(this.compiled.plus(compiled)))
+fun Compiler.plus(rhs: LineCompiled): Compiler =
+	setBody(bindings.resolve(compiled.plus(rhs)))
+
+fun Compiler.plusRaw(rhs: LineCompiled): Compiler =
+	setBody(compiled.plus(rhs))
 
 fun Compiler.setBody(body: Compiled) = copy(compiled = body)
 
