@@ -4,10 +4,11 @@ import leo.ansi
 import leo.magenta
 import leo.reset
 import leo14.Reducer
+import leo14.Token
 import leo14.promptStringCharReducer
 import leo14.reducer
 
-val TokenProcessor.tokenReducer: Reducer<TokenProcessor, leo14.Token>
+val TokenProcessor.tokenReducer: Reducer<TokenProcessor, Token>
 	get() =
 		reducer { plus(it).tokenReducer }
 
