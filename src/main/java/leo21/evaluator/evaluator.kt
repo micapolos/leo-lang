@@ -11,6 +11,7 @@ import leo21.compiled.lineTo
 import leo21.compiler.Compiler
 import leo21.compiler.plus
 import leo21.prim.runtime.value
+import leo21.value.value
 
 data class Evaluator(val context: Context, val evaluated: Evaluated)
 
@@ -52,8 +53,17 @@ fun Evaluator.plusEvaluate(scriptField: ScriptField): Evaluator =
 		}
 
 fun Evaluator.plus(name: String, rhs: Evaluated): Evaluator =
-	copy(evaluated =
-	Compiler(context.bindings, evaluated.compiled)
-		.plus(name lineTo rhs.compiled)
-		.compiled
-		.evaluated)
+	set(
+		Compiler(context.bindings, evaluated.compiled)
+			.plus(name lineTo rhs.compiled)
+			.compiled
+			.let { compiled -> context.scope.value(compiled.term).of(compiled.type) })
+
+fun Evaluator.set(evaluated: Evaluated): Evaluator =
+	copy(evaluated = evaluated)
+
+val Evaluator.doEvaluator: Evaluator
+	get() =
+		Evaluator(
+			context.push(evaluated),
+			emptyEvaluated)

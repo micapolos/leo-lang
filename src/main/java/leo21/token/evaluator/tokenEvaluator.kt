@@ -6,9 +6,11 @@ import leo14.LiteralToken
 import leo14.Token
 import leo21.evaluator.Evaluated
 import leo21.evaluator.Evaluator
+import leo21.evaluator.doEvaluator
 import leo21.evaluator.emptyEvaluated
 import leo21.evaluator.emptyEvaluator
 import leo21.evaluator.plus
+import leo21.evaluator.set
 import leo21.token.processor.EvaluatorTokenProcessor
 import leo21.token.processor.TokenProcessor
 
@@ -24,6 +26,7 @@ fun TokenEvaluator.plus(token: Token): TokenProcessor =
 		is LiteralToken -> EvaluatorTokenProcessor(copy(evaluator = evaluator.plus(token.literal)))
 		is BeginToken -> when (token.begin.string) {
 			"define" -> TODO()
+			"do" -> EvaluatorTokenProcessor(doEvaluator)
 			else ->
 				EvaluatorTokenProcessor(
 					TokenEvaluator(
@@ -35,3 +38,12 @@ fun TokenEvaluator.plus(token: Token): TokenProcessor =
 
 fun TokenEvaluator.plus(name: String, evaluated: Evaluated): TokenEvaluator =
 	copy(evaluator = evaluator.plus(name, evaluated))
+
+val TokenEvaluator.doEvaluator: TokenEvaluator
+	get() =
+		TokenEvaluator(
+			EvaluatorDoEvaluatedParent(this),
+			evaluator.doEvaluator)
+
+fun TokenEvaluator.plusDo(evaluated: Evaluated): TokenEvaluator =
+	copy(evaluator = evaluator.set(evaluated))
