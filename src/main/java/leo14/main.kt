@@ -1,9 +1,18 @@
 package leo14
 
-import leo.*
+import leo.ansi
 import leo.base.runIf
+import leo.bellChar
+import leo.clear
+import leo.home
 import leo.java.lang.sttyPrivateMode
-import leo14.reader.*
+import leo.red
+import leo.reset
+import leo14.reader.CharReader
+import leo14.reader.charReader
+import leo14.reader.indentColorString
+import leo14.reader.reducer
+import leo14.reader.tokenReader
 import leo14.typed.compiler.compiler
 import leo14.typed.compiler.js.emptyContext
 import leo14.typed.compiler.js.stdScript
@@ -15,8 +24,11 @@ import leo14.untyped.dsl2.read
 import leo14.untyped.stringCharReducer
 import leo14.untyped.typed.stringCharReducer
 import leo16.stringCharReducer
+import leo21.token.processor.emptyEvaluatorTokenProcessor
+import leo21.token.processor.stringCharReducer
 import java.io.InputStreamReader
 
+val useLeo21 = true
 val useLeo16 = true
 val errorTriggerCount = 7
 val importPrelude = false
@@ -25,7 +37,10 @@ val untyped = true
 val untypedTyped = true
 
 fun main() {
-	if (useLeo16) {
+	if (useLeo21) {
+		val tokenProcessor = emptyEvaluatorTokenProcessor
+		run(tokenProcessor.stringCharReducer)
+	} else if (useLeo16) {
 		val evaluator = if (importPrelude) leo16.baseEvaluator else leo16.emptyEvaluator
 		run(evaluator.stringCharReducer)
 	} else if (untyped)
