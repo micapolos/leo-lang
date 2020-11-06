@@ -28,16 +28,19 @@ fun TokenTyper.plus(token: Token): TokenProcessor =
 		is EndToken -> parentOrNull!!.plus(type)
 	}
 
-// TODO: choice
 fun TokenTyper.plusBegin(name: String): TokenTyper =
-	TokenTyper(
-		TyperNameTypeParent(this, name),
-		type())
+	when (name) {
+		"choice" -> TODO()
+		else -> TokenTyper(
+			TyperNameTypeParent(this, name),
+			type())
+	}
 
 fun TokenTyper.plus(name: String, rhs: Type): TokenTyper =
 	when (name) {
 		"number" -> notNullIf(rhs == type()) { set(type.plus(doubleLine)) }
 		"string" -> notNullIf(rhs == type()) { set(type.plus(stringLine)) }
+		"function" -> TODO()
 		else -> null
 	} ?: set(type.plus(name lineTo rhs))
 
