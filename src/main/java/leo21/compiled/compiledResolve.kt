@@ -6,11 +6,13 @@ import leo14.lambda.arg
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.nativeTerm
+import leo14.leonardoScript
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
+import leo21.token.processor.compiled
 import leo21.type.Type
 import leo21.type.doubleType
 import leo21.type.lineTo
@@ -34,6 +36,12 @@ val Compiled.resolve: Compiled
 
 val Type.fn2Compiled: Compiled get() = fn(arg<Prim>(0)) of this
 
+val Compiled.resolveLeonardoOrNull: Compiled?
+	get() =
+		notNullIf(type == type("leonardo" lineTo type())) {
+			leonardoScript.compiled
+		}
+
 fun Compiled.resolveFn2OrNull(lhs: Type, name: String, rhs: Type, prim: Prim, result: Type): Compiled? =
 	notNullIf(type == lhs.plus(name lineTo rhs)) {
 		fn(nativeTerm(prim).invoke(arg(0))).invoke(term).of(result)
@@ -42,6 +50,7 @@ fun Compiled.resolveFn2OrNull(lhs: Type, name: String, rhs: Type, prim: Prim, re
 val Compiled.resolvePrimOrNull: Compiled?
 	get() =
 		null
+			?: resolveLeonardoOrNull
 			?: resolveFn2OrNull(doubleType, "plus", doubleType, DoublePlusDoublePrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "minus", doubleType, DoubleMinusDoublePrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "times", doubleType, DoubleTimesDoublePrim, doubleType)
