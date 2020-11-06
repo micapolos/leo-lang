@@ -8,7 +8,6 @@ import leo21.evaluator.Evaluated
 import leo21.evaluator.Evaluator
 import leo21.evaluator.beginEvaluator
 import leo21.evaluator.doEvaluator
-import leo21.evaluator.emptyEvaluated
 import leo21.evaluator.emptyEvaluator
 import leo21.evaluator.plus
 import leo21.evaluator.set
