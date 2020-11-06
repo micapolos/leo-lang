@@ -40,7 +40,7 @@ fun TokenCompiler.plus(token: Token): TokenProcessor =
 				"make" -> TODO()
 				else -> CompilerTokenProcessor(
 					TokenCompiler(
-						CompilerPlusCompiledParent(this, token.begin.string),
+						CompilerNameCompiledParent(this, token.begin.string),
 						Compiler(lineCompiler.bindings, compiled())))
 			}
 		is EndToken ->

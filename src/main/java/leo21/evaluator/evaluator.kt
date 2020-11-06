@@ -2,10 +2,12 @@ package leo21.evaluator
 
 import leo.base.fold
 import leo.base.reverse
+import leo14.Literal
 import leo14.Script
 import leo14.ScriptField
 import leo14.ScriptLine
 import leo14.lineSeq
+import leo21.compiled.lineTo
 import leo21.compiler.Compiler
 import leo21.compiler.plus
 import leo21.prim.runtime.value
@@ -25,6 +27,13 @@ fun Evaluator.plus(scriptLine: ScriptLine): Evaluator =
 			}
 		}
 
+fun Evaluator.plus(literal: Literal): Evaluator =
+	copy(evaluated =
+	Compiler(context.bindings, evaluated.compiled)
+		.plus(literal)
+		.compiled
+		.evaluated)
+
 fun Evaluator.plus(scriptField: ScriptField): Evaluator =
 	when (scriptField.string) {
 		"define" -> plusDefine(scriptField.rhs)
@@ -41,3 +50,10 @@ fun Evaluator.plusEvaluate(scriptField: ScriptField): Evaluator =
 				Evaluator(context, Evaluated(value, body.type))
 			}
 		}
+
+fun Evaluator.plus(name: String, rhs: Evaluated): Evaluator =
+	copy(evaluated =
+	Compiler(context.bindings, evaluated.compiled)
+		.plus(name lineTo rhs.compiled)
+		.compiled
+		.evaluated)

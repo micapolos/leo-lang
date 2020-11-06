@@ -5,4 +5,4 @@ import leo21.compiled.script
 
 val Script.compile: Script
 	get() =
-		emptyCompilerTokenProcessor.plus(this).compiled.script
+		compiled.script

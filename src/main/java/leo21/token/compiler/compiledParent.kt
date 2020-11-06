@@ -6,12 +6,12 @@ import leo21.token.processor.CompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
 
 sealed class CompiledParent
-data class CompilerPlusCompiledParent(val compiler: TokenCompiler, val name: String) : CompiledParent()
+data class CompilerNameCompiledParent(val compiler: TokenCompiler, val name: String) : CompiledParent()
 data class CompilerDoCompiledParent(val compiler: TokenCompiler) : CompiledParent()
 
 fun CompiledParent.plus(compiled: Compiled): TokenProcessor =
 	when (this) {
-		is CompilerPlusCompiledParent ->
+		is CompilerNameCompiledParent ->
 			CompilerTokenProcessor(compiler.plus(name lineTo compiled))
 		is CompilerDoCompiledParent ->
 			CompilerTokenProcessor(compiler.plusDo(compiled))
