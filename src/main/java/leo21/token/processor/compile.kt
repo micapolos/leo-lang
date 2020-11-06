@@ -1,8 +1,8 @@
 package leo21.token.processor
 
 import leo14.Script
-import leo21.compiled.Compiled
+import leo21.compiled.script
 
-val Script.compiled: Compiled
+val Script.compile: Script
 	get() =
-		emptyCompilerTokenProcessor.plus(this).compiled
+		emptyCompilerTokenProcessor.plus(this).compiled.script
