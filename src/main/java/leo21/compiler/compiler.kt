@@ -70,6 +70,12 @@ fun Compiler.plusDo(script: Script): Compiler =
 				typed.type))
 	}
 
+fun Compiler.plusDo(rhs: Compiled): Compiler =
+	setBody(
+		Compiled(
+			fn(rhs.term).invoke(compiled.term),
+			rhs.type))
+
 fun Compiler.plusFunction(script: Script): Compiler =
 	setBody(compiled.plus(lineCompiled(bindings.arrowTyped(script))))
 
@@ -90,3 +96,4 @@ fun Compiler.plus(compiled: LineCompiled): Compiler =
 	setBody(bindings.resolve(this.compiled.plus(compiled)))
 
 fun Compiler.setBody(body: Compiled) = copy(compiled = body)
+
