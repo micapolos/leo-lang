@@ -7,6 +7,7 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.nativeTerm
 import leo14.leonardoScript
+import leo21.prim.DoubleCosinusPrim
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoubleSinusPrim
@@ -47,7 +48,7 @@ val Compiled.resolvePrimOrNull: Compiled?
 		null
 			?: resolveLeonardoOrNull
 			?: resolveFn1OrNull(doubleType, "sinus", DoubleSinusPrim, doubleType)
-			?: resolveFn1OrNull(doubleType, "cosinus", DoubleSinusPrim, doubleType)
+			?: resolveFn1OrNull(doubleType, "cosinus", DoubleCosinusPrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "plus", doubleType, DoublePlusDoublePrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "minus", doubleType, DoubleMinusDoublePrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "times", doubleType, DoubleTimesDoublePrim, doubleType)
