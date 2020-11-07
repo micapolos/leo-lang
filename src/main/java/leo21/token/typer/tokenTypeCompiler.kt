@@ -8,6 +8,7 @@ import leo14.Token
 import leo21.token.processor.ChoiceCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
 import leo21.token.processor.TypeCompilerTokenProcessor
+import leo21.type.Line
 import leo21.type.Type
 import leo21.type.choice
 import leo21.type.doubleLine
@@ -44,11 +45,16 @@ fun TokenTypeCompiler.plusBegin(name: String): TokenProcessor =
 
 fun TokenTypeCompiler.plus(name: String, rhs: Type): TokenTypeCompiler =
 	when (name) {
-		"number" -> notNullIf(rhs == type()) { set(type.plus(doubleLine)) }
-		"text" -> notNullIf(rhs == type()) { set(type.plus(stringLine)) }
 		"function" -> TODO()
 		else -> null
-	} ?: set(type.plus(name lineTo rhs))
+	} ?: set(type.plus(name compiledLineTo rhs))
 
 fun TokenTypeCompiler.set(type: Type): TokenTypeCompiler =
 	copy(type = type)
+
+infix fun String.compiledLineTo(rhs: Type): Line =
+	when (this) {
+		"number" -> notNullIf(rhs == type()) { doubleLine }
+		"text" -> notNullIf(rhs == type()) { stringLine }
+		else -> null
+	} ?: this lineTo rhs

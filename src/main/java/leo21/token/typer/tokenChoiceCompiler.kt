@@ -9,7 +9,6 @@ import leo21.token.processor.TypeCompilerTokenProcessor
 import leo21.type.Choice
 import leo21.type.Type
 import leo21.type.choice
-import leo21.type.lineTo
 import leo21.type.plus
 import leo21.type.type
 
@@ -34,7 +33,7 @@ fun TokenChoiceCompiler.plusBegin(name: String): TokenProcessor =
 			type()))
 
 fun TokenChoiceCompiler.plus(name: String, rhs: Type): TokenChoiceCompiler =
-	set(choice.plus(name lineTo rhs))
+	set(choice.plus(name compiledLineTo rhs))
 
 fun TokenChoiceCompiler.set(choice: Choice): TokenChoiceCompiler =
 	copy(choice = choice)

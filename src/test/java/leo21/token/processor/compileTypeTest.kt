@@ -26,13 +26,13 @@ class CompileTypeTest {
 			.assertEqualTo(doubleType)
 	}
 
-//	@Test
-//	fun choices() {
-//		script(
-//			"choice" lineTo script(
-//				"text" lineTo script(),
-//				"number" lineTo  script()))
-//			.compileType
-//			.assertEqualTo(type(choice(stringLine, doubleLine)))
-//	}
+	@Test
+	fun choices() {
+		script(
+			"choice" lineTo script(
+				"text" lineTo script(),
+				"number" lineTo script()))
+			.compileType
+			.assertEqualTo(type(choice(stringLine, doubleLine)))
+	}
 }
