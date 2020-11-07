@@ -28,11 +28,12 @@ val Prim.expr: Expr
 			DoubleMinusDoublePrim -> op2Expr("-")
 			DoubleTimesDoublePrim -> op2Expr("*")
 			StringPlusStringPrim -> op2Expr("*")
-			DoubleSinusPrim -> TODO()
-			DoubleCosinusPrim -> TODO()
+			DoubleSinusPrim -> op1Expr("Math.sin")
+			DoubleCosinusPrim -> op1Expr("Math.cos")
 		}
 
 val lhsExpr = expr(lambda("a", expr(lambda("b", expr(id("a"))))))
 val rhsExpr = expr(lambda("a", expr(lambda("b", expr(id("b"))))))
 
+fun op1Expr(op: String): Expr = expr(lambda("x", expr(id(op)).invoke(expr(id("x")))))
 fun op2Expr(op: String): Expr = expr(lambda("x", expr(expr(id("x")).invoke(lhsExpr).op(op, expr(id("x")).invoke(rhsExpr)))))

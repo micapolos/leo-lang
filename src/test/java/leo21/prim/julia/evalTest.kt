@@ -7,9 +7,11 @@ import leo14.lambda.map
 import leo14.lambda.term
 import leo16.term.julia.eval
 import leo21.prim.DoubleMinusDoublePrim
+import leo21.prim.DoubleSinusPrim
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.term.plus
+import kotlin.math.sin
 import kotlin.test.Test
 
 class EvalTest {
@@ -21,5 +23,15 @@ class EvalTest {
 			.code
 			.eval
 			.assertEqualTo("2.0")
+	}
+
+	@Test
+	fun doubleSinus() {
+		term<Prim>(DoubleSinusPrim)
+			.invoke(term(prim(1)))
+			.map(Prim::julia)
+			.code
+			.eval
+			.assertEqualTo("${sin(1.0)}")
 	}
 }

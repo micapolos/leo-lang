@@ -28,8 +28,9 @@ val Prim.julia: Julia
 			DoubleMinusDoublePrim -> op2Julia("-")
 			DoubleTimesDoublePrim -> op2Julia("*")
 			StringPlusStringPrim -> op2Julia("+")
-			DoubleSinusPrim -> TODO()
-			DoubleCosinusPrim -> TODO()
+			DoubleSinusPrim -> op1Julia("sin")
+			DoubleCosinusPrim -> op1Julia("cos")
 		}
 
+fun op1Julia(op: String) = julia("x->${op}(x)")
 fun op2Julia(op: String) = julia("x->x(a->b->a)${op}x(a->b->b)")

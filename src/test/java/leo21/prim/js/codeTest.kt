@@ -5,6 +5,7 @@ import leo14.lambda.js.code
 import leo14.lambda.map
 import leo14.lambda.nativeTerm
 import leo21.prim.DoubleMinusDoublePrim
+import leo21.prim.DoubleSinusPrim
 import leo21.prim.Prim
 import kotlin.test.Test
 
@@ -15,5 +16,13 @@ class CodeTest {
 			.map(Prim::expr)
 			.code
 			.assertEqualTo("x=>((x)(a=>b=>a))-((x)(a=>b=>b))")
+	}
+
+	@Test
+	fun sinus() {
+		nativeTerm(DoubleSinusPrim)
+			.map(Prim::expr)
+			.code
+			.assertEqualTo("x=>(Math.sin)(x)")
 	}
 }
