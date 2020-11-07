@@ -28,12 +28,16 @@ val Prim.code: Code
 			DoubleMinusDoublePrim -> fn2Code("-")
 			DoubleTimesDoublePrim -> fn2Code("*")
 			StringPlusStringPrim -> fn2Code("string-append")
-			DoubleSinusPrim -> TODO()
-			DoubleCosinusPrim -> TODO()
+			DoubleSinusPrim -> fn1Code("sin")
+			DoubleCosinusPrim -> fn1Code("cos")
 		}
 
 val firstCode = code("(lambda (a) (lambda (b) a))")
 val secondCode = code("(lambda (a) (lambda (b) b))")
 
+fun fn1Code(op: String) =
+	code("(lambda (x) ($op x))")
+
 fun fn2Code(op: String) =
 	code("(lambda (x) ($op (x $firstCode) (x $secondCode)))")
+
