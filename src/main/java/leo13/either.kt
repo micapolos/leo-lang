@@ -12,3 +12,6 @@ fun <F, S, R> Either<F, S>.select(firstFn: (F) -> R, secondFn: (S) -> R): R =
 		is FirstEither -> firstFn(first)
 		is SecondEither -> secondFn(second)
 	}
+
+val <F> Either<F, *>.first: F get() = (this as FirstEither).first
+val <S> Either<*, S>.second: S get() = (this as SecondEither).second

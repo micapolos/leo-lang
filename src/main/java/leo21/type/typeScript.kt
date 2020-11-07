@@ -44,4 +44,8 @@ val Field.scriptLine: ScriptLine
 
 val Arrow.scriptLine: ScriptLine
 	get() =
-		"function" lineTo lhs.script.plus("doing" lineTo rhs.script)
+		"function" lineTo script
+
+val Arrow.script: Script
+	get() =
+		lhs.script.plus("doing" lineTo rhs.script)

@@ -12,4 +12,5 @@ val TokenProcessor.fragment: Fragment
 			is EvaluatorTokenProcessor -> evaluator.fragment
 			is TypeCompilerTokenProcessor -> typeCompiler.fragment
 			is ChoiceCompilerTokenProcessor -> choiceCompiler.fragment
+			is ArrowCompilerTokenProcessor -> arrowCompiler.fragment
 		}
