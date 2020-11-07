@@ -1,4 +1,4 @@
-package leo21.token.typer
+package leo21.token.type.compiler
 
 import leo21.token.processor.ArrowCompilerTokenProcessor
 import leo21.token.processor.ChoiceCompilerTokenProcessor

@@ -1,4 +1,4 @@
-package leo21.token.typer
+package leo21.token.type.compiler
 
 import leo.base.notNullIf
 import leo14.BeginToken

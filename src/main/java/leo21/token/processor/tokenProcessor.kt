@@ -13,11 +13,11 @@ import leo21.token.compiler.plus
 import leo21.token.evaluator.TokenEvaluator
 import leo21.token.evaluator.emptyTokenEvaluator
 import leo21.token.evaluator.plus
-import leo21.token.typer.TokenArrowCompiler
-import leo21.token.typer.TokenChoiceCompiler
-import leo21.token.typer.TokenTypeCompiler
-import leo21.token.typer.emptyTokenTypeCompiler
-import leo21.token.typer.plus
+import leo21.token.type.compiler.TokenArrowCompiler
+import leo21.token.type.compiler.TokenChoiceCompiler
+import leo21.token.type.compiler.TokenTypeCompiler
+import leo21.token.type.compiler.emptyTokenTypeCompiler
+import leo21.token.type.compiler.plus
 import leo21.type.Type
 
 sealed class TokenProcessor

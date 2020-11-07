@@ -1,4 +1,4 @@
-package leo21.token.typer
+package leo21.token.type.compiler
 
 import leo13.select
 import leo14.Fragment
