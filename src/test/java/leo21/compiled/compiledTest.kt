@@ -2,6 +2,7 @@ package leo21.compiled
 
 import leo.base.assertEqualTo
 import leo14.lambda.arg
+import leo21.type.allowDuplicateFields
 import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.doubleType
@@ -33,11 +34,12 @@ class CompiledTest {
 
 	@Test
 	fun struct_duplicateField() {
-		assertFails {
-			compiled(
-				"x" lineTo compiled(10.0),
-				"x" lineTo compiled(20.0))
-		}
+		if (!allowDuplicateFields)
+			assertFails {
+				compiled(
+					"x" lineTo compiled(10.0),
+					"x" lineTo compiled(20.0))
+			}
 	}
 
 	@Test
@@ -56,13 +58,14 @@ class CompiledTest {
 
 	@Test
 	fun choice_duplicateField() {
-		assertFails {
-			choiceTyped {
-				this
-					.plusNotChosen("number" lineTo doubleType)
-					.plusChosen("number" lineTo compiled("foo"))
+		if (!allowDuplicateFields)
+			assertFails {
+				choiceTyped {
+					this
+						.plusNotChosen("number" lineTo doubleType)
+						.plusChosen("number" lineTo compiled("foo"))
+				}
 			}
-		}
 	}
 
 	@Test

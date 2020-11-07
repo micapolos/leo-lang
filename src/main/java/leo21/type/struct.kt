@@ -14,7 +14,7 @@ data class Struct(val lineStack: Stack<Line>)
 val emptyStruct = Struct(stack())
 
 fun Struct.plus(line: Line) =
-	if (lineStack.any { name == line.name }) error("duplicate field")
+	if (!allowDuplicateFields && lineStack.any { name == line.name }) error("duplicate field")
 	else Struct(lineStack.push(line))
 
 fun struct(vararg lines: Line) = emptyStruct.fold(lines) { plus(it) }

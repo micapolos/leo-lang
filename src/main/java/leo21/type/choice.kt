@@ -14,7 +14,7 @@ data class Choice(val lineStack: Stack<Line>)
 val emptyChoice = Choice(stack())
 
 fun Choice.plus(line: Line) =
-	if (lineStack.any { name == line.name }) error("duplicate case")
+	if (!allowDuplicateFields && lineStack.any { name == line.name }) error("duplicate case")
 	else Choice(lineStack.push(line))
 
 fun choice(vararg lines: Line) = emptyChoice.fold(lines) { plus(it) }
