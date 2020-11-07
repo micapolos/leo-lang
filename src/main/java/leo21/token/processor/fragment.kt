@@ -10,5 +10,6 @@ val TokenProcessor.fragment: Fragment
 		when (this) {
 			is CompilerTokenProcessor -> compiler.fragment
 			is EvaluatorTokenProcessor -> evaluator.fragment
-			is TyperTokenProcessor -> typer.fragment
+			is TypeCompilerTokenProcessor -> typeCompiler.fragment
+			is ChoiceCompilerTokenProcessor -> choiceCompiler.fragment
 		}

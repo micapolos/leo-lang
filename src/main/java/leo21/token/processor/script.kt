@@ -10,5 +10,6 @@ val TokenProcessor.script: Script
 		when (this) {
 			is CompilerTokenProcessor -> compiler.script
 			is EvaluatorTokenProcessor -> evaluator.evaluator.evaluated.script
-			is TyperTokenProcessor -> typer.type.script
+			is TypeCompilerTokenProcessor -> typeCompiler.type.script
+			is ChoiceCompilerTokenProcessor -> choiceCompiler.choice.script
 		}

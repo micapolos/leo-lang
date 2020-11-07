@@ -7,13 +7,24 @@ import leo14.fragment
 import leo14.parent
 import leo21.type.script
 
-val TokenTyper.fragment: Fragment
+val TokenTypeCompiler.fragment: Fragment
 	get() =
 		parentOrNull?.fragmentParent.fragment(type.script)
 
 val TypeParent.fragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is TyperNameTypeParent -> typer.fragment.parent(begin(name))
+			is TypeNameTypeParent -> typeCompiler.fragment.parent(begin(name))
+			is ChoiceNameTypeParent -> choiceCompiler.fragment.parent(begin(name))
+		}
+
+val TokenChoiceCompiler.fragment: Fragment
+	get() =
+		parentOrNull?.fragmentParent.fragment(choice.script)
+
+val ChoiceParent.fragmentParent: FragmentParent
+	get() =
+		when (this) {
+			is TypeCompilerChoiceParent -> typeCompiler.fragment.parent(begin("choice"))
 		}
 
