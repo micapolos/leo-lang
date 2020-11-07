@@ -3,9 +3,11 @@ package leo21.token.processor
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.script
+import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.doubleLine
 import leo21.type.doubleType
+import leo21.type.line
 import leo21.type.stringLine
 import leo21.type.stringType
 import leo21.type.type
@@ -34,5 +36,16 @@ class CompileTypeTest {
 				"number" lineTo script()))
 			.compileType
 			.assertEqualTo(type(choice(stringLine, doubleLine)))
+	}
+
+	@Test
+	fun function() {
+		script(
+			"function" lineTo script(
+				"text" lineTo script(),
+				"doing" lineTo script(
+					"number" lineTo script())))
+			.compileType
+			.assertEqualTo(type(line(stringType arrowTo doubleType)))
 	}
 }

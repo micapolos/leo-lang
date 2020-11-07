@@ -13,19 +13,19 @@ import leo21.token.compiler.plus
 import leo21.token.evaluator.TokenEvaluator
 import leo21.token.evaluator.emptyTokenEvaluator
 import leo21.token.evaluator.plus
-import leo21.token.type.compiler.TokenArrowCompiler
-import leo21.token.type.compiler.TokenChoiceCompiler
-import leo21.token.type.compiler.TokenTypeCompiler
-import leo21.token.type.compiler.emptyTokenTypeCompiler
+import leo21.token.type.compiler.ArrowCompiler
+import leo21.token.type.compiler.ChoiceCompiler
+import leo21.token.type.compiler.TypeCompiler
+import leo21.token.type.compiler.emptyTypeCompiler
 import leo21.token.type.compiler.plus
 import leo21.type.Type
 
 sealed class TokenProcessor
 data class CompilerTokenProcessor(val compiler: TokenCompiler) : TokenProcessor()
 data class EvaluatorTokenProcessor(val evaluator: TokenEvaluator) : TokenProcessor()
-data class TypeCompilerTokenProcessor(val typeCompiler: TokenTypeCompiler) : TokenProcessor()
-data class ChoiceCompilerTokenProcessor(val choiceCompiler: TokenChoiceCompiler) : TokenProcessor()
-data class ArrowCompilerTokenProcessor(val arrowCompiler: TokenArrowCompiler) : TokenProcessor()
+data class TypeCompilerTokenProcessor(val typeCompiler: TypeCompiler) : TokenProcessor()
+data class ChoiceCompilerTokenProcessor(val choiceCompiler: ChoiceCompiler) : TokenProcessor()
+data class ArrowCompilerTokenProcessor(val arrowCompiler: ArrowCompiler) : TokenProcessor()
 
 val emptyCompilerTokenProcessor: TokenProcessor =
 	CompilerTokenProcessor(emptyTokenCompiler)
@@ -34,7 +34,7 @@ val emptyEvaluatorTokenProcessor: TokenProcessor =
 	EvaluatorTokenProcessor(emptyTokenEvaluator)
 
 val emptyTyperTokenProcessor: TokenProcessor =
-	TypeCompilerTokenProcessor(emptyTokenTypeCompiler)
+	TypeCompilerTokenProcessor(emptyTypeCompiler)
 
 fun TokenProcessor.plus(token: Token): TokenProcessor =
 	when (this) {

@@ -12,28 +12,28 @@ import leo21.type.choice
 import leo21.type.plus
 import leo21.type.type
 
-data class TokenChoiceCompiler(
+data class ChoiceCompiler(
 	val parentOrNull: ChoiceParent?,
 	val choice: Choice
 )
 
-val emptyTokenChoiceCompiler = TokenChoiceCompiler(null, choice())
+val emptyChoiceCompiler = ChoiceCompiler(null, choice())
 
-fun TokenChoiceCompiler.plus(token: Token): TokenProcessor =
+fun ChoiceCompiler.plus(token: Token): TokenProcessor =
 	when (token) {
 		is LiteralToken -> null!!
 		is BeginToken -> plusBegin(token.begin.string)
 		is EndToken -> parentOrNull!!.plus(choice)
 	}
 
-fun TokenChoiceCompiler.plusBegin(name: String): TokenProcessor =
+fun ChoiceCompiler.plusBegin(name: String): TokenProcessor =
 	TypeCompilerTokenProcessor(
-		TokenTypeCompiler(
+		TypeCompiler(
 			ChoiceNameTypeParent(this, name),
 			type()))
 
-fun TokenChoiceCompiler.plus(name: String, rhs: Type): TokenChoiceCompiler =
+fun ChoiceCompiler.plus(name: String, rhs: Type): ChoiceCompiler =
 	set(choice.plus(name compiledLineTo rhs))
 
-fun TokenChoiceCompiler.set(choice: Choice): TokenChoiceCompiler =
+fun ChoiceCompiler.set(choice: Choice): ChoiceCompiler =
 	copy(choice = choice)

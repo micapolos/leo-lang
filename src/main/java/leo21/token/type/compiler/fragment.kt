@@ -10,7 +10,7 @@ import leo21.type.Arrow
 import leo21.type.Type
 import leo21.type.script
 
-val TokenTypeCompiler.fragment: Fragment
+val TypeCompiler.fragment: Fragment
 	get() =
 		parentOrNull?.fragmentParent.fragment(type.script)
 
@@ -20,9 +20,10 @@ val TypeParent.fragmentParent: FragmentParent
 			is TypeNameTypeParent -> typeCompiler.fragment.parent(begin(name))
 			is ChoiceNameTypeParent -> choiceCompiler.fragment.parent(begin(name))
 			is ArrowDoingTypeParent -> arrowCompiler.fragment.parent(begin("doing"))
+			is ArrowNameTypeParent -> arrowCompiler.fragment.parent(begin(name))
 		}
 
-val TokenChoiceCompiler.fragment: Fragment
+val ChoiceCompiler.fragment: Fragment
 	get() =
 		parentOrNull?.fragmentParent.fragment(choice.script)
 
@@ -32,7 +33,7 @@ val ChoiceParent.fragmentParent: FragmentParent
 			is TypeCompilerChoiceParent -> typeCompiler.fragment.parent(begin("choice"))
 		}
 
-val TokenArrowCompiler.fragment: Fragment
+val ArrowCompiler.fragment: Fragment
 	get() =
 		parentOrNull?.fragmentParent.fragment(typeOrArrow.select(Type::script, Arrow::script))
 

@@ -1,10 +1,12 @@
 package leo21.token.type.compiler
 
 import leo.base.notNullIf
+import leo13.firstEither
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
+import leo21.token.processor.ArrowCompilerTokenProcessor
 import leo21.token.processor.ChoiceCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
 import leo21.token.processor.TypeCompilerTokenProcessor
@@ -17,36 +19,43 @@ import leo21.type.plus
 import leo21.type.stringLine
 import leo21.type.type
 
-data class TokenTypeCompiler(
+data class TypeCompiler(
 	val parentOrNull: TypeParent?,
 	val type: Type
 )
 
-val emptyTokenTypeCompiler = TokenTypeCompiler(null, type())
+val emptyTypeCompiler = TypeCompiler(null, type())
 
-fun TokenTypeCompiler.plus(token: Token): TokenProcessor =
+fun TypeCompiler.plus(token: Token): TokenProcessor =
 	when (token) {
 		is LiteralToken -> null!!
 		is BeginToken -> plusBegin(token.begin.string)
 		is EndToken -> parentOrNull!!.plus(type)
 	}
 
-fun TokenTypeCompiler.plusBegin(name: String): TokenProcessor =
+fun TypeCompiler.plusBegin(name: String): TokenProcessor =
 	when (name) {
 		"choice" -> ChoiceCompilerTokenProcessor(
-			TokenChoiceCompiler(
+			ChoiceCompiler(
 				TypeCompilerChoiceParent(this),
 				choice()))
+		"function" -> ArrowCompilerTokenProcessor(
+			ArrowCompiler(
+				TypeCompilerArrowParent(this),
+				type().firstEither()))
 		else -> TypeCompilerTokenProcessor(
-			TokenTypeCompiler(
+			TypeCompiler(
 				TypeNameTypeParent(this, name),
 				type()))
 	}
 
-fun TokenTypeCompiler.plus(name: String, rhs: Type): TokenTypeCompiler =
-	set(type.plus(name compiledLineTo rhs))
+fun TypeCompiler.plus(name: String, rhs: Type): TypeCompiler =
+	plus(name compiledLineTo rhs)
 
-fun TokenTypeCompiler.set(type: Type): TokenTypeCompiler =
+fun TypeCompiler.plus(line: Line): TypeCompiler =
+	set(type.plus(line))
+
+fun TypeCompiler.set(type: Type): TypeCompiler =
 	copy(type = type)
 
 infix fun String.compiledLineTo(rhs: Type): Line =

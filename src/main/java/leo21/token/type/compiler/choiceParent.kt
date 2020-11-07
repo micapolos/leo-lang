@@ -6,7 +6,7 @@ import leo21.type.Choice
 import leo21.type.type
 
 sealed class ChoiceParent
-data class TypeCompilerChoiceParent(val typeCompiler: TokenTypeCompiler) : ChoiceParent()
+data class TypeCompilerChoiceParent(val typeCompiler: TypeCompiler) : ChoiceParent()
 
 fun ChoiceParent.plus(choice: Choice): TokenProcessor =
 	when (this) {
