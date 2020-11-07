@@ -3,9 +3,11 @@ package leo21.prim.julia
 import leo14.lambda.julia.Julia
 import leo14.lambda.julia.julia
 import leo14.literalString
+import leo21.prim.DoubleCosinusPrim
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoublePrim
+import leo21.prim.DoubleSinusPrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.NilPrim
 import leo21.prim.Prim
@@ -26,6 +28,8 @@ val Prim.julia: Julia
 			DoubleMinusDoublePrim -> op2Julia("-")
 			DoubleTimesDoublePrim -> op2Julia("*")
 			StringPlusStringPrim -> op2Julia("+")
+			DoubleSinusPrim -> TODO()
+			DoubleCosinusPrim -> TODO()
 		}
 
 fun op2Julia(op: String) = julia("x->x(a->b->a)${op}x(a->b->b)")

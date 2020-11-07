@@ -3,9 +3,11 @@ package leo21.prim.scheme
 import leo14.lambda.scheme.Code
 import leo14.lambda.scheme.code
 import leo14.literalString
+import leo21.prim.DoubleCosinusPrim
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
 import leo21.prim.DoublePrim
+import leo21.prim.DoubleSinusPrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.NilPrim
 import leo21.prim.Prim
@@ -26,6 +28,8 @@ val Prim.code: Code
 			DoubleMinusDoublePrim -> fn2Code("-")
 			DoubleTimesDoublePrim -> fn2Code("*")
 			StringPlusStringPrim -> fn2Code("string-append")
+			DoubleSinusPrim -> TODO()
+			DoubleCosinusPrim -> TODO()
 		}
 
 val firstCode = code("(lambda (a) (lambda (b) a))")

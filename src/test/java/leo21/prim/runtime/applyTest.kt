@@ -3,11 +3,15 @@ package leo21.prim.runtime
 import leo.base.assertEqualTo
 import leo14.lambda.value.plus
 import leo14.lambda.value.value
+import leo21.prim.DoubleCosinusPrim
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
+import leo21.prim.DoubleSinusPrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.prim
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.test.Test
 
 class ApplyTest {
@@ -30,6 +34,20 @@ class ApplyTest {
 		DoubleTimesDoublePrim
 			.apply(value(prim(10.0)).plus(value(prim(20.0))))
 			.assertEqualTo(value(prim(200.0)))
+	}
+
+	@Test
+	fun doubleSinus() {
+		DoubleSinusPrim
+			.apply(value(prim(1)))
+			.assertEqualTo(value(prim(sin(1.0))))
+	}
+
+	@Test
+	fun doubleCosinus() {
+		DoubleCosinusPrim
+			.apply(value(prim(1)))
+			.assertEqualTo(value(prim(cos(1.0))))
 	}
 
 	@Test

@@ -17,6 +17,8 @@ sealed class Prim : Scriptable() {
 				DoubleMinusDoublePrim -> script("double" lineTo script(), "minus" lineTo script("double"))
 				DoubleTimesDoublePrim -> script("double" lineTo script(), "times" lineTo script("double"))
 				StringPlusStringPrim -> script("string" lineTo script(), "plus" lineTo script("string"))
+				DoubleSinusPrim -> script("double" lineTo script(), "sinus" lineTo script())
+				DoubleCosinusPrim -> script("double" lineTo script(), "cosinus" lineTo script())
 			}
 }
 
@@ -33,6 +35,8 @@ data class DoublePrim(val double: Double) : Prim() {
 object DoublePlusDoublePrim : Prim()
 object DoubleMinusDoublePrim : Prim()
 object DoubleTimesDoublePrim : Prim()
+object DoubleSinusPrim : Prim()
+object DoubleCosinusPrim : Prim()
 object StringPlusStringPrim : Prim()
 
 val nilPrim: Prim = NilPrim

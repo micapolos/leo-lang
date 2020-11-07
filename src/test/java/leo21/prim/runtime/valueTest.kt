@@ -5,11 +5,15 @@ import leo14.lambda.invoke
 import leo14.lambda.pair
 import leo14.lambda.term
 import leo14.lambda.value.value
+import leo21.prim.DoubleCosinusPrim
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
+import leo21.prim.DoubleSinusPrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.prim
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.test.Test
 import leo21.prim.runtime.value as primValue
 
@@ -38,6 +42,16 @@ class EvaluateTest {
 			.invoke(pair(term(prim(2)), term(prim(3))))
 			.primValue
 			.assertEqualTo(value(prim(6)))
+
+		term(DoubleSinusPrim)
+			.invoke(term(prim(1)))
+			.primValue
+			.assertEqualTo(value(prim(sin(1.0))))
+
+		term(DoubleCosinusPrim)
+			.invoke(term(prim(1)))
+			.primValue
+			.assertEqualTo(value(prim(cos(1.0))))
 
 		term(StringPlusStringPrim)
 			.invoke(pair(term(prim("Hello, ")), term(prim("world!"))))

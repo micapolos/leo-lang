@@ -9,6 +9,7 @@ import leo14.lambda.nativeTerm
 import leo14.leonardoScript
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
+import leo21.prim.DoubleSinusPrim
 import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
@@ -41,17 +42,23 @@ val Compiled.resolveLeonardoOrNull: Compiled?
 		notNullIf(type == type("leonardo" lineTo type())) {
 			leonardoScript.compiled
 		}
-
-fun Compiled.resolveFn2OrNull(lhs: Type, name: String, rhs: Type, prim: Prim, result: Type): Compiled? =
-	notNullIf(type == lhs.plus(name lineTo rhs)) {
-		fn(nativeTerm(prim).invoke(arg(0))).invoke(term).of(result)
-	}
-
 val Compiled.resolvePrimOrNull: Compiled?
 	get() =
 		null
 			?: resolveLeonardoOrNull
+			?: resolveFn1OrNull(doubleType, "sinus", DoubleSinusPrim, doubleType)
+			?: resolveFn1OrNull(doubleType, "cosinus", DoubleSinusPrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "plus", doubleType, DoublePlusDoublePrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "minus", doubleType, DoubleMinusDoublePrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "times", doubleType, DoubleTimesDoublePrim, doubleType)
 			?: resolveFn2OrNull(stringType, "plus", stringType, StringPlusStringPrim, stringType)
+
+fun Compiled.resolveFn1OrNull(lhs: Type, name: String, prim: Prim, result: Type): Compiled? =
+	notNullIf(type == lhs.plus(name lineTo type())) {
+		fn(nativeTerm(prim).invoke(arg(0))).invoke(term).of(result)
+	}
+
+fun Compiled.resolveFn2OrNull(lhs: Type, name: String, rhs: Type, prim: Prim, result: Type): Compiled? =
+	notNullIf(type == lhs.plus(name lineTo rhs)) {
+		nativeTerm(prim).invoke(term).of(result)
+	}
