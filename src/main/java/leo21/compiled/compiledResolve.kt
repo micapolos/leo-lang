@@ -46,7 +46,7 @@ val Compiled.resolveLeonardoOrNull: Compiled?
 val Compiled.resolvePrimOrNull: Compiled?
 	get() =
 		null
-			?: resolveMakeOrNull
+			?: resolveAsOrNull
 			?: resolveToOrNull
 			?: resolveLeonardoOrNull
 			?: resolveFn1OrNull(doubleType, "sinus", DoubleSinusPrim, doubleType)
@@ -88,11 +88,11 @@ val Compiled.resolveToOrNull: Compiled?
 			}
 		}
 
-val Compiled.resolveMakeOrNull: Compiled?
+val Compiled.resolveAsOrNull: Compiled?
 	get() =
 		linkOrNull?.let { link ->
 			link.head.fieldCompiledOrNull?.let { field ->
-				ifOrNull(field.field.name == "make") {
+				ifOrNull(field.field.name == "as") {
 					field.rhsCompiled.linkOrNull?.let { rhsLink ->
 						ifOrNull(rhsLink.tail.type == type()) {
 							rhsLink.head.fieldCompiledOrNull?.let { rhsField ->

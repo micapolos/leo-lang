@@ -38,11 +38,11 @@ class CompiledResolveTest {
 	}
 
 	@Test
-	fun make() {
+	fun as_() {
 		val compiled = compiled(
 			"x" lineTo compiled(10.0),
 			"y" lineTo compiled(20.0),
-			"make" lineTo compiled(
+			"as" lineTo compiled(
 				"point" lineTo compiled()))
 
 		compiled
