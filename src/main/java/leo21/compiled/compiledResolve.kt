@@ -47,7 +47,6 @@ val Compiled.resolvePrimOrNull: Compiled?
 	get() =
 		null
 			?: resolveAsOrNull
-			?: resolveToOrNull
 			?: resolveLeonardoOrNull
 			?: resolveFn1OrNull(doubleType, "sinus", DoubleSinusPrim, doubleType)
 			?: resolveFn1OrNull(doubleType, "cosinus", DoubleCosinusPrim, doubleType)
@@ -66,28 +65,6 @@ fun Compiled.resolveFn2OrNull(lhs: Type, name: String, rhs: Type, prim: Prim, re
 		nativeTerm(prim).invoke(term).of(result)
 	}
 
-val Compiled.resolveToOrNull: Compiled?
-	get() =
-		linkOrNull?.let { link ->
-			link.head.fieldCompiledOrNull?.let { field ->
-				field.rhsCompiled.let { rhs ->
-					rhs.linkOrNull?.let { rhsLink ->
-						ifOrNull(rhsLink.tail.type == type()) {
-							rhsLink.head.fieldCompiledOrNull?.let { rhsField ->
-								ifOrNull(rhsField.field.name == "to") {
-									rhsField.rhsCompiled.linkOrNull?.let { rhsRhsLink ->
-										ifOrNull(rhsRhsLink.tail.type == type()) {
-											link.tail.plus(rhsRhsLink.head).make(field.field.name)
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
 val Compiled.resolveAsOrNull: Compiled?
 	get() =
 		linkOrNull?.let { link ->
@@ -96,9 +73,20 @@ val Compiled.resolveAsOrNull: Compiled?
 					field.rhsCompiled.linkOrNull?.let { rhsLink ->
 						ifOrNull(rhsLink.tail.type == type()) {
 							rhsLink.head.fieldCompiledOrNull?.let { rhsField ->
-								ifOrNull(rhsField.rhsCompiled.type == type()) {
-									rhsField.field.name.let { name ->
-										link.tail.make(name)
+								rhsField.field.name.let { name ->
+									rhsField.rhsCompiled.linkOrNull.let { rhsLink ->
+										if (rhsLink == null) link.tail.make(name)
+										else ifOrNull(rhsLink.tail.type == type()) {
+											rhsLink.head.fieldCompiledOrNull?.let { rhsField ->
+												ifOrNull(rhsField.field.name == "to") {
+													rhsField.rhsCompiled.linkOrNull?.let { rhsRhsLink ->
+														ifOrNull(rhsRhsLink.tail.type == type()) {
+															link.tail.plus(rhsRhsLink.head).make(name)
+														}
+													}
+												}
+											}
+										}
 									}
 								}
 							}
