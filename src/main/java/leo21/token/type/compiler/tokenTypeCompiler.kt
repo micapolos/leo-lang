@@ -44,10 +44,7 @@ fun TokenTypeCompiler.plusBegin(name: String): TokenProcessor =
 	}
 
 fun TokenTypeCompiler.plus(name: String, rhs: Type): TokenTypeCompiler =
-	when (name) {
-		"function" -> TODO()
-		else -> null
-	} ?: set(type.plus(name compiledLineTo rhs))
+	set(type.plus(name compiledLineTo rhs))
 
 fun TokenTypeCompiler.set(type: Type): TokenTypeCompiler =
 	copy(type = type)
