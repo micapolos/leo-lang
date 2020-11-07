@@ -56,6 +56,15 @@ val Compiled.choice get() = choiceOrNull.notNullOrError("not choice")
 fun Compiled.getOrNull(name: String): Compiled? =
 	structOrNull?.onlyLineOrNull?.rhsOrNull?.structOrNull?.lineOrNull(name)?.let { compiled(it) }
 
+fun Compiled.lineOrNull(name: String): LineCompiled? =
+	structOrNull?.lineOrNull(name)
+
+fun Compiled.line(name: String): LineCompiled =
+	lineOrNull(name)!!
+
+fun Compiled.access(name: String): Compiled =
+	compiled(line(name))
+
 val Compiled.contentOrNull: Compiled?
 	get() =
 		structOrNull?.onlyLineOrNull?.rhsOrNull
