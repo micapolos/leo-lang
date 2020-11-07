@@ -7,7 +7,6 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.nativeTerm
 import leo14.leonardoScript
-import leo16.nativeString
 import leo21.prim.DoubleCosinusPrim
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
@@ -47,6 +46,7 @@ val Compiled.resolveLeonardoOrNull: Compiled?
 val Compiled.resolvePrimOrNull: Compiled?
 	get() =
 		null
+			?: resolveMakeOrNull
 			?: resolveToOrNull
 			?: resolveLeonardoOrNull
 			?: resolveFn1OrNull(doubleType, "sinus", DoubleSinusPrim, doubleType)
@@ -79,6 +79,26 @@ val Compiled.resolveToOrNull: Compiled?
 										ifOrNull(rhsRhsLink.tail.type == type()) {
 											link.tail.plus(rhsRhsLink.head).make(field.field.name)
 										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+val Compiled.resolveMakeOrNull: Compiled?
+	get() =
+		linkOrNull?.let { link ->
+			link.head.fieldCompiledOrNull?.let { field ->
+				ifOrNull(field.field.name == "make") {
+					field.rhsCompiled.linkOrNull?.let { rhsLink ->
+						ifOrNull(rhsLink.tail.type == type()) {
+							rhsLink.head.fieldCompiledOrNull?.let { rhsField ->
+								ifOrNull(rhsField.rhsCompiled.type == type()) {
+									rhsField.field.name.let { name ->
+										link.tail.make(name)
 									}
 								}
 							}

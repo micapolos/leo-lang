@@ -36,4 +36,17 @@ class CompiledResolveTest {
 					.plus(compiled.access("point").get("to").get("y").link.head)
 					.make("point"))
 	}
+
+	@Test
+	fun make() {
+		val compiled = compiled(
+			"x" lineTo compiled(10.0),
+			"y" lineTo compiled(20.0),
+			"make" lineTo compiled(
+				"point" lineTo compiled()))
+
+		compiled
+			.resolve
+			.assertEqualTo(compiled.link.tail.make("point"))
+	}
 }
