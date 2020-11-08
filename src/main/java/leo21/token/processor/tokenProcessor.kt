@@ -13,6 +13,9 @@ import leo21.token.compiler.plus
 import leo21.token.evaluator.TokenEvaluator
 import leo21.token.evaluator.emptyTokenEvaluator
 import leo21.token.evaluator.plus
+import leo21.token.script.ScriptCompiler
+import leo21.token.script.emptyScriptCompiler
+import leo21.token.script.plus
 import leo21.token.type.compiler.ArrowCompiler
 import leo21.token.type.compiler.ChoiceCompiler
 import leo21.token.type.compiler.RecursiveCompiler
@@ -28,6 +31,7 @@ data class TypeCompilerTokenProcessor(val typeCompiler: TypeCompiler) : TokenPro
 data class ChoiceCompilerTokenProcessor(val choiceCompiler: ChoiceCompiler) : TokenProcessor()
 data class ArrowCompilerTokenProcessor(val arrowCompiler: ArrowCompiler) : TokenProcessor()
 data class RecursiveTokenProcessor(val recursiveCompiler: RecursiveCompiler) : TokenProcessor()
+data class ScriptCompilerTokenProcessor(val scriptCompiler: ScriptCompiler) : TokenProcessor()
 
 val emptyCompilerTokenProcessor: TokenProcessor =
 	CompilerTokenProcessor(emptyTokenCompiler)
@@ -38,6 +42,9 @@ val emptyEvaluatorTokenProcessor: TokenProcessor =
 val emptyTyperTokenProcessor: TokenProcessor =
 	TypeCompilerTokenProcessor(emptyTypeCompiler)
 
+val emptyScriptTokenProcessor: TokenProcessor =
+	ScriptCompilerTokenProcessor(emptyScriptCompiler)
+
 fun TokenProcessor.plus(token: Token): TokenProcessor =
 	when (this) {
 		is CompilerTokenProcessor -> compiler.plus(token)
@@ -46,6 +53,7 @@ fun TokenProcessor.plus(token: Token): TokenProcessor =
 		is ChoiceCompilerTokenProcessor -> choiceCompiler.plus(token)
 		is ArrowCompilerTokenProcessor -> arrowCompiler.plus(token)
 		is RecursiveTokenProcessor -> recursiveCompiler.plus(token)
+		is ScriptCompilerTokenProcessor -> scriptCompiler.plus(token)
 	}
 
 fun TokenProcessor.plus(script: Script): TokenProcessor =

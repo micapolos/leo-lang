@@ -13,14 +13,22 @@ data class Number(val bigDecimal: BigDecimal) {
 fun number(bigDecimal: BigDecimal): Number = Number(bigDecimal)
 fun number(int: Int): Number = Number(BigDecimal.valueOf(int.toLong()))
 fun number(long: Long): Number = Number(BigDecimal.valueOf(long))
-fun number(double: Double): Number = Number(BigDecimal.valueOf(double))
+fun number(double: Double): Number = Number(double.bigDecimal)
 
 val Int.number: Number get() = number(this)
 val Double.number: Number get() = number(this)
 
 val Int.bigDecimal get() = BigDecimal.valueOf(toLong())
 val Int.unsignedBigDecimal get() = BigDecimal.valueOf(toUInt().toLong())
-val Double.bigDecimal get() = BigDecimal.valueOf(this)
+val Double.bigDecimal get() = BigDecimal.valueOf(this).stripDotZero
+
+val BigDecimal.stripDotZero: BigDecimal
+	get() =
+		try {
+			toBigIntegerExact().toBigDecimal()
+		} catch (e: ArithmeticException) {
+			this
+		}
 
 val String.numberOrNull: Number?
 	get() =

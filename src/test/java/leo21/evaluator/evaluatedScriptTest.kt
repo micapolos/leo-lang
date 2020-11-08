@@ -2,18 +2,21 @@ package leo21.evaluator
 
 import leo.base.assertEqualTo
 import leo14.lambda.id
+import leo14.lambda.value.value
 import leo14.lineTo
 import leo14.literal
 import leo14.script
 import leo21.compiled.LineCompiled
 import leo21.compiled.compiled
 import leo21.compiled.lineTo
+import leo21.prim.prim
 import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.doubleType
 import leo21.type.line
 import leo21.type.lineTo
 import leo21.type.stringType
+import java.math.BigDecimal
 import kotlin.test.Test
 
 class EvaluatedScriptTest {
@@ -80,5 +83,12 @@ class EvaluatedScriptTest {
 					"function" lineTo script(
 						"text" lineTo script(),
 						"doing" lineTo script("number"))))
+	}
+
+	@Test
+	fun double() {
+		Evaluated(value(prim(10.0)), doubleType)
+			.script
+			.assertEqualTo(script(literal(10)))
 	}
 }
