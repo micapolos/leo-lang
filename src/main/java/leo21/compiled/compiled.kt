@@ -12,6 +12,7 @@ import leo14.lineTo
 import leo14.plus
 import leo21.prim.Prim
 import leo21.type.ChoiceType
+import leo21.type.RecursiveType
 import leo21.type.StructType
 import leo21.type.Type
 import leo21.type.script
@@ -36,6 +37,7 @@ fun <R> Compiled.switch(
 	when (type) {
 		is StructType -> structFn(StructCompiled(term, type.struct))
 		is ChoiceType -> choiceFn(ChoiceCompiled(term, type.choice))
+		is RecursiveType -> TODO()
 	}
 
 fun compiled(vararg lines: LineCompiled): Compiled =

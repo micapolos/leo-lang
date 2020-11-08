@@ -1,5 +1,6 @@
 package leo14
 
+import leo.base.failIfOr
 import leo.base.ifNotNull
 import leo.base.notNullOrError
 import leo13.fold
@@ -60,3 +61,7 @@ fun Fragment.plus(fragment: Fragment): Fragment =
 
 fun Fragment.plus(fragmentParent: FragmentParent): Fragment =
 	plus(fragmentParent.fragment).plus(fragmentParent.begin)
+
+val Fragment.rootScript: Script
+	get() =
+		failIfOr(parent != null) { script }

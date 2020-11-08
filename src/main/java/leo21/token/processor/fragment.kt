@@ -1,6 +1,7 @@
 package leo21.token.processor
 
 import leo14.Fragment
+import leo14.rootScript
 import leo21.token.compiler.fragment
 import leo21.token.evaluator.fragment
 import leo21.token.type.compiler.fragment
@@ -13,4 +14,5 @@ val TokenProcessor.fragment: Fragment
 			is TypeCompilerTokenProcessor -> typeCompiler.fragment
 			is ChoiceCompilerTokenProcessor -> choiceCompiler.fragment
 			is ArrowCompilerTokenProcessor -> arrowCompiler.fragment
+			is RecursiveTokenProcessor -> recursiveCompiler.fragment
 		}

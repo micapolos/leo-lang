@@ -19,6 +19,10 @@ data class ChoiceType(val choice: Choice) : Type() {
 	override fun toString() = super.toString()
 }
 
+data class RecursiveType(val recursive: Recursive) : Type() {
+	override fun toString() = super.toString()
+}
+
 fun type(struct: Struct): Type = StructType(struct)
 fun type(choice: Choice): Type = ChoiceType(choice)
 

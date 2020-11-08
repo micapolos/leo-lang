@@ -7,6 +7,7 @@ val Type.isStatic: Boolean
 		when (this) {
 			is StructType -> struct.isStatic
 			is ChoiceType -> false
+			is RecursiveType -> TODO()
 		}
 
 val Struct.isStatic: Boolean

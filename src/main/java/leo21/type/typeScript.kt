@@ -15,6 +15,7 @@ val Type.script: Script
 		when (this) {
 			is StructType -> struct.script
 			is ChoiceType -> choice.script
+			is RecursiveType -> recursive.script
 		}
 
 val Struct.script: Script
@@ -49,3 +50,7 @@ val Arrow.scriptLine: ScriptLine
 val Arrow.script: Script
 	get() =
 		lhs.script.plus("doing" lineTo rhs.script)
+
+val Recursive.script: Script
+	get() =
+		script("recursive" lineTo script(name))

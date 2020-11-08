@@ -8,6 +8,7 @@ import leo14.LiteralToken
 import leo14.Token
 import leo21.token.processor.ArrowCompilerTokenProcessor
 import leo21.token.processor.ChoiceCompilerTokenProcessor
+import leo21.token.processor.RecursiveTokenProcessor
 import leo21.token.processor.TokenProcessor
 import leo21.token.processor.TypeCompilerTokenProcessor
 import leo21.type.Line
@@ -43,6 +44,10 @@ fun TypeCompiler.plusBegin(name: String): TokenProcessor =
 			ArrowCompiler(
 				TypeCompilerArrowParent(this),
 				type().firstEither()))
+		"recursive" -> RecursiveTokenProcessor(
+			RecursiveCompiler(
+				TODO(),
+				null))
 		else -> TypeCompilerTokenProcessor(
 			TypeCompiler(
 				TypeNameTypeParent(this, name),
