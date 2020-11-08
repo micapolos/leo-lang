@@ -1,5 +1,6 @@
 package leo21.type
 
-data class Recursive(val name: String)
+data class Recursive(val type: Type)
 
-fun recursive(name: String) = Recursive(name)
+fun recursive(type: Type) = Recursive(type)
+val Type.asRecursive get() = recursive(this)

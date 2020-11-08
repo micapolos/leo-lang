@@ -23,8 +23,14 @@ data class RecursiveType(val recursive: Recursive) : Type() {
 	override fun toString() = super.toString()
 }
 
+data class RecurseType(val recurse: Recurse) : Type() {
+	override fun toString() = super.toString()
+}
+
 fun type(struct: Struct): Type = StructType(struct)
 fun type(choice: Choice): Type = ChoiceType(choice)
+fun type(recursive: Recursive): Type = RecursiveType(recursive)
+fun type(recurse: Recurse): Type = RecurseType(recurse)
 
 val Type.structOrNull get() = (this as? StructType)?.struct
 val Type.choiceOrNull get() = (this as? ChoiceType)?.choice

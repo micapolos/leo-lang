@@ -8,7 +8,8 @@ val Type.isUninhabited: Boolean
 		when (this) {
 			is StructType -> struct.isUninhabited
 			is ChoiceType -> choice.isUninhabited
-			is RecursiveType -> TODO()
+			is RecursiveType -> false
+			is RecurseType -> false
 		}
 
 val Struct.isUninhabited: Boolean

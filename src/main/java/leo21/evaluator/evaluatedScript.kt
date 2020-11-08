@@ -23,6 +23,7 @@ import leo21.type.DoubleLine
 import leo21.type.Field
 import leo21.type.FieldLine
 import leo21.type.Line
+import leo21.type.RecurseType
 import leo21.type.RecursiveType
 import leo21.type.StringLine
 import leo21.type.Struct
@@ -37,6 +38,7 @@ fun script(value: Value<Prim>, type: Type): Script =
 		is StructType -> script(value, type.struct)
 		is ChoiceType -> script(scriptLine(value, type.choice))
 		is RecursiveType -> TODO()
+		is RecurseType -> TODO()
 	}
 
 fun script(value: Value<Prim>, struct: Struct): Script =

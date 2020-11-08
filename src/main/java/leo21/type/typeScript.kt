@@ -6,6 +6,7 @@ import leo13.map
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
+import leo14.literal
 import leo14.plus
 import leo14.script
 import leo14.scriptLine
@@ -16,6 +17,7 @@ val Type.script: Script
 			is StructType -> struct.script
 			is ChoiceType -> choice.script
 			is RecursiveType -> recursive.script
+			is RecurseType -> TODO()
 		}
 
 val Struct.script: Script
@@ -53,4 +55,8 @@ val Arrow.script: Script
 
 val Recursive.script: Script
 	get() =
-		script("recursive" lineTo script(name))
+		script("recursive" lineTo type.script)
+
+val Recurse.script: Script
+	get() =
+		script("recurse" lineTo script(literal(index)))
