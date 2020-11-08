@@ -2,11 +2,15 @@ package leo21.compiled
 
 import leo.base.assertEqualTo
 import leo14.lambda.arg
+import leo14.lambda.nativeTerm
+import leo21.prim.prim
 import leo21.type.allowDuplicateFields
 import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.doubleType
 import leo21.type.lineTo
+import leo21.type.recurse
+import leo21.type.recursive
 import leo21.type.stringType
 import leo21.type.type
 import kotlin.test.Test
@@ -285,5 +289,16 @@ class CompiledTest {
 				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo stringType))
 				.case("two", ArrowCompiled(arg(0), type("two" lineTo type()) arrowTo stringType))
 		}
+	}
+
+	@Test
+	fun recursiveAccessOrNull() {
+		nativeTerm(prim("foo"))
+			.of(type(recursive(type("foo" lineTo type("bar" lineTo type(recurse(0)))))))
+			.accessOrNull("foo")
+			.assertEqualTo(
+				nativeTerm(prim("foo"))
+					.of(type(recursive(type("bar" lineTo type("foo" lineTo type(recurse(0)))))))
+			)
 	}
 }

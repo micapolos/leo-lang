@@ -67,6 +67,9 @@ fun Compiled.lineOrNull(name: String): LineCompiled? =
 fun Compiled.line(name: String): LineCompiled =
 	lineOrNull(name)!!
 
+fun Compiled.accessOrNull(name: String): Compiled? =
+	lineOrNull(name)?.fieldCompiledOrNull?.rhsCompiled
+
 fun Compiled.access(name: String): Compiled =
 	compiled(line(name))
 
