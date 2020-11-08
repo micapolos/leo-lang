@@ -10,7 +10,7 @@ import leo14.lineSeq
 import leo21.compiled.lineTo
 import leo21.compiler.Compiler
 import leo21.compiler.plus
-import leo21.compiler.plusRaw
+import leo21.compiler.plusData
 import leo21.compiler.resolve
 import leo21.prim.runtime.value
 import leo21.value.value
@@ -57,7 +57,7 @@ fun Evaluator.plusEvaluate(scriptField: ScriptField): Evaluator =
 fun Evaluator.plus(name: String, rhs: Evaluated): Evaluator =
 	set(
 		Compiler(context.bindings, evaluated.compiled)
-			.plusRaw(name lineTo rhs.compiled)
+			.plusData(name lineTo rhs.compiled)
 			.resolve
 			.compiled
 			.let { compiled -> context.scope.value(compiled.term).of(compiled.type) })

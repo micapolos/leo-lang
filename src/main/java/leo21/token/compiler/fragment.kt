@@ -16,5 +16,9 @@ val CompiledParent.fragmentParent: FragmentParent
 		when (this) {
 			is CompilerNameCompiledParent -> compiler.fragment.parent(begin(name))
 			is CompilerDoCompiledParent -> compiler.fragment.parent(begin("do"))
+			is DataCompilerNameCompiledParent -> dataCompiler.fragment.parent(begin(name))
 		}
 
+val DataCompiler.fragment: Fragment
+	get() =
+		parent.fragment.parent(begin("data")).fragment(script)

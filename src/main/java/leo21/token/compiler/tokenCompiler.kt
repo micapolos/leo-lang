@@ -1,5 +1,6 @@
 package leo21.token.compiler
 
+import leo13.stack
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
@@ -10,11 +11,12 @@ import leo21.compiled.compiled
 import leo21.compiler.Compiler
 import leo21.compiler.emptyBindings
 import leo21.compiler.plus
+import leo21.compiler.plusData
 import leo21.compiler.plusDo
-import leo21.compiler.plusRaw
 import leo21.compiler.push
 import leo21.compiler.resolve
 import leo21.token.processor.CompilerTokenProcessor
+import leo21.token.processor.DataCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
 
 data class TokenCompiler(
@@ -31,6 +33,12 @@ fun TokenCompiler.plus(token: Token): TokenProcessor =
 				copy(lineCompiler = lineCompiler.plus(token.literal)))
 		is BeginToken ->
 			when (token.begin.string) {
+				"data" ->
+					DataCompilerTokenProcessor(
+						DataCompiler(
+							this,
+							lineCompiler.bindings,
+							stack()))
 				"do" ->
 					CompilerTokenProcessor(
 						TokenCompiler(
@@ -39,7 +47,6 @@ fun TokenCompiler.plus(token: Token): TokenProcessor =
 								lineCompiler.bindings.push(lineCompiler.compiled.type),
 								compiled())))
 				"function" -> TODO()
-				"make" -> TODO()
 				else -> CompilerTokenProcessor(
 					TokenCompiler(
 						CompilerNameCompiledParent(this, token.begin.string),
@@ -50,7 +57,10 @@ fun TokenCompiler.plus(token: Token): TokenProcessor =
 	}
 
 fun TokenCompiler.plus(compiled: LineCompiled): TokenCompiler =
-	copy(lineCompiler = lineCompiler.plusRaw(compiled).resolve)
+	copy(lineCompiler = lineCompiler.plusData(compiled).resolve)
+
+fun TokenCompiler.plusData(compiled: LineCompiled): TokenCompiler =
+	copy(lineCompiler = lineCompiler.plusData(compiled))
 
 fun TokenCompiler.plusDo(compiled: Compiled): TokenCompiler =
 	copy(lineCompiler = lineCompiler.plusDo(compiled))

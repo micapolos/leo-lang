@@ -16,4 +16,5 @@ val TokenProcessor.fragment: Fragment
 			is ArrowCompilerTokenProcessor -> arrowCompiler.fragment
 			is RecursiveTokenProcessor -> recursiveCompiler.fragment
 			is ScriptCompilerTokenProcessor -> scriptCompiler.fragment
+			is DataCompilerTokenProcessor -> dataCompiler.fragment
 		}
