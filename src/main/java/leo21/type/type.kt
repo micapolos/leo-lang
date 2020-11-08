@@ -50,3 +50,5 @@ fun Type.make(name: String): Type =
 val Type.onlyNameOrNull: String?
 	get() =
 		structOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.orNullIf { rhs != type() }?.name
+
+val Type.isEmpty: Boolean get() = this == type()

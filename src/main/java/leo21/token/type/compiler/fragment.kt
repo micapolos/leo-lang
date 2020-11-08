@@ -6,7 +6,6 @@ import leo14.FragmentParent
 import leo14.begin
 import leo14.fragment
 import leo14.parent
-import leo14.script
 import leo21.type.Arrow
 import leo21.type.Type
 import leo21.type.script
@@ -22,6 +21,7 @@ val TypeParent.fragmentParent: FragmentParent
 			is ChoiceNameTypeParent -> choiceCompiler.fragment.parent(begin(name))
 			is ArrowDoingTypeParent -> arrowCompiler.fragment.parent(begin("doing"))
 			is ArrowNameTypeParent -> arrowCompiler.fragment.parent(begin(name))
+			is RecursiveTypeParent -> typeCompiler.fragment.parent(begin("recursive"))
 		}
 
 val ChoiceCompiler.fragment: Fragment
@@ -43,11 +43,3 @@ val ArrowParent.fragmentParent: FragmentParent
 		when (this) {
 			is TypeCompilerArrowParent -> typeCompiler.fragment.parent(begin("function"))
 		}
-
-val RecursiveCompiler.fragment: Fragment
-	get() =
-		parentOrNull?.fragmentParent.fragment(recursiveOrNull?.script ?: script())
-
-val RecursiveParent.fragmentParent: FragmentParent
-	get() =
-		TODO()
