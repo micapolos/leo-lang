@@ -16,6 +16,7 @@ import leo21.type.RecurseType
 import leo21.type.RecursiveType
 import leo21.type.StructType
 import leo21.type.Type
+import leo21.type.resolve
 import leo21.type.script
 import leo21.type.type
 
@@ -38,8 +39,8 @@ fun <R> Compiled.switch(
 	when (type) {
 		is StructType -> structFn(StructCompiled(term, type.struct))
 		is ChoiceType -> choiceFn(ChoiceCompiled(term, type.choice))
-		is RecursiveType -> TODO()
-		is RecurseType -> TODO()
+		is RecursiveType -> term.of(type.recursive.resolve).switch(structFn, choiceFn)
+		is RecurseType -> null!!
 	}
 
 fun compiled(vararg lines: LineCompiled): Compiled =
