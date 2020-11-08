@@ -17,7 +17,7 @@ val Type.script: Script
 			is StructType -> struct.script
 			is ChoiceType -> choice.script
 			is RecursiveType -> recursive.script
-			is RecurseType -> TODO()
+			is RecurseType -> recurse.script
 		}
 
 val Struct.script: Script

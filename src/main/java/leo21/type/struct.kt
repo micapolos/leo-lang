@@ -11,6 +11,7 @@ import leo13.stack
 
 data class Struct(val lineStack: Stack<Line>)
 
+val Stack<Line>.struct get() = Struct(this)
 val emptyStruct = Struct(stack())
 
 fun Struct.plus(line: Line) =

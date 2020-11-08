@@ -11,6 +11,7 @@ import leo13.stack
 
 data class Choice(val lineStack: Stack<Line>)
 
+val Stack<Line>.choice get() = Choice(this)
 val emptyChoice = Choice(stack())
 
 fun Choice.plus(line: Line) =
