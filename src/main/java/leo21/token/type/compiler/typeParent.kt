@@ -3,7 +3,6 @@ package leo21.token.type.compiler
 import leo21.token.processor.ArrowCompilerTokenProcessor
 import leo21.token.processor.ChoiceCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
-import leo21.token.processor.TypeCompilerTokenProcessor
 import leo21.type.Type
 import leo21.type.plus
 import leo21.type.recursive
@@ -18,9 +17,9 @@ data class RecursiveTypeParent(val typeCompiler: TypeCompiler) : TypeParent()
 
 fun TypeParent.plus(type: Type): TokenProcessor =
 	when (this) {
-		is TypeNameTypeParent -> TypeCompilerTokenProcessor(typeCompiler.plus(name, type))
+		is TypeNameTypeParent -> typeCompiler.plus(name, type)
 		is ChoiceNameTypeParent -> ChoiceCompilerTokenProcessor(choiceCompiler.plus(name, type))
 		is ArrowDoingTypeParent -> ArrowCompilerTokenProcessor(arrowCompiler.plusDoing(lhs, type))
 		is ArrowNameTypeParent -> ArrowCompilerTokenProcessor(arrowCompiler.set(lhs.plus(name compiledLineTo type)))
-		is RecursiveTypeParent -> TypeCompilerTokenProcessor(typeCompiler.set(type(recursive(type))))
+		is RecursiveTypeParent -> typeCompiler.process(type(recursive(type)))
 	}

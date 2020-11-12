@@ -4,12 +4,14 @@ import leo21.compiled.Compiled
 import leo21.compiled.lineTo
 import leo21.token.processor.CompilerTokenProcessor
 import leo21.token.processor.DataCompilerTokenProcessor
+import leo21.token.processor.FunctionCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
 
 sealed class CompiledParent
 data class CompilerNameCompiledParent(val compiler: TokenCompiler, val name: String) : CompiledParent()
 data class DataCompilerNameCompiledParent(val dataCompiler: DataCompiler, val name: String) : CompiledParent()
 data class CompilerDoCompiledParent(val compiler: TokenCompiler) : CompiledParent()
+data class FunctionDoesCompiledParent(val functionTypeCompiler: FunctionTypeCompiler) : CompiledParent()
 
 fun CompiledParent.plus(compiled: Compiled): TokenProcessor =
 	when (this) {
@@ -19,4 +21,6 @@ fun CompiledParent.plus(compiled: Compiled): TokenProcessor =
 			DataCompilerTokenProcessor(dataCompiler.plus(name lineTo compiled))
 		is CompilerDoCompiledParent ->
 			CompilerTokenProcessor(compiler.plusDo(compiled))
+		is FunctionDoesCompiledParent ->
+			FunctionCompilerTokenProcessor(functionTypeCompiler.plusDoes(compiled))
 	}

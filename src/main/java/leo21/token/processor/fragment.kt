@@ -16,4 +16,6 @@ val TokenProcessor.fragment: Fragment
 			is ArrowCompilerTokenProcessor -> arrowCompiler.fragment
 			is ScriptCompilerTokenProcessor -> scriptCompiler.fragment
 			is DataCompilerTokenProcessor -> dataCompiler.fragment
+			is FunctionTypeCompilerTokenProcessor -> functionTypeCompiler.fragment
+			is FunctionCompilerTokenProcessor -> functionCompiler.fragment
 		}

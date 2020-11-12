@@ -30,11 +30,13 @@ fun ArrowCompiler.plus(token: Token): TokenProcessor =
 					"doing" -> TypeCompilerTokenProcessor(
 						TypeCompiler(
 							ArrowDoingTypeParent(this, type),
+							null,
 							type()))
 					else ->
 						TypeCompilerTokenProcessor(
 							TypeCompiler(
 								ArrowNameTypeParent(this, type, token.begin.string),
+								null,
 								type()))
 				}
 			},

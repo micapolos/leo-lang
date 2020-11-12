@@ -8,6 +8,8 @@ import leo14.tokenStack
 import leo21.compiled.Compiled
 import leo21.evaluator.Evaluated
 import leo21.token.compiler.DataCompiler
+import leo21.token.compiler.FunctionCompiler
+import leo21.token.compiler.FunctionTypeCompiler
 import leo21.token.compiler.TokenCompiler
 import leo21.token.compiler.emptyTokenCompiler
 import leo21.token.compiler.plus
@@ -33,6 +35,9 @@ data class ChoiceCompilerTokenProcessor(val choiceCompiler: ChoiceCompiler) : To
 data class ArrowCompilerTokenProcessor(val arrowCompiler: ArrowCompiler) : TokenProcessor()
 data class ScriptCompilerTokenProcessor(val scriptCompiler: ScriptCompiler) : TokenProcessor()
 
+data class FunctionTypeCompilerTokenProcessor(val functionTypeCompiler: FunctionTypeCompiler) : TokenProcessor()
+data class FunctionCompilerTokenProcessor(val functionCompiler: FunctionCompiler) : TokenProcessor()
+
 val emptyCompilerTokenProcessor: TokenProcessor =
 	CompilerTokenProcessor(emptyTokenCompiler)
 
@@ -54,6 +59,8 @@ fun TokenProcessor.plus(token: Token): TokenProcessor =
 		is ChoiceCompilerTokenProcessor -> choiceCompiler.plus(token)
 		is ArrowCompilerTokenProcessor -> arrowCompiler.plus(token)
 		is ScriptCompilerTokenProcessor -> scriptCompiler.plus(token)
+		is FunctionTypeCompilerTokenProcessor -> functionTypeCompiler.plus(token)
+		is FunctionCompilerTokenProcessor -> functionCompiler.plus(token)
 	}
 
 fun TokenProcessor.plus(script: Script): TokenProcessor =

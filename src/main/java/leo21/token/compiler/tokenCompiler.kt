@@ -17,7 +17,10 @@ import leo21.compiler.push
 import leo21.compiler.resolve
 import leo21.token.processor.CompilerTokenProcessor
 import leo21.token.processor.DataCompilerTokenProcessor
+import leo21.token.processor.FunctionTypeCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
+import leo21.token.type.compiler.TypeCompiler
+import leo21.type.type
 
 data class TokenCompiler(
 	val parentOrNull: CompiledParent?,
@@ -46,7 +49,14 @@ fun TokenCompiler.plus(token: Token): TokenProcessor =
 							Compiler(
 								lineCompiler.bindings.push(lineCompiler.compiled.type),
 								compiled())))
-				"function" -> TODO()
+				"function" ->
+					FunctionTypeCompilerTokenProcessor(
+						FunctionTypeCompiler(
+							this,
+							TypeCompiler(
+								null,
+								null,
+								type())))
 				else -> CompilerTokenProcessor(
 					TokenCompiler(
 						CompilerNameCompiledParent(this, token.begin.string),
