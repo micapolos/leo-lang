@@ -7,14 +7,14 @@ import kotlin.test.Test
 class ScopeTest {
 	@Test
 	fun native() {
-		emptyScope
+		scope()
 			.scopeValue(term(native(text("Hello, world!"))))
 			.assertEqualTo(value(native(text("Hello, world!"))))
 	}
 
 	@Test
 	fun variable() {
-		emptyScope
+		scope()
 			.scopePush(value(native(text("Hello, world!"))))
 			.scopeValue(term(variable(number(0))))
 			.assertEqualTo(value(native(text("Hello, world!"))))
@@ -22,14 +22,14 @@ class ScopeTest {
 
 	@Test
 	fun abstraction() {
-		emptyScope
+		scope()
 			.scopeValue(term(abstraction(term(variable(number(0))))))
-			.assertEqualTo(value(function(emptyScope, term(variable(number(0))))))
+			.assertEqualTo(value(function(scope(), term(variable(number(0))))))
 	}
 
 	@Test
 	fun application() {
-		emptyScope
+		scope()
 			.scopeValue(
 				term(
 					application(
