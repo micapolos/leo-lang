@@ -1,4 +1,4 @@
-package leo21.dsl
+package leo22.dsl
 
 fun a(vararg lines: Line) = _line("a", *lines)
 val Line.a get() = _get("a")

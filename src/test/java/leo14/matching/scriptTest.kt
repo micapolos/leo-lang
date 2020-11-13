@@ -1,12 +1,12 @@
 package leo14.matching
 
 import leo.base.assertEqualTo
-import leo21.dsl.circle
-import leo21.dsl.number
-import leo21.dsl.radius
-import leo21.dsl.shape
-import leo21.dsl.side
-import leo21.dsl.square
+import leo22.dsl.circle
+import leo22.dsl.number
+import leo22.dsl.radius
+import leo22.dsl.shape
+import leo22.dsl.side
+import leo22.dsl.square
 import kotlin.test.Test
 
 class ScriptTest {
