@@ -30,6 +30,18 @@ val termDef =
 			application(lhs(term()), rhs(term())),
 			variable(number())))
 
+fun nativeTerm(int: Int) =
+	term(native(number(int)))
+
+fun nativeTerm(string: String) =
+	term(native(text(string)))
+
+fun fnTerm(term: X): X =
+	term(abstraction(term))
+
+fun argTerm(index: Int): X =
+	term(variable(number(index)))
+
 fun X.termApply(rhs: X): X =
 	term(application(lhs(this), rhs(rhs)))
 

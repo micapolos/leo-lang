@@ -26,6 +26,8 @@ fun <R> _case(name: String, fn: (ScriptLine) -> R) = Case(name, fn)
 
 fun number(int: Int) = line(literal(int))
 fun text(string: String) = line(literal(string))
+val String.asText get() = text(this)
+val Int.asNumber get() = number(this)
 
 val Line.int_ get() = (this as LiteralScriptLine).literal.numberOrNull!!.bigDecimal.intValueExact()
 val Line.string_ get() = (this as LiteralScriptLine).literal.stringOrNull!!

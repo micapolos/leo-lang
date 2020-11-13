@@ -1,4513 +1,6769 @@
 package leo22.dsl
 
-fun a(vararg lines: Line) = _line("a", *lines)
-val Line.a get() = _get("a")
-fun <R> a(fn: (Line) -> R) = _case("a", fn)
-
-fun above(vararg lines: Line) = _line("above", *lines)
-val Line.above get() = _get("above")
-fun <R> above(fn: (Line) -> R) = _case("above", fn)
-
-fun abs(vararg lines: Line) = _line("abs", *lines)
-val Line.abs get() = _get("abs")
-fun <R> abs(fn: (Line) -> R) = _case("abs", fn)
-
-fun absent(vararg lines: Line) = _line("absent", *lines)
-val Line.absent get() = _get("absent")
-fun <R> absent(fn: (Line) -> R) = _case("absent", fn)
-
-fun absolute(vararg lines: Line) = _line("absolute", *lines)
-val Line.absolute get() = _get("absolute")
-fun <R> absolute(fn: (Line) -> R) = _case("absolute", fn)
-
-fun abstract(vararg lines: Line) = _line("abstract", *lines)
-val Line.abstract get() = _get("abstract")
-fun <R> abstract(fn: (Line) -> R) = _case("abstract", fn)
-
-fun abstraction(vararg lines: Line) = _line("abstraction", *lines)
-val Line.abstraction get() = _get("abstraction")
-fun <R> abstraction(fn: (Line) -> R) = _case("abstraction", fn)
-
-fun accept(vararg lines: Line) = _line("accept", *lines)
-val Line.accept get() = _get("accept")
-fun <R> accept(fn: (Line) -> R) = _case("accept", fn)
-
-fun access(vararg lines: Line) = _line("access", *lines)
-val Line.access get() = _get("access")
-fun <R> access(fn: (Line) -> R) = _case("access", fn)
-
-fun accessible(vararg lines: Line) = _line("accessible", *lines)
-val Line.accessible get() = _get("accessible")
-fun <R> accessible(fn: (Line) -> R) = _case("accessible", fn)
-
-fun acos(vararg lines: Line) = _line("acos", *lines)
-val Line.acos get() = _get("acos")
-fun <R> acos(fn: (Line) -> R) = _case("acos", fn)
-
-fun activity(vararg lines: Line) = _line("activity", *lines)
-val Line.activity get() = _get("activity")
-fun <R> activity(fn: (Line) -> R) = _case("activity", fn)
-
-fun actual(vararg lines: Line) = _line("actual", *lines)
-val Line.actual get() = _get("actual")
-fun <R> actual(fn: (Line) -> R) = _case("actual", fn)
-
-fun add(vararg lines: Line) = _line("add", *lines)
-val Line.add get() = _get("add")
-fun <R> add(fn: (Line) -> R) = _case("add", fn)
-
-fun addr(vararg lines: Line) = _line("addr", *lines)
-val Line.addr get() = _get("addr")
-fun <R> addr(fn: (Line) -> R) = _case("addr", fn)
-
-fun address(vararg lines: Line) = _line("address", *lines)
-val Line.address get() = _get("address")
-fun <R> address(fn: (Line) -> R) = _case("address", fn)
-
-fun admin(vararg lines: Line) = _line("admin", *lines)
-val Line.admin get() = _get("admin")
-fun <R> admin(fn: (Line) -> R) = _case("admin", fn)
-
-fun after(vararg lines: Line) = _line("after", *lines)
-val Line.after get() = _get("after")
-fun <R> after(fn: (Line) -> R) = _case("after", fn)
-
-fun age(vararg lines: Line) = _line("age", *lines)
-val Line.age get() = _get("age")
-fun <R> age(fn: (Line) -> R) = _case("age", fn)
-
-fun align(vararg lines: Line) = _line("align", *lines)
-val Line.align get() = _get("align")
-fun <R> align(fn: (Line) -> R) = _case("align", fn)
-
-fun alignment(vararg lines: Line) = _line("alignment", *lines)
-val Line.alignment get() = _get("alignment")
-fun <R> alignment(fn: (Line) -> R) = _case("alignment", fn)
-
-fun all(vararg lines: Line) = _line("all", *lines)
-val Line.all get() = _get("all")
-fun <R> all(fn: (Line) -> R) = _case("all", fn)
-
-fun alloc(vararg lines: Line) = _line("alloc", *lines)
-val Line.alloc get() = _get("alloc")
-fun <R> alloc(fn: (Line) -> R) = _case("alloc", fn)
-
-fun allocate(vararg lines: Line) = _line("allocate", *lines)
-val Line.allocate get() = _get("allocate")
-fun <R> allocate(fn: (Line) -> R) = _case("allocate", fn)
-
-fun alpha(vararg lines: Line) = _line("alpha", *lines)
-val Line.alpha get() = _get("alpha")
-fun <R> alpha(fn: (Line) -> R) = _case("alpha", fn)
-
-fun always(vararg lines: Line) = _line("always", *lines)
-val Line.always get() = _get("always")
-fun <R> always(fn: (Line) -> R) = _case("always", fn)
-
-fun am(vararg lines: Line) = _line("am", *lines)
-val Line.am get() = _get("am")
-fun <R> am(fn: (Line) -> R) = _case("am", fn)
-
-fun amplitude(vararg lines: Line) = _line("amplitude", *lines)
-val Line.amplitude get() = _get("amplitude")
-fun <R> amplitude(fn: (Line) -> R) = _case("amplitude", fn)
-
-fun anchor(vararg lines: Line) = _line("anchor", *lines)
-val Line.anchor get() = _get("anchor")
-fun <R> anchor(fn: (Line) -> R) = _case("anchor", fn)
-
-fun and(vararg lines: Line) = _line("and", *lines)
-val Line.and get() = _get("and")
-fun <R> and(fn: (Line) -> R) = _case("and", fn)
-
-fun angle(vararg lines: Line) = _line("angle", *lines)
-val Line.angle get() = _get("angle")
-fun <R> angle(fn: (Line) -> R) = _case("angle", fn)
-
-fun animate(vararg lines: Line) = _line("animate", *lines)
-val Line.animate get() = _get("animate")
-fun <R> animate(fn: (Line) -> R) = _case("animate", fn)
-
-fun animated(vararg lines: Line) = _line("animated", *lines)
-val Line.animated get() = _get("animated")
-fun <R> animated(fn: (Line) -> R) = _case("animated", fn)
-
-fun animation(vararg lines: Line) = _line("animation", *lines)
-val Line.animation get() = _get("animation")
-fun <R> animation(fn: (Line) -> R) = _case("animation", fn)
-
-fun anon(vararg lines: Line) = _line("anon", *lines)
-val Line.anon get() = _get("anon")
-fun <R> anon(fn: (Line) -> R) = _case("anon", fn)
-
-fun antialias(vararg lines: Line) = _line("antialias", *lines)
-val Line.antialias get() = _get("antialias")
-fun <R> antialias(fn: (Line) -> R) = _case("antialias", fn)
-
-fun antialiasing(vararg lines: Line) = _line("antialiasing", *lines)
-val Line.antialiasing get() = _get("antialiasing")
-fun <R> antialiasing(fn: (Line) -> R) = _case("antialiasing", fn)
-
-fun anticlockwise(vararg lines: Line) = _line("anticlockwise", *lines)
-val Line.anticlockwise get() = _get("anticlockwise")
-fun <R> anticlockwise(fn: (Line) -> R) = _case("anticlockwise", fn)
-
-fun any(vararg lines: Line) = _line("any", *lines)
-val Line.any get() = _get("any")
-fun <R> any(fn: (Line) -> R) = _case("any", fn)
-
-fun anything(vararg lines: Line) = _line("anything", *lines)
-val Line.anything get() = _get("anything")
-fun <R> anything(fn: (Line) -> R) = _case("anything", fn)
-
-fun appearance(vararg lines: Line) = _line("appearance", *lines)
-val Line.appearance get() = _get("appearance")
-fun <R> appearance(fn: (Line) -> R) = _case("appearance", fn)
-
-fun append(vararg lines: Line) = _line("append", *lines)
-val Line.append get() = _get("append")
-fun <R> append(fn: (Line) -> R) = _case("append", fn)
-
-fun appending(vararg lines: Line) = _line("appending", *lines)
-val Line.appending get() = _get("appending")
-fun <R> appending(fn: (Line) -> R) = _case("appending", fn)
-
-fun application(vararg lines: Line) = _line("application", *lines)
-val Line.application get() = _get("application")
-fun <R> application(fn: (Line) -> R) = _case("application", fn)
-
-fun applicative(vararg lines: Line) = _line("applicative", *lines)
-val Line.applicative get() = _get("applicative")
-fun <R> applicative(fn: (Line) -> R) = _case("applicative", fn)
-
-fun applier(vararg lines: Line) = _line("applier", *lines)
-val Line.applier get() = _get("applier")
-fun <R> applier(fn: (Line) -> R) = _case("applier", fn)
-
-fun apply(vararg lines: Line) = _line("apply", *lines)
-val Line.apply get() = _get("apply")
-fun <R> apply(fn: (Line) -> R) = _case("apply", fn)
-
-fun approximate(vararg lines: Line) = _line("approximate", *lines)
-val Line.approximate get() = _get("approximate")
-fun <R> approximate(fn: (Line) -> R) = _case("approximate", fn)
-
-fun arc(vararg lines: Line) = _line("arc", *lines)
-val Line.arc get() = _get("arc")
-fun <R> arc(fn: (Line) -> R) = _case("arc", fn)
-
-fun area(vararg lines: Line) = _line("area", *lines)
-val Line.area get() = _get("area")
-fun <R> area(fn: (Line) -> R) = _case("area", fn)
-
-fun arg(vararg lines: Line) = _line("arg", *lines)
-val Line.arg get() = _get("arg")
-fun <R> arg(fn: (Line) -> R) = _case("arg", fn)
-
-fun argb(vararg lines: Line) = _line("argb", *lines)
-val Line.argb get() = _get("argb")
-fun <R> argb(fn: (Line) -> R) = _case("argb", fn)
-
-fun args(vararg lines: Line) = _line("args", *lines)
-val Line.args get() = _get("args")
-fun <R> args(fn: (Line) -> R) = _case("args", fn)
-
-fun argument(vararg lines: Line) = _line("argument", *lines)
-val Line.argument get() = _get("argument")
-fun <R> argument(fn: (Line) -> R) = _case("argument", fn)
-
-fun arguments(vararg lines: Line) = _line("arguments", *lines)
-val Line.arguments get() = _get("arguments")
-fun <R> arguments(fn: (Line) -> R) = _case("arguments", fn)
-
-fun arity(vararg lines: Line) = _line("arity", *lines)
-val Line.arity get() = _get("arity")
-fun <R> arity(fn: (Line) -> R) = _case("arity", fn)
-
-fun arr(vararg lines: Line) = _line("arr", *lines)
-val Line.arr get() = _get("arr")
-fun <R> arr(fn: (Line) -> R) = _case("arr", fn)
-
-fun array(vararg lines: Line) = _line("array", *lines)
-val Line.array get() = _get("array")
-fun <R> array(fn: (Line) -> R) = _case("array", fn)
-
-fun arraycopy(vararg lines: Line) = _line("arraycopy", *lines)
-val Line.arraycopy get() = _get("arraycopy")
-fun <R> arraycopy(fn: (Line) -> R) = _case("arraycopy", fn)
-
-fun arrow(vararg lines: Line) = _line("arrow", *lines)
-val Line.arrow get() = _get("arrow")
-fun <R> arrow(fn: (Line) -> R) = _case("arrow", fn)
-
-fun as_(vararg lines: Line) = _line("as", *lines)
-val Line.as_ get() = _get("as")
-fun <R> as_(fn: (Line) -> R) = _case("as", fn)
-
-fun asin(vararg lines: Line) = _line("asin", *lines)
-val Line.asin get() = _get("asin")
-fun <R> asin(fn: (Line) -> R) = _case("asin", fn)
-
-fun assert(vararg lines: Line) = _line("assert", *lines)
-val Line.assert get() = _get("assert")
-fun <R> assert(fn: (Line) -> R) = _case("assert", fn)
-
-fun assignable(vararg lines: Line) = _line("assignable", *lines)
-val Line.assignable get() = _get("assignable")
-fun <R> assignable(fn: (Line) -> R) = _case("assignable", fn)
-
-fun async(vararg lines: Line) = _line("async", *lines)
-val Line.async get() = _get("async")
-fun <R> async(fn: (Line) -> R) = _case("async", fn)
-
-fun at(vararg lines: Line) = _line("at", *lines)
-val Line.at get() = _get("at")
-fun <R> at(fn: (Line) -> R) = _case("at", fn)
-
-fun atan(vararg lines: Line) = _line("atan", *lines)
-val Line.atan get() = _get("atan")
-fun <R> atan(fn: (Line) -> R) = _case("atan", fn)
-
-fun attention(vararg lines: Line) = _line("attention", *lines)
-val Line.attention get() = _get("attention")
-fun <R> attention(fn: (Line) -> R) = _case("attention", fn)
-
-fun attr(vararg lines: Line) = _line("attr", *lines)
-val Line.attr get() = _get("attr")
-fun <R> attr(fn: (Line) -> R) = _case("attr", fn)
-
-fun attribute(vararg lines: Line) = _line("attribute", *lines)
-val Line.attribute get() = _get("attribute")
-fun <R> attribute(fn: (Line) -> R) = _case("attribute", fn)
-
-fun audio(vararg lines: Line) = _line("audio", *lines)
-val Line.audio get() = _get("audio")
-fun <R> audio(fn: (Line) -> R) = _case("audio", fn)
-
-fun author(vararg lines: Line) = _line("author", *lines)
-val Line.author get() = _get("author")
-fun <R> author(fn: (Line) -> R) = _case("author", fn)
-
-fun authority(vararg lines: Line) = _line("authority", *lines)
-val Line.authority get() = _get("authority")
-fun <R> authority(fn: (Line) -> R) = _case("authority", fn)
-
-fun awt(vararg lines: Line) = _line("awt", *lines)
-val Line.awt get() = _get("awt")
-fun <R> awt(fn: (Line) -> R) = _case("awt", fn)
-
-fun b(vararg lines: Line) = _line("b", *lines)
-val Line.b get() = _get("b")
-fun <R> b(fn: (Line) -> R) = _case("b", fn)
-
-fun back(vararg lines: Line) = _line("back", *lines)
-val Line.back get() = _get("back")
-fun <R> back(fn: (Line) -> R) = _case("back", fn)
-
-fun background(vararg lines: Line) = _line("background", *lines)
-val Line.background get() = _get("background")
-fun <R> background(fn: (Line) -> R) = _case("background", fn)
-
-fun backslash(vararg lines: Line) = _line("backslash", *lines)
-val Line.backslash get() = _get("backslash")
-fun <R> backslash(fn: (Line) -> R) = _case("backslash", fn)
-
-fun backtrace(vararg lines: Line) = _line("backtrace", *lines)
-val Line.backtrace get() = _get("backtrace")
-fun <R> backtrace(fn: (Line) -> R) = _case("backtrace", fn)
-
-fun ball(vararg lines: Line) = _line("ball", *lines)
-val Line.ball get() = _get("ball")
-fun <R> ball(fn: (Line) -> R) = _case("ball", fn)
-
-fun ban(vararg lines: Line) = _line("ban", *lines)
-val Line.ban get() = _get("ban")
-fun <R> ban(fn: (Line) -> R) = _case("ban", fn)
-
-fun base(vararg lines: Line) = _line("base", *lines)
-val Line.base get() = _get("base")
-fun <R> base(fn: (Line) -> R) = _case("base", fn)
-
-fun becomes(vararg lines: Line) = _line("becomes", *lines)
-val Line.becomes get() = _get("becomes")
-fun <R> becomes(fn: (Line) -> R) = _case("becomes", fn)
-
-fun before(vararg lines: Line) = _line("before", *lines)
-val Line.before get() = _get("before")
-fun <R> before(fn: (Line) -> R) = _case("before", fn)
-
-fun begin(vararg lines: Line) = _line("begin", *lines)
-val Line.begin get() = _get("begin")
-fun <R> begin(fn: (Line) -> R) = _case("begin", fn)
-
-fun being(vararg lines: Line) = _line("being", *lines)
-val Line.being get() = _get("being")
-fun <R> being(fn: (Line) -> R) = _case("being", fn)
-
-fun below(vararg lines: Line) = _line("below", *lines)
-val Line.below get() = _get("below")
-fun <R> below(fn: (Line) -> R) = _case("below", fn)
-
-fun big(vararg lines: Line) = _line("big", *lines)
-val Line.big get() = _get("big")
-fun <R> big(fn: (Line) -> R) = _case("big", fn)
-
-fun binary(vararg lines: Line) = _line("binary", *lines)
-val Line.binary get() = _get("binary")
-fun <R> binary(fn: (Line) -> R) = _case("binary", fn)
-
-fun bind(vararg lines: Line) = _line("bind", *lines)
-val Line.bind get() = _get("bind")
-fun <R> bind(fn: (Line) -> R) = _case("bind", fn)
-
-fun binding(vararg lines: Line) = _line("binding", *lines)
-val Line.binding get() = _get("binding")
-fun <R> binding(fn: (Line) -> R) = _case("binding", fn)
-
-fun bindings(vararg lines: Line) = _line("bindings", *lines)
-val Line.bindings get() = _get("bindings")
-fun <R> bindings(fn: (Line) -> R) = _case("bindings", fn)
-
-fun bit(vararg lines: Line) = _line("bit", *lines)
-val Line.bit get() = _get("bit")
-fun <R> bit(fn: (Line) -> R) = _case("bit", fn)
-
-fun black(vararg lines: Line) = _line("black", *lines)
-val Line.black get() = _get("black")
-fun <R> black(fn: (Line) -> R) = _case("black", fn)
-
-fun block(vararg lines: Line) = _line("block", *lines)
-val Line.block get() = _get("block")
-fun <R> block(fn: (Line) -> R) = _case("block", fn)
-
-fun blue(vararg lines: Line) = _line("blue", *lines)
-val Line.blue get() = _get("blue")
-fun <R> blue(fn: (Line) -> R) = _case("blue", fn)
-
-fun body(vararg lines: Line) = _line("body", *lines)
-val Line.body get() = _get("body")
-fun <R> body(fn: (Line) -> R) = _case("body", fn)
-
-fun bool(vararg lines: Line) = _line("bool", *lines)
-val Line.bool get() = _get("bool")
-fun <R> bool(fn: (Line) -> R) = _case("bool", fn)
-
-fun boolean(vararg lines: Line) = _line("boolean", *lines)
-val Line.boolean get() = _get("boolean")
-fun <R> boolean(fn: (Line) -> R) = _case("boolean", fn)
-
-fun booleans(vararg lines: Line) = _line("booleans", *lines)
-val Line.booleans get() = _get("booleans")
-fun <R> booleans(fn: (Line) -> R) = _case("booleans", fn)
-
-fun boost(vararg lines: Line) = _line("boost", *lines)
-val Line.boost get() = _get("boost")
-fun <R> boost(fn: (Line) -> R) = _case("boost", fn)
-
-fun bottom(vararg lines: Line) = _line("bottom", *lines)
-val Line.bottom get() = _get("bottom")
-fun <R> bottom(fn: (Line) -> R) = _case("bottom", fn)
-
-fun bounds(vararg lines: Line) = _line("bounds", *lines)
-val Line.bounds get() = _get("bounds")
-fun <R> bounds(fn: (Line) -> R) = _case("bounds", fn)
-
-fun bold(vararg lines: Line) = _line("bold", *lines)
-val Line.bold get() = _get("bold")
-fun <R> bold(fn: (Line) -> R) = _case("bold", fn)
-
-fun box(vararg lines: Line) = _line("box", *lines)
-val Line.box get() = _get("box")
-fun <R> box(fn: (Line) -> R) = _case("box", fn)
-
-fun bpm(vararg lines: Line) = _line("bpm", *lines)
-val Line.bpm get() = _get("bpm")
-fun <R> bpm(fn: (Line) -> R) = _case("bpm", fn)
-
-fun branch(vararg lines: Line) = _line("branch", *lines)
-val Line.branch get() = _get("branch")
-fun <R> branch(fn: (Line) -> R) = _case("branch", fn)
-
-fun browse(vararg lines: Line) = _line("browse", *lines)
-val Line.browse get() = _get("browse")
-fun <R> browse(fn: (Line) -> R) = _case("browse", fn)
-
-fun buf(vararg lines: Line) = _line("buf", *lines)
-val Line.buf get() = _get("buf")
-fun <R> buf(fn: (Line) -> R) = _case("buf", fn)
-
-fun buffer(vararg lines: Line) = _line("buffer", *lines)
-val Line.buffer get() = _get("buffer")
-fun <R> buffer(fn: (Line) -> R) = _case("buffer", fn)
-
-fun build(vararg lines: Line) = _line("build", *lines)
-val Line.build get() = _get("build")
-fun <R> build(fn: (Line) -> R) = _case("build", fn)
-
-fun builder(vararg lines: Line) = _line("builder", *lines)
-val Line.builder get() = _get("builder")
-fun <R> builder(fn: (Line) -> R) = _case("builder", fn)
-
-fun by(vararg lines: Line) = _line("by", *lines)
-val Line.by get() = _get("by")
-fun <R> by(fn: (Line) -> R) = _case("by", fn)
-
-fun byte(vararg lines: Line) = _line("byte", *lines)
-val Line.byte get() = _get("byte")
-fun <R> byte(fn: (Line) -> R) = _case("byte", fn)
-
-fun bytes(vararg lines: Line) = _line("bytes", *lines)
-val Line.bytes get() = _get("bytes")
-fun <R> bytes(fn: (Line) -> R) = _case("bytes", fn)
-
-fun c(vararg lines: Line) = _line("c", *lines)
-val Line.c get() = _get("c")
-fun <R> c(fn: (Line) -> R) = _case("c", fn)
-
-fun cache(vararg lines: Line) = _line("cache", *lines)
-val Line.cache get() = _get("cache")
-fun <R> cache(fn: (Line) -> R) = _case("cache", fn)
-
-fun call(vararg lines: Line) = _line("call", *lines)
-val Line.call get() = _get("call")
-fun <R> call(fn: (Line) -> R) = _case("call", fn)
-
-fun called(vararg lines: Line) = _line("called", *lines)
-val Line.called get() = _get("called")
-fun <R> called(fn: (Line) -> R) = _case("called", fn)
-
-fun calling(vararg lines: Line) = _line("calling", *lines)
-val Line.calling get() = _get("calling")
-fun <R> calling(fn: (Line) -> R) = _case("calling", fn)
-
-fun cancel(vararg lines: Line) = _line("cancel", *lines)
-val Line.cancel get() = _get("cancel")
-fun <R> cancel(fn: (Line) -> R) = _case("cancel", fn)
-
-fun cancelable(vararg lines: Line) = _line("cancelable", *lines)
-val Line.cancelable get() = _get("cancelable")
-fun <R> cancelable(fn: (Line) -> R) = _case("cancelable", fn)
-
-fun cancelled(vararg lines: Line) = _line("cancelled", *lines)
-val Line.cancelled get() = _get("cancelled")
-fun <R> cancelled(fn: (Line) -> R) = _case("cancelled", fn)
-
-fun canvas(vararg lines: Line) = _line("canvas", *lines)
-val Line.canvas get() = _get("canvas")
-fun <R> canvas(fn: (Line) -> R) = _case("canvas", fn)
-
-fun cap(vararg lines: Line) = _line("cap", *lines)
-val Line.cap get() = _get("cap")
-fun <R> cap(fn: (Line) -> R) = _case("cap", fn)
-
-fun caps(vararg lines: Line) = _line("caps", *lines)
-val Line.caps get() = _get("caps")
-fun <R> caps(fn: (Line) -> R) = _case("caps", fn)
-
-fun case(vararg lines: Line) = _line("case", *lines)
-val Line.case get() = _get("case")
-fun <R> case(fn: (Line) -> R) = _case("case", fn)
-
-fun cast(vararg lines: Line) = _line("cast", *lines)
-val Line.cast get() = _get("cast")
-fun <R> cast(fn: (Line) -> R) = _case("cast", fn)
-
-fun catching(vararg lines: Line) = _line("catching", *lines)
-val Line.catching get() = _get("catching")
-fun <R> catching(fn: (Line) -> R) = _case("catching", fn)
-
-fun category(vararg lines: Line) = _line("category", *lines)
-val Line.category get() = _get("category")
-fun <R> category(fn: (Line) -> R) = _case("category", fn)
-
-fun cause(vararg lines: Line) = _line("cause", *lines)
-val Line.cause get() = _get("cause")
-fun <R> cause(fn: (Line) -> R) = _case("cause", fn)
-
-fun caution(vararg lines: Line) = _line("caution", *lines)
-val Line.caution get() = _get("caution")
-fun <R> caution(fn: (Line) -> R) = _case("caution", fn)
-
-fun center(vararg lines: Line) = _line("center", *lines)
-val Line.center get() = _get("center")
-fun <R> center(fn: (Line) -> R) = _case("center", fn)
-
-fun chain(vararg lines: Line) = _line("chain", *lines)
-val Line.chain get() = _get("chain")
-fun <R> chain(fn: (Line) -> R) = _case("chain", fn)
-
-fun change(vararg lines: Line) = _line("change", *lines)
-val Line.change get() = _get("change")
-fun <R> change(fn: (Line) -> R) = _case("change", fn)
-
-fun char(vararg lines: Line) = _line("char", *lines)
-val Line.char get() = _get("char")
-fun <R> char(fn: (Line) -> R) = _case("char", fn)
-
-fun character(vararg lines: Line) = _line("character", *lines)
-val Line.character get() = _get("character")
-fun <R> character(fn: (Line) -> R) = _case("character", fn)
-
-fun cheat(vararg lines: Line) = _line("cheat", *lines)
-val Line.cheat get() = _get("cheat")
-fun <R> cheat(fn: (Line) -> R) = _case("cheat", fn)
-
-fun check(vararg lines: Line) = _line("check", *lines)
-val Line.check get() = _get("check")
-fun <R> check(fn: (Line) -> R) = _case("check", fn)
-
-fun checked(vararg lines: Line) = _line("checked", *lines)
-val Line.checked get() = _get("checked")
-fun <R> checked(fn: (Line) -> R) = _case("checked", fn)
-
-fun child(vararg lines: Line) = _line("child", *lines)
-val Line.child get() = _get("child")
-fun <R> child(fn: (Line) -> R) = _case("child", fn)
-
-fun children(vararg lines: Line) = _line("children", *lines)
-val Line.children get() = _get("children")
-fun <R> children(fn: (Line) -> R) = _case("children", fn)
-
-fun choice(vararg lines: Line) = _line("choice", *lines)
-val Line.choice get() = _get("choice")
-fun <R> choice(fn: (Line) -> R) = _case("choice", fn)
-
-fun circle(vararg lines: Line) = _line("circle", *lines)
-val Line.circle get() = _get("circle")
-fun <R> circle(fn: (Line) -> R) = _case("circle", fn)
-
-fun class_(vararg lines: Line) = _line("class", *lines)
-val Line.class_ get() = _get("class")
-fun <R> class_(fn: (Line) -> R) = _case("class", fn)
-
-fun classes(vararg lines: Line) = _line("classes", *lines)
-val Line.classes get() = _get("classes")
-fun <R> classes(fn: (Line) -> R) = _case("classes", fn)
-
-fun clear(vararg lines: Line) = _line("clear", *lines)
-val Line.clear get() = _get("clear")
-fun <R> clear(fn: (Line) -> R) = _case("clear", fn)
-
-fun click(vararg lines: Line) = _line("click", *lines)
-val Line.click get() = _get("click")
-fun <R> click(fn: (Line) -> R) = _case("click", fn)
-
-fun clip(vararg lines: Line) = _line("clip", *lines)
-val Line.clip get() = _get("clip")
-fun <R> clip(fn: (Line) -> R) = _case("clip", fn)
-
-fun clock(vararg lines: Line) = _line("clock", *lines)
-val Line.clock get() = _get("clock")
-fun <R> clock(fn: (Line) -> R) = _case("clock", fn)
-
-fun clockwise(vararg lines: Line) = _line("clockwise", *lines)
-val Line.clockwise get() = _get("clockwise")
-fun <R> clockwise(fn: (Line) -> R) = _case("clockwise", fn)
-
-fun clone(vararg lines: Line) = _line("clone", *lines)
-val Line.clone get() = _get("clone")
-fun <R> clone(fn: (Line) -> R) = _case("clone", fn)
-
-fun clones(vararg lines: Line) = _line("clones", *lines)
-val Line.clones get() = _get("clones")
-fun <R> clones(fn: (Line) -> R) = _case("clones", fn)
-
-fun close(vararg lines: Line) = _line("close", *lines)
-val Line.close get() = _get("close")
-fun <R> close(fn: (Line) -> R) = _case("close", fn)
-
-fun closeable(vararg lines: Line) = _line("closeable", *lines)
-val Line.closeable get() = _get("closeable")
-fun <R> closeable(fn: (Line) -> R) = _case("closeable", fn)
-
-fun closed(vararg lines: Line) = _line("closed", *lines)
-val Line.closed get() = _get("closed")
-fun <R> closed(fn: (Line) -> R) = _case("closed", fn)
-
-fun closure(vararg lines: Line) = _line("closure", *lines)
-val Line.closure get() = _get("closure")
-fun <R> closure(fn: (Line) -> R) = _case("closure", fn)
-
-fun code(vararg lines: Line) = _line("code", *lines)
-val Line.code get() = _get("code")
-fun <R> code(fn: (Line) -> R) = _case("code", fn)
-
-fun codeblock(vararg lines: Line) = _line("codeblock", *lines)
-val Line.codeblock get() = _get("codeblock")
-fun <R> codeblock(fn: (Line) -> R) = _case("codeblock", fn)
-
-fun codegen(vararg lines: Line) = _line("codegen", *lines)
-val Line.codegen get() = _get("codegen")
-fun <R> codegen(fn: (Line) -> R) = _case("codegen", fn)
-
-fun collect(vararg lines: Line) = _line("collect", *lines)
-val Line.collect get() = _get("collect")
-fun <R> collect(fn: (Line) -> R) = _case("collect", fn)
-
-fun collecting(vararg lines: Line) = _line("collecting", *lines)
-val Line.collecting get() = _get("collecting")
-fun <R> collecting(fn: (Line) -> R) = _case("collecting", fn)
-
-fun color(vararg lines: Line) = _line("color", *lines)
-val Line.color get() = _get("color")
-fun <R> color(fn: (Line) -> R) = _case("color", fn)
-
-fun colors(vararg lines: Line) = _line("colors", *lines)
-val Line.colors get() = _get("colors")
-fun <R> colors(fn: (Line) -> R) = _case("colors", fn)
-
-fun column(vararg lines: Line) = _line("column", *lines)
-val Line.column get() = _get("column")
-fun <R> column(fn: (Line) -> R) = _case("column", fn)
-
-fun columns(vararg lines: Line) = _line("columns", *lines)
-val Line.columns get() = _get("columns")
-fun <R> columns(fn: (Line) -> R) = _case("columns", fn)
-
-fun com(vararg lines: Line) = _line("com", *lines)
-val Line.com get() = _get("com")
-fun <R> com(fn: (Line) -> R) = _case("com", fn)
-
-fun comfort(vararg lines: Line) = _line("comfort", *lines)
-val Line.comfort get() = _get("comfort")
-fun <R> comfort(fn: (Line) -> R) = _case("comfort", fn)
-
-fun comma(vararg lines: Line) = _line("comma", *lines)
-val Line.comma get() = _get("comma")
-fun <R> comma(fn: (Line) -> R) = _case("comma", fn)
-
-fun command(vararg lines: Line) = _line("command", *lines)
-val Line.command get() = _get("command")
-fun <R> command(fn: (Line) -> R) = _case("command", fn)
-
-fun comment(vararg lines: Line) = _line("comment", *lines)
-val Line.comment get() = _get("comment")
-fun <R> comment(fn: (Line) -> R) = _case("comment", fn)
-
-fun comments(vararg lines: Line) = _line("comments", *lines)
-val Line.comments get() = _get("comments")
-fun <R> comments(fn: (Line) -> R) = _case("comments", fn)
-
-fun commenting(vararg lines: Line) = _line("commenting", *lines)
-val Line.commenting get() = _get("commenting")
-fun <R> commenting(fn: (Line) -> R) = _case("commenting", fn)
-
-fun common(vararg lines: Line) = _line("common", *lines)
-val Line.common get() = _get("common")
-fun <R> common(fn: (Line) -> R) = _case("common", fn)
-
-fun compact(vararg lines: Line) = _line("compact", *lines)
-val Line.compact get() = _get("compact")
-fun <R> compact(fn: (Line) -> R) = _case("compact", fn)
-
-fun compare(vararg lines: Line) = _line("compare", *lines)
-val Line.compare get() = _get("compare")
-fun <R> compare(fn: (Line) -> R) = _case("compare", fn)
-
-fun compass(vararg lines: Line) = _line("compass", *lines)
-val Line.compass get() = _get("compass")
-fun <R> compass(fn: (Line) -> R) = _case("compass", fn)
-
-fun compile(vararg lines: Line) = _line("compile", *lines)
-val Line.compile get() = _get("compile")
-fun <R> compile(fn: (Line) -> R) = _case("compile", fn)
-
-fun compiled(vararg lines: Line) = _line("compiled", *lines)
-val Line.compiled get() = _get("compiled")
-fun <R> compiled(fn: (Line) -> R) = _case("compiled", fn)
-
-fun compiler(vararg lines: Line) = _line("compiler", *lines)
-val Line.compiler get() = _get("compiler")
-fun <R> compiler(fn: (Line) -> R) = _case("compiler", fn)
-
-fun component(vararg lines: Line) = _line("component", *lines)
-val Line.component get() = _get("component")
-fun <R> component(fn: (Line) -> R) = _case("component", fn)
-
-fun components(vararg lines: Line) = _line("components", *lines)
-val Line.components get() = _get("components")
-fun <R> components(fn: (Line) -> R) = _case("components", fn)
-
-fun compute(vararg lines: Line) = _line("compute", *lines)
-val Line.compute get() = _get("compute")
-fun <R> compute(fn: (Line) -> R) = _case("compute", fn)
-
-fun concat(vararg lines: Line) = _line("concat", *lines)
-val Line.concat get() = _get("concat")
-fun <R> concat(fn: (Line) -> R) = _case("concat", fn)
-
-fun condition(vararg lines: Line) = _line("condition", *lines)
-val Line.condition get() = _get("condition")
-fun <R> condition(fn: (Line) -> R) = _case("condition", fn)
-
-fun conflicts(vararg lines: Line) = _line("conflicts", *lines)
-val Line.conflicts get() = _get("conflicts")
-fun <R> conflicts(fn: (Line) -> R) = _case("conflicts", fn)
-
-fun connect(vararg lines: Line) = _line("connect", *lines)
-val Line.connect get() = _get("connect")
-fun <R> connect(fn: (Line) -> R) = _case("connect", fn)
-
-fun connected(vararg lines: Line) = _line("connected", *lines)
-val Line.connected get() = _get("connected")
-fun <R> connected(fn: (Line) -> R) = _case("connected", fn)
-
-fun connection(vararg lines: Line) = _line("connection", *lines)
-val Line.connection get() = _get("connection")
-fun <R> connection(fn: (Line) -> R) = _case("connection", fn)
-
-fun connections(vararg lines: Line) = _line("connections", *lines)
-val Line.connections get() = _get("connections")
-fun <R> connections(fn: (Line) -> R) = _case("connections", fn)
-
-fun console(vararg lines: Line) = _line("console", *lines)
-val Line.console get() = _get("console")
-fun <R> console(fn: (Line) -> R) = _case("console", fn)
-
-fun const(vararg lines: Line) = _line("const", *lines)
-val Line.const get() = _get("const")
-fun <R> const(fn: (Line) -> R) = _case("const", fn)
-
-fun constant(vararg lines: Line) = _line("constant", *lines)
-val Line.constant get() = _get("constant")
-fun <R> constant(fn: (Line) -> R) = _case("constant", fn)
-
-fun constructor(vararg lines: Line) = _line("constructor", *lines)
-val Line.constructor get() = _get("constructor")
-fun <R> constructor(fn: (Line) -> R) = _case("constructor", fn)
-
-fun constructors(vararg lines: Line) = _line("constructors", *lines)
-val Line.constructors get() = _get("constructors")
-fun <R> constructors(fn: (Line) -> R) = _case("constructors", fn)
-
-fun constructs(vararg lines: Line) = _line("constructs", *lines)
-val Line.constructs get() = _get("constructs")
-fun <R> constructs(fn: (Line) -> R) = _case("constructs", fn)
-
-fun constuctor(vararg lines: Line) = _line("constuctor", *lines)
-val Line.constuctor get() = _get("constuctor")
-fun <R> constuctor(fn: (Line) -> R) = _case("constuctor", fn)
-
-fun consumer(vararg lines: Line) = _line("consumer", *lines)
-val Line.consumer get() = _get("consumer")
-fun <R> consumer(fn: (Line) -> R) = _case("consumer", fn)
-
-fun consumers(vararg lines: Line) = _line("consumers", *lines)
-val Line.consumers get() = _get("consumers")
-fun <R> consumers(fn: (Line) -> R) = _case("consumers", fn)
-
-fun contain(vararg lines: Line) = _line("contain", *lines)
-val Line.contain get() = _get("contain")
-fun <R> contain(fn: (Line) -> R) = _case("contain", fn)
-
-fun contains(vararg lines: Line) = _line("contains", *lines)
-val Line.contains get() = _get("contains")
-fun <R> contains(fn: (Line) -> R) = _case("contains", fn)
-
-fun content(vararg lines: Line) = _line("content", *lines)
-val Line.content get() = _get("content")
-fun <R> content(fn: (Line) -> R) = _case("content", fn)
-
-fun context(vararg lines: Line) = _line("context", *lines)
-val Line.context get() = _get("context")
-fun <R> context(fn: (Line) -> R) = _case("context", fn)
-
-fun continuous(vararg lines: Line) = _line("continuous", *lines)
-val Line.continuous get() = _get("continuous")
-fun <R> continuous(fn: (Line) -> R) = _case("continuous", fn)
-
-fun control(vararg lines: Line) = _line("control", *lines)
-val Line.control get() = _get("control")
-fun <R> control(fn: (Line) -> R) = _case("control", fn)
-
-fun convert(vararg lines: Line) = _line("convert", *lines)
-val Line.convert get() = _get("convert")
-fun <R> convert(fn: (Line) -> R) = _case("convert", fn)
-
-fun coord(vararg lines: Line) = _line("coord", *lines)
-val Line.coord get() = _get("coord")
-fun <R> coord(fn: (Line) -> R) = _case("coord", fn)
-
-fun coordinate(vararg lines: Line) = _line("coordinate", *lines)
-val Line.coordinate get() = _get("coordinate")
-fun <R> coordinate(fn: (Line) -> R) = _case("coordinate", fn)
-
-fun coordinates(vararg lines: Line) = _line("coordinates", *lines)
-val Line.coordinates get() = _get("coordinates")
-fun <R> coordinates(fn: (Line) -> R) = _case("coordinates", fn)
-
-fun coords(vararg lines: Line) = _line("coords", *lines)
-val Line.coords get() = _get("coords")
-fun <R> coords(fn: (Line) -> R) = _case("coords", fn)
-
-fun copies(vararg lines: Line) = _line("copies", *lines)
-val Line.copies get() = _get("copies")
-fun <R> copies(fn: (Line) -> R) = _case("copies", fn)
-
-fun copy(vararg lines: Line) = _line("copy", *lines)
-val Line.copy get() = _get("copy")
-fun <R> copy(fn: (Line) -> R) = _case("copy", fn)
-
-fun core(vararg lines: Line) = _line("core", *lines)
-val Line.core get() = _get("core")
-fun <R> core(fn: (Line) -> R) = _case("core", fn)
-
-fun cos(vararg lines: Line) = _line("cos", *lines)
-val Line.cos get() = _get("cos")
-fun <R> cos(fn: (Line) -> R) = _case("cos", fn)
-
-fun cosh(vararg lines: Line) = _line("cosh", *lines)
-val Line.cosh get() = _get("cosh")
-fun <R> cosh(fn: (Line) -> R) = _case("cosh", fn)
-
-fun cosinus(vararg lines: Line) = _line("cosinus", *lines)
-val Line.cosinus get() = _get("cosinus")
-fun <R> cosinus(fn: (Line) -> R) = _case("cosinus", fn)
-
-fun count(vararg lines: Line) = _line("count", *lines)
-val Line.count get() = _get("count")
-fun <R> count(fn: (Line) -> R) = _case("count", fn)
-
-fun counter(vararg lines: Line) = _line("counter", *lines)
-val Line.counter get() = _get("counter")
-fun <R> counter(fn: (Line) -> R) = _case("counter", fn)
-
-fun cout(vararg lines: Line) = _line("cout", *lines)
-val Line.cout get() = _get("cout")
-fun <R> cout(fn: (Line) -> R) = _case("cout", fn)
-
-fun cover(vararg lines: Line) = _line("cover", *lines)
-val Line.cover get() = _get("cover")
-fun <R> cover(fn: (Line) -> R) = _case("cover", fn)
-
-fun crash(vararg lines: Line) = _line("crash", *lines)
-val Line.crash get() = _get("crash")
-fun <R> crash(fn: (Line) -> R) = _case("crash", fn)
-
-fun create(vararg lines: Line) = _line("create", *lines)
-val Line.create get() = _get("create")
-fun <R> create(fn: (Line) -> R) = _case("create", fn)
-
-fun created(vararg lines: Line) = _line("created", *lines)
-val Line.created get() = _get("created")
-fun <R> created(fn: (Line) -> R) = _case("created", fn)
-
-fun ctor(vararg lines: Line) = _line("ctor", *lines)
-val Line.ctor get() = _get("ctor")
-fun <R> ctor(fn: (Line) -> R) = _case("ctor", fn)
-
-fun current(vararg lines: Line) = _line("current", *lines)
-val Line.current get() = _get("current")
-fun <R> current(fn: (Line) -> R) = _case("current", fn)
-
-fun curve(vararg lines: Line) = _line("curve", *lines)
-val Line.curve get() = _get("curve")
-fun <R> curve(fn: (Line) -> R) = _case("curve", fn)
-
-fun cut(vararg lines: Line) = _line("cut", *lines)
-val Line.cut get() = _get("cut")
-fun <R> cut(fn: (Line) -> R) = _case("cut", fn)
-
-fun cyan(vararg lines: Line) = _line("cyan", *lines)
-val Line.cyan get() = _get("cyan")
-fun <R> cyan(fn: (Line) -> R) = _case("cyan", fn)
-
-fun d(vararg lines: Line) = _line("d", *lines)
-val Line.d get() = _get("d")
-fun <R> d(fn: (Line) -> R) = _case("d", fn)
-
-fun dare(vararg lines: Line) = _line("dare", *lines)
-val Line.dare get() = _get("dare")
-fun <R> dare(fn: (Line) -> R) = _case("dare", fn)
-
-fun dark(vararg lines: Line) = _line("dark", *lines)
-val Line.dark get() = _get("dark")
-fun <R> dark(fn: (Line) -> R) = _case("dark", fn)
-
-fun data(vararg lines: Line) = _line("data", *lines)
-val Line.data get() = _get("data")
-fun <R> data(fn: (Line) -> R) = _case("data", fn)
-
-fun database(vararg lines: Line) = _line("database", *lines)
-val Line.database get() = _get("database")
-fun <R> database(fn: (Line) -> R) = _case("database", fn)
-
-fun day(vararg lines: Line) = _line("day", *lines)
-val Line.day get() = _get("day")
-fun <R> day(fn: (Line) -> R) = _case("day", fn)
-
-fun debug(vararg lines: Line) = _line("debug", *lines)
-val Line.debug get() = _get("debug")
-fun <R> debug(fn: (Line) -> R) = _case("debug", fn)
-
-fun decimal(vararg lines: Line) = _line("decimal", *lines)
-val Line.decimal get() = _get("decimal")
-fun <R> decimal(fn: (Line) -> R) = _case("decimal", fn)
-
-fun declaration(vararg lines: Line) = _line("declaration", *lines)
-val Line.declaration get() = _get("declaration")
-fun <R> declaration(fn: (Line) -> R) = _case("declaration", fn)
-
-fun declared(vararg lines: Line) = _line("declared", *lines)
-val Line.declared get() = _get("declared")
-fun <R> declared(fn: (Line) -> R) = _case("declared", fn)
-
-fun declaring(vararg lines: Line) = _line("declaring", *lines)
-val Line.declaring get() = _get("declaring")
-fun <R> declaring(fn: (Line) -> R) = _case("declaring", fn)
-
-fun decrement(vararg lines: Line) = _line("decrement", *lines)
-val Line.decrement get() = _get("decrement")
-fun <R> decrement(fn: (Line) -> R) = _case("decrement", fn)
-
-fun deepnight(vararg lines: Line) = _line("deepnight", *lines)
-val Line.deepnight get() = _get("deepnight")
-fun <R> deepnight(fn: (Line) -> R) = _case("deepnight", fn)
-
-fun def(vararg lines: Line) = _line("def", *lines)
-val Line.def get() = _get("def")
-fun <R> def(fn: (Line) -> R) = _case("def", fn)
-
-fun default(vararg lines: Line) = _line("default", *lines)
-val Line.default get() = _get("default")
-fun <R> default(fn: (Line) -> R) = _case("default", fn)
-
-fun define(vararg lines: Line) = _line("define", *lines)
-val Line.define get() = _get("define")
-fun <R> define(fn: (Line) -> R) = _case("define", fn)
-
-fun definition(vararg lines: Line) = _line("definition", *lines)
-val Line.definition get() = _get("definition")
-fun <R> definition(fn: (Line) -> R) = _case("definition", fn)
-
-fun defined(vararg lines: Line) = _line("defined", *lines)
-val Line.defined get() = _get("defined")
-fun <R> defined(fn: (Line) -> R) = _case("defined", fn)
-
-fun degrees(vararg lines: Line) = _line("degrees", *lines)
-val Line.degrees get() = _get("degrees")
-fun <R> degrees(fn: (Line) -> R) = _case("degrees", fn)
-
-fun delete(vararg lines: Line) = _line("delete", *lines)
-val Line.delete get() = _get("delete")
-fun <R> delete(fn: (Line) -> R) = _case("delete", fn)
-
-fun demo(vararg lines: Line) = _line("demo", *lines)
-val Line.demo get() = _get("demo")
-fun <R> demo(fn: (Line) -> R) = _case("demo", fn)
-
-fun depth(vararg lines: Line) = _line("depth", *lines)
-val Line.depth get() = _get("depth")
-fun <R> depth(fn: (Line) -> R) = _case("depth", fn)
-
-fun derive(vararg lines: Line) = _line("derive", *lines)
-val Line.derive get() = _get("derive")
-fun <R> derive(fn: (Line) -> R) = _case("derive", fn)
-
-fun describe(vararg lines: Line) = _line("describe", *lines)
-val Line.describe get() = _get("describe")
-fun <R> describe(fn: (Line) -> R) = _case("describe", fn)
-
-fun destroy(vararg lines: Line) = _line("destroy", *lines)
-val Line.destroy get() = _get("destroy")
-fun <R> destroy(fn: (Line) -> R) = _case("destroy", fn)
-
-fun detector(vararg lines: Line) = _line("detector", *lines)
-val Line.detector get() = _get("detector")
-fun <R> detector(fn: (Line) -> R) = _case("detector", fn)
-
-fun dict(vararg lines: Line) = _line("dict", *lines)
-val Line.dict get() = _get("dict")
-fun <R> dict(fn: (Line) -> R) = _case("dict", fn)
-
-fun dictionary(vararg lines: Line) = _line("dictionary", *lines)
-val Line.dictionary get() = _get("dictionary")
-fun <R> dictionary(fn: (Line) -> R) = _case("dictionary", fn)
-
-fun did(vararg lines: Line) = _line("did", *lines)
-val Line.did get() = _get("did")
-fun <R> did(fn: (Line) -> R) = _case("did", fn)
-
-fun difference(vararg lines: Line) = _line("difference", *lines)
-val Line.difference get() = _get("difference")
-fun <R> difference(fn: (Line) -> R) = _case("difference", fn)
-
-fun digest(vararg lines: Line) = _line("digest", *lines)
-val Line.digest get() = _get("digest")
-fun <R> digest(fn: (Line) -> R) = _case("digest", fn)
-
-fun digit(vararg lines: Line) = _line("digit", *lines)
-val Line.digit get() = _get("digit")
-fun <R> digit(fn: (Line) -> R) = _case("digit", fn)
-
-fun dimension(vararg lines: Line) = _line("dimension", *lines)
-val Line.dimension get() = _get("dimension")
-fun <R> dimension(fn: (Line) -> R) = _case("dimension", fn)
-
-fun dimensional(vararg lines: Line) = _line("dimensional", *lines)
-val Line.dimensional get() = _get("dimensional")
-fun <R> dimensional(fn: (Line) -> R) = _case("dimensional", fn)
-
-fun dimensions(vararg lines: Line) = _line("dimensions", *lines)
-val Line.dimensions get() = _get("dimensions")
-fun <R> dimensions(fn: (Line) -> R) = _case("dimensions", fn)
-
-fun direct(vararg lines: Line) = _line("direct", *lines)
-val Line.direct get() = _get("direct")
-fun <R> direct(fn: (Line) -> R) = _case("direct", fn)
-
-fun display(vararg lines: Line) = _line("display", *lines)
-val Line.display get() = _get("display")
-fun <R> display(fn: (Line) -> R) = _case("display", fn)
-
-fun div(vararg lines: Line) = _line("div", *lines)
-val Line.div get() = _get("div")
-fun <R> div(fn: (Line) -> R) = _case("div", fn)
-
-fun divide(vararg lines: Line) = _line("divide", *lines)
-val Line.divide get() = _get("divide")
-fun <R> divide(fn: (Line) -> R) = _case("divide", fn)
-
-fun divided(vararg lines: Line) = _line("divided", *lines)
-val Line.divided get() = _get("divided")
-fun <R> divided(fn: (Line) -> R) = _case("divided", fn)
-
-fun divmod(vararg lines: Line) = _line("divmod", *lines)
-val Line.divmod get() = _get("divmod")
-fun <R> divmod(fn: (Line) -> R) = _case("divmod", fn)
-
-fun do_(vararg lines: Line) = _line("do", *lines)
-val Line.do_ get() = _get("do")
-fun <R> do_(fn: (Line) -> R) = _case("do", fn)
-
-fun document(vararg lines: Line) = _line("document", *lines)
-val Line.document get() = _get("document")
-fun <R> document(fn: (Line) -> R) = _case("document", fn)
-
-fun does(vararg lines: Line) = _line("does", *lines)
-val Line.does get() = _get("does")
-fun <R> does(fn: (Line) -> R) = _case("does", fn)
-
-fun doing(vararg lines: Line) = _line("doing", *lines)
-val Line.doing get() = _get("doing")
-fun <R> doing(fn: (Line) -> R) = _case("doing", fn)
-
-fun dollar(vararg lines: Line) = _line("dollar", *lines)
-val Line.dollar get() = _get("dollar")
-fun <R> dollar(fn: (Line) -> R) = _case("dollar", fn)
-
-fun done(vararg lines: Line) = _line("done", *lines)
-val Line.done get() = _get("done")
-fun <R> done(fn: (Line) -> R) = _case("done", fn)
-
-fun dot(vararg lines: Line) = _line("dot", *lines)
-val Line.dot get() = _get("dot")
-fun <R> dot(fn: (Line) -> R) = _case("dot", fn)
-
-fun double(vararg lines: Line) = _line("double", *lines)
-val Line.double get() = _get("double")
-fun <R> double(fn: (Line) -> R) = _case("double", fn)
-
-fun dp(vararg lines: Line) = _line("dp", *lines)
-val Line.dp get() = _get("dp")
-fun <R> dp(fn: (Line) -> R) = _case("dp", fn)
-
-fun draw(vararg lines: Line) = _line("draw", *lines)
-val Line.draw get() = _get("draw")
-fun <R> draw(fn: (Line) -> R) = _case("draw", fn)
-
-fun drawing(vararg lines: Line) = _line("drawing", *lines)
-val Line.drawing get() = _get("drawing")
-fun <R> drawing(fn: (Line) -> R) = _case("drawing", fn)
-
-fun ds(vararg lines: Line) = _line("ds", *lines)
-val Line.ds get() = _get("ds")
-fun <R> ds(fn: (Line) -> R) = _case("ds", fn)
-
-fun dsl(vararg lines: Line) = _line("dsl", *lines)
-val Line.dsl get() = _get("dsl")
-fun <R> dsl(fn: (Line) -> R) = _case("dsl", fn)
-
-fun duty(vararg lines: Line) = _line("duty", *lines)
-val Line.duty get() = _get("duty")
-fun <R> duty(fn: (Line) -> R) = _case("duty", fn)
-
-fun dynamic(vararg lines: Line) = _line("dynamic", *lines)
-val Line.dynamic get() = _get("dynamic")
-fun <R> dynamic(fn: (Line) -> R) = _case("dynamic", fn)
-
-fun dynamics(vararg lines: Line) = _line("dynamics", *lines)
-val Line.dynamics get() = _get("dynamics")
-fun <R> dynamics(fn: (Line) -> R) = _case("dynamics", fn)
-
-fun e(vararg lines: Line) = _line("e", *lines)
-val Line.e get() = _get("e")
-fun <R> e(fn: (Line) -> R) = _case("e", fn)
-
-fun each(vararg lines: Line) = _line("each", *lines)
-val Line.each get() = _get("each")
-fun <R> each(fn: (Line) -> R) = _case("each", fn)
-
-fun edge(vararg lines: Line) = _line("edge", *lines)
-val Line.edge get() = _get("edge")
-fun <R> edge(fn: (Line) -> R) = _case("edge", fn)
-
-fun eight(vararg lines: Line) = _line("eight", *lines)
-val Line.eight get() = _get("eight")
-fun <R> eight(fn: (Line) -> R) = _case("eight", fn)
-
-fun eighth(vararg lines: Line) = _line("eighth", *lines)
-val Line.eighth get() = _get("eighth")
-fun <R> eighth(fn: (Line) -> R) = _case("eighth", fn)
-
-fun either(vararg lines: Line) = _line("either", *lines)
-val Line.either get() = _get("either")
-fun <R> either(fn: (Line) -> R) = _case("either", fn)
-
-fun element(vararg lines: Line) = _line("element", *lines)
-val Line.element get() = _get("element")
-fun <R> element(fn: (Line) -> R) = _case("element", fn)
-
-fun elements(vararg lines: Line) = _line("elements", *lines)
-val Line.elements get() = _get("elements")
-fun <R> elements(fn: (Line) -> R) = _case("elements", fn)
-
-fun else_(vararg lines: Line) = _line("else", *lines)
-val Line.else_ get() = _get("else")
-fun <R> else_(fn: (Line) -> R) = _case("else", fn)
-
-fun email(vararg lines: Line) = _line("email", *lines)
-val Line.email get() = _get("email")
-fun <R> email(fn: (Line) -> R) = _case("email", fn)
-
-fun empty(vararg lines: Line) = _line("empty", *lines)
-val Line.empty get() = _get("empty")
-fun <R> empty(fn: (Line) -> R) = _case("empty", fn)
-
-fun end(vararg lines: Line) = _line("end", *lines)
-val Line.end get() = _get("end")
-fun <R> end(fn: (Line) -> R) = _case("end", fn)
-
-fun ends(vararg lines: Line) = _line("ends", *lines)
-val Line.ends get() = _get("ends")
-fun <R> ends(fn: (Line) -> R) = _case("ends", fn)
-
-fun enter(vararg lines: Line) = _line("enter", *lines)
-val Line.enter get() = _get("enter")
-fun <R> enter(fn: (Line) -> R) = _case("enter", fn)
-
-fun entries(vararg lines: Line) = _line("entries", *lines)
-val Line.entries get() = _get("entries")
-fun <R> entries(fn: (Line) -> R) = _case("entries", fn)
-
-fun entry(vararg lines: Line) = _line("entry", *lines)
-val Line.entry get() = _get("entry")
-fun <R> entry(fn: (Line) -> R) = _case("entry", fn)
-
-fun enum(vararg lines: Line) = _line("enum", *lines)
-val Line.enum get() = _get("enum")
-fun <R> enum(fn: (Line) -> R) = _case("enum", fn)
-
-fun enums(vararg lines: Line) = _line("enums", *lines)
-val Line.enums get() = _get("enums")
-fun <R> enums(fn: (Line) -> R) = _case("enums", fn)
-
-fun eq(vararg lines: Line) = _line("eq", *lines)
-val Line.eq get() = _get("eq")
-fun <R> eq(fn: (Line) -> R) = _case("eq", fn)
-
-fun equal(vararg lines: Line) = _line("equal", *lines)
-val Line.equal get() = _get("equal")
-fun <R> equal(fn: (Line) -> R) = _case("equal", fn)
-
-fun equals_(vararg lines: Line) = _line("equals", *lines)
-val Line.equals_ get() = _get("equals")
-fun <R> equals_(fn: (Line) -> R) = _case("equals", fn)
-
-fun equatable(vararg lines: Line) = _line("equatable", *lines)
-val Line.equatable get() = _get("equatable")
-fun <R> equatable(fn: (Line) -> R) = _case("equatable", fn)
-
-fun error(vararg lines: Line) = _line("error", *lines)
-val Line.error get() = _get("error")
-fun <R> error(fn: (Line) -> R) = _case("error", fn)
-
-fun esc(vararg lines: Line) = _line("esc", *lines)
-val Line.esc get() = _get("esc")
-fun <R> esc(fn: (Line) -> R) = _case("esc", fn)
-
-fun escape(vararg lines: Line) = _line("escape", *lines)
-val Line.escape get() = _get("escape")
-fun <R> escape(fn: (Line) -> R) = _case("escape", fn)
-
-fun eval(vararg lines: Line) = _line("eval", *lines)
-val Line.eval get() = _get("eval")
-fun <R> eval(fn: (Line) -> R) = _case("eval", fn)
-
-fun evaluate(vararg lines: Line) = _line("evaluate", *lines)
-val Line.evaluate get() = _get("evaluate")
-fun <R> evaluate(fn: (Line) -> R) = _case("evaluate", fn)
-
-fun evaluated(vararg lines: Line) = _line("evaluated", *lines)
-val Line.evaluated get() = _get("evaluated")
-fun <R> evaluated(fn: (Line) -> R) = _case("evaluated", fn)
-
-fun evaluator(vararg lines: Line) = _line("evaluator", *lines)
-val Line.evaluator get() = _get("evaluator")
-fun <R> evaluator(fn: (Line) -> R) = _case("evaluator", fn)
-
-fun event(vararg lines: Line) = _line("event", *lines)
-val Line.event get() = _get("event")
-fun <R> event(fn: (Line) -> R) = _case("event", fn)
-
-fun events(vararg lines: Line) = _line("events", *lines)
-val Line.events get() = _get("events")
-fun <R> events(fn: (Line) -> R) = _case("events", fn)
-
-fun exact(vararg lines: Line) = _line("exact", *lines)
-val Line.exact get() = _get("exact")
-fun <R> exact(fn: (Line) -> R) = _case("exact", fn)
-
-fun exactly(vararg lines: Line) = _line("exactly", *lines)
-val Line.exactly get() = _get("exactly")
-fun <R> exactly(fn: (Line) -> R) = _case("exactly", fn)
-
-fun examples(vararg lines: Line) = _line("examples", *lines)
-val Line.examples get() = _get("examples")
-fun <R> examples(fn: (Line) -> R) = _case("examples", fn)
-
-fun exception(vararg lines: Line) = _line("exception", *lines)
-val Line.exception get() = _get("exception")
-fun <R> exception(fn: (Line) -> R) = _case("exception", fn)
-
-fun exceptions(vararg lines: Line) = _line("exceptions", *lines)
-val Line.exceptions get() = _get("exceptions")
-fun <R> exceptions(fn: (Line) -> R) = _case("exceptions", fn)
-
-fun exclamation(vararg lines: Line) = _line("exclamation", *lines)
-val Line.exclamation get() = _get("exclamation")
-fun <R> exclamation(fn: (Line) -> R) = _case("exclamation", fn)
-
-fun exclusive(vararg lines: Line) = _line("exclusive", *lines)
-val Line.exclusive get() = _get("exclusive")
-fun <R> exclusive(fn: (Line) -> R) = _case("exclusive", fn)
-
-fun exec(vararg lines: Line) = _line("exec", *lines)
-val Line.exec get() = _get("exec")
-fun <R> exec(fn: (Line) -> R) = _case("exec", fn)
-
-fun executable(vararg lines: Line) = _line("executable", *lines)
-val Line.executable get() = _get("executable")
-fun <R> executable(fn: (Line) -> R) = _case("executable", fn)
-
-fun execute(vararg lines: Line) = _line("execute", *lines)
-val Line.execute get() = _get("execute")
-fun <R> execute(fn: (Line) -> R) = _case("execute", fn)
-
-fun execution(vararg lines: Line) = _line("execution", *lines)
-val Line.execution get() = _get("execution")
-fun <R> execution(fn: (Line) -> R) = _case("execution", fn)
-
-fun executor(vararg lines: Line) = _line("executor", *lines)
-val Line.executor get() = _get("executor")
-fun <R> executor(fn: (Line) -> R) = _case("executor", fn)
-
-fun exists(vararg lines: Line) = _line("exists", *lines)
-val Line.exists get() = _get("exists")
-fun <R> exists(fn: (Line) -> R) = _case("exists", fn)
-
-fun exit(vararg lines: Line) = _line("exit", *lines)
-val Line.exit get() = _get("exit")
-fun <R> exit(fn: (Line) -> R) = _case("exit", fn)
-
-fun expand(vararg lines: Line) = _line("expand", *lines)
-val Line.expand get() = _get("expand")
-fun <R> expand(fn: (Line) -> R) = _case("expand", fn)
-
-fun expanded(vararg lines: Line) = _line("expanded", *lines)
-val Line.expanded get() = _get("expanded")
-fun <R> expanded(fn: (Line) -> R) = _case("expanded", fn)
-
-fun expands(vararg lines: Line) = _line("expands", *lines)
-val Line.expands get() = _get("expands")
-fun <R> expands(fn: (Line) -> R) = _case("expands", fn)
-
-fun expected(vararg lines: Line) = _line("expected", *lines)
-val Line.expected get() = _get("expected")
-fun <R> expected(fn: (Line) -> R) = _case("expected", fn)
-
-fun export(vararg lines: Line) = _line("export", *lines)
-val Line.export get() = _get("export")
-fun <R> export(fn: (Line) -> R) = _case("export", fn)
-
-fun exported(vararg lines: Line) = _line("exported", *lines)
-val Line.exported get() = _get("exported")
-fun <R> exported(fn: (Line) -> R) = _case("exported", fn)
-
-fun expression(vararg lines: Line) = _line("expression", *lines)
-val Line.expression get() = _get("expression")
-fun <R> expression(fn: (Line) -> R) = _case("expression", fn)
-
-fun ext(vararg lines: Line) = _line("ext", *lines)
-val Line.ext get() = _get("ext")
-fun <R> ext(fn: (Line) -> R) = _case("ext", fn)
-
-fun extends(vararg lines: Line) = _line("extends", *lines)
-val Line.extends get() = _get("extends")
-fun <R> extends(fn: (Line) -> R) = _case("extends", fn)
-
-fun extractor(vararg lines: Line) = _line("extractor", *lines)
-val Line.extractor get() = _get("extractor")
-fun <R> extractor(fn: (Line) -> R) = _case("extractor", fn)
-
-fun f(vararg lines: Line) = _line("f", *lines)
-val Line.f get() = _get("f")
-fun <R> f(fn: (Line) -> R) = _case("f", fn)
-
-fun f32(vararg lines: Line) = _line("f32", *lines)
-val Line.f32 get() = _get("f32")
-fun <R> f32(fn: (Line) -> R) = _case("f32", fn)
-
-fun f64(vararg lines: Line) = _line("f64", *lines)
-val Line.f64 get() = _get("f64")
-fun <R> f64(fn: (Line) -> R) = _case("f64", fn)
-
-fun factory(vararg lines: Line) = _line("factory", *lines)
-val Line.factory get() = _get("factory")
-fun <R> factory(fn: (Line) -> R) = _case("factory", fn)
-
-fun fading(vararg lines: Line) = _line("fading", *lines)
-val Line.fading get() = _get("fading")
-fun <R> fading(fn: (Line) -> R) = _case("fading", fn)
-
-fun fail(vararg lines: Line) = _line("fail", *lines)
-val Line.fail get() = _get("fail")
-fun <R> fail(fn: (Line) -> R) = _case("fail", fn)
-
-fun failed(vararg lines: Line) = _line("failed", *lines)
-val Line.failed get() = _get("failed")
-fun <R> failed(fn: (Line) -> R) = _case("failed", fn)
-
-fun fails(vararg lines: Line) = _line("fails", *lines)
-val Line.fails get() = _get("fails")
-fun <R> fails(fn: (Line) -> R) = _case("fails", fn)
-
-fun failures(vararg lines: Line) = _line("failures", *lines)
-val Line.failures get() = _get("failures")
-fun <R> failures(fn: (Line) -> R) = _case("failures", fn)
-
-fun false_(vararg lines: Line) = _line("false", *lines)
-val Line.false_ get() = _get("false")
-fun <R> false_(fn: (Line) -> R) = _case("false", fn)
-
-fun family(vararg lines: Line) = _line("family", *lines)
-val Line.family get() = _get("family")
-fun <R> family(fn: (Line) -> R) = _case("family", fn)
-
-fun fast(vararg lines: Line) = _line("fast", *lines)
-val Line.fast get() = _get("fast")
-fun <R> fast(fn: (Line) -> R) = _case("fast", fn)
-
-fun father(vararg lines: Line) = _line("father", *lines)
-val Line.father get() = _get("father")
-fun <R> father(fn: (Line) -> R) = _case("father", fn)
-
-fun female(vararg lines: Line) = _line("female", *lines)
-val Line.female get() = _get("female")
-fun <R> female(fn: (Line) -> R) = _case("female", fn)
-
-fun fetch(vararg lines: Line) = _line("fetch", *lines)
-val Line.fetch get() = _get("fetch")
-fun <R> fetch(fn: (Line) -> R) = _case("fetch", fn)
-
-fun fib(vararg lines: Line) = _line("fib", *lines)
-val Line.fib get() = _get("fib")
-fun <R> fib(fn: (Line) -> R) = _case("fib", fn)
-
-fun field(vararg lines: Line) = _line("field", *lines)
-val Line.field get() = _get("field")
-fun <R> field(fn: (Line) -> R) = _case("field", fn)
-
-fun fields(vararg lines: Line) = _line("fields", *lines)
-val Line.fields get() = _get("fields")
-fun <R> fields(fn: (Line) -> R) = _case("fields", fn)
-
-fun fifth(vararg lines: Line) = _line("fifth", *lines)
-val Line.fifth get() = _get("fifth")
-fun <R> fifth(fn: (Line) -> R) = _case("fifth", fn)
-
-fun file(vararg lines: Line) = _line("file", *lines)
-val Line.file get() = _get("file")
-fun <R> file(fn: (Line) -> R) = _case("file", fn)
-
-fun files(vararg lines: Line) = _line("files", *lines)
-val Line.files get() = _get("files")
-fun <R> files(fn: (Line) -> R) = _case("files", fn)
-
-fun fill(vararg lines: Line) = _line("fill", *lines)
-val Line.fill get() = _get("fill")
-fun <R> fill(fn: (Line) -> R) = _case("fill", fn)
-
-fun filter(vararg lines: Line) = _line("filter", *lines)
-val Line.filter get() = _get("filter")
-fun <R> filter(fn: (Line) -> R) = _case("filter", fn)
-
-fun final(vararg lines: Line) = _line("final", *lines)
-val Line.final get() = _get("final")
-fun <R> final(fn: (Line) -> R) = _case("final", fn)
-
-fun finality(vararg lines: Line) = _line("finality", *lines)
-val Line.finality get() = _get("finality")
-fun <R> finality(fn: (Line) -> R) = _case("finality", fn)
-
-fun finalizer(vararg lines: Line) = _line("finalizer", *lines)
-val Line.finalizer get() = _get("finalizer")
-fun <R> finalizer(fn: (Line) -> R) = _case("finalizer", fn)
-
-fun find(vararg lines: Line) = _line("find", *lines)
-val Line.find get() = _get("find")
-fun <R> find(fn: (Line) -> R) = _case("find", fn)
-
-fun finite(vararg lines: Line) = _line("finite", *lines)
-val Line.finite get() = _get("finite")
-fun <R> finite(fn: (Line) -> R) = _case("finite", fn)
-
-fun first(vararg lines: Line) = _line("first", *lines)
-val Line.first get() = _get("first")
-fun <R> first(fn: (Line) -> R) = _case("first", fn)
-
-fun five(vararg lines: Line) = _line("five", *lines)
-val Line.five get() = _get("five")
-fun <R> five(fn: (Line) -> R) = _case("five", fn)
-
-fun flat(vararg lines: Line) = _line("flat", *lines)
-val Line.flat get() = _get("flat")
-fun <R> flat(fn: (Line) -> R) = _case("flat", fn)
-
-fun flip(vararg lines: Line) = _line("flip", *lines)
-val Line.flip get() = _get("flip")
-fun <R> flip(fn: (Line) -> R) = _case("flip", fn)
-
-fun float(vararg lines: Line) = _line("float", *lines)
-val Line.float get() = _get("float")
-fun <R> float(fn: (Line) -> R) = _case("float", fn)
-
-fun float32(vararg lines: Line) = _line("float32", *lines)
-val Line.float32 get() = _get("float32")
-fun <R> float32(fn: (Line) -> R) = _case("float32", fn)
-
-fun float64(vararg lines: Line) = _line("float64", *lines)
-val Line.float64 get() = _get("float64")
-fun <R> float64(fn: (Line) -> R) = _case("float64", fn)
-
-fun floating(vararg lines: Line) = _line("floating", *lines)
-val Line.floating get() = _get("floating")
-fun <R> floating(fn: (Line) -> R) = _case("floating", fn)
-
-fun flush(vararg lines: Line) = _line("flush", *lines)
-val Line.flush get() = _get("flush")
-fun <R> flush(fn: (Line) -> R) = _case("flush", fn)
-
-fun fn(vararg lines: Line) = _line("fn", *lines)
-val Line.fn get() = _get("fn")
-fun <R> fn(fn: (Line) -> R) = _case("fn", fn)
-
-fun fold(vararg lines: Line) = _line("fold", *lines)
-val Line.fold get() = _get("fold")
-fun <R> fold(fn: (Line) -> R) = _case("fold", fn)
-
-fun folded(vararg lines: Line) = _line("folded", *lines)
-val Line.folded get() = _get("folded")
-fun <R> folded(fn: (Line) -> R) = _case("folded", fn)
-
-fun folder(vararg lines: Line) = _line("folder", *lines)
-val Line.folder get() = _get("folder")
-fun <R> folder(fn: (Line) -> R) = _case("folder", fn)
-
-fun font(vararg lines: Line) = _line("font", *lines)
-val Line.font get() = _get("font")
-fun <R> font(fn: (Line) -> R) = _case("font", fn)
-
-fun footer(vararg lines: Line) = _line("footer", *lines)
-val Line.footer get() = _get("footer")
-fun <R> footer(fn: (Line) -> R) = _case("footer", fn)
-
-fun for_(vararg lines: Line) = _line("for", *lines)
-val Line.for_ get() = _get("for")
-fun <R> for_(fn: (Line) -> R) = _case("for", fn)
-
-fun force(vararg lines: Line) = _line("force", *lines)
-val Line.force get() = _get("force")
-fun <R> force(fn: (Line) -> R) = _case("force", fn)
-
-fun forced(vararg lines: Line) = _line("forced", *lines)
-val Line.forced get() = _get("forced")
-fun <R> forced(fn: (Line) -> R) = _case("forced", fn)
-
-fun foreground(vararg lines: Line) = _line("foreground", *lines)
-val Line.foreground get() = _get("foreground")
-fun <R> foreground(fn: (Line) -> R) = _case("foreground", fn)
-
-fun forget(vararg lines: Line) = _line("forget", *lines)
-val Line.forget get() = _get("forget")
-fun <R> forget(fn: (Line) -> R) = _case("forget", fn)
-
-fun form(vararg lines: Line) = _line("form", *lines)
-val Line.form get() = _get("form")
-fun <R> form(fn: (Line) -> R) = _case("form", fn)
-
-fun found(vararg lines: Line) = _line("found", *lines)
-val Line.found get() = _get("found")
-fun <R> found(fn: (Line) -> R) = _case("found", fn)
-
-fun four(vararg lines: Line) = _line("four", *lines)
-val Line.four get() = _get("four")
-fun <R> four(fn: (Line) -> R) = _case("four", fn)
-
-fun fourth(vararg lines: Line) = _line("fourth", *lines)
-val Line.fourth get() = _get("fourth")
-fun <R> fourth(fn: (Line) -> R) = _case("fourth", fn)
-
-fun fragment(vararg lines: Line) = _line("fragment", *lines)
-val Line.fragment get() = _get("fragment")
-fun <R> fragment(fn: (Line) -> R) = _case("fragment", fn)
-
-fun frame(vararg lines: Line) = _line("frame", *lines)
-val Line.frame get() = _get("frame")
-fun <R> frame(fn: (Line) -> R) = _case("frame", fn)
-
-fun free(vararg lines: Line) = _line("free", *lines)
-val Line.free get() = _get("free")
-fun <R> free(fn: (Line) -> R) = _case("free", fn)
-
-fun freeze(vararg lines: Line) = _line("freeze", *lines)
-val Line.freeze get() = _get("freeze")
-fun <R> freeze(fn: (Line) -> R) = _case("freeze", fn)
-
-fun frequency(vararg lines: Line) = _line("frequency", *lines)
-val Line.frequency get() = _get("frequency")
-fun <R> frequency(fn: (Line) -> R) = _case("frequency", fn)
-
-fun from(vararg lines: Line) = _line("from", *lines)
-val Line.from get() = _get("from")
-fun <R> from(fn: (Line) -> R) = _case("from", fn)
-
-fun frozen(vararg lines: Line) = _line("frozen", *lines)
-val Line.frozen get() = _get("frozen")
-fun <R> frozen(fn: (Line) -> R) = _case("frozen", fn)
-
-fun full(vararg lines: Line) = _line("full", *lines)
-val Line.full get() = _get("full")
-fun <R> full(fn: (Line) -> R) = _case("full", fn)
-
-fun fully(vararg lines: Line) = _line("fully", *lines)
-val Line.fully get() = _get("fully")
-fun <R> fully(fn: (Line) -> R) = _case("fully", fn)
-
-fun fun_(vararg lines: Line) = _line("fun", *lines)
-val Line.fun_ get() = _get("fun")
-fun <R> fun_(fn: (Line) -> R) = _case("fun", fn)
-
-fun func(vararg lines: Line) = _line("func", *lines)
-val Line.func get() = _get("func")
-fun <R> func(fn: (Line) -> R) = _case("func", fn)
-
-fun function(vararg lines: Line) = _line("function", *lines)
-val Line.function get() = _get("function")
-fun <R> function(fn: (Line) -> R) = _case("function", fn)
-
-fun functions(vararg lines: Line) = _line("functions", *lines)
-val Line.functions get() = _get("functions")
-fun <R> functions(fn: (Line) -> R) = _case("functions", fn)
-
-fun functor(vararg lines: Line) = _line("functor", *lines)
-val Line.functor get() = _get("functor")
-fun <R> functor(fn: (Line) -> R) = _case("functor", fn)
-
-fun future(vararg lines: Line) = _line("future", *lines)
-val Line.future get() = _get("future")
-fun <R> future(fn: (Line) -> R) = _case("future", fn)
-
-fun futures(vararg lines: Line) = _line("futures", *lines)
-val Line.futures get() = _get("futures")
-fun <R> futures(fn: (Line) -> R) = _case("futures", fn)
-
-fun g(vararg lines: Line) = _line("g", *lines)
-val Line.g get() = _get("g")
-fun <R> g(fn: (Line) -> R) = _case("g", fn)
-
-fun game(vararg lines: Line) = _line("game", *lines)
-val Line.game get() = _get("game")
-fun <R> game(fn: (Line) -> R) = _case("game", fn)
-
-fun gave(vararg lines: Line) = _line("gave", *lines)
-val Line.gave get() = _get("gave")
-fun <R> gave(fn: (Line) -> R) = _case("gave", fn)
-
-fun gen(vararg lines: Line) = _line("gen", *lines)
-val Line.gen get() = _get("gen")
-fun <R> gen(fn: (Line) -> R) = _case("gen", fn)
-
-fun generic(vararg lines: Line) = _line("generic", *lines)
-val Line.generic get() = _get("generic")
-fun <R> generic(fn: (Line) -> R) = _case("generic", fn)
-
-fun generics(vararg lines: Line) = _line("generics", *lines)
-val Line.generics get() = _get("generics")
-fun <R> generics(fn: (Line) -> R) = _case("generics", fn)
-
-fun get(vararg lines: Line) = _line("get", *lines)
-val Line.get get() = _get("get")
-fun <R> get(fn: (Line) -> R) = _case("get", fn)
-
-fun gets(vararg lines: Line) = _line("gets", *lines)
-val Line.gets get() = _get("gets")
-fun <R> gets(fn: (Line) -> R) = _case("gets", fn)
-
-fun getting(vararg lines: Line) = _line("getting", *lines)
-val Line.getting get() = _get("getting")
-fun <R> getting(fn: (Line) -> R) = _case("getting", fn)
-
-fun give(vararg lines: Line) = _line("give", *lines)
-val Line.give get() = _get("give")
-fun <R> give(fn: (Line) -> R) = _case("give", fn)
-
-fun given(vararg lines: Line) = _line("given", *lines)
-val Line.given get() = _get("given")
-fun <R> given(fn: (Line) -> R) = _case("given", fn)
-
-fun gives(vararg lines: Line) = _line("gives", *lines)
-val Line.gives get() = _get("gives")
-fun <R> gives(fn: (Line) -> R) = _case("gives", fn)
-
-fun giving(vararg lines: Line) = _line("giving", *lines)
-val Line.giving get() = _get("giving")
-fun <R> giving(fn: (Line) -> R) = _case("giving", fn)
-
-fun global(vararg lines: Line) = _line("global", *lines)
-val Line.global get() = _get("global")
-fun <R> global(fn: (Line) -> R) = _case("global", fn)
-
-fun glyph(vararg lines: Line) = _line("glyph", *lines)
-val Line.glyph get() = _get("glyph")
-fun <R> glyph(fn: (Line) -> R) = _case("glyph", fn)
-
-fun google(vararg lines: Line) = _line("google", *lines)
-val Line.google get() = _get("google")
-fun <R> google(fn: (Line) -> R) = _case("google", fn)
-
-fun gray(vararg lines: Line) = _line("gray", *lines)
-val Line.gray get() = _get("gray")
-fun <R> gray(fn: (Line) -> R) = _case("gray", fn)
-
-fun green(vararg lines: Line) = _line("green", *lines)
-val Line.green get() = _get("green")
-fun <R> green(fn: (Line) -> R) = _case("green", fn)
-
-fun grey(vararg lines: Line) = _line("grey", *lines)
-val Line.grey get() = _get("grey")
-fun <R> grey(fn: (Line) -> R) = _case("grey", fn)
-
-fun grid(vararg lines: Line) = _line("grid", *lines)
-val Line.grid get() = _get("grid")
-fun <R> grid(fn: (Line) -> R) = _case("grid", fn)
-
-fun h(vararg lines: Line) = _line("h", *lines)
-val Line.h get() = _get("h")
-fun <R> h(fn: (Line) -> R) = _case("h", fn)
-
-fun h1(vararg lines: Line) = _line("h1", *lines)
-val Line.h1 get() = _get("h1")
-fun <R> h1(fn: (Line) -> R) = _case("h1", fn)
-
-fun h2(vararg lines: Line) = _line("h2", *lines)
-val Line.h2 get() = _get("h2")
-fun <R> h2(fn: (Line) -> R) = _case("h2", fn)
-
-fun h3(vararg lines: Line) = _line("h3", *lines)
-val Line.h3 get() = _get("h3")
-fun <R> h3(fn: (Line) -> R) = _case("h3", fn)
-
-fun h4(vararg lines: Line) = _line("h4", *lines)
-val Line.h4 get() = _get("h4")
-fun <R> h4(fn: (Line) -> R) = _case("h4", fn)
-
-fun h5(vararg lines: Line) = _line("h5", *lines)
-val Line.h5 get() = _get("h5")
-fun <R> h5(fn: (Line) -> R) = _case("h5", fn)
-
-fun h6(vararg lines: Line) = _line("h6", *lines)
-val Line.h6 get() = _get("h6")
-fun <R> h6(fn: (Line) -> R) = _case("h6", fn)
-
-fun hack(vararg lines: Line) = _line("hack", *lines)
-val Line.hack get() = _get("hack")
-fun <R> hack(fn: (Line) -> R) = _case("hack", fn)
-
-fun hacker(vararg lines: Line) = _line("hacker", *lines)
-val Line.hacker get() = _get("hacker")
-fun <R> hacker(fn: (Line) -> R) = _case("hacker", fn)
-
-fun handle(vararg lines: Line) = _line("handle", *lines)
-val Line.handle get() = _get("handle")
-fun <R> handle(fn: (Line) -> R) = _case("handle", fn)
-
-fun has(vararg lines: Line) = _line("has", *lines)
-val Line.has get() = _get("has")
-fun <R> has(fn: (Line) -> R) = _case("has", fn)
-
-fun hash(vararg lines: Line) = _line("hash", *lines)
-val Line.hash get() = _get("hash")
-fun <R> hash(fn: (Line) -> R) = _case("hash", fn)
-
-fun hashes(vararg lines: Line) = _line("hashes", *lines)
-val Line.hashes get() = _get("hashes")
-fun <R> hashes(fn: (Line) -> R) = _case("hashes", fn)
-
-fun haskell(vararg lines: Line) = _line("haskell", *lines)
-val Line.haskell get() = _get("haskell")
-fun <R> haskell(fn: (Line) -> R) = _case("haskell", fn)
-
-fun haxe(vararg lines: Line) = _line("haxe", *lines)
-val Line.haxe get() = _get("haxe")
-fun <R> haxe(fn: (Line) -> R) = _case("haxe", fn)
-
-fun head(vararg lines: Line) = _line("head", *lines)
-val Line.head get() = _get("head")
-fun <R> head(fn: (Line) -> R) = _case("head", fn)
-
-fun header(vararg lines: Line) = _line("header", *lines)
-val Line.header get() = _get("header")
-fun <R> header(fn: (Line) -> R) = _case("header", fn)
-
-fun heap(vararg lines: Line) = _line("heap", *lines)
-val Line.heap get() = _get("heap")
-fun <R> heap(fn: (Line) -> R) = _case("heap", fn)
-
-fun height(vararg lines: Line) = _line("height", *lines)
-val Line.height get() = _get("height")
-fun <R> height(fn: (Line) -> R) = _case("height", fn)
-
-fun heights(vararg lines: Line) = _line("heights", *lines)
-val Line.heights get() = _get("heights")
-fun <R> heights(fn: (Line) -> R) = _case("heights", fn)
-
-fun help(vararg lines: Line) = _line("help", *lines)
-val Line.help get() = _get("help")
-fun <R> help(fn: (Line) -> R) = _case("help", fn)
-
-fun hi(vararg lines: Line) = _line("hi", *lines)
-val Line.hi get() = _get("hi")
-fun <R> hi(fn: (Line) -> R) = _case("hi", fn)
-
-fun high(vararg lines: Line) = _line("high", *lines)
-val Line.high get() = _get("high")
-fun <R> high(fn: (Line) -> R) = _case("high", fn)
-
-fun hint(vararg lines: Line) = _line("hint", *lines)
-val Line.hint get() = _get("hint")
-fun <R> hint(fn: (Line) -> R) = _case("hint", fn)
-
-fun holder(vararg lines: Line) = _line("holder", *lines)
-val Line.holder get() = _get("holder")
-fun <R> holder(fn: (Line) -> R) = _case("holder", fn)
-
-fun horizontal(vararg lines: Line) = _line("horizontal", *lines)
-val Line.horizontal get() = _get("horizontal")
-fun <R> horizontal(fn: (Line) -> R) = _case("horizontal", fn)
-
-fun horizontally(vararg lines: Line) = _line("horizontally", *lines)
-val Line.horizontally get() = _get("horizontally")
-fun <R> horizontally(fn: (Line) -> R) = _case("horizontally", fn)
-
-fun host(vararg lines: Line) = _line("host", *lines)
-val Line.host get() = _get("host")
-fun <R> host(fn: (Line) -> R) = _case("host", fn)
-
-fun hour(vararg lines: Line) = _line("hour", *lines)
-val Line.hour get() = _get("hour")
-fun <R> hour(fn: (Line) -> R) = _case("hour", fn)
-
-fun href(vararg lines: Line) = _line("href", *lines)
-val Line.href get() = _get("href")
-fun <R> href(fn: (Line) -> R) = _case("href", fn)
-
-fun html(vararg lines: Line) = _line("html", *lines)
-val Line.html get() = _get("html")
-fun <R> html(fn: (Line) -> R) = _case("html", fn)
-
-fun http(vararg lines: Line) = _line("http", *lines)
-val Line.http get() = _get("http")
-fun <R> http(fn: (Line) -> R) = _case("http", fn)
-
-fun husband(vararg lines: Line) = _line("husband", *lines)
-val Line.husband get() = _get("husband")
-fun <R> husband(fn: (Line) -> R) = _case("husband", fn)
-
-fun hx(vararg lines: Line) = _line("hx", *lines)
-val Line.hx get() = _get("hx")
-fun <R> hx(fn: (Line) -> R) = _case("hx", fn)
-
-fun i(vararg lines: Line) = _line("i", *lines)
-val Line.i get() = _get("i")
-fun <R> i(fn: (Line) -> R) = _case("i", fn)
-
-fun icon(vararg lines: Line) = _line("icon", *lines)
-val Line.icon get() = _get("icon")
-fun <R> icon(fn: (Line) -> R) = _case("icon", fn)
-
-fun identifier(vararg lines: Line) = _line("identifier", *lines)
-val Line.identifier get() = _get("identifier")
-fun <R> identifier(fn: (Line) -> R) = _case("identifier", fn)
-
-fun identifiers(vararg lines: Line) = _line("identifiers", *lines)
-val Line.identifiers get() = _get("identifiers")
-fun <R> identifiers(fn: (Line) -> R) = _case("identifiers", fn)
-
-fun if_(vararg lines: Line) = _line("if", *lines)
-val Line.if_ get() = _get("if")
-fun <R> if_(fn: (Line) -> R) = _case("if", fn)
-
-fun immediate(vararg lines: Line) = _line("immediate", *lines)
-val Line.immediate get() = _get("immediate")
-fun <R> immediate(fn: (Line) -> R) = _case("immediate", fn)
-
-fun immutable(vararg lines: Line) = _line("immutable", *lines)
-val Line.immutable get() = _get("immutable")
-fun <R> immutable(fn: (Line) -> R) = _case("immutable", fn)
-
-fun impl(vararg lines: Line) = _line("impl", *lines)
-val Line.impl get() = _get("impl")
-fun <R> impl(fn: (Line) -> R) = _case("impl", fn)
-
-fun implement(vararg lines: Line) = _line("implement", *lines)
-val Line.implement get() = _get("implement")
-fun <R> implement(fn: (Line) -> R) = _case("implement", fn)
-
-fun implements(vararg lines: Line) = _line("implements", *lines)
-val Line.implements get() = _get("implements")
-fun <R> implements(fn: (Line) -> R) = _case("implements", fn)
-
-fun import(vararg lines: Line) = _line("import", *lines)
-val Line.import get() = _get("import")
-fun <R> import(fn: (Line) -> R) = _case("import", fn)
-
-fun in_(vararg lines: Line) = _line("in", *lines)
-val Line.in_ get() = _get("in")
-fun <R> in_(fn: (Line) -> R) = _case("in", fn)
-
-fun inbpm(vararg lines: Line) = _line("inbpm", *lines)
-val Line.inbpm get() = _get("inbpm")
-fun <R> inbpm(fn: (Line) -> R) = _case("inbpm", fn)
-
-fun increment(vararg lines: Line) = _line("increment", *lines)
-val Line.increment get() = _get("increment")
-fun <R> increment(fn: (Line) -> R) = _case("increment", fn)
-
-fun indent(vararg lines: Line) = _line("indent", *lines)
-val Line.indent get() = _get("indent")
-fun <R> indent(fn: (Line) -> R) = _case("indent", fn)
-
-fun index(vararg lines: Line) = _line("index", *lines)
-val Line.index get() = _get("index")
-fun <R> index(fn: (Line) -> R) = _case("index", fn)
-
-fun infinite(vararg lines: Line) = _line("infinite", *lines)
-val Line.infinite get() = _get("infinite")
-fun <R> infinite(fn: (Line) -> R) = _case("infinite", fn)
-
-fun info(vararg lines: Line) = _line("info", *lines)
-val Line.info get() = _get("info")
-fun <R> info(fn: (Line) -> R) = _case("info", fn)
-
-fun inherit(vararg lines: Line) = _line("inherit", *lines)
-val Line.inherit get() = _get("inherit")
-fun <R> inherit(fn: (Line) -> R) = _case("inherit", fn)
-
-fun init(vararg lines: Line) = _line("init", *lines)
-val Line.init get() = _get("init")
-fun <R> init(fn: (Line) -> R) = _case("init", fn)
-
-fun initial(vararg lines: Line) = _line("initial", *lines)
-val Line.initial get() = _get("initial")
-fun <R> initial(fn: (Line) -> R) = _case("initial", fn)
-
-fun initializer(vararg lines: Line) = _line("initializer", *lines)
-val Line.initializer get() = _get("initializer")
-fun <R> initializer(fn: (Line) -> R) = _case("initializer", fn)
-
-fun inline(vararg lines: Line) = _line("inline", *lines)
-val Line.inline get() = _get("inline")
-fun <R> inline(fn: (Line) -> R) = _case("inline", fn)
-
-fun input(vararg lines: Line) = _line("input", *lines)
-val Line.input get() = _get("input")
-fun <R> input(fn: (Line) -> R) = _case("input", fn)
-
-fun insert(vararg lines: Line) = _line("insert", *lines)
-val Line.insert get() = _get("insert")
-fun <R> insert(fn: (Line) -> R) = _case("insert", fn)
-
-fun instance(vararg lines: Line) = _line("instance", *lines)
-val Line.instance get() = _get("instance")
-fun <R> instance(fn: (Line) -> R) = _case("instance", fn)
-
-fun instrument(vararg lines: Line) = _line("instrument", *lines)
-val Line.instrument get() = _get("instrument")
-fun <R> instrument(fn: (Line) -> R) = _case("instrument", fn)
-
-fun instruments(vararg lines: Line) = _line("instruments", *lines)
-val Line.instruments get() = _get("instruments")
-fun <R> instruments(fn: (Line) -> R) = _case("instruments", fn)
-
-fun invalid(vararg lines: Line) = _line("invalid", *lines)
-val Line.invalid get() = _get("invalid")
-fun <R> invalid(fn: (Line) -> R) = _case("invalid", fn)
-
-fun i1(vararg lines: Line) = _line("i1", *lines)
-val Line.i1 get() = _get("i1")
-fun <R> i1(fn: (Line) -> R) = _case("i1", fn)
-
-fun i2(vararg lines: Line) = _line("i2", *lines)
-val Line.i2 get() = _get("i2")
-fun <R> i2(fn: (Line) -> R) = _case("i2", fn)
-
-fun i4(vararg lines: Line) = _line("i4", *lines)
-val Line.i4 get() = _get("i4")
-fun <R> i4(fn: (Line) -> R) = _case("i4", fn)
-
-fun i8(vararg lines: Line) = _line("i8", *lines)
-val Line.i8 get() = _get("i8")
-fun <R> i8(fn: (Line) -> R) = _case("i8", fn)
-
-fun i16(vararg lines: Line) = _line("i16", *lines)
-val Line.i16 get() = _get("i16")
-fun <R> i16(fn: (Line) -> R) = _case("i16", fn)
-
-fun i32(vararg lines: Line) = _line("i32", *lines)
-val Line.i32 get() = _get("i32")
-fun <R> i32(fn: (Line) -> R) = _case("i32", fn)
-
-fun i64(vararg lines: Line) = _line("i64", *lines)
-val Line.i64 get() = _get("i64")
-fun <R> i64(fn: (Line) -> R) = _case("i64", fn)
-
-fun image(vararg lines: Line) = _line("image", *lines)
-val Line.image get() = _get("image")
-fun <R> image(fn: (Line) -> R) = _case("image", fn)
-
-fun int(vararg lines: Line) = _line("int", *lines)
-val Line.int get() = _get("int")
-fun <R> int(fn: (Line) -> R) = _case("int", fn)
-
-fun int16(vararg lines: Line) = _line("int16", *lines)
-val Line.int16 get() = _get("int16")
-fun <R> int16(fn: (Line) -> R) = _case("int16", fn)
-
-fun int32(vararg lines: Line) = _line("int32", *lines)
-val Line.int32 get() = _get("int32")
-fun <R> int32(fn: (Line) -> R) = _case("int32", fn)
-
-fun int64(vararg lines: Line) = _line("int64", *lines)
-val Line.int64 get() = _get("int64")
-fun <R> int64(fn: (Line) -> R) = _case("int64", fn)
-
-fun int8(vararg lines: Line) = _line("int8", *lines)
-val Line.int8 get() = _get("int8")
-fun <R> int8(fn: (Line) -> R) = _case("int8", fn)
-
-fun integer(vararg lines: Line) = _line("integer", *lines)
-val Line.integer get() = _get("integer")
-fun <R> integer(fn: (Line) -> R) = _case("integer", fn)
-
-fun integers(vararg lines: Line) = _line("integers", *lines)
-val Line.integers get() = _get("integers")
-fun <R> integers(fn: (Line) -> R) = _case("integers", fn)
-
-fun integral(vararg lines: Line) = _line("integral", *lines)
-val Line.integral get() = _get("integral")
-fun <R> integral(fn: (Line) -> R) = _case("integral", fn)
-
-fun intent(vararg lines: Line) = _line("intent", *lines)
-val Line.intent get() = _get("intent")
-fun <R> intent(fn: (Line) -> R) = _case("intent", fn)
-
-fun intercept(vararg lines: Line) = _line("intercept", *lines)
-val Line.intercept get() = _get("intercept")
-fun <R> intercept(fn: (Line) -> R) = _case("intercept", fn)
-
-fun interface_(vararg lines: Line) = _line("interface", *lines)
-val Line.interface_ get() = _get("interface")
-fun <R> interface_(fn: (Line) -> R) = _case("interface", fn)
-
-fun intern(vararg lines: Line) = _line("intern", *lines)
-val Line.intern get() = _get("intern")
-fun <R> intern(fn: (Line) -> R) = _case("intern", fn)
-
-fun interrupt(vararg lines: Line) = _line("interrupt", *lines)
-val Line.interrupt get() = _get("interrupt")
-fun <R> interrupt(fn: (Line) -> R) = _case("interrupt", fn)
-
-fun inventory(vararg lines: Line) = _line("inventory", *lines)
-val Line.inventory get() = _get("inventory")
-fun <R> inventory(fn: (Line) -> R) = _case("inventory", fn)
-
-fun invoke(vararg lines: Line) = _line("invoke", *lines)
-val Line.invoke get() = _get("invoke")
-fun <R> invoke(fn: (Line) -> R) = _case("invoke", fn)
-
-fun ios(vararg lines: Line) = _line("ios", *lines)
-val Line.ios get() = _get("ios")
-fun <R> ios(fn: (Line) -> R) = _case("ios", fn)
-
-fun ipad(vararg lines: Line) = _line("ipad", *lines)
-val Line.ipad get() = _get("ipad")
-fun <R> ipad(fn: (Line) -> R) = _case("ipad", fn)
-
-fun iphone(vararg lines: Line) = _line("iphone", *lines)
-val Line.iphone get() = _get("iphone")
-fun <R> iphone(fn: (Line) -> R) = _case("iphone", fn)
-
-fun is_(vararg lines: Line) = _line("is", *lines)
-val Line.is_ get() = _get("is")
-fun <R> is_(fn: (Line) -> R) = _case("is", fn)
-
-fun it(vararg lines: Line) = _line("it", *lines)
-val Line.it get() = _get("it")
-fun <R> it(fn: (Line) -> R) = _case("it", fn)
-
-fun item(vararg lines: Line) = _line("item", *lines)
-val Line.item get() = _get("item")
-fun <R> item(fn: (Line) -> R) = _case("item", fn)
-
-fun iterable(vararg lines: Line) = _line("iterable", *lines)
-val Line.iterable get() = _get("iterable")
-fun <R> iterable(fn: (Line) -> R) = _case("iterable", fn)
-
-fun iterables(vararg lines: Line) = _line("iterables", *lines)
-val Line.iterables get() = _get("iterables")
-fun <R> iterables(fn: (Line) -> R) = _case("iterables", fn)
-
-fun iteratively(vararg lines: Line) = _line("iteratively", *lines)
-val Line.iteratively get() = _get("iteratively")
-fun <R> iteratively(fn: (Line) -> R) = _case("iteratively", fn)
-
-fun iterator(vararg lines: Line) = _line("iterator", *lines)
-val Line.iterator get() = _get("iterator")
-fun <R> iterator(fn: (Line) -> R) = _case("iterator", fn)
-
-fun iterators(vararg lines: Line) = _line("iterators", *lines)
-val Line.iterators get() = _get("iterators")
-fun <R> iterators(fn: (Line) -> R) = _case("iterators", fn)
-
-fun itself(vararg lines: Line) = _line("itself", *lines)
-val Line.itself get() = _get("itself")
-fun <R> itself(fn: (Line) -> R) = _case("itself", fn)
-
-fun j(vararg lines: Line) = _line("j", *lines)
-val Line.j get() = _get("j")
-fun <R> j(fn: (Line) -> R) = _case("j", fn)
-
-fun jam(vararg lines: Line) = _line("jam", *lines)
-val Line.jam get() = _get("jam")
-fun <R> jam(fn: (Line) -> R) = _case("jam", fn)
-
-fun jar(vararg lines: Line) = _line("jar", *lines)
-val Line.jar get() = _get("jar")
-fun <R> jar(fn: (Line) -> R) = _case("jar", fn)
-
-fun java(vararg lines: Line) = _line("java", *lines)
-val Line.java get() = _get("java")
-fun <R> java(fn: (Line) -> R) = _case("java", fn)
-
-fun javascript(vararg lines: Line) = _line("javascript", *lines)
-val Line.javascript get() = _get("javascript")
-fun <R> javascript(fn: (Line) -> R) = _case("javascript", fn)
-
-fun join(vararg lines: Line) = _line("join", *lines)
-val Line.join get() = _get("join")
-fun <R> join(fn: (Line) -> R) = _case("join", fn)
-
-fun js(vararg lines: Line) = _line("js", *lines)
-val Line.js get() = _get("js")
-fun <R> js(fn: (Line) -> R) = _case("js", fn)
-
-fun jump(vararg lines: Line) = _line("jump", *lines)
-val Line.jump get() = _get("jump")
-fun <R> jump(fn: (Line) -> R) = _case("jump", fn)
-
-fun just(vararg lines: Line) = _line("just", *lines)
-val Line.just get() = _get("just")
-fun <R> just(fn: (Line) -> R) = _case("just", fn)
-
-fun k(vararg lines: Line) = _line("k", *lines)
-val Line.k get() = _get("k")
-fun <R> k(fn: (Line) -> R) = _case("k", fn)
-
-fun key(vararg lines: Line) = _line("key", *lines)
-val Line.key get() = _get("key")
-fun <R> key(fn: (Line) -> R) = _case("key", fn)
-
-fun keyboard(vararg lines: Line) = _line("keyboard", *lines)
-val Line.keyboard get() = _get("keyboard")
-fun <R> keyboard(fn: (Line) -> R) = _case("keyboard", fn)
-
-fun keyword(vararg lines: Line) = _line("keyword", *lines)
-val Line.keyword get() = _get("keyword")
-fun <R> keyword(fn: (Line) -> R) = _case("keyword", fn)
-
-fun kick(vararg lines: Line) = _line("kick", *lines)
-val Line.kick get() = _get("kick")
-fun <R> kick(fn: (Line) -> R) = _case("kick", fn)
-
-fun kotlin(vararg lines: Line) = _line("kotlin", *lines)
-val Line.kotlin get() = _get("kotlin")
-fun <R> kotlin(fn: (Line) -> R) = _case("kotlin", fn)
-
-fun l(vararg lines: Line) = _line("l", *lines)
-val Line.l get() = _get("l")
-fun <R> l(fn: (Line) -> R) = _case("l", fn)
-
-fun label(vararg lines: Line) = _line("label", *lines)
-val Line.label get() = _get("label")
-fun <R> label(fn: (Line) -> R) = _case("label", fn)
-
-fun lambda(vararg lines: Line) = _line("lambda", *lines)
-val Line.lambda get() = _get("lambda")
-fun <R> lambda(fn: (Line) -> R) = _case("lambda", fn)
-
-fun lang(vararg lines: Line) = _line("lang", *lines)
-val Line.lang get() = _get("lang")
-fun <R> lang(fn: (Line) -> R) = _case("lang", fn)
-
-fun last(vararg lines: Line) = _line("last", *lines)
-val Line.last get() = _get("last")
-fun <R> last(fn: (Line) -> R) = _case("last", fn)
-
-fun latch(vararg lines: Line) = _line("latch", *lines)
-val Line.latch get() = _get("latch")
-fun <R> latch(fn: (Line) -> R) = _case("latch", fn)
-
-fun lazily(vararg lines: Line) = _line("lazily", *lines)
-val Line.lazily get() = _get("lazily")
-fun <R> lazily(fn: (Line) -> R) = _case("lazily", fn)
-
-fun lazy_(vararg lines: Line) = _line("lazy", *lines)
-val Line.lazy_ get() = _get("lazy")
-fun <R> lazy_(fn: (Line) -> R) = _case("lazy", fn)
-
-fun left(vararg lines: Line) = _line("left", *lines)
-val Line.left get() = _get("left")
-fun <R> left(fn: (Line) -> R) = _case("left", fn)
-
-fun len(vararg lines: Line) = _line("len", *lines)
-val Line.len get() = _get("len")
-fun <R> len(fn: (Line) -> R) = _case("len", fn)
-
-fun length(vararg lines: Line) = _line("length", *lines)
-val Line.length get() = _get("length")
-fun <R> length(fn: (Line) -> R) = _case("length", fn)
-
-fun lengths(vararg lines: Line) = _line("lengths", *lines)
-val Line.lengths get() = _get("lengths")
-fun <R> lengths(fn: (Line) -> R) = _case("lengths", fn)
-
-fun leo(vararg lines: Line) = _line("leo", *lines)
-val Line.leo get() = _get("leo")
-fun <R> leo(fn: (Line) -> R) = _case("leo", fn)
-
-fun leonardo(vararg lines: Line) = _line("leonardo", *lines)
-val Line.leonardo get() = _get("leonardo")
-fun <R> leonardo(fn: (Line) -> R) = _case("leonardo", fn)
-
-fun leonize(vararg lines: Line) = _line("leonize", *lines)
-val Line.leonize get() = _get("leonize")
-fun <R> leonize(fn: (Line) -> R) = _case("leonize", fn)
-
-fun leonized(vararg lines: Line) = _line("leonized", *lines)
-val Line.leonized get() = _get("leonized")
-fun <R> leonized(fn: (Line) -> R) = _case("leonized", fn)
-
-fun leonizer(vararg lines: Line) = _line("leonizer", *lines)
-val Line.leonizer get() = _get("leonizer")
-fun <R> leonizer(fn: (Line) -> R) = _case("leonizer", fn)
-
-fun letter(vararg lines: Line) = _line("letter", *lines)
-val Line.letter get() = _get("letter")
-fun <R> letter(fn: (Line) -> R) = _case("letter", fn)
-
-fun lhs(vararg lines: Line) = _line("lhs", *lines)
-val Line.lhs get() = _get("lhs")
-fun <R> lhs(fn: (Line) -> R) = _case("lhs", fn)
-
-fun lib(vararg lines: Line) = _line("lib", *lines)
-val Line.lib get() = _get("lib")
-fun <R> lib(fn: (Line) -> R) = _case("lib", fn)
-
-fun library(vararg lines: Line) = _line("library", *lines)
-val Line.library get() = _get("library")
-fun <R> library(fn: (Line) -> R) = _case("library", fn)
-
-fun light(vararg lines: Line) = _line("light", *lines)
-val Line.light get() = _get("light")
-fun <R> light(fn: (Line) -> R) = _case("light", fn)
-
-fun limit(vararg lines: Line) = _line("limit", *lines)
-val Line.limit get() = _get("limit")
-fun <R> limit(fn: (Line) -> R) = _case("limit", fn)
-
-fun limited(vararg lines: Line) = _line("limited", *lines)
-val Line.limited get() = _get("limited")
-fun <R> limited(fn: (Line) -> R) = _case("limited", fn)
-
-fun line(vararg lines: Line) = _line("line", *lines)
-val Line.line get() = _get("line")
-fun <R> line(fn: (Line) -> R) = _case("line", fn)
-
-fun lines(vararg lines: Line) = _line("lines", *lines)
-val Line.lines get() = _get("lines")
-fun <R> lines(fn: (Line) -> R) = _case("lines", fn)
-
-fun link(vararg lines: Line) = _line("link", *lines)
-val Line.link get() = _get("link")
-fun <R> link(fn: (Line) -> R) = _case("link", fn)
-
-fun linked(vararg lines: Line) = _line("linked", *lines)
-val Line.linked get() = _get("linked")
-fun <R> linked(fn: (Line) -> R) = _case("linked", fn)
-
-fun list(vararg lines: Line) = _line("list", *lines)
-val Line.list get() = _get("list")
-fun <R> list(fn: (Line) -> R) = _case("list", fn)
-
-fun listener(vararg lines: Line) = _line("listener", *lines)
-val Line.listener get() = _get("listener")
-fun <R> listener(fn: (Line) -> R) = _case("listener", fn)
-
-fun lists(vararg lines: Line) = _line("lists", *lines)
-val Line.lists get() = _get("lists")
-fun <R> lists(fn: (Line) -> R) = _case("lists", fn)
-
-fun literal(vararg lines: Line) = _line("literal", *lines)
-val Line.literal get() = _get("literal")
-fun <R> literal(fn: (Line) -> R) = _case("literal", fn)
-
-fun lo(vararg lines: Line) = _line("lo", *lines)
-val Line.lo get() = _get("lo")
-fun <R> lo(fn: (Line) -> R) = _case("lo", fn)
-
-fun load(vararg lines: Line) = _line("load", *lines)
-val Line.load get() = _get("load")
-fun <R> load(fn: (Line) -> R) = _case("load", fn)
-
-fun loaded(vararg lines: Line) = _line("loaded", *lines)
-val Line.loaded get() = _get("loaded")
-fun <R> loaded(fn: (Line) -> R) = _case("loaded", fn)
-
-fun loader(vararg lines: Line) = _line("loader", *lines)
-val Line.loader get() = _get("loader")
-fun <R> loader(fn: (Line) -> R) = _case("loader", fn)
-
-fun loading(vararg lines: Line) = _line("loading", *lines)
-val Line.loading get() = _get("loading")
-fun <R> loading(fn: (Line) -> R) = _case("loading", fn)
-
-fun lock(vararg lines: Line) = _line("lock", *lines)
-val Line.lock get() = _get("lock")
-fun <R> lock(fn: (Line) -> R) = _case("lock", fn)
-
-fun log(vararg lines: Line) = _line("log", *lines)
-val Line.log get() = _get("log")
-fun <R> log(fn: (Line) -> R) = _case("log", fn)
-
-fun login(vararg lines: Line) = _line("login", *lines)
-val Line.login get() = _get("login")
-fun <R> login(fn: (Line) -> R) = _case("login", fn)
-
-fun logo(vararg lines: Line) = _line("logo", *lines)
-val Line.logo get() = _get("logo")
-fun <R> logo(fn: (Line) -> R) = _case("logo", fn)
-
-fun logout(vararg lines: Line) = _line("logout", *lines)
-val Line.logout get() = _get("logout")
-fun <R> logout(fn: (Line) -> R) = _case("logout", fn)
-
-fun lol(vararg lines: Line) = _line("lol", *lines)
-val Line.lol get() = _get("lol")
-fun <R> lol(fn: (Line) -> R) = _case("lol", fn)
-
-fun long(vararg lines: Line) = _line("long", *lines)
-val Line.long get() = _get("long")
-fun <R> long(fn: (Line) -> R) = _case("long", fn)
-
-fun look(vararg lines: Line) = _line("look", *lines)
-val Line.look get() = _get("look")
-fun <R> look(fn: (Line) -> R) = _case("look", fn)
-
-fun lookup(vararg lines: Line) = _line("lookup", *lines)
-val Line.lookup get() = _get("lookup")
-fun <R> lookup(fn: (Line) -> R) = _case("lookup", fn)
-
-fun loop(vararg lines: Line) = _line("loop", *lines)
-val Line.loop get() = _get("loop")
-fun <R> loop(fn: (Line) -> R) = _case("loop", fn)
-
-fun lost(vararg lines: Line) = _line("lost", *lines)
-val Line.lost get() = _get("lost")
-fun <R> lost(fn: (Line) -> R) = _case("lost", fn)
-
-fun low(vararg lines: Line) = _line("low", *lines)
-val Line.low get() = _get("low")
-fun <R> low(fn: (Line) -> R) = _case("low", fn)
-
-fun lower(vararg lines: Line) = _line("lower", *lines)
-val Line.lower get() = _get("lower")
-fun <R> lower(fn: (Line) -> R) = _case("lower", fn)
-
-fun ludum(vararg lines: Line) = _line("ludum", *lines)
-val Line.ludum get() = _get("ludum")
-fun <R> ludum(fn: (Line) -> R) = _case("ludum", fn)
-
-fun ludumdare(vararg lines: Line) = _line("ludumdare", *lines)
-val Line.ludumdare get() = _get("ludumdare")
-fun <R> ludumdare(fn: (Line) -> R) = _case("ludumdare", fn)
-
-fun m(vararg lines: Line) = _line("m", *lines)
-val Line.m get() = _get("m")
-fun <R> m(fn: (Line) -> R) = _case("m", fn)
-
-fun mac(vararg lines: Line) = _line("mac", *lines)
-val Line.mac get() = _get("mac")
-fun <R> mac(fn: (Line) -> R) = _case("mac", fn)
-
-fun macos(vararg lines: Line) = _line("macos", *lines)
-val Line.macos get() = _get("macos")
-fun <R> macos(fn: (Line) -> R) = _case("macos", fn)
-
-fun macro(vararg lines: Line) = _line("macro", *lines)
-val Line.macro get() = _get("macro")
-fun <R> macro(fn: (Line) -> R) = _case("macro", fn)
-
-fun magenta(vararg lines: Line) = _line("magenta", *lines)
-val Line.magenta get() = _get("magenta")
-fun <R> magenta(fn: (Line) -> R) = _case("magenta", fn)
-
-fun mail(vararg lines: Line) = _line("mail", *lines)
-val Line.mail get() = _get("mail")
-fun <R> mail(fn: (Line) -> R) = _case("mail", fn)
-
-fun main(vararg lines: Line) = _line("main", *lines)
-val Line.main get() = _get("main")
-fun <R> main(fn: (Line) -> R) = _case("main", fn)
-
-fun make(vararg lines: Line) = _line("make", *lines)
-val Line.make get() = _get("make")
-fun <R> make(fn: (Line) -> R) = _case("make", fn)
-
-fun male(vararg lines: Line) = _line("male", *lines)
-val Line.male get() = _get("male")
-fun <R> male(fn: (Line) -> R) = _case("male", fn)
-
-fun manager(vararg lines: Line) = _line("manager", *lines)
-val Line.manager get() = _get("manager")
-fun <R> manager(fn: (Line) -> R) = _case("manager", fn)
-
-fun manual(vararg lines: Line) = _line("manual", *lines)
-val Line.manual get() = _get("manual")
-fun <R> manual(fn: (Line) -> R) = _case("manual", fn)
-
-fun map(vararg lines: Line) = _line("map", *lines)
-val Line.map get() = _get("map")
-fun <R> map(fn: (Line) -> R) = _case("map", fn)
-
-fun mapping(vararg lines: Line) = _line("mapping", *lines)
-val Line.mapping get() = _get("mapping")
-fun <R> mapping(fn: (Line) -> R) = _case("mapping", fn)
-
-fun maps(vararg lines: Line) = _line("maps", *lines)
-val Line.maps get() = _get("maps")
-fun <R> maps(fn: (Line) -> R) = _case("maps", fn)
-
-fun mapt(vararg lines: Line) = _line("mapt", *lines)
-val Line.mapt get() = _get("mapt")
-fun <R> mapt(fn: (Line) -> R) = _case("mapt", fn)
-
-fun margin(vararg lines: Line) = _line("margin", *lines)
-val Line.margin get() = _get("margin")
-fun <R> margin(fn: (Line) -> R) = _case("margin", fn)
-
-fun marriage(vararg lines: Line) = _line("marriage", *lines)
-val Line.marriage get() = _get("marriage")
-fun <R> marriage(fn: (Line) -> R) = _case("marriage", fn)
-
-fun mask(vararg lines: Line) = _line("mask", *lines)
-val Line.mask get() = _get("mask")
-fun <R> mask(fn: (Line) -> R) = _case("mask", fn)
-
-fun match(vararg lines: Line) = _line("match", *lines)
-val Line.match get() = _get("match")
-fun <R> match(fn: (Line) -> R) = _case("match", fn)
-
-fun matcher(vararg lines: Line) = _line("matcher", *lines)
-val Line.matcher get() = _get("matcher")
-fun <R> matcher(fn: (Line) -> R) = _case("matcher", fn)
-
-fun matches(vararg lines: Line) = _line("matches", *lines)
-val Line.matches get() = _get("matches")
-fun <R> matches(fn: (Line) -> R) = _case("matches", fn)
-
-fun matching(vararg lines: Line) = _line("matching", *lines)
-val Line.matching get() = _get("matching")
-fun <R> matching(fn: (Line) -> R) = _case("matching", fn)
-
-fun math(vararg lines: Line) = _line("math", *lines)
-val Line.math get() = _get("math")
-fun <R> math(fn: (Line) -> R) = _case("math", fn)
-
-fun max(vararg lines: Line) = _line("max", *lines)
-val Line.max get() = _get("max")
-fun <R> max(fn: (Line) -> R) = _case("max", fn)
-
-fun maybe(vararg lines: Line) = _line("maybe", *lines)
-val Line.maybe get() = _get("maybe")
-fun <R> maybe(fn: (Line) -> R) = _case("maybe", fn)
-
-fun measure(vararg lines: Line) = _line("measure", *lines)
-val Line.measure get() = _get("measure")
-fun <R> measure(fn: (Line) -> R) = _case("measure", fn)
-
-fun melody(vararg lines: Line) = _line("melody", *lines)
-val Line.melody get() = _get("melody")
-fun <R> melody(fn: (Line) -> R) = _case("melody", fn)
-
-fun mem(vararg lines: Line) = _line("mem", *lines)
-val Line.mem get() = _get("mem")
-fun <R> mem(fn: (Line) -> R) = _case("mem", fn)
-
-fun member(vararg lines: Line) = _line("member", *lines)
-val Line.member get() = _get("member")
-fun <R> member(fn: (Line) -> R) = _case("member", fn)
-
-fun members(vararg lines: Line) = _line("members", *lines)
-val Line.members get() = _get("members")
-fun <R> members(fn: (Line) -> R) = _case("members", fn)
-
-fun membership(vararg lines: Line) = _line("membership", *lines)
-val Line.membership get() = _get("membership")
-fun <R> membership(fn: (Line) -> R) = _case("membership", fn)
-
-fun memory(vararg lines: Line) = _line("memory", *lines)
-val Line.memory get() = _get("memory")
-fun <R> memory(fn: (Line) -> R) = _case("memory", fn)
-
-fun merger(vararg lines: Line) = _line("merger", *lines)
-val Line.merger get() = _get("merger")
-fun <R> merger(fn: (Line) -> R) = _case("merger", fn)
-
-fun message(vararg lines: Line) = _line("message", *lines)
-val Line.message get() = _get("message")
-fun <R> message(fn: (Line) -> R) = _case("message", fn)
-
-fun meta(vararg lines: Line) = _line("meta", *lines)
-val Line.meta get() = _get("meta")
-fun <R> meta(fn: (Line) -> R) = _case("meta", fn)
-
-fun method(vararg lines: Line) = _line("method", *lines)
-val Line.method get() = _get("method")
-fun <R> method(fn: (Line) -> R) = _case("method", fn)
-
-fun methods(vararg lines: Line) = _line("methods", *lines)
-val Line.methods get() = _get("methods")
-fun <R> methods(fn: (Line) -> R) = _case("methods", fn)
-
-fun metrics(vararg lines: Line) = _line("metrics", *lines)
-val Line.metrics get() = _get("metrics")
-fun <R> metrics(fn: (Line) -> R) = _case("metrics", fn)
-
-fun micapolos(vararg lines: Line) = _line("micapolos", *lines)
-val Line.micapolos get() = _get("micapolos")
-fun <R> micapolos(fn: (Line) -> R) = _case("micapolos", fn)
-
-fun middle(vararg lines: Line) = _line("middle", *lines)
-val Line.middle get() = _get("middle")
-fun <R> middle(fn: (Line) -> R) = _case("middle", fn)
-
-fun millis(vararg lines: Line) = _line("millis", *lines)
-val Line.millis get() = _get("millis")
-fun <R> millis(fn: (Line) -> R) = _case("millis", fn)
-
-fun min(vararg lines: Line) = _line("min", *lines)
-val Line.min get() = _get("min")
-fun <R> min(fn: (Line) -> R) = _case("min", fn)
-
-fun minus(vararg lines: Line) = _line("minus", *lines)
-val Line.minus get() = _get("minus")
-fun <R> minus(fn: (Line) -> R) = _case("minus", fn)
-
-fun minute(vararg lines: Line) = _line("minute", *lines)
-val Line.minute get() = _get("minute")
-fun <R> minute(fn: (Line) -> R) = _case("minute", fn)
-
-fun miss(vararg lines: Line) = _line("miss", *lines)
-val Line.miss get() = _get("miss")
-fun <R> miss(fn: (Line) -> R) = _case("miss", fn)
-
-fun missing(vararg lines: Line) = _line("missing", *lines)
-val Line.missing get() = _get("missing")
-fun <R> missing(fn: (Line) -> R) = _case("missing", fn)
-
-fun mod(vararg lines: Line) = _line("mod", *lines)
-val Line.mod get() = _get("mod")
-fun <R> mod(fn: (Line) -> R) = _case("mod", fn)
-
-fun mode(vararg lines: Line) = _line("mode", *lines)
-val Line.mode get() = _get("mode")
-fun <R> mode(fn: (Line) -> R) = _case("mode", fn)
-
-fun modifier(vararg lines: Line) = _line("modifier", *lines)
-val Line.modifier get() = _get("modifier")
-fun <R> modifier(fn: (Line) -> R) = _case("modifier", fn)
-
-fun modifiers(vararg lines: Line) = _line("modifiers", *lines)
-val Line.modifiers get() = _get("modifiers")
-fun <R> modifiers(fn: (Line) -> R) = _case("modifiers", fn)
-
-fun module(vararg lines: Line) = _line("module", *lines)
-val Line.module get() = _get("module")
-fun <R> module(fn: (Line) -> R) = _case("module", fn)
-
-fun modulo(vararg lines: Line) = _line("modulo", *lines)
-val Line.modulo get() = _get("modulo")
-fun <R> modulo(fn: (Line) -> R) = _case("modulo", fn)
-
-fun monad(vararg lines: Line) = _line("monad", *lines)
-val Line.monad get() = _get("monad")
-fun <R> monad(fn: (Line) -> R) = _case("monad", fn)
-
-fun month(vararg lines: Line) = _line("month", *lines)
-val Line.month get() = _get("month")
-fun <R> month(fn: (Line) -> R) = _case("month", fn)
-
-fun more(vararg lines: Line) = _line("more", *lines)
-val Line.more get() = _get("more")
-fun <R> more(fn: (Line) -> R) = _case("more", fn)
-
-fun mother(vararg lines: Line) = _line("mother", *lines)
-val Line.mother get() = _get("mother")
-fun <R> mother(fn: (Line) -> R) = _case("mother", fn)
-
-fun motion(vararg lines: Line) = _line("motion", *lines)
-val Line.motion get() = _get("motion")
-fun <R> motion(fn: (Line) -> R) = _case("motion", fn)
-
-fun mouse(vararg lines: Line) = _line("mouse", *lines)
-val Line.mouse get() = _get("mouse")
-fun <R> mouse(fn: (Line) -> R) = _case("mouse", fn)
-
-fun move(vararg lines: Line) = _line("move", *lines)
-val Line.move get() = _get("move")
-fun <R> move(fn: (Line) -> R) = _case("move", fn)
-
-fun mul(vararg lines: Line) = _line("mul", *lines)
-val Line.mul get() = _get("mul")
-fun <R> mul(fn: (Line) -> R) = _case("mul", fn)
-
-fun multiply(vararg lines: Line) = _line("multiply", *lines)
-val Line.multiply get() = _get("multiply")
-fun <R> multiply(fn: (Line) -> R) = _case("multiply", fn)
-
-fun mutable(vararg lines: Line) = _line("mutable", *lines)
-val Line.mutable get() = _get("mutable")
-fun <R> mutable(fn: (Line) -> R) = _case("mutable", fn)
-
-fun my(vararg lines: Line) = _line("my", *lines)
-val Line.my get() = _get("my")
-fun <R> my(fn: (Line) -> R) = _case("my", fn)
-
-fun n(vararg lines: Line) = _line("n", *lines)
-val Line.n get() = _get("n")
-fun <R> n(fn: (Line) -> R) = _case("n", fn)
-
-fun name(vararg lines: Line) = _line("name", *lines)
-val Line.name get() = _get("name")
-fun <R> name(fn: (Line) -> R) = _case("name", fn)
-
-fun named(vararg lines: Line) = _line("named", *lines)
-val Line.named get() = _get("named")
-fun <R> named(fn: (Line) -> R) = _case("named", fn)
-
-fun names(vararg lines: Line) = _line("names", *lines)
-val Line.names get() = _get("names")
-fun <R> names(fn: (Line) -> R) = _case("names", fn)
-
-fun nand(vararg lines: Line) = _line("nand", *lines)
-val Line.nand get() = _get("nand")
-fun <R> nand(fn: (Line) -> R) = _case("nand", fn)
-
-fun native(vararg lines: Line) = _line("native", *lines)
-val Line.native get() = _get("native")
-fun <R> native(fn: (Line) -> R) = _case("native", fn)
-
-fun natural(vararg lines: Line) = _line("natural", *lines)
-val Line.natural get() = _get("natural")
-fun <R> natural(fn: (Line) -> R) = _case("natural", fn)
-
-fun negate(vararg lines: Line) = _line("negate", *lines)
-val Line.negate get() = _get("negate")
-fun <R> negate(fn: (Line) -> R) = _case("negate", fn)
-
-fun new(vararg lines: Line) = _line("new", *lines)
-val Line.new get() = _get("new")
-fun <R> new(fn: (Line) -> R) = _case("new", fn)
-
-fun newline(vararg lines: Line) = _line("newline", *lines)
-val Line.newline get() = _get("newline")
-fun <R> newline(fn: (Line) -> R) = _case("newline", fn)
-
-fun next(vararg lines: Line) = _line("next", *lines)
-val Line.next get() = _get("next")
-fun <R> next(fn: (Line) -> R) = _case("next", fn)
-
-fun night(vararg lines: Line) = _line("night", *lines)
-val Line.night get() = _get("night")
-fun <R> night(fn: (Line) -> R) = _case("night", fn)
-
-fun nil(vararg lines: Line) = _line("nil", *lines)
-val Line.nil get() = _get("nil")
-fun <R> nil(fn: (Line) -> R) = _case("nil", fn)
-
-fun nine(vararg lines: Line) = _line("nine", *lines)
-val Line.nine get() = _get("nine")
-fun <R> nine(fn: (Line) -> R) = _case("nine", fn)
-
-fun nineth(vararg lines: Line) = _line("nineth", *lines)
-val Line.nineth get() = _get("nineth")
-fun <R> nineth(fn: (Line) -> R) = _case("nineth", fn)
-
-fun no(vararg lines: Line) = _line("no", *lines)
-val Line.no get() = _get("no")
-fun <R> no(fn: (Line) -> R) = _case("no", fn)
-
-fun node(vararg lines: Line) = _line("node", *lines)
-val Line.node get() = _get("node")
-fun <R> node(fn: (Line) -> R) = _case("node", fn)
-
-fun non(vararg lines: Line) = _line("non", *lines)
-val Line.non get() = _get("non")
-fun <R> non(fn: (Line) -> R) = _case("non", fn)
-
-fun none(vararg lines: Line) = _line("none", *lines)
-val Line.none get() = _get("none")
-fun <R> none(fn: (Line) -> R) = _case("none", fn)
-
-fun nor(vararg lines: Line) = _line("nor", *lines)
-val Line.nor get() = _get("nor")
-fun <R> nor(fn: (Line) -> R) = _case("nor", fn)
-
-fun normalize(vararg lines: Line) = _line("normalize", *lines)
-val Line.normalize get() = _get("normalize")
-fun <R> normalize(fn: (Line) -> R) = _case("normalize", fn)
-
-fun normalization(vararg lines: Line) = _line("normalization", *lines)
-val Line.normalization get() = _get("normalization")
-fun <R> normalization(fn: (Line) -> R) = _case("normalization", fn)
-
-fun not(vararg lines: Line) = _line("not", *lines)
-val Line.not get() = _get("not")
-fun <R> not(fn: (Line) -> R) = _case("not", fn)
-
-fun note(vararg lines: Line) = _line("note", *lines)
-val Line.note get() = _get("note")
-fun <R> note(fn: (Line) -> R) = _case("note", fn)
-
-fun notes(vararg lines: Line) = _line("notes", *lines)
-val Line.notes get() = _get("notes")
-fun <R> notes(fn: (Line) -> R) = _case("notes", fn)
-
-fun nothing(vararg lines: Line) = _line("nothing", *lines)
-val Line.nothing get() = _get("nothing")
-fun <R> nothing(fn: (Line) -> R) = _case("nothing", fn)
-
-fun now(vararg lines: Line) = _line("now", *lines)
-val Line.now get() = _get("now")
-fun <R> now(fn: (Line) -> R) = _case("now", fn)
-
-fun null_(vararg lines: Line) = _line("null", *lines)
-val Line.null_ get() = _get("null")
-fun <R> null_(fn: (Line) -> R) = _case("null", fn)
-
-fun nullable(vararg lines: Line) = _line("nullable", *lines)
-val Line.nullable get() = _get("nullable")
-fun <R> nullable(fn: (Line) -> R) = _case("nullable", fn)
-
-fun number(vararg lines: Line) = _line("number", *lines)
-val Line.number get() = _get("number")
-fun <R> number(fn: (Line) -> R) = _case("number", fn)
-
-fun numbers(vararg lines: Line) = _line("numbers", *lines)
-val Line.numbers get() = _get("numbers")
-fun <R> numbers(fn: (Line) -> R) = _case("numbers", fn)
-
-fun o(vararg lines: Line) = _line("o", *lines)
-val Line.o get() = _get("o")
-fun <R> o(fn: (Line) -> R) = _case("o", fn)
-
-fun obj(vararg lines: Line) = _line("obj", *lines)
-val Line.obj get() = _get("obj")
-fun <R> obj(fn: (Line) -> R) = _case("obj", fn)
-
-fun object_(vararg lines: Line) = _line("object", *lines)
-val Line.object_ get() = _get("object")
-fun <R> object_(fn: (Line) -> R) = _case("object", fn)
-
-fun objects(vararg lines: Line) = _line("objects", *lines)
-val Line.objects get() = _get("objects")
-fun <R> objects(fn: (Line) -> R) = _case("objects", fn)
-
-fun of(vararg lines: Line) = _line("of", *lines)
-val Line.of get() = _get("of")
-fun <R> of(fn: (Line) -> R) = _case("of", fn)
-
-fun off(vararg lines: Line) = _line("off", *lines)
-val Line.off get() = _get("off")
-fun <R> off(fn: (Line) -> R) = _case("off", fn)
-
-fun office(vararg lines: Line) = _line("office", *lines)
-val Line.office get() = _get("office")
-fun <R> office(fn: (Line) -> R) = _case("office", fn)
-
-fun offset(vararg lines: Line) = _line("offset", *lines)
-val Line.offset get() = _get("offset")
-fun <R> offset(fn: (Line) -> R) = _case("offset", fn)
-
-fun ofib(vararg lines: Line) = _line("ofib", *lines)
-val Line.ofib get() = _get("ofib")
-fun <R> ofib(fn: (Line) -> R) = _case("ofib", fn)
-
-fun ok(vararg lines: Line) = _line("ok", *lines)
-val Line.ok get() = _get("ok")
-fun <R> ok(fn: (Line) -> R) = _case("ok", fn)
-
-fun on(vararg lines: Line) = _line("on", *lines)
-val Line.on get() = _get("on")
-fun <R> on(fn: (Line) -> R) = _case("on", fn)
-
-fun one(vararg lines: Line) = _line("one", *lines)
-val Line.one get() = _get("one")
-fun <R> one(fn: (Line) -> R) = _case("one", fn)
-
-fun only(vararg lines: Line) = _line("only", *lines)
-val Line.only get() = _get("only")
-fun <R> only(fn: (Line) -> R) = _case("only", fn)
-
-fun op(vararg lines: Line) = _line("op", *lines)
-val Line.op get() = _get("op")
-fun <R> op(fn: (Line) -> R) = _case("op", fn)
-
-fun open(vararg lines: Line) = _line("open", *lines)
-val Line.open get() = _get("open")
-fun <R> open(fn: (Line) -> R) = _case("open", fn)
-
-fun operation(vararg lines: Line) = _line("operation", *lines)
-val Line.operation get() = _get("operation")
-fun <R> operation(fn: (Line) -> R) = _case("operation", fn)
-
-fun operator(vararg lines: Line) = _line("operator", *lines)
-val Line.operator get() = _get("operator")
-fun <R> operator(fn: (Line) -> R) = _case("operator", fn)
-
-fun option(vararg lines: Line) = _line("option", *lines)
-val Line.option get() = _get("option")
-fun <R> option(fn: (Line) -> R) = _case("option", fn)
-
-fun optional(vararg lines: Line) = _line("optional", *lines)
-val Line.optional get() = _get("optional")
-fun <R> optional(fn: (Line) -> R) = _case("optional", fn)
-
-fun optionals(vararg lines: Line) = _line("optionals", *lines)
-val Line.optionals get() = _get("optionals")
-fun <R> optionals(fn: (Line) -> R) = _case("optionals", fn)
-
-fun or(vararg lines: Line) = _line("or", *lines)
-val Line.or get() = _get("or")
-fun <R> or(fn: (Line) -> R) = _case("or", fn)
-
-fun orange(vararg lines: Line) = _line("orange", *lines)
-val Line.orange get() = _get("orange")
-fun <R> orange(fn: (Line) -> R) = _case("orange", fn)
-
-fun order(vararg lines: Line) = _line("order", *lines)
-val Line.order get() = _get("order")
-fun <R> order(fn: (Line) -> R) = _case("order", fn)
-
-fun ordinal(vararg lines: Line) = _line("ordinal", *lines)
-val Line.ordinal get() = _get("ordinal")
-fun <R> ordinal(fn: (Line) -> R) = _case("ordinal", fn)
-
-fun org(vararg lines: Line) = _line("org", *lines)
-val Line.org get() = _get("org")
-fun <R> org(fn: (Line) -> R) = _case("org", fn)
-
-fun original(vararg lines: Line) = _line("original", *lines)
-val Line.original get() = _get("original")
-fun <R> original(fn: (Line) -> R) = _case("original", fn)
-
-fun otherwise(vararg lines: Line) = _line("otherwise", *lines)
-val Line.otherwise get() = _get("otherwise")
-fun <R> otherwise(fn: (Line) -> R) = _case("otherwise", fn)
-
-fun out(vararg lines: Line) = _line("out", *lines)
-val Line.out get() = _get("out")
-fun <R> out(fn: (Line) -> R) = _case("out", fn)
-
-fun outline(vararg lines: Line) = _line("outline", *lines)
-val Line.outline get() = _get("outline")
-fun <R> outline(fn: (Line) -> R) = _case("outline", fn)
-
-fun output(vararg lines: Line) = _line("output", *lines)
-val Line.output get() = _get("output")
-fun <R> output(fn: (Line) -> R) = _case("output", fn)
-
-fun oval(vararg lines: Line) = _line("oval", *lines)
-val Line.oval get() = _get("oval")
-fun <R> oval(fn: (Line) -> R) = _case("oval", fn)
-
-fun over(vararg lines: Line) = _line("over", *lines)
-val Line.over get() = _get("over")
-fun <R> over(fn: (Line) -> R) = _case("over", fn)
-
-fun overflow(vararg lines: Line) = _line("overflow", *lines)
-val Line.overflow get() = _get("overflow")
-fun <R> overflow(fn: (Line) -> R) = _case("overflow", fn)
-
-fun owner(vararg lines: Line) = _line("owner", *lines)
-val Line.owner get() = _get("owner")
-fun <R> owner(fn: (Line) -> R) = _case("owner", fn)
-
-fun p(vararg lines: Line) = _line("p", *lines)
-val Line.p get() = _get("p")
-fun <R> p(fn: (Line) -> R) = _case("p", fn)
-
-fun package_(vararg lines: Line) = _line("package", *lines)
-val Line.package_ get() = _get("package")
-fun <R> package_(fn: (Line) -> R) = _case("package", fn)
-
-fun packages(vararg lines: Line) = _line("packages", *lines)
-val Line.packages get() = _get("packages")
-fun <R> packages(fn: (Line) -> R) = _case("packages", fn)
-
-fun page(vararg lines: Line) = _line("page", *lines)
-val Line.page get() = _get("page")
-fun <R> page(fn: (Line) -> R) = _case("page", fn)
-
-fun paint(vararg lines: Line) = _line("paint", *lines)
-val Line.paint get() = _get("paint")
-fun <R> paint(fn: (Line) -> R) = _case("paint", fn)
-
-fun pair(vararg lines: Line) = _line("pair", *lines)
-val Line.pair get() = _get("pair")
-fun <R> pair(fn: (Line) -> R) = _case("pair", fn)
-
-fun pane(vararg lines: Line) = _line("pane", *lines)
-val Line.pane get() = _get("pane")
-fun <R> pane(fn: (Line) -> R) = _case("pane", fn)
-
-fun param(vararg lines: Line) = _line("param", *lines)
-val Line.param get() = _get("param")
-fun <R> param(fn: (Line) -> R) = _case("param", fn)
-
-fun parameter(vararg lines: Line) = _line("parameter", *lines)
-val Line.parameter get() = _get("parameter")
-fun <R> parameter(fn: (Line) -> R) = _case("parameter", fn)
-
-fun parameters(vararg lines: Line) = _line("parameters", *lines)
-val Line.parameters get() = _get("parameters")
-fun <R> parameters(fn: (Line) -> R) = _case("parameters", fn)
-
-fun params(vararg lines: Line) = _line("params", *lines)
-val Line.params get() = _get("params")
-fun <R> params(fn: (Line) -> R) = _case("params", fn)
-
-fun parent(vararg lines: Line) = _line("parent", *lines)
-val Line.parent get() = _get("parent")
-fun <R> parent(fn: (Line) -> R) = _case("parent", fn)
-
-fun parentheses(vararg lines: Line) = _line("parentheses", *lines)
-val Line.parentheses get() = _get("parentheses")
-fun <R> parentheses(fn: (Line) -> R) = _case("parentheses", fn)
-
-fun parse(vararg lines: Line) = _line("parse", *lines)
-val Line.parse get() = _get("parse")
-fun <R> parse(fn: (Line) -> R) = _case("parse", fn)
-
-fun parser(vararg lines: Line) = _line("parser", *lines)
-val Line.parser get() = _get("parser")
-fun <R> parser(fn: (Line) -> R) = _case("parser", fn)
-
-fun pass(vararg lines: Line) = _line("pass", *lines)
-val Line.pass get() = _get("pass")
-fun <R> pass(fn: (Line) -> R) = _case("pass", fn)
-
-fun password(vararg lines: Line) = _line("password", *lines)
-val Line.password get() = _get("password")
-fun <R> password(fn: (Line) -> R) = _case("password", fn)
-
-fun paste(vararg lines: Line) = _line("paste", *lines)
-val Line.paste get() = _get("paste")
-fun <R> paste(fn: (Line) -> R) = _case("paste", fn)
-
-fun path(vararg lines: Line) = _line("path", *lines)
-val Line.path get() = _get("path")
-fun <R> path(fn: (Line) -> R) = _case("path", fn)
-
-fun pattern(vararg lines: Line) = _line("pattern", *lines)
-val Line.pattern get() = _get("pattern")
-fun <R> pattern(fn: (Line) -> R) = _case("pattern", fn)
-
-fun pause(vararg lines: Line) = _line("pause", *lines)
-val Line.pause get() = _get("pause")
-fun <R> pause(fn: (Line) -> R) = _case("pause", fn)
-
-fun payload(vararg lines: Line) = _line("payload", *lines)
-val Line.payload get() = _get("payload")
-fun <R> payload(fn: (Line) -> R) = _case("payload", fn)
-
-fun pc(vararg lines: Line) = _line("pc", *lines)
-val Line.pc get() = _get("pc")
-fun <R> pc(fn: (Line) -> R) = _case("pc", fn)
-
-fun percent(vararg lines: Line) = _line("percent", *lines)
-val Line.percent get() = _get("percent")
-fun <R> percent(fn: (Line) -> R) = _case("percent", fn)
-
-fun period(vararg lines: Line) = _line("period", *lines)
-val Line.period get() = _get("period")
-fun <R> period(fn: (Line) -> R) = _case("period", fn)
-
-fun person(vararg lines: Line) = _line("person", *lines)
-val Line.person get() = _get("person")
-fun <R> person(fn: (Line) -> R) = _case("person", fn)
-
-fun phase(vararg lines: Line) = _line("phase", *lines)
-val Line.phase get() = _get("phase")
-fun <R> phase(fn: (Line) -> R) = _case("phase", fn)
-
-fun phone(vararg lines: Line) = _line("phone", *lines)
-val Line.phone get() = _get("phone")
-fun <R> phone(fn: (Line) -> R) = _case("phone", fn)
-
-fun pi(vararg lines: Line) = _line("pi", *lines)
-val Line.pi get() = _get("pi")
-fun <R> pi(fn: (Line) -> R) = _case("pi", fn)
-
-fun pin(vararg lines: Line) = _line("pin", *lines)
-val Line.pin get() = _get("pin")
-fun <R> pin(fn: (Line) -> R) = _case("pin", fn)
-
-fun ping(vararg lines: Line) = _line("ping", *lines)
-val Line.ping get() = _get("ping")
-fun <R> ping(fn: (Line) -> R) = _case("ping", fn)
-
-fun pink(vararg lines: Line) = _line("pink", *lines)
-val Line.pink get() = _get("pink")
-fun <R> pink(fn: (Line) -> R) = _case("pink", fn)
-
-fun pins(vararg lines: Line) = _line("pins", *lines)
-val Line.pins get() = _get("pins")
-fun <R> pins(fn: (Line) -> R) = _case("pins", fn)
-
-fun pixel(vararg lines: Line) = _line("pixel", *lines)
-val Line.pixel get() = _get("pixel")
-fun <R> pixel(fn: (Line) -> R) = _case("pixel", fn)
-
-fun pkg(vararg lines: Line) = _line("pkg", *lines)
-val Line.pkg get() = _get("pkg")
-fun <R> pkg(fn: (Line) -> R) = _case("pkg", fn)
-
-fun plain(vararg lines: Line) = _line("plain", *lines)
-val Line.plain get() = _get("plain")
-fun <R> plain(fn: (Line) -> R) = _case("plain", fn)
-
-fun play(vararg lines: Line) = _line("play", *lines)
-val Line.play get() = _get("play")
-fun <R> play(fn: (Line) -> R) = _case("play", fn)
-
-fun plus(vararg lines: Line) = _line("plus", *lines)
-val Line.plus get() = _get("plus")
-fun <R> plus(fn: (Line) -> R) = _case("plus", fn)
-
-fun pm(vararg lines: Line) = _line("pm", *lines)
-val Line.pm get() = _get("pm")
-fun <R> pm(fn: (Line) -> R) = _case("pm", fn)
-
-fun point(vararg lines: Line) = _line("point", *lines)
-val Line.point get() = _get("point")
-fun <R> point(fn: (Line) -> R) = _case("point", fn)
-
-fun pointer(vararg lines: Line) = _line("pointer", *lines)
-val Line.pointer get() = _get("pointer")
-fun <R> pointer(fn: (Line) -> R) = _case("pointer", fn)
-
-fun pong(vararg lines: Line) = _line("pong", *lines)
-val Line.pong get() = _get("pong")
-fun <R> pong(fn: (Line) -> R) = _case("pong", fn)
-
-fun pop(vararg lines: Line) = _line("pop", *lines)
-val Line.pop get() = _get("pop")
-fun <R> pop(fn: (Line) -> R) = _case("pop", fn)
-
-fun port(vararg lines: Line) = _line("port", *lines)
-val Line.port get() = _get("port")
-fun <R> port(fn: (Line) -> R) = _case("port", fn)
-
-fun position(vararg lines: Line) = _line("position", *lines)
-val Line.position get() = _get("position")
-fun <R> position(fn: (Line) -> R) = _case("position", fn)
-
-fun possible(vararg lines: Line) = _line("possible", *lines)
-val Line.possible get() = _get("possible")
-fun <R> possible(fn: (Line) -> R) = _case("possible", fn)
-
-fun post(vararg lines: Line) = _line("post", *lines)
-val Line.post get() = _get("post")
-fun <R> post(fn: (Line) -> R) = _case("post", fn)
-
-fun ppq(vararg lines: Line) = _line("ppq", *lines)
-val Line.ppq get() = _get("ppq")
-fun <R> ppq(fn: (Line) -> R) = _case("ppq", fn)
-
-fun predecessor(vararg lines: Line) = _line("predecessor", *lines)
-val Line.predecessor get() = _get("predecessor")
-fun <R> predecessor(fn: (Line) -> R) = _case("predecessor", fn)
-
-fun prefix(vararg lines: Line) = _line("prefix", *lines)
-val Line.prefix get() = _get("prefix")
-fun <R> prefix(fn: (Line) -> R) = _case("prefix", fn)
-
-fun prelude(vararg lines: Line) = _line("prelude", *lines)
-val Line.prelude get() = _get("prelude")
-fun <R> prelude(fn: (Line) -> R) = _case("prelude", fn)
-
-fun preprocess(vararg lines: Line) = _line("preprocess", *lines)
-val Line.preprocess get() = _get("preprocess")
-fun <R> preprocess(fn: (Line) -> R) = _case("preprocess", fn)
-
-fun preprocessor(vararg lines: Line) = _line("preprocessor", *lines)
-val Line.preprocessor get() = _get("preprocessor")
-fun <R> preprocessor(fn: (Line) -> R) = _case("preprocessor", fn)
-
-fun present(vararg lines: Line) = _line("present", *lines)
-val Line.present get() = _get("present")
-fun <R> present(fn: (Line) -> R) = _case("present", fn)
-
-fun prev(vararg lines: Line) = _line("prev", *lines)
-val Line.prev get() = _get("prev")
-fun <R> prev(fn: (Line) -> R) = _case("prev", fn)
-
-fun previous(vararg lines: Line) = _line("previous", *lines)
-val Line.previous get() = _get("previous")
-fun <R> previous(fn: (Line) -> R) = _case("previous", fn)
-
-fun primitive(vararg lines: Line) = _line("primitive", *lines)
-val Line.primitive get() = _get("primitive")
-fun <R> primitive(fn: (Line) -> R) = _case("primitive", fn)
-
-fun print(vararg lines: Line) = _line("print", *lines)
-val Line.print get() = _get("print")
-fun <R> print(fn: (Line) -> R) = _case("print", fn)
-
-fun printed(vararg lines: Line) = _line("printed", *lines)
-val Line.printed get() = _get("printed")
-fun <R> printed(fn: (Line) -> R) = _case("printed", fn)
-
-fun printer(vararg lines: Line) = _line("printer", *lines)
-val Line.printer get() = _get("printer")
-fun <R> printer(fn: (Line) -> R) = _case("printer", fn)
-
-fun printing(vararg lines: Line) = _line("printing", *lines)
-val Line.printing get() = _get("printing")
-fun <R> printing(fn: (Line) -> R) = _case("printing", fn)
-
-fun println(vararg lines: Line) = _line("println", *lines)
-val Line.println get() = _get("println")
-fun <R> println(fn: (Line) -> R) = _case("println", fn)
-
-fun private(vararg lines: Line) = _line("private", *lines)
-val Line.private get() = _get("private")
-fun <R> private(fn: (Line) -> R) = _case("private", fn)
-
-fun process(vararg lines: Line) = _line("process", *lines)
-val Line.process get() = _get("process")
-fun <R> process(fn: (Line) -> R) = _case("process", fn)
-
-fun processed(vararg lines: Line) = _line("processed", *lines)
-val Line.processed get() = _get("processed")
-fun <R> processed(fn: (Line) -> R) = _case("processed", fn)
-
-fun producer(vararg lines: Line) = _line("producer", *lines)
-val Line.producer get() = _get("producer")
-fun <R> producer(fn: (Line) -> R) = _case("producer", fn)
-
-fun product(vararg lines: Line) = _line("product", *lines)
-val Line.product get() = _get("product")
-fun <R> product(fn: (Line) -> R) = _case("product", fn)
-
-fun program(vararg lines: Line) = _line("program", *lines)
-val Line.program get() = _get("program")
-fun <R> program(fn: (Line) -> R) = _case("program", fn)
-
-fun property(vararg lines: Line) = _line("property", *lines)
-val Line.property get() = _get("property")
-fun <R> property(fn: (Line) -> R) = _case("property", fn)
-
-fun protected(vararg lines: Line) = _line("protected", *lines)
-val Line.protected get() = _get("protected")
-fun <R> protected(fn: (Line) -> R) = _case("protected", fn)
-
-fun protocol(vararg lines: Line) = _line("protocol", *lines)
-val Line.protocol get() = _get("protocol")
-fun <R> protocol(fn: (Line) -> R) = _case("protocol", fn)
-
-fun public(vararg lines: Line) = _line("public", *lines)
-val Line.public get() = _get("public")
-fun <R> public(fn: (Line) -> R) = _case("public", fn)
-
-fun pull(vararg lines: Line) = _line("pull", *lines)
-val Line.pull get() = _get("pull")
-fun <R> pull(fn: (Line) -> R) = _case("pull", fn)
-
-fun push(vararg lines: Line) = _line("push", *lines)
-val Line.push get() = _get("push")
-fun <R> push(fn: (Line) -> R) = _case("push", fn)
-
-fun pushed(vararg lines: Line) = _line("pushed", *lines)
-val Line.pushed get() = _get("pushed")
-fun <R> pushed(fn: (Line) -> R) = _case("pushed", fn)
-
-fun put(vararg lines: Line) = _line("put", *lines)
-val Line.put get() = _get("put")
-fun <R> put(fn: (Line) -> R) = _case("put", fn)
-
-fun q(vararg lines: Line) = _line("q", *lines)
-val Line.q get() = _get("q")
-fun <R> q(fn: (Line) -> R) = _case("q", fn)
-
-fun query(vararg lines: Line) = _line("query", *lines)
-val Line.query get() = _get("query")
-fun <R> query(fn: (Line) -> R) = _case("query", fn)
-
-fun queue(vararg lines: Line) = _line("queue", *lines)
-val Line.queue get() = _get("queue")
-fun <R> queue(fn: (Line) -> R) = _case("queue", fn)
-
-fun quicksort(vararg lines: Line) = _line("quicksort", *lines)
-val Line.quicksort get() = _get("quicksort")
-fun <R> quicksort(fn: (Line) -> R) = _case("quicksort", fn)
-
-fun quote(vararg lines: Line) = _line("quote", *lines)
-val Line.quote get() = _get("quote")
-fun <R> quote(fn: (Line) -> R) = _case("quote", fn)
-
-fun quoted(vararg lines: Line) = _line("quoted", *lines)
-val Line.quoted get() = _get("quoted")
-fun <R> quoted(fn: (Line) -> R) = _case("quoted", fn)
-
-fun r(vararg lines: Line) = _line("r", *lines)
-val Line.r get() = _get("r")
-fun <R> r(fn: (Line) -> R) = _case("r", fn)
-
-fun radians(vararg lines: Line) = _line("radians", *lines)
-val Line.radians get() = _get("radians")
-fun <R> radians(fn: (Line) -> R) = _case("radians", fn)
-
-fun radius(vararg lines: Line) = _line("radius", *lines)
-val Line.radius get() = _get("radius")
-fun <R> radius(fn: (Line) -> R) = _case("radius", fn)
-
-fun random(vararg lines: Line) = _line("random", *lines)
-val Line.random get() = _get("random")
-fun <R> random(fn: (Line) -> R) = _case("random", fn)
-
-fun read(vararg lines: Line) = _line("read", *lines)
-val Line.read get() = _get("read")
-fun <R> read(fn: (Line) -> R) = _case("read", fn)
-
-fun reader(vararg lines: Line) = _line("reader", *lines)
-val Line.reader get() = _get("reader")
-fun <R> reader(fn: (Line) -> R) = _case("reader", fn)
-
-fun reading(vararg lines: Line) = _line("reading", *lines)
-val Line.reading get() = _get("reading")
-fun <R> reading(fn: (Line) -> R) = _case("reading", fn)
-
-fun readonly(vararg lines: Line) = _line("readonly", *lines)
-val Line.readonly get() = _get("readonly")
-fun <R> readonly(fn: (Line) -> R) = _case("readonly", fn)
-
-fun readutf(vararg lines: Line) = _line("readutf", *lines)
-val Line.readutf get() = _get("readutf")
-fun <R> readutf(fn: (Line) -> R) = _case("readutf", fn)
-
-fun recover(vararg lines: Line) = _line("recover", *lines)
-val Line.recover get() = _get("recover")
-fun <R> recover(fn: (Line) -> R) = _case("recover", fn)
-
-fun rect(vararg lines: Line) = _line("rect", *lines)
-val Line.rect get() = _get("rect")
-fun <R> rect(fn: (Line) -> R) = _case("rect", fn)
-
-fun rectangle(vararg lines: Line) = _line("rectangle", *lines)
-val Line.rectangle get() = _get("rectangle")
-fun <R> rectangle(fn: (Line) -> R) = _case("rectangle", fn)
-
-fun recurse(vararg lines: Line) = _line("recurse", *lines)
-val Line.recurse get() = _get("recurse")
-fun <R> recurse(fn: (Line) -> R) = _case("recurse", fn)
-
-fun recursing(vararg lines: Line) = _line("recursing", *lines)
-val Line.recursing get() = _get("recursing")
-fun <R> recursing(fn: (Line) -> R) = _case("recursing", fn)
-
-fun recursion(vararg lines: Line) = _line("recursion", *lines)
-val Line.recursion get() = _get("recursion")
-fun <R> recursion(fn: (Line) -> R) = _case("recursion", fn)
-
-fun recursive(vararg lines: Line) = _line("recursive", *lines)
-val Line.recursive get() = _get("recursive")
-fun <R> recursive(fn: (Line) -> R) = _case("recursive", fn)
-
-fun recursively(vararg lines: Line) = _line("recursively", *lines)
-val Line.recursively get() = _get("recursively")
-fun <R> recursively(fn: (Line) -> R) = _case("recursively", fn)
-
-fun red(vararg lines: Line) = _line("red", *lines)
-val Line.red get() = _get("red")
-fun <R> red(fn: (Line) -> R) = _case("red", fn)
-
-fun redirect(vararg lines: Line) = _line("redirect", *lines)
-val Line.redirect get() = _get("redirect")
-fun <R> redirect(fn: (Line) -> R) = _case("redirect", fn)
-
-fun ref(vararg lines: Line) = _line("ref", *lines)
-val Line.ref get() = _get("ref")
-fun <R> ref(fn: (Line) -> R) = _case("ref", fn)
-
-fun reference(vararg lines: Line) = _line("reference", *lines)
-val Line.reference get() = _get("reference")
-fun <R> reference(fn: (Line) -> R) = _case("reference", fn)
-
-fun refl(vararg lines: Line) = _line("refl", *lines)
-val Line.refl get() = _get("refl")
-fun <R> refl(fn: (Line) -> R) = _case("refl", fn)
-
-fun reflect(vararg lines: Line) = _line("reflect", *lines)
-val Line.reflect get() = _get("reflect")
-fun <R> reflect(fn: (Line) -> R) = _case("reflect", fn)
-
-fun reflection(vararg lines: Line) = _line("reflection", *lines)
-val Line.reflection get() = _get("reflection")
-fun <R> reflection(fn: (Line) -> R) = _case("reflection", fn)
-
-fun regex(vararg lines: Line) = _line("regex", *lines)
-val Line.regex get() = _get("regex")
-fun <R> regex(fn: (Line) -> R) = _case("regex", fn)
-
-fun regular(vararg lines: Line) = _line("regular", *lines)
-val Line.regular get() = _get("regular")
-fun <R> regular(fn: (Line) -> R) = _case("regular", fn)
-
-fun remainder(vararg lines: Line) = _line("remainder", *lines)
-val Line.remainder get() = _get("remainder")
-fun <R> remainder(fn: (Line) -> R) = _case("remainder", fn)
-
-fun remove(vararg lines: Line) = _line("remove", *lines)
-val Line.remove get() = _get("remove")
-fun <R> remove(fn: (Line) -> R) = _case("remove", fn)
-
-fun render(vararg lines: Line) = _line("render", *lines)
-val Line.render get() = _get("render")
-fun <R> render(fn: (Line) -> R) = _case("render", fn)
-
-fun rendering(vararg lines: Line) = _line("rendering", *lines)
-val Line.rendering get() = _get("rendering")
-fun <R> rendering(fn: (Line) -> R) = _case("rendering", fn)
-
-fun repeat(vararg lines: Line) = _line("repeat", *lines)
-val Line.repeat get() = _get("repeat")
-fun <R> repeat(fn: (Line) -> R) = _case("repeat", fn)
-
-fun repeating(vararg lines: Line) = _line("repeating", *lines)
-val Line.repeating get() = _get("repeating")
-fun <R> repeating(fn: (Line) -> R) = _case("repeating", fn)
-
-fun replace(vararg lines: Line) = _line("replace", *lines)
-val Line.replace get() = _get("replace")
-fun <R> replace(fn: (Line) -> R) = _case("replace", fn)
-
-fun required(vararg lines: Line) = _line("required", *lines)
-val Line.required get() = _get("required")
-fun <R> required(fn: (Line) -> R) = _case("required", fn)
-
-fun reset(vararg lines: Line) = _line("reset", *lines)
-val Line.reset get() = _get("reset")
-fun <R> reset(fn: (Line) -> R) = _case("reset", fn)
-
-fun resolution(vararg lines: Line) = _line("resolution", *lines)
-val Line.resolution get() = _get("resolution")
-fun <R> resolution(fn: (Line) -> R) = _case("resolution", fn)
-
-fun resolve(vararg lines: Line) = _line("resolve", *lines)
-val Line.resolve get() = _get("resolve")
-fun <R> resolve(fn: (Line) -> R) = _case("resolve", fn)
-
-fun resolved(vararg lines: Line) = _line("resolved", *lines)
-val Line.resolved get() = _get("resolved")
-fun <R> resolved(fn: (Line) -> R) = _case("resolved", fn)
-
-fun resolver(vararg lines: Line) = _line("resolver", *lines)
-val Line.resolver get() = _get("resolver")
-fun <R> resolver(fn: (Line) -> R) = _case("resolver", fn)
-
-fun resource(vararg lines: Line) = _line("resource", *lines)
-val Line.resource get() = _get("resource")
-fun <R> resource(fn: (Line) -> R) = _case("resource", fn)
-
-fun result(vararg lines: Line) = _line("result", *lines)
-val Line.result get() = _get("result")
-fun <R> result(fn: (Line) -> R) = _case("result", fn)
-
-fun resume(vararg lines: Line) = _line("resume", *lines)
-val Line.resume get() = _get("resume")
-fun <R> resume(fn: (Line) -> R) = _case("resume", fn)
-
-fun resumed(vararg lines: Line) = _line("resumed", *lines)
-val Line.resumed get() = _get("resumed")
-fun <R> resumed(fn: (Line) -> R) = _case("resumed", fn)
-
-fun ret(vararg lines: Line) = _line("ret", *lines)
-val Line.ret get() = _get("ret")
-fun <R> ret(fn: (Line) -> R) = _case("ret", fn)
-
-fun reti(vararg lines: Line) = _line("reti", *lines)
-val Line.reti get() = _get("reti")
-fun <R> reti(fn: (Line) -> R) = _case("reti", fn)
-
-fun return_(vararg lines: Line) = _line("return", *lines)
-val Line.return_ get() = _get("return")
-fun <R> return_(fn: (Line) -> R) = _case("return", fn)
-
-fun returns(vararg lines: Line) = _line("returns", *lines)
-val Line.returns get() = _get("returns")
-fun <R> returns(fn: (Line) -> R) = _case("returns", fn)
-
-fun reverse(vararg lines: Line) = _line("reverse", *lines)
-val Line.reverse get() = _get("reverse")
-fun <R> reverse(fn: (Line) -> R) = _case("reverse", fn)
-
-fun rgb(vararg lines: Line) = _line("rgb", *lines)
-val Line.rgb get() = _get("rgb")
-fun <R> rgb(fn: (Line) -> R) = _case("rgb", fn)
-
-fun rgba(vararg lines: Line) = _line("rgba", *lines)
-val Line.rgba get() = _get("rgba")
-fun <R> rgba(fn: (Line) -> R) = _case("rgba", fn)
-
-fun rhs(vararg lines: Line) = _line("rhs", *lines)
-val Line.rhs get() = _get("rhs")
-fun <R> rhs(fn: (Line) -> R) = _case("rhs", fn)
-
-fun right(vararg lines: Line) = _line("right", *lines)
-val Line.right get() = _get("right")
-fun <R> right(fn: (Line) -> R) = _case("right", fn)
-
-fun root(vararg lines: Line) = _line("root", *lines)
-val Line.root get() = _get("root")
-fun <R> root(fn: (Line) -> R) = _case("root", fn)
-
-fun rotate(vararg lines: Line) = _line("rotate", *lines)
-val Line.rotate get() = _get("rotate")
-fun <R> rotate(fn: (Line) -> R) = _case("rotate", fn)
-
-fun round(vararg lines: Line) = _line("round", *lines)
-val Line.round get() = _get("round")
-fun <R> round(fn: (Line) -> R) = _case("round", fn)
-
-fun row(vararg lines: Line) = _line("row", *lines)
-val Line.row get() = _get("row")
-fun <R> row(fn: (Line) -> R) = _case("row", fn)
-
-fun rows(vararg lines: Line) = _line("rows", *lines)
-val Line.rows get() = _get("rows")
-fun <R> rows(fn: (Line) -> R) = _case("rows", fn)
-
-fun rule(vararg lines: Line) = _line("rule", *lines)
-val Line.rule get() = _get("rule")
-fun <R> rule(fn: (Line) -> R) = _case("rule", fn)
-
-fun run(vararg lines: Line) = _line("run", *lines)
-val Line.run get() = _get("run")
-fun <R> run(fn: (Line) -> R) = _case("run", fn)
-
-fun running(vararg lines: Line) = _line("running", *lines)
-val Line.running get() = _get("running")
-fun <R> running(fn: (Line) -> R) = _case("running", fn)
-
-fun runtime(vararg lines: Line) = _line("runtime", *lines)
-val Line.runtime get() = _get("runtime")
-fun <R> runtime(fn: (Line) -> R) = _case("runtime", fn)
-
-fun s(vararg lines: Line) = _line("s", *lines)
-val Line.s get() = _get("s")
-fun <R> s(fn: (Line) -> R) = _case("s", fn)
-
-fun save(vararg lines: Line) = _line("save", *lines)
-val Line.save get() = _get("save")
-fun <R> save(fn: (Line) -> R) = _case("save", fn)
-
-fun sawtooth(vararg lines: Line) = _line("sawtooth", *lines)
-val Line.sawtooth get() = _get("sawtooth")
-fun <R> sawtooth(fn: (Line) -> R) = _case("sawtooth", fn)
-
-fun say(vararg lines: Line) = _line("say", *lines)
-val Line.say get() = _get("say")
-fun <R> say(fn: (Line) -> R) = _case("say", fn)
-
-fun scale(vararg lines: Line) = _line("scale", *lines)
-val Line.scale get() = _get("scale")
-fun <R> scale(fn: (Line) -> R) = _case("scale", fn)
-
-fun scheme(vararg lines: Line) = _line("scheme", *lines)
-val Line.scheme get() = _get("scheme")
-fun <R> scheme(fn: (Line) -> R) = _case("scheme", fn)
-
-fun scope(vararg lines: Line) = _line("scope", *lines)
-val Line.scope get() = _get("scope")
-fun <R> scope(fn: (Line) -> R) = _case("scope", fn)
-
-fun scoped(vararg lines: Line) = _line("scoped", *lines)
-val Line.scoped get() = _get("scoped")
-fun <R> scoped(fn: (Line) -> R) = _case("scoped", fn)
-
-fun scopes(vararg lines: Line) = _line("scopes", *lines)
-val Line.scopes get() = _get("scopes")
-fun <R> scopes(fn: (Line) -> R) = _case("scopes", fn)
-
-fun screen(vararg lines: Line) = _line("screen", *lines)
-val Line.screen get() = _get("screen")
-fun <R> screen(fn: (Line) -> R) = _case("screen", fn)
-
-fun script(vararg lines: Line) = _line("script", *lines)
-val Line.script get() = _get("script")
-fun <R> script(fn: (Line) -> R) = _case("script", fn)
-
-fun search(vararg lines: Line) = _line("search", *lines)
-val Line.search get() = _get("search")
-fun <R> search(fn: (Line) -> R) = _case("search", fn)
-
-fun second(vararg lines: Line) = _line("second", *lines)
-val Line.second get() = _get("second")
-fun <R> second(fn: (Line) -> R) = _case("second", fn)
-
-fun select(vararg lines: Line) = _line("select", *lines)
-val Line.select get() = _get("select")
-fun <R> select(fn: (Line) -> R) = _case("select", fn)
-
-fun selector(vararg lines: Line) = _line("selector", *lines)
-val Line.selector get() = _get("selector")
-fun <R> selector(fn: (Line) -> R) = _case("selector", fn)
-
-fun self(vararg lines: Line) = _line("self", *lines)
-val Line.self get() = _get("self")
-fun <R> self(fn: (Line) -> R) = _case("self", fn)
-
-fun semicolon(vararg lines: Line) = _line("semicolon", *lines)
-val Line.semicolon get() = _get("semicolon")
-fun <R> semicolon(fn: (Line) -> R) = _case("semicolon", fn)
-
-fun sentence(vararg lines: Line) = _line("sentence", *lines)
-val Line.sentence get() = _get("sentence")
-fun <R> sentence(fn: (Line) -> R) = _case("sentence", fn)
-
-fun sentinel(vararg lines: Line) = _line("sentinel", *lines)
-val Line.sentinel get() = _get("sentinel")
-fun <R> sentinel(fn: (Line) -> R) = _case("sentinel", fn)
-
-fun separated(vararg lines: Line) = _line("separated", *lines)
-val Line.separated get() = _get("separated")
-fun <R> separated(fn: (Line) -> R) = _case("separated", fn)
-
-fun separator(vararg lines: Line) = _line("separator", *lines)
-val Line.separator get() = _get("separator")
-fun <R> separator(fn: (Line) -> R) = _case("separator", fn)
-
-fun sequence(vararg lines: Line) = _line("sequence", *lines)
-val Line.sequence get() = _get("sequence")
-fun <R> sequence(fn: (Line) -> R) = _case("sequence", fn)
-
-fun sequencer(vararg lines: Line) = _line("sequencer", *lines)
-val Line.sequencer get() = _get("sequencer")
-fun <R> sequencer(fn: (Line) -> R) = _case("sequencer", fn)
-
-fun serial(vararg lines: Line) = _line("serial", *lines)
-val Line.serial get() = _get("serial")
-fun <R> serial(fn: (Line) -> R) = _case("serial", fn)
-
-fun server(vararg lines: Line) = _line("server", *lines)
-val Line.server get() = _get("server")
-fun <R> server(fn: (Line) -> R) = _case("server", fn)
-
-fun set(vararg lines: Line) = _line("set", *lines)
-val Line.set get() = _get("set")
-fun <R> set(fn: (Line) -> R) = _case("set", fn)
-
-fun sets(vararg lines: Line) = _line("sets", *lines)
-val Line.sets get() = _get("sets")
-fun <R> sets(fn: (Line) -> R) = _case("sets", fn)
-
-fun seven(vararg lines: Line) = _line("seven", *lines)
-val Line.seven get() = _get("seven")
-fun <R> seven(fn: (Line) -> R) = _case("seven", fn)
-
-fun seventh(vararg lines: Line) = _line("seventh", *lines)
-val Line.seventh get() = _get("seventh")
-fun <R> seventh(fn: (Line) -> R) = _case("seventh", fn)
-
-fun sex(vararg lines: Line) = _line("sex", *lines)
-val Line.sex get() = _get("sex")
-fun <R> sex(fn: (Line) -> R) = _case("sex", fn)
-
-fun shape(vararg lines: Line) = _line("shape", *lines)
-val Line.shape get() = _get("shape")
-fun <R> shape(fn: (Line) -> R) = _case("shape", fn)
-
-fun shapes(vararg lines: Line) = _line("shapes", *lines)
-val Line.shapes get() = _get("shapes")
-fun <R> shapes(fn: (Line) -> R) = _case("shapes", fn)
-
-fun shift(vararg lines: Line) = _line("shift", *lines)
-val Line.shift get() = _get("shift")
-fun <R> shift(fn: (Line) -> R) = _case("shift", fn)
-
-fun short(vararg lines: Line) = _line("short", *lines)
-val Line.short get() = _get("short")
-fun <R> short(fn: (Line) -> R) = _case("short", fn)
-
-fun shortquote(vararg lines: Line) = _line("shortquote", *lines)
-val Line.shortquote get() = _get("shortquote")
-fun <R> shortquote(fn: (Line) -> R) = _case("shortquote", fn)
-
-fun should(vararg lines: Line) = _line("should", *lines)
-val Line.should get() = _get("should")
-fun <R> should(fn: (Line) -> R) = _case("should", fn)
-
-fun show(vararg lines: Line) = _line("show", *lines)
-val Line.show get() = _get("show")
-fun <R> show(fn: (Line) -> R) = _case("show", fn)
-
-fun shutdown(vararg lines: Line) = _line("shutdown", *lines)
-val Line.shutdown get() = _get("shutdown")
-fun <R> shutdown(fn: (Line) -> R) = _case("shutdown", fn)
-
-fun side(vararg lines: Line) = _line("side", *lines)
-val Line.side get() = _get("side")
-fun <R> side(fn: (Line) -> R) = _case("side", fn)
-
-fun simple(vararg lines: Line) = _line("simple", *lines)
-val Line.simple get() = _get("simple")
-fun <R> simple(fn: (Line) -> R) = _case("simple", fn)
-
-fun sin(vararg lines: Line) = _line("sin", *lines)
-val Line.sin get() = _get("sin")
-fun <R> sin(fn: (Line) -> R) = _case("sin", fn)
-
-fun sine(vararg lines: Line) = _line("sine", *lines)
-val Line.sine get() = _get("sine")
-fun <R> sine(fn: (Line) -> R) = _case("sine", fn)
-
-fun single(vararg lines: Line) = _line("single", *lines)
-val Line.single get() = _get("single")
-fun <R> single(fn: (Line) -> R) = _case("single", fn)
-
-fun singleton(vararg lines: Line) = _line("singleton", *lines)
-val Line.singleton get() = _get("singleton")
-fun <R> singleton(fn: (Line) -> R) = _case("singleton", fn)
-
-fun singly(vararg lines: Line) = _line("singly", *lines)
-val Line.singly get() = _get("singly")
-fun <R> singly(fn: (Line) -> R) = _case("singly", fn)
-
-fun sinh(vararg lines: Line) = _line("sinh", *lines)
-val Line.sinh get() = _get("sinh")
-fun <R> sinh(fn: (Line) -> R) = _case("sinh", fn)
-
-fun sink(vararg lines: Line) = _line("sink", *lines)
-val Line.sink get() = _get("sink")
-fun <R> sink(fn: (Line) -> R) = _case("sink", fn)
-
-fun sinks(vararg lines: Line) = _line("sinks", *lines)
-val Line.sinks get() = _get("sinks")
-fun <R> sinks(fn: (Line) -> R) = _case("sinks", fn)
-
-fun sinus(vararg lines: Line) = _line("sinus", *lines)
-val Line.sinus get() = _get("sinus")
-fun <R> sinus(fn: (Line) -> R) = _case("sinus", fn)
-
-fun six(vararg lines: Line) = _line("six", *lines)
-val Line.six get() = _get("six")
-fun <R> six(fn: (Line) -> R) = _case("six", fn)
-
-fun sixth(vararg lines: Line) = _line("sixth", *lines)
-val Line.sixth get() = _get("sixth")
-fun <R> sixth(fn: (Line) -> R) = _case("sixth", fn)
-
-fun size(vararg lines: Line) = _line("size", *lines)
-val Line.size get() = _get("size")
-fun <R> size(fn: (Line) -> R) = _case("size", fn)
-
-fun skip(vararg lines: Line) = _line("skip", *lines)
-val Line.skip get() = _get("skip")
-fun <R> skip(fn: (Line) -> R) = _case("skip", fn)
-
-fun slash(vararg lines: Line) = _line("slash", *lines)
-val Line.slash get() = _get("slash")
-fun <R> slash(fn: (Line) -> R) = _case("slash", fn)
-
-fun sleep(vararg lines: Line) = _line("sleep", *lines)
-val Line.sleep get() = _get("sleep")
-fun <R> sleep(fn: (Line) -> R) = _case("sleep", fn)
-
-fun slice(vararg lines: Line) = _line("slice", *lines)
-val Line.slice get() = _get("slice")
-fun <R> slice(fn: (Line) -> R) = _case("slice", fn)
-
-fun sliding(vararg lines: Line) = _line("sliding", *lines)
-val Line.sliding get() = _get("sliding")
-fun <R> sliding(fn: (Line) -> R) = _case("sliding", fn)
-
-fun slow(vararg lines: Line) = _line("slow", *lines)
-val Line.slow get() = _get("slow")
-fun <R> slow(fn: (Line) -> R) = _case("slow", fn)
-
-fun some(vararg lines: Line) = _line("some", *lines)
-val Line.some get() = _get("some")
-fun <R> some(fn: (Line) -> R) = _case("some", fn)
-
-fun sort(vararg lines: Line) = _line("sort", *lines)
-val Line.sort get() = _get("sort")
-fun <R> sort(fn: (Line) -> R) = _case("sort", fn)
-
-fun source(vararg lines: Line) = _line("source", *lines)
-val Line.source get() = _get("source")
-fun <R> source(fn: (Line) -> R) = _case("source", fn)
-
-fun space(vararg lines: Line) = _line("space", *lines)
-val Line.space get() = _get("space")
-fun <R> space(fn: (Line) -> R) = _case("space", fn)
-
-fun span(vararg lines: Line) = _line("span", *lines)
-val Line.span get() = _get("span")
-fun <R> span(fn: (Line) -> R) = _case("span", fn)
-
-fun spanning(vararg lines: Line) = _line("spanning", *lines)
-val Line.spanning get() = _get("spanning")
-fun <R> spanning(fn: (Line) -> R) = _case("spanning", fn)
-
-fun splice(vararg lines: Line) = _line("splice", *lines)
-val Line.splice get() = _get("splice")
-fun <R> splice(fn: (Line) -> R) = _case("splice", fn)
-
-fun split(vararg lines: Line) = _line("split", *lines)
-val Line.split get() = _get("split")
-fun <R> split(fn: (Line) -> R) = _case("split", fn)
-
-fun spouse(vararg lines: Line) = _line("spouse", *lines)
-val Line.spouse get() = _get("spouse")
-fun <R> spouse(fn: (Line) -> R) = _case("spouse", fn)
-
-fun sqrt(vararg lines: Line) = _line("sqrt", *lines)
-val Line.sqrt get() = _get("sqrt")
-fun <R> sqrt(fn: (Line) -> R) = _case("sqrt", fn)
-
-fun square(vararg lines: Line) = _line("square", *lines)
-val Line.square get() = _get("square")
-fun <R> square(fn: (Line) -> R) = _case("square", fn)
-
-fun squared(vararg lines: Line) = _line("squared", *lines)
-val Line.squared get() = _get("squared")
-fun <R> squared(fn: (Line) -> R) = _case("squared", fn)
-
-fun sr(vararg lines: Line) = _line("sr", *lines)
-val Line.sr get() = _get("sr")
-fun <R> sr(fn: (Line) -> R) = _case("sr", fn)
-
-fun src(vararg lines: Line) = _line("src", *lines)
-val Line.src get() = _get("src")
-fun <R> src(fn: (Line) -> R) = _case("src", fn)
-
-fun stack(vararg lines: Line) = _line("stack", *lines)
-val Line.stack get() = _get("stack")
-fun <R> stack(fn: (Line) -> R) = _case("stack", fn)
-
-fun stacks(vararg lines: Line) = _line("stacks", *lines)
-val Line.stacks get() = _get("stacks")
-fun <R> stacks(fn: (Line) -> R) = _case("stacks", fn)
-
-fun stand(vararg lines: Line) = _line("stand", *lines)
-val Line.stand get() = _get("stand")
-fun <R> stand(fn: (Line) -> R) = _case("stand", fn)
-
-fun start(vararg lines: Line) = _line("start", *lines)
-val Line.start get() = _get("start")
-fun <R> start(fn: (Line) -> R) = _case("start", fn)
-
-fun started(vararg lines: Line) = _line("started", *lines)
-val Line.started get() = _get("started")
-fun <R> started(fn: (Line) -> R) = _case("started", fn)
-
-fun starts(vararg lines: Line) = _line("starts", *lines)
-val Line.starts get() = _get("starts")
-fun <R> starts(fn: (Line) -> R) = _case("starts", fn)
-
-fun state(vararg lines: Line) = _line("state", *lines)
-val Line.state get() = _get("state")
-fun <R> state(fn: (Line) -> R) = _case("state", fn)
-
-fun statement(vararg lines: Line) = _line("statement", *lines)
-val Line.statement get() = _get("statement")
-fun <R> statement(fn: (Line) -> R) = _case("statement", fn)
-
-fun statements(vararg lines: Line) = _line("statements", *lines)
-val Line.statements get() = _get("statements")
-fun <R> statements(fn: (Line) -> R) = _case("statements", fn)
-
-fun static(vararg lines: Line) = _line("static", *lines)
-val Line.static get() = _get("static")
-fun <R> static(fn: (Line) -> R) = _case("static", fn)
-
-fun std(vararg lines: Line) = _line("std", *lines)
-val Line.std get() = _get("std")
-fun <R> std(fn: (Line) -> R) = _case("std", fn)
-
-fun step(vararg lines: Line) = _line("step", *lines)
-val Line.step get() = _get("step")
-fun <R> step(fn: (Line) -> R) = _case("step", fn)
-
-fun stop(vararg lines: Line) = _line("stop", *lines)
-val Line.stop get() = _get("stop")
-fun <R> stop(fn: (Line) -> R) = _case("stop", fn)
-
-fun stream(vararg lines: Line) = _line("stream", *lines)
-val Line.stream get() = _get("stream")
-fun <R> stream(fn: (Line) -> R) = _case("stream", fn)
-
-fun string(vararg lines: Line) = _line("string", *lines)
-val Line.string get() = _get("string")
-fun <R> string(fn: (Line) -> R) = _case("string", fn)
-
-fun strings(vararg lines: Line) = _line("strings", *lines)
-val Line.strings get() = _get("strings")
-fun <R> strings(fn: (Line) -> R) = _case("strings", fn)
-
-fun stroke(vararg lines: Line) = _line("stroke", *lines)
-val Line.stroke get() = _get("stroke")
-fun <R> stroke(fn: (Line) -> R) = _case("stroke", fn)
-
-fun struct(vararg lines: Line) = _line("struct", *lines)
-val Line.struct get() = _get("struct")
-fun <R> struct(fn: (Line) -> R) = _case("struct", fn)
-
-fun style(vararg lines: Line) = _line("style", *lines)
-val Line.style get() = _get("style")
-fun <R> style(fn: (Line) -> R) = _case("style", fn)
-
-fun sub(vararg lines: Line) = _line("sub", *lines)
-val Line.sub get() = _get("sub")
-fun <R> sub(fn: (Line) -> R) = _case("sub", fn)
-
-fun subject(vararg lines: Line) = _line("subject", *lines)
-val Line.subject get() = _get("subject")
-fun <R> subject(fn: (Line) -> R) = _case("subject", fn)
-
-fun submit(vararg lines: Line) = _line("submit", *lines)
-val Line.submit get() = _get("submit")
-fun <R> submit(fn: (Line) -> R) = _case("submit", fn)
-
-fun subpackages(vararg lines: Line) = _line("subpackages", *lines)
-val Line.subpackages get() = _get("subpackages")
-fun <R> subpackages(fn: (Line) -> R) = _case("subpackages", fn)
-
-fun substr(vararg lines: Line) = _line("substr", *lines)
-val Line.substr get() = _get("substr")
-fun <R> substr(fn: (Line) -> R) = _case("substr", fn)
-
-fun substring(vararg lines: Line) = _line("substring", *lines)
-val Line.substring get() = _get("substring")
-fun <R> substring(fn: (Line) -> R) = _case("substring", fn)
-
-fun subtract(vararg lines: Line) = _line("subtract", *lines)
-val Line.subtract get() = _get("subtract")
-fun <R> subtract(fn: (Line) -> R) = _case("subtract", fn)
-
-fun successor(vararg lines: Line) = _line("successor", *lines)
-val Line.successor get() = _get("successor")
-fun <R> successor(fn: (Line) -> R) = _case("successor", fn)
-
-fun suffix(vararg lines: Line) = _line("suffix", *lines)
-val Line.suffix get() = _get("suffix")
-fun <R> suffix(fn: (Line) -> R) = _case("suffix", fn)
-
-fun sum(vararg lines: Line) = _line("sum", *lines)
-val Line.sum get() = _get("sum")
-fun <R> sum(fn: (Line) -> R) = _case("sum", fn)
-
-fun super_(vararg lines: Line) = _line("super", *lines)
-val Line.super_ get() = _get("super")
-fun <R> super_(fn: (Line) -> R) = _case("super", fn)
-
-fun superclass(vararg lines: Line) = _line("superclass", *lines)
-val Line.superclass get() = _get("superclass")
-fun <R> superclass(fn: (Line) -> R) = _case("superclass", fn)
-
-fun supervisor(vararg lines: Line) = _line("supervisor", *lines)
-val Line.supervisor get() = _get("supervisor")
-fun <R> supervisor(fn: (Line) -> R) = _case("supervisor", fn)
-
-fun supplier(vararg lines: Line) = _line("supplier", *lines)
-val Line.supplier get() = _get("supplier")
-fun <R> supplier(fn: (Line) -> R) = _case("supplier", fn)
-
-fun suppliers(vararg lines: Line) = _line("suppliers", *lines)
-val Line.suppliers get() = _get("suppliers")
-fun <R> suppliers(fn: (Line) -> R) = _case("suppliers", fn)
-
-fun suppressed(vararg lines: Line) = _line("suppressed", *lines)
-val Line.suppressed get() = _get("suppressed")
-fun <R> suppressed(fn: (Line) -> R) = _case("suppressed", fn)
-
-fun switch(vararg lines: Line) = _line("switch", *lines)
-val Line.switch get() = _get("switch")
-fun <R> switch(fn: (Line) -> R) = _case("switch", fn)
-
-fun symbol(vararg lines: Line) = _line("symbol", *lines)
-val Line.symbol get() = _get("symbol")
-fun <R> symbol(fn: (Line) -> R) = _case("symbol", fn)
-
-fun symbols(vararg lines: Line) = _line("symbols", *lines)
-val Line.symbols get() = _get("symbols")
-fun <R> symbols(fn: (Line) -> R) = _case("symbols", fn)
-
-fun syntax(vararg lines: Line) = _line("syntax", *lines)
-val Line.syntax get() = _get("syntax")
-fun <R> syntax(fn: (Line) -> R) = _case("syntax", fn)
-
-fun system(vararg lines: Line) = _line("system", *lines)
-val Line.system get() = _get("system")
-fun <R> system(fn: (Line) -> R) = _case("system", fn)
-
-fun t(vararg lines: Line) = _line("t", *lines)
-val Line.t get() = _get("t")
-fun <R> t(fn: (Line) -> R) = _case("t", fn)
-
-fun tab(vararg lines: Line) = _line("tab", *lines)
-val Line.tab get() = _get("tab")
-fun <R> tab(fn: (Line) -> R) = _case("tab", fn)
-
-fun tag(vararg lines: Line) = _line("tag", *lines)
-val Line.tag get() = _get("tag")
-fun <R> tag(fn: (Line) -> R) = _case("tag", fn)
-
-fun tail(vararg lines: Line) = _line("tail", *lines)
-val Line.tail get() = _get("tail")
-fun <R> tail(fn: (Line) -> R) = _case("tail", fn)
-
-fun take(vararg lines: Line) = _line("take", *lines)
-val Line.take get() = _get("take")
-fun <R> take(fn: (Line) -> R) = _case("take", fn)
-
-fun taken(vararg lines: Line) = _line("taken", *lines)
-val Line.taken get() = _get("taken")
-fun <R> taken(fn: (Line) -> R) = _case("taken", fn)
-
-fun takes(vararg lines: Line) = _line("takes", *lines)
-val Line.takes get() = _get("takes")
-fun <R> takes(fn: (Line) -> R) = _case("takes", fn)
-
-fun taking(vararg lines: Line) = _line("taking", *lines)
-val Line.taking get() = _get("taking")
-fun <R> taking(fn: (Line) -> R) = _case("taking", fn)
-
-fun tan(vararg lines: Line) = _line("tan", *lines)
-val Line.tan get() = _get("tan")
-fun <R> tan(fn: (Line) -> R) = _case("tan", fn)
-
-fun tanh(vararg lines: Line) = _line("tanh", *lines)
-val Line.tanh get() = _get("tanh")
-fun <R> tanh(fn: (Line) -> R) = _case("tanh", fn)
-
-fun tap(vararg lines: Line) = _line("tap", *lines)
-val Line.tap get() = _get("tap")
-fun <R> tap(fn: (Line) -> R) = _case("tap", fn)
-
-fun target(vararg lines: Line) = _line("target", *lines)
-val Line.target get() = _get("target")
-fun <R> target(fn: (Line) -> R) = _case("target", fn)
-
-fun temp(vararg lines: Line) = _line("temp", *lines)
-val Line.temp get() = _get("temp")
-fun <R> temp(fn: (Line) -> R) = _case("temp", fn)
-
-fun template(vararg lines: Line) = _line("template", *lines)
-val Line.template get() = _get("template")
-fun <R> template(fn: (Line) -> R) = _case("template", fn)
-
-fun tempo(vararg lines: Line) = _line("tempo", *lines)
-val Line.tempo get() = _get("tempo")
-fun <R> tempo(fn: (Line) -> R) = _case("tempo", fn)
-
-fun tempos(vararg lines: Line) = _line("tempos", *lines)
-val Line.tempos get() = _get("tempos")
-fun <R> tempos(fn: (Line) -> R) = _case("tempos", fn)
-
-fun ten(vararg lines: Line) = _line("ten", *lines)
-val Line.ten get() = _get("ten")
-fun <R> ten(fn: (Line) -> R) = _case("ten", fn)
-
-fun tenth(vararg lines: Line) = _line("tenth", *lines)
-val Line.tenth get() = _get("tenth")
-fun <R> tenth(fn: (Line) -> R) = _case("tenth", fn)
-
-fun term(vararg lines: Line) = _line("term", *lines)
-val Line.term get() = _get("term")
-fun <R> term(fn: (Line) -> R) = _case("term", fn)
-
-fun terms(vararg lines: Line) = _line("terms", *lines)
-val Line.terms get() = _get("terms")
-fun <R> terms(fn: (Line) -> R) = _case("terms", fn)
-
-fun test(vararg lines: Line) = _line("test", *lines)
-val Line.test get() = _get("test")
-fun <R> test(fn: (Line) -> R) = _case("test", fn)
-
-fun testing(vararg lines: Line) = _line("testing", *lines)
-val Line.testing get() = _get("testing")
-fun <R> testing(fn: (Line) -> R) = _case("testing", fn)
-
-fun tests(vararg lines: Line) = _line("tests", *lines)
-val Line.tests get() = _get("tests")
-fun <R> tests(fn: (Line) -> R) = _case("tests", fn)
-
-fun text(vararg lines: Line) = _line("text", *lines)
-val Line.text get() = _get("text")
-fun <R> text(fn: (Line) -> R) = _case("text", fn)
-
-fun that(vararg lines: Line) = _line("that", *lines)
-val Line.that get() = _get("that")
-fun <R> that(fn: (Line) -> R) = _case("that", fn)
-
-fun the(vararg lines: Line) = _line("the", *lines)
-val Line.the get() = _get("the")
-fun <R> the(fn: (Line) -> R) = _case("the", fn)
-
-fun then_(vararg lines: Line) = _line("then", *lines)
-val Line.then_ get() = _get("then")
-fun <R> then_(fn: (Line) -> R) = _case("then", fn)
-
-fun these(vararg lines: Line) = _line("these", *lines)
-val Line.these get() = _get("these")
-fun <R> these(fn: (Line) -> R) = _case("these", fn)
-
-fun thing(vararg lines: Line) = _line("thing", *lines)
-val Line.thing get() = _get("thing")
-fun <R> thing(fn: (Line) -> R) = _case("thing", fn)
-
-fun third(vararg lines: Line) = _line("third", *lines)
-val Line.third get() = _get("third")
-fun <R> third(fn: (Line) -> R) = _case("third", fn)
-
-fun this_(vararg lines: Line) = _line("this", *lines)
-val Line.this_ get() = _get("this")
-fun <R> this_(fn: (Line) -> R) = _case("this", fn)
-
-fun thread(vararg lines: Line) = _line("thread", *lines)
-val Line.thread get() = _get("thread")
-fun <R> thread(fn: (Line) -> R) = _case("thread", fn)
-
-fun three(vararg lines: Line) = _line("three", *lines)
-val Line.three get() = _get("three")
-fun <R> three(fn: (Line) -> R) = _case("three", fn)
-
-fun throw_(vararg lines: Line) = _line("throw", *lines)
-val Line.throw_ get() = _get("throw")
-fun <R> throw_(fn: (Line) -> R) = _case("throw", fn)
-
-fun throwable(vararg lines: Line) = _line("throwable", *lines)
-val Line.throwable get() = _get("throwable")
-fun <R> throwable(fn: (Line) -> R) = _case("throwable", fn)
-
-fun throws(vararg lines: Line) = _line("throws", *lines)
-val Line.throws get() = _get("throws")
-fun <R> throws(fn: (Line) -> R) = _case("throws", fn)
-
-fun thunk(vararg lines: Line) = _line("thunk", *lines)
-val Line.thunk get() = _get("thunk")
-fun <R> thunk(fn: (Line) -> R) = _case("thunk", fn)
-
-fun time(vararg lines: Line) = _line("time", *lines)
-val Line.time get() = _get("time")
-fun <R> time(fn: (Line) -> R) = _case("time", fn)
-
-fun timeout(vararg lines: Line) = _line("timeout", *lines)
-val Line.timeout get() = _get("timeout")
-fun <R> timeout(fn: (Line) -> R) = _case("timeout", fn)
-
-fun times(vararg lines: Line) = _line("times", *lines)
-val Line.times get() = _get("times")
-fun <R> times(fn: (Line) -> R) = _case("times", fn)
-
-fun timestamp(vararg lines: Line) = _line("timestamp", *lines)
-val Line.timestamp get() = _get("timestamp")
-fun <R> timestamp(fn: (Line) -> R) = _case("timestamp", fn)
-
-fun to(vararg lines: Line) = _line("to", *lines)
-val Line.to get() = _get("to")
-fun <R> to(fn: (Line) -> R) = _case("to", fn)
-
-fun token(vararg lines: Line) = _line("token", *lines)
-val Line.token get() = _get("token")
-fun <R> token(fn: (Line) -> R) = _case("token", fn)
-
-fun top(vararg lines: Line) = _line("top", *lines)
-val Line.top get() = _get("top")
-fun <R> top(fn: (Line) -> R) = _case("top", fn)
-
-fun touch(vararg lines: Line) = _line("touch", *lines)
-val Line.touch get() = _get("touch")
-fun <R> touch(fn: (Line) -> R) = _case("touch", fn)
-
-fun trace(vararg lines: Line) = _line("trace", *lines)
-val Line.trace get() = _get("trace")
-fun <R> trace(fn: (Line) -> R) = _case("trace", fn)
-
-fun traced(vararg lines: Line) = _line("traced", *lines)
-val Line.traced get() = _get("traced")
-fun <R> traced(fn: (Line) -> R) = _case("traced", fn)
-
-fun track(vararg lines: Line) = _line("track", *lines)
-val Line.track get() = _get("track")
-fun <R> track(fn: (Line) -> R) = _case("track", fn)
-
-fun transform(vararg lines: Line) = _line("transform", *lines)
-val Line.transform get() = _get("transform")
-fun <R> transform(fn: (Line) -> R) = _case("transform", fn)
-
-fun translate(vararg lines: Line) = _line("translate", *lines)
-val Line.translate get() = _get("translate")
-fun <R> translate(fn: (Line) -> R) = _case("translate", fn)
-
-fun triangle(vararg lines: Line) = _line("triangle", *lines)
-val Line.triangle get() = _get("triangle")
-fun <R> triangle(fn: (Line) -> R) = _case("triangle", fn)
-
-fun trigger(vararg lines: Line) = _line("trigger", *lines)
-val Line.trigger get() = _get("trigger")
-fun <R> trigger(fn: (Line) -> R) = _case("trigger", fn)
-
-fun true_(vararg lines: Line) = _line("true", *lines)
-val Line.true_ get() = _get("true")
-fun <R> true_(fn: (Line) -> R) = _case("true", fn)
-
-fun truth(vararg lines: Line) = _line("truth", *lines)
-val Line.truth get() = _get("truth")
-fun <R> truth(fn: (Line) -> R) = _case("truth", fn)
-
-fun tuple(vararg lines: Line) = _line("tuple", *lines)
-val Line.tuple get() = _get("tuple")
-fun <R> tuple(fn: (Line) -> R) = _case("tuple", fn)
-
-fun two(vararg lines: Line) = _line("two", *lines)
-val Line.two get() = _get("two")
-fun <R> two(fn: (Line) -> R) = _case("two", fn)
-
-fun type(vararg lines: Line) = _line("type", *lines)
-val Line.type get() = _get("type")
-fun <R> type(fn: (Line) -> R) = _case("type", fn)
-
-fun typed(vararg lines: Line) = _line("typed", *lines)
-val Line.typed get() = _get("typed")
-fun <R> typed(fn: (Line) -> R) = _case("typed", fn)
-
-fun types(vararg lines: Line) = _line("types", *lines)
-val Line.types get() = _get("types")
-fun <R> types(fn: (Line) -> R) = _case("types", fn)
-
-fun u(vararg lines: Line) = _line("u", *lines)
-val Line.u get() = _get("u")
-fun <R> u(fn: (Line) -> R) = _case("u", fn)
-
-fun uint(vararg lines: Line) = _line("uint", *lines)
-val Line.uint get() = _get("uint")
-fun <R> uint(fn: (Line) -> R) = _case("uint", fn)
-
-fun uint16(vararg lines: Line) = _line("uint16", *lines)
-val Line.uint16 get() = _get("uint16")
-fun <R> uint16(fn: (Line) -> R) = _case("uint16", fn)
-
-fun uint32(vararg lines: Line) = _line("uint32", *lines)
-val Line.uint32 get() = _get("uint32")
-fun <R> uint32(fn: (Line) -> R) = _case("uint32", fn)
-
-fun uint64(vararg lines: Line) = _line("uint64", *lines)
-val Line.uint64 get() = _get("uint64")
-fun <R> uint64(fn: (Line) -> R) = _case("uint64", fn)
-
-fun uint8(vararg lines: Line) = _line("uint8", *lines)
-val Line.uint8 get() = _get("uint8")
-fun <R> uint8(fn: (Line) -> R) = _case("uint8", fn)
-
-fun unchecked(vararg lines: Line) = _line("unchecked", *lines)
-val Line.unchecked get() = _get("unchecked")
-fun <R> unchecked(fn: (Line) -> R) = _case("unchecked", fn)
-
-fun undefined(vararg lines: Line) = _line("undefined", *lines)
-val Line.undefined get() = _get("undefined")
-fun <R> undefined(fn: (Line) -> R) = _case("undefined", fn)
-
-fun underscorify(vararg lines: Line) = _line("underscorify", *lines)
-val Line.underscorify get() = _get("underscorify")
-fun <R> underscorify(fn: (Line) -> R) = _case("underscorify", fn)
-
-fun undo(vararg lines: Line) = _line("undo", *lines)
-val Line.undo get() = _get("undo")
-fun <R> undo(fn: (Line) -> R) = _case("undo", fn)
-
-fun unhandled(vararg lines: Line) = _line("unhandled", *lines)
-val Line.unhandled get() = _get("unhandled")
-fun <R> unhandled(fn: (Line) -> R) = _case("unhandled", fn)
-
-fun unindent(vararg lines: Line) = _line("unindent", *lines)
-val Line.unindent get() = _get("unindent")
-fun <R> unindent(fn: (Line) -> R) = _case("unindent", fn)
-
-fun unit(vararg lines: Line) = _line("unit", *lines)
-val Line.unit get() = _get("unit")
-fun <R> unit(fn: (Line) -> R) = _case("unit", fn)
-
-fun unknown(vararg lines: Line) = _line("unknown", *lines)
-val Line.unknown get() = _get("unknown")
-fun <R> unknown(fn: (Line) -> R) = _case("unknown", fn)
-
-fun unlimited(vararg lines: Line) = _line("unlimited", *lines)
-val Line.unlimited get() = _get("unlimited")
-fun <R> unlimited(fn: (Line) -> R) = _case("unlimited", fn)
-
-fun unmodifiable(vararg lines: Line) = _line("unmodifiable", *lines)
-val Line.unmodifiable get() = _get("unmodifiable")
-fun <R> unmodifiable(fn: (Line) -> R) = _case("unmodifiable", fn)
-
-fun unquote(vararg lines: Line) = _line("unquote", *lines)
-val Line.unquote get() = _get("unquote")
-fun <R> unquote(fn: (Line) -> R) = _case("unquote", fn)
-
-fun unquoted(vararg lines: Line) = _line("unquoted", *lines)
-val Line.unquoted get() = _get("unquoted")
-fun <R> unquoted(fn: (Line) -> R) = _case("unquoted", fn)
-
-fun unread(vararg lines: Line) = _line("unread", *lines)
-val Line.unread get() = _get("unread")
-fun <R> unread(fn: (Line) -> R) = _case("unread", fn)
-
-fun unresolved(vararg lines: Line) = _line("unresolved", *lines)
-val Line.unresolved get() = _get("unresolved")
-fun <R> unresolved(fn: (Line) -> R) = _case("unresolved", fn)
-
-fun unsafe(vararg lines: Line) = _line("unsafe", *lines)
-val Line.unsafe get() = _get("unsafe")
-fun <R> unsafe(fn: (Line) -> R) = _case("unsafe", fn)
-
-fun unsafes(vararg lines: Line) = _line("unsafes", *lines)
-val Line.unsafes get() = _get("unsafes")
-fun <R> unsafes(fn: (Line) -> R) = _case("unsafes", fn)
-
-fun unshift(vararg lines: Line) = _line("unshift", *lines)
-val Line.unshift get() = _get("unshift")
-fun <R> unshift(fn: (Line) -> R) = _case("unshift", fn)
-
-fun unsigned(vararg lines: Line) = _line("unsigned", *lines)
-val Line.unsigned get() = _get("unsigned")
-fun <R> unsigned(fn: (Line) -> R) = _case("unsigned", fn)
-
-fun update(vararg lines: Line) = _line("update", *lines)
-val Line.update get() = _get("update")
-fun <R> update(fn: (Line) -> R) = _case("update", fn)
-
-fun upper(vararg lines: Line) = _line("upper", *lines)
-val Line.upper get() = _get("upper")
-fun <R> upper(fn: (Line) -> R) = _case("upper", fn)
-
-fun uri(vararg lines: Line) = _line("uri", *lines)
-val Line.uri get() = _get("uri")
-fun <R> uri(fn: (Line) -> R) = _case("uri", fn)
-
-fun url(vararg lines: Line) = _line("url", *lines)
-val Line.url get() = _get("url")
-fun <R> url(fn: (Line) -> R) = _case("url", fn)
-
-fun use(vararg lines: Line) = _line("use", *lines)
-val Line.use get() = _get("use")
-fun <R> use(fn: (Line) -> R) = _case("use", fn)
-
-fun user(vararg lines: Line) = _line("user", *lines)
-val Line.user get() = _get("user")
-fun <R> user(fn: (Line) -> R) = _case("user", fn)
-
-fun using(vararg lines: Line) = _line("using", *lines)
-val Line.using get() = _get("using")
-fun <R> using(fn: (Line) -> R) = _case("using", fn)
-
-fun util(vararg lines: Line) = _line("util", *lines)
-val Line.util get() = _get("util")
-fun <R> util(fn: (Line) -> R) = _case("util", fn)
-
-fun v(vararg lines: Line) = _line("v", *lines)
-val Line.v get() = _get("v")
-fun <R> v(fn: (Line) -> R) = _case("v", fn)
-
-fun val_(vararg lines: Line) = _line("val", *lines)
-val Line.val_ get() = _get("val")
-fun <R> val_(fn: (Line) -> R) = _case("val", fn)
-
-fun valid(vararg lines: Line) = _line("valid", *lines)
-val Line.valid get() = _get("valid")
-fun <R> valid(fn: (Line) -> R) = _case("valid", fn)
-
-fun validate(vararg lines: Line) = _line("validate", *lines)
-val Line.validate get() = _get("validate")
-fun <R> validate(fn: (Line) -> R) = _case("validate", fn)
-
-fun value(vararg lines: Line) = _line("value", *lines)
-val Line.value get() = _get("value")
-fun <R> value(fn: (Line) -> R) = _case("value", fn)
-
-fun values(vararg lines: Line) = _line("values", *lines)
-val Line.values get() = _get("values")
-fun <R> values(fn: (Line) -> R) = _case("values", fn)
-
-fun var_(vararg lines: Line) = _line("var", *lines)
-val Line.var_ get() = _get("var")
-fun <R> var_(fn: (Line) -> R) = _case("var", fn)
-
-fun variable(vararg lines: Line) = _line("variable", *lines)
-val Line.variable get() = _get("variable")
-fun <R> variable(fn: (Line) -> R) = _case("variable", fn)
-
-fun variables(vararg lines: Line) = _line("variables", *lines)
-val Line.variables get() = _get("variables")
-fun <R> variables(fn: (Line) -> R) = _case("variables", fn)
-
-fun vec(vararg lines: Line) = _line("vec", *lines)
-val Line.vec get() = _get("vec")
-fun <R> vec(fn: (Line) -> R) = _case("vec", fn)
-
-fun vec2(vararg lines: Line) = _line("vec2", *lines)
-val Line.vec2 get() = _get("vec2")
-fun <R> vec2(fn: (Line) -> R) = _case("vec2", fn)
-
-fun vec3(vararg lines: Line) = _line("vec3", *lines)
-val Line.vec3 get() = _get("vec3")
-fun <R> vec3(fn: (Line) -> R) = _case("vec3", fn)
-
-fun vec4(vararg lines: Line) = _line("vec4", *lines)
-val Line.vec4 get() = _get("vec4")
-fun <R> vec4(fn: (Line) -> R) = _case("vec4", fn)
-
-fun vector(vararg lines: Line) = _line("vector", *lines)
-val Line.vector get() = _get("vector")
-fun <R> vector(fn: (Line) -> R) = _case("vector", fn)
-
-fun versionuid(vararg lines: Line) = _line("versionuid", *lines)
-val Line.versionuid get() = _get("versionuid")
-fun <R> versionuid(fn: (Line) -> R) = _case("versionuid", fn)
-
-fun vertical(vararg lines: Line) = _line("vertical", *lines)
-val Line.vertical get() = _get("vertical")
-fun <R> vertical(fn: (Line) -> R) = _case("vertical", fn)
-
-fun vertically(vararg lines: Line) = _line("vertically", *lines)
-val Line.vertically get() = _get("vertically")
-fun <R> vertically(fn: (Line) -> R) = _case("vertically", fn)
-
-fun view(vararg lines: Line) = _line("view", *lines)
-val Line.view get() = _get("view")
-fun <R> view(fn: (Line) -> R) = _case("view", fn)
-
-fun violet(vararg lines: Line) = _line("violet", *lines)
-val Line.violet get() = _get("violet")
-fun <R> violet(fn: (Line) -> R) = _case("violet", fn)
-
-fun visibility(vararg lines: Line) = _line("visibility", *lines)
-val Line.visibility get() = _get("visibility")
-fun <R> visibility(fn: (Line) -> R) = _case("visibility", fn)
-
-fun visible(vararg lines: Line) = _line("visible", *lines)
-val Line.visible get() = _get("visible")
-fun <R> visible(fn: (Line) -> R) = _case("visible", fn)
-
-fun visit(vararg lines: Line) = _line("visit", *lines)
-val Line.visit get() = _get("visit")
-fun <R> visit(fn: (Line) -> R) = _case("visit", fn)
-
-fun visitor(vararg lines: Line) = _line("visitor", *lines)
-val Line.visitor get() = _get("visitor")
-fun <R> visitor(fn: (Line) -> R) = _case("visitor", fn)
-
-fun void(vararg lines: Line) = _line("void", *lines)
-val Line.void get() = _get("void")
-fun <R> void(fn: (Line) -> R) = _case("void", fn)
-
-fun volume(vararg lines: Line) = _line("volume", *lines)
-val Line.volume get() = _get("volume")
-fun <R> volume(fn: (Line) -> R) = _case("volume", fn)
-
-fun w(vararg lines: Line) = _line("w", *lines)
-val Line.w get() = _get("w")
-fun <R> w(fn: (Line) -> R) = _case("w", fn)
-
-fun wait(vararg lines: Line) = _line("wait", *lines)
-val Line.wait get() = _get("wait")
-fun <R> wait(fn: (Line) -> R) = _case("wait", fn)
-
-fun warn(vararg lines: Line) = _line("warn", *lines)
-val Line.warn get() = _get("warn")
-fun <R> warn(fn: (Line) -> R) = _case("warn", fn)
-
-fun warning(vararg lines: Line) = _line("warning", *lines)
-val Line.warning get() = _get("warning")
-fun <R> warning(fn: (Line) -> R) = _case("warning", fn)
-
-fun watch(vararg lines: Line) = _line("watch", *lines)
-val Line.watch get() = _get("watch")
-fun <R> watch(fn: (Line) -> R) = _case("watch", fn)
-
-fun wave(vararg lines: Line) = _line("wave", *lines)
-val Line.wave get() = _get("wave")
-fun <R> wave(fn: (Line) -> R) = _case("wave", fn)
-
-fun weak(vararg lines: Line) = _line("weak", *lines)
-val Line.weak get() = _get("weak")
-fun <R> weak(fn: (Line) -> R) = _case("weak", fn)
-
-fun week(vararg lines: Line) = _line("week", *lines)
-val Line.week get() = _get("week")
-fun <R> week(fn: (Line) -> R) = _case("week", fn)
-
-fun while_(vararg lines: Line) = _line("while", *lines)
-val Line.while_ get() = _get("while")
-fun <R> while_(fn: (Line) -> R) = _case("while", fn)
-
-fun white(vararg lines: Line) = _line("white", *lines)
-val Line.white get() = _get("white")
-fun <R> white(fn: (Line) -> R) = _case("white", fn)
-
-fun widget(vararg lines: Line) = _line("widget", *lines)
-val Line.widget get() = _get("widget")
-fun <R> widget(fn: (Line) -> R) = _case("widget", fn)
-
-fun width(vararg lines: Line) = _line("width", *lines)
-val Line.width get() = _get("width")
-fun <R> width(fn: (Line) -> R) = _case("width", fn)
-
-fun wife(vararg lines: Line) = _line("wife", *lines)
-val Line.wife get() = _get("wife")
-fun <R> wife(fn: (Line) -> R) = _case("wife", fn)
-
-fun win(vararg lines: Line) = _line("win", *lines)
-val Line.win get() = _get("win")
-fun <R> win(fn: (Line) -> R) = _case("win", fn)
-
-fun winding(vararg lines: Line) = _line("winding", *lines)
-val Line.winding get() = _get("winding")
-fun <R> winding(fn: (Line) -> R) = _case("winding", fn)
-
-fun window(vararg lines: Line) = _line("window", *lines)
-val Line.window get() = _get("window")
-fun <R> window(fn: (Line) -> R) = _case("window", fn)
-
-fun wire(vararg lines: Line) = _line("wire", *lines)
-val Line.wire get() = _get("wire")
-fun <R> wire(fn: (Line) -> R) = _case("wire", fn)
-
-fun with(vararg lines: Line) = _line("with", *lines)
-val Line.with get() = _get("with")
-fun <R> with(fn: (Line) -> R) = _case("with", fn)
-
-fun without(vararg lines: Line) = _line("without", *lines)
-val Line.without get() = _get("without")
-fun <R> without(fn: (Line) -> R) = _case("without", fn)
-
-fun word(vararg lines: Line) = _line("word", *lines)
-val Line.word get() = _get("word")
-fun <R> word(fn: (Line) -> R) = _case("word", fn)
-
-fun wrap(vararg lines: Line) = _line("wrap", *lines)
-val Line.wrap get() = _get("wrap")
-fun <R> wrap(fn: (Line) -> R) = _case("wrap", fn)
-
-fun write(vararg lines: Line) = _line("write", *lines)
-val Line.write get() = _get("write")
-fun <R> write(fn: (Line) -> R) = _case("write", fn)
-
-fun writes(vararg lines: Line) = _line("writes", *lines)
-val Line.writes get() = _get("writes")
-fun <R> writes(fn: (Line) -> R) = _case("writes", fn)
-
-fun writing(vararg lines: Line) = _line("writing", *lines)
-val Line.writing get() = _get("writing")
-fun <R> writing(fn: (Line) -> R) = _case("writing", fn)
-
-fun x(vararg lines: Line) = _line("x", *lines)
-val Line.x get() = _get("x")
-fun <R> x(fn: (Line) -> R) = _case("x", fn)
-
-fun xfib(vararg lines: Line) = _line("xfib", *lines)
-val Line.xfib get() = _get("xfib")
-fun <R> xfib(fn: (Line) -> R) = _case("xfib", fn)
-
-fun xor(vararg lines: Line) = _line("xor", *lines)
-val Line.xor get() = _get("xor")
-fun <R> xor(fn: (Line) -> R) = _case("xor", fn)
-
-fun xy(vararg lines: Line) = _line("xy", *lines)
-val Line.xy get() = _get("xy")
-fun <R> xy(fn: (Line) -> R) = _case("xy", fn)
-
-fun xyz(vararg lines: Line) = _line("xyz", *lines)
-val Line.xyz get() = _get("xyz")
-fun <R> xyz(fn: (Line) -> R) = _case("xyz", fn)
-
-fun y(vararg lines: Line) = _line("y", *lines)
-val Line.y get() = _get("y")
-fun <R> y(fn: (Line) -> R) = _case("y", fn)
-
-fun year(vararg lines: Line) = _line("year", *lines)
-val Line.year get() = _get("year")
-fun <R> year(fn: (Line) -> R) = _case("year", fn)
-
-fun yellow(vararg lines: Line) = _line("yellow", *lines)
-val Line.yellow get() = _get("yellow")
-fun <R> yellow(fn: (Line) -> R) = _case("yellow", fn)
-
-fun yes(vararg lines: Line) = _line("yes", *lines)
-val Line.yes get() = _get("yes")
-fun <R> yes(fn: (Line) -> R) = _case("yes", fn)
-
-fun z(vararg lines: Line) = _line("z", *lines)
-val Line.z get() = _get("z")
-fun <R> z(fn: (Line) -> R) = _case("z", fn)
-
-fun zero(vararg lines: Line) = _line("zero", *lines)
-val Line.zero get() = _get("zero")
-fun <R> zero(fn: (Line) -> R) = _case("zero", fn)
-
-fun zoom(vararg lines: Line) = _line("zoom", *lines)
-val Line.zoom get() = _get("zoom")
-fun <R> zoom(fn: (Line) -> R) = _case("zoom", fn)
+fun a(vararg x: X) = _line("a", *x)
+val X.a get() = _get("a")
+fun <R> a(fn: (X) -> R) = _case("a", fn)
+val X.asA get() = a(this)
+fun X.asATo(x: X) = a(this, x)
+
+fun above(vararg x: X) = _line("above", *x)
+val X.above get() = _get("above")
+fun <R> above(fn: (X) -> R) = _case("above", fn)
+val X.asAbove get() = above(this)
+fun X.asAboveTo(x: X) = above(this, x)
+
+fun abs(vararg x: X) = _line("abs", *x)
+val X.abs get() = _get("abs")
+fun <R> abs(fn: (X) -> R) = _case("abs", fn)
+val X.asAbs get() = abs(this)
+fun X.asAbsTo(x: X) = abs(this, x)
+
+fun absent(vararg x: X) = _line("absent", *x)
+val X.absent get() = _get("absent")
+fun <R> absent(fn: (X) -> R) = _case("absent", fn)
+val X.asAbsent get() = absent(this)
+fun X.asAbsentTo(x: X) = absent(this, x)
+
+fun absolute(vararg x: X) = _line("absolute", *x)
+val X.absolute get() = _get("absolute")
+fun <R> absolute(fn: (X) -> R) = _case("absolute", fn)
+val X.asAbsolute get() = absolute(this)
+fun X.asAbsoluteTo(x: X) = absolute(this, x)
+
+fun abstract(vararg x: X) = _line("abstract", *x)
+val X.abstract get() = _get("abstract")
+fun <R> abstract(fn: (X) -> R) = _case("abstract", fn)
+val X.asAbstract get() = abstract(this)
+fun X.asAbstractTo(x: X) = abstract(this, x)
+
+fun abstraction(vararg x: X) = _line("abstraction", *x)
+val X.abstraction get() = _get("abstraction")
+fun <R> abstraction(fn: (X) -> R) = _case("abstraction", fn)
+val X.asAbstraction get() = abstraction(this)
+fun X.asAbstractionTo(x: X) = abstraction(this, x)
+
+fun accept(vararg x: X) = _line("accept", *x)
+val X.accept get() = _get("accept")
+fun <R> accept(fn: (X) -> R) = _case("accept", fn)
+val X.asAccept get() = accept(this)
+fun X.asAcceptTo(x: X) = accept(this, x)
+
+fun access(vararg x: X) = _line("access", *x)
+val X.access get() = _get("access")
+fun <R> access(fn: (X) -> R) = _case("access", fn)
+val X.asAccess get() = access(this)
+fun X.asAccessTo(x: X) = access(this, x)
+
+fun accessible(vararg x: X) = _line("accessible", *x)
+val X.accessible get() = _get("accessible")
+fun <R> accessible(fn: (X) -> R) = _case("accessible", fn)
+val X.asAccessible get() = accessible(this)
+fun X.asAccessibleTo(x: X) = accessible(this, x)
+
+fun acos(vararg x: X) = _line("acos", *x)
+val X.acos get() = _get("acos")
+fun <R> acos(fn: (X) -> R) = _case("acos", fn)
+val X.asAcos get() = acos(this)
+fun X.asAcosTo(x: X) = acos(this, x)
+
+fun activity(vararg x: X) = _line("activity", *x)
+val X.activity get() = _get("activity")
+fun <R> activity(fn: (X) -> R) = _case("activity", fn)
+val X.asActivity get() = activity(this)
+fun X.asActivityTo(x: X) = activity(this, x)
+
+fun actual(vararg x: X) = _line("actual", *x)
+val X.actual get() = _get("actual")
+fun <R> actual(fn: (X) -> R) = _case("actual", fn)
+val X.asActual get() = actual(this)
+fun X.asActualTo(x: X) = actual(this, x)
+
+fun add(vararg x: X) = _line("add", *x)
+val X.add get() = _get("add")
+fun <R> add(fn: (X) -> R) = _case("add", fn)
+val X.asAdd get() = add(this)
+fun X.asAddTo(x: X) = add(this, x)
+
+fun addr(vararg x: X) = _line("addr", *x)
+val X.addr get() = _get("addr")
+fun <R> addr(fn: (X) -> R) = _case("addr", fn)
+val X.asAddr get() = addr(this)
+fun X.asAddrTo(x: X) = addr(this, x)
+
+fun address(vararg x: X) = _line("address", *x)
+val X.address get() = _get("address")
+fun <R> address(fn: (X) -> R) = _case("address", fn)
+val X.asAddress get() = address(this)
+fun X.asAddressTo(x: X) = address(this, x)
+
+fun admin(vararg x: X) = _line("admin", *x)
+val X.admin get() = _get("admin")
+fun <R> admin(fn: (X) -> R) = _case("admin", fn)
+val X.asAdmin get() = admin(this)
+fun X.asAdminTo(x: X) = admin(this, x)
+
+fun after(vararg x: X) = _line("after", *x)
+val X.after get() = _get("after")
+fun <R> after(fn: (X) -> R) = _case("after", fn)
+val X.asAfter get() = after(this)
+fun X.asAfterTo(x: X) = after(this, x)
+
+fun age(vararg x: X) = _line("age", *x)
+val X.age get() = _get("age")
+fun <R> age(fn: (X) -> R) = _case("age", fn)
+val X.asAge get() = age(this)
+fun X.asAgeTo(x: X) = age(this, x)
+
+fun align(vararg x: X) = _line("align", *x)
+val X.align get() = _get("align")
+fun <R> align(fn: (X) -> R) = _case("align", fn)
+val X.asAlign get() = align(this)
+fun X.asAlignTo(x: X) = align(this, x)
+
+fun alignment(vararg x: X) = _line("alignment", *x)
+val X.alignment get() = _get("alignment")
+fun <R> alignment(fn: (X) -> R) = _case("alignment", fn)
+val X.asAlignment get() = alignment(this)
+fun X.asAlignmentTo(x: X) = alignment(this, x)
+
+fun all(vararg x: X) = _line("all", *x)
+val X.all get() = _get("all")
+fun <R> all(fn: (X) -> R) = _case("all", fn)
+val X.asAll get() = all(this)
+fun X.asAllTo(x: X) = all(this, x)
+
+fun alloc(vararg x: X) = _line("alloc", *x)
+val X.alloc get() = _get("alloc")
+fun <R> alloc(fn: (X) -> R) = _case("alloc", fn)
+val X.asAlloc get() = alloc(this)
+fun X.asAllocTo(x: X) = alloc(this, x)
+
+fun allocate(vararg x: X) = _line("allocate", *x)
+val X.allocate get() = _get("allocate")
+fun <R> allocate(fn: (X) -> R) = _case("allocate", fn)
+val X.asAllocate get() = allocate(this)
+fun X.asAllocateTo(x: X) = allocate(this, x)
+
+fun alpha(vararg x: X) = _line("alpha", *x)
+val X.alpha get() = _get("alpha")
+fun <R> alpha(fn: (X) -> R) = _case("alpha", fn)
+val X.asAlpha get() = alpha(this)
+fun X.asAlphaTo(x: X) = alpha(this, x)
+
+fun always(vararg x: X) = _line("always", *x)
+val X.always get() = _get("always")
+fun <R> always(fn: (X) -> R) = _case("always", fn)
+val X.asAlways get() = always(this)
+fun X.asAlwaysTo(x: X) = always(this, x)
+
+fun am(vararg x: X) = _line("am", *x)
+val X.am get() = _get("am")
+fun <R> am(fn: (X) -> R) = _case("am", fn)
+val X.asAm get() = am(this)
+fun X.asAmTo(x: X) = am(this, x)
+
+fun amplitude(vararg x: X) = _line("amplitude", *x)
+val X.amplitude get() = _get("amplitude")
+fun <R> amplitude(fn: (X) -> R) = _case("amplitude", fn)
+val X.asAmplitude get() = amplitude(this)
+fun X.asAmplitudeTo(x: X) = amplitude(this, x)
+
+fun anchor(vararg x: X) = _line("anchor", *x)
+val X.anchor get() = _get("anchor")
+fun <R> anchor(fn: (X) -> R) = _case("anchor", fn)
+val X.asAnchor get() = anchor(this)
+fun X.asAnchorTo(x: X) = anchor(this, x)
+
+fun and(vararg x: X) = _line("and", *x)
+val X.and get() = _get("and")
+fun <R> and(fn: (X) -> R) = _case("and", fn)
+val X.asAnd get() = and(this)
+fun X.asAndTo(x: X) = and(this, x)
+
+fun angle(vararg x: X) = _line("angle", *x)
+val X.angle get() = _get("angle")
+fun <R> angle(fn: (X) -> R) = _case("angle", fn)
+val X.asAngle get() = angle(this)
+fun X.asAngleTo(x: X) = angle(this, x)
+
+fun animate(vararg x: X) = _line("animate", *x)
+val X.animate get() = _get("animate")
+fun <R> animate(fn: (X) -> R) = _case("animate", fn)
+val X.asAnimate get() = animate(this)
+fun X.asAnimateTo(x: X) = animate(this, x)
+
+fun animated(vararg x: X) = _line("animated", *x)
+val X.animated get() = _get("animated")
+fun <R> animated(fn: (X) -> R) = _case("animated", fn)
+val X.asAnimated get() = animated(this)
+fun X.asAnimatedTo(x: X) = animated(this, x)
+
+fun animation(vararg x: X) = _line("animation", *x)
+val X.animation get() = _get("animation")
+fun <R> animation(fn: (X) -> R) = _case("animation", fn)
+val X.asAnimation get() = animation(this)
+fun X.asAnimationTo(x: X) = animation(this, x)
+
+fun anon(vararg x: X) = _line("anon", *x)
+val X.anon get() = _get("anon")
+fun <R> anon(fn: (X) -> R) = _case("anon", fn)
+val X.asAnon get() = anon(this)
+fun X.asAnonTo(x: X) = anon(this, x)
+
+fun antialias(vararg x: X) = _line("antialias", *x)
+val X.antialias get() = _get("antialias")
+fun <R> antialias(fn: (X) -> R) = _case("antialias", fn)
+val X.asAntialias get() = antialias(this)
+fun X.asAntialiasTo(x: X) = antialias(this, x)
+
+fun antialiasing(vararg x: X) = _line("antialiasing", *x)
+val X.antialiasing get() = _get("antialiasing")
+fun <R> antialiasing(fn: (X) -> R) = _case("antialiasing", fn)
+val X.asAntialiasing get() = antialiasing(this)
+fun X.asAntialiasingTo(x: X) = antialiasing(this, x)
+
+fun anticlockwise(vararg x: X) = _line("anticlockwise", *x)
+val X.anticlockwise get() = _get("anticlockwise")
+fun <R> anticlockwise(fn: (X) -> R) = _case("anticlockwise", fn)
+val X.asAnticlockwise get() = anticlockwise(this)
+fun X.asAnticlockwiseTo(x: X) = anticlockwise(this, x)
+
+fun any(vararg x: X) = _line("any", *x)
+val X.any get() = _get("any")
+fun <R> any(fn: (X) -> R) = _case("any", fn)
+val X.asAny get() = any(this)
+fun X.asAnyTo(x: X) = any(this, x)
+
+fun anything(vararg x: X) = _line("anything", *x)
+val X.anything get() = _get("anything")
+fun <R> anything(fn: (X) -> R) = _case("anything", fn)
+val X.asAnything get() = anything(this)
+fun X.asAnythingTo(x: X) = anything(this, x)
+
+fun appearance(vararg x: X) = _line("appearance", *x)
+val X.appearance get() = _get("appearance")
+fun <R> appearance(fn: (X) -> R) = _case("appearance", fn)
+val X.asAppearance get() = appearance(this)
+fun X.asAppearanceTo(x: X) = appearance(this, x)
+
+fun append(vararg x: X) = _line("append", *x)
+val X.append get() = _get("append")
+fun <R> append(fn: (X) -> R) = _case("append", fn)
+val X.asAppend get() = append(this)
+fun X.asAppendTo(x: X) = append(this, x)
+
+fun appending(vararg x: X) = _line("appending", *x)
+val X.appending get() = _get("appending")
+fun <R> appending(fn: (X) -> R) = _case("appending", fn)
+val X.asAppending get() = appending(this)
+fun X.asAppendingTo(x: X) = appending(this, x)
+
+fun application(vararg x: X) = _line("application", *x)
+val X.application get() = _get("application")
+fun <R> application(fn: (X) -> R) = _case("application", fn)
+val X.asApplication get() = application(this)
+fun X.asApplicationTo(x: X) = application(this, x)
+
+fun applicative(vararg x: X) = _line("applicative", *x)
+val X.applicative get() = _get("applicative")
+fun <R> applicative(fn: (X) -> R) = _case("applicative", fn)
+val X.asApplicative get() = applicative(this)
+fun X.asApplicativeTo(x: X) = applicative(this, x)
+
+fun applier(vararg x: X) = _line("applier", *x)
+val X.applier get() = _get("applier")
+fun <R> applier(fn: (X) -> R) = _case("applier", fn)
+val X.asApplier get() = applier(this)
+fun X.asApplierTo(x: X) = applier(this, x)
+
+fun apply(vararg x: X) = _line("apply", *x)
+val X.apply get() = _get("apply")
+fun <R> apply(fn: (X) -> R) = _case("apply", fn)
+val X.asApply get() = apply(this)
+fun X.asApplyTo(x: X) = apply(this, x)
+
+fun approximate(vararg x: X) = _line("approximate", *x)
+val X.approximate get() = _get("approximate")
+fun <R> approximate(fn: (X) -> R) = _case("approximate", fn)
+val X.asApproximate get() = approximate(this)
+fun X.asApproximateTo(x: X) = approximate(this, x)
+
+fun arc(vararg x: X) = _line("arc", *x)
+val X.arc get() = _get("arc")
+fun <R> arc(fn: (X) -> R) = _case("arc", fn)
+val X.asArc get() = arc(this)
+fun X.asArcTo(x: X) = arc(this, x)
+
+fun area(vararg x: X) = _line("area", *x)
+val X.area get() = _get("area")
+fun <R> area(fn: (X) -> R) = _case("area", fn)
+val X.asArea get() = area(this)
+fun X.asAreaTo(x: X) = area(this, x)
+
+fun arg(vararg x: X) = _line("arg", *x)
+val X.arg get() = _get("arg")
+fun <R> arg(fn: (X) -> R) = _case("arg", fn)
+val X.asArg get() = arg(this)
+fun X.asArgTo(x: X) = arg(this, x)
+
+fun argb(vararg x: X) = _line("argb", *x)
+val X.argb get() = _get("argb")
+fun <R> argb(fn: (X) -> R) = _case("argb", fn)
+val X.asArgb get() = argb(this)
+fun X.asArgbTo(x: X) = argb(this, x)
+
+fun args(vararg x: X) = _line("args", *x)
+val X.args get() = _get("args")
+fun <R> args(fn: (X) -> R) = _case("args", fn)
+val X.asArgs get() = args(this)
+fun X.asArgsTo(x: X) = args(this, x)
+
+fun argument(vararg x: X) = _line("argument", *x)
+val X.argument get() = _get("argument")
+fun <R> argument(fn: (X) -> R) = _case("argument", fn)
+val X.asArgument get() = argument(this)
+fun X.asArgumentTo(x: X) = argument(this, x)
+
+fun arguments(vararg x: X) = _line("arguments", *x)
+val X.arguments get() = _get("arguments")
+fun <R> arguments(fn: (X) -> R) = _case("arguments", fn)
+val X.asArguments get() = arguments(this)
+fun X.asArgumentsTo(x: X) = arguments(this, x)
+
+fun arity(vararg x: X) = _line("arity", *x)
+val X.arity get() = _get("arity")
+fun <R> arity(fn: (X) -> R) = _case("arity", fn)
+val X.asArity get() = arity(this)
+fun X.asArityTo(x: X) = arity(this, x)
+
+fun arr(vararg x: X) = _line("arr", *x)
+val X.arr get() = _get("arr")
+fun <R> arr(fn: (X) -> R) = _case("arr", fn)
+val X.asArr get() = arr(this)
+fun X.asArrTo(x: X) = arr(this, x)
+
+fun array(vararg x: X) = _line("array", *x)
+val X.array get() = _get("array")
+fun <R> array(fn: (X) -> R) = _case("array", fn)
+val X.asArray get() = array(this)
+fun X.asArrayTo(x: X) = array(this, x)
+
+fun arraycopy(vararg x: X) = _line("arraycopy", *x)
+val X.arraycopy get() = _get("arraycopy")
+fun <R> arraycopy(fn: (X) -> R) = _case("arraycopy", fn)
+val X.asArraycopy get() = arraycopy(this)
+fun X.asArraycopyTo(x: X) = arraycopy(this, x)
+
+fun arrow(vararg x: X) = _line("arrow", *x)
+val X.arrow get() = _get("arrow")
+fun <R> arrow(fn: (X) -> R) = _case("arrow", fn)
+val X.asArrow get() = arrow(this)
+fun X.asArrowTo(x: X) = arrow(this, x)
+
+fun as_(vararg x: X) = _line("as", *x)
+val X.as_ get() = _get("as")
+fun <R> as_(fn: (X) -> R) = _case("as", fn)
+val X.asAs get() = as_(this)
+fun X.asAsTo(x: X) = as_(this, x)
+
+fun asin(vararg x: X) = _line("asin", *x)
+val X.asin get() = _get("asin")
+fun <R> asin(fn: (X) -> R) = _case("asin", fn)
+val X.asAsin get() = asin(this)
+fun X.asAsinTo(x: X) = asin(this, x)
+
+fun assert(vararg x: X) = _line("assert", *x)
+val X.assert get() = _get("assert")
+fun <R> assert(fn: (X) -> R) = _case("assert", fn)
+val X.asAssert get() = assert(this)
+fun X.asAssertTo(x: X) = assert(this, x)
+
+fun assignable(vararg x: X) = _line("assignable", *x)
+val X.assignable get() = _get("assignable")
+fun <R> assignable(fn: (X) -> R) = _case("assignable", fn)
+val X.asAssignable get() = assignable(this)
+fun X.asAssignableTo(x: X) = assignable(this, x)
+
+fun async(vararg x: X) = _line("async", *x)
+val X.async get() = _get("async")
+fun <R> async(fn: (X) -> R) = _case("async", fn)
+val X.asAsync get() = async(this)
+fun X.asAsyncTo(x: X) = async(this, x)
+
+fun at(vararg x: X) = _line("at", *x)
+val X.at get() = _get("at")
+fun <R> at(fn: (X) -> R) = _case("at", fn)
+val X.asAt get() = at(this)
+fun X.asAtTo(x: X) = at(this, x)
+
+fun atan(vararg x: X) = _line("atan", *x)
+val X.atan get() = _get("atan")
+fun <R> atan(fn: (X) -> R) = _case("atan", fn)
+val X.asAtan get() = atan(this)
+fun X.asAtanTo(x: X) = atan(this, x)
+
+fun attention(vararg x: X) = _line("attention", *x)
+val X.attention get() = _get("attention")
+fun <R> attention(fn: (X) -> R) = _case("attention", fn)
+val X.asAttention get() = attention(this)
+fun X.asAttentionTo(x: X) = attention(this, x)
+
+fun attr(vararg x: X) = _line("attr", *x)
+val X.attr get() = _get("attr")
+fun <R> attr(fn: (X) -> R) = _case("attr", fn)
+val X.asAttr get() = attr(this)
+fun X.asAttrTo(x: X) = attr(this, x)
+
+fun attribute(vararg x: X) = _line("attribute", *x)
+val X.attribute get() = _get("attribute")
+fun <R> attribute(fn: (X) -> R) = _case("attribute", fn)
+val X.asAttribute get() = attribute(this)
+fun X.asAttributeTo(x: X) = attribute(this, x)
+
+fun audio(vararg x: X) = _line("audio", *x)
+val X.audio get() = _get("audio")
+fun <R> audio(fn: (X) -> R) = _case("audio", fn)
+val X.asAudio get() = audio(this)
+fun X.asAudioTo(x: X) = audio(this, x)
+
+fun author(vararg x: X) = _line("author", *x)
+val X.author get() = _get("author")
+fun <R> author(fn: (X) -> R) = _case("author", fn)
+val X.asAuthor get() = author(this)
+fun X.asAuthorTo(x: X) = author(this, x)
+
+fun authority(vararg x: X) = _line("authority", *x)
+val X.authority get() = _get("authority")
+fun <R> authority(fn: (X) -> R) = _case("authority", fn)
+val X.asAuthority get() = authority(this)
+fun X.asAuthorityTo(x: X) = authority(this, x)
+
+fun awt(vararg x: X) = _line("awt", *x)
+val X.awt get() = _get("awt")
+fun <R> awt(fn: (X) -> R) = _case("awt", fn)
+val X.asAwt get() = awt(this)
+fun X.asAwtTo(x: X) = awt(this, x)
+
+fun b(vararg x: X) = _line("b", *x)
+val X.b get() = _get("b")
+fun <R> b(fn: (X) -> R) = _case("b", fn)
+val X.asB get() = b(this)
+fun X.asBTo(x: X) = b(this, x)
+
+fun back(vararg x: X) = _line("back", *x)
+val X.back get() = _get("back")
+fun <R> back(fn: (X) -> R) = _case("back", fn)
+val X.asBack get() = back(this)
+fun X.asBackTo(x: X) = back(this, x)
+
+fun background(vararg x: X) = _line("background", *x)
+val X.background get() = _get("background")
+fun <R> background(fn: (X) -> R) = _case("background", fn)
+val X.asBackground get() = background(this)
+fun X.asBackgroundTo(x: X) = background(this, x)
+
+fun backslash(vararg x: X) = _line("backslash", *x)
+val X.backslash get() = _get("backslash")
+fun <R> backslash(fn: (X) -> R) = _case("backslash", fn)
+val X.asBackslash get() = backslash(this)
+fun X.asBackslashTo(x: X) = backslash(this, x)
+
+fun backtrace(vararg x: X) = _line("backtrace", *x)
+val X.backtrace get() = _get("backtrace")
+fun <R> backtrace(fn: (X) -> R) = _case("backtrace", fn)
+val X.asBacktrace get() = backtrace(this)
+fun X.asBacktraceTo(x: X) = backtrace(this, x)
+
+fun ball(vararg x: X) = _line("ball", *x)
+val X.ball get() = _get("ball")
+fun <R> ball(fn: (X) -> R) = _case("ball", fn)
+val X.asBall get() = ball(this)
+fun X.asBallTo(x: X) = ball(this, x)
+
+fun ban(vararg x: X) = _line("ban", *x)
+val X.ban get() = _get("ban")
+fun <R> ban(fn: (X) -> R) = _case("ban", fn)
+val X.asBan get() = ban(this)
+fun X.asBanTo(x: X) = ban(this, x)
+
+fun base(vararg x: X) = _line("base", *x)
+val X.base get() = _get("base")
+fun <R> base(fn: (X) -> R) = _case("base", fn)
+val X.asBase get() = base(this)
+fun X.asBaseTo(x: X) = base(this, x)
+
+fun becomes(vararg x: X) = _line("becomes", *x)
+val X.becomes get() = _get("becomes")
+fun <R> becomes(fn: (X) -> R) = _case("becomes", fn)
+val X.asBecomes get() = becomes(this)
+fun X.asBecomesTo(x: X) = becomes(this, x)
+
+fun before(vararg x: X) = _line("before", *x)
+val X.before get() = _get("before")
+fun <R> before(fn: (X) -> R) = _case("before", fn)
+val X.asBefore get() = before(this)
+fun X.asBeforeTo(x: X) = before(this, x)
+
+fun begin(vararg x: X) = _line("begin", *x)
+val X.begin get() = _get("begin")
+fun <R> begin(fn: (X) -> R) = _case("begin", fn)
+val X.asBegin get() = begin(this)
+fun X.asBeginTo(x: X) = begin(this, x)
+
+fun being(vararg x: X) = _line("being", *x)
+val X.being get() = _get("being")
+fun <R> being(fn: (X) -> R) = _case("being", fn)
+val X.asBeing get() = being(this)
+fun X.asBeingTo(x: X) = being(this, x)
+
+fun below(vararg x: X) = _line("below", *x)
+val X.below get() = _get("below")
+fun <R> below(fn: (X) -> R) = _case("below", fn)
+val X.asBelow get() = below(this)
+fun X.asBelowTo(x: X) = below(this, x)
+
+fun big(vararg x: X) = _line("big", *x)
+val X.big get() = _get("big")
+fun <R> big(fn: (X) -> R) = _case("big", fn)
+val X.asBig get() = big(this)
+fun X.asBigTo(x: X) = big(this, x)
+
+fun binary(vararg x: X) = _line("binary", *x)
+val X.binary get() = _get("binary")
+fun <R> binary(fn: (X) -> R) = _case("binary", fn)
+val X.asBinary get() = binary(this)
+fun X.asBinaryTo(x: X) = binary(this, x)
+
+fun bind(vararg x: X) = _line("bind", *x)
+val X.bind get() = _get("bind")
+fun <R> bind(fn: (X) -> R) = _case("bind", fn)
+val X.asBind get() = bind(this)
+fun X.asBindTo(x: X) = bind(this, x)
+
+fun binding(vararg x: X) = _line("binding", *x)
+val X.binding get() = _get("binding")
+fun <R> binding(fn: (X) -> R) = _case("binding", fn)
+val X.asBinding get() = binding(this)
+fun X.asBindingTo(x: X) = binding(this, x)
+
+fun bindings(vararg x: X) = _line("bindings", *x)
+val X.bindings get() = _get("bindings")
+fun <R> bindings(fn: (X) -> R) = _case("bindings", fn)
+val X.asBindings get() = bindings(this)
+fun X.asBindingsTo(x: X) = bindings(this, x)
+
+fun bit(vararg x: X) = _line("bit", *x)
+val X.bit get() = _get("bit")
+fun <R> bit(fn: (X) -> R) = _case("bit", fn)
+val X.asBit get() = bit(this)
+fun X.asBitTo(x: X) = bit(this, x)
+
+fun black(vararg x: X) = _line("black", *x)
+val X.black get() = _get("black")
+fun <R> black(fn: (X) -> R) = _case("black", fn)
+val X.asBlack get() = black(this)
+fun X.asBlackTo(x: X) = black(this, x)
+
+fun block(vararg x: X) = _line("block", *x)
+val X.block get() = _get("block")
+fun <R> block(fn: (X) -> R) = _case("block", fn)
+val X.asBlock get() = block(this)
+fun X.asBlockTo(x: X) = block(this, x)
+
+fun blue(vararg x: X) = _line("blue", *x)
+val X.blue get() = _get("blue")
+fun <R> blue(fn: (X) -> R) = _case("blue", fn)
+val X.asBlue get() = blue(this)
+fun X.asBlueTo(x: X) = blue(this, x)
+
+fun body(vararg x: X) = _line("body", *x)
+val X.body get() = _get("body")
+fun <R> body(fn: (X) -> R) = _case("body", fn)
+val X.asBody get() = body(this)
+fun X.asBodyTo(x: X) = body(this, x)
+
+fun bool(vararg x: X) = _line("bool", *x)
+val X.bool get() = _get("bool")
+fun <R> bool(fn: (X) -> R) = _case("bool", fn)
+val X.asBool get() = bool(this)
+fun X.asBoolTo(x: X) = bool(this, x)
+
+fun boolean(vararg x: X) = _line("boolean", *x)
+val X.boolean get() = _get("boolean")
+fun <R> boolean(fn: (X) -> R) = _case("boolean", fn)
+val X.asBoolean get() = boolean(this)
+fun X.asBooleanTo(x: X) = boolean(this, x)
+
+fun booleans(vararg x: X) = _line("booleans", *x)
+val X.booleans get() = _get("booleans")
+fun <R> booleans(fn: (X) -> R) = _case("booleans", fn)
+val X.asBooleans get() = booleans(this)
+fun X.asBooleansTo(x: X) = booleans(this, x)
+
+fun boost(vararg x: X) = _line("boost", *x)
+val X.boost get() = _get("boost")
+fun <R> boost(fn: (X) -> R) = _case("boost", fn)
+val X.asBoost get() = boost(this)
+fun X.asBoostTo(x: X) = boost(this, x)
+
+fun bottom(vararg x: X) = _line("bottom", *x)
+val X.bottom get() = _get("bottom")
+fun <R> bottom(fn: (X) -> R) = _case("bottom", fn)
+val X.asBottom get() = bottom(this)
+fun X.asBottomTo(x: X) = bottom(this, x)
+
+fun bounds(vararg x: X) = _line("bounds", *x)
+val X.bounds get() = _get("bounds")
+fun <R> bounds(fn: (X) -> R) = _case("bounds", fn)
+val X.asBounds get() = bounds(this)
+fun X.asBoundsTo(x: X) = bounds(this, x)
+
+fun bold(vararg x: X) = _line("bold", *x)
+val X.bold get() = _get("bold")
+fun <R> bold(fn: (X) -> R) = _case("bold", fn)
+val X.asBold get() = bold(this)
+fun X.asBoldTo(x: X) = bold(this, x)
+
+fun box(vararg x: X) = _line("box", *x)
+val X.box get() = _get("box")
+fun <R> box(fn: (X) -> R) = _case("box", fn)
+val X.asBox get() = box(this)
+fun X.asBoxTo(x: X) = box(this, x)
+
+fun bpm(vararg x: X) = _line("bpm", *x)
+val X.bpm get() = _get("bpm")
+fun <R> bpm(fn: (X) -> R) = _case("bpm", fn)
+val X.asBpm get() = bpm(this)
+fun X.asBpmTo(x: X) = bpm(this, x)
+
+fun branch(vararg x: X) = _line("branch", *x)
+val X.branch get() = _get("branch")
+fun <R> branch(fn: (X) -> R) = _case("branch", fn)
+val X.asBranch get() = branch(this)
+fun X.asBranchTo(x: X) = branch(this, x)
+
+fun browse(vararg x: X) = _line("browse", *x)
+val X.browse get() = _get("browse")
+fun <R> browse(fn: (X) -> R) = _case("browse", fn)
+val X.asBrowse get() = browse(this)
+fun X.asBrowseTo(x: X) = browse(this, x)
+
+fun buf(vararg x: X) = _line("buf", *x)
+val X.buf get() = _get("buf")
+fun <R> buf(fn: (X) -> R) = _case("buf", fn)
+val X.asBuf get() = buf(this)
+fun X.asBufTo(x: X) = buf(this, x)
+
+fun buffer(vararg x: X) = _line("buffer", *x)
+val X.buffer get() = _get("buffer")
+fun <R> buffer(fn: (X) -> R) = _case("buffer", fn)
+val X.asBuffer get() = buffer(this)
+fun X.asBufferTo(x: X) = buffer(this, x)
+
+fun build(vararg x: X) = _line("build", *x)
+val X.build get() = _get("build")
+fun <R> build(fn: (X) -> R) = _case("build", fn)
+val X.asBuild get() = build(this)
+fun X.asBuildTo(x: X) = build(this, x)
+
+fun builder(vararg x: X) = _line("builder", *x)
+val X.builder get() = _get("builder")
+fun <R> builder(fn: (X) -> R) = _case("builder", fn)
+val X.asBuilder get() = builder(this)
+fun X.asBuilderTo(x: X) = builder(this, x)
+
+fun by(vararg x: X) = _line("by", *x)
+val X.by get() = _get("by")
+fun <R> by(fn: (X) -> R) = _case("by", fn)
+val X.asBy get() = by(this)
+fun X.asByTo(x: X) = by(this, x)
+
+fun byte(vararg x: X) = _line("byte", *x)
+val X.byte get() = _get("byte")
+fun <R> byte(fn: (X) -> R) = _case("byte", fn)
+val X.asByte get() = byte(this)
+fun X.asByteTo(x: X) = byte(this, x)
+
+fun bytes(vararg x: X) = _line("bytes", *x)
+val X.bytes get() = _get("bytes")
+fun <R> bytes(fn: (X) -> R) = _case("bytes", fn)
+val X.asBytes get() = bytes(this)
+fun X.asBytesTo(x: X) = bytes(this, x)
+
+fun c(vararg x: X) = _line("c", *x)
+val X.c get() = _get("c")
+fun <R> c(fn: (X) -> R) = _case("c", fn)
+val X.asC get() = c(this)
+fun X.asCTo(x: X) = c(this, x)
+
+fun cache(vararg x: X) = _line("cache", *x)
+val X.cache get() = _get("cache")
+fun <R> cache(fn: (X) -> R) = _case("cache", fn)
+val X.asCache get() = cache(this)
+fun X.asCacheTo(x: X) = cache(this, x)
+
+fun call(vararg x: X) = _line("call", *x)
+val X.call get() = _get("call")
+fun <R> call(fn: (X) -> R) = _case("call", fn)
+val X.asCall get() = call(this)
+fun X.asCallTo(x: X) = call(this, x)
+
+fun called(vararg x: X) = _line("called", *x)
+val X.called get() = _get("called")
+fun <R> called(fn: (X) -> R) = _case("called", fn)
+val X.asCalled get() = called(this)
+fun X.asCalledTo(x: X) = called(this, x)
+
+fun calling(vararg x: X) = _line("calling", *x)
+val X.calling get() = _get("calling")
+fun <R> calling(fn: (X) -> R) = _case("calling", fn)
+val X.asCalling get() = calling(this)
+fun X.asCallingTo(x: X) = calling(this, x)
+
+fun cancel(vararg x: X) = _line("cancel", *x)
+val X.cancel get() = _get("cancel")
+fun <R> cancel(fn: (X) -> R) = _case("cancel", fn)
+val X.asCancel get() = cancel(this)
+fun X.asCancelTo(x: X) = cancel(this, x)
+
+fun cancelable(vararg x: X) = _line("cancelable", *x)
+val X.cancelable get() = _get("cancelable")
+fun <R> cancelable(fn: (X) -> R) = _case("cancelable", fn)
+val X.asCancelable get() = cancelable(this)
+fun X.asCancelableTo(x: X) = cancelable(this, x)
+
+fun cancelled(vararg x: X) = _line("cancelled", *x)
+val X.cancelled get() = _get("cancelled")
+fun <R> cancelled(fn: (X) -> R) = _case("cancelled", fn)
+val X.asCancelled get() = cancelled(this)
+fun X.asCancelledTo(x: X) = cancelled(this, x)
+
+fun canvas(vararg x: X) = _line("canvas", *x)
+val X.canvas get() = _get("canvas")
+fun <R> canvas(fn: (X) -> R) = _case("canvas", fn)
+val X.asCanvas get() = canvas(this)
+fun X.asCanvasTo(x: X) = canvas(this, x)
+
+fun cap(vararg x: X) = _line("cap", *x)
+val X.cap get() = _get("cap")
+fun <R> cap(fn: (X) -> R) = _case("cap", fn)
+val X.asCap get() = cap(this)
+fun X.asCapTo(x: X) = cap(this, x)
+
+fun caps(vararg x: X) = _line("caps", *x)
+val X.caps get() = _get("caps")
+fun <R> caps(fn: (X) -> R) = _case("caps", fn)
+val X.asCaps get() = caps(this)
+fun X.asCapsTo(x: X) = caps(this, x)
+
+fun case(vararg x: X) = _line("case", *x)
+val X.case get() = _get("case")
+fun <R> case(fn: (X) -> R) = _case("case", fn)
+val X.asCase get() = case(this)
+fun X.asCaseTo(x: X) = case(this, x)
+
+fun cast(vararg x: X) = _line("cast", *x)
+val X.cast get() = _get("cast")
+fun <R> cast(fn: (X) -> R) = _case("cast", fn)
+val X.asCast get() = cast(this)
+fun X.asCastTo(x: X) = cast(this, x)
+
+fun catching(vararg x: X) = _line("catching", *x)
+val X.catching get() = _get("catching")
+fun <R> catching(fn: (X) -> R) = _case("catching", fn)
+val X.asCatching get() = catching(this)
+fun X.asCatchingTo(x: X) = catching(this, x)
+
+fun category(vararg x: X) = _line("category", *x)
+val X.category get() = _get("category")
+fun <R> category(fn: (X) -> R) = _case("category", fn)
+val X.asCategory get() = category(this)
+fun X.asCategoryTo(x: X) = category(this, x)
+
+fun cause(vararg x: X) = _line("cause", *x)
+val X.cause get() = _get("cause")
+fun <R> cause(fn: (X) -> R) = _case("cause", fn)
+val X.asCause get() = cause(this)
+fun X.asCauseTo(x: X) = cause(this, x)
+
+fun caution(vararg x: X) = _line("caution", *x)
+val X.caution get() = _get("caution")
+fun <R> caution(fn: (X) -> R) = _case("caution", fn)
+val X.asCaution get() = caution(this)
+fun X.asCautionTo(x: X) = caution(this, x)
+
+fun center(vararg x: X) = _line("center", *x)
+val X.center get() = _get("center")
+fun <R> center(fn: (X) -> R) = _case("center", fn)
+val X.asCenter get() = center(this)
+fun X.asCenterTo(x: X) = center(this, x)
+
+fun chain(vararg x: X) = _line("chain", *x)
+val X.chain get() = _get("chain")
+fun <R> chain(fn: (X) -> R) = _case("chain", fn)
+val X.asChain get() = chain(this)
+fun X.asChainTo(x: X) = chain(this, x)
+
+fun change(vararg x: X) = _line("change", *x)
+val X.change get() = _get("change")
+fun <R> change(fn: (X) -> R) = _case("change", fn)
+val X.asChange get() = change(this)
+fun X.asChangeTo(x: X) = change(this, x)
+
+fun char(vararg x: X) = _line("char", *x)
+val X.char get() = _get("char")
+fun <R> char(fn: (X) -> R) = _case("char", fn)
+val X.asChar get() = char(this)
+fun X.asCharTo(x: X) = char(this, x)
+
+fun character(vararg x: X) = _line("character", *x)
+val X.character get() = _get("character")
+fun <R> character(fn: (X) -> R) = _case("character", fn)
+val X.asCharacter get() = character(this)
+fun X.asCharacterTo(x: X) = character(this, x)
+
+fun cheat(vararg x: X) = _line("cheat", *x)
+val X.cheat get() = _get("cheat")
+fun <R> cheat(fn: (X) -> R) = _case("cheat", fn)
+val X.asCheat get() = cheat(this)
+fun X.asCheatTo(x: X) = cheat(this, x)
+
+fun check(vararg x: X) = _line("check", *x)
+val X.check get() = _get("check")
+fun <R> check(fn: (X) -> R) = _case("check", fn)
+val X.asCheck get() = check(this)
+fun X.asCheckTo(x: X) = check(this, x)
+
+fun checked(vararg x: X) = _line("checked", *x)
+val X.checked get() = _get("checked")
+fun <R> checked(fn: (X) -> R) = _case("checked", fn)
+val X.asChecked get() = checked(this)
+fun X.asCheckedTo(x: X) = checked(this, x)
+
+fun child(vararg x: X) = _line("child", *x)
+val X.child get() = _get("child")
+fun <R> child(fn: (X) -> R) = _case("child", fn)
+val X.asChild get() = child(this)
+fun X.asChildTo(x: X) = child(this, x)
+
+fun children(vararg x: X) = _line("children", *x)
+val X.children get() = _get("children")
+fun <R> children(fn: (X) -> R) = _case("children", fn)
+val X.asChildren get() = children(this)
+fun X.asChildrenTo(x: X) = children(this, x)
+
+fun choice(vararg x: X) = _line("choice", *x)
+val X.choice get() = _get("choice")
+fun <R> choice(fn: (X) -> R) = _case("choice", fn)
+val X.asChoice get() = choice(this)
+fun X.asChoiceTo(x: X) = choice(this, x)
+
+fun circle(vararg x: X) = _line("circle", *x)
+val X.circle get() = _get("circle")
+fun <R> circle(fn: (X) -> R) = _case("circle", fn)
+val X.asCircle get() = circle(this)
+fun X.asCircleTo(x: X) = circle(this, x)
+
+fun class_(vararg x: X) = _line("class", *x)
+val X.class_ get() = _get("class")
+fun <R> class_(fn: (X) -> R) = _case("class", fn)
+val X.asClass get() = class_(this)
+fun X.asClassTo(x: X) = class_(this, x)
+
+fun classes(vararg x: X) = _line("classes", *x)
+val X.classes get() = _get("classes")
+fun <R> classes(fn: (X) -> R) = _case("classes", fn)
+val X.asClasses get() = classes(this)
+fun X.asClassesTo(x: X) = classes(this, x)
+
+fun clear(vararg x: X) = _line("clear", *x)
+val X.clear get() = _get("clear")
+fun <R> clear(fn: (X) -> R) = _case("clear", fn)
+val X.asClear get() = clear(this)
+fun X.asClearTo(x: X) = clear(this, x)
+
+fun click(vararg x: X) = _line("click", *x)
+val X.click get() = _get("click")
+fun <R> click(fn: (X) -> R) = _case("click", fn)
+val X.asClick get() = click(this)
+fun X.asClickTo(x: X) = click(this, x)
+
+fun clip(vararg x: X) = _line("clip", *x)
+val X.clip get() = _get("clip")
+fun <R> clip(fn: (X) -> R) = _case("clip", fn)
+val X.asClip get() = clip(this)
+fun X.asClipTo(x: X) = clip(this, x)
+
+fun clock(vararg x: X) = _line("clock", *x)
+val X.clock get() = _get("clock")
+fun <R> clock(fn: (X) -> R) = _case("clock", fn)
+val X.asClock get() = clock(this)
+fun X.asClockTo(x: X) = clock(this, x)
+
+fun clockwise(vararg x: X) = _line("clockwise", *x)
+val X.clockwise get() = _get("clockwise")
+fun <R> clockwise(fn: (X) -> R) = _case("clockwise", fn)
+val X.asClockwise get() = clockwise(this)
+fun X.asClockwiseTo(x: X) = clockwise(this, x)
+
+fun clone(vararg x: X) = _line("clone", *x)
+val X.clone get() = _get("clone")
+fun <R> clone(fn: (X) -> R) = _case("clone", fn)
+val X.asClone get() = clone(this)
+fun X.asCloneTo(x: X) = clone(this, x)
+
+fun clones(vararg x: X) = _line("clones", *x)
+val X.clones get() = _get("clones")
+fun <R> clones(fn: (X) -> R) = _case("clones", fn)
+val X.asClones get() = clones(this)
+fun X.asClonesTo(x: X) = clones(this, x)
+
+fun close(vararg x: X) = _line("close", *x)
+val X.close get() = _get("close")
+fun <R> close(fn: (X) -> R) = _case("close", fn)
+val X.asClose get() = close(this)
+fun X.asCloseTo(x: X) = close(this, x)
+
+fun closeable(vararg x: X) = _line("closeable", *x)
+val X.closeable get() = _get("closeable")
+fun <R> closeable(fn: (X) -> R) = _case("closeable", fn)
+val X.asCloseable get() = closeable(this)
+fun X.asCloseableTo(x: X) = closeable(this, x)
+
+fun closed(vararg x: X) = _line("closed", *x)
+val X.closed get() = _get("closed")
+fun <R> closed(fn: (X) -> R) = _case("closed", fn)
+val X.asClosed get() = closed(this)
+fun X.asClosedTo(x: X) = closed(this, x)
+
+fun closure(vararg x: X) = _line("closure", *x)
+val X.closure get() = _get("closure")
+fun <R> closure(fn: (X) -> R) = _case("closure", fn)
+val X.asClosure get() = closure(this)
+fun X.asClosureTo(x: X) = closure(this, x)
+
+fun code(vararg x: X) = _line("code", *x)
+val X.code get() = _get("code")
+fun <R> code(fn: (X) -> R) = _case("code", fn)
+val X.asCode get() = code(this)
+fun X.asCodeTo(x: X) = code(this, x)
+
+fun codeblock(vararg x: X) = _line("codeblock", *x)
+val X.codeblock get() = _get("codeblock")
+fun <R> codeblock(fn: (X) -> R) = _case("codeblock", fn)
+val X.asCodeblock get() = codeblock(this)
+fun X.asCodeblockTo(x: X) = codeblock(this, x)
+
+fun codegen(vararg x: X) = _line("codegen", *x)
+val X.codegen get() = _get("codegen")
+fun <R> codegen(fn: (X) -> R) = _case("codegen", fn)
+val X.asCodegen get() = codegen(this)
+fun X.asCodegenTo(x: X) = codegen(this, x)
+
+fun collect(vararg x: X) = _line("collect", *x)
+val X.collect get() = _get("collect")
+fun <R> collect(fn: (X) -> R) = _case("collect", fn)
+val X.asCollect get() = collect(this)
+fun X.asCollectTo(x: X) = collect(this, x)
+
+fun collecting(vararg x: X) = _line("collecting", *x)
+val X.collecting get() = _get("collecting")
+fun <R> collecting(fn: (X) -> R) = _case("collecting", fn)
+val X.asCollecting get() = collecting(this)
+fun X.asCollectingTo(x: X) = collecting(this, x)
+
+fun color(vararg x: X) = _line("color", *x)
+val X.color get() = _get("color")
+fun <R> color(fn: (X) -> R) = _case("color", fn)
+val X.asColor get() = color(this)
+fun X.asColorTo(x: X) = color(this, x)
+
+fun colors(vararg x: X) = _line("colors", *x)
+val X.colors get() = _get("colors")
+fun <R> colors(fn: (X) -> R) = _case("colors", fn)
+val X.asColors get() = colors(this)
+fun X.asColorsTo(x: X) = colors(this, x)
+
+fun column(vararg x: X) = _line("column", *x)
+val X.column get() = _get("column")
+fun <R> column(fn: (X) -> R) = _case("column", fn)
+val X.asColumn get() = column(this)
+fun X.asColumnTo(x: X) = column(this, x)
+
+fun columns(vararg x: X) = _line("columns", *x)
+val X.columns get() = _get("columns")
+fun <R> columns(fn: (X) -> R) = _case("columns", fn)
+val X.asColumns get() = columns(this)
+fun X.asColumnsTo(x: X) = columns(this, x)
+
+fun com(vararg x: X) = _line("com", *x)
+val X.com get() = _get("com")
+fun <R> com(fn: (X) -> R) = _case("com", fn)
+val X.asCom get() = com(this)
+fun X.asComTo(x: X) = com(this, x)
+
+fun comfort(vararg x: X) = _line("comfort", *x)
+val X.comfort get() = _get("comfort")
+fun <R> comfort(fn: (X) -> R) = _case("comfort", fn)
+val X.asComfort get() = comfort(this)
+fun X.asComfortTo(x: X) = comfort(this, x)
+
+fun comma(vararg x: X) = _line("comma", *x)
+val X.comma get() = _get("comma")
+fun <R> comma(fn: (X) -> R) = _case("comma", fn)
+val X.asComma get() = comma(this)
+fun X.asCommaTo(x: X) = comma(this, x)
+
+fun command(vararg x: X) = _line("command", *x)
+val X.command get() = _get("command")
+fun <R> command(fn: (X) -> R) = _case("command", fn)
+val X.asCommand get() = command(this)
+fun X.asCommandTo(x: X) = command(this, x)
+
+fun comment(vararg x: X) = _line("comment", *x)
+val X.comment get() = _get("comment")
+fun <R> comment(fn: (X) -> R) = _case("comment", fn)
+val X.asComment get() = comment(this)
+fun X.asCommentTo(x: X) = comment(this, x)
+
+fun comments(vararg x: X) = _line("comments", *x)
+val X.comments get() = _get("comments")
+fun <R> comments(fn: (X) -> R) = _case("comments", fn)
+val X.asComments get() = comments(this)
+fun X.asCommentsTo(x: X) = comments(this, x)
+
+fun commenting(vararg x: X) = _line("commenting", *x)
+val X.commenting get() = _get("commenting")
+fun <R> commenting(fn: (X) -> R) = _case("commenting", fn)
+val X.asCommenting get() = commenting(this)
+fun X.asCommentingTo(x: X) = commenting(this, x)
+
+fun common(vararg x: X) = _line("common", *x)
+val X.common get() = _get("common")
+fun <R> common(fn: (X) -> R) = _case("common", fn)
+val X.asCommon get() = common(this)
+fun X.asCommonTo(x: X) = common(this, x)
+
+fun compact(vararg x: X) = _line("compact", *x)
+val X.compact get() = _get("compact")
+fun <R> compact(fn: (X) -> R) = _case("compact", fn)
+val X.asCompact get() = compact(this)
+fun X.asCompactTo(x: X) = compact(this, x)
+
+fun compare(vararg x: X) = _line("compare", *x)
+val X.compare get() = _get("compare")
+fun <R> compare(fn: (X) -> R) = _case("compare", fn)
+val X.asCompare get() = compare(this)
+fun X.asCompareTo(x: X) = compare(this, x)
+
+fun compass(vararg x: X) = _line("compass", *x)
+val X.compass get() = _get("compass")
+fun <R> compass(fn: (X) -> R) = _case("compass", fn)
+val X.asCompass get() = compass(this)
+fun X.asCompassTo(x: X) = compass(this, x)
+
+fun compile(vararg x: X) = _line("compile", *x)
+val X.compile get() = _get("compile")
+fun <R> compile(fn: (X) -> R) = _case("compile", fn)
+val X.asCompile get() = compile(this)
+fun X.asCompileTo(x: X) = compile(this, x)
+
+fun compiled(vararg x: X) = _line("compiled", *x)
+val X.compiled get() = _get("compiled")
+fun <R> compiled(fn: (X) -> R) = _case("compiled", fn)
+val X.asCompiled get() = compiled(this)
+fun X.asCompiledTo(x: X) = compiled(this, x)
+
+fun compiler(vararg x: X) = _line("compiler", *x)
+val X.compiler get() = _get("compiler")
+fun <R> compiler(fn: (X) -> R) = _case("compiler", fn)
+val X.asCompiler get() = compiler(this)
+fun X.asCompilerTo(x: X) = compiler(this, x)
+
+fun component(vararg x: X) = _line("component", *x)
+val X.component get() = _get("component")
+fun <R> component(fn: (X) -> R) = _case("component", fn)
+val X.asComponent get() = component(this)
+fun X.asComponentTo(x: X) = component(this, x)
+
+fun components(vararg x: X) = _line("components", *x)
+val X.components get() = _get("components")
+fun <R> components(fn: (X) -> R) = _case("components", fn)
+val X.asComponents get() = components(this)
+fun X.asComponentsTo(x: X) = components(this, x)
+
+fun compute(vararg x: X) = _line("compute", *x)
+val X.compute get() = _get("compute")
+fun <R> compute(fn: (X) -> R) = _case("compute", fn)
+val X.asCompute get() = compute(this)
+fun X.asComputeTo(x: X) = compute(this, x)
+
+fun concat(vararg x: X) = _line("concat", *x)
+val X.concat get() = _get("concat")
+fun <R> concat(fn: (X) -> R) = _case("concat", fn)
+val X.asConcat get() = concat(this)
+fun X.asConcatTo(x: X) = concat(this, x)
+
+fun condition(vararg x: X) = _line("condition", *x)
+val X.condition get() = _get("condition")
+fun <R> condition(fn: (X) -> R) = _case("condition", fn)
+val X.asCondition get() = condition(this)
+fun X.asConditionTo(x: X) = condition(this, x)
+
+fun conflicts(vararg x: X) = _line("conflicts", *x)
+val X.conflicts get() = _get("conflicts")
+fun <R> conflicts(fn: (X) -> R) = _case("conflicts", fn)
+val X.asConflicts get() = conflicts(this)
+fun X.asConflictsTo(x: X) = conflicts(this, x)
+
+fun connect(vararg x: X) = _line("connect", *x)
+val X.connect get() = _get("connect")
+fun <R> connect(fn: (X) -> R) = _case("connect", fn)
+val X.asConnect get() = connect(this)
+fun X.asConnectTo(x: X) = connect(this, x)
+
+fun connected(vararg x: X) = _line("connected", *x)
+val X.connected get() = _get("connected")
+fun <R> connected(fn: (X) -> R) = _case("connected", fn)
+val X.asConnected get() = connected(this)
+fun X.asConnectedTo(x: X) = connected(this, x)
+
+fun connection(vararg x: X) = _line("connection", *x)
+val X.connection get() = _get("connection")
+fun <R> connection(fn: (X) -> R) = _case("connection", fn)
+val X.asConnection get() = connection(this)
+fun X.asConnectionTo(x: X) = connection(this, x)
+
+fun connections(vararg x: X) = _line("connections", *x)
+val X.connections get() = _get("connections")
+fun <R> connections(fn: (X) -> R) = _case("connections", fn)
+val X.asConnections get() = connections(this)
+fun X.asConnectionsTo(x: X) = connections(this, x)
+
+fun console(vararg x: X) = _line("console", *x)
+val X.console get() = _get("console")
+fun <R> console(fn: (X) -> R) = _case("console", fn)
+val X.asConsole get() = console(this)
+fun X.asConsoleTo(x: X) = console(this, x)
+
+fun const(vararg x: X) = _line("const", *x)
+val X.const get() = _get("const")
+fun <R> const(fn: (X) -> R) = _case("const", fn)
+val X.asConst get() = const(this)
+fun X.asConstTo(x: X) = const(this, x)
+
+fun constant(vararg x: X) = _line("constant", *x)
+val X.constant get() = _get("constant")
+fun <R> constant(fn: (X) -> R) = _case("constant", fn)
+val X.asConstant get() = constant(this)
+fun X.asConstantTo(x: X) = constant(this, x)
+
+fun constructor(vararg x: X) = _line("constructor", *x)
+val X.constructor get() = _get("constructor")
+fun <R> constructor(fn: (X) -> R) = _case("constructor", fn)
+val X.asConstructor get() = constructor(this)
+fun X.asConstructorTo(x: X) = constructor(this, x)
+
+fun constructors(vararg x: X) = _line("constructors", *x)
+val X.constructors get() = _get("constructors")
+fun <R> constructors(fn: (X) -> R) = _case("constructors", fn)
+val X.asConstructors get() = constructors(this)
+fun X.asConstructorsTo(x: X) = constructors(this, x)
+
+fun constructs(vararg x: X) = _line("constructs", *x)
+val X.constructs get() = _get("constructs")
+fun <R> constructs(fn: (X) -> R) = _case("constructs", fn)
+val X.asConstructs get() = constructs(this)
+fun X.asConstructsTo(x: X) = constructs(this, x)
+
+fun constuctor(vararg x: X) = _line("constuctor", *x)
+val X.constuctor get() = _get("constuctor")
+fun <R> constuctor(fn: (X) -> R) = _case("constuctor", fn)
+val X.asConstuctor get() = constuctor(this)
+fun X.asConstuctorTo(x: X) = constuctor(this, x)
+
+fun consumer(vararg x: X) = _line("consumer", *x)
+val X.consumer get() = _get("consumer")
+fun <R> consumer(fn: (X) -> R) = _case("consumer", fn)
+val X.asConsumer get() = consumer(this)
+fun X.asConsumerTo(x: X) = consumer(this, x)
+
+fun consumers(vararg x: X) = _line("consumers", *x)
+val X.consumers get() = _get("consumers")
+fun <R> consumers(fn: (X) -> R) = _case("consumers", fn)
+val X.asConsumers get() = consumers(this)
+fun X.asConsumersTo(x: X) = consumers(this, x)
+
+fun contain(vararg x: X) = _line("contain", *x)
+val X.contain get() = _get("contain")
+fun <R> contain(fn: (X) -> R) = _case("contain", fn)
+val X.asContain get() = contain(this)
+fun X.asContainTo(x: X) = contain(this, x)
+
+fun contains(vararg x: X) = _line("contains", *x)
+val X.contains get() = _get("contains")
+fun <R> contains(fn: (X) -> R) = _case("contains", fn)
+val X.asContains get() = contains(this)
+fun X.asContainsTo(x: X) = contains(this, x)
+
+fun content(vararg x: X) = _line("content", *x)
+val X.content get() = _get("content")
+fun <R> content(fn: (X) -> R) = _case("content", fn)
+val X.asContent get() = content(this)
+fun X.asContentTo(x: X) = content(this, x)
+
+fun context(vararg x: X) = _line("context", *x)
+val X.context get() = _get("context")
+fun <R> context(fn: (X) -> R) = _case("context", fn)
+val X.asContext get() = context(this)
+fun X.asContextTo(x: X) = context(this, x)
+
+fun continuous(vararg x: X) = _line("continuous", *x)
+val X.continuous get() = _get("continuous")
+fun <R> continuous(fn: (X) -> R) = _case("continuous", fn)
+val X.asContinuous get() = continuous(this)
+fun X.asContinuousTo(x: X) = continuous(this, x)
+
+fun control(vararg x: X) = _line("control", *x)
+val X.control get() = _get("control")
+fun <R> control(fn: (X) -> R) = _case("control", fn)
+val X.asControl get() = control(this)
+fun X.asControlTo(x: X) = control(this, x)
+
+fun convert(vararg x: X) = _line("convert", *x)
+val X.convert get() = _get("convert")
+fun <R> convert(fn: (X) -> R) = _case("convert", fn)
+val X.asConvert get() = convert(this)
+fun X.asConvertTo(x: X) = convert(this, x)
+
+fun coord(vararg x: X) = _line("coord", *x)
+val X.coord get() = _get("coord")
+fun <R> coord(fn: (X) -> R) = _case("coord", fn)
+val X.asCoord get() = coord(this)
+fun X.asCoordTo(x: X) = coord(this, x)
+
+fun coordinate(vararg x: X) = _line("coordinate", *x)
+val X.coordinate get() = _get("coordinate")
+fun <R> coordinate(fn: (X) -> R) = _case("coordinate", fn)
+val X.asCoordinate get() = coordinate(this)
+fun X.asCoordinateTo(x: X) = coordinate(this, x)
+
+fun coordinates(vararg x: X) = _line("coordinates", *x)
+val X.coordinates get() = _get("coordinates")
+fun <R> coordinates(fn: (X) -> R) = _case("coordinates", fn)
+val X.asCoordinates get() = coordinates(this)
+fun X.asCoordinatesTo(x: X) = coordinates(this, x)
+
+fun coords(vararg x: X) = _line("coords", *x)
+val X.coords get() = _get("coords")
+fun <R> coords(fn: (X) -> R) = _case("coords", fn)
+val X.asCoords get() = coords(this)
+fun X.asCoordsTo(x: X) = coords(this, x)
+
+fun copies(vararg x: X) = _line("copies", *x)
+val X.copies get() = _get("copies")
+fun <R> copies(fn: (X) -> R) = _case("copies", fn)
+val X.asCopies get() = copies(this)
+fun X.asCopiesTo(x: X) = copies(this, x)
+
+fun copy(vararg x: X) = _line("copy", *x)
+val X.copy get() = _get("copy")
+fun <R> copy(fn: (X) -> R) = _case("copy", fn)
+val X.asCopy get() = copy(this)
+fun X.asCopyTo(x: X) = copy(this, x)
+
+fun core(vararg x: X) = _line("core", *x)
+val X.core get() = _get("core")
+fun <R> core(fn: (X) -> R) = _case("core", fn)
+val X.asCore get() = core(this)
+fun X.asCoreTo(x: X) = core(this, x)
+
+fun cos(vararg x: X) = _line("cos", *x)
+val X.cos get() = _get("cos")
+fun <R> cos(fn: (X) -> R) = _case("cos", fn)
+val X.asCos get() = cos(this)
+fun X.asCosTo(x: X) = cos(this, x)
+
+fun cosh(vararg x: X) = _line("cosh", *x)
+val X.cosh get() = _get("cosh")
+fun <R> cosh(fn: (X) -> R) = _case("cosh", fn)
+val X.asCosh get() = cosh(this)
+fun X.asCoshTo(x: X) = cosh(this, x)
+
+fun cosinus(vararg x: X) = _line("cosinus", *x)
+val X.cosinus get() = _get("cosinus")
+fun <R> cosinus(fn: (X) -> R) = _case("cosinus", fn)
+val X.asCosinus get() = cosinus(this)
+fun X.asCosinusTo(x: X) = cosinus(this, x)
+
+fun count(vararg x: X) = _line("count", *x)
+val X.count get() = _get("count")
+fun <R> count(fn: (X) -> R) = _case("count", fn)
+val X.asCount get() = count(this)
+fun X.asCountTo(x: X) = count(this, x)
+
+fun counter(vararg x: X) = _line("counter", *x)
+val X.counter get() = _get("counter")
+fun <R> counter(fn: (X) -> R) = _case("counter", fn)
+val X.asCounter get() = counter(this)
+fun X.asCounterTo(x: X) = counter(this, x)
+
+fun cout(vararg x: X) = _line("cout", *x)
+val X.cout get() = _get("cout")
+fun <R> cout(fn: (X) -> R) = _case("cout", fn)
+val X.asCout get() = cout(this)
+fun X.asCoutTo(x: X) = cout(this, x)
+
+fun cover(vararg x: X) = _line("cover", *x)
+val X.cover get() = _get("cover")
+fun <R> cover(fn: (X) -> R) = _case("cover", fn)
+val X.asCover get() = cover(this)
+fun X.asCoverTo(x: X) = cover(this, x)
+
+fun crash(vararg x: X) = _line("crash", *x)
+val X.crash get() = _get("crash")
+fun <R> crash(fn: (X) -> R) = _case("crash", fn)
+val X.asCrash get() = crash(this)
+fun X.asCrashTo(x: X) = crash(this, x)
+
+fun create(vararg x: X) = _line("create", *x)
+val X.create get() = _get("create")
+fun <R> create(fn: (X) -> R) = _case("create", fn)
+val X.asCreate get() = create(this)
+fun X.asCreateTo(x: X) = create(this, x)
+
+fun created(vararg x: X) = _line("created", *x)
+val X.created get() = _get("created")
+fun <R> created(fn: (X) -> R) = _case("created", fn)
+val X.asCreated get() = created(this)
+fun X.asCreatedTo(x: X) = created(this, x)
+
+fun ctor(vararg x: X) = _line("ctor", *x)
+val X.ctor get() = _get("ctor")
+fun <R> ctor(fn: (X) -> R) = _case("ctor", fn)
+val X.asCtor get() = ctor(this)
+fun X.asCtorTo(x: X) = ctor(this, x)
+
+fun current(vararg x: X) = _line("current", *x)
+val X.current get() = _get("current")
+fun <R> current(fn: (X) -> R) = _case("current", fn)
+val X.asCurrent get() = current(this)
+fun X.asCurrentTo(x: X) = current(this, x)
+
+fun curve(vararg x: X) = _line("curve", *x)
+val X.curve get() = _get("curve")
+fun <R> curve(fn: (X) -> R) = _case("curve", fn)
+val X.asCurve get() = curve(this)
+fun X.asCurveTo(x: X) = curve(this, x)
+
+fun cut(vararg x: X) = _line("cut", *x)
+val X.cut get() = _get("cut")
+fun <R> cut(fn: (X) -> R) = _case("cut", fn)
+val X.asCut get() = cut(this)
+fun X.asCutTo(x: X) = cut(this, x)
+
+fun cyan(vararg x: X) = _line("cyan", *x)
+val X.cyan get() = _get("cyan")
+fun <R> cyan(fn: (X) -> R) = _case("cyan", fn)
+val X.asCyan get() = cyan(this)
+fun X.asCyanTo(x: X) = cyan(this, x)
+
+fun d(vararg x: X) = _line("d", *x)
+val X.d get() = _get("d")
+fun <R> d(fn: (X) -> R) = _case("d", fn)
+val X.asD get() = d(this)
+fun X.asDTo(x: X) = d(this, x)
+
+fun dare(vararg x: X) = _line("dare", *x)
+val X.dare get() = _get("dare")
+fun <R> dare(fn: (X) -> R) = _case("dare", fn)
+val X.asDare get() = dare(this)
+fun X.asDareTo(x: X) = dare(this, x)
+
+fun dark(vararg x: X) = _line("dark", *x)
+val X.dark get() = _get("dark")
+fun <R> dark(fn: (X) -> R) = _case("dark", fn)
+val X.asDark get() = dark(this)
+fun X.asDarkTo(x: X) = dark(this, x)
+
+fun data(vararg x: X) = _line("data", *x)
+val X.data get() = _get("data")
+fun <R> data(fn: (X) -> R) = _case("data", fn)
+val X.asData get() = data(this)
+fun X.asDataTo(x: X) = data(this, x)
+
+fun database(vararg x: X) = _line("database", *x)
+val X.database get() = _get("database")
+fun <R> database(fn: (X) -> R) = _case("database", fn)
+val X.asDatabase get() = database(this)
+fun X.asDatabaseTo(x: X) = database(this, x)
+
+fun day(vararg x: X) = _line("day", *x)
+val X.day get() = _get("day")
+fun <R> day(fn: (X) -> R) = _case("day", fn)
+val X.asDay get() = day(this)
+fun X.asDayTo(x: X) = day(this, x)
+
+fun debug(vararg x: X) = _line("debug", *x)
+val X.debug get() = _get("debug")
+fun <R> debug(fn: (X) -> R) = _case("debug", fn)
+val X.asDebug get() = debug(this)
+fun X.asDebugTo(x: X) = debug(this, x)
+
+fun decimal(vararg x: X) = _line("decimal", *x)
+val X.decimal get() = _get("decimal")
+fun <R> decimal(fn: (X) -> R) = _case("decimal", fn)
+val X.asDecimal get() = decimal(this)
+fun X.asDecimalTo(x: X) = decimal(this, x)
+
+fun declaration(vararg x: X) = _line("declaration", *x)
+val X.declaration get() = _get("declaration")
+fun <R> declaration(fn: (X) -> R) = _case("declaration", fn)
+val X.asDeclaration get() = declaration(this)
+fun X.asDeclarationTo(x: X) = declaration(this, x)
+
+fun declared(vararg x: X) = _line("declared", *x)
+val X.declared get() = _get("declared")
+fun <R> declared(fn: (X) -> R) = _case("declared", fn)
+val X.asDeclared get() = declared(this)
+fun X.asDeclaredTo(x: X) = declared(this, x)
+
+fun declaring(vararg x: X) = _line("declaring", *x)
+val X.declaring get() = _get("declaring")
+fun <R> declaring(fn: (X) -> R) = _case("declaring", fn)
+val X.asDeclaring get() = declaring(this)
+fun X.asDeclaringTo(x: X) = declaring(this, x)
+
+fun decrement(vararg x: X) = _line("decrement", *x)
+val X.decrement get() = _get("decrement")
+fun <R> decrement(fn: (X) -> R) = _case("decrement", fn)
+val X.asDecrement get() = decrement(this)
+fun X.asDecrementTo(x: X) = decrement(this, x)
+
+fun deepnight(vararg x: X) = _line("deepnight", *x)
+val X.deepnight get() = _get("deepnight")
+fun <R> deepnight(fn: (X) -> R) = _case("deepnight", fn)
+val X.asDeepnight get() = deepnight(this)
+fun X.asDeepnightTo(x: X) = deepnight(this, x)
+
+fun def(vararg x: X) = _line("def", *x)
+val X.def get() = _get("def")
+fun <R> def(fn: (X) -> R) = _case("def", fn)
+val X.asDef get() = def(this)
+fun X.asDefTo(x: X) = def(this, x)
+
+fun default(vararg x: X) = _line("default", *x)
+val X.default get() = _get("default")
+fun <R> default(fn: (X) -> R) = _case("default", fn)
+val X.asDefault get() = default(this)
+fun X.asDefaultTo(x: X) = default(this, x)
+
+fun define(vararg x: X) = _line("define", *x)
+val X.define get() = _get("define")
+fun <R> define(fn: (X) -> R) = _case("define", fn)
+val X.asDefine get() = define(this)
+fun X.asDefineTo(x: X) = define(this, x)
+
+fun definition(vararg x: X) = _line("definition", *x)
+val X.definition get() = _get("definition")
+fun <R> definition(fn: (X) -> R) = _case("definition", fn)
+val X.asDefinition get() = definition(this)
+fun X.asDefinitionTo(x: X) = definition(this, x)
+
+fun defined(vararg x: X) = _line("defined", *x)
+val X.defined get() = _get("defined")
+fun <R> defined(fn: (X) -> R) = _case("defined", fn)
+val X.asDefined get() = defined(this)
+fun X.asDefinedTo(x: X) = defined(this, x)
+
+fun degrees(vararg x: X) = _line("degrees", *x)
+val X.degrees get() = _get("degrees")
+fun <R> degrees(fn: (X) -> R) = _case("degrees", fn)
+val X.asDegrees get() = degrees(this)
+fun X.asDegreesTo(x: X) = degrees(this, x)
+
+fun delete(vararg x: X) = _line("delete", *x)
+val X.delete get() = _get("delete")
+fun <R> delete(fn: (X) -> R) = _case("delete", fn)
+val X.asDelete get() = delete(this)
+fun X.asDeleteTo(x: X) = delete(this, x)
+
+fun demo(vararg x: X) = _line("demo", *x)
+val X.demo get() = _get("demo")
+fun <R> demo(fn: (X) -> R) = _case("demo", fn)
+val X.asDemo get() = demo(this)
+fun X.asDemoTo(x: X) = demo(this, x)
+
+fun depth(vararg x: X) = _line("depth", *x)
+val X.depth get() = _get("depth")
+fun <R> depth(fn: (X) -> R) = _case("depth", fn)
+val X.asDepth get() = depth(this)
+fun X.asDepthTo(x: X) = depth(this, x)
+
+fun derive(vararg x: X) = _line("derive", *x)
+val X.derive get() = _get("derive")
+fun <R> derive(fn: (X) -> R) = _case("derive", fn)
+val X.asDerive get() = derive(this)
+fun X.asDeriveTo(x: X) = derive(this, x)
+
+fun describe(vararg x: X) = _line("describe", *x)
+val X.describe get() = _get("describe")
+fun <R> describe(fn: (X) -> R) = _case("describe", fn)
+val X.asDescribe get() = describe(this)
+fun X.asDescribeTo(x: X) = describe(this, x)
+
+fun destroy(vararg x: X) = _line("destroy", *x)
+val X.destroy get() = _get("destroy")
+fun <R> destroy(fn: (X) -> R) = _case("destroy", fn)
+val X.asDestroy get() = destroy(this)
+fun X.asDestroyTo(x: X) = destroy(this, x)
+
+fun detector(vararg x: X) = _line("detector", *x)
+val X.detector get() = _get("detector")
+fun <R> detector(fn: (X) -> R) = _case("detector", fn)
+val X.asDetector get() = detector(this)
+fun X.asDetectorTo(x: X) = detector(this, x)
+
+fun dict(vararg x: X) = _line("dict", *x)
+val X.dict get() = _get("dict")
+fun <R> dict(fn: (X) -> R) = _case("dict", fn)
+val X.asDict get() = dict(this)
+fun X.asDictTo(x: X) = dict(this, x)
+
+fun dictionary(vararg x: X) = _line("dictionary", *x)
+val X.dictionary get() = _get("dictionary")
+fun <R> dictionary(fn: (X) -> R) = _case("dictionary", fn)
+val X.asDictionary get() = dictionary(this)
+fun X.asDictionaryTo(x: X) = dictionary(this, x)
+
+fun did(vararg x: X) = _line("did", *x)
+val X.did get() = _get("did")
+fun <R> did(fn: (X) -> R) = _case("did", fn)
+val X.asDid get() = did(this)
+fun X.asDidTo(x: X) = did(this, x)
+
+fun difference(vararg x: X) = _line("difference", *x)
+val X.difference get() = _get("difference")
+fun <R> difference(fn: (X) -> R) = _case("difference", fn)
+val X.asDifference get() = difference(this)
+fun X.asDifferenceTo(x: X) = difference(this, x)
+
+fun digest(vararg x: X) = _line("digest", *x)
+val X.digest get() = _get("digest")
+fun <R> digest(fn: (X) -> R) = _case("digest", fn)
+val X.asDigest get() = digest(this)
+fun X.asDigestTo(x: X) = digest(this, x)
+
+fun digit(vararg x: X) = _line("digit", *x)
+val X.digit get() = _get("digit")
+fun <R> digit(fn: (X) -> R) = _case("digit", fn)
+val X.asDigit get() = digit(this)
+fun X.asDigitTo(x: X) = digit(this, x)
+
+fun dimension(vararg x: X) = _line("dimension", *x)
+val X.dimension get() = _get("dimension")
+fun <R> dimension(fn: (X) -> R) = _case("dimension", fn)
+val X.asDimension get() = dimension(this)
+fun X.asDimensionTo(x: X) = dimension(this, x)
+
+fun dimensional(vararg x: X) = _line("dimensional", *x)
+val X.dimensional get() = _get("dimensional")
+fun <R> dimensional(fn: (X) -> R) = _case("dimensional", fn)
+val X.asDimensional get() = dimensional(this)
+fun X.asDimensionalTo(x: X) = dimensional(this, x)
+
+fun dimensions(vararg x: X) = _line("dimensions", *x)
+val X.dimensions get() = _get("dimensions")
+fun <R> dimensions(fn: (X) -> R) = _case("dimensions", fn)
+val X.asDimensions get() = dimensions(this)
+fun X.asDimensionsTo(x: X) = dimensions(this, x)
+
+fun direct(vararg x: X) = _line("direct", *x)
+val X.direct get() = _get("direct")
+fun <R> direct(fn: (X) -> R) = _case("direct", fn)
+val X.asDirect get() = direct(this)
+fun X.asDirectTo(x: X) = direct(this, x)
+
+fun display(vararg x: X) = _line("display", *x)
+val X.display get() = _get("display")
+fun <R> display(fn: (X) -> R) = _case("display", fn)
+val X.asDisplay get() = display(this)
+fun X.asDisplayTo(x: X) = display(this, x)
+
+fun div(vararg x: X) = _line("div", *x)
+val X.div get() = _get("div")
+fun <R> div(fn: (X) -> R) = _case("div", fn)
+val X.asDiv get() = div(this)
+fun X.asDivTo(x: X) = div(this, x)
+
+fun divide(vararg x: X) = _line("divide", *x)
+val X.divide get() = _get("divide")
+fun <R> divide(fn: (X) -> R) = _case("divide", fn)
+val X.asDivide get() = divide(this)
+fun X.asDivideTo(x: X) = divide(this, x)
+
+fun divided(vararg x: X) = _line("divided", *x)
+val X.divided get() = _get("divided")
+fun <R> divided(fn: (X) -> R) = _case("divided", fn)
+val X.asDivided get() = divided(this)
+fun X.asDividedTo(x: X) = divided(this, x)
+
+fun divmod(vararg x: X) = _line("divmod", *x)
+val X.divmod get() = _get("divmod")
+fun <R> divmod(fn: (X) -> R) = _case("divmod", fn)
+val X.asDivmod get() = divmod(this)
+fun X.asDivmodTo(x: X) = divmod(this, x)
+
+fun do_(vararg x: X) = _line("do", *x)
+val X.do_ get() = _get("do")
+fun <R> do_(fn: (X) -> R) = _case("do", fn)
+val X.asDo get() = do_(this)
+fun X.asDoTo(x: X) = do_(this, x)
+
+fun document(vararg x: X) = _line("document", *x)
+val X.document get() = _get("document")
+fun <R> document(fn: (X) -> R) = _case("document", fn)
+val X.asDocument get() = document(this)
+fun X.asDocumentTo(x: X) = document(this, x)
+
+fun does(vararg x: X) = _line("does", *x)
+val X.does get() = _get("does")
+fun <R> does(fn: (X) -> R) = _case("does", fn)
+val X.asDoes get() = does(this)
+fun X.asDoesTo(x: X) = does(this, x)
+
+fun doing(vararg x: X) = _line("doing", *x)
+val X.doing get() = _get("doing")
+fun <R> doing(fn: (X) -> R) = _case("doing", fn)
+val X.asDoing get() = doing(this)
+fun X.asDoingTo(x: X) = doing(this, x)
+
+fun dollar(vararg x: X) = _line("dollar", *x)
+val X.dollar get() = _get("dollar")
+fun <R> dollar(fn: (X) -> R) = _case("dollar", fn)
+val X.asDollar get() = dollar(this)
+fun X.asDollarTo(x: X) = dollar(this, x)
+
+fun done(vararg x: X) = _line("done", *x)
+val X.done get() = _get("done")
+fun <R> done(fn: (X) -> R) = _case("done", fn)
+val X.asDone get() = done(this)
+fun X.asDoneTo(x: X) = done(this, x)
+
+fun dot(vararg x: X) = _line("dot", *x)
+val X.dot get() = _get("dot")
+fun <R> dot(fn: (X) -> R) = _case("dot", fn)
+val X.asDot get() = dot(this)
+fun X.asDotTo(x: X) = dot(this, x)
+
+fun double(vararg x: X) = _line("double", *x)
+val X.double get() = _get("double")
+fun <R> double(fn: (X) -> R) = _case("double", fn)
+val X.asDouble get() = double(this)
+fun X.asDoubleTo(x: X) = double(this, x)
+
+fun dp(vararg x: X) = _line("dp", *x)
+val X.dp get() = _get("dp")
+fun <R> dp(fn: (X) -> R) = _case("dp", fn)
+val X.asDp get() = dp(this)
+fun X.asDpTo(x: X) = dp(this, x)
+
+fun draw(vararg x: X) = _line("draw", *x)
+val X.draw get() = _get("draw")
+fun <R> draw(fn: (X) -> R) = _case("draw", fn)
+val X.asDraw get() = draw(this)
+fun X.asDrawTo(x: X) = draw(this, x)
+
+fun drawing(vararg x: X) = _line("drawing", *x)
+val X.drawing get() = _get("drawing")
+fun <R> drawing(fn: (X) -> R) = _case("drawing", fn)
+val X.asDrawing get() = drawing(this)
+fun X.asDrawingTo(x: X) = drawing(this, x)
+
+fun ds(vararg x: X) = _line("ds", *x)
+val X.ds get() = _get("ds")
+fun <R> ds(fn: (X) -> R) = _case("ds", fn)
+val X.asDs get() = ds(this)
+fun X.asDsTo(x: X) = ds(this, x)
+
+fun dsl(vararg x: X) = _line("dsl", *x)
+val X.dsl get() = _get("dsl")
+fun <R> dsl(fn: (X) -> R) = _case("dsl", fn)
+val X.asDsl get() = dsl(this)
+fun X.asDslTo(x: X) = dsl(this, x)
+
+fun duty(vararg x: X) = _line("duty", *x)
+val X.duty get() = _get("duty")
+fun <R> duty(fn: (X) -> R) = _case("duty", fn)
+val X.asDuty get() = duty(this)
+fun X.asDutyTo(x: X) = duty(this, x)
+
+fun dynamic(vararg x: X) = _line("dynamic", *x)
+val X.dynamic get() = _get("dynamic")
+fun <R> dynamic(fn: (X) -> R) = _case("dynamic", fn)
+val X.asDynamic get() = dynamic(this)
+fun X.asDynamicTo(x: X) = dynamic(this, x)
+
+fun dynamics(vararg x: X) = _line("dynamics", *x)
+val X.dynamics get() = _get("dynamics")
+fun <R> dynamics(fn: (X) -> R) = _case("dynamics", fn)
+val X.asDynamics get() = dynamics(this)
+fun X.asDynamicsTo(x: X) = dynamics(this, x)
+
+fun e(vararg x: X) = _line("e", *x)
+val X.e get() = _get("e")
+fun <R> e(fn: (X) -> R) = _case("e", fn)
+val X.asE get() = e(this)
+fun X.asETo(x: X) = e(this, x)
+
+fun each(vararg x: X) = _line("each", *x)
+val X.each get() = _get("each")
+fun <R> each(fn: (X) -> R) = _case("each", fn)
+val X.asEach get() = each(this)
+fun X.asEachTo(x: X) = each(this, x)
+
+fun edge(vararg x: X) = _line("edge", *x)
+val X.edge get() = _get("edge")
+fun <R> edge(fn: (X) -> R) = _case("edge", fn)
+val X.asEdge get() = edge(this)
+fun X.asEdgeTo(x: X) = edge(this, x)
+
+fun eight(vararg x: X) = _line("eight", *x)
+val X.eight get() = _get("eight")
+fun <R> eight(fn: (X) -> R) = _case("eight", fn)
+val X.asEight get() = eight(this)
+fun X.asEightTo(x: X) = eight(this, x)
+
+fun eighth(vararg x: X) = _line("eighth", *x)
+val X.eighth get() = _get("eighth")
+fun <R> eighth(fn: (X) -> R) = _case("eighth", fn)
+val X.asEighth get() = eighth(this)
+fun X.asEighthTo(x: X) = eighth(this, x)
+
+fun either(vararg x: X) = _line("either", *x)
+val X.either get() = _get("either")
+fun <R> either(fn: (X) -> R) = _case("either", fn)
+val X.asEither get() = either(this)
+fun X.asEitherTo(x: X) = either(this, x)
+
+fun element(vararg x: X) = _line("element", *x)
+val X.element get() = _get("element")
+fun <R> element(fn: (X) -> R) = _case("element", fn)
+val X.asElement get() = element(this)
+fun X.asElementTo(x: X) = element(this, x)
+
+fun elements(vararg x: X) = _line("elements", *x)
+val X.elements get() = _get("elements")
+fun <R> elements(fn: (X) -> R) = _case("elements", fn)
+val X.asElements get() = elements(this)
+fun X.asElementsTo(x: X) = elements(this, x)
+
+fun else_(vararg x: X) = _line("else", *x)
+val X.else_ get() = _get("else")
+fun <R> else_(fn: (X) -> R) = _case("else", fn)
+val X.asElse get() = else_(this)
+fun X.asElseTo(x: X) = else_(this, x)
+
+fun email(vararg x: X) = _line("email", *x)
+val X.email get() = _get("email")
+fun <R> email(fn: (X) -> R) = _case("email", fn)
+val X.asEmail get() = email(this)
+fun X.asEmailTo(x: X) = email(this, x)
+
+fun empty(vararg x: X) = _line("empty", *x)
+val X.empty get() = _get("empty")
+fun <R> empty(fn: (X) -> R) = _case("empty", fn)
+val X.asEmpty get() = empty(this)
+fun X.asEmptyTo(x: X) = empty(this, x)
+
+fun end(vararg x: X) = _line("end", *x)
+val X.end get() = _get("end")
+fun <R> end(fn: (X) -> R) = _case("end", fn)
+val X.asEnd get() = end(this)
+fun X.asEndTo(x: X) = end(this, x)
+
+fun ends(vararg x: X) = _line("ends", *x)
+val X.ends get() = _get("ends")
+fun <R> ends(fn: (X) -> R) = _case("ends", fn)
+val X.asEnds get() = ends(this)
+fun X.asEndsTo(x: X) = ends(this, x)
+
+fun enter(vararg x: X) = _line("enter", *x)
+val X.enter get() = _get("enter")
+fun <R> enter(fn: (X) -> R) = _case("enter", fn)
+val X.asEnter get() = enter(this)
+fun X.asEnterTo(x: X) = enter(this, x)
+
+fun entries(vararg x: X) = _line("entries", *x)
+val X.entries get() = _get("entries")
+fun <R> entries(fn: (X) -> R) = _case("entries", fn)
+val X.asEntries get() = entries(this)
+fun X.asEntriesTo(x: X) = entries(this, x)
+
+fun entry(vararg x: X) = _line("entry", *x)
+val X.entry get() = _get("entry")
+fun <R> entry(fn: (X) -> R) = _case("entry", fn)
+val X.asEntry get() = entry(this)
+fun X.asEntryTo(x: X) = entry(this, x)
+
+fun enum(vararg x: X) = _line("enum", *x)
+val X.enum get() = _get("enum")
+fun <R> enum(fn: (X) -> R) = _case("enum", fn)
+val X.asEnum get() = enum(this)
+fun X.asEnumTo(x: X) = enum(this, x)
+
+fun enums(vararg x: X) = _line("enums", *x)
+val X.enums get() = _get("enums")
+fun <R> enums(fn: (X) -> R) = _case("enums", fn)
+val X.asEnums get() = enums(this)
+fun X.asEnumsTo(x: X) = enums(this, x)
+
+fun eq(vararg x: X) = _line("eq", *x)
+val X.eq get() = _get("eq")
+fun <R> eq(fn: (X) -> R) = _case("eq", fn)
+val X.asEq get() = eq(this)
+fun X.asEqTo(x: X) = eq(this, x)
+
+fun equal(vararg x: X) = _line("equal", *x)
+val X.equal get() = _get("equal")
+fun <R> equal(fn: (X) -> R) = _case("equal", fn)
+val X.asEqual get() = equal(this)
+fun X.asEqualTo(x: X) = equal(this, x)
+
+fun equals_(vararg x: X) = _line("equals", *x)
+val X.equals_ get() = _get("equals")
+fun <R> equals_(fn: (X) -> R) = _case("equals", fn)
+val X.asEquals get() = equals_(this)
+fun X.asEqualsTo(x: X) = equals_(this, x)
+
+fun equatable(vararg x: X) = _line("equatable", *x)
+val X.equatable get() = _get("equatable")
+fun <R> equatable(fn: (X) -> R) = _case("equatable", fn)
+val X.asEquatable get() = equatable(this)
+fun X.asEquatableTo(x: X) = equatable(this, x)
+
+fun error(vararg x: X) = _line("error", *x)
+val X.error get() = _get("error")
+fun <R> error(fn: (X) -> R) = _case("error", fn)
+val X.asError get() = error(this)
+fun X.asErrorTo(x: X) = error(this, x)
+
+fun esc(vararg x: X) = _line("esc", *x)
+val X.esc get() = _get("esc")
+fun <R> esc(fn: (X) -> R) = _case("esc", fn)
+val X.asEsc get() = esc(this)
+fun X.asEscTo(x: X) = esc(this, x)
+
+fun escape(vararg x: X) = _line("escape", *x)
+val X.escape get() = _get("escape")
+fun <R> escape(fn: (X) -> R) = _case("escape", fn)
+val X.asEscape get() = escape(this)
+fun X.asEscapeTo(x: X) = escape(this, x)
+
+fun eval(vararg x: X) = _line("eval", *x)
+val X.eval get() = _get("eval")
+fun <R> eval(fn: (X) -> R) = _case("eval", fn)
+val X.asEval get() = eval(this)
+fun X.asEvalTo(x: X) = eval(this, x)
+
+fun evaluate(vararg x: X) = _line("evaluate", *x)
+val X.evaluate get() = _get("evaluate")
+fun <R> evaluate(fn: (X) -> R) = _case("evaluate", fn)
+val X.asEvaluate get() = evaluate(this)
+fun X.asEvaluateTo(x: X) = evaluate(this, x)
+
+fun evaluated(vararg x: X) = _line("evaluated", *x)
+val X.evaluated get() = _get("evaluated")
+fun <R> evaluated(fn: (X) -> R) = _case("evaluated", fn)
+val X.asEvaluated get() = evaluated(this)
+fun X.asEvaluatedTo(x: X) = evaluated(this, x)
+
+fun evaluator(vararg x: X) = _line("evaluator", *x)
+val X.evaluator get() = _get("evaluator")
+fun <R> evaluator(fn: (X) -> R) = _case("evaluator", fn)
+val X.asEvaluator get() = evaluator(this)
+fun X.asEvaluatorTo(x: X) = evaluator(this, x)
+
+fun event(vararg x: X) = _line("event", *x)
+val X.event get() = _get("event")
+fun <R> event(fn: (X) -> R) = _case("event", fn)
+val X.asEvent get() = event(this)
+fun X.asEventTo(x: X) = event(this, x)
+
+fun events(vararg x: X) = _line("events", *x)
+val X.events get() = _get("events")
+fun <R> events(fn: (X) -> R) = _case("events", fn)
+val X.asEvents get() = events(this)
+fun X.asEventsTo(x: X) = events(this, x)
+
+fun exact(vararg x: X) = _line("exact", *x)
+val X.exact get() = _get("exact")
+fun <R> exact(fn: (X) -> R) = _case("exact", fn)
+val X.asExact get() = exact(this)
+fun X.asExactTo(x: X) = exact(this, x)
+
+fun exactly(vararg x: X) = _line("exactly", *x)
+val X.exactly get() = _get("exactly")
+fun <R> exactly(fn: (X) -> R) = _case("exactly", fn)
+val X.asExactly get() = exactly(this)
+fun X.asExactlyTo(x: X) = exactly(this, x)
+
+fun examples(vararg x: X) = _line("examples", *x)
+val X.examples get() = _get("examples")
+fun <R> examples(fn: (X) -> R) = _case("examples", fn)
+val X.asExamples get() = examples(this)
+fun X.asExamplesTo(x: X) = examples(this, x)
+
+fun exception(vararg x: X) = _line("exception", *x)
+val X.exception get() = _get("exception")
+fun <R> exception(fn: (X) -> R) = _case("exception", fn)
+val X.asException get() = exception(this)
+fun X.asExceptionTo(x: X) = exception(this, x)
+
+fun exceptions(vararg x: X) = _line("exceptions", *x)
+val X.exceptions get() = _get("exceptions")
+fun <R> exceptions(fn: (X) -> R) = _case("exceptions", fn)
+val X.asExceptions get() = exceptions(this)
+fun X.asExceptionsTo(x: X) = exceptions(this, x)
+
+fun exclamation(vararg x: X) = _line("exclamation", *x)
+val X.exclamation get() = _get("exclamation")
+fun <R> exclamation(fn: (X) -> R) = _case("exclamation", fn)
+val X.asExclamation get() = exclamation(this)
+fun X.asExclamationTo(x: X) = exclamation(this, x)
+
+fun exclusive(vararg x: X) = _line("exclusive", *x)
+val X.exclusive get() = _get("exclusive")
+fun <R> exclusive(fn: (X) -> R) = _case("exclusive", fn)
+val X.asExclusive get() = exclusive(this)
+fun X.asExclusiveTo(x: X) = exclusive(this, x)
+
+fun exec(vararg x: X) = _line("exec", *x)
+val X.exec get() = _get("exec")
+fun <R> exec(fn: (X) -> R) = _case("exec", fn)
+val X.asExec get() = exec(this)
+fun X.asExecTo(x: X) = exec(this, x)
+
+fun executable(vararg x: X) = _line("executable", *x)
+val X.executable get() = _get("executable")
+fun <R> executable(fn: (X) -> R) = _case("executable", fn)
+val X.asExecutable get() = executable(this)
+fun X.asExecutableTo(x: X) = executable(this, x)
+
+fun execute(vararg x: X) = _line("execute", *x)
+val X.execute get() = _get("execute")
+fun <R> execute(fn: (X) -> R) = _case("execute", fn)
+val X.asExecute get() = execute(this)
+fun X.asExecuteTo(x: X) = execute(this, x)
+
+fun execution(vararg x: X) = _line("execution", *x)
+val X.execution get() = _get("execution")
+fun <R> execution(fn: (X) -> R) = _case("execution", fn)
+val X.asExecution get() = execution(this)
+fun X.asExecutionTo(x: X) = execution(this, x)
+
+fun executor(vararg x: X) = _line("executor", *x)
+val X.executor get() = _get("executor")
+fun <R> executor(fn: (X) -> R) = _case("executor", fn)
+val X.asExecutor get() = executor(this)
+fun X.asExecutorTo(x: X) = executor(this, x)
+
+fun exists(vararg x: X) = _line("exists", *x)
+val X.exists get() = _get("exists")
+fun <R> exists(fn: (X) -> R) = _case("exists", fn)
+val X.asExists get() = exists(this)
+fun X.asExistsTo(x: X) = exists(this, x)
+
+fun exit(vararg x: X) = _line("exit", *x)
+val X.exit get() = _get("exit")
+fun <R> exit(fn: (X) -> R) = _case("exit", fn)
+val X.asExit get() = exit(this)
+fun X.asExitTo(x: X) = exit(this, x)
+
+fun expand(vararg x: X) = _line("expand", *x)
+val X.expand get() = _get("expand")
+fun <R> expand(fn: (X) -> R) = _case("expand", fn)
+val X.asExpand get() = expand(this)
+fun X.asExpandTo(x: X) = expand(this, x)
+
+fun expanded(vararg x: X) = _line("expanded", *x)
+val X.expanded get() = _get("expanded")
+fun <R> expanded(fn: (X) -> R) = _case("expanded", fn)
+val X.asExpanded get() = expanded(this)
+fun X.asExpandedTo(x: X) = expanded(this, x)
+
+fun expands(vararg x: X) = _line("expands", *x)
+val X.expands get() = _get("expands")
+fun <R> expands(fn: (X) -> R) = _case("expands", fn)
+val X.asExpands get() = expands(this)
+fun X.asExpandsTo(x: X) = expands(this, x)
+
+fun expected(vararg x: X) = _line("expected", *x)
+val X.expected get() = _get("expected")
+fun <R> expected(fn: (X) -> R) = _case("expected", fn)
+val X.asExpected get() = expected(this)
+fun X.asExpectedTo(x: X) = expected(this, x)
+
+fun export(vararg x: X) = _line("export", *x)
+val X.export get() = _get("export")
+fun <R> export(fn: (X) -> R) = _case("export", fn)
+val X.asExport get() = export(this)
+fun X.asExportTo(x: X) = export(this, x)
+
+fun exported(vararg x: X) = _line("exported", *x)
+val X.exported get() = _get("exported")
+fun <R> exported(fn: (X) -> R) = _case("exported", fn)
+val X.asExported get() = exported(this)
+fun X.asExportedTo(x: X) = exported(this, x)
+
+fun expression(vararg x: X) = _line("expression", *x)
+val X.expression get() = _get("expression")
+fun <R> expression(fn: (X) -> R) = _case("expression", fn)
+val X.asExpression get() = expression(this)
+fun X.asExpressionTo(x: X) = expression(this, x)
+
+fun ext(vararg x: X) = _line("ext", *x)
+val X.ext get() = _get("ext")
+fun <R> ext(fn: (X) -> R) = _case("ext", fn)
+val X.asExt get() = ext(this)
+fun X.asExtTo(x: X) = ext(this, x)
+
+fun extends(vararg x: X) = _line("extends", *x)
+val X.extends get() = _get("extends")
+fun <R> extends(fn: (X) -> R) = _case("extends", fn)
+val X.asExtends get() = extends(this)
+fun X.asExtendsTo(x: X) = extends(this, x)
+
+fun extractor(vararg x: X) = _line("extractor", *x)
+val X.extractor get() = _get("extractor")
+fun <R> extractor(fn: (X) -> R) = _case("extractor", fn)
+val X.asExtractor get() = extractor(this)
+fun X.asExtractorTo(x: X) = extractor(this, x)
+
+fun f(vararg x: X) = _line("f", *x)
+val X.f get() = _get("f")
+fun <R> f(fn: (X) -> R) = _case("f", fn)
+val X.asF get() = f(this)
+fun X.asFTo(x: X) = f(this, x)
+
+fun f32(vararg x: X) = _line("f32", *x)
+val X.f32 get() = _get("f32")
+fun <R> f32(fn: (X) -> R) = _case("f32", fn)
+val X.asF32 get() = f32(this)
+fun X.asF32To(x: X) = f32(this, x)
+
+fun f64(vararg x: X) = _line("f64", *x)
+val X.f64 get() = _get("f64")
+fun <R> f64(fn: (X) -> R) = _case("f64", fn)
+val X.asF64 get() = f64(this)
+fun X.asF64To(x: X) = f64(this, x)
+
+fun factory(vararg x: X) = _line("factory", *x)
+val X.factory get() = _get("factory")
+fun <R> factory(fn: (X) -> R) = _case("factory", fn)
+val X.asFactory get() = factory(this)
+fun X.asFactoryTo(x: X) = factory(this, x)
+
+fun fading(vararg x: X) = _line("fading", *x)
+val X.fading get() = _get("fading")
+fun <R> fading(fn: (X) -> R) = _case("fading", fn)
+val X.asFading get() = fading(this)
+fun X.asFadingTo(x: X) = fading(this, x)
+
+fun fail(vararg x: X) = _line("fail", *x)
+val X.fail get() = _get("fail")
+fun <R> fail(fn: (X) -> R) = _case("fail", fn)
+val X.asFail get() = fail(this)
+fun X.asFailTo(x: X) = fail(this, x)
+
+fun failed(vararg x: X) = _line("failed", *x)
+val X.failed get() = _get("failed")
+fun <R> failed(fn: (X) -> R) = _case("failed", fn)
+val X.asFailed get() = failed(this)
+fun X.asFailedTo(x: X) = failed(this, x)
+
+fun fails(vararg x: X) = _line("fails", *x)
+val X.fails get() = _get("fails")
+fun <R> fails(fn: (X) -> R) = _case("fails", fn)
+val X.asFails get() = fails(this)
+fun X.asFailsTo(x: X) = fails(this, x)
+
+fun failures(vararg x: X) = _line("failures", *x)
+val X.failures get() = _get("failures")
+fun <R> failures(fn: (X) -> R) = _case("failures", fn)
+val X.asFailures get() = failures(this)
+fun X.asFailuresTo(x: X) = failures(this, x)
+
+fun false_(vararg x: X) = _line("false", *x)
+val X.false_ get() = _get("false")
+fun <R> false_(fn: (X) -> R) = _case("false", fn)
+val X.asFalse get() = false_(this)
+fun X.asFalseTo(x: X) = false_(this, x)
+
+fun family(vararg x: X) = _line("family", *x)
+val X.family get() = _get("family")
+fun <R> family(fn: (X) -> R) = _case("family", fn)
+val X.asFamily get() = family(this)
+fun X.asFamilyTo(x: X) = family(this, x)
+
+fun fast(vararg x: X) = _line("fast", *x)
+val X.fast get() = _get("fast")
+fun <R> fast(fn: (X) -> R) = _case("fast", fn)
+val X.asFast get() = fast(this)
+fun X.asFastTo(x: X) = fast(this, x)
+
+fun father(vararg x: X) = _line("father", *x)
+val X.father get() = _get("father")
+fun <R> father(fn: (X) -> R) = _case("father", fn)
+val X.asFather get() = father(this)
+fun X.asFatherTo(x: X) = father(this, x)
+
+fun female(vararg x: X) = _line("female", *x)
+val X.female get() = _get("female")
+fun <R> female(fn: (X) -> R) = _case("female", fn)
+val X.asFemale get() = female(this)
+fun X.asFemaleTo(x: X) = female(this, x)
+
+fun fetch(vararg x: X) = _line("fetch", *x)
+val X.fetch get() = _get("fetch")
+fun <R> fetch(fn: (X) -> R) = _case("fetch", fn)
+val X.asFetch get() = fetch(this)
+fun X.asFetchTo(x: X) = fetch(this, x)
+
+fun fib(vararg x: X) = _line("fib", *x)
+val X.fib get() = _get("fib")
+fun <R> fib(fn: (X) -> R) = _case("fib", fn)
+val X.asFib get() = fib(this)
+fun X.asFibTo(x: X) = fib(this, x)
+
+fun field(vararg x: X) = _line("field", *x)
+val X.field get() = _get("field")
+fun <R> field(fn: (X) -> R) = _case("field", fn)
+val X.asField get() = field(this)
+fun X.asFieldTo(x: X) = field(this, x)
+
+fun fields(vararg x: X) = _line("fields", *x)
+val X.fields get() = _get("fields")
+fun <R> fields(fn: (X) -> R) = _case("fields", fn)
+val X.asFields get() = fields(this)
+fun X.asFieldsTo(x: X) = fields(this, x)
+
+fun fifth(vararg x: X) = _line("fifth", *x)
+val X.fifth get() = _get("fifth")
+fun <R> fifth(fn: (X) -> R) = _case("fifth", fn)
+val X.asFifth get() = fifth(this)
+fun X.asFifthTo(x: X) = fifth(this, x)
+
+fun file(vararg x: X) = _line("file", *x)
+val X.file get() = _get("file")
+fun <R> file(fn: (X) -> R) = _case("file", fn)
+val X.asFile get() = file(this)
+fun X.asFileTo(x: X) = file(this, x)
+
+fun files(vararg x: X) = _line("files", *x)
+val X.files get() = _get("files")
+fun <R> files(fn: (X) -> R) = _case("files", fn)
+val X.asFiles get() = files(this)
+fun X.asFilesTo(x: X) = files(this, x)
+
+fun fill(vararg x: X) = _line("fill", *x)
+val X.fill get() = _get("fill")
+fun <R> fill(fn: (X) -> R) = _case("fill", fn)
+val X.asFill get() = fill(this)
+fun X.asFillTo(x: X) = fill(this, x)
+
+fun filter(vararg x: X) = _line("filter", *x)
+val X.filter get() = _get("filter")
+fun <R> filter(fn: (X) -> R) = _case("filter", fn)
+val X.asFilter get() = filter(this)
+fun X.asFilterTo(x: X) = filter(this, x)
+
+fun final(vararg x: X) = _line("final", *x)
+val X.final get() = _get("final")
+fun <R> final(fn: (X) -> R) = _case("final", fn)
+val X.asFinal get() = final(this)
+fun X.asFinalTo(x: X) = final(this, x)
+
+fun finality(vararg x: X) = _line("finality", *x)
+val X.finality get() = _get("finality")
+fun <R> finality(fn: (X) -> R) = _case("finality", fn)
+val X.asFinality get() = finality(this)
+fun X.asFinalityTo(x: X) = finality(this, x)
+
+fun finalizer(vararg x: X) = _line("finalizer", *x)
+val X.finalizer get() = _get("finalizer")
+fun <R> finalizer(fn: (X) -> R) = _case("finalizer", fn)
+val X.asFinalizer get() = finalizer(this)
+fun X.asFinalizerTo(x: X) = finalizer(this, x)
+
+fun find(vararg x: X) = _line("find", *x)
+val X.find get() = _get("find")
+fun <R> find(fn: (X) -> R) = _case("find", fn)
+val X.asFind get() = find(this)
+fun X.asFindTo(x: X) = find(this, x)
+
+fun finite(vararg x: X) = _line("finite", *x)
+val X.finite get() = _get("finite")
+fun <R> finite(fn: (X) -> R) = _case("finite", fn)
+val X.asFinite get() = finite(this)
+fun X.asFiniteTo(x: X) = finite(this, x)
+
+fun first(vararg x: X) = _line("first", *x)
+val X.first get() = _get("first")
+fun <R> first(fn: (X) -> R) = _case("first", fn)
+val X.asFirst get() = first(this)
+fun X.asFirstTo(x: X) = first(this, x)
+
+fun five(vararg x: X) = _line("five", *x)
+val X.five get() = _get("five")
+fun <R> five(fn: (X) -> R) = _case("five", fn)
+val X.asFive get() = five(this)
+fun X.asFiveTo(x: X) = five(this, x)
+
+fun flat(vararg x: X) = _line("flat", *x)
+val X.flat get() = _get("flat")
+fun <R> flat(fn: (X) -> R) = _case("flat", fn)
+val X.asFlat get() = flat(this)
+fun X.asFlatTo(x: X) = flat(this, x)
+
+fun flip(vararg x: X) = _line("flip", *x)
+val X.flip get() = _get("flip")
+fun <R> flip(fn: (X) -> R) = _case("flip", fn)
+val X.asFlip get() = flip(this)
+fun X.asFlipTo(x: X) = flip(this, x)
+
+fun float(vararg x: X) = _line("float", *x)
+val X.float get() = _get("float")
+fun <R> float(fn: (X) -> R) = _case("float", fn)
+val X.asFloat get() = float(this)
+fun X.asFloatTo(x: X) = float(this, x)
+
+fun float32(vararg x: X) = _line("float32", *x)
+val X.float32 get() = _get("float32")
+fun <R> float32(fn: (X) -> R) = _case("float32", fn)
+val X.asFloat32 get() = float32(this)
+fun X.asFloat32To(x: X) = float32(this, x)
+
+fun float64(vararg x: X) = _line("float64", *x)
+val X.float64 get() = _get("float64")
+fun <R> float64(fn: (X) -> R) = _case("float64", fn)
+val X.asFloat64 get() = float64(this)
+fun X.asFloat64To(x: X) = float64(this, x)
+
+fun floating(vararg x: X) = _line("floating", *x)
+val X.floating get() = _get("floating")
+fun <R> floating(fn: (X) -> R) = _case("floating", fn)
+val X.asFloating get() = floating(this)
+fun X.asFloatingTo(x: X) = floating(this, x)
+
+fun flush(vararg x: X) = _line("flush", *x)
+val X.flush get() = _get("flush")
+fun <R> flush(fn: (X) -> R) = _case("flush", fn)
+val X.asFlush get() = flush(this)
+fun X.asFlushTo(x: X) = flush(this, x)
+
+fun fn(vararg x: X) = _line("fn", *x)
+val X.fn get() = _get("fn")
+fun <R> fn(fn: (X) -> R) = _case("fn", fn)
+val X.asFn get() = fn(this)
+fun X.asFnTo(x: X) = fn(this, x)
+
+fun fold(vararg x: X) = _line("fold", *x)
+val X.fold get() = _get("fold")
+fun <R> fold(fn: (X) -> R) = _case("fold", fn)
+val X.asFold get() = fold(this)
+fun X.asFoldTo(x: X) = fold(this, x)
+
+fun folded(vararg x: X) = _line("folded", *x)
+val X.folded get() = _get("folded")
+fun <R> folded(fn: (X) -> R) = _case("folded", fn)
+val X.asFolded get() = folded(this)
+fun X.asFoldedTo(x: X) = folded(this, x)
+
+fun folder(vararg x: X) = _line("folder", *x)
+val X.folder get() = _get("folder")
+fun <R> folder(fn: (X) -> R) = _case("folder", fn)
+val X.asFolder get() = folder(this)
+fun X.asFolderTo(x: X) = folder(this, x)
+
+fun font(vararg x: X) = _line("font", *x)
+val X.font get() = _get("font")
+fun <R> font(fn: (X) -> R) = _case("font", fn)
+val X.asFont get() = font(this)
+fun X.asFontTo(x: X) = font(this, x)
+
+fun footer(vararg x: X) = _line("footer", *x)
+val X.footer get() = _get("footer")
+fun <R> footer(fn: (X) -> R) = _case("footer", fn)
+val X.asFooter get() = footer(this)
+fun X.asFooterTo(x: X) = footer(this, x)
+
+fun for_(vararg x: X) = _line("for", *x)
+val X.for_ get() = _get("for")
+fun <R> for_(fn: (X) -> R) = _case("for", fn)
+val X.asFor get() = for_(this)
+fun X.asForTo(x: X) = for_(this, x)
+
+fun force(vararg x: X) = _line("force", *x)
+val X.force get() = _get("force")
+fun <R> force(fn: (X) -> R) = _case("force", fn)
+val X.asForce get() = force(this)
+fun X.asForceTo(x: X) = force(this, x)
+
+fun forced(vararg x: X) = _line("forced", *x)
+val X.forced get() = _get("forced")
+fun <R> forced(fn: (X) -> R) = _case("forced", fn)
+val X.asForced get() = forced(this)
+fun X.asForcedTo(x: X) = forced(this, x)
+
+fun foreground(vararg x: X) = _line("foreground", *x)
+val X.foreground get() = _get("foreground")
+fun <R> foreground(fn: (X) -> R) = _case("foreground", fn)
+val X.asForeground get() = foreground(this)
+fun X.asForegroundTo(x: X) = foreground(this, x)
+
+fun forget(vararg x: X) = _line("forget", *x)
+val X.forget get() = _get("forget")
+fun <R> forget(fn: (X) -> R) = _case("forget", fn)
+val X.asForget get() = forget(this)
+fun X.asForgetTo(x: X) = forget(this, x)
+
+fun form(vararg x: X) = _line("form", *x)
+val X.form get() = _get("form")
+fun <R> form(fn: (X) -> R) = _case("form", fn)
+val X.asForm get() = form(this)
+fun X.asFormTo(x: X) = form(this, x)
+
+fun found(vararg x: X) = _line("found", *x)
+val X.found get() = _get("found")
+fun <R> found(fn: (X) -> R) = _case("found", fn)
+val X.asFound get() = found(this)
+fun X.asFoundTo(x: X) = found(this, x)
+
+fun four(vararg x: X) = _line("four", *x)
+val X.four get() = _get("four")
+fun <R> four(fn: (X) -> R) = _case("four", fn)
+val X.asFour get() = four(this)
+fun X.asFourTo(x: X) = four(this, x)
+
+fun fourth(vararg x: X) = _line("fourth", *x)
+val X.fourth get() = _get("fourth")
+fun <R> fourth(fn: (X) -> R) = _case("fourth", fn)
+val X.asFourth get() = fourth(this)
+fun X.asFourthTo(x: X) = fourth(this, x)
+
+fun fragment(vararg x: X) = _line("fragment", *x)
+val X.fragment get() = _get("fragment")
+fun <R> fragment(fn: (X) -> R) = _case("fragment", fn)
+val X.asFragment get() = fragment(this)
+fun X.asFragmentTo(x: X) = fragment(this, x)
+
+fun frame(vararg x: X) = _line("frame", *x)
+val X.frame get() = _get("frame")
+fun <R> frame(fn: (X) -> R) = _case("frame", fn)
+val X.asFrame get() = frame(this)
+fun X.asFrameTo(x: X) = frame(this, x)
+
+fun free(vararg x: X) = _line("free", *x)
+val X.free get() = _get("free")
+fun <R> free(fn: (X) -> R) = _case("free", fn)
+val X.asFree get() = free(this)
+fun X.asFreeTo(x: X) = free(this, x)
+
+fun freeze(vararg x: X) = _line("freeze", *x)
+val X.freeze get() = _get("freeze")
+fun <R> freeze(fn: (X) -> R) = _case("freeze", fn)
+val X.asFreeze get() = freeze(this)
+fun X.asFreezeTo(x: X) = freeze(this, x)
+
+fun frequency(vararg x: X) = _line("frequency", *x)
+val X.frequency get() = _get("frequency")
+fun <R> frequency(fn: (X) -> R) = _case("frequency", fn)
+val X.asFrequency get() = frequency(this)
+fun X.asFrequencyTo(x: X) = frequency(this, x)
+
+fun from(vararg x: X) = _line("from", *x)
+val X.from get() = _get("from")
+fun <R> from(fn: (X) -> R) = _case("from", fn)
+val X.asFrom get() = from(this)
+fun X.asFromTo(x: X) = from(this, x)
+
+fun frozen(vararg x: X) = _line("frozen", *x)
+val X.frozen get() = _get("frozen")
+fun <R> frozen(fn: (X) -> R) = _case("frozen", fn)
+val X.asFrozen get() = frozen(this)
+fun X.asFrozenTo(x: X) = frozen(this, x)
+
+fun full(vararg x: X) = _line("full", *x)
+val X.full get() = _get("full")
+fun <R> full(fn: (X) -> R) = _case("full", fn)
+val X.asFull get() = full(this)
+fun X.asFullTo(x: X) = full(this, x)
+
+fun fully(vararg x: X) = _line("fully", *x)
+val X.fully get() = _get("fully")
+fun <R> fully(fn: (X) -> R) = _case("fully", fn)
+val X.asFully get() = fully(this)
+fun X.asFullyTo(x: X) = fully(this, x)
+
+fun fun_(vararg x: X) = _line("fun", *x)
+val X.fun_ get() = _get("fun")
+fun <R> fun_(fn: (X) -> R) = _case("fun", fn)
+val X.asFun get() = fun_(this)
+fun X.asFunTo(x: X) = fun_(this, x)
+
+fun func(vararg x: X) = _line("func", *x)
+val X.func get() = _get("func")
+fun <R> func(fn: (X) -> R) = _case("func", fn)
+val X.asFunc get() = func(this)
+fun X.asFuncTo(x: X) = func(this, x)
+
+fun function(vararg x: X) = _line("function", *x)
+val X.function get() = _get("function")
+fun <R> function(fn: (X) -> R) = _case("function", fn)
+val X.asFunction get() = function(this)
+fun X.asFunctionTo(x: X) = function(this, x)
+
+fun functions(vararg x: X) = _line("functions", *x)
+val X.functions get() = _get("functions")
+fun <R> functions(fn: (X) -> R) = _case("functions", fn)
+val X.asFunctions get() = functions(this)
+fun X.asFunctionsTo(x: X) = functions(this, x)
+
+fun functor(vararg x: X) = _line("functor", *x)
+val X.functor get() = _get("functor")
+fun <R> functor(fn: (X) -> R) = _case("functor", fn)
+val X.asFunctor get() = functor(this)
+fun X.asFunctorTo(x: X) = functor(this, x)
+
+fun future(vararg x: X) = _line("future", *x)
+val X.future get() = _get("future")
+fun <R> future(fn: (X) -> R) = _case("future", fn)
+val X.asFuture get() = future(this)
+fun X.asFutureTo(x: X) = future(this, x)
+
+fun futures(vararg x: X) = _line("futures", *x)
+val X.futures get() = _get("futures")
+fun <R> futures(fn: (X) -> R) = _case("futures", fn)
+val X.asFutures get() = futures(this)
+fun X.asFuturesTo(x: X) = futures(this, x)
+
+fun g(vararg x: X) = _line("g", *x)
+val X.g get() = _get("g")
+fun <R> g(fn: (X) -> R) = _case("g", fn)
+val X.asG get() = g(this)
+fun X.asGTo(x: X) = g(this, x)
+
+fun game(vararg x: X) = _line("game", *x)
+val X.game get() = _get("game")
+fun <R> game(fn: (X) -> R) = _case("game", fn)
+val X.asGame get() = game(this)
+fun X.asGameTo(x: X) = game(this, x)
+
+fun gave(vararg x: X) = _line("gave", *x)
+val X.gave get() = _get("gave")
+fun <R> gave(fn: (X) -> R) = _case("gave", fn)
+val X.asGave get() = gave(this)
+fun X.asGaveTo(x: X) = gave(this, x)
+
+fun gen(vararg x: X) = _line("gen", *x)
+val X.gen get() = _get("gen")
+fun <R> gen(fn: (X) -> R) = _case("gen", fn)
+val X.asGen get() = gen(this)
+fun X.asGenTo(x: X) = gen(this, x)
+
+fun generic(vararg x: X) = _line("generic", *x)
+val X.generic get() = _get("generic")
+fun <R> generic(fn: (X) -> R) = _case("generic", fn)
+val X.asGeneric get() = generic(this)
+fun X.asGenericTo(x: X) = generic(this, x)
+
+fun generics(vararg x: X) = _line("generics", *x)
+val X.generics get() = _get("generics")
+fun <R> generics(fn: (X) -> R) = _case("generics", fn)
+val X.asGenerics get() = generics(this)
+fun X.asGenericsTo(x: X) = generics(this, x)
+
+fun get(vararg x: X) = _line("get", *x)
+val X.get get() = _get("get")
+fun <R> get(fn: (X) -> R) = _case("get", fn)
+val X.asGet get() = get(this)
+fun X.asGetTo(x: X) = get(this, x)
+
+fun gets(vararg x: X) = _line("gets", *x)
+val X.gets get() = _get("gets")
+fun <R> gets(fn: (X) -> R) = _case("gets", fn)
+val X.asGets get() = gets(this)
+fun X.asGetsTo(x: X) = gets(this, x)
+
+fun getting(vararg x: X) = _line("getting", *x)
+val X.getting get() = _get("getting")
+fun <R> getting(fn: (X) -> R) = _case("getting", fn)
+val X.asGetting get() = getting(this)
+fun X.asGettingTo(x: X) = getting(this, x)
+
+fun give(vararg x: X) = _line("give", *x)
+val X.give get() = _get("give")
+fun <R> give(fn: (X) -> R) = _case("give", fn)
+val X.asGive get() = give(this)
+fun X.asGiveTo(x: X) = give(this, x)
+
+fun given(vararg x: X) = _line("given", *x)
+val X.given get() = _get("given")
+fun <R> given(fn: (X) -> R) = _case("given", fn)
+val X.asGiven get() = given(this)
+fun X.asGivenTo(x: X) = given(this, x)
+
+fun gives(vararg x: X) = _line("gives", *x)
+val X.gives get() = _get("gives")
+fun <R> gives(fn: (X) -> R) = _case("gives", fn)
+val X.asGives get() = gives(this)
+fun X.asGivesTo(x: X) = gives(this, x)
+
+fun giving(vararg x: X) = _line("giving", *x)
+val X.giving get() = _get("giving")
+fun <R> giving(fn: (X) -> R) = _case("giving", fn)
+val X.asGiving get() = giving(this)
+fun X.asGivingTo(x: X) = giving(this, x)
+
+fun global(vararg x: X) = _line("global", *x)
+val X.global get() = _get("global")
+fun <R> global(fn: (X) -> R) = _case("global", fn)
+val X.asGlobal get() = global(this)
+fun X.asGlobalTo(x: X) = global(this, x)
+
+fun glyph(vararg x: X) = _line("glyph", *x)
+val X.glyph get() = _get("glyph")
+fun <R> glyph(fn: (X) -> R) = _case("glyph", fn)
+val X.asGlyph get() = glyph(this)
+fun X.asGlyphTo(x: X) = glyph(this, x)
+
+fun google(vararg x: X) = _line("google", *x)
+val X.google get() = _get("google")
+fun <R> google(fn: (X) -> R) = _case("google", fn)
+val X.asGoogle get() = google(this)
+fun X.asGoogleTo(x: X) = google(this, x)
+
+fun gray(vararg x: X) = _line("gray", *x)
+val X.gray get() = _get("gray")
+fun <R> gray(fn: (X) -> R) = _case("gray", fn)
+val X.asGray get() = gray(this)
+fun X.asGrayTo(x: X) = gray(this, x)
+
+fun green(vararg x: X) = _line("green", *x)
+val X.green get() = _get("green")
+fun <R> green(fn: (X) -> R) = _case("green", fn)
+val X.asGreen get() = green(this)
+fun X.asGreenTo(x: X) = green(this, x)
+
+fun grey(vararg x: X) = _line("grey", *x)
+val X.grey get() = _get("grey")
+fun <R> grey(fn: (X) -> R) = _case("grey", fn)
+val X.asGrey get() = grey(this)
+fun X.asGreyTo(x: X) = grey(this, x)
+
+fun grid(vararg x: X) = _line("grid", *x)
+val X.grid get() = _get("grid")
+fun <R> grid(fn: (X) -> R) = _case("grid", fn)
+val X.asGrid get() = grid(this)
+fun X.asGridTo(x: X) = grid(this, x)
+
+fun h(vararg x: X) = _line("h", *x)
+val X.h get() = _get("h")
+fun <R> h(fn: (X) -> R) = _case("h", fn)
+val X.asH get() = h(this)
+fun X.asHTo(x: X) = h(this, x)
+
+fun h1(vararg x: X) = _line("h1", *x)
+val X.h1 get() = _get("h1")
+fun <R> h1(fn: (X) -> R) = _case("h1", fn)
+val X.asH1 get() = h1(this)
+fun X.asH1To(x: X) = h1(this, x)
+
+fun h2(vararg x: X) = _line("h2", *x)
+val X.h2 get() = _get("h2")
+fun <R> h2(fn: (X) -> R) = _case("h2", fn)
+val X.asH2 get() = h2(this)
+fun X.asH2To(x: X) = h2(this, x)
+
+fun h3(vararg x: X) = _line("h3", *x)
+val X.h3 get() = _get("h3")
+fun <R> h3(fn: (X) -> R) = _case("h3", fn)
+val X.asH3 get() = h3(this)
+fun X.asH3To(x: X) = h3(this, x)
+
+fun h4(vararg x: X) = _line("h4", *x)
+val X.h4 get() = _get("h4")
+fun <R> h4(fn: (X) -> R) = _case("h4", fn)
+val X.asH4 get() = h4(this)
+fun X.asH4To(x: X) = h4(this, x)
+
+fun h5(vararg x: X) = _line("h5", *x)
+val X.h5 get() = _get("h5")
+fun <R> h5(fn: (X) -> R) = _case("h5", fn)
+val X.asH5 get() = h5(this)
+fun X.asH5To(x: X) = h5(this, x)
+
+fun h6(vararg x: X) = _line("h6", *x)
+val X.h6 get() = _get("h6")
+fun <R> h6(fn: (X) -> R) = _case("h6", fn)
+val X.asH6 get() = h6(this)
+fun X.asH6To(x: X) = h6(this, x)
+
+fun hack(vararg x: X) = _line("hack", *x)
+val X.hack get() = _get("hack")
+fun <R> hack(fn: (X) -> R) = _case("hack", fn)
+val X.asHack get() = hack(this)
+fun X.asHackTo(x: X) = hack(this, x)
+
+fun hacker(vararg x: X) = _line("hacker", *x)
+val X.hacker get() = _get("hacker")
+fun <R> hacker(fn: (X) -> R) = _case("hacker", fn)
+val X.asHacker get() = hacker(this)
+fun X.asHackerTo(x: X) = hacker(this, x)
+
+fun handle(vararg x: X) = _line("handle", *x)
+val X.handle get() = _get("handle")
+fun <R> handle(fn: (X) -> R) = _case("handle", fn)
+val X.asHandle get() = handle(this)
+fun X.asHandleTo(x: X) = handle(this, x)
+
+fun has(vararg x: X) = _line("has", *x)
+val X.has get() = _get("has")
+fun <R> has(fn: (X) -> R) = _case("has", fn)
+val X.asHas get() = has(this)
+fun X.asHasTo(x: X) = has(this, x)
+
+fun hash(vararg x: X) = _line("hash", *x)
+val X.hash get() = _get("hash")
+fun <R> hash(fn: (X) -> R) = _case("hash", fn)
+val X.asHash get() = hash(this)
+fun X.asHashTo(x: X) = hash(this, x)
+
+fun hashes(vararg x: X) = _line("hashes", *x)
+val X.hashes get() = _get("hashes")
+fun <R> hashes(fn: (X) -> R) = _case("hashes", fn)
+val X.asHashes get() = hashes(this)
+fun X.asHashesTo(x: X) = hashes(this, x)
+
+fun haskell(vararg x: X) = _line("haskell", *x)
+val X.haskell get() = _get("haskell")
+fun <R> haskell(fn: (X) -> R) = _case("haskell", fn)
+val X.asHaskell get() = haskell(this)
+fun X.asHaskellTo(x: X) = haskell(this, x)
+
+fun haxe(vararg x: X) = _line("haxe", *x)
+val X.haxe get() = _get("haxe")
+fun <R> haxe(fn: (X) -> R) = _case("haxe", fn)
+val X.asHaxe get() = haxe(this)
+fun X.asHaxeTo(x: X) = haxe(this, x)
+
+fun head(vararg x: X) = _line("head", *x)
+val X.head get() = _get("head")
+fun <R> head(fn: (X) -> R) = _case("head", fn)
+val X.asHead get() = head(this)
+fun X.asHeadTo(x: X) = head(this, x)
+
+fun header(vararg x: X) = _line("header", *x)
+val X.header get() = _get("header")
+fun <R> header(fn: (X) -> R) = _case("header", fn)
+val X.asHeader get() = header(this)
+fun X.asHeaderTo(x: X) = header(this, x)
+
+fun heap(vararg x: X) = _line("heap", *x)
+val X.heap get() = _get("heap")
+fun <R> heap(fn: (X) -> R) = _case("heap", fn)
+val X.asHeap get() = heap(this)
+fun X.asHeapTo(x: X) = heap(this, x)
+
+fun height(vararg x: X) = _line("height", *x)
+val X.height get() = _get("height")
+fun <R> height(fn: (X) -> R) = _case("height", fn)
+val X.asHeight get() = height(this)
+fun X.asHeightTo(x: X) = height(this, x)
+
+fun heights(vararg x: X) = _line("heights", *x)
+val X.heights get() = _get("heights")
+fun <R> heights(fn: (X) -> R) = _case("heights", fn)
+val X.asHeights get() = heights(this)
+fun X.asHeightsTo(x: X) = heights(this, x)
+
+fun help(vararg x: X) = _line("help", *x)
+val X.help get() = _get("help")
+fun <R> help(fn: (X) -> R) = _case("help", fn)
+val X.asHelp get() = help(this)
+fun X.asHelpTo(x: X) = help(this, x)
+
+fun hi(vararg x: X) = _line("hi", *x)
+val X.hi get() = _get("hi")
+fun <R> hi(fn: (X) -> R) = _case("hi", fn)
+val X.asHi get() = hi(this)
+fun X.asHiTo(x: X) = hi(this, x)
+
+fun high(vararg x: X) = _line("high", *x)
+val X.high get() = _get("high")
+fun <R> high(fn: (X) -> R) = _case("high", fn)
+val X.asHigh get() = high(this)
+fun X.asHighTo(x: X) = high(this, x)
+
+fun hint(vararg x: X) = _line("hint", *x)
+val X.hint get() = _get("hint")
+fun <R> hint(fn: (X) -> R) = _case("hint", fn)
+val X.asHint get() = hint(this)
+fun X.asHintTo(x: X) = hint(this, x)
+
+fun holder(vararg x: X) = _line("holder", *x)
+val X.holder get() = _get("holder")
+fun <R> holder(fn: (X) -> R) = _case("holder", fn)
+val X.asHolder get() = holder(this)
+fun X.asHolderTo(x: X) = holder(this, x)
+
+fun horizontal(vararg x: X) = _line("horizontal", *x)
+val X.horizontal get() = _get("horizontal")
+fun <R> horizontal(fn: (X) -> R) = _case("horizontal", fn)
+val X.asHorizontal get() = horizontal(this)
+fun X.asHorizontalTo(x: X) = horizontal(this, x)
+
+fun horizontally(vararg x: X) = _line("horizontally", *x)
+val X.horizontally get() = _get("horizontally")
+fun <R> horizontally(fn: (X) -> R) = _case("horizontally", fn)
+val X.asHorizontally get() = horizontally(this)
+fun X.asHorizontallyTo(x: X) = horizontally(this, x)
+
+fun host(vararg x: X) = _line("host", *x)
+val X.host get() = _get("host")
+fun <R> host(fn: (X) -> R) = _case("host", fn)
+val X.asHost get() = host(this)
+fun X.asHostTo(x: X) = host(this, x)
+
+fun hour(vararg x: X) = _line("hour", *x)
+val X.hour get() = _get("hour")
+fun <R> hour(fn: (X) -> R) = _case("hour", fn)
+val X.asHour get() = hour(this)
+fun X.asHourTo(x: X) = hour(this, x)
+
+fun href(vararg x: X) = _line("href", *x)
+val X.href get() = _get("href")
+fun <R> href(fn: (X) -> R) = _case("href", fn)
+val X.asHref get() = href(this)
+fun X.asHrefTo(x: X) = href(this, x)
+
+fun html(vararg x: X) = _line("html", *x)
+val X.html get() = _get("html")
+fun <R> html(fn: (X) -> R) = _case("html", fn)
+val X.asHtml get() = html(this)
+fun X.asHtmlTo(x: X) = html(this, x)
+
+fun http(vararg x: X) = _line("http", *x)
+val X.http get() = _get("http")
+fun <R> http(fn: (X) -> R) = _case("http", fn)
+val X.asHttp get() = http(this)
+fun X.asHttpTo(x: X) = http(this, x)
+
+fun husband(vararg x: X) = _line("husband", *x)
+val X.husband get() = _get("husband")
+fun <R> husband(fn: (X) -> R) = _case("husband", fn)
+val X.asHusband get() = husband(this)
+fun X.asHusbandTo(x: X) = husband(this, x)
+
+fun hx(vararg x: X) = _line("hx", *x)
+val X.hx get() = _get("hx")
+fun <R> hx(fn: (X) -> R) = _case("hx", fn)
+val X.asHx get() = hx(this)
+fun X.asHxTo(x: X) = hx(this, x)
+
+fun i(vararg x: X) = _line("i", *x)
+val X.i get() = _get("i")
+fun <R> i(fn: (X) -> R) = _case("i", fn)
+val X.asI get() = i(this)
+fun X.asITo(x: X) = i(this, x)
+
+fun icon(vararg x: X) = _line("icon", *x)
+val X.icon get() = _get("icon")
+fun <R> icon(fn: (X) -> R) = _case("icon", fn)
+val X.asIcon get() = icon(this)
+fun X.asIconTo(x: X) = icon(this, x)
+
+fun identifier(vararg x: X) = _line("identifier", *x)
+val X.identifier get() = _get("identifier")
+fun <R> identifier(fn: (X) -> R) = _case("identifier", fn)
+val X.asIdentifier get() = identifier(this)
+fun X.asIdentifierTo(x: X) = identifier(this, x)
+
+fun identifiers(vararg x: X) = _line("identifiers", *x)
+val X.identifiers get() = _get("identifiers")
+fun <R> identifiers(fn: (X) -> R) = _case("identifiers", fn)
+val X.asIdentifiers get() = identifiers(this)
+fun X.asIdentifiersTo(x: X) = identifiers(this, x)
+
+fun if_(vararg x: X) = _line("if", *x)
+val X.if_ get() = _get("if")
+fun <R> if_(fn: (X) -> R) = _case("if", fn)
+val X.asIf get() = if_(this)
+fun X.asIfTo(x: X) = if_(this, x)
+
+fun immediate(vararg x: X) = _line("immediate", *x)
+val X.immediate get() = _get("immediate")
+fun <R> immediate(fn: (X) -> R) = _case("immediate", fn)
+val X.asImmediate get() = immediate(this)
+fun X.asImmediateTo(x: X) = immediate(this, x)
+
+fun immutable(vararg x: X) = _line("immutable", *x)
+val X.immutable get() = _get("immutable")
+fun <R> immutable(fn: (X) -> R) = _case("immutable", fn)
+val X.asImmutable get() = immutable(this)
+fun X.asImmutableTo(x: X) = immutable(this, x)
+
+fun impl(vararg x: X) = _line("impl", *x)
+val X.impl get() = _get("impl")
+fun <R> impl(fn: (X) -> R) = _case("impl", fn)
+val X.asImpl get() = impl(this)
+fun X.asImplTo(x: X) = impl(this, x)
+
+fun implement(vararg x: X) = _line("implement", *x)
+val X.implement get() = _get("implement")
+fun <R> implement(fn: (X) -> R) = _case("implement", fn)
+val X.asImplement get() = implement(this)
+fun X.asImplementTo(x: X) = implement(this, x)
+
+fun implements(vararg x: X) = _line("implements", *x)
+val X.implements get() = _get("implements")
+fun <R> implements(fn: (X) -> R) = _case("implements", fn)
+val X.asImplements get() = implements(this)
+fun X.asImplementsTo(x: X) = implements(this, x)
+
+fun import(vararg x: X) = _line("import", *x)
+val X.import get() = _get("import")
+fun <R> import(fn: (X) -> R) = _case("import", fn)
+val X.asImport get() = import(this)
+fun X.asImportTo(x: X) = import(this, x)
+
+fun in_(vararg x: X) = _line("in", *x)
+val X.in_ get() = _get("in")
+fun <R> in_(fn: (X) -> R) = _case("in", fn)
+val X.asIn get() = in_(this)
+fun X.asInTo(x: X) = in_(this, x)
+
+fun inbpm(vararg x: X) = _line("inbpm", *x)
+val X.inbpm get() = _get("inbpm")
+fun <R> inbpm(fn: (X) -> R) = _case("inbpm", fn)
+val X.asInbpm get() = inbpm(this)
+fun X.asInbpmTo(x: X) = inbpm(this, x)
+
+fun increment(vararg x: X) = _line("increment", *x)
+val X.increment get() = _get("increment")
+fun <R> increment(fn: (X) -> R) = _case("increment", fn)
+val X.asIncrement get() = increment(this)
+fun X.asIncrementTo(x: X) = increment(this, x)
+
+fun indent(vararg x: X) = _line("indent", *x)
+val X.indent get() = _get("indent")
+fun <R> indent(fn: (X) -> R) = _case("indent", fn)
+val X.asIndent get() = indent(this)
+fun X.asIndentTo(x: X) = indent(this, x)
+
+fun index(vararg x: X) = _line("index", *x)
+val X.index get() = _get("index")
+fun <R> index(fn: (X) -> R) = _case("index", fn)
+val X.asIndex get() = index(this)
+fun X.asIndexTo(x: X) = index(this, x)
+
+fun infinite(vararg x: X) = _line("infinite", *x)
+val X.infinite get() = _get("infinite")
+fun <R> infinite(fn: (X) -> R) = _case("infinite", fn)
+val X.asInfinite get() = infinite(this)
+fun X.asInfiniteTo(x: X) = infinite(this, x)
+
+fun info(vararg x: X) = _line("info", *x)
+val X.info get() = _get("info")
+fun <R> info(fn: (X) -> R) = _case("info", fn)
+val X.asInfo get() = info(this)
+fun X.asInfoTo(x: X) = info(this, x)
+
+fun inherit(vararg x: X) = _line("inherit", *x)
+val X.inherit get() = _get("inherit")
+fun <R> inherit(fn: (X) -> R) = _case("inherit", fn)
+val X.asInherit get() = inherit(this)
+fun X.asInheritTo(x: X) = inherit(this, x)
+
+fun init(vararg x: X) = _line("init", *x)
+val X.init get() = _get("init")
+fun <R> init(fn: (X) -> R) = _case("init", fn)
+val X.asInit get() = init(this)
+fun X.asInitTo(x: X) = init(this, x)
+
+fun initial(vararg x: X) = _line("initial", *x)
+val X.initial get() = _get("initial")
+fun <R> initial(fn: (X) -> R) = _case("initial", fn)
+val X.asInitial get() = initial(this)
+fun X.asInitialTo(x: X) = initial(this, x)
+
+fun initializer(vararg x: X) = _line("initializer", *x)
+val X.initializer get() = _get("initializer")
+fun <R> initializer(fn: (X) -> R) = _case("initializer", fn)
+val X.asInitializer get() = initializer(this)
+fun X.asInitializerTo(x: X) = initializer(this, x)
+
+fun inline(vararg x: X) = _line("inline", *x)
+val X.inline get() = _get("inline")
+fun <R> inline(fn: (X) -> R) = _case("inline", fn)
+val X.asInline get() = inline(this)
+fun X.asInlineTo(x: X) = inline(this, x)
+
+fun input(vararg x: X) = _line("input", *x)
+val X.input get() = _get("input")
+fun <R> input(fn: (X) -> R) = _case("input", fn)
+val X.asInput get() = input(this)
+fun X.asInputTo(x: X) = input(this, x)
+
+fun insert(vararg x: X) = _line("insert", *x)
+val X.insert get() = _get("insert")
+fun <R> insert(fn: (X) -> R) = _case("insert", fn)
+val X.asInsert get() = insert(this)
+fun X.asInsertTo(x: X) = insert(this, x)
+
+fun instance(vararg x: X) = _line("instance", *x)
+val X.instance get() = _get("instance")
+fun <R> instance(fn: (X) -> R) = _case("instance", fn)
+val X.asInstance get() = instance(this)
+fun X.asInstanceTo(x: X) = instance(this, x)
+
+fun instrument(vararg x: X) = _line("instrument", *x)
+val X.instrument get() = _get("instrument")
+fun <R> instrument(fn: (X) -> R) = _case("instrument", fn)
+val X.asInstrument get() = instrument(this)
+fun X.asInstrumentTo(x: X) = instrument(this, x)
+
+fun instruments(vararg x: X) = _line("instruments", *x)
+val X.instruments get() = _get("instruments")
+fun <R> instruments(fn: (X) -> R) = _case("instruments", fn)
+val X.asInstruments get() = instruments(this)
+fun X.asInstrumentsTo(x: X) = instruments(this, x)
+
+fun invalid(vararg x: X) = _line("invalid", *x)
+val X.invalid get() = _get("invalid")
+fun <R> invalid(fn: (X) -> R) = _case("invalid", fn)
+val X.asInvalid get() = invalid(this)
+fun X.asInvalidTo(x: X) = invalid(this, x)
+
+fun i1(vararg x: X) = _line("i1", *x)
+val X.i1 get() = _get("i1")
+fun <R> i1(fn: (X) -> R) = _case("i1", fn)
+val X.asI1 get() = i1(this)
+fun X.asI1To(x: X) = i1(this, x)
+
+fun i2(vararg x: X) = _line("i2", *x)
+val X.i2 get() = _get("i2")
+fun <R> i2(fn: (X) -> R) = _case("i2", fn)
+val X.asI2 get() = i2(this)
+fun X.asI2To(x: X) = i2(this, x)
+
+fun i4(vararg x: X) = _line("i4", *x)
+val X.i4 get() = _get("i4")
+fun <R> i4(fn: (X) -> R) = _case("i4", fn)
+val X.asI4 get() = i4(this)
+fun X.asI4To(x: X) = i4(this, x)
+
+fun i8(vararg x: X) = _line("i8", *x)
+val X.i8 get() = _get("i8")
+fun <R> i8(fn: (X) -> R) = _case("i8", fn)
+val X.asI8 get() = i8(this)
+fun X.asI8To(x: X) = i8(this, x)
+
+fun i16(vararg x: X) = _line("i16", *x)
+val X.i16 get() = _get("i16")
+fun <R> i16(fn: (X) -> R) = _case("i16", fn)
+val X.asI16 get() = i16(this)
+fun X.asI16To(x: X) = i16(this, x)
+
+fun i32(vararg x: X) = _line("i32", *x)
+val X.i32 get() = _get("i32")
+fun <R> i32(fn: (X) -> R) = _case("i32", fn)
+val X.asI32 get() = i32(this)
+fun X.asI32To(x: X) = i32(this, x)
+
+fun i64(vararg x: X) = _line("i64", *x)
+val X.i64 get() = _get("i64")
+fun <R> i64(fn: (X) -> R) = _case("i64", fn)
+val X.asI64 get() = i64(this)
+fun X.asI64To(x: X) = i64(this, x)
+
+fun image(vararg x: X) = _line("image", *x)
+val X.image get() = _get("image")
+fun <R> image(fn: (X) -> R) = _case("image", fn)
+val X.asImage get() = image(this)
+fun X.asImageTo(x: X) = image(this, x)
+
+fun int(vararg x: X) = _line("int", *x)
+val X.int get() = _get("int")
+fun <R> int(fn: (X) -> R) = _case("int", fn)
+val X.asInt get() = int(this)
+fun X.asIntTo(x: X) = int(this, x)
+
+fun int16(vararg x: X) = _line("int16", *x)
+val X.int16 get() = _get("int16")
+fun <R> int16(fn: (X) -> R) = _case("int16", fn)
+val X.asInt16 get() = int16(this)
+fun X.asInt16To(x: X) = int16(this, x)
+
+fun int32(vararg x: X) = _line("int32", *x)
+val X.int32 get() = _get("int32")
+fun <R> int32(fn: (X) -> R) = _case("int32", fn)
+val X.asInt32 get() = int32(this)
+fun X.asInt32To(x: X) = int32(this, x)
+
+fun int64(vararg x: X) = _line("int64", *x)
+val X.int64 get() = _get("int64")
+fun <R> int64(fn: (X) -> R) = _case("int64", fn)
+val X.asInt64 get() = int64(this)
+fun X.asInt64To(x: X) = int64(this, x)
+
+fun int8(vararg x: X) = _line("int8", *x)
+val X.int8 get() = _get("int8")
+fun <R> int8(fn: (X) -> R) = _case("int8", fn)
+val X.asInt8 get() = int8(this)
+fun X.asInt8To(x: X) = int8(this, x)
+
+fun integer(vararg x: X) = _line("integer", *x)
+val X.integer get() = _get("integer")
+fun <R> integer(fn: (X) -> R) = _case("integer", fn)
+val X.asInteger get() = integer(this)
+fun X.asIntegerTo(x: X) = integer(this, x)
+
+fun integers(vararg x: X) = _line("integers", *x)
+val X.integers get() = _get("integers")
+fun <R> integers(fn: (X) -> R) = _case("integers", fn)
+val X.asIntegers get() = integers(this)
+fun X.asIntegersTo(x: X) = integers(this, x)
+
+fun integral(vararg x: X) = _line("integral", *x)
+val X.integral get() = _get("integral")
+fun <R> integral(fn: (X) -> R) = _case("integral", fn)
+val X.asIntegral get() = integral(this)
+fun X.asIntegralTo(x: X) = integral(this, x)
+
+fun intent(vararg x: X) = _line("intent", *x)
+val X.intent get() = _get("intent")
+fun <R> intent(fn: (X) -> R) = _case("intent", fn)
+val X.asIntent get() = intent(this)
+fun X.asIntentTo(x: X) = intent(this, x)
+
+fun intercept(vararg x: X) = _line("intercept", *x)
+val X.intercept get() = _get("intercept")
+fun <R> intercept(fn: (X) -> R) = _case("intercept", fn)
+val X.asIntercept get() = intercept(this)
+fun X.asInterceptTo(x: X) = intercept(this, x)
+
+fun interface_(vararg x: X) = _line("interface", *x)
+val X.interface_ get() = _get("interface")
+fun <R> interface_(fn: (X) -> R) = _case("interface", fn)
+val X.asInterface get() = interface_(this)
+fun X.asInterfaceTo(x: X) = interface_(this, x)
+
+fun intern(vararg x: X) = _line("intern", *x)
+val X.intern get() = _get("intern")
+fun <R> intern(fn: (X) -> R) = _case("intern", fn)
+val X.asIntern get() = intern(this)
+fun X.asInternTo(x: X) = intern(this, x)
+
+fun interrupt(vararg x: X) = _line("interrupt", *x)
+val X.interrupt get() = _get("interrupt")
+fun <R> interrupt(fn: (X) -> R) = _case("interrupt", fn)
+val X.asInterrupt get() = interrupt(this)
+fun X.asInterruptTo(x: X) = interrupt(this, x)
+
+fun inventory(vararg x: X) = _line("inventory", *x)
+val X.inventory get() = _get("inventory")
+fun <R> inventory(fn: (X) -> R) = _case("inventory", fn)
+val X.asInventory get() = inventory(this)
+fun X.asInventoryTo(x: X) = inventory(this, x)
+
+fun invoke(vararg x: X) = _line("invoke", *x)
+val X.invoke get() = _get("invoke")
+fun <R> invoke(fn: (X) -> R) = _case("invoke", fn)
+val X.asInvoke get() = invoke(this)
+fun X.asInvokeTo(x: X) = invoke(this, x)
+
+fun ios(vararg x: X) = _line("ios", *x)
+val X.ios get() = _get("ios")
+fun <R> ios(fn: (X) -> R) = _case("ios", fn)
+val X.asIos get() = ios(this)
+fun X.asIosTo(x: X) = ios(this, x)
+
+fun ipad(vararg x: X) = _line("ipad", *x)
+val X.ipad get() = _get("ipad")
+fun <R> ipad(fn: (X) -> R) = _case("ipad", fn)
+val X.asIpad get() = ipad(this)
+fun X.asIpadTo(x: X) = ipad(this, x)
+
+fun iphone(vararg x: X) = _line("iphone", *x)
+val X.iphone get() = _get("iphone")
+fun <R> iphone(fn: (X) -> R) = _case("iphone", fn)
+val X.asIphone get() = iphone(this)
+fun X.asIphoneTo(x: X) = iphone(this, x)
+
+fun is_(vararg x: X) = _line("is", *x)
+val X.is_ get() = _get("is")
+fun <R> is_(fn: (X) -> R) = _case("is", fn)
+val X.asIs get() = is_(this)
+fun X.asIsTo(x: X) = is_(this, x)
+
+fun it(vararg x: X) = _line("it", *x)
+val X.it get() = _get("it")
+fun <R> it(fn: (X) -> R) = _case("it", fn)
+val X.asIt get() = it(this)
+fun X.asItTo(x: X) = it(this, x)
+
+fun item(vararg x: X) = _line("item", *x)
+val X.item get() = _get("item")
+fun <R> item(fn: (X) -> R) = _case("item", fn)
+val X.asItem get() = item(this)
+fun X.asItemTo(x: X) = item(this, x)
+
+fun iterable(vararg x: X) = _line("iterable", *x)
+val X.iterable get() = _get("iterable")
+fun <R> iterable(fn: (X) -> R) = _case("iterable", fn)
+val X.asIterable get() = iterable(this)
+fun X.asIterableTo(x: X) = iterable(this, x)
+
+fun iterables(vararg x: X) = _line("iterables", *x)
+val X.iterables get() = _get("iterables")
+fun <R> iterables(fn: (X) -> R) = _case("iterables", fn)
+val X.asIterables get() = iterables(this)
+fun X.asIterablesTo(x: X) = iterables(this, x)
+
+fun iteratively(vararg x: X) = _line("iteratively", *x)
+val X.iteratively get() = _get("iteratively")
+fun <R> iteratively(fn: (X) -> R) = _case("iteratively", fn)
+val X.asIteratively get() = iteratively(this)
+fun X.asIterativelyTo(x: X) = iteratively(this, x)
+
+fun iterator(vararg x: X) = _line("iterator", *x)
+val X.iterator get() = _get("iterator")
+fun <R> iterator(fn: (X) -> R) = _case("iterator", fn)
+val X.asIterator get() = iterator(this)
+fun X.asIteratorTo(x: X) = iterator(this, x)
+
+fun iterators(vararg x: X) = _line("iterators", *x)
+val X.iterators get() = _get("iterators")
+fun <R> iterators(fn: (X) -> R) = _case("iterators", fn)
+val X.asIterators get() = iterators(this)
+fun X.asIteratorsTo(x: X) = iterators(this, x)
+
+fun itself(vararg x: X) = _line("itself", *x)
+val X.itself get() = _get("itself")
+fun <R> itself(fn: (X) -> R) = _case("itself", fn)
+val X.asItself get() = itself(this)
+fun X.asItselfTo(x: X) = itself(this, x)
+
+fun j(vararg x: X) = _line("j", *x)
+val X.j get() = _get("j")
+fun <R> j(fn: (X) -> R) = _case("j", fn)
+val X.asJ get() = j(this)
+fun X.asJTo(x: X) = j(this, x)
+
+fun jam(vararg x: X) = _line("jam", *x)
+val X.jam get() = _get("jam")
+fun <R> jam(fn: (X) -> R) = _case("jam", fn)
+val X.asJam get() = jam(this)
+fun X.asJamTo(x: X) = jam(this, x)
+
+fun jar(vararg x: X) = _line("jar", *x)
+val X.jar get() = _get("jar")
+fun <R> jar(fn: (X) -> R) = _case("jar", fn)
+val X.asJar get() = jar(this)
+fun X.asJarTo(x: X) = jar(this, x)
+
+fun java(vararg x: X) = _line("java", *x)
+val X.java get() = _get("java")
+fun <R> java(fn: (X) -> R) = _case("java", fn)
+val X.asJava get() = java(this)
+fun X.asJavaTo(x: X) = java(this, x)
+
+fun javascript(vararg x: X) = _line("javascript", *x)
+val X.javascript get() = _get("javascript")
+fun <R> javascript(fn: (X) -> R) = _case("javascript", fn)
+val X.asJavascript get() = javascript(this)
+fun X.asJavascriptTo(x: X) = javascript(this, x)
+
+fun join(vararg x: X) = _line("join", *x)
+val X.join get() = _get("join")
+fun <R> join(fn: (X) -> R) = _case("join", fn)
+val X.asJoin get() = join(this)
+fun X.asJoinTo(x: X) = join(this, x)
+
+fun js(vararg x: X) = _line("js", *x)
+val X.js get() = _get("js")
+fun <R> js(fn: (X) -> R) = _case("js", fn)
+val X.asJs get() = js(this)
+fun X.asJsTo(x: X) = js(this, x)
+
+fun jump(vararg x: X) = _line("jump", *x)
+val X.jump get() = _get("jump")
+fun <R> jump(fn: (X) -> R) = _case("jump", fn)
+val X.asJump get() = jump(this)
+fun X.asJumpTo(x: X) = jump(this, x)
+
+fun just(vararg x: X) = _line("just", *x)
+val X.just get() = _get("just")
+fun <R> just(fn: (X) -> R) = _case("just", fn)
+val X.asJust get() = just(this)
+fun X.asJustTo(x: X) = just(this, x)
+
+fun k(vararg x: X) = _line("k", *x)
+val X.k get() = _get("k")
+fun <R> k(fn: (X) -> R) = _case("k", fn)
+val X.asK get() = k(this)
+fun X.asKTo(x: X) = k(this, x)
+
+fun key(vararg x: X) = _line("key", *x)
+val X.key get() = _get("key")
+fun <R> key(fn: (X) -> R) = _case("key", fn)
+val X.asKey get() = key(this)
+fun X.asKeyTo(x: X) = key(this, x)
+
+fun keyboard(vararg x: X) = _line("keyboard", *x)
+val X.keyboard get() = _get("keyboard")
+fun <R> keyboard(fn: (X) -> R) = _case("keyboard", fn)
+val X.asKeyboard get() = keyboard(this)
+fun X.asKeyboardTo(x: X) = keyboard(this, x)
+
+fun keyword(vararg x: X) = _line("keyword", *x)
+val X.keyword get() = _get("keyword")
+fun <R> keyword(fn: (X) -> R) = _case("keyword", fn)
+val X.asKeyword get() = keyword(this)
+fun X.asKeywordTo(x: X) = keyword(this, x)
+
+fun kick(vararg x: X) = _line("kick", *x)
+val X.kick get() = _get("kick")
+fun <R> kick(fn: (X) -> R) = _case("kick", fn)
+val X.asKick get() = kick(this)
+fun X.asKickTo(x: X) = kick(this, x)
+
+fun kotlin(vararg x: X) = _line("kotlin", *x)
+val X.kotlin get() = _get("kotlin")
+fun <R> kotlin(fn: (X) -> R) = _case("kotlin", fn)
+val X.asKotlin get() = kotlin(this)
+fun X.asKotlinTo(x: X) = kotlin(this, x)
+
+fun l(vararg x: X) = _line("l", *x)
+val X.l get() = _get("l")
+fun <R> l(fn: (X) -> R) = _case("l", fn)
+val X.asL get() = l(this)
+fun X.asLTo(x: X) = l(this, x)
+
+fun label(vararg x: X) = _line("label", *x)
+val X.label get() = _get("label")
+fun <R> label(fn: (X) -> R) = _case("label", fn)
+val X.asLabel get() = label(this)
+fun X.asLabelTo(x: X) = label(this, x)
+
+fun lambda(vararg x: X) = _line("lambda", *x)
+val X.lambda get() = _get("lambda")
+fun <R> lambda(fn: (X) -> R) = _case("lambda", fn)
+val X.asLambda get() = lambda(this)
+fun X.asLambdaTo(x: X) = lambda(this, x)
+
+fun lang(vararg x: X) = _line("lang", *x)
+val X.lang get() = _get("lang")
+fun <R> lang(fn: (X) -> R) = _case("lang", fn)
+val X.asLang get() = lang(this)
+fun X.asLangTo(x: X) = lang(this, x)
+
+fun last(vararg x: X) = _line("last", *x)
+val X.last get() = _get("last")
+fun <R> last(fn: (X) -> R) = _case("last", fn)
+val X.asLast get() = last(this)
+fun X.asLastTo(x: X) = last(this, x)
+
+fun latch(vararg x: X) = _line("latch", *x)
+val X.latch get() = _get("latch")
+fun <R> latch(fn: (X) -> R) = _case("latch", fn)
+val X.asLatch get() = latch(this)
+fun X.asLatchTo(x: X) = latch(this, x)
+
+fun lazily(vararg x: X) = _line("lazily", *x)
+val X.lazily get() = _get("lazily")
+fun <R> lazily(fn: (X) -> R) = _case("lazily", fn)
+val X.asLazily get() = lazily(this)
+fun X.asLazilyTo(x: X) = lazily(this, x)
+
+fun lazy_(vararg x: X) = _line("lazy", *x)
+val X.lazy_ get() = _get("lazy")
+fun <R> lazy_(fn: (X) -> R) = _case("lazy", fn)
+val X.asLazy get() = lazy_(this)
+fun X.asLazyTo(x: X) = lazy_(this, x)
+
+fun left(vararg x: X) = _line("left", *x)
+val X.left get() = _get("left")
+fun <R> left(fn: (X) -> R) = _case("left", fn)
+val X.asLeft get() = left(this)
+fun X.asLeftTo(x: X) = left(this, x)
+
+fun len(vararg x: X) = _line("len", *x)
+val X.len get() = _get("len")
+fun <R> len(fn: (X) -> R) = _case("len", fn)
+val X.asLen get() = len(this)
+fun X.asLenTo(x: X) = len(this, x)
+
+fun length(vararg x: X) = _line("length", *x)
+val X.length get() = _get("length")
+fun <R> length(fn: (X) -> R) = _case("length", fn)
+val X.asLength get() = length(this)
+fun X.asLengthTo(x: X) = length(this, x)
+
+fun lengths(vararg x: X) = _line("lengths", *x)
+val X.lengths get() = _get("lengths")
+fun <R> lengths(fn: (X) -> R) = _case("lengths", fn)
+val X.asLengths get() = lengths(this)
+fun X.asLengthsTo(x: X) = lengths(this, x)
+
+fun leo(vararg x: X) = _line("leo", *x)
+val X.leo get() = _get("leo")
+fun <R> leo(fn: (X) -> R) = _case("leo", fn)
+val X.asLeo get() = leo(this)
+fun X.asLeoTo(x: X) = leo(this, x)
+
+fun leonardo(vararg x: X) = _line("leonardo", *x)
+val X.leonardo get() = _get("leonardo")
+fun <R> leonardo(fn: (X) -> R) = _case("leonardo", fn)
+val X.asLeonardo get() = leonardo(this)
+fun X.asLeonardoTo(x: X) = leonardo(this, x)
+
+fun leonize(vararg x: X) = _line("leonize", *x)
+val X.leonize get() = _get("leonize")
+fun <R> leonize(fn: (X) -> R) = _case("leonize", fn)
+val X.asLeonize get() = leonize(this)
+fun X.asLeonizeTo(x: X) = leonize(this, x)
+
+fun leonized(vararg x: X) = _line("leonized", *x)
+val X.leonized get() = _get("leonized")
+fun <R> leonized(fn: (X) -> R) = _case("leonized", fn)
+val X.asLeonized get() = leonized(this)
+fun X.asLeonizedTo(x: X) = leonized(this, x)
+
+fun leonizer(vararg x: X) = _line("leonizer", *x)
+val X.leonizer get() = _get("leonizer")
+fun <R> leonizer(fn: (X) -> R) = _case("leonizer", fn)
+val X.asLeonizer get() = leonizer(this)
+fun X.asLeonizerTo(x: X) = leonizer(this, x)
+
+fun letter(vararg x: X) = _line("letter", *x)
+val X.letter get() = _get("letter")
+fun <R> letter(fn: (X) -> R) = _case("letter", fn)
+val X.asLetter get() = letter(this)
+fun X.asLetterTo(x: X) = letter(this, x)
+
+fun lhs(vararg x: X) = _line("lhs", *x)
+val X.lhs get() = _get("lhs")
+fun <R> lhs(fn: (X) -> R) = _case("lhs", fn)
+val X.asLhs get() = lhs(this)
+fun X.asLhsTo(x: X) = lhs(this, x)
+
+fun lib(vararg x: X) = _line("lib", *x)
+val X.lib get() = _get("lib")
+fun <R> lib(fn: (X) -> R) = _case("lib", fn)
+val X.asLib get() = lib(this)
+fun X.asLibTo(x: X) = lib(this, x)
+
+fun library(vararg x: X) = _line("library", *x)
+val X.library get() = _get("library")
+fun <R> library(fn: (X) -> R) = _case("library", fn)
+val X.asLibrary get() = library(this)
+fun X.asLibraryTo(x: X) = library(this, x)
+
+fun light(vararg x: X) = _line("light", *x)
+val X.light get() = _get("light")
+fun <R> light(fn: (X) -> R) = _case("light", fn)
+val X.asLight get() = light(this)
+fun X.asLightTo(x: X) = light(this, x)
+
+fun limit(vararg x: X) = _line("limit", *x)
+val X.limit get() = _get("limit")
+fun <R> limit(fn: (X) -> R) = _case("limit", fn)
+val X.asLimit get() = limit(this)
+fun X.asLimitTo(x: X) = limit(this, x)
+
+fun limited(vararg x: X) = _line("limited", *x)
+val X.limited get() = _get("limited")
+fun <R> limited(fn: (X) -> R) = _case("limited", fn)
+val X.asLimited get() = limited(this)
+fun X.asLimitedTo(x: X) = limited(this, x)
+
+fun line(vararg x: X) = _line("line", *x)
+val X.line get() = _get("line")
+fun <R> line(fn: (X) -> R) = _case("line", fn)
+val X.asLine get() = line(this)
+fun X.asLineTo(x: X) = line(this, x)
+
+fun lines(vararg x: X) = _line("lines", *x)
+val X.lines get() = _get("lines")
+fun <R> lines(fn: (X) -> R) = _case("lines", fn)
+val X.asLines get() = lines(this)
+fun X.asLinesTo(x: X) = lines(this, x)
+
+fun link(vararg x: X) = _line("link", *x)
+val X.link get() = _get("link")
+fun <R> link(fn: (X) -> R) = _case("link", fn)
+val X.asLink get() = link(this)
+fun X.asLinkTo(x: X) = link(this, x)
+
+fun linked(vararg x: X) = _line("linked", *x)
+val X.linked get() = _get("linked")
+fun <R> linked(fn: (X) -> R) = _case("linked", fn)
+val X.asLinked get() = linked(this)
+fun X.asLinkedTo(x: X) = linked(this, x)
+
+fun list(vararg x: X) = _line("list", *x)
+val X.list get() = _get("list")
+fun <R> list(fn: (X) -> R) = _case("list", fn)
+val X.asList get() = list(this)
+fun X.asListTo(x: X) = list(this, x)
+
+fun listener(vararg x: X) = _line("listener", *x)
+val X.listener get() = _get("listener")
+fun <R> listener(fn: (X) -> R) = _case("listener", fn)
+val X.asListener get() = listener(this)
+fun X.asListenerTo(x: X) = listener(this, x)
+
+fun lists(vararg x: X) = _line("lists", *x)
+val X.lists get() = _get("lists")
+fun <R> lists(fn: (X) -> R) = _case("lists", fn)
+val X.asLists get() = lists(this)
+fun X.asListsTo(x: X) = lists(this, x)
+
+fun literal(vararg x: X) = _line("literal", *x)
+val X.literal get() = _get("literal")
+fun <R> literal(fn: (X) -> R) = _case("literal", fn)
+val X.asLiteral get() = literal(this)
+fun X.asLiteralTo(x: X) = literal(this, x)
+
+fun lo(vararg x: X) = _line("lo", *x)
+val X.lo get() = _get("lo")
+fun <R> lo(fn: (X) -> R) = _case("lo", fn)
+val X.asLo get() = lo(this)
+fun X.asLoTo(x: X) = lo(this, x)
+
+fun load(vararg x: X) = _line("load", *x)
+val X.load get() = _get("load")
+fun <R> load(fn: (X) -> R) = _case("load", fn)
+val X.asLoad get() = load(this)
+fun X.asLoadTo(x: X) = load(this, x)
+
+fun loaded(vararg x: X) = _line("loaded", *x)
+val X.loaded get() = _get("loaded")
+fun <R> loaded(fn: (X) -> R) = _case("loaded", fn)
+val X.asLoaded get() = loaded(this)
+fun X.asLoadedTo(x: X) = loaded(this, x)
+
+fun loader(vararg x: X) = _line("loader", *x)
+val X.loader get() = _get("loader")
+fun <R> loader(fn: (X) -> R) = _case("loader", fn)
+val X.asLoader get() = loader(this)
+fun X.asLoaderTo(x: X) = loader(this, x)
+
+fun loading(vararg x: X) = _line("loading", *x)
+val X.loading get() = _get("loading")
+fun <R> loading(fn: (X) -> R) = _case("loading", fn)
+val X.asLoading get() = loading(this)
+fun X.asLoadingTo(x: X) = loading(this, x)
+
+fun lock(vararg x: X) = _line("lock", *x)
+val X.lock get() = _get("lock")
+fun <R> lock(fn: (X) -> R) = _case("lock", fn)
+val X.asLock get() = lock(this)
+fun X.asLockTo(x: X) = lock(this, x)
+
+fun log(vararg x: X) = _line("log", *x)
+val X.log get() = _get("log")
+fun <R> log(fn: (X) -> R) = _case("log", fn)
+val X.asLog get() = log(this)
+fun X.asLogTo(x: X) = log(this, x)
+
+fun login(vararg x: X) = _line("login", *x)
+val X.login get() = _get("login")
+fun <R> login(fn: (X) -> R) = _case("login", fn)
+val X.asLogin get() = login(this)
+fun X.asLoginTo(x: X) = login(this, x)
+
+fun logo(vararg x: X) = _line("logo", *x)
+val X.logo get() = _get("logo")
+fun <R> logo(fn: (X) -> R) = _case("logo", fn)
+val X.asLogo get() = logo(this)
+fun X.asLogoTo(x: X) = logo(this, x)
+
+fun logout(vararg x: X) = _line("logout", *x)
+val X.logout get() = _get("logout")
+fun <R> logout(fn: (X) -> R) = _case("logout", fn)
+val X.asLogout get() = logout(this)
+fun X.asLogoutTo(x: X) = logout(this, x)
+
+fun lol(vararg x: X) = _line("lol", *x)
+val X.lol get() = _get("lol")
+fun <R> lol(fn: (X) -> R) = _case("lol", fn)
+val X.asLol get() = lol(this)
+fun X.asLolTo(x: X) = lol(this, x)
+
+fun long(vararg x: X) = _line("long", *x)
+val X.long get() = _get("long")
+fun <R> long(fn: (X) -> R) = _case("long", fn)
+val X.asLong get() = long(this)
+fun X.asLongTo(x: X) = long(this, x)
+
+fun look(vararg x: X) = _line("look", *x)
+val X.look get() = _get("look")
+fun <R> look(fn: (X) -> R) = _case("look", fn)
+val X.asLook get() = look(this)
+fun X.asLookTo(x: X) = look(this, x)
+
+fun lookup(vararg x: X) = _line("lookup", *x)
+val X.lookup get() = _get("lookup")
+fun <R> lookup(fn: (X) -> R) = _case("lookup", fn)
+val X.asLookup get() = lookup(this)
+fun X.asLookupTo(x: X) = lookup(this, x)
+
+fun loop(vararg x: X) = _line("loop", *x)
+val X.loop get() = _get("loop")
+fun <R> loop(fn: (X) -> R) = _case("loop", fn)
+val X.asLoop get() = loop(this)
+fun X.asLoopTo(x: X) = loop(this, x)
+
+fun lost(vararg x: X) = _line("lost", *x)
+val X.lost get() = _get("lost")
+fun <R> lost(fn: (X) -> R) = _case("lost", fn)
+val X.asLost get() = lost(this)
+fun X.asLostTo(x: X) = lost(this, x)
+
+fun low(vararg x: X) = _line("low", *x)
+val X.low get() = _get("low")
+fun <R> low(fn: (X) -> R) = _case("low", fn)
+val X.asLow get() = low(this)
+fun X.asLowTo(x: X) = low(this, x)
+
+fun lower(vararg x: X) = _line("lower", *x)
+val X.lower get() = _get("lower")
+fun <R> lower(fn: (X) -> R) = _case("lower", fn)
+val X.asLower get() = lower(this)
+fun X.asLowerTo(x: X) = lower(this, x)
+
+fun ludum(vararg x: X) = _line("ludum", *x)
+val X.ludum get() = _get("ludum")
+fun <R> ludum(fn: (X) -> R) = _case("ludum", fn)
+val X.asLudum get() = ludum(this)
+fun X.asLudumTo(x: X) = ludum(this, x)
+
+fun ludumdare(vararg x: X) = _line("ludumdare", *x)
+val X.ludumdare get() = _get("ludumdare")
+fun <R> ludumdare(fn: (X) -> R) = _case("ludumdare", fn)
+val X.asLudumdare get() = ludumdare(this)
+fun X.asLudumdareTo(x: X) = ludumdare(this, x)
+
+fun m(vararg x: X) = _line("m", *x)
+val X.m get() = _get("m")
+fun <R> m(fn: (X) -> R) = _case("m", fn)
+val X.asM get() = m(this)
+fun X.asMTo(x: X) = m(this, x)
+
+fun mac(vararg x: X) = _line("mac", *x)
+val X.mac get() = _get("mac")
+fun <R> mac(fn: (X) -> R) = _case("mac", fn)
+val X.asMac get() = mac(this)
+fun X.asMacTo(x: X) = mac(this, x)
+
+fun macos(vararg x: X) = _line("macos", *x)
+val X.macos get() = _get("macos")
+fun <R> macos(fn: (X) -> R) = _case("macos", fn)
+val X.asMacos get() = macos(this)
+fun X.asMacosTo(x: X) = macos(this, x)
+
+fun macro(vararg x: X) = _line("macro", *x)
+val X.macro get() = _get("macro")
+fun <R> macro(fn: (X) -> R) = _case("macro", fn)
+val X.asMacro get() = macro(this)
+fun X.asMacroTo(x: X) = macro(this, x)
+
+fun magenta(vararg x: X) = _line("magenta", *x)
+val X.magenta get() = _get("magenta")
+fun <R> magenta(fn: (X) -> R) = _case("magenta", fn)
+val X.asMagenta get() = magenta(this)
+fun X.asMagentaTo(x: X) = magenta(this, x)
+
+fun mail(vararg x: X) = _line("mail", *x)
+val X.mail get() = _get("mail")
+fun <R> mail(fn: (X) -> R) = _case("mail", fn)
+val X.asMail get() = mail(this)
+fun X.asMailTo(x: X) = mail(this, x)
+
+fun main(vararg x: X) = _line("main", *x)
+val X.main get() = _get("main")
+fun <R> main(fn: (X) -> R) = _case("main", fn)
+val X.asMain get() = main(this)
+fun X.asMainTo(x: X) = main(this, x)
+
+fun make(vararg x: X) = _line("make", *x)
+val X.make get() = _get("make")
+fun <R> make(fn: (X) -> R) = _case("make", fn)
+val X.asMake get() = make(this)
+fun X.asMakeTo(x: X) = make(this, x)
+
+fun male(vararg x: X) = _line("male", *x)
+val X.male get() = _get("male")
+fun <R> male(fn: (X) -> R) = _case("male", fn)
+val X.asMale get() = male(this)
+fun X.asMaleTo(x: X) = male(this, x)
+
+fun manager(vararg x: X) = _line("manager", *x)
+val X.manager get() = _get("manager")
+fun <R> manager(fn: (X) -> R) = _case("manager", fn)
+val X.asManager get() = manager(this)
+fun X.asManagerTo(x: X) = manager(this, x)
+
+fun manual(vararg x: X) = _line("manual", *x)
+val X.manual get() = _get("manual")
+fun <R> manual(fn: (X) -> R) = _case("manual", fn)
+val X.asManual get() = manual(this)
+fun X.asManualTo(x: X) = manual(this, x)
+
+fun map(vararg x: X) = _line("map", *x)
+val X.map get() = _get("map")
+fun <R> map(fn: (X) -> R) = _case("map", fn)
+val X.asMap get() = map(this)
+fun X.asMapTo(x: X) = map(this, x)
+
+fun mapping(vararg x: X) = _line("mapping", *x)
+val X.mapping get() = _get("mapping")
+fun <R> mapping(fn: (X) -> R) = _case("mapping", fn)
+val X.asMapping get() = mapping(this)
+fun X.asMappingTo(x: X) = mapping(this, x)
+
+fun maps(vararg x: X) = _line("maps", *x)
+val X.maps get() = _get("maps")
+fun <R> maps(fn: (X) -> R) = _case("maps", fn)
+val X.asMaps get() = maps(this)
+fun X.asMapsTo(x: X) = maps(this, x)
+
+fun mapt(vararg x: X) = _line("mapt", *x)
+val X.mapt get() = _get("mapt")
+fun <R> mapt(fn: (X) -> R) = _case("mapt", fn)
+val X.asMapt get() = mapt(this)
+fun X.asMaptTo(x: X) = mapt(this, x)
+
+fun margin(vararg x: X) = _line("margin", *x)
+val X.margin get() = _get("margin")
+fun <R> margin(fn: (X) -> R) = _case("margin", fn)
+val X.asMargin get() = margin(this)
+fun X.asMarginTo(x: X) = margin(this, x)
+
+fun marriage(vararg x: X) = _line("marriage", *x)
+val X.marriage get() = _get("marriage")
+fun <R> marriage(fn: (X) -> R) = _case("marriage", fn)
+val X.asMarriage get() = marriage(this)
+fun X.asMarriageTo(x: X) = marriage(this, x)
+
+fun mask(vararg x: X) = _line("mask", *x)
+val X.mask get() = _get("mask")
+fun <R> mask(fn: (X) -> R) = _case("mask", fn)
+val X.asMask get() = mask(this)
+fun X.asMaskTo(x: X) = mask(this, x)
+
+fun match(vararg x: X) = _line("match", *x)
+val X.match get() = _get("match")
+fun <R> match(fn: (X) -> R) = _case("match", fn)
+val X.asMatch get() = match(this)
+fun X.asMatchTo(x: X) = match(this, x)
+
+fun matcher(vararg x: X) = _line("matcher", *x)
+val X.matcher get() = _get("matcher")
+fun <R> matcher(fn: (X) -> R) = _case("matcher", fn)
+val X.asMatcher get() = matcher(this)
+fun X.asMatcherTo(x: X) = matcher(this, x)
+
+fun matches(vararg x: X) = _line("matches", *x)
+val X.matches get() = _get("matches")
+fun <R> matches(fn: (X) -> R) = _case("matches", fn)
+val X.asMatches get() = matches(this)
+fun X.asMatchesTo(x: X) = matches(this, x)
+
+fun matching(vararg x: X) = _line("matching", *x)
+val X.matching get() = _get("matching")
+fun <R> matching(fn: (X) -> R) = _case("matching", fn)
+val X.asMatching get() = matching(this)
+fun X.asMatchingTo(x: X) = matching(this, x)
+
+fun math(vararg x: X) = _line("math", *x)
+val X.math get() = _get("math")
+fun <R> math(fn: (X) -> R) = _case("math", fn)
+val X.asMath get() = math(this)
+fun X.asMathTo(x: X) = math(this, x)
+
+fun max(vararg x: X) = _line("max", *x)
+val X.max get() = _get("max")
+fun <R> max(fn: (X) -> R) = _case("max", fn)
+val X.asMax get() = max(this)
+fun X.asMaxTo(x: X) = max(this, x)
+
+fun maybe(vararg x: X) = _line("maybe", *x)
+val X.maybe get() = _get("maybe")
+fun <R> maybe(fn: (X) -> R) = _case("maybe", fn)
+val X.asMaybe get() = maybe(this)
+fun X.asMaybeTo(x: X) = maybe(this, x)
+
+fun measure(vararg x: X) = _line("measure", *x)
+val X.measure get() = _get("measure")
+fun <R> measure(fn: (X) -> R) = _case("measure", fn)
+val X.asMeasure get() = measure(this)
+fun X.asMeasureTo(x: X) = measure(this, x)
+
+fun melody(vararg x: X) = _line("melody", *x)
+val X.melody get() = _get("melody")
+fun <R> melody(fn: (X) -> R) = _case("melody", fn)
+val X.asMelody get() = melody(this)
+fun X.asMelodyTo(x: X) = melody(this, x)
+
+fun mem(vararg x: X) = _line("mem", *x)
+val X.mem get() = _get("mem")
+fun <R> mem(fn: (X) -> R) = _case("mem", fn)
+val X.asMem get() = mem(this)
+fun X.asMemTo(x: X) = mem(this, x)
+
+fun member(vararg x: X) = _line("member", *x)
+val X.member get() = _get("member")
+fun <R> member(fn: (X) -> R) = _case("member", fn)
+val X.asMember get() = member(this)
+fun X.asMemberTo(x: X) = member(this, x)
+
+fun members(vararg x: X) = _line("members", *x)
+val X.members get() = _get("members")
+fun <R> members(fn: (X) -> R) = _case("members", fn)
+val X.asMembers get() = members(this)
+fun X.asMembersTo(x: X) = members(this, x)
+
+fun membership(vararg x: X) = _line("membership", *x)
+val X.membership get() = _get("membership")
+fun <R> membership(fn: (X) -> R) = _case("membership", fn)
+val X.asMembership get() = membership(this)
+fun X.asMembershipTo(x: X) = membership(this, x)
+
+fun memory(vararg x: X) = _line("memory", *x)
+val X.memory get() = _get("memory")
+fun <R> memory(fn: (X) -> R) = _case("memory", fn)
+val X.asMemory get() = memory(this)
+fun X.asMemoryTo(x: X) = memory(this, x)
+
+fun merger(vararg x: X) = _line("merger", *x)
+val X.merger get() = _get("merger")
+fun <R> merger(fn: (X) -> R) = _case("merger", fn)
+val X.asMerger get() = merger(this)
+fun X.asMergerTo(x: X) = merger(this, x)
+
+fun message(vararg x: X) = _line("message", *x)
+val X.message get() = _get("message")
+fun <R> message(fn: (X) -> R) = _case("message", fn)
+val X.asMessage get() = message(this)
+fun X.asMessageTo(x: X) = message(this, x)
+
+fun meta(vararg x: X) = _line("meta", *x)
+val X.meta get() = _get("meta")
+fun <R> meta(fn: (X) -> R) = _case("meta", fn)
+val X.asMeta get() = meta(this)
+fun X.asMetaTo(x: X) = meta(this, x)
+
+fun method(vararg x: X) = _line("method", *x)
+val X.method get() = _get("method")
+fun <R> method(fn: (X) -> R) = _case("method", fn)
+val X.asMethod get() = method(this)
+fun X.asMethodTo(x: X) = method(this, x)
+
+fun methods(vararg x: X) = _line("methods", *x)
+val X.methods get() = _get("methods")
+fun <R> methods(fn: (X) -> R) = _case("methods", fn)
+val X.asMethods get() = methods(this)
+fun X.asMethodsTo(x: X) = methods(this, x)
+
+fun metrics(vararg x: X) = _line("metrics", *x)
+val X.metrics get() = _get("metrics")
+fun <R> metrics(fn: (X) -> R) = _case("metrics", fn)
+val X.asMetrics get() = metrics(this)
+fun X.asMetricsTo(x: X) = metrics(this, x)
+
+fun micapolos(vararg x: X) = _line("micapolos", *x)
+val X.micapolos get() = _get("micapolos")
+fun <R> micapolos(fn: (X) -> R) = _case("micapolos", fn)
+val X.asMicapolos get() = micapolos(this)
+fun X.asMicapolosTo(x: X) = micapolos(this, x)
+
+fun middle(vararg x: X) = _line("middle", *x)
+val X.middle get() = _get("middle")
+fun <R> middle(fn: (X) -> R) = _case("middle", fn)
+val X.asMiddle get() = middle(this)
+fun X.asMiddleTo(x: X) = middle(this, x)
+
+fun millis(vararg x: X) = _line("millis", *x)
+val X.millis get() = _get("millis")
+fun <R> millis(fn: (X) -> R) = _case("millis", fn)
+val X.asMillis get() = millis(this)
+fun X.asMillisTo(x: X) = millis(this, x)
+
+fun min(vararg x: X) = _line("min", *x)
+val X.min get() = _get("min")
+fun <R> min(fn: (X) -> R) = _case("min", fn)
+val X.asMin get() = min(this)
+fun X.asMinTo(x: X) = min(this, x)
+
+fun minus(vararg x: X) = _line("minus", *x)
+val X.minus get() = _get("minus")
+fun <R> minus(fn: (X) -> R) = _case("minus", fn)
+val X.asMinus get() = minus(this)
+fun X.asMinusTo(x: X) = minus(this, x)
+
+fun minute(vararg x: X) = _line("minute", *x)
+val X.minute get() = _get("minute")
+fun <R> minute(fn: (X) -> R) = _case("minute", fn)
+val X.asMinute get() = minute(this)
+fun X.asMinuteTo(x: X) = minute(this, x)
+
+fun miss(vararg x: X) = _line("miss", *x)
+val X.miss get() = _get("miss")
+fun <R> miss(fn: (X) -> R) = _case("miss", fn)
+val X.asMiss get() = miss(this)
+fun X.asMissTo(x: X) = miss(this, x)
+
+fun missing(vararg x: X) = _line("missing", *x)
+val X.missing get() = _get("missing")
+fun <R> missing(fn: (X) -> R) = _case("missing", fn)
+val X.asMissing get() = missing(this)
+fun X.asMissingTo(x: X) = missing(this, x)
+
+fun mod(vararg x: X) = _line("mod", *x)
+val X.mod get() = _get("mod")
+fun <R> mod(fn: (X) -> R) = _case("mod", fn)
+val X.asMod get() = mod(this)
+fun X.asModTo(x: X) = mod(this, x)
+
+fun mode(vararg x: X) = _line("mode", *x)
+val X.mode get() = _get("mode")
+fun <R> mode(fn: (X) -> R) = _case("mode", fn)
+val X.asMode get() = mode(this)
+fun X.asModeTo(x: X) = mode(this, x)
+
+fun modifier(vararg x: X) = _line("modifier", *x)
+val X.modifier get() = _get("modifier")
+fun <R> modifier(fn: (X) -> R) = _case("modifier", fn)
+val X.asModifier get() = modifier(this)
+fun X.asModifierTo(x: X) = modifier(this, x)
+
+fun modifiers(vararg x: X) = _line("modifiers", *x)
+val X.modifiers get() = _get("modifiers")
+fun <R> modifiers(fn: (X) -> R) = _case("modifiers", fn)
+val X.asModifiers get() = modifiers(this)
+fun X.asModifiersTo(x: X) = modifiers(this, x)
+
+fun module(vararg x: X) = _line("module", *x)
+val X.module get() = _get("module")
+fun <R> module(fn: (X) -> R) = _case("module", fn)
+val X.asModule get() = module(this)
+fun X.asModuleTo(x: X) = module(this, x)
+
+fun modulo(vararg x: X) = _line("modulo", *x)
+val X.modulo get() = _get("modulo")
+fun <R> modulo(fn: (X) -> R) = _case("modulo", fn)
+val X.asModulo get() = modulo(this)
+fun X.asModuloTo(x: X) = modulo(this, x)
+
+fun monad(vararg x: X) = _line("monad", *x)
+val X.monad get() = _get("monad")
+fun <R> monad(fn: (X) -> R) = _case("monad", fn)
+val X.asMonad get() = monad(this)
+fun X.asMonadTo(x: X) = monad(this, x)
+
+fun month(vararg x: X) = _line("month", *x)
+val X.month get() = _get("month")
+fun <R> month(fn: (X) -> R) = _case("month", fn)
+val X.asMonth get() = month(this)
+fun X.asMonthTo(x: X) = month(this, x)
+
+fun more(vararg x: X) = _line("more", *x)
+val X.more get() = _get("more")
+fun <R> more(fn: (X) -> R) = _case("more", fn)
+val X.asMore get() = more(this)
+fun X.asMoreTo(x: X) = more(this, x)
+
+fun mother(vararg x: X) = _line("mother", *x)
+val X.mother get() = _get("mother")
+fun <R> mother(fn: (X) -> R) = _case("mother", fn)
+val X.asMother get() = mother(this)
+fun X.asMotherTo(x: X) = mother(this, x)
+
+fun motion(vararg x: X) = _line("motion", *x)
+val X.motion get() = _get("motion")
+fun <R> motion(fn: (X) -> R) = _case("motion", fn)
+val X.asMotion get() = motion(this)
+fun X.asMotionTo(x: X) = motion(this, x)
+
+fun mouse(vararg x: X) = _line("mouse", *x)
+val X.mouse get() = _get("mouse")
+fun <R> mouse(fn: (X) -> R) = _case("mouse", fn)
+val X.asMouse get() = mouse(this)
+fun X.asMouseTo(x: X) = mouse(this, x)
+
+fun move(vararg x: X) = _line("move", *x)
+val X.move get() = _get("move")
+fun <R> move(fn: (X) -> R) = _case("move", fn)
+val X.asMove get() = move(this)
+fun X.asMoveTo(x: X) = move(this, x)
+
+fun mul(vararg x: X) = _line("mul", *x)
+val X.mul get() = _get("mul")
+fun <R> mul(fn: (X) -> R) = _case("mul", fn)
+val X.asMul get() = mul(this)
+fun X.asMulTo(x: X) = mul(this, x)
+
+fun multiply(vararg x: X) = _line("multiply", *x)
+val X.multiply get() = _get("multiply")
+fun <R> multiply(fn: (X) -> R) = _case("multiply", fn)
+val X.asMultiply get() = multiply(this)
+fun X.asMultiplyTo(x: X) = multiply(this, x)
+
+fun mutable(vararg x: X) = _line("mutable", *x)
+val X.mutable get() = _get("mutable")
+fun <R> mutable(fn: (X) -> R) = _case("mutable", fn)
+val X.asMutable get() = mutable(this)
+fun X.asMutableTo(x: X) = mutable(this, x)
+
+fun my(vararg x: X) = _line("my", *x)
+val X.my get() = _get("my")
+fun <R> my(fn: (X) -> R) = _case("my", fn)
+val X.asMy get() = my(this)
+fun X.asMyTo(x: X) = my(this, x)
+
+fun n(vararg x: X) = _line("n", *x)
+val X.n get() = _get("n")
+fun <R> n(fn: (X) -> R) = _case("n", fn)
+val X.asN get() = n(this)
+fun X.asNTo(x: X) = n(this, x)
+
+fun name(vararg x: X) = _line("name", *x)
+val X.name get() = _get("name")
+fun <R> name(fn: (X) -> R) = _case("name", fn)
+val X.asName get() = name(this)
+fun X.asNameTo(x: X) = name(this, x)
+
+fun named(vararg x: X) = _line("named", *x)
+val X.named get() = _get("named")
+fun <R> named(fn: (X) -> R) = _case("named", fn)
+val X.asNamed get() = named(this)
+fun X.asNamedTo(x: X) = named(this, x)
+
+fun names(vararg x: X) = _line("names", *x)
+val X.names get() = _get("names")
+fun <R> names(fn: (X) -> R) = _case("names", fn)
+val X.asNames get() = names(this)
+fun X.asNamesTo(x: X) = names(this, x)
+
+fun nand(vararg x: X) = _line("nand", *x)
+val X.nand get() = _get("nand")
+fun <R> nand(fn: (X) -> R) = _case("nand", fn)
+val X.asNand get() = nand(this)
+fun X.asNandTo(x: X) = nand(this, x)
+
+fun native(vararg x: X) = _line("native", *x)
+val X.native get() = _get("native")
+fun <R> native(fn: (X) -> R) = _case("native", fn)
+val X.asNative get() = native(this)
+fun X.asNativeTo(x: X) = native(this, x)
+
+fun natural(vararg x: X) = _line("natural", *x)
+val X.natural get() = _get("natural")
+fun <R> natural(fn: (X) -> R) = _case("natural", fn)
+val X.asNatural get() = natural(this)
+fun X.asNaturalTo(x: X) = natural(this, x)
+
+fun negate(vararg x: X) = _line("negate", *x)
+val X.negate get() = _get("negate")
+fun <R> negate(fn: (X) -> R) = _case("negate", fn)
+val X.asNegate get() = negate(this)
+fun X.asNegateTo(x: X) = negate(this, x)
+
+fun new(vararg x: X) = _line("new", *x)
+val X.new get() = _get("new")
+fun <R> new(fn: (X) -> R) = _case("new", fn)
+val X.asNew get() = new(this)
+fun X.asNewTo(x: X) = new(this, x)
+
+fun newline(vararg x: X) = _line("newline", *x)
+val X.newline get() = _get("newline")
+fun <R> newline(fn: (X) -> R) = _case("newline", fn)
+val X.asNewline get() = newline(this)
+fun X.asNewlineTo(x: X) = newline(this, x)
+
+fun next(vararg x: X) = _line("next", *x)
+val X.next get() = _get("next")
+fun <R> next(fn: (X) -> R) = _case("next", fn)
+val X.asNext get() = next(this)
+fun X.asNextTo(x: X) = next(this, x)
+
+fun night(vararg x: X) = _line("night", *x)
+val X.night get() = _get("night")
+fun <R> night(fn: (X) -> R) = _case("night", fn)
+val X.asNight get() = night(this)
+fun X.asNightTo(x: X) = night(this, x)
+
+fun nil(vararg x: X) = _line("nil", *x)
+val X.nil get() = _get("nil")
+fun <R> nil(fn: (X) -> R) = _case("nil", fn)
+val X.asNil get() = nil(this)
+fun X.asNilTo(x: X) = nil(this, x)
+
+fun nine(vararg x: X) = _line("nine", *x)
+val X.nine get() = _get("nine")
+fun <R> nine(fn: (X) -> R) = _case("nine", fn)
+val X.asNine get() = nine(this)
+fun X.asNineTo(x: X) = nine(this, x)
+
+fun nineth(vararg x: X) = _line("nineth", *x)
+val X.nineth get() = _get("nineth")
+fun <R> nineth(fn: (X) -> R) = _case("nineth", fn)
+val X.asNineth get() = nineth(this)
+fun X.asNinethTo(x: X) = nineth(this, x)
+
+fun no(vararg x: X) = _line("no", *x)
+val X.no get() = _get("no")
+fun <R> no(fn: (X) -> R) = _case("no", fn)
+val X.asNo get() = no(this)
+fun X.asNoTo(x: X) = no(this, x)
+
+fun node(vararg x: X) = _line("node", *x)
+val X.node get() = _get("node")
+fun <R> node(fn: (X) -> R) = _case("node", fn)
+val X.asNode get() = node(this)
+fun X.asNodeTo(x: X) = node(this, x)
+
+fun non(vararg x: X) = _line("non", *x)
+val X.non get() = _get("non")
+fun <R> non(fn: (X) -> R) = _case("non", fn)
+val X.asNon get() = non(this)
+fun X.asNonTo(x: X) = non(this, x)
+
+fun none(vararg x: X) = _line("none", *x)
+val X.none get() = _get("none")
+fun <R> none(fn: (X) -> R) = _case("none", fn)
+val X.asNone get() = none(this)
+fun X.asNoneTo(x: X) = none(this, x)
+
+fun nor(vararg x: X) = _line("nor", *x)
+val X.nor get() = _get("nor")
+fun <R> nor(fn: (X) -> R) = _case("nor", fn)
+val X.asNor get() = nor(this)
+fun X.asNorTo(x: X) = nor(this, x)
+
+fun normalize(vararg x: X) = _line("normalize", *x)
+val X.normalize get() = _get("normalize")
+fun <R> normalize(fn: (X) -> R) = _case("normalize", fn)
+val X.asNormalize get() = normalize(this)
+fun X.asNormalizeTo(x: X) = normalize(this, x)
+
+fun normalization(vararg x: X) = _line("normalization", *x)
+val X.normalization get() = _get("normalization")
+fun <R> normalization(fn: (X) -> R) = _case("normalization", fn)
+val X.asNormalization get() = normalization(this)
+fun X.asNormalizationTo(x: X) = normalization(this, x)
+
+fun not(vararg x: X) = _line("not", *x)
+val X.not get() = _get("not")
+fun <R> not(fn: (X) -> R) = _case("not", fn)
+val X.asNot get() = not(this)
+fun X.asNotTo(x: X) = not(this, x)
+
+fun note(vararg x: X) = _line("note", *x)
+val X.note get() = _get("note")
+fun <R> note(fn: (X) -> R) = _case("note", fn)
+val X.asNote get() = note(this)
+fun X.asNoteTo(x: X) = note(this, x)
+
+fun notes(vararg x: X) = _line("notes", *x)
+val X.notes get() = _get("notes")
+fun <R> notes(fn: (X) -> R) = _case("notes", fn)
+val X.asNotes get() = notes(this)
+fun X.asNotesTo(x: X) = notes(this, x)
+
+fun nothing(vararg x: X) = _line("nothing", *x)
+val X.nothing get() = _get("nothing")
+fun <R> nothing(fn: (X) -> R) = _case("nothing", fn)
+val X.asNothing get() = nothing(this)
+fun X.asNothingTo(x: X) = nothing(this, x)
+
+fun now(vararg x: X) = _line("now", *x)
+val X.now get() = _get("now")
+fun <R> now(fn: (X) -> R) = _case("now", fn)
+val X.asNow get() = now(this)
+fun X.asNowTo(x: X) = now(this, x)
+
+fun null_(vararg x: X) = _line("null", *x)
+val X.null_ get() = _get("null")
+fun <R> null_(fn: (X) -> R) = _case("null", fn)
+val X.asNull get() = null_(this)
+fun X.asNullTo(x: X) = null_(this, x)
+
+fun nullable(vararg x: X) = _line("nullable", *x)
+val X.nullable get() = _get("nullable")
+fun <R> nullable(fn: (X) -> R) = _case("nullable", fn)
+val X.asNullable get() = nullable(this)
+fun X.asNullableTo(x: X) = nullable(this, x)
+
+fun number(vararg x: X) = _line("number", *x)
+val X.number get() = _get("number")
+fun <R> number(fn: (X) -> R) = _case("number", fn)
+val X.asNumber get() = number(this)
+fun X.asNumberTo(x: X) = number(this, x)
+
+fun numbers(vararg x: X) = _line("numbers", *x)
+val X.numbers get() = _get("numbers")
+fun <R> numbers(fn: (X) -> R) = _case("numbers", fn)
+val X.asNumbers get() = numbers(this)
+fun X.asNumbersTo(x: X) = numbers(this, x)
+
+fun o(vararg x: X) = _line("o", *x)
+val X.o get() = _get("o")
+fun <R> o(fn: (X) -> R) = _case("o", fn)
+val X.asO get() = o(this)
+fun X.asOTo(x: X) = o(this, x)
+
+fun obj(vararg x: X) = _line("obj", *x)
+val X.obj get() = _get("obj")
+fun <R> obj(fn: (X) -> R) = _case("obj", fn)
+val X.asObj get() = obj(this)
+fun X.asObjTo(x: X) = obj(this, x)
+
+fun object_(vararg x: X) = _line("object", *x)
+val X.object_ get() = _get("object")
+fun <R> object_(fn: (X) -> R) = _case("object", fn)
+val X.asObject get() = object_(this)
+fun X.asObjectTo(x: X) = object_(this, x)
+
+fun objects(vararg x: X) = _line("objects", *x)
+val X.objects get() = _get("objects")
+fun <R> objects(fn: (X) -> R) = _case("objects", fn)
+val X.asObjects get() = objects(this)
+fun X.asObjectsTo(x: X) = objects(this, x)
+
+fun of(vararg x: X) = _line("of", *x)
+val X.of get() = _get("of")
+fun <R> of(fn: (X) -> R) = _case("of", fn)
+val X.asOf get() = of(this)
+fun X.asOfTo(x: X) = of(this, x)
+
+fun off(vararg x: X) = _line("off", *x)
+val X.off get() = _get("off")
+fun <R> off(fn: (X) -> R) = _case("off", fn)
+val X.asOff get() = off(this)
+fun X.asOffTo(x: X) = off(this, x)
+
+fun office(vararg x: X) = _line("office", *x)
+val X.office get() = _get("office")
+fun <R> office(fn: (X) -> R) = _case("office", fn)
+val X.asOffice get() = office(this)
+fun X.asOfficeTo(x: X) = office(this, x)
+
+fun offset(vararg x: X) = _line("offset", *x)
+val X.offset get() = _get("offset")
+fun <R> offset(fn: (X) -> R) = _case("offset", fn)
+val X.asOffset get() = offset(this)
+fun X.asOffsetTo(x: X) = offset(this, x)
+
+fun ofib(vararg x: X) = _line("ofib", *x)
+val X.ofib get() = _get("ofib")
+fun <R> ofib(fn: (X) -> R) = _case("ofib", fn)
+val X.asOfib get() = ofib(this)
+fun X.asOfibTo(x: X) = ofib(this, x)
+
+fun ok(vararg x: X) = _line("ok", *x)
+val X.ok get() = _get("ok")
+fun <R> ok(fn: (X) -> R) = _case("ok", fn)
+val X.asOk get() = ok(this)
+fun X.asOkTo(x: X) = ok(this, x)
+
+fun on(vararg x: X) = _line("on", *x)
+val X.on get() = _get("on")
+fun <R> on(fn: (X) -> R) = _case("on", fn)
+val X.asOn get() = on(this)
+fun X.asOnTo(x: X) = on(this, x)
+
+fun one(vararg x: X) = _line("one", *x)
+val X.one get() = _get("one")
+fun <R> one(fn: (X) -> R) = _case("one", fn)
+val X.asOne get() = one(this)
+fun X.asOneTo(x: X) = one(this, x)
+
+fun only(vararg x: X) = _line("only", *x)
+val X.only get() = _get("only")
+fun <R> only(fn: (X) -> R) = _case("only", fn)
+val X.asOnly get() = only(this)
+fun X.asOnlyTo(x: X) = only(this, x)
+
+fun op(vararg x: X) = _line("op", *x)
+val X.op get() = _get("op")
+fun <R> op(fn: (X) -> R) = _case("op", fn)
+val X.asOp get() = op(this)
+fun X.asOpTo(x: X) = op(this, x)
+
+fun open(vararg x: X) = _line("open", *x)
+val X.open get() = _get("open")
+fun <R> open(fn: (X) -> R) = _case("open", fn)
+val X.asOpen get() = open(this)
+fun X.asOpenTo(x: X) = open(this, x)
+
+fun operation(vararg x: X) = _line("operation", *x)
+val X.operation get() = _get("operation")
+fun <R> operation(fn: (X) -> R) = _case("operation", fn)
+val X.asOperation get() = operation(this)
+fun X.asOperationTo(x: X) = operation(this, x)
+
+fun operator(vararg x: X) = _line("operator", *x)
+val X.operator get() = _get("operator")
+fun <R> operator(fn: (X) -> R) = _case("operator", fn)
+val X.asOperator get() = operator(this)
+fun X.asOperatorTo(x: X) = operator(this, x)
+
+fun option(vararg x: X) = _line("option", *x)
+val X.option get() = _get("option")
+fun <R> option(fn: (X) -> R) = _case("option", fn)
+val X.asOption get() = option(this)
+fun X.asOptionTo(x: X) = option(this, x)
+
+fun optional(vararg x: X) = _line("optional", *x)
+val X.optional get() = _get("optional")
+fun <R> optional(fn: (X) -> R) = _case("optional", fn)
+val X.asOptional get() = optional(this)
+fun X.asOptionalTo(x: X) = optional(this, x)
+
+fun optionals(vararg x: X) = _line("optionals", *x)
+val X.optionals get() = _get("optionals")
+fun <R> optionals(fn: (X) -> R) = _case("optionals", fn)
+val X.asOptionals get() = optionals(this)
+fun X.asOptionalsTo(x: X) = optionals(this, x)
+
+fun or(vararg x: X) = _line("or", *x)
+val X.or get() = _get("or")
+fun <R> or(fn: (X) -> R) = _case("or", fn)
+val X.asOr get() = or(this)
+fun X.asOrTo(x: X) = or(this, x)
+
+fun orange(vararg x: X) = _line("orange", *x)
+val X.orange get() = _get("orange")
+fun <R> orange(fn: (X) -> R) = _case("orange", fn)
+val X.asOrange get() = orange(this)
+fun X.asOrangeTo(x: X) = orange(this, x)
+
+fun order(vararg x: X) = _line("order", *x)
+val X.order get() = _get("order")
+fun <R> order(fn: (X) -> R) = _case("order", fn)
+val X.asOrder get() = order(this)
+fun X.asOrderTo(x: X) = order(this, x)
+
+fun ordinal(vararg x: X) = _line("ordinal", *x)
+val X.ordinal get() = _get("ordinal")
+fun <R> ordinal(fn: (X) -> R) = _case("ordinal", fn)
+val X.asOrdinal get() = ordinal(this)
+fun X.asOrdinalTo(x: X) = ordinal(this, x)
+
+fun org(vararg x: X) = _line("org", *x)
+val X.org get() = _get("org")
+fun <R> org(fn: (X) -> R) = _case("org", fn)
+val X.asOrg get() = org(this)
+fun X.asOrgTo(x: X) = org(this, x)
+
+fun original(vararg x: X) = _line("original", *x)
+val X.original get() = _get("original")
+fun <R> original(fn: (X) -> R) = _case("original", fn)
+val X.asOriginal get() = original(this)
+fun X.asOriginalTo(x: X) = original(this, x)
+
+fun otherwise(vararg x: X) = _line("otherwise", *x)
+val X.otherwise get() = _get("otherwise")
+fun <R> otherwise(fn: (X) -> R) = _case("otherwise", fn)
+val X.asOtherwise get() = otherwise(this)
+fun X.asOtherwiseTo(x: X) = otherwise(this, x)
+
+fun out(vararg x: X) = _line("out", *x)
+val X.out get() = _get("out")
+fun <R> out(fn: (X) -> R) = _case("out", fn)
+val X.asOut get() = out(this)
+fun X.asOutTo(x: X) = out(this, x)
+
+fun outline(vararg x: X) = _line("outline", *x)
+val X.outline get() = _get("outline")
+fun <R> outline(fn: (X) -> R) = _case("outline", fn)
+val X.asOutline get() = outline(this)
+fun X.asOutlineTo(x: X) = outline(this, x)
+
+fun output(vararg x: X) = _line("output", *x)
+val X.output get() = _get("output")
+fun <R> output(fn: (X) -> R) = _case("output", fn)
+val X.asOutput get() = output(this)
+fun X.asOutputTo(x: X) = output(this, x)
+
+fun oval(vararg x: X) = _line("oval", *x)
+val X.oval get() = _get("oval")
+fun <R> oval(fn: (X) -> R) = _case("oval", fn)
+val X.asOval get() = oval(this)
+fun X.asOvalTo(x: X) = oval(this, x)
+
+fun over(vararg x: X) = _line("over", *x)
+val X.over get() = _get("over")
+fun <R> over(fn: (X) -> R) = _case("over", fn)
+val X.asOver get() = over(this)
+fun X.asOverTo(x: X) = over(this, x)
+
+fun overflow(vararg x: X) = _line("overflow", *x)
+val X.overflow get() = _get("overflow")
+fun <R> overflow(fn: (X) -> R) = _case("overflow", fn)
+val X.asOverflow get() = overflow(this)
+fun X.asOverflowTo(x: X) = overflow(this, x)
+
+fun owner(vararg x: X) = _line("owner", *x)
+val X.owner get() = _get("owner")
+fun <R> owner(fn: (X) -> R) = _case("owner", fn)
+val X.asOwner get() = owner(this)
+fun X.asOwnerTo(x: X) = owner(this, x)
+
+fun p(vararg x: X) = _line("p", *x)
+val X.p get() = _get("p")
+fun <R> p(fn: (X) -> R) = _case("p", fn)
+val X.asP get() = p(this)
+fun X.asPTo(x: X) = p(this, x)
+
+fun package_(vararg x: X) = _line("package", *x)
+val X.package_ get() = _get("package")
+fun <R> package_(fn: (X) -> R) = _case("package", fn)
+val X.asPackage get() = package_(this)
+fun X.asPackageTo(x: X) = package_(this, x)
+
+fun packages(vararg x: X) = _line("packages", *x)
+val X.packages get() = _get("packages")
+fun <R> packages(fn: (X) -> R) = _case("packages", fn)
+val X.asPackages get() = packages(this)
+fun X.asPackagesTo(x: X) = packages(this, x)
+
+fun page(vararg x: X) = _line("page", *x)
+val X.page get() = _get("page")
+fun <R> page(fn: (X) -> R) = _case("page", fn)
+val X.asPage get() = page(this)
+fun X.asPageTo(x: X) = page(this, x)
+
+fun paint(vararg x: X) = _line("paint", *x)
+val X.paint get() = _get("paint")
+fun <R> paint(fn: (X) -> R) = _case("paint", fn)
+val X.asPaint get() = paint(this)
+fun X.asPaintTo(x: X) = paint(this, x)
+
+fun pair(vararg x: X) = _line("pair", *x)
+val X.pair get() = _get("pair")
+fun <R> pair(fn: (X) -> R) = _case("pair", fn)
+val X.asPair get() = pair(this)
+fun X.asPairTo(x: X) = pair(this, x)
+
+fun pane(vararg x: X) = _line("pane", *x)
+val X.pane get() = _get("pane")
+fun <R> pane(fn: (X) -> R) = _case("pane", fn)
+val X.asPane get() = pane(this)
+fun X.asPaneTo(x: X) = pane(this, x)
+
+fun param(vararg x: X) = _line("param", *x)
+val X.param get() = _get("param")
+fun <R> param(fn: (X) -> R) = _case("param", fn)
+val X.asParam get() = param(this)
+fun X.asParamTo(x: X) = param(this, x)
+
+fun parameter(vararg x: X) = _line("parameter", *x)
+val X.parameter get() = _get("parameter")
+fun <R> parameter(fn: (X) -> R) = _case("parameter", fn)
+val X.asParameter get() = parameter(this)
+fun X.asParameterTo(x: X) = parameter(this, x)
+
+fun parameters(vararg x: X) = _line("parameters", *x)
+val X.parameters get() = _get("parameters")
+fun <R> parameters(fn: (X) -> R) = _case("parameters", fn)
+val X.asParameters get() = parameters(this)
+fun X.asParametersTo(x: X) = parameters(this, x)
+
+fun params(vararg x: X) = _line("params", *x)
+val X.params get() = _get("params")
+fun <R> params(fn: (X) -> R) = _case("params", fn)
+val X.asParams get() = params(this)
+fun X.asParamsTo(x: X) = params(this, x)
+
+fun parent(vararg x: X) = _line("parent", *x)
+val X.parent get() = _get("parent")
+fun <R> parent(fn: (X) -> R) = _case("parent", fn)
+val X.asParent get() = parent(this)
+fun X.asParentTo(x: X) = parent(this, x)
+
+fun parentheses(vararg x: X) = _line("parentheses", *x)
+val X.parentheses get() = _get("parentheses")
+fun <R> parentheses(fn: (X) -> R) = _case("parentheses", fn)
+val X.asParentheses get() = parentheses(this)
+fun X.asParenthesesTo(x: X) = parentheses(this, x)
+
+fun parse(vararg x: X) = _line("parse", *x)
+val X.parse get() = _get("parse")
+fun <R> parse(fn: (X) -> R) = _case("parse", fn)
+val X.asParse get() = parse(this)
+fun X.asParseTo(x: X) = parse(this, x)
+
+fun parser(vararg x: X) = _line("parser", *x)
+val X.parser get() = _get("parser")
+fun <R> parser(fn: (X) -> R) = _case("parser", fn)
+val X.asParser get() = parser(this)
+fun X.asParserTo(x: X) = parser(this, x)
+
+fun pass(vararg x: X) = _line("pass", *x)
+val X.pass get() = _get("pass")
+fun <R> pass(fn: (X) -> R) = _case("pass", fn)
+val X.asPass get() = pass(this)
+fun X.asPassTo(x: X) = pass(this, x)
+
+fun password(vararg x: X) = _line("password", *x)
+val X.password get() = _get("password")
+fun <R> password(fn: (X) -> R) = _case("password", fn)
+val X.asPassword get() = password(this)
+fun X.asPasswordTo(x: X) = password(this, x)
+
+fun paste(vararg x: X) = _line("paste", *x)
+val X.paste get() = _get("paste")
+fun <R> paste(fn: (X) -> R) = _case("paste", fn)
+val X.asPaste get() = paste(this)
+fun X.asPasteTo(x: X) = paste(this, x)
+
+fun path(vararg x: X) = _line("path", *x)
+val X.path get() = _get("path")
+fun <R> path(fn: (X) -> R) = _case("path", fn)
+val X.asPath get() = path(this)
+fun X.asPathTo(x: X) = path(this, x)
+
+fun pattern(vararg x: X) = _line("pattern", *x)
+val X.pattern get() = _get("pattern")
+fun <R> pattern(fn: (X) -> R) = _case("pattern", fn)
+val X.asPattern get() = pattern(this)
+fun X.asPatternTo(x: X) = pattern(this, x)
+
+fun pause(vararg x: X) = _line("pause", *x)
+val X.pause get() = _get("pause")
+fun <R> pause(fn: (X) -> R) = _case("pause", fn)
+val X.asPause get() = pause(this)
+fun X.asPauseTo(x: X) = pause(this, x)
+
+fun payload(vararg x: X) = _line("payload", *x)
+val X.payload get() = _get("payload")
+fun <R> payload(fn: (X) -> R) = _case("payload", fn)
+val X.asPayload get() = payload(this)
+fun X.asPayloadTo(x: X) = payload(this, x)
+
+fun pc(vararg x: X) = _line("pc", *x)
+val X.pc get() = _get("pc")
+fun <R> pc(fn: (X) -> R) = _case("pc", fn)
+val X.asPc get() = pc(this)
+fun X.asPcTo(x: X) = pc(this, x)
+
+fun percent(vararg x: X) = _line("percent", *x)
+val X.percent get() = _get("percent")
+fun <R> percent(fn: (X) -> R) = _case("percent", fn)
+val X.asPercent get() = percent(this)
+fun X.asPercentTo(x: X) = percent(this, x)
+
+fun period(vararg x: X) = _line("period", *x)
+val X.period get() = _get("period")
+fun <R> period(fn: (X) -> R) = _case("period", fn)
+val X.asPeriod get() = period(this)
+fun X.asPeriodTo(x: X) = period(this, x)
+
+fun person(vararg x: X) = _line("person", *x)
+val X.person get() = _get("person")
+fun <R> person(fn: (X) -> R) = _case("person", fn)
+val X.asPerson get() = person(this)
+fun X.asPersonTo(x: X) = person(this, x)
+
+fun phase(vararg x: X) = _line("phase", *x)
+val X.phase get() = _get("phase")
+fun <R> phase(fn: (X) -> R) = _case("phase", fn)
+val X.asPhase get() = phase(this)
+fun X.asPhaseTo(x: X) = phase(this, x)
+
+fun phone(vararg x: X) = _line("phone", *x)
+val X.phone get() = _get("phone")
+fun <R> phone(fn: (X) -> R) = _case("phone", fn)
+val X.asPhone get() = phone(this)
+fun X.asPhoneTo(x: X) = phone(this, x)
+
+fun pi(vararg x: X) = _line("pi", *x)
+val X.pi get() = _get("pi")
+fun <R> pi(fn: (X) -> R) = _case("pi", fn)
+val X.asPi get() = pi(this)
+fun X.asPiTo(x: X) = pi(this, x)
+
+fun pin(vararg x: X) = _line("pin", *x)
+val X.pin get() = _get("pin")
+fun <R> pin(fn: (X) -> R) = _case("pin", fn)
+val X.asPin get() = pin(this)
+fun X.asPinTo(x: X) = pin(this, x)
+
+fun ping(vararg x: X) = _line("ping", *x)
+val X.ping get() = _get("ping")
+fun <R> ping(fn: (X) -> R) = _case("ping", fn)
+val X.asPing get() = ping(this)
+fun X.asPingTo(x: X) = ping(this, x)
+
+fun pink(vararg x: X) = _line("pink", *x)
+val X.pink get() = _get("pink")
+fun <R> pink(fn: (X) -> R) = _case("pink", fn)
+val X.asPink get() = pink(this)
+fun X.asPinkTo(x: X) = pink(this, x)
+
+fun pins(vararg x: X) = _line("pins", *x)
+val X.pins get() = _get("pins")
+fun <R> pins(fn: (X) -> R) = _case("pins", fn)
+val X.asPins get() = pins(this)
+fun X.asPinsTo(x: X) = pins(this, x)
+
+fun pixel(vararg x: X) = _line("pixel", *x)
+val X.pixel get() = _get("pixel")
+fun <R> pixel(fn: (X) -> R) = _case("pixel", fn)
+val X.asPixel get() = pixel(this)
+fun X.asPixelTo(x: X) = pixel(this, x)
+
+fun pkg(vararg x: X) = _line("pkg", *x)
+val X.pkg get() = _get("pkg")
+fun <R> pkg(fn: (X) -> R) = _case("pkg", fn)
+val X.asPkg get() = pkg(this)
+fun X.asPkgTo(x: X) = pkg(this, x)
+
+fun plain(vararg x: X) = _line("plain", *x)
+val X.plain get() = _get("plain")
+fun <R> plain(fn: (X) -> R) = _case("plain", fn)
+val X.asPlain get() = plain(this)
+fun X.asPlainTo(x: X) = plain(this, x)
+
+fun play(vararg x: X) = _line("play", *x)
+val X.play get() = _get("play")
+fun <R> play(fn: (X) -> R) = _case("play", fn)
+val X.asPlay get() = play(this)
+fun X.asPlayTo(x: X) = play(this, x)
+
+fun plus(vararg x: X) = _line("plus", *x)
+val X.plus get() = _get("plus")
+fun <R> plus(fn: (X) -> R) = _case("plus", fn)
+val X.asPlus get() = plus(this)
+fun X.asPlusTo(x: X) = plus(this, x)
+
+fun pm(vararg x: X) = _line("pm", *x)
+val X.pm get() = _get("pm")
+fun <R> pm(fn: (X) -> R) = _case("pm", fn)
+val X.asPm get() = pm(this)
+fun X.asPmTo(x: X) = pm(this, x)
+
+fun point(vararg x: X) = _line("point", *x)
+val X.point get() = _get("point")
+fun <R> point(fn: (X) -> R) = _case("point", fn)
+val X.asPoint get() = point(this)
+fun X.asPointTo(x: X) = point(this, x)
+
+fun pointer(vararg x: X) = _line("pointer", *x)
+val X.pointer get() = _get("pointer")
+fun <R> pointer(fn: (X) -> R) = _case("pointer", fn)
+val X.asPointer get() = pointer(this)
+fun X.asPointerTo(x: X) = pointer(this, x)
+
+fun pong(vararg x: X) = _line("pong", *x)
+val X.pong get() = _get("pong")
+fun <R> pong(fn: (X) -> R) = _case("pong", fn)
+val X.asPong get() = pong(this)
+fun X.asPongTo(x: X) = pong(this, x)
+
+fun pop(vararg x: X) = _line("pop", *x)
+val X.pop get() = _get("pop")
+fun <R> pop(fn: (X) -> R) = _case("pop", fn)
+val X.asPop get() = pop(this)
+fun X.asPopTo(x: X) = pop(this, x)
+
+fun port(vararg x: X) = _line("port", *x)
+val X.port get() = _get("port")
+fun <R> port(fn: (X) -> R) = _case("port", fn)
+val X.asPort get() = port(this)
+fun X.asPortTo(x: X) = port(this, x)
+
+fun position(vararg x: X) = _line("position", *x)
+val X.position get() = _get("position")
+fun <R> position(fn: (X) -> R) = _case("position", fn)
+val X.asPosition get() = position(this)
+fun X.asPositionTo(x: X) = position(this, x)
+
+fun possible(vararg x: X) = _line("possible", *x)
+val X.possible get() = _get("possible")
+fun <R> possible(fn: (X) -> R) = _case("possible", fn)
+val X.asPossible get() = possible(this)
+fun X.asPossibleTo(x: X) = possible(this, x)
+
+fun post(vararg x: X) = _line("post", *x)
+val X.post get() = _get("post")
+fun <R> post(fn: (X) -> R) = _case("post", fn)
+val X.asPost get() = post(this)
+fun X.asPostTo(x: X) = post(this, x)
+
+fun ppq(vararg x: X) = _line("ppq", *x)
+val X.ppq get() = _get("ppq")
+fun <R> ppq(fn: (X) -> R) = _case("ppq", fn)
+val X.asPpq get() = ppq(this)
+fun X.asPpqTo(x: X) = ppq(this, x)
+
+fun predecessor(vararg x: X) = _line("predecessor", *x)
+val X.predecessor get() = _get("predecessor")
+fun <R> predecessor(fn: (X) -> R) = _case("predecessor", fn)
+val X.asPredecessor get() = predecessor(this)
+fun X.asPredecessorTo(x: X) = predecessor(this, x)
+
+fun prefix(vararg x: X) = _line("prefix", *x)
+val X.prefix get() = _get("prefix")
+fun <R> prefix(fn: (X) -> R) = _case("prefix", fn)
+val X.asPrefix get() = prefix(this)
+fun X.asPrefixTo(x: X) = prefix(this, x)
+
+fun prelude(vararg x: X) = _line("prelude", *x)
+val X.prelude get() = _get("prelude")
+fun <R> prelude(fn: (X) -> R) = _case("prelude", fn)
+val X.asPrelude get() = prelude(this)
+fun X.asPreludeTo(x: X) = prelude(this, x)
+
+fun preprocess(vararg x: X) = _line("preprocess", *x)
+val X.preprocess get() = _get("preprocess")
+fun <R> preprocess(fn: (X) -> R) = _case("preprocess", fn)
+val X.asPreprocess get() = preprocess(this)
+fun X.asPreprocessTo(x: X) = preprocess(this, x)
+
+fun preprocessor(vararg x: X) = _line("preprocessor", *x)
+val X.preprocessor get() = _get("preprocessor")
+fun <R> preprocessor(fn: (X) -> R) = _case("preprocessor", fn)
+val X.asPreprocessor get() = preprocessor(this)
+fun X.asPreprocessorTo(x: X) = preprocessor(this, x)
+
+fun present(vararg x: X) = _line("present", *x)
+val X.present get() = _get("present")
+fun <R> present(fn: (X) -> R) = _case("present", fn)
+val X.asPresent get() = present(this)
+fun X.asPresentTo(x: X) = present(this, x)
+
+fun prev(vararg x: X) = _line("prev", *x)
+val X.prev get() = _get("prev")
+fun <R> prev(fn: (X) -> R) = _case("prev", fn)
+val X.asPrev get() = prev(this)
+fun X.asPrevTo(x: X) = prev(this, x)
+
+fun previous(vararg x: X) = _line("previous", *x)
+val X.previous get() = _get("previous")
+fun <R> previous(fn: (X) -> R) = _case("previous", fn)
+val X.asPrevious get() = previous(this)
+fun X.asPreviousTo(x: X) = previous(this, x)
+
+fun primitive(vararg x: X) = _line("primitive", *x)
+val X.primitive get() = _get("primitive")
+fun <R> primitive(fn: (X) -> R) = _case("primitive", fn)
+val X.asPrimitive get() = primitive(this)
+fun X.asPrimitiveTo(x: X) = primitive(this, x)
+
+fun print(vararg x: X) = _line("print", *x)
+val X.print get() = _get("print")
+fun <R> print(fn: (X) -> R) = _case("print", fn)
+val X.asPrint get() = print(this)
+fun X.asPrintTo(x: X) = print(this, x)
+
+fun printed(vararg x: X) = _line("printed", *x)
+val X.printed get() = _get("printed")
+fun <R> printed(fn: (X) -> R) = _case("printed", fn)
+val X.asPrinted get() = printed(this)
+fun X.asPrintedTo(x: X) = printed(this, x)
+
+fun printer(vararg x: X) = _line("printer", *x)
+val X.printer get() = _get("printer")
+fun <R> printer(fn: (X) -> R) = _case("printer", fn)
+val X.asPrinter get() = printer(this)
+fun X.asPrinterTo(x: X) = printer(this, x)
+
+fun printing(vararg x: X) = _line("printing", *x)
+val X.printing get() = _get("printing")
+fun <R> printing(fn: (X) -> R) = _case("printing", fn)
+val X.asPrinting get() = printing(this)
+fun X.asPrintingTo(x: X) = printing(this, x)
+
+fun println(vararg x: X) = _line("println", *x)
+val X.println get() = _get("println")
+fun <R> println(fn: (X) -> R) = _case("println", fn)
+val X.asPrintln get() = println(this)
+fun X.asPrintlnTo(x: X) = println(this, x)
+
+fun private(vararg x: X) = _line("private", *x)
+val X.private get() = _get("private")
+fun <R> private(fn: (X) -> R) = _case("private", fn)
+val X.asPrivate get() = private(this)
+fun X.asPrivateTo(x: X) = private(this, x)
+
+fun process(vararg x: X) = _line("process", *x)
+val X.process get() = _get("process")
+fun <R> process(fn: (X) -> R) = _case("process", fn)
+val X.asProcess get() = process(this)
+fun X.asProcessTo(x: X) = process(this, x)
+
+fun processed(vararg x: X) = _line("processed", *x)
+val X.processed get() = _get("processed")
+fun <R> processed(fn: (X) -> R) = _case("processed", fn)
+val X.asProcessed get() = processed(this)
+fun X.asProcessedTo(x: X) = processed(this, x)
+
+fun producer(vararg x: X) = _line("producer", *x)
+val X.producer get() = _get("producer")
+fun <R> producer(fn: (X) -> R) = _case("producer", fn)
+val X.asProducer get() = producer(this)
+fun X.asProducerTo(x: X) = producer(this, x)
+
+fun product(vararg x: X) = _line("product", *x)
+val X.product get() = _get("product")
+fun <R> product(fn: (X) -> R) = _case("product", fn)
+val X.asProduct get() = product(this)
+fun X.asProductTo(x: X) = product(this, x)
+
+fun program(vararg x: X) = _line("program", *x)
+val X.program get() = _get("program")
+fun <R> program(fn: (X) -> R) = _case("program", fn)
+val X.asProgram get() = program(this)
+fun X.asProgramTo(x: X) = program(this, x)
+
+fun property(vararg x: X) = _line("property", *x)
+val X.property get() = _get("property")
+fun <R> property(fn: (X) -> R) = _case("property", fn)
+val X.asProperty get() = property(this)
+fun X.asPropertyTo(x: X) = property(this, x)
+
+fun protected(vararg x: X) = _line("protected", *x)
+val X.protected get() = _get("protected")
+fun <R> protected(fn: (X) -> R) = _case("protected", fn)
+val X.asProtected get() = protected(this)
+fun X.asProtectedTo(x: X) = protected(this, x)
+
+fun protocol(vararg x: X) = _line("protocol", *x)
+val X.protocol get() = _get("protocol")
+fun <R> protocol(fn: (X) -> R) = _case("protocol", fn)
+val X.asProtocol get() = protocol(this)
+fun X.asProtocolTo(x: X) = protocol(this, x)
+
+fun public(vararg x: X) = _line("public", *x)
+val X.public get() = _get("public")
+fun <R> public(fn: (X) -> R) = _case("public", fn)
+val X.asPublic get() = public(this)
+fun X.asPublicTo(x: X) = public(this, x)
+
+fun pull(vararg x: X) = _line("pull", *x)
+val X.pull get() = _get("pull")
+fun <R> pull(fn: (X) -> R) = _case("pull", fn)
+val X.asPull get() = pull(this)
+fun X.asPullTo(x: X) = pull(this, x)
+
+fun push(vararg x: X) = _line("push", *x)
+val X.push get() = _get("push")
+fun <R> push(fn: (X) -> R) = _case("push", fn)
+val X.asPush get() = push(this)
+fun X.asPushTo(x: X) = push(this, x)
+
+fun pushed(vararg x: X) = _line("pushed", *x)
+val X.pushed get() = _get("pushed")
+fun <R> pushed(fn: (X) -> R) = _case("pushed", fn)
+val X.asPushed get() = pushed(this)
+fun X.asPushedTo(x: X) = pushed(this, x)
+
+fun put(vararg x: X) = _line("put", *x)
+val X.put get() = _get("put")
+fun <R> put(fn: (X) -> R) = _case("put", fn)
+val X.asPut get() = put(this)
+fun X.asPutTo(x: X) = put(this, x)
+
+fun q(vararg x: X) = _line("q", *x)
+val X.q get() = _get("q")
+fun <R> q(fn: (X) -> R) = _case("q", fn)
+val X.asQ get() = q(this)
+fun X.asQTo(x: X) = q(this, x)
+
+fun query(vararg x: X) = _line("query", *x)
+val X.query get() = _get("query")
+fun <R> query(fn: (X) -> R) = _case("query", fn)
+val X.asQuery get() = query(this)
+fun X.asQueryTo(x: X) = query(this, x)
+
+fun queue(vararg x: X) = _line("queue", *x)
+val X.queue get() = _get("queue")
+fun <R> queue(fn: (X) -> R) = _case("queue", fn)
+val X.asQueue get() = queue(this)
+fun X.asQueueTo(x: X) = queue(this, x)
+
+fun quicksort(vararg x: X) = _line("quicksort", *x)
+val X.quicksort get() = _get("quicksort")
+fun <R> quicksort(fn: (X) -> R) = _case("quicksort", fn)
+val X.asQuicksort get() = quicksort(this)
+fun X.asQuicksortTo(x: X) = quicksort(this, x)
+
+fun quote(vararg x: X) = _line("quote", *x)
+val X.quote get() = _get("quote")
+fun <R> quote(fn: (X) -> R) = _case("quote", fn)
+val X.asQuote get() = quote(this)
+fun X.asQuoteTo(x: X) = quote(this, x)
+
+fun quoted(vararg x: X) = _line("quoted", *x)
+val X.quoted get() = _get("quoted")
+fun <R> quoted(fn: (X) -> R) = _case("quoted", fn)
+val X.asQuoted get() = quoted(this)
+fun X.asQuotedTo(x: X) = quoted(this, x)
+
+fun r(vararg x: X) = _line("r", *x)
+val X.r get() = _get("r")
+fun <R> r(fn: (X) -> R) = _case("r", fn)
+val X.asR get() = r(this)
+fun X.asRTo(x: X) = r(this, x)
+
+fun radians(vararg x: X) = _line("radians", *x)
+val X.radians get() = _get("radians")
+fun <R> radians(fn: (X) -> R) = _case("radians", fn)
+val X.asRadians get() = radians(this)
+fun X.asRadiansTo(x: X) = radians(this, x)
+
+fun radius(vararg x: X) = _line("radius", *x)
+val X.radius get() = _get("radius")
+fun <R> radius(fn: (X) -> R) = _case("radius", fn)
+val X.asRadius get() = radius(this)
+fun X.asRadiusTo(x: X) = radius(this, x)
+
+fun random(vararg x: X) = _line("random", *x)
+val X.random get() = _get("random")
+fun <R> random(fn: (X) -> R) = _case("random", fn)
+val X.asRandom get() = random(this)
+fun X.asRandomTo(x: X) = random(this, x)
+
+fun read(vararg x: X) = _line("read", *x)
+val X.read get() = _get("read")
+fun <R> read(fn: (X) -> R) = _case("read", fn)
+val X.asRead get() = read(this)
+fun X.asReadTo(x: X) = read(this, x)
+
+fun reader(vararg x: X) = _line("reader", *x)
+val X.reader get() = _get("reader")
+fun <R> reader(fn: (X) -> R) = _case("reader", fn)
+val X.asReader get() = reader(this)
+fun X.asReaderTo(x: X) = reader(this, x)
+
+fun reading(vararg x: X) = _line("reading", *x)
+val X.reading get() = _get("reading")
+fun <R> reading(fn: (X) -> R) = _case("reading", fn)
+val X.asReading get() = reading(this)
+fun X.asReadingTo(x: X) = reading(this, x)
+
+fun readonly(vararg x: X) = _line("readonly", *x)
+val X.readonly get() = _get("readonly")
+fun <R> readonly(fn: (X) -> R) = _case("readonly", fn)
+val X.asReadonly get() = readonly(this)
+fun X.asReadonlyTo(x: X) = readonly(this, x)
+
+fun readutf(vararg x: X) = _line("readutf", *x)
+val X.readutf get() = _get("readutf")
+fun <R> readutf(fn: (X) -> R) = _case("readutf", fn)
+val X.asReadutf get() = readutf(this)
+fun X.asReadutfTo(x: X) = readutf(this, x)
+
+fun recover(vararg x: X) = _line("recover", *x)
+val X.recover get() = _get("recover")
+fun <R> recover(fn: (X) -> R) = _case("recover", fn)
+val X.asRecover get() = recover(this)
+fun X.asRecoverTo(x: X) = recover(this, x)
+
+fun rect(vararg x: X) = _line("rect", *x)
+val X.rect get() = _get("rect")
+fun <R> rect(fn: (X) -> R) = _case("rect", fn)
+val X.asRect get() = rect(this)
+fun X.asRectTo(x: X) = rect(this, x)
+
+fun rectangle(vararg x: X) = _line("rectangle", *x)
+val X.rectangle get() = _get("rectangle")
+fun <R> rectangle(fn: (X) -> R) = _case("rectangle", fn)
+val X.asRectangle get() = rectangle(this)
+fun X.asRectangleTo(x: X) = rectangle(this, x)
+
+fun recurse(vararg x: X) = _line("recurse", *x)
+val X.recurse get() = _get("recurse")
+fun <R> recurse(fn: (X) -> R) = _case("recurse", fn)
+val X.asRecurse get() = recurse(this)
+fun X.asRecurseTo(x: X) = recurse(this, x)
+
+fun recursing(vararg x: X) = _line("recursing", *x)
+val X.recursing get() = _get("recursing")
+fun <R> recursing(fn: (X) -> R) = _case("recursing", fn)
+val X.asRecursing get() = recursing(this)
+fun X.asRecursingTo(x: X) = recursing(this, x)
+
+fun recursion(vararg x: X) = _line("recursion", *x)
+val X.recursion get() = _get("recursion")
+fun <R> recursion(fn: (X) -> R) = _case("recursion", fn)
+val X.asRecursion get() = recursion(this)
+fun X.asRecursionTo(x: X) = recursion(this, x)
+
+fun recursive(vararg x: X) = _line("recursive", *x)
+val X.recursive get() = _get("recursive")
+fun <R> recursive(fn: (X) -> R) = _case("recursive", fn)
+val X.asRecursive get() = recursive(this)
+fun X.asRecursiveTo(x: X) = recursive(this, x)
+
+fun recursively(vararg x: X) = _line("recursively", *x)
+val X.recursively get() = _get("recursively")
+fun <R> recursively(fn: (X) -> R) = _case("recursively", fn)
+val X.asRecursively get() = recursively(this)
+fun X.asRecursivelyTo(x: X) = recursively(this, x)
+
+fun red(vararg x: X) = _line("red", *x)
+val X.red get() = _get("red")
+fun <R> red(fn: (X) -> R) = _case("red", fn)
+val X.asRed get() = red(this)
+fun X.asRedTo(x: X) = red(this, x)
+
+fun redirect(vararg x: X) = _line("redirect", *x)
+val X.redirect get() = _get("redirect")
+fun <R> redirect(fn: (X) -> R) = _case("redirect", fn)
+val X.asRedirect get() = redirect(this)
+fun X.asRedirectTo(x: X) = redirect(this, x)
+
+fun ref(vararg x: X) = _line("ref", *x)
+val X.ref get() = _get("ref")
+fun <R> ref(fn: (X) -> R) = _case("ref", fn)
+val X.asRef get() = ref(this)
+fun X.asRefTo(x: X) = ref(this, x)
+
+fun reference(vararg x: X) = _line("reference", *x)
+val X.reference get() = _get("reference")
+fun <R> reference(fn: (X) -> R) = _case("reference", fn)
+val X.asReference get() = reference(this)
+fun X.asReferenceTo(x: X) = reference(this, x)
+
+fun refl(vararg x: X) = _line("refl", *x)
+val X.refl get() = _get("refl")
+fun <R> refl(fn: (X) -> R) = _case("refl", fn)
+val X.asRefl get() = refl(this)
+fun X.asReflTo(x: X) = refl(this, x)
+
+fun reflect(vararg x: X) = _line("reflect", *x)
+val X.reflect get() = _get("reflect")
+fun <R> reflect(fn: (X) -> R) = _case("reflect", fn)
+val X.asReflect get() = reflect(this)
+fun X.asReflectTo(x: X) = reflect(this, x)
+
+fun reflection(vararg x: X) = _line("reflection", *x)
+val X.reflection get() = _get("reflection")
+fun <R> reflection(fn: (X) -> R) = _case("reflection", fn)
+val X.asReflection get() = reflection(this)
+fun X.asReflectionTo(x: X) = reflection(this, x)
+
+fun regex(vararg x: X) = _line("regex", *x)
+val X.regex get() = _get("regex")
+fun <R> regex(fn: (X) -> R) = _case("regex", fn)
+val X.asRegex get() = regex(this)
+fun X.asRegexTo(x: X) = regex(this, x)
+
+fun regular(vararg x: X) = _line("regular", *x)
+val X.regular get() = _get("regular")
+fun <R> regular(fn: (X) -> R) = _case("regular", fn)
+val X.asRegular get() = regular(this)
+fun X.asRegularTo(x: X) = regular(this, x)
+
+fun remainder(vararg x: X) = _line("remainder", *x)
+val X.remainder get() = _get("remainder")
+fun <R> remainder(fn: (X) -> R) = _case("remainder", fn)
+val X.asRemainder get() = remainder(this)
+fun X.asRemainderTo(x: X) = remainder(this, x)
+
+fun remove(vararg x: X) = _line("remove", *x)
+val X.remove get() = _get("remove")
+fun <R> remove(fn: (X) -> R) = _case("remove", fn)
+val X.asRemove get() = remove(this)
+fun X.asRemoveTo(x: X) = remove(this, x)
+
+fun render(vararg x: X) = _line("render", *x)
+val X.render get() = _get("render")
+fun <R> render(fn: (X) -> R) = _case("render", fn)
+val X.asRender get() = render(this)
+fun X.asRenderTo(x: X) = render(this, x)
+
+fun rendering(vararg x: X) = _line("rendering", *x)
+val X.rendering get() = _get("rendering")
+fun <R> rendering(fn: (X) -> R) = _case("rendering", fn)
+val X.asRendering get() = rendering(this)
+fun X.asRenderingTo(x: X) = rendering(this, x)
+
+fun repeat(vararg x: X) = _line("repeat", *x)
+val X.repeat get() = _get("repeat")
+fun <R> repeat(fn: (X) -> R) = _case("repeat", fn)
+val X.asRepeat get() = repeat(this)
+fun X.asRepeatTo(x: X) = repeat(this, x)
+
+fun repeating(vararg x: X) = _line("repeating", *x)
+val X.repeating get() = _get("repeating")
+fun <R> repeating(fn: (X) -> R) = _case("repeating", fn)
+val X.asRepeating get() = repeating(this)
+fun X.asRepeatingTo(x: X) = repeating(this, x)
+
+fun replace(vararg x: X) = _line("replace", *x)
+val X.replace get() = _get("replace")
+fun <R> replace(fn: (X) -> R) = _case("replace", fn)
+val X.asReplace get() = replace(this)
+fun X.asReplaceTo(x: X) = replace(this, x)
+
+fun required(vararg x: X) = _line("required", *x)
+val X.required get() = _get("required")
+fun <R> required(fn: (X) -> R) = _case("required", fn)
+val X.asRequired get() = required(this)
+fun X.asRequiredTo(x: X) = required(this, x)
+
+fun reset(vararg x: X) = _line("reset", *x)
+val X.reset get() = _get("reset")
+fun <R> reset(fn: (X) -> R) = _case("reset", fn)
+val X.asReset get() = reset(this)
+fun X.asResetTo(x: X) = reset(this, x)
+
+fun resolution(vararg x: X) = _line("resolution", *x)
+val X.resolution get() = _get("resolution")
+fun <R> resolution(fn: (X) -> R) = _case("resolution", fn)
+val X.asResolution get() = resolution(this)
+fun X.asResolutionTo(x: X) = resolution(this, x)
+
+fun resolve(vararg x: X) = _line("resolve", *x)
+val X.resolve get() = _get("resolve")
+fun <R> resolve(fn: (X) -> R) = _case("resolve", fn)
+val X.asResolve get() = resolve(this)
+fun X.asResolveTo(x: X) = resolve(this, x)
+
+fun resolved(vararg x: X) = _line("resolved", *x)
+val X.resolved get() = _get("resolved")
+fun <R> resolved(fn: (X) -> R) = _case("resolved", fn)
+val X.asResolved get() = resolved(this)
+fun X.asResolvedTo(x: X) = resolved(this, x)
+
+fun resolver(vararg x: X) = _line("resolver", *x)
+val X.resolver get() = _get("resolver")
+fun <R> resolver(fn: (X) -> R) = _case("resolver", fn)
+val X.asResolver get() = resolver(this)
+fun X.asResolverTo(x: X) = resolver(this, x)
+
+fun resource(vararg x: X) = _line("resource", *x)
+val X.resource get() = _get("resource")
+fun <R> resource(fn: (X) -> R) = _case("resource", fn)
+val X.asResource get() = resource(this)
+fun X.asResourceTo(x: X) = resource(this, x)
+
+fun result(vararg x: X) = _line("result", *x)
+val X.result get() = _get("result")
+fun <R> result(fn: (X) -> R) = _case("result", fn)
+val X.asResult get() = result(this)
+fun X.asResultTo(x: X) = result(this, x)
+
+fun resume(vararg x: X) = _line("resume", *x)
+val X.resume get() = _get("resume")
+fun <R> resume(fn: (X) -> R) = _case("resume", fn)
+val X.asResume get() = resume(this)
+fun X.asResumeTo(x: X) = resume(this, x)
+
+fun resumed(vararg x: X) = _line("resumed", *x)
+val X.resumed get() = _get("resumed")
+fun <R> resumed(fn: (X) -> R) = _case("resumed", fn)
+val X.asResumed get() = resumed(this)
+fun X.asResumedTo(x: X) = resumed(this, x)
+
+fun ret(vararg x: X) = _line("ret", *x)
+val X.ret get() = _get("ret")
+fun <R> ret(fn: (X) -> R) = _case("ret", fn)
+val X.asRet get() = ret(this)
+fun X.asRetTo(x: X) = ret(this, x)
+
+fun reti(vararg x: X) = _line("reti", *x)
+val X.reti get() = _get("reti")
+fun <R> reti(fn: (X) -> R) = _case("reti", fn)
+val X.asReti get() = reti(this)
+fun X.asRetiTo(x: X) = reti(this, x)
+
+fun return_(vararg x: X) = _line("return", *x)
+val X.return_ get() = _get("return")
+fun <R> return_(fn: (X) -> R) = _case("return", fn)
+val X.asReturn get() = return_(this)
+fun X.asReturnTo(x: X) = return_(this, x)
+
+fun returns(vararg x: X) = _line("returns", *x)
+val X.returns get() = _get("returns")
+fun <R> returns(fn: (X) -> R) = _case("returns", fn)
+val X.asReturns get() = returns(this)
+fun X.asReturnsTo(x: X) = returns(this, x)
+
+fun reverse(vararg x: X) = _line("reverse", *x)
+val X.reverse get() = _get("reverse")
+fun <R> reverse(fn: (X) -> R) = _case("reverse", fn)
+val X.asReverse get() = reverse(this)
+fun X.asReverseTo(x: X) = reverse(this, x)
+
+fun rgb(vararg x: X) = _line("rgb", *x)
+val X.rgb get() = _get("rgb")
+fun <R> rgb(fn: (X) -> R) = _case("rgb", fn)
+val X.asRgb get() = rgb(this)
+fun X.asRgbTo(x: X) = rgb(this, x)
+
+fun rgba(vararg x: X) = _line("rgba", *x)
+val X.rgba get() = _get("rgba")
+fun <R> rgba(fn: (X) -> R) = _case("rgba", fn)
+val X.asRgba get() = rgba(this)
+fun X.asRgbaTo(x: X) = rgba(this, x)
+
+fun rhs(vararg x: X) = _line("rhs", *x)
+val X.rhs get() = _get("rhs")
+fun <R> rhs(fn: (X) -> R) = _case("rhs", fn)
+val X.asRhs get() = rhs(this)
+fun X.asRhsTo(x: X) = rhs(this, x)
+
+fun right(vararg x: X) = _line("right", *x)
+val X.right get() = _get("right")
+fun <R> right(fn: (X) -> R) = _case("right", fn)
+val X.asRight get() = right(this)
+fun X.asRightTo(x: X) = right(this, x)
+
+fun root(vararg x: X) = _line("root", *x)
+val X.root get() = _get("root")
+fun <R> root(fn: (X) -> R) = _case("root", fn)
+val X.asRoot get() = root(this)
+fun X.asRootTo(x: X) = root(this, x)
+
+fun rotate(vararg x: X) = _line("rotate", *x)
+val X.rotate get() = _get("rotate")
+fun <R> rotate(fn: (X) -> R) = _case("rotate", fn)
+val X.asRotate get() = rotate(this)
+fun X.asRotateTo(x: X) = rotate(this, x)
+
+fun round(vararg x: X) = _line("round", *x)
+val X.round get() = _get("round")
+fun <R> round(fn: (X) -> R) = _case("round", fn)
+val X.asRound get() = round(this)
+fun X.asRoundTo(x: X) = round(this, x)
+
+fun row(vararg x: X) = _line("row", *x)
+val X.row get() = _get("row")
+fun <R> row(fn: (X) -> R) = _case("row", fn)
+val X.asRow get() = row(this)
+fun X.asRowTo(x: X) = row(this, x)
+
+fun rows(vararg x: X) = _line("rows", *x)
+val X.rows get() = _get("rows")
+fun <R> rows(fn: (X) -> R) = _case("rows", fn)
+val X.asRows get() = rows(this)
+fun X.asRowsTo(x: X) = rows(this, x)
+
+fun rule(vararg x: X) = _line("rule", *x)
+val X.rule get() = _get("rule")
+fun <R> rule(fn: (X) -> R) = _case("rule", fn)
+val X.asRule get() = rule(this)
+fun X.asRuleTo(x: X) = rule(this, x)
+
+fun run(vararg x: X) = _line("run", *x)
+val X.run get() = _get("run")
+fun <R> run(fn: (X) -> R) = _case("run", fn)
+val X.asRun get() = run(this)
+fun X.asRunTo(x: X) = run(this, x)
+
+fun running(vararg x: X) = _line("running", *x)
+val X.running get() = _get("running")
+fun <R> running(fn: (X) -> R) = _case("running", fn)
+val X.asRunning get() = running(this)
+fun X.asRunningTo(x: X) = running(this, x)
+
+fun runtime(vararg x: X) = _line("runtime", *x)
+val X.runtime get() = _get("runtime")
+fun <R> runtime(fn: (X) -> R) = _case("runtime", fn)
+val X.asRuntime get() = runtime(this)
+fun X.asRuntimeTo(x: X) = runtime(this, x)
+
+fun s(vararg x: X) = _line("s", *x)
+val X.s get() = _get("s")
+fun <R> s(fn: (X) -> R) = _case("s", fn)
+val X.asS get() = s(this)
+fun X.asSTo(x: X) = s(this, x)
+
+fun save(vararg x: X) = _line("save", *x)
+val X.save get() = _get("save")
+fun <R> save(fn: (X) -> R) = _case("save", fn)
+val X.asSave get() = save(this)
+fun X.asSaveTo(x: X) = save(this, x)
+
+fun sawtooth(vararg x: X) = _line("sawtooth", *x)
+val X.sawtooth get() = _get("sawtooth")
+fun <R> sawtooth(fn: (X) -> R) = _case("sawtooth", fn)
+val X.asSawtooth get() = sawtooth(this)
+fun X.asSawtoothTo(x: X) = sawtooth(this, x)
+
+fun say(vararg x: X) = _line("say", *x)
+val X.say get() = _get("say")
+fun <R> say(fn: (X) -> R) = _case("say", fn)
+val X.asSay get() = say(this)
+fun X.asSayTo(x: X) = say(this, x)
+
+fun scale(vararg x: X) = _line("scale", *x)
+val X.scale get() = _get("scale")
+fun <R> scale(fn: (X) -> R) = _case("scale", fn)
+val X.asScale get() = scale(this)
+fun X.asScaleTo(x: X) = scale(this, x)
+
+fun scheme(vararg x: X) = _line("scheme", *x)
+val X.scheme get() = _get("scheme")
+fun <R> scheme(fn: (X) -> R) = _case("scheme", fn)
+val X.asScheme get() = scheme(this)
+fun X.asSchemeTo(x: X) = scheme(this, x)
+
+fun scope(vararg x: X) = _line("scope", *x)
+val X.scope get() = _get("scope")
+fun <R> scope(fn: (X) -> R) = _case("scope", fn)
+val X.asScope get() = scope(this)
+fun X.asScopeTo(x: X) = scope(this, x)
+
+fun scoped(vararg x: X) = _line("scoped", *x)
+val X.scoped get() = _get("scoped")
+fun <R> scoped(fn: (X) -> R) = _case("scoped", fn)
+val X.asScoped get() = scoped(this)
+fun X.asScopedTo(x: X) = scoped(this, x)
+
+fun scopes(vararg x: X) = _line("scopes", *x)
+val X.scopes get() = _get("scopes")
+fun <R> scopes(fn: (X) -> R) = _case("scopes", fn)
+val X.asScopes get() = scopes(this)
+fun X.asScopesTo(x: X) = scopes(this, x)
+
+fun screen(vararg x: X) = _line("screen", *x)
+val X.screen get() = _get("screen")
+fun <R> screen(fn: (X) -> R) = _case("screen", fn)
+val X.asScreen get() = screen(this)
+fun X.asScreenTo(x: X) = screen(this, x)
+
+fun script(vararg x: X) = _line("script", *x)
+val X.script get() = _get("script")
+fun <R> script(fn: (X) -> R) = _case("script", fn)
+val X.asScript get() = script(this)
+fun X.asScriptTo(x: X) = script(this, x)
+
+fun search(vararg x: X) = _line("search", *x)
+val X.search get() = _get("search")
+fun <R> search(fn: (X) -> R) = _case("search", fn)
+val X.asSearch get() = search(this)
+fun X.asSearchTo(x: X) = search(this, x)
+
+fun second(vararg x: X) = _line("second", *x)
+val X.second get() = _get("second")
+fun <R> second(fn: (X) -> R) = _case("second", fn)
+val X.asSecond get() = second(this)
+fun X.asSecondTo(x: X) = second(this, x)
+
+fun select(vararg x: X) = _line("select", *x)
+val X.select get() = _get("select")
+fun <R> select(fn: (X) -> R) = _case("select", fn)
+val X.asSelect get() = select(this)
+fun X.asSelectTo(x: X) = select(this, x)
+
+fun selector(vararg x: X) = _line("selector", *x)
+val X.selector get() = _get("selector")
+fun <R> selector(fn: (X) -> R) = _case("selector", fn)
+val X.asSelector get() = selector(this)
+fun X.asSelectorTo(x: X) = selector(this, x)
+
+fun self(vararg x: X) = _line("self", *x)
+val X.self get() = _get("self")
+fun <R> self(fn: (X) -> R) = _case("self", fn)
+val X.asSelf get() = self(this)
+fun X.asSelfTo(x: X) = self(this, x)
+
+fun semicolon(vararg x: X) = _line("semicolon", *x)
+val X.semicolon get() = _get("semicolon")
+fun <R> semicolon(fn: (X) -> R) = _case("semicolon", fn)
+val X.asSemicolon get() = semicolon(this)
+fun X.asSemicolonTo(x: X) = semicolon(this, x)
+
+fun sentence(vararg x: X) = _line("sentence", *x)
+val X.sentence get() = _get("sentence")
+fun <R> sentence(fn: (X) -> R) = _case("sentence", fn)
+val X.asSentence get() = sentence(this)
+fun X.asSentenceTo(x: X) = sentence(this, x)
+
+fun sentinel(vararg x: X) = _line("sentinel", *x)
+val X.sentinel get() = _get("sentinel")
+fun <R> sentinel(fn: (X) -> R) = _case("sentinel", fn)
+val X.asSentinel get() = sentinel(this)
+fun X.asSentinelTo(x: X) = sentinel(this, x)
+
+fun separated(vararg x: X) = _line("separated", *x)
+val X.separated get() = _get("separated")
+fun <R> separated(fn: (X) -> R) = _case("separated", fn)
+val X.asSeparated get() = separated(this)
+fun X.asSeparatedTo(x: X) = separated(this, x)
+
+fun separator(vararg x: X) = _line("separator", *x)
+val X.separator get() = _get("separator")
+fun <R> separator(fn: (X) -> R) = _case("separator", fn)
+val X.asSeparator get() = separator(this)
+fun X.asSeparatorTo(x: X) = separator(this, x)
+
+fun sequence(vararg x: X) = _line("sequence", *x)
+val X.sequence get() = _get("sequence")
+fun <R> sequence(fn: (X) -> R) = _case("sequence", fn)
+val X.asSequence get() = sequence(this)
+fun X.asSequenceTo(x: X) = sequence(this, x)
+
+fun sequencer(vararg x: X) = _line("sequencer", *x)
+val X.sequencer get() = _get("sequencer")
+fun <R> sequencer(fn: (X) -> R) = _case("sequencer", fn)
+val X.asSequencer get() = sequencer(this)
+fun X.asSequencerTo(x: X) = sequencer(this, x)
+
+fun serial(vararg x: X) = _line("serial", *x)
+val X.serial get() = _get("serial")
+fun <R> serial(fn: (X) -> R) = _case("serial", fn)
+val X.asSerial get() = serial(this)
+fun X.asSerialTo(x: X) = serial(this, x)
+
+fun server(vararg x: X) = _line("server", *x)
+val X.server get() = _get("server")
+fun <R> server(fn: (X) -> R) = _case("server", fn)
+val X.asServer get() = server(this)
+fun X.asServerTo(x: X) = server(this, x)
+
+fun set(vararg x: X) = _line("set", *x)
+val X.set get() = _get("set")
+fun <R> set(fn: (X) -> R) = _case("set", fn)
+val X.asSet get() = set(this)
+fun X.asSetTo(x: X) = set(this, x)
+
+fun sets(vararg x: X) = _line("sets", *x)
+val X.sets get() = _get("sets")
+fun <R> sets(fn: (X) -> R) = _case("sets", fn)
+val X.asSets get() = sets(this)
+fun X.asSetsTo(x: X) = sets(this, x)
+
+fun seven(vararg x: X) = _line("seven", *x)
+val X.seven get() = _get("seven")
+fun <R> seven(fn: (X) -> R) = _case("seven", fn)
+val X.asSeven get() = seven(this)
+fun X.asSevenTo(x: X) = seven(this, x)
+
+fun seventh(vararg x: X) = _line("seventh", *x)
+val X.seventh get() = _get("seventh")
+fun <R> seventh(fn: (X) -> R) = _case("seventh", fn)
+val X.asSeventh get() = seventh(this)
+fun X.asSeventhTo(x: X) = seventh(this, x)
+
+fun sex(vararg x: X) = _line("sex", *x)
+val X.sex get() = _get("sex")
+fun <R> sex(fn: (X) -> R) = _case("sex", fn)
+val X.asSex get() = sex(this)
+fun X.asSexTo(x: X) = sex(this, x)
+
+fun shape(vararg x: X) = _line("shape", *x)
+val X.shape get() = _get("shape")
+fun <R> shape(fn: (X) -> R) = _case("shape", fn)
+val X.asShape get() = shape(this)
+fun X.asShapeTo(x: X) = shape(this, x)
+
+fun shapes(vararg x: X) = _line("shapes", *x)
+val X.shapes get() = _get("shapes")
+fun <R> shapes(fn: (X) -> R) = _case("shapes", fn)
+val X.asShapes get() = shapes(this)
+fun X.asShapesTo(x: X) = shapes(this, x)
+
+fun shift(vararg x: X) = _line("shift", *x)
+val X.shift get() = _get("shift")
+fun <R> shift(fn: (X) -> R) = _case("shift", fn)
+val X.asShift get() = shift(this)
+fun X.asShiftTo(x: X) = shift(this, x)
+
+fun short(vararg x: X) = _line("short", *x)
+val X.short get() = _get("short")
+fun <R> short(fn: (X) -> R) = _case("short", fn)
+val X.asShort get() = short(this)
+fun X.asShortTo(x: X) = short(this, x)
+
+fun shortquote(vararg x: X) = _line("shortquote", *x)
+val X.shortquote get() = _get("shortquote")
+fun <R> shortquote(fn: (X) -> R) = _case("shortquote", fn)
+val X.asShortquote get() = shortquote(this)
+fun X.asShortquoteTo(x: X) = shortquote(this, x)
+
+fun should(vararg x: X) = _line("should", *x)
+val X.should get() = _get("should")
+fun <R> should(fn: (X) -> R) = _case("should", fn)
+val X.asShould get() = should(this)
+fun X.asShouldTo(x: X) = should(this, x)
+
+fun show(vararg x: X) = _line("show", *x)
+val X.show get() = _get("show")
+fun <R> show(fn: (X) -> R) = _case("show", fn)
+val X.asShow get() = show(this)
+fun X.asShowTo(x: X) = show(this, x)
+
+fun shutdown(vararg x: X) = _line("shutdown", *x)
+val X.shutdown get() = _get("shutdown")
+fun <R> shutdown(fn: (X) -> R) = _case("shutdown", fn)
+val X.asShutdown get() = shutdown(this)
+fun X.asShutdownTo(x: X) = shutdown(this, x)
+
+fun side(vararg x: X) = _line("side", *x)
+val X.side get() = _get("side")
+fun <R> side(fn: (X) -> R) = _case("side", fn)
+val X.asSide get() = side(this)
+fun X.asSideTo(x: X) = side(this, x)
+
+fun simple(vararg x: X) = _line("simple", *x)
+val X.simple get() = _get("simple")
+fun <R> simple(fn: (X) -> R) = _case("simple", fn)
+val X.asSimple get() = simple(this)
+fun X.asSimpleTo(x: X) = simple(this, x)
+
+fun sin(vararg x: X) = _line("sin", *x)
+val X.sin get() = _get("sin")
+fun <R> sin(fn: (X) -> R) = _case("sin", fn)
+val X.asSin get() = sin(this)
+fun X.asSinTo(x: X) = sin(this, x)
+
+fun sine(vararg x: X) = _line("sine", *x)
+val X.sine get() = _get("sine")
+fun <R> sine(fn: (X) -> R) = _case("sine", fn)
+val X.asSine get() = sine(this)
+fun X.asSineTo(x: X) = sine(this, x)
+
+fun single(vararg x: X) = _line("single", *x)
+val X.single get() = _get("single")
+fun <R> single(fn: (X) -> R) = _case("single", fn)
+val X.asSingle get() = single(this)
+fun X.asSingleTo(x: X) = single(this, x)
+
+fun singleton(vararg x: X) = _line("singleton", *x)
+val X.singleton get() = _get("singleton")
+fun <R> singleton(fn: (X) -> R) = _case("singleton", fn)
+val X.asSingleton get() = singleton(this)
+fun X.asSingletonTo(x: X) = singleton(this, x)
+
+fun singly(vararg x: X) = _line("singly", *x)
+val X.singly get() = _get("singly")
+fun <R> singly(fn: (X) -> R) = _case("singly", fn)
+val X.asSingly get() = singly(this)
+fun X.asSinglyTo(x: X) = singly(this, x)
+
+fun sinh(vararg x: X) = _line("sinh", *x)
+val X.sinh get() = _get("sinh")
+fun <R> sinh(fn: (X) -> R) = _case("sinh", fn)
+val X.asSinh get() = sinh(this)
+fun X.asSinhTo(x: X) = sinh(this, x)
+
+fun sink(vararg x: X) = _line("sink", *x)
+val X.sink get() = _get("sink")
+fun <R> sink(fn: (X) -> R) = _case("sink", fn)
+val X.asSink get() = sink(this)
+fun X.asSinkTo(x: X) = sink(this, x)
+
+fun sinks(vararg x: X) = _line("sinks", *x)
+val X.sinks get() = _get("sinks")
+fun <R> sinks(fn: (X) -> R) = _case("sinks", fn)
+val X.asSinks get() = sinks(this)
+fun X.asSinksTo(x: X) = sinks(this, x)
+
+fun sinus(vararg x: X) = _line("sinus", *x)
+val X.sinus get() = _get("sinus")
+fun <R> sinus(fn: (X) -> R) = _case("sinus", fn)
+val X.asSinus get() = sinus(this)
+fun X.asSinusTo(x: X) = sinus(this, x)
+
+fun six(vararg x: X) = _line("six", *x)
+val X.six get() = _get("six")
+fun <R> six(fn: (X) -> R) = _case("six", fn)
+val X.asSix get() = six(this)
+fun X.asSixTo(x: X) = six(this, x)
+
+fun sixth(vararg x: X) = _line("sixth", *x)
+val X.sixth get() = _get("sixth")
+fun <R> sixth(fn: (X) -> R) = _case("sixth", fn)
+val X.asSixth get() = sixth(this)
+fun X.asSixthTo(x: X) = sixth(this, x)
+
+fun size(vararg x: X) = _line("size", *x)
+val X.size get() = _get("size")
+fun <R> size(fn: (X) -> R) = _case("size", fn)
+val X.asSize get() = size(this)
+fun X.asSizeTo(x: X) = size(this, x)
+
+fun skip(vararg x: X) = _line("skip", *x)
+val X.skip get() = _get("skip")
+fun <R> skip(fn: (X) -> R) = _case("skip", fn)
+val X.asSkip get() = skip(this)
+fun X.asSkipTo(x: X) = skip(this, x)
+
+fun slash(vararg x: X) = _line("slash", *x)
+val X.slash get() = _get("slash")
+fun <R> slash(fn: (X) -> R) = _case("slash", fn)
+val X.asSlash get() = slash(this)
+fun X.asSlashTo(x: X) = slash(this, x)
+
+fun sleep(vararg x: X) = _line("sleep", *x)
+val X.sleep get() = _get("sleep")
+fun <R> sleep(fn: (X) -> R) = _case("sleep", fn)
+val X.asSleep get() = sleep(this)
+fun X.asSleepTo(x: X) = sleep(this, x)
+
+fun slice(vararg x: X) = _line("slice", *x)
+val X.slice get() = _get("slice")
+fun <R> slice(fn: (X) -> R) = _case("slice", fn)
+val X.asSlice get() = slice(this)
+fun X.asSliceTo(x: X) = slice(this, x)
+
+fun sliding(vararg x: X) = _line("sliding", *x)
+val X.sliding get() = _get("sliding")
+fun <R> sliding(fn: (X) -> R) = _case("sliding", fn)
+val X.asSliding get() = sliding(this)
+fun X.asSlidingTo(x: X) = sliding(this, x)
+
+fun slow(vararg x: X) = _line("slow", *x)
+val X.slow get() = _get("slow")
+fun <R> slow(fn: (X) -> R) = _case("slow", fn)
+val X.asSlow get() = slow(this)
+fun X.asSlowTo(x: X) = slow(this, x)
+
+fun some(vararg x: X) = _line("some", *x)
+val X.some get() = _get("some")
+fun <R> some(fn: (X) -> R) = _case("some", fn)
+val X.asSome get() = some(this)
+fun X.asSomeTo(x: X) = some(this, x)
+
+fun sort(vararg x: X) = _line("sort", *x)
+val X.sort get() = _get("sort")
+fun <R> sort(fn: (X) -> R) = _case("sort", fn)
+val X.asSort get() = sort(this)
+fun X.asSortTo(x: X) = sort(this, x)
+
+fun source(vararg x: X) = _line("source", *x)
+val X.source get() = _get("source")
+fun <R> source(fn: (X) -> R) = _case("source", fn)
+val X.asSource get() = source(this)
+fun X.asSourceTo(x: X) = source(this, x)
+
+fun space(vararg x: X) = _line("space", *x)
+val X.space get() = _get("space")
+fun <R> space(fn: (X) -> R) = _case("space", fn)
+val X.asSpace get() = space(this)
+fun X.asSpaceTo(x: X) = space(this, x)
+
+fun span(vararg x: X) = _line("span", *x)
+val X.span get() = _get("span")
+fun <R> span(fn: (X) -> R) = _case("span", fn)
+val X.asSpan get() = span(this)
+fun X.asSpanTo(x: X) = span(this, x)
+
+fun spanning(vararg x: X) = _line("spanning", *x)
+val X.spanning get() = _get("spanning")
+fun <R> spanning(fn: (X) -> R) = _case("spanning", fn)
+val X.asSpanning get() = spanning(this)
+fun X.asSpanningTo(x: X) = spanning(this, x)
+
+fun splice(vararg x: X) = _line("splice", *x)
+val X.splice get() = _get("splice")
+fun <R> splice(fn: (X) -> R) = _case("splice", fn)
+val X.asSplice get() = splice(this)
+fun X.asSpliceTo(x: X) = splice(this, x)
+
+fun split(vararg x: X) = _line("split", *x)
+val X.split get() = _get("split")
+fun <R> split(fn: (X) -> R) = _case("split", fn)
+val X.asSplit get() = split(this)
+fun X.asSplitTo(x: X) = split(this, x)
+
+fun spouse(vararg x: X) = _line("spouse", *x)
+val X.spouse get() = _get("spouse")
+fun <R> spouse(fn: (X) -> R) = _case("spouse", fn)
+val X.asSpouse get() = spouse(this)
+fun X.asSpouseTo(x: X) = spouse(this, x)
+
+fun sqrt(vararg x: X) = _line("sqrt", *x)
+val X.sqrt get() = _get("sqrt")
+fun <R> sqrt(fn: (X) -> R) = _case("sqrt", fn)
+val X.asSqrt get() = sqrt(this)
+fun X.asSqrtTo(x: X) = sqrt(this, x)
+
+fun square(vararg x: X) = _line("square", *x)
+val X.square get() = _get("square")
+fun <R> square(fn: (X) -> R) = _case("square", fn)
+val X.asSquare get() = square(this)
+fun X.asSquareTo(x: X) = square(this, x)
+
+fun squared(vararg x: X) = _line("squared", *x)
+val X.squared get() = _get("squared")
+fun <R> squared(fn: (X) -> R) = _case("squared", fn)
+val X.asSquared get() = squared(this)
+fun X.asSquaredTo(x: X) = squared(this, x)
+
+fun sr(vararg x: X) = _line("sr", *x)
+val X.sr get() = _get("sr")
+fun <R> sr(fn: (X) -> R) = _case("sr", fn)
+val X.asSr get() = sr(this)
+fun X.asSrTo(x: X) = sr(this, x)
+
+fun src(vararg x: X) = _line("src", *x)
+val X.src get() = _get("src")
+fun <R> src(fn: (X) -> R) = _case("src", fn)
+val X.asSrc get() = src(this)
+fun X.asSrcTo(x: X) = src(this, x)
+
+fun stack(vararg x: X) = _line("stack", *x)
+val X.stack get() = _get("stack")
+fun <R> stack(fn: (X) -> R) = _case("stack", fn)
+val X.asStack get() = stack(this)
+fun X.asStackTo(x: X) = stack(this, x)
+
+fun stacks(vararg x: X) = _line("stacks", *x)
+val X.stacks get() = _get("stacks")
+fun <R> stacks(fn: (X) -> R) = _case("stacks", fn)
+val X.asStacks get() = stacks(this)
+fun X.asStacksTo(x: X) = stacks(this, x)
+
+fun stand(vararg x: X) = _line("stand", *x)
+val X.stand get() = _get("stand")
+fun <R> stand(fn: (X) -> R) = _case("stand", fn)
+val X.asStand get() = stand(this)
+fun X.asStandTo(x: X) = stand(this, x)
+
+fun start(vararg x: X) = _line("start", *x)
+val X.start get() = _get("start")
+fun <R> start(fn: (X) -> R) = _case("start", fn)
+val X.asStart get() = start(this)
+fun X.asStartTo(x: X) = start(this, x)
+
+fun started(vararg x: X) = _line("started", *x)
+val X.started get() = _get("started")
+fun <R> started(fn: (X) -> R) = _case("started", fn)
+val X.asStarted get() = started(this)
+fun X.asStartedTo(x: X) = started(this, x)
+
+fun starts(vararg x: X) = _line("starts", *x)
+val X.starts get() = _get("starts")
+fun <R> starts(fn: (X) -> R) = _case("starts", fn)
+val X.asStarts get() = starts(this)
+fun X.asStartsTo(x: X) = starts(this, x)
+
+fun state(vararg x: X) = _line("state", *x)
+val X.state get() = _get("state")
+fun <R> state(fn: (X) -> R) = _case("state", fn)
+val X.asState get() = state(this)
+fun X.asStateTo(x: X) = state(this, x)
+
+fun statement(vararg x: X) = _line("statement", *x)
+val X.statement get() = _get("statement")
+fun <R> statement(fn: (X) -> R) = _case("statement", fn)
+val X.asStatement get() = statement(this)
+fun X.asStatementTo(x: X) = statement(this, x)
+
+fun statements(vararg x: X) = _line("statements", *x)
+val X.statements get() = _get("statements")
+fun <R> statements(fn: (X) -> R) = _case("statements", fn)
+val X.asStatements get() = statements(this)
+fun X.asStatementsTo(x: X) = statements(this, x)
+
+fun static(vararg x: X) = _line("static", *x)
+val X.static get() = _get("static")
+fun <R> static(fn: (X) -> R) = _case("static", fn)
+val X.asStatic get() = static(this)
+fun X.asStaticTo(x: X) = static(this, x)
+
+fun std(vararg x: X) = _line("std", *x)
+val X.std get() = _get("std")
+fun <R> std(fn: (X) -> R) = _case("std", fn)
+val X.asStd get() = std(this)
+fun X.asStdTo(x: X) = std(this, x)
+
+fun step(vararg x: X) = _line("step", *x)
+val X.step get() = _get("step")
+fun <R> step(fn: (X) -> R) = _case("step", fn)
+val X.asStep get() = step(this)
+fun X.asStepTo(x: X) = step(this, x)
+
+fun stop(vararg x: X) = _line("stop", *x)
+val X.stop get() = _get("stop")
+fun <R> stop(fn: (X) -> R) = _case("stop", fn)
+val X.asStop get() = stop(this)
+fun X.asStopTo(x: X) = stop(this, x)
+
+fun stream(vararg x: X) = _line("stream", *x)
+val X.stream get() = _get("stream")
+fun <R> stream(fn: (X) -> R) = _case("stream", fn)
+val X.asStream get() = stream(this)
+fun X.asStreamTo(x: X) = stream(this, x)
+
+fun string(vararg x: X) = _line("string", *x)
+val X.string get() = _get("string")
+fun <R> string(fn: (X) -> R) = _case("string", fn)
+val X.asString get() = string(this)
+fun X.asStringTo(x: X) = string(this, x)
+
+fun strings(vararg x: X) = _line("strings", *x)
+val X.strings get() = _get("strings")
+fun <R> strings(fn: (X) -> R) = _case("strings", fn)
+val X.asStrings get() = strings(this)
+fun X.asStringsTo(x: X) = strings(this, x)
+
+fun stroke(vararg x: X) = _line("stroke", *x)
+val X.stroke get() = _get("stroke")
+fun <R> stroke(fn: (X) -> R) = _case("stroke", fn)
+val X.asStroke get() = stroke(this)
+fun X.asStrokeTo(x: X) = stroke(this, x)
+
+fun struct(vararg x: X) = _line("struct", *x)
+val X.struct get() = _get("struct")
+fun <R> struct(fn: (X) -> R) = _case("struct", fn)
+val X.asStruct get() = struct(this)
+fun X.asStructTo(x: X) = struct(this, x)
+
+fun style(vararg x: X) = _line("style", *x)
+val X.style get() = _get("style")
+fun <R> style(fn: (X) -> R) = _case("style", fn)
+val X.asStyle get() = style(this)
+fun X.asStyleTo(x: X) = style(this, x)
+
+fun sub(vararg x: X) = _line("sub", *x)
+val X.sub get() = _get("sub")
+fun <R> sub(fn: (X) -> R) = _case("sub", fn)
+val X.asSub get() = sub(this)
+fun X.asSubTo(x: X) = sub(this, x)
+
+fun subject(vararg x: X) = _line("subject", *x)
+val X.subject get() = _get("subject")
+fun <R> subject(fn: (X) -> R) = _case("subject", fn)
+val X.asSubject get() = subject(this)
+fun X.asSubjectTo(x: X) = subject(this, x)
+
+fun submit(vararg x: X) = _line("submit", *x)
+val X.submit get() = _get("submit")
+fun <R> submit(fn: (X) -> R) = _case("submit", fn)
+val X.asSubmit get() = submit(this)
+fun X.asSubmitTo(x: X) = submit(this, x)
+
+fun subpackages(vararg x: X) = _line("subpackages", *x)
+val X.subpackages get() = _get("subpackages")
+fun <R> subpackages(fn: (X) -> R) = _case("subpackages", fn)
+val X.asSubpackages get() = subpackages(this)
+fun X.asSubpackagesTo(x: X) = subpackages(this, x)
+
+fun substr(vararg x: X) = _line("substr", *x)
+val X.substr get() = _get("substr")
+fun <R> substr(fn: (X) -> R) = _case("substr", fn)
+val X.asSubstr get() = substr(this)
+fun X.asSubstrTo(x: X) = substr(this, x)
+
+fun substring(vararg x: X) = _line("substring", *x)
+val X.substring get() = _get("substring")
+fun <R> substring(fn: (X) -> R) = _case("substring", fn)
+val X.asSubstring get() = substring(this)
+fun X.asSubstringTo(x: X) = substring(this, x)
+
+fun subtract(vararg x: X) = _line("subtract", *x)
+val X.subtract get() = _get("subtract")
+fun <R> subtract(fn: (X) -> R) = _case("subtract", fn)
+val X.asSubtract get() = subtract(this)
+fun X.asSubtractTo(x: X) = subtract(this, x)
+
+fun successor(vararg x: X) = _line("successor", *x)
+val X.successor get() = _get("successor")
+fun <R> successor(fn: (X) -> R) = _case("successor", fn)
+val X.asSuccessor get() = successor(this)
+fun X.asSuccessorTo(x: X) = successor(this, x)
+
+fun suffix(vararg x: X) = _line("suffix", *x)
+val X.suffix get() = _get("suffix")
+fun <R> suffix(fn: (X) -> R) = _case("suffix", fn)
+val X.asSuffix get() = suffix(this)
+fun X.asSuffixTo(x: X) = suffix(this, x)
+
+fun sum(vararg x: X) = _line("sum", *x)
+val X.sum get() = _get("sum")
+fun <R> sum(fn: (X) -> R) = _case("sum", fn)
+val X.asSum get() = sum(this)
+fun X.asSumTo(x: X) = sum(this, x)
+
+fun super_(vararg x: X) = _line("super", *x)
+val X.super_ get() = _get("super")
+fun <R> super_(fn: (X) -> R) = _case("super", fn)
+val X.asSuper get() = super_(this)
+fun X.asSuperTo(x: X) = super_(this, x)
+
+fun superclass(vararg x: X) = _line("superclass", *x)
+val X.superclass get() = _get("superclass")
+fun <R> superclass(fn: (X) -> R) = _case("superclass", fn)
+val X.asSuperclass get() = superclass(this)
+fun X.asSuperclassTo(x: X) = superclass(this, x)
+
+fun supervisor(vararg x: X) = _line("supervisor", *x)
+val X.supervisor get() = _get("supervisor")
+fun <R> supervisor(fn: (X) -> R) = _case("supervisor", fn)
+val X.asSupervisor get() = supervisor(this)
+fun X.asSupervisorTo(x: X) = supervisor(this, x)
+
+fun supplier(vararg x: X) = _line("supplier", *x)
+val X.supplier get() = _get("supplier")
+fun <R> supplier(fn: (X) -> R) = _case("supplier", fn)
+val X.asSupplier get() = supplier(this)
+fun X.asSupplierTo(x: X) = supplier(this, x)
+
+fun suppliers(vararg x: X) = _line("suppliers", *x)
+val X.suppliers get() = _get("suppliers")
+fun <R> suppliers(fn: (X) -> R) = _case("suppliers", fn)
+val X.asSuppliers get() = suppliers(this)
+fun X.asSuppliersTo(x: X) = suppliers(this, x)
+
+fun suppressed(vararg x: X) = _line("suppressed", *x)
+val X.suppressed get() = _get("suppressed")
+fun <R> suppressed(fn: (X) -> R) = _case("suppressed", fn)
+val X.asSuppressed get() = suppressed(this)
+fun X.asSuppressedTo(x: X) = suppressed(this, x)
+
+fun switch(vararg x: X) = _line("switch", *x)
+val X.switch get() = _get("switch")
+fun <R> switch(fn: (X) -> R) = _case("switch", fn)
+val X.asSwitch get() = switch(this)
+fun X.asSwitchTo(x: X) = switch(this, x)
+
+fun symbol(vararg x: X) = _line("symbol", *x)
+val X.symbol get() = _get("symbol")
+fun <R> symbol(fn: (X) -> R) = _case("symbol", fn)
+val X.asSymbol get() = symbol(this)
+fun X.asSymbolTo(x: X) = symbol(this, x)
+
+fun symbols(vararg x: X) = _line("symbols", *x)
+val X.symbols get() = _get("symbols")
+fun <R> symbols(fn: (X) -> R) = _case("symbols", fn)
+val X.asSymbols get() = symbols(this)
+fun X.asSymbolsTo(x: X) = symbols(this, x)
+
+fun syntax(vararg x: X) = _line("syntax", *x)
+val X.syntax get() = _get("syntax")
+fun <R> syntax(fn: (X) -> R) = _case("syntax", fn)
+val X.asSyntax get() = syntax(this)
+fun X.asSyntaxTo(x: X) = syntax(this, x)
+
+fun system(vararg x: X) = _line("system", *x)
+val X.system get() = _get("system")
+fun <R> system(fn: (X) -> R) = _case("system", fn)
+val X.asSystem get() = system(this)
+fun X.asSystemTo(x: X) = system(this, x)
+
+fun t(vararg x: X) = _line("t", *x)
+val X.t get() = _get("t")
+fun <R> t(fn: (X) -> R) = _case("t", fn)
+val X.asT get() = t(this)
+fun X.asTTo(x: X) = t(this, x)
+
+fun tab(vararg x: X) = _line("tab", *x)
+val X.tab get() = _get("tab")
+fun <R> tab(fn: (X) -> R) = _case("tab", fn)
+val X.asTab get() = tab(this)
+fun X.asTabTo(x: X) = tab(this, x)
+
+fun tag(vararg x: X) = _line("tag", *x)
+val X.tag get() = _get("tag")
+fun <R> tag(fn: (X) -> R) = _case("tag", fn)
+val X.asTag get() = tag(this)
+fun X.asTagTo(x: X) = tag(this, x)
+
+fun tail(vararg x: X) = _line("tail", *x)
+val X.tail get() = _get("tail")
+fun <R> tail(fn: (X) -> R) = _case("tail", fn)
+val X.asTail get() = tail(this)
+fun X.asTailTo(x: X) = tail(this, x)
+
+fun take(vararg x: X) = _line("take", *x)
+val X.take get() = _get("take")
+fun <R> take(fn: (X) -> R) = _case("take", fn)
+val X.asTake get() = take(this)
+fun X.asTakeTo(x: X) = take(this, x)
+
+fun taken(vararg x: X) = _line("taken", *x)
+val X.taken get() = _get("taken")
+fun <R> taken(fn: (X) -> R) = _case("taken", fn)
+val X.asTaken get() = taken(this)
+fun X.asTakenTo(x: X) = taken(this, x)
+
+fun takes(vararg x: X) = _line("takes", *x)
+val X.takes get() = _get("takes")
+fun <R> takes(fn: (X) -> R) = _case("takes", fn)
+val X.asTakes get() = takes(this)
+fun X.asTakesTo(x: X) = takes(this, x)
+
+fun taking(vararg x: X) = _line("taking", *x)
+val X.taking get() = _get("taking")
+fun <R> taking(fn: (X) -> R) = _case("taking", fn)
+val X.asTaking get() = taking(this)
+fun X.asTakingTo(x: X) = taking(this, x)
+
+fun tan(vararg x: X) = _line("tan", *x)
+val X.tan get() = _get("tan")
+fun <R> tan(fn: (X) -> R) = _case("tan", fn)
+val X.asTan get() = tan(this)
+fun X.asTanTo(x: X) = tan(this, x)
+
+fun tanh(vararg x: X) = _line("tanh", *x)
+val X.tanh get() = _get("tanh")
+fun <R> tanh(fn: (X) -> R) = _case("tanh", fn)
+val X.asTanh get() = tanh(this)
+fun X.asTanhTo(x: X) = tanh(this, x)
+
+fun tap(vararg x: X) = _line("tap", *x)
+val X.tap get() = _get("tap")
+fun <R> tap(fn: (X) -> R) = _case("tap", fn)
+val X.asTap get() = tap(this)
+fun X.asTapTo(x: X) = tap(this, x)
+
+fun target(vararg x: X) = _line("target", *x)
+val X.target get() = _get("target")
+fun <R> target(fn: (X) -> R) = _case("target", fn)
+val X.asTarget get() = target(this)
+fun X.asTargetTo(x: X) = target(this, x)
+
+fun temp(vararg x: X) = _line("temp", *x)
+val X.temp get() = _get("temp")
+fun <R> temp(fn: (X) -> R) = _case("temp", fn)
+val X.asTemp get() = temp(this)
+fun X.asTempTo(x: X) = temp(this, x)
+
+fun template(vararg x: X) = _line("template", *x)
+val X.template get() = _get("template")
+fun <R> template(fn: (X) -> R) = _case("template", fn)
+val X.asTemplate get() = template(this)
+fun X.asTemplateTo(x: X) = template(this, x)
+
+fun tempo(vararg x: X) = _line("tempo", *x)
+val X.tempo get() = _get("tempo")
+fun <R> tempo(fn: (X) -> R) = _case("tempo", fn)
+val X.asTempo get() = tempo(this)
+fun X.asTempoTo(x: X) = tempo(this, x)
+
+fun tempos(vararg x: X) = _line("tempos", *x)
+val X.tempos get() = _get("tempos")
+fun <R> tempos(fn: (X) -> R) = _case("tempos", fn)
+val X.asTempos get() = tempos(this)
+fun X.asTemposTo(x: X) = tempos(this, x)
+
+fun ten(vararg x: X) = _line("ten", *x)
+val X.ten get() = _get("ten")
+fun <R> ten(fn: (X) -> R) = _case("ten", fn)
+val X.asTen get() = ten(this)
+fun X.asTenTo(x: X) = ten(this, x)
+
+fun tenth(vararg x: X) = _line("tenth", *x)
+val X.tenth get() = _get("tenth")
+fun <R> tenth(fn: (X) -> R) = _case("tenth", fn)
+val X.asTenth get() = tenth(this)
+fun X.asTenthTo(x: X) = tenth(this, x)
+
+fun term(vararg x: X) = _line("term", *x)
+val X.term get() = _get("term")
+fun <R> term(fn: (X) -> R) = _case("term", fn)
+val X.asTerm get() = term(this)
+fun X.asTermTo(x: X) = term(this, x)
+
+fun terms(vararg x: X) = _line("terms", *x)
+val X.terms get() = _get("terms")
+fun <R> terms(fn: (X) -> R) = _case("terms", fn)
+val X.asTerms get() = terms(this)
+fun X.asTermsTo(x: X) = terms(this, x)
+
+fun test(vararg x: X) = _line("test", *x)
+val X.test get() = _get("test")
+fun <R> test(fn: (X) -> R) = _case("test", fn)
+val X.asTest get() = test(this)
+fun X.asTestTo(x: X) = test(this, x)
+
+fun testing(vararg x: X) = _line("testing", *x)
+val X.testing get() = _get("testing")
+fun <R> testing(fn: (X) -> R) = _case("testing", fn)
+val X.asTesting get() = testing(this)
+fun X.asTestingTo(x: X) = testing(this, x)
+
+fun tests(vararg x: X) = _line("tests", *x)
+val X.tests get() = _get("tests")
+fun <R> tests(fn: (X) -> R) = _case("tests", fn)
+val X.asTests get() = tests(this)
+fun X.asTestsTo(x: X) = tests(this, x)
+
+fun text(vararg x: X) = _line("text", *x)
+val X.text get() = _get("text")
+fun <R> text(fn: (X) -> R) = _case("text", fn)
+val X.asText get() = text(this)
+fun X.asTextTo(x: X) = text(this, x)
+
+fun that(vararg x: X) = _line("that", *x)
+val X.that get() = _get("that")
+fun <R> that(fn: (X) -> R) = _case("that", fn)
+val X.asThat get() = that(this)
+fun X.asThatTo(x: X) = that(this, x)
+
+fun the(vararg x: X) = _line("the", *x)
+val X.the get() = _get("the")
+fun <R> the(fn: (X) -> R) = _case("the", fn)
+val X.asThe get() = the(this)
+fun X.asTheTo(x: X) = the(this, x)
+
+fun then_(vararg x: X) = _line("then", *x)
+val X.then_ get() = _get("then")
+fun <R> then_(fn: (X) -> R) = _case("then", fn)
+val X.asThen get() = then_(this)
+fun X.asThenTo(x: X) = then_(this, x)
+
+fun these(vararg x: X) = _line("these", *x)
+val X.these get() = _get("these")
+fun <R> these(fn: (X) -> R) = _case("these", fn)
+val X.asThese get() = these(this)
+fun X.asTheseTo(x: X) = these(this, x)
+
+fun thing(vararg x: X) = _line("thing", *x)
+val X.thing get() = _get("thing")
+fun <R> thing(fn: (X) -> R) = _case("thing", fn)
+val X.asThing get() = thing(this)
+fun X.asThingTo(x: X) = thing(this, x)
+
+fun third(vararg x: X) = _line("third", *x)
+val X.third get() = _get("third")
+fun <R> third(fn: (X) -> R) = _case("third", fn)
+val X.asThird get() = third(this)
+fun X.asThirdTo(x: X) = third(this, x)
+
+fun this_(vararg x: X) = _line("this", *x)
+val X.this_ get() = _get("this")
+fun <R> this_(fn: (X) -> R) = _case("this", fn)
+val X.asThis get() = this_(this)
+fun X.asThisTo(x: X) = this_(this, x)
+
+fun thread(vararg x: X) = _line("thread", *x)
+val X.thread get() = _get("thread")
+fun <R> thread(fn: (X) -> R) = _case("thread", fn)
+val X.asThread get() = thread(this)
+fun X.asThreadTo(x: X) = thread(this, x)
+
+fun three(vararg x: X) = _line("three", *x)
+val X.three get() = _get("three")
+fun <R> three(fn: (X) -> R) = _case("three", fn)
+val X.asThree get() = three(this)
+fun X.asThreeTo(x: X) = three(this, x)
+
+fun throw_(vararg x: X) = _line("throw", *x)
+val X.throw_ get() = _get("throw")
+fun <R> throw_(fn: (X) -> R) = _case("throw", fn)
+val X.asThrow get() = throw_(this)
+fun X.asThrowTo(x: X) = throw_(this, x)
+
+fun throwable(vararg x: X) = _line("throwable", *x)
+val X.throwable get() = _get("throwable")
+fun <R> throwable(fn: (X) -> R) = _case("throwable", fn)
+val X.asThrowable get() = throwable(this)
+fun X.asThrowableTo(x: X) = throwable(this, x)
+
+fun throws(vararg x: X) = _line("throws", *x)
+val X.throws get() = _get("throws")
+fun <R> throws(fn: (X) -> R) = _case("throws", fn)
+val X.asThrows get() = throws(this)
+fun X.asThrowsTo(x: X) = throws(this, x)
+
+fun thunk(vararg x: X) = _line("thunk", *x)
+val X.thunk get() = _get("thunk")
+fun <R> thunk(fn: (X) -> R) = _case("thunk", fn)
+val X.asThunk get() = thunk(this)
+fun X.asThunkTo(x: X) = thunk(this, x)
+
+fun time(vararg x: X) = _line("time", *x)
+val X.time get() = _get("time")
+fun <R> time(fn: (X) -> R) = _case("time", fn)
+val X.asTime get() = time(this)
+fun X.asTimeTo(x: X) = time(this, x)
+
+fun timeout(vararg x: X) = _line("timeout", *x)
+val X.timeout get() = _get("timeout")
+fun <R> timeout(fn: (X) -> R) = _case("timeout", fn)
+val X.asTimeout get() = timeout(this)
+fun X.asTimeoutTo(x: X) = timeout(this, x)
+
+fun times(vararg x: X) = _line("times", *x)
+val X.times get() = _get("times")
+fun <R> times(fn: (X) -> R) = _case("times", fn)
+val X.asTimes get() = times(this)
+fun X.asTimesTo(x: X) = times(this, x)
+
+fun timestamp(vararg x: X) = _line("timestamp", *x)
+val X.timestamp get() = _get("timestamp")
+fun <R> timestamp(fn: (X) -> R) = _case("timestamp", fn)
+val X.asTimestamp get() = timestamp(this)
+fun X.asTimestampTo(x: X) = timestamp(this, x)
+
+fun to(vararg x: X) = _line("to", *x)
+val X.to get() = _get("to")
+fun <R> to(fn: (X) -> R) = _case("to", fn)
+val X.asTo get() = to(this)
+fun X.asToTo(x: X) = to(this, x)
+
+fun token(vararg x: X) = _line("token", *x)
+val X.token get() = _get("token")
+fun <R> token(fn: (X) -> R) = _case("token", fn)
+val X.asToken get() = token(this)
+fun X.asTokenTo(x: X) = token(this, x)
+
+fun top(vararg x: X) = _line("top", *x)
+val X.top get() = _get("top")
+fun <R> top(fn: (X) -> R) = _case("top", fn)
+val X.asTop get() = top(this)
+fun X.asTopTo(x: X) = top(this, x)
+
+fun touch(vararg x: X) = _line("touch", *x)
+val X.touch get() = _get("touch")
+fun <R> touch(fn: (X) -> R) = _case("touch", fn)
+val X.asTouch get() = touch(this)
+fun X.asTouchTo(x: X) = touch(this, x)
+
+fun trace(vararg x: X) = _line("trace", *x)
+val X.trace get() = _get("trace")
+fun <R> trace(fn: (X) -> R) = _case("trace", fn)
+val X.asTrace get() = trace(this)
+fun X.asTraceTo(x: X) = trace(this, x)
+
+fun traced(vararg x: X) = _line("traced", *x)
+val X.traced get() = _get("traced")
+fun <R> traced(fn: (X) -> R) = _case("traced", fn)
+val X.asTraced get() = traced(this)
+fun X.asTracedTo(x: X) = traced(this, x)
+
+fun track(vararg x: X) = _line("track", *x)
+val X.track get() = _get("track")
+fun <R> track(fn: (X) -> R) = _case("track", fn)
+val X.asTrack get() = track(this)
+fun X.asTrackTo(x: X) = track(this, x)
+
+fun transform(vararg x: X) = _line("transform", *x)
+val X.transform get() = _get("transform")
+fun <R> transform(fn: (X) -> R) = _case("transform", fn)
+val X.asTransform get() = transform(this)
+fun X.asTransformTo(x: X) = transform(this, x)
+
+fun translate(vararg x: X) = _line("translate", *x)
+val X.translate get() = _get("translate")
+fun <R> translate(fn: (X) -> R) = _case("translate", fn)
+val X.asTranslate get() = translate(this)
+fun X.asTranslateTo(x: X) = translate(this, x)
+
+fun triangle(vararg x: X) = _line("triangle", *x)
+val X.triangle get() = _get("triangle")
+fun <R> triangle(fn: (X) -> R) = _case("triangle", fn)
+val X.asTriangle get() = triangle(this)
+fun X.asTriangleTo(x: X) = triangle(this, x)
+
+fun trigger(vararg x: X) = _line("trigger", *x)
+val X.trigger get() = _get("trigger")
+fun <R> trigger(fn: (X) -> R) = _case("trigger", fn)
+val X.asTrigger get() = trigger(this)
+fun X.asTriggerTo(x: X) = trigger(this, x)
+
+fun true_(vararg x: X) = _line("true", *x)
+val X.true_ get() = _get("true")
+fun <R> true_(fn: (X) -> R) = _case("true", fn)
+val X.asTrue get() = true_(this)
+fun X.asTrueTo(x: X) = true_(this, x)
+
+fun truth(vararg x: X) = _line("truth", *x)
+val X.truth get() = _get("truth")
+fun <R> truth(fn: (X) -> R) = _case("truth", fn)
+val X.asTruth get() = truth(this)
+fun X.asTruthTo(x: X) = truth(this, x)
+
+fun tuple(vararg x: X) = _line("tuple", *x)
+val X.tuple get() = _get("tuple")
+fun <R> tuple(fn: (X) -> R) = _case("tuple", fn)
+val X.asTuple get() = tuple(this)
+fun X.asTupleTo(x: X) = tuple(this, x)
+
+fun two(vararg x: X) = _line("two", *x)
+val X.two get() = _get("two")
+fun <R> two(fn: (X) -> R) = _case("two", fn)
+val X.asTwo get() = two(this)
+fun X.asTwoTo(x: X) = two(this, x)
+
+fun type(vararg x: X) = _line("type", *x)
+val X.type get() = _get("type")
+fun <R> type(fn: (X) -> R) = _case("type", fn)
+val X.asType get() = type(this)
+fun X.asTypeTo(x: X) = type(this, x)
+
+fun typed(vararg x: X) = _line("typed", *x)
+val X.typed get() = _get("typed")
+fun <R> typed(fn: (X) -> R) = _case("typed", fn)
+val X.asTyped get() = typed(this)
+fun X.asTypedTo(x: X) = typed(this, x)
+
+fun types(vararg x: X) = _line("types", *x)
+val X.types get() = _get("types")
+fun <R> types(fn: (X) -> R) = _case("types", fn)
+val X.asTypes get() = types(this)
+fun X.asTypesTo(x: X) = types(this, x)
+
+fun u(vararg x: X) = _line("u", *x)
+val X.u get() = _get("u")
+fun <R> u(fn: (X) -> R) = _case("u", fn)
+val X.asU get() = u(this)
+fun X.asUTo(x: X) = u(this, x)
+
+fun uint(vararg x: X) = _line("uint", *x)
+val X.uint get() = _get("uint")
+fun <R> uint(fn: (X) -> R) = _case("uint", fn)
+val X.asUint get() = uint(this)
+fun X.asUintTo(x: X) = uint(this, x)
+
+fun uint16(vararg x: X) = _line("uint16", *x)
+val X.uint16 get() = _get("uint16")
+fun <R> uint16(fn: (X) -> R) = _case("uint16", fn)
+val X.asUint16 get() = uint16(this)
+fun X.asUint16To(x: X) = uint16(this, x)
+
+fun uint32(vararg x: X) = _line("uint32", *x)
+val X.uint32 get() = _get("uint32")
+fun <R> uint32(fn: (X) -> R) = _case("uint32", fn)
+val X.asUint32 get() = uint32(this)
+fun X.asUint32To(x: X) = uint32(this, x)
+
+fun uint64(vararg x: X) = _line("uint64", *x)
+val X.uint64 get() = _get("uint64")
+fun <R> uint64(fn: (X) -> R) = _case("uint64", fn)
+val X.asUint64 get() = uint64(this)
+fun X.asUint64To(x: X) = uint64(this, x)
+
+fun uint8(vararg x: X) = _line("uint8", *x)
+val X.uint8 get() = _get("uint8")
+fun <R> uint8(fn: (X) -> R) = _case("uint8", fn)
+val X.asUint8 get() = uint8(this)
+fun X.asUint8To(x: X) = uint8(this, x)
+
+fun unchecked(vararg x: X) = _line("unchecked", *x)
+val X.unchecked get() = _get("unchecked")
+fun <R> unchecked(fn: (X) -> R) = _case("unchecked", fn)
+val X.asUnchecked get() = unchecked(this)
+fun X.asUncheckedTo(x: X) = unchecked(this, x)
+
+fun undefined(vararg x: X) = _line("undefined", *x)
+val X.undefined get() = _get("undefined")
+fun <R> undefined(fn: (X) -> R) = _case("undefined", fn)
+val X.asUndefined get() = undefined(this)
+fun X.asUndefinedTo(x: X) = undefined(this, x)
+
+fun underscorify(vararg x: X) = _line("underscorify", *x)
+val X.underscorify get() = _get("underscorify")
+fun <R> underscorify(fn: (X) -> R) = _case("underscorify", fn)
+val X.asUnderscorify get() = underscorify(this)
+fun X.asUnderscorifyTo(x: X) = underscorify(this, x)
+
+fun undo(vararg x: X) = _line("undo", *x)
+val X.undo get() = _get("undo")
+fun <R> undo(fn: (X) -> R) = _case("undo", fn)
+val X.asUndo get() = undo(this)
+fun X.asUndoTo(x: X) = undo(this, x)
+
+fun unhandled(vararg x: X) = _line("unhandled", *x)
+val X.unhandled get() = _get("unhandled")
+fun <R> unhandled(fn: (X) -> R) = _case("unhandled", fn)
+val X.asUnhandled get() = unhandled(this)
+fun X.asUnhandledTo(x: X) = unhandled(this, x)
+
+fun unindent(vararg x: X) = _line("unindent", *x)
+val X.unindent get() = _get("unindent")
+fun <R> unindent(fn: (X) -> R) = _case("unindent", fn)
+val X.asUnindent get() = unindent(this)
+fun X.asUnindentTo(x: X) = unindent(this, x)
+
+fun unit(vararg x: X) = _line("unit", *x)
+val X.unit get() = _get("unit")
+fun <R> unit(fn: (X) -> R) = _case("unit", fn)
+val X.asUnit get() = unit(this)
+fun X.asUnitTo(x: X) = unit(this, x)
+
+fun unknown(vararg x: X) = _line("unknown", *x)
+val X.unknown get() = _get("unknown")
+fun <R> unknown(fn: (X) -> R) = _case("unknown", fn)
+val X.asUnknown get() = unknown(this)
+fun X.asUnknownTo(x: X) = unknown(this, x)
+
+fun unlimited(vararg x: X) = _line("unlimited", *x)
+val X.unlimited get() = _get("unlimited")
+fun <R> unlimited(fn: (X) -> R) = _case("unlimited", fn)
+val X.asUnlimited get() = unlimited(this)
+fun X.asUnlimitedTo(x: X) = unlimited(this, x)
+
+fun unmodifiable(vararg x: X) = _line("unmodifiable", *x)
+val X.unmodifiable get() = _get("unmodifiable")
+fun <R> unmodifiable(fn: (X) -> R) = _case("unmodifiable", fn)
+val X.asUnmodifiable get() = unmodifiable(this)
+fun X.asUnmodifiableTo(x: X) = unmodifiable(this, x)
+
+fun unquote(vararg x: X) = _line("unquote", *x)
+val X.unquote get() = _get("unquote")
+fun <R> unquote(fn: (X) -> R) = _case("unquote", fn)
+val X.asUnquote get() = unquote(this)
+fun X.asUnquoteTo(x: X) = unquote(this, x)
+
+fun unquoted(vararg x: X) = _line("unquoted", *x)
+val X.unquoted get() = _get("unquoted")
+fun <R> unquoted(fn: (X) -> R) = _case("unquoted", fn)
+val X.asUnquoted get() = unquoted(this)
+fun X.asUnquotedTo(x: X) = unquoted(this, x)
+
+fun unread(vararg x: X) = _line("unread", *x)
+val X.unread get() = _get("unread")
+fun <R> unread(fn: (X) -> R) = _case("unread", fn)
+val X.asUnread get() = unread(this)
+fun X.asUnreadTo(x: X) = unread(this, x)
+
+fun unresolved(vararg x: X) = _line("unresolved", *x)
+val X.unresolved get() = _get("unresolved")
+fun <R> unresolved(fn: (X) -> R) = _case("unresolved", fn)
+val X.asUnresolved get() = unresolved(this)
+fun X.asUnresolvedTo(x: X) = unresolved(this, x)
+
+fun unsafe(vararg x: X) = _line("unsafe", *x)
+val X.unsafe get() = _get("unsafe")
+fun <R> unsafe(fn: (X) -> R) = _case("unsafe", fn)
+val X.asUnsafe get() = unsafe(this)
+fun X.asUnsafeTo(x: X) = unsafe(this, x)
+
+fun unsafes(vararg x: X) = _line("unsafes", *x)
+val X.unsafes get() = _get("unsafes")
+fun <R> unsafes(fn: (X) -> R) = _case("unsafes", fn)
+val X.asUnsafes get() = unsafes(this)
+fun X.asUnsafesTo(x: X) = unsafes(this, x)
+
+fun unshift(vararg x: X) = _line("unshift", *x)
+val X.unshift get() = _get("unshift")
+fun <R> unshift(fn: (X) -> R) = _case("unshift", fn)
+val X.asUnshift get() = unshift(this)
+fun X.asUnshiftTo(x: X) = unshift(this, x)
+
+fun unsigned(vararg x: X) = _line("unsigned", *x)
+val X.unsigned get() = _get("unsigned")
+fun <R> unsigned(fn: (X) -> R) = _case("unsigned", fn)
+val X.asUnsigned get() = unsigned(this)
+fun X.asUnsignedTo(x: X) = unsigned(this, x)
+
+fun update(vararg x: X) = _line("update", *x)
+val X.update get() = _get("update")
+fun <R> update(fn: (X) -> R) = _case("update", fn)
+val X.asUpdate get() = update(this)
+fun X.asUpdateTo(x: X) = update(this, x)
+
+fun upper(vararg x: X) = _line("upper", *x)
+val X.upper get() = _get("upper")
+fun <R> upper(fn: (X) -> R) = _case("upper", fn)
+val X.asUpper get() = upper(this)
+fun X.asUpperTo(x: X) = upper(this, x)
+
+fun uri(vararg x: X) = _line("uri", *x)
+val X.uri get() = _get("uri")
+fun <R> uri(fn: (X) -> R) = _case("uri", fn)
+val X.asUri get() = uri(this)
+fun X.asUriTo(x: X) = uri(this, x)
+
+fun url(vararg x: X) = _line("url", *x)
+val X.url get() = _get("url")
+fun <R> url(fn: (X) -> R) = _case("url", fn)
+val X.asUrl get() = url(this)
+fun X.asUrlTo(x: X) = url(this, x)
+
+fun use(vararg x: X) = _line("use", *x)
+val X.use get() = _get("use")
+fun <R> use(fn: (X) -> R) = _case("use", fn)
+val X.asUse get() = use(this)
+fun X.asUseTo(x: X) = use(this, x)
+
+fun user(vararg x: X) = _line("user", *x)
+val X.user get() = _get("user")
+fun <R> user(fn: (X) -> R) = _case("user", fn)
+val X.asUser get() = user(this)
+fun X.asUserTo(x: X) = user(this, x)
+
+fun using(vararg x: X) = _line("using", *x)
+val X.using get() = _get("using")
+fun <R> using(fn: (X) -> R) = _case("using", fn)
+val X.asUsing get() = using(this)
+fun X.asUsingTo(x: X) = using(this, x)
+
+fun util(vararg x: X) = _line("util", *x)
+val X.util get() = _get("util")
+fun <R> util(fn: (X) -> R) = _case("util", fn)
+val X.asUtil get() = util(this)
+fun X.asUtilTo(x: X) = util(this, x)
+
+fun v(vararg x: X) = _line("v", *x)
+val X.v get() = _get("v")
+fun <R> v(fn: (X) -> R) = _case("v", fn)
+val X.asV get() = v(this)
+fun X.asVTo(x: X) = v(this, x)
+
+fun val_(vararg x: X) = _line("val", *x)
+val X.val_ get() = _get("val")
+fun <R> val_(fn: (X) -> R) = _case("val", fn)
+val X.asVal get() = val_(this)
+fun X.asValTo(x: X) = val_(this, x)
+
+fun valid(vararg x: X) = _line("valid", *x)
+val X.valid get() = _get("valid")
+fun <R> valid(fn: (X) -> R) = _case("valid", fn)
+val X.asValid get() = valid(this)
+fun X.asValidTo(x: X) = valid(this, x)
+
+fun validate(vararg x: X) = _line("validate", *x)
+val X.validate get() = _get("validate")
+fun <R> validate(fn: (X) -> R) = _case("validate", fn)
+val X.asValidate get() = validate(this)
+fun X.asValidateTo(x: X) = validate(this, x)
+
+fun value(vararg x: X) = _line("value", *x)
+val X.value get() = _get("value")
+fun <R> value(fn: (X) -> R) = _case("value", fn)
+val X.asValue get() = value(this)
+fun X.asValueTo(x: X) = value(this, x)
+
+fun values(vararg x: X) = _line("values", *x)
+val X.values get() = _get("values")
+fun <R> values(fn: (X) -> R) = _case("values", fn)
+val X.asValues get() = values(this)
+fun X.asValuesTo(x: X) = values(this, x)
+
+fun var_(vararg x: X) = _line("var", *x)
+val X.var_ get() = _get("var")
+fun <R> var_(fn: (X) -> R) = _case("var", fn)
+val X.asVar get() = var_(this)
+fun X.asVarTo(x: X) = var_(this, x)
+
+fun variable(vararg x: X) = _line("variable", *x)
+val X.variable get() = _get("variable")
+fun <R> variable(fn: (X) -> R) = _case("variable", fn)
+val X.asVariable get() = variable(this)
+fun X.asVariableTo(x: X) = variable(this, x)
+
+fun variables(vararg x: X) = _line("variables", *x)
+val X.variables get() = _get("variables")
+fun <R> variables(fn: (X) -> R) = _case("variables", fn)
+val X.asVariables get() = variables(this)
+fun X.asVariablesTo(x: X) = variables(this, x)
+
+fun vec(vararg x: X) = _line("vec", *x)
+val X.vec get() = _get("vec")
+fun <R> vec(fn: (X) -> R) = _case("vec", fn)
+val X.asVec get() = vec(this)
+fun X.asVecTo(x: X) = vec(this, x)
+
+fun vec2(vararg x: X) = _line("vec2", *x)
+val X.vec2 get() = _get("vec2")
+fun <R> vec2(fn: (X) -> R) = _case("vec2", fn)
+val X.asVec2 get() = vec2(this)
+fun X.asVec2To(x: X) = vec2(this, x)
+
+fun vec3(vararg x: X) = _line("vec3", *x)
+val X.vec3 get() = _get("vec3")
+fun <R> vec3(fn: (X) -> R) = _case("vec3", fn)
+val X.asVec3 get() = vec3(this)
+fun X.asVec3To(x: X) = vec3(this, x)
+
+fun vec4(vararg x: X) = _line("vec4", *x)
+val X.vec4 get() = _get("vec4")
+fun <R> vec4(fn: (X) -> R) = _case("vec4", fn)
+val X.asVec4 get() = vec4(this)
+fun X.asVec4To(x: X) = vec4(this, x)
+
+fun vector(vararg x: X) = _line("vector", *x)
+val X.vector get() = _get("vector")
+fun <R> vector(fn: (X) -> R) = _case("vector", fn)
+val X.asVector get() = vector(this)
+fun X.asVectorTo(x: X) = vector(this, x)
+
+fun versionuid(vararg x: X) = _line("versionuid", *x)
+val X.versionuid get() = _get("versionuid")
+fun <R> versionuid(fn: (X) -> R) = _case("versionuid", fn)
+val X.asVersionuid get() = versionuid(this)
+fun X.asVersionuidTo(x: X) = versionuid(this, x)
+
+fun vertical(vararg x: X) = _line("vertical", *x)
+val X.vertical get() = _get("vertical")
+fun <R> vertical(fn: (X) -> R) = _case("vertical", fn)
+val X.asVertical get() = vertical(this)
+fun X.asVerticalTo(x: X) = vertical(this, x)
+
+fun vertically(vararg x: X) = _line("vertically", *x)
+val X.vertically get() = _get("vertically")
+fun <R> vertically(fn: (X) -> R) = _case("vertically", fn)
+val X.asVertically get() = vertically(this)
+fun X.asVerticallyTo(x: X) = vertically(this, x)
+
+fun view(vararg x: X) = _line("view", *x)
+val X.view get() = _get("view")
+fun <R> view(fn: (X) -> R) = _case("view", fn)
+val X.asView get() = view(this)
+fun X.asViewTo(x: X) = view(this, x)
+
+fun violet(vararg x: X) = _line("violet", *x)
+val X.violet get() = _get("violet")
+fun <R> violet(fn: (X) -> R) = _case("violet", fn)
+val X.asViolet get() = violet(this)
+fun X.asVioletTo(x: X) = violet(this, x)
+
+fun visibility(vararg x: X) = _line("visibility", *x)
+val X.visibility get() = _get("visibility")
+fun <R> visibility(fn: (X) -> R) = _case("visibility", fn)
+val X.asVisibility get() = visibility(this)
+fun X.asVisibilityTo(x: X) = visibility(this, x)
+
+fun visible(vararg x: X) = _line("visible", *x)
+val X.visible get() = _get("visible")
+fun <R> visible(fn: (X) -> R) = _case("visible", fn)
+val X.asVisible get() = visible(this)
+fun X.asVisibleTo(x: X) = visible(this, x)
+
+fun visit(vararg x: X) = _line("visit", *x)
+val X.visit get() = _get("visit")
+fun <R> visit(fn: (X) -> R) = _case("visit", fn)
+val X.asVisit get() = visit(this)
+fun X.asVisitTo(x: X) = visit(this, x)
+
+fun visitor(vararg x: X) = _line("visitor", *x)
+val X.visitor get() = _get("visitor")
+fun <R> visitor(fn: (X) -> R) = _case("visitor", fn)
+val X.asVisitor get() = visitor(this)
+fun X.asVisitorTo(x: X) = visitor(this, x)
+
+fun void(vararg x: X) = _line("void", *x)
+val X.void get() = _get("void")
+fun <R> void(fn: (X) -> R) = _case("void", fn)
+val X.asVoid get() = void(this)
+fun X.asVoidTo(x: X) = void(this, x)
+
+fun volume(vararg x: X) = _line("volume", *x)
+val X.volume get() = _get("volume")
+fun <R> volume(fn: (X) -> R) = _case("volume", fn)
+val X.asVolume get() = volume(this)
+fun X.asVolumeTo(x: X) = volume(this, x)
+
+fun w(vararg x: X) = _line("w", *x)
+val X.w get() = _get("w")
+fun <R> w(fn: (X) -> R) = _case("w", fn)
+val X.asW get() = w(this)
+fun X.asWTo(x: X) = w(this, x)
+
+fun wait(vararg x: X) = _line("wait", *x)
+val X.wait get() = _get("wait")
+fun <R> wait(fn: (X) -> R) = _case("wait", fn)
+val X.asWait get() = wait(this)
+fun X.asWaitTo(x: X) = wait(this, x)
+
+fun warn(vararg x: X) = _line("warn", *x)
+val X.warn get() = _get("warn")
+fun <R> warn(fn: (X) -> R) = _case("warn", fn)
+val X.asWarn get() = warn(this)
+fun X.asWarnTo(x: X) = warn(this, x)
+
+fun warning(vararg x: X) = _line("warning", *x)
+val X.warning get() = _get("warning")
+fun <R> warning(fn: (X) -> R) = _case("warning", fn)
+val X.asWarning get() = warning(this)
+fun X.asWarningTo(x: X) = warning(this, x)
+
+fun watch(vararg x: X) = _line("watch", *x)
+val X.watch get() = _get("watch")
+fun <R> watch(fn: (X) -> R) = _case("watch", fn)
+val X.asWatch get() = watch(this)
+fun X.asWatchTo(x: X) = watch(this, x)
+
+fun wave(vararg x: X) = _line("wave", *x)
+val X.wave get() = _get("wave")
+fun <R> wave(fn: (X) -> R) = _case("wave", fn)
+val X.asWave get() = wave(this)
+fun X.asWaveTo(x: X) = wave(this, x)
+
+fun weak(vararg x: X) = _line("weak", *x)
+val X.weak get() = _get("weak")
+fun <R> weak(fn: (X) -> R) = _case("weak", fn)
+val X.asWeak get() = weak(this)
+fun X.asWeakTo(x: X) = weak(this, x)
+
+fun week(vararg x: X) = _line("week", *x)
+val X.week get() = _get("week")
+fun <R> week(fn: (X) -> R) = _case("week", fn)
+val X.asWeek get() = week(this)
+fun X.asWeekTo(x: X) = week(this, x)
+
+fun while_(vararg x: X) = _line("while", *x)
+val X.while_ get() = _get("while")
+fun <R> while_(fn: (X) -> R) = _case("while", fn)
+val X.asWhile get() = while_(this)
+fun X.asWhileTo(x: X) = while_(this, x)
+
+fun white(vararg x: X) = _line("white", *x)
+val X.white get() = _get("white")
+fun <R> white(fn: (X) -> R) = _case("white", fn)
+val X.asWhite get() = white(this)
+fun X.asWhiteTo(x: X) = white(this, x)
+
+fun widget(vararg x: X) = _line("widget", *x)
+val X.widget get() = _get("widget")
+fun <R> widget(fn: (X) -> R) = _case("widget", fn)
+val X.asWidget get() = widget(this)
+fun X.asWidgetTo(x: X) = widget(this, x)
+
+fun width(vararg x: X) = _line("width", *x)
+val X.width get() = _get("width")
+fun <R> width(fn: (X) -> R) = _case("width", fn)
+val X.asWidth get() = width(this)
+fun X.asWidthTo(x: X) = width(this, x)
+
+fun wife(vararg x: X) = _line("wife", *x)
+val X.wife get() = _get("wife")
+fun <R> wife(fn: (X) -> R) = _case("wife", fn)
+val X.asWife get() = wife(this)
+fun X.asWifeTo(x: X) = wife(this, x)
+
+fun win(vararg x: X) = _line("win", *x)
+val X.win get() = _get("win")
+fun <R> win(fn: (X) -> R) = _case("win", fn)
+val X.asWin get() = win(this)
+fun X.asWinTo(x: X) = win(this, x)
+
+fun winding(vararg x: X) = _line("winding", *x)
+val X.winding get() = _get("winding")
+fun <R> winding(fn: (X) -> R) = _case("winding", fn)
+val X.asWinding get() = winding(this)
+fun X.asWindingTo(x: X) = winding(this, x)
+
+fun window(vararg x: X) = _line("window", *x)
+val X.window get() = _get("window")
+fun <R> window(fn: (X) -> R) = _case("window", fn)
+val X.asWindow get() = window(this)
+fun X.asWindowTo(x: X) = window(this, x)
+
+fun wire(vararg x: X) = _line("wire", *x)
+val X.wire get() = _get("wire")
+fun <R> wire(fn: (X) -> R) = _case("wire", fn)
+val X.asWire get() = wire(this)
+fun X.asWireTo(x: X) = wire(this, x)
+
+fun with(vararg x: X) = _line("with", *x)
+val X.with get() = _get("with")
+fun <R> with(fn: (X) -> R) = _case("with", fn)
+val X.asWith get() = with(this)
+fun X.asWithTo(x: X) = with(this, x)
+
+fun without(vararg x: X) = _line("without", *x)
+val X.without get() = _get("without")
+fun <R> without(fn: (X) -> R) = _case("without", fn)
+val X.asWithout get() = without(this)
+fun X.asWithoutTo(x: X) = without(this, x)
+
+fun word(vararg x: X) = _line("word", *x)
+val X.word get() = _get("word")
+fun <R> word(fn: (X) -> R) = _case("word", fn)
+val X.asWord get() = word(this)
+fun X.asWordTo(x: X) = word(this, x)
+
+fun wrap(vararg x: X) = _line("wrap", *x)
+val X.wrap get() = _get("wrap")
+fun <R> wrap(fn: (X) -> R) = _case("wrap", fn)
+val X.asWrap get() = wrap(this)
+fun X.asWrapTo(x: X) = wrap(this, x)
+
+fun write(vararg x: X) = _line("write", *x)
+val X.write get() = _get("write")
+fun <R> write(fn: (X) -> R) = _case("write", fn)
+val X.asWrite get() = write(this)
+fun X.asWriteTo(x: X) = write(this, x)
+
+fun writes(vararg x: X) = _line("writes", *x)
+val X.writes get() = _get("writes")
+fun <R> writes(fn: (X) -> R) = _case("writes", fn)
+val X.asWrites get() = writes(this)
+fun X.asWritesTo(x: X) = writes(this, x)
+
+fun writing(vararg x: X) = _line("writing", *x)
+val X.writing get() = _get("writing")
+fun <R> writing(fn: (X) -> R) = _case("writing", fn)
+val X.asWriting get() = writing(this)
+fun X.asWritingTo(x: X) = writing(this, x)
+
+fun x(vararg x: X) = _line("x", *x)
+val X.x get() = _get("x")
+fun <R> x(fn: (X) -> R) = _case("x", fn)
+val X.asX get() = x(this)
+fun X.asXTo(x: X) = x(this, x)
+
+fun xfib(vararg x: X) = _line("xfib", *x)
+val X.xfib get() = _get("xfib")
+fun <R> xfib(fn: (X) -> R) = _case("xfib", fn)
+val X.asXfib get() = xfib(this)
+fun X.asXfibTo(x: X) = xfib(this, x)
+
+fun xor(vararg x: X) = _line("xor", *x)
+val X.xor get() = _get("xor")
+fun <R> xor(fn: (X) -> R) = _case("xor", fn)
+val X.asXor get() = xor(this)
+fun X.asXorTo(x: X) = xor(this, x)
+
+fun xy(vararg x: X) = _line("xy", *x)
+val X.xy get() = _get("xy")
+fun <R> xy(fn: (X) -> R) = _case("xy", fn)
+val X.asXy get() = xy(this)
+fun X.asXyTo(x: X) = xy(this, x)
+
+fun xyz(vararg x: X) = _line("xyz", *x)
+val X.xyz get() = _get("xyz")
+fun <R> xyz(fn: (X) -> R) = _case("xyz", fn)
+val X.asXyz get() = xyz(this)
+fun X.asXyzTo(x: X) = xyz(this, x)
+
+fun y(vararg x: X) = _line("y", *x)
+val X.y get() = _get("y")
+fun <R> y(fn: (X) -> R) = _case("y", fn)
+val X.asY get() = y(this)
+fun X.asYTo(x: X) = y(this, x)
+
+fun year(vararg x: X) = _line("year", *x)
+val X.year get() = _get("year")
+fun <R> year(fn: (X) -> R) = _case("year", fn)
+val X.asYear get() = year(this)
+fun X.asYearTo(x: X) = year(this, x)
+
+fun yellow(vararg x: X) = _line("yellow", *x)
+val X.yellow get() = _get("yellow")
+fun <R> yellow(fn: (X) -> R) = _case("yellow", fn)
+val X.asYellow get() = yellow(this)
+fun X.asYellowTo(x: X) = yellow(this, x)
+
+fun yes(vararg x: X) = _line("yes", *x)
+val X.yes get() = _get("yes")
+fun <R> yes(fn: (X) -> R) = _case("yes", fn)
+val X.asYes get() = yes(this)
+fun X.asYesTo(x: X) = yes(this, x)
+
+fun z(vararg x: X) = _line("z", *x)
+val X.z get() = _get("z")
+fun <R> z(fn: (X) -> R) = _case("z", fn)
+val X.asZ get() = z(this)
+fun X.asZTo(x: X) = z(this, x)
+
+fun zero(vararg x: X) = _line("zero", *x)
+val X.zero get() = _get("zero")
+fun <R> zero(fn: (X) -> R) = _case("zero", fn)
+val X.asZero get() = zero(this)
+fun X.asZeroTo(x: X) = zero(this, x)
+
+fun zoom(vararg x: X) = _line("zoom", *x)
+val X.zoom get() = _get("zoom")
+fun <R> zoom(fn: (X) -> R) = _case("zoom", fn)
+val X.asZoom get() = zoom(this)
+fun X.asZoomTo(x: X) = zoom(this, x)
