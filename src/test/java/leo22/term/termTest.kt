@@ -20,8 +20,7 @@ class TermTest {
 			.termNative_
 			.assertEqualTo(fn(nativeTerm(prim("Hello, world!"))))
 
-		lhs(term(native(number(10))))
-			.asApplicationTo(rhs(term(native(number(20)))))
+		term(application(lhs(term(native(number(10)))), rhs(term(native(number(20))))))
 			.termNative_
 			.assertEqualTo(nativeTerm(prim(10)).invoke(nativeTerm(prim(20))))
 
