@@ -2,6 +2,8 @@ package leo22.term
 
 import leo22.dsl.*
 
+val scopeDef = scope(list(value()))
+
 val emptyScope = scope()
 
 fun X.scopePush(value: X): X =
