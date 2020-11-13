@@ -1,20 +1,28 @@
 package leo14.matching
 
 import leo.base.assertEqualTo
-import leo14.lineTo
-import leo14.literal
-import leo14.script
+import leo21.dsl.circle
+import leo21.dsl.number
+import leo21.dsl.radius
+import leo21.dsl.shape
+import leo21.dsl.side
+import leo21.dsl.square
 import kotlin.test.Test
 
 class ScriptTest {
 	@Test
 	fun get() {
-		script(
-			"shape" lineTo script(
-				"square" lineTo script(literal(20))))
+		circle(radius(number(10)))
+			.radius
+			.assertEqualTo(radius(number(10)))
+	}
+
+	@Test
+	fun switch() {
+		shape(circle(radius(number(10))))
 			.switch(
-				"circle" caseTo { it.get("number") },
-				"square" caseTo { it.get("number") })
-			.assertEqualTo(script(literal(20)))
+				circle { it.radius },
+				square { it.side })
+			.assertEqualTo(radius(number(10)))
 	}
 }

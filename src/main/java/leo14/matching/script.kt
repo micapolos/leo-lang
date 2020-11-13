@@ -4,19 +4,19 @@ import leo.base.mapFirstOrNull
 import leo13.seq
 import leo13.stack
 import leo14.Script
+import leo14.ScriptLine
 import leo14.fieldOrNull
 import leo14.lineSeq
 import leo14.onlyLineOrNull
-import leo14.script
 
-val Script.rhs: Script
+val ScriptLine.rhs: Script
 	get() =
-		onlyLineOrNull!!.fieldOrNull!!.rhs
+		fieldOrNull!!.rhs
 
-fun <R : Any> Script.switch(vararg cases: Case<R>): R =
+fun <R : Any> ScriptLine.switch(vararg cases: Case<R>): R =
 	rhs.onlyLineOrNull!!.let { line ->
 		stack(*cases).seq.mapFirstOrNull { matchOrNull(line) }!!
 	}
 
-fun Script.get(name: String): Script =
-	script(rhs.lineSeq.firstOrNull { it.name == name }!!)
+fun ScriptLine.get(name: String): ScriptLine =
+	rhs.lineSeq.firstOrNull { it.name == name }!!
