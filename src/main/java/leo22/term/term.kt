@@ -19,6 +19,7 @@ import leo21.prim.NilPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
+import leo21.prim.nilPrim
 import leo21.prim.prim
 import leo22.dsl.*
 
@@ -56,6 +57,7 @@ val X.termNative_: Term<Prim>
 val X.termPrim_: Prim
 	get() =
 		switch_(
+			nil { nilPrim },
 			text { prim(it.string_) },
 			number { prim(it.int_) })
 
@@ -73,7 +75,7 @@ val Term<Prim>.x_: X
 val Prim.x_: X
 	get() =
 		when (this) {
-			NilPrim -> TODO()
+			NilPrim -> native(nil())
 			is StringPrim -> native(text(string))
 			is DoublePrim -> native(number(double.toInt()))
 			DoublePlusDoublePrim -> TODO()
@@ -83,3 +85,15 @@ val Prim.x_: X
 			DoubleCosinusPrim -> TODO()
 			StringPlusStringPrim -> TODO()
 		}
+
+val nilTerm = term(native(nil()))
+
+fun X.termPlus(rhs: X): X =
+	fnTerm(
+		fnTerm(
+			fnTerm(
+				argTerm(0)
+					.termApply(argTerm(2))
+					.termApply(argTerm(1)))))
+		.termApply(this)
+		.termApply(rhs)
