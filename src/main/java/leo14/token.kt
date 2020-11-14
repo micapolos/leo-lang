@@ -22,6 +22,17 @@ fun token(double: Double): Token = token(number(double))
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
 
+inline fun <R> Token.switch(
+	literalFn: (Literal) -> R,
+	beginFn: (Begin) -> R,
+	endFn: (End) -> R
+): R =
+	when (this) {
+		is LiteralToken -> literalFn(literal)
+		is BeginToken -> beginFn(begin)
+		is EndToken -> endFn(end)
+	}
+
 val Token.reflectScriptLine
 	get() =
 		"token" lineTo script(

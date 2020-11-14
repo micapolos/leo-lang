@@ -34,7 +34,7 @@ val Compiled.resolveGetOrNull: Compiled?
 
 val Compiled.resolve: Compiled
 	get() =
-		resolvePrimOrNull ?: this
+		resolveOrNull ?: this
 
 val Type.fn2Compiled: Compiled get() = fn(arg<Prim>(0)) of this
 
@@ -43,9 +43,10 @@ val Compiled.resolveLeonardoOrNull: Compiled?
 		notNullIf(type == type("leonardo" lineTo type())) {
 			leonardoScript.compiled
 		}
-val Compiled.resolvePrimOrNull: Compiled?
+val Compiled.resolveOrNull: Compiled?
 	get() =
 		null
+			?: resolveGetOrNull
 			?: resolveAsOrNull
 			?: resolveLeonardoOrNull
 			?: resolveFn1OrNull(doubleType, "sinus", DoubleSinusPrim, doubleType)

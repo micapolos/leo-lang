@@ -18,7 +18,7 @@ import leo21.type.type
 import leo21.compiled.ArrowCompiled
 import leo21.compiled.Compiled
 import leo21.compiled.of
-import leo21.compiled.resolvePrimOrNull
+import leo21.compiled.resolveOrNull
 
 data class Bindings(val bindingStack: Stack<Binding>) : Scriptable() {
 	override fun toString() = super.toString()
@@ -38,7 +38,7 @@ fun Bindings.resolveOrNull(compiled: Compiled): Compiled? =
 fun Bindings.resolve(compiled: Compiled): Compiled =
 	null
 		?: resolveOrNull(compiled)
-		?: compiled.resolvePrimOrNull
+		?: compiled.resolveOrNull
 		?: compiled
 
 fun Bindings.arrowTyped(script: Script): ArrowCompiled =

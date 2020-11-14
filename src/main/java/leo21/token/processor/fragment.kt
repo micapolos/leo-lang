@@ -1,6 +1,7 @@
 package leo21.token.processor
 
 import leo14.Fragment
+import leo21.token.body.printFragment
 import leo21.token.compiler.fragment
 import leo21.token.evaluator.fragment
 import leo21.token.script.fragment
@@ -18,4 +19,5 @@ val TokenProcessor.fragment: Fragment
 			is DataCompilerTokenProcessor -> dataCompiler.fragment
 			is FunctionTypeCompilerTokenProcessor -> functionTypeCompiler.fragment
 			is FunctionCompilerTokenProcessor -> functionCompiler.fragment
+			is BodyCompilerTokenProcessor -> bodyCompiler.printFragment
 		}

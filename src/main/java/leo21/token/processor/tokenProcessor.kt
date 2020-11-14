@@ -7,6 +7,8 @@ import leo14.Token
 import leo14.tokenStack
 import leo21.compiled.Compiled
 import leo21.evaluator.Evaluated
+import leo21.token.body.BodyCompiler
+import leo21.token.body.plus
 import leo21.token.compiler.DataCompiler
 import leo21.token.compiler.FunctionCompiler
 import leo21.token.compiler.FunctionTypeCompiler
@@ -36,6 +38,7 @@ data class ArrowCompilerTokenProcessor(val arrowCompiler: ArrowCompiler) : Token
 data class ScriptCompilerTokenProcessor(val scriptCompiler: ScriptCompiler) : TokenProcessor()
 data class FunctionTypeCompilerTokenProcessor(val functionTypeCompiler: FunctionTypeCompiler) : TokenProcessor()
 data class FunctionCompilerTokenProcessor(val functionCompiler: FunctionCompiler) : TokenProcessor()
+data class BodyCompilerTokenProcessor(val bodyCompiler: BodyCompiler) : TokenProcessor()
 
 val emptyCompilerTokenProcessor: TokenProcessor =
 	CompilerTokenProcessor(emptyTokenCompiler)
@@ -49,6 +52,8 @@ val emptyTyperTokenProcessor: TokenProcessor =
 val emptyScriptTokenProcessor: TokenProcessor =
 	ScriptCompilerTokenProcessor(emptyScriptCompiler)
 
+val BodyCompiler.asTokenProcessor: TokenProcessor get() = BodyCompilerTokenProcessor(this)
+
 fun TokenProcessor.plus(token: Token): TokenProcessor =
 	when (this) {
 		is CompilerTokenProcessor -> compiler.plus(token)
@@ -60,6 +65,7 @@ fun TokenProcessor.plus(token: Token): TokenProcessor =
 		is ScriptCompilerTokenProcessor -> scriptCompiler.plus(token)
 		is FunctionTypeCompilerTokenProcessor -> functionTypeCompiler.plus(token)
 		is FunctionCompilerTokenProcessor -> functionCompiler.plus(token)
+		is BodyCompilerTokenProcessor -> bodyCompiler.plus(token)
 	}
 
 fun TokenProcessor.plus(script: Script): TokenProcessor =
