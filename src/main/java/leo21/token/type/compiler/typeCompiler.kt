@@ -2,6 +2,7 @@ package leo21.token.type.compiler
 
 import leo.base.failIfOr
 import leo.base.notNullIf
+import leo13.Either
 import leo13.firstEither
 import leo14.BeginToken
 import leo14.EndToken

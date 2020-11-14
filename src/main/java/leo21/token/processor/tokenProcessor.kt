@@ -34,7 +34,6 @@ data class TypeCompilerTokenProcessor(val typeCompiler: TypeCompiler) : TokenPro
 data class ChoiceCompilerTokenProcessor(val choiceCompiler: ChoiceCompiler) : TokenProcessor()
 data class ArrowCompilerTokenProcessor(val arrowCompiler: ArrowCompiler) : TokenProcessor()
 data class ScriptCompilerTokenProcessor(val scriptCompiler: ScriptCompiler) : TokenProcessor()
-
 data class FunctionTypeCompilerTokenProcessor(val functionTypeCompiler: FunctionTypeCompiler) : TokenProcessor()
 data class FunctionCompilerTokenProcessor(val functionCompiler: FunctionCompiler) : TokenProcessor()
 
