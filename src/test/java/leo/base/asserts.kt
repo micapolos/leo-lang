@@ -19,6 +19,14 @@ val Boolean.assert
 	get() =
 		assertEqualTo(true)
 
+val Boolean.assertFalse
+	get() =
+		assertEqualTo(false)
+
+val Boolean.assertTrue
+	get() =
+		assertEqualTo(true)
+
 val <V : Any> V?.assertNotNull
 	get() =
 		kotlin.test.assertNotNull(this)

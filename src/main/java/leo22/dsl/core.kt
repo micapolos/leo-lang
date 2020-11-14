@@ -10,6 +10,7 @@ import leo14.lineTo
 import leo14.literal
 import leo14.matching.Case
 import leo14.matching.get
+import leo14.matching.rhs
 import leo14.matching.switch
 import leo14.numberOrNull
 import leo14.plus
@@ -38,3 +39,5 @@ fun X.append_(line: X): X =
 
 fun X.at_(index: Int): X =
 	fieldOrNull!!.rhs.lineSeq.get(index)!!
+
+val X.rhs_ get() = rhs
