@@ -16,7 +16,7 @@ fun Module.body(compiled: Compiled) = Body(this, compiled)
 val emptyBody = emptyModule.body(compiled())
 
 fun Body.plus(lineCompiled: LineCompiled): Body =
-	set(compiled.plus(lineCompiled)).resolve
+	set(compiled.plus(module.definitions.cast(lineCompiled))).resolve
 
 fun Body.set(compiled: Compiled): Body =
 	copy(compiled = compiled)

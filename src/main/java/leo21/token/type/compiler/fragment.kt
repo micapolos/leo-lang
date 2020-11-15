@@ -24,11 +24,12 @@ val TypeParent.fragmentParent: FragmentParent
 			is ArrowNameTypeParent -> arrowCompiler.fragment.parent(begin(name))
 			is RecursiveTypeParent -> typeCompiler.fragment.parent(begin("recursive"))
 			is FunctionCompilerTypeParent -> functionCompiler.printFragment.parent(begin("it"))
+			is DefineCompilerTypeParent -> defineCompiler.printFragment.parent(begin("type"))
 		}
 
 val ChoiceCompiler.fragment: Fragment
 	get() =
-		parentOrNull?.fragmentParent.fragment(choice.script)
+		parentOrNull?.fragmentParent.fragment(choice.lineStack.script)
 
 val ChoiceParent.fragmentParent: FragmentParent
 	get() =

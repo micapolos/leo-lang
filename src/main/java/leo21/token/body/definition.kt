@@ -19,6 +19,7 @@ data class ArrowCompiledDefinition(val arrowCompiled: ArrowCompiled) : Definitio
 data class LineDefinition(val line: Line) : Definition()
 
 val ArrowCompiled.asDefinition: Definition get() = ArrowCompiledDefinition(this)
+val Line.asDefinition: Definition get() = LineDefinition(this)
 
 fun Compiled.wrap(definition: Definition): Compiled =
 	when (definition) {
