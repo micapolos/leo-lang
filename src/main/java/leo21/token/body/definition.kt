@@ -7,6 +7,8 @@ import leo14.lineTo
 import leo14.script
 import leo21.compiled.ArrowCompiled
 import leo21.compiled.Compiled
+import leo21.compiled.LineCompiled
+import leo21.compiled.castOrNull
 import leo21.compiled.of
 import leo21.type.Line
 import leo21.type.script
@@ -37,3 +39,9 @@ val Definition.printScriptLine: ScriptLine
 			is ArrowCompiledDefinition -> "function" lineTo arrowCompiled.arrow.script
 			is LineDefinition -> "type" lineTo script(line.scriptLine)
 		}
+
+fun Definition.castOrNull(lineCompiled: LineCompiled): LineCompiled? =
+	when (this) {
+		is ArrowCompiledDefinition -> null
+		is LineDefinition -> lineCompiled.castOrNull(line)?.t
+	}

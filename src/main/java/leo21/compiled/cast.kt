@@ -3,7 +3,6 @@ package leo21.compiled
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo13.fold
-import leo13.mapFirst
 import leo13.reverse
 import leo21.type.ArrowLine
 import leo21.type.Choice
@@ -12,7 +11,6 @@ import leo21.type.DoubleLine
 import leo21.type.Field
 import leo21.type.FieldLine
 import leo21.type.Line
-import leo21.type.Lines
 import leo21.type.RecurseType
 import leo21.type.RecursiveType
 import leo21.type.StringLine
@@ -23,14 +21,6 @@ import leo21.type.line
 import leo21.type.linkOrNull
 import leo21.type.struct
 import leo21.type.type
-
-fun Line.castOrNull(lineCompiled: LineCompiled): LineCompiled? =
-	lineCompiled.castOrNull(this)?.t
-
-fun Lines.cast(lineCompiled: LineCompiled): LineCompiled =
-	lineStack
-		.mapFirst { castOrNull(lineCompiled) }
-		?: lineCompiled
 
 data class Cast<out T : Any>(val t: T, val isIdentity: Boolean)
 
