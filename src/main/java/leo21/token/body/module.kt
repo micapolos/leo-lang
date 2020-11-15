@@ -1,5 +1,6 @@
 package leo21.token.body
 
+import leo.base.updateIfNotNull
 import leo13.fold
 import leo13.reverse
 import leo21.compiled.Compiled
@@ -11,7 +12,7 @@ val emptyModule = emptyBindings.module(emptyDefinitions)
 
 fun Module.plus(definition: Definition): Module =
 	Module(
-		bindings.plus(definition.binding),
+		bindings.updateIfNotNull(definition.bindingOrNull) { plus(it) },
 		definitions.plus(definition))
 
 fun Module.plus(definitions: Definitions): Module =
