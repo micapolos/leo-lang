@@ -1,5 +1,6 @@
 package leo21.token.body
 
+import leo13.stack
 import leo14.Begin
 import leo14.End
 import leo14.Literal
@@ -9,10 +10,13 @@ import leo21.compiled.Compiled
 import leo21.compiled.LineCompiled
 import leo21.compiled.lineCompiled
 import leo21.compiled.lineTo
+import leo21.compiled.switch
 import leo21.token.processor.DefineCompilerTokenProcessor
 import leo21.token.processor.FunctionCompilerTokenProcessor
+import leo21.token.processor.SwitchCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
 import leo21.token.processor.processor
+import leo21.type.Line
 
 data class BodyCompiler(
 	val parentOrNull: Parent?,
@@ -22,6 +26,7 @@ data class BodyCompiler(
 		data class BodyName(val bodyCompiler: BodyCompiler, val name: String) : Parent()
 		data class BodyDo(val bodyCompiler: BodyCompiler) : Parent()
 		data class FunctionItDoes(val functionItCompiler: FunctionItCompiler) : Parent()
+		data class SwitchCase(val switchCompiler: SwitchCompiler, val case: Line) : Parent()
 	}
 }
 
@@ -48,15 +53,22 @@ fun BodyCompiler.plus(begin: Begin): TokenProcessor =
 				DefineCompiler(
 					DefineCompiler.Parent.Body(this),
 					body.module))
+		"do" -> this
+			.doParent
+			.compiler(body.beginDo)
+			.processor
 		"function" ->
 			FunctionCompilerTokenProcessor(
 				FunctionCompiler(
 					FunctionCompiler.Parent.Body(this),
 					body.module))
-		"do" -> this
-			.doParent
-			.compiler(body.beginDo)
-			.processor
+		"switch" ->
+			SwitchCompilerTokenProcessor(
+				SwitchCompiler(
+					this,
+					body.module,
+					stack(),
+					body.compiled.switch))
 		else ->
 			this
 				.parent(begin.string)
@@ -79,6 +91,8 @@ fun BodyCompiler.Parent.process(body: Body): TokenProcessor =
 				.processor
 		is BodyCompiler.Parent.FunctionItDoes ->
 			functionItCompiler.plus(body.wrapCompiled)
+		is BodyCompiler.Parent.SwitchCase ->
+			switchCompiler.plus(case, body)
 	}
 
 fun BodyCompiler.plus(lineCompiled: LineCompiled): BodyCompiler =
@@ -87,8 +101,8 @@ fun BodyCompiler.plus(lineCompiled: LineCompiled): BodyCompiler =
 fun BodyCompiler.set(compiled: Compiled): BodyCompiler =
 	copy(body = body.set(compiled))
 
-fun BodyCompiler.plus(definitions: Definitions): BodyCompiler =
-	copy(body = body.plus(definitions))
+fun BodyCompiler.plus(module: Module): BodyCompiler =
+	copy(body = body.plus(module))
 
 fun BodyCompiler.plusDo(rhsBody: Body): BodyCompiler =
 	copy(body = body.do_(rhsBody))

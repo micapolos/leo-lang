@@ -12,6 +12,7 @@ import leo21.token.body.DefineCompiler
 import leo21.token.body.FunctionCompiler
 import leo21.token.body.FunctionItCompiler
 import leo21.token.body.FunctionItDoesCompiler
+import leo21.token.body.SwitchCompiler
 import leo21.token.body.emptyBodyCompiler
 import leo21.token.body.plus
 import leo21.token.script.ScriptCompiler
@@ -34,6 +35,7 @@ data class FunctionCompilerTokenProcessor(val functionCompiler: FunctionCompiler
 data class FunctionItCompilerTokenProcessor(val functionItCompiler: FunctionItCompiler) : TokenProcessor()
 data class FunctionItDoesCompilerTokenProcessor(val functionItDoesCompiler: FunctionItDoesCompiler) : TokenProcessor()
 data class DefineCompilerTokenProcessor(val defineCompiler: DefineCompiler) : TokenProcessor()
+data class SwitchCompilerTokenProcessor(val switchCompiler: SwitchCompiler) : TokenProcessor()
 
 val emptyTyperTokenProcessor: TokenProcessor =
 	TypeCompilerTokenProcessor(emptyTypeCompiler)
@@ -60,6 +62,7 @@ fun TokenProcessor.plus(token: Token): TokenProcessor =
 		is FunctionItCompilerTokenProcessor -> functionItCompiler.plus(token)
 		is FunctionItDoesCompilerTokenProcessor -> functionItDoesCompiler.plus(token)
 		is DefineCompilerTokenProcessor -> defineCompiler.plus(token)
+		is SwitchCompilerTokenProcessor -> switchCompiler.plus(token)
 	}
 
 fun TokenProcessor.plus(script: Script): TokenProcessor =

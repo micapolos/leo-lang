@@ -44,7 +44,7 @@ fun DefineCompiler.plus(token: Token): TokenProcessor =
 						type()))
 			else -> null
 		}
-		is EndToken -> parentOrNull!!.plus(module.definitions)
+		is EndToken -> parentOrNull!!.plus(module)
 	}!!
 
 fun DefineCompiler.plus(definition: Definition): DefineCompiler =
@@ -56,7 +56,7 @@ fun DefineCompiler.plus(line: Line): DefineCompiler =
 fun DefineCompiler.plus(type: Type): TokenProcessor =
 	DefineCompilerTokenProcessor(plus(type.struct.lineStack.onlyOrNull!!))
 
-fun DefineCompiler.Parent.plus(definitions: Definitions): TokenProcessor =
+fun DefineCompiler.Parent.plus(module: Module): TokenProcessor =
 	when (this) {
-		is DefineCompiler.Parent.Body -> bodyCompiler.plus(definitions).processor
+		is DefineCompiler.Parent.Body -> bodyCompiler.plus(module).processor
 	}

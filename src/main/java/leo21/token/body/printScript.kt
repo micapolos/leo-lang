@@ -14,6 +14,7 @@ import leo14.script
 import leo21.compiled.script
 import leo21.token.type.compiler.Lines
 import leo21.type.Line
+import leo21.type.name
 import leo21.type.script
 import leo21.type.scriptLine
 
@@ -34,7 +35,15 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 				bodyCompiler.printFragment.parent(begin("do"))
 			is BodyCompiler.Parent.FunctionItDoes ->
 				functionItCompiler.printFragment.parent(begin("does"))
+			is BodyCompiler.Parent.SwitchCase ->
+				switchCompiler.printFragment.parent(begin(case.name))
 		}
+
+val SwitchCompiler.printFragment: Fragment
+	get() =
+		parentBodyCompiler.printFragment
+			.parent(begin("switch"))
+			.fragment(caseFieldStack.map { scriptLine }.script)
 
 val FunctionCompiler.printFragment: Fragment
 	get() =

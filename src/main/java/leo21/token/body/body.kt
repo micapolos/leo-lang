@@ -40,10 +40,10 @@ val Body.wrapCompiled: Compiled
 	get() =
 		compiled.wrap(module)
 
-fun Body.plus(definitions: Definitions) =
+fun Body.plus(module: Module) =
 	Body(
-		module.plus(definitions),
-		compiled.wrap(definitions))
+		module.plus(module),
+		compiled.wrap(module.definitions))
 
 fun Body.do_(body: Body): Body =
 	set(compiled.do_(body.wrapCompiled))

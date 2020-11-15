@@ -27,6 +27,12 @@ fun Module.plus(definition: Definition): Module =
 fun Module.plus(definitions: Definitions): Module =
 	fold(definitions.definitionStack.reverse) { plus(it) }
 
+fun Module.plus(lines: Lines): Module =
+	fold(lines.lineStack.reverse) { plus(it) }
+
+fun Module.plus(module: Module): Module =
+	plus(lines).plus(module.definitions)
+
 fun Module.plus(line: Line): Module =
 	copy(lines = lines.plus(line))
 
