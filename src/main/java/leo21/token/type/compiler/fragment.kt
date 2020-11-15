@@ -6,6 +6,7 @@ import leo14.FragmentParent
 import leo14.begin
 import leo14.fragment
 import leo14.parent
+import leo21.token.body.printFragment
 import leo21.type.Arrow
 import leo21.type.Type
 import leo21.type.script
@@ -22,6 +23,7 @@ val TypeParent.fragmentParent: FragmentParent
 			is ArrowDoingTypeParent -> arrowCompiler.fragment.parent(begin("doing"))
 			is ArrowNameTypeParent -> arrowCompiler.fragment.parent(begin(name))
 			is RecursiveTypeParent -> typeCompiler.fragment.parent(begin("recursive"))
+			is FunctionCompilerTypeParent -> functionCompiler.printFragment.parent(begin("it"))
 		}
 
 val ChoiceCompiler.fragment: Fragment

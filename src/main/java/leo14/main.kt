@@ -24,11 +24,8 @@ import leo14.untyped.dsl2.read
 import leo14.untyped.stringCharReducer
 import leo14.untyped.typed.stringCharReducer
 import leo16.stringCharReducer
-import leo21.token.processor.emptyEvaluatorTokenProcessor
-import leo21.token.processor.stringCharReducer
 import java.io.InputStreamReader
 
-val useLeo21 = true
 val useLeo16 = true
 val errorTriggerCount = 7
 val importPrelude = false
@@ -37,10 +34,7 @@ val untyped = true
 val untypedTyped = true
 
 fun main() {
-	if (useLeo21) {
-		val tokenProcessor = emptyEvaluatorTokenProcessor
-		run(tokenProcessor.stringCharReducer)
-	} else if (useLeo16) {
+	if (useLeo16) {
 		val evaluator = if (importPrelude) leo16.baseEvaluator else leo16.emptyEvaluator
 		run(evaluator.stringCharReducer)
 	} else if (untyped)

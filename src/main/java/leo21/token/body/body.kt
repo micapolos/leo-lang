@@ -7,12 +7,12 @@ import leo21.compiled.plus
 import leo21.compiled.resolve
 
 data class Body(
-	val bindings: Bindings,
+	val module: Module,
 	val compiled: Compiled
 )
 
-fun Bindings.asBody(compiled: Compiled) = Body(this, compiled)
-val emptyBody = emptyBindings.asBody(compiled())
+fun Module.asBody(compiled: Compiled) = Body(this, compiled)
+val emptyBody = emptyModule.asBody(compiled())
 
 fun Body.plus(lineCompiled: LineCompiled): Body =
 	set(compiled.plus(lineCompiled)).resolve
@@ -26,10 +26,19 @@ val Body.begin: Body
 
 val Body.beginDo: Body
 	get() =
-		bindings
-			.plus(compiled.asGiven.asBinding)
+		module
+			.begin(compiled.type.asGiven)
 			.asBody(compiled())
 
 val Body.resolve: Body
 	get() =
-		copy(compiled = bindings.resolveOrNull(compiled) ?: compiled.resolve)
+		copy(compiled = module.resolveOrNull(compiled) ?: compiled.resolve)
+
+val Body.wrapCompiled: Compiled
+	get() =
+		compiled.wrap(module)
+
+fun Body.plus(definitions: Definitions) =
+	Body(
+		module.plus(definitions),
+		compiled.wrap(definitions))

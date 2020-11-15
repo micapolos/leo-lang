@@ -2,7 +2,6 @@ package leo21.token.type.compiler
 
 import leo.base.failIfOr
 import leo.base.notNullIf
-import leo13.Either
 import leo13.firstEither
 import leo14.BeginToken
 import leo14.EndToken
@@ -24,11 +23,10 @@ import leo21.type.type
 
 data class TypeCompiler(
 	val parentOrNull: TypeParent?,
-	val siblingOrNull: TypeSibling?,
 	val type: Type
 )
 
-val emptyTypeCompiler = TypeCompiler(null, null, type())
+val emptyTypeCompiler = TypeCompiler(null, type())
 
 fun TypeCompiler.plus(token: Token): TokenProcessor =
 	when (token) {
@@ -53,14 +51,12 @@ fun TypeCompiler.plusBegin(name: String): TokenProcessor =
 			TypeCompilerTokenProcessor(
 				TypeCompiler(
 					RecursiveTypeParent(this),
-					null,
 					type()))
 		}
 		else -> null
 	} ?: TypeCompilerTokenProcessor(
 		TypeCompiler(
 			TypeNameTypeParent(this, name),
-			null,
 			type()))
 
 fun TypeCompiler.plus(name: String, rhs: Type): TokenProcessor =
@@ -73,9 +69,7 @@ fun TypeCompiler.set(type: Type): TypeCompiler =
 	copy(type = type)
 
 fun TypeCompiler.process(type: Type): TokenProcessor =
-	siblingOrNull
-		?.process(type)
-		?: TypeCompilerTokenProcessor(set(type))
+	TypeCompilerTokenProcessor(set(type))
 
 infix fun String.compiledLineTo(rhs: Type): Line =
 	when (this) {

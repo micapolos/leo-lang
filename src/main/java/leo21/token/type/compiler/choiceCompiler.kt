@@ -30,7 +30,6 @@ fun ChoiceCompiler.plusBegin(name: String): TokenProcessor =
 	TypeCompilerTokenProcessor(
 		TypeCompiler(
 			ChoiceNameTypeParent(this, name),
-			null,
 			type()))
 
 fun ChoiceCompiler.plus(name: String, rhs: Type): ChoiceCompiler =

@@ -1,5 +1,7 @@
 package leo21.token.type.compiler
 
+import leo21.token.body.FunctionCompiler
+import leo21.token.body.plus
 import leo21.token.processor.ArrowCompilerTokenProcessor
 import leo21.token.processor.ChoiceCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
@@ -14,6 +16,7 @@ data class ChoiceNameTypeParent(val choiceCompiler: ChoiceCompiler, val name: St
 data class ArrowNameTypeParent(val arrowCompiler: ArrowCompiler, val lhs: Type, val name: String) : TypeParent()
 data class ArrowDoingTypeParent(val arrowCompiler: ArrowCompiler, val lhs: Type) : TypeParent()
 data class RecursiveTypeParent(val typeCompiler: TypeCompiler) : TypeParent()
+data class FunctionCompilerTypeParent(val functionCompiler: FunctionCompiler) : TypeParent()
 
 fun TypeParent.plus(type: Type): TokenProcessor =
 	when (this) {
@@ -22,4 +25,5 @@ fun TypeParent.plus(type: Type): TokenProcessor =
 		is ArrowDoingTypeParent -> ArrowCompilerTokenProcessor(arrowCompiler.plusDoing(lhs, type))
 		is ArrowNameTypeParent -> ArrowCompilerTokenProcessor(arrowCompiler.set(lhs.plus(name compiledLineTo type)))
 		is RecursiveTypeParent -> typeCompiler.process(type(recursive(type)))
+		is FunctionCompilerTypeParent -> functionCompiler.plus(type)
 	}

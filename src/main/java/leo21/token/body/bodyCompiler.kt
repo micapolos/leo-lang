@@ -16,10 +16,10 @@ data class BodyCompiler(
 	val parentOrNull: Parent?,
 	val body: Body
 ) {
-
 	sealed class Parent {
-		data class BodyCompilerName(val bodyCompiler: BodyCompiler, val name: String) : Parent()
-		data class BodyCompilerDo(val bodyCompiler: BodyCompiler) : Parent()
+		data class BodyName(val bodyCompiler: BodyCompiler, val name: String) : Parent()
+		data class BodyDo(val bodyCompiler: BodyCompiler) : Parent()
+		data class FunctionIt(val functionItCompiler: FunctionItCompiler) : Parent()
 	}
 }
 
@@ -27,8 +27,8 @@ val nullBodyCompilerParent: BodyCompiler.Parent? = null
 val emptyBodyCompiler = nullBodyCompilerParent.asCompiler(emptyBody)
 
 fun BodyCompiler.Parent?.asCompiler(body: Body) = BodyCompiler(this, body)
-val BodyCompiler.asDoParent: BodyCompiler.Parent get() = BodyCompiler.Parent.BodyCompilerDo(this)
-fun BodyCompiler.asParent(name: String): BodyCompiler.Parent = BodyCompiler.Parent.BodyCompilerName(this, name)
+val BodyCompiler.asDoParent: BodyCompiler.Parent get() = BodyCompiler.Parent.BodyDo(this)
+fun BodyCompiler.asParent(name: String): BodyCompiler.Parent = BodyCompiler.Parent.BodyName(this, name)
 
 fun BodyCompiler.plus(token: Token): TokenProcessor =
 	token.switch(this::plus, this::plus, this::plus)
@@ -57,14 +57,16 @@ fun BodyCompiler.plus(end: End): TokenProcessor =
 
 fun BodyCompiler.Parent.process(body: Body): TokenProcessor =
 	when (this) {
-		is BodyCompiler.Parent.BodyCompilerName ->
+		is BodyCompiler.Parent.BodyName ->
 			bodyCompiler
-				.plus(name lineTo body.compiled)
+				.plus(name lineTo body.wrapCompiled)
 				.asTokenProcessor
-		is BodyCompiler.Parent.BodyCompilerDo ->
+		is BodyCompiler.Parent.BodyDo ->
 			bodyCompiler
-				.set(body.compiled)
+				.set(body.wrapCompiled)
 				.asTokenProcessor
+		is BodyCompiler.Parent.FunctionIt ->
+			functionItCompiler.plus(body.wrapCompiled)
 	}
 
 fun BodyCompiler.plus(lineCompiled: LineCompiled): BodyCompiler =
@@ -72,3 +74,6 @@ fun BodyCompiler.plus(lineCompiled: LineCompiled): BodyCompiler =
 
 fun BodyCompiler.set(compiled: Compiled): BodyCompiler =
 	copy(body = body.set(compiled))
+
+fun BodyCompiler.plus(definitions: Definitions): BodyCompiler =
+	copy(body = body.plus(definitions))

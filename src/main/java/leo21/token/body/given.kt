@@ -4,16 +4,17 @@ import leo14.lambda.arg
 import leo21.compiled.Compiled
 import leo21.compiled.getOrNull
 import leo21.compiled.make
+import leo21.type.Type
 import leo21.type.onlyNameOrNull
 
-data class Given(val compiled: Compiled)
+data class Given(val type: Type)
 
-val Compiled.asGiven get() = Given(this)
+val Type.asGiven get() = Given(this)
 
 fun Given.resolveOrNull(index: Int, param: Compiled): Compiled? =
 	param.type.onlyNameOrNull?.let { name ->
 		when (name) {
-			"given" -> Compiled(arg(index), compiled.type).make("given")
-			else -> Compiled(arg(index), compiled.type).make("given").getOrNull(name)
+			"given" -> Compiled(arg(index), type).make("given")
+			else -> Compiled(arg(index), type).make("given").getOrNull(name)
 		}
 	}
