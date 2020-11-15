@@ -23,10 +23,11 @@ import leo21.type.type
 
 data class TypeCompiler(
 	val parentOrNull: TypeParent?,
+	val lines: Lines,
 	val type: Type
 )
 
-val emptyTypeCompiler = TypeCompiler(null, type())
+val emptyTypeCompiler = TypeCompiler(null, emptyLines, type())
 
 fun TypeCompiler.plus(token: Token): TokenProcessor =
 	when (token) {
@@ -41,26 +42,30 @@ fun TypeCompiler.plusBegin(name: String): TokenProcessor =
 			ChoiceCompilerTokenProcessor(
 				ChoiceCompiler(
 					TypeCompilerChoiceParent(this),
+					lines,
 					choice()))
 		}
 		"function" -> ArrowCompilerTokenProcessor(
 			ArrowCompiler(
 				TypeCompilerArrowParent(this),
+				lines,
 				type().firstEither()))
 		"recursive" -> failIfOr(!type.isEmpty) {
 			TypeCompilerTokenProcessor(
 				TypeCompiler(
 					RecursiveTypeParent(this),
+					lines,
 					type()))
 		}
 		else -> null
 	} ?: TypeCompilerTokenProcessor(
 		TypeCompiler(
 			TypeNameTypeParent(this, name),
+			lines,
 			type()))
 
 fun TypeCompiler.plus(name: String, rhs: Type): TokenProcessor =
-	plus(name compiledLineTo rhs)
+	plus(lines.resolve(name compiledLineTo rhs))
 
 fun TypeCompiler.plus(line: Line): TokenProcessor =
 	process(type.plus(line))

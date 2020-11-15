@@ -6,6 +6,7 @@ import leo21.compiled.compiled
 import leo21.compiled.do_
 import leo21.compiled.plus
 import leo21.compiled.resolve
+import leo21.token.type.compiler.cast
 
 data class Body(
 	val module: Module,
@@ -16,7 +17,7 @@ fun Module.body(compiled: Compiled) = Body(this, compiled)
 val emptyBody = emptyModule.body(compiled())
 
 fun Body.plus(lineCompiled: LineCompiled): Body =
-	set(compiled.plus(module.definitions.cast(lineCompiled))).resolve
+	set(compiled.plus(module.lines.cast(lineCompiled))).resolve
 
 fun Body.set(compiled: Compiled): Body =
 	copy(compiled = compiled)

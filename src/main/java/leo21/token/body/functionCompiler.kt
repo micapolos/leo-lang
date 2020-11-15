@@ -49,6 +49,7 @@ fun FunctionCompiler.plus(token: Token): TokenProcessor =
 		TypeCompilerTokenProcessor(
 			TypeCompiler(
 				FunctionCompilerTypeParent(this),
+				module.lines,
 				type()))
 	}!!
 

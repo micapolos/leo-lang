@@ -18,6 +18,7 @@ import leo21.type.type
 
 data class ArrowCompiler(
 	val parentOrNull: ArrowParent?,
+	val lines: Lines,
 	val typeOrArrow: Either<Type, Arrow>
 )
 
@@ -30,11 +31,13 @@ fun ArrowCompiler.plus(token: Token): TokenProcessor =
 					"doing" -> TypeCompilerTokenProcessor(
 						TypeCompiler(
 							ArrowDoingTypeParent(this, type),
+							lines,
 							type()))
 					else ->
 						TypeCompilerTokenProcessor(
 							TypeCompiler(
 								ArrowNameTypeParent(this, type, token.begin.string),
+								lines,
 								type()))
 				}
 			},

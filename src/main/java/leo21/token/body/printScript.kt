@@ -1,15 +1,21 @@
 package leo21.token.body
 
+import leo13.map
 import leo14.Fragment
 import leo14.FragmentParent
 import leo14.Script
+import leo14.ScriptLine
 import leo14.begin
 import leo14.fragment
 import leo14.lineTo
 import leo14.parent
+import leo14.plus
 import leo14.script
 import leo21.compiled.script
+import leo21.token.type.compiler.Lines
+import leo21.type.Line
 import leo21.type.script
+import leo21.type.scriptLine
 
 val Body.printScript: Script
 	get() =
@@ -51,10 +57,19 @@ val FunctionCompiler.Parent.printFragmentParent: FragmentParent
 
 val DefineCompiler.printFragment: Fragment
 	get() =
-		parentOrNull?.printFragmentParent.fragment(module.definitions.printScript)
+		parentOrNull?.printFragmentParent.fragment(
+			module.definitions.printScript.plus(module.printScript))
 
 val DefineCompiler.Parent.printFragmentParent: FragmentParent
 	get() =
 		when (this) {
 			is DefineCompiler.Parent.Body -> bodyCompiler.printFragment.parent(begin("define"))
 		}
+
+val Line.printScriptLine: ScriptLine
+	get() =
+		"type" lineTo script(scriptLine)
+
+val Lines.printScript: Script
+	get() =
+		lineStack.map { printScriptLine }.script
