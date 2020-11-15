@@ -1,6 +1,5 @@
 package leo21.token.body
 
-import leo.base.println
 import leo13.Stack
 import leo13.linkOrNull
 import leo13.push
@@ -25,6 +24,8 @@ import leo21.type.fieldTo
 import leo21.type.line
 import leo21.type.name
 import leo21.type.type
+
+// TODO: This class is terrible. Refactor without using SwitchCompiled.
 
 data class SwitchCompiler(
 	val parentBodyCompiler: BodyCompiler,
