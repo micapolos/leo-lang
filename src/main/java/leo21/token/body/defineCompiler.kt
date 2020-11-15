@@ -6,7 +6,7 @@ import leo14.LiteralToken
 import leo14.Token
 import leo21.token.processor.FunctionCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
-import leo21.token.processor.asTokenProcessor
+import leo21.token.processor.processor
 
 data class DefineCompiler(
 	val parentOrNull: Parent?,
@@ -37,5 +37,5 @@ fun DefineCompiler.plus(definition: Definition): DefineCompiler =
 
 fun DefineCompiler.Parent.plus(definitions: Definitions): TokenProcessor =
 	when (this) {
-		is DefineCompiler.Parent.Body -> bodyCompiler.plus(definitions).asTokenProcessor
+		is DefineCompiler.Parent.Body -> bodyCompiler.plus(definitions).processor
 	}

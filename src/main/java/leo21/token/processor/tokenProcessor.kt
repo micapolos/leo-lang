@@ -44,7 +44,7 @@ val emptyScriptTokenProcessor: TokenProcessor =
 val emptyBodyTokenProcessor: TokenProcessor =
 	BodyCompilerTokenProcessor(emptyBodyCompiler)
 
-val BodyCompiler.asTokenProcessor: TokenProcessor get() = BodyCompilerTokenProcessor(this)
+val BodyCompiler.processor: TokenProcessor get() = BodyCompilerTokenProcessor(this)
 val FunctionCompiler.asTokenProcessor: TokenProcessor get() = FunctionCompilerTokenProcessor(this)
 val FunctionItCompiler.asTokenProcessor: TokenProcessor get() = FunctionItCompilerTokenProcessor(this)
 val FunctionItDoesCompiler.asTokenProcessor: TokenProcessor get() = FunctionItDoesCompilerTokenProcessor(this)

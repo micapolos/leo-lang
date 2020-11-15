@@ -9,8 +9,10 @@ import leo21.compiled.Compiled
 import leo21.compiled.LineCompiled
 import leo21.compiled.lineCompiled
 import leo21.compiled.lineTo
+import leo21.token.processor.DefineCompilerTokenProcessor
+import leo21.token.processor.FunctionCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
-import leo21.token.processor.asTokenProcessor
+import leo21.token.processor.processor
 
 data class BodyCompiler(
 	val parentOrNull: Parent?,
@@ -36,20 +38,30 @@ fun BodyCompiler.plus(token: Token): TokenProcessor =
 fun BodyCompiler.plus(literal: Literal): TokenProcessor =
 	this
 		.plus(lineCompiled(literal))
-		.asTokenProcessor
+		.processor
 
 fun BodyCompiler.plus(begin: Begin): TokenProcessor =
 	when (begin.string) {
-		"define" -> TODO()
+		"apply" -> TODO()
+		"define" ->
+			DefineCompilerTokenProcessor(
+				DefineCompiler(
+					DefineCompiler.Parent.Body(this),
+					body.module))
+		"function" ->
+			FunctionCompilerTokenProcessor(
+				FunctionCompiler(
+					FunctionCompiler.Parent.Body(this),
+					body.module))
 		"do" -> this
 			.doParent
 			.compiler(body.beginDo)
-			.asTokenProcessor
+			.processor
 		else ->
 			this
 				.parent(begin.string)
 				.compiler(body.begin)
-				.asTokenProcessor
+				.processor
 	}
 
 fun BodyCompiler.plus(end: End): TokenProcessor =
@@ -60,11 +72,11 @@ fun BodyCompiler.Parent.process(body: Body): TokenProcessor =
 		is BodyCompiler.Parent.BodyName ->
 			bodyCompiler
 				.plus(name lineTo body.wrapCompiled)
-				.asTokenProcessor
+				.processor
 		is BodyCompiler.Parent.BodyDo ->
 			bodyCompiler
 				.plusDo(body)
-				.asTokenProcessor
+				.processor
 		is BodyCompiler.Parent.FunctionIt ->
 			functionItCompiler.plus(body.wrapCompiled)
 	}
