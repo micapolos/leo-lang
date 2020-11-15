@@ -7,6 +7,7 @@ import leo13.push
 import leo13.seq
 import leo13.stack
 import leo21.compiled.Compiled
+import leo21.compiled.resolve
 
 inline class Bindings(val bindingStack: Stack<Binding>)
 val Stack<Binding>.asBindings get() = Bindings(this)
@@ -18,3 +19,5 @@ fun Bindings.resolveOrNull(compiled: Compiled): Compiled? =
 		value.resolveOrNull(index, compiled)
 	}
 
+fun Bindings.resolve(compiled: Compiled): Compiled =
+	resolveOrNull(compiled) ?: compiled.resolve

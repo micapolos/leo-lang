@@ -1,7 +1,11 @@
 package leo21.prim
 
+import leo14.Literal
+import leo14.Number
+import leo14.NumberLiteral
 import leo14.ScriptLine
 import leo14.Scriptable
+import leo14.StringLiteral
 import leo14.lineTo
 import leo14.literal
 import leo14.script
@@ -45,6 +49,12 @@ val Prim.double get() = (this as DoublePrim).double
 
 val Double.prim get() = prim(this)
 val String.prim get() = prim(this)
+val Number.prim get() = prim(bigDecimal.toDouble())
+val Literal.prim
+	get() = when (this) {
+		is StringLiteral -> string.prim
+		is NumberLiteral -> number.prim
+	}
 
 fun prim(string: String): Prim = StringPrim(string)
 fun prim(double: Double): Prim = DoublePrim(double)

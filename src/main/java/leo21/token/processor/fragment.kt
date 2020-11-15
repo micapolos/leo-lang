@@ -18,4 +18,5 @@ val TokenProcessor.fragment: Fragment
 			is FunctionItDoesCompilerTokenProcessor -> functionItDoesCompiler.printFragment
 			is DefineCompilerTokenProcessor -> defineCompiler.printFragment
 			is SwitchCompilerTokenProcessor -> switchCompiler.printFragment
+			is EvaluatorTokenProcessor -> TODO()
 		}
