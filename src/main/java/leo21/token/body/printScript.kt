@@ -27,8 +27,8 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 				bodyCompiler.printFragment.parent(begin(name))
 			is BodyCompiler.Parent.BodyDo ->
 				bodyCompiler.printFragment.parent(begin("do"))
-			is BodyCompiler.Parent.FunctionIt ->
-				functionItCompiler.printFragment.parent(begin("it"))
+			is BodyCompiler.Parent.FunctionItDoes ->
+				functionItCompiler.printFragment.parent(begin("does"))
 		}
 
 val FunctionCompiler.printFragment: Fragment
@@ -41,26 +41,26 @@ val FunctionItCompiler.printScript: Script
 
 val FunctionItCompiler.printFragment: Fragment
 	get() =
-		parent.printFragment.plus(printScript)
+		functionCompiler.printFragment.plus(printScript)
 
 val FunctionItDoesCompiler.printScript: Script
 	get() =
-		parent.printScript.plus("does" lineTo arrowCompiled.arrow.rhs.script)
+		functionItCompiler.printScript.plus("does" lineTo arrowCompiled.arrow.rhs.script)
 
 val FunctionItDoesCompiler.printFragment: Fragment
 	get() =
-		parent.printFragment.plus(printScript)
+		functionItCompiler.functionCompiler.printFragment.plus(printScript)
 
 val FunctionCompiler.Parent.printFragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is FunctionCompiler.Parent.Define -> defineCompiler.printFragment.parent(begin("define"))
-			is FunctionCompiler.Parent.Body -> bodyCompiler.printFragment.parent(begin("define"))
+			is FunctionCompiler.Parent.Define -> defineCompiler.printFragment.parent(begin("function"))
+			is FunctionCompiler.Parent.Body -> bodyCompiler.printFragment.parent(begin("function"))
 		}
 
 val DefineCompiler.printFragment: Fragment
 	get() =
-		parentOrNull?.printFragmentParent.fragment(script())
+		parentOrNull?.printFragmentParent.fragment(module.definitions.printScript)
 
 val DefineCompiler.Parent.printFragmentParent: FragmentParent
 	get() =

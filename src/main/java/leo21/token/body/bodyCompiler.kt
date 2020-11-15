@@ -21,7 +21,7 @@ data class BodyCompiler(
 	sealed class Parent {
 		data class BodyName(val bodyCompiler: BodyCompiler, val name: String) : Parent()
 		data class BodyDo(val bodyCompiler: BodyCompiler) : Parent()
-		data class FunctionIt(val functionItCompiler: FunctionItCompiler) : Parent()
+		data class FunctionItDoes(val functionItCompiler: FunctionItCompiler) : Parent()
 	}
 }
 
@@ -77,7 +77,7 @@ fun BodyCompiler.Parent.process(body: Body): TokenProcessor =
 			bodyCompiler
 				.plusDo(body)
 				.processor
-		is BodyCompiler.Parent.FunctionIt ->
+		is BodyCompiler.Parent.FunctionItDoes ->
 			functionItCompiler.plus(body.wrapCompiled)
 	}
 

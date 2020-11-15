@@ -51,7 +51,9 @@ val Arrow.scriptLine: ScriptLine
 
 val Arrow.script: Script
 	get() =
-		lhs.script.plus("doing" lineTo rhs.script)
+		script(
+			"it" lineTo lhs.script,
+			"does" lineTo rhs.script)
 
 val Recursive.script: Script
 	get() =

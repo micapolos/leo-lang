@@ -46,7 +46,7 @@ class TypeScriptTest {
 			.assertEqualTo(
 				script(
 					"function" lineTo script(
-						"number" lineTo script(),
-						"doing" lineTo script("text"))))
+						"it" lineTo script("number"),
+						"does" lineTo script("text"))))
 	}
 }
