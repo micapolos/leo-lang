@@ -48,7 +48,7 @@ fun compiled(vararg lines: LineCompiled): Compiled =
 	compiled(emptyStructTyped.fold(lines) { plus(it) })
 
 fun choiceTyped(fn: ChoiceCompiled.() -> ChoiceCompiled): Compiled =
-	compiled(emptyChoiceTyped.fn())
+	compiled(emptyChoiceCompiled.fn())
 
 fun compiled(text: String) = compiled(line(text))
 fun compiled(number: Double) = compiled(line(number))

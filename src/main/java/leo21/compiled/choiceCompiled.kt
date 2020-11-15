@@ -2,7 +2,9 @@ package leo21.compiled
 
 import leo14.lambda.Term
 import leo14.lambda.eitherFirst
+import leo14.lambda.eitherFirst2
 import leo14.lambda.eitherSecond
+import leo14.lambda.eitherSecond2
 import leo21.prim.Prim
 import leo21.type.Choice
 import leo21.type.Line
@@ -15,7 +17,7 @@ data class ChoiceCompiled(
 	val choice: Choice
 )
 
-val emptyChoiceTyped = ChoiceCompiled(null, choice())
+val emptyChoiceCompiled = ChoiceCompiled(null, choice())
 
 infix fun Term<Prim>?.of(choice: Choice) = ChoiceCompiled(this, choice)
 

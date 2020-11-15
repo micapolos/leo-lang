@@ -66,7 +66,7 @@ fun StructCompiled.castOrNull(rhs: Struct): Cast<StructCompiled>? =
 	}
 
 fun LineCompiled.castOrNull(choice: Choice): Cast<Compiled>? =
-	emptyChoiceTyped.fold(choice.lineStack.reverse) { choiceLine ->
+	emptyChoiceCompiled.fold(choice.lineStack.reverse) { choiceLine ->
 		if (line == choiceLine) plusChosen(this@castOrNull)
 		else plusNotChosen(choiceLine)
 	}.let { choiceCompiled ->

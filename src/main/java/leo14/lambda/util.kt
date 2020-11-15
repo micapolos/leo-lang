@@ -158,6 +158,9 @@ tailrec fun <T> Term<T>.fn(index: Index): Term<T> =
 val <T> Term<T>.eitherFirst get() = fn(fn(arg<T>(1).invoke(this)))
 val <T> Term<T>.eitherSecond get() = fn(fn(arg<T>(0).invoke(this)))
 
+val <T> Term<T>.eitherFirst2 get() = fn(fn(fn(arg<T>(1).invoke(arg(2))))).invoke(this)
+val <T> Term<T>.eitherSecond2 get() = fn(fn(fn(arg<T>(0).invoke(arg(2))))).invoke(this)
+
 fun <T> Term<T>.eitherSwitch(firstFn: Term<T>, secondFn: Term<T>): Term<T> =
 	invoke(firstFn).invoke(secondFn)
 

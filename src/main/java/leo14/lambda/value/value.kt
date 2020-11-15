@@ -5,6 +5,7 @@ import leo14.Scriptable
 import leo14.anyReflectScriptLine
 import leo14.lambda.Term
 import leo14.lambda.arg
+import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.term
 import leo14.lineTo
@@ -62,3 +63,11 @@ fun Any.anyApply(value: Value<Any>): Value<Any> =
 
 fun <T> Value<T>.plus(value: Value<T>): Value<T> =
 	value(scope(this, value).function(arg<T>(0).invoke(arg(2)).invoke(arg(1))))
+
+val <T> Value<T>.eitherFirst: Value<T>
+	get() =
+		value(scope(eitherSecond).function(fn(arg<T>(0).invoke(arg(2)))))
+
+val <T> Value<T>.eitherSecond: Value<T>
+	get() =
+		value(scope(this).function(fn(arg<T>(1).invoke(arg(2)))))
