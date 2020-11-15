@@ -23,3 +23,7 @@ fun choice(vararg lines: Line) = emptyChoice.fold(lines) { plus(it) }
 val Choice.linkOrNull: Link<Choice, Line>?
 	get() =
 		lineStack.linkOrNull?.run { Choice(stack) linkTo value }
+
+inline val Link<Choice, Line>.choice get() = tail
+inline val Link<Choice, Line>.line get() = head
+

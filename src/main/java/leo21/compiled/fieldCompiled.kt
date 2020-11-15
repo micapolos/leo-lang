@@ -14,6 +14,8 @@ import leo21.type.name
 
 data class FieldCompiled(val term: Term<Prim>, val field: Field)
 
+infix fun Term<Prim>.of(field: Field) = FieldCompiled(this, field)
+
 infix fun String.fieldTo(compiled: Compiled) =
 	FieldCompiled(compiled.term, this fieldTo compiled.type)
 

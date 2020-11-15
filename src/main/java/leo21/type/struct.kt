@@ -24,3 +24,6 @@ val Struct.linkOrNull: Link<Struct, Line>?
 	get() =
 		lineStack.linkOrNull?.run { Struct(stack) linkTo value }
 
+val Link<Struct, Line>.struct get() = tail
+val Link<Struct, Line>.line get() = head
+

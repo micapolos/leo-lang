@@ -17,6 +17,8 @@ data class ChoiceCompiled(
 
 val emptyChoiceTyped = ChoiceCompiled(null, choice())
 
+infix fun Term<Prim>?.of(choice: Choice) = ChoiceCompiled(this, choice)
+
 fun ChoiceCompiled.plusChosen(compiled: LineCompiled): ChoiceCompiled =
 	if (termOrNull != null) error("already chosen")
 	else ChoiceCompiled(compiled.term.eitherFirst, choice.plus(compiled.line))

@@ -80,6 +80,9 @@ val StructCompiled.linkOrNull: Link<StructCompiled, LineCompiled>?
 				else StructCompiled(term.first, Struct(link.stack)) linkTo LineCompiled(term.second, link.value)
 		}
 
+val Link<StructCompiled, LineCompiled>.structCompiled get() = tail
+val Link<StructCompiled, LineCompiled>.lineCompiled get() = head
+
 val StructCompiled.link: Link<StructCompiled, LineCompiled>
 	get() =
 		linkOrNull!!

@@ -59,3 +59,7 @@ val LineCompiled.fieldCompiledOrNull: FieldCompiled?
 		switch({ null }, { null }, { it }, { null })
 
 val LineCompiled.rhsOrNull: Compiled? get() = fieldCompiledOrNull?.rhsCompiled
+
+val FieldCompiled.lineCompiled: LineCompiled
+	get() =
+		term of line(field)
