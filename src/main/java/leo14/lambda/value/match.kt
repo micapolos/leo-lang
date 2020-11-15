@@ -38,10 +38,10 @@ fun <T, R> Value<T>.switch(firstFn: (Value<T>) -> R, secondFn: (Value<T>) -> R):
 				body.application { lhs, rhs ->
 					lhs.variable { index ->
 						when (index) {
-							0 -> rhs.abstraction { body ->
-								firstFn(value(function.copy(term = body)))
+							0 -> rhs.variable(2) {
+								firstFn(value)
 							}
-							1 -> rhs.variable(0) {
+							1 -> rhs.variable(2) {
 								secondFn(value)
 							}
 							else -> null!!

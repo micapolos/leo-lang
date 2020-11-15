@@ -66,7 +66,7 @@ fun <T> Value<T>.plus(value: Value<T>): Value<T> =
 
 val <T> Value<T>.eitherFirst: Value<T>
 	get() =
-		value(scope(eitherSecond).function(fn(arg<T>(0).invoke(arg(2)))))
+		value(scope(this).function(fn(arg<T>(0).invoke(arg(2)))))
 
 val <T> Value<T>.eitherSecond: Value<T>
 	get() =

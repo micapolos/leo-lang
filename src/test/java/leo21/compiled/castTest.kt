@@ -2,7 +2,9 @@ package leo21.compiled
 
 import leo.base.assertEqualTo
 import leo14.lambda.eitherFirst
+import leo14.lambda.eitherFirst2
 import leo14.lambda.eitherSecond
+import leo14.lambda.eitherSecond2
 import leo14.lambda.nativeTerm
 import leo21.prim.prim
 import leo21.type.choice
@@ -18,7 +20,7 @@ class CastTest {
 		("a" lineTo compiled(12.0))
 			.castOrNull("a" lineTo type(choice(stringLine, doubleLine)))
 			.assertEqualTo(
-				nativeTerm(prim(12.0)).eitherFirst
+				nativeTerm(prim(12.0)).eitherFirst2
 					.of("a" lineTo type(choice(stringLine, doubleLine)))
 					.nonIdentityCast)
 	}
@@ -28,7 +30,7 @@ class CastTest {
 		("a" lineTo compiled("foo"))
 			.castOrNull("a" lineTo type(choice(stringLine, doubleLine)))
 			.assertEqualTo(
-				nativeTerm(prim("foo")).eitherFirst.eitherSecond
+				nativeTerm(prim("foo")).eitherFirst2.eitherSecond2
 					.of("a" lineTo type(choice(stringLine, doubleLine)))
 					.nonIdentityCast)
 	}

@@ -29,6 +29,7 @@ infix fun Value<Prim>.of(type: Type) = Evaluated(this, type)
 val emptyEvaluated = Evaluated(value(nilPrim), type())
 
 val StructEvaluated.evaluated: Evaluated get() = value of type(struct)
+val ChoiceEvaluated.evaluated: Evaluated get() = valueOrNull!! of type(choice)
 
 fun evaluated(vararg lines: LineEvaluated): Evaluated =
 	emptyEvaluated.fold(lines) { plus(it) }

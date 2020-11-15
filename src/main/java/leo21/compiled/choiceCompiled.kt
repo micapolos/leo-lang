@@ -23,10 +23,10 @@ infix fun Term<Prim>?.of(choice: Choice) = ChoiceCompiled(this, choice)
 
 fun ChoiceCompiled.plusChosen(compiled: LineCompiled): ChoiceCompiled =
 	if (termOrNull != null) error("already chosen")
-	else ChoiceCompiled(compiled.term.eitherFirst, choice.plus(compiled.line))
+	else ChoiceCompiled(compiled.term.eitherFirst2, choice.plus(compiled.line))
 
 fun ChoiceCompiled.plusNotChosen(line: Line): ChoiceCompiled =
-	ChoiceCompiled(termOrNull?.eitherSecond, choice.plus(line))
+	ChoiceCompiled(termOrNull?.eitherSecond2, choice.plus(line))
 
 val ChoiceCompiled.compiled: Compiled
 	get() =

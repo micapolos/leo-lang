@@ -4,7 +4,9 @@ import leo.base.assertEqualTo
 import leo.base.iterate
 import leo14.lambda.arg
 import leo14.lambda.eitherFirst
+import leo14.lambda.eitherFirst2
 import leo14.lambda.eitherSecond
+import leo14.lambda.eitherSecond2
 import leo14.lambda.eitherSwitch
 import leo14.lambda.first
 import leo14.lambda.fix
@@ -58,6 +60,24 @@ class EvaluateTest {
 	fun eitherSecond() {
 		term("foo")
 			.eitherSecond
+			.eitherSwitch(fn(term("first")), fn(term("second")))
+			.value
+			.assertEqualTo(value("second"))
+	}
+
+	@Test
+	fun eitherFirst2() {
+		term("foo")
+			.eitherFirst2
+			.eitherSwitch(fn(term("first")), fn(term("second")))
+			.value
+			.assertEqualTo(value("first"))
+	}
+
+	@Test
+	fun eitherSecond2() {
+		term("foo")
+			.eitherSecond2
 			.eitherSwitch(fn(term("first")), fn(term("second")))
 			.value
 			.assertEqualTo(value("second"))
