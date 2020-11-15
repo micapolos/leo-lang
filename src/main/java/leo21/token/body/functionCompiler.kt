@@ -57,7 +57,7 @@ fun FunctionItCompiler.plus(token: Token): TokenProcessor =
 		BodyCompilerTokenProcessor(
 			BodyCompiler(
 				BodyCompiler.Parent.FunctionIt(this),
-				parent.module.begin(type.asGiven).asBody(compiled())))
+				parent.module.begin(type.asGiven).body(compiled())))
 	}!!
 
 fun FunctionItDoesCompiler.plus(token: Token): TokenProcessor =

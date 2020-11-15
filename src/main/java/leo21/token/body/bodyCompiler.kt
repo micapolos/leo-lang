@@ -24,11 +24,11 @@ data class BodyCompiler(
 }
 
 val nullBodyCompilerParent: BodyCompiler.Parent? = null
-val emptyBodyCompiler = nullBodyCompilerParent.asCompiler(emptyBody)
+val emptyBodyCompiler = nullBodyCompilerParent.compiler(emptyBody)
 
-fun BodyCompiler.Parent?.asCompiler(body: Body) = BodyCompiler(this, body)
-val BodyCompiler.asDoParent: BodyCompiler.Parent get() = BodyCompiler.Parent.BodyDo(this)
-fun BodyCompiler.asParent(name: String): BodyCompiler.Parent = BodyCompiler.Parent.BodyName(this, name)
+fun BodyCompiler.Parent?.compiler(body: Body) = BodyCompiler(this, body)
+val BodyCompiler.doParent: BodyCompiler.Parent get() = BodyCompiler.Parent.BodyDo(this)
+fun BodyCompiler.parent(name: String): BodyCompiler.Parent = BodyCompiler.Parent.BodyName(this, name)
 
 fun BodyCompiler.plus(token: Token): TokenProcessor =
 	token.switch(this::plus, this::plus, this::plus)
@@ -42,13 +42,13 @@ fun BodyCompiler.plus(begin: Begin): TokenProcessor =
 	when (begin.string) {
 		"define" -> TODO()
 		"do" -> this
-			.asDoParent
-			.asCompiler(body.beginDo)
+			.doParent
+			.compiler(body.beginDo)
 			.asTokenProcessor
 		else ->
 			this
-				.asParent(begin.string)
-				.asCompiler(body.begin)
+				.parent(begin.string)
+				.compiler(body.begin)
 				.asTokenProcessor
 	}
 
@@ -63,7 +63,7 @@ fun BodyCompiler.Parent.process(body: Body): TokenProcessor =
 				.asTokenProcessor
 		is BodyCompiler.Parent.BodyDo ->
 			bodyCompiler
-				.set(body.wrapCompiled)
+				.plusDo(body)
 				.asTokenProcessor
 		is BodyCompiler.Parent.FunctionIt ->
 			functionItCompiler.plus(body.wrapCompiled)
@@ -77,3 +77,6 @@ fun BodyCompiler.set(compiled: Compiled): BodyCompiler =
 
 fun BodyCompiler.plus(definitions: Definitions): BodyCompiler =
 	copy(body = body.plus(definitions))
+
+fun BodyCompiler.plusDo(rhsBody: Body): BodyCompiler =
+	copy(body = body.do_(rhsBody))

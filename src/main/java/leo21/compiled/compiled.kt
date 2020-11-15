@@ -5,6 +5,7 @@ import leo.base.notNullOrError
 import leo14.Scriptable
 import leo14.lambda.Term
 import leo14.lambda.arg0
+import leo14.lambda.do_
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.script
@@ -90,3 +91,6 @@ fun Compiled.reference(f: Compiled.() -> Compiled): Compiled =
 	arg0<Prim>().of(type).f().let { typed ->
 		fn(typed.term).invoke(term).of(typed.type)
 	}
+
+fun Compiled.do_(compiled: Compiled): Compiled =
+	term.do_(compiled.term).of(compiled.type)

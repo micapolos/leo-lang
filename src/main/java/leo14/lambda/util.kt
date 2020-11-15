@@ -192,3 +192,6 @@ fun <T> fix(): Term<T> =
 
 fun <T> Term<T>.reference(f: Term<T>.() -> Term<T>): Term<T> =
 	fn(arg0<T>().f()).invoke(this)
+
+fun <T> Term<T>.do_(term: Term<T>): Term<T> =
+	fn(term).invoke(this)

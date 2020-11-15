@@ -3,6 +3,7 @@ package leo21.token.body
 import leo21.compiled.Compiled
 import leo21.compiled.LineCompiled
 import leo21.compiled.compiled
+import leo21.compiled.do_
 import leo21.compiled.plus
 import leo21.compiled.resolve
 
@@ -11,8 +12,8 @@ data class Body(
 	val compiled: Compiled
 )
 
-fun Module.asBody(compiled: Compiled) = Body(this, compiled)
-val emptyBody = emptyModule.asBody(compiled())
+fun Module.body(compiled: Compiled) = Body(this, compiled)
+val emptyBody = emptyModule.body(compiled())
 
 fun Body.plus(lineCompiled: LineCompiled): Body =
 	set(compiled.plus(lineCompiled)).resolve
@@ -28,7 +29,7 @@ val Body.beginDo: Body
 	get() =
 		module
 			.begin(compiled.type.asGiven)
-			.asBody(compiled())
+			.body(compiled())
 
 val Body.resolve: Body
 	get() =
@@ -42,3 +43,6 @@ fun Body.plus(definitions: Definitions) =
 	Body(
 		module.plus(definitions),
 		compiled.wrap(definitions))
+
+fun Body.do_(body: Body): Body =
+	set(compiled.do_(body.wrapCompiled))
