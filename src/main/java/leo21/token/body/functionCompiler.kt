@@ -34,12 +34,13 @@ data class FunctionCompiler(
 }
 
 data class FunctionItCompiler(
-	val functionCompiler: FunctionCompiler,
+	val parentOrNull: FunctionCompiler.Parent?,
+	val module: Module,
 	val type: Type
 )
 
 data class FunctionItDoesCompiler(
-	val functionItCompiler: FunctionItCompiler,
+	val parentOrNull: FunctionCompiler.Parent?,
 	val arrowCompiled: ArrowCompiled
 )
 
@@ -56,12 +57,12 @@ fun FunctionItCompiler.plus(token: Token): TokenProcessor =
 		BodyCompilerTokenProcessor(
 			BodyCompiler(
 				BodyCompiler.Parent.FunctionItDoes(this),
-				functionCompiler.module.begin(type.asGiven).body(compiled())))
+				module.begin(type.asGiven).body(compiled())))
 	}!!
 
 fun FunctionItDoesCompiler.plus(token: Token): TokenProcessor =
 	notNullIf(token == token(end)) {
-		functionItCompiler.functionCompiler.parentOrNull!!.plus(arrowCompiled)
+		parentOrNull!!.plus(arrowCompiled)
 	}!!
 
 fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): TokenProcessor =
@@ -73,8 +74,8 @@ fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): TokenProcessor =
 	}
 
 fun FunctionCompiler.plus(type: Type): TokenProcessor =
-	FunctionItCompiler(this, type).asTokenProcessor
+	FunctionItCompiler(parentOrNull, module, type).asTokenProcessor
 
 fun FunctionItCompiler.plus(compiled: Compiled): TokenProcessor =
-	FunctionItDoesCompiler(this, fn(compiled.term).of(type arrowTo compiled.type))
+	FunctionItDoesCompiler(parentOrNull, fn(compiled.term).of(type arrowTo compiled.type))
 		.asTokenProcessor
