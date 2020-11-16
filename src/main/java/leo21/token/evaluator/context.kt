@@ -7,7 +7,6 @@ import leo21.evaluator.evaluated
 import leo21.prim.Prim
 import leo21.token.body.Bindings
 import leo21.token.body.resolve
-import leo21.token.body.resolveOrNull
 import leo21.token.type.compiler.Lines
 
 data class Context(

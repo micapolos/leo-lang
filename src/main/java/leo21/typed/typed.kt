@@ -1,6 +1,5 @@
 package leo21.typed
 
-import leo.base.fold
 import leo13.Link
 import leo13.linkTo
 import leo21.type.Choice
@@ -57,6 +56,3 @@ fun <V> Typed<V, Struct>.linkOrNull(pairFn: V.() -> Pair<V, V>): Link<Typed<V, S
 			lhs.of(structLink.tail) linkTo rhs.of(structLink.head)
 		}
 	}
-
-fun <V> typed(nilValue: V, plusFn: V.(V) -> V, vararg lines: Typed<V, Line>): Typed<V, Type> =
-	nilValue.of(type()).fold(lines) { plus(it, plusFn) }
