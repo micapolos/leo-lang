@@ -5,7 +5,6 @@ import leo.base.assertNull
 import leo21.evaluator.accessOrNull
 import leo21.evaluator.emptyChoiceEvaluated
 import leo21.evaluator.evaluated
-import leo21.evaluator.lineEvaluated
 import leo21.evaluator.lineTo
 import leo21.evaluator.plusChosen
 import leo21.evaluator.plusNotChosen
