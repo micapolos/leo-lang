@@ -13,7 +13,6 @@ import leo21.compiled.Compiled
 import leo21.prim.Prim
 import leo21.prim.nilPrim
 import leo21.type.Type
-import leo21.type.lineTo
 import leo21.type.resolve
 import leo21.type.switch
 import leo21.type.type
@@ -57,9 +56,6 @@ val Evaluated.script: Script
 
 fun Evaluated.plus(evaluated: LineEvaluated): Evaluated =
 	structOrNull!!.plus(evaluated).evaluated
-
-fun Evaluated.make(name: String): Evaluated =
-	value of type(name lineTo type)
 
 fun evaluated(lineEvaluated: LineEvaluated): Evaluated =
 	lineEvaluated.value of type(lineEvaluated.line)
