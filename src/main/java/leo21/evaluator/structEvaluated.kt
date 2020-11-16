@@ -1,5 +1,6 @@
 package leo21.evaluator
 
+import leo.base.notNullIf
 import leo13.Link
 import leo13.linkTo
 import leo14.lambda.value.Value
@@ -7,6 +8,7 @@ import leo14.lambda.value.pair
 import leo14.lambda.value.plus
 import leo21.prim.Prim
 import leo21.type.Struct
+import leo21.type.emptyStruct
 import leo21.type.isStatic
 import leo21.type.linkOrNull
 import leo21.type.plus
@@ -33,5 +35,13 @@ val StructEvaluated.linkOrNull: Link<StructEvaluated, LineEvaluated>?
 				if (structLink.head.isStatic) value to nilValue
 				else value.pair { lhs, rhs -> lhs to rhs }).let { (lhs, rhs) ->
 				lhs.of(structLink.tail) linkTo rhs.of(structLink.head)
+			}
+		}
+
+val StructEvaluated.onlyLineOrNull: LineEvaluated?
+	get() =
+		linkOrNull?.let { link ->
+			notNullIf(link.tail.struct == emptyStruct) {
+				link.head
 			}
 		}

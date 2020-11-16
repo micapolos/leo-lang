@@ -44,9 +44,8 @@ fun <R> Evaluated.switch(
 		{ recursive -> value.of(recursive.resolve).switch(structFn, choiceFn) },
 		{ recurse -> null!! })
 
-val Evaluated.structOrNull: StructEvaluated?
-	get() =
-		switch({ it }, { null })
+val Evaluated.structOrNull: StructEvaluated? get() = switch({ it }, { null })
+val Evaluated.choiceOrNull: ChoiceEvaluated? get() = switch({ null }, { it })
 
 val Evaluated.compiled: Compiled
 	get() =
@@ -68,3 +67,6 @@ fun evaluated(lineEvaluated: LineEvaluated): Evaluated =
 fun evaluated(string: String) = evaluated(string.lineEvaluated)
 fun evaluated(double: Double) = evaluated(double.lineEvaluated)
 
+val Evaluated.rhsOrNull: Evaluated?
+	get() =
+		structOrNull?.onlyLineOrNull?.fieldOrNull?.rhs

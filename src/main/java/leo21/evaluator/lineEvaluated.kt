@@ -54,6 +54,10 @@ val Literal.lineEvaluated: LineEvaluated
 			is NumberLiteral -> number.lineEvaluated
 		}
 
+val LineEvaluated.fieldOrNull: FieldEvaluated?
+	get() =
+		switch({ null }, { null }, { it }, { null })
+
 val LineEvaluated.onlyNameOrNull: String?
 	get() =
 		line.fieldOrNull?.let { field ->
@@ -63,5 +67,5 @@ val LineEvaluated.onlyNameOrNull: String?
 		}
 
 val String.lineEvaluated: LineEvaluated get() = value(prim) of stringLine
-val Double.lineEvaluated: LineEvaluated get() = value(prim) of stringLine
+val Double.lineEvaluated: LineEvaluated get() = value(prim) of doubleLine
 val Number.lineEvaluated: LineEvaluated get() = value(prim) of doubleLine
