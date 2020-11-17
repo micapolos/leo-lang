@@ -5,6 +5,7 @@ import leo13.reverse
 import leo14.Script
 import leo14.Token
 import leo14.tokenStack
+import leo15.dsl.*
 import leo21.compiled.Compiled
 import leo21.token.body.Body
 import leo21.token.body.BodyCompiler
@@ -76,6 +77,9 @@ fun TokenProcessor.plus(token: Token): TokenProcessor =
 
 fun TokenProcessor.plus(script: Script): TokenProcessor =
 	fold(script.tokenStack.reverse) { plus(it) }
+
+fun TokenProcessor.plus(f: F): TokenProcessor =
+	plus(script_(f))
 
 val TokenProcessor.type: Type
 	get() =
