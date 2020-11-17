@@ -12,6 +12,7 @@ import leo14.parent
 import leo14.plus
 import leo14.script
 import leo21.compiled.script
+import leo21.token.evaluator.printFragment
 import leo21.token.type.compiler.Lines
 import leo21.type.Line
 import leo21.type.name
@@ -60,9 +61,9 @@ val FunctionItDoesCompiler.printFragment: Fragment
 val FunctionCompiler.Parent.printFragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is FunctionCompiler.Parent.Define -> defineCompiler.printFragment.parent(begin("function"))
-			is FunctionCompiler.Parent.Body -> bodyCompiler.printFragment.parent(begin("function"))
-		}
+			is FunctionCompiler.Parent.Define -> defineCompiler.printFragment
+			is FunctionCompiler.Parent.Body -> bodyCompiler.printFragment
+		}.parent(begin("function"))
 
 val DefineCompiler.printFragment: Fragment
 	get() =
@@ -72,8 +73,9 @@ val DefineCompiler.printFragment: Fragment
 val DefineCompiler.Parent.printFragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is DefineCompiler.Parent.Body -> bodyCompiler.printFragment.parent(begin("define"))
-		}
+			is DefineCompiler.Parent.Body -> bodyCompiler.printFragment
+			is DefineCompiler.Parent.Evaluator -> evaluatorNode.printFragment
+		}.parent(begin("define"))
 
 val Line.printScriptLine: ScriptLine
 	get() =

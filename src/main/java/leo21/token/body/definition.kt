@@ -3,10 +3,13 @@ package leo21.token.body
 import leo14.ScriptLine
 import leo14.lambda.fn
 import leo14.lambda.invoke
+import leo14.lambda.value.Value
 import leo14.lineTo
 import leo21.compiled.ArrowCompiled
 import leo21.compiled.Compiled
 import leo21.compiled.of
+import leo21.prim.Prim
+import leo21.prim.runtime.value
 import leo21.type.script
 
 sealed class Definition
@@ -29,4 +32,10 @@ val Definition.printScriptLine: ScriptLine
 	get() =
 		when (this) {
 			is ArrowCompiledDefinition -> "function" lineTo arrowCompiled.arrow.script
+		}
+
+val Definition.value: Value<Prim>
+	get() =
+		when (this) {
+			is ArrowCompiledDefinition -> arrowCompiled.term.value
 		}

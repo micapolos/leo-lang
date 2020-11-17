@@ -7,6 +7,7 @@ import leo21.evaluator.evaluated
 import leo21.evaluator.given
 import leo21.evaluator.lineTo
 import leo21.evaluator.plus
+import leo21.token.body.Module
 
 data class Evaluator(
 	val context: Context,
@@ -35,3 +36,6 @@ val Evaluator.beginDo
 
 fun Evaluator.do_(evaluator: Evaluator): Evaluator =
 	copy(evaluated = evaluator.evaluated)
+
+fun Evaluator.plus(module: Module): Evaluator =
+	copy(context = context.plus(module))

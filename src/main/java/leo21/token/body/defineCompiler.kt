@@ -5,11 +5,14 @@ import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
+import leo21.token.evaluator.EvaluatorNode
+import leo21.token.evaluator.end
 import leo21.token.processor.DefineCompilerTokenProcessor
 import leo21.token.processor.FunctionCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
 import leo21.token.processor.TypeCompilerTokenProcessor
 import leo21.token.processor.processor
+import leo21.token.processor.tokenProcessor
 import leo21.token.type.compiler.DefineCompilerTypeParent
 import leo21.token.type.compiler.TypeCompiler
 import leo21.type.Line
@@ -24,6 +27,7 @@ data class DefineCompiler(
 
 	sealed class Parent {
 		data class Body(val bodyCompiler: BodyCompiler) : Parent()
+		data class Evaluator(val evaluatorNode: EvaluatorNode) : Parent()
 	}
 }
 
@@ -59,4 +63,5 @@ fun DefineCompiler.plus(type: Type): TokenProcessor =
 fun DefineCompiler.Parent.plus(module: Module): TokenProcessor =
 	when (this) {
 		is DefineCompiler.Parent.Body -> bodyCompiler.plus(module).processor
+		is DefineCompiler.Parent.Evaluator -> evaluatorNode.end(module).tokenProcessor
 	}
