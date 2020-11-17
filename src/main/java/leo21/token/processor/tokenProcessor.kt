@@ -15,7 +15,7 @@ import leo21.token.body.FunctionItDoesCompiler
 import leo21.token.body.SwitchCompiler
 import leo21.token.body.emptyBodyCompiler
 import leo21.token.body.plus
-import leo21.token.evaluator.Evaluator
+import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.plus
 import leo21.token.script.ScriptCompiler
 import leo21.token.script.emptyScriptCompiler
@@ -38,7 +38,7 @@ data class FunctionItCompilerTokenProcessor(val functionItCompiler: FunctionItCo
 data class FunctionItDoesCompilerTokenProcessor(val functionItDoesCompiler: FunctionItDoesCompiler) : TokenProcessor()
 data class DefineCompilerTokenProcessor(val defineCompiler: DefineCompiler) : TokenProcessor()
 data class SwitchCompilerTokenProcessor(val switchCompiler: SwitchCompiler) : TokenProcessor()
-data class EvaluatorTokenProcessor(val evaluator: Evaluator) : TokenProcessor()
+data class EvaluatorTokenProcessor(val evaluatorNode: EvaluatorNode) : TokenProcessor()
 
 val emptyTyperTokenProcessor: TokenProcessor =
 	TypeCompilerTokenProcessor(emptyTypeCompiler)
@@ -53,7 +53,7 @@ val BodyCompiler.processor: TokenProcessor get() = BodyCompilerTokenProcessor(th
 val FunctionCompiler.asTokenProcessor: TokenProcessor get() = FunctionCompilerTokenProcessor(this)
 val FunctionItCompiler.asTokenProcessor: TokenProcessor get() = FunctionItCompilerTokenProcessor(this)
 val FunctionItDoesCompiler.asTokenProcessor: TokenProcessor get() = FunctionItDoesCompilerTokenProcessor(this)
-val Evaluator.tokenProcessor: TokenProcessor get() = EvaluatorTokenProcessor(this)
+val EvaluatorNode.tokenProcessor: TokenProcessor get() = EvaluatorTokenProcessor(this)
 
 fun TokenProcessor.plus(token: Token): TokenProcessor =
 	when (this) {
@@ -67,7 +67,7 @@ fun TokenProcessor.plus(token: Token): TokenProcessor =
 		is FunctionItDoesCompilerTokenProcessor -> functionItDoesCompiler.plus(token)
 		is DefineCompilerTokenProcessor -> defineCompiler.plus(token)
 		is SwitchCompilerTokenProcessor -> switchCompiler.plus(token)
-		is EvaluatorTokenProcessor -> evaluator.plus(token)
+		is EvaluatorTokenProcessor -> evaluatorNode.plus(token)
 	}
 
 fun TokenProcessor.plus(script: Script): TokenProcessor =

@@ -9,3 +9,7 @@ data class FieldEvaluated(val value: Value<Prim>, val field: Field)
 val FieldEvaluated.rhs: Evaluated
 	get() =
 		value of field.rhs
+
+val FieldEvaluated.name: String
+	get() =
+		field.name
