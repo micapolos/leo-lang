@@ -7,6 +7,8 @@ import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
+import leo14.error
+import leo15.dsl.*
 import leo21.token.processor.ArrowCompilerTokenProcessor
 import leo21.token.processor.ChoiceCompilerTokenProcessor
 import leo21.token.processor.TokenProcessor
@@ -31,38 +33,39 @@ val emptyTypeCompiler = TypeCompiler(null, emptyLines, type())
 
 fun TypeCompiler.plus(token: Token): TokenProcessor =
 	when (token) {
-		is LiteralToken -> null!!
+		is LiteralToken -> error { not { expected { literal } } }
 		is BeginToken -> plusBegin(token.begin.string)
 		is EndToken -> parentOrNull!!.plus(type)
 	}
 
 fun TypeCompiler.plusBegin(name: String): TokenProcessor =
 	when (name) {
-		"choice" -> failIfOr(!type.isEmpty) {
-			ChoiceCompilerTokenProcessor(
-				ChoiceCompiler(
-					TypeCompilerChoiceParent(this),
-					lines,
-					choice()))
-		}
+		"choice" ->
+			if (type.isEmpty)
+				ChoiceCompilerTokenProcessor(
+					ChoiceCompiler(
+						TypeCompilerChoiceParent(this),
+						lines,
+						choice()))
+			else error { not { expected { word { choice } } } }
 		"function" -> ArrowCompilerTokenProcessor(
 			ArrowCompiler(
 				TypeCompilerArrowParent(this),
 				lines,
 				type().firstEither()))
-		"recursive" -> failIfOr(!type.isEmpty) {
-			TypeCompilerTokenProcessor(
+		"recursive" ->
+			if (!type.isEmpty) TypeCompilerTokenProcessor(
 				TypeCompiler(
 					RecursiveTypeParent(this),
 					lines,
 					type()))
-		}
-		else -> null
-	} ?: TypeCompilerTokenProcessor(
-		TypeCompiler(
-			TypeNameTypeParent(this, name),
-			lines,
-			type()))
+			else error { not { expected { word { recursive } } } }
+		else -> TypeCompilerTokenProcessor(
+			TypeCompiler(
+				TypeNameTypeParent(this, name),
+				lines,
+				type()))
+	}
 
 fun TypeCompiler.plus(name: String, rhs: Type): TokenProcessor =
 	plus(lines.resolve(name compiledLineTo rhs))

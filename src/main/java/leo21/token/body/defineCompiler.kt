@@ -5,6 +5,9 @@ import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
+import leo14.error
+import leo14.orError
+import leo15.dsl.*
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.end
 import leo21.token.processor.DefineCompilerTokenProcessor
@@ -33,7 +36,17 @@ data class DefineCompiler(
 
 fun DefineCompiler.plus(token: Token): TokenProcessor =
 	when (token) {
-		is LiteralToken -> null
+		is LiteralToken ->
+			error {
+				expected {
+					one {
+						of {
+							word { function }
+							word { type }
+						}
+					}
+				}
+			}
 		is BeginToken -> when (token.begin.string) {
 			"function" ->
 				FunctionCompilerTokenProcessor(
@@ -46,10 +59,20 @@ fun DefineCompiler.plus(token: Token): TokenProcessor =
 						DefineCompilerTypeParent(this),
 						module.lines,
 						type()))
-			else -> null
+			else ->
+				error {
+					expected {
+						one {
+							of {
+								word { function }
+								word { type }
+							}
+						}
+					}
+				}
 		}
-		is EndToken -> parentOrNull!!.plus(module)
-	}!!
+		is EndToken -> parentOrNull?.plus(module).orError { not { expected { end } } }
+	}
 
 fun DefineCompiler.plus(definition: Definition): DefineCompiler =
 	copy(module = module.plus(definition))

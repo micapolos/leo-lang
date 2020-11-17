@@ -47,4 +47,4 @@ fun Compiled.wrap(module: Module): Compiled =
 
 val Module.printScript: Script
 	get() =
-		definitions.printScript.plus(lines.printScript)
+		lines.printScript.plus(definitions.printScript)

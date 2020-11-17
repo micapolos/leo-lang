@@ -5,7 +5,9 @@ import leo14.Begin
 import leo14.End
 import leo14.Literal
 import leo14.Token
+import leo14.error
 import leo14.switch
+import leo15.dsl.*
 import leo21.compiled.Compiled
 import leo21.compiled.LineCompiled
 import leo21.compiled.lineCompiled
@@ -47,7 +49,7 @@ fun BodyCompiler.plus(literal: Literal): TokenProcessor =
 
 fun BodyCompiler.plus(begin: Begin): TokenProcessor =
 	when (begin.string) {
-		"apply" -> TODO()
+		"apply" -> error { not { implement } }
 		"define" ->
 			DefineCompilerTokenProcessor(
 				DefineCompiler(

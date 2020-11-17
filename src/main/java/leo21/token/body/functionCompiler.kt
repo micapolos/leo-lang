@@ -5,7 +5,9 @@ import leo14.Token
 import leo14.begin
 import leo14.end
 import leo14.lambda.fn
+import leo14.orError
 import leo14.token
+import leo15.dsl.*
 import leo21.compiled.ArrowCompiled
 import leo21.compiled.Compiled
 import leo21.compiled.compiled
@@ -51,7 +53,7 @@ fun FunctionCompiler.plus(token: Token): TokenProcessor =
 				FunctionCompilerTypeParent(this),
 				module.lines,
 				type()))
-	}!!
+	}.orError { expected { word { it } } }
 
 fun FunctionItCompiler.plus(token: Token): TokenProcessor =
 	notNullIf(token == token(begin("does"))) {
@@ -59,12 +61,12 @@ fun FunctionItCompiler.plus(token: Token): TokenProcessor =
 			BodyCompiler(
 				BodyCompiler.Parent.FunctionItDoes(this),
 				module.begin(type.given).body(compiled())))
-	}!!
+	}.orError { expected { word { does } } }
 
 fun FunctionItDoesCompiler.plus(token: Token): TokenProcessor =
 	notNullIf(token == token(end)) {
 		parentOrNull!!.plus(arrowCompiled)
-	}!!
+	}.orError { expected { end } }
 
 fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): TokenProcessor =
 	when (this) {

@@ -1,10 +1,12 @@
 package leo21.token.evaluator
 
-import leo.base.failIfOr
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
+import leo14.error
+import leo14.orError
+import leo15.dsl.*
 import leo21.evaluator.LineEvaluated
 import leo21.evaluator.lineEvaluated
 import leo21.token.body.DefineCompiler
@@ -27,12 +29,12 @@ fun EvaluatorNode.plus(token: Token): TokenProcessor =
 		is LiteralToken -> plus(token.literal.lineEvaluated).tokenProcessor
 		is BeginToken -> when (token.begin.string) {
 			"define" ->
-				failIfOr(!evaluator.evaluated.type.isEmpty) {
+				if (evaluator.evaluated.type.isEmpty)
 					DefineCompilerTokenProcessor(
 						DefineCompiler(
 							DefineCompiler.Parent.Evaluator(this),
 							evaluator.context.beginModule))
-				}
+				else error { not { expected { word { define } } } }
 			"do" -> EvaluatorTokenProcessor(
 				EvaluatorNode(
 					EvaluatorNodeDoEvaluatorParent(EvaluatorNodeDo(this)),
@@ -42,8 +44,7 @@ fun EvaluatorNode.plus(token: Token): TokenProcessor =
 					EvaluatorNodeBeginEvaluatorParent(EvaluatorNodeBegin(this, token.begin.string)),
 					evaluator.begin))
 		}
-
-		is EndToken -> parentOrNull!!.end(evaluator)
+		is EndToken -> parentOrNull?.end(evaluator).orError { not { expected { end } } }
 	}
 
 fun EvaluatorNode.plus(line: LineEvaluated): EvaluatorNode =

@@ -1,6 +1,7 @@
 package leo14
 
 import leo.ansi
+import leo.base.println
 import leo.base.runIf
 import leo.bellChar
 import leo.clear
@@ -21,6 +22,7 @@ import leo14.typed.compiler.parse
 import leo14.typed.compiler.preludeMemory
 import leo14.untyped.dsl2.library.prelude
 import leo14.untyped.dsl2.read
+import leo14.untyped.leoString
 import leo14.untyped.stringCharReducer
 import leo14.untyped.typed.stringCharReducer
 import leo16.stringCharReducer
@@ -68,9 +70,13 @@ fun run(reducer: Reducer<String, Char>) {
 			print(ansi.reset)
 		}
 		errorToPrint?.run {
-			println("[ERROR]")
-			printStackTrace()
-			println(undoableReducerVariable.current.lastDone.toString())
+			println()
+			if (this is ScriptError) "${ansi.red}${script("error" lineTo script).leoString}${ansi.reset}".println
+			else {
+				println("${ansi.red}[ERROR]${ansi.reset}")
+				printStackTrace()
+				println(undoableReducerVariable.current.lastDone.toString())
+			}
 		}
 		if (printDebug) {
 			println("[DEBUG]")
@@ -100,6 +106,9 @@ fun run(reducer: Reducer<String, Char>) {
 		} catch (e: AssertionError) {
 			print(bellChar)
 			assertionError = e
+		} catch (e: ScriptError) {
+			print(bellChar)
+			errorToPrint = e
 		} catch (e: Throwable) {
 			print(bellChar)
 			if (errorCount-- < 0) errorToPrint = e

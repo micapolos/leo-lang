@@ -9,7 +9,6 @@ import leo14.begin
 import leo14.fragment
 import leo14.lineTo
 import leo14.parent
-import leo14.plus
 import leo14.script
 import leo21.compiled.script
 import leo21.token.evaluator.printFragment
@@ -67,8 +66,7 @@ val FunctionCompiler.Parent.printFragmentParent: FragmentParent
 
 val DefineCompiler.printFragment: Fragment
 	get() =
-		parentOrNull?.printFragmentParent.fragment(
-			module.definitions.printScript.plus(module.printScript))
+		parentOrNull?.printFragmentParent.fragment(module.printScript)
 
 val DefineCompiler.Parent.printFragmentParent: FragmentParent
 	get() =
