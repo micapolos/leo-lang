@@ -27,3 +27,6 @@ val Ansi.brightCyan get() = escape + "96m"
 val Ansi.brightWhite get() = escape + "97m"
 
 val Ansi.reset get() = escape + "0m"
+
+fun Ansi.goto(line: Int, column: Int) = "${escape}${line};${column}H"
+val Ansi.eraseToEndOfLine get() = "${escape}K"
