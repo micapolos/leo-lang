@@ -29,7 +29,7 @@ val Body.begin: Body
 val Body.beginDo: Body
 	get() =
 		module
-			.begin(compiled.type.asGiven)
+			.begin(compiled.type.given)
 			.body(compiled())
 
 val Body.resolve: Body

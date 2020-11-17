@@ -9,7 +9,7 @@ import leo21.type.onlyNameOrNull
 
 data class Given(val type: Type)
 
-val Type.asGiven get() = Given(this)
+val Type.given get() = Given(this)
 
 fun Given.resolveOrNull(index: Int, param: Compiled): Compiled? =
 	param.type.onlyNameOrNull?.let { name ->

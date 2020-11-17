@@ -43,7 +43,7 @@ fun SwitchCompiler.plus(token: Token): TokenProcessor =
 					BodyCompilerTokenProcessor(
 						BodyCompiler(
 							BodyCompiler.Parent.SwitchCase(this, choiceLink.line),
-							module.begin(type(choiceLink.line).asGiven).body(compiled())))
+							module.begin(type(choiceLink.line).given).body(compiled())))
 				}
 			}
 		is EndToken -> BodyCompilerTokenProcessor(parentBodyCompiler.set(switchCompiled.end))

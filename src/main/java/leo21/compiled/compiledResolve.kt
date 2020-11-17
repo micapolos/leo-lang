@@ -32,6 +32,16 @@ val Compiled.resolveGetOrNull: Compiled?
 			}
 		}
 
+val Compiled.resolveMakeOrNull: Compiled?
+	get() =
+		linkOrNull?.run {
+			head.fieldCompiledOrNull?.let { fieldTyped ->
+				ifOrNull(fieldTyped.rhsCompiled.type == type()) {
+					tail.make(fieldTyped.field.name)
+				}
+			}
+		}
+
 val Compiled.resolve: Compiled
 	get() =
 		resolveOrNull ?: this
@@ -55,6 +65,7 @@ val Compiled.resolveOrNull: Compiled?
 			?: resolveFn2OrNull(doubleType, "minus", doubleType, DoubleMinusDoublePrim, doubleType)
 			?: resolveFn2OrNull(doubleType, "times", doubleType, DoubleTimesDoublePrim, doubleType)
 			?: resolveFn2OrNull(stringType, "plus", stringType, StringPlusStringPrim, stringType)
+			?: resolveMakeOrNull
 
 fun Compiled.resolveFn1OrNull(lhs: Type, name: String, prim: Prim, result: Type): Compiled? =
 	notNullIf(type == lhs.plus(name lineTo type())) {

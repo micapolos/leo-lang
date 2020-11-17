@@ -1,13 +1,14 @@
 package leo21.evaluator
 
 import leo.base.runIfNotNull
+import leo21.compiled.resolve
 import leo21.type.isEmpty
 import kotlin.math.cos
 import kotlin.math.sin
 
 val Evaluated.resolve: Evaluated
 	get() =
-		resolveOrNull ?: this
+		compiled.resolve.evaluated
 
 val Evaluated.resolveOrNull: Evaluated?
 	get() =

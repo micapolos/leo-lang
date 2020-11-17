@@ -16,6 +16,7 @@ import leo21.token.body.SwitchCompiler
 import leo21.token.body.emptyBodyCompiler
 import leo21.token.body.plus
 import leo21.token.evaluator.EvaluatorNode
+import leo21.token.evaluator.emptyEvaluatorNode
 import leo21.token.evaluator.plus
 import leo21.token.script.ScriptCompiler
 import leo21.token.script.emptyScriptCompiler
@@ -48,6 +49,9 @@ val emptyScriptTokenProcessor: TokenProcessor =
 
 val emptyBodyTokenProcessor: TokenProcessor =
 	BodyCompilerTokenProcessor(emptyBodyCompiler)
+
+val emptyEvaluatorProcessor: TokenProcessor =
+	EvaluatorTokenProcessor(emptyEvaluatorNode)
 
 val BodyCompiler.processor: TokenProcessor get() = BodyCompilerTokenProcessor(this)
 val FunctionCompiler.asTokenProcessor: TokenProcessor get() = FunctionCompilerTokenProcessor(this)
