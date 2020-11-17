@@ -3,7 +3,12 @@ package leo21.token.processor
 import leo13.fold
 import leo13.reverse
 import leo14.Script
+import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.Token
+import leo14.anyReflectScriptLine
+import leo14.lineTo
+import leo14.script
 import leo14.tokenStack
 import leo15.dsl.*
 import leo21.compiled.Compiled
@@ -29,18 +34,68 @@ import leo21.token.type.compiler.emptyTypeCompiler
 import leo21.token.type.compiler.plus
 import leo21.type.Type
 
-sealed class Processor
-data class TypeCompilerProcessor(val typeCompiler: TypeCompiler) : Processor()
-data class ChoiceCompilerProcessor(val choiceCompiler: ChoiceCompiler) : Processor()
-data class ArrowCompilerProcessor(val arrowCompiler: ArrowCompiler) : Processor()
-data class ScriptCompilerProcessor(val scriptCompiler: ScriptCompiler) : Processor()
-data class BodyCompilerProcessor(val bodyCompiler: BodyCompiler) : Processor()
-data class FunctionCompilerProcessor(val functionCompiler: FunctionCompiler) : Processor()
-data class FunctionItCompilerProcessor(val functionItCompiler: FunctionItCompiler) : Processor()
-data class FunctionItDoesCompilerProcessor(val functionItDoesCompiler: FunctionItDoesCompiler) : Processor()
-data class DefineCompilerProcessor(val defineCompiler: DefineCompiler) : Processor()
-data class SwitchCompilerProcessor(val switchCompiler: SwitchCompiler) : Processor()
-data class EvaluatorProcessor(val evaluatorNode: EvaluatorNode) : Processor()
+sealed class Processor : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "processor" lineTo script(
+			when (this) {
+				is TypeCompilerProcessor -> typeCompiler.anyReflectScriptLine
+				is ChoiceCompilerProcessor -> choiceCompiler.anyReflectScriptLine
+				is ArrowCompilerProcessor -> arrowCompiler.anyReflectScriptLine
+				is ScriptCompilerProcessor -> scriptCompiler.anyReflectScriptLine
+				is BodyCompilerProcessor -> bodyCompiler.anyReflectScriptLine
+				is FunctionCompilerProcessor -> functionCompiler.anyReflectScriptLine
+				is FunctionItCompilerProcessor -> functionItCompiler.anyReflectScriptLine
+				is FunctionItDoesCompilerProcessor -> functionItDoesCompiler.anyReflectScriptLine
+				is DefineCompilerProcessor -> defineCompiler.anyReflectScriptLine
+				is SwitchCompilerProcessor -> switchCompiler.anyReflectScriptLine
+				is EvaluatorProcessor -> evaluatorNode.anyReflectScriptLine
+			}
+		)
+}
+
+data class TypeCompilerProcessor(val typeCompiler: TypeCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class ChoiceCompilerProcessor(val choiceCompiler: ChoiceCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class ArrowCompilerProcessor(val arrowCompiler: ArrowCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class ScriptCompilerProcessor(val scriptCompiler: ScriptCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class BodyCompilerProcessor(val bodyCompiler: BodyCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionCompilerProcessor(val functionCompiler: FunctionCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionItCompilerProcessor(val functionItCompiler: FunctionItCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class FunctionItDoesCompilerProcessor(val functionItDoesCompiler: FunctionItDoesCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class DefineCompilerProcessor(val defineCompiler: DefineCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class SwitchCompilerProcessor(val switchCompiler: SwitchCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class EvaluatorProcessor(val evaluatorNode: EvaluatorNode) : Processor() {
+	override fun toString() = super.toString()
+}
 
 val emptyTypeProcessor: Processor =
 	TypeCompilerProcessor(emptyTypeCompiler)

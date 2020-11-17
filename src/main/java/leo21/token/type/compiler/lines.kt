@@ -6,15 +6,21 @@ import leo13.first
 import leo13.mapFirst
 import leo13.push
 import leo13.stack
-import leo14.Script
+import leo14.ScriptLine
+import leo14.Scriptable
+import leo14.reflectOrEmptyScriptLine
 import leo21.compiled.LineCompiled
 import leo21.compiled.castOrNull
 import leo21.type.Line
 import leo21.type.fieldOrNull
 import leo21.type.isEmpty
 import leo21.type.name
+import leo21.type.scriptLine
 
-inline class Lines(val lineStack: Stack<Line>)
+data class Lines(val lineStack: Stack<Line>) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = lineStack.reflectOrEmptyScriptLine("lines") { scriptLine }
+}
 
 val Stack<Line>.lines get() = Lines(this)
 val emptyLines = Lines(stack())

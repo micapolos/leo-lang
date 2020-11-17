@@ -1,10 +1,15 @@
 package leo21.token.body
 
 import leo.base.notNullIf
+import leo14.ScriptLine
+import leo14.Scriptable
+import leo14.anyReflectScriptLine
 import leo14.lambda.arg
 import leo14.lambda.invoke
 import leo14.lambda.value.Value
 import leo14.lambda.value.apply
+import leo14.lineTo
+import leo14.script
 import leo21.compiled.Compiled
 import leo21.compiled.getOrNull
 import leo21.compiled.make
@@ -18,9 +23,21 @@ import leo21.prim.runtime.apply
 import leo21.type.Arrow
 import leo21.type.onlyNameOrNull
 
-sealed class Binding {
-	data class Given(val given: leo21.token.body.Given) : Binding()
-	data class Arrow(val arrow: leo21.type.Arrow) : Binding()
+sealed class Binding : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "binding" lineTo script(
+			when (this) {
+				is Given -> given.anyReflectScriptLine
+				is Arrow -> arrow.anyReflectScriptLine
+			})
+
+	data class Given(val given: leo21.token.body.Given) : Binding() {
+		override fun toString() = super.toString()
+	}
+
+	data class Arrow(val arrow: leo21.type.Arrow) : Binding() {
+		override fun toString() = super.toString()
+	}
 }
 
 val Given.binding: Binding get() = Binding.Given(this)

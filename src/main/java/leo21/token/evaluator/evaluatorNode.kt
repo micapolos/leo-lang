@@ -1,11 +1,18 @@
 package leo21.token.evaluator
 
+import leo13.script.script
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
+import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.Token
+import leo14.anyOptionalReflectScriptLine
+import leo14.anyReflectScriptLine
 import leo14.error
+import leo14.lineTo
 import leo14.orError
+import leo14.script
 import leo15.dsl.*
 import leo21.evaluator.LineEvaluated
 import leo21.evaluator.lineEvaluated
@@ -20,7 +27,12 @@ import leo21.type.isEmpty
 data class EvaluatorNode(
 	val parentOrNull: EvaluatorParent?,
 	val evaluator: Evaluator
-)
+) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "node" lineTo script(
+			parentOrNull.anyOptionalReflectScriptLine("parent"),
+			evaluator.reflectScriptLine)
+}
 
 val emptyEvaluatorNode = EvaluatorNode(null, emptyEvaluator)
 

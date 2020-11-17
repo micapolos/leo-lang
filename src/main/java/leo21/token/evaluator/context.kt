@@ -2,9 +2,14 @@ package leo21.token.evaluator
 
 import leo13.fold
 import leo13.reverse
+import leo14.ScriptLine
+import leo14.Scriptable
+import leo14.anyReflectScriptLine
 import leo14.lambda.value.Scope
 import leo14.lambda.value.emptyScope
 import leo14.lambda.value.push
+import leo14.lineTo
+import leo14.script
 import leo21.evaluator.Evaluated
 import leo21.evaluator.EvaluatedGiven
 import leo21.evaluator.compiled
@@ -26,7 +31,13 @@ data class Context(
 	val bindings: Bindings,
 	val lines: Lines,
 	val scope: Scope<Prim>
-)
+) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "context" lineTo script(
+			bindings.reflectScriptLine,
+			lines.reflectScriptLine,
+			scope.reflectScriptLine)
+}
 
 val emptyContext = Context(emptyBindings, emptyLines, emptyScope())
 
