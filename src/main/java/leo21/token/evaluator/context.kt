@@ -22,7 +22,6 @@ import leo21.token.body.resolve
 import leo21.token.body.value
 import leo21.token.type.compiler.Lines
 import leo21.token.type.compiler.emptyLines
-import leo22.dsl.*
 
 data class Context(
 	val bindings: Bindings,
@@ -46,7 +45,12 @@ val Context.beginModule: Module
 		Module(bindings, lines, emptyDefinitions)
 
 fun Context.plus(module: Module): Context =
+	this
+		.fold(module.definitions.definitionStack.reverse, Context::plus)
+		.copy(lines = module.lines)
+
+fun Context.plus(definition: Definition): Context =
 	Context(
-		bindings,
-		module.lines,
-		scope.fold(module.definitions.definitionStack.reverse) { push(it.value) })
+		bindings.plus(definition.binding),
+		lines,
+		scope.push(definition.value))
