@@ -5,4 +5,4 @@ import leo21.type.Type
 
 val Script.compileType: Type
 	get() =
-		emptyTyperTokenProcessor.plus(this).type
+		emptyTypeProcessor.plus(this).type

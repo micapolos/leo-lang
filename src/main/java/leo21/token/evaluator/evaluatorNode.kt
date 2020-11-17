@@ -11,10 +11,10 @@ import leo21.evaluator.LineEvaluated
 import leo21.evaluator.lineEvaluated
 import leo21.token.body.DefineCompiler
 import leo21.token.body.Module
-import leo21.token.processor.DefineCompilerTokenProcessor
-import leo21.token.processor.EvaluatorTokenProcessor
-import leo21.token.processor.TokenProcessor
-import leo21.token.processor.tokenProcessor
+import leo21.token.processor.DefineCompilerProcessor
+import leo21.token.processor.EvaluatorProcessor
+import leo21.token.processor.Processor
+import leo21.token.processor.processor
 import leo21.type.isEmpty
 
 data class EvaluatorNode(
@@ -24,22 +24,22 @@ data class EvaluatorNode(
 
 val emptyEvaluatorNode = EvaluatorNode(null, emptyEvaluator)
 
-fun EvaluatorNode.plus(token: Token): TokenProcessor =
+fun EvaluatorNode.plus(token: Token): Processor =
 	when (token) {
-		is LiteralToken -> plus(token.literal.lineEvaluated).tokenProcessor
+		is LiteralToken -> plus(token.literal.lineEvaluated).processor
 		is BeginToken -> when (token.begin.string) {
 			"define" ->
 				if (evaluator.evaluated.type.isEmpty)
-					DefineCompilerTokenProcessor(
+					DefineCompilerProcessor(
 						DefineCompiler(
 							DefineCompiler.Parent.Evaluator(this),
 							evaluator.context.beginModule))
 				else error { not { expected { word { define } } } }
-			"do" -> EvaluatorTokenProcessor(
+			"do" -> EvaluatorProcessor(
 				EvaluatorNode(
 					EvaluatorNodeDoEvaluatorParent(EvaluatorNodeDo(this)),
 					evaluator.beginDo))
-			else -> EvaluatorTokenProcessor(
+			else -> EvaluatorProcessor(
 				EvaluatorNode(
 					EvaluatorNodeBeginEvaluatorParent(EvaluatorNodeBegin(this, token.begin.string)),
 					evaluator.begin))

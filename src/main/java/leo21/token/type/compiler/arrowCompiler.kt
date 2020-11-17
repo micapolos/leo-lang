@@ -9,8 +9,8 @@ import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
-import leo21.token.processor.TokenProcessor
-import leo21.token.processor.TypeCompilerTokenProcessor
+import leo21.token.processor.Processor
+import leo21.token.processor.TypeCompilerProcessor
 import leo21.type.Arrow
 import leo21.type.Type
 import leo21.type.arrowTo
@@ -22,19 +22,19 @@ data class ArrowCompiler(
 	val typeOrArrow: Either<Type, Arrow>
 )
 
-fun ArrowCompiler.plus(token: Token): TokenProcessor =
+fun ArrowCompiler.plus(token: Token): Processor =
 	when (token) {
 		is LiteralToken -> error("$token")
 		is BeginToken -> typeOrArrow.select(
 			{ type ->
 				when (token.begin.string) {
-					"doing" -> TypeCompilerTokenProcessor(
+					"doing" -> TypeCompilerProcessor(
 						TypeCompiler(
 							ArrowDoingTypeParent(this, type),
 							lines,
 							type()))
 					else ->
-						TypeCompilerTokenProcessor(
+						TypeCompilerProcessor(
 							TypeCompiler(
 								ArrowNameTypeParent(this, type, token.begin.string),
 								lines,

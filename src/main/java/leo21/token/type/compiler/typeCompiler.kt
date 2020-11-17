@@ -1,6 +1,5 @@
 package leo21.token.type.compiler
 
-import leo.base.failIfOr
 import leo.base.notNullIf
 import leo13.firstEither
 import leo14.BeginToken
@@ -9,10 +8,10 @@ import leo14.LiteralToken
 import leo14.Token
 import leo14.error
 import leo15.dsl.*
-import leo21.token.processor.ArrowCompilerTokenProcessor
-import leo21.token.processor.ChoiceCompilerTokenProcessor
-import leo21.token.processor.TokenProcessor
-import leo21.token.processor.TypeCompilerTokenProcessor
+import leo21.token.processor.ArrowCompilerProcessor
+import leo21.token.processor.ChoiceCompilerProcessor
+import leo21.token.processor.Processor
+import leo21.token.processor.TypeCompilerProcessor
 import leo21.type.Line
 import leo21.type.Type
 import leo21.type.choice
@@ -31,53 +30,53 @@ data class TypeCompiler(
 
 val emptyTypeCompiler = TypeCompiler(null, emptyLines, type())
 
-fun TypeCompiler.plus(token: Token): TokenProcessor =
+fun TypeCompiler.plus(token: Token): Processor =
 	when (token) {
 		is LiteralToken -> error { not { expected { literal } } }
 		is BeginToken -> plusBegin(token.begin.string)
 		is EndToken -> parentOrNull!!.plus(type)
 	}
 
-fun TypeCompiler.plusBegin(name: String): TokenProcessor =
+fun TypeCompiler.plusBegin(name: String): Processor =
 	when (name) {
 		"choice" ->
 			if (type.isEmpty)
-				ChoiceCompilerTokenProcessor(
+				ChoiceCompilerProcessor(
 					ChoiceCompiler(
 						TypeCompilerChoiceParent(this),
 						lines,
 						choice()))
 			else error { not { expected { word { choice } } } }
-		"function" -> ArrowCompilerTokenProcessor(
+		"function" -> ArrowCompilerProcessor(
 			ArrowCompiler(
 				TypeCompilerArrowParent(this),
 				lines,
 				type().firstEither()))
 		"recursive" ->
-			if (!type.isEmpty) TypeCompilerTokenProcessor(
+			if (!type.isEmpty) TypeCompilerProcessor(
 				TypeCompiler(
 					RecursiveTypeParent(this),
 					lines,
 					type()))
 			else error { not { expected { word { recursive } } } }
-		else -> TypeCompilerTokenProcessor(
+		else -> TypeCompilerProcessor(
 			TypeCompiler(
 				TypeNameTypeParent(this, name),
 				lines,
 				type()))
 	}
 
-fun TypeCompiler.plus(name: String, rhs: Type): TokenProcessor =
+fun TypeCompiler.plus(name: String, rhs: Type): Processor =
 	plus(lines.resolve(name compiledLineTo rhs))
 
-fun TypeCompiler.plus(line: Line): TokenProcessor =
+fun TypeCompiler.plus(line: Line): Processor =
 	process(type.plus(line))
 
 fun TypeCompiler.set(type: Type): TypeCompiler =
 	copy(type = type)
 
-fun TypeCompiler.process(type: Type): TokenProcessor =
-	TypeCompilerTokenProcessor(set(type))
+fun TypeCompiler.process(type: Type): Processor =
+	TypeCompilerProcessor(set(type))
 
 infix fun String.compiledLineTo(rhs: Type): Line =
 	when (this) {

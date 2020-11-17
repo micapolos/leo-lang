@@ -6,18 +6,18 @@ import leo21.token.evaluator.printFragment
 import leo21.token.script.fragment
 import leo21.token.type.compiler.fragment
 
-val TokenProcessor.fragment: Fragment
+val Processor.fragment: Fragment
 	get() =
 		when (this) {
-			is TypeCompilerTokenProcessor -> typeCompiler.fragment
-			is ChoiceCompilerTokenProcessor -> choiceCompiler.fragment
-			is ArrowCompilerTokenProcessor -> arrowCompiler.fragment
-			is ScriptCompilerTokenProcessor -> scriptCompiler.fragment
-			is BodyCompilerTokenProcessor -> bodyCompiler.printFragment
-			is FunctionCompilerTokenProcessor -> functionCompiler.printFragment
-			is FunctionItCompilerTokenProcessor -> functionItCompiler.printFragment
-			is FunctionItDoesCompilerTokenProcessor -> functionItDoesCompiler.printFragment
-			is DefineCompilerTokenProcessor -> defineCompiler.printFragment
-			is SwitchCompilerTokenProcessor -> switchCompiler.printFragment
-			is EvaluatorTokenProcessor -> evaluatorNode.printFragment
+			is TypeCompilerProcessor -> typeCompiler.fragment
+			is ChoiceCompilerProcessor -> choiceCompiler.fragment
+			is ArrowCompilerProcessor -> arrowCompiler.fragment
+			is ScriptCompilerProcessor -> scriptCompiler.fragment
+			is BodyCompilerProcessor -> bodyCompiler.printFragment
+			is FunctionCompilerProcessor -> functionCompiler.printFragment
+			is FunctionItCompilerProcessor -> functionItCompiler.printFragment
+			is FunctionItDoesCompilerProcessor -> functionItDoesCompiler.printFragment
+			is DefineCompilerProcessor -> defineCompiler.printFragment
+			is SwitchCompilerProcessor -> switchCompiler.printFragment
+			is EvaluatorProcessor -> evaluatorNode.printFragment
 		}

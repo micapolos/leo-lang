@@ -13,11 +13,11 @@ import leo21.compiled.Compiled
 import leo21.compiled.compiled
 import leo21.compiled.lineCompiled
 import leo21.compiled.of
-import leo21.token.processor.BodyCompilerTokenProcessor
-import leo21.token.processor.DefineCompilerTokenProcessor
-import leo21.token.processor.TokenProcessor
-import leo21.token.processor.TypeCompilerTokenProcessor
-import leo21.token.processor.asTokenProcessor
+import leo21.token.processor.BodyCompilerProcessor
+import leo21.token.processor.DefineCompilerProcessor
+import leo21.token.processor.Processor
+import leo21.token.processor.TypeCompilerProcessor
+import leo21.token.processor.processor
 import leo21.token.type.compiler.FunctionCompilerTypeParent
 import leo21.token.type.compiler.TypeCompiler
 import leo21.type.Type
@@ -46,39 +46,39 @@ data class FunctionItDoesCompiler(
 	val arrowCompiled: ArrowCompiled
 )
 
-fun FunctionCompiler.plus(token: Token): TokenProcessor =
+fun FunctionCompiler.plus(token: Token): Processor =
 	notNullIf(token == token(begin("it"))) {
-		TypeCompilerTokenProcessor(
+		TypeCompilerProcessor(
 			TypeCompiler(
 				FunctionCompilerTypeParent(this),
 				module.lines,
 				type()))
 	}.orError { expected { word { it } } }
 
-fun FunctionItCompiler.plus(token: Token): TokenProcessor =
+fun FunctionItCompiler.plus(token: Token): Processor =
 	notNullIf(token == token(begin("does"))) {
-		BodyCompilerTokenProcessor(
+		BodyCompilerProcessor(
 			BodyCompiler(
 				BodyCompiler.Parent.FunctionItDoes(this),
 				module.begin(type.given).body(compiled())))
 	}.orError { expected { word { does } } }
 
-fun FunctionItDoesCompiler.plus(token: Token): TokenProcessor =
+fun FunctionItDoesCompiler.plus(token: Token): Processor =
 	notNullIf(token == token(end)) {
 		parentOrNull!!.plus(arrowCompiled)
 	}.orError { expected { end } }
 
-fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): TokenProcessor =
+fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): Processor =
 	when (this) {
 		is FunctionCompiler.Parent.Define ->
-			DefineCompilerTokenProcessor(defineCompiler.plus(arrowCompiled.asDefinition))
+			DefineCompilerProcessor(defineCompiler.plus(arrowCompiled.asDefinition))
 		is FunctionCompiler.Parent.Body ->
-			BodyCompilerTokenProcessor(bodyCompiler.plus(lineCompiled(arrowCompiled)))
+			BodyCompilerProcessor(bodyCompiler.plus(lineCompiled(arrowCompiled)))
 	}
 
-fun FunctionCompiler.plus(type: Type): TokenProcessor =
-	FunctionItCompiler(parentOrNull, module, type).asTokenProcessor
+fun FunctionCompiler.plus(type: Type): Processor =
+	FunctionItCompiler(parentOrNull, module, type).processor
 
-fun FunctionItCompiler.plus(compiled: Compiled): TokenProcessor =
+fun FunctionItCompiler.plus(compiled: Compiled): Processor =
 	FunctionItDoesCompiler(parentOrNull, fn(compiled.term).of(type arrowTo compiled.type))
-		.asTokenProcessor
+		.processor

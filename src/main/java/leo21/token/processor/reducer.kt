@@ -8,13 +8,13 @@ import leo14.Token
 import leo14.promptStringCharReducer
 import leo14.reducer
 
-val TokenProcessor.tokenReducer: Reducer<TokenProcessor, Token>
+val Processor.reducer: Reducer<Processor, Token>
 	get() =
-		reducer { plus(it).tokenReducer }
+		reducer { plus(it).reducer }
 
-val TokenProcessor.stringCharReducer: Reducer<String, Char>
+val Processor.stringCharReducer: Reducer<String, Char>
 	get() =
-		tokenReducer
+		reducer
 			.promptStringCharReducer { noPromptString to fragment }
 
 val promptString = "${ansi.magenta}=> Leonardo v0.21${ansi.reset}\n"

@@ -9,8 +9,8 @@ import leo14.Token
 import leo14.line
 import leo14.plus
 import leo14.script
-import leo21.token.processor.ScriptCompilerTokenProcessor
-import leo21.token.processor.TokenProcessor
+import leo21.token.processor.ScriptCompilerProcessor
+import leo21.token.processor.Processor
 
 data class ScriptCompiler(
 	val parentOrNull: ScriptParent?,
@@ -19,10 +19,10 @@ data class ScriptCompiler(
 
 val emptyScriptCompiler = ScriptCompiler(null, script())
 
-fun ScriptCompiler.plus(token: Token): TokenProcessor =
+fun ScriptCompiler.plus(token: Token): Processor =
 	when (token) {
-		is LiteralToken -> ScriptCompilerTokenProcessor(plus(line(token.literal)))
-		is BeginToken -> ScriptCompilerTokenProcessor(
+		is LiteralToken -> ScriptCompilerProcessor(plus(line(token.literal)))
+		is BeginToken -> ScriptCompilerProcessor(
 			ScriptCompiler(
 				ScriptCompilerNameScriptParent(this, token.begin.string),
 				script()))

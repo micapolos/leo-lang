@@ -10,12 +10,11 @@ import leo14.orError
 import leo15.dsl.*
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.end
-import leo21.token.processor.DefineCompilerTokenProcessor
-import leo21.token.processor.FunctionCompilerTokenProcessor
-import leo21.token.processor.TokenProcessor
-import leo21.token.processor.TypeCompilerTokenProcessor
+import leo21.token.processor.DefineCompilerProcessor
+import leo21.token.processor.FunctionCompilerProcessor
+import leo21.token.processor.Processor
+import leo21.token.processor.TypeCompilerProcessor
 import leo21.token.processor.processor
-import leo21.token.processor.tokenProcessor
 import leo21.token.type.compiler.DefineCompilerTypeParent
 import leo21.token.type.compiler.TypeCompiler
 import leo21.type.Line
@@ -34,7 +33,7 @@ data class DefineCompiler(
 	}
 }
 
-fun DefineCompiler.plus(token: Token): TokenProcessor =
+fun DefineCompiler.plus(token: Token): Processor =
 	when (token) {
 		is LiteralToken ->
 			error {
@@ -49,12 +48,12 @@ fun DefineCompiler.plus(token: Token): TokenProcessor =
 			}
 		is BeginToken -> when (token.begin.string) {
 			"function" ->
-				FunctionCompilerTokenProcessor(
+				FunctionCompilerProcessor(
 					FunctionCompiler(
 						FunctionCompiler.Parent.Define(this),
 						module))
 			"type" ->
-				TypeCompilerTokenProcessor(
+				TypeCompilerProcessor(
 					TypeCompiler(
 						DefineCompilerTypeParent(this),
 						module.lines,
@@ -80,11 +79,11 @@ fun DefineCompiler.plus(definition: Definition): DefineCompiler =
 fun DefineCompiler.plus(line: Line): DefineCompiler =
 	copy(module = module.plus(line))
 
-fun DefineCompiler.plus(type: Type): TokenProcessor =
-	DefineCompilerTokenProcessor(plus(type.struct.lineStack.onlyOrNull!!))
+fun DefineCompiler.plus(type: Type): Processor =
+	DefineCompilerProcessor(plus(type.struct.lineStack.onlyOrNull!!))
 
-fun DefineCompiler.Parent.plus(module: Module): TokenProcessor =
+fun DefineCompiler.Parent.plus(module: Module): Processor =
 	when (this) {
 		is DefineCompiler.Parent.Body -> bodyCompiler.plus(module).processor
-		is DefineCompiler.Parent.Evaluator -> evaluatorNode.end(module).tokenProcessor
+		is DefineCompiler.Parent.Evaluator -> evaluatorNode.end(module).processor
 	}

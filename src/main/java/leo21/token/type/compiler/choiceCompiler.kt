@@ -4,12 +4,11 @@ import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
-import leo21.token.processor.TokenProcessor
-import leo21.token.processor.TypeCompilerTokenProcessor
+import leo21.token.processor.Processor
+import leo21.token.processor.TypeCompilerProcessor
 import leo21.type.Choice
 import leo21.type.Type
 import leo21.type.choice
-import leo21.type.isEmpty
 import leo21.type.plus
 import leo21.type.type
 
@@ -21,15 +20,15 @@ data class ChoiceCompiler(
 
 val emptyChoiceCompiler = ChoiceCompiler(null, emptyLines, choice())
 
-fun ChoiceCompiler.plus(token: Token): TokenProcessor =
+fun ChoiceCompiler.plus(token: Token): Processor =
 	when (token) {
 		is LiteralToken -> null!!
 		is BeginToken -> plusBegin(token.begin.string)
 		is EndToken -> parentOrNull!!.plus(choice)
 	}
 
-fun ChoiceCompiler.plusBegin(name: String): TokenProcessor =
-	TypeCompilerTokenProcessor(
+fun ChoiceCompiler.plusBegin(name: String): Processor =
+	TypeCompilerProcessor(
 		TypeCompiler(
 			ChoiceNameTypeParent(this, name),
 			lines,

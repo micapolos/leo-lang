@@ -13,10 +13,10 @@ import leo21.compiled.LineCompiled
 import leo21.compiled.lineCompiled
 import leo21.compiled.lineTo
 import leo21.compiled.switch
-import leo21.token.processor.DefineCompilerTokenProcessor
-import leo21.token.processor.FunctionCompilerTokenProcessor
-import leo21.token.processor.SwitchCompilerTokenProcessor
-import leo21.token.processor.TokenProcessor
+import leo21.token.processor.DefineCompilerProcessor
+import leo21.token.processor.FunctionCompilerProcessor
+import leo21.token.processor.SwitchCompilerProcessor
+import leo21.token.processor.Processor
 import leo21.token.processor.processor
 import leo21.type.Line
 
@@ -39,19 +39,19 @@ fun BodyCompiler.Parent?.compiler(body: Body) = BodyCompiler(this, body)
 val BodyCompiler.doParent: BodyCompiler.Parent get() = BodyCompiler.Parent.BodyDo(this)
 fun BodyCompiler.parent(name: String): BodyCompiler.Parent = BodyCompiler.Parent.BodyName(this, name)
 
-fun BodyCompiler.plus(token: Token): TokenProcessor =
+fun BodyCompiler.plus(token: Token): Processor =
 	token.switch(this::plus, this::plus, this::plus)
 
-fun BodyCompiler.plus(literal: Literal): TokenProcessor =
+fun BodyCompiler.plus(literal: Literal): Processor =
 	this
 		.plus(lineCompiled(literal))
 		.processor
 
-fun BodyCompiler.plus(begin: Begin): TokenProcessor =
+fun BodyCompiler.plus(begin: Begin): Processor =
 	when (begin.string) {
 		"apply" -> error { not { implement } }
 		"define" ->
-			DefineCompilerTokenProcessor(
+			DefineCompilerProcessor(
 				DefineCompiler(
 					DefineCompiler.Parent.Body(this),
 					body.module))
@@ -60,12 +60,12 @@ fun BodyCompiler.plus(begin: Begin): TokenProcessor =
 			.compiler(body.beginDo)
 			.processor
 		"function" ->
-			FunctionCompilerTokenProcessor(
+			FunctionCompilerProcessor(
 				FunctionCompiler(
 					FunctionCompiler.Parent.Body(this),
 					body.module))
 		"switch" ->
-			SwitchCompilerTokenProcessor(
+			SwitchCompilerProcessor(
 				SwitchCompiler(
 					this,
 					body.module,
@@ -78,10 +78,10 @@ fun BodyCompiler.plus(begin: Begin): TokenProcessor =
 				.processor
 	}
 
-fun BodyCompiler.plus(end: End): TokenProcessor =
+fun BodyCompiler.plus(end: End): Processor =
 	parentOrNull!!.process(body)
 
-fun BodyCompiler.Parent.process(body: Body): TokenProcessor =
+fun BodyCompiler.Parent.process(body: Body): Processor =
 	when (this) {
 		is BodyCompiler.Parent.BodyName ->
 			bodyCompiler
