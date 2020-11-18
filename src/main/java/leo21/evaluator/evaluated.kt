@@ -67,7 +67,7 @@ val Evaluated.script: Script
 		script(value, type)
 
 fun Evaluated.plus(evaluated: LineEvaluated): Evaluated =
-	structOrNull!!.plus(evaluated).evaluated
+	struct.plus(evaluated).evaluated
 
 fun evaluated(lineEvaluated: LineEvaluated): Evaluated =
 	lineEvaluated.value of type(lineEvaluated.line)
