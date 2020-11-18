@@ -12,7 +12,9 @@ import leo14.lambda.ApplicationTerm
 import leo14.lambda.NativeTerm
 import leo14.lambda.Term
 import leo14.lambda.VariableTerm
+import leo14.orError
 import leo14.reflectOrEmptyScriptLine
+import leo22.dsl.*
 
 val applyTailCallOptimization = true
 
@@ -26,7 +28,7 @@ fun <T> Scope<T>.scriptLine(nativeScriptLine: T.() -> ScriptLine): ScriptLine =
 
 fun <T> emptyScope(): Scope<T> = Scope(stack())
 fun <T> Scope<T>.push(value: Value<T>): Scope<T> = Scope(valueStack.push(value))
-fun <T> Scope<T>.at(index: Int): Value<T> = valueStack.get(index)!!
+fun <T> Scope<T>.at(index: Int): Value<T> = valueStack.get(index).orError(anyReflectScriptLine, plus(number(index)))
 fun <T> scope(vararg values: Value<T>) = Scope(stack(*values))
 
 fun <T> Scope<T>.value(term: Term<T>, nativeApply: NativeApply<T>): Value<T> =

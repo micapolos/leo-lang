@@ -1,9 +1,11 @@
 package leo21.prim.runtime
 
+import leo14.anyReflectScriptLine
 import leo14.lambda.value.Value
 import leo14.lambda.value.native
 import leo14.lambda.value.pair
 import leo14.lambda.value.value
+import leo14.orError
 import leo21.prim.DoubleCosinusPrim
 import leo21.prim.DoubleMinusDoublePrim
 import leo21.prim.DoublePlusDoublePrim
@@ -17,6 +19,7 @@ import leo21.prim.StringPrim
 import leo21.prim.double
 import leo21.prim.prim
 import leo21.prim.string
+import leo22.dsl.*
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -31,7 +34,7 @@ fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 		StringPlusStringPrim -> rhs.apply(Prim::string, String::plus, Prim::string, String::prim)
 		DoubleSinusPrim -> rhs.apply(Prim::double, ::sin, Double::prim)
 		DoubleCosinusPrim -> rhs.apply(Prim::double, ::cos, Double::prim)
-	}!!
+	}.orError(anyReflectScriptLine, apply(rhs.anyReflectScriptLine))
 
 fun <Lhs, Rhs, Out> Value<Prim>.apply(
 	lhs: Prim.() -> Lhs,

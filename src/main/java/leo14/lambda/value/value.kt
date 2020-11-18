@@ -9,7 +9,9 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.term
 import leo14.lineTo
+import leo14.orError
 import leo14.script
+import leo22.dsl.*
 
 sealed class Value<out T> : Scriptable() {
 	override fun toString() = scriptLine { anyReflectScriptLine }.toString()
@@ -39,8 +41,8 @@ fun <T> Value<T>.scriptLine(nativeScriptLine: T.() -> ScriptLine): ScriptLine =
 fun <T> value(native: T): Value<T> = NativeValue(native)
 fun <T> value(function: Function<T>): Value<T> = FunctionValue(function)
 
-val <T> Value<T>.native: T get() = nativeOrNull!!
-val <T> Value<T>.function: Function<T> get() = functionOrNull!!
+val <T> Value<T>.native: T get() = nativeOrNull.orError(anyReflectScriptLine, native())
+val <T> Value<T>.function: Function<T> get() = functionOrNull.orError(anyReflectScriptLine, function())
 
 val <T> Value<T>.nativeOrNull: T? get() = (this as? NativeValue)?.native
 val <T> Value<T>.functionOrNull: Function<T>? get() = (this as? FunctionValue)?.function

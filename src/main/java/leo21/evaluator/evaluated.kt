@@ -5,11 +5,13 @@ import leo.base.notNullIf
 import leo14.Script
 import leo14.ScriptLine
 import leo14.Scriptable
+import leo14.anyReflectScriptLine
 import leo14.lambda.value.Value
 import leo14.lambda.value.native
 import leo14.lambda.value.term
 import leo14.lambda.value.value
 import leo14.lineTo
+import leo14.orError
 import leo14.script
 import leo21.compiled.Compiled
 import leo21.prim.Prim
@@ -22,6 +24,7 @@ import leo21.type.resolve
 import leo21.type.stringType
 import leo21.type.switch
 import leo21.type.type
+import leo22.dsl.*
 
 data class Evaluated(val value: Value<Prim>, val type: Type) : Scriptable() {
 	override fun toString() = super.toString()
@@ -51,6 +54,9 @@ fun <R> Evaluated.switch(
 
 val Evaluated.structOrNull: StructEvaluated? get() = switch({ it }, { null })
 val Evaluated.choiceOrNull: ChoiceEvaluated? get() = switch({ null }, { it })
+
+val Evaluated.struct: StructEvaluated get() = structOrNull.orError(anyReflectScriptLine, struct())
+val Evaluated.choice: ChoiceEvaluated get() = choiceOrNull.orError(anyReflectScriptLine, choice())
 
 val Evaluated.compiled: Compiled
 	get() =
