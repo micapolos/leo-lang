@@ -10,6 +10,7 @@ import leo14.lambda.value.emptyScope
 import leo14.lambda.value.push
 import leo14.lineTo
 import leo14.script
+import leo21.compiled.Compiled
 import leo21.evaluator.Evaluated
 import leo21.evaluator.EvaluatedGiven
 import leo21.evaluator.compiled
@@ -46,6 +47,9 @@ fun Context.plus(given: EvaluatedGiven): Context =
 		bindings.plus(given.evaluated.type.given.binding),
 		lines,
 		scope.push(given.evaluated.value))
+
+fun Context.resolve(compiled: Compiled): Evaluated =
+	scope.evaluated(bindings.resolve(compiled))
 
 fun Context.resolve(evaluated: Evaluated): Evaluated =
 	scope.evaluated(bindings.resolve(evaluated.compiled))

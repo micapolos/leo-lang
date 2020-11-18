@@ -34,6 +34,7 @@ val importPrelude = false
 val memory = if (importPrelude) emptyContext.preludeMemory() else memory()
 val untyped = true
 val untypedTyped = true
+var debugEnabled = false
 
 fun main() {
 	if (useLeo16) {
@@ -91,7 +92,8 @@ fun run(reducer: Reducer<String, Char>) {
 				assertionError = null
 			} else undoableReducerVariable.update { undoIfPossible }
 		} else if (char == 27) {
-			printDebug = true
+			//printDebug = true
+			debugEnabled = !debugEnabled
 		} else if (errorToPrint == null && assertionError == null) try {
 			undoableReducerVariable.update {
 				doIt {

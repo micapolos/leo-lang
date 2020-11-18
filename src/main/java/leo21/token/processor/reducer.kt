@@ -15,7 +15,7 @@ val Processor.reducer: Reducer<Processor, Token>
 val Processor.stringCharReducer: Reducer<String, Char>
 	get() =
 		reducer
-			.promptStringCharReducer { noPromptString to fragment }
+			.promptStringCharReducer { noPromptString to printFragment }
 
 val promptString = "${ansi.magenta}=> Leonardo v0.21${ansi.reset}\n"
 val noPromptString = ""

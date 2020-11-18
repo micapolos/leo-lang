@@ -6,13 +6,13 @@ import leo14.begin
 import leo14.fragment
 import leo14.parent
 
-val ScriptCompiler.fragment: Fragment
+val ScriptCompiler.printFragment: Fragment
 	get() =
 		parentOrNull?.fragmentParent.fragment(script)
 
 val ScriptParent.fragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is ScriptCompilerNameScriptParent -> scriptCompiler.fragment.parent(begin(name))
+			is ScriptCompilerNameScriptParent -> scriptCompiler.printFragment.parent(begin(name))
 		}
 

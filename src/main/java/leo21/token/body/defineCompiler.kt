@@ -4,9 +4,15 @@ import leo13.onlyOrNull
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
+import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.Token
+import leo14.anyOptionalReflectScriptLine
+import leo14.anyReflectScriptLine
 import leo14.error
+import leo14.lineTo
 import leo14.orError
+import leo14.script
 import leo15.dsl.*
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.end
@@ -25,11 +31,28 @@ import leo21.type.type
 data class DefineCompiler(
 	val parentOrNull: Parent?,
 	val module: Module
-) {
+) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "define" lineTo script(
+			parentOrNull.anyOptionalReflectScriptLine("parent"),
+			module.anyReflectScriptLine)
 
-	sealed class Parent {
-		data class Body(val bodyCompiler: BodyCompiler) : Parent()
-		data class Evaluator(val evaluatorNode: EvaluatorNode) : Parent()
+	sealed class Parent : Scriptable() {
+		override val reflectScriptLine: ScriptLine
+			get() = "parent" lineTo script(
+				when (this) {
+					is Body -> bodyCompiler.anyReflectScriptLine
+					is Evaluator -> evaluatorNode.anyReflectScriptLine
+				}
+			)
+
+		data class Body(val bodyCompiler: BodyCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class Evaluator(val evaluatorNode: EvaluatorNode) : Parent() {
+			override fun toString() = super.toString()
+		}
 	}
 }
 

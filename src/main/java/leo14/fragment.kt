@@ -65,3 +65,10 @@ fun Fragment.plus(fragmentParent: FragmentParent): Fragment =
 val Fragment.rootScript: Script
 	get() =
 		failIfOr(parent != null) { script }
+
+fun FragmentParent.prepend(script: Script): FragmentParent =
+	fragment.prepend(script).parent(begin)
+
+fun Fragment.prepend(script: Script): Fragment =
+	if (parent == null) parent.fragment(script.plus(this.script))
+	else parent.prepend(script).fragment(this.script)

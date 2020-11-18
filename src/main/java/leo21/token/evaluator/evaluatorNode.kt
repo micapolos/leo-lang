@@ -51,10 +51,7 @@ fun EvaluatorNode.plus(token: Token): Processor =
 				EvaluatorNode(
 					EvaluatorNodeDoEvaluatorParent(EvaluatorNodeDo(this)),
 					evaluator.beginDo))
-			else -> EvaluatorProcessor(
-				EvaluatorNode(
-					EvaluatorNodeBeginEvaluatorParent(EvaluatorNodeBegin(this, token.begin.string)),
-					evaluator.begin))
+			else -> EvaluatorProcessor(begin(token.begin.string))
 		}
 		is EndToken -> parentOrNull?.end(evaluator).orError { not { expected { end } } }
 	}
@@ -70,3 +67,8 @@ fun EvaluatorNode.end(module: Module): EvaluatorNode =
 
 fun EvaluatorNode.do_(evaluator: Evaluator): EvaluatorNode =
 	copy(evaluator = evaluator.do_(evaluator))
+
+fun EvaluatorNode.begin(name: String): EvaluatorNode =
+	EvaluatorNode(
+		EvaluatorNodeBeginEvaluatorParent(EvaluatorNodeBegin(this, name)),
+		evaluator.begin)

@@ -11,38 +11,38 @@ import leo21.type.Arrow
 import leo21.type.Type
 import leo21.type.script
 
-val TypeCompiler.fragment: Fragment
+val TypeCompiler.printFragment: Fragment
 	get() =
 		parentOrNull?.fragmentParent.fragment(type.script)
 
 val TypeParent.fragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is TypeNameTypeParent -> typeCompiler.fragment.parent(begin(name))
-			is ChoiceNameTypeParent -> choiceCompiler.fragment.parent(begin(name))
-			is ArrowDoingTypeParent -> arrowCompiler.fragment.parent(begin("doing"))
-			is ArrowNameTypeParent -> arrowCompiler.fragment.parent(begin(name))
-			is RecursiveTypeParent -> typeCompiler.fragment.parent(begin("recursive"))
+			is TypeNameTypeParent -> typeCompiler.printFragment.parent(begin(name))
+			is ChoiceNameTypeParent -> choiceCompiler.printFragment.parent(begin(name))
+			is ArrowDoingTypeParent -> arrowCompiler.printFragment.parent(begin("doing"))
+			is ArrowNameTypeParent -> arrowCompiler.printFragment.parent(begin(name))
+			is RecursiveTypeParent -> typeCompiler.printFragment.parent(begin("recursive"))
 			is FunctionCompilerTypeParent -> functionCompiler.printFragment.parent(begin("it"))
 			is DefineCompilerTypeParent -> defineCompiler.printFragment.parent(begin("type"))
 		}
 
-val ChoiceCompiler.fragment: Fragment
+val ChoiceCompiler.printFragment: Fragment
 	get() =
 		parentOrNull?.fragmentParent.fragment(choice.lineStack.script)
 
 val ChoiceParent.fragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is TypeCompilerChoiceParent -> typeCompiler.fragment.parent(begin("choice"))
+			is TypeCompilerChoiceParent -> typeCompiler.printFragment.parent(begin("choice"))
 		}
 
-val ArrowCompiler.fragment: Fragment
+val ArrowCompiler.printFragment: Fragment
 	get() =
 		parentOrNull?.fragmentParent.fragment(typeOrArrow.select(Type::script, Arrow::script))
 
 val ArrowParent.fragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is TypeCompilerArrowParent -> typeCompiler.fragment.parent(begin("function"))
+			is TypeCompilerArrowParent -> typeCompiler.printFragment.parent(begin("function"))
 		}

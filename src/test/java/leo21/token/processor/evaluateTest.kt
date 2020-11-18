@@ -19,7 +19,6 @@ class EvaluateTest {
 			}
 			x { number(10) }
 			z { number(20) }
-			point
-		}.assertNull
+		}
 	}
 }

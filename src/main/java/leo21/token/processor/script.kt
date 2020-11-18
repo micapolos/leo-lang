@@ -5,4 +5,4 @@ import leo14.rootScript
 
 val Processor.script: Script
 	get() =
-		fragment.rootScript
+		printFragment.rootScript

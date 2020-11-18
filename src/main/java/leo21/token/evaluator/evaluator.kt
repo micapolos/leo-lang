@@ -2,7 +2,6 @@ package leo21.token.evaluator
 
 import leo14.ScriptLine
 import leo14.Scriptable
-import leo14.anyReflectScriptLine
 import leo14.lineTo
 import leo14.script
 import leo21.evaluator.Evaluated
@@ -15,6 +14,7 @@ import leo21.evaluator.plus
 import leo21.token.body.Module
 
 data class Evaluator(val context: Context, val evaluated: Evaluated) : Scriptable() {
+	override fun toString() = super.toString()
 	override val reflectScriptLine: ScriptLine
 		get() = "evaluator" lineTo script(context.reflectScriptLine, evaluated.reflectScriptLine)
 }

@@ -39,3 +39,11 @@ val <T> Function<T>.topLevelTerm: Term<T>
 			.fold(scope.valueStack.takeOrNull(min(term.freeVariableCount, (scope.valueStack.size)))!!.reverse) {
 				invoke(it.term)
 			}
+
+val <T> Function<T>.topLevelTerm2: Term<T>
+	get() =
+		term
+			.iterate(scope.valueStack.size) { fn(this) }
+			.fold(scope.valueStack.reverse) {
+				invoke(it.term)
+			}

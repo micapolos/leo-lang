@@ -4,8 +4,14 @@ import leo13.stack
 import leo14.Begin
 import leo14.End
 import leo14.Literal
+import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.Token
+import leo14.anyOptionalReflectScriptLine
+import leo14.anyReflectScriptLine
 import leo14.error
+import leo14.lineTo
+import leo14.script
 import leo14.switch
 import leo15.dsl.*
 import leo21.compiled.Compiled
@@ -23,12 +29,38 @@ import leo21.type.Line
 data class BodyCompiler(
 	val parentOrNull: Parent?,
 	val body: Body
-) {
-	sealed class Parent {
-		data class BodyName(val bodyCompiler: BodyCompiler, val name: String) : Parent()
-		data class BodyDo(val bodyCompiler: BodyCompiler) : Parent()
-		data class FunctionItDoes(val functionItCompiler: FunctionItCompiler) : Parent()
-		data class SwitchCase(val switchCompiler: SwitchCompiler, val case: Line) : Parent()
+) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "body" lineTo script(
+			parentOrNull.anyOptionalReflectScriptLine("parent"),
+			body.anyReflectScriptLine)
+
+	sealed class Parent : Scriptable() {
+		override val reflectScriptLine: ScriptLine
+			get() = "parent" lineTo script(
+				when (this) {
+					is BodyName -> "field" lineTo script(bodyCompiler.reflectScriptLine, "name" lineTo script(name))
+					is BodyDo -> "do" lineTo script(bodyCompiler.reflectScriptLine)
+					is FunctionItDoes -> functionItCompiler.anyReflectScriptLine
+					is SwitchCase -> "switch" lineTo script(switchCompiler.anyReflectScriptLine, case.anyReflectScriptLine)
+				}
+			)
+
+		data class BodyName(val bodyCompiler: BodyCompiler, val name: String) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class BodyDo(val bodyCompiler: BodyCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class FunctionItDoes(val functionItCompiler: FunctionItCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class SwitchCase(val switchCompiler: SwitchCompiler, val case: Line) : Parent() {
+			override fun toString() = super.toString()
+		}
 	}
 }
 
