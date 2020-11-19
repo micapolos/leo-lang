@@ -1,39 +1,43 @@
 package leo21.prim.runtime
 
+import leo14.Number
 import leo14.anyReflectScriptLine
+import leo14.cosinus
 import leo14.lambda.value.Value
 import leo14.lambda.value.native
 import leo14.lambda.value.pair
 import leo14.lambda.value.value
+import leo14.minus
 import leo14.orError
-import leo21.prim.DoubleCosinusPrim
-import leo21.prim.DoubleMinusDoublePrim
-import leo21.prim.DoublePlusDoublePrim
-import leo21.prim.DoublePrim
-import leo21.prim.DoubleSinusPrim
-import leo21.prim.DoubleTimesDoublePrim
+import leo14.plus
+import leo14.sinus
+import leo14.times
 import leo21.prim.NilPrim
+import leo21.prim.NumberCosinusPrim
+import leo21.prim.NumberMinusNumberPrim
+import leo21.prim.NumberPlusNumberPrim
+import leo21.prim.NumberPrim
+import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
-import leo21.prim.double
+import leo21.prim.number
 import leo21.prim.prim
 import leo21.prim.string
 import leo22.dsl.*
-import kotlin.math.cos
-import kotlin.math.sin
 
 fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 	when (this) {
 		is NilPrim -> null
 		is StringPrim -> null
-		is DoublePrim -> null
-		DoublePlusDoublePrim -> rhs.apply(Prim::double, Double::plus, Prim::double, Double::prim)
-		DoubleMinusDoublePrim -> rhs.apply(Prim::double, Double::minus, Prim::double, Double::prim)
-		DoubleTimesDoublePrim -> rhs.apply(Prim::double, Double::times, Prim::double, Double::prim)
+		is NumberPrim -> null
+		NumberPlusNumberPrim -> rhs.apply(Prim::number, Number::plus, Prim::number, Number::prim)
+		NumberMinusNumberPrim -> rhs.apply(Prim::number, Number::minus, Prim::number, Number::prim)
+		NumberTimesNumberPrim -> rhs.apply(Prim::number, Number::times, Prim::number, Number::prim)
 		StringPlusStringPrim -> rhs.apply(Prim::string, String::plus, Prim::string, String::prim)
-		DoubleSinusPrim -> rhs.apply(Prim::double, ::sin, Double::prim)
-		DoubleCosinusPrim -> rhs.apply(Prim::double, ::cos, Double::prim)
+		NumberSinusPrim -> rhs.apply(Prim::number, Number::sinus, Number::prim)
+		NumberCosinusPrim -> rhs.apply(Prim::number, Number::cosinus, Number::prim)
 	}.orError(anyReflectScriptLine, apply(rhs.anyReflectScriptLine))
 
 fun <Lhs, Rhs, Out> Value<Prim>.apply(

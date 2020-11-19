@@ -8,6 +8,7 @@ import leo14.Scriptable
 import leo14.StringLiteral
 import leo14.lineTo
 import leo14.literal
+import leo14.number
 import leo14.script
 
 sealed class Prim : Scriptable() {
@@ -16,13 +17,13 @@ sealed class Prim : Scriptable() {
 			"prim" lineTo when (this) {
 				NilPrim -> script("nil")
 				is StringPrim -> script(literal(string))
-				is DoublePrim -> script(literal(double))
-				DoublePlusDoublePrim -> script("double" lineTo script(), "plus" lineTo script("double"))
-				DoubleMinusDoublePrim -> script("double" lineTo script(), "minus" lineTo script("double"))
-				DoubleTimesDoublePrim -> script("double" lineTo script(), "times" lineTo script("double"))
+				is NumberPrim -> script(literal(number))
+				NumberPlusNumberPrim -> script("number" lineTo script(), "plus" lineTo script("number"))
+				NumberMinusNumberPrim -> script("number" lineTo script(), "minus" lineTo script("number"))
+				NumberTimesNumberPrim -> script("number" lineTo script(), "times" lineTo script("number"))
 				StringPlusStringPrim -> script("string" lineTo script(), "plus" lineTo script("string"))
-				DoubleSinusPrim -> script("double" lineTo script(), "sinus" lineTo script())
-				DoubleCosinusPrim -> script("double" lineTo script(), "cosinus" lineTo script())
+				NumberSinusPrim -> script("number" lineTo script(), "sinus" lineTo script())
+				NumberCosinusPrim -> script("number" lineTo script(), "cosinus" lineTo script())
 			}
 }
 
@@ -32,24 +33,24 @@ data class StringPrim(val string: String) : Prim() {
 	override fun toString() = super.toString()
 }
 
-data class DoublePrim(val double: Double) : Prim() {
+data class NumberPrim(val number: Number) : Prim() {
 	override fun toString() = super.toString()
 }
 
-object DoublePlusDoublePrim : Prim()
-object DoubleMinusDoublePrim : Prim()
-object DoubleTimesDoublePrim : Prim()
-object DoubleSinusPrim : Prim()
-object DoubleCosinusPrim : Prim()
+object NumberPlusNumberPrim : Prim()
+object NumberMinusNumberPrim : Prim()
+object NumberTimesNumberPrim : Prim()
+object NumberSinusPrim : Prim()
+object NumberCosinusPrim : Prim()
 object StringPlusStringPrim : Prim()
 
 val nilPrim: Prim = NilPrim
 val Prim.string get() = (this as StringPrim).string
-val Prim.double get() = (this as DoublePrim).double
+val Prim.number get() = (this as NumberPrim).number
 
-val Double.prim get() = prim(this)
 val String.prim get() = prim(this)
-val Number.prim get() = prim(bigDecimal.toDouble())
+val Number.prim get() = prim(this)
+val Double.prim get() = prim(this)
 val Literal.prim
 	get() = when (this) {
 		is StringLiteral -> string.prim
@@ -57,5 +58,6 @@ val Literal.prim
 	}
 
 fun prim(string: String): Prim = StringPrim(string)
-fun prim(double: Double): Prim = DoublePrim(double)
-fun prim(int: Int): Prim = prim(int.toDouble())
+fun prim(number: Number): Prim = NumberPrim(number)
+fun prim(double: Double): Prim = prim(double.number)
+fun prim(int: Int): Prim = prim(int.number)

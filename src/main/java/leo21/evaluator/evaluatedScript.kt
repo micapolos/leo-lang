@@ -13,13 +13,13 @@ import leo14.literal
 import leo14.plus
 import leo14.script
 import leo21.prim.Prim
-import leo21.prim.double
+import leo21.prim.number
 import leo21.prim.nilPrim
 import leo21.prim.string
 import leo21.type.ArrowLine
 import leo21.type.Choice
 import leo21.type.ChoiceType
-import leo21.type.DoubleLine
+import leo21.type.NumberLine
 import leo21.type.Field
 import leo21.type.FieldLine
 import leo21.type.Line
@@ -65,7 +65,7 @@ fun scriptLine(value: Value<Prim>, choice: Choice): ScriptLine =
 fun scriptLine(value: Value<Prim>, line: Line): ScriptLine =
 	when (line) {
 		StringLine -> line(literal(value.native.string))
-		DoubleLine -> line(literal(value.native.double))
+		NumberLine -> line(literal(value.native.number))
 		is FieldLine -> scriptLine(value, line.field)
 		is ArrowLine -> line.arrow.scriptLine
 	}

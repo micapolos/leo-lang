@@ -1,6 +1,5 @@
 package leo21.token.evaluator
 
-import leo.base.assertEqualTo
 import leo.base.assertNotNull
 import leo14.lambda.fn
 import leo14.lambda.value.emptyScope
@@ -16,7 +15,7 @@ import leo21.token.body.emptyBindings
 import leo21.token.body.plus
 import leo21.token.type.compiler.emptyLines
 import leo21.type.arrowTo
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.lineTo
 import leo21.type.type
 import kotlin.test.Test
@@ -28,7 +27,7 @@ class EvaluatorTest {
 			Context(
 				emptyBindings
 					.plus(
-						type("x" lineTo doubleType, "y" lineTo doubleType)
+						type("x" lineTo numberType, "y" lineTo numberType)
 							.arrowTo(type("ok" lineTo type()))
 							.binding),
 				emptyLines,

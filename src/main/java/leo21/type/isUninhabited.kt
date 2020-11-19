@@ -24,7 +24,7 @@ val Line.isUninhabited: Boolean
 	get() =
 		when (this) {
 			StringLine -> false
-			DoubleLine -> false
+			NumberLine -> false
 			is FieldLine -> field.isUninhabited
 			is ArrowLine -> arrow.isUninhabited
 		}

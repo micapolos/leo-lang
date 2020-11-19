@@ -41,7 +41,7 @@ val ScriptField.typeLine: Line
 val ScriptField.keywordTypeLineOrNull: Line?
 	get() =
 		when (string) {
-			"number" -> notNullIf(rhs.isEmpty) { doubleLine }
+			"number" -> notNullIf(rhs.isEmpty) { numberLine }
 			"text" -> notNullIf(rhs.isEmpty) { stringLine }
 			"function" -> line(rhs.arrowLine)
 			else -> null

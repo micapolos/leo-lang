@@ -13,11 +13,11 @@ import leo21.compiled.of
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.type.ArrowLine
-import leo21.type.DoubleLine
+import leo21.type.NumberLine
 import leo21.type.FieldLine
 import leo21.type.Line
 import leo21.type.StringLine
-import leo21.type.doubleLine
+import leo21.type.numberLine
 import leo21.type.fieldOrNull
 import leo21.type.isEmpty
 import leo21.type.lineTo
@@ -42,7 +42,7 @@ fun <R> LineEvaluated.switch(
 ): R =
 	when (line) {
 		StringLine -> stringFn(StringEvaluated(value))
-		DoubleLine -> doubleFn(DoubleEvaluated(value))
+		NumberLine -> doubleFn(DoubleEvaluated(value))
 		is FieldLine -> fieldFn(FieldEvaluated(value, line.field))
 		is ArrowLine -> arrowFn(ArrowEvaluated(value, line.arrow))
 	}
@@ -67,5 +67,5 @@ val LineEvaluated.onlyNameOrNull: String?
 		}
 
 val String.lineEvaluated: LineEvaluated get() = value(prim) of stringLine
-val Double.lineEvaluated: LineEvaluated get() = value(prim) of doubleLine
-val Number.lineEvaluated: LineEvaluated get() = value(prim) of doubleLine
+val Double.lineEvaluated: LineEvaluated get() = value(prim) of numberLine
+val Number.lineEvaluated: LineEvaluated get() = value(prim) of numberLine

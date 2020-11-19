@@ -2,7 +2,7 @@ package leo21.type
 
 sealed class Line
 object StringLine : Line()
-object DoubleLine : Line()
+object NumberLine : Line()
 data class FieldLine(val field: Field) : Line()
 data class ArrowLine(val arrow: Arrow) : Line()
 
@@ -19,10 +19,10 @@ val Line.name: String
 	get() =
 		when (this) {
 			StringLine -> "text"
-			DoubleLine -> "number"
+			NumberLine -> "number"
 			is FieldLine -> field.name
 			is ArrowLine -> "function"
 		}
 
 val stringLine: Line = StringLine
-val doubleLine: Line = DoubleLine
+val numberLine: Line = NumberLine

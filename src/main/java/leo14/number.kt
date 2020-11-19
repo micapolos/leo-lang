@@ -5,6 +5,8 @@ import leo14.js.ast.expr
 import leo14.lambda.js.Term
 import leo14.lambda.term
 import java.math.BigDecimal
+import kotlin.math.cos
+import kotlin.math.sin
 
 data class Number(val bigDecimal: BigDecimal) {
 	override fun toString() = bigDecimal.toString()
@@ -64,3 +66,11 @@ operator fun Number.times(number: Number) =
 
 operator fun Number.unaryMinus() =
 	number(-bigDecimal)
+
+val Number.sinus: Number
+	get() =
+		sin(bigDecimal.toDouble()).number
+
+val Number.cosinus: Number
+	get() =
+		cos(bigDecimal.toDouble()).number

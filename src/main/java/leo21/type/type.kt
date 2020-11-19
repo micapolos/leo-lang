@@ -55,7 +55,7 @@ fun Type.plus(line: Line): Type = type(struct.plus(line))
 fun type(vararg lines: Line) = type(struct(*lines))
 
 val stringType = type(stringLine)
-val doubleType = type(doubleLine)
+val numberType = type(numberLine)
 
 fun Type.make(name: String): Type =
 	type(name lineTo this)

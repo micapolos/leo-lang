@@ -10,7 +10,7 @@ import leo21.compiled.ArrowCompiled
 import leo21.compiled.compiled
 import leo21.compiler.emptyBindings
 import leo21.type.arrowTo
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.lineTo
 import leo21.type.type
 import kotlin.test.Test
@@ -34,7 +34,7 @@ class ScriptDictionaryTest {
 						definition(
 							ArrowCompiled(
 								fn(arg(0)),
-								type("x" lineTo doubleType) arrowTo type("given" lineTo type("x" lineTo doubleType)))))
+								type("x" lineTo numberType) arrowTo type("given" lineTo type("x" lineTo numberType)))))
 					.plus(
 						definition(
 							type("y" lineTo type()),

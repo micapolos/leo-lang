@@ -15,7 +15,7 @@ import leo21.token.processor.TypeCompilerProcessor
 import leo21.type.Line
 import leo21.type.Type
 import leo21.type.choice
-import leo21.type.doubleLine
+import leo21.type.numberLine
 import leo21.type.isEmpty
 import leo21.type.lineTo
 import leo21.type.plus
@@ -80,7 +80,7 @@ fun TypeCompiler.process(type: Type): Processor =
 
 infix fun String.compiledLineTo(rhs: Type): Line =
 	when (this) {
-		"number" -> notNullIf(rhs == type()) { doubleLine }
+		"number" -> notNullIf(rhs == type()) { numberLine }
 		"text" -> notNullIf(rhs == type()) { stringLine }
 		else -> null
 	} ?: this lineTo rhs

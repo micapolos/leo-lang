@@ -15,7 +15,7 @@ class ScriptTypeTest {
 
 	@Test
 	fun number() {
-		script("number").type.assertEqualTo(doubleType)
+		script("number").type.assertEqualTo(numberType)
 	}
 
 	@Test
@@ -38,7 +38,7 @@ class ScriptTypeTest {
 			.assertEqualTo(
 				type(
 					"name" lineTo stringType,
-					"age" lineTo doubleType))
+					"age" lineTo numberType))
 	}
 
 	@Test
@@ -48,7 +48,7 @@ class ScriptTypeTest {
 				"number" lineTo script(),
 				"text" lineTo script()))
 			.type
-			.assertEqualTo(type(choice(doubleLine, stringLine)))
+			.assertEqualTo(type(choice(numberLine, stringLine)))
 	}
 
 	@Test
@@ -58,7 +58,7 @@ class ScriptTypeTest {
 				"number" lineTo script(),
 				"doing" lineTo script("text")))
 			.type
-			.assertEqualTo(type(line(doubleType arrowTo stringType)))
+			.assertEqualTo(type(line(numberType arrowTo stringType)))
 	}
 
 	@Test

@@ -4,15 +4,15 @@ import leo.base.assertEqualTo
 import leo14.lambda.js.code
 import leo14.lambda.map
 import leo14.lambda.nativeTerm
-import leo21.prim.DoubleMinusDoublePrim
-import leo21.prim.DoubleSinusPrim
+import leo21.prim.NumberMinusNumberPrim
+import leo21.prim.NumberSinusPrim
 import leo21.prim.Prim
 import kotlin.test.Test
 
 class CodeTest {
 	@Test
 	fun twoPlusTwo() {
-		nativeTerm(DoubleMinusDoublePrim)
+		nativeTerm(NumberMinusNumberPrim)
 			.map(Prim::expr)
 			.code
 			.assertEqualTo("x=>((x)(a=>b=>a))-((x)(a=>b=>b))")
@@ -20,7 +20,7 @@ class CodeTest {
 
 	@Test
 	fun sinus() {
-		nativeTerm(DoubleSinusPrim)
+		nativeTerm(NumberSinusPrim)
 			.map(Prim::expr)
 			.code
 			.assertEqualTo("x=>(Math.sin)(x)")

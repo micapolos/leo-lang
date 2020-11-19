@@ -30,7 +30,7 @@ fun Recurse.shift(depth: Int, recursive: Recursive): Type =
 fun Line.shift(depth: Int, recursive: Recursive): Line =
 	when (this) {
 		StringLine -> this
-		DoubleLine -> this
+		NumberLine -> this
 		is FieldLine -> line(field.shift(depth, recursive))
 		is ArrowLine -> this
 	}
@@ -62,7 +62,7 @@ fun Recurse.extend(depth: Int, recursive: Recursive): Type =
 fun Line.extend(depth: Int, recursive: Recursive): Line =
 	when (this) {
 		StringLine -> this
-		DoubleLine -> this
+		NumberLine -> this
 		is FieldLine -> line(field.extend(depth, recursive))
 		is ArrowLine -> this
 	}
@@ -90,7 +90,7 @@ fun Recursive.tail(recurse: Recurse): Recursive =
 fun Line.tail(recurse: Recurse): Line =
 	when (this) {
 		StringLine -> this
-		DoubleLine -> this
+		NumberLine -> this
 		is FieldLine -> field.tail(recurse)
 		is ArrowLine -> this
 	}

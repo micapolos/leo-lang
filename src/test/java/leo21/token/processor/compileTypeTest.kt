@@ -5,8 +5,8 @@ import leo14.lineTo
 import leo14.script
 import leo21.type.arrowTo
 import leo21.type.choice
-import leo21.type.doubleLine
-import leo21.type.doubleType
+import leo21.type.numberLine
+import leo21.type.numberType
 import leo21.type.line
 import leo21.type.stringLine
 import leo21.type.stringType
@@ -25,7 +25,7 @@ class CompileTypeTest {
 	fun number() {
 		script("number" lineTo script())
 			.compileType
-			.assertEqualTo(doubleType)
+			.assertEqualTo(numberType)
 	}
 
 	@Test
@@ -35,7 +35,7 @@ class CompileTypeTest {
 				"text" lineTo script(),
 				"number" lineTo script()))
 			.compileType
-			.assertEqualTo(type(choice(stringLine, doubleLine)))
+			.assertEqualTo(type(choice(stringLine, numberLine)))
 	}
 
 	@Test
@@ -46,6 +46,6 @@ class CompileTypeTest {
 				"doing" lineTo script(
 					"number" lineTo script())))
 			.compileType
-			.assertEqualTo(type(line(stringType arrowTo doubleType)))
+			.assertEqualTo(type(line(stringType arrowTo numberType)))
 	}
 }

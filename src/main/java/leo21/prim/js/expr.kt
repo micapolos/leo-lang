@@ -7,12 +7,13 @@ import leo14.js.ast.id
 import leo14.js.ast.invoke
 import leo14.js.ast.lambda
 import leo14.js.ast.op
-import leo21.prim.DoubleCosinusPrim
-import leo21.prim.DoubleMinusDoublePrim
-import leo21.prim.DoublePlusDoublePrim
-import leo21.prim.DoublePrim
-import leo21.prim.DoubleSinusPrim
-import leo21.prim.DoubleTimesDoublePrim
+import leo14.lambda.runtime.asDouble
+import leo21.prim.NumberCosinusPrim
+import leo21.prim.NumberMinusNumberPrim
+import leo21.prim.NumberPlusNumberPrim
+import leo21.prim.NumberPrim
+import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.NilPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
@@ -23,13 +24,13 @@ val Prim.expr: Expr
 		when (this) {
 			is NilPrim -> expr(NULL)
 			is StringPrim -> expr(string)
-			is DoublePrim -> expr(double)
-			DoublePlusDoublePrim -> op2Expr("+")
-			DoubleMinusDoublePrim -> op2Expr("-")
-			DoubleTimesDoublePrim -> op2Expr("*")
+			is NumberPrim -> expr(number.bigDecimal.toDouble())
+			NumberPlusNumberPrim -> op2Expr("+")
+			NumberMinusNumberPrim -> op2Expr("-")
+			NumberTimesNumberPrim -> op2Expr("*")
 			StringPlusStringPrim -> op2Expr("*")
-			DoubleSinusPrim -> op1Expr("Math.sin")
-			DoubleCosinusPrim -> op1Expr("Math.cos")
+			NumberSinusPrim -> op1Expr("Math.sin")
+			NumberCosinusPrim -> op1Expr("Math.cos")
 		}
 
 val lhsExpr = expr(lambda("a", expr(lambda("b", expr(id("a"))))))

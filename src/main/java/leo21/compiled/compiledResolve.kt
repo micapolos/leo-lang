@@ -7,16 +7,16 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.nativeTerm
 import leo14.leonardoScript
-import leo21.prim.DoubleCosinusPrim
-import leo21.prim.DoubleMinusDoublePrim
-import leo21.prim.DoublePlusDoublePrim
-import leo21.prim.DoubleSinusPrim
-import leo21.prim.DoubleTimesDoublePrim
+import leo21.prim.NumberCosinusPrim
+import leo21.prim.NumberMinusNumberPrim
+import leo21.prim.NumberPlusNumberPrim
+import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
 import leo21.token.processor.compiled
 import leo21.type.Type
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.lineTo
 import leo21.type.plus
 import leo21.type.stringType
@@ -59,11 +59,11 @@ val Compiled.resolveOrNull: Compiled?
 			?: resolveGetOrNull
 			?: resolveAsOrNull
 			?: resolveLeonardoOrNull
-			?: resolveFn1OrNull(doubleType, "sinus", DoubleSinusPrim, doubleType)
-			?: resolveFn1OrNull(doubleType, "cosinus", DoubleCosinusPrim, doubleType)
-			?: resolveFn2OrNull(doubleType, "plus", doubleType, DoublePlusDoublePrim, doubleType)
-			?: resolveFn2OrNull(doubleType, "minus", doubleType, DoubleMinusDoublePrim, doubleType)
-			?: resolveFn2OrNull(doubleType, "times", doubleType, DoubleTimesDoublePrim, doubleType)
+			?: resolveFn1OrNull(numberType, "sinus", NumberSinusPrim, numberType)
+			?: resolveFn1OrNull(numberType, "cosinus", NumberCosinusPrim, numberType)
+			?: resolveFn2OrNull(numberType, "plus", numberType, NumberPlusNumberPrim, numberType)
+			?: resolveFn2OrNull(numberType, "minus", numberType, NumberMinusNumberPrim, numberType)
+			?: resolveFn2OrNull(numberType, "times", numberType, NumberTimesNumberPrim, numberType)
 			?: resolveFn2OrNull(stringType, "plus", stringType, StringPlusStringPrim, stringType)
 			?: resolveMakeOrNull
 

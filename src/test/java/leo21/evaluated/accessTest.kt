@@ -8,7 +8,7 @@ import leo21.evaluator.evaluated
 import leo21.evaluator.lineTo
 import leo21.evaluator.plusChosen
 import leo21.evaluator.plusNotChosen
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.lineTo
 import kotlin.test.Test
 
@@ -44,7 +44,7 @@ class AccessTest {
 	fun choice_match1() {
 		emptyChoiceEvaluated
 			.plusChosen("x" lineTo evaluated(10.0))
-			.plusNotChosen("y" lineTo doubleType)
+			.plusNotChosen("y" lineTo numberType)
 			.evaluated
 			.accessOrNull("x")
 			.assertEqualTo(evaluated("x" lineTo evaluated(10.0)))
@@ -53,7 +53,7 @@ class AccessTest {
 	@Test
 	fun choice_match2() {
 		emptyChoiceEvaluated
-			.plusNotChosen("x" lineTo doubleType)
+			.plusNotChosen("x" lineTo numberType)
 			.plusChosen("y" lineTo evaluated(20.0))
 			.evaluated
 			.accessOrNull("y")
@@ -64,7 +64,7 @@ class AccessTest {
 	fun choice_mismatch1() {
 		emptyChoiceEvaluated
 			.plusChosen("x" lineTo evaluated(10.0))
-			.plusNotChosen("y" lineTo doubleType)
+			.plusNotChosen("y" lineTo numberType)
 			.evaluated
 			.accessOrNull("y")
 			.assertNull
@@ -73,7 +73,7 @@ class AccessTest {
 	@Test
 	fun choice_mismatch2() {
 		emptyChoiceEvaluated
-			.plusNotChosen("x" lineTo doubleType)
+			.plusNotChosen("x" lineTo numberType)
 			.plusChosen("y" lineTo evaluated(20.0))
 			.evaluated
 			.accessOrNull("x")
@@ -83,7 +83,7 @@ class AccessTest {
 	@Test
 	fun choice_mismatch() {
 		emptyChoiceEvaluated
-			.plusNotChosen("x" lineTo doubleType)
+			.plusNotChosen("x" lineTo numberType)
 			.plusChosen("y" lineTo evaluated(20.0))
 			.evaluated
 			.accessOrNull("z")

@@ -8,16 +8,16 @@ class AccessTest {
 	@Test
 	fun struct_matchFirst() {
 		type(
-			"x" lineTo doubleType,
+			"x" lineTo numberType,
 			"y" lineTo stringType)
 			.accessOrNull("x")
-			.assertEqualTo(doubleType)
+			.assertEqualTo(numberType)
 	}
 
 	@Test
 	fun struct_matchSecond() {
 		type(
-			"x" lineTo doubleType,
+			"x" lineTo numberType,
 			"y" lineTo stringType)
 			.accessOrNull("y")
 			.assertEqualTo(stringType)
@@ -26,7 +26,7 @@ class AccessTest {
 	@Test
 	fun struct_mismatch() {
 		type(
-			"x" lineTo doubleType,
+			"x" lineTo numberType,
 			"y" lineTo stringType)
 			.accessOrNull("z")
 			.assertNull
@@ -36,17 +36,17 @@ class AccessTest {
 	fun choice_matchFirst() {
 		type(
 			choice(
-				"x" lineTo doubleType,
+				"x" lineTo numberType,
 				"y" lineTo stringType))
 			.accessOrNull("x")
-			.assertEqualTo(doubleType)
+			.assertEqualTo(numberType)
 	}
 
 	@Test
 	fun choice_matchSecond() {
 		type(
 			choice(
-				"x" lineTo doubleType,
+				"x" lineTo numberType,
 				"y" lineTo stringType))
 			.accessOrNull("y")
 			.assertEqualTo(stringType)
@@ -56,7 +56,7 @@ class AccessTest {
 	fun choice_mismatch() {
 		type(
 			choice(
-				"x" lineTo doubleType,
+				"x" lineTo numberType,
 				"y" lineTo stringType))
 			.accessOrNull("z")
 			.assertNull

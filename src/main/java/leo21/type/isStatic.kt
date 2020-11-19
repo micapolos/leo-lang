@@ -22,7 +22,7 @@ val Line.isStatic: Boolean
 	get() =
 		when (this) {
 			StringLine -> false
-			DoubleLine -> false
+			NumberLine -> false
 			is FieldLine -> field.isStatic
 			is ArrowLine -> arrow.isStatic
 		}

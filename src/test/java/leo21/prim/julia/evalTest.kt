@@ -6,8 +6,8 @@ import leo14.lambda.julia.code
 import leo14.lambda.map
 import leo14.lambda.term
 import leo16.term.julia.eval
-import leo21.prim.DoubleMinusDoublePrim
-import leo21.prim.DoubleSinusPrim
+import leo21.prim.NumberMinusNumberPrim
+import leo21.prim.NumberSinusPrim
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.term.plus
@@ -17,17 +17,17 @@ import kotlin.test.Test
 class EvalTest {
 	@Test
 	fun doublePlus() {
-		term<Prim>(DoubleMinusDoublePrim)
+		term<Prim>(NumberMinusNumberPrim)
 			.invoke(term(prim(5.0)).plus(term(prim(3.0))))
 			.map(Prim::julia)
 			.code
 			.eval
-			.assertEqualTo("2.0")
+			.assertEqualTo("2")
 	}
 
 	@Test
 	fun doubleSinus() {
-		term<Prim>(DoubleSinusPrim)
+		term<Prim>(NumberSinusPrim)
 			.invoke(term(prim(1)))
 			.map(Prim::julia)
 			.code

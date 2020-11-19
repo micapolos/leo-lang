@@ -2,6 +2,7 @@ package leo22.dsl
 
 import leo.base.get
 import leo14.LiteralScriptLine
+import leo14.Number
 import leo14.ScriptLine
 import leo14.fieldOrNull
 import leo14.line
@@ -24,6 +25,7 @@ fun X._get(name: String) = get(name)
 fun <R : Any> X.switch_(vararg cases: Case<R>) = switch(*cases)
 fun <R> _case(name: String, fn: (ScriptLine) -> R) = Case(name, fn)
 
+fun number(number: Number) = line(literal(number))
 fun number(int: Int) = line(literal(int))
 fun text(string: String) = line(literal(string))
 val String.asText get() = text(this)

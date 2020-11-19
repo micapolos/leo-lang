@@ -7,7 +7,7 @@ import leo21.prim.prim
 import leo21.type.allowDuplicateFields
 import leo21.type.arrowTo
 import leo21.type.choice
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.lineTo
 import leo21.type.recurse
 import leo21.type.recursive
@@ -32,8 +32,8 @@ class CompiledTest {
 			.type
 			.assertEqualTo(
 				type(
-					"x" lineTo doubleType,
-					"y" lineTo doubleType))
+					"x" lineTo numberType,
+					"y" lineTo numberType))
 	}
 
 	@Test
@@ -50,13 +50,13 @@ class CompiledTest {
 	fun choice_ok() {
 		choiceTyped {
 			this
-				.plusNotChosen("number" lineTo doubleType)
+				.plusNotChosen("number" lineTo numberType)
 				.plusChosen("text" lineTo compiled("foo"))
 		}.type
 			.assertEqualTo(
 				type(
 					choice(
-						"number" lineTo doubleType,
+						"number" lineTo numberType,
 						"text" lineTo stringType)))
 	}
 
@@ -66,7 +66,7 @@ class CompiledTest {
 			assertFails {
 				choiceTyped {
 					this
-						.plusNotChosen("number" lineTo doubleType)
+						.plusNotChosen("number" lineTo numberType)
 						.plusChosen("number" lineTo compiled("foo"))
 				}
 			}
@@ -77,7 +77,7 @@ class CompiledTest {
 		assertFails {
 			choiceTyped {
 				this
-					.plusNotChosen("number" lineTo doubleType)
+					.plusNotChosen("number" lineTo numberType)
 					.plusNotChosen("text" lineTo stringType)
 			}
 		}
@@ -97,14 +97,14 @@ class CompiledTest {
 	@Test
 	fun choice_typed() {
 		choice(
-			"number" lineTo doubleType,
+			"number" lineTo numberType,
 			"text" lineTo stringType)
 			.compiled("number" lineTo compiled(10.0))
 			.type
 			.assertEqualTo(
 				type(
 					choice(
-						"number" lineTo doubleType,
+						"number" lineTo numberType,
 						"text" lineTo stringType)))
 	}
 
@@ -116,7 +116,7 @@ class CompiledTest {
 				"y" lineTo compiled(20.0)))
 			.get("x")
 			.type
-			.assertEqualTo(type("x" lineTo doubleType))
+			.assertEqualTo(type("x" lineTo numberType))
 	}
 
 	@Test
@@ -127,7 +127,7 @@ class CompiledTest {
 				"y" lineTo compiled(20.0)))
 			.get("y")
 			.type
-			.assertEqualTo(type("y" lineTo doubleType))
+			.assertEqualTo(type("y" lineTo numberType))
 	}
 
 	@Test
@@ -136,7 +136,7 @@ class CompiledTest {
 			"x" lineTo compiled(10.0))
 			.get("number")
 			.type
-			.assertEqualTo(doubleType)
+			.assertEqualTo(numberType)
 	}
 
 	@Test
@@ -169,13 +169,13 @@ class CompiledTest {
 			.assertEqualTo(
 				type(
 					"point" lineTo type(
-						"x" lineTo doubleType,
-						"y" lineTo doubleType)))
+						"x" lineTo numberType,
+						"y" lineTo numberType)))
 	}
 
 	@Test
 	fun invoke() {
-		ArrowCompiled(arg(0), doubleType arrowTo stringType)
+		ArrowCompiled(arg(0), numberType arrowTo stringType)
 			.invoke(compiled(10.0))
 			.type
 			.assertEqualTo(stringType)
@@ -184,7 +184,7 @@ class CompiledTest {
 	@Test
 	fun invoke_typeMismatch() {
 		assertFails {
-			ArrowCompiled(arg(0), stringType arrowTo doubleType)
+			ArrowCompiled(arg(0), stringType arrowTo numberType)
 				.invoke(compiled(10.0))
 		}
 	}
@@ -259,7 +259,7 @@ class CompiledTest {
 					.compiled("zero" lineTo compiled()))
 				.switch
 				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo doubleType))
+				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo numberType))
 		}
 	}
 

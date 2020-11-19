@@ -7,7 +7,6 @@ import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.literal
-import leo14.plus
 import leo14.script
 import leo14.scriptLine
 
@@ -36,7 +35,7 @@ val Line.scriptLine: ScriptLine
 	get() =
 		when (this) {
 			StringLine -> "text".scriptLine
-			DoubleLine -> "number".scriptLine
+			NumberLine -> "number".scriptLine
 			is FieldLine -> field.scriptLine
 			is ArrowLine -> arrow.scriptLine
 		}

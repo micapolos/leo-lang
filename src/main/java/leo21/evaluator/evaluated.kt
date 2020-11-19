@@ -2,6 +2,7 @@ package leo21.evaluator
 
 import leo.base.fold
 import leo.base.notNullIf
+import leo14.Number
 import leo14.Script
 import leo14.ScriptLine
 import leo14.Scriptable
@@ -15,11 +16,11 @@ import leo14.orError
 import leo14.script
 import leo21.compiled.Compiled
 import leo21.prim.Prim
-import leo21.prim.double
+import leo21.prim.number
 import leo21.prim.nilPrim
 import leo21.prim.string
 import leo21.type.Type
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.resolve
 import leo21.type.stringType
 import leo21.type.switch
@@ -73,15 +74,16 @@ fun evaluated(lineEvaluated: LineEvaluated): Evaluated =
 	lineEvaluated.value of type(lineEvaluated.line)
 
 fun evaluated(string: String) = evaluated(string.lineEvaluated)
+fun evaluated(number: Number) = evaluated(number.lineEvaluated)
 fun evaluated(double: Double) = evaluated(double.lineEvaluated)
 
 val Evaluated.rhsOrNull: Evaluated?
 	get() =
 		structOrNull?.onlyLineOrNull?.fieldOrNull?.rhs
 
-val Evaluated.doubleOrNull: Double? get() = notNullIf(type == doubleType) { value.native.double }
+val Evaluated.numberOrNull: Number? get() = notNullIf(type == numberType) { value.native.number }
 val Evaluated.stringOrNull: String? get() = notNullIf(type == stringType) { value.native.string }
 
-val Evaluated.double: Double get() = doubleOrNull!!
+val Evaluated.number: Number get() = numberOrNull!!
 val Evaluated.string: String get() = stringOrNull!!
 

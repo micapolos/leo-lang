@@ -8,11 +8,11 @@ import leo14.lambda.term
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.type.ArrowLine
-import leo21.type.DoubleLine
+import leo21.type.NumberLine
 import leo21.type.FieldLine
 import leo21.type.Line
 import leo21.type.StringLine
-import leo21.type.doubleLine
+import leo21.type.numberLine
 import leo21.type.line
 import leo21.type.lineTo
 import leo21.type.stringLine
@@ -29,13 +29,13 @@ fun <R> LineCompiled.switch(
 ): R =
 	when (line) {
 		StringLine -> stringFn(StringCompiled(term))
-		DoubleLine -> doubleFn(DoubleCompiled(term))
+		NumberLine -> doubleFn(DoubleCompiled(term))
 		is FieldLine -> fieldFn(FieldCompiled(term, line.field))
 		is ArrowLine -> arrowFn(ArrowCompiled(term, line.arrow))
 	}
 
 fun line(string: String) = LineCompiled(term(prim(string)), stringLine)
-fun line(double: Double) = LineCompiled(term(prim(double)), doubleLine)
+fun line(double: Double) = LineCompiled(term(prim(double)), numberLine)
 infix fun String.lineTo(rhs: Compiled) = LineCompiled(rhs.term, this lineTo rhs.type)
 fun lineCompiled(arrowCompiled: ArrowCompiled) = LineCompiled(arrowCompiled.term, line(arrowCompiled.arrow))
 

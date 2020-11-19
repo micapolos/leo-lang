@@ -7,7 +7,7 @@ import leo13.reverse
 import leo21.type.ArrowLine
 import leo21.type.Choice
 import leo21.type.ChoiceType
-import leo21.type.DoubleLine
+import leo21.type.NumberLine
 import leo21.type.Field
 import leo21.type.FieldLine
 import leo21.type.Line
@@ -79,7 +79,7 @@ fun LineCompiled.castOrNull(rhs: Line): Cast<LineCompiled>? =
 			notNullIf(rhs is StringLine) { identityCast }
 		},
 		{ doubleCompiled ->
-			notNullIf(rhs is DoubleLine) { identityCast }
+			notNullIf(rhs is NumberLine) { identityCast }
 		},
 		{ fieldCompiled ->
 			if (rhs is FieldLine) fieldCompiled.castOrNull(rhs.field)?.let { fieldCast ->

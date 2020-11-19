@@ -5,12 +5,13 @@ import leo14.lambda.invoke
 import leo14.lambda.java.eval
 import leo14.lambda.map
 import leo14.lambda.term
-import leo21.prim.DoubleSinusPrim
+import leo14.number
+import leo14.sinus
+import leo21.prim.NumberSinusPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.prim
 import leo21.term.plus
-import kotlin.math.sin
 import kotlin.test.Test
 
 class EvalTest {
@@ -25,10 +26,10 @@ class EvalTest {
 
 	@Test
 	fun doubleSinus() {
-		term<Prim>(DoubleSinusPrim)
+		term<Prim>(NumberSinusPrim)
 			.invoke(term(prim(1)))
 			.map(Prim::native)
 			.eval
-			.assertEqualTo("${sin(1.0)}")
+			.assertEqualTo("${1.number.sinus}")
 	}
 }

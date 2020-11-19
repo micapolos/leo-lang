@@ -6,7 +6,7 @@ import leo14.lambda.map
 import leo14.lambda.scheme.code
 import leo14.lambda.term
 import leo16.term.chez.eval
-import leo21.prim.DoubleSinusPrim
+import leo21.prim.NumberSinusPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.prim
@@ -28,7 +28,7 @@ class EvalTest {
 
 	@Test
 	fun doubleSinus() {
-		term<Prim>(DoubleSinusPrim)
+		term<Prim>(NumberSinusPrim)
 			.invoke(term(prim(1)))
 			.map(Prim::code)
 			.code

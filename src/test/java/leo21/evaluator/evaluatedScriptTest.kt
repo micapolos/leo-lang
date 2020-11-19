@@ -12,11 +12,10 @@ import leo21.compiled.lineTo
 import leo21.prim.prim
 import leo21.type.arrowTo
 import leo21.type.choice
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.line
 import leo21.type.lineTo
 import leo21.type.stringType
-import java.math.BigDecimal
 import kotlin.test.Test
 
 class EvaluatedScriptTest {
@@ -75,7 +74,7 @@ class EvaluatedScriptTest {
 
 	@Test
 	fun function() {
-		compiled(LineCompiled(id(), line(stringType arrowTo doubleType)))
+		compiled(LineCompiled(id(), line(stringType arrowTo numberType)))
 			.evaluated
 			.script
 			.assertEqualTo(
@@ -87,7 +86,7 @@ class EvaluatedScriptTest {
 
 	@Test
 	fun double() {
-		Evaluated(value(prim(10.0)), doubleType)
+		Evaluated(value(prim(10.0)), numberType)
 			.script
 			.assertEqualTo(script(literal(10)))
 	}

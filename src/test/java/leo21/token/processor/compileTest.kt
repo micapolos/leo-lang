@@ -13,7 +13,7 @@ import leo14.typed.plus
 import leo21.compiled.of
 import leo21.prim.Prim
 import leo21.prim.prim
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.lineTo
 import leo21.type.type
 import kotlin.test.Test
@@ -32,7 +32,7 @@ class CompileTest {
 				nativeTerm(prim(10.0))
 					.plus(nativeTerm(prim(20.0)))
 					.first
-					.of(type("x" lineTo doubleType)))
+					.of(type("x" lineTo numberType)))
 	}
 
 	@Test
@@ -43,6 +43,6 @@ class CompileTest {
 			.compiled
 			.assertEqualTo(
 				fn(arg<Prim>(0)).invoke(nativeTerm(prim(10)))
-					.of(type("given" lineTo type("x" lineTo doubleType))))
+					.of(type("given" lineTo type("x" lineTo numberType))))
 	}
 }

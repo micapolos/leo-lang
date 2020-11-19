@@ -14,7 +14,7 @@ import leo21.prim.prim
 import leo21.term.term
 import leo21.type.arrowTo
 import leo21.type.choice
-import leo21.type.doubleType
+import leo21.type.numberType
 import leo21.type.lineTo
 import leo21.type.stringType
 import leo21.type.type
@@ -29,7 +29,7 @@ class TypedEvaluateTest {
 				"y" lineTo compiled(20.0)))
 			.get("x")
 			.evaluated
-			.assertEqualTo(value(prim(10.0)) of type("x" lineTo doubleType))
+			.assertEqualTo(value(prim(10.0)) of type("x" lineTo numberType))
 	}
 
 	@Test
@@ -40,7 +40,7 @@ class TypedEvaluateTest {
 				"y" lineTo compiled(20.0)))
 			.get("y")
 			.evaluated
-			.assertEqualTo(value(prim(20.0)) of type("y" lineTo doubleType))
+			.assertEqualTo(value(prim(20.0)) of type("y" lineTo numberType))
 	}
 
 	@Test

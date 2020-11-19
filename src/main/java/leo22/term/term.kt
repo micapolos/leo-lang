@@ -9,13 +9,13 @@ import leo14.lambda.arg
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.nativeTerm
-import leo21.prim.DoubleCosinusPrim
-import leo21.prim.DoubleMinusDoublePrim
-import leo21.prim.DoublePlusDoublePrim
-import leo21.prim.DoublePrim
-import leo21.prim.DoubleSinusPrim
-import leo21.prim.DoubleTimesDoublePrim
 import leo21.prim.NilPrim
+import leo21.prim.NumberCosinusPrim
+import leo21.prim.NumberMinusNumberPrim
+import leo21.prim.NumberPlusNumberPrim
+import leo21.prim.NumberPrim
+import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
@@ -77,12 +77,12 @@ val Prim.x_: X
 		when (this) {
 			NilPrim -> native(nil())
 			is StringPrim -> native(text(string))
-			is DoublePrim -> native(number(double.toInt()))
-			DoublePlusDoublePrim -> TODO()
-			DoubleMinusDoublePrim -> TODO()
-			DoubleTimesDoublePrim -> TODO()
-			DoubleSinusPrim -> TODO()
-			DoubleCosinusPrim -> TODO()
+			is NumberPrim -> native(number(number))
+			NumberPlusNumberPrim -> TODO()
+			NumberMinusNumberPrim -> TODO()
+			NumberTimesNumberPrim -> TODO()
+			NumberSinusPrim -> TODO()
+			NumberCosinusPrim -> TODO()
 			StringPlusStringPrim -> TODO()
 		}
 
