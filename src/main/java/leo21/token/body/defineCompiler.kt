@@ -74,7 +74,8 @@ fun DefineCompiler.plus(token: Token): Processor =
 				FunctionCompilerProcessor(
 					FunctionCompiler(
 						FunctionCompiler.Parent.Define(this),
-						module))
+						module,
+						type()))
 			"type" ->
 				TypeCompilerProcessor(
 					TypeCompiler(

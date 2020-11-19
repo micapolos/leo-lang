@@ -16,8 +16,7 @@ import leo21.token.body.Body
 import leo21.token.body.BodyCompiler
 import leo21.token.body.DefineCompiler
 import leo21.token.body.FunctionCompiler
-import leo21.token.body.FunctionItCompiler
-import leo21.token.body.FunctionItDoesCompiler
+import leo21.token.body.FunctionDoesCompiler
 import leo21.token.body.SwitchCompiler
 import leo21.token.body.emptyBodyCompiler
 import leo21.token.body.plus
@@ -44,8 +43,7 @@ sealed class Processor : Scriptable() {
 				is ScriptCompilerProcessor -> scriptCompiler.anyReflectScriptLine
 				is BodyCompilerProcessor -> bodyCompiler.anyReflectScriptLine
 				is FunctionCompilerProcessor -> functionCompiler.anyReflectScriptLine
-				is FunctionItCompilerProcessor -> functionItCompiler.anyReflectScriptLine
-				is FunctionItDoesCompilerProcessor -> functionItDoesCompiler.anyReflectScriptLine
+				is FunctionItDoesCompilerProcessor -> functionDoesCompiler.anyReflectScriptLine
 				is DefineCompilerProcessor -> defineCompiler.anyReflectScriptLine
 				is SwitchCompilerProcessor -> switchCompiler.anyReflectScriptLine
 				is EvaluatorProcessor -> evaluatorNode.anyReflectScriptLine
@@ -77,11 +75,7 @@ data class FunctionCompilerProcessor(val functionCompiler: FunctionCompiler) : P
 	override fun toString() = super.toString()
 }
 
-data class FunctionItCompilerProcessor(val functionItCompiler: FunctionItCompiler) : Processor() {
-	override fun toString() = super.toString()
-}
-
-data class FunctionItDoesCompilerProcessor(val functionItDoesCompiler: FunctionItDoesCompiler) : Processor() {
+data class FunctionItDoesCompilerProcessor(val functionDoesCompiler: FunctionDoesCompiler) : Processor() {
 	override fun toString() = super.toString()
 }
 
@@ -110,9 +104,9 @@ val emptyEvaluatorProcessor: Processor =
 	EvaluatorProcessor(emptyEvaluatorNode)
 
 val BodyCompiler.processor: Processor get() = BodyCompilerProcessor(this)
+val TypeCompiler.processor: Processor get() = TypeCompilerProcessor(this)
 val FunctionCompiler.processor: Processor get() = FunctionCompilerProcessor(this)
-val FunctionItCompiler.processor: Processor get() = FunctionItCompilerProcessor(this)
-val FunctionItDoesCompiler.processor: Processor get() = FunctionItDoesCompilerProcessor(this)
+val FunctionDoesCompiler.processor: Processor get() = FunctionItDoesCompilerProcessor(this)
 val EvaluatorNode.processor: Processor get() = EvaluatorProcessor(this)
 
 fun Processor.plus(token: Token): Processor =
@@ -123,8 +117,7 @@ fun Processor.plus(token: Token): Processor =
 		is ScriptCompilerProcessor -> scriptCompiler.plus(token)
 		is BodyCompilerProcessor -> bodyCompiler.plus(token)
 		is FunctionCompilerProcessor -> functionCompiler.plus(token)
-		is FunctionItCompilerProcessor -> functionItCompiler.plus(token)
-		is FunctionItDoesCompilerProcessor -> functionItDoesCompiler.plus(token)
+		is FunctionItDoesCompilerProcessor -> functionDoesCompiler.plus(token)
 		is DefineCompilerProcessor -> defineCompiler.plus(token)
 		is SwitchCompilerProcessor -> switchCompiler.plus(token)
 		is EvaluatorProcessor -> evaluatorNode.plus(token)

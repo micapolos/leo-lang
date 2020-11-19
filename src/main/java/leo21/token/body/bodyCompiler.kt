@@ -25,6 +25,7 @@ import leo21.token.processor.SwitchCompilerProcessor
 import leo21.token.processor.Processor
 import leo21.token.processor.processor
 import leo21.type.Line
+import leo21.type.type
 
 data class BodyCompiler(
 	val parentOrNull: Parent?,
@@ -41,7 +42,7 @@ data class BodyCompiler(
 				when (this) {
 					is BodyName -> "field" lineTo script(bodyCompiler.reflectScriptLine, "name" lineTo script(name))
 					is BodyDo -> "do" lineTo script(bodyCompiler.reflectScriptLine)
-					is FunctionItDoes -> functionItCompiler.anyReflectScriptLine
+					is FunctionDoes -> functionCompiler.anyReflectScriptLine
 					is SwitchCase -> "switch" lineTo script(switchCompiler.anyReflectScriptLine, case.anyReflectScriptLine)
 				}
 			)
@@ -54,7 +55,7 @@ data class BodyCompiler(
 			override fun toString() = super.toString()
 		}
 
-		data class FunctionItDoes(val functionItCompiler: FunctionItCompiler) : Parent() {
+		data class FunctionDoes(val functionCompiler: FunctionCompiler) : Parent() {
 			override fun toString() = super.toString()
 		}
 
@@ -95,7 +96,8 @@ fun BodyCompiler.plus(begin: Begin): Processor =
 			FunctionCompilerProcessor(
 				FunctionCompiler(
 					FunctionCompiler.Parent.Body(this),
-					body.module))
+					body.module,
+					type()))
 		"switch" ->
 			SwitchCompilerProcessor(
 				SwitchCompiler(
@@ -123,8 +125,8 @@ fun BodyCompiler.Parent.process(body: Body): Processor =
 			bodyCompiler
 				.plusDo(body)
 				.processor
-		is BodyCompiler.Parent.FunctionItDoes ->
-			functionItCompiler.plus(body.wrapCompiled)
+		is BodyCompiler.Parent.FunctionDoes ->
+			functionCompiler.plus(body.wrapCompiled)
 		is BodyCompiler.Parent.SwitchCase ->
 			switchCompiler.plus(case, body)
 	}

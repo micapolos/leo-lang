@@ -7,6 +7,7 @@ import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.literal
+import leo14.plus
 import leo14.script
 import leo14.scriptLine
 
@@ -50,9 +51,7 @@ val Arrow.scriptLine: ScriptLine
 
 val Arrow.script: Script
 	get() =
-		script(
-			"it" lineTo lhs.script,
-			"does" lineTo rhs.script)
+		lhs.script.plus("does" lineTo rhs.script)
 
 val Recursive.script: Script
 	get() =

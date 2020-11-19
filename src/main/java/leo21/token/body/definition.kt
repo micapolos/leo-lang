@@ -1,10 +1,12 @@
 package leo21.token.body
 
 import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.value.Value
 import leo14.lineTo
+import leo14.script
 import leo21.compiled.ArrowCompiled
 import leo21.compiled.Compiled
 import leo21.compiled.of
@@ -12,7 +14,15 @@ import leo21.prim.Prim
 import leo21.prim.runtime.value
 import leo21.type.script
 
-sealed class Definition
+sealed class Definition : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "definition" lineTo script(
+			when (this) {
+				is ArrowCompiledDefinition -> arrowCompiled.reflectScriptLine
+			}
+		)
+}
+
 data class ArrowCompiledDefinition(val arrowCompiled: ArrowCompiled) : Definition()
 
 val ArrowCompiled.asDefinition: Definition get() = ArrowCompiledDefinition(this)

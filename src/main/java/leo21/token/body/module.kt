@@ -1,9 +1,11 @@
 package leo21.token.body
 
 import leo13.fold
-import leo13.map
 import leo13.reverse
 import leo14.Script
+import leo14.ScriptLine
+import leo14.Scriptable
+import leo14.anyReflectScriptLine
 import leo14.lineTo
 import leo14.plus
 import leo14.script
@@ -12,9 +14,14 @@ import leo21.token.type.compiler.Lines
 import leo21.token.type.compiler.emptyLines
 import leo21.token.type.compiler.plus
 import leo21.type.Line
-import leo21.type.scriptLine
 
-data class Module(val bindings: Bindings, val lines: Lines, val definitions: Definitions)
+data class Module(val bindings: Bindings, val lines: Lines, val definitions: Definitions) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "module" lineTo script(
+			bindings.reflectScriptLine,
+			lines.reflectScriptLine,
+			definitions.anyReflectScriptLine)
+}
 
 val emptyModule = Module(emptyBindings, emptyLines, emptyDefinitions)
 

@@ -1,11 +1,19 @@
 package leo21.token.body
 
 import leo.base.notNullIf
+import leo14.BeginToken
+import leo14.EndToken
+import leo14.LiteralToken
+import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.Token
-import leo14.begin
+import leo14.anyOptionalReflectScriptLine
 import leo14.end
+import leo14.error
 import leo14.lambda.fn
+import leo14.lineTo
 import leo14.orError
+import leo14.script
 import leo14.token
 import leo15.dsl.*
 import leo21.compiled.ArrowCompiled
@@ -16,54 +24,68 @@ import leo21.compiled.of
 import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.Processor
-import leo21.token.processor.TypeCompilerProcessor
 import leo21.token.processor.processor
 import leo21.token.type.compiler.FunctionCompilerTypeParent
 import leo21.token.type.compiler.TypeCompiler
+import leo21.token.type.compiler.plus
 import leo21.type.Type
 import leo21.type.arrowTo
-import leo21.type.type
 
 data class FunctionCompiler(
 	val parentOrNull: Parent?,
-	val module: Module
-) {
+	val module: Module,
+	val type: Type
+) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "function" lineTo script(
+			parentOrNull.anyOptionalReflectScriptLine("parent"),
+			module.reflectScriptLine,
+			type.reflectScriptLine)
 
-	sealed class Parent {
-		data class Define(val defineCompiler: DefineCompiler) : Parent()
-		data class Body(val bodyCompiler: BodyCompiler) : Parent()
+	sealed class Parent : Scriptable() {
+		override val reflectScriptLine: ScriptLine
+			get() = "parent" lineTo script(
+				when (this) {
+					is Define -> defineCompiler.reflectScriptLine
+					is Body -> bodyCompiler.reflectScriptLine
+				}
+			)
+
+		data class Define(val defineCompiler: DefineCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class Body(val bodyCompiler: BodyCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
 	}
 }
 
-data class FunctionItCompiler(
-	val parentOrNull: FunctionCompiler.Parent?,
-	val module: Module,
-	val type: Type
-)
-
-data class FunctionItDoesCompiler(
+data class FunctionDoesCompiler(
 	val parentOrNull: FunctionCompiler.Parent?,
 	val arrowCompiled: ArrowCompiled
 )
 
 fun FunctionCompiler.plus(token: Token): Processor =
-	notNullIf(token == token(begin("it"))) {
-		TypeCompilerProcessor(
-			TypeCompiler(
-				FunctionCompilerTypeParent(this),
-				module.lines,
-				type()))
-	}.orError { expected { word { it } } }
+	when (token) {
+		is LiteralToken -> null
+		is BeginToken ->
+			when (token.begin.string) {
+				"does" -> BodyCompilerProcessor(
+					BodyCompiler(
+						BodyCompiler.Parent.FunctionDoes(this),
+						module.begin(type.given).body(compiled())))
+				else -> null
+			}
+		is EndToken -> error { expected { type.or { word { does } } } }
+	} ?: TypeCompiler(
+		FunctionCompilerTypeParent(this),
+		module.lines,
+		type,
+		autoEnd = true)
+		.plus(token)
 
-fun FunctionItCompiler.plus(token: Token): Processor =
-	notNullIf(token == token(begin("does"))) {
-		BodyCompilerProcessor(
-			BodyCompiler(
-				BodyCompiler.Parent.FunctionItDoes(this),
-				module.begin(type.given).body(compiled())))
-	}.orError { expected { word { does } } }
-
-fun FunctionItDoesCompiler.plus(token: Token): Processor =
+fun FunctionDoesCompiler.plus(token: Token): Processor =
 	notNullIf(token == token(end)) {
 		parentOrNull!!.plus(arrowCompiled)
 	}.orError { expected { end } }
@@ -77,8 +99,8 @@ fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): Processor =
 	}
 
 fun FunctionCompiler.plus(type: Type): Processor =
-	FunctionItCompiler(parentOrNull, module, type).processor
+	FunctionCompiler(parentOrNull, module, type).processor
 
-fun FunctionItCompiler.plus(compiled: Compiled): Processor =
-	FunctionItDoesCompiler(parentOrNull, fn(compiled.term).of(type arrowTo compiled.type))
+fun FunctionCompiler.plus(compiled: Compiled): Processor =
+	FunctionDoesCompiler(parentOrNull, fn(compiled.term).of(type arrowTo compiled.type))
 		.processor

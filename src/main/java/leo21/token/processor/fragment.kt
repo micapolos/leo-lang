@@ -19,8 +19,7 @@ val Processor.printFragment: Fragment
 			is ScriptCompilerProcessor -> scriptCompiler.printFragment
 			is BodyCompilerProcessor -> bodyCompiler.printFragment
 			is FunctionCompilerProcessor -> functionCompiler.printFragment
-			is FunctionItCompilerProcessor -> functionItCompiler.printFragment
-			is FunctionItDoesCompilerProcessor -> functionItDoesCompiler.printFragment
+			is FunctionItDoesCompilerProcessor -> functionDoesCompiler.printFragment
 			is DefineCompilerProcessor -> defineCompiler.printFragment
 			is SwitchCompilerProcessor -> switchCompiler.printFragment
 			is EvaluatorProcessor -> evaluatorNode.printFragment

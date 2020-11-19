@@ -80,7 +80,7 @@ class EvaluatedScriptTest {
 			.assertEqualTo(
 				script(
 					"function" lineTo script(
-						"it" lineTo script("text"),
+						"text" lineTo script(),
 						"does" lineTo script("number"))))
 	}
 

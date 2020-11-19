@@ -33,8 +33,8 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 				bodyCompiler.printFragment.parent(begin(name))
 			is BodyCompiler.Parent.BodyDo ->
 				bodyCompiler.printFragment.parent(begin("do"))
-			is BodyCompiler.Parent.FunctionItDoes ->
-				functionItCompiler.printFragment.parent(begin("does"))
+			is BodyCompiler.Parent.FunctionDoes ->
+				functionCompiler.printFragment.parent(begin("does"))
 			is BodyCompiler.Parent.SwitchCase ->
 				switchCompiler.printFragment.parent(begin(case.name))
 		}
@@ -47,13 +47,9 @@ val SwitchCompiler.printFragment: Fragment
 
 val FunctionCompiler.printFragment: Fragment
 	get() =
-		parentOrNull?.printFragmentParent.fragment(script())
+		parentOrNull?.printFragmentParent.fragment(type.script)
 
-val FunctionItCompiler.printFragment: Fragment
-	get() =
-		parentOrNull?.printFragmentParent.fragment(script("it" lineTo type.script))
-
-val FunctionItDoesCompiler.printFragment: Fragment
+val FunctionDoesCompiler.printFragment: Fragment
 	get() =
 		parentOrNull?.printFragmentParent.fragment(arrowCompiled.arrow.script)
 
