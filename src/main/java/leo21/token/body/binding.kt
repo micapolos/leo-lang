@@ -20,7 +20,7 @@ import leo21.evaluator.make
 import leo21.evaluator.of
 import leo21.prim.Prim
 import leo21.prim.runtime.apply
-import leo21.type.Arrow
+import leo21.type.Type
 import leo21.type.onlyNameOrNull
 
 sealed class Binding : Scriptable() {
@@ -28,20 +28,32 @@ sealed class Binding : Scriptable() {
 		get() = "binding" lineTo script(
 			when (this) {
 				is Given -> given.anyReflectScriptLine
-				is Arrow -> arrow.anyReflectScriptLine
+				is Function ->
+					"function" lineTo script(
+						"key" lineTo script(keyType.reflectScriptLine),
+						"value" lineTo script(valueType.reflectScriptLine))
+				is Constant ->
+					"constant" lineTo script(
+						"key" lineTo script(keyType.reflectScriptLine),
+						"value" lineTo script(valueType.reflectScriptLine))
 			})
 
 	data class Given(val given: leo21.token.body.Given) : Binding() {
 		override fun toString() = super.toString()
 	}
 
-	data class Arrow(val arrow: leo21.type.Arrow) : Binding() {
+	data class Function(val keyType: Type, val valueType: Type) : Binding() {
+		override fun toString() = super.toString()
+	}
+
+	data class Constant(val keyType: Type, val valueType: Type) : Binding() {
 		override fun toString() = super.toString()
 	}
 }
 
 val Given.binding: Binding get() = Binding.Given(this)
-val Arrow.binding: Binding get() = Binding.Arrow(this)
+fun Type.functionBinding(type: Type): Binding = Binding.Function(this, type)
+fun Type.constantBinding(type: Type): Binding = Binding.Constant(this, type)
 
 fun Binding.resolveOrNull(index: Int, param: Compiled): Compiled? =
 	when (this) {
@@ -51,8 +63,11 @@ fun Binding.resolveOrNull(index: Int, param: Compiled): Compiled? =
 				else -> arg<Prim>(index).of(given.type).make("given").getOrNull(name)
 			}
 		}
-		is Binding.Arrow -> notNullIf(arrow.lhs == param.type) {
-			arg<Prim>(index).invoke(param.term).of(arrow.rhs)
+		is Binding.Function -> notNullIf(keyType == param.type) {
+			arg<Prim>(index).invoke(param.term).of(valueType)
+		}
+		is Binding.Constant -> notNullIf(keyType == param.type) {
+			arg<Prim>(index).of(valueType)
 		}
 	}
 
@@ -64,7 +79,10 @@ fun Binding.resolveOrNull(value: Value<Prim>, param: Evaluated): Evaluated? =
 				else -> value.of(given.type).accessOrNull(name)
 			}
 		}
-		is Binding.Arrow -> notNullIf(arrow.lhs == param.type) {
-			value.apply(param.value, Prim::apply).of(arrow.rhs)
+		is Binding.Function -> notNullIf(keyType == param.type) {
+			value.apply(param.value, Prim::apply).of(valueType)
+		}
+		is Binding.Constant -> notNullIf(keyType == param.type) {
+			value.of(valueType)
 		}
 	}

@@ -10,13 +10,12 @@ import leo21.evaluator.evaluated
 import leo21.evaluator.lineTo
 import leo21.prim.Prim
 import leo21.term.nilTerm
-import leo21.token.body.binding
 import leo21.token.body.emptyBindings
+import leo21.token.body.functionBinding
 import leo21.token.body.plus
 import leo21.token.type.compiler.emptyLines
-import leo21.type.arrowTo
-import leo21.type.numberType
 import leo21.type.lineTo
+import leo21.type.numberType
 import leo21.type.type
 import kotlin.test.Test
 
@@ -28,8 +27,7 @@ class EvaluatorTest {
 				emptyBindings
 					.plus(
 						type("x" lineTo numberType, "y" lineTo numberType)
-							.arrowTo(type("ok" lineTo type()))
-							.binding),
+							.functionBinding(type("ok" lineTo type()))),
 				emptyLines,
 				scope(value(emptyScope<Prim>().function(fn(nilTerm))))),
 			evaluated(

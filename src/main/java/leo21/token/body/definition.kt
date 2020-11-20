@@ -6,48 +6,41 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.value.Value
 import leo14.lineTo
+import leo14.plus
 import leo14.script
-import leo21.compiled.ArrowCompiled
 import leo21.compiled.Compiled
 import leo21.compiled.of
 import leo21.prim.Prim
 import leo21.prim.runtime.value
+import leo21.type.Type
 import leo21.type.script
 
-sealed class Definition : Scriptable() {
+data class Definition(val type: Type, val compiled: Compiled, val isFunction: Boolean) : Scriptable() {
 	override val reflectScriptLine: ScriptLine
 		get() = "definition" lineTo script(
-			when (this) {
-				is ArrowCompiledDefinition -> arrowCompiled.reflectScriptLine
-			}
-		)
+			(if (isFunction) "function" else "constant") lineTo script(
+				type.reflectScriptLine,
+				compiled.reflectScriptLine))
 }
 
-data class ArrowCompiledDefinition(val arrowCompiled: ArrowCompiled) : Definition() {
-	override fun toString() = super.toString()
-}
 
-val ArrowCompiled.asDefinition: Definition get() = ArrowCompiledDefinition(this)
+fun constantDefinition(type: Type, compiled: Compiled) = Definition(type, compiled, isFunction = false)
+fun functionDefinition(type: Type, compiled: Compiled) = Definition(type, compiled, isFunction = true)
 
 fun Compiled.wrap(definition: Definition): Compiled =
-	when (definition) {
-		is ArrowCompiledDefinition -> fn(term).invoke(definition.arrowCompiled.term).of(type)
-	}
+	fn(term).invoke(definition.compiled.term).of(type)
 
 val Definition.binding: Binding
 	get() =
-		when (this) {
-			is ArrowCompiledDefinition -> arrowCompiled.arrow.binding
-		}
+		if (isFunction) type.functionBinding(compiled.type)
+		else type.constantBinding(compiled.type)
 
 val Definition.printScriptLine: ScriptLine
 	get() =
-		when (this) {
-			is ArrowCompiledDefinition -> "function" lineTo arrowCompiled.arrow.script
-		}
+		(if (isFunction) "function" else "constant") lineTo
+			type.script.plus(
+				(if (isFunction) "does" else "is") lineTo compiled.type.script)
 
 val Definition.value: Value<Prim>
 	get() =
-		when (this) {
-			is ArrowCompiledDefinition -> arrowCompiled.term.value
-		}
+		compiled.term.value

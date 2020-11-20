@@ -93,7 +93,11 @@ fun FunctionDoesCompiler.plus(token: Token): Processor =
 fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): Processor =
 	when (this) {
 		is FunctionCompiler.Parent.Define ->
-			DefineCompilerProcessor(defineCompiler.plus(arrowCompiled.asDefinition))
+			DefineCompilerProcessor(
+				defineCompiler.plus(
+					functionDefinition(
+						arrowCompiled.arrow.lhs,
+						arrowCompiled.term.of(arrowCompiled.arrow.rhs))))
 		is FunctionCompiler.Parent.Body ->
 			BodyCompilerProcessor(bodyCompiler.plus(lineCompiled(arrowCompiled)))
 	}
