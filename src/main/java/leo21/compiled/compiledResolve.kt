@@ -14,11 +14,13 @@ import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
 import leo21.prim.StringPlusStringPrim
-import leo21.token.processor.compiled
+import leo21.token.processor.staticCompiled
 import leo21.type.Type
-import leo21.type.numberType
+import leo21.type.isEmpty
 import leo21.type.lineTo
+import leo21.type.numberType
 import leo21.type.plus
+import leo21.type.script
 import leo21.type.stringType
 import leo21.type.type
 
@@ -51,7 +53,7 @@ val Type.fn2Compiled: Compiled get() = fn(arg<Prim>(0)) of this
 val Compiled.resolveLeonardoOrNull: Compiled?
 	get() =
 		notNullIf(type == type("leonardo" lineTo type())) {
-			leonardoScript.compiled
+			leonardoScript.staticCompiled
 		}
 val Compiled.resolveOrNull: Compiled?
 	get() =
@@ -65,6 +67,7 @@ val Compiled.resolveOrNull: Compiled?
 			?: resolveFn2OrNull(numberType, "minus", numberType, NumberMinusNumberPrim, numberType)
 			?: resolveFn2OrNull(numberType, "times", numberType, NumberTimesNumberPrim, numberType)
 			?: resolveFn2OrNull(stringType, "plus", stringType, StringPlusStringPrim, stringType)
+			?: resolveTypeOrNull
 			?: resolveMakeOrNull
 
 fun Compiled.resolveFn1OrNull(lhs: Type, name: String, prim: Prim, result: Type): Compiled? =
@@ -106,4 +109,38 @@ val Compiled.resolveAsOrNull: Compiled?
 					}
 				}
 			}
+		}
+
+fun Compiled.resolveOp1OrNull(name: String, fn: (Compiled) -> Compiled?): Compiled? =
+	resolveOp1OrNull { lhs, resolvedName ->
+		ifOrNull(name == resolvedName) {
+			fn(lhs)
+		}
+	}
+
+fun Compiled.resolveOp2OrNull(name: String, fn: (Compiled, Compiled) -> Compiled?): Compiled? =
+	resolveOp2OrNull { lhs, resolvedName, rhs ->
+		ifOrNull(name == resolvedName) {
+			fn(lhs, rhs)
+		}
+	}
+
+fun Compiled.resolveOp1OrNull(fn: (Compiled, String) -> Compiled?): Compiled? =
+	resolveOp2OrNull { lhs, name, rhs ->
+		ifOrNull(rhs.type.isEmpty) {
+			fn(lhs, name)
+		}
+	}
+
+fun Compiled.resolveOp2OrNull(fn: (Compiled, String, Compiled) -> Compiled?): Compiled? =
+	structOrNull?.linkOrNull?.let { link ->
+		link.head.fieldCompiledOrNull?.let { field ->
+			fn(compiled(link.tail), field.field.name, field.rhsCompiled)
+		}
+	}
+
+val Compiled.resolveTypeOrNull: Compiled?
+	get() =
+		resolveOp1OrNull("type") { lhs ->
+			lhs.type.script.staticCompiled
 		}

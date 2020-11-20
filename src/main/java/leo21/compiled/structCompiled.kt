@@ -40,7 +40,7 @@ fun StructCompiled.plus(compiled: LineCompiled): StructCompiled =
 fun structTyped(vararg lines: LineCompiled): StructCompiled =
 	emptyStructTyped.fold(lines) { plus(it) }
 
-val StructCompiled.typed
+val StructCompiled.compiled
 	get() =
 		Compiled(term, type(struct))
 

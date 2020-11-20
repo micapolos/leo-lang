@@ -85,7 +85,7 @@ fun Compiled.invoke(compiled: Compiled) = invokeOrNull(compiled).notNullOrError(
 fun Compiled.make(name: String) = compiled(name lineTo this)
 val Compiled.switch: SwitchCompiled get() = contentOrNull?.choiceOrNull.notNullOrError("not choice").switchCompiled
 
-fun Compiled.plus(line: LineCompiled): Compiled = struct.plus(line).typed
+fun Compiled.plus(line: LineCompiled): Compiled = struct.plus(line).compiled
 
 fun Compiled.reference(f: Compiled.() -> Compiled): Compiled =
 	arg0<Prim>().of(type).f().let { typed ->
