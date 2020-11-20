@@ -23,7 +23,9 @@ sealed class Definition : Scriptable() {
 		)
 }
 
-data class ArrowCompiledDefinition(val arrowCompiled: ArrowCompiled) : Definition()
+data class ArrowCompiledDefinition(val arrowCompiled: ArrowCompiled) : Definition() {
+	override fun toString() = super.toString()
+}
 
 val ArrowCompiled.asDefinition: Definition get() = ArrowCompiledDefinition(this)
 
