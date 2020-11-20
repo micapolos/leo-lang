@@ -56,6 +56,8 @@ data class DefineCompiler(
 	}
 }
 
+val emptyDefineCompiler = DefineCompiler(null, emptyModule)
+
 fun DefineCompiler.plus(token: Token): Processor =
 	when (token) {
 		is LiteralToken ->

@@ -7,7 +7,10 @@ import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
+import leo14.error
 import leo14.lambda.fn
+import leo14.orError
+import leo15.dsl.*
 import leo21.compiled.SwitchCompiled
 import leo21.compiled.case
 import leo21.compiled.compiled
@@ -36,18 +39,22 @@ data class SwitchCompiler(
 
 fun SwitchCompiler.plus(token: Token): Processor =
 	when (token) {
-		is LiteralToken -> null
+		is LiteralToken -> error { not { expected { literal } } }
 		is BeginToken ->
-			switchCompiled.remainingLineStack.linkOrNull { choice }?.let { choiceLink ->
-				leo.base.notNullIf(token.begin.string == choiceLink.line.name) {
-					BodyCompilerProcessor(
-						BodyCompiler(
-							BodyCompiler.Parent.SwitchCase(this, choiceLink.line),
-							module.begin(type(choiceLink.line).given).body(compiled())))
+			switchCompiled
+				.remainingLineStack
+				.linkOrNull { choice }
+				.orError { expected { choice } }
+				.let { choiceLink ->
+					if (token.begin.string == choiceLink.line.name)
+						BodyCompilerProcessor(
+							BodyCompiler(
+								BodyCompiler.Parent.SwitchCase(this, choiceLink.line),
+								module.begin(type(choiceLink.line).given).body(compiled())))
+					else error { expected { case { x(choiceLink.line.name) } } }
 				}
-			}
 		is EndToken -> BodyCompilerProcessor(parentBodyCompiler.set(switchCompiled.end))
-	}!!
+	}
 
 fun SwitchCompiler.plus(line: Line, body: Body): Processor =
 	SwitchCompilerProcessor(

@@ -11,6 +11,7 @@ import leo14.lineTo
 import leo14.script
 import leo14.tokenStack
 import leo15.dsl.*
+import leo19.compiler.emptyDefineCompiler
 import leo21.compiled.Compiled
 import leo21.token.body.Body
 import leo21.token.body.BodyCompiler
@@ -108,6 +109,7 @@ val TypeCompiler.processor: Processor get() = TypeCompilerProcessor(this)
 val FunctionCompiler.processor: Processor get() = FunctionCompilerProcessor(this)
 val FunctionDoesCompiler.processor: Processor get() = FunctionItDoesCompilerProcessor(this)
 val EvaluatorNode.processor: Processor get() = EvaluatorProcessor(this)
+val DefineCompiler.processor: Processor get() = DefineCompilerProcessor(this)
 
 fun Processor.plus(token: Token): Processor =
 	when (this) {
