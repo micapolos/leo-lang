@@ -78,7 +78,9 @@ class AccessTest {
 				type(
 					line(recursive("empty" lineTo type())),
 					line(recursive("tail" lineTo type(
-						"list" lineTo type(line(recurse(0))))))))
+						"list" lineTo type(
+							"empty" lineTo type(),
+							line(recurse(0))))))))
 	}
 
 	@Test

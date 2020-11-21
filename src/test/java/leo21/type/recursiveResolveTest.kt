@@ -13,7 +13,7 @@ class RecursiveResolveTest {
 			.resolve
 			.assertEqualTo(
 				"list" lineTo type(
-					"empty" lineTo type(),
+					line(recursive("empty" lineTo type())),
 					line(recursive("tail" lineTo type(
 						"list" lineTo type(
 							"empty" lineTo type(),
