@@ -198,3 +198,12 @@ fun <T> Term<T>.reference(f: Term<T>.() -> Term<T>): Term<T> =
 
 fun <T> Term<T>.do_(term: Term<T>): Term<T> =
 	fn(term).invoke(this)
+
+val <T> Term<T>.isSimple: Boolean
+	get() =
+		when (this) {
+			is NativeTerm -> true
+			is AbstractionTerm -> true
+			is ApplicationTerm -> false
+			is VariableTerm -> true
+		}

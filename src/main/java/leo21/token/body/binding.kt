@@ -1,6 +1,7 @@
 package leo21.token.body
 
 import leo.base.notNullIf
+import leo13.Empty
 import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.anyReflectScriptLine
@@ -22,6 +23,7 @@ import leo21.prim.Prim
 import leo21.prim.runtime.apply
 import leo21.type.Type
 import leo21.type.onlyNameOrNull
+import javax.swing.border.EmptyBorder
 
 sealed class Binding : Scriptable() {
 	override val reflectScriptLine: ScriptLine
@@ -36,6 +38,7 @@ sealed class Binding : Scriptable() {
 					"constant" lineTo script(
 						"key" lineTo script(keyType.reflectScriptLine),
 						"value" lineTo script(valueType.reflectScriptLine))
+				is Empty -> "empty" lineTo script()
 			})
 
 	data class Given(val given: leo21.token.body.Given) : Binding() {
@@ -49,8 +52,13 @@ sealed class Binding : Scriptable() {
 	data class Constant(val keyType: Type, val valueType: Type) : Binding() {
 		override fun toString() = super.toString()
 	}
+
+	data class Empty(val empty: leo13.Empty) : Binding() {
+		override fun toString() = super.toString()
+	}
 }
 
+val Empty.binding: Binding get() = Binding.Empty(this)
 val Given.binding: Binding get() = Binding.Given(this)
 fun Type.functionBinding(type: Type): Binding = Binding.Function(this, type)
 fun Type.constantBinding(type: Type): Binding = Binding.Constant(this, type)
@@ -69,6 +77,7 @@ fun Binding.resolveOrNull(index: Int, param: Compiled): Compiled? =
 		is Binding.Constant -> notNullIf(keyType == param.type) {
 			arg<Prim>(index).of(valueType)
 		}
+		is Binding.Empty -> null
 	}
 
 fun Binding.resolveOrNull(value: Value<Prim>, param: Evaluated): Evaluated? =
@@ -85,4 +94,5 @@ fun Binding.resolveOrNull(value: Value<Prim>, param: Evaluated): Evaluated? =
 		is Binding.Constant -> notNullIf(keyType == param.type) {
 			value.of(valueType)
 		}
+		is Binding.Empty -> null
 	}

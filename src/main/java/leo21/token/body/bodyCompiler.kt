@@ -1,5 +1,6 @@
 package leo21.token.body
 
+import leo.base.notNullIf
 import leo13.stack
 import leo14.Begin
 import leo14.End
@@ -157,3 +158,5 @@ fun BodyCompiler.plusDo(rhsBody: Body): BodyCompiler =
 
 fun BodyCompiler.apply(compiled: Compiled): BodyCompiler =
 	copy(body = body.apply(compiled))
+
+val BodyCompiler.rootBody: Body get() = notNullIf(parentOrNull == null) { body }!!

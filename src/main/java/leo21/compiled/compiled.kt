@@ -4,6 +4,7 @@ import leo.base.fold
 import leo.base.notNullOrError
 import leo14.Scriptable
 import leo14.lambda.Term
+import leo14.lambda.arg
 import leo14.lambda.arg0
 import leo14.lambda.do_
 import leo14.lambda.fn
@@ -34,6 +35,7 @@ infix fun Term<Prim>.of(type: Type) = Compiled(this, type)
 
 fun compiled(compiled: StructCompiled) = Compiled(compiled.term, type(compiled.struct))
 fun compiled(compiled: ChoiceCompiled) = Compiled(compiled.termOrNull!!, type(compiled.choice))
+fun compiledArg(index: Int, type: Type) = Compiled(arg(index), type)
 
 fun <R> Compiled.switch(
 	structFn: (StructCompiled) -> R,
@@ -54,6 +56,7 @@ fun choiceTyped(fn: ChoiceCompiled.() -> ChoiceCompiled): Compiled =
 
 fun compiled(text: String) = compiled(line(text))
 fun compiled(number: Double) = compiled(line(number))
+fun compiled(int: Int) = compiled(int.toDouble())
 
 val Compiled.structOrNull: StructCompiled? get() = switch({ it }, { null })
 val Compiled.choiceOrNull: ChoiceCompiled? get() = switch({ null }, { it })

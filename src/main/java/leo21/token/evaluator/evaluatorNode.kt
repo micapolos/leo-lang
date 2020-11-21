@@ -1,6 +1,5 @@
 package leo21.token.evaluator
 
-import leo13.script.script
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
@@ -8,21 +7,28 @@ import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.Token
 import leo14.anyOptionalReflectScriptLine
-import leo14.anyReflectScriptLine
 import leo14.error
 import leo14.lineTo
 import leo14.orError
 import leo14.script
 import leo15.dsl.*
+import leo21.compiled.ArrowCompiled
+import leo21.compiled.line
+import leo21.compiled.of
 import leo21.evaluator.LineEvaluated
 import leo21.evaluator.lineEvaluated
+import leo21.evaluator.of
+import leo21.prim.runtime.value
 import leo21.token.body.DefineCompiler
+import leo21.token.body.FunctionCompiler
 import leo21.token.body.Module
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.EvaluatorProcessor
+import leo21.token.processor.FunctionCompilerProcessor
 import leo21.token.processor.Processor
 import leo21.token.processor.processor
 import leo21.type.isEmpty
+import leo21.type.type
 
 data class EvaluatorNode(
 	val parentOrNull: EvaluatorParent?,
@@ -51,6 +57,11 @@ fun EvaluatorNode.plus(token: Token): Processor =
 				EvaluatorNode(
 					EvaluatorNodeDoEvaluatorParent(EvaluatorNodeDo(this)),
 					evaluator.beginDo))
+			"function" -> FunctionCompilerProcessor(
+				FunctionCompiler(
+					FunctionCompiler.Parent.Evaluator(this),
+					evaluator.context.beginModule,
+					type()))
 			else -> EvaluatorProcessor(begin(token.begin.string))
 		}
 		is EndToken -> parentOrNull?.end(evaluator).orError { not { expected { end } } }
@@ -72,3 +83,6 @@ fun EvaluatorNode.begin(name: String): EvaluatorNode =
 	EvaluatorNode(
 		EvaluatorNodeBeginEvaluatorParent(EvaluatorNodeBegin(this, name)),
 		evaluator.begin)
+
+fun EvaluatorNode.plus(arrowCompiled: ArrowCompiled): EvaluatorNode =
+	copy(evaluator = evaluator.plus(arrowCompiled))

@@ -135,6 +135,10 @@ val Processor.type: Type
 	get() =
 		(this as TypeCompilerProcessor).typeCompiler.type
 
+val Processor.bodyCompiler: BodyCompiler
+	get() =
+		(this as BodyCompilerProcessor).bodyCompiler
+
 val Processor.body: Body
 	get() =
 		(this as BodyCompilerProcessor).bodyCompiler.body

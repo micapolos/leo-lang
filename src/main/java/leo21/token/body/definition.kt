@@ -1,7 +1,9 @@
 package leo21.token.body
 
+import leo.base.runIf
 import leo14.ScriptLine
 import leo14.Scriptable
+import leo14.lambda.Term
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.value.Value
@@ -28,7 +30,11 @@ fun constantDefinition(type: Type, compiled: Compiled) = Definition(type, compil
 fun functionDefinition(type: Type, compiled: Compiled) = Definition(type, compiled, isFunction = true)
 
 fun Compiled.wrap(definition: Definition): Compiled =
-	fn(term).invoke(definition.compiled.term).of(type)
+	fn(term).invoke(definition.term).of(type)
+
+val Definition.term: Term<Prim>
+	get() =
+		compiled.term.runIf(isFunction) { fn(this) }
 
 val Definition.binding: Binding
 	get() =

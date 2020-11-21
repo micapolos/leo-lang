@@ -10,6 +10,7 @@ import leo14.Token
 import leo14.anyOptionalReflectScriptLine
 import leo14.end
 import leo14.error
+import leo14.lambda.abstraction
 import leo14.lambda.fn
 import leo14.lineTo
 import leo14.orError
@@ -21,8 +22,11 @@ import leo21.compiled.Compiled
 import leo21.compiled.compiled
 import leo21.compiled.line
 import leo21.compiled.of
+import leo21.token.evaluator.EvaluatorNode
+import leo21.token.evaluator.plus
 import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
+import leo21.token.processor.EvaluatorProcessor
 import leo21.token.processor.Processor
 import leo21.token.processor.processor
 import leo21.token.type.compiler.FunctionCompilerTypeParent
@@ -48,6 +52,7 @@ data class FunctionCompiler(
 				when (this) {
 					is Define -> defineCompiler.reflectScriptLine
 					is Body -> bodyCompiler.reflectScriptLine
+					is Evaluator -> evaluatorNode.reflectScriptLine
 				}
 			)
 
@@ -56,6 +61,10 @@ data class FunctionCompiler(
 		}
 
 		data class Body(val bodyCompiler: BodyCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class Evaluator(val evaluatorNode: EvaluatorNode) : Parent() {
 			override fun toString() = super.toString()
 		}
 	}
@@ -97,9 +106,11 @@ fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): Processor =
 				defineCompiler.plus(
 					functionDefinition(
 						arrowCompiled.arrow.lhs,
-						arrowCompiled.term.of(arrowCompiled.arrow.rhs))))
+						arrowCompiled.term.abstraction { it }.of(arrowCompiled.arrow.rhs))))
 		is FunctionCompiler.Parent.Body ->
 			BodyCompilerProcessor(bodyCompiler.plus(line(arrowCompiled)))
+		is FunctionCompiler.Parent.Evaluator ->
+			evaluatorNode.plus(arrowCompiled).processor
 	}
 
 fun FunctionCompiler.plus(type: Type): Processor =

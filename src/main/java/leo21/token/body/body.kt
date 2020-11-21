@@ -4,6 +4,7 @@ import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.lineTo
 import leo14.script
+import leo15.dsl.*
 import leo21.compiled.Compiled
 import leo21.compiled.LineCompiled
 import leo21.compiled.apply
@@ -12,11 +13,13 @@ import leo21.compiled.do_
 import leo21.compiled.plus
 import leo21.compiled.resolve
 import leo21.token.type.compiler.cast
+import leo21.type.isEmpty
 
 data class Body(
 	val module: Module,
 	val compiled: Compiled
 ) : Scriptable() {
+	override fun toString() = super.toString()
 	override val reflectScriptLine: ScriptLine
 		get() = "body" lineTo script(module.reflectScriptLine, compiled.reflectScriptLine)
 }
@@ -48,10 +51,16 @@ val Body.wrapCompiled: Compiled
 	get() =
 		compiled.wrap(module)
 
-fun Body.plus(module: Module) =
+fun Body.plus(rhs: Module) =
 	Body(
-		module.plus(module),
-		compiled.wrap(module.definitions))
+		module.plus(rhs),
+		compiled)
+
+fun Body.plus(definition: Definition) =
+	if (!compiled.type.isEmpty) leo14.error { not { empty } }
+	else Body(
+		module.plus(definition),
+		compiled)
 
 fun Body.do_(body: Body): Body =
 	set(compiled.do_(body.wrapCompiled))

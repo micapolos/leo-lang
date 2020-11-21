@@ -4,17 +4,20 @@ import leo14.Literal
 import leo14.NumberLiteral
 import leo14.StringLiteral
 import leo14.lambda.Term
+import leo14.lambda.fn
 import leo14.lambda.term
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.type.ArrowLine
-import leo21.type.NumberLine
 import leo21.type.FieldLine
 import leo21.type.Line
+import leo21.type.NumberLine
 import leo21.type.StringLine
-import leo21.type.numberLine
+import leo21.type.Type
+import leo21.type.arrowTo
 import leo21.type.line
 import leo21.type.lineTo
+import leo21.type.numberLine
 import leo21.type.stringLine
 
 data class LineCompiled(val term: Term<Prim>, val line: Line)
@@ -38,6 +41,7 @@ fun line(string: String) = LineCompiled(term(prim(string)), stringLine)
 fun line(double: Double) = LineCompiled(term(prim(double)), numberLine)
 infix fun String.lineTo(rhs: Compiled) = LineCompiled(rhs.term, this lineTo rhs.type)
 fun line(arrowCompiled: ArrowCompiled) = LineCompiled(arrowCompiled.term, line(arrowCompiled.arrow))
+infix fun Type.does(compiled: Compiled) = line(fn(compiled.term).of(this arrowTo compiled.type))
 
 fun lineCompiled(literal: Literal): LineCompiled =
 	when (literal) {

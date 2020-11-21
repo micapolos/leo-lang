@@ -5,12 +5,15 @@ import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.lambda.Term
 import leo14.lambda.arg
+import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lineTo
 import leo14.orError
 import leo14.script
 import leo21.prim.Prim
 import leo21.type.Arrow
+import leo21.type.Type
+import leo21.type.arrowTo
 import leo21.type.script
 
 data class ArrowCompiled(
@@ -22,6 +25,8 @@ data class ArrowCompiled(
 }
 
 infix fun Term<Prim>.of(arrow: Arrow) = ArrowCompiled(this, arrow)
+
+infix fun Type.arrowTo(compiled: Compiled) = fn(compiled.term).of(this arrowTo compiled.type)
 
 fun ArrowCompiled.invokeOrNull(compiled: Compiled): Compiled? =
 	if (arrow.lhs != compiled.type) null

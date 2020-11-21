@@ -60,6 +60,7 @@ val FunctionCompiler.Parent.printFragmentParent: FragmentParent
 		when (this) {
 			is FunctionCompiler.Parent.Define -> defineCompiler.printFragment
 			is FunctionCompiler.Parent.Body -> bodyCompiler.printFragment
+			is FunctionCompiler.Parent.Evaluator -> evaluatorNode.printFragment
 		}.parent(begin("function"))
 
 val DefineCompiler.printFragment: Fragment
