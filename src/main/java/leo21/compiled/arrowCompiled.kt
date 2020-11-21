@@ -1,16 +1,17 @@
 package leo21.compiled
 
 import leo.base.notNullIf
-import leo.base.notNullOrError
 import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.lambda.Term
 import leo14.lambda.arg
 import leo14.lambda.invoke
 import leo14.lineTo
+import leo14.orError
 import leo14.script
 import leo21.prim.Prim
 import leo21.type.Arrow
+import leo21.type.script
 
 data class ArrowCompiled(
 	val term: Term<Prim>,
@@ -27,7 +28,10 @@ fun ArrowCompiled.invokeOrNull(compiled: Compiled): Compiled? =
 	else Compiled(term.invoke(compiled.term), arrow.rhs)
 
 fun ArrowCompiled.invoke(compiled: Compiled): Compiled =
-	invokeOrNull(compiled).notNullOrError("type mismatch")
+	invokeOrNull(compiled).orError(
+		"apply" lineTo script(
+			"expected" lineTo arrow.lhs.script,
+			"was" lineTo compiled.type.script))
 
 fun ArrowCompiled.resolveOrNull(index: Int, param: Compiled) =
 	notNullIf(arrow.lhs == param.type) {
