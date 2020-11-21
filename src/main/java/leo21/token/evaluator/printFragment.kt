@@ -20,6 +20,7 @@ val EvaluatorParent.printFragmentParent: FragmentParent
 		when (this) {
 			is EvaluatorNodeBeginEvaluatorParent -> evaluatorNodeBegin.printFragmentParent
 			is EvaluatorNodeDoEvaluatorParent -> evaluatorNodeDo.printFragmentParent
+			is EvaluatorNodeApplyEvaluatorParent -> evaluatorNode.printFragment.parent(begin("apply"))
 		}
 
 val EvaluatorNodeBegin.printFragmentParent: FragmentParent

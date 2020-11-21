@@ -14,6 +14,7 @@ sealed class EvaluatorParent : Scriptable() {
 			when (this) {
 				is EvaluatorNodeBeginEvaluatorParent -> evaluatorNodeBegin.anyReflectScriptLine
 				is EvaluatorNodeDoEvaluatorParent -> evaluatorNodeDo.anyReflectScriptLine
+				is EvaluatorNodeApplyEvaluatorParent -> "apply" lineTo script(evaluatorNode.reflectScriptLine)
 			}
 		)
 }
@@ -26,9 +27,14 @@ data class EvaluatorNodeDoEvaluatorParent(val evaluatorNodeDo: EvaluatorNodeDo) 
 	override fun toString() = super.toString()
 }
 
+data class EvaluatorNodeApplyEvaluatorParent(val evaluatorNode: EvaluatorNode) : EvaluatorParent() {
+	override fun toString() = super.toString()
+}
+
 fun EvaluatorParent.end(evaluator: Evaluator): Processor =
 	when (this) {
 		is EvaluatorNodeBeginEvaluatorParent -> evaluatorNodeBegin.end(evaluator).processor
 		is EvaluatorNodeDoEvaluatorParent -> evaluatorNodeDo.end(evaluator).processor
+		is EvaluatorNodeApplyEvaluatorParent -> evaluatorNode.apply(evaluator).processor
 	}
 

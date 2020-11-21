@@ -10,6 +10,7 @@ import leo14.script
 import leo21.compiled.ArrowCompiled
 import leo21.evaluator.Evaluated
 import leo21.evaluator.LineEvaluated
+import leo21.evaluator.apply
 import leo21.evaluator.emptyEvaluated
 import leo21.evaluator.evaluated
 import leo21.evaluator.given
@@ -31,6 +32,7 @@ val Evaluator.resolve: Evaluator
 	get() =
 		copy(evaluated = context.resolve(evaluated))
 
+// TODO: This is wrong
 fun Evaluator.plus(line: LineEvaluated): Evaluator =
 	copy(evaluated = evaluated.plus(line)).resolve
 
@@ -55,3 +57,6 @@ fun Evaluator.plus(arrowCompiled: ArrowCompiled): Evaluator =
 	plus(
 		value(context.scope.function(arrowCompiled.term.abstraction { it }))
 			.of(line(arrowCompiled.arrow)))
+
+fun Evaluator.apply(evaluator: Evaluator): Evaluator =
+	copy(evaluated = evaluated.apply(evaluator.evaluated))

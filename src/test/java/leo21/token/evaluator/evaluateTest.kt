@@ -21,6 +21,29 @@ class EvaluateTest {
 				number
 				does { text("ok") }
 			}
+		}.assertEqualTo(evaluated())
+	}
+
+	@Test
+	fun functionApply() {
+		evaluated {
+			function {
+				number
+				does { text("ok") }
+			}
+			apply { number(123) }
+		}.assertEqualTo(evaluated("ok"))
+	}
+
+	@Test
+	fun defineFunction() {
+		evaluated {
+			define {
+				function {
+					number
+					does { text("ok") }
+				}
+			}
 		}.assertEqualTo(null)
 	}
 }

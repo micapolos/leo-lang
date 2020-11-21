@@ -87,3 +87,5 @@ val Evaluated.stringOrNull: String? get() = notNullIf(type == stringType) { valu
 val Evaluated.number: Number get() = numberOrNull!!
 val Evaluated.string: String get() = stringOrNull!!
 
+fun Evaluated.apply(evaluated: Evaluated): Evaluated =
+	structOrNull?.onlyLineOrNull?.arrowOrNull?.apply(evaluated)!!

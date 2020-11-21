@@ -24,7 +24,6 @@ import leo21.token.processor.FunctionCompilerProcessor
 import leo21.token.processor.Processor
 import leo21.token.processor.processor
 import leo21.type.isEmpty
-import leo21.type.type
 
 data class EvaluatorNode(
 	val parentOrNull: EvaluatorParent?,
@@ -42,6 +41,11 @@ fun EvaluatorNode.plus(token: Token): Processor =
 	when (token) {
 		is LiteralToken -> plus(token.literal.lineEvaluated).processor
 		is BeginToken -> when (token.begin.string) {
+			"apply" ->
+				EvaluatorProcessor(
+					EvaluatorNode(
+						EvaluatorNodeApplyEvaluatorParent(this),
+						evaluator.begin))
 			"define" ->
 				if (evaluator.evaluated.type.isEmpty)
 					DefineCompilerProcessor(
@@ -49,15 +53,16 @@ fun EvaluatorNode.plus(token: Token): Processor =
 							DefineCompiler.Parent.Evaluator(this),
 							evaluator.context.beginModule))
 				else error { not { expected { word { define } } } }
-			"do" -> EvaluatorProcessor(
-				EvaluatorNode(
-					EvaluatorNodeDoEvaluatorParent(EvaluatorNodeDo(this)),
-					evaluator.beginDo))
-			"function" -> FunctionCompilerProcessor(
-				FunctionCompiler(
-					FunctionCompiler.Parent.Evaluator(this),
-					evaluator.context.beginModule,
-					type()))
+			"do" ->
+				EvaluatorProcessor(
+					EvaluatorNode(
+						EvaluatorNodeDoEvaluatorParent(EvaluatorNodeDo(this)),
+						evaluator.beginDo))
+			"function" ->
+				FunctionCompilerProcessor(
+					FunctionCompiler(
+						FunctionCompiler.Parent.Evaluator(this),
+						evaluator.context.beginModule))
 			else -> EvaluatorProcessor(begin(token.begin.string))
 		}
 		is EndToken -> parentOrNull?.end(evaluator).orError { not { expected { end } } }
@@ -87,3 +92,6 @@ val EvaluatorNode.rootEvaluator: Evaluator
 	get() =
 		if (parentOrNull != null) null!!
 		else evaluator
+
+fun EvaluatorNode.apply(evaluator: Evaluator): EvaluatorNode =
+	copy(evaluator = evaluator.apply(evaluator))

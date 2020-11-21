@@ -17,6 +17,7 @@ import leo21.type.NumberLine
 import leo21.type.FieldLine
 import leo21.type.Line
 import leo21.type.StringLine
+import leo21.type.Type
 import leo21.type.numberLine
 import leo21.type.fieldOrNull
 import leo21.type.isEmpty
@@ -57,6 +58,10 @@ val Literal.lineEvaluated: LineEvaluated
 val LineEvaluated.fieldOrNull: FieldEvaluated?
 	get() =
 		switch({ null }, { null }, { it }, { null })
+
+val LineEvaluated.arrowOrNull: ArrowEvaluated?
+	get() =
+		switch({ null }, { null }, { null }, { it })
 
 val LineEvaluated.onlyNameOrNull: String?
 	get() =

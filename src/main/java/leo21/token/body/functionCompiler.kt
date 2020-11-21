@@ -26,7 +26,6 @@ import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.plus
 import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
-import leo21.token.processor.EvaluatorProcessor
 import leo21.token.processor.Processor
 import leo21.token.processor.processor
 import leo21.token.type.compiler.FunctionCompilerTypeParent
@@ -34,11 +33,12 @@ import leo21.token.type.compiler.TypeCompiler
 import leo21.token.type.compiler.plus
 import leo21.type.Type
 import leo21.type.arrowTo
+import leo21.type.type
 
 data class FunctionCompiler(
 	val parentOrNull: Parent?,
 	val module: Module,
-	val type: Type
+	val type: Type = type()
 ) : Scriptable() {
 	override val reflectScriptLine: ScriptLine
 		get() = "function" lineTo script(
