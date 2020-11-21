@@ -6,6 +6,7 @@ import leo.base.inc
 import leo.base.indent
 import leo.base.string
 import leo.cyan
+import leo.defaultColor
 import leo.magenta
 import leo.reset
 import leo14.Literal
@@ -46,7 +47,7 @@ val CodeWord.string
 	get() =
 		kind
 			.colorStringOrNull
-			?.let { "$it$this${ansi.reset}" }
+			?.let { "$it$this${ansi.defaultColor}" }
 			?: string
 
 val CodeNameKind.colorStringOrNull: String?
@@ -58,4 +59,4 @@ val CodeNameKind.colorStringOrNull: String?
 
 val Literal.colorString
 	get() =
-		"${ansi.cyan}$this${ansi.reset}"
+		"${ansi.cyan}$this${ansi.defaultColor}"

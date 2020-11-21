@@ -2,6 +2,7 @@ package leo14.untyped
 
 import leo.ansi
 import leo.base.*
+import leo.defaultColor
 import leo.magenta
 import leo.reset
 import leo14.*
@@ -88,7 +89,7 @@ fun AppendableIndented.leoAppend(literal: Literal): AppendableIndented =
 
 val String.colored
 	get() =
-		"${ansi.magenta}${this}${ansi.reset}"
+		"${ansi.magenta}${this}${ansi.defaultColor}"
 
 const val stringEllipsizedHalfLength = 50
 

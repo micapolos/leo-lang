@@ -93,7 +93,7 @@ class EvaluateTest {
 
 	@Test
 	fun tailRecursion() {
-		val times = 1000000
+		val times = 1000
 		fn(arg<Any>(0))
 			.iterate(times) { fn(invoke(nativeTerm(Any::anyIntInc).invoke(arg(0)))) }
 			.invoke(nativeTerm(0))

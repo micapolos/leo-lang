@@ -1,6 +1,7 @@
 package leo16
 
 import leo.ansi
+import leo.defaultColor
 import leo.magenta
 import leo.reset
 import leo14.Literal
@@ -35,7 +36,7 @@ val Int.sentence: Sentence
 
 val Any?.nativeString: String
 	get() =
-		"${ansi.magenta}«$this»${ansi.reset}"
+		"${ansi.magenta}«$this»${ansi.defaultColor}"
 
 fun <R : Any> nullIfThrowsException(fn: () -> R): R? =
 	try {

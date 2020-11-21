@@ -16,6 +16,7 @@ val Ansi.blue get() = escape + "34m"
 val Ansi.magenta get() = escape + "35m"
 val Ansi.cyan get() = escape + "36m"
 val Ansi.white get() = escape + "37m"
+val Ansi.defaultColor get() = escape + "39m"
 
 val Ansi.brightBlack get() = escape + "90m"
 val Ansi.brightRed get() = escape + "91m"

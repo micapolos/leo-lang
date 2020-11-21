@@ -5,6 +5,7 @@ import leo.base.println
 import leo.base.runIf
 import leo.bellChar
 import leo.clear
+import leo.defaultColor
 import leo.home
 import leo.java.lang.sttyPrivateMode
 import leo.red
@@ -68,13 +69,13 @@ fun run(reducer: Reducer<String, Char>) {
 			print("${ansi.clear}${ansi.home}")
 			print(ansi.red)
 			println(message)
-			print(ansi.reset)
+			print(ansi.defaultColor)
 		}
 		errorToPrint?.run {
 			println()
-			if (this is ScriptError) "${ansi.red}${script("error" lineTo script).leoString}${ansi.reset}".println
+			if (this is ScriptError) "${ansi.red}${script("error" lineTo script).leoString}${ansi.defaultColor}".println
 			else {
-				println("${ansi.red}[ERROR]${ansi.reset}")
+				println("${ansi.red}[ERROR]${ansi.defaultColor}")
 				printStackTrace()
 				println(undoableReducerVariable.current.lastDone.toString())
 			}

@@ -1,6 +1,7 @@
 package leo21.token.processor
 
 import leo.ansi
+import leo.defaultColor
 import leo.magenta
 import leo.reset
 import leo14.Reducer
@@ -17,5 +18,5 @@ val Processor.stringCharReducer: Reducer<String, Char>
 		reducer
 			.promptStringCharReducer { noPromptString to printFragment }
 
-val promptString = "${ansi.magenta}=> Leonardo v0.21${ansi.reset}\n"
+val promptString = "${ansi.magenta}=> Leonardo v0.21${ansi.defaultColor}\n"
 val noPromptString = ""
