@@ -4,14 +4,6 @@ import leo13.all
 
 val Type.isStatic: Boolean
 	get() =
-		switch(
-			Struct::isStatic,
-			Choice::isStatic,
-			Recursive::isStatic,
-			Recurse::isStatic)
-
-val Struct.isStatic: Boolean
-	get() =
 		lineStack.all { isStatic }
 
 val Choice.isStatic: Boolean get() = false
@@ -24,7 +16,10 @@ val Line.isStatic: Boolean
 			StringLine -> false
 			NumberLine -> false
 			is FieldLine -> field.isStatic
+			is ChoiceLine -> false
 			is ArrowLine -> arrow.isStatic
+			is RecursiveLine -> false
+			is RecurseLine -> false
 		}
 
 val Field.isStatic: Boolean

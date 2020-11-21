@@ -19,6 +19,7 @@ import leo21.type.Line
 import leo21.type.Type
 import leo21.type.choice
 import leo21.type.isEmpty
+import leo21.type.line
 import leo21.type.lineTo
 import leo21.type.numberLine
 import leo21.type.plus
@@ -60,15 +61,13 @@ fun TypeCompiler.plusBegin(name: String): Processor =
 				lines,
 				type().firstEither()))
 		"recursive" ->
-			if (type.isEmpty) TypeCompilerProcessor(
+			TypeCompilerProcessor(
 				TypeCompiler(
 					RecursiveTypeParent(this),
 					lines,
 					type()))
-			else error { not { expected { word { recursive } } } }
 		"recurse" ->
-			if (type.isEmpty) TypeRecurseCompilerProcessor(TypeRecurseCompiler(this))
-			else error { not { expected { word { recurse } } } }
+			TypeRecurseCompilerProcessor(TypeRecurseCompiler(this))
 		else -> TypeCompilerProcessor(
 			TypeCompiler(
 				TypeNameTypeParent(this, name),
@@ -105,4 +104,4 @@ val TypeCompiler.end: Processor
 
 val TypeCompiler.plusRecurse: TypeCompiler
 	get() =
-		copy(type = type(recurse(0)))
+		copy(type = type.plus(line(recurse(0))))

@@ -5,18 +5,15 @@ import leo13.Stack
 import leo13.fold
 import leo13.isEmpty
 import leo13.linkOrNull
-import leo13.map
 import leo13.push
 import leo13.reverse
 import leo13.stack
-import leo14.Script
 import leo14.lambda.Term
 import leo14.lambda.invoke
 import leo21.prim.Prim
 import leo21.type.Line
 import leo21.type.Type
-import leo21.type.name
-import leo21.type.script
+import leo21.type.matches
 import leo21.type.type
 
 data class SwitchCompiled(
@@ -32,7 +29,7 @@ val ChoiceCompiled.switchCompiled: SwitchCompiled
 
 fun SwitchCompiled.case(name: String, compiled: ArrowCompiled): SwitchCompiled =
 	remainingLineStack.linkOrNull.notNullOrError("exhausted").let { link ->
-		if (link.value.name != name) error("case mismatch")
+		if (!link.value.matches(name)) error("case mismatch")
 		else if (type(link.value) != compiled.arrow.lhs) error("arrow lhs illegal")
 		else SwitchCompiled(
 			term,

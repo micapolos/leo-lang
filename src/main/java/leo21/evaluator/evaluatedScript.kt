@@ -13,35 +13,25 @@ import leo14.literal
 import leo14.plus
 import leo14.script
 import leo21.prim.Prim
-import leo21.prim.number
 import leo21.prim.nilPrim
+import leo21.prim.number
 import leo21.prim.string
 import leo21.type.ArrowLine
 import leo21.type.Choice
-import leo21.type.ChoiceType
-import leo21.type.NumberLine
+import leo21.type.ChoiceLine
 import leo21.type.Field
 import leo21.type.FieldLine
 import leo21.type.Line
-import leo21.type.RecurseType
-import leo21.type.RecursiveType
+import leo21.type.NumberLine
+import leo21.type.RecurseLine
+import leo21.type.RecursiveLine
 import leo21.type.StringLine
-import leo21.type.Struct
-import leo21.type.StructType
 import leo21.type.Type
 import leo21.type.isStatic
 import leo21.type.linkOrNull
 import leo21.type.scriptLine
 
-fun script(value: Value<Prim>, type: Type): Script =
-	when (type) {
-		is StructType -> script(value, type.struct)
-		is ChoiceType -> script(scriptLine(value, type.choice))
-		is RecursiveType -> TODO()
-		is RecurseType -> TODO()
-	}
-
-fun script(value: Value<Prim>, struct: Struct): Script =
+fun script(value: Value<Prim>, struct: Type): Script =
 	struct.linkOrNull
 		?.let { (lhsStruct, rhsLine) ->
 			if (lhsStruct.isStatic)
@@ -67,7 +57,10 @@ fun scriptLine(value: Value<Prim>, line: Line): ScriptLine =
 		StringLine -> line(literal(value.native.string))
 		NumberLine -> line(literal(value.native.number))
 		is FieldLine -> scriptLine(value, line.field)
+		is ChoiceLine -> scriptLine(value, line.choice)
 		is ArrowLine -> line.arrow.scriptLine
+		is RecursiveLine -> TODO()
+		is RecurseLine -> TODO()
 	}
 
 fun scriptLine(value: Value<Prim>, field: Field): ScriptLine =

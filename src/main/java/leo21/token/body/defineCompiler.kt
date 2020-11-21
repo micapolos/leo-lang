@@ -25,7 +25,6 @@ import leo21.token.type.compiler.DefineCompilerTypeParent
 import leo21.token.type.compiler.TypeCompiler
 import leo21.type.Line
 import leo21.type.Type
-import leo21.type.struct
 import leo21.type.type
 
 data class DefineCompiler(
@@ -106,7 +105,7 @@ fun DefineCompiler.plus(line: Line): DefineCompiler =
 	copy(module = module.plus(line))
 
 fun DefineCompiler.plus(type: Type): Processor =
-	DefineCompilerProcessor(plus(type.struct.lineStack.onlyOrNull!!))
+	DefineCompilerProcessor(plus(type.lineStack.onlyOrNull!!))
 
 fun DefineCompiler.Parent.plus(module: Module): Processor =
 	when (this) {

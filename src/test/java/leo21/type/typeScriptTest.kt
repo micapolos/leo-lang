@@ -30,7 +30,7 @@ class TypeScriptTest {
 
 	@Test
 	fun choice_() {
-		type(choice(stringLine, numberLine))
+		type(line(choice(stringLine, numberLine)))
 			.script
 			.assertEqualTo(
 				script(

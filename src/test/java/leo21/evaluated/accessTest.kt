@@ -5,6 +5,7 @@ import leo.base.assertNull
 import leo21.evaluator.accessOrNull
 import leo21.evaluator.emptyChoiceEvaluated
 import leo21.evaluator.evaluated
+import leo21.evaluator.lineEvaluated
 import leo21.evaluator.lineTo
 import leo21.evaluator.plusChosen
 import leo21.evaluator.plusNotChosen
@@ -45,7 +46,7 @@ class AccessTest {
 		emptyChoiceEvaluated
 			.plusChosen("x" lineTo evaluated(10.0))
 			.plusNotChosen("y" lineTo numberType)
-			.evaluated
+			.lineEvaluated
 			.accessOrNull("x")
 			.assertEqualTo(evaluated("x" lineTo evaluated(10.0)))
 	}
@@ -55,7 +56,7 @@ class AccessTest {
 		emptyChoiceEvaluated
 			.plusNotChosen("x" lineTo numberType)
 			.plusChosen("y" lineTo evaluated(20.0))
-			.evaluated
+			.lineEvaluated
 			.accessOrNull("y")
 			.assertEqualTo(evaluated("y" lineTo evaluated(20.0)))
 	}
@@ -65,7 +66,7 @@ class AccessTest {
 		emptyChoiceEvaluated
 			.plusChosen("x" lineTo evaluated(10.0))
 			.plusNotChosen("y" lineTo numberType)
-			.evaluated
+			.lineEvaluated
 			.accessOrNull("y")
 			.assertNull
 	}
@@ -75,7 +76,7 @@ class AccessTest {
 		emptyChoiceEvaluated
 			.plusNotChosen("x" lineTo numberType)
 			.plusChosen("y" lineTo evaluated(20.0))
-			.evaluated
+			.lineEvaluated
 			.accessOrNull("x")
 			.assertNull
 	}
@@ -85,7 +86,7 @@ class AccessTest {
 		emptyChoiceEvaluated
 			.plusNotChosen("x" lineTo numberType)
 			.plusChosen("y" lineTo evaluated(20.0))
-			.evaluated
+			.lineEvaluated
 			.accessOrNull("z")
 			.assertNull
 	}

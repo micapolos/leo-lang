@@ -6,9 +6,9 @@ import leo14.lambda.fn
 import leo14.lambda.nativeTerm
 import leo14.lambda.term
 import leo21.prim.prim
-import leo21.type.allowDuplicateFields
 import leo21.type.arrowTo
 import leo21.type.choice
+import leo21.type.line
 import leo21.type.numberType
 import leo21.type.lineTo
 import leo21.type.recurse
@@ -39,16 +39,6 @@ class CompiledTest {
 	}
 
 	@Test
-	fun struct_duplicateField() {
-		if (!allowDuplicateFields)
-			assertFails {
-				compiled(
-					"x" lineTo compiled(10.0),
-					"x" lineTo compiled(20.0))
-			}
-	}
-
-	@Test
 	fun choice_ok() {
 		choiceTyped {
 			this
@@ -57,21 +47,10 @@ class CompiledTest {
 		}.type
 			.assertEqualTo(
 				type(
-					choice(
-						"number" lineTo numberType,
-						"text" lineTo stringType)))
-	}
-
-	@Test
-	fun choice_duplicateField() {
-		if (!allowDuplicateFields)
-			assertFails {
-				choiceTyped {
-					this
-						.plusNotChosen("number" lineTo numberType)
-						.plusChosen("number" lineTo compiled("foo"))
-				}
-			}
+					line(
+						choice(
+							"number" lineTo numberType,
+							"text" lineTo stringType))))
 	}
 
 	@Test
@@ -105,9 +84,10 @@ class CompiledTest {
 			.type
 			.assertEqualTo(
 				type(
-					choice(
-						"number" lineTo numberType,
-						"text" lineTo stringType)))
+					line(
+						choice(
+							"number" lineTo numberType,
+							"text" lineTo stringType))))
 	}
 
 	@Test
@@ -296,11 +276,11 @@ class CompiledTest {
 	@Test
 	fun recursiveAccessOrNull() {
 		nativeTerm(prim("foo"))
-			.of(type(recursive(type("foo" lineTo type("bar" lineTo type(recurse(0)))))))
+			.of(type(line(recursive("foo" lineTo type("bar" lineTo type(line(recurse(0))))))))
 			.accessOrNull("foo")
 			.assertEqualTo(
 				nativeTerm(prim("foo"))
-					.of(type(recursive(type("bar" lineTo type("foo" lineTo type(recurse(0)))))))
+					.of(type(line(recursive("bar" lineTo type("foo" lineTo type(line(recurse(0))))))))
 			)
 	}
 

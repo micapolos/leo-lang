@@ -6,20 +6,15 @@ import leo13.fold
 import leo13.reverse
 import leo21.type.ArrowLine
 import leo21.type.Choice
-import leo21.type.ChoiceType
-import leo21.type.NumberLine
+import leo21.type.ChoiceLine
 import leo21.type.Field
 import leo21.type.FieldLine
 import leo21.type.Line
-import leo21.type.RecurseType
-import leo21.type.RecursiveType
+import leo21.type.NumberLine
 import leo21.type.StringLine
-import leo21.type.Struct
-import leo21.type.StructType
 import leo21.type.Type
 import leo21.type.line
 import leo21.type.linkOrNull
-import leo21.type.struct
 import leo21.type.type
 
 data class Cast<out T : Any>(val t: T, val isIdentity: Boolean)
@@ -27,37 +22,21 @@ data class Cast<out T : Any>(val t: T, val isIdentity: Boolean)
 val <T : Any> T.identityCast get() = Cast(this, isIdentity = true)
 val <T : Any> T.nonIdentityCast get() = Cast(this, isIdentity = false)
 
+fun ChoiceCompiled.castOrNull(rhs: Line): Cast<LineCompiled>? =
+	notNullIf(rhs is ChoiceLine && choice == rhs.choice) {
+		line(this).identityCast
+	}
+
 fun Compiled.castOrNull(rhs: Type): Cast<Compiled>? =
-	switch(
-		{ it.castOrNull(rhs) },
-		{ it.castOrNull(rhs) })
-
-fun StructCompiled.castOrNull(rhs: Type): Cast<Compiled>? =
-	when (rhs) {
-		is StructType -> castOrNull(rhs.struct)?.let { cast ->
-			if (cast.isIdentity) compiled(this).identityCast
-			else compiled(cast.t).nonIdentityCast
-		}
-		is ChoiceType -> onlyLineOrNull?.castOrNull(rhs.choice)
-		is RecursiveType -> null
-		is RecurseType -> null
-	}
-
-fun ChoiceCompiled.castOrNull(rhs: Type): Cast<Compiled>? =
-	notNullIf(rhs is ChoiceType && choice == rhs.choice) {
-		compiled(this).identityCast
-	}
-
-fun StructCompiled.castOrNull(rhs: Struct): Cast<StructCompiled>? =
 	linkOrNull.let { compiledLinkOrNull ->
-		rhs.linkOrNull.let { structLinkOrNull ->
+		rhs.linkOrNull.let { typeLinkOrNull ->
 			if (compiledLinkOrNull == null)
-				if (structLinkOrNull == null) identityCast
+				if (typeLinkOrNull == null) identityCast
 				else null
 			else
-				if (structLinkOrNull == null) null
-				else compiledLinkOrNull.lineCompiled.castOrNull(structLinkOrNull.line)?.let { lineCast ->
-					compiledLinkOrNull.structCompiled.castOrNull(structLinkOrNull.struct)?.let { structCast ->
+				if (typeLinkOrNull == null) null
+				else compiledLinkOrNull.lineCompiled.castOrNull(typeLinkOrNull.line)?.let { lineCast ->
+					compiledLinkOrNull.compiled.castOrNull(typeLinkOrNull.type)?.let { structCast ->
 						if (lineCast.isIdentity && structCast.isIdentity) identityCast
 						else structCast.t.plus(lineCast.t).nonIdentityCast
 					}
@@ -65,16 +44,17 @@ fun StructCompiled.castOrNull(rhs: Struct): Cast<StructCompiled>? =
 		}
 	}
 
-fun LineCompiled.castOrNull(choice: Choice): Cast<Compiled>? =
+fun LineCompiled.castOrNull(choice: Choice): Cast<LineCompiled>? =
 	emptyChoiceCompiled.fold(choice.lineStack.reverse) { choiceLine ->
 		if (line == choiceLine) plusChosen(this@castOrNull)
 		else plusNotChosen(choiceLine)
 	}.let { choiceCompiled ->
-		choiceCompiled.termOrNull?.of(type(choiceCompiled.choice))?.nonIdentityCast
+		choiceCompiled.termOrNull?.of(line(choiceCompiled.choice))?.nonIdentityCast
 	}
 
 fun LineCompiled.castOrNull(rhs: Line): Cast<LineCompiled>? =
-	switch(
+	if (rhs is ChoiceLine) castOrNull(rhs.choice)
+	else switch(
 		{ stringCompiled ->
 			notNullIf(rhs is StringLine) { identityCast }
 		},
@@ -87,6 +67,9 @@ fun LineCompiled.castOrNull(rhs: Line): Cast<LineCompiled>? =
 				else fieldCast.t.lineCompiled.nonIdentityCast
 			}
 			else null
+		},
+		{ choiceCompiled ->
+			notNullIf(rhs is ChoiceLine) { identityCast }
 		},
 		{ arrowCompiled ->
 			notNullIf(rhs is ArrowLine && arrowCompiled.arrow == rhs.arrow) { identityCast }

@@ -14,7 +14,7 @@ import leo21.compiled.castOrNull
 import leo21.type.Line
 import leo21.type.fieldOrNull
 import leo21.type.isEmpty
-import leo21.type.name
+import leo21.type.matches
 import leo21.type.scriptLine
 
 data class Lines(val lineStack: Stack<Line>) : Scriptable() {
@@ -35,7 +35,7 @@ fun Lines.cast(lineCompiled: LineCompiled): LineCompiled =
 fun Lines.resolveOrNull(line: Line): Line? =
 	line.fieldOrNull?.let { field ->
 		ifOrNull(field.rhs.isEmpty) {
-			lineStack.first { it.name == field.name }
+			lineStack.first { it.matches(field.name) }
 		}
 	}
 

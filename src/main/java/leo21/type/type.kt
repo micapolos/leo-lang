@@ -2,57 +2,33 @@ package leo21.type
 
 import leo.base.notNullOrError
 import leo.base.orNullIf
+import leo13.Link
+import leo13.Stack
+import leo13.isEmpty
+import leo13.linkOrNull
+import leo13.linkTo
 import leo13.onlyOrNull
+import leo13.push
+import leo13.stack
 import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.lineTo
 
-sealed class Type : Scriptable() {
+data class Type(val lineStack: Stack<Line>) : Scriptable() {
+	override fun toString() = super.toString()
 	override val reflectScriptLine: ScriptLine get() = "type" lineTo script
 }
 
-data class StructType(val struct: Struct) : Type() {
-	override fun toString() = super.toString()
-}
+val Type.linkOrNull: Link<Type, Line>?
+	get() =
+		lineStack.linkOrNull?.run { stack.type linkTo value }
 
-data class ChoiceType(val choice: Choice) : Type() {
-	override fun toString() = super.toString()
-}
+val Link<Type, Line>.type get() = tail
+val Link<Type, Line>.line get() = head
 
-data class RecursiveType(val recursive: Recursive) : Type() {
-	override fun toString() = super.toString()
-}
-
-data class RecurseType(val recurse: Recurse) : Type() {
-	override fun toString() = super.toString()
-}
-
-inline fun <R> Type.switch(
-	structFn: (Struct) -> R,
-	choiceFn: (Choice) -> R,
-	recursiveFn: (Recursive) -> R,
-	recurseFn: (Recurse) -> R
-) =
-	when (this) {
-		is StructType -> structFn(struct)
-		is ChoiceType -> choiceFn(choice)
-		is RecursiveType -> recursiveFn(recursive)
-		is RecurseType -> recurseFn(recurse)
-	}
-
-fun type(struct: Struct): Type = StructType(struct)
-fun type(choice: Choice): Type = ChoiceType(choice)
-fun type(recursive: Recursive): Type = RecursiveType(recursive)
-fun type(recurse: Recurse): Type = RecurseType(recurse)
-
-val Type.structOrNull get() = (this as? StructType)?.struct
-val Type.choiceOrNull get() = (this as? ChoiceType)?.choice
-
-val Type.struct get() = structOrNull.notNullOrError("not struct")
-val Type.choice get() = choiceOrNull.notNullOrError("not choice")
-
-fun Type.plus(line: Line): Type = type(struct.plus(line))
-fun type(vararg lines: Line) = type(struct(*lines))
+val Stack<Line>.type get() = Type(this)
+fun Type.plus(line: Line): Type = lineStack.push(line).type
+fun type(vararg lines: Line) = stack(*lines).type
 
 val stringType = type(stringLine)
 val numberType = type(numberLine)
@@ -62,6 +38,6 @@ fun Type.make(name: String): Type =
 
 val Type.onlyNameOrNull: String?
 	get() =
-		structOrNull?.lineStack?.onlyOrNull?.fieldOrNull?.orNullIf { rhs != type() }?.name
+		lineStack.onlyOrNull?.fieldOrNull?.orNullIf { rhs != type() }?.name
 
-val Type.isEmpty: Boolean get() = this == type()
+val Type.isEmpty: Boolean get() = lineStack.isEmpty

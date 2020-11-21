@@ -13,23 +13,13 @@ import leo14.scriptLine
 import leo21.token.strings.type
 import leo21.token.strings.typeKeyword
 
-
 val Type.printScript: Script
-	get() =
-		when (this) {
-			is StructType -> struct.printScript
-			is ChoiceType -> choice.printScript
-			is RecursiveType -> recursive.printScript
-			is RecurseType -> recurse.printScript
-		}
-
-val Struct.printScript: Script
 	get() =
 		lineStack.printScript
 
-val Choice.printScript: Script
+val Choice.printScriptLine: ScriptLine
 	get() =
-		script("choice".typeKeyword lineTo lineStack.printScript)
+		"choice".typeKeyword lineTo lineStack.printScript
 
 val Stack<Line>.printScript
 	get() =
@@ -41,7 +31,10 @@ val Line.printScriptLine: ScriptLine
 			StringLine -> "text".typeKeyword.scriptLine
 			NumberLine -> "number".typeKeyword.scriptLine
 			is FieldLine -> field.printScriptLine
+			is ChoiceLine -> choice.printScriptLine
 			is ArrowLine -> arrow.printScriptLine
+			is RecursiveLine -> recursive.printScriptLine
+			is RecurseLine -> recurse.printScriptLine
 		}
 
 val Field.printScriptLine: ScriptLine
@@ -56,10 +49,10 @@ val Arrow.printScript: Script
 	get() =
 		lhs.printScript.plus("does".typeKeyword lineTo rhs.printScript)
 
-val Recursive.printScript: Script
+val Recursive.printScriptLine: ScriptLine
 	get() =
-		script("recursive".typeKeyword lineTo type.printScript)
+		"recursive".typeKeyword lineTo script(line.printScriptLine)
 
-val Recurse.printScript: Script
+val Recurse.printScriptLine: ScriptLine
 	get() =
-		script("recurse".typeKeyword lineTo script(literal(index)))
+		"recurse".typeKeyword lineTo script(literal(index))

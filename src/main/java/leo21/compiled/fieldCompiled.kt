@@ -10,7 +10,8 @@ import leo21.prim.Prim
 import leo21.type.Choice
 import leo21.type.Field
 import leo21.type.fieldTo
-import leo21.type.name
+import leo21.type.matches
+import leo21.type.nameOrNull
 
 data class FieldCompiled(val term: Term<Prim>, val field: Field)
 
@@ -22,7 +23,7 @@ infix fun String.fieldTo(compiled: Compiled) =
 infix fun Choice.compiled(compiled: LineCompiled): Compiled =
 	choiceTyped {
 		fold(lineStack.reverse) { case ->
-			if (compiled.line.name == case.name) plusChosen(LineCompiled(arg(0), compiled.line))
+			if (compiled.line.matches(case.nameOrNull!!)) plusChosen(LineCompiled(arg(0), compiled.line))
 			else plusNotChosen(case)
 		}
 	}.run { fn(term).invoke(compiled.term).of(type) }

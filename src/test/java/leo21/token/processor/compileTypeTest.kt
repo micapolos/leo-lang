@@ -35,7 +35,7 @@ class CompileTypeTest {
 				"text" lineTo script(),
 				"number" lineTo script()))
 			.compileType
-			.assertEqualTo(type(choice(stringLine, numberLine)))
+			.assertEqualTo(type(line(choice(stringLine, numberLine))))
 	}
 
 	@Test

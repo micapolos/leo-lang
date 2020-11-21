@@ -17,15 +17,16 @@ import leo21.compiled.compiled
 import leo21.compiled.end
 import leo21.compiled.of
 import leo21.token.processor.BodyCompilerProcessor
-import leo21.token.processor.SwitchCompilerProcessor
 import leo21.token.processor.Processor
+import leo21.token.processor.SwitchCompilerProcessor
 import leo21.type.Field
 import leo21.type.Line
 import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.fieldTo
 import leo21.type.line
-import leo21.type.name
+import leo21.type.matches
+import leo21.type.nameOrNull
 import leo21.type.type
 
 // TODO: This class is terrible. Refactor without using SwitchCompiled.
@@ -46,12 +47,12 @@ fun SwitchCompiler.plus(token: Token): Processor =
 				.linkOrNull { choice }
 				.orError { expected { choice } }
 				.let { choiceLink ->
-					if (token.begin.string == choiceLink.line.name)
+					if (choiceLink.line.matches(token.begin.string))
 						BodyCompilerProcessor(
 							BodyCompiler(
 								BodyCompiler.Parent.SwitchCase(this, choiceLink.line),
 								module.begin(type(choiceLink.line).given).body(compiled())))
-					else error { expected { case { x(choiceLink.line.name) } } }
+					else error { expected { case { x(token.begin.string) } } }
 				}
 		is EndToken -> BodyCompilerProcessor(parentBodyCompiler.set(switchCompiled.end))
 	}
@@ -59,6 +60,6 @@ fun SwitchCompiler.plus(token: Token): Processor =
 fun SwitchCompiler.plus(line: Line, body: Body): Processor =
 	SwitchCompilerProcessor(
 		copy(
-			switchCompiled = switchCompiled.case(line.name,
+			switchCompiled = switchCompiled.case(line.nameOrNull!!,
 				fn(body.compiled.term).of(type(line) arrowTo body.compiled.type)),
-			caseFieldStack = caseFieldStack.push(line.name fieldTo body.compiled.type)))
+			caseFieldStack = caseFieldStack.push(line.nameOrNull!! fieldTo body.compiled.type)))

@@ -1,7 +1,6 @@
 package leo21.compiled
 
 import leo.base.assertEqualTo
-import leo21.evaluator.evaluated
 import kotlin.test.Test
 
 class CompiledResolveTest {

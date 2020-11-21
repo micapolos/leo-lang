@@ -3,7 +3,6 @@ package leo21.type
 import leo.base.fold
 import leo13.Link
 import leo13.Stack
-import leo13.any
 import leo13.linkOrNull
 import leo13.linkTo
 import leo13.push
@@ -15,8 +14,7 @@ val Stack<Line>.choice get() = Choice(this)
 val emptyChoice = Choice(stack())
 
 fun Choice.plus(line: Line) =
-	if (!allowDuplicateFields && lineStack.any { name == line.name }) error("duplicate case")
-	else Choice(lineStack.push(line))
+	Choice(lineStack.push(line))
 
 fun choice(vararg lines: Line) = emptyChoice.fold(lines) { plus(it) }
 

@@ -13,20 +13,11 @@ import leo14.scriptLine
 
 val Type.script: Script
 	get() =
-		when (this) {
-			is StructType -> struct.script
-			is ChoiceType -> choice.script
-			is RecursiveType -> recursive.script
-			is RecurseType -> recurse.script
-		}
-
-val Struct.script: Script
-	get() =
 		lineStack.script
 
-val Choice.script: Script
+val Choice.scriptLine: ScriptLine
 	get() =
-		script("choice" lineTo lineStack.script)
+		"choice" lineTo lineStack.script
 
 val Stack<Line>.script
 	get() =
@@ -38,7 +29,10 @@ val Line.scriptLine: ScriptLine
 			StringLine -> "text".scriptLine
 			NumberLine -> "number".scriptLine
 			is FieldLine -> field.scriptLine
+			is ChoiceLine -> choice.scriptLine
 			is ArrowLine -> arrow.scriptLine
+			is RecursiveLine -> recursive.scriptLine
+			is RecurseLine -> recurse.scriptLine
 		}
 
 val Field.scriptLine: ScriptLine
@@ -53,10 +47,10 @@ val Arrow.script: Script
 	get() =
 		lhs.script.plus("does" lineTo rhs.script)
 
-val Recursive.script: Script
+val Recursive.scriptLine: ScriptLine
 	get() =
-		script("recursive" lineTo type.script)
+		"recursive" lineTo script(line.scriptLine)
 
-val Recurse.script: Script
+val Recurse.scriptLine: ScriptLine
 	get() =
-		script("recurse" lineTo script(literal(index)))
+		"recurse" lineTo script(literal(index))

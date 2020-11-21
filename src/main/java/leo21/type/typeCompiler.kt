@@ -16,7 +16,7 @@ fun TypeCompiler.plus(scriptLine: ScriptLine): TypeCompiler =
 fun TypeCompiler.plusChoiceOrNull(scriptLine: ScriptLine): TypeCompiler? =
 	ifOrNull(type == type()) {
 		scriptLine.match("choice") { rhs ->
-			copy(type = type(rhs.choice))
+			copy(type = type.plus(line(rhs.choice)))
 		}
 	}
 

@@ -26,7 +26,7 @@ fun TypeParent.plus(type: Type): Processor =
 		is ChoiceNameTypeParent -> ChoiceCompilerProcessor(choiceCompiler.plus(name, type))
 		is ArrowDoingTypeParent -> ArrowCompilerProcessor(arrowCompiler.plusDoing(lhs, type))
 		is ArrowNameTypeParent -> ArrowCompilerProcessor(arrowCompiler.set(lhs.plus(name compiledLineTo type)))
-		is RecursiveTypeParent -> typeCompiler.process(type(recursive(type)))
+		is RecursiveTypeParent -> TODO()//typeCompiler.process(type(recursive(type)))
 		is FunctionCompilerTypeParent -> functionCompiler.plus(type)
 		is DefineCompilerTypeParent -> defineCompiler.plus(type)
 	}

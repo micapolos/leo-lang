@@ -13,15 +13,19 @@ import leo21.compiled.of
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.type.ArrowLine
-import leo21.type.NumberLine
+import leo21.type.ChoiceLine
 import leo21.type.FieldLine
 import leo21.type.Line
+import leo21.type.NumberLine
+import leo21.type.RecurseLine
+import leo21.type.RecursiveLine
 import leo21.type.StringLine
-import leo21.type.Type
-import leo21.type.numberLine
 import leo21.type.fieldOrNull
 import leo21.type.isEmpty
+import leo21.type.line
 import leo21.type.lineTo
+import leo21.type.numberLine
+import leo21.type.resolve
 import leo21.type.stringLine
 
 data class LineEvaluated(val value: Value<Prim>, val line: Line)
@@ -39,13 +43,17 @@ fun <R> LineEvaluated.switch(
 	stringFn: (StringEvaluated) -> R,
 	doubleFn: (DoubleEvaluated) -> R,
 	fieldFn: (FieldEvaluated) -> R,
+	choiceFn: (ChoiceEvaluated) -> R,
 	arrowFn: (ArrowEvaluated) -> R
 ): R =
 	when (line) {
 		StringLine -> stringFn(StringEvaluated(value))
 		NumberLine -> doubleFn(DoubleEvaluated(value))
 		is FieldLine -> fieldFn(FieldEvaluated(value, line.field))
+		is ChoiceLine -> choiceFn(ChoiceEvaluated(value, line.choice))
 		is ArrowLine -> arrowFn(ArrowEvaluated(value, line.arrow))
+		is RecursiveLine -> value.of(line.recursive.resolve).switch(stringFn, doubleFn, fieldFn, choiceFn, arrowFn)
+		is RecurseLine -> null!!
 	}
 
 val Literal.lineEvaluated: LineEvaluated
@@ -55,13 +63,21 @@ val Literal.lineEvaluated: LineEvaluated
 			is NumberLiteral -> number.lineEvaluated
 		}
 
+val ChoiceEvaluated.lineEvaluated: LineEvaluated
+	get() =
+		valueOrNull!! of line(choice)
+
 val LineEvaluated.fieldOrNull: FieldEvaluated?
 	get() =
-		switch({ null }, { null }, { it }, { null })
+		switch({ null }, { null }, { it }, { null }, { null })
+
+val LineEvaluated.choiceOrNull: ChoiceEvaluated?
+	get() =
+		switch({ null }, { null }, { null }, { it }, { null })
 
 val LineEvaluated.arrowOrNull: ArrowEvaluated?
 	get() =
-		switch({ null }, { null }, { null }, { it })
+		switch({ null }, { null }, { null }, { null }, { it })
 
 val LineEvaluated.onlyNameOrNull: String?
 	get() =

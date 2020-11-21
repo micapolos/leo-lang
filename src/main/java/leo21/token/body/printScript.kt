@@ -15,7 +15,7 @@ import leo21.token.evaluator.printFragment
 import leo21.token.strings.valueKeyword
 import leo21.token.type.compiler.Lines
 import leo21.type.Line
-import leo21.type.name
+import leo21.type.nameOrNull
 import leo21.type.printScript
 import leo21.type.script
 import leo21.type.scriptLine
@@ -40,7 +40,7 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 			is BodyCompiler.Parent.FunctionDoes ->
 				functionCompiler.printFragment.parent(begin("does".valueKeyword))
 			is BodyCompiler.Parent.SwitchCase ->
-				switchCompiler.printFragment.parent(begin(case.name))
+				switchCompiler.printFragment.parent(begin(case.nameOrNull!!))
 		}
 
 val SwitchCompiler.printFragment: Fragment

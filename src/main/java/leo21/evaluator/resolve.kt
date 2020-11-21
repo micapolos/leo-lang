@@ -8,8 +8,6 @@ import leo14.sinus
 import leo14.times
 import leo21.compiled.resolve
 import leo21.type.isEmpty
-import kotlin.math.cos
-import kotlin.math.sin
 
 val Evaluated.resolve: Evaluated
 	get() =
@@ -17,8 +15,8 @@ val Evaluated.resolve: Evaluated
 
 val Evaluated.resolveOrNull: Evaluated?
 	get() =
-		structOrNull?.linkOrNull?.let { link ->
-			link.tail.evaluated.run {
+		linkOrNull?.let { link ->
+			link.tail.run {
 				link.head.fieldOrNull?.let { field ->
 					if (field.rhs.type.isEmpty) resolveOrNull(field.name)
 					else resolveOrNull(field.name, field.rhs)

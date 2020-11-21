@@ -48,7 +48,7 @@ class ScriptTypeTest {
 				"number" lineTo script(),
 				"text" lineTo script()))
 			.type
-			.assertEqualTo(type(choice(numberLine, stringLine)))
+			.assertEqualTo(type(line(choice(numberLine, stringLine))))
 	}
 
 	@Test

@@ -19,10 +19,6 @@ val Script.type: Type
 	get() =
 		emptyTypeCompiler.fold(lineSeq.reverse) { plus(it) }.type
 
-val Script.struct: Struct
-	get() =
-		struct().fold(lineSeq.reverse) { plus(it.typeLine) }
-
 val Script.choice: Choice
 	get() =
 		choice().fold(lineSeq.reverse) { plus(it.typeLine) }

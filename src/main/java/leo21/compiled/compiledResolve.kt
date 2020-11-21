@@ -145,9 +145,9 @@ fun Compiled.resolveOp1OrNull(fn: (Compiled, String) -> Compiled?): Compiled? =
 	}
 
 fun Compiled.resolveOp2OrNull(fn: (Compiled, String, Compiled) -> Compiled?): Compiled? =
-	structOrNull?.linkOrNull?.let { link ->
+	linkOrNull?.let { link ->
 		link.head.fieldCompiledOrNull?.let { field ->
-			fn(compiled(link.tail), field.field.name, field.rhsCompiled)
+			fn(link.tail, field.field.name, field.rhsCompiled)
 		}
 	}
 

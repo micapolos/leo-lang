@@ -35,9 +35,10 @@ class AccessTest {
 	@Test
 	fun choice_matchFirst() {
 		type(
-			choice(
-				"x" lineTo numberType,
-				"y" lineTo stringType))
+			line(
+				choice(
+					"x" lineTo numberType,
+					"y" lineTo stringType)))
 			.accessOrNull("x")
 			.assertEqualTo(numberType)
 	}
@@ -45,9 +46,10 @@ class AccessTest {
 	@Test
 	fun choice_matchSecond() {
 		type(
-			choice(
-				"x" lineTo numberType,
-				"y" lineTo stringType))
+			line(
+				choice(
+					"x" lineTo numberType,
+					"y" lineTo stringType)))
 			.accessOrNull("y")
 			.assertEqualTo(stringType)
 	}
@@ -55,9 +57,10 @@ class AccessTest {
 	@Test
 	fun choice_mismatch() {
 		type(
-			choice(
-				"x" lineTo numberType,
-				"y" lineTo stringType))
+			line(
+				choice(
+					"x" lineTo numberType,
+					"y" lineTo stringType)))
 			.accessOrNull("z")
 			.assertNull
 	}
@@ -65,36 +68,34 @@ class AccessTest {
 	@Test
 	fun recursive_match() {
 		type(
-			recursive(
-				type(
+			line(
+				recursive(
 					"list" lineTo type(
 						"empty" lineTo type(),
-						"tail" lineTo type(recurse(0))))))
+						"tail" lineTo type(line(recurse(0)))))))
 			.accessOrNull("list")
 			.assertEqualTo(
 				type(
-					recursive(
-						type(
-							"empty" lineTo type(),
-							"tail" lineTo type(
-								"list" lineTo type(recurse(0)))))))
+					line(recursive("empty" lineTo type())),
+					line(recursive("tail" lineTo type(
+						"list" lineTo type(line(recurse(0))))))))
 	}
 
 	@Test
 	fun recursive_mismatch() {
 		type(
-			recursive(
-				type(
+			line(
+				recursive(
 					"list" lineTo type(
 						"empty" lineTo type(),
-						"tail" lineTo type(recurse(0))))))
+						"tail" lineTo type(line(recurse(0)))))))
 			.accessOrNull("foo")
 			.assertNull
 	}
 
 	@Test
 	fun recurse() {
-		type(recurse(0))
+		type(line(recurse(0)))
 			.accessOrNull("list")
 			.assertNull
 	}
