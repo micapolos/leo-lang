@@ -11,12 +11,14 @@ import leo14.lambda.invoke
 import leo14.lambda.nativeTerm
 import leo21.prim.NilPrim
 import leo21.prim.NumberCosinusPrim
+import leo21.prim.NumberEqualsNumberPrim
 import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberPrim
 import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
+import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
 import leo21.prim.nilPrim
@@ -84,6 +86,8 @@ val Prim.x_: X
 			NumberSinusPrim -> TODO()
 			NumberCosinusPrim -> TODO()
 			StringPlusStringPrim -> TODO()
+			NumberEqualsNumberPrim -> TODO()
+			StringLengthPrim -> TODO()
 		}
 
 val nilTerm = term(native(nil()))

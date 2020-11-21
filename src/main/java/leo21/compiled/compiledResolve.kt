@@ -13,8 +13,10 @@ import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
+import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.token.processor.staticCompiled
+import leo21.type.Line
 import leo21.type.Type
 import leo21.type.isEmpty
 import leo21.type.lineTo
@@ -67,8 +69,18 @@ val Compiled.resolveOrNull: Compiled?
 			?: resolveFn2OrNull(numberType, "minus", numberType, NumberMinusNumberPrim, numberType)
 			?: resolveFn2OrNull(numberType, "times", numberType, NumberTimesNumberPrim, numberType)
 			?: resolveFn2OrNull(stringType, "plus", stringType, StringPlusStringPrim, stringType)
+			?: resolveFn1OrNull(
+				stringType,
+				"count" lineTo type("characters" lineTo type()),
+				StringLengthPrim,
+				type("count" lineTo numberType))
 			?: resolveTypeOrNull
 			?: resolveMakeOrNull
+
+fun Compiled.resolveFn1OrNull(lhs: Type, line: Line, prim: Prim, result: Type): Compiled? =
+	notNullIf(type == lhs.plus(line)) {
+		fn(nativeTerm(prim).invoke(arg(0))).invoke(term).of(result)
+	}
 
 fun Compiled.resolveFn1OrNull(lhs: Type, name: String, prim: Prim, result: Type): Compiled? =
 	notNullIf(type == lhs.plus(name lineTo type())) {

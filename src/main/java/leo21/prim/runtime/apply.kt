@@ -8,18 +8,21 @@ import leo14.lambda.value.native
 import leo14.lambda.value.pair
 import leo14.lambda.value.value
 import leo14.minus
+import leo14.number
 import leo14.orError
 import leo14.plus
 import leo14.sinus
 import leo14.times
 import leo21.prim.NilPrim
 import leo21.prim.NumberCosinusPrim
+import leo21.prim.NumberEqualsNumberPrim
 import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberPrim
 import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
+import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
 import leo21.prim.number
@@ -35,9 +38,11 @@ fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 		NumberPlusNumberPrim -> rhs.apply(Prim::number, Number::plus, Prim::number, Number::prim)
 		NumberMinusNumberPrim -> rhs.apply(Prim::number, Number::minus, Prim::number, Number::prim)
 		NumberTimesNumberPrim -> rhs.apply(Prim::number, Number::times, Prim::number, Number::prim)
+		NumberEqualsNumberPrim -> TODO()
 		StringPlusStringPrim -> rhs.apply(Prim::string, String::plus, Prim::string, String::prim)
 		NumberSinusPrim -> rhs.apply(Prim::number, Number::sinus, Number::prim)
 		NumberCosinusPrim -> rhs.apply(Prim::number, Number::cosinus, Number::prim)
+		StringLengthPrim -> rhs.apply(Prim::string, String::lengthNumber, Number::prim)
 	}.orError(anyReflectScriptLine, apply(rhs.anyReflectScriptLine))
 
 fun <Lhs, Rhs, Out> Value<Prim>.apply(
@@ -56,3 +61,7 @@ fun <Lhs, Out> Value<Prim>.apply(
 	out: Out.() -> Prim
 ): Value<Prim> =
 	value(native.lhs().op().out())
+
+val String.lengthNumber: Number
+	get() =
+		length.number

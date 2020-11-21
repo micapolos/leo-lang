@@ -11,7 +11,9 @@ import leo21.prim.NumberPrim
 import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.NilPrim
+import leo21.prim.NumberEqualsNumberPrim
 import leo21.prim.Prim
+import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
 
@@ -31,6 +33,8 @@ val Prim.code: Code
 			StringPlusStringPrim -> fn2Code("string-append")
 			NumberSinusPrim -> fn1Code("sin")
 			NumberCosinusPrim -> fn1Code("cos")
+			NumberEqualsNumberPrim -> TODO()
+			StringLengthPrim -> TODO()
 		}
 
 val firstCode = code("(lambda (a) (lambda (b) a))")

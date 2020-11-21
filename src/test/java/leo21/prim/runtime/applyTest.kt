@@ -8,6 +8,7 @@ import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberTimesNumberPrim
+import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.prim
 import kotlin.math.cos
@@ -55,5 +56,13 @@ class ApplyTest {
 		StringPlusStringPrim
 			.apply(value(prim("Hello, ")).plus(value(prim("world!"))))
 			.assertEqualTo(value(prim("Hello, world!")))
+	}
+
+	@Test
+	fun stringLength() {
+		// TODO: char count?
+		StringLengthPrim
+			.apply(value(prim("Hello, world!")))
+			.assertEqualTo(value(prim("Hello, world!".lengthNumber)))
 	}
 }

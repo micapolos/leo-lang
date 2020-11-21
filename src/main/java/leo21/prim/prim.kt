@@ -21,9 +21,11 @@ sealed class Prim : Scriptable() {
 				NumberPlusNumberPrim -> script("number" lineTo script(), "plus" lineTo script("number"))
 				NumberMinusNumberPrim -> script("number" lineTo script(), "minus" lineTo script("number"))
 				NumberTimesNumberPrim -> script("number" lineTo script(), "times" lineTo script("number"))
+				NumberEqualsNumberPrim -> script("number" lineTo script(), "equals" lineTo script("number"))
 				StringPlusStringPrim -> script("string" lineTo script(), "plus" lineTo script("string"))
 				NumberSinusPrim -> script("number" lineTo script(), "sinus" lineTo script())
 				NumberCosinusPrim -> script("number" lineTo script(), "cosinus" lineTo script())
+				StringLengthPrim -> script("string" lineTo script(), "length" lineTo script())
 			}
 }
 
@@ -40,9 +42,11 @@ data class NumberPrim(val number: Number) : Prim() {
 object NumberPlusNumberPrim : Prim()
 object NumberMinusNumberPrim : Prim()
 object NumberTimesNumberPrim : Prim()
+object NumberEqualsNumberPrim : Prim()
 object NumberSinusPrim : Prim()
 object NumberCosinusPrim : Prim()
 object StringPlusStringPrim : Prim()
+object StringLengthPrim : Prim()
 
 val nilPrim: Prim = NilPrim
 val Prim.string get() = (this as StringPrim).string
