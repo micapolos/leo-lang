@@ -107,7 +107,7 @@ class EvaluateTest {
 			.invoke(fn(fn(nativeTerm(10))))
 			.value
 			.function
-			.term
+			.bodyTerm
 			.assertEqualTo(nativeTerm(10))
 	}
 }
