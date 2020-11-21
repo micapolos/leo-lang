@@ -94,4 +94,4 @@ val EvaluatorNode.rootEvaluator: Evaluator
 		else evaluator
 
 fun EvaluatorNode.apply(evaluator: Evaluator): EvaluatorNode =
-	copy(evaluator = evaluator.apply(evaluator))
+	copy(evaluator = this.evaluator.apply(evaluator))

@@ -42,6 +42,9 @@ fun <T> Value<T>.scriptLine(nativeScriptLine: T.() -> ScriptLine): ScriptLine =
 fun <T> value(native: T): Value<T> = NativeValue(native)
 fun <T> value(function: Function<T>): Value<T> = FunctionValue(function)
 
+val <T> T.nativeValue: Value<T> get() = value(this)
+val <T> Function<T>.value: Value<T> get() = value(this)
+
 val <T> Value<T>.native: T get() = nativeOrNull.orError(anyReflectScriptLine, native())
 val <T> Value<T>.function: Function<T> get() = functionOrNull.orError(anyReflectScriptLine, function())
 

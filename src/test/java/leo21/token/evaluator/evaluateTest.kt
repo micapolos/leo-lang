@@ -36,7 +36,9 @@ class EvaluateTest {
 				does { text("ok") }
 			}
 		}.assertEqualTo(
-			value(scope<Prim>().function(nativeTerm(prim("ok"))))
+			scope<Prim>()
+				.function(nativeTerm(prim("ok")))
+				.value
 				.of(type(line(numberType arrowTo stringType))))
 	}
 

@@ -9,7 +9,9 @@ import leo13.stack
 import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.anyReflectScriptLine
+import leo14.lambda.value.Scope
 import leo14.lambda.value.Value
+import leo14.lambda.value.at
 import leo14.reflectOrEmptyScriptLine
 import leo21.compiled.Compiled
 import leo21.compiled.resolve
@@ -31,9 +33,9 @@ fun Bindings.resolveOrNull(compiled: Compiled): Compiled? =
 		value.resolveOrNull(index, compiled)
 	}
 
-fun Bindings.resolveOrNull(evaluated: Evaluated, fn: (Int) -> Value<Prim>): Evaluated? =
+fun Bindings.resolveOrNull(scope: Scope<Prim>, evaluated: Evaluated): Evaluated? =
 	bindingStack.seq.indexed.mapFirstOrNull {
-		value.resolveOrNull(fn(index), evaluated)
+		value.resolveOrNull(scope.at(index), evaluated)
 	}
 
 fun Bindings.resolve(compiled: Compiled): Compiled =

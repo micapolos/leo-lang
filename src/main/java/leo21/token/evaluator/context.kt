@@ -5,7 +5,6 @@ import leo13.reverse
 import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.lambda.value.Scope
-import leo14.lambda.value.at
 import leo14.lambda.value.emptyScope
 import leo14.lambda.value.push
 import leo14.lineTo
@@ -13,6 +12,7 @@ import leo14.script
 import leo21.compiled.Compiled
 import leo21.evaluator.Evaluated
 import leo21.evaluator.EvaluatedGiven
+import leo21.evaluator.resolve
 import leo21.prim.Prim
 import leo21.token.body.Bindings
 import leo21.token.body.Definition
@@ -52,7 +52,7 @@ fun Context.resolve(compiled: Compiled): Evaluated =
 	scope.evaluated(bindings.resolve(compiled))
 
 fun Context.resolve(evaluated: Evaluated): Evaluated =
-	bindings.resolveOrNull(evaluated) { index -> scope.at(index) } ?: evaluated
+	bindings.resolveOrNull(scope, evaluated) ?: evaluated.resolve
 
 val Context.beginModule: Module
 	get() =
