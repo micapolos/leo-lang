@@ -88,4 +88,7 @@ val Evaluated.number: Number get() = numberOrNull!!
 val Evaluated.string: String get() = stringOrNull!!
 
 fun Evaluated.apply(evaluated: Evaluated): Evaluated =
-	structOrNull?.onlyLineOrNull?.arrowOrNull?.apply(evaluated)!!
+	structOrNull!!
+		.onlyLineOrNull!!
+		.arrowOrNull!!
+		.apply(evaluated)

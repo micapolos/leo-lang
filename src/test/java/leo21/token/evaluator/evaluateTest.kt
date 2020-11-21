@@ -1,8 +1,22 @@
 package leo21.token.evaluator
 
 import leo.base.assertEqualTo
+import leo14.lambda.nativeTerm
+import leo14.lambda.value.function
+import leo14.lambda.value.scope
+import leo14.lambda.value.value
 import leo15.dsl.*
+import leo21.compiled.compiled
 import leo21.evaluator.evaluated
+import leo21.evaluator.of
+import leo21.prim.Prim
+import leo21.prim.prim
+import leo21.token.body.functionDefinition
+import leo21.type.arrowTo
+import leo21.type.line
+import leo21.type.numberType
+import leo21.type.stringType
+import leo21.type.type
 import kotlin.test.Test
 
 class EvaluateTest {
@@ -21,7 +35,9 @@ class EvaluateTest {
 				number
 				does { text("ok") }
 			}
-		}.assertEqualTo(evaluated())
+		}.assertEqualTo(
+			value(scope<Prim>().function(nativeTerm(prim("ok"))))
+				.of(type(line(numberType arrowTo stringType))))
 	}
 
 	@Test
@@ -37,13 +53,13 @@ class EvaluateTest {
 
 	@Test
 	fun defineFunction() {
-		evaluated {
+		evaluator {
 			define {
 				function {
 					number
 					does { text("ok") }
 				}
 			}
-		}.assertEqualTo(null)
+		}.assertEqualTo(emptyEvaluator.plus(functionDefinition(numberType, compiled("ok"))))
 	}
 }

@@ -4,8 +4,8 @@ import leo13.fold
 import leo13.reverse
 import leo14.ScriptLine
 import leo14.Scriptable
-import leo14.anyReflectScriptLine
 import leo14.lambda.value.Scope
+import leo14.lambda.value.at
 import leo14.lambda.value.emptyScope
 import leo14.lambda.value.push
 import leo14.lineTo
@@ -13,7 +13,6 @@ import leo14.script
 import leo21.compiled.Compiled
 import leo21.evaluator.Evaluated
 import leo21.evaluator.EvaluatedGiven
-import leo21.evaluator.compiled
 import leo21.prim.Prim
 import leo21.token.body.Bindings
 import leo21.token.body.Definition
@@ -24,6 +23,7 @@ import leo21.token.body.emptyDefinitions
 import leo21.token.body.given
 import leo21.token.body.plus
 import leo21.token.body.resolve
+import leo21.token.body.resolveOrNull
 import leo21.token.body.value
 import leo21.token.type.compiler.Lines
 import leo21.token.type.compiler.emptyLines
@@ -52,7 +52,7 @@ fun Context.resolve(compiled: Compiled): Evaluated =
 	scope.evaluated(bindings.resolve(compiled))
 
 fun Context.resolve(evaluated: Evaluated): Evaluated =
-	scope.evaluated(bindings.resolve(evaluated.compiled))
+	bindings.resolveOrNull(evaluated) { index -> scope.at(index) } ?: evaluated
 
 val Context.beginModule: Module
 	get() =

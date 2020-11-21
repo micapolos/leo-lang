@@ -9,9 +9,13 @@ import leo13.stack
 import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.anyReflectScriptLine
+import leo14.lambda.value.Value
 import leo14.reflectOrEmptyScriptLine
 import leo21.compiled.Compiled
 import leo21.compiled.resolve
+import leo21.evaluator.Evaluated
+import leo21.prim.Prim
+import java.lang.reflect.Type
 
 data class Bindings(val bindingStack: Stack<Binding>) : Scriptable() {
 	override val reflectScriptLine: ScriptLine
@@ -25,6 +29,11 @@ fun Bindings.plus(binding: Binding) = bindingStack.push(binding).asBindings
 fun Bindings.resolveOrNull(compiled: Compiled): Compiled? =
 	bindingStack.seq.indexed.mapFirstOrNull {
 		value.resolveOrNull(index, compiled)
+	}
+
+fun Bindings.resolveOrNull(evaluated: Evaluated, fn: (Int) -> Value<Prim>): Evaluated? =
+	bindingStack.seq.indexed.mapFirstOrNull {
+		value.resolveOrNull(fn(index), evaluated)
 	}
 
 fun Bindings.resolve(compiled: Compiled): Compiled =

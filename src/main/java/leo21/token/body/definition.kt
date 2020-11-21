@@ -49,4 +49,4 @@ val Definition.printScriptLine: ScriptLine
 
 val Definition.value: Value<Prim>
 	get() =
-		compiled.term.value
+		term.value

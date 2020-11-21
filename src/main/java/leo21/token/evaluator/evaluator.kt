@@ -17,6 +17,7 @@ import leo21.evaluator.given
 import leo21.evaluator.lineTo
 import leo21.evaluator.of
 import leo21.evaluator.plus
+import leo21.token.body.Definition
 import leo21.token.body.Module
 import leo21.type.line
 
@@ -32,7 +33,6 @@ val Evaluator.resolve: Evaluator
 	get() =
 		copy(evaluated = context.resolve(evaluated))
 
-// TODO: This is wrong
 fun Evaluator.plus(line: LineEvaluated): Evaluator =
 	copy(evaluated = evaluated.plus(line)).resolve
 
@@ -52,6 +52,9 @@ fun Evaluator.do_(evaluator: Evaluator): Evaluator =
 
 fun Evaluator.plus(module: Module): Evaluator =
 	copy(context = context.plus(module))
+
+fun Evaluator.plus(definition: Definition): Evaluator =
+	copy(context = context.plus(definition))
 
 fun Evaluator.plus(arrowCompiled: ArrowCompiled): Evaluator =
 	plus(
