@@ -2,7 +2,9 @@ package leo21.compiled
 
 import leo.base.assertEqualTo
 import leo14.lambda.arg
+import leo14.lambda.fn
 import leo14.lambda.nativeTerm
+import leo14.lambda.term
 import leo21.prim.prim
 import leo21.type.allowDuplicateFields
 import leo21.type.arrowTo
@@ -300,5 +302,12 @@ class CompiledTest {
 				nativeTerm(prim("foo"))
 					.of(type(recursive(type("bar" lineTo type("foo" lineTo type(recurse(0)))))))
 			)
+	}
+
+	@Test
+	fun arrowOrNull() {
+		compiled(line(fn(term(prim("foo"))) of (numberType arrowTo stringType)))
+			.arrowOrNull
+			.assertEqualTo(fn(term(prim("foo"))) of (numberType arrowTo stringType))
 	}
 }

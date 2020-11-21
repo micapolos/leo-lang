@@ -10,11 +10,14 @@ import leo14.lineTo
 import leo14.literal
 import leo14.script
 import leo14.typed.plus
+import leo15.dsl.*
+import leo21.compiled.apply
+import leo21.compiled.compiled
 import leo21.compiled.of
 import leo21.prim.Prim
 import leo21.prim.prim
-import leo21.type.numberType
 import leo21.type.lineTo
+import leo21.type.numberType
 import leo21.type.type
 import kotlin.test.Test
 
@@ -44,5 +47,22 @@ class CompileTest {
 			.assertEqualTo(
 				fn(arg<Prim>(0)).invoke(nativeTerm(prim(10)))
 					.of(type("given" lineTo type("x" lineTo numberType))))
+	}
+
+	@Test
+	fun apply() {
+		compiled {
+			function {
+				number
+				does { text("ok") }
+			}
+			apply { number(123) }
+		}.assertEqualTo(
+			compiled {
+				function {
+					number
+					does { text("ok") }
+				}
+			}.apply(compiled { number(123) }))
 	}
 }

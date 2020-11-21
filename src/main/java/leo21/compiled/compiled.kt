@@ -10,7 +10,9 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.script
 import leo14.lineTo
+import leo14.orError
 import leo14.plus
+import leo15.dsl.*
 import leo21.prim.Prim
 import leo21.type.ChoiceType
 import leo21.type.RecurseType
@@ -55,9 +57,11 @@ fun compiled(number: Double) = compiled(line(number))
 
 val Compiled.structOrNull: StructCompiled? get() = switch({ it }, { null })
 val Compiled.choiceOrNull: ChoiceCompiled? get() = switch({ null }, { it })
+val Compiled.arrowOrNull: ArrowCompiled? get() = structOrNull?.onlyLineOrNull?.arrowCompiledOrNull
 
 val Compiled.struct get() = structOrNull.notNullOrError("not struct")
 val Compiled.choice get() = choiceOrNull.notNullOrError("not choice")
+val Compiled.arrow get() = arrowOrNull.orError { expected { function } }
 
 fun Compiled.getOrNull(name: String): Compiled? =
 	structOrNull?.onlyLineOrNull?.rhsOrNull?.structOrNull?.lineOrNull(name)?.let { compiled(it) }
@@ -94,3 +98,6 @@ fun Compiled.reference(f: Compiled.() -> Compiled): Compiled =
 
 fun Compiled.do_(compiled: Compiled): Compiled =
 	term.do_(compiled.term).of(compiled.type)
+
+fun Compiled.apply(compiled: Compiled): Compiled =
+	arrow.invoke(compiled)

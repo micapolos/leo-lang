@@ -9,20 +9,19 @@ import leo14.Scriptable
 import leo14.Token
 import leo14.anyOptionalReflectScriptLine
 import leo14.anyReflectScriptLine
-import leo14.error
 import leo14.lineTo
 import leo14.script
 import leo14.switch
-import leo15.dsl.*
 import leo21.compiled.Compiled
 import leo21.compiled.LineCompiled
 import leo21.compiled.lineCompiled
 import leo21.compiled.lineTo
 import leo21.compiled.switch
+import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.FunctionCompilerProcessor
-import leo21.token.processor.SwitchCompilerProcessor
 import leo21.token.processor.Processor
+import leo21.token.processor.SwitchCompilerProcessor
 import leo21.token.processor.processor
 import leo21.type.Line
 import leo21.type.type
@@ -42,6 +41,7 @@ data class BodyCompiler(
 				when (this) {
 					is BodyName -> "field" lineTo script(bodyCompiler.reflectScriptLine, "name" lineTo script(name))
 					is BodyDo -> "do" lineTo script(bodyCompiler.reflectScriptLine)
+					is BodyApply -> "apply" lineTo script(bodyCompiler.reflectScriptLine)
 					is FunctionDoes -> functionCompiler.anyReflectScriptLine
 					is SwitchCase -> "switch" lineTo script(switchCompiler.anyReflectScriptLine, case.anyReflectScriptLine)
 				}
@@ -52,6 +52,10 @@ data class BodyCompiler(
 		}
 
 		data class BodyDo(val bodyCompiler: BodyCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class BodyApply(val bodyCompiler: BodyCompiler) : Parent() {
 			override fun toString() = super.toString()
 		}
 
@@ -82,7 +86,11 @@ fun BodyCompiler.plus(literal: Literal): Processor =
 
 fun BodyCompiler.plus(begin: Begin): Processor =
 	when (begin.string) {
-		"apply" -> error { not { implement } }
+		"apply" ->
+			BodyCompilerProcessor(
+				BodyCompiler(
+					BodyCompiler.Parent.BodyApply(this),
+					body.begin))
 		"define" ->
 			DefineCompilerProcessor(
 				DefineCompiler(
@@ -125,6 +133,10 @@ fun BodyCompiler.Parent.process(body: Body): Processor =
 			bodyCompiler
 				.plusDo(body)
 				.processor
+		is BodyCompiler.Parent.BodyApply ->
+			bodyCompiler
+				.apply(body.wrapCompiled)
+				.processor
 		is BodyCompiler.Parent.FunctionDoes ->
 			functionCompiler.plus(body.wrapCompiled)
 		is BodyCompiler.Parent.SwitchCase ->
@@ -142,3 +154,6 @@ fun BodyCompiler.plus(module: Module): BodyCompiler =
 
 fun BodyCompiler.plusDo(rhsBody: Body): BodyCompiler =
 	copy(body = body.do_(rhsBody))
+
+fun BodyCompiler.apply(compiled: Compiled): BodyCompiler =
+	copy(body = body.apply(compiled))

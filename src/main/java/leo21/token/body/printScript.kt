@@ -33,6 +33,8 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 				bodyCompiler.printFragment.parent(begin(name))
 			is BodyCompiler.Parent.BodyDo ->
 				bodyCompiler.printFragment.parent(begin("do"))
+			is BodyCompiler.Parent.BodyApply ->
+				bodyCompiler.printFragment.parent(begin("apply"))
 			is BodyCompiler.Parent.FunctionDoes ->
 				functionCompiler.printFragment.parent(begin("does"))
 			is BodyCompiler.Parent.SwitchCase ->

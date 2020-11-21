@@ -11,7 +11,6 @@ import leo14.lineTo
 import leo14.script
 import leo14.tokenStack
 import leo15.dsl.*
-import leo19.compiler.emptyDefineCompiler
 import leo21.compiled.Compiled
 import leo21.token.body.Body
 import leo21.token.body.BodyCompiler
@@ -21,6 +20,7 @@ import leo21.token.body.FunctionDoesCompiler
 import leo21.token.body.SwitchCompiler
 import leo21.token.body.emptyBodyCompiler
 import leo21.token.body.plus
+import leo21.token.body.wrapCompiled
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.emptyEvaluatorNode
 import leo21.token.evaluator.plus
@@ -141,4 +141,4 @@ val Processor.body: Body
 
 val Processor.compiled: Compiled
 	get() =
-		body.compiled
+		body.wrapCompiled

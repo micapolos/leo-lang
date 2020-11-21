@@ -19,7 +19,7 @@ import leo15.dsl.*
 import leo21.compiled.ArrowCompiled
 import leo21.compiled.Compiled
 import leo21.compiled.compiled
-import leo21.compiled.lineCompiled
+import leo21.compiled.line
 import leo21.compiled.of
 import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
@@ -99,7 +99,7 @@ fun FunctionCompiler.Parent.plus(arrowCompiled: ArrowCompiled): Processor =
 						arrowCompiled.arrow.lhs,
 						arrowCompiled.term.of(arrowCompiled.arrow.rhs))))
 		is FunctionCompiler.Parent.Body ->
-			BodyCompilerProcessor(bodyCompiler.plus(lineCompiled(arrowCompiled)))
+			BodyCompilerProcessor(bodyCompiler.plus(line(arrowCompiled)))
 	}
 
 fun FunctionCompiler.plus(type: Type): Processor =

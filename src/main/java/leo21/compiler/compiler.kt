@@ -20,6 +20,7 @@ import leo21.compiled.Compiled
 import leo21.compiled.LineCompiled
 import leo21.compiled.compiled
 import leo21.compiled.lineCompiled
+import leo21.compiled.line
 import leo21.compiled.lineTo
 import leo21.compiled.make
 import leo21.compiled.plus
@@ -77,7 +78,7 @@ fun Compiler.plusDo(rhs: Compiled): Compiler =
 			rhs.type))
 
 fun Compiler.plusFunction(script: Script): Compiler =
-	setBody(compiled.plus(lineCompiled(bindings.arrowTyped(script))))
+	setBody(compiled.plus(line(bindings.arrowTyped(script))))
 
 fun Compiler.plusMake(script: Script): Compiler =
 	setBody(compiled.make(script.onlyStringOrNull.notNullOrError("make syntax error")))

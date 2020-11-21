@@ -1,7 +1,12 @@
 package leo21.token.body
 
+import leo14.ScriptLine
+import leo14.Scriptable
+import leo14.lineTo
+import leo14.script
 import leo21.compiled.Compiled
 import leo21.compiled.LineCompiled
+import leo21.compiled.apply
 import leo21.compiled.compiled
 import leo21.compiled.do_
 import leo21.compiled.plus
@@ -11,7 +16,10 @@ import leo21.token.type.compiler.cast
 data class Body(
 	val module: Module,
 	val compiled: Compiled
-)
+) : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "body" lineTo script(module.reflectScriptLine, compiled.reflectScriptLine)
+}
 
 fun Module.body(compiled: Compiled) = Body(this, compiled)
 val emptyBody = emptyModule.body(compiled())
@@ -47,3 +55,6 @@ fun Body.plus(module: Module) =
 
 fun Body.do_(body: Body): Body =
 	set(compiled.do_(body.wrapCompiled))
+
+fun Body.apply(rhs: Compiled): Body =
+	set(compiled.apply(rhs))

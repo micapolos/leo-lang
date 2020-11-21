@@ -37,7 +37,7 @@ fun <R> LineCompiled.switch(
 fun line(string: String) = LineCompiled(term(prim(string)), stringLine)
 fun line(double: Double) = LineCompiled(term(prim(double)), numberLine)
 infix fun String.lineTo(rhs: Compiled) = LineCompiled(rhs.term, this lineTo rhs.type)
-fun lineCompiled(arrowCompiled: ArrowCompiled) = LineCompiled(arrowCompiled.term, line(arrowCompiled.arrow))
+fun line(arrowCompiled: ArrowCompiled) = LineCompiled(arrowCompiled.term, line(arrowCompiled.arrow))
 
 fun lineCompiled(literal: Literal): LineCompiled =
 	when (literal) {
@@ -48,12 +48,15 @@ fun lineCompiled(literal: Literal): LineCompiled =
 val LineCompiled.stringCompiledOrNull: StringCompiled?
 	get() =
 		switch({ it }, { null }, { null }, { null })
+
 val LineCompiled.doubleCompiledOrNull: DoubleCompiled?
 	get() =
 		switch({ null }, { it }, { null }, { null })
+
 val LineCompiled.arrowCompiledOrNull: ArrowCompiled?
 	get() =
 		switch({ null }, { null }, { null }, { it })
+
 val LineCompiled.fieldCompiledOrNull: FieldCompiled?
 	get() =
 		switch({ null }, { null }, { it }, { null })
