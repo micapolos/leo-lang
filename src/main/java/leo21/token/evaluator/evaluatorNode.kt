@@ -13,12 +13,8 @@ import leo14.orError
 import leo14.script
 import leo15.dsl.*
 import leo21.compiled.ArrowCompiled
-import leo21.compiled.line
-import leo21.compiled.of
 import leo21.evaluator.LineEvaluated
 import leo21.evaluator.lineEvaluated
-import leo21.evaluator.of
-import leo21.prim.runtime.value
 import leo21.token.body.DefineCompiler
 import leo21.token.body.FunctionCompiler
 import leo21.token.body.Module
@@ -86,3 +82,8 @@ fun EvaluatorNode.begin(name: String): EvaluatorNode =
 
 fun EvaluatorNode.plus(arrowCompiled: ArrowCompiled): EvaluatorNode =
 	copy(evaluator = evaluator.plus(arrowCompiled))
+
+val EvaluatorNode.rootEvaluator: Evaluator
+	get() =
+		if (parentOrNull != null) null!!
+		else evaluator

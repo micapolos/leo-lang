@@ -146,3 +146,8 @@ val Processor.body: Body
 val Processor.compiled: Compiled
 	get() =
 		body.wrapCompiled
+
+val Processor.evaluatorNode: EvaluatorNode
+	get() =
+		(this as EvaluatorProcessor).evaluatorNode
+

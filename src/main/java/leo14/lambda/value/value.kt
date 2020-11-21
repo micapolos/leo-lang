@@ -16,10 +16,11 @@ import leo22.dsl.*
 sealed class Value<out T> : Scriptable() {
 	override fun toString() = scriptLine { anyReflectScriptLine }.toString()
 	override val reflectScriptLine: ScriptLine
-		get() = "value" lineTo script(when (this) {
-			is NativeValue -> "native" lineTo script(native.anyReflectScriptLine)
-			is FunctionValue -> function.reflectScriptLine
-		})
+		get() = "value" lineTo script(
+			when (this) {
+				is NativeValue -> "native" lineTo script(native.anyReflectScriptLine)
+				is FunctionValue -> function.reflectScriptLine
+			})
 }
 
 data class NativeValue<T>(val native: T) : Value<T>() {
