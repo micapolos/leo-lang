@@ -96,7 +96,7 @@ fun BodyCompiler.plus(begin: Begin): Processor =
 			DefineCompilerProcessor(
 				DefineCompiler(
 					DefineCompiler.Parent.Body(this),
-					body.module))
+					body.module.begin))
 		"do" -> this
 			.doParent
 			.compiler(body.beginDo)

@@ -3,6 +3,7 @@ package leo21.token.type.compiler
 import leo.base.notNullIf
 import leo.base.runIf
 import leo13.firstEither
+import leo13.map
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
@@ -24,6 +25,7 @@ import leo21.type.lineTo
 import leo21.type.numberLine
 import leo21.type.plus
 import leo21.type.recurse
+import leo21.type.recursive
 import leo21.type.stringLine
 import leo21.type.type
 
@@ -86,6 +88,9 @@ fun TypeCompiler.set(type: Type): TypeCompiler =
 
 fun TypeCompiler.process(type: Type): Processor =
 	set(type).process
+
+fun TypeCompiler.plusRecursive(type: Type): Processor =
+	process(type.lineStack.map { line(recursive(this)) }.type)
 
 infix fun String.compiledLineTo(rhs: Type): Line =
 	when (this) {

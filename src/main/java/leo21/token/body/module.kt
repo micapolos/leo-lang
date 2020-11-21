@@ -55,3 +55,7 @@ fun Compiled.wrap(module: Module): Compiled =
 val Module.printScript: Script
 	get() =
 		lines.printScript.plus(definitions.printScript)
+
+val Module.begin: Module
+	get() =
+		Module(bindings, lines, emptyDefinitions)
