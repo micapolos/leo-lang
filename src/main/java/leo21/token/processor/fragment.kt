@@ -14,6 +14,7 @@ val Processor.printFragment: Fragment
 	get() =
 		when (this) {
 			is TypeCompilerProcessor -> typeCompiler.printFragment
+			is TypeRecurseCompilerProcessor -> typeRecurseCompiler.printFragment
 			is ChoiceCompilerProcessor -> choiceCompiler.printFragment
 			is ArrowCompilerProcessor -> arrowCompiler.printFragment
 			is ScriptCompilerProcessor -> scriptCompiler.printFragment

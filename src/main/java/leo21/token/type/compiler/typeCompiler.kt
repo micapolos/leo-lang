@@ -7,22 +7,22 @@ import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
-import leo14.end
 import leo14.error
-import leo14.token
 import leo15.dsl.*
 import leo21.token.processor.ArrowCompilerProcessor
 import leo21.token.processor.ChoiceCompilerProcessor
 import leo21.token.processor.Processor
 import leo21.token.processor.TypeCompilerProcessor
+import leo21.token.processor.TypeRecurseCompilerProcessor
 import leo21.token.processor.processor
 import leo21.type.Line
 import leo21.type.Type
 import leo21.type.choice
-import leo21.type.numberLine
 import leo21.type.isEmpty
 import leo21.type.lineTo
+import leo21.type.numberLine
 import leo21.type.plus
+import leo21.type.recurse
 import leo21.type.stringLine
 import leo21.type.type
 
@@ -60,12 +60,15 @@ fun TypeCompiler.plusBegin(name: String): Processor =
 				lines,
 				type().firstEither()))
 		"recursive" ->
-			if (!type.isEmpty) TypeCompilerProcessor(
+			if (type.isEmpty) TypeCompilerProcessor(
 				TypeCompiler(
 					RecursiveTypeParent(this),
 					lines,
 					type()))
 			else error { not { expected { word { recursive } } } }
+		"recurse" ->
+			if (type.isEmpty) TypeRecurseCompilerProcessor(TypeRecurseCompiler(this))
+			else error { not { expected { word { recurse } } } }
 		else -> TypeCompilerProcessor(
 			TypeCompiler(
 				TypeNameTypeParent(this, name),
@@ -100,3 +103,6 @@ val TypeCompiler.end: Processor
 	get() =
 		parentOrNull!!.plus(type)
 
+val TypeCompiler.plusRecurse: TypeCompiler
+	get() =
+		copy(type = type(recurse(0)))

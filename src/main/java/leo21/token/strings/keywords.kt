@@ -2,18 +2,21 @@ package leo21.token.strings
 
 import leo.ansi
 import leo.bold
-import leo.brightBlue
+import leo.cyan
+import leo.defaultColor
 import leo.normal
-import leo.white
 
 val String.value get() = this
-val String.valueKeyword get() = this//ansi.brightBlue + ansi.bold + this + ansi.normal + ansi.white
-val String.type get() = this//ansi.brightBlue + this + ansi.white
-val String.typeKeyword get() = this//ansi.brightBlue + ansi.bold + this + ansi.normal + ansi.white
+val String.valueKeyword get() = ansi.bold + this + ansi.normal
+val String.type get() = ansi.cyan + this + ansi.defaultColor
+val String.typeKeyword get() = ansi.cyan + ansi.bold + this + ansi.normal + ansi.defaultColor
 
 val applyKeyword = "apply".valueKeyword
+val choiceKeyword = "choice".typeKeyword
 val defineKeyword = "define".valueKeyword
 val doKeyword = "do".valueKeyword
 val doesKeyword = "does".valueKeyword
 val functionKeyword = "function".valueKeyword
+val recurseKeyword = "recurse".typeKeyword
+val recursiveKeyword = "recursive".typeKeyword
 val typeKeyword = "type".valueKeyword

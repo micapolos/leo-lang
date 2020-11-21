@@ -30,6 +30,7 @@ import leo21.token.script.plus
 import leo21.token.type.compiler.ArrowCompiler
 import leo21.token.type.compiler.ChoiceCompiler
 import leo21.token.type.compiler.TypeCompiler
+import leo21.token.type.compiler.TypeRecurseCompiler
 import leo21.token.type.compiler.emptyTypeCompiler
 import leo21.token.type.compiler.plus
 import leo21.type.Type
@@ -39,6 +40,7 @@ sealed class Processor : Scriptable() {
 		get() = "processor" lineTo script(
 			when (this) {
 				is TypeCompilerProcessor -> typeCompiler.anyReflectScriptLine
+				is TypeRecurseCompilerProcessor -> typeRecurseCompiler.anyReflectScriptLine
 				is ChoiceCompilerProcessor -> choiceCompiler.anyReflectScriptLine
 				is ArrowCompilerProcessor -> arrowCompiler.anyReflectScriptLine
 				is ScriptCompilerProcessor -> scriptCompiler.anyReflectScriptLine
@@ -53,6 +55,10 @@ sealed class Processor : Scriptable() {
 }
 
 data class TypeCompilerProcessor(val typeCompiler: TypeCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
+data class TypeRecurseCompilerProcessor(val typeRecurseCompiler: TypeRecurseCompiler) : Processor() {
 	override fun toString() = super.toString()
 }
 
@@ -114,6 +120,7 @@ val DefineCompiler.processor: Processor get() = DefineCompilerProcessor(this)
 fun Processor.plus(token: Token): Processor =
 	when (this) {
 		is TypeCompilerProcessor -> typeCompiler.plus(token)
+		is TypeRecurseCompilerProcessor -> typeRecurseCompiler.plus(token)
 		is ChoiceCompilerProcessor -> choiceCompiler.plus(token)
 		is ArrowCompilerProcessor -> arrowCompiler.plus(token)
 		is ScriptCompilerProcessor -> scriptCompiler.plus(token)

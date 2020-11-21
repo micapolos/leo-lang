@@ -7,6 +7,7 @@ import leo14.begin
 import leo14.emptyFragment
 import leo14.fragment
 import leo14.parent
+import leo14.script
 import leo21.token.body.printFragment
 import leo21.token.body.printFragmentParent
 import leo21.token.strings.typeKeyword
@@ -52,3 +53,7 @@ val ArrowParent.fragmentParent: FragmentParent
 		when (this) {
 			is TypeCompilerArrowParent -> typeCompiler.printFragment.parent(begin("function".typeKeyword))
 		}
+
+val TypeRecurseCompiler.printFragment: Fragment
+	get() =
+		parentTypeCompiler.printFragment.parent(begin("recurse".typeKeyword)).fragment(script())
