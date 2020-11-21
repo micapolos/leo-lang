@@ -26,6 +26,9 @@ val Ansi.brightMagenta get() = escape + "95m"
 val Ansi.brightCyan get() = escape + "96m"
 val Ansi.brightWhite get() = escape + "97m"
 
+val Ansi.bold get() = escape + "1m"
+val Ansi.normal get() = escape + "22m"
+
 val Ansi.reset get() = escape + "0m"
 
 fun Ansi.goto(line: Int, column: Int) = "${escape}${line};${column}H"
