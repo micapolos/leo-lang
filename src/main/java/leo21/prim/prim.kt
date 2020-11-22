@@ -27,6 +27,7 @@ sealed class Prim : Scriptable() {
 				NumberSinusPrim -> script("number" lineTo script(), "sinus" lineTo script())
 				NumberCosinusPrim -> script("number" lineTo script(), "cosinus" lineTo script())
 				StringLengthPrim -> script("string" lineTo script(), "length" lineTo script())
+				StringTryNumberPrim -> script("string" lineTo script(), "try" lineTo script("number" lineTo script()))
 			}
 }
 
@@ -49,6 +50,7 @@ object NumberSinusPrim : Prim()
 object NumberCosinusPrim : Prim()
 object StringPlusStringPrim : Prim()
 object StringLengthPrim : Prim()
+object StringTryNumberPrim : Prim()
 
 val nilPrim: Prim = NilPrim
 val Prim.string get() = (this as StringPrim).string

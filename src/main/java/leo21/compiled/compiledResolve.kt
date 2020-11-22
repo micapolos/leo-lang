@@ -76,6 +76,7 @@ val Compiled.resolveOrNull: Compiled?
 				"count" lineTo type("characters" lineTo type()),
 				StringLengthPrim,
 				type("count" lineTo numberType))
+			?: resolveStringTryNumber
 			?: resolveTypeOrNull
 			?: resolveStructureOrNull
 			?: resolveMakeOrNull
@@ -164,4 +165,14 @@ val Compiled.resolveStructureOrNull: Compiled?
 	get() =
 		resolveOp1OrNull("structure") { lhs ->
 			lhs.structure
+		}
+
+val Compiled.resolveStringTryNumber: Compiled?
+	get() =
+		linkOrNull?.let { link ->
+			ifOrNull(link.compiled.type == stringType) {
+				ifOrNull(link.lineCompiled.line == "try" lineTo type("number" lineTo type())) {
+					link.compiled.stringTryNumber
+				}
+			}
 		}

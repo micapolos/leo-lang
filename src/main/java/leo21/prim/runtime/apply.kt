@@ -4,6 +4,8 @@ import leo14.Number
 import leo14.anyReflectScriptLine
 import leo14.cosinus
 import leo14.lambda.value.Value
+import leo14.lambda.value.eitherFirst
+import leo14.lambda.value.eitherSecond
 import leo14.lambda.value.native
 import leo14.lambda.value.pair
 import leo14.lambda.value.value
@@ -27,6 +29,7 @@ import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
+import leo21.prim.StringTryNumberPrim
 import leo21.prim.number
 import leo21.prim.prim
 import leo21.prim.string
@@ -46,6 +49,7 @@ fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 		NumberSinusPrim -> rhs.apply(Prim::number, Number::sinus, Number::prim)
 		NumberCosinusPrim -> rhs.apply(Prim::number, Number::cosinus, Number::prim)
 		StringLengthPrim -> rhs.apply(Prim::string, String::lengthNumber, Number::prim)
+		StringTryNumberPrim -> rhs.stringTryNumber
 	}.orError(anyReflectScriptLine, apply(rhs.anyReflectScriptLine))
 
 fun <Lhs, Rhs, Out> Value<Prim>.apply(
@@ -68,3 +72,14 @@ fun <Lhs, Out> Value<Prim>.apply(
 val String.lengthNumber: Number
 	get() =
 		length.number
+
+val Value<Prim>.stringTryNumber: Value<Prim>
+	get() =
+		try_ { value(prim(number(native.string.toBigDecimal()))) }
+
+fun <T> Value<T>.try_(fn: Value<T>.() -> Value<T>): Value<T> =
+	try {
+		fn().eitherSecond
+	} catch (throwable: Throwable) {
+		eitherFirst
+	}

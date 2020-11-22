@@ -22,6 +22,7 @@ import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
+import leo21.prim.StringTryNumberPrim
 import leo21.prim.nilPrim
 import leo21.prim.prim
 import leo22.dsl.*
@@ -90,6 +91,7 @@ val Prim.x_: X
 			NumberEqualsNumberPrim -> TODO()
 			StringLengthPrim -> TODO()
 			NumberStringPrim -> TODO()
+			StringTryNumberPrim -> TODO()
 		}
 
 val nilTerm = term(native(nil()))

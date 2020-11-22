@@ -19,6 +19,7 @@ import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
+import leo21.prim.StringTryNumberPrim
 
 val String.native: Native get() = native(code(literalString))
 val Number.native: Native get() = native(code("${bigDecimal.toDouble()}"))
@@ -38,6 +39,7 @@ val Prim.native: Native
 			NumberCosinusPrim -> prefixFn1Native("java.lang.Math.cos", "Double")
 			StringLengthPrim -> postfixFn1Native("length()", "String")
 			NumberStringPrim -> TODO()
+			StringTryNumberPrim -> TODO()
 		}
 
 val lhs = "fn(a->fn(b->a))"

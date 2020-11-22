@@ -17,6 +17,7 @@ import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
+import leo21.prim.StringTryNumberPrim
 
 val nilCode = code("'()")
 val String.code: Code get() = code(literalString)
@@ -37,6 +38,7 @@ val Prim.code: Code
 			NumberCosinusPrim -> fn1Code("cos")
 			NumberEqualsNumberPrim -> TODO()
 			StringLengthPrim -> TODO()
+			StringTryNumberPrim -> TODO()
 		}
 
 val firstCode = code("(lambda (a) (lambda (b) a))")
