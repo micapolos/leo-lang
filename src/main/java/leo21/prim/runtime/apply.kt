@@ -16,6 +16,7 @@ import leo14.plus
 import leo14.sinus
 import leo14.string
 import leo14.times
+import leo21.evaluated.nilValue
 import leo21.prim.NilPrim
 import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberEqualsNumberPrim
@@ -73,13 +74,24 @@ val String.lengthNumber: Number
 	get() =
 		length.number
 
+val String.numberOrNull: Number?
+	get() =
+		try {
+			number(toBigDecimal())
+		} catch (numberFormatException: NumberFormatException) {
+			null
+		}
+
 val Value<Prim>.stringTryNumber: Value<Prim>
 	get() =
-		try_ { value(prim(number(native.string.toBigDecimal()))) }
+		try_ { value(prim(native.string.numberOrNull!!)) }
 
-fun <T> Value<T>.try_(fn: Value<T>.() -> Value<T>): Value<T> =
+fun Value<Prim>.try_(fn: Value<Prim>.() -> Value<Prim>): Value<Prim> =
 	try {
-		fn().eitherSecond
+		fn().trySuccess
 	} catch (throwable: Throwable) {
-		eitherFirst
+		tryFailureValue
 	}
+
+val Value<Prim>.trySuccess: Value<Prim> get() = eitherSecond.eitherFirst
+val tryFailureValue: Value<Prim> get() = nilValue.eitherSecond

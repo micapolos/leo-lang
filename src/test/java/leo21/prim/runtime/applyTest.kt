@@ -1,11 +1,11 @@
 package leo21.prim.runtime
 
 import leo.base.assertEqualTo
-import leo14.lambda.value.eitherFirst
-import leo14.lambda.value.eitherSecond
+import leo14.lambda.value.native
 import leo14.lambda.value.plus
+import leo14.lambda.value.switch
 import leo14.lambda.value.value
-import leo21.evaluated.nilValue
+import leo14.number
 import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
@@ -14,6 +14,7 @@ import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringTryNumberPrim
+import leo21.prim.number
 import leo21.prim.prim
 import kotlin.math.cos
 import kotlin.math.sin
@@ -74,13 +75,19 @@ class ApplyTest {
 	fun stringTryNumber_success() {
 		StringTryNumberPrim
 			.apply(value(prim("123")))
-			.assertEqualTo(value(prim(123)).eitherSecond)
+			.switch(
+				{ it.switch({ null!! }, { it }) },
+				{ value(prim("error")) })
+			.assertEqualTo(value(prim(123)))
 	}
 
 	@Test
 	fun stringTryNumber_error() {
 		StringTryNumberPrim
 			.apply(value(prim("123a")))
-			.assertEqualTo(value(prim("123a")).eitherFirst)
+			.switch(
+				{ it.switch({ null!! }, { it }) },
+				{ value(prim("error")) })
+			.assertEqualTo(value(prim("error")))
 	}
 }

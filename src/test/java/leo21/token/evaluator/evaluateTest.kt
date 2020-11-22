@@ -5,6 +5,7 @@ import leo14.lambda.nativeTerm
 import leo14.lambda.value.function
 import leo14.lambda.value.scope
 import leo14.lambda.value.value
+import leo14.success
 import leo15.dsl.*
 import leo21.compiled.compiled
 import leo21.evaluated.evaluated
@@ -12,6 +13,7 @@ import leo21.evaluated.of
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.definition.functionDefinition
+import leo21.evaluated.script
 import leo21.type.arrowTo
 import leo21.type.line
 import leo21.type.numberType
@@ -68,5 +70,21 @@ class EvaluateTest {
 				}
 			}
 		}.assertEqualTo(emptyEvaluator.plus(functionDefinition(numberType, compiled("ok"))))
+	}
+
+	@Test
+	fun stringTryNumber_success() {
+		evaluate {
+			text("123")
+			try_ { number }
+		}.assertEqualTo(script_ { try_ { success { number(123) } } })
+	}
+
+	@Test
+	fun stringTryNumber_failure() {
+		evaluate {
+			text("123a")
+			try_ { number }
+		}.assertEqualTo(script_ { try_ { failure } })
 	}
 }

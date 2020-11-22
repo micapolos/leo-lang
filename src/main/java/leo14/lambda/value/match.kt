@@ -47,7 +47,11 @@ fun <T, R> Value<T>.switch(firstFn: (Value<T>) -> R, secondFn: (Value<T>) -> R):
 							1 -> rhs.variable(2) {
 								secondFn(value)
 							}
-							else -> error(anyReflectScriptLine, switch(firstFn.anyReflectScriptLine, secondFn.anyReflectScriptLine))
+							else -> error(
+								anyReflectScriptLine,
+								switch(
+									firstFn.anyReflectScriptLine,
+									secondFn.anyReflectScriptLine))
 						}
 					}
 				}
