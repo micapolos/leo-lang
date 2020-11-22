@@ -8,7 +8,9 @@ import leo13.linkTo
 import leo13.push
 import leo13.stack
 
-data class Choice(val lineStack: Stack<Line>)
+data class Choice(val lineStack: Stack<Line>) : TypeComponent {
+	override val typeComponentLine get() = line(this)
+}
 
 val Stack<Line>.choice get() = Choice(this)
 val emptyChoice = Choice(stack())

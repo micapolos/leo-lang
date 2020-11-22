@@ -8,20 +8,18 @@ import leo14.EndToken
 import leo14.LiteralToken
 import leo14.Token
 import leo14.error
-import leo14.lambda.fn
 import leo14.orError
 import leo15.dsl.*
 import leo21.compiled.SwitchCompiled
-import leo21.compiled.case
+import leo21.compiled.caseTo
 import leo21.compiled.compiled
 import leo21.compiled.end
-import leo21.compiled.of
+import leo21.compiled.plus
 import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.Processor
 import leo21.token.processor.SwitchCompilerProcessor
 import leo21.type.Field
 import leo21.type.Line
-import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.fieldTo
 import leo21.type.line
@@ -60,6 +58,5 @@ fun SwitchCompiler.plus(token: Token): Processor =
 fun SwitchCompiler.plus(line: Line, body: Body): Processor =
 	SwitchCompilerProcessor(
 		copy(
-			switchCompiled = switchCompiled.case(line.nameOrNull!!,
-				fn(body.compiled.term).of(type(line) arrowTo body.compiled.type)),
-			caseFieldStack = caseFieldStack.push(line.nameOrNull!! fieldTo body.compiled.type)))
+			switchCompiled = switchCompiled.plus(line.nameOrNull!! caseTo { body.wrapCompiled }),
+			caseFieldStack = caseFieldStack.push(line.nameOrNull!! fieldTo body.wrapCompiled.type)))

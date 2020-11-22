@@ -1,6 +1,6 @@
 package leo21.type
 
-import leo.base.notNullOrError
+import leo.base.fold
 import leo.base.orNullIf
 import leo13.Link
 import leo13.Stack
@@ -13,6 +13,10 @@ import leo13.stack
 import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.lineTo
+
+interface TypeComponent {
+	val typeComponentLine: Line
+}
 
 data class Type(val lineStack: Stack<Line>) : Scriptable() {
 	override fun toString() = super.toString()
@@ -27,8 +31,9 @@ val Link<Type, Line>.type get() = tail
 val Link<Type, Line>.line get() = head
 
 val Stack<Line>.type get() = Type(this)
-fun Type.plus(line: Line): Type = lineStack.push(line).type
-fun type(vararg lines: Line) = stack(*lines).type
+val emptyType = Type(stack())
+fun Type.plus(typeComponent: TypeComponent): Type = lineStack.push(typeComponent.typeComponentLine).type
+fun type(vararg typeComponents: TypeComponent) = emptyType.fold(typeComponents) { plus(it) }
 
 val stringType = type(stringLine)
 val numberType = type(numberLine)

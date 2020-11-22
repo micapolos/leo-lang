@@ -200,7 +200,7 @@ class CompiledTest {
 					"one" lineTo type())
 					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo stringType))
+				.plus("one" caseTo { compiled(1) })
 		}
 	}
 
@@ -213,21 +213,8 @@ class CompiledTest {
 					"one" lineTo type())
 					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
-		}
-	}
-
-	@Test
-	fun switch_arrowLhsTypeMismatch() {
-		assertFails {
-			compiled(
-				"bit" lineTo choice(
-					"zero" lineTo type(),
-					"one" lineTo type())
-					.compiled("zero" lineTo compiled()))
-				.switch
-				.case("zero", ArrowCompiled(arg(0), type("foo" lineTo type()) arrowTo stringType))
+				.plus("zero" caseTo { compiled(0) })
+				.plus("zero" caseTo { compiled(0) })
 		}
 	}
 
@@ -240,8 +227,8 @@ class CompiledTest {
 					"one" lineTo type())
 					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo numberType))
+				.plus("zero" caseTo { compiled("foo") })
+				.plus("one" caseTo { compiled(123) })
 		}
 	}
 
@@ -267,9 +254,9 @@ class CompiledTest {
 					"one" lineTo type())
 					.compiled("zero" lineTo compiled()))
 				.switch
-				.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
-				.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo stringType))
-				.case("two", ArrowCompiled(arg(0), type("two" lineTo type()) arrowTo stringType))
+				.plus("zero" caseTo { compiled(0) })
+				.plus("one" caseTo { compiled(1) })
+				.plus("two" caseTo { compiled(2) })
 		}
 	}
 

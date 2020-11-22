@@ -5,9 +5,10 @@ import leo14.Scriptable
 import leo14.lineTo
 import leo14.script
 
-sealed class Line : Scriptable() {
+sealed class Line : Scriptable(), TypeComponent {
 	override val reflectScriptLine: ScriptLine
 		get() = "line" lineTo script(scriptLine)
+	override val typeComponentLine get() = this
 }
 
 object StringLine : Line()
