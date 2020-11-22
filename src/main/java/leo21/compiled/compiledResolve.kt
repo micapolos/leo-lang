@@ -11,6 +11,7 @@ import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberStringPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
@@ -63,6 +64,7 @@ val Compiled.resolveOrNull: Compiled?
 			?: resolveGetOrNull
 			?: resolveAsOrNull
 			?: resolveLeonardoOrNull
+			?: resolveFn1OrNull(numberType, "text", NumberStringPrim, stringType)
 			?: resolveFn1OrNull(numberType, "sinus", NumberSinusPrim, numberType)
 			?: resolveFn1OrNull(numberType, "cosinus", NumberCosinusPrim, numberType)
 			?: resolveFn2OrNull(numberType, "plus", numberType, NumberPlusNumberPrim, numberType)

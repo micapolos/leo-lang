@@ -12,6 +12,7 @@ import leo14.number
 import leo14.orError
 import leo14.plus
 import leo14.sinus
+import leo14.string
 import leo14.times
 import leo21.prim.NilPrim
 import leo21.prim.NumberCosinusPrim
@@ -20,6 +21,7 @@ import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberPrim
 import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberStringPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
@@ -40,6 +42,7 @@ fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 		NumberTimesNumberPrim -> rhs.apply(Prim::number, Number::times, Prim::number, Number::prim)
 		NumberEqualsNumberPrim -> TODO()
 		StringPlusStringPrim -> rhs.apply(Prim::string, String::plus, Prim::string, String::prim)
+		NumberStringPrim -> rhs.apply(Prim::number, Number::string, String::prim)
 		NumberSinusPrim -> rhs.apply(Prim::number, Number::sinus, Number::prim)
 		NumberCosinusPrim -> rhs.apply(Prim::number, Number::cosinus, Number::prim)
 		StringLengthPrim -> rhs.apply(Prim::string, String::lengthNumber, Number::prim)

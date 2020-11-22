@@ -16,6 +16,7 @@ import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.NilPrim
 import leo21.prim.NumberEqualsNumberPrim
+import leo21.prim.NumberStringPrim
 import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
@@ -35,6 +36,7 @@ val Prim.expr: Expr
 			NumberSinusPrim -> prefix1Expr("Math.sin")
 			NumberCosinusPrim -> prefix1Expr("Math.cos")
 			StringLengthPrim -> postfix1Expr("length")
+			NumberStringPrim -> TODO()
 		}
 
 val lhsExpr = expr(lambda("a", expr(lambda("b", expr(id("a"))))))

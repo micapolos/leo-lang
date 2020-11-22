@@ -12,6 +12,7 @@ import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.NilPrim
 import leo21.prim.NumberEqualsNumberPrim
+import leo21.prim.NumberStringPrim
 import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
@@ -31,6 +32,7 @@ val Prim.code: Code
 			NumberMinusNumberPrim -> fn2Code("-")
 			NumberTimesNumberPrim -> fn2Code("*")
 			StringPlusStringPrim -> fn2Code("string-append")
+			NumberStringPrim -> TODO()
 			NumberSinusPrim -> fn1Code("sin")
 			NumberCosinusPrim -> fn1Code("cos")
 			NumberEqualsNumberPrim -> TODO()

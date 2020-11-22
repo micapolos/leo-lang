@@ -16,6 +16,7 @@ import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberPrim
 import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberStringPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
@@ -88,6 +89,7 @@ val Prim.x_: X
 			StringPlusStringPrim -> TODO()
 			NumberEqualsNumberPrim -> TODO()
 			StringLengthPrim -> TODO()
+			NumberStringPrim -> TODO()
 		}
 
 val nilTerm = term(native(nil()))

@@ -29,6 +29,11 @@ class EvaluateTest {
 	}
 
 	@Test
+	fun numberText() {
+		evaluated { number(123).text }.assertEqualTo(evaluated("123"))
+	}
+
+	@Test
 	fun function() {
 		evaluated {
 			function {

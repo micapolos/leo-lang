@@ -74,3 +74,7 @@ val Number.sinus: Number
 val Number.cosinus: Number
 	get() =
 		cos(bigDecimal.toDouble()).number
+
+val Number.string: String
+	get() =
+		toString()

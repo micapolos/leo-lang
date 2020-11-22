@@ -13,6 +13,7 @@ import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberPrim
 import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberStringPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
 import leo21.prim.StringLengthPrim
@@ -36,6 +37,7 @@ val Prim.native: Native
 			NumberSinusPrim -> prefixFn1Native("java.lang.Math.sin", "Double")
 			NumberCosinusPrim -> prefixFn1Native("java.lang.Math.cos", "Double")
 			StringLengthPrim -> postfixFn1Native("length()", "String")
+			NumberStringPrim -> TODO()
 		}
 
 val lhs = "fn(a->fn(b->a))"
