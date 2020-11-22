@@ -10,6 +10,14 @@ import leo14.anyReflectScriptLine
 import leo14.lineTo
 import leo14.script
 import leo21.compiled.Compiled
+import leo21.definition.Definition
+import leo21.definition.Definitions
+import leo21.definition.bindingOrNull
+import leo21.definition.emptyDefinitions
+import leo21.definition.lineOrNull
+import leo21.definition.plus
+import leo21.definition.printScript
+import leo21.definition.wrap
 import leo21.token.type.compiler.Lines
 import leo21.token.type.compiler.emptyLines
 import leo21.token.type.compiler.plus

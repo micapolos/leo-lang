@@ -1,4 +1,4 @@
-package leo21.token.body
+package leo21.definition
 
 import leo13.Stack
 import leo13.fold

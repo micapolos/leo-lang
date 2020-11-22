@@ -5,6 +5,7 @@ import leo15.dsl.*
 import leo21.compiled.apply
 import leo21.compiled.compiled
 import leo21.compiled.does
+import leo21.definition.functionDefinition
 import leo21.type.numberType
 import kotlin.test.Test
 

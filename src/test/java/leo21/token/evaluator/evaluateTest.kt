@@ -11,7 +11,7 @@ import leo21.evaluator.evaluated
 import leo21.evaluator.of
 import leo21.prim.Prim
 import leo21.prim.prim
-import leo21.token.body.functionDefinition
+import leo21.definition.functionDefinition
 import leo21.type.arrowTo
 import leo21.type.line
 import leo21.type.numberType

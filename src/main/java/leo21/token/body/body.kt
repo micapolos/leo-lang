@@ -12,6 +12,7 @@ import leo21.compiled.compiled
 import leo21.compiled.do_
 import leo21.compiled.plus
 import leo21.compiled.resolve
+import leo21.definition.Definition
 import leo21.token.type.compiler.cast
 import leo21.type.isEmpty
 

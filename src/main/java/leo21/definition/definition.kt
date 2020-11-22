@@ -1,4 +1,4 @@
-package leo21.token.body
+package leo21.definition
 
 import leo.base.updateIfNotNull
 import leo14.ScriptLine
@@ -8,16 +8,14 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.value.Value
 import leo14.lineTo
-import leo14.plus
 import leo14.script
 import leo21.compiled.Compiled
 import leo21.compiled.of
 import leo21.prim.Prim
 import leo21.prim.runtime.value
-import leo21.token.strings.typeKeyword
+import leo21.token.body.Binding
 import leo21.type.Line
 import leo21.type.Type
-import leo21.type.printScript
 
 sealed class Definition : Scriptable() {
 	override val reflectScriptLine: ScriptLine
@@ -42,29 +40,15 @@ data class TypeDefinition(val type: DefinitionType) : Definition() {
 	override fun toString() = super.toString()
 }
 
-data class DefinitionFunction(val type: Type, val compiled: Compiled) : Scriptable() {
-	override fun toString() = super.toString()
-	override val reflectScriptLine: ScriptLine
-		get() = "function" lineTo script(type.reflectScriptLine, compiled.reflectScriptLine)
-}
-
-data class DefinitionConstant(val type: Type, val compiled: Compiled) : Scriptable() {
-	override fun toString() = super.toString()
-	override val reflectScriptLine: ScriptLine
-		get() = "constant" lineTo script(type.reflectScriptLine, compiled.reflectScriptLine)
-}
-
-data class DefinitionType(val line: Line) : Scriptable() {
-	override fun toString() = super.toString()
-	override val reflectScriptLine: ScriptLine
-		get() = "type" lineTo script(line.reflectScriptLine)
-}
+fun definition(function: DefinitionFunction): Definition = FunctionDefinition(function)
+fun definition(constant: DefinitionConstant): Definition = ConstantDefinition(constant)
+fun definition(type: DefinitionType): Definition = TypeDefinition(type)
 
 fun constantDefinition(type: Type, compiled: Compiled): Definition =
-	ConstantDefinition(DefinitionConstant(type, compiled))
+	definition(type is_ compiled)
 
 fun functionDefinition(type: Type, compiled: Compiled): Definition =
-	FunctionDefinition(DefinitionFunction(type, compiled))
+	definition(type does compiled)
 
 fun typeDefinition(line: Line): Definition =
 	TypeDefinition(DefinitionType(line))
@@ -77,16 +61,20 @@ fun Compiled.wrap(definition: Definition): Compiled =
 val Definition.termOrNull: Term<Prim>?
 	get() =
 		when (this) {
-			is ConstantDefinition -> constant.compiled.term
-			is FunctionDefinition -> fn(function.compiled.term)
+			is ConstantDefinition -> constant.term
+			is FunctionDefinition -> function.term
 			is TypeDefinition -> null
 		}
+
+val Definition.valueOrNull: Value<Prim>?
+	get() =
+		termOrNull?.value
 
 val Definition.bindingOrNull: Binding?
 	get() =
 		when (this) {
-			is ConstantDefinition -> constant.type.constantBinding(constant.compiled.type)
-			is FunctionDefinition -> function.type.functionBinding(function.compiled.type)
+			is ConstantDefinition -> constant.binding
+			is FunctionDefinition -> function.binding
 			is TypeDefinition -> null
 		}
 
@@ -101,16 +89,8 @@ val Definition.lineOrNull: Line?
 val Definition.printScriptLine: ScriptLine
 	get() =
 		when (this) {
-			is ConstantDefinition ->
-				"constant" lineTo constant.type.printScript
-					.plus("is".typeKeyword lineTo constant.compiled.type.printScript)
-			is FunctionDefinition ->
-				"function" lineTo function.type.printScript
-					.plus("does".typeKeyword lineTo function.compiled.type.printScript)
-			is TypeDefinition ->
-				"type" lineTo script(type.line.printScriptLine)
+			is ConstantDefinition -> constant.printScriptLine
+			is FunctionDefinition -> function.printScriptLine
+			is TypeDefinition -> type.printScriptLine
 		}
 
-val Definition.valueOrNull: Value<Prim>?
-	get() =
-		termOrNull?.value

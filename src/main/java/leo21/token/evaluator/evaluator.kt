@@ -17,7 +17,7 @@ import leo21.evaluator.given
 import leo21.evaluator.lineTo
 import leo21.evaluator.of
 import leo21.evaluator.plus
-import leo21.token.body.Definition
+import leo21.definition.Definition
 import leo21.token.body.Module
 import leo21.type.line
 

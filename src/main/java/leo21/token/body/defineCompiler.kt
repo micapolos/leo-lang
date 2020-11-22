@@ -13,6 +13,7 @@ import leo14.lineTo
 import leo14.orError
 import leo14.script
 import leo15.dsl.*
+import leo21.definition.Definition
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.end
 import leo21.token.processor.FunctionCompilerProcessor
