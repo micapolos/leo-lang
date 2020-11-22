@@ -7,9 +7,6 @@ import leo14.lambda.value.scope
 import leo14.lambda.value.value
 import leo21.compiled.compiled
 import leo21.compiled.does
-import leo21.evaluator.compiled
-import leo21.evaluator.evaluated
-import leo21.evaluator.of
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.type.arrowTo

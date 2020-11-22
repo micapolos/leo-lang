@@ -6,8 +6,8 @@ import leo14.lambda.value.emptyScope
 import leo14.lambda.value.function
 import leo14.lambda.value.scope
 import leo14.lambda.value.value
-import leo21.evaluator.evaluated
-import leo21.evaluator.lineTo
+import leo21.evaluated.evaluated
+import leo21.evaluated.lineTo
 import leo21.prim.Prim
 import leo21.term.nilTerm
 import leo21.token.body.emptyBindings

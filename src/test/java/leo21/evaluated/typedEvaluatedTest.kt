@@ -1,4 +1,4 @@
-package leo21.evaluator
+package leo21.evaluated
 
 import leo.base.assertEqualTo
 import leo14.lambda.fn

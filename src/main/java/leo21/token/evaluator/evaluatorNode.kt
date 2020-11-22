@@ -13,8 +13,8 @@ import leo14.orError
 import leo14.script
 import leo15.dsl.*
 import leo21.compiled.ArrowCompiled
-import leo21.evaluator.LineEvaluated
-import leo21.evaluator.lineEvaluated
+import leo21.evaluated.LineEvaluated
+import leo21.evaluated.lineEvaluated
 import leo21.token.body.DefineCompiler
 import leo21.token.body.FunctionCompiler
 import leo21.token.body.Module

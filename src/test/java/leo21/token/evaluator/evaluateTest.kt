@@ -7,8 +7,8 @@ import leo14.lambda.value.scope
 import leo14.lambda.value.value
 import leo15.dsl.*
 import leo21.compiled.compiled
-import leo21.evaluator.evaluated
-import leo21.evaluator.of
+import leo21.evaluated.evaluated
+import leo21.evaluated.of
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.definition.functionDefinition

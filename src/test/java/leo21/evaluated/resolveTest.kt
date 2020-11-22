@@ -1,10 +1,6 @@
 package leo21.evaluated
 
 import leo.base.assertEqualTo
-import leo21.evaluator.evaluated
-import leo21.evaluator.lineEvaluated
-import leo21.evaluator.lineTo
-import leo21.evaluator.resolve
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.test.Test

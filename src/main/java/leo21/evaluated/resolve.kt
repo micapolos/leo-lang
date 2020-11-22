@@ -1,4 +1,4 @@
-package leo21.evaluator
+package leo21.evaluated
 
 import leo.base.runIfNotNull
 import leo14.cosinus

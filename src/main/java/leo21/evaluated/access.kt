@@ -1,7 +1,6 @@
-package leo21.evaluator
+package leo21.evaluated
 
 import leo.base.notNullIf
-import leo21.type.ChoiceLine
 import leo21.type.matches
 
 fun Evaluated.accessOrNull(name: String): Evaluated? =

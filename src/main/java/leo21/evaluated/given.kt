@@ -1,4 +1,4 @@
-package leo21.evaluator
+package leo21.evaluated
 
 data class EvaluatedGiven(val evaluated: Evaluated)
 

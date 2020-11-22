@@ -11,9 +11,9 @@ import leo14.lambda.value.push
 import leo14.lineTo
 import leo14.script
 import leo21.compiled.Compiled
-import leo21.evaluator.Evaluated
-import leo21.evaluator.EvaluatedGiven
-import leo21.evaluator.resolve
+import leo21.evaluated.Evaluated
+import leo21.evaluated.EvaluatedGiven
+import leo21.evaluated.resolve
 import leo21.prim.Prim
 import leo21.token.body.Bindings
 import leo21.definition.Definition

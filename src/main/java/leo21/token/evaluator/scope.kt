@@ -2,8 +2,8 @@ package leo21.token.evaluator
 
 import leo14.lambda.value.Scope
 import leo21.compiled.Compiled
-import leo21.evaluator.Evaluated
-import leo21.evaluator.of
+import leo21.evaluated.Evaluated
+import leo21.evaluated.of
 import leo21.prim.Prim
 import leo21.value.value
 

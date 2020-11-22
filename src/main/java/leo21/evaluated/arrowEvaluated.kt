@@ -1,4 +1,4 @@
-package leo21.evaluator
+package leo21.evaluated
 
 import leo14.lambda.value.Value
 import leo14.lambda.value.apply

@@ -1,10 +1,6 @@
 package leo21.evaluated
 
 import leo.base.assertEqualTo
-import leo21.evaluator.evaluated
-import leo21.evaluator.getOrNull
-import leo21.evaluator.lineEvaluated
-import leo21.evaluator.lineTo
 import kotlin.test.Test
 
 class GetTest {
