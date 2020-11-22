@@ -1,5 +1,6 @@
 package leo21.evaluated
 
+import leo13.Link
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lambda.value.native
@@ -15,8 +16,12 @@ import leo21.type.scriptLine
 val Evaluated.script: Script
 	get() =
 		linkOrNull
-			?.run { evaluated.script.plus(lineEvaluated.scriptLine) }
+			?.evaluatedScript
 			?: script()
+
+val Link<Evaluated, LineEvaluated>.evaluatedScript
+	get() =
+		evaluated.script.plus(lineEvaluated.scriptLine)
 
 val LineEvaluated.scriptLine: ScriptLine
 	get() =
