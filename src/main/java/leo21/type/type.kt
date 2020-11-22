@@ -14,13 +14,14 @@ import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.lineTo
 
-interface TypeComponent {
-	val typeComponentLine: Line
+interface AsType {
+	val asType: Type
 }
 
-data class Type(val lineStack: Stack<Line>) : Scriptable() {
+data class Type(val lineStack: Stack<Line>) : Scriptable(), AsType {
 	override fun toString() = super.toString()
 	override val reflectScriptLine: ScriptLine get() = "type" lineTo script
+	override val asType get() = this
 }
 
 val Type.linkOrNull: Link<Type, Line>?
@@ -32,8 +33,8 @@ val Link<Type, Line>.line get() = head
 
 val Stack<Line>.type get() = Type(this)
 val emptyType = Type(stack())
-fun Type.plus(typeComponent: TypeComponent): Type = lineStack.push(typeComponent.typeComponentLine).type
-fun type(vararg typeComponents: TypeComponent) = emptyType.fold(typeComponents) { plus(it) }
+fun Type.plus(asLine: AsLine): Type = lineStack.push(asLine.asLine).type
+fun type(vararg asLines: AsLine) = emptyType.fold(asLines) { plus(it) }
 
 val stringType = type(stringLine)
 val numberType = type(numberLine)

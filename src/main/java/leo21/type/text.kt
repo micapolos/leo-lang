@@ -1,7 +1,7 @@
 package leo21.type
 
-object Text : TypeComponent {
-	override val typeComponentLine get() = stringLine
+object Text : AsLine {
+	override val asLine get() = stringLine
 }
 
 val text = Text

@@ -13,11 +13,11 @@ class RecursiveResolveTest {
 			.resolve
 			.assertEqualTo(
 				"list" lineTo type(
-					line(recursive("empty" lineTo type())),
-					line(recursive("tail" lineTo type(
+					recursive("empty" lineTo type()),
+					recursive("tail" lineTo type(
 						"list" lineTo type(
 							"empty" lineTo type(),
-							line(recurse(0))))))))
+							recurse(0))))))
 	}
 
 	@Test
@@ -29,8 +29,8 @@ class RecursiveResolveTest {
 
 	@Test
 	fun shift_infinite() {
-		recursive("empty" lineTo type(line(recurse(0))))
+		recursive("empty" lineTo type(recurse(0)))
 			.resolve
-			.assertEqualTo("empty" lineTo type(line(recursive("empty" lineTo type(line(recurse(0)))))))
+			.assertEqualTo("empty" lineTo type(recursive("empty" lineTo type(recurse(0)))))
 	}
 }

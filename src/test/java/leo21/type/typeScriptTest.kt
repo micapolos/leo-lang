@@ -23,14 +23,14 @@ class TypeScriptTest {
 
 	@Test
 	fun struct() {
-		type("x" lineTo numberType, "y" lineTo numberType)
+		type("x" fieldTo numberType, "y" fieldTo numberType)
 			.script
 			.assertEqualTo(script("x" lineTo script("number"), "y" lineTo script("number")))
 	}
 
 	@Test
 	fun choice_() {
-		type(line(choice(stringLine, numberLine)))
+		type(choice(stringLine, numberLine))
 			.script
 			.assertEqualTo(
 				script(
@@ -41,7 +41,7 @@ class TypeScriptTest {
 
 	@Test
 	fun function() {
-		type(line(numberType arrowTo stringType))
+		type(numberType arrowTo stringType)
 			.script
 			.assertEqualTo(
 				script(

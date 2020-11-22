@@ -5,10 +5,15 @@ import leo14.Scriptable
 import leo14.lineTo
 import leo14.script
 
-sealed class Line : Scriptable(), TypeComponent {
+interface AsLine : AsType {
+	val asLine: Line
+	override val asType get() = type(asLine)
+}
+
+sealed class Line : Scriptable(), AsLine {
 	override val reflectScriptLine: ScriptLine
 		get() = "line" lineTo script(scriptLine)
-	override val typeComponentLine get() = this
+	override val asLine get() = this
 }
 
 object StringLine : Line()
@@ -45,8 +50,8 @@ fun line(choice: Choice): Line = ChoiceLine(choice)
 fun line(recursive: Recursive): Line = RecursiveLine(recursive)
 fun line(recurse: Recurse): Line = RecurseLine(recurse)
 
-infix fun String.lineTo(rhs: Type) = line(this fieldTo rhs)
-infix fun Type.lineTo(rhs: Type) = line(this arrowTo rhs)
+infix fun String.lineTo(rhs: AsType) = line(this fieldTo rhs.asType)
+infix fun Type.lineTo(rhs: AsType) = line(this arrowTo rhs.asType)
 
 val Line.nameOrNull: String?
 	get() =

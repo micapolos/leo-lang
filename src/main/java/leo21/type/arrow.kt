@@ -5,13 +5,13 @@ import leo14.Scriptable
 import leo14.lineTo
 import leo14.script
 
-data class Arrow(val lhs: Type, val rhs: Type) : Scriptable(), TypeComponent {
+data class Arrow(val lhs: Type, val rhs: Type) : Scriptable(), AsLine {
 	override fun toString() = reflectScriptLine.toString()
 	override val reflectScriptLine: ScriptLine
 		get() = "arrow" lineTo script(
 			"lhs" lineTo script(lhs.reflectScriptLine),
 			"rhs" lineTo script(rhs.reflectScriptLine))
-	override val typeComponentLine get() = line(this)
+	override val asLine get() = line(this)
 }
 
 infix fun Type.arrowTo(rhs: Type) = Arrow(this, rhs)
