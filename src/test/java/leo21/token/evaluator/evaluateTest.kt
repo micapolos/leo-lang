@@ -74,17 +74,12 @@ class EvaluateTest {
 
 	@Test
 	fun stringTryNumber_success() {
-		evaluate {
-			text("123")
-			try_ { number }
-		}.assertEqualTo(script_ { try_ { success { number(123) } } })
+		evaluate { text("123").number.try_ }
+			.assertEqualTo(script_ { try_ { success { number(123) } } })
 	}
 
 	@Test
 	fun stringTryNumber_failure() {
-		evaluate {
-			text("123a")
-			try_ { number }
-		}.assertEqualTo(script_ { try_ { failure } })
+		evaluate { text("123a").number.try_ }.assertEqualTo(script_ { try_ { failure } })
 	}
 }

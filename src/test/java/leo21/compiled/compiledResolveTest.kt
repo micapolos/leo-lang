@@ -62,8 +62,8 @@ class CompiledResolveTest {
 	@Test
 	fun stringTryNumber() {
 		compiled(
-			line("123"),
-			"try" lineTo compiled("number" lineTo compiled()))
+			"number" lineTo compiled("123"),
+			"try" lineTo compiled())
 			.resolve
 			.assertEqualTo(
 				nativeTerm(StringTryNumberPrim)

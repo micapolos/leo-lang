@@ -169,10 +169,10 @@ val Compiled.resolveStructureOrNull: Compiled?
 
 val Compiled.resolveStringTryNumber: Compiled?
 	get() =
-		linkOrNull?.let { link ->
-			ifOrNull(link.compiled.type == stringType) {
-				ifOrNull(link.lineCompiled.line == "try" lineTo type("number" lineTo type())) {
-					link.compiled.stringTryNumber
+		matchPostfix("try") { lhs ->
+			lhs.matchPrefix("number") { rhs ->
+				rhs.onlyLineOrNull?.stringCompiledOrNull?.let { string ->
+					rhs.stringTryNumber
 				}
 			}
 		}
