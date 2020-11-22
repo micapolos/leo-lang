@@ -1,21 +1,16 @@
 package leo21.evaluated
 
 import leo.base.assertEqualTo
-import leo14.lambda.fn
 import leo14.lambda.value.value
-import leo21.compiled.case
+import leo21.compiled.caseTo
 import leo21.compiled.compiled
-import leo21.compiled.end
 import leo21.compiled.get
 import leo21.compiled.lineTo
-import leo21.compiled.of
 import leo21.compiled.switch
 import leo21.prim.prim
-import leo21.term.term
-import leo21.type.arrowTo
 import leo21.type.choice
-import leo21.type.numberType
 import leo21.type.lineTo
+import leo21.type.numberType
 import leo21.type.stringType
 import leo21.type.type
 import kotlin.test.Test
@@ -50,10 +45,9 @@ class TypedEvaluateTest {
 				"zero" lineTo type(),
 				"one" lineTo type())
 				.compiled("zero" lineTo compiled()))
-			.switch
-			.case("zero", fn(term("false")) of (type("zero" lineTo type()) arrowTo stringType))
-			.case("one", fn(term("true")) of (type("one" lineTo type()) arrowTo stringType))
-			.end
+			.switch(
+				"zero" caseTo { compiled("false") },
+				"one" caseTo { compiled("true") })
 			.evaluated
 			.assertEqualTo(value(prim("false")) of stringType)
 	}
@@ -65,10 +59,9 @@ class TypedEvaluateTest {
 				"zero" lineTo type(),
 				"one" lineTo type())
 				.compiled("one" lineTo compiled()))
-			.switch
-			.case("zero", fn(term("false")) of (type("zero" lineTo type()) arrowTo stringType))
-			.case("one", fn(term("true")) of (type("one" lineTo type()) arrowTo stringType))
-			.end
+			.switch(
+				"zero" caseTo { compiled("false") },
+				"one" caseTo { compiled("true") })
 			.evaluated
 			.assertEqualTo(value(prim("true")) of stringType)
 	}

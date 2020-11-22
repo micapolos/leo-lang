@@ -1,5 +1,6 @@
 package leo21.compiled
 
+import leo.base.fold
 import leo14.lambda.Term
 import leo14.lambda.eitherFirst2
 import leo14.lambda.eitherSecond2
@@ -31,3 +32,12 @@ val ChoiceCompiled.compiled: Compiled
 	get() =
 		if (termOrNull == null) error("no choice")
 		else Compiled(termOrNull, type(line(choice)))
+
+fun ChoiceCompiled.plus(option: Option): ChoiceCompiled =
+	when (option) {
+		is YesOption -> plusChosen(option.lineCompiled)
+		is NoOption -> plusNotChosen(option.line)
+	}
+
+fun choice(option: Option, vararg options: Option): ChoiceCompiled =
+	emptyChoiceCompiled.plus(option).fold(options) { plus(it) }

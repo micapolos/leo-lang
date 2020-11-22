@@ -9,8 +9,8 @@ import leo21.prim.prim
 import leo21.type.arrowTo
 import leo21.type.choice
 import leo21.type.line
-import leo21.type.numberType
 import leo21.type.lineTo
+import leo21.type.numberType
 import leo21.type.recurse
 import leo21.type.recursive
 import leo21.type.stringType
@@ -178,10 +178,10 @@ class CompiledTest {
 				"zero" lineTo type(),
 				"one" lineTo type())
 				.compiled("zero" lineTo compiled()))
-			.switch
-			.case("zero", ArrowCompiled(arg(0), type("zero" lineTo type()) arrowTo stringType))
-			.case("one", ArrowCompiled(arg(0), type("one" lineTo type()) arrowTo stringType))
-			.end
+			.switch(
+				"zero" caseTo { compiled("zero") },
+				"one" caseTo { compiled("one") }
+			)
 			.type
 			.assertEqualTo(stringType)
 	}
