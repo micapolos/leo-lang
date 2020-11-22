@@ -3,7 +3,6 @@ package leo21.evaluated
 import leo14.Script
 import leo14.ScriptLine
 import leo14.lambda.value.native
-import leo14.lambda.value.switch
 import leo14.line
 import leo14.lineTo
 import leo14.literal
@@ -11,7 +10,6 @@ import leo14.plus
 import leo14.script
 import leo21.prim.number
 import leo21.prim.string
-import leo21.type.linkOrNull
 import leo21.type.scriptLine
 
 val Evaluated.script: Script
@@ -43,11 +41,9 @@ val FieldEvaluated.scriptLine: ScriptLine
 
 val ChoiceEvaluated.scriptLine: ScriptLine
 	get() =
-		choice.linkOrNull!!.let { link ->
-			valueOrNull!!.switch(
-				{ lhsValue -> lhsValue.of(link.tail).scriptLine },
-				{ rhsValue -> rhsValue.of(link.head).scriptLine })
-		}
+		switch(
+			ChoiceEvaluated::scriptLine,
+			LineEvaluated::scriptLine)
 
 val ArrowEvaluated.scriptLine: ScriptLine
 	get() =
