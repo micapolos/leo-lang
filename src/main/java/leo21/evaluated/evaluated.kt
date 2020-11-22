@@ -47,10 +47,6 @@ val Evaluated.compiled: Compiled
 	get() =
 		Compiled(value.term, type)
 
-val Evaluated.script: Script
-	get() =
-		script(value, type)
-
 fun evaluated(lineEvaluated: LineEvaluated): Evaluated =
 	lineEvaluated.value of type(lineEvaluated.line)
 

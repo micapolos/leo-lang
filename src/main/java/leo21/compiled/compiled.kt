@@ -136,3 +136,15 @@ val Compiled.isEmpty: Boolean
 
 val Link<Compiled, LineCompiled>.compiled: Compiled get() = tail
 val Link<Compiled, LineCompiled>.lineCompiled: LineCompiled get() = head
+
+val Compiled.structure: Compiled
+	get() =
+		compiled(
+			"structure" lineTo compiled(
+				linkOrNull
+					?.let { link ->
+						"link" lineTo compiled(
+							"remaining" lineTo link.tail.structure,
+							"last" lineTo compiled(link.head))
+					}
+					?: "empty" lineTo compiled()))

@@ -12,9 +12,9 @@ import leo21.compiled.lineTo
 import leo21.prim.prim
 import leo21.type.arrowTo
 import leo21.type.choice
-import leo21.type.numberType
 import leo21.type.line
 import leo21.type.lineTo
+import leo21.type.numberType
 import leo21.type.stringType
 import kotlin.test.Test
 

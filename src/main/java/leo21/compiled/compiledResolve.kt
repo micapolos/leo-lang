@@ -75,6 +75,7 @@ val Compiled.resolveOrNull: Compiled?
 				StringLengthPrim,
 				type("count" lineTo numberType))
 			?: resolveTypeOrNull
+			?: resolveStructureOrNull
 			?: resolveMakeOrNull
 
 fun Compiled.resolveFn1OrNull(lhs: Type, line: Line, prim: Prim, result: Type): Compiled? =
@@ -155,4 +156,10 @@ val Compiled.resolveTypeOrNull: Compiled?
 	get() =
 		resolveOp1OrNull("type") { lhs ->
 			lhs.type.script.staticCompiled
+		}
+
+val Compiled.resolveStructureOrNull: Compiled?
+	get() =
+		resolveOp1OrNull("structure") { lhs ->
+			lhs.structure
 		}
