@@ -9,6 +9,7 @@ import leo21.type.choice
 import leo21.type.line
 import leo21.type.lineTo
 import leo21.type.numberLine
+import leo21.type.recursive
 import leo21.type.stringLine
 import leo21.type.type
 import kotlin.test.Test
@@ -32,5 +33,12 @@ class CastTest {
 				nativeTerm(prim("foo")).eitherFirst2.eitherSecond2
 					.of(type("a" lineTo type(line(choice(stringLine, numberLine)))))
 					.nonIdentityCast)
+	}
+
+	@Test
+	fun recursive() {
+		compiled("empty" lineTo compiled())
+			.castOrNull(type(line(recursive("empty" lineTo type()))))
+			.assertEqualTo(compiled(line(recursive("empty" lineTo compiled()))).identityCast)
 	}
 }

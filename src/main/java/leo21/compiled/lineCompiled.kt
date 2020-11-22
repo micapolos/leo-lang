@@ -45,11 +45,31 @@ fun <R> LineCompiled.switch(
 		is RecurseLine -> null!!
 	}
 
+fun <R> LineCompiled.switch(
+	stringFn: (StringCompiled) -> R,
+	doubleFn: (DoubleCompiled) -> R,
+	fieldFn: (FieldCompiled) -> R,
+	choiceFn: (ChoiceCompiled) -> R,
+	arrowFn: (ArrowCompiled) -> R,
+	recursiveFn: (RecursiveCompiled) -> R,
+	recurseFn: (RecurseCompiled) -> R
+): R =
+	when (line) {
+		StringLine -> stringFn(StringCompiled(term))
+		NumberLine -> doubleFn(DoubleCompiled(term))
+		is ChoiceLine -> choiceFn(ChoiceCompiled(term, line.choice))
+		is FieldLine -> fieldFn(FieldCompiled(term, line.field))
+		is ArrowLine -> arrowFn(ArrowCompiled(term, line.arrow))
+		is RecursiveLine -> recursiveFn(RecursiveCompiled(term, line.recursive))
+		is RecurseLine -> recurseFn(RecurseCompiled(term, line.recurse))
+	}
+
 fun line(string: String) = LineCompiled(nativeTerm(prim(string)), stringLine)
 fun line(double: Double) = LineCompiled(nativeTerm(prim(double)), numberLine)
 infix fun String.lineTo(rhs: Compiled) = LineCompiled(rhs.term, this lineTo rhs.type)
 fun line(arrowCompiled: ArrowCompiled) = LineCompiled(arrowCompiled.term, line(arrowCompiled.arrow))
 fun line(choiceCompiled: ChoiceCompiled) = LineCompiled(choiceCompiled.termOrNull!!, line(choiceCompiled.choice))
+fun line(recursiveCompiled: RecursiveCompiled) = LineCompiled(recursiveCompiled.term, line(recursiveCompiled.recursive))
 infix fun Type.does(compiled: Compiled) = line(fn(compiled.term).of(this arrowTo compiled.type))
 
 fun lineCompiled(literal: Literal): LineCompiled =

@@ -19,4 +19,18 @@ class RecursiveResolveTest {
 							"empty" lineTo type(),
 							line(recurse(0))))))))
 	}
+
+	@Test
+	fun shift_empty() {
+		recursive("empty" lineTo type())
+			.resolve
+			.assertEqualTo("empty" lineTo type())
+	}
+
+	@Test
+	fun shift_infinite() {
+		recursive("empty" lineTo type(line(recurse(0))))
+			.resolve
+			.assertEqualTo("empty" lineTo type(line(recursive("empty" lineTo type(line(recurse(0)))))))
+	}
 }

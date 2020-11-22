@@ -3,6 +3,11 @@ package leo21.type
 import leo13.indexed
 import leo13.map
 
+val Line.resolve: Line
+	get() =
+		if (this is RecursiveLine) recursive.resolve
+		else this
+
 val Recursive.resolve: Line
 	get() =
 		line.shift(0, this)
