@@ -5,12 +5,12 @@ import leo14.Script
 import leo14.begin
 import leo14.fragment
 import leo14.parent
-import leo21.evaluated.script
+import leo21.evaluated.printScript
 import leo21.token.strings.valueKeyword
 
 val Evaluator.printScript: Script
 	get() =
-		evaluated.script
+		evaluated.printScript
 
 val EvaluatorNode.printFragment
 	get() =
