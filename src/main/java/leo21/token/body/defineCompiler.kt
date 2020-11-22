@@ -1,6 +1,5 @@
 package leo21.token.body
 
-import leo13.onlyOrNull
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
@@ -16,15 +15,12 @@ import leo14.script
 import leo15.dsl.*
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.end
-import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.FunctionCompilerProcessor
 import leo21.token.processor.Processor
 import leo21.token.processor.TypeCompilerProcessor
 import leo21.token.processor.processor
 import leo21.token.type.compiler.DefineCompilerTypeParent
 import leo21.token.type.compiler.TypeCompiler
-import leo21.type.Line
-import leo21.type.Type
 import leo21.type.type
 
 data class DefineCompiler(
@@ -100,12 +96,6 @@ fun DefineCompiler.plus(token: Token): Processor =
 
 fun DefineCompiler.plus(definition: Definition): DefineCompiler =
 	copy(module = module.plus(definition))
-
-fun DefineCompiler.plus(line: Line): DefineCompiler =
-	copy(module = module.plus(line))
-
-fun DefineCompiler.plus(type: Type): Processor =
-	DefineCompilerProcessor(plus(type.lineStack.onlyOrNull!!))
 
 fun DefineCompiler.Parent.plus(module: Module): Processor =
 	when (this) {

@@ -1,5 +1,6 @@
 package leo21.token.body
 
+import leo.base.updateIfNotNull
 import leo13.fold
 import leo13.reverse
 import leo14.Script
@@ -7,7 +8,6 @@ import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.anyReflectScriptLine
 import leo14.lineTo
-import leo14.plus
 import leo14.script
 import leo21.compiled.Compiled
 import leo21.token.type.compiler.Lines
@@ -27,8 +27,8 @@ val emptyModule = Module(emptyBindings, emptyLines, emptyDefinitions)
 
 fun Module.plus(definition: Definition): Module =
 	Module(
-		bindings.plus(definition.binding),
-		lines,
+		bindings.updateIfNotNull(definition.bindingOrNull) { plus(it) },
+		lines.updateIfNotNull(definition.lineOrNull) { plus(it) },
 		definitions.plus(definition))
 
 fun Module.plus(definitions: Definitions): Module =
@@ -38,7 +38,7 @@ fun Module.plus(lines: Lines): Module =
 	fold(lines.lineStack.reverse) { plus(it) }
 
 fun Module.plus(module: Module): Module =
-	plus(lines).plus(module.definitions)
+	plus(module.definitions)
 
 fun Module.plus(line: Line): Module =
 	copy(lines = lines.plus(line))
@@ -54,7 +54,7 @@ fun Compiled.wrap(module: Module): Compiled =
 
 val Module.printScript: Script
 	get() =
-		lines.printScript.plus(definitions.printScript)
+		definitions.printScript
 
 val Module.begin: Module
 	get() =

@@ -1,11 +1,14 @@
 package leo21.token.type.compiler
 
+import leo13.onlyOrNull
 import leo21.token.body.DefineCompiler
 import leo21.token.body.FunctionCompiler
 import leo21.token.body.plus
+import leo21.token.body.typeDefinition
 import leo21.token.processor.ArrowCompilerProcessor
 import leo21.token.processor.ChoiceCompilerProcessor
 import leo21.token.processor.Processor
+import leo21.token.processor.processor
 import leo21.type.Type
 import leo21.type.plus
 
@@ -26,5 +29,5 @@ fun TypeParent.plus(type: Type): Processor =
 		is ArrowNameTypeParent -> ArrowCompilerProcessor(arrowCompiler.set(lhs.plus(name compiledLineTo type)))
 		is RecursiveTypeParent -> typeCompiler.plusRecursive(type)
 		is FunctionCompilerTypeParent -> functionCompiler.plus(type)
-		is DefineCompilerTypeParent -> defineCompiler.plus(type)
+		is DefineCompilerTypeParent -> defineCompiler.plus(typeDefinition(type.lineStack.onlyOrNull!!)).processor
 	}

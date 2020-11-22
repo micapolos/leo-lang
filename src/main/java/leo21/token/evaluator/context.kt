@@ -1,5 +1,6 @@
 package leo21.token.evaluator
 
+import leo.base.updateIfNotNull
 import leo13.fold
 import leo13.reverse
 import leo14.ScriptLine
@@ -18,15 +19,18 @@ import leo21.token.body.Bindings
 import leo21.token.body.Definition
 import leo21.token.body.Module
 import leo21.token.body.binding
+import leo21.token.body.bindingOrNull
 import leo21.token.body.emptyBindings
 import leo21.token.body.emptyDefinitions
 import leo21.token.body.given
+import leo21.token.body.lineOrNull
 import leo21.token.body.plus
 import leo21.token.body.resolve
 import leo21.token.body.resolveOrNull
-import leo21.token.body.value
+import leo21.token.body.valueOrNull
 import leo21.token.type.compiler.Lines
 import leo21.token.type.compiler.emptyLines
+import leo21.token.type.compiler.plus
 
 data class Context(
 	val bindings: Bindings,
@@ -65,6 +69,6 @@ fun Context.plus(module: Module): Context =
 
 fun Context.plus(definition: Definition): Context =
 	Context(
-		bindings.plus(definition.binding),
-		lines,
-		scope.push(definition.value))
+		bindings.updateIfNotNull(definition.bindingOrNull) { plus(it) },
+		lines.updateIfNotNull(definition.lineOrNull) { plus(it) },
+		scope.updateIfNotNull(definition.valueOrNull) { push(it) })
