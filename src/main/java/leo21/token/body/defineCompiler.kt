@@ -67,6 +67,7 @@ fun DefineCompiler.plus(token: Token): Processor =
 				}
 			}
 		is BeginToken -> when (token.begin.string) {
+			"constant" -> error { did { not { implement } } }
 			"function" ->
 				FunctionCompilerProcessor(
 					FunctionCompiler(
