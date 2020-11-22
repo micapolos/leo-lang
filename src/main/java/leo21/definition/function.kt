@@ -25,6 +25,6 @@ val DefinitionFunction.binding get() = type.functionBinding(compiled.type)
 
 val DefinitionFunction.printScriptLine: ScriptLine
 	get() =
-		"function" lineTo type.printScript
+		"function".typeKeyword lineTo type.printScript
 			.plus("does".typeKeyword lineTo compiled.type.printScript)
 

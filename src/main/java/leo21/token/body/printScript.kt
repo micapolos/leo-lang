@@ -12,17 +12,17 @@ import leo14.parent
 import leo14.script
 import leo21.compiled.script
 import leo21.token.evaluator.printFragment
+import leo21.token.strings.typeKeyword
 import leo21.token.strings.valueKeyword
 import leo21.token.type.compiler.Lines
 import leo21.type.Line
 import leo21.type.nameOrNull
 import leo21.type.printScript
-import leo21.type.script
 import leo21.type.scriptLine
 
 val Body.printScript: Script
 	get() =
-		compiled.script
+		compiled.type.printScript
 
 val BodyCompiler.printFragment: Fragment
 	get() =
@@ -34,11 +34,11 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 			is BodyCompiler.Parent.BodyName ->
 				bodyCompiler.printFragment.parent(begin(name))
 			is BodyCompiler.Parent.BodyDo ->
-				bodyCompiler.printFragment.parent(begin("do".valueKeyword))
+				bodyCompiler.printFragment.parent(begin("do".typeKeyword))
 			is BodyCompiler.Parent.BodyApply ->
-				bodyCompiler.printFragment.parent(begin("apply".valueKeyword))
+				bodyCompiler.printFragment.parent(begin("apply".typeKeyword))
 			is BodyCompiler.Parent.FunctionDoes ->
-				functionCompiler.printFragment.parent(begin("does".valueKeyword))
+				functionCompiler.printFragment.parent(begin("does".typeKeyword))
 			is BodyCompiler.Parent.SwitchCase ->
 				switchCompiler.printFragment.parent(begin(case.nameOrNull!!))
 		}
@@ -55,7 +55,7 @@ val FunctionCompiler.printFragment: Fragment
 
 val FunctionDoesCompiler.printFragment: Fragment
 	get() =
-		parentOrNull?.printFragmentParent.fragment(arrowCompiled.arrow.script)
+		parentOrNull?.printFragmentParent.fragment(arrowCompiled.arrow.printScript)
 
 val FunctionCompiler.Parent.printFragmentParent: FragmentParent
 	get() =
@@ -63,7 +63,7 @@ val FunctionCompiler.Parent.printFragmentParent: FragmentParent
 			is FunctionCompiler.Parent.Define -> defineCompiler.printFragment
 			is FunctionCompiler.Parent.Body -> bodyCompiler.printFragment
 			is FunctionCompiler.Parent.Evaluator -> evaluatorNode.printFragment
-		}.parent(begin("function".valueKeyword))
+		}.parent(begin("function".typeKeyword))
 
 val DefineCompiler.printFragment: Fragment
 	get() =
@@ -74,11 +74,11 @@ val DefineCompiler.Parent.printFragmentParent: FragmentParent
 		when (this) {
 			is DefineCompiler.Parent.Body -> bodyCompiler.printFragment
 			is DefineCompiler.Parent.Evaluator -> evaluatorNode.printFragment
-		}.parent(begin("define".valueKeyword))
+		}.parent(begin("define".typeKeyword))
 
 val Line.printScriptLine: ScriptLine
 	get() =
-		"type" lineTo script(scriptLine)
+		"type".typeKeyword lineTo script(scriptLine)
 
 val Lines.printScript: Script
 	get() =

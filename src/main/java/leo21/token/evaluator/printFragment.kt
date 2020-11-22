@@ -6,8 +6,7 @@ import leo14.begin
 import leo14.fragment
 import leo14.parent
 import leo21.evaluated.script
-import leo21.token.strings.applyKeyword
-import leo21.token.strings.doKeyword
+import leo21.token.strings.valueKeyword
 
 val Evaluator.printScript: Script
 	get() =
@@ -22,7 +21,7 @@ val EvaluatorParent.printFragmentParent: FragmentParent
 		when (this) {
 			is EvaluatorNodeBeginEvaluatorParent -> evaluatorNodeBegin.printFragmentParent
 			is EvaluatorNodeDoEvaluatorParent -> evaluatorNodeDo.printFragmentParent
-			is EvaluatorNodeApplyEvaluatorParent -> evaluatorNode.printFragment.parent(begin(applyKeyword))
+			is EvaluatorNodeApplyEvaluatorParent -> evaluatorNode.printFragment.parent(begin("apply".valueKeyword))
 		}
 
 val EvaluatorNodeBegin.printFragmentParent: FragmentParent
@@ -31,4 +30,4 @@ val EvaluatorNodeBegin.printFragmentParent: FragmentParent
 
 val EvaluatorNodeDo.printFragmentParent: FragmentParent
 	get() =
-		evaluatorNode.printFragment.parent(begin(doKeyword))
+		evaluatorNode.printFragment.parent(begin("do".valueKeyword))

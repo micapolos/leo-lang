@@ -28,7 +28,9 @@ val Ansi.brightCyan get() = escape + "96m"
 val Ansi.brightWhite get() = escape + "97m"
 
 val Ansi.bold get() = escape + "1m"
-val Ansi.normal get() = escape + "22m"
+val Ansi.italic get() = escape + "3m"
+val Ansi.notBold get() = escape + "22m"
+val Ansi.notItalic get() = escape + "23m"
 
 val Ansi.reset get() = escape + "0m"
 
