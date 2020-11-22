@@ -16,21 +16,21 @@ import kotlin.test.Test
 class CastTest {
 	@Test
 	fun choice_1() {
-		("a" lineTo compiled(12.0))
-			.castOrNull("a" lineTo type(line(choice(stringLine, numberLine))))
+		compiled("a" lineTo compiled(12.0))
+			.castOrNull(type("a" lineTo type(line(choice(stringLine, numberLine)))))
 			.assertEqualTo(
 				nativeTerm(prim(12.0)).eitherFirst2
-					.of("a" lineTo type(line(choice(stringLine, numberLine))))
+					.of(type("a" lineTo type(line(choice(stringLine, numberLine)))))
 					.nonIdentityCast)
 	}
 
 	@Test
 	fun choice_2() {
-		("a" lineTo compiled("foo"))
-			.castOrNull("a" lineTo type(line(choice(stringLine, numberLine))))
+		compiled("a" lineTo compiled("foo"))
+			.castOrNull(type("a" lineTo type(line(choice(stringLine, numberLine)))))
 			.assertEqualTo(
 				nativeTerm(prim("foo")).eitherFirst2.eitherSecond2
-					.of("a" lineTo type(line(choice(stringLine, numberLine))))
+					.of(type("a" lineTo type(line(choice(stringLine, numberLine)))))
 					.nonIdentityCast)
 	}
 }
