@@ -107,7 +107,7 @@ fun <V> Stack<V>.split(predicate: (V) -> Boolean): Pair<Stack<V>?, Stack<V>?> =
 
 fun <V> Stack<V>.removeTop(value: V): Stack<V>? =
 	if (head == value) tail
-	else tail.removeTop(value).push(head)
+	else tail?.removeTop(value).push(head)
 
 // TODO: Using clampedInt is "cheating", implement it properly some day
 operator fun <V : Any> Stack<V>.get(binary: Binary): V? =
