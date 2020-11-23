@@ -10,6 +10,7 @@ import leo14.Token
 import leo14.error
 import leo14.orError
 import leo15.dsl.*
+import leo21.compiled.Compiled
 import leo21.compiled.SwitchCompiled
 import leo21.compiled.caseTo
 import leo21.compiled.compiled
@@ -55,8 +56,8 @@ fun SwitchCompiler.plus(token: Token): Processor =
 		is EndToken -> BodyCompilerProcessor(parentBodyCompiler.set(switchCompiled.end))
 	}
 
-fun SwitchCompiler.plus(line: Line, body: Body): Processor =
+fun SwitchCompiler.plus(line: Line, compiled: Compiled): Processor =
 	SwitchCompilerProcessor(
 		copy(
-			switchCompiled = switchCompiled.plus(line.nameOrNull!! caseTo { body.wrapCompiled }),
-			caseFieldStack = caseFieldStack.push(line.nameOrNull!! fieldTo body.wrapCompiled.type)))
+			switchCompiled = switchCompiled.plus(line.nameOrNull!! caseTo { compiled }),
+			caseFieldStack = caseFieldStack.push(line.nameOrNull!! fieldTo compiled.type)))

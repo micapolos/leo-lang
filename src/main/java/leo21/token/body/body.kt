@@ -63,8 +63,8 @@ fun Body.plus(definition: Definition) =
 		module.plus(definition),
 		compiled)
 
-fun Body.do_(body: Body): Body =
-	set(compiled.do_(body.wrapCompiled))
+fun Body.do_(rhs: Compiled): Body =
+	set(compiled.do_(rhs))
 
 fun Body.apply(rhs: Compiled): Body =
 	set(compiled.apply(rhs))

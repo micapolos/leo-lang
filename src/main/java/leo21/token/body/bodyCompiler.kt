@@ -122,26 +122,26 @@ fun BodyCompiler.plus(begin: Begin): Processor =
 	}
 
 fun BodyCompiler.plus(end: End): Processor =
-	parentOrNull!!.process(body)
+	parentOrNull!!.process(body.wrapCompiled)
 
-fun BodyCompiler.Parent.process(body: Body): Processor =
+fun BodyCompiler.Parent.process(compiled: Compiled): Processor =
 	when (this) {
 		is BodyCompiler.Parent.BodyName ->
 			bodyCompiler
-				.plus(name lineTo body.wrapCompiled)
+				.plus(name lineTo compiled)
 				.processor
 		is BodyCompiler.Parent.BodyDo ->
 			bodyCompiler
-				.plusDo(body)
+				.plusDo(compiled)
 				.processor
 		is BodyCompiler.Parent.BodyApply ->
 			bodyCompiler
-				.apply(body.wrapCompiled)
+				.apply(compiled)
 				.processor
 		is BodyCompiler.Parent.FunctionDoes ->
-			functionCompiler.plus(body.wrapCompiled)
+			functionCompiler.plus(compiled)
 		is BodyCompiler.Parent.SwitchCase ->
-			switchCompiler.plus(case, body)
+			switchCompiler.plus(case, compiled)
 	}
 
 fun BodyCompiler.plus(lineCompiled: LineCompiled): BodyCompiler =
@@ -153,8 +153,8 @@ fun BodyCompiler.set(compiled: Compiled): BodyCompiler =
 fun BodyCompiler.plus(module: Module): BodyCompiler =
 	copy(body = body.plus(module))
 
-fun BodyCompiler.plusDo(rhsBody: Body): BodyCompiler =
-	copy(body = body.do_(rhsBody))
+fun BodyCompiler.plusDo(compiled: Compiled): BodyCompiler =
+	copy(body = body.do_(compiled))
 
 fun BodyCompiler.apply(compiled: Compiled): BodyCompiler =
 	copy(body = body.apply(compiled))
