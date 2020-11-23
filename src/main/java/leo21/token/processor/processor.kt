@@ -14,12 +14,13 @@ import leo15.dsl.*
 import leo21.compiled.Compiled
 import leo21.token.body.Body
 import leo21.token.body.BodyCompiler
-import leo21.token.body.DefineCompiler
+import leo21.token.define.DefineCompiler
 import leo21.token.body.FunctionCompiler
 import leo21.token.body.FunctionDoesCompiler
 import leo21.token.body.SwitchCompiler
 import leo21.token.body.emptyBodyCompiler
 import leo21.token.body.plus
+import leo21.token.define.plus
 import leo21.token.body.wrapCompiled
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.emptyEvaluatorNode

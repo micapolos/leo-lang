@@ -13,6 +13,7 @@ import leo21.compiled.do_
 import leo21.compiled.plus
 import leo21.compiled.resolve
 import leo21.definition.Definition
+import leo21.definition.Definitions
 import leo21.token.type.compiler.cast
 import leo21.type.isEmpty
 
@@ -52,9 +53,9 @@ val Body.wrapCompiled: Compiled
 	get() =
 		compiled.wrap(module)
 
-fun Body.plus(rhs: Module) =
+fun Body.plus(definitions: Definitions) =
 	Body(
-		module.plus(rhs),
+		module.plus(definitions),
 		compiled)
 
 fun Body.plus(definition: Definition) =

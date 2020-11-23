@@ -17,6 +17,7 @@ import leo21.evaluated.resolve
 import leo21.prim.Prim
 import leo21.token.body.Bindings
 import leo21.definition.Definition
+import leo21.definition.Definitions
 import leo21.token.body.Module
 import leo21.token.body.binding
 import leo21.definition.bindingOrNull
@@ -62,10 +63,8 @@ val Context.beginModule: Module
 	get() =
 		Module(bindings, lines, emptyDefinitions)
 
-fun Context.plus(module: Module): Context =
-	this
-		.fold(module.definitions.definitionStack.reverse, Context::plus)
-		.copy(lines = module.lines)
+fun Context.plus(definitions: Definitions): Context =
+	fold(definitions.definitionStack.reverse, Context::plus)
 
 fun Context.plus(definition: Definition): Context =
 	Context(

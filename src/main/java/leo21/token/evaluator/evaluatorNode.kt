@@ -13,12 +13,12 @@ import leo14.orError
 import leo14.script
 import leo15.dsl.*
 import leo21.compiled.ArrowCompiled
+import leo21.definition.Definitions
 import leo21.evaluated.Evaluated
 import leo21.evaluated.LineEvaluated
 import leo21.evaluated.lineEvaluated
-import leo21.token.body.DefineCompiler
+import leo21.token.define.DefineCompiler
 import leo21.token.body.FunctionCompiler
-import leo21.token.body.Module
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.EvaluatorProcessor
 import leo21.token.processor.FunctionCompilerProcessor
@@ -72,8 +72,8 @@ fun EvaluatorNode.plus(token: Token): Processor =
 fun EvaluatorNode.plus(line: LineEvaluated): EvaluatorNode =
 	copy(evaluator = evaluator.plus(line))
 
-fun EvaluatorNode.end(module: Module): EvaluatorNode =
-	copy(evaluator = evaluator.plus(module))
+fun EvaluatorNode.end(definitions: Definitions): EvaluatorNode =
+	copy(evaluator = evaluator.plus(definitions))
 
 fun EvaluatorNode.do_(rhs: Evaluated): EvaluatorNode =
 	copy(evaluator = evaluator.do_(rhs))

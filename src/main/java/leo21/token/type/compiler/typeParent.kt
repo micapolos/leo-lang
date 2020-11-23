@@ -2,9 +2,10 @@ package leo21.token.type.compiler
 
 import leo13.onlyOrNull
 import leo21.definition.typeDefinition
-import leo21.token.body.DefineCompiler
+import leo21.token.define.DefineCompiler
 import leo21.token.body.FunctionCompiler
 import leo21.token.body.plus
+import leo21.token.define.plus
 import leo21.token.processor.ArrowCompilerProcessor
 import leo21.token.processor.ChoiceCompilerProcessor
 import leo21.token.processor.Processor

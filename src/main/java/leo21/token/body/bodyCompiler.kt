@@ -18,6 +18,8 @@ import leo21.compiled.LineCompiled
 import leo21.compiled.lineCompiled
 import leo21.compiled.lineTo
 import leo21.compiled.switch
+import leo21.definition.Definitions
+import leo21.token.define.DefineCompiler
 import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.FunctionCompilerProcessor
@@ -150,8 +152,8 @@ fun BodyCompiler.plus(lineCompiled: LineCompiled): BodyCompiler =
 fun BodyCompiler.set(compiled: Compiled): BodyCompiler =
 	copy(body = body.set(compiled))
 
-fun BodyCompiler.plus(module: Module): BodyCompiler =
-	copy(body = body.plus(module))
+fun BodyCompiler.plus(definitions: Definitions): BodyCompiler =
+	copy(body = body.plus(definitions))
 
 fun BodyCompiler.plusDo(compiled: Compiled): BodyCompiler =
 	copy(body = body.do_(compiled))

@@ -1,4 +1,4 @@
-package leo21.token.body
+package leo21.token.define
 
 import leo14.BeginToken
 import leo14.EndToken
@@ -14,6 +14,12 @@ import leo14.orError
 import leo14.script
 import leo15.dsl.*
 import leo21.definition.Definition
+import leo21.definition.Definitions
+import leo21.token.body.BodyCompiler
+import leo21.token.body.FunctionCompiler
+import leo21.token.body.Module
+import leo21.token.body.emptyModule
+import leo21.token.body.plus
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.end
 import leo21.token.processor.FunctionCompilerProcessor
@@ -93,14 +99,14 @@ fun DefineCompiler.plus(token: Token): Processor =
 					}
 				}
 		}
-		is EndToken -> parentOrNull?.plus(module).orError { not { expected { end } } }
+		is EndToken -> parentOrNull?.plus(module.definitions).orError { not { expected { end } } }
 	}
 
 fun DefineCompiler.plus(definition: Definition): DefineCompiler =
 	copy(module = module.plus(definition))
 
-fun DefineCompiler.Parent.plus(module: Module): Processor =
+fun DefineCompiler.Parent.plus(definitions: Definitions): Processor =
 	when (this) {
-		is DefineCompiler.Parent.Body -> bodyCompiler.plus(module).processor
-		is DefineCompiler.Parent.Evaluator -> evaluatorNode.end(module).processor
+		is DefineCompiler.Parent.Body -> bodyCompiler.plus(definitions).processor
+		is DefineCompiler.Parent.Evaluator -> evaluatorNode.end(definitions).processor
 	}

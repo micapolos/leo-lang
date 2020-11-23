@@ -18,7 +18,7 @@ import leo21.evaluated.lineTo
 import leo21.evaluated.of
 import leo21.evaluated.plus
 import leo21.definition.Definition
-import leo21.token.body.Module
+import leo21.definition.Definitions
 import leo21.type.line
 
 data class Evaluator(val context: Context, val evaluated: Evaluated) : Scriptable() {
@@ -50,8 +50,8 @@ val Evaluator.beginDo
 fun Evaluator.do_(rhs: Evaluated): Evaluator =
 	copy(evaluated = rhs)
 
-fun Evaluator.plus(module: Module): Evaluator =
-	copy(context = context.plus(module))
+fun Evaluator.plus(definitions: Definitions): Evaluator =
+	copy(context = context.plus(definitions))
 
 fun Evaluator.plus(definition: Definition): Evaluator =
 	copy(context = context.plus(definition))

@@ -10,7 +10,7 @@ import leo14.fragment
 import leo14.lineTo
 import leo14.parent
 import leo14.script
-import leo21.compiled.script
+import leo21.token.define.DefineCompiler
 import leo21.token.evaluator.printFragment
 import leo21.token.strings.typeKeyword
 import leo21.token.strings.valueKeyword

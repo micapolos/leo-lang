@@ -23,6 +23,8 @@ import leo21.compiled.compiled
 import leo21.compiled.line
 import leo21.compiled.of
 import leo21.definition.functionDefinition
+import leo21.token.define.DefineCompiler
+import leo21.token.define.plus
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.plus
 import leo21.token.processor.BodyCompilerProcessor
