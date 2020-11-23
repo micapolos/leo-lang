@@ -56,7 +56,7 @@ class ScriptTypeTest {
 		script(
 			"function" lineTo script(
 				"number" lineTo script(),
-				"doing" lineTo script("text")))
+				"does" lineTo script("text")))
 			.type
 			.assertEqualTo(type(numberType arrowTo stringType))
 	}

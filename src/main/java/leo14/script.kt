@@ -422,6 +422,10 @@ val ScriptLine.fieldOrNull: ScriptField?
 	get() =
 		(this as? FieldScriptLine)?.field
 
+val ScriptLine.literalOrNull: Literal?
+	get() =
+		(this as? LiteralScriptLine)?.literal
+
 val ScriptLink.onlyLineOrNull: ScriptLine?
 	get() =
 		notNullIf(lhs.isEmpty) { line }

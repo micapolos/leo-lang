@@ -14,14 +14,13 @@ import leo14.UnitScript
 import leo14.fieldOrNull
 import leo14.isEmpty
 import leo14.lineSeq
+import leo14.literalOrNull
+import leo14.numberOrNull
+import leo14.onlyLineOrNull
 
 val Script.type: Type
 	get() =
-		emptyTypeCompiler.fold(lineSeq.reverse) { plus(it) }.type
-
-val Script.choice: Choice
-	get() =
-		choice().fold(lineSeq.reverse) { plus(it.typeLine) }
+		type().fold(lineSeq.reverse) { plus(it.typeLine) }
 
 val ScriptLine.typeLine: Line
 	get() =
@@ -32,16 +31,16 @@ val ScriptLine.typeLine: Line
 
 val ScriptField.typeLine: Line
 	get() =
-		keywordTypeLineOrNull ?: rawTypeLine
-
-val ScriptField.keywordTypeLineOrNull: Line?
-	get() =
 		when (string) {
+			"choice" -> line(choice().fold(rhs.lineSeq.reverse) { plus(it.typeLine) })
 			"number" -> notNullIf(rhs.isEmpty) { numberLine }
 			"text" -> notNullIf(rhs.isEmpty) { stringLine }
 			"function" -> line(rhs.arrowLine)
+			"recursive" -> line(recursive(rhs.onlyLineOrNull!!.fieldOrNull!!.typeLine))
+			"recurse" -> line(recurse(rhs.onlyLineOrNull!!.literalOrNull!!.numberOrNull!!.bigDecimal.intValueExact()))
+			"word" -> rhs.onlyLineOrNull!!.fieldOrNull!!.rawTypeLine
 			else -> null
-		}
+		} ?: rawTypeLine
 
 val ScriptField.rawTypeLine: Line
 	get() =
@@ -52,7 +51,7 @@ val Script.arrowLine: Arrow
 		when (this) {
 			is UnitScript -> error("not a function")
 			is LinkScript -> link.line.fieldOrNull.notNullOrError("not a function").let { field ->
-				if (field.string != "doing") error("not a function")
+				if (field.string != "does") error("not a function")
 				else link.lhs.type arrowTo field.rhs.type
 			}
 		}
