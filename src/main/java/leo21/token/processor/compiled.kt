@@ -16,10 +16,11 @@ import leo21.compiled.compiled
 import leo21.compiled.fieldTo
 import leo21.compiled.lineCompiled
 import leo21.compiled.plus
+import leo21.token.body.wrapCompiled
 
 val Script.compiled: Compiled
 	get() =
-		(emptyBodyProcessor.plus(this) as BodyCompilerProcessor).bodyCompiler.body.compiled
+		(emptyBodyProcessor.plus(this) as BodyCompilerProcessor).bodyCompiler.body.wrapCompiled
 
 val Script.staticCompiled: Compiled
 	get() =
