@@ -55,7 +55,10 @@ fun Module.resolveOrNull(compiled: Compiled): Compiled? =
 	bindings.resolveOrNull(compiled)
 
 fun Module.begin(given: Given): Module =
-	Module(bindings.plus(given.binding), lines, emptyDefinitions)
+	plus(given.binding)
+
+fun Module.plus(binding: Binding): Module =
+	copy(bindings = bindings.plus(binding))
 
 fun Compiled.wrap(module: Module): Compiled =
 	wrap(module.definitions)

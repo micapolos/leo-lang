@@ -35,12 +35,16 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 				bodyCompiler.printFragment.parent(begin(name))
 			is BodyCompiler.Parent.BodyDo ->
 				bodyCompiler.printFragment.parent(begin("do".typeKeyword))
+			is BodyCompiler.Parent.BodyRepeat ->
+				bodyCompiler.printFragment.parent(begin("repeat".typeKeyword))
 			is BodyCompiler.Parent.BodyApply ->
 				bodyCompiler.printFragment.parent(begin("apply".typeKeyword))
 			is BodyCompiler.Parent.FunctionDoes ->
 				functionCompiler.printFragment.parent(begin("does".typeKeyword))
 			is BodyCompiler.Parent.SwitchCase ->
 				switchCompiler.printFragment.parent(begin(case.nameOrNull!!))
+			is BodyCompiler.Parent.EvaluatorRepeat ->
+				evaluatorNode.printFragment.parent(begin("repeat".valueKeyword))
 		}
 
 val SwitchCompiler.printFragment: Fragment
@@ -83,3 +87,14 @@ val Line.printScriptLine: ScriptLine
 val Lines.printScript: Script
 	get() =
 		lineStack.map { printScriptLine }.script
+
+val RepeatCompiler.printFragment: Fragment
+	get() =
+		parent.printFragmentParent.fragment(script())
+
+val RepeatParent.printFragmentParent: FragmentParent
+	get() =
+		when (this) {
+			is BodyCompilerRepeatParent -> bodyCompiler.printFragment.parent(begin("repeat".typeKeyword))
+			is EvaluatorNodeRepeatParent -> evaluatorNode.printFragment.parent(begin("repeat".valueKeyword))
+		}

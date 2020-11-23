@@ -13,6 +13,7 @@ import leo14.orError
 import leo14.script
 import leo15.dsl.*
 import leo21.compiled.ArrowCompiled
+import leo21.compiled.Compiled
 import leo21.definition.Definitions
 import leo21.evaluated.Evaluated
 import leo21.evaluated.LineEvaluated
@@ -93,3 +94,5 @@ val EvaluatorNode.rootEvaluator: Evaluator
 
 fun EvaluatorNode.apply(rhs: Evaluated): EvaluatorNode =
 	copy(evaluator = evaluator.apply(rhs))
+
+fun EvaluatorNode.repeat(compiled: Compiled): EvaluatorNode = TODO()

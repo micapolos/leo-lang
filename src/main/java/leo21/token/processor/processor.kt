@@ -14,14 +14,15 @@ import leo15.dsl.*
 import leo21.compiled.Compiled
 import leo21.token.body.Body
 import leo21.token.body.BodyCompiler
-import leo21.token.define.DefineCompiler
 import leo21.token.body.FunctionCompiler
 import leo21.token.body.FunctionDoesCompiler
+import leo21.token.body.RepeatCompiler
 import leo21.token.body.SwitchCompiler
 import leo21.token.body.emptyBodyCompiler
 import leo21.token.body.plus
-import leo21.token.define.plus
 import leo21.token.body.wrapCompiled
+import leo21.token.define.DefineCompiler
+import leo21.token.define.plus
 import leo21.token.evaluator.EvaluatorNode
 import leo21.token.evaluator.emptyEvaluatorNode
 import leo21.token.evaluator.plus
@@ -51,6 +52,7 @@ sealed class Processor : Scriptable() {
 				is DefineCompilerProcessor -> defineCompiler.anyReflectScriptLine
 				is SwitchCompilerProcessor -> switchCompiler.anyReflectScriptLine
 				is EvaluatorProcessor -> evaluatorNode.anyReflectScriptLine
+				is RepeatCompilerProcessor -> repeatCompiler.anyReflectScriptLine
 			}
 		)
 }
@@ -99,6 +101,10 @@ data class EvaluatorProcessor(val evaluatorNode: EvaluatorNode) : Processor() {
 	override fun toString() = super.toString()
 }
 
+data class RepeatCompilerProcessor(val repeatCompiler: RepeatCompiler) : Processor() {
+	override fun toString() = super.toString()
+}
+
 val emptyTypeProcessor: Processor =
 	TypeCompilerProcessor(emptyTypeCompiler)
 
@@ -117,6 +123,7 @@ val FunctionCompiler.processor: Processor get() = FunctionCompilerProcessor(this
 val FunctionDoesCompiler.processor: Processor get() = FunctionItDoesCompilerProcessor(this)
 val EvaluatorNode.processor: Processor get() = EvaluatorProcessor(this)
 val DefineCompiler.processor: Processor get() = DefineCompilerProcessor(this)
+val RepeatCompiler.processor: Processor get() = RepeatCompilerProcessor(this)
 
 fun Processor.plus(token: Token): Processor =
 	when (this) {
@@ -131,6 +138,7 @@ fun Processor.plus(token: Token): Processor =
 		is DefineCompilerProcessor -> defineCompiler.plus(token)
 		is SwitchCompilerProcessor -> switchCompiler.plus(token)
 		is EvaluatorProcessor -> evaluatorNode.plus(token)
+		is RepeatCompilerProcessor -> repeatCompiler.plus(token)
 	}
 
 fun Processor.plus(script: Script): Processor =

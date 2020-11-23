@@ -24,4 +24,5 @@ val Processor.printFragment: Fragment
 			is DefineCompilerProcessor -> defineCompiler.printFragment
 			is SwitchCompilerProcessor -> switchCompiler.printFragment
 			is EvaluatorProcessor -> evaluatorNode.printFragment
+			is RepeatCompilerProcessor -> repeatCompiler.printFragment
 		}.runIf(debugEnabled) { prepend(script(reflectScriptLine)) }

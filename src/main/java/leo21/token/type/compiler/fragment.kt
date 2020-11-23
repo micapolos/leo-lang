@@ -32,6 +32,7 @@ val TypeParent.fragmentParent: FragmentParent
 			is FunctionCompilerTypeParent -> functionCompiler.parentOrNull?.printFragmentParent
 				?: emptyFragment.parent(begin("function".valueKeyword))
 			is DefineCompilerTypeParent -> defineCompiler.printFragment.parent(begin("type".valueKeyword))
+			is RepeatDoingCompilerTypeParent -> repeatCompiler.printFragment.parent(begin("doing".typeKeyword))
 		}
 
 val ChoiceCompiler.printFragment: Fragment

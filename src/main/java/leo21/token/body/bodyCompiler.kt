@@ -20,6 +20,8 @@ import leo21.compiled.lineTo
 import leo21.compiled.switch
 import leo21.definition.Definitions
 import leo21.token.define.DefineCompiler
+import leo21.token.evaluator.EvaluatorNode
+import leo21.token.evaluator.repeat
 import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.FunctionCompilerProcessor
@@ -44,9 +46,11 @@ data class BodyCompiler(
 				when (this) {
 					is BodyName -> "field" lineTo script(bodyCompiler.reflectScriptLine, "name" lineTo script(name))
 					is BodyDo -> "do" lineTo script(bodyCompiler.reflectScriptLine)
+					is BodyRepeat -> "repeat" lineTo script(bodyCompiler.reflectScriptLine)
 					is BodyApply -> "apply" lineTo script(bodyCompiler.reflectScriptLine)
 					is FunctionDoes -> functionCompiler.anyReflectScriptLine
 					is SwitchCase -> "switch" lineTo script(switchCompiler.anyReflectScriptLine, case.anyReflectScriptLine)
+					is EvaluatorRepeat -> "repeat" lineTo script(evaluatorNode.reflectScriptLine)
 				}
 			)
 
@@ -55,6 +59,14 @@ data class BodyCompiler(
 		}
 
 		data class BodyDo(val bodyCompiler: BodyCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class BodyRepeat(val bodyCompiler: BodyCompiler) : Parent() {
+			override fun toString() = super.toString()
+		}
+
+		data class EvaluatorRepeat(val evaluatorNode: EvaluatorNode) : Parent() {
 			override fun toString() = super.toString()
 		}
 
@@ -129,21 +141,19 @@ fun BodyCompiler.plus(end: End): Processor =
 fun BodyCompiler.Parent.process(compiled: Compiled): Processor =
 	when (this) {
 		is BodyCompiler.Parent.BodyName ->
-			bodyCompiler
-				.plus(name lineTo compiled)
-				.processor
+			bodyCompiler.plus(name lineTo compiled).processor
 		is BodyCompiler.Parent.BodyDo ->
-			bodyCompiler
-				.plusDo(compiled)
-				.processor
+			bodyCompiler.plusDo(compiled).processor
+		is BodyCompiler.Parent.BodyRepeat ->
+			bodyCompiler.plusDo(compiled).processor
 		is BodyCompiler.Parent.BodyApply ->
-			bodyCompiler
-				.apply(compiled)
-				.processor
+			bodyCompiler.apply(compiled).processor
 		is BodyCompiler.Parent.FunctionDoes ->
 			functionCompiler.plus(compiled)
 		is BodyCompiler.Parent.SwitchCase ->
 			switchCompiler.plus(case, compiled)
+		is BodyCompiler.Parent.EvaluatorRepeat ->
+			evaluatorNode.repeat(compiled).processor
 	}
 
 fun BodyCompiler.plus(lineCompiled: LineCompiled): BodyCompiler =
