@@ -8,6 +8,7 @@ import leo14.lambda.term
 import leo16.term.chez.eval
 import leo21.prim.NumberEqualsNumberPrim
 import leo21.prim.NumberSinusPrim
+import leo21.prim.NumberStringPrim
 import leo21.prim.Prim
 import leo21.prim.StringEqualsStringPrim
 import leo21.prim.StringPlusStringPrim
@@ -40,13 +41,13 @@ class EvalTest {
 	}
 
 	@Test
-	fun numberEqualsNumber() {
-		term<Prim>(NumberEqualsNumberPrim)
-			.invoke(term(prim(10)).plus(term(prim(10))))
+	fun numberString() {
+		term<Prim>(NumberStringPrim)
+			.invoke(term(prim(3.14)))
 			.map(Prim::code)
 			.code
 			.string
 			.eval
-			.assertEqualTo(sin(1.0).toString())
+			.assertEqualTo("3.14")
 	}
 }
