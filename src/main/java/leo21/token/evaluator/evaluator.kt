@@ -47,8 +47,8 @@ val Evaluator.beginDo
 	get() =
 		Evaluator(context.plus(evaluated.given), evaluated())
 
-fun Evaluator.do_(evaluator: Evaluator): Evaluator =
-	copy(evaluated = evaluator.evaluated)
+fun Evaluator.do_(rhs: Evaluated): Evaluator =
+	copy(evaluated = rhs)
 
 fun Evaluator.plus(module: Module): Evaluator =
 	copy(context = context.plus(module))
@@ -61,5 +61,5 @@ fun Evaluator.plus(arrowCompiled: ArrowCompiled): Evaluator =
 		value(context.scope.function(arrowCompiled.term.abstraction { it }))
 			.of(line(arrowCompiled.arrow)))
 
-fun Evaluator.apply(evaluator: Evaluator): Evaluator =
-	copy(evaluated = evaluated.apply(evaluator.evaluated))
+fun Evaluator.apply(rhs: Evaluated): Evaluator =
+	copy(evaluated = evaluated.apply(rhs))

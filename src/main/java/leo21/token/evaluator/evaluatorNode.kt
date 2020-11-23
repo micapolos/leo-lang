@@ -13,6 +13,7 @@ import leo14.orError
 import leo14.script
 import leo15.dsl.*
 import leo21.compiled.ArrowCompiled
+import leo21.evaluated.Evaluated
 import leo21.evaluated.LineEvaluated
 import leo21.evaluated.lineEvaluated
 import leo21.token.body.DefineCompiler
@@ -65,20 +66,17 @@ fun EvaluatorNode.plus(token: Token): Processor =
 						evaluator.context.beginModule))
 			else -> EvaluatorProcessor(begin(token.begin.string))
 		}
-		is EndToken -> parentOrNull?.end(evaluator).orError { not { expected { end } } }
+		is EndToken -> parentOrNull?.end(evaluator.evaluated).orError { not { expected { end } } }
 	}
 
 fun EvaluatorNode.plus(line: LineEvaluated): EvaluatorNode =
 	copy(evaluator = evaluator.plus(line))
 
-fun EvaluatorNode.end(field: EvaluatorField): EvaluatorNode =
-	copy(evaluator = evaluator.plus(field))
-
 fun EvaluatorNode.end(module: Module): EvaluatorNode =
 	copy(evaluator = evaluator.plus(module))
 
-fun EvaluatorNode.do_(evaluator: Evaluator): EvaluatorNode =
-	copy(evaluator = evaluator.do_(evaluator))
+fun EvaluatorNode.do_(rhs: Evaluated): EvaluatorNode =
+	copy(evaluator = evaluator.do_(rhs))
 
 fun EvaluatorNode.begin(name: String): EvaluatorNode =
 	EvaluatorNode(
@@ -93,5 +91,5 @@ val EvaluatorNode.rootEvaluator: Evaluator
 		if (parentOrNull != null) null!!
 		else evaluator
 
-fun EvaluatorNode.apply(evaluator: Evaluator): EvaluatorNode =
-	copy(evaluator = this.evaluator.apply(evaluator))
+fun EvaluatorNode.apply(rhs: Evaluated): EvaluatorNode =
+	copy(evaluator = evaluator.apply(rhs))

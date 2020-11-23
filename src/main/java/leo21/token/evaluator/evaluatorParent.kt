@@ -5,6 +5,7 @@ import leo14.Scriptable
 import leo14.anyReflectScriptLine
 import leo14.lineTo
 import leo14.script
+import leo21.evaluated.Evaluated
 import leo21.token.processor.Processor
 import leo21.token.processor.processor
 
@@ -31,10 +32,10 @@ data class EvaluatorNodeApplyEvaluatorParent(val evaluatorNode: EvaluatorNode) :
 	override fun toString() = super.toString()
 }
 
-fun EvaluatorParent.end(evaluator: Evaluator): Processor =
+fun EvaluatorParent.end(rhs: Evaluated): Processor =
 	when (this) {
-		is EvaluatorNodeBeginEvaluatorParent -> evaluatorNodeBegin.end(evaluator).processor
-		is EvaluatorNodeDoEvaluatorParent -> evaluatorNodeDo.end(evaluator).processor
-		is EvaluatorNodeApplyEvaluatorParent -> evaluatorNode.apply(evaluator).processor
+		is EvaluatorNodeBeginEvaluatorParent -> evaluatorNodeBegin.end(rhs).processor
+		is EvaluatorNodeDoEvaluatorParent -> evaluatorNodeDo.end(rhs).processor
+		is EvaluatorNodeApplyEvaluatorParent -> evaluatorNode.apply(rhs).processor
 	}
 
