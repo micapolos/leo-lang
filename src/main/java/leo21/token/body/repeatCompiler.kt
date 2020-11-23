@@ -42,13 +42,16 @@ fun RepeatCompiler.plus(token: Token): Processor =
 	}
 
 fun RepeatCompiler.plusDoing(type: Type): Processor =
-	when (parent) {
-		is BodyCompilerRepeatParent ->
-			BodyCompilerProcessor(
-				BodyCompiler(
-					BodyCompiler.Parent.BodyRepeat(parent.bodyCompiler),
-					Body(
-						module.plus(given.type.functionBinding(type)).plus(given.binding),
-						compiled())))
-		is EvaluatorNodeRepeatParent -> TODO()
-	}
+	BodyCompilerProcessor(
+		BodyCompiler(
+			parent.bodyCompilerParent,
+			Body(
+				module.plus(given.type.functionBinding(type)).plus(given.binding),
+				compiled())))
+
+val RepeatParent.bodyCompilerParent: BodyCompiler.Parent
+	get() =
+		when (this) {
+			is BodyCompilerRepeatParent -> BodyCompiler.Parent.BodyRepeat(bodyCompiler)
+			is EvaluatorNodeRepeatParent -> BodyCompiler.Parent.EvaluatorRepeat(evaluatorNode)
+		}

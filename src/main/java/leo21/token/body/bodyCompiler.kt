@@ -26,6 +26,7 @@ import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.FunctionCompilerProcessor
 import leo21.token.processor.Processor
+import leo21.token.processor.RepeatCompilerProcessor
 import leo21.token.processor.SwitchCompilerProcessor
 import leo21.token.processor.processor
 import leo21.type.Line
@@ -115,6 +116,12 @@ fun BodyCompiler.plus(begin: Begin): Processor =
 			.doParent
 			.compiler(body.beginDo)
 			.processor
+		"repeat" ->
+			RepeatCompilerProcessor(
+				RepeatCompiler(
+					BodyCompilerRepeatParent(this),
+					body.compiled.type.given,
+					body.module.begin))
 		"function" ->
 			FunctionCompilerProcessor(
 				FunctionCompiler(

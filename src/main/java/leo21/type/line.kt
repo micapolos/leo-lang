@@ -70,3 +70,4 @@ fun Line.matches(name: String): Boolean =
 
 val stringLine: Line = StringLine
 val numberLine: Line = NumberLine
+val equalsLine: Line = "equals" lineTo choice("yes" lineTo type(), "no" lineTo type())

@@ -7,18 +7,22 @@ import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.nativeTerm
 import leo14.leonardoScript
+import leo15.core.stringTyp
 import leo21.prim.NumberCosinusPrim
+import leo21.prim.NumberEqualsNumberPrim
 import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
 import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberStringPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
+import leo21.prim.StringEqualsStringPrim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.token.processor.staticCompiled
 import leo21.type.Line
 import leo21.type.Type
+import leo21.type.equalsType
 import leo21.type.isEmpty
 import leo21.type.lineTo
 import leo21.type.numberType
@@ -70,6 +74,8 @@ val Compiled.resolveOrNull: Compiled?
 			?: resolveFn2OrNull(numberType, "plus", numberType, NumberPlusNumberPrim, numberType)
 			?: resolveFn2OrNull(numberType, "minus", numberType, NumberMinusNumberPrim, numberType)
 			?: resolveFn2OrNull(numberType, "times", numberType, NumberTimesNumberPrim, numberType)
+			?: resolveFn2OrNull(numberType, "equals", numberType, NumberEqualsNumberPrim, equalsType)
+			?: resolveFn2OrNull(stringType, "equals", stringType, StringEqualsStringPrim, equalsType)
 			?: resolveFn2OrNull(stringType, "plus", stringType, StringPlusStringPrim, stringType)
 			?: resolveFn1OrNull(
 				stringType,

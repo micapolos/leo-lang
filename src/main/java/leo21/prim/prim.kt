@@ -28,6 +28,7 @@ sealed class Prim : Scriptable() {
 				NumberCosinusPrim -> script("number" lineTo script(), "cosinus" lineTo script())
 				StringLengthPrim -> script("string" lineTo script(), "length" lineTo script())
 				StringTryNumberPrim -> script("string" lineTo script(), "try" lineTo script("number" lineTo script()))
+				StringEqualsStringPrim -> script("string" lineTo script(), "equals" lineTo script("string"))
 			}
 }
 
@@ -49,6 +50,7 @@ object NumberStringPrim : Prim()
 object NumberSinusPrim : Prim()
 object NumberCosinusPrim : Prim()
 object StringPlusStringPrim : Prim()
+object StringEqualsStringPrim : Prim()
 object StringLengthPrim : Prim()
 object StringTryNumberPrim : Prim()
 
@@ -69,3 +71,5 @@ fun prim(string: String): Prim = StringPrim(string)
 fun prim(number: Number): Prim = NumberPrim(number)
 fun prim(double: Double): Prim = prim(double.number)
 fun prim(int: Int): Prim = prim(int.number)
+
+fun String.isEqualTo(string: String): Boolean = this == string

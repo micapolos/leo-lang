@@ -18,12 +18,16 @@ import leo21.definition.Definitions
 import leo21.evaluated.Evaluated
 import leo21.evaluated.LineEvaluated
 import leo21.evaluated.lineEvaluated
-import leo21.token.define.DefineCompiler
+import leo21.token.body.EvaluatorNodeRepeatParent
 import leo21.token.body.FunctionCompiler
+import leo21.token.body.RepeatCompiler
+import leo21.token.body.given
+import leo21.token.define.DefineCompiler
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.EvaluatorProcessor
 import leo21.token.processor.FunctionCompilerProcessor
 import leo21.token.processor.Processor
+import leo21.token.processor.RepeatCompilerProcessor
 import leo21.token.processor.processor
 import leo21.type.isEmpty
 
@@ -60,6 +64,12 @@ fun EvaluatorNode.plus(token: Token): Processor =
 					EvaluatorNode(
 						EvaluatorNodeDoEvaluatorParent(EvaluatorNodeDo(this)),
 						evaluator.beginDo))
+			"repeat" ->
+				RepeatCompilerProcessor(
+					RepeatCompiler(
+						EvaluatorNodeRepeatParent(this),
+						evaluator.evaluated.type.given,
+						evaluator.context.beginModule))
 			"function" ->
 				FunctionCompilerProcessor(
 					FunctionCompiler(

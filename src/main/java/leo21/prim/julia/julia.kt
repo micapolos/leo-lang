@@ -14,6 +14,7 @@ import leo21.prim.NilPrim
 import leo21.prim.NumberEqualsNumberPrim
 import leo21.prim.NumberStringPrim
 import leo21.prim.Prim
+import leo21.prim.StringEqualsStringPrim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
@@ -39,6 +40,7 @@ val Prim.julia: Julia
 			StringLengthPrim -> TODO()
 			NumberStringPrim -> TODO()
 			StringTryNumberPrim -> TODO()
+			StringEqualsStringPrim -> TODO()
 		}
 
 fun op1Julia(op: String) = julia("x->${op}(x)")

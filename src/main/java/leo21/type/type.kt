@@ -38,6 +38,7 @@ fun type(vararg asLines: AsLine) = emptyType.fold(asLines) { plus(it) }
 
 val stringType = type(stringLine)
 val numberType = type(numberLine)
+val equalsType = type(equalsLine)
 
 fun Type.make(name: String): Type =
 	type(name lineTo this)

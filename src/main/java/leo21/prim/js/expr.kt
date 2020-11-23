@@ -18,6 +18,7 @@ import leo21.prim.NilPrim
 import leo21.prim.NumberEqualsNumberPrim
 import leo21.prim.NumberStringPrim
 import leo21.prim.Prim
+import leo21.prim.StringEqualsStringPrim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
@@ -39,6 +40,7 @@ val Prim.expr: Expr
 			StringLengthPrim -> postfix1Expr("length")
 			NumberStringPrim -> TODO()
 			StringTryNumberPrim -> TODO()
+			StringEqualsStringPrim -> TODO()
 		}
 
 val lhsExpr = expr(lambda("a", expr(lambda("b", expr(id("a"))))))

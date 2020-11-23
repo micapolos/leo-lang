@@ -3,6 +3,7 @@ package leo21.prim.runtime
 import leo14.Number
 import leo14.anyReflectScriptLine
 import leo14.cosinus
+import leo14.isEqualTo
 import leo14.lambda.value.Value
 import leo14.lambda.value.eitherFirst
 import leo14.lambda.value.eitherSecond
@@ -27,10 +28,12 @@ import leo21.prim.NumberSinusPrim
 import leo21.prim.NumberStringPrim
 import leo21.prim.NumberTimesNumberPrim
 import leo21.prim.Prim
+import leo21.prim.StringEqualsStringPrim
 import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
 import leo21.prim.StringTryNumberPrim
+import leo21.prim.isEqualTo
 import leo21.prim.number
 import leo21.prim.prim
 import leo21.prim.string
@@ -44,13 +47,14 @@ fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 		NumberPlusNumberPrim -> rhs.apply(Prim::number, Number::plus, Prim::number, Number::prim)
 		NumberMinusNumberPrim -> rhs.apply(Prim::number, Number::minus, Prim::number, Number::prim)
 		NumberTimesNumberPrim -> rhs.apply(Prim::number, Number::times, Prim::number, Number::prim)
-		NumberEqualsNumberPrim -> TODO()
+		NumberEqualsNumberPrim -> rhs.applyValue(Prim::number, Number::isEqualTo, Prim::number, Boolean::value)
 		StringPlusStringPrim -> rhs.apply(Prim::string, String::plus, Prim::string, String::prim)
 		NumberStringPrim -> rhs.apply(Prim::number, Number::string, String::prim)
 		NumberSinusPrim -> rhs.apply(Prim::number, Number::sinus, Number::prim)
 		NumberCosinusPrim -> rhs.apply(Prim::number, Number::cosinus, Number::prim)
 		StringLengthPrim -> rhs.apply(Prim::string, String::lengthNumber, Number::prim)
 		StringTryNumberPrim -> rhs.stringTryNumber
+		StringEqualsStringPrim -> rhs.applyValue(Prim::string, String::isEqualTo, Prim::string, Boolean::value)
 	}.orError(anyReflectScriptLine, apply(rhs.anyReflectScriptLine))
 
 fun <Lhs, Rhs, Out> Value<Prim>.apply(
@@ -61,6 +65,16 @@ fun <Lhs, Rhs, Out> Value<Prim>.apply(
 ): Value<Prim> =
 	pair { lhs, rhs ->
 		value(lhs.native.lhs().op(rhs.native.rhs()).out())
+	}
+
+fun <Lhs, Rhs, Out> Value<Prim>.applyValue(
+	lhs: Prim.() -> Lhs,
+	op: Lhs.(Rhs) -> Out,
+	rhs: Prim.() -> Rhs,
+	out: Out.() -> Value<Prim>
+): Value<Prim> =
+	pair { lhs, rhs ->
+		lhs.native.lhs().op(rhs.native.rhs()).out()
 	}
 
 fun <Lhs, Out> Value<Prim>.apply(
