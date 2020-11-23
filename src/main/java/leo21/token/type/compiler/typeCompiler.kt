@@ -7,9 +7,15 @@ import leo13.map
 import leo14.BeginToken
 import leo14.EndToken
 import leo14.LiteralToken
+import leo14.ScriptLine
+import leo14.Scriptable
 import leo14.Token
+import leo14.anyOptionalReflectScriptLine
 import leo14.error
+import leo14.lineTo
+import leo14.script
 import leo15.dsl.*
+import leo19.script
 import leo21.token.processor.ArrowCompilerProcessor
 import leo21.token.processor.ChoiceCompilerProcessor
 import leo21.token.processor.Processor
@@ -34,7 +40,15 @@ data class TypeCompiler(
 	val lines: Lines,
 	val type: Type,
 	val autoEnd: Boolean = false
-)
+) : Scriptable() {
+	override fun toString() = super.toString()
+	override val reflectScriptLine: ScriptLine
+		get() = "compiler" lineTo script(
+			parentOrNull.anyOptionalReflectScriptLine("parent"),
+			lines.reflectScriptLine,
+			type.reflectScriptLine,
+			"autoend" lineTo autoEnd.script)
+}
 
 val emptyTypeCompiler = TypeCompiler(null, emptyLines, type())
 

@@ -1,6 +1,15 @@
 package leo21.token.type.compiler
 
 import leo13.onlyOrNull
+import leo14.ScriptLine
+import leo14.Scriptable
+import leo14.anyReflectScriptLine
+import leo14.begin
+import leo14.lineTo
+import leo14.reflectScriptLine
+import leo14.script
+import leo14.scriptLine
+import leo14.untyped.typed.script
 import leo21.definition.typeDefinition
 import leo21.token.define.DefineCompiler
 import leo21.token.body.FunctionCompiler
@@ -16,7 +25,11 @@ import leo21.token.processor.processor
 import leo21.type.Type
 import leo21.type.plus
 
-sealed class TypeParent
+sealed class TypeParent : Scriptable() {
+	override val reflectScriptLine: ScriptLine
+		get() = "parent" lineTo script(anyReflectScriptLine)
+}
+
 data class TypeNameTypeParent(val typeCompiler: TypeCompiler, val name: String) : TypeParent()
 data class ChoiceNameTypeParent(val choiceCompiler: ChoiceCompiler, val name: String) : TypeParent()
 data class ArrowNameTypeParent(val arrowCompiler: ArrowCompiler, val lhs: Type, val name: String) : TypeParent()
