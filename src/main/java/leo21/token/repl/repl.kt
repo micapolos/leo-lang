@@ -5,13 +5,13 @@ import leo14.Reducer
 import leo14.Token
 import leo14.reducer
 import leo14.stringCharReducer
-import leo21.token.processor.Processor
+import leo21.token.processor.emptyEvaluatorProcessor
 
 sealed class Repl
 data class ProcessorRepl(val processorNode: ProcessorNode) : Repl()
 data class DebugRepl(val debugNode: DebugNode) : Repl()
 
-val Processor.repl: Repl get() = ProcessorRepl(ProcessorNode(null, this))
+val emptyRepl: Repl get() = ProcessorRepl(ProcessorNode(null, emptyEvaluatorProcessor))
 
 fun Repl.plus(token: Token): Repl =
 	when (this) {
