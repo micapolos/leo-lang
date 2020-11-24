@@ -24,6 +24,6 @@ val DefinitionConstant.binding get() = type.constantBinding(compiled.type)
 
 val DefinitionConstant.printScriptLine: ScriptLine
 	get() =
-		"constant" lineTo type.printScript
+		"constant".typeKeyword lineTo type.printScript
 			.plus("is".typeKeyword lineTo compiled.type.printScript)
 

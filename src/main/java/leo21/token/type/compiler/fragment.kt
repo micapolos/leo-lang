@@ -10,6 +10,7 @@ import leo14.parent
 import leo14.script
 import leo21.token.body.printFragment
 import leo21.token.body.printFragmentParent
+import leo21.token.strings.type
 import leo21.token.strings.typeKeyword
 import leo21.token.strings.valueKeyword
 import leo21.type.Arrow
@@ -24,10 +25,10 @@ val TypeCompiler.printFragment: Fragment
 val TypeParent.fragmentParent: FragmentParent
 	get() =
 		when (this) {
-			is TypeNameTypeParent -> typeCompiler.printFragment.parent(begin(name))
-			is ChoiceNameTypeParent -> choiceCompiler.printFragment.parent(begin(name))
+			is TypeNameTypeParent -> typeCompiler.printFragment.parent(begin(name.type))
+			is ChoiceNameTypeParent -> choiceCompiler.printFragment.parent(begin(name.type))
 			is ArrowDoingTypeParent -> arrowCompiler.printFragment.parent(begin("doing".typeKeyword))
-			is ArrowNameTypeParent -> arrowCompiler.printFragment.parent(begin(name))
+			is ArrowNameTypeParent -> arrowCompiler.printFragment.parent(begin(name.type))
 			is RecursiveTypeParent -> typeCompiler.printFragment.parent(begin("recursive".typeKeyword))
 			is FunctionCompilerTypeParent -> functionCompiler.parentOrNull?.printFragmentParent
 				?: emptyFragment.parent(begin("function".valueKeyword))
@@ -37,7 +38,7 @@ val TypeParent.fragmentParent: FragmentParent
 
 val ChoiceCompiler.printFragment: Fragment
 	get() =
-		parentOrNull?.fragmentParent.fragment(choice.lineStack.script)
+		parentOrNull?.fragmentParent.fragment(choice.lineStack.printScript)
 
 val ChoiceParent.fragmentParent: FragmentParent
 	get() =
@@ -47,7 +48,7 @@ val ChoiceParent.fragmentParent: FragmentParent
 
 val ArrowCompiler.printFragment: Fragment
 	get() =
-		parentOrNull?.fragmentParent.fragment(typeOrArrow.select(Type::script, Arrow::script))
+		parentOrNull?.fragmentParent.fragment(typeOrArrow.select(Type::printScript, Arrow::printScript))
 
 val ArrowParent.fragmentParent: FragmentParent
 	get() =

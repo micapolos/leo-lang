@@ -12,12 +12,14 @@ import leo14.parent
 import leo14.script
 import leo21.token.define.DefineCompiler
 import leo21.token.evaluator.printFragment
+import leo21.token.strings.type
 import leo21.token.strings.typeKeyword
 import leo21.token.strings.valueKeyword
 import leo21.token.type.compiler.Lines
 import leo21.type.Line
 import leo21.type.nameOrNull
 import leo21.type.printScript
+import leo21.type.printScriptLine
 import leo21.type.scriptLine
 
 val Body.printScript: Script
@@ -32,7 +34,7 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 	get() =
 		when (this) {
 			is BodyCompiler.Parent.BodyName ->
-				bodyCompiler.printFragment.parent(begin(name))
+				bodyCompiler.printFragment.parent(begin(name.type))
 			is BodyCompiler.Parent.BodyDo ->
 				bodyCompiler.printFragment.parent(begin("do".typeKeyword))
 			is BodyCompiler.Parent.BodyRepeat ->
@@ -42,7 +44,7 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 			is BodyCompiler.Parent.FunctionDoes ->
 				functionCompiler.printFragment.parent(begin("does".typeKeyword))
 			is BodyCompiler.Parent.SwitchCase ->
-				switchCompiler.printFragment.parent(begin(case.nameOrNull!!))
+				switchCompiler.printFragment.parent(begin(case.nameOrNull!!.type))
 			is BodyCompiler.Parent.EvaluatorRepeat ->
 				evaluatorNode.printFragment.parent(begin("repeat".valueKeyword))
 		}
@@ -50,8 +52,8 @@ val BodyCompiler.Parent.printFragmentParent: FragmentParent
 val SwitchCompiler.printFragment: Fragment
 	get() =
 		parentBodyCompiler.printFragment
-			.parent(begin("switch".valueKeyword))
-			.fragment(caseFieldStack.map { scriptLine }.script)
+			.parent(begin("switch".typeKeyword))
+			.fragment(caseFieldStack.map { printScriptLine }.script)
 
 val FunctionCompiler.printFragment: Fragment
 	get() =
