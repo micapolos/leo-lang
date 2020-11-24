@@ -6,7 +6,10 @@ import leo14.Scriptable
 import leo14.lambda.Term
 import leo14.lambda.fn
 import leo14.lambda.invoke
+import leo14.lambda.value.Scope
 import leo14.lambda.value.Value
+import leo14.lambda.value.function
+import leo14.lambda.value.value
 import leo14.lineTo
 import leo14.script
 import leo21.compiled.Compiled
@@ -62,13 +65,16 @@ val Definition.termOrNull: Term<Prim>?
 	get() =
 		when (this) {
 			is ConstantDefinition -> constant.term
-			is FunctionDefinition -> function.term
+			is FunctionDefinition -> fn(function.term)
 			is TypeDefinition -> null
 		}
 
-val Definition.valueOrNull: Value<Prim>?
-	get() =
-		termOrNull?.value
+fun Scope<Prim>.valueOrNull(definition: Definition): Value<Prim>? =
+	when (definition) {
+		is ConstantDefinition -> definition.constant.term.value
+		is FunctionDefinition -> function(definition.function.term).value
+		is TypeDefinition -> null
+	}
 
 val Definition.bindingOrNull: Binding?
 	get() =

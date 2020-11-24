@@ -18,6 +18,7 @@ import leo21.definition.Definitions
 import leo21.token.body.BodyCompiler
 import leo21.token.body.FunctionCompiler
 import leo21.token.body.Module
+import leo21.token.body.begin
 import leo21.token.body.emptyModule
 import leo21.token.body.plus
 import leo21.token.evaluator.EvaluatorNode
@@ -79,7 +80,7 @@ fun DefineCompiler.plus(token: Token): Processor =
 				FunctionCompilerProcessor(
 					FunctionCompiler(
 						FunctionCompiler.Parent.Define(this),
-						module,
+						module.begin,
 						type()))
 			"type" ->
 				TypeCompilerProcessor(

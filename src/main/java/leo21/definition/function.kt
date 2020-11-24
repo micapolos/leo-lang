@@ -20,7 +20,7 @@ data class DefinitionFunction(val type: Type, val compiled: Compiled) : Scriptab
 
 infix fun Type.does(compiled: Compiled) = DefinitionFunction(this, compiled)
 
-val DefinitionFunction.term get() = fn(compiled.term)
+val DefinitionFunction.term get() = compiled.term
 val DefinitionFunction.binding get() = type.functionBinding(compiled.type)
 
 val DefinitionFunction.printScriptLine: ScriptLine

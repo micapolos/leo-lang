@@ -70,4 +70,4 @@ fun Context.plus(definition: Definition): Context =
 	Context(
 		bindings.updateIfNotNull(definition.bindingOrNull) { plus(it) },
 		lines.updateIfNotNull(definition.lineOrNull) { plus(it) },
-		scope.updateIfNotNull(definition.valueOrNull) { push(it) })
+		scope.updateIfNotNull(scope.valueOrNull(definition)) { push(it) })
