@@ -107,5 +107,5 @@ fun Value<Prim>.try_(fn: Value<Prim>.() -> Value<Prim>): Value<Prim> =
 		tryFailureValue
 	}
 
-val Value<Prim>.trySuccess: Value<Prim> get() = eitherSecond.eitherFirst
+val Value<Prim>.trySuccess: Value<Prim> get() = eitherFirst
 val tryFailureValue: Value<Prim> get() = nilValue.eitherSecond

@@ -76,7 +76,7 @@ class ApplyTest {
 		StringTryNumberPrim
 			.apply(value(prim("123")))
 			.switch(
-				{ it.switch({ null!! }, { it }) },
+				{ it },
 				{ value(prim("error")) })
 			.assertEqualTo(value(prim(123)))
 	}
@@ -86,7 +86,7 @@ class ApplyTest {
 		StringTryNumberPrim
 			.apply(value(prim("123a")))
 			.switch(
-				{ it.switch({ null!! }, { it }) },
+				{ it },
 				{ value(prim("error")) })
 			.assertEqualTo(value(prim("error")))
 	}

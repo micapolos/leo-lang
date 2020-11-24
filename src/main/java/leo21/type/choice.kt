@@ -3,6 +3,7 @@ package leo21.type
 import leo.base.fold
 import leo13.Link
 import leo13.Stack
+import leo13.isEmpty
 import leo13.linkOrNull
 import leo13.linkTo
 import leo13.push
@@ -27,3 +28,4 @@ val Choice.linkOrNull: Link<Choice, Line>?
 inline val Link<Choice, Line>.choice get() = tail
 inline val Link<Choice, Line>.line get() = head
 
+inline val Choice.isEmpty: Boolean get() = lineStack.isEmpty

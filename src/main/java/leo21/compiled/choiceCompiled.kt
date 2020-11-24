@@ -8,6 +8,7 @@ import leo21.prim.Prim
 import leo21.type.Choice
 import leo21.type.Line
 import leo21.type.choice
+import leo21.type.isEmpty
 import leo21.type.line
 import leo21.type.plus
 import leo21.type.type
@@ -23,6 +24,7 @@ infix fun Term<Prim>?.of(choice: Choice) = ChoiceCompiled(this, choice)
 
 fun ChoiceCompiled.plusChosen(compiled: LineCompiled): ChoiceCompiled =
 	if (termOrNull != null) error("already chosen")
+	else if (choice.isEmpty) ChoiceCompiled(compiled.term, choice.plus(compiled.line))
 	else ChoiceCompiled(compiled.term.eitherFirst2, choice.plus(compiled.line))
 
 fun ChoiceCompiled.plusNotChosen(line: Line): ChoiceCompiled =

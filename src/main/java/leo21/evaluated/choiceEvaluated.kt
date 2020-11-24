@@ -8,6 +8,7 @@ import leo21.prim.Prim
 import leo21.type.Choice
 import leo21.type.Line
 import leo21.type.choice
+import leo21.type.isEmpty
 import leo21.type.linkOrNull
 import leo21.type.plus
 
@@ -21,7 +22,9 @@ fun <R> ChoiceEvaluated.switch(
 	secondFn: (LineEvaluated) -> R
 ): R =
 	choice.linkOrNull!!.let { choiceLink ->
-		valueOrNull!!.switch(
+		if (choiceLink.tail.isEmpty)
+			secondFn(valueOrNull!! of choiceLink.head)
+		else valueOrNull!!.switch(
 			{ tailValue ->
 				firstFn(tailValue of choiceLink.tail)
 			},
@@ -34,4 +37,5 @@ fun ChoiceEvaluated.plusNotChosen(line: Line): ChoiceEvaluated =
 	valueOrNull?.eitherFirst of choice.plus(line)
 
 fun ChoiceEvaluated.plusChosen(lineEvaluated: LineEvaluated): ChoiceEvaluated =
-	lineEvaluated.value.eitherSecond of choice.plus(lineEvaluated.line)
+	if (choice.isEmpty) lineEvaluated.value of choice.plus(lineEvaluated.line)
+	else lineEvaluated.value.eitherSecond of choice.plus(lineEvaluated.line)

@@ -14,5 +14,5 @@ val Term<Prim>.value: Value<Prim>
 
 val Boolean.value: Value<Prim>
 	get() =
-		if (this) nilValue.eitherSecond.eitherFirst
+		if (this) nilValue.eitherFirst
 		else nilValue.eitherSecond

@@ -85,7 +85,7 @@ fun <R, T> R.foldRight(stack: Stack<T>, fn: R.(T) -> R): R =
 
 val <T> Stack<T>.reverse get() = stack<T>().fold(this) { push(it) }
 val <T> StackLink<T>.reverse get() = stackLink(value).fold(stack) { push(it) }
-val Stack<*>.isEmpty get() = this is EmptyStack
+inline val Stack<*>.isEmpty get() = this is EmptyStack
 
 fun <T> Stack<T>.any(fn: T.() -> Boolean): Boolean =
 	false.fold(this) { or(fn(it)) }

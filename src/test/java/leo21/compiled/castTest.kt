@@ -26,12 +26,22 @@ class CastTest {
 	}
 
 	@Test
-	fun choice_2() {
+	fun choice_2_last() {
 		compiled("a" lineTo compiled("foo"))
 			.castOrNull(type("a" lineTo type(line(choice(stringLine, numberLine)))))
 			.assertEqualTo(
-				nativeTerm(prim("foo")).eitherFirst2.eitherSecond2
+				nativeTerm(prim("foo")).eitherSecond2
 					.of(type("a" lineTo type(line(choice(stringLine, numberLine)))))
+					.nonIdentityCast)
+	}
+
+	@Test
+	fun choice_2_middle() {
+		compiled("a" lineTo compiled("foo"))
+			.castOrNull(type("a" lineTo type(line(choice("x" lineTo type(), stringLine, numberLine)))))
+			.assertEqualTo(
+				nativeTerm(prim("foo")).eitherFirst2.eitherSecond2
+					.of(type("a" lineTo type(line(choice("x" lineTo type(), stringLine, numberLine)))))
 					.nonIdentityCast)
 	}
 
