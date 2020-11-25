@@ -1,13 +1,15 @@
 package leo21.native
 
-import leo21.native.chez.string as chezString
 import leo14.Number
+import leo14.Scriptable
+import leo14.lineTo
 
-sealed class Native {
-	override fun toString() = chezString
+sealed class Native : Scriptable() {
+	override val reflectScriptLine get() = "native" lineTo script
 }
 
 object NilNative : Native()
+
 data class BooleanNative(val boolean: Boolean) : Native() {
 	override fun toString() = super.toString()
 }
