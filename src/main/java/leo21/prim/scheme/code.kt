@@ -30,14 +30,14 @@ val Prim.code: Code
 			is NilPrim -> nilCode
 			is StringPrim -> string.code
 			is NumberPrim -> number.code
-			NumberEqualsNumberPrim -> fn2Code("=")
+			NumberEqualsNumberPrim -> boolSwitchCode(fn2Code("="))
 			NumberPlusNumberPrim -> fn2Code("+")
 			NumberMinusNumberPrim -> fn2Code("-")
 			NumberTimesNumberPrim -> fn2Code("*")
 			NumberStringPrim -> fn1Code("number->string")
 			NumberSinusPrim -> fn1Code("sin")
 			NumberCosinusPrim -> fn1Code("cos")
-			StringEqualsStringPrim -> fn2Code("string=?")
+			StringEqualsStringPrim -> boolSwitchCode(fn2Code("string=?"))
 			StringPlusStringPrim -> fn2Code("string-append")
 			StringLengthPrim -> fn1Code("string-length")
 			StringTryNumberPrim -> fn1Code("string->number") // TODO: Convert to try
@@ -52,3 +52,5 @@ fun fn1Code(op: String) =
 fun fn2Code(op: String) =
 	code("(lambda (x) ($op (x $firstCode) (x $secondCode)))")
 
+fun boolSwitchCode(boolCode: Code) =
+	code("(lambda (b) (lambda (f1) (lambda (f2) (if ($boolCode b) (f1 b) (f2 b)))))")

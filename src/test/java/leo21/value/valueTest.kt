@@ -16,6 +16,7 @@ import leo14.lambda.value.value
 import leo21.prim.Prim
 import leo21.prim.prim
 import leo21.prim.runtime.value
+import leo21.syntax.countdown
 import leo21.syntax.fn
 import leo21.syntax.number
 import leo21.syntax.numberEqualsNumber
@@ -57,8 +58,8 @@ class ValueTest {
 		number(10)
 			.numberEqualsNumber(number(10))
 			.eitherSwitch(
-				fn { text("yes") },
-				fn { text("no") })
+				{ text("yes") },
+				{ text("no") })
 			.value
 			.assertEqualTo(value(prim("yes")))
 	}
@@ -68,35 +69,16 @@ class ValueTest {
 		number(10)
 			.numberEqualsNumber(number(20))
 			.eitherSwitch(
-				fn { text("yes") },
-				fn { text("no") })
+				{ text("yes") },
+				{ text("no") })
 			.value
 			.assertEqualTo(value(prim("no")))
 	}
 
 	@Test
-	fun countdown2() {
-		recFn { countdownFn, textPairToNumber ->
-			textPairToNumber
-				.pairSecond
-				.numberEqualsNumber(number(0))
-				.eitherSwitch(
-					fn {
-						textPairToNumber
-							.pairFirst
-							.textPlusText(text("GO!!!"))
-					},
-					fn {
-						countdownFn
-							.invoke(
-								textPairToNumber
-									.pairFirst
-									.textPlusText(textPairToNumber.pairSecond.numberText)
-									.textPlusText(text(", "))
-									.pairTo(textPairToNumber.pairSecond.numberMinusNumber(number(1))))
-					})
-		}
-			.invoke(text("Countdown: ").pairTo(number(3)))
+	fun countdown() {
+		number(3)
+			.countdown
 			.value
 			.assertEqualTo(value(prim("Countdown: 3, 2, 1, GO!!!")))
 	}

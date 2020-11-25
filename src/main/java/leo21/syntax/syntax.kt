@@ -1,6 +1,7 @@
 package leo21.syntax
 
 import leo14.lambda.syntax.Syntax
+import leo14.lambda.syntax.eitherSwitch
 import leo14.lambda.syntax.invoke
 import leo14.lambda.syntax.native
 import leo14.lambda.syntax.term
@@ -19,6 +20,10 @@ typealias X = Syntax<Prim>
 fun number(int: Int): X = native(prim(int))
 fun number(double: Double): X = native(prim(double))
 fun text(string: String): X = native(prim(string))
+
+fun boolean(boolean: Boolean): X = leo14.lambda.syntax.boolean(boolean)
+fun X.booleanSwitch(trueFn: (X) -> X, falseFn: (X) -> X): X = eitherSwitch(trueFn, falseFn)
+fun X.booleanSwitch(trueX: X, falseX: X): X = booleanSwitch({ trueX }, { falseX })
 
 fun X.numberPlusNumber(rhs: X): X = op2(NumberPlusNumberPrim, rhs)
 fun X.numberMinusNumber(rhs: X): X = op2(NumberMinusNumberPrim, rhs)

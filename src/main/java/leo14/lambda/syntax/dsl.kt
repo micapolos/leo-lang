@@ -18,8 +18,15 @@ val <T> Syntax<T>.eitherSecond: Syntax<T>
 	get() =
 		fn<T> { value -> fn { firstFn -> fn { secondFn -> secondFn.invoke(value) } } }.invoke(this)
 
-fun <T> Syntax<T>.eitherSwitch(firstFn: Syntax<T>, secondFn: Syntax<T>): Syntax<T> =
-	invoke(firstFn).invoke(secondFn)
+fun <T> boolean(boolean: Boolean): Syntax<T> =
+	if (boolean) fn<T> { it }.eitherFirst
+	else fn<T> { it }.eitherSecond
+
+fun <T> Syntax<T>.eitherSwitch(firstFn: (Syntax<T>) -> Syntax<T>, secondFn: (Syntax<T>) -> Syntax<T>): Syntax<T> =
+	invoke(fn(firstFn)).invoke(fn(secondFn))
+
+fun <T> Syntax<T>.eitherSwitch(first: Syntax<T>, second: Syntax<T>): Syntax<T> =
+	eitherSwitch({ first }, { second })
 
 fun <T> fix(): Syntax<T> =
 	fn { g ->
