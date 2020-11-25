@@ -16,8 +16,10 @@ sealed class Prim : Scriptable() {
 		get() =
 			"prim" lineTo when (this) {
 				NilPrim -> script("nil")
+				is BooleanPrim -> script("boolean" lineTo script(if (boolean) "true" else "false"))
 				is StringPrim -> script(literal(string))
 				is NumberPrim -> script(literal(number))
+				BooleanSwitchPrim -> script("boolean" lineTo script("switch" lineTo script()))
 				NumberPlusNumberPrim -> script("number" lineTo script(), "plus" lineTo script("number"))
 				NumberMinusNumberPrim -> script("number" lineTo script(), "minus" lineTo script("number"))
 				NumberTimesNumberPrim -> script("number" lineTo script(), "times" lineTo script("number"))
@@ -34,6 +36,10 @@ sealed class Prim : Scriptable() {
 
 object NilPrim : Prim()
 
+data class BooleanPrim(val boolean: Boolean) : Prim() {
+	override fun toString() = super.toString()
+}
+
 data class StringPrim(val string: String) : Prim() {
 	override fun toString() = super.toString()
 }
@@ -42,6 +48,7 @@ data class NumberPrim(val number: Number) : Prim() {
 	override fun toString() = super.toString()
 }
 
+object BooleanSwitchPrim : Prim()
 object NumberPlusNumberPrim : Prim()
 object NumberMinusNumberPrim : Prim()
 object NumberTimesNumberPrim : Prim()
@@ -55,9 +62,11 @@ object StringLengthPrim : Prim()
 object StringTryNumberPrim : Prim()
 
 val nilPrim: Prim = NilPrim
+val Prim.boolean get() = (this as BooleanPrim).boolean
 val Prim.string get() = (this as StringPrim).string
 val Prim.number get() = (this as NumberPrim).number
 
+val Boolean.prim get() = prim(this)
 val String.prim get() = prim(this)
 val Number.prim get() = prim(this)
 val Double.prim get() = prim(this)
@@ -67,6 +76,7 @@ val Literal.prim
 		is NumberLiteral -> number.prim
 	}
 
+fun prim(boolean: Boolean): Prim = BooleanPrim(boolean)
 fun prim(string: String): Prim = StringPrim(string)
 fun prim(number: Number): Prim = NumberPrim(number)
 fun prim(double: Double): Prim = prim(double.number)

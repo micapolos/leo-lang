@@ -4,7 +4,9 @@ import leo14.Number
 import leo14.anyReflectScriptLine
 import leo14.cosinus
 import leo14.isEqualTo
+import leo14.lambda.runtime.invoke
 import leo14.lambda.value.Value
+import leo14.lambda.value.apply
 import leo14.lambda.value.eitherFirst
 import leo14.lambda.value.eitherSecond
 import leo14.lambda.value.native
@@ -18,6 +20,8 @@ import leo14.sinus
 import leo14.string
 import leo14.times
 import leo21.evaluated.nilValue
+import leo21.prim.BooleanPrim
+import leo21.prim.BooleanSwitchPrim
 import leo21.prim.NilPrim
 import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberEqualsNumberPrim
@@ -33,6 +37,7 @@ import leo21.prim.StringLengthPrim
 import leo21.prim.StringPlusStringPrim
 import leo21.prim.StringPrim
 import leo21.prim.StringTryNumberPrim
+import leo21.prim.boolean
 import leo21.prim.isEqualTo
 import leo21.prim.number
 import leo21.prim.prim
@@ -42,8 +47,14 @@ import leo22.dsl.*
 fun Prim.apply(rhs: Value<Prim>): Value<Prim> =
 	when (this) {
 		is NilPrim -> null
+		is BooleanPrim -> null
 		is StringPrim -> null
 		is NumberPrim -> null
+		BooleanSwitchPrim -> rhs.pair { b, cases ->
+			cases.pair { trueCase, falseCase ->
+				(if (b.native.boolean) trueCase else falseCase).apply(nilValue, Prim::apply)
+			}
+		}
 		NumberPlusNumberPrim -> rhs.apply(Prim::number, Number::plus, Prim::number, Number::prim)
 		NumberMinusNumberPrim -> rhs.apply(Prim::number, Number::minus, Prim::number, Number::prim)
 		NumberTimesNumberPrim -> rhs.apply(Prim::number, Number::times, Prim::number, Number::prim)

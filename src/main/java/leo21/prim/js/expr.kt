@@ -8,6 +8,8 @@ import leo14.js.ast.id
 import leo14.js.ast.invoke
 import leo14.js.ast.lambda
 import leo14.js.ast.op
+import leo21.prim.BooleanPrim
+import leo21.prim.BooleanSwitchPrim
 import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
@@ -28,8 +30,10 @@ val Prim.expr: Expr
 	get() =
 		when (this) {
 			is NilPrim -> expr(NULL)
+			is BooleanPrim -> TODO()
 			is StringPrim -> expr(string)
 			is NumberPrim -> expr(number.bigDecimal.toDouble())
+			BooleanSwitchPrim -> TODO()
 			NumberPlusNumberPrim -> op2Expr("+")
 			NumberMinusNumberPrim -> op2Expr("-")
 			NumberTimesNumberPrim -> op2Expr("*")

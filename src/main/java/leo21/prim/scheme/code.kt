@@ -4,6 +4,8 @@ import leo14.Number
 import leo14.lambda.scheme.Code
 import leo14.lambda.scheme.code
 import leo14.literalString
+import leo21.prim.BooleanPrim
+import leo21.prim.BooleanSwitchPrim
 import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
@@ -21,6 +23,7 @@ import leo21.prim.StringPrim
 import leo21.prim.StringTryNumberPrim
 
 val nilCode = code("'()")
+val Boolean.code: Code get() = code(if (this) "#t" else "f")
 val String.code: Code get() = code(literalString)
 val Number.code: Code get() = code("$this")
 
@@ -28,8 +31,10 @@ val Prim.code: Code
 	get() =
 		when (this) {
 			is NilPrim -> nilCode
+			is BooleanPrim -> boolean.code
 			is StringPrim -> string.code
 			is NumberPrim -> number.code
+			BooleanSwitchPrim -> TODO()
 			NumberEqualsNumberPrim -> boolSwitchCode(fn2Code("="))
 			NumberPlusNumberPrim -> fn2Code("+")
 			NumberMinusNumberPrim -> fn2Code("-")
@@ -54,3 +59,6 @@ fun fn2Code(op: String) =
 
 fun boolSwitchCode(boolCode: Code) =
 	code("(lambda (b) (lambda (f1) (lambda (f2) (if ($boolCode b) (f1 b) (f2 b)))))")
+
+fun ifThenElseCode(cond: Code, caseTrue: Code, caseFalse: Code): Code =
+	code("(if $cond $caseTrue $caseFalse)")

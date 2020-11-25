@@ -4,6 +4,8 @@ import leo14.Number
 import leo14.lambda.julia.Julia
 import leo14.lambda.julia.julia
 import leo14.literalString
+import leo21.prim.BooleanPrim
+import leo21.prim.BooleanSwitchPrim
 import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberMinusNumberPrim
 import leo21.prim.NumberPlusNumberPrim
@@ -28,8 +30,10 @@ val Prim.julia: Julia
 	get() =
 		when (this) {
 			is NilPrim -> nullJulia
+			is BooleanPrim -> TODO()
 			is StringPrim -> string.julia
 			is NumberPrim -> number.julia
+			BooleanSwitchPrim -> TODO()
 			NumberPlusNumberPrim -> op2Julia("+")
 			NumberMinusNumberPrim -> op2Julia("-")
 			NumberTimesNumberPrim -> op2Julia("*")

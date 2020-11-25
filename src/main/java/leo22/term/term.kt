@@ -9,6 +9,8 @@ import leo14.lambda.arg
 import leo14.lambda.fn
 import leo14.lambda.invoke
 import leo14.lambda.nativeTerm
+import leo21.prim.BooleanPrim
+import leo21.prim.BooleanSwitchPrim
 import leo21.prim.NilPrim
 import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberEqualsNumberPrim
@@ -81,8 +83,10 @@ val Prim.x_: X
 	get() =
 		when (this) {
 			NilPrim -> native(nil())
+			is BooleanPrim -> TODO()
 			is StringPrim -> native(text(string))
 			is NumberPrim -> native(number(number))
+			BooleanSwitchPrim -> TODO()
 			NumberPlusNumberPrim -> TODO()
 			NumberMinusNumberPrim -> TODO()
 			NumberTimesNumberPrim -> TODO()

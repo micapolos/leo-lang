@@ -6,6 +6,8 @@ import leo14.lambda.java.Native
 import leo14.lambda.java.native
 import leo14.lambda.java.nullNative
 import leo14.literalString
+import leo21.prim.BooleanPrim
+import leo21.prim.BooleanSwitchPrim
 import leo21.prim.NilPrim
 import leo21.prim.NumberCosinusPrim
 import leo21.prim.NumberEqualsNumberPrim
@@ -29,8 +31,10 @@ val Prim.native: Native
 	get() =
 		when (this) {
 			is NilPrim -> nullNative
+			is BooleanPrim -> TODO()
 			is StringPrim -> string.native
 			is NumberPrim -> number.native
+			BooleanSwitchPrim -> TODO()
 			NumberPlusNumberPrim -> op2Native("+", "Double")
 			NumberMinusNumberPrim -> op2Native("-", "Double")
 			NumberTimesNumberPrim -> op2Native("*", "Double")
