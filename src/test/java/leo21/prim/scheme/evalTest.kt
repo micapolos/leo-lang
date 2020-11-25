@@ -62,6 +62,43 @@ class EvalTest {
 	}
 
 	@Test
+	fun booleanSwitch_true() {
+		boolean(true)
+			.booleanSwitch(text("true"), text("false"))
+			.term
+			.map(Prim::code)
+			.code
+			.string
+			.eval
+			.assertEqualTo("true")
+	}
+
+	@Test
+	fun booleanSwitch_false() {
+		boolean(false)
+			.booleanSwitch(text("true"), text("false"))
+			.term
+			.map(Prim::code)
+			.code
+			.string
+			.eval
+			.assertEqualTo("false")
+	}
+
+	@Test
+	fun numberEqualsNumber() {
+		number(3)
+			.numberEqualsNumber(number(3))
+			.booleanSwitch(text("true"), text("false"))
+			.term
+			.map(Prim::code)
+			.code
+			.string
+			.eval
+			.assertEqualTo("true")
+	}
+
+	@Test
 	fun countdown() {
 		number(3)
 			.countdown
