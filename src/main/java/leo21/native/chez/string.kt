@@ -34,7 +34,7 @@ fun Native.string(depth: Int): String =
 		is BooleanNative -> if (boolean) "#t" else "#f"
 		is StringNative -> string.literalString
 		is NumberNative -> number.string
-		is IsNilNative -> "(null? ${native.string(depth)})"
+		is IsNilNative -> "(null? ${lhs.string(depth)})"
 		is PlusNative -> "(+ ${lhs.string(depth)} ${rhs.string(depth)})"
 		is MinusNative -> "(- ${lhs.string(depth)} ${rhs.string(depth)})"
 		is TimesNative -> "(* ${lhs.string(depth)} ${rhs.string(depth)})"
