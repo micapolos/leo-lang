@@ -16,6 +16,7 @@ import leo21.token.body.FunctionCompiler
 import leo21.token.body.RepeatCompiler
 import leo21.token.body.plus
 import leo21.token.body.plusDoing
+import leo21.token.body.plusTo
 import leo21.token.body.set
 import leo21.token.define.plus
 import leo21.token.processor.ArrowCompilerProcessor
@@ -36,6 +37,7 @@ data class ArrowNameTypeParent(val arrowCompiler: ArrowCompiler, val lhs: Type, 
 data class ArrowDoingTypeParent(val arrowCompiler: ArrowCompiler, val lhs: Type) : TypeParent()
 data class RecursiveTypeParent(val typeCompiler: TypeCompiler) : TypeParent()
 data class FunctionCompilerTypeParent(val functionCompiler: FunctionCompiler) : TypeParent()
+data class FunctionToCompilerTypeParent(val functionCompiler: FunctionCompiler) : TypeParent()
 data class DefineCompilerTypeParent(val defineCompiler: DefineCompiler) : TypeParent()
 data class RepeatDoingCompilerTypeParent(val repeatCompiler: RepeatCompiler) : TypeParent()
 
@@ -47,6 +49,7 @@ fun TypeParent.plus(type: Type): Processor =
 		is ArrowNameTypeParent -> ArrowCompilerProcessor(arrowCompiler.set(lhs.plus(name compiledLineTo type)))
 		is RecursiveTypeParent -> typeCompiler.plusRecursive(type)
 		is FunctionCompilerTypeParent -> functionCompiler.plus(type)
+		is FunctionToCompilerTypeParent -> functionCompiler.plusTo(type).processor
 		is DefineCompilerTypeParent -> defineCompiler.plus(typeDefinition(type.lineStack.onlyOrNull!!)).processor
 		is RepeatDoingCompilerTypeParent -> repeatCompiler.plusDoing(type)
 	}

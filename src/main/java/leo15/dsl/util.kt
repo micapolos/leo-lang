@@ -2,6 +2,8 @@ package leo15.dsl
 
 import leo.base.println
 import leo.base.runWith
+import leo13.fold
+import leo13.reverse
 import leo14.*
 import leo14.untyped.leoString
 import leo15.eval
@@ -54,3 +56,6 @@ fun dsl_(f: F): F = f
 val Fragment.tokenReducer: Reducer<Fragment, Token>
 	get() =
 		reducer { plus(it).tokenReducer }
+
+fun X.x(script: Script): X = fold(script.tokenStack.reverse) { x(it) }
+fun X.x(vararg lines: ScriptLine): X = x(script(*lines))

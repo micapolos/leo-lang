@@ -38,7 +38,7 @@ import leo21.type.type
 data class TypeCompiler(
 	val parentOrNull: TypeParent?,
 	val lines: Lines,
-	val type: Type,
+	val type: Type = type(),
 	val autoEnd: Boolean = false
 ) : Scriptable() {
 	override fun toString() = super.toString()

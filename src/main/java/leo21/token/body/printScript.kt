@@ -1,5 +1,8 @@
 package leo21.token.body
 
+import leo.base.runIf
+import leo.base.updateIf
+import leo.base.updateIfNotNull
 import leo13.map
 import leo14.Fragment
 import leo14.FragmentParent
@@ -9,6 +12,7 @@ import leo14.begin
 import leo14.fragment
 import leo14.lineTo
 import leo14.parent
+import leo14.plus
 import leo14.script
 import leo21.token.define.DefineCompiler
 import leo21.token.evaluator.printFragment
@@ -55,9 +59,15 @@ val SwitchCompiler.printFragment: Fragment
 			.parent(begin("switch".typeKeyword))
 			.fragment(caseFieldStack.map { printScriptLine }.script)
 
+val FunctionCompiler.printScript: Script
+	get() =
+		type.printScript.updateIfNotNull(toTypeOrNull) {
+			plus("to".typeKeyword lineTo it.printScript)
+		}
+
 val FunctionCompiler.printFragment: Fragment
 	get() =
-		parentOrNull?.printFragmentParent.fragment(type.printScript)
+		parentOrNull?.printFragmentParent.fragment(printScript)
 
 val FunctionDoesCompiler.printFragment: Fragment
 	get() =

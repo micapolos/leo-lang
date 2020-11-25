@@ -8,6 +8,7 @@ import leo14.ScriptLine
 import leo14.Scriptable
 import leo14.Token
 import leo14.anyOptionalReflectScriptLine
+import leo14.dsl.x
 import leo14.end
 import leo14.error
 import leo14.lambda.abstraction
@@ -30,24 +31,29 @@ import leo21.token.evaluator.plus
 import leo21.token.processor.BodyCompilerProcessor
 import leo21.token.processor.DefineCompilerProcessor
 import leo21.token.processor.Processor
+import leo21.token.processor.TypeCompilerProcessor
 import leo21.token.processor.processor
 import leo21.token.type.compiler.FunctionCompilerTypeParent
+import leo21.token.type.compiler.FunctionToCompilerTypeParent
 import leo21.token.type.compiler.TypeCompiler
 import leo21.token.type.compiler.plus
 import leo21.type.Type
 import leo21.type.arrowTo
+import leo21.type.printScript
 import leo21.type.type
 
 data class FunctionCompiler(
 	val parentOrNull: Parent?,
 	val module: Module,
-	val type: Type = type()
+	val type: Type = type(),
+	val toTypeOrNull: Type? = null
 ) : Scriptable() {
 	override val reflectScriptLine: ScriptLine
 		get() = "function" lineTo script(
 			parentOrNull.anyOptionalReflectScriptLine("parent"),
 			module.reflectScriptLine,
-			type.reflectScriptLine)
+			type.reflectScriptLine,
+			"to" lineTo script(toTypeOrNull.anyOptionalReflectScriptLine("type")))
 
 	sealed class Parent : Scriptable() {
 		override val reflectScriptLine: ScriptLine
@@ -83,11 +89,20 @@ fun FunctionCompiler.plus(token: Token): Processor =
 		is LiteralToken -> null
 		is BeginToken ->
 			when (token.begin.string) {
-				"does" -> BodyCompilerProcessor(
-					BodyCompiler(
-						BodyCompiler.Parent.FunctionDoes(this),
-						module.begin(type.given).body(compiled())))
-				else -> null
+				"does" ->
+					BodyCompilerProcessor(
+						BodyCompiler(
+							BodyCompiler.Parent.FunctionDoes(this),
+							module.begin(type.given).body(compiled())))
+				"to" ->
+					if (toTypeOrNull != null) error { not { expected { word { to } } } }
+					else TypeCompilerProcessor(
+						TypeCompiler(
+							FunctionToCompilerTypeParent(this),
+							module.lines))
+				else ->
+					if (toTypeOrNull != null) error { expected { word { does } } }
+					else null
 			}
 		is EndToken -> error { expected { type.or { word { does } } } }
 	} ?: TypeCompiler(
@@ -120,5 +135,10 @@ fun FunctionCompiler.plus(type: Type): Processor =
 	FunctionCompiler(parentOrNull, module, type).processor
 
 fun FunctionCompiler.plus(compiled: Compiled): Processor =
-	FunctionDoesCompiler(parentOrNull, fn(compiled.term).of(type arrowTo compiled.type))
+	if (toTypeOrNull != null && toTypeOrNull != compiled.type)
+		error { expected { x(toTypeOrNull.printScript) } }
+	else FunctionDoesCompiler(parentOrNull, fn(compiled.term).of(type arrowTo compiled.type))
 		.processor
+
+fun FunctionCompiler.plusTo(type: Type): FunctionCompiler =
+	copy(toTypeOrNull = type)

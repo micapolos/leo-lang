@@ -32,6 +32,7 @@ val TypeParent.fragmentParent: FragmentParent
 			is RecursiveTypeParent -> typeCompiler.printFragment.parent(begin("recursive".typeKeyword))
 			is FunctionCompilerTypeParent -> functionCompiler.parentOrNull?.printFragmentParent
 				?: emptyFragment.parent(begin("function".valueKeyword))
+			is FunctionToCompilerTypeParent -> functionCompiler.printFragment.parent(begin("to".typeKeyword))
 			is DefineCompilerTypeParent -> defineCompiler.printFragment.parent(begin("type".typeKeyword))
 			is RepeatDoingCompilerTypeParent -> repeatCompiler.printFragment.parent(begin("doing".typeKeyword))
 		}
