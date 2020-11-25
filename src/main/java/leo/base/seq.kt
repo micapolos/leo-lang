@@ -298,3 +298,12 @@ fun <V> Seq<V>.indexed(startIndex: Int): Seq<IndexedValue<V>> =
 fun <V> SeqNode<V>.indexed(startIndex: Int): SeqNode<IndexedValue<V>> =
 	startIndex.indexed(first).then(remaining.indexed(startIndex.inc()))
 
+fun <V> Seq<V>.indexOrNullOf(value: V): Int? =
+	indexed.mapFirstOrNull {
+		notNullIf(this == value) {
+			index
+		}
+	}
+
+fun <V> Seq<V>.indexOr(value: V): Int =
+	indexOrNullOf(value)!!

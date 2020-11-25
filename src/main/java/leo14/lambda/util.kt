@@ -191,6 +191,9 @@ fun <T> fix(): Term<T> =
 	fn(fn(arg<T>(1).invoke(fn(arg<T>(1).invoke(arg(1)).invoke(arg(0)))))
 		.invoke(fn(arg<T>(1).invoke(fn(arg<T>(1).invoke(arg(1)).invoke(arg(0)))))))
 
+fun <T> recFn(body: Term<T>): Term<T> =
+	fix<T>().invoke(fn(fn(body)))
+
 // ===
 
 fun <T> Term<T>.reference(f: Term<T>.() -> Term<T>): Term<T> =

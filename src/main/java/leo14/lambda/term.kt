@@ -15,7 +15,7 @@ import leo14.plus
 import leo14.script
 
 sealed class Term<out T> : Scriptable() {
-	override fun toString() = script { line(literal(toString())) }.indentString
+	override fun toString() = script { anyReflectScriptLine }.indentString
 	override val reflectScriptLine: ScriptLine get() = "term" lineTo script { anyReflectScriptLine }
 }
 
