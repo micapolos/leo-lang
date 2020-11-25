@@ -1,15 +1,15 @@
-package leo21.native.chez
+package leo23.term.chez
 
 import leo.base.assertEqualTo
-import leo21.native.fn2
-import leo21.native.get
-import leo21.native.minus
-import leo21.native.number
-import leo21.native.textAppend
-import leo21.native.text
-import leo21.native.v0
-import leo21.native.v1
-import leo21.native.vector
+import leo23.term.fn2
+import leo23.term.get
+import leo23.term.minus
+import leo23.term.number
+import leo23.term.textAppend
+import leo23.term.text
+import leo23.term.v0
+import leo23.term.v1
+import leo23.term.vector
 import kotlin.test.Test
 
 class StringTest {

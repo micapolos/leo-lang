@@ -1,24 +1,24 @@
-package leo21.native.chez
+package leo23.term.chez
 
 import leo.base.assertEqualTo
-import leo21.native.apply
-import leo21.native.boolean
-import leo21.native.fn2
-import leo21.native.get
-import leo21.native.ifThenElse
-import leo21.native.isNil
-import leo21.native.lhs
-import leo21.native.minus
-import leo21.native.nil
-import leo21.native.number
-import leo21.native.pairTo
-import leo21.native.rhs
-import leo21.native.text
-import leo21.native.textAppend
-import leo21.native.textNumberOrNil
-import leo21.native.v0
-import leo21.native.v1
-import leo21.native.vector
+import leo23.term.apply
+import leo23.term.boolean
+import leo23.term.fn2
+import leo23.term.get
+import leo23.term.ifThenElse
+import leo23.term.isNil
+import leo23.term.lhs
+import leo23.term.minus
+import leo23.term.nil
+import leo23.term.number
+import leo23.term.pairTo
+import leo23.term.rhs
+import leo23.term.text
+import leo23.term.textAppend
+import leo23.term.textNumberOrNil
+import leo23.term.v0
+import leo23.term.v1
+import leo23.term.vector
 import kotlin.test.Test
 
 class EvalTest {

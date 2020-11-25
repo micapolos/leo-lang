@@ -1,4 +1,4 @@
-package leo21.native
+package leo23.term
 
 import leo.base.assertNotNull
 import kotlin.test.Test
