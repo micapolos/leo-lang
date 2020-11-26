@@ -5,23 +5,25 @@ import leo14.string
 import leo23.term.ApplyTerm
 import leo23.term.BooleanTerm
 import leo23.term.ConditionalTerm
-import leo23.term.FunctionTerm
-import leo23.term.IsNilTerm
-import leo23.term.Term
-import leo23.term.NilTerm
 import leo23.term.EqualsTerm
-import leo23.term.MinusTerm
-import leo23.term.NumberTerm
-import leo23.term.PlusTerm
-import leo23.term.NumberStringTerm
-import leo23.term.TimesTerm
+import leo23.term.FunctionTerm
+import leo23.term.IndexedTerm
+import leo23.term.IsNilTerm
 import leo23.term.LhsTerm
+import leo23.term.MinusTerm
+import leo23.term.NilTerm
+import leo23.term.NumberStringTerm
+import leo23.term.NumberTerm
 import leo23.term.PairTerm
+import leo23.term.PlusTerm
 import leo23.term.RhsTerm
-import leo23.term.StringEqualsTerm
-import leo23.term.StringTerm
-import leo23.term.StringNumberOrNilTerm
 import leo23.term.StringAppendTerm
+import leo23.term.StringEqualsTerm
+import leo23.term.StringNumberOrNilTerm
+import leo23.term.StringTerm
+import leo23.term.SwitchTerm
+import leo23.term.Term
+import leo23.term.TimesTerm
 import leo23.term.VariableTerm
 import leo23.term.VectorAtTerm
 import leo23.term.VectorTerm
@@ -52,4 +54,6 @@ fun Term.string(depth: Int): String =
 		is FunctionTerm -> "(lambda (${(0 until arity).joinToString(" ") { "v${it + depth}" }}) ${body.string(depth.plus(arity))})"
 		is ApplyTerm -> "(${listOf(function).plus(paramList).joinToString(" ") { it.string(depth) }})"
 		is VariableTerm -> "v${depth - index - 1}"
+		is IndexedTerm -> "(cons $index ${rhs.string(depth)})"
+		is SwitchTerm -> TODO()
 	}

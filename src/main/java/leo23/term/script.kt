@@ -1,6 +1,7 @@
 package leo23.term
 
 import leo14.Script
+import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.plus
@@ -31,4 +32,6 @@ val Term.script: Script
 			is FunctionTerm -> script("function" lineTo script("arity" lineTo script(literal(arity))).plus(body.script))
 			is ApplyTerm -> function.script.plus("apply" lineTo script(*paramList.map { "item" lineTo it.script }.toTypedArray()))
 			is VariableTerm -> script("arg" lineTo script(literal(index)))
+			is IndexedTerm -> script(line(literal(index)), "indexed" lineTo rhs.script)
+			is SwitchTerm -> lhs.script.plus("switch" lineTo cases.map { "case" lineTo it.script }.script)
 		}

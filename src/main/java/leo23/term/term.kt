@@ -93,3 +93,11 @@ data class ApplyTerm(val function: Term, val paramList: List<Term>) : Term() {
 data class VariableTerm(val index: Int) : Term() {
 	override fun toString() = super.toString()
 }
+
+data class IndexedTerm(val index: Int, val rhs: Term) : Term() {
+	override fun toString() = super.toString()
+}
+
+data class SwitchTerm(val lhs: Term, val cases: List<Term>) : Term() {
+	override fun toString() = super.toString()
+}

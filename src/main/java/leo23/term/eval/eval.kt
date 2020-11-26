@@ -1,6 +1,6 @@
 package leo23.term.eval
 
-import leo.stak.Stak
+import leo.base.indexed
 import leo.stak.push
 import leo.stak.stakOf
 import leo.stak.top
@@ -15,35 +15,32 @@ import leo23.term.BooleanTerm
 import leo23.term.ConditionalTerm
 import leo23.term.EqualsTerm
 import leo23.term.FunctionTerm
+import leo23.term.IndexedTerm
 import leo23.term.IsNilTerm
 import leo23.term.LhsTerm
 import leo23.term.MinusTerm
-import leo23.term.Term
 import leo23.term.NilTerm
-import leo23.term.NumberTerm
 import leo23.term.NumberStringTerm
+import leo23.term.NumberTerm
 import leo23.term.PairTerm
 import leo23.term.PlusTerm
 import leo23.term.RhsTerm
 import leo23.term.StringAppendTerm
 import leo23.term.StringEqualsTerm
-import leo23.term.StringTerm
 import leo23.term.StringNumberOrNilTerm
+import leo23.term.StringTerm
+import leo23.term.SwitchTerm
+import leo23.term.Term
 import leo23.term.TimesTerm
 import leo23.term.VariableTerm
 import leo23.term.VectorAtTerm
 import leo23.term.VectorTerm
-
-typealias Value = Any
-typealias Scope = Stak<Value>
-
-data class Fn(val scope: Scope, val body: Term)
-
-fun Fn.apply(params: List<Value>): Value = params.fold(scope) { acc, value -> acc.push(value) }.eval(body)
+import leo23.value.Value
+import leo23.value.indexed
 
 val Term.eval: Value get() = stakOf<Value>().eval(this)
 
-// TODO: Tail recursion!!!
+// TODO: Tail recursion
 fun Scope.eval(term: Term): Value =
 	when (term) {
 		NilTerm -> Unit
@@ -68,4 +65,6 @@ fun Scope.eval(term: Term): Value =
 		is FunctionTerm -> Fn(this, term.body)
 		is ApplyTerm -> (eval(term.function) as Fn).apply(term.paramList.map { eval(it) })
 		is VariableTerm -> top(term.index)!!
+		is IndexedTerm -> term.index indexed eval(term.rhs)
+		is SwitchTerm -> eval(term.lhs).indexed.let { push(it.value).eval(term.cases[it.index]) }
 	}

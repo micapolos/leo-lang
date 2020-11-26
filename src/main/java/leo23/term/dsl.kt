@@ -25,6 +25,8 @@ fun Term.ifThenElse(trueTerm: Term, falseTerm: Term): Term = ConditionalTerm(thi
 fun fn(arity: Int, body: Term): Term = FunctionTerm(arity, body)
 fun Term.apply(vararg params: Term): Term = ApplyTerm(this, listOf(*params))
 fun v(index: Int): Term = VariableTerm(index)
+infix fun Int.indexed(term: Term): Term = IndexedTerm(this, term)
+fun Term.switch(vararg terms: Term): Term = SwitchTerm(this, listOf(*terms))
 
 fun fn0(body: Term) = fn(0, body)
 fun fn1(body: Term) = fn(1, body)

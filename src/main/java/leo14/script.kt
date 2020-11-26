@@ -59,6 +59,7 @@ fun line(field: ScriptField): ScriptLine = FieldScriptLine(field)
 fun Script.plus(vararg lines: ScriptLine) = fold(lines) { LinkScript(this linkTo it) }
 fun Script.plus(field: ScriptField, vararg fields: ScriptField): Script = plus(line(field)).fold(fields) { plus(it) }
 fun script(vararg lines: ScriptLine): Script = script(Unit).plus(*lines)
+val List<ScriptLine>.script get() = script(*toTypedArray())
 fun script(string: String, vararg strings: String) = script(field(string)).fold(strings) { plus(field(it)) }
 fun script(field: ScriptField, vararg fields: ScriptField): Script =
 	script(line(field)).fold(fields) { plus(line(it)) }

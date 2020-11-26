@@ -5,13 +5,15 @@ import kotlin.test.Test
 class DslTest {
 	@Test
 	fun dsl() {
-		nilType
 		booleanType
 		textType
 		numberType
-		textType.vector
-		numberType pairTo textType
-		textType.orNil
 		params(numberType, textType) arrowTo booleanType
+		"point" struct fields(
+			"x" struct fields(numberType),
+			"y" struct fields(numberType))
+		"boolean" choice cases(
+			"true".type,
+			"false".type)
 	}
 }
