@@ -1,6 +1,6 @@
 package leo23.term.chez
 
 import leo16.term.chez.eval
-import leo23.term.Term
+import leo23.term.Expr
 
-val Term.evalString: String get() = string.eval
+val Expr.evalString: String get() = string.eval

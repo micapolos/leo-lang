@@ -1,37 +1,45 @@
 package leo23.term
 
 import leo14.number
+import leo23.term.type.ArrowType
+import leo23.term.type.BooleanType
+import leo23.term.type.ChoiceType
+import leo23.term.type.NilType
+import leo23.term.type.NumberType
+import leo23.term.type.TextType
+import leo23.term.type.TupleType
+import leo23.term.type.Type
+import leo23.term.type.booleanType
+import leo23.term.type.checkEqual
+import leo23.term.type.indexIn
+import leo23.term.type.nilType
+import leo23.term.type.numberType
+import leo23.term.type.textType
 
-val nil: Term get() = NilTerm
-fun boolean(boolean: Boolean): Term = BooleanTerm(boolean)
-fun text(string: String): Term = StringTerm(string)
-fun number(int: Int): Term = NumberTerm(int.number)
-fun number(double: Double): Term = NumberTerm(double.number)
-val Term.isNil: Term get() = IsNilTerm(this)
-operator fun Term.plus(rhs: Term): Term = PlusTerm(this, rhs)
-operator fun Term.minus(rhs: Term): Term = MinusTerm(this, rhs)
-operator fun Term.times(rhs: Term): Term = TimesTerm(this, rhs)
-fun Term.numberEquals(rhs: Term): Term = EqualsTerm(this, rhs)
-val Term.numberText: Term get() = NumberStringTerm(this)
-fun Term.textAppend(rhs: Term): Term = StringAppendTerm(this, rhs)
-fun Term.textEquals(rhs: Term): Term = StringEqualsTerm(this, rhs)
-val Term.textNumberOrNil: Term get() = StringNumberOrNilTerm(this)
-infix fun Term.pairTo(rhs: Term): Term = PairTerm(this, rhs)
-val Term.lhs: Term get() = LhsTerm(this)
-val Term.rhs: Term get() = RhsTerm(this)
-fun vector(vararg terms: Term): Term = VectorTerm(listOf(*terms))
-operator fun Term.get(index: Term): Term = VectorAtTerm(this, index)
-fun Term.ifThenElse(trueTerm: Term, falseTerm: Term): Term = ConditionalTerm(this, trueTerm, falseTerm)
-fun fn(arity: Int, body: Term): Term = FunctionTerm(arity, body)
-fun Term.apply(vararg params: Term): Term = ApplyTerm(this, listOf(*params))
-fun v(index: Int): Term = VariableTerm(index)
-infix fun Int.indexed(term: Term): Term = IndexedTerm(this, term)
-fun Term.switch(vararg terms: Term): Term = SwitchTerm(this, listOf(*terms))
+val nilExpr: Expr get() = Expr(NilTerm, NilType)
+fun expr(boolean: Boolean): Expr = Expr(BooleanTerm(boolean), BooleanType)
+fun expr(string: String): Expr = Expr(StringTerm(string), TextType)
+fun expr(int: Int): Expr = Expr(NumberTerm(int.number), NumberType)
+fun expr(double: Double): Expr = Expr(NumberTerm(double.number), NumberType)
+val Expr.isNil: Expr get() = Expr(IsNilTerm(this), BooleanType)
+fun Expr.numberPlus(rhs: Expr): Expr = Expr(PlusTerm(check(numberType), rhs.check(numberType)), numberType)
+fun Expr.numberMinus(rhs: Expr): Expr = Expr(MinusTerm(check(numberType), rhs.check(numberType)), numberType)
+fun Expr.numberTimes(rhs: Expr): Expr = Expr(TimesTerm(check(numberType), rhs.check(numberType)), numberType)
+fun Expr.numberEquals(rhs: Expr): Expr = Expr(EqualsTerm(check(numberType), rhs.check(numberType)), booleanType)
+val Expr.numberText: Expr get() = Expr(NumberStringTerm(check(numberType)), textType)
+fun Expr.textAppend(rhs: Expr): Expr = Expr(StringAppendTerm(check(textType), rhs.check(textType)), textType)
+fun Expr.textEquals(rhs: Expr): Expr = Expr(StringEqualsTerm(check(textType), rhs.check(textType)), booleanType)
+val Expr.textNumberOrNil: Expr get() = Expr(StringNumberOrNilTerm(check(textType)), ChoiceType(listOf(textType, nilType)))
+fun tuple(vararg terms: Expr): Expr = Expr(TupleTerm(listOf(*terms)), TupleType(terms.map { it.type }))
+fun Expr.tupleAt(index: Int): Expr = Expr(TupleAtTerm(this, index), (type as TupleType).itemTypes[index])
+fun Expr.ifThenElse(trueTerm: Expr, falseTerm: Expr): Expr = Expr(ConditionalTerm(check(booleanType), trueTerm, falseTerm), trueTerm.type.checkEqual(falseTerm.type))
+fun params(type: Type, vararg types: Type): List<Type> = listOf(type, *types)
+fun List<Type>.does(body: Expr): Expr = Expr(FunctionTerm(this, body), ArrowType(this, body.type))
+fun Expr.apply(vararg params: Expr): Expr = Expr(ApplyTerm(this, listOf(*params).check((type as ArrowType).paramTypes)), type.returnType)
+fun argExpr(index: Int, type: Type): Expr = Expr(VariableTerm(index), type)
+infix fun Expr.cast(choiceType: Type): Expr = Expr(IndexedTerm(type.indexIn(choiceType), this), choiceType)
+fun Expr.switch(vararg terms: Expr): Expr = Expr(SwitchTerm(this, listOf(*terms)), terms.map { it.type }.checkEqual)
 
-fun fn0(body: Term) = fn(0, body)
-fun fn1(body: Term) = fn(1, body)
-fun fn2(body: Term) = fn(2, body)
-
-val v0 get() = v(0)
-val v1 get() = v(1)
-val v2 get() = v(2)
+fun argExpr0(type: Type): Expr = argExpr(0, type)
+fun argExpr1(type: Type): Expr = argExpr(1, type)
+fun argExpr2(type: Type): Expr = argExpr(2, type)

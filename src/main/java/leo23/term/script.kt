@@ -6,6 +6,11 @@ import leo14.lineTo
 import leo14.literal
 import leo14.plus
 import leo14.script
+import leo23.term.type.scriptLine
+
+val Expr.script: Script
+	get() =
+		term.script.plus("of" lineTo script(type.scriptLine))
 
 val Term.script: Script
 	get() =
@@ -19,18 +24,16 @@ val Term.script: Script
 			is MinusTerm -> lhs.script.plus("minus" lineTo rhs.script)
 			is TimesTerm -> lhs.script.plus("times" lineTo rhs.script)
 			is EqualsTerm -> lhs.script.plus("equals" lineTo rhs.script)
-			is NumberStringTerm -> lhs.script.plus("number" lineTo script("text" lineTo script()))
+			is NumberStringTerm -> number.script.plus("number" lineTo script("text" lineTo script()))
 			is StringAppendTerm -> lhs.script.plus("text" lineTo script("plus" lineTo rhs.script))
 			is StringEqualsTerm -> lhs.script.plus("text" lineTo script("equals" lineTo rhs.script))
-			is StringNumberOrNilTerm -> lhs.script.plus("text" lineTo script("number" lineTo rhs.script))
-			is PairTerm -> lhs.script.plus("to" lineTo rhs.script)
-			is LhsTerm -> pair.script.plus("lhs" lineTo script())
-			is RhsTerm -> pair.script.plus("rhs" lineTo script())
-			is VectorTerm -> script("vector" lineTo script(*list.map { "item" lineTo it.script }.toTypedArray()))
-			is VectorAtTerm -> vector.script.plus("at" lineTo index.script)
+			is StringNumberOrNilTerm -> string.script.plus("text" lineTo script("number" lineTo script()))
+			is TupleTerm -> script("vector" lineTo script(*list.map { "item" lineTo it.script }.toTypedArray()))
+			is TupleAtTerm -> vector.script.plus("at" lineTo script(literal(index)))
 			is ConditionalTerm -> cond.script.plus("if" lineTo script("true" lineTo caseTrue.script, "false" lineTo caseFalse.script))
-			is FunctionTerm -> script("function" lineTo script("arity" lineTo script(literal(arity))).plus(body.script))
+			is FunctionTerm -> script("function" lineTo paramTypes.map { it.scriptLine }.script.plus("does" lineTo body.script))
 			is ApplyTerm -> function.script.plus("apply" lineTo script(*paramList.map { "item" lineTo it.script }.toTypedArray()))
+			is ApplyRecursiveTerm -> function.script.plus("apply" lineTo script("recursive" lineTo script(*paramList.map { "item" lineTo it.script }.toTypedArray())))
 			is VariableTerm -> script("arg" lineTo script(literal(index)))
 			is IndexedTerm -> script(line(literal(index)), "indexed" lineTo rhs.script)
 			is SwitchTerm -> lhs.script.plus("switch" lineTo cases.map { "case" lineTo it.script }.script)

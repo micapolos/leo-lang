@@ -1,46 +1,34 @@
 package leo23.term
 
+import leo23.term.type.numberType
 import kotlin.test.Test
 
 class DslTest {
 	@Test
 	fun dsl() {
-		v(0)
-		v0
-		v1
-		v2
+		argExpr(0, numberType)
 
-		nil
-		v0.isNil
+		nilExpr
 
-		boolean(true)
-		v0.ifThenElse(v1, v2)
+		expr(true)
+		expr(true).ifThenElse(expr("true"), expr("false"))
 
-		number(10)
-		number(10.0)
-		v0.plus(v1)
-		v0.minus(v1)
-		v0.times(v1)
-		v0.numberEquals(v1)
-		v0.numberText
+		expr(10)
+		expr(10.0)
+		expr(2).numberPlus(expr(3))
+		expr(2).numberMinus(expr(3))
+		expr(2).numberTimes(expr(3))
+		expr(2).numberEquals(expr(3))
+		expr(2).numberText
 
-		text("Hello")
-		v0.textAppend(v1)
-		v0.textNumberOrNil
+		expr("Hello")
+		expr("Hello, ").textAppend(expr("world!"))
+		expr("foo").textNumberOrNil
 
-		v0 pairTo v1
-		v0.lhs
-		v0.rhs
+		tuple()
+		tuple(expr(10), expr("foo"))
+		tuple(expr(10), expr("foo")).tupleAt(0)
 
-		vector()
-		vector(v0, v1, v2)
-		v0[v1]
-
-		fn(2, v0.minus(v1))
-		fn0(v0)
-		fn1(v0)
-		fn2(v0)
-
-		v0.apply(v1)
+		params(numberType, numberType).does(argExpr(0, numberType).numberMinus(argExpr(1, numberType)))
 	}
 }

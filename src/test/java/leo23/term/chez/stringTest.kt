@@ -1,37 +1,38 @@
 package leo23.term.chez
 
 import leo.base.assertEqualTo
-import leo23.term.fn2
-import leo23.term.get
-import leo23.term.minus
-import leo23.term.number
+import leo23.term.argExpr
+import leo23.term.does
+import leo23.term.expr
+import leo23.term.numberMinus
+import leo23.term.params
 import leo23.term.textAppend
-import leo23.term.text
-import leo23.term.v0
-import leo23.term.v1
-import leo23.term.vector
+import leo23.term.tuple
+import leo23.term.tupleAt
+import leo23.term.type.numberType
 import kotlin.test.Test
 
 class StringTest {
 	@Test
 	fun stringAppend() {
-		text("Hello, ")
-			.textAppend(text("world!"))
+		expr("Hello, ")
+			.textAppend(expr("world!"))
 			.string
 			.assertEqualTo("(string-append \"Hello, \" \"world!\")")
 	}
 
 	@Test
 	fun fn() {
-		fn2(v1 - v0)
+		params(numberType, numberType)
+			.does(argExpr(1, numberType).numberMinus(argExpr(0, numberType)))
 			.string
 			.assertEqualTo("(lambda (v0 v1) (- v0 v1))")
 	}
 
 	@Test
 	fun vectorAt() {
-		vector(number(10), number(20))
-			.get(number(0))
+		tuple(expr(10), expr(20))
+			.tupleAt(0)
 			.string
 			.assertEqualTo("(vector-ref (vector 10 20) 0)")
 	}

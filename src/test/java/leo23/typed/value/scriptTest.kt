@@ -5,9 +5,10 @@ import leo.base.indexed
 import leo14.line
 import leo14.lineTo
 import leo14.literal
+import leo14.number
 import leo14.script
-import leo23.term.eval.num
-import leo23.term.nil
+import leo23.term.expr
+import leo23.term.nilExpr
 import leo23.type.booleanType
 import leo23.type.cases
 import leo23.type.choice
@@ -46,7 +47,7 @@ class ScriptTest {
 
 	@Test
 	fun struct0() {
-		nil.of("point" struct fields())
+		nilExpr.of("point" struct fields())
 			.scriptLine
 			.assertEqualTo("point" lineTo script())
 	}
@@ -83,7 +84,7 @@ class ScriptTest {
 
 	@Test
 	fun choice_1() {
-		1.indexed(num(10))
+		1.indexed(10.number)
 			.of("a" choice cases(textType, numberType))
 			.scriptLine
 			.assertEqualTo("a" lineTo script(literal(10)))

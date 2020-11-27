@@ -3,6 +3,7 @@ package leo23.term
 import leo14.Number
 import leo14.Scriptable
 import leo14.lineTo
+import leo23.term.type.Type
 
 sealed class Term : Scriptable() {
 	override val reflectScriptLine get() = "native" lineTo script
@@ -22,71 +23,63 @@ data class NumberTerm(val number: Number) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class IsNilTerm(val lhs: Term) : Term() {
+data class IsNilTerm(val lhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class PlusTerm(val lhs: Term, val rhs: Term) : Term() {
+data class PlusTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class MinusTerm(val lhs: Term, val rhs: Term) : Term() {
+data class MinusTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class TimesTerm(val lhs: Term, val rhs: Term) : Term() {
+data class TimesTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class EqualsTerm(val lhs: Term, val rhs: Term) : Term() {
+data class EqualsTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class NumberStringTerm(val number: Term) : Term() {
+data class NumberStringTerm(val number: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class StringAppendTerm(val lhs: Term, val rhs: Term) : Term() {
+data class StringAppendTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class StringEqualsTerm(val lhs: Term, val rhs: Term) : Term() {
+data class StringEqualsTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class StringNumberOrNilTerm(val string: Term) : Term() {
+data class StringNumberOrNilTerm(val string: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class PairTerm(val lhs: Term, val rhs: Term) : Term() {
+data class TupleTerm(val list: List<Expr>) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class LhsTerm(val pair: Term) : Term() {
+data class TupleAtTerm(val vector: Expr, val index: Int) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class RhsTerm(val pair: Term) : Term() {
+data class ConditionalTerm(val cond: Expr, val caseTrue: Expr, val caseFalse: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class VectorTerm(val list: List<Term>) : Term() {
+data class FunctionTerm(val paramTypes: List<Type>, val body: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class VectorAtTerm(val vector: Term, val index: Term) : Term() {
+data class ApplyTerm(val function: Expr, val paramList: List<Expr>) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class ConditionalTerm(val cond: Term, val caseTrue: Term, val caseFalse: Term) : Term() {
-	override fun toString() = super.toString()
-}
-
-data class FunctionTerm(val arity: Int, val body: Term) : Term() {
-	override fun toString() = super.toString()
-}
-
-data class ApplyTerm(val function: Term, val paramList: List<Term>) : Term() {
+data class ApplyRecursiveTerm(val function: Expr, val paramList: List<Expr>) : Term() {
 	override fun toString() = super.toString()
 }
 
@@ -94,10 +87,10 @@ data class VariableTerm(val index: Int) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class IndexedTerm(val index: Int, val rhs: Term) : Term() {
+data class IndexedTerm(val index: Int, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class SwitchTerm(val lhs: Term, val cases: List<Term>) : Term() {
+data class SwitchTerm(val lhs: Expr, val cases: List<Expr>) : Term() {
 	override fun toString() = super.toString()
 }

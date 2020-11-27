@@ -1,57 +1,62 @@
 package leo23.term.eval
 
 import leo.base.assertEqualTo
+import leo14.number
 import leo23.term.apply
-import leo23.term.fn2
-import leo23.term.get
-import leo23.term.indexed
-import leo23.term.minus
-import leo23.term.number
-import leo23.term.plus
+import leo23.term.argExpr
+import leo23.term.cast
+import leo23.term.does
+import leo23.term.expr
+import leo23.term.numberMinus
+import leo23.term.numberPlus
+import leo23.term.numberText
+import leo23.term.params
 import leo23.term.switch
-import leo23.term.text
 import leo23.term.textAppend
-import leo23.term.v0
-import leo23.term.v1
-import leo23.term.vector
+import leo23.term.tuple
+import leo23.term.tupleAt
+import leo23.term.type.ChoiceType
+import leo23.term.type.numberType
+import leo23.term.type.textType
 import kotlin.test.Test
-
-fun num(int: Int) = leo14.number(int)
 
 class EvalTest {
 	@Test
-	fun vectorAt() {
-		vector(text("Hello"), text("world"))
-			.get(number(0))
+	fun tupleAt() {
+		tuple(expr("Hello"), expr("world"))
+			.tupleAt(0)
 			.eval
 			.assertEqualTo("Hello")
 	}
 
 	@Test
 	fun fnApply() {
-		fn2(v1.minus(v0))
-			.apply(number(5), number(3))
+		params(numberType, numberType)
+			.does(argExpr(1, numberType).numberMinus(argExpr(0, numberType)))
+			.apply(expr(5), expr(3))
 			.eval
-			.assertEqualTo(num(2))
+			.assertEqualTo(2.number)
 	}
 
 	@Test
 	fun switch_0() {
-		0.indexed(text("10"))
+		expr("10")
+			.cast(ChoiceType(listOf(textType, numberType)))
 			.switch(
-				v0.textAppend(text("10")),
-				v0.plus(number(10)))
+				expr("'").textAppend(argExpr(0, textType)).textAppend(expr("'")),
+				argExpr(0, numberType).numberText)
 			.eval
-			.assertEqualTo("1010")
+			.assertEqualTo("'10'")
 	}
 
 	@Test
 	fun switch_1() {
-		1.indexed(number(10))
+		expr(10)
+			.cast(ChoiceType(listOf(textType, numberType)))
 			.switch(
-				v0.textAppend(text("10")),
-				v0.plus(number(10)))
+				expr("'").textAppend(argExpr(0, textType)).textAppend(expr("'")),
+				argExpr(0, numberType).numberText)
 			.eval
-			.assertEqualTo(num(20))
+			.assertEqualTo("10")
 	}
 }
