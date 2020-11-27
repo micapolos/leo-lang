@@ -13,16 +13,17 @@ import leo14.times
 import leo23.term.ApplyTerm
 import leo23.term.BooleanTerm
 import leo23.term.ConditionalTerm
-import leo23.term.NumberEqualsTerm
 import leo23.term.Expr
 import leo23.term.FunctionTerm
 import leo23.term.IndexedTerm
 import leo23.term.IsNilTerm
-import leo23.term.NumberMinusTerm
 import leo23.term.NilTerm
+import leo23.term.NumberEqualsTerm
+import leo23.term.NumberMinusTerm
+import leo23.term.NumberPlusTerm
 import leo23.term.NumberStringTerm
 import leo23.term.NumberTerm
-import leo23.term.NumberPlusTerm
+import leo23.term.NumberTimesTerm
 import leo23.term.RecursiveFunctionTerm
 import leo23.term.StringAppendTerm
 import leo23.term.StringEqualsTerm
@@ -30,7 +31,6 @@ import leo23.term.StringNumberOrNilTerm
 import leo23.term.StringTerm
 import leo23.term.SwitchTerm
 import leo23.term.Term
-import leo23.term.NumberTimesTerm
 import leo23.term.TupleAtTerm
 import leo23.term.TupleTerm
 import leo23.term.VariableTerm
@@ -41,7 +41,7 @@ val Expr.eval: Value get() = stakOf<Value>().eval(this)
 
 fun Scope.eval(expr: Expr): Value = eval(expr.term)
 
-// TODO: Tail recursion
+// TODO: Implement tail recursion
 fun Scope.eval(term: Term): Value =
 	when (term) {
 		NilTerm -> Unit

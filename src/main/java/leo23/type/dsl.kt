@@ -3,9 +3,10 @@ package leo23.type
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
-val booleanType: Type get() = BooleanType
+val booleanType: Type get() = "boolean" choice cases("true".struct, "false".struct)
 val textType: Type get() = TextType
 val numberType: Type get() = NumberType
+val String.struct get() = this struct fields()
 fun params(vararg params: Type): List<Type> = listOf(*params)
 infix fun List<Type>.arrowTo(type: Type): Type = ArrowType(this, type)
 fun fields(vararg types: Type): PersistentList<Type> = persistentListOf(*types)

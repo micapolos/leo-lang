@@ -3,7 +3,6 @@ package leo23.type
 import kotlinx.collections.immutable.PersistentList
 
 sealed class Type
-object BooleanType : Type()
 object TextType : Type()
 object NumberType : Type()
 data class ArrowType(val paramTypes: List<Type>, val returnType: Type) : Type()

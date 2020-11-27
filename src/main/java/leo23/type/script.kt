@@ -9,7 +9,6 @@ import leo14.scriptLine
 val Type.scriptLine: ScriptLine
 	get() =
 		when (this) {
-			BooleanType -> "boolean".scriptLine
 			TextType -> "text".scriptLine
 			NumberType -> "number".scriptLine
 			is ArrowType -> "arrow" lineTo paramTypes.map { it.scriptLine }.script.plus("to" lineTo script(returnType.scriptLine))
