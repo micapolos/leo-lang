@@ -11,7 +11,6 @@ import leo23.term.expr
 import leo23.term.ifThenElse
 import leo23.term.numberEquals
 import leo23.term.numberMinus
-import leo23.term.numberPlus
 import leo23.term.numberText
 import leo23.term.params
 import leo23.term.switch

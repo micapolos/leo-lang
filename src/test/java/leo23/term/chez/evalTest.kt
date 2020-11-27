@@ -1,20 +1,25 @@
 package leo23.term.chez
 
 import leo.base.assertEqualTo
+import leo14.number
 import leo23.term.apply
 import leo23.term.argExpr
 import leo23.term.does
+import leo23.term.eval.eval
 import leo23.term.expr
 import leo23.term.ifThenElse
 import leo23.term.isNil
 import leo23.term.nilExpr
 import leo23.term.numberMinus
+import leo23.term.numberPlus
 import leo23.term.params
+import leo23.term.switch
 import leo23.term.textAppend
 import leo23.term.textNumberOrNil
 import leo23.term.tuple
 import leo23.term.tupleAt
 import leo23.term.type.numberType
+import leo23.term.type.textType
 import kotlin.test.Test
 
 class EvalTest {
@@ -45,18 +50,24 @@ class EvalTest {
 
 	@Test
 	fun textNumber_number() {
-		expr("123")
+		expr("10")
 			.textNumberOrNil
+			.switch(
+				argExpr(0, numberType).numberPlus(expr(20)),
+				expr(0))
 			.evalString
-			.assertEqualTo("(0 . 123)")
+			.assertEqualTo("30")
 	}
 
 	@Test
 	fun textNumber_nil() {
-		expr("123a")
+		expr("10a")
 			.textNumberOrNil
+			.switch(
+				argExpr(0, numberType).numberPlus(expr(20)),
+				expr(0))
 			.evalString
-			.assertEqualTo("(1)")
+			.assertEqualTo("0")
 	}
 
 	@Test

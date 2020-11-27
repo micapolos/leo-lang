@@ -27,19 +27,19 @@ data class IsNilTerm(val lhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class PlusTerm(val lhs: Expr, val rhs: Expr) : Term() {
+data class NumberPlusTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class MinusTerm(val lhs: Expr, val rhs: Expr) : Term() {
+data class NumberMinusTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class TimesTerm(val lhs: Expr, val rhs: Expr) : Term() {
+data class NumberTimesTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class EqualsTerm(val lhs: Expr, val rhs: Expr) : Term() {
+data class NumberEqualsTerm(val lhs: Expr, val rhs: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
