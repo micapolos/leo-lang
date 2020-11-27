@@ -7,7 +7,7 @@ object TextType : Type()
 object NumberType : Type()
 data class TupleType(val itemTypes: List<Type>) : Type()
 data class ChoiceType(val itemTypes: List<Type>) : Type()
-data class ArrowType(val paramTypes: List<Type>, val returnType: Type) : Type()
+data class ArrowType(val paramTypes: List<Type>, val returnType: Type, val isRecursive: Boolean) : Type()
 
 fun Type.checkEqual(type: Type): Type =
 	if (this != type) null!!

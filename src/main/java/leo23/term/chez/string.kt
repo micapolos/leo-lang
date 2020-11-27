@@ -2,7 +2,6 @@ package leo23.term.chez
 
 import leo14.literalString
 import leo14.string
-import leo23.term.ApplyRecursiveTerm
 import leo23.term.ApplyTerm
 import leo23.term.BooleanTerm
 import leo23.term.ConditionalTerm
@@ -26,6 +25,7 @@ import leo23.term.TupleAtTerm
 import leo23.term.TupleTerm
 import leo23.term.VariableTerm
 import leo23.term.Expr
+import leo23.term.RecursiveFunctionTerm
 
 val Expr.string: String get() = string(0)
 
@@ -51,8 +51,8 @@ fun Term.string(depth: Int): String =
 		is TupleAtTerm -> "(vector-ref ${vector.string(depth)} ${index})"
 		is ConditionalTerm -> "(if ${cond.string(depth)} ${caseTrue.string(depth)} ${caseFalse.string(depth)})"
 		is FunctionTerm -> "(lambda (${(paramTypes.indices).joinToString(" ") { "v${it + depth}" }}) ${body.string(depth.plus(paramTypes.size))})"
+		is RecursiveFunctionTerm -> TODO()
 		is ApplyTerm -> "(${listOf(function).plus(paramList).joinToString(" ") { it.string(depth) }})"
-		is ApplyRecursiveTerm -> TODO()
 		is VariableTerm -> "v${depth - index - 1}"
 		is IndexedTerm -> "(cons $index ${rhs.string(depth)})"
 		is SwitchTerm -> TODO()

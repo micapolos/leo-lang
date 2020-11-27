@@ -75,11 +75,11 @@ data class FunctionTerm(val paramTypes: List<Type>, val body: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class ApplyTerm(val function: Expr, val paramList: List<Expr>) : Term() {
+data class RecursiveFunctionTerm(val paramTypes: List<Type>, val body: Expr) : Term() {
 	override fun toString() = super.toString()
 }
 
-data class ApplyRecursiveTerm(val function: Expr, val paramList: List<Expr>) : Term() {
+data class ApplyTerm(val function: Expr, val paramList: List<Expr>) : Term() {
 	override fun toString() = super.toString()
 }
 

@@ -1,21 +1,16 @@
 package leo23.term.eval
 
 import leo.base.fold
+import leo.base.runIf
 import leo.stak.push
 import leo23.term.Expr
 import leo23.value.Value
 
-data class Fn(val scope: Scope, val body: Expr)
+data class Fn(val scope: Scope, val isRecursive: Boolean, val body: Expr)
 
 fun Fn.apply(vararg params: Value): Value =
 	apply(params.asIterable())
 
 fun Fn.apply(params: Iterable<Value>): Value =
-	scope.fold(params, Scope::push).eval(body)
-
-fun Fn.applyRecursive(vararg params: Value): Value =
-	applyRecursive(params.asIterable())
-
-fun Fn.applyRecursive(params: Iterable<Value>): Value =
-	scope.push(this).fold(params, Scope::push).eval(body)
+	scope.runIf(isRecursive) { push(this@apply) }.fold(params, Scope::push).eval(body)
 

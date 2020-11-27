@@ -9,7 +9,6 @@ import leo14.minus
 import leo14.plus
 import leo14.string
 import leo14.times
-import leo23.term.ApplyRecursiveTerm
 import leo23.term.ApplyTerm
 import leo23.term.BooleanTerm
 import leo23.term.ConditionalTerm
@@ -23,6 +22,7 @@ import leo23.term.NilTerm
 import leo23.term.NumberStringTerm
 import leo23.term.NumberTerm
 import leo23.term.PlusTerm
+import leo23.term.RecursiveFunctionTerm
 import leo23.term.StringAppendTerm
 import leo23.term.StringEqualsTerm
 import leo23.term.StringNumberOrNilTerm
@@ -59,9 +59,9 @@ fun Scope.eval(term: Term): Value =
 		is TupleTerm -> (term.list.map { eval(it) })
 		is TupleAtTerm -> (eval(term.vector) as List<Value>).get(term.index)
 		is ConditionalTerm -> if (eval(term.cond) as Boolean) eval(term.caseTrue) else eval(term.caseFalse)
-		is FunctionTerm -> Fn(this, term.body)
+		is FunctionTerm -> Fn(this, false, term.body)
+		is RecursiveFunctionTerm -> Fn(this, true, term.body)
 		is ApplyTerm -> (eval(term.function) as Fn).apply(term.paramList.map { eval(it) })
-		is ApplyRecursiveTerm -> (eval(term.function) as Fn).applyRecursive(term.paramList.map { eval(it) })
 		is VariableTerm -> top(term.index)!!
 		is IndexedTerm -> term.index indexed eval(term.rhs)
 		is SwitchTerm -> eval(term.lhs).indexed.let { push(it.value).eval(term.cases[it.index]) }
