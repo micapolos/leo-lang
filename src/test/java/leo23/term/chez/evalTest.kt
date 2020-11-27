@@ -5,11 +5,13 @@ import leo14.number
 import leo23.term.apply
 import leo23.term.argExpr
 import leo23.term.does
+import leo23.term.doesRecursively
 import leo23.term.eval.eval
 import leo23.term.expr
 import leo23.term.ifThenElse
 import leo23.term.isNil
 import leo23.term.nilExpr
+import leo23.term.numberEquals
 import leo23.term.numberMinus
 import leo23.term.numberPlus
 import leo23.term.params
@@ -18,6 +20,7 @@ import leo23.term.textAppend
 import leo23.term.textNumberOrNil
 import leo23.term.tuple
 import leo23.term.tupleAt
+import leo23.term.type.doesRecursively
 import leo23.term.type.numberType
 import leo23.term.type.textType
 import kotlin.test.Test
@@ -38,6 +41,22 @@ class EvalTest {
 			.apply(expr(5), expr(3))
 			.evalString
 			.assertEqualTo("2")
+	}
+
+	@Test
+	fun recfnApply() {
+		params(numberType)
+			.doesRecursively(
+				argExpr(0, numberType)
+					.numberEquals(expr(0))
+					.ifThenElse(
+						expr(0),
+						argExpr(1, params(numberType).doesRecursively(numberType))
+							.apply(
+								argExpr(0, numberType).numberMinus(expr(1)))))
+			.apply(expr(5))
+			.evalString
+			.assertEqualTo("0")
 	}
 
 	@Test

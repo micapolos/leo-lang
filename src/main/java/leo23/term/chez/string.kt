@@ -50,10 +50,12 @@ fun Term.string(depth: Int): String =
 		is TupleTerm -> "(vector ${list.joinToString(" ") { it.string(depth) }})"
 		is TupleAtTerm -> "(vector-ref ${vector.string(depth)} ${index})"
 		is ConditionalTerm -> "(if ${cond.string(depth)} ${caseTrue.string(depth)} ${caseFalse.string(depth)})"
-		is FunctionTerm -> "(lambda (${(paramTypes.indices).joinToString(" ") { "v${it + depth}" }}) ${body.string(depth.plus(paramTypes.size))})"
-		is RecursiveFunctionTerm -> TODO()
+		is FunctionTerm -> "(lambda (${(paramTypes.indices).joinToString(" ") { it.plus(depth).varString }}) ${body.string(depth.plus(paramTypes.size))})"
+		is RecursiveFunctionTerm -> "(letrec ((${depth.varString} (lambda (${(paramTypes.indices).joinToString(" ") { it.plus(depth).inc().varString }}) ${body.string(depth.plus(paramTypes.size).inc())}))) ${depth.varString})"
 		is ApplyTerm -> "(${listOf(function).plus(paramList).joinToString(" ") { it.string(depth) }})"
-		is VariableTerm -> "v${depth - index - 1}"
+		is VariableTerm -> depth.minus(index).dec().varString
 		is IndexedTerm -> "(cons $index ${rhs.string(depth)})"
-		is SwitchTerm -> "(let* ((indexed ${lhs.string(depth)}) (index (car indexed)) (v${depth} (cdr indexed))) (case index ${cases.mapIndexed { index, case -> "(($index) ${case.string(depth.inc())})" }.joinToString(" ")} ))"
+		is SwitchTerm -> "(let* ((indexed ${lhs.string(depth)}) (index (car indexed)) (${depth.varString} (cdr indexed))) (case index ${cases.mapIndexed { index, case -> "(($index) ${case.string(depth.inc())})" }.joinToString(" ")} ))"
 	}
+
+val Int.varString get() = "v$this"
