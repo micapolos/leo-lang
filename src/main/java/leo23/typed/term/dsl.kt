@@ -1,6 +1,17 @@
 package leo23.typed.term
 
 import kotlinx.collections.immutable.toPersistentList
+import leo13.Stack
+import leo13.array
+import leo13.onlyOrNull
+import leo13.push
+import leo13.size
+import leo13.stack
+import leo14.Literal
+import leo14.Number
+import leo14.NumberLiteral
+import leo14.StringLiteral
+import leo14.number
 import leo23.term.Expr
 import leo23.term.IndexedTerm
 import leo23.term.expr
@@ -23,12 +34,17 @@ import leo23.type.StructType
 import leo23.type.TextType
 import leo23.type.Type
 import leo23.type.booleanType
+import leo23.type.fields
 import leo23.type.numberType
+import leo23.type.struct
 import leo23.type.textType
 import leo23.typed.Typed
 import leo23.typed.of
 
 typealias Compiled = Typed<Expr, Type>
+typealias StackCompiled = Typed<Stack<Expr>, Stack<Type>>
+
+val emptyStackCompiled: StackCompiled get() = stack<Expr>().of(stack())
 
 sealed class Case
 data class CompiledCase(val compiled: Compiled) : Case()
@@ -43,8 +59,13 @@ val Case.type: Type
 
 fun compiled(boolean: Boolean): Compiled = expr(boolean).of(booleanType)
 fun compiled(string: String): Compiled = expr(string).of(textType)
-fun compiled(int: Int): Compiled = expr(int).of(numberType)
-fun compiled(double: Double): Compiled = expr(double).of(numberType)
+fun compiled(number: Number): Compiled = expr(number).of(numberType)
+fun compiled(int: Int): Compiled = compiled(int.number)
+fun compiled(double: Double): Compiled = compiled(double.number)
+fun compiled(literal: Literal): Compiled = when (literal) {
+	is StringLiteral -> compiled(literal.string)
+	is NumberLiteral -> compiled(literal.number)
+}
 
 fun <T> with(vararg fields: T) = listOf(*fields)
 
@@ -94,3 +115,12 @@ val Compiled.numberText: Compiled get() = v.numberText.of(textType)
 
 fun Compiled.textAppend(rhs: Compiled): Compiled = v.textAppend(rhs.v).of(textType)
 fun Compiled.textEquals(rhs: Compiled): Compiled = v.textEquals(rhs.v).of(booleanType)
+
+fun StackCompiled.push(compiled: Compiled): StackCompiled = v.push(compiled.v).of(t.push(compiled.t))
+val Compiled.stackCompiled: StackCompiled get() = stack(v).of(stack(t))
+infix fun String.struct(stackCompiled: StackCompiled): Compiled =
+	when (stackCompiled.t.size) {
+		0 -> nilExpr
+		1 -> stackCompiled.v.onlyOrNull!!
+		else -> tuple(*stackCompiled.v.array)
+	}.of(this struct fields(*stackCompiled.t.array))

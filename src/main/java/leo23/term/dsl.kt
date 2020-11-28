@@ -1,5 +1,6 @@
 package leo23.term
 
+import leo14.Number
 import leo14.number
 import leo23.term.type.ArrowType
 import leo23.term.type.BooleanType
@@ -21,6 +22,7 @@ fun expr(boolean: Boolean): Expr = Expr(BooleanTerm(boolean), BooleanType)
 fun expr(string: String): Expr = Expr(StringTerm(string), TextType)
 fun expr(int: Int): Expr = Expr(NumberTerm(int.number), NumberType)
 fun expr(double: Double): Expr = Expr(NumberTerm(double.number), NumberType)
+fun expr(number: Number): Expr = Expr(NumberTerm(number), NumberType)
 val Expr.isNil: Expr get() = Expr(IsNilTerm(this), BooleanType)
 fun Expr.numberPlus(rhs: Expr): Expr = Expr(NumberPlusTerm(check(numberType), rhs.check(numberType)), numberType)
 fun Expr.numberMinus(rhs: Expr): Expr = Expr(NumberMinusTerm(check(numberType), rhs.check(numberType)), numberType)

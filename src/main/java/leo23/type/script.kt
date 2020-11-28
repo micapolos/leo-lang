@@ -1,5 +1,8 @@
 package leo23.type
 
+import leo13.Stack
+import leo13.map
+import leo14.Script
 import leo14.ScriptLine
 import leo14.lineTo
 import leo14.plus
@@ -16,3 +19,7 @@ val Type.scriptLine: ScriptLine
 			is StructType -> name lineTo fields.map { it.scriptLine }.script
 			is ChoiceType -> name lineTo script("choice" lineTo cases.map { it.scriptLine }.script)
 		}
+
+val Stack<Type>.script: Script
+	get() =
+		map { scriptLine }.script
