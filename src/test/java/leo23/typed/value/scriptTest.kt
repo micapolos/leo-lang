@@ -7,7 +7,7 @@ import leo14.lineTo
 import leo14.literal
 import leo14.number
 import leo14.script
-import leo23.term.expr
+import leo14.scriptLine
 import leo23.term.nilExpr
 import leo23.type.booleanType
 import leo23.type.cases
@@ -42,7 +42,7 @@ class ScriptTest {
 		true
 			.of(booleanType)
 			.scriptLine
-			.assertEqualTo("boolean" lineTo script("true"))
+			.assertEqualTo("true".scriptLine)
 	}
 
 	@Test

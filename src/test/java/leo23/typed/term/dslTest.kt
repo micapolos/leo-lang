@@ -1,5 +1,6 @@
 package leo23.typed.term
 
+import leo23.type.struct
 import kotlin.test.Test
 
 class DslTest {
@@ -10,8 +11,12 @@ class DslTest {
 		compiled(10.0)
 		compiled("foo")
 
-		"point" struct fields(
-			"x" struct fields(compiled(10)),
-			"y" struct fields(compiled(20)))
+		"point" struct with(
+			"x" struct with(compiled(10)),
+			"y" struct with(compiled(20)))
+
+		"bit" choice with(
+			case("zero".structCompiled),
+			case("one".struct))
 	}
 }

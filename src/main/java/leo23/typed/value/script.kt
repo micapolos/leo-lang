@@ -8,6 +8,7 @@ import leo14.plus
 import leo14.script
 import leo14.scriptLine
 import leo23.type.ArrowType
+import leo23.type.BooleanType
 import leo23.type.ChoiceType
 import leo23.type.NumberType
 import leo23.type.StructType
@@ -25,6 +26,7 @@ import leo23.value.string
 val Typed<Value, Type>.scriptLine: ScriptLine
 	get() =
 		when (t) {
+			BooleanType -> (if (v as Boolean) "true" else "false").scriptLine
 			TextType -> line(literal(v.string))
 			NumberType -> line(literal(v.number))
 			is ArrowType -> "function" lineTo t.paramTypes.map { it.scriptLine }.script.plus("does" lineTo script(t.returnType.scriptLine))

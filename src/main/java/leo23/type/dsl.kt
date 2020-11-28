@@ -3,7 +3,7 @@ package leo23.type
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
-val booleanType: Type get() = "boolean" choice cases("true".struct, "false".struct)
+val booleanType: Type get() = BooleanType
 val textType: Type get() = TextType
 val numberType: Type get() = NumberType
 val String.struct get() = this struct fields()
