@@ -13,17 +13,14 @@ import leo23.type.ChoiceType
 import leo23.type.NumberType
 import leo23.type.StructType
 import leo23.type.TextType
-import leo23.type.Type
 import leo23.type.scriptLine
-import leo23.typed.Typed
 import leo23.typed.of
-import leo23.value.Value
 import leo23.value.indexed
 import leo23.value.list
 import leo23.value.number
 import leo23.value.string
 
-val Typed<Value, Type>.scriptLine: ScriptLine
+val Evaluated.scriptLine: ScriptLine
 	get() =
 		when (t) {
 			BooleanType -> (if (v as Boolean) "true" else "false").scriptLine

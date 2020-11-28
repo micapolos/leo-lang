@@ -5,6 +5,13 @@ import leo23.term.Expr
 import leo23.term.IndexedTerm
 import leo23.term.expr
 import leo23.term.nilExpr
+import leo23.term.numberEquals
+import leo23.term.numberMinus
+import leo23.term.numberPlus
+import leo23.term.numberText
+import leo23.term.numberTimes
+import leo23.term.textAppend
+import leo23.term.textEquals
 import leo23.term.tuple
 import leo23.term.type.TupleType
 import leo23.term.type.does
@@ -78,3 +85,12 @@ val Type.termType: leo23.term.type.Type
 			}
 			is ChoiceType -> leo23.term.type.ChoiceType(cases.map { it.termType })
 		}
+
+fun Compiled.numberPlus(rhs: Compiled): Compiled = v.numberPlus(rhs.v).of(numberType)
+fun Compiled.numberMinus(rhs: Compiled): Compiled = v.numberMinus(rhs.v).of(numberType)
+fun Compiled.numberTimes(rhs: Compiled): Compiled = v.numberTimes(rhs.v).of(numberType)
+fun Compiled.numberEquals(rhs: Compiled): Compiled = v.numberEquals(rhs.v).of(booleanType)
+val Compiled.numberText: Compiled get() = v.numberText.of(textType)
+
+fun Compiled.textAppend(rhs: Compiled): Compiled = v.textAppend(rhs.v).of(textType)
+fun Compiled.textEquals(rhs: Compiled): Compiled = v.textEquals(rhs.v).of(booleanType)
