@@ -9,6 +9,7 @@ import leo23.typed.of
 import leo23.typed.term.Compiled
 import leo23.typed.term.StackCompiled
 import leo23.typed.term.emptyStackCompiled
+import leo23.typed.term.normalize
 import leo23.typed.term.printScript
 import leo23.typed.term.push
 
