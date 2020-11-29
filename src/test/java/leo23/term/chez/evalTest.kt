@@ -1,12 +1,10 @@
 package leo23.term.chez
 
 import leo.base.assertEqualTo
-import leo14.number
 import leo23.term.apply
 import leo23.term.argExpr
 import leo23.term.does
 import leo23.term.doesRecursively
-import leo23.term.eval.eval
 import leo23.term.expr
 import leo23.term.ifThenElse
 import leo23.term.isNil
@@ -22,7 +20,6 @@ import leo23.term.tuple
 import leo23.term.tupleAt
 import leo23.term.type.doesRecursively
 import leo23.term.type.numberType
-import leo23.term.type.textType
 import kotlin.test.Test
 
 class EvalTest {
