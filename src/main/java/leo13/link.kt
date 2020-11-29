@@ -12,3 +12,5 @@ fun <T, H> Stack<H>.linkOrNull(fn: Stack<H>.() -> T): Link<T, H>? =
 
 fun <T, H> StackLink<H>.link(fn: Stack<H>.() -> T): Link<T, H> =
 	stack.fn() linkTo value
+
+fun <T, H, R> Link<T, H>.combine(fn: T.(H) -> R): R = tail.fn(head)

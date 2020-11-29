@@ -77,3 +77,5 @@ val Int.uincOrNull
 val Int.udecOrNull
 	get() =
 		if (this == 0) null else this - 1
+
+val Int.isMinusOne get() = this == -1

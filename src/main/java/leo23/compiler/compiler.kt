@@ -20,11 +20,18 @@ data class Compiler(
 val emptyCompiler get() = Compiler(emptyContext, emptyStackCompiled)
 
 fun Compiler.plus(compiled: Compiled): Compiler =
-	copy(stackCompiled = context.resolve(stackCompiled.push(compiled)))
+	set(context.resolve(stackCompiled.push(compiled)))
+
+fun Compiler.set(stackCompiled: StackCompiled): Compiler =
+	copy(stackCompiled = stackCompiled)
 
 val Compiler.begin: Compiler
 	get() =
 		Compiler(context.begin, emptyStackCompiled)
+
+val Compiler.beginDo: Compiler
+	get() =
+		Compiler(context.beginDo(stackCompiled), emptyStackCompiled)
 
 fun Compiler.compiled(name: String): Compiled =
 	tuple(*stackCompiled.v.array).of(name struct fields(*stackCompiled.t.array))

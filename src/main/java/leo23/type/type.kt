@@ -11,4 +11,4 @@ data class ArrowType(val paramTypes: List<Type>, val returnType: Type) : Type()
 data class StructType(val name: String, val fields: PersistentList<Type>) : Type()
 data class ChoiceType(val name: String, val cases: PersistentList<Type>) : Type()
 
-data class Types(val types: Stack<Type>)
+typealias Types = Stack<Type>

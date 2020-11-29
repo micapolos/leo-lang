@@ -1,6 +1,8 @@
 package leo23.typed.term
 
 import leo.base.ifOrNull
+import leo.base.runIfNotNull
+import leo13.combine
 import leo13.map2OrNull
 import leo23.term.Expr
 import leo23.term.numberEquals
@@ -17,6 +19,7 @@ import leo23.type.numberPlusTypeStack
 import leo23.type.numberTextTypeStack
 import leo23.type.numberTimesTypeStack
 import leo23.type.numberType
+import leo23.type.onlyNameOrNull
 import leo23.type.textEqualsTypeStack
 import leo23.type.textPlusTypeStack
 import leo23.type.textType
@@ -28,6 +31,7 @@ val StackCompiled.resolve: StackCompiled
 val StackCompiled.resolveOrNull: Compiled?
 	get() =
 		null
+			?: resolveMakeOrNull
 			?: resolveNumberPlusOrNull
 			?: resolveNumberMinusOrNull
 			?: resolveNumberTimesOrNull
@@ -35,6 +39,23 @@ val StackCompiled.resolveOrNull: Compiled?
 			?: resolveNumberTextOrNull
 			?: resolveTextPlusOrNull
 			?: resolveTextEqualsOrNull
+			?: resolveGetOrNull
+
+val StackCompiled.resolveGetOrNull: Compiled?
+	get() =
+		linkOrNull?.combine { rhsCompiled ->
+			onlyOrNull?.runIfNotNull(rhsCompiled.t.onlyNameOrNull) { name ->
+				getOrNull(name)
+			}
+		}
+
+val StackCompiled.resolveMakeOrNull: Compiled?
+	get() =
+		linkOrNull?.combine { rhsCompiled ->
+			onlyOrNull?.runIfNotNull(rhsCompiled.t.onlyNameOrNull) { name ->
+				make(name)
+			}
+		}
 
 val StackCompiled.resolveNumberPlusOrNull: Compiled?
 	get() =
@@ -77,4 +98,3 @@ val StackCompiled.resolveTextEqualsOrNull: Compiled?
 		ifOrNull(t == textEqualsTypeStack) {
 			v.map2OrNull(Expr::textEquals)!!.of(booleanType)
 		}
-
