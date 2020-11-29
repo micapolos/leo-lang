@@ -16,8 +16,8 @@ fun StackCompiled.command(name: String): CompiledCommand =
 	when (name) {
 		"do" -> DoCompiledCommand(this)
 		"function" -> FunctionCompiledCommand
-		"apply" -> ApplyCompiledCommand(functionCompiled)
-		"switch" -> SwitchCompiledCommand(choiceCompiled)
+		"apply" -> ApplyCompiledCommand(function)
+		"switch" -> SwitchCompiledCommand(choice)
 		"define" -> DefineCompiledCommand
 		"repeat" -> RepeatCompiledCommand(this)
 		else -> BeginCompiledCommand(begin(name))

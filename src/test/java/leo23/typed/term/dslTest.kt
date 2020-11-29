@@ -18,5 +18,10 @@ class DslTest {
 		"bit" choice with(
 			case("zero".structCompiled),
 			case("one".struct))
+
+		compiled()
+		compiled(
+			"x" struct with(compiled(10)),
+			"y" struct with(compiled(20)))
 	}
 }

@@ -9,7 +9,7 @@ import leo23.compiler.binding.resolveOrNull
 import leo23.typed.term.Compiled
 import leo23.typed.term.StackCompiled
 import leo23.typed.term.resolve
-import leo23.typed.term.stackCompiled
+import leo23.typed.term.stack
 
 data class Context(val bindings: Bindings)
 
@@ -21,7 +21,7 @@ fun Context.beginDo(stackCompiled: StackCompiled): Context =
 	copy(bindings = bindings.push(GivenBinding(Given(stackCompiled.t))))
 
 fun Context.resolve(stackCompiled: StackCompiled): StackCompiled =
-	resolveOrNull(stackCompiled)?.stackCompiled ?: stackCompiled.resolve
+	resolveOrNull(stackCompiled)?.stack ?: stackCompiled.resolve
 
 fun Context.resolveOrNull(stackCompiled: StackCompiled): Compiled? =
 	bindings.resolveOrNull(stackCompiled)

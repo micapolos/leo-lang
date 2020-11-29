@@ -2,11 +2,13 @@ package leo23.typed.term
 
 import kotlinx.collections.immutable.toPersistentList
 import leo.base.isMinusOne
+import leo.base.notNullIf
 import leo.base.orNullIf
 import leo.base.runIfNotNull
 import leo13.Link
 import leo13.Stack
 import leo13.array
+import leo13.isEmpty
 import leo13.link
 import leo13.linkOrNull
 import leo13.linkTo
@@ -81,6 +83,10 @@ fun compiled(literal: Literal): Compiled = when (literal) {
 	is NumberLiteral -> compiled(literal.number)
 }
 
+fun compiled(vararg compileds: Compiled): StackCompiled =
+	stack(*compileds.map { it.v }.toTypedArray())
+		.of(stack(*compileds.map { it.t }.toTypedArray()))
+
 fun <T> with(vararg fields: T) = listOf(*fields)
 
 val String.structCompiled get() = this struct with()
@@ -131,7 +137,7 @@ fun Compiled.textAppend(rhs: Compiled): Compiled = v.textAppend(rhs.v).of(textTy
 fun Compiled.textEquals(rhs: Compiled): Compiled = v.textEquals(rhs.v).of(booleanType)
 
 fun StackCompiled.push(compiled: Compiled): StackCompiled = v.push(compiled.v).of(t.push(compiled.t))
-val Compiled.stackCompiled: StackCompiled get() = stack(v).of(stack(t))
+val Compiled.stack: StackCompiled get() = stack(v).of(stack(t))
 infix fun String.struct(stackCompiled: StackCompiled): Compiled =
 	when (stackCompiled.t.size) {
 		0 -> nilExpr
@@ -139,22 +145,22 @@ infix fun String.struct(stackCompiled: StackCompiled): Compiled =
 		else -> tuple(*stackCompiled.v.array)
 	}.of(this struct fields(*stackCompiled.t.array))
 
-val StackCompiled.functionCompiled: Typed<Expr, ArrowType>
+val StackCompiled.function: FunctionCompiled
 	get() =
 		v.onlyOrNull!!.of(t.onlyOrNull!! as ArrowType)
 
-val StackCompiled.choiceCompiled: Typed<Expr, ChoiceType>
+val StackCompiled.choice: ChoiceCompiled
 	get() =
 		v.onlyOrNull!!.of(t.onlyOrNull!! as ChoiceType)
 
-val StackCompiled.structCompiled: Typed<Expr, StructType>
+val StackCompiled.struct: StructCompiled
 	get() =
 		v.onlyOrNull!!.of(t.onlyOrNull!! as StructType)
 
 val StackCompiled.onlyOrNull: Compiled?
 	get() =
-		t.onlyOrNull?.let { type ->
-			v.onlyOrNull!!.of(type)
+		linkOrNull?.let { (lhs, rhs) ->
+			notNullIf(lhs.t.isEmpty) { rhs }
 		}
 
 fun FunctionCompiled.apply(stackCompiled: StackCompiled): Compiled =
@@ -184,7 +190,11 @@ fun StructCompiled.getOrNull(name: String): Compiled? =
 	t.fields
 		.indexOfLast { it.name == name }
 		.orNullIf { isMinusOne }
-		?.let { index -> v.tupleAt(index).of(t.fields[index]) }
+		?.let { index ->
+			(if (t.fields.size == 1) v
+			else v.tupleAt(index))
+				.of(t.fields[index])
+		}
 
-fun Compiled.make(name: String): Compiled =
-	v.of(name struct fields(t))
+fun StackCompiled.make(name: String): Compiled =
+	tuple(*v.array).of(name struct fields(*t.array))

@@ -31,7 +31,7 @@ import leo23.typed.term.SwitchCompiledCommand
 import leo23.typed.term.apply
 import leo23.typed.term.command
 import leo23.typed.term.compiled
-import leo23.typed.term.stackCompiled
+import leo23.typed.term.stack
 import leo23.typed.term.struct
 
 sealed class CompilerParent
@@ -86,7 +86,7 @@ fun CompilerParent.end(compiler: Compiler): Processor =
 	when (this) {
 		is BeginCompilerParent -> CompilerProcessor(compilerNode.plus(begin.string struct compiler.stackCompiled))
 		is DoCompilerParent -> CompilerProcessor(compilerNode.set(compiler.stackCompiled))
-		is ApplyCompilerParent -> CompilerProcessor(compilerNode.set(functionCompiled.apply(compiler.stackCompiled).stackCompiled))
+		is ApplyCompilerParent -> CompilerProcessor(compilerNode.set(functionCompiled.apply(compiler.stackCompiled).stack))
 	}
 
 val CompilerNode.printFragment: Fragment

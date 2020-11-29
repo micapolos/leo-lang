@@ -1,6 +1,9 @@
 package leo14
 
+import leo.base.Seq
 import leo13.Stack
+import leo13.reverse
+import leo13.seq
 import leo14.syntax.Syntax
 import leo14.syntax.valueSyntax
 
@@ -29,6 +32,9 @@ val Script.tokenStack: Stack<Token>
 	get() =
 		let { processStack { process(it) } }
 
+val Script.tokenSeq: Seq<Token>
+	get() =
+		tokenStack.reverse.seq
+
 fun Processor<Syntax>.syntaxProcess(script: Script): Processor<Syntax> =
 	map(Token::valueSyntax).process(script).map(Syntax::token)
-

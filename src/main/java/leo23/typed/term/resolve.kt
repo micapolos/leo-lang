@@ -26,12 +26,11 @@ import leo23.type.textType
 import leo23.typed.of
 
 val StackCompiled.resolve: StackCompiled
-	get() = resolveOrNull?.stackCompiled ?: this
+	get() = resolveOrNull?.stack ?: this
 
 val StackCompiled.resolveOrNull: Compiled?
 	get() =
 		null
-			?: resolveMakeOrNull
 			?: resolveNumberPlusOrNull
 			?: resolveNumberMinusOrNull
 			?: resolveNumberTimesOrNull
@@ -40,19 +39,20 @@ val StackCompiled.resolveOrNull: Compiled?
 			?: resolveTextPlusOrNull
 			?: resolveTextEqualsOrNull
 			?: resolveGetOrNull
+			?: resolveMakeOrNull
 
 val StackCompiled.resolveGetOrNull: Compiled?
 	get() =
 		linkOrNull?.combine { rhsCompiled ->
-			onlyOrNull?.runIfNotNull(rhsCompiled.t.onlyNameOrNull) { name ->
-				getOrNull(name)
+			rhsCompiled.t.onlyNameOrNull?.let { name ->
+				onlyOrNull?.getOrNull(name)
 			}
 		}
 
 val StackCompiled.resolveMakeOrNull: Compiled?
 	get() =
 		linkOrNull?.combine { rhsCompiled ->
-			onlyOrNull?.runIfNotNull(rhsCompiled.t.onlyNameOrNull) { name ->
+			rhsCompiled.t.onlyNameOrNull?.let { name ->
 				make(name)
 			}
 		}
