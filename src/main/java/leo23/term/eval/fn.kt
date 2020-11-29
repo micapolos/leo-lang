@@ -4,6 +4,7 @@ import leo.base.fold
 import leo.base.runIf
 import leo.stak.push
 import leo23.term.Expr
+import leo23.value.Scope
 import leo23.value.Value
 
 data class Fn(val scope: Scope, val isRecursive: Boolean, val body: Expr)

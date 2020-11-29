@@ -34,6 +34,7 @@ import leo23.term.Term
 import leo23.term.TupleAtTerm
 import leo23.term.TupleTerm
 import leo23.term.VariableTerm
+import leo23.value.Scope
 import leo23.value.Value
 import leo23.value.indexed
 
