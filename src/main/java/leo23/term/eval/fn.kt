@@ -13,5 +13,5 @@ fun Fn.apply(vararg params: Value): Value =
 	apply(params.asIterable())
 
 fun Fn.apply(params: Iterable<Value>): Value =
-	scope.runIf(isRecursive) { push(this@apply) }.fold(params, Scope::push).eval(body)
+	scope.runIf(isRecursive) { push(this@apply) }.fold(params, Scope::push).value(body)
 

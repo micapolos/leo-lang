@@ -34,37 +34,40 @@ import leo23.term.Term
 import leo23.term.TupleAtTerm
 import leo23.term.TupleTerm
 import leo23.term.VariableTerm
+import leo23.term.type.Type
+import leo23.typed.Typed
+import leo23.typed.of
 import leo23.value.Scope
 import leo23.value.Value
 import leo23.value.indexed
 
-val Expr.eval: Value get() = stakOf<Value>().eval(this)
-
-fun Scope.eval(expr: Expr): Value = eval(expr.term)
+val Expr.eval: Typed<Value, Type> get() = value.of(type)
+val Expr.value: Value get() = stakOf<Value>().value(this)
+fun Scope.value(expr: Expr): Value = value(expr.term)
 
 // TODO: Implement tail recursion
-fun Scope.eval(term: Term): Value =
+fun Scope.value(term: Term): Value =
 	when (term) {
 		NilTerm -> Unit
 		is BooleanTerm -> term.boolean
 		is StringTerm -> term.string
 		is NumberTerm -> term.number
-		is IsNilTerm -> eval(term.lhs) == Unit
-		is NumberPlusTerm -> (eval(term.lhs) as Number).plus(eval(term.rhs) as Number)
-		is NumberMinusTerm -> (eval(term.lhs) as Number).minus(eval(term.rhs) as Number)
-		is NumberTimesTerm -> (eval(term.lhs) as Number).times(eval(term.rhs) as Number)
-		is NumberEqualsTerm -> (eval(term.lhs) as Number) == (eval(term.rhs) as Number)
-		is NumberStringTerm -> (eval(term.number) as Number).string
-		is StringAppendTerm -> (eval(term.lhs) as String).plus(eval(term.rhs) as String)
-		is StringEqualsTerm -> (eval(term.lhs) as String) == (eval(term.rhs) as String)
-		is StringNumberOrNilTerm -> (eval(term.string) as String).numberOrNull?.let { 0 indexed it } ?: 1 indexed Unit
-		is TupleTerm -> (term.list.map { eval(it) })
-		is TupleAtTerm -> (eval(term.vector) as List<Value>).get(term.index)
-		is ConditionalTerm -> if (eval(term.cond) as Boolean) eval(term.caseTrue) else eval(term.caseFalse)
+		is IsNilTerm -> value(term.lhs) == Unit
+		is NumberPlusTerm -> (value(term.lhs) as Number).plus(value(term.rhs) as Number)
+		is NumberMinusTerm -> (value(term.lhs) as Number).minus(value(term.rhs) as Number)
+		is NumberTimesTerm -> (value(term.lhs) as Number).times(value(term.rhs) as Number)
+		is NumberEqualsTerm -> (value(term.lhs) as Number) == (value(term.rhs) as Number)
+		is NumberStringTerm -> (value(term.number) as Number).string
+		is StringAppendTerm -> (value(term.lhs) as String).plus(value(term.rhs) as String)
+		is StringEqualsTerm -> (value(term.lhs) as String) == (value(term.rhs) as String)
+		is StringNumberOrNilTerm -> (value(term.string) as String).numberOrNull?.let { 0 indexed it } ?: 1 indexed Unit
+		is TupleTerm -> (term.list.map { value(it) })
+		is TupleAtTerm -> (value(term.vector) as List<Value>).get(term.index)
+		is ConditionalTerm -> if (value(term.cond) as Boolean) value(term.caseTrue) else value(term.caseFalse)
 		is FunctionTerm -> Fn(this, false, term.body)
 		is RecursiveFunctionTerm -> Fn(this, true, term.body)
-		is ApplyTerm -> (eval(term.function) as Fn).apply(term.paramList.map { eval(it) })
+		is ApplyTerm -> (value(term.function) as Fn).apply(term.paramList.map { value(it) })
 		is VariableTerm -> top(term.index)!!
-		is IndexedTerm -> term.index indexed eval(term.rhs)
-		is SwitchTerm -> eval(term.lhs).indexed.let { push(it.value).eval(term.cases[it.index]) }
+		is IndexedTerm -> term.index indexed value(term.rhs)
+		is SwitchTerm -> value(term.lhs).indexed.let { push(it.value).value(term.cases[it.index]) }
 	}
