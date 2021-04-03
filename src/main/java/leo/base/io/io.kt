@@ -11,15 +11,15 @@ class IO<T> private constructor(private val unsafeValueFn: () -> T) {
 	val unsafeValue: T get() = unsafeValueFn()
 }
 
-
-fun <T> io(value: T) = IO.unsafe { value }
-val io: IO<Unit> = io(Unit)
-fun <T, K> IO<T>.bind(fn: (T) -> IO<K>): IO<K> = fn(unsafeValue)
+val IO<Unit>.unsafeRun: Unit get() = unsafeValue
+val <T> T.io: IO<T> get() = IO.unsafe { this }
+val io: IO<Unit> = Unit.io
+fun <T, K> IO<T>.bind(fn: (T) -> IO<K>): IO<K> = IO.unsafe { fn(unsafeValue).unsafeValue }
 fun <T, K> IO<T>.then(fn: () -> IO<K>): IO<K> = bind { fn() }
-fun <T, K> IO<T>.map(fn: (T) -> K): IO<K> = bind { io(fn(it)) }
+fun <T, K> IO<T>.map(fn: (T) -> K): IO<K> = bind { fn(it).io }
 
 val File.readStringIO: IO<String> get() = IO.unsafe { readText() }
-fun File.writeIO(string: String): IO<Unit> = IO.unsafe { writeText(string) }
+fun File.runWriterIO(string: String): IO<Unit> = IO.unsafe { writeText(string) }
 val Any?.printlnIO: IO<Unit> get() = IO.unsafe { println }
 
 fun main() {
@@ -29,8 +29,8 @@ fun main() {
 			io
 				.then { "Writing...".printlnIO }
 				.then { string.printlnIO }
-				.then { File("/Users/micapolos/ui2.ini").writeIO(string) }
+				.then { File("/Users/micapolos/ui2.ini").runWriterIO(string) }
 				.then { "Written...".printlnIO }
 		}
-		.unsafeValue
+		.unsafeRun
 }
