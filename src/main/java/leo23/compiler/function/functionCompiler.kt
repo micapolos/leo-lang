@@ -6,7 +6,6 @@ import leo14.ScriptField
 import leo14.ScriptLine
 import leo21.token.body.Body
 import leo23.compiler.Context
-import leo23.type.Type
 import leo23.type.Types
 
 data class FunctionCompiler(
