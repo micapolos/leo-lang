@@ -19,7 +19,7 @@ fun <T, K> IO<T>.then(fn: () -> IO<K>): IO<K> = bind { fn() }
 fun <T, K> IO<T>.map(fn: (T) -> K): IO<K> = bind { fn(it).io }
 
 val File.readStringIO: IO<String> get() = IO.unsafe { readText() }
-fun File.runWriterIO(string: String): IO<Unit> = IO.unsafe { writeText(string) }
+fun File.writeIO(string: String): IO<Unit> = IO.unsafe { writeText(string) }
 val Any?.printlnIO: IO<Unit> get() = IO.unsafe { println }
 
 fun main() {
@@ -29,7 +29,7 @@ fun main() {
 			io
 				.then { "Writing...".printlnIO }
 				.then { string.printlnIO }
-				.then { File("/Users/micapolos/ui2.ini").runWriterIO(string) }
+				.then { File("/Users/micapolos/ui2.ini").writeIO(string) }
 				.then { "Written...".printlnIO }
 		}
 		.unsafeRun

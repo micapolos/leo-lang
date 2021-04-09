@@ -6,12 +6,12 @@ data class Writer(private val javaWriter: java.io.Writer) {
 	fun writeIO(string: String): IO<Unit> = IO.unsafe { javaWriter.write(string) }
 }
 
-fun File.runWriterIO(fn: (Writer) -> IO<Unit>): IO<Unit> =
+fun File.writeIO(fn: (Writer) -> IO<Unit>): IO<Unit> =
 	IO.unsafe { outputStream().writer().use { fn(Writer(it)).unsafeValue } }
 
 fun main() {
 	File("/Users/micapolos/out.txt")
-		.runWriterIO { writer ->
+		.writeIO { writer ->
 			io
 				.then { "Writing...".printlnIO }
 				.then { writer.writeIO("jajko\n") }
