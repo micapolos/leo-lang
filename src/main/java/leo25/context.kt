@@ -95,22 +95,22 @@ fun Context.plus(value: Value, binding: Binding): Context =
 fun Context.update(value: Value, fn: Context.() -> Resolution): Context =
 	when (value) {
 		is FunctionValue -> this // functions can not be used in pattern matching
-		is LinkValue -> update(value.link, fn)
+		is StructValue -> update(value.struct, fn)
 		is StringValue -> update(value.string, fn)
 		is WordValue -> update(value.word, fn)
 	}
 
-fun Context.update(link: Link, fn: Context.() -> Resolution): Context =
-	update(link.head) {
+fun Context.update(struct: Struct, fn: Context.() -> Resolution): Context =
+	update(struct.head) {
 		resolution(
-			if (link.tail == null) updateContinuation(token(emptyEnd), fn)
-			else update(link.tail, fn)
+			if (struct.tail == null) updateContinuation(token(emptyEnd), fn)
+			else update(struct.tail, fn)
 		)
 	}
 
-fun Context.update(line: Line, fn: Context.() -> Resolution): Context =
-	updateContinuation(token(begin(line.word))) {
-		resolution(update(line.value, fn))
+fun Context.update(field: Field, fn: Context.() -> Resolution): Context =
+	updateContinuation(token(begin(field.word))) {
+		resolution(update(field.value, fn))
 	}
 
 fun Context.update(word: Word, fn: Context.() -> Resolution): Context =

@@ -6,7 +6,7 @@ import leo.base.runLet
 fun Context.resolve(value: Value): Value =
 	null
 		?: applyOrNull(value)
-		?: value
+		?: value.resolve
 
 fun Context.applyOrNull(value: Value): Value? =
 	resolutionOrNull(value)?.bindingOrNull?.apply(value)
@@ -21,34 +21,34 @@ fun Context.resolutionOrNull(value: Value): Resolution? =
 
 fun Context.concreteResolutionOrNull(value: Value): Resolution? =
 	when (value) {
-		is LinkValue -> resolutionOrNull(value.link)
+		is StructValue -> resolutionOrNull(value.struct)
 		is FunctionValue -> null
 		is StringValue -> resolutionOrNull(token(end(value.string)))
 		is WordValue -> resolutionOrNull(value.word)
 	}
 
-fun Context.resolutionOrNull(link: Link): Resolution? =
+fun Context.resolutionOrNull(struct: Struct): Resolution? =
 	null
-		?: staticResolutionOrNull(link)
-		?: dynamicResolutionOrNull(link)
+		?: staticResolutionOrNull(struct)
+		?: dynamicResolutionOrNull(struct)
 
-fun Context.staticResolutionOrNull(link: Link): Resolution? =
-	null // TODO()
+fun Context.staticResolutionOrNull(struct: Struct): Resolution? =
+	null
 
-fun Context.dynamicResolutionOrNull(link: Link): Resolution? =
+fun Context.dynamicResolutionOrNull(struct: Struct): Resolution? =
 	orNull
-		?.resolutionOrNull(link.head)
+		?.resolutionOrNull(struct.head)
 		?.contextOrNull
-		?.runLet(link.tail) { tail ->
+		?.runLet(struct.tail) { tail ->
 			if (tail == null) resolutionOrNull(token(emptyEnd))
 			else resolutionOrNull(tail)
 		}
 
-fun Context.resolutionOrNull(line: Line): Resolution? =
+fun Context.resolutionOrNull(field: Field): Resolution? =
 	orNull
-		?.resolutionOrNull(BeginToken(Begin(line.word)))
+		?.resolutionOrNull(BeginToken(Begin(field.word)))
 		?.contextOrNull
-		?.resolutionOrNull(line.value)
+		?.resolutionOrNull(field.value)
 
 fun Context.resolutionOrNull(word: Word): Resolution? =
 	orNull

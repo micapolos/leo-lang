@@ -9,4 +9,3 @@ fun Function.apply(value: Value): Value =
 	context
 		.plusGiven(value)
 		.resolve(body.value)
-

@@ -17,4 +17,11 @@ class FunctionTest {
 			.apply(value("foo"))
 			.assertEqualTo(value("given" to value("foo")))
 	}
+
+	@Test
+	fun applyGivenFoo() {
+		Function(context(), body(value("given" to null, "name" to null)))
+			.apply(value("name" to value("Michał")))
+			.assertEqualTo(value("name" to value("Michał")))
+	}
 }
