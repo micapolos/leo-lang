@@ -142,7 +142,7 @@ fun <T : Any> Node<T>.pushLink(depth: Int): Link<T>? {
 
 fun <T : Any> Node<T>?.push(value: T): Node<T> =
 	if (this == null) node(value, null)
-	else node(value, pushLink(1))
+	else node(value, this.pushLink(1))
 
 tailrec fun <R, T : Any> R.fold(node: Node<T>, fn: R.(T) -> R): R {
 	val folded = fn(node.value)

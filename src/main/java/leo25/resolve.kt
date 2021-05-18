@@ -2,6 +2,7 @@ package leo25
 
 import kotlinx.collections.immutable.persistentMapOf
 import leo.base.orNull
+import leo.base.runIfNotNull
 
 fun Context.resolve(value: Value): Value =
 	null
@@ -15,22 +16,16 @@ fun Context.resolutionOrNull(token: Token): Resolution? =
 	tokenToResolutionMap[token]
 
 fun Context.resolutionOrNull(value: Value): Resolution? =
-	when (value) {
-		EmptyValue -> resolutionOrNull(EndToken(EmptyEnd))
-		is ThingValue -> resolutionOrNull(value.thing)
-	}
-
-fun Context.resolutionOrNull(thing: Thing): Resolution? =
 	null
-		?: concreteResolutionOrNull(thing)
+		?: concreteResolutionOrNull(value)
 		?: resolutionOrNull(EndToken(AnythingEnd))
 
-fun Context.concreteResolutionOrNull(thing: Thing): Resolution? =
-	when (thing) {
-		is LinkThing -> resolutionOrNull(thing.link)
-		is FunctionThing -> null
-		is StringThing -> null
-		is WordThing -> resolutionOrNull(thing.word)
+fun Context.concreteResolutionOrNull(value: Value): Resolution? =
+	when (value) {
+		is LinkValue -> resolutionOrNull(value.link)
+		is FunctionValue -> null
+		is StringValue -> null
+		is WordValue -> resolutionOrNull(value.word)
 	}
 
 fun Context.resolutionOrNull(link: Link): Resolution? =
@@ -43,15 +38,17 @@ fun Context.staticResolutionOrNull(link: Link): Resolution? =
 
 fun Context.dynamicResolutionOrNull(link: Link): Resolution? =
 	orNull
-		?.resolutionOrNull(link.line)
+		?.resolutionOrNull(link.head)
 		?.contextOrNull
-		?.resolutionOrNull(link.value)
+		?.runIfNotNull(link.tail) { tail ->
+			resolutionOrNull(tail)
+		}
 
 fun Context.resolutionOrNull(line: Line): Resolution? =
 	orNull
 		?.resolutionOrNull(BeginToken(Begin(line.word)))
 		?.contextOrNull
-		?.resolutionOrNull(line.thing)
+		?.resolutionOrNull(line.value)
 
 fun Context.resolutionOrNull(word: Word): Resolution? =
 	orNull
@@ -77,7 +74,7 @@ fun Context.give(value: Value): Context =
 								Context(
 									persistentMapOf(
 										EndToken(EmptyEnd) to BindingResolution(
-											ValueBinding(value)
+											ThingBinding(value)
 										)
 									)
 								)
@@ -91,5 +88,5 @@ fun Context.give(value: Value): Context =
 fun Binding.apply(value: Value): Value =
 	when (this) {
 		is FunctionBinding -> apply(value)
-		is ValueBinding -> this.value
+		is ThingBinding -> this.value
 	}
