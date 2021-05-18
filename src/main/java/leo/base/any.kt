@@ -59,6 +59,9 @@ inline fun <V, R, O> R.runIfNotNull(valueOrNull: V?, fn: R.(V) -> O): O? =
 	if (valueOrNull == null) null
 	else fn(valueOrNull)
 
+inline fun <V, R, O> R.runLet(value: V, fn: R.(V) -> O): O? =
+	fn(value)
+
 val fail: Nothing
 	get() =
 		throw IllegalStateException()

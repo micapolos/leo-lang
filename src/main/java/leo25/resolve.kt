@@ -1,8 +1,7 @@
 package leo25
 
-import kotlinx.collections.immutable.persistentMapOf
 import leo.base.orNull
-import leo.base.runIfNotNull
+import leo.base.runLet
 
 fun Context.resolve(value: Value): Value =
 	null
@@ -24,7 +23,7 @@ fun Context.concreteResolutionOrNull(value: Value): Resolution? =
 	when (value) {
 		is LinkValue -> resolutionOrNull(value.link)
 		is FunctionValue -> null
-		is StringValue -> null
+		is StringValue -> resolutionOrNull(token(end(value.string)))
 		is WordValue -> resolutionOrNull(value.word)
 	}
 
@@ -34,14 +33,15 @@ fun Context.resolutionOrNull(link: Link): Resolution? =
 		?: dynamicResolutionOrNull(link)
 
 fun Context.staticResolutionOrNull(link: Link): Resolution? =
-	TODO()
+	null // TODO()
 
 fun Context.dynamicResolutionOrNull(link: Link): Resolution? =
 	orNull
 		?.resolutionOrNull(link.head)
 		?.contextOrNull
-		?.runIfNotNull(link.tail) { tail ->
-			resolutionOrNull(tail)
+		?.runLet(link.tail) { tail ->
+			if (tail == null) resolutionOrNull(token(emptyEnd))
+			else resolutionOrNull(tail)
 		}
 
 fun Context.resolutionOrNull(line: Line): Resolution? =
@@ -55,34 +55,16 @@ fun Context.resolutionOrNull(word: Word): Resolution? =
 		?.resolutionOrNull(BeginToken(Begin(word)))
 		?.contextOrNull
 		?.resolutionOrNull(EndToken(EmptyEnd))
+		?.contextOrNull
+		?.resolutionOrNull(EndToken(EmptyEnd))
 
 val Resolution.contextOrNull get() = (this as? ContextResolution)?.context
 val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
-fun Function.apply(value: Value): Value =
-	context.give(value).resolve(body.value)
-
-fun Context.give(value: Value): Context =
-	Context(
-		tokenToResolutionMap
-			.put(
-				BeginToken(Begin(Word("given"))),
-				ContextResolution(
-					Context(
-						persistentMapOf(
-							EndToken(EmptyEnd) to ContextResolution(
-								Context(
-									persistentMapOf(
-										EndToken(EmptyEnd) to BindingResolution(
-											ValueBinding(value)
-										)
-									)
-								)
-							)
-						)
-					)
-				)
-			)
+fun Context.plusGiven(value: Value): Context =
+	plus(
+		value("given" to null),
+		binding(value("given" to value))
 	)
 
 fun Binding.apply(value: Value): Value =

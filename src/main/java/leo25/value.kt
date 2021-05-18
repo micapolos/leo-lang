@@ -32,4 +32,4 @@ fun value(string: String): Value = StringValue(string)
 fun value(pair: Pair<String, Value?>, vararg pairs: Pair<String, Value?>) =
 	nullOf<Value>().plus(pair).fold(pairs) { plus(it) }
 
-fun context() = Context(persistentMapOf())
+val anyValue: Value = value("any" to null)
