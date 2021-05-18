@@ -74,7 +74,7 @@ fun Context.give(value: Value): Context =
 								Context(
 									persistentMapOf(
 										EndToken(EmptyEnd) to BindingResolution(
-											ThingBinding(value)
+											ValueBinding(value)
 										)
 									)
 								)
@@ -88,5 +88,5 @@ fun Context.give(value: Value): Context =
 fun Binding.apply(value: Value): Value =
 	when (this) {
 		is FunctionBinding -> apply(value)
-		is ThingBinding -> this.value
+		is ValueBinding -> this.value
 	}

@@ -21,7 +21,7 @@ fun <V : Any> V.orNullIf(boolean: Boolean): V? =
 inline fun <V : Any> V.orNullIf(fn: V.() -> Boolean): V? =
 	if (fn()) null else this
 
-inline fun <V : Any> V?.orIfNull(fn: () -> V) =
+inline fun <V : Any> V?.orIfNull(fn: () -> V): V =
 	this ?: fn()
 
 inline fun <R, V : Any> R.updateIfNotNull(valueOrNull: V?, fn: R.(V) -> R): R =
