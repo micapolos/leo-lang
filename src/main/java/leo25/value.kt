@@ -35,9 +35,13 @@ operator fun Value?.plus(pair: Pair<String, Value?>): Value =
 
 fun value(word: Word): Value = WordValue(word)
 fun value(string: String): Value = StringValue(string)
+fun value(function: Function): Value = FunctionValue(function)
 fun value(struct: Struct): Value = StructValue(struct)
 fun value(pair: Pair<String, Value?>, vararg pairs: Pair<String, Value?>) =
 	nullOf<Value>().plus(pair).fold(pairs) { plus(it) }
+
+fun value(field: Field, vararg fields: Field) =
+	nullOf<Value>().plus(field).fold(fields) { plus(it) }
 
 val anyValue: Value = value("any" to null)
 val Value.structOrNull: Struct? get() = (this as? StructValue)?.struct

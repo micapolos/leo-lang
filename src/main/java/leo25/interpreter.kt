@@ -15,9 +15,9 @@ fun Context.interpreter(valueOrNull: Value? = null) =
 fun Context.interpretedValueOrNull(script: Script): Value? =
 	interpreter().fold(script.lineSeq.reverse) { plus(it) }.valueOrNull
 
-val Script.interpretedValueOrNull: Value?
+val Script.interpret: Script
 	get() =
-		context().interpretedValueOrNull(this)
+		context().interpretedValueOrNull(this).orNullScript
 
 fun Interpreter.plus(scriptLine: ScriptLine): Interpreter =
 	// TODO: Resolve static definitions, function etc...
@@ -48,7 +48,7 @@ fun Interpreter.plus(field: Field): Interpreter =
 fun Interpreter.plus(word: Word): Interpreter =
 	context.interpreter(
 		context.resolve(
-			if (valueOrNull != null) valueOrNull.plus(word fieldTo valueOrNull)
+			if (valueOrNull != null) value(word fieldTo valueOrNull)
 			else value(word)
 		)
 	)
