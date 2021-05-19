@@ -16,6 +16,11 @@ data class Struct(val tail: Value?, val head: Field)
 data class Field(val word: Word, val value: Value)
 
 fun word(string: String) = Word(string)
+infix fun Word.fieldTo(value: Value): Field = Field(this, value)
+infix fun String.fieldTo(value: Value): Field = word(this) fieldTo value
+
+operator fun Value?.plus(field: Field): Value =
+	StructValue(Struct(this, field))
 
 operator fun Value?.plus(pair: Pair<String, Value?>): Value =
 	pair.let { (string, valueOrNull) ->
@@ -28,6 +33,7 @@ operator fun Value?.plus(pair: Pair<String, Value?>): Value =
 		}
 	}
 
+fun value(word: Word): Value = WordValue(word)
 fun value(string: String): Value = StringValue(string)
 fun value(struct: Struct): Value = StructValue(struct)
 fun value(pair: Pair<String, Value?>, vararg pairs: Pair<String, Value?>) =
