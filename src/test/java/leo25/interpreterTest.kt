@@ -1,7 +1,9 @@
 package leo25
 
 import leo.base.assertEqualTo
+import leo14.line
 import leo14.lineTo
+import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
@@ -14,6 +16,16 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script("color" lineTo script("red")))
+	}
+
+	@Test
+	fun textPlusTest() {
+		script(
+			line(literal("Hello, ")),
+			"plus" lineTo script(literal("world!"))
+		)
+			.interpret
+			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test

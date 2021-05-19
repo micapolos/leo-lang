@@ -57,6 +57,7 @@ val Value.resolve: Value
 	get() =
 		null
 			?: resolveFunctionApplyOrNull
+			?: resolveTextPlusTextOrNull
 			?: resolveGetOrNull
 			?: this
 
@@ -73,6 +74,17 @@ val Value.resolveFunctionApplyOrNull: Value?
 				tail?.resolveFunctionOrNull?.let { function ->
 					head.valueOrNull("apply")?.let { given ->
 						function.apply(given)
+					}
+				}
+			}
+
+val Value.resolveTextPlusTextOrNull: Value?
+	get() =
+		structOrNull
+			?.run {
+				tail?.resolveStringOrNull?.let { lhs ->
+					head.valueOrNull("plus")?.resolveStringOrNull?.let { rhs ->
+						value("text" to value(lhs.plus(rhs)))
 					}
 				}
 			}

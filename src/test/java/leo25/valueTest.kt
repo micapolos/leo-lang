@@ -127,4 +127,14 @@ class ValueTest {
 			.resolveFunctionApplyOrNull
 			.assertEqualTo(value("given" to value("foo")))
 	}
+
+	@Test
+	fun resolveTextPlusText() {
+		value(
+			"text" to value("Hello, "),
+			"plus" to value("text" to value("world!"))
+		)
+			.resolveTextPlusTextOrNull
+			.assertEqualTo(value("Hello, world!"))
+	}
 }
