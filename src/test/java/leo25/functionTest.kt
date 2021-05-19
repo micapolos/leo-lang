@@ -1,26 +1,28 @@
 package leo25
 
 import leo.base.assertEqualTo
+import leo14.lineTo
+import leo14.script
 import kotlin.test.Test
 
 class FunctionTest {
 	@Test
 	fun apply() {
-		Function(context(), body(value("ok")))
+		Function(context(), script("ok"))
 			.apply(value("foo"))
-			.assertEqualTo(value("ok"))
+			.assertEqualTo(value("ok" to null))
 	}
 
 	@Test
 	fun applyGiven() {
-		Function(context(), body(value("given" to null)))
+		Function(context(), script("given"))
 			.apply(value("foo"))
 			.assertEqualTo(value("given" to value("foo")))
 	}
 
 	@Test
 	fun applyGivenFoo() {
-		Function(context(), body(value("given" to null, "name" to null)))
+		Function(context(), script("given" lineTo script(), "name" lineTo script()))
 			.apply(value("name" to value("Michał")))
 			.assertEqualTo(value("name" to value("Michał")))
 	}
