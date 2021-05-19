@@ -44,7 +44,9 @@ fun value(field: Field, vararg fields: Field) =
 	nullOf<Value>().plus(field).fold(fields) { plus(it) }
 
 val anyValue: Value = value("any" to null)
+val Value.stringOrNull: String? get() = (this as? StringValue)?.string
 val Value.structOrNull: Struct? get() = (this as? StructValue)?.struct
+val Value.functionOrNull: Function? get() = (this as? FunctionValue)?.function
 
 val Struct.onlyFieldOrNull: Field?
 	get() =
@@ -54,6 +56,7 @@ val Struct.onlyFieldOrNull: Field?
 val Value.resolve: Value
 	get() =
 		null
+			?: resolveFunctionApplyOrNull
 			?: resolveGetOrNull
 			?: this
 
@@ -62,6 +65,17 @@ val Value.resolveGetOrNull: Value?
 		structOrNull?.onlyFieldOrNull?.let { field ->
 			field.value.getOrNull(field.word.string)
 		}
+
+val Value.resolveFunctionApplyOrNull: Value?
+	get() =
+		structOrNull
+			?.run {
+				tail?.resolveFunctionOrNull?.let { function ->
+					head.valueOrNull("apply")?.let { given ->
+						function.apply(given)
+					}
+				}
+			}
 
 fun Value.selectOrNull(name: String): Value? =
 	structOrNull?.selectOrNull(name)
@@ -76,3 +90,14 @@ fun Field.selectOrNull(name: String): Value? =
 
 fun Value.getOrNull(name: String): Value? =
 	structOrNull?.onlyFieldOrNull?.value?.selectOrNull(name)
+
+fun Field.valueOrNull(name: String): Value? =
+	notNullIf(word.string == name) { value }
+
+val Value.resolveFunctionOrNull: Function?
+	get() =
+		structOrNull?.onlyFieldOrNull?.valueOrNull("function")?.functionOrNull
+
+val Value.resolveStringOrNull: String?
+	get() =
+		structOrNull?.onlyFieldOrNull?.valueOrNull("text")?.stringOrNull

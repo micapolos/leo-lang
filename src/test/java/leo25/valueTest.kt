@@ -1,6 +1,7 @@
 package leo25
 
 import leo.base.assertEqualTo
+import leo14.script
 import kotlin.test.Test
 
 class ValueTest {
@@ -85,5 +86,45 @@ class ValueTest {
 					)
 				)
 			)
+	}
+
+	@Test
+	fun resolveFunction() {
+		value("function" to value(Function(context(), script("foo"))))
+			.resolveFunctionOrNull
+			.assertEqualTo(Function(context(), script("foo")))
+
+		value(Function(context(), script("foo")))
+			.resolveFunctionOrNull
+			.assertEqualTo(null)
+
+		value("function" to value("foo"))
+			.resolveFunctionOrNull
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun resolveString() {
+		value("text" to value("Michał"))
+			.resolveStringOrNull
+			.assertEqualTo("Michał")
+
+		value("Michał")
+			.resolveStringOrNull
+			.assertEqualTo(null)
+
+		value("text" to value(word("foo")))
+			.resolveFunctionOrNull
+			.assertEqualTo(null)
+	}
+
+	@Test
+	fun resolveFunctionApply() {
+		value(
+			"function" to value(Function(context(), script("given"))),
+			"apply" to value("foo")
+		)
+			.resolveFunctionApplyOrNull
+			.assertEqualTo(value("given" to value("foo")))
 	}
 }

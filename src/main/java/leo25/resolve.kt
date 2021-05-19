@@ -66,9 +66,3 @@ fun Context.plusGiven(value: Value): Context =
 		value("given" to null),
 		binding(value("given" to value))
 	)
-
-fun Binding.apply(value: Value): Value =
-	when (this) {
-		is FunctionBinding -> apply(value)
-		is ValueBinding -> this.value
-	}

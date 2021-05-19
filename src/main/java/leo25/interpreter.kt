@@ -27,6 +27,18 @@ fun Interpreter.plus(scriptLine: ScriptLine): Interpreter =
 	}
 
 fun Interpreter.plus(scriptField: ScriptField): Interpreter =
+	null
+		?: plusStaticOrNull(scriptField)
+		?: plusDynamic(scriptField)
+
+fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
+	when (scriptField.string) {
+		"function" -> plus("function" fieldTo value(Function(context, scriptField.rhs)))
+		"define" -> TODO()
+		else -> null
+	}
+
+fun Interpreter.plusDynamic(scriptField: ScriptField): Interpreter =
 	context.interpretedValueOrNull(scriptField.rhs).let { valueOrNull ->
 		if (valueOrNull != null) plus(scriptField.string fieldTo valueOrNull)
 		else plus(word(scriptField.string))
