@@ -3,6 +3,7 @@ package leo25
 import leo.base.fold
 import leo.base.notNullIf
 import leo14.*
+import leo14.Number
 
 sealed class Value {
 	override fun toString() = script.toString()
@@ -16,7 +17,6 @@ data class LinkValue(val link: Link) : Value() {
 data class Native(val any: Any?)
 
 sealed class Line
-data class LiteralLine(val literal: Literal) : Line()
 data class FunctionLine(val function: Function) : Line()
 data class FieldLine(val field: Field) : Line()
 data class NativeLine(val native: Native) : Line()
@@ -27,12 +27,13 @@ data class Field(val name: String, val value: Value)
 infix fun String.fieldTo(value: Value): Field = Field(this, value)
 infix fun String.lineTo(value: Value): Line = FieldLine(this fieldTo value)
 fun line(field: Field): Line = FieldLine(field)
-fun line(literal: Literal): Line = LiteralLine(literal)
-fun line(string: String): Line = line(literal(string))
+fun line(literal: Literal): Line = literal.line
 fun line(function: Function): Line = FunctionLine(function)
 fun line(native: Native): Line = NativeLine(native)
 
 fun native(any: Any?) = Native(any)
+val Native.stringOrNull: String? get() = any as? String
+val Native.numberOrNull: leo14.Number? get() = any as? leo14.Number
 
 operator fun Value.plus(line: Line): Value = LinkValue(Link(this, line))
 val emptyValue: Value get() = EmptyValue
@@ -40,13 +41,11 @@ fun value(vararg lines: Line) = emptyValue.fold(lines) { plus(it) }
 fun value(name: String) = value(name lineTo value())
 
 val Line.functionOrNull: Function? get() = (this as? FunctionLine)?.function
-val Line.literalOrNull: Literal? get() = (this as? LiteralLine)?.literal
-val Line.stringOrNull: String? get() = literalOrNull?.stringOrNull
+val Line.nativeOrNull: Native? get() = (this as? NativeLine)?.native
 val Line.fieldOrNull: Field? get() = (this as? FieldLine)?.field
 
 val Value.linkOrNull: Link? get() = (this as? LinkValue)?.link
-val Value.functionOrNull: Function? get() = linkOrNull?.onlyLineOrNull?.functionOrNull
-val Value.stringOrNull: String? get() = linkOrNull?.onlyLineOrNull?.stringOrNull
+val Value.resolveFunctionOrNull: Function? get() = linkOrNull?.onlyLineOrNull?.functionOrNull
 
 val Link.onlyLineOrNull: Line?
 	get() =
@@ -88,8 +87,8 @@ val Value.resolveTextPlusTextOrNull: Value?
 	get() =
 		linkOrNull
 			?.run {
-				tail.resolveTextOrNull?.let { lhs ->
-					head.fieldOrNull?.valueOrNull("plus")?.resolveTextOrNull?.let { rhs ->
+				tail.textOrNull?.let { lhs ->
+					head.fieldOrNull?.valueOrNull("plus")?.textOrNull?.let { rhs ->
 						value(line(literal(lhs.plus(rhs))))
 					}
 				}
@@ -108,7 +107,6 @@ val Line.selectName: String
 		when (this) {
 			is FieldLine -> field.name
 			is FunctionLine -> functionName
-			is LiteralLine -> literal.selectName
 			is NativeLine -> nativeName
 		}
 
@@ -134,13 +132,21 @@ fun Value.make(name: String): Value =
 fun Value.resolve(name: String): Value =
 	getOrNull(name) ?: make(name)
 
-val Value.resolveFunctionOrNull: Function?
+val Line.textOrNull: String?
 	get() =
-		functionOrNull
+		fieldOrNull?.valueOrNull("text")?.linkOrNull?.onlyLineOrNull?.nativeOrNull?.any as? String
 
-val Value.resolveTextOrNull: String?
+val Line.numberOrNull: Number?
 	get() =
-		stringOrNull
+		fieldOrNull?.valueOrNull("number")?.linkOrNull?.onlyLineOrNull?.nativeOrNull?.any as? Number
+
+val Value.textOrNull: String?
+	get() =
+		linkOrNull?.onlyLineOrNull?.textOrNull
+
+val Value.numberOrNull: Number?
+	get() =
+		linkOrNull?.onlyLineOrNull?.numberOrNull
 
 val Field.onlyNameOrNull: String?
 	get() =

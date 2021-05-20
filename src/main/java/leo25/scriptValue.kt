@@ -17,9 +17,16 @@ val ScriptLine.line: Line
 	get() =
 		when (this) {
 			is FieldScriptLine -> line(field.field)
-			is LiteralScriptLine -> line(literal)
+			is LiteralScriptLine -> literal.line
 		}
 
 val ScriptField.field: Field
 	get() =
 		string fieldTo rhs.value
+
+val Literal.line: Line
+	get() =
+		when (this) {
+			is NumberLiteral -> numberName lineTo value(line(native(number)))
+			is StringLiteral -> textName lineTo value(line(native(string)))
+		}

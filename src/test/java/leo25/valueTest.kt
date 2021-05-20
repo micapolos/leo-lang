@@ -105,11 +105,11 @@ class ValueTest {
 	@Test
 	fun resolveText() {
 		value(line(literal("foo")))
-			.resolveTextOrNull
+			.textOrNull
 			.assertEqualTo("foo")
 
 		value("foo")
-			.resolveTextOrNull
+			.textOrNull
 			.assertEqualTo(null)
 
 		value("text" lineTo value("foo"))

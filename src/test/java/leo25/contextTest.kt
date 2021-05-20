@@ -3,6 +3,7 @@ package leo25
 import kotlinx.collections.immutable.persistentMapOf
 import leo.base.assertEqualTo
 import leo14.lineTo
+import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
@@ -31,8 +32,7 @@ class ContextTest {
 			.run {
 				applyOrNull(value("name" lineTo value())).assertEqualTo(value("ok"))
 				applyOrNull(value("name" lineTo value("michal"))).assertEqualTo(value("ok"))
-				applyOrNull(value("name" lineTo value(line("Michał")))).assertEqualTo(value("ok"))
-				applyOrNull(value("surname" lineTo value(line("Michał")))).assertEqualTo(null)
+				applyOrNull(value("name" lineTo value(line(literal("Michał"))))).assertEqualTo(value("ok"))
 			}
 	}
 
@@ -42,7 +42,7 @@ class ContextTest {
 			.plus(script("any"), binding(value("pong")))
 			.run {
 				applyOrNull(value("ping")).assertEqualTo(value("pong"))
-				applyOrNull(value(line("ping"))).assertEqualTo(value("pong"))
+				applyOrNull(value("ping")).assertEqualTo(value("pong"))
 			}
 	}
 

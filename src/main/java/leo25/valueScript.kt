@@ -15,10 +15,21 @@ val Link.script: Script
 
 val Line.scriptLine: ScriptLine
 	get() =
+		null
+			?: literalScriptLineOrNull
+			?: exactScriptLine
+
+val Line.literalScriptLineOrNull: ScriptLine?
+	get() =
+		null
+			?: textOrNull?.let { leo14.line(literal(it)) }
+			?: numberOrNull?.let { leo14.line(literal(it)) }
+
+val Line.exactScriptLine: ScriptLine
+	get() =
 		when (this) {
 			is FieldLine -> line(field.scriptField)
 			is FunctionLine -> function.scriptLine
-			is LiteralLine -> leo14.line(literal)
 			is NativeLine -> native.scriptLine
 		}
 

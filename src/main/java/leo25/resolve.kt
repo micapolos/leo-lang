@@ -36,7 +36,6 @@ fun Context.resolutionOrNull(line: Line): Resolution? =
 	when (line) {
 		is FieldLine -> resolutionOrNull(line.field)
 		is FunctionLine -> resolutionOrNull(line.function)
-		is LiteralLine -> resolutionOrNull(line.literal)
 		is NativeLine -> null
 	}
 
