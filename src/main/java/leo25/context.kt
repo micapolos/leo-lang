@@ -2,13 +2,13 @@ package leo25
 
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
+import leo.base.fold
 import leo.base.notNullIf
 import leo.base.orIfNull
+import leo.base.runIf
 import leo14.*
 
 data class Context(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
-
-fun context() = Context(persistentMapOf())
 
 sealed class Token
 data class BeginToken(val begin: Begin) : Token()
@@ -27,6 +27,9 @@ data class BindingResolution(val binding: Binding) : Resolution()
 
 fun Context.put(token: Token, resolution: Resolution): Context =
 	Context(tokenToResolutionMap.put(token, resolution))
+
+fun context(vararg pairs: Pair<Token, Resolution>): Context =
+	Context(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
 
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
@@ -70,21 +73,12 @@ val Context.removeForAny: Context
 				is BeginToken -> context
 				is EndToken ->
 					when (token.end) {
-						AnythingEnd -> context
-						EmptyEnd -> context.put(token, resolution)
+						AnythingEnd -> context.put(token, resolution)
+						EmptyEnd -> context
 					}
 				is NativeToken -> context
 			}
 		}
-
-fun Context.plusRaw(name: String, resolution: Resolution): Context =
-	updateContinuation(token(begin(name))) {
-		resolution(updateContinuation(token(emptyEnd)) {
-			resolution(updateContinuation(token(emptyEnd)) {
-				resolution
-			})
-		})
-	}
 
 val Resolution.continuationContext: Context
 	get() =
@@ -141,3 +135,26 @@ fun Context.update(field: ScriptField, fn: Context.() -> Resolution): Context =
 
 fun Context.updateAny(fn: Context.() -> Resolution): Context =
 	removeForAny.updateContinuation(token(anyEnd), fn)
+
+operator fun Context.plus(context: Context): Context =
+	runIf(context.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
+		.run {
+			context.tokenToResolutionMap.entries.fold(this) { context, (token, resolution) ->
+				context.update(token) { resolutionOrNull ->
+					resolutionOrNull.orNullMerge(resolution)
+				}
+			}
+		}
+
+fun Resolution.merge(resolution: Resolution): Resolution =
+	when (resolution) {
+		is BindingResolution -> resolution
+		is ContextResolution ->
+			when (this) {
+				is BindingResolution -> resolution
+				is ContextResolution -> resolution(context.plus(resolution.context))
+			}
+	}
+
+fun Resolution?.orNullMerge(resolution: Resolution): Resolution =
+	this?.merge(resolution) ?: resolution

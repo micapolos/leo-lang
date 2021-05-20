@@ -81,4 +81,166 @@ class ContextTest {
 			.applyOrNull(value(line(literal(124))))
 			.assertEqualTo(null)
 	}
+
+	@Test
+	fun plusDifferentTokens() {
+		context(
+			token(begin("x")) to resolution(
+				context(
+					token(emptyEnd) to resolution(
+						context(
+							token(emptyEnd) to resolution(binding(value("x")))
+						)
+					)
+				)
+			)
+		)
+			.plus(
+				context(
+					token(begin("y")) to resolution(
+						context(
+							token(emptyEnd) to resolution(
+								context(
+									token(emptyEnd) to resolution(binding(value("y")))
+								)
+							)
+						)
+					)
+				)
+			)
+			.assertEqualTo(
+				context(
+					token(begin("x")) to resolution(
+						context(
+							token(emptyEnd) to resolution(
+								context(
+									token(emptyEnd) to resolution(binding(value("x")))
+								)
+							)
+						)
+					),
+					token(begin("y")) to resolution(
+						context(
+							token(emptyEnd) to resolution(
+								context(
+									token(emptyEnd) to resolution(binding(value("y")))
+								)
+							)
+						)
+					)
+				)
+			)
+	}
+
+	@Test
+	fun plusSharedTokens() {
+		context(
+			token(begin("point")) to resolution(
+				context(
+					token(begin("x")) to resolution(
+						context(
+							token(emptyEnd) to resolution(
+								context(
+									token(emptyEnd) to resolution(
+										context(
+											token(emptyEnd) to resolution(binding(value("x")))
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+			.plus(
+				context(
+					token(begin("point")) to resolution(
+						context(
+							token(begin("y")) to resolution(
+								context(
+									token(emptyEnd) to resolution(
+										context(
+											token(emptyEnd) to resolution(
+												context(
+													token(emptyEnd) to resolution(binding(value("y")))
+												)
+											)
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+			.assertEqualTo(
+				context(
+					token(begin("point")) to resolution(
+						context(
+							token(begin("x")) to resolution(
+								context(
+									token(emptyEnd) to resolution(
+										context(
+											token(emptyEnd) to resolution(
+												context(
+													token(emptyEnd) to resolution(binding(value("x")))
+												)
+											)
+										)
+									)
+								)
+							),
+							token(begin("y")) to resolution(
+								context(
+									token(emptyEnd) to resolution(
+										context(
+											token(emptyEnd) to resolution(
+												context(
+													token(emptyEnd) to resolution(binding(value("y")))
+												)
+											)
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+	}
+
+	@Test
+	fun plusAnyOverride() {
+		context(
+			token(begin("x")) to resolution(
+				context(
+					token(emptyEnd) to resolution(
+						context(
+							token(emptyEnd) to resolution(binding(value("x")))
+						)
+					)
+				)
+			),
+			token(emptyEnd) to resolution(binding(value("end")))
+		)
+			.plus(
+				context(
+					token(anyEnd) to resolution(
+						context(
+							token(emptyEnd) to resolution(binding(value("y")))
+						)
+					)
+				)
+			)
+			.assertEqualTo(
+				context(
+					token(anyEnd) to resolution(
+						context(
+							token(emptyEnd) to resolution(binding(value("y")))
+						)
+					)
+				)
+			)
+	}
 }
