@@ -1,15 +1,10 @@
 package leo25
 
 import leo.base.*
-import leo.base.reverse
 import leo13.*
 import leo13.Stack
-import leo13.charString
-import leo13.push
-import leo13.seq
 import leo14.*
 import leo14.Number
-import leo25.pushParser
 
 data class Parser<T>(
 	val plusCharFn: (Char) -> Parser<T>?,
@@ -21,15 +16,18 @@ val <T> Parser<T>.parsedOrNull: T? get() = parsedOrNullFn()
 fun <T> parsedParser(parsed: T) = Parser({ null }, { parsed })
 fun <T> partialParser(plusCharFn: (Char) -> Parser<T>?) = Parser(plusCharFn) { null }
 
-fun parser(string: String, index: Int): Parser<String> =
-	if (index == string.length) parsedParser(string)
+fun parser(string: String, startIndex: Int): Parser<String> =
+	if (startIndex == string.length) parsedParser(string)
 	else partialParser { char ->
-		notNullIf(char == string[index]) {
-			parser(string, index.inc())
+		notNullIf(char == string[startIndex]) {
+			parser(string, startIndex.inc())
 		}
 	}
 
 fun parser(string: String): Parser<String> = parser(string, 0)
+
+fun unitParser(char: Char): Parser<Unit> = parser(char).map { Unit }
+fun unitParser(string: String): Parser<Unit> = parser(string).map { Unit }
 
 fun charParser(fn: (Char) -> Boolean): Parser<Char> =
 	partialParser { char ->
@@ -37,6 +35,8 @@ fun charParser(fn: (Char) -> Boolean): Parser<Char> =
 			parsedParser(char)
 		}
 	}
+
+val charParser: Parser<Char> get() = charParser { true }
 
 fun parser(char: Char): Parser<Char> = charParser { it == char }
 val letterCharParser: Parser<Char> get() = charParser { it.isLetter() }
@@ -144,7 +144,7 @@ val <T> Parser<T>.isPresentParser: Parser<Boolean>
 
 val numberParser: Parser<Number>
 	get() =
-		parser("-").isPresentParser.bind { negated ->
+		unitParser("-").isPresentParser.bind { negated ->
 			positiveNumberParser.map { number ->
 				number.runIf(negated) { unaryMinus() }
 			}
@@ -167,38 +167,20 @@ val escapeCharParser: Parser<Char>
 			}
 		}
 
-fun stringBodyParser(
-	charStack: Stack<Char>,
-	escapeCharParserOrNull: Parser<Char>?
-): Parser<String> = Parser(
-	{ char ->
-		if (escapeCharParserOrNull != null)
-			escapeCharParserOrNull.plus(char).let { escapeCharParser ->
-				if (escapeCharParser != null) stringBodyParser(charStack, escapeCharParser)
-				else escapeCharParserOrNull.parsedOrNull.let { escapedChar ->
-					if (escapedChar != null) stringBodyParser(charStack.push(escapedChar), null).plus(char)
-					else null
-				}
-			}
-		else
-			when (char) {
-				'\\' -> stringBodyParser(charStack, escapeCharParser)
-				'\"' -> null
-				else -> stringBodyParser(charStack.push(char), null)
-			}
-	},
-	{
-		if (escapeCharParserOrNull == null) charStack.charString
-		else escapeCharParserOrNull.parsedOrNull.let { escapedCharOrNull ->
-			if (escapedCharOrNull == null) null
-			else charStack.push(escapedCharOrNull).charString
-		}
-	}
-)
+val escapeSequenceCharParser: Parser<Char>
+	get() =
+		unitParser('\\').bind { escapeCharParser }
 
-val stringBodyParser: Parser<String> get() = stringBodyParser(stack(), null)
+val stringCharParser = charParser { it != '"' }
+
+val stringBodyParser: Parser<String>
+	get() =
+		escapeSequenceCharParser
+			.firstCharOr(stringCharParser)
+			.stackParser
+			.map { it.charString }
 
 val stringParser: Parser<String>
-	get() = stringBodyParser.enclosedWith(parser('"'))
+	get() = stringBodyParser.enclosedWith(unitParser('"'))
 
-val indentParser: Parser<Unit> get() = parser("  ").map { Unit }
+val indentParser: Parser<Unit> get() = unitParser("  ")

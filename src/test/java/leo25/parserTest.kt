@@ -22,6 +22,33 @@ class ParserTest {
 	}
 
 	@Test
+	fun escapeCharParser() {
+		escapeCharParser.parsed("\\").assertEqualTo('\\')
+		escapeCharParser.parsed("n").assertEqualTo('\n')
+		escapeCharParser.parsed("t").assertEqualTo('\t')
+		escapeCharParser.parsed("\"").assertEqualTo('\"')
+
+		escapeCharParser.parsed("a").assertEqualTo(null)
+		escapeCharParser.parsed("\na").assertEqualTo(null)
+	}
+
+	@Test
+	fun escapeSequenceCharParser() {
+		escapeSequenceCharParser.parsed("\\\\").assertEqualTo('\\')
+		escapeSequenceCharParser.parsed("\\n").assertEqualTo('\n')
+		escapeSequenceCharParser.parsed("\\na").assertEqualTo(null)
+	}
+
+	@Test
+	fun stringBody() {
+		stringBodyParser.parsed("").assertEqualTo("")
+		stringBodyParser.parsed("abc").assertEqualTo("abc")
+		stringBodyParser.parsed("a\\nc").assertEqualTo("a\nc")
+		stringBodyParser.parsed("a\\\"c").assertEqualTo("a\"c")
+		stringBodyParser.parsed("a\"").assertEqualTo(null)
+	}
+
+	@Test
 	fun name() {
 		nameParser.parsed("a").assertEqualTo("a")
 		nameParser.parsed("foo").assertEqualTo("foo")
