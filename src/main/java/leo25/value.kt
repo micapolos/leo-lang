@@ -4,14 +4,22 @@ import leo.base.fold
 import leo.base.notNullIf
 import leo14.*
 
-sealed class Value
+sealed class Value {
+	override fun toString() = script.toString()
+}
+
 object EmptyValue : Value()
-data class LinkValue(val link: Link) : Value()
+data class LinkValue(val link: Link) : Value() {
+	override fun toString() = super.toString()
+}
+
+data class Native(val any: Any?)
 
 sealed class Line
 data class LiteralLine(val literal: Literal) : Line()
 data class FunctionLine(val function: Function) : Line()
 data class FieldLine(val field: Field) : Line()
+data class NativeLine(val native: Native) : Line()
 
 data class Link(val tail: Value, val head: Line)
 data class Field(val name: String, val value: Value)
@@ -22,6 +30,9 @@ fun line(field: Field): Line = FieldLine(field)
 fun line(literal: Literal): Line = LiteralLine(literal)
 fun line(string: String): Line = line(literal(string))
 fun line(function: Function): Line = FunctionLine(function)
+fun line(native: Native): Line = NativeLine(native)
+
+fun native(any: Any?) = Native(any)
 
 operator fun Value.plus(line: Line): Value = LinkValue(Link(this, line))
 val emptyValue: Value get() = EmptyValue
@@ -51,14 +62,14 @@ val Value.resolve: Value
 		null
 			?: resolveFunctionApplyOrNull
 			?: resolveTextPlusTextOrNull
-			?: resolveGetOrMakeOrNull
+			?: resolveNameOrNull
 			?: this
 
-val Value.resolveGetOrMakeOrNull: Value?
+val Value.resolveNameOrNull: Value?
 	get() =
 		linkOrNull?.let { link ->
 			link.head.fieldOrNull?.onlyNameOrNull?.let { name ->
-				link.tail.getOrNull(name) ?: value(name lineTo link.tail)
+				link.tail.resolve(name)
 			}
 		}
 
@@ -96,15 +107,16 @@ val Line.selectName: String
 	get() =
 		when (this) {
 			is FieldLine -> field.name
-			is FunctionLine -> "function"
+			is FunctionLine -> functionName
 			is LiteralLine -> literal.selectName
+			is NativeLine -> nativeName
 		}
 
 val Literal.selectName: String
 	get() =
 		when (this) {
-			is NumberLiteral -> "number"
-			is StringLiteral -> "text"
+			is NumberLiteral -> numberName
+			is StringLiteral -> textName
 		}
 
 fun Line.selectOrNull(name: String): Value? =
@@ -115,6 +127,12 @@ fun Value.getOrNull(name: String): Value? =
 
 fun Field.valueOrNull(name: String): Value? =
 	notNullIf(this.name == name) { value }
+
+fun Value.make(name: String): Value =
+	value(name lineTo this)
+
+fun Value.resolve(name: String): Value =
+	getOrNull(name) ?: make(name)
 
 val Value.resolveFunctionOrNull: Function?
 	get() =

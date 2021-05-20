@@ -49,7 +49,7 @@ class ValueTest {
 	}
 
 	@Test
-	fun resolveGet() {
+	fun resolveGetOrMake() {
 		value(
 			"point" lineTo value(
 				"x" lineTo value("10"),

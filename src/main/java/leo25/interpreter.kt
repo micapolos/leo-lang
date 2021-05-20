@@ -33,8 +33,8 @@ fun Interpreter.plus(scriptField: ScriptField): Interpreter =
 
 fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	when (scriptField.string) {
-		"function" -> plus(line(Function(context, scriptField.rhs)))
-		"define" -> context.define(scriptField.rhs).interpreter(value)
+		functionName -> plus(line(Function(context, scriptField.rhs)))
+		defineName -> context.define(scriptField.rhs).interpreter(value)
 		else -> null
 	}
 

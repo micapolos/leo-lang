@@ -37,10 +37,11 @@ fun Context.resolutionOrNull(line: Line): Resolution? =
 		is FieldLine -> resolutionOrNull(line.field)
 		is FunctionLine -> resolutionOrNull(line.function)
 		is LiteralLine -> resolutionOrNull(line.literal)
+		is NativeLine -> null
 	}
 
 fun Context.resolutionOrNull(function: Function): Resolution? =
-	resolutionOrNull(token(begin("function")))?.contextOrNull?.resolutionOrNull(token(anyEnd))
+	resolutionOrNull(token(begin(functionName)))?.contextOrNull?.resolutionOrNull(token(anyEnd))
 
 fun Context.resolutionOrNull(literal: Literal): Resolution? =
 	resolutionOrNull(token(end(literal)))
@@ -56,6 +57,6 @@ val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
 fun Context.plusGiven(value: Value): Context =
 	plus(
-		script("given"),
-		binding(value("given" lineTo value))
+		script(givenName),
+		binding(value(givenName lineTo value))
 	)

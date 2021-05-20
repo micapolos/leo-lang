@@ -19,6 +19,7 @@ val Line.scriptLine: ScriptLine
 			is FieldLine -> line(field.scriptField)
 			is FunctionLine -> function.scriptLine
 			is LiteralLine -> leo14.line(literal)
+			is NativeLine -> native.scriptLine
 		}
 
 val Field.scriptField: ScriptField
@@ -26,4 +27,8 @@ val Field.scriptField: ScriptField
 
 val Function.scriptLine: ScriptLine
 	get() =
-		"function" lineTo script
+		functionName lineTo script
+
+val Native.scriptLine: ScriptLine
+	get() =
+		nativeName lineTo script(any.toString())
