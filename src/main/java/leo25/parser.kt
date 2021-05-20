@@ -2,6 +2,7 @@ package leo25
 
 import leo.base.*
 import leo13.*
+import leo13.stack
 import leo13.Stack
 import leo14.*
 import leo14.Number
@@ -37,12 +38,14 @@ fun charParser(fn: (Char) -> Boolean): Parser<Char> =
 	}
 
 val charParser: Parser<Char> get() = charParser { true }
+fun oneOfCharParser(chars: String) = charParser { chars.contains(it) }
+fun noneOfCharParser(chars: String) = charParser { !chars.contains(it) }
 
 fun parser(char: Char): Parser<Char> = charParser { it == char }
 val letterCharParser: Parser<Char> get() = charParser { it.isLetter() }
 val digitCharParser: Parser<Char> get() = charParser { it.isDigit() }
 
-fun <T> Parser<T>.enclosedWith(left: Parser<*>, right: Parser<*> = left): Parser<T> =
+fun <T> Parser<T>.enclosedWith(left: Parser<Unit>, right: Parser<Unit> = left): Parser<T> =
 	left.bind {
 		bind { string ->
 			right.bind {
@@ -171,7 +174,7 @@ val escapeSequenceCharParser: Parser<Char>
 	get() =
 		unitParser('\\').bind { escapeCharParser }
 
-val stringCharParser = charParser { it != '"' }
+val stringCharParser = noneOfCharParser("\"")
 
 val stringBodyParser: Parser<String>
 	get() =
@@ -184,3 +187,8 @@ val stringParser: Parser<String>
 	get() = stringBodyParser.enclosedWith(unitParser('"'))
 
 val indentParser: Parser<Unit> get() = unitParser("  ")
+
+fun <T> Parser<T>.stackLinkSeparatedBy(parser: Parser<Unit>): Parser<StackLink<T>> =
+	bind { first ->
+		stack(first).pushParser(parser.bind { this }).map { it.linkOrNull }
+	}

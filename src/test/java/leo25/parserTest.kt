@@ -3,6 +3,7 @@ package leo25
 import leo.base.assertEqualTo
 import leo13.charString
 import leo13.stack
+import leo13.stackLink
 import leo14.literal
 import leo14.number
 import kotlin.test.Test
@@ -106,6 +107,20 @@ class ParserTest {
 		parser.parsed("a+").assertEqualTo(null)
 		parser.parsed("1+").assertEqualTo(null)
 		parser.parsed("a1+").assertEqualTo(null)
+	}
+
+	@Test
+	fun stackLinkSeparatedBy() {
+		val parser = nameParser.stackLinkSeparatedBy(unitParser('.'))
+		parser.parsed("foo").assertEqualTo(stackLink("foo"))
+		parser.parsed("foo.bar").assertEqualTo(stackLink("foo", "bar"))
+		parser.parsed("foo.bar.zoo").assertEqualTo(stackLink("foo", "bar", "zoo"))
+
+		parser.parsed("").assertEqualTo(null)
+		parser.parsed(".").assertEqualTo(null)
+		parser.parsed("foo.").assertEqualTo(null)
+		parser.parsed("foo..zoo").assertEqualTo(null)
+		parser.parsed("foo.123").assertEqualTo(null)
 	}
 
 	@Test
