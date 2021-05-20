@@ -66,6 +66,13 @@ class ParserTest {
 	}
 
 	@Test
+	fun or() {
+		val parser = parser("12").or(parser("13"))
+		parser.parsed("12").assertEqualTo("12")
+		parser.parsed("13").assertEqualTo("13")
+	}
+
+	@Test
 	fun string() {
 		stringParser.parsed("\"\"").assertEqualTo("")
 		stringParser.parsed("\"foo\"").assertEqualTo("foo")

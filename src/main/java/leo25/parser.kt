@@ -1,10 +1,13 @@
 package leo25
 
-import leo.base.charSeq
-import leo.base.notNullIf
-import leo.base.orNullFold
+import leo.base.*
 import leo.base.reverse
 import leo13.*
+import leo13.Stack
+import leo13.charString
+import leo13.push
+import leo13.seq
+import leo25.pushParser
 
 data class Parser<T>(
 	val plusCharFn: (Char) -> Parser<T>?,
@@ -66,7 +69,18 @@ fun <T> parser(stack: Stack<T>, parser: Parser<T>, partialParser: Parser<T>): Pa
 fun <T> stackParser(parser: Parser<T>): Parser<Stack<T>> =
 	parser(stack(), parser)
 
-fun <T, O> Parser<T>.map(fn: (T) -> O): Parser<O> =
+fun <T> Stack<T>.pushParser(parser: Parser<T>): Parser<Stack<T>> =
+	parser(this, parser)
+
+val <T> Parser<T>.stackParser: Parser<Stack<T>>
+	get() =
+		stack<T>().pushParser(this)
+
+val <T> Parser<T>.stackLinkParser: Parser<StackLink<T>>
+	get() =
+		stackParser.map { it.linkOrNull }
+
+fun <T, O> Parser<T>.map(fn: (T) -> O?): Parser<O> =
 	Parser(
 		{ char -> plus(char)?.map(fn) },
 		{ parsedOrNull?.let { fn(it) } }
@@ -93,15 +107,28 @@ fun <T> Parser<T>.firstCharOr(parser: Parser<T>): Parser<T> =
 		{ parsedOrNull ?: parser.parsedOrNull }
 	)
 
+fun <T> Parser<T>.or(parser: Parser<T>, charStack: Stack<Char>): Parser<T> =
+	Parser(
+		{ char ->
+			plus(char).let { newParserOrNull ->
+				if (newParserOrNull != null) newParserOrNull.or(parser, charStack.push(char))
+				else parser.orNullFold(charStack.seq.reverse) { plus(it) }?.plus(char)
+			}
+		},
+		{ parsedOrNull ?: parser.parsedOrNull }
+	)
+
+fun <T> Parser<T>.or(parser: Parser<T>): Parser<T> =
+	or(parser, stack())
+
 fun <T> Parser<T>.parsed(string: String) =
 	orNullFold(string.charSeq) { plus(it) }?.parsedOrNull
 
-fun nameParser(charStack: Stack<Char>): Parser<String> = Parser(
-	{ char -> notNullIf(char.isLetter()) { nameParser(charStack.push(char)) } },
-	{ notNullIf(!charStack.isEmpty) { charStack.charString } }
-)
-
-val nameParser get() = nameParser(stack())
+val nameParser: Parser<String>
+	get() =
+		letterCharParser.stackLinkParser.map {
+			it.asStack.charString
+		}
 
 val escapeCharParser: Parser<Char>
 	get() =
