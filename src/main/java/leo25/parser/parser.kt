@@ -1,9 +1,9 @@
-package leo25
+package leo25.parser
 
 import leo.base.*
 import leo13.*
-import leo13.stack
 import leo13.Stack
+import leo13.stack
 import leo14.*
 import leo14.Number
 
@@ -16,6 +16,9 @@ fun <T> Parser<T>.plus(char: Char) = plusCharFn(char)
 val <T> Parser<T>.parsedOrNull: T? get() = parsedOrNullFn()
 fun <T> parsedParser(parsed: T) = Parser({ null }, { parsed })
 fun <T> partialParser(plusCharFn: (Char) -> Parser<T>?) = Parser(plusCharFn) { null }
+fun <T> T.parser(plusCharFn: (Char) -> Parser<T>?) = Parser(plusCharFn) { this }
+fun <T> T.parser(): Parser<T> = parser { null }
+fun <T> nullParser(): Parser<T> = Parser({ null }, { null })
 
 fun parser(string: String, startIndex: Int): Parser<String> =
 	if (startIndex == string.length) parsedParser(string)
@@ -59,6 +62,12 @@ fun <T> parser(stack: Stack<T>, parser: Parser<T>): Parser<Stack<T>> =
 		{ char -> parser.plus(char)?.let { parser(stack, parser, it) } },
 		{ stack }
 	)
+
+fun <T> Parser<Unit>.unitThen(parser: Parser<T>): Parser<T> =
+	bind { parser }
+
+fun <T> Parser<T>.thenUnit(parser: Parser<Unit>): Parser<T> =
+	bind { item -> parser.map { item } }
 
 fun <T> parser(stack: Stack<T>, parser: Parser<T>, partialParser: Parser<T>): Parser<Stack<T>> =
 	Parser(
@@ -186,9 +195,52 @@ val stringBodyParser: Parser<String>
 val stringParser: Parser<String>
 	get() = stringBodyParser.enclosedWith(unitParser('"'))
 
-val indentParser: Parser<Unit> get() = unitParser("  ")
+object Tab
+
+val tab get() = Tab
+val tabParser: Parser<Tab> get() = unitParser("  ").map { Tab }
 
 fun <T> Parser<T>.stackLinkSeparatedBy(parser: Parser<Unit>): Parser<StackLink<T>> =
 	bind { first ->
-		stack(first).pushParser(parser.bind { this }).map { it.linkOrNull }
+		stack(first).pushParser(parser.unitThen(this)).map { it.linkOrNull }
+	}
+
+val Parser<*>.countParser: Parser<Int>
+	get() =
+		stackParser.map { it.size }
+
+val indentParser: Parser<Int> get() = tabParser.countParser
+
+fun Script.plusParser(indent: Int): Parser<Script> =
+	indentParser
+		.bind { indent ->
+			lineParser(indent)
+		}
+		.bind { line ->
+			TODO()
+		}
+
+fun lineParser(indent: Int): Parser<ScriptLine> =
+	nameParser.bind { name ->
+		nullParser<ScriptLine>()
+			.firstCharOr(
+				unitParser(' ').bind {
+					lineParser(indent).map { line ->
+						name lineTo script(line)
+					}
+				})
+			.firstCharOr(
+				unitParser('.').bind {
+					script(name).plusParser(indent).map { script ->
+						name lineTo script
+					}
+				}
+			)
+			.firstCharOr(
+				unitParser('\n').bind {
+					script().plusParser(indent.inc()).map { script ->
+						name lineTo script
+					}
+				}
+			)
 	}

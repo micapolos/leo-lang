@@ -3,7 +3,6 @@ package leo25
 import leo.base.orNull
 import leo14.Literal
 import leo14.script
-import leo18.Tokenizer
 
 fun Context.resolve(value: Value): Value =
 	null
@@ -37,20 +36,20 @@ fun Context.resolutionOrNull(line: Line): Resolution? =
 	when (line) {
 		is FieldLine -> resolutionOrNull(line.field)
 		is FunctionLine -> resolutionOrNull(line.function)
-		is NativeLine -> null
+		is NativeLine -> resolutionOrNull(line.native)
 	}
 
 fun Context.resolutionOrNull(function: Function): Resolution? =
 	resolutionOrNull(token(begin(functionName)))?.contextOrNull?.resolutionOrNull(token(anyEnd))
-
-fun Context.resolutionOrNull(literal: Literal): Resolution? =
-	resolutionOrNull(token(end(literal)))
 
 fun Context.resolutionOrNull(field: Field): Resolution? =
 	orNull
 		?.resolutionOrNull(BeginToken(Begin(field.name)))
 		?.contextOrNull
 		?.resolutionOrNull(field.value)
+
+fun Context.resolutionOrNull(native: Native): Resolution? =
+	resolutionOrNull(token(native))
 
 val Resolution.contextOrNull get() = (this as? ContextResolution)?.context
 val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding

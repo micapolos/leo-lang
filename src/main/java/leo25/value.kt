@@ -151,3 +151,10 @@ val Value.numberOrNull: Number?
 val Field.onlyNameOrNull: String?
 	get() =
 		notNullIf(value is EmptyValue) { name }
+
+val Literal.native: Native
+	get() =
+		when (this) {
+			is NumberLiteral -> native(number)
+			is StringLiteral -> native(string)
+		}

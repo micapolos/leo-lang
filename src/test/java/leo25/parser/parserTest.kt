@@ -1,4 +1,4 @@
-package leo25
+package leo25.parser
 
 import leo.base.assertEqualTo
 import leo13.charString
@@ -160,9 +160,9 @@ class ParserTest {
 
 	@Test
 	fun tabParser() {
-		indentParser.parsed("  ").assertEqualTo(Unit)
-		indentParser.parsed("").assertEqualTo(null)
-		indentParser.parsed(" ").assertEqualTo(null)
-		indentParser.parsed("   ").assertEqualTo(null)
+		tabParser.parsed("  ").assertEqualTo(Tab)
+		tabParser.parsed("").assertEqualTo(null)
+		tabParser.parsed(" ").assertEqualTo(null)
+		tabParser.parsed("   ").assertEqualTo(null)
 	}
 }

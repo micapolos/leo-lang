@@ -13,13 +13,13 @@ fun context() = Context(persistentMapOf())
 sealed class Token
 data class BeginToken(val begin: Begin) : Token()
 data class EndToken(val end: End) : Token()
+data class NativeToken(val native: Native) : Token()
 
 data class Begin(val name: String)
 
 sealed class End
 object EmptyEnd : End()
 object AnythingEnd : End()
-data class LiteralEnd(val literal: Literal) : End()
 
 sealed class Resolution
 data class ContextResolution(val context: Context) : Resolution()
@@ -30,11 +30,11 @@ fun Context.put(token: Token, resolution: Resolution): Context =
 
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
+fun token(native: Native): Token = NativeToken(native)
 
 fun begin(name: String) = Begin(name)
 val emptyEnd: End = EmptyEnd
 val anyEnd: End = AnythingEnd
-fun end(literal: Literal): End = LiteralEnd(literal)
 
 fun resolution(context: Context): Resolution = ContextResolution(context)
 fun resolution(binding: Binding): Resolution = BindingResolution(binding)
@@ -53,8 +53,12 @@ fun Context.updateContinuation(token: Token, fn: Context.() -> Resolution): Cont
 	}
 
 fun Context.plus(literal: Literal, resolution: Resolution): Context =
-	updateContinuation(token(end(literal))) {
-		resolution
+	updateContinuation(token(begin(literal.selectName))) {
+		resolution(updateContinuation(token(literal.native)) {
+			resolution(updateContinuation(token(emptyEnd)) {
+				resolution
+			})
+		})
 	}
 
 // TODO: This is slow!!! Refactor Context to make removing for "any" fast,
@@ -68,8 +72,8 @@ val Context.removeForAny: Context
 					when (token.end) {
 						AnythingEnd -> context
 						EmptyEnd -> context.put(token, resolution)
-						is LiteralEnd -> context
 					}
+				is NativeToken -> context
 			}
 		}
 
@@ -115,7 +119,14 @@ fun Context.update(struct: ScriptLink, fn: Context.() -> Resolution): Context =
 fun Context.update(line: ScriptLine, fn: Context.() -> Resolution): Context =
 	when (line) {
 		is FieldScriptLine -> update(line.field, fn)
-		is LiteralScriptLine -> updateContinuation(token(end(line.literal)), fn)
+		is LiteralScriptLine -> update(line.literal, fn)
+	}
+
+fun Context.update(literal: Literal, fn: Context.() -> Resolution): Context =
+	updateContinuation(token(begin(literal.selectName))) {
+		resolution(updateContinuation(token(literal.native)) {
+			resolution(updateContinuation(token(emptyEnd), fn))
+		})
 	}
 
 fun Context.updateAnyOrNull(script: Script, fn: Context.() -> Resolution): Context? =

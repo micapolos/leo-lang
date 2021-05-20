@@ -58,4 +58,27 @@ class ContextTest {
 					.assertEqualTo(value("ok"))
 			}
 	}
+
+	@Test
+	fun literalApply() {
+		context()
+			.plus(script(literal("foo")), binding(value("ok")))
+			.applyOrNull(value(line(literal("foo"))))
+			.assertEqualTo(value("ok"))
+
+		context()
+			.plus(script(literal("foo")), binding(value("ok")))
+			.applyOrNull(value(line(literal("bar"))))
+			.assertEqualTo(null)
+
+		context()
+			.plus(script(literal(123)), binding(value("ok")))
+			.applyOrNull(value(line(literal(123))))
+			.assertEqualTo(value("ok"))
+
+		context()
+			.plus(script(literal(123)), binding(value("ok")))
+			.applyOrNull(value(line(literal(124))))
+			.assertEqualTo(null)
+	}
 }

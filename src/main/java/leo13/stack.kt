@@ -404,3 +404,6 @@ val <V> StackLink<V>.valueLink: Link<Stack<V>, V>
 		Link(stack, value)
 
 val Stack<Char>.charString: String get() = String(array.toCharArray())
+
+fun <T> StackLink<T>.updateValue(fn: (T) -> T): StackLink<T> =
+	StackLink(stack, fn(value))
