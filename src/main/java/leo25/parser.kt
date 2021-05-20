@@ -1,9 +1,9 @@
 package leo25
 
 import leo.base.charSeq
-import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo.base.orNullFold
+import leo.base.reverse
 import leo13.*
 
 data class Parser<T>(
@@ -15,6 +15,83 @@ fun <T> Parser<T>.plus(char: Char) = plusCharFn(char)
 val <T> Parser<T>.parsedOrNull: T? get() = parsedOrNullFn()
 fun <T> parsedParser(parsed: T) = Parser({ null }, { parsed })
 fun <T> partialParser(plusCharFn: (Char) -> Parser<T>?) = Parser(plusCharFn) { null }
+
+fun parser(string: String, index: Int): Parser<String> =
+	if (index == string.length) parsedParser(string)
+	else partialParser { char ->
+		notNullIf(char == string[index]) {
+			parser(string, index.inc())
+		}
+	}
+
+fun parser(string: String): Parser<String> = parser(string, 0)
+
+fun charParser(fn: (Char) -> Boolean): Parser<Char> =
+	partialParser { char ->
+		notNullIf(fn(char)) {
+			parsedParser(char)
+		}
+	}
+
+fun parser(char: Char): Parser<Char> = charParser { it == char }
+val letterCharParser: Parser<Char> get() = charParser { it.isLetter() }
+val digitCharParser: Parser<Char> get() = charParser { it.isDigit() }
+
+fun <T> Parser<T>.enclosedWith(left: Parser<*>, right: Parser<*> = left): Parser<T> =
+	left.bind {
+		bind { string ->
+			right.bind {
+				parsedParser(string)
+			}
+		}
+	}
+
+fun <T> parser(stack: Stack<T>, parser: Parser<T>): Parser<Stack<T>> =
+	Parser(
+		{ char -> parser.plus(char)?.let { parser(stack, parser, it) } },
+		{ stack }
+	)
+
+fun <T> parser(stack: Stack<T>, parser: Parser<T>, partialParser: Parser<T>): Parser<Stack<T>> =
+	Parser(
+		{ char ->
+			partialParser.plus(char).let { newPartialParserOrNull ->
+				if (newPartialParserOrNull != null) parser(stack, parser, newPartialParserOrNull)
+				else partialParser.parsedOrNull?.let { parser(stack.push(it), parser).plus(char) }
+			}
+		},
+		{ partialParser.parsedOrNull?.let { stack.push(it) } }
+	)
+
+fun <T> stackParser(parser: Parser<T>): Parser<Stack<T>> =
+	parser(stack(), parser)
+
+fun <T, O> Parser<T>.map(fn: (T) -> O): Parser<O> =
+	Parser(
+		{ char -> plus(char)?.map(fn) },
+		{ parsedOrNull?.let { fn(it) } }
+	)
+
+fun <T, O> Parser<T>.bind(fn: (T) -> Parser<O>): Parser<O> =
+	Parser(
+		{ char ->
+			plus(char).let { newParserOrNull ->
+				if (newParserOrNull != null) newParserOrNull.bind(fn)
+				else parsedOrNull?.let { fn(it).plus(char) }
+			}
+		},
+		{ parsedOrNull?.let { fn(it).parsedOrNull } })
+
+fun <T> Parser<T>.firstCharOr(parser: Parser<T>): Parser<T> =
+	Parser(
+		{ char ->
+			plus(char).let { newParserOrNull ->
+				if (newParserOrNull != null) newParserOrNull
+				else parser.plus(char)
+			}
+		},
+		{ parsedOrNull ?: parser.parsedOrNull }
+	)
 
 fun <T> Parser<T>.parsed(string: String) =
 	orNullFold(string.charSeq) { plus(it) }?.parsedOrNull
@@ -67,20 +144,9 @@ fun stringBodyParser(
 	}
 )
 
-fun stringParser(stringBodyParser: Parser<String>): Parser<String> =
-	partialParser { char ->
-		stringBodyParser.plus(char).let { newStringBodyParserOrNull ->
-			if (newStringBodyParserOrNull != null) stringParser(newStringBodyParserOrNull)
-			else ifOrNull(char == '"') {
-				stringBodyParser.parsedOrNull?.let { parsedParser(it) }
-			}
-		}
-	}
+val stringBodyParser: Parser<String> get() = stringBodyParser(stack(), null)
 
 val stringParser: Parser<String>
-	get() =
-		partialParser { char ->
-			notNullIf(char == '"') {
-				stringParser(stringBodyParser(stack(), null))
-			}
-		}
+	get() = stringBodyParser.enclosedWith(parser('"'))
+
+val indentParser: Parser<Unit> get() = parser("  ").map { Unit }
