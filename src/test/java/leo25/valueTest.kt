@@ -81,12 +81,11 @@ class ValueTest {
 			.resolve
 			.assertEqualTo(
 				value(
-					"point" lineTo value(
-						"x" lineTo value("10"),
-						"y" lineTo value("20")
-					),
 					"z" lineTo value(
-
+						"point" lineTo value(
+							"x" lineTo value("10"),
+							"y" lineTo value("20")
+						)
 					)
 				)
 			)

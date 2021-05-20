@@ -51,14 +51,14 @@ val Value.resolve: Value
 		null
 			?: resolveFunctionApplyOrNull
 			?: resolveTextPlusTextOrNull
-			?: resolveGetOrNull
+			?: resolveGetOrMakeOrNull
 			?: this
 
-val Value.resolveGetOrNull: Value?
+val Value.resolveGetOrMakeOrNull: Value?
 	get() =
 		linkOrNull?.let { link ->
 			link.head.fieldOrNull?.onlyNameOrNull?.let { name ->
-				link.tail.getOrNull(name)
+				link.tail.getOrNull(name) ?: value(name lineTo link.tail)
 			}
 		}
 

@@ -9,6 +9,16 @@ import kotlin.test.Test
 
 class InterpreterTest {
 	@Test
+	fun normalization() {
+		script(
+			"red" lineTo script(),
+			"color" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script("color" lineTo script("red")))
+	}
+
+	@Test
 	fun textPlusTest() {
 		script(
 			line(literal("Hello, ")),
