@@ -3,6 +3,8 @@ package leo25
 import leo.base.assertEqualTo
 import leo13.charString
 import leo13.stack
+import leo14.literal
+import leo14.number
 import kotlin.test.Test
 
 class ParserTest {
@@ -28,6 +30,33 @@ class ParserTest {
 		nameParser.parsed("1").assertEqualTo(null)
 		nameParser.parsed("foo1").assertEqualTo(null)
 		nameParser.parsed("foo bar").assertEqualTo(null)
+	}
+
+	@Test
+	fun number() {
+		numberParser.parsed("0").assertEqualTo(number(0))
+		numberParser.parsed("-0").assertEqualTo(number(0))
+		numberParser.parsed("1").assertEqualTo(number(1))
+		numberParser.parsed("12").assertEqualTo(number(12))
+		numberParser.parsed("-1").assertEqualTo(number(-1))
+		numberParser.parsed("-12").assertEqualTo(number(-12))
+
+		numberParser.parsed("").assertEqualTo(null)
+		numberParser.parsed("-").assertEqualTo(null)
+		numberParser.parsed("+").assertEqualTo(null)
+		numberParser.parsed("+1").assertEqualTo(null)
+		numberParser.parsed("1.").assertEqualTo(null)
+		numberParser.parsed("1.0").assertEqualTo(null)
+		numberParser.parsed("1a").assertEqualTo(null)
+	}
+
+	@Test
+	fun literal() {
+		literalParser.parsed("\"foo\"").assertEqualTo(literal("foo"))
+		literalParser.parsed("123").assertEqualTo(literal(123))
+
+		literalParser.parsed("").assertEqualTo(null)
+		literalParser.parsed("abc").assertEqualTo(null)
 	}
 
 	@Test

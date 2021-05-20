@@ -7,6 +7,8 @@ import leo13.Stack
 import leo13.charString
 import leo13.push
 import leo13.seq
+import leo14.*
+import leo14.Number
 import leo25.pushParser
 
 data class Parser<T>(
@@ -129,6 +131,29 @@ val nameParser: Parser<String>
 		letterCharParser.stackLinkParser.map {
 			it.asStack.charString
 		}
+
+val positiveNumberParser: Parser<Number>
+	get() =
+		digitCharParser.stackLinkParser.map {
+			it.asStack.charString.numberOrNull
+		}
+
+val <T> Parser<T>.isPresentParser: Parser<Boolean>
+	get() =
+		map { true }.firstCharOr(parsedParser(false))
+
+val numberParser: Parser<Number>
+	get() =
+		parser("-").isPresentParser.bind { negated ->
+			positiveNumberParser.map { number ->
+				number.runIf(negated) { unaryMinus() }
+			}
+		}
+
+val literalParser: Parser<Literal>
+	get() =
+		stringParser.map { literal(it) }
+			.firstCharOr(numberParser.map { literal(it) })
 
 val escapeCharParser: Parser<Char>
 	get() =
