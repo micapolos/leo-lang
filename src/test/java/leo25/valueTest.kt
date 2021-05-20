@@ -1,17 +1,18 @@
 package leo25
 
 import leo.base.assertEqualTo
+import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
 class ValueTest {
 	@Test
 	fun values() {
-		value("Michał Pociecha-Łoś")
+		value("foo")
 		value(
-			"name" to value(
-				"first" to value("Michał"),
-				"last" to value("Pociecha-Łoś")
+			"point" lineTo value(
+				"first" lineTo value("foo"),
+				"last" lineTo value("bar")
 			)
 		)
 	}
@@ -19,26 +20,30 @@ class ValueTest {
 	@Test
 	fun contextResolve() {
 		context()
-			.resolve(value("Michał"))
-			.assertEqualTo(value("Michał"))
+			.resolve(value("foo"))
+			.assertEqualTo(value("foo"))
 	}
 
 	@Test
 	fun select() {
-		value("x" to value("10"), "y" to value("20"), "x" to value("30"))
+		value(
+			"x" lineTo value("zero"),
+			"y" lineTo value("one"),
+			"x" lineTo value("two")
+		)
 			.run {
-				selectOrNull("x").assertEqualTo(value("x" to value("30")))
-				selectOrNull("y").assertEqualTo(value("y" to value("20")))
+				selectOrNull("x").assertEqualTo(value("x" lineTo value("two")))
+				selectOrNull("y").assertEqualTo(value("y" lineTo value("one")))
 				selectOrNull("z").assertEqualTo(null)
 			}
 	}
 
 	@Test
 	fun get() {
-		value("point" to value("x" to value("10"), "y" to value("20"), "x" to value("30")))
+		value("point" lineTo value("x" lineTo value("10"), "y" lineTo value("20"), "x" lineTo value("30")))
 			.run {
-				getOrNull("x").assertEqualTo(value("x" to value("30")))
-				getOrNull("y").assertEqualTo(value("y" to value("20")))
+				getOrNull("x").assertEqualTo(value("x" lineTo value("30")))
+				getOrNull("y").assertEqualTo(value("y" lineTo value("20")))
 				getOrNull("z").assertEqualTo(null)
 			}
 	}
@@ -46,43 +51,42 @@ class ValueTest {
 	@Test
 	fun resolveGet() {
 		value(
-			"x" to value(
-				"point" to value(
-					"x" to value("10"),
-					"y" to value("20")
-				)
-			)
+			"point" lineTo value(
+				"x" lineTo value("10"),
+				"y" lineTo value("20")
+			),
+			"x" lineTo value()
 		)
 			.resolve
-			.assertEqualTo(value("x" to value("10")))
+			.assertEqualTo(value("x" lineTo value("10")))
 
 		value(
-			"y" to value(
-				"point" to value(
-					"x" to value("10"),
-					"y" to value("20")
-				)
-			)
+			"point" lineTo value(
+				"x" lineTo value("10"),
+				"y" lineTo value("20")
+			),
+			"y" lineTo value()
 		)
 			.resolve
-			.assertEqualTo(value("y" to value("20")))
+			.assertEqualTo(value("y" lineTo value("20")))
 
 		value(
-			"z" to value(
-				"point" to value(
-					"x" to value("10"),
-					"y" to value("20")
-				)
+			"point" lineTo value(
+				"x" lineTo value("10"),
+				"y" lineTo value("20")
+			),
+			"z" lineTo value(
 			)
 		)
 			.resolve
 			.assertEqualTo(
 				value(
-					"z" to value(
-						"point" to value(
-							"x" to value("10"),
-							"y" to value("20")
-						)
+					"point" lineTo value(
+						"x" lineTo value("10"),
+						"y" lineTo value("20")
+					),
+					"z" lineTo value(
+
 					)
 				)
 			)
@@ -90,30 +94,26 @@ class ValueTest {
 
 	@Test
 	fun resolveFunction() {
-		value("function" to value(Function(context(), script("foo"))))
+		value(line(Function(context(), script("foo"))))
 			.resolveFunctionOrNull
 			.assertEqualTo(Function(context(), script("foo")))
 
-		value(Function(context(), script("foo")))
-			.resolveFunctionOrNull
-			.assertEqualTo(null)
-
-		value("function" to value("foo"))
+		value("function" lineTo value("foo"))
 			.resolveFunctionOrNull
 			.assertEqualTo(null)
 	}
 
 	@Test
-	fun resolveString() {
-		value("text" to value("Michał"))
-			.resolveStringOrNull
-			.assertEqualTo("Michał")
+	fun resolveText() {
+		value(line(literal("foo")))
+			.resolveTextOrNull
+			.assertEqualTo("foo")
 
-		value("Michał")
-			.resolveStringOrNull
+		value("foo")
+			.resolveTextOrNull
 			.assertEqualTo(null)
 
-		value("text" to value(word("foo")))
+		value("text" lineTo value("foo"))
 			.resolveFunctionOrNull
 			.assertEqualTo(null)
 	}
@@ -121,20 +121,20 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			"function" to value(Function(context(), script("given"))),
-			"apply" to value("foo")
+			line(Function(context(), script("given"))),
+			"apply" lineTo value("foo")
 		)
 			.resolveFunctionApplyOrNull
-			.assertEqualTo(value("given" to value("foo")))
+			.assertEqualTo(value("given" lineTo value("foo")))
 	}
 
 	@Test
 	fun resolveTextPlusText() {
 		value(
-			"text" to value("Hello, "),
-			"plus" to value("text" to value("world!"))
+			line(literal("Hello, ")),
+			"plus" lineTo value(line(literal("world!")))
 		)
 			.resolveTextPlusTextOrNull
-			.assertEqualTo(value("Hello, world!"))
+			.assertEqualTo(value(line(literal("Hello, world!"))))
 	}
 }

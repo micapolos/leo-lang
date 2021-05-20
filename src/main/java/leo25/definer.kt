@@ -37,13 +37,11 @@ fun Definer.plusSpecialOrNull(scriptField: ScriptField): Definer? =
 	}
 
 fun Definer.plusGivesOrNull(script: Script): Definer? =
-	this.script.valueOrNull?.let { value ->
-		context.plus(value, binding(Function(context, script))).definer()
-	}
+	context
+		.plus(this.script, binding(Function(context, script)))
+		.definer()
 
 fun Definer.plusIs(script: Script): Definer? =
-	this.script.valueOrNull?.let { value ->
-		context.interpretedValueOrNull(script)?.let { body ->
-			context.plus(value, binding(body)).definer()
-		}
-	}
+	context
+		.plus(this.script, binding(context.interpretedValue(script)))
+		.definer()

@@ -1,63 +1,61 @@
 package leo25
 
+import kotlinx.collections.immutable.persistentMapOf
 import leo.base.assertEqualTo
+import leo14.lineTo
+import leo14.script
 import kotlin.test.Test
 
 class ContextTest {
 	@Test
+	fun plusAny() {
+		context()
+			.plus(script("any"), binding(value("ok")))
+			.assertEqualTo(
+				Context(persistentMapOf(token(anyEnd) to resolution(binding(value("ok")))))
+			)
+	}
+
+	@Test
 	fun applyString() {
 		context()
-			.plus(value("ping"), binding(value("pong")))
+			.plus(script("ping"), binding(value("pong")))
 			.applyOrNull(value("ping"))
 			.assertEqualTo(value("pong"))
 	}
 
 	@Test
-	fun applyWord() {
-		context()
-			.plus(value("ping" to null), binding(value("ok")))
-			.run {
-				applyOrNull(value("ping" to null)).assertEqualTo(value("ok"))
-				applyOrNull(value("pong" to null)).assertEqualTo(null)
-				applyOrNull(value("pong" to null, "ping" to null)).assertEqualTo(null)
-			}
-	}
-
-	@Test
 	fun applyStruct() {
 		context()
-			.plus(value("name" to anyValue), binding(value("ok")))
+			.plus(script("name" lineTo script("any")), binding(value("ok")))
 			.run {
-				applyOrNull(value("name" to null)).assertEqualTo(null)
-				applyOrNull(value("name" to value("michal" to null))).assertEqualTo(value("ok"))
-				applyOrNull(value("name" to value("Michał"))).assertEqualTo(value("ok"))
+				applyOrNull(value("name" lineTo value())).assertEqualTo(value("ok"))
+				applyOrNull(value("name" lineTo value("michal"))).assertEqualTo(value("ok"))
+				applyOrNull(value("name" lineTo value(line("Michał")))).assertEqualTo(value("ok"))
+				applyOrNull(value("surname" lineTo value(line("Michał")))).assertEqualTo(null)
 			}
 	}
 
 	@Test
 	fun applyAny() {
 		context()
-			.plus(anyValue, binding(value("pong")))
+			.plus(script("any"), binding(value("pong")))
 			.run {
 				applyOrNull(value("ping")).assertEqualTo(value("pong"))
-				applyOrNull(value("x" to null)).assertEqualTo(value("pong"))
-				applyOrNull(value("x" to value("10"))).assertEqualTo(value("pong"))
+				applyOrNull(value(line("ping"))).assertEqualTo(value("pong"))
 			}
 	}
 
 	@Test
 	fun anyValueApply() {
 		context()
-			.plus(anyValue.plus("plus" to anyValue), binding(value("ok")))
+			.plus(
+				script("any" lineTo script(), "plus" lineTo script("any")),
+				binding(value("ok"))
+			)
 			.run {
-				applyOrNull(value("a" to null, "plus" to value("b" to null)))
+				applyOrNull(value("a" lineTo value(), "plus" lineTo value("b" lineTo value())))
 					.assertEqualTo(value("ok"))
-				applyOrNull(value("plus" to value("b" to null)))
-					.assertEqualTo(null)
-				applyOrNull(value("a" to null, "plus" to null))
-					.assertEqualTo(null)
-				applyOrNull(value("plus" to null))
-					.assertEqualTo(null)
 			}
 	}
 }

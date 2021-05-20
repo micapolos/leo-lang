@@ -8,20 +8,34 @@ import kotlin.test.Test
 
 class ValueScriptTest {
 	@Test
-	fun text() {
-		value("text" to value("Michał")).script.assertEqualTo(script(literal("Michał")))
+	fun literal() {
+		value(line(literal("Michał"))).script.assertEqualTo(script(literal("Michał")))
+		value(line(literal(123))).script.assertEqualTo(script(literal(123)))
 	}
 
 	@Test
 	fun natives() {
-		value("Michał").script.assertEqualTo(script("native"))
-		value(Function(context(), script("foo"))).script.assertEqualTo(script("native"))
+		value(line(Function(context(), script("foo"))))
+			.script
+			.assertEqualTo(script("function" lineTo script("foo")))
 	}
 
 	@Test
 	fun struct() {
-		value("point" to value("x" to value("zero" to null), "y" to value("one" to null)))
+		value(
+			"point" lineTo value(
+				"x" lineTo value("zero"),
+				"y" lineTo value("one")
+			)
+		)
 			.script
-			.assertEqualTo(script("point" lineTo script("x" lineTo script("zero"), "y" lineTo script("one"))))
+			.assertEqualTo(
+				script(
+					"point" lineTo script(
+						"x" lineTo script("zero"),
+						"y" lineTo script("one")
+					)
+				)
+			)
 	}
 }

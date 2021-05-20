@@ -1,33 +1,29 @@
 package leo25
 
 import leo14.*
-import leo14.untyped.scriptLine
-
-val Value?.orNullScript: Script
-	get() =
-		this?.script ?: script()
 
 val Value.script: Script
 	get() =
 		when (this) {
-			is FunctionValue -> script("native")
-			is StringValue -> script("native")
-			is StructValue -> struct.script
-			is WordValue -> script(word.string)
+			EmptyValue -> script()
+			is LinkValue -> link.script
 		}
 
-val Struct.script: Script
+val Link.script: Script
 	get() =
-		tail.orNullScript.plus(head.scriptLine)
+		tail.script.plus(head.scriptLine)
 
-val Field.scriptLine: ScriptLine
-	get() = null
-		?: literalOrNull?.scriptLine
-		?: word.string lineTo value.script
-
-val Field.literalOrNull: Literal?
+val Line.scriptLine: ScriptLine
 	get() =
-		when (word.string) {
-			"text" -> (value as? StringValue)?.string?.literal
-			else -> null
+		when (this) {
+			is FieldLine -> line(field.scriptField)
+			is FunctionLine -> function.scriptLine
+			is LiteralLine -> leo14.line(literal)
 		}
+
+val Field.scriptField: ScriptField
+	get() = name fieldTo value.script
+
+val Function.scriptLine: ScriptLine
+	get() =
+		"function" lineTo script

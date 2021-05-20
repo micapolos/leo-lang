@@ -10,20 +10,20 @@ class FunctionTest {
 	fun apply() {
 		Function(context(), script("ok"))
 			.apply(value("foo"))
-			.assertEqualTo(value("ok" to null))
+			.assertEqualTo(value("ok"))
 	}
 
 	@Test
 	fun applyGiven() {
 		Function(context(), script("given"))
 			.apply(value("foo"))
-			.assertEqualTo(value("given" to value("foo")))
+			.assertEqualTo(value("given" lineTo value("foo")))
 	}
 
 	@Test
 	fun applyGivenFoo() {
 		Function(context(), script("given" lineTo script(), "name" lineTo script()))
-			.apply(value("name" to value("Michał")))
-			.assertEqualTo(value("name" to value("Michał")))
+			.apply(value("name" lineTo value("foo")))
+			.assertEqualTo(value("name" lineTo value("foo")))
 	}
 }

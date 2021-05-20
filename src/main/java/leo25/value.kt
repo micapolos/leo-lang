@@ -2,56 +2,49 @@ package leo25
 
 import leo.base.fold
 import leo.base.notNullIf
-import leo.base.nullOf
-
-data class Word(val string: String)
+import leo14.*
 
 sealed class Value
-data class WordValue(val word: Word) : Value()
-data class StringValue(val string: String) : Value()
-data class StructValue(val struct: Struct) : Value()
-data class FunctionValue(val function: Function) : Value()
+object EmptyValue : Value()
+data class LinkValue(val link: Link) : Value()
 
-data class Struct(val tail: Value?, val head: Field)
-data class Field(val word: Word, val value: Value)
+sealed class Line
+data class LiteralLine(val literal: Literal) : Line()
+data class FunctionLine(val function: Function) : Line()
+data class FieldLine(val field: Field) : Line()
 
-fun word(string: String) = Word(string)
-infix fun Word.fieldTo(value: Value): Field = Field(this, value)
-infix fun String.fieldTo(value: Value): Field = word(this) fieldTo value
+data class Link(val tail: Value, val head: Line)
+data class Field(val name: String, val value: Value)
 
-operator fun Value?.plus(field: Field): Value =
-	StructValue(Struct(this, field))
+infix fun String.fieldTo(value: Value): Field = Field(this, value)
+infix fun String.lineTo(value: Value): Line = FieldLine(this fieldTo value)
+fun line(field: Field): Line = FieldLine(field)
+fun line(literal: Literal): Line = LiteralLine(literal)
+fun line(string: String): Line = line(literal(string))
+fun line(function: Function): Line = FunctionLine(function)
 
-operator fun Value?.plus(pair: Pair<String, Value?>): Value =
-	pair.let { (string, valueOrNull) ->
-		Word(string).let { word ->
-			when {
-				valueOrNull != null -> StructValue(Struct(this, Field(word, valueOrNull)))
-				this != null -> StructValue(Struct(null, Field(word, this)))
-				else -> WordValue(word)
-			}
-		}
-	}
+operator fun Value.plus(line: Line): Value = LinkValue(Link(this, line))
+val emptyValue: Value get() = EmptyValue
+fun value(vararg lines: Line) = emptyValue.fold(lines) { plus(it) }
+fun value(name: String) = value(name lineTo value())
 
-fun value(word: Word): Value = WordValue(word)
-fun value(string: String): Value = StringValue(string)
-fun value(function: Function): Value = FunctionValue(function)
-fun value(struct: Struct): Value = StructValue(struct)
-fun value(pair: Pair<String, Value?>, vararg pairs: Pair<String, Value?>) =
-	nullOf<Value>().plus(pair).fold(pairs) { plus(it) }
+val Line.functionOrNull: Function? get() = (this as? FunctionLine)?.function
+val Line.literalOrNull: Literal? get() = (this as? LiteralLine)?.literal
+val Line.stringOrNull: String? get() = literalOrNull?.stringOrNull
+val Line.fieldOrNull: Field? get() = (this as? FieldLine)?.field
 
-fun value(field: Field, vararg fields: Field) =
-	nullOf<Value>().plus(field).fold(fields) { plus(it) }
+val Value.linkOrNull: Link? get() = (this as? LinkValue)?.link
+val Value.functionOrNull: Function? get() = linkOrNull?.onlyLineOrNull?.functionOrNull
+val Value.stringOrNull: String? get() = linkOrNull?.onlyLineOrNull?.stringOrNull
 
-val anyValue: Value = value("any" to null)
-val Value.stringOrNull: String? get() = (this as? StringValue)?.string
-val Value.structOrNull: Struct? get() = (this as? StructValue)?.struct
-val Value.functionOrNull: Function? get() = (this as? FunctionValue)?.function
-
-val Struct.onlyFieldOrNull: Field?
+val Link.onlyLineOrNull: Line?
 	get() =
-		if (tail == null) head
+		if (tail is EmptyValue) head
 		else null
+
+val Link.onlyFieldOrNull: Field?
+	get() =
+		onlyLineOrNull?.fieldOrNull
 
 val Value.resolve: Value
 	get() =
@@ -63,16 +56,18 @@ val Value.resolve: Value
 
 val Value.resolveGetOrNull: Value?
 	get() =
-		structOrNull?.onlyFieldOrNull?.let { field ->
-			field.value.getOrNull(field.word.string)
+		linkOrNull?.let { link ->
+			link.head.fieldOrNull?.onlyNameOrNull?.let { name ->
+				link.tail.getOrNull(name)
+			}
 		}
 
 val Value.resolveFunctionApplyOrNull: Value?
 	get() =
-		structOrNull
+		linkOrNull
 			?.run {
-				tail?.resolveFunctionOrNull?.let { function ->
-					head.valueOrNull("apply")?.let { given ->
+				tail.resolveFunctionOrNull?.let { function ->
+					head.fieldOrNull?.valueOrNull("apply")?.let { given ->
 						function.apply(given)
 					}
 				}
@@ -80,36 +75,55 @@ val Value.resolveFunctionApplyOrNull: Value?
 
 val Value.resolveTextPlusTextOrNull: Value?
 	get() =
-		structOrNull
+		linkOrNull
 			?.run {
-				tail?.resolveStringOrNull?.let { lhs ->
-					head.valueOrNull("plus")?.resolveStringOrNull?.let { rhs ->
-						value("text" to value(lhs.plus(rhs)))
+				tail.resolveTextOrNull?.let { lhs ->
+					head.fieldOrNull?.valueOrNull("plus")?.resolveTextOrNull?.let { rhs ->
+						value(line(literal(lhs.plus(rhs))))
 					}
 				}
 			}
 
 fun Value.selectOrNull(name: String): Value? =
-	structOrNull?.selectOrNull(name)
+	linkOrNull?.selectOrNull(name)
 
-fun Struct.selectOrNull(name: String): Value? =
+fun Link.selectOrNull(name: String): Value? =
 	null
 		?: head.selectOrNull(name)
-		?: tail?.selectOrNull(name)
+		?: tail.selectOrNull(name)
 
-fun Field.selectOrNull(name: String): Value? =
-	notNullIf(word.string == name) { value(Struct(null, this)) }
+val Line.selectName: String
+	get() =
+		when (this) {
+			is FieldLine -> field.name
+			is FunctionLine -> "function"
+			is LiteralLine -> literal.selectName
+		}
+
+val Literal.selectName: String
+	get() =
+		when (this) {
+			is NumberLiteral -> "number"
+			is StringLiteral -> "text"
+		}
+
+fun Line.selectOrNull(name: String): Value? =
+	notNullIf(name == selectName) { value(this) }
 
 fun Value.getOrNull(name: String): Value? =
-	structOrNull?.onlyFieldOrNull?.value?.selectOrNull(name)
+	linkOrNull?.onlyFieldOrNull?.value?.selectOrNull(name)
 
 fun Field.valueOrNull(name: String): Value? =
-	notNullIf(word.string == name) { value }
+	notNullIf(this.name == name) { value }
 
 val Value.resolveFunctionOrNull: Function?
 	get() =
-		structOrNull?.onlyFieldOrNull?.valueOrNull("function")?.functionOrNull
+		functionOrNull
 
-val Value.resolveStringOrNull: String?
+val Value.resolveTextOrNull: String?
 	get() =
-		structOrNull?.onlyFieldOrNull?.valueOrNull("text")?.stringOrNull
+		stringOrNull
+
+val Field.onlyNameOrNull: String?
+	get() =
+		notNullIf(value is EmptyValue) { name }

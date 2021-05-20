@@ -2,31 +2,24 @@ package leo25
 
 import leo14.*
 
-val Script.valueOrNull: Value?
+val Script.value: Value
 	get() =
 		when (this) {
-			is UnitScript -> null
+			is UnitScript -> value()
 			is LinkScript -> link.value
 		}
 
 val ScriptLink.value: Value
 	get() =
-		lhs.valueOrNull.plus(line.stringValueOrNullPair)
+		lhs.value.plus(line.line)
 
-val ScriptLine.stringValueOrNullPair: Pair<String, Value?>
+val ScriptLine.line: Line
 	get() =
 		when (this) {
-			is FieldScriptLine -> field.stringValueOrNullPair
-			is LiteralScriptLine -> literal.stringValueOrNullPair
+			is FieldScriptLine -> line(field.field)
+			is LiteralScriptLine -> line(literal)
 		}
 
-val ScriptField.stringValueOrNullPair: Pair<String, Value?>
+val ScriptField.field: Field
 	get() =
-		string to rhs.valueOrNull
-
-val Literal.stringValueOrNullPair: Pair<String, Value?>
-	get() =
-		when (this) {
-			is NumberLiteral -> "number" to value(number.toString())
-			is StringLiteral -> "text" to value(string)
-		}
+		string fieldTo rhs.value

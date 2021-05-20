@@ -1,7 +1,8 @@
 package leo25
 
 import leo.base.orNull
-import leo.base.runLet
+import leo14.Literal
+import leo14.script
 
 fun Context.resolve(value: Value): Value =
 	null
@@ -21,48 +22,40 @@ fun Context.resolutionOrNull(value: Value): Resolution? =
 
 fun Context.concreteResolutionOrNull(value: Value): Resolution? =
 	when (value) {
-		is StructValue -> resolutionOrNull(value.struct)
-		is FunctionValue -> null
-		is StringValue -> resolutionOrNull(token(end(value.string)))
-		is WordValue -> resolutionOrNull(value.word)
+		EmptyValue -> resolutionOrNull(token(emptyEnd))
+		is LinkValue -> resolutionOrNull(value.link)
 	}
 
-fun Context.resolutionOrNull(struct: Struct): Resolution? =
-	null
-		?: staticResolutionOrNull(struct)
-		?: dynamicResolutionOrNull(struct)
-
-fun Context.staticResolutionOrNull(struct: Struct): Resolution? =
-	null
-
-fun Context.dynamicResolutionOrNull(struct: Struct): Resolution? =
+fun Context.resolutionOrNull(link: Link): Resolution? =
 	orNull
-		?.resolutionOrNull(struct.head)
+		?.resolutionOrNull(link.head)
 		?.contextOrNull
-		?.runLet(struct.tail) { tail ->
-			if (tail == null) resolutionOrNull(token(emptyEnd))
-			else resolutionOrNull(tail)
-		}
+		?.resolutionOrNull(link.tail)
+
+fun Context.resolutionOrNull(line: Line): Resolution? =
+	when (line) {
+		is FieldLine -> resolutionOrNull(line.field)
+		is FunctionLine -> resolutionOrNull(line.function)
+		is LiteralLine -> resolutionOrNull(line.literal)
+	}
+
+fun Context.resolutionOrNull(function: Function): Resolution? =
+	resolutionOrNull(token(begin("function")))?.contextOrNull?.resolutionOrNull(token(anyEnd))
+
+fun Context.resolutionOrNull(literal: Literal): Resolution? =
+	resolutionOrNull(token(end(literal)))
 
 fun Context.resolutionOrNull(field: Field): Resolution? =
 	orNull
-		?.resolutionOrNull(BeginToken(Begin(field.word)))
+		?.resolutionOrNull(BeginToken(Begin(field.name)))
 		?.contextOrNull
 		?.resolutionOrNull(field.value)
-
-fun Context.resolutionOrNull(word: Word): Resolution? =
-	orNull
-		?.resolutionOrNull(BeginToken(Begin(word)))
-		?.contextOrNull
-		?.resolutionOrNull(EndToken(EmptyEnd))
-		?.contextOrNull
-		?.resolutionOrNull(EndToken(EmptyEnd))
 
 val Resolution.contextOrNull get() = (this as? ContextResolution)?.context
 val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
 fun Context.plusGiven(value: Value): Context =
 	plus(
-		value("given" to null),
-		binding(value("given" to value))
+		script("given"),
+		binding(value("given" lineTo value))
 	)

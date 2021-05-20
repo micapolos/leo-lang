@@ -2,7 +2,9 @@ package leo25
 
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
+import leo.base.notNullIf
 import leo.base.orIfNull
+import leo14.*
 
 data class Context(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
 
@@ -12,12 +14,12 @@ sealed class Token
 data class BeginToken(val begin: Begin) : Token()
 data class EndToken(val end: End) : Token()
 
-data class Begin(val word: Word)
+data class Begin(val name: String)
 
 sealed class End
 object EmptyEnd : End()
 object AnythingEnd : End()
-data class StringEnd(val string: String) : End()
+data class LiteralEnd(val literal: Literal) : End()
 
 sealed class Resolution
 data class ContextResolution(val context: Context) : Resolution()
@@ -29,10 +31,10 @@ fun Context.put(token: Token, resolution: Resolution): Context =
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
 
-fun begin(word: Word) = Begin(word)
+fun begin(name: String) = Begin(name)
 val emptyEnd: End = EmptyEnd
 val anyEnd: End = AnythingEnd
-fun end(string: String): End = StringEnd(string)
+fun end(literal: Literal): End = LiteralEnd(literal)
 
 fun resolution(context: Context): Resolution = ContextResolution(context)
 fun resolution(binding: Binding): Resolution = BindingResolution(binding)
@@ -50,8 +52,8 @@ fun Context.updateContinuation(token: Token, fn: Context.() -> Resolution): Cont
 		resolutionOrNull?.continuationContext.orIfNull { context() }.fn()
 	}
 
-fun Context.plus(string: String, resolution: Resolution): Context =
-	updateContinuation(token(end(string))) {
+fun Context.plus(literal: Literal, resolution: Resolution): Context =
+	updateContinuation(token(end(literal))) {
 		resolution
 	}
 
@@ -66,13 +68,13 @@ val Context.removeForAny: Context
 					when (token.end) {
 						AnythingEnd -> context
 						EmptyEnd -> context.put(token, resolution)
-						is StringEnd -> context
+						is LiteralEnd -> context
 					}
 			}
 		}
 
-fun Context.plusRaw(word: Word, resolution: Resolution): Context =
-	updateContinuation(token(begin(word))) {
+fun Context.plusRaw(name: String, resolution: Resolution): Context =
+	updateContinuation(token(begin(name))) {
 		resolution(updateContinuation(token(emptyEnd)) {
 			resolution(updateContinuation(token(emptyEnd)) {
 				resolution
@@ -87,52 +89,44 @@ val Resolution.continuationContext: Context
 			is ContextResolution -> context
 		}
 
-fun Context.plus(value: Value, binding: Binding): Context =
-	update(value) {
+fun Context.plus(script: Script, binding: Binding): Context =
+	update(script) {
 		resolution(binding)
 	}
 
-fun Context.update(value: Value, fn: Context.() -> Resolution): Context =
-	when (value) {
-		is FunctionValue -> this // functions can not be used in pattern matching
-		is StructValue -> update(value.struct, fn)
-		is StringValue -> update(value.string, fn)
-		is WordValue -> update(value.word, fn)
+fun Context.update(script: Script, fn: Context.() -> Resolution): Context =
+	null
+		?: updateAnyOrNull(script, fn)
+		?: updateExact(script, fn)
+
+fun Context.updateExact(script: Script, fn: Context.() -> Resolution): Context =
+	when (script) {
+		is UnitScript -> updateContinuation(token(emptyEnd), fn)
+		is LinkScript -> update(script.link, fn)
 	}
 
-fun Context.update(struct: Struct, fn: Context.() -> Resolution): Context =
-	update(struct.head) {
+fun Context.update(struct: ScriptLink, fn: Context.() -> Resolution): Context =
+	update(struct.line) {
 		resolution(
-			if (struct.tail == null) updateContinuation(token(emptyEnd), fn)
-			else update(struct.tail, fn)
+			update(struct.lhs, fn)
 		)
 	}
 
-fun Context.update(field: Field, fn: Context.() -> Resolution): Context =
-	updateContinuation(token(begin(field.word))) {
-		resolution(update(field.value, fn))
+fun Context.update(line: ScriptLine, fn: Context.() -> Resolution): Context =
+	when (line) {
+		is FieldScriptLine -> update(line.field, fn)
+		is LiteralScriptLine -> updateContinuation(token(end(line.literal)), fn)
 	}
 
-fun Context.update(word: Word, fn: Context.() -> Resolution): Context =
-	updateKeywordOrNull(word, fn) ?: updateExact(word, fn)
+fun Context.updateAnyOrNull(script: Script, fn: Context.() -> Resolution): Context? =
+	notNullIf(script == script("any")) {
+		updateAny(fn)
+	}
 
-fun Context.updateKeywordOrNull(word: Word, fn: Context.() -> Resolution): Context? =
-	when (word.string) {
-		"any" -> updateAny(fn)
-		else -> null
+fun Context.update(field: ScriptField, fn: Context.() -> Resolution): Context =
+	updateContinuation(token(begin(field.string))) {
+		resolution(update(field.rhs, fn))
 	}
 
 fun Context.updateAny(fn: Context.() -> Resolution): Context =
-	removeForAny.updateContinuation(token(anyEnd)) { fn() }
-
-fun Context.updateExact(word: Word, fn: Context.() -> Resolution): Context =
-	updateContinuation(token(begin(word))) {
-		resolution(updateContinuation(token(emptyEnd)) {
-			resolution(updateContinuation(token(emptyEnd)) {
-				fn()
-			})
-		})
-	}
-
-fun Context.update(string: String, fn: Context.() -> Resolution): Context =
-	updateContinuation(token(end(string)), fn)
+	removeForAny.updateContinuation(token(anyEnd), fn)

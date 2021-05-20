@@ -17,7 +17,7 @@ class DefinerTest {
 			)
 			.assertEqualTo(
 				context()
-					.plus(value(word("foo")), binding(Function(context(), script("given"))))
+					.plus(script("foo"), binding(Function(context(), script("given"))))
 			)
 	}
 }
