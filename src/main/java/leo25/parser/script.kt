@@ -1,6 +1,7 @@
 package leo25.parser
 
 import leo14.*
+import leo25.preprocess
 
 val scriptParser: Parser<Script>
 	get() =
@@ -43,8 +44,4 @@ val scriptSpacedRhsParser: Parser<Script>
 
 val String.scriptOrNull: Script?
 	get() =
-		scriptParser.parsed(this)
-
-val String.unsafeScript: Script
-	get() =
-		scriptParser.parsed(this)!!
+		scriptParser.parsed(preprocess)
