@@ -64,21 +64,13 @@ fun Context.plus(literal: Literal, resolution: Resolution): Context =
 		})
 	}
 
-// TODO: This is slow!!! Refactor Context to make removing for "any" fast,
-// by separating non-any stuff into different structure.
 val Context.removeForAny: Context
 	get() =
-		tokenToResolutionMap.entries.fold(context()) { context, (token, resolution) ->
-			when (token) {
-				is BeginToken -> context
-				is EndToken ->
-					when (token.end) {
-						AnythingEnd -> context.put(token, resolution)
-						EmptyEnd -> context
-					}
-				is NativeToken -> context
-			}
-		}
+		Context(
+			tokenToResolutionMap[token(anyEnd)].let { resolutionOrNull ->
+				if (resolutionOrNull == null) persistentMapOf()
+				else persistentMapOf(token(anyEnd) to resolutionOrNull)
+			})
 
 val Resolution.continuationContext: Context
 	get() =
