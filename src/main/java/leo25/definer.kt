@@ -31,12 +31,12 @@ fun Definer.plus(scriptField: ScriptField): Definer =
 
 fun Definer.plusSpecialOrNull(scriptField: ScriptField): Definer? =
 	when (scriptField.string) {
-		givesName -> plusGivesOrNull(scriptField.rhs)
+		givesName -> plusGives(scriptField.rhs)
 		isName -> plusIs(scriptField.rhs)
 		else -> null
 	}
 
-fun Definer.plusGivesOrNull(script: Script): Definer? =
+fun Definer.plusGives(script: Script): Definer =
 	context
 		.plus(this.script, binding(Function(context, script)))
 		.definer()
