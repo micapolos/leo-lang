@@ -205,18 +205,4 @@ class ParserTest {
 		2.maxIndentUnitParser.parsed("     ").assertEqualTo(null)
 		2.maxIndentUnitParser.parsed("      ").assertEqualTo(null)
 	}
-
-	@Test
-	fun indented() {
-		stringParser.indentedParser(2).run {
-			parsed("ab\n").assertEqualTo(Indented("ab", 0))
-			parsed("ab\n ").assertEqualTo(null)
-			parsed("ab\n  ").assertEqualTo(Indented("ab", 1))
-			parsed("ab\n   ").assertEqualTo(null)
-			parsed("ab\n    ").assertEqualTo(Indented("ab\n", 2))
-			parsed("ab\n    c").assertEqualTo(Indented("ab\nc", 2))
-			parsed("ab\n    cd").assertEqualTo(Indented("ab\ncd", 2))
-			parsed("ab\n    cd\n      ef").assertEqualTo(Indented("ab\ncd\n  ef", 2))
-		}
-	}
 }

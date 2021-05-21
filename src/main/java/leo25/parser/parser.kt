@@ -154,8 +154,11 @@ fun <T> Parser<T>.or(parser: Parser<T>, charStack: Stack<Char>): Parser<T> =
 fun <T> Parser<T>.or(parser: Parser<T>): Parser<T> =
 	or(parser, stack())
 
+fun <T> Parser<T>.plus(string: String): Parser<T>? =
+	orNullFold(string.charSeq) { plus(it) }
+
 fun <T> Parser<T>.parsed(string: String) =
-	orNullFold(string.charSeq) { plus(it) }?.parsedOrNull
+	plus(string)?.parsedOrNull
 
 val nameParser: Parser<String>
 	get() =
@@ -216,8 +219,10 @@ val textParser: Parser<String>
 
 object Tab
 
+val tabUnitParser: Parser<Unit> get() = unitParser("  ")
+
 val tab get() = Tab
-val tabParser: Parser<Tab> get() = unitParser("  ").map { Tab }
+val tabParser: Parser<Tab> get() = tabUnitParser.map { Tab }
 
 val Int.maxIndentUnitParser: Parser<Unit>
 	get() =
@@ -268,55 +273,10 @@ fun lineParser(indent: Int): Parser<ScriptLine> =
 			)
 	}
 
-data class Indented<T>(val thing: T, val currentIndent: Int)
-
-fun <T> Parser<T>.indentedParser(indent: Int): Parser<Indented<T>> =
-	this
-		.map { Indented(it, indent) }
-		.doing { char ->
-			when (char) {
-				'\n' -> indentedParser(indent, 0)
-				else -> plus(char).indentedParser(indent)
-			}
-		}
-
-fun <T> Parser<T>.indentedParser(indent: Int, currentIndent: Int): Parser<Indented<T>> =
-	this
-		.map { Indented(it, currentIndent) }
-		.doing { char ->
-			tabParser.plus(char)?.let { tabParser ->
-				tabParser.parsedOrNull.let { tabOrNull ->
-					if (tabOrNull == null) indentedParser(indent, currentIndent, tabParser)
-					else currentIndent.inc().let { nextIndent ->
-						if (nextIndent == indent) plus('\n')?.indentedParser(nextIndent)
-						else indentedParser(indent, nextIndent)
-					}
-				}
-			}
-		}
-
-fun <T> Parser<T>.indentedParser(indent: Int, currentIndent: Int, tabParser: Parser<Tab>): Parser<Indented<T>> =
-	partialParser { char ->
-		tabParser.plus(char)?.let { tabParser ->
-			tabParser.parsedOrNull.let { tabOrNull ->
-				if (tabOrNull == null) indentedParser(indent, currentIndent, tabParser)
-				else currentIndent.inc().let { nextIndent ->
-					if (nextIndent == indent) plus('\n')?.indentedParser(nextIndent)
-					else indentedParser(indent, nextIndent)
-				}
-			}
-		}
-	}
-
 val stringParser: Parser<String>
 	get() =
 		charStackParser.map { it.charString }
 
-fun scriptParser(indent: Int): Parser<Script> =
-	nameParser.bind { name ->
-		unitParser('\n').bind {
-			scriptParser(indent.inc()).indentedParser(indent.inc(), 0).map { indentedScript ->
-				indentedScript.thing
-			}
-		}
-	}
+fun Parser<Unit>.repeat(times: Int): Parser<Unit> =
+	if (times <= 0) Unit.parser()
+	else bind { repeat(times.dec()) }
