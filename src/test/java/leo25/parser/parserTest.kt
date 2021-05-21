@@ -186,6 +186,27 @@ class ParserTest {
 	}
 
 	@Test
+	fun maxIndentParser() {
+		0.maxIndentUnitParser.parsed("").assertEqualTo(Unit)
+		0.maxIndentUnitParser.parsed(" ").assertEqualTo(null)
+		0.maxIndentUnitParser.parsed("  ").assertEqualTo(null)
+
+		1.maxIndentUnitParser.parsed("").assertEqualTo(Unit)
+		1.maxIndentUnitParser.parsed(" ").assertEqualTo(null)
+		1.maxIndentUnitParser.parsed("  ").assertEqualTo(Unit)
+		1.maxIndentUnitParser.parsed("   ").assertEqualTo(null)
+		1.maxIndentUnitParser.parsed("    ").assertEqualTo(null)
+
+		2.maxIndentUnitParser.parsed("").assertEqualTo(Unit)
+		2.maxIndentUnitParser.parsed(" ").assertEqualTo(null)
+		2.maxIndentUnitParser.parsed("  ").assertEqualTo(Unit)
+		2.maxIndentUnitParser.parsed("   ").assertEqualTo(null)
+		2.maxIndentUnitParser.parsed("    ").assertEqualTo(Unit)
+		2.maxIndentUnitParser.parsed("     ").assertEqualTo(null)
+		2.maxIndentUnitParser.parsed("      ").assertEqualTo(null)
+	}
+
+	@Test
 	fun indented() {
 		stringParser.indentedParser(2).run {
 			parsed("ab\n").assertEqualTo(Indented("ab", 0))

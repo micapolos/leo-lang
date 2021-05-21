@@ -219,6 +219,10 @@ object Tab
 val tab get() = Tab
 val tabParser: Parser<Tab> get() = unitParser("  ").map { Tab }
 
+val Int.maxIndentUnitParser: Parser<Unit>
+	get() =
+		tabParser.stackParser.map { Unit.orNullIf(it.size > this) }
+
 fun <T> Parser<T>.stackLinkSeparatedBy(parser: Parser<Unit>): Parser<StackLink<T>> =
 	bind { first ->
 		stack(first).pushParser(parser.unitThen(this)).map { it.linkOrNull }
