@@ -52,7 +52,7 @@ compileTestKotlin {
 
 jar {
 	manifest {
-		attributes 'Main-Class': 'leo23.MainKt'
+		attributes 'Main-Class': 'leo25.MainKt'
 	}
 
 	// This line of code recursively collects and copies all of a project's files

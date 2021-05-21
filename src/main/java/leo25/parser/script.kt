@@ -40,3 +40,11 @@ val scriptSpacedRhsParser: Parser<Script>
 				script(it)
 			}
 		}
+
+val String.scriptOrNull: Script?
+	get() =
+		scriptParser.parsed(this)
+
+val String.unsafeScript: Script
+	get() =
+		scriptParser.parsed(this)!!

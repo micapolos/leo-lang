@@ -197,6 +197,7 @@ fun <V> Stack<V>.script(fn: V.() -> ScriptLine): Script =
 // === Indented string
 
 val Script.indentString get() = string(0.indent, defaultIndentConfig)
+val Script.fullIndentString get() = string(0.indent, maxIndentConfig)
 
 fun Script.string(indent: Indent, config: IndentConfig): String =
 	when (this) {

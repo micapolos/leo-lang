@@ -3,6 +3,7 @@ package leo25
 import leo.base.fold
 import leo.base.reverse
 import leo14.*
+import leo25.parser.scriptOrNull
 
 data class Interpreter(
 	val context: Context,
@@ -18,6 +19,8 @@ fun Context.interpretedValue(script: Script): Value =
 val Script.interpret: Script
 	get() =
 		context().interpretedValue(this).script
+
+val String.interpret: String get() = scriptOrNull?.interpret?.string ?: this
 
 fun Interpreter.plus(scriptLine: ScriptLine): Interpreter =
 	// TODO: Resolve static definitions, function etc...

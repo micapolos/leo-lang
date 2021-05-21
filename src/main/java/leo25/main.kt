@@ -1,5 +1,8 @@
 package leo25
 
+import leo.base.print
+import leo.java.io.inString
+
 fun main() {
-	println("sdf")
+	inString.interpret.print
 }
