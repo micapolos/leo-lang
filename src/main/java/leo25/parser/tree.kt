@@ -23,3 +23,17 @@ val <T> Parser<T>.parenthesisedTreeParser: Parser<Tree<T>>
 val <T> Parser<T>.parenthesisedForestParser: Parser<Forest<T>>
 	get() =
 		parenthesisedTreeParser.stackParser.map { Forest(it) }
+
+val <T> Parser<T>.indentedTreeParser: Parser<Tree<T>>
+	get() =
+		bind { item ->
+			unitParser('\n').bind {
+				indentedForestParser.indented.map { childForest ->
+					Tree(item, childForest)
+				}
+			}
+		}
+
+val <T> Parser<T>.indentedForestParser: Parser<Forest<T>>
+	get() =
+		indentedTreeParser.stackParser.map { Forest(it) }
