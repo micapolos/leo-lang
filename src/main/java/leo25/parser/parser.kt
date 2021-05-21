@@ -140,6 +140,12 @@ fun <T> Parser<T>.firstCharOr(parser: Parser<T>): Parser<T> =
 		{ parsedOrNull ?: parser.parsedOrNull }
 	)
 
+fun <T> firstCharOneOf(vararg parsers: Parser<T>): Parser<T> =
+	nullParser<T>().fold(parsers) { firstCharOr(it) }
+
+fun <T> oneOf(vararg parsers: Parser<T>): Parser<T> =
+	nullParser<T>().fold(parsers) { or(it) }
+
 fun <T> Parser<T>.or(parser: Parser<T>, charStack: Stack<Char>): Parser<T> =
 	Parser(
 		{ char ->
