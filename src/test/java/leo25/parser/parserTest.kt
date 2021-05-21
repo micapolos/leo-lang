@@ -10,7 +10,21 @@ import kotlin.test.Test
 
 class ParserTest {
 	@Test
+	fun charStackParser() {
+		charStackParser.parsed("").assertEqualTo(stack())
+		charStackParser.parsed("a").assertEqualTo(stack('a'))
+		charStackParser.parsed("a\n").assertEqualTo(stack('a', '\n'))
+	}
+
+	@Test
 	fun stringParser() {
+		stringParser.parsed("").assertEqualTo("")
+		stringParser.parsed("a").assertEqualTo("a")
+		stringParser.parsed("a\n").assertEqualTo("a\n")
+	}
+
+	@Test
+	fun textParser() {
 		parser("abc").parsed("abc").assertEqualTo("abc")
 		parser("abc").parsed("ab").assertEqualTo(null)
 		parser("abc").parsed("abcd").assertEqualTo(null)
@@ -18,8 +32,13 @@ class ParserTest {
 
 	@Test
 	fun stackParser() {
-		stackParser(letterCharParser).parsed("").assertEqualTo(stack())
-		stackParser(letterCharParser).parsed("abc").assertEqualTo(stack('a', 'b', 'c'))
+		val itemParser = unitParser('.').unitThen(nameParser)
+		itemParser.stackParser.parsed("").assertEqualTo(stack())
+		itemParser.stackParser.parsed(".a").assertEqualTo(stack("a"))
+		itemParser.stackParser.parsed(".ab").assertEqualTo(stack("ab"))
+		itemParser.stackParser.parsed(".ab.").assertEqualTo(null)
+		itemParser.stackParser.parsed(".ab.a").assertEqualTo(stack("ab", "a"))
+		itemParser.stackParser.parsed(".ab1").assertEqualTo(null)
 	}
 
 	@Test
@@ -42,11 +61,11 @@ class ParserTest {
 
 	@Test
 	fun stringBody() {
-		stringBodyParser.parsed("").assertEqualTo("")
-		stringBodyParser.parsed("abc").assertEqualTo("abc")
-		stringBodyParser.parsed("a\\nc").assertEqualTo("a\nc")
-		stringBodyParser.parsed("a\\\"c").assertEqualTo("a\"c")
-		stringBodyParser.parsed("a\"").assertEqualTo(null)
+		textBodyParser.parsed("").assertEqualTo("")
+		textBodyParser.parsed("abc").assertEqualTo("abc")
+		textBodyParser.parsed("a\\nc").assertEqualTo("a\nc")
+		textBodyParser.parsed("a\\\"c").assertEqualTo("a\"c")
+		textBodyParser.parsed("a\"").assertEqualTo(null)
 	}
 
 	@Test
@@ -145,17 +164,17 @@ class ParserTest {
 
 	@Test
 	fun string() {
-		stringParser.parsed("\"\"").assertEqualTo("")
-		stringParser.parsed("\"foo\"").assertEqualTo("foo")
-		stringParser.parsed("\"foo 123\"").assertEqualTo("foo 123")
-		stringParser.parsed("\"\t\"").assertEqualTo("\t")
-		stringParser.parsed("\"\n\"").assertEqualTo("\n")
-		stringParser.parsed("\"\\\\\"").assertEqualTo("\\")
-		stringParser.parsed("\"\\\"\"").assertEqualTo("\"")
+		textParser.parsed("\"\"").assertEqualTo("")
+		textParser.parsed("\"foo\"").assertEqualTo("foo")
+		textParser.parsed("\"foo 123\"").assertEqualTo("foo 123")
+		textParser.parsed("\"\t\"").assertEqualTo("\t")
+		textParser.parsed("\"\n\"").assertEqualTo("\n")
+		textParser.parsed("\"\\\\\"").assertEqualTo("\\")
+		textParser.parsed("\"\\\"\"").assertEqualTo("\"")
 
-		stringParser.parsed("").assertEqualTo(null)
-		stringParser.parsed("\"").assertEqualTo(null)
-		stringParser.parsed("\"foo").assertEqualTo(null)
+		textParser.parsed("").assertEqualTo(null)
+		textParser.parsed("\"").assertEqualTo(null)
+		textParser.parsed("\"foo").assertEqualTo(null)
 	}
 
 	@Test
@@ -164,5 +183,19 @@ class ParserTest {
 		tabParser.parsed("").assertEqualTo(null)
 		tabParser.parsed(" ").assertEqualTo(null)
 		tabParser.parsed("   ").assertEqualTo(null)
+	}
+
+	@Test
+	fun indented() {
+		stringParser.indentedParser(2).run {
+			parsed("ab\n").assertEqualTo(Indented("ab", 0))
+			parsed("ab\n ").assertEqualTo(null)
+			parsed("ab\n  ").assertEqualTo(Indented("ab", 1))
+			parsed("ab\n   ").assertEqualTo(null)
+			parsed("ab\n    ").assertEqualTo(Indented("ab\n", 2))
+			parsed("ab\n    c").assertEqualTo(Indented("ab\nc", 2))
+			parsed("ab\n    cd").assertEqualTo(Indented("ab\ncd", 2))
+			parsed("ab\n    cd\n      ef").assertEqualTo(Indented("ab\ncd\n  ef", 2))
+		}
 	}
 }

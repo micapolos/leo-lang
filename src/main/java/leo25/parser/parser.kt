@@ -57,6 +57,11 @@ fun <T> Parser<T>.enclosedWith(left: Parser<Unit>, right: Parser<Unit> = left): 
 		}
 	}
 
+fun <T> Parser<T>.enclosedWith(leftChar: Char, rightChar: Char): Parser<T> =
+	enclosedWith(unitParser(leftChar), unitParser(rightChar))
+
+val <T> Parser<T>.parenthesised: Parser<T> get() = enclosedWith('(', ')')
+
 fun <T> parser(stack: Stack<T>, parser: Parser<T>): Parser<Stack<T>> =
 	Parser(
 		{ char -> parser.plus(char)?.let { parser(stack, parser, it) } },
@@ -80,6 +85,14 @@ fun <T> parser(stack: Stack<T>, parser: Parser<T>, partialParser: Parser<T>): Pa
 		{ partialParser.parsedOrNull?.let { stack.push(it) } }
 	)
 
+val Stack<Char>.charPushParser: Parser<Stack<Char>>
+	get() =
+		parser { push(it).charPushParser }
+
+val charStackParser: Parser<Stack<Char>>
+	get() =
+		stack<Char>().charPushParser
+
 fun <T> stackParser(parser: Parser<T>): Parser<Stack<T>> =
 	parser(stack(), parser)
 
@@ -99,6 +112,12 @@ fun <T, O> Parser<T>.map(fn: (T) -> O?): Parser<O> =
 		{ char -> plus(char)?.map(fn) },
 		{ parsedOrNull?.let { fn(it) } }
 	)
+
+fun <T> Parser<T>.doing(plusCharFn: (Char) -> Parser<T>?): Parser<T> =
+	Parser(plusCharFn, parsedOrNullFn)
+
+fun <O> Parser<*>.withParsed(fn: () -> O?): Parser<O> =
+	Parser<O>({ char -> plus(char)?.withParsed { null } }, { fn() })
 
 fun <T, O> Parser<T>.bind(fn: (T) -> Parser<O>): Parser<O> =
 	Parser(
@@ -164,7 +183,7 @@ val numberParser: Parser<Number>
 
 val literalParser: Parser<Literal>
 	get() =
-		stringParser.map { literal(it) }
+		textParser.map { literal(it) }
 			.firstCharOr(numberParser.map { literal(it) })
 
 val escapeCharParser: Parser<Char>
@@ -183,17 +202,17 @@ val escapeSequenceCharParser: Parser<Char>
 	get() =
 		unitParser('\\').bind { escapeCharParser }
 
-val stringCharParser = noneOfCharParser("\"")
+val textCharParser = noneOfCharParser("\"")
 
-val stringBodyParser: Parser<String>
+val textBodyParser: Parser<String>
 	get() =
 		escapeSequenceCharParser
-			.firstCharOr(stringCharParser)
+			.firstCharOr(textCharParser)
 			.stackParser
 			.map { it.charString }
 
-val stringParser: Parser<String>
-	get() = stringBodyParser.enclosedWith(unitParser('"'))
+val textParser: Parser<String>
+	get() = textBodyParser.enclosedWith(unitParser('"'))
 
 object Tab
 
@@ -243,4 +262,57 @@ fun lineParser(indent: Int): Parser<ScriptLine> =
 					}
 				}
 			)
+	}
+
+data class Indented<T>(val thing: T, val currentIndent: Int)
+
+fun <T> Parser<T>.indentedParser(indent: Int): Parser<Indented<T>> =
+	this
+		.map { Indented(it, indent) }
+		.doing { char ->
+			when (char) {
+				'\n' -> indentedParser(indent, 0)
+				else -> plus(char).indentedParser(indent)
+			}
+		}
+
+fun <T> Parser<T>.indentedParser(indent: Int, currentIndent: Int): Parser<Indented<T>> =
+	this
+		.map { Indented(it, currentIndent) }
+		.doing { char ->
+			tabParser.plus(char)?.let { tabParser ->
+				tabParser.parsedOrNull.let { tabOrNull ->
+					if (tabOrNull == null) indentedParser(indent, currentIndent, tabParser)
+					else currentIndent.inc().let { nextIndent ->
+						if (nextIndent == indent) plus('\n')?.indentedParser(nextIndent)
+						else indentedParser(indent, nextIndent)
+					}
+				}
+			}
+		}
+
+fun <T> Parser<T>.indentedParser(indent: Int, currentIndent: Int, tabParser: Parser<Tab>): Parser<Indented<T>> =
+	partialParser { char ->
+		tabParser.plus(char)?.let { tabParser ->
+			tabParser.parsedOrNull.let { tabOrNull ->
+				if (tabOrNull == null) indentedParser(indent, currentIndent, tabParser)
+				else currentIndent.inc().let { nextIndent ->
+					if (nextIndent == indent) plus('\n')?.indentedParser(nextIndent)
+					else indentedParser(indent, nextIndent)
+				}
+			}
+		}
+	}
+
+val stringParser: Parser<String>
+	get() =
+		charStackParser.map { it.charString }
+
+fun scriptParser(indent: Int): Parser<Script> =
+	nameParser.bind { name ->
+		unitParser('\n').bind {
+			scriptParser(indent.inc()).indentedParser(indent.inc(), 0).map { indentedScript ->
+				indentedScript.thing
+			}
+		}
 	}
