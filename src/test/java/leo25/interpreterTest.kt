@@ -99,4 +99,59 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script("given"))
 	}
+
+	@Test
+	fun switch() {
+		script(
+			"shape" lineTo script(
+				"circle" lineTo script(
+					"radius" lineTo script("zero")
+				)
+			),
+			switchName lineTo script(
+				"circle" lineTo script("radius"),
+				"rectangle" lineTo script("height")
+			)
+		)
+			.interpret
+			.assertEqualTo(script("radius" lineTo script("zero")))
+
+		script(
+			"shape" lineTo script(
+				"rectangle" lineTo script(
+					"height" lineTo script("zero")
+				)
+			),
+			switchName lineTo script(
+				"circle" lineTo script("radius"),
+				"rectangle" lineTo script("height")
+			)
+		)
+			.interpret
+			.assertEqualTo(script("height" lineTo script("zero")))
+
+		script(
+			"shape" lineTo script(
+				"circle" lineTo script(
+					"radius" lineTo script("zero")
+				)
+			),
+			switchName lineTo script(
+				"triangle" lineTo script("height")
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					"shape" lineTo script(
+						"circle" lineTo script(
+							"radius" lineTo script("zero")
+						)
+					),
+					switchName lineTo script(
+						"triangle" lineTo script("height")
+					)
+				)
+			)
+	}
 }
