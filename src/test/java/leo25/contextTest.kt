@@ -11,7 +11,7 @@ class ContextTest {
 	@Test
 	fun plusAny() {
 		context()
-			.plus(script("any"), binding(value("ok")))
+			.plus(script(anythingName), binding(value("ok")))
 			.assertEqualTo(
 				Context(persistentMapOf(token(anyEnd) to resolution(binding(value("ok")))))
 			)
@@ -28,7 +28,7 @@ class ContextTest {
 	@Test
 	fun applyStruct() {
 		context()
-			.plus(script("name" lineTo script("any")), binding(value("ok")))
+			.plus(script("name" lineTo script(anythingName)), binding(value("ok")))
 			.run {
 				applyOrNull(value("name" lineTo value())).assertEqualTo(value("ok"))
 				applyOrNull(value("name" lineTo value("michal"))).assertEqualTo(value("ok"))
@@ -39,7 +39,7 @@ class ContextTest {
 	@Test
 	fun applyAny() {
 		context()
-			.plus(script("any"), binding(value("pong")))
+			.plus(script(anythingName), binding(value("pong")))
 			.run {
 				applyOrNull(value("ping")).assertEqualTo(value("pong"))
 				applyOrNull(value("ping")).assertEqualTo(value("pong"))
@@ -50,7 +50,7 @@ class ContextTest {
 	fun anyValueApply() {
 		context()
 			.plus(
-				script("any" lineTo script(), "plus" lineTo script("any")),
+				script(anythingName lineTo script(), "plus" lineTo script(anythingName)),
 				binding(value("ok"))
 			)
 			.run {

@@ -49,7 +49,7 @@ class ValueTest {
 	}
 
 	@Test
-	fun resolveGetOrMake() {
+	fun resolveGet() {
 		value(
 			"point" lineTo value(
 				"x" lineTo value("10"),
@@ -69,26 +69,6 @@ class ValueTest {
 		)
 			.resolve
 			.assertEqualTo(value("y" lineTo value("20")))
-
-		value(
-			"point" lineTo value(
-				"x" lineTo value("10"),
-				"y" lineTo value("20")
-			),
-			"z" lineTo value(
-			)
-		)
-			.resolve
-			.assertEqualTo(
-				value(
-					"z" lineTo value(
-						"point" lineTo value(
-							"x" lineTo value("10"),
-							"y" lineTo value("20")
-						)
-					)
-				)
-			)
 	}
 
 	@Test

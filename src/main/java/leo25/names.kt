@@ -1,11 +1,11 @@
 package leo25
 
-val anyName = "any"
+val anythingName = "anything"
 val functionName = "function"
+val giveName = "give"
+val givenName = "given"
+val isName = "is"
+val letName = "let"
 val nativeName = "native"
 val numberName = "number"
 val textName = "text"
-val givesName = "gives"
-val givenName = "given"
-val isName = "is"
-val defineName = "define"

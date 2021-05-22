@@ -15,7 +15,7 @@ class InterpreterTest {
 			"color" lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script("color" lineTo script("red")))
+			.assertEqualTo(script("red" lineTo script(), "color" lineTo script()))
 	}
 
 	@Test
@@ -68,7 +68,7 @@ class InterpreterTest {
 	fun define() {
 		script(
 			"foo" lineTo script(),
-			"define" lineTo script("bar")
+			letName lineTo script("bar")
 		)
 			.interpret
 			.assertEqualTo(script("foo"))
@@ -77,22 +77,22 @@ class InterpreterTest {
 	@Test
 	fun defineGives() {
 		script(
-			"define" lineTo script(
+			letName lineTo script(
 				"foo" lineTo script(),
-				"gives" lineTo script("given")
+				giveName lineTo script("given")
 			),
 			"foo" lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script("given" lineTo script("foo")))
+			.assertEqualTo(script(givenName lineTo script("foo")))
 	}
 
 	@Test
 	fun defineIs() {
 		script(
-			"define" lineTo script(
+			letName lineTo script(
 				"foo" lineTo script(),
-				"is" lineTo script("given")
+				isName lineTo script("given")
 			),
 			"foo" lineTo script()
 		)

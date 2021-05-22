@@ -12,12 +12,12 @@ class DefinerTest {
 			.define(
 				script(
 					"foo" lineTo script(),
-					"gives" lineTo script("given")
+					giveName lineTo script(givenName)
 				)
 			)
 			.assertEqualTo(
 				context()
-					.plus(script("foo"), binding(Function(context(), script("given"))))
+					.plus(script("foo"), binding(Function(context(), script(givenName))))
 			)
 	}
 }
