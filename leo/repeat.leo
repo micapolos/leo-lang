@@ -1,10 +1,10 @@
 10000
 do repeating
   get number
-  equals 0
+  is 0
   switch
-    true "Repeated 10000 times"
-    false
+    yes "Repeated 10000 times"
+    no
       get number
       subtract 1
       repeat

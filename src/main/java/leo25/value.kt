@@ -65,8 +65,8 @@ val Value.resolve: Value
 			?: resolveNumberOpOrNull("add", Number::plus)
 			?: resolveNumberOpOrNull("subtract", Number::minus)
 			?: resolveNumberOpOrNull("multiply", "by", Number::times)
-			?: resolveHashOrNull
-			?: resolveEqualsOrNull
+			?: resolveGetHashOrNull
+			?: resolveIsOrNull
 			?: resolveGetOrNull
 			?: resolveMakeOrNull
 			?: this
@@ -112,18 +112,18 @@ fun Value.resolveTextOpOrNull(name: String, fn: String.(String) -> String): Valu
 			}
 		}
 
-val Value.resolveHashOrNull: Value?
+val Value.resolveGetHashOrNull: Value?
 	get() =
 		resolveInfixOrNull(getName) { rhs ->
 			rhs.resolveOrNull(hashName) {
-				value("hash" lineTo value(line(literal(hashCode()))))
+				value(hashName lineTo value(line(literal(hashCode()))))
 			}
 		}
 
-val Value.resolveEqualsOrNull: Value?
+val Value.resolveIsOrNull: Value?
 	get() =
-		resolveInfixOrNull("equals") { rhs ->
-			equals(rhs).value
+		resolveInfixOrNull(isName) { rhs ->
+			equals(rhs).isValue
 		}
 
 fun Value.selectOrNull(name: String): Value? =
@@ -259,9 +259,9 @@ fun Value.resolveEmptyOrNull(fn: () -> Value?): Value? =
 		fn()
 	}
 
-val Boolean.value
+val Boolean.isValue
 	get() =
-		value(booleanName lineTo value(if (this) trueName else falseName))
+		value(isName lineTo value(if (this) yesName else noName))
 
 val Value.repeatValueOrNull: Value?
 	get() =
