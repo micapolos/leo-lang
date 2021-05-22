@@ -220,4 +220,19 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script(literal(5)))
 	}
+
+	@Test
+	fun be() {
+		script(
+			"zero" lineTo script(),
+			beName lineTo script(
+				line(literal(1)),
+				addName lineTo script(line(literal(2)))
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(line(literal(3)))
+			)
+	}
 }
