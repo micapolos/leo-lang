@@ -81,11 +81,11 @@ class ValueTest {
 	@Test
 	fun resolveFunction() {
 		value(line(dictionary().function(body(script("foo")))))
-			.resolveFunctionOrNull
+			.functionOrNull
 			.assertEqualTo(dictionary().function(body(script("foo"))))
 
 		value("function" lineTo value("foo"))
-			.resolveFunctionOrNull
+			.functionOrNull
 			.assertEqualTo(null)
 	}
 
@@ -100,7 +100,7 @@ class ValueTest {
 			.assertEqualTo(null)
 
 		value("text" lineTo value("foo"))
-			.resolveFunctionOrNull
+			.functionOrNull
 			.assertEqualTo(null)
 	}
 

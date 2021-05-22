@@ -9,7 +9,7 @@ import leo14.times
 val textAppendTextBody
 	get() =
 		unsafeBody {
-			unlinkOrNull { rhs ->
+			resolveOrNull(textName, appendName) { rhs ->
 				value(line(literal(textOrNull!!.plus(rhs.textOrNull!!))))
 			}!!
 		}
@@ -17,7 +17,7 @@ val textAppendTextBody
 val numberAddNumberBody
 	get() =
 		unsafeBody {
-			unlinkOrNull { rhs ->
+			resolveOrNull(numberName, addName) { rhs ->
 				value(line(literal(numberOrNull!!.plus(rhs.numberOrNull!!))))
 			}!!
 		}
@@ -25,7 +25,7 @@ val numberAddNumberBody
 val numberSubtractNumberBody
 	get() =
 		unsafeBody {
-			unlinkOrNull { rhs ->
+			resolveOrNull(numberName, subtractName) { rhs ->
 				value(line(literal(numberOrNull!!.minus(rhs.numberOrNull!!))))
 			}!!
 		}
@@ -33,8 +33,10 @@ val numberSubtractNumberBody
 val numberMultiplyByNumberBody
 	get() =
 		unsafeBody {
-			unlinkOrNull { rhs ->
-				value(line(literal(numberOrNull!!.times(rhs.bodyOrNull!!.numberOrNull!!))))
+			resolveOrNull(numberName, multiplyName) { rhs ->
+				rhs.resolveOrNull(byName) { rhs ->
+					value(line(literal(numberOrNull!!.times(rhs.numberOrNull!!))))
+				}
 			}!!
 		}
 

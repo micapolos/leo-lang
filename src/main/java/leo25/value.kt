@@ -47,7 +47,8 @@ val Line.nativeOrNull: Native? get() = (this as? NativeLine)?.native
 val Line.fieldOrNull: Field? get() = (this as? FieldLine)?.field
 
 val Value.linkOrNull: Link? get() = (this as? LinkValue)?.link
-val Value.resolveFunctionOrNull: Function? get() = linkOrNull?.onlyLineOrNull?.functionOrNull
+val Value.functionOrNull: Function? get() = lineOrNull?.functionOrNull
+val Value.lineOrNull: Line? get() = linkOrNull?.onlyLineOrNull
 
 val Link.onlyLineOrNull: Line?
 	get() =
@@ -70,12 +71,15 @@ val Value.resolveFunctionApplyOrNull: Value?
 	get() =
 		linkOrNull
 			?.run {
-				tail.resolveFunctionOrNull?.let { function ->
+				tail.functionOrNull?.let { function ->
 					head.fieldOrNull?.valueOrNull(applyName)?.let { given ->
 						function.apply(given)
 					}
 				}
 			}
+
+fun Value.bodyOrNull(name: String): Value? =
+	lineOrNull?.bodyOrNull(name)
 
 fun Value.selectOrNull(name: String): Value? =
 	linkOrNull?.selectOrNull(name)
@@ -115,6 +119,9 @@ val Value.bodyOrNull: Value?
 	get() =
 		linkOrNull?.onlyFieldOrNull?.value
 
+fun Line.bodyOrNull(name: String): Value? =
+	fieldOrNull?.valueOrNull(name)
+
 fun Value.getOrNull(name: String): Value? =
 	bodyOrNull?.selectOrNull(name)
 
@@ -146,21 +153,24 @@ val Value.resolveMakeOrNull: Value?
 fun Value.plus(name: String): Value =
 	plus(name lineTo value())
 
+fun Value.orNull(name: String): Value? =
+	lineOrNull?.orNull(name)?.let { this }
+
 val Line.textOrNull: String?
 	get() =
-		fieldOrNull?.valueOrNull("text")?.linkOrNull?.onlyLineOrNull?.nativeOrNull?.any as? String
+		fieldOrNull?.valueOrNull("text")?.lineOrNull?.nativeOrNull?.any as? String
 
 val Line.numberOrNull: Number?
 	get() =
-		fieldOrNull?.valueOrNull("number")?.linkOrNull?.onlyLineOrNull?.nativeOrNull?.any as? Number
+		fieldOrNull?.valueOrNull("number")?.lineOrNull?.nativeOrNull?.any as? Number
 
 val Value.textOrNull: String?
 	get() =
-		linkOrNull?.onlyLineOrNull?.textOrNull
+		lineOrNull?.textOrNull
 
 val Value.numberOrNull: Number?
 	get() =
-		linkOrNull?.onlyLineOrNull?.numberOrNull
+		lineOrNull?.numberOrNull
 
 val Field.onlyNameOrNull: String?
 	get() =
@@ -175,7 +185,7 @@ val Literal.native: Native
 
 val Value.nameOrNull: String?
 	get() =
-		linkOrNull?.onlyLineOrNull?.fieldOrNull?.onlyNameOrNull
+		lineOrNull?.fieldOrNull?.onlyNameOrNull
 
 fun Value.resolveInfixOrNull(name: String, fn: Value.(Value) -> Value?): Value? =
 	linkOrNull?.run {
@@ -246,3 +256,15 @@ fun Link.lineOrNull(name: String): Line? =
 
 fun Line.orNull(name: String): Line? =
 	orNullIf { selectName != name }
+
+fun Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) -> Value?): Value? =
+	linkOrNull?.run {
+		head.bodyOrNull(rhsName)?.let { rhs ->
+			tail.orNull(lhsName)?.let { lhs ->
+				lhs.fn(rhs)
+			}
+		}
+	}
+
+fun Value.resolveOrNull(name: String, fn: (Value) -> Value?): Value? =
+	bodyOrNull(name)?.let(fn)

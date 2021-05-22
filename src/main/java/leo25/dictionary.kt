@@ -153,10 +153,10 @@ fun Resolution?.orNullMerge(resolution: Resolution): Resolution =
 	this?.merge(resolution) ?: resolution
 
 fun Dictionary.switchOrNull(value: Value, script: Script): Value? =
-	value.linkOrNull?.onlyLineOrNull?.fieldOrNull?.value?.let { switchBodyOrNull(it, script) }
+	value.bodyOrNull?.let { switchBodyOrNull(it, script) }
 
 fun Dictionary.switchBodyOrNull(value: Value, script: Script): Value? =
-	value.linkOrNull?.onlyLineOrNull?.let {
+	value.lineOrNull?.let {
 		switchOrNull(it, script)
 	}
 
