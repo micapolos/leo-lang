@@ -77,7 +77,7 @@ val Value.resolveFunctionApplyOrNull: Value?
 		linkOrNull
 			?.run {
 				tail.resolveFunctionOrNull?.let { function ->
-					head.fieldOrNull?.valueOrNull("apply")?.let { given ->
+					head.fieldOrNull?.valueOrNull(takeName)?.let { given ->
 						function.apply(given)
 					}
 				}
@@ -106,7 +106,7 @@ val Line.selectName: String
 	get() =
 		when (this) {
 			is FieldLine -> field.name
-			is FunctionLine -> functionName
+			is FunctionLine -> givingName
 			is NativeLine -> nativeName
 		}
 

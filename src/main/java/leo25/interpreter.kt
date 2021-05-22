@@ -36,10 +36,20 @@ fun Interpreter.plus(scriptField: ScriptField): Interpreter =
 
 fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	when (scriptField.string) {
-		functionName -> plus(line(Function(context, scriptField.rhs)))
-		letName -> context.define(scriptField.rhs).interpreter(value)
+		giveName -> plusGive(scriptField.rhs)
+		givingName -> plusGiving(scriptField.rhs)
+		letName -> plusLet(scriptField.rhs)
 		else -> null
 	}
+
+fun Interpreter.plusGive(script: Script): Interpreter =
+	context.interpreter(context.plusGiven(value).interpretedValue(script))
+
+fun Interpreter.plusGiving(script: Script): Interpreter =
+	plus(line(Function(context, script)))
+
+fun Interpreter.plusLet(script: Script): Interpreter =
+	context.define(script).interpreter(value)
 
 fun Interpreter.plusDynamic(scriptField: ScriptField): Interpreter =
 	context.interpretedValue(scriptField.rhs).let { valueOrNull ->

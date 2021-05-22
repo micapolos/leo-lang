@@ -38,7 +38,7 @@ val Field.scriptField: ScriptField
 
 val Function.scriptLine: ScriptLine
 	get() =
-		functionName lineTo script
+		givingName lineTo script
 
 val Native.scriptLine: ScriptLine
 	get() =

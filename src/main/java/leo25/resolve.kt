@@ -1,7 +1,6 @@
 package leo25
 
 import leo.base.orNull
-import leo14.Literal
 import leo14.script
 
 fun Context.resolve(value: Value): Value =
@@ -40,7 +39,7 @@ fun Context.resolutionOrNull(line: Line): Resolution? =
 	}
 
 fun Context.resolutionOrNull(function: Function): Resolution? =
-	resolutionOrNull(token(begin(functionName)))?.contextOrNull?.resolutionOrNull(token(anyEnd))
+	resolutionOrNull(token(begin(givingName)))?.contextOrNull?.resolutionOrNull(token(anyEnd))
 
 fun Context.resolutionOrNull(field: Field): Resolution? =
 	orNull
@@ -55,7 +54,16 @@ val Resolution.contextOrNull get() = (this as? ContextResolution)?.context
 val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
 fun Context.plusGiven(value: Value): Context =
+	when (value) {
+		EmptyValue -> this
+		is LinkValue -> plusGiven(value.link)
+	}
+
+fun Context.plusGiven(link: Link): Context =
+	plusGiven(link.tail).plusGiven(link.head)
+
+fun Context.plusGiven(line: Line): Context =
 	plus(
-		script(givenName),
-		binding(value(givenName lineTo value))
+		script(line.selectName),
+		binding(value(line))
 	)

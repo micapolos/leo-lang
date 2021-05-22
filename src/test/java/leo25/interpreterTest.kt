@@ -57,11 +57,11 @@ class InterpreterTest {
 	@Test
 	fun functionApply() {
 		script(
-			"function" lineTo script("given"),
-			"apply" lineTo script("foo")
+			givingName lineTo script("name"),
+			takeName lineTo script("name" lineTo script("foo"))
 		)
 			.interpret
-			.assertEqualTo(script("given" lineTo script("foo")))
+			.assertEqualTo(script("name" lineTo script("foo")))
 	}
 
 	@Test
@@ -78,13 +78,13 @@ class InterpreterTest {
 	fun defineGives() {
 		script(
 			letName lineTo script(
-				"foo" lineTo script(),
-				giveName lineTo script("given")
+				"name" lineTo script("anything"),
+				giveName lineTo script("name")
 			),
-			"foo" lineTo script()
+			"name" lineTo script("foo")
 		)
 			.interpret
-			.assertEqualTo(script(givenName lineTo script("foo")))
+			.assertEqualTo(script("name" lineTo script("foo")))
 	}
 
 	@Test

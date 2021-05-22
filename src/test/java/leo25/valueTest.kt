@@ -100,11 +100,11 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			line(Function(context(), script("given"))),
-			"apply" lineTo value("foo")
+			line(Function(context(), script("name"))),
+			takeName lineTo value("name" lineTo value("foo"))
 		)
 			.resolveFunctionApplyOrNull
-			.assertEqualTo(value("given" lineTo value("foo")))
+			.assertEqualTo(value("name" lineTo value("foo")))
 	}
 
 	@Test
