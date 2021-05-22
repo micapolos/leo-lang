@@ -116,7 +116,7 @@ fun Context.update(literal: Literal, fn: Context.() -> Resolution): Context =
 	}
 
 fun Context.updateAnyOrNull(script: Script, fn: Context.() -> Resolution): Context? =
-	notNullIf(script == script(anythingName)) {
+	notNullIf(script == script(anyName)) {
 		updateAny(fn)
 	}
 

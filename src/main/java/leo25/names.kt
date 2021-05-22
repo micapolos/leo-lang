@@ -1,6 +1,6 @@
 package leo25
 
-val anythingName = "anything"
+val anyName = "any"
 val givingName = "giving"
 val giveName = "give"
 val givenName = "given"

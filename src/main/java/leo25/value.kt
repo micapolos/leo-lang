@@ -130,7 +130,7 @@ fun Value.make(name: String): Value =
 	value(name lineTo this)
 
 fun Value.resolve(name: String): Value =
-	getOrNull(name) ?: plus(name)
+	getOrNull(name) ?: make(name)
 
 fun Value.plus(name: String): Value =
 	plus(name lineTo value())
