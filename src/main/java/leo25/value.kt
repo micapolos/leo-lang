@@ -34,7 +34,7 @@ fun line(native: Native): Line = NativeLine(native)
 
 fun native(any: Any?) = Native(any)
 val Native.stringOrNull: String? get() = any as? String
-val Native.numberOrNull: leo14.Number? get() = any as? leo14.Number
+val Native.numberOrNull: Number? get() = any as? Number
 
 operator fun Value.plus(line: Line): Value = LinkValue(Link(this, line))
 val emptyValue: Value get() = EmptyValue
