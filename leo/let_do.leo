@@ -3,7 +3,7 @@ let
   exclamate
   do
     text
-    plus "!"
+    append "!"
 
 "Hello, world"
 exclamate

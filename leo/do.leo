@@ -5,8 +5,8 @@ do
   name
   first
   text
-  plus " "
-  plus
+  append " "
+  append
     name
     last
     text

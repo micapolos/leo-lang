@@ -1,4 +1,4 @@
 100
-plus 123
-minus 3
-plus -123
+add 123
+subtract 3
+multiply -123

@@ -2,16 +2,16 @@ shape rectangle height 10
 switch
   circle
     pi
-    times
+    multiply
       radius
       number
-    times
+    multiply
       radius
       number
   rectangle
     height
     number
-    times 
+    multiply
       height
       number
   line 0

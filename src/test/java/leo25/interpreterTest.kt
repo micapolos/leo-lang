@@ -22,7 +22,7 @@ class InterpreterTest {
 	fun textPlusTest() {
 		script(
 			line(literal("Hello, ")),
-			"plus" lineTo script(literal("world!"))
+			"append" lineTo script(literal("world!"))
 		)
 			.interpret
 			.assertEqualTo(script(literal("Hello, world!")))

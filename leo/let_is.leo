@@ -3,8 +3,8 @@ let
   text
   is
     "Michał"
-    plus " "
-    plus "Pociecha-Łoś"
+    append " "
+    append "Pociecha-Łoś"
 
 name
 text

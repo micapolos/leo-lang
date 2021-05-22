@@ -60,10 +60,10 @@ val Value.resolve: Value
 	get() =
 		null
 			?: resolveFunctionApplyOrNull
-			?: resolveTextNameTextOrNull("plus", String::plus)
-			?: resolveNumberNameNumberOrNull("plus", Number::plus)
-			?: resolveNumberNameNumberOrNull("minus", Number::minus)
-			?: resolveNumberNameNumberOrNull("times", Number::times)
+			?: resolveTextNameTextOrNull("append", String::plus)
+			?: resolveNumberNameNumberOrNull("add", Number::plus)
+			?: resolveNumberNameNumberOrNull("subtract", Number::minus)
+			?: resolveNumberNameNumberOrNull("multiply", Number::times)
 			?: resolveNameOrNull
 			?: this
 

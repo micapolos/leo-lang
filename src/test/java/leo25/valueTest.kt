@@ -111,7 +111,7 @@ class ValueTest {
 	fun resolveTextPlusText() {
 		value(
 			line(literal("Hello, ")),
-			"plus" lineTo value(line(literal("world!")))
+			"append" lineTo value(line(literal("world!")))
 		)
 			.resolve
 			.assertEqualTo(value(line(literal("Hello, world!"))))
@@ -121,7 +121,7 @@ class ValueTest {
 	fun resolveNumberMinusNumber() {
 		value(
 			line(literal(5)),
-			"minus" lineTo value(line(literal(3)))
+			"subtract" lineTo value(line(literal(3)))
 		)
 			.resolve
 			.assertEqualTo(value(line(literal(2))))
