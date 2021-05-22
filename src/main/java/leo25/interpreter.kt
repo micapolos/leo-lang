@@ -23,7 +23,6 @@ val Script.interpret: Script
 val String.interpret: String get() = scriptOrNull?.interpret?.string ?: this
 
 fun Interpreter.plus(scriptLine: ScriptLine): Interpreter =
-	// TODO: Resolve static definitions, function etc...
 	when (scriptLine) {
 		is FieldScriptLine -> plus(scriptLine.field)
 		is LiteralScriptLine -> plus(scriptLine.literal)
@@ -44,7 +43,7 @@ fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	}
 
 fun Interpreter.plusDo(script: Script): Interpreter =
-	context.interpreter(body(script).apply(context, value))
+	context.interpreter(context.apply(script, value))
 
 fun Interpreter.plusGiving(script: Script): Interpreter =
 	plus(line(context.function(body(script))))

@@ -178,3 +178,10 @@ fun Context.switchOrNull(line: Line, scriptField: ScriptField): Value? =
 			plusGiven(given).interpretedValue(scriptField.rhs)
 		}
 	}
+
+tailrec fun Context.apply(script: Script, given: Value): Value {
+	val result = plusGiven(given).interpretedValue(script)
+	val repeatValue = result.repeatValueOrNull
+	return if (repeatValue != null) apply(script, repeatValue)
+	else result
+}
