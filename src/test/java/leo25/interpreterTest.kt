@@ -190,18 +190,20 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun repeat() {
+	fun repeating() {
 		script(
 			line(literal(10000)),
 			doName lineTo script(
-				"get" lineTo script("number"),
-				"equals" lineTo script(line(literal(0))),
-				"switch" lineTo script(
-					"true" lineTo script(line(literal("OK"))),
-					"false" lineTo script(
-						"get" lineTo script("number"),
-						"subtract" lineTo script(line(literal(1))),
-						"repeat" lineTo script()
+				repeatingName lineTo script(
+					"get" lineTo script("number"),
+					"equals" lineTo script(line(literal(0))),
+					"switch" lineTo script(
+						"true" lineTo script(line(literal("OK"))),
+						"false" lineTo script(
+							"get" lineTo script("number"),
+							"subtract" lineTo script(line(literal(1))),
+							"repeat" lineTo script()
+						)
 					)
 				)
 			)

@@ -43,7 +43,7 @@ fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	}
 
 fun Interpreter.plusDo(script: Script): Interpreter =
-	context.interpreter(context.apply(script, value))
+	context.interpreter(context.apply(block(script), value))
 
 fun Interpreter.plusGiving(script: Script): Interpreter =
 	plus(line(context.function(body(script))))

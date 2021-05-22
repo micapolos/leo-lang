@@ -179,9 +179,19 @@ fun Context.switchOrNull(line: Line, scriptField: ScriptField): Value? =
 		}
 	}
 
-tailrec fun Context.apply(script: Script, given: Value): Value {
+fun Context.apply(block: Block, given: Value): Value =
+	when (block.typeOrNull) {
+		BlockType.REPEATEDLY -> applyRepeating(block.untypedScript, given)
+		BlockType.RECURSIVELY -> TODO()
+		null -> applyUntyped(block.untypedScript, given)
+	}
+
+tailrec fun Context.applyRepeating(script: Script, given: Value): Value {
 	val result = plusGiven(given).interpretedValue(script)
 	val repeatValue = result.repeatValueOrNull
-	return if (repeatValue != null) apply(script, repeatValue)
+	return if (repeatValue != null) applyRepeating(script, repeatValue)
 	else result
 }
+
+fun Context.applyUntyped(script: Script, given: Value): Value =
+	plusGiven(given).interpretedValue(script)
