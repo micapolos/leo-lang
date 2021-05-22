@@ -3,6 +3,7 @@ package leo25
 import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.notNullIf
+import leo.base.orNullIf
 import leo14.*
 import leo14.Number
 
@@ -110,8 +111,12 @@ val Literal.selectName: String
 fun Line.selectOrNull(name: String): Value? =
 	notNullIf(name == selectName) { value(this) }
 
+val Value.bodyOrNull: Value?
+	get() =
+		linkOrNull?.onlyFieldOrNull?.value
+
 fun Value.getOrNull(name: String): Value? =
-	linkOrNull?.onlyFieldOrNull?.value?.selectOrNull(name)
+	bodyOrNull?.selectOrNull(name)
 
 fun Field.valueOrNull(name: String): Value? =
 	notNullIf(this.name == name) { value }
@@ -230,6 +235,14 @@ fun Value.unlinkOrNull(fn: Value.(Value) -> Value?): Value? =
 		}
 	}
 
-val Value.rhsOrNull: Value?
-	get() =
-		linkOrNull?.onlyLineOrNull?.fieldOrNull?.value
+fun Value.lineOrNull(name: String): Line? =
+	when (this) {
+		EmptyValue -> null
+		is LinkValue -> link.lineOrNull(name)
+	}
+
+fun Link.lineOrNull(name: String): Line? =
+	head.orNull(name) ?: tail.lineOrNull(name)
+
+fun Line.orNull(name: String): Line? =
+	orNullIf { selectName != name }

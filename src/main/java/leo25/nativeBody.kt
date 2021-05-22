@@ -34,7 +34,7 @@ val numberMultiplyByNumberBody
 	get() =
 		unsafeBody {
 			unlinkOrNull { rhs ->
-				value(line(literal(numberOrNull!!.times(rhs.rhsOrNull!!.numberOrNull!!))))
+				value(line(literal(numberOrNull!!.times(rhs.bodyOrNull!!.numberOrNull!!))))
 			}!!
 		}
 
