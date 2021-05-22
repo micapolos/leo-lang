@@ -1,12 +1,12 @@
 package leo25
 
-import leo13.fold
-import leo13.reverse
+import leo.base.fold
+import leo.base.reverse
 import leo14.*
 
 val Value.script: Script
 	get() =
-		script().fold(fieldStack.reverse) { plus(it.scriptLine) }
+		script().fold(fieldSeq.reverse) { plus(it.scriptLine) }
 
 val Field.scriptLine: ScriptLine
 	get() =

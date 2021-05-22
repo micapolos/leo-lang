@@ -1,6 +1,8 @@
 package leo25
 
+import leo.base.fold
 import leo.base.orNull
+import leo.base.reverse
 import leo13.*
 import leo14.lineTo
 import leo14.script
@@ -22,16 +24,16 @@ fun Dictionary.resolutionOrNull(value: Value): Resolution? =
 		?: resolutionOrNull(token(anyEnd))
 
 fun Dictionary.concreteResolutionOrNull(value: Value): Resolution? =
-	when (value.fieldStack) {
-		is EmptyStack -> resolutionOrNull(token(emptyEnd))
-		is LinkStack -> resolutionOrNull(value.fieldStack.link)
+	when (value) {
+		is EmptyValue -> resolutionOrNull(token(emptyEnd))
+		is LinkValue -> resolutionOrNull(value.link)
 	}
 
-fun Dictionary.resolutionOrNull(link: StackLink<Field>): Resolution? =
+fun Dictionary.resolutionOrNull(link: Link): Resolution? =
 	orNull
-		?.resolutionOrNull(link.value)
+		?.resolutionOrNull(link.field)
 		?.dictionaryOrNull
-		?.resolutionOrNull(Value(link.stack))
+		?.resolutionOrNull(link.value)
 
 fun Dictionary.resolutionOrNull(rhs: Rhs): Resolution? =
 	when (rhs) {
@@ -56,7 +58,7 @@ val Resolution.dictionaryOrNull get() = (this as? DictionaryResolution)?.diction
 val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
 fun Dictionary.plusGiven(value: Value): Dictionary =
-	fold(value.fieldStack.reverse) { plusGiven(it) }
+	fold(value.fieldSeq.reverse) { plusGiven(it) }
 
 fun Dictionary.plusGiven(line: Field): Dictionary =
 	plus(

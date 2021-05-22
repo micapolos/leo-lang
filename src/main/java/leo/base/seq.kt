@@ -68,6 +68,9 @@ val <T> SeqNode<T>.seq: Seq<T>
 	get() =
 		Seq { this }
 
+infix fun <T> T.seqNode(seq: Seq<T>): SeqNode<T> =
+	SeqNode(this, seq)
+
 infix fun <T> T.then(seq: Seq<T>): SeqNode<T> =
 	SeqNode(this, seq)
 

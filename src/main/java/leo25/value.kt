@@ -1,16 +1,15 @@
 package leo25
 
-import leo.base.fold
-import leo.base.ifOrNull
-import leo.base.notNullIf
-import leo.base.orNullIf
+import leo.base.*
 import leo13.*
 import leo14.*
 import leo14.Number
 
-data class Value(val fieldStack: Stack<Field>) {
-	override fun toString() = script.toString()
-}
+sealed class Value
+object EmptyValue : Value()
+data class LinkValue(val link: Link) : Value()
+
+data class Link(val value: Value, val field: Field)
 
 data class Native(val any: Any?)
 
@@ -34,20 +33,25 @@ infix fun String.fieldTo(value: Value): Field = this fieldTo rhs(value)
 fun field(literal: Literal): Field = literal.field
 fun field(function: Function): Field = doingName fieldTo rhs(function)
 
+infix fun Value.linkTo(field: Field) = Link(this, field)
+
+val Value.linkOrNull: Link? get() = (this as? LinkValue)?.link
+
 fun native(any: Any?) = Native(any)
 val Native.stringOrNull: String? get() = any as? String
 val Native.numberOrNull: Number? get() = any as? Number
 
-operator fun Value.plus(field: Field): Value = Value(fieldStack.push(field))
-val emptyValue: Value get() = Value(stack())
+operator fun Value.plus(field: Field): Value = value(this linkTo field)
+val emptyValue: Value get() = EmptyValue
 fun value(vararg fields: Field) = emptyValue.fold(fields) { plus(it) }
 fun value(name: String) = value(name fieldTo value())
+fun value(link: Link): Value = LinkValue(link)
 
 val Field.functionOrNull: Function? get() = rhs.functionOrNull
 val Field.nativeOrNull: Native? get() = rhs.nativeOrNull
 
 val Value.functionOrNull: Function? get() = fieldOrNull?.functionOrNull
-val Value.fieldOrNull: Field? get() = fieldStack.onlyOrNull
+val Value.fieldOrNull: Field? get() = linkOrNull?.run { notNullIf(value.isEmpty) { field } }
 
 val Value.resolve: Value
 	get() =
@@ -65,11 +69,20 @@ val Value.resolveFunctionApplyOrNull: Value?
 			}
 		}
 
+val Value.fieldSeq: Seq<Field>
+	get() =
+		seq {
+			when (this) {
+				EmptyValue -> null
+				is LinkValue -> link.field.seqNode(link.value.fieldSeq)
+			}
+		}
+
 fun Value.rhsValueOrNull(name: String): Value? =
 	fieldOrNull?.rhs?.valueOrNull
 
 fun Value.selectOrNull(name: String): Value? =
-	fieldStack.mapFirst { selectOrNull(name) }
+	fieldSeq.mapFirstOrNull { selectOrNull(name) }
 
 val Literal.selectName: String
 	get() =
@@ -140,7 +153,7 @@ val Value.numberOrNull: Number?
 
 val Value.isEmpty: Boolean
 	get() =
-		fieldStack.isEmpty
+		this is EmptyValue
 
 val Rhs.isEmpty: Boolean
 	get() =
@@ -166,9 +179,9 @@ val Value.nameOrNull: String?
 		fieldOrNull?.onlyNameOrNull
 
 fun Value.resolveInfixOrNull(name: String, fn: Value.(Value) -> Value?): Value? =
-	fieldStack.linkOrNull?.run {
-		Value(stack).let { lhs ->
-			value.valueOrNull(name)?.let { rhs ->
+	linkOrNull?.run {
+		value.let { lhs ->
+			field.valueOrNull(name)?.let { rhs ->
 				lhs.fn(rhs)
 			}
 		}
@@ -198,7 +211,7 @@ fun Value.resolveOrNull(name: String, fn: () -> Value?): Value? =
 	}
 
 fun Value.resolveEmptyOrNull(fn: () -> Value?): Value? =
-	ifOrNull(fieldStack.isEmpty) {
+	ifOrNull(isEmpty) {
 		fn()
 	}
 
@@ -215,9 +228,9 @@ val Value.repeatValueOrNull: Value?
 		resolvePostfixOrNull(repeatName) { this }
 
 fun Value.unlinkOrNull(fn: Value.(Value) -> Value?): Value? =
-	fieldStack.linkOrNull?.run {
-		Value(stack).let { lhs ->
-			value.rhs.valueOrNull?.let { rhs ->
+	linkOrNull?.run {
+		value.let { lhs ->
+			field.rhs.valueOrNull?.let { rhs ->
 				lhs.fn(rhs)
 			}
 		}
@@ -230,9 +243,9 @@ fun Field.orNull(name: String): Field? =
 	orNullIf { this.name != name }
 
 fun Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) -> Value?): Value? =
-	fieldStack.linkOrNull?.run {
-		value.valueOrNull(rhsName)?.let { rhs ->
-			Value(stack).orNull(lhsName)?.let { lhs ->
+	linkOrNull?.run {
+		field.valueOrNull(rhsName)?.let { rhs ->
+			value.orNull(lhsName)?.let { lhs ->
 				lhs.fn(rhs)
 			}
 		}
