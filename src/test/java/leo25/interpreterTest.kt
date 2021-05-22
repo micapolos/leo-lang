@@ -292,4 +292,17 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script(literal(6)))
 	}
+
+	@Test
+	fun comment() {
+		script(
+			commentName lineTo script("first" lineTo script("number")),
+			line(literal(2)),
+			commentName lineTo script("second" lineTo script("number")),
+			"add" lineTo script(line(literal(3))),
+			commentName lineTo script("expecting" lineTo script(literal(5)))
+		)
+			.interpret
+			.assertEqualTo(script(literal(5)))
+	}
 }

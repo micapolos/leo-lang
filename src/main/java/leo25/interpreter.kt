@@ -4,6 +4,7 @@ import leo.base.fold
 import leo.base.notNullIf
 import leo.base.reverse
 import leo14.*
+import leo15.comName
 import leo25.parser.scriptOrNull
 
 data class Interpreter(
@@ -53,6 +54,7 @@ fun Interpreter.plus(scriptField: ScriptField): Interpreter =
 
 fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	when (scriptField.string) {
+		commentName -> this
 		doName -> plusDo(scriptField.rhs)
 		doingName -> plusGiving(scriptField.rhs)
 		evaluateName -> plusEvaluateOrNull(scriptField.rhs)
