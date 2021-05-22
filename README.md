@@ -17,7 +17,7 @@ gradle jar
 ##### Running
 
 ```
-java -jar build/libs/leo-0.1.jar
+java -jar build/libs/leo-0.25.jar
 ```
 
 ##### Updating
