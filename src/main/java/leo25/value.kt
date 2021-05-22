@@ -219,15 +219,6 @@ fun Value.resolveInfixOrNull(name: String, fn: Value.(Value) -> Value?): Value? 
 		}
 	}
 
-fun Value.resolveInfixOrNull(fn: Value.(Value) -> Value?): Value? =
-	linkOrNull?.run {
-		tail.let { lhs ->
-			head.fieldOrNull?.value?.let { rhs ->
-				lhs.fn(rhs)
-			}
-		}
-	}
-
 fun Value.resolvePostfixOrNull(name: String, fn: Value.() -> Value): Value? =
 	resolveInfixOrNull(name) { rhs ->
 		ifOrNull(rhs is EmptyValue) {
@@ -237,8 +228,8 @@ fun Value.resolvePostfixOrNull(name: String, fn: Value.() -> Value): Value? =
 
 val Boolean.value
 	get() =
-		value("boolean" lineTo value(if (this) "true" else "false"))
+		value(booleanName lineTo value(if (this) trueName else falseName))
 
 val Value.repeatValueOrNull: Value?
 	get() =
-		resolvePostfixOrNull("repeat") { this }
+		resolvePostfixOrNull(repeatName) { this }

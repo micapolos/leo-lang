@@ -159,50 +159,73 @@ class InterpreterTest {
 	fun hash() {
 		script(
 			"foo" lineTo script(),
-			"hash" lineTo script()
+			hashName lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script("hash" lineTo script(literal(value("foo").hashCode()))))
+			.assertEqualTo(script(hashName lineTo script(literal(value("foo").hashCode()))))
 	}
 
 	@Test
 	fun equals() {
 		script(
 			"foo" lineTo script(),
-			"equals" lineTo script("foo")
+			equalsName lineTo script("foo")
 		)
 			.interpret
-			.assertEqualTo(script("boolean" lineTo script("true")))
+			.assertEqualTo(script(booleanName lineTo script(trueName)))
 
 		script(
 			"foo" lineTo script(),
-			"equals" lineTo script("bar")
+			equalsName lineTo script("bar")
 		)
 			.interpret
-			.assertEqualTo(script("boolean" lineTo script("false")))
+			.assertEqualTo(script(booleanName lineTo script(falseName)))
 
 		script(
 			line(literal("foo")),
-			"equals" lineTo script(line(literal("foo")))
+			equalsName lineTo script(line(literal("foo")))
 		)
 			.interpret
-			.assertEqualTo(script("boolean" lineTo script("true")))
+			.assertEqualTo(script(booleanName lineTo script(trueName)))
 	}
 
 	@Test
-	fun repeating() {
+	fun doRepeating() {
 		script(
 			line(literal(10000)),
 			doName lineTo script(
 				repeatingName lineTo script(
-					"get" lineTo script("number"),
-					"equals" lineTo script(line(literal(0))),
-					"switch" lineTo script(
-						"true" lineTo script(line(literal("OK"))),
-						"false" lineTo script(
-							"get" lineTo script("number"),
+					getName lineTo script(numberName),
+					equalsName lineTo script(line(literal(0))),
+					switchName lineTo script(
+						trueName lineTo script(line(literal("OK"))),
+						falseName lineTo script(
+							getName lineTo script(numberName),
 							"subtract" lineTo script(line(literal(1))),
-							"repeat" lineTo script()
+							repeatName lineTo script()
+						)
+					)
+				)
+			)
+		)
+			.interpret
+			.assertEqualTo(script(line(literal("OK"))))
+	}
+
+	@Test
+	fun doRecursing() {
+		script(
+			line(literal(100)),
+			doName lineTo script(
+				recursingName lineTo script(
+					getName lineTo script(numberName),
+					equalsName lineTo script(line(literal(0))),
+					switchName lineTo script(
+						trueName lineTo script(line(literal("OK"))),
+						falseName lineTo script(
+							getName lineTo script(numberName),
+							"subtract" lineTo script(line(literal(1))),
+							recurseName lineTo script()
 						)
 					)
 				)
