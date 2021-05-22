@@ -43,5 +43,5 @@ fun Definer.plusGives(script: Script): Definer =
 
 fun Definer.plusIs(script: Script): Definer? =
 	context
-		.plus(this.script, binding(context.interpretedValue(script)))
+		.plus(this.script, binding(context.value(script)))
 		.definer()

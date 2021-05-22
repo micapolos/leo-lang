@@ -175,7 +175,7 @@ fun Context.switchOrNull(line: Line, scriptLine: ScriptLine): Value? =
 fun Context.switchOrNull(line: Line, scriptField: ScriptField): Value? =
 	ifOrNull(line.selectName == scriptField.name) {
 		line.selectValueOrNull?.let { given ->
-			plusGiven(given).interpretedValue(scriptField.rhs)
+			plusGiven(given).value(scriptField.rhs)
 		}
 	}
 
@@ -187,17 +187,17 @@ fun Context.apply(block: Block, given: Value): Value =
 	}
 
 tailrec fun Context.applyRepeating(script: Script, given: Value): Value {
-	val result = plusGiven(given).interpretedValue(script)
+	val result = plusGiven(given).value(script)
 	val repeatValue = result.repeatValueOrNull
 	return if (repeatValue != null) applyRepeating(script, repeatValue)
 	else result
 }
 
 fun Context.applyRecursing(script: Script, given: Value): Value =
-	plusGiven(given).plusRecurse(script).interpretedValue(script)
+	plusGiven(given).plusRecurse(script).value(script)
 
 fun Context.applyUntyped(script: Script, given: Value): Value =
-	plusGiven(given).interpretedValue(script)
+	plusGiven(given).value(script)
 
 fun Context.plusRecurse(script: Script): Context =
 	plus(
