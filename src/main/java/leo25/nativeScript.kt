@@ -8,7 +8,7 @@ val textAppendTextScript: Script
 	get() =
 		script(
 			textName lineTo script(anyName),
-			"append" lineTo script(
+			appendName lineTo script(
 				textName lineTo script(anyName)
 			)
 		)
@@ -17,7 +17,7 @@ val numberAddNumberScript: Script
 	get() =
 		script(
 			numberName lineTo script(anyName),
-			"add" lineTo script(
+			addName lineTo script(
 				numberName lineTo script(anyName)
 			)
 		)
@@ -26,7 +26,7 @@ val numberSubtractNumberScript: Script
 	get() =
 		script(
 			numberName lineTo script(anyName),
-			"subtract" lineTo script(
+			subtractName lineTo script(
 				numberName lineTo script(anyName)
 			)
 		)
@@ -35,8 +35,8 @@ val numberMultiplyByNumberScript: Script
 	get() =
 		script(
 			numberName lineTo script(anyName),
-			"multiply" lineTo script(
-				"by" lineTo script(
+			multiplyName lineTo script(
+				byName lineTo script(
 					numberName lineTo script(anyName)
 				)
 			)

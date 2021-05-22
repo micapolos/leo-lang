@@ -5,7 +5,6 @@ import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
-import leo23.value.int
 import kotlin.test.Test
 
 class InterpreterTest {
@@ -17,16 +16,6 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script("color" lineTo script("red")))
-	}
-
-	@Test
-	fun textPlusTest() {
-		script(
-			line(literal("Hello, ")),
-			"append" lineTo script(literal("world!"))
-		)
-			.interpret
-			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test
@@ -76,11 +65,11 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun defineGives() {
+	fun letDo() {
 		script(
 			letName lineTo script(
-				"name" lineTo script("anything"),
-				doName lineTo script("name")
+				"name" lineTo script(anyName),
+				doName lineTo script(getName lineTo script("name" lineTo script()))
 			),
 			"name" lineTo script("foo")
 		)
@@ -89,7 +78,7 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun defineBe() {
+	fun letBe() {
 		script(
 			letName lineTo script(
 				"foo" lineTo script(),
@@ -157,40 +146,6 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun hash() {
-		script(
-			"foo" lineTo script(),
-			getName lineTo script(hashName lineTo script())
-		)
-			.interpret
-			.assertEqualTo(script(hashName lineTo script(literal(value("foo").hashCode()))))
-	}
-
-	@Test
-	fun isEqual() {
-		script(
-			"foo" lineTo script(),
-			isName lineTo script("foo")
-		)
-			.interpret
-			.assertEqualTo(script(isName lineTo script(yesName)))
-
-		script(
-			"foo" lineTo script(),
-			isName lineTo script("bar")
-		)
-			.interpret
-			.assertEqualTo(script(isName lineTo script(noName)))
-
-		script(
-			line(literal("foo")),
-			isName lineTo script(line(literal("foo")))
-		)
-			.interpret
-			.assertEqualTo(script(isName lineTo script(yesName)))
-	}
-
-	@Test
 	fun doRepeating() {
 		script(
 			line(literal(10000)),
@@ -202,7 +157,7 @@ class InterpreterTest {
 						yesName lineTo script(line(literal("OK"))),
 						noName lineTo script(
 							getName lineTo script(numberName),
-							"subtract" lineTo script(line(literal(1))),
+							subtractName lineTo script(line(literal(1))),
 							repeatName lineTo script()
 						)
 					)
@@ -225,7 +180,7 @@ class InterpreterTest {
 						yesName lineTo script(line(literal("OK"))),
 						noName lineTo script(
 							getName lineTo script(numberName),
-							"subtract" lineTo script(line(literal(1))),
+							subtractName lineTo script(line(literal(1))),
 							recurseName lineTo script()
 						)
 					)
@@ -240,7 +195,7 @@ class InterpreterTest {
 	fun script_() {
 		script(scriptName lineTo script(hashName))
 			.interpret
-			.assertEqualTo(script("hash"))
+			.assertEqualTo(script(hashName))
 	}
 
 	@Test
@@ -254,52 +209,12 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun textAppendText() {
-		script(
-			line(literal("Hello, ")),
-			"append" lineTo script(line(literal("world!")))
-		)
-			.interpret
-			.assertEqualTo(script(literal("Hello, world!")))
-	}
-
-	@Test
-	fun numberAddNumber() {
-		script(
-			line(literal(2)),
-			"add" lineTo script(line(literal(3)))
-		)
-			.interpret
-			.assertEqualTo(script(literal(5)))
-	}
-
-	@Test
-	fun numberSubtractNumber() {
-		script(
-			line(literal(5)),
-			"subtract" lineTo script(line(literal(3)))
-		)
-			.interpret
-			.assertEqualTo(script(literal(2)))
-	}
-
-	@Test
-	fun numberMultiplyByNumber() {
-		script(
-			line(literal(2)),
-			"multiply" lineTo script("by" lineTo script(line(literal(3))))
-		)
-			.interpret
-			.assertEqualTo(script(literal(6)))
-	}
-
-	@Test
 	fun comment() {
 		script(
 			commentName lineTo script("first" lineTo script("number")),
 			line(literal(2)),
 			commentName lineTo script("second" lineTo script("number")),
-			"add" lineTo script(line(literal(3))),
+			addName lineTo script(line(literal(3))),
 			commentName lineTo script("expecting" lineTo script(literal(5)))
 		)
 			.interpret
