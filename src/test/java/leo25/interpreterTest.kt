@@ -9,10 +9,10 @@ import kotlin.test.Test
 
 class InterpreterTest {
 	@Test
-	fun normalization() {
+	fun make() {
 		script(
 			"red" lineTo script(),
-			"color" lineTo script()
+			makeName lineTo script("color")
 		)
 			.interpret
 			.assertEqualTo(script("color" lineTo script("red")))
@@ -57,7 +57,7 @@ class InterpreterTest {
 	@Test
 	fun functionApply() {
 		script(
-			doingName lineTo script("name"),
+			doingName lineTo script(getName lineTo script("name")),
 			applyName lineTo script("name" lineTo script("foo"))
 		)
 			.interpret
@@ -109,8 +109,8 @@ class InterpreterTest {
 				)
 			),
 			switchName lineTo script(
-				"circle" lineTo script("radius"),
-				"rectangle" lineTo script("height")
+				"circle" lineTo script(getName lineTo script("radius")),
+				"rectangle" lineTo script(getName lineTo script("height"))
 			)
 		)
 			.interpret
@@ -123,8 +123,8 @@ class InterpreterTest {
 				)
 			),
 			switchName lineTo script(
-				"circle" lineTo script("radius"),
-				"rectangle" lineTo script("height")
+				"circle" lineTo script(getName lineTo script("radius")),
+				"rectangle" lineTo script(getName lineTo script("height"))
 			)
 		)
 			.interpret
@@ -137,7 +137,7 @@ class InterpreterTest {
 				)
 			),
 			switchName lineTo script(
-				"triangle" lineTo script("height")
+				"triangle" lineTo script(getName lineTo script("height"))
 			)
 		)
 			.interpret
@@ -149,7 +149,7 @@ class InterpreterTest {
 						)
 					),
 					switchName lineTo script(
-						"triangle" lineTo script("height")
+						"triangle" lineTo script(getName lineTo script("height"))
 					)
 				)
 			)

@@ -1,6 +1,7 @@
 package leo25
 
 import leo.base.assertEqualTo
+import leo14.lineTo
 import leo14.literal
 import leo14.script
 import kotlin.test.Test
@@ -55,7 +56,7 @@ class ValueTest {
 				"x" lineTo value("10"),
 				"y" lineTo value("20")
 			),
-			"x" lineTo value()
+			getName lineTo value("x")
 		)
 			.resolve
 			.assertEqualTo(value("x" lineTo value("10")))
@@ -65,7 +66,7 @@ class ValueTest {
 				"x" lineTo value("10"),
 				"y" lineTo value("20")
 			),
-			"y" lineTo value()
+			getName lineTo value("y")
 		)
 			.resolve
 			.assertEqualTo(value("y" lineTo value("20")))
@@ -100,7 +101,7 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			line(context().function(body(script("name")))),
+			line(context().function(body(script(getName lineTo script("name"))))),
 			applyName lineTo value("name" lineTo value("foo"))
 		)
 			.resolveFunctionApplyOrNull

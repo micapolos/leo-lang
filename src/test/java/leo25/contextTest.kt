@@ -250,8 +250,8 @@ class ContextTest {
 			.switchOrNull(
 				value("shape" lineTo value("circle" lineTo value("radius" lineTo value("zero")))),
 				script(
-					"circle" lineTo script("radius"),
-					"rectangle" lineTo script("side")
+					"circle" lineTo script(getName lineTo script("radius")),
+					"rectangle" lineTo script(getName lineTo script("side"))
 				)
 			)
 			.assertEqualTo(value("radius" lineTo value("zero")))

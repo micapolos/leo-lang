@@ -1,6 +1,7 @@
 package leo25
 
 import leo.base.orNull
+import leo14.lineTo
 import leo14.script
 
 fun Context.resolve(value: Value): Value =
@@ -64,6 +65,6 @@ fun Context.plusGiven(link: Link): Context =
 
 fun Context.plusGiven(line: Line): Context =
 	plus(
-		script(line.selectName),
+		script(getName lineTo script(line.selectName)),
 		binding(value(line))
 	)

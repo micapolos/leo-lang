@@ -2,11 +2,11 @@ name
   first "Michał"
   last "Pociecha-Łoś"
 do
-  name
-  first
-  text
+  get name
+  get first
+  get text
   append " "
   append
-    name
-    last
-    text
+    get name
+    get last
+    get text

@@ -1,17 +1,17 @@
 shape rectangle height 10
 switch
   circle
-    pi
+    3
     multiply
-      radius
-      number
+      get radius
+      get number
     multiply
-      radius
-      number
+      get radius
+      get number
   rectangle
-    height
-    number
+    get height
+    get number
     multiply
-      height
-      number
+      get height
+      get number
   line 0

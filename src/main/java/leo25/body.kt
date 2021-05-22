@@ -20,7 +20,7 @@ fun Body.apply(context: Context, given: Value): Value =
 val textPlusTextBody
 	get() = body { value ->
 		value
-			.resolveOp2OrNull { rhs ->
+			.resolveInfixOrNull { rhs ->
 				textOrNull?.orNullApply(rhs.textOrNull) {
 					value(line(literal(plus(it))))
 				}

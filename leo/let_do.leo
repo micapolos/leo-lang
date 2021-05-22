@@ -2,7 +2,7 @@ let
   text any
   exclamate
   do
-    text
+    get text
     append "!"
 
 "Hello, world"

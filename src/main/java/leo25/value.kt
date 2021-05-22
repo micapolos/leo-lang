@@ -64,16 +64,9 @@ val Value.resolve: Value
 			?: resolveNumberNameNumberOrNull("add", Number::plus)
 			?: resolveNumberNameNumberOrNull("subtract", Number::minus)
 			?: resolveNumberNameNumberOrNull("multiply", Number::times)
-			?: resolveNameOrNull
+			?: resolveGetOrNull
+			?: resolveMakeOrNull
 			?: this
-
-val Value.resolveNameOrNull: Value?
-	get() =
-		linkOrNull?.let { link ->
-			link.head.fieldOrNull?.onlyNameOrNull?.let { name ->
-				link.tail.resolve(name)
-			}
-		}
 
 val Value.resolveFunctionApplyOrNull: Value?
 	get() =
@@ -152,6 +145,22 @@ fun Value.make(name: String): Value =
 fun Value.resolve(name: String): Value =
 	getOrNull(name) ?: make(name)
 
+val Value.resolveGetOrNull: Value?
+	get() =
+		resolveInfixOrNull(getName) { rhs ->
+			rhs.nameOrNull?.let { name ->
+				getOrNull(name)
+			}
+		}
+
+val Value.resolveMakeOrNull: Value?
+	get() =
+		resolveInfixOrNull(makeName) { rhs ->
+			rhs.nameOrNull?.let { name ->
+				make(name)
+			}
+		}
+
 fun Value.plus(name: String): Value =
 	plus(name lineTo value())
 
@@ -182,7 +191,20 @@ val Literal.native: Native
 			is StringLiteral -> native(string)
 		}
 
-fun Value.resolveOp2OrNull(fn: Value.(Value) -> Value?): Value? =
+val Value.nameOrNull: String?
+	get() =
+		linkOrNull?.onlyLineOrNull?.fieldOrNull?.onlyNameOrNull
+
+fun Value.resolveInfixOrNull(name: String, fn: Value.(Value) -> Value?): Value? =
+	linkOrNull?.run {
+		tail.let { lhs ->
+			head.fieldOrNull?.valueOrNull(name)?.let { rhs ->
+				lhs.fn(rhs)
+			}
+		}
+	}
+
+fun Value.resolveInfixOrNull(fn: Value.(Value) -> Value?): Value? =
 	linkOrNull?.run {
 		tail.let { lhs ->
 			head.fieldOrNull?.value?.let { rhs ->
