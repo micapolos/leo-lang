@@ -122,6 +122,14 @@ val Line.selectName: String
 			is NativeLine -> nativeName
 		}
 
+val Line.selectValueOrNull: Value?
+	get() =
+		when (this) {
+			is FieldLine -> field.value
+			is FunctionLine -> null
+			is NativeLine -> null
+		}
+
 val Literal.selectName: String
 	get() =
 		when (this) {

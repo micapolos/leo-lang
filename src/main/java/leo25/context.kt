@@ -2,11 +2,9 @@ package leo25
 
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
-import leo.base.fold
-import leo.base.notNullIf
-import leo.base.orIfNull
-import leo.base.runIf
+import leo.base.*
 import leo14.*
+import leo14.matching.name
 
 data class Context(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
 
@@ -150,3 +148,33 @@ fun Resolution.merge(resolution: Resolution): Resolution =
 
 fun Resolution?.orNullMerge(resolution: Resolution): Resolution =
 	this?.merge(resolution) ?: resolution
+
+fun Context.switchOrNull(value: Value, script: Script): Value? =
+	value.linkOrNull?.onlyLineOrNull?.fieldOrNull?.value?.let { switchBodyOrNull(it, script) }
+
+fun Context.switchBodyOrNull(value: Value, script: Script): Value? =
+	value.linkOrNull?.onlyLineOrNull?.let {
+		switchOrNull(it, script)
+	}
+
+fun Context.switchOrNull(line: Line, script: Script): Value? =
+	when (script) {
+		is LinkScript -> switchOrNull(line, script.link)
+		is UnitScript -> null
+	}
+
+fun Context.switchOrNull(line: Line, scriptLink: ScriptLink): Value? =
+	switchOrNull(line, scriptLink.lhs) ?: switchOrNull(line, scriptLink.line)
+
+fun Context.switchOrNull(line: Line, scriptLine: ScriptLine): Value? =
+	when (scriptLine) {
+		is FieldScriptLine -> switchOrNull(line, scriptLine.field)
+		is LiteralScriptLine -> null
+	}
+
+fun Context.switchOrNull(line: Line, scriptField: ScriptField): Value? =
+	ifOrNull(line.selectName == scriptField.name) {
+		line.selectValueOrNull?.let { given ->
+			plusGiven(given).interpretedValue(scriptField.rhs)
+		}
+	}

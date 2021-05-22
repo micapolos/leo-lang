@@ -243,4 +243,17 @@ class ContextTest {
 				)
 			)
 	}
+
+	@Test
+	fun switchOrNull() {
+		context()
+			.switchOrNull(
+				value("shape" lineTo value("circle" lineTo value("radius" lineTo value("zero")))),
+				script(
+					"circle" lineTo script("radius"),
+					"rectangle" lineTo script("side")
+				)
+			)
+			.assertEqualTo(value("radius" lineTo value("zero")))
+	}
 }
