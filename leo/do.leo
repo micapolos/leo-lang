@@ -1,12 +1,9 @@
-name
-  first "Michał"
-  last "Pociecha-Łoś"
+first "Hello, "
+last "world!"
 do
-  get name
   get first
   get text
   append " "
   append
-    get name
     get last
     get text

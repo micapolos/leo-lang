@@ -1,5 +1,3 @@
-circle
-  radius 10
-  center point
-    x 20
-    y 30
+greeting
+  first word "Hello"
+  second word "world"

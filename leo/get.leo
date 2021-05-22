@@ -1,5 +1,5 @@
 name
-  first "Michał"
-  last "Pociecha-Łoś"
+  first "Hello, "
+  last "world!"
 get first
 get text
