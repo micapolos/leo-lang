@@ -154,11 +154,15 @@ class InterpreterTest {
 					getName lineTo script(numberName),
 					isName lineTo script(line(literal(0))),
 					switchName lineTo script(
-						yesName lineTo script(line(literal("OK"))),
+						yesName lineTo script(
+							beName lineTo script(line(literal("OK")))
+						),
 						noName lineTo script(
-							getName lineTo script(numberName),
-							subtractName lineTo script(line(literal(1))),
-							repeatName lineTo script()
+							beName lineTo script(
+								getName lineTo script(numberName),
+								subtractName lineTo script(line(literal(1))),
+								repeatName lineTo script()
+							)
 						)
 					)
 				)
@@ -177,11 +181,15 @@ class InterpreterTest {
 					getName lineTo script(numberName),
 					isName lineTo script(line(literal(0))),
 					switchName lineTo script(
-						yesName lineTo script(line(literal("OK"))),
+						yesName lineTo script(
+							beName lineTo script(line(literal("OK")))
+						),
 						noName lineTo script(
-							getName lineTo script(numberName),
-							subtractName lineTo script(line(literal(1))),
-							recurseName lineTo script()
+							beName lineTo script(
+								getName lineTo script(numberName),
+								subtractName lineTo script(line(literal(1))),
+								recurseName lineTo script()
+							)
 						)
 					)
 				)

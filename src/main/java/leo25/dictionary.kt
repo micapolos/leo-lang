@@ -169,9 +169,7 @@ fun Dictionary.switchOrNull(line: Field, scriptLine: ScriptLine): Value? =
 
 fun Dictionary.switchOrNull(line: Field, scriptField: ScriptField): Value? =
 	ifOrNull(line.name == scriptField.name) {
-		line.valueOrNull?.let { given ->
-			plusGiven(given).value(scriptField.rhs)
-		}
+		interpreter(value(line)).plus(scriptField.rhs).value
 	}
 
 fun Dictionary.apply(body: Body, given: Value): Value =

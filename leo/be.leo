@@ -1,0 +1,2 @@
+ugly
+be pretty
