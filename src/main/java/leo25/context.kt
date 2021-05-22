@@ -182,6 +182,12 @@ fun Dictionary.switchOrNull(line: Line, scriptField: ScriptField): Value? =
 		}
 	}
 
+fun Dictionary.apply(body: Body, given: Value): Value =
+	when (body) {
+		is FnBody -> body.fn(given)
+		is BlockBody -> apply(body.block, given)
+	}
+
 fun Dictionary.apply(block: Block, given: Value): Value =
 	when (block.typeOrNull) {
 		BlockType.REPEATEDLY -> applyRepeating(block.untypedScript, given)
