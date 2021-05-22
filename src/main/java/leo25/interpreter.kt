@@ -14,8 +14,17 @@ data class Interpreter(
 fun Context.interpreter(value: Value = value()) =
 	Interpreter(this, value)
 
+fun Interpreter.set(value: Value): Interpreter =
+	context.interpreter(value)
+
+fun Interpreter.set(context: Context): Interpreter =
+	context.interpreter(value)
+
 fun Context.value(script: Script): Value =
 	interpreter(script).value
+
+fun Context.line(scriptField: ScriptField): Line =
+	scriptField.string lineTo value(scriptField.rhs)
 
 val Script.interpret: Script
 	get() =
@@ -54,30 +63,30 @@ fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	}
 
 fun Interpreter.plusDo(rhs: Script): Interpreter =
-	context.interpreter(context.apply(block(rhs), value))
+	set(context.apply(block(rhs), value))
 
 fun Interpreter.plusEvaluateOrNull(rhs: Script): Interpreter? =
 	notNullIf(rhs.isEmpty) {
-		context.interpreter(context.value(value.script))
+		set(context.value(value.script))
 	}
 
 fun Interpreter.plusGiving(rhs: Script): Interpreter =
 	plus(line(context.function(body(rhs))))
 
 fun Interpreter.plusLet(rhs: Script): Interpreter =
-	context.define(rhs).interpreter(value)
+	set(context.define(rhs))
 
 fun Interpreter.plusScript(rhs: Script): Interpreter? =
-	context.interpreter(rhs.value)
+	set(rhs.value)
 
 fun Interpreter.plusSwitchOrNull(rhs: Script): Interpreter? =
-	context.switchOrNull(value, rhs)?.let { context.interpreter(it) }
+	context.switchOrNull(value, rhs)?.let { set(it) }
 
 fun Interpreter.plusDynamic(scriptField: ScriptField): Interpreter =
-	plus(scriptField.string lineTo context.value(scriptField.rhs))
+	plus(context.line(scriptField))
 
 fun Interpreter.plus(literal: Literal): Interpreter =
 	plus(line(literal))
 
 fun Interpreter.plus(line: Line): Interpreter =
-	context.interpreter(context.resolve(value.plus(line)))
+	set(context.resolve(value.plus(line)))
