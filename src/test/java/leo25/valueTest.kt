@@ -101,7 +101,7 @@ class ValueTest {
 	fun resolveFunctionApply() {
 		value(
 			line(context().function(body(script("name")))),
-			takeName lineTo value("name" lineTo value("foo"))
+			applyName lineTo value("name" lineTo value("foo"))
 		)
 			.resolveFunctionApplyOrNull
 			.assertEqualTo(value("name" lineTo value("foo")))

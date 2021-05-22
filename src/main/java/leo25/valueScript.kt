@@ -38,7 +38,7 @@ val Field.scriptField: ScriptField
 
 val Function.scriptLine: ScriptLine
 	get() =
-		givingName lineTo body.script
+		doingName lineTo body.script
 
 val Body.script: Script
 	get() =

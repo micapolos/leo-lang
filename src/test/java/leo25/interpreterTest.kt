@@ -57,8 +57,8 @@ class InterpreterTest {
 	@Test
 	fun functionApply() {
 		script(
-			givingName lineTo script("name"),
-			takeName lineTo script("name" lineTo script("foo"))
+			doingName lineTo script("name"),
+			applyName lineTo script("name" lineTo script("foo"))
 		)
 			.interpret
 			.assertEqualTo(script("name" lineTo script("foo")))
@@ -79,7 +79,7 @@ class InterpreterTest {
 		script(
 			letName lineTo script(
 				"name" lineTo script("anything"),
-				giveName lineTo script("name")
+				doName lineTo script("name")
 			),
 			"name" lineTo script("foo")
 		)

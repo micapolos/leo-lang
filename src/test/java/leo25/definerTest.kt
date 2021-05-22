@@ -7,17 +7,38 @@ import kotlin.test.Test
 
 class DefinerTest {
 	@Test
-	fun gives() {
+	fun defineDo() {
 		context()
 			.define(
 				script(
-					"foo" lineTo script(),
-					giveName lineTo script(givenName)
+					"name" lineTo script(anyName),
+					doName lineTo script("name")
 				)
 			)
 			.assertEqualTo(
 				context()
-					.plus(script("foo"), binding(context().function(body(script(givenName)))))
+					.plus(
+						script("name" lineTo script(anyName)),
+						binding(context().function(body(script("name"))))
+					)
+			)
+	}
+
+	@Test
+	fun defineIs() {
+		context()
+			.define(
+				script(
+					"name" lineTo script(anyName),
+					isName lineTo script("name")
+				)
+			)
+			.assertEqualTo(
+				context()
+					.plus(
+						script("name" lineTo script(anyName)),
+						binding(value("name"))
+					)
 			)
 	}
 }

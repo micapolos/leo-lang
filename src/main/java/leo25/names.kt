@@ -1,12 +1,12 @@
 package leo25
 
+val applyName = "apply"
 val anyName = "any"
-val givingName = "giving"
-val giveName = "give"
+val doName = "do"
+val doingName = "doing"
 val givenName = "given"
 val isName = "is"
 val letName = "let"
 val nativeName = "native"
 val numberName = "number"
-val takeName = "take"
 val textName = "text"

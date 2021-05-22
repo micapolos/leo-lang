@@ -39,7 +39,7 @@ fun Context.resolutionOrNull(line: Line): Resolution? =
 	}
 
 fun Context.resolutionOrNull(function: Function): Resolution? =
-	resolutionOrNull(token(begin(givingName)))?.contextOrNull?.resolutionOrNull(token(anyEnd))
+	resolutionOrNull(token(begin(doingName)))?.contextOrNull?.resolutionOrNull(token(anyEnd))
 
 fun Context.resolutionOrNull(field: Field): Resolution? =
 	orNull

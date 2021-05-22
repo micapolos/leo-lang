@@ -80,7 +80,7 @@ val Value.resolveFunctionApplyOrNull: Value?
 		linkOrNull
 			?.run {
 				tail.resolveFunctionOrNull?.let { function ->
-					head.fieldOrNull?.valueOrNull(takeName)?.let { given ->
+					head.fieldOrNull?.valueOrNull(applyName)?.let { given ->
 						function.apply(given)
 					}
 				}
@@ -118,7 +118,7 @@ val Line.selectName: String
 	get() =
 		when (this) {
 			is FieldLine -> field.name
-			is FunctionLine -> givingName
+			is FunctionLine -> doingName
 			is NativeLine -> nativeName
 		}
 
@@ -173,3 +173,12 @@ val Literal.native: Native
 			is NumberLiteral -> native(number)
 			is StringLiteral -> native(string)
 		}
+
+fun Value.resolveOp2OrNull(fn: Value.(Value) -> Value?): Value? =
+	linkOrNull?.run {
+		tail.let { lhs ->
+			head.fieldOrNull?.value?.let { rhs ->
+				lhs.fn(rhs)
+			}
+		}
+	}

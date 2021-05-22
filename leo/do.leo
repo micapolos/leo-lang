@@ -1,7 +1,7 @@
 name
   first "Michał"
   last "Pociecha-Łoś"
-give
+do
   name
   first
   text

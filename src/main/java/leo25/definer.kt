@@ -31,7 +31,7 @@ fun Definer.plus(scriptField: ScriptField): Definer =
 
 fun Definer.plusSpecialOrNull(scriptField: ScriptField): Definer? =
 	when (scriptField.string) {
-		giveName -> plusGives(scriptField.rhs)
+		doName -> plusGives(scriptField.rhs)
 		isName -> plusIs(scriptField.rhs)
 		else -> null
 	}
