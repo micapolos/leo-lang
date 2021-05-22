@@ -1,7 +1,6 @@
 package leo25
 
 import leo.base.*
-import leo13.*
 import leo14.*
 import leo14.Number
 
