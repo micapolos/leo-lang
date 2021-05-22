@@ -73,9 +73,9 @@ class ValueTest {
 
 	@Test
 	fun resolveFunction() {
-		value(line(Function(context(), script("foo"))))
+		value(line(context().function(body(script("foo")))))
 			.resolveFunctionOrNull
-			.assertEqualTo(Function(context(), script("foo")))
+			.assertEqualTo(context().function(body(script("foo"))))
 
 		value("function" lineTo value("foo"))
 			.resolveFunctionOrNull
@@ -100,7 +100,7 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			line(Function(context(), script("name"))),
+			line(context().function(body(script("name")))),
 			takeName lineTo value("name" lineTo value("foo"))
 		)
 			.resolveFunctionApplyOrNull

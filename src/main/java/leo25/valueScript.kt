@@ -38,7 +38,14 @@ val Field.scriptField: ScriptField
 
 val Function.scriptLine: ScriptLine
 	get() =
-		givingName lineTo script
+		givingName lineTo body.script
+
+val Body.script: Script
+	get() =
+		when (this) {
+			is FnBody -> script("native")
+			is ScriptBody -> script
+		}
 
 val Native.scriptLine: ScriptLine
 	get() =

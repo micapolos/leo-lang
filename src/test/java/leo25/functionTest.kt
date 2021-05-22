@@ -7,7 +7,7 @@ import kotlin.test.Test
 class FunctionTest {
 	@Test
 	fun apply() {
-		Function(context(), script("name"))
+		context().function(body(script("name")))
 			.apply(value("name" lineTo value("foo")))
 			.assertEqualTo(value("name" lineTo value("foo")))
 	}

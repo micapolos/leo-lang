@@ -46,7 +46,7 @@ fun Interpreter.plusGive(script: Script): Interpreter =
 	context.interpreter(context.plusGiven(value).interpretedValue(script))
 
 fun Interpreter.plusGiving(script: Script): Interpreter =
-	plus(line(Function(context, script)))
+	plus(line(context.function(body(script))))
 
 fun Interpreter.plusLet(script: Script): Interpreter =
 	context.define(script).interpreter(value)

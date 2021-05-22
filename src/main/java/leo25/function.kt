@@ -1,10 +1,7 @@
 package leo25
 
-import leo14.Script
+data class Function(val context: Context, val body: Body)
 
-data class Function(val context: Context, val script: Script)
+fun Context.function(body: Body): Function = Function(this, body)
 
-fun Function.apply(value: Value): Value =
-	context
-		.plusGiven(value)
-		.interpretedValue(script)
+fun Function.apply(value: Value): Value = body.apply(context, value)
