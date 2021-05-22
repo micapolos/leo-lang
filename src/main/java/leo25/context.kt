@@ -182,7 +182,7 @@ fun Context.switchOrNull(line: Line, scriptField: ScriptField): Value? =
 fun Context.apply(block: Block, given: Value): Value =
 	when (block.typeOrNull) {
 		BlockType.REPEATEDLY -> applyRepeating(block.untypedScript, given)
-		BlockType.RECURSIVELY -> TODO()
+		BlockType.RECURSIVELY -> applyRecursing(block.untypedScript, given)
 		null -> applyUntyped(block.untypedScript, given)
 	}
 
@@ -193,5 +193,17 @@ tailrec fun Context.applyRepeating(script: Script, given: Value): Value {
 	else result
 }
 
+fun Context.applyRecursing(script: Script, given: Value): Value =
+	plusGiven(given).plusRecurse(script).interpretedValue(script)
+
 fun Context.applyUntyped(script: Script, given: Value): Value =
 	plusGiven(given).interpretedValue(script)
+
+fun Context.plusRecurse(script: Script): Context =
+	plus(
+		script(
+			anyName lineTo script(),
+			recurseName lineTo script()
+		),
+		binding(context().function(body(BlockType.RECURSIVELY.block(script))))
+	)
