@@ -2,5 +2,5 @@
 add 2
 is 4
 switch
-  yes "2 + 2 = 4"
-  no "2 + 2 != 4"
+  yes be "2 + 2 = 4"
+  no be "2 + 2 != 4"
