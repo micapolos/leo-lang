@@ -1,5 +1,5 @@
 group 'leo'
-version '0.1'
+version '0.25'
 
 buildscript {
 	ext.kotlin_version = '1.3.72'
