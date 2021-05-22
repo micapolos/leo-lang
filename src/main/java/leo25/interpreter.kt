@@ -55,9 +55,11 @@ fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	when (scriptField.string) {
 		commentName -> this
 		doName -> plusDo(scriptField.rhs)
-		doingName -> plusGiving(scriptField.rhs)
+		doingName -> plusDoing(scriptField.rhs)
 		evaluateName -> plusEvaluateOrNull(scriptField.rhs)
+		getName -> plus(scriptField.field)
 		letName -> plusLet(scriptField.rhs)
+		makeName -> plusMake(scriptField.rhs)
 		scriptName -> plusScript(scriptField.rhs)
 		switchName -> plusSwitchOrNull(scriptField.rhs)
 		else -> null
@@ -71,11 +73,18 @@ fun Interpreter.plusEvaluateOrNull(rhs: Script): Interpreter? =
 		set(dictionary.value(value.script))
 	}
 
-fun Interpreter.plusGiving(rhs: Script): Interpreter =
+fun Interpreter.plusDoing(rhs: Script): Interpreter =
 	plus(field(dictionary.function(body(rhs))))
+
+fun Interpreter.plusGet(rhs: Script): Interpreter =
+	plus(getName fieldTo rhs.value)
 
 fun Interpreter.plusLet(rhs: Script): Interpreter =
 	set(dictionary.define(rhs))
+
+fun Interpreter.plusMake(rhs: Script): Interpreter =
+	// TODO: make with
+	plus(makeName fieldTo rhs.value)
 
 fun Interpreter.plusScript(rhs: Script): Interpreter? =
 	set(rhs.value)
