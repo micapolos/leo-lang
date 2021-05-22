@@ -61,10 +61,10 @@ val Value.resolve: Value
 	get() =
 		null
 			?: resolveFunctionApplyOrNull
-			?: resolveTextNameTextOrNull("append", String::plus)
-			?: resolveNumberNameNumberOrNull("add", Number::plus)
-			?: resolveNumberNameNumberOrNull("subtract", Number::minus)
-			?: resolveNumberNameNumberOrNull("multiply", Number::times)
+			?: resolveTextOpOrNull("append", String::plus)
+			?: resolveNumberOpOrNull("add", Number::plus)
+			?: resolveNumberOpOrNull("subtract", Number::minus)
+			?: resolveNumberOpOrNull("multiply", "by", Number::times)
 			?: resolveHashOrNull
 			?: resolveEqualsOrNull
 			?: resolveGetOrNull
@@ -82,17 +82,27 @@ val Value.resolveFunctionApplyOrNull: Value?
 				}
 			}
 
-fun Value.resolveNumberNameNumberOrNull(name: String, fn: Number.(Number) -> Number): Value? =
-	linkOrNull
-		?.run {
-			tail.numberOrNull?.let { lhs ->
-				head.fieldOrNull?.valueOrNull(name)?.numberOrNull?.let { rhs ->
+fun Value.resolveNumberOpOrNull(name: String, fn: Number.(Number) -> Number): Value? =
+	resolveInfixOrNull(name) { rhs ->
+		numberOrNull?.let { lhs ->
+			rhs.numberOrNull?.let { rhs ->
+				value(line(literal(lhs.fn(rhs))))
+			}
+		}
+	}
+
+fun Value.resolveNumberOpOrNull(name1: String, name2: String, fn: Number.(Number) -> Number): Value? =
+	resolveInfixOrNull(name1) { rhs ->
+		rhs.resolvePrefixOrNull(name2) { rhs ->
+			numberOrNull?.let { lhs ->
+				rhs.numberOrNull?.let { rhs ->
 					value(line(literal(lhs.fn(rhs))))
 				}
 			}
 		}
+	}
 
-fun Value.resolveTextNameTextOrNull(name: String, fn: String.(String) -> String): Value? =
+fun Value.resolveTextOpOrNull(name: String, fn: String.(String) -> String): Value? =
 	linkOrNull
 		?.run {
 			tail.textOrNull?.let { lhs ->
