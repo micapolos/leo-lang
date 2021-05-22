@@ -1,9 +1,10 @@
-first "Hello, "
-last "world!"
+first "Hello"
+second "world"
 do
   get first
   get text
-  append " "
+  append ", "
   append
-    get last
+    get second
     get text
+  append "!"
