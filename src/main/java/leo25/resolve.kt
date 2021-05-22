@@ -2,6 +2,7 @@ package leo25
 
 import leo.base.fold
 import leo.base.orNull
+import leo.base.orNullFold
 import leo.base.reverse
 import leo13.*
 import leo14.lineTo
@@ -35,13 +36,6 @@ fun Dictionary.resolutionOrNull(link: Link): Resolution? =
 		?.dictionaryOrNull
 		?.resolutionOrNull(link.value)
 
-fun Dictionary.resolutionOrNull(rhs: Rhs): Resolution? =
-	when (rhs) {
-		is ValueRhs -> resolutionOrNull(rhs.value)
-		is FunctionRhs -> resolutionOrNull(rhs.function)
-		is NativeRhs -> resolutionOrNull(rhs.native)
-	} ?: resolutionOrNull(token(anyEnd))
-
 fun Dictionary.resolutionOrNull(function: Function): Resolution? =
 	null
 
@@ -50,6 +44,13 @@ fun Dictionary.resolutionOrNull(field: Field): Resolution? =
 		?.resolutionOrNull(token(begin(field.name)))
 		?.dictionaryOrNull
 		?.resolutionOrNull(field.rhs)
+
+fun Dictionary.resolutionOrNull(rhs: Rhs): Resolution? =
+	when (rhs) {
+		is ValueRhs -> resolutionOrNull(rhs.value)
+		is FunctionRhs -> resolutionOrNull(rhs.function)
+		is NativeRhs -> resolutionOrNull(rhs.native)
+	} ?: resolutionOrNull(token(anyEnd))
 
 fun Dictionary.resolutionOrNull(native: Native): Resolution? =
 	resolutionOrNull(token(native))

@@ -71,12 +71,11 @@ val Value.resolveFunctionApplyOrNull: Value?
 
 val Value.fieldSeq: Seq<Field>
 	get() =
-		seq {
-			when (this) {
-				EmptyValue -> null
-				is LinkValue -> link.field.seqNode(link.value.fieldSeq)
-			}
-		}
+		seq { linkOrNull?.fieldSeqNode }
+
+val Link.fieldSeqNode: SeqNode<Field>
+	get() =
+		field.seqNode(value.fieldSeq)
 
 fun Value.rhsValueOrNull(name: String): Value? =
 	fieldOrNull?.rhs?.valueOrNull
