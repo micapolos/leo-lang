@@ -1,4 +1,4 @@
 doing
   text
-  plus "!"
+  append "!"
 apply "Hello, world"
