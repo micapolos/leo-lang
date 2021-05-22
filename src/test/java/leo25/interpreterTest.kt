@@ -15,7 +15,7 @@ class InterpreterTest {
 			"color" lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script("red" lineTo script(), "color" lineTo script()))
+			.assertEqualTo(script("color" lineTo script("red")))
 	}
 
 	@Test

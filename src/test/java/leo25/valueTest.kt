@@ -113,7 +113,17 @@ class ValueTest {
 			line(literal("Hello, ")),
 			"plus" lineTo value(line(literal("world!")))
 		)
-			.resolveTextPlusTextOrNull
+			.resolve
 			.assertEqualTo(value(line(literal("Hello, world!"))))
+	}
+
+	@Test
+	fun resolveNumberMinusNumber() {
+		value(
+			line(literal(5)),
+			"minus" lineTo value(line(literal(3)))
+		)
+			.resolve
+			.assertEqualTo(value(line(literal(2))))
 	}
 }

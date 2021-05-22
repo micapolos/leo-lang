@@ -60,7 +60,10 @@ val Value.resolve: Value
 	get() =
 		null
 			?: resolveFunctionApplyOrNull
-			?: resolveTextPlusTextOrNull
+			?: resolveTextNameTextOrNull("plus", String::plus)
+			?: resolveNumberNameNumberOrNull("plus", Number::plus)
+			?: resolveNumberNameNumberOrNull("minus", Number::minus)
+			?: resolveNumberNameNumberOrNull("times", Number::times)
 			?: resolveNameOrNull
 			?: this
 
@@ -83,16 +86,25 @@ val Value.resolveFunctionApplyOrNull: Value?
 				}
 			}
 
-val Value.resolveTextPlusTextOrNull: Value?
-	get() =
-		linkOrNull
-			?.run {
-				tail.textOrNull?.let { lhs ->
-					head.fieldOrNull?.valueOrNull("plus")?.textOrNull?.let { rhs ->
-						value(line(literal(lhs.plus(rhs))))
-					}
+fun Value.resolveNumberNameNumberOrNull(name: String, fn: Number.(Number) -> Number): Value? =
+	linkOrNull
+		?.run {
+			tail.numberOrNull?.let { lhs ->
+				head.fieldOrNull?.valueOrNull(name)?.numberOrNull?.let { rhs ->
+					value(line(literal(lhs.fn(rhs))))
 				}
 			}
+		}
+
+fun Value.resolveTextNameTextOrNull(name: String, fn: String.(String) -> String): Value? =
+	linkOrNull
+		?.run {
+			tail.textOrNull?.let { lhs ->
+				head.fieldOrNull?.valueOrNull(name)?.textOrNull?.let { rhs ->
+					value(line(literal(lhs.fn(rhs))))
+				}
+			}
+		}
 
 fun Value.selectOrNull(name: String): Value? =
 	linkOrNull?.selectOrNull(name)
