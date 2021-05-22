@@ -15,7 +15,7 @@ class ValueScriptTest {
 
 	@Test
 	fun natives() {
-		value(line(context().function(body(script("foo")))))
+		value(line(dictionary().function(body(script("foo")))))
 			.script
 			.assertEqualTo(script(doingName lineTo script("foo")))
 	}

@@ -7,19 +7,19 @@ import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
-class ContextTest {
+class DictionaryTest {
 	@Test
 	fun plusAny() {
-		context()
+		dictionary()
 			.plus(script(anyName), binding(value("ok")))
 			.assertEqualTo(
-				Context(persistentMapOf(token(anyEnd) to resolution(binding(value("ok")))))
+				Dictionary(persistentMapOf(token(anyEnd) to resolution(binding(value("ok")))))
 			)
 	}
 
 	@Test
 	fun applyString() {
-		context()
+		dictionary()
 			.plus(script("ping"), binding(value("pong")))
 			.applyOrNull(value("ping"))
 			.assertEqualTo(value("pong"))
@@ -27,7 +27,7 @@ class ContextTest {
 
 	@Test
 	fun applyStruct() {
-		context()
+		dictionary()
 			.plus(script("name" lineTo script(anyName)), binding(value("ok")))
 			.run {
 				applyOrNull(value("name" lineTo value())).assertEqualTo(value("ok"))
@@ -38,7 +38,7 @@ class ContextTest {
 
 	@Test
 	fun applyAny() {
-		context()
+		dictionary()
 			.plus(script(anyName), binding(value("pong")))
 			.run {
 				applyOrNull(value("ping")).assertEqualTo(value("pong"))
@@ -48,7 +48,7 @@ class ContextTest {
 
 	@Test
 	fun anyValueApply() {
-		context()
+		dictionary()
 			.plus(
 				script(anyName lineTo script(), "plus" lineTo script(anyName)),
 				binding(value("ok"))
@@ -61,22 +61,22 @@ class ContextTest {
 
 	@Test
 	fun literalApply() {
-		context()
+		dictionary()
 			.plus(script(literal("foo")), binding(value("ok")))
 			.applyOrNull(value(line(literal("foo"))))
 			.assertEqualTo(value("ok"))
 
-		context()
+		dictionary()
 			.plus(script(literal("foo")), binding(value("ok")))
 			.applyOrNull(value(line(literal("bar"))))
 			.assertEqualTo(null)
 
-		context()
+		dictionary()
 			.plus(script(literal(123)), binding(value("ok")))
 			.applyOrNull(value(line(literal(123))))
 			.assertEqualTo(value("ok"))
 
-		context()
+		dictionary()
 			.plus(script(literal(123)), binding(value("ok")))
 			.applyOrNull(value(line(literal(124))))
 			.assertEqualTo(null)
@@ -84,11 +84,11 @@ class ContextTest {
 
 	@Test
 	fun plusDifferentTokens() {
-		context(
+		dictionary(
 			token(begin("x")) to resolution(
-				context(
+				dictionary(
 					token(emptyEnd) to resolution(
-						context(
+						dictionary(
 							token(emptyEnd) to resolution(binding(value("x")))
 						)
 					)
@@ -96,11 +96,11 @@ class ContextTest {
 			)
 		)
 			.plus(
-				context(
+				dictionary(
 					token(begin("y")) to resolution(
-						context(
+						dictionary(
 							token(emptyEnd) to resolution(
-								context(
+								dictionary(
 									token(emptyEnd) to resolution(binding(value("y")))
 								)
 							)
@@ -109,20 +109,20 @@ class ContextTest {
 				)
 			)
 			.assertEqualTo(
-				context(
+				dictionary(
 					token(begin("x")) to resolution(
-						context(
+						dictionary(
 							token(emptyEnd) to resolution(
-								context(
+								dictionary(
 									token(emptyEnd) to resolution(binding(value("x")))
 								)
 							)
 						)
 					),
 					token(begin("y")) to resolution(
-						context(
+						dictionary(
 							token(emptyEnd) to resolution(
-								context(
+								dictionary(
 									token(emptyEnd) to resolution(binding(value("y")))
 								)
 							)
@@ -134,15 +134,15 @@ class ContextTest {
 
 	@Test
 	fun plusSharedTokens() {
-		context(
+		dictionary(
 			token(begin("point")) to resolution(
-				context(
+				dictionary(
 					token(begin("x")) to resolution(
-						context(
+						dictionary(
 							token(emptyEnd) to resolution(
-								context(
+								dictionary(
 									token(emptyEnd) to resolution(
-										context(
+										dictionary(
 											token(emptyEnd) to resolution(binding(value("x")))
 										)
 									)
@@ -154,15 +154,15 @@ class ContextTest {
 			)
 		)
 			.plus(
-				context(
+				dictionary(
 					token(begin("point")) to resolution(
-						context(
+						dictionary(
 							token(begin("y")) to resolution(
-								context(
+								dictionary(
 									token(emptyEnd) to resolution(
-										context(
+										dictionary(
 											token(emptyEnd) to resolution(
-												context(
+												dictionary(
 													token(emptyEnd) to resolution(binding(value("y")))
 												)
 											)
@@ -175,15 +175,15 @@ class ContextTest {
 				)
 			)
 			.assertEqualTo(
-				context(
+				dictionary(
 					token(begin("point")) to resolution(
-						context(
+						dictionary(
 							token(begin("x")) to resolution(
-								context(
+								dictionary(
 									token(emptyEnd) to resolution(
-										context(
+										dictionary(
 											token(emptyEnd) to resolution(
-												context(
+												dictionary(
 													token(emptyEnd) to resolution(binding(value("x")))
 												)
 											)
@@ -192,11 +192,11 @@ class ContextTest {
 								)
 							),
 							token(begin("y")) to resolution(
-								context(
+								dictionary(
 									token(emptyEnd) to resolution(
-										context(
+										dictionary(
 											token(emptyEnd) to resolution(
-												context(
+												dictionary(
 													token(emptyEnd) to resolution(binding(value("y")))
 												)
 											)
@@ -212,11 +212,11 @@ class ContextTest {
 
 	@Test
 	fun plusAnyOverride() {
-		context(
+		dictionary(
 			token(begin("x")) to resolution(
-				context(
+				dictionary(
 					token(emptyEnd) to resolution(
-						context(
+						dictionary(
 							token(emptyEnd) to resolution(binding(value("x")))
 						)
 					)
@@ -225,18 +225,18 @@ class ContextTest {
 			token(emptyEnd) to resolution(binding(value("end")))
 		)
 			.plus(
-				context(
+				dictionary(
 					token(anyEnd) to resolution(
-						context(
+						dictionary(
 							token(emptyEnd) to resolution(binding(value("y")))
 						)
 					)
 				)
 			)
 			.assertEqualTo(
-				context(
+				dictionary(
 					token(anyEnd) to resolution(
-						context(
+						dictionary(
 							token(emptyEnd) to resolution(binding(value("y")))
 						)
 					)
@@ -246,7 +246,7 @@ class ContextTest {
 
 	@Test
 	fun switchOrNull() {
-		context()
+		dictionary()
 			.switchOrNull(
 				value("shape" lineTo value("circle" lineTo value("radius" lineTo value("zero")))),
 				script(

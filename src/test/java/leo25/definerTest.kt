@@ -8,7 +8,7 @@ import kotlin.test.Test
 class DefinerTest {
 	@Test
 	fun defineDo() {
-		context()
+		dictionary()
 			.define(
 				script(
 					"name" lineTo script(anyName),
@@ -16,17 +16,17 @@ class DefinerTest {
 				)
 			)
 			.assertEqualTo(
-				context()
+				dictionary()
 					.plus(
 						script("name" lineTo script(anyName)),
-						binding(context().function(body(script("name"))))
+						binding(dictionary().function(body(script("name"))))
 					)
 			)
 	}
 
 	@Test
 	fun letBe() {
-		context()
+		dictionary()
 			.define(
 				script(
 					"name" lineTo script(anyName),
@@ -34,7 +34,7 @@ class DefinerTest {
 				)
 			)
 			.assertEqualTo(
-				context()
+				dictionary()
 					.plus(
 						script(getName lineTo script("name" lineTo script(anyName))),
 						binding(value("name"))

@@ -5,15 +5,15 @@ import leo.base.reverse
 import leo14.*
 
 data class Definer(
-	val context: Context,
+	val dictionary: Dictionary,
 	val script: Script
 )
 
-fun Context.definer(script: Script = script()) =
+fun Dictionary.definer(script: Script = script()) =
 	Definer(this, script)
 
-fun Context.define(script: Script): Context =
-	definer().fold(script.lineSeq.reverse) { plus(it) }.context
+fun Dictionary.define(script: Script): Dictionary =
+	definer().fold(script.lineSeq.reverse) { plus(it) }.dictionary
 
 fun Definer.plus(scriptLine: ScriptLine): Definer =
 	when (scriptLine) {
@@ -22,7 +22,7 @@ fun Definer.plus(scriptLine: ScriptLine): Definer =
 	}
 
 fun Definer.scriptPlus(scriptLine: ScriptLine): Definer =
-	context.definer(script.plus(scriptLine))
+	dictionary.definer(script.plus(scriptLine))
 
 fun Definer.plus(scriptField: ScriptField): Definer =
 	null
@@ -37,11 +37,11 @@ fun Definer.plusSpecialOrNull(scriptField: ScriptField): Definer? =
 	}
 
 fun Definer.plusGives(rhs: Script): Definer =
-	context
-		.plus(this.script, binding(context.function(body(rhs))))
+	dictionary
+		.plus(this.script, binding(dictionary.function(body(rhs))))
 		.definer()
 
 fun Definer.plusBe(rhs: Script): Definer? =
-	context
-		.plus(script("get" lineTo script), binding(context.value(rhs)))
+	dictionary
+		.plus(script("get" lineTo script), binding(dictionary.value(rhs)))
 		.definer()

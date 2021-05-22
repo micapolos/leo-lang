@@ -8,7 +8,7 @@ import kotlin.test.Test
 class FunctionTest {
 	@Test
 	fun apply() {
-		context().function(body(script(getName lineTo script("name"))))
+		dictionary().function(body(script(getName lineTo script("name"))))
 			.apply(value("name" lineTo value("foo")))
 			.assertEqualTo(value("name" lineTo value("foo")))
 	}

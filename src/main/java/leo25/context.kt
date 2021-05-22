@@ -6,7 +6,7 @@ import leo.base.*
 import leo14.*
 import leo14.matching.name
 
-data class Context(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
+data class Dictionary(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
 
 sealed class Token
 data class BeginToken(val begin: Begin) : Token()
@@ -20,14 +20,14 @@ object EmptyEnd : End()
 object AnythingEnd : End()
 
 sealed class Resolution
-data class ContextResolution(val context: Context) : Resolution()
+data class DictionaryResolution(val dictionary: Dictionary) : Resolution()
 data class BindingResolution(val binding: Binding) : Resolution()
 
-fun Context.put(token: Token, resolution: Resolution): Context =
-	Context(tokenToResolutionMap.put(token, resolution))
+fun Dictionary.put(token: Token, resolution: Resolution): Dictionary =
+	Dictionary(tokenToResolutionMap.put(token, resolution))
 
-fun context(vararg pairs: Pair<Token, Resolution>): Context =
-	Context(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
+fun dictionary(vararg pairs: Pair<Token, Resolution>): Dictionary =
+	Dictionary(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
 
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
@@ -37,23 +37,23 @@ fun begin(name: String) = Begin(name)
 val emptyEnd: End = EmptyEnd
 val anyEnd: End = AnythingEnd
 
-fun resolution(context: Context): Resolution = ContextResolution(context)
+fun resolution(dictionary: Dictionary): Resolution = DictionaryResolution(dictionary)
 fun resolution(binding: Binding): Resolution = BindingResolution(binding)
 
-fun Context.update(token: Token, fn: (Resolution?) -> Resolution?): Context =
+fun Dictionary.update(token: Token, fn: (Resolution?) -> Resolution?): Dictionary =
 	fn(tokenToResolutionMap[token]).let { resolutionOrNull ->
-		Context(
+		Dictionary(
 			if (resolutionOrNull == null) tokenToResolutionMap.remove(token)
 			else tokenToResolutionMap.put(token, resolutionOrNull)
 		)
 	}
 
-fun Context.updateContinuation(token: Token, fn: Context.() -> Resolution): Context =
+fun Dictionary.updateContinuation(token: Token, fn: Dictionary.() -> Resolution): Dictionary =
 	update(token) { resolutionOrNull ->
-		resolutionOrNull?.continuationContext.orIfNull { context() }.fn()
+		resolutionOrNull?.continuationDictionary.orIfNull { dictionary() }.fn()
 	}
 
-fun Context.plus(literal: Literal, resolution: Resolution): Context =
+fun Dictionary.plus(literal: Literal, resolution: Resolution): Dictionary =
 	updateContinuation(token(begin(literal.selectName))) {
 		resolution(updateContinuation(token(literal.native)) {
 			resolution(updateContinuation(token(emptyEnd)) {
@@ -62,78 +62,78 @@ fun Context.plus(literal: Literal, resolution: Resolution): Context =
 		})
 	}
 
-val Context.removeForAny: Context
+val Dictionary.removeForAny: Dictionary
 	get() =
-		Context(
+		Dictionary(
 			tokenToResolutionMap[token(anyEnd)].let { resolutionOrNull ->
 				if (resolutionOrNull == null) persistentMapOf()
 				else persistentMapOf(token(anyEnd) to resolutionOrNull)
 			})
 
-val Resolution.continuationContext: Context
+val Resolution.continuationDictionary: Dictionary
 	get() =
 		when (this) {
-			is BindingResolution -> context()
-			is ContextResolution -> context
+			is BindingResolution -> dictionary()
+			is DictionaryResolution -> dictionary
 		}
 
-fun Context.plus(script: Script, binding: Binding): Context =
+fun Dictionary.plus(script: Script, binding: Binding): Dictionary =
 	update(script) {
 		resolution(binding)
 	}
 
-fun Context.plus(script: Script, body: Body): Context =
-	plus(script, binding(context().function(body)))
+fun Dictionary.plus(script: Script, body: Body): Dictionary =
+	plus(script, binding(dictionary().function(body)))
 
-fun Context.update(script: Script, fn: Context.() -> Resolution): Context =
+fun Dictionary.update(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
 	null
 		?: updateAnyOrNull(script, fn)
 		?: updateExact(script, fn)
 
-fun Context.updateExact(script: Script, fn: Context.() -> Resolution): Context =
+fun Dictionary.updateExact(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
 	when (script) {
 		is UnitScript -> updateContinuation(token(emptyEnd), fn)
 		is LinkScript -> update(script.link, fn)
 	}
 
-fun Context.update(struct: ScriptLink, fn: Context.() -> Resolution): Context =
+fun Dictionary.update(struct: ScriptLink, fn: Dictionary.() -> Resolution): Dictionary =
 	update(struct.line) {
 		resolution(
 			update(struct.lhs, fn)
 		)
 	}
 
-fun Context.update(line: ScriptLine, fn: Context.() -> Resolution): Context =
+fun Dictionary.update(line: ScriptLine, fn: Dictionary.() -> Resolution): Dictionary =
 	when (line) {
 		is FieldScriptLine -> update(line.field, fn)
 		is LiteralScriptLine -> update(line.literal, fn)
 	}
 
-fun Context.update(literal: Literal, fn: Context.() -> Resolution): Context =
+fun Dictionary.update(literal: Literal, fn: Dictionary.() -> Resolution): Dictionary =
 	updateContinuation(token(begin(literal.selectName))) {
 		resolution(updateContinuation(token(literal.native)) {
 			resolution(updateContinuation(token(emptyEnd), fn))
 		})
 	}
 
-fun Context.updateAnyOrNull(script: Script, fn: Context.() -> Resolution): Context? =
+fun Dictionary.updateAnyOrNull(script: Script, fn: Dictionary.() -> Resolution): Dictionary? =
 	notNullIf(script == script(anyName)) {
 		updateAny(fn)
 	}
 
-fun Context.update(field: ScriptField, fn: Context.() -> Resolution): Context =
+fun Dictionary.update(field: ScriptField, fn: Dictionary.() -> Resolution): Dictionary =
 	updateContinuation(token(begin(field.string))) {
 		resolution(update(field.rhs, fn))
 	}
 
-fun Context.updateAny(fn: Context.() -> Resolution): Context =
+fun Dictionary.updateAny(fn: Dictionary.() -> Resolution): Dictionary =
 	removeForAny.updateContinuation(token(anyEnd), fn)
 
-operator fun Context.plus(context: Context): Context =
-	runIf(context.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
+operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
+	runIf(dictionary.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
 		.run {
-			context.tokenToResolutionMap.entries.fold(this) { context, (token, resolution) ->
-				context.update(token) { resolutionOrNull ->
+			dictionary.tokenToResolutionMap.entries.fold(this) { dictionary, (token, resolution) ->
+				dictionary.update(token) { resolutionOrNull ->
 					resolutionOrNull.orNullMerge(resolution)
 				}
 			}
@@ -142,67 +142,67 @@ operator fun Context.plus(context: Context): Context =
 fun Resolution.merge(resolution: Resolution): Resolution =
 	when (resolution) {
 		is BindingResolution -> resolution
-		is ContextResolution ->
+		is DictionaryResolution ->
 			when (this) {
 				is BindingResolution -> resolution
-				is ContextResolution -> resolution(context.plus(resolution.context))
+				is DictionaryResolution -> resolution(dictionary.plus(resolution.dictionary))
 			}
 	}
 
 fun Resolution?.orNullMerge(resolution: Resolution): Resolution =
 	this?.merge(resolution) ?: resolution
 
-fun Context.switchOrNull(value: Value, script: Script): Value? =
+fun Dictionary.switchOrNull(value: Value, script: Script): Value? =
 	value.linkOrNull?.onlyLineOrNull?.fieldOrNull?.value?.let { switchBodyOrNull(it, script) }
 
-fun Context.switchBodyOrNull(value: Value, script: Script): Value? =
+fun Dictionary.switchBodyOrNull(value: Value, script: Script): Value? =
 	value.linkOrNull?.onlyLineOrNull?.let {
 		switchOrNull(it, script)
 	}
 
-fun Context.switchOrNull(line: Line, script: Script): Value? =
+fun Dictionary.switchOrNull(line: Line, script: Script): Value? =
 	when (script) {
 		is LinkScript -> switchOrNull(line, script.link)
 		is UnitScript -> null
 	}
 
-fun Context.switchOrNull(line: Line, scriptLink: ScriptLink): Value? =
+fun Dictionary.switchOrNull(line: Line, scriptLink: ScriptLink): Value? =
 	switchOrNull(line, scriptLink.lhs) ?: switchOrNull(line, scriptLink.line)
 
-fun Context.switchOrNull(line: Line, scriptLine: ScriptLine): Value? =
+fun Dictionary.switchOrNull(line: Line, scriptLine: ScriptLine): Value? =
 	when (scriptLine) {
 		is FieldScriptLine -> switchOrNull(line, scriptLine.field)
 		is LiteralScriptLine -> null
 	}
 
-fun Context.switchOrNull(line: Line, scriptField: ScriptField): Value? =
+fun Dictionary.switchOrNull(line: Line, scriptField: ScriptField): Value? =
 	ifOrNull(line.selectName == scriptField.name) {
 		line.selectValueOrNull?.let { given ->
 			plusGiven(given).value(scriptField.rhs)
 		}
 	}
 
-fun Context.apply(block: Block, given: Value): Value =
+fun Dictionary.apply(block: Block, given: Value): Value =
 	when (block.typeOrNull) {
 		BlockType.REPEATEDLY -> applyRepeating(block.untypedScript, given)
 		BlockType.RECURSIVELY -> applyRecursing(block.untypedScript, given)
 		null -> applyUntyped(block.untypedScript, given)
 	}
 
-tailrec fun Context.applyRepeating(script: Script, given: Value): Value {
+tailrec fun Dictionary.applyRepeating(script: Script, given: Value): Value {
 	val result = plusGiven(given).value(script)
 	val repeatValue = result.repeatValueOrNull
 	return if (repeatValue != null) applyRepeating(script, repeatValue)
 	else result
 }
 
-fun Context.applyRecursing(script: Script, given: Value): Value =
+fun Dictionary.applyRecursing(script: Script, given: Value): Value =
 	plusGiven(given).plusRecurse(script).value(script)
 
-fun Context.applyUntyped(script: Script, given: Value): Value =
+fun Dictionary.applyUntyped(script: Script, given: Value): Value =
 	plusGiven(given).value(script)
 
-fun Context.plusRecurse(script: Script): Context =
+fun Dictionary.plusRecurse(script: Script): Dictionary =
 	plus(
 		script(
 			anyName lineTo script(),

@@ -19,8 +19,8 @@ class ValueTest {
 	}
 
 	@Test
-	fun contextResolve() {
-		context()
+	fun dictionaryResolve() {
+		dictionary()
 			.resolve(value("foo"))
 			.assertEqualTo(value("foo"))
 	}
@@ -74,9 +74,9 @@ class ValueTest {
 
 	@Test
 	fun resolveFunction() {
-		value(line(context().function(body(script("foo")))))
+		value(line(dictionary().function(body(script("foo")))))
 			.resolveFunctionOrNull
-			.assertEqualTo(context().function(body(script("foo"))))
+			.assertEqualTo(dictionary().function(body(script("foo"))))
 
 		value("function" lineTo value("foo"))
 			.resolveFunctionOrNull
@@ -101,7 +101,7 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			line(context().function(body(script(getName lineTo script("name"))))),
+			line(dictionary().function(body(script(getName lineTo script("name"))))),
 			applyName lineTo value("name" lineTo value("foo"))
 		)
 			.resolveFunctionApplyOrNull

@@ -4,66 +4,66 @@ import leo.base.orNull
 import leo14.lineTo
 import leo14.script
 
-fun Context.resolve(value: Value): Value =
+fun Dictionary.resolve(value: Value): Value =
 	null
 		?: applyOrNull(value)
 		?: value.resolve
 
-fun Context.applyOrNull(value: Value): Value? =
+fun Dictionary.applyOrNull(value: Value): Value? =
 	resolutionOrNull(value)?.bindingOrNull?.apply(value)
 
-fun Context.resolutionOrNull(token: Token): Resolution? =
+fun Dictionary.resolutionOrNull(token: Token): Resolution? =
 	tokenToResolutionMap[token]
 
-fun Context.resolutionOrNull(value: Value): Resolution? =
+fun Dictionary.resolutionOrNull(value: Value): Resolution? =
 	null
 		?: concreteResolutionOrNull(value)
 		?: resolutionOrNull(EndToken(AnythingEnd))
 
-fun Context.concreteResolutionOrNull(value: Value): Resolution? =
+fun Dictionary.concreteResolutionOrNull(value: Value): Resolution? =
 	when (value) {
 		EmptyValue -> resolutionOrNull(token(emptyEnd))
 		is LinkValue -> resolutionOrNull(value.link)
 	}
 
-fun Context.resolutionOrNull(link: Link): Resolution? =
+fun Dictionary.resolutionOrNull(link: Link): Resolution? =
 	orNull
 		?.resolutionOrNull(link.head)
-		?.contextOrNull
+		?.dictionaryOrNull
 		?.resolutionOrNull(link.tail)
 
-fun Context.resolutionOrNull(line: Line): Resolution? =
+fun Dictionary.resolutionOrNull(line: Line): Resolution? =
 	when (line) {
 		is FieldLine -> resolutionOrNull(line.field)
 		is FunctionLine -> resolutionOrNull(line.function)
 		is NativeLine -> resolutionOrNull(line.native)
 	}
 
-fun Context.resolutionOrNull(function: Function): Resolution? =
-	resolutionOrNull(token(begin(doingName)))?.contextOrNull?.resolutionOrNull(token(anyEnd))
+fun Dictionary.resolutionOrNull(function: Function): Resolution? =
+	resolutionOrNull(token(begin(doingName)))?.dictionaryOrNull?.resolutionOrNull(token(anyEnd))
 
-fun Context.resolutionOrNull(field: Field): Resolution? =
+fun Dictionary.resolutionOrNull(field: Field): Resolution? =
 	orNull
 		?.resolutionOrNull(BeginToken(Begin(field.name)))
-		?.contextOrNull
+		?.dictionaryOrNull
 		?.resolutionOrNull(field.value)
 
-fun Context.resolutionOrNull(native: Native): Resolution? =
+fun Dictionary.resolutionOrNull(native: Native): Resolution? =
 	resolutionOrNull(token(native))
 
-val Resolution.contextOrNull get() = (this as? ContextResolution)?.context
+val Resolution.dictionaryOrNull get() = (this as? DictionaryResolution)?.dictionary
 val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
-fun Context.plusGiven(value: Value): Context =
+fun Dictionary.plusGiven(value: Value): Dictionary =
 	when (value) {
 		EmptyValue -> this
 		is LinkValue -> plusGiven(value.link)
 	}
 
-fun Context.plusGiven(link: Link): Context =
+fun Dictionary.plusGiven(link: Link): Dictionary =
 	plusGiven(link.tail).plusGiven(link.head)
 
-fun Context.plusGiven(line: Line): Context =
+fun Dictionary.plusGiven(line: Line): Dictionary =
 	plus(
 		script(getName lineTo script(line.selectName)),
 		binding(value(line))

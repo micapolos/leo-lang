@@ -1,8 +1,8 @@
 package leo25
 
-val nativeContext: Context
+val nativeDictionary: Dictionary
 	get() =
-		context()
+		dictionary()
 			.plus(textAppendTextScript, textAppendTextBody)
 			.plus(numberAddNumberScript, numberAddNumberBody)
 			.plus(numberSubtractNumberScript, numberSubtractNumberBody)

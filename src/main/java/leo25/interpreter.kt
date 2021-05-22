@@ -4,38 +4,37 @@ import leo.base.fold
 import leo.base.notNullIf
 import leo.base.reverse
 import leo14.*
-import leo15.comName
 import leo25.parser.scriptOrNull
 
 data class Interpreter(
-	val context: Context,
+	val dictionary: Dictionary,
 	val value: Value
 )
 
-fun Context.interpreter(value: Value = value()) =
+fun Dictionary.interpreter(value: Value = value()) =
 	Interpreter(this, value)
 
 fun Interpreter.set(value: Value): Interpreter =
-	context.interpreter(value)
+	dictionary.interpreter(value)
 
-fun Interpreter.set(context: Context): Interpreter =
-	context.interpreter(value)
+fun Interpreter.set(dictionary: Dictionary): Interpreter =
+	dictionary.interpreter(value)
 
-fun Context.value(script: Script): Value =
+fun Dictionary.value(script: Script): Value =
 	interpreter(script).value
 
-fun Context.line(scriptField: ScriptField): Line =
+fun Dictionary.line(scriptField: ScriptField): Line =
 	scriptField.string lineTo value(scriptField.rhs)
 
 val Script.interpret: Script
 	get() =
-		nativeContext.value(this).script
+		nativeDictionary.value(this).script
 
 val String.interpret: String
 	get() =
 		scriptOrNull?.interpret?.string ?: this
 
-fun Context.interpreter(script: Script): Interpreter =
+fun Dictionary.interpreter(script: Script): Interpreter =
 	interpreter().plus(script)
 
 fun Interpreter.plus(script: Script): Interpreter =
@@ -65,30 +64,30 @@ fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	}
 
 fun Interpreter.plusDo(rhs: Script): Interpreter =
-	set(context.apply(block(rhs), value))
+	set(dictionary.apply(block(rhs), value))
 
 fun Interpreter.plusEvaluateOrNull(rhs: Script): Interpreter? =
 	notNullIf(rhs.isEmpty) {
-		set(context.value(value.script))
+		set(dictionary.value(value.script))
 	}
 
 fun Interpreter.plusGiving(rhs: Script): Interpreter =
-	plus(line(context.function(body(rhs))))
+	plus(line(dictionary.function(body(rhs))))
 
 fun Interpreter.plusLet(rhs: Script): Interpreter =
-	set(context.define(rhs))
+	set(dictionary.define(rhs))
 
 fun Interpreter.plusScript(rhs: Script): Interpreter? =
 	set(rhs.value)
 
 fun Interpreter.plusSwitchOrNull(rhs: Script): Interpreter? =
-	context.switchOrNull(value, rhs)?.let { set(it) }
+	dictionary.switchOrNull(value, rhs)?.let { set(it) }
 
 fun Interpreter.plusDynamic(scriptField: ScriptField): Interpreter =
-	plus(context.line(scriptField))
+	plus(dictionary.line(scriptField))
 
 fun Interpreter.plus(literal: Literal): Interpreter =
 	plus(line(literal))
 
 fun Interpreter.plus(line: Line): Interpreter =
-	set(context.resolve(value.plus(line)))
+	set(dictionary.resolve(value.plus(line)))
