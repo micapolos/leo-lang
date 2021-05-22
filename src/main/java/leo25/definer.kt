@@ -38,10 +38,10 @@ fun Definer.plusSpecialOrNull(scriptField: ScriptField): Definer? =
 
 fun Definer.plusGives(rhs: Script): Definer =
 	dictionary
-		.plus(this.script, binding(dictionary.function(body(rhs))))
+		.plus(script, binding(dictionary.function(body(rhs))))
 		.definer()
 
 fun Definer.plusBe(rhs: Script): Definer? =
 	dictionary
-		.plus(script("get" lineTo script), binding(dictionary.value(rhs)))
+		.plus(script(getName lineTo script), binding(dictionary.value(rhs)))
 		.definer()
