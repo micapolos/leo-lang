@@ -28,7 +28,7 @@ fun Context.line(scriptField: ScriptField): Line =
 
 val Script.interpret: Script
 	get() =
-		context().value(this).script
+		nativeContext.value(this).script
 
 val String.interpret: String
 	get() =

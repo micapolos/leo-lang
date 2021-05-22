@@ -5,6 +5,7 @@ import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
+import leo23.value.int
 import kotlin.test.Test
 
 class InterpreterTest {
@@ -250,5 +251,45 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script(hashName lineTo script(line(literal(value().hashCode())))))
+	}
+
+	@Test
+	fun textAppendText() {
+		script(
+			line(literal("Hello, ")),
+			"append" lineTo script(line(literal("world!")))
+		)
+			.interpret
+			.assertEqualTo(script(literal("Hello, world!")))
+	}
+
+	@Test
+	fun numberAddNumber() {
+		script(
+			line(literal(2)),
+			"add" lineTo script(line(literal(3)))
+		)
+			.interpret
+			.assertEqualTo(script(literal(5)))
+	}
+
+	@Test
+	fun numberSubtractNumber() {
+		script(
+			line(literal(5)),
+			"subtract" lineTo script(line(literal(3)))
+		)
+			.interpret
+			.assertEqualTo(script(literal(2)))
+	}
+
+	@Test
+	fun numberMultiplyByNumber() {
+		script(
+			line(literal(2)),
+			"multiply" lineTo script("by" lineTo script(line(literal(3))))
+		)
+			.interpret
+			.assertEqualTo(script(literal(6)))
 	}
 }

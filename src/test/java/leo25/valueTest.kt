@@ -107,24 +107,4 @@ class ValueTest {
 			.resolveFunctionApplyOrNull
 			.assertEqualTo(value("name" lineTo value("foo")))
 	}
-
-	@Test
-	fun resolveTextPlusText() {
-		value(
-			line(literal("Hello, ")),
-			"append" lineTo value(line(literal("world!")))
-		)
-			.resolve
-			.assertEqualTo(value(line(literal("Hello, world!"))))
-	}
-
-	@Test
-	fun resolveNumberMinusNumber() {
-		value(
-			line(literal(5)),
-			"subtract" lineTo value(line(literal(3)))
-		)
-			.resolve
-			.assertEqualTo(value(line(literal(2))))
-	}
 }

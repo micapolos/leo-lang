@@ -61,12 +61,6 @@ val Value.resolve: Value
 	get() =
 		null
 			?: resolveFunctionApplyOrNull
-			?: resolveTextOpOrNull("append", String::plus)
-			?: resolveNumberOpOrNull("add", Number::plus)
-			?: resolveNumberOpOrNull("subtract", Number::minus)
-			?: resolveNumberOpOrNull("multiply", "by", Number::times)
-			?: resolveGetHashOrNull
-			?: resolveIsOrNull
 			?: resolveGetOrNull
 			?: resolveMakeOrNull
 			?: this
@@ -81,50 +75,6 @@ val Value.resolveFunctionApplyOrNull: Value?
 					}
 				}
 			}
-
-fun Value.resolveNumberOpOrNull(name: String, fn: Number.(Number) -> Number): Value? =
-	resolveInfixOrNull(name) { rhs ->
-		numberOrNull?.let { lhs ->
-			rhs.numberOrNull?.let { rhs ->
-				value(line(literal(lhs.fn(rhs))))
-			}
-		}
-	}
-
-fun Value.resolveNumberOpOrNull(name1: String, name2: String, fn: Number.(Number) -> Number): Value? =
-	resolveInfixOrNull(name1) { rhs ->
-		rhs.resolvePrefixOrNull(name2) { rhs ->
-			numberOrNull?.let { lhs ->
-				rhs.numberOrNull?.let { rhs ->
-					value(line(literal(lhs.fn(rhs))))
-				}
-			}
-		}
-	}
-
-fun Value.resolveTextOpOrNull(name: String, fn: String.(String) -> String): Value? =
-	linkOrNull
-		?.run {
-			tail.textOrNull?.let { lhs ->
-				head.fieldOrNull?.valueOrNull(name)?.textOrNull?.let { rhs ->
-					value(line(literal(lhs.fn(rhs))))
-				}
-			}
-		}
-
-val Value.resolveGetHashOrNull: Value?
-	get() =
-		resolveInfixOrNull(getName) { rhs ->
-			rhs.resolveOrNull(hashName) {
-				value(hashName lineTo value(line(literal(hashCode()))))
-			}
-		}
-
-val Value.resolveIsOrNull: Value?
-	get() =
-		resolveInfixOrNull(isName) { rhs ->
-			equals(rhs).isValue
-		}
 
 fun Value.selectOrNull(name: String): Value? =
 	linkOrNull?.selectOrNull(name)
@@ -263,6 +213,23 @@ val Boolean.isValue
 	get() =
 		value(isName lineTo value(if (this) yesName else noName))
 
+val Value.hashValue
+	get() =
+		value(hashName lineTo value(line(literal(hashCode()))))
+
 val Value.repeatValueOrNull: Value?
 	get() =
 		resolvePostfixOrNull(repeatName) { this }
+
+fun Value.unlinkOrNull(fn: Value.(Value) -> Value?): Value? =
+	linkOrNull?.run {
+		tail.let { lhs ->
+			head.fieldOrNull?.value?.let { rhs ->
+				lhs.fn(rhs)
+			}
+		}
+	}
+
+val Value.rhsOrNull: Value?
+	get() =
+		linkOrNull?.onlyLineOrNull?.fieldOrNull?.value

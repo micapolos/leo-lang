@@ -82,6 +82,9 @@ fun Context.plus(script: Script, binding: Binding): Context =
 		resolution(binding)
 	}
 
+fun Context.plus(script: Script, body: Body): Context =
+	plus(script, binding(context().function(body)))
+
 fun Context.update(script: Script, fn: Context.() -> Resolution): Context =
 	null
 		?: updateAnyOrNull(script, fn)
@@ -205,5 +208,5 @@ fun Context.plusRecurse(script: Script): Context =
 			anyName lineTo script(),
 			recurseName lineTo script()
 		),
-		binding(context().function(body(BlockType.RECURSIVELY.block(script))))
+		binding(function(body(BlockType.RECURSIVELY.block(script))))
 	)
