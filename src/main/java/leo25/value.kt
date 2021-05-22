@@ -23,6 +23,19 @@ data class FunctionLine(val function: Function) : Line()
 data class FieldLine(val field: Field) : Line()
 data class NativeLine(val native: Native) : Line()
 
+sealed class Rhs
+data class ValueRhs(val value: Value) : Rhs()
+data class FunctionRhs(val function: Function) : Rhs()
+data class NativeRhs(val native: Native) : Rhs()
+
+fun rhs(value: Value): Rhs = ValueRhs(value)
+fun rhs(function: Function): Rhs = FunctionRhs(function)
+fun rhs(native: Native): Rhs = NativeRhs(native)
+
+val Rhs.valueOrNull: Value? get() = (this as? ValueRhs)?.value
+val Rhs.functionOrNull: Function? get() = (this as? FunctionRhs)?.function
+val Rhs.nativeRhs: Native? get() = (this as? NativeRhs)?.native
+
 data class Link(val tail: Value, val head: Line)
 data class Field(val name: String, val value: Value)
 
