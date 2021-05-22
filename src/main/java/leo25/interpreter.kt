@@ -46,6 +46,7 @@ fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 		doingName -> plusGiving(scriptField.rhs)
 		evaluateName -> plusEvaluateOrNull(scriptField.rhs)
 		letName -> plusLet(scriptField.rhs)
+		scriptName -> plusScript(scriptField.rhs)
 		switchName -> plusSwitchOrNull(scriptField.rhs)
 		else -> null
 	}
@@ -55,7 +56,7 @@ fun Interpreter.plusDo(rhs: Script): Interpreter =
 
 fun Interpreter.plusEvaluateOrNull(rhs: Script): Interpreter? =
 	notNullIf(rhs.isEmpty) {
-		context.interpreter(context.interpretedValue(rhs))
+		context.interpreter(context.interpretedValue(value.script))
 	}
 
 fun Interpreter.plusGiving(rhs: Script): Interpreter =
@@ -63,6 +64,9 @@ fun Interpreter.plusGiving(rhs: Script): Interpreter =
 
 fun Interpreter.plusLet(rhs: Script): Interpreter =
 	context.define(rhs).interpreter(value)
+
+fun Interpreter.plusScript(rhs: Script): Interpreter? =
+	context.interpreter(rhs.value)
 
 fun Interpreter.plusSwitchOrNull(rhs: Script): Interpreter? =
 	context.switchOrNull(value, rhs)?.let { context.interpreter(it) }

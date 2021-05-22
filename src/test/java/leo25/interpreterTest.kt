@@ -234,4 +234,27 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script(line(literal("OK"))))
 	}
+
+	@Test
+	fun script_() {
+		script(scriptName lineTo script(hashName))
+			.interpret
+			.assertEqualTo(script("hash"))
+	}
+
+	@Test
+	fun evaluate() {
+		script(
+			scriptName lineTo script(hashName),
+			evaluateName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					hashName lineTo script(
+						line(literal(value().hashCode()))
+					)
+				)
+			)
+	}
 }
