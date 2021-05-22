@@ -1,44 +1,43 @@
 package leo25
 
+import leo13.fold
+import leo13.reverse
 import leo14.*
 
 val Value.script: Script
 	get() =
-		when (this) {
-			EmptyValue -> script()
-			is LinkValue -> link.script
-		}
+		script().fold(fieldStack.reverse) { plus(it.scriptLine) }
 
-val Link.script: Script
-	get() =
-		tail.script.plus(head.scriptLine)
-
-val Line.scriptLine: ScriptLine
+val Field.scriptLine: ScriptLine
 	get() =
 		null
 			?: literalScriptLineOrNull
 			?: exactScriptLine
 
-val Line.literalScriptLineOrNull: ScriptLine?
+val Field.literalScriptLineOrNull: ScriptLine?
 	get() =
 		null
-			?: textOrNull?.let { leo14.line(literal(it)) }
-			?: numberOrNull?.let { leo14.line(literal(it)) }
+			?: textOrNull?.let { line(literal(it)) }
+			?: numberOrNull?.let { line(literal(it)) }
 
-val Line.exactScriptLine: ScriptLine
+val Field.exactScriptLine: ScriptLine
+	get() =
+		name lineTo rhs.script
+
+val Rhs.script: Script
 	get() =
 		when (this) {
-			is FieldLine -> line(field.scriptField)
-			is FunctionLine -> function.scriptLine
-			is NativeLine -> native.scriptLine
+			is FunctionRhs -> function.script
+			is NativeRhs -> native.script
+			is ValueRhs -> value.script
 		}
 
 val Field.scriptField: ScriptField
-	get() = name fieldTo value.script
+	get() = name fieldTo rhs.script
 
-val Function.scriptLine: ScriptLine
+val Function.script: Script
 	get() =
-		doingName lineTo body.script
+		body.script
 
 val Body.script: Script
 	get() =
@@ -55,6 +54,6 @@ val Block.typedScriptOrNull: Script?
 	get() =
 		typeOrNull?.name?.let { script(it lineTo untypedScript) }
 
-val Native.scriptLine: ScriptLine
+val Native.script: Script
 	get() =
-		nativeName lineTo script(any.toString())
+		script(any.toString())

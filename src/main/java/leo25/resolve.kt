@@ -1,6 +1,7 @@
 package leo25
 
 import leo.base.orNull
+import leo13.*
 import leo14.lineTo
 import leo14.script
 
@@ -18,35 +19,35 @@ fun Dictionary.resolutionOrNull(token: Token): Resolution? =
 fun Dictionary.resolutionOrNull(value: Value): Resolution? =
 	null
 		?: concreteResolutionOrNull(value)
-		?: resolutionOrNull(EndToken(AnythingEnd))
+		?: resolutionOrNull(token(anyEnd))
 
 fun Dictionary.concreteResolutionOrNull(value: Value): Resolution? =
-	when (value) {
-		EmptyValue -> resolutionOrNull(token(emptyEnd))
-		is LinkValue -> resolutionOrNull(value.link)
+	when (value.fieldStack) {
+		is EmptyStack -> resolutionOrNull(token(emptyEnd))
+		is LinkStack -> resolutionOrNull(value.fieldStack.link)
 	}
 
-fun Dictionary.resolutionOrNull(link: Link): Resolution? =
+fun Dictionary.resolutionOrNull(link: StackLink<Field>): Resolution? =
 	orNull
-		?.resolutionOrNull(link.head)
+		?.resolutionOrNull(link.value)
 		?.dictionaryOrNull
-		?.resolutionOrNull(link.tail)
+		?.resolutionOrNull(Value(link.stack))
 
-fun Dictionary.resolutionOrNull(line: Line): Resolution? =
-	when (line) {
-		is FieldLine -> resolutionOrNull(line.field)
-		is FunctionLine -> resolutionOrNull(line.function)
-		is NativeLine -> resolutionOrNull(line.native)
-	}
+fun Dictionary.resolutionOrNull(rhs: Rhs): Resolution? =
+	when (rhs) {
+		is ValueRhs -> resolutionOrNull(rhs.value)
+		is FunctionRhs -> resolutionOrNull(rhs.function)
+		is NativeRhs -> resolutionOrNull(rhs.native)
+	} ?: resolutionOrNull(token(anyEnd))
 
 fun Dictionary.resolutionOrNull(function: Function): Resolution? =
-	resolutionOrNull(token(begin(doingName)))?.dictionaryOrNull?.resolutionOrNull(token(anyEnd))
+	null
 
 fun Dictionary.resolutionOrNull(field: Field): Resolution? =
 	orNull
-		?.resolutionOrNull(BeginToken(Begin(field.name)))
+		?.resolutionOrNull(token(begin(field.name)))
 		?.dictionaryOrNull
-		?.resolutionOrNull(field.value)
+		?.resolutionOrNull(field.rhs)
 
 fun Dictionary.resolutionOrNull(native: Native): Resolution? =
 	resolutionOrNull(token(native))
@@ -55,16 +56,10 @@ val Resolution.dictionaryOrNull get() = (this as? DictionaryResolution)?.diction
 val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
 fun Dictionary.plusGiven(value: Value): Dictionary =
-	when (value) {
-		EmptyValue -> this
-		is LinkValue -> plusGiven(value.link)
-	}
+	fold(value.fieldStack.reverse) { plusGiven(it) }
 
-fun Dictionary.plusGiven(link: Link): Dictionary =
-	plusGiven(link.tail).plusGiven(link.head)
-
-fun Dictionary.plusGiven(line: Line): Dictionary =
+fun Dictionary.plusGiven(line: Field): Dictionary =
 	plus(
-		script(getName lineTo script(line.selectName)),
+		script(getName lineTo script(line.name)),
 		binding(value(line))
 	)

@@ -11,22 +11,22 @@ val Script.value: Value
 
 val ScriptLink.value: Value
 	get() =
-		lhs.value.plus(line.line)
+		lhs.value.plus(line.field)
 
-val ScriptLine.line: Line
+val ScriptLine.field: Field
 	get() =
 		when (this) {
-			is FieldScriptLine -> line(field.field)
-			is LiteralScriptLine -> literal.line
+			is FieldScriptLine -> field.field
+			is LiteralScriptLine -> literal.field
 		}
 
 val ScriptField.field: Field
 	get() =
 		string fieldTo rhs.value
 
-val Literal.line: Line
+val Literal.field: Field
 	get() =
 		when (this) {
-			is NumberLiteral -> numberName lineTo value(line(native(number)))
-			is StringLiteral -> textName lineTo value(line(native(string)))
+			is NumberLiteral -> numberName fieldTo rhs(native(number))
+			is StringLiteral -> textName fieldTo rhs(native(string))
 		}

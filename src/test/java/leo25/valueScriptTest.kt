@@ -9,13 +9,13 @@ import kotlin.test.Test
 class ValueScriptTest {
 	@Test
 	fun literal() {
-		value(line(literal("Michał"))).script.assertEqualTo(script(literal("Michał")))
-		value(line(literal(123))).script.assertEqualTo(script(literal(123)))
+		value(field(literal("Michał"))).script.assertEqualTo(script(literal("Michał")))
+		value(field(literal(123))).script.assertEqualTo(script(literal(123)))
 	}
 
 	@Test
 	fun natives() {
-		value(line(dictionary().function(body(script("foo")))))
+		value(field(dictionary().function(body(script("foo")))))
 			.script
 			.assertEqualTo(script(doingName lineTo script("foo")))
 	}
@@ -23,9 +23,9 @@ class ValueScriptTest {
 	@Test
 	fun struct() {
 		value(
-			"point" lineTo value(
-				"x" lineTo value("zero"),
-				"y" lineTo value("one")
+			"point" fieldTo value(
+				"x" fieldTo value("zero"),
+				"y" fieldTo value("one")
 			)
 		)
 			.script

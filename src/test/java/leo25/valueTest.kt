@@ -11,9 +11,9 @@ class ValueTest {
 	fun values() {
 		value("foo")
 		value(
-			"point" lineTo value(
-				"first" lineTo value("foo"),
-				"last" lineTo value("bar")
+			"point" fieldTo value(
+				"first" fieldTo value("foo"),
+				"last" fieldTo value("bar")
 			)
 		)
 	}
@@ -28,13 +28,13 @@ class ValueTest {
 	@Test
 	fun select() {
 		value(
-			"x" lineTo value("zero"),
-			"y" lineTo value("one"),
-			"x" lineTo value("two")
+			"x" fieldTo value("zero"),
+			"y" fieldTo value("one"),
+			"x" fieldTo value("two")
 		)
 			.run {
-				selectOrNull("x").assertEqualTo(value("x" lineTo value("two")))
-				selectOrNull("y").assertEqualTo(value("y" lineTo value("one")))
+				selectOrNull("x").assertEqualTo(value("x" fieldTo value("two")))
+				selectOrNull("y").assertEqualTo(value("y" fieldTo value("one")))
 				selectOrNull("z").assertEqualTo(null)
 			}
 	}
@@ -42,15 +42,15 @@ class ValueTest {
 	@Test
 	fun get() {
 		value(
-			"point" lineTo value(
-				"x" lineTo value("10"),
-				"y" lineTo value("20"),
-				"x" lineTo value("30")
+			"point" fieldTo value(
+				"x" fieldTo value("10"),
+				"y" fieldTo value("20"),
+				"x" fieldTo value("30")
 			)
 		)
 			.run {
-				getOrNull("x").assertEqualTo(value("x" lineTo value("30")))
-				getOrNull("y").assertEqualTo(value("y" lineTo value("20")))
+				getOrNull("x").assertEqualTo(value("x" fieldTo value("30")))
+				getOrNull("y").assertEqualTo(value("y" fieldTo value("20")))
 				getOrNull("z").assertEqualTo(null)
 			}
 	}
@@ -58,40 +58,40 @@ class ValueTest {
 	@Test
 	fun resolveGet() {
 		value(
-			"point" lineTo value(
-				"x" lineTo value("10"),
-				"y" lineTo value("20")
+			"point" fieldTo value(
+				"x" fieldTo value("10"),
+				"y" fieldTo value("20")
 			),
-			getName lineTo value("x")
+			getName fieldTo value("x")
 		)
 			.resolve
-			.assertEqualTo(value("x" lineTo value("10")))
+			.assertEqualTo(value("x" fieldTo value("10")))
 
 		value(
-			"point" lineTo value(
-				"x" lineTo value("10"),
-				"y" lineTo value("20")
+			"point" fieldTo value(
+				"x" fieldTo value("10"),
+				"y" fieldTo value("20")
 			),
-			getName lineTo value("y")
+			getName fieldTo value("y")
 		)
 			.resolve
-			.assertEqualTo(value("y" lineTo value("20")))
+			.assertEqualTo(value("y" fieldTo value("20")))
 	}
 
 	@Test
 	fun resolveFunction() {
-		value(line(dictionary().function(body(script("foo")))))
+		value(field(dictionary().function(body(script("foo")))))
 			.functionOrNull
 			.assertEqualTo(dictionary().function(body(script("foo"))))
 
-		value("function" lineTo value("foo"))
+		value("function" fieldTo value("foo"))
 			.functionOrNull
 			.assertEqualTo(null)
 	}
 
 	@Test
 	fun resolveText() {
-		value(line(literal("foo")))
+		value(field(literal("foo")))
 			.textOrNull
 			.assertEqualTo("foo")
 
@@ -99,7 +99,7 @@ class ValueTest {
 			.textOrNull
 			.assertEqualTo(null)
 
-		value("text" lineTo value("foo"))
+		value("text" fieldTo value("foo"))
 			.functionOrNull
 			.assertEqualTo(null)
 	}
@@ -107,10 +107,10 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			line(dictionary().function(body(script(getName lineTo script("name"))))),
-			applyName lineTo value("name" lineTo value("foo"))
+			field(dictionary().function(body(script(getName lineTo script("name"))))),
+			applyName fieldTo value("name" fieldTo value("foo"))
 		)
 			.resolveFunctionApplyOrNull
-			.assertEqualTo(value("name" lineTo value("foo")))
+			.assertEqualTo(value("name" fieldTo value("foo")))
 	}
 }

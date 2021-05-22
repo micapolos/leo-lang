@@ -53,15 +53,6 @@ fun Dictionary.updateContinuation(token: Token, fn: Dictionary.() -> Resolution)
 		resolutionOrNull?.continuationDictionary.orIfNull { dictionary() }.fn()
 	}
 
-fun Dictionary.plus(literal: Literal, resolution: Resolution): Dictionary =
-	updateContinuation(token(begin(literal.selectName))) {
-		resolution(updateContinuation(token(literal.native)) {
-			resolution(updateContinuation(token(emptyEnd)) {
-				resolution
-			})
-		})
-	}
-
 val Dictionary.removeForAny: Dictionary
 	get() =
 		Dictionary(
@@ -96,10 +87,10 @@ fun Dictionary.updateExact(script: Script, fn: Dictionary.() -> Resolution): Dic
 		is LinkScript -> update(script.link, fn)
 	}
 
-fun Dictionary.update(struct: ScriptLink, fn: Dictionary.() -> Resolution): Dictionary =
-	update(struct.line) {
+fun Dictionary.update(link: ScriptLink, fn: Dictionary.() -> Resolution): Dictionary =
+	update(link.line) {
 		resolution(
-			update(struct.lhs, fn)
+			update(link.lhs, fn)
 		)
 	}
 
@@ -111,9 +102,10 @@ fun Dictionary.update(line: ScriptLine, fn: Dictionary.() -> Resolution): Dictio
 
 fun Dictionary.update(literal: Literal, fn: Dictionary.() -> Resolution): Dictionary =
 	updateContinuation(token(begin(literal.selectName))) {
-		resolution(updateContinuation(token(literal.native)) {
-			resolution(updateContinuation(token(emptyEnd), fn))
-		})
+		resolution(updateContinuation(token(literal.native), fn))
+//		) {
+//			resolution(updateContinuation(token(emptyEnd), fn))
+//		})
 	}
 
 fun Dictionary.updateAnyOrNull(script: Script, fn: Dictionary.() -> Resolution): Dictionary? =
@@ -156,28 +148,28 @@ fun Dictionary.switchOrNull(value: Value, script: Script): Value? =
 	value.bodyOrNull?.let { switchBodyOrNull(it, script) }
 
 fun Dictionary.switchBodyOrNull(value: Value, script: Script): Value? =
-	value.lineOrNull?.let {
+	value.fieldOrNull?.let {
 		switchOrNull(it, script)
 	}
 
-fun Dictionary.switchOrNull(line: Line, script: Script): Value? =
+fun Dictionary.switchOrNull(line: Field, script: Script): Value? =
 	when (script) {
 		is LinkScript -> switchOrNull(line, script.link)
 		is UnitScript -> null
 	}
 
-fun Dictionary.switchOrNull(line: Line, scriptLink: ScriptLink): Value? =
+fun Dictionary.switchOrNull(line: Field, scriptLink: ScriptLink): Value? =
 	switchOrNull(line, scriptLink.line) ?: switchOrNull(line, scriptLink.lhs)
 
-fun Dictionary.switchOrNull(line: Line, scriptLine: ScriptLine): Value? =
+fun Dictionary.switchOrNull(line: Field, scriptLine: ScriptLine): Value? =
 	when (scriptLine) {
 		is FieldScriptLine -> switchOrNull(line, scriptLine.field)
 		is LiteralScriptLine -> null
 	}
 
-fun Dictionary.switchOrNull(line: Line, scriptField: ScriptField): Value? =
-	ifOrNull(line.selectName == scriptField.name) {
-		line.selectValueOrNull?.let { given ->
+fun Dictionary.switchOrNull(line: Field, scriptField: ScriptField): Value? =
+	ifOrNull(line.name == scriptField.name) {
+		line.valueOrNull?.let { given ->
 			plusGiven(given).value(scriptField.rhs)
 		}
 	}

@@ -30,9 +30,9 @@ class DictionaryTest {
 		dictionary()
 			.plus(script("name" lineTo script(anyName)), binding(value("ok")))
 			.run {
-				applyOrNull(value("name" lineTo value())).assertEqualTo(value("ok"))
-				applyOrNull(value("name" lineTo value("michal"))).assertEqualTo(value("ok"))
-				applyOrNull(value("name" lineTo value(line(literal("Michał"))))).assertEqualTo(value("ok"))
+				applyOrNull(value("name" fieldTo value())).assertEqualTo(value("ok"))
+				applyOrNull(value("name" fieldTo value("michal"))).assertEqualTo(value("ok"))
+				applyOrNull(value("name" fieldTo value(field(literal("Michał"))))).assertEqualTo(value("ok"))
 			}
 	}
 
@@ -54,7 +54,7 @@ class DictionaryTest {
 				binding(value("ok"))
 			)
 			.run {
-				applyOrNull(value("a" lineTo value(), "plus" lineTo value("b" lineTo value())))
+				applyOrNull(value("a" fieldTo value(), "plus" fieldTo value("b" fieldTo value())))
 					.assertEqualTo(value("ok"))
 			}
 	}
@@ -62,23 +62,28 @@ class DictionaryTest {
 	@Test
 	fun literalApply() {
 		dictionary()
-			.plus(script(literal("foo")), binding(value("ok")))
-			.applyOrNull(value(line(literal("foo"))))
+			.plus(script(textName lineTo script(anyName)), binding(value("ok")))
+			.applyOrNull(value(field(literal("foo"))))
 			.assertEqualTo(value("ok"))
 
 		dictionary()
 			.plus(script(literal("foo")), binding(value("ok")))
-			.applyOrNull(value(line(literal("bar"))))
+			.applyOrNull(value(field(literal("foo"))))
+			.assertEqualTo(value("ok"))
+
+		dictionary()
+			.plus(script(literal("foo")), binding(value("ok")))
+			.applyOrNull(value(field(literal("bar"))))
 			.assertEqualTo(null)
 
 		dictionary()
 			.plus(script(literal(123)), binding(value("ok")))
-			.applyOrNull(value(line(literal(123))))
+			.applyOrNull(value(field(literal(123))))
 			.assertEqualTo(value("ok"))
 
 		dictionary()
 			.plus(script(literal(123)), binding(value("ok")))
-			.applyOrNull(value(line(literal(124))))
+			.applyOrNull(value(field(literal(124))))
 			.assertEqualTo(null)
 	}
 
@@ -248,12 +253,12 @@ class DictionaryTest {
 	fun switchOrNull() {
 		dictionary()
 			.switchOrNull(
-				value("shape" lineTo value("circle" lineTo value("radius" lineTo value("zero")))),
+				value("shape" fieldTo value("circle" fieldTo value("radius" fieldTo value("zero")))),
 				script(
 					"circle" lineTo script(getName lineTo script("radius")),
 					"rectangle" lineTo script(getName lineTo script("side"))
 				)
 			)
-			.assertEqualTo(value("radius" lineTo value("zero")))
+			.assertEqualTo(value("radius" fieldTo value("zero")))
 	}
 }

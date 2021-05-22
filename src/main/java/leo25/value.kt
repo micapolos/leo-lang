@@ -4,24 +4,15 @@ import leo.base.fold
 import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo.base.orNullIf
+import leo13.*
 import leo14.*
 import leo14.Number
 
-sealed class Value {
+data class Value(val fieldStack: Stack<Field>) {
 	override fun toString() = script.toString()
 }
 
-object EmptyValue : Value()
-data class LinkValue(val link: Link) : Value() {
-	override fun toString() = super.toString()
-}
-
 data class Native(val any: Any?)
-
-sealed class Line
-data class FunctionLine(val function: Function) : Line()
-data class FieldLine(val field: Field) : Line()
-data class NativeLine(val native: Native) : Line()
 
 sealed class Rhs
 data class ValueRhs(val value: Value) : Rhs()
@@ -34,43 +25,29 @@ fun rhs(native: Native): Rhs = NativeRhs(native)
 
 val Rhs.valueOrNull: Value? get() = (this as? ValueRhs)?.value
 val Rhs.functionOrNull: Function? get() = (this as? FunctionRhs)?.function
-val Rhs.nativeRhs: Native? get() = (this as? NativeRhs)?.native
+val Rhs.nativeOrNull: Native? get() = (this as? NativeRhs)?.native
 
-data class Link(val tail: Value, val head: Line)
-data class Field(val name: String, val value: Value)
+data class Field(val name: String, val rhs: Rhs)
 
-infix fun String.fieldTo(value: Value): Field = Field(this, value)
-infix fun String.lineTo(value: Value): Line = FieldLine(this fieldTo value)
-fun line(field: Field): Line = FieldLine(field)
-fun line(literal: Literal): Line = literal.line
-fun line(function: Function): Line = FunctionLine(function)
-fun line(native: Native): Line = NativeLine(native)
+infix fun String.fieldTo(rhs: Rhs): Field = Field(this, rhs)
+infix fun String.fieldTo(value: Value): Field = this fieldTo rhs(value)
+fun field(literal: Literal): Field = literal.field
+fun field(function: Function): Field = doingName fieldTo rhs(function)
 
 fun native(any: Any?) = Native(any)
 val Native.stringOrNull: String? get() = any as? String
 val Native.numberOrNull: Number? get() = any as? Number
 
-operator fun Value.plus(line: Line): Value = LinkValue(Link(this, line))
-val emptyValue: Value get() = EmptyValue
-fun value(vararg lines: Line) = emptyValue.fold(lines) { plus(it) }
-fun value(name: String) = value(name lineTo value())
+operator fun Value.plus(field: Field): Value = Value(fieldStack.push(field))
+val emptyValue: Value get() = Value(stack())
+fun value(vararg fields: Field) = emptyValue.fold(fields) { plus(it) }
+fun value(name: String) = value(name fieldTo value())
 
-val Line.functionOrNull: Function? get() = (this as? FunctionLine)?.function
-val Line.nativeOrNull: Native? get() = (this as? NativeLine)?.native
-val Line.fieldOrNull: Field? get() = (this as? FieldLine)?.field
+val Field.functionOrNull: Function? get() = rhs.functionOrNull
+val Field.nativeOrNull: Native? get() = rhs.nativeOrNull
 
-val Value.linkOrNull: Link? get() = (this as? LinkValue)?.link
-val Value.functionOrNull: Function? get() = lineOrNull?.functionOrNull
-val Value.lineOrNull: Line? get() = linkOrNull?.onlyLineOrNull
-
-val Link.onlyLineOrNull: Line?
-	get() =
-		if (tail is EmptyValue) head
-		else null
-
-val Link.onlyFieldOrNull: Field?
-	get() =
-		onlyLineOrNull?.fieldOrNull
+val Value.functionOrNull: Function? get() = fieldOrNull?.functionOrNull
+val Value.fieldOrNull: Field? get() = fieldStack.onlyOrNull
 
 val Value.resolve: Value
 	get() =
@@ -82,41 +59,17 @@ val Value.resolve: Value
 
 val Value.resolveFunctionApplyOrNull: Value?
 	get() =
-		linkOrNull
-			?.run {
-				tail.functionOrNull?.let { function ->
-					head.fieldOrNull?.valueOrNull(applyName)?.let { given ->
-						function.apply(given)
-					}
-				}
+		resolveOrNull(doingName, applyName) { rhs ->
+			functionOrNull?.let { function ->
+				function.apply(rhs)
 			}
+		}
 
-fun Value.bodyOrNull(name: String): Value? =
-	lineOrNull?.bodyOrNull(name)
+fun Value.rhsValueOrNull(name: String): Value? =
+	fieldOrNull?.rhs?.valueOrNull
 
 fun Value.selectOrNull(name: String): Value? =
-	linkOrNull?.selectOrNull(name)
-
-fun Link.selectOrNull(name: String): Value? =
-	null
-		?: head.selectOrNull(name)
-		?: tail.selectOrNull(name)
-
-val Line.selectName: String
-	get() =
-		when (this) {
-			is FieldLine -> field.name
-			is FunctionLine -> doingName
-			is NativeLine -> nativeName
-		}
-
-val Line.selectValueOrNull: Value?
-	get() =
-		when (this) {
-			is FieldLine -> field.value
-			is FunctionLine -> null
-			is NativeLine -> null
-		}
+	fieldStack.mapFirst { selectOrNull(name) }
 
 val Literal.selectName: String
 	get() =
@@ -125,24 +78,24 @@ val Literal.selectName: String
 			is StringLiteral -> textName
 		}
 
-fun Line.selectOrNull(name: String): Value? =
-	notNullIf(name == selectName) { value(this) }
+fun Field.selectOrNull(name: String): Value? =
+	notNullIf(this.name == name) { value(this) }
 
 val Value.bodyOrNull: Value?
 	get() =
-		linkOrNull?.onlyFieldOrNull?.value
-
-fun Line.bodyOrNull(name: String): Value? =
-	fieldOrNull?.valueOrNull(name)
+		fieldOrNull?.valueOrNull
 
 fun Value.getOrNull(name: String): Value? =
 	bodyOrNull?.selectOrNull(name)
 
+fun Field.rhsOrNull(name: String): Rhs? =
+	notNullIf(this.name == name) { rhs }
+
 fun Field.valueOrNull(name: String): Value? =
-	notNullIf(this.name == name) { value }
+	rhsOrNull(name)?.valueOrNull
 
 fun Value.make(name: String): Value =
-	value(name lineTo this)
+	value(name fieldTo this)
 
 fun Value.resolve(name: String): Value =
 	getOrNull(name) ?: make(name)
@@ -164,30 +117,38 @@ val Value.resolveMakeOrNull: Value?
 		}
 
 fun Value.plus(name: String): Value =
-	plus(name lineTo value())
+	plus(name fieldTo value())
 
 fun Value.orNull(name: String): Value? =
-	lineOrNull?.orNull(name)?.let { this }
+	fieldOrNull?.orNull(name)?.let { this }
 
-val Line.textOrNull: String?
+val Field.textOrNull: String?
 	get() =
-		fieldOrNull?.valueOrNull("text")?.lineOrNull?.nativeOrNull?.any as? String
+		rhsOrNull(textName)?.nativeOrNull?.any as? String
 
-val Line.numberOrNull: Number?
+val Field.numberOrNull: Number?
 	get() =
-		fieldOrNull?.valueOrNull("number")?.lineOrNull?.nativeOrNull?.any as? Number
+		rhsOrNull(numberName)?.nativeOrNull?.any as? Number
 
 val Value.textOrNull: String?
 	get() =
-		lineOrNull?.textOrNull
+		fieldOrNull?.textOrNull
 
 val Value.numberOrNull: Number?
 	get() =
-		lineOrNull?.numberOrNull
+		fieldOrNull?.numberOrNull
+
+val Value.isEmpty: Boolean
+	get() =
+		fieldStack.isEmpty
+
+val Rhs.isEmpty: Boolean
+	get() =
+		valueOrNull?.isEmpty ?: false
 
 val Field.onlyNameOrNull: String?
 	get() =
-		notNullIf(value is EmptyValue) { name }
+		notNullIf(rhs.isEmpty) { name }
 
 val Literal.native: Native
 	get() =
@@ -196,14 +157,18 @@ val Literal.native: Native
 			is StringLiteral -> native(string)
 		}
 
+val Field.valueOrNull: Value?
+	get() =
+		rhs.valueOrNull
+
 val Value.nameOrNull: String?
 	get() =
-		lineOrNull?.fieldOrNull?.onlyNameOrNull
+		fieldOrNull?.onlyNameOrNull
 
 fun Value.resolveInfixOrNull(name: String, fn: Value.(Value) -> Value?): Value? =
-	linkOrNull?.run {
-		tail.let { lhs ->
-			head.fieldOrNull?.valueOrNull(name)?.let { rhs ->
+	fieldStack.linkOrNull?.run {
+		Value(stack).let { lhs ->
+			value.valueOrNull(name)?.let { rhs ->
 				lhs.fn(rhs)
 			}
 		}
@@ -233,51 +198,45 @@ fun Value.resolveOrNull(name: String, fn: () -> Value?): Value? =
 	}
 
 fun Value.resolveEmptyOrNull(fn: () -> Value?): Value? =
-	ifOrNull(this is EmptyValue) {
+	ifOrNull(fieldStack.isEmpty) {
 		fn()
 	}
 
 val Boolean.isValue
 	get() =
-		value(isName lineTo value(if (this) yesName else noName))
+		value(isName fieldTo value(if (this) yesName else noName))
 
 val Value.hashValue
 	get() =
-		value(hashName lineTo value(line(literal(hashCode()))))
+		value(hashName fieldTo value(field(literal(hashCode()))))
 
 val Value.repeatValueOrNull: Value?
 	get() =
 		resolvePostfixOrNull(repeatName) { this }
 
 fun Value.unlinkOrNull(fn: Value.(Value) -> Value?): Value? =
-	linkOrNull?.run {
-		tail.let { lhs ->
-			head.fieldOrNull?.value?.let { rhs ->
+	fieldStack.linkOrNull?.run {
+		Value(stack).let { lhs ->
+			value.rhs.valueOrNull?.let { rhs ->
 				lhs.fn(rhs)
 			}
 		}
 	}
 
-fun Value.lineOrNull(name: String): Line? =
-	when (this) {
-		EmptyValue -> null
-		is LinkValue -> link.lineOrNull(name)
-	}
+fun Value.fieldOrNull(name: String): Field? =
+	fieldOrNull?.orNull(name)
 
-fun Link.lineOrNull(name: String): Line? =
-	head.orNull(name) ?: tail.lineOrNull(name)
-
-fun Line.orNull(name: String): Line? =
-	orNullIf { selectName != name }
+fun Field.orNull(name: String): Field? =
+	orNullIf { this.name != name }
 
 fun Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) -> Value?): Value? =
-	linkOrNull?.run {
-		head.bodyOrNull(rhsName)?.let { rhs ->
-			tail.orNull(lhsName)?.let { lhs ->
+	fieldStack.linkOrNull?.run {
+		value.valueOrNull(rhsName)?.let { rhs ->
+			Value(stack).orNull(lhsName)?.let { lhs ->
 				lhs.fn(rhs)
 			}
 		}
 	}
 
 fun Value.resolveOrNull(name: String, fn: (Value) -> Value?): Value? =
-	bodyOrNull(name)?.let(fn)
+	rhsValueOrNull(name)?.let(fn)

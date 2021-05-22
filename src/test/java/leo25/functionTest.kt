@@ -9,7 +9,7 @@ class FunctionTest {
 	@Test
 	fun apply() {
 		dictionary().function(body(script(getName lineTo script("name"))))
-			.apply(value("name" lineTo value("foo")))
-			.assertEqualTo(value("name" lineTo value("foo")))
+			.apply(value("name" fieldTo value("foo")))
+			.assertEqualTo(value("name" fieldTo value("foo")))
 	}
 }
