@@ -1,4 +1,4 @@
- 10000
+10000
 do repeating
   get number
   equals 0
