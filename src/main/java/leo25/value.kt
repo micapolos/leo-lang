@@ -104,8 +104,10 @@ fun Value.resolveTextNameTextOrNull(name: String, fn: String.(String) -> String)
 
 val Value.resolveHashOrNull: Value?
 	get() =
-		resolvePostfixOrNull("hash") {
-			value("hash" lineTo value(line(literal(hashCode()))))
+		resolveInfixOrNull(getName) { rhs ->
+			rhs.resolveOrNull(hashName) {
+				value("hash" lineTo value(line(literal(hashCode()))))
+			}
 		}
 
 val Value.resolveEqualsOrNull: Value?
@@ -219,11 +221,32 @@ fun Value.resolveInfixOrNull(name: String, fn: Value.(Value) -> Value?): Value? 
 		}
 	}
 
-fun Value.resolvePostfixOrNull(name: String, fn: Value.() -> Value): Value? =
+fun Value.resolvePrefixOrNull(name: String, fn: (Value) -> Value?): Value? =
 	resolveInfixOrNull(name) { rhs ->
-		ifOrNull(rhs is EmptyValue) {
+		resolveEmptyOrNull {
+			fn(rhs)
+		}
+	}
+
+fun Value.resolvePostfixOrNull(name: String, fn: Value.() -> Value?): Value? =
+	resolveInfixOrNull(name) { rhs ->
+		rhs.resolveEmptyOrNull {
 			fn()
 		}
+	}
+
+fun Value.resolveOrNull(name: String, fn: () -> Value?): Value? =
+	resolveInfixOrNull(name) { rhs ->
+		resolveEmptyOrNull {
+			rhs.resolveEmptyOrNull {
+				fn()
+			}
+		}
+	}
+
+fun Value.resolveEmptyOrNull(fn: () -> Value?): Value? =
+	ifOrNull(this is EmptyValue) {
+		fn()
 	}
 
 val Boolean.value

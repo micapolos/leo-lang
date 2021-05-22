@@ -159,7 +159,7 @@ class InterpreterTest {
 	fun hash() {
 		script(
 			"foo" lineTo script(),
-			hashName lineTo script()
+			getName lineTo script(hashName lineTo script())
 		)
 			.interpret
 			.assertEqualTo(script(hashName lineTo script(literal(value("foo").hashCode()))))
@@ -245,16 +245,10 @@ class InterpreterTest {
 	@Test
 	fun evaluate() {
 		script(
-			scriptName lineTo script(hashName),
+			scriptName lineTo script(getName lineTo script(hashName)),
 			evaluateName lineTo script()
 		)
 			.interpret
-			.assertEqualTo(
-				script(
-					hashName lineTo script(
-						line(literal(value().hashCode()))
-					)
-				)
-			)
+			.assertEqualTo(script(hashName lineTo script(line(literal(value().hashCode())))))
 	}
 }
