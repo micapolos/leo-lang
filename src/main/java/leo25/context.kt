@@ -167,7 +167,7 @@ fun Dictionary.switchOrNull(line: Line, script: Script): Value? =
 	}
 
 fun Dictionary.switchOrNull(line: Line, scriptLink: ScriptLink): Value? =
-	switchOrNull(line, scriptLink.lhs) ?: switchOrNull(line, scriptLink.line)
+	switchOrNull(line, scriptLink.line) ?: switchOrNull(line, scriptLink.lhs)
 
 fun Dictionary.switchOrNull(line: Line, scriptLine: ScriptLine): Value? =
 	when (scriptLine) {

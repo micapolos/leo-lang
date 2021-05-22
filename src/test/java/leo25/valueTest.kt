@@ -41,7 +41,13 @@ class ValueTest {
 
 	@Test
 	fun get() {
-		value("point" lineTo value("x" lineTo value("10"), "y" lineTo value("20"), "x" lineTo value("30")))
+		value(
+			"point" lineTo value(
+				"x" lineTo value("10"),
+				"y" lineTo value("20"),
+				"x" lineTo value("30")
+			)
+		)
 			.run {
 				getOrNull("x").assertEqualTo(value("x" lineTo value("30")))
 				getOrNull("y").assertEqualTo(value("y" lineTo value("20")))
