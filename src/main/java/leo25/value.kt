@@ -1,6 +1,7 @@
 package leo25
 
 import leo.base.fold
+import leo.base.ifOrNull
 import leo.base.notNullIf
 import leo14.*
 import leo14.Number
@@ -64,6 +65,8 @@ val Value.resolve: Value
 			?: resolveNumberNameNumberOrNull("add", Number::plus)
 			?: resolveNumberNameNumberOrNull("subtract", Number::minus)
 			?: resolveNumberNameNumberOrNull("multiply", Number::times)
+			?: resolveHashOrNull
+			?: resolveEqualsOrNull
 			?: resolveGetOrNull
 			?: resolveMakeOrNull
 			?: this
@@ -97,6 +100,18 @@ fun Value.resolveTextNameTextOrNull(name: String, fn: String.(String) -> String)
 					value(line(literal(lhs.fn(rhs))))
 				}
 			}
+		}
+
+val Value.resolveHashOrNull: Value?
+	get() =
+		resolvePostfixOrNull("hash") {
+			value("hash" lineTo value(line(literal(hashCode()))))
+		}
+
+val Value.resolveEqualsOrNull: Value?
+	get() =
+		resolveInfixOrNull("equals") { rhs ->
+			equals(rhs).value
 		}
 
 fun Value.selectOrNull(name: String): Value? =
@@ -212,3 +227,18 @@ fun Value.resolveInfixOrNull(fn: Value.(Value) -> Value?): Value? =
 			}
 		}
 	}
+
+fun Value.resolvePostfixOrNull(name: String, fn: Value.() -> Value): Value? =
+	resolveInfixOrNull(name) { rhs ->
+		ifOrNull(rhs is EmptyValue) {
+			fn()
+		}
+	}
+
+val Boolean.value
+	get() =
+		value("boolean" lineTo value(if (this) "true" else "false"))
+
+val Value.repeatValueOrNull: Value?
+	get() =
+		resolvePostfixOrNull("repeat") { this }

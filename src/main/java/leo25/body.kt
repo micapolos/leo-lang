@@ -11,10 +11,15 @@ data class FnBody(val fn: Context.(Value) -> Value) : Body()
 fun body(script: Script): Body = ScriptBody(script)
 fun body(fn: Context.(Value) -> Value): Body = FnBody(fn)
 
-fun Body.apply(context: Context, given: Value): Value =
+tailrec fun Body.apply(context: Context, given: Value): Value =
 	when (this) {
 		is FnBody -> context.fn(given)
-		is ScriptBody -> context.plusGiven(given).interpretedValue(script)
+		is ScriptBody -> {
+			val result = context.plusGiven(given).interpretedValue(script)
+			val repeatValue = result.repeatValueOrNull
+			if (repeatValue != null) apply(context, repeatValue)
+			else result
+		}
 	}
 
 val textPlusTextBody

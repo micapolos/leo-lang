@@ -64,4 +64,3 @@ fun Appendable.append(literal: Literal): Appendable =
 		is NumberLiteral -> append(literal.number.toString())
 		is StringLiteral -> append(literal.string.literalString)
 	}
-

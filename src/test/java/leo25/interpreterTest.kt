@@ -154,4 +154,59 @@ class InterpreterTest {
 				)
 			)
 	}
+
+	@Test
+	fun hash() {
+		script(
+			"foo" lineTo script(),
+			"hash" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script("hash" lineTo script(literal(value("foo").hashCode()))))
+	}
+
+	@Test
+	fun equals() {
+		script(
+			"foo" lineTo script(),
+			"equals" lineTo script("foo")
+		)
+			.interpret
+			.assertEqualTo(script("boolean" lineTo script("true")))
+
+		script(
+			"foo" lineTo script(),
+			"equals" lineTo script("bar")
+		)
+			.interpret
+			.assertEqualTo(script("boolean" lineTo script("false")))
+
+		script(
+			line(literal("foo")),
+			"equals" lineTo script(line(literal("foo")))
+		)
+			.interpret
+			.assertEqualTo(script("boolean" lineTo script("true")))
+	}
+
+	@Test
+	fun repeat() {
+		script(
+			line(literal(10000)),
+			doName lineTo script(
+				"get" lineTo script("number"),
+				"equals" lineTo script(line(literal(0))),
+				"switch" lineTo script(
+					"true" lineTo script(line(literal("OK"))),
+					"false" lineTo script(
+						"get" lineTo script("number"),
+						"subtract" lineTo script(line(literal(1))),
+						"repeat" lineTo script()
+					)
+				)
+			)
+		)
+			.interpret
+			.assertEqualTo(script(line(literal("OK"))))
+	}
 }
