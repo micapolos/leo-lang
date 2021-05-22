@@ -25,18 +25,18 @@ class DefinerTest {
 	}
 
 	@Test
-	fun defineIs() {
+	fun letBe() {
 		context()
 			.define(
 				script(
 					"name" lineTo script(anyName),
-					isName lineTo script("name")
+					beName lineTo script("name")
 				)
 			)
 			.assertEqualTo(
 				context()
 					.plus(
-						script("name" lineTo script(anyName)),
+						script(getName lineTo script("name" lineTo script(anyName))),
 						binding(value("name"))
 					)
 			)

@@ -32,16 +32,16 @@ fun Definer.plus(scriptField: ScriptField): Definer =
 fun Definer.plusSpecialOrNull(scriptField: ScriptField): Definer? =
 	when (scriptField.string) {
 		doName -> plusGives(scriptField.rhs)
-		isName -> plusIs(scriptField.rhs)
+		beName -> plusBe(scriptField.rhs)
 		else -> null
 	}
 
-fun Definer.plusGives(script: Script): Definer =
+fun Definer.plusGives(rhs: Script): Definer =
 	context
-		.plus(this.script, binding(context.function(body(script))))
+		.plus(this.script, binding(context.function(body(rhs))))
 		.definer()
 
-fun Definer.plusIs(script: Script): Definer? =
+fun Definer.plusBe(rhs: Script): Definer? =
 	context
-		.plus(this.script, binding(context.value(script)))
+		.plus(script("get" lineTo script), binding(context.value(rhs)))
 		.definer()

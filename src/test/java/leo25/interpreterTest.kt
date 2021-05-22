@@ -88,16 +88,16 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun defineIs() {
+	fun defineBe() {
 		script(
 			letName lineTo script(
 				"foo" lineTo script(),
-				isName lineTo script("given")
+				beName lineTo script("bar")
 			),
-			"foo" lineTo script()
+			getName lineTo script("foo" lineTo script())
 		)
 			.interpret
-			.assertEqualTo(script("given"))
+			.assertEqualTo(script("bar"))
 	}
 
 	@Test
