@@ -21,7 +21,7 @@ class ValueTest {
 	@Test
 	fun dictionaryResolve() {
 		resolver()
-			.resolve(value("foo"))
+			.resolveLeo(value("foo")).get
 			.assertEqualTo(value("foo"))
 	}
 
@@ -64,7 +64,8 @@ class ValueTest {
 			),
 			getName fieldTo value("x")
 		)
-			.resolve
+			.resolveLeo
+			.get
 			.assertEqualTo(value("x" fieldTo value("10")))
 
 		value(
@@ -74,7 +75,8 @@ class ValueTest {
 			),
 			getName fieldTo value("y")
 		)
-			.resolve
+			.resolveLeo
+			.get
 			.assertEqualTo(value("y" fieldTo value("20")))
 
 		value(
@@ -84,7 +86,8 @@ class ValueTest {
 			),
 			getName fieldTo value("x" fieldTo value("30"))
 		)
-			.resolve
+			.resolveLeo
+			.get
 			.assertEqualTo(value("x" fieldTo value("30")))
 
 		value(
@@ -94,7 +97,8 @@ class ValueTest {
 			),
 			getName fieldTo value("y" fieldTo value("30"))
 		)
-			.resolve
+			.resolveLeo
+			.get
 			.assertEqualTo(value("y" fieldTo value("30")))
 
 		value(
@@ -102,7 +106,8 @@ class ValueTest {
 			"y" fieldTo value("20"),
 			getName fieldTo value("point")
 		)
-			.resolve
+			.resolveLeo
+			.get
 			.assertEqualTo(
 				value(
 					"point" fieldTo value(
@@ -120,7 +125,8 @@ class ValueTest {
 				)
 			)
 		)
-			.resolve
+			.resolveLeo
+			.get
 			.assertEqualTo(
 				value(
 					"point" fieldTo value(
@@ -163,7 +169,8 @@ class ValueTest {
 			field(resolver().function(body(script(getName lineTo script("name"))))),
 			applyName fieldTo value("name" fieldTo value("foo"))
 		)
-			.resolveFunctionApplyOrNull
+			.resolveFunctionApplyOrNullLeo
+			.get
 			.assertEqualTo(value("name" fieldTo value("foo")))
 	}
 }

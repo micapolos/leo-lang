@@ -31,7 +31,8 @@ class ResolverTest {
 					binding(value("pong"))
 				)
 			)
-			.applyOrNull(value("ping"))
+			.applyOrNullLeo(value("ping"))
+			.get
 			.assertEqualTo(value("pong"))
 	}
 
@@ -45,9 +46,9 @@ class ResolverTest {
 				)
 			)
 			.run {
-				applyOrNull(value("name" fieldTo value())).assertEqualTo(value("ok"))
-				applyOrNull(value("name" fieldTo value("michal"))).assertEqualTo(value("ok"))
-				applyOrNull(value("name" fieldTo value(field(literal("Michał"))))).assertEqualTo(value("ok"))
+				applyOrNullLeo(value("name" fieldTo value())).get.assertEqualTo(value("ok"))
+				applyOrNullLeo(value("name" fieldTo value("michal"))).get.assertEqualTo(value("ok"))
+				applyOrNullLeo(value("name" fieldTo value(field(literal("Michał"))))).get.assertEqualTo(value("ok"))
 			}
 	}
 
@@ -61,8 +62,8 @@ class ResolverTest {
 				)
 			)
 			.run {
-				applyOrNull(value("ping")).assertEqualTo(value("pong"))
-				applyOrNull(value("ping")).assertEqualTo(value("pong"))
+				applyOrNullLeo(value("ping")).get.assertEqualTo(value("pong"))
+				applyOrNullLeo(value("ping")).get.assertEqualTo(value("pong"))
 			}
 	}
 
@@ -76,7 +77,8 @@ class ResolverTest {
 				)
 			)
 			.run {
-				applyOrNull(value("a" fieldTo value(), "plus" fieldTo value("b" fieldTo value())))
+				applyOrNullLeo(value("a" fieldTo value(), "plus" fieldTo value("b" fieldTo value())))
+					.get
 					.assertEqualTo(value("ok"))
 			}
 	}
@@ -90,7 +92,8 @@ class ResolverTest {
 					binding(value("ok"))
 				)
 			)
-			.applyOrNull(value(field(literal("foo"))))
+			.applyOrNullLeo(value(field(literal("foo"))))
+			.get
 			.assertEqualTo(value("ok"))
 
 		resolver()
@@ -100,7 +103,8 @@ class ResolverTest {
 					binding(value("ok"))
 				)
 			)
-			.applyOrNull(value(field(literal("foo"))))
+			.applyOrNullLeo(value(field(literal("foo"))))
+			.get
 			.assertEqualTo(value("ok"))
 
 		resolver()
@@ -110,7 +114,8 @@ class ResolverTest {
 					binding(value("ok"))
 				)
 			)
-			.applyOrNull(value(field(literal("bar"))))
+			.applyOrNullLeo(value(field(literal("bar"))))
+			.get
 			.assertEqualTo(null)
 
 		resolver()
@@ -120,7 +125,8 @@ class ResolverTest {
 					binding(value("ok"))
 				)
 			)
-			.applyOrNull(value(field(literal(123))))
+			.applyOrNullLeo(value(field(literal(123))))
+			.get
 			.assertEqualTo(value("ok"))
 
 		resolver()
@@ -130,7 +136,8 @@ class ResolverTest {
 					binding(value("ok"))
 				)
 			)
-			.applyOrNull(value(field(literal(124))))
+			.applyOrNullLeo(value(field(literal(124))))
+			.get
 			.assertEqualTo(null)
 	}
 
@@ -299,13 +306,14 @@ class ResolverTest {
 	@Test
 	fun switchOrNull() {
 		resolver()
-			.switchOrNull(
+			.switchOrNullLeo(
 				value("shape" fieldTo value("circle" fieldTo value("radius" fieldTo value("zero")))),
 				script(
 					"circle" lineTo script(getName lineTo script("radius")),
 					"rectangle" lineTo script(getName lineTo script("side"))
 				)
 			)
+			.get
 			.assertEqualTo(value("radius" fieldTo value("zero")))
 	}
 }

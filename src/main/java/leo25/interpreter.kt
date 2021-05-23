@@ -20,101 +20,116 @@ fun Interpreter.set(value: Value): Interpreter =
 fun Interpreter.set(resolver: Resolver): Interpreter =
 	resolver.interpreter(value)
 
-fun Resolver.value(script: Script): Value =
-	interpreter(script).value
+fun Resolver.valueLeo(script: Script): Leo<Value> =
+	interpreterLeo(script).map { it.value }
 
-fun Resolver.linesValue(script: Script): Value =
-	value().fold(script.lineSeq.reverse) { plus(field(it)) }
-
-fun Resolver.field(scriptLine: ScriptLine): Field =
-	when (scriptLine) {
-		is FieldScriptLine -> field(scriptLine.field)
-		is LiteralScriptLine -> field(scriptLine.literal)
+fun Resolver.linesValueLeo(script: Script): Leo<Value> =
+	value().leo.fold(script.lineSeq.reverse) { line ->
+		bind { value ->
+			fieldLeo(line).map {
+				value.plus(it)
+			}
+		}
 	}
 
-fun Resolver.field(scriptField: ScriptField): Field =
-	scriptField.string fieldTo value(scriptField.rhs)
+fun Resolver.fieldLeo(scriptLine: ScriptLine): Leo<Field> =
+	when (scriptLine) {
+		is FieldScriptLine -> fieldLeo(scriptLine.field)
+		is LiteralScriptLine -> field(scriptLine.literal).leo
+	}
+
+fun Resolver.fieldLeo(scriptField: ScriptField): Leo<Field> =
+	valueLeo(scriptField.rhs).map {
+		scriptField.string fieldTo it
+	}
 
 val Script.interpret: Script
 	get() =
-		nativeResolver.value(this).script
+		interpretLeo.get
+
+val Script.interpretLeo: Leo<Script>
+	get() =
+		nativeResolver.valueLeo(this).map { it.script }
 
 val String.interpret: String
 	get() =
 		scriptOrNull?.interpret?.string ?: this
 
-fun Resolver.interpreter(script: Script): Interpreter =
-	interpreter().plus(script)
+fun Resolver.interpreterLeo(script: Script): Leo<Interpreter> =
+	interpreter().plusLeo(script)
 
-fun Interpreter.plus(script: Script): Interpreter =
-	fold(script.lineSeq.reverse) { plus(it) }
+fun Interpreter.plusLeo(script: Script): Leo<Interpreter> =
+	leo.fold(script.lineSeq.reverse) { line ->
+		bind {
+			it.plusLeo(line)
+		}
+	}
 
-fun Interpreter.plus(scriptLine: ScriptLine): Interpreter =
+fun Interpreter.plusLeo(scriptLine: ScriptLine): Leo<Interpreter> =
 	when (scriptLine) {
-		is FieldScriptLine -> plus(scriptLine.field)
-		is LiteralScriptLine -> plus(scriptLine.literal)
+		is FieldScriptLine -> plusLeo(scriptLine.field)
+		is LiteralScriptLine -> plusLeo(scriptLine.literal)
 	}
 
-fun Interpreter.plus(scriptField: ScriptField): Interpreter =
-	null
-		?: plusDefinitionsOrNull(scriptField)
-		?: plusStaticOrNull(scriptField)
-		?: plusDynamic(scriptField)
+fun Interpreter.plusLeo(scriptField: ScriptField): Leo<Interpreter> =
+	plusDefinitionsOrNullLeo(scriptField).or {
+		plusStaticOrNullLeo(scriptField).or {
+			plusDynamicLeo(scriptField)
+		}
+	}
 
-fun Interpreter.plusDefinitionsOrNull(scriptField: ScriptField): Interpreter? =
-	resolver.plusOrNull(scriptField)?.let { set(it) }
+fun Interpreter.plusDefinitionsOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
+	resolver.plusOrNullLeo(scriptField).nullableBind { set(it).leo }
 
-fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
+fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
 	when (scriptField.string) {
-		commentName -> this
-		becomeName -> plusBe(scriptField.rhs)
-		doName -> plusDo(scriptField.rhs)
-		doingName -> plusDoing(scriptField.rhs)
-		evaluateName -> plusEvaluateOrNull(scriptField.rhs)
-		getName -> plusGet(scriptField.rhs)
-		scriptName -> plusScript(scriptField.rhs)
-		switchName -> plusSwitchOrNull(scriptField.rhs)
-		else -> null
+		commentName -> leo(this)
+		becomeName -> plusBeLeo(scriptField.rhs)
+		doName -> plusDoLeo(scriptField.rhs)
+		doingName -> plusDoingLeo(scriptField.rhs)
+		evaluateName -> plusEvaluateOrNullLeo(scriptField.rhs)
+		getName -> plusGetLeo(scriptField.rhs)
+		scriptName -> plusScript(scriptField.rhs).leo
+		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
+		else -> leo(null)
 	}
 
-fun Interpreter.plusBe(rhs: Script): Interpreter =
-	set(resolver.value(rhs))
+fun Interpreter.plusBeLeo(rhs: Script): Leo<Interpreter> =
+	resolver.valueLeo(rhs).map { set(it) }
 
-fun Interpreter.plusDo(rhs: Script): Interpreter =
-	set(resolver.apply(block(rhs), value))
+fun Interpreter.plusDoLeo(rhs: Script): Leo<Interpreter> =
+	resolver.applyLeo(block(rhs), value).map { set(it) }
 
-fun Interpreter.plusEvaluateOrNull(rhs: Script): Interpreter? =
+fun Interpreter.plusEvaluateOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	notNullIf(rhs.isEmpty) {
-		set(resolver.value(value.script))
-	}
+		resolver.valueLeo(value.script).map { set(it) }
+	} ?: leo(null)
 
-fun Interpreter.plusDoing(rhs: Script): Interpreter =
-	plus(field(resolver.function(body(rhs))))
+fun Interpreter.plusDoingLeo(rhs: Script): Leo<Interpreter> =
+	plusLeo(field(resolver.function(body(rhs))))
 
-fun Interpreter.plusGet(rhs: Script): Interpreter =
-	plus(getName fieldTo resolver.linesValue(rhs))
-
-fun Interpreter.plusLetOrNull(rhs: Script): Interpreter? =
-	rhs.matchInfix(doName) { lhs, rhs ->
-		set(resolver.plus(lhs, body(rhs)))
+fun Interpreter.plusGetLeo(rhs: Script): Leo<Interpreter> =
+	resolver.linesValueLeo(rhs).bind {
+		plusLeo(getName fieldTo it)
 	}
 
 fun Interpreter.plusScript(rhs: Script): Interpreter? =
 	set(rhs.value)
 
-fun Interpreter.plusSetOrNull(rhs: Script): Interpreter? =
-	notNullIf(value.isEmpty) {
-		set(resolver.set(resolver.value(rhs)))
+fun Interpreter.plusSwitchOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	resolver.switchOrNullLeo(value, rhs).map {
+		it?.let { set(it) }
 	}
 
-fun Interpreter.plusSwitchOrNull(rhs: Script): Interpreter? =
-	resolver.switchOrNull(value, rhs)?.let { set(it) }
+fun Interpreter.plusDynamicLeo(scriptField: ScriptField): Leo<Interpreter> =
+	resolver.fieldLeo(scriptField).bind {
+		plusLeo(it)
+	}
 
-fun Interpreter.plusDynamic(scriptField: ScriptField): Interpreter =
-	plus(resolver.field(scriptField))
+fun Interpreter.plusLeo(literal: Literal): Leo<Interpreter> =
+	plusLeo(field(literal))
 
-fun Interpreter.plus(literal: Literal): Interpreter =
-	plus(field(literal))
-
-fun Interpreter.plus(line: Field): Interpreter =
-	set(resolver.resolve(value.plus(line)))
+fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
+	resolver.resolveLeo(value.plus(field)).map {
+		set(it)
+	}

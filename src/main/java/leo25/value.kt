@@ -59,22 +59,25 @@ val Field.nativeOrNull: Native? get() = rhs.nativeOrNull
 val Value.functionOrNull: Function? get() = fieldOrNull?.functionOrNull
 val Value.fieldOrNull: Field? get() = linkOrNull?.run { notNullIf(value.isEmpty) { field } }
 
+val Value.resolveLeo: Leo<Value>
+	get() =
+		resolveFunctionApplyOrNullLeo.or { resolve.leo }
+
 val Value.resolve: Value
 	get() =
 		null
-			?: resolveFunctionApplyOrNull
 			?: resolveGetHashOrNull
 			?: resolveIsOrNull
 			?: resolveGetOrNull
 			?: this
 
-val Value.resolveFunctionApplyOrNull: Value?
+val Value.resolveFunctionApplyOrNullLeo: Leo<Value?>
 	get() =
 		resolveOrNull(doingName, applyName) { rhs ->
 			functionOrNull?.let { function ->
-				function.apply(rhs)
+				function.applyLeo(rhs)
 			}
-		}
+		} ?: leo(null)
 
 val Value.fieldSeq: Seq<Field>
 	get() =
@@ -280,7 +283,7 @@ fun Value.fieldOrNull(name: String): Field? =
 fun Field.orNull(name: String): Field? =
 	orNullIf { this.name != name }
 
-fun Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) -> Value?): Value? =
+fun <R> Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) -> R?): R? =
 	linkOrNull?.run {
 		field.valueOrNull(rhsName)?.let { rhs ->
 			value.orNull(lhsName)?.let { lhs ->

@@ -144,59 +144,62 @@ fun Resolution.merge(resolution: Resolution): Resolution =
 fun Resolution?.orNullMerge(resolution: Resolution): Resolution =
 	this?.merge(resolution) ?: resolution
 
-fun Resolver.switchOrNull(value: Value, script: Script): Value? =
-	value.bodyOrNull?.let { switchBodyOrNull(it, script) }
+fun Resolver.switchOrNullLeo(value: Value, script: Script): Leo<Value?> =
+	value.bodyOrNull?.let { switchBodyOrNull(it, script) } ?: leo(null)
 
-fun Resolver.switchBodyOrNull(value: Value, script: Script): Value? =
+fun Resolver.switchBodyOrNull(value: Value, script: Script): Leo<Value?> =
 	value.fieldOrNull?.let {
-		switchOrNull(it, script)
-	}
+		switchOrNullLeo(it, script)
+	} ?: leo(null)
 
-fun Resolver.switchOrNull(line: Field, script: Script): Value? =
+fun Resolver.switchOrNullLeo(line: Field, script: Script): Leo<Value?> =
 	when (script) {
-		is LinkScript -> switchOrNull(line, script.link)
-		is UnitScript -> null
+		is LinkScript -> switchOrNullLeo(line, script.link)
+		is UnitScript -> leo(null)
 	}
 
-fun Resolver.switchOrNull(line: Field, scriptLink: ScriptLink): Value? =
-	switchOrNull(line, scriptLink.line) ?: switchOrNull(line, scriptLink.lhs)
+fun Resolver.switchOrNullLeo(line: Field, scriptLink: ScriptLink): Leo<Value?> =
+	switchOrNullLeo(line, scriptLink.line).or {
+		switchOrNullLeo(line, scriptLink.lhs)
+	}
 
-fun Resolver.switchOrNull(line: Field, scriptLine: ScriptLine): Value? =
+fun Resolver.switchOrNullLeo(line: Field, scriptLine: ScriptLine): Leo<Value?> =
 	when (scriptLine) {
-		is FieldScriptLine -> switchOrNull(line, scriptLine.field)
-		is LiteralScriptLine -> null
+		is FieldScriptLine -> switchOrNullLeo(line, scriptLine.field)
+		is LiteralScriptLine -> leo(null)
 	}
 
-fun Resolver.switchOrNull(line: Field, scriptField: ScriptField): Value? =
+fun Resolver.switchOrNullLeo(line: Field, scriptField: ScriptField): Leo<Value?> =
 	ifOrNull(line.name == scriptField.name) {
-		interpreter(value(line)).plus(scriptField.rhs).value
-	}
+		interpreter(value(line)).plusLeo(scriptField.rhs).map { it.value }
+	} ?: leo(null)
 
-fun Resolver.apply(body: Body, given: Value): Value =
+fun Resolver.applyLeo(body: Body, given: Value): Leo<Value> =
 	when (body) {
-		is FnBody -> body.fn(given)
-		is BlockBody -> apply(body.block, given)
+		is FnBody -> body.fn(given).leo
+		is BlockBody -> applyLeo(body.block, given)
 	}
 
-fun Resolver.apply(block: Block, given: Value): Value =
+fun Resolver.applyLeo(block: Block, given: Value): Leo<Value> =
 	when (block.typeOrNull) {
-		BlockType.REPEATEDLY -> applyRepeating(block.untypedScript, given)
-		BlockType.RECURSIVELY -> applyRecursing(block.untypedScript, given)
-		null -> applyUntyped(block.untypedScript, given)
+		BlockType.REPEATEDLY -> applyRepeatingLeo(block.untypedScript, given)
+		BlockType.RECURSIVELY -> applyRecursingLeo(block.untypedScript, given)
+		null -> applyUntypedLeo(block.untypedScript, given)
 	}
 
-tailrec fun Resolver.applyRepeating(script: Script, given: Value): Value {
-	val result = set(given).value(script)
-	val repeatValue = result.repeatValueOrNull
-	return if (repeatValue != null) applyRepeating(script, repeatValue)
-	else result
-}
+// TODO: How to make this Leo<Value> tailrecursive?
+fun Resolver.applyRepeatingLeo(script: Script, given: Value): Leo<Value> =
+	set(given).valueLeo(script).bind { result ->
+		val repeatValue = result.repeatValueOrNull
+		if (repeatValue != null) applyRepeatingLeo(script, repeatValue)
+		else result.leo
+	}
 
-fun Resolver.applyRecursing(script: Script, given: Value): Value =
-	set(given).plusRecurse(script).value(script)
+fun Resolver.applyRecursingLeo(script: Script, given: Value): Leo<Value> =
+	set(given).plusRecurse(script).valueLeo(script)
 
-fun Resolver.applyUntyped(script: Script, given: Value): Value =
-	set(given).value(script)
+fun Resolver.applyUntypedLeo(script: Script, given: Value): Leo<Value> =
+	set(given).valueLeo(script)
 
 fun Resolver.plusRecurse(script: Script): Resolver =
 	plus(
@@ -211,11 +214,11 @@ fun Resolver.plusRecurse(script: Script): Resolver =
 		)
 	)
 
-fun Resolver.plusOrNull(scriptField: ScriptField): Resolver? =
+fun Resolver.plusOrNullLeo(scriptField: ScriptField): Leo<Resolver?> =
 	when (scriptField.string) {
-		"let" -> plusLetOrNull(scriptField.rhs)
-		"set" -> plusSet(scriptField.rhs)
-		else -> null
+		"let" -> plusLetOrNull(scriptField.rhs).leo
+		"set" -> plusSetLeo(scriptField.rhs)
+		else -> leo(null)
 	}
 
 fun Resolver.plusLetOrNull(rhs: Script): Resolver? =
@@ -223,5 +226,5 @@ fun Resolver.plusLetOrNull(rhs: Script): Resolver? =
 		plus(definition(pattern(lhs), binding(function(body(rhs)))))
 	}
 
-fun Resolver.plusSet(rhs: Script): Resolver =
-	set(value(rhs))
+fun Resolver.plusSetLeo(rhs: Script): Leo<Resolver> =
+	valueLeo(rhs).map { set(it) }

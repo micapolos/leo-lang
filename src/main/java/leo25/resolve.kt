@@ -6,13 +6,13 @@ import leo.base.reverse
 import leo14.lineTo
 import leo14.script
 
-fun Resolver.resolve(value: Value): Value =
-	null
-		?: applyOrNull(value)
-		?: value.resolve
+fun Resolver.resolveLeo(value: Value): Leo<Value> =
+	applyOrNullLeo(value).or {
+		value.resolveLeo
+	}
 
-fun Resolver.applyOrNull(value: Value): Value? =
-	resolutionOrNull(value)?.bindingOrNull?.apply(value)
+fun Resolver.applyOrNullLeo(value: Value): Leo<Value?> =
+	resolutionOrNull(value)?.bindingOrNull?.applyLeo(value) ?: leo(null)
 
 fun Resolver.resolutionOrNull(token: Token): Resolution? =
 	tokenToResolutionMap[token]

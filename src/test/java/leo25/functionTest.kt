@@ -9,7 +9,7 @@ class FunctionTest {
 	@Test
 	fun apply() {
 		resolver().function(body(script(getName lineTo script("name"))))
-			.apply(value("name" fieldTo value("foo")))
+			.applyLeo(value("name" fieldTo value("foo"))).get
 			.assertEqualTo(value("name" fieldTo value("foo")))
 	}
 }

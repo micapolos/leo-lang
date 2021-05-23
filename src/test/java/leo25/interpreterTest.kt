@@ -9,6 +9,42 @@ import kotlin.test.Test
 
 class InterpreterTest {
 	@Test
+	fun literal() {
+		script(line(literal("ok")))
+			.interpret
+			.assertEqualTo(script(line(literal("ok"))))
+	}
+
+	@Test
+	fun name() {
+		script("ok")
+			.interpret
+			.assertEqualTo(script("ok"))
+	}
+
+	@Test
+	fun field() {
+		script("foo" lineTo script("bar"))
+			.interpret
+			.assertEqualTo(script("foo" lineTo script("bar")))
+	}
+
+	@Test
+	fun lines() {
+		script(
+			"foo" lineTo script(),
+			"bar" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					"foo" lineTo script(),
+					"bar" lineTo script()
+				)
+			)
+	}
+
+	@Test
 	fun struct() {
 		script(
 			"point" lineTo script(
