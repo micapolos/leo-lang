@@ -104,6 +104,7 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		privateName -> plusPrivateLeo(scriptField.rhs)
 		scriptName -> plusScript(scriptField.rhs).leo
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
+		textName -> plusTestLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
 		else -> leo(null)
 	}
@@ -170,6 +171,9 @@ fun Interpreter.plusUseOrNullLeo(rhs: Script): Leo<Interpreter?> =
 val Interpreter.resolver
 	get() =
 		context.privateResolver
+
+fun Interpreter.plusTestLeo(script: Script): Leo<Interpreter> =
+	TODO()
 
 fun Interpreter.useLeo(string: String): Leo<Interpreter> =
 	Leo { it.libraryEffect(File(string)) }.map { use(it) }
