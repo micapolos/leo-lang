@@ -210,3 +210,19 @@ fun Dictionary.plusRecurse(script: Script): Dictionary =
 			binding(function(body(BlockType.RECURSIVELY.block(script))))
 		)
 	)
+
+
+fun Dictionary.plusOrNull(scriptField: ScriptField): Dictionary? =
+	when (scriptField.string) {
+		"let" -> plusLetOrNull(scriptField.rhs)
+		"set" -> plusSet(scriptField.rhs)
+		else -> null
+	}
+
+fun Dictionary.plusLetOrNull(rhs: Script): Dictionary? =
+	rhs.matchInfix(doName) { lhs, rhs ->
+		plus(definition(pattern(lhs), binding(function(body(rhs)))))
+	}
+
+fun Dictionary.plusSet(rhs: Script): Dictionary =
+	set(value(rhs))

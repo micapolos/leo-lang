@@ -57,8 +57,12 @@ fun Interpreter.plus(scriptLine: ScriptLine): Interpreter =
 
 fun Interpreter.plus(scriptField: ScriptField): Interpreter =
 	null
+		?: plusDefinitionsOrNull(scriptField)
 		?: plusStaticOrNull(scriptField)
 		?: plusDynamic(scriptField)
+
+fun Interpreter.plusDefinitionsOrNull(scriptField: ScriptField): Interpreter? =
+	dictionary.plusOrNull(scriptField)?.let { set(it) }
 
 fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	when (scriptField.string) {
@@ -67,10 +71,8 @@ fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 		doName -> plusDo(scriptField.rhs)
 		doingName -> plusDoing(scriptField.rhs)
 		evaluateName -> plusEvaluateOrNull(scriptField.rhs)
-		letName -> plusLetOrNull(scriptField.rhs)
 		getName -> plusGet(scriptField.rhs)
 		scriptName -> plusScript(scriptField.rhs)
-		setName -> plusSetOrNull(scriptField.rhs)
 		switchName -> plusSwitchOrNull(scriptField.rhs)
 		else -> null
 	}
