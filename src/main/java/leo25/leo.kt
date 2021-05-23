@@ -41,5 +41,5 @@ fun <V, O> Leo<V>.map(fn: (V) -> O): Leo<O> =
 fun <V, O> Leo<V?>.nullableMap(fn: (V) -> O): Leo<O?> =
 	nullableBind { leo(fn(it)) }
 
-fun leoLibrary(file: File): Leo<Library> =
+fun leoLibrary(file: File): Leo<Resolver> =
 	Leo { it.libraryEffect(file) }

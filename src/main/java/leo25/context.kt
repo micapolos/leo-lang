@@ -1,14 +1,19 @@
 package leo25
 
 data class Context(
-	val resolver: Resolver,
-	val library: Library
+	val publicResolver: Resolver,
+	val privateResolver: Resolver
 )
 
-fun context(resolver: Resolver, library: Library) = Context(resolver, library)
+fun context(publicResolver: Resolver, privateResolver: Resolver) =
+	Context(publicResolver, privateResolver)
 
-fun context() = context(resolver(), library())
-val nativeContext get() = context(nativeResolver, library())
+fun context() = context(resolver(), resolver())
+val nativeContext get() = context(resolver(), nativeResolver)
 
 fun Context.plus(definition: Definition): Context =
-	context(resolver.plus(definition), library.plus(definition))
+	context(publicResolver.plus(definition), privateResolver.plus(definition))
+
+fun Context.plusPrivate(resolver: Resolver): Context =
+	context(publicResolver, privateResolver.plus(resolver))
+
