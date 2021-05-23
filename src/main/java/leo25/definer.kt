@@ -32,7 +32,7 @@ fun Definer.plus(scriptField: ScriptField): Definer =
 fun Definer.plusSpecialOrNull(scriptField: ScriptField): Definer? =
 	when (scriptField.string) {
 		doName -> plusGives(scriptField.rhs)
-		becomeName -> plusBe(scriptField.rhs)
+		becomeName -> plusBecome(scriptField.rhs)
 		else -> null
 	}
 
@@ -41,7 +41,7 @@ fun Definer.plusGives(rhs: Script): Definer =
 		.plus(script, binding(dictionary.function(body(rhs))))
 		.definer()
 
-fun Definer.plusBe(rhs: Script): Definer? =
+fun Definer.plusBecome(rhs: Script): Definer? =
 	dictionary
-		.plus(script(getName lineTo script), binding(dictionary.value(rhs)))
+		.plus(script, binding(dictionary.value(rhs)))
 		.definer()

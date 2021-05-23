@@ -1,5 +1,5 @@
 let
-  get greeting
-  become greeting "Hello, world!"
+  prepare nice greeting
+  become "Hello, world!"
 
-get greeting
+prepare nice greeting
