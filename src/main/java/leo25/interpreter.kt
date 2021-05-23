@@ -23,7 +23,16 @@ fun Interpreter.set(dictionary: Dictionary): Interpreter =
 fun Dictionary.value(script: Script): Value =
 	interpreter(script).value
 
-fun Dictionary.line(scriptField: ScriptField): Field =
+fun Dictionary.linesValue(script: Script): Value =
+	value().fold(script.lineSeq.reverse) { plus(field(it)) }
+
+fun Dictionary.field(scriptLine: ScriptLine): Field =
+	when (scriptLine) {
+		is FieldScriptLine -> field(scriptLine.field)
+		is LiteralScriptLine -> field(scriptLine.literal)
+	}
+
+fun Dictionary.field(scriptField: ScriptField): Field =
 	scriptField.string fieldTo value(scriptField.rhs)
 
 val Script.interpret: Script
@@ -82,7 +91,7 @@ fun Interpreter.plusDoing(rhs: Script): Interpreter =
 	plus(field(dictionary.function(body(rhs))))
 
 fun Interpreter.plusGet(rhs: Script): Interpreter =
-	plus(getName fieldTo rhs.value)
+	plus(getName fieldTo dictionary.linesValue(rhs))
 
 fun Interpreter.plusLetOrNull(rhs: Script): Interpreter? =
 	rhs.matchInfix(doName) { lhs, rhs ->
@@ -105,7 +114,7 @@ fun Interpreter.plusSwitchOrNull(rhs: Script): Interpreter? =
 	dictionary.switchOrNull(value, rhs)?.let { set(it) }
 
 fun Interpreter.plusDynamic(scriptField: ScriptField): Interpreter =
-	plus(dictionary.line(scriptField))
+	plus(dictionary.field(scriptField))
 
 fun Interpreter.plus(literal: Literal): Interpreter =
 	plus(field(literal))
