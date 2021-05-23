@@ -21,3 +21,6 @@ fun Context.plus(definition: Definition): Context =
 fun Context.plusPrivate(resolver: Resolver): Context =
 	context(publicResolver, privateResolver.plus(resolver))
 
+val Context.private: Context
+	get() =
+		context(resolver(), privateResolver)

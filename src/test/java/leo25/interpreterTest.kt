@@ -292,4 +292,36 @@ class InterpreterTest {
 			""
 		)
 	}
+
+	@Test
+	fun private() {
+		script(
+			privateName lineTo script(
+				letName lineTo script(
+					"ping" lineTo script(),
+					doName lineTo script("pong")
+				)
+			),
+			"ping" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script("pong"))
+	}
+
+	@Test
+	fun private_double() {
+		script(
+			privateName lineTo script(
+				privateName lineTo script(
+					letName lineTo script(
+						"ping" lineTo script(),
+						doName lineTo script("pong")
+					)
+				)
+			),
+			"ping" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script("ping"))
+	}
 }

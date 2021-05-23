@@ -93,6 +93,7 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		getName -> plusGetLeo(scriptField.rhs)
 		scriptName -> plusScript(scriptField.rhs).leo
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
+		privateName -> plusPrivateLeo(scriptField.rhs)
 		else -> leo(null)
 	}
 
@@ -134,6 +135,11 @@ fun Interpreter.plusLeo(literal: Literal): Leo<Interpreter> =
 fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
 	resolver.resolveLeo(value.plus(field)).map {
 		set(it)
+	}
+
+fun Interpreter.plusPrivateLeo(rhs: Script): Leo<Interpreter> =
+	context.private.interpreterLeo(rhs).map { interpreter ->
+		set(context.plusPrivate(interpreter.context.publicResolver))
 	}
 
 val Interpreter.resolver
