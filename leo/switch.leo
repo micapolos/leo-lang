@@ -2,9 +2,9 @@ first
   the "Hello, "
   switch
     text append "world!"
-    number add 2
+    number add 5
 second
-  the 2
+  the 10
   switch
     text append "world!"
-    number add 2
+    number add 5

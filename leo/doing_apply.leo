@@ -1,4 +1,4 @@
 doing
   get text
-  append "!"
-apply "Hello, world"
+  append "world!"
+apply "Hello, "

@@ -1,4 +1,2 @@
-"Hello"
-append ", "
-append "world"
-append "!"
+"Hello, "
+append "world!"

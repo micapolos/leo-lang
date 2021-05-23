@@ -1,9 +1,9 @@
 let
-  text any
-  exclamate
+  number any
+  double
   do
-    get text
-    append "!"
+    get number
+    add get number
 
-"Hello, world"
-exclamate
+10
+double
