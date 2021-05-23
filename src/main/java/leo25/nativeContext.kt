@@ -7,5 +7,3 @@ val nativeDictionary: Dictionary
 			.plus(numberAddNumberScript, numberAddNumberBody)
 			.plus(numberSubtractNumberScript, numberSubtractNumberBody)
 			.plus(numberMultiplyByNumberScript, numberMultiplyByNumberBody)
-			.plus(getHashScript, getHashBody)
-			.plus(anyIsAnyScript, isBody)

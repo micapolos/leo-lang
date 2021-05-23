@@ -41,17 +41,3 @@ val numberMultiplyByNumberScript: Script
 				)
 			)
 		)
-
-val getHashScript: Script
-	get() =
-		script(
-			anyName lineTo script(),
-			getName lineTo script(hashName)
-		)
-
-val anyIsAnyScript: Script
-	get() =
-		script(
-			anyName lineTo script(),
-			isName lineTo script(anyName)
-		)

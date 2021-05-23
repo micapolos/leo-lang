@@ -34,24 +34,8 @@ val numberMultiplyByNumberBody
 	get() =
 		unsafeBody {
 			resolveOrNull(numberName, multiplyName) { rhs ->
-				rhs.resolveOrNull(byName) { rhs ->
+				rhs.resolvePrefixOrNull(byName) { rhs ->
 					value(field(literal(numberOrNull!!.times(rhs.numberOrNull!!))))
 				}
-			}!!
-		}
-
-val getHashBody
-	get() =
-		unsafeBody {
-			unlinkOrNull {
-				hashValue
-			}!!
-		}
-
-val isBody
-	get() =
-		unsafeBody {
-			unlinkOrNull { rhs ->
-				equals(rhs).isValue
 			}!!
 		}

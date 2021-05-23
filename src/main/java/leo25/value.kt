@@ -63,6 +63,8 @@ val Value.resolve: Value
 	get() =
 		null
 			?: resolveFunctionApplyOrNull
+			?: resolveGetHashOrNull
+			?: resolveIsOrNull
 			?: resolveGetOrNull
 			?: this
 
@@ -149,6 +151,20 @@ val Value.resolveGetOrNull: Value?
 	get() =
 		resolveInfixOrNull(getName) { rhs ->
 			getOrNull(rhs)
+		}
+
+val Value.resolveGetHashOrNull: Value?
+	get() =
+		resolveInfixOrNull(getName) { rhs ->
+			rhs.resolveOrNull(hashName) {
+				hashValue
+			}
+		}
+
+val Value.resolveIsOrNull: Value?
+	get() =
+		resolveInfixOrNull(isName) { rhs ->
+			equals(rhs).isValue
 		}
 
 fun Value.plus(name: String): Value =
@@ -272,9 +288,6 @@ fun Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) -> V
 			}
 		}
 	}
-
-fun Value.resolveOrNull(name: String, fn: (Value) -> Value?): Value? =
-	rhsValueOrNull(name)?.let(fn)
 
 fun Value.replaceOrNull(field: Field): Value? =
 	when (this) {
