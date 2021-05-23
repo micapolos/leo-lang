@@ -68,13 +68,13 @@ val Resolution.continuationDictionary: Dictionary
 			is DictionaryResolution -> dictionary
 		}
 
-fun Dictionary.plus(script: Script, binding: Binding): Dictionary =
-	update(script) {
-		resolution(binding)
+fun Dictionary.plus(definition: Definition): Dictionary =
+	update(definition.pattern.script) {
+		resolution(definition.binding)
 	}
 
 fun Dictionary.plus(script: Script, body: Body): Dictionary =
-	plus(script, binding(dictionary().function(body)))
+	plus(definition(pattern(script), binding(dictionary().function(body))))
 
 fun Dictionary.update(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
 	null
@@ -200,9 +200,13 @@ fun Dictionary.applyUntyped(script: Script, given: Value): Value =
 
 fun Dictionary.plusRecurse(script: Script): Dictionary =
 	plus(
-		script(
-			anyName lineTo script(),
-			recurseName lineTo script()
-		),
-		binding(function(body(BlockType.RECURSIVELY.block(script))))
+		definition(
+			pattern(
+				script(
+					anyName lineTo script(),
+					recurseName lineTo script()
+				)
+			),
+			binding(function(body(BlockType.RECURSIVELY.block(script))))
+		)
 	)

@@ -11,7 +11,12 @@ class DictionaryTest {
 	@Test
 	fun plusAny() {
 		dictionary()
-			.plus(script(anyName), binding(value("ok")))
+			.plus(
+				definition(
+					pattern(script(anyName)),
+					binding(value("ok"))
+				)
+			)
 			.assertEqualTo(
 				Dictionary(persistentMapOf(token(anyEnd) to resolution(binding(value("ok")))))
 			)
@@ -20,7 +25,12 @@ class DictionaryTest {
 	@Test
 	fun applyString() {
 		dictionary()
-			.plus(script("ping"), binding(value("pong")))
+			.plus(
+				definition(
+					pattern(script("ping")),
+					binding(value("pong"))
+				)
+			)
 			.applyOrNull(value("ping"))
 			.assertEqualTo(value("pong"))
 	}
@@ -28,7 +38,12 @@ class DictionaryTest {
 	@Test
 	fun applyStruct() {
 		dictionary()
-			.plus(script("name" lineTo script(anyName)), binding(value("ok")))
+			.plus(
+				definition(
+					pattern(script("name" lineTo script(anyName))),
+					binding(value("ok"))
+				)
+			)
 			.run {
 				applyOrNull(value("name" fieldTo value())).assertEqualTo(value("ok"))
 				applyOrNull(value("name" fieldTo value("michal"))).assertEqualTo(value("ok"))
@@ -39,7 +54,12 @@ class DictionaryTest {
 	@Test
 	fun applyAny() {
 		dictionary()
-			.plus(script(anyName), binding(value("pong")))
+			.plus(
+				definition(
+					pattern(script(anyName)),
+					binding(value("pong"))
+				)
+			)
 			.run {
 				applyOrNull(value("ping")).assertEqualTo(value("pong"))
 				applyOrNull(value("ping")).assertEqualTo(value("pong"))
@@ -50,8 +70,10 @@ class DictionaryTest {
 	fun anyValueApply() {
 		dictionary()
 			.plus(
-				script(anyName lineTo script(), "plus" lineTo script(anyName)),
-				binding(value("ok"))
+				definition(
+					pattern(script(anyName lineTo script(), "plus" lineTo script(anyName))),
+					binding(value("ok"))
+				)
 			)
 			.run {
 				applyOrNull(value("a" fieldTo value(), "plus" fieldTo value("b" fieldTo value())))
@@ -62,27 +84,52 @@ class DictionaryTest {
 	@Test
 	fun literalApply() {
 		dictionary()
-			.plus(script(textName lineTo script(anyName)), binding(value("ok")))
+			.plus(
+				definition(
+					pattern(script(textName lineTo script(anyName))),
+					binding(value("ok"))
+				)
+			)
 			.applyOrNull(value(field(literal("foo"))))
 			.assertEqualTo(value("ok"))
 
 		dictionary()
-			.plus(script(literal("foo")), binding(value("ok")))
+			.plus(
+				definition(
+					pattern(script(literal("foo"))),
+					binding(value("ok"))
+				)
+			)
 			.applyOrNull(value(field(literal("foo"))))
 			.assertEqualTo(value("ok"))
 
 		dictionary()
-			.plus(script(literal("foo")), binding(value("ok")))
+			.plus(
+				definition(
+					pattern(script(literal("foo"))),
+					binding(value("ok"))
+				)
+			)
 			.applyOrNull(value(field(literal("bar"))))
 			.assertEqualTo(null)
 
 		dictionary()
-			.plus(script(literal(123)), binding(value("ok")))
+			.plus(
+				definition(
+					pattern(script(literal(123))),
+					binding(value("ok"))
+				)
+			)
 			.applyOrNull(value(field(literal(123))))
 			.assertEqualTo(value("ok"))
 
 		dictionary()
-			.plus(script(literal(123)), binding(value("ok")))
+			.plus(
+				definition(
+					pattern(script(literal(123))),
+					binding(value("ok"))
+				)
+			)
 			.applyOrNull(value(field(literal(124))))
 			.assertEqualTo(null)
 	}

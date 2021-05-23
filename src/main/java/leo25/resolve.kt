@@ -61,6 +61,8 @@ fun Dictionary.set(value: Value): Dictionary =
 
 fun Dictionary.set(line: Field): Dictionary =
 	plus(
-		script(getName lineTo script(line.name)),
-		binding(value(line))
+		definition(
+			pattern(script(getName lineTo script(line.name))),
+			binding(value(line))
+		)
 	)
