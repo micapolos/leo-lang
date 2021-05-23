@@ -88,6 +88,9 @@ fun Value.rhsValueOrNull(name: String): Value? =
 fun Value.selectOrNull(name: String): Value? =
 	fieldSeq.mapFirstOrNull { selectOrNull(name) }
 
+fun Value.selectFieldOrNull(name: String): Field? =
+	fieldSeq.mapFirstOrNull { orNull(name) }
+
 val Literal.selectName: String
 	get() =
 		when (this) {
@@ -113,11 +116,22 @@ fun Value.getOrNull(field: Field): Value? =
 	}
 
 fun Value.getOrNull(name: String, value: Value): Value? =
-	if (value.isEmpty) getOrNull(name) ?: make(name)
-	else value(name fieldTo plus(value))
+	getOrSetOrNull(name, value) ?: make(name, value)
+
+fun Value.getOrSetOrNull(name: String, value: Value): Value? =
+	bodyOrNull?.selectFieldOrNull(name)?.let { field ->
+		if (value.isEmpty) value(field)
+		else value(name fieldTo value)
+	}
+
+fun Value.make(name: String, value: Value): Value =
+	value(name fieldTo plus(value))
 
 fun Value.getOrNull(name: String): Value? =
 	bodyOrNull?.selectOrNull(name)
+
+fun Value.get(name: String): Value? =
+	getOrNull(name) ?: make(name)
 
 fun Field.rhsOrNull(name: String): Rhs? =
 	notNullIf(this.name == name) { rhs }
@@ -261,3 +275,11 @@ fun Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) -> V
 
 fun Value.resolveOrNull(name: String, fn: (Value) -> Value?): Value? =
 	rhsValueOrNull(name)?.let(fn)
+
+fun Value.replaceOrNull(field: Field): Value? =
+	when (this) {
+		EmptyValue -> null
+		is LinkValue ->
+			if (link.field.name == field.name) link.value.plus(field)
+			else link.value.replaceOrNull(field)?.plus(link.field)
+	}

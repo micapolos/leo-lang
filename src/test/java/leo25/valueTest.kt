@@ -78,6 +78,26 @@ class ValueTest {
 			.assertEqualTo(value("y" fieldTo value("20")))
 
 		value(
+			"point" fieldTo value(
+				"x" fieldTo value("10"),
+				"y" fieldTo value("20")
+			),
+			getName fieldTo value("x" fieldTo value("30"))
+		)
+			.resolve
+			.assertEqualTo(value("x" fieldTo value("30")))
+
+		value(
+			"point" fieldTo value(
+				"x" fieldTo value("10"),
+				"y" fieldTo value("20")
+			),
+			getName fieldTo value("y" fieldTo value("30"))
+		)
+			.resolve
+			.assertEqualTo(value("y" fieldTo value("30")))
+
+		value(
 			"x" fieldTo value("10"),
 			"y" fieldTo value("20"),
 			getName fieldTo value("point")
