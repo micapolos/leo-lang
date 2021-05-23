@@ -4,8 +4,8 @@ import leo13.Stack
 import leo13.push
 import leo13.stack
 
-data class Module(val definitionStack: Stack<Definition>)
+data class Library(val definitionStack: Stack<Definition>)
 
-fun module(definitionStack: Stack<Definition>) = Module(definitionStack)
-fun module(vararg definitions: Definition) = module(stack(*definitions))
-operator fun Module.plus(definition: Definition) = module(definitionStack.push(definition))
+fun library(definitionStack: Stack<Definition>) = Library(definitionStack)
+fun library(vararg definitions: Definition) = library(stack(*definitions))
+operator fun Library.plus(definition: Definition) = library(definitionStack.push(definition))

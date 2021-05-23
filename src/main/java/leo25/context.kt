@@ -1,14 +1,14 @@
 package leo25
 
 data class Context(
-	val dictionary: Dictionary,
-	val module: Module
+	val resolver: Resolver,
+	val library: Library
 )
 
-fun context(dictionary: Dictionary, module: Module) = Context(dictionary, module)
+fun context(resolver: Resolver, library: Library) = Context(resolver, library)
 
-fun context() = context(dictionary(), module())
-val nativeContext get() = context(nativeDictionary, module())
+fun context() = context(resolver(), library())
+val nativeContext get() = context(nativeResolver, library())
 
 fun Context.plus(definition: Definition): Context =
-	context(dictionary.plus(definition), module.plus(definition))
+	context(resolver.plus(definition), library.plus(definition))

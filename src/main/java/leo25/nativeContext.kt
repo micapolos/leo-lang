@@ -1,8 +1,8 @@
 package leo25
 
-val nativeDictionary: Dictionary
+val nativeResolver: Resolver
 	get() =
-		dictionary()
+		resolver()
 			.plus(textAppendTextScript, textAppendTextBody)
 			.plus(numberAddNumberScript, numberAddNumberBody)
 			.plus(numberSubtractNumberScript, numberSubtractNumberBody)

@@ -1,8 +1,6 @@
 package leo25
 
 import leo.base.assertEqualTo
-import leo.base.assertTrue
-import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
@@ -22,7 +20,7 @@ class ValueTest {
 
 	@Test
 	fun dictionaryResolve() {
-		dictionary()
+		resolver()
 			.resolve(value("foo"))
 			.assertEqualTo(value("foo"))
 	}
@@ -135,9 +133,9 @@ class ValueTest {
 
 	@Test
 	fun resolveFunction() {
-		value(field(dictionary().function(body(script("foo")))))
+		value(field(resolver().function(body(script("foo")))))
 			.functionOrNull
-			.assertEqualTo(dictionary().function(body(script("foo"))))
+			.assertEqualTo(resolver().function(body(script("foo"))))
 
 		value("function" fieldTo value("foo"))
 			.functionOrNull
@@ -162,7 +160,7 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			field(dictionary().function(body(script(getName lineTo script("name"))))),
+			field(resolver().function(body(script(getName lineTo script("name"))))),
 			applyName fieldTo value("name" fieldTo value("foo"))
 		)
 			.resolveFunctionApplyOrNull

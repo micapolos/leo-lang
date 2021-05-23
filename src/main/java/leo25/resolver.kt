@@ -6,7 +6,7 @@ import leo.base.*
 import leo14.*
 import leo14.matching.name
 
-data class Dictionary(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
+data class Resolver(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
 
 sealed class Token
 data class BeginToken(val begin: Begin) : Token()
@@ -20,14 +20,14 @@ object EmptyEnd : End()
 object AnythingEnd : End()
 
 sealed class Resolution
-data class DictionaryResolution(val dictionary: Dictionary) : Resolution()
+data class ResolverResolution(val resolver: Resolver) : Resolution()
 data class BindingResolution(val binding: Binding) : Resolution()
 
-fun Dictionary.put(token: Token, resolution: Resolution): Dictionary =
-	Dictionary(tokenToResolutionMap.put(token, resolution))
+fun Resolver.put(token: Token, resolution: Resolution): Resolver =
+	Resolver(tokenToResolutionMap.put(token, resolution))
 
-fun dictionary(vararg pairs: Pair<Token, Resolution>): Dictionary =
-	Dictionary(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
+fun resolver(vararg pairs: Pair<Token, Resolution>): Resolver =
+	Resolver(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
 
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
@@ -37,70 +37,70 @@ fun begin(name: String) = Begin(name)
 val emptyEnd: End = EmptyEnd
 val anyEnd: End = AnythingEnd
 
-fun resolution(dictionary: Dictionary): Resolution = DictionaryResolution(dictionary)
+fun resolution(resolver: Resolver): Resolution = ResolverResolution(resolver)
 fun resolution(binding: Binding): Resolution = BindingResolution(binding)
 
-fun Dictionary.update(token: Token, fn: (Resolution?) -> Resolution?): Dictionary =
+fun Resolver.update(token: Token, fn: (Resolution?) -> Resolution?): Resolver =
 	fn(tokenToResolutionMap[token]).let { resolutionOrNull ->
-		Dictionary(
+		Resolver(
 			if (resolutionOrNull == null) tokenToResolutionMap.remove(token)
 			else tokenToResolutionMap.put(token, resolutionOrNull)
 		)
 	}
 
-fun Dictionary.updateContinuation(token: Token, fn: Dictionary.() -> Resolution): Dictionary =
+fun Resolver.updateContinuation(token: Token, fn: Resolver.() -> Resolution): Resolver =
 	update(token) { resolutionOrNull ->
-		resolutionOrNull?.continuationDictionary.orIfNull { dictionary() }.fn()
+		resolutionOrNull?.continuationResolver.orIfNull { resolver() }.fn()
 	}
 
-val Dictionary.removeForAny: Dictionary
+val Resolver.removeForAny: Resolver
 	get() =
-		Dictionary(
+		Resolver(
 			tokenToResolutionMap[token(anyEnd)].let { resolutionOrNull ->
 				if (resolutionOrNull == null) persistentMapOf()
 				else persistentMapOf(token(anyEnd) to resolutionOrNull)
 			})
 
-val Resolution.continuationDictionary: Dictionary
+val Resolution.continuationResolver: Resolver
 	get() =
 		when (this) {
-			is BindingResolution -> dictionary()
-			is DictionaryResolution -> dictionary
+			is BindingResolution -> resolver()
+			is ResolverResolution -> resolver
 		}
 
-fun Dictionary.plus(definition: Definition): Dictionary =
+fun Resolver.plus(definition: Definition): Resolver =
 	update(definition.pattern.script) {
 		resolution(definition.binding)
 	}
 
-fun Dictionary.plus(script: Script, body: Body): Dictionary =
-	plus(definition(pattern(script), binding(dictionary().function(body))))
+fun Resolver.plus(script: Script, body: Body): Resolver =
+	plus(definition(pattern(script), binding(resolver().function(body))))
 
-fun Dictionary.update(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
+fun Resolver.update(script: Script, fn: Resolver.() -> Resolution): Resolver =
 	null
 		?: updateAnyOrNull(script, fn)
 		?: updateExact(script, fn)
 
-fun Dictionary.updateExact(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
+fun Resolver.updateExact(script: Script, fn: Resolver.() -> Resolution): Resolver =
 	when (script) {
 		is UnitScript -> updateContinuation(token(emptyEnd), fn)
 		is LinkScript -> update(script.link, fn)
 	}
 
-fun Dictionary.update(link: ScriptLink, fn: Dictionary.() -> Resolution): Dictionary =
+fun Resolver.update(link: ScriptLink, fn: Resolver.() -> Resolution): Resolver =
 	update(link.line) {
 		resolution(
 			update(link.lhs, fn)
 		)
 	}
 
-fun Dictionary.update(line: ScriptLine, fn: Dictionary.() -> Resolution): Dictionary =
+fun Resolver.update(line: ScriptLine, fn: Resolver.() -> Resolution): Resolver =
 	when (line) {
 		is FieldScriptLine -> update(line.field, fn)
 		is LiteralScriptLine -> update(line.literal, fn)
 	}
 
-fun Dictionary.update(literal: Literal, fn: Dictionary.() -> Resolution): Dictionary =
+fun Resolver.update(literal: Literal, fn: Resolver.() -> Resolution): Resolver =
 	updateContinuation(token(begin(literal.selectName))) {
 		resolution(updateContinuation(token(literal.native), fn))
 //		) {
@@ -108,24 +108,24 @@ fun Dictionary.update(literal: Literal, fn: Dictionary.() -> Resolution): Dictio
 //		})
 	}
 
-fun Dictionary.updateAnyOrNull(script: Script, fn: Dictionary.() -> Resolution): Dictionary? =
+fun Resolver.updateAnyOrNull(script: Script, fn: Resolver.() -> Resolution): Resolver? =
 	notNullIf(script == script(anyName)) {
 		updateAny(fn)
 	}
 
-fun Dictionary.update(field: ScriptField, fn: Dictionary.() -> Resolution): Dictionary =
+fun Resolver.update(field: ScriptField, fn: Resolver.() -> Resolution): Resolver =
 	updateContinuation(token(begin(field.string))) {
 		resolution(update(field.rhs, fn))
 	}
 
-fun Dictionary.updateAny(fn: Dictionary.() -> Resolution): Dictionary =
+fun Resolver.updateAny(fn: Resolver.() -> Resolution): Resolver =
 	removeForAny.updateContinuation(token(anyEnd), fn)
 
-operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
-	runIf(dictionary.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
+operator fun Resolver.plus(resolver: Resolver): Resolver =
+	runIf(resolver.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
 		.run {
-			dictionary.tokenToResolutionMap.entries.fold(this) { dictionary, (token, resolution) ->
-				dictionary.update(token) { resolutionOrNull ->
+			resolver.tokenToResolutionMap.entries.fold(this) { resolver, (token, resolution) ->
+				resolver.update(token) { resolutionOrNull ->
 					resolutionOrNull.orNullMerge(resolution)
 				}
 			}
@@ -134,71 +134,71 @@ operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
 fun Resolution.merge(resolution: Resolution): Resolution =
 	when (resolution) {
 		is BindingResolution -> resolution
-		is DictionaryResolution ->
+		is ResolverResolution ->
 			when (this) {
 				is BindingResolution -> resolution
-				is DictionaryResolution -> resolution(dictionary.plus(resolution.dictionary))
+				is ResolverResolution -> resolution(resolver.plus(resolution.resolver))
 			}
 	}
 
 fun Resolution?.orNullMerge(resolution: Resolution): Resolution =
 	this?.merge(resolution) ?: resolution
 
-fun Dictionary.switchOrNull(value: Value, script: Script): Value? =
+fun Resolver.switchOrNull(value: Value, script: Script): Value? =
 	value.bodyOrNull?.let { switchBodyOrNull(it, script) }
 
-fun Dictionary.switchBodyOrNull(value: Value, script: Script): Value? =
+fun Resolver.switchBodyOrNull(value: Value, script: Script): Value? =
 	value.fieldOrNull?.let {
 		switchOrNull(it, script)
 	}
 
-fun Dictionary.switchOrNull(line: Field, script: Script): Value? =
+fun Resolver.switchOrNull(line: Field, script: Script): Value? =
 	when (script) {
 		is LinkScript -> switchOrNull(line, script.link)
 		is UnitScript -> null
 	}
 
-fun Dictionary.switchOrNull(line: Field, scriptLink: ScriptLink): Value? =
+fun Resolver.switchOrNull(line: Field, scriptLink: ScriptLink): Value? =
 	switchOrNull(line, scriptLink.line) ?: switchOrNull(line, scriptLink.lhs)
 
-fun Dictionary.switchOrNull(line: Field, scriptLine: ScriptLine): Value? =
+fun Resolver.switchOrNull(line: Field, scriptLine: ScriptLine): Value? =
 	when (scriptLine) {
 		is FieldScriptLine -> switchOrNull(line, scriptLine.field)
 		is LiteralScriptLine -> null
 	}
 
-fun Dictionary.switchOrNull(line: Field, scriptField: ScriptField): Value? =
+fun Resolver.switchOrNull(line: Field, scriptField: ScriptField): Value? =
 	ifOrNull(line.name == scriptField.name) {
 		interpreter(value(line)).plus(scriptField.rhs).value
 	}
 
-fun Dictionary.apply(body: Body, given: Value): Value =
+fun Resolver.apply(body: Body, given: Value): Value =
 	when (body) {
 		is FnBody -> body.fn(given)
 		is BlockBody -> apply(body.block, given)
 	}
 
-fun Dictionary.apply(block: Block, given: Value): Value =
+fun Resolver.apply(block: Block, given: Value): Value =
 	when (block.typeOrNull) {
 		BlockType.REPEATEDLY -> applyRepeating(block.untypedScript, given)
 		BlockType.RECURSIVELY -> applyRecursing(block.untypedScript, given)
 		null -> applyUntyped(block.untypedScript, given)
 	}
 
-tailrec fun Dictionary.applyRepeating(script: Script, given: Value): Value {
+tailrec fun Resolver.applyRepeating(script: Script, given: Value): Value {
 	val result = set(given).value(script)
 	val repeatValue = result.repeatValueOrNull
 	return if (repeatValue != null) applyRepeating(script, repeatValue)
 	else result
 }
 
-fun Dictionary.applyRecursing(script: Script, given: Value): Value =
+fun Resolver.applyRecursing(script: Script, given: Value): Value =
 	set(given).plusRecurse(script).value(script)
 
-fun Dictionary.applyUntyped(script: Script, given: Value): Value =
+fun Resolver.applyUntyped(script: Script, given: Value): Value =
 	set(given).value(script)
 
-fun Dictionary.plusRecurse(script: Script): Dictionary =
+fun Resolver.plusRecurse(script: Script): Resolver =
 	plus(
 		definition(
 			pattern(
@@ -211,18 +211,17 @@ fun Dictionary.plusRecurse(script: Script): Dictionary =
 		)
 	)
 
-
-fun Dictionary.plusOrNull(scriptField: ScriptField): Dictionary? =
+fun Resolver.plusOrNull(scriptField: ScriptField): Resolver? =
 	when (scriptField.string) {
 		"let" -> plusLetOrNull(scriptField.rhs)
 		"set" -> plusSet(scriptField.rhs)
 		else -> null
 	}
 
-fun Dictionary.plusLetOrNull(rhs: Script): Dictionary? =
+fun Resolver.plusLetOrNull(rhs: Script): Resolver? =
 	rhs.matchInfix(doName) { lhs, rhs ->
 		plus(definition(pattern(lhs), binding(function(body(rhs)))))
 	}
 
-fun Dictionary.plusSet(rhs: Script): Dictionary =
+fun Resolver.plusSet(rhs: Script): Resolver =
 	set(value(rhs))
