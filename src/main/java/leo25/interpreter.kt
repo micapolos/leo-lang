@@ -7,21 +7,21 @@ import leo14.*
 import leo25.parser.scriptOrNull
 
 data class Interpreter(
-	val resolver: Resolver,
+	val context: Context,
 	val value: Value
 )
 
-fun Resolver.interpreter(value: Value = value()) =
+fun Context.interpreter(value: Value = value()) =
 	Interpreter(this, value)
 
 fun Interpreter.set(value: Value): Interpreter =
-	resolver.interpreter(value)
+	context.interpreter(value)
 
-fun Interpreter.set(resolver: Resolver): Interpreter =
-	resolver.interpreter(value)
+fun Interpreter.set(context: Context): Interpreter =
+	context.interpreter(value)
 
 fun Resolver.valueLeo(script: Script): Leo<Value> =
-	interpreterLeo(script).map { it.value }
+	context.interpreterLeo(script).map { it.value }
 
 fun Resolver.linesValueLeo(script: Script): Leo<Value> =
 	value().leo.fold(script.lineSeq.reverse) { line ->
@@ -55,7 +55,7 @@ val String.interpret: String
 	get() =
 		scriptOrNull?.interpret?.string ?: this
 
-fun Resolver.interpreterLeo(script: Script): Leo<Interpreter> =
+fun Context.interpreterLeo(script: Script): Leo<Interpreter> =
 	interpreter().plusLeo(script)
 
 fun Interpreter.plusLeo(script: Script): Leo<Interpreter> =
@@ -79,7 +79,9 @@ fun Interpreter.plusLeo(scriptField: ScriptField): Leo<Interpreter> =
 	}
 
 fun Interpreter.plusDefinitionsOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
-	resolver.plusOrNullLeo(scriptField).nullableBind { set(it).leo }
+	resolver.definitionSeqOrNullLeo(scriptField).nullableMap { definitionSeq ->
+		set(context.fold(definitionSeq.reverse) { plus(it) })
+	}
 
 fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
 	when (scriptField.string) {
@@ -133,3 +135,7 @@ fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
 	resolver.resolveLeo(value.plus(field)).map {
 		set(it)
 	}
+
+val Interpreter.resolver
+	get() =
+		context.privateResolver

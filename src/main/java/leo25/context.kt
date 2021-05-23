@@ -8,6 +8,10 @@ data class Context(
 fun context(publicResolver: Resolver, privateResolver: Resolver) =
 	Context(publicResolver, privateResolver)
 
+val Resolver.context
+	get() =
+		context(resolver(), this)
+
 fun context() = context(resolver(), resolver())
 val nativeContext get() = context(resolver(), nativeResolver)
 

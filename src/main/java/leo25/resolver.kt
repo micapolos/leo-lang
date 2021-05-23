@@ -171,7 +171,7 @@ fun Resolver.switchOrNullLeo(line: Field, scriptLine: ScriptLine): Leo<Value?> =
 
 fun Resolver.switchOrNullLeo(line: Field, scriptField: ScriptField): Leo<Value?> =
 	ifOrNull(line.name == scriptField.name) {
-		interpreter(value(line)).plusLeo(scriptField.rhs).map { it.value }
+		context.interpreter(value(line)).plusLeo(scriptField.rhs).map { it.value }
 	} ?: leo(null)
 
 fun Resolver.applyLeo(body: Body, given: Value): Leo<Value> =
@@ -214,17 +214,20 @@ fun Resolver.plusRecurse(script: Script): Resolver =
 		)
 	)
 
-fun Resolver.plusOrNullLeo(scriptField: ScriptField): Leo<Resolver?> =
+fun Resolver.definitionSeqOrNullLeo(scriptField: ScriptField): Leo<Seq<Definition>?> =
 	when (scriptField.string) {
-		"let" -> plusLetOrNull(scriptField.rhs).leo
-		"set" -> plusSetLeo(scriptField.rhs)
+		"let" -> letDefinitionOrNull(scriptField.rhs)?.let { seq(it) }.leo
+		"set" -> setDefinitionSeqLeo(scriptField.rhs)
 		else -> leo(null)
 	}
 
-fun Resolver.plusLetOrNull(rhs: Script): Resolver? =
+fun Resolver.letDefinitionOrNull(rhs: Script): Definition? =
 	rhs.matchInfix(doName) { lhs, rhs ->
-		plus(definition(pattern(lhs), binding(function(body(rhs)))))
+		definition(pattern(lhs), binding(function(body(rhs))))
 	}
 
-fun Resolver.plusSetLeo(rhs: Script): Leo<Resolver> =
-	valueLeo(rhs).map { set(it) }
+
+fun Resolver.setDefinitionSeqLeo(rhs: Script): Leo<Seq<Definition>> =
+	valueLeo(rhs).map { value ->
+		value.setDefinitionSeq
+	}
