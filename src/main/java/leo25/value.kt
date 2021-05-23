@@ -4,9 +4,15 @@ import leo.base.*
 import leo14.*
 import leo14.Number
 
-sealed class Value
+sealed class Value {
+	override fun toString() = script.toString()
+}
+
 object EmptyValue : Value()
-data class LinkValue(val link: Link) : Value()
+
+data class LinkValue(val link: Link) : Value() {
+	override fun toString() = super.toString()
+}
 
 data class Link(val value: Value, val field: Field)
 
