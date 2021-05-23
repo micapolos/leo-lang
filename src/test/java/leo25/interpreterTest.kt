@@ -55,13 +55,18 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun define() {
+	fun letEmpty() {
 		script(
 			"foo" lineTo script(),
 			letName lineTo script("bar")
 		)
 			.interpret
-			.assertEqualTo(script("foo"))
+			.assertEqualTo(
+				script(
+					"foo" lineTo script(),
+					letName lineTo script("bar")
+				)
+			)
 	}
 
 	@Test
@@ -75,19 +80,6 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script("name" lineTo script("foo")))
-	}
-
-	@Test
-	fun letBe() {
-		script(
-			letName lineTo script(
-				"foo" lineTo script(),
-				becomeName lineTo script("bar")
-			),
-			getName lineTo script("foo" lineTo script())
-		)
-			.interpret
-			.assertEqualTo(script("bar"))
 	}
 
 	@Test
