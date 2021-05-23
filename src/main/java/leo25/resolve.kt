@@ -2,9 +2,7 @@ package leo25
 
 import leo.base.fold
 import leo.base.orNull
-import leo.base.orNullFold
 import leo.base.reverse
-import leo13.*
 import leo14.lineTo
 import leo14.script
 
@@ -58,10 +56,10 @@ fun Dictionary.resolutionOrNull(native: Native): Resolution? =
 val Resolution.dictionaryOrNull get() = (this as? DictionaryResolution)?.dictionary
 val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
-fun Dictionary.plusGiven(value: Value): Dictionary =
-	fold(value.fieldSeq.reverse) { plusGiven(it) }
+fun Dictionary.set(value: Value): Dictionary =
+	fold(value.fieldSeq.reverse) { set(it) }
 
-fun Dictionary.plusGiven(line: Field): Dictionary =
+fun Dictionary.set(line: Field): Dictionary =
 	plus(
 		script(getName lineTo script(line.name)),
 		binding(value(line))

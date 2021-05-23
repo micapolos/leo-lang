@@ -186,17 +186,17 @@ fun Dictionary.apply(block: Block, given: Value): Value =
 	}
 
 tailrec fun Dictionary.applyRepeating(script: Script, given: Value): Value {
-	val result = plusGiven(given).value(script)
+	val result = set(given).value(script)
 	val repeatValue = result.repeatValueOrNull
 	return if (repeatValue != null) applyRepeating(script, repeatValue)
 	else result
 }
 
 fun Dictionary.applyRecursing(script: Script, given: Value): Value =
-	plusGiven(given).plusRecurse(script).value(script)
+	set(given).plusRecurse(script).value(script)
 
 fun Dictionary.applyUntyped(script: Script, given: Value): Value =
-	plusGiven(given).value(script)
+	set(given).value(script)
 
 fun Dictionary.plusRecurse(script: Script): Dictionary =
 	plus(

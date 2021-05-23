@@ -203,4 +203,11 @@ class InterpreterTest {
 				script(line(literal(3)))
 			)
 	}
+
+	@Test
+	fun set() {
+		script(
+			""
+		)
+	}
 }
