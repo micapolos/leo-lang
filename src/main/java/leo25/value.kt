@@ -5,7 +5,7 @@ import leo14.*
 import leo14.Number
 
 sealed class Value {
-	override fun toString() = script.toString()
+	override fun toString() = script.string
 }
 
 object EmptyValue : Value()
@@ -47,6 +47,7 @@ val Native.stringOrNull: String? get() = any as? String
 val Native.numberOrNull: Number? get() = any as? Number
 
 operator fun Value.plus(field: Field): Value = value(this linkTo field)
+operator fun Value.plus(value: Value): Value = fold(value.fieldSeq.reverse) { plus(it) }
 val emptyValue: Value get() = EmptyValue
 fun value(vararg fields: Field) = emptyValue.fold(fields) { plus(it) }
 fun value(name: String) = value(name fieldTo value())
@@ -63,7 +64,6 @@ val Value.resolve: Value
 		null
 			?: resolveFunctionApplyOrNull
 			?: resolveGetOrNull
-			?: resolveMakeOrNull
 			?: this
 
 val Value.resolveFunctionApplyOrNull: Value?
@@ -102,6 +102,20 @@ val Value.bodyOrNull: Value?
 	get() =
 		fieldOrNull?.valueOrNull
 
+fun Value.getOrNull(value: Value): Value? =
+	runIfNotNull(value.fieldOrNull) {
+		getOrNull(it)
+	}
+
+fun Value.getOrNull(field: Field): Value? =
+	runIfNotNull(field.rhs.valueOrNull) {
+		getOrNull(field.name, it)
+	}
+
+fun Value.getOrNull(name: String, value: Value): Value? =
+	if (value.isEmpty) getOrNull(name) ?: make(name)
+	else value(name fieldTo plus(value))
+
 fun Value.getOrNull(name: String): Value? =
 	bodyOrNull?.selectOrNull(name)
 
@@ -120,17 +134,7 @@ fun Value.resolve(name: String): Value =
 val Value.resolveGetOrNull: Value?
 	get() =
 		resolveInfixOrNull(getName) { rhs ->
-			rhs.nameOrNull?.let { name ->
-				getOrNull(name)
-			}
-		}
-
-val Value.resolveMakeOrNull: Value?
-	get() =
-		resolveInfixOrNull(makeName) { rhs ->
-			rhs.nameOrNull?.let { name ->
-				make(name)
-			}
+			getOrNull(rhs)
 		}
 
 fun Value.plus(name: String): Value =

@@ -9,21 +9,67 @@ import kotlin.test.Test
 
 class InterpreterTest {
 	@Test
-	fun make() {
-		script(
-			"red" lineTo script(),
-			makeName lineTo script("color")
-		)
-			.interpret
-			.assertEqualTo(script("color" lineTo script("red")))
-	}
-
-	@Test
 	fun struct() {
 		script(
 			"point" lineTo script(
 				"x" lineTo script("zero"),
 				"y" lineTo script("one")
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					"point" lineTo script(
+						"x" lineTo script("zero"),
+						"y" lineTo script("one")
+					)
+				)
+			)
+	}
+
+	@Test
+	fun get() {
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")
+			),
+			getName lineTo script("x")
+		)
+			.interpret
+			.assertEqualTo(script("x" lineTo script("zero")))
+
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")
+			),
+			getName lineTo script("y")
+		)
+			.interpret
+			.assertEqualTo(script("y" lineTo script("one")))
+
+		script(
+			"x" lineTo script("zero"),
+			"y" lineTo script("one"),
+			getName lineTo script("point")
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					"point" lineTo script(
+						"x" lineTo script("zero"),
+						"y" lineTo script("one")
+					)
+				)
+			)
+
+		script(
+			"x" lineTo script("zero"),
+			getName lineTo script(
+				"point" lineTo script(
+					"y" lineTo script("one")
+				)
 			)
 		)
 			.interpret
