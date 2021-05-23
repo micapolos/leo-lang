@@ -1,3 +1,3 @@
-greeting
-  first word "Hello"
-  second word "world"
+point
+  x 10
+  y 20

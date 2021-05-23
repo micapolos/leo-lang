@@ -30,7 +30,7 @@ class DefinerTest {
 			.define(
 				script(
 					"name" lineTo script(anyName),
-					beName lineTo script("name")
+					becomeName lineTo script("name")
 				)
 			)
 			.assertEqualTo(

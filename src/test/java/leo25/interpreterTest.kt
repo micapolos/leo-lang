@@ -82,7 +82,7 @@ class InterpreterTest {
 		script(
 			letName lineTo script(
 				"foo" lineTo script(),
-				beName lineTo script("bar")
+				becomeName lineTo script("bar")
 			),
 			getName lineTo script("foo" lineTo script())
 		)
@@ -123,10 +123,10 @@ class InterpreterTest {
 					isName lineTo script(line(literal(0))),
 					switchName lineTo script(
 						yesName lineTo script(
-							beName lineTo script(line(literal("OK")))
+							becomeName lineTo script(line(literal("OK")))
 						),
 						noName lineTo script(
-							beName lineTo script(
+							becomeName lineTo script(
 								getName lineTo script(numberName),
 								subtractName lineTo script(line(literal(1))),
 								repeatName lineTo script()
@@ -150,10 +150,10 @@ class InterpreterTest {
 					isName lineTo script(line(literal(0))),
 					switchName lineTo script(
 						yesName lineTo script(
-							beName lineTo script(line(literal("OK")))
+							becomeName lineTo script(line(literal("OK")))
 						),
 						noName lineTo script(
-							beName lineTo script(
+							becomeName lineTo script(
 								getName lineTo script(numberName),
 								subtractName lineTo script(line(literal(1))),
 								recurseName lineTo script()
@@ -201,7 +201,7 @@ class InterpreterTest {
 	fun be() {
 		script(
 			"zero" lineTo script(),
-			beName lineTo script(
+			becomeName lineTo script(
 				line(literal(1)),
 				addName lineTo script(line(literal(2)))
 			)

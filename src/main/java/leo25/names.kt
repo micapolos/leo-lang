@@ -2,7 +2,7 @@ package leo25
 
 val applyName = "apply"
 val anyName = "any"
-val beName = "be"
+val becomeName = "become"
 val commentName = "comment"
 val doName = "do"
 val doingName = "doing"

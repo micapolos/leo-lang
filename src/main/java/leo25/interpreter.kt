@@ -54,7 +54,7 @@ fun Interpreter.plus(scriptField: ScriptField): Interpreter =
 fun Interpreter.plusStaticOrNull(scriptField: ScriptField): Interpreter? =
 	when (scriptField.string) {
 		commentName -> this
-		beName -> plusBe(scriptField.rhs)
+		becomeName -> plusBe(scriptField.rhs)
 		doName -> plusDo(scriptField.rhs)
 		doingName -> plusDoing(scriptField.rhs)
 		evaluateName -> plusEvaluateOrNull(scriptField.rhs)

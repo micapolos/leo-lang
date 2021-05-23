@@ -1,5 +1,5 @@
 let
-  greeting
-  be greeting "Hello, world!"
+  get greeting
+  become greeting "Hello, world!"
 
 get greeting
