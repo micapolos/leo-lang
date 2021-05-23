@@ -3,6 +3,7 @@ package leo25
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import leo.base.Effect
+import leo.base.effect
 import java.io.File
 
 data class Environment(
@@ -12,4 +13,11 @@ data class Environment(
 fun environment() = Environment(persistentMapOf())
 
 fun Environment.libraryEffect(file: File): Effect<Environment, Resolver> =
-	TODO()
+	fileLibraryMap[file]
+		?.let { this effect it }
+		?: loadLibrary(file).let { library ->
+			Environment(fileLibraryMap.put(file, library)) effect library
+		}
+
+fun Environment.loadLibrary(file: File): Resolver =
+	file.readText().resolver //.also { println("Loading: $file") }

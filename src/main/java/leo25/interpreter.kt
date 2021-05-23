@@ -1,10 +1,12 @@
 package leo25
 
-import leo.base.fold
-import leo.base.notNullIf
-import leo.base.reverse
+import leo.base.*
+import leo13.map
+import leo13.mapOrNull
+import leo13.seq
 import leo14.*
 import leo25.parser.scriptOrNull
+import java.io.File
 
 data class Interpreter(
 	val context: Context,
@@ -46,6 +48,14 @@ fun Resolver.fieldLeo(scriptField: ScriptField): Leo<Field> =
 val Script.interpret: Script
 	get() =
 		interpretLeo.get
+
+val Script.resolver: Resolver
+	get() =
+		nativeResolver.context.interpreter().plusLeo(this).get.context.publicResolver
+
+val String.resolver: Resolver
+	get() =
+		scriptOrNull?.resolver ?: resolver()
 
 val Script.interpretLeo: Leo<Script>
 	get() =
@@ -91,9 +101,10 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		doingName -> plusDoingLeo(scriptField.rhs)
 		evaluateName -> plusEvaluateOrNullLeo(scriptField.rhs)
 		getName -> plusGetLeo(scriptField.rhs)
+		privateName -> plusPrivateLeo(scriptField.rhs)
 		scriptName -> plusScript(scriptField.rhs).leo
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
-		privateName -> plusPrivateLeo(scriptField.rhs)
+		useName -> plusUseOrNullLeo(scriptField.rhs)
 		else -> leo(null)
 	}
 
@@ -139,9 +150,29 @@ fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
 
 fun Interpreter.plusPrivateLeo(rhs: Script): Leo<Interpreter> =
 	context.private.interpreterLeo(rhs).map { interpreter ->
-		set(context.plusPrivate(interpreter.context.publicResolver))
+		use(interpreter.context.publicResolver)
 	}
+
+fun Interpreter.plusUseOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	rhs
+		.lineSeq
+		.stack
+		.mapOrNull { literalOrNull?.stringOrNull }
+		?.let { strings ->
+			leo.fold(strings.seq.reverse) { string ->
+				bind { interpreter ->
+					interpreter.useLeo(string)
+				}
+			}
+		}
+		?: leo(null)
 
 val Interpreter.resolver
 	get() =
 		context.privateResolver
+
+fun Interpreter.useLeo(string: String): Leo<Interpreter> =
+	Leo { it.libraryEffect(File(string)) }.map { use(it) }
+
+fun Interpreter.use(resolver: Resolver): Interpreter =
+	set(context.plusPrivate(resolver))

@@ -324,4 +324,16 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script("ping"))
 	}
+
+//	@Test
+//	fun use() {
+//		script(
+//			useName lineTo script(literal("/Users")),
+//			useName lineTo script(literal("lib 2")),
+//			useName lineTo script(literal("lib 1")),
+//			useName lineTo script(literal("lib 3")),
+//			useName lineTo script(literal("lib 2")))
+//			.interpret
+//			.assertEqualTo(script())
+//	}
 }

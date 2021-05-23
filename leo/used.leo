@@ -1,0 +1,1 @@
+set greeting "Hello, world!"
