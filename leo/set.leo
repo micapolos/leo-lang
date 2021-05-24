@@ -1,7 +1,7 @@
 comment
   set
     binds value fields
-    in the current block
+    in the current scope
 
 set
   first "Hello, "
