@@ -1,7 +1,7 @@
 comment
   evaluate
     evaluates the given code
-    in current scope
+    in the current scope
 
 script
   "Hello, "

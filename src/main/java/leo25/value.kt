@@ -282,12 +282,12 @@ fun <R> Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) 
 		}
 	}
 
-fun Value.matching(pattern: Pattern): Value =
+fun Value.as_(pattern: Pattern): Value =
 	resolver()
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)
 		?.let { this }
-		.notNullOrThrow { plus(value(notName fieldTo pattern.script.value)) }
+		.notNullOrThrow { plus(value(asName fieldTo pattern.script.value)) }
 
 val Value.resolveNameOrNull: Value?
 	get() =

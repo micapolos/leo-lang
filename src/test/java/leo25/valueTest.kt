@@ -96,7 +96,7 @@ class ValueTest {
 	@Test
 	fun matching_ok() {
 		value(field(literal("foo")))
-			.matching(pattern(script(textName lineTo script(anyName))))
+			.as_(pattern(script(textName lineTo script(anyName))))
 			.assertEqualTo(value(field(literal("foo"))))
 	}
 
@@ -104,7 +104,7 @@ class ValueTest {
 	fun matching_fail() {
 		assertFailsWith<ValueError> {
 			value(field(literal(1)))
-				.matching(pattern(script(textName lineTo script(anyName))))
+				.as_(pattern(script(textName lineTo script(anyName))))
 		}
 	}
 }

@@ -1,7 +1,8 @@
 comment
   do
-    binds value fields as arguments
-    and executes the given code
+    executes the given code
+    with value fields
+    bound in executed scope
 
 first "Hello, "
 second "world!"

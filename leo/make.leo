@@ -1,9 +1,14 @@
 comment
-  a word
-  after a value
-  without matching field
-  builds new structure
+  a value
+  followed by a word
+  builds a new structure
+  if it does not contain matching field
 
 x 10
 y 20
 point
+
+comment
+  point
+    x 10
+    y 20

@@ -5,10 +5,13 @@ comment
     executing the given code
   any
     matches any value
-  text any
-    matches any text
-  number any
-    matches any number
+  special cases
+    text any
+      matches any text
+      like "Hello"
+    number any
+      matches any number
+      like 123
 
 let
   first text any

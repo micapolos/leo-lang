@@ -99,6 +99,7 @@ fun Interpreter.plusDefinitionsOrNullLeo(scriptField: ScriptField): Leo<Interpre
 
 fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
 	when (scriptField.string) {
+		asName -> plusAsLeo(scriptField.rhs)
 		commentName -> leo(this)
 		becomeName -> plusBeLeo(scriptField.rhs)
 		doName -> plusDoLeo(scriptField.rhs)
@@ -106,7 +107,6 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		evaluateName -> plusEvaluateOrNullLeo(scriptField.rhs)
 		hashName -> plusHashOrNullLeo(scriptField.rhs)
 		equalsName -> plusEqualsLeo(scriptField.rhs)
-		asName -> plusAsLeo(scriptField.rhs)
 		privateName -> plusPrivateLeo(scriptField.rhs)
 		scriptName -> plusScriptLeo(scriptField.rhs)
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
@@ -167,7 +167,7 @@ fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
 	}
 
 fun Interpreter.plusAsLeo(rhs: Script): Leo<Interpreter> =
-	setLeo(value.matching(pattern(rhs)))
+	setLeo(value.as_(pattern(rhs)))
 
 fun Interpreter.plusPrivateLeo(rhs: Script): Leo<Interpreter> =
 	context.private.interpreterLeo(rhs).map { interpreter ->

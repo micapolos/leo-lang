@@ -1,6 +1,6 @@
 comment
-  a word
-  after a structure
+  a structure
+  followed by a word
   accesses its field
   if present
 
