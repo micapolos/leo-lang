@@ -5,7 +5,7 @@ exact
   mismatch
     "Hello, world!"
     matching "Hello, universe!"
-any
+not exact
   match
     "Hello, world!"
     matching text any
