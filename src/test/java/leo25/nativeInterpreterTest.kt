@@ -8,40 +8,6 @@ import kotlin.test.Test
 
 class NativeInterpreterTest {
 	@Test
-	fun getHash() {
-		script(
-			"foo" lineTo script(),
-			getName lineTo script(hashName lineTo script())
-		)
-			.interpret
-			.assertEqualTo(script(hashName lineTo script(literal(value("foo").hashCode()))))
-	}
-
-	@Test
-	fun is_() {
-		script(
-			"foo" lineTo script(),
-			isName lineTo script("foo")
-		)
-			.interpret
-			.assertEqualTo(script(isName lineTo script(yesName)))
-
-		script(
-			"foo" lineTo script(),
-			isName lineTo script("bar")
-		)
-			.interpret
-			.assertEqualTo(script(isName lineTo script(noName)))
-
-		script(
-			leo14.line(literal("foo")),
-			isName lineTo script(leo14.line(literal("foo")))
-		)
-			.interpret
-			.assertEqualTo(script(isName lineTo script(yesName)))
-	}
-
-	@Test
 	fun textAppendText() {
 		script(
 			leo14.line(literal("Hello, ")),

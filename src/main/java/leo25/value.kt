@@ -68,7 +68,7 @@ val Value.resolveLeo: Leo<Value>
 val Value.resolve: Value
 	get() =
 		null
-			?: resolveGetHashOrNull
+			?: resolveHashOrNull
 			?: resolveIsOrNull
 			?: resolveGetOrNull
 			?: this
@@ -157,12 +157,10 @@ val Value.resolveGetOrNull: Value?
 			getOrNull(rhs)
 		}
 
-val Value.resolveGetHashOrNull: Value?
+val Value.resolveHashOrNull: Value?
 	get() =
-		resolveInfixOrNull(getName) { rhs ->
-			rhs.resolveOrNull(hashName) {
-				hashValue
-			}
+		resolvePostfixOrNull(hashName) {
+			hashValue
 		}
 
 val Value.resolveIsOrNull: Value?
