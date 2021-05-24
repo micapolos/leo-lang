@@ -1,2 +1,0 @@
-"Hello, "
-plus "world!"
