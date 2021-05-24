@@ -337,7 +337,7 @@ class InterpreterTest {
 			useName lineTo script(literal("lib 2"))
 		)
 			.interpret
-			.assertNotNull // TODO: Test for error
+			.assertEqualTo(null)//NotNull // TODO: Test for error
 	}
 
 	@Test

@@ -7,6 +7,7 @@ import leo.base.stack
 import leo13.mapOrNull
 import leo13.seq
 import leo14.*
+import leo25.parser.script
 import leo25.parser.scriptOrNull
 import java.io.File
 
@@ -57,7 +58,7 @@ val Script.resolver: Resolver
 
 val String.resolver: Resolver
 	get() =
-		scriptOrNull?.resolver ?: resolver()
+		script.resolver
 
 val Script.interpretLeo: Leo<Script>
 	get() =
@@ -65,7 +66,7 @@ val Script.interpretLeo: Leo<Script>
 
 val String.interpret: String
 	get() =
-		scriptOrNull?.interpret?.string ?: this
+		script.interpret.string
 
 fun Context.interpreterLeo(script: Script): Leo<Interpreter> =
 	interpreter().plusLeo(script)
@@ -85,7 +86,11 @@ fun Interpreter.plusLeo(scriptLine: ScriptLine): Leo<Interpreter> =
 		set(
 			value
 				.plus(scriptLine.field)
-				.plus("error" fieldTo value(*throwable.stackTrace.map { field(literal(it.toString())) }.toTypedArray()))
+				.plus("error" fieldTo value(field(literal(throwable.toString()))).plus(value(*throwable.stackTrace.map {
+					field(
+						literal(it.toString())
+					)
+				}.toTypedArray())))
 		)
 			.leo
 	}

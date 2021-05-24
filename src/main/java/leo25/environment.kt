@@ -19,5 +19,5 @@ fun Environment.libraryEffect(file: File): Effect<Environment, Resolver> =
 			Environment(fileLibraryMap.put(file, library)) effect library
 		}
 
-fun Environment.loadLibrary(file: File): Resolver =
+fun loadLibrary(file: File): Resolver =
 	file.readText().resolver

@@ -1,7 +1,9 @@
 package leo25.parser
 
 import leo14.*
+import leo25.errorName
 import leo25.preprocess
+import java.lang.RuntimeException
 
 val scriptParser: Parser<Script>
 	get() =
@@ -45,3 +47,11 @@ val scriptSpacedRhsParser: Parser<Script>
 val String.scriptOrNull: Script?
 	get() =
 		scriptParser.parsed(preprocess)
+
+val String.script: Script
+	get() =
+		try {
+			scriptOrNull!!
+		} catch (e: Throwable) {
+			throw RuntimeException("Parse error")
+		}

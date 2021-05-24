@@ -1,1 +1,3 @@
-set greeting "Hello, world!"
+let 
+  welcome
+  do "Hello, world!"
