@@ -5,7 +5,6 @@ import leo14.minus
 import leo14.plus
 import leo14.times
 
-
 val textAppendTextBody
 	get() =
 		unsafeBody {
