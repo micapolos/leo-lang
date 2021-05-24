@@ -1,9 +1,9 @@
 let
   number any
-  double
+  increment
   do
     number
-    plus number
+    plus 1
 
 10
-double
+increment
