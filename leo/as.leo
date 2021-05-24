@@ -1,6 +1,5 @@
-item
-  "Hello, world!"
+"Hello, "
+as text any
+plus
+  128
   as text any
-item
-  "Hello, world!"
-  as number any
