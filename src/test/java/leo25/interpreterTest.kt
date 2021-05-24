@@ -210,7 +210,7 @@ class InterpreterTest {
 			doName lineTo script(
 				repeatingName lineTo script(
 					numberName lineTo script(),
-					isName lineTo script(line(literal(0))),
+					equalsName lineTo script(line(literal(0))),
 					switchName lineTo script(
 						yesName lineTo script(
 							becomeName lineTo script(line(literal("OK")))
@@ -237,7 +237,7 @@ class InterpreterTest {
 			doName lineTo script(
 				recursingName lineTo script(
 					numberName lineTo script(),
-					isName lineTo script(line(literal(0))),
+					equalsName lineTo script(line(literal(0))),
 					switchName lineTo script(
 						yesName lineTo script(
 							becomeName lineTo script(line(literal("OK")))
@@ -393,26 +393,26 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun is_() {
+	fun equals_() {
 		script(
 			"foo" lineTo script(),
-			isName lineTo script("foo")
+			equalsName lineTo script("foo")
 		)
 			.interpret
-			.assertEqualTo(script(isName lineTo script(yesName)))
+			.assertEqualTo(script(equalsName lineTo script(yesName)))
 
 		script(
 			"foo" lineTo script(),
-			isName lineTo script("bar")
+			equalsName lineTo script("bar")
 		)
 			.interpret
-			.assertEqualTo(script(isName lineTo script(noName)))
+			.assertEqualTo(script(equalsName lineTo script(noName)))
 
 		script(
 			line(literal("foo")),
-			isName lineTo script(line(literal("foo")))
+			equalsName lineTo script(line(literal("foo")))
 		)
 			.interpret
-			.assertEqualTo(script(isName lineTo script(yesName)))
+			.assertEqualTo(script(equalsName lineTo script(yesName)))
 	}
 }

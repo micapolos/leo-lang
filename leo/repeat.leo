@@ -1,7 +1,7 @@
 10000
 do repeating
   number
-  is 0
+  equals 0
   switch
     yes become "Repeated 10000 times"
     no become

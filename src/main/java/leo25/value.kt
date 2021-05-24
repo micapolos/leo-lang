@@ -160,7 +160,7 @@ val Value.resolveHashOrNull: Value?
 
 val Value.resolveIsOrNull: Value?
 	get() =
-		resolveInfixOrNull(isName) { rhs ->
+		resolveInfixOrNull(equalsName) { rhs ->
 			equals(rhs).isValue
 		}
 
@@ -185,7 +185,7 @@ val Value.textOrNull: String?
 val Value.textOrThrow: String
 	get() =
 		textOrNull.notNullOrThrow {
-			plus(isName fieldTo value("not" fieldTo value(textName)))
+			plus(equalsName fieldTo value("not" fieldTo value(textName)))
 		}
 
 val Value.numberOrNull: Number?
@@ -195,7 +195,7 @@ val Value.numberOrNull: Number?
 val Value.numberOrThrow: Number
 	get() =
 		numberOrNull.notNullOrThrow {
-			plus(isName fieldTo value("not" fieldTo value(numberName)))
+			plus(equalsName fieldTo value("not" fieldTo value(numberName)))
 		}
 
 val Value.isEmpty: Boolean
@@ -264,7 +264,7 @@ fun Value.resolveEmptyOrNull(fn: () -> Value?): Value? =
 
 val Boolean.isValue
 	get() =
-		value(isName fieldTo value(if (this) yesName else noName))
+		value(equalsName fieldTo value(if (this) yesName else noName))
 
 val Value.hashValue
 	get() =

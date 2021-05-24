@@ -1,8 +1,8 @@
 first
   2
   add 2
-  is 4
+  equals 4
 second
   2
   add 2
-  is 5
+  equals 5

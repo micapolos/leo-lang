@@ -1,9 +1,7 @@
 package leo25
 
 val plusName = "plus"
-val byName = "by"
 val hashName = "hash"
-val isName = "is"
 val noName = "no"
 val numberName = "number"
 val minusName = "minus"
