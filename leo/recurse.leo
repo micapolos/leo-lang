@@ -1,9 +1,10 @@
 comment
   do recursing
     executes the given code
-    using normal recursion
+    using stack recursion
   recurse
-    repeats the execution recursively
+    performs recursion 
+    with the current value
 
 10
 do recursing

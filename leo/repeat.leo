@@ -4,6 +4,7 @@ comment
     using tail recursion
   repeat
     repeats the execution
+    with the current value
 
 10000
 do repeating
