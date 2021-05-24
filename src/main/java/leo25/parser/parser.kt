@@ -45,7 +45,10 @@ fun oneOfCharParser(chars: String) = charParser { chars.contains(it) }
 fun noneOfCharParser(chars: String) = charParser { !chars.contains(it) }
 
 fun parser(char: Char): Parser<Char> = charParser { it == char }
-val letterCharParser: Parser<Char> get() = charParser { it.isLetter() }
+val letterCharParser: Parser<Char>
+	get() = charParser {
+		it.isLetter()// || it.category == CharCategory.OTHER_PUNCTUATION || it.category == CharCategory.MATH_SYMBOL
+	}
 val digitCharParser: Parser<Char> get() = charParser { it.isDigit() }
 
 fun <T> Parser<T>.enclosedWith(left: Parser<Unit>, right: Parser<Unit> = left): Parser<T> =

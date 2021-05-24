@@ -1,10 +1,12 @@
 package leo25
 
 import leo.base.assertEqualTo
+import leo.base.assertNotNull
 import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
+import leo23.value.int
 import kotlin.test.Test
 
 class InterpreterTest {
@@ -325,15 +327,26 @@ class InterpreterTest {
 			.assertEqualTo(script("ping"))
 	}
 
-//	@Test
-//	fun use() {
-//		script(
-//			useName lineTo script(literal("/Users")),
-//			useName lineTo script(literal("lib 2")),
-//			useName lineTo script(literal("lib 1")),
-//			useName lineTo script(literal("lib 3")),
-//			useName lineTo script(literal("lib 2")))
-//			.interpret
-//			.assertEqualTo(script())
-//	}
+	@Test
+	fun use() {
+		script(
+			useName lineTo script(literal("/Users")),
+			useName lineTo script(literal("lib 2")),
+			useName lineTo script(literal("lib 1")),
+			useName lineTo script(literal("lib 3")),
+			useName lineTo script(literal("lib 2"))
+		)
+			.interpret
+			.assertNotNull // TODO: Test for error
+	}
+
+	@Test
+	fun catch() {
+		script(
+			textName lineTo script("hello"),
+			appendName lineTo script(textName lineTo script("world"))
+		)
+			.interpret
+			.assertNotNull // TODO: Check for error.
+	}
 }

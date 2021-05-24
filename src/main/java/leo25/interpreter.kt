@@ -1,7 +1,9 @@
 package leo25
 
-import leo.base.*
-import leo13.map
+import leo.base.fold
+import leo.base.notNullIf
+import leo.base.reverse
+import leo.base.stack
 import leo13.mapOrNull
 import leo13.seq
 import leo14.*
@@ -79,6 +81,13 @@ fun Interpreter.plusLeo(scriptLine: ScriptLine): Leo<Interpreter> =
 	when (scriptLine) {
 		is FieldScriptLine -> plusLeo(scriptLine.field)
 		is LiteralScriptLine -> plusLeo(scriptLine.literal)
+	}.catch { throwable ->
+		set(
+			value
+				.plus(scriptLine.field)
+				.plus("error" fieldTo value(*throwable.stackTrace.map { field(literal(it.toString())) }.toTypedArray()))
+		)
+			.leo
 	}
 
 fun Interpreter.plusLeo(scriptField: ScriptField): Leo<Interpreter> =
@@ -104,7 +113,7 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		privateName -> plusPrivateLeo(scriptField.rhs)
 		scriptName -> plusScript(scriptField.rhs).leo
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
-		textName -> plusTestLeo(scriptField.rhs)
+		testName -> plusTestLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
 		else -> leo(null)
 	}

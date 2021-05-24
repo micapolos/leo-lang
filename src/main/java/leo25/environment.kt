@@ -20,4 +20,4 @@ fun Environment.libraryEffect(file: File): Effect<Environment, Resolver> =
 		}
 
 fun Environment.loadLibrary(file: File): Resolver =
-	file.readText().resolver //.also { println("Loading: $file") }
+	file.readText().resolver

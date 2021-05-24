@@ -56,4 +56,4 @@ val Block.typedScriptOrNull: Script?
 
 val Native.script: Script
 	get() =
-		script(any.toString())
+		script(line(literal(any.toString())))

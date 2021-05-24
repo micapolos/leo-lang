@@ -43,3 +43,12 @@ fun <V, O> Leo<V?>.nullableMap(fn: (V) -> O): Leo<O?> =
 
 fun leoLibrary(file: File): Leo<Resolver> =
 	Leo { it.libraryEffect(file) }
+
+fun <T> Leo<T>.catch(fn: (Throwable) -> Leo<T>): Leo<T> =
+	Leo { environment ->
+		try {
+			run(environment)
+		} catch (throwable: Throwable) {
+			fn(throwable).run(environment)
+		}
+	}
