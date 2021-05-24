@@ -113,6 +113,7 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		recurseName -> plusRecurseOrNullLeo(scriptField.rhs)
 		takeName -> plusTakeLeo(scriptField.rhs)
 		failName -> plusFailLeo(scriptField.rhs)
+		testName -> plusTestLeo(scriptField.rhs)
 		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		tryName -> plusTryLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
@@ -155,6 +156,22 @@ fun Interpreter.plusFailLeo(rhs: Script): Leo<Interpreter> =
 	else resolver.valueLeo(rhs).bind { value ->
 		leo.also { value.throwError() }
 	}
+
+fun Interpreter.plusTestLeo(test: Script): Leo<Interpreter> =
+	test.matchInfix(equalsName) { lhs, rhs ->
+		resolver.valueLeo(lhs).bind { lhs ->
+			resolver.valueLeo(rhs).bind { rhs ->
+				if (lhs.equals(rhs)) leo
+				else leo.also {
+					value(testName fieldTo test.value)
+						.plus(
+							causeName fieldTo
+								lhs.plus(notName fieldTo value(equalsName fieldTo rhs))
+						).throwError()
+				}
+			}
+		}
+	}!!
 
 fun Interpreter.plusDoingOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	rhs.orNullIf(rhs.isEmpty).leo.nullableBind {

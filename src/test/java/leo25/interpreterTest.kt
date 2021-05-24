@@ -6,7 +6,6 @@ import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
-import leo15.throwName
 import kotlin.test.Test
 
 class InterpreterTest {
@@ -510,5 +509,47 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script(tryName lineTo script(errorName lineTo script("foo"))))
+	}
+
+	@Test
+	fun test_success() {
+		script(
+			testName lineTo script(
+				line(literal(2)),
+				plusName lineTo script(literal(2)),
+				equalsName lineTo script(literal(4))
+			)
+		)
+			.interpret
+			.assertEqualTo(script())
+	}
+
+	@Test
+	fun test_error() {
+		script(
+			testName lineTo script(
+				line(literal(2)),
+				plusName lineTo script(literal(2)),
+				equalsName lineTo script(literal(5))
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					errorName lineTo script(
+						testName lineTo script(
+							line(literal(2)),
+							plusName lineTo script(literal(2)),
+							equalsName lineTo script(literal(5))
+						),
+						causeName lineTo script(
+							line(literal(4)),
+							notName lineTo script(
+								equalsName lineTo script(literal(5))
+							)
+						)
+					)
+				)
+			)
 	}
 }
