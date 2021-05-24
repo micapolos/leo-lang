@@ -3,13 +3,24 @@ comment
     defines function
     matching the given pattern
     executing the given code
+  any
+    matches any value
+  text any
+    matches any text
+  number any
+    matches any number
 
 let
-  number any
-  increment
+  first text any
+  second text any
+  join
   do
-    number
-    plus 1
+    first
+    text
+    plus
+      second
+      text
 
-10
-increment
+first "Hello, "
+second "world!"
+join

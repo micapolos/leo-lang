@@ -7,6 +7,11 @@ comment
     with the given argument
 
 doing
+  first
   text
-  plus "world!"
-apply "Hello, "
+  plus
+    second
+    text
+apply
+  first "Hello, "
+  second "world!"
