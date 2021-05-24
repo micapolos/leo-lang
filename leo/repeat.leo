@@ -6,5 +6,5 @@ do repeating
     yes become "Repeated 10000 times"
     no become
       number
-      subtract 1
+      minus 1
       repeat

@@ -3,7 +3,7 @@ let
   double
   do
     number
-    add number
+    plus number
 
 10
 double

@@ -1,4 +1,3 @@
 2
-add 2
-subtract 1
-multiply by 5
+plus 2
+times 5

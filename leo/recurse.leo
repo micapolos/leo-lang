@@ -6,5 +6,5 @@ do recursing
     yes become "Recursed 100 times, hopefully without overflowing the stack."
     no become
       number
-      subtract 1
+      minus 1
       recurse
