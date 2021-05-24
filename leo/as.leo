@@ -5,8 +5,11 @@ comment
       the value
       does not match the pattern
 
-"Hello, "
-as text any
-plus
-  128
+example
+  "Hello, "
   as text any
+example
+  point
+    x 10
+    y 20
+  as point any

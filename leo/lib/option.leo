@@ -11,8 +11,15 @@ let
         apply present
       absent
 
-option present "Hello, "
-map present doing
-  present
-  text
-  plus "world!"
+example
+  option present "Hello, "
+  map present doing
+    present
+    text
+    plus "world!"
+example
+  option absent
+  map present doing
+    present
+    text
+    plus "world!"

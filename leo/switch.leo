@@ -9,23 +9,16 @@ comment
       throws error
       if no branch is matching
 
-comment it should give "Hello, world!"
-first
+example
+  comment it should give "Hello, world!"
   item "Hello, "
   switch
     text plus "world!"
     number plus 5
 
-comment it should give "15"
-second
+example
+  comment it should give "15"
   item 10
-  switch
-    text plus "world!"
-    number plus 5
-
-comment it should throw error
-third
-  item something else
   switch
     text plus "world!"
     number plus 5
