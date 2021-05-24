@@ -1,8 +1,8 @@
 comment
   do
     executes the given code
-    with value fields
-    bound in executed scope
+    binding value fields
+    inside executed scope
 
 first "Hello, "
 second "world!"
