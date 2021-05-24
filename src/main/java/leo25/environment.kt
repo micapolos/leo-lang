@@ -5,8 +5,9 @@ import kotlinx.collections.immutable.persistentMapOf
 import leo.base.Effect
 import leo.base.effect
 import leo.base.orIfNull
-import leo.base.stack
+import leo14.literal
 import java.io.File
+import java.io.IOException
 
 data class Environment(
 	val fileLibraryMap: PersistentMap<File, Resolver>,
@@ -27,7 +28,11 @@ val Value.tracedLeo: Leo<Unit>
 		Leo { it.copy(traceOrNull = it.traceOrNull?.push(this)) effect Unit }
 
 fun loadLibrary(file: File): Resolver =
-	file.readText().resolver
+	try {
+		file.readText().resolver
+	} catch (ioException: IOException) {
+		value(field(literal(ioException.message ?: ioException.toString()))).throwError()
+	}
 
 val traceValueLeo: Leo<Value>
 	get() =

@@ -330,14 +330,10 @@ class InterpreterTest {
 	@Test
 	fun use() {
 		script(
-			useName lineTo script(literal("/Users")),
-			useName lineTo script(literal("lib 2")),
-			useName lineTo script(literal("lib 1")),
-			useName lineTo script(literal("lib 3")),
-			useName lineTo script(literal("lib 2"))
+			useName lineTo script(literal("lib"))
 		)
 			.interpret
-			.assertEqualTo(null)//NotNull // TODO: Test for error
+			.assertEqualTo(script(errorName lineTo script(literal("lib (No such file or directory)"))))
 	}
 
 	@Test

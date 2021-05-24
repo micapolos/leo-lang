@@ -47,7 +47,11 @@ fun Resolver.fieldLeo(scriptField: ScriptField): Leo<Field> =
 
 val Script.interpret: Script
 	get() =
-		interpretLeo.get
+		try {
+			interpretLeo.get
+		} catch (e: Throwable) {
+			e.value.script
+		}
 
 val Script.resolver: Resolver
 	get() =
@@ -79,8 +83,6 @@ fun Interpreter.plusLeo(scriptLine: ScriptLine): Leo<Interpreter> =
 	when (scriptLine) {
 		is FieldScriptLine -> plusLeo(scriptLine.field)
 		is LiteralScriptLine -> plusLeo(scriptLine.literal)
-	}.catch { throwable ->
-		setLeo(throwable.causeStackTrace(value.plus(scriptLine.field)))
 	}
 
 fun Interpreter.plusLeo(scriptField: ScriptField): Leo<Interpreter> =
