@@ -1,2 +1,2 @@
-use "used.leo"
+use "syntax_error.leo"
 welcome

@@ -2,7 +2,11 @@ package leo25.parser
 
 import leo.base.assertEqualTo
 import leo14.*
+import leo25.ValueError
+import leo25.errorName
+import leo25.syntaxName
 import org.junit.Test
+import kotlin.test.assertFailsWith
 
 class ScriptParser {
 	@Test
@@ -49,6 +53,13 @@ class ScriptParser {
 						"y" lineTo script(literal(20))
 					)
 				)
+		}
+	}
+
+	@Test
+	fun syntaxError() {
+		assertFailsWith<ValueError> {
+			"*".scriptOrThrow
 		}
 	}
 }
