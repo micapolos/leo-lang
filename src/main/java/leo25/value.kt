@@ -280,17 +280,9 @@ fun <R> Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) 
 		}
 	}
 
-fun Value.replaceOrNull(field: Field): Value? =
-	when (this) {
-		EmptyValue -> null
-		is LinkValue ->
-			if (link.field.name == field.name) link.value.plus(field)
-			else link.value.replaceOrNull(field)?.plus(link.field)
-	}
-
 fun Value.matching(pattern: Pattern): Value =
 	resolver()
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)
 		?.let { this }
-		.notNullOrThrow { plus(value(notName fieldTo value(matchingName fieldTo pattern.script.value))) }
+		.notNullOrThrow { plus(value(notName fieldTo pattern.script.value)) }

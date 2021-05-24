@@ -106,7 +106,7 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		evaluateName -> plusEvaluateOrNullLeo(scriptField.rhs)
 		hashName -> plusHashOrNullLeo(scriptField.rhs)
 		equalsName -> plusEqualsLeo(scriptField.rhs)
-		matchingName -> plusMatchesLeo(scriptField.rhs)
+		asName -> plusAsLeo(scriptField.rhs)
 		privateName -> plusPrivateLeo(scriptField.rhs)
 		scriptName -> plusScriptLeo(scriptField.rhs)
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
@@ -166,7 +166,7 @@ fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
 		setLeo(it)
 	}
 
-fun Interpreter.plusMatchesLeo(rhs: Script): Leo<Interpreter> =
+fun Interpreter.plusAsLeo(rhs: Script): Leo<Interpreter> =
 	setLeo(value.matching(pattern(rhs)))
 
 fun Interpreter.plusPrivateLeo(rhs: Script): Leo<Interpreter> =
