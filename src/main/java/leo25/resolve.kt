@@ -1,6 +1,5 @@
 package leo25
 
-import leo.base.effect
 import leo.base.fold
 import leo.base.orNull
 import leo.base.reverse
@@ -8,8 +7,10 @@ import leo14.lineTo
 import leo14.script
 
 fun Resolver.resolveLeo(value: Value): Leo<Value> =
-	applyOrNullLeo(value).or {
-		value.resolveLeo
+	value.tracedLeo.bind {
+		applyOrNullLeo(value).or {
+			value.resolveLeo
+		}
 	}
 
 fun Resolver.applyOrNullLeo(value: Value): Leo<Value?> =
