@@ -1,6 +1,14 @@
-first
-  "Hello, world!"
-  matching text any
-second
-  "Hello, world!"
-  matching number any
+exact
+  match
+    "Hello, world!"
+    matching "Hello, world!"
+  mismatch
+    "Hello, world!"
+    matching "Hello, universe!"
+any
+  match
+    "Hello, world!"
+    matching text any
+  mismatch
+    "Hello, world!"
+    matching number any
