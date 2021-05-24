@@ -104,7 +104,6 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		doName -> plusDoLeo(scriptField.rhs)
 		doingName -> plusDoingLeo(scriptField.rhs)
 		evaluateName -> plusEvaluateOrNullLeo(scriptField.rhs)
-		getName -> plusGetLeo(scriptField.rhs)
 		hashName -> plusHashOrNullLeo(scriptField.rhs)
 		matchingName -> plusMatchesLeo(scriptField.rhs)
 		privateName -> plusPrivateLeo(scriptField.rhs)
@@ -130,11 +129,6 @@ fun Interpreter.plusEvaluateOrNullLeo(rhs: Script): Leo<Interpreter?> =
 
 fun Interpreter.plusDoingLeo(rhs: Script): Leo<Interpreter> =
 	plusLeo(field(resolver.function(body(rhs))))
-
-fun Interpreter.plusGetLeo(rhs: Script): Leo<Interpreter> =
-	resolver.linesValueLeo(rhs).bind {
-		plusLeo(getName fieldTo it)
-	}
 
 fun Interpreter.plusHashOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	if (rhs.isEmpty) setLeo(value.hashValue)
