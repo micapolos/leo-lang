@@ -17,7 +17,7 @@ val numberAddNumberScript: Script
 	get() =
 		script(
 			numberName lineTo script(anyName),
-			addName lineTo script(
+			plusName lineTo script(
 				numberName lineTo script(anyName)
 			)
 		)
@@ -26,7 +26,7 @@ val numberSubtractNumberScript: Script
 	get() =
 		script(
 			numberName lineTo script(anyName),
-			subtractName lineTo script(
+			minusName lineTo script(
 				numberName lineTo script(anyName)
 			)
 		)
@@ -35,9 +35,7 @@ val numberMultiplyByNumberScript: Script
 	get() =
 		script(
 			numberName lineTo script(anyName),
-			multiplyName lineTo script(
-				byName lineTo script(
-					numberName lineTo script(anyName)
-				)
+			timesName lineTo script(
+				numberName lineTo script(anyName)
 			)
 		)

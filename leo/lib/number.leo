@@ -1,12 +1,5 @@
 let
   number any
-  double
-  do
-    number
-    add number
-
-let
-  number any
   increment
   do
     number

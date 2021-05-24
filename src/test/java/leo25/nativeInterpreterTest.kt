@@ -21,7 +21,7 @@ class NativeInterpreterTest {
 	fun numberAddNumber() {
 		script(
 			leo14.line(literal(2)),
-			addName lineTo script(leo14.line(literal(3)))
+			plusName lineTo script(leo14.line(literal(3)))
 		)
 			.interpret
 			.assertEqualTo(script(literal(5)))
@@ -31,7 +31,7 @@ class NativeInterpreterTest {
 	fun numberSubtractNumber() {
 		script(
 			leo14.line(literal(5)),
-			subtractName lineTo script(leo14.line(literal(3)))
+			minusName lineTo script(leo14.line(literal(3)))
 		)
 			.interpret
 			.assertEqualTo(script(literal(2)))
@@ -41,7 +41,7 @@ class NativeInterpreterTest {
 	fun numberMultiplyByNumber() {
 		script(
 			leo14.line(literal(2)),
-			multiplyName lineTo script(byName lineTo script(leo14.line(literal(3))))
+			timesName lineTo script(leo14.line(literal(3)))
 		)
 			.interpret
 			.assertEqualTo(script(literal(6)))

@@ -186,7 +186,7 @@ class InterpreterTest {
 			"the" lineTo script(literal("Hello, ")),
 			switchName lineTo script(
 				"text" lineTo script(appendName lineTo script(literal("world!"))),
-				"number" lineTo script(addName lineTo script(literal(2)))
+				"number" lineTo script(plusName lineTo script(literal(2)))
 			)
 		)
 			.interpret
@@ -196,7 +196,7 @@ class InterpreterTest {
 			"the" lineTo script(literal(1)),
 			switchName lineTo script(
 				"text" lineTo script(appendName lineTo script(literal("world!"))),
-				"number" lineTo script(addName lineTo script(literal(2)))
+				"number" lineTo script(plusName lineTo script(literal(2)))
 			)
 		)
 			.interpret
@@ -218,7 +218,7 @@ class InterpreterTest {
 						noName lineTo script(
 							becomeName lineTo script(
 								numberName lineTo script(),
-								subtractName lineTo script(line(literal(1))),
+								minusName lineTo script(line(literal(1))),
 								repeatName lineTo script()
 							)
 						)
@@ -245,7 +245,7 @@ class InterpreterTest {
 						noName lineTo script(
 							becomeName lineTo script(
 								numberName lineTo script(),
-								subtractName lineTo script(line(literal(1))),
+								minusName lineTo script(line(literal(1))),
 								recurseName lineTo script()
 							)
 						)
@@ -280,7 +280,7 @@ class InterpreterTest {
 			commentName lineTo script("first" lineTo script("number")),
 			line(literal(2)),
 			commentName lineTo script("second" lineTo script("number")),
-			addName lineTo script(line(literal(3))),
+			plusName lineTo script(line(literal(3))),
 			commentName lineTo script("expecting" lineTo script(literal(5)))
 		)
 			.interpret
@@ -293,7 +293,7 @@ class InterpreterTest {
 			"zero" lineTo script(),
 			becomeName lineTo script(
 				line(literal(1)),
-				addName lineTo script(line(literal(2)))
+				plusName lineTo script(line(literal(2)))
 			)
 		)
 			.interpret

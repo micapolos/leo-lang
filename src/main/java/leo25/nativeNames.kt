@@ -1,13 +1,13 @@
 package leo25
 
 val appendName = "append"
-val addName = "add"
+val plusName = "plus"
 val byName = "by"
 val hashName = "hash"
 val isName = "is"
 val noName = "no"
 val numberName = "number"
-val subtractName = "subtract"
-val multiplyName = "multiply"
+val minusName = "minus"
+val timesName = "times"
 val textName = "text"
 val yesName = "yes"

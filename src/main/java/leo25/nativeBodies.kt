@@ -16,7 +16,7 @@ val textAppendTextBody
 val numberAddNumberBody
 	get() =
 		unsafeBody {
-			resolveOrNull(numberName, addName) { rhs ->
+			resolveOrNull(numberName, plusName) { rhs ->
 				value(field(literal(numberOrThrow.plus(rhs.numberOrThrow))))
 			}!!
 		}
@@ -24,7 +24,7 @@ val numberAddNumberBody
 val numberSubtractNumberBody
 	get() =
 		unsafeBody {
-			resolveOrNull(numberName, subtractName) { rhs ->
+			resolveOrNull(numberName, minusName) { rhs ->
 				value(field(literal(numberOrThrow.minus(rhs.numberOrThrow))))
 			}!!
 		}
@@ -32,9 +32,7 @@ val numberSubtractNumberBody
 val numberMultiplyByNumberBody
 	get() =
 		unsafeBody {
-			resolveOrNull(numberName, multiplyName) { rhs ->
-				rhs.resolvePrefixOrNull(byName) { rhs ->
-					value(field(literal(numberOrThrow.times(rhs.numberOrThrow))))
-				}
+			resolveOrNull(numberName, timesName) { rhs ->
+				value(field(literal(numberOrThrow.times(rhs.numberOrThrow))))
 			}!!
 		}
