@@ -3,7 +3,6 @@ package leo25
 import leo.base.fold
 import leo.base.orNull
 import leo.base.reverse
-import leo14.lineTo
 import leo14.script
 
 fun Resolver.resolveLeo(value: Value): Leo<Value> =

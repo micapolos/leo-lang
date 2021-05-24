@@ -66,10 +66,7 @@ val Value.resolveLeo: Leo<Value>
 		resolveFunctionApplyOrNullLeo.or { resolve.leo }
 
 val Value.resolve: Value
-	get() =
-		null
-			?: resolveIsOrNull
-			?: this
+	get() = this
 
 val Value.resolveFunctionApplyOrNullLeo: Leo<Value?>
 	get() =
