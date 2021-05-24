@@ -6,6 +6,7 @@ import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
+import leo15.throwName
 import kotlin.test.Test
 
 class InterpreterTest {
@@ -417,7 +418,7 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun catch() {
+	fun error_native() {
 		script(
 			textName lineTo script("hello"),
 			plusName lineTo script(textName lineTo script("world"))
@@ -480,5 +481,34 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script(equalsName lineTo script(yesName)))
+	}
+
+	@Test
+	fun fail() {
+		script(
+			failName lineTo script("foo")
+		)
+			.interpret
+			.assertEqualTo(script(errorName lineTo script("foo")))
+	}
+
+	@Test
+	fun try_success() {
+		script(
+			tryName lineTo script("foo")
+		)
+			.interpret
+			.assertEqualTo(script(tryName lineTo script(successName lineTo script("foo"))))
+	}
+
+	@Test
+	fun try_error() {
+		script(
+			tryName lineTo script(
+				failName lineTo script("foo")
+			)
+		)
+			.interpret
+			.assertEqualTo(script(tryName lineTo script(errorName lineTo script("foo"))))
 	}
 }
