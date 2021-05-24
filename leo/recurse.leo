@@ -1,10 +1,10 @@
 10
 do recursing
-  get number
+  number
   is 0
   switch
     yes become "Recursed 100 times, hopefully without overflowing the stack."
     no become
-      get number
+      number
       subtract 1
       recurse

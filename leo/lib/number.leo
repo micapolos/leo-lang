@@ -2,26 +2,26 @@ let
   number any
   double
   do
-    get number
-    add get number
+    number
+    add number
 
 let
   number any
   increment
   do
-    get number
+    number
     add 1
 
 let
   number any
   decrement
   do
-    get number
+    number
     subtract 1
 
 let
   number any
   square
   do
-    get number
-    multiply by get number
+    number
+    multiply by number

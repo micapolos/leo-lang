@@ -1,4 +1,4 @@
 doing
-  get text
+  text
   append "world!"
 apply "Hello, "

@@ -1,8 +1,8 @@
 first "Hello, "
 second "world!"
 do
-  get first
-  get text
+  first
+  text
   append
-    get second
-    get text
+    second
+    text

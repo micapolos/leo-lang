@@ -2,8 +2,8 @@ set
   first "Hello, "
   second "world!"
 
-get first
-get text
+first
+text
 append
-  get second
-  get text
+  second
+  text

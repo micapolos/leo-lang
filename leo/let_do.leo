@@ -2,8 +2,8 @@ let
   number any
   double
   do
-    get number
-    add get number
+    number
+    add number
 
 10
 double
