@@ -309,8 +309,8 @@ class ResolverTest {
 			.switchOrNullLeo(
 				value("shape" fieldTo value("circle" fieldTo value("radius" fieldTo value("zero")))),
 				script(
-					"circle" lineTo script(getName lineTo script("radius")),
-					"rectangle" lineTo script(getName lineTo script("side"))
+					"circle" lineTo script("radius"),
+					"rectangle" lineTo script("side")
 				)
 			)
 			.get

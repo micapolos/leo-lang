@@ -68,9 +68,7 @@ val Value.resolveLeo: Leo<Value>
 val Value.resolve: Value
 	get() =
 		null
-			?: resolveHashOrNull
 			?: resolveIsOrNull
-			?: resolveGetOrNull
 			?: this
 
 val Value.resolveFunctionApplyOrNullLeo: Leo<Value?>

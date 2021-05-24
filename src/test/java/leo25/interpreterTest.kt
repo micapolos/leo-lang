@@ -104,7 +104,7 @@ class InterpreterTest {
 				"x" lineTo script("zero"),
 				"y" lineTo script("one")
 			),
-			getName lineTo script("x")
+			"x" lineTo script()
 		)
 			.interpret
 			.assertEqualTo(script("x" lineTo script("zero")))
@@ -114,7 +114,7 @@ class InterpreterTest {
 				"x" lineTo script("zero"),
 				"y" lineTo script("one")
 			),
-			getName lineTo script("y")
+			"y" lineTo script()
 		)
 			.interpret
 			.assertEqualTo(script("y" lineTo script("one")))
@@ -122,25 +122,7 @@ class InterpreterTest {
 		script(
 			"x" lineTo script("zero"),
 			"y" lineTo script("one"),
-			getName lineTo script("point")
-		)
-			.interpret
-			.assertEqualTo(
-				script(
-					"point" lineTo script(
-						"x" lineTo script("zero"),
-						"y" lineTo script("one")
-					)
-				)
-			)
-
-		script(
-			"x" lineTo script("zero"),
-			getName lineTo script(
-				"point" lineTo script(
-					"y" lineTo script("one")
-				)
-			)
+			"point" lineTo script()
 		)
 			.interpret
 			.assertEqualTo(
