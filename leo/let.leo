@@ -1,3 +1,9 @@
+comment
+  let do
+    defines function
+    matching the given pattern
+    executing the given code
+
 let
   number any
   increment

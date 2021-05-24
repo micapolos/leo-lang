@@ -1,3 +1,10 @@
+comment
+  do repeating
+    executes the given code
+    using tail recursion
+  repeat
+    repeats the execution
+
 10000
 do repeating
   number

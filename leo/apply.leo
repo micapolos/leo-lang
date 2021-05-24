@@ -1,10 +1,10 @@
 comment
   doing
-    contains the code to do
-    and works like function in other languages
+    contains the code to execute
+    and behaves like function
   apply
     executes the function
-    with given value
+    with the given argument
 
 doing
   text

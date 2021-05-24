@@ -1,3 +1,10 @@
+comment
+  do recursing
+    executes the given code
+    using normal recursion
+  recurse
+    repeats the execution recursively
+
 10
 do recursing
   number
