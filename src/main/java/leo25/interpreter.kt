@@ -151,7 +151,8 @@ fun Interpreter.plusEvaluateLeo(rhs: Script): Leo<Interpreter> =
 	}
 
 fun Interpreter.plusFailLeo(rhs: Script): Leo<Interpreter> =
-	resolver.valueLeo(rhs).bind { value ->
+	if (!value.isEmpty) value(syntaxName).throwError()
+	else resolver.valueLeo(rhs).bind { value ->
 		leo.also { value.throwError() }
 	}
 
@@ -183,7 +184,8 @@ fun Interpreter.plusTraceOrNullLeo(rhs: Script): Leo<Interpreter?> =
 		?: leo(null)
 
 fun Interpreter.plusTryLeo(rhs: Script): Leo<Interpreter> =
-	resolver.valueLeo(rhs)
+	if (!value.isEmpty) value(syntaxName).throwError()
+	else resolver.valueLeo(rhs)
 		.bind { value -> setLeo(value(tryName fieldTo value(successName fieldTo value))) }
 		.catch { throwable -> setLeo(value(tryName fieldTo throwable.value)) }
 
