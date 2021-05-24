@@ -1,2 +1,3 @@
-use "used.leo"
-welcome
+use lib number
+2
+increment
