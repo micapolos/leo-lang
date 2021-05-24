@@ -11,7 +11,7 @@ private
 
 comment
   public definition
-  visible when used from other file
+  visible from other files
 let
   number any
   increment

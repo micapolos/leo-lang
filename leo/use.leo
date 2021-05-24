@@ -4,8 +4,9 @@ comment
     at the path
     relative to current directory
 
-use library
+use lib number
 
 2
 increment
-invisible increment
+square
+decrement
