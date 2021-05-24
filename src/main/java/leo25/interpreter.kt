@@ -137,7 +137,7 @@ fun Interpreter.plusHashOrNullLeo(rhs: Script): Leo<Interpreter?> =
 
 fun Interpreter.plusEqualsLeo(rhs: Script): Leo<Interpreter?> =
 	resolver.valueLeo(rhs).bind {
-		setLeo((value == it).isValue)
+		setLeo(value.equals(it).equalsValue)
 	}
 
 fun Interpreter.plusScriptLeo(rhs: Script): Leo<Interpreter> =

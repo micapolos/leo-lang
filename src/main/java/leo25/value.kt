@@ -146,24 +146,6 @@ fun Value.makeOrNull(name: String): Value? =
 		value(name fieldTo this)
 	}
 
-val Value.resolveGetOrNull: Value?
-	get() =
-		resolveInfixOrNull(getName) { rhs ->
-			getOrNull(rhs)
-		}
-
-val Value.resolveHashOrNull: Value?
-	get() =
-		resolvePostfixOrNull(hashName) {
-			hashValue
-		}
-
-val Value.resolveIsOrNull: Value?
-	get() =
-		resolveInfixOrNull(equalsName) { rhs ->
-			equals(rhs).isValue
-		}
-
 fun Value.plus(name: String): Value =
 	plus(name fieldTo value())
 
@@ -262,7 +244,7 @@ fun Value.resolveEmptyOrNull(fn: () -> Value?): Value? =
 		fn()
 	}
 
-val Boolean.isValue
+val Boolean.equalsValue
 	get() =
 		value(equalsName fieldTo value(if (this) yesName else noName))
 
