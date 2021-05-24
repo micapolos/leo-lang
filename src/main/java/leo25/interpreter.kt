@@ -16,8 +16,8 @@ data class Interpreter(
 fun Context.interpreter(value: Value = value()) =
 	Interpreter(this, value)
 
-fun Interpreter.set(value: Value): Interpreter =
-	context.interpreter(value)
+fun Interpreter.setLeo(value: Value): Leo<Interpreter> =
+	context.interpreter(value).leo
 
 fun Interpreter.set(context: Context): Interpreter =
 	context.interpreter(value)
@@ -80,7 +80,7 @@ fun Interpreter.plusLeo(scriptLine: ScriptLine): Leo<Interpreter> =
 		is FieldScriptLine -> plusLeo(scriptLine.field)
 		is LiteralScriptLine -> plusLeo(scriptLine.literal)
 	}.catch { throwable ->
-		set(throwable.causeStackTrace(value.plus(scriptLine.field))).leo
+		setLeo(throwable.causeStackTrace(value.plus(scriptLine.field)))
 	}
 
 fun Interpreter.plusLeo(scriptField: ScriptField): Leo<Interpreter> =
@@ -103,23 +103,23 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		doingName -> plusDoingLeo(scriptField.rhs)
 		evaluateName -> plusEvaluateOrNullLeo(scriptField.rhs)
 		getName -> plusGetLeo(scriptField.rhs)
-		matchingName -> plusMatches(scriptField.rhs).leo
+		matchingName -> plusMatchesLeo(scriptField.rhs)
 		privateName -> plusPrivateLeo(scriptField.rhs)
-		scriptName -> plusScript(scriptField.rhs).leo
+		scriptName -> plusScriptLeo(scriptField.rhs)
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
 		else -> leo(null)
 	}
 
 fun Interpreter.plusBeLeo(rhs: Script): Leo<Interpreter> =
-	resolver.valueLeo(rhs).map { set(it) }
+	resolver.valueLeo(rhs).bind { setLeo(it) }
 
 fun Interpreter.plusDoLeo(rhs: Script): Leo<Interpreter> =
-	resolver.applyLeo(block(rhs), value).map { set(it) }
+	resolver.applyLeo(block(rhs), value).bind { setLeo(it) }
 
 fun Interpreter.plusEvaluateOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	notNullIf(rhs.isEmpty) {
-		resolver.valueLeo(value.script).map { set(it) }
+		resolver.valueLeo(value.script).bind { setLeo(it) }
 	} ?: leo(null)
 
 fun Interpreter.plusDoingLeo(rhs: Script): Leo<Interpreter> =
@@ -130,12 +130,12 @@ fun Interpreter.plusGetLeo(rhs: Script): Leo<Interpreter> =
 		plusLeo(getName fieldTo it)
 	}
 
-fun Interpreter.plusScript(rhs: Script): Interpreter? =
-	set(rhs.value)
+fun Interpreter.plusScriptLeo(rhs: Script): Leo<Interpreter> =
+	setLeo(rhs.value)
 
 fun Interpreter.plusSwitchOrNullLeo(rhs: Script): Leo<Interpreter?> =
-	resolver.switchOrNullLeo(value, rhs).map {
-		it?.let { set(it) }
+	resolver.switchOrNullLeo(value, rhs).nullableBind {
+		setLeo(it)
 	}
 
 fun Interpreter.plusDynamicLeo(scriptField: ScriptField): Leo<Interpreter> =
@@ -147,12 +147,12 @@ fun Interpreter.plusLeo(literal: Literal): Leo<Interpreter> =
 	plusLeo(field(literal))
 
 fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
-	resolver.resolveLeo(value.plus(field)).map {
-		set(it)
+	resolver.resolveLeo(value.plus(field)).bind {
+		setLeo(it)
 	}
 
-fun Interpreter.plusMatches(rhs: Script): Interpreter =
-	set(value.matching(pattern(rhs)))
+fun Interpreter.plusMatchesLeo(rhs: Script): Leo<Interpreter> =
+	setLeo(value.matching(pattern(rhs)))
 
 fun Interpreter.plusPrivateLeo(rhs: Script): Leo<Interpreter> =
 	context.private.interpreterLeo(rhs).map { interpreter ->
