@@ -1,7 +1,7 @@
 comment
   hash
     gives hash number
-    of any value
+    of value
 
 "Hello, world!"
 hash
