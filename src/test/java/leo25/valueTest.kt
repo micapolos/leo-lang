@@ -167,7 +167,7 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			field(resolver().function(body(script(getName lineTo script("name"))))),
+			field(resolver().function(body(script("name")))),
 			applyName fieldTo value("name" fieldTo value("foo"))
 		)
 			.resolveFunctionApplyOrNullLeo

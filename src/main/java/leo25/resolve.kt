@@ -64,7 +64,7 @@ fun Resolver.set(value: Value): Resolver =
 fun Resolver.set(line: Field): Resolver =
 	plus(
 		definition(
-			pattern(script(getName lineTo script(line.name))),
+			pattern(script(line.name)),
 			binding(value(line))
 		)
 	)

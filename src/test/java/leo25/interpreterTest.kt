@@ -163,7 +163,7 @@ class InterpreterTest {
 	@Test
 	fun functionApply() {
 		script(
-			doingName lineTo script(getName lineTo script("name")),
+			doingName lineTo script("name"),
 			applyName lineTo script("name" lineTo script("foo"))
 		)
 			.interpret
@@ -190,7 +190,7 @@ class InterpreterTest {
 		script(
 			letName lineTo script(
 				"name" lineTo script(anyName),
-				doName lineTo script(getName lineTo script("name" lineTo script()))
+				doName lineTo script("name" lineTo script())
 			),
 			"name" lineTo script("foo")
 		)
@@ -227,7 +227,7 @@ class InterpreterTest {
 			line(literal(10000)),
 			doName lineTo script(
 				repeatingName lineTo script(
-					getName lineTo script(numberName),
+					numberName lineTo script(),
 					isName lineTo script(line(literal(0))),
 					switchName lineTo script(
 						yesName lineTo script(
@@ -235,7 +235,7 @@ class InterpreterTest {
 						),
 						noName lineTo script(
 							becomeName lineTo script(
-								getName lineTo script(numberName),
+								numberName lineTo script(),
 								subtractName lineTo script(line(literal(1))),
 								repeatName lineTo script()
 							)
@@ -254,7 +254,7 @@ class InterpreterTest {
 			line(literal(100)),
 			doName lineTo script(
 				recursingName lineTo script(
-					getName lineTo script(numberName),
+					numberName lineTo script(),
 					isName lineTo script(line(literal(0))),
 					switchName lineTo script(
 						yesName lineTo script(
@@ -262,7 +262,7 @@ class InterpreterTest {
 						),
 						noName lineTo script(
 							becomeName lineTo script(
-								getName lineTo script(numberName),
+								numberName lineTo script(),
 								subtractName lineTo script(line(literal(1))),
 								recurseName lineTo script()
 							)
