@@ -169,7 +169,13 @@ val Value.textOrNull: String?
 val Value.textOrThrow: String
 	get() =
 		textOrNull.notNullOrThrow {
-			plus(equalsName fieldTo value("not" fieldTo value(textName)))
+			plus("not" fieldTo value(textName))
+		}
+
+val Value.functionOrThrow: Function
+	get() =
+		functionOrNull.notNullOrThrow {
+			plus("not" fieldTo value("function"))
 		}
 
 val Value.numberOrNull: Number?

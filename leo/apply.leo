@@ -1,7 +1,7 @@
 comment
   doing
     contains the code to execute
-    and behaves like function
+    and behaves like a function
   apply
     executes the function
     with the given argument

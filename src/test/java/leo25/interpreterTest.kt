@@ -143,13 +143,40 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun functionApply() {
+	fun apply() {
 		script(
 			doingName lineTo script("name"),
 			applyName lineTo script("name" lineTo script("foo"))
 		)
 			.interpret
 			.assertEqualTo(script("name" lineTo script("foo")))
+	}
+
+	@Test
+	fun apply_error() {
+		script(
+			"foo" lineTo script(),
+			applyName lineTo script("bar")
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					errorName lineTo script(
+						"foo" lineTo script(),
+						"not" lineTo script("function")
+					)
+				)
+			)
+	}
+
+	@Test
+	fun functionGet() {
+		script(
+			"map" lineTo script(doingName lineTo script("foo")),
+			doingName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(doingName lineTo script("foo")))
 	}
 
 	@Test
@@ -290,6 +317,19 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script(hashName lineTo script(line(literal(value().hashCode())))))
+	}
+
+	@Test
+	fun evaluate_with() {
+		script(
+			scriptName lineTo script(
+				line(literal("Hello, ")),
+				plusName lineTo script(textName lineTo script())
+			),
+			evaluateName lineTo script(literal("world!"))
+		)
+			.interpret
+			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test
