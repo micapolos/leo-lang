@@ -2,7 +2,7 @@ private
   private
     let
       number any
-      internal increment
+      invisible increment
       do
         number
         plus 1
@@ -12,8 +12,8 @@ private
     increment
     do
       number
-      internal increment
+      invisible increment
 
 2
 increment
-internal increment
+invisible increment
