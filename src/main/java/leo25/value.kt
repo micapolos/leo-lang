@@ -134,8 +134,8 @@ fun Value.make(name: String, value: Value): Value =
 fun Value.getOrNull(name: String): Value? =
 	bodyOrNull?.selectOrNull(name)
 
-fun Value.get(name: String): Value? =
-	getOrNull(name) ?: make(name)
+fun Value.resolveOrNull(name: String): Value? =
+	getOrNull(name) ?: makeOrNull(name)
 
 fun Field.rhsOrNull(name: String): Rhs? =
 	notNullIf(this.name == name) { rhs }
@@ -146,8 +146,10 @@ fun Field.valueOrNull(name: String): Value? =
 fun Value.make(name: String): Value =
 	value(name fieldTo this)
 
-fun Value.resolve(name: String): Value =
-	getOrNull(name) ?: make(name)
+fun Value.makeOrNull(name: String): Value? =
+	notNullIf(!isEmpty) {
+		value(name fieldTo this)
+	}
 
 val Value.resolveGetOrNull: Value?
 	get() =

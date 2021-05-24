@@ -6,7 +6,6 @@ import leo14.line
 import leo14.lineTo
 import leo14.literal
 import leo14.script
-import leo23.value.int
 import kotlin.test.Test
 
 class InterpreterTest {
@@ -34,14 +33,14 @@ class InterpreterTest {
 	@Test
 	fun lines() {
 		script(
-			"foo" lineTo script(),
-			"bar" lineTo script()
+			"foo" lineTo script("bar"),
+			"zoo" lineTo script("zar")
 		)
 			.interpret
 			.assertEqualTo(
 				script(
-					"foo" lineTo script(),
-					"bar" lineTo script()
+					"foo" lineTo script("bar"),
+					"zoo" lineTo script("zar")
 				)
 			)
 	}
@@ -63,6 +62,39 @@ class InterpreterTest {
 					)
 				)
 			)
+	}
+
+	@Test
+	fun make_implicit() {
+		script(
+			"red" lineTo script(),
+			"color" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script("color" lineTo script("red")))
+	}
+
+	@Test
+	fun get_implicit() {
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")
+			),
+			"x" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script("x" lineTo script("zero")))
+
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one")
+			),
+			"y" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script("y" lineTo script("one")))
 	}
 
 	@Test

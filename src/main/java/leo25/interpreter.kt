@@ -109,9 +109,11 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		privateName -> plusPrivateLeo(scriptField.rhs)
 		scriptName -> plusScriptLeo(scriptField.rhs)
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
+		repeatName -> plusRepeatOrNullLeo(scriptField.rhs)
+		recurseName -> plusRecurseOrNullLeo(scriptField.rhs)
 		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
-		else -> leo(null)
+		else -> plusNameOrNullLeo(scriptField)
 	}
 
 fun Interpreter.plusBeLeo(rhs: Script): Leo<Interpreter> =
@@ -180,6 +182,19 @@ fun Interpreter.plusUseOrNullLeo(rhs: Script): Leo<Interpreter?> =
 			}
 		}
 		?: leo(null)
+
+fun Interpreter.plusNameOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
+	scriptField.onlyStringOrNull?.let { name ->
+		value.resolveOrNull(name)
+	}.leo.nullableBind { setLeo(it) }
+
+fun Interpreter.plusRecurseOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	if (rhs.isEmpty) plusDynamicLeo(recurseName fieldTo script())
+	else leo(null)
+
+fun Interpreter.plusRepeatOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	if (rhs.isEmpty) plusDynamicLeo(repeatName fieldTo script())
+	else leo(null)
 
 val Interpreter.resolver
 	get() =
