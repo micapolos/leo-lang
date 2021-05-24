@@ -1,4 +1,4 @@
-10000
+10
 do recursing
   get number
   is 0
