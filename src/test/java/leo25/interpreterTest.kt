@@ -349,4 +349,26 @@ class InterpreterTest {
 			.interpret
 			.assertNotNull // TODO: Check for error.
 	}
+
+	@Test
+	fun trace() {
+		script(
+			line(literal("Hello, ")),
+			appendName lineTo script(line(literal("world!"))),
+			traceName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					traceName lineTo script(
+						resolveName lineTo script(literal("Hello, ")),
+						resolveName lineTo script(literal("world!")),
+						resolveName lineTo script(
+							line(literal("Hello, ")),
+							appendName lineTo script(line(literal("world!")))
+						)
+					)
+				)
+			)
+	}
 }

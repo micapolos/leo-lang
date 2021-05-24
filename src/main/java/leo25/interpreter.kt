@@ -107,6 +107,7 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		privateName -> plusPrivateLeo(scriptField.rhs)
 		scriptName -> plusScriptLeo(scriptField.rhs)
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
+		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
 		else -> leo(null)
 	}
@@ -137,6 +138,11 @@ fun Interpreter.plusSwitchOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	resolver.switchOrNullLeo(value, rhs).nullableBind {
 		setLeo(it)
 	}
+
+fun Interpreter.plusTraceOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	rhs
+		.matchEmpty { traceValueLeo.bind { setLeo(it) } }
+		?: leo(null)
 
 fun Interpreter.plusDynamicLeo(scriptField: ScriptField): Leo<Interpreter> =
 	resolver.fieldLeo(scriptField).bind {
