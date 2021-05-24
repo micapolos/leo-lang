@@ -1,12 +1,10 @@
 package leo25
 
-import leo.base.fold
-import leo.base.notNullIf
-import leo.base.reverse
-import leo.base.stack
+import leo.base.*
 import leo13.mapOrNull
 import leo13.seq
 import leo14.*
+import leo25.parser.scriptOrNull
 import leo25.parser.scriptOrThrow
 import java.io.File
 
@@ -65,7 +63,7 @@ val Script.interpretLeo: Leo<Script>
 
 val String.interpret: String
 	get() =
-		scriptOrThrow.interpret.string
+		scriptOrNull?.run { interpret }.orIfNull { value(syntaxName).errorValue }.string
 
 fun Context.interpreterLeo(script: Script): Leo<Interpreter> =
 	interpreter().plusLeo(script)
