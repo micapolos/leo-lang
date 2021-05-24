@@ -181,6 +181,24 @@ class InterpreterTest {
 	}
 
 	@Test
+	fun letName() {
+		script(
+			letName lineTo script(
+				numberName lineTo script(anyName),
+				"increment" lineTo script(),
+				doName lineTo script(
+					numberName lineTo script(),
+					plusName lineTo script(literal(1))
+				)
+			),
+			line(literal(2)),
+			"increment" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(literal(3)))
+	}
+
+	@Test
 	fun switch() {
 		script(
 			"the" lineTo script(literal("Hello, ")),

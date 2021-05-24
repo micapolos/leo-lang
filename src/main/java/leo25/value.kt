@@ -66,7 +66,7 @@ val Value.resolveLeo: Leo<Value>
 		resolveFunctionApplyOrNullLeo.or { resolve.leo }
 
 val Value.resolve: Value
-	get() = this
+	get() = resolveNameOrNull ?: this
 
 val Value.resolveFunctionApplyOrNullLeo: Leo<Value?>
 	get() =
@@ -130,7 +130,9 @@ fun Value.getOrNull(name: String): Value? =
 	bodyOrNull?.selectOrNull(name)
 
 fun Value.resolveOrNull(name: String): Value? =
-	getOrNull(name) ?: makeOrNull(name)
+	ifOrNull(name != repeatName) { // TODO: This is a temporary hack... resolve "repeat" and "recurse" differently
+		getOrNull(name) ?: makeOrNull(name)
+	}
 
 fun Field.rhsOrNull(name: String): Rhs? =
 	notNullIf(this.name == name) { rhs }
@@ -286,3 +288,11 @@ fun Value.matching(pattern: Pattern): Value =
 		.resolutionOrNull(this)
 		?.let { this }
 		.notNullOrThrow { plus(value(notName fieldTo pattern.script.value)) }
+
+val Value.resolveNameOrNull: Value?
+	get() =
+		linkOrNull?.run {
+			field.onlyNameOrNull?.let { name ->
+				value.resolveOrNull(name)
+			}
+		}

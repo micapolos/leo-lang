@@ -13,7 +13,6 @@ val Resolver.context
 		context(resolver(), this)
 
 fun context() = context(resolver(), resolver())
-val nativeContext get() = context(resolver(), nativeResolver)
 
 fun Context.plus(definition: Definition): Context =
 	context(publicResolver.plus(definition), privateResolver.plus(definition))

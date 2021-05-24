@@ -114,7 +114,7 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		recurseName -> plusRecurseOrNullLeo(scriptField.rhs)
 		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
-		else -> plusNameOrNullLeo(scriptField)
+		else -> leo(null)
 	}
 
 fun Interpreter.plusBeLeo(rhs: Script): Leo<Interpreter> =
