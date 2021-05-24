@@ -1,10 +1,10 @@
 first
-  the "Hello, "
+  item "Hello, "
   switch
     text append "world!"
     number add 5
 second
-  the 10
+  item 10
   switch
     text append "world!"
     number add 5
