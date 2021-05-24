@@ -5,7 +5,7 @@ import leo.base.indentString
 import leo14.*
 import leo14.matching.name
 
-val Script.string get() = appendableString { it.append(0, this) }
+val Script.string get() = appendableString { it.append(0, this) }.addTrailingNewline
 
 val String.preprocess: String
 	get() =
@@ -24,7 +24,7 @@ val String.convertTabsToSpaces get() = replace("\t", "  ")
 val String.addTrailingNewline
 	get() =
 		if (isEmpty() || this[length - 1] == '\n') this
-		else this + '\n'
+		else plus('\n')
 
 fun Appendable.append(indent: Int, script: Script): Appendable =
 	when (script) {

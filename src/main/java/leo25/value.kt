@@ -5,7 +5,7 @@ import leo14.*
 import leo14.Number
 
 sealed class Value {
-	override fun toString() = script.string
+	override fun toString() = string
 }
 
 object EmptyValue : Value()
@@ -32,6 +32,8 @@ val Rhs.functionOrNull: Function? get() = (this as? FunctionRhs)?.function
 val Rhs.nativeOrNull: Native? get() = (this as? NativeRhs)?.native
 
 data class Field(val name: String, val rhs: Rhs)
+
+val Value.string: String get() = script.string
 
 infix fun String.fieldTo(rhs: Rhs): Field = Field(this, rhs)
 infix fun String.fieldTo(value: Value): Field = this fieldTo rhs(value)
@@ -188,9 +190,21 @@ val Value.textOrNull: String?
 	get() =
 		fieldOrNull?.textOrNull
 
+val Value.textOrThrow: String
+	get() =
+		textOrNull.notNullOrThrow {
+			plus(isName fieldTo value("not" fieldTo value(textName)))
+		}
+
 val Value.numberOrNull: Number?
 	get() =
 		fieldOrNull?.numberOrNull
+
+val Value.numberOrThrow: Number
+	get() =
+		numberOrNull.notNullOrThrow {
+			plus(isName fieldTo value("not" fieldTo value(numberName)))
+		}
 
 val Value.isEmpty: Boolean
 	get() =

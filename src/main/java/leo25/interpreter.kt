@@ -63,7 +63,7 @@ val Script.interpretLeo: Leo<Script>
 
 val String.interpret: String
 	get() =
-		scriptOrNull?.run { interpret }.orIfNull { value(syntaxName).errorValue }.string
+		scriptOrNull?.run { interpret }.orIfNull { value(syntaxName).errorValue.script }.string
 
 fun Context.interpreterLeo(script: Script): Leo<Interpreter> =
 	interpreter().plusLeo(script)
