@@ -9,17 +9,20 @@ let
         present
         doing
         apply present
-      absent
+      absent option
 
-example
+test
   option present "Hello, "
   map present doing
     present
     text
     plus "world!"
-example
+  equals "Hello, world!"
+
+test
   option absent
   map present doing
     present
     text
     plus "world!"
+  equals option absent

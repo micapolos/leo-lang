@@ -5,9 +5,10 @@ let
     number
     plus 1
 
-example
+test
   10
   increment
+  equals 11
 
 let
   number any
@@ -16,9 +17,10 @@ let
     number
     minus 1
 
-example
+test
   10
   decrement
+  equals 9
 
 let
   number any
@@ -27,6 +29,7 @@ let
     number
     times number
 
-example
+test
   10
   square
+  equals 100

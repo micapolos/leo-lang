@@ -22,10 +22,13 @@ let
           y
           number
 
-example
+test
   vector
     x 10
     y 20
   plus vector
     x 40
     y 60
+  equals vector
+    x 50
+    y 80

@@ -5,9 +5,10 @@ let
     text
     plus "!"
 
-example
+test
   "Hello, world"
   exclamate
+  equals "Hello, world!"
 
 let
   text any
@@ -17,6 +18,7 @@ let
     plus text
     plus ")"
 
-example
+test
   "hello"
   parenthesize
+  equals "(hello)"

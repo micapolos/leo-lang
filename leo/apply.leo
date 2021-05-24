@@ -6,12 +6,13 @@ comment
     executes the function
     with the given argument
 
-doing
-  first
-  text
-  plus
-    second
+example
+  doing
+    first
     text
-apply
-  first "Hello, "
-  second "world!"
+    plus
+      second
+      text
+  apply
+    first "Hello, "
+    second "world!"
