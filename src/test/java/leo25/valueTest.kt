@@ -5,6 +5,7 @@ import leo14.lineTo
 import leo14.literal
 import leo14.script
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 class ValueTest {
 	@Test
@@ -172,5 +173,20 @@ class ValueTest {
 			.resolveFunctionApplyOrNullLeo
 			.get
 			.assertEqualTo(value("name" fieldTo value("foo")))
+	}
+
+	@Test
+	fun matching_ok() {
+		value(field(literal("foo")))
+			.matching(pattern(script(textName lineTo script(anyName))))
+			.assertEqualTo(value(field(literal("foo"))))
+	}
+
+	@Test
+	fun matching_fail() {
+		assertFailsWith<ValueError> {
+			value(field(literal(1)))
+				.matching(pattern(script(textName lineTo script(anyName))))
+		}
 	}
 }

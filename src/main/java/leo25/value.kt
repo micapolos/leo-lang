@@ -89,9 +89,6 @@ val Link.fieldSeqNode: SeqNode<Field>
 	get() =
 		field.seqNode(value.fieldSeq)
 
-fun Value.rhsValueOrNull(name: String): Value? =
-	fieldOrNull?.rhs?.valueOrNull
-
 fun Value.selectOrNull(name: String): Value? =
 	fieldSeq.mapFirstOrNull { selectOrNull(name) }
 
@@ -313,3 +310,10 @@ fun Value.replaceOrNull(field: Field): Value? =
 			if (link.field.name == field.name) link.value.plus(field)
 			else link.value.replaceOrNull(field)?.plus(link.field)
 	}
+
+fun Value.matching(pattern: Pattern): Value =
+	resolver()
+		.plus(definition(pattern, binding(this)))
+		.resolutionOrNull(this)
+		?.let { this }
+		.notNullOrThrow { plus(value(notName fieldTo value(matchingName fieldTo pattern.script.value))) }
