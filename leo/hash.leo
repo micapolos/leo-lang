@@ -1,2 +1,2 @@
 "Hello, world!"
-get hash
+hash
