@@ -47,7 +47,7 @@ fun noneOfCharParser(chars: String) = charParser { !chars.contains(it) }
 fun parser(char: Char): Parser<Char> = charParser { it == char }
 val letterCharParser: Parser<Char>
 	get() = charParser {
-		it.isLetter()// || it.category == CharCategory.OTHER_PUNCTUATION || it.category == CharCategory.MATH_SYMBOL
+		it.isLetter() && it.isLowerCase()
 	}
 val digitCharParser: Parser<Char> get() = charParser { it.isDigit() }
 

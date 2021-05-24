@@ -1,1 +1,1 @@
-! this is not a valid leo script
+Hello, world!
