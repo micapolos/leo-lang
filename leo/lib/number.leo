@@ -5,6 +5,10 @@ let
     number
     plus 1
 
+example
+  10
+  increment
+
 let
   number any
   decrement
@@ -12,9 +16,17 @@ let
     number
     minus 1
 
+example
+  10
+  decrement
+
 let
   number any
   square
   do
     number
     times number
+
+example
+  10
+  square

@@ -153,6 +153,16 @@ class InterpreterTest {
 	}
 
 	@Test
+	fun take() {
+		script(
+			"name" lineTo script("foo"),
+			takeName lineTo script(doingName lineTo script("name"))
+		)
+			.interpret
+			.assertEqualTo(script("name" lineTo script("foo")))
+	}
+
+	@Test
 	fun apply_error() {
 		script(
 			"foo" lineTo script(),

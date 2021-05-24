@@ -110,6 +110,7 @@ fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?>
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
 		repeatName -> plusRepeatOrNullLeo(scriptField.rhs)
 		recurseName -> plusRecurseOrNullLeo(scriptField.rhs)
+		takeName -> plusTakeLeo(scriptField.rhs)
 		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
 		else -> leo(null)
@@ -119,6 +120,15 @@ fun Interpreter.plusApplyLeo(rhs: Script): Leo<Interpreter> =
 	value.functionOrThrow.leo.bind { function ->
 		resolver.valueLeo(rhs).bind { input ->
 			function.applyLeo(input).bind { output ->
+				setLeo(output)
+			}
+		}
+	}
+
+fun Interpreter.plusTakeLeo(rhs: Script): Leo<Interpreter> =
+	resolver.valueLeo(rhs).bind { input ->
+		input.functionOrThrow.leo.bind { function ->
+			function.applyLeo(value).bind { output ->
 				setLeo(output)
 			}
 		}

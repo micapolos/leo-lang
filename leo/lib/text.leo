@@ -5,6 +5,10 @@ let
     text
     plus "!"
 
+example
+  "Hello, world"
+  exclamate
+
 let
   text any
   parenthesize
@@ -12,3 +16,7 @@ let
     "("
     plus text
     plus ")"
+
+example
+  "hello"
+  parenthesize
