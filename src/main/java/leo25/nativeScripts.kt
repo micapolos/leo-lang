@@ -8,7 +8,7 @@ val textAppendTextScript: Script
 	get() =
 		script(
 			textName lineTo script(anyName),
-			appendName lineTo script(
+			plusName lineTo script(
 				textName lineTo script(anyName)
 			)
 		)

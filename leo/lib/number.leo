@@ -3,18 +3,18 @@ let
   increment
   do
     number
-    add 1
+    plus 1
 
 let
   number any
   decrement
   do
     number
-    subtract 1
+    minus 1
 
 let
   number any
   square
   do
     number
-    multiply by number
+    times number

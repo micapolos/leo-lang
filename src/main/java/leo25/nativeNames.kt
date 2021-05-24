@@ -1,6 +1,5 @@
 package leo25
 
-val appendName = "append"
 val plusName = "plus"
 val byName = "by"
 val hashName = "hash"

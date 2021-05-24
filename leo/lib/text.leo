@@ -2,13 +2,13 @@ let
   text any
   exclamate
   do
-    get text
-    append "!"
+    text
+    plus "!"
 
 let
   text any
   parenthesize
   do
     "("
-    append get text
-    append ")"
+    plus text
+    plus ")"

@@ -11,7 +11,7 @@ class NativeInterpreterTest {
 	fun textAppendText() {
 		script(
 			leo14.line(literal("Hello, ")),
-			appendName lineTo script(leo14.line(literal("world!")))
+			plusName lineTo script(leo14.line(literal("world!")))
 		)
 			.interpret
 			.assertEqualTo(script(literal("Hello, world!")))

@@ -185,7 +185,7 @@ class InterpreterTest {
 		script(
 			"the" lineTo script(literal("Hello, ")),
 			switchName lineTo script(
-				"text" lineTo script(appendName lineTo script(literal("world!"))),
+				"text" lineTo script(plusName lineTo script(literal("world!"))),
 				"number" lineTo script(plusName lineTo script(literal(2)))
 			)
 		)
@@ -195,7 +195,7 @@ class InterpreterTest {
 		script(
 			"the" lineTo script(literal(1)),
 			switchName lineTo script(
-				"text" lineTo script(appendName lineTo script(literal("world!"))),
+				"text" lineTo script(plusName lineTo script(literal("world!"))),
 				"number" lineTo script(plusName lineTo script(literal(2)))
 			)
 		)
@@ -354,7 +354,7 @@ class InterpreterTest {
 	fun catch() {
 		script(
 			textName lineTo script("hello"),
-			appendName lineTo script(textName lineTo script("world"))
+			plusName lineTo script(textName lineTo script("world"))
 		)
 			.interpret
 			.assertNotNull // TODO: Check for error.
@@ -364,7 +364,7 @@ class InterpreterTest {
 	fun trace() {
 		script(
 			line(literal("Hello, ")),
-			appendName lineTo script(line(literal("world!"))),
+			plusName lineTo script(line(literal("world!"))),
 			traceName lineTo script()
 		)
 			.interpret
@@ -375,7 +375,7 @@ class InterpreterTest {
 						resolveName lineTo script(literal("world!")),
 						resolveName lineTo script(
 							line(literal("Hello, ")),
-							appendName lineTo script(line(literal("world!")))
+							plusName lineTo script(line(literal("world!")))
 						)
 					)
 				)

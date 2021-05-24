@@ -4,6 +4,6 @@ set
 
 first
 text
-append
+plus
   second
   text

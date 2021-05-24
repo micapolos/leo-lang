@@ -3,6 +3,6 @@ second "world!"
 do
   first
   text
-  append
+  plus
     second
     text

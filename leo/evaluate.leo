@@ -1,4 +1,4 @@
 script
   "Hello, "
-  append "world!"
+  plus "world!"
 evaluate
