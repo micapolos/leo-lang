@@ -17,14 +17,15 @@ val Throwable.value: Value
 		valueOrNull?.errorValue ?: stackTraceValue.errorValue
 
 fun Throwable.causeStackTrace(value: Value): Value =
-	value(
-		errorName fieldTo value
-			.plus(causeName fieldTo stackTraceValue)
-	)
+	value(errorName fieldTo value.plus(causeValue))
 
 val Throwable.stackTraceValue: Value
 	get() =
 		value(*stackTrace.map { field(literal(it.toString())) }.toTypedArray())
+
+val Throwable.causeValue: Value
+	get() =
+		value(causeName fieldTo (valueOrNull ?: stackTraceValue))
 
 val Value.errorValue: Value
 	get() =
