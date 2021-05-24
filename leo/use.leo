@@ -1,3 +1,4 @@
-use lib number
+use used
 2
 increment
+internal increment
