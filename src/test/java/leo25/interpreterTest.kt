@@ -343,11 +343,9 @@ class InterpreterTest {
 
 	@Test
 	fun use() {
-		script(
-			useName lineTo script(literal("lib"))
-		)
+		script(useName lineTo script("lib" lineTo script("text")))
 			.interpret
-			.assertEqualTo(script(errorName lineTo script(literal("lib (No such file or directory)"))))
+			.assertEqualTo(script(errorName lineTo script(literal("lib/text.leo (No such file or directory)"))))
 	}
 
 	@Test

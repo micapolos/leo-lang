@@ -105,6 +105,9 @@ fun <T, R> StackLink<T>.map(fn: T.() -> R): StackLink<R> =
 fun <T, R> Stack<T>.reverseMap(fn: T.() -> R): Stack<R> =
 	stack<R>().fold(this) { push(fn(it)) }
 
+fun <T> StackLink<T>.updateTop(fn: T.() -> T): StackLink<T> =
+	stack linkTo (value.fn())
+
 tailrec fun <T, R : Any> Stack<T>.mapFirst(fn: T.() -> R?): R? =
 	when (this) {
 		is EmptyStack -> null

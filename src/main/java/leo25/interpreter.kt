@@ -1,12 +1,10 @@
 package leo25
 
 import leo.base.*
-import leo13.mapOrNull
-import leo13.seq
+import leo.java.io.file
 import leo14.*
 import leo25.parser.scriptOrNull
 import leo25.parser.scriptOrThrow
-import java.io.File
 
 data class Interpreter(
 	val context: Context,
@@ -175,18 +173,9 @@ fun Interpreter.plusPrivateLeo(rhs: Script): Leo<Interpreter> =
 	}
 
 fun Interpreter.plusUseOrNullLeo(rhs: Script): Leo<Interpreter?> =
-	rhs
-		.lineSeq
-		.stack
-		.mapOrNull { literalOrNull?.stringOrNull }
-		?.let { strings ->
-			leo.fold(strings.seq.reverse) { string ->
-				bind { interpreter ->
-					interpreter.useLeo(string)
-				}
-			}
-		}
-		?: leo(null)
+	rhs.useOrNull.leo.nullableBind {
+		plusLeo(it)
+	}
 
 fun Interpreter.plusNameOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
 	scriptField.onlyStringOrNull?.let { name ->
@@ -205,8 +194,8 @@ val Interpreter.resolver
 	get() =
 		context.privateResolver
 
-fun Interpreter.useLeo(string: String): Leo<Interpreter> =
-	Leo { it.libraryEffect(File(string)) }.map { use(it) }
+fun Interpreter.plusLeo(use: Use): Leo<Interpreter> =
+	Leo { it.libraryEffect(use) }.map { use(it) }
 
 fun Interpreter.use(resolver: Resolver): Interpreter =
 	set(context.plusPrivate(resolver))
