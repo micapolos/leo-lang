@@ -1,10 +1,10 @@
 comment
   give
-    executes a function value
+    executes a function
     with the given argument
   doing
-    is the function
-    and contains the code to execute
+    contains the code to execute
+    and acts like a function
     
 example
   doing
