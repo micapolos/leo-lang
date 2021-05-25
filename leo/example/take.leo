@@ -1,4 +1,11 @@
-"Hello, "
-take doing
-  text
-  plus "world!"
+comment
+  take
+    takes a value
+    and executes given function value
+    passing it as an argument
+
+example
+  "Hello, "
+  take doing
+    text
+    plus "world!"

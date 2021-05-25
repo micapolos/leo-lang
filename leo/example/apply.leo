@@ -1,11 +1,11 @@
 comment
-  doing
-    contains the code to execute
-    and behaves like a function
   apply
-    executes the function
+    executes a function value
     with the given argument
-
+  doing
+    is the function
+    and contains the code to execute
+    
 example
   doing
     first

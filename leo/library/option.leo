@@ -1,11 +1,11 @@
 let
   option any
-  map present doing any
+  update present doing any
   do
     option
     switch
       present do
-        map
+        update
         present
         doing
         apply present
@@ -13,7 +13,7 @@ let
 
 test
   option present "Hello, "
-  map present doing
+  update present doing
     present
     text
     plus "world!"
@@ -21,7 +21,7 @@ test
 
 test
   option absent
-  map present doing
+  update present doing
     present
     text
     plus "world!"

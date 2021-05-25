@@ -1,6 +1,6 @@
 comment
   trace
-    prints debug trace
+    gives debug trace
 
 "Hello, "
 plus "world"

@@ -1,3 +1,8 @@
+test
+  "Hello, "
+  plus "world!"
+  equals "Hello, world!"
+
 let
   text any
   exclamate

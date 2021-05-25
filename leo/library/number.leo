@@ -1,3 +1,18 @@
+test
+  2
+  plus 3
+  equals 5
+
+test
+  5
+  minus 3
+  equals 2
+
+test
+  2
+  times 3
+  equals 6
+
 let
   number any
   increment
