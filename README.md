@@ -7,7 +7,7 @@ Leonardo programming language.
 git clone https://github.com/micapolos/leo-lang.git
 ```
 
-##### Building
+##### Building with Gradle
 
 ```
 cd leo-lang
@@ -16,8 +16,10 @@ gradle jar
 
 ##### Running
 
+Leonardo reads from standard input and writes to standard output, and requires Java JRE:
+
 ```
-java -jar build/libs/leo-0.25.jar
+bin/leo < my_file.leo
 ```
 
 ##### Updating
