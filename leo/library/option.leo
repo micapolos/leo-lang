@@ -16,7 +16,7 @@ test
   update present doing
     present
     text
-    plus "world!"
+    append "world!"
   equals "Hello, world!"
 
 test
@@ -24,5 +24,5 @@ test
   update present doing
     present
     text
-    plus "world!"
+    append "world!"
   equals option absent
