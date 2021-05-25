@@ -6,12 +6,6 @@ internal const val MAX_BRANCHING_FACTOR_MINUS_ONE = MAX_BRANCHING_FACTOR - 1
 internal const val ENTRY_SIZE = 2
 internal const val MAX_SHIFT = 30
 
-/**
- * Gets trie index segment of the specified [index] at the level specified by [shift].
- *
- * `shift` equal to zero corresponds to the root level.
- * For each lower level `shift` increments by [LOG_MAX_BRANCHING_FACTOR].
- */
 internal fun indexSegment(index: Int, shift: Int): Int =
 	(index shr shift) and MAX_BRANCHING_FACTOR_MINUS_ONE
 
@@ -24,7 +18,6 @@ private fun <K, V> Array<Any?>.insertEntryAtIndex(keyIndex: Int, key: K, value: 
 	return newBuffer
 }
 
-@ExperimentalStdlibApi
 private fun Array<Any?>.replaceEntryWithNode(keyIndex: Int, nodeIndex: Int, newNode: Trie<*, *>): Array<Any?> {
 	val newNodeIndex = nodeIndex - ENTRY_SIZE  // place where to insert new node in the new buffer
 	val newBuffer = arrayOfNulls<Any?>(this.size - ENTRY_SIZE + 1)
@@ -58,7 +51,6 @@ private fun Array<Any?>.removeNodeAtIndex(nodeIndex: Int): Array<Any?> {
 	return newBuffer
 }
 
-@ExperimentalStdlibApi
 class Trie<K, V>(
 	private var dataMap: Int,
 	private var nodeMap: Int,
@@ -69,7 +61,7 @@ class Trie<K, V>(
 		private set
 
 	/** Returns number of entries stored in this trie node (not counting subnodes) */
-	internal fun entryCount(): Int = dataMap.countOneBits()
+	internal fun entryCount(): Int = Integer.bitCount(dataMap)
 
 	// here and later:
 	// positionMask — an int in form 2^n, i.e. having the single bit set, whose ordinal is a logical position in buffer
@@ -87,12 +79,12 @@ class Trie<K, V>(
 
 	/** Gets the index in buffer of the data entry key corresponding to the position specified by [positionMask]. */
 	internal fun entryKeyIndex(positionMask: Int): Int {
-		return ENTRY_SIZE * (dataMap and (positionMask - 1)).countOneBits()
+		return Integer.bitCount(ENTRY_SIZE * (dataMap and (positionMask - 1)))
 	}
 
 	/** Gets the index in buffer of the subtrie node entry corresponding to the position specified by [positionMask]. */
 	internal fun nodeIndex(positionMask: Int): Int {
-		return buffer.size - 1 - (nodeMap and (positionMask - 1)).countOneBits()
+		return Integer.bitCount(buffer.size - 1 - (nodeMap and (positionMask - 1)))
 	}
 
 	/** Retrieves the buffer element at the given [keyIndex] as key of a data entry. */
