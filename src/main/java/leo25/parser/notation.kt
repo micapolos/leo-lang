@@ -44,36 +44,46 @@ val notationLinkParser: Parser<NotationLink>
 val notationLineParser: Parser<NotationLine>
 	get() =
 		atomParser.bind { atom ->
-			firstCharOneOf(
-				notationFieldParser.map { line(it) },
-				nameStackParser.map { nameStack -> line(chain(atom).fold(nameStack.reverse) { plus(it) }) })
-		}
-
-val notationFieldParser: Parser<NotationField>
-	get() =
-		nameParser.bind { name ->
-			notationRhsParser.map { rhs ->
-				name fieldTo rhs
+			when (atom) {
+				is LiteralAtom ->
+					nameStackParser.bind { nameStack ->
+						unitParser('\n').map {
+							line(chain(atom).fold(nameStack.reverse) { plus(it) })
+						}
+					}
+				is NameAtom ->
+					firstCharOneOf(
+						nameStackParser.bind { nameStack ->
+							unitParser('\n').map {
+								line(chain(atom).fold(nameStack.reverse) { plus(it) })
+							}
+						},
+						notationRhsParser.map { rhs ->
+							when (rhs) {
+								is EmptyNotation -> line(chain(atom))
+								is LinkNotation -> line(atom.name fieldTo rhs.link)
+							}
+						})
 			}
 		}
 
-val notationRhsParser: Parser<NotationLink>
+val notationRhsParser: Parser<Notation>
 	get() =
 		firstCharOneOf(
-			notationLinkIndentedRhsParser,
-			notationLinkSpacedRhsParser
+			notationIndentedRhsParser,
+			notationSpacedRhsParser
 		)
 
-val notationLinkIndentedRhsParser: Parser<NotationLink>
+val notationIndentedRhsParser: Parser<Notation>
 	get() =
 		unitParser('\n').bind {
-			notationLinkParser.indented
+			notationParser.indented
 		}
 
-val notationLinkSpacedRhsParser: Parser<NotationLink>
+val notationSpacedRhsParser: Parser<Notation>
 	get() =
 		unitParser(' ').bind {
 			notationLineParser.map {
-				emptyNotation linkTo it
+				notation(it)
 			}
 		}

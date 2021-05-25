@@ -1,9 +1,12 @@
 package leo25.parser
 
 import leo.base.assertEqualTo
+import leo14.lineTo
 import leo14.literal
+import leo14.script
 import leo25.atom
 import leo25.chain
+import leo25.script
 import org.junit.Test
 
 class NotationParserTest {
@@ -27,6 +30,17 @@ class NotationParserTest {
 			parsed("123.bar").assertEqualTo(chain(atom(literal(123)), "bar"))
 			parsed("foo").assertEqualTo(chain(atom("foo")))
 			parsed("foo.bar").assertEqualTo(chain(atom("foo"), "bar"))
+		}
+	}
+
+	@Test
+	fun notationParser() {
+		notationParser.run {
+			parsed("")?.script.assertEqualTo(script())
+			parsed("foo\n")?.script.assertEqualTo(script("foo"))
+			parsed("foo.bar\n")?.script.assertEqualTo(script("foo" lineTo script(), "bar" lineTo script()))
+			//parsed("foo\nbar\n")?.script.assertEqualTo(null)
+			parsed("foo\nbar zoo\n")?.script.assertEqualTo(script("foo" lineTo script(), "bar" lineTo script("zoo")))
 		}
 	}
 }
