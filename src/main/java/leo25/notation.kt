@@ -1,5 +1,6 @@
 package leo25
 
+import leo.base.fold
 import leo.base.runIfNotNull
 import leo14.Literal
 
@@ -28,6 +29,7 @@ fun notation(link: NotationLink): Notation = LinkNotation(link)
 fun Notation.plus(line: NotationLine): Notation = notation(this linkTo line)
 infix fun Notation.linkTo(line: NotationLine) = NotationLink(this, line)
 infix fun String.fieldTo(link: NotationLink) = NotationField(this, link)
+fun notation(vararg lines: NotationLine) = emptyNotation.fold(lines) { plus(it) }
 
 fun atom(literal: Literal): Atom = LiteralAtom(literal)
 fun atom(name: String): Atom = NameAtom(name)
@@ -39,6 +41,7 @@ fun chain(atom: Atom): Chain = AtomChain(atom)
 fun chain(link: ChainLink): Chain = LinkChain(link)
 fun Chain.plus(name: String) = chain(this linkTo name)
 infix fun Chain.linkTo(name: String) = ChainLink(this, name)
+fun chain(atom: Atom, vararg names: String) = chain(atom).fold(names) { plus(it) }
 
 fun NotationLink.plus(literal: Literal): NotationLink =
 	notation(this) linkTo line(chain(atom(literal)))

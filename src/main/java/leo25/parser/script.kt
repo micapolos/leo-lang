@@ -4,6 +4,7 @@ import leo14.*
 
 val scriptParser: Parser<Script>
 	get() =
+		//notationParser.map { it.script }
 		scriptLineParser.stackParser.map { it.script }
 
 val scriptLineParser: Parser<ScriptLine>
