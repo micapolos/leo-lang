@@ -3,7 +3,7 @@ package leo25
 import leo.base.*
 import leo14.Literal
 
-val Notation.string get() = appendableString { it.append(this) }.addTrailingNewline
+val Notation.string get() = appendableString { it.append(this) }
 
 fun Appendable.append(notation: Notation): Appendable =
 	indented.append(notation).appendable
@@ -15,7 +15,7 @@ fun AppendableIndented.append(notation: Notation): AppendableIndented =
 	}
 
 fun AppendableIndented.append(link: NotationLink): AppendableIndented =
-	append(link.lhs).runIf(link.lhs !is EmptyNotation) { append('\n') }.append(link.line)
+	append(link.lhs).append(link.line).append('\n')
 
 fun AppendableIndented.append(line: NotationLine): AppendableIndented =
 	when (line) {
