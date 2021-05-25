@@ -1,6 +1,9 @@
 package leo25
 
-import leo.base.*
+import leo.base.fold
+import leo.base.orIfNull
+import leo.base.orNullIf
+import leo.base.reverse
 import leo14.*
 import leo25.natives.nativeDictionary
 import leo25.parser.scriptOrNull
@@ -43,13 +46,16 @@ fun Dictionary.fieldLeo(scriptField: ScriptField): Leo<Field> =
 		scriptField.string fieldTo it
 	}
 
+fun Environment.interpret(script: Script): Script =
+	try {
+		script.interpretLeo.run(this).value
+	} catch (e: Throwable) {
+		e.value.script
+	}
+
 val Script.interpret: Script
 	get() =
-		try {
-			interpretLeo.get
-		} catch (e: Throwable) {
-			e.value.script
-		}
+		environment().interpret(this)
 
 val Script.dictionary: Dictionary
 	get() =

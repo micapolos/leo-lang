@@ -428,12 +428,14 @@ class InterpreterTest {
 
 	@Test
 	fun trace() {
-		script(
-			line(literal("Hello, ")),
-			plusName lineTo script(line(literal("world!"))),
-			traceName lineTo script()
-		)
-			.interpret
+		environment(traceOrNull = emptyTrace)
+			.interpret(
+				script(
+					line(literal("Hello, ")),
+					plusName lineTo script(line(literal("world!"))),
+					traceName lineTo script()
+				)
+			)
 			.assertEqualTo(
 				script(
 					traceName lineTo script(
@@ -446,6 +448,19 @@ class InterpreterTest {
 					)
 				)
 			)
+	}
+
+	@Test
+	fun trace_disabled() {
+		environment()
+			.interpret(
+				script(
+					line(literal("Hello, ")),
+					plusName lineTo script(line(literal("world!"))),
+					traceName lineTo script()
+				)
+			)
+			.assertEqualTo(script(traceName lineTo script(disabledName)))
 	}
 
 	@Test

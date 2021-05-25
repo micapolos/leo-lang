@@ -4,6 +4,7 @@ import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import leo.base.Effect
 import leo.base.effect
+import leo.base.notNullIf
 import leo.base.orIfNull
 import leo.java.io.file
 import leo14.literal
@@ -14,7 +15,14 @@ data class Environment(
 	val traceOrNull: Trace?
 )
 
-fun environment() = Environment(persistentMapOf(), emptyTrace)
+fun environment(
+	fileLibraryMap: PersistentMap<Use, Dictionary> = persistentMapOf(),
+	traceOrNull: Trace? = null
+) =
+	Environment(
+		fileLibraryMap,
+		traceOrNull
+	)
 
 fun Environment.libraryEffect(use: Use): Effect<Environment, Dictionary> =
 	fileLibraryMap[use]
@@ -36,4 +44,4 @@ fun loadLibrary(use: Use): Dictionary =
 
 val traceValueLeo: Leo<Value>
 	get() =
-		Leo { it effect it.traceOrNull?.value.orIfNull { value(traceName fieldTo value("unavailable")) } }
+		Leo { it effect it.traceOrNull?.value.orIfNull { value(traceName fieldTo value(disabledName)) } }

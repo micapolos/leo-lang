@@ -2,7 +2,6 @@ package leo25
 
 import leo.base.Effect
 import leo.base.effect
-import java.io.File
 
 data class Leo<out V>(
 	val run: (Environment) -> Effect<Environment, V>
