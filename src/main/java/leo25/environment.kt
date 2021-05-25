@@ -10,13 +10,13 @@ import leo14.literal
 import java.io.IOException
 
 data class Environment(
-	val fileLibraryMap: PersistentMap<Use, Resolver>,
+	val fileLibraryMap: PersistentMap<Use, Dictionary>,
 	val traceOrNull: Trace?
 )
 
 fun environment() = Environment(persistentMapOf(), emptyTrace)
 
-fun Environment.libraryEffect(use: Use): Effect<Environment, Resolver> =
+fun Environment.libraryEffect(use: Use): Effect<Environment, Dictionary> =
 	fileLibraryMap[use]
 		?.let { this effect it }
 		?: loadLibrary(use).let { library ->
@@ -27,9 +27,9 @@ val Value.tracedLeo: Leo<Unit>
 	get() =
 		Leo { it.copy(traceOrNull = it.traceOrNull?.push(this)) effect Unit }
 
-fun loadLibrary(use: Use): Resolver =
+fun loadLibrary(use: Use): Dictionary =
 	try {
-		use.path.file.readText().resolver
+		use.path.file.readText().dictionary
 	} catch (ioException: IOException) {
 		value(field(literal(ioException.message ?: ioException.toString()))).throwError()
 	}

@@ -7,7 +7,7 @@ import leo14.literal
 import leo14.script
 import kotlin.test.Test
 
-class ResolverTest {
+class DictionaryTest {
 	@Test
 	fun plusAny() {
 		resolver()
@@ -18,7 +18,7 @@ class ResolverTest {
 				)
 			)
 			.assertEqualTo(
-				Resolver(persistentMapOf(token(anyEnd) to resolution(binding(value("ok")))))
+				Dictionary(persistentMapOf(token(anyEnd) to resolution(binding(value("ok")))))
 			)
 	}
 

@@ -1,15 +1,16 @@
-package leo25
+package leo25.natives
 
 import leo14.*
 import leo14.Number
+import leo25.*
 
 val textAnyLine = textName lineTo script(anyName)
 val numberAnyLine = numberName lineTo script(anyName)
 
-fun nativeDefinition(script: Script, fn: Resolver.() -> Value) =
+fun nativeDefinition(script: Script, fn: Dictionary.() -> Value) =
 	definition(pattern(script), binding(resolver().function(body(fn))))
 
-fun Resolver.nativeValue(name: String): Value =
+fun Dictionary.nativeValue(name: String): Value =
 	resolutionOrNull(value(name))!!.bindingOrNull!!.valueOrNull!!
 
 fun Value.nativeValue(name: String): Value =

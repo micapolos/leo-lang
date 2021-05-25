@@ -6,7 +6,7 @@ import leo.base.*
 import leo14.*
 import leo14.matching.name
 
-data class Resolver(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
+data class Dictionary(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
 
 sealed class Token
 data class BeginToken(val begin: Begin) : Token()
@@ -20,14 +20,14 @@ object EmptyEnd : End()
 object AnythingEnd : End()
 
 sealed class Resolution
-data class ResolverResolution(val resolver: Resolver) : Resolution()
+data class ResolverResolution(val dictionary: Dictionary) : Resolution()
 data class BindingResolution(val binding: Binding) : Resolution()
 
-fun Resolver.put(token: Token, resolution: Resolution): Resolver =
-	Resolver(tokenToResolutionMap.put(token, resolution))
+fun Dictionary.put(token: Token, resolution: Resolution): Dictionary =
+	Dictionary(tokenToResolutionMap.put(token, resolution))
 
-fun resolver(vararg pairs: Pair<Token, Resolution>): Resolver =
-	Resolver(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
+fun resolver(vararg pairs: Pair<Token, Resolution>): Dictionary =
+	Dictionary(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
 
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
@@ -37,70 +37,70 @@ fun begin(name: String) = Begin(name)
 val emptyEnd: End = EmptyEnd
 val anyEnd: End = AnythingEnd
 
-fun resolution(resolver: Resolver): Resolution = ResolverResolution(resolver)
+fun resolution(dictionary: Dictionary): Resolution = ResolverResolution(dictionary)
 fun resolution(binding: Binding): Resolution = BindingResolution(binding)
 
-fun Resolver.update(token: Token, fn: (Resolution?) -> Resolution?): Resolver =
+fun Dictionary.update(token: Token, fn: (Resolution?) -> Resolution?): Dictionary =
 	fn(tokenToResolutionMap[token]).let { resolutionOrNull ->
-		Resolver(
+		Dictionary(
 			if (resolutionOrNull == null) tokenToResolutionMap.remove(token)
 			else tokenToResolutionMap.put(token, resolutionOrNull)
 		)
 	}
 
-fun Resolver.updateContinuation(token: Token, fn: Resolver.() -> Resolution): Resolver =
+fun Dictionary.updateContinuation(token: Token, fn: Dictionary.() -> Resolution): Dictionary =
 	update(token) { resolutionOrNull ->
-		resolutionOrNull?.continuationResolver.orIfNull { resolver() }.fn()
+		resolutionOrNull?.continuationDictionary.orIfNull { resolver() }.fn()
 	}
 
-val Resolver.removeForAny: Resolver
+val Dictionary.removeForAny: Dictionary
 	get() =
-		Resolver(
+		Dictionary(
 			tokenToResolutionMap[token(anyEnd)].let { resolutionOrNull ->
 				if (resolutionOrNull == null) persistentMapOf()
 				else persistentMapOf(token(anyEnd) to resolutionOrNull)
 			})
 
-val Resolution.continuationResolver: Resolver
+val Resolution.continuationDictionary: Dictionary
 	get() =
 		when (this) {
 			is BindingResolution -> resolver()
-			is ResolverResolution -> resolver
+			is ResolverResolution -> dictionary
 		}
 
-fun Resolver.plus(definition: Definition): Resolver =
+fun Dictionary.plus(definition: Definition): Dictionary =
 	update(definition.pattern.script) {
 		resolution(definition.binding)
 	}
 
-fun Resolver.plus(script: Script, body: Body): Resolver =
+fun Dictionary.plus(script: Script, body: Body): Dictionary =
 	plus(definition(pattern(script), binding(resolver().function(body))))
 
-fun Resolver.update(script: Script, fn: Resolver.() -> Resolution): Resolver =
+fun Dictionary.update(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
 	null
 		?: updateAnyOrNull(script, fn)
 		?: updateExact(script, fn)
 
-fun Resolver.updateExact(script: Script, fn: Resolver.() -> Resolution): Resolver =
+fun Dictionary.updateExact(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
 	when (script) {
 		is UnitScript -> updateContinuation(token(emptyEnd), fn)
 		is LinkScript -> update(script.link, fn)
 	}
 
-fun Resolver.update(link: ScriptLink, fn: Resolver.() -> Resolution): Resolver =
+fun Dictionary.update(link: ScriptLink, fn: Dictionary.() -> Resolution): Dictionary =
 	update(link.line) {
 		resolution(
 			update(link.lhs, fn)
 		)
 	}
 
-fun Resolver.update(line: ScriptLine, fn: Resolver.() -> Resolution): Resolver =
+fun Dictionary.update(line: ScriptLine, fn: Dictionary.() -> Resolution): Dictionary =
 	when (line) {
 		is FieldScriptLine -> update(line.field, fn)
 		is LiteralScriptLine -> update(line.literal, fn)
 	}
 
-fun Resolver.update(literal: Literal, fn: Resolver.() -> Resolution): Resolver =
+fun Dictionary.update(literal: Literal, fn: Dictionary.() -> Resolution): Dictionary =
 	updateContinuation(token(begin(literal.selectName))) {
 		resolution(updateContinuation(token(literal.native), fn))
 //		) {
@@ -108,23 +108,23 @@ fun Resolver.update(literal: Literal, fn: Resolver.() -> Resolution): Resolver =
 //		})
 	}
 
-fun Resolver.updateAnyOrNull(script: Script, fn: Resolver.() -> Resolution): Resolver? =
+fun Dictionary.updateAnyOrNull(script: Script, fn: Dictionary.() -> Resolution): Dictionary? =
 	notNullIf(script == script(anyName)) {
 		updateAny(fn)
 	}
 
-fun Resolver.update(field: ScriptField, fn: Resolver.() -> Resolution): Resolver =
+fun Dictionary.update(field: ScriptField, fn: Dictionary.() -> Resolution): Dictionary =
 	updateContinuation(token(begin(field.string))) {
 		resolution(update(field.rhs, fn))
 	}
 
-fun Resolver.updateAny(fn: Resolver.() -> Resolution): Resolver =
+fun Dictionary.updateAny(fn: Dictionary.() -> Resolution): Dictionary =
 	removeForAny.updateContinuation(token(anyEnd), fn)
 
-operator fun Resolver.plus(resolver: Resolver): Resolver =
-	runIf(resolver.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
+operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
+	runIf(dictionary.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
 		.run {
-			resolver.tokenToResolutionMap.entries.fold(this) { resolver, (token, resolution) ->
+			dictionary.tokenToResolutionMap.entries.fold(this) { resolver, (token, resolution) ->
 				resolver.update(token) { resolutionOrNull ->
 					resolutionOrNull.orNullMerge(resolution)
 				}
@@ -137,50 +137,50 @@ fun Resolution.merge(resolution: Resolution): Resolution =
 		is ResolverResolution ->
 			when (this) {
 				is BindingResolution -> resolution
-				is ResolverResolution -> resolution(resolver.plus(resolution.resolver))
+				is ResolverResolution -> resolution(dictionary.plus(resolution.dictionary))
 			}
 	}
 
 fun Resolution?.orNullMerge(resolution: Resolution): Resolution =
 	this?.merge(resolution) ?: resolution
 
-fun Resolver.switchOrNullLeo(value: Value, script: Script): Leo<Value?> =
+fun Dictionary.switchOrNullLeo(value: Value, script: Script): Leo<Value?> =
 	value.bodyOrNull?.let { switchBodyOrNull(it, script) } ?: leo(null)
 
-fun Resolver.switchBodyOrNull(value: Value, script: Script): Leo<Value?> =
+fun Dictionary.switchBodyOrNull(value: Value, script: Script): Leo<Value?> =
 	value.fieldOrNull?.let {
 		switchOrNullLeo(it, script)
 	} ?: leo(null)
 
-fun Resolver.switchOrNullLeo(line: Field, script: Script): Leo<Value?> =
+fun Dictionary.switchOrNullLeo(line: Field, script: Script): Leo<Value?> =
 	when (script) {
 		is LinkScript -> switchOrNullLeo(line, script.link)
 		is UnitScript -> leo(null)
 	}
 
-fun Resolver.switchOrNullLeo(line: Field, scriptLink: ScriptLink): Leo<Value?> =
+fun Dictionary.switchOrNullLeo(line: Field, scriptLink: ScriptLink): Leo<Value?> =
 	switchOrNullLeo(line, scriptLink.line).or {
 		switchOrNullLeo(line, scriptLink.lhs)
 	}
 
-fun Resolver.switchOrNullLeo(line: Field, scriptLine: ScriptLine): Leo<Value?> =
+fun Dictionary.switchOrNullLeo(line: Field, scriptLine: ScriptLine): Leo<Value?> =
 	when (scriptLine) {
 		is FieldScriptLine -> switchOrNullLeo(line, scriptLine.field)
 		is LiteralScriptLine -> leo(null)
 	}
 
-fun Resolver.switchOrNullLeo(line: Field, scriptField: ScriptField): Leo<Value?> =
+fun Dictionary.switchOrNullLeo(line: Field, scriptField: ScriptField): Leo<Value?> =
 	ifOrNull(line.name == scriptField.name) {
 		context.interpreter(value(line)).plusLeo(scriptField.rhs).map { it.value }
 	} ?: leo(null)
 
-fun Resolver.applyLeo(body: Body, given: Value): Leo<Value> =
+fun Dictionary.applyLeo(body: Body, given: Value): Leo<Value> =
 	when (body) {
 		is FnBody -> body.fn(set(given)).leo
 		is BlockBody -> applyLeo(body.block, given)
 	}
 
-fun Resolver.applyLeo(block: Block, given: Value): Leo<Value> =
+fun Dictionary.applyLeo(block: Block, given: Value): Leo<Value> =
 	when (block.typeOrNull) {
 		BlockType.REPEATEDLY -> applyRepeatingLeo(block.untypedScript, given)
 		BlockType.RECURSIVELY -> applyRecursingLeo(block.untypedScript, given)
@@ -188,20 +188,20 @@ fun Resolver.applyLeo(block: Block, given: Value): Leo<Value> =
 	}
 
 // TODO: How to make this Leo<Value> tailrecursive?
-fun Resolver.applyRepeatingLeo(script: Script, given: Value): Leo<Value> =
+fun Dictionary.applyRepeatingLeo(script: Script, given: Value): Leo<Value> =
 	set(given).valueLeo(script).bind { result ->
 		val repeatValue = result.repeatValueOrNull
 		if (repeatValue != null) applyRepeatingLeo(script, repeatValue)
 		else result.leo
 	}
 
-fun Resolver.applyRecursingLeo(script: Script, given: Value): Leo<Value> =
+fun Dictionary.applyRecursingLeo(script: Script, given: Value): Leo<Value> =
 	set(given).plusRecurse(script).valueLeo(script)
 
-fun Resolver.applyUntypedLeo(script: Script, given: Value): Leo<Value> =
+fun Dictionary.applyUntypedLeo(script: Script, given: Value): Leo<Value> =
 	set(given).valueLeo(script)
 
-fun Resolver.plusRecurse(script: Script): Resolver =
+fun Dictionary.plusRecurse(script: Script): Dictionary =
 	plus(
 		definition(
 			pattern(
@@ -214,20 +214,20 @@ fun Resolver.plusRecurse(script: Script): Resolver =
 		)
 	)
 
-fun Resolver.definitionSeqOrNullLeo(scriptField: ScriptField): Leo<Seq<Definition>?> =
+fun Dictionary.definitionSeqOrNullLeo(scriptField: ScriptField): Leo<Seq<Definition>?> =
 	when (scriptField.string) {
 		"let" -> letDefinitionOrNull(scriptField.rhs)?.let { seq(it) }.leo
 		"set" -> setDefinitionSeqLeo(scriptField.rhs)
 		else -> leo(null)
 	}
 
-fun Resolver.letDefinitionOrNull(rhs: Script): Definition? =
+fun Dictionary.letDefinitionOrNull(rhs: Script): Definition? =
 	rhs.matchInfix(doName) { lhs, rhs ->
 		definition(pattern(lhs), binding(function(body(rhs))))
 	}
 
 
-fun Resolver.setDefinitionSeqLeo(rhs: Script): Leo<Seq<Definition>> =
+fun Dictionary.setDefinitionSeqLeo(rhs: Script): Leo<Seq<Definition>> =
 	valueLeo(rhs).map { value ->
 		value.setDefinitionSeq
 	}

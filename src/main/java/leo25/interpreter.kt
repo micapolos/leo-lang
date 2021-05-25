@@ -2,6 +2,7 @@ package leo25
 
 import leo.base.*
 import leo14.*
+import leo25.natives.nativeDictionary
 import leo25.parser.scriptOrNull
 import leo25.parser.scriptOrThrow
 
@@ -19,10 +20,10 @@ fun Interpreter.setLeo(value: Value): Leo<Interpreter> =
 fun Interpreter.set(context: Context): Interpreter =
 	context.interpreter(value)
 
-fun Resolver.valueLeo(script: Script): Leo<Value> =
+fun Dictionary.valueLeo(script: Script): Leo<Value> =
 	context.interpreterLeo(script).map { it.value }
 
-fun Resolver.linesValueLeo(script: Script): Leo<Value> =
+fun Dictionary.linesValueLeo(script: Script): Leo<Value> =
 	value().leo.fold(script.lineSeq.reverse) { line ->
 		bind { value ->
 			fieldLeo(line).map {
@@ -31,13 +32,13 @@ fun Resolver.linesValueLeo(script: Script): Leo<Value> =
 		}
 	}
 
-fun Resolver.fieldLeo(scriptLine: ScriptLine): Leo<Field> =
+fun Dictionary.fieldLeo(scriptLine: ScriptLine): Leo<Field> =
 	when (scriptLine) {
 		is FieldScriptLine -> fieldLeo(scriptLine.field)
 		is LiteralScriptLine -> field(scriptLine.literal).leo
 	}
 
-fun Resolver.fieldLeo(scriptField: ScriptField): Leo<Field> =
+fun Dictionary.fieldLeo(scriptField: ScriptField): Leo<Field> =
 	valueLeo(scriptField.rhs).map {
 		scriptField.string fieldTo it
 	}
@@ -50,17 +51,17 @@ val Script.interpret: Script
 			e.value.script
 		}
 
-val Script.resolver: Resolver
+val Script.dictionary: Dictionary
 	get() =
-		nativeResolver.context.interpreter().plusLeo(this).get.context.publicResolver
+		nativeDictionary.context.interpreter().plusLeo(this).get.context.publicDictionary
 
-val String.resolver: Resolver
+val String.dictionary: Dictionary
 	get() =
-		scriptOrThrow.resolver
+		scriptOrThrow.dictionary
 
 val Script.interpretLeo: Leo<Script>
 	get() =
-		nativeResolver.valueLeo(this).map { it.script }
+		nativeDictionary.valueLeo(this).map { it.script }
 
 val String.interpret: String
 	get() =
@@ -231,7 +232,7 @@ fun Interpreter.plusCommentLeo(rhs: Script): Leo<Interpreter> =
 
 fun Interpreter.plusPrivateLeo(rhs: Script): Leo<Interpreter> =
 	context.private.interpreterLeo(rhs).map { interpreter ->
-		use(interpreter.context.publicResolver)
+		use(interpreter.context.publicDictionary)
 	}
 
 fun Interpreter.plusUseOrNullLeo(rhs: Script): Leo<Interpreter?> =
@@ -254,10 +255,10 @@ fun Interpreter.plusRepeatOrNullLeo(rhs: Script): Leo<Interpreter?> =
 
 val Interpreter.resolver
 	get() =
-		context.privateResolver
+		context.privateDictionary
 
 fun Interpreter.plusLeo(use: Use): Leo<Interpreter> =
 	Leo { it.libraryEffect(use) }.map { use(it) }
 
-fun Interpreter.use(resolver: Resolver): Interpreter =
-	set(context.plusPrivate(resolver))
+fun Interpreter.use(dictionary: Dictionary): Interpreter =
+	set(context.plusPrivate(dictionary))
