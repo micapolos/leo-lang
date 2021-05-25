@@ -16,13 +16,7 @@ gradle jar
 
 ##### Running
 
-Leonardo reads from standard input and writes to standard output:
-
-```
-java -jar build/libs/leo-0.25.jar < my_file.leo
-```
-
-or:
+Leonardo reads from standard input and writes to standard output, and requires Java JRE:
 
 ```
 bin/leo < my_file.leo
