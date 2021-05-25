@@ -39,12 +39,12 @@ test
 
 let
   number any
-  square
+  squared
   do
     number
     times number
 
 test
   10
-  square
+  squared
   equals 100

@@ -1,6 +1,6 @@
 comment
   let do
-    defines function
+    defines a function
     matching the given pattern
     executing the given code
   any
