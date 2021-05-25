@@ -187,12 +187,9 @@ fun Dictionary.applyLeo(block: Block, given: Value): Leo<Value> =
 		null -> applyUntypedLeo(block.untypedScript, given)
 	}
 
-// TODO: How to make this Leo<Value> tailrecursive?
 fun Dictionary.applyRepeatingLeo(script: Script, given: Value): Leo<Value> =
-	set(given).valueLeo(script).bind { result ->
-		val repeatValue = result.repeatValueOrNull
-		if (repeatValue != null) applyRepeatingLeo(script, repeatValue)
-		else result.leo
+	given.leo.bindRepeating { given ->
+		set(given).valueLeo(script)
 	}
 
 fun Dictionary.applyRecursingLeo(script: Script, given: Value): Leo<Value> =
