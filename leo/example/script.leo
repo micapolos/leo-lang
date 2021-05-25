@@ -5,4 +5,4 @@ comment
     
 script
   "Hello, "
-  and "world!"
+  append "world!"

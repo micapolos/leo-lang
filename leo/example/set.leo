@@ -9,6 +9,6 @@ set
 
 first
 text
-and
+append
   second
   text

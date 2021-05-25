@@ -9,6 +9,6 @@ second "world!"
 do
   first
   text
-  and
+  append
     second
     text

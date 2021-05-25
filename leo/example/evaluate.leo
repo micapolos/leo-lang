@@ -6,5 +6,5 @@ comment
 
 script
   "Hello, "
-  and text
+  append text
 evaluate "world!"

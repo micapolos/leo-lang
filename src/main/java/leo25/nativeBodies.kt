@@ -8,7 +8,7 @@ import leo14.times
 val textAndTextBody
 	get() =
 		unsafeBody {
-			resolveOrNull(textName, andName) { rhs ->
+			resolveOrNull(textName, appendName) { rhs ->
 				value(field(literal(textOrThrow.plus(rhs.textOrThrow))))
 			}!!
 		}

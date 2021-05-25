@@ -1,6 +1,6 @@
 package leo25
 
-val andName = "and"
+val appendName = "append"
 val anyName = "any"
 val applyName = "apply"
 val asName = "as"

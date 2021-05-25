@@ -8,4 +8,4 @@ example
   "Hello, "
   take doing
     text
-    and "world!"
+    append "world!"

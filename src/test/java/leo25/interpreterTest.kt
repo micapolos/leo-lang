@@ -240,7 +240,7 @@ class InterpreterTest {
 		script(
 			"the" lineTo script(literal("Hello, ")),
 			switchName lineTo script(
-				"text" lineTo script(andName lineTo script(literal("world!"))),
+				"text" lineTo script(appendName lineTo script(literal("world!"))),
 				"number" lineTo script(plusName lineTo script(literal(2)))
 			)
 		)
@@ -250,7 +250,7 @@ class InterpreterTest {
 		script(
 			"the" lineTo script(literal(1)),
 			switchName lineTo script(
-				"text" lineTo script(andName lineTo script(literal("world!"))),
+				"text" lineTo script(appendName lineTo script(literal("world!"))),
 				"number" lineTo script(plusName lineTo script(literal(2)))
 			)
 		)
@@ -334,7 +334,7 @@ class InterpreterTest {
 		script(
 			scriptName lineTo script(
 				line(literal("Hello, ")),
-				andName lineTo script(textName lineTo script())
+				appendName lineTo script(textName lineTo script())
 			),
 			evaluateName lineTo script(literal("world!"))
 		)

@@ -13,12 +13,12 @@ example
   comment it should give "Hello, world!"
   item "Hello, "
   switch
-    text and "world!"
+    text append "world!"
     number plus 5
 
 example
   comment it should give "15"
   item 10
   switch
-    text and "world!"
+    text append "world!"
     number plus 5
