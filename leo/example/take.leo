@@ -1,8 +1,8 @@
 comment
   take
     takes a value
-    and executes given function value
-    passing it as an argument
+    and executes given function
+    with the value as argument
 
 example
   "Hello, "
