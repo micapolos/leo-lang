@@ -6,7 +6,7 @@ import kotlin.test.Test
 class RepeatTest {
 	@Test
 	fun noStackOverflow() {
-		1000000.leo
+		100000.leo
 			.bindRepeating { counter ->
 				if (counter == 0) counter.leo
 				else counter.dec().leo.repeat
