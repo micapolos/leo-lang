@@ -1,6 +1,11 @@
 package leo25.parser
 
+import leo13.fold
+import leo13.reverse
 import leo14.*
+import leo25.*
+import leo25.LiteralAtom
+import leo25.NameAtom
 
 val scriptParser: Parser<Script>
 	get() =
@@ -37,7 +42,32 @@ val scriptIndentedRhsParser: Parser<Script>
 val scriptSpacedRhsParser: Parser<Script>
 	get() =
 		unitParser(' ').bind {
+//			singleLineScriptParser
 			scriptLineParser.map {
 				script(it)
 			}
 		}
+
+val singleLineScriptParser: Parser<Script>
+	get() =
+		atomParser.bind { atom ->
+			when (atom) {
+				is LiteralAtom ->
+					nameStackParser.bind { nameStack ->
+						unitParser('\n').map {
+							script(line(atom.literal)).fold(nameStack.reverse) { plus(it lineTo script()) }
+						}
+					}
+				is NameAtom ->
+					firstCharOneOf(
+						nameStackParser.bind { nameStack ->
+							unitParser('\n').map {
+								script(line(atom.name)).fold(nameStack.reverse) { plus(it lineTo script()) }
+							}
+						},
+						scriptRhsParser.map {
+							script(atom.name lineTo it)
+						})
+			}
+		}
+

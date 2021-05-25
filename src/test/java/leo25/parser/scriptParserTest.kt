@@ -55,6 +55,13 @@ class ScriptParser {
 	}
 
 	@Test
+	fun chains() {
+//		scriptParser.run {
+//			parsed("foo.bar\n").assertEqualTo(script("foo" lineTo script(), "bar" lineTo script()))
+//		}
+	}
+
+	@Test
 	fun syntaxError() {
 		assertFailsWith<ValueError> {
 			"*".scriptOrThrow
