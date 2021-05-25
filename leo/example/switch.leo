@@ -1,6 +1,6 @@
 comment
   switch
-    switches on the only field in a structure
+    switches on structure field
     and
       continues execution
       in the matching branch
