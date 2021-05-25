@@ -1,4 +1,4 @@
-let
+script let
   vector any
   plus vector any
   do
@@ -22,13 +22,13 @@ let
           y
           number
 
-test
-  vector
-    x 10
-    y 20
-  plus vector
-    x 40
-    y 60
-  equals vector
-    x 50
-    y 80
+  test
+    vector
+      x 10
+      y 20
+    plus vector
+      x 40
+      y 60
+    equals vector
+      x 50
+      y 80

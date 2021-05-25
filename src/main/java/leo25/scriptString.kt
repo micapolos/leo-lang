@@ -2,12 +2,13 @@ package leo25
 
 import leo.base.appendableString
 import leo.base.indentString
-import leo.base.notNullIf
-import leo.base.runIfNotNull
 import leo14.*
 import leo14.matching.name
 
-val Script.string get() = appendableString { it.append(0, this) }.addTrailingNewline
+val Script.string
+	get() =
+		notation.string
+//appendableString { it.append(0, this) }.addTrailingNewline
 
 val String.preprocess: String
 	get() =
@@ -35,14 +36,7 @@ fun Appendable.append(indent: Int, script: Script): Appendable =
 	}
 
 fun Appendable.append(indent: Int, link: ScriptLink): Appendable =
-	runIfNotNull(link.dottedLinkOrNull) { append(indent, it) }
-		?: append(indent, link.lhs).append(indent, link.line)
-
-fun Appendable.append(indent: Int, link: ScriptDottedLink): Appendable =
-	append(indent, link.lhs).append('.').append(link.rhsName)
-
-fun Appendable.append(indent: Int, link: ScriptDottedLhs): Appendable =
-	append(indent, link.lhsScript).append(indent.indentString).append(link.rhsName)
+	append(indent, link.lhs).append(indent, link.line)
 
 fun Appendable.append(indent: Int, line: ScriptLine): Appendable =
 	append(indent.indentString).indentedAppend(indent, line)
