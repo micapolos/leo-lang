@@ -21,7 +21,7 @@ class ValueTest {
 
 	@Test
 	fun dictionaryResolve() {
-		resolver()
+		dictionary()
 			.resolveLeo(value("foo")).get
 			.assertEqualTo(value("foo"))
 	}
@@ -58,9 +58,9 @@ class ValueTest {
 
 	@Test
 	fun resolveFunction() {
-		value(field(resolver().function(body(script("foo")))))
+		value(field(dictionary().function(body(script("foo")))))
 			.functionOrNull
-			.assertEqualTo(resolver().function(body(script("foo"))))
+			.assertEqualTo(dictionary().function(body(script("foo"))))
 
 		value("function" fieldTo value("foo"))
 			.functionOrNull
@@ -85,7 +85,7 @@ class ValueTest {
 	@Test
 	fun resolveFunctionApply() {
 		value(
-			field(resolver().function(body(script("name")))),
+			field(dictionary().function(body(script("name")))),
 			giveName fieldTo value("name" fieldTo value("foo"))
 		)
 			.resolveFunctionApplyOrNullLeo

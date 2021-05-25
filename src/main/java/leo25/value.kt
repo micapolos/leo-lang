@@ -293,7 +293,7 @@ fun <R> Value.resolveOrNull(lhsName: String, rhsName: String, fn: Value.(Value) 
 	}
 
 fun Value.as_(pattern: Pattern): Value =
-	resolver()
+	dictionary()
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)
 		?.bindingOrNull
@@ -301,7 +301,7 @@ fun Value.as_(pattern: Pattern): Value =
 		.notNullOrThrow { plus(value(asName fieldTo pattern.script.value)) }
 
 fun Value.is_(pattern: Pattern): Value =
-	resolver()
+	dictionary()
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)
 		?.bindingOrNull

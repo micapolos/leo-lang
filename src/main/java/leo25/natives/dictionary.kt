@@ -2,11 +2,11 @@ package leo25.natives
 
 import leo25.Dictionary
 import leo25.plus
-import leo25.resolver
+import leo25.dictionary
 
 val nativeDictionary: Dictionary
 	get() =
-		resolver()
+		dictionary()
 			.plus(textAppendTextDefinition)
 			.plus(numberPlusNumberDefinition)
 			.plus(numberMinusNumberDefinition)

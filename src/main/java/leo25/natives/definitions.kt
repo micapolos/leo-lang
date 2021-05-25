@@ -8,7 +8,7 @@ val textAnyLine = textName lineTo script(anyName)
 val numberAnyLine = numberName lineTo script(anyName)
 
 fun nativeDefinition(script: Script, fn: Dictionary.() -> Value) =
-	definition(pattern(script), binding(resolver().function(body(fn))))
+	definition(pattern(script), binding(dictionary().function(body(fn))))
 
 fun Dictionary.nativeValue(name: String): Value =
 	resolutionOrNull(value(name))!!.bindingOrNull!!.valueOrNull!!

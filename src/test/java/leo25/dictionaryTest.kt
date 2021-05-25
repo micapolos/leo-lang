@@ -10,7 +10,7 @@ import kotlin.test.Test
 class DictionaryTest {
 	@Test
 	fun plusAny() {
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script(anyName)),
@@ -24,7 +24,7 @@ class DictionaryTest {
 
 	@Test
 	fun applyString() {
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script("ping")),
@@ -38,7 +38,7 @@ class DictionaryTest {
 
 	@Test
 	fun applyStruct() {
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script("name" lineTo script(anyName))),
@@ -54,7 +54,7 @@ class DictionaryTest {
 
 	@Test
 	fun applyAny() {
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script(anyName)),
@@ -69,7 +69,7 @@ class DictionaryTest {
 
 	@Test
 	fun anyValueApply() {
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script(anyName lineTo script(), "plus" lineTo script(anyName))),
@@ -85,7 +85,7 @@ class DictionaryTest {
 
 	@Test
 	fun literalApply() {
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script(textName lineTo script(anyName))),
@@ -96,7 +96,7 @@ class DictionaryTest {
 			.get
 			.assertEqualTo(value("ok"))
 
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script(literal("foo"))),
@@ -107,7 +107,7 @@ class DictionaryTest {
 			.get
 			.assertEqualTo(value("ok"))
 
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script(literal("foo"))),
@@ -118,7 +118,7 @@ class DictionaryTest {
 			.get
 			.assertEqualTo(null)
 
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script(literal(123))),
@@ -129,7 +129,7 @@ class DictionaryTest {
 			.get
 			.assertEqualTo(value("ok"))
 
-		resolver()
+		dictionary()
 			.plus(
 				definition(
 					pattern(script(literal(123))),
@@ -143,11 +143,11 @@ class DictionaryTest {
 
 	@Test
 	fun plusDifferentTokens() {
-		resolver(
+		dictionary(
 			token(begin("x")) to resolution(
-				resolver(
+				dictionary(
 					token(emptyEnd) to resolution(
-						resolver(
+						dictionary(
 							token(emptyEnd) to resolution(binding(value("x")))
 						)
 					)
@@ -155,11 +155,11 @@ class DictionaryTest {
 			)
 		)
 			.plus(
-				resolver(
+				dictionary(
 					token(begin("y")) to resolution(
-						resolver(
+						dictionary(
 							token(emptyEnd) to resolution(
-								resolver(
+								dictionary(
 									token(emptyEnd) to resolution(binding(value("y")))
 								)
 							)
@@ -168,20 +168,20 @@ class DictionaryTest {
 				)
 			)
 			.assertEqualTo(
-				resolver(
+				dictionary(
 					token(begin("x")) to resolution(
-						resolver(
+						dictionary(
 							token(emptyEnd) to resolution(
-								resolver(
+								dictionary(
 									token(emptyEnd) to resolution(binding(value("x")))
 								)
 							)
 						)
 					),
 					token(begin("y")) to resolution(
-						resolver(
+						dictionary(
 							token(emptyEnd) to resolution(
-								resolver(
+								dictionary(
 									token(emptyEnd) to resolution(binding(value("y")))
 								)
 							)
@@ -193,15 +193,15 @@ class DictionaryTest {
 
 	@Test
 	fun plusSharedTokens() {
-		resolver(
+		dictionary(
 			token(begin("point")) to resolution(
-				resolver(
+				dictionary(
 					token(begin("x")) to resolution(
-						resolver(
+						dictionary(
 							token(emptyEnd) to resolution(
-								resolver(
+								dictionary(
 									token(emptyEnd) to resolution(
-										resolver(
+										dictionary(
 											token(emptyEnd) to resolution(binding(value("x")))
 										)
 									)
@@ -213,15 +213,15 @@ class DictionaryTest {
 			)
 		)
 			.plus(
-				resolver(
+				dictionary(
 					token(begin("point")) to resolution(
-						resolver(
+						dictionary(
 							token(begin("y")) to resolution(
-								resolver(
+								dictionary(
 									token(emptyEnd) to resolution(
-										resolver(
+										dictionary(
 											token(emptyEnd) to resolution(
-												resolver(
+												dictionary(
 													token(emptyEnd) to resolution(binding(value("y")))
 												)
 											)
@@ -234,15 +234,15 @@ class DictionaryTest {
 				)
 			)
 			.assertEqualTo(
-				resolver(
+				dictionary(
 					token(begin("point")) to resolution(
-						resolver(
+						dictionary(
 							token(begin("x")) to resolution(
-								resolver(
+								dictionary(
 									token(emptyEnd) to resolution(
-										resolver(
+										dictionary(
 											token(emptyEnd) to resolution(
-												resolver(
+												dictionary(
 													token(emptyEnd) to resolution(binding(value("x")))
 												)
 											)
@@ -251,11 +251,11 @@ class DictionaryTest {
 								)
 							),
 							token(begin("y")) to resolution(
-								resolver(
+								dictionary(
 									token(emptyEnd) to resolution(
-										resolver(
+										dictionary(
 											token(emptyEnd) to resolution(
-												resolver(
+												dictionary(
 													token(emptyEnd) to resolution(binding(value("y")))
 												)
 											)
@@ -271,11 +271,11 @@ class DictionaryTest {
 
 	@Test
 	fun plusAnyOverride() {
-		resolver(
+		dictionary(
 			token(begin("x")) to resolution(
-				resolver(
+				dictionary(
 					token(emptyEnd) to resolution(
-						resolver(
+						dictionary(
 							token(emptyEnd) to resolution(binding(value("x")))
 						)
 					)
@@ -284,18 +284,18 @@ class DictionaryTest {
 			token(emptyEnd) to resolution(binding(value("end")))
 		)
 			.plus(
-				resolver(
+				dictionary(
 					token(anyEnd) to resolution(
-						resolver(
+						dictionary(
 							token(emptyEnd) to resolution(binding(value("y")))
 						)
 					)
 				)
 			)
 			.assertEqualTo(
-				resolver(
+				dictionary(
 					token(anyEnd) to resolution(
-						resolver(
+						dictionary(
 							token(emptyEnd) to resolution(binding(value("y")))
 						)
 					)
@@ -305,7 +305,7 @@ class DictionaryTest {
 
 	@Test
 	fun switchOrNull() {
-		resolver()
+		dictionary()
 			.switchOrNullLeo(
 				value("shape" fieldTo value("circle" fieldTo value("radius" fieldTo value("zero")))),
 				script(

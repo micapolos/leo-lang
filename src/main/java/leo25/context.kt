@@ -10,9 +10,9 @@ fun context(publicDictionary: Dictionary, privateDictionary: Dictionary) =
 
 val Dictionary.context
 	get() =
-		context(resolver(), this)
+		context(dictionary(), this)
 
-fun context() = context(resolver(), resolver())
+fun context() = context(dictionary(), dictionary())
 
 fun Context.plus(definition: Definition): Context =
 	context(publicDictionary.plus(definition), privateDictionary.plus(definition))
@@ -22,4 +22,4 @@ fun Context.plusPrivate(dictionary: Dictionary): Context =
 
 val Context.private: Context
 	get() =
-		context(resolver(), privateDictionary)
+		context(dictionary(), privateDictionary)

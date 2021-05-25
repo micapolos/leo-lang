@@ -26,7 +26,7 @@ data class BindingResolution(val binding: Binding) : Resolution()
 fun Dictionary.put(token: Token, resolution: Resolution): Dictionary =
 	Dictionary(tokenToResolutionMap.put(token, resolution))
 
-fun resolver(vararg pairs: Pair<Token, Resolution>): Dictionary =
+fun dictionary(vararg pairs: Pair<Token, Resolution>): Dictionary =
 	Dictionary(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
 
 fun token(begin: Begin): Token = BeginToken(begin)
@@ -50,7 +50,7 @@ fun Dictionary.update(token: Token, fn: (Resolution?) -> Resolution?): Dictionar
 
 fun Dictionary.updateContinuation(token: Token, fn: Dictionary.() -> Resolution): Dictionary =
 	update(token) { resolutionOrNull ->
-		resolutionOrNull?.continuationDictionary.orIfNull { resolver() }.fn()
+		resolutionOrNull?.continuationDictionary.orIfNull { dictionary() }.fn()
 	}
 
 val Dictionary.removeForAny: Dictionary
@@ -64,7 +64,7 @@ val Dictionary.removeForAny: Dictionary
 val Resolution.continuationDictionary: Dictionary
 	get() =
 		when (this) {
-			is BindingResolution -> resolver()
+			is BindingResolution -> dictionary()
 			is ResolverResolution -> dictionary
 		}
 
@@ -74,7 +74,7 @@ fun Dictionary.plus(definition: Definition): Dictionary =
 	}
 
 fun Dictionary.plus(script: Script, body: Body): Dictionary =
-	plus(definition(pattern(script), binding(resolver().function(body))))
+	plus(definition(pattern(script), binding(dictionary().function(body))))
 
 fun Dictionary.update(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
 	null
@@ -124,8 +124,8 @@ fun Dictionary.updateAny(fn: Dictionary.() -> Resolution): Dictionary =
 operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
 	runIf(dictionary.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
 		.run {
-			dictionary.tokenToResolutionMap.entries.fold(this) { resolver, (token, resolution) ->
-				resolver.update(token) { resolutionOrNull ->
+			dictionary.tokenToResolutionMap.entries.fold(this) { dictionary, (token, resolution) ->
+				dictionary.update(token) { resolutionOrNull ->
 					resolutionOrNull.orNullMerge(resolution)
 				}
 			}
