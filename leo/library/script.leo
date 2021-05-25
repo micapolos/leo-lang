@@ -1,4 +1,7 @@
 test
+  comment
+    this test is stupid
+    but how to test it properly
   script
     "Hello, "
     append "world!"
@@ -6,6 +9,3 @@ test
     "Hello, "
     append "world!"
 
-comment
-  this test is stupid
-  but how to test it properly
