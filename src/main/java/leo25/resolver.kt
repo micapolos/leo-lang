@@ -176,7 +176,7 @@ fun Resolver.switchOrNullLeo(line: Field, scriptField: ScriptField): Leo<Value?>
 
 fun Resolver.applyLeo(body: Body, given: Value): Leo<Value> =
 	when (body) {
-		is FnBody -> body.fn(given).leo
+		is FnBody -> body.fn(set(given)).leo
 		is BlockBody -> applyLeo(body.block, given)
 	}
 

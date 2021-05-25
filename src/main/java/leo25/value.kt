@@ -296,6 +296,7 @@ fun Value.as_(pattern: Pattern): Value =
 	resolver()
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)
+		?.bindingOrNull
 		?.let { this }
 		.notNullOrThrow { plus(value(asName fieldTo pattern.script.value)) }
 
@@ -303,6 +304,7 @@ fun Value.is_(pattern: Pattern): Value =
 	resolver()
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)
+		?.bindingOrNull
 		.let { value(isName fieldTo (it != null).yesNoValue) }
 
 val Value.resolveNameOrNull: Value?

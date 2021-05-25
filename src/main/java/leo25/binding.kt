@@ -12,3 +12,7 @@ fun Binding.applyLeo(given: Value): Leo<Value> =
 		is FunctionBinding -> function.applyLeo(given)
 		is ValueBinding -> value.leo
 	}
+
+val Binding.valueOrNull: Value?
+	get() =
+		(this as? ValueBinding)?.value
