@@ -552,4 +552,21 @@ class InterpreterTest {
 				)
 			)
 	}
+
+	@Test
+	fun is_() {
+		script(
+			line(literal("foo")),
+			isName lineTo script(textName lineTo script(anyName))
+		)
+			.interpret
+			.assertEqualTo(script(isName lineTo script(yesName)))
+
+		script(
+			line(literal("doo")),
+			isName lineTo script(numberName lineTo script(anyName))
+		)
+			.interpret
+			.assertEqualTo(script(isName lineTo script(noName)))
+	}
 }

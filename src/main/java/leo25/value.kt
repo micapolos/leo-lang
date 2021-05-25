@@ -254,7 +254,11 @@ fun Value.resolveEmptyOrNull(fn: () -> Value?): Value? =
 
 val Boolean.equalsValue
 	get() =
-		value(equalsName fieldTo value(if (this) yesName else noName))
+		value(equalsName fieldTo yesNoValue)
+
+val Boolean.yesNoValue
+	get() =
+		value(if (this) yesName else noName)
 
 val Value.hashValue
 	get() =
@@ -294,6 +298,12 @@ fun Value.as_(pattern: Pattern): Value =
 		.resolutionOrNull(this)
 		?.let { this }
 		.notNullOrThrow { plus(value(asName fieldTo pattern.script.value)) }
+
+fun Value.is_(pattern: Pattern): Value =
+	resolver()
+		.plus(definition(pattern, binding(this)))
+		.resolutionOrNull(this)
+		.let { value(isName fieldTo (it != null).yesNoValue) }
 
 val Value.resolveNameOrNull: Value?
 	get() =
