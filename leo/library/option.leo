@@ -4,11 +4,10 @@ let
   do
     option
     switch
-      present do
+      present take
         update
         present
         doing
-        give present
       absent option
 
 test
