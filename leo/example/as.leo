@@ -3,7 +3,8 @@ comment
     throws error
     when 
       the value
-      does not match the pattern
+      does not match
+        the pattern
 
 example
   "Hello, "
