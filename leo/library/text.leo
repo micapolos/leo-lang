@@ -3,6 +3,11 @@ test
   append "world!"
   equals "Hello, world!"
 
+test
+  "Hello, world!"
+  length
+  equals length 13
+
 let
   text any
   exclamate

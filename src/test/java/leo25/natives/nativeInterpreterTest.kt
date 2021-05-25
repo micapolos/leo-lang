@@ -1,9 +1,10 @@
-package leo25
+package leo25.natives
 
 import leo.base.assertEqualTo
 import leo14.lineTo
 import leo14.literal
 import leo14.script
+import leo25.*
 import kotlin.test.Test
 
 class NativeInterpreterTest {
@@ -15,6 +16,16 @@ class NativeInterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script(literal("Hello, world!")))
+	}
+
+	@Test
+	fun textLength() {
+		script(
+			leo14.line(literal("Hello, world!")),
+			lengthName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(lengthName lineTo script(literal(13))))
 	}
 
 	@Test

@@ -8,6 +8,7 @@ val nativeDictionary: Dictionary
 	get() =
 		dictionary()
 			.plus(textAppendTextDefinition)
+			.plus(textLengthDefinition)
 			.plus(numberPlusNumberDefinition)
 			.plus(numberMinusNumberDefinition)
 			.plus(numberTimesNumberDefinition)
