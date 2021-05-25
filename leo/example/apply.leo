@@ -1,5 +1,5 @@
 comment
-  apply
+  give
     executes a function value
     with the given argument
   doing
@@ -13,6 +13,6 @@ example
     append
       second
       text
-  apply
+  give
     first "Hello, "
     second "world!"

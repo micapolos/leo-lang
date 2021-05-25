@@ -146,7 +146,7 @@ class InterpreterTest {
 	fun apply() {
 		script(
 			doingName lineTo script("name"),
-			applyName lineTo script("name" lineTo script("foo"))
+			giveName lineTo script("name" lineTo script("foo"))
 		)
 			.interpret
 			.assertEqualTo(script("name" lineTo script("foo")))
@@ -166,7 +166,7 @@ class InterpreterTest {
 	fun apply_error() {
 		script(
 			"foo" lineTo script(),
-			applyName lineTo script("bar")
+			giveName lineTo script("bar")
 		)
 			.interpret
 			.assertEqualTo(

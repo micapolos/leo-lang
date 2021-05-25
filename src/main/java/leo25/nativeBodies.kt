@@ -13,7 +13,7 @@ val textAndTextBody
 			}!!
 		}
 
-val numberAddNumberBody
+val numberPlusNumberBody
 	get() =
 		unsafeBody {
 			resolveOrNull(numberName, plusName) { rhs ->
@@ -21,7 +21,7 @@ val numberAddNumberBody
 			}!!
 		}
 
-val numberSubtractNumberBody
+val numberMinusNumberBody
 	get() =
 		unsafeBody {
 			resolveOrNull(numberName, minusName) { rhs ->
@@ -29,7 +29,7 @@ val numberSubtractNumberBody
 			}!!
 		}
 
-val numberMultiplyByNumberBody
+val numberTimesNumberBody
 	get() =
 		unsafeBody {
 			resolveOrNull(numberName, timesName) { rhs ->

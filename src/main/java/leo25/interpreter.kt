@@ -96,7 +96,7 @@ fun Interpreter.plusDefinitionsOrNullLeo(scriptField: ScriptField): Leo<Interpre
 
 fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
 	when (scriptField.string) {
-		applyName -> plusApplyLeo(scriptField.rhs)
+		giveName -> plusApplyLeo(scriptField.rhs)
 		asName -> plusAsLeo(scriptField.rhs)
 		commentName -> plusCommentLeo(scriptField.rhs)
 		becomeName -> plusBeLeo(scriptField.rhs)

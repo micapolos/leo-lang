@@ -70,7 +70,7 @@ val Value.resolve: Value
 
 val Value.resolveFunctionApplyOrNullLeo: Leo<Value?>
 	get() =
-		resolveOrNull(doingName, applyName) { rhs ->
+		resolveOrNull(doingName, giveName) { rhs ->
 			functionOrNull?.let { function ->
 				function.applyLeo(rhs)
 			}

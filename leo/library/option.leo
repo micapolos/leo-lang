@@ -8,7 +8,7 @@ let
         update
         present
         doing
-        apply present
+        give present
       absent option
 
 test
