@@ -8,10 +8,10 @@ import kotlin.test.Test
 
 class NativeInterpreterTest {
 	@Test
-	fun textAppendText() {
+	fun textAndText() {
 		script(
 			leo14.line(literal("Hello, ")),
-			plusName lineTo script(leo14.line(literal("world!")))
+			andName lineTo script(leo14.line(literal("world!")))
 		)
 			.interpret
 			.assertEqualTo(script(literal("Hello, world!")))

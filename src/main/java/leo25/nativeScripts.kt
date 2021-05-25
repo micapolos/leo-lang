@@ -4,11 +4,11 @@ import leo14.Script
 import leo14.lineTo
 import leo14.script
 
-val textAppendTextScript: Script
+val textAndTextScript: Script
 	get() =
 		script(
 			textName lineTo script(anyName),
-			plusName lineTo script(
+			andName lineTo script(
 				textName lineTo script(anyName)
 			)
 		)

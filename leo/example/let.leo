@@ -20,7 +20,7 @@ let
   do
     first
     text
-    plus
+    and
       second
       text
 

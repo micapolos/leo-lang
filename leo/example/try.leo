@@ -10,17 +10,17 @@ example
   switch
     success
       text
-      plus "world!"
+      and "world!"
     error
       text
-      plus "hell!"
+      and "hell!"
 
 example
   try fail "Hello, "
   switch
     success
       text
-      plus "world!"
+      and "world!"
     error
       text
-      plus "hell!"
+      and "hell!"

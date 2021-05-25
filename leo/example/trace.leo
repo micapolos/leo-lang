@@ -3,5 +3,5 @@ comment
     gives debug trace
 
 "Hello, "
-plus "world"
+and "world"
 trace

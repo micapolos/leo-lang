@@ -5,10 +5,10 @@ import leo14.minus
 import leo14.plus
 import leo14.times
 
-val textAppendTextBody
+val textAndTextBody
 	get() =
 		unsafeBody {
-			resolveOrNull(textName, plusName) { rhs ->
+			resolveOrNull(textName, andName) { rhs ->
 				value(field(literal(textOrThrow.plus(rhs.textOrThrow))))
 			}!!
 		}

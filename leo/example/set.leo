@@ -9,6 +9,6 @@ set
 
 first
 text
-plus
+and
   second
   text

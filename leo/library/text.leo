@@ -1,6 +1,6 @@
 test
   "Hello, "
-  plus "world!"
+  and "world!"
   equals "Hello, world!"
 
 let
@@ -8,7 +8,7 @@ let
   exclamate
   do
     text
-    plus "!"
+    and "!"
 
 test
   "Hello, world"
@@ -20,8 +20,8 @@ let
   parenthesize
   do
     "("
-    plus text
-    plus ")"
+    and text
+    and ")"
 
 test
   "hello"

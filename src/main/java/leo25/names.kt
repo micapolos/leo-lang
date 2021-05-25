@@ -1,7 +1,8 @@
 package leo25
 
-val applyName = "apply"
+val andName = "and"
 val anyName = "any"
+val applyName = "apply"
 val asName = "as"
 val becomeName = "become"
 val causeName = "cause"

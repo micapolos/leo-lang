@@ -1,2 +1,2 @@
 "Hello, "
-plus "world!"
+and "world!"

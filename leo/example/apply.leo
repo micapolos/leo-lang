@@ -10,7 +10,7 @@ example
   doing
     first
     text
-    plus
+    and
       second
       text
   apply
