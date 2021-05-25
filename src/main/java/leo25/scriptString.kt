@@ -2,6 +2,8 @@ package leo25
 
 import leo.base.appendableString
 import leo.base.indentString
+import leo.base.notNullIf
+import leo.base.runIfNotNull
 import leo14.*
 import leo14.matching.name
 
@@ -33,7 +35,14 @@ fun Appendable.append(indent: Int, script: Script): Appendable =
 	}
 
 fun Appendable.append(indent: Int, link: ScriptLink): Appendable =
-	append(indent, link.lhs).append(indent, link.line)
+	runIfNotNull(link.dottedLinkOrNull) { append(indent, it) }
+		?: append(indent, link.lhs).append(indent, link.line)
+
+fun Appendable.append(indent: Int, link: ScriptDottedLink): Appendable =
+	append(indent, link.lhs).append('.').append(link.rhsName)
+
+fun Appendable.append(indent: Int, link: ScriptDottedLhs): Appendable =
+	append(indent, link.lhsScript).append(indent.indentString).append(link.rhsName)
 
 fun Appendable.append(indent: Int, line: ScriptLine): Appendable =
 	append(indent.indentString).indentedAppend(indent, line)

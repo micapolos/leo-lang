@@ -28,10 +28,24 @@ class ScriptStringTest {
 	}
 
 	@Test
-	fun complexField() {
+	fun fieldAndDotted() {
 		script("foo" lineTo script("bar" lineTo script(), "zoo" lineTo script()))
 			.string
-			.assertEqualTo("foo\n  bar\n  zoo\n")
+			.assertEqualTo("foo\n  bar.zoo\n")
+	}
+
+	@Test
+	fun dottedNames() {
+		script("foo" lineTo script(), "bar" lineTo script())
+			.string
+			.assertEqualTo("foo.bar\n")
+	}
+
+	@Test
+	fun nameAndField() {
+		script("foo" lineTo script(), "bar" lineTo script("zoo"))
+			.string
+			.assertEqualTo("foo\nbar zoo\n")
 	}
 
 	@Test
