@@ -1,10 +1,9 @@
 package leo25.natives
 
 import leo.base.assertEqualTo
-import leo14.line
-import leo14.lineTo
-import leo14.literal
-import leo14.script
+import leo.base.assertNotNull
+import leo14.*
+import leo20.patternLineOrNull
 import leo25.*
 import kotlin.test.Test
 
@@ -58,6 +57,21 @@ class NativeInterpreterTest {
 	}
 
 	@Test
+	fun arrayObjectJava() {
+		script(
+			elementName lineTo script(line(literal("foo")), line(objectName), line(javaName)),
+			elementName lineTo script(line(literal("bar")), line(objectName), line(javaName)),
+			arrayName lineTo script(),
+			objectName lineTo script(),
+			javaName lineTo script()
+		)
+			.interpret
+			.get(objectName)
+			?.get(nativeName)
+			.assertNotNull
+	}
+
+	@Test
 	fun textClassJava() {
 		script(
 			line(literal("java.lang.String")),
@@ -96,7 +110,8 @@ class NativeInterpreterTest {
 				line(literal("java.lang.String")),
 				className lineTo script(),
 				javaName lineTo script(),
-				methodName lineTo script(literal("length"))
+				methodName lineTo script(literal("length")),
+				argsName lineTo script(line(arrayName), line(objectName), line(javaName))
 			)
 		)
 			.interpret

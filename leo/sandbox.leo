@@ -1,5 +1,3 @@
-"Hello, world!".object.java
-invoke
-  "java.lang.String".class.java
-  method "length"
-number
+element "foo".object.java
+element "bar".object.java
+array.object.java

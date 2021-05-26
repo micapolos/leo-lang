@@ -3,6 +3,7 @@ package leo25.natives
 import leo14.*
 import leo14.Number
 import leo14.untyped.typed.loadClass
+import leo15.arrayName
 import leo25.*
 
 val textAppendTextDefinition
@@ -100,6 +101,23 @@ val javaObjectNumberDefinition
 			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeObject as Int)))
 		}
 
+val arrayObjectJavaDefinition
+	get() =
+		nativeDefinition(
+			script(
+				objectName lineTo script(arrayName lineTo script(anyName)),
+				javaName lineTo script()
+			)
+		) {
+			value(
+				javaName fieldTo value(
+					objectName fieldTo rhs(
+						native(nativeValue(objectName).nativeValue(arrayName).nativeArray)
+					)
+				)
+			)
+		}
+
 val textClassJavaDefinition
 	get() =
 		nativeDefinition(
@@ -143,7 +161,10 @@ val javaObjectInvokeJavaMethodDefinition
 		nativeDefinition(
 			script(
 				javaName lineTo script(objectName lineTo script(anyName)),
-				invokeName lineTo script(javaName lineTo script(methodName lineTo script(anyName)))
+				invokeName lineTo script(
+					javaName lineTo script(methodName lineTo script(anyName)),
+					argsName lineTo script(javaName lineTo script(objectName lineTo script(anyName)))
+				)
 			)
 		) {
 			value(
@@ -151,7 +172,9 @@ val javaObjectInvokeJavaMethodDefinition
 					objectName fieldTo rhs(
 						native(
 							nativeValue(invokeName).nativeValue(javaName).nativeValue(methodName).nativeMethod.invoke(
-								nativeValue(javaName).nativeValue(objectName).nativeObject
+								nativeValue(javaName).nativeValue(objectName).nativeObject,
+								*nativeValue(invokeName).nativeValue(argsName).nativeValue(javaName)
+									.nativeValue(objectName).nativeObject as Array<*>
 							)
 						)
 					)

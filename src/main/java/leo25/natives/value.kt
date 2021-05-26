@@ -1,5 +1,8 @@
 package leo25.natives
 
+import leo.base.map
+import leo.base.stack
+import leo13.array
 import leo14.Number
 import leo14.literal
 import leo25.*
@@ -19,3 +22,12 @@ val Value.nativeMethod: Method get() = fieldOrNull!!.rhs.nativeOrNull!!.any as M
 
 val String.nativeValue get() = value(field(literal(this)))
 val Number.nativeValue get() = value(field(literal(this)))
+
+val Value.nativeArray: Array<Any?>
+	get() =
+		fieldOrNull!!.rhs.valueOrNull!!.fieldSeq.map { value(this).nativeArrayElement }.stack.array
+
+val Value.nativeArrayElement: Any?
+	get() =
+		nativeValue(javaName).nativeValue(objectName).nativeObject
+
