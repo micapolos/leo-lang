@@ -4,8 +4,7 @@ test
   equals "Hello, world!"
 
 test
-  "Hello, world!"
-  length
+  "Hello, world!".length
   equals length 13
 
 let
@@ -16,8 +15,7 @@ let
     append "!"
 
 test
-  "Hello, world"
-  exclamate
+  "Hello, world".exclamate
   equals "Hello, world!"
 
 let
@@ -29,6 +27,5 @@ let
     append ")"
 
 test
-  "hello"
-  parenthesize
+  "hello".parenthesize
   equals "(hello)"

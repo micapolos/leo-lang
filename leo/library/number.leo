@@ -21,8 +21,7 @@ let
     plus 1
 
 test
-  10
-  increment
+  10.increment
   equals 11
 
 let
@@ -33,8 +32,7 @@ let
     minus 1
 
 test
-  10
-  decrement
+  10.decrement
   equals 9
 
 let
@@ -45,6 +43,5 @@ let
     times number
 
 test
-  10
-  squared
+  10.squared
   equals 100

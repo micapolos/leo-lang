@@ -18,11 +18,8 @@ let
   second text any
   join
   do
-    first
-    text
-    append
-      second
-      text
+    first.text
+    append second.text
 
 first "Hello, "
 second "world!"

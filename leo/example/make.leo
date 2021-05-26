@@ -7,8 +7,3 @@ comment
 x 10
 y 20
 point
-
-comment
-  point
-    x 10
-    y 20

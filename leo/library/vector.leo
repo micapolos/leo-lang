@@ -1,26 +1,13 @@
 let
   vector any
   plus vector any
-  do
-    vector
-      x
-        vector
-        x
-        number
-        plus
-          plus
-          vector
-          x
-          number
-      y
-        vector
-        y
-        number
-        plus
-          plus
-          vector
-          y
-          number
+  do vector
+    x
+      vector.x.number
+      plus plus.vector.x.number
+    y
+      vector.y.number
+      plus plus.vector.y.number
 
 test
   vector

@@ -8,11 +8,8 @@ comment
     
 example
   doing
-    first
-    text
-    append
-      second
-      text
+    first.text
+    append second.text
   give
     first "Hello, "
     second "world!"

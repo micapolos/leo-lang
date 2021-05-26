@@ -4,7 +4,10 @@ comment
   accesses its field
   if present
 
-point
-  x 10
-  y 20
-x
+example
+  circle
+    radius 10
+    center point
+      x 10
+      y 20
+  center.point.x.number

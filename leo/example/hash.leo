@@ -3,5 +3,4 @@ comment
     gives hash number
     of value
 
-"Hello, world!"
-hash
+"Hello, world!".hash

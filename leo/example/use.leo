@@ -5,7 +5,4 @@ comment
 
 use library number
 
-2
-increment
-square
-decrement
+2.increment.squared.decrement

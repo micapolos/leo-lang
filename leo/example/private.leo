@@ -16,6 +16,5 @@ private
       number
       invisible increment
 
-2
-increment
+2.increment
 invisible increment
