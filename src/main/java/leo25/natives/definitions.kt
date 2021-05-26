@@ -14,14 +14,6 @@ val textAppendTextDefinition
 			{ nativeValue }, String::plus
 		)
 
-val textLengthDefinition
-	get() =
-		nativeDefinition(
-			textName, { nativeText },
-			lengthName, { nativeValue },
-			lengthName, String::lengthNumber
-		)
-
 val numberPlusNumberDefinition
 	get() =
 		nativeDefinition(
@@ -77,32 +69,35 @@ val javaObjectTextDefinition
 			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeObject as String)))
 		}
 
-val numberIntegerJavaDefinition
+val numberIntegerObjectJavaDefinition
 	get() =
 		nativeDefinition(
 			script(
-				integerName lineTo script(numberName lineTo script(anyName)),
+				objectName lineTo script(integerName lineTo script(numberName lineTo script(anyName))),
 				javaName lineTo script()
 			)
 		) {
 			value(
 				javaName fieldTo value(
-					integerName fieldTo rhs(
-						native(nativeValue(integerName).nativeValue(numberName).nativeNumber.bigDecimal.intValueExact())
+					objectName fieldTo rhs(
+						native(
+							nativeValue(objectName).nativeValue(integerName)
+								.nativeValue(numberName).nativeNumber.bigDecimal.intValueExact()
+						)
 					)
 				)
 			)
 		}
 
-val javaIntegerNumberDefinition
+val javaObjectNumberDefinition
 	get() =
 		nativeDefinition(
 			script(
-				javaName lineTo script(integerName lineTo script(anyName)),
+				javaName lineTo script(objectName lineTo script(anyName)),
 				numberName lineTo script()
 			)
 		) {
-			value(field(literal(nativeValue(javaName).nativeValue(integerName).nativeObject as Int)))
+			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeObject as Int)))
 		}
 
 val textClassJavaDefinition

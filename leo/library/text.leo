@@ -1,11 +1,21 @@
+let
+  text any
+  length
+  do
+    text.object.java
+    invoke
+      "java.lang.String".class.java
+      method "length"
+    number.length
+
+test
+  "Hello, world!".lengtha
+  equals lengtha 13
+
 test
   "Hello, "
   append "world!"
   equals "Hello, world!"
-
-test
-  "Hello, world!".length
-  equals length 13
 
 let
   text any

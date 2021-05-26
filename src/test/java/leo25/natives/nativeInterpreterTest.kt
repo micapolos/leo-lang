@@ -37,17 +37,19 @@ class NativeInterpreterTest {
 		script(
 			line(literal(123)),
 			integerName lineTo script(),
+			objectName lineTo script(),
 			javaName lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script(javaName lineTo script(integerName lineTo native(123))))
+			.assertEqualTo(script(javaName lineTo script(objectName lineTo native(123))))
 	}
 
 	@Test
-	fun javaIntegerNumber() {
+	fun javaObjectNumber() {
 		script(
 			line(literal(123)),
 			integerName lineTo script(),
+			objectName lineTo script(),
 			javaName lineTo script(),
 			numberName lineTo script()
 		)
@@ -115,16 +117,6 @@ class NativeInterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script(literal("Hello, world!")))
-	}
-
-	@Test
-	fun textLength() {
-		script(
-			line(literal("Hello, world!")),
-			lengthName lineTo script()
-		)
-			.interpret
-			.assertEqualTo(script(lengthName lineTo script(literal(13))))
 	}
 
 	@Test
