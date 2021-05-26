@@ -13,8 +13,5 @@ do repeating
   number
   equals 0
   switch
+    no do number.decrement.repeat
     yes do "Repeated 10000 times"
-    no do
-      number
-      minus 1
-      repeat
