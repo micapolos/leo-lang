@@ -1,6 +1,20 @@
 use library text
 
 comment
+  let be
+    defines a constant
+    matching the given pattern
+
+example 
+  let
+    greeting
+    be
+      "Hello, "
+      append "world!"
+      
+  greeting
+
+comment
   let do
     defines a function
     matching the given pattern
@@ -15,14 +29,15 @@ comment
       matches any number
       like 123
 
-let
-  first text any
-  second text any
-  join
-  do
-    first.text
-    append second.text
+example
+  let
+    first text any
+    second text any
+    join
+    do
+      first.text
+      append second.text
 
-first "Hello, "
-second "world!"
-join
+  first "Hello, "
+  second "world!"
+  join
