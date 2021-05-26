@@ -77,6 +77,34 @@ val javaObjectTextDefinition
 			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeObject as String)))
 		}
 
+val numberIntegerJavaDefinition
+	get() =
+		nativeDefinition(
+			script(
+				integerName lineTo script(numberName lineTo script(anyName)),
+				javaName lineTo script()
+			)
+		) {
+			value(
+				javaName fieldTo value(
+					integerName fieldTo rhs(
+						native(nativeValue(integerName).nativeValue(numberName).nativeNumber.bigDecimal.intValueExact())
+					)
+				)
+			)
+		}
+
+val javaIntegerNumberDefinition
+	get() =
+		nativeDefinition(
+			script(
+				javaName lineTo script(integerName lineTo script(anyName)),
+				numberName lineTo script()
+			)
+		) {
+			value(field(literal(nativeValue(javaName).nativeValue(integerName).nativeObject as Int)))
+		}
+
 val textClassJavaDefinition
 	get() =
 		nativeDefinition(

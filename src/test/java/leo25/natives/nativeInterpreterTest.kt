@@ -33,6 +33,29 @@ class NativeInterpreterTest {
 	}
 
 	@Test
+	fun numberObjectJava() {
+		script(
+			line(literal(123)),
+			integerName lineTo script(),
+			javaName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(javaName lineTo script(integerName lineTo native(123))))
+	}
+
+	@Test
+	fun javaIntegerNumber() {
+		script(
+			line(literal(123)),
+			integerName lineTo script(),
+			javaName lineTo script(),
+			numberName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(literal(123)))
+	}
+
+	@Test
 	fun textClassJava() {
 		script(
 			line(literal("java.lang.String")),
