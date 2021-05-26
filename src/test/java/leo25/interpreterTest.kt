@@ -238,24 +238,24 @@ class InterpreterTest {
 	@Test
 	fun switch() {
 		script(
-			"the" lineTo script(literal("Hello, ")),
+			"the" lineTo script(literal("Hello, world!")),
 			switchName lineTo script(
-				"text" lineTo script(appendName lineTo script(literal("world!"))),
-				"number" lineTo script(plusName lineTo script(literal(2)))
+				"text" lineTo script("one"),
+				"number" lineTo script("two")
 			)
 		)
 			.interpret
-			.assertEqualTo(script(literal("Hello, world!")))
+			.assertEqualTo(script("one" lineTo script(literal("Hello, world!"))))
 
 		script(
 			"the" lineTo script(literal(1)),
 			switchName lineTo script(
-				"text" lineTo script(appendName lineTo script(literal("world!"))),
-				"number" lineTo script(plusName lineTo script(literal(2)))
+				"text" lineTo script("one"),
+				"number" lineTo script("two")
 			)
 		)
 			.interpret
-			.assertEqualTo(script(literal(3)))
+			.assertEqualTo(script("two" lineTo script(literal(1))))
 	}
 
 	@Test
@@ -341,13 +341,13 @@ class InterpreterTest {
 	fun evaluate_with() {
 		script(
 			scriptName lineTo script(
-				line(literal("Hello, ")),
-				appendName lineTo script(textName lineTo script())
+				line(literal("Hello, world!")),
+				"ok" lineTo script()
 			),
 			evaluateName lineTo script(literal("world!"))
 		)
 			.interpret
-			.assertEqualTo(script(literal("Hello, world!")))
+			.assertEqualTo(script("ok" lineTo script(literal("Hello, world!"))))
 	}
 
 	@Test

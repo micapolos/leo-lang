@@ -73,6 +73,36 @@ val javaObjectTextDefinition
 			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeObject as String)))
 		}
 
+val numberObjectJavaDefinition
+	get() =
+		nativeDefinition(
+			script(
+				objectName lineTo script(numberName lineTo script(anyName)),
+				javaName lineTo script()
+			)
+		) {
+			value(
+				javaName fieldTo value(
+					objectName fieldTo rhs(
+						native(
+							nativeValue(objectName).nativeValue(numberName).nativeNumber
+						)
+					)
+				)
+			)
+		}
+
+val javaObjectNumberDefinition
+	get() =
+		nativeDefinition(
+			script(
+				javaName lineTo script(objectName lineTo script(anyName)),
+				numberName lineTo script()
+			)
+		) {
+			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeObject as Number)))
+		}
+
 val numberIntegerObjectJavaDefinition
 	get() =
 		nativeDefinition(
@@ -93,15 +123,15 @@ val numberIntegerObjectJavaDefinition
 			)
 		}
 
-val javaObjectNumberDefinition
+val javaObjectIntegerNumberDefinition
 	get() =
 		nativeDefinition(
 			script(
-				javaName lineTo script(objectName lineTo script(anyName)),
+				javaName lineTo script(objectName lineTo script(integerName lineTo script(anyName))),
 				numberName lineTo script()
 			)
 		) {
-			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeObject as Int)))
+			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeValue(integerName).nativeObject as Int)))
 		}
 
 val arrayObjectJavaDefinition

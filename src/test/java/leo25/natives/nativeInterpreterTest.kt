@@ -54,10 +54,23 @@ class NativeInterpreterTest {
 	}
 
 	@Test
-	fun javaObjectNumber() {
+	fun javaObjectIntegerNumber() {
 		script(
 			line(literal(123)),
 			integerName lineTo script(),
+			objectName lineTo script(),
+			javaName lineTo script(),
+			integerName lineTo script(),
+			numberName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(literal(123)))
+	}
+
+	@Test
+	fun javaObjectNumber() {
+		script(
+			line(literal(123)),
 			objectName lineTo script(),
 			javaName lineTo script(),
 			numberName lineTo script()
@@ -150,16 +163,6 @@ class NativeInterpreterTest {
 					)
 				)
 			)
-	}
-
-	@Test
-	fun textAndText() {
-		script(
-			line(literal("Hello, ")),
-			appendName lineTo script(line(literal("world!")))
-		)
-			.interpret
-			.assertEqualTo(script(literal("Hello, world!")))
 	}
 
 	@Test
