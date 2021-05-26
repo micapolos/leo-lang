@@ -1,7 +1,7 @@
 package leo25
 
 import kotlinx.collections.immutable.PersistentMap
-import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.persistentHashMapOf
 import leo.base.*
 import leo14.*
 import leo14.matching.name
@@ -27,7 +27,7 @@ fun Dictionary.put(token: Token, resolution: Resolution): Dictionary =
 	Dictionary(tokenToResolutionMap.put(token, resolution))
 
 fun dictionary(vararg pairs: Pair<Token, Resolution>): Dictionary =
-	Dictionary(persistentMapOf()).fold(pairs) { put(it.first, it.second) }
+	Dictionary(persistentHashMapOf()).fold(pairs) { put(it.first, it.second) }
 
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
@@ -57,8 +57,8 @@ val Dictionary.removeForAny: Dictionary
 	get() =
 		Dictionary(
 			tokenToResolutionMap[token(anyEnd)].let { resolutionOrNull ->
-				if (resolutionOrNull == null) persistentMapOf()
-				else persistentMapOf(token(anyEnd) to resolutionOrNull)
+				if (resolutionOrNull == null) persistentHashMapOf()
+				else persistentHashMapOf(token(anyEnd) to resolutionOrNull)
 			})
 
 val Resolution.continuationDictionary: Dictionary
