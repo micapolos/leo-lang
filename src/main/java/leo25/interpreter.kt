@@ -1,12 +1,10 @@
 package leo25
 
 import leo.base.fold
-import leo.base.orIfNull
 import leo.base.orNullIf
 import leo.base.reverse
 import leo14.*
 import leo25.natives.nativeDictionary
-import leo25.parser.scriptOrNull
 import leo25.parser.scriptOrThrow
 
 data class Interpreter(
@@ -26,15 +24,6 @@ fun Interpreter.set(context: Context): Interpreter =
 fun Dictionary.valueLeo(script: Script): Leo<Value> =
 	context.interpreterLeo(script).map { it.value }
 
-fun Dictionary.linesValueLeo(script: Script): Leo<Value> =
-	value().leo.fold(script.lineSeq.reverse) { line ->
-		bind { value ->
-			fieldLeo(line).map {
-				value.plus(it)
-			}
-		}
-	}
-
 fun Dictionary.fieldLeo(scriptLine: ScriptLine): Leo<Field> =
 	when (scriptLine) {
 		is FieldScriptLine -> fieldLeo(scriptLine.field)
@@ -46,32 +35,13 @@ fun Dictionary.fieldLeo(scriptField: ScriptField): Leo<Field> =
 		scriptField.string fieldTo it
 	}
 
-fun Environment.interpret(script: Script): Script =
-	try {
-		script.interpretLeo.run(this).value
-	} catch (e: Throwable) {
-		e.value.script
-	}
-
-val Script.interpret: Script
-	get() =
-		environment().interpret(this)
-
-val Script.dictionary: Dictionary
-	get() =
-		nativeDictionary.context.interpreter().plusLeo(this).get.context.publicDictionary
-
 val String.dictionary: Dictionary
 	get() =
 		scriptOrThrow.dictionary
 
-val Script.interpretLeo: Leo<Script>
+val Script.dictionary: Dictionary
 	get() =
-		nativeDictionary.valueLeo(this).map { it.script }
-
-val String.interpret: String
-	get() =
-		scriptOrNull?.run { interpret }.orIfNull { value(scriptName).errorValue.script }.string
+		nativeDictionary.context.interpreter().plusLeo(this).get.context.publicDictionary
 
 fun Context.interpreterLeo(script: Script): Leo<Interpreter> =
 	interpreter().plusLeo(script)

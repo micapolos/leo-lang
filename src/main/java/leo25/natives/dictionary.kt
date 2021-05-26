@@ -1,6 +1,5 @@
 package leo25.natives
 
-import leo16.native.classFieldDefinition
 import leo25.Dictionary
 import leo25.dictionary
 import leo25.plus

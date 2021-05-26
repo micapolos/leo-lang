@@ -18,7 +18,6 @@ val nullObjectJavaDefinition
 			value(javaName fieldTo value(objectName fieldTo rhs(native(null))))
 		}
 
-
 val textObjectJavaDefinition
 	get() =
 		nativeDefinition(
