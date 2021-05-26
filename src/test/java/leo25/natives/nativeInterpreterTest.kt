@@ -164,34 +164,4 @@ class NativeInterpreterTest {
 				)
 			)
 	}
-
-	@Test
-	fun numberAddNumber() {
-		script(
-			line(literal(2)),
-			plusName lineTo script(line(literal(3)))
-		)
-			.interpret
-			.assertEqualTo(script(literal(5)))
-	}
-
-	@Test
-	fun numberSubtractNumber() {
-		script(
-			line(literal(5)),
-			minusName lineTo script(line(literal(3)))
-		)
-			.interpret
-			.assertEqualTo(script(literal(2)))
-	}
-
-	@Test
-	fun numberMultiplyByNumber() {
-		script(
-			line(literal(2)),
-			timesName lineTo script(line(literal(3)))
-		)
-			.interpret
-			.assertEqualTo(script(literal(6)))
-	}
 }

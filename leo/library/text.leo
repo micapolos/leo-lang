@@ -9,7 +9,7 @@ let
         name "length"
         types array.object.java
       args array.object.java
-    number.length
+    integer.number.length
 
 test
   "Hello, world!".length

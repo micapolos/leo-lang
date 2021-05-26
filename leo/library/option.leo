@@ -11,6 +11,7 @@ let
       absent option
 
 test
+  use library text
   option present "Hello, "
   update present doing
     present
@@ -19,6 +20,7 @@ test
   equals "Hello, world!"
 
 test
+  use library text
   option absent
   update present doing
     present

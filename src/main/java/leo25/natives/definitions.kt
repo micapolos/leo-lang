@@ -100,11 +100,11 @@ val javaObjectIntegerNumberDefinition
 	get() =
 		nativeDefinition(
 			script(
-				javaName lineTo script(objectName lineTo script(integerName lineTo script(anyName))),
+				integerName lineTo script(javaName lineTo script(objectName lineTo script(anyName))),
 				numberName lineTo script()
 			)
 		) {
-			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeValue(integerName).nativeObject as Int)))
+			value(field(literal(nativeValue(integerName).nativeValue(javaName).nativeValue(objectName).nativeObject as Int)))
 		}
 
 val arrayObjectJavaDefinition

@@ -225,14 +225,19 @@ class InterpreterTest {
 				"increment" lineTo script(),
 				doName lineTo script(
 					numberName lineTo script(),
-					plusName lineTo script(literal(1))
+					"plus" lineTo script("one")
 				)
 			),
 			line(literal(2)),
 			"increment" lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script(literal(3)))
+			.assertEqualTo(
+				script(
+					line(literal(2)),
+					"plus" lineTo script("one")
+				)
+			)
 	}
 
 	@Test
@@ -261,20 +266,19 @@ class InterpreterTest {
 	@Test
 	fun doRepeating() {
 		script(
-			line(literal(10000)),
+			"number" lineTo script("one"),
 			doName lineTo script(
 				repeatingName lineTo script(
 					numberName lineTo script(),
-					equalsName lineTo script(line(literal(0))),
 					switchName lineTo script(
-						yesName lineTo script(
+						"zero" lineTo script(
 							becomeName lineTo script(line(literal("OK")))
 						),
-						noName lineTo script(
+						"one" lineTo script(
 							becomeName lineTo script(
-								numberName lineTo script(),
-								minusName lineTo script(line(literal(1))),
-								repeatName lineTo script()
+								numberName lineTo script("zero"),
+								repeatName lineTo script(),
+								"tail" lineTo script("ignored")
 							)
 						)
 					)
@@ -288,19 +292,17 @@ class InterpreterTest {
 	@Test
 	fun doRecursing() {
 		script(
-			line(literal(100)),
+			"number" lineTo script("one"),
 			doName lineTo script(
 				recursingName lineTo script(
 					numberName lineTo script(),
-					equalsName lineTo script(line(literal(0))),
 					switchName lineTo script(
-						yesName lineTo script(
+						"zero" lineTo script(
 							becomeName lineTo script(line(literal("OK")))
 						),
-						noName lineTo script(
+						"one" lineTo script(
 							becomeName lineTo script(
-								numberName lineTo script(),
-								minusName lineTo script(line(literal(1))),
+								numberName lineTo script("zero"),
 								recurseName lineTo script()
 							)
 						)
@@ -356,26 +358,21 @@ class InterpreterTest {
 			commentName lineTo script("first" lineTo script("number")),
 			line(literal(2)),
 			commentName lineTo script("second" lineTo script("number")),
-			plusName lineTo script(line(literal(3))),
+			"increment" lineTo script(),
 			commentName lineTo script("expecting" lineTo script(literal(5)))
 		)
 			.interpret
-			.assertEqualTo(script(literal(5)))
+			.assertEqualTo(script("increment" lineTo script(literal(2))))
 	}
 
 	@Test
 	fun be() {
 		script(
 			"zero" lineTo script(),
-			becomeName lineTo script(
-				line(literal(1)),
-				plusName lineTo script(line(literal(2)))
-			)
+			becomeName lineTo script("one")
 		)
 			.interpret
-			.assertEqualTo(
-				script(line(literal(3)))
-			)
+			.assertEqualTo(script("one"))
 	}
 
 	@Test
@@ -538,9 +535,12 @@ class InterpreterTest {
 	fun test_success() {
 		script(
 			testName lineTo script(
-				line(literal(2)),
-				plusName lineTo script(literal(2)),
-				equalsName lineTo script(literal(4))
+				"foo" lineTo script(),
+				"bar" lineTo script(),
+				equalsName lineTo script(
+					"foo" lineTo script(),
+					"bar" lineTo script()
+				)
 			)
 		)
 			.interpret
@@ -551,9 +551,12 @@ class InterpreterTest {
 	fun test_error() {
 		script(
 			testName lineTo script(
-				line(literal(2)),
-				plusName lineTo script(literal(2)),
-				equalsName lineTo script(literal(5))
+				"foo" lineTo script(),
+				"bar" lineTo script(),
+				equalsName lineTo script(
+					"zoo" lineTo script(),
+					"zar" lineTo script()
+				)
 			)
 		)
 			.interpret
@@ -561,14 +564,17 @@ class InterpreterTest {
 				script(
 					errorName lineTo script(
 						testName lineTo script(
-							line(literal(2)),
-							plusName lineTo script(literal(2)),
-							equalsName lineTo script(literal(5))
+							"foo" lineTo script(),
+							"bar" lineTo script(),
+							equalsName lineTo script(
+								"zoo" lineTo script(),
+								"zar" lineTo script()
+							)
 						),
 						causeName lineTo script(
-							line(literal(4)),
+							"bar" lineTo script("foo"),
 							notName lineTo script(
-								equalsName lineTo script(literal(5))
+								equalsName lineTo script("zar" lineTo script("zoo"))
 							)
 						)
 					)
