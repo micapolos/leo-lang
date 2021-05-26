@@ -75,3 +75,25 @@ test
   2
   times 3
   equals 6
+
+let
+  number any
+  increment
+  do
+    number
+    plus 1
+
+test
+  2.increment
+  equals 3
+
+let
+  number any
+  decrement
+  do
+    number
+    minus 1
+
+test
+  2.decrement
+  equals 1
