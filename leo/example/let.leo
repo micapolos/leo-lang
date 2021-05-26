@@ -1,3 +1,5 @@
+use library text
+
 comment
   let do
     defines a function

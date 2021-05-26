@@ -3,6 +3,7 @@ comment
     imports definitions from the given library
     into the current scope
 
-use library number
+use library text
 
-2.increment.squared.decrement
+"Hello, "
+append "world!"

@@ -1,3 +1,5 @@
+use library text
+
 comment
   trace
     gives debug trace

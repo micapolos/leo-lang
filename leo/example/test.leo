@@ -1,3 +1,5 @@
+use library number
+
 comment
   test equals
     fails if two values are not equal

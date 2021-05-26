@@ -1,3 +1,5 @@
+use library text
+
 comment
   do
     executes the given code

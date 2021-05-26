@@ -1,3 +1,5 @@
+use library text
+
 comment
   script
     gives unevaluated code

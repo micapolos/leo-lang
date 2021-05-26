@@ -1,3 +1,5 @@
+use library text
+
 comment
   try 
     catches value thrown with fail

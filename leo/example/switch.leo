@@ -1,3 +1,6 @@
+use library text
+use library number
+
 comment
   switch
     switches on structure field

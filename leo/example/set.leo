@@ -1,3 +1,5 @@
+use library text
+
 comment
   set
     binds value fields

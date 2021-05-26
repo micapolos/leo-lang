@@ -1,3 +1,5 @@
+use library number
+
 comment
   do recursing
     executes the given code
@@ -6,7 +8,7 @@ comment
     performs recursion 
     with the current value
 
-10
+100
 do recursing
   number
   equals 0

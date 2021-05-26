@@ -1,3 +1,5 @@
+use library text
+
 comment
   evaluate
     evaluates the given code
