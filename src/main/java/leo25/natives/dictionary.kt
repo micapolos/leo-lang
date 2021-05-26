@@ -7,10 +7,6 @@ import leo25.plus
 val nativeDictionary: Dictionary
 	get() =
 		dictionary()
-			.plus(numberPlusNumberDefinition)
-			.plus(numberMinusNumberDefinition)
-			.plus(numberTimesNumberDefinition)
-
 			.plus(nullObjectJavaDefinition)
 			.plus(arrayObjectJavaDefinition)
 

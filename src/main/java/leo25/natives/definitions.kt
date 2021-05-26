@@ -6,33 +6,6 @@ import leo14.untyped.typed.loadClass
 import leo15.arrayName
 import leo25.*
 
-val numberPlusNumberDefinition
-	get() =
-		nativeDefinition(
-			numberName, { nativeNumber },
-			plusName,
-			numberName, { nativeNumber },
-			{ nativeValue }, Number::plus
-		)
-
-val numberMinusNumberDefinition
-	get() =
-		nativeDefinition(
-			numberName, { nativeNumber },
-			minusName,
-			numberName, { nativeNumber },
-			{ nativeValue }, Number::minus
-		)
-
-val numberTimesNumberDefinition
-	get() =
-		nativeDefinition(
-			numberName, { nativeNumber },
-			timesName,
-			numberName, { nativeNumber },
-			{ nativeValue }, Number::times
-		)
-
 val nullObjectJavaDefinition
 	get() =
 		nativeDefinition(
