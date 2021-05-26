@@ -314,9 +314,17 @@ class InterpreterTest {
 
 	@Test
 	fun script_() {
-		script(scriptName lineTo script(hashName))
+		script(
+			"foo" lineTo script(),
+			scriptName lineTo script(hashName)
+		)
 			.interpret
-			.assertEqualTo(script(hashName))
+			.assertEqualTo(
+				script(
+					"foo" lineTo script(),
+					hashName lineTo script()
+				)
+			)
 	}
 
 	@Test

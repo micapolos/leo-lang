@@ -196,7 +196,7 @@ fun Interpreter.plusEqualsLeo(rhs: Script): Leo<Interpreter?> =
 	}
 
 fun Interpreter.plusScriptLeo(rhs: Script): Leo<Interpreter> =
-	setLeo(rhs.value)
+	setLeo(value.script.plus(rhs).value)
 
 fun Interpreter.plusSwitchOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	resolver.switchOrNullLeo(value, rhs).nullableBind {
