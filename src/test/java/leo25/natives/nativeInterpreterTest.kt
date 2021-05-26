@@ -137,9 +137,7 @@ class NativeInterpreterTest {
 				className lineTo script(),
 				methodName lineTo script(
 					nameName lineTo script(literal("length")),
-					typesName lineTo script(
-						line(arrayName), line(objectName), line(javaName)
-					)
+					typesName lineTo script(line(arrayName), line(objectName), line(javaName))
 				),
 				argsName lineTo script(line(arrayName), line(objectName), line(javaName))
 			)

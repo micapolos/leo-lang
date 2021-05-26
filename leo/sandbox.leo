@@ -1,3 +1,8 @@
-element "foo".object.java
-element "bar".object.java
-array.object.java
+"Hello, world!".object.java
+invoke
+  "java.lang.String".name.class.object.java.class
+  method
+    name "length"
+    types array.object.java
+  args array.object.java
+

@@ -4,17 +4,7 @@ import leo14.*
 import leo14.Number
 import leo14.untyped.typed.loadClass
 import leo15.arrayName
-import leo16.native.nativeObjectClassDefinition
 import leo25.*
-
-val textAppendTextDefinition
-	get() =
-		nativeDefinition(
-			textName, { nativeText },
-			appendName,
-			textName, { nativeText },
-			{ nativeValue }, String::plus
-		)
 
 val numberPlusNumberDefinition
 	get() =
