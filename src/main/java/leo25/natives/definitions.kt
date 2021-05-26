@@ -50,13 +50,19 @@ val numberTimesNumberDefinition
 			{ nativeValue }, Number::times
 		)
 
-val textClassDefinition
+val textClassJavaDefinition
 	get() =
 		nativeDefinition(
 			script(
-				textName lineTo script(anyName),
-				className lineTo script()
+				className lineTo script(textName lineTo script(anyName)),
+				javaName lineTo script()
 			)
 		) {
-			value(className fieldTo rhs(native(nativeValue(textName).nativeText.loadClass)))
+			value(
+				javaName fieldTo value(
+					className fieldTo rhs(
+						native(nativeValue(className).nativeValue(textName).nativeText.loadClass)
+					)
+				)
+			)
 		}

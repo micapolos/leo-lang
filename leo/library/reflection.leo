@@ -1,3 +1,3 @@
 test
-  "java.lang.String".class.script
-  equals class native "class java.lang.String"
+  "java.lang.String".class.java.script
+  equals java class native "class java.lang.String"

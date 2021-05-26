@@ -10,13 +10,14 @@ import kotlin.test.Test
 
 class NativeInterpreterTest {
 	@Test
-	fun textClassName() {
+	fun textClassJavaName() {
 		script(
 			line(literal("java.lang.String")),
-			className lineTo script()
+			className lineTo script(),
+			javaName lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script(className lineTo native(String::class.java)))
+			.assertEqualTo(script(javaName lineTo script(className lineTo native(String::class.java))))
 	}
 
 	@Test
