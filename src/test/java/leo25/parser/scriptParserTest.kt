@@ -1,6 +1,7 @@
 package leo25.parser
 
 import leo.base.assertEqualTo
+import leo13.stack
 import leo14.*
 import leo25.ValueError
 import org.junit.Test
@@ -59,6 +60,35 @@ class ScriptParser {
 //		scriptParser.run {
 //			parsed("foo.bar\n").assertEqualTo(script("foo" lineTo script(), "bar" lineTo script()))
 //		}
+	}
+
+	@Test
+	fun dottedNameStack() {
+		dottedNameStackParser.run {
+			parsed(".").assertEqualTo(null)
+			parsed(".f").assertEqualTo(stack("f"))
+			parsed(".foo").assertEqualTo(stack("foo"))
+			parsed(".foo.").assertEqualTo(null)
+			parsed(".foo.bar").assertEqualTo(stack("foo", "bar"))
+			parsed(".foo.bar\n").assertEqualTo(null)
+		}
+	}
+
+	@Test
+	fun scriptBlockParser() {
+		scriptBlockParser.run {
+			parsed("foo\n").assertEqualTo(script("foo"))
+			parsed("foo\n  bar\n").assertEqualTo(script("foo" lineTo script("bar")))
+			parsed("foo bar\n").assertEqualTo(script("foo" lineTo script("bar")))
+			parsed("foo.bar\n").assertEqualTo(script("foo" lineTo script(), "bar" lineTo script()))
+			parsed("foo bar goo\n").assertEqualTo(script("foo" lineTo script("bar" lineTo script("goo"))))
+			parsed("foo.bar.goo\n").assertEqualTo(script(line("foo"), line("bar"), line("goo")))
+			parsed("foo bar.goo\n").assertEqualTo(script("foo" lineTo script(line("bar"), line("goo"))))
+
+			parsed("\"foo\"\n").assertEqualTo(script(literal("foo")))
+			parsed("\"foo\".bar\n").assertEqualTo(script(line(literal("foo")), line("bar")))
+			parsed("123.bar\n").assertEqualTo(script(line(literal(123)), line("bar")))
+		}
 	}
 
 	@Test

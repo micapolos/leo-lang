@@ -3,14 +3,15 @@ package leo25.parser
 import leo13.fold
 import leo13.reverse
 import leo14.*
-import leo25.*
 import leo25.LiteralAtom
 import leo25.NameAtom
 
 val scriptParser: Parser<Script>
 	get() =
-		//notationParser.map { it.script }
-		scriptLineParser.stackParser.map { it.script }
+		scriptBlockParser.stackParser.map {
+			script().fold(it.reverse) { plus(it) }
+		}
+//scriptLineParser.stackParser.map { it.script }
 
 val scriptLineParser: Parser<ScriptLine>
 	get() =
@@ -43,31 +44,28 @@ val scriptSpacedRhsParser: Parser<Script>
 	get() =
 		unitParser(' ').bind {
 //			singleLineScriptParser
-			scriptLineParser.map {
-				script(it)
-			}
+			scriptBlockParser
 		}
 
-val singleLineScriptParser: Parser<Script>
+val scriptBlockParser: Parser<Script>
 	get() =
 		atomParser.bind { atom ->
 			when (atom) {
 				is LiteralAtom ->
-					nameStackParser.bind { nameStack ->
+					dottedNameStackParser.bind { nameStack ->
 						unitParser('\n').map {
 							script(line(atom.literal)).fold(nameStack.reverse) { plus(it lineTo script()) }
 						}
 					}
 				is NameAtom ->
 					firstCharOneOf(
-						nameStackParser.bind { nameStack ->
+						scriptRhsParser.map {
+							script(atom.name lineTo it)
+						},
+						dottedNameStackParser.bind { nameStack ->
 							unitParser('\n').map {
 								script(line(atom.name)).fold(nameStack.reverse) { plus(it lineTo script()) }
 							}
-						},
-						scriptRhsParser.map {
-							script(atom.name lineTo it)
 						})
 			}
 		}
-

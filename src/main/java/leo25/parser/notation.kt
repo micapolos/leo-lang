@@ -15,7 +15,7 @@ val atomParser: Parser<Atom>
 val chainParser: Parser<Chain>
 	get() =
 		atomParser.bind { atom ->
-			nameStackParser
+			dottedNameStackParser
 			unitParser('.')
 				.bind { nameParser }
 				.stackParser.bind { nameStack ->
@@ -23,7 +23,7 @@ val chainParser: Parser<Chain>
 				}
 		}
 
-val nameStackParser: Parser<Stack<String>>
+val dottedNameStackParser: Parser<Stack<String>>
 	get() =
 		unitParser('.')
 			.bind { nameParser }
@@ -46,14 +46,14 @@ val notationLineParser: Parser<NotationLine>
 		atomParser.bind { atom ->
 			when (atom) {
 				is LiteralAtom ->
-					nameStackParser.bind { nameStack ->
+					dottedNameStackParser.bind { nameStack ->
 						unitParser('\n').map {
 							line(chain(atom).fold(nameStack.reverse) { plus(it) })
 						}
 					}
 				is NameAtom ->
 					firstCharOneOf(
-						nameStackParser.bind { nameStack ->
+						dottedNameStackParser.bind { nameStack ->
 							unitParser('\n').map {
 								line(chain(atom).fold(nameStack.reverse) { plus(it) })
 							}
