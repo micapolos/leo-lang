@@ -1,9 +1,9 @@
 package leo25.natives
 
+import leo14.*
 import leo14.Number
-import leo14.minus
-import leo14.plus
-import leo14.times
+import leo14.untyped.typed.loadClass
+import leo16.nativeString
 import leo25.*
 
 val textAppendTextDefinition
@@ -50,3 +50,13 @@ val numberTimesNumberDefinition
 			{ nativeValue }, Number::times
 		)
 
+val textClassDefinition
+	get() =
+		nativeDefinition(
+			script(
+				textName lineTo script(anyName),
+				className lineTo script()
+			)
+		) {
+			value(className fieldTo rhs(native(nativeValue(textName).nativeText.loadClass)))
+		}

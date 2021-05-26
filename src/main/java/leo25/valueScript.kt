@@ -56,4 +56,7 @@ val Block.typedScriptOrNull: Script?
 
 val Native.script: Script
 	get() =
-		script(line(literal(any.toString())))
+		script(nativeName lineTo script(line(literal(any.toString()))))
+
+infix fun String.lineTo(native: Native): ScriptLine =
+	this lineTo native.script
